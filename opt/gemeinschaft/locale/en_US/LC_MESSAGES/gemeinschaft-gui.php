@@ -28,7 +28,7 @@
 \*******************************************************************/
 
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1873 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1888 $
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2007-05-23 12:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
@@ -228,7 +228,7 @@ Content-Transfer-Encoding: 8bit
   '<b>12 Leitungstasten</b><br /> Diese Tasten lassen sich mit Rufnummern programmieren.<br /> Im Men&uuml;punkt &quot;Tastenbelegung&quot; k&ouml;nnen Sie Ihre Einstellung ansehen und ver&auml;ndern.' => '<b>12 Line keys</b><br /> Diese Tasten lassen sich mit Rufnummern programmieren.<br /> Im Men&uuml;punkt &quot;Tastenbelegung&quot; k&ouml;nnen Sie Ihre Einstellung ansehen und ver&auml;ndern.',
   'Willkommen' => 'Welcome',
   'Ihre Durchwahl' => 'Your extension',
-  'Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)' => 'Your comment for colleagues (i.e. &quot;off-time&quot;)',
+  'Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)' => 'Your comment for colleagues (e.g. &quot;off-time&quot;)',
   'Telefon neustarten' => 'Reboot phone',
   'Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu gestartet haben!' => 'You need to restart you phone to make changes become active!',
   'Umleitung' => 'Forward',
