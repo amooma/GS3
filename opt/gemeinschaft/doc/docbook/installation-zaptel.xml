@@ -650,7 +650,7 @@ Channel 62: Clear channel (Default) (Slaves: 62)
         mit <literal>0x00</literal> auf T1), aber diese Einstellung bliebe
         nach einem Reboot nicht erhalten. Sie sollten also die Jumper auf der
         Karte setzen<footnote>
-            <para>siehe <xref linkend="install-isdn-hardware" /></para>
+            <para>siehe <xref linkend="install-zap-isdn-hardware" /></para>
           </footnote>.</para>
       </note>
 
