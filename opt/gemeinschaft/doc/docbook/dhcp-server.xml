@@ -262,7 +262,7 @@ subnet 192.168.0.0 netmask 255.255.0.0 {
     <formalpara>
       <title>Beispiel</title>
 
-      <para><programlisting>option ntp-servers ntp.lvm.de;</programlisting></para>
+      <para><programlisting>option ntp-servers ntp.example.com;</programlisting></para>
     </formalpara>
   </section>
 </chapter>
