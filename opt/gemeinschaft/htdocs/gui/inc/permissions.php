@@ -35,15 +35,17 @@ require_once( GS_DIR .'inc/ldap.php' );
 
 /*
 In eine ggf. vom Admin anpaßbare Funktion ausgelagert, da es sich
-generisch nicht definieren läßt, daß für die Editier-Rechte die
-ersten 4 Stellen der LVM-Kostenstelle aus dem LDAP ausschlaggebend
+generisch nicht definieren läßt, daß z.B. für die Editier-Rechte die
+ersten 4 Stellen einer Kostenstellennr. aus dem LDAP ausschlaggebend
 sind.
 Muß true oder false zurückgeben.
 
-Info für LVM: Der Funktion wird die Personalnummer übergeben.
+Der Funktion wird der Gemeinschafts-Username übergeben.
 
-Um diese Kostenstellen-Lookups abzuschalten einfach in der
-inc/conf.php GS_GUI_SUDO_EXTENDED auf false setzen.
+Um diese Lookups abzuschalten einfach in der inc/conf.php
+GS_GUI_SUDO_EXTENDED auf false setzen.
+
+siehe auch session.php ldap_user_map()
 */
 
 
@@ -63,13 +65,12 @@ function gui_sudo_allowed( $real_user, $sudo_user )
 
 function _get_kostenstellen( $user )
 {
-	//$kostenstelle_prop = 'carLicense';
-	$kostenstelle_prop = 'lvmkostenstelle';
+	$kostenstelle_prop = 'kostenstelle';
 	
 	$ldap = gs_ldap_connect();
-	if (GS_LVM_USER_6_DIGIT_INT) {
+	if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
 		$user = preg_replace('/^0+/', '', $user);
-		// sind im LVM-LDAP ohne führende 0
+		# without leading "0" in our LDAP
 	}
 	$u = gs_ldap_get_first( $ldap, GS_LDAP_SEARCHBASE,
 		'('. GS_LDAP_PROP_USER .'='. $user .')',
@@ -90,8 +91,7 @@ function gui_monitor_which_peers( $sudo_user )
 	$kks = @_get_kostenstellen( $sudo_user );
 	if ($kks == false || ! is_array( $kks )) return false;
 	
-	//$kostenstelle_prop = 'carLicense';
-	$kostenstelle_prop = 'lvmkostenstelle';
+	$kostenstelle_prop = 'kostenstelle';
 	$limit = 100;
 	
 	$filter = '';
@@ -117,9 +117,9 @@ function gui_monitor_which_peers( $sudo_user )
 	foreach ($matches as $match) {
 		if (! is_array( $match[$lc_GS_LDAP_PROP_USER] )) continue;
 		foreach ($match[$lc_GS_LDAP_PROP_USER] as $mm) {
-			if (GS_LVM_USER_6_DIGIT_INT) {
+			if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
 				$mm = str_pad($mm, 6, '0', STR_PAD_LEFT);
-				// sind im LVM-LDAP ohne führende 0
+				# without leading "0" in our LDAP
 			}
 			$peers[] = $mm;
 		}

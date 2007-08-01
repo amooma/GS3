@@ -25,16 +25,16 @@ msgid "Telefonbuch"
 msgstr "Telefonbuch"
 
 #: inc/modules.php:45
-msgid "LVM (aus LDAP)"
-msgstr "LVM (aus LDAP)"
+msgid "Firma (aus LDAP)"
+msgstr "Firma (aus LDAP)"
 
 #: inc/modules.php:45
-msgid "LVM (Projekt)"
-msgstr "LVM (Projekt)"
+msgid "Firma (Projekt)"
+msgstr "Firma (Projekt)"
 
 #: inc/modules.php:46
-msgid "LVM (LDAP)"
-msgstr "LVM (LDAP)"
+msgid "Firma (LDAP)"
+msgstr "Firma (LDAP)"
 
 #: inc/modules.php:47
 msgid "Pers&ouml;nlich"
@@ -164,7 +164,7 @@ msgstr "Sie d&uuml;rfen nicht als \"%s\" agieren."
 
 #: index.php:104
 msgid "Gemeinschaft Telefon-Manager"
-msgstr "LVM Telefon-Manager"
+msgstr "Gemeinschaft Telefon-Manager"
 
 #: index.php:118
 msgid "Telefon-Manager"
@@ -866,9 +866,9 @@ msgstr "<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nne
 
 #: mod/help_snom.php:149
 msgid ""
-"<b>Telefonbuch</b> (LVM / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z."
+"<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z."
 "B. 63437 f&uuml;r MEIER dr&uuml;cken."
-msgstr "<b>Telefonbuch</b> (LVM / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z."
+msgstr "<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z."
 "B. 63437 f&uuml;r MEIER dr&uuml;cken."
 
 #: mod/help_snom.php:159

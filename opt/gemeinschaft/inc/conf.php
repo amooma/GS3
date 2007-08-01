@@ -108,7 +108,7 @@ define( 'GS_GUI_QUEUE_SHOW_NUM_CALLS', false );
 *    EXTERNAL NUMBERS BACKEND
 ***********************************************************/
 
-define( 'GS_EXTERNAL_NUMBERS_BACKEND', 'ldap' );  # "db"|"ldap"
+define( 'GS_EXTERNAL_NUMBERS_BACKEND', 'db' );  # "db"|"ldap"
 define( 'GS_EXTERNAL_NUMBERS_LDAP_PROP', 'telephoneNumber' );
 # e.g. "externaltelephone"
 

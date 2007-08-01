@@ -146,7 +146,7 @@ echo '</h2>', "\n";
 		<small>Directory</small>
 	</td>
 	<td>
-		<?php echo __('<b>Telefonbuch</b> (LVM / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z.B. 63437 f&uuml;r MEIER dr&uuml;cken.'); ?>
+		<?php echo __('<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z.B. 63437 f&uuml;r MEIER dr&uuml;cken.'); ?>
 	</td>
 </tr>
 
