@@ -917,7 +917,7 @@ msgstr "Your extension"
 
 #: mod/home_home.php:63
 msgid "Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)"
-msgstr "Your comment for colleagues (i.e. &quot;off-time&quot;)"
+msgstr "Your comment for colleagues (e.g. &quot;off-time&quot;)"
 
 #: mod/home_home.php:78
 msgid "Telefon neustarten"
