@@ -1,0 +1,75 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1768 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+
+$user_id  = (int)trim(@$argv[1]);
+if ($user_id < 1) die();
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$db =  gs_db_master_connect();
+if ($db) {
+	$rs = $db->execute( 'SELECT `id` FROM `phones` WHERE `user_id`='. $user_id );
+	while ($phone = $rs->fetchRow()) {
+		
+		# assign an unused nobody user
+		#
+		$new_user_id = (int)$db->executeGetOne(
+'SELECT `id` FROM `users`
+WHERE
+	`nobody_index` IS NOT NULL AND
+	`id` NOT IN (SELECT `user_id` FROM `phones` WHERE `user_id` IS NOT NULL)
+ORDER BY RAND() LIMIT 1'
+		);
+		$db_user_id = $new_user_id ? $new_user_id : 'NULL';
+		$db->execute( 'UPDATE `phones` SET `user_id`='. $db_user_id .' WHERE `id`='. (int)$phone['id'] );
+		
+		//if ($new_user_id)
+		//	$db->execute( 'UPDATE `users` SET `current_ip`=NULL WHERE `id`='. $new_user_id );
+		
+	}
+}
+
+# log out of all queues
+#
+$user_ext = (int)$db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
+if ($user_id > 0) {
+	ob_start();
+	@exec( GS_DIR .'dialplan-scripts/queue-login-logout.agi '. $user_ext .' 0 logoutall' );
+	ob_end_clean();
+}
+
+?>

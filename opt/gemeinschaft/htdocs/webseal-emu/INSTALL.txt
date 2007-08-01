@@ -1,0 +1,12 @@
+In /etc/httpd/conf/httpd.conf:
+
+
+Listen 88
+<VirtualHost *:88>
+    DocumentRoot /opt/gemeinschaft/htdocs/webseal-emu
+    <Directory />
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+    </Directory>
+</VirtualHost>
+

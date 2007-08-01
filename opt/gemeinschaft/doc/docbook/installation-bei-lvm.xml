@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<chapter id="installation-bei-lvm" revision="$Revision: 1805 $">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Installation bei LVM (Pilotprojekt)</title>
+
+  <section>
+    <title>Ablauf der Installation</title>
+
+    <itemizedlist>
+      <listitem>
+        <para>Installation der benötigten Pakete</para>
+      </listitem>
+
+      <listitem>
+        <para>Download der benötigten Programme als Quellcode (Asterisk,
+        Zaptel, Sipsak, etc.)</para>
+      </listitem>
+
+      <listitem>
+        <para>Übersetzen der Programme aus dem Quellcode</para>
+      </listitem>
+
+      <listitem>
+        <para>Einrichten der MySQL replikation</para>
+      </listitem>
+
+      <listitem>
+        <para>Einrichten des DHCP-Servers</para>
+      </listitem>
+
+      <listitem>
+        <para>Einrichten des HTTP-Servers</para>
+      </listitem>
+
+      <listitem>
+        <para>Installation des Projekts Gemeinschaft</para>
+      </listitem>
+
+      <listitem>
+        <para>Initiale Konfiguration des Projekts Gemeinschaft</para>
+      </listitem>
+
+      <listitem>
+        <para>Konfiguration des Cluster-Watchdogs</para>
+      </listitem>
+    </itemizedlist>
+
+    <important>
+      <para>Hier werden teilweise abweichende Schritte zur Installation bei
+      der LVM beschrieben. <emphasis role="bold">Diese Anleitung ersetzt nicht
+      das sorgfältige Beachten von <xref linkend="installation" />! Die
+      Informationen dort sind ggf. aktueller!</emphasis></para>
+
+      <para>Einer der Unterschiede ist, daß - während man auf CentOS Pakete
+      mit <command>yum install</command> installiert - man auf RedHat dafür
+      <command>up2date -i</command> verwenden kann.</para>
+    </important>
+  </section>
+
+  <section>
+    <title>Gemeinsame Installatonsschritte</title>
+
+    <para>Alle Server im Verbund können, bis auf wenige Einstellungen, gleich
+    installiert werden.</para>
+
+    <section>
+      <title>Systemvoraussetzungen</title>
+
+      <para>siehe <xref linkend="system-requirements" /></para>
+    </section>
+
+    <section>
+      <title>Installation der benötigten Programmpakete</title>
+
+      <para>Es wird von der Installation auf RedHat Enterprise Linux 4 (RHEL
+      4) in der Standard-LVM-Konfiguration ausgegangen.</para>
+
+      <para>Da aus Sicherheitsgründen der direkte Zugrif auf das Internet
+      nicht möglich ist, wird bei der LVM ein Proxy für Downloads
+      benötigt:<programlisting><command>export http_proxy="&lt;proxy&gt;:&lt;port&gt;"</command></programlisting></para>
+
+      <para>Es werden zusätzlich noch Development-Pakete, MySQL, PHP, SOX,
+      expect und die von ihnen abhängenden Pakete benötigt:<programlisting><command>up2date -i --force php php-devel php-mbstring php-mysql php-ldap \
+mysql mysql-server mysql-devel gcc gcc-c++ libtermcap-devel alsa-lib \
+kernel-smp-devel sox crontabs expect</command></programlisting></para>
+
+      <para>Weiterhin wird für die Konvertierung der Klingeltöne
+      <command>mpg123</command> benötigt:<programlisting><command>cd /root/asterisk/Download/ \
+&amp;&amp; wget -c <replaceable>&lt;URL zum RPM-Paket mpg123-0.65-1.el4.rf.i386.rpm&gt;</replaceable> \
+&amp;&amp; rpm -i mpg123-0.65-1.el4.rf.i386.rpm</command></programlisting></para>
+    </section>
+
+    <section>
+      <title>Download der benötigten Programme im Quellcode</title>
+
+      <para>Die benötigten Programme (Asterisk, Zaptel, Sipsak, etc) liegen
+      als Quellcode vor und müssen zunächst heruntergeladen
+      werden:<programlisting><command>wget -c http://ftp.digium.com/pub/zaptel/releases/zaptel-1.4.1.tar.gz</command>
+<command>wget -c http://ftp.digium.com/pub/asterisk/releases/asterisk-1.4.2.tar.gz</command>
+<command>wget -c http://ftp.digium.com/pub/asterisk/releases/asterisk-addons-1.4.0.tar.gz</command></programlisting>Zusätzich
+      muss auf dem Master-Host noch folgendes Programm herutergeladen
+      werden:<programlisting><command>wget -c http://download.berlios.de/sipsak/sipsak-0.9.6-1.tar.gz</command></programlisting></para>
+    </section>
+
+    <section>
+      <title>Übersetzen der Programme aus dem Quellcode</title>
+
+      <para>Der herutergeladene Quellcode muss noch kompiliert werden, dazu
+      werden aus de Verzeichins in dem sich die Archive befinden folgende
+      Schritte ausgeführt:</para>
+
+      <para>Falls es sich um ein Upgrade handelt, ist es günstig die
+      Asterisk-Module der alten Installation vorher zu
+      löschen:<programlisting><command>rm -rf /usr/lib/asterisk/modules/</command></programlisting>Übersetzung
+      und Installation von Zaptel:<programlisting><command>tar -xzf zaptel-1.4.1.tar.gz \
+&amp;&amp; cd /usr/src/zaptel-1.4.1/ \
+&amp;&amp; ./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config \
+&amp;&amp; modprobe ztdummy</command></programlisting>Asterisk
+      installieren:<programlisting><command>tar -xzf asterisk-1.4.2.tar.gz \
+&amp;&amp; cd /usr/src/asterisk-1.4.2/ \
+&amp;&amp; ./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config</command></programlisting>Ob
+      das erfolgreich war, kann man so prüfen (großes V!):<screen>$ <command>asterisk -V</command>
+Asterisk 1.4.2</screen></para>
+
+      <para>Asterisk-Addons installieren:<programlisting><command>tar -xzf asterisk-addons-1.4.0.tar.gz \
+&amp;&amp; cd /usr/src/asterisk-addons-1.4.0/ \
+&amp;&amp; ./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install</command></programlisting></para>
+
+      <para>Dabei muß die Datei
+      <filename>/usr/lib/asterisk/modules/res_config_mysql.so</filename>
+      erzeugt worden sein:<screen>$ <command>ls -l /usr/lib/asterisk/modules/res_config_mysql.so</command>
+-rwxr-xr-x  1 root root 42267 Apr 11 04:09 /usr/lib/asterisk/modules/res_config_mysql.so</screen></para>
+
+      <para>SipSak installieren:<programlisting><command>tar -xzf sipsak-0.9.6-1.tar.gz \
+&amp;&amp; cd sipsak-0.9.6/ \
+&amp;&amp; ./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install</command></programlisting></para>
+    </section>
+
+    <section>
+      <title>Einrichten der MySQL-Replikation</title>
+
+      <para>DerMySQL Server muß für die Replikation auf dem Master und den
+      Slaves installiert sein. Das Einrichten<footnoteref
+      linkend="footnote-mysql-replikation" />, siehe <xref
+      linkend="mysql-replikation" />.</para>
+    </section>
+
+    <section>
+      <title>Einrichten des DHCP-Servers</title>
+
+      <para>Der DHCP-Server ist wichtig für das automatische Provisioning der
+      Telefone und ist be der LVM auf einem gesonderten Host
+      untergebracht.</para>
+
+      <para>Dabei wird in der Konfigurationsdatei des DHCP-Servers folgender
+      Abschnitt für das Subnet eingetragen:<screen>subnet 10.176.12.0 netmask 255.255.255.0        {      #subnet_statement_voip_inka
+        option routers                  10.176.12.254 ;      #default_router
+        option subnet-mask              255.255.255.0 ;      #default_mask
+        option tftp-server-name "http://voipweb01f:82/snom/settings.php?mac={mac}";
+        pool {                                          #start_pool_definition
+                deny unknown-clients;
+                ping-check true;
+                ping-timeout 1;
+                known-clients;
+                range 10.176.12.10 10.176.12.20;
+
+        }                                               #end_pool_definition
+} #end_subnet
+</screen></para>
+    </section>
+
+    <section>
+      <title>Einrichten des HTTP-Servers</title>
+
+      <para>Der HTTP-Server wird auf dem Master-Host eingerichet.</para>
+
+      <para>Das Dateisystem-Verzeichnis
+      <filename>/opt/gemeinschaft/htdocs/gui/</filename> muß per Web-Browser
+      erreichbar sein.</para>
+
+      <para>Ebenso muß <filename>/opt/gemeinschaft/htdocs/prov/</filename> auf
+      einem Web-Server erreichbar sein - dazu richtet man am besten einen
+      virtuellen Server mit anderem Port (oder anderem Namen) ein und setzt
+      das Document-Root entsprechend. Dieses Verzeichnis wird für das
+      Provisioning der Telefone genutzt; diese müssen also Zugriff haben. Aus
+      dem Unterverzeichnis <filename>ringtones/</filename> holen sich die
+      Telefone ggf. einen benutzerabhängig eingestellten eigenen
+      Klingelton.</para>
+
+      <para>Den Web-Server für das Provisioning könnte man z.B. so einrichten:
+      Ans Ende der <filename>/etc/httpd/conf/httpd.conf</filename> schreibt
+      man:<screen>Listen 82
+&lt;VirtualHost *:82&gt;
+    DocumentRoot /opt/gemeinschaft/htdocs/prov
+    &lt;Directory /&gt;
+        Options FollowSymLinks MultiViews
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</screen></para>
+
+      <para>Optional schreibt man zu den <code>Options</code> noch
+      <code>Indexes</code> wenn man Verzeichnis-Listings haben will. Danach
+      startet man den Apache neu: <command>service httpd
+      restart</command></para>
+
+      <para>Das gleiche kann man analog für das Web-Interface machen.</para>
+
+      <para>Den Provisioning-Host, -Port etc. muß man noch in der
+      <filename>/opt/gemeinschaft/inc/conf.php</filename> eintragen.</para>
+
+      <para>Nach dem Ändern der Konfiguration muß der HTTP-Server neu
+      gestartet werden. Es ist zusätzlich sicherzustellen, das er nach einem
+      Neustart des Hosts automatisch gestartet wird:</para>
+
+      <para><programlisting><command>service httpd restart</command>
+<command>chkconfig --levels 235 httpd on</command></programlisting></para>
+    </section>
+
+    <section>
+      <title>Installation des Projekts Gemeinschaft</title>
+
+      <para>Das das TAR-Archiv von Amooma ins Dateisystem-Root entpacken.
+      Unter <filename>/etc/asterisk/</filename> muß jetzt eine einzige Datei
+      <filename>asterisk.conf</filename> liegen, unter
+      <filename>/opt/gemeinschaft/</filename> die verschiedenen Verzeichnisse
+      <filename>etc/</filename>, <filename>htdocs/</filename>,
+      <filename>scripts/</filename> usw.</para>
+    </section>
+
+    <section>
+      <title>Initiale Konfiguration des Projekts Gemeinschaft</title>
+
+      <para>Nach der Installation müssen verschiedene Einstellungen an die
+      Gegebenheiten angepaßt werden.</para>
+
+      <warning>
+        <para><emphasis role="bold">Bei allen entsprechenden Einstellungen
+        müssen IP-Adressen verwendet werden, nicht
+        Host-Namen!</emphasis></para>
+      </warning>
+
+      <section>
+        <title>Dateien</title>
+
+        <variablelist>
+          <varlistentry>
+            <term><filename>/opt/gemeinschaft/etc/listen-to-ip</filename></term>
+
+            <listitem>
+              <para>Auf allen aktiven Asterisk-Servern muß in dieser Datei die
+              entsprechende eigene IP-Adresse (genau wie in der Tabelle
+              <literal>hosts</literal> in der Datenbank) eingetragen werden.
+              Auf dem Ersatz-Rechner allerdings <emphasis>keine</emphasis>
+              Adresse eintragen - er wird den Eintrag automatisch vornehmen,
+              sobald er einen anderen Rechner übernimmt.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term><filename>/opt/gemeinschaft/etc/asterisk/sip.conf</filename></term>
+
+            <listitem>
+              <para>Abschnitt <code>[gateway]</code> und<literallayout>register =&gt; <replaceable>gemeinschaft01</replaceable>@gateway/<replaceable>gemeinschaft01</replaceable></literallayout>anpassen,
+              bzw. durch ein Semikolon (<code>;</code>) am Zeilenanfang
+              auskommentieren, wenn kein Gateway verwendet werden soll.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term><filename>/opt/gemeinschaft/inc/conf.php</filename></term>
+
+            <listitem>
+              <para>MySQL-Hosts, -User und -Passwörter
+              (<code>AST_DB_MASTER_<replaceable>*</replaceable></code> und
+              <code>AST_DB_SLAVE_<replaceable>*</replaceable></code>)
+              anpassen.</para>
+
+              <para>Die Einstellungen zu Provisioning-Host und -URL
+              (<code>AST_PROV_<replaceable>*</replaceable></code>) anpassen
+              (<code>AST_PROV_HOST</code> muß von den Telefonen erreichbar
+              sein).</para>
+
+              <para><code>AST_PROV_AUTO_ADD_PHONE</code> bestimmt, ob bisher
+              unbekannte Telefone, die eine Konfiguration beziehen wollen,
+              automatisch in die Datenbank aufgenommen oder abgewiesen
+              werden.</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term><filename>/opt/gemeinschaft/sbin/stonith.sh</filename></term>
+
+            <listitem>
+              <para>Dieses Skript wird beim Ausfall eines Asterisk-Servers
+              aufgerufen, mit der entsprechenden IP-Adresse als erstem
+              Parameter. Sie sollten es an Ihre Gegebenheiten anpassen, sodaß
+              es diesen Rechner vom Ethernet oder Stromnetz trennt.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </section>
+
+      <section>
+        <title>Admin-Skripte</title>
+
+        <para>Die Admin-Skripte dürfen <emphasis role="bold">nur</emphasis>
+        auf dem MySQL-Master/Web-Server-Rechner aufgerufen werden. Um
+        Fehlbedienung vorzubeugen, kann man die Skripte auf den
+        <emphasis>anderen</emphasis> Rechnern einfach löschen</para>
+
+        <programlisting><command>rm -rf /opt/gemeinschaft/scripts/</command></programlisting>
+      </section>
+
+      <section>
+        <title>Initiale Änderungen in der Datenbank</title>
+
+        <para>In der Tabelle <literal>hosts</literal> müssen die IP-Adressen
+        (nicht Hostnamen!) der aktiven Asterisk-Server (nicht der
+        Reserve-Server) eingetragen werden, das geht z.B. so (in
+        <command>mysql</command>)<footnote>
+            <para>Wenn die Spalten-/Tabellenbezeichner reservierte Wörter in
+            MySQL wären, müßte man sie in Backticks (<code>`</code>)
+            setzen.</para>
+          </footnote><programlisting><command><command>USE asterisk;</command>
+<command>DELETE FROM hosts;</command>
+<command>INSERT INTO hosts (id,host,comment) VALUES (1, '192.168.1.130', 'ast 1');</command>
+<command>INSERT INTO hosts (id,host,comment) VALUES (2, '192.168.1.131', 'ast 2');</command>
+<command>SELECT * FROM hosts;</command></command></programlisting>Wenn die
+        Replikation korrekt eingerichtet ist, werden diese Änderungen
+        automatisch auf alle Nodes des Clusters übertragen.</para>
+
+        <para>Die Adressen müssen von den Telefonen erreicht werden können,
+        also nicht <code>127.0.0.1</code>.</para>
+      </section>
+
+      <section>
+        <title>Generierung und Verteilung des SSH-Schlüssels</title>
+
+        <para>Der Web-Server-Rechner muß auf den Asterisk-Servern ohne
+        Paßwortabfrage als <literal>root</literal> Shell-Befehle ausführen
+        können. Dazu muß auf dem Master ein SSH-Key generiert und der
+        öffentliche Schlüssel auf den Asterisk-Rechnern hinterlegt werden.
+        Dies ist kein SSH-Tutorial, daher nur ganz kurz die notwendigen
+        Schritte:</para>
+
+        <para>Den Key generiert man (als <literal>root</literal>!) so:<screen>$ <command>ssh-keygen -t dsa</command>
+[...]
+Enter passphrase (empty for no passphrase): 
+[...]</screen>Dabei muß die passphrase<footnote>
+            <para>Die passphrase ist nicht das Paßwort des Benutzers sondern
+            ein Paßwort zum Entschlüsseln des eigenen Keys.</para>
+          </footnote> leer sein, weil diese sonst auch wieder interaktiv
+        abgefragt würde!</para>
+
+        <para>Den öffentlichen Schlüssel (<literal>.pub</literal>) trägt man
+        auf den Asterisken im Home-Verzeichnis von <literal>root</literal> in
+        der <filename>.ssh/authorized_keys</filename> ein. Das kann man
+        entweder manuell oder auch mit <command>ssh-copy-id</command>
+        machen:<programlisting><command>ssh-copy-id -i ~/.ssh/id_dsa.pub root@<replaceable>&lt;ip-adresse&gt;</replaceable></command></programlisting>Dabei
+        wird ein letztes Mal das Paßwort des Benutzers <literal>root</literal>
+        auf dem anderen Rechner abgefragt.</para>
+
+        <para>Vom Web-Server aus müssen folgendermaßen Befehle auf den anderen
+        ausgeführt werden können:<programlisting><command>ssh root@<replaceable>&lt;ip-adresse&gt;</replaceable> '<replaceable>&lt;befehl&gt;</replaceable>'</command></programlisting>also
+        z.B.<screen>$ <command>ssh root@192.168.1.130 'uptime'</command>
+ 10:34:28 up 102 days, 19:58,  0 users,  load average: 0.00, 0.00, 0.00</screen></para>
+      </section>
+    </section>
+
+    <section>
+      <title>Konfiguration des Cluster-Watchdogs</title>
+
+      <para>Der Cluster-Watchdog sorgt im Cluster für die Übernahme der
+      Aufgaben eines ausgefallenen Nodes auf den Master. Er kann bequem
+      installiert werden, wenn alle anderen Funktionen des Clusters korrekt
+      funktionieren.</para>
+
+      <para>Konfiguration siehe <xref linkend="cluster-watchdog" />.</para>
+    </section>
+  </section>
+</chapter>

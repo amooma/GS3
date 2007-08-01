@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<chapter id="installation-zap" revision="$Revision: 1827 $">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Installation von Zaptel</title>
+
+  <subtitle>Einbau/Konfiguration von ISDN-Karten von Digium, Installation und
+  Konfiguration von Zaptel etc.</subtitle>
+
+  <indexterm>
+    <primary>Zaptel</primary>
+  </indexterm>
+
+  <authorblurb>
+    <para>-- Philipp Kempgen</para>
+  </authorblurb>
+
+  <para>Zaptel und was dazugehört wird von Asterisk für die Telefonie per ISDN
+  benötigt. Aber auch als Quelle eines Zeittaktes an Stellen, an denen man es
+  nicht unbedingt vermutet: beispielsweise für Konferenzen mit
+  <code>MeetMe()</code> und für IAX-Trunks. Aber auch wenn man keine
+  Konferenzen braucht, kann ein solcher Zeittakt die Qualität von z.B.
+  Voicemails verbessern</para>
+
+  <section id="install-zap-isdn-hardware">
+    <title>Karte einbauen</title>
+
+    <indexterm>
+      <primary>PRI-Karte einbauen</primary>
+    </indexterm>
+
+    <indexterm>
+      <primary>Digium-ISDN-Karten</primary>
+    </indexterm>
+
+    <note>
+      <para>Sollten Sie keine ISDN-Karte haben können Sie diesen Abschnitt
+      überspringen und gleich beim nächsten weitermachen.</para>
+    </note>
+
+    <para>Auf den Digium-Karten der Serien Wildcard<footnote>
+        <para>ein genialer Name :-)</para>
+      </footnote> TE1xx, TE2xx, TE4xx sind Jumper angebracht, über denen
+    <quote><foreignphrase lang="en">T1/E1 select</foreignphrase></quote>
+    steht. Für den Betrieb in Europa müssen die Ports der Karte auf E1
+    gestellt werden, dazu steckt man alle Jumper ein.</para>
+
+    <para>Falls man mehrere Karten einbaut, sollte man noch das
+    <quote><foreignphrase lang="en">Ident Wheel</foreignphrase></quote> (ein
+    kleiner Drehknopf) einstellen. Dadurch wird bestimmt, in welcher
+    Reihenfolge die Karten erkannt werden. Die erste Karte stellt man auf
+    <literal>0</literal>, die zweite auf <literal>1</literal>, usw. Außerdem
+    sollte man dann das Digium-Timing-Cable verwenden, mit dem die Karten
+    ihren Zeittakt synchronisieren (Einbau siehe Handbuch).<footnote>
+        <para>Das kann später mit <code><command>modprobe wct2xxp
+        timingcable=1</command></code> aktiviert werden.</para>
+      </footnote></para>
+
+    <para>Nachdem man die Karte eingebaut hat, sollte sie in der Ausgabe von
+    <code><command>lspci</command></code> oder <code><command>lspci
+    -nn</command></code> erscheinen:<screen>$ <command>lspci -nn | grep -i d161</command>
+0f:08.0 Communication controller [0780]: Digium, Inc. Unknown device [d161:0220] (rev 02)</screen>Dabei
+    haben Digium-Karten der o.a. Serien den Hersteller-Code
+    <literal>d161</literal><footnote>
+        <para>Das ist hier ein Hexadezimal-Wert, aber 161 sind übrigens die
+        letzten 3 Ziffern der Telefonnummer des Digium-Hardware-Supports
+        (IAXTel). :-)</para>
+      </footnote>. Je nach eingebauter Karte steht in der Ausgabe einer der
+    folgenden Karten-Identifikatoren:<informaltable align="center">
+        <tgroup cols="2">
+          <colspec colnum="1" colwidth="5cm" />
+
+          <colspec colnum="2" colwidth="4cm" />
+
+          <thead>
+            <row>
+              <entry>Karte</entry>
+
+              <entry>Identifikator</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry><literal>TE120p</literal></entry>
+
+              <entry><literal>0120</literal></entry>
+            </row>
+
+            <row>
+              <entry><literal>TE205p</literal> /
+              <literal>TE207p</literal></entry>
+
+              <entry><literal>0205</literal></entry>
+            </row>
+
+            <row>
+              <entry><literal>TE210p</literal> /
+              <literal>TE212p</literal></entry>
+
+              <entry><literal>0210</literal></entry>
+            </row>
+
+            <row>
+              <entry><literal>TE220<replaceable>b</replaceable></literal></entry>
+
+              <entry><literal>0220</literal></entry>
+            </row>
+
+            <row>
+              <entry><literal>TE405p</literal> /
+              <literal>TE407p</literal></entry>
+
+              <entry><literal>0405</literal></entry>
+            </row>
+
+            <row>
+              <entry><literal>TE410p</literal> /
+              <literal>TE412p</literal></entry>
+
+              <entry><literal>0410</literal></entry>
+            </row>
+
+            <row>
+              <entry><literal>TE420<replaceable>b</replaceable></literal></entry>
+
+              <entry><literal>0420</literal></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable></para>
+  </section>
+
+  <section id="install-kernel-headers">
+    <title>Kernel-Header</title>
+
+    <indexterm>
+      <primary>Kernel-Header</primary>
+    </indexterm>
+
+    <para>Die Kernel-Header (Quellcode) werden für die Übersetzung von Zaptel
+    benötigt. Dabei ist zu beachten, daß das Paket für einen
+    SMP-Kernel<footnote>
+        <para>Ob man einen SMP-Kernel hat findet man mit <command>uname
+        -a</command> heraus.</para>
+      </footnote> evtl. anders heißt. (Bei einem Kernel &lt; 2.6.17 muß für
+    SMP unterschieden werden.)</para>
+
+    <para>Wir gehen hier davon aus, daß Sie - wie für die Installation von
+    Asterisk und Gemeinschaft beschrieben - bereits Ihren Kernel mit
+    <command>yum update</command> (CentOS) oder <command>apt-get
+    update</command> (Debian) auf den aktuellen Stand gebracht, rebootet und
+    die weiteren erforderlichen Pakete installiert haben.</para>
+
+    <para>Installation:<variablelist termlength="15">
+        <varlistentry>
+          <term>CentOS:</term>
+
+          <listitem>
+            <variablelist termlength="10">
+              <varlistentry>
+                <term>Single:</term>
+
+                <listitem>
+                  <programlisting><command>yum install kernel-devel-`uname -r`</command></programlisting>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>SMP (bei CentOS &lt; 5):</term>
+
+                <listitem>
+                  <programlisting><command>yum install kernel-smp-devel-`uname -r`</command></programlisting>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term>Xen:</term>
+
+                <listitem>
+                  <programlisting><command>yum install kernel-xen-devel-`uname -r`</command></programlisting>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+
+            <para>Zusätzlich notwendig für <literal>zttool</literal> bzw.
+            <literal>ztdummy</literal>:<programlisting><command>yum install newt-devel libusb-devel</command></programlisting></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Debian:</term>
+
+          <listitem>
+            <para>Seit Etch muß man beim Installieren der Kernel-Header nicht
+            mehr für SMP unterscheiden.<programlisting><command>apt-get install linux-headers-`uname -r` linux-kernel-headers</command></programlisting></para>
+
+            <para>Zusätzlich notwendig für <literal>zttool</literal> bzw.
+            <literal>ztdummy</literal>:<programlisting><command>apt-get install libnewt-dev libusb-dev</command></programlisting></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>SuSE:</term>
+
+          <listitem>
+            <para>Ungetestet: Offenbar wird das Paket
+            <literal>kernel-source</literal> benötigt.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist><code><command>uname -r</command></code> ist z.B.
+    <literal>2.6.9-42.0.10.EL</literal> oder
+    <literal>2.6.18-4-686</literal></para>
+
+    <para>Je nach Art und Version Ihres Linux/Unix kann die korrekte
+    Installation der Kernel-Header der Grund für Kopfschmerzen sein. Auf
+    <ulink
+    url="http://www.voip-info.org/wiki/index.php?page=Asterisk+Zaptel+Installation">http://www.voip-info.org/wiki/index.php?page=Asterisk+Zaptel+Installation</ulink>
+    gibt es ein paar Betriebssystem-spezifische Tipps.</para>
+
+    <para>Prüfen Sie, daß <filename>/lib/modules/`uname -r`/build</filename>
+    auf das Kernel-Verzeichnis zeigt.<screen>$ <command>ls -lF /lib/modules/`uname -r`/</command>
+insgesamt 1364
+lrwxrwxrwx 1 root root     35 2007-06-28 09:37 build -&gt; /usr/src/linux-headers-2.6.18-4-686/
+drwxr-xr-x 9 root root   1024 2007-06-28 08:35 kernel/
+drwxr-xr-x 5 root root   1024 2007-07-20 21:06 misc/
+<replaceable>[...]</replaceable></screen></para>
+
+    <para>Vor allem die Datei <filename>/lib/modules/`uname
+    -r`/build/.config</filename> muß genau die sein, die für den Kernel
+    verwendet wurde.</para>
+  </section>
+
+  <section id="install-libpri">
+    <title>LibPRI</title>
+
+    <indexterm>
+      <primary>libpri</primary>
+    </indexterm>
+
+    <note>
+      <para>LibPRI benötigen Sie nur dann, wenn Sie ISDN-Karten zum Anschluß
+      an einen Primärmultiplexer in Ihrem Rechner haben.</para>
+    </note>
+
+    <para>Kompilierung und Installation:<programlisting><command>cd /usr/src/ \
+&amp;&amp; wget -c http://ftp.digium.com/pub/libpri/releases/libpri-1.4.1.tar.gz \
+&amp;&amp; tar -xzf libpri-1.4.1.tar.gz \
+&amp;&amp; cd libpri-1.4.1/ \
+&amp;&amp; make clean \
+&amp;&amp; make \
+&amp;&amp; make install</command></programlisting></para>
+  </section>
+
+  <section id="install-zaptel">
+    <title>Zaptel</title>
+
+    <indexterm>
+      <primary>zaptel installieren</primary>
+    </indexterm>
+
+    <para>Kompilierung und Installation:<programlisting><command>cd /usr/src/ \
+&amp;&amp; wget -c http://ftp.digium.com/pub/zaptel/releases/zaptel-1.4.4.tar.gz \
+&amp;&amp; tar -xzf zaptel-1.4.4.tar.gz \
+&amp;&amp; zaptel-1.4.4/ \
+&amp;&amp; ./configure \
+&amp;&amp; make clean \
+&amp;&amp; make \
+&amp;&amp; make install \
+&amp;&amp; make install-udev \
+&amp;&amp; make config</command></programlisting></para>
+
+    <section id="install-zaptel-without-cards">
+      <title>Ohne ISDN-Karten</title>
+
+      <indexterm>
+        <primary>ztdummy</primary>
+      </indexterm>
+
+      <para>Wenn Sie in Ihrem Rechner keine ISDN-Karten installiert haben und
+      damit Zaptel lediglich zur Bereitstellung eines Zeittaktes für die
+      <code>MeetMe()</code>-Konferenzen benötigen, laden Sie jetzt noch mit
+      <code><command>modprobe ztdummy</command></code><footnote>
+          <para>Falls auf dem Rechner schon eine ältere Version von Zaptel
+          installiert war, sollten Sie zuerst das alte Modul aus dem Kernel
+          entfernen:<programlisting><command>rmmod ztdummy</command>
+<command>modprobe ztdummy</command></programlisting></para>
+        </footnote> das dafür vorgesehene Kernel-Modul (oder Sie starten
+      alternativ den Rechner neu) und sind schon fertig.<footnote>
+          <para>Auf <ulink
+          url="http://www.voip-info.org/wiki/index.php?page=Asterisk+timer+ztdummy">http://www.voip-info.org/wiki/index.php?page=Asterisk+timer+ztdummy</ulink>
+          findet man ein paar ungeordnete Erfahrungsberichte.</para>
+        </footnote> Auch die weiteren Installationsschritte sind nicht mehr
+      nötig. Übrigens: Mit <literal>ztdummy</literal> sieht
+      <filename>/proc/zaptel/1</filename> einfach so aus:<screen>$ <emphasis
+            role="bold">cat /proc/zaptel/1</emphasis> 
+Span 1: ZTDUMMY/1 "ZTDUMMY/1 1" 
+</screen></para>
+    </section>
+
+    <section id="install-zaptel-with-cards">
+      <title>Mit ISDN-Karten</title>
+
+      <indexterm>
+        <primary>zaptel.conf</primary>
+      </indexterm>
+
+      <para>Wer allerdings eine oder mehrere ISDN-Karte in seinem Rechner
+      einsetzt, muß jetzt als erstes die <filename>/etc/zaptel.conf</filename>
+      anpassen. In der vorgegebenen Datei werden die Optionen näher
+      beschrieben, daher hier nur die Kurzversion.</para>
+
+      <para>Wir betrachten hier speziell den Betrieb an einem
+      Primärmultiplexanschluß<footnote>
+          <para><ulink
+          url="http://de.wikipedia.org/wiki/Prim%C3%A4rmultiplexanschluss">http://de.wikipedia.org/wiki/Prim%C3%A4rmultiplexanschluss</ulink></para>
+        </footnote> (PMx, <foreignphrase lang="en">Primary Rate
+      Interface</foreignphrase>, <foreignphrase lang="en">PRI</foreignphrase>,
+      S<subscript>2M</subscript>) in Europa (also E1, im Gegensatz zum T1 in
+      den USA oder J1 in Japan). Dieser E1-Anschluß hat 30 Nutzkanäle<footnote>
+          <para>wird daher manchmal auch als <quote>ISDN30</quote>
+          angeboten</para>
+        </footnote> (B-Kanäle, das sind die Kanäle 1-15 und 17-31), 1
+      Signalisierungskanal (D-Kanal, 16) und 1 Kanal (Nummer 0) zur
+      Synchronisierung und Übertragung von Prüfsummen (CRC). Als Kodierung
+      kommt hier meist HDB3<footnote>
+          <para>High Density Bipolar 3, <ulink
+          url="http://de.wikipedia.org/wiki/HDB3-Code">http://de.wikipedia.org/wiki/HDB3-Code</ulink></para>
+        </footnote> zum Einsatz. Das Framing-Format<footnote>
+          <para>Das sagt aus, welche Art von Daten im D-Kanal übertragen
+          werden.</para>
+        </footnote> für E1 ist CCS <footnote>
+          <para><foreignphrase lang="en">Common Channel
+          Signaling</foreignphrase>, im Dt. auch Zentralkanal-Zeichengabe,
+          ZKZ, <ulink
+          url="http://de.wikipedia.org/wiki/Zentralkanalzeichengabe">http://de.wikipedia.org/wiki/Zentralkanalzeichengabe</ulink>,
+          <ulink
+          url="http://en.wikipedia.org/wiki/Common_Channel_Signaling">http://en.wikipedia.org/wiki/Common_Channel_Signaling</ulink></para>
+
+          <para>Das logische Gegenstück wäre CAS (<foreignphrase
+          lang="en">Channel Associated Signaling</foreignphrase>), im Dt.
+          Kanalgebundene Zeichengabe, <ulink
+          url="http://de.wikipedia.org/wiki/Kanalgebundene_Zeichengabe">http://de.wikipedia.org/wiki/Kanalgebundene_Zeichengabe</ulink>,
+          <ulink
+          url="http://en.wikipedia.org/wiki/Channel_Associated_Signalling">http://en.wikipedia.org/wiki/Channel_Associated_Signalling</ulink>,
+          in seiner häufigsten Form auch als <foreignphrase
+          lang="en">Robbed-Bit Signaling</foreignphrase> (RBS, <ulink
+          url="http://en.wikipedia.org/wiki/Robbed_bit_signaling">http://en.wikipedia.org/wiki/Robbed_bit_signaling</ulink>)
+          bekannt.</para>
+        </footnote> in der Form von DSS1<footnote>
+          <para><foreignphrase lang="en">Digital Subscriber Signalling System
+          No. 1</foreignphrase>, <ulink
+          url="http://de.wikipedia.org/wiki/Digital_Subscriber_System_No._1">http://de.wikipedia.org/wiki/Digital_Subscriber_System_No._1</ulink>,
+          <ulink
+          url="http://en.wikipedia.org/wiki/Digital_Subscriber_System_No._1">http://en.wikipedia.org/wiki/Digital_Subscriber_System_No._1</ulink></para>
+        </footnote>, besser bekannt als Euro-ISDN.</para>
+
+      <para>Die <filename>/etc/zaptel.conf</filename> für eine Digium
+      TE220<footnote>
+          <para><ulink
+          url="http://www.digium.com/en/products/hardware/te220.php">http://www.digium.com/en/products/hardware/te220.php</ulink></para>
+        </footnote>, die an 2 PRIs (auch <foreignphrase
+      lang="en">Ports</foreignphrase> oder <foreignphrase
+      lang="en">Spans</foreignphrase> genannt) angeschlossen werden kann,
+      sieht so aus:<screen># PRI port 1
+#
+span=1,1,0,ccs,hdb3,crc4
+bchan=1-15,17-31
+dchan=16
+
+# PRI port 2
+#
+span=2,2,0,ccs,hdb3,crc4
+bchan=32-46,48-62
+dchan=47
+
+loadzone=de
+defaultzone=de
+
+# am Ende der Datei:
+channels=1-62</screen></para>
+
+      <para>Dabei ist die erste Zahl nach <literal>span=</literal> die
+      Span-Nummer, fortlaufend von 1 (für Port 1 auf der Karte).</para>
+
+      <para>Die Zahl an der zweiten Stelle sagt aus, mit welcher Priorität die
+      Karte den Zeittakt des Anschluß-Providers übernimmt (im Slave-Modus).
+      Üblicherweise gibt man dem ersten Span eine <literal>1</literal>, dem
+      zweiten eine <literal>2</literal> usw. (Mit einer <literal>0</literal>
+      würde die Karte den Zeittakt des Providers nicht übernehmen, sondern
+      selber als Zeit-Master agieren, was jedoch am öffentlichen Telefonnetz
+      nicht möglich ist.)</para>
+
+      <para>Die Zahl an 3. Stelle ist die Line-Build-Out- oder LBO-Kennzahl -
+      damit ist die Leitungsdistanz (und Dämpfung) zum Übergabepunkt der
+      PRI-Leitung in Ihrem Gebäude gemeint - nach folgender
+      Tabelle:<informaltable align="center" frame="none">
+          <tgroup cols="4">
+            <colspec colnum="1" colwidth="1.8cm" />
+
+            <colspec colwidth="3.5cm" />
+
+            <colspec colwidth="3.5cm" />
+
+            <colspec colwidth="2.5cm" />
+
+            <thead>
+              <row>
+                <entry>LBO</entry>
+
+                <entry>ft</entry>
+
+                <entry>m</entry>
+
+                <entry>dB</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry><literal>0</literal></entry>
+
+                <entry>0-133</entry>
+
+                <entry>0-40</entry>
+
+                <entry>-0,6</entry>
+              </row>
+
+              <row>
+                <entry><literal>1</literal></entry>
+
+                <entry>133-266</entry>
+
+                <entry>40-80</entry>
+
+                <entry>-1,2</entry>
+              </row>
+
+              <row>
+                <entry><literal>2</literal></entry>
+
+                <entry>266-399</entry>
+
+                <entry>80-120</entry>
+
+                <entry>-1,8</entry>
+              </row>
+
+              <row>
+                <entry><literal>3</literal></entry>
+
+                <entry>399-533</entry>
+
+                <entry>120-160</entry>
+
+                <entry>-2,4</entry>
+              </row>
+
+              <row>
+                <entry><literal>4</literal></entry>
+
+                <entry>533-655</entry>
+
+                <entry>160-200</entry>
+
+                <entry>-3,0</entry>
+              </row>
+
+              <row>
+                <entry><literal>5</literal></entry>
+
+                <entry>655-1633</entry>
+
+                <entry>200-500</entry>
+
+                <entry>-7,5</entry>
+              </row>
+
+              <row>
+                <entry><literal>6</literal></entry>
+
+                <entry>1633-3300</entry>
+
+                <entry>500-1000</entry>
+
+                <entry>-15,0</entry>
+              </row>
+
+              <row>
+                <entry><literal>7</literal></entry>
+
+                <entry>3300-5000</entry>
+
+                <entry>1000-1500</entry>
+
+                <entry>-22,5</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>dürfte also fast immer <literal>0</literal>
+      sein.</para>
+
+      <para>Der Zusatz <literal>crc4</literal><footnote>
+          <para>Cyclic Redundancy Check 4</para>
+        </footnote> am Ende besagt, daß Prüfsummen verwendet werden.</para>
+
+      <para>Für Digium-Karten der Serien <literal>TE1xx</literal>,
+      <literal>TE2xx</literal>, <literal>TE4xx</literal><footnote>
+          <para><ulink
+          url="http://www.digium.com/en/products/hardware/digitalcards.php">http://www.digium.com/en/products/hardware/digitalcards.php</ulink></para>
+        </footnote> würde man die Konfiguration der
+      <filename>/etc/zaptel.conf</filename> genauso machen, aber natürlich je
+      nach Karte dann 1, 2 oder 4 Spans mit den entsprechenden Nummern der
+      Kanäle angeben.</para>
+
+      <para>Nach der Konfiguration Zaptel starten:<programlisting><command>/etc/init.d/zaptel start</command></programlisting></para>
+
+      <para>Dafür sorgen, daß Zaptel beim Booten automatisch gestartet
+      wird:<variablelist termlength="15">
+          <varlistentry>
+            <term>Debian:</term>
+
+            <listitem>
+              <programlisting><command>update-rc.d zaptel defaults</command></programlisting>
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+
+      <para>Kernel-Module laden:<programlisting><command>modprobe zaptel
+modprobe zttranscode
+modprobe wct4xxp</command></programlisting></para>
+
+      <note>
+        <para>Je nach installierter Karte gibt man hier
+        <literal>wct1xxp</literal>, <literal>wct2xxp</literal> oder
+        <literal>wct4xxp</literal> an. <literal>wct2xxp</literal> ist
+        allerdings nur ein Alias für <literal>wct4xxp</literal>, also kann man
+        bei einer Karte der <literal>TE2xx</literal>-Serie auch immer
+        <literal>wct4xxp</literal> angeben.</para>
+      </note>
+
+      <para>Falls auf dem Rechner bereits eine ältere Version von Zaptel
+      installiert war, sollte man den Rechner an dieser Stelle einfach neu
+      booten.</para>
+
+      <para><command>ztcfg</command> ausführen:<programlisting><command>ztcfg -s</command>
+<command>ztcfg -vv</command></programlisting></para>
+
+      <para>Und gleich nochmal (die Ausgabe ist nach einer Änderung der
+      zaptel.conf beim 2. Aufruf anders)<footnote>
+          <para>Zur Automatisierung in Skripten könnte man z.B. mit
+          <code><command>ztcfg -vv | grep -i failed</command></code> auf einen
+          Fehler prüfen.</para>
+        </footnote>:<screen>$ <command>ztcfg -vv</command>
+
+Zaptel Version: 1.4.4
+Echo Canceller: MG2
+Configuration
+======================
+
+SPAN 1: CCS/HDB3 Build-out: 0 db (CSU)/0-133 feet (DSX-1)
+SPAN 2: CCS/HDB3 Build-out: 0 db (CSU)/0-133 feet (DSX-1)
+
+Channel map:
+
+Channel 01: Clear channel (Default) (Slaves: 01)
+Channel 02: Clear channel (Default) (Slaves: 02)
+Channel 03: Clear channel (Default) (Slaves: 03)
+Channel 04: Clear channel (Default) (Slaves: 04)
+Channel 05: Clear channel (Default) (Slaves: 05)
+Channel 06: Clear channel (Default) (Slaves: 06)
+Channel 07: Clear channel (Default) (Slaves: 07)
+Channel 08: Clear channel (Default) (Slaves: 08)
+Channel 09: Clear channel (Default) (Slaves: 09)
+Channel 10: Clear channel (Default) (Slaves: 10)
+Channel 11: Clear channel (Default) (Slaves: 11)
+Channel 12: Clear channel (Default) (Slaves: 12)
+Channel 13: Clear channel (Default) (Slaves: 13)
+Channel 14: Clear channel (Default) (Slaves: 14)
+Channel 15: Clear channel (Default) (Slaves: 15)
+Channel 16: D-channel (Default) (Slaves: 16)
+Channel 17: Clear channel (Default) (Slaves: 17)
+Channel 18: Clear channel (Default) (Slaves: 18)
+Channel 19: Clear channel (Default) (Slaves: 19)
+Channel 20: Clear channel (Default) (Slaves: 20)
+Channel 21: Clear channel (Default) (Slaves: 21)
+Channel 22: Clear channel (Default) (Slaves: 22)
+Channel 23: Clear channel (Default) (Slaves: 23)
+Channel 24: Clear channel (Default) (Slaves: 24)
+Channel 25: Clear channel (Default) (Slaves: 25)
+Channel 26: Clear channel (Default) (Slaves: 26)
+Channel 27: Clear channel (Default) (Slaves: 27)
+Channel 28: Clear channel (Default) (Slaves: 28)
+Channel 29: Clear channel (Default) (Slaves: 29)
+Channel 30: Clear channel (Default) (Slaves: 30)
+Channel 31: Clear channel (Default) (Slaves: 31)
+Channel 32: Clear channel (Default) (Slaves: 32)
+Channel 33: Clear channel (Default) (Slaves: 33)
+Channel 34: Clear channel (Default) (Slaves: 34)
+Channel 35: Clear channel (Default) (Slaves: 35)
+Channel 36: Clear channel (Default) (Slaves: 36)
+Channel 37: Clear channel (Default) (Slaves: 37)
+Channel 38: Clear channel (Default) (Slaves: 38)
+Channel 39: Clear channel (Default) (Slaves: 39)
+Channel 40: Clear channel (Default) (Slaves: 40)
+Channel 41: Clear channel (Default) (Slaves: 41)
+Channel 42: Clear channel (Default) (Slaves: 42)
+Channel 43: Clear channel (Default) (Slaves: 43)
+Channel 44: Clear channel (Default) (Slaves: 44)
+Channel 45: Clear channel (Default) (Slaves: 45)
+Channel 46: Clear channel (Default) (Slaves: 46)
+Channel 47: D-channel (Default) (Slaves: 47)
+Channel 48: Clear channel (Default) (Slaves: 48)
+Channel 49: Clear channel (Default) (Slaves: 49)
+Channel 50: Clear channel (Default) (Slaves: 50)
+Channel 51: Clear channel (Default) (Slaves: 51)
+Channel 52: Clear channel (Default) (Slaves: 52)
+Channel 53: Clear channel (Default) (Slaves: 53)
+Channel 54: Clear channel (Default) (Slaves: 54)
+Channel 55: Clear channel (Default) (Slaves: 55)
+Channel 56: Clear channel (Default) (Slaves: 56)
+Channel 57: Clear channel (Default) (Slaves: 57)
+Channel 58: Clear channel (Default) (Slaves: 58)
+Channel 59: Clear channel (Default) (Slaves: 59)
+Channel 60: Clear channel (Default) (Slaves: 60)
+Channel 61: Clear channel (Default) (Slaves: 61)
+Channel 62: Clear channel (Default) (Slaves: 62)
+
+62 channels configured.
+</screen></para>
+
+      <note>
+        <para>Sollte in der o.a. Ausgabe<literallayout>ZT_CHANCONFIG failed on channel 49: No such device or address (6)</literallayout>stehen,
+        wäre das ein Zeichen dafür, daß die Jumper auf Ihrer Karte statt für
+        den E1- auf den T1-Modus gestellt sind (und eine 2-Port-Karte damit
+        nur 50 statt 64 Kanälen hat).</para>
+
+        <para>Sie ließe sich zwar auch per Software mit<programlisting><command>rmmod wct4xxp</command>
+<command>modprobe wct4xxp t1e1override=0xFF</command>
+<command>ztcfg -s</command>
+<command>ztcfg -vv</command></programlisting>auf E1 umjumpern (oder umgekehrt
+        mit <literal>0x00</literal> auf T1), aber diese Einstellung bliebe
+        nach einem Reboot nicht erhalten. Sie sollten also die Jumper auf der
+        Karte setzen<footnote>
+            <para>siehe <xref linkend="install-isdn-hardware" /></para>
+          </footnote>.</para>
+      </note>
+
+      <note>
+        <para>Mit dem interaktiven Tool
+        <code><command>zttool</command></code><footnote>
+            <para>In der Ausgabe findet man als Autor übrigens noch
+            <quote>Linux Support Services</quote>, die Vorgängerfirma von
+            Digium.</para>
+          </footnote> läßt sich die Konfiguration der Karte prüfen. Wenn man
+        die Karte noch nicht an die PRI-Leitung angeschlossen hat, steht bei
+        allen Spans der Rote Alarm (<quote>RED</quote>).</para>
+      </note>
+    </section>
+  </section>
+
+  <section id="install-zap-irqs">
+    <title>IRQs</title>
+
+    <indexterm>
+      <primary>Interrupts</primary>
+    </indexterm>
+
+    <indexterm>
+      <primary>IRQs</primary>
+    </indexterm>
+
+    <blockquote>
+      <attribution><ulink
+      url="http://de.wikipedia.org/wiki/Interrupt_Request">http://de.wikipedia.org/wiki/Interrupt_Request</ulink></attribution>
+
+      <para>Ein Interrupt Request (IRQ) bzw. eine Unterbrechungsanforderung
+      löst eine Unterbrechung eines Prozessors im System aus, in der Regel
+      ausgehend von Geräten im System. Der Prozessor unterbricht daraufhin
+      seine derzeitige Aufgabe und führt die Unterbrechungsroutine aus. Danach
+      wird die unterbrochene Aufgabe fortgesetzt.</para>
+    </blockquote>
+
+    <para>Geräte, die Interrupts auslösen, sind bespielsweise die
+    Netzwerkkarte, die Festplatte, der USB-Bus und eben auch ISDN-Karten. Bei
+    einigen Systemen (besonders Low-End-Systemen) wird eine
+    <quote>IRQ-Sharing</quote> genannte Technik verwendet, bei der sich
+    mehrere Geräte einen IRQ (eine Interrupt-Nummer) teilen. Zum Behandeln
+    eines solchen Interrupts müssen dann immer alle Treiber der Geräte, die
+    diesen Interrupt ausgelöst haben könnten, aufgerufen werden. Daher sollte
+    sich bei einem ernstzunehmenden System die ISDN-Karte
+    <emphasis>nie</emphasis> einen IRQ mit anderen Geräten teilen müssen,
+    sonst kann es u.a. zu Störgeräuschen/Aussetzern im Audio-Stream
+    kommen!</para>
+
+    <para>In diesem Fall sieht man, daß die ISDN-Karte
+    (<literal>wct2xxp</literal>) einen IRQ ganz für sich alleine hat:<screen>$ <command>cat /proc/interrupts</command>
+           CPU0       CPU1       CPU2       CPU3       
+  0:    5419439        139        140        139    IO-APIC-edge  timer
+  2:          0          0          0          0          XT-PIC  cascade
+  8:          0          1          0          0    IO-APIC-edge  rtc
+ 14:         74          0          0          1    IO-APIC-edge  ide0
+ 98:      48340          0          0          0         PCI-MSI  eth0
+129:    7086653    7243721    7337504       6043   IO-APIC-level  wct2xxp
+161:         61          0          1          0   IO-APIC-level  uhci_hcd:usb3
+169:         23          1          0          0   IO-APIC-level  ehci_hcd:usb1, uhci_hcd:usb2, uhci_hcd:usb4
+201:       7211          0          1          0   IO-APIC-level  megasas
+NMI:          0          0          0          0 
+LOC:    5332267    5332386    5364846    5364845 
+ERR:          0
+MIS:          0</screen>Sollte das anders sein, kann man in manchen BIOSen
+    entsprechende Einstellungen vornehmen. Ein Computer hat traditionell 16
+    IRQs (0-15). Sofern das Mainboard und das BIOS APIC<footnote>
+        <para>Advanced Processor Interrupt Controller</para>
+      </footnote> unterstützen, sollte man das aktivieren (und auch einen
+    Kernel mit Unterstützung dafür verwenden). Der APIC weist automatisch IRQs
+    zu und verhindert IRQ-Sharing, außerdem stellt er zusätzlich zu den 16
+    üblichen noch weitere IRQs bereit. Leider muß auch gesagt werden, daß
+    APIC-Implementierungen nicht immer perfekt sind und bei einigen Systemen
+    eher einen negativen Effekt haben können.</para>
+
+    <para>Es sollte nicht nötig sein darauf hinzuweisen, daß auf einem Server
+    keinesfalls ein X-Window-System laufen sollte (<command>ps -aux | grep
+    X</command>). Auch eine Soundkarte ist absolut überflüssig.</para>
+  </section>
+
+  <section id="install-zap-test">
+    <title>Zaptel testen</title>
+
+    <para>Das Tool <command>zttest</command> prüft, wie gut die Systemuhr mit
+    dem Zaptel-Takt synchronisiert ist. Diesen Test sollte man am besten bei
+    normaler CPU- und Netzwerk-Last (was Interrupts auslöst) durchführen. Nach
+    einer Weile bricht man es mit <keycode>Ctrl-C</keycode> ab.<screen>$ <command>cd /usr/src/zaptel-1.4.4/</command>
+$ <command>./zttest</command>
+Opened pseudo zap interface, measuring accuracy...
+100.000000% 100.000000% 100.000000% 100.000000% 100.000000% 100.000000% 100.000000% 
+100.000000% 100.000000% 100.000000% 100.000000% 100.000000% 100.000000% 100.000000% 100.000000% 
+100.000000% 100.000000% 100.000000% 99.987793% 100.000000% 100.000000% 100.000000% 100.000000% 
+100.000000% 99.987793% 100.000000% 100.000000% 100.000000% 100.000000% 
+--- Results after 29 passes ---
+Best: 100.000000 -- Worst: 99.987793 -- Average: 99.999158</screen>Laut
+    man-Page (die aber normalerweise nicht installiert wird) sind Werte von
+    100 % - 99,99 % perfekt, 99,98 % - 99,97 % noch ok. Wir haben hier also
+    ein sehr gutes Ergebnis. Wenn das Ergebnis aber unter 99,975 % liegt, ist
+    das ein ernster Grund zur Sorge.</para>
+
+    <para>Verpaßte Interrupts kann man sich auch im interaktiven Tool
+    <command>zttool</command> anzeigen lassen.</para>
+
+    <para>Mit <command>ztmonitor</command> (ebenfalls per Default kompiliert
+    aber nicht installiert) kann man die Lautstärke-Level auf Zaptel-Kanälen
+    beobachten, z.B. interaktiv mit (hier für Kanal 1):<screen>$ <command>cd /usr/src/zaptel-1.4.4/</command>
+$ <command>./ztmonitor 1 -v</command>
+
+Visual Audio Levels.
+--------------------
+ Use zapata.conf file to adjust the gains if needed.
+
+( # = Audio Level  * = Max Audio Hit )
+&lt;----------------(RX)----------------&gt; &lt;----------------(TX)----------------&gt;
+                                                                            
+</screen>Die weiteren Optionen erhält man, wenn man
+    <command>./ztmonitor</command> ohne Optionen aufruft.</para>
+  </section>
+
+  <section id="install-zap-zapata.conf">
+    <title>zapata.conf</title>
+
+    <indexterm>
+      <primary>zapata.conf</primary>
+    </indexterm>
+
+    <note>
+      <para>Hier wird vorausgesetzt, daß Sie Asterisk bereits installiert
+      haben, was an anderer Stelle beschrieben wird.</para>
+    </note>
+
+    <para>Die <filename>/etc/asterisk/zapata.conf</filename> definiert, wie
+    Asterisk auf Zaptel zugreifen soll. Wir füllen sie mit folgendem
+    Inhalt:<screen>;
+; Zapata telephony interface
+;
+; Configuration file
+;
+; You need to restart Asterisk to re-configure the Zap channel
+; CLI&gt; reload chan_zap.so
+;               will reload the configuration file,
+;               but not all configuration options are
+;               re-configured during a reload.
+
+[trunkgroups]
+
+[channels]
+
+language = de
+context = from-pstn        ; der Kontext in dem eingehende Anrufe
+                           ; landen sollen, im einfachsten Fall
+                           ; "default"
+switchtype = euroisdn      ; Euro-ISDN-Framing
+signalling = pri_cpe       ; wir sind das Endgerät (TE) am PRI
+pridialplan = local
+prilocaldialplan = local
+internationalprefix = 00   ; Präfix für international
+nationalprefix = 0         ; Präfix für national
+localprefix = 02604        ; Ortsvorwahl
+overlapdial = no
+priindication = outofband
+usecallerid = yes
+cidsignalling = dtmf
+hidecallerid = no
+restrictcid = no
+usecallingpres = yes
+callwaitingcallerid = yes
+facilityenable = yes
+callwaiting = no
+echocancel = yes
+echocancelwhenbridged = yes
+rxgain = 0.0               ; Lautstärkeanpassung in dB eingehend
+txgain = 0.0               ;     "                     ausgehend
+group = 1                  ; Kanalgruppe 1
+                           ; siehe Dial(Zap/g1/...)
+callgroup = 1
+pickupgroup = 1
+immediate = no
+callerid = asreceived
+amaflags = default
+faxdetect = both
+
+channel =&gt; 1-15,17-31,32-46,48-62
+</screen></para>
+  </section>
+
+  <section id="install-zap-asterisk-test">
+    <title>Testen in Asterisk</title>
+
+    <note>
+      <para>In Asterisk muß das Modul <literal>chan_zap</literal> geladen sein
+      (siehe ggf. <filename>/etc/asterisk/modules.conf</filename>).</para>
+    </note>
+
+    <para></para>
+
+    <para>Befehle im Asterisk-CLI:</para>
+
+    <para><screen>CLI&gt; <command>zap show status</command> 
+Description                              Alarms     IRQ        bpviol     CRC4      
+T2XXP (PCI) Card 0 Span 1                OK         0          0          0         
+T2XXP (PCI) Card 0 Span 2                RED        0          0          0         </screen>(In
+    der Ausgabe hier sieht man, daß der 1. Span mit einem PRI verbunden
+    ist.)</para>
+
+    <para>Dieser Befehl liefert erst dann eine Ausgabe, wenn die Karte an den
+    PRI angeschlossen ist:<screen>CLI&gt; <command>pri show spans</command></screen></para>
+  </section>
+
+  <section id="install-zap-asterisk-dial">
+    <title>Konfiguration/Benutzung von Zaptel in Asterisk</title>
+
+    <para>In der <filename>/etc/asterisk/zapata.conf</filename><footnote>
+        <para>siehe <xref linkend="install-zap-zapata.conf" /></para>
+      </footnote> haben wir alle Kanäle der ISDN-Karte zur Gruppe 1
+    zusammengefaßt. Daraus folgt, daß wir im Dialplan folgendermaßen
+    wählen:<programlisting>Dial(Zap/g<emphasis role="bold">1</emphasis>/<replaceable>Nummer</replaceable>)</programlisting>Dadurch
+    wird immer automatisch ein freier Kanal aus der Gruppe 1 ausgewählt, und
+    zwar wird dabei in der Reihenfolge 1, 2, 3, ... nach einem freien Kanal
+    gesucht. Mit einem großen <literal>G</literal> ist die Reihenfolge
+    umgekehrt. Mit <literal>r</literal> wird nach dem Round-Robin-Verfahren
+    immer zuerst der nächste Kanal nach dem zuletzt benutzten getestet, mit
+    <literal>R</literal> der vorangehende.</para>
+
+    <para>Zum Testen:<programlisting>exten =&gt; _X.,1,Verbose(1,### Dial ${EXTEN})
+exten =&gt; _X.,n,Dial(Zap/r1/${EXTEN})
+exten =&gt; _X.,n,Verbose(1,### DIALSTATUS       : ${DIALSTATUS})
+exten =&gt; _X.,n,Verbose(1,### HANGUPCAUSE      : ${HANGUPCAUSE})
+exten =&gt; _X.,n,Verbose(1,### PRI_CAUSE        : ${PRI_CAUSE})
+exten =&gt; _X.,n,Verbose(1,### PRIREDIRECTREASON: ${PRIREDIRECTREASON})
+exten =&gt; _X.,n,Verbose(1,### CALLEDTON        : ${CALLEDTON})
+exten =&gt; _X.,n,Hangup()</programlisting></para>
+  </section>
+</chapter>

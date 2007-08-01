@@ -1,0 +1,2110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<chapter id="datenbank-struktur" revision="$Revision: 1758 $">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Datenbank-Struktur</title>
+
+  <para>Wie die Datenbank <literal>asterisk</literal> angelegt und die
+  Tabellenstruktur eingespielt wird, ist in <xref
+  linkend="mysql-replikation" /> beschrieben.</para>
+
+  <para>Die Datei <filename>asterisk.sql</filename> enthält hier alle zum
+  Erzeugen der Tabellen nötigen SQL-Befehle. Einige Einträge (z.B. IP-Adressen
+  etc.) müssen noch an die Installation angepaßt werden.</para>
+
+  <section id="datenbank-infos">
+    <title>Datenbank-Struktur</title>
+
+    <para>In der Datenbank <literal>asterisk</literal> werden zentral
+    Laufzeitkonfiguration und Logeinträge vorgehalten. Auf alle Tabellen, die
+    mit <literal>ast_</literal> beginnen, wird direkt aus Asterisk
+    zugegriffen, wodurch auch die Struktur und Spaltennamen vorgegeben sind.
+    Zusätzliche Spalten, die für Asterisk keine Bedeutung haben, sind in
+    diesen Tabellen mit einem führenden Unterstrich (<literal>_</literal>)
+    benannt.</para>
+  </section>
+
+  <section id="datenbank-tabellen">
+    <title>Tabellenstruktur der Datenbank <quote>asterisk</quote></title>
+
+    <para>Die Tabellen der Datenbank werden hier alphabetisch
+    aufgeführt.</para>
+
+    <section>
+      <title><literal>ast_cdr</literal></title>
+
+      <para>Call Data Records (Anruf-Logs). Die Felder sind von Asterisk so
+      vorgegeben. In diese Tabelle wird vom Add-On
+      <literal>cdr_addon_mysql</literal> (MySQL-CDR-Backend) geschrieben. Die
+      Konfigurationen dazu werden auf den Asterisk-Servern in der
+      <filename>/opt/gemeinschaft/etc/asterisk/cdr_mysql.conf</filename>
+      vorgenommen.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>calldate</literal></term>
+
+          <listitem>
+            <para>Datum und Uhrzeit, z.B.: <literal>2007-05-10
+            12:37:45</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>clid</literal></term>
+
+          <listitem>
+            <para>Caller-ID, z.B.: <literal>"Homer Simpson"
+            &lt;2001&gt;</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>src</literal></term>
+
+          <listitem>
+            <para>Ausgangs-Extension, z.B.: 2001</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>dst</literal></term>
+
+          <listitem>
+            <para>Zuletzt für den Anruf im Dialplan ausgeführte
+            Ziel-Extension; Achtung: kann auch <literal>h</literal> (für
+            Hangup-Extension) sein!</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>dcontext</literal></term>
+
+          <listitem>
+            <para>Ziel-Kontext im Dialplan, z.B.:
+            <literal>to-internal-users-self</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>channel</literal></term>
+
+          <listitem>
+            <para>Asterisk-ID (alphanumerisch) des Ausgangskanals, z.B.:
+            <literal>SIP/2001-0a068c60</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>dstchannel</literal></term>
+
+          <listitem>
+            <para>Asterisk-ID (alphanumerisch) des Zielkanals, z.B.:
+            <literal>SIP/2002-0a085328</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>lastapp</literal></term>
+
+          <listitem>
+            <para>Letzte ausgeführte Applikation im Dialplan, z.B.:
+            <literal>NoOp</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>lastdata</literal></term>
+
+          <listitem>
+            <para>Die dieser Applikation (s.o.) übergebenen Argumente, z.B.:
+            <literal>Finish if-to-internal-users-self-79</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>duration</literal></term>
+
+          <listitem>
+            <para>Dauer des Anrufs in Sekunden, z.B.:
+            <literal>36</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>billsec</literal></term>
+
+          <listitem>
+            <para>Dauer des Gesprächs in Sekunden, also ohne Klingeln o.ä.
+            (die ggf. in Rechnung zu stellende Zeit), z.B.:
+            <literal>29</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>disposition</literal></term>
+
+          <listitem>
+            <para>Erfolgsstatus des Anrufs<variablelist>
+                <varlistentry>
+                  <term><literal>ANSWERED</literal></term>
+
+                  <listitem>
+                    <simpara>Durchgestellt. - Anruf wurde beantwortet
+                    (verbunden).</simpara>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term><literal>NO ANSWER</literal></term>
+
+                  <listitem>
+                    <simpara>Nicht erreichbar. - Der angerufene Teilnehmer hat
+                    nicht abgehoben.</simpara>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term><literal>BUSY</literal></term>
+
+                  <listitem>
+                    <simpara>Besetzt. - Der angerufene Teilnehmer war
+                    besetzt.</simpara>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term><literal>FAILED</literal></term>
+
+                  <listitem>
+                    <simpara>Fehlgeschlagen. - Unbekannte Rufnummer, Stau,
+                    o.ä.</simpara>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term><literal>UNKNOWN</literal></term>
+
+                  <listitem>
+                    <simpara>Unbekannt. - Keine Information über den Erfolg
+                    verfügbar.</simpara>
+                  </listitem>
+                </varlistentry>
+              </variablelist></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>amaflags</literal></term>
+
+          <listitem>
+            <para>AMA<footnote>
+                <para>AMA = Automated Message Accounting</para>
+              </footnote>-Flags<variablelist>
+                <varlistentry>
+                  <term><literal>1</literal></term>
+
+                  <listitem>
+                    <simpara>(= <literal>OMIT</literal>) keine</simpara>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term><literal>2</literal></term>
+
+                  <listitem>
+                    <simpara>(= <literal>BILLING</literal>) zur
+                    Abrechnung</simpara>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term><literal>3</literal></term>
+
+                  <listitem>
+                    <simpara>(= <literal>DOCUMENTATION</literal>) zur
+                    Dokumentation</simpara>
+                  </listitem>
+                </varlistentry>
+              </variablelist></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>accountcode</literal></term>
+
+          <listitem>
+            <para>Die alphanumerische Nummer des Abrechnungskontos, max. 20
+            Zeichen</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>userfield</literal></term>
+
+          <listitem>
+            <para>Freitextfeld.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>ast_queue_members</literal></title>
+
+      <para>Die Mitglieder einer Warteschlange</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>queue_name</literal></term>
+
+          <listitem>
+            <para>Bezeichnung (Extension!) der Warteschlange</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>_queue_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige numerische ID der Warteschlange</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>interface</literal></term>
+
+          <listitem>
+            <para>Schnittstelle zum Dialplan</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>_user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers (Agenten), aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>penalty</literal></term>
+
+          <listitem>
+            <para>Legt die Priorität fest, nach der die Mitglieder einer
+            Warteschlange (Agenten) angerufen werden.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>ast_queues</literal></title>
+
+      <para>Die im System angelegten Warteschlangen.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige numerische ID der Warteschlange</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>name</literal></term>
+
+          <listitem>
+            <para>Alphanumerische Bezeichnung der Warteschlange</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>_host_id</literal></term>
+
+          <listitem>
+            <para>ID des Hosts auf dem die Warteschlange liegt aus der Tabelle
+            <literal>hosts</literal>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>musicclass</literal></term>
+
+          <listitem>
+            <para>Die Art der Wartemusik kann hiermit für die einzelne
+            Warteschlange (z.B. nach Musikrichtung) definiert werden.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>announce</literal></term>
+
+          <listitem>
+            <para>Audiodatei der Ansage, die dem Mitglied einer Warteschlange
+            (Agenten) vor dem Beantworten eines Anrufes vorgespielt
+            wird.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>context</literal></term>
+
+          <listitem>
+            <para>Legt einen optionalen Kontext fest. Ein Anrufer wird durch
+            Drücken einer einzigen Ziffer zu der entsprechenden Extension in
+            diesem Kontext weitergeleitet.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>timeout</literal></term>
+
+          <listitem>
+            <para>Zeit in Sekunden, nach deren verstreichen ein Telefon als
+            "nicht abgehoben" gilt.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>autopause</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob ein Agent automatisch auf "Pause" gesetzt
+            wird, wenn er einen Anruf nicht beantwortet. Mögliche Werte:
+            <literal>yes</literal>|<literal>no</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>setinterfacevar</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob das Interface des Mitglieds der Warteschlange,
+            welches mit dem Anrufer verbunden wird, in der Variable
+            "MEMBERINTERFACE" gespeichert wird. Mögliche Werte:
+            <literal>yes</literal>|<literal>no</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>monitor_join</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob bei einem Gesprächsmitschnitt die Audiodateien
+            der eIngehenden und der ausgehenden Richtung zu einer einzigen
+            Datei zusammengemischt werden. Mögliche Werte:
+            <literal>yes</literal>|<literal>no</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>monitor_format</literal></term>
+
+          <listitem>
+            <para>Legt fest ob und in welchem Audioformat Gesprächsmitschnitte
+            gespeichert werden sollen.</para>
+
+            <variablelist>
+              <varlistentry>
+                <term><literal>NULL</literal></term>
+
+                <listitem>
+                  <para>Keine Aufzeichnung der Sprachkanäle wird durchgeführt,
+                  wenn kein Format definiert wurde.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>gsm</literal></term>
+
+                <listitem>
+                  <para>Zur Aufzeichnung wird das komprimierte, platzsparende
+                  GSM-Format verwendet.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>wav</literal></term>
+
+                <listitem>
+                  <para>Zur Aufzeichnung wird das WAV-Format in 16bit, 8khz,
+                  mono - verwendet.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>wav49</literal></term>
+
+                <listitem>
+                  <para>Zur Aufzeichnung wird das komprimierte Microsoft
+                  WAV49-Format verwendet.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>periodic_announce_frequency</literal></term>
+
+          <listitem>
+            <para>Zeit in Sekunden, nach deren verstreichen die Ansage an den
+            Anrufer wiederholt wird.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>announce_frequency</literal></term>
+
+          <listitem>
+            <para>Zeit in Sekunden, nach deren Verstreichen dem Anrufer seine
+            Position in der Warteschlange und ggf. die voraussichtliche
+            Wartezeit angesagt wird..<command></command></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>announce_round_seconds</literal></term>
+
+          <listitem>
+            <para>Sekunden, auf welche die Ansage der Wartezeit abgerundet
+            oder aufgerundet werden soll, um nicht unnötige Präzision
+            vorzutäuschen. Sinnvolle Werte: <literal>0</literal> (keine Ansage
+            der Sekunden), <literal>1</literal>, <literal>5</literal>,
+            <literal>10</literal>, <literal>15</literal>,
+            <literal>30</literal>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>announce_holdtime</literal></term>
+
+          <listitem>
+            <para>Legt fest ob eine voraussichtliche Wartezeit dem Anrufer
+            mitgeteilt werden soll.</para>
+
+            <variablelist>
+              <varlistentry>
+                <term><literal>yes</literal></term>
+
+                <listitem>
+                  <para>Eine voraussichtliche Wartezeit wird angesagt.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>no</literal></term>
+
+                <listitem>
+                  <para>Eine voraussichtliche Wartezeit wird nicht
+                  angesagt.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>once</literal></term>
+
+                <listitem>
+                  <para>Eine voraussichtliche Wartezeit wird nur einmalig
+                  angesagt.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>retry</literal></term>
+
+          <listitem>
+            <para>Zeit in Sekunden, nach deren verstreichen die Mitglieder
+            einer Warteschlange erneut angeklingelt werden.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>wrapuptime</literal></term>
+
+          <listitem>
+            <para>Zeit in Sekunden, die ein Mitglied der Warteschlange nicht
+            angerufen wird, nachdem er ein vorhergehendes Gespräch beendet
+            hat.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>maxlen</literal></term>
+
+          <listitem>
+            <para>Maximale Anzahl der Anrufer, die in der Warteschlange
+            gehalten werden dürfen. Der Wert <literal>0</literal> steht für
+            eine unbegrenzte Anzahl.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>servicelevel</literal></term>
+
+          <listitem>
+            <para>Zeit in Sekunden innerhalb welcher ein Anruf beantwortet
+            werden soll.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>strategy</literal></term>
+
+          <listitem>
+            <para>Legt fest, in welcher Weise und Reihenfolge die Mitglieder
+            der Warteschlange bei einem Anruf angeklingelt werden
+            sollen.</para>
+
+            <variablelist>
+              <varlistentry>
+                <term><literal>ringall</literal></term>
+
+                <listitem>
+                  <para>Alle Mitglieder der Warteschlange werden gleichzeitig
+                  angeklingelt. Dies ist die Standardeinstellung.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>roundrobin</literal></term>
+
+                <listitem>
+                  <para>Alle Mitglieder der Warteschlange werden nacheinander
+                  angeklingelt. Diese Einstellung ist veraltet und in neueren
+                  Asterisk-Versionen nicht mehr vorhanden. Stattdessen sollte
+                  "<literal>rrmemory</literal>" verwendet werden.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>leastrecent</literal></term>
+
+                <listitem>
+                  <para>Das Mitglied der Warteschlange wird angeklingelt,
+                  dessen letztes Telefonat zeitlich am längsten
+                  zurückliegt.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>fewestcalls</literal></term>
+
+                <listitem>
+                  <para>Das Mitglied der Warteschlange wird angeklingelt,
+                  welches bisher die wenigsten Anrufe angenommen hat.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>random</literal></term>
+
+                <listitem>
+                  <para>Ein zufällig ausgewähltes Mitglied der Warteschlange
+                  wird angeklingelt.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>rrmemory</literal></term>
+
+                <listitem>
+                  <para>Alle Mitglieder der Warteschlange werden nacheinander
+                  angeklingelt, jedoch wird die Anfangsposition aus einem
+                  vorhergehenden Durchlauf berücksichtigt.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>joinempty</literal></term>
+
+          <listitem>
+            <para>Legt fest ob Anrufer in eine Warteschlange aufgenommen
+            werden, die keine Mitglieder enthält.</para>
+
+            <variablelist>
+              <varlistentry>
+                <term><literal>yes</literal></term>
+
+                <listitem>
+                  <para>Anrufer können in die Warteschlange aufgenommen
+                  werden, auch wenn diese keine Mitglieder definiert
+                  hat.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>no</literal></term>
+
+                <listitem>
+                  <para>Anrufer können nur in die Warteschlange aufgenommen
+                  werden, mindestens ein Mitglied verfügbar ist.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>strict</literal></term>
+
+                <listitem>
+                  <para>Anrufer können nur in die Warteschlange aufgenommen
+                  werden, wenn mindestens ein Mitglied definiert ist, muß aber
+                  zu diesem Zeitpunkt nicht unbedingt eingeloggt sein.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>leavewhenempty</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob Anrufer aus einer Warteschlange entfernt
+            werden, wenn in dieser keine Mitglieder mehr vorhanden
+            sind.</para>
+
+            <variablelist>
+              <varlistentry>
+                <term><literal>yes</literal></term>
+
+                <listitem>
+                  <para>Anrufer werden aus der Warteschlange entfernt, sobald
+                  diese keine Mitglieder mehr definiert hat.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>no</literal></term>
+
+                <listitem>
+                  <para>Anrufer werden nicht aus der Warteschlange entfernt,
+                  auch wenn diese keine Mitglieder mehr hat.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>strict</literal></term>
+
+                <listitem>
+                  <para>Anrufer werden aus der Warteschlange entfernt, sobald
+                  keine Mitglieder mehr eingeloggt sind.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>eventmemberstatus</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob QueueMemberStatus-Events im Manager-Interface
+            erzeugt werden. Mögliche Werte:
+            <literal>yes</literal>|<literal>no</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>eventwhencalled</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob u.a. die folgenden Events für das
+            Manager-Interface erzeugt werden: <literal>AgentCalled</literal>,
+            <literal>AgentDump</literal>, <literal>AgentConnect</literal>,
+            <literal>AgentComplete</literal>. Mögliche Werte:
+            <literal>yes</literal>|<literal>no</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>reportholdtime</literal></term>
+
+          <listitem>
+            <para>Legt fest ob dem Mitglied der Warteschlange, der das
+            Gespräch annimmt, die Wartezeit des Anrufers angesagt werden soll,
+            bevor dieser zu ihm durchgestellt wird. Mögliche Werte:
+            <literal>yes</literal>|<literal>no</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>ringinuse</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob Mitglieder der Warteschlange auch dann
+            angeklingelt werden ,wenn sie sich in einem Gespräch befinden.
+            Mögliche Werte:
+            <literal>yes</literal>|<literal>no</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>memberdelay</literal></term>
+
+          <listitem>
+            <para>Zeit in Sekunden, die vor dem Verbinden des Anrufers mit
+            einem Mitglied der Warteschlange verstreichen soll.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>weight</literal></term>
+
+          <listitem>
+            <para>Die relative Gewichtung der Warteschlangen. Ist ein Benutzer
+            Mitglied in mehreren Warteschlangen, kann hiermit die Reihenfolge
+            der Wichtigkeit festgelegt werden. Schlangen mit höherem Wert
+            werden bevorzugt.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>timeoutrestart</literal></term>
+
+          <listitem>
+            <para>Bestimmt, ob der Antwort-Timeout eines Mitglieds der
+            Warteschlange bei einem Besetzt- oder Leitung-überlastet-Signal
+            zurückgesetzt wird.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>ast_sipfriends</literal></title>
+
+      <para>Die SIP Endgeräte - Datenbankversion der
+      <filename>sip.conf</filename></para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>_user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>name</literal></term>
+
+          <listitem>
+            <para>Der Name des Endgerätes zur Identifikation z.B. im
+            Dialplan.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>secret</literal></term>
+
+          <listitem>
+            <para>Legt das Passwort fest, welches das SIP-Endgerät zur
+            Anmeldung benutzten muß.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>type</literal></term>
+
+          <listitem>
+            <para>Die Art, wie der SIP-Anschluss und damit das SIP-Endgerät
+            behandelt werden soll</para>
+
+            <variablelist>
+              <varlistentry>
+                <term><literal>peer</literal></term>
+
+                <listitem>
+                  <para>Der Anschluss kann nur selbst anrufen, nicht angerufen
+                  werden.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>user</literal></term>
+
+                <listitem>
+                  <para>Der Anschluss kann nur angerufen werden, nicht selbst
+                  anrufen.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>friend</literal></term>
+
+                <listitem>
+                  <para>Der Anschluss kann sowohl anrufen als auch angerufen
+                  werden.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>host</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob sich das SIP-Endgerät eine dynamische oder
+            eine statische IP-Adresse verwendet.</para>
+
+            <variablelist>
+              <varlistentry>
+                <term><literal>dynamic</literal></term>
+
+                <listitem>
+                  <para>Die IP-Adresse des Endgerätes ist dynamisch, seine IP
+                  ist dem System nicht bekannt.</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal><replaceable>&lt;IP&gt;</replaceable>|<replaceable>&lt;hostname&gt;</replaceable></literal></term>
+
+                <listitem>
+                  <para>Die IP-Adresse oder der Hostname des Endgerätes. Das
+                  System kann hierüber das Endgerät erreichen, ohne dass sich
+                  dieses erst registrieren muss.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>defaultip</literal></term>
+
+          <listitem>
+            <para>Legt die IP-Adresse fest, unter der das System versucht ein
+            Endgerät zu erreichen, wenn es sich noch nicht registriert
+            hat.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>context</literal></term>
+
+          <listitem>
+            <para>Der Kontext, zu welchem das SIP-Endgerät gehören
+            soll.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>callerid</literal></term>
+
+          <listitem>
+            <para>Die ID des Anrufers, die an die Gegenstelle übetragen
+            wird.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>mailbox</literal></term>
+
+          <listitem>
+            <para>Die Nummer der Mailbox, die dem Endgerät zugeordnet
+            ist.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>callgroup</literal></term>
+
+          <listitem>
+            <para>Liste numerischer IDs der Call-Groups, zu denen das Endgerät
+            gehören soll.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>pickupgroup</literal></term>
+
+          <listitem>
+            <para>Liste numerischer IDs der Call-Groups, für die das
+            Heranholen von Gesprächen an dieses Endgerät erlaubt ist.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>setvar</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob und welche Channelvariable bei Anrufen von
+            diesem Endgerät gesetzt werden soll.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>call-limit</literal></term>
+
+          <listitem>
+            <para>Legt die Maximale Anzahl von Gesprächen fest, die über
+            dieses Endgerät geführt werden können.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>subscribecontext</literal></term>
+
+          <listitem>
+            <para>Legt den Kontext fest, welcher zur Signalisierung z.B. von
+            LEDs an einem SIP-Endgerät verwendet wird. In diesem Kontext
+            befinden sich z.B. die "hint" Einträge im Dialplan.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>regcontext</literal></term>
+
+          <listitem>
+            <para>Legt fest, welcher Kontest beim ersten Registrieren eines
+            SIP-Endgerätes automatisch aufgerufen wird. Als Extension wird der
+            Inhalt des Feldes <literal>name</literal> verwendet.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>ipaddr</literal></term>
+
+          <listitem>
+            <para>Die aktuelle IP-Adresse des SIP-Endgerätes wird vom
+            Asterisk-Server in diesem Feld abgelegt.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>port</literal></term>
+
+          <listitem>
+            <para>Die aktuelle Portnummer des SIP-Endgerätes wird vom
+            Asterisk-Server in diesem Feld abgelegt.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>regseconds</literal></term>
+
+          <listitem>
+            <para>Zeitstempel der Registrierung des SIP-Endgerätes wird vom
+            Asterisk-Server in diesem Feld abgelegt.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>username</literal></term>
+
+          <listitem>
+            <para>Benutzername, wie er in der Konfiguration des SIP-Endgerätes
+            festgelegt wurde.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>regserver</literal></term>
+
+          <listitem>
+            <para>Name des Servers, an dem das Endgerät registriert ist, wird
+            vom Asterisk-Server in diesem Feld abgelegt.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>fullcontact</literal></term>
+
+          <listitem>
+            <para>Die Kontaktdaten des SIP-Endgerätes werden vom
+            Asterisk-Server in diesem Feld abgelegt.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>ast_voicemail</literal></title>
+
+      <para>Anrufbeantworter- und Voicemail-Konfiguration</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>uniqueid</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Mailboxeintrags</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>_user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>mailbox</literal></term>
+
+          <listitem>
+            <para>Die numerische ID der Mailbox.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>context</literal></term>
+
+          <listitem>
+            <para>Legt fest, zu welchem Kontext die Mailbox gehört.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>password</literal></term>
+
+          <listitem>
+            <para>Passwort zum Zugang zur Mailbox.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>email</literal></term>
+
+          <listitem>
+            <para>eMail-Adresse, an die eine Benachrichtigung gesendet werden
+            kann.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>fullname</literal></term>
+
+          <listitem>
+            <para>Vollständiger Name des Benutzers der Mailbox.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>tz</literal></term>
+
+          <listitem>
+            <para>Zeitzone, die bei der Erstellung einer eMai-Benachrichtigung
+            verwendet werden soll.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>attach</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob an die Benachrichtigung über eMail, eine
+            Audiodatei mit der Aufnahme angehängt werden soll. Mögliche Werte:
+            <literal>yes</literal>|<literal>no</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>delete</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob nach der Benachrichtigung per eMail die
+            Audiodatei gelöscht werden soll.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>callblocking</literal></title>
+
+      <para>Konfiguration der Zielrufnummernsperre</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID der Rufnummernsperre</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>regexp</literal></term>
+
+          <listitem>
+            <para>Regulärer Ausdruck zur Definition der
+            Rufnummernsperre</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>pin</literal></term>
+
+          <listitem>
+            <para>PIN (Passwort) zur Umgehung der Rufnummernsperre</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>callforwards</literal></title>
+
+      <para>Konfiguration der Anrufweiterleitung</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>case</literal></term>
+
+          <listitem>
+            <simpara>Legt fest, für welchen Fall die Anrufweiterleitung
+            aktiviert werden soll.</simpara>
+
+            <variablelist>
+              <varlistentry>
+                <term><literal>always</literal></term>
+
+                <listitem>
+                  <simpara>Immer</simpara>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>busy</literal></term>
+
+                <listitem>
+                  <simpara>bei Besetzt</simpara>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>unavail</literal></term>
+
+                <listitem>
+                  <simpara>bei Unerreichbarkeit</simpara>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>offline</literal></term>
+
+                <listitem>
+                  <para>Wenn das Endgerät des Benutzers nicht angemeldet
+                  ist.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>timeout</literal></term>
+
+          <listitem>
+            <para>Zeit in Sekunden, nach deren Verstreichen die Weiterleitung
+            aktiv wird.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>number_std</literal></term>
+
+          <listitem>
+            <para>Rufnummer des Standardweiterleitungsziels.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>number_var</literal></term>
+
+          <listitem>
+            <para>Rufnummer des variablen Weiterleitungsziels.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>active</literal></term>
+
+          <listitem>
+            <para>Auswahl des Ziels der Anrufweiterleitung</para>
+
+            <variablelist>
+              <varlistentry>
+                <term><literal>std</literal></term>
+
+                <listitem>
+                  <para>Standardweiterleitungsziel</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>var</literal></term>
+
+                <listitem>
+                  <para>Variables Weiterleitungsziel</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>no</literal></term>
+
+                <listitem>
+                  <para>Weiterleitung ausgeschaltet.</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>callwaiting</literal></title>
+
+      <para>Konfiguration des Dienstmerkmals "Anklopfen"</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>active</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob das Signal für einen weiteren, ankommenden
+            Anruf, während eines bestehenden Gesprächs gesendet wird.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>clir</literal></title>
+
+      <para>Konfiguration des Dienstmerkmals "CLIR"
+      (Rufnummernunterdrückung)</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>internal_restrict</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob bei ausgehenden, internen Gesprächen die
+            eigene Rufnummer unterdrückt wird. Mögliche Werte:
+            <literal>yes</literal>|<literal>no</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>external_restrict</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob bei ausgehenden, externen Gesprächen die
+            eigene Rufnummer unterdrückt wird. Mögliche Werte:
+            <literal>yes</literal>|<literal>no</literal></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>conferences</literal></title>
+
+      <para>Konferenzräume</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>ext</literal></term>
+
+          <listitem>
+            <para>Durchwahl der Konferenz</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>host_id</literal></term>
+
+          <listitem>
+            <para>ID des Hosts auf dem die Konferenz liegt aus der Tabelle
+            <literal>hosts</literal>.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>dial_log</literal></title>
+
+      <para>Liste getätigter, erhaltener oder verpasster Anrufe</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>type</literal></term>
+
+          <listitem>
+            <para>Typ des Eintrages</para>
+
+            <variablelist>
+              <varlistentry>
+                <term><literal>in</literal></term>
+
+                <listitem>
+                  <para>Angenommener Anruf</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>out</literal></term>
+
+                <listitem>
+                  <para>Getätigter Anruf</para>
+                </listitem>
+              </varlistentry>
+
+              <varlistentry>
+                <term><literal>missed</literal></term>
+
+                <listitem>
+                  <para>Verpasster Anruf</para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>timestamp</literal></term>
+
+          <listitem>
+            <para>Zeitstempel des Anrufes</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>number</literal></term>
+
+          <listitem>
+            <para>Rufnummer</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>name</literal></term>
+
+          <listitem>
+            <para>Name des Anrufers bzw. des Angerufenen, falls dem System
+            bekannt z.B. bei internen Anrufen.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>remote_user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Anrufers bzw. des Angerufenen aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal>, falls
+            es sich um einen internen Anruf handelt.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>hosts</literal></title>
+
+      <para>Zum System gehörende Hosts</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>id</literal></term>
+
+          <listitem>
+            <para>Eindeutige, numerische ID des Asterisk-Servers</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>host</literal></term>
+
+          <listitem>
+            <para>Die IP des Asterisk-Servers</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>comment</literal></term>
+
+          <listitem>
+            <para>Optionaler Kommentar</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>instant_messaging</literal></title>
+
+      <para>"Instant Messaging"-Konfiguration</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>type</literal></term>
+
+          <listitem>
+            <para>Art der Kommunikation, z.B. <literal>jabber</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>contact</literal></term>
+
+          <listitem>
+            <para>Kontaktdaten des Benutzers auf der angegebenen
+            Kommunikationsplattform.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>pb_ldap</literal></title>
+
+      <para>Mittels
+      <filename>/opt/gemeinschaft/sbin/gs-ldap-phonebook-import</filename>
+      importiertes externes Telefonbuch. Siehe <xref
+      linkend="cron-job-phonebook-import" /></para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>user</literal></term>
+
+          <listitem>
+            <para>Benutzer-Code (z.B. Personalnummer)</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>lastname</literal></term>
+
+          <listitem>
+            <para>Nachname</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>firstname</literal></term>
+
+          <listitem>
+            <para>Vorname</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>number</literal></term>
+
+          <listitem>
+            <para>Rufnummer</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>updated</literal></term>
+
+          <listitem>
+            <para>Zeitpunkt des Imports</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>pb_prv</literal></title>
+
+      <para>Die persönlichen Telefonbücher der Benutzer.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>id</literal></term>
+
+          <listitem>
+            <para>Fortlaufende Nummer der Einträge.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>ID des Benutzers (aus der Tabelle <literal>users</literal>)
+            dem das Telefonbuch gehört.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>name</literal></term>
+
+          <listitem>
+            <para>Name des Teilnehmers im Telefonbucheintrag.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>number</literal></term>
+
+          <listitem>
+            <para>Nummer des Teilnehmers im Telefonbucheintrag.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>phones</literal></title>
+
+      <para>Die Endgeräte.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>id</literal></term>
+
+          <listitem>
+            <para>Eindeutige, numerische ID des Endgerätes.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>type</literal></term>
+
+          <listitem>
+            <para>Typ des Endgerätes, z.B. <literal>snom360</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>mac_addr</literal></term>
+
+          <listitem>
+            <para>Die MAC-Adresse des Endgerätes.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>nobody_index</literal></term>
+
+          <listitem>
+            <para>Eindeutige, numerische ID eines Pseudo-Benutzers aus dem
+            Feld <literal>nobody_index</literal> der Tabelle
+            <literal>users</literal>. Jedem Endgerät wird bei der Installation
+            ein solcher Benutzer zugewiesen, um auch dann das Telefon
+            verwenden zu können, wenn sich noch kein Benutzer an diesem Gerät
+            angemeldet hat. Dies ermöglicht Notrufe, kostenlose
+            Interngespräche etc. direkt nach der Installation.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>added</literal></term>
+
+          <listitem>
+            <para>Zeitstempel im Unix-Format</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>pickupgroups</literal></title>
+
+      <para>Liste im System angelegter Pickup-Gruppen</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>id</literal></term>
+
+          <listitem>
+            <para>Eindeutige, numerische ID der Pickup-Gruppe.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>title</literal></term>
+
+          <listitem>
+            <para>Bezeichnung der Pickup-Gruppe</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>pickupgroups_users</literal></title>
+
+      <para>Liste aller Mitglieder einzelner Pickupgroups</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>group_id</literal></term>
+
+          <listitem>
+            <para>Numerische ID der Pickup-Gruppe, zu welcher der Benutzer
+            gehört, aus der Tabelle <literal>pickupgroups</literal>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>queue_log</literal></title>
+
+      <para>Liste der in den Queues aufgetretenen Events (z.B. eingegangene
+      Anrufe)</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>queue_id</literal></term>
+
+          <listitem>
+            <para>Numerische ID der Warteschlange</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>timestamp</literal></term>
+
+          <listitem>
+            <para>Zeitstempel im Unix-Format des Zeitpunktes, zu dem das
+            Ereignis aufgetreten ist.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>event</literal></term>
+
+          <listitem>
+            <para>Ereignis, welches zum Eintrag ins Log geführt hat.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>reason</literal></term>
+
+          <listitem>
+            <para>Der Grund, weshalb das Ereignis aufgetreten ist.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>ast_call_id</literal></term>
+
+          <listitem>
+            <para>ID des Anrufes.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal>, der in
+            das Ereignis involviert war.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>caller</literal></term>
+
+          <listitem>
+            <para>Die Anrufer-ID, wie sie zum System übertragen wurde oder
+            NULL, fals keine Rufnummernübertragung aktiviert war.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>pos</literal></term>
+
+          <listitem>
+            <para>Position des Anrufers in der Warteschlange zum Zeitpunkt des
+            Ereignisses.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>origpos</literal></term>
+
+          <listitem>
+            <para>Position des Anrufers in der Warteschlange zu Beginn des
+            Anrufes.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>waittime</literal></term>
+
+          <listitem>
+            <para>Wartezeit des Anrufers</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>logindur</literal></term>
+
+          <listitem>
+            <para>Login-Dater des Mitgliedes einer Warteschlange</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>calldur</literal></term>
+
+          <listitem>
+            <para>Dauer des Telefonats</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>info</literal></term>
+
+          <listitem>
+            <para>Zusätzliche Informationen (z.B.
+            <literal><replaceable>&lt;extension&gt;</replaceable>@<replaceable>&lt;context&gt;</replaceable></literal>)
+            bei einer Weiterleitung.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>ringtones</literal></title>
+
+      <para>Die pro Benutzer eingestellten Klingeltöne.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>ID des Benutzers aus der Tabelle
+            <literal>users</literal>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>src</literal></term>
+
+          <listitem>
+            <para>Für Anrufe von welcher Quelle der Klingelton gelten soll.
+            <literal>internal</literal> | <literal>external</literal>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>bellcore</literal></term>
+
+          <listitem>
+            <para>Die Nummer eines Standard-Klingeltons. Üblicherweise
+            <literal>1</literal> - <literal>10</literal> für
+            <literal>Bellcore-dr<replaceable>X</replaceable></literal> oder
+            <literal>0</literal> für <literal>Silent</literal>
+            (lautlos).</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>file</literal></term>
+
+          <listitem>
+            <para>Optionale eigene Audio-Datei.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>softkeys</literal></title>
+
+      <para>Die vom Benutzer eingestellten Tastenbelegungen am Telefon.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>ID des Benutzers aus der Tabelle
+            <literal>users</literal>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>phone</literal></term>
+
+          <listitem>
+            <para>Typ des Telefons, z.B. <literal>snom</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>key</literal></term>
+
+          <listitem>
+            <para>Telefon-Typ-spezifisches Kürzel der Taste. Wird aber vom
+            Provisioning-System (z.B.
+            <filename>htdocs/prov/snom/settings.php</filename>) nochmal für
+            das Telefon übersetzt.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>number</literal></term>
+
+          <listitem>
+            <para>Eingestellte Rufnummer.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>users</literal></title>
+
+      <para>Die im System angelegten Benutzer.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, sie wird zu Zuordnung des
+            Benutzers in allen benutzerbezogenen Tabellen verwendet.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>user</literal></term>
+
+          <listitem>
+            <para>Eindeutige alphanumerische Bezeichnung des Benutzers, z.B.
+            Personalnummer o.ä.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>pin</literal></term>
+
+          <listitem>
+            <para>Numerisches Passwort des Benutzers.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>firstname</literal></term>
+
+          <listitem>
+            <para>Vorname des Benutzers.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>lastname</literal></term>
+
+          <listitem>
+            <para>Nachname des Benutzers.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>honorific</literal></term>
+
+          <listitem>
+            <para>Titel des Benutzers.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>nobody_index</literal></term>
+
+          <listitem>
+            <para>Eindeutige, numerische ID eines Pseudo-Benutzers. Diese
+            speziellen Benutzer werden verwendet, wenn an einem Endgerät noch
+            kein anderer Benutzer angemeldet ist. Dies ermöglicht z.B.
+            Notrufe.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>host_id</literal></term>
+
+          <listitem>
+            <para>Numerische ID des Asterisk-Servers, an dem sich das Endgerät
+            des Benutzer anmeldet.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>current_ip</literal></term>
+
+          <listitem>
+            <para>Aktuelle IP des Endgerätes, welches der Benutzer aktuell
+            verwendet.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>user_comment</literal></term>
+
+          <listitem>
+            <para>Kommentarfeld eines Benutzers, z.B. "Feierabend" / "Urlaub
+            bis zum 11.3."</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>users_external_numbers</literal></title>
+
+      <para>Mögliche Ausgangsrufnummern pro Benutzer zur Initiierung von
+      Anrufen.</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>number</literal></term>
+
+          <listitem>
+            <para>Ausgangsrufnummer</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+
+    <section>
+      <title><literal>vm</literal></title>
+
+      <para>Benutzerspezifische Voicemail-Konfiguration</para>
+
+      <variablelist>
+        <varlistentry>
+          <term><literal>user_id</literal></term>
+
+          <listitem>
+            <para>Eindeutige ID des Benutzers, aus dem Feld
+            <literal>id</literal> der Tabelle <literal>users</literal></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>internal_active</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob die Anrufbeantworterfunktion für interne
+            Gespräche aktiviert werden soll.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>external_active</literal></term>
+
+          <listitem>
+            <para>Legt fest, ob die Anrufbeantworterfunktion für externe
+            Gespräche aktiviert werden soll.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+  </section>
+</chapter>

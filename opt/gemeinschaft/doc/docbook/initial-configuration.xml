@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<chapter id="initial-configuration" revision="$Revision: 1805 $">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Initiale Konfiguration</title>
+
+  <para>Nach der Installation müssen verschiedene Einstellungen an die
+  Gegebenheiten angepaßt werden.</para>
+
+  <warning>
+    <para><emphasis role="bold">Bei allen entsprechenden Einstellungen müssen
+    IP-Adressen verwendet werden, nicht Host-Namen!</emphasis></para>
+  </warning>
+
+  <section id="initial-config-files">
+    <title>Dateien</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><filename>/opt/gemeinschaft/etc/listen-to-ip</filename></term>
+
+        <listitem>
+          <para>Auf allen aktiven Asterisk-Servern muß in dieser Datei die
+          entsprechende eigene IP-Adresse (genau wie in der Tabelle
+          <literal>hosts</literal> in der Datenbank) eingetragen werden. Auf
+          dem Ersatz-Rechner allerdings <emphasis>keine</emphasis> Adresse
+          eintragen - er wird den Eintrag automatisch vornehmen, sobald er
+          einen anderen Rechner übernimmt.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><filename>/opt/gemeinschaft/etc/asterisk/sip.conf</filename></term>
+
+        <listitem>
+          <para>Abschnitt <code>[gateway]</code> und<literallayout>register =&gt; <replaceable>gemeinschaft01</replaceable>@gateway/<replaceable>gemeinschaft01</replaceable></literallayout>anpassen,
+          bzw. durch ein Semikolon (<code>;</code>) am Zeilenanfang
+          auskommentieren, wenn kein Gateway verwendet werden soll.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><filename>/opt/gemeinschaft/etc/asterisk/res_mysql.conf</filename></term>
+
+        <listitem>
+          <para>Datenbank-User, -Paßwort und Pfad zum Socket für den lokalen
+          MySQL-Server anpassen.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><filename>/opt/gemeinschaft/etc/asterisk/cdr_mysql.conf</filename></term>
+
+        <listitem>
+          <para>Datenbank-Host, -User, und -Paßwort für den MySQL-Master
+          anpassen. Die Einstellung ist unabhängig vom übrigen
+          Realtime-System. Als Host <emphasis role="bold">muß</emphasis> der
+          Master angegeben werden; auf den Slaves darf man <emphasis
+          role="bold">nicht</emphasis> schreiben!</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><filename>/opt/gemeinschaft/etc/asterisk/manager.conf</filename></term>
+
+        <listitem>
+          <para>Im Abschnitt <code>[gscc]</code> mittels <code>permit</code>
+          Zugriff auf das Asterisk-Manager-Interface von
+          <literal>127.0.0.1</literal> und vom Master erlauben; dabei das
+          Paßwort nicht verändern. Beispiel:<programlisting>[gscc]                                  ; Gemeinschaft, Call Completion
+secret = gspass                         ; nicht ändern
+deny = 0.0.0.0/0.0.0.0                  ; alle verbieten
+permit = 127.0.0.1/255.255.255.0        ; von localhost erlauben
+permit = 192.168.1.130/255.255.255.255  ; vom Master erlauben
+writetimeout = 1000                     ; AMI -&gt; Client
+read = call                             ; Priviliegien dieses Accounts
+write = call                            ;  "</programlisting></para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><filename>/opt/gemeinschaft/inc/conf.php</filename></term>
+
+        <listitem>
+          <para>MySQL-Hosts, -User und -Passwörter
+          (<code>AST_DB_MASTER_<replaceable>*</replaceable></code> und
+          <code>AST_DB_SLAVE_<replaceable>*</replaceable></code>) anpassen
+          (solange keine Replikation eingerichtet ist, müssen sowohl Master
+          als auch Slave auf <code>127.0.0.1</code> eingestellt sein).</para>
+
+          <para>Die Einstellungen zu Provisioning-Host und -URL
+          (<code>AST_PROV_<replaceable>*</replaceable></code>) anpassen
+          (<code>AST_PROV_HOST</code> muß von den Telefonen erreichbar
+          sein).</para>
+
+          <para><code>AST_PROV_AUTO_ADD_PHONE</code> bestimmt, ob bisher
+          unbekannte Telefone, die eine Konfiguration beziehen wollen,
+          automatisch in die Datenbank aufgenommen oder abgewiesen
+          werden.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><filename>/opt/gemeinschaft/sbin/stonith.sh</filename></term>
+
+        <listitem>
+          <para>Dieses Skript wird beim Ausfall eines Asterisk-Servers
+          aufgerufen, mit der entsprechenden IP-Adresse als erstem Parameter.
+          Sie sollten es an Ihre Gegebenheiten anpassen, sodaß es diesen
+          Rechner vom Ethernet oder Stromnetz trennt. Siehe <xref
+          linkend="watchdog-stonith" />.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="initial-config-cluster-watchdog">
+    <title>Cluster-Watchdog</title>
+
+    <para>Cluster-Watchdog konfigurieren, siehe <xref
+    linkend="cluster-watchdog" />.</para>
+  </section>
+
+  <section id="installation-admin-scripts">
+    <title>Admin-Skripte</title>
+
+    <para>Die Admin-Skripte dürfen <emphasis role="bold">nur</emphasis> auf
+    dem MySQL-Master/Web-Server-Rechner aufgerufen werden. Um Fehlbedienung
+    vorzubeugen, sollte man die Skripte auf den <emphasis>anderen</emphasis>
+    Rechnern einfach löschen<footnote>
+        <para>Natürlich nicht, wenn alles auf einem Rechner läuft.</para>
+      </footnote>:<programlisting><command>rm -rf /opt/gemeinschaft/scripts/</command></programlisting></para>
+
+    <para>Natürlich kann man die Skripte in den <code>PATH</code> eintragen,
+    um sie bequemer aufrufen zu können. Dazu ändert man z.B. in der
+    ~/.bash_profile die Zeile<programlisting>PATH=$PATH:$HOME/bin</programlisting>in
+    (Änderung fett):<programlisting>PATH=$PATH:$HOME/bin:<emphasis role="bold">/opt/gemeinschaft/scripts</emphasis></programlisting>Oder
+    man macht das systemweit, indem man in der
+    <filename>/etc/profile</filename> eine Zeile hinzufügt (Änderung
+    fett):<programlisting># Path manipulation
+if [ `id -u` = 0 ]; then
+        pathmunge /sbin
+        pathmunge /usr/sbin
+        pathmunge /usr/local/sbin
+        <emphasis role="bold">pathmunge /opt/gemeinschaft/scripts</emphasis>
+fi</programlisting></para>
+  </section>
+
+  <section id="initial-config-database">
+    <title>Datenbank</title>
+
+    <para>In der Tabelle <literal>hosts</literal> müssen die IP-Adressen
+    (nicht Hostnamen!) der aktiven Asterisk-Server (nicht der Reserve-Server)
+    eingetragen werden, das geht z.B. so (in
+    <command>mysql</command>)<footnote>
+        <para>Wenn die Spalten-/Tabellenbezeichner reservierte Wörter in MySQL
+        wären, müßte man sie in Backticks (<code>`</code>) setzen.</para>
+      </footnote>:<programlisting><command>USE asterisk;</command>
+<command>DELETE FROM hosts;</command>
+<command>INSERT INTO hosts (id,host,comment) VALUES (1, '192.168.1.130', 'ast 1');</command>
+<command>INSERT INTO hosts (id,host,comment) VALUES (2, '192.168.1.131', 'ast 2');</command>
+<command>SELECT * FROM hosts;</command></programlisting></para>
+
+    <para>Die Adressen müssen von den Telefonen erreicht werden können, also
+    nicht <code>127.0.0.1</code>.</para>
+  </section>
+
+  <section id="installation-ssh-keys">
+    <title>SSH-Keys</title>
+
+    <section id="ssh-user-key-gen">
+      <title>User-Key generieren</title>
+
+      <para>Der Web-Server-Rechner muß auf den Asterisk-Servern (auch dem
+      Hotspare) ohne Paßwortabfrage als <literal>root</literal> Shell-Befehle
+      ausführen können. Dazu muß auf dem Master ein SSH-Key generiert und der
+      öffentliche Schlüssel auf den Asterisk-Rechnern hinterlegt werden. Dies
+      ist kein SSH-Tutorial, daher nur ganz kurz die notwendigen
+      Schritte:</para>
+
+      <para>Den Key generiert man (als <literal>root</literal>!) so:<screen>$ <command>ssh-keygen -t dsa</command>
+[...]
+Enter passphrase (empty for no passphrase): 
+[...]</screen>Dabei muß die passphrase<footnote>
+          <para>Die passphrase ist nicht das Paßwort des Benutzers sondern ein
+          Paßwort zum Entschlüsseln des eigenen Keys.</para>
+        </footnote> leer sein, weil diese sonst auch wieder interaktiv
+      abgefragt würde!</para>
+    </section>
+
+    <section id="ssh-host-keys">
+      <title>Host-Keys kopieren</title>
+
+      <para>Alle Hosts müssen für SSH die gleiche Host-Identifikation haben.
+      Dazu geht man auf den Master und kopiert dessen Host-Keys auf alle
+      anderen Rechner (auch den Hotspare!). Für jeden der anderen Hosts muß
+      man diesen Befehl aufrufen:<screen><command>scp /etc/ssh/ssh_host_* root@<replaceable>&lt;IP-Adresse&gt;</replaceable></command></screen></para>
+    </section>
+
+    <section id="ssh-user-key-copy">
+      <title>User-Key eintragen</title>
+
+      <para>Den in <xref linkend="ssh-user-key-gen" /> erzeugten öffentlichen
+      Schlüssel (<literal>.pub</literal>) trägt man auf den Asterisken im
+      Home-Verzeichnis von <literal>root</literal> in der
+      <filename>.ssh/authorized_keys</filename> ein. Das kann man entweder
+      manuell oder auch mit <command>ssh-copy-id</command><footnote>
+          <para>beigefügt in <filename>usr/bin/</filename>, kann ansonsten von
+          <ulink url="http://www.openssh.org/">http://www.openssh.org/</ulink>
+          runtergeladen werden</para>
+        </footnote> machen:<programlisting><command>ssh-copy-id -i ~/.ssh/id_dsa.pub root@<replaceable>&lt;IP-Adresse&gt;</replaceable></command></programlisting>Dabei
+      wird ein letztes Mal das Paßwort des Benutzers <literal>root</literal>
+      auf dem anderen Rechner abgefragt.</para>
+
+      <important>
+        <para>Falls auf einem Rechner sowohl der Web-Server als auch Asterisk
+        eingesetzt wird, muß - um Fehlern vorzubeugen - der SSH-Key auch in
+        der <filename>authorized_keys</filename> auf dem selben Rechner
+        eingetragen werden!</para>
+      </important>
+
+      <para>Vom Web-Server aus müssen folgendermaßen Befehle auf den anderen
+      ausgeführt werden können:<programlisting><command>ssh root@<replaceable>&lt;IP-Adresse&gt;</replaceable> '<replaceable>&lt;befehl&gt;</replaceable>'</command></programlisting>also
+      z.B.<screen>$ <command>ssh root@192.168.1.140 'uptime'</command>
+ 10:34:28 up 102 days, 19:58,  0 users,  load average: 0.00, 0.00, 0.00</screen></para>
+
+      <para>Wenn man diesen Befehl für einen Host zum ersten mal aufruft,
+      passiert folgendes:<screen>$ <command>ssh root@192.168.1.140 'uptime'</command>
+The authenticity of host '192.168.1.140 (192.168.1.140)' can't be established.
+RSA key fingerprint is 99:8b:4f:e3:74:ad:b1:81:e5:b0:98:bb:d9:fa:69:f4.
+Are you sure you want to continue connecting (yes/no)? <emphasis role="bold"><userinput>yes</userinput></emphasis>
+Warning: Permanently added '192.168.1.140' (RSA) to the list of known hosts.
+<replaceable>[...]</replaceable></screen></para>
+
+      <para>Damit das in Zukunft auch ohne diese Sicherheitsabfrage möglich
+      ist, müssen sie <emphasis role="bold">für jeden Host</emphasis>
+      (<emphasis role="bold">auch den Hotspare!</emphasis>) einmal manuell
+      z.B. folgenden Befehl ausführen und die Frage mit
+      <userinput>yes</userinput> bestätigen:<screen>$ <command>ssh root@<replaceable>192.168.1.130</replaceable> 'uptime'</command></screen></para>
+    </section>
+
+    <section id="ssh-usedns">
+      <title>SSH UseDNS</title>
+
+      <para>Damit der SSH-Server beim Verbinden eines Clients keine
+      "unnötigen" DNS-Abfragen macht, kann man auf allen Rechnern in der
+      <filename>/etc/ssh/sshd_config</filename><literallayout>UseDNS no</literallayout>eintragen.</para>
+    </section>
+  </section>
+</chapter>

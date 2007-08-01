@@ -1,0 +1,86 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1134 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user>';
+
+$opts = getOptsNoMultiples( '',
+	array(
+		'user='
+	),
+	$usage
+);
+if (! isSet($opts['user'])) {
+	gs_script_invalid_usage( $usage );
+}
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+$cf = @ gs_callforward_get( $opts['user'] );
+if (isGsError( $cf )) gs_script_error( $cf->getMsg() );
+if (! $cf)            gs_script_error();
+
+$nStdLen = strLen('number_std');
+$nVarLen = strLen('number_var');
+
+foreach ($cf as $source => $arr1) {
+	foreach ($arr1 as $case => $arr) {
+		if (strLen($arr['number_std']) > $nStdLen)
+			$nStdLen = strLen($arr['number_std']);
+		if (strLen($arr['number_var']) > $nVarLen)
+			$nVarLen = strLen($arr['number_var']);
+	}
+}
+
+$header = '| source   | case     | active | number_std | number_var | timeout |';
+$sep = str_pad( '', strLen($header), '-' );
+echo $sep, "\n";
+echo $header, "\n";
+echo $sep, "\n";
+
+foreach ($cf as $source => $arr1) {
+	foreach ($arr1 as $case => $arr) {
+		echo '| ', str_pad( $source, 8, ' ' ), ' | ', str_pad( $case, 8, ' ' ), ' | ', str_pad( $arr['active'], 6, ' ' ), ' | ', str_pad( $arr['number_std'], $nStdLen, ' ' ), ' | ', str_pad( $arr['number_var'], $nVarLen, ' ' ), ' | ', str_pad( $arr['timeout'], 7, ' ', STR_PAD_LEFT ), ' |', "\n";
+	}
+}
+echo $sep, "\n";
+
+
+?>

@@ -1,0 +1,181 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1134 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Moves all nobody accounts to a new host.
+Usage: '. baseName(__FILE__) .' --host=<id>|<ip>|RANDOM --force=yes';
+
+$opts = getOptsNoMultiples( '',
+	array(
+		'host=',
+		'force='
+	),
+	$usage
+);
+if (! isSet( $opts['host'] )
+ ) {
+	gs_script_invalid_usage( $usage );
+}
+if (! isSet( $opts['force'] ) || $opts['force'] != 'yes') {
+	echo "This is a serious operation and will only be done with --force=yes.
+";
+	die(1);
+}
+
+
+
+if ($opts['host'] != 'RANDOM') {
+	
+	/*
+	if (is_int($opts['host'])) {
+		foreach ($hosts as $host) {
+			if ($host['id'] == $opts['host']) {
+				$host_id   = $host['id'];
+				$host_host = $host['host'];
+				break;
+			}
+		}
+	} else {
+		foreach ($hosts as $host) {
+			if ($host['host'] == $opts['host']) {
+				$host_id   = $host['id'];
+				$host_host = $host['host'];
+				break;
+			}
+		}
+	}
+	*/
+	$h = gs_host_by_id_or_ip( $opts['host'] );	
+	if (isGsError( $h ) || ! is_array( $h )) {
+		if (isGsError( $h ))
+			echo $h->getMsg(), "\n";
+		echo "Valid hosts are:\n";
+		passthru( GS_DIR .'scripts/gs_hosts_get' );
+		die(1);
+	}
+	$host_id   = $h['id'];
+	$host_host = $h['host'];
+	
+	$db = gs_db_master_connect();
+	if (! $db) {
+		echo "Could not connect to DB.\n";
+		die(1);
+	}
+	echo "Moving all nobody accounts to host '$host_host', ID $host_id ...\n";
+	$ok = $db->execute( 'UPDATE `users` SET `host_id`='. $host_id .' WHERE `nobody_index`>0' );
+	
+	$rs = $db->execute(
+'SELECT `u`.`id`, `u`.`user` `uc`, `s`.`name` `ext`
+FROM
+	`users` `u` LEFT JOIN
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
+WHERE `u`.`nobody_index`>0'
+	);
+	echo 'Rebooting: ';
+	while ($u = $rs->fetchRow()) {
+		echo '.';
+		if ($u['ext'])
+			 @ gs_prov_phone_checkcfg_by_ext( $u['ext'], true );
+		else
+			 @ gs_prov_phone_checkcfg_by_user( $u['uc'], true );
+	}
+	echo "\n";
+	
+	if (! $ok) {
+		echo "Failed.\n";
+		die(1);
+	}
+	echo "Done.\n";
+	die();
+	
+} else {
+	
+	$hosts = @ gs_hosts_get();
+	if (isGsError( $hosts )) gs_script_error( $hosts->getMsg() );
+	if (! $hosts)            gs_script_error();
+	if (count($hosts)<1) {
+		echo "No hosts configured!\n";
+		die(1);
+	}
+	
+	$db = gs_db_master_connect();
+	if (! $db) {
+		echo "Could not connect to DB.\n";
+		die(1);
+	}
+	echo "Moving all nobody accounts to random hosts ...\n";
+	$rs = $db->execute(
+'SELECT `u`.`id`, `u`.`user` `uc`, `s`.`name` `ext`
+FROM
+	`users` `u` LEFT JOIN
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
+WHERE `u`.`nobody_index`>0'
+	);
+	if (! $rs) {
+		echo "Error.\n";
+		die(1);
+	}
+	$sep = "-------------------------------------\n";
+	echo $sep;
+	echo "| user code            | extension  |\n";
+	echo $sep;
+	$ok = true;
+	while ($u = $rs->fetchRow()) {
+		echo '| ', str_pad($u['uc'], 20, ' '), ' | ', str_pad($u['ext'], 10, ' '), ' | ';
+		$host_id = (int)$hosts[ mt_rand(0,count($hosts)-1) ]['id'];
+		$ok2 = $db->execute( 'UPDATE `users` SET `host_id`='. $host_id .' WHERE `id`='. (int)$u['id'] );
+		$ok = $ok && $ok2;
+		if ($u['ext'])
+			 @ gs_prov_phone_checkcfg_by_ext( $u['ext'], true );
+		else
+			 @ gs_prov_phone_checkcfg_by_user( $u['uc'], true );
+		echo ($ok2 ? "ok ($host_id)" : "failed"), "\n";
+	}
+	echo $sep;
+	if (! $ok) {
+		echo "Failed.\n";
+		die(1);
+	}
+	echo "Done.\n";
+	die();
+	
+}
+
+
+?>

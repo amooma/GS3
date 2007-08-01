@@ -1,0 +1,107 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1110 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+
+$new_uname = trim(@$argv[1]);
+$pass      = trim(@$argv[2]);
+$old_uid   = (int)trim(@$argv[3]);
+
+if (! $new_uname) {
+	echo "SET VARIABLE ret unknown\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+if (! $pass) {
+	echo "SET VARIABLE ret badpass\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+if (! $old_uid) {
+	echo "SET VARIABLE ret error\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$db = gs_db_master_connect();
+
+$new_uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($new_uname) .'\'' );
+if ($new_uid < 1) {
+	# unknown user
+	echo "SET VARIABLE ret unknown\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+$pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `id`='. $new_uid );
+if (trim($pin)=='') {
+	# db error, unknown user
+	echo "SET VARIABLE ret unknown\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+if ($pin != $pass) {
+	# wrong password
+	echo "SET VARIABLE ret badpass\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+
+# correct password
+
+# get id of the phone:
+$phone_id = (int)$db->executeGetOne( 'SELECT `id` FROM `phones` WHERE `user_id`='. $old_uid .' LIMIT 1' );
+
+# log out the old user:
+$db->execute( 'UPDATE `phones` SET `user_id`=NULL WHERE `user_id` IN ('. $old_uid .','. $new_uid .')' );
+//FIXME ?
+//$db->execute( 'UPDATE `users` SET `current_ip`=NULL WHERE `id`='. $old_uid );
+
+# log in the new user:
+$ok = $db->execute( 'UPDATE `phones` SET `user_id`='. $new_uid .' WHERE `id`='. $phone_id );
+if (! $ok) {
+	echo "SET VARIABLE ret error\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+
+
+echo "SET VARIABLE ret ok\n";
+//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+
+
+?>

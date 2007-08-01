@@ -1,0 +1,99 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1843 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+
+#
+# DEPRECATED - use gs_keys_snom_get
+#
+
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = '!!! DEPRECATED - use gs_keys_snom_get'."\n".'Usage: '. baseName(__FILE__) .' --user=<user>';
+
+$opts = getOptsNoMultiples( '',
+	array(
+		'user='
+	),
+	$usage
+);
+if (! isSet($opts['user'])
+ ) {
+	gs_script_invalid_usage( $usage );
+}
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+$keys = @ gs_user_snom_keys_get( $opts['user'] );
+if (isGsError( $keys )) gs_script_error( $keys->getMsg() );
+if (! $keys)            gs_script_error();
+if (! is_array($keys))  gs_script_error();
+
+
+$len = 5;
+foreach ($keys as $val) {
+	if (strLen($val) > $len)
+		$len = strLen($val);
+}
+$len += 5;
+
+echo "\n";
+$right = 6;
+$left = 0;
+for ($i=0; $i<12; ++$i) {
+	if ($i % 2) {
+		$val = subStr( $keys[$left], 0, $len );
+		if (trim($val)=='') $val = '-';
+		$val = str_pad( $val, $len, ' ', STR_PAD_RIGHT );
+		echo '(P '. str_pad($left+1,2,' ',STR_PAD_LEFT) .') '. $val ."\n";
+		++$left;
+	} else {
+		$val = subStr( $keys[$right], 0, $len );
+		if (trim($val)=='') $val = '-';
+		$val = str_pad( $val, $len, ' ', STR_PAD_LEFT );
+		echo '        '. $val .' (P '. str_pad($right+1,2,' ',STR_PAD_LEFT) .')'."\n";
+		++$right;
+	}
+}
+echo "\n";
+
+echo "\n", '!!! DEPRECATED - use gs_keys_snom_get', "\n";
+
+
+?>

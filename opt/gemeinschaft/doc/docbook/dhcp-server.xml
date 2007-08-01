@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<chapter id="dhcp-server" revision="$Revision: 1847 $">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>DHCP-Server</title>
+
+  <para>Die grundlegende Einrichtung und Konfiguration eines
+  DHCP-Servers<footnote>
+      <para><xref linkend="install-centos-dhcp-server" />, <xref
+      linkend="install-debian-dhcp-server" /></para>
+    </footnote> wird hier nicht weiter erläutert. Es werden nur die für das
+  Provisioning der Snom-Telefone entscheidende Einstellungen genannt.</para>
+
+  <note>
+    <para>Eine möglichst große <quote>lease time</quote> kann u.U. vorteilhaft
+    sein. Sie sollten daher Ihr Subnetz für die Telefone groß genug machen,
+    damit dies problemlos möglich ist.</para>
+  </note>
+
+  <section id="dhcp-server-provisioning">
+    <title>Konfiguration für die Telefone</title>
+
+    <section id="dhcp-server-snom">
+      <title>Snom</title>
+
+      <para>Damit die Snom-360-Telefone automatisch ihre Konfiguration
+      beziehen können, muß im DHCP-Server für die Snom-Telefone die Option
+      <code>tftp-server-name</code> (Option 66) eingetragen sein und auf die
+      URL des Provisioning-Servers und -Skriptes zeigen.</para>
+
+      <formalpara>
+        <title>Beispiel in der <filename>/etc/dhcpd.conf</filename> des ISC
+        dhcpd:</title>
+
+        <para><programlisting>subnet 192.168.1.0 netmask 255.255.255.0 {
+    range 192.168.1.200 192.168.1.249;
+    default-lease-time 18396000;  # 7 months
+    max-lease-time     21024000;  # 8 months
+    <emphasis role="bold">option tftp-server-name "http://192.168.1.130:82/snom/settings.php?mac={mac}";</emphasis>
+}</programlisting>Der Platzhalter <code>{mac}</code> wird bei Abrufen der URL
+        von den Snoms durch deren MAC-Adresse ersetzt.</para>
+      </formalpara>
+
+      <para>Natürlich kann man - abhängig vom eingesetzten DHCP-Server - auch
+      etwas ausgefeiltere Einstellungen verwenden, z.B. so
+      (ungetestet):<programlisting><emphasis role="bold">class "Snom" {
+    match if substring(hardware, 1, 3) = 00:04:13;
+}</emphasis>
+
+subnet 192.168.0.0 netmask 255.255.0.0 {
+    default-lease-time 18396000;  # 7 months
+    max-lease-time     21024000;  # 8 months
+    option subnet-mask 255.255.255.0;
+    
+    pool {
+        <emphasis role="bold">allow members of "Snom";</emphasis>
+        range 192.168.1.200 192.168.1.249;
+        <emphasis role="bold">option tftp-server-name "http://192.168.1.130:82/snom/settings.php?mac={mac}";</emphasis>
+        
+        # falls erweitertes Loggen gewünscht (per Default nach /var/log/messages):
+        on commit {
+            log(info, concat("Client ",
+                binary-to-ascii(16, 8, ":", substring(hardware, 1, 6)),
+                " requests ",
+                binary-to-ascii(16, 8, ":", option dhcp-parameter-request-list),
+                " - ",
+                pick-first-value(option vendor-class-identifier, "no vendor-id")
+            ));
+        }
+    }
+}</programlisting></para>
+    </section>
+
+    <section id="dhcp-server-siemens">
+      <title>Siemens<footnote>
+          <para>Die Informationen in diesem Abschnitt sind von Siemens
+          öffentlich dokumentiert und in unserem Testlabor überprüft
+          worden.</para>
+        </footnote></title>
+
+      <section id="dhcp-server-siemens-old">
+        <title>Alte Doku ohne Provisioning-Server</title>
+
+        <note>
+          <para>Nicht löschen, neue Doku noch nicht vollständig. Ggf.
+          einarbeiten.</para>
+        </note>
+
+        <formalpara>
+          <title>VLAN-ID</title>
+
+          <para>Siemens-Telefone vom Typ OpenStage (auch einige OptiPoint)
+          können automatisch per DHCP die ihnen zugedachte VLAN-ID beziehen,
+          was interessant sein dürfte, sofern man ein VLAN für die Telefone
+          einsetzt. Die genaue Beschreibung ist auf <ulink
+          url="http://wwww.wiki.siemens-enterprise.com/index.php/VLAN_ID_Discovery_over_DHCP">http://wwww.wiki.siemens-enterprise.com/index.php/VLAN_ID_Discovery_over_DHCP</ulink>
+          zu finden. (Natürlich kann man die VLAN-ID alternativ auch manuell
+          am Telefon einstellen.)</para>
+        </formalpara>
+
+        <para>Dazu muß den Telefonen von dem DHCP-Server, der vom normalen
+        Datennetz ohne VLAN-ID (also 0) zugänglich ist, mit der Option 43
+        (<literal>vendor-encapsulated-options</literal>) in einem bestimmten
+        Format die zukünftige VLAN-ID zugeteilt werden. (Danach senden die
+        Telefone im zugewiesenen Voice-VLAN erneut einen
+        DHCP-Discover-Request. Der DHCP-Server in diesem VLAN sollte die
+        Option 43 nicht mehr verwenden, sondern den Settings-Server nennen,
+        wie unten beschrieben.)</para>
+
+        <para>Der Wert der Option 43 muß für die OpenStage immer aus 24 Bytes
+        bestehen (die hier in hexadezimaler Schreibweise angegeben werden,
+        aber natürlich Byte-Werte sind):<itemizedlist>
+            <listitem>
+              <simpara>Options-Code der 1. gekapselte Option: <emphasis
+              role="bold">01</emphasis></simpara>
+            </listitem>
+
+            <listitem>
+              <simpara>Länge des 1. Datenfelds: <emphasis
+              role="bold">0A</emphasis> (also 10)</simpara>
+            </listitem>
+
+            <listitem>
+              <simpara>1. Datenfeld (Magic Number): <emphasis role="bold">53
+              69 65 6D 65 6E 73 00 00 00</emphasis> ("Siemens" und 3
+              Füll-Bytes)</simpara>
+            </listitem>
+
+            <listitem>
+              <simpara>Options-Code der 2. gekapselte Option: <emphasis
+              role="bold">02</emphasis></simpara>
+            </listitem>
+
+            <listitem>
+              <simpara>Länge des 2. Datenfelds: <emphasis
+              role="bold">04</emphasis></simpara>
+            </listitem>
+
+            <listitem>
+              <simpara>2. Datenfeld (VLAN-ID): <emphasis role="bold">00 00 00
+              14</emphasis> (Beispiel für VLAN-ID 20)<footnote>
+                  <para>VLAN-ID 1245 wäre (in hexadezimaler Schreibweise)
+                  <emphasis role="bold">00 00 04 DD</emphasis></para>
+                </footnote></simpara>
+            </listitem>
+
+            <listitem>
+              <simpara>dann 5 Füll-Bytes: <emphasis role="bold">00 00 00 00
+              00</emphasis></simpara>
+            </listitem>
+
+            <listitem>
+              <simpara>und die End-Option: <emphasis
+              role="bold">FF</emphasis></simpara>
+            </listitem>
+          </itemizedlist></para>
+
+        <para>In der <filename>dhcpd.conf</filename> gibt man das z.B.
+        folgendermaßen an:<programlisting>subnet 192.168.1.0 netmask 255.255.255.0 {
+    range 192.168.1.200 192.168.1.249;
+    default-lease-time 18396000;  # 7 months
+    max-lease-time     21024000;  # 8 months
+    <emphasis role="bold">option vendor-encapsulated-options
+        01:0A:53:69:65:6D:65:6E:73:00:00:00:
+        02:04:00:00:00:14:
+        00:00:00:00:00:FF;</emphasis>
+}</programlisting></para>
+
+        <para>oder leichter zu lesen so (ungetestet):<programlisting># Define option space for Siemens OpenStage phones:
+<emphasis role="bold">option space optSiemensOpenStage;
+option optSiemensOpenStage.magic   code 1 = string;
+option optSiemensOpenStage.vlanid  code 2 = unsigned integer 32;</emphasis>
+
+<emphasis role="bold">class "SiemensOpenStage" {
+    match if substring(hardware, 1, 3) = 00:01:E3;
+}</emphasis>
+
+subnet 192.168.0.0 netmask 255.255.0.0 {
+    default-lease-time 18396000;  # 7 months
+    max-lease-time     21024000;  # 8 months
+    option subnet-mask 255.255.255.0;
+    
+    pool {
+        <emphasis role="bold">allow members of "SiemensOpenStage";</emphasis>
+        range 192.168.1.200 192.168.1.249;
+        
+        <emphasis role="bold">vendor-option-space                optSiemensOpenStage;</emphasis>
+        <emphasis role="bold">option optSiemensOpenStage.magic   53:69:65:6D:65:6E:73:00:00:00;</emphasis>
+        # u.U. ist es möglich, den Wert auch so anzugeben:
+        # "Siemens\0\0\0" (mit den Anführungszeichen). das hat im Test
+        # jedoch nicht funktioniert
+        <emphasis role="bold">option optSiemensOpenStage.vlanid  20;</emphasis>
+    }
+}</programlisting></para>
+      </section>
+
+      <section id="dhcp-server-siemens-new">
+        <title>Neue Doku mit VLAN-ID und Provisioning-Server</title>
+
+        <note>
+          <para>... aber bisher nur kurz auf die Schnelle. :-)</para>
+        </note>
+
+        <para>Getestet:<programlisting># Define option space for Siemens OptiPoint / OpenStage phones:
+<emphasis role="bold">option space OptiIpPhone;
+option OptiIpPhone.magic   code 1 = string;
+option OptiIpPhone.vlanid  code 2 = unsigned integer 32;
+option OptiIpPhone.dls     code 3 = string;</emphasis>
+
+<emphasis role="bold">class "SiemensPhone" {
+    match if substring(hardware, 1, 3) = 00:01:E3;
+}</emphasis>
+
+subnet 192.168.0.0 netmask 255.255.0.0 {
+    default-lease-time 18396000;  # 7 months
+    max-lease-time     21024000;  # 8 months
+    option subnet-mask 255.255.255.0;
+    
+    pool {
+        <emphasis role="bold">allow members of "SiemensPhone";</emphasis>
+        range 192.168.1.200 192.168.1.249;
+        
+        <emphasis role="bold">vendor-option-space        OptiIpPhone;</emphasis>
+        <emphasis role="bold">option OptiIpPhone.magic   53:69:65:6D:65:6E:73:00:00:00;</emphasis>
+        # u.U. ist es möglich, den Wert auch einfach
+        # als "Siemens" anzugeben
+        <emphasis role="bold">#option OptiIpPhone.vlanid  20;
+        option OptiIpPhone.dls     "sdlp://192.168.1.130:18443";</emphasis>
+    }
+}</programlisting></para>
+
+        <para>Die URL zum DLS<footnote>
+            <para>Damit ist der Siemens-Deployment-Server gemeint.</para>
+          </footnote>-Server muß immer mit dem Schema
+        <literal>sdlp://</literal> beginnen. Der Port ist auf
+        <literal>18443</literal> festgelegt. Danach darf kein abschließender
+        Slash (<literal>/</literal>) oder eine andere Pfadangabe folgen.
+        Passen Sie also lediglich die IP-Adresse an.</para>
+      </section>
+    </section>
+  </section>
+
+  <section id="dhcp-server-ntp">
+    <title>Zeit für die Telefone</title>
+
+    <para>Um die Telefone mit der korrekten Uhrzeit zu versorgen, muß in der
+    Konfiguration des DHCP-Servers ein (oder mehrere) NTP-Server<footnote>
+        <para>Installation:<programlisting><command>yum -y install ntp</command>
+<command>chkconfig --levels 235 ntpd on</command></programlisting></para>
+
+        <para>Die <filename>/etc/ntp.conf</filename> Ihren Gegebenheiten
+        anpassen und:<programlisting><command>service ntpd start</command></programlisting></para>
+      </footnote> angegeben sein.</para>
+
+    <formalpara>
+      <title>Beispiel</title>
+
+      <para><programlisting>option ntp-servers ntp.lvm.de;</programlisting></para>
+    </formalpara>
+  </section>
+</chapter>

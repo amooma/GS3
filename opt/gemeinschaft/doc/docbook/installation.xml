@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<chapter id="installation" revision="$Revision: 1819 $">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Installation</title>
+
+  <section id="system-requirements">
+    <title>Systemvoraussetzungen</title>
+
+    <para>Folgende Software ist für den Betrieb erforderlich - die
+    Installation wird (bis auf das Betriebssystem) im Folgenden noch
+    beschrieben:<variablelist>
+        <varlistentry>
+          <term>Linux</term>
+
+          <listitem>
+            <para>aktuelle Installation. Momentan wird ein RedHat Enterprise
+            Linux (RHEL 4) oder CentOS 4 auf einem i686-System
+            vorausgesetzt.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Asterisk</term>
+
+          <listitem>
+            <para>in Version 1.4.x mit <literal>res_mysql</literal> aus den
+            Addons</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>PHP</term>
+
+          <listitem>
+            <para>mindestens Version 4.3.8 (bzw. aktuelle 4.x oder 5.1) mit
+            dem Modul <literal>mysql</literal>, sowohl auf der Kommandozeile
+            unter <filename>/usr/bin/php</filename> als auch auf dem
+            Web-Server</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Web-Server (Apache)</term>
+
+          <listitem>
+            <para>Standardinstallation. Skripte mit der Endung
+            <filename>.php</filename> müssen von PHP ausgeführt werden,
+            entweder als CGI/FastCGI oder mit <literal>mod_php</literal>. Das
+            Modul <literal>mysql</literal> muß verfügbar sein. Siehe
+            PHP.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>MySQL</term>
+
+          <listitem>
+            <para>mindestens Version 4.1 (oder 5), Standardinstallation</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>NTP</term>
+
+          <listitem>
+            <para>Es ist extrem wichtig, daß alle Systeme die gleiche Zeit
+            haben, deshalb sollte NTP auf allen Hosts korrekt konfiguriert
+            vorliegen.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+
+    <para>Daneben müssen Standard-Tools installiert sein, die man auf jedem
+    System findet, wie: <command>cat</command>, <command>logrotate</command>,
+    ...</para>
+
+    <para>Zusätzlich: <command>mpg123</command>, <command>sox</command></para>
+
+    <important>
+      <para>Die Installation der Asteriske erfolgt auf Rechnern <emphasis
+      role="bold">ohne</emphasis> ISDN-Hardware! Für Gespräche über ISDN wird
+      ein ISDN-zu-SIP-Gateway vorausgesetzt. Alle Telefone werden per SIP an
+      die Asterisk-Server angebunden. Der Codec G.711a wird als
+      Mindeststandard vereinbart.</para>
+    </important>
+
+    <para>Die Installationsanleitung ist in die verschiedenen Rechner
+    (MySQL-Master, Asterisk-Server, Web-Server) aufgeteilt. Natürlich kann
+    auch alles auf einem Rechner installiert werden. Bestimmte Schritte wie
+    die Einrichtung der MySQL-Replikation sind dann auszulassen.</para>
+
+    <para>Wenn die im folgenden beschriebenen Betriebssystem-spezifischen
+    Installationsschritte abgeschlossen sind, beachten Sie bitte auch <xref
+    linkend="verschiedenes" /> zur Einrichtung von notwendigen Cron-Jobs
+    etc.</para>
+  </section>
+
+  <xi:include href="installation-centos.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+</chapter>

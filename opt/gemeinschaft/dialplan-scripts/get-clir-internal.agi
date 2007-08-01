@@ -1,0 +1,73 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1110 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+
+$uid  = (int)trim(@$argv[1]);
+
+if ($uid < 1) {
+	# originator is external
+	echo "SET VARIABLE clir 0\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$db = gs_db_slave_connect();
+
+
+$restrict = 'no';
+
+$rs = $db->execute( 'SELECT `internal_restrict` FROM `clir` WHERE `user_id`='. $uid );
+if ($r = $rs->fetchRow()) {
+	$restrict = $r['internal_restrict'];
+	if (! in_array( $restrict, array('no','yes','once'), true ))
+		$restrict = 'no';
+}
+if     ($restrict=='no'  ) $clir = 0;
+elseif ($restrict=='yes' ) $clir = 1;
+elseif ($restrict=='once') {
+	$clir = 1;
+	$dbm = gs_db_master_connect();
+	$dbm->execute( 'UPDATE `clir` SET `internal_restrict`=\'no\' WHERE `user_id`='. $uid );
+}
+
+echo "SET VARIABLE clir ". $clir ."\n";
+//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+
+
+?>

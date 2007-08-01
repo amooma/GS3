@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<book id="gemeinschaft" lang="de" revision="$Revision: 1804 $">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Gemeinschaft</title>
+
+  <subtitle>Asterisk-Cluster-Gemeinschaft</subtitle>
+
+  <bookinfo>
+    <author id="amooma-gmbh">
+      <surname>amooma GmbH</surname>
+
+      <address>amooma GmbH - <street>Bachstr. 126</street> - <postcode>56566</postcode> <city>Neuwied</city> - <country>Germany</country></address>
+    </author>
+
+    <author>
+      <firstname>Stefan</firstname>
+
+      <surname>Wintermeyer</surname>
+
+      <email>stefan.wintermeyer@amooma.de</email>
+    </author>
+
+    <author>
+      <firstname>Philipp</firstname>
+
+      <surname>Kempgen</surname>
+
+      <email>philipp.kempgen@amooma.de</email>
+    </author>
+
+    <author>
+      <firstname>Peter</firstname>
+
+      <surname>Kozak</surname>
+
+      <email>peter.kozak@amooma.de</email>
+    </author>
+  </bookinfo>
+
+  <xi:include href="vorbemerkungen.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="installation.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="installation-zaptel.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="initial-configuration.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="installation-bei-lvm.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="dhcp-server.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="mysql-replikation.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="verzeichnisstruktur.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="php-sicherheit.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="cluster-watchdog.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="admin-scripts.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="service-nummern.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="verschiedenes.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="endgeraete.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="datenbank-tabellen.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="gnu-gpl.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <index id="stichwortverzeichnis"></index>
+</book>

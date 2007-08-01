@@ -1,0 +1,92 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1110 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+
+$user_name = trim(@$argv[1]);
+$to        = trim(@$argv[2]);
+
+if (! preg_match('/^[0-9]*$/', $user_name)) {
+	echo "SET VARIABLE dial_allowed no\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+
+/*
+if ($user_id < 1) {
+	# originator is external
+	echo "SET VARIABLE dial_allowed no\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+*/
+
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$db = gs_db_slave_connect();
+
+
+$user_id = $db->executeGetOne(
+'SELECT `u`.`id` FROM `users` `u` JOIN `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) WHERE `s`.`name`=\''. $db->escape($user_name) .'\''
+);
+if ($user_id < 1) {
+	// forwarded by a queue
+	echo "SET VARIABLE dial_allowed yes\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+
+
+$rs = $db->execute( 'SELECT `regexp`,`pin` FROM `callblocking` WHERE `user_id`='. $user_id .' ORDER BY LENGTH(`regexp`) DESC' );
+if ($rs) {
+	while ($row = $rs->fetchRow()) {
+		if (preg_match( '°'. $row['regexp'] .'°', $to )) {
+			if ($row['pin']=='') {
+				echo "SET VARIABLE dial_allowed no\n";
+			} else {
+				echo "SET VARIABLE dial_allowed pin\n";
+				echo "SET VARIABLE dial_pin ". $row['pin'] ."\n";
+			}
+			die();
+		}
+	}
+}
+
+echo "SET VARIABLE dial_allowed yes\n";
+//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+
+
+?>

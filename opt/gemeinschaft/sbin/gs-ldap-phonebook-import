@@ -1,0 +1,103 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1628 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+//require_once( GS_DIR .'inc/log.php' );
+require_once( GS_DIR .'inc/db_connect.php' );
+
+
+$filename = '/tmp/gs-ldap-phonebook.tsv';
+// format: tab-separated values, UTF-8
+// user code	lastname	firstname	number
+
+if (! file_exists($filename)) {
+	echo 'No file to import. (Looking for "', $filename, '")', "\n";
+	die();
+}
+
+ini_set('auto_detect_line_endings', 'On');
+$f = fOpen($filename, 'rb');
+if (! $f) {
+	echo 'Could not open "', $filename, '".', "\n";
+	die(1);
+}
+
+$db = gs_db_master_connect();
+if (! $db) {
+	echo 'Could not connect to database.', "\n";
+	die(1);
+}
+
+function writeBuf()
+{
+	global $buf, $db;
+	static $sql = 'REPLACE INTO `pb_ldap` (`user`, `lastname`, `firstname`, `number`) VALUES ';
+	if (count($buf) < 1) return;
+	
+	$vals = array();
+	foreach ($buf as $row) {
+		$vals[] = '(\''. $db->escape($row[0]) .'\', \''. $db->escape($row[1]) .'\', \''. $db->escape($row[2]) .'\', \''. $db->escape($row[3]) .'\')';
+	}
+	@$db->execute( $sql . implode(',', $vals) );
+	$buf = array();
+}
+
+echo "Importing entries ...\n";
+$i=0;
+$buf = array();
+while (($row = fGetCsv($f, 500, "\t"))) {
+	if (! $row || ! is_array($row) || count($row)<4) continue;
+	
+	//list($user, $ln, $fn, $number) = $row;
+	if (GS_LVM_USER_6_DIGIT_INT)
+		$row[0] = str_pad($row[0], 6, '0', STR_PAD_LEFT);
+	if (! preg_match( '/^[a-zA-Z\d]+$/S', $row[0] ))
+		continue;
+	
+	$buf[] = $row;
+	if (count($buf) > 40) writeBuf();
+	++$i;
+}
+if (count($buf) > 0) writeBuf();
+echo $i, ' entries written to database.', "\n";
+
+if ($i > 0) {
+	// do not delete old records if no entries were written
+	echo "Deleting records older than 2 days ...\n";
+	@$db->execute( 'DELETE FROM `pb_ldap` WHERE `updated`<\''. date('Y-m-d H:i:s', strToTime('-2 days')) .'\'' );
+}
+echo "Optimizing table ...\n";
+@$db->execute( 'OPTIMIZE TABLE `pb_ldap`' );
+echo "Analyzing table ...\n";
+@$db->execute( 'ANALYZE TABLE `pb_ldap`' );
+echo "Done.\n";
+
+?>
