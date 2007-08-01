@@ -59,9 +59,6 @@
   <xi:include href="initial-configuration.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-  <xi:include href="installation-bei-lvm.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
   <xi:include href="dhcp-server.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 

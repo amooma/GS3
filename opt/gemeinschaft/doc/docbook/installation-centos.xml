@@ -23,12 +23,6 @@
     <command>yum install</command>.</para>
   </note>
 
-  <important>
-    <para>Bitte beachten Sie auch die ggf. leicht abweichenden Schritte zur
-    Installation bei der LVM, siehe <xref
-    linkend="installation-bei-lvm" />.</para>
-  </important>
-
   <section id="install-centos-common">
     <title>Gemeinsame Installationsschritte</title>
 
