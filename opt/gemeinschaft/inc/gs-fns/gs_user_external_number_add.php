@@ -68,14 +68,16 @@ function gs_user_external_number_add( $user, $number )
 			#
 			if (GS_LDAP_PROP_UID == GS_LDAP_PROP_USER) {
 				$ldap_uid = $user;
-				if (GS_LVM_USER_6_DIGIT_INT) {
+				if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
 					$user = preg_replace('/^0+/', '', $user);
-					// sind im LVM-LDAP ohne führende 0
+					# if the usernames in your LDAP are integers without
+					# a leading "0"
 				}
 			} else {
-				if (GS_LVM_USER_6_DIGIT_INT) {
+				if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
 					$user = preg_replace('/^0+/', '', $user);
-					// sind im LVM-LDAP ohne führende 0
+					# if the usernames in your LDAP are integers without
+					# a leading "0"
 				}
 				$userArr = gs_ldap_get_first( $ldap, GS_LDAP_SEARCHBASE, GS_LDAP_PROP_USER .'='. $user, array(GS_LDAP_PROP_UID) );
 				if (isGsError($userArr))

@@ -58,16 +58,17 @@ function gs_user_external_numbers_get( $user )
 	switch (strToLower(GS_EXTERNAL_NUMBERS_BACKEND)) {
 		
 		case 'ldap':
-			//ldapsearch -x -D 'cn=root,dc=lvm,dc=de' -w secret -b 'ou=People,dc=lvm,dc=de' '(uid=demo2)' telephoneNumber
+			//ldapsearch -x -D 'cn=root,dc=example,dc=com' -w secret -b 'ou=People,dc=example,dc=com' '(uid=demo2)' telephoneNumber
 			
 			$ldap = gs_ldap_connect();
 			if (! $ldap)
 				return new GsError( 'Could not connect to LDAP server.' );
 			
 			$ldap_user = $user;
-			if (GS_LVM_USER_6_DIGIT_INT) {
+			if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
 				$ldap_user = preg_replace('/^0+/', '', $ldap_user);
-				// sind im LVM-LDAP ohne führende 0
+				# if the usernames in your LDAP are integers without a
+				# leading "0"
 			}
 			$userArr = gs_ldap_get_first( $ldap, GS_LDAP_SEARCHBASE,
 				GS_LDAP_PROP_USER .'='. $ldap_user,
