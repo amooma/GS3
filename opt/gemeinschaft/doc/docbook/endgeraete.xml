@@ -130,8 +130,8 @@
         <listitem>
           <para>Öffnet das Telefonbuch.</para>
 
-          <para>Belegt mit dem LVM-Telefonbuch. T9-Modus zum Suchen, also z.B.
-          <literal>63437</literal> für <literal>MEIER</literal>
+          <para>Belegt mit dem Firmen-Telefonbuch. T9-Modus zum Suchen, also
+          z.B. <literal>63437</literal> für <literal>MEIER</literal>
           drücken.</para>
         </listitem>
       </varlistentry>
