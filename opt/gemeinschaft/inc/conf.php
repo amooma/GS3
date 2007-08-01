@@ -62,26 +62,26 @@ define( 'GS_DB_SLAVE_DB'    , 'asterisk' );
 define( 'GS_LDAP_HOST'      , '192.168.1.130' );
 define( 'GS_LDAP_SSL'       , false );
 define( 'GS_LDAP_PORT'      , 0 );  # 0 for default (389 / 636)
-define( 'GS_LDAP_BINDDN'    , 'cn=root,dc=lvm,dc=de' );  # i.e. the rootdn
+define( 'GS_LDAP_BINDDN'    , 'cn=root,dc=example,dc=com' );  # i.e. the rootdn
 define( 'GS_LDAP_PWD'       , 'secret' );
 define( 'GS_LDAP_PROTOCOL'  , 3 );  # protocol version. 2|3
 
-define( 'GS_LDAP_SEARCHBASE', 'ou=People,dc=lvm,dc=de' );
-# the users (LVM: "ou=lvmuser,o=LVM,c=DE"?)
+define( 'GS_LDAP_SEARCHBASE', 'ou=People,dc=example,dc=com' );
+# e.g. "ou=People,dc=example,dc=com" | "ou=users,o=Company,c=de"
 
-define( 'GS_LDAP_PROP_USER' , 'carLicense' );  # i.e. "uid"
+define( 'GS_LDAP_PROP_USER' , 'uid' );  # e.g. "uid"
 # the user name in the LDAP GS_LDAP_PROP_USER field must match the
-# user name/code you use in Gemeinschaft (LVM: Personalnummer:
-# "employeenumber"|"lvmpersonalnummer"?)
+# user name/code you use in Gemeinschaft
+# e.g. "uid" | "employeenumber"
 
 define( 'GS_LDAP_PROP_UID'  , 'uid' );
 # GS_LDAP_PROP_UID is the "primary key" in the "dn", normally
-# "uid" for users. (LVM: Memo-ID: "cn"?)
+# "uid" for users (or "cn").
 
 # for the phonebook:
-define( 'GS_LDAP_PROP_FIRSTNAME', 'givenname' );  # (LVM: "lvmvorname"?)
-define( 'GS_LDAP_PROP_LASTNAME' , 'sn' );  # (LVM: "lvmnachname"?)
-define( 'GS_LDAP_PROP_PHONE'    , 'telephonenumber' );  # (LVM: "lvmtelefonnummer"?)
+define( 'GS_LDAP_PROP_FIRSTNAME', 'givenname' );  # e.g. "givenname"
+define( 'GS_LDAP_PROP_LASTNAME' , 'sn' );  # e.g. "sn"
+define( 'GS_LDAP_PROP_PHONE'    , 'telephonenumber' );  # e.g. "telephonenumber"
 
 
 /***********************************************************
@@ -94,9 +94,8 @@ define( 'GS_LDAP_PROP_PHONE'    , 'telephonenumber' );  # (LVM: "lvmtelefonnumme
 define( 'GS_GUI_NUM_RESULTS', 12 );
 define( 'GS_GUI_SUDO_ADMINS', '47110002, 47110003' );
 # comma separated list of admin users who can manage *all* accounts
-# (LVM: Personalnummern)
 
-define( 'GS_GUI_SUDO_EXTENDED', true );
+define( 'GS_GUI_SUDO_EXTENDED', false );
 # whether to include htdocs/gui/inc/permissions.php and consult
 # gui_sudo_allowed() to find out if a user can act as a certain
 # other user (you may need to adjust this function!)
@@ -111,7 +110,7 @@ define( 'GS_GUI_QUEUE_SHOW_NUM_CALLS', false );
 
 define( 'GS_EXTERNAL_NUMBERS_BACKEND', 'ldap' );  # "db"|"ldap"
 define( 'GS_EXTERNAL_NUMBERS_LDAP_PROP', 'telephoneNumber' );
-# i.e. "externaltelephone"
+# e.g. "externaltelephone"
 
 
 /***********************************************************
@@ -169,21 +168,18 @@ define( 'GS_CALL_INIT_FROM_NET', '192.168.1.0/24' );
 # e.g.: '127.0.0.1, 192.168.1.130/255.255.255.0, 192.168.1.130/24'
 # allow all: '0.0.0.0/0', allow none: '0.0.0.0/32'
 
-define( 'GS_LVM_USER_6_DIGIT_INT', true );
-# a "hack" for LVM to compare user names as 6 digit integers (padded
-# with zeros (0) on the left. currently used by htdocs/prov/
-# call-init.php and inc/gs-fns/gs_user_external_number*.
-# should normally be off.
+define( 'GS_LVM_USER_6_DIGIT_INT', false );
+# compare user names as 6 digit integers (padded with zeros (0) on
+# the left. currently used by htdocs/prov/call-init.php and
+# inc/gs-fns/gs_user_external_number*. should normally be off.
 
-define( 'GS_LVM_CALL_INIT_USERS_500000', true );
-# a "hack" for LVM so for call-init.php user names > 500000
-# (Agenturmitarbeiter) are not checked against our database.
+define( 'GS_LVM_CALL_INIT_USERS_500000', false );
 # should normally be off.
 
 define( 'GS_LVM_FORWARD_REQ_EXT_NUM', true );
-# a "hack" for LVM, when set to true call forwards can be set to
-# numbers in a user's external numbers only - apart from numbers
-# not starting in "0" which are always allowed
+# if true call forwards can be set to numbers in a user's list of
+# external numbers only - apart from numbers not starting in "0"
+# which are always allowed
 
 define( 'GS_CC_TIMEOUT',  60 );  # timeout of programmed call completions
                                  # in minutes

@@ -59,8 +59,9 @@ macro hangup-proper-status() {
 
 macro is_dmz( is_dmz_num ) {
 	// callerid(num) for incoming calls or dialed number for outgoing
-	if ("${is_dmz_num:0:1}" = "0" || "${is_dmz_num:0:2}" = "60") {
-		// from PSTN or LVM-Agentur => external
+	//if ("${is_dmz_num:0:1}" = "0" || "${is_dmz_num:0:2}" = "60") {
+	//	// from PSTN or branch office => external
+	if ("${is_dmz_num:0:1}" = "0") {
 		Set(is_dmz=);
 	}
 	else {
