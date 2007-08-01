@@ -104,7 +104,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
                                                       GNU GPL -->]]>
 <title><?php echo __('Gemeinschaft Telefon-Manager'); ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/lvm.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/original.css" />
 <link rel="shortcut icon" type="image/x-icon" href="<?php echo GS_URL_PATH; ?>favicon.ico" />
 <meta http-equiv="imagetoolbar" content="no" />
 <meta http-equiv="pragma" content="no-cache" />
@@ -118,7 +118,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
 	<img alt="Suchen" src="<?php echo GS_URL_PATH; ?>crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />
 	<h1><?php echo __('Telefon-Manager'); ?></h1> 
 </div>
-<img alt="LVM" src="<?php echo GS_URL_PATH; ?>img/lvmlogo.gif" class="fr" />
+<!--<img alt="Gemeinschaft" src="<?php echo GS_URL_PATH; ?>img/logo.gif" class="fr" />-->
 
 <a href="<?php echo gs_url($SECTION, $MODULE); ?>&amp;setlang=en_US" title="English">
 <img alt="en_US" src="<?php echo GS_URL_PATH; ?>img/lang/en_US.png" class="fr" /></a>

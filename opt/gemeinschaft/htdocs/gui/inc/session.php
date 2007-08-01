@@ -73,8 +73,9 @@ gs_loadtextdomain( 'gemeinschaft-gui' );
 gs_settextdomain( 'gemeinschaft-gui' );
 
 
-# function to map from LVM-Memo-ID to LVM-Personalnr.
+# function to map from some legacy user name to the current one
 #
+/*
 function ldap_user_map( $user )
 {
 	if (! $user) return false;
@@ -98,10 +99,17 @@ function ldap_user_map( $user )
 	if (! isSet( $u[$lc_GS_LDAP_PROP_USER]    )) return false;
 	if (! isSet( $u[$lc_GS_LDAP_PROP_USER][0] )) return false;
 	$ret = $u[$lc_GS_LDAP_PROP_USER][0];
-	if (GS_LVM_USER_6_DIGIT_INT) {
+	if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
 		$ret = str_pad($ret, 6, '0', STR_PAD_LEFT);
 	}
 	return $ret;
+}
+*/
+function ldap_user_map( $user )
+{
+	if (! $user) return false;
+	
+	return $user;
 }
 
 

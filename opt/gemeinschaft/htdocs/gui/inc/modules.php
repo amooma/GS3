@@ -42,9 +42,9 @@ $MODULES = array(
 	'pb'               => array('title' => __('Telefonbuch'),
 	                            'icon'  => 'crystal-svg/%s/act/contents.png',
 	   'sub' => array(
-	      'imported'   => array('title' => __('LVM (aus LDAP)')),
-	      'gs'         => array('title' => __('LVM (Projekt)')),
-	      //'ldap'       => array('title' => __('LVM (LDAP)')),
+	      'imported'   => array('title' => __('Firma (aus LDAP)')),
+	      'gs'         => array('title' => __('Firma (Projekt)')),
+	      //'ldap'       => array('title' => __('Firma (LDAP)')),
 	      'private'    => array('title' => __('Pers&ouml;nlich'))
 	   )
 	),

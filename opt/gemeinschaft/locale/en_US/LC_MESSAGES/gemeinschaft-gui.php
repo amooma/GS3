@@ -28,7 +28,7 @@
 \*******************************************************************/
 
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1737 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1873 $
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2007-05-23 12:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
@@ -40,9 +40,9 @@ Content-Transfer-Encoding: 8bit
 ',
   'Home' => 'Home',
   'Telefonbuch' => 'Phonebook',
-  'LVM (aus LDAP)' => 'LVM (from LDAP)',
-  'LVM (Projekt)' => 'LVM (Project)',
-  'LVM (LDAP)' => 'LVM (LDAP)',
+  'Firma (aus LDAP)' => 'Company (from LDAP)',
+  'Firma (Projekt)' => 'Company (Project)',
+  'Firma (LDAP)' => 'Company (LDAP)',
   'Pers&ouml;nlich' => 'Private',
   'Anruflisten' => 'Dial Log',
   'gew&auml;hlt' => 'dialed',
@@ -73,7 +73,7 @@ Content-Transfer-Encoding: 8bit
   'You are not logged in (authentication method: \\"%s\\").' => 'You are not logged in (authentication method: "%s").',
   'Unknown user \\"%s\\".' => 'Unknown user "%s".',
   'You are not allowed to act as \\"%s\\".' => 'You are not allowed to act as "%s".',
-  'Gemeinschaft Telefon-Manager' => 'LVM Phone Manager',
+  'Gemeinschaft Telefon-Manager' => 'Gemeinschaft Phone Manager',
   'Telefon-Manager' => 'Phone Manager',
   'Angemeldet' => 'Logged in as',
   'Als' => 'Acting as',
@@ -221,7 +221,7 @@ Content-Transfer-Encoding: 8bit
   '<b>Best&auml;tigen</b><br /> W&auml;hlen, Gespr&auml;ch annehmen' => '<b>Confirm</b><br /> Dial, answer call',
   '<b>Mailbox</b> abfragen<br /> Hat die Mailbox ein Gespr&auml;ch f&uuml;r Sie aufgezeichnet, wird dies durch Blinken der Message-LED signalisiert. Die Anzahl alter und neuer Nachrichten wird zus&auml;tzlich auch auf dem Display angezeigt.' => 'Check <b>Mailbox</b><br /> Once there are new messages on your mailbox the message LED will start blinking. Your display will show the numbers of new and old messages.',
   '<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nnen Sie die letzten angerufenen Nummern erneut anrufen und sehen angenommene und verpasste Anrufe. W&auml;hlen Sie zun&auml;chst mit den Pfeiltasten die Nummer aus und dr&uuml;cken danach die OK-Taste.' => '<b>Redial</b><br /> By pressing redial you can redial the numbers of outgoing, answered and missed calls. Use the arrow keys to select a number then press OK.',
-  '<b>Telefonbuch</b> (LVM / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z.B. 63437 f&uuml;r MEIER dr&uuml;cken.' => '<b>Phonebook</b> (LVM / private)<br /> T9 mode for searching, e.g. press 63437 for MEIER.',
+  '<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z.B. 63437 f&uuml;r MEIER dr&uuml;cken.' => '<b>Phonebook</b> (Company / private)<br /> T9 mode for searching, e.g. press 63437 for MEIER.',
   '<b>Vermitteln</b><br /> Es gibt zwei Wege, wie Sie Ihren Gespr&auml;chspartner mit einer anderen Nummer verbinden k&ouml;nnen:<br /> <i>Direktes Verbinden</i>: Wenn Sie w&auml;hrend eines Gespr&auml;chs die Transfer-Taste dr&uuml;cken, wird Ihr Gespr&auml;chsparter auf Halten gesetzt. Geben Sie danach die Nummer an, mit der Sie den Anrufer verbinden m&ouml;chten. Durch Dr&uuml;cken der OK-Taste wird der Teilnehmer dann mit der gew&auml;hlten Nummer verbunden.<br /> <i>Verbinden mit R&uuml;ckfrage</i>: Dr&uuml;cken Sie hierzu w&auml;hrend eines Gespr&auml;chs die Hold-Taste um Ihren Gespr&auml;chspartner zu halten und w&auml;hlen dann die Nummer, mit der Sie ihn verbinden m&ouml;chten. Sie k&ouml;nnen jetzt mit dem zweiten Teilnehmer sprechen. Durch Dr&uuml;cken der Transfer-Taste oder durch Auflegen werden die beiden Teilnehmer verbunden.' => '<b>Transfer</b><br /> Es gibt zwei Wege, wie Sie Ihren Gespr&auml;chspartner mit einer anderen Nummer verbinden k&ouml;nnen:<br /> <i>Direktes Verbinden</i>: Wenn Sie w&auml;hrend eines Gespr&auml;chs die Transfer-Taste dr&uuml;cken, wird Ihr Gespr&auml;chsparter auf Halten gesetzt. Geben Sie danach die Nummer an, mit der Sie den Anrufer verbinden m&ouml;chten. Durch Dr&uuml;cken der OK-Taste wird der Teilnehmer dann mit der gew&auml;hlten Nummer verbunden.<br /> <i>Verbinden mit R&uuml;ckfrage</i>: Dr&uuml;cken Sie hierzu w&auml;hrend eines Gespr&auml;chs die Hold-Taste um Ihren Gespr&auml;chspartner zu halten und w&auml;hlen dann die Nummer, mit der Sie ihn verbinden m&ouml;chten. Sie k&ouml;nnen jetzt mit dem zweiten Teilnehmer sprechen. Durch Dr&uuml;cken der Transfer-Taste oder durch Auflegen werden die beiden Teilnehmer verbunden.',
   '<b>Halten</b> (R&uuml;ckfrage)<br /> Wenn Sie diese Taste w&auml;hrend eines Gespr&auml;chs dr&uuml;cken, wird Ihr Gespr&auml;chspartner auf Halten gesetzt. Danach k&ouml;nnen Sie eine weitere Verbindung zu einem anderen Teilnehmer herstellen. Mit den leuchtenden Leitungstasten k&ouml;nnen Sie zwischen beiden Leitungen hin- und herschalten (Makeln).' => '<b>Hold</b> (R)<br /> Wenn Sie diese Taste w&auml;hrend eines Gespr&auml;chs dr&uuml;cken, wird Ihr Gespr&auml;chspartner auf Halten gesetzt. Danach k&ouml;nnen Sie eine weitere Verbindung zu einem anderen Teilnehmer herstellen. Mit den leuchtenden Leitungstasten k&ouml;nnen Sie zwischen beiden Leitungen hin- und herschalten (Makeln).',
   '<b>Nicht st&ouml;ren</b> ein/aus<br /> Wenn dieser Modus aktiviert ist, werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem Display links unten das Symbol und &quot;Inaktiv&quot; angezeigt. Auf Ihre ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&auml;ren Sie gar nicht eingeloggt, also offline.' => '<b>Do Not Disturb</b> mode on/off<br /> Wenn dieser Modus aktiviert ist, werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem Display links unten das Symbol und &quot;Inaktiv&quot; angezeigt. Auf Ihre ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&auml;ren Sie gar nicht eingeloggt, also offline.',
