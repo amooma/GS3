@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<chapter id="php-sicherheit" revision="$Revision: 1811 $">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>PHP-Sicherheit</title>
+
+  <para>PHP wird/wurde häufig als unsichere Programmiersprache bezeichnet, was
+  sie nicht ist. Das hängt wohl mit der großen Verbreitung und der flachen
+  Lernkurve zusammen, wodurch viele unerfahrene Programmierer eine unmenge
+  unsicherer Programme schreiben.</para>
+
+  <para>Grundsätzliche Einstellungen (in der <filename>/etc/php.ini</filename>
+  bzw. <filename>/etc/php4/*/php.ini</filename>, abhängig von der
+  Installation):<programlisting>register_globals = Off        ; in Verbindung mit uninitialisierten Variablen
+                              ; (schlechter Programmierstil!) war das eine der
+                              ; größten Sicherheitslücken
+
+max_execution_time = 300      ; nicht immer läßt sich im Skript noch dieses
+                              ; Limit verändern
+
+memory_limit = 16M
+
+error_reporting = 0           ; keine Fehlermeldungen auf dem Produktivsystem
+display_errors = Off
+
+magic_quotes_gpc = Off        ; diese vermeintlichen Sicherheitseinstellungen für
+magic_quotes_runtime = Off    ; faule Programmierer führen immer zu Problemen.
+                              ; diese Aufgabe wird vom Datenbank-Abstraktionslayer
+                              ; besser ausgeführt, so daß keine Code-Einschleusung
+                              ; möglich ist
+
+enable_dl = Off               ; wird nicht benötigt, Sicherheits- und
+                              ; Geschwindigkeitsvorteil
+
+session.use_cookies = 1       ; Cookies sind sicherer als URL-Parameter
+session.use_only_cookies = 0  ; als Fallback
+session.auto_start = 0
+
+session.bug_compat_42 = 0     ; keinen schlechten Programmierstil fördern
+session.bug_compat_warn = 1
+
+</programlisting></para>
+
+  <important>
+    <para>Einstellungen, die hier nicht genannt wurden, sollten i.d.R. auf den
+    Default-Werten der php.ini der aktuellen Version bleiben!</para>
+  </important>
+
+  <para>Einige weitere Einstellungen, die nicht unbedingt sicherheitsrelevant
+  sind, aber für das ordnungsgemäße Funktionieren dieses Systems notwendig
+  sein könnten:<programlisting>output_buffering = Off                 ; bei einer Intranet-Anwendung sind diese
+zlib.output_compression = Off          ; Einstellungen eher von Nachteil. zudem
+                                       ; kann Kompression und Caching besser und
+                                       ; kontrollierter im Skript selbst erfolgen
+
+allow_call_time_pass_reference = Off   ; das wäre sonst schlechter Programmier-
+                                       ; stil
+safe_mode = Off                        ; muß off sein, damit Skripte auf der
+                                       ; Shell ausgeführt werden können<footnote>
+        <para>In allen Skripten dieses Systems wird sichergestellt, daß keine Code-Einschleusung möglich ist.</para>
+      </footnote>
+variables_order = "EGPCS"              ; die Default-Einstellung
+gpc_order = "GPC"
+
+always_populate_raw_post_data = Off    ; wird von uns nicht benötigt, Geschwindig-
+                                       ; keitsvorteil
+
+cgi.force_redirect = 1
+cgi.nph = 0
+
+cgi.rfc2616_headers = 1                ; nur falls als Web-Server nicht der Apache
+                                       ; zum Einsatz kommt!
+
+allow_url_fopen = On                   ; notwendig
+
+default_socket_timeout = 10            ; der Default von 60 ist zu lang
+
+mysql.connect_timeout = 30             ; der Default von 60 ist zu lang
+mysql.trace_mode = Off                 ; keine Fehlermeldungen im Produktivsystem,
+                                       ; ist auch ein Geschwindigkeitsvorteil
+
+mbstring.internal_encoding = UTF-8
+mbstring.http_input = auto
+mbstring.encoding_translation = Off
+mbstring.func_overload = 0             ; wichtig. die Byte-Funktionen müssen als
+                                       ; solche verwendet werden können
+
+</programlisting></para>
+
+  <section id="sql-injection">
+    <title><quote>SQL Injection</quote> (SQL-Einschleusung)</title>
+
+    <para>Ein beliebter Angriff auf nachlässig programmierte Skripte. Wie das
+    funktioniert, kann man hundertfach im Internet nachlesen. In allen
+    Skripten dieses Systems wird solche EInschleusung zweifach
+    verhindert:</para>
+
+    <procedure>
+      <step>
+        <para>Durch Prüfung, daß nur erlaubte Zeichen im Parameter vorkommen,
+        mittels <code>preg_match()</code> bzw. <code>preg_replace()</code>,
+        also Regular Expressions, oder bei Ganzzahlen der expliziten
+        Umwandlung in einen Integer-Wert mit <code>(int)</code>.</para>
+      </step>
+
+      <step>
+        <para>Durch Escapen aller Sonderzeichen im SQL-Befehl. Das geschieht
+        durch den Datenbank-Abstraktionslayer, der dazu die native
+        MySQL-Funktion <code>mysql_real_escape_string()</code>
+        verwendet.</para>
+      </step>
+    </procedure>
+  </section>
+</chapter>

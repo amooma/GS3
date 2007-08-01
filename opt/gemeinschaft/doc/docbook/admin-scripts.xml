@@ -1,0 +1,1591 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<chapter id="admin-scripts" revision="$Revision: 1757 $">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Skripte zur Administration<indexterm>
+      <primary>Skripte</primary>
+
+      <secondary>zur Administration</secondary>
+    </indexterm></title>
+
+  <para>Pfad: <filename>/opt/gemeinschaft/scripts/</filename></para>
+
+  <para>Die Skripte dürfen nur auf dem MySQL-Master/Web-Server-Rechner
+  ausgeführt werden.</para>
+
+  <para>Alle Skripte setzen voraus, daß unter
+  <filename>/usr/bin/php</filename> ein PHP-Interpreter (min. 4.3.8, mit dem
+  Modul <literal>mysql</literal>) liegt.</para>
+
+  <para>Generell wird beim Aufruf mit dem Parameter <literal>-?</literal> oder
+  <literal>--help</literal> (oder auch ohne Parameter) eine kurze
+  Parameter-Übersicht ausgegeben. Beispielsweise so:<screen>$ <command>./gs_user_add --help</command>
+Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; --firstname=&lt;firstname&gt; --lastname=&lt;lastname&gt; --host=&lt;id&gt;|&lt;ip&gt;</screen>Die
+  Reihenfolge der Parameter ist beliebig. Falls ein Wert Leerzeichen oder
+  Shell-Sonderzeichen enthält, muß er natürlich in doppelte (<code>"</code>)
+  oder einfache (<code>'</code>) Anführungszeichen eingeschlossen sein (wie
+  man das auch sonst auf der Shell kennt).</para>
+
+  <para>Wie mit <command>getopt</command> üblich ist das Gleichheitszeichen
+  (<literal>=</literal>) zwischen Argumentname und -wert optional. Als
+  Erleichterung kann der Argumentname, solange er noch eindeutig ist,
+  abgekürzt werden. Statt<literallayout><command>./gs_user_get --user=123</command></literallayout>könnte
+  man beispielsweise auch folgendes schreiben:<literallayout><command>./gs_user_get --u 123</command></literallayout></para>
+
+  <para>Die Skripte sind hier in alphabetischer Reihenfolge aufgeführt; als
+  Einstieg sollten Sie jedoch mit <command>gs_users_get</command> und
+  <command>gs_user_add</command> beginnen, da es das Verstädnis für die
+  weiteren Skripte erleichtert.</para>
+
+  <section>
+    <title><command>gs_callblocking_get</command><indexterm>
+        <primary><command>gs_callblocking_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Rufnummernsperre auslesen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die Rufnummernsperre für einen bestimmten Benutzer.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section>
+    <title><command>gs_callblocking_set</command><indexterm>
+        <primary><command>gs_callblocking_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Rufnummernsperre setzen</primary>
+      </indexterm></title>
+
+    <para>Stellt die Rufnummernsperre für einen bestimmten Benutzer
+    ein.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--regexp=<replaceable>Regular_Expression</replaceable></code></term>
+
+        <listitem>
+          <para>Regulärer Ausdruck zur Definition der Rufnumernsperre.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>[--pin=<replaceable>PIN</replaceable>]</code></term>
+
+        <listitem>
+          <para>PIN (Passwort) zur Umgehung der Rufnummersperre</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>[--delete]</code></term>
+
+        <listitem>
+          <para>Eintrag aus der Rufnummernsperre löschen.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>Das Pattern ist eine normale Perl Regular Expression, also inklusive
+    <code>^</code>, <code>$</code>, <code>[0-9]</code>, <code>{}</code> usw.
+    aber ohne die Begrenzer (<code>/</code>) am Anfang und Ende. Die Pattern
+    sind Verbote, wenn also eines auf die gewählte Nummer zutrifft, ist das
+    Wählen nicht erlaubt. Dabei ist die Länge der Pattern ausschlaggebend:
+    längere Pattern werden zuerst überprüft (und bei Zutreffen
+    abgebrochen).</para>
+
+    <para>Beispiel: Für einen User sind zwei Pattern eingetragen: <emphasis
+    role="bold"><code>^0190[5]</code></emphasis> (ohne PIN) und <emphasis
+    role="bold"><code>^0</code></emphasis> (mit PIN). Die erste dieser beiden
+    Regeln wird immer zuerst überprüft, da sie mehr Zeichen hat (8) als die
+    zweite (2). Wählen auf <literal>01907333</literal> wäre mit Eingabe der
+    PIN erlaubt - nur die zweite Regel trifft zu. Wählen auf
+    <literal>01905333</literal> wäre verboten, da bereits die erste der Regeln
+    zutrifft, die auch keine PIN erlaubt. Wählen auf
+    <literal>301905333</literal> wäre erlaubt - keine Regel matcht. Um einer
+    Regel höhere Priorität zu geben, kann man sie länger machen, also z.B. mit
+    <code>()()()()()()</code> am Ende auffüllen. Wenn wir aus der Regel
+    <code>^0</code> testweise <code>^0()()()()()()</code> machen, wäre sie mit
+    14 Zeichen die längste Regel und würde immer zuerst überprüft. Damit wäre
+    Wählen auf <literal>01905333</literal> jetzt mit Eingabe der PIN
+    erlaubt.</para>
+  </section>
+
+  <section id="gs_callforward_activate">
+    <title><command>gs_callforward_activate</command><indexterm>
+        <primary><command>gs_callforward_activate</command></primary>
+      </indexterm><indexterm>
+        <primary>Anrufweiterleitung aktivieren/deaktivieren</primary>
+      </indexterm></title>
+
+    <para>Aktiviert oder deaktiviert die Anrufweiterleitung eines
+    Benutzers</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <simpara>Die eindeutige Identifikation des Benutzers.</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--source=<replaceable>(internal|external)</replaceable></code></term>
+
+        <listitem>
+          <para>Quelle des Anrufs intern|extern</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--case=<replaceable>(always|busy|unavail|offline)</replaceable></code></term>
+
+        <listitem>
+          <simpara>Legt fest,l für welchen Fall die Anrufweiterleitung
+          aktiviert werden soll.</simpara>
+
+          <variablelist>
+            <varlistentry>
+              <term><code>always</code></term>
+
+              <listitem>
+                <simpara>Immer</simpara>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>busy</code></term>
+
+              <listitem>
+                <simpara>bei Besetzt</simpara>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>unavail</code></term>
+
+              <listitem>
+                <simpara>bei Unerreichbarkeit</simpara>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>offline</code></term>
+
+              <listitem>
+                <para>Wenn das Endgerät des Benutzers nicht angemeldet
+                ist.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--active=<replaceable>(no|std|var)</replaceable></code></term>
+
+        <listitem>
+          <para>Aktivierung/Deaktivierung der Anrufweiterleitung.</para>
+
+          <variablelist>
+            <varlistentry>
+              <term><code>no</code></term>
+
+              <listitem>
+                <para>Augeschaltet</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>std</code></term>
+
+              <listitem>
+                <para>Standardweiterleitungsziel - das
+                Standardweiterleitungsziel wird verwendet.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>var</code></term>
+
+              <listitem>
+                <para>Variables Weiterleitungsziel - ein Weiterleitungsziel
+                kann selbst angegeben werden.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_callforward_get">
+    <title><command>gs_callforward_get</command><indexterm>
+        <primary><command>gs_callforward_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Anrufweiterleitungen anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die aktuellen Einstellungen der Anrufweiterleitung</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_callforward_set">
+    <title><command>gs_callforward_set</command><indexterm>
+        <primary><command>gs_callforward_set</command></primary>
+      </indexterm><indexterm>
+        <primary>Anrufweiterleitung einrichten</primary>
+      </indexterm></title>
+
+    <para>Ermöglicht die Einrichtung einer Anrufweiterleitung</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--source=<replaceable>(internal|external)</replaceable></code></term>
+
+        <listitem>
+          <para>Quelle des Anrufs intern|extern</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--case=<replaceable>(always|busy|unavail|offline)</replaceable></code></term>
+
+        <listitem>
+          <para>Auswahl für welchen Fall die Anrufweiterleitung aktiviert
+          werden soll.</para>
+
+          <variablelist>
+            <varlistentry>
+              <term><code>always</code></term>
+
+              <listitem>
+                <para>immer</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>busy</code></term>
+
+              <listitem>
+                <para>bei besetzt</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>unavail</code></term>
+
+              <listitem>
+                <para>bei Unerreichbarkeit</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>offline</code></term>
+
+              <listitem>
+                <para>Wenn das Endgerät des Benutzers nicht angemeldet
+                ist</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--type=<replaceable>(std|var)</replaceable></code></term>
+
+        <listitem>
+          <para>Auswahl des Ziels der Anrufweiterleitung</para>
+
+          <variablelist>
+            <varlistentry>
+              <term><code>std</code></term>
+
+              <listitem>
+                <para>Standardweiterleitungsziel</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>var</code></term>
+
+              <listitem>
+                <para>Variables Weiterleitungsziel</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>[--timeout=<replaceable>Zeit</replaceable>]</code></term>
+
+        <listitem>
+          <para>Zeit in Sekunden, nach deren Verstreichen die Weiterleitung
+          aktiv wird. Nur sinnvoll bei <code>--case=unavail</code></para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--number=<replaceable>Rufnummer</replaceable></code></term>
+
+        <listitem>
+          <para>Die Rufnummer des Anschlusses auf den der Anruf weitergeleitet
+          werden soll.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_callwaiting_activate">
+    <title><command>gs_callwaiting_activate</command><indexterm>
+        <primary><command>gs_callwaiting_activate</command></primary>
+      </indexterm><indexterm>
+        <primary>Anklopfen aktivieren/deaktivieren</primary>
+      </indexterm></title>
+
+    <para>Aktiviert/deaktiviert die Signalisierung eines eingehenden Anrufes
+    während eines bestehenden Gesprächs. Dienstmerkmal
+    <quote>Anklopfen</quote>.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--active=<replaceable>(no|yes)</replaceable></code></term>
+
+        <listitem>
+          <para>Aktivierung/Deaktivierung des Dienstmerkmals Anklopfen</para>
+
+          <variablelist>
+            <varlistentry>
+              <term><code>no</code></term>
+
+              <listitem>
+                <para>Anklopfen deaktiviert.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>yes</code></term>
+
+              <listitem>
+                <para>Anklopfen aktiviert.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_callwaiting_get">
+    <title><command>gs_callwaiting_get</command><indexterm>
+        <primary><command>gs_callwaiting_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Einstellungen zu Anklopfen anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die aktuellen Einstellungen des Dienstmerkmals
+    <quote>Anklopfen</quote> für den ausgewählten Benutzer</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_clir_activate">
+    <title><command>gs_clir_activate</command><indexterm>
+        <primary><command>gs_clir_activate</command></primary>
+      </indexterm><indexterm>
+        <primary>Rufnummernunterdrückung aktivieren/deaktivieren</primary>
+      </indexterm></title>
+
+    <para>Aktivierung/Deaktivierung der Unterdrückung der eigenen Rufnummer
+    bei der Rufnummernanzeige der Gegenstelle. Dienstmerkmal
+    "CLIR"/"CLIP".</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--dest=<replaceable>(internal|external)</replaceable></code></term>
+
+        <listitem>
+          <para>Festlegung der Funktion auf interne oder externe
+          Anrufziele.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--active=<replaceable>(yes|no)</replaceable></code></term>
+
+        <listitem>
+          <para>Aktvierung/Deaktivierung der Unterdrückung der eigenen
+          Rufnummer.</para>
+
+          <variablelist>
+            <varlistentry>
+              <term><code>yes</code></term>
+
+              <listitem>
+                <para>Die eigene Rufnummer wird nicht an die Gegenstelle
+                übertragen. Dienstmerkmal "CLIR".</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>no</code></term>
+
+              <listitem>
+                <para>Die eigene Rufnummer wird an die Gegenstelle übertragen.
+                Dienstmerkmal "CLIP".</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_clir_get">
+    <title><command>gs_clir_get</command><indexterm>
+        <primary><command>gs_clir_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Rufnummernunterdrückung anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die aktuellen Einstellungen der Rufnummernübertragung des
+    angegebenen Benutzers.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_hosts_get">
+    <title><command>gs_hosts_get</command><indexterm>
+        <primary><command>gs_hosts_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Hosts anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die in der Datenbank eingetragenen Asterisk-Hosts an.</para>
+  </section>
+
+  <section id="gs_hosts_show_our_ids">
+    <title><command>gs_hosts_show_our_ids</command><indexterm>
+        <primary><command>gs_hosts_show_our_ids</command></primary>
+      </indexterm><indexterm>
+        <primary>Host-IDs anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die IDs der Hosts an (wie in <command>gs_hosts_get</command>),
+    die auf dem aktuellen Rechner liegen. Das ist normalerweise nur
+    <emphasis>eine</emphasis>.</para>
+  </section>
+
+  <section id="gs_hosts_show_our_ips">
+    <title><command>gs_hosts_show_our_ips</command><indexterm>
+        <primary><command>gs_hosts_show_our_ids</command></primary>
+      </indexterm><indexterm>
+        <primary>Host-IPs anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die IP-Adressen der Hosts an (wie in
+    <command>gs_hosts_get</command>), die auf dem aktuellen Rechner liegen.
+    Das ist normalerweise nur <emphasis>eine</emphasis>.</para>
+  </section>
+
+  <section id="snom_show_keys">
+    <title><command>gs_keys_snom_get</command><indexterm>
+        <primary><command>gs_keys_snom_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Tastenbelegung anzeigen (Snom)</primary>
+      </indexterm></title>
+
+    <para>Zeigt die Belegung der Kurzwahltasten eines Snom-Telefons für den
+    angegebenen Benutzer.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_nobodies_move">
+    <title><command>gs_nobodies_move</command><indexterm>
+        <primary><command>gs_nobodies_move</command></primary>
+      </indexterm><indexterm>
+        <primary>Nobody-Accounts verschieben</primary>
+      </indexterm></title>
+
+    <para>Legt alle Nobody-Accounts auf einen anderen Host.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--host=&lt;ID&gt;|&lt;IP&gt;|RANDOM</code></term>
+
+        <listitem>
+          <para>Die ID oder IP-Adresse des neuen Hosts wie mit
+          <command>gs_hosts_get</command> angezeigt oder
+          <literal>RANDOM</literal> um die Accounts zufällig zu
+          verteilen.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--force=yes</code></term>
+
+        <listitem>
+          <para>Da das eine tiefgreifende Operation ist, muß zur Sicherheit
+          <code>--force=yes</code> angegeben werden.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_pickupgroup_add">
+    <title><command>gs_pickupgroup_add</command><indexterm>
+        <primary><command>gs_pickupgroup_add</command></primary>
+      </indexterm><indexterm>
+        <primary>Pickupgroup anlegen</primary>
+      </indexterm></title>
+
+    <para>Legt eine "Pickupgroup" an, eine Gruppe zu der Benutzer hinzugefügt
+    werden können, deren ankommende Anrufe an die Mitglieder der Gruppe
+    signalisiert werden und von ihnen beantwortet werden können.</para>
+
+    <para>Zurückgegeben wird die numerische ID der neu angelegten Gruppe, die
+    für die weiteren Gruppenspezifischen Kommandos benötigt wird.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--title=<replaceable>Gruppenbezeichnung</replaceable></code></term>
+
+        <listitem>
+          <para>Eine frei wählbare Bezeichnung für die anzulegende
+          Gruppe.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_pickupgroup_del">
+    <title><command>gs_pickupgroup_del</command><indexterm>
+        <primary><command>gs_pickupgroup_del</command></primary>
+      </indexterm><indexterm>
+        <primary>Pickupgroup löschen</primary>
+      </indexterm></title>
+
+    <para>Löscht eine Pickup-Gruppe.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--pgroup=<replaceable>Gruppen-ID</replaceable></code></term>
+
+        <listitem>
+          <para>Numerische ID der Gruppe, welche entfernt werden soll.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_pickupgroup_show">
+    <title><command>gs_pickupgroup_show</command><indexterm>
+        <primary><command>gs_pickupgroup_show</command></primary>
+      </indexterm><indexterm>
+        <primary>Pickupgroup anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die Mitglieder und die Gruppenbezeichnung einer Pickup-Gruppe
+    an.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--pgroup=<replaceable>Gruppen-ID</replaceable></code></term>
+
+        <listitem>
+          <para>Numerische ID der Gruppe</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_pickupgroup_user_add">
+    <title><command>gs_pickupgroup_user_add</command><indexterm>
+        <primary><command>gs_pickupgroup_user_add</command></primary>
+      </indexterm><indexterm>
+        <primary>User in Pickupgroup aufnehmen</primary>
+      </indexterm></title>
+
+    <para>Fügt einen Benutzer zu einer Pickup-Gruppe hinzu.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--pgroup=<replaceable>Gruppen-ID</replaceable></code></term>
+
+        <listitem>
+          <para>Numerische ID der Gruppe zu welcher der Benutzer hinzugefügt
+          werden soll.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>Es ist darauf zu achten, daß Pickup (also das Heranholen von
+    Gesprächen) nur von Usern auf dem gleichen Host möglich ist. Alle User in
+    einer Pickup-Gruppe müssen also auf dem gleichen Host liegen.</para>
+  </section>
+
+  <section id="gs_pickupgroup_user_del">
+    <title><command>gs_pickupgroup_user_del</command><indexterm>
+        <primary><command>gs_pickupgroup_user_del</command></primary>
+      </indexterm><indexterm>
+        <primary>User aus Pickupgroup löschen</primary>
+      </indexterm></title>
+
+    <para>Löscht einen Benutzer aus einer Pickup-Gruppe.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--pgroup=<replaceable>Gruppen-ID</replaceable></code></term>
+
+        <listitem>
+          <para>Numerische ID der Gruppe aus welcher der Benutzer entfernt
+          werden soll.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section>
+    <title><command>gs_pickupgroups_show</command><indexterm>
+        <primary><command>gs_pickupgroups_show</command></primary>
+      </indexterm><indexterm>
+        <primary>Alle Pickupgroups anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt alle angelegten Pickup-Gruppen an.</para>
+  </section>
+
+  <section id="gs_prov_phone_checkcfg">
+    <title><command>gs_prov_phone_checkcfg</command><indexterm>
+        <primary><command>gs_prov_phone_checkcfg</command></primary>
+      </indexterm><indexterm>
+        <primary>Telefon neustarten</primary>
+      </indexterm></title>
+
+    <para>Veranlaßt ein Telefon neuzustarten und dabei seine Konfiguration
+    erneut vom Provisioning-Server einzulesen<footnote>
+        <para>Um sicherzugehen wird das sowohl aus Asterisk per SIP-NOTIFY
+        gemacht als auch auf dem Snom die entsprechende URL aufgerufen. Da es
+        keine bekannte URL auf dem Snom gibt, die nur check-sync ohne Reboot
+        macht, wird als Fallback z.Zt. immer rebootet.</para>
+      </footnote>.</para>
+
+    <para>Genau einer der folgenden Parameter muß angegeben sein:<variablelist>
+        <varlistentry>
+          <term><code>--user=<replaceable>usercode</replaceable></code></term>
+
+          <listitem>
+            <para>Benutzername.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>--ext=<replaceable>extension</replaceable></code></term>
+
+          <listitem>
+            <para>Extension.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>--ip=<replaceable>ip_addr</replaceable></code></term>
+
+          <listitem>
+            <para>IP-Adresse.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>--all=yes</code></term>
+
+          <listitem>
+            <para><emphasis>Alle</emphasis> Telefone syncen.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section id="gs_queue_add">
+    <title><command>gs_queue_add</command><indexterm>
+        <primary><command>gs_queues_add</command></primary>
+      </indexterm><indexterm>
+        <primary>Warteschlange anlegen</primary>
+      </indexterm></title>
+
+    <para>Legt eine Queue (Warteschlange) an.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--queue=<replaceable>Extension</replaceable></code></term>
+
+        <listitem>
+          <para>Extension der Schlange.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--title=<replaceable>"&lt;beliebiger
+        Titel&gt;"</replaceable></code></term>
+
+        <listitem>
+          <para>Titel der Schlange</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--maxlen=<replaceable>&lt;0|1-255&gt;</replaceable></code></term>
+
+        <listitem>
+          <para>maximale Länge (d.h. Anzahl der Anrufer) der Schlange. ein
+          Wert von 1 bis 999 oder 0 für unbegrenzt.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--host=<replaceable>&lt;ID&gt;</replaceable>|<replaceable>&lt;IP&gt;</replaceable></code></term>
+
+        <listitem>
+          <para>ID oder IP-Adresse des Hosts, auf dem die Queue liegen
+          soll.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_queue_callforward_activate">
+    <title><command>gs_queue_callforward_activate</command><indexterm>
+        <primary><command>gs_queue_callforward_activate</command></primary>
+      </indexterm><indexterm>
+        <primary>Rufumleitung für eine Warteschlange aktivieren</primary>
+      </indexterm></title>
+
+    <para>Aktiviert eine (mit <command>ast_queue_callforward_set</command>
+    eingerichtete) Rufumleitung für eine Warteschlange.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--queue=<replaceable>Extension</replaceable></code></term>
+
+        <listitem>
+          <simpara>Extension der Schlange.</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--source=<replaceable>(internal|external)</replaceable></code></term>
+
+        <listitem>
+          <para>Quelle des Anrufs intern|extern</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--case=<replaceable>(always|full|timeout|empty)</replaceable></code></term>
+
+        <listitem>
+          <simpara>Auswahl für welchen Fall die Anrufweiterleitung aktiviert
+          werden soll. Siehe Fälle bei
+          <command>ast_queue_callforward_set</command> (verlinken!).</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--active=<replaceable>(no|std|var)</replaceable></code></term>
+
+        <listitem>
+          <para>Aktivierung/Deaktivierung der Anrufweiterleitung.</para>
+
+          <variablelist>
+            <varlistentry>
+              <term><code>no</code></term>
+
+              <listitem>
+                <para>Augeschaltet</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>std</code></term>
+
+              <listitem>
+                <para>Standardweiterleitungsziel - das
+                Standardweiterleitungsziel wird verwendet.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>var</code></term>
+
+              <listitem>
+                <para>Variables Weiterleitungsziel - ein Weiterleitungsziel
+                kann selbst angegeben werden.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_queue_callforward_get">
+    <title><command>gs_queue_callforward_get</command><indexterm>
+        <primary><command>gs_queue_callforward_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Rufumleitungen für eine Warteschlange anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die Rufumleitungen für eine Warteschlange an.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--queue=<replaceable>Extension</replaceable></code></term>
+
+        <listitem>
+          <para>Extension der Schlange</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_queue_callforward_set">
+    <title><command>gs_queue_callforward_set</command><indexterm>
+        <primary><command>gs_queue_callforward_set</command></primary>
+      </indexterm><indexterm>
+        <primary>Rufumleitung für eine Warteschlange setzen</primary>
+      </indexterm></title>
+
+    <para>Richtet eine Rufumleitung für eine Warteschleife ein (die danach
+    noch mit <command>ast_queue_callforward_activate</command> aktiviert
+    werden muß).</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--queue=<replaceable>Extension</replaceable></code></term>
+
+        <listitem>
+          <para>Extension der Schlange</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--source=<replaceable>(internal|external)</replaceable></code></term>
+
+        <listitem>
+          <para>Quelle des Anrufs intern|extern</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--case=<replaceable>(always|full|timeout|empty)</replaceable></code></term>
+
+        <listitem>
+          <para>Auswahl für welchen Fall die Anrufweiterleitung aktiviert
+          werden soll.</para>
+
+          <variablelist>
+            <varlistentry>
+              <term><code>always</code></term>
+
+              <listitem>
+                <para>immer</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>full</code></term>
+
+              <listitem>
+                <para>Warteschlange voll (<code>maxlen</code> erreicht)</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>timeout</code></term>
+
+              <listitem>
+                <para>nach einer gewissen Dauer, nach der kein Agent den Anruf
+                entgegengenommen hat</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>empty</code></term>
+
+              <listitem>
+                <para>keine Agenten in der Schlange, die Anrufe entgegennehmen
+                könnten</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--type=(std|var)</code></term>
+
+        <listitem>
+          <para>Auswahl des Ziels der Anrufweiterleitung</para>
+
+          <variablelist>
+            <varlistentry>
+              <term><code>std</code></term>
+
+              <listitem>
+                <para>Standardweiterleitungsziel</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>var</code></term>
+
+              <listitem>
+                <para>Variables Weiterleitungsziel</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>[--timeout=<replaceable>Zeit</replaceable>]</code></term>
+
+        <listitem>
+          <para>Zeit in Sekunden, nach deren verstreichen die Weiterleitung
+          aktiv wird. Nur sinnvoll bei
+          <command>--case=timeout</command></para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--number=<replaceable>Rufnummer</replaceable></code></term>
+
+        <listitem>
+          <para>Die Rufnummer des Anschlusses auf den der Anruf weitergeleitet
+          werden soll.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_queue_del">
+    <title><command>gs_queue_del</command><indexterm>
+        <primary><command>gs_queues_del</command></primary>
+      </indexterm><indexterm>
+        <primary>Warteschlange löschen</primary>
+      </indexterm></title>
+
+    <para>Löscht eine Queue (Warteschlange).</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--queue=<replaceable>Extension</replaceable></code></term>
+
+        <listitem>
+          <para>Extension der Schlange.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_queues_get">
+    <title><command>gs_queues_get</command><indexterm>
+        <primary><command>gs_queues_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Warteschlangen anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die angelegten Queues (Warteschlangen) an.</para>
+  </section>
+
+  <section id="gs_ringtone_set">
+    <title><command>gs_ringtone_set</command><indexterm>
+        <primary><command>gs_ringtone_set</command></primary>
+      </indexterm><indexterm>
+        <primary>Klingelton einstellen</primary>
+      </indexterm></title>
+
+    <para>Die Auswahl des Klingeltons für das Endgerät eines Benutzers.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--source=<replaceable>(internal|external)</replaceable></code></term>
+
+        <listitem>
+          <para>Für Anrufe von welcher Quelle der Klingelton benutzt werden
+          soll.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--bellcore=<replaceable>Nummer</replaceable></code></term>
+
+        <listitem>
+          <para>Nummer eines Standard-Klingeltons. Üblicherweise
+          <literal>1</literal> - <literal>10</literal> für
+          <literal>Bellcore-dr<replaceable>X</replaceable></literal> oder
+          <literal>0</literal> für <literal>Silent</literal> (lautlos).</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>[--file=<replaceable>Dateiname</replaceable>|NONE]</code></term>
+
+        <listitem>
+          <para>Eigene Audio-Datei. Es wird versucht, diese Datei automatisch
+          in das (/die) richtige(n) Format(e) zu konvertieren. Ohne Angabe von
+          <literal>--file</literal> wird eine evtl. eingestellte eigene Datei
+          nicht verändert, mit <literal>--file=NONE</literal> würde die
+          Einstellung entfernt.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_ringtones_get">
+    <title><command>gs_ringtones_get</command><indexterm>
+        <primary><command>gs_ringtones_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Klingeltöne anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die für einen Benutzer eingestellten Klingeltöne an.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_user_add">
+    <title><command>gs_user_add</command><indexterm>
+        <primary><command>gs_user_add</command></primary>
+      </indexterm><indexterm>
+        <primary>User anlegen</primary>
+      </indexterm></title>
+
+    <para>Legt einen Benutzer an.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <simpara>Als Benutzername kann ein beliebiger alphanumerischer
+          String verwendet werden, z.B. die Personalnummer oder auch direkt
+          die Extension. Dieser Benutzername muß bei allen weiteren diesen
+          Benutzer betreffenden Skript-Aufrufen angegeben werden.</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--ext=<replaceable>Extension</replaceable></code></term>
+
+        <listitem>
+          <simpara>Extension (Durchwahl) des Benutzers, z.B. 1234</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><command>--pin=<replaceable>PIN</replaceable></command></term>
+
+        <listitem>
+          <simpara>PIN-Nummer (Paßwort, numerisch) für Mailbox etc.</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--firstname=<replaceable>Vorname</replaceable></code></term>
+
+        <listitem>
+          <simpara>Vorname</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--lastname=<replaceable>Nachname</replaceable></code></term>
+
+        <listitem>
+          <simpara>Nachname</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--host=<replaceable>ID|IP</replaceable></code></term>
+
+        <listitem>
+          <para>ID oder IP-Adresse des Hosts (Asterisk-Server)</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_user_change">
+    <title><command>gs_user_change</command><indexterm>
+        <primary><command>gs_user_change</command></primary>
+      </indexterm><indexterm>
+        <primary>User verändern</primary>
+      </indexterm></title>
+
+    <para>Ändert die gespeicherten Daten eines Benutzers</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Als Benutzername kann ein beliebiger alphanumerischer String
+          verwendet werden, z.B. die Personalnummer oder auch direkt die
+          Extension. Dieser Benutzername muß bei allen weiteren diesen
+          Benutzer betreffenden Skript-Aufrufen angegeben werden.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--pin=<replaceable>PIN</replaceable></code></term>
+
+        <listitem>
+          <para>PIN-Nummer (numerisch) für Mailbox etc.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--firstname=<replaceable>Vorname</replaceable></code></term>
+
+        <listitem>
+          <para>Vorname</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--lastname=<replaceable>Nachname</replaceable></code></term>
+
+        <listitem>
+          <para>Nachname</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--host=<replaceable>ID|IP</replaceable></code></term>
+
+        <listitem>
+          <para>ID oder IP-Adresse des Hosts (Asterisk-Server)</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>[--force]</code></term>
+
+        <listitem>
+          <para>Falls der User auf einen anderen Host übertragen werden soll,
+          muß zur Sicherheit <code>--force</code> angegeben werden, da durch
+          diese Operation Mailbox-Nachrichten<footnote>
+              <para>sofern nicht sowieso
+              <filename>/var/spool/asterisk/voicemail/</filename> auf einem
+              gemounteten Dateisystem liegt, das sich alle Asteriske
+              teilen</para>
+            </footnote> etc. verlorengehen.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_user_comment_get">
+    <title><command>gs_user_comment_get</command><indexterm>
+        <primary><command>gs_user_comment_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Kommentarfeld eines Benutzers abfragen</primary>
+      </indexterm></title>
+
+    <para>Liefert das Kommentarfeld (wird im Kollegen-Monitor angezeigt) eines
+    Benutzers zurück.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <simpara>Die eindeutige Identifikation des Benutzers.</simpara>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_user_del">
+    <title><command>gs_user_comment_set</command><indexterm>
+        <primary><command>gs_user_comment_set</command></primary>
+      </indexterm><indexterm>
+        <primary>Kommentarfeld eines Benutzers setzen</primary>
+      </indexterm></title>
+
+    <para>Setzt das Kommentarfeld eines Benutzers (wird im Kollegen-Monitor
+    angezeigt). Jeder Benutzer kann sein Kommentarfeld im Web-Interface selber
+    setzen. Siehe auch <xref linkend="nummern-kommentarfeld" /></para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <simpara>Die eindeutige Identifikation des Benutzers.</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--comment=<replaceable>'Kommentar'</replaceable></code></term>
+
+        <listitem>
+          <simpara>Kommentar, z.B. 'Feierabend' oder 'Urlaub bis zum
+          11.3.'.</simpara>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_user_del">
+    <title><command>gs_user_del</command><indexterm>
+        <primary><command>gs_user_del</command></primary>
+      </indexterm><indexterm>
+        <primary>User löschen</primary>
+      </indexterm></title>
+
+    <para>Entfernt einen Benutzer aus der Datenbank</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <simpara>Die eindeutige Identifikation des Benutzers.</simpara>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_user_external_number_add">
+    <title><command>gs_user_external_number_add</command><indexterm>
+        <primary><command>gs_user_external_number_add</command></primary>
+      </indexterm><indexterm>
+        <primary>Externe Ausgangsnummer hinzufügen</primary>
+      </indexterm></title>
+
+    <para>Fügt für einen Benutzer eine externe Ausgangsnummer hinzu, d.h. von
+    dieser Nummer darf der User Gespräche initiieren.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <simpara>Die eindeutige Identifikation des Benutzers.</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--number=<replaceable>Nummer</replaceable></code></term>
+
+        <listitem>
+          <para>Ausgangsnummer (z.B. Handy-Nr.) - ggf. mit 0 für
+          Amtsholung!</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_user_external_number_del">
+    <title><command>gs_user_external_number_del</command><indexterm>
+        <primary><command>gs_user_external_number_del</command></primary>
+      </indexterm><indexterm>
+        <primary>Externe Ausgangsnummer löschen</primary>
+      </indexterm></title>
+
+    <para>Löscht eine externe Ausgangsnummer eines Benutzers.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <simpara>Die eindeutige Identifikation des Benutzers.</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--number=<replaceable>Nummer</replaceable></code></term>
+
+        <listitem>
+          <para>Ausgangsnummer</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_user_external_numbers_get">
+    <title><command>gs_user_external_numbers_get</command><indexterm>
+        <primary><command>gs_user_external_numbers_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Externe Ausgangsnummern anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die externen Ausgangsnummern eines Benutzers an. Von diesen
+    Nummern darf der User Gespräche initiieren.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <simpara>Die eindeutige Identifikation des Benutzers.</simpara>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_user_get">
+    <title><command>gs_user_get</command><indexterm>
+        <primary><command>gs_user_get</command></primary>
+      </indexterm><indexterm>
+        <primary>User anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt einen User an.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <simpara>Die eindeutige Identifikation des Benutzers.</simpara>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_user_ip_by_ext">
+    <title><command>gs_user_ip_by_ext</command><indexterm>
+        <primary><command>gs_user_ip_by_ext</command></primary>
+      </indexterm><indexterm>
+        <primary>IP eines Users über Extension anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die IP des Endgerätes eines Benutzets über seine Extension
+    (Durchwahl).</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--ext=<replaceable>Extension</replaceable></code></term>
+
+        <listitem>
+          <para>Extension (Durchwahl) des Benutzers, z.B. 1234</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_user_ip_by_user">
+    <title><command>gs_user_ip_by_user</command><indexterm>
+        <primary><command>gs_user_ip_by_user</command></primary>
+      </indexterm><indexterm>
+        <primary>IP eines Users anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die IP des Endgerätes eines Benutzers an.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_users_get">
+    <title><command>gs_users_get</command><indexterm>
+        <primary><command>gs_uses_get</command></primary>
+      </indexterm><indexterm>
+        <primary>User anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt alle im System angelegten Benutzer.</para>
+  </section>
+
+  <section id="gs_vm_activate">
+    <title><command>gs_vm_activate</command><indexterm>
+        <primary><command>gs_vm_activate</command></primary>
+      </indexterm><indexterm>
+        <primary>Voicemail aktivieren</primary>
+      </indexterm></title>
+
+    <para>Aktiviert/deaktiviert die Anrufbeantworterfunktion ("Voicemail") für
+    den angegebenen Benutzer.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--user=<replaceable>Benutzername</replaceable></code></term>
+
+        <listitem>
+          <para>Die eindeutige Identifikation des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--source=<replaceable>(internal|external)</replaceable></code></term>
+
+        <listitem>
+          <para>Unterscheidung zwischen internen und externen Anrufen.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--active=<replaceable>(yes|no)</replaceable></code></term>
+
+        <listitem>
+          <para>Aktiviert/deaktiviert Sprachnachrichten</para>
+
+          <variablelist>
+            <varlistentry>
+              <term><code>yes</code></term>
+
+              <listitem>
+                <para>Sprachnachrichten können aufgezeichnet werden.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><code>no</code></term>
+
+              <listitem>
+                <para>Sprachnachrichten werden nicht aufgezeichnet.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_vm_get">
+    <title><command>gs_vm_get</command><indexterm>
+        <primary><command>gs_vm_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Voicemaileinstellungen anzeigen</primary>
+      </indexterm></title>
+
+    <para>Zeigt die Einstellungen für Sprachnachrichten des angegebenen
+    Benutzers</para>
+  </section>
+</chapter>

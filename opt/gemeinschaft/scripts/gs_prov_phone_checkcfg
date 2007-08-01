@@ -1,0 +1,96 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1682 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+/*
+$usage = 'Reboots a phone by user code, extension, IP addr. or all phones
+Usage: '. baseName(__FILE__) .' ( --user=<usercode> | --ext=<extension> | --ip=<ip_addr> | --all=yes ) --reboot=yes|no';
+*/
+$usage = 'Reboots a phone by user code, extension, IP addr. or all phones
+Usage: '. baseName(__FILE__) .' ( --user=<usercode> | --ext=<extension> | --ip=<ip_addr> | --all=yes )';
+
+$opts = getOptsNoMultiples( '',
+	array(
+		'user=',
+		'ext=',
+		'ip=',
+		'all='/*,
+		'reboot='*/
+	),
+	$usage
+);
+if (! isSet( $opts['user'] )
+ && ! isSet( $opts['ext'] )
+ && ! isSet( $opts['ip'] )
+ && ! isSet( $opts['all'] )
+ ) {
+	gs_script_invalid_usage( $usage );
+}
+/*
+if (! isSet( $opts['reboot'] )) {
+	echo "Use --reboot=yes|no\n";
+	gs_script_invalid_usage( $usage );
+}
+*/
+$opts['reboot'] = 'yes';
+if (count($opts) > 2) {
+	echo "Use only one of the parameters!\n";
+	gs_script_invalid_usage( $usage );
+}
+$reboot = (strToLower($opts['reboot']) != 'no');
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+if     (isSet( $opts['user'] ))
+	$ret = @ gs_prov_phone_checkcfg_by_user( $opts['user'], $reboot );
+elseif (isSet( $opts['ext'] ))
+	$ret = @ gs_prov_phone_checkcfg_by_ext( $opts['ext'], $reboot );
+elseif (isSet( $opts['ip'] ))
+	$ret = @ gs_prov_phone_checkcfg_by_ip( $opts['ip'], $reboot );
+else
+	$ret = @ gs_prov_phone_checkcfg_all( $reboot );
+
+if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
+if (! $ret)
+	echo "Failed.\n";
+else
+	echo "Done.\n";
+
+?>

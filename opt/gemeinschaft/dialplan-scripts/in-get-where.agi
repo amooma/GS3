@@ -1,0 +1,118 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1110 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+
+$ext  = trim(@$argv[1]);
+
+if (! $ext) {
+	echo "SET VARIABLE __exttype\n";
+	echo "SET VARIABLE __dial_to_node\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
+	echo "SET VARIABLE __exttype unknown\n";
+	echo "SET VARIABLE __dial_to_node\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/get-listen-to-ids.php' );
+
+
+
+function get_at_dial( $host_id )
+{
+	$our_ids = @gs_get_listen_to_ids();
+	if (! is_array($our_ids) || ! in_array($host_id, $our_ids))
+		return 'gs-'. str_pad( $host_id, 4, '0', STR_PAD_LEFT );
+	else
+		return '';
+}
+
+
+
+$db = gs_db_slave_connect();
+
+# is it a user?
+#
+$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
+if ($num > 0) {
+	echo "SET VARIABLE __exttype user\n";
+	$host_id = $db->executeGetOne( 'SELECT `u`.`host_id` FROM `ast_sipfriends` `s` JOIN `users` `u` ON (`u`.`id`=`s`.`_user_id`) WHERE `s`.`name`=\''. $db->escape($ext) .'\'' );
+	if ($host_id < 1)
+		echo "SET VARIABLE __dial_to_node\n";
+	else
+		echo "SET VARIABLE __dial_to_node ". get_at_dial( $host_id ) ."\n";
+	die();
+}
+
+# is it a queue?
+#
+$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queues` WHERE `name`=\''. $db->escape($ext) .'\'' );
+if ($num > 0) {
+	echo "SET VARIABLE __exttype queue\n";
+	$host_id = $db->executeGetOne( 'SELECT `_host_id` FROM `ast_queues` WHERE `name`=\''. $db->escape($ext) .'\'' );
+	if ($host_id < 1)  // should never happen
+		echo "SET VARIABLE __dial_to_node\n";
+	else
+		echo "SET VARIABLE __dial_to_node ". get_at_dial( $host_id ) ."\n";
+	die();
+}
+
+# is it a conference?
+#
+/*
+$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `conferences` WHERE `ext`=\''. $db->escape($ext) .'\'' );
+if ($num > 0) {
+	echo "SET VARIABLE __exttype conference\n";
+	$host_id = $db->executeGetOne( 'SELECT `host_id` FROM `conferences` WHERE `ext`=\''. $db->escape($ext) .'\'' );
+	if ($host_id < 1)  // should never happen
+		echo "SET VARIABLE __dial_to_node\n";
+	else
+		echo "SET VARIABLE __dial_to_node ". get_at_dial( $host_id ) ."\n";
+	die();
+}
+*/
+
+
+echo "SET VARIABLE __exttype unknown\n";
+echo "SET VARIABLE __dial_to_node\n";
+//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+die();
+
+?>

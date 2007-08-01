@@ -1,0 +1,270 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1849 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/log.php' );
+require_once( GS_DIR .'inc/db_connect.php' );
+require_once( GS_DIR .'inc/extension-state.php' );
+require_once( GS_DIR .'inc/gs-lib.php' );
+require_once( GS_DIR .'inc/get-listen-to-ids.php' );
+require_once( GS_DIR .'inc/remote-exec.php' );
+
+
+$runctl_max_time = 10*60;
+
+$runctl_t_start = time();
+@ set_time_limit( (int)($runctl_max_time * 1.5) + 30 );
+$max_exec_time = (int)@ini_get('max_execution_time');
+if ($max_exec_time < 1) $max_exec_time = $runctl_max_time;
+$max_exec_time = (int)($max_exec_time * 0.95);
+$runctl_t_stop = $runctl_t_start + $max_exec_time;
+
+gs_log(GS_LOG_DEBUG, 'Worker started.', 'cc.log');
+
+$DB = gs_db_master_connect();
+$our_host_ids = array();
+$hosts = array();
+
+do {
+	$ok = @_do_one_pass();
+	sleep( $ok ? 7 : 21 );
+} while (time() < $runctl_t_stop);
+@ exec( 'find \'/tmp/\' -maxdepth 1 -name \'gs-cc-*.call\' -type f -mmin +10 | xargs rm -f 1>>/dev/null 2>&1' );
+gs_log(GS_LOG_DEBUG, 'Worker ended normally.', 'cc.log');
+die(0);
+
+
+
+function _extstate_v( $state )
+{
+	static $states = array(
+		AST_MGR_EXT_UNKNOWN => 'no extension',
+		AST_MGR_EXT_IDLE    => 'idle',
+		AST_MGR_EXT_INUSE   => 'busy',
+		AST_MGR_EXT_OFFLINE => 'unreachable',
+		AST_MGR_EXT_RINGING => 'ringing'
+	);
+	return array_key_exists($state, $states) ? $states[$state] : $state;
+}
+
+function _do_one_pass()
+{
+	global $DB, $our_host_ids, $hosts;
+	
+	gs_log(GS_LOG_DEBUG, 'Checking waiting call completions ...', 'cc.log');
+	
+	# get hosts
+	#
+	$rs = @ $DB->execute( 'SELECT `id`, `host` FROM `hosts`' );
+	if (! $rs) {
+		gs_log(GS_LOG_FATAL, 'Failed to get hosts!');
+		gs_log(GS_LOG_FATAL, 'Failed to get hosts!', 'cc.log');
+		//echo "Failed to get hosts!\n";
+		//die(1);
+		return false;
+	}
+	$hosts = array();
+	while ($r = $rs->fetchRow()) {
+		$hosts[$r['id']] = $r['host'];
+	}
+	
+	# delete timed out call completions
+	#
+	$ok = @ $DB->execute( 'DELETE FROM `call_completion_waiting` WHERE `t_init`<'. (time() - (int)GS_CC_TIMEOUT*60) );
+	
+	# get out host ids
+	#
+	$our_host_ids = @ gs_get_listen_to_ids();
+	if (! is_array($our_host_ids)) $our_host_ids = array();
+	
+	# get waiting call completions
+	#
+	$rs_ccw = @ $DB->execute(
+'SELECT
+	`c`.`from_ext`, `c`.`from_host_id`, `c`.`from_user_id`, `sf`.`callerid` `from_cid`,
+	`c`.`to_ext`, `c`.`to_host_id`, `c`.`to_user_id`, `st`.`callerid` `to_cid`
+FROM
+	`call_completion_waiting` `c`
+	LEFT JOIN `ast_sipfriends` `sf` ON (`sf`.`_user_id`=`c`.`from_user_id`)
+	LEFT JOIN `ast_sipfriends` `st` ON (`st`.`_user_id`=`c`.`to_user_id`)'
+	);
+	if (! $rs_ccw) {
+		gs_log(GS_LOG_FATAL, 'Could not get waiting call completions!');
+		gs_log(GS_LOG_FATAL, 'Could not get waiting call completions!', 'cc.log');
+		//echo "Could not get waiting call completions!\n";
+		//die(1);
+		return false;
+	}
+	while ($cc = $rs_ccw->fetchRow()) {
+		
+		gs_log(GS_LOG_DEBUG, 'Checking CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .' ...', 'cc.log');
+		
+		if ( ! isSet( $hosts[$cc['from_host_id']] )
+		  || ! isSet( $hosts[$cc[  'to_host_id']] ) ) continue;
+		
+		if ($cc['from_ext'] == $cc['to_ext']) continue;
+		$caller_state = gs_extstate( $hosts[$cc['from_host_id']], $cc['from_ext'] );
+		if (! gs_ast_extstate_try_cc( $caller_state )) {
+			gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': '. $cc['from_ext'] .' is not idle (state: '. _extstate_v($caller_state) .') => no CC', 'cc.log');
+			continue;
+		};
+		$callee_state = gs_extstate( $hosts[$cc[  'to_host_id']], $cc[  'to_ext'] );
+		if (! gs_ast_extstate_try_cc( $callee_state )) {
+			gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': '. $cc['to_ext'] .' is not idle (state: '. _extstate_v($callee_state) .') => no CC', 'cc.log');
+			continue;
+		}
+		
+		# check if original caller has unconditional forward and if so
+		# don't even try CC
+		#
+		$from_user = $DB->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`='. (int)$cc['from_user_id'] );
+		if (! $from_user) continue;
+		$cf = gs_callforward_get( $from_user );
+		if (isGsError($cf) || ! is_array($cf)) continue;
+		if (@$cf['internal']['always']['active'] != 'no') {
+			//gs_log(GS_LOG_DEBUG, 'Don\'t try CC from "'. $cc['from_ext'] .'" because of unconditional forward');
+			gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': '. $cc['from_ext'] .' has unconditional forward. => no CC', 'cc.log');
+			continue;
+		}
+		
+		# check if original callee has unconditional forward and if so
+		# don't even try CC
+		#
+		$to_user = $DB->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`='. (int)$cc['to_user_id'] );
+		if (! $to_user) continue;
+		$cf = gs_callforward_get( $to_user );
+		if (isGsError($cf) || ! is_array($cf)) continue;
+		if (@$cf['internal']['always']['active'] != 'no') {
+			//gs_log(GS_LOG_DEBUG, 'Don\'t try CC to "'. $cc['to_ext'] .'" because of unconditional forward');
+			gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': '. $cc['to_ext'] .' has unconditional forward. => no CC', 'cc.log');
+			continue;
+		}		
+		
+		gs_log(GS_LOG_DEBUG, 'Trying call completion from '. $cc['from_ext'] .' to '. $cc['to_ext'] .' ...');
+		$ok = @ $DB->execute( 'DELETE FROM `call_completion_waiting` WHERE `from_ext`=\''. $DB->escape($cc['from_ext']) .'\' AND `to_ext`=\''. $DB->escape($cc['to_ext']) .'\'' );
+		if (! $ok) {
+			gs_log(GS_LOG_FATAL, 'Could not delete call completion from '. $cc['from_ext'] .' to '. $cc['to_ext'] .'. Aborting to prevent infinite loop.');
+			gs_log(GS_LOG_FATAL, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': Could not delete db entry. Aborting to prevent infinite loop.', 'cc.log');
+			# abort to prevent calling them infinitely
+			continue;
+		}
+		gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': Try to write call file ...', 'cc.log');
+			
+		_make_call_file( $cc['from_ext'], $cc['to_ext'], $cc['to_cid'], $cc['from_cid'], $cc['from_user_id'], $cc['from_host_id'] );
+		
+	}
+	return true;
+}
+
+
+function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid, $from_host_id )
+{
+	global $our_host_ids, $hosts;
+	
+	//$rr = "R\xC3\xBCckruf";
+	$rr = "RR";
+	$cid_to_caller = "$rr ". ($cid_to_caller ? $cid_to_caller : '<*>');
+	$cid_to_callee = $cid_to_callee ? $cid_to_callee : "$rr <*>";
+	$call = "Channel: SIP/$from\n"
+      . "MaxRetries: 20\n"
+      . "WaitTime: 20\n"
+      . "Context: call-completion\n"
+      . "Extension: cc-$to\n"
+      . "Callerid: $cid_to_caller\n"
+      . "Setvar: __orig_callerid=$cid_to_callee\n"
+      . "Setvar: __user_id=$from_uid\n"
+      . "Setvar: __user_name=$from\n"
+      . "Setvar: CHANNEL(language)=de\n"
+	;
+	//echo $call, "\n";
+	
+	//$filename = '/tmp/gs-'. $user['id'] .'-'. _pack_int(time()) . rand(100,999) .'.call';
+	$filename = '/tmp/gs-cc-'. _pack_int(time()) . rand(100,999) .'.call';
+	$cf = @ fOpen( $filename, 'wb' );
+	if (! $cf) {
+		gs_log(GS_LOG_WARNING, 'Failed to write call file "'. $filename .'"');
+		gs_log(GS_LOG_WARNING, 'Failed to write call file "'. $filename .'"', 'cc.log');
+		return false;
+	}
+	@ fWrite( $cf, $call, strLen($call) );
+	@ fClose( $cf );
+	@ chmod( $filename, 00666 );
+	
+	$spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
+	
+	if (in_array( $from_host_id, $our_host_ids )) {
+		# the Asterisk of this user and the web server both run on this host
+		
+		$ok = @ rename( $filename, $spoolfile );
+		if ($ok < 1) {
+			@ unlink( $filename );
+			gs_log(GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"');
+			gs_log(GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"', 'cc.log');
+			return false;
+		}
+		
+	} else {
+		
+		$host = @ $hosts[$from_host_id];
+		if (! $host) return false;
+		
+		$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. escapeShellArg( $filename ) .' '. escapeShellArg( 'root@'. $host .':'. $filename );
+		//echo $cmd, "\n";
+		@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
+		@ unlink( $filename );
+		if ($err != 0) {
+			gs_log(GS_LOG_WARNING, 'Failed to scp call file "'. $filename .'" to '. $host);
+			gs_log(GS_LOG_WARNING, 'Failed to scp call file "'. $filename .'" to '. $host, 'cc.log');
+			return false;
+		}
+		//remote_exec( $host, $cmd, 10, $out, $err ); // <-- does not use sudo!
+		$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. escapeShellArg( $host ) .' '. escapeShellArg( 'mv '. escapeShellArg( $filename ) .' '. escapeShellArg( $spoolfile ) );
+		//echo $cmd, "\n";
+		@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
+		if ($err != 0) {
+			gs_log(GS_LOG_WARNING, 'Failed to mv call file "'. $filename .'" on '. $host .' to "'. $spoolfile .'"');
+			gs_log(GS_LOG_WARNING, 'Failed to mv call file "'. $filename .'" on '. $host .' to "'. $spoolfile .'"', 'cc.log');
+			return false;
+		}
+		
+	}
+	
+	gs_log(GS_LOG_NOTICE, 'CC '. $from .' to '. $to .': Call file written.', 'cc.log');
+	return true;
+}
+
+function _pack_int( $int ) {
+	$str = base64_encode(pack('N', $int ));
+	return preg_replace('/[^a-z\d]/i', '', $str);
+}
+
+
+?>

@@ -1,0 +1,90 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1110 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+
+$user_ext = trim(@$argv[1]);
+$type     = trim(@$argv[2]);
+$number   = trim(@$argv[3]);
+
+if (! preg_match('/^[0-9]+$/', $user_ext))
+	die();
+if (! in_array( $type, array('in','out','missed'), true ))
+	die();
+if (! $number)
+	die();
+$number = preg_replace( '/[^\d*#]/', '', $number );
+
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$db = gs_db_master_connect();
+
+# get user id:
+#
+$uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user_ext) .'\'' );
+if ($uid < 1) die();
+
+# get remote user
+#
+$rs = $db->execute(
+'SELECT
+	`u`.`id`, `u`.`firstname`, `u`.`lastname`
+FROM
+	`ast_sipfriends` `s` JOIN
+	`users` `u` ON (`u`.`id`=`s`.`_user_id`)
+WHERE
+	`s`.`name`=\''. $db->escape($number) .'\''
+);
+$remote_user = $rs->fetchRow();
+if ($remote_user) {
+	$db_remote_user_id = (int)$remote_user['id'];
+	$remote_name = '';
+	if ($remote_user['firstname'] != '')
+		$remote_name .= mb_subStr($remote_user['firstname'], 0, 1) .'. ';
+	$remote_name .= $remote_user['lastname'];
+	$remote_name = trim($remote_name);
+} else {
+	$db_remote_user_id = 'NULL';
+	$remote_name = '';
+}
+
+# log
+#
+$db->execute( 'INSERT INTO `dial_log` (`user_id`, `type`, `timestamp`, `number`, `remote_name`, `remote_user_id`) VALUES ('. $uid .', \''. $type .'\', '. time() .', \''. $db->escape($number) .'\', \''. $db->escape($remote_name) .'\', '. $db_remote_user_id .')' );
+
+
+
+?>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<chapter id="verzeichnisstruktur" revision="$Revision: 1178 $">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Verzeichnisstruktur und wichtige Dateien</title>
+
+  <para>Verzeichnis: <filename>/opt/gemeinschaft/</filename></para>
+
+  <variablelist termlength="20">
+    <varlistentry>
+      <term><filename>dialplan-scripts/</filename></term>
+
+      <listitem>
+        <simpara>Hier liegen Skripte, die vom Dialplan benötigt werden. Sie
+        sollten nicht von Hand aufgerufen werden.</simpara>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><filename>doc/</filename></term>
+
+      <listitem>
+        <simpara>Diese Dokumentation</simpara>
+
+        <variablelist termlength="20">
+          <varlistentry>
+            <term><filename>docbook/</filename></term>
+
+            <listitem>
+              <para>Dokumentation im Docbook-Format</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term><filename>html/</filename></term>
+
+            <listitem>
+              <simpara>Dokumentation im HTML-Format</simpara>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><filename>etc/</filename></term>
+
+      <listitem>
+        <simpara>Verschiedene Konfigurationsdateien</simpara>
+
+        <variablelist termlength="20">
+          <varlistentry>
+            <term><filename>asterisk/</filename></term>
+
+            <listitem>
+              <simpara>Konfigurationsdateien von Asterisk, bis auf
+              <filename>asterisk.conf</filename>, die in
+              <filename>/etc/asterisk/</filename> liegen muß.</simpara>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><filename>htdocs/</filename></term>
+
+      <listitem>
+        <simpara>Web-Root-Verzeichnisse</simpara>
+
+        <variablelist termlength="20">
+          <varlistentry>
+            <term><filename>gui/</filename></term>
+
+            <listitem>
+              <simpara>Document-Root des Web-interfaces</simpara>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term><filename>prov/</filename></term>
+
+            <listitem>
+              <simpara>Document-Root für Provisioning (Einstellungen) der
+              Telefone</simpara>
+
+              <variablelist termlength="20">
+                <varlistentry>
+                  <term><filename>snom/</filename></term>
+
+                  <listitem>
+                    <simpara>Snom-spezifische Provisioning-Skripte</simpara>
+
+                    <variablelist termlength="20">
+                      <varlistentry>
+                        <term><filename>settings.php</filename></term>
+
+                        <listitem>
+                          <simpara>Diese Datei wird von den Snom-Telefonen mit
+                          dem Parameter <code>?mac={mac}</code> aufgerufen,
+                          wobei <code>{mac}</code> von den Telefonen durch
+                          deren jeweilige MAC-Adresse ersetzt wird.</simpara>
+
+                          <simpara>Damit die Snoms diese Adresse aufrufen, muß
+                          im DHCP eine spezielle Option gesetzt sein. Siehe
+                          <xref linkend="dhcp-server" />.</simpara>
+                        </listitem>
+                      </varlistentry>
+                    </variablelist>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term><filename>ringtones/</filename></term>
+
+                  <listitem>
+                    <simpara>Hier liegen von den Usern gewählte eigene
+                    Klingeltöne. Dateinamen:
+                    <filename><replaceable>SipUser</replaceable>-<replaceable>Zufallsstring</replaceable>.wav</filename>.
+                    Dabei ist SipUser gleichzeitig die Extension des
+                    Benutzers. Der Zufallsstring ist nötig, damit die Snoms
+                    bei einem geänderten Klingelton die Datei neu laden.
+                    Dateiformat für die Snom 360: WAV (RIFF WAVE) mit
+                    PCM-Kodierung, mono, Sampling-Rate: 8 kHz (8000 Hz),
+                    Sample-Größe: 16 Bit (linear).</simpara>
+                  </listitem>
+                </varlistentry>
+              </variablelist>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><filename>inc/</filename></term>
+
+      <listitem>
+        <simpara>Von verschiedenen Skripten benötigte Dateien (meist
+        PHP).</simpara>
+
+        <variablelist termlength="20">
+          <varlistentry>
+            <term><filename>conf.php</filename></term>
+
+            <listitem>
+              <simpara>Zentrale Konfigurationsdatei (Datenbank-Verbindung
+              etc.).</simpara>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><filename>lib/</filename></term>
+
+      <listitem>
+        <simpara>Ähnlich <filename>inc/</filename>, aber hier liegen Dateien
+        (meist PHP), die nicht direkt zum Projekt selber gehören (z.B.
+        DB-Abstraktionslayer etc.).</simpara>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><filename>sbin/</filename></term>
+
+      <listitem>
+        <simpara>Besondere System-Skripte, die i.d.R. nicht von Hand
+        aufgerufen werden.</simpara>
+
+        <variablelist termlength="20">
+          <varlistentry>
+            <term><filename>queuelog-to-db.php</filename></term>
+
+            <listitem>
+              <simpara>Dieses Skript schreibt das Queue-Log von Asterisk
+              (<filename>/var/log/asterisk/queue_log</filename>) in
+              aufbereiteter Form in die Datenbank (Tabelle
+              <code>queue_log</code>).</simpara>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><filename>scripts/</filename></term>
+
+      <listitem>
+        <simpara>Skripte zur Administration des Systems (Benutzer anlegen
+        etc.). Siehe <xref linkend="admin-scripts" />.</simpara>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><filename>vm-rec/</filename></term>
+
+      <listitem>
+        <simpara>Mailbox-Ansagen der Benutzer.</simpara>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</chapter>

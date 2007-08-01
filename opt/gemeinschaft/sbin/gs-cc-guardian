@@ -1,0 +1,84 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1778 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/log.php' );
+
+$process_name = 'gs-cc-worker';
+
+
+$t_start = time();
+gs_log(GS_LOG_DEBUG, 'Guardian started.', 'cc.log');
+while (time() < $t_start+50) {
+	$ok = @ _check_worker_alive();
+	sleep( 5 );
+}
+gs_log(GS_LOG_DEBUG, 'Guardian ended normally.', 'cc.log');
+die(0);
+
+
+function _check_worker_alive()
+{
+	global $process_name;
+	
+	@ exec( 'ps -NC grep | grep gs-cc-worker 2>>/dev/null', $out, $err );
+	if ($err == 1)
+		$running = false;
+	else {
+		if ($err != 0) {
+			gs_log(GS_LOG_FATAL, 'Failed to exec ps ax in Call Completion Guardian!');
+			gs_log(GS_LOG_FATAL, 'Failed to check if worker is alive!.', 'cc.log');
+			return false;
+		}
+		$running = false;
+		foreach ($out as $line) {
+			if ( strPos($line, $process_name) !== false
+			 && strPos($line, 'grep') === false )
+				$running = true;
+		}
+	}
+	if (! $running) {
+		@ exec( GS_DIR .'sbin/'. $process_name .' &', $out, $err );
+		if ($err != 0) {
+			gs_log(GS_LOG_FATAL, 'Failed to start Call Completion Worker! ('. implode(' ', $out) .')');
+			gs_log(GS_LOG_FATAL, 'Worker not running. Failed to start worker! ('. implode(' ', $out) .')', 'cc.log');
+			return false;
+		} else {
+			gs_log(GS_LOG_DEBUG, 'Worker not running. Started worker.', 'cc.log');
+		}
+	} else {
+		gs_log(GS_LOG_DEBUG, 'Worker is alive.', 'cc.log');
+	}
+	return true;
+}
+
+
+?>
