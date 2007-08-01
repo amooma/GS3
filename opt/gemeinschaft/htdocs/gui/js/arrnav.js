@@ -1,4 +1,4 @@
-/* $Revision: 1235 $ */
+/* $Revision$ */
 
 function arr_nav( evt )
 {
