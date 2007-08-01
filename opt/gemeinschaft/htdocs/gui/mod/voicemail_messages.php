@@ -224,7 +224,7 @@ if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
 				? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
 			echo ' &nbsp; <a href="', GS_URL_PATH, 'pb-dial.php?n=', htmlEnt(@$msg['cidnum']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a>';
 		} else {
-			echo ' &nbsp; <img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook-lvm-dis.png" />';
+			echo ' &nbsp; <img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook-cust-dis.png" />';
 		}
 		echo ' &nbsp;&nbsp; <a href="', gs_url($SECTION, $MODULE), '&amp;action=del&amp;fld=', rawUrlEncode( @$msg['fld'] ), '&amp;file=', rawUrlEncode( @$msg['file'] ), '" title="', __('l&ouml;schen'), '"><img alt="l&ouml;schen" src="', GS_URL_PATH, 'img/trash.gif" /></a>';
 		echo '</td>', "\n";
