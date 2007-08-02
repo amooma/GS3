@@ -639,6 +639,7 @@ CREATE TABLE `users` (
   `firstname` varchar(50) collate utf8_unicode_ci NOT NULL default '',
   `lastname` varchar(50) collate utf8_unicode_ci NOT NULL default '',
   `honorific` varchar(30) collate utf8_unicode_ci NOT NULL default '',
+  `email` varchar(50) collate utf8_unicode_ci NOT NULL default '',
   `nobody_index` mediumint(8) unsigned default NULL,
   `host_id` mediumint(8) unsigned default '1',
   `current_ip` varchar(15) character set ascii default NULL,
@@ -659,7 +660,7 @@ CREATE TABLE `users` (
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 LOCK TABLES `users` WRITE;
-INSERT INTO `users` VALUES (5,'nobody-00001','','','','',1,1,'192.168.1.249',''),(6,'nobody-00002','','','','',2,1,NULL,''),(7,'nobody-00003','','','','',3,1,'192.168.1.202',''),(8,'nobody-00004','','','','',4,1,NULL,''),(9,'nobody-00005','','','','',5,1,'192.168.1.202',''),(10,'nobody-00006','','','','',6,1,'192.168.1.247',''),(11,'nobody-00007','','','','',7,1,NULL,''),(12,'nobody-00008','','','','',8,1,NULL,''),(13,'nobody-00009','','','','',9,1,'192.168.1.202',''),(14,'nobody-00010','','','','',10,1,'192.168.1.201',''),(22,'47110001','123','Bart','Simpson','',NULL,1,NULL,''),(23,'47110002','123','Homer','Simpson','',NULL,2,'192.168.1.247',''),(24,'47110003','123','Marge','Simpson','',NULL,1,'192.168.1.249',''),(25,'47110004','123','Lisa','Simpson','',NULL,1,'192.168.1.247',''),(28,'nobody-00011','','','','',11,1,NULL,''),(29,'nobody-00012','','','','',12,1,'192.168.1.201',''),(30,'nobody-00013','','','','',13,1,'192.168.1.109','');
+INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,'192.168.1.249',''),(6,'nobody-00002','','','','','',2,1,NULL,''),(7,'nobody-00003','','','','','',3,1,'192.168.1.202',''),(8,'nobody-00004','','','','','',4,1,NULL,''),(9,'nobody-00005','','','','','',5,1,'192.168.1.202',''),(10,'nobody-00006','','','','','',6,1,'192.168.1.247',''),(11,'nobody-00007','','','','','',7,1,NULL,''),(12,'nobody-00008','','','','','',8,1,NULL,''),(13,'nobody-00009','','','','','',9,1,'192.168.1.202',''),(14,'nobody-00010','','','','','',10,1,'192.168.1.201',''),(22,'47110001','123','Bart','Simpson','','',NULL,1,NULL,''),(23,'47110002','123','Homer','Simpson','','',NULL,2,'192.168.1.247',''),(24,'47110003','123','Marge','Simpson','','',NULL,1,'192.168.1.249',''),(25,'47110004','123','Lisa','Simpson','','',NULL,1,'192.168.1.247',''),(28,'nobody-00011','','','','','',11,1,NULL,''),(29,'nobody-00012','','','','','',12,1,'192.168.1.201',''),(30,'nobody-00013','','','','','',13,1,'192.168.1.109','');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
