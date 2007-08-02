@@ -33,7 +33,7 @@ defined('GS_VALID') or die('No direct access.');
 *    change a user account
 ***********************************************************/
 
-function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false )
+function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false, $email='' )
 {
 	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -45,6 +45,10 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	//if (! preg_match( '/^[a-zA-Z\d.\-\_ ]+$/', $lastname ))
 	//	return new GsError( 'Invalid characters in last name.' );
 	$lastname = preg_replace('/\s+/', ' ', trim($lastname));
+	if (! defined('GS_EMAIL_PATTERN_VALID'))
+		return new GsError( 'GS_EMAIL_PATTERN_VALID not defined.' );
+	if ($email != '' && ! preg_match( GS_EMAIL_PATTERN_VALID, $email ))
+		return new GsError( 'E-mail address must be numeric.' );
 	
 	include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 	
@@ -85,7 +89,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	
 	# update user
 	#
-	$ok = $db->execute( 'UPDATE `users` SET `pin`=\''. $db->escape($pin) .'\', `firstname`=\''. $db->escape($firstname) .'\', `lastname`=\''. $db->escape($lastname) .'\', `host_id`='. $host['id'] .' WHERE `id`='. $user_id );
+	$ok = $db->execute( 'UPDATE `users` SET `pin`=\''. $db->escape($pin) .'\', `firstname`=\''. $db->escape($firstname) .'\', `lastname`=\''. $db->escape($lastname) .'\', `email`=\''. $db->escape($email) .'\', `host_id`='. $host['id'] .' WHERE `id`='. $user_id );
 	if (! $ok)
 		return new GsError( 'Failed to change user.' );
 	
