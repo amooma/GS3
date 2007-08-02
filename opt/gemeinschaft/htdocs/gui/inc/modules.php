@@ -132,7 +132,7 @@ $MODULES = array(
 	),
 	##################################################################
 	'logout'           => array('title' => __('Logout'),
-	                            'icon'  => 'crystal-svg/%s/app/kfm_home.png',
+	                            'icon'  => 'crystal-svg/%s/act/exit.png',
 	   'sub' => array(
 	      'logout'     => array('title' => __('Logout'))
 	   )
