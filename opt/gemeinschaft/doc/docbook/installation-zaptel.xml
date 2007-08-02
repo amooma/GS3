@@ -47,10 +47,11 @@
 
     <para>Auf den Digium-Karten der Serien Wildcard<footnote>
         <para>ein genialer Name :-)</para>
-      </footnote> TE1xx, TE2xx, TE4xx sind Jumper angebracht, über denen
-    <quote><foreignphrase lang="en">T1/E1 select</foreignphrase></quote>
-    steht. Für den Betrieb in Europa müssen die Ports der Karte auf E1
-    gestellt werden, dazu steckt man alle Jumper ein.</para>
+      </footnote> (abgekürzt "wc") TE1xx, TE2xx, TE4xx sind Jumper angebracht,
+    über denen <quote><foreignphrase lang="en">T1/E1
+    select</foreignphrase></quote> steht. Für den Betrieb in Europa müssen die
+    Ports der Karte auf E1 gestellt werden, dazu steckt man alle Jumper
+    ein.</para>
 
     <para>Falls man mehrere Karten einbaut, sollte man noch das
     <quote><foreignphrase lang="en">Ident Wheel</foreignphrase></quote> (ein
@@ -652,6 +653,12 @@ Channel 62: Clear channel (Default) (Slaves: 62)
         Karte setzen<footnote>
             <para>siehe <xref linkend="install-zap-isdn-hardware" /></para>
           </footnote>.</para>
+
+        <para>Wer es ganz genau wissen will: Man könnte das auch in der
+        <filename>/etc/sysconfig/zaptel</filename> angeben (die
+        vorinstallierte Datei hat ein Beispiel):<screen>MODULES="$MODULES wct4xxp"     # TE4xxP - Quad Span T1/E1 Card
+wct4xxp_ARGS="t1e1override=15" # Additional parameters for TE4xxP driver</screen>Nach
+        Änderungen natürlich rebooten.</para>
       </note>
 
       <note>
