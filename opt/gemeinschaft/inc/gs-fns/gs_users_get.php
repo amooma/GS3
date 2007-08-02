@@ -45,7 +45,8 @@ function gs_users_get()
 	#
 	$rs = $db->execute(
 'SELECT
-	`u`.`id`, `u`.`user`, `u`.`pin`, `u`.`lastname`, `u`.`firstname`, `u`.`honorific`,
+	`u`.`id`, `u`.`user`, `u`.`pin`,
+	`u`.`lastname`, `u`.`firstname`, `u`.`honorific`, `u`.`email`,
 	`s`.`name` `ext`, `s`.`callerid`, `s`.`mailbox`,
 	`h`.`host`
 FROM

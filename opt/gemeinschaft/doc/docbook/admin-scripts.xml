@@ -27,7 +27,7 @@
   <para>Generell wird beim Aufruf mit dem Parameter <literal>-?</literal> oder
   <literal>--help</literal> (oder auch ohne Parameter) eine kurze
   Parameter-Übersicht ausgegeben. Beispielsweise so:<screen>$ <command>./gs_user_add --help</command>
-Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; --firstname=&lt;firstname&gt; --lastname=&lt;lastname&gt; --host=&lt;id&gt;|&lt;ip&gt;</screen>Die
+Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; --firstname=&lt;firstname&gt; --lastname=&lt;lastname&gt; --email=&lt;email&gt; --host=&lt;id&gt;|&lt;ip&gt;</screen>Die
   Reihenfolge der Parameter ist beliebig. Falls ein Wert Leerzeichen oder
   Shell-Sonderzeichen enthält, muß er natürlich in doppelte (<code>"</code>)
   oder einfache (<code>'</code>) Anführungszeichen eingeschlossen sein (wie
@@ -1222,6 +1222,14 @@ Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
       </varlistentry>
 
       <varlistentry>
+        <term><code>--email=<replaceable>Email</replaceable></code></term>
+
+        <listitem>
+          <simpara>E-Mail-Adresse (für Paßwort-vergessen-Funktion)</simpara>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
         <term><code>--host=<replaceable>ID|IP</replaceable></code></term>
 
         <listitem>
@@ -1273,6 +1281,14 @@ Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
 
         <listitem>
           <para>Nachname</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>--email=<replaceable>Email</replaceable></code></term>
+
+        <listitem>
+          <simpara>E-Mail-Adresse (für Paßwort-vergessen-Funktion)</simpara>
         </listitem>
       </varlistentry>
 

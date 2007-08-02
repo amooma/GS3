@@ -33,7 +33,7 @@ defined('GS_VALID') or die('No direct access.');
 *    adds a user account
 ***********************************************************/
 
-function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip )
+function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, $email )
 {
 	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -47,6 +47,10 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip )
 	//if (! preg_match( '/^[a-zA-Z\d.\-\_ ]+$/', $lastname ))
 	//	return new GsError( 'Invalid characters in last name.' );
 	$lastname = preg_replace('/\s+/', ' ', trim($lastname));
+	if (! defined('GS_EMAIL_PATTERN_VALID'))
+		return new GsError( 'GS_EMAIL_PATTERN_VALID not defined.' );
+	if ($email != '' && ! preg_match( GS_EMAIL_PATTERN_VALID, $email ))
+		return new GsError( 'E-mail address must be numeric.' );
 	
 	include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 	
@@ -84,7 +88,7 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip )
 	
 	# add user
 	#
-	$ok = $db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `nobody_index`, `host_id`) VALUES (NULL, \''. $db->escape($user) .'\', \''. $db->escape($pin) .'\', _utf8\''. $db->escape($firstname) .'\', _utf8\''. $db->escape($lastname) .'\', NULL, '. $host['id'] .')' );
+	$ok = $db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `email`, `nobody_index`, `host_id`) VALUES (NULL, \''. $db->escape($user) .'\', \''. $db->escape($pin) .'\', _utf8\''. $db->escape($firstname) .'\', _utf8\''. $db->escape($lastname) .'\', _utf8\''. $db->escape($email) .'\', NULL, '. $host['id'] .')' );
 	if (! $ok)
 		return new GsError( 'Failed to add user (table users).' );
 	
