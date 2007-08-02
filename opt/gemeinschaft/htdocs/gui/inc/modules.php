@@ -32,6 +32,14 @@ defined('GS_VALID') or die('No direct access.');
 $MODULES = array(
 	
 	##################################################################
+	'login'            => array('title' => __('Login'),
+	                            'icon'  => 'crystal-svg/%s/app/kfm_home.png',
+	                            'inmenu'=> false,
+	   'sub' => array(
+	      'login'      => array('title' => __('Login'))
+	   )
+	),
+	##################################################################
 	'home'             => array('title' => __('Home'),
 	                            'icon'  => 'crystal-svg/%s/app/kfm_home.png',
 	   'sub' => array(
