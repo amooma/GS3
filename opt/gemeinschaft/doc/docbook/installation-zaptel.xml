@@ -833,9 +833,7 @@ amaflags = default
 faxdetect = both
 
 group = 1                  ; Kanalgruppe 1 - Dial(Zap/g1/...)
-channel =&gt; 1-15,17-31
-group = 1                  ; Kanalgruppe 2 - Dial(Zap/g2/...)
-channel =&gt; 32-46,48-62
+channel =&gt; 1-15,17-31,32-46,48-62
 </screen></para>
   </section>
 
