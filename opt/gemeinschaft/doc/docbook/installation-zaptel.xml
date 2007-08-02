@@ -825,8 +825,6 @@ echocancel = yes
 echocancelwhenbridged = yes
 rxgain = 0.0               ; Lautstärkeanpassung in dB eingehend
 txgain = 0.0               ;     "                     ausgehend
-group = 1                  ; Kanalgruppe 1
-                           ; siehe Dial(Zap/g1/...)
 callgroup = 1
 pickupgroup = 1
 immediate = no
@@ -834,7 +832,10 @@ callerid = asreceived
 amaflags = default
 faxdetect = both
 
-channel =&gt; 1-15,17-31,32-46,48-62
+group = 1                  ; Kanalgruppe 1 - Dial(Zap/g1/...)
+channel =&gt; 1-15,17-31
+group = 1                  ; Kanalgruppe 2 - Dial(Zap/g2/...)
+channel =&gt; 32-46,48-62
 </screen></para>
   </section>
 
