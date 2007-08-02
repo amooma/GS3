@@ -143,19 +143,43 @@ WHERE `u`.`user`=\''. $DB->escape($user) .'\''
 
 # authenticate the user
 #
-$PAM = new PAMAL( GS_GUI_AUTH_METHOD );
-$_SESSION['real_user']['_origname'] = preg_replace( '/[^a-z0-9_\-]/', '', $PAM->getUser() );
+$login_info   = '';
+$login_errmsg = '';
 
-if (! @$_SESSION['real_user']['name']) {
-	$_SESSION['real_user']['name'] = @ldap_user_map( $_SESSION['real_user']['_origname'] );
-	if (! $_SESSION['real_user']['name'])
-		die( sprintf(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod()) );
+if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
+	
+	$PAM = new PAMAL( GS_GUI_AUTH_METHOD );
+	$user = $PAM->getUser();
+	if (! $user) {
+		$_SESSION['login_ok'  ] = false;
+		$_SESSION['login_user'] = false;
+		$login_info = sprintf(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod());
+		$login_errmsg = __('Benutzer oder Pa&szlig;wort ung&uuml;ltig');
+		return;
+	}
+	$_SESSION['real_user']['_origname'] = preg_replace( '/[^a-z0-9_\-]/', '', $user );
+	
+	//if (! @$_SESSION['real_user']['name']) {
+		$_SESSION['real_user']['name'] = @ldap_user_map( $_SESSION['real_user']['_origname'] );
+	//}
+	if (! $_SESSION['real_user']['name']) {
+		//die( sprintf(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod()) );
+		$_SESSION['login_ok'  ] = false;
+		$_SESSION['login_user'] = false;
+		$login_info = sprintf(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod());
+		return;
+	}
+	
+	if (! @$_SESSION['real_user']['info'])
+		$_SESSION['real_user']['info'] = get_user( $_SESSION['real_user']['name'] );
+	//print_r($_SESSION);
+	if (! @$_SESSION['real_user']['info'])
+		die( sprintf(__('Unknown user "%s".'), @$_SESSION['real_user']['name']) );
+	
+	$_SESSION['login_ok'  ] = true;
+	$_SESSION['login_user'] = $user;
+
 }
-
-if (! @$_SESSION['real_user']['info'])
-	$_SESSION['real_user']['info'] = get_user( $_SESSION['real_user']['name'] );
-if (! @$_SESSION['real_user']['info'])
-	die( sprintf(__('Unknown user "%s".'), @$_SESSION['real_user']['name']) );
 
 $_SESSION['sudo_user']['name'] = @$_REQUEST['sudo'];
 if (! $_SESSION['sudo_user']['name'])
