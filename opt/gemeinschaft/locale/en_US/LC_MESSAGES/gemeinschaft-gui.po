@@ -16,6 +16,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: inc/modules.php:35
+msgid "Login"
+msgstr "Login"
+
 #: inc/modules.php:35 inc/modules.php:38
 msgid "Home"
 msgstr "Home"
@@ -157,6 +161,10 @@ msgstr "You are not logged in (authentication method: \"%s\")."
 msgid "Unknown user \"%s\"."
 msgstr "Unknown user \"%s\"."
 
+#: inc/session.php:157
+msgid "Benutzer oder Pa&szlig;wort ung&uuml;ltig"
+msgstr "Invalid user or password"
+
 #: inc/session.php:199
 #, php-format
 msgid "You are not allowed to act as \"%s\"."
@@ -181,6 +189,10 @@ msgstr "Acting as"
 #: index.php:187
 msgid "Benutzer wechseln"
 msgstr "Change user"
+
+#: index.php:190
+msgid "Nicht angemeldet"
+msgstr "Not logged in"
 
 #: mod/admin_calls.php:180
 msgid "Zeitraum"
@@ -928,6 +940,18 @@ msgid ""
 "Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu "
 "gestartet haben!"
 msgstr "You need to restart you phone to make changes become active!"
+
+#: mod/login_login.php:57
+msgid "Benutzername"
+msgstr "Username"
+
+#: mod/login_login.php:60
+msgid "Pa&szlig;wort"
+msgstr "Password"
+
+#: mod/login_login.php:65
+msgid "Einloggen"
+msgstr "Login"
 
 #: mod/monitor_peers.php:81
 msgid "Umleitung"
