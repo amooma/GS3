@@ -129,6 +129,13 @@ $MODULES = array(
 	      'calls'      => array('title' => __('Verbindungen')),
 	      'nodes'      => array('title' => __('Nodes'))
 	   )
+	),
+	##################################################################
+	'logout'           => array('title' => __('Logout'),
+	                            'icon'  => 'crystal-svg/%s/app/kfm_home.png',
+	   'sub' => array(
+	      'logout'     => array('title' => __('Logout'))
+	   )
 	)
 	##################################################################
 	

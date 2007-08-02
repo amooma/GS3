@@ -28,7 +28,7 @@
 \*******************************************************************/
 
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1891 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1906 $
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2007-05-23 12:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
@@ -68,6 +68,7 @@ Content-Transfer-Encoding: 8bit
   'Benutzer' => 'Users',
   'Verbindungen' => 'Connections',
   'Nodes' => 'Nodes',
+  'Logout' => 'Logout',
   'Failed to get LDAP user \\"%s\\".' => 'Failed to get LDAP user "%s".',
   'No user \\"%s\\" in LDAP.' => 'No user "%s" in LDAP.',
   'Failed to get user.' => 'Failed to get user.',
@@ -237,6 +238,7 @@ Content-Transfer-Encoding: 8bit
   'Benutzername' => 'Username',
   'Pa&szlig;wort' => 'Password',
   'Einloggen' => 'Login',
+  'Sie sind jetzt abgemeldet.' => 'You are now logged out.',
   'Umleitung' => 'Forward',
   'Bemerkung' => 'Comment',
   'frei' => 'idle',

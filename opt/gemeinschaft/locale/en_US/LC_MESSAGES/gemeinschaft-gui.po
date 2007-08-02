@@ -137,6 +137,10 @@ msgstr "Connections"
 msgid "Nodes"
 msgstr "Nodes"
 
+#: inc/modules.php:134
+msgid "Logout"
+msgstr "Logout"
+
 #: inc/session.php:90
 #, php-format
 msgid "Failed to get LDAP user \"%s\"."
@@ -952,6 +956,10 @@ msgstr "Password"
 #: mod/login_login.php:65
 msgid "Einloggen"
 msgstr "Login"
+
+#: mod/logout_logout.php:49
+msgid "Sie sind jetzt abgemeldet."
+msgstr "You are now logged out."
 
 #: mod/monitor_peers.php:81
 msgid "Umleitung"
