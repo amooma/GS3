@@ -507,7 +507,7 @@ context to-gateway {
 macro dial-gateway-do( mnumber ) {
 	/*
 	if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway") {
-		Verbose(1,### Don't allow call from the gateway to go to the gateway again - number: ${mnumber});
+		Verbose(1,### Don't allow call from outside to go to the outside again - number: ${mnumber});
 		Congestion(3);
 		Hangup();
 	}
@@ -527,7 +527,6 @@ macro dial-gateway-do( mnumber ) {
 			// RFC 2543
 		}
 	}
-	Verbose(1,### Outgoing call via the gateway. User: ${user_name}\, CallerID: ${CALLERID(all)}\, Number: ${mnumber}\, Zone: ${zone});
 	/*
 	SIPAddHeader(X-GS-clir: ${clir});
 	SIPAddHeader(X-GS-origext: ${origext});
@@ -535,9 +534,17 @@ macro dial-gateway-do( mnumber ) {
 	SIPAddHeader(X-GS-user_name: ${user_name});
 	SIPAddHeader(X-GS-user_id: ${user_id});
 	*/
-	Dial(SIP/${mnumber}@${gateway_host},300);
+	if ("${dial_outbound}" = "sip") {
+		Verbose(1,### Outgoing call via the gateway. User: ${user_name}\, CallerID: ${CALLERID(all)}\, Number: ${mnumber}\, Zone: ${zone});
+		Dial(SIP/${mnumber}@${gateway_host},300);
+	} else {
+		if ("${dial_outbound}" = "zap") {
+			Verbose(1,### Outgoing call via ISDN. User: ${user_name}\, CallerID: ${CALLERID(all)}\, Number: ${mnumber}\, Zone: ${zone});
+			Dial(Zap/r1/${mnumber},300);
+		}
+	}
 	//&hangup-proper-status();
-	Verbose(1,### Tried to dial ${mnumber} via gateway but: ${DIALSTATUS});
+	Verbose(1,### Tried to dial ${mnumber} to the outside but: ${DIALSTATUS});
 	if ("${DIALSTATUS}" = "BUSY") {
 		Busy(5);
 	} else if ("${DIALSTATUS}" = "CHANUNAVAIL" || "${DIALSTATUS}" = "CONGESTION") {

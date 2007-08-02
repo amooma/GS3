@@ -61,7 +61,12 @@ macro check-valid-extension( mext ) {
 		
 		if ("${fake_ringing}" = "1")
 			Ringing();
-		&dial-gateway(${mext});
+		if ("${is_sub_system}" = "yes") {
+			Verbose(1,### We are a sub-system. Dial to the gateway.);
+			&dial-gateway(${mext});
+		} else {
+			Verbose(1,### We are not a sub-system. Hang up.);
+		}
 		Hangup();
 	}
 	if ("${fake_ringing}" = "1")
@@ -195,7 +200,7 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 	_Z. => {
-		if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway") {
+		if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
 			// not sure why this works because the "parent" context was
 			// "from-gateway" but obviously we are now in context
 			// "to-internal-users". well, it works :-)
@@ -261,7 +266,7 @@ context to-internal-users {
 		}
 		Verbose(1,### Incoming call to ${boss}\, direct dial);
 		
-		if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway") {
+		if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
 			Verbose(1,### No direct dial from gateway);
 			Hangup();
 		}
@@ -298,7 +303,7 @@ context to-internal-users {
 			Hangup();
 		}
 		Verbose(1,### Incoming call to mailbox ${box}\, direct dial);
-		if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway") {
+		if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
 			Verbose(1,### No direct dial from gateway);
 			Hangup();
 		}
@@ -488,7 +493,7 @@ context to-internal-users-self {
 				}
 				Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 				Set(__forwarded_by=${EXTEN});
-				Set(__is_from_gateway=0);
+				Set(__is_from_gateway=);
 				Dial(Local/${fw_${is_call_from}_always},200);
 				&hangup-proper-status();
 			}
@@ -546,7 +551,7 @@ context to-internal-users-self {
 					}
 					Verbose(1,### Called user: ${EXTEN}\, forward on busy to: ${fw_${is_call_from}_busy});
 					Set(__forwarded_by=${EXTEN});
-					Set(__is_from_gateway=0);
+					Set(__is_from_gateway=);
 					Dial(Local/${fw_${is_call_from}_busy},200);
 					&hangup-proper-status();
 				}
@@ -565,7 +570,7 @@ context to-internal-users-self {
 					}
 					Verbose(1,### Called user ${EXTEN} - forward on unavail to: ${fw_${is_call_from}_unavail});
 					Set(__forwarded_by=${EXTEN});
-					Set(__is_from_gateway=0);
+					Set(__is_from_gateway=);
 					Dial(Local/${fw_${is_call_from}_unavail},200);
 					&hangup-proper-status();
 				}
@@ -584,7 +589,7 @@ context to-internal-users-self {
 					}
 					Verbose(1,### Called user: ${EXTEN} - forward on offline to: ${fw_${is_call_from}_offline});
 					Set(__forwarded_by=${EXTEN});
-					Set(__is_from_gateway=0);
+					Set(__is_from_gateway=);
 					Dial(Local/${fw_${is_call_from}_offline},200);
 					Congestion(3);
 					&hangup-proper-status();
@@ -606,7 +611,7 @@ context to-internal-users-self {
 			if ("${fw_${is_call_from}_always}" != "") {
 				Verbose(1,### Called queue: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 				Set(__forwarded_by=${EXTEN});
-				Set(__is_from_gateway=0);
+				Set(__is_from_gateway=);
 				Dial(Local/${fw_${is_call_from}_always},900);
 				&hangup-proper-status();
 			}
@@ -631,26 +636,26 @@ context to-internal-users-self {
 			Set(all_busy=);
 			
 			// SONDERFALL HACK
-			if ("${EXTEN}" = "5000") {
-				Set(ring_instead_of_moh=r);
-				Set(queuetimeout=30);
-				Verbose(1,### Sonderfall fuer Queue ${EXTEN} - klingeln statt MOH\, timeout: ${queuetimeout});
-				AGI(/opt/gemeinschaft/dialplan-scripts/queue-num-avail-members.agi|${EXTEN});
-				Verbose(1,### Sonderfall fuer Queue ${EXTEN} - Agenten: ${queue_num_members}\, frei: ${queue_avail_members});
-				if ("${queue_avail_members}" = "0") {
-					Set(all_busy=1);
-					if ("${queue_num_members}" = "0") {
-						// empty:
-						SET(QUEUESTATUS=JOINEMPTY);
-						Verbose(1,### Sonderfall fuer Queue ${EXTEN} - keine Agenten\, behandeln wie ${QUEUESTATUS});
-					}
-					else {
-						// treat like full:
-						SET(QUEUESTATUS=FULL);
-						Verbose(1,### Sonderfall fuer Queue ${EXTEN} - alle besetzt\, behandeln wie ${QUEUESTATUS});
-					}
-				}
-			}
+			//if ("${EXTEN}" = "5000") {
+			//	Set(ring_instead_of_moh=r);
+			//	Set(queuetimeout=30);
+			//	Verbose(1,### Sonderfall fuer Queue ${EXTEN} - klingeln statt MOH\, timeout: ${queuetimeout});
+			//	AGI(/opt/gemeinschaft/dialplan-scripts/queue-num-avail-members.agi|${EXTEN});
+			//	Verbose(1,### Sonderfall fuer Queue ${EXTEN} - Agenten: ${queue_num_members}\, frei: ${queue_avail_members});
+			//	if ("${queue_avail_members}" = "0") {
+			//		Set(all_busy=1);
+			//		if ("${queue_num_members}" = "0") {
+			//			// empty:
+			//			SET(QUEUESTATUS=JOINEMPTY);
+			//			Verbose(1,### Sonderfall fuer Queue ${EXTEN} - keine Agenten\, behandeln wie ${QUEUESTATUS});
+			//		}
+			//		else {
+			//			// treat like full:
+			//			SET(QUEUESTATUS=FULL);
+			//			Verbose(1,### Sonderfall fuer Queue ${EXTEN} - alle besetzt\, behandeln wie ${QUEUESTATUS});
+			//		}
+			//	}
+			//}
 			// ENDE SONDERFALL HACK
 			
 			if ("${all_busy}" != "1") {
@@ -708,7 +713,7 @@ context to-internal-users-self {
 				if ("${fw_${is_call_from}_timeout}" != "") {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on timeout to: ${fw_${is_call_from}_timeout});
 					Set(__forwarded_by=${EXTEN});
-					Set(__is_from_gateway=0);
+					Set(__is_from_gateway=);
 					Dial(Local/${fw_${is_call_from}_timeout},900);
 					&hangup-proper-status();
 				}
@@ -722,7 +727,7 @@ context to-internal-users-self {
 				if ("${fw_${is_call_from}_full}" != "") {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on full to: ${fw_${is_call_from}_full});
 					Set(__forwarded_by=${EXTEN});
-					Set(__is_from_gateway=0);
+					Set(__is_from_gateway=);
 					Dial(Local/${fw_${is_call_from}_full},900);
 					&hangup-proper-status();
 				}
@@ -736,7 +741,7 @@ context to-internal-users-self {
 				if ("${fw_${is_call_from}_empty}" != "") {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on empty to: ${fw_${is_call_from}_empty});
 					Set(__forwarded_by=${EXTEN});
-					Set(__is_from_gateway=0);
+					Set(__is_from_gateway=);
 					Dial(Local/${fw_${is_call_from}_empty},900);
 					&hangup-proper-status();
 				}
@@ -750,7 +755,12 @@ context to-internal-users-self {
 		//----------------------------------------------------------
 		to_unknown:
 			
-			&dial-gateway(${EXTEN});
+			if ("${is_sub_system}" = "yes") {
+				Verbose(1,### We are a sub-system. Dial to the gateway.);
+				&dial-gateway(${EXTEN});
+			} else {
+				Verbose(1,### We are not a sub-system. Hang up.);
+			}
 			Hangup();
 		
 		//}
