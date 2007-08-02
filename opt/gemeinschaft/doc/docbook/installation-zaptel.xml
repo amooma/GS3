@@ -655,7 +655,8 @@ Channel 62: Clear channel (Default) (Slaves: 62)
           </footnote>.</para>
 
         <para>Wer es ganz genau wissen will: Man könnte das auch in der
-        <filename>/etc/sysconfig/zaptel</filename> angeben (die
+        <filename>/etc/default/zaptel</filename> (Debian und CentOS) bzw.
+        <filename>/etc/sysconfig/zaptel</filename> (CentOS) angeben (die
         vorinstallierte Datei hat ein Beispiel):<screen>MODULES="$MODULES wct4xxp"     # TE4xxP - Quad Span T1/E1 Card
 wct4xxp_ARGS="t1e1override=15" # Additional parameters for TE4xxP driver</screen>Nach
         Änderungen natürlich rebooten.</para>
