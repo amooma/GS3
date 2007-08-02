@@ -28,7 +28,7 @@
 \*******************************************************************/
 
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1888 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1891 $
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2007-05-23 12:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
@@ -38,6 +38,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 ',
+  'Login' => 'Login',
   'Home' => 'Home',
   'Telefonbuch' => 'Phonebook',
   'Firma (aus LDAP)' => 'Company (from LDAP)',
@@ -72,12 +73,14 @@ Content-Transfer-Encoding: 8bit
   'Failed to get user.' => 'Failed to get user.',
   'You are not logged in (authentication method: \\"%s\\").' => 'You are not logged in (authentication method: "%s").',
   'Unknown user \\"%s\\".' => 'Unknown user "%s".',
+  'Benutzer oder Pa&szlig;wort ung&uuml;ltig' => 'Invalid user or password',
   'You are not allowed to act as \\"%s\\".' => 'You are not allowed to act as "%s".',
   'Gemeinschaft Telefon-Manager' => 'Gemeinschaft Phone Manager',
   'Telefon-Manager' => 'Phone Manager',
   'Angemeldet' => 'Logged in as',
   'Als' => 'Acting as',
   'Benutzer wechseln' => 'Change user',
+  'Nicht angemeldet' => 'Not logged in',
   'Zeitraum' => 'Time',
   'Anrufer' => 'Caller',
   'Ziel' => 'Target',
@@ -231,6 +234,9 @@ Content-Transfer-Encoding: 8bit
   'Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)' => 'Your comment for colleagues (e.g. &quot;off-time&quot;)',
   'Telefon neustarten' => 'Reboot phone',
   'Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu gestartet haben!' => 'You need to restart you phone to make changes become active!',
+  'Benutzername' => 'Username',
+  'Pa&szlig;wort' => 'Password',
+  'Einloggen' => 'Login',
   'Umleitung' => 'Forward',
   'Bemerkung' => 'Comment',
   'frei' => 'idle',
