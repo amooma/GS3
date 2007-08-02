@@ -143,7 +143,7 @@ WHERE `u`.`user`=\''. $DB->escape($user) .'\''
 
 # authenticate the user
 #
-$PAM = new PAMAL( 'webseal' );
+$PAM = new PAMAL( GS_GUI_AUTH_METHOD );
 $_SESSION['real_user']['_origname'] = preg_replace( '/[^a-z0-9_\-]/', '', $PAM->getUser() );
 
 if (! @$_SESSION['real_user']['name']) {
