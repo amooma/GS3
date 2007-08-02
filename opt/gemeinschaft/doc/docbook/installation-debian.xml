@@ -20,15 +20,17 @@
     die Kernel-Header kompiliert wird, sollte man darauf achten, daß man sich
     in seiner <filename>/etc/apt/sources.list</filename> explizit für eine
     stabile Version entscheidet (derzeit <literal>etch</literal>) und nicht
-    einfach <literal>stable</literal> da stehen hat, womit man irgendwann
-    versehentlich mal den Kernel updaten könnte - Zaptel wäre dann gegen die
-    falschen Kernel-Header verlinkt und müßte neu kompiliert werden.</para>
+    einfach <literal>stable</literal> da stehen hat.</para>
 
-    <para><filename>/etc/apt/sources.list</filename>:<screen>deb     http://ftp.de.debian.org/debian/ etch main
+    <screen>deb     http://ftp.de.debian.org/debian/ etch main
 deb-src http://ftp.de.debian.org/debian/ etch main
 
 deb     http://security.debian.org/ etch/updates main contrib
-deb-src http://security.debian.org/ etch/updates main contrib</screen></para>
+deb-src http://security.debian.org/ etch/updates main contrib</screen>
+
+    <para>Sonst könnte man irgendwann versehentlich mal den Kernel upgraden -
+    Zaptel wäre dann gegen die falschen Kernel-Header verlinkt und müßte (nach
+    Installation der neuen Header) erneut kompiliert werden.</para>
   </note>
 
   <section id="install-debian-common">
