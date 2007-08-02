@@ -15,6 +15,22 @@
       <para>Etch</para>
     </footnote> in "Minimal-Installation".</para>
 
+  <note>
+    <para>Gerade wenn man ein Kernel-Modul wie Zaptel einsetzt, das ja gegen
+    die Kernel-Header kompiliert wird, sollte man darauf achten, daß man sich
+    in seiner <filename>/etc/apt/sources.list</filename> explizit für eine
+    stabile Version entscheidet (derzeit <literal>etch</literal>) und nicht
+    einfach <literal>stable</literal> da stehen hat, womit man irgendwann
+    versehentlich mal den Kernel updaten könnte - Zaptel wäre dann gegen die
+    falschen Kernel-Header verlinkt und müßte neu kompiliert werden.</para>
+
+    <para><filename>/etc/apt/sources.list</filename>:<screen>deb     http://ftp.de.debian.org/debian/ etch main
+deb-src http://ftp.de.debian.org/debian/ etch main
+
+deb     http://security.debian.org/ etch/updates main contrib
+deb-src http://security.debian.org/ etch/updates main contrib</screen></para>
+  </note>
+
   <section id="install-debian-common">
     <title>Gemeinsame Installationsschritte</title>
 
@@ -81,7 +97,7 @@ netcat openssh-client openssh-server autoconf make automake</command></programli
 /usr/local/bin/sipsak</screen><filename>/usr/local/bin</filename> muß im Pfad
         liegen! Die Environment-Variable <literal>PATH</literal> hat bei einer
         Default-Installation folgenden Inhalt:<screen>$ <command>echo $PATH</command>
-FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_INSERT_OUTPUT_HERE</screen></para>
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</screen></para>
       </footnote>:<screen>$ <command>sipsak -V</command>
 sipsak 0.9.6  by Nils Ohlmeier
  Copyright (C) 2002-2004 FhG Fokus
