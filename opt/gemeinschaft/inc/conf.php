@@ -91,7 +91,7 @@ define( 'GS_LDAP_PROP_PHONE'    , 'telephonenumber' );  # e.g. "telephonenumber"
 //define( 'GS_GUI_SESSIONS', false );  # use sessions?
 # not used. always start session but fallback gracefully
 
-define( 'GS_GUI_AUTH_METHOD', 'dummy' );  # "gemeinschaft" | "webseal"
+define( 'GS_GUI_AUTH_METHOD', 'gemeinschaft' );  # "gemeinschaft" | "webseal"
 
 define( 'GS_GUI_NUM_RESULTS', 12 );
 
