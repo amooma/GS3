@@ -56,6 +56,9 @@
   <xi:include href="installation-zaptel.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
+  <xi:include href="installation-sendmail.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
   <xi:include href="initial-configuration.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
