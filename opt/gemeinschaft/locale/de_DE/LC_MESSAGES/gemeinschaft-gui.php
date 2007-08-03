@@ -28,7 +28,7 @@
 \*******************************************************************/
 
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1906 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1911 $
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2007-05-23 12:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
@@ -235,9 +235,16 @@ Content-Transfer-Encoding: 8bit
   'Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)' => 'Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)',
   'Telefon neustarten' => 'Telefon neustarten',
   'Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu gestartet haben!' => 'Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu gestartet haben!',
+  'Benutzer nicht vorhanden' => 'Benutzer nicht vorhanden',
   'Benutzername' => 'Benutzername',
   'Pa&szlig;wort' => 'Pa&szlig;wort',
+  'Benutzer hat keine E-Mail-Adresse' => 'Benutzer hat keine E-Mail-Adresse',
+  'Benutzer hat keine g&uuml;tige E-Mail-Adresse' => 'Benutzer hat keine g&uuml;tige E-Mail-Adresse',
   'Einloggen' => 'Einloggen',
+  'Pa&szlig;wort wurde an &quot;%s&quot; gesendet' => 'Pa&szlig;wort wurde an &quot;%s&quot; gesendet',
+  'Fehler beim Senden an &quot;%s&quot;' => 'Fehler beim Senden an &quot;%s&quot;',
+  'Pa&szlig;wort mailen' => 'Pa&szlig;wort mailen',
+  'Pa&szlig;wort vergessen' => 'Pa&szlig;wort vergessen',
   'Sie sind jetzt abgemeldet.' => 'Sie sind jetzt abgemeldet.',
   'Umleitung' => 'Umleitung',
   'Bemerkung' => 'Bemerkung',
