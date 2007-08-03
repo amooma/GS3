@@ -198,7 +198,7 @@ if ($r) {
 		default:
 			$host_id_sql = 'SELECT MIN(`id`) FROM `hosts`'; break;
 	}
-	$db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `honorific`, `nobody_index`, `host_id`) VALUES (NULL, \''. $user_code .'\', \'\', \'\', \'\', \'\', '. $newNobodyIndex .', ('. $host_id_sql .'))' );
+	$db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `honorific`, `email`, `nobody_index`, `host_id`) VALUES (NULL, \''. $user_code .'\', \'\', \'\', \'\', \'\', \'\', '. $newNobodyIndex .', ('. $host_id_sql .'))' );
 	$user_id = (int)$db->getLastInsertId();
 	if ($user_id < 1) die( 'Unknown phone. Failed to add nobody user.' );
 	
