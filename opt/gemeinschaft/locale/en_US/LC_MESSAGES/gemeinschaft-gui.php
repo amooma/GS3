@@ -28,7 +28,7 @@
 \*******************************************************************/
 
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1906 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1911 $
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2007-05-23 12:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
@@ -41,9 +41,9 @@ Content-Transfer-Encoding: 8bit
   'Login' => 'Login',
   'Home' => 'Home',
   'Telefonbuch' => 'Phonebook',
-  'Firma (aus LDAP)' => 'Company (from LDAP)',
-  'Firma (Projekt)' => 'Company (Project)',
-  'Firma (LDAP)' => 'Company (LDAP)',
+  'Firma (aus LDAP)' => 'Org (from LDAP)',
+  'Firma (Projekt)' => 'Org (Project)',
+  'Firma (LDAP)' => 'Org (LDAP)',
   'Pers&ouml;nlich' => 'Private',
   'Anruflisten' => 'Dial Log',
   'gew&auml;hlt' => 'dialed',
@@ -235,9 +235,16 @@ Content-Transfer-Encoding: 8bit
   'Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)' => 'Your comment for colleagues (e.g. &quot;off-time&quot;)',
   'Telefon neustarten' => 'Reboot phone',
   'Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu gestartet haben!' => 'You need to restart you phone to make changes become active!',
+  'Benutzer nicht vorhanden' => 'No such user',
   'Benutzername' => 'Username',
   'Pa&szlig;wort' => 'Password',
+  'Benutzer hat keine E-Mail-Adresse' => 'User does not have an e-mail address',
+  'Benutzer hat keine g&uuml;tige E-Mail-Adresse' => 'User does not have a valid e-mail address',
   'Einloggen' => 'Login',
+  'Pa&szlig;wort wurde an &quot;%s&quot; gesendet' => 'Password sent to &quot;%s&quot;',
+  'Fehler beim Senden an &quot;%s&quot;' => 'Failed to send to &quot;%s&quot;',
+  'Pa&szlig;wort mailen' => 'Mail password',
+  'Pa&szlig;wort vergessen' => 'Forgot password',
   'Sie sind jetzt abgemeldet.' => 'You are now logged out.',
   'Umleitung' => 'Forward',
   'Bemerkung' => 'Comment',

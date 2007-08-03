@@ -972,6 +972,10 @@ msgid ""
 msgstr "Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu "
 "gestartet haben!"
 
+#: mod/login_login.php:55
+msgid "Benutzer nicht vorhanden"
+msgstr "Benutzer nicht vorhanden"
+
 #: mod/login_login.php:57
 msgid "Benutzername"
 msgstr "Benutzername"
@@ -980,9 +984,33 @@ msgstr "Benutzername"
 msgid "Pa&szlig;wort"
 msgstr "Pa&szlig;wort"
 
+#: mod/login_login.php:60
+msgid "Benutzer hat keine E-Mail-Adresse"
+msgstr "Benutzer hat keine E-Mail-Adresse"
+
+#: mod/login_login.php:62
+msgid "Benutzer hat keine g&uuml;tige E-Mail-Adresse"
+msgstr "Benutzer hat keine g&uuml;tige E-Mail-Adresse"
+
 #: mod/login_login.php:65
 msgid "Einloggen"
 msgstr "Einloggen"
+
+#: mod/login_login.php:100
+msgid "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
+msgstr "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
+
+#: mod/login_login.php:101
+msgid "Fehler beim Senden an &quot;%s&quot;"
+msgstr "Fehler beim Senden an &quot;%s&quot;"
+
+#: mod/login_login.php:121
+msgid "Pa&szlig;wort mailen"
+msgstr "Pa&szlig;wort mailen"
+
+#: mod/login_login.php:151
+msgid "Pa&szlig;wort vergessen"
+msgstr "Pa&szlig;wort vergessen"
 
 #: mod/logout_logout.php:49
 msgid "Sie sind jetzt abgemeldet."

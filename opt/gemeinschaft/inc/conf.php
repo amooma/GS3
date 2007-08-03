@@ -194,7 +194,7 @@ define( 'GS_INTL_USE_GETTEXT', false );
 
 define( 'GS_USERCOMMENT_OFFTIME', 'Feierabend' );  # i.e. "off-time"
 
-define( 'GS_EMAIL_PATTERN_VALID', '/^[a-z0-9\-._]+@[a-z0-9\-._]{2}\.[a-z]{2,10}$/i' );
+define( 'GS_EMAIL_PATTERN_VALID', '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i' );
 
 
 /***********************************************************
