@@ -25,23 +25,35 @@
 # MA 02110-1301, USA.
 #####################################################################
 
-all: before tohtml topdf
+all: prereq tohtml topdf
 
-before:
-	@ if [ `which yum 2>>/dev/null` ]; then \
+prereq:
+	@    if [ `which yum 2>>/dev/null` ]; then \
+		# CentOS
 		echo '************************************************************'; \
 		echo '*  Installing DocBook utils using yum ...                  *'; \
 		echo '************************************************************'; \
 		yum -y install docbook-dtds docbook-style-xsl docbook-utils-pdf; \
+	
 	else if [ `which up2date 2>>/dev/null` ]; then \
+		# RedHat
 		echo '************************************************************'; \
 		echo '*  Installing DocBook utils using up2date ...              *'; \
 		echo '************************************************************'; \
 		up2date -f -i docbook-dtds docbook-style-xsl docbook-utils-pdf; \
+	
+	else if [ `which apt-get 2>>/dev/null` ]; then \
+		# Debian
+		echo '************************************************************'; \
+		echo '*  Installing DocBook utils using apt-get ...              *'; \
+		echo '************************************************************'; \
+		apt-get -y install docbook-xml docbook-xsl docbook-utils; \
+	
 	else \
 		echo '************************************************************'; \
-		echo '*  No installer found. (yum, up2date)                      *'; \
+		echo '*  No package installer found. (yum, up2date)              *'; \
 		echo '************************************************************'; \
+	
 	fi; fi
 
 
@@ -49,7 +61,7 @@ tohtml:
 	@ if [ ! -x /usr/bin/docbook2html ]; then \
 		echo '************************************************************'; \
 		echo '*  DocBook utils are not installed.                        *'; \
-		echo '*  Please use "make before" first.                         *'; \
+		echo '*  Please use "make prereq" first.                         *'; \
 		echo '************************************************************'; \
 		exit 1; \
 	fi
@@ -74,7 +86,7 @@ topdf:
 	@ if [ ! -x /usr/bin/docbook2pdf ]; then \
 		echo '************************************************************'; \
 		echo '*  DocBook utils are not installed.                        *'; \
-		echo '*  Please use "make before" first.                         *'; \
+		echo '*  Please use "make prereq" first.                         *'; \
 		echo '************************************************************'; \
 		exit 1; \
 	fi
