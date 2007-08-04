@@ -25,36 +25,38 @@
 # MA 02110-1301, USA.
 #####################################################################
 
+# this Makefile is not nice but sort of works  :)
+
+
 all: prereq tohtml topdf
 
 prereq:
-	@    if [ `which yum 2>>/dev/null` ]; then \
-		# CentOS
+	@ if [ `which yum 2>>/dev/null` ]; then \
+		# CentOS \
 		echo '************************************************************'; \
 		echo '*  Installing DocBook utils using yum ...                  *'; \
 		echo '************************************************************'; \
 		yum -y install docbook-dtds docbook-style-xsl docbook-utils-pdf; \
-	
+	\
 	else if [ `which up2date 2>>/dev/null` ]; then \
-		# RedHat
+		# RedHat \
 		echo '************************************************************'; \
 		echo '*  Installing DocBook utils using up2date ...              *'; \
 		echo '************************************************************'; \
 		up2date -f -i docbook-dtds docbook-style-xsl docbook-utils-pdf; \
-	
+	\
 	else if [ `which apt-get 2>>/dev/null` ]; then \
-		# Debian
+		# Debian \
 		echo '************************************************************'; \
 		echo '*  Installing DocBook utils using apt-get ...              *'; \
 		echo '************************************************************'; \
-		apt-get -y install docbook-xml docbook-xsl docbook-utils; \
-	
+		apt-get -y install docbook-xml docbook-xsl docbook-utils xsltproc xmlto; \
+	\
 	else \
 		echo '************************************************************'; \
-		echo '*  No package installer found. (yum, up2date)              *'; \
+		echo '*  No package installer found. (yum, up2date, apt-get)     *'; \
 		echo '************************************************************'; \
-	
-	fi; fi
+	fi; fi; fi
 
 
 tohtml:
@@ -71,12 +73,12 @@ tohtml:
 	@ echo '************************************************************';
 	
 	@ echo "Resolving XIncludes ..."
-	xmllint --xinclude --output docbook/HANDBUCH-full.xml docbook/HANDBUCH.xml
+	xmllint --xinclude --output docbook/HANDBUCH-complete.xml docbook/HANDBUCH.xml
 	
 	@ echo "Transforming to HTML ..."
 	mkdir -p html
-	docbook2html -o html/ docbook/HANDBUCH-full.xml
-	rm -f docbook/HANDBUCH-full.xml
+	docbook2html -e no-idref -o html/ docbook/HANDBUCH-complete.xml
+	rm -f docbook/HANDBUCH-complete.xml
 	@ echo '************************************************************';
 	@ echo '*  HTML done.                                              *';
 	@ echo '************************************************************';
@@ -96,13 +98,13 @@ topdf:
 	@ echo '************************************************************';
 	
 	@ echo "Resolving XIncludes ..."
-	xmllint --xinclude --output docbook/HANDBUCH-full.xml docbook/HANDBUCH.xml
+	xmllint --xinclude --output docbook/HANDBUCH-complete.xml docbook/HANDBUCH.xml
 	
 	@ echo "Transforming to PDF ..."
 	mkdir -p pdf
-	docbook2pdf -o pdf/ docbook/HANDBUCH-full.xml
-	rm -f docbook/HANDBUCH-full.xml
-	mv pdf/HANDBUCH-full.pdf pdf/HANDBUCH.pdf
+	docbook2pdf -e no-idref -o pdf/ docbook/HANDBUCH-complete.xml
+	rm -f docbook/HANDBUCH-complete.xml
+	mv pdf/HANDBUCH-complete.pdf pdf/HANDBUCH.pdf
 	@ echo '************************************************************';
 	@ echo '*  PDF done.                                               *';
 	@ echo '************************************************************';
