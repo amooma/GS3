@@ -152,8 +152,8 @@ Query OK, 0 rows affected (0.01 sec)
 
     <para>Nun können weitere benötigte Entwicklungs-Pakte etc. installiert
     werden:<programlisting><command>apt-get install bison byacc flex libnewt0.52 libnewt-dev \
-ncurses-base ncurses-bin ncurses-dev ncurses-runtime \
-ncurses-term libncurses4 libncurses5 libncurses-dev \
+ncurses-base ncurses-bin ncurses-dev ncurses-term \
+libncurses4 libncurses5 libncurses-dev \
 openssl zlib1g zlib1g-dev</command></programlisting></para>
 
     <para>Übersetzung und Installation von Zaptel geht normalerweise
