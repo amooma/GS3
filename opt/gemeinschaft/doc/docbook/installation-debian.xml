@@ -85,8 +85,10 @@ The system is going down for reboot NOW!</screen></para>
     hinzufügen.<programlisting><command>ntpdate 0.debian.pool.ntp.org</command>
 <command>/etc/init.d/ntp start</command></programlisting></para>
 
+    <para>Entwicklungspakete:<programlisting><command>apt-get install gcc libtool autoconf make automake</command></programlisting></para>
+
     <para>Weitere Pakete:<programlisting><command>apt-get install cron expect findutils sudo wget logrotate grep \
-netcat openssh-client openssh-server autoconf make automake</command></programlisting></para>
+netcat openssh-client openssh-server</command></programlisting></para>
 
     <para>SipSak<footnote>
         <para>wird momentan vom Cluster-Watchdog benötigt</para>
@@ -149,9 +151,9 @@ Query OK, 0 rows affected (0.01 sec)
     <code>MeetMe()</code>-Konferenzen) benötigt werden:<programlisting><command>apt-get install linux-headers-`uname -r` linux-kernel-headers</command></programlisting></para>
 
     <para>Nun können weitere benötigte Entwicklungs-Pakte etc. installiert
-    werden:<programlisting><command>apt-get install gcc autoconf libtool make automake bison byacc \
-flex libnewt0.52 libnewt-dev ncurses-base ncurses-bin ncurses-dev \
-ncurses-runtime ncurses-term libncurses4 libncurses5 libncurses-dev \
+    werden:<programlisting><command>apt-get install bison byacc flex libnewt0.52 libnewt-dev \
+ncurses-base ncurses-bin ncurses-dev ncurses-runtime \
+ncurses-term libncurses4 libncurses5 libncurses-dev \
 openssl zlib1g zlib1g-dev</command></programlisting></para>
 
     <para>Übersetzung und Installation von Zaptel geht normalerweise
