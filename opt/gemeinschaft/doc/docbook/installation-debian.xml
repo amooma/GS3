@@ -385,8 +385,8 @@ User www-data</screen></para>
     ist wichtig für das automatische Provisioning der Telefone.</para>
 
     <para>DHCP-Server installieren:<programlisting><command>apt-get install dhcp</command>
-<command>/etc/init.d/dhcpd start       FIXME_FIXME_FIXME_FIXME_???????</command>
-<command>update-rc.d dhcpd defaults    FIXME_FIXME_FIXME_FIXME_???????</command></programlisting></para>
+<command>/etc/init.d/dhcp start</command>
+<command>update-rc.d dhcp defaults</command></programlisting></para>
 
     <para>Danach die Konfiguration des DHCP-Servers anpassen (siehe <xref
     linkend="dhcp-server" />).</para>
@@ -395,24 +395,8 @@ User www-data</screen></para>
   <section id="deinstall-centos-services">
     <title>Entfernen überflüssiger Dienste etc.</title>
 
-    <important>
-      <para>FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME</para>
-    </important>
-
     <para>Optional kann man darüber nachdenken, evtl. überflüssige Dienste zu
-    entfernen:<programlisting># CUPS (Drucken konnte man unter Linux eh noch nie ;-):
-service cups stop; chkconfig --del cups
-# PCMCIA:
-service pcmcia stop; chkconfig --del pcmcia
-# SMB:
-service smb stop; chkconfig --del smb
-# WinBind:
-service winbind stop; chkconfig --del winbind
-# Bluetooth:
-yum remove bluez-*
-# Infrarot:
-yum remove irda-utils
-</programlisting></para>
+    entfernen:<programlisting>FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME</programlisting></para>
   </section>
 
   <section id="install-centos-optional">
@@ -423,10 +407,9 @@ yum remove irda-utils
     </important>
 
     <para>Wer gerne mal schnell einen (unsicheren!) NFS-Server
-    hat:<programlisting><command>yum install nfs-utils \
+    hat:<programlisting><command>yum install nfs-kernel-server \
 &amp;&amp; echo '/ *(rw,all_squash,insecure,anonuid=0,anongid=0)' &gt;&gt; /etc/exports \
-&amp;&amp; service nfs restart</command>
-<command>chkconfig --levels 235 nfs on</command></programlisting></para>
+&amp;&amp; /etc/init.d/nfs-kernel-server restart</command></programlisting></para>
 
     <important>
       <para>FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME</para>
