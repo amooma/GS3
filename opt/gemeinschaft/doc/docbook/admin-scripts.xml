@@ -1338,7 +1338,7 @@ Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
     </variablelist>
   </section>
 
-  <section id="gs_user_del">
+  <section id="gs_user_comment_set">
     <title><command>gs_user_comment_set</command><indexterm>
         <primary><command>gs_user_comment_set</command></primary>
       </indexterm><indexterm>
