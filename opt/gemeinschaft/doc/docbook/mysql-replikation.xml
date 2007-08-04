@@ -50,17 +50,17 @@ MySQL beenden:                                             [  OK  ]</screen>gest
     Sie sich dadurch nicht verwirren. Wenn man nicht RedHat oder CentOS
     verwendet, stoppt man MySQL klassisch so:<screen>$ <command>/etc/init.d/mysqld stop</command>
 MySQL beenden:                                             [  OK  ]</screen>oder
-    (je nach System) so:<screen>$ <command>/etc/init.d/mysql stop</command>
- * Stopping MySQL database server mysqld
-   ...done.</screen></para>
+    (Debian) so:<screen>$ <command>/etc/init.d/mysql stop</command>
+Stopping MySQL database server: mysqld.</screen></para>
   </section>
 
   <section id="replikation-master">
     <title>Konfiguration des Master-Servers</title>
 
     <para>Auf diesem Host soll nur der MySQL-Server als Master laufen. Dazu
-    muss die Konfigurationsdatei <filename>/etc/my.cnf</filename> angepasst
-    werden (Änderungen zur Default-Installation fett):</para>
+    muss die Konfigurationsdatei <filename>/etc/my.cnf</filename> (CentOS)
+    bzw. <filename>/etc/mysql/my.cnf</filename> (Debian) angepaßt werden
+    (Änderungen zur Default-Installation fett):</para>
 
     <programlisting>[mysqld]
 datadir = /var/lib/mysql

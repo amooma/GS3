@@ -278,6 +278,10 @@ drwxr-xr-x 5 root root   1024 2007-07-20 21:06 misc/
 &amp;&amp; make install-udev \
 &amp;&amp; make config</command></programlisting></para>
 
+    <para>Danach ggf. abhängig von den installierten Karten
+    <filename>/etc/default/zaptel</filename> anpassen. Normalerweise ist aber
+    keine Änderung nötig.</para>
+
     <section id="install-zaptel-without-cards">
       <title>Ohne ISDN-Karten</title>
 
@@ -522,7 +526,7 @@ channels=1-62</screen></para>
       nach Karte dann 1, 2 oder 4 Spans mit den entsprechenden Nummern der
       Kanäle angeben.</para>
 
-      <para>Nach der Konfiguration Zaptel starten:<programlisting><command>/etc/init.d/zaptel start</command></programlisting></para>
+      <para>Nach der Konfiguration Zaptel starten:<programlisting><command>/etc/init.d/zaptel restart</command></programlisting></para>
 
       <para>Dafür sorgen, daß Zaptel beim Booten automatisch gestartet
       wird:<variablelist termlength="15">
@@ -556,7 +560,7 @@ modprobe wct4xxp</command></programlisting></para>
 <command>ztcfg -vv</command></programlisting></para>
 
       <para>Und gleich nochmal (die Ausgabe ist nach einer Änderung der
-      zaptel.conf beim 2. Aufruf anders)<footnote>
+      <filename>zaptel.conf</filename> beim 2. Aufruf anders)<footnote>
           <para>Zur Automatisierung in Skripten könnte man z.B. mit
           <code><command>ztcfg -vv | grep -i failed</command></code> auf einen
           Fehler prüfen.</para>
@@ -711,18 +715,18 @@ wct4xxp_ARGS="t1e1override=15" # Additional parameters for TE4xxP driver</screen
 
     <para>In diesem Fall sieht man, daß die ISDN-Karte
     (<literal>wct2xxp</literal>) einen IRQ ganz für sich alleine hat:<screen>$ <command>cat /proc/interrupts</command>
-           CPU0       CPU1       CPU2       CPU3       
-  0:    5419439        139        140        139    IO-APIC-edge  timer
-  2:          0          0          0          0          XT-PIC  cascade
-  8:          0          1          0          0    IO-APIC-edge  rtc
- 14:         74          0          0          1    IO-APIC-edge  ide0
- 98:      48340          0          0          0         PCI-MSI  eth0
-129:    7086653    7243721    7337504       6043   IO-APIC-level  wct2xxp
-161:         61          0          1          0   IO-APIC-level  uhci_hcd:usb3
-169:         23          1          0          0   IO-APIC-level  ehci_hcd:usb1, uhci_hcd:usb2, uhci_hcd:usb4
-201:       7211          0          1          0   IO-APIC-level  megasas
-NMI:          0          0          0          0 
-LOC:    5332267    5332386    5364846    5364845 
+           CPU0       CPU1       
+  0:     861278        116    IO-APIC-edge  timer
+  8:          0          0    IO-APIC-edge  rtc
+  9:          0          1   IO-APIC-level  acpi
+ 14:        107          1    IO-APIC-edge  ide0
+ 66:      17917          1   IO-APIC-level  megasas
+ 74:         23          1   IO-APIC-level  uhci_hcd:usb1, uhci_hcd:usb3, ehci_hcd:usb4
+ 82:        376          1   IO-APIC-level  uhci_hcd:usb2
+ 90:      83616          0         PCI-MSI  eth0
+169:     120322       2521   IO-APIC-level  wct2xxp
+NMI:          0          0 
+LOC:     861339     861338 
 ERR:          0
 MIS:          0</screen>Sollte das anders sein, kann man in manchen BIOSen
     entsprechende Einstellungen vornehmen. Ein Computer hat traditionell 16
