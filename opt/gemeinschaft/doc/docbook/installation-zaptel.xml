@@ -270,7 +270,7 @@ drwxr-xr-x 5 root root   1024 2007-07-20 21:06 misc/
     <para>Kompilierung und Installation:<programlisting><command>cd /usr/src/ \
 &amp;&amp; wget -c http://ftp.digium.com/pub/zaptel/releases/zaptel-1.4.4.tar.gz \
 &amp;&amp; tar -xzf zaptel-1.4.4.tar.gz \
-&amp;&amp; zaptel-1.4.4/ \
+&amp;&amp; cd zaptel-1.4.4/ \
 &amp;&amp; ./configure \
 &amp;&amp; make clean \
 &amp;&amp; make \
