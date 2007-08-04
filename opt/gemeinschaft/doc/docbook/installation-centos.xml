@@ -63,6 +63,9 @@ The system is going down for reboot NOW!</screen></para>
     sollten Sie noch Ihre NTP-Server in der <filename>/etc/ntp.conf</filename>
     hinzufügen.</para>
 
+    <para>Entwicklungspakete:<programlisting><command>yum -y install gcc gcc-c++ compat-gcc-32 compat-gcc-32-c++ libtool \
+autoconf make automake automake14 automake15 automake16 automake17</command></programlisting></para>
+
     <para>Weitere Pakete:<programlisting><command>yum -y install crontabs expect findutils sudo wget logrotate grep \
 nc openssh openssh-clients openssh-server autoconf make automake</command></programlisting></para>
 
@@ -129,10 +132,9 @@ Query OK, 0 rows affected (0.01 sec)
     aber (mit einem Xen-Kernel)<programlisting><command>yum -y install kernel-xen-devel-`uname -r`</command></programlisting></para>
 
     <para>Nun können weitere benötigte Entwicklungs-Pakte etc. installiert
-    werden:<programlisting><command>yum -y install gcc gcc-c++ compat-gcc-32 compat-gcc-32-c++ autoconf \
-libtool make automake automake14 automake15 automake16 automake17 \
-bison byacc flex libtermcap libtermcap-devel newt newt-devel \
-ncurses ncurses-devel openssl-devel zlib zlib-devel krb5-devel</command></programlisting></para>
+    werden:<programlisting><command>yum -y install bison byacc flex libtermcap libtermcap-devel \
+newt newt-devel ncurses ncurses-devel \
+openssl-devel zlib zlib-devel krb5-devel</command></programlisting></para>
 
     <para>Übersetzung und Installation von Zaptel geht normalerweise
     so:<programlisting><command>cd /usr/src/ \
