@@ -108,7 +108,7 @@ mysql  Ver 14.7 Distrib 4.1.20, for redhat-linux-gnu (i686) using readline 4.3</
     auf <code>127.0.0.1</code>) haben wir bereits bei der Einrichtung der
     Replikation eingestellt. Aber die Rechte müssen noch angepaßt werden (in
     <command>mysql</command>). Im einfachsten Fall sieht das so aus (User und
-    Paßwort müssen ggf. angepaßt werden):<screen>mysql&gt; <command>GRANT ALL ON *.* TO 'gemeinschaft'@'%' IDENTIFIED BY 'geheim';</command>
+    Paßwort müssen ggf. angepaßt werden):<screen>mysql&gt; <command>GRANT ALL ON *.* TO 'gemeinschaft'@'%' IDENTIFIED BY '<replaceable>geheim</replaceable>';</command>
 Query OK, 0 rows affected (0.00 sec)
 
 mysql&gt; <command>FLUSH PRIVILEGES;</command>

@@ -130,7 +130,7 @@ mysql  Ver 14.12 Distrib 5.0.32, for pc-linux-gnu (i486) using readline 5.2</scr
     auf <code>127.0.0.1</code>) haben wir bereits bei der Einrichtung der
     Replikation eingestellt. Aber die Rechte müssen noch angepaßt werden (in
     <command>mysql</command>). Im einfachsten Fall sieht das so aus (User und
-    Paßwort müssen ggf. angepaßt werden):<screen>mysql&gt; <command>GRANT ALL ON *.* TO 'gemeinschaft'@'%' IDENTIFIED BY 'geheim';</command>
+    Paßwort müssen ggf. angepaßt werden):<screen>mysql&gt; <command>GRANT ALL ON *.* TO 'gemeinschaft'@'%' IDENTIFIED BY '<replaceable>geheim</replaceable>';</command>
 Query OK, 0 rows affected (0.00 sec)
 
 mysql&gt; <command>FLUSH PRIVILEGES;</command>
@@ -169,19 +169,20 @@ openssl zlib1g zlib1g-dev</command></programlisting></para>
     gelöscht werden:<programlisting><command>rm -rf /usr/lib/asterisk/modules/</command></programlisting></para>
 
     <para>Asterisk installieren:<programlisting><command>cd /usr/src/ \
-&amp;&amp; wget -c http://ftp.digium.com/pub/asterisk/releases/asterisk-1.4.8.tar.gz \
-&amp;&amp; tar -xzf asterisk-1.4.8.tar.gz \
-&amp;&amp; cd /usr/src/asterisk-1.4.8/ \
+&amp;&amp; wget -c http://ftp.digium.com/pub/asterisk/releases/asterisk-1.4.9.tar.gz \
+&amp;&amp; tar -xzf asterisk-1.4.9.tar.gz \
+&amp;&amp; cd /usr/src/asterisk-1.4.9/ \
 &amp;&amp; ./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config \
 &amp;&amp; make samples</command></programlisting></para>
 
     <para>Ob das erfolgreich war, kann man so prüfen (großes V!):<screen>$ <command>asterisk -V</command>
-Asterisk 1.4.8</screen>In <filename>/usr/sbin/safe_asterisk</filename>
+Asterisk 1.4.9</screen>In <filename>/usr/sbin/safe_asterisk</filename>
     <code>SLEEPSECS</code> von <code>4</code> auf <code>1</code>
     stellen.</para>
 
     <para>Verzeichnis für Call-Files freigeben (damit z.B. vom Web-Server
-    geschrieben werden kann):<programlisting><command>chmod a+rwx /var/spool/asterisk/outgoing/</command></programlisting></para>
+    geschrieben werden kann):<programlisting><command>chmod a+rwx /var/spool/asterisk/outgoing/</command>
+<command>chmod a+rwx /var/spool/asterisk/tmp/</command></programlisting></para>
 
     <para>Asterisk-Addons installieren:<programlisting><command>cd /usr/src/ \
 &amp;&amp; wget -c http://ftp.digium.com/pub/asterisk/releases/asterisk-addons-1.4.2.tar.gz \
@@ -288,7 +289,7 @@ zlib
 
     <para>Auf allen Hosts muss das Programm <command>arping</command>
     installiert werden, mit dem mittels ARP die IP-Adressen im Netzwerk
-    bekanntgegeben werden.<programlisting><command>apt-get install arping iputils-arping</command></programlisting></para>
+    bekanntgegeben werden.<programlisting><command>apt-get install arping</command></programlisting>oder<programlisting><command>apt-get install iputils-arping</command></programlisting></para>
   </section>
 
   <section id="install-centos-webserver">
@@ -338,7 +339,7 @@ mpg123 0.61</screen></para>
     Da in der <filename>/etc/apache2/apache2.conf</filename> alle Dateien im
     Verzeichnis <filename>/etc/apache2/sites-enabled/</filename> eingebunden
     werden, legt man eine Datei
-    <filename>/etc/apache2/sites-enabled/gemeinschaft-prov</filename> an mit
+    <filename>/etc/apache2/sites-available/gemeinschaft-prov</filename> an mit
     folgendem Inhalt:<screen>NameVirtualHost *:82
 Listen *:82
 &lt;VirtualHost *:82&gt;
@@ -346,13 +347,13 @@ Listen *:82
     &lt;Directory /&gt;
         Options FollowSymLinks MultiViews
     &lt;/Directory&gt;
-&lt;/VirtualHost&gt;</screen>Optional schreibt man zu den <code>Options</code>
-    noch <code>Indexes</code> wenn man Verzeichnis-Listings haben will.
-    Außerdem stellen wir (optional) noch in der
-    <filename>/etc/apache2/apache2.conf</filename> den server-weiten Parameter
-    <code>KeepAlive</code> von <code>Off</code> auf <code>On</code>:<screen>KeepAlive On</screen>Danach
-    startet man den Apache neu: <command>/etc/init.d/apache2
-    restart</command></para>
+&lt;/VirtualHost&gt;</screen>und macht einen Symlink:<programlisting><command>ln -s /etc/apache2/sites-available/gemeinschaft-prov /etc/apache2/sites-enabled/101-gemeinschaft-prov</command></programlisting>Optional
+    schreibt man zu den <code>Options</code> noch <code>Indexes</code> wenn
+    man Verzeichnis-Listings haben will. Außerdem stellen wir (optional) noch
+    in der <filename>/etc/apache2/apache2.conf</filename> den server-weiten
+    Parameter <code>KeepAlive</code> von <code>Off</code> auf
+    <code>On</code>:<screen>KeepAlive On</screen>Danach startet man den Apache
+    neu: <command>/etc/init.d/apache2 restart</command></para>
 
     <para>Das gleiche kann man analog für das Web-Interface machen.</para>
 
@@ -372,7 +373,7 @@ Listen *:82
         Als welcher User der Apache läuft, steht in der
         <filename>apache2.conf</filename>:<screen>$ <command>cat /etc/apache2/apache2.conf | grep 'User '</command>
 User www-data</screen></para>
-      </footnote>:<screen>apache   ALL=(ALL)   NOPASSWD: ALL</screen></para>
+      </footnote>:<screen>www-data   ALL=(ALL)   NOPASSWD: ALL</screen></para>
   </section>
 
   <section id="install-centos-dhcp-server">

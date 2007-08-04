@@ -50,7 +50,8 @@ session.bug_compat_warn = 1
 
   <important>
     <para>Einstellungen, die hier nicht genannt wurden, sollten i.d.R. auf den
-    Default-Werten der php.ini der aktuellen Version bleiben!</para>
+    Default-Werten der <filename>php.ini</filename> der aktuellen Version
+    bleiben!</para>
   </important>
 
   <para>Einige weitere Einstellungen, die nicht unbedingt sicherheitsrelevant
