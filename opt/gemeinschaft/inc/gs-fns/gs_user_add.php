@@ -100,7 +100,7 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 	
 	# add sip account
 	#
-	$callerid = gs_utf8_decompose_to_ascii($firstname .' '. $lastname) .' <'. $ext .'>';
+	$callerid = trim( gs_utf8_decompose_to_ascii( $firstname .' '. $lastname )) .' <'. $ext .'>';
 	$ok = $db->execute( 'INSERT INTO `ast_sipfriends` (`_user_id`, `name`, `secret`, `callerid`, `mailbox`, `setvar`) VALUES ('. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape(rand(10000,99999).rand(10000,99999)) .'\', _utf8\''. $db->escape($callerid) .'\', \''. $db->escape($ext) .'\', \''. $db->escape('__user_id='. $user_id .';__user_name='. $ext) .'\')' );
 	if (! $ok)
 		return new GsError( 'Failed to add user (table ast_sipfriends).' );

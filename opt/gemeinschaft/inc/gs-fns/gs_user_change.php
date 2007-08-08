@@ -95,7 +95,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	
 	# update sip account
 	#
-	$calleridname = gs_utf8_decompose_to_ascii($firstname .' '. $lastname);
+	$calleridname = trim( gs_utf8_decompose_to_ascii( $firstname .' '. $lastname ));
 	$ok = $db->execute( 'UPDATE `ast_sipfriends` SET `callerid`=CONCAT(_utf8\''. $db->escape($calleridname) .'\', \' <\', `name`, \'>\') WHERE `_user_id`='. $user_id );
 	if (! $ok)
 		return new GsError( 'Failed to change SIP account.' );
