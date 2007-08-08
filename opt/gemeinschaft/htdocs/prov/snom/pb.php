@@ -71,8 +71,8 @@ $db = gs_db_slave_connect();
 
 
 $typeToTitle = array(
-	'imported' => "LVM (aus LDAP)",
-	'gs'       => "LVM (Projekt)",  # should normall be "Gemeinschaft"
+	/*'imported' => "Firma (aus LDAP)",*/
+	'gs'       => "Firma",  # should normally be "Gemeinschaft"
 	'prv'      => "Pers\xC3\xB6nlich",
 );
 
