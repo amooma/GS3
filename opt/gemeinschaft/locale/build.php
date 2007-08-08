@@ -27,6 +27,11 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+
+# needs msgfmt
+# Debian: apt-get install gettext
+
+
 define( 'GS_VALID', true );  /// this is a parent file
 
 
