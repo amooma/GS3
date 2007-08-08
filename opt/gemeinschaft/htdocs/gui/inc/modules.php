@@ -85,8 +85,8 @@ $MODULES = array(
 	                            'icon'  => 'crystal-svg/%s/app/display.png',
 	   'sub' => array(
 	      'queues'     => array('title' => __('Queues')),
-	      'pgrps'      => array('title' => __('Gruppen')),
-	      'peers'      => array('title' => __('Kollegen'))
+	      'pgrps'      => array('title' => __('Gruppen'))
+	      //'peers'      => array('title' => __('Kollegen'))
 	   )
 	),
 	##################################################################
