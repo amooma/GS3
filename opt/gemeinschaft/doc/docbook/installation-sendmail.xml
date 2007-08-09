@@ -46,8 +46,12 @@
         sein</para>
       </footnote> die Einrichtung von <command>postfix</command>.</para>
 
-    <para>Haben wir schon ein <command>sendmail</command>?<programlisting>$ <command>which sendmail 2&gt;&gt;/dev/null || echo 'no sendmail installed'</command>
-no sendmail installed</programlisting></para>
+    <para>Haben wir schon ein <command>sendmail</command>?<screen>$ <command>which sendmail 2&gt;&gt;/dev/null || echo 'no sendmail installed'</command></screen>Die
+    Ausgabe ist dann entweder:<screen>no sendmail installed</screen>oder<screen>/usr/sbin/sendmail</screen></para>
+
+    <para>Welches <command>sendmail</command> haben wir?<screen>$ <command>ls -lF /usr/sbin/sendmail</command>
+lrwxrwxrwx 1 root root 5 2007-08-03 18:11 /usr/sbin/sendmail -&gt; exim4*
+as</screen>Exim ist bereits installiert. Aber wir wollen Postfix :-)</para>
 
     <para>Installieren:<variablelist termlength="15">
         <varlistentry>
@@ -63,6 +67,11 @@ no sendmail installed</programlisting></para>
 
           <listitem>
             <programlisting>$ <command>apt-get install postfix</command></programlisting>
+
+            <para>Wenn Sie in einem kleinen Dialog gefragt werden, welche Art
+            der Konfiguration Sie wollen, empfiehlt sich "internet mit
+            Smarthost" (falls Sie bereits einen zentralen Mail-Server
+            haben).</para>
           </listitem>
         </varlistentry>
       </variablelist></para>
