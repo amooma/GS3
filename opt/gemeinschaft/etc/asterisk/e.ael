@@ -527,22 +527,9 @@ macro dial-gateway-do( mnumber ) {
 			// RFC 2543
 		}
 	}
-	/*
-	SIPAddHeader(X-GS-clir: ${clir});
-	SIPAddHeader(X-GS-origext: ${origext});
-	SIPAddHeader(X-GS-forwards: ${forwards});
-	SIPAddHeader(X-GS-user_name: ${user_name});
-	SIPAddHeader(X-GS-user_id: ${user_id});
-	*/
-	if ("${dial_outbound}" = "sip") {
-		Verbose(1,### Outgoing call via the gateway. User: ${user_name}\, CallerID: ${CALLERID(all)}\, Number: ${mnumber}\, Zone: ${zone});
-		Dial(SIP/${mnumber}@${gateway_host},300);
-	} else {
-		if ("${dial_outbound}" = "zap") {
-			Verbose(1,### Outgoing call via ISDN. User: ${user_name}\, CallerID: ${CALLERID(all)}\, Number: ${mnumber}\, Zone: ${zone});
-			Dial(Zap/r1/${mnumber},300);
-		}
-	}
+	
+	#exec "/opt/gemeinschaft/etc/asterisk/e-outbound.ael.php"
+	
 	//&hangup-proper-status();
 	Verbose(1,### Tried to dial ${mnumber} to the outside but: ${DIALSTATUS});
 	if ("${DIALSTATUS}" = "BUSY") {
