@@ -611,16 +611,7 @@ macro dial-gateway( mnumber ) {
 
 context to-emergency {
 	
-	110 => &emergency-call(${emergency_police});
-	112 => &emergency-call(${emergency_fire});
-	911 => &emergency-call(${emergency_police});
-	999 => &emergency-call(${emergency_police});
-	767 => &emergency-call(${emergency_police});
-	0110 => &emergency-call(${emergency_police});
-	0112 => &emergency-call(${emergency_fire});
-	0911 => &emergency-call(${emergency_police});
-	0999 => &emergency-call(${emergency_police});
-	0767 => &emergency-call(${emergency_police});
+	#exec "/opt/gemeinschaft/etc/asterisk/e-emergency.ael.php"
 }
 
 macro emergency-call( mnumber ) {
