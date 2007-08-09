@@ -294,7 +294,8 @@ nameserver 192.168.2.1
         <term>CentOS:</term>
 
         <listitem>
-          <programlisting><command>/etc/init.d/named restart</command></programlisting>
+          <screen><command>/etc/init.d/named restart</command>
+<command>chkconfig --levels 235 named on</command></screen>
         </listitem>
       </varlistentry>
 
@@ -302,7 +303,8 @@ nameserver 192.168.2.1
         <term>Debian:</term>
 
         <listitem>
-          <programlisting><command>/etc/init.d/bind9 restart</command></programlisting>
+          <programlisting><command>/etc/init.d/bind9 restart</command>
+<command>update-rc.d bind9 defaults</command></programlisting>
         </listitem>
       </varlistentry>
     </variablelist>
