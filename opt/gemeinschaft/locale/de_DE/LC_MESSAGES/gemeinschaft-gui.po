@@ -34,7 +34,7 @@ msgstr "Firma (aus LDAP)"
 
 #: inc/modules.php:45
 msgid "Firma (Projekt)"
-msgstr "Firma (Projekt)"
+msgstr "Firma"
 
 #: inc/modules.php:46
 msgid "Firma (LDAP)"

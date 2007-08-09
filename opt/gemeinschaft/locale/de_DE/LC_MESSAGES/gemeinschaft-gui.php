@@ -28,7 +28,7 @@
 \*******************************************************************/
 
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1911 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1917 $
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2007-05-23 12:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
@@ -42,7 +42,7 @@ Content-Transfer-Encoding: 8bit
   'Home' => 'Home',
   'Telefonbuch' => 'Telefonbuch',
   'Firma (aus LDAP)' => 'Firma (aus LDAP)',
-  'Firma (Projekt)' => 'Firma (Projekt)',
+  'Firma (Projekt)' => 'Firma',
   'Firma (LDAP)' => 'Firma (LDAP)',
   'Pers&ouml;nlich' => 'Pers&ouml;nlich',
   'Anruflisten' => 'Anruflisten',
