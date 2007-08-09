@@ -30,15 +30,15 @@ msgstr "Phonebook"
 
 #: inc/modules.php:45
 msgid "Firma (aus LDAP)"
-msgstr "Org (from LDAP)"
+msgstr "Org. (from LDAP)"
 
 #: inc/modules.php:45
 msgid "Firma (Projekt)"
-msgstr "Org (Project)"
+msgstr "Org."
 
 #: inc/modules.php:46
 msgid "Firma (LDAP)"
-msgstr "Org (LDAP)"
+msgstr "Org. (LDAP)"
 
 #: inc/modules.php:47
 msgid "Pers&ouml;nlich"
