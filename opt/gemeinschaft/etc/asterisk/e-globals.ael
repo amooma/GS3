@@ -50,7 +50,4 @@ allow_direct_dial_mbox=no;  // yes | no
 // are we a sub-system? if yes, dial to the gateway for unknown numbers:
 is_sub_system=no;           // yes | no
 
-// how to dial to the outside world:
-dial_outbound=sip;          // sip | zap
-
 
