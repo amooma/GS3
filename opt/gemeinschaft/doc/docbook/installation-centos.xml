@@ -426,8 +426,8 @@ yum remove irda-utils
         <filename>/</filename>):<programlisting>cd /opt/ &amp;&amp; ln -s gemeinschaft-svn/trunk/opt/gemeinschaft gemeinschaft</programlisting></para>
 
         <para>Dann<programlisting>cd /opt/gemeinschaft-svn/ &amp;&amp; mysql &lt; asterisk.sql</programlisting>und<programlisting>cd /etc/asterisk/ \
-&amp;&amp; ln -s /opt/gemeinschaft-svn/etc/asterisk/asterisk.conf asterisk.conf</programlisting><programlisting>cd /var/lib/asterisk/sounds/ \
-&amp;&amp; ln -s /opt/gemeinschaft-svn/var/lib/asterisk/sounds/de de</programlisting></para>
+&amp;&amp; ln -s /opt/gemeinschaft-svn/trunk/etc/asterisk/asterisk.conf asterisk.conf</programlisting><programlisting>cd /var/lib/asterisk/sounds/ \
+&amp;&amp; ln -s /opt/gemeinschaft-svn/trunk/var/lib/asterisk/sounds/de de</programlisting></para>
       </footnote>. Unter <filename>/etc/asterisk/</filename> muﬂ jetzt eine
     einzige Datei <filename>asterisk.conf</filename> liegen, unter
     <filename>/opt/gemeinschaft/</filename> die verschiedenen Verzeichnisse
