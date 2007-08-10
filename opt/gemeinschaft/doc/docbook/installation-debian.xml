@@ -412,12 +412,8 @@ User www-data</screen></para>
   <section id="install-centos-optional">
     <title>Optionale Pakete</title>
 
-    <important>
-      <para>FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME</para>
-    </important>
-
     <para>Wer gerne mal schnell einen (unsicheren!) NFS-Server
-    hat:<programlisting><command>yum install nfs-kernel-server \
+    hat:<programlisting><command>apt-get install nfs-kernel-server \
 &amp;&amp; echo '/ *(rw,all_squash,insecure,anonuid=0,anongid=0)' &gt;&gt; /etc/exports \
 &amp;&amp; /etc/init.d/nfs-kernel-server restart</command></programlisting></para>
 
