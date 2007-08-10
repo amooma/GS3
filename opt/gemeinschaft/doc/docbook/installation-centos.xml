@@ -167,9 +167,9 @@ Asterisk 1.4.10</screen>In <filename>/usr/sbin/safe_asterisk</filename>
 chmod a+rwx /var/spool/asterisk/tmp/</command></programlisting></para>
 
     <para>Asterisk-Addons installieren:<programlisting><command>cd /usr/src/ \
-&amp;&amp; wget -c http://ftp.digium.com/pub/asterisk/releases/asterisk-addons-1.4.0.tar.gz \
-&amp;&amp; tar -xzf asterisk-addons-1.4.0.tar.gz \
-&amp;&amp; cd /usr/src/asterisk-addons-1.4.0/ \
+&amp;&amp; wget -c http://ftp.digium.com/pub/asterisk/releases/asterisk-addons-1.4.2.tar.gz \
+&amp;&amp; tar -xzf asterisk-addons-1.4.2.tar.gz \
+&amp;&amp; cd /usr/src/asterisk-addons-1.4.2/ \
 &amp;&amp; ./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install \
 &amp;&amp; make samples</command></programlisting></para>
 
