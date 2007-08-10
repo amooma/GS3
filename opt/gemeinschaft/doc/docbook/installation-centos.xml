@@ -163,7 +163,8 @@ Asterisk 1.4.10</screen>In <filename>/usr/sbin/safe_asterisk</filename>
     stellen.</para>
 
     <para>Verzeichnis für Call-Files freigeben (damit z.B. vom Web-Server
-    geschrieben werden kann):<programlisting><command>chmod a+rwx /var/spool/asterisk/outgoing/</command></programlisting></para>
+    geschrieben werden kann):<programlisting><command>chmod a+rwx /var/spool/asterisk/outgoing/
+chmod a+rwx /var/spool/asterisk/tmp/</command></programlisting></para>
 
     <para>Asterisk-Addons installieren:<programlisting><command>cd /usr/src/ \
 &amp;&amp; wget -c http://ftp.digium.com/pub/asterisk/releases/asterisk-addons-1.4.0.tar.gz \
