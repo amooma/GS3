@@ -204,38 +204,48 @@ Asterisk 1.4.10</screen>In <filename>/usr/sbin/safe_asterisk</filename>
 <command>update-rc.d mysql defaults</command></programlisting>Überprüfung:<screen>$ <command>mysql -V</command>
 mysql  Ver 14.12 Distrib 5.0.32, for pc-linux-gnu (i486) using readline 5.2</screen></para>
 
-    <para>PHP installieren:<programlisting><command>apt-get install php4 php4-cli php4-mysql php4-ldap</command></programlisting>Überprüfung:<screen>$ <command>which php</command>
+    <para>PHP installieren:<programlisting><command>apt-get install php5 php5-cli php5-mysql php5-ldap</command></programlisting>Überprüfung:<screen>$ <command>which php</command>
 /usr/bin/php
 $ <command>php -v</command>
-PHP 4.4.4-8+etch4 (cli) (built: Jun 30 2007 21:02:54)
+PHP 5.2.0-8+etch7 (cli) (built: Jul  2 2007 21:46:15) 
 Copyright (c) 1997-2006 The PHP Group
-Zend Engine v1.3.0, Copyright (c) 1998-2004 Zend Technologies
+Zend Engine v2.2.0, Copyright (c) 1998-2006 Zend Technologies
 $ <command>php -m</command>
 [PHP Modules]
 bcmath
 bz2
 calendar
 ctype
+date
 dba
-dbx
+dom
 exif
-filepro
+filter
 ftp
 gettext
+hash
 iconv
+json
 ldap
+libxml
 mbstring
 mime_magic
 mysql
+mysqli
 ncurses
 openssl
-overload
 pcntl
 pcre
+PDO
+pdo_mysql
 posix
+Reflection
 session
 shmop
+SimpleXML
+soap
 sockets
+SPL
 standard
 sysvmsg
 sysvsem
@@ -243,15 +253,15 @@ sysvshm
 tokenizer
 wddx
 xml
-xmlrpc
-yp
+xmlreader
+xmlwriter
 zip
 zlib
 
 [Zend Modules]
 
-</screen>und in der <filename>/etc/php4/cli/php.ini</filename> und
-    <filename>/etc/php4/apache2/php.ini</filename> die Einstellungen wie in
+</screen>und in der <filename>/etc/php5/cli/php.ini</filename> und
+    <filename>/etc/php5/apache2/php.ini</filename> die Einstellungen wie in
     <xref linkend="php-sicherheit" /> beschrieben vornehmen.</para>
 
     <para>Danach MySQL als Client einrichten<footnote
@@ -299,7 +309,7 @@ zlib
 
     <para>Auf diesem Rechner soll nur das Web-Interface laufen.</para>
 
-    <para>PHP installieren:<programlisting><command>apt-get install php4 php4-cli php4-mysql php4-ldap</command></programlisting>(Überprüfung
+    <para>PHP installieren:<programlisting><command>apt-get install php5 php5-cli php5-mysql php5-ldap</command></programlisting>(Überprüfung
     wie beim Installieren von PHP in <xref
     linkend="install-debian-asterisk" />) und in der
     <filename>/etc/php.ini</filename> die Einstellungen wie in <xref
