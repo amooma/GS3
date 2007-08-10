@@ -159,7 +159,7 @@ openssl-devel zlib zlib-devel krb5-devel</command></programlisting></para>
 
     <para>Ob das erfolgreich war, kann man so prüfen (großes V!):<screen>$ <command>asterisk -V</command>
 Asterisk 1.4.10</screen>In <filename>/usr/sbin/safe_asterisk</filename>
-    <code>SLEEPSECS</code> von <code>4</code> auf <code>1</code>
+    <code>SLEEPSECS</code> von <code>4</code> auf <code>2</code>
     stellen.</para>
 
     <para>Verzeichnis für Call-Files freigeben (damit z.B. vom Web-Server
