@@ -333,6 +333,11 @@ Address: 209.85.135.103</screen>Hier sollte jetzt (spätestens beim 2. Aufruf)
     <para>Falls gewünscht kann man zur Beschleunigung einen OpCode-Cache für
     PHP installieren.</para>
 
+    <important>
+      <para>Installieren Sie keinesfalls mehrere Beschleuniger
+      gleichzeitig!</para>
+    </important>
+
     <section id="eaccelerator">
       <title>eAccelerator</title>
 
@@ -368,7 +373,8 @@ Address: 209.85.135.103</screen>Hier sollte jetzt (spätestens beim 2. Aufruf)
   --with-eaccelerator-sessions</command> <footnote>
             <para>siehe <ulink
                 url="http://eaccelerator.net/wiki/CompileConfiguration">http://eaccelerator.net/wiki/CompileConfiguration</ulink> für Optionen</para>
-          </footnote><command>make</command>
+          </footnote>
+<command>make</command>
 <command>make install</command></programlisting></para>
 
       <para>Datei <filename>/etc/php5/conf.d/eaccelerator.ini</filename>
@@ -397,6 +403,60 @@ eaccelerator.compress_level="9"</screen></para>
       Datei auf fast 1/4.</para>
 
       <para>Apache neu starten:<programlisting><command>/etc/init.d/apache2 restart</command></programlisting></para>
+    </section>
+
+    <section id="xcache">
+      <title>xCache</title>
+
+      <para>Voraussetzung außer den bereits installierten Entwicklungspaketen:
+      <command>m4</command> und <command>phpize</command>.<variablelist
+          termlength="15">
+          <varlistentry>
+            <term>Debian:</term>
+
+            <listitem>
+              <programlisting><command>apt-get install m4 php5-dev bzip2</command></programlisting>
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+
+      <para>Siehe <ulink
+      url="http://xcache.lighttpd.net/wiki/ReleaseArchive">http://xcache.lighttpd.net/wiki/ReleaseArchive</ulink>.<programlisting><command>cd /usr/src/</command>
+<command>wget -c http://xcache.lighttpd.net/pub/Releases/1.2.1/xcache-1.2.1.tar.bz2</command>
+<command>tar -xjf xcache-1.2.1.tar.bz2</command>
+<command>cd xcache-1.2.1/</command>
+<command>phpize</command>
+<command>./configure \
+  --enable-xcache=shared \
+  --enable-xcache-optimizer \
+  --enable-xcache-coverager</command>
+<command>make</command>
+<command>make install</command></programlisting></para>
+
+      <para>Konfiguration:<programlisting><command>cp xcache.ini /etc/php5/conf.d/</command></programlisting><filename>/etc/php5/conf.d/xcache.ini</filename>
+      (nur zu verändernde Werte werden hier genannt): Z.B.
+      <literal>zend_extension</literal> und
+      <literal>zend_extension_ts</literal> auskommentieren (mit
+      <literal>;</literal>),<literallayout>extension = xcache.so</literallayout>außerdem:<screen>xcache.size        = 16M
+xcache.ttl         = 3600
+xcache.gc_interval =  500
+xcache.cacher      = On
+xcache.stat        = On
+xcache.optimizer   = On
+xcache.coverager   = Off</screen></para>
+
+      <para>Wer will kann noch unbenutzte Debug-Symbole aus dem Shared Object
+      entfernen:<programlisting><command>cd /usr/lib/php5/20060613+lfs</command>
+<command>strip xcache.so</command></programlisting>Das verkleinert die Datei
+      auf fast 1/4.</para>
+
+      <para>Apache neu starten:<programlisting><command>/etc/init.d/apache2 restart</command></programlisting></para>
+
+      <para><screen>$ <command>php -v</command>
+PHP 5.2.0-8+etch7 (cli) (built: Jul  2 2007 21:46:15) 
+Copyright (c) 1997-2006 The PHP Group
+Zend Engine v2.2.0, Copyright (c) 1998-2006 Zend Technologies
+    with XCache v1.2.1, Copyright (c) 2005-2007, by mOo</screen></para>
     </section>
   </section>
 </section>
