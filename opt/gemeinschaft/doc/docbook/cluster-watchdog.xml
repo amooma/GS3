@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<section id="cluster-watchdog" revision="$Revision$">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Asterisk-Cluster</title>
+
+  <para>Durch den Betrieb mehrerer, kombinierter Asterisk-MySQL-Knoten ergibt
+  sich die Möglichkeit, bei dem Ausfall eines Hosts dessen Aufgaben von einem
+  anderen Knoten zu übernehmen. Es kann hierbei ein Asterisk-Server
+  bereitgehalten werden (Hotspare), der im Notfall die IP-Adresse und die
+  Konfiguration des ausgefallenen Hosts übernimmt, wobei die Ausfallzeit der
+  Dienste unter einer Minute liegt.</para>
+
+  <para>Um sicherzustellen, daß der ausgefallene Host nicht plötzlich seine
+  Arbeit wieder aufnimmt, was nach der Überhame der Aufgaben durch den
+  Ersatzserver zu einigem Chaos führen würde, muß der Havarist dabei sicher
+  vom Netz getrennt werden (STONITH - Shoot The Other Node In The Head). Um
+  dies zu automatisieren, kann auf spezielle Hardware zurückgegriffen werden
+  (IP-fähige Steckerleisten, Relaiskarten, etc.), welche die Stromversorgung
+  oder die Netzwerkverbindung zu dem betroffenen Host unterbrechen.</para>
+
+  <para>Ein auf dem Hotspare installiertes Programm kann dabei die anderen
+  Knoten ständig überwachen und im Notfall, entsprechend den Vorgaben, in den
+  Betrieb eingreifen.</para>
+
+  <para>Falls ein Asterisk-Server nicht mehr erreichbar ist, wird das Skript
+  <filename>/opt/gemeinschaft/sbin/stonith.sh</filename> mit Übergabe der
+  entsprechenden IP-Adresse als erstem Parameter aufgerufen. Sie müssen das
+  Skript auf Ihre Gegebenheiten anpassen, so daß es diese IP-Adresse vom Netz
+  trennt.</para>
+
+  <section id="watchdog-uebersicht">
+    <title>Cluster-Watchdog Übersicht</title>
+
+    <para>Der Cluster-Watchdog besteht aus dem PHP-Skript gs-cluster-watchdog,
+    welches vom Cron einmal pro Minute aufgerufen wird. Es überprüft mehrmals
+    die Verbindung zu den Asterisk-Servern im Cluster und reagiert auf
+    Ausfälle einzelner Hosts.</para>
+
+    <para>Der Watchdog besteht aus folgenden Dateien (relativ zu
+    <filename>/opt/gemeinschaft/</filename>):<variablelist>
+        <varlistentry>
+          <term><filename>sbin/gs-cluster-watchdog.php</filename></term>
+
+          <listitem>
+            <para>Das Hauptprogramm</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><filename>sbin/gs-cluster-admin.php</filename></term>
+
+          <listitem>
+            <para>Hilfsprogramm, um nach einem Ausfall die Nodes wieder in den
+            ursprünglichen Zustand zu versetzen. (IPs freigeben etc.)</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><filename>etc/gs-cluster-watchdog.conf</filename></term>
+
+          <listitem>
+            <para>Konfigurationsdatei, die alle nötigen Konstanten und Angaben
+            zu den einzelnen Nodes enthält</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><filename>etc/gs-cluster-watchdog.data</filename></term>
+
+          <listitem>
+            <para>Datendatei, in welcher der Watchdog die aktuellen Daten der
+            Nodes vorhält. Wird nach dem ersten Start des Programmes
+            automatisch angelegt.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><filename>etc/listen-to-ip</filename></term>
+
+          <listitem>
+            <para>Konfigurationsdatei, welche die IP-Adressen enthält, auf die
+            der Asteriskserver reagieren soll. (Diese Datei wird aber nicht
+            nur vom Watchdog benötigt.)</para>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section id="watchdog-konfiguration">
+    <title>Konfiguration des Watchdogs</title>
+
+    <para>Die Konfigurationsdatei <emphasis
+    role="bold"><filename>etc/gs-cluster-watchdog.conf</filename></emphasis>
+    ist selbst ein PHP-Programm und enthält folgende Definitionen:</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>SLEEP_SECONDS</code></term>
+
+        <listitem>
+          <para>Zeit in Sekunden die zwischen den Checks vergehen soll.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>SIP_TIMEOUT</code></term>
+
+        <listitem>
+          <para>Zeit in Sekunden, in der eine SIP-Anfrage vom Node beantworet
+          werden muss, bis dieser als ausgefallen gewertet wird.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>RETRY</code></term>
+
+        <listitem>
+          <para>Gibt an, wie oft ein Kommunikationsfehler wiederholt auftreten
+          darf, bis der Host als ausgefallen gewertet wird. Die maximale Zeit
+          bis zur Übernahme der Funktionen eines defekten Nodes ergibt sich
+          also aus (<code>RETRY</code> +1) * (<code>SLEEP_SECONDS</code> +
+          <code>SIP_TIMEOUT</code>)</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>Beispiel:</para>
+
+    <para><programlisting>define("SLEEP_SECONDS", "2");
+define("SIP_TIMEOUT", "4");
+define("RETRY", "2");</programlisting></para>
+
+    <para>Weiterhin werden die folgenden Daten für dei einzelnen Nodes
+    benötigt. Dabei ist der Node <code>0</code> (also der erste mit <emphasis
+    role="bold"><code>define_node()</code></emphasis> definierte Node) immer
+    der Master.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>ip</code></term>
+
+        <listitem>
+          <para>Die IP-Adresse des Nodes - diese wird dann ggf. vom Master
+          übernommen.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>netmask</code></term>
+
+        <listitem>
+          <para>Die Netzwerkmaske des Netzwerks.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>broadcast</code></term>
+
+        <listitem>
+          <para>Die Broadcast-Adresse des Netzwerks.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>device</code></term>
+
+        <listitem>
+          <para>Das Interface, welches auf dem Master die zusätzliche
+          IP-Adresse übernehmen soll. (z.B. <literal>eth0</literal>,
+          <literal>eth2</literal> oder <literal>eth0:1</literal>)</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>local_mac</code></term>
+
+        <listitem>
+          <para>Die MAC-Adresse des Interfaces welches die IP übernehmen
+          soll.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>remote_mac</code></term>
+
+        <listitem>
+          <para>Die MAC-Adresse des Interfaces von dem die IP übernommen wird,
+          also des betroffenen Slave-Nodes.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>Das Beispiel<programlisting># definition of node 1 
+define_node(
+/* ip         */  '192.168.1.4',
+/* netmask    */  '255.255.255.0',
+/* broadcast  */  '192.168.1.255',
+/* device     */  'eth0:2',
+/* local_mac  */  '00:0C:29:64:05:EB',
+/* remote_mac */  '00:0C:29:8D:D1:B2'
+);
+</programlisting>definiert einen Node des Clusters. Der erste definierte Node
+    (Node 0) ist der Master.</para>
+
+    <section id="watchdog-stonith">
+      <title><filename>stonith.sh</filename></title>
+
+      <para>Erkennt der Watchdog, daß ein Node nicht mehr ansprechbar ist,
+      ruft er das Skript
+      <filename>/opt/gemeinschaft/sbin/stonith.sh</filename> auf und übergibt
+      als ersten Parameter auf der Kommandozeile die IP-Adresse des
+      ausgefallenen Nodes. Dieses Skript muß so angepaßt werden, daß es auf
+      die STONITH-Hardware zugreift und den Rechner mit der entsprechenden
+      IP-Adresse vom Ethernet oder Stromnetz trennt.<footnote>
+          <para>Je nach STONITH-Hardware läßt sich diese beispielsweise über
+          SSH oder Telnet ansprechen. Möglicherweise kann das RPM-Paket
+          <literal>heartbeat-stonith</literal> hilfreich sein, das bereits
+          Schnittstellen für verschiedene Geräte mitliefert - z.Zt. sind
+          das:<screen>[root@ast0 redhat]# <command>stonith -L</command>
+apcmaster
+apcmastersnmp
+apcsmart
+baytech
+cyclades
+drac3
+external/riloe
+external/ssh
+ibmhmc
+meatware
+null
+nw_rpc100s
+rcd_serial
+rps10
+ssh
+suicide
+wti_nps</screen></para>
+        </footnote></para>
+    </section>
+  </section>
+
+  <section id="watchdog-admin">
+    <title><filename>gs-watchdog-admin.php</filename></title>
+
+    <para>Das Administrationsprogamm kann benutzt werden, um die Konfiguration
+    des Watchdogs zu überprüfen. Es hat folgende Optionen:</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>[--host=<replaceable>Host-ID</replaceable>]</code></term>
+
+        <listitem>
+          <para>Die ID des Nodes, wie sie in der Konfigurationsdatei angegeben
+          wurde.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>[--show-config]</code></term>
+
+        <listitem>
+          <para>Zeigt den Inhalt der Konfigurationsdatei.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>[--show-data]</code></term>
+
+        <listitem>
+          <para>Zeigt den Inhalt der Datendatei</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>[--clear-data]</code></term>
+
+        <listitem>
+          <para>Schreibt die Definition der Nodes in die Datendatei</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>[--release]</code></term>
+
+        <listitem>
+          <para>Gibt eine übernommene IP wieder ab. Nur sinnvoll mit Angabe
+          eines Host.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>Das Beispiel<screen>$ ./gs-cluster-admin.php --host=1
+Host 1 (192.168.1.4) is in status NORMAL                                       </screen>zegt
+    z.B. den Status des ersten Slave-Nodes.</para>
+
+    <para>Nach dem Recovery eines Nodes kann die übernommene IP wieder
+    freigegeben werden, mit:</para>
+
+    <para><programlisting>gs-cluster-admin.php --host=1 --release
+</programlisting></para>
+  </section>
+
+  <section id="watchdog-cron">
+    <title>Starten des Watchdogs</title>
+
+    <para>Der Watchdog muß mit jeweils einem der folgenden Parameter gestartet
+    werden:</para>
+
+    <variablelist>
+      <varlistentry>
+        <term>active</term>
+
+        <listitem>
+          <para>Normalbetrieb - IPs werden bei ausfall übernommen und Asterisk
+          neu gestartet.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>debug</term>
+
+        <listitem>
+          <para>Wie Normalbetrieb, mit zusätzlicher Ausgabe von Debugmeldungen
+          auf der Konsole</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>testing</term>
+
+        <listitem>
+          <para>Keine Übername von IPs, kein Neustart von Asterisk. Ausgabe
+          von Debugmeldungen auf der Konsole.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>Der Watchdog muß minütlich von Cron aufgerufen werden. Dazu trägt
+    man ihn in der <filename>crontab</filename> von <literal>root</literal>
+    ein oder legt z.B. eine Datei
+    <filename>/etc/cron.d/gs-cluster-watchdog</filename> an mit folgendem
+    Inhalt:</para>
+
+    <programlisting># Run Gemeinschaft cluster watchdog once every minute:
+* *  * * *  root /opt/gemeinschaft/sbin/gs-cluster-watchdog.php active</programlisting>
+  </section>
+</section>

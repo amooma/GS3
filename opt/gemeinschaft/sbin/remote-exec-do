@@ -1,0 +1,64 @@
+#!/usr/bin/expect
+
+#####################################################################
+#            Gemeinschaft - asterisk cluster gemeinschaft
+# 
+# $Revision$
+# 
+# Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+# Philipp Kempgen <philipp.kempgen@amooma.de>
+# Peter Kozak <peter.kozak@amooma.de>
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#####################################################################
+
+
+if {[llength $argv] != 3} {
+    send_user "Params: <host> <command> <timeout>\n"
+    exit 1
+}
+set host [lindex $argv 0]
+set cmd [lindex $argv 1]
+set timeout [lindex $argv 2]
+
+log_user 0
+set timeout $timeout
+set match_max 32000
+
+spawn sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root $host $cmd \; echo "CMDEXIT===$?==="
+expect {
+	"CMDEXIT===0===" {  # remote command ok
+		set out $expect_out(buffer)
+		regsub "CMDEXIT===0===\\s*$" $out "" out
+		send_user $out
+		exit 0
+	}
+	-re "CMDEXIT===(\\d*)===" {  # remote command failed
+		set out $expect_out(buffer)
+		regsub "CMDEXIT===(\\d)===\\s*$" $out "" out
+		send_user $out
+		exit $expect_out(1,string)
+	}
+	" password:"        {exit 119}
+	"assphrase"         {exit 118}
+	"o route to host"   {exit 117}
+	"onnection refused" {exit 116}
+	timeout             {exit 110}
+}
+exit 120
+

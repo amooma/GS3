@@ -1,0 +1,106 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/nobody-extensions.php' );
+include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Updates all nobody accounts to GS_NOBODY_EXTEN_PATTERN and GS_NOBODY_CID_NAME.
+Usage: '. baseName(__FILE__) .' --force=yes';
+
+$opts = getOptsNoMultiples( '',
+	array(
+		'force='
+	),
+	$usage
+);
+if (! isSet( $opts['force'] ) || $opts['force'] != 'yes') {
+	echo "This is a serious operation and will only be done with --force=yes.\n";
+	die(1);
+}
+
+
+
+$db = gs_db_master_connect();
+if (! $db) {
+	echo "Could not connect to DB.\n";
+	die(1);
+}
+
+$pattern = gs_conf_nobody_pattern();
+//$start = (int)preg_replace('/[^\d]/', '0', $pattern);
+$start = (int)gs_nobody_index_to_extension(0);
+$GS_NOBODY_CID_NAME = gs_utf8_decompose_to_ascii( GS_NOBODY_CID_NAME );
+echo "Moving all nobody accounts to extension pattern '$pattern', caller ID name '". $GS_NOBODY_CID_NAME ."' ...\n";
+
+$ok = $db->execute(
+'UPDATE
+	`ast_sipfriends` `s` JOIN
+	`users` `u` ON (`u`.`id`=`s`.`_user_id`)
+SET
+	`s`.`name` = ('. $start .'+`u`.`nobody_index`),
+	`s`.`setvar` = CONCAT(\'__user_id=\', `s`.`_user_id`, \';__user_name=\', ('. $start .'+`u`.`nobody_index`)),
+	`s`.`callerid` = CONCAT(_utf8\''. $db->escape($GS_NOBODY_CID_NAME) .'\', `s`.`_user_id`, \' <\', ('. $start .'+`u`.`nobody_index`), \'>\')
+WHERE `u`.`nobody_index` > 0'
+);
+
+$rs = $db->execute(
+'SELECT `u`.`id`, `u`.`user` `uc`, `s`.`name` `ext`
+FROM
+	`users` `u` LEFT JOIN
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
+WHERE `u`.`nobody_index`>0'
+);
+echo 'Rebooting: ';
+while ($u = $rs->fetchRow()) {
+	echo '.';
+	if ($u['ext'])
+		 @ gs_prov_phone_checkcfg_by_ext( $u['ext'], true );
+	else
+		 @ gs_prov_phone_checkcfg_by_user( $u['uc'], true );
+}
+echo "\n";
+
+if (! $ok) {
+	echo "Failed.\n";
+	die(1);
+}
+echo "Done.\n";
+
+
+?>

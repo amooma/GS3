@@ -1,0 +1,322 @@
+//---------------------------------------------------------------------
+//            Gemeinschaft - asterisk cluster gemeinschaft
+// 
+// $Revision$
+// 
+// Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+// http://www.amooma.de/
+// Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+// Philipp Kempgen <philipp.kempgen@amooma.de>
+// Peter Kozak <peter.kozak@amooma.de>
+// 
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+// MA 02110-1301, USA.
+//---------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------
+//
+//  User Config of Line Features and Call Forwarding
+//
+//---------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------
+//  Macro to get a user's code by the extension (= SIP name)
+//---------------------------------------------------------------------
+
+macro usercode-by-ext( mext ) {
+	AGI(/opt/gemeinschaft/dialplan-scripts/usercode-by-ext.agi|${mext});
+	NoOp(### AGI returned: user_code = ${user_code});
+}
+
+
+//---------------------------------------------------------------------
+//  User config service numbers
+//---------------------------------------------------------------------
+
+context user-config {
+	
+	//-------------------------------------------------------------
+	//  CLIR (Rufnummernunterdrückung)
+	//-------------------------------------------------------------
+	
+	*90 => {
+		&user-config-clir(internal,1);
+	}
+	*90* => {
+		&user-config-clir(internal,0);
+	}
+	*91 => {
+		&user-config-clir(external,1);
+	}
+	*91* => {
+		&user-config-clir(external,0);
+	}
+	
+	
+	//-------------------------------------------------------------
+	//  Call Waiting (Anklopfen)
+	//-------------------------------------------------------------
+	
+	*92 => {
+		&user-config-call-waiting(1);
+	}
+	*92* => {
+		&user-config-call-waiting(0);
+	}
+	
+	
+	//-------------------------------------------------------------
+	//  Call Forwarding (Anrufumleitung)
+	//-------------------------------------------------------------
+	
+	_*9[34][01]. => {
+		Set(number=${EXTEN:4});
+		if ("${EXTEN:2:1}" = "3") {
+			Set(type=std);
+		} else {
+			Set(type=var);
+		}
+		if ("${EXTEN:3:1}" = "0") {
+			Set(source=internal);
+		} else {
+			Set(source=external);
+		}
+		Verbose(1,### User ${user_name}: set ${type} Call Forward number from ${source}: ${number});
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		TrySystem(/opt/gemeinschaft/scripts/gs_callforward_number_set --user='${user_code}' --source='${source}' --type='${type}' --number='${number}');
+		Wait(0.5);
+		//Playback(beep);
+		if ("${type}" = "std") {
+			Playback(gemeinschaft/standard);
+		} else {
+			Playback(gemeinschaft/variable);
+		}
+		Playback(gemeinschaft/rufumleitungsnummer&gemeinschaft/fuer-anrufe&gemeinschaft/von);
+		if ("${source}" = "internal") {
+			Playback(gemeinschaft/intern);
+		} else {
+			Playback(gemeinschaft/extern);
+		}
+		Playback(gemeinschaft/eingestellt);
+		Wait(0.5);
+		SayDigits(${number});
+		Hangup();
+	}
+	
+	_*95XX => {
+		Set(timeout=${EXTEN:3});
+		Verbose(1,### User ${user_name}: set Unavail Timeout to ${timeout});
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		TrySystem(/opt/gemeinschaft/scripts/gs_callforward_timeout_set --user='${user_code}' --timeout='${timeout}');
+		Wait(0.5);
+		//Playback(beep);
+		Playback(klingeldauer);
+		SayNumber(${timeout});
+		Playback(seconds);
+		Hangup();
+	}
+	
+	_*9*[01][0-3] => {
+		&user-call-forward-activate-numeric(std,${EXTEN:3:1},${EXTEN:4:1},1);
+		Wait(0.5);
+		Playback(beep);
+		Hangup();
+	}
+	_*9*[01][0-3]* => {
+		&user-call-forward-activate-numeric(std,${EXTEN:3:1},${EXTEN:4:1},0);
+		Wait(0.5);
+		Playback(beep);
+		Hangup();
+	}
+	_*9**[01][0-3] => {
+		&user-call-forward-activate-numeric(var,${EXTEN:4:1},${EXTEN:5:1},1);
+		Wait(0.5);
+		Playback(beep);
+		Hangup();
+	}
+	_*9**[01][0-3]* => {
+		&user-call-forward-activate-numeric(var,${EXTEN:4:1},${EXTEN:5:1},0);
+		Wait(0.5);
+		Playback(beep);
+		Hangup();
+	}
+	
+	*2 => {
+		&user-call-forward-activate-numeric(std,0,0,1);
+		&user-call-forward-activate-numeric(std,1,0,1);
+		&queue-logout-all-silent();
+		Wait(0.5);
+		Playback(gemeinschaft/rufumleitung&gemeinschaft/aktiviert);
+		Hangup();
+	}
+	dnd-on => {
+		// like *2 but silent
+		&user-call-forward-activate-numeric(std,0,0,1);
+		&user-call-forward-activate-numeric(std,1,0,1);
+		&queue-logout-all-silent();
+		Hangup();
+	}
+	
+	*2* => {
+		&user-call-forward-activate-numeric(std,0,0,0);
+		&user-call-forward-activate-numeric(std,1,0,0);
+		Wait(0.5);
+		Playback(gemeinschaft/rufumleitung&gemeinschaft/deaktiviert);
+		Hangup();
+	}
+	dnd-off => {
+		// like *2* but silent
+		&user-call-forward-activate-numeric(std,0,0,0);
+		&user-call-forward-activate-numeric(std,1,0,0);
+		Hangup();
+	}
+	
+	_*2X. => {
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		Set(tonumber=${EXTEN:2});
+		System(/opt/gemeinschaft/scripts/gs_callforward_number_set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
+		System(/opt/gemeinschaft/scripts/gs_callforward_number_set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
+		&user-call-forward-activate-numeric(var,0,0,1);
+		&user-call-forward-activate-numeric(var,1,0,1);
+		&queue-logout-all-silent();
+		Wait(0.5);
+		Playback(gemeinschaft/rufumleitung&gemeinschaft/aktiviert);
+		Hangup();
+	}
+	
+	
+	//-------------------------------------------------------------
+	// Comment
+	//-------------------------------------------------------------
+	
+	*96 => {
+		&user-config-comment(1);
+	}
+	*96* => {
+		&user-config-comment(0);
+	}
+}
+
+
+macro user-config-comment( mactive ) {
+	if ("${user_name}" = "")
+		Hangup();
+	
+	if ("${mactive}" != "1")
+		Set(mactive=0);
+	
+	Verbose(1,### User ${user_name}: set comment off-time ${mactive});
+	Answer();
+	TrySystem(/opt/gemeinschaft/dialplan-scripts/user-comment-offtime-set '${user_name}' '${mactive}');
+	Wait(0.5);
+	Playback(beep);
+	Hangup();
+}
+
+
+macro user-config-clir( mdest, mactive_num ) {
+	&usercode-by-ext(${user_name});
+	if ("${user_code}" = "")
+		Hangup();
+	
+	if ("${mdest}" != "external")
+		Set(mdest=internal);
+	
+	Set(mactive=yes);
+	if ("${mactive_num}" = "0")
+		Set(mactive=no);
+	
+	Verbose(1,### User ${user_name}: set CLIR ${mdest}: ${mactive});
+	Answer();
+	TrySystem(/opt/gemeinschaft/scripts/gs_clir_activate --user='${user_code}' --dest='${mdest}' --active='${mactive}');
+	Wait(0.5);
+	Playback(beep);
+	Hangup();
+}
+
+
+macro user-config-call-waiting( mactive_num ) {
+	&usercode-by-ext(${user_name});
+	if ("${user_code}" = "")
+		Hangup();
+	
+	Set(mactive=yes);
+	if ("${mactive_num}" = "0")
+		Set(mactive=no);
+	
+	Verbose(1,### User ${user_name}: set Call Waiting: ${mactive});
+	Answer();
+	TrySystem(/opt/gemeinschaft/scripts/gs_callwaiting_activate --user='${user_code}' --active='${mactive}');
+	Wait(0.5);
+	//Playback(beep);
+	Playback(gemeinschaft/anklopfen);
+	if ("${mactive}" = "yes") {
+		Playback(gemeinschaft/eingeschaltet);
+	} else {
+		Playback(gemeinschaft/ausgeschaltet);
+	}
+	Hangup();
+}
+
+
+macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive_num ) {
+	
+	&usercode-by-ext(${user_name});
+	if ("${user_code}" = "")
+		Hangup();
+	
+	//ExecIf($["${mtype}" != "std"],Set,mtype=var);
+	if ("${mtype}" != "std")
+		Set(mtype=var);
+	
+	Set(msource=internal);
+	//ExecIf($["${msource_num}" = "1"],Set,msource=external);
+	if ("${msource_num}" = "1")
+		Set(msource=external);
+	
+	Set(mcase=always);
+	/*
+	ExecIf($["${mcase_num}" = "1"],Set,mcase=busy);
+	ExecIf($["${mcase_num}" = "2"],Set,mcase=unavail);
+	ExecIf($["${mcase_num}" = "3"],Set,mcase=offline);
+	*/
+	if ("${mcase_num}" = "1")
+		Set(mcase=busy);
+	if ("${mcase_num}" = "2")
+		Set(mcase=unavail);
+	if ("${mcase_num}" = "3")
+		Set(mcase=offline);
+	
+	Set(mactive=no);
+	if ("${mactive_num}" != "0")
+		Set(mactive=${mtype});
+	
+	Verbose(1,### User ${user_name}: set call forward ${msource} ${mtype} ${mcase} ${mactive_num});
+	
+	Answer();
+	System(/opt/gemeinschaft/scripts/gs_callforward_activate --user='${user_code}' --source='${msource}' --case='${mcase}' --active='${mactive}');
+}
+

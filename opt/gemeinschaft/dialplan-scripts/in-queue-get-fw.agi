@@ -1,0 +1,103 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+
+$queue  = trim(@$argv[1]);
+
+if (! preg_match('/^\d+$/', $queue)) {  // is not just digits
+	die();
+}
+
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$db = gs_db_slave_connect();
+
+# get queue_id:
+$queue_id = (int)$db->executeGetOne( 'SELECT `_id` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue) .'\'' );
+if ($queue_id < 1) die();
+
+
+
+$forwards = array(
+		'internal'=> array(
+		'always'  => array( 'number'=>'' ),
+		'full'    => array( 'number'=>'' ),
+		'empty'   => array( 'number'=>'' ),
+		'timeout' => array( 'number'=>'', 'timeout'=>15 )
+	),
+		'external'=> array(
+		'always'  => array( 'number'=>'' ),
+		'full'    => array( 'number'=>'' ),
+		'empty'   => array( 'number'=>'' ),
+		'timeout' => array( 'number'=>'', 'timeout'=>15 )
+	)
+);
+
+$rs = $db->execute( 'SELECT `source`, `case`, `timeout`, `number_std`, `number_var`, `active` FROM `queue_callforwards` WHERE `queue_id`='. $queue_id );
+while ($r = $rs->fetchRow()) {
+	$number_std = trim( $r['number_std'] );
+	$number_var = trim( $r['number_var'] );
+	$number = '';
+	if     ($r['active']=='std' && $number_std != '')
+		$number = $number_std;
+	elseif ($r['active']=='var' && $number_var != '')
+		$number = $number_var;
+	$forwards[$r['source']][$r['case']]['number'] = $number;
+	if ($r['case']=='unavail' && $number != '')
+		$forwards[$r['source']][$r['case']]['timeout'] = $r['timeout'];
+}
+
+
+foreach ($forwards as $source => $arr) {
+	foreach ($arr as $case => $fw) {
+		//if ($fw['number'] != '') {
+			echo "SET VARIABLE fw_". $source ."_". $case . rTrim( " ". $fw['number'] ) ."\n";
+			//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+		//}
+	}
+}
+if ($forwards['internal']['timeout']['number'] != '') {
+	echo "SET VARIABLE fw_internal_timeout_timeout ". $forwards['internal']['timeout']['timeout'] ."\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+}
+if ($forwards['external']['timeout']['number'] != '') {
+	echo "SET VARIABLE fw_internal_timeout_timeout ". $forwards['external']['timeout']['timeout'] ."\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+}
+
+
+?>

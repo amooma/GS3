@@ -1,0 +1,145 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/mb_str_pad.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --queue=<extension>';
+
+$opts = getOptsNoMultiples( '',
+	array(
+		'queue='
+	),
+	$usage
+);
+if (! isSet($opts['queue'])
+ ) {
+	gs_script_invalid_usage( $usage );
+}
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+$queue =  gs_queue_get( $opts['queue'] );
+if (isGsError( $queue )) gs_script_error( $queue->getMsg() );
+if (! is_array($queue))  gs_script_error();
+
+
+
+echo '      id: ', $queue['id'     ], "\n";
+echo '     ext: ', $queue['ext'    ], "\n";
+echo '   title: ', $queue['title'  ], "\n";
+echo '  maxlen: ', $queue['maxlen' ], "\n";
+echo ' host_id: ', $queue['host_id'], "\n";
+echo '    host: ', $queue['host'   ], "\n";
+echo ' members: ', "\n";
+
+
+$fields = array(
+	'interface'=> 6,
+	'id'       => 2,
+	'user'     => 6,
+	'firstname'=> 5,
+	'lastname' => 5,
+	'host_id'  => 1,
+	'host'     => 7
+);
+$fieldsAbbr = array(
+	'interface'=> 'interface',
+	'id'       => 'user_id',
+	'user'     => 'user',
+	'firstname'=> 'firstname',
+	'lastname' => 'lastname',
+	'host_id'  => 'host_id',
+	'host'     => 'host'
+);
+$fieldsPad = array(
+	'interface'=> STR_PAD_RIGHT,
+	'id'       => STR_PAD_LEFT,
+	'user'     => STR_PAD_RIGHT,
+	'firstname'=> STR_PAD_RIGHT,
+	'lastname' => STR_PAD_RIGHT,
+	'host_id'  => STR_PAD_LEFT,
+	'host'     => STR_PAD_RIGHT
+);
+
+foreach ($fields as $field => $length) {
+	if (strLen($fieldsAbbr[$field]) > $length)
+		$fields[$field] = strLen($fieldsAbbr[$field]);
+}
+foreach ($queue['members'] as $ignore => $member) {
+	foreach ($fields as $field => $length) {
+		//$queue[$field] = str_replace( '"', '\\"', $queue[$field] );
+		if (strLen($member[$field]) > $length)
+			$fields[$field] = strLen($member[$field]);
+	}
+}
+
+$header = '| ';
+foreach ($fields as $field => $length) {
+	$header.= str_pad( $fieldsAbbr[$field], $length, ' ' ) .' | ';
+}
+$sep = str_repeat( '-', strLen($header)-1 );
+
+echo $sep, "\n";
+echo $header, "\n";
+echo $sep, "\n";
+$host_warn = false;
+foreach ($queue['members'] as $ignore => $member) {
+	
+	if ($member['host_id'] != $queue['host_id']) {
+		$host_warn = true;
+		$host_warn_v = ' (!)';
+	} else
+		$host_warn_v = '';
+	
+	echo '| ';
+	foreach ($fields as $field => $length) {
+		if ($field == 'host_id')
+			$member[$field] .= $host_warn_v;
+		echo mb_str_pad( $member[$field], $length, ' ', $fieldsPad[$field] ), ' | ';
+	}
+	echo "\n";
+}
+echo $sep, "\n";
+
+if ($host_warn) {
+	echo "WARNING: MEMBERS MUST ALL BE ON THE SAME HOST (". $queue['host'] .")\n\n";
+}
+
+?>

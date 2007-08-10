@@ -1,0 +1,163 @@
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+defined('GS_VALID') or die('No direct access.');
+
+
+# These states are used in the manager API (see
+# action_extensionstate() in manager.c). They are different from
+# the internal device states (AST_DEVICE_...)!
+define( 'AST_MGR_EXT_UNKNOWN' ,-1 );  # no hint for the extension
+define( 'AST_MGR_EXT_IDLE'    , 0 );  # registered, idle
+define( 'AST_MGR_EXT_INUSE'   , 1 );  # busy
+define( 'AST_MGR_EXT_OFFLINE' , 4 );  # unreachable, not registered
+define( 'AST_MGR_EXT_RINGING' , 8 );  # ringing
+
+
+function gs_extstate( $host, $exts )
+{
+	static $hosts = array();
+	
+	if (! is_array($exts)) {
+		$exts = array($exts);
+		$return_single = true;
+	} else
+		$return_single = false;
+	
+	if (! isSet($hosts[$host])) {
+		$hosts[$host] = array(
+			'sock'    => null,
+			'lasttry' => 0
+		);
+	}
+	if (! is_resource($hosts[$host]['sock'])) {
+		
+		if ($hosts[$host]['lasttry'] > time()-3600) {
+			# we have tried less than a minute ago
+			$hosts[$host]['lasttry'] = time();
+			return AST_MGR_EXT_UNKNOWN;
+		}
+		$hosts[$host]['lasttry'] = time();
+		
+		$sock = @ fSockOpen( $host, 5038, $err, $errMsg, 4 );
+		if (! is_resource($sock))
+			return AST_MGR_EXT_UNKNOWN;
+		$hosts[$host]['sock'] = $sock;
+		$req = "Action: Login\r\n"
+		     . "Username: ". "gscc" ."\r\n"
+		     . "Secret: ". "gspass" ."\r\n"
+		     . "Events: off\r\n"
+		     . "\r\n";
+		@ fWrite( $sock, $req, strLen($req) );
+		@ fFlush( $sock );
+		$data = _sock_read( $sock, 5, '/\\r\\n\\r\\n/' );
+		if (! preg_match('/Authentication accepted/i', $data)) {
+			$hosts[$host]['sock'] = null;
+		}
+	} else
+		$sock = $hosts[$host]['sock'];
+	
+	$states = array();
+	foreach ($exts as $ext) {
+		$req = "Action: ExtensionState\r\n"
+		     . "Context: to-internal-users-self\r\n"  // or "default"
+		     . "Exten: ". $ext ."\r\n"
+		     . "\r\n";
+		@ fWrite( $sock, $req, strLen($req) );
+		@ fFlush( $sock );
+		$resp = trim( _sock_read( $sock, 3, '/\\r\\n\\r\\n/' ) );
+		//echo "\n$resp\n\n";
+		$states[$ext] = AST_MGR_EXT_UNKNOWN;
+		if (! preg_match('/^Response:\s*Success/is', $resp)) continue;
+		if (! preg_match('/^Exten:\s*([\da-z]+)/mis', $resp, $m)) continue;
+		$resp_ext = $m[1];
+		if (! preg_match('/^Status:\s*(-?\d+)/mis', $resp, $m)) continue;
+		$resp_state = (int)$m[1];
+		$states[$resp_ext] = $resp_state;
+	}
+	
+	if (! $return_single)
+		return $states;
+	else
+		return array_key_exists( $exts[0], $states )
+			? $states[$exts[0]]
+			: AST_MGR_EXT_UNKNOWN;
+}
+
+function gs_extstate_single( $ext )
+{
+	include_once( GS_DIR .'inc/db_connect.php' );
+	$db = @ gs_db_slave_connect();
+	if (! $db) {
+		gs_log( GS_LOG_FATAL, 'Could not connect do slave DB!' );
+		return AST_MGR_EXT_UNKNOWN;
+	}
+	$host = $db->executeGetOne(
+'SELECT `h`.`host`
+FROM
+	`ast_sipfriends` `s` JOIN
+	`users` `u` ON (`u`.`id`=`s`.`_user_id`) JOIN
+	`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
+WHERE `s`.`name`=\''. $db->escape($ext) .'\'' );
+	if (! $host)  # not a user
+		return AST_MGR_EXT_UNKNOWN;
+	
+	return gs_extstate( $host, $ext );
+}
+
+function _sock_read( $sock, $timeout, $stop_regex )
+{
+	if (! is_resource($sock)) return false;
+	@ stream_set_blocking( $sock, false );
+	//stream_set_timeout( $sock, 5 );  // not really used here
+	$tStart = time();
+	$data = '';
+	while (! @ fEof( $sock ) && time() < $tStart+$timeout) {
+		$data .= @ fRead( $sock, 8192 );
+		if (@ preg_match($stop_regex, $data)) break;
+		uSleep(1000);  # sleep 0.001 secs
+	}
+	return $data;
+}
+
+function gs_ast_extstate_offer_cc( $state )
+{
+	return ($state > AST_MGR_EXT_UNKNOWN);
+	# don't offer call completion if there is no hint for the extension
+	# as the state would never change
+}
+
+function gs_ast_extstate_try_cc( $state )
+{
+	return ($state == AST_MGR_EXT_IDLE);
+	# try to initiate a callback if both the caller and the callee are
+	# in idle state
+}
+
+
+?>

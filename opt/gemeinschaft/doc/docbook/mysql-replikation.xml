@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<section id="mysql-replikation" revision="$Revision$">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>MySQL-Replikation</title>
+
+  <para>Durch Replikation der Datenbankinhalte zwischen einem Master-Server
+  und einem oder mehreren Slaves erreicht man eine höhere Ausfallsicherheit
+  und Arbeitsgeschwindigkeit. Die Anfragen einzelne Asterisk-Server können
+  direkt an eine lokal installierte Slave-Datenbank gerichtet werdem, womit
+  man sowohl den nötigen Netzwerkverkehr minimiert, als auch die Anfragen an
+  die Datenbank beschleunigt.</para>
+
+  <para>Fällt einer dieser kombinierten Asterisk-Datenbank-Knoten aus, hat
+  dies auf die anderen Knoten dieses Verbundes keine negativen Auswirkungen.
+  Ein Ausfall der Master-Datenbank verhindert die Replikation zwar, der
+  weitere Betrieb der einzelnen Knoten ist aber weiterhin
+  gewährleistet.</para>
+
+  <section id="replikation-voraussetzungen">
+    <title>Benötigte Komponenten</title>
+
+    <para>MySQL-Server in der unter <xref linkend="system-requirements" />
+    angegebenen Version auf allen Hosts, die für die MySQL-Replikation
+    vorgesehen sind. Wichtig ist hierbei, dass auf allen Knoten vor dem Start
+    der Replikation die Datenbank <literal>asterisk</literal> <emphasis
+    role="bold">exakt</emphasis> den gleichen Inhalt aufweist. Also z.B die
+    <filename>asterisk.sql</filename> auf alle Knoten eingespielt wurde und
+    <emphasis role="bold">keine</emphasis> Veränderungen an dem Inhalt der
+    Datenbanken vorgenommen wurden.<tip>
+        <para>Wenn Sie allerdings sowieso eine Neuinstallation machen, können
+        Sie auch <emphasis>erst</emphasis> die Replikation vom Master auf die
+        Slaves wie unten beschrieben einrichten und <emphasis>dann</emphasis>
+        auf dem Master mit <command>mysql &lt; asterisk.sql</command> die
+        Datenbank einspielen.</para>
+      </tip></para>
+
+    <para>Bevor die Replikation eingerichtet wird, müssen alle MySQL-Server
+    mit<screen>$ <command>service mysqld stop</command>
+MySQL beenden:                                             [  OK  ]</screen>gestoppt
+    werden. Falls <command>mysqld</command> gar nicht lief, ist die
+    Ausgabe:<screen>MySQL beenden:                                             [FEHLGESCHLAGEN]</screen>Lassen
+    Sie sich dadurch nicht verwirren. Wenn man nicht RedHat oder CentOS
+    verwendet, stoppt man MySQL klassisch so:<screen>$ <command>/etc/init.d/mysqld stop</command>
+MySQL beenden:                                             [  OK  ]</screen>oder
+    (Debian) so:<screen>$ <command>/etc/init.d/mysql stop</command>
+Stopping MySQL database server: mysqld.</screen></para>
+  </section>
+
+  <section id="replikation-master">
+    <title>Konfiguration des Master-Servers</title>
+
+    <para>Auf diesem Host soll nur der MySQL-Server als Master laufen. Dazu
+    muss die Konfigurationsdatei <filename>/etc/my.cnf</filename> (CentOS)
+    bzw. <filename>/etc/mysql/my.cnf</filename> (Debian) angepaßt werden
+    (Änderungen zur Default-Installation fett):</para>
+
+    <programlisting>[mysqld]
+datadir = /var/lib/mysql
+socket = /var/lib/mysql/mysql.sock
+old_passwords = 1
+
+<emphasis role="bold">log-bin = /var/log/mysql/mysql-bin
+server-id = 1
+sync_binlog = 1
+innodb_flush_log_at_trx_commit = 1
+innodb_safe_binlog
+expire_logs_days = 40
+bind-address = 0.0.0.0</emphasis>
+
+[mysql.server]
+user = mysql
+basedir = /var/lib
+
+[mysqld_safe]
+err-log = /var/log/mysqld.log
+pid-file = /var/run/mysqld/mysqld.pid</programlisting>
+
+    <para>Die Konfiguration unterscheidet sich nicht wesentlich von einem
+    gewöhnlichen MySQL-Server<footnote>
+        <para>Eine Liste der möglichen Optionen findet man unter: <ulink
+        url="http://dev.mysql.com/doc/refman/4.1/en/mysqld-option-tables.html">http://dev.mysql.com/doc/refman/4.1/en/mysqld-option-tables.html</ulink>
+        und <ulink
+        url="http://dev.mysql.com/doc/refman/4.1/en/optimizing-the-server.html">http://dev.mysql.com/doc/refman/4.1/en/optimizing-the-server.html</ulink></para>
+      </footnote>. Die wesentlichen Punkte bei der Replikation
+    sind:<variablelist>
+        <varlistentry>
+          <term><code>log-bin =
+          <replaceable>&lt;logfile&gt;</replaceable></code></term>
+
+          <listitem>
+            <para>Die Änderungen an der Datenbank werden zur Laufzeit in
+            dieses Log im Binärformat gespeichert, diese Änderungen werden
+            dann an den Slave-Server übertragen.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>server-id =
+          <replaceable>&lt;id&gt;</replaceable></code></term>
+
+          <listitem>
+            <para>Numerische ID des MySQL-Servers. Beim Master ist dies
+            üblicherweise <code>server-id = 1</code></para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>binlog-do-db =
+          <replaceable>&lt;database&gt;</replaceable></code></term>
+
+          <listitem>
+            <para>Darf <emphasis>nicht</emphasis> gesetzt sein, sonst werden
+            z.B. Änderungen per Kommandozeilenaufruf (<command>mysql -e
+            '<replaceable>&lt;query&gt;</replaceable>'</command>) nicht
+            geloggt!</para>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+
+    <para>Das Verzeichnis <filename>/var/log/mysql/</filename> müssen wir noch
+    anlegen:<programlisting><command>cd /var/log/ &amp;&amp; mkdir mysql &amp;&amp; chown mysql:mysql mysql/</command></programlisting></para>
+
+    <para>Danach kann MySQL wieder gestartet und dafür gesorgt werden, dass
+    dies auch nach einem Neustart passiert.<programlisting><command>service mysqld start</command>
+<command>chkconfig --levels 235 mysqld on</command></programlisting>Nach dem
+    Start des MySQL-Servers mit der obengenannten Konfiguration, müssen noch
+    die Rechte unter MySQL angepasst werden. Dies geschieht in
+    <command>mysql</command> mit dem MySQL-Kommando:<programlisting><command>GRANT REPLICATION SLAVE ON *.* TO '<replaceable>&lt;user&gt;</replaceable>'@'<replaceable>&lt;host&gt;</replaceable>' IDENTIFIED BY '<replaceable>&lt;password&gt;</replaceable>';</command></programlisting>Dabei
+    müssen <code><replaceable>&lt;user&gt;</replaceable></code> und
+    <code><replaceable>&lt;password&gt;</replaceable></code> auf die gleichen
+    Werte gesetzt sein, die später bei den Slave-Servern Verwendung finden.
+    Entweder führt man diesen Befehl für jeden Host aus, der replizieren
+    können soll, oder man verwendet für &lt;host&gt; das Wildcard
+    <code>%</code> (Prozentzeichen).</para>
+
+    <para>In diesem Fall sind dies z.B.:<screen>mysql&gt; <command>GRANT REPLICATION SLAVE ON *.* TO 'gemeinschaft'@'%' IDENTIFIED BY 'geheim';</command>
+Query OK, 0 rows affected (0.00 sec)</screen>Auf den MySQL-Master muß von
+    allen Rechnern aus, nicht nur für den Replikationsvorgang, zugegriffen
+    werden können. Daß er auf allen Interfaces (<code>0.0.0.0</code>) hört
+    (nicht nur auf <code>127.0.0.1</code>) wird bereits in der
+    Konfigurationsdatei angegeben. Die Rechte müssen noch angepaßt werden (in
+    <command>mysql</command>). Im einfachsten Fall sieht das so aus (User und
+    Paßwort müssen ggf. angepaßt werden):<screen>mysql&gt; <command>GRANT ALL ON *.* TO 'gemeinschaft'@'%' IDENTIFIED BY 'geheim';</command>
+Query OK, 0 rows affected (0.00 sec)</screen></para>
+
+    <para>Die Änderungen der Berechtigung werden mit dem MySQL-Kommando
+    <emphasis role="bold">FLUSH PRIVILEGES</emphasis> übernommen:</para>
+
+    <para><screen>mysql&gt; <command>FLUSH PRIVILEGES;</command>
+Query OK, 0 rows affected (0.00 sec)</screen></para>
+
+    <para>MIt dem folgenden Befehl kann die Einstellung des Master-Servers
+    überprüft werden:<programlisting><command>SHOW MASTER STATUS;</command></programlisting></para>
+
+    <para>In unserem Beispiel ist dies:<screen>mysql&gt; <command>SHOW MASTER STATUS;</command>
++------------------+----------+--------------+------------------+
+| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB |
++------------------+----------+--------------+------------------+
+| mysql-bin.000001 |      148 |              |                  |
++------------------+----------+--------------+------------------+
+1 row in set (0.00 sec)</screen></para>
+
+    <para>Die Werte aus <literal>File</literal> und
+    <literal>Position</literal> werden später zur Konfiguration der
+    Slave-Server benötigt.</para>
+  </section>
+
+  <section id="replikation-slave">
+    <title>Konfiguration der Slave-Server</title>
+
+    <para>Die Konfigurationsdatei der MySQL-Slave-Server ist ebenfalls die
+    <filename>/etc/my.cnf</filename> (Änderungen zur Default-Installation
+    fett):</para>
+
+    <programlisting>[mysqld]
+datadir = /var/lib/mysql
+socket = /var/lib/mysql/mysql.sock
+old_passwords = 1
+
+<emphasis role="bold">server-id = <replaceable>&lt;id&gt;</replaceable>
+master-host = <replaceable>&lt;ip&gt;</replaceable>
+master-user = gemeinschaft
+master-password = geheim
+master-connect-retry = 10</emphasis>
+
+[mysql.server]
+user = mysql
+basedir = /var/lib
+
+[mysqld_safe]
+err-log = /var/log/mysqld.log
+pid-file = /var/run/mysqld/mysqld.pid</programlisting>
+
+    <para>Ein Großteil der Einstellungen ist wiederrum einem Standalone-System
+    gleich. Die wesentlichen Punkte bei der Konfiguration der Slave-Server
+    sind:</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>server-id =
+        <replaceable>&lt;id&gt;</replaceable></code></term>
+
+        <listitem>
+          <para>Eindeutige, numerische ID des MySQL-Servers.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>master-host =
+        <replaceable>&lt;ip&gt;</replaceable></code></term>
+
+        <listitem>
+          <para>Die IP-Adresse des MySQL-Masters.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>master-user =
+        <replaceable>&lt;username&gt;</replaceable></code></term>
+
+        <listitem>
+          <para>Der Benutzername, unter dem sich der Slave bei dem
+          Master-Server authentifizieren soll. In diesem Fall ist dies
+          <code>master-user = gemeinschaft</code></para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>master-password =
+        <replaceable>&lt;password&gt;</replaceable></code></term>
+
+        <listitem>
+          <para>Das Passwort, mit dem sich der Slave bei dem Master-Server
+          authentifizieren soll.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>master-connect-retry =
+        <replaceable>&lt;seconds&gt;</replaceable></code></term>
+
+        <listitem>
+          <para>Zeit in Sekunden, die abgewartet werden, bis bei einem
+          Verbindungsabbruch der Slave einen erneuten Versuch der
+          Verbindungsaufnahme unternimmt, also z.B. <code>10</code>.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>replicate-do-db =
+        <replaceable>&lt;database&gt;</replaceable></code></term>
+
+        <listitem>
+          <para>Darf <emphasis>nicht</emphasis> gesetzt sein, sonst werden
+          z.B. Änderungen durch Kommandozeilen-Aufruf (<command>mysql -e
+          '<replaceable>&lt;query&gt;</replaceable>'</command>) nicht
+          repliziert!</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>Weiterhin muss dem Slave noch das binäre Log des Servers mitgeteilt
+    werden, dazu stoppt man nach dem Starten von MySQL (<command>service
+    mysqld start</command>) in <command>mysql</command> die Replikation
+    zunächst:<programlisting><command>SLAVE STOP;</command></programlisting>ändert
+    die Einstellungen des Slaves in Bezug auf den Master:<programlisting><command>CHANGE MASTER TO
+  MASTER_HOST='<replaceable>&lt;ip&gt;</replaceable>',
+  MASTER_USER='<replaceable>&lt;username&gt;</replaceable>',
+  MASTER_PASSWORD='<replaceable>&lt;password&gt;</replaceable>',
+  MASTER_LOG_FILE='<replaceable>&lt;file&gt;</replaceable>',
+  MASTER_LOG_POS=<replaceable>&lt;position&gt;</replaceable>;</command></programlisting>und
+    startet die Replikation wieder:<programlisting><command>START SLAVE;</command></programlisting></para>
+
+    <para>In unserem Beispiel ist dies:<screen>mysql&gt; <command>SLAVE STOP;</command>
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; <command>CHANGE MASTER TO</command>
+    -&gt; <command>MASTER_HOST='192.168.1.130',</command>
+    -&gt; <command>MASTER_USER='gemeinschaft',</command>
+    -&gt; <command>MASTER_PASSWORD='geheim',</command>
+    -&gt; <command>MASTER_LOG_FILE='mysql-bin.000001',</command>
+    -&gt; <command>MASTER_LOG_POS=148;</command>
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; <command>START SLAVE;</command>
+Query OK, 0 rows affected (0.00 sec)</screen>Dabei müssen
+    <literal>MASTER_LOG_FILE</literal> und <literal>MASTER_LOG_POS</literal>
+    die wie oben beschrieben auf dem Master mit <command>SHOW MASTER
+    STATUS</command> herausgefundenen Werte sein.</para>
+
+    <para>Nun sollten alle Änderungen an der Datenbank, die auf dem
+    Master-Server vorgenommen werden, unverzüglich auch auf den Slave-Servern
+    erscheinen.</para>
+
+    <para>Den Status des Slaves kann man mit diesem Befehl überprüfen<footnote>
+        <para>Das abschließende <code>\G</code> statt dem üblichen
+        <code>;</code> bewirkt eine Ausgabe der Felder unter- statt
+        nebeneinander.</para>
+      </footnote>:<screen>mysql&gt; <command>SHOW SLAVE STATUS\G</command>
+*************************** 1. row ***************************
+             Slave_IO_State: Waiting for master to send event
+                Master_Host: 192.168.1.130
+                Master_User: gemeinschaft
+                Master_Port: 3306
+              Connect_Retry: 10
+            Master_Log_File: mysql-bin.000006
+        Read_Master_Log_Pos: 5400
+             Relay_Log_File: ast2-relay-bin.000002
+              Relay_Log_Pos: 12905
+      Relay_Master_Log_File: mysql-bin.000006
+           Slave_IO_Running: Yes
+          Slave_SQL_Running: Yes
+            Replicate_Do_DB: 
+        Replicate_Ignore_DB: 
+         Replicate_Do_Table: 
+     Replicate_Ignore_Table: 
+    Replicate_Wild_Do_Table: 
+Replicate_Wild_Ignore_Table: 
+                 Last_Errno: 0
+                 Last_Error: 
+               Skip_Counter: 0
+        Exec_Master_Log_Pos: 5400
+            Relay_Log_Space: 12905
+            Until_Condition: None
+             Until_Log_File: 
+              Until_Log_Pos: 0
+         Master_SSL_Allowed: No
+         Master_SSL_CA_File: 
+         Master_SSL_CA_Path: 
+            Master_SSL_Cert: 
+          Master_SSL_Cipher: 
+             Master_SSL_Key: 
+      Seconds_Behind_Master: 0
+1 row in set (0.00 sec)</screen></para>
+  </section>
+</section>

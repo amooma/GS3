@@ -1,0 +1,59 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+
+if ($argc != 4) {
+	echo 'Usage: ', baseName($argv[0]), " <extension> <folder> <msg>\n";
+	die(1);
+}
+$ext = preg_replace('/[^\d]/', '', $argv[1]);
+if (! $ext) die();
+$fld = preg_replace('/[^a-z\d]/i', '', $argv[2]);
+if (! $fld) die();
+$msg = preg_replace('/[^a-z\d]/i', '', $argv[3]);
+if (! $msg) die();
+
+
+@chdir( '/var/spool/asterisk/voicemail/default/' );
+$files = glob( $ext .'/'. $fld .'/'. $msg .'.*' );
+$ok = true;
+$i=0;
+foreach ($files as $filename) {
+	++$i;
+	$ok2 = @unlink($filename);
+	$ok = $ok && $ok2;
+}
+if ($i < 1) die( "ERROR. No such message.\n" );
+if (! $ok) die( "ERROR. Failed to delete message.\n" );
+echo "OK. Deleted.\n";
+
+
+?>

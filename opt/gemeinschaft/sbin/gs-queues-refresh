@@ -1,0 +1,120 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/log.php' );
+require_once( GS_DIR .'inc/db_connect.php' );
+require_once( GS_DIR .'inc/gs-lib.php' );
+require_once( GS_DIR .'inc/get-listen-to-ids.php' );
+
+
+$db = gs_db_slave_connect();
+$our_host_ids = array();
+$hosts = array();
+
+
+# get hosts
+#
+
+$rs = @ $db->execute( 'SELECT `id`, `host` FROM `hosts`' );
+if (! $rs) {
+	gs_log( GS_LOG_FATAL, 'Failed to get hosts!' );
+	die(1);
+}
+$hosts = array();
+while ($r = $rs->fetchRow()) {
+	$hosts[$r['id']] = $r['host'];
+}
+
+
+# get out host ids
+#
+$our_host_ids = @ gs_get_listen_to_ids();
+if (! is_array($our_host_ids)) $our_host_ids = array();
+
+
+# find asterisk (this script gets executed by cron which has a
+# different PATH !)
+$path_asterisk = array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/');
+$asterisk = '';
+foreach ($path_asterisk as $p) {
+	if (is_executable( $p.'asterisk' )) {
+		$asterisk = $p.'asterisk';
+		break;
+	}
+}
+if ($asterisk == '') $asterisk = 'asterisk';
+
+
+# get queues
+$rs = @ $db->execute( 'SELECT `name` `ext`, `_host_id` `host_id` FROM `ast_queues`' );
+if (! $rs) {
+	gs_log( GS_LOG_FATAL, 'Failed to get queues!' );
+	die(1);
+}
+$queues = array();
+while ($queue = $rs->fetchRow()) {
+	
+	if (in_array( $queue['host_id'], $our_host_ids )) {
+		
+		# queue show <ext> has the side-effect of reloading the
+		# queue information from Realtime
+		
+		$cmd = $asterisk .' -rx \'queue show '. $queue['ext'] .'\' 2>&1';
+		$cmd = 'sudo '. $cmd;
+		$out = array();
+		@exec($cmd, $out, $err);
+		
+		if ($err != 0) {
+			gs_log(GS_LOG_WARNING, 'Command failed: '. $cmd .'  --- '. implode(' - ', $out));
+			//echo $err, "\n";
+		}
+		
+	} else {
+		
+		$host = @ $hosts[$queue['host_id']];
+		if (! $host) continue;
+		
+		$cmd = 'asterisk -rx \'queue show '. $queue['ext'] .'\' 2>&1';
+		$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. escapeShellArg( $host ) .' '. escapeShellArg( $cmd ) .' 2>&1';
+		$out = array();
+		@exec($cmd, $out, $err);
+		
+		if ($err != 0) {
+			gs_log(GS_LOG_WARNING, 'Command failed: '. $cmd .'  --- '. implode(' - ', $out));
+			//echo $err, "\n";
+		}
+		
+	}
+}
+
+
+?>

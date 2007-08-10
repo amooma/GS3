@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<section id="verschiedenes" revision="$Revision$">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Verschiedenes</title>
+
+  <section id="call-init-http-get">
+    <title>Initiierung von Gesprächen per HTTP GET</title>
+
+    <para>Über eine URL können Gespräche per HTTP GET initiiert werden. Die
+    URL ist abhängig von den EInstellungen in
+    <filename>/opt/gemeinschaft/inc/conf.php</filename> und setzt sich wie
+    folgt zusammen:<literallayout><replaceable>&lt;GS_PROV_SCHEME&gt;</replaceable>://<replaceable>&lt;GS_PROV_HOST&gt;</replaceable>:<replaceable>&lt;GS_PROV_PORT&gt;</replaceable><replaceable>&lt;GS_PROV_PATH&gt;</replaceable>call-init.php</literallayout>also
+    z.B.:<literallayout>http://192.168.1.130:82/call-init.php</literallayout></para>
+
+    <para>Dem Skript müssen mehrere Parameter übergeben werden:<variablelist>
+        <varlistentry>
+          <term><literal>user</literal></term>
+
+          <listitem>
+            <para>Der eindeutige Benutzername (also z.B. Personalnr.) des
+            Anrufers.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>to</literal></term>
+
+          <listitem>
+            <para>Anzurufende Durchwahl/Telefonnummer.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>from</literal></term>
+
+          <listitem>
+            <para>(optional) Telefonnummer des anrufenden Teilnehmers, falls
+            von dessen Std.-Nr. abweichend. Muß mit den entsprechenden
+            Skripten (<filename>scripts/gs_user_external_number_add</filename>
+            etc.) in der Datenbank bzw. im LDAP<footnote>
+                <para>Ob die MySQL-Datenbank oder LDAP als Backend verwendet
+                wird, hängt von der Einstellung
+                <code>GS_EXTERNAL_NUMBERS_BACKEND</code> in der Datei
+                <filename>/opt/gemeinschaft/inc/conf.php</filename> ab.</para>
+              </footnote> eingetragen und damit erlaubt sein.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>cidnum</literal></term>
+
+          <listitem>
+            <para>(optional) Caller-ID-Nummer des anrufenden Teilnehmers. Ohne
+            Angabe wird die mit <literal>from</literal> vorgegebene Nr.
+            verwendet, bzw. die Default-Nr., falls auch
+            <literal>from</literal> nicht gesetzt ist.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>clir</literal></term>
+
+          <listitem>
+            <para>(optional) Rufnummernunterdrückung. <literal>1</literal> =
+            an (unterdrückt), <literal>0</literal> = aus (Nummer sichtbar,
+            Default).</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>prv</literal></term>
+
+          <listitem>
+            <para>(optional) Privatgespräch. <literal>1</literal> = ja,
+            <literal>0</literal> = nein (Default).</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>Beispiele:<literallayout>http://192.168.1.130:82/call-init.php?user=471102&amp;to=950001</literallayout><literallayout>http://192.168.1.130:82/call-init.php?user=471102&amp;from=001701234567&amp;to=00261012345</literallayout></para>
+
+    <para>Von welchen IP-Adressen oder Teilnetzen der Aufruf dieser URL
+    erlaubt ist, wird in der <filename>inc/conf.php</filename> (s.o.) mit der
+    Option <code>GS_CALL_INIT_FROM_NET</code> eingestellt. Es kann eine
+    komma-separierte Liste von IP-Adressen oder Paaren in der Form
+    <code><replaceable>&lt;IP-Adresse&gt;</replaceable>/<replaceable>&lt;Netzmaske&gt;</replaceable></code>
+    angegeben werden. Gültig wäre z.B.: "<code>127.0.0.1,
+    192.168.1.130/255.255.255.0, 192.168.1.130/24</code>". Um Zugriff von
+    <emphasis>allen</emphasis> Adressen zu erlauben, gibt man
+    "<code>0.0.0.0/0</code>" an, für <emphasis>keine</emphasis>:
+    "<code>0.0.0.0/32</code>".</para>
+
+    <para>Nur von richtigen Benutzer-Accounts können Anrufe initiiert werden,
+    nicht von Nobody-Accounts.</para>
+
+    <para>Das Skript gibt einen der folgenden HTTP-Status-Codes
+    zurück:<variablelist>
+        <varlistentry>
+          <term><literal>403 Forbidden</literal></term>
+
+          <listitem>
+            <para>Kein Zugriffsrecht (bedingt durch IP-Adresse oder
+            Benutzer).</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>400 Bad Request</literal></term>
+
+          <listitem>
+            <para>Das Skript wurde mit ungültigen/fehlenden Parametern
+            aufgerufen.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>200 OK</literal></term>
+
+          <listitem>
+            <para>Der Anruf wurde/wird aufgebaut.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>500 Internal Server Error</literal></term>
+
+          <listitem>
+            <para>Bei der Ausführung ist ein schwerer Fehler
+            aufgetreten.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section id="cron-jobs">
+    <title>Cron-Jobs</title>
+
+    <indexterm>
+      <primary>Cron-Jobs</primary>
+    </indexterm>
+
+    <para>Abhängig von Ihrer Installation müssen verschiedene Cron-Jobs in
+    <filename>/etc/cron.d/</filename> angelegt werden.</para>
+
+    <section id="cron-job-watchdog">
+      <title>Cluster-Watchdog</title>
+
+      <para>Cron-Job für den Cluster-Watchdog. Siehe <xref
+      linkend="watchdog-cron" /></para>
+    </section>
+
+    <section id="cron-job-ccbs">
+      <title>Automatischer Rückruf</title>
+
+      <indexterm>
+        <primary>Call Completion Guardian</primary>
+      </indexterm>
+
+      <indexterm>
+        <primary>Automatischer Rückruf</primary>
+      </indexterm>
+
+      <indexterm>
+        <primary>CCBS</primary>
+      </indexterm>
+
+      <para>Für Call Completion (autom. Rückruf) muß ebenfalls ein Cron-Job
+      angelegt werden, also z.B. eine Datei
+      <filename>/etc/cron.d/gs-cc-guardian</filename> auf dem
+      Master:<programlisting># run Gemeinschaft call completion guardian once every minute:
+* *  * * *  root /opt/gemeinschaft/sbin/gs-cc-guardian</programlisting></para>
+    </section>
+
+    <section id="cron-job-phonebook-import">
+      <title>Import eines externen Telefonbuchs</title>
+
+      <indexterm>
+        <primary>Telefonbuch importieren</primary>
+      </indexterm>
+
+      <indexterm>
+        <primary>LDAP-Telefonbuch importieren</primary>
+      </indexterm>
+
+      <indexterm>
+        <primary>Import Telefonbuch</primary>
+      </indexterm>
+
+      <para>Da das einzige Wildcard in LDAP-Abfragen <code>*</code> ist, kann
+      so keine Suche mit Pattern implementiert werden, die für die T9-Suche
+      per Telefon-Interface notwendig wäre. Aus diesem Grund besteht die
+      Möglichkeit, ein Telefonbuch in Form einer TSV<footnote>
+          <para>Tab-Separated Values</para>
+        </footnote>-Datei zu importieren (die z.B. aus dem LDAP exportiert
+      wurde). Das Skript
+      <filename>/opt/gemeinschaft/sbin/gs-ldap-phonebook-import</filename>
+      prüft beim Aufruf, ob die Datei
+      <filename>/tmp/gs-ldap-phonebook.tsv</filename> vorhanden ist. Erwartet
+      wird eine TSV-Datei, UTF-8 kodiert, mit den 4 folgenden
+      Feldern:<literallayout><replaceable>user_code</replaceable>   <replaceable>lastname</replaceable>   <replaceable>firstname</replaceable>   <replaceable>number</replaceable></literallayout></para>
+
+      <para>Das Skript liest die Datei ein und speichert die Einträge in der
+      Datenbank-Tabelle <literal>pb_ldap</literal>. Danach werden aus der
+      Tabelle alle Einträge älter als 2 Tage gelöscht.</para>
+
+      <para>Um das Skript täglich per cron aufzurufen legt man (am besten auf
+      dem Master) im Verzeichnis <filename>/etc/cron.d/</filename> eine Datei
+      <filename>gs-phonebook-import</filename> an, mit folgendem
+      Inhalt:<programlisting># run Gemeinschaft phonebook importer once every day at 4:45:
+45 4  * * *  root /opt/gemeinschaft/sbin/gs-ldap-phonebook-import</programlisting></para>
+
+      <para>Natürlich gibt das nur Sinn, wenn Sie auch ein Skript haben, das
+      jeden Tag mit einiger Puffer-Zeit vorher eine entsprechende Datei dort
+      ablegt.</para>
+    </section>
+
+    <section id="cron-job-refresh-queues">
+      <title>Asterisk-Queues aus der Datenbank refreshen</title>
+
+      <para>Damit sichergestellt ist, daß das Realtime-System in Asterisk
+      nicht mit veralteten Queue-Informationen arbeitet, sollte man folgenden
+      Cron-Job (am besten auf dem Master) einrichten: Im Verzeichnis
+      <filename>/etc/cron.d/</filename> eine Datei
+      <filename>gs-queues-refresh</filename> anlegen mit folgendem
+      Inhalt:<programlisting># Gemeinschaft - refresh queue information from Realtime:
+*/2 *  * * *  root /opt/gemeinschaft/sbin/gs-queues-refresh</programlisting></para>
+    </section>
+  </section>
+
+  <section id="caching-nameserver">
+    <title>Caching Nameserver</title>
+
+    <indexterm>
+      <primary>bind</primary>
+    </indexterm>
+
+    <indexterm>
+      <primary>named</primary>
+    </indexterm>
+
+    <indexterm>
+      <primary>caching-nameserver</primary>
+    </indexterm>
+
+    <indexterm>
+      <primary>nameserver</primary>
+    </indexterm>
+
+    <indexterm>
+      <primary><filename>resolv.conf</filename></primary>
+    </indexterm>
+
+    <para>Selbst wenn Asterisk offenbar keine DNS-Lookups machen müßte, da man
+    überall IP-Adressen verwendet hat, so wird es mit einem langsamen
+    DNS-Server doch fast unbenutzbar langsam. Um das Problem zu umgehen, kann
+    man einen lokalen Caching-Nameserver installieren, was folgendermaßen
+    geht:<variablelist termlength="15">
+        <varlistentry>
+          <term>CentOS:</term>
+
+          <listitem>
+            <programlisting><command>yum install bind* caching-nameserver</command></programlisting>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Debian:<footnote>
+              <para>Ob man <literal>bind</literal> (8.x) oder
+              <literal>bind9</literal> (9.x) installiert, hängt von der
+              Verfügbarkeit für Ihr System ab: <command>apt-cache search bind
+              | grep '^bind'</command></para>
+            </footnote></term>
+
+          <listitem>
+            <programlisting><command>apt-get install bind9</command></programlisting>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+
+    <para>Und den lokalen Nameserver in der
+    <filename>/etc/resolv.conf</filename> vor den vorhandenen Eintrag
+    schreiben (neuer Eintrag fett):<screen><emphasis role="bold">nameserver 127.0.0.1</emphasis>
+nameserver 192.168.2.1
+</screen></para>
+
+    <variablelist termlength="15">
+      <varlistentry>
+        <term>CentOS:</term>
+
+        <listitem>
+          <screen><command>/etc/init.d/named restart</command>
+<command>chkconfig --levels 235 named on</command></screen>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Debian:</term>
+
+        <listitem>
+          <programlisting><command>/etc/init.d/bind9 restart</command>
+<command>update-rc.d bind9 defaults</command></programlisting>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para>Testen:<screen>$ <command>nslookup www.google.de</command>
+Server:         127.0.0.1
+Address:        127.0.0.1#53
+
+Non-authoritative answer:
+www.google.de   canonical name = www.google.com.
+www.google.com  canonical name = www.l.google.com.
+Name:   www.l.google.com
+Address: 209.85.135.104
+Name:   www.l.google.com
+Address: 209.85.135.147
+Name:   www.l.google.com
+Address: 209.85.135.99
+Name:   www.l.google.com
+Address: 209.85.135.103</screen>Hier sollte jetzt (spätestens beim 2. Aufruf)
+    als Adresse des DNS-Servers <literal>127.0.0.1</literal> stehen.</para>
+  </section>
+</section>
