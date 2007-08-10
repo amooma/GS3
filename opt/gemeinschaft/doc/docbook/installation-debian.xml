@@ -469,6 +469,11 @@ User www-data</screen></para>
       </footnote> einspielen, falls Sie dies noch nicht getan haben.
     Vorgehensweise siehe <xref linkend="mysql-replikation" />.</para>
 
+    <para>Unter einem aktuellen Debian mit MySQL 5 muﬂ derzeit die Option
+    <literal>old_passwords</literal> noch auf <literal>true</literal> gesetzt
+    werden (<filename>/etc/mysql/conf.d/old_passwords.cnf</filename>).
+    Danach<programlisting><command>/etc/init.d/mysql restart</command></programlisting></para>
+
     <para><filename>/opt/gemeinschaft/htdocs/prov/</filename> als Web-Root
     einrichten (Provisioning-Server), so daﬂ z.B.
     <code>http://<replaceable>&lt;adresse&gt;</replaceable>:<replaceable>&lt;port&gt;</replaceable><replaceable>&lt;pfad&gt;</replaceable>snom/settings.php</code>
