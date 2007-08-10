@@ -417,16 +417,10 @@ User www-data</screen></para>
 &amp;&amp; echo '/ *(rw,all_squash,insecure,anonuid=0,anongid=0)' &gt;&gt; /etc/exports \
 &amp;&amp; /etc/init.d/nfs-kernel-server restart</command></programlisting></para>
 
-    <important>
-      <para>FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME</para>
-    </important>
-
-    <para>Einen phpMyAdmin auf dem MySQL-Master oder Web-Server installiert
-    man so (unter CentOS ist das kein Paket):<programlisting><command>yum install httpd &amp;&amp; service httpd start \
-&amp;&amp; cd /var/www/html/ \
-&amp;&amp; wget -c http://switch.dl.sourceforge.net/sourceforge/phpmyadmin/phpMyAdmin-2.10.0.2-english.tar.gz \
-&amp;&amp; tar -xzf phpMyAdmin-2.10.0.2-english.tar.gz \
-&amp;&amp; ln -s phpMyAdmin-2.10.0.2-english phpMyAdmin</command></programlisting></para>
+    <para>Ein phpMyAdmin auf dem MySQL-Master oder Web-Server installiert man
+    so (unter Debian ist das ein Paket):<programlisting><command>apt-get install phpmyadmin</command></programlisting>URL:
+    <literal>http://<replaceable>IP-Adresse</replaceable>/phpmyadmin/</literal>
+    (nicht wie auch üblich <literal>/phpMyAdmin/</literal>)</para>
   </section>
 
   <section id="install-centos-core">
