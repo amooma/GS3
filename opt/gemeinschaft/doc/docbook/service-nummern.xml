@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<section id="service-nummern" revision="$Revision$">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Features und Service-Nummern</title>
+
+  <para>Bestimmte System-Dienste oder Konfigurationen werden über besondere
+  Service-Nummern erreicht.</para>
+
+  <section id="nummern-user-login">
+    <title>Ein-/Ausloggen eines Benutzers</title>
+
+    <para><variablelist>
+        <varlistentry>
+          <term><code>*0<replaceable>&lt;Durchwahl&gt;</replaceable></code></term>
+
+          <listitem>
+            <simpara>Einloggen an einem Telefon mit PIN</simpara>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*0*</code></term>
+
+          <listitem>
+            <simpara>Ausloggen</simpara>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section id="nummern-mailbox">
+    <title>Mailbox abfragen</title>
+
+    <para><variablelist>
+        <varlistentry>
+          <term><code>80</code></term>
+
+          <listitem>
+            <simpara>eigene Mailbox abfragen (auch über
+            <code>Retrieve</code>-Taste auf dem Telefon)</simpara>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>80<replaceable>&lt;Durchwahl&gt;</replaceable></code></term>
+
+          <listitem>
+            <simpara>andere Mailbox abfragen mit PIN</simpara>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section id="nummern-amtsholung">
+    <title>Amtsholung</title>
+
+    <para><variablelist>
+        <varlistentry>
+          <term><code>0<replaceable>&lt;Nummer&gt;</replaceable></code></term>
+
+          <listitem>
+            <simpara>direktes Wählen zum Gateway</simpara>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section id="nummern-privatgespraeche">
+    <title>Privatgespräche</title>
+
+    <para><variablelist>
+        <varlistentry>
+          <term><code>*7*<replaceable>&lt;Nummer&gt;</replaceable></code></term>
+
+          <listitem>
+            <simpara>Privatgespräch führen</simpara>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section id="nummern-abwesenheitsansage">
+    <title>Abwesenheitsansage aufzeichnen</title>
+
+    <para><variablelist>
+        <varlistentry>
+          <term><code>*99*</code></term>
+
+          <listitem>
+            <simpara>Abwesenheitsansage für Anrufe von intern
+            aufzeichnen</simpara>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*98*</code></term>
+
+          <listitem>
+            <simpara>Abwesenheitsansage für Anrufe von extern
+            aufzeichnen</simpara>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section id="nummern-dienstmerkmale">
+    <title>Dienstmerkmale einstellen</title>
+
+    <para><variablelist>
+        <varlistentry>
+          <term><code>*90</code></term>
+
+          <listitem>
+            <simpara>Rufnummernunterdrückung (CLIR) nach intern einschalten
+            (d.h. keine Nummer übertragen)</simpara>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*90*</code></term>
+
+          <listitem>
+            <simpara>Rufnummernunterdrückung (CLIR) nach intern ausschalten
+            (d.h. Nummer übertragen)</simpara>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*91</code></term>
+
+          <listitem>
+            <simpara>Rufnummernunterdrückung (CLIR) nach extern einschalten
+            (d.h. keine Nummer übertragen)</simpara>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*91*</code></term>
+
+          <listitem>
+            <simpara>Rufnummernunterdrückung (CLIR) nach extern ausschalten
+            (d.h. Nummer übertragen)</simpara>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*92</code></term>
+
+          <listitem>
+            <simpara>Anklopfen (Call Waiting) einschalten</simpara>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*92*</code></term>
+
+          <listitem>
+            <simpara>Anklopfen (Call Waiting) ausschalten</simpara>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section id="nummern-umleitungen">
+    <title>Anrufumleitungen einstellen</title>
+
+    <para><variablelist>
+        <varlistentry>
+          <term><code>*930<replaceable>&lt;Nummer&gt;</replaceable></code></term>
+
+          <listitem>
+            <para>Std.-Rufumleitungsnummer für Anrufe von intern
+            einstellen</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*931<replaceable>&lt;Nummer&gt;</replaceable></code></term>
+
+          <listitem>
+            <para>Std.-Rufumleitungsnummer für Anrufe von extern
+            einstellen</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*940<replaceable>&lt;Nummer&gt;</replaceable></code></term>
+
+          <listitem>
+            <para>variable Rufumleitungsnummer für Anrufe von intern
+            einstellen</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*941<replaceable>&lt;Nummer&gt;</replaceable></code></term>
+
+          <listitem>
+            <para>variable Rufumleitungsnummer für Anrufe von extern
+            einstellen</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*95<replaceable>&lt;01-99&gt;</replaceable></code></term>
+
+          <listitem>
+            <para>Einstellen der Klingeldauer bis Nicht-Abheben angenommen
+            wird</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*9*<replaceable>&lt;Quelle&gt;</replaceable><replaceable>&lt;Fall&gt;</replaceable><replaceable>[*]</replaceable></code></term>
+
+          <listitem>
+            <para>Aktivieren/Deaktivieren der Umleitung auf die
+            Std.-Nummer</para>
+
+            <para>Quelle:<variablelist>
+                <varlistentry>
+                  <term><code>0</code></term>
+
+                  <listitem>
+                    <simpara>Anrufe von intern</simpara>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term><code>1</code></term>
+
+                  <listitem>
+                    <simpara>Anrufe von extern</simpara>
+                  </listitem>
+                </varlistentry>
+              </variablelist></para>
+
+            <para>Fall:<variablelist>
+                <varlistentry>
+                  <term><code>0</code></term>
+
+                  <listitem>
+                    <simpara>immer - also direkt umleiten</simpara>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term><code>1</code></term>
+
+                  <listitem>
+                    <simpara>bei besetzt</simpara>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term><code>2</code></term>
+
+                  <listitem>
+                    <simpara>bei Nicht-Abheben nach einer bestimmten
+                    Zeit</simpara>
+                  </listitem>
+                </varlistentry>
+
+                <varlistentry>
+                  <term><code>3</code></term>
+
+                  <listitem>
+                    <simpara>bei offline - also nicht eingeloggt, DND<footnote>
+                        <para>Do Not Disturb, Taste <code>DND</code> auf dem
+                        Telefon</para>
+                      </footnote> oder Telefon unerreichbar</simpara>
+                  </listitem>
+                </varlistentry>
+              </variablelist></para>
+
+            <para>Ohne einen angehängten Stern (<code>*</code>) wird die
+            Umleitung aktiviert, mit <code>*</code> deaktiviert.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*9**<replaceable>&lt;Quelle&gt;</replaceable><replaceable>&lt;Fall&gt;</replaceable><replaceable>[*]</replaceable></code></term>
+
+          <listitem>
+            <para>Aktivieren/Deaktivieren der Umleitung auf die variable
+            Nummer, Quelle und Fall wie oben</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*2</code></term>
+
+          <listitem>
+            <para>Shortcut um die Rufumleitung für Anrufe von intern und
+            extern auf die Std.-Nummer (falls gesetzt) zu aktivieren (also wie
+            <code>*9*00</code> und <code>*9*10</code>). Loggt den Benutzer
+            außerdem aus allen Queues aus.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*2<replaceable>&lt;Nummer&gt;</replaceable></code></term>
+
+          <listitem>
+            <para>Shortcut um für Anrufe von intern und extern eine temporäre
+            Rufumleitung zu setzen und zu aktivieren (also wie
+            <code>*940<replaceable>&lt;Nummer&gt;</replaceable></code>,
+            <code>*941<replaceable>&lt;Nummer&gt;</replaceable></code>,
+            <code>*9**00</code> und <code>*9**10</code>). Loggt den Benutzer
+            außerdem aus allen Queues aus.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*2*</code></term>
+
+          <listitem>
+            <para>Shortcut um die Rufumleitung für Anrufe von intern und
+            extern zu deaktivieren (also wie <code>*9*00*</code> und
+            <code>*9*10*</code>)</para>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section id="nummern-kommentarfeld">
+    <title>Kommentarfeld setzen</title>
+
+    <para><variablelist>
+        <varlistentry>
+          <term><code>*96</code></term>
+
+          <listitem>
+            <simpara>Setzt das Kommentarfeld des Benutzers (sichtbar im
+            Kollegen-Monitor) auf den in der <filename>inc/conf.php</filename>
+            mit <code>GS_USERCOMMENT_OFFTIME</code> eingestellten Wert (z.B.
+            "<literal>Feierabend</literal>").</simpara>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*96*</code></term>
+
+          <listitem>
+            <simpara>Setzt das Kommentarfeld (s.o.) auf "".</simpara>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section id="nummern-queue-login">
+    <title>Einloggen in eine Warteschlange (Queue)</title>
+
+    <para><variablelist>
+        <varlistentry>
+          <term><code>*5<replaceable>&lt;Durchwahl&gt;</replaceable></code></term>
+
+          <listitem>
+            <simpara>Einloggen in die Queue mit der angegebenen
+            Durchwahl</simpara>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*5<replaceable>&lt;Durchwahl&gt;*</replaceable></code></term>
+
+          <listitem>
+            <simpara>Ausloggen aus der Queue mit der angegebenen
+            Durchwahl</simpara>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*5*</code></term>
+
+          <listitem>
+            <simpara>Ausloggen aus allen Queues</simpara>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+
+  <section>
+    <title>Konferenzen</title>
+
+    <para><variablelist>
+        <varlistentry>
+          <term><code>88<replaceable>&lt;Konferenznr.&gt;</replaceable></code></term>
+
+          <listitem>
+            <para>Einen Konferenzraum (nach <code>88</code> eine 3- oder
+            4-stellige Nummer) betreten bzw. eröffnen (wenn noch keine
+            existiert). Wenn die Konferenz leer ist, kann eine PIN-Nr. gesetzt
+            werden. Wenn keine PIN gewünscht wird einfach Raute
+            (<literal>#</literal>) für keine PIN drücken. Ansonsten muß eine
+            ggf. für diesen Raum gesetzte PIN eingegeben werden.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>88000</code> oder <code>880000</code></term>
+
+          <listitem>
+            <para>Einen freien Konferenzraum finden. Die Nummer der Konferenz
+            wird beim Betreten angesagt. (Die anderen Teilnehmer wählen dann
+            <code>88<replaceable>&lt;Konferenznr.&gt;</replaceable></code>,
+            s.o.)</para>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+  </section>
+</section>

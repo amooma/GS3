@@ -1,0 +1,1260 @@
+# Gemeinschaft - GUI - German
+# Copyright (C) 2007 amooma GmbH
+# This file is distributed under the same license as Gemeinschaft.
+# Philipp Kempgen <philipp.kempgen@amooma.de>, 2007
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Gemeinschaft, file $Revision$\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-05-23 12:00+0200\n"
+"PO-Revision-Date: 2007-05-23 12:00+0200\n"
+"Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
+"Language-Team: German <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: inc/modules.php:35
+msgid "Login"
+msgstr "Login"
+
+#: inc/modules.php:35 inc/modules.php:38
+msgid "Home"
+msgstr "Home"
+
+#: inc/modules.php:42
+msgid "Telefonbuch"
+msgstr "Telefonbuch"
+
+#: inc/modules.php:45
+msgid "Firma (aus LDAP)"
+msgstr "Firma (aus LDAP)"
+
+#: inc/modules.php:45
+msgid "Firma (Projekt)"
+msgstr "Firma"
+
+#: inc/modules.php:46
+msgid "Firma (LDAP)"
+msgstr "Firma (LDAP)"
+
+#: inc/modules.php:47
+msgid "Pers&ouml;nlich"
+msgstr "Pers&ouml;nlich"
+
+#: inc/modules.php:51
+msgid "Anruflisten"
+msgstr "Anruflisten"
+
+#: inc/modules.php:54
+msgid "gew&auml;hlt"
+msgstr "gew&auml;hlt"
+
+#: inc/modules.php:55
+msgid "verpasst"
+msgstr "verpasst"
+
+#: inc/modules.php:56
+msgid "angenommen"
+msgstr "angenommen"
+
+#: inc/modules.php:60
+msgid "Voicemail"
+msgstr "Voicemail"
+
+#: inc/modules.php:63
+msgid "Nachrichten"
+msgstr "Nachrichten"
+
+#: inc/modules.php:67 inc/modules.php:70 mod/forwards_forwards.php:39
+#: mod/help_numbers.php:68
+msgid "Rufumleitung"
+msgstr "Rufumleitung"
+
+#: inc/modules.php:71
+msgid "externe Nummern"
+msgstr "Externe Nummern"
+
+#: inc/modules.php:75
+msgid "Monitor"
+msgstr "Monitor"
+
+#: inc/modules.php:78 mod/monitor_peers.php:83
+msgid "Queues"
+msgstr "Queues"
+
+#: inc/modules.php:79
+msgid "Gruppen"
+msgstr "Gruppen"
+
+#: inc/modules.php:80
+msgid "Kollegen"
+msgstr "Kollegen"
+
+#: inc/modules.php:83 inc/modules.php:86 mod/features_features.php:84
+msgid "Dienstmerkmale"
+msgstr "Dienstmerkmale"
+
+#: inc/modules.php:90 mod/keys_snom.php:98
+msgid "Tastenbelegung"
+msgstr "Tastenbelegung"
+
+#: inc/modules.php:93 inc/modules.php:108
+msgid "Snom"
+msgstr "Snom"
+
+#: inc/modules.php:97 inc/modules.php:100
+msgid "Klingelt&ouml;ne"
+msgstr "Klingelt&ouml;ne"
+
+#: inc/modules.php:104
+msgid "Hilfe"
+msgstr "Hilfe"
+
+#: inc/modules.php:107
+msgid "Service-Nummern"
+msgstr "Service-Nummern"
+
+#: inc/modules.php:112
+msgid "Administration"
+msgstr "Administration"
+
+#: inc/modules.php:116
+msgid "&Uuml;bersicht"
+msgstr "&Uuml;bersicht"
+
+#: inc/modules.php:117 mod/admin_overview.php:71 mod/admin_user.php:261
+msgid "Benutzer"
+msgstr "Benutzer"
+
+#: inc/modules.php:118
+msgid "Verbindungen"
+msgstr "Verbindungen"
+
+#: inc/modules.php:119
+msgid "Nodes"
+msgstr "Nodes"
+
+#: inc/modules.php:134
+msgid "Logout"
+msgstr "Abmelden"
+
+#: inc/session.php:90
+#, php-format
+msgid "Failed to get LDAP user \"%s\"."
+msgstr "Fehler beim Abfragen des LDAP-Benutzers \"%s\"."
+
+#: inc/session.php:94
+#, php-format
+msgid "No user \"%s\" in LDAP."
+msgstr "Benutzer \"%s\" nicht im LDAP."
+
+#: inc/session.php:129
+msgid "Failed to get user."
+msgstr "Fehler beim Abfragen des Benutzers."
+
+#: inc/session.php:144
+#, php-format
+msgid "You are not logged in (authentication method: \"%s\")."
+msgstr "Sie sind nicht eingeloggt (Authentisierungsmethode: \"%s\")."
+
+#: inc/session.php:150 inc/session.php:165
+#, php-format
+msgid "Unknown user \"%s\"."
+msgstr "Benutzer \"%s\" unbekannt."
+
+#: inc/session.php:157
+msgid "Benutzer oder Pa&szlig;wort ung&uuml;ltig"
+msgstr "Benutzer oder Pa&szlig;wort ung&uuml;ltig"
+
+#: inc/session.php:199
+#, php-format
+msgid "You are not allowed to act as \"%s\"."
+msgstr "Sie d&uuml;rfen nicht als \"%s\" agieren."
+
+#: index.php:104
+msgid "Gemeinschaft Telefon-Manager"
+msgstr "Gemeinschaft Telefon-Manager"
+
+#: index.php:118
+msgid "Telefon-Manager"
+msgstr "Telefon-Manager"
+
+#: index.php:169 index.php:174
+msgid "Angemeldet"
+msgstr "Angemeldet"
+
+#: index.php:177
+msgid "Als"
+msgstr "Als"
+
+#: index.php:187
+msgid "Benutzer wechseln"
+msgstr "Benutzer wechseln"
+
+#: index.php:190
+msgid "Nicht angemeldet"
+msgstr "Nicht angemeldet"
+
+#: mod/admin_calls.php:180
+msgid "Zeitraum"
+msgstr "Zeitraum"
+
+#: mod/admin_calls.php:181 mod/admin_calls.php:263
+#: mod/voicemail_messages.php:185
+msgid "Anrufer"
+msgstr "Anrufer"
+
+#: mod/admin_calls.php:182 mod/admin_calls.php:264
+msgid "Ziel"
+msgstr "Ziel"
+
+#: mod/admin_calls.php:183 mod/admin_calls.php:265
+msgid "Anrufdauer"
+msgstr "Anrufdauer"
+
+#: mod/admin_calls.php:185 mod/admin_user.php:128 mod/diallog_in.php:79
+#: mod/diallog_missed.php:79 mod/diallog_out.php:79 mod/pb_gs.php:117
+#: mod/pb_private.php:185
+msgid "Seite"
+msgstr "Seite"
+
+#: mod/admin_calls.php:191 mod/admin_user.php:156 mod/diallog_in.php:90
+#: mod/diallog_missed.php:90 mod/diallog_out.php:90 mod/pb_gs.php:145
+#: mod/pb_private.php:213
+msgid "zur&uuml;ckbl&auml;ttern"
+msgstr "zur&uuml;ckbl&auml;ttern"
+
+#: mod/admin_calls.php:192 mod/admin_calls.php:196 mod/admin_user.php:157
+#: mod/admin_user.php:161 mod/diallog_in.php:91 mod/diallog_in.php:95
+#: mod/diallog_missed.php:91 mod/diallog_missed.php:95 mod/diallog_out.php:91
+#: mod/diallog_out.php:95 mod/pb_gs.php:146 mod/pb_gs.php:150
+#: mod/pb_private.php:214 mod/pb_private.php:218
+msgid "zur&uuml;ck"
+msgstr "zur&uuml;ck"
+
+#: mod/admin_calls.php:201 mod/admin_user.php:165 mod/diallog_in.php:99
+#: mod/diallog_missed.php:99 mod/diallog_out.php:99 mod/pb_gs.php:154
+#: mod/pb_private.php:222
+msgid "weiterbl&auml;ttern"
+msgstr "weiterbl&auml;ttern"
+
+#: mod/admin_calls.php:202 mod/admin_calls.php:206 mod/admin_user.php:166
+#: mod/admin_user.php:170 mod/diallog_in.php:100 mod/diallog_in.php:104
+#: mod/diallog_missed.php:100 mod/diallog_missed.php:104
+#: mod/diallog_out.php:100 mod/diallog_out.php:104 mod/pb_gs.php:159
+#: mod/pb_private.php:223 mod/pb_private.php:227
+msgid "weiter"
+msgstr "weiter"
+
+#: mod/admin_calls.php:217
+msgid "alle"
+msgstr "alle"
+
+#: mod/admin_calls.php:218
+msgid "ein Monat"
+msgstr "ein Monat"
+
+#: mod/admin_calls.php:219
+msgid "diesen Monat"
+msgstr "diesen Monat"
+
+#: mod/admin_calls.php:220
+msgid "eine Woche"
+msgstr "eine Woche"
+
+#: mod/admin_calls.php:221
+msgid "diese Woche"
+msgstr "diese Woche"
+
+#: mod/admin_calls.php:222
+msgid "ein Tag"
+msgstr "ein Tag"
+
+#: mod/admin_calls.php:223
+msgid "heute"
+msgstr "heute"
+
+#: mod/admin_calls.php:224
+msgid "eine Stunde"
+msgstr "eine Stunde"
+
+#: mod/admin_calls.php:225
+msgid "15 Minuten"
+msgstr "15 Minuten"
+
+#: mod/admin_calls.php:239
+msgid "alle Verb."
+msgstr "alle Verb."
+
+#: mod/admin_calls.php:240 mod/admin_calls.php:289
+msgid "beantwortet"
+msgstr "beantwortet"
+
+#: mod/admin_calls.php:241 mod/admin_calls.php:292
+msgid "keine Antwort"
+msgstr "keine Antwort"
+
+#: mod/admin_calls.php:242 mod/admin_calls.php:298
+#: mod/forwards_forwards.php:49
+msgid "besetzt"
+msgstr "besetzt"
+
+#: mod/admin_calls.php:243 mod/admin_calls.php:295
+msgid "fehlgeschlagen"
+msgstr "fehlgeschlagen"
+
+#: mod/admin_calls.php:247 mod/admin_calls.php:248 mod/admin_user.php:138
+#: mod/admin_user.php:147 mod/pb_gs.php:127 mod/pb_gs.php:136
+#: mod/pb_ldap.php:138 mod/pb_ldap.php:147 mod/pb_private.php:195
+#: mod/pb_private.php:204
+msgid "Suchen"
+msgstr "Suchen"
+
+#: mod/admin_calls.php:250 mod/help_snom.php:106
+msgid "Abbrechen"
+msgstr "Abbrechen"
+
+#: mod/admin_calls.php:262
+msgid "Zeit"
+msgstr "Zeit"
+
+#: mod/admin_calls.php:266 mod/admin_user.php:200 mod/monitor_pgrps.php:111
+#: mod/monitor_queues.php:107 mod/monitor_peers.php:81
+msgid "Status"
+msgstr "Status"
+
+#: mod/admin_calls.php:301 mod/admin_user.php:227 mod/monitor_queues.php:195
+#: mod/voicemail_messages.php:211
+msgid "unbekannt"
+msgstr "unbekannt"
+
+#: mod/admin_calls.php:320
+msgid "Verbindungsstatistik"
+msgstr "Verbindungsstatistik"
+
+#: mod/admin_calls.php:329 mod/monitor_queues.php:108
+msgid "Anrufe"
+msgstr "Anrufe"
+
+#: mod/admin_calls.php:333
+msgid "Anrufdauer insges."
+msgstr "Anrufdauer insges."
+
+#: mod/admin_calls.php:337
+msgid "Anrufdauer im Durchschnitt"
+msgstr "Anrufdauer im Durchschnitt"
+
+#: mod/admin_calls.php:340
+msgid "keine Anrufe"
+msgstr "keine Anrufe"
+
+#: mod/admin_calls.php:345
+msgid "Verbindungszeit"
+msgstr "Verbindungszeit"
+
+#: mod/admin_nodes.php:50
+msgid "Fehler beim Lesen der Nodes aus der Watchdog-Konfiguration!"
+msgstr "Fehler beim Lesen der Nodes aus der Watchdog-Konfiguration!"
+
+#: mod/admin_nodes.php:68
+msgid "Fehler beim Abfragen der Hosts aus der Datenbank!"
+msgstr "Fehler beim Abfragen der Hosts aus der Datenbank!"
+
+#: mod/admin_nodes.php:101
+msgid "IP (stat.)"
+msgstr "IP (stat.)"
+
+#: mod/admin_nodes.php:102
+msgid "IP (dyn.)"
+msgstr "IP (dyn.)"
+
+#: mod/admin_nodes.php:103
+msgid "Kommentar"
+msgstr "Kommentar"
+
+#: mod/admin_nodes.php:104
+msgid "ID"
+msgstr "ID"
+
+#: mod/admin_nodes.php:105
+msgid "Rolle"
+msgstr "Rolle"
+
+#: mod/admin_nodes.php:106
+msgid "Stonith"
+msgstr "Stonith"
+
+#: mod/admin_nodes.php:107
+msgid "Ping"
+msgstr "Ping"
+
+#: mod/admin_nodes.php:108
+msgid "SIP Ping"
+msgstr "SIP-Ping"
+
+#: mod/admin_nodes.php:135
+msgid "Aktiv"
+msgstr "Aktiv"
+
+#: mod/admin_nodes.php:136
+msgid "Reserve"
+msgstr "Reserve"
+
+#: mod/admin_nodes.php:191
+msgid "Nicht konfiguriert."
+msgstr "Nicht konfiguriert."
+
+#: mod/admin_overview.php:80 mod/admin_user.php:270
+msgid "Eingerichtete Benutzer"
+msgstr "Eingerichtete Benutzer"
+
+#: mod/admin_overview.php:84 mod/admin_user.php:274
+msgid "Eingeloggte Benutzer"
+msgstr "Eingeloggte Benutzer"
+
+#: mod/admin_overview.php:94
+msgid "Endger&auml;te"
+msgstr "Endger&auml;te"
+
+#: mod/admin_overview.php:103
+msgid "Eingerichtete Endger&auml;te"
+msgstr "Eingerichtete Endger&auml;te"
+
+#: mod/admin_overview.php:107
+msgid "Verwendete Endger&auml;te"
+msgstr "Aktive Endger&auml;te"
+
+#: mod/admin_overview.php:111
+msgid "Letztes Endger&auml;t eingetragen"
+msgstr "Letztes Endger&auml;t eingetragen"
+
+#: mod/admin_user.php:126 mod/admin_user.php:137 mod/pb_gs.php:115
+#: mod/pb_gs.php:126 mod/pb_ldap.php:126 mod/pb_ldap.php:137
+#: mod/pb_private.php:183 mod/pb_private.php:194
+msgid "Name suchen"
+msgstr "Name suchen"
+
+#: mod/admin_user.php:127 mod/admin_user.php:146 mod/pb_gs.php:116
+#: mod/pb_gs.php:135 mod/pb_ldap.php:127 mod/pb_ldap.php:146
+#: mod/pb_private.php:184 mod/pb_private.php:203
+msgid "Nummer suchen"
+msgstr "Nummer suchen"
+
+#: mod/admin_user.php:196 mod/diallog_in.php:77 mod/diallog_missed.php:77
+#: mod/diallog_out.php:77 mod/monitor_pgrps.php:110 mod/monitor_queues.php:106
+#: mod/pb_gs.php:186 mod/pb_ldap.php:184 mod/monitor_peers.php:80
+msgid "Name"
+msgstr "Name"
+
+#: mod/admin_user.php:197 mod/diallog_in.php:76 mod/diallog_missed.php:76
+#: mod/diallog_out.php:76 mod/help_numbers.php:79 mod/help_numbers.php:148
+#: mod/monitor_pgrps.php:109 mod/monitor_queues.php:105
+#: mod/monitor_queues.php:173 mod/pb_gs.php:189 mod/pb_ldap.php:187
+#: mod/pb_private.php:266 mod/monitor_peers.php:79
+msgid "Nummer"
+msgstr "Nummer"
+
+#: mod/admin_user.php:198
+msgid "User"
+msgstr "User"
+
+#: mod/admin_user.php:199
+msgid "Host"
+msgstr "Host"
+
+#: mod/admin_user.php:230
+msgid "bereit"
+msgstr "bereit"
+
+#: mod/admin_user.php:233 mod/monitor_pgrps.php:61 mod/monitor_queues.php:52
+#: mod/forwards_forwards.php:52
+msgid "offline"
+msgstr "offline"
+
+#: mod/admin_user.php:236
+msgid "spricht"
+msgstr "spricht"
+
+#: mod/admin_user.php:239 mod/monitor_pgrps.php:62 mod/monitor_queues.php:53
+msgid "klingelt"
+msgstr "klingelt"
+
+#: mod/diallog_in.php:78 mod/diallog_missed.php:78 mod/diallog_out.php:78
+#: mod/voicemail_messages.php:184
+msgid "Datum"
+msgstr "Datum"
+
+#: mod/diallog_in.php:134 mod/diallog_missed.php:134 mod/diallog_out.php:134
+#: mod/pb_gs.php:214 mod/pb_ldap.php:216 mod/pb_private.php:316
+#: mod/voicemail_messages.php:225 mod/voicemail_messages.php:227
+msgid "w&auml;hlen"
+msgstr "w&auml;hlen"
+
+#: mod/features_features.php:66 mod/features_features.php:72
+#: mod/forwards_extnumbers.php:48 mod/forwards_forwards.php:102
+#: mod/forwards_forwards.php:159 mod/keys_snom.php:48 mod/keys_snom.php:52
+#: mod/keys_snom.php:80 mod/keys_snom.php:84 mod/ringtones_ringtones.php:151
+msgid "Fehler beim Abfragen."
+msgstr "Fehler beim Abfragen."
+
+#: mod/features_features.php:90
+msgid "CLIR nach intern"
+msgstr "CLIR nach intern"
+
+#: mod/features_features.php:93 mod/features_features.php:105
+#: mod/features_features.php:114
+msgid "an"
+msgstr "an"
+
+#: mod/features_features.php:95 mod/features_features.php:107
+#: mod/features_features.php:116
+msgid "aus"
+msgstr "aus"
+
+#: mod/features_features.php:98
+msgid ""
+"Rufnummernunterdr&uuml;ckung. Bei &quot;an&quot; wird die Nummer "
+"unterdr&uuml;ckt, bei &quot;aus&quot; wird sie mitgesendet."
+msgstr "Rufnummernunterdr&uuml;ckung. Bei &quot;an&quot; wird die Nummer "
+"unterdr&uuml;ckt, bei &quot;aus&quot; wird sie mitgesendet."
+
+#: mod/features_features.php:102
+msgid "CLIR nach extern"
+msgstr "CLIR nach extern"
+
+#: mod/features_features.php:111
+msgid "Anklopfen"
+msgstr "Anklopfen"
+
+#: mod/features_features.php:119
+msgid "Das Verhalten ist ggf. von Ihrem Endger&auml;t abh&auml;ngig."
+msgstr "Das Verhalten ist ggf. von Ihrem Endger&auml;t abh&auml;ngig."
+
+#: mod/features_features.php:130 mod/forwards_forwards.php:267
+#: mod/keys_snom.php:160 mod/pb_private.php:342
+#: mod/ringtones_ringtones.php:256
+msgid "Speichern"
+msgstr "Speichern"
+
+#: mod/forwards_extnumbers.php:39
+msgid "Eigene externe Nummern"
+msgstr "Eigene externe Nummern"
+
+#: mod/forwards_extnumbers.php:54
+msgid ""
+"Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern "
+"weiterleiten:"
+msgstr "Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern "
+"weiterleiten:"
+
+#: mod/forwards_extnumbers.php:59
+msgid "Externe Nummern"
+msgstr "Externe Nummern"
+
+#: mod/forwards_extnumbers.php:67 mod/monitor_pgrps.php:121
+#: mod/monitor_queues.php:118 mod/monitor_queues.php:183
+#: mod/ringtones_ringtones.php:233 mod/voicemail_messages.php:194
+msgid "keine"
+msgstr "keine"
+
+#: mod/forwards_extnumbers.php:84
+msgid ""
+"Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die "
+"Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden sollen."
+msgstr "Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die "
+"Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden sollen."
+
+#: mod/forwards_forwards.php:44 mod/ringtones_ringtones.php:42
+msgid "intern"
+msgstr "intern"
+
+#: mod/forwards_forwards.php:45 mod/ringtones_ringtones.php:43
+msgid "extern"
+msgstr "extern"
+
+#: mod/forwards_forwards.php:48
+msgid "immer"
+msgstr "immer"
+
+#: mod/forwards_forwards.php:50
+msgid "keine Antw."
+msgstr "keine Antw."
+
+#: mod/forwards_forwards.php:51
+msgid "offline/DND"
+msgstr "offline/DND"
+
+#: mod/forwards_forwards.php:55
+msgid "Std."
+msgstr "Std."
+
+#: mod/forwards_forwards.php:56
+msgid "Tmp."
+msgstr "Tmp."
+
+#: mod/forwards_forwards.php:73 mod/forwards_forwards.php:130
+msgid "Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-St&ouml;ren-Funktion am Telefon ben&ouml;tigt."
+msgstr "Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-St&ouml;ren-Funktion am Telefon ben&ouml;tigt."
+
+#: mod/forwards_forwards.php:76
+msgid "Fehler beim Setzen der Std.-Umleitungsnummer"
+msgstr "Fehler beim Setzen der Std.-Umleitungsnummer"
+
+#: mod/forwards_forwards.php:80
+msgid "Fehler beim Setzen der Tempor&auml;ren Umleitungsnummer"
+msgstr "Fehler beim Setzen der Tempor&auml;ren Umleitungsnummer"
+
+#: mod/forwards_forwards.php:84
+msgid "Fehler beim Aktivieren der Umleitungsnummer"
+msgstr "Fehler beim Aktivieren der Umleitungsnummer"
+
+#: mod/forwards_forwards.php:183
+msgid "Umleitungsnummern"
+msgstr "Umleitungsnummern"
+
+#: mod/forwards_forwards.php:188
+msgid "Standardnummer"
+msgstr "Standardnummer"
+
+#: mod/forwards_forwards.php:194
+msgid "Tempor&auml;re Nummer"
+msgstr "Tempor&auml;re Nummer"
+
+#: mod/forwards_forwards.php:201
+msgid "nicht leer!"
+msgstr "nicht leer!"
+
+#: mod/forwards_forwards.php:207
+msgid "Umleiten in folgenden F&auml;llen"
+msgstr "Umleiten in folgenden F&auml;llen"
+
+#: mod/forwards_forwards.php:218
+msgid "Mailbox"
+msgstr "Mailbox"
+
+#: mod/forwards_forwards.php:225
+msgid "von"
+msgstr "von"
+
+#: mod/forwards_forwards.php:240
+msgid "An"
+msgstr "An"
+
+#: mod/forwards_forwards.php:241
+msgid "Aus"
+msgstr "Aus"
+
+#: mod/forwards_forwards.php:252
+msgid "nach"
+msgstr "nach"
+
+#: mod/forwards_forwards.php:259
+msgid ""
+"Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung "
+"eingestellt haben."
+msgstr "Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung "
+"eingestellt haben."
+
+#: mod/forwards_queues.php:39
+msgid "Rufumleitung Warteschleifen"
+msgstr "Rufumleitung Warteschleifen"
+
+#: mod/forwards_queues.php:49
+msgid "voll"
+msgstr "voll"
+
+#: mod/forwards_queues.php:51
+msgid "leer"
+msgstr "leer"
+
+#: mod/forwards_queues.php:129
+msgid "Anzeigen"
+msgstr "Anzeigen"
+
+#: mod/forwards_queues.php:173
+msgid "Bitte w&auml;hlen Sie eine Warteschleife."
+msgstr "Bitte w&auml;hlen Sie eine Warteschleife."
+
+#: mod/help_numbers.php:45
+msgid "Ein-/Ausloggen am Telefon"
+msgstr "Ein-/Ausloggen am Telefon"
+
+#: mod/help_numbers.php:50 mod/help_numbers.php:108 mod/help_numbers.php:165
+#: mod/help_numbers.php:171
+msgid "Durchwahl"
+msgstr "Durchwahl"
+
+#: mod/help_numbers.php:52
+msgid ""
+"Einloggen an einem Telefon. Dabei wird die Eingabe der PIN-Nummer verlangt."
+msgstr "Einloggen an einem Telefon. Dabei wird die Eingabe der PIN-Nummer verlangt."
+
+#: mod/help_numbers.php:58
+msgid "Ausloggen"
+msgstr "Ausloggen"
+
+#: mod/help_numbers.php:75
+msgid ""
+"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
+"auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt "
+"&quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)"
+msgstr "Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
+"auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt "
+"&quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)"
+
+#: mod/help_numbers.php:81
+msgid ""
+"Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern und extern im Fall "
+"&quot;immer&quot; auf die angegebene Nummer programmieren"
+msgstr "Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern und extern im Fall "
+"&quot;immer&quot; auf die angegebene Nummer programmieren"
+
+#: mod/help_numbers.php:87
+msgid ""
+"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
+"deaktivieren"
+msgstr "Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
+"deaktivieren"
+
+#: mod/help_numbers.php:97
+msgid "Mailbox abfragen"
+msgstr "Mailbox abfragen"
+
+#: mod/help_numbers.php:104
+msgid ""
+"Eigene Mailbox abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;"
+"Retrieve&quot;-Taste gedr&uuml;ckt werden.)"
+msgstr "Eigene Mailbox abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;"
+"Retrieve&quot;-Taste gedr&uuml;ckt werden.)"
+
+#: mod/help_numbers.php:110
+msgid "Andere Mailbox abfragen (mit PIN)"
+msgstr "Andere Mailbox abfragen (mit PIN)"
+
+#: mod/help_numbers.php:120
+msgid "Abwesenheitsansage aufzeichnen"
+msgstr "Abwesenheitsansage aufzeichnen"
+
+#: mod/help_numbers.php:127
+msgid "Abwesenheitsansage f&uuml;r Anrufe von intern aufzeichnen"
+msgstr "Abwesenheitsansage f&uuml;r Anrufe von intern aufzeichnen"
+
+#: mod/help_numbers.php:133
+msgid "Abwesenheitsansage f&uuml;r Anrufe von extern aufzeichnen"
+msgstr "Abwesenheitsansage f&uuml;r Anrufe von extern aufzeichnen"
+
+#: mod/help_numbers.php:143
+msgid "Privatgespr&auml;che"
+msgstr "Privatgespr&auml;che"
+
+#: mod/help_numbers.php:150
+msgid "Privatgespr&auml;ch f&uuml;hren"
+msgstr "Privatgespr&auml;ch f&uuml;hren"
+
+#: mod/help_numbers.php:160
+msgid "Warteschlangen"
+msgstr "Warteschlangen"
+
+#: mod/help_numbers.php:167
+msgid "Einloggen in die Warteschlange mit der angegebenen Durchwahl"
+msgstr "Einloggen in die Warteschlange mit der angegebenen Durchwahl"
+
+#: mod/help_numbers.php:173
+msgid "Ausloggen aus der Warteschlange mit der angegebenen Durchwahl"
+msgstr "Ausloggen aus der Warteschlange mit der angegebenen Durchwahl"
+
+#: mod/help_numbers.php:179
+msgid "Ausloggen aus allen Warteschlangen"
+msgstr "Ausloggen aus allen Warteschlangen"
+
+#: mod/help_numbers.php:189
+msgid "Konferenzen"
+msgstr "Konferenzen"
+
+#: mod/help_numbers.php:194
+msgid "Konf.nr."
+msgstr "Konf.nr."
+
+#: mod/help_numbers.php:196
+msgid ""
+"Einen Konferenzraum (nach 88 eine 3- oder 4-stellige Nummer) betreten bzw. "
+"er&ouml;ffnen. Wenn die Konferenz leer ist, kann eine PIN-Nr. gesetzt werden "
+"(f&uuml;r keine PIN # dr&uuml;cken). Ansonsten muss eine ggf. f&uuml;r "
+"diesen Raum gesetzte PIN eingegeben werden."
+msgstr "Einen Konferenzraum (nach 88 eine 3- oder 4-stellige Nummer) betreten bzw. "
+"er&ouml;ffnen. Wenn die Konferenz leer ist, kann eine PIN-Nr. gesetzt werden "
+"(f&uuml;r keine PIN # dr&uuml;cken). Ansonsten muss eine ggf. f&uuml;r "
+"diesen Raum gesetzte PIN eingegeben werden."
+
+#: mod/help_numbers.php:200
+msgid "oder"
+msgstr "oder"
+
+#: mod/help_numbers.php:202
+msgid ""
+"Einen freien Konferenzraum finden. Die Nummer der Konferenz wird beim "
+"Betreten angesagt. (Die anderen Teilnehmer w&auml;hlen dann <code>88 "
+"<i>Konferenznr.</i></code>, s.o.)"
+msgstr "Einen freien Konferenzraum finden. Die Nummer der Konferenz wird beim "
+"Betreten angesagt. (Die anderen Teilnehmer w&auml;hlen dann <code>88 "
+"<i>Konferenznr.</i></code>, s.o.)"
+
+#: mod/help_snom.php:50
+msgid ""
+"Das SIP-Telefon Snom 360 bietet neben den &uuml;blichen Zifferntasten eine "
+"ganze Reihe n&uuml;tzlicher Funktionstasten, die bis zu einem gewissen Grad "
+"konfigurierbar sind. Die wichtigsten Tasten und Funktionen werden an dieser "
+"Stelle kurz aufgef&uuml;hrt. Eine genaue Beschreibung der Tasten finden Sie "
+"in dem &uuml;ber 100 Seiten starken Handbuch zu ihrem Snom-Telefon."
+msgstr "Das SIP-Telefon Snom 360 bietet neben den &uuml;blichen Zifferntasten eine "
+"ganze Reihe n&uuml;tzlicher Funktionstasten, die bis zu einem gewissen Grad "
+"konfigurierbar sind. Die wichtigsten Tasten und Funktionen werden an dieser "
+"Stelle kurz aufgef&uuml;hrt. Eine genaue Beschreibung der Tasten finden Sie "
+"in dem &uuml;ber 100 Seiten starken Handbuch zu ihrem Snom-Telefon."
+
+#: mod/help_snom.php:51
+msgid "Snom 360 Doku"
+msgstr "Snom 360 Doku"
+
+#: mod/help_snom.php:58
+msgid "Snom 360 Tasten"
+msgstr "Snom 360 Tasten"
+
+#: mod/help_snom.php:66
+msgid "4 Softkeys unter dem Bildschirm"
+msgstr "4 Softkeys unter dem Bildschirm"
+
+#: mod/help_snom.php:69
+msgid ""
+"Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die "
+"Bedeutungen werden ggf. am unteren Rand des Displays angezeigt."
+msgstr "Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die "
+"Bedeutungen werden ggf. am unteren Rand des Displays angezeigt."
+
+#: mod/help_snom.php:79
+msgid "<b>Lautst&auml;rke</b> des H&ouml;rers oder Lautsprechers -/+"
+msgstr "<b>Lautst&auml;rke</b> des H&ouml;rers oder Lautsprechers -/+"
+
+#: mod/help_snom.php:89
+msgid "<b>Stummschaltung</b> des Mikrofons ein/aus"
+msgstr "<b>Stummschaltung</b> des Mikrofons ein/aus"
+
+#: mod/help_snom.php:99
+msgid "<b>Lauth&ouml;ren</b> ein/aus"
+msgstr "<b>Lauth&ouml;ren</b> ein/aus"
+
+#: mod/help_snom.php:109
+msgid "<b>Abbrechen</b><br /> Gespr&auml;ch beenden, Gespr&auml;ch abweisen"
+msgstr "<b>Abbrechen</b><br /> Gespr&auml;ch beenden, Gespr&auml;ch abweisen"
+
+#: mod/help_snom.php:116
+msgid "OK"
+msgstr "OK"
+
+#: mod/help_snom.php:119
+msgid "<b>Best&auml;tigen</b><br /> W&auml;hlen, Gespr&auml;ch annehmen"
+msgstr "<b>Best&auml;tigen</b><br /> W&auml;hlen, Gespr&auml;ch annehmen"
+
+#: mod/help_snom.php:129
+msgid ""
+"<b>Mailbox</b> abfragen<br /> Hat die Mailbox ein Gespr&auml;ch f&uuml;r Sie "
+"aufgezeichnet, wird dies durch Blinken der Message-LED signalisiert. Die "
+"Anzahl alter und neuer Nachrichten wird zus&auml;tzlich auch auf dem Display "
+"angezeigt."
+msgstr "<b>Mailbox</b> abfragen<br /> Hat die Mailbox ein Gespr&auml;ch f&uuml;r Sie "
+"aufgezeichnet, wird dies durch Blinken der Message-LED signalisiert. Die "
+"Anzahl alter und neuer Nachrichten wird zus&auml;tzlich auch auf dem Display "
+"angezeigt."
+
+#: mod/help_snom.php:139
+msgid ""
+"<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nnen "
+"Sie die letzten angerufenen Nummern erneut anrufen und sehen angenommene und "
+"verpasste Anrufe. W&auml;hlen Sie zun&auml;chst mit den Pfeiltasten die "
+"Nummer aus und dr&uuml;cken danach die OK-Taste."
+msgstr "<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nnen "
+"Sie die letzten angerufenen Nummern erneut anrufen und sehen angenommene und "
+"verpasste Anrufe. W&auml;hlen Sie zun&auml;chst mit den Pfeiltasten die "
+"Nummer aus und dr&uuml;cken danach die OK-Taste."
+
+#: mod/help_snom.php:149
+msgid ""
+"<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z."
+"B. 63437 f&uuml;r MEIER dr&uuml;cken."
+msgstr "<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z."
+"B. 63437 f&uuml;r MEIER dr&uuml;cken."
+
+#: mod/help_snom.php:159
+msgid ""
+"<b>Vermitteln</b><br /> Es gibt zwei Wege, wie Sie Ihren Gespr&auml;"
+"chspartner mit einer anderen Nummer verbinden k&ouml;nnen:<br /> <i>Direktes "
+"Verbinden</i>: Wenn Sie w&auml;hrend eines Gespr&auml;chs die Transfer-Taste "
+"dr&uuml;cken, wird Ihr Gespr&auml;chsparter auf Halten gesetzt. Geben Sie "
+"danach die Nummer an, mit der Sie den Anrufer verbinden m&ouml;chten. Durch "
+"Dr&uuml;cken der OK-Taste wird der Teilnehmer dann mit der gew&auml;hlten "
+"Nummer verbunden.<br /> <i>Verbinden mit R&uuml;ckfrage</i>: Dr&uuml;cken "
+"Sie hierzu w&auml;hrend eines Gespr&auml;chs die Hold-Taste um Ihren "
+"Gespr&auml;chspartner zu halten und w&auml;hlen dann die Nummer, mit der Sie "
+"ihn verbinden m&ouml;chten. Sie k&ouml;nnen jetzt mit dem zweiten Teilnehmer "
+"sprechen. Durch Dr&uuml;cken der Transfer-Taste oder durch Auflegen werden "
+"die beiden Teilnehmer verbunden."
+msgstr "<b>Vermitteln</b><br /> Es gibt zwei Wege, wie Sie Ihren Gespr&auml;"
+"chspartner mit einer anderen Nummer verbinden k&ouml;nnen:<br /> <i>Direktes "
+"Verbinden</i>: Wenn Sie w&auml;hrend eines Gespr&auml;chs die Transfer-Taste "
+"dr&uuml;cken, wird Ihr Gespr&auml;chsparter auf Halten gesetzt. Geben Sie "
+"danach die Nummer an, mit der Sie den Anrufer verbinden m&ouml;chten. Durch "
+"Dr&uuml;cken der OK-Taste wird der Teilnehmer dann mit der gew&auml;hlten "
+"Nummer verbunden.<br /> <i>Verbinden mit R&uuml;ckfrage</i>: Dr&uuml;cken "
+"Sie hierzu w&auml;hrend eines Gespr&auml;chs die Hold-Taste um Ihren "
+"Gespr&auml;chspartner zu halten und w&auml;hlen dann die Nummer, mit der Sie "
+"ihn verbinden m&ouml;chten. Sie k&ouml;nnen jetzt mit dem zweiten Teilnehmer "
+"sprechen. Durch Dr&uuml;cken der Transfer-Taste oder durch Auflegen werden "
+"die beiden Teilnehmer verbunden."
+
+#: mod/help_snom.php:169
+msgid ""
+"<b>Halten</b> (R&uuml;ckfrage)<br /> Wenn Sie diese Taste w&auml;hrend eines "
+"Gespr&auml;chs dr&uuml;cken, wird Ihr Gespr&auml;chspartner auf Halten "
+"gesetzt. Danach k&ouml;nnen Sie eine weitere Verbindung zu einem anderen "
+"Teilnehmer herstellen. Mit den leuchtenden Leitungstasten k&ouml;nnen Sie "
+"zwischen beiden Leitungen hin- und herschalten (Makeln)."
+msgstr "<b>Halten</b> (R&uuml;ckfrage)<br /> Wenn Sie diese Taste w&auml;hrend eines "
+"Gespr&auml;chs dr&uuml;cken, wird Ihr Gespr&auml;chspartner auf Halten "
+"gesetzt. Danach k&ouml;nnen Sie eine weitere Verbindung zu einem anderen "
+"Teilnehmer herstellen. Mit den leuchtenden Leitungstasten k&ouml;nnen Sie "
+"zwischen beiden Leitungen hin- und herschalten (Makeln)."
+
+#: mod/help_snom.php:179
+msgid ""
+"<b>Nicht st&ouml;ren</b> ein/aus<br /> Wenn dieser Modus aktiviert ist, "
+"werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem "
+"Display links unten das Symbol und &quot;Inaktiv&quot; angezeigt. Auf Ihre "
+"ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&auml;ren Sie "
+"gar nicht eingeloggt, also offline."
+msgstr "<b>Nicht st&ouml;ren</b> ein/aus<br /> Wenn dieser Modus aktiviert ist, "
+"werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem "
+"Display links unten das Symbol und &quot;Inaktiv&quot; angezeigt. Auf Ihre "
+"ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&auml;ren Sie "
+"gar nicht eingeloggt, also offline."
+
+#: mod/help_snom.php:188
+msgid ""
+"<b>12 Leitungstasten</b><br /> Diese Tasten lassen sich mit Rufnummern "
+"programmieren.<br /> Im Men&uuml;punkt &quot;Tastenbelegung&quot; k&ouml;"
+"nnen Sie Ihre Einstellung ansehen und ver&auml;ndern."
+msgstr "<b>12 Leitungstasten</b><br /> Diese Tasten lassen sich mit Rufnummern "
+"programmieren.<br /> Im Men&uuml;punkt &quot;Tastenbelegung&quot; k&ouml;"
+"nnen Sie Ihre Einstellung ansehen und ver&auml;ndern."
+
+#: mod/home_home.php:42
+msgid "Willkommen"
+msgstr "Willkommen"
+
+#: mod/home_home.php:44
+msgid "Ihre Durchwahl"
+msgstr "Ihre Durchwahl"
+
+#: mod/home_home.php:63
+msgid "Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)"
+msgstr "Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)"
+
+#: mod/home_home.php:78
+msgid "Telefon neustarten"
+msgstr "Telefon neustarten"
+
+#: mod/keys_snom.php:167
+msgid ""
+"Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu "
+"gestartet haben!"
+msgstr "Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu "
+"gestartet haben!"
+
+#: mod/login_login.php:55
+msgid "Benutzer nicht vorhanden"
+msgstr "Benutzer nicht vorhanden"
+
+#: mod/login_login.php:57
+msgid "Benutzername"
+msgstr "Benutzername"
+
+#: mod/login_login.php:60
+msgid "Pa&szlig;wort"
+msgstr "Pa&szlig;wort"
+
+#: mod/login_login.php:60
+msgid "Benutzer hat keine E-Mail-Adresse"
+msgstr "Benutzer hat keine E-Mail-Adresse"
+
+#: mod/login_login.php:62
+msgid "Benutzer hat keine g&uuml;tige E-Mail-Adresse"
+msgstr "Benutzer hat keine g&uuml;tige E-Mail-Adresse"
+
+#: mod/login_login.php:65
+msgid "Einloggen"
+msgstr "Einloggen"
+
+#: mod/login_login.php:100
+msgid "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
+msgstr "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
+
+#: mod/login_login.php:101
+msgid "Fehler beim Senden an &quot;%s&quot;"
+msgstr "Fehler beim Senden an &quot;%s&quot;"
+
+#: mod/login_login.php:121
+msgid "Pa&szlig;wort mailen"
+msgstr "Pa&szlig;wort mailen"
+
+#: mod/login_login.php:151
+msgid "Pa&szlig;wort vergessen"
+msgstr "Pa&szlig;wort vergessen"
+
+#: mod/logout_logout.php:49
+msgid "Sie sind jetzt abgemeldet."
+msgstr "Sie sind jetzt abgemeldet."
+
+#: mod/monitor_peers.php:81
+msgid "Umleitung"
+msgstr "Umleitung"
+
+#: mod/monitor_peers.php:84
+msgid "Bemerkung"
+msgstr "Bemerkung"
+
+#: mod/monitor_pgrps.php:59 mod/monitor_queues.php:48
+msgid "frei"
+msgstr "frei"
+
+#: mod/monitor_pgrps.php:60 mod/monitor_queues.php:49
+#: mod/monitor_queues.php:50
+msgid "belegt"
+msgstr "belegt"
+
+#: mod/monitor_pgrps.php:81
+msgid "Sie sind Mitglied keiner Pickup-Gruppe."
+msgstr "Sie sind Mitglied keiner Pickup-Gruppe."
+
+#: mod/monitor_pgrps.php:192
+msgid "Snom-Tasten"
+msgstr "Snom-Tasten"
+
+#: mod/monitor_pgrps.php:241
+msgid "Gruppe"
+msgstr "Gruppe"
+
+#: mod/monitor_queues.php:54
+msgid "anklopfen"
+msgstr "anklopfen"
+
+#: mod/monitor_queues.php:55
+msgid "halten"
+msgstr "halten"
+
+#: mod/monitor_queues.php:75
+msgid "Sie sind Mitglied keiner Warteschlange."
+msgstr "Sie sind Mitglied keiner Warteschlange."
+
+#: mod/monitor_queues.php:101
+msgid "Mitglieder"
+msgstr "Mitglieder"
+
+#: mod/monitor_queues.php:105
+msgid "Statistik"
+msgstr "Statistik"
+
+#: mod/monitor_queues.php:110
+msgid "Erfolgreich"
+msgstr "Erfolgreich"
+
+#: mod/monitor_queues.php:111
+msgid "Aufgelegt"
+msgstr "Aufgelegt"
+
+#: mod/monitor_queues.php:109
+msgid "zuletzt"
+msgstr "zuletzt"
+
+#: mod/monitor_queues.php:168
+msgid "Anrufer(p)"
+msgstr "Anrufer"
+
+#: mod/monitor_queues.php:172
+msgid "Pos."
+msgstr "Pos."
+
+#: mod/monitor_queues.php:174
+msgid "Wartezeit"
+msgstr "Wartezeit"
+
+#: mod/pb_ldap.php:72 mod/pb_ldap.php:104
+msgid "Could not connect to LDAP server."
+msgstr "Konnte nicht mit dem LDAP-Server verbinden."
+
+#: mod/pb_ldap.php:156
+#, php-format
+msgid "mehr als %d Treffer"
+msgstr "mehr als %d Treffer"
+
+#: mod/pb_private.php:263
+msgid "Nachname"
+msgstr "Nachname"
+
+#: mod/pb_private.php:263
+msgid "Vorname"
+msgstr "Vorname"
+
+#: mod/pb_private.php:293 mod/pb_private.php:341
+msgid "Eintrag speichern"
+msgstr "Eintrag speichern"
+
+#: mod/pb_private.php:294
+msgid "speichern"
+msgstr "speichern"
+
+#: mod/pb_private.php:296 mod/pb_private.php:297
+msgid "r&uuml;ckg&auml;ngig"
+msgstr "r&uuml;ckg&auml;ngig"
+
+#: mod/pb_private.php:299
+msgid "abbrechen"
+msgstr "abbrechen"
+
+#: mod/pb_private.php:317
+msgid "bearbeiten"
+msgstr "bearbeiten"
+
+#: mod/pb_private.php:318
+msgid "entfernen"
+msgstr "entfernen"
+
+#: mod/ringtones_ringtones.php:74 mod/ringtones_ringtones.php:113
+#, php-format
+msgid "Datei-Upload f&uuml;r %s fehlgeschlagen."
+msgstr "Datei-Upload f&uuml;r %s fehlgeschlagen."
+
+#: mod/ringtones_ringtones.php:88
+#, php-format
+msgid "Datei f&uuml;r %s keine Audio-Datei"
+msgstr "Datei f&uuml;r %s keine Audio-Datei"
+
+#: mod/ringtones_ringtones.php:88
+msgid "Erlaubte Formate"
+msgstr "Erlaubte Formate"
+
+#: mod/ringtones_ringtones.php:91
+msgid "Zugriffsverletzung!"
+msgstr "Zugriffsverletzung!"
+
+#: mod/ringtones_ringtones.php:97
+#, php-format
+msgid "Fehler beim Upload f&uuml;r %s."
+msgstr "Fehler beim Upload f&uuml;r %s."
+
+#: mod/ringtones_ringtones.php:107
+#, php-format
+msgid "Datei f&uuml;r %s zu gro&szlig;."
+msgstr "Datei f&uuml;r %s zu gro&szlig;."
+
+#: mod/ringtones_ringtones.php:125
+msgid "Fehler beim Setzen des eigenen Klingeltons."
+msgstr "Fehler beim Setzen des eigenen Klingeltons."
+
+#: mod/ringtones_ringtones.php:163
+msgid ""
+"Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark "
+"von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. "
+"wird also ein anderer als der hier eingestellte Klingelton gespielt."
+msgstr "Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark "
+"von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. "
+"wird also ein anderer als der hier eingestellte Klingelton gespielt."
+
+#: mod/ringtones_ringtones.php:173
+msgid ""
+"Das Snom unterst&uuml;tzt Ringer 1-5 und lautlos.<br /> F&uuml;r das Snom "
+"kann nur entweder f&uuml;r interne oder f&uuml;r externe Anrufe eine eigene "
+"Klingeltondatei eingestellt sein, nicht f&uuml;r beides. Die L&auml;nge wird "
+"auf wenige Sekunden begrenzt."
+msgstr "Das Snom unterst&uuml;tzt Ringer 1-5 und lautlos.<br /> F&uuml;r das Snom "
+"kann nur entweder f&uuml;r interne oder f&uuml;r externe Anrufe eine eigene "
+"Klingeltondatei eingestellt sein, nicht f&uuml;r beides. Die L&auml;nge wird "
+"auf wenige Sekunden begrenzt."
+
+#: mod/ringtones_ringtones.php:200
+msgid "Von"
+msgstr "Von"
+
+#: mod/ringtones_ringtones.php:202
+msgid "Audio-Datei"
+msgstr "Audio-Datei"
+
+#: mod/ringtones_ringtones.php:220
+msgid "Lautlos"
+msgstr "Lautlos"
+
+#: mod/ringtones_ringtones.php:238
+msgid "eigene beibehalten"
+msgstr "eigene beibehalten"
+
+#: mod/voicemail_messages.php:35
+msgid "Neue"
+msgstr "Neue"
+
+#: mod/voicemail_messages.php:36
+msgid "Alte"
+msgstr "Alte"
+
+#: mod/voicemail_messages.php:37
+msgid "Arbeit"
+msgstr "Arbeit"
+
+#: mod/voicemail_messages.php:38
+msgid "Familie"
+msgstr "Familie"
+
+#: mod/voicemail_messages.php:39
+msgid "Freunde"
+msgstr "Freunde"
+
+#: mod/voicemail_messages.php:40
+msgid "Verzeichnis 5"
+msgstr "Verzeichnis 5"
+
+#: mod/voicemail_messages.php:41
+msgid "Verzeichnis 6"
+msgstr "Verzeichnis 6"
+
+#: mod/voicemail_messages.php:42
+msgid "Verzeichnis 7"
+msgstr "Verzeichnis 7"
+
+#: mod/voicemail_messages.php:43
+msgid "Verzeichnis 8"
+msgstr "Verzeichnis 8"
+
+#: mod/voicemail_messages.php:44
+msgid "Verzeichnis 9"
+msgstr "Verzeichnis 9"
+
+#: mod/voicemail_messages.php:103
+msgid "Player"
+msgstr "Player"
+
+#: mod/voicemail_messages.php:105
+#, php-format
+msgid "Ihr Browser kann die %s-Datei nicht abspielen."
+msgstr "Ihr Browser kann die %s-Datei nicht abspielen."
+
+#: mod/voicemail_messages.php:186
+msgid "Dauer"
+msgstr "Dauer"
+
+#: mod/voicemail_messages.php:220
+msgid "abspielen"
+msgstr "abspielen"
+
+#: mod/voicemail_messages.php:229
+msgid "l&ouml;schen"
+msgstr "l&ouml;schen"

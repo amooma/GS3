@@ -1,0 +1,87 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --source=internal|external --bellcore=<number> [--file=NONE|<audiofile>]';
+
+$opts = getOptsNoMultiples( '',
+	array(
+		'user=',
+		'source=',
+		'bellcore=',
+		'file='
+	),
+	$usage
+);
+if (! isSet($opts['user'])
+ || ! isSet($opts['source'])
+ || ! isSet($opts['bellcore'])
+ ) {
+	gs_script_invalid_usage( $usage );
+}
+
+
+if (trim(@$opts['file'])=='') {
+	$change_file = false;
+	$file = null;
+} elseif (strToUpper(trim(@$opts['file']))=='NONE') {
+	$change_file = true;
+	$file = null;
+} else {
+	$change_file = true;
+	$file = @realPath( @$opts['file'] );
+	if (! $file || ! file_exists($file)) {
+		$file = @realPath( @$_ENV['PWD'] .'/'. @$opts['file'] );
+		if (! $file || ! file_exists($file))
+			die( "File not found.\n" );
+	}
+	//if (strToLower(subStr($ringer,-4)) != '.mp3')
+	//	die( "File is not an mp3.\n" );
+}
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+$ret = @ gs_ringtone_set( $opts['user'], $opts['source'], $opts['bellcore'], $change_file, ($change_file ? $file : null) );
+if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
+if (! $ret)            gs_script_error();
+echo "Ringtone set.\n";
+
+
+?>

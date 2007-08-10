@@ -1,0 +1,155 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+
+$uname  = trim(@$argv[1]);
+$source = trim(@$argv[2]);
+
+if (! $uname) die();
+if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
+	die();
+}
+if (! $source) die();
+if (! in_array($source, array('internal','external'))) die();
+
+
+/*
+$files = glob( '/opt/gemeinschaft/htdocs/prov/ringtones/'. $uname .'-*.wav' );
+if (count($files) < 1) {
+	echo "SET VARIABLE ringer\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+
+$ringer = baseName( $files[0] );
+echo "SET VARIABLE ringer ". $ringer ."\n";
+//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+*/
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+//include_once( GS_DIR .'inc/gs-lib.php' );
+
+$db = gs_db_slave_connect();
+if (! $db) die();
+
+$rs = $db->execute(
+'SELECT `p`.`user_id` `id`, `p`.`type` `phone_type`
+FROM
+	`phones` `p` JOIN
+	`users` `u` ON (`u`.`id`=`p`.`user_id`) JOIN
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
+WHERE `s`.`name`=\''. $db->escape($uname) .'\''
+);
+if (! ($user = $rs->fetchRow())) die();
+
+
+if (strToLower(subStr($user['phone_type'],0,4)) == 'snom') {
+		
+	//$ringtones = gs_ringtones_get( $uname );
+	//if (! is_array($ringtones)) die();
+	
+	$ringtones = array(
+		'internal' => array( 'bellcore' => 1, 'file' => null ),
+		'external' => array( 'bellcore' => 1, 'file' => null )
+	);
+	
+	# get ringers
+	#
+	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
+	if (! $rs) die();
+	while ($r = $rs->fetchRow()) {
+		$src = $r['src'];
+		if (! array_key_exists($src, $ringtones)) continue;
+		$ringtones[$src]['bellcore'] = (int)$r['bellcore'];
+		$ringtones[$src]['file'] = $r['file'];
+	}
+	//print_r($ringtones);
+		
+	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
+		$ringtones['external']['file'] = null;
+	
+	if (@$ringtones[$source]['file']) {
+		echo 'SET VARIABLE ringer <', GS_PROV_SCHEME, '://', GS_PROV_HOST, ':', GS_PROV_PORT, GS_PROV_PATH, 'ringtones/', $ringtones[$source]['file'], '-snom.wav>', "\n";
+	} elseif (array_key_exists('bellcore', $ringtones[$source])) {
+		if (@$ringtones[$source]['bellcore'] == 1) die();
+		if (@$ringtones[$source]['bellcore'] != 0) {
+			echo 'SET VARIABLE ringer <http://127.0.0.1/Bellcore-dr', $ringtones[$source]['bellcore'], '>', "\n";
+		} else {
+			echo 'SET VARIABLE ringer <http://127.0.0.1/Bellcore-dr0>', "\n";
+		}
+	}
+	
+}
+elseif (strToLower(subStr($user['phone_type'],0,7)) == 'siemens') {
+	
+	//FIXME
+	// Alert-Info headers supported?
+	// this is completely untested!
+	
+	$ringtones = array(
+		'internal' => array( 'bellcore' => 1, 'file' => null ),
+		'external' => array( 'bellcore' => 1, 'file' => null )
+	);
+	
+	# get ringers
+	#
+	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
+	if (! $rs) die();
+	while ($r = $rs->fetchRow()) {
+		$src = $r['src'];
+		if (! array_key_exists($src, $ringtones)) continue;
+		$ringtones[$src]['bellcore'] = (int)$r['bellcore'];
+		$ringtones[$src]['file'] = $r['file'];
+	}
+	//print_r($ringtones);
+		
+	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
+		$ringtones['external']['file'] = null;
+	
+	if (@$ringtones[$source]['file']) {
+		echo 'SET VARIABLE ringer <', GS_PROV_SCHEME, '://', GS_PROV_HOST, ':', GS_PROV_PORT, GS_PROV_PATH, 'ringtones/', $ringtones[$source]['file'], '-snom.wav>', "\n";
+	} elseif (array_key_exists('bellcore', $ringtones[$source])) {
+		if (@$ringtones[$source]['bellcore'] == 1) die();
+		if (@$ringtones[$source]['bellcore'] != 0) {
+			echo 'SET VARIABLE ringer <http://127.0.0.1/Bellcore-dr', $ringtones[$source]['bellcore'], '>', "\n";
+		} else {
+			echo 'SET VARIABLE ringer <http://127.0.0.1/Bellcore-dr0>', "\n";
+		}
+	}
+	
+}
+
+
+?>

@@ -1,0 +1,91 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+
+$uname  = trim(@$argv[1]);
+
+if (! $uname) die();
+if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
+	die();
+}
+
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$db = gs_db_slave_connect();
+
+# get user id:
+$uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($uname) .'\'' );
+if ($uid < 1) die();
+
+
+
+$vm = array(
+	'internal_active'  => 0,
+	'external_active'  => 0
+);
+
+$rs = $db->execute( 'SELECT `internal_active`, `external_active` FROM `vm` WHERE `user_id`='. $uid );
+if ($r = $rs->fetchRow()) {
+	$vm['internal_active'] = $r['internal_active'];
+	$vm['external_active'] = $r['external_active'];
+}
+
+echo "SET VARIABLE vm_internal_active ". $vm['internal_active'] ."\n";
+//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+echo "SET VARIABLE vm_external_active ". $vm['external_active'] ."\n";
+//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+
+
+
+
+$msgs = array(
+	'internal' => '',
+	'external' => ''
+);
+foreach ($msgs as $src => $ignore) {
+	$fname = GS_DIR .'vm-rec/'. $uname .'-'. $src;
+	if (file_exists( $fname .'.alaw' ))
+		$msgs[$src] = $fname;
+}
+foreach ($msgs as $src => $file) {
+	echo "SET VARIABLE vm_announce_". $src ." ". $file ."\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+}
+
+
+
+?>

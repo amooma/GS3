@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<section id="sendmail-installation" revision="$Revision$">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Ein Sendmail</title>
+
+  <indexterm>
+    <primary>sendmail</primary>
+  </indexterm>
+
+  <indexterm>
+    <primary>MTA</primary>
+  </indexterm>
+
+  <indexterm>
+    <primary>Mail Transfer Agent</primary>
+  </indexterm>
+
+  <authorblurb>
+    <para>-- Philipp Kempgen</para>
+  </authorblurb>
+
+  <para>Um E-Mails versenden zu können benutzt man i.d.R. einen
+  <command>sendmail</command>-kompatiblen MTA<footnote>
+      <para>Mail Transfer Agent</para>
+    </footnote>, also z.B. <command>sendmail</command>,
+  <command>postfix</command> oder <command>exim</command>. Ein MTA ist ein
+  Programm, das im Hintergrund E-Mails an die Empfänger verteilt.</para>
+
+  <section id="postfix-installation">
+    <title>Postfix</title>
+
+    <indexterm>
+      <primary>postfix</primary>
+    </indexterm>
+
+    <para>Wir beschreiben hier ganz kurz und knapp<footnote>
+        <para>die Konfiguration eines MTAs kann eine Wissenschaft für sich
+        sein</para>
+      </footnote> die Einrichtung von <command>postfix</command>.</para>
+
+    <para>Haben wir schon ein <command>sendmail</command>?<screen>$ <command>which sendmail 2&gt;&gt;/dev/null || echo 'no sendmail installed'</command></screen>Die
+    Ausgabe ist dann entweder:<screen>no sendmail installed</screen>oder<screen>/usr/sbin/sendmail</screen></para>
+
+    <para>Welches <command>sendmail</command> haben wir?<screen>$ <command>ls -lF /usr/sbin/sendmail</command>
+lrwxrwxrwx 1 root root 5 2007-08-03 18:11 /usr/sbin/sendmail -&gt; exim4*
+as</screen>Exim ist bereits installiert. Aber wir wollen Postfix :-)</para>
+
+    <para>Installieren:<variablelist termlength="15">
+        <varlistentry>
+          <term>CentOS:</term>
+
+          <listitem>
+            <programlisting>$ <command>yum install postfix</command></programlisting>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Debian:</term>
+
+          <listitem>
+            <programlisting>$ <command>apt-get install postfix</command></programlisting>
+
+            <para>Wenn Sie in einem kleinen Dialog gefragt werden, welche Art
+            der Konfiguration Sie wollen, empfiehlt sich "internet mit
+            Smarthost" (falls Sie bereits einen zentralen Mail-Server
+            haben).</para>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+
+    <programlisting>$ <command>which sendmail</command>
+/usr/sbin/sendmail</programlisting>
+
+    <para>In der <filename>/etc/postfix/master.cf</filename> die
+    Zeile<literallayout>smtp      inet  n       -       n       -       -       smtpd</literallayout>durch
+    Voranstellen von <literal>#</literal> (Raute) auskommentieren.</para>
+
+    <para>In der <filename>/etc/postfix/main.cf</filename>:</para>
+
+    <para>Den Host-Namen eintragen:<literallayout>myhostname = <replaceable>gemeinschaft1.example.com</replaceable></literallayout></para>
+
+    <para>Lokales Verteilen von Mail ausschalten:<literallayout>local_transport = error:local delivery is disabled</literallayout></para>
+
+    <para>Normalerweise hat man ja bereits einen Mail-Server. Dann sollte man
+    dem einfach seine ausgehenden E-Mails zuschieben<footnote>
+        <para>er muß so konfiguriert sein, daß er Mails von uns
+        akzeptiert</para>
+      </footnote>:<literallayout># FQDN:
+relayhost = <replaceable>smtp.example.com</replaceable>
+# oder Domain (falls MX-Records gesetzt):
+#relayhost = <replaceable>example.com</replaceable>
+# oder IP-Adresse:
+#relayhost = <replaceable>192.168.1.33</replaceable></literallayout>Evtl. muß
+    man auch noch die Parameter <literal>mydomain</literal> und
+    <literal>myorigin</literal> anpassen.</para>
+
+    <para>Starten:<variablelist termlength="15">
+        <varlistentry>
+          <term>CentOS:</term>
+
+          <listitem>
+            <programlisting>$ <command>chkconfig --levels 235 postfix on</command>
+$ <command>/etc/init.d/postfix restart</command></programlisting>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Debian:</term>
+
+          <listitem>
+            <programlisting>$ <command>FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME</command>
+$ <command>/etc/init.d/postfix restart</command></programlisting>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+
+    <tip>
+      <para>Wenn man mehrere MTAs (z.B. auch noch <command>sendmail</command>)
+      installiert hat, kann das Programm <command>system-switch-mail</command>
+      hilfreich sein, um zwischen den verschiedenen MTAs zu
+      wechseln.<variablelist termlength="15">
+          <varlistentry>
+            <term>CentOS:</term>
+
+            <listitem>
+              <programlisting>$ <command>yum install system-switch-mail</command></programlisting>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Debian:</term>
+
+            <listitem>
+              <programlisting>$ <command>FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME</command></programlisting>
+            </listitem>
+          </varlistentry>
+        </variablelist><programlisting>$ <command>system-switch-mail-nox</command></programlisting>(interaktiv)</para>
+    </tip>
+  </section>
+</section>
