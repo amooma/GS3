@@ -85,7 +85,7 @@ The system is going down for reboot NOW!</screen></para>
     hinzufügen.<programlisting><command>ntpdate 0.debian.pool.ntp.org</command>
 <command>/etc/init.d/ntp start</command></programlisting></para>
 
-    <para>Entwicklungspakete:<programlisting><command>apt-get install gcc libtool autoconf make automake</command></programlisting></para>
+    <para>Entwicklungspakete:<programlisting><command>apt-get install gcc g++ binutils libtool autoconf make automake</command></programlisting></para>
 
     <para>Weitere Pakete:<programlisting><command>apt-get install cron expect findutils sudo wget logrotate grep \
 netcat openssh-client openssh-server</command></programlisting></para>
@@ -179,7 +179,7 @@ openssl zlib1g zlib1g-dev</command></programlisting></para>
 
     <para>Ob das erfolgreich war, kann man so prüfen (großes V!):<screen>$ <command>asterisk -V</command>
 Asterisk 1.4.10</screen>In <filename>/usr/sbin/safe_asterisk</filename>
-    <code>SLEEPSECS</code> von <code>4</code> auf <code>1</code>
+    <code>SLEEPSECS</code> von <code>4</code> auf <code>2</code>
     stellen.</para>
 
     <para>Verzeichnis für Call-Files freigeben (damit z.B. vom Web-Server
