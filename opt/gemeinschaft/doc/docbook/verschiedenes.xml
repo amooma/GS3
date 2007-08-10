@@ -326,4 +326,77 @@ Name:   www.l.google.com
 Address: 209.85.135.103</screen>Hier sollte jetzt (spätestens beim 2. Aufruf)
     als Adresse des DNS-Servers <literal>127.0.0.1</literal> stehen.</para>
   </section>
+
+  <section id="php-accelerator">
+    <title>PHP-Accelerator</title>
+
+    <para>Falls gewünscht kann man zur Beschleunigung einen OpCode-Cache für
+    PHP installieren.</para>
+
+    <section id="eaccelerator">
+      <title>eAccelerator</title>
+
+      <para>Beschleunigt PHP-Skripte die unter <literal>mod_php</literal>
+      (Apache) oder als FastCGI laufen, nicht CGI oder CLI.</para>
+
+      <para>Voraussetzung außer den bereits installierten Entwicklungspaketen:
+      <command>m4</command> und <command>phpize</command>.<variablelist
+          termlength="15">
+          <varlistentry>
+            <term>Debian:</term>
+
+            <listitem>
+              <programlisting><command>apt-get install m4 php5-dev bzip2</command></programlisting>
+            </listitem>
+          </varlistentry>
+        </variablelist></para>
+
+      <para>Aktuelle Version installieren, siehe Release-Notes auf <ulink
+      url="http://eaccelerator.net/">http://eaccelerator.net/</ulink> und
+      Installationshinweise unter <ulink
+      url="http://eaccelerator.net/wiki/InstallFromSource">http://eaccelerator.net/wiki/InstallFromSource</ulink>:<programlisting><command>cd /usr/src/</command>
+<command>wget -c http://bart.eaccelerator.net/source/0.9.5.1/eaccelerator-0.9.5.1.tar.bz2</command>
+<command>tar -xjf eaccelerator-0.9.5.1.tar.bz2</command>
+<command>cd eaccelerator-0.9.5.1/</command>
+<command>phpize</command>
+<command>make clean</command>
+<command>./configure \
+  --enable-accelerator=shared \
+  --without-eaccelerator-encoder \
+  --without-eaccelerator-loader \
+  --with-eaccelerator-shared-memory \
+  --with-eaccelerator-sessions</command> <footnote>
+            <para>siehe <ulink
+                url="http://eaccelerator.net/wiki/CompileConfiguration">http://eaccelerator.net/wiki/CompileConfiguration</ulink> für Optionen</para>
+          </footnote><command>make</command>
+<command>make install</command></programlisting></para>
+
+      <para>Datei <filename>/etc/php5/conf.d/eaccelerator.ini</filename>
+      anlegen (Pfad je nach Betriebssystem unterschiedlich; oder in die
+      <filename>php.ini</filename> schreiben):<screen>extension="eaccelerator.so"
+eaccelerator.shm_size="16"
+eaccelerator.cache_dir="/var/lib/eaccelerator"
+eaccelerator.enable="1"
+eaccelerator.optimizer="1"
+eaccelerator.check_mtime="1"
+eaccelerator.debug="0"
+eaccelerator.filter=""
+eaccelerator.shm_max="0"
+eaccelerator.shm_ttl="0"
+eaccelerator.shm_prune_period="0"
+eaccelerator.shm_only="0"
+eaccelerator.compress="1"
+eaccelerator.compress_level="9"</screen></para>
+
+      <para>Cache-Verzeichnis (wie oben angegeben) anlegen:<programlisting><command>mkdir -p /var/lib/eaccelerator</command>
+<command>chmod 777 /var/lib/eaccelerator/</command></programlisting></para>
+
+      <para>Wer will kann noch unbenutzte Debug-Symbole aus dem Shared Object
+      entfernen:<programlisting><command>cd /usr/lib/php5/20060613+lfs</command>
+<command>strip eaccelerator.so</command></programlisting>Das verkleinert die
+      Datei auf fast 1/4.</para>
+
+      <para>Apache neu starten:<programlisting><command>/etc/init.d/apache2 restart</command></programlisting></para>
+    </section>
+  </section>
 </section>
