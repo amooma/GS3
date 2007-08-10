@@ -151,14 +151,14 @@ openssl-devel zlib zlib-devel krb5-devel</command></programlisting></para>
     gelöscht werden:<programlisting><command>rm -rf /usr/lib/asterisk/modules/</command></programlisting></para>
 
     <para>Asterisk installieren:<programlisting><command>cd /usr/src/ \
-&amp;&amp; wget -c http://ftp.digium.com/pub/asterisk/releases/asterisk-1.4.2.tar.gz \
-&amp;&amp; tar -xzf asterisk-1.4.2.tar.gz \
-&amp;&amp; cd /usr/src/asterisk-1.4.2/ \
+&amp;&amp; wget -c http://ftp.digium.com/pub/asterisk/releases/asterisk-1.4.10.tar.gz \
+&amp;&amp; tar -xzf asterisk-1.4.10.tar.gz \
+&amp;&amp; cd /usr/src/asterisk-1.4.10/ \
 &amp;&amp; ./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config \
 &amp;&amp; make samples</command></programlisting></para>
 
     <para>Ob das erfolgreich war, kann man so prüfen (großes V!):<screen>$ <command>asterisk -V</command>
-Asterisk 1.4.2</screen>In <filename>/usr/sbin/safe_asterisk</filename>
+Asterisk 1.4.10</screen>In <filename>/usr/sbin/safe_asterisk</filename>
     <code>SLEEPSECS</code> von <code>4</code> auf <code>1</code>
     stellen.</para>
 
