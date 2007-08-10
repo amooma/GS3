@@ -138,9 +138,9 @@ openssl-devel zlib zlib-devel krb5-devel</command></programlisting></para>
 
     <para>Übersetzung und Installation von Zaptel geht normalerweise
     so:<programlisting><command>cd /usr/src/ \
-&amp;&amp; wget -c http://ftp.digium.com/pub/zaptel/releases/zaptel-1.4.1.tar.gz \
-&amp;&amp; tar -xzf zaptel-1.4.1.tar.gz \
-&amp;&amp; cd /usr/src/zaptel-1.4.1/ \
+&amp;&amp; wget -c http://ftp.digium.com/pub/zaptel/releases/zaptel-1.4.4.tar.gz \
+&amp;&amp; tar -xzf zaptel-1.4.4.tar.gz \
+&amp;&amp; cd /usr/src/zaptel-1.4.4/ \
 &amp;&amp; ./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config</command></programlisting>und
     dann evtl. noch - abhängig vom Einsatzzweck Ihres Gemeinschaft-Systems -
     ein <code><command>modprobe ztdummy</command></code>. Bitte beachten Sie
