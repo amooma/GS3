@@ -37,6 +37,8 @@ function normalizeIPs( $str ) {
 }
 
 
+if (! defined('E_STRICT')) define('E_STRICT', 2048);
+
 function err_handler_die_on_err( $type, $msg, $file, $line )
 {
 	switch ($type) {
@@ -44,6 +46,13 @@ function err_handler_die_on_err( $type, $msg, $file, $line )
 		case E_USER_NOTICE:
 			if (error_reporting() != 0) {
 				gs_log( GS_LOG_NOTICE, 'PHP: '. $msg .' in '. $file .' on line '. $line );
+			} else {  # suppressed by @
+				//gs_log( GS_LOG_DEBUG , 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
+			}
+			break;
+		case E_STRICT:
+			if (error_reporting() != 0) {
+				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
 				//gs_log( GS_LOG_DEBUG , 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
 			}
@@ -69,6 +78,13 @@ function err_handler_quiet( $type, $msg, $file, $line )
 		case E_USER_NOTICE:
 			if (error_reporting() != 0) {
 				gs_log( GS_LOG_NOTICE, 'PHP: '. $msg .' in '. $file .' on line '. $line );
+			} else {  # suppressed by @
+				//gs_log( GS_LOG_DEBUG , 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
+			}
+			break;
+		case E_STRICT:
+			if (error_reporting() != 0) {
+				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
 				//gs_log( GS_LOG_DEBUG , 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
 			}
