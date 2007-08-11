@@ -224,7 +224,7 @@ define( 'GS_LOG_WARNING', 1<<2 );  #  "
 define( 'GS_LOG_NOTICE' , 1<<3 );  #  "
 define( 'GS_LOG_DEBUG'  , 1<<4 );  #  "
 
-define( 'GS_LOG_LEVEL'  , GS_LOG_DEBUG );  # your log level
+define( 'GS_LOG_LEVEL'  , GS_LOG_NOTICE );  # your log level
 define( 'GS_LOG_FILE'   , '/var/log/gemeinschaft/gs.log' );
 define( 'GS_LOG_GMT'    , true );  # use GMT or local time
 
