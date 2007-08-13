@@ -776,7 +776,14 @@ setting('show_local_line', 'off');
 # http://www.snom.com/wiki/index.php/Mass_deployment#Firmware_configuration_file
 
 
+ob_start();
 settings_out();
+$ob = ob_get_clean();
+if (! headers_sent()) {
+	# avoid chunked transfer-encoding
+	header( 'Content-Length: '. strLen($ob) );
+}
+echo $ob;
 
 /*
 $fh = fOpen( './access.txt', 'ab' );
