@@ -34,8 +34,8 @@ $host = '127.0.0.1';
 $port = 5039;
 $maxtime = 35;
 
-header( 'Content-Type: text/plain' );
-#header( 'Content-Type: application/json' );
+#header( 'Content-Type: text/json' );
+header( 'Content-Type: application/json' );  # RFC 4627
 header( 'Pragma: no-cache' );
 header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Expires: 0' );
