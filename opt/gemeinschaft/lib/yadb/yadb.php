@@ -783,7 +783,9 @@ class YADB_Connection
 		if ($rs) {
 			if ($rs === true) return true;
 			if (! $rs->EOF) {
-				$ret = reset( $rs->getRow() );
+				//$ret = reset( $rs->getRow() );
+				$ret = $rs->getRow();
+				$ret = reset( $ret );
 				$rs->close();
 				return $ret;
 			}
