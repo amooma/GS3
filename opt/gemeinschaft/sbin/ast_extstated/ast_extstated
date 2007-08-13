@@ -1,0 +1,652 @@
+#!/usr/bin/perl -w
+
+use strict;
+#no  strict 'refs';
+require 5.6.0;  # 5.7.3 or 5.8.x preferred!
+#use Thread qw/yield/;
+use bytes; no locale; no utf8;
+use Socket;
+use POSIX ();
+use Config;
+use diagnostics;
+use Time::HiRes qw(usleep);
+use AstMan ();
+require 'strings.pl';
+require 'read_conf.pl';
+require 'sig_action.pl';
+#use Threads::Shared;
+#$ENV{PERL_SIGNALS} = 'safe';
+use Fcntl ();
+use Cwd 'realpath';
+
+if ($Config{'usethreads'}) {
+	require threads; import threads ();
+	require threads::shared; import threads::shared qw(share);
+} else {
+	print "Your Perl does not have support for threads. Sorry.\n";
+	exit 1;
+}
+
+
+##################### user settable #####################
+#
+our $ask_in_context = 'default';
+our $ignore_context = 1;
+our $nobody_exten   = '95';
+our $skip_nobody    = 1;
+our $conn_time      = 25;
+#
+#########################################################
+
+
+
+use constant {  # "\n" is platform dependant!
+	CR   => "\x0D",
+	LF   => "\x0A",
+	CRLF => "\x0D\x0A"
+};
+
+#use constant AST_EXTSTATE_UNKNOWN => -1;
+use constant {
+	AST_EXTSTATE_UNKNOWN  => -1,  # no hint for the extension
+	AST_EXTSTATE_IDLE     =>  0,  # registered, idle
+	AST_EXTSTATE_INUSE    =>  1,  # busy
+	AST_EXTSTATE_OFFLINE  =>  4,  # unreachable, not registered
+	AST_EXTSTATE_RINGING  =>  8   # ringing
+};
+
+
+our @known_contexts : shared = ();
+our %extstates : shared = ();
+our %chanremotes : shared = ();
+our %lastchanged : shared = ();
+our @ami_threads;
+our $sel;
+
+use IO::Socket;
+use IO::Select;
+my $srv_sock = new IO::Socket::INET(
+	LocalAddr  => '0.0.0.0',
+	LocalPort  => 5039,
+	Reuse      => 1,
+	ReuseAddr  => 1,
+	Listen     => 5,
+	Proto      => 'tcp',
+	MultiHomed => 1,
+	Blocking   => 1
+);
+if (! $srv_sock) {
+	print STDERR "Can't create local socket - $@\n";
+	exit 1;
+}
+$sel = new IO::Select( $srv_sock );
+
+
+
+sub handle_loggedin
+{
+	#my $ami = shift; $ami = $$ami;
+	#my $ami = ${(shift)};
+	my $ami = ${$_[0]};
+	
+	# we are interested in "ExtensionStatus" events and
+	# "Extension Status" messages only. system is necessary
+	# so reload events etc. are not lost
+	$ami->send(
+		'Action: Events' .CRLF.
+		'EventMask: system,call' .CRLF.
+		CRLF);
+	#$ami->send(
+	#	"Action: SIPpeers\r\n".
+	#	"\r\n");
+	#$ami->send(
+	#	'Action: Command' .CRLF.
+	#	'Command: core show hints' .CRLF.
+	#	'ActionID: hints' .CRLF.
+	#	CRLF);
+	
+	# the Asterisk CLI command "core show contexts" cuts the name of
+	# the context after 20 chars so we need a list in order to expand
+	# the name
+	$ami->send(
+		'Action: Command' .CRLF.
+		'Command: dialplan show' .CRLF.
+		'ActionID: dialplan' .CRLF.
+		CRLF);
+	select(undef, undef, undef, 0.2);
+}
+sub handle_response
+{
+	my $ami      = ${$_[0]};
+	my $pkt      = ${$_[1]};
+	my $respname = ${$_[2]};
+	my $message  = ${$_[3]};
+	our $ignore_context;
+	our @known_contexts;
+	
+	#print "\nGOT RESPONSE $respname ($message):\n$pkt\n\n";
+	
+	if ($message eq 'extension status') {
+		if ($pkt !~ m/^Exten:\s*([0-9\\*\\-_]+)/mio) {return;}
+		if (! defined($1)) {return;}
+		my $exten = $1;
+		
+		if ($pkt !~ m/^Status:\s*(-?[0-9]+)/mio) {return;}
+		if (! defined($1)) {return;}
+		my $state = defined($1) ? int($1) : int(AST_EXTSTATE_UNKNOWN);
+		
+		if ($ignore_context) {
+			&handle_extstate(\$exten, $state);
+		} else {
+			if ($pkt !~ m/^Context:\s*([a-z0-9\\-_]+)/mio) {return;}
+			if (! defined($1)) {return;}
+			my $context = $1;
+			my $exten_at_context = $exten .'@'. $context;
+			&handle_extstate(\$exten_at_context, $state);
+		}
+	}
+	elsif ($message eq 'follows' && $pkt =~ m/^ActionID:\s*dialplan/mio) {
+		my $context = '';
+		while ($pkt =~ m/Context\s*['"]?([a-z\-_0-9]+)/gio) {
+			$context = $1;
+			if ($context =~ /^macro/io) {next;}
+			push(@known_contexts, $context);
+		}
+		#foreach (@known_contexts) {
+		#	print "CTXT: $_\n";
+		#}
+		$ami->send(
+			'Action: Command' .CRLF.
+			'Command: core show hints' .CRLF.
+			'ActionID: hints' .CRLF.
+			CRLF);
+		}
+	elsif ($message eq 'follows' && $pkt =~ m/^ActionID:\s*hints/mio) {
+		my $exten   = '';
+		my $context = '';
+		while ($pkt =~ m/([0-9*a-z\-_]+)@([a-z\-_0-9]+)/gcio) {
+			$exten   = $1;
+			$context = $2;
+			foreach (@known_contexts) {
+				if ($context eq substr($_, 0, length($context))) {
+					$context = $_;
+					last;
+				}
+			}
+			#print 'HINT: '. $exten .'@'. $context ."\n";
+			if ($ignore_context) {
+				&handle_extstate(\$exten, -2);
+			} else {
+				my $exten_at_context = $exten .'@'. $context;
+				&handle_extstate(\$exten_at_context, -2);
+			}
+			$ami->request_extstate($exten, $context);
+		}
+	}
+}
+sub handle_event
+{
+	my $ami      = ${$_[0]};
+	my $pkt      = ${$_[1]};
+	my $evtname  = ${$_[2]};
+	our $ignore_context;
+	
+	#print "\nGOT EVENT $evtname:\n$pkt\n\n";
+	
+	if ($evtname eq 'extensionstatus') {
+		#print "\nGOT EVENT $evtname:\n$pkt\n\n";
+		
+		if ($pkt !~ m/^Exten:\s*([0-9\\*\\-_]+)/mio) {return;}
+		if (! defined($1)) {return;}
+		my $exten = $1;
+		
+		if ($pkt !~ m/^Status:\s*(-?[0-9]+)/mio) {return;}
+		if (! defined($1)) {return;}
+		my $state = defined($1) ? int($1) : int(AST_EXTSTATE_UNKNOWN);
+		
+		if ($ignore_context) {
+			&handle_extstate(\$exten, $state);
+		} else {
+			if ($pkt !~ m/^Context:\s*([a-z0-9\\-_]+)/mio) {return;}
+			if (! defined($1)) {return;}
+			my $context = $1;
+			my $exten_at_context = $exten .'@'. $context;
+			&handle_extstate(\$exten_at_context, $state);
+		}
+	}
+	elsif ($evtname eq 'newexten') {
+		#print "\nGOT EVENT $evtname:\n$pkt\n\n";
+		
+		my $ext_from = '';
+		my $ext_from_is_external = 0;
+		if ($pkt =~ m/^Channel:\s*SIP\/([0-9]+)/mio) {
+			if (! defined($1)) {return;}
+			$ext_from = $1;
+			if ($ext_from !~ m/^[1-9]/o) {
+				$ext_from_is_external = 1;
+			}
+		} elsif ($pkt =~ m/^Channel:\s*Zap\/([gr][0-9]+\/)?([0-9]+)/mio) {
+			if (! defined($1)) {return;}
+			$ext_from = $1;
+			$ext_from_is_external = 1;
+		} else {return;}
+		
+		if ($pkt !~ m/^Extension:\s*([0-9a-z*\-_]+)/mio) {return;}
+		if (! defined($1)) {return;}
+		my $ext_to = $1;
+		my $ext_to_is_external = 0;
+		if ($ext_to =~ m/^0/o) {
+			$ext_to_is_external = 1;
+		}
+		
+		if ($ext_to eq 's') {return;}
+		&handle_channelinfo(\$ext_from, $ext_from_is_external, \$ext_to, $ext_to_is_external);
+	}
+}
+
+sub handle_extstate : locked
+{
+	my $ext_at_context = ${$_[0]};
+	my $state          =   $_[1];
+	#our $sel;
+	our %extstates;
+	our $skip_nobody;
+	our $nobody_exten;
+	our %lastchanged;
+	
+	if ($ext_at_context !~ m/^[0-9]+(?:@|$)/o) {return;}
+	
+	if ($skip_nobody && $ext_at_context =~ m/^$nobody_exten/io) {
+		#print "SKIPPING NOBODY EXTENSION\n";
+		return;
+	}
+	
+	# store
+	#
+	$state = int($state);
+	if ($state == -2) {
+		$state = AST_EXTSTATE_UNKNOWN;
+		if (exists($extstates{ $ext_at_context })) {return;}
+	}
+	#print "STORE ".$ext_at_context.": ".$state ." - TIME: ". time() ."\n";
+	$extstates{ $ext_at_context } = $state;
+	$lastchanged{ $ext_at_context } = time();
+	
+	my @write_ready;
+	my $client;
+	#foreach $client ( $sel->handles() ) {
+	#foreach @handle ($sel->handles()) {
+	#foreach $fh ( @write_ready = $sel->can_write(0) ) {
+	#foreach $handle2 ( @handle = $sel->handles() ) {
+	#	foreach $client ($handle2) {
+	#foreach $client ( @write_ready = $sel->can_write(0) ) {
+	#print $client "store ".$ext_at_context.": ".$state."\n";
+	#}
+	#print "----\n";
+}
+
+sub handle_channelinfo : locked
+{
+	my $ext_from             = ${$_[0]};
+	my $ext_from_is_external =   $_[1];
+	my $ext_to               = ${$_[2]};
+	my $ext_to_is_external   =   $_[3];
+	
+	our %extstates;
+	our %chanremotes;
+	our %lastchanged;
+	
+	print "CHAN from $ext_from ($ext_from_is_external) to $ext_to ($ext_to_is_external)\n";
+	
+	if (! $ext_from_is_external && exists($extstates{ $ext_from })) {
+		#$chanremotes{ $ext_from } = $ext_to;
+		$chanremotes{ $ext_from } = $ext_to_is_external;
+		$lastchanged{ $ext_from } = time();
+	}
+	if (! $ext_to_is_external && exists($extstates{ $ext_to })) {
+		#$chanremotes{ $ext_from } = $ext_to;
+		$chanremotes{ $ext_to } = $ext_from_is_external;
+		$lastchanged{ $ext_to } = time();
+	}
+}
+
+sub get_extstate : locked
+{
+	my $ext_at_context =   $_[0];
+	
+	return $main::extstates{ $ext_at_context } || AST_EXTSTATE_UNKNOWN;
+}
+
+
+sub stop
+{
+	our $sigint_cnt;
+	#our $ami_threads;
+	
+	my $signame = shift;
+	print "\nGot a SIG$signame\n";
+	if (++$sigint_cnt > 1) {
+		print "Stop.\n";
+		exit 1;
+	}
+	print "Stopping gracefully ...\n";
+	
+	#foreach my $ami_thread (@ami_threads) {
+	#	kill('USR2', -$$);
+	#}
+	
+	# ...
+	#$ami_thread->kill('USR1');
+	#print "------PID: ", $$, ", PGRP: ", getpgrp(), "\n";
+	#kill('USR2', -$$);
+	#$ami_thread->join;
+	#usleep(100000);
+	
+	print "Stop.\n";
+	exit 0;
+}
+
+
+
+# change the visible name of this process (e.g. in `ps ax`) from
+# something like "./ast_extstated" to "ast_extstated":
+#our $SELF = realpath($0);
+our $SELF = '/opt/gemeinschaft/sbin/ast_extstated/ast_extstated';
+our $process_name = `basename '$0'`; chomp $process_name;
+#$0 = $process_name .' [starting up]';
+#$0 = "$process_name @ARGV";
+$0 = $process_name;
+
+# write PID
+#
+#our $pid_file_name = '/var/run/'.$process_name.'.pid';
+#open(our $pidfile, '>', $pid_file_name);
+#if ($!) {
+#	print STDERR "Could not open pid file \"$pid_file_name\" ($!)\n";
+#} else {
+#	print $pidfile $$."\n";
+#	close $pidfile;
+#	chmod 0644, $pid_file_name;
+#}
+
+
+our $has_tty = (-t STDIN && -t STDOUT);
+
+my $configfile = "/etc/ast_extstated.ini";
+
+#$file = join('', <FILE>);
+
+# read config file
+#
+my @asterisks = read_conf($configfile);
+if ($has_tty) {
+	print "Connect to:\n";
+	foreach my $asterisk (@asterisks) {
+		print $asterisk->{'host'} . "\n";
+	}
+	print "\n";
+}
+
+sub restart
+{
+	our $SELF;
+	
+	my @args = qw();
+	#exec($SELF, @args);
+	system('(sleep 2; '. $SELF .' 1>>/dev/null 2>>/dev/null &) 1>>/dev/null 2>>/dev/null &');
+	exit 0;
+}
+if ($has_tty && (!$ARGV[0] || $ARGV[0] ne '--nofork')) {
+	restart();
+}
+
+# unblock SIGHUP which would be blocked after we restarted ourselves
+# because Perl's exec() uses the execvp() call and thus the new process
+# inherits the process signal mask:
+my $sig_set = POSIX::SigSet->new();
+$sig_set->addset(POSIX::SIGHUP());
+POSIX::sigprocmask(POSIX::SIG_UNBLOCK(), $sig_set);
+
+our $sigint_cnt = 0;
+$SIG{'INT' } = \&stop;
+$SIG{'TERM'} = \&stop;
+$SIG{'QUIT'} = \&stop;
+$SIG{'ALRM'} = 'IGNORE';
+$SIG{'PIPE'} = 'IGNORE';
+$SIG{'USR1'} = 'IGNORE';
+$SIG{'USR2'} = 'IGNORE';
+#$SIG{USR2} = sub { print("Ignoring SIGUSR2\n"); };
+$SIG{'HUP' } = sub {
+	print "GOT SIGHUP - RESTART ...\n";
+	&restart;
+};
+#$SIG{'HUP' } = 'IGNORE';
+
+#sigaction_set('INT', \&stop, 1);
+#sigaction_set('INT', 'IGNORE', 1);
+
+#my $sigset = POSIX::SigSet->new();
+##my $action = POSIX::SigAction->new('stop');
+#my $action = POSIX::SigAction->new(\&stop, $sigset, &POSIX::SA_NODEFER);
+#POSIX::sigaction(&POSIX::SIGINT, $action)
+#	or die "Error setting SIG handler ($!)\n";
+
+
+
+
+sub daemonize
+{
+	#chdir '/'                  or die "Can't chdir to \"/\" ($!)";
+		# somehow breaks things
+	close(STDIN);
+	open STDIN , '</dev/null'  or die "Can't read /dev/null ($!)";
+	close(STDOUT);
+	open STDOUT, '>>/dev/null' or die "Can't write to /dev/null ($!)";
+	defined(my $pid = fork())  or die "Can't fork ($!)";
+	if ($pid) {exit 0;}
+	POSIX::setsid()            or die "Can't start a new session ($!)";
+	close(STDERR);
+	open STDERR, '>&STDOUT'    or die "Can't dup stdout ($!)";
+	open STDOUT, '>>/dev/null' or die "Can't write to /dev/null ($!)";
+}
+if (!$ARGV[0] || $ARGV[0] ne '--nofork') {
+	daemonize();
+}
+
+
+sub ami_listen
+{
+	my($host, $user, $secret, $port) = @_;
+	
+	#my $ami = AstMan->new('192.168.1.130', 'extstated', 'secret', 5038);
+	my $ami = AstMan->new($host, $user, $secret, $port);
+	
+	#print $ami->{user}, "\n";
+	
+	$ami->debug(0);
+	$ami->register_loggedin_cb( \&handle_loggedin );
+	my @eventtypes = ('extensionstatus','newexten');
+	$ami->register_event_cb( \&handle_event, \@eventtypes );
+	$ami->register_response_cb( \&handle_response );
+	
+	my $clear_str = `clear`;
+	
+	my $run = 1;
+	my $cnt = 0;
+	while ($run) {
+		$ami->run_one_timeslice();
+		++$cnt;
+		if ($cnt==6000) {
+			$cnt = 0;
+			#$ami->request_extstate('2001', $ask_in_context);
+			#$ami->request_extstate('4001', $ask_in_context);
+			$ami->request_hints();
+		}
+		threads::yield();
+	}
+}
+
+$|=1;
+
+
+foreach my $asterisk (@asterisks) {
+	my $thr = threads->create( \&ami_listen, $asterisk->{'host'}, $asterisk->{'user'}, $asterisk->{'secret'}, $asterisk->{'port'} );
+	$thr->detach();
+	push(@ami_threads, $thr);
+}
+
+
+
+#print "STARTING THREAD\n";
+#our $ami_thread = threads->create( \&ami_listen );
+#$ami_thread->detach();
+#sleep(1);
+#print "THREAD STARTED\n";
+#for (1..10) {print ",";sleep(1);}
+#$ami_thread->join();
+#print "THREAD ENDED\n";
+#&ami_listen;
+
+
+
+
+#while (1) {
+#	print "########################################\n";
+#	my $ext;
+#	my $stateval;
+#	while (($ext, $stateval) = each(%extstates)) {
+#		print "  -   ". $ext ." : ". $stateval ."\n";
+#	}
+#	print "########################################\n";
+#	sleep(1);
+#}
+
+
+
+my @read_ready;
+my @write_ready;
+my $client;
+my $new_client;
+my $line;
+my $ext;
+my $stateval;
+my $out_all = '';
+my $out_mod = '';
+my $tmp = '';
+my $is_external = 0;
+my $from_time = 0;
+my $time = 0;
+#while ( @read_ready = $sel->can_read() ) { # blocks
+my %conn_close;
+
+while (1) {
+	
+	$time = time();
+	$from_time = $time - 5;
+	
+	$out_all = "{";
+	$out_mod = "{";
+	while (($ext, $stateval) = each(%extstates)) {
+		$is_external = $chanremotes{$ext} || 0;
+		$tmp = $ext .":{s:". $stateval . ($is_external ? ",e:1" : "") ."},";
+		$out_all .= $tmp;
+		if ($lastchanged{$ext} > $from_time) {
+			$out_mod .= $tmp;
+		}
+	}
+	if (substr($out_all,-1) eq ',') { $out_all = substr($out_all,0,-1); }
+	$out_all .= "}";
+	
+	#if ($out_mod eq "{") {$out_mod .= "0:{s:0},";}
+	#for (my $e=100; $e<=999; ++$e) {
+	#	if (rand(40) > 1) {next;}
+	#	$out_mod .= "$e:{s:";
+	#	my $rnd = rand(18);
+	#	if    ($rnd < 13) {$out_mod .= "-1";}
+	#	elsif ($rnd < 14) {$out_mod .= "4";}
+	#	elsif ($rnd < 15) {$out_mod .= "8";}
+	#	elsif ($rnd < 16) {$out_mod .= "0";}
+	#	else             {$out_mod .= "1";}
+	#	$rnd = rand(2);
+	#	if ($rnd < 1) {$out_mod .= ",e:1";}
+	#	$out_mod .= "},";
+	#}
+	
+	if (substr($out_mod,-1) eq ',') { $out_mod = substr($out_mod,0,-1); }
+	$out_mod .= "}";
+		
+	@read_ready = $sel->can_read(0);
+	#my @data;
+	
+	foreach $client (@read_ready) {
+		if ($client == $srv_sock) {
+			# Create a new socket
+			$new_client = $srv_sock->accept();
+			$sel->add($new_client);
+			#push( @data, fileno($new_client) . " has joined.");
+			#print "Client connected from " . $new_client->peerhost . "\n";
+			&usleep(10000);  # 0.01 s
+			$conn_close{fileno($new_client)} = $time + $conn_time;
+			#print $new_client "HTTP/1.0 200 OK\r\n";
+			#print $new_client "Server: ast_extstated/0.2\r\n";
+			#print $new_client "Content-Type: application/json\r\n";
+			#print $new_client "Connection: Close\r\n";
+			#print $new_client "\r\n";
+			print $new_client ($out_all ."\n==\n");
+		} else {
+			# Handle connection
+			my $input = <$client>;
+			if ($input) {chomp $input;}
+			if (!$input || $input eq '') {
+				#push( @data, fileno($client) . " has left.");
+				if ($new_client && $new_client->peerhost) {
+					#print "Client " . $new_client->peerhost . " disconnected\n";
+				} else {
+					#print "Client disconnected\n";
+				}
+				$sel->remove($client);
+				delete $conn_close{fileno($client)};
+				$client->close();
+			}
+			else {
+				#my $output = fileno($client) . ": $input";
+				#push( @data, $output );
+			}
+		}
+	}
+	
+	# Write to the clients that are available
+	foreach $client ( @write_ready = $sel->can_write(0) ) {
+		#foreach $line (@data) {
+		#	print $client "$line\0";
+		#}
+		#print "Sending update to client ". fileno($client) ."\n";
+		print $client ($out_mod ."\n==\n");
+		
+		#print "Connection will end at ". $conn_close{fileno($client)} ."\n";
+		if ($conn_close{fileno($client)} < $time) {
+			#print "END.\n";
+			&usleep(1000);  # 0.001 s
+			if ($new_client && $new_client->peerhost) {
+				#print "Client " . $new_client->peerhost . " disconnected\n";
+			} else {
+				#print "Client disconnected\n";
+			}
+			$sel->remove($client);
+			delete $conn_close{fileno($client)};
+			$client->close();
+		}
+	}
+	
+	#while (my($clnum, $conn_end) = each(%conn_close)) {
+	#	print "connection for $clnum ends at $conn_end\n";
+	#}
+	
+	#undef @data;
+	#sleep(1);
+	&usleep(500000);  # 0.5 s
+}
+
+
+while (1) {sleep(1);}
+sleep(1);
