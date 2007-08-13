@@ -188,6 +188,10 @@ define( 'GS_CALL_INIT_FROM_NET', '192.168.1.0/24' );
 # e.g.: '127.0.0.1, 192.168.1.130/255.255.255.0, 192.168.1.130/24'
 # allow all: '0.0.0.0/0', allow none: '0.0.0.0/32'
 
+define( 'GS_MONITOR_FROM_NET', '192.168.1.0/24' );
+# allow access to the extension monitor panel from these network
+# ranges
+
 define( 'GS_LVM_USER_6_DIGIT_INT', false );
 # compare user names as 6 digit integers (padded with zeros (0) on
 # the left. currently used by htdocs/prov/call-init.php and
