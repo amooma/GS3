@@ -52,7 +52,8 @@ function gs_log( $level, $msg, $logfile=null )
 		}
 		$logfiles[$logfile] = @ fOpen($logfile, 'ab');  # probably permission denied
 		if (! $logfiles[$logfile]) return false;
-		@chmod($logfile, 00666);  # in octal mode!
+		//@chmod($logfile, 0666);  # in octal mode!
+		@exec('sudo chmod 0666 '. escapeShellArg($logfile) .' 1>>/dev/null 2>>/dev/null');
 	}
 	$vLevel = @ $levels[$level];
 	if (! $vLevel) $vLevel = 'UNKNOWN';
