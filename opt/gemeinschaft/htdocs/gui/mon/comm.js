@@ -286,27 +286,43 @@ function handle_msg( req, msg )
 	try{ $('mon-status').innerHTML = 'Online'; }catch(e){}
 }
 
+var areq = null;
+
 function req_msg_stream()
 {
 	//req_start = (new Date).getTime();
-	new AjaxReq( 'proxy.php', {
+	areq = new AjaxReq( 'proxy.php', {
 		'connect_timeout': 5,
 		'msgsep': "\n==\n",
 		'onMsg' : handle_msg,
 		'onOk'  : function(){
-			window.setTimeout('req_msg_stream();', 10);
+			cleanup();
+			window.setTimeout('req_msg_stream();', 50);
 		},
 		'onErr' : function(){
 			try{
 				$('mon-status').innerHTML = '<span style="background:#f10; color:#fff;">OFFLINE</span>';
 			}catch(e){}
+			cleanup();
 			window.setTimeout('req_msg_stream();', 3000);
 		}
 	});
 }
 
+function cleanup()
+{
+	// try to avoid memory leaks
+	areq.x.onreadystatechange = null;
+	areq.x = null;
+	delete(areq.x);
+	areq = null;
+}
+
 Event.observe(window, 'load', function(){
 	window.setTimeout('req_msg_stream();', 250);
+});
+Event.observe(window, 'pageshow', function(){
+	window.setTimeout('if (!areq) req_msg_stream();', 500);
 });
 
 
