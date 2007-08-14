@@ -247,4 +247,10 @@ function gs_get_conf( $key )
 # in every file
 include_once( GS_DIR .'inc/gettext.php' );
 
+if (function_exists('date_default_timezone_set')) {
+	# PHP >= 5.1.0
+	# needed by date()
+	@date_default_timezone_set( @date_default_timezone_get() );
+}
+
 ?>
