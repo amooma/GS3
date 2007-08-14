@@ -52,9 +52,9 @@ function err_handler_die_on_err( $type, $msg, $file, $line )
 			break;
 		case E_STRICT:
 			if (error_reporting() != 0) {
-				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line );
+				gs_log( GS_LOG_DEBUG, 'PHP (Strict): '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
-				//gs_log( GS_LOG_DEBUG , 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
+				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
 			}
 			break;
 		case E_ERROR:
@@ -84,9 +84,9 @@ function err_handler_quiet( $type, $msg, $file, $line )
 			break;
 		case E_STRICT:
 			if (error_reporting() != 0) {
-				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line );
+				gs_log( GS_LOG_DEBUG, 'PHP (Strict): '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
-				//gs_log( GS_LOG_DEBUG , 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
+				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
 			}
 			break;
 		default:
