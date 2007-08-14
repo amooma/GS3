@@ -27,8 +27,11 @@ max_execution_time = 300      ; nicht immer läßt sich im Skript noch dieses
 
 memory_limit = 16M
 
-error_reporting = 0           ; keine Fehlermeldungen auf dem Produktivsystem
 display_errors = Off
+error_reporting = 0           ; keine Fehlermeldungen auf dem Produktivsystem
+; Entwickler:
+;error_reporting = E_ALL             ; bei PHP 4
+;error_reporting = E_ALL &amp; E_STRICT  ; bei PHP 5
 
 magic_quotes_gpc = Off        ; diese vermeintlichen Sicherheitseinstellungen für
 magic_quotes_runtime = Off    ; faule Programmierer führen immer zu Problemen.
