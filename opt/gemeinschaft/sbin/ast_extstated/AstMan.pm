@@ -33,6 +33,7 @@ require 5.6.0;
 use Socket qw(:DEFAULT);
 use POSIX ();
 use Fcntl ();
+use lib qw(/opt/gemeinschaft/sbin/ast_extstated); # set @INC
 use Trim;
 use Time::HiRes qw(usleep);
 #use Thread qw(yield);

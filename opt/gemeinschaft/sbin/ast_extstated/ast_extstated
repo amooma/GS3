@@ -37,6 +37,7 @@ use POSIX ();
 use Config;
 use diagnostics;
 use Time::HiRes qw(usleep);
+use lib qw(/opt/gemeinschaft/sbin/ast_extstated); # set @INC
 use AstMan ();
 require 'strings.pl';
 require 'read_conf.pl';
