@@ -32,6 +32,9 @@ error_reporting = 0           ; keine Fehlermeldungen auf dem Produktivsystem
 ; Entwickler:
 ;error_reporting = E_ALL             ; bei PHP 4
 ;error_reporting = E_ALL &amp; E_STRICT  ; bei PHP 5
+ignore_repeated_errors = On   ; mehrfache gleiche Fehler ignorieren
+ignore_repeated_source = Off
+html_errors = Off             ; kein HTML in Fehlermeldungen
 
 magic_quotes_gpc = Off        ; diese vermeintlichen Sicherheitseinstellungen für
 magic_quotes_runtime = Off    ; faule Programmierer führen immer zu Problemen.
