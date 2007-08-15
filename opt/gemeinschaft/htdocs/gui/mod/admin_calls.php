@@ -154,7 +154,7 @@ $rs = $DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
 	DATE_FORMAT(`calldate`, \'%d.%m.%Y %H:%i:%s\') `datum`, `clid`, `src`, `dst`, `duration`, `billsec`, `disposition` 
 FROM `ast_cdr` '. query_string($period, $src, $dst, $dur, $stat) .'
-ORDER BY `calldate`
+ORDER BY `calldate` DESC
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 );
 
