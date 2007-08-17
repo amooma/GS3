@@ -106,6 +106,10 @@ define( 'GS_GUI_SUDO_EXTENDED', false );
 define( 'GS_GUI_QUEUE_SHOW_NUM_CALLS', false );
 # show number of completed calls for each member in Monitor->Queues
 
+define( 'GS_GUI_MON_NOQUEUEBLUE', true );
+# used in Monitor->Peers. if true idle users who are not member
+# of a queue get a blue led instead of a green one
+
 
 /***********************************************************
 *    EXTERNAL NUMBERS BACKEND
