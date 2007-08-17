@@ -138,12 +138,12 @@ while ($user = $rs_users->fetchRow()) {
 	$extinfos[$user['ext']]['info'] = $user;
 	$extinfos[$user['ext']]['state'] = $extstate;
 	$extstatev = _extstate2v( $extstate );
-	//if (L V M H A C K) {
-	if ($extstate == AST_MGR_EXT_IDLE && count($queues) < 1) {
-		# blue LED for available users who are not member of a queue
-		$extstatev['s'] = 'blue';
+	if (defined('GS_GUI_MON_NOQUEUEBLUE') && GS_GUI_MON_NOQUEUEBLUE) {
+		if ($extstate == AST_MGR_EXT_IDLE && count($queues) < 1) {
+			# blue LED for available users who are not member of a queue
+			$extstatev['s'] = 'blue';
+		}
 	}
-	//}
 	
 	if (@$extstatev['s']) {
 		$img = '<img alt="" src="'. GS_URL_PATH;
