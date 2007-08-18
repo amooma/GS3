@@ -62,11 +62,17 @@ function gs_log( $level, $msg, $logfile=null )
 	$dateFn = GS_LOG_GMT ? 'gmDate' : 'date';
 	$backtrace = debug_backtrace();
 	if (is_array($backtrace) && isSet($backtrace[0])) {
-		$where = str_replace(GS_DIR, '', @$backtrace[0]['file']) .':'. @$backtrace[0]['line'] .':';
+		$line = @$backtrace[0]['line'];
+		if (strLen($line) < 4)
+			$line = str_pad($line, 4, ' ', STR_PAD_LEFT);
+		$file = @$backtrace[0]['file'];
+		if (subStr($file, 0, strLen(GS_DIR)) == GS_DIR)
+			$file = str_replace(GS_DIR, '', $file);
+		$where = $file .':'. $line .':';
 	} else
 		$where = '';
 	$msg = $dateFn('Y-m-d H:i:s') .' ['. $vLevel .'] '. $where .' '. $msg ."\n";
-	return @ fWrite( $logfiles[$logfile], $msg, strLen($msg) );
+	return @fWrite( $logfiles[$logfile], $msg, strLen($msg) );
 }
 
 
