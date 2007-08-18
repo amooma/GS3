@@ -163,6 +163,9 @@ define( 'GS_PROV_DIAL_LOG_LIFE', 7*24*3600 );
 # for how long to keep the dial log entries (dialed, missed,
 # in) - CDR will be stored forever
 
+define( 'GS_PROV_SNOM_PB_NUM_RESULTS', 15 );
+# number of results in phonebook search on Snom phone
+
 
 /***********************************************************
 *    DIALPLAN SETTINGS

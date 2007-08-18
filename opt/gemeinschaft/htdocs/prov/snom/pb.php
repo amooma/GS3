@@ -176,6 +176,8 @@ function defineBackKey() {
 }
 
 
+$num_results = defined('GS_PROV_SNOM_PB_NUM_RESULTS')
+	? (int)GS_PROV_SNOM_PB_NUM_RESULTS : 10;
 
 if ($type == 'imported') {
 	
@@ -210,7 +212,7 @@ if ($type == 'imported') {
 FROM `pb_ldap`
 '. ($where ? ('WHERE ('. $where .')') : '') .'
 ORDER BY `lastname`, `firstname`
-LIMIT 10';
+LIMIT '. $num_results;
 	$rs = $db->execute($query);
 	if ($rs->numRows() !== 0) {
 		
@@ -281,7 +283,7 @@ WHERE
 	`u`.`nobody_index` IS NULL
 	'. ($where ? ('AND ('. $where .')') : '') .'
 ORDER BY `u`.`lastname`, `u`.`firstname`
-LIMIT 10';
+LIMIT '. $num_results;
 	$rs = $db->execute($query);
 	if ($rs->numRows() !== 0) {
 		
@@ -374,7 +376,7 @@ WHERE
 	`user_id`='. $user_id .'
 	'. ($where ? ('AND ('. $where .')') : '') .'
 ORDER BY `lastname`, `firstname`
-LIMIT 10';
+LIMIT '. $num_results;
 	$rs = $db->execute($query);
 	if ($rs->numRows() !== 0) {
 		
