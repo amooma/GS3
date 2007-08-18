@@ -35,8 +35,9 @@ macro check-valid-extension( mext ) {
 	Verbose(1,### Incoming call to ${mext});
 	if ("${user_id}" != "") {
 		// from internal user, store dial log (out)
-		if ("${forwarded_by}" = "") {
+		if ("${forwarded_by}" = "" && "${forwards}" < "1" && "${origext}" = "") {
 			// only if this is the dialed number
+			// origext will be set later
 			&dial-log-store(${user_name},out,${mext});
 		}
 	}
@@ -200,12 +201,23 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 	_Z. => {
-		if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
+		if ("${is_from_gateway}" = "1" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
 			// not sure why this works because the "parent" context was
 			// "from-gateway" but obviously we are now in context
 			// "to-internal-users". well, it works :-)
 			Verbose(1,### Incoming call from the gateway to ${EXTEN});
 			Set(__is_from_gateway=1);
+		}
+		else if ("${CHANNEL(channeltype)}" = "SIP") {
+			// this needs to be nested because Asterisk would otherwise complain
+			// ("function_sipchaninfo_read: This function can only be used on SIP channels")
+			if ("${SIPCHANINFO(peername)}" = "gateway") {
+				Verbose(1,### Incoming call from the gateway to ${EXTEN});
+				Set(__is_from_gateway=1);
+			}
+			else {
+				Set(__is_from_gateway=);
+			}
 		}
 		else {
 			Set(__is_from_gateway=);
@@ -364,6 +376,7 @@ context to-internal-users-self {
 	_**Z. => {
 		Set(box=${EXTEN:2});
 		Set(origext=${box});
+		Set(CHANNEL(language)=de);
 		Verbose(1,### Direct dial to mailbox ${box} on this node);
 		Set(__is_call_from=internal);
 		
@@ -399,6 +412,7 @@ context to-internal-users-self {
 		
 		Verbose(1,### Incoming call to ${EXTEN} at this node);
 		
+		Set(CHANNEL(language)=de);
 		if ("${from_node}" = "yes") {
 			Verbose(1,### Incoming call to ${EXTEN} is from another node);
 			if ("${CHANNEL(channeltype)}" = "SIP") {
@@ -871,7 +885,7 @@ context to-internal-users-self {
 			Verbose(1,###### CALLERID(dnid) : ${CALLERID(dnid)});
 			Verbose(1,###### CALLERID(rdnis): ${CALLERID(rdnis)});
 			*/
-			if ("${CALLERID(dnid)}" != "")
+			if ("${CALLERID(dnid)}" != "" && "${DIALEDPEERNUMBER:0:1}" != "*")
 				&dial-log-store(${origext},${type},${user_name});
 		}
 	}
@@ -884,6 +898,7 @@ context program-cc {
 	
 	offer => {
 		Answer();
+		Set(CHANNEL(language)=de);
 		Wait(0.5);
 		Set(TIMEOUT(digit)=5);
 		Set(TIMEOUT(response)=10);
@@ -900,6 +915,7 @@ context program-cc {
 	}
 	1 => {
 		Verbose(1,### Caller wants to leave voicemail for user ${cc_to_ext});
+		Set(CHANNEL(language)=de);
 		//Playback(beep);
 		if ("${vm_${vm_source}_active}" = "1") {
 			if ("${is_callcompletion}" = "1") {
@@ -913,6 +929,7 @@ context program-cc {
 	}
 	* => {
 		Verbose(1,### Caller wants call completion to user ${cc_to_ext});
+		Set(CHANNEL(language)=de);
 		AGI(/opt/gemeinschaft/dialplan-scripts/cc-program.agi|${user_name}|${cc_to_ext});
 		Verbose(1,### Call completion programmed?: ${cc_programmed});
 		if ("${cc_programmed}" = "1") {
