@@ -54,23 +54,20 @@ function _ob_send()
 	die();
 }
 
-function getUserID( $user )
+function getUserID( $ext )
 {
 	global $db;
 	
-	if (! preg_match('/^\d+$/', $user))
+	if (! preg_match('/^\d+$/', $ext))
 		_err( 'Invalid username' );
 	
-	# get user_id
-	#
-	$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
+	$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 	if ($user_id < 1)
 		_err( 'Unknown user' );
-	
 	return $user_id;
 }
 
-$type = trim( @ $_REQUEST['t'] );
+$type = trim( @$_REQUEST['t'] );
 if (! in_array( $type, array('gs','prv','imported'), true )) {
 	$type = false;
 }
