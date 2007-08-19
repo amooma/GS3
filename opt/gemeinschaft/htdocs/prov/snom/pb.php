@@ -28,8 +28,21 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 
+require_once( '../../../inc/conf.php' );
+require_once( GS_DIR .'inc/db_connect.php' );
+
 header( 'Content-Type: text/xml; charset=utf-8' );
 header( 'Expires: 0' );
+
+
+function snomXmlEsc($str) {
+	return str_replace(
+		array('<', '>', '"'   , "\n"),
+		array('_', '_', '\'\'', ' ' ),
+	$str);
+	# the stupid Snom does not understand &lt;, &gt, &amp;, &quot; or &apos;
+	# - neither as named nor as numbered entities
+}
 
 function _err( $msg='' )
 {
@@ -72,18 +85,6 @@ if (! in_array( $type, array('gs','prv','imported'), true )) {
 	$type = false;
 }
 
-function snomXmlEsc($str) {
-	return str_replace(
-		array('<', '>', '"'   , "\n"),
-		array('_', '_', '\'\'', ' ' ),
-	$str);
-	# the stupid Snom does not understand &lt;, &gt, &amp;, &quot; or &apos;
-	# - neither as named nor as numbered entities
-}
-
-
-require_once( '../../../inc/conf.php' );
-require_once( GS_DIR .'inc/db_connect.php' );
 
 $db = gs_db_slave_connect();
 
