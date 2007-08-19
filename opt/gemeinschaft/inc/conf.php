@@ -244,9 +244,9 @@ define( 'GS_LOG_GMT'    , true );  # use GMT or local time
 ***********************************************************/
 
 
-function gs_get_conf( $key )
+function gs_get_conf( $key, $default=null )
 {
-	return defined($key) ? constant($key) : null;
+	return @defined($key) ? constant($key) : $default;
 }
 
 
