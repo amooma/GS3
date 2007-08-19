@@ -26,6 +26,9 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+# caution: earlier versions of Snom firmware do not like
+# indented XML
+
 define( 'GS_VALID', true );  /// this is a parent file
 
 require_once( '../../../inc/conf.php' );
@@ -61,11 +64,11 @@ function _err( $msg='' )
 {
 	@ob_end_clean();
 	ob_start();
-	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
-	echo '<SnomIPPhoneText>', "\n",
-	     '<Title>', 'Error', '</Title>', "\n";
-	echo '<Text>', snomXmlEsc( 'Error: '. $msg ), '</Text>', "\n";
-	echo '</SnomIPPhoneText>', "\n";
+	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
+	     '<SnomIPPhoneText>', "\n",
+	     '<Title>', 'Error', '</Title>', "\n",
+	     '<Text>', snomXmlEsc( 'Error: '. $msg ), '</Text>', "\n",
+	     '</SnomIPPhoneText>', "\n";
 	_ob_send();
 }
 
@@ -129,8 +132,8 @@ if (! $type) {
 	$user_id = getUserID( $user );
 	
 	ob_start();
-	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
-	echo '<SnomIPPhoneMenu>', "\n",
+	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
+	     '<SnomIPPhoneMenu>', "\n",
 	     '<Title>Telefonbuch</Title>', "\n\n";
 	foreach ($typeToTitle as $t => $title) {
 		echo '<MenuItem>', "\n",
@@ -291,7 +294,6 @@ LIMIT '. $num_results;
 		echo '<SnomIPPhoneDirectory>', "\n",
 		     '<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
 		     '<Prompt>Prompt</Prompt>', "\n";
-		
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$number = $r['ext'];
@@ -307,8 +309,8 @@ LIMIT '. $num_results;
 		
 		echo '<SnomIPPhoneText>', "\n",
 		     '<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
-		     '<Prompt>Prompt</Prompt>', "\n";
-		echo '<Text>', snomXmlEsc( "Keine Treffer f\xC3\xBCr \"$keys\". Dr\xC3\xBCcken Sie # um die letzte Eingabe zu widerrufen." ), '</Text>', "\n";
+		     '<Prompt>Prompt</Prompt>', "\n",
+		     '<Text>', snomXmlEsc( "Keine Treffer f\xC3\xBCr \"$keys\". Dr\xC3\xBCcken Sie # um die letzte Eingabe zu widerrufen." ), '</Text>', "\n";
 		defineBackKey();
 		echo '</SnomIPPhoneText>', "\n";
 		
