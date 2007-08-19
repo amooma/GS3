@@ -33,6 +33,9 @@ require_once( GS_DIR .'inc/db_connect.php' );
 
 header( 'Content-Type: text/xml; charset=utf-8' );
 header( 'Expires: 0' );
+header( 'Pragma: no-cache' );
+header( 'Cache-Control: private, no-cache, must-revalidate' );
+header( 'Vary: *' );
 
 
 function snomXmlEsc($str) {
