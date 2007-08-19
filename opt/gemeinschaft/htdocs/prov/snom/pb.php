@@ -44,6 +44,17 @@ function snomXmlEsc($str) {
 	# - neither as named nor as numbered entities
 }
 
+function _ob_send()
+{
+	if (! headers_sent()) {
+		header( 'Content-Type: text/xml; charset=utf-8' );
+		header( 'Expires: 0' );
+		header( 'Content-Length: '. (int)@ob_get_length() );
+	}
+	@ob_end_flush();
+	die();
+}
+
 function _err( $msg='' )
 {
 	@ob_end_clean();
@@ -54,17 +65,6 @@ function _err( $msg='' )
 	echo '<Text>', snomXmlEsc( 'Error: '. $msg ), '</Text>', "\n";
 	echo '</SnomIPPhoneText>', "\n";
 	_ob_send();
-}
-
-function _ob_send()
-{
-	if (! headers_sent()) {
-		header( 'Content-Type: text/xml; charset=utf-8' );
-		header( 'Expires: 0' );
-		header( 'Content-Length: '. (int)@ob_get_length() );
-	}
-	@ob_end_flush();
-	die();
 }
 
 function getUserID( $ext )
