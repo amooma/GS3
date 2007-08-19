@@ -99,13 +99,17 @@ $typeToTitle = array(
 );
 */
 $tmp = array(
-	15=>array( 'k' => 'gs' , 'v' => "Intern"            ),
-	25=>array( 'k' => 'prv', 'v' => "Pers\xC3\xB6nlich" )
+	15=>array('k' => 'gs' ,
+		      'v' => gs_get_conf('GS_PB_INTERNAL_TITLE', "Intern") ),
+	25=>array('k' => 'prv',
+	          'v' => gs_get_conf('GS_PB_PRIVATE_TITLE', "Pers\xC3\xB6nlich" ) )
 );
 if (gs_get_conf('GS_PB_IMPORTED_USE')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
-	$tmp[$pos] =
-		array( 'k' => 'imported', 'v' => gs_get_conf('GS_PB_IMPORTED_TITLE') );
+	$tmp[$pos] = array(
+		'k' => 'imported',
+		'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', "Importiert")
+	);
 }
 kSort($tmp);
 foreach ($tmp as $arr) {
@@ -117,6 +121,7 @@ $url_snom_pb = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':
 
 
 
+#################################### INITIAL SCREEN {
 if (! $type) {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
@@ -139,6 +144,7 @@ if (! $type) {
 	_ob_send();
 	
 }
+#################################### INITIAL SCREEN }
 
 
 
@@ -239,9 +245,11 @@ function defineBackKey()
 }
 
 
-$num_results = defined('GS_PROV_SNOM_PB_NUM_RESULTS')
-	? (int)GS_PROV_SNOM_PB_NUM_RESULTS : 10;
+$num_results = (int)gs_get_conf('GS_PROV_SNOM_PB_NUM_RESULTS', 10);
 
+
+
+#################################### IMPORTED PHONEBOOK {
 if ($type == 'imported') {
 	
 	// we don't need $user for this
@@ -307,9 +315,11 @@ LIMIT '. $num_results;
 	}
 	_ob_send();
 }
+#################################### IMPORTED PHONEBOOK }
 
 
 
+#################################### INTERNAL PHONEBOOK {
 if ($type == 'gs') {
 	
 	// we don't need $user for this
@@ -379,9 +389,11 @@ LIMIT '. $num_results;
 	}
 	_ob_send();
 }
+#################################### INTERNAL PHONEBOOK }
 
 
 
+#################################### PRIVATE PHONEBOOK {
 if ($type == 'prv') {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
@@ -477,6 +489,7 @@ LIMIT '. $num_results;
 	}
 	_ob_send();
 }
+#################################### PRIVATE PHONEBOOK }
 
 
 ?>
