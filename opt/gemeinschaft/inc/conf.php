@@ -224,9 +224,17 @@ define( 'GS_USERCOMMENT_OFFTIME', 'Feierabend' );  # i.e. "off-time"
 
 define( 'GS_EMAIL_PATTERN_VALID', '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i' );
 
+
+/***********************************************************
+*    PHONEBOOK
+***********************************************************/
+
 define( 'GS_PB_IMPORTED_USE'  , false );
 define( 'GS_PB_IMPORTED_ORDER', 2 );  # 1|2|3
-define( 'GS_PB_IMPORTED_TITLE', "Firma (aus LDAP)" );  # short! no HTML entities!
+define( 'GS_PB_IMPORTED_TITLE', "Firma (aus LDAP)"  );  # short! no HTML entities!
+
+define( 'GS_PB_INTERNAL_TITLE', "Intern"            );  #  "
+define( 'GS_PB_PRIVATE_TITLE' , "Pers\xC3\xB6nlich" );  #  "
 
 
 /***********************************************************
