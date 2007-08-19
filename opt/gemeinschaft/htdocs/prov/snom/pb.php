@@ -51,7 +51,6 @@ function _ob_send()
 {
 	if (! headers_sent()) {
 		header( 'Content-Type: text/xml; charset=utf-8' );
-		header( 'Expires: 0' );
 		header( 'Content-Length: '. (int)@ob_get_length() );
 	}
 	@ob_end_flush();
