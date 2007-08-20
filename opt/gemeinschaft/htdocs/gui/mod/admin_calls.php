@@ -161,8 +161,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 $num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
-$sum_calltime = (int)@$DB->executeGetOne( 'SELECT SUM(`billsec`) FROM `ast_cdr` '.query_string($period, $src, $dst, $dur, $stat));
-$sum_phonetime =(int)@$DB->executeGetOne( 'SELECT SUM(`duration`) FROM `ast_cdr` '.query_string($period, $src, $dst, $dur, $stat));
+$sum_talktime = (int)@$DB->executeGetOne( 'SELECT SUM(`billsec`) FROM `ast_cdr` '.query_string($period, $src, $dst, $dur, $stat));
+$sum_calltime = (int)@$DB->executeGetOne( 'SELECT SUM(`duration`) FROM `ast_cdr` '.query_string($period, $src, $dst, $dur, $stat));
 // $num_total_not_null = (int) $DB->executeGetOne( 'SELECT COUNT(*) FROM `ast_cdr` WHERE `billsec` > 0');
 
 
@@ -331,19 +331,31 @@ if (@$rs) {
 </tr>
 <tr>
 	<th><?php echo __('Anrufdauer insges.'); ?>:</th>
-	<td><?php echo sec_to_hours( $sum_calltime ); ?></td>
+	<td><?php echo sec_to_hours( $sum_talktime ); ?></td>
 </tr>
 <tr>
 	<th><?php echo __('Anrufdauer im Durchschnitt'); ?>:</th>
-	<td><?php if ($num_total > 0)
-		echo sec_to_hours( $sum_calltime / $num_total );
-		else echo '<i>', __('keine Anrufe'), '</i>';
-	?>
+	<td><?php
+
+$where = trim( query_string($period, $src, $dst, $dur, $stat) );
+if (strToUpper(subStr($where,0,5)) == 'WHERE')
+	$where = $where.' AND `billsec` > 0';
+else
+	$where = 'WHERE `billsec` > 0';
+
+$num_total_with_talktime = $DB->executeGetOne( 'SELECT COUNT(*) FROM `ast_cdr` '. $where );
+
+if ($num_total_with_talktime > 0)
+	echo sec_to_hours( $sum_talktime / $num_total_with_talktime );
+//else echo '<i>', __('keine Anrufe'), '</i>';
+else echo '<i>', sec_to_hours( 0 ), '</i>';
+
+?>
 	</td>
 </tr>
 <tr>
 	<th><?php echo __('Verbindungszeit'); ?>:</th>
-	<td><?php echo sec_to_hours( $sum_phonetime - $sum_calltime ); ?></td>
+	<td><?php echo sec_to_hours( $sum_calltime ); ?></td>
 </tr>
 </tbody>
 </table>
