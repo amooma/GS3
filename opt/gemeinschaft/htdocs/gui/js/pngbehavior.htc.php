@@ -74,8 +74,9 @@ function pngb_fix_png()
 	}
 	if (! new RegExp(pngb_blank_src).test(src)) pngb_real_src = src;
 	if (/\.png$/i.test(pngb_real_src)) {
-		element.style.width  = element.clientWidth +'px';
-		element.style.height = element.clientHeight +'px';
+		element.runtimeStyle.width  = element.clientWidth +'px';
+		element.runtimeStyle.height = element.clientHeight +'px';
+		element.runtimeStyle.border = '0 none transparent';
 		element.src = pngb_blank_src;
 		element.runtimeStyle.filter =
 			"progid:"+ filter +"("+
