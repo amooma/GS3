@@ -138,8 +138,8 @@ ORDER BY `m`.`interface`'
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:60px;"><?php echo __('Nummer'); ?></th>
-	<th style="width:200px;"><?php echo __('Name'); ?></th>
+	<th style="width:65px;"><?php echo __('Nummer'); ?></th>
+	<th style="width:203px;"><?php echo __('Name'); ?></th>
 	<th style="width:100px;"><?php echo __('Status'); ?></th>
 	<?php if (GS_GUI_QUEUE_SHOW_NUM_CALLS) { ?>
 	<th style="width:50px;" class="r"><?php echo __('Anrufe'); ?></th>
