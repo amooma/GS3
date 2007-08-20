@@ -95,13 +95,13 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
-<head><![CDATA[<!--
+<head><!--<![CDATA[
                 Gemeinschaft
   @(_)-----(_)  (c) 2007, amooma GmbH - http://www.amooma.de/
  @   / ### \    Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
-                                                      GNU GPL -->]]>
+                                                      GNU GPL ]]>-->
 <title><?php echo __('Gemeinschaft Telefon-Manager'); ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/original.css" />
@@ -109,9 +109,12 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
 <meta http-equiv="imagetoolbar" content="no" />
 <meta http-equiv="pragma" content="no-cache" />
 <meta http-equiv="cache-control" content="no-cache" />
+<!-- for stupid MSIE: -->
+<!--[if IE]><link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/msie-fix.css" /><![endif]-->
+<!--[if lte IE 6]><style type="text/css">img {behavior: url("js/pngbehavior.htc.php?msie-sucks=.htc");}</style><![endif]-->
 </head>
-
 <body>
+
 <div id="topheader"></div>
 <div id="headerboxes">
 <div id="boxtitle">
