@@ -74,7 +74,7 @@ body, input, select, table, td {
 #headerboxes {
 	height: 35px;
 	/*background: #b7976f url(../img/header-2.jpg) no-repeat;*/
-	background: /*#019362*/ /*#efc181*/ #b7976f;
+	background: #b7976f;
 	/*border-bottom: 1px solid #7a7a7a;*/
 	overflow: hidden;
 }
@@ -84,7 +84,7 @@ body, input, select, table, td {
 	margin: 1px 0 0 5px;
 }
 #boxtitle h1 {
-	color: /*#0a7*/ #fff;
+	color: #fff;
 	font-size: 20px;
 	line-height: 1.6em;
 	display: inline;
@@ -105,7 +105,7 @@ body, input, select, table, td {
 	background: #e0e0e0;
 	padding: 3px 0 2px 0;
 	font-size: 11px;
-	color: /*#986*/ #777;
+	color: #866;
 }
 #sudo-info .user-name {
 	color: #0a3;
@@ -169,7 +169,7 @@ h1 {
 }
 #content h3 {
 	font-weight: bold;
-	font-size: /*1em*/ 1.4em;
+	font-size: 1.4em;
 	margin: 0; padding: 0.1em 0 0.3em 0;
 	color: #963;
 	/*border-bottom: 1px solid #aaa;*/
@@ -298,7 +298,7 @@ th, td {
 	text-align: left;
 }
 th {
-	background: /*#dda*/ /*#efc181*/ /*#dde0b0*/ #dde7c4;
+	background: #dde7c4;
 	padding-top: 4px;
 	padding-bottom: 4px;
 	font-weight: bold;
