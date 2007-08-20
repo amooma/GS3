@@ -99,7 +99,7 @@ if (is_array($warnings) && count($warnings) > 0) {
 <thead>
 <tr>
 	<th style="width:100px;"><?php echo __('IP (stat.)'); ?></th>
-	<th style="width:100px;"><?php echo __('IP (dyn.)'); ?></th>
+	<th style="width:100px;"><?php echo __('IP (dyn.)'); ?> <sup>[1]</sup></th>
 	<th style="width:85px;"><?php echo __('Kommentar'); ?></th>
 	<th style="width:25px;"><?php echo __('ID'); ?></th>
 	<th style="width:60px;"><?php echo __('Rolle'); ?></th>
@@ -139,7 +139,7 @@ if (false) {
 		if ($node['watchdog'])
 			echo '<img alt="ja" src="', GS_URL_PATH, 'crystal-svg/16/act/ok.png" /><sup>&nbsp;</sup>';
 		else
-			echo '<img alt="nein" src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" /><sup>[1]</sup>';
+			echo '<img alt="nein" src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" /><sup>[2]</sup>';
 		echo '</td>';
 		
 		echo '<td class="r">';
@@ -188,7 +188,12 @@ if (false) {
 </table>
 
 <br />
-<sup>[1]</sup> <?php echo __('Nicht konfiguriert.'); ?>
+<br />
+
+<p style="max-width:500px;"><small><sup>[1]</sup> <?php echo __('FIXME. DIESEN STRING UEBERSETZEN. Dies ist die Adresse, die ggf. per Stonith &uuml;bernommen werden w&uuml;rde. (Die dynamische Adresse hat hier nichts mit DHCP zu tun.)'); ?></small></p>
+
+<p style="max-width:500px;"><small><sup>[2]</sup> <?php echo __('Nicht konfiguriert.'); ?></small></p>
+
 
 <?php
 /*
