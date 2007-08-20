@@ -88,6 +88,14 @@ if (! is_array($keys)) {
 
 ?>
 
+
+<div class="fr">
+	<?php echo __('Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu gestartet haben!'); ?>
+</div>
+<br style="clear:right;" />
+<br />
+
+
 <form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
 <input type="hidden" name="action" value="save" />
 
@@ -103,9 +111,8 @@ if (! is_array($keys)) {
 
 <?php
 
-
-$right = 6;
 $left = 0;
+$right = 6;
 for ($i=0; $i<12; ++$i) {
 	echo '<tr class="', ($i%2 ? 'even':'odd'), '">', "\n";
 	
@@ -130,6 +137,10 @@ for ($i=0; $i<12; ++$i) {
 		$val = $m[1];
 	}
 	*/
+	if (preg_match('/^\\*8/', $val, $m)) {
+		$val = 'PickUp';
+	}
+	
 	if (@$keyinfo['rw'])
 		echo '<input type="text" name="key-f', $knum, '" value="', htmlEnt($val), '" size="25" class="', ($i%2 ? 'l':'r'), '" maxlength="22" style="width:150px;" tabindex="', 5+$knum, '" />';
 	else
@@ -149,26 +160,128 @@ for ($i=0; $i<12; ++$i) {
 	else ++$right;
 }
 
-
 ?>
 
-<tr>
-	<td colspan="2" class="quickchars r">
-		<br />
-		<button type="submit">
-			<img alt="" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
-			<?php echo __('Speichern'); ?>
-		</button>
-	</td>
-</tr>
-<tr>
-	<td class="quickchars">&nbsp;</td>
-	<td class="quickchars">
-		<b><?php echo __('Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu gestartet haben!'); ?></b>
-	</td>
-</tr>
 </tbody>
 </table>
 
+<button type="submit" class="fr">
+	<img alt="" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+	<?php echo __('Speichern'); ?>
+</button>
+<br class="nofloat" />
+
+
+
+
+<div id="keys-snom-expansion-toggle" style="display:none; cursor:pointer; color:#00a;" href="" onclick="toggle_expansion();return false;">
+Expansion Module
+</div>
+
+<div id="keys-snom-expansion">
+<?php
+for ($row=0; $row<2; ++$row) {
+?>
+<br />
+<table cellspacing="1">
+<thead>
+<tr>
+	<th style="width:70px;" class="quickchars">&nbsp;</th>
+	<th style="width:340px;"><?php echo __('Tastenbelegung');
+	if     ($row==0) echo ' &nbsp; P 13 - 32';
+	elseif ($row==1) echo ' &nbsp; P 33 - 54';
+	?></th>
+	<th style="width:70px;" class="quickchars">&nbsp;</th>
+</tr>
+</thead>
+<tbody>
+
+<?php
+
+if     ($row==0) { $left = 12; $right = 23; }
+elseif ($row==1) { $left = 33; $right = 44; }
+
+for ($i=12; $i<33; ++$i) {
+	echo '<tr class="', ($i%2 ? 'even':'odd'), '">', "\n";
+	
+	$knum = ($i%2==0 ? $left : $right);
+	
+	$keyv = 'P'. str_replace(' ', '&nbsp;', str_pad($knum+1, 2, ' ', STR_PAD_LEFT));
+	
+	echo '<td', ($i%2==0 ? '':' style="background:transparent;"'), '>';
+	if ($i%2==0)
+		echo '<img alt="" src="', GS_URL_PATH, 'img/snom_fkleft_off.gif" /> ', $keyv;
+	else
+		echo '&nbsp;';
+	echo '</td>', "\n";
+	
+	echo '<td class="', ($i%2==0 ? 'l':'r'), '">', "\n";
+	$keyinfo = @$keys['f'.$knum];
+	if (! is_array($keyinfo)) $keyinfo = array();
+	$val = @$keyinfo['val'];
+	/*
+	if (preg_match('/:([^@]*)@/', $val, $m)) {
+		# i.e. "dest <sip:*800001@192.168.1.130>"
+		$val = $m[1];
+	}
+	*/
+	if (@$keyinfo['rw'])
+		echo '<input type="text" name="key-f', $knum, '" value="', htmlEnt($val), '" size="25" class="', ($i%2==0 ? 'l':'r'), '" maxlength="22" style="width:150px;" tabindex="', 5+$knum, '" />';
+	else
+		echo '<input type="text" name="key-f', $knum, '" value="', htmlEnt($val), '" size="25" class="', ($i%2==0 ? 'l':'r'), '" maxlength="22" style="width:150px;" tabindex="', 5+$knum, '" disabled="disabled" readonly="readonly" />';
+	echo '</td>', "\n";
+	
+	echo '<td class="r"', ($i%2==0 ? ' style="background:transparent;"':''), '>';
+	if ($i%2)
+		echo $keyv, ' <img alt="" src="', GS_URL_PATH, 'img/snom_fkright_off.gif" />';
+	else
+		echo '&nbsp;';
+	echo '</td>', "\n";
+	
+	echo '</tr>', "\n";
+	
+	if ($i%2==0) ++$left;
+	else ++$right;
+}
+
+?>
+
+</tbody>
+</table>
+
+<button type="submit" class="fr">
+	<img alt="" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+	<?php echo __('Speichern'); ?>
+</button>
+<br class="nofloat" />
+
+<?php
+}
+?>
+</div>
+
 </form>
 
+
+
+<script type="text/javascript">
+
+window.onload = function()
+{
+	var el = document.getElementById('keys-snom-expansion');
+	el.style.display = 'none';
+	var el = document.getElementById('keys-snom-expansion-toggle');
+	el.style.display = 'block';
+};
+
+function toggle_expansion()
+{
+	var el = document.getElementById('keys-snom-expansion');
+	if (el.style.display == 'block') {
+		el.style.display = 'none';
+	} else {
+		el.style.display = 'block';
+	}
+}
+
+</script>
