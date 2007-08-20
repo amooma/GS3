@@ -1,0 +1,97 @@
+<?php
+
+header( 'Content-Type: text/x-component' );
+
+?>
+<public:component lightWeight="true">
+<public:attach event="onpropertychange" onevent="pngb_property_changed()" />
+<public:attach event="onbeforeprint" onevent="pngb_before_print()" for="window" />
+<public:attach event="onafterprint" onevent="pngb_after_print()" for="window" />
+<script type="text/javascript" language="JavaScript">
+
+/*
+ * PNG Behavior
+ *
+ * This script was created by Erik Arvidsson (http://webfx.eae.net/contact.html#erik)
+ * for WebFX (http://webfx.eae.net)
+ * Copyright 2002-2004
+ *
+ * For usage see license at http://webfx.eae.net/license.html
+ *
+ * Version: 1.02
+ * Created: 2001-??-??	First working version
+ * Updated: 2002-03-28	Fixed issue when starting with a non png image and
+ *                      switching between non png images
+ *          2003-01-06	Fixed RegExp to correctly work with IE 5.0x
+ *          2004-05-09  When printing revert to original
+ *
+ */
+
+/*
+License info from the URL above: "we've decided to re-license our
+components under the Apache Software License 2.0, allowing anyone to
+use them free of charge."
+Some changes by me.
+-- Philipp Kempgen
+*/
+
+var pngb_blank_src = 'img/blank.gif';
+var pngb_real_src;
+var pngb_is_printing = false;
+var pngb_supported = element.nodeName.toUpperCase()=='IMG' &&
+	navigator.userAgent.match(/MSIE\s*(5\.5|6\.)/i) &&
+	navigator.platform.match(/^Win/i);
+var filter = 'DXImageTransform.Microsoft.AlphaImageLoader';
+
+function pngb_fix_png()
+{
+	var src = element.src;
+	if (src == pngb_real_src && /\.png$/i.test(src)) {
+		element.src = pngb_blank_src;
+		return;
+	}
+	if (! new RegExp(pngb_blank_src).test(src)) pngb_real_src = src;
+	if (/\.png$/i.test(pngb_real_src)) {
+		element.style.width  = element.clientWidth +'px';
+		element.style.height = element.clientHeight +'px';
+		element.src = pngb_blank_src;
+		element.runtimeStyle.filter =
+			"progid:"+ filter +"("+
+			"src='"+ src +"',sizingMethod='scale')";
+		if (element.filters && element.filters[filter])
+			element.filters[filter].enabled = true;
+		if (element.parentElement.href) element.style.cursor = 'pointer';
+	} else {
+		element.runtimeStyle.filter = "";
+	}
+}
+
+function pngb_before_print()
+{
+	pngb_is_printing = true;
+	element.src = pngb_real_src;
+	element.runtimeStyle.filter = "";
+	pngb_real_src = null;
+}
+
+function pngb_after_print()
+{
+	pngb_is_printing = false;
+	pngb_fix_png();
+}
+
+function pngb_property_changed()
+{
+	if (!pngb_supported || pngb_is_printing) return;
+	
+	var pName = event.propertyName;
+	if (pName != "src") return;
+	// if not set to blank
+	if (! new RegExp(pngb_blank_src).test(src))
+		pngb_fix_png();
+};
+
+if (pngb_supported) pngb_fix_png();
+
+</script>
+</public:component>

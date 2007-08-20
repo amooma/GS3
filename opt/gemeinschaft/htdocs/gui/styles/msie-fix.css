@@ -1,0 +1,32 @@
+/* $Revision$ */
+
+/*
+	Fix display in the broken Microsoft Internet Explorer
+*/
+
+#content-container {
+	position: absolute;
+	width: auto;
+	top: 50px;
+	left: 170px;
+	float:left;
+}
+#content {
+	width: auto;
+	padding: 1em 1.5em;
+	margin: 0;
+}
+
+#menu ul li ul {
+	display: none;
+}
+#menu ul li.expanded ul {
+	display: block;
+}
+#menu li {
+	border-width: 1px 0 1px 0;
+	border-style: solid;
+	border-color: #eee #eee #ccc #eee;
+	margin: 0;
+}
+
