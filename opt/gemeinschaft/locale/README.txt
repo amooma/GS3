@@ -1,5 +1,8 @@
 
 
+Benötigt msgfmt !
+Debian: apt-get install gettext
+
 
 
 OLD:
