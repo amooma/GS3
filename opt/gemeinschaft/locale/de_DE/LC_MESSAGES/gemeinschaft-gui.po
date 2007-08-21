@@ -125,7 +125,7 @@ msgstr "Administration"
 msgid "&Uuml;bersicht"
 msgstr "&Uuml;bersicht"
 
-#: inc/modules.php:117 mod/admin_overview.php:71 mod/admin_user.php:261
+#: inc/modules.php:117 mod/admin_overview.php:71 mod/admin_users.php:261
 msgid "Benutzer"
 msgstr "Benutzer"
 
@@ -215,34 +215,34 @@ msgstr "Ziel"
 msgid "Anrufdauer"
 msgstr "Anrufdauer"
 
-#: mod/admin_calls.php:185 mod/admin_user.php:128 mod/diallog_in.php:79
+#: mod/admin_calls.php:185 mod/admin_users.php:128 mod/diallog_in.php:79
 #: mod/diallog_missed.php:79 mod/diallog_out.php:79 mod/pb_gs.php:117
 #: mod/pb_private.php:185
 msgid "Seite"
 msgstr "Seite"
 
-#: mod/admin_calls.php:191 mod/admin_user.php:156 mod/diallog_in.php:90
+#: mod/admin_calls.php:191 mod/admin_users.php:156 mod/diallog_in.php:90
 #: mod/diallog_missed.php:90 mod/diallog_out.php:90 mod/pb_gs.php:145
 #: mod/pb_private.php:213
 msgid "zur&uuml;ckbl&auml;ttern"
 msgstr "zur&uuml;ckbl&auml;ttern"
 
-#: mod/admin_calls.php:192 mod/admin_calls.php:196 mod/admin_user.php:157
-#: mod/admin_user.php:161 mod/diallog_in.php:91 mod/diallog_in.php:95
+#: mod/admin_calls.php:192 mod/admin_calls.php:196 mod/admin_users.php:157
+#: mod/admin_users.php:161 mod/diallog_in.php:91 mod/diallog_in.php:95
 #: mod/diallog_missed.php:91 mod/diallog_missed.php:95 mod/diallog_out.php:91
 #: mod/diallog_out.php:95 mod/pb_gs.php:146 mod/pb_gs.php:150
 #: mod/pb_private.php:214 mod/pb_private.php:218
 msgid "zur&uuml;ck"
 msgstr "zur&uuml;ck"
 
-#: mod/admin_calls.php:201 mod/admin_user.php:165 mod/diallog_in.php:99
+#: mod/admin_calls.php:201 mod/admin_users.php:165 mod/diallog_in.php:99
 #: mod/diallog_missed.php:99 mod/diallog_out.php:99 mod/pb_gs.php:154
 #: mod/pb_private.php:222
 msgid "weiterbl&auml;ttern"
 msgstr "weiterbl&auml;ttern"
 
-#: mod/admin_calls.php:202 mod/admin_calls.php:206 mod/admin_user.php:166
-#: mod/admin_user.php:170 mod/diallog_in.php:100 mod/diallog_in.php:104
+#: mod/admin_calls.php:202 mod/admin_calls.php:206 mod/admin_users.php:166
+#: mod/admin_users.php:170 mod/diallog_in.php:100 mod/diallog_in.php:104
 #: mod/diallog_missed.php:100 mod/diallog_missed.php:104
 #: mod/diallog_out.php:100 mod/diallog_out.php:104 mod/pb_gs.php:159
 #: mod/pb_private.php:223 mod/pb_private.php:227
@@ -306,8 +306,8 @@ msgstr "besetzt"
 msgid "fehlgeschlagen"
 msgstr "fehlgeschlagen"
 
-#: mod/admin_calls.php:247 mod/admin_calls.php:248 mod/admin_user.php:138
-#: mod/admin_user.php:147 mod/pb_gs.php:127 mod/pb_gs.php:136
+#: mod/admin_calls.php:247 mod/admin_calls.php:248 mod/admin_users.php:138
+#: mod/admin_users.php:147 mod/pb_gs.php:127 mod/pb_gs.php:136
 #: mod/pb_ldap.php:138 mod/pb_ldap.php:147 mod/pb_private.php:195
 #: mod/pb_private.php:204
 msgid "Suchen"
@@ -321,12 +321,12 @@ msgstr "Abbrechen"
 msgid "Zeit"
 msgstr "Zeit"
 
-#: mod/admin_calls.php:266 mod/admin_user.php:200 mod/monitor_pgrps.php:111
+#: mod/admin_calls.php:266 mod/admin_users.php:200 mod/monitor_pgrps.php:111
 #: mod/monitor_queues.php:107 mod/monitor_peers.php:81
 msgid "Status"
 msgstr "Status"
 
-#: mod/admin_calls.php:301 mod/admin_user.php:227 mod/monitor_queues.php:195
+#: mod/admin_calls.php:301 mod/admin_users.php:227 mod/monitor_queues.php:195
 #: mod/voicemail_messages.php:211
 msgid "unbekannt"
 msgstr "unbekannt"
@@ -407,11 +407,11 @@ msgstr "Reserve"
 msgid "Nicht konfiguriert."
 msgstr "Nicht konfiguriert."
 
-#: mod/admin_overview.php:80 mod/admin_user.php:270
+#: mod/admin_overview.php:80 mod/admin_users.php:270
 msgid "Eingerichtete Benutzer"
 msgstr "Eingerichtete Benutzer"
 
-#: mod/admin_overview.php:84 mod/admin_user.php:274
+#: mod/admin_overview.php:84 mod/admin_users.php:274
 msgid "Eingeloggte Benutzer"
 msgstr "Eingeloggte Benutzer"
 
@@ -431,25 +431,25 @@ msgstr "Aktive Endger&auml;te"
 msgid "Letztes Endger&auml;t eingetragen"
 msgstr "Letztes Endger&auml;t eingetragen"
 
-#: mod/admin_user.php:126 mod/admin_user.php:137 mod/pb_gs.php:115
+#: mod/admin_users.php:126 mod/admin_users.php:137 mod/pb_gs.php:115
 #: mod/pb_gs.php:126 mod/pb_ldap.php:126 mod/pb_ldap.php:137
 #: mod/pb_private.php:183 mod/pb_private.php:194
 msgid "Name suchen"
 msgstr "Name suchen"
 
-#: mod/admin_user.php:127 mod/admin_user.php:146 mod/pb_gs.php:116
+#: mod/admin_users.php:127 mod/admin_users.php:146 mod/pb_gs.php:116
 #: mod/pb_gs.php:135 mod/pb_ldap.php:127 mod/pb_ldap.php:146
 #: mod/pb_private.php:184 mod/pb_private.php:203
 msgid "Nummer suchen"
 msgstr "Nummer suchen"
 
-#: mod/admin_user.php:196 mod/diallog_in.php:77 mod/diallog_missed.php:77
+#: mod/admin_users.php:196 mod/diallog_in.php:77 mod/diallog_missed.php:77
 #: mod/diallog_out.php:77 mod/monitor_pgrps.php:110 mod/monitor_queues.php:106
 #: mod/pb_gs.php:186 mod/pb_ldap.php:184 mod/monitor_peers.php:80
 msgid "Name"
 msgstr "Name"
 
-#: mod/admin_user.php:197 mod/diallog_in.php:76 mod/diallog_missed.php:76
+#: mod/admin_users.php:197 mod/diallog_in.php:76 mod/diallog_missed.php:76
 #: mod/diallog_out.php:76 mod/help_numbers.php:79 mod/help_numbers.php:148
 #: mod/monitor_pgrps.php:109 mod/monitor_queues.php:105
 #: mod/monitor_queues.php:173 mod/pb_gs.php:189 mod/pb_ldap.php:187
@@ -457,28 +457,28 @@ msgstr "Name"
 msgid "Nummer"
 msgstr "Nummer"
 
-#: mod/admin_user.php:198
+#: mod/admin_users.php:198
 msgid "User"
 msgstr "User"
 
-#: mod/admin_user.php:199
+#: mod/admin_users.php:199
 msgid "Host"
 msgstr "Host"
 
-#: mod/admin_user.php:230
+#: mod/admin_users.php:230
 msgid "bereit"
 msgstr "bereit"
 
-#: mod/admin_user.php:233 mod/monitor_pgrps.php:61 mod/monitor_queues.php:52
+#: mod/admin_users.php:233 mod/monitor_pgrps.php:61 mod/monitor_queues.php:52
 #: mod/forwards_forwards.php:52
 msgid "offline"
 msgstr "offline"
 
-#: mod/admin_user.php:236
+#: mod/admin_users.php:236
 msgid "spricht"
 msgstr "spricht"
 
-#: mod/admin_user.php:239 mod/monitor_pgrps.php:62 mod/monitor_queues.php:53
+#: mod/admin_users.php:239 mod/monitor_pgrps.php:62 mod/monitor_queues.php:53
 msgid "klingelt"
 msgstr "klingelt"
 

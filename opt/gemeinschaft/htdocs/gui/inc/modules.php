@@ -124,7 +124,7 @@ $MODULES = array(
 	                            'perms' => 'admin',
 	   'sub' => array(
 	      'overview'   => array('title' => __('&Uuml;bersicht')),
-	      'user'       => array('title' => __('Benutzer')),
+	      'users'      => array('title' => __('Benutzer')),
 	      'calls'      => array('title' => __('Verbindungen')),
 	      'nodes'      => array('title' => __('Nodes'))
 	   )
