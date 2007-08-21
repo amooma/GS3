@@ -28,7 +28,7 @@
 \*******************************************************************/
 
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1917 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 1976 $
 Report-Msgid-Bugs-To: 
 POT-Creation-Date: 2007-05-23 12:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
