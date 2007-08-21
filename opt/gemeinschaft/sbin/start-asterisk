@@ -42,12 +42,14 @@ $usage = 'Usage: '. baseName(__FILE__) .' [--dialplan]';
 
 $opts = getOptsNoMultiples( '',
 	array(
-		'dialplan'
+		'dialplan',
+		'restart'
 	),
 	$usage
 );
 
 $only_dialplan = array_key_exists('dialplan', $opts);
+$full_restart  = array_key_exists('restart' , $opts);
 
 
 
@@ -93,7 +95,8 @@ function ael_eval_callback( $m )
 	} elseif ($directive == 'exec') {
 		
 		$filename = ael_file_realname( $filename );
-		@ exec( escapeShellCmd($filename) .' 2>>/dev/null', $out, $err );
+		$err=0; $out=array();
+		@exec( escapeShellCmd($filename) .' 2>>/dev/null', $out, $err );
 		if (is_array($out) && $err == 0)
 			return implode("\n", $out);
 		else
@@ -111,7 +114,8 @@ $extensions_ael_filename = $etc_asterisk .'extensions.ael';
 if (file_exists( $extensions_ael_filename )) {
 	/*
 	echo "Moving extensions.ael out of the way ...\n";
-	@ exec( 'mv '. escapeShellArg( $extensions_ael_filename ) .' '. escapeShellArg( dirName( $extensions_ael_filename ) .'/extensions.ael.bak.'. time() ) .' 1>>/dev/null 2>&1' );
+	$err=0; $out=array();
+	@exec( 'mv '. escapeShellArg( $extensions_ael_filename ) .' '. escapeShellArg( dirName( $extensions_ael_filename ) .'/extensions.ael.bak.'. time() ) .' 1>>/dev/null 2>&1' );
 	*/
 }
 
@@ -131,23 +135,34 @@ else {
 }
 
 
-if (! $only_dialplan) {
-	echo "Reloading Asterisk ...\n";
-	@ exec( 'asterisk -rx \'reload\' 1>>/dev/null', $out, $err );
-	$start_ast = ($err != 0);
-} else {
+if ($only_dialplan) {
 	echo "Reloading only the Dialplan ...\n";
 	$start_ast = false;
-	@ exec( 'asterisk -rx \'extensions reload\' 1>>/dev/null', $out, $err );
+	$err=0; $out=array();
+	@exec( 'asterisk -rx \'extensions reload\' 1>>/dev/null', $out, $err );
 	$start_ast = $start_ast || ($err != 0);
-	@ exec( 'asterisk -rx \'ael reload\' 1>>/dev/null', $out, $err );
+	$err=0; $out=array();
+	@exec( 'asterisk -rx \'ael reload\' 1>>/dev/null', $out, $err );
 	$start_ast = $start_ast || ($err != 0);
+} else {
+	if ($full_restart) {
+		echo "Stopping Asterisk ...\n";
+		$err=0; $out=array();
+		@exec( 'asterisk -rx \'stop now\' 1>>/dev/null', $out, $err );
+		$start_ast = true;
+	} else {
+		echo "Reloading Asterisk ...\n";
+		$err=0; $out=array();
+		@exec( 'asterisk -rx \'reload\' 1>>/dev/null', $out, $err );
+		$start_ast = ($err != 0);
+	}
 }
 
 if ($start_ast) {
-	echo "Asterisk wasn't running. Starting Asterisk ...\n";
-	//@ exec( 'asterisk 1>>/dev/null', $out, $err );
-	@ exec( 'safe_asterisk 1>>/dev/null', $out, $err );
+	echo "Asterisk isn't running. Starting Asterisk ...\n";
+	$err=0; $out=array();
+	//@exec( 'asterisk 1>>/dev/null', $out, $err );
+	@exec( 'safe_asterisk 1>>/dev/null', $out, $err );
 	if ($err != 0) {
 		echo "Failed to start Asterisk!\n";
 		die(1);
