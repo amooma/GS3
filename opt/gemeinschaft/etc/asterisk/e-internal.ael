@@ -872,6 +872,18 @@ context to-internal-users-self {
 	
 	h => {
 		ForkCDR();
+		if ("${confnum}" != "") {
+			Verbose(1,### Participant "${CALLERID(all)}" has left conference ${confprefix}${confnum});
+			MeetMeCount(${confnum},cnt);
+			Verbose(1,### There are now ${cnt} people left in conference ${confprefix}${confnum});
+			if (${cnt} < 1) {
+				Verbose(1,### Conference ${confprefix}${confnum} is empty. Free it.);
+				// remove the conference from the db so some other node can claim it:
+				TrySystem(/opt/gemeinschaft/dialplan-scripts/conf-remove ${confprefix}${confnum});
+				Verbose(1,### Conference ${confprefix}${confnum} freed.);
+			}
+		} 
+		else
 		if ("${exttype}" = "user") {
 			// to internal user, store dial log (in|missed)
 			

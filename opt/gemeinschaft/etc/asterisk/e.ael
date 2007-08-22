@@ -280,22 +280,6 @@ context to-conferences-self {
 		Hangup();
 	}
 	
-	h => {
-		ForkCDR();
-		//Verbose(1,################################## HANGUP);
-		if ("${confnum}" != "") {
-			Verbose(1,### Participant "${CALLERID(all)}" has left conference ${confprefix}${confnum});
-			MeetMeCount(${confnum},cnt);
-			Verbose(1,### There are now ${cnt} people left in conference ${confprefix}${confnum});
-			if (${cnt} < 1) {
-				Verbose(1,### Conference ${confprefix}${confnum} is empty. Free it.);
-				// remove the conference from the db so some other node can claim it:
-				TrySystem(/opt/gemeinschaft/dialplan-scripts/conf-remove ${confprefix}${confnum});
-				Verbose(1,### Conference ${confprefix}${confnum} freed.);
-			}
-		}
-	}
-	
 }
 
 
@@ -628,14 +612,14 @@ context private-call {
 			&dial-log-store(${user_name},out,${EXTEN});
 		}
 		
-		// prüfen, ob der User Privatgespräche machen darf ...
+		// prfen, ob der User Privatgesprï¿½he machen darf ...
 		
 		// accountcode setzen ...
 		AGI(/opt/gemeinschaft/dialplan-scripts/usercode-by-ext.agi|${user_name});
 		Set(CDR(amaflags)=BILLING);
 		SET(CDR(accountcode)=prv-${user_code});
 		
-		// für Amtsberechtigung:
+		// fr Amtsberechtigung:
 		Set(__is_private_call=1);
 		Verbose(1,### Private call from user ${user_name} to ${number});
 		//&dial-gateway(${number});
@@ -728,10 +712,10 @@ macro dial-log-store( muser, mtype, mnumber ) {
 
 context systemalarm {
 	
-	// wird vom HA-System angerufen falls z.B. ein Node ausfällt
+	// wird vom HA-System angerufen falls z.B. ein Node ausfï¿½lt
 	systemalarm => {
 		Verbose(0,################## SYSTEM-ALARM ##################);
-		Set(__is_private_call=1);  // damit Rauswählen erlaubt
+		Set(__is_private_call=1);  // damit Rauswï¿½len erlaubt
 		/*
 		Set(i=1);
 		while ("${systemalarm_${i}}" != "") {
@@ -748,7 +732,7 @@ context systemalarm {
 
 
 //---------------------------------------------------------------------
-//  Call Completion (Autom. Rückruf)
+//  Call Completion (Autom. Rckruf)
 //---------------------------------------------------------------------
 
 context call-completion {
