@@ -51,6 +51,13 @@ option {margin: 0; padding: 0 2px;}
 
 .inline {display: inline;}
 
+.pre {
+	white-space: pre !important;
+	font-family: Courier, Monaco, monospace !important;
+	font-size: 1.1em !important;
+}
+
+
 
 body {
 	text-align: left;
@@ -180,7 +187,10 @@ h1 {
 	padding: 0 0 1.2em 0;
 }
 
-
+#content p.text {
+	max-width: 45em;
+	line-height: 1.4em;
+}
 
 
 
@@ -306,7 +316,7 @@ th, td {
 	padding: 2px 6px;
 	text-align: left;
 }
-th {
+th, td.th {
 	background: #dde7c4;
 	padding-top: 4px;
 	padding-bottom: 4px;
