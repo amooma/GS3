@@ -151,6 +151,12 @@ if ($action == 'move-up' || $action == 'move-down') {
 	@$DB->execute( 'OPTIMIZE TABLE `routes`' );
 	@$DB->execute( 'ANALYZE TABLE `routes`' );
 	
+} elseif ($action == 'del') {
+	
+	if ($id > 0) {
+		$DB->execute( 'DELETE FROM `routes` WHERE `id`='. $id );
+	}
+	
 }
 
 
