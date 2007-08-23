@@ -514,7 +514,8 @@ context to-internal-users-self {
 			
 			// call the user
 			//
-			Set(dialtimeout=30);
+			//Set(dialtimeout=30);
+			#exec "/opt/gemeinschaft/etc/asterisk/e-dialtimeout-in.ael.php"
 			if ("${fw_${is_call_from}_unavail}" != "")
 				Set(dialtimeout=${fw_${is_call_from}_unavail_timeout});
 			
