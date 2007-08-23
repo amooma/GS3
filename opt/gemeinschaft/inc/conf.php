@@ -168,6 +168,23 @@ define( 'GS_PROV_SNOM_PB_NUM_RESULTS', 15 );
 
 
 /***********************************************************
+*    CANONICAL PHONE NUMBERS
+***********************************************************/
+
+define( 'GS_CANONIZE_INTL_PREFIX' , '00'  );  # Präfix international
+define( 'GS_CANONIZE_COUNTRY_CODE', '49'  );  # Landesvorwahl ohne 00
+define( 'GS_CANONIZE_NATL_PREFIX' , '0'   );  # Präfix national
+define( 'GS_CANONIZE_AREA_CODE'   , '251' );  # Ortsvorwahl ohne 0
+define( 'GS_CANONIZE_LOCAL_BRANCH', '702' );  # private Kopfnummer
+# if all you have is a single phone number put your local number in
+# here, i.e. the rest after the area code
+define( 'GS_CANONIZE_SPECIAL'     , '110,112,19222' );
+# these numbers will not be prefixed with anything
+define( 'GS_CANONIZE_CBC_PREFIX'  , '010'  );  # Call-by-Call-Präfix
+# Germany: 010
+
+
+/***********************************************************
 *    DIALPLAN SETTINGS
 ***********************************************************/
 
