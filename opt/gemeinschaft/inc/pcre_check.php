@@ -32,7 +32,7 @@ defined('GS_VALID') or die('No direct access.');
 // helper function
 function _pcre_check_counting_err_hdlr( $type, $msg, $file, $line )
 {
-	global $_pcre_errCnt;
+	global $_pcre_err_cnt;
 	
 	switch ($type) {
 		case E_NOTICE:
@@ -52,17 +52,17 @@ function is_valid_pcre( $pcre )
 {
 	global $_pcre_err_cnt;
 	
-	# make sure the regex compiles:
 	error_reporting(E_ALL ^ E_NOTICE);
-	$_pcre_err_cnt = 0;
+	# set counting error handler:
 	set_error_handler('_pcre_check_counting_err_hdlr');
-	$_pcre_err_cntBefore = $_pcre_err_cnt;
-	preg_match( $pcre, 'ignored' );
-	$failed = $_pcre_err_cnt > $_pcre_err_cntBefore;
+	# try to compile the regex:
+	preg_match($pcre, '');
+	# any errors?:
+	$ok = ($_pcre_err_cnt == 0);
+	# restore the error handler to the previous one:
 	restore_error_handler();
-	return (! $failed);
+	return $ok;
 }
-
 
 
 ?>
