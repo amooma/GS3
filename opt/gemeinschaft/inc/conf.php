@@ -179,10 +179,12 @@ define( 'GS_CANONIZE_COUNTRY_CODE', '49'  ); # country code (Landesvorwahl) with
                                              # prefix
 define( 'GS_CANONIZE_NATL_PREFIX' , '0'   ); # National prefix
                                              # (Verkehrsausscheidungsziffer)
-define( 'GS_CANONIZE_AREA_CODE'   , '251' ); # Area code (Ortsvorwahl) without prefix
-define( 'GS_CANONIZE_AREA_CODE_INTL',false); # Whether the area code needs the
+define( 'GS_CANONIZE_NATL_PREFIX_INTL', false );
+                                             # Whether the area code needs the
                                              # national prefix even when dialing
                                              # in international format (in Italy)
+define( 'GS_CANONIZE_AREA_CODE'   , '251' ); # Area code (Ortsvorwahl) without
+                                             # national prefix
 define( 'GS_CANONIZE_LOCAL_BRANCH', '702' ); # Private branch (private Kopfnummer).
                                              # If all you have is a single phone
                                              # number put your local number in here,
