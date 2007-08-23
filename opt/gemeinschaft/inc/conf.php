@@ -197,8 +197,11 @@ define( 'GS_DP_EMERGENCY_FIRE_MAP'   , '112' );
 # of gateway you might need to prefix the ..._MAP numbers
 # with 0
 
-# how to dial to the outside world:
 define( 'GS_DP_OUTBOUND' , 'sip' );  # "sip"|"zap"
+# how to dial to the outside world
+
+define( 'GS_DP_DIALTIMEOUT_IN', 45 );
+# default timeout when dialing to internal users
 
 
 /***********************************************************
