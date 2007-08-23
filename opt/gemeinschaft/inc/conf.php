@@ -43,6 +43,8 @@ define( 'GS_DB_MASTER_HOST' , '192.168.1.130' );
 define( 'GS_DB_MASTER_USER' , 'root' );
 define( 'GS_DB_MASTER_PWD'  , '' );
 define( 'GS_DB_MASTER_DB'   , 'asterisk' );
+define( 'GS_DB_MASTER_TRANSACTIONS', true );
+# whether to use transactions
 
 
 /***********************************************************
