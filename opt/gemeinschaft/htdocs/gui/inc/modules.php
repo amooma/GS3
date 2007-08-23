@@ -126,7 +126,8 @@ $MODULES = array(
 	      'overview'   => array('title' => __('&Uuml;bersicht')),
 	      'users'      => array('title' => __('Benutzer')),
 	      'calls'      => array('title' => __('Verbindungen')),
-	      'nodes'      => array('title' => __('Nodes'))
+	      'nodes'      => array('title' => __('Nodes')),
+	      'routes'     => array('title' => __('$$$ Routen'))
 	   )
 	),
 	##################################################################
