@@ -54,7 +54,12 @@ option {margin: 0; padding: 0 2px;}
 .pre {
 	white-space: pre !important;
 	font-family: Courier, Monaco, monospace !important;
-	font-size: 1.1em !important;
+	font-size: 1.15em !important;
+}
+
+code {
+	font-family: Courier, Monaco, monospace;
+	font-size: 1.15em;
 }
 
 
