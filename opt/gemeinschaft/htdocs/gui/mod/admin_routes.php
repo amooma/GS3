@@ -134,7 +134,7 @@ if ($action == 'move-up' || $action == 'move-down') {
 	`d_su`='. ((int)(bool)@$_REQUEST['r_'.$dbid.'_d_su']) .',
 	`h_from`=\''. $DB->escape($h_from) .'\',
 	`h_to`=\''  . $DB->escape($h_to  ) .'\',
-	`descr`=\''. $DB->escape(@$_REQUEST['r_'.$dbid.'_descr']) .'\',
+	`descr`=\''. $DB->escape(trim(@$_REQUEST['r_'.$dbid.'_descr'])) .'\',
 	`gw_grp_id_1`='. (array_key_exists($gg1, $ggs) ? $gg1 : 'NULL') .',
 	`gw_grp_id_2`='. (array_key_exists($gg2, $ggs) ? $gg2 : 'NULL') .',
 	`gw_grp_id_3`='. (array_key_exists($gg3, $ggs) ? $gg3 : 'NULL') .'
@@ -263,7 +263,7 @@ while ($route = $rs->fetchRow()) {
 	echo '</td>', "\n";
 	
 	echo '<td>';
-	echo '<input type="text" name="r_',$id,'_pattern" value="', htmlEnt($route['pattern']), '" size="17" maxlength="30" class="pre" />';
+	echo '<input type="text" name="r_',$id,'_pattern" value="', htmlEnt($route['pattern']), '" size="17" maxlength="30" class="pre" style="font-weight:bold;" />';
 	echo '</td>', "\n";
 	
 	echo '<td>';
@@ -333,7 +333,7 @@ while ($route = $rs->fetchRow()) {
 	echo '<td colspan="2" class="r"><label for="ipt-r_',$id,'_descr">', __('$$$ Beschr.:'), '</label></td>';
 	
 	echo '<td colspan="2">';
-	echo '<input type="text" name="r_',$id,'_descr" id="ipt-r_',$id,'_descr" value="', htmlEnt($route['descr']), '" size="45" maxlength="50" style="width:97%;" />';
+	echo '<input type="text" name="r_',$id,'_descr" id="ipt-r_',$id,'_descr" value="', htmlEnt(trim($route['descr'])), '" size="45" maxlength="60" style="width:97%; font-weight:bold;" />';
 	echo '</td>', "\n";
 	
 	echo '</tr>', "\n";
@@ -357,7 +357,7 @@ echo '<input type="checkbox" name="r_',$id,'_active" value="1" checked="checked"
 echo '</td>', "\n";
 
 echo '<td>';
-echo '<input type="text" name="r_',$id,'_pattern" value="" size="17" maxlength="30" class="pre" />';
+echo '<input type="text" name="r_',$id,'_pattern" value="" size="17" maxlength="30" class="pre" style="font-weight:bold;" />';
 echo '</td>', "\n";
 
 echo '<td>';
@@ -395,7 +395,7 @@ echo '<tr class="', (($i % 2 == 0) ? 'even':'odd'), '">', "\n";
 echo '<td colspan="2" class="r"><label for="ipt-r_',$id,'_descr">', __('$$$ Beschr.:'), '</label></td>';
 
 echo '<td colspan="2">';
-echo '<input type="text" name="r_',$id,'_descr" id="ipt-r_',$id,'_descr" value="', htmlEnt($route['descr']), '" size="45" maxlength="50" style="width:97%;" />';
+echo '<input type="text" name="r_',$id,'_descr" id="ipt-r_',$id,'_descr" value="', htmlEnt(trim($route['descr'])), '" size="45" maxlength="60" style="width:97%;font-weight:bold;" />';
 echo '</td>', "\n";
 
 echo '</tr>', "\n";
