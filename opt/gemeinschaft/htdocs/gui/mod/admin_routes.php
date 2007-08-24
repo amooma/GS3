@@ -27,7 +27,6 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
-require_once( GS_DIR .'inc/extension-state.php' );
 include_once( GS_DIR .'inc/pcre_check.php' );
 
 echo '<h2>';
@@ -135,9 +134,9 @@ if ($action == 'move-up' || $action == 'move-down') {
 	`h_from`=\''. $DB->escape($h_from) .'\',
 	`h_to`=\''  . $DB->escape($h_to  ) .'\',
 	`descr`=\''. $DB->escape(trim(@$_REQUEST['r_'.$dbid.'_descr'])) .'\',
-	`gw_grp_id_1`='. (array_key_exists($gg1, $ggs) ? $gg1 : 'NULL') .',
-	`gw_grp_id_2`='. (array_key_exists($gg2, $ggs) ? $gg2 : 'NULL') .',
-	`gw_grp_id_3`='. (array_key_exists($gg3, $ggs) ? $gg3 : 'NULL') .'
+	`gw_grp_id_1`='. (array_key_exists($gg1, $ggs) ? $gg1 : '0') .',
+	`gw_grp_id_2`='. (array_key_exists($gg2, $ggs) ? $gg2 : '0') .',
+	`gw_grp_id_3`='. (array_key_exists($gg3, $ggs) ? $gg3 : '0') .'
 '. ($dbid>0 ? 'WHERE `id`='. (int)$dbid : '')
 		;
 		$ok = $DB->execute($query);
