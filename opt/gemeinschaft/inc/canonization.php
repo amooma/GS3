@@ -28,7 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 
-require_once( dirName(__FILE__) .'/inc/conf.php' );
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/pcre_check.php' );
 include_once( GS_DIR .'inc/log.php' );
 
