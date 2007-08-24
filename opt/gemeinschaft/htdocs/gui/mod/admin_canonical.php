@@ -112,15 +112,41 @@ $canonical = new CanonicalPhoneNumber( $number );
 	<td class="pre"><?php echo ($canonical->is_call_by_call ? __('$$$ ja') : __('$$$ nein')); ?></td>
 </tr>
 
+<tr class="even">
+	<td><b><?php echo __('$$$ Ergebnis'); ?>:</b></td>
+	<td class="pre r"><?php echo $canonical->dial; ?></td>
+</tr>
+
 </tbody>
 </table>
 
+<br />
+<p>
+<?php
+switch (@$canonical->errt) {
+	case 'empty':
+		echo "$$$ Keine Telefonnummer angegeben.";
+		break;
+	case 'cbc':
+		echo "$$$ Der Endanwender soll keine Call-by-Call-Vorwahlen verwenden.";
+		break;
+	case 'self':
+		echo "$$$ Diese Nummer ist innerhalb der eigenen Telefonanlage.";
+		break;
+	case '':
+	default:
+		echo sPrintF("$$$ Die Nummer w&uuml;rde als <b>%s</b> gew&auml;hlt.", $canonical->dial);
+}
+?>
+</p>
 
 
 <br />
 
 <?php
+/*
 echo "<pre>\n";
 print_r($canonical);
 echo "</pre>\n";
+*/
 ?>
