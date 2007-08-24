@@ -19,6 +19,7 @@ table {
 
 small {
 	font-size: 0.93em;
+	line-height: 1.2em;
 }
 
 button {
@@ -27,6 +28,8 @@ button {
 }
 
 option {margin: 0; padding: 0 2px;}
+
+sup {font-weight: normal;}
 
 /*
 	shortcuts
