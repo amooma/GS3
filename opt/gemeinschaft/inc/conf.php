@@ -173,6 +173,8 @@ define( 'GS_PROV_SNOM_PB_NUM_RESULTS', 15 );
 *    CANONICAL PHONE NUMBERS (FQTN)
 ***********************************************************/
 
+define( 'GS_CANONIZE_OUTBOUND'    , true  ); # canonize numbers before matching
+                                             # against routes?
 define( 'GS_CANONIZE_INTL_PREFIX' , '00'  ); # international prefix. Do not use "+",
                                              # we know the canonical format is "+".
 define( 'GS_CANONIZE_COUNTRY_CODE', '49'  ); # country code (Landesvorwahl) without
