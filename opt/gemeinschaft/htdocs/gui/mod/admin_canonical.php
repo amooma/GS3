@@ -52,6 +52,9 @@ $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 
 <p class="text"><?php echo __('$$$ Hier k&ouml;nnen Sie &uuml;berpr&uuml;fen, wie nach extern gew&auml;hlte Telefonnummern entsprechend Ihrer Einstellungen kanonisiert werden.'); ?></p>
 
+<?php if (! gs_get_conf('GS_CANONIZE_OUTBOUND')) { ?>
+<p class="text">(<?php echo __('$$$ Kanonisierung ist nicht aktiviert.'); ?>)</p>
+<?php } ?>
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
