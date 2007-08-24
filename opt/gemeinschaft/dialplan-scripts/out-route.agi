@@ -1,0 +1,115 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+error_reporting(0);
+
+
+function _no_route( $idx=1 )
+{
+	echo 'SET VARIABLE r_'.$idx.'_dial' ."\n";
+	die();
+}
+
+
+$number = ($argc > 1) ? trim($argv[1]) : '';
+if ($number == '') _no_route();
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$number_natl = $number;
+
+
+$db = gs_db_slave_connect();
+if (! $db) die(1);
+
+$t = time();
+$wd = strToLower(subStr(date('D', $t),0,2));
+$hm = date('H:i', $t);
+
+$rs = $db->execute(
+'SELECT
+	`pattern` `pat`,
+	`gw_grp_id_1` `gg1`, `gw_grp_id_2` `gg2`, `gw_grp_id_3` `gg3`
+FROM `routes` USE INDEX(`active_'.$wd.'`)
+WHERE
+	`active`=1 AND `d_'.$wd.'`=1 AND
+	`h_from`<=\''.$hm.'\' AND `h_to`>=\''.$hm.'\'
+ORDER BY `ord`'
+);
+// we can't use MySQL's REGEXP comparison because it does not understand
+// all of PCRE syntax
+$have_match = false;
+while ($route = $rs->fetchRow()) {
+	if (@preg_match( '/'.$route['pat'].'/', $number_natl )) {
+		$have_match = true;
+		break;
+	}
+}
+if (! $have_match) _no_route();
+
+$gate_grps = array();
+if ($route['gg1'] != 0) $gate_grps[] = (int)$route['gg1'];
+if ($route['gg2'] != 0) $gate_grps[] = (int)$route['gg2'];
+if ($route['gg3'] != 0) $gate_grps[] = (int)$route['gg3'];
+unset($route);
+if (count($gate_grps) < 1) _no_route();
+
+$gates = array();
+$idx = 1;
+foreach ($gate_grps as $ggrp_id) {
+	//$rs = $db->execute( 'SELECT * FROM `gate_grps` WHERE `id`='. $ggrp_id );
+	
+	$rs = $db->execute(
+'SELECT `name`, `title`, `dialstr`
+FROM `gates`
+WHERE `grp_id`='. $ggrp_id .' AND `allow_out`=1
+ORDER BY RAND()'
+	);
+	//while ($gate = $rs->fetchRow()) $gates[] = $gate;
+	while ($gate = $rs->fetchRow()) {
+		$dialstr = str_replace(
+			array( '{number}'  , '{peer}'      ),
+			array( $number_natl, $gate['name'] ),
+			$gate['dialstr']
+		);
+		echo 'SET VARIABLE r_'.$idx.'_dial '.$dialstr ."\n";
+		++$idx;
+	}
+}
+_no_route($idx);
+
+
+?>

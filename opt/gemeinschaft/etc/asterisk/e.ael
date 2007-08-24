@@ -512,14 +512,51 @@ macro dial-gateway-do( mnumber ) {
 		}
 	}
 	
-	#exec "/opt/gemeinschaft/etc/asterisk/e-outbound.ael.php"
-	
-	//&hangup-proper-status();
-	Verbose(1,### Tried to dial ${mnumber} to the outside but: ${DIALSTATUS});
-	if ("${DIALSTATUS}" = "BUSY") {
-		Busy(5);
-	} else if ("${DIALSTATUS}" = "CHANUNAVAIL" || "${DIALSTATUS}" = "CONGESTION") {
+	AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi|${mnumber});
+	Set(no_route=1);
+	Set(r=1);
+	while ("${r_${r}_dial}" != "") {
+		//Verbose(1,### route: r_${r});
+		Set(no_route=);
+		Verbose(1,### Outbound route: ${r_${r}_dial});
+		Dial(${r_${r}_dial},180);
+		if ("${DIALSTATUS}" = "ANSWER" || "${DIALSTATUS}" = "CANCEL") {
+			Hangup();
+		}
+		else if ("${DIALSTATUS}" = "NOANSWER" || "${DIALSTATUS}" = "BUSY") {
+			Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
+			Busy(5);
+			Hangup();
+		}
+		else if ("${DIALSTATUS}" = "CHANUNAVAIL" || "${DIALSTATUS}" = "CONGESTION") {
+			Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
+			Verbose(1,### DIALEDTIME: ${DIALEDTIME});
+			Verbose(1,### ANSWEREDTIME: ${ANSWEREDTIME});
+			// try next gateway
+		}
+		else {
+			Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
+			Congestion(5);
+			Hangup();
+		}
+		
+		if (${r} > 10) {
+			Verbose(1,### Could not reach ${mnumber} via 10 different gateways);
+			Congestion(5);
+			Hangup();
+		}
+		r=${r}+1;
+	}
+	if ("${no_route}" != "") {
+		Verbose(1,### We don't have a route for ${mnumber});
+		Set(DIALSTATUS=CONGESTION);
 		Congestion(5);
+		Hangup();
+	}
+	else {
+		// we have run out of gateways to try
+		Congestion(5);
+		Hangup();
 	}
 	Hangup();
 }
