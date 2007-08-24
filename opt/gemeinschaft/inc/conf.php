@@ -174,7 +174,9 @@ define( 'GS_PROV_SNOM_PB_NUM_RESULTS', 15 );
 ***********************************************************/
 
 define( 'GS_CANONIZE_OUTBOUND'    , true  ); # canonize numbers before matching
-                                             # against routes?
+                                             # against routes? also determines
+                                             # whether we dial in national form or
+                                             # as is
 define( 'GS_CANONIZE_INTL_PREFIX' , '00'  ); # international prefix. Do not use "+",
                                              # we know the canonical format is "+".
 define( 'GS_CANONIZE_COUNTRY_CODE', '49'  ); # country code (Landesvorwahl) without
@@ -209,9 +211,6 @@ define( 'GS_DP_EMERGENCY_FIRE_MAP'   , '112' );
 # if you do not dial to the PSTN directly but via some kind
 # of gateway you might need to prefix the ..._MAP numbers
 # with 0
-
-define( 'GS_DP_OUTBOUND' , 'sip' );  # "sip"|"zap"
-# how to dial to the outside world
 
 define( 'GS_DP_DIALTIMEOUT_IN', 45 );
 # default timeout when dialing to internal users
