@@ -127,7 +127,8 @@ $MODULES = array(
 	      'users'      => array('title' => __('Benutzer')),
 	      'calls'      => array('title' => __('Verbindungen')),
 	      'nodes'      => array('title' => __('Nodes')),
-	      'routes'     => array('title' => __('$$$ Routen'))
+	      'routes'     => array('title' => __('$$$ Routen')),
+	      'canonical'  => array('title' => __('$$$ Kanonisierung'))
 	   )
 	),
 	##################################################################
