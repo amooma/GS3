@@ -844,8 +844,18 @@ callerid = asreceived
 amaflags = default
 faxdetect = both
 
-group = 1                  ; Kanalgruppe 1 - Dial(Zap/g1/...)
-channel =&gt; 1-15,17-31,32-46,48-62
+; Man könnte einfach alle Kanäle der beiden PRI-Ports
+; einer einzigen Gruppe zuordnen:
+;group = 1                  ; Kanalgruppe 1 - Dial(Zap/g1/...)
+;channel =&gt; 1-15,17-31,32-46,48-62
+
+; Für Gemeinschaft legen wir aber 2 Gruppen an, also für
+; jeden PRI eine eigene:
+group = 1                  ; Dial(Zap/g1/...)
+channel =&gt; 1-15,17-31
+
+group = 2                  ; Dial(Zap/g2/...)
+channel =&gt; 32-46,48-62
 </screen></para>
   </section>
 
