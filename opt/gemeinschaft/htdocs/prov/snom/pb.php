@@ -42,7 +42,7 @@ header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
 
 
-function snomXmlEsc($str) {
+function snomXmlEsc( $str ) {
 	return str_replace(
 		array('<', '>', '"'   , "\n"),
 		array('_', '_', '\'\'', ' ' ),
