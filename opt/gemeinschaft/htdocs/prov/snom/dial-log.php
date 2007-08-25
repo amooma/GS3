@@ -26,6 +26,9 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+# caution: earlier versions of Snom firmware do not like
+# indented XML
+
 define( 'GS_VALID', true );  /// this is a parent file
 
 header( 'Content-type: text/plain; charset=utf-8' );
@@ -59,9 +62,9 @@ if ($user_id < 1)
 
 
 $typeToTitle = array(
-	'out'    => 'Gewaehlt',
-	'missed' => 'Verpasst',
-	'in'     => 'Angenommen',
+	'out'    => "Gew\xC3\xA4hlt",
+	'missed' => "Verpasst",
+	'in'     => "Angenommen",
 );
 
 
@@ -74,36 +77,25 @@ if (! $type) {
 	
 	
 	
-	echo '<?','xml version="1.0" encoding="utf-8"?','>
-';
-	echo '<SnomIPPhoneMenu>
-<Title>Anruflisten</Title>
-';
+	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
+	echo '<SnomIPPhoneMenu>', "\n",
+	       '<Title>Anruflisten</Title>', "\n";
 	
 	foreach ($typeToTitle as $t => $title) {
 		
 		$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE `user_id`='. $user_id .' AND `type`=\''. $t .'\'' );
 		if ($num_calls > 0) {
-			/*
-			echo '
-<MenuItem>
-<Name>'. $title .' ('. $num_calls .')</Name>
-<URL>'. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/dial-log.php?user='. $user .'&type='. $t .'</URL>
-</MenuItem>
-';
-			*/
-			echo '
-<MenuItem>
-<Name>'. htmlSpecialChars($title, ENT_QUOTES) .'</Name>
-<URL>'. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/dial-log.php?user='. $user .'&type='. $t .'</URL>
-</MenuItem>
-';
+			echo "\n",
+			     '<MenuItem>', "\n",
+			       '<Name>', htmlSpecialChars($title, ENT_QUOTES) ,'</Name>', "\n",
+			       '<URL>', GS_PROV_SCHEME,'://', GS_PROV_HOST, (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)), GS_PROV_PATH, 'snom/dial-log.php?user=',$user, '&type=',$t, '</URL>', "\n",
+			     '</MenuItem>', "\n";
+			# Snom does not understand &amp; !
 		}
 	}
 	
-	echo '
-</SnomIPPhoneMenu>
-';
+	echo "\n",
+	     '</SnomIPPhoneMenu>';
 	die();
 	
 }
@@ -111,37 +103,14 @@ if (! $type) {
 
 
 
-echo '<?','xml version="1.0" encoding="utf-8"?','>
-<SnomIPPhoneDirectory>
-<Title>'. htmlSpecialChars($typeToTitle[$type], ENT_QUOTES) .'</Title>
-';
-
-/*
-$rs = $db->execute( 'SELECT `timestamp`, `number`, `remote_name` FROM `dial_log` WHERE `user_id`='. $user_id .' AND type=\''. $type .'\' ORDER BY `timestamp` DESC LIMIT 20' );
-while ($r = $rs->fetchRow()) {
-	
-	$entry_name = $r['number'];
-	if ($r['remote_name'] != '')
-		$entry_name .= '  '. $r['remote_name'];
-	
-	if ($type=='missed') {
-		$when = date('H:i', (int)$r['timestamp']);
-		$entry_name = $when .'  '. $entry_name;
-	}
-	
-	echo '
-<DirectoryEntry>
-<Name>', $entry_name ,'</Name>
-<Telephone>', $r['number'] ,'</Telephone>
-</DirectoryEntry>
-';
-	
-}
-*/
+echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
+echo '<SnomIPPhoneDirectory>', "\n",
+       '<Title>', htmlSpecialChars($typeToTitle[$type], ENT_QUOTES) ,'</Title>', "\n";
 
 $query =
 'SELECT
-	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`, COUNT(*) `num_calls`
+	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
+	COUNT(*) `num_calls`
 FROM `dial_log`
 WHERE
 	`user_id`='. $user_id .' AND
@@ -153,30 +122,26 @@ $rs = $db->execute( $query );
 while ($r = $rs->fetchRow()) {
 	
 	$entry_name = $r['number'];
-	if ($r['remote_name'] != '')
+	if ($r['remote_name'] != '') {
 		$entry_name .= ' '. $r['remote_name'];
-	
+	}
 	if ($type=='missed') {
 		$when = date('H:i', (int)$r['ts']);
 		$entry_name = $when .'  '. $entry_name;
 	}
-	
 	if ($r['num_calls'] > 1) {
 		$entry_name .= ' ('. $r['num_calls'] .')';
 	}
-	
-	echo '
-<DirectoryEntry>
-<Name>', htmlSpecialChars($entry_name, ENT_QUOTES) ,'</Name>
-<Telephone>', htmlSpecialChars($r['number'], ENT_QUOTES) ,'</Telephone>
-</DirectoryEntry>
-';
+	echo "\n",
+	     '<DirectoryEntry>', "\n",
+	       '<Name>', htmlSpecialChars($entry_name, ENT_QUOTES) ,'</Name>', "\n",
+	       '<Telephone>', htmlSpecialChars($r['number'], ENT_QUOTES) ,'</Telephone>', "\n",
+	     '</DirectoryEntry>', "\n";
 	
 }
 
-echo '
-</SnomIPPhoneDirectory>
-';
+echo "\n",
+     '</SnomIPPhoneDirectory>';
 
 
 ?>
