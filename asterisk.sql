@@ -393,6 +393,58 @@ LOCK TABLES `dial_log` WRITE;
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `dial_log` ENABLE KEYS */;
 
+
+--
+-- Table structure for table `gate_grps`
+--
+
+DROP TABLE IF EXISTS `gate_grps`;
+CREATE TABLE `gate_grps` (
+  `id` smallint(5) unsigned NOT NULL auto_increment,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `type` varchar(20) character set ascii NOT NULL default 'balance',
+  PRIMARY KEY  (`id`),
+  KEY `title` (`title`(8))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `gate_grps`
+--
+
+
+/*!40000 ALTER TABLE `gate_grps` DISABLE KEYS */;
+INSERT INTO `gate_grps` VALUES (5,'SIP-ISDN-GWs intern','balance'),(6,'ISDN (PRI)','balance'),(7,'GSM-GW T-Mobile','balance'),(8,'GSM-GW Vodafone','balance'),(9,'SIP-GW (sipgate.de)','balance'),(10,'SIP-GW (dus.net)','balance');
+/*!40000 ALTER TABLE `gate_grps` ENABLE KEYS */;
+
+--
+-- Table structure for table `gates`
+--
+
+DROP TABLE IF EXISTS `gates`;
+CREATE TABLE `gates` (
+  `id` smallint(5) unsigned NOT NULL auto_increment,
+  `grp_id` smallint(5) unsigned NOT NULL,
+  `type` varchar(10) character set ascii NOT NULL default 'sip',
+  `name` varchar(25) character set ascii NOT NULL,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `allow_out` tinyint(1) unsigned NOT NULL default '1',
+  `allow_in` tinyint(1) unsigned NOT NULL,
+  `dialstr` varchar(50) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `name` (`name`(10)),
+  KEY `grp_title` (`grp_id`,`title`(10)),
+  KEY `grp_allow_out` (`grp_id`,`allow_out`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `gates`
+--
+
+
+/*!40000 ALTER TABLE `gates` DISABLE KEYS */;
+INSERT INTO `gates` VALUES (5,6,'zap','gw_5_zaptel_span_1','Zaptel Span 1',1,0,'Zap/r1/{number}'),(6,6,'zap','gw_6_zaptel_span_2','Zaptel Span 2',1,0,'Zap/r2/{number}'),(7,5,'sip','gw_7_sip_isdn_intern_a','SIP-ISDN intern A',1,0,'SIP/{number}@{peer}'),(8,5,'sip','gw_8_sip_isdn_intern_b','SIP-ISDN intern B',1,0,'SIP/{number}@{peer}'),(9,8,'sip','gw_9_sip_gsm_vodafone','SIP-GSM Vodafone',1,1,'SIP/{number}@{peer}');
+/*!40000 ALTER TABLE `gates` ENABLE KEYS */;
+
 --
 -- Table structure for table `hosts`
 --
@@ -602,6 +654,49 @@ LOCK TABLES `ringtones` WRITE;
 INSERT INTO `ringtones` VALUES (23,'internal',NULL,'somefile'),(23,'external',2,NULL);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `ringtones` ENABLE KEYS */;
+
+--
+-- Table structure for table `routes`
+--
+
+DROP TABLE IF EXISTS `routes`;
+CREATE TABLE `routes` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `active` tinyint(1) unsigned NOT NULL default '1',
+  `ord` int(10) unsigned NOT NULL,
+  `pattern` varchar(30) character set ascii NOT NULL,
+  `d_mo` tinyint(1) unsigned NOT NULL default '1',
+  `d_tu` tinyint(1) unsigned NOT NULL default '1',
+  `d_we` tinyint(1) unsigned NOT NULL default '1',
+  `d_th` tinyint(1) unsigned NOT NULL default '1',
+  `d_fr` tinyint(1) unsigned NOT NULL default '1',
+  `d_sa` tinyint(1) unsigned NOT NULL default '1',
+  `d_su` tinyint(1) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `gw_grp_id_1` smallint(5) unsigned NOT NULL default '0',
+  `gw_grp_id_2` smallint(5) unsigned NOT NULL default '0',
+  `gw_grp_id_3` smallint(5) unsigned NOT NULL default '0',
+  `descr` varchar(150) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `ord` (`ord`),
+  KEY `active_mo` (`active`,`d_mo`,`ord`),
+  KEY `active_tu` (`active`,`d_tu`,`ord`),
+  KEY `active_we` (`active`,`d_we`,`ord`),
+  KEY `active_th` (`active`,`d_th`,`ord`),
+  KEY `active_fr` (`active`,`d_fr`,`ord`),
+  KEY `active_sa` (`active`,`d_sa`,`ord`),
+  KEY `active_su` (`active`,`d_su`,`ord`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `routes`
+--
+
+
+/*!40000 ALTER TABLE `routes` DISABLE KEYS */;
+INSERT INTO `routes` VALUES (5,1,3,'^11[0-7]$',1,1,1,1,1,1,0,'00:00:00','24:00:00',6,7,9,'Notrufnummern etc.'),(6,1,4,'^19222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,7,9,'Notruf Rettungsdienst'),(7,1,14,'^0900',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'Mehrwertnummern'),(8,1,8,'^118',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'Auskünfte (u.U. teuer, können vermitteln!)'),(9,1,10,'^09009',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Mehrwertnummern (Dialer)'),(10,1,12,'^09005',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Mehrwertnummern (\"Erwachsenenunterhaltung\")'),(11,1,16,'^0902',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Televoting (14 ct/Anruf)'),(12,1,18,'^019[1-4]',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Internet-Zugänge'),(13,1,20,'^070[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'private Vanity-Nummern'),(14,1,22,'^080[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'Mehrwertnummern (kostenlos)'),(15,1,24,'^01805',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Mehrwertnummern (Hotlines/\"Erwachsenenunterhaltung)'),(16,1,26,'^01802001033',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Handvermittlung ins Ausland (teuer)'),(17,1,28,'^0180',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'Mehrwertnummern'),(18,1,30,'^0137',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Televoting (25-100 ct/Anruf)'),(19,1,32,'^012x',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Innovative Dienste (teuer)'),(20,1,34,'^032x',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'ortsunabhängig, unklare Tarifierung, GSM vermeiden'),(21,1,36,'^0151',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'T-Mobile D1'),(22,1,38,'^016[01489]',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'T-Mobile D1'),(23,1,40,'^017[015]',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'T-Mobile D1'),(24,1,42,'^0152',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'Vodafone D2'),(25,1,44,'^0162',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'Vodafone D2'),(26,1,46,'^017[234]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'Vodafone D2'),(27,1,48,'^015[57]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'E-Plus'),(28,1,50,'^0163',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'E-Plus'),(29,1,52,'^017[78]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'E-Plus'),(30,1,54,'^0156',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'MobilCom'),(31,1,56,'^0159',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'O2'),(32,1,58,'^017[69]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'O2'),(33,1,60,'^0150',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'Group3G'),(34,1,62,'^01[5-7]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'andere Handy-Gespräche'),(35,1,64,'^0zxx',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,10,0,'Ortsnetze'),(36,1,66,'^00',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,9,0,'international'),(37,1,68,'^',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,9,0,'alles andere');
+/*!40000 ALTER TABLE `routes` ENABLE KEYS */;
 
 --
 -- Table structure for table `softkeys`
