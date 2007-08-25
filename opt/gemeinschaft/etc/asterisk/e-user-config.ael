@@ -38,7 +38,7 @@
 //---------------------------------------------------------------------
 
 macro usercode-by-ext( mext ) {
-	AGI(/opt/gemeinschaft/dialplan-scripts/usercode-by-ext.agi|${mext});
+	AGI(/opt/gemeinschaft/dialplan-scripts/usercode-by-ext.agi,${mext});
 	NoOp(### AGI returned: user_code = ${user_code});
 }
 

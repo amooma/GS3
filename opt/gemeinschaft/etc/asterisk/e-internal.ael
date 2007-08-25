@@ -43,7 +43,7 @@ macro check-valid-extension( mext ) {
 	}
 	
 	// is it to one of *our* extensions?
-	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi|${mext});
+	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${mext});
 	Verbose(1,### Extension ${mext} is of type ${exttype});
 	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference") {
 		Verbose(1,### Extension ${mext} is unknown);
@@ -287,7 +287,7 @@ context to-internal-users {
 			Hangup();
 		}
 		// is it to one of *our* extensions?
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi|${boss});
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${boss});
 		Verbose(1,### Extension ${boss} is of type ${exttype});
 		if ("${exttype}" != "user") {
 			Verbose(1,### Extension ${boss} is not a user);
@@ -324,7 +324,7 @@ context to-internal-users {
 			Hangup();
 		}
 		// is it to one of *our* extensions?
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi|${box});
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${box});
 		Verbose(1,### Extension ${box} is of type ${exttype});
 		if ("${exttype}" != "user") {
 			Verbose(1,### Extension ${box} is not a user);
@@ -358,7 +358,7 @@ context to-internal-users-self {
 		Verbose(1,### Secretary (${user_name}) to boss (${boss}) direct dial);
 		Set(__is_call_from=internal);
 		// get ringer
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi|${boss}|${is_call_from});
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${boss},${is_call_from});
 		if ("${ringer}" != "") {
 			Verbose(1,### Ringer: ${ringer});
 			SIPAddHeader(Alert-Info: ${ringer});
@@ -398,7 +398,7 @@ context to-internal-users-self {
 		Set(is_callcompletion=0);
 		Set(vm_real_source=internal);
 		Set(vm_source=internal);
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi|${box});
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi,${box});
 		goto ${box}|user_uncallable_vm_on;
 		
 	}
@@ -471,7 +471,7 @@ context to-internal-users-self {
 		&set-callerid-by-clir();
 		
 		// check the type of the called extension:
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-type.agi|${EXTEN});
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-type.agi,${EXTEN});
 		Verbose(1,### Incoming call to ${EXTEN}\, type: ${exttype}\, forwards: ${forwards});
 		
 		// is it a user? is it a queue?
@@ -496,7 +496,7 @@ context to-internal-users-self {
 		//----------------------------------------------------------
 		to_user:
 			
-			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi|${EXTEN});
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${EXTEN});
 			
 			// forward (case=always) active?
 			if ("${fw_${is_call_from}_always}" != "") {
@@ -520,14 +520,14 @@ context to-internal-users-self {
 				Set(dialtimeout=${fw_${is_call_from}_unavail_timeout});
 			
 			// get ringer
-			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi|${EXTEN}|${is_call_from});
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${EXTEN},${is_call_from});
 			if ("${ringer}" != "") {
 				Verbose(1,### Ringer: ${ringer});
 				//SIPAddHeader(Alert-Info: <http://192.168.1.110:82/ringtones/${ringer}>);
 				SIPAddHeader(Alert-Info: ${ringer});
 			}
 			
-			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-pgrpdialstr.agi|${EXTEN});
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-pgrpdialstr.agi,${EXTEN});
 			if ("${dialtimeout}" != "") {
 				Verbose(1,### Call local user ${EXTEN}\, timeout: ${dialtimeout} s);
 			}
@@ -620,7 +620,7 @@ context to-internal-users-self {
 			
 			//Verbose(1,### Called queue: ${EXTEN});
 			
-			AGI(/opt/gemeinschaft/dialplan-scripts/in-queue-get-fw.agi|${EXTEN});
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-queue-get-fw.agi,${EXTEN});
 			
 			// forward (case=always) active?
 			if ("${fw_${is_call_from}_always}" != "") {
@@ -655,7 +655,7 @@ context to-internal-users-self {
 			//	Set(ring_instead_of_moh=r);
 			//	Set(queuetimeout=30);
 			//	Verbose(1,### Sonderfall fuer Queue ${EXTEN} - klingeln statt MOH\, timeout: ${queuetimeout});
-			//	AGI(/opt/gemeinschaft/dialplan-scripts/queue-num-avail-members.agi|${EXTEN});
+			//	AGI(/opt/gemeinschaft/dialplan-scripts/queue-num-avail-members.agi,${EXTEN});
 			//	Verbose(1,### Sonderfall fuer Queue ${EXTEN} - Agenten: ${queue_num_members}\, frei: ${queue_avail_members});
 			//	if ("${queue_avail_members}" = "0") {
 			//		Set(all_busy=1);
@@ -783,8 +783,8 @@ context to-internal-users-self {
 		user_uncallable:
 			// user uncallable (busy/offline/unavail)
 			// vm box active (from internal/external)?
-			//AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi|${origext});
-			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi|${EXTEN});
+			//AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi,${origext});
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi,${EXTEN});
 			if ("${user_id}" != "") {
 				Set(vm_real_source=internal);
 				Set(vm_source=internal);
@@ -802,7 +802,7 @@ context to-internal-users-self {
 			if ("${vm_real_source}" = "internal") {
 				if ("${DIALSTATUS}" = "BUSY" || "${DIALSTATUS}" = "CHANUNAVAIL" || "${DIALSTATUS}" = "CONGESTION") {
 					// call completion possible?
-					AGI(/opt/gemeinschaft/dialplan-scripts/cc-get-possible.agi|${EXTEN});
+					AGI(/opt/gemeinschaft/dialplan-scripts/cc-get-possible.agi,${EXTEN});
 					Verbose(1,### Call completion to ${EXTEN} possible?: ${cc_possible});
 					if ("${cc_possible}" = "1" && "${EXTEN}" != "${user_name}")
 						goto user_uncallable_offer_cc;
@@ -943,7 +943,7 @@ context program-cc {
 	* => {
 		Verbose(1,### Caller wants call completion to user ${cc_to_ext});
 		Set(CHANNEL(language)=de);
-		AGI(/opt/gemeinschaft/dialplan-scripts/cc-program.agi|${user_name}|${cc_to_ext});
+		DeadAGI(/opt/gemeinschaft/dialplan-scripts/cc-program.agi,${user_name},${cc_to_ext});
 		Verbose(1,### Call completion programmed?: ${cc_programmed});
 		if ("${cc_programmed}" = "1") {
 			Playback(gemeinschaft/rueckruf-programmiert);
@@ -965,7 +965,7 @@ context program-cc {
 
 macro set-callerid-by-clir() {
 	// get CLIR for a call to internal:
-	AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-internal.agi|${user_id});
+	AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-internal.agi,${user_id});
 	if ("${clir}" = "1") {
 		Set(CALLERID(all)=Anonymous <anonymous>);
 		// RFC 2543
