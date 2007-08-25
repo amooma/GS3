@@ -408,4 +408,9 @@ echo '</tr>', "\n";
 </table>
 
 <br />
-<p class="text"><small><sup>[1]</sup> <?php echo __('$$$ PCRE-Syntax ohne <code>/</code> als Begrenzer, d.h. <code>^</code> f&uuml;r den Anfang, <code>$</code> f&uuml;r das Ende, z.B. <code>[5-8]</code> oder <code>[57]</code> f&uuml;r Ziffern-Bereiche, <code>+</code> f&uuml;r eine Wiederholung des vorangehenden Zeichens (1 oder mehr) oder <code>*</code> f&uuml;r 0 oder mehr. Zus&auml;tzlich m&ouml;glich: <code>x</code> f&uuml;r <code>[0-9]</code>, <code>z</code> f&uuml;r <code>[1-9]</code>'); ?></small></p>
+<p class="text"><small><sup>[1]</sup> <?php
+/*
+echo __('$$$ PCRE-Syntax ohne <code>/</code> als Begrenzer, d.h. <code>^</code> f&uuml;r den Anfang, <code>$</code> f&uuml;r das Ende, z.B. <code>[5-8]</code> oder <code>[57]</code> f&uuml;r Ziffern-Bereiche, <code>+</code> f&uuml;r eine Wiederholung des vorangehenden Zeichens (1 oder mehr) oder <code>*</code> f&uuml;r 0 oder mehr. Zus&auml;tzlich m&ouml;glich: <code>x</code> f&uuml;r <code>[0-9]</code>, <code>z</code> f&uuml;r <code>[1-9]</code>');
+*/
+echo __('$$$ PCRE-Syntax (&quot;Perl Compatible Regular Expression&quot;) ohne <code>/</code> als Begrenzer, d.h. <code>^</code> f&uuml;r den Anfang, <code>$</code> f&uuml;r das Ende, z.B. <code>[5-8]</code> oder <code>[57]</code> f&uuml;r Ziffern-Bereiche, <code>+</code> f&uuml;r eine Wiederholung des vorangehenden Zeichens (1 oder mehr) oder <code>*</code> f&uuml;r 0 oder mehr.');
+?></small></p>
