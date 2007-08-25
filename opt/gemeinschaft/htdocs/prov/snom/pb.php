@@ -256,7 +256,7 @@ function defineBackKey()
 }
 
 
-$num_results = (int)gs_get_conf('GS_PROV_SNOM_PB_NUM_RESULTS', 10);
+$num_results = (int)gs_get_conf('GS_SNOM_PROV_PB_NUM_RESULTS', 10);
 
 
 

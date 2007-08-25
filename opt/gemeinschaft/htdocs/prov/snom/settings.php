@@ -427,8 +427,8 @@ if ($vlan_id < 1) {
 #
 setting('webserver_type'  , 'http_https');
 setting('http_scheme'     , 'off');  # off = Basic, on = Digest
-setting('http_user'       , GS_PROV_SNOM_HTTP_USER );
-setting('http_pass'       , GS_PROV_SNOM_HTTP_PASS );
+setting('http_user'       , gs_get_conf('GS_SNOM_PROV_HTTP_USER', '') );
+setting('http_pass'       , gs_get_conf('GS_SNOM_PROV_HTTP_PASS', '') );
 setting('http_port'       , '80' );
 setting('https_port'      , '443');
 setting('web_logout_timer', '5'  );

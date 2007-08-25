@@ -157,16 +157,30 @@ define( 'GS_PROV_AUTO_ADD_PHONE_HOST', 'first' );
 # which of the hosts should the new phone be assigned to?
 # can be "first", "last" or "random"
 
-define( 'GS_PROV_SNOM_HTTP_USER', 'gs' );
-define( 'GS_PROV_SNOM_HTTP_PASS', 'gEheiM' );
-# changing these values will likely cause automatic rebooting to fail
-
 define( 'GS_PROV_DIAL_LOG_LIFE', 7*24*3600 );
 # for how long to keep the dial log entries (dialed, missed,
 # in) - CDR will be stored forever
 
-define( 'GS_PROV_SNOM_PB_NUM_RESULTS', 15 );
+
+/***********************************************************
+*    HANDSETS
+***********************************************************/
+
+//---------------------[  Snom 3xx  ]---------------------//
+
+define( 'GS_SNOM_ENABLED', true );  # do provisioning for Snom?
+                                    # show keyset for Snom in the GUI?
+
+define( 'GS_SNOM_PROV_HTTP_USER', 'gs' );
+define( 'GS_SNOM_PROV_HTTP_PASS', 'gEheiM' );
+# changing these values will likely cause automatic rebooting to fail
+
+define( 'GS_SNOM_PROV_PB_NUM_RESULTS', 15 );
 # number of results in phonebook search on Snom phone
+
+//-----------------[  Siemens OpenStage  ]----------------//
+
+//...
 
 
 /***********************************************************
