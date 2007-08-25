@@ -461,11 +461,10 @@ User www-data</screen></para>
 
     <para>In MySQL die Datenbank <literal>gemeinschaft</literal> anlegen und
     <filename>gemeinschaft.sql</filename><footnote>
-        <para>Entwicklerinfo: Die Datenbank muß mit<programlisting>mysqldump --opt --databases asterisk &gt; asterisk.sql</programlisting>exportiert
-        werden. <literal>--databases</literal> ist wichtig, damit ein
-        <literal>CREATE TABLE</literal> geschrieben wird. Andernfalls müßte
-        bei der Installation erst mit<programlisting>mysql -e "create database asterisk"</programlisting>die
-        Datenbank angelegt werden.</para>
+        <para>Entwicklerinfo: Die Datenbank muß mit<programlisting>mysqldump --opt --skip-extended-insert --databases asterisk &gt; asterisk.sql</programlisting>exportiert
+        werden. <literal>--databases</literal> ist wichtig, damit die Tabellen
+        in der Datei mit <literal>CREATE TABLE</literal> erzeugt
+        werden.</para>
       </footnote> einspielen, falls Sie dies noch nicht getan haben.
     Vorgehensweise siehe <xref linkend="mysql-replikation" />.</para>
 
