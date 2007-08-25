@@ -85,6 +85,12 @@ function getUserID( $ext )
 	return $user_id;
 }
 
+
+if (! gs_get_conf('GS_SNOM_ENABLED'), true) {
+	gs_log( GS_LOG_NOTICE, "Snom provisioning not enabled" );
+	_err( 'Not enabled' );
+}
+
 $type = trim( @$_REQUEST['t'] );
 if (! in_array( $type, array('gs','prv','imported'), true )) {
 	$type = false;
