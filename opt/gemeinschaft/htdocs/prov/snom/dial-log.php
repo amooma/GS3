@@ -134,13 +134,15 @@ while ($r = $rs->fetchRow()) {
 */
 
 $query =
-'SELECT MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`, COUNT(*) `num_calls`
+'SELECT
+	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`, COUNT(*) `num_calls`
 FROM `dial_log`
 WHERE
 	`user_id`='. $user_id .' AND
 	`type`=\''. $type .'\'
 GROUP BY `number`
-ORDER BY `ts` DESC LIMIT 20';
+ORDER BY `ts` DESC
+LIMIT 20';
 $rs = $db->execute( $query );
 while ($r = $rs->fetchRow()) {
 	
@@ -165,7 +167,6 @@ while ($r = $rs->fetchRow()) {
 ';
 	
 }
-
 
 echo '
 </SnomIPPhoneDirectory>
