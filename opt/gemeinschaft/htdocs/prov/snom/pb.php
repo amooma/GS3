@@ -34,7 +34,8 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( '../../../inc/conf.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 
-header( 'Content-Type: text/xml; charset=utf-8' );
+header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
+# the Content-Type header is ignored by the Snom
 header( 'Expires: 0' );
 header( 'Pragma: no-cache' );
 header( 'Cache-Control: private, no-cache, must-revalidate' );
