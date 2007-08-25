@@ -35,21 +35,89 @@ ob_implicit_flush(1);
 error_reporting(0);
 
 
-function _no_route( $idx=1 )
+function _no_more_routes( $idx=1 )
 {
 	echo 'SET VARIABLE r_'.$idx.'_dial' ."\n";
 	die();
 }
 
+function _agi_str_esc( $str )
+{
+	return str_replace(
+		array( "\n" , "\r" , "\t" , ' '   ),
+		array( '\\ ', '\\ ', '\\ ', '\\ ' ),
+		$str );
+}
+
+function _agi_verbose( $str, $level=1 )
+{
+	echo 'VERBOSE '. _agi_str_esc($str) .' '. (int)$level ."\n";
+}
+
 
 $number = ($argc > 1) ? trim($argv[1]) : '';
-if ($number == '') _no_route();
+if ($number == '') {
+	_agi_verbose("### Empty number");
+	echo "HANGUP\n";
+	_no_more_routes();
+}
+$is_sub_system = ($argc > 2) ? strToLower(trim($argv[2])) : '';
+$is_sub_system = ($is_sub_system=='1' || $is_sub_system=='yes');
+
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
-$number_natl = $number;
+if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
+	
+	include_once( GS_DIR .'inc/canonization.php' );
+	$canonical = new CanonicalPhoneNumber( $number );
+	
+	if (@$canonical->is_call_by_call) {
+		_agi_verbose("### $number has a call-by-call prefix");
+		echo "HANGUP\n";
+		_no_more_routes();
+	}
+	elseif (@$canonical->in_prv_branch) {
+		if ($is_sub_system) {
+			# allow to go to the outside
+			_agi_verbose("### $number is in private branch but we are a sub-system");
+			$number_dial = trim( @$canonical->dial );
+		} else {
+			_agi_verbose("### $number is in private branch and we are not a sub-system");
+			/*
+			# don't dial to the outside
+			echo "HANGUP\n";
+			_no_more_routes();
+			*/
+			# dial our extension
+			$exten = trim( @$canonical->extn );
+			if ($exten != '') {
+				echo "SET VARIABLE __is_from_gateway 1\n";
+				$idx = 1;
+				echo 'SET VARIABLE r_'.$idx.'_dial Local/'. $exten .'@to-internal-users' ."\n";
+				_no_more_routes(++$idx);
+			} else {
+				_agi_verbose("### Empty number");
+				echo "HANGUP\n";
+				_no_more_routes();
+			}
+		}
+	}
+	else {
+		$number_dial = trim( @$canonical->dial );
+	}
+	
+	if ($number_dial == '') {
+		_agi_verbose("### Empty number");
+		echo "HANGUP\n";
+		_no_more_routes();
+	}
+	
+} else {
+	$number_dial = $number;
+}
 
 
 $db = gs_db_slave_connect();
@@ -73,19 +141,19 @@ ORDER BY `ord`'
 // all of PCRE syntax
 $have_match = false;
 while ($route = $rs->fetchRow()) {
-	if (@preg_match( '/'.$route['pat'].'/', $number_natl )) {
+	if (@preg_match( '/'.$route['pat'].'/', $number_dial )) {
 		$have_match = true;
 		break;
 	}
 }
-if (! $have_match) _no_route();
+if (! $have_match) _no_more_routes();
 
 $gate_grps = array();
 if ($route['gg1'] != 0) $gate_grps[] = (int)$route['gg1'];
 if ($route['gg2'] != 0) $gate_grps[] = (int)$route['gg2'];
 if ($route['gg3'] != 0) $gate_grps[] = (int)$route['gg3'];
 unset($route);
-if (count($gate_grps) < 1) _no_route();
+if (count($gate_grps) < 1) _no_more_routes();
 
 $gates = array();
 $idx = 1;
@@ -96,20 +164,21 @@ foreach ($gate_grps as $ggrp_id) {
 'SELECT `name`, `title`, `dialstr`
 FROM `gates`
 WHERE `grp_id`='. $ggrp_id .' AND `allow_out`=1
-ORDER BY RAND()'
+ORDER BY RAND()
+LIMIT 8'
 	);
 	//while ($gate = $rs->fetchRow()) $gates[] = $gate;
 	while ($gate = $rs->fetchRow()) {
 		$dialstr = str_replace(
 			array( '{number}'  , '{peer}'      ),
-			array( $number_natl, $gate['name'] ),
+			array( $number_dial, $gate['name'] ),
 			$gate['dialstr']
 		);
 		echo 'SET VARIABLE r_'.$idx.'_dial '.$dialstr ."\n";
 		++$idx;
 	}
 }
-_no_route($idx);
+_no_more_routes($idx);
 
 
 ?>
