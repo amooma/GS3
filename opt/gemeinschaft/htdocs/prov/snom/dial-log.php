@@ -31,7 +31,8 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 
-header( 'Content-type: text/plain; charset=utf-8' );
+header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
+# the Content-Type header is ignored by the Snom
 header( 'Expires: 0' );
 
 
