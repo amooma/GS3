@@ -87,7 +87,7 @@ function getUserID( $ext )
 
 
 if (! gs_get_conf('GS_SNOM_ENABLED', true)) {
-	gs_log( GS_LOG_NOTICE, "Snom provisioning not enabled" );
+	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
 	_err( 'Not enabled' );
 }
 

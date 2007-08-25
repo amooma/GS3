@@ -35,7 +35,7 @@ require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_die_on_err');
 
 if (! gs_get_conf('GS_SNOM_ENABLED', true)) {
-	gs_log( GS_LOG_NOTICE, "Snom provisioning not enabled" );
+	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
 	die( 'Not enabled.' );
 }
 
