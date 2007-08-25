@@ -34,6 +34,12 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_die_on_err');
 
+if (! gs_get_conf('GS_SNOM_ENABLED'), true) {
+	gs_log( GS_LOG_NOTICE, "Snom provisioning not enabled" );
+	die( 'Not enabled.' );
+}
+
+
 $mac = preg_replace( '/[^0-9A-F]/', '', strToUpper( @$_REQUEST['mac'] ) );
 if (strLen($mac) != 12) {
 	gs_log( GS_LOG_NOTICE, "Snom provisioning: Invalid MAC address \"$mac\" (wrong length)" );
