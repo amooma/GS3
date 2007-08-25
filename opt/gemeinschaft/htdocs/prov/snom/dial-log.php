@@ -32,6 +32,15 @@ header( 'Content-type: text/plain; charset=utf-8' );
 header( 'Expires: 0' );
 
 
+require_once( '../../../inc/conf.php' );
+require_once( GS_DIR .'inc/db_connect.php' );
+
+if (! gs_get_conf('GS_SNOM_ENABLED', true)) {
+	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
+	die( 'Not enabled.' );
+}
+
+
 $user = trim( @ $_REQUEST['user'] );
 if (! preg_match('/^\d+$/', $user))
 	die( 'Not a valid SIP user.' );
@@ -39,9 +48,6 @@ $type = trim( @ $_REQUEST['type'] );
 if (! in_array( $type, array('in','out','missed'), true ))
 	$type = false;
 
-
-require_once( '../../../inc/conf.php' );
-require_once( GS_DIR .'inc/db_connect.php' );
 
 $db = gs_db_slave_connect();
 
