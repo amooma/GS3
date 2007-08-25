@@ -29,6 +29,12 @@
 define( 'GS_VALID', true );  /// this is a parent file
 
 header( 'Content-Type: text/plain; charset=utf-8' );
+# the Content-Type header is ignored by the Snom
+header( 'Expires: 0' );
+header( 'Pragma: no-cache' );
+header( 'Cache-Control: private, no-cache, must-revalidate' );
+header( 'Vary: *' );
+
 
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
