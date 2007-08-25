@@ -3,7 +3,7 @@
 --   This file was created with
 --   mysqldump --opt --skip-extended-insert --databases asterisk > asterisk.sql
 --   
---   $Revision: 2133 $
+--   $Revision$
 -- ----------------------------------------------------------------------------
 
 
