@@ -54,7 +54,8 @@ function snomXmlEsc( $str ) {
 function _ob_send()
 {
 	if (! headers_sent()) {
-		header( 'Content-Type: text/xml; charset=utf-8' );
+		header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
+		# the Content-Type header is ignored by the Snom
 		header( 'Content-Length: '. (int)@ob_get_length() );
 	}
 	@ob_end_flush();
