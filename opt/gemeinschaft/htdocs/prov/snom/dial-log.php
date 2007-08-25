@@ -34,20 +34,56 @@ define( 'GS_VALID', true );  /// this is a parent file
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
 header( 'Expires: 0' );
+header( 'Pragma: no-cache' );
+header( 'Cache-Control: private, no-cache, must-revalidate' );
+header( 'Vary: *' );
 
 
 require_once( '../../../inc/conf.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 
+function snomXmlEsc( $str ) {
+	return str_replace(
+		array('<', '>', '"'   , "\n"),
+		array('_', '_', '\'\'', ' ' ),
+	$str);
+	# the stupid Snom does not understand &lt;, &gt, &amp;, &quot; or &apos;
+	# - neither as named nor as numbered entities
+}
+
+function _ob_send()
+{
+	if (! headers_sent()) {
+		header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
+		# the Content-Type header is ignored by the Snom
+		header( 'Content-Length: '. (int)@ob_get_length() );
+	}
+	@ob_end_flush();
+	die();
+}
+
+function _err( $msg='' )
+{
+	@ob_end_clean();
+	ob_start();
+	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
+	     '<SnomIPPhoneText>', "\n",
+	       '<Title>', 'Error', '</Title>', "\n",
+	       '<Text>', snomXmlEsc( 'Error: '. $msg ), '</Text>', "\n",
+	     '</SnomIPPhoneText>', "\n";
+	_ob_send();
+}
+
+
 if (! gs_get_conf('GS_SNOM_ENABLED', true)) {
 	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
-	die( 'Not enabled.' );
+	_err( 'Not enabled.' );
 }
 
 
 $user = trim( @ $_REQUEST['user'] );
 if (! preg_match('/^\d+$/', $user))
-	die( 'Not a valid SIP user.' );
+	_err( 'Not a valid SIP user.' );
 $type = trim( @ $_REQUEST['type'] );
 if (! in_array( $type, array('in','out','missed'), true ))
 	$type = false;
@@ -59,7 +95,7 @@ $db = gs_db_slave_connect();
 #
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1)
-	die( 'Unknown user.' );
+	_err( 'Unknown user.' );
 
 
 $typeToTitle = array(
@@ -70,6 +106,10 @@ $typeToTitle = array(
 
 
 
+ob_start();
+
+
+#################################### INITIAL SCREEN {
 if (! $type) {
 	
 	# delete outdated entries
@@ -88,7 +128,7 @@ if (! $type) {
 		if ($num_calls > 0) {
 			echo "\n",
 			     '<MenuItem>', "\n",
-			       '<Name>', htmlSpecialChars($title, ENT_QUOTES) ,'</Name>', "\n",
+			       '<Name>', snomXmlEsc( $title ) ,'</Name>', "\n",
 			       '<URL>', GS_PROV_SCHEME,'://', GS_PROV_HOST, (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)), GS_PROV_PATH, 'snom/dial-log.php?user=',$user, '&type=',$t, '</URL>', "\n",
 			     '</MenuItem>', "\n";
 			# Snom does not understand &amp; !
@@ -97,18 +137,20 @@ if (! $type) {
 	
 	echo "\n",
 	     '</SnomIPPhoneMenu>';
-	die();
 	
 }
+#################################### INITIAL SCREEN }
 
 
 
-
-echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
-echo '<SnomIPPhoneDirectory>', "\n",
-       '<Title>', htmlSpecialChars($typeToTitle[$type], ENT_QUOTES) ,'</Title>', "\n";
-
-$query =
+#################################### DIAL LOG {
+else {
+	
+	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
+	echo '<SnomIPPhoneDirectory>', "\n",
+       '<Title>', snomXmlEsc( $typeToTitle[$type] ) ,'</Title>', "\n";
+	
+	$query =
 'SELECT
 	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
 	COUNT(*) `num_calls`
@@ -119,30 +161,35 @@ WHERE
 GROUP BY `number`
 ORDER BY `ts` DESC
 LIMIT 20';
-$rs = $db->execute( $query );
-while ($r = $rs->fetchRow()) {
+	$rs = $db->execute( $query );
+	while ($r = $rs->fetchRow()) {
+		
+		$entry_name = $r['number'];
+		if ($r['remote_name'] != '') {
+			$entry_name .= ' '. $r['remote_name'];
+		}
+		if ($type=='missed') {
+			$when = date('H:i', (int)$r['ts']);
+			$entry_name = $when .'  '. $entry_name;
+		}
+		if ($r['num_calls'] > 1) {
+			$entry_name .= ' ('. $r['num_calls'] .')';
+		}
+		echo "\n",
+			 '<DirectoryEntry>', "\n",
+			   '<Name>', snomXmlEsc( $entry_name ) ,'</Name>', "\n",
+			   '<Telephone>', snomXmlEsc( $r['number'] ) ,'</Telephone>', "\n",
+			 '</DirectoryEntry>', "\n";
+		
+	}
 	
-	$entry_name = $r['number'];
-	if ($r['remote_name'] != '') {
-		$entry_name .= ' '. $r['remote_name'];
-	}
-	if ($type=='missed') {
-		$when = date('H:i', (int)$r['ts']);
-		$entry_name = $when .'  '. $entry_name;
-	}
-	if ($r['num_calls'] > 1) {
-		$entry_name .= ' ('. $r['num_calls'] .')';
-	}
 	echo "\n",
-	     '<DirectoryEntry>', "\n",
-	       '<Name>', htmlSpecialChars($entry_name, ENT_QUOTES) ,'</Name>', "\n",
-	       '<Telephone>', htmlSpecialChars($r['number'], ENT_QUOTES) ,'</Telephone>', "\n",
-	     '</DirectoryEntry>', "\n";
+	     '</SnomIPPhoneDirectory>';
 	
 }
+#################################### DIAL LOG }
 
-echo "\n",
-     '</SnomIPPhoneDirectory>';
 
+_ob_send();
 
 ?>
