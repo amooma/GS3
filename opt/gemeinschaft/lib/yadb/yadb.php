@@ -1,6 +1,6 @@
 <?php
 /***********************************************************
-*                        YADB 0.02.01
+*                        YADB 0.02.03
 * 
 * YADB is a small database abstraction layer (yet another
 * ...) designed for speed and small memory footprint. It
@@ -91,9 +91,9 @@
 * 
 * 
 * Example: Instantiate a new database connection:
-* $db =& YADB_newConnection('mysql');
+* $db = YADB_newConnection('mysql');
 * or
-* $db =& YADB_Connection::factory('mysql');
+* $db = YADB_Connection::factory('mysql');
 * 
 * 
 * Changelog:
@@ -204,7 +204,7 @@ else
 
 /***********************************************************
 * Instantiates a new database connection
-* Usage: $db =& YADB_newConnection('mysql');
+* Usage: $db = YADB_newConnection('mysql');
 ***********************************************************/
 
 function & YADB_newConnection( $dbType )
@@ -296,19 +296,25 @@ class YADB_Connection
 	
 	function YADB_Connection( $dbType )
 	{
-		$this->__construct( $dbType );
+		//$this->__construct( $dbType );
+		
+		if ( strToLower(get_class($this))=='yadb_connection' )
+			die('YADB: YADB_Connection is an abstract class - cannot instantiate. Use YADB_newConnection() or ::factory().');
+		$this->_dbType = $dbType;
 	}
 	
 	/***********************************************************
 	* The constructor (PHP 5).
 	***********************************************************/
 	
+	/*
 	function __construct( $dbType )
 	{
 		if ( strToLower(get_class($this))=='yadb_connection' )
 			die('YADB: YADB_Connection is an abstract class - cannot instantiate. Use YADB_newConnection() or ::factory().');
 		$this->_dbType = $dbType;
 	}
+	*/
 	
 	
 	function & factory( $dbType )
@@ -573,7 +579,7 @@ class YADB_Connection
 	{
 		$ret = @ $this->_close();
 		$ignore = null;
-		$this->_conn =& $ignore;
+		$this->_conn = $ignore;
 		if (!$ret) {
 			trigger_error( 'YADB: Could not close the connection. Reason unknown.', E_USER_NOTICE );
 			return false;
@@ -624,7 +630,7 @@ class YADB_Connection
 	/*
 	function & selectLimit( $query, $nRows=-1, $offset=-1, $inputArr=null )
 	{
-		$ret =& $this->execute( $query, $inputArr );
+		$ret = $this->execute( $query, $inputArr );
 	}
 	*/
 	
@@ -681,11 +687,11 @@ class YADB_Connection
 			if (! $this->_hasBindParams) {
 				if (! $sql = @ $this->_emulateVarBind( $sql, $inputArr ))
 					return false;
-				$rs =& $this->_execute( $sql );
+				$rs = $this->_execute( $sql );
 			} else
-				$rs =& $this->_execute( $sql, $inputArr );
+				$rs = $this->_execute( $sql, $inputArr );
 		} else
-			$rs =& $this->_execute( $sql );
+			$rs = $this->_execute( $sql );
 		return $rs;
 	}
 	
@@ -708,7 +714,7 @@ class YADB_Connection
 		if ($rs === true) {
 			// return simplified record set for INSERT/UPDATE/
 			// DELETE queries which just return true on success
-			//$rs =& new YADB_RecordSet_empty;
+			//$rs = new YADB_RecordSet_empty;
 			//return $rs;
 			
 			// what do we need the simplified record set for? we
@@ -719,7 +725,7 @@ class YADB_Connection
 		
 		// return real record set for SELECT queries:
 		$rsClass = 'YADB_RecordSet_'. $this->_dbType;
-		$rs =& new $rsClass( $rs, $this, $sql );
+		$rs = new $rsClass( $rs, $this, $sql );
 		return $rs;
 	}
 	
@@ -779,7 +785,7 @@ class YADB_Connection
 	
 	function executeGetOne( $sql, $inputArr=null )
 	{
-		$rs =& $this->execute( $sql, $inputArr );
+		$rs = $this->execute( $sql, $inputArr );
 		if ($rs) {
 			if ($rs === true) return true;
 			if (! $rs->EOF) {
@@ -1218,7 +1224,7 @@ class YADB_Connection
 		if ($rs === true) {
 			// return simplified record set for INSERT/UPDATE/
 			// DELETE queries which just return true on success
-			//$rs =& new YADB_RecordSet_empty;
+			//$rs = new YADB_RecordSet_empty;
 			//return $rs;
 			
 			// what do we need the simplified record set for? we
@@ -1229,7 +1235,7 @@ class YADB_Connection
 		
 		// return real record set for SELECT queries:
 		$rsClass = 'YADB_RecordSet_'. $this->_dbType;
-		$rs =& new $rsClass( $rs, $this, $sql );
+		$rs = new $rsClass( $rs, $this, $sql );
 		return $rs;
 	}
 	
@@ -1295,7 +1301,7 @@ class YADB_Connection
 				return $false;
 			}
 			
-			$row =& $rs->getRow();
+			$row = $rs->getRow();
 			$rs->close();
 			foreach ($cols as $col => $colMeta) {
 				if (isSet($row[$col]))
@@ -1312,7 +1318,7 @@ class YADB_Connection
 			}
 		}
 		
-		$recObj =& new YADB_RecordObject( $this, $table, $pkCol, $pkVal, $cols );
+		$recObj = new YADB_RecordObject( $this, $table, $pkCol, $pkVal, $cols );
 		
 		unset( $cols );
 		return $recObj;
@@ -1436,8 +1442,8 @@ class YADB_RecordSet extends YADB_BaseRS
 	* parent::YADB_RecordSet( $rs );
 	***********************************************************/
 	function YADB_RecordSet( &$rs, &$conn, $sql ) {
-		$this->_rs =& $rs;
-		$this->_conn =& $conn;
+		$this->_rs = $rs;
+		$this->_conn = $conn;
 		$this->_sql = $sql;
 		if ($this->_rs) {
 			// init record set:
@@ -1650,8 +1656,8 @@ class YADB_RecordSet extends YADB_BaseRS
 		// $this->_conn = null;
 		$ret = $this->_close();
 		$ignore = null;
-		$this->_conn =& $ignore;
-		$this->_rs   =& $ignore;
+		$this->_conn = $ignore;
+		$this->_rs   = $ignore;
 		return $ret;
 	}
 	
@@ -2085,9 +2091,9 @@ function YADB_subTypeToStr( $colMeta )
 
 
 /*
-$db =& YADB_Connection::factory('mysql');
+$db = YADB_Connection::factory('mysql');
 $db->connect( '', 'root', '', 'pwoffice2' );
-if ( $mand =& $db->loadObject('mand',2) )
+if ( $mand = $db->loadObject('mand',2) )
 	$mand->print_r();
 */
 
