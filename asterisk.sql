@@ -824,7 +824,7 @@ CREATE TABLE `routes` (
 
 LOCK TABLES `routes` WRITE;
 /*!40000 ALTER TABLE `routes` DISABLE KEYS */;
-INSERT INTO `routes` VALUES (5,1,3,'^11[0-7]$',1,1,1,1,1,1,0,'00:00:00','24:00:00',6,7,9,'Notrufnummern etc.');
+INSERT INTO `routes` VALUES (5,1,3,'^11[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,7,9,'Notrufnummern etc.');
 INSERT INTO `routes` VALUES (6,1,4,'^19222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,7,9,'Notruf Rettungsdienst');
 INSERT INTO `routes` VALUES (7,1,14,'^0900',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'Mehrwertnummern');
 INSERT INTO `routes` VALUES (8,1,8,'^118',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'Auskünfte (u.U. teuer, können vermitteln!)');
@@ -838,8 +838,8 @@ INSERT INTO `routes` VALUES (15,1,24,'^01805',1,1,1,1,1,1,1,'00:00:00','24:00:00
 INSERT INTO `routes` VALUES (16,1,26,'^01802001033',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Handvermittlung ins Ausland (teuer)');
 INSERT INTO `routes` VALUES (17,1,28,'^0180',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'Mehrwertnummern');
 INSERT INTO `routes` VALUES (18,1,30,'^0137',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Televoting (25-100 ct/Anruf)');
-INSERT INTO `routes` VALUES (19,1,32,'^012x',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Innovative Dienste (teuer)');
-INSERT INTO `routes` VALUES (20,1,34,'^032x',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'ortsunabhängig, unklare Tarifierung, GSM vermeiden');
+INSERT INTO `routes` VALUES (19,1,32,'^012[0-9]',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'Innovative Dienste (teuer)');
+INSERT INTO `routes` VALUES (20,1,34,'^032',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'ortsunabhängig, unklare Tarifierung, GSM vermeiden');
 INSERT INTO `routes` VALUES (21,1,36,'^0151',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'T-Mobile D1');
 INSERT INTO `routes` VALUES (22,1,38,'^016[01489]',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'T-Mobile D1');
 INSERT INTO `routes` VALUES (23,1,40,'^017[015]',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'T-Mobile D1');
@@ -854,7 +854,7 @@ INSERT INTO `routes` VALUES (31,1,56,'^0159',1,1,1,1,1,1,1,'00:00:00','24:00:00'
 INSERT INTO `routes` VALUES (32,1,58,'^017[69]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'O2');
 INSERT INTO `routes` VALUES (33,1,60,'^0150',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'Group3G');
 INSERT INTO `routes` VALUES (34,1,62,'^01[5-7]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'andere Handy-Gespräche');
-INSERT INTO `routes` VALUES (35,1,64,'^0zxx',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,10,0,'Ortsnetze');
+INSERT INTO `routes` VALUES (35,1,64,'^0[1-9][0-9]{2}',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,10,0,'Ortsnetze');
 INSERT INTO `routes` VALUES (36,1,66,'^00',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,9,0,'international');
 INSERT INTO `routes` VALUES (37,1,68,'^',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,9,0,'alles andere');
 /*!40000 ALTER TABLE `routes` ENABLE KEYS */;
