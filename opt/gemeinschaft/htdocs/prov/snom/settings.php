@@ -28,7 +28,7 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 
-header( 'Content-type: text/plain; charset=utf-8' );
+header( 'Content-Type: text/plain; charset=utf-8' );
 
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
