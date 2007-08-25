@@ -78,14 +78,14 @@ macro is_dmz( is_dmz_num ) {
 macro cmm-login( new_user_name ) {
 	
 	Answer();
-	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-check-user.agi|${new_user_name});
+	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-check-user.agi,${new_user_name});
 	NoOp(### AGI returned: ret = ${ret});
 	if ("${ret}" != "1")
 		goto unknown;
 	
 	Wait(1);
 	Read(pass,agent-pass,10,s,3,5);
-	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-login.agi|${new_user_name}|${pass}|${user_id});
+	DeadAGI(/opt/gemeinschaft/dialplan-scripts/cmm-login.agi,${new_user_name},${pass},${user_id});
 	NoOp(### AGI returned: ret = ${ret});
 	if ("${ret}" = "error")
 		goto error;
@@ -98,8 +98,8 @@ macro cmm-login( new_user_name ) {
 	//TrySystem(asterisk -rx \'sip notify snom-reboot ${user_name}\');
 	//TrySystem(asterisk -rx \'sip prune realtime ${new_user_name}\');
 	//TrySystem(asterisk -rx \'sip prune realtime ${user_name}\');
-	//AGI(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot.agi|${new_user_name});
-	//AGI(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot.agi|${user_name});
+	//DeadAGI(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot.agi,${new_user_name});
+	//DeadAGI(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot.agi,${user_name});
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot ${new_user_name});
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot ${user_name});
 	Hangup();
@@ -125,7 +125,7 @@ macro cmm-logout() {
 	
 	Answer();
 	Wait(1);
-	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi|${user_id});
+	DeadAGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id});
 	//Playback(agent-loggedoff&vm-goodbye);
 	Playback(gemeinschaft/sie-sind-abgemeldet);
 	//TrySystem(asterisk -rx \'sip notify snom-reboot ${user_name}\');
@@ -175,7 +175,7 @@ context to-conferences {
 			Set(confnum=${RAND(100,999)});
 			Verbose(1,### Searching empty conference - trying ${confprefix}${confnum});
 			// find where the conference is or claim it:
-			AGI(/opt/gemeinschaft/dialplan-scripts/conf-get-where.agi|${confprefix}${confnum});
+			AGI(/opt/gemeinschaft/dialplan-scripts/conf-get-where.agi,${confprefix}${confnum});
 			if ("${exttype}" != "conference") {
 				Verbose(1,### Something bad happened. Conference ${confprefix}${confnum} is of type "${exttype}");
 				Congestion(3);
@@ -215,7 +215,7 @@ context to-conferences {
 			&dial-log-store(${user_name},out,${confprefix}${confnum});
 		}
 		// find where the conference is or claim it:
-		AGI(/opt/gemeinschaft/dialplan-scripts/conf-get-where.agi|${confprefix}${confnum});
+		AGI(/opt/gemeinschaft/dialplan-scripts/conf-get-where.agi,${confprefix}${confnum});
 		if ("${exttype}" != "conference") {
 			Verbose(1,### Something bad happened. Conference ${confprefix}${confnum} is of type "${exttype}");
 			Congestion(3);
@@ -291,7 +291,7 @@ macro queue-login( queue ) {
 	
 	Answer();
 	Verbose(1,### User ${user_name} wants to log in to queue ${queue});
-	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi|${user_name}|${queue}|login);
+	DeadAGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},login);
 	if ("${agent_login_status}" = "loggedin") {
 		// fake login for the statistics:
 		QueueLog(NONE,${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGIN,fake);
@@ -310,7 +310,7 @@ macro queue-logout( queue ) {
 	
 	Answer();
 	Verbose(1,### User ${user_name} wants to log out from queue ${queue});
-	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi|${user_name}|${queue}|logout);
+	DeadAGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},logout);
 	Wait(0.5);
 	if ("${agent_login_status}" = "loggedout") {
 		Playback(agent-loggedoff);
@@ -324,7 +324,7 @@ macro queue-logout-all() {
 	
 	Answer();
 	Verbose(1,### User ${user_name} wants to log out from all queues);
-	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi|${user_name}|0|logoutall);
+	DeadAGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},0,logoutall);
 	Wait(0.5);
 	if ("${agent_login_status}" = "loggedout") {
 		Playback(agent-loggedoff);
@@ -337,7 +337,7 @@ macro queue-logout-all() {
 macro queue-logout-all-silent() {
 	// like &queue-logout-all() but silent
 	Verbose(1,### User ${user_name} wants to log out from all queues);
-	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi|${user_name}|0|logoutall);
+	DeadAGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},0,logoutall);
 }
 context queues-login-logout {
 	
@@ -505,14 +505,14 @@ macro dial-gateway-do( mnumber ) {
 		Set(zone=internal);
 	}
 	if ("${user_id}" != "") {
-		AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-${zone}.agi|${user_id});
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-${zone}.agi,${user_id});
 		if ("${clir}" = "1") {
 			Set(CALLERID(all)=Anonymous <anonymous>);
 			// RFC 2543
 		}
 	}
 	
-	AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi|${mnumber}|${is_sub_system});
+	AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi,${mnumber},${is_sub_system});
 	Set(no_route=1);
 	Set(r=1);
 	while ("${r_${r}_dial}" != "") {
@@ -578,7 +578,7 @@ macro dial-gateway( mnumber ) {
 		Verbose(1,### forwarded_by: ${forwarded_by});
 	}
 	// AGI ...      dial_allowed = yes | no | pin,  dial_pin = <pin>
-	AGI(/opt/gemeinschaft/dialplan-scripts/callblocking.agi|${forwarded_by}|${mnumber});
+	AGI(/opt/gemeinschaft/dialplan-scripts/callblocking.agi,${forwarded_by},${mnumber});
 	if ("${dial_allowed}" = "pin") {
 		Verbose(1,### User ${user_name} needs PIN (${dial_pin}) to dial ${mnumber} via gateway);
 		if ("${is_forwarded}" = "1") {
@@ -652,7 +652,7 @@ context private-call {
 		// prfen, ob der User Privatgespr�he machen darf ...
 		
 		// accountcode setzen ...
-		AGI(/opt/gemeinschaft/dialplan-scripts/usercode-by-ext.agi|${user_name});
+		AGI(/opt/gemeinschaft/dialplan-scripts/usercode-by-ext.agi,${user_name});
 		Set(CDR(amaflags)=BILLING);
 		SET(CDR(accountcode)=prv-${user_code});
 		
