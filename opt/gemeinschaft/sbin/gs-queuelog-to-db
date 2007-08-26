@@ -348,6 +348,8 @@ foreach ($files as $file) {
 	process_log( $file );
 }
 
+@$DB->execute( 'OPTIMIZE TABLE `queue_log`' );
+@$DB->execute( 'ANALYZE TABLE `queue_log`' );
 
 remove_lockfile();
 
