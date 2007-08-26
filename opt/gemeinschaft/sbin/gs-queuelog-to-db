@@ -77,7 +77,7 @@ function _err_handler( $type, $msg, $file, $line )
 
 function process_log( $file )
 {
-	global $DB;
+	global $DB, $last_timestamp;
 	
 	$fh = fOpen( $file, 'rb' );
 	if (! is_resource( $fh )) return false;
@@ -86,6 +86,9 @@ function process_log( $file )
 		
 		$r = log_line_to_db_entry( $line );
 		if (! $r) continue;
+		
+		# don't insert the old entries again:
+		if ((int)$r['ts'] < $last_timestamp) continue;
 		
 		if ($r['uid'] < 1 ) $r['uid'] = 'NULL';
 		if ($r['qid'] < 1 ) $r['qid'] = 'NULL';
@@ -102,7 +105,7 @@ function process_log( $file )
 		$r['logindur'] = db_quote_or_null( $r['logindur'] );
 		$r['info'    ] = db_quote_or_null( $r['info'    ] );
 		
-		print_r($r);
+		//print_r($r);
 		$DB->execute(
 'INSERT INTO `queue_log` (
 	`queue_id`,
@@ -142,7 +145,8 @@ function process_log( $file )
 }
 
 
-function db_quote_or_null( $val ) {
+function db_quote_or_null( $val )
+{
 	global $DB;
 	
 	return $val ? ('\''. $DB->escape($val) .'\'') : 'NULL';
@@ -333,6 +337,7 @@ if (! @touch($lockfile)) {
 
 $DB = gs_db_master_connect();
 
+$last_timestamp = (int)$DB->executeGetOne( 'SELECT MAX(`timestamp`) FROM `queue_log`' );
 
 # rotate the log file and tell asterisk to reopen the log file
 $err=0; $out=array();
