@@ -111,6 +111,13 @@ $MODULES = array(
 	   )
 	),
 	##################################################################
+	'stats'            => array('title' => __('$$$ Statistik'),
+	                            'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
+	   'sub' => array(
+	      'qclassical' => array('title' => __('$$$ Q Klassisch'))
+	   )
+	),
+	##################################################################
 	'help'             => array('title' => __('Hilfe'),
 	                            'icon'  => 'crystal-svg/%s/act/help.png',
 	   'sub' => array(
