@@ -303,6 +303,10 @@ nameserver 192.168.2.1
         <term>Debian:</term>
 
         <listitem>
+          <para>In der <filename>/etc/bind/named.conf.local</filename> sollte
+          man jetzt noch die Zeile<programlisting>include "/etc/bind/zones.rfc1918";</programlisting>hinzufügen,
+          danach:</para>
+
           <programlisting><command>/etc/init.d/bind9 restart</command>
 <command>update-rc.d bind9 defaults</command></programlisting>
         </listitem>
