@@ -49,36 +49,38 @@ function sec_to_hours($sec) {
 	return $hours;
 }
 
-function query_string( $period, $src, $dst, $dur, $stat ) {
+function query_string( $period, $src, $dst, $dur, $stat )
+{
+	global $DB;
 	
 	$query_line = '';
 	
 	switch ($period) {
 	case 'month':
-		$query_line = '`calldate` > (NOW() - INTERVAL 1 MONTH)';
+		$query_line = '`calldate` > (NOW()-INTERVAL 1 MONTH)';
 		break;
 	case 'day':
-		$query_line = '`calldate` > (NOW() - INTERVAL 1 DAY)';
+		$query_line = '`calldate` > (NOW()-INTERVAL 1 DAY)';
 		break;
 	case 'hour':
-		$query_line = '`calldate` > (NOW() - INTERVAL 1 HOUR)';
+		$query_line = '`calldate` > (NOW()-INTERVAL 1 HOUR)';
 		break;
 	case 'qhour':
-		$query_line = '`calldate` > (NOW() - INTERVAL 15 MINUTE)';
+		$query_line = '`calldate` > (NOW()-INTERVAL 15 MINUTE)';
 		break;
 	case 'tmonth':
-		$query_line = 'DATE_FORMAT(`calldate`,\'%Y-%m\') =  DATE_FORMAT(CURRENT_DATE,\'%Y-%m\')';
+		$query_line = 'DATE_FORMAT(`calldate`,\'%Y-%m\') =  DATE_FORMAT(CURRENT_DATE(),\'%Y-%m\')';
 		break;
 	case 'tweek':
-		$dow = DATE('w');
+		$dow = (int)date('w');
 		if ($dow == 0) $dow = 7; 
-		$query_line = '`calldate` > (CURRENT_DATE - INTERVAL '.$dow.' DAY)';
+		$query_line = '`calldate` > (CURRENT_DATE()-INTERVAL '.$dow.' DAY)';
 		break;
 	case 'today':
-		$query_line = 'DATE_FORMAT(`calldate`,\'%Y-%m-%d\') =  CURRENT_DATE';
+		$query_line = 'DATE_FORMAT(`calldate`,\'%Y-%m-%d\') = CURRENT_DATE()';
 		break;
 	default:
-		$query_line = '`calldate` > (NOW() - INTERVAL 7 DAY)';
+		$query_line = '`calldate` > (NOW()-INTERVAL 7 DAY)';
 	}
 	
 	$src_sql = str_replace(
@@ -90,22 +92,22 @@ function query_string( $period, $src, $dst, $dur, $stat ) {
 		array( '%', '_' ),
 		$dst);
 	
-	if ($src!='') {
+	if ($src != '') {
 		if ($query_line != '') $query_line .= ' AND';
-		$query_line .= ' `src` LIKE \''.$src_sql.'\'';
+		$query_line .= ' `src` LIKE \''. $DB->escape($src_sql) .'\'';
 	}
 	
-	if ($dst!='') {
+	if ($dst != '') {
 		if ($query_line != '') $query_line .= ' AND';
-		$query_line .= ' `dst` LIKE \''.$dst_sql.'\'';
+		$query_line .= ' `dst` LIKE \''. $DB->escape($dst_sql).'\'';
 	}
-	if ($dur!='') {
+	if ($dur != '') {
 		if ($query_line != '') $query_line .= ' AND';		
-		$query_line .= ' `billsec` '.$dur.'';		
+		$query_line .= ' `billsec` '. $DB->escape($dur) .'';		
 	}
-	if ($stat!='') {
+	if ($stat != '') {
 		if ($query_line != '') $query_line .= ' AND';
-		$query_line .= ' `disposition` = \''.$stat.'\'';
+		$query_line .= ' `disposition` = \''. $DB->escape($stat) .'\'';
 	}
 	
 	if ($query_line != '') $query_line = ' WHERE '.$query_line;
