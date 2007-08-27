@@ -108,8 +108,12 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	}
 	if ($stat != '') {
 		if ($query_line != '') $query_line .= ' AND';
-		$query_line .= ' `disposition` = \''. $DB->escape($stat) .'\'';
+		$query_line .= ' `disposition`=\''. $DB->escape($stat) .'\'';
 	}
+	
+	if ($query_line != '') $query_line .= ' AND';
+	$query_line .= ' `dst`<>\'s\' AND `dst` NOT LIKE \'*8%\'';
+	# do not show calls to any of the "s" or pickup extensions
 	
 	if ($query_line != '') $query_line = ' WHERE '.$query_line;
 	return $query_line;
