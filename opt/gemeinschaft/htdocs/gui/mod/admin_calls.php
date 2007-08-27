@@ -92,20 +92,20 @@ function query_string( $period, $src, $dst, $dur, $stat ) {
 	
 	if ($src!='') {
 		if ($query_line!='') $query_line = $query_line.' AND';
-		$query_line = $query_line.' `src` LIKE \''.$src_sql.'\'';
+		$query_line .= ' `src` LIKE \''.$src_sql.'\'';
 	}
 	
 	if ($dst!='') {
 		if ($query_line!='') $query_line = $query_line.' AND';
-		$query_line = $query_line.' `dst` LIKE \''.$dst_sql.'\'';
+		$query_line .= ' `dst` LIKE \''.$dst_sql.'\'';
 	}
 	if ($dur!='') {
 		if ($query_line!='') $query_line = $query_line.' AND';		
-		$query_line = $query_line.' `billsec` '.$dur.'';		
+		$query_line .= ' `billsec` '.$dur.'';		
 	}
 	if ($stat!='') {
 		if ($query_line!='') $query_line = $query_line.' AND';
-		$query_line = $query_line.' `disposition` = \''.$stat.'\'';
+		$query_line .= ' `disposition` = \''.$stat.'\'';
 	}
 	
 	if ($query_line!='') $query_line = ' WHERE '.$query_line;
@@ -141,10 +141,12 @@ if ($dur!='') {
 } 
 
 
+$query_string = query_string($period, $src, $dst, $dur, $stat);
+
 /*
 echo 'SELECT SQL_CALC_FOUND_ROWS
 DATE_FORMAT(calldate,\'%d.%m.%Y %H:%i:%s\') as datum,clid,src,dst,duration,billsec,disposition 
-FROM `ast_cdr` '.query_string($period, $src, $dst, $dur, $stat);
+FROM `ast_cdr` '. $query_string;
 */
 
 
@@ -153,7 +155,7 @@ $rs = $DB->execute( 'DELETE FROM `ast_cdr` WHERE `dst`=\'h\'' );
 $rs = $DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
 	DATE_FORMAT(`calldate`, \'%d.%m.%Y %H:%i:%s\') `datum`, `clid`, `src`, `dst`, `duration`, `billsec`, `disposition` 
-FROM `ast_cdr` '. query_string($period, $src, $dst, $dur, $stat) .'
+FROM `ast_cdr` '. $query_string .'
 ORDER BY `calldate` DESC
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 );
@@ -161,8 +163,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 $num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
-$sum_talktime = (int)@$DB->executeGetOne( 'SELECT SUM(`billsec`) FROM `ast_cdr` '.query_string($period, $src, $dst, $dur, $stat));
-$sum_calltime = (int)@$DB->executeGetOne( 'SELECT SUM(`duration`) FROM `ast_cdr` '.query_string($period, $src, $dst, $dur, $stat));
+$sum_talktime = (int)@$DB->executeGetOne( 'SELECT SUM(`billsec`) FROM `ast_cdr` '. $query_string);
+$sum_calltime = (int)@$DB->executeGetOne( 'SELECT SUM(`duration`) FROM `ast_cdr` '. $query_string);
 // $num_total_not_null = (int) $DB->executeGetOne( 'SELECT COUNT(*) FROM `ast_cdr` WHERE `billsec` > 0');
 
 
@@ -337,7 +339,7 @@ if (@$rs) {
 	<th><?php echo __('Anrufdauer im Durchschnitt'); ?>:</th>
 	<td><?php
 
-$where = trim( query_string($period, $src, $dst, $dur, $stat) );
+$where = trim( $query_string );
 if (strToUpper(subStr($where,0,5)) == 'WHERE')
 	$where = $where.' AND `billsec` > 0';
 else
