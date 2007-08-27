@@ -101,9 +101,10 @@ function query_string( $period, $src, $dst, $dur, $stat )
 		if ($query_line != '') $query_line .= ' AND';
 		$query_line .= ' `dst` LIKE \''. $DB->escape($dst_sql).'\'';
 	}
+	$dur = _sanitize_dur( $dur );
 	if ($dur != '') {
 		if ($query_line != '') $query_line .= ' AND';		
-		$query_line .= ' `billsec` '. $DB->escape($dur) .'';		
+		$query_line .= ' `billsec` '. $dur .'';		
 	}
 	if ($stat != '') {
 		if ($query_line != '') $query_line .= ' AND';
@@ -111,38 +112,51 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	}
 	
 	if ($query_line != '') $query_line = ' WHERE '.$query_line;
-	
 	return $query_line;
 }
 
 
 $per_page = (int)GS_GUI_NUM_RESULTS;
 
-$src = trim(@$_REQUEST['src']);
-$dst = trim(@$_REQUEST['dst']);
-$dur = trim(@$_REQUEST['dur']);
-$stat = trim(@$_REQUEST['stat']);
+$src    = trim(@$_REQUEST['src'   ]);
+$dst    = trim(@$_REQUEST['dst'   ]);
+$dur    = trim(@$_REQUEST['dur'   ]);
+$stat   = trim(@$_REQUEST['stat'  ]);
 $period = trim(@$_REQUEST['period']);
-$page = (int)@$_REQUEST['page'];
+$page   = (int)@$_REQUEST['page'  ] ;
 
-if ($dur!='') {
-	switch ($dur[0]) {
-		case '<':
-			$dur = '< '. (int)substr($dur,1);
-			break;
-		case '>':
-			$dur = '> '. (int)substr($dur,1);
-			break;
-		case '=':
-			$dur = '= '. (int)substr($dur,1);
-			break;
-		default:
-			$dur = '> '. (int)$dur;
-			break;
+
+function _sanitize_dur( $dur )
+{
+	if ($dur != '') {
+		switch ($dur[0]) {
+			case '<':
+				if (subStr($dur,1,1) == '=')
+					$dur = '<= '. (int)trim(subStr($dur,2));
+				else
+					$dur = '< '. (int)trim(subStr($dur,1));
+				break;
+			case '>':
+				if (subStr($dur,1,1) == '=')
+					$dur = '>= '. (int)trim(subStr($dur,2));
+				else
+					$dur = '> '. (int)trim(subStr($dur,1));
+				break;
+			case '=':
+				$dur = '= '. (int)trim(subStr($dur,1));
+				break;
+			default:
+				$dur = '> '. (int)trim($dur);
+				break;
+		}
+	} else {
+		$dur = '';
 	}
-} 
+	return $dur;
+}
 
 
+$dur = _sanitize_dur( $dur );
 $query_string = query_string($period, $src, $dst, $dur, $stat);
 
 /*
@@ -170,8 +184,12 @@ $sum_calltime = (int)@$DB->executeGetOne( 'SELECT SUM(`duration`) FROM `ast_cdr`
 // $num_total_not_null = (int) $DB->executeGetOne( 'SELECT COUNT(*) FROM `ast_cdr` WHERE `billsec` > 0');
 
 
-$mod_url = gs_url($SECTION, $MODULE) .
-'&amp;src='. $src .'&amp;dst='. $dst .'&amp;dur='. $dur .'&amp;stat='. $stat .'&amp;period='. $period;
+$mod_url = gs_url($SECTION, $MODULE)
+	.'&amp;src='   . rawUrlEncode($src)
+	.'&amp;dst='   . rawUrlEncode($dst)
+	.'&amp;dur='   . rawUrlEncode($dur)
+	.'&amp;stat='  . rawUrlEncode($stat)
+	.'&amp;period='. rawUrlEncode($period);
 
 
 ?>
