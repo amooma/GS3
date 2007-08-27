@@ -91,24 +91,24 @@ function query_string( $period, $src, $dst, $dur, $stat ) {
 		$dst);
 	
 	if ($src!='') {
-		if ($query_line!='') $query_line = $query_line.' AND';
+		if ($query_line != '') $query_line .= ' AND';
 		$query_line .= ' `src` LIKE \''.$src_sql.'\'';
 	}
 	
 	if ($dst!='') {
-		if ($query_line!='') $query_line = $query_line.' AND';
+		if ($query_line != '') $query_line .= ' AND';
 		$query_line .= ' `dst` LIKE \''.$dst_sql.'\'';
 	}
 	if ($dur!='') {
-		if ($query_line!='') $query_line = $query_line.' AND';		
+		if ($query_line != '') $query_line .= ' AND';		
 		$query_line .= ' `billsec` '.$dur.'';		
 	}
 	if ($stat!='') {
-		if ($query_line!='') $query_line = $query_line.' AND';
+		if ($query_line != '') $query_line .= ' AND';
 		$query_line .= ' `disposition` = \''.$stat.'\'';
 	}
 	
-	if ($query_line!='') $query_line = ' WHERE '.$query_line;
+	if ($query_line != '') $query_line = ' WHERE '.$query_line;
 	
 	return $query_line;
 }
