@@ -138,7 +138,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
 foreach ($MODULES as $sectname => $sectinfo) {
 	$sect_active = ($sectname == $SECTION);
 	
-	if ( array_key_exists('inmenu', $sectinfo) && ! $sectinfo['inmenu'] )
+	if (array_key_exists('inmenu', $sectinfo) && ! $sectinfo['inmenu'])
 		continue;
 	
 	if ( @$sectinfo['perms'] == 'admin'
@@ -155,6 +155,9 @@ foreach ($MODULES as $sectname => $sectinfo) {
 	if (count($sectinfo['sub']) > 1) {
 		echo '<ul class="menu">', "\n";
 		foreach ($sectinfo['sub'] as $modname => $modinfo) {
+			if (array_key_exists('inmenu', $modinfo) && ! $modinfo['inmenu'])
+				continue;
+			
 			echo "\t", '<li class="leaf"><a href="'. gs_url($sectname, $modname) .'" class="'. ($modname==$MODULE ? 'active' : '') .'"><img alt="" src="', GS_URL_PATH, 'img/tree.gif" />'. $modinfo['title'] .'</a></li>', "\n";
 		}
 		echo '</ul>', "\n";
