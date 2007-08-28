@@ -150,47 +150,4 @@ $MODULES = array(
 );
 
 
-/*
-<ul>
-	<li class="leaf"><a href="?m=home" title="">Home</a></li>
-	<li class="expanded"><a href="?m=pb&amp;s=org" title="" class="active">Telefonbuch</a>
-		<ul class="menu">
-			<li class="leaf"><a href="?m=pb&amp;s=contacts" title="">Kontakte</a></li>
-			<li class="leaf"><a href="?m=pb&amp;s=local" title="">Kontakte lokal</a></li>
-			<li class="leaf"><a href="?m=pb&amp;s=private" title="">Pers&ouml;nlich</a></li>
-		</ul>
-	</li>
-	<li class="collapsed"><a href="?m=vm" title="" class="">Voicemail</a>
-		<ul class="menu">
-			<li class="leaf"><a href="?m=vm&amp;s=msg" title="">Nachrichten</a></li>
-			<li class="leaf"><a href="?m=vm&amp;s=pref" title="">Einstellungen</a></li>
-		</ul>
-	</li>
-	<li class="collapsed"><a href="?m=calls" title="" class="">Anruflisten</a>
-		<ul class="menu">
-			<li class="leaf"><a href="?m=calls&amp;s=dialed" title="">gew&auml;hlte</a></li>
-			<li class="leaf"><a href="?m=calls&amp;s=missed" title="">verpasste</a></li>
-			<li class="leaf"><a href="?m=calls&amp;s=accepted" title="">angenommene</a></li>
-		</ul>
-	</li>
-	<li class="collapsed"><a href="?m=fw" title="">Rufumleitung</a></li>
-	<li class="collapsed"><a href="?m=misc" title="">Verschiedenes</a></li>
-	<li class="collapsed"><a href="?m=reporting" title="" class="">Reporting</a>
-		<ul class="menu">
-			<li class="leaf"><a href="?m=reporting&amp;s=mon&amp;s=group" title="">Live-Monitor</a></li>
-			<li class="leaf"><a href="?m=reporting&amp;s=stats&amp;s=stats" title="">Live-Statistik</a></li>
-			<li class="leaf"><a href="?m=reporting&amp;s=reports&amp;s=stats" title="">Auswertung</a></li>
-		</ul>
-	</li>
-	<li class="collapsed"><a href="?m=private" title="">Privatgespr&auml;che</a></li>
-	<li class="collapsed"><a href="?m=help" title="" class="">Hilfe</a>
-		<ul class="menu">
-			<li class="leaf"><a href="?m=help&amp;s=pbx" title="">Telefonanlage</a></li>
-			<li class="leaf"><a href="?m=help&amp;s=snom" title="">Snom</a></li>
-		</ul>
-	</li>
-</ul>
-*/
-
-
 ?>
