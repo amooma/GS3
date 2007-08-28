@@ -26,6 +26,12 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+######################################################
+##
+##   ALL STRINGS IN HERE NEED TO BE TRANSLATED!
+##
+######################################################
+
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/canonization.php' );
 
@@ -50,23 +56,23 @@ $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 
 ?>
 
-<p class="text"><?php echo __('$$$ Hier k&ouml;nnen Sie &uuml;berpr&uuml;fen, wie nach extern gew&auml;hlte Telefonnummern entsprechend Ihrer Einstellungen kanonisiert und geroutet werden.'); ?></p>
+<p class="text"><?php echo __('Hier k&ouml;nnen Sie &uuml;berpr&uuml;fen, wie nach extern gew&auml;hlte Telefonnummern entsprechend Ihrer Einstellungen kanonisiert und geroutet werden.'); ?></p>
 
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="canonize" />
 
-<label for="ipt-number"><?php echo __('$$$ Telefonnummer'); ?>:</label><br />
+<label for="ipt-number"><?php echo __('Telefonnummer'); ?>:</label><br />
 <input type="text" name="number" id="ipt-number" value="<?php echo $number; ?>" size="25" maxlength="30" />
 
-<input type="submit" value="<?php echo __('$$$ Testen'); ?>" />
+<input type="submit" value="<?php echo __('Testen'); ?>" />
 </form>
 <br />
 
 
 
-<h3><?php echo __('$$$ Kanonisierung'); ?></h3>
+<h3><?php echo __('Kanonisierung'); ?></h3>
 
 <?php
 ###################################################### CANONIZATION {
@@ -78,47 +84,47 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 <tbody>
 
 <tr class="even">
-	<td><b><?php echo __('$$$ Kanonisch'); ?>:</b></td>
+	<td><b><?php echo __('Kanonisch'); ?>:</b></td>
 	<td class="pre r"><?php echo $canonical->norm; ?></td>
 </tr>
 
 <tr class="odd">
-	<td><b><?php echo __('$$$ International'); ?>:</b></td>
+	<td><b><?php echo __('International'); ?>:</b></td>
 	<td class="pre r"><?php echo $canonical->intl; ?></td>
 </tr>
 
 <tr class="even">
-	<td><b><?php echo __('$$$ National'); ?>:</b></td>
+	<td><b><?php echo __('National'); ?>:</b></td>
 	<td class="pre r"><?php echo $canonical->natl; ?></td>
 </tr>
 
 <tr class="odd">
-	<td><b><?php echo __('$$$ Innerorts'); ?>:</b></td>
+	<td><b><?php echo __('Innerorts'); ?>:</b></td>
 	<td class="pre r"><?php echo $canonical->locl; ?></td>
 </tr>
 
 <tr class="even">
-	<td><b><?php echo __('$$$ In eigener Telefonanlage?'); ?>:</b></td>
-	<td class="pre"><?php echo ($canonical->in_prv_branch ? __('$$$ ja') : __('$$$ nein')); ?></td>
+	<td><b><?php echo __('In eigener Telefonanlage?'); ?>:</b></td>
+	<td class="pre"><?php echo ($canonical->in_prv_branch ? __('ja') : __('nein')); ?></td>
 </tr>
 
 <tr class="odd">
-	<td><b><?php echo __('$$$ Durchwahl'); ?>:</b></td>
+	<td><b><?php echo __('Durchwahl'); ?>:</b></td>
 	<td class="pre r"><?php echo $canonical->extn; ?></td>
 </tr>
 
 <tr class="even">
-	<td><b><?php echo __('$$$ Sondernummer?'); ?>:</b></td>
-	<td class="pre"><?php echo ($canonical->is_special ? __('$$$ ja') : __('$$$ nein')); ?></td>
+	<td><b><?php echo __('Sondernummer?'); ?>:</b></td>
+	<td class="pre"><?php echo ($canonical->is_special ? __('ja') : __('nein')); ?></td>
 </tr>
 
 <tr class="odd">
-	<td><b><?php echo __('$$$ Call-by-Call?'); ?>:</b></td>
-	<td class="pre"><?php echo ($canonical->is_call_by_call ? __('$$$ ja') : __('$$$ nein')); ?></td>
+	<td><b><?php echo __('Call-by-Call?'); ?>:</b></td>
+	<td class="pre"><?php echo ($canonical->is_call_by_call ? __('ja') : __('nein')); ?></td>
 </tr>
 
 <tr class="even">
-	<td><b><?php echo __('$$$ Ergebnis'); ?>:</b></td>
+	<td><b><?php echo __('Ergebnis'); ?>:</b></td>
 	<td class="pre r"><?php echo $canonical->dial; ?></td>
 </tr>
 
@@ -131,18 +137,18 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 $dial = '';
 switch (@$canonical->errt) {
 	case 'empty':
-		echo "$$$ Keine Telefonnummer angegeben.";
+		echo __('Keine Telefonnummer angegeben.');
 		break;
 	case 'cbc':
-		echo "$$$ Der Endanwender soll keine Call-by-Call-Vorwahlen verwenden.";
+		echo __('Der Endanwender soll keine Call-by-Call-Vorwahlen verwenden.');
 		break;
 	case 'self':
-		echo "$$$ Diese Nummer ist innerhalb der eigenen Telefonanlage.";
+		echo __('Diese Nummer ist innerhalb der eigenen Telefonanlage.');
 		break;
 	case '':
 	default:
 		$dial = $canonical->dial;
-		echo sPrintF("$$$ Die Nummer w&uuml;rde als <b>%s</b> mit den Mustern in der Routing-Tabelle verglichen.", $dial);
+		echo sPrintF(__('Die Nummer w&uuml;rde als <b>%s</b> mit den Mustern in der Routing-Tabelle verglichen.'), $dial);
 }
 ?>
 </p>
@@ -154,7 +160,7 @@ switch (@$canonical->errt) {
 
 ###################################################### NO CANONIZATION {
 else {
-	echo '<p class="text">(', __('$$$ Kanonisierung ist nicht aktiviert!') ,')</p>', "\n";
+	echo '<p class="text">(', __('Kanonisierung ist nicht aktiviert!') ,')</p>', "\n";
 	$dial = trim($number);
 }
 ###################################################### NO CANONIZATION }
@@ -166,22 +172,22 @@ else {
 if ($dial != '') {
 ?>
 
-<h3><?php echo __('$$$ Zutreffende Suchmuster'); ?></h3>
+<h3><?php echo __('Zutreffende Suchmuster'); ?></h3>
 
 <table cellspacing="1">
 <thead>
 <tr>
-	<th><?php echo __('$$$ Wochentage'); ?></th>
-	<th><?php echo __('$$$ Uhrzeit'); ?></th>
-	<th><?php echo __('$$$ Muster'); ?></th>
+	<th><?php echo __('Wochentage'); ?></th>
+	<th><?php echo __('Uhrzeit'); ?></th>
+	<th><?php echo __('Muster'); ?></th>
 	<?php /* ?>
-	<th><?php echo sPrintF(__('$$$ Route Prio. %d'), 1); ?></th>
-	<th><?php echo sPrintF(__('$$$ Route Prio. %d'), 2); ?></th>
-	<th><?php echo sPrintF(__('$$$ Route Prio. %d'), 3); ?></th>
+	<th><?php echo sPrintF(__('Route Prio. %d'), 1); ?></th>
+	<th><?php echo sPrintF(__('Route Prio. %d'), 2); ?></th>
+	<th><?php echo sPrintF(__('Route Prio. %d'), 3); ?></th>
 	<?php */ ?>
-	<th><?php echo __('$$$ Route'); ?></th>
-	<th><?php echo __('$$$ Fallback'); ?></th>
-	<th><?php echo __('$$$ Fallback'); ?></th>
+	<th><?php echo __('Route'); ?></th>
+	<th><?php echo __('Fallback'); ?></th>
+	<th><?php echo __('Fallback'); ?></th>
 </tr>
 </thead>
 <tbody>
@@ -259,14 +265,11 @@ ORDER BY `ord`'
 </table>
 
 <br />
-<p class="text"><small>(<?php echo __('$$$ Dabei ist die Reihenfolge entscheidend; das erste zutreffende Muster gewinnt.'); ?>)</small></p>
+<p class="text"><small>(<?php echo __('Dabei ist die Reihenfolge entscheidend; das erste zutreffende Muster gewinnt.'); ?>)</small></p>
 
 <?php
 }
 ###################################################### ROUTING }
 
 ?>
-
-<br />
-<br />
 
