@@ -26,6 +26,12 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+######################################################
+##
+##   ALL STRINGS IN HERE NEED TO BE TRANSLATED!
+##
+######################################################
+
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/pcre_check.php' );
 
@@ -210,7 +216,7 @@ $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 
 ?>
 
-<p class="text"><small><?php echo __('$$$ Diese W&auml;hlregeln f&uuml;r ausgehende Routen werden von oben nach unten abgearbeitet bis eine Regel zutrifft. Dabei wird die gew&auml;hlte Telefonnummer in der nach Ihren Einstellungen kanonisierten <b>nationalen</b> Form (ohne die 0 zur Amtsholung) mit dem Muster verglichen.'); ?></small></p>
+<p class="text"><small><?php echo __('Diese W&auml;hlregeln f&uuml;r ausgehende Routen werden von oben nach unten abgearbeitet bis eine Regel zutrifft. Dabei wird die gew&auml;hlte Telefonnummer in der nach Ihren Einstellungen kanonisierten <b>nationalen</b> Form (ohne die 0 zur Amtsholung) mit dem Muster verglichen.'); ?></small></p>
 
 
 
@@ -222,12 +228,12 @@ $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th><?php echo __('$$$ Aktiv'); ?></th>
-	<th><?php echo __('$$$ Muster'); ?><sup>[1]</sup></th>
-	<th><?php echo __('$$$ Wochentage'); ?></th>
-	<th><?php echo __('$$$ Uhrzeit'); ?></th>
-	<th><?php echo __('$$$ Gateway / Fallback'); ?></th>
-	<th><?php echo __('$$$ Reihenfolge'); ?></th>
+	<th><?php echo __('Aktiv'); ?></th>
+	<th><?php echo __('Muster'); ?><sup>[1]</sup></th>
+	<th><?php echo __('Wochentage'); ?></th>
+	<th><?php echo __('Uhrzeit'); ?></th>
+	<th><?php echo __('Gateway / Fallback'); ?></th>
+	<th><?php echo __('Reihenfolge'); ?></th>
 </tr>
 </thead>
 <tbody>
@@ -332,7 +338,7 @@ while ($route = $rs->fetchRow()) {
 	echo '</tr>', "\n";
 	
 	echo '<tr class="', (($i%2) ? 'even':'odd'), '">', "\n";
-	echo '<td colspan="2" class="r"><label for="ipt-r_',$id,'_descr">', __('$$$ Beschr.:'), '</label></td>';
+	echo '<td colspan="2" class="r"><label for="ipt-r_',$id,'_descr">', __('Beschr.:'), '</label></td>';
 	
 	echo '<td colspan="2">';
 	echo '<input type="text" name="r_',$id,'_descr" id="ipt-r_',$id,'_descr" value="', htmlEnt(trim($route['descr'])), '" size="45" maxlength="60" style="width:97%; font-weight:bold;" />';
@@ -346,7 +352,7 @@ while ($route = $rs->fetchRow()) {
 echo '<tr>', "\n";
 echo '<td colspan="5" class="transp">&nbsp;</td>', "\n";
 echo '<td class="r transp">';
-echo '<input type="submit" value="', __('$$$ Speichern'), '" />';
+echo '<input type="submit" value="', __('Speichern'), '" />';
 echo '</td>', "\n";
 echo '</tr>', "\n";
 
@@ -394,7 +400,7 @@ echo '</td>', "\n";
 echo '</tr>', "\n";
 
 echo '<tr class="', (($i % 2 == 0) ? 'even':'odd'), '">', "\n";
-echo '<td colspan="2" class="r"><label for="ipt-r_',$id,'_descr">', __('$$$ Beschr.:'), '</label></td>';
+echo '<td colspan="2" class="r"><label for="ipt-r_',$id,'_descr">', __('Beschr.:'), '</label></td>';
 
 echo '<td colspan="2">';
 echo '<input type="text" name="r_',$id,'_descr" id="ipt-r_',$id,'_descr" value="', htmlEnt(trim($route['descr'])), '" size="45" maxlength="60" style="width:97%;font-weight:bold;" />';
@@ -410,7 +416,7 @@ echo '</tr>', "\n";
 <br />
 <p class="text"><small><sup>[1]</sup> <?php
 /*
-echo __('$$$ PCRE-Syntax ohne <code>/</code> als Begrenzer, d.h. <code>^</code> f&uuml;r den Anfang, <code>$</code> f&uuml;r das Ende, z.B. <code>[5-8]</code> oder <code>[57]</code> f&uuml;r Ziffern-Bereiche, <code>+</code> f&uuml;r eine Wiederholung des vorangehenden Zeichens (1 oder mehr) oder <code>*</code> f&uuml;r 0 oder mehr. Zus&auml;tzlich m&ouml;glich: <code>x</code> f&uuml;r <code>[0-9]</code>, <code>z</code> f&uuml;r <code>[1-9]</code>');
+echo __('PCRE-Syntax ohne <code>/</code> als Begrenzer, d.h. <code>^</code> f&uuml;r den Anfang, <code>$</code> f&uuml;r das Ende, z.B. <code>[5-8]</code> oder <code>[57]</code> f&uuml;r Ziffern-Bereiche, <code>+</code> f&uuml;r eine Wiederholung des vorangehenden Zeichens (1 oder mehr) oder <code>*</code> f&uuml;r 0 oder mehr. Zus&auml;tzlich m&ouml;glich: <code>x</code> f&uuml;r <code>[0-9]</code>, <code>z</code> f&uuml;r <code>[1-9]</code>');
 */
-echo __('$$$ PCRE-Syntax (&quot;Perl Compatible Regular Expression&quot;) ohne <code>/</code> als Begrenzer, d.h. <code>^</code> f&uuml;r den Anfang, <code>$</code> f&uuml;r das Ende, z.B. <code>[5-8]</code> oder <code>[57]</code> f&uuml;r Ziffern-Bereiche, <code>+</code> f&uuml;r eine Wiederholung des vorangehenden Zeichens (1 oder mehr) oder <code>*</code> f&uuml;r 0 oder mehr.');
+echo __('PCRE-Syntax (&quot;Perl Compatible Regular Expression&quot;) ohne <code>/</code> als Begrenzer, d.h. <code>^</code> f&uuml;r den Anfang, <code>$</code> f&uuml;r das Ende, z.B. <code>[5-8]</code> oder <code>[57]</code> f&uuml;r Ziffern-Bereiche, <code>+</code> f&uuml;r eine Wiederholung des vorangehenden Zeichens (1 oder mehr) oder <code>*</code> f&uuml;r 0 oder mehr.');
 ?></small></p>
