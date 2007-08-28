@@ -108,7 +108,7 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	}
 	if ($stat != '') {
 		if ($query_line != '') $query_line .= ' AND';
-		$query_line .= ' `disposition`=\''. $DB->escape($stat) .'\'';
+		$query_line .= ' `disposition`=\''. $DB->escape(strToUpper($stat)) .'\'';
 	}
 	
 	if ($query_line != '') $query_line .= ' AND';
@@ -262,11 +262,11 @@ if ($page < $num_pages-1) {
 	</td>
 	<td>
 		<select name="stat" style="width:135px;" onchange="this.form.submit();">
-		<option value ="" <?php echo ($stat=='') ? 'selected="selected">' : '>'; ?><?php echo __('alle Verb.'); ?></option>
-		<option value ="answered" <?php echo ($stat=='answered') ? 'selected="selected">' : '>'; ?><?php echo __('beantwortet'); ?></option>
-		<option value ="no answer" <?php echo ($stat=='no answer') ? 'selected="selected">' : '>'; ?><?php echo __('keine Antwort'); ?></option>
-		<option value ="busy" <?php echo ($stat=='busy') ? 'selected="selected">' : '>'; ?><?php echo __('besetzt'); ?></option>
-		<option value ="failed" <?php echo ($stat=='failed') ? 'selected="selected">' : '>'; ?><?php echo __('fehlgeschlagen'); ?></option>
+		<option value="" <?php echo ($stat=='') ? 'selected="selected">' : '>'; ?><?php echo __('alle Verb.'); ?></option>
+		<option value="answered" <?php echo ($stat=='answered') ? 'selected="selected">' : '>'; ?><?php echo __('beantwortet'); ?></option>
+		<option value="no answer" <?php echo ($stat=='no answer') ? 'selected="selected">' : '>'; ?><?php echo __('keine Antwort'); ?></option>
+		<option value="busy" <?php echo ($stat=='busy') ? 'selected="selected">' : '>'; ?><?php echo __('besetzt'); ?></option>
+		<option value="failed" <?php echo ($stat=='failed') ? 'selected="selected">' : '>'; ?><?php echo __('fehlgeschlagen'); ?></option>
 		</select>
 	</td>
 	<td>
