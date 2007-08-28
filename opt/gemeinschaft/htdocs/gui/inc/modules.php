@@ -111,10 +111,10 @@ $MODULES = array(
 	   )
 	),
 	##################################################################
-	'stats'            => array('title' => __('$$$ Statistik'),
+	'stats'            => array('title' => __('_ Statistik'),
 	                            'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
 	   'sub' => array(
-	      'qclassical' => array('title' => __('$$$ Q Klassisch'))
+	      'qclassical' => array('title' => __('_ Q Klassisch'))
 	   )
 	),
 	##################################################################
@@ -134,8 +134,8 @@ $MODULES = array(
 	      'users'      => array('title' => __('Benutzer')),
 	      'calls'      => array('title' => __('Verbindungen')),
 	      'nodes'      => array('title' => __('Nodes')),
-	      'routes'     => array('title' => __('$$$ Routen')),
-	      'testroute'  => array('title' => __('$$$ Routing-Test'))
+	      'routes'     => array('title' => __('_ Routen')),
+	      'testroute'  => array('title' => __('_ Routing-Test'))
 	   )
 	),
 	##################################################################
