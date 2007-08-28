@@ -186,6 +186,20 @@ function chart_fullscreen_toggle()
 
 <?php
 
+$totals = array(
+	'num_entered'   => 0,
+	'num_connected' => 0,
+	'num_abandoned' => 0,
+	'num_timeout'   => 0,
+	'num_empty'     => 0,
+	'pct_connected' => 0,
+	'num_sl_ok'     => 0,
+	'num_sl_fail'   => 0,
+	'avg_calldur'   => 0,
+	'num_wait_ok'   => 0,
+	'num_wait_fail' => 0
+);
+
 for ($day=1; $day<$num_days; ++$day) {
 	
 	if ($month_d >= 0 && $day > $today_day) break;
@@ -222,6 +236,7 @@ AND `event`=\'_ENTER\'
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', $num_entered ,'</td>', "\n";
+	$totals['num_entered'] += $num_entered;
 	
 	
 	# connected to an agent
@@ -233,6 +248,7 @@ AND `event`=\'_CONNECT\'
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', $num_connected ,'</td>', "\n";
+	$totals['num_connected'] += $num_connected;
 	
 	
 	# abandoned
@@ -245,6 +261,7 @@ AND `reason`=\'ABANDON\'
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', $num_abandoned ,'</td>', "\n";
+	$totals['num_abandoned'] += $num_abandoned;
 	
 	
 	# timeout
@@ -257,6 +274,7 @@ AND `reason`=\'TIMEOUT\'
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', $num_timeout ,'</td>', "\n";
+	$totals['num_timeout'] += $num_timeout;
 	
 	
 	# no queue members
@@ -269,14 +287,16 @@ AND `reason`=\'EMPTY\'
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', $num_empty ,'</td>', "\n";
+	$totals['num_empty'] += $num_empty;
 	
 	
 	# % connected
 	#
-	$pct = ($num_connected > 0)
-		? round(($num_connected / $num_entered) *100)
+	$pct_connected = ($num_connected > 0)
+		? ($num_connected / $num_entered)
 		: 0.0;
-	echo '<td class="r"',$style_wd,'>', $pct ,'<small>&thinsp;%</small></td>', "\n";
+	echo '<td class="r"',$style_wd,'>', round($pct_connected*100) ,' <small>%</small></td>', "\n";
+	$totals['pct_connected'] += $pct_connected;
 	
 	
 	# duration <= $service_level
@@ -291,6 +311,7 @@ AND `calldur`<='. (int)$service_level .'
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', $num_sl_ok ,'</td>', "\n";
+	$totals['num_sl_ok'] += $num_sl_ok;
 	
 	
 	# duration > $service_level
@@ -305,6 +326,7 @@ AND `calldur`>'. (int)$service_level .'
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', $num_sl_fail ,'</td>', "\n";
+	$totals['num_sl_fail'] + $num_sl_fail;
 	
 	
 	# average duration
@@ -318,6 +340,7 @@ AND `calldur` IS NOT NULL
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', _secs_to_minsecs($avg_calldur) ,'</td>', "\n";
+	$totals['avg_calldur'] += $avg_calldur;
 	
 	
 	# duration <= $waittime_level
@@ -332,6 +355,7 @@ AND `waittime`<='. (int)$waittime_level .'
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', $num_wait_ok ,'</td>', "\n";
+	$totals['num_wait_ok'] += $num_wait_ok;
 	
 	
 	# duration > $waittime_level
@@ -346,20 +370,47 @@ AND `waittime`>'. (int)$waittime_level .'
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', $num_wait_fail ,'</td>', "\n";
-	
-	
-	
-	
-	
+	$totals['num_wait_fail'] += $num_wait_fail;
 	
 	
 	echo '</tr>', "\n";
 }
 
+
+
+$style = 'style="border-top:3px solid #b90; background:#feb; line-height:2.5em;"';
+echo '<tr>', "\n";
+
+echo '<td class="r" ',$style,'><b>&sum;</b></td>', "\n";
+
+echo '<td class="r" ',$style,'>', $totals['num_entered'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_connected'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_abandoned'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_timeout'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_empty'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', round($totals['pct_connected']/$day*100) ,' <small>%</small></td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_sl_ok'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_sl_fail'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', _secs_to_minsecs($totals['avg_calldur']/$day) ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_wait_ok'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_wait_fail'] ,'</td>', "\n";
+
+echo '</tr>', "\n";
+
 ?>
 
 </tbody>
 </table>
+
+<?php
+$sum_dur = (int)@$DB->executeGetOne(
+'SELECT SUM(`calldur`) FROM `queue_log` WHERE
+    `queue_id`='. $queue_id .'
+AND `event`=\'_COMPLETE\'
+AND '. $sql_time
+);
+?>
+<p style="padding:0.5em 0;"><?php echo __('Gespr&auml;chsminuten'), ': &nbsp; ', round($sum_dur/60); ?></p>
 
 </div>
 
