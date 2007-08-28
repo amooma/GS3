@@ -140,19 +140,21 @@ function chart_fullscreen_toggle()
 	if (chart && toggle) {
 		if (chart.style.position == 'absolute') {
 			chart.style.position = 'static';
-			chart.style.top = '';
-			chart.style.left = '';
-			chart.style.right = '';
-			chart.style.bottom = '';
+			chart.style.top        = '';
+			chart.style.left       = '';
+			chart.style.right      = '';
+			chart.style.bottom     = '';
 			chart.style.background = 'transparent';
+			chart.style.padding    = '0';
 			toggle.src = '<?php echo GS_URL_PATH; ?>crystal-svg/16/act/window_fullscreen.png';
 		} else {
 			chart.style.position = 'absolute';
-			chart.style.top = '0';
-			chart.style.left = '0';
-			chart.style.right = '0';
-			chart.style.bottom = '0';
+			chart.style.top        = '0';
+			chart.style.left       = '0';
+			chart.style.right      = '0';
+			chart.style.bottom     = '0';
 			chart.style.background = '#fff';
+			chart.style.padding    = '0.4em 0.8em 0.7em 0.8em';
 			toggle.src = '<?php echo GS_URL_PATH; ?>crystal-svg/16/act/window_nofullscreen.png';
 		}
 	}
@@ -161,8 +163,8 @@ function chart_fullscreen_toggle()
 
 
 
-<div id="chart" style="">
-<img id="chart-fullscreen-toggle" class="fr" style="cursor:pointer; margin:4px 7px 0 0;" title="Fullscreen" alt="Fullscreen" onclick="chart_fullscreen_toggle();" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/window_fullscreen.png" />
+<div id="chart">
+<img id="chart-fullscreen-toggle" class="fr" style="cursor:pointer; margin:0 1px 1px 0;" title="Fullscreen" alt="Fullscreen" onclick="chart_fullscreen_toggle();" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/window_fullscreen.png" />
 <br style="clear:right;" />
 
 <table cellspacing="1" class="phonebook" style="border:1px solid #ccc; background:#fff;">
