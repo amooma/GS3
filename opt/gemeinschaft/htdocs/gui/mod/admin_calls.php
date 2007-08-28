@@ -112,7 +112,7 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	}
 	
 	if ($query_line != '') $query_line .= ' AND';
-	$query_line .= ' `dst`<>\'s\' AND `dst` NOT LIKE \'*8%\'';
+	$query_line .= ' `dst`<>\'s\' AND `dst`<>\'h\' AND `dst` NOT LIKE \'*8%\'';
 	# do not show calls to any of the "s" or pickup extensions
 	
 	if ($query_line != '') $query_line = ' WHERE '.$query_line;
