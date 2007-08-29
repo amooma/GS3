@@ -52,7 +52,8 @@ $MODULES = array(
 	   'sub' => array(
 	      //'imported'   => array('title' => __('Firma (aus LDAP)')),
 	      'gs'         => array('title' => __('Firma (Projekt)')),
-	      'private'    => array('title' => __('Pers&ouml;nlich'))
+	      'private'    => array('title' => __('Pers&ouml;nlich')),
+	      'csvimport'  => array('title' => __('_ CSV-Import'))
 	   )
 	),
 	##################################################################
