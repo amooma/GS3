@@ -202,7 +202,7 @@ function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid,
       . "Setvar: __orig_callerid=$cid_to_callee\n"
       . "Setvar: __user_id=$from_uid\n"
       . "Setvar: __user_name=$from\n"
-      . "Setvar: CHANNEL(language)=de\n"
+      . "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
 	;
 	//echo $call, "\n";
 	
