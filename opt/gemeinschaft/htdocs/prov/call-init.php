@@ -163,12 +163,12 @@ if (! $is_LVM_agenturmitarbeiter) {
 # from number
 #
 if (! isSet( $_REQUEST['from'] ))
-	$from_num = false;  // default
+	$from_num = null;  # i.e. use default
 else {
 	$from_num = _normalize_number( $_REQUEST['from'] );
 }
 if ($from_num == $user['ext'])
-	$from_num = false;
+	$from_num = null;
 if ($from_num) {
 	if (! $is_LVM_agenturmitarbeiter) {
 		$user_external_numbers = @ gs_user_external_numbers_get( $user_code );
@@ -180,7 +180,7 @@ if ($from_num) {
 			$user_external_numbers = array();
 		if (! in_array($from_num, $user_external_numbers, true)) {
 			gs_log( GS_LOG_WARNING, 'User '. $user_code .' does not have "'. $from_num .'" in external numbers. Falling back to default number "'. $user['ext'] .'".' );
-			$from_num = false;
+			$from_num = null;
 		}
 	} else {
 		$user_external_numbers = array();
@@ -199,10 +199,10 @@ if (isSet( $_REQUEST['cidnum'] ))
 elseif (isSet( $_REQUEST['callerid'] ))
 	$cidnum = _normalize_number( $_REQUEST['callerid'] );
 else
-	$cidnum = false;  # default
+	$cidnum = null;  # i.e. use the default
 
 if ($cidnum == $user['ext'])
-	$cidnum = false;
+	$cidnum = null;
 if ($cidnum) {
 	if (! $is_LVM_agenturmitarbeiter) {
 		if (! is_array($user_external_numbers)) {
@@ -217,10 +217,10 @@ if ($cidnum) {
 		}
 		if (! in_array($cidnum, $user_external_numbers, true)) {
 			gs_log( GS_LOG_WARNING, 'User '. $user_code .' does not have "'. $cidnum .'" in external numbers. Falling back to default number (from=) as CIDnum.' );
-			$cidnum = false;
+			$cidnum = null;
 		}
 	} else {
-		$cidnum = false;
+		$cidnum = null;
 	}
 }
 
@@ -233,7 +233,7 @@ if (! isSet( $_REQUEST['to'] ))
 $to_num = _normalize_number( $_REQUEST['to'] );
 
 if ( ($from_num && $to_num == $from_num)
-  || (! $from_num && $to_num == $user['ext']) )
+||   (! $from_num && $to_num == $user['ext']) )
 {
 	# from_num and to_num must not be the same - would probably result
 	# in voicemail picking up the phone
