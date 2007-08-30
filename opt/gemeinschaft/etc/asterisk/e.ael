@@ -776,7 +776,8 @@ context call-completion {
 	
 	_cc-. => {
 		Set(callee=${EXTEN:3});
-		Set(CHANNEL(language)=de);
+		//Set(CHANNEL(language)=de);
+		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		Verbose(1,### Call completion from ${user_name} to ${callee});
 		Answer();
 		Wait(0.5);

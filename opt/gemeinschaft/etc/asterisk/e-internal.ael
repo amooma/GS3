@@ -376,7 +376,8 @@ context to-internal-users-self {
 	_**Z. => {
 		Set(box=${EXTEN:2});
 		Set(origext=${box});
-		Set(CHANNEL(language)=de);
+		//Set(CHANNEL(language)=de);
+		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		Verbose(1,### Direct dial to mailbox ${box} on this node);
 		Set(__is_call_from=internal);
 		
@@ -412,7 +413,8 @@ context to-internal-users-self {
 		
 		Verbose(1,### Incoming call to ${EXTEN} at this node);
 		
-		Set(CHANNEL(language)=de);
+		//Set(CHANNEL(language)=de);
+		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		if ("${from_node}" = "yes") {
 			Verbose(1,### Incoming call to ${EXTEN} is from another node);
 			if ("${CHANNEL(channeltype)}" = "SIP") {
@@ -911,7 +913,8 @@ context program-cc {
 	
 	offer => {
 		Answer();
-		Set(CHANNEL(language)=de);
+		//Set(CHANNEL(language)=de);
+		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		Wait(0.5);
 		Set(TIMEOUT(digit)=5);
 		Set(TIMEOUT(response)=10);
@@ -928,7 +931,8 @@ context program-cc {
 	}
 	1 => {
 		Verbose(1,### Caller wants to leave voicemail for user ${cc_to_ext});
-		Set(CHANNEL(language)=de);
+		//Set(CHANNEL(language)=de);
+		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		//Playback(beep);
 		if ("${vm_${vm_source}_active}" = "1") {
 			if ("${is_callcompletion}" = "1") {
@@ -942,7 +946,8 @@ context program-cc {
 	}
 	* => {
 		Verbose(1,### Caller wants call completion to user ${cc_to_ext});
-		Set(CHANNEL(language)=de);
+		//Set(CHANNEL(language)=de);
+		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		DeadAGI(/opt/gemeinschaft/dialplan-scripts/cc-program.agi,${user_name},${cc_to_ext});
 		Verbose(1,### Call completion programmed?: ${cc_programmed});
 		if ("${cc_programmed}" = "1") {
