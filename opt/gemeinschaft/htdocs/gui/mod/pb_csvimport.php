@@ -162,9 +162,11 @@ if ($action == 'preview' || $action == 'import') {
 				
 				if ($ln==='' && $fn==='' && $nr==='') continue;
 				
-				$nrimp = preg_replace('/[^0-9]+/S', ' ', $nr);
-				$nrimp = preg_replace('/^[^0-9]+/S', '', $nrimp);
-				$nrimp = preg_replace('/[^0-9]+$/S', '', $nrimp);
+				$nrimp = preg_replace('/\(0\)/S'    , ' ', $nr);
+				$nrimp = preg_replace('/[^0-9+*]+/S', '-', $nrimp);
+				$nrimp = preg_replace('/(?!^)[+]/S' , '--', $nrimp);
+				$nrimp = preg_replace('/[\s\-]+/S'  , '-', $nrimp);
+				$nrimp = trim($nrimp);
 				
 				if ($action !== 'import') {
 					$records[] = array(
@@ -351,15 +353,11 @@ if ($action == 'import') {
 		@$_SESSION['sudo_user']['pb-csv-file'] = null;
 		if (@is_file($file)) {
 			$err=0; $out=array();
-			echo $file;
 			@exec( 'rm -f '. escapeShellArg($file) );
 		}
 		
-		if ($ok) {
-			echo 'Done.';
-		} else {
-			echo 'DB Error.';
-		}
+		echo '<br />', "\n";
+		echo '<p class="text">', ($ok ? __('Die Daten wurden in Ihr pers&ouml;nliches Telefonbuch importiert.') : 'DB Error.') ,'</p>', "\n";
 		
 	}
 	
