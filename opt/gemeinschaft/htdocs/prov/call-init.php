@@ -87,7 +87,8 @@ function die_error( $msg ) {
 }
 
 function _normalize_number( $number ) {
-	$number = preg_replace('/^\+/', '00', trim($number));
+	$intl_prfx = gs_get_conf('GS_CANONIZE_INTL_PREFIX', '00');
+	$number = preg_replace('/^\+/', $intl_prfx, trim($number));
 	$number = preg_replace('/[^\d*#]/', '', $number);
 	return $number;
 }
@@ -258,7 +259,7 @@ $prvPrefix = $prv ? '*7*' : '';
 
 
 
-gs_log( GS_LOG_DEBUG, "Init call - user: $user_code, from: ". ($from_num ? $from_num : '(default)') .", to: $to_num, clir:". ($clir ? 'yes':'no') );
+gs_log( GS_LOG_DEBUG, "Init call - user: $user_code, from: ". ($from_num ? $from_num : '(default)') .", to: $to_num, clir: ". ($clir ? 'yes':'no') );
 
 if (! $clir) {
 	if (! defined('GS_LVM_CALL_INIT_USERS_500000') || ! GS_LVM_CALL_INIT_USERS_500000 || $user_code < '500000') {
@@ -286,6 +287,7 @@ $call = "Channel: Local/". ($from_num ? $from_num : $user['ext']) ."\n"
       . "Setvar: __user_name=". $user['ext'] ."\n"
       . "Setvar: CHANNEL(language)=de\n"
       . "Setvar: __is_callcompletion=1\n"  # prevent vm from answering?
+      . "Setvar: __saved_callerid=$callerid\n"  # always useful to know the orgin
 ;
 //echo $call;
 
