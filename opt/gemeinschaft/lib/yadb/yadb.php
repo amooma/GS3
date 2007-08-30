@@ -66,24 +66,24 @@
 * Do not run queries which are not transaction safe in
 * YADB transactions (eg. LOCK TABLES, database definition
 * language queries).
-* Don't append a semicolon ";" to you queries.
+* Don't append a semicolon (;) to your queries.
 * 
 * 
 * Knowledge base:
 * 
 * It's about 1.5 x faster to use
 *     $val = $arr['val'];
-*     if (is_integer($val)) {}
-*     elseif (is_string($val)) {}
-*     elseif (is_double($val)) {}
+*     if     (is_integer($val)) {}
+*     elseif (is_string ($val)) {}
+*     elseif (is_double ($val)) {}
 * than
 *     $val = getType($arr['val']);
 *     switch ($b) {
 *       case 'integer': break;
-*       case 'string': break;
-*       case 'double': break;
+*       case 'string' : break;
+*       case 'double' : break;
 *     }
-* Care should be taken to test the common types first.
+* Take care to test the common types first.
 * 
 * $a = (int)$a;
 * is slightly faster than
