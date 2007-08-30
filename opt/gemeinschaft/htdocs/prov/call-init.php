@@ -290,7 +290,7 @@ $call = "Channel: Local/". ($from_num ? $from_num : $user['ext']) ."\n"
       . "Callerid: $callerid\n"
       . "Setvar: __user_id=". $user['id'] ."\n"
       . "Setvar: __user_name=". $user['ext'] ."\n"
-      . "Setvar: CHANNEL(language)=de\n"
+      . "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
       . "Setvar: __is_callcompletion=1\n"  # prevent vm from answering?
       . "Setvar: __saved_callerid=$callerid\n"  # always useful to know the orgin
 ;
