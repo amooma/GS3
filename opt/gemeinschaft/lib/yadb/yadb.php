@@ -1,6 +1,6 @@
 <?php
 /***********************************************************
-*                        YADB 0.02.03
+*                        YADB 0.02.04
 * 
 * YADB is a small database abstraction layer (yet another
 * ...) designed for speed and small memory footprint. It
@@ -1406,12 +1406,13 @@ class YADB_RecordSet_empty
 * Include the base record set.
 ***********************************************************/
 
-if     (YADB_PHPVER >= 50100)
+if       (YADB_PHPVER >= 50100) {
 	include( YADB_DIR .'inc/base_rs_php51.php' );
-elseif (YADB_PHPVER >= 50000)
+} elseif (YADB_PHPVER >= 50000) {
 	include( YADB_DIR .'inc/base_rs_php50.php' );
-else
+} else {
 	include( YADB_DIR .'inc/base_rs_php4.php' );
+}
 
 
 /***********************************************************
