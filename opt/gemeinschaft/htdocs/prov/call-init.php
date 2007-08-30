@@ -124,14 +124,19 @@ else {
 if (! isSet( $_REQUEST['user'] ))
 	die_invalid( 'No user code specified. Use user=' );
 $user_code = trim( $_REQUEST['user'] );
-if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
+
+if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
 	# hack to compare user names as if they were integers
 	# padded to 6 digits
 	$user_code = lTrim($user_code, '0');
 	if (strLen($user_code) < 6)
 		$user_code = str_pad($user_code, 6, '0', STR_PAD_LEFT);
 }
-if (! defined('GS_LVM_CALL_INIT_USERS_500000') || ! GS_LVM_CALL_INIT_USERS_500000 || $user_code < '500000') {
+
+$is_LVM_agenturmitarbeiter =
+	(gs_get_conf('GS_LVM_CALL_INIT_USERS_500000') && $user_code >= '500000');
+
+if (! $is_LVM_agenturmitarbeiter) {
 	$user = @ gs_user_get( $user_code );
 	if (isGsError( $user ))
 		die_invalid( $user->getMsg() );
@@ -165,7 +170,7 @@ else {
 if ($from_num == $user['ext'])
 	$from_num = false;
 if ($from_num) {
-	if (! defined('GS_LVM_CALL_INIT_USERS_500000') || ! GS_LVM_CALL_INIT_USERS_500000 || $user_code < '500000') {
+	if (! $is_LVM_agenturmitarbeiter) {
 		$user_external_numbers = @ gs_user_external_numbers_get( $user_code );
 		if (isGsError($user_external_numbers)) {
 			gs_log( GS_LOG_WARNING, $user_external_numbers->getMsg() );
@@ -181,8 +186,8 @@ if ($from_num) {
 		$user_external_numbers = array();
 	}
 } else {
-	if (defined('GS_LVM_CALL_INIT_USERS_500000') && GS_LVM_CALL_INIT_USERS_500000 && $user_code >= '500000') {
-		die_invalid( 'Agenturmitarbeiter - must use from=' );
+	if ($is_LVM_agenturmitarbeiter) {
+		die_invalid( 'LVM Agenturmitarbeiter - must use from=' );
 	}
 }
 
@@ -199,7 +204,7 @@ else
 if ($cidnum == $user['ext'])
 	$cidnum = false;
 if ($cidnum) {
-	if (! defined('GS_LVM_CALL_INIT_USERS_500000') || ! GS_LVM_CALL_INIT_USERS_500000 || $user_code < '500000') {
+	if (! $is_LVM_agenturmitarbeiter) {
 		if (! is_array($user_external_numbers)) {
 			# we might already have that
 			$user_external_numbers = @ gs_user_external_numbers_get( $user_code );
@@ -262,7 +267,7 @@ $prvPrefix = $prv ? '*7*' : '';
 gs_log( GS_LOG_DEBUG, "Init call - user: $user_code, from: ". ($from_num ? $from_num : '(default)') .", to: $to_num, clir: ". ($clir ? 'yes':'no') );
 
 if (! $clir) {
-	if (! defined('GS_LVM_CALL_INIT_USERS_500000') || ! GS_LVM_CALL_INIT_USERS_500000 || $user_code < '500000') {
+	if (! $is_LVM_agenturmitarbeiter) {
 		$firstname_abbr = mb_subStr($user['firstname'],0,1);
 		$firstname_abbr = ($firstname_abbr != '') ? $firstname_abbr .'. ' : '';
 		if (! $cidnum)
@@ -307,7 +312,7 @@ $spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
 $our_host_ids = @ gs_get_listen_to_ids();
 if (! is_array($our_host_ids)) $our_host_ids = array();
 
-if (defined('GS_LVM_CALL_INIT_USERS_500000') && GS_LVM_CALL_INIT_USERS_500000 && $user_code >= '500000') {
+if ($is_LVM_agenturmitarbeiter) {
 	$hosts = gs_hosts_get();
 	if (isGsError($hosts) || ! is_array($hosts) || count($hosts)<1)
 		die_error( 'Could not get hosts.' );
