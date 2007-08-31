@@ -58,6 +58,8 @@ FILETYPE=pdf;
 /usr/bin/sudo /bin/chgrp "$USER_ID" "$SPOOL/$FILE"
 
 ------------------------------------------------------------------------------------
+Die Zugangsdaten zur MySQL (Host, user etc.) müssen angepasst werden.
+
 
 
 /var/spool/hylafax/etc/FaxNotify:
