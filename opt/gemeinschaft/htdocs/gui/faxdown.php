@@ -47,8 +47,9 @@ if ($file) {
 		$fnamel_pre=strlen(strrchr($file,"."));
 		$fnamel_all=strlen($file);
 		$fname = substr($file,0,$fnamel_all-$fnamel_pre);
-		system("/opt/gemeinschaft/sbin/fax_to_pdf /tmp/".$file." /tmp/".$fname.".pdf");
 		
+		system('cd /var/spool/hylafax/ && /var/spool/hylafax/bin/tiff2pdf -o /tmp/'.$fname.".pdf  /tmp/".$file);
+
 		header('Content-type: application/pdf');
 		header('Content-Disposition: attachment; filename="'.$fname.'.pdf"');
 		header('Content-Length: ' . filesize("/tmp/".$fname.".pdf"));
