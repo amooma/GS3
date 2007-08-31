@@ -112,20 +112,20 @@ $MODULES = array(
 	   )
 	),
 	##################################################################
-	'stats'            => array('title' => __('_ Statistik'),
+	'stats'            => array('title' => __('Statistik'),     //TRANSLATE ME
 	                            'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
 	   'sub' => array(
-	      'qclassical' => array('title' => __('_ Q Klassisch'))
+	      'qclassical' => array('title' => __('Q Klassisch'))   //TRANSLATE ME
 	   )
 	),
 	##################################################################
-	'fax'              => array('title' => __('Fax'),
+	'fax'              => array('title' => __('Fax'),           //TRANSLATE ME
 	                            'icon'  => 'crystal-svg/%s/act/fileprint.png',
 	   'sub' => array(
-	      'rec'        => array('title' => __('Empfangen')),
-	      'done'       => array('title' => __('Gesendet')),
-	      'out'        => array('title' => __('Fax Ausgang')),
-	      'send'       => array('title' => __('Fax versenden'))
+	      'rec'        => array('title' => __('Empfangen')),    //TRANSLATE ME
+	      'done'       => array('title' => __('Gesendet')),     //TRANSLATE ME
+	      'out'        => array('title' => __('Fax Ausgang')),  //TRANSLATE ME
+	      'send'       => array('title' => __('Fax versenden')) //TRANSLATE ME
 	   )
 	),
 	##################################################################
@@ -145,8 +145,8 @@ $MODULES = array(
 	      'users'      => array('title' => __('Benutzer')),
 	      'calls'      => array('title' => __('Verbindungen')),
 	      'nodes'      => array('title' => __('Nodes')),
-	      'routes'     => array('title' => __('_ Routen')),
-	      'testroute'  => array('title' => __('_ Routing-Test'))
+	      'routes'     => array('title' => __('Routen')),       //TRANSLATE ME
+	      'testroute'  => array('title' => __('Routing-Test'))  //TRANSLATE ME
 	   )
 	),
 	##################################################################
