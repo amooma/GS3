@@ -163,3 +163,5 @@ define( 'GS_FAX_TSI', '02511234, 02515677' );
 ------------------------------------------------------------------------------------
 GS_FAX_TSI_PREFIX + User-Extension = Fax-Senderkennung
 GS_FAX_TSI = Zusätzliche globale Faxnummern, die der Benutzer als Faxkennung setzen darf.
+
+
