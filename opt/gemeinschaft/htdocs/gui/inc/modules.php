@@ -119,6 +119,17 @@ $MODULES = array(
 	   )
 	),
 	##################################################################
+        'fax'         => array('title' => __('Fax'),
+                                    'icon'  => 'crystal-svg/%s/act/fileprint.png',
+           'sub' => array(
+              'rec'   => array('title' => __('Empfangen')),
+              'done' => array('title' => __('Gesendet')),
+              'out'     => array('title' => __('Fax Ausgang')),
+              'send'     => array('title' => __('Fax versenden'))
+           )
+        ),
+
+	##################################################################
 	'help'             => array('title' => __('Hilfe'),
 	                            'icon'  => 'crystal-svg/%s/act/help.png',
 	   'sub' => array(
