@@ -309,8 +309,7 @@ define( 'GS_LOG_GMT'    , true );  # use GMT or local time
 
 define( 'GS_FAX_SERVER'   , '127.0.0.1' );
 define( 'GS_FAX_PORT'   , '4559' );
-define( 'GS_FAX_PREFIX', '6' );
-define( 'GS_FAX_TSI_PFEFIX', '0251' );
+define( 'GS_FAX_TSI_PREFIX', '0251' );
 define( 'GS_FAX_TSI', '025161000, 025162000' );
 
 /***********************************************************
