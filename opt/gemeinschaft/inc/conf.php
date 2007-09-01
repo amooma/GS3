@@ -148,6 +148,7 @@ _gscnf( 'DP_EMERGENCY_POLICE_MAP'   , '110'              );
 _gscnf( 'DP_EMERGENCY_FIRE'         , '112,0112'         );
 _gscnf( 'DP_EMERGENCY_FIRE_MAP'     , '112'              );
 _gscnf( 'DP_DIALTIMEOUT_IN'         , 45                 );
+_gscnf( 'DP_PRV_CALL_PREFIX'        , '*7*'              );
 
 _gscnf( 'PB_IMPORTED_USE'           , false              );
 _gscnf( 'PB_IMPORTED_ORDER'         , 2                  );

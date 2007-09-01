@@ -232,6 +232,10 @@ $DP_EMERGENCY_FIRE_MAP      = '112';
 $DP_DIALTIMEOUT_IN          = 45;
   # default timeout when dialing to internal users
 
+$DP_PRV_CALL_PREFIX         = '*7*';  # e.g. "*7*", "96", ...
+                                      # must not collide with any other
+                                      # extension!
+
 
 
 /***********************************************************
