@@ -10,18 +10,30 @@ http://dfn.dl.sourceforge.net/sourceforge/iaxmodem/iaxmodem-0.3.1.tar.gz
 ./configure && make && cp iaxmodem /usr/local/bin/
 mkdir /etc/iaxmodem/
 
-/etc/iaxmodem/ttyIAX0 usw. ttyIAX1, ttyIAX2
+/etc/iaxmodem/ttyIAX0 usw. ttyIAX1, ttyIAX2 (bis ttyIAX9 ?)
 ------------------------------------------------------------------------------------
 
 device          /dev/ttyIAX0
 owner           uucp:uucp
 mode            660
-port            4570
+port            14570
 refresh         60
 server          127.0.0.1
-peername        iaxmodem1
-secret          password
+peername        iaxmodem00
+secret          myiaxmdpwd
 codec           alaw
+
+
+device          /dev/ttyIAX1
+owner           uucp:uucp
+mode            660
+port            14571
+refresh         60
+server          127.0.0.1
+peername        iaxmodem01
+secret          myiaxmdpwd
+codec           alaw
+
 
 ------------------------------------------------------------------------------------
 Dabei muss der Port bei jedem Modem auch ein anderer sein.
