@@ -57,9 +57,18 @@ function gs_get_conf( $key, $default=null )
 
 
 $conf = '/etc/gemeinschaft/gemeinschaft.php';
-if (file_exists( $conf )) {
-	@include( $conf );
+if (! file_exists( $conf )) {
+	trigger_error( "Config file \"$conf\" not found!\n", E_USER_ERROR );
+	exit(1);
+} else {
+	if ((@include( $conf )) === false) {
+		// () around the include are important!
+		trigger_error( "Could not include config file \"$conf\"!\n", E_USER_ERROR );
+		exit(1);
+	}
 }
+
+
 function _gscnf( $param, $default=null )
 {
 	if (@array_key_exists($param, $GLOBALS)) {
