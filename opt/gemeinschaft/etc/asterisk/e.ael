@@ -709,14 +709,18 @@ context from-internal-users {
 	}
 }
 
+
+//---------------------------------------------------------------------
+//  From Fax server
+//---------------------------------------------------------------------
+
 context from-fax-server {
 	_X. => {
-		Set(__user_id=${CALLEIRID(name)});
-		Set(CALLEIRID(name)=${CALLEIRID(num)});
-		Verbose(1,### Sending FAX from user ${CALLEIRID(num)} user: ${user_id} to ${EXTEN});
+		Set(__user_id=${CALLERID(name)});
+		Set(CALLERID(name)=${CALLERID(num)});
+		Verbose(1,### Sending fax from user ${CALLERID(num)}\, ${user_id} to ${EXTEN});
 		jump ${EXTEN}@from-internal-users;
 	}
-	
 }
 
 
