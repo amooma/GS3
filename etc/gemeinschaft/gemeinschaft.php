@@ -298,8 +298,8 @@ $PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";  #  "
 ***********************************************************/
 
 $FAX_SERVER             = '127.0.0.1';
-$FAX_PORT               = 4559;
-$FAX_PREFIX             = '6';
+$FAX_PORT               = 4559;     # HylaFax port
+$FAX_PREFIX             = '6';      # not used yet  //FIXME
 $FAX_TSI_PREFIX         = @$CANONIZE_NATL_PREFIX.
                           @$CANONIZE_AREA_CODE.
                           @$CANONIZE_LOCAL_BRANCH;
