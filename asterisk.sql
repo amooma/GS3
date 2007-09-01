@@ -728,7 +728,7 @@ DROP TABLE IF EXISTS `queue_log`;
 CREATE TABLE `queue_log` (
   `queue_id` int(10) unsigned default NULL,
   `timestamp` int(10) unsigned NOT NULL default '0',
-  `event` varchar(25) character set ascii NOT NULL default '',
+  `event` varchar(15) character set ascii NOT NULL default '',
   `reason` varchar(10) character set ascii default NULL,
   `ast_call_id` varchar(20) character set ascii default NULL,
   `user_id` int(10) unsigned default NULL,
@@ -741,7 +741,8 @@ CREATE TABLE `queue_log` (
   `info` varchar(50) character set ascii default NULL,
   KEY `queue_timestamp` (`queue_id`,`timestamp`),
   KEY `queue_event_timestamp` (`queue_id`,`event`,`timestamp`),
-  KEY `queue_event_reason_timestamp` (`queue_id`,`event`,`reason`,`timestamp`)
+  KEY `queue_event_reason_timestamp` (`queue_id`,`event`,`reason`,`timestamp`),
+  KEY `timestamp` (`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -998,4 +999,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-08-24  16:07:12
+-- Dump completed on 2007-09-30  16:07:12
