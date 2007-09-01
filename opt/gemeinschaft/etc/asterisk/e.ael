@@ -663,6 +663,7 @@ context private-call {
 		Dial(Local/${number});
 		&hangup-proper-status();
 	}
+	#exec "/opt/gemeinschaft/etc/asterisk/e-number-private.ael.php"
 }
 
 
