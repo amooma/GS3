@@ -169,13 +169,13 @@ _gscnf( 'INTL_ASTERISK_LANG'        , 'de'               );
 _gscnf( 'USERCOMMENT_OFFTIME'       , 'Feierabend'       );
 _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i'              );
 
-_gscnf( 'GS_FAX_SERVER'             , '127.0.0.1'        );
-_gscnf( 'GS_FAX_PORT'               , 4559               );
-_gscnf( 'GS_FAX_PREFIX'             , gs_get_conf('GS_CANONIZE_NATL_PREFIX', '0'  ).
+_gscnf( 'FAX_SERVER'                , '127.0.0.1'        );
+_gscnf( 'FAX_PORT'                  , 4559               );
+_gscnf( 'FAX_PREFIX'                , gs_get_conf('GS_CANONIZE_NATL_PREFIX', '0'  ).
                                       gs_get_conf('CANONIZE_AREA_CODE'     , '999').
                                       gs_get_conf('CANONIZE_LOCAL_BRANCH'  , '999'));
-_gscnf( 'GS_FAX_TSI_PREFIX'         , ''                 );
-_gscnf( 'GS_FAX_TSI'                , ''                 );
+_gscnf( 'FAX_TSI_PREFIX'            , ''                 );
+_gscnf( 'FAX_TSI'                   , ''                 );
 
 _gscnf( 'LOG_FILE'                  , '/var/log/gemeinschaft/gs.log' );
 _gscnf( 'LOG_GMT'                   , true               );
