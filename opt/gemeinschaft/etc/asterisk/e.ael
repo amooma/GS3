@@ -649,20 +649,19 @@ context private-call {
 			&dial-log-store(${user_name},out,${EXTEN});
 		}
 		
-		// prfen, ob der User Privatgespr�he machen darf ...
+		// pruefen, ob der User Privatgespraeche machen darf ...
 		
 		// accountcode setzen ...
 		AGI(/opt/gemeinschaft/dialplan-scripts/usercode-by-ext.agi,${user_name});
 		Set(CDR(amaflags)=BILLING);
 		SET(CDR(accountcode)=prv-${user_code});
 		
-		// fr Amtsberechtigung:
+		// fuer Amtsberechtigung:
 		Set(__is_private_call=1);
 		Verbose(1,### Private call from user ${user_name} to ${number});
 		//&dial-gateway(${number});
 		Dial(Local/${number});
 		&hangup-proper-status();
-		Hangup();
 	}
 }
 
@@ -759,10 +758,10 @@ macro dial-log-store( muser, mtype, mnumber ) {
 
 context systemalarm {
 	
-	// wird vom HA-System angerufen falls z.B. ein Node ausf�lt
+	// wird vom HA-System angerufen falls z.B. ein Node ausfaellt
 	systemalarm => {
 		Verbose(0,################## SYSTEM-ALARM ##################);
-		Set(__is_private_call=1);  // damit Rausw�len erlaubt
+		Set(__is_private_call=1);  // damit Rauswaehlen erlaubt
 		/*
 		Set(i=1);
 		while ("${systemalarm_${i}}" != "") {
