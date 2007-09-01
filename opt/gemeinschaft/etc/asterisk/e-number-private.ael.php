@@ -40,14 +40,12 @@ set_error_handler('err_handler_quiet');
 
 echo "\n";
 
-//$prv_prfx = (int)gs_get_conf('GS_DP_DIALTIMEOUT_IN', 45);
-//if ($timeout < 1) $timeout = 1;
-$prv_prfx = '96';
+$prv_prfx = gs_get_conf('GS_DP_PRV_CALL_PREFIX', '*3*');
 $prv_prfx = preg_replace('/[^0-9*]/', '', $prv_prfx);
 if ($prv_prfx == '') die();
 if (preg_match('/^\*[7*02589]/', $prv_prfx)) die();
 
-
+echo 123;
 echo "\t", '_', $prv_prfx ,'. => jump *7*${EXTEN:', strLen($prv_prfx) ,'}', "\n";
 
 
