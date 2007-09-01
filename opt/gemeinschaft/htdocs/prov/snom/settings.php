@@ -389,7 +389,7 @@ setting('dhcp'                 , 'on' );
 //setting('gateway'              , '192.168.1.1');
 setting('filter_registrar'     , 'off');  # so we can reboot the phone even if not registered
 setting('enable_timer_support' , 'on' );
-setting('session_timer'        , '300');  # default 3600
+setting('session_timer'        , '120');  # default 3600
 setting('dirty_host_ttl'       , '0'  );
 setting('challenge_response'   , 'off');
 setting('challenge_reboot'     , 'off');
@@ -399,11 +399,11 @@ setting('network_id_port'      , ''   );
 setting('tcp_listen'           , 'off');
 setting('offer_gruu'           , 'off');
 setting('short_form'           , 'on' );  # kurze SIP-Header verwenden
-setting('subscription_delay'   , '5'  );
-setting('subscription_expiry'  , '3600');  # default 3600
+setting('subscription_delay'   , '2'  );
+setting('subscription_expiry'  , '120');  # default 3600
 setting('terminate_subscribers_on_reboot', 'on');
 setting('publish_presence'     , 'off');  # unterstützt Asterisk (noch?) nicht
-setting('presence_timeout'     , '30' );  # default 15 (Minuten)
+setting('presence_timeout'     , '15' );  # default 15 (Minuten)
 setting('user_phone'           , 'off');  # user=phone in SIP URIs is deprecated
 setting('require_prack'        , 'on' );  # default
 setting('refer_brackets'       , 'off');  # default
