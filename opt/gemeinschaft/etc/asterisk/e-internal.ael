@@ -80,6 +80,12 @@ macro check-valid-extension( mext ) {
 //---------------------------------------------------------------------
 
 macro dial-node( mext_at_node ) {
+	if ("${saved_callerid}" != "") {
+		// __saved_callerid is set by call-init.php
+		// is this needed here? call-init.php should have picked the
+		// correct node already
+		Set(CALLERID(all)=${saved_callerid});
+	}
 	Verbose(1,### Dial and forget: ${mext_at_node});
 	SIPAddHeader(X-GS-user_id: ${user_id});
 	SIPAddHeader(X-GS-user_name: ${user_name});
@@ -154,6 +160,10 @@ context to-internal-nobody-self {
 			// from internal user, store dial log (out)
 			&dial-log-store(${user_name},out,${EXTEN});
 		}
+		if ("${saved_callerid}" != "") {
+			// __saved_callerid is set by call-init.php
+			Set(CALLERID(all)=${saved_callerid});
+		}
 		&set-callerid-by-clir();
 		Verbose(1,### Call local nobody ${EXTEN}\, timeout 30);
 		Dial(SIP/${EXTEN},30);
@@ -164,6 +174,10 @@ context to-internal-nobody-self {
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
 			&dial-log-store(${user_name},out,${EXTEN});
+		}
+		if ("${saved_callerid}" != "") {
+			// __saved_callerid is set by call-init.php
+			Set(CALLERID(all)=${saved_callerid});
 		}
 		&set-callerid-by-clir();
 		Verbose(1,### Call local nobody ${EXTEN}\, timeout 30);
@@ -378,6 +392,10 @@ context to-internal-users-self {
 			Verbose(1,### Ringer: ${ringer});
 			SIPAddHeader(Alert-Info: ${ringer});
 		}
+		if ("${saved_callerid}" != "") {
+			// __saved_callerid is set by call-init.php
+			Set(CALLERID(all)=${saved_callerid});
+		}
 		Set(CALLERID(name)=Sek. ${CALLERID(name)});
 		Dial(SIP/${boss},30);
 		&hangup-proper-status();
@@ -427,6 +445,11 @@ context to-internal-users-self {
 	_Z. => {
 		
 		Verbose(1,### Incoming call to ${EXTEN} at this node);
+		
+		if ("${saved_callerid}" != "") {
+			// __saved_callerid is set by call-init.php
+			Set(CALLERID(all)=${saved_callerid});
+		}
 		
 		//Set(CHANNEL(language)=de);
 		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
@@ -514,7 +537,6 @@ context to-internal-users-self {
 		to_user:
 			
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${EXTEN});
-			
 			// forward (case=always) active?
 			if ("${fw_${is_call_from}_always}" != "") {
 				if ("${is_callcompletion}" = "1") {
@@ -915,8 +937,11 @@ context to-internal-users-self {
 			Verbose(1,###### CALLERID(dnid) : ${CALLERID(dnid)});
 			Verbose(1,###### CALLERID(rdnis): ${CALLERID(rdnis)});
 			*/
-			if ("${CALLERID(dnid)}" != "" && "${DIALEDPEERNUMBER:0:1}" != "*")
-				&dial-log-store(${origext},${type},${user_name});
+			if ("${CALLERID(dnid)}" != "" && "${DIALEDPEERNUMBER:0:1}" != "*") {
+				//&dial-log-store(${origext},${type},${user_name});
+				&dial-log-store(${CALLERID(dnid)},${type},${CALLERID(num)});
+				//FIXME? does this always work as expected?
+			}
 		}
 	}
 	
