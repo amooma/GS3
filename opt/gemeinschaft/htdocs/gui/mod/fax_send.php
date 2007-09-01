@@ -120,7 +120,7 @@ echo "Senderkennung";
 echo "</th>\n";
 echo '<td>';
 echo '<select name="tsi"> style="width:250px;"'."\n";
-echo '<option value="0'.GS_CANONIZE_AREA_CODE.$_SESSION['sudo_user']['info']['ext'].'">'.GS_FAX_TSI_PREFIX.$_SESSION['sudo_user']['info']['ext'].'</option>'."\n";
+echo '<option value="'.GS_FAX_TSI_PREFIX.$_SESSION['sudo_user']['info']['ext'].'">'.GS_FAX_TSI_PREFIX.$_SESSION['sudo_user']['info']['ext'].'</option>'."\n";
 
 $fax_tsis_global = explode(",",GS_FAX_TSI);
 
