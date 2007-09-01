@@ -42,14 +42,12 @@ $usage = 'Usage: '. baseName(__FILE__) .' [--dialplan]';
 
 $opts = getOptsNoMultiples( '',
 	array(
-		'dialplan',
-		'restart'
+		'dialplan'
 	),
 	$usage
 );
 
 $only_dialplan = array_key_exists('dialplan', $opts);
-$full_restart  = array_key_exists('restart' , $opts);
 
 
 
@@ -145,17 +143,10 @@ if ($only_dialplan) {
 	@exec( 'asterisk -rx \'ael reload\' 1>>/dev/null', $out, $err );
 	$start_ast = $start_ast || ($err != 0);
 } else {
-	if ($full_restart) {
-		echo "Stopping Asterisk ...\n";
-		$err=0; $out=array();
-		@exec( 'asterisk -rx \'stop now\' 1>>/dev/null', $out, $err );
-		$start_ast = true;
-	} else {
-		echo "Reloading Asterisk ...\n";
-		$err=0; $out=array();
-		@exec( 'asterisk -rx \'reload\' 1>>/dev/null', $out, $err );
-		$start_ast = ($err != 0);
-	}
+	echo "Reloading Asterisk ...\n";
+	$err=0; $out=array();
+	@exec( 'asterisk -rx \'reload\' 1>>/dev/null', $out, $err );
+	$start_ast = ($err != 0);
 }
 
 if ($start_ast) {
