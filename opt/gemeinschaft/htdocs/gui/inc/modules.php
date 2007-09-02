@@ -32,7 +32,7 @@ defined('GS_VALID') or die('No direct access.');
 $MODULES = array();
 
 
-######################################################################
+#####################################################################
 
 $MODULES['login'    ]=  array('title' => __('Login'),
                               'icon'  => 'crystal-svg/%s/app/kfm_home.png',
@@ -42,7 +42,7 @@ $MODULES['login'    ]=  array('title' => __('Login'),
    )
 );
 
-######################################################################
+#####################################################################
 
 $MODULES['home'     ]=  array('title' => __('Home'),
                               'icon'  => 'crystal-svg/%s/app/kfm_home.png',
@@ -51,19 +51,36 @@ $MODULES['home'     ]=  array('title' => __('Home'),
    )
 );
 
-######################################################################
+#####################################################################
 
 $MODULES['pb'       ]=  array('title' => __('Telefonbuch'),
                               'icon'  => 'crystal-svg/%s/act/contents.png',
    'sub' => array(
-      'imported'     => array('title' => __('Firma (aus LDAP)')),
-      'gs'           => array('title' => __('Firma (Projekt)')),
-      'private'      => array('title' => __('Pers&ouml;nlich')),
-      'csvimport'    => array('title' => __('CSV-Import'))    //TRANSLATE ME
    )
 );
+$tmp = array(
+	15=>array('k' => 'gs' ,
+		      's' => array('title' => __('Firma (Projekt)' ))  ),
+	25=>array('k' => 'private',
+	          's' => array('title' => __('Pers&ouml;nlich' ))  )
+);
+if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
+	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
+	$tmp[$pos] = array(
+	          'k' => 'imported',
+	          's' => array('title' => __('Firma (aus LDAP)'))
+	);
+}
+kSort($tmp);
+foreach ($tmp as $arr) {
+$MODULES['pb'       ]['sub'][$arr['k']]
+                     = $arr['s'];
+}
 
-######################################################################
+$MODULES['pb'       ]['sub']['csvimport']
+	                 =  array('title' => __('CSV-Import'));   //TRANSLATE ME
+
+#####################################################################
 
 $MODULES['diallog'  ]=  array('title' => __('Anruflisten'),
                               'icon'  => 'crystal-svg/%s/app/karm.png',
@@ -74,7 +91,7 @@ $MODULES['diallog'  ]=  array('title' => __('Anruflisten'),
    )
 );
 
-######################################################################
+#####################################################################
 
 $MODULES['voicemail']=  array('title' => __('Voicemail'),
                               'icon'  => 'crystal-svg/%s/act/inbox.png',
@@ -83,7 +100,7 @@ $MODULES['voicemail']=  array('title' => __('Voicemail'),
    )
 );
 
-######################################################################
+#####################################################################
 
 $MODULES['forwards' ]=  array('title' => __('Rufumleitung'),
                               'icon'  => 'crystal-svg/%s/app/yast_route.png',
@@ -94,7 +111,7 @@ $MODULES['forwards' ]=  array('title' => __('Rufumleitung'),
    )
 );
 
-######################################################################
+#####################################################################
 
 $MODULES['monitor'  ]=  array('title' => __('Monitor'),
                               'icon'  => 'crystal-svg/%s/app/display.png',
@@ -108,7 +125,7 @@ $MODULES['monitor'  ]['sub']['peers']
 	                 =  array('title' => __('Kollegen'));
 }
 
-######################################################################
+#####################################################################
 
 $MODULES['features' ]=  array('title' => __('Dienstmerkmale'),
                               'icon'  => 'crystal-svg/%s/act/configure.png',
@@ -117,7 +134,7 @@ $MODULES['features' ]=  array('title' => __('Dienstmerkmale'),
    )
 );
 
-######################################################################
+#####################################################################
 
 $MODULES['keys'     ]=  array('title' => __('Tastenbelegung'),
                               'icon'  => 'crystal-svg/%s/app/keyboard.png',
@@ -129,7 +146,7 @@ $MODULES['keys'     ]['sub']['snom']
 	                 =  array('title' => __('Snom'));
 }
 
-######################################################################
+#####################################################################
 
 $MODULES['ringtones']=  array('title' => __('Klingelt&ouml;ne'),
                               'icon'  => 'crystal-svg/%s/app/knotify.png',
@@ -138,7 +155,7 @@ $MODULES['ringtones']=  array('title' => __('Klingelt&ouml;ne'),
    )
 );
 
-######################################################################
+#####################################################################
 
 $MODULES['stats'    ]=  array('title' => __('Statistik'),     //TRANSLATE ME
                               'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
@@ -147,7 +164,7 @@ $MODULES['stats'    ]=  array('title' => __('Statistik'),     //TRANSLATE ME
    )
 );
 
-######################################################################
+#####################################################################
 
 if (gs_get_conf('GS_FAX_ENABLED')) {
 $MODULES['fax'      ]=  array('title' => __('Fax'),           //TRANSLATE ME
@@ -161,7 +178,7 @@ $MODULES['fax'      ]=  array('title' => __('Fax'),           //TRANSLATE ME
 );
 }
 
-######################################################################
+#####################################################################
 
 $MODULES['help'     ]=  array('title' => __('Hilfe'),
                               'icon'  => 'crystal-svg/%s/act/help.png',
@@ -171,7 +188,7 @@ $MODULES['help'     ]=  array('title' => __('Hilfe'),
    )
 );
 
-######################################################################
+#####################################################################
 
 $MODULES['admin'    ]=  array('title' => __('Administration'),
                               'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
@@ -186,7 +203,7 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
    )
 );
 
-######################################################################
+#####################################################################
 
 $MODULES['logout'   ]=  array('title' => __('Logout'),
                               'icon'  => 'crystal-svg/%s/act/exit.png',
@@ -195,7 +212,7 @@ $MODULES['logout'   ]=  array('title' => __('Logout'),
    )
 );
 
-######################################################################
+#####################################################################
 
 
 ?>
