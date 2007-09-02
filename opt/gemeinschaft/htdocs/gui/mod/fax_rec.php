@@ -26,10 +26,16 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+######################################################
+##
+##   ALL STRINGS IN HERE NEED TO BE TRANSLATED!
+##
+######################################################
+
 defined('GS_VALID') or die('No direct access allowed.');
 require_once( GS_DIR .'inc/cn_hylafax.php' );
 
-function sec_to_hours($sec)
+function sec_to_hours( $sec )
 {
 	$hours = sprintf('%d:%02d:%02d',
 		$sec / 3600 % 24,
@@ -39,36 +45,31 @@ function sec_to_hours($sec)
 	return $hours;
 }
 
-function username_prep($user_name)
+function username_prep( $user_name )
 {
 	$user_name_str = strtr(trim($user_name), array(
-			'^' => '',
-			'\\' => '',
-			'>' => '',
-			'<' => '',
-			'\`' => '',
-			'\'' => '',
-			'"' => ''
-		));
-
+		'^'  => '',
+		'\\' => '',
+		'>'  => '',
+		'<'  => '',
+		'\`' => '',
+		'\'' => '',
+		'"'  => ''
+	));
 	return $user_name_str;
-
 }
 
-function uid_by_name ($user_name) {
+function uid_by_name( $user_name )
+{
 	global $DB;
-
-	$sql_query = 'SELECT `id` FROM `users`
-WHERE
-	( `user` =_utf8\''. $DB->escape($user_name) .'\' COLLATE utf8_unicode_ci ) ';
-
-	$user_id = $DB->executeGetOne($sql_query);
-
-	return $user_id;
+	
+	$query = 'SELECT `id` FROM `users` WHERE
+	(`user` = _utf8\''. $DB->escape($user_name) .'\' COLLATE utf8_unicode_ci)';
+	return (int)$DB->executeGetOne($sql_query);
 }
 
 $per_page = 10;
-$page = (int)@$_REQUEST['page'];
+$page     = (int)@$_REQUEST['page'];
 $delete   = trim(@$_REQUEST['delete']);
 
 if ($delete) fax_delete_file('/recvq/'.$delete);
@@ -78,16 +79,14 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 ?>
 
 
-<h2>Empfangen</h2>
+<h2><?php echo __('Empfangen'); ?></h2>
 
 
 <div class="userlist">
 
-
 <table cellspacing="1" class="userlist">
 <thead>
 <tr>
-
 
 <?php
 
@@ -95,11 +94,10 @@ $jobs_rec = fax_get_jobs_rec();
 
 foreach ($jobs_rec as $key => $row) {
 	if ($row[11] == $_SESSION['sudo_user']['name']) { 
-    		$recdate[$key]  = $row[18];
-    		$jobid[$key] = $row[4];
+		$recdate[$key] = $row[18];
+		$jobid[$key] = $row[4];
 	} else {
 		unset($jobs_rec[$key]);
-
 	}
 }
 
@@ -203,10 +201,6 @@ for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 
 </tbody>
 </table>
+
 </div>
-
-
-
-
-
 
