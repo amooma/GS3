@@ -29,136 +29,165 @@
 defined('GS_VALID') or die('No direct access.');
 
 
-$MODULES = array(
-	
-	##################################################################
-	'login'            => array('title' => __('Login'),
-	                            'icon'  => 'crystal-svg/%s/app/kfm_home.png',
-	                            'inmenu'=> false,
-	   'sub' => array(
-	      'login'      => array('title' => __('Login'))
-	   )
-	),
-	##################################################################
-	'home'             => array('title' => __('Home'),
-	                            'icon'  => 'crystal-svg/%s/app/kfm_home.png',
-	   'sub' => array(
-	      'home'       => array('title' => __('Home'))
-	   )
-	),
-	##################################################################
-	'pb'               => array('title' => __('Telefonbuch'),
-	                            'icon'  => 'crystal-svg/%s/act/contents.png',
-	   'sub' => array(
-	      //'imported'   => array('title' => __('Firma (aus LDAP)')),
-	      'gs'         => array('title' => __('Firma (Projekt)')),
-	      'private'    => array('title' => __('Pers&ouml;nlich')),
-	      'csvimport'  => array('title' => __('_ CSV-Import'))
-	   )
-	),
-	##################################################################
-	'diallog'          => array('title' => __('Anruflisten'),
-	                            'icon'  => 'crystal-svg/%s/app/karm.png',
-	   'sub' => array(
-	      'out'        => array('title' => __('gew&auml;hlt')),
-	      'missed'     => array('title' => __('verpasst')),
-	      'in'         => array('title' => __('angenommen'))
-	   )
-	),
-	##################################################################
-	'voicemail'        => array('title' => __('Voicemail'),
-	                            'icon'  => 'crystal-svg/%s/act/inbox.png',
-	   'sub' => array(
-	      'messages'   => array('title' => __('Nachrichten'))
-	   )
-	),
-	##################################################################
-	'forwards'         => array('title' => __('Rufumleitung'),
-	                            'icon'  => 'crystal-svg/%s/app/yast_route.png',
-	   'sub' => array(
-	      'forwards'   => array('title' => __('Rufumleitung')),
-	      'extnumbers' => array('title' => __('externe Nummern')),
-	      'queues'     => array('title' => __('Queues'))
-	   )
-	),
-	##################################################################
-	'monitor'          => array('title' => __('Monitor'),
-	                            'icon'  => 'crystal-svg/%s/app/display.png',
-	   'sub' => array(
-	      'queues'     => array('title' => __('Queues')),
-	      'pgrps'      => array('title' => __('Gruppen'))
-	      //'peers'      => array('title' => __('Kollegen'))
-	   )
-	),
-	##################################################################
-	'features'         => array('title' => __('Dienstmerkmale'),
-	                            'icon'  => 'crystal-svg/%s/act/configure.png',
-	   'sub' => array(
-	      'features'   => array('title' => __('Dienstmerkmale'))
-	   )
-	),
-	##################################################################
-	'keys'             => array('title' => __('Tastenbelegung'),
-	                            'icon'  => 'crystal-svg/%s/app/keyboard.png',
-	   'sub' => array(
-	      'snom'       => array('title' => __('Snom'))
-	   )
-	),
-	##################################################################
-	'ringtones'        => array('title' => __('Klingelt&ouml;ne'),
-	                            'icon'  => 'crystal-svg/%s/app/knotify.png',
-	   'sub' => array(
-	      'ringtones'  => array('title' => __('Klingelt&ouml;ne'))
-	   )
-	),
-	##################################################################
-	'stats'            => array('title' => __('Statistik'),     //TRANSLATE ME
-	                            'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
-	   'sub' => array(
-	      'qclassical' => array('title' => __('Q Klassisch'))   //TRANSLATE ME
-	   )
-	),
-	##################################################################
-	'fax'              => array('title' => __('Fax'),           //TRANSLATE ME
-	                            'icon'  => 'crystal-svg/%s/act/fileprint.png',
-	   'sub' => array(
-	      'rec'        => array('title' => __('Empfangen')),    //TRANSLATE ME
-	      'send'       => array('title' => __('Fax versenden')),//TRANSLATE ME
-	      'out'        => array('title' => __('Ausgang')),      //TRANSLATE ME
-	      'done'       => array('title' => __('Gesendet'))      //TRANSLATE ME
-	   )
-	),
-	##################################################################
-	'help'             => array('title' => __('Hilfe'),
-	                            'icon'  => 'crystal-svg/%s/act/help.png',
-	   'sub' => array(
-	      'numbers'    => array('title' => __('Service-Nummern')),
-	      'snom'       => array('title' => __('Snom'))
-	   )
-	),
-	##################################################################
-	'admin'            => array('title' => __('Administration'),
-	                            'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
-	                            'perms' => 'admin',
-	   'sub' => array(
-	      'overview'   => array('title' => __('&Uuml;bersicht')),
-	      'users'      => array('title' => __('Benutzer')),
-	      'calls'      => array('title' => __('Verbindungen')),
-	      'nodes'      => array('title' => __('Nodes')),
-	      'routes'     => array('title' => __('Routen')),       //TRANSLATE ME
-	      'testroute'  => array('title' => __('Routing-Test'))  //TRANSLATE ME
-	   )
-	),
-	##################################################################
-	'logout'           => array('title' => __('Logout'),
-	                            'icon'  => 'crystal-svg/%s/act/exit.png',
-	   'sub' => array(
-	      'logout'     => array('title' => __('Logout'))
-	   )
-	)
-	##################################################################
-	
+$MODULES = array();
+
+
+######################################################################
+
+$MODULES['login'    ]=  array('title' => __('Login'),
+                              'icon'  => 'crystal-svg/%s/app/kfm_home.png',
+                              'inmenu'=> false,
+   'sub' => array(
+      'login'        => array('title' => __('Login'))
+   )
 );
+
+######################################################################
+
+$MODULES['home'     ]=  array('title' => __('Home'),
+                              'icon'  => 'crystal-svg/%s/app/kfm_home.png',
+   'sub' => array(
+      'home'         => array('title' => __('Home'))
+   )
+);
+
+######################################################################
+
+$MODULES['pb'       ]=  array('title' => __('Telefonbuch'),
+                              'icon'  => 'crystal-svg/%s/act/contents.png',
+   'sub' => array(
+      //'imported'     => array('title' => __('Firma (aus LDAP)')),
+      'gs'           => array('title' => __('Firma (Projekt)')),
+      'private'      => array('title' => __('Pers&ouml;nlich')),
+      'csvimport'    => array('title' => __('_ CSV-Import'))
+   )
+);
+
+######################################################################
+
+$MODULES['diallog'  ]=  array('title' => __('Anruflisten'),
+                              'icon'  => 'crystal-svg/%s/app/karm.png',
+   'sub' => array(
+      'out'          => array('title' => __('gew&auml;hlt')),
+      'missed'       => array('title' => __('verpasst')),
+      'in'           => array('title' => __('angenommen'))
+   )
+);
+
+######################################################################
+
+$MODULES['voicemail']=  array('title' => __('Voicemail'),
+                              'icon'  => 'crystal-svg/%s/act/inbox.png',
+   'sub' => array(
+      'messages'     => array('title' => __('Nachrichten'))
+   )
+);
+
+######################################################################
+
+$MODULES['forwards' ]=  array('title' => __('Rufumleitung'),
+                              'icon'  => 'crystal-svg/%s/app/yast_route.png',
+   'sub' => array(
+      'forwards'     => array('title' => __('Rufumleitung')),
+      'extnumbers'   => array('title' => __('externe Nummern')),
+      'queues'       => array('title' => __('Queues'))
+   )
+);
+
+######################################################################
+
+$MODULES['monitor'  ]=  array('title' => __('Monitor'),
+                              'icon'  => 'crystal-svg/%s/app/display.png',
+   'sub' => array(
+      'queues'       => array('title' => __('Queues')),
+      'pgrps'        => array('title' => __('Gruppen'))
+      //'peers'        => array('title' => __('Kollegen'))
+   )
+);
+
+######################################################################
+
+$MODULES['features' ]=  array('title' => __('Dienstmerkmale'),
+                              'icon'  => 'crystal-svg/%s/act/configure.png',
+   'sub' => array(
+      'features'     => array('title' => __('Dienstmerkmale'))
+   )
+);
+
+######################################################################
+
+$MODULES['keys'     ]=  array('title' => __('Tastenbelegung'),
+                              'icon'  => 'crystal-svg/%s/app/keyboard.png',
+   'sub' => array(
+      'snom'         => array('title' => __('Snom'))
+   )
+);
+
+######################################################################
+
+$MODULES['ringtones']=  array('title' => __('Klingelt&ouml;ne'),
+                              'icon'  => 'crystal-svg/%s/app/knotify.png',
+   'sub' => array(
+      'ringtones'    => array('title' => __('Klingelt&ouml;ne'))
+   )
+);
+
+######################################################################
+
+$MODULES['stats'    ]=  array('title' => __('Statistik'),     //TRANSLATE ME
+                              'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
+   'sub' => array(
+      'qclassical'   => array('title' => __('Q Klassisch'))   //TRANSLATE ME
+   )
+);
+
+######################################################################
+
+$MODULES['fax'      ]=  array('title' => __('Fax'),           //TRANSLATE ME
+                              'icon'  => 'crystal-svg/%s/act/fileprint.png',
+   'sub' => array(
+      'rec'          => array('title' => __('Empfangen')),    //TRANSLATE ME
+      'send'         => array('title' => __('Fax versenden')),//TRANSLATE ME
+      'out'          => array('title' => __('Ausgang')),      //TRANSLATE ME
+      'done'         => array('title' => __('Gesendet'))      //TRANSLATE ME
+   )
+);
+
+######################################################################
+
+$MODULES['help'     ]=  array('title' => __('Hilfe'),
+                              'icon'  => 'crystal-svg/%s/act/help.png',
+   'sub' => array(
+      'numbers'      => array('title' => __('Service-Nummern')),
+      'snom'         => array('title' => __('Snom'))
+   )
+);
+
+######################################################################
+
+$MODULES['admin'    ]=  array('title' => __('Administration'),
+                              'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
+                              'perms' => 'admin',
+   'sub' => array(
+      'overview'     => array('title' => __('&Uuml;bersicht')),
+      'users'        => array('title' => __('Benutzer')),
+      'calls'        => array('title' => __('Verbindungen')),
+      'nodes'        => array('title' => __('Nodes')),
+      'routes'       => array('title' => __('Routen')),       //TRANSLATE ME
+      'testroute'    => array('title' => __('Routing-Test'))  //TRANSLATE ME
+   )
+);
+
+######################################################################
+
+$MODULES['logout'   ]=  array('title' => __('Logout'),
+                              'icon'  => 'crystal-svg/%s/act/exit.png',
+   'sub' => array(
+      'logout'       => array('title' => __('Logout'))
+   )
+);
+
+######################################################################
 
 
 ?>
