@@ -63,7 +63,7 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 <?php
 
 $jobs_rec = fax_get_jobs_rec();
-if ($jobs_rec === false) {
+if (! is_array($jobs_rec)) {
 	echo __('Fehler beim Verbinden.');
 	return;
 }
@@ -98,24 +98,24 @@ $mod_url = gs_url($SECTION, $MODULE).'&amp;id=';
 	<th style="width:130px;">
 <?php
 if ($page > 0) {
-		echo
-		'<a href="', $mod_url, '&amp;page=',($page-1),'" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
-		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
-		'</a>', "\n";
-	} else {
-		echo
-		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
-	}
-	if ($page < $num_pages-1) {
-		echo
-		'<a href="', $mod_url, '&amp;page=', ($page+1),'" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
-		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
-		'</a>', "\n";
-	} else {
-		echo
-		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
-	}
-	echo ($page+1),'/',$num_pages;
+	echo
+	'<a href="', $mod_url, '&amp;page=',($page-1),'" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
+	'</a>', "\n";
+} else {
+	echo
+	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
+}
+if ($page < $num_pages-1) {
+	echo
+	'<a href="', $mod_url, '&amp;page=', ($page+1),'" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
+	'</a>', "\n";
+} else {
+	echo
+	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
+}
+echo ($page+1),'/',$num_pages;
 ?>
 	</th>
 </tr>
@@ -124,14 +124,10 @@ if ($page > 0) {
 
 <?php
 
-$rs=1;
-
-//@$_SESSION['sudo_user']['id'];
-
 for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 	
 	if ($i < $jobs_rec_count) {
-		echo '<tr class="', (($i % 2 == 0) ? 'even':'odd'), '">', "\n";
+		echo '<tr class="', (($i%2==0) ? 'even':'odd'), '">', "\n";
 		
 		echo "<td>", date('d.m.y H:i:s', $jobs_rec[$i][18]), "</td>\n";
 		if (@$jobs_rec[$i][15]) echo "<td>", $jobs_rec[$i][15] ," </td>\n";
