@@ -36,6 +36,14 @@ defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/cn_hylafax.php' );
 include_once( GS_DIR .'inc/util.php' );
 
+echo '<h2>';
+if (@$MODULES[$SECTION]['icon'])
+	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+if (count( $MODULES[$SECTION]['sub'] ) > 1 )
+	echo $MODULES[$SECTION]['title'], ' - ';
+echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+echo '</h2>', "\n";
+
 
 function username_prep($user_name) {
 	$user_name_str = strtr(trim($user_name), array(
@@ -95,14 +103,13 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 ?>
 
-<h2>Fax versenden</h2>
 
-<div class="userlist">
 <?php
+
 echo '<form enctype="multipart/form-data" method="post" action="'.GS_URL_PATH.'">', "\n";
 echo gs_form_hidden($SECTION,$MODULE);
 
-echo '<table cellspacing="1" class="userlist">', "\n";
+echo '<table cellspacing="1">', "\n";
 echo '<tbody>', "\n";
 echo "<tr>\n";
 echo '<th style="width:150px;">';
@@ -193,23 +200,16 @@ echo "</table>\n";
 
 
 echo '</form>';
-echo "</div>\n";
-
-
-
 
 ?>
 
 
-</div>
 
-<pre>
 <?php
- //var_dump($_SESSION);
-//$_SESSION['sudo_user']['info']['ext']
+/*
+echo "<pre>\n";
+var_dump($_SESSION);
+echo $_SESSION['sudo_user']['info']['ext'];
+echo "</pre>\n";
+*/
 ?>
-</pre>
-
-
-
-

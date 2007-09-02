@@ -78,9 +78,8 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 ?>
 
-<div class="userlist">
 
-<table cellspacing="1" class="userlist">
+<table cellspacing="1">
 <thead>
 <tr>
 
@@ -179,6 +178,4 @@ for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 
 </tbody>
 </table>
-
-</div>
 

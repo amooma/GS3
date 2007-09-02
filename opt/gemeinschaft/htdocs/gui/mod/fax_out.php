@@ -36,6 +36,14 @@ defined('GS_VALID') or die('No direct access allowed.');
 require_once( GS_DIR .'inc/cn_hylafax.php' );
 include_once( GS_DIR .'inc/util.php' );
 
+echo '<h2>';
+if (@$MODULES[$SECTION]['icon'])
+	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+if (count( $MODULES[$SECTION]['sub'] ) > 1 )
+	echo $MODULES[$SECTION]['title'], ' - ';
+echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+echo '</h2>', "\n";
+
 
 function username_prep($user_name) {
 	$user_name_str = strtr(trim($user_name), array(
@@ -77,12 +85,8 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 ?>
 
-<h2>Fax Ausgang</h2>
 
-<div class="userlist">
-
-
-<table cellspacing="1" class="userlist">
+<table cellspacing="1">
 <thead>
 <tr>
 
@@ -188,12 +192,13 @@ for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 
 </tbody>
 </table>
-</div>
-
-<pre>
-<?php //var_dump($jobs_send); ?>
-</pre>
 
 
-
+<?php
+/*
+echo "<pre>\n";
+var_dump($jobs_send);
+echo "</pre>\n";
+*/
+?>
 
