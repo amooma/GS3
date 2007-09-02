@@ -57,7 +57,7 @@ if (! isSet( $MODULES[$SECTION]['sub'][$MODULE] ))
 	die( 'Invalid request! ');
 
 if ( @$MODULES[$SECTION]['perms'] == 'admin'
-  && ! (preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
+&&   !(preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
 {
 	die( 'You are not an admin!' );
 }
@@ -139,6 +139,8 @@ foreach ($MODULES as $sectname => $sectinfo) {
 	$sect_active = ($sectname == $SECTION);
 	
 	if (array_key_exists('inmenu', $sectinfo) && ! $sectinfo['inmenu'])
+		continue;
+	if (count($sectinfo['sub']) < 1)
 		continue;
 	
 	if ( @$sectinfo['perms'] == 'admin'
