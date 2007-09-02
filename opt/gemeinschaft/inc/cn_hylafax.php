@@ -27,6 +27,14 @@
 \*******************************************************************/
 
 
+######################################################
+##
+##   Die hier verwendeten Parameter müssen noch
+##   escapt / gecastet werden!
+##
+######################################################
+
+
 function fax_get_jobs_rec() {
 	
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
