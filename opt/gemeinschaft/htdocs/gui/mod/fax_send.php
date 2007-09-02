@@ -62,7 +62,6 @@ $tsi        = trim(@$_REQUEST['tsi']);
 $faxnumber  = trim(@$_REQUEST['faxnumber']);
 $resolution = (int) trim(@$_REQUEST['res']);
 
-print_r($_FILES);
 if (is_array($_FILES)
 &&  @array_key_exists('file', @$_FILES)
 &&  @$_FILES['file']['error'] == 0
