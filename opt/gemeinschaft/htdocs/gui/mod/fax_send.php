@@ -45,43 +45,17 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 
-function username_prep($user_name) {
-	$user_name_str = strtr(trim($user_name), array(
-			'^' => '',
-			'\\' => '',
-			'>' => '',
-			'<' => '',
-			'\`' => '',
-			'\'' => '',
-			'"' => ''
-		));
 
-	return $user_name_str;
 
-}
 
-function uid_by_name ($user_name) {
+
+function email_by_name( $user_name )
+{
 	global $DB;
-
-	$sql_query = 'SELECT `id` FROM `users`
-WHERE
-	( `user` =_utf8\''. $DB->escape($user_name) .'\' COLLATE utf8_unicode_ci ) ';
-
-	$user_id = $DB->executeGetOne($sql_query);
-
-	return $user_id;
-}
-
-function email_by_name ($user_name) {
-	global $DB;
-
-	$sql_query = 'SELECT `email` FROM `users`
-WHERE
-	( `user` =_utf8\''. $DB->escape($user_name) .'\' COLLATE utf8_unicode_ci ) ';
-
-	$user_email = $DB->executeGetOne($sql_query);
-
-	return $user_email;
+	
+	$query = 'SELECT `email` FROM `users` WHERE
+	(`user` = _utf8\''. $DB->escape($user_name) .'\' COLLATE utf8_unicode_ci)';
+	return $DB->executeGetOne($query);
 }
 
 
@@ -187,9 +161,6 @@ echo "</th>\n";
 echo '<td>';
 echo '<button type="submit" title="Senden" class="plain">';
 echo '<img src="'.GS_URL_PATH.'crystal-svg/16/act/fileprint.png" />';
-echo '</button>';
-echo '<button type="reset" title="r&uuml;ckg&auml;ngig" class="plain">';
-echo '<img alt="r&uuml;ckg&auml;ngig" src="', GS_URL_PATH, 'crystal-svg/16/act/cancel.png" />';
 echo '</button>';
 
 echo "</td>\n";
