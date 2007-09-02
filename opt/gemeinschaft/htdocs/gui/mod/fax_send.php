@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************\
-* 
+*            Gemeinschaft - asterisk cluster gemeinschaft
 * 
 * $Revision$
 * 
