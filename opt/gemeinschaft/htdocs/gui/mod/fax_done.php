@@ -79,16 +79,22 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 <?php
 
 $jobs_done = fax_get_jobs_done();
+if (! is_array($jobs_done)) {
+	echo __('Fehler beim Verbinden.');
+	return;
+}
 
+$recdate = array();
+$jobid   = array();
 foreach ($jobs_done as $key => $row) {
-	if (username_prep($row[12]) == "webmanag")
-			$fax_username=username_prep($row[28]);
-		else
-			$fax_username=username_prep($row[12]);		
-
+	if (username_prep($row[12]) == 'webmanag')
+		$fax_username = username_prep($row[28]);
+	else
+		$fax_username = username_prep($row[12]);		
+	
 	if ($fax_username == $_SESSION['sudo_user']['name']) { 
-		$recdate[$key]  = $row[32];
-    		$jobid[$key] = $row[9];
+		$recdate[$key] = $row[32];
+		$jobid[$key]   = $row[9];
 	} else {
 		unset($jobs_done[$key]);
 	}
@@ -104,86 +110,64 @@ $num_pages = ceil($jobs_done_count / $per_page);
 $mod_url = gs_url($SECTION, $MODULE).'&amp;id=';
 
 
-
 ?>
-	<th style="width:140px;">
-		Datum
-	</th>
-	<th style="width:20px;">
-		Job
-	</th>
-	<th style="width:20px;">
-		Empf&auml;nger
-	</th>
-	<th style="width:20px;">
-		Seiten
-	</th>
-	<th style="width:20px;">
-		Aufl&ouml;sung
-	</th>
-	<th style="width:20px;">
-		Vers.
-	</th>
-	<th style="width:200px;">
-		Fehler
-	</th>
+	<th style="width:140px;"><?php echo __('Datum'); ?></th>
+	<th style="width:20px;"><?php echo __('Job'); ?></th>
+	<th style="width:20px;"><?php echo __('Empf&auml;nger'); ?></th>
+	<th style="width:20px;"><?php echo __('Seiten'); ?></th>
+	<th style="width:20px;"><?php echo __('Aufl&ouml;sung'); ?></th>
+	<th style="width:20px;"><?php echo __('Vers.'); ?></th>
+	<th style="width:200px;"><?php echo __('Fehler'); ?></th>
 	<th style="width:80px;">
-
 <?php
 if ($page > 0) {
-		echo
-		'<a href="', $mod_url, '&amp;page=',($page-1),'" title="zur&uuml;ckbl&auml;ttern" id="arr-prev">',
-		'<img alt="zur&uuml;ck" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
-		'</a>', "\n";
-	} else {
-		echo
-		'<img alt="zur&uuml;ck" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
-	}
-	if ($page < $num_pages-1) {
-		echo
-		'<a href="', $mod_url, '&amp;page=', ($page+1),'" title="weiterbl&auml;ttern" id="arr-next">',
-		'<img alt="weiter" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
-		'</a>', "\n";
-	} else {
-		echo
-		'<img alt="weiter" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
-	}
-	echo $page+1,"/$num_pages";
-
-	echo "</th>\n";
-
+	echo
+	'<a href="', $mod_url, '&amp;page=',($page-1),'" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
+	'</a>', "\n";
+} else {
+	echo
+	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
+}
+if ($page < $num_pages-1) {
+	echo
+	'<a href="', $mod_url, '&amp;page=', ($page+1),'" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
+	'</a>', "\n";
+} else {
+	echo
+	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
+}
+echo ($page+1),'/',$num_pages;
 ?>
-	
+	</th>
 </tr>
 </thead>
 <tbody>
 
 <?php
 
-$rs=1;
-
 for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
-
+	
 	if ($i < $jobs_done_count) {
-	echo '<tr class="', (($i % 2 == 0) ? 'even':'odd'), '">', "\n";
+		echo '<tr class="', (($i%2==0) ? 'even':'odd'), '">', "\n";
 		
-		echo "<td>".date("d.m.y H:i:s",$jobs_done[$i][32])."</td>\n";
-		echo "<td> ".$jobs_done[$i][9]." </td>\n";
-		echo "<td> ".$jobs_done[$i][4]." </td>\n";
-		
-		echo "<td> ".$jobs_done[$i][13]." / ".$jobs_done[$i][22]." </td>\n";
-		echo "<td> ".$jobs_done[$i][15]." lpi</td>\n";
-		echo "<td> ".$jobs_done[$i][3]." </td>\n";
-		//echo "<td> ".$jobs_done[$i][30]." </td>\n";
-		echo "<td> ".$jobs_done[$i][16]." </td>\n";
+		echo "<td>", date('d.m.y H:i:s', $jobs_done[$i][32]) ,"</td>\n";
+		echo "<td>", $jobs_done[$i][9] ,"</td>\n";
+		echo "<td>", $jobs_done[$i][4] ,"</td>\n";
+		echo "<td>", $jobs_done[$i][13] ,' / ', $jobs_done[$i][22] ,"</td>\n";
+		echo "<td>", $jobs_done[$i][15] ," lpi</td>\n";
+		echo "<td>", $jobs_done[$i][3] ,"</td>\n";
+		//echo "<td>", $jobs_done[$i][30] ,"</td>\n";
+		echo "<td>", $jobs_done[$i][16] ,"</td>\n";
 		echo "<td>\n";
-		echo '<a href="',$mod_url,'&amp;delete=',$jobs_done[$i][9],'&amp;page=',$page,'" title="entfernen"><img alt="entfernen" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="',$mod_url,'&amp;delete=',$jobs_done[$i][9],'&amp;page=',$page,'" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo "</td>\n";	
 		echo "</tr>\n";
-	echo "</tr>\n";
+		
+		echo "</tr>\n";
 	} 
 }
-
 
 ?>
 
