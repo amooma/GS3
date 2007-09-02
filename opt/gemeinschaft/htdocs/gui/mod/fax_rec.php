@@ -35,6 +35,12 @@
 defined('GS_VALID') or die('No direct access allowed.');
 require_once( GS_DIR .'inc/cn_hylafax.php' );
 
+echo '<h2>';
+if (@$MODULES[$SECTION]['icon'])
+	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+echo __('Empfangene Faxe');
+echo '</h2>', "\n";
+
 function sec_to_hours( $sec )
 {
 	$hours = sprintf('%d:%02d:%02d',
@@ -78,10 +84,6 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 ?>
 
-
-<h2><?php echo __('Empfangen'); ?></h2>
-
-
 <div class="userlist">
 
 <table cellspacing="1" class="userlist">
@@ -91,6 +93,10 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 <?php
 
 $jobs_rec = fax_get_jobs_rec();
+if ($jobs_rec === false) {
+	echo __('Fehler beim Verbinden.');
+	return;
+}
 
 foreach ($jobs_rec as $key => $row) {
 	if ($row[11] == $_SESSION['sudo_user']['name']) { 
@@ -102,64 +108,44 @@ foreach ($jobs_rec as $key => $row) {
 }
 
 array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_rec);
-
 unset($recdate);
 unset($jobid);
-
-
 
 $jobs_rec_count = count($jobs_rec);
 $num_pages = ceil($jobs_rec_count / $per_page);
 $mod_url = gs_url($SECTION, $MODULE).'&amp;id=';
 
-
 ?>
-	<th style="width:140px;">
-		Datum
-	</th>
-	<th style="width:20px;">
-		Sender
-	</th>
-	<th style="width:20px;">
-		Dauer
-	</th>
-	<th style="width:20px;">
-		Gr&ouml;&szlig;e
-	</th>
-	<th style="width:20px;">
-		Seiten
-	</th>
-	<th style="width:20px;">
-		Aufl&ouml;sung
-	</th>
-	<th style="width:20px;">
-		Bps
-	</th>
-	<th style="width:80px;">
+	<th style="width:140px;"><?php echo __('Datum'); ?></th>
+	<th style="width:20px;"><?php echo __('Sender'); ?></th>
+	<th style="width:20px;"><?php echo __('Dauer'); ?></th>
+	<th style="width:20px;"><?php echo __('Gr&ouml;&szlig;e'); ?></th>
+	<th style="width:20px;"><?php echo __('Seiten'); ?></th>
+	<th style="width:20px;"><?php echo __('Aufl&ouml;sung'); ?></th>
+	<th style="width:40px;"><?php echo __('bps'); ?></th>
+	<th style="width:130px;">
 <?php
 if ($page > 0) {
 		echo
-		'<a href="', $mod_url, '&amp;page=',($page-1),'" title="zur&uuml;ckbl&auml;ttern" id="arr-prev">',
-		'<img alt="zur&uuml;ck" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
+		'<a href="', $mod_url, '&amp;page=',($page-1),'" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
 		'</a>', "\n";
 	} else {
 		echo
-		'<img alt="zur&uuml;ck" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
 	}
 	if ($page < $num_pages-1) {
 		echo
-		'<a href="', $mod_url, '&amp;page=', ($page+1),'" title="weiterbl&auml;ttern" id="arr-next">',
-		'<img alt="weiter" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
+		'<a href="', $mod_url, '&amp;page=', ($page+1),'" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
 		'</a>', "\n";
 	} else {
 		echo
-		'<img alt="weiter" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
 	}
-	echo $page+1,"/$num_pages";
-
-	echo "</th>\n";
+	echo ($page+1),'/',$num_pages;
 ?>
-	
+	</th>
 </tr>
 </thead>
 <tbody>
@@ -170,32 +156,28 @@ $rs=1;
 
 //@$_SESSION['sudo_user']['id'];
 
-
 for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
-
+	
 	if ($i < $jobs_rec_count) {
-	echo '<tr class="', (($i % 2 == 0) ? 'even':'odd'), '">', "\n";
+		echo '<tr class="', (($i % 2 == 0) ? 'even':'odd'), '">', "\n";
 		
-		echo "<td>".date("d.m.y H:i:s",$jobs_rec[$i][18])."</td>\n";
-		if ($jobs_rec[$i][15]) echo "<td> ".$jobs_rec[$i][15]." </td>\n";
-		else echo "<td> ".$jobs_rec[$i][7]." </td>\n";
-		echo "<td> ".$jobs_rec[$i][5]." </td>\n";
-		echo "<td> ".round($jobs_rec[$i][10] / 1024)." kb </td>\n";
-		echo "<td> ".$jobs_rec[$i][12]." </td>\n";
-		echo "<td> ".$jobs_rec[$i][14]." lpi</td>\n";
-//		echo '<td> <a href="faxdown.php?file='.$jobs_rec[$i][4].'">';
-//		echo $jobs_rec[$i][4]."</a> </td>\n";
-		echo "<td> ".$jobs_rec[$i][1]." </td>\n";
+		echo "<td>", date('d.m.y H:i:s', $jobs_rec[$i][18]), "</td>\n";
+		if (@$jobs_rec[$i][15]) echo "<td>", $jobs_rec[$i][15] ," </td>\n";
+		else                    echo "<td>", $jobs_rec[$i][7] ,"</td>\n";
+		echo "<td>", $jobs_rec[$i][5] ,"</td>\n";
+		echo "<td>", round($jobs_rec[$i][10] / 1024) ," kB</td>\n";
+		echo "<td>", $jobs_rec[$i][12] ,"</td>\n";
+		echo "<td>", $jobs_rec[$i][14] ," lpi</td>\n";
+		//echo '<td><a href="faxdown.php?file=',$jobs_rec[$i][4],'">', $jobs_rec[$i][4] ,"</a></td>\n";
+		echo "<td>", $jobs_rec[$i][1] ,"</td>\n";
 		echo "<td>\n";
-		echo '<a href="',$mod_url,'&amp;delete=',$jobs_rec[$i][4],'&amp;page=',$page,'" title="entfernen"><img alt="entfernen" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-		echo ' &nbsp; <a href="faxdown.php?file='.$jobs_rec[$i][4].'">';
-		echo '<img alt="Fax anzeigen" src="', GS_URL_PATH, 'crystal-svg/16/app/pdf.png" /></a>'."\n";
-		echo "</td>\n";	
+		echo '<a href="',$mod_url,'&amp;delete=',$jobs_rec[$i][4],'&amp;page=',$page,'" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo ' &nbsp; <a href="faxdown.php?file='.$jobs_rec[$i][4].'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/app/pdf.png" /></a>'."\n";
+		echo "</td>\n";
+		
 		echo "</tr>\n";
-	echo "</tr>\n";
-	} 
+	}
 }
-
 
 ?>
 
