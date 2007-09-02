@@ -115,7 +115,7 @@ $tmp = array(
 	25=>array('k' => 'prv',
 	          'v' => gs_get_conf('GS_PB_PRIVATE_TITLE', "Pers\xC3\xB6nlich" ) )
 );
-if (gs_get_conf('PB_IMPORTED_ENABLED')) {
+if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
 	$tmp[$pos] = array(
 		'k' => 'imported',
