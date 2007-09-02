@@ -2,7 +2,7 @@
 /*******************************************************************\
 * 
 * 
-* $Revision: $
+* $Revision$
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -29,7 +29,8 @@
 defined('GS_VALID') or die('No direct access allowed.');
 require_once( GS_DIR .'inc/cn_hylafax.php' );
 
-function sec_to_hours($sec) {
+function sec_to_hours($sec)
+{
 	$hours = sprintf('%d:%02d:%02d',
 		$sec / 3600 % 24,
 		$sec / 60 % 60,
@@ -38,7 +39,8 @@ function sec_to_hours($sec) {
 	return $hours;
 }
 
-function username_prep($user_name) {
+function username_prep($user_name)
+{
 	$user_name_str = strtr(trim($user_name), array(
 			'^' => '',
 			'\\' => '',
