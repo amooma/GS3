@@ -112,6 +112,7 @@ $GUI_MON_NOQUEUEBLUE        = true;
   # used in Monitor->Peers. if true idle users who are not member
   # of a queue get a blue led instead of a green one
 
+$GUI_MON_PEERS_ENABLED      = false;  # needs LDAP
 
 
 /***********************************************************
@@ -289,7 +290,7 @@ $EMAIL_PATTERN_VALID    = '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i';
 *    PHONEBOOK
 ***********************************************************/
 
-$PB_IMPORTED_USE        = false;
+$PB_IMPORTED_ENABLED    = false;
 $PB_IMPORTED_ORDER      = 2;                    # 1|2|3
 $PB_IMPORTED_TITLE      = "Firma (aus LDAP)";   # short! no HTML entities!
 
@@ -301,6 +302,7 @@ $PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";  #  "
 *    FAX
 ***********************************************************/
 
+$FAX_ENABLED            = true;
 $FAX_SERVER             = '127.0.0.1';
 $FAX_PORT               = 4559;     # HylaFax port
 $FAX_PREFIX             = '6';      # not used yet  //FIXME

@@ -113,6 +113,7 @@ _gscnf( 'GUI_SUDO_ADMINS'           , ''                 );
 _gscnf( 'GUI_SUDO_EXTENDED'         , false              );
 _gscnf( 'GUI_QUEUE_SHOW_NUM_CALLS'  , false              );
 _gscnf( 'GUI_MON_NOQUEUEBLUE'       , true               );
+_gscnf( 'GUI_MON_PEERS_ENABLED'     , false              );
 
 _gscnf( 'EXTERNAL_NUMBERS_BACKEND'  , 'db'               );
 _gscnf( 'EXTERNAL_NUMBERS_LDAP_PROP', ''                 );
@@ -129,8 +130,8 @@ _gscnf( 'PROV_AUTO_ADD_PHONE_HOST'  , 'first'            );
 _gscnf( 'PROV_DIAL_LOG_LIFE'        , 14*24*3600         );
 
 _gscnf( 'SNOM_ENABLED'              , false              );
-_gscnf( 'SNOM_PROV_HTTP_USER'       , 'gs'               );
-_gscnf( 'SNOM_PROV_HTTP_PASS'       , 'gEheiM'           );
+_gscnf( 'SNOM_PROV_HTTP_USER'       , ''                 );
+_gscnf( 'SNOM_PROV_HTTP_PASS'       , ''                 );
 _gscnf( 'SNOM_PROV_PB_NUM_RESULTS'  , 15                 );
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
@@ -150,7 +151,7 @@ _gscnf( 'DP_EMERGENCY_FIRE_MAP'     , '112'              );
 _gscnf( 'DP_DIALTIMEOUT_IN'         , 45                 );
 _gscnf( 'DP_PRV_CALL_PREFIX'        , '*7*'              );
 
-_gscnf( 'PB_IMPORTED_USE'           , false              );
+_gscnf( 'PB_IMPORTED_ENABLED'       , false              );
 _gscnf( 'PB_IMPORTED_ORDER'         , 2                  );
 _gscnf( 'PB_IMPORTED_TITLE'         , "Firma (aus LDAP)" );
 _gscnf( 'PB_INTERNAL_TITLE'         , "Intern"           );
@@ -169,6 +170,7 @@ _gscnf( 'INTL_ASTERISK_LANG'        , 'de'               );
 _gscnf( 'USERCOMMENT_OFFTIME'       , 'Feierabend'       );
 _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i'              );
 
+_gscnf( 'FAX_ENABLED'               , false              );
 _gscnf( 'FAX_SERVER'                , '127.0.0.1'        );
 _gscnf( 'FAX_PORT'                  , 4559               );
 _gscnf( 'FAX_PREFIX'                , gs_get_conf('GS_CANONIZE_NATL_PREFIX', '0'  ).
