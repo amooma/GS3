@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************\
 * 
-* $Revision:  $
+* $Revision$
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -83,7 +83,7 @@ function fax_get_jobs_send() {
 	return $jobs_r;
 }
 
-function fax_delete_file($file) {
+function fax_delete_file( $file ) {
 	
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
@@ -97,7 +97,7 @@ function fax_delete_file($file) {
 	return $ret_val;
 }
 
-function fax_delete_job($job) {
+function fax_delete_job( $job ) {
 	
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
@@ -111,7 +111,7 @@ function fax_delete_job($job) {
 	return $ret_val;
 }
 
-function fax_kill_job($job) {
+function fax_kill_job( $job ) {
 	
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
@@ -125,7 +125,7 @@ function fax_kill_job($job) {
 	return $ret_val;
 }
 
-function fax_send($user_id, $user_name, $to_num, $from_num, $file, $user_email, $resolution) {
+function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email, $resolution ) {
 	
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
