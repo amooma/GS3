@@ -56,10 +56,10 @@ $MODULES['home'     ]=  array('title' => __('Home'),
 $MODULES['pb'       ]=  array('title' => __('Telefonbuch'),
                               'icon'  => 'crystal-svg/%s/act/contents.png',
    'sub' => array(
-      //'imported'     => array('title' => __('Firma (aus LDAP)')),
+      'imported'     => array('title' => __('Firma (aus LDAP)')),
       'gs'           => array('title' => __('Firma (Projekt)')),
       'private'      => array('title' => __('Pers&ouml;nlich')),
-      'csvimport'    => array('title' => __('_ CSV-Import'))
+      'csvimport'    => array('title' => __('CSV-Import'))    //TRANSLATE ME
    )
 );
 
@@ -101,9 +101,12 @@ $MODULES['monitor'  ]=  array('title' => __('Monitor'),
    'sub' => array(
       'queues'       => array('title' => __('Queues')),
       'pgrps'        => array('title' => __('Gruppen'))
-      //'peers'        => array('title' => __('Kollegen'))
    )
 );
+if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
+$MODULES['monitor'  ]['sub']['peers']
+	                 =  array('title' => __('Kollegen'));
+}
 
 ######################################################################
 
@@ -119,9 +122,12 @@ $MODULES['features' ]=  array('title' => __('Dienstmerkmale'),
 $MODULES['keys'     ]=  array('title' => __('Tastenbelegung'),
                               'icon'  => 'crystal-svg/%s/app/keyboard.png',
    'sub' => array(
-      'snom'         => array('title' => __('Snom'))
    )
 );
+if (gs_get_conf('GS_SNOM_ENABLED')) {
+$MODULES['keys'     ]['sub']['snom']
+	                 =  array('title' => __('Snom'));
+}
 
 ######################################################################
 
@@ -143,6 +149,7 @@ $MODULES['stats'    ]=  array('title' => __('Statistik'),     //TRANSLATE ME
 
 ######################################################################
 
+if (gs_get_conf('GS_FAX_ENABLED')) {
 $MODULES['fax'      ]=  array('title' => __('Fax'),           //TRANSLATE ME
                               'icon'  => 'crystal-svg/%s/act/fileprint.png',
    'sub' => array(
@@ -152,6 +159,7 @@ $MODULES['fax'      ]=  array('title' => __('Fax'),           //TRANSLATE ME
       'done'         => array('title' => __('Gesendet'))      //TRANSLATE ME
    )
 );
+}
 
 ######################################################################
 
