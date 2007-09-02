@@ -33,6 +33,12 @@
 ######################################################
 
 defined('GS_VALID') or die('No direct access.');
+if ((float)PHP_VERSION < 5.0) {
+	# to communicate with HylaFax inc/cn_hylafax.php uses ftp_raw(),
+	# which is not available in PHP < 5
+	echo 'PHP &gt;= 5 required.';
+	return;
+}
 require_once( GS_DIR .'inc/cn_hylafax.php' );
 include_once( GS_DIR .'inc/util.php' );
 
