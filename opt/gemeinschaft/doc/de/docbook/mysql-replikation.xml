@@ -20,9 +20,8 @@
 
   <para>Fällt einer dieser kombinierten Asterisk-Datenbank-Knoten aus, hat
   dies auf die anderen Knoten dieses Verbundes keine negativen Auswirkungen.
-  Ein Ausfall der Master-Datenbank verhindert die Replikation zwar, der
-  weitere Betrieb der einzelnen Knoten ist aber weiterhin
-  gewährleistet.</para>
+  Bei einem Ausfall der Master-Datenbank kann auf den Nodes noch im Notbetrieb
+  telefoniert werden.</para>
 
   <section id="replikation-voraussetzungen">
     <title>Benötigte Komponenten</title>
