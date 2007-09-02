@@ -123,9 +123,9 @@ $MODULES = array(
 	                            'icon'  => 'crystal-svg/%s/act/fileprint.png',
 	   'sub' => array(
 	      'rec'        => array('title' => __('Empfangen')),    //TRANSLATE ME
-	      'done'       => array('title' => __('Gesendet')),     //TRANSLATE ME
-	      'out'        => array('title' => __('Fax Ausgang')),  //TRANSLATE ME
-	      'send'       => array('title' => __('Fax versenden')) //TRANSLATE ME
+	      'send'       => array('title' => __('Fax versenden')),//TRANSLATE ME
+	      'out'        => array('title' => __('Ausgang')),      //TRANSLATE ME
+	      'done'       => array('title' => __('Gesendet'))      //TRANSLATE ME
 	   )
 	),
 	##################################################################
