@@ -45,29 +45,6 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 
-function username_prep( $user_name )
-{
-	$user_name_str = strtr(trim($user_name), array(
-		'^'  => '',
-		'\\' => '',
-		'>'  => '',
-		'<'  => '',
-		'\`' => '',
-		'\'' => '',
-		'"'  => ''
-	));
-	return $user_name_str;
-}
-
-function uid_by_name( $user_name )
-{
-	global $DB;
-	
-	$query = 'SELECT `id` FROM `users` WHERE
-	(`user` = _utf8\''. $DB->escape($user_name) .'\' COLLATE utf8_unicode_ci)';
-	return (int)$DB->executeGetOne($sql_query);
-}
-
 $per_page = 10;
 $page     = (int)@$_REQUEST['page'];
 $delete   = trim(@$_REQUEST['delete']);
