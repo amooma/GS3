@@ -38,7 +38,9 @@ require_once( GS_DIR .'inc/cn_hylafax.php' );
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
-echo __('Empfangene Faxe');
+if (count( $MODULES[$SECTION]['sub'] ) > 1 )
+	echo $MODULES[$SECTION]['title'], ' - ';
+echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 function sec_to_hours( $sec )
@@ -98,10 +100,12 @@ if ($jobs_rec === false) {
 	return;
 }
 
+$recdate = array();
+$jobid   = array();
 foreach ($jobs_rec as $key => $row) {
 	if ($row[11] == $_SESSION['sudo_user']['name']) { 
 		$recdate[$key] = $row[18];
-		$jobid[$key] = $row[4];
+		$jobid[$key]   = $row[4];
 	} else {
 		unset($jobs_rec[$key]);
 	}
