@@ -45,19 +45,17 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 
-function username_prep($user_name) {
-	$user_name_str = strtr(trim($user_name), array(
-			'^' => '',
-			'\\' => '',
-			'>' => '',
-			'<' => '',
-			'\`' => '',
-			'\'' => '',
-			'"' => ''
-		));
-
-	return $user_name_str;
-
+function username_prep( $user_name )
+{
+	return strTr(trim($user_name), array(
+		'^'  => '',
+		'\\' => '',
+		'>'  => '',
+		'<'  => '',
+		'\`' => '',
+		'\'' => '',
+		'"'  => ''
+	));
 }
 
 

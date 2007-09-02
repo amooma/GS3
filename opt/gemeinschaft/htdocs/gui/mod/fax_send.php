@@ -45,11 +45,7 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 
-
-
-
-
-function email_by_name( $user_name )
+function email_by_username( $user_name )
 {
 	global $DB;
 	
@@ -68,7 +64,7 @@ $faxnumber   = trim(@$_REQUEST['faxnumber']);
 $resolution   = (int) trim(@$_REQUEST['res']);
 
 if ((array_key_exists('file',$_FILES)) && ($_FILES['file']['error'] == 0)) {
-	$fax_job_id = fax_send($user_id, $_SESSION['sudo_user']['name'], $faxnumber, $tsi, $_FILES['file']['tmp_name'],email_by_name($_SESSION['sudo_user']['name']),$resolution);
+	$fax_job_id = fax_send($user_id, $_SESSION['sudo_user']['name'], $faxnumber, $tsi, $_FILES['file']['tmp_name'],email_by_username($_SESSION['sudo_user']['name']),$resolution);
 
 	//print_r($_FILES);
 }
