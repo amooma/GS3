@@ -62,8 +62,11 @@ $tsi        = trim(@$_REQUEST['tsi']);
 $faxnumber  = trim(@$_REQUEST['faxnumber']);
 $resolution = (int) trim(@$_REQUEST['res']);
 
-if (@array_key_exists('file', @$_FILES)
-&&  @$_FILES['file']['error'] == 0) {
+print_r($_FILES);
+if (is_array($_FILES)
+&&  @array_key_exists('file', @$_FILES)
+&&  @$_FILES['file']['error'] == 0
+&&  @$_FILES['file']['size'] > 0) {
 	$fax_job_id = fax_send(
 		$user_id,
 		$_SESSION['sudo_user']['name'],
@@ -73,6 +76,9 @@ if (@array_key_exists('file', @$_FILES)
 		email_by_username($_SESSION['sudo_user']['name']),
 		$resolution
 	);
+	$file_ok = true;
+} else {
+	$file_ok = false;
 }
 
 
@@ -132,21 +138,15 @@ echo '<input name="file" type="file" />';
 echo "</td>\n";
 echo "</tr>\n";
 
-/*
 echo "<tr>\n";
-echo '<th>Upload</th>' ,"\n";
+echo '<th>&nbsp;</th>' ,"\n";
 echo '<th style="width:350px;">';
-if (@array_key_exists('file', @$_FILES)
-&&  @$_FILES['file']['error'] == 0) {
-	echo $_FILES['file']['name'] ," (", round( (int)$_FILES['file']['size'] / 1024 ) ," kb)\n";
+if ($file_ok) {
+	echo baseName($_FILES['file']['name']) ," (", round( (int)$_FILES['file']['size'] / 1024 ) ," kB)\n";
+	if ($fax_job_id) echo '', __('wird gesendet.'), ' ID: ', $fax_job_id;
+	else             echo ' - ', __('Fehler beim Senden');
 }
-if ($fax_job_id) echo " wird gesendet. ID: $fax_job_id \n";
 echo "</th>\n";
-echo "</tr>\n";
-*/
-
-echo "<tr>\n";
-echo '<th colspan="2"></th>' ,"\n";
 echo "</tr>\n";
 
 echo "<tr>\n";
