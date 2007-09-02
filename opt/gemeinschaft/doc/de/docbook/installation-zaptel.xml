@@ -759,10 +759,10 @@ Opened pseudo zap interface, measuring accuracy...
 100.000000% 99.987793% 100.000000% 100.000000% 100.000000% 100.000000% 
 --- Results after 29 passes ---
 Best: 100.000000 -- Worst: 99.987793 -- Average: 99.999158</screen>Laut
-    man-Page (die aber normalerweise nicht installiert wird) sind Werte von
-    100 % - 99,99 % perfekt, 99,98 % - 99,97 % noch ok. Wir haben hier also
-    ein sehr gutes Ergebnis. Wenn das Ergebnis aber unter 99,975 % liegt, ist
-    das ein ernster Grund zur Sorge.</para>
+    <literal>man</literal>-Page (die aber normalerweise nicht installiert
+    wird) sind Werte von 100 % - 99,99 % perfekt, 99,98 % - 99,97 % noch ok.
+    Wir haben hier also ein sehr gutes Ergebnis. Wenn das Ergebnis aber unter
+    99,975 % liegt, ist das ein ernster Grund zur Sorge.</para>
 
     <para>Verpaßte Interrupts kann man sich auch im interaktiven Tool
     <command>zttool</command> anzeigen lassen.</para>
