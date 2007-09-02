@@ -34,6 +34,7 @@
 
 defined('GS_VALID') or die('No direct access allowed.');
 require_once( GS_DIR .'inc/cn_hylafax.php' );
+include_once( GS_DIR .'inc/util.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -43,15 +44,6 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
-function sec_to_hours( $sec )
-{
-	$hours = sprintf('%d:%02d:%02d',
-		$sec / 3600 % 24,
-		$sec / 60 % 60,
-		$sec % 60
-	);
-	return $hours;
-}
 
 function username_prep( $user_name )
 {
