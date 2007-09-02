@@ -170,7 +170,12 @@ _gscnf( 'INTL_ASTERISK_LANG'        , 'de'               );
 _gscnf( 'USERCOMMENT_OFFTIME'       , 'Feierabend'       );
 _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i'              );
 
-_gscnf( 'FAX_ENABLED'               , false              );
+# to communicate with HylaFax ftp_raw() is required, which is not
+# available in PHP < 5
+if ((float)PHP_VERSION >= 5.0)
+	_gscnf( 'FAX_ENABLED'               , false              );
+else
+	define('GS_FAX_ENABLED', false);
 _gscnf( 'FAX_SERVER'                , '127.0.0.1'        );
 _gscnf( 'FAX_PORT'                  , 4559               );
 _gscnf( 'FAX_PREFIX'                , gs_get_conf('GS_CANONIZE_NATL_PREFIX', '0'  ).
