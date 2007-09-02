@@ -46,7 +46,7 @@ echo '</h2>', "\n";
 
 
 $per_page = 10;
-$page = (int)@$_REQUEST['page'];
+$page     = (int)@$_REQUEST['page'];
 $delete   = trim(@$_REQUEST['delete']);
 
 if ($delete) {
