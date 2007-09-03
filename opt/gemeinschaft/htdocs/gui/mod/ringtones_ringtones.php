@@ -145,21 +145,33 @@ $cur_phone_type = $DB->executeGetOne( 'SELECT `type` FROM `phones` WHERE `user_i
 <div style="max-width:600px;">
 	<img alt="" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/info.png" class="fl" />
 	<p style="margin-left:22px;">
-		<?php echo __('Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.'); ?>
+		<?php echo __('_ Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.'); /*//TRANSLATE ME*/ ?>
 	</p>
 </div>
 
 <?php
-if (strToLower(subStr($cur_phone_type,0,4))=='snom') {
+
+if (strToLower(subStr($cur_phone_type,0,4)) == 'snom') {
 ?>
 <div style="max-width:600px;">
 	<img alt="" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/info.png" class="fl" />
 	<p style="margin-left:22px;">
-		<?php echo __('Das Snom unterst&uuml;tzt Ringer 1-5 und lautlos.<br /> F&uuml;r das Snom kann nur entweder f&uuml;r interne oder f&uuml;r externe Anrufe eine eigene Klingeltondatei eingestellt sein, nicht f&uuml;r beides. Die L&auml;nge wird auf wenige Sekunden begrenzt.'); ?>
+		<?php echo __('_ Das Snom unterst&uuml;tzt Ringer 1-5 und lautlos.<br /> F&uuml;r das Snom kann nur entweder f&uuml;r interne oder f&uuml;r externe Anrufe eine eigene Klingeltondatei eingestellt sein, nicht f&uuml;r beides. Die L&auml;nge wird auf wenige Sekunden begrenzt.'); /*//TRANSLATE ME*/ ?>
 	</p>
 </div>
 <?php
 }
+elseif (strToLower(subStr($cur_phone_type,0,7)) == 'siemens') {
+?>
+<div style="max-width:600px;">
+	<img alt="" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/info.png" class="fl" />
+	<p style="margin-left:22px;">
+		<?php echo __('_ Das Siemens OpenStage kann in der derzeitigen Firmware noch nicht zwischen intern und extern unterscheiden. Die Ruftonmelodie kann nur am Telefon eingestellt werden!'); /*//TRANSLATE ME?*/ ?>
+	</p>
+</div>
+<?php
+}
+
 ?>
 
 <?php
