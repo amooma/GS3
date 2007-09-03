@@ -118,7 +118,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
 <div id="topheader"></div>
 <div id="headerboxes">
 <div id="boxtitle">
-	<img alt="Suchen" src="<?php echo GS_URL_PATH; ?>crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />
+	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />
 	<h1><?php echo __('Telefon-Manager'); ?></h1> 
 </div>
 <!--<img alt="Gemeinschaft" src="<?php echo GS_URL_PATH; ?>img/logo.gif" class="fr" />-->
@@ -152,7 +152,7 @@ foreach ($MODULES as $sectname => $sectinfo) {
 	//echo '<a href="'. GS_URL_PATH .'?s='. $sectname .'" class="'. (($sect_active) ? 'active' : '') .'">'. $sectinfo['title'] .'</a>', "\n";
 	echo '<a href="', gs_url($sectname, ''), '" class="', (($sect_active) ? 'active' : ''), '">';
 	if (@$sectinfo['icon'])
-		echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '16', $sectinfo['icon']), '" /> ';
+		echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '16', $sectinfo['icon']), '" /> ';
 	echo $sectinfo['title'], '</a>', "\n";
 	if (count($sectinfo['sub']) > 1) {
 		echo '<ul class="menu">', "\n";
@@ -160,7 +160,7 @@ foreach ($MODULES as $sectname => $sectinfo) {
 			if (array_key_exists('inmenu', $modinfo) && ! $modinfo['inmenu'])
 				continue;
 			
-			echo "\t", '<li class="leaf"><a href="'. gs_url($sectname, $modname) .'" class="'. ($modname==$MODULE ? 'active' : '') .'"><img alt="" src="', GS_URL_PATH, 'img/tree.gif" />'. $modinfo['title'] .'</a></li>', "\n";
+			echo "\t", '<li class="leaf"><a href="'. gs_url($sectname, $modname) .'" class="'. ($modname==$MODULE ? 'active' : '') .'"><img alt=" " src="', GS_URL_PATH, 'img/tree.gif" />'. $modinfo['title'] .'</a></li>', "\n";
 		}
 		echo '</ul>', "\n";
 	}
