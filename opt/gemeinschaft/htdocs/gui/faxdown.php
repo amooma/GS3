@@ -26,11 +26,16 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+####################################################################
+#
+#  //FIXME. We should check permissions!
+#
+####################################################################
+
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );
 
-$ext = @$_SESSION['sudo_user']['info']['ext'];
 $fld = @$_REQUEST['fld'];
 $msg = @$_REQUEST['msg'];
 
@@ -39,30 +44,30 @@ require_once( GS_DIR .'inc/cn_hylafax.php' );
 
 $file = trim(@$_REQUEST['file']);
 
-$user_id = $ext = @$_SESSION['sudo_user']['id'];
-
-if ($file) {
-
-	if (fax_download($file)) {
-		$fnamel_pre=strlen(strrchr($file,"."));
-		$fnamel_all=strlen($file);
-		$fname = substr($file,0,$fnamel_all-$fnamel_pre);
-		
-		system('cd /var/spool/hylafax/ && /var/spool/hylafax/bin/tiff2pdf -o /tmp/'.$fname.".pdf  /tmp/".$file);
-
-		header('Content-type: application/pdf');
-		header('Content-Disposition: attachment; filename="'.$fname.'.pdf"');
-		header('Content-Length: ' . filesize("/tmp/".$fname.".pdf"));
-	
-		readfile("/tmp/".$fname.".pdf");
-	}
-} else {
+if (! $file) {
 	header( 'HTTP/1.0 404 Not Found', true, 404 );
 	header( 'Status: 404 Not Found' , true, 404 );
-	header( 'Content-Type: text/plain' );
-	die( 'Not found.' );
+	die( 'File not found.' );
 }
 
+if (! fax_download($file)) {
+	header( 'HTTP/1.0 500 Internal Server Error', true, 500 );
+	header( 'Status: 500 Internal Server Error' , true, 500 );
+	die( 'Error.' );
+}
+
+
+$fnamel_pre = strLen(strRChr($file, '.'));
+$fnamel_all = strLen($file);
+$fname      = subStr($file, 0, $fnamel_all - $fnamel_pre);
+
+@system('cd /var/spool/hylafax/ && /var/spool/hylafax/bin/tiff2pdf -o '. escapeShellArg('/tmp/'.$fname.'.pdf') .' '. escapeShellArg('/tmp/'.$file));
+
+header('Content-Type: application/pdf');
+header('Content-Disposition: attachment; filename="'.$fname.'.pdf"');
+header('Content-Length: ' . fileSize('/tmp/'.$fname.'.pdf'));
+
+readFile('/tmp/'.$fname.'.pdf');
 
 
 ?>
