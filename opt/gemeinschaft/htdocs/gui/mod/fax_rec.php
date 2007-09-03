@@ -69,27 +69,27 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 <?php
 
 $jobs_rec = fax_get_jobs_rec();
-if (! is_array($jobs_rec)) {
-	echo __('Fehler beim Verbinden.');
-	return;
-}
 
-$recdate = array();
-$jobid   = array();
-foreach ($jobs_rec as $key => $row) {
-	if ($row[11] == $_SESSION['sudo_user']['name']) { 
-		$recdate[$key] = $row[18];
-		$jobid[$key]   = $row[4];
-	} else {
-		unset($jobs_rec[$key]);
+if (is_array($jobs_rec)) {
+
+	foreach ($jobs_rec as $key => $row) {
+		if ($row[11] == $_SESSION['sudo_user']['name']) { 
+			$recdate[$key]  = $row[18];
+			$jobid[$key] = $row[4];
+		} else {
+			unset($jobs_rec[$key]);
+	
+		}
 	}
-}
+	
+	array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_rec);
+	
+	unset($recdate);
+	unset($jobid);
+	
+	$jobs_rec_count = count($jobs_rec);
+} else $jobs_rec_count = 0;
 
-array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_rec);
-unset($recdate);
-unset($jobid);
-
-$jobs_rec_count = count($jobs_rec);
 $num_pages = ceil($jobs_rec_count / $per_page);
 $mod_url = gs_url($SECTION, $MODULE).'&amp;id=';
 
