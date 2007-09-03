@@ -122,7 +122,9 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
 	<h1><?php echo __('Telefon-Manager'); ?></h1> 
 </div>
 <!--<img alt="Gemeinschaft" src="<?php echo GS_URL_PATH; ?>img/logo.gif" class="fr" />-->
+<div class="tty"><a href="#a-content"><?php echo __('_ Navigation &uuml;berspringen'); ?></a></div>
 
+<span class="tty"><?php echo __('_ Sprache'); ?>:</span>
 <a href="<?php echo gs_url($SECTION, $MODULE); ?>&amp;setlang=en_US" title="English">
 <img alt="en_US" src="<?php echo GS_URL_PATH; ?>img/lang/en_US.png" class="fr" /></a>
 <a href="<?php echo gs_url($SECTION, $MODULE); ?>&amp;setlang=de_DE" title="Deutsch">
@@ -211,6 +213,8 @@ if (@$_SESSION['login_ok']) {
 
 
 <div id="content">
+<hr class="tty" width="50%" align="left" />
+<a name="a-content" id="a-content" class="tty"></a>
 
 <?php
 
