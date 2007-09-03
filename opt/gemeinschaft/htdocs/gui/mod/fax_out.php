@@ -70,12 +70,20 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 <?php
 
 $jobs_send = fax_get_jobs_send();
-if (! is_array($jobs_send)) {
-	echo __('Fehler beim Verbinden.');
-	return;
-}
 
-$jobs_send_count = count($jobs_send);
+if (is_array($jobs_send)) {
+	$jobs_send_count = count($jobs_send);
+
+	foreach ($jobs_send as $key => $row) {
+	$recdate[$key]  = $row[32];
+	$jobid[$key] = $row[9];
+	}
+	@array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_send);
+	unset($recdate);
+	unset($jobid);
+	
+} else $jobs_send_count = 0;
+
 $num_pages = ceil($jobs_send_count / $per_page);
 $mod_url = gs_url($SECTION, $MODULE).'&amp;id=';
 
@@ -115,17 +123,6 @@ echo ($page+1),'/',$num_pages;
 <tbody>
 
 <?php
-
-$recdate = array();
-$jobid   = array();
-foreach ($jobs_send as $key => $row) {
-    $recdate[$key] = $row[32];
-    $jobid[$key]   = $row[9];
-}
-@array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_send);
-unset($recdate);
-unset($jobid);
-
 
 for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 	

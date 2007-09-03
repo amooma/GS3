@@ -85,33 +85,31 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 <?php
 
 $jobs_done = fax_get_jobs_done();
-if (! is_array($jobs_done)) {
-	echo __('Fehler beim Verbinden.');
-	return;
-}
 
-$recdate = array();
-$jobid   = array();
-foreach ($jobs_done as $key => $row) {
-	if (username_prep($row[12]) == 'webmanag')
-		$fax_username = username_prep($row[28]);
-	else
-		$fax_username = username_prep($row[12]);		
+if (is_array($jobs_done)) {
+	foreach ($jobs_done as $key => $row) {
+		if (username_prep($row[12]) == "webmanag")
+				$fax_username=username_prep($row[28]);
+			else
+				$fax_username=username_prep($row[12]);		
 	
-	if ($fax_username == $_SESSION['sudo_user']['name']) { 
-		$recdate[$key] = $row[32];
-		$jobid[$key]   = $row[9];
-	} else {
-		unset($jobs_done[$key]);
+		if ($fax_username == $_SESSION['sudo_user']['name']) { 
+			$recdate[$key]  = $row[32];
+			$jobid[$key] = $row[9];
+		} else {
+			unset($jobs_done[$key]);
+		}
 	}
-}
 
-array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_done);
-unset($recdate);
-unset($jobid);
+	array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_done);
+	unset($recdate);
+	unset($jobid);
+	
+	
+	$jobs_done_count = count($jobs_done);
+	
+} else $jobs_done_count = 0;
 
-
-$jobs_done_count = count($jobs_done);
 $num_pages = ceil($jobs_done_count / $per_page);
 $mod_url = gs_url($SECTION, $MODULE).'&amp;id=';
 
