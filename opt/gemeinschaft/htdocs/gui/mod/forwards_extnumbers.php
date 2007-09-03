@@ -30,7 +30,7 @@ defined('GS_VALID') or die('No direct access.');
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
-	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 /*
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';

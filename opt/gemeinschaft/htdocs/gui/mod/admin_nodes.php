@@ -33,7 +33,7 @@ include_once( GS_DIR .'inc/util.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
-	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
@@ -85,7 +85,7 @@ if (is_array($warnings) && count($warnings) > 0) {
 	foreach ($warnings as $warning) {
 ?>
 <div style="max-width:600px;">
-	<img alt="" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/app/important.png" class="fl" />
+	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/app/important.png" class="fl" />
 	<p style="margin:0 0 0 22px; padding:0 0 7px 0;">
 		<?php echo $warning; ?>
 	</p>
@@ -190,7 +190,7 @@ if (false) {
 <br />
 <br />
 
-<p style="max-width:500px;"><small><sup>[1]</sup> <?php echo __('FIXME. DIESEN STRING UEBERSETZEN. Dies ist die Adresse, die ggf. per Stonith &uuml;bernommen werden w&uuml;rde. (Die dynamische Adresse hat hier nichts mit DHCP zu tun.)'); ?></small></p>
+<p style="max-width:500px;"><small><sup>[1]</sup> <?php echo __('_ Dies ist die Adresse, die ggf. per Stonith &uuml;bernommen werden w&uuml;rde. (Die dynamische Adresse hat hier nichts mit DHCP zu tun.)'); /* //TRANSLATE ME */ ?></small></p>
 
 <p style="max-width:500px;"><small><sup>[2]</sup> <?php echo __('Nicht konfiguriert.'); ?></small></p>
 

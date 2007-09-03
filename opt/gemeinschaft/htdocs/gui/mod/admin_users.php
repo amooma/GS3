@@ -31,7 +31,7 @@ require_once( GS_DIR .'inc/extension-state.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
-	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
@@ -224,19 +224,19 @@ if (@$rs) {
 		$state = gs_extstate_single( $r['ext'] );
 		switch ($state) {
 		case AST_MGR_EXT_UNKNOWN:
-			echo '<img alt="" src="', GS_URL_PATH, 'crystal-svg/16/app/important.png" />&nbsp; ', __('unbekannt');
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/important.png" />&nbsp; ', __('unbekannt');
 			break;
 		case AST_MGR_EXT_IDLE:
-			echo '<img alt="" src="', GS_URL_PATH, 'crystal-svg/16/act/greenled.png" />&nbsp; ', __('bereit');
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/greenled.png" />&nbsp; ', __('bereit');
 			break;
 		case AST_MGR_EXT_OFFLINE:
-			echo '<img alt="" src="', GS_URL_PATH, 'crystal-svg/16/act/free_icon.png" />&nbsp; ', __('offline');
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/free_icon.png" />&nbsp; ', __('offline');
 			break;
 		case AST_MGR_EXT_INUSE:
-			echo '<img alt="" src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" />&nbsp; ', __('spricht');
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" />&nbsp; ', __('spricht');
 			break;
 		case AST_MGR_EXT_RINGING:
-			echo '<img alt="" src="', GS_URL_PATH, 'crystal-svg/16/app/knotify.png" />&nbsp; ', __('klingelt');
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/knotify.png" />&nbsp; ', __('klingelt');
 			break;
 		default:
 			echo $state;
