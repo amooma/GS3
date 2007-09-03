@@ -54,6 +54,19 @@ sup {font-weight: normal;}
 
 .inline {display: inline;}
 
+.tty {
+	display: none; visibility: hidden;
+	width: 0px; height: 0px;
+}
+@media tty
+{
+	.tty {
+		display: inline; visibility: visible;
+		width: auto; height: auto;
+	}
+}
+
+
 .pre {
 	white-space: pre !important;
 	font-family: Courier, Monaco, monospace !important;
