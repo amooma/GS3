@@ -38,7 +38,7 @@ defined('GS_VALID') or die('No direct access.');
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
-	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
@@ -62,7 +62,7 @@ echo '</h2>', "\n";
 
 <tr class="odd">
 	<td class="transp" style="width:80px;">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_soft.png" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_soft.png" /><br />
 		<small><?php echo __('4 Softkeys unter dem Bildschirm'); ?></small>
 	</td>
 	<td style="width:450px;">
@@ -72,7 +72,7 @@ echo '</h2>', "\n";
 
 <tr class="even">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_volume.png" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_volume.png" /><br />
 		<small>- Volume +</small>
 	</td>
 	<td>
@@ -82,7 +82,7 @@ echo '</h2>', "\n";
 
 <tr class="odd">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_mute.png" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_mute.png" /><br />
 		<small>Mute</small>
 	</td>
 	<td>
@@ -92,7 +92,7 @@ echo '</h2>', "\n";
 
 <tr class="even">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_speaker.png" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_speaker.png" /><br />
 		<small>Speaker</small>
 	</td>
 	<td>
@@ -102,7 +102,7 @@ echo '</h2>', "\n";
 
 <tr class="odd">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_cancel.png" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_cancel.png" /><br />
 		<small><?php echo __('Abbrechen'); ?></small>
 	</td>
 	<td>
@@ -112,7 +112,7 @@ echo '</h2>', "\n";
 
 <tr class="even">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_tick.png" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_tick.png" /><br />
 		<small><?php echo __('OK'); ?></small>
 	</td>
 	<td>
@@ -122,7 +122,7 @@ echo '</h2>', "\n";
 
 <tr class="odd">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_retrieve.gif" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_retrieve.gif" /><br />
 		<small>Retrieve</small>
 	</td>
 	<td>
@@ -132,7 +132,7 @@ echo '</h2>', "\n";
 
 <tr class="even">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_redial.gif" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_redial.gif" /><br />
 		<small>Redial</small>
 	</td>
 	<td>
@@ -142,7 +142,7 @@ echo '</h2>', "\n";
 
 <tr class="odd">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_adrb.gif" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_adrb.gif" /><br />
 		<small>Directory</small>
 	</td>
 	<td>
@@ -152,7 +152,7 @@ echo '</h2>', "\n";
 
 <tr class="even">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_transfer.gif" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_transfer.gif" /><br />
 		<small>Transfer</small>
 	</td>
 	<td>
@@ -162,7 +162,7 @@ echo '</h2>', "\n";
 
 <tr class="odd">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_hold.gif" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_hold.gif" /><br />
 		<small>Hold</small>
 	</td>
 	<td>
@@ -172,7 +172,7 @@ echo '</h2>', "\n";
 
 <tr class="even">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom/key_dnd.gif" /><br />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom/key_dnd.gif" /><br />
 		<small>DND</small>
 	</td>
 	<td>
@@ -182,7 +182,7 @@ echo '</h2>', "\n";
 
 <tr class="odd">
 	<td class="transp">
-		<img alt="" src="<?php echo GS_URL_PATH; ?>img/snom_fkleft_off.gif" />
+		<img alt=" " src="<?php echo GS_URL_PATH; ?>img/snom_fkleft_off.gif" />
 	</td>
 	<td>
 		<?php echo __('<b>12 Leitungstasten</b><br /> Diese Tasten lassen sich mit Rufnummern programmieren.<br /> Im Men&uuml;punkt &quot;Tastenbelegung&quot; k&ouml;nnen Sie Ihre Einstellung ansehen und ver&auml;ndern.'); ?>

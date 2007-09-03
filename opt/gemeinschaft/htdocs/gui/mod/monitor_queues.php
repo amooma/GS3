@@ -31,7 +31,7 @@ defined('GS_VALID') or die('No direct access.');
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
-	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
@@ -175,7 +175,7 @@ if (@$rs_members) {
 			
 			$devstate = _devstate2v( @$memberinfo['devstate'] );
 			if (@$devstate['s']) {
-				$img = '<img alt="" src="'. GS_URL_PATH;
+				$img = '<img alt=" " src="'. GS_URL_PATH;
 				switch ($devstate['s']) {
 					case 'green' : $img.= 'crystal-svg/16/act/greenled.png' ; break;
 					case 'yellow': $img.= 'crystal-svg/16/act/yellowled.png'; break;
@@ -184,7 +184,7 @@ if (@$rs_members) {
 				}
 				$img.= '" /> ';
 			} else
-				$img = '<img alt="" src="'. GS_URL_PATH .'crystal-svg/16/act/free_icon.png" /> ';
+				$img = '<img alt=" " src="'. GS_URL_PATH .'crystal-svg/16/act/free_icon.png" /> ';
 			echo '<td>', $img, ($devstate !== null ? $devstate['v'] : '?'), '</td>';
 			
 			if (GS_GUI_QUEUE_SHOW_NUM_CALLS) {

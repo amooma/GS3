@@ -30,7 +30,7 @@ defined('GS_VALID') or die('No direct access.');
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
-	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 /*
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
@@ -180,7 +180,7 @@ if (isGsError($vm)) {
 if (is_array($warnings) && count($warnings) > 0) {
 ?>
 	<div style="max-width:600px;">
-	<img alt="" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/app/important.png" class="fl" />
+	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/app/important.png" class="fl" />
 	<p style="margin-left:22px;">
 		<?php echo implode('<br />', $warnings); ?>
 	</p>
@@ -279,7 +279,7 @@ foreach ($sources as $src => $srctitle) {
 	<td colspan="6" class="quickchars r">
 		<br />
 		<button type="submit">
-			<img alt="" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+			<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			<?php echo __('Speichern'); ?>
 		</button>
 	</td>

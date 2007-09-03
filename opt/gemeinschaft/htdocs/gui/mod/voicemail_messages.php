@@ -112,7 +112,7 @@ if (@$_REQUEST['action']=='play') {
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
-	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
@@ -198,7 +198,7 @@ if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
 		
 		echo '<td>';
 		if ($folder=='INBOX')
-			echo '<img alt="" src="', GS_URL_PATH, 'img/star.gif" /> ';
+			echo '<img alt=" " src="', GS_URL_PATH, 'img/star.gif" /> ';
 		echo date_human( @$msg['ts'] );
 		echo '</td>', "\n";
 		

@@ -31,7 +31,7 @@ defined('GS_VALID') or die('No direct access.');
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
-	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
@@ -146,7 +146,7 @@ while ($user = $rs_users->fetchRow()) {
 	}
 	
 	if (@$extstatev['s']) {
-		$img = '<img alt="" src="'. GS_URL_PATH;
+		$img = '<img alt=" " src="'. GS_URL_PATH;
 		switch ($extstatev['s']) {
 			case 'green' : $img.= 'crystal-svg/16/act/greenled.png' ; break;
 			case 'yellow': $img.= 'crystal-svg/16/act/yellowled.png'; break;
@@ -156,7 +156,7 @@ while ($user = $rs_users->fetchRow()) {
 		}
 		$img.= '" />&nbsp;';
 	} else
-		$img = '<img alt="" src="'. GS_URL_PATH .'crystal-svg/16/act/free_icon.png" />&nbsp;';
+		$img = '<img alt=" " src="'. GS_URL_PATH .'crystal-svg/16/act/free_icon.png" />&nbsp;';
 	echo '<td>', $img, ($extstatev ? $extstatev['v'] : '?'), '</td>';
 	
 	echo '<td>';

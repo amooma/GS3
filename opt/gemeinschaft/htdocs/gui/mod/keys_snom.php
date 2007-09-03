@@ -31,7 +31,7 @@ defined('GS_VALID') or die('No direct access.');
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
-	echo '<img alt="" src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
@@ -122,7 +122,7 @@ for ($i=0; $i<12; ++$i) {
 	
 	echo '<td', ($i%2 ? '':' style="background:transparent;"'), '>';
 	if ($i % 2)
-		echo '<img alt="" src="', GS_URL_PATH, 'img/snom_fkleft_off.gif" /> ', $keyv;
+		echo '<img alt=" " src="', GS_URL_PATH, 'img/snom_fkleft_off.gif" /> ', $keyv;
 	else
 		echo '&nbsp;';
 	echo '</td>', "\n";
@@ -149,7 +149,7 @@ for ($i=0; $i<12; ++$i) {
 	
 	echo '<td class="r"', ($i%2 ? ' style="background:transparent;"':''), '>';
 	if (!($i % 2))
-		echo $keyv, ' <img alt="" src="', GS_URL_PATH, 'img/snom_fkright_off.gif" />';
+		echo $keyv, ' <img alt=" " src="', GS_URL_PATH, 'img/snom_fkright_off.gif" />';
 	else
 		echo '&nbsp;';
 	echo '</td>', "\n";
@@ -166,7 +166,7 @@ for ($i=0; $i<12; ++$i) {
 </table>
 
 <button type="submit" class="fr">
-	<img alt="" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 	<?php echo __('Speichern'); ?>
 </button>
 <br class="nofloat" />
@@ -210,7 +210,7 @@ for ($i=12; $i<33; ++$i) {
 	
 	echo '<td', ($i%2==0 ? '':' style="background:transparent;"'), '>';
 	if ($i%2==0)
-		echo '<img alt="" src="', GS_URL_PATH, 'img/snom_fkleft_off.gif" /> ', $keyv;
+		echo '<img alt=" " src="', GS_URL_PATH, 'img/snom_fkleft_off.gif" /> ', $keyv;
 	else
 		echo '&nbsp;';
 	echo '</td>', "\n";
@@ -233,7 +233,7 @@ for ($i=12; $i<33; ++$i) {
 	
 	echo '<td class="r"', ($i%2==0 ? ' style="background:transparent;"':''), '>';
 	if ($i%2)
-		echo $keyv, ' <img alt="" src="', GS_URL_PATH, 'img/snom_fkright_off.gif" />';
+		echo $keyv, ' <img alt=" " src="', GS_URL_PATH, 'img/snom_fkright_off.gif" />';
 	else
 		echo '&nbsp;';
 	echo '</td>', "\n";
@@ -250,7 +250,7 @@ for ($i=12; $i<33; ++$i) {
 </table>
 
 <button type="submit" class="fr">
-	<img alt="" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 	<?php echo __('Speichern'); ?>
 </button>
 <br class="nofloat" />
