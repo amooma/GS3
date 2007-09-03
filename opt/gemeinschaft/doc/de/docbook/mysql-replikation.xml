@@ -23,6 +23,30 @@
   Bei einem Ausfall der Master-Datenbank kann auf den Nodes noch im Notbetrieb
   telefoniert werden.</para>
 
+  <important>
+    <para>Um nicht den MySQL-Master als Single Point of Failure zu haben,
+    setzen Sie bitte eine Lösung auf, die den Master umschalten kann<footnote>
+        <para><ulink
+        url="http://dev.mysql.com/doc/refman/5.1/en/replication-solutions-switch.html">http://dev.mysql.com/doc/refman/5.1/en/replication-solutions-switch.html</ulink></para>
+      </footnote>. Oder verwenden Sie MySQL Cluster<footnote>
+        <para><ulink
+        url="http://www.mysql.com/products/database/cluster/">http://www.mysql.com/products/database/cluster/</ulink>,
+        <ulink
+        url="http://dev.mysql.com/doc/refman/5.1/en/mysql-cluster.html">http://dev.mysql.com/doc/refman/5.1/en/mysql-cluster.html</ulink></para>
+      </footnote> oder die MySQL Cluster Carrier Grade Edition<footnote>
+        <para><ulink
+        url="http://www.mysql.com/products/database/clustercge/">http://www.mysql.com/products/database/clustercge/</ulink>,
+        <ulink
+        url="http://dev.mysql.com/doc/refman/5.1/en/mysql-cluster-cge.html">http://dev.mysql.com/doc/refman/5.1/en/mysql-cluster-cge.html</ulink></para>
+      </footnote>. Die <literal>NDB</literal> Storage Engine hält allerdings
+    die gesamte Datenbank im RAM vor<footnote>
+        <para>außer man benutzt MySQL Cluster Disk Data Tables, siehe <ulink
+        url="http://dev.mysql.com/doc/refman/5.1/en/mysql-cluster-disk-data.html">http://dev.mysql.com/doc/refman/5.1/en/mysql-cluster-disk-data.html</ulink>,
+        ab MySQL 5.1.6</para>
+      </footnote>, sodaß man unter 1 GB wohl gar nicht auf diese Idee kommen
+    sollte.</para>
+  </important>
+
   <section id="replikation-voraussetzungen">
     <title>Benötigte Komponenten</title>
 
