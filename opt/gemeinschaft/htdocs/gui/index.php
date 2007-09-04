@@ -97,7 +97,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
 <head><!--<![CDATA[
                 Gemeinschaft
-  @(_)-----(_)  (c) 2007, amooma GmbH - http://www.amooma.de/
+  @(_)=====(_)  (c) 2007, amooma GmbH - http://www.amooma.de/
  @   / ### \    Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
