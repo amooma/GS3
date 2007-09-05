@@ -49,8 +49,7 @@ function fax_get_jobs_rec() {
 	$jobs_r = array();
 	//$rlist = ftp_rawlist($conn_id,'recvq');
 	$rlist = ftp_rawlist($conn_id,"recvq");
-	var_dump($rlist);
-
+	
 	foreach ($rlist as $rlist_line) {
 		$jobs_r[] = explode('|',$rlist_line);
 	}
@@ -70,8 +69,6 @@ function fax_get_jobs_done() {
 		return false;
 	$jobs_r = array();
  	$rlist = ftp_rawlist($conn_id,"doneq");
-	
-	var_dump($rlist);
 
 	foreach ($rlist as $rlist_line) {
 		$jobs_r[] = explode('|',$rlist_line);

@@ -217,8 +217,8 @@ context to-internal-users {
 	_6. => {
 		Set(__fax_to_ext=${EXTEN:1});
 		Verbose(1,### Incoming fax to ${fax_to_ext});
-		Dial(IAX/iaxmodem1/${fax_to_ext});
-		Dial(IAX/iaxmodem2/${fax_to_ext});
+		Dial(IAX2/iaxmodem01/${fax_to_ext});
+		Dial(IAX2/iaxmodem05/${fax_to_ext});
 		// REPEAT AS MANY TIMES AS YOU HAVE IAXMODEMS CONFIGURED.
 		// EACH IAXMODEM CAN HANDLE ONE CALL AT A TIME.
 		// FIXME!?
