@@ -82,7 +82,7 @@ if (@count($jobs_rec)) {
 		}
 	}
 	
-	array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_rec);
+	@array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_rec);
 	
 	unset($recdate);
 	unset($jobid);
