@@ -85,8 +85,11 @@ use constant {
 
 
 our @known_contexts : shared = ();
-our %extstates : shared = ();
+our %extstates   : shared = ();
 our %chanremotes : shared = ();
+our %chan_to_ext : shared = ();
+our %ext_to_chan : shared = ();
+our %chan_to_chan: shared = ();
 our %lastchanged : shared = ();
 our @ami_threads;
 our $sel;
@@ -212,6 +215,7 @@ sub handle_response
 		}
 	}
 }
+
 sub handle_event
 {
 	my $ami      = ${$_[0]};
@@ -220,6 +224,9 @@ sub handle_event
 	our $ignore_context;
 	
 	#print "\nGOT EVENT $evtname:\n$pkt\n\n";
+	#if ($evtname ne 'newexten') {
+	#	print "\nGOT EVENT $evtname:\n$pkt\n\n";
+	#}
 	
 	if ($evtname eq 'extensionstatus') {
 		#print "\nGOT EVENT $evtname:\n$pkt\n\n";
@@ -242,34 +249,76 @@ sub handle_event
 			&handle_extstate(\$exten_at_context, $state);
 		}
 	}
-	elsif ($evtname eq 'newexten') {
+	#elsif ($evtname eq 'newexten') {
+	#	#print "\nGOT EVENT $evtname:\n$pkt\n\n";
+	#	
+	#	if ($pkt !~ m/^Extension:\s*([0-9a-z*\-_]+)/mio) {return;}
+	#	if (! defined($1)) {return;}
+	#	my $ext_to = $1;
+	#	my $ext_to_is_external = 0;
+	#	if ($ext_to =~ m/^0/o) {
+	#		$ext_to_is_external = 1;
+	#	}
+	#	if ($ext_to eq 's' || $ext_to eq 'h') {return;}
+	#	
+	#	my $ext_from = '';
+	#	my $ext_from_is_external = 0;
+	#	if ($pkt =~ m/^Channel:\s*SIP\/([0-9]+)/mio) {
+	#		if (! defined($1)) {return;}
+	#		$ext_from = $1;
+	#		if ($ext_from !~ m/^[1-9]/o) {
+	#			$ext_from_is_external = 1;
+	#		}
+	#	} elsif ($pkt =~ m/^Channel:\s*Zap\/([gr][0-9]+\/)?([0-9]+)/mio) {
+	#		if (! defined($1)) {return;}
+	#		$ext_from = $1;
+	#		$ext_from_is_external = 1;
+	#	} else {return;}
+	#	
+	#	&handle_channelinfo(\$ext_from, $ext_from_is_external, \$ext_to, $ext_to_is_external);
+	#}
+	
+	elsif ($evtname eq 'newchannel' || $evtname eq 'hangup') {
 		#print "\nGOT EVENT $evtname:\n$pkt\n\n";
 		
-		my $ext_from = '';
-		my $ext_from_is_external = 0;
+		if ($pkt !~ m/^Uniqueid:\s*([0-9\.\-_]+)/mio) {return;}
+		if (! defined($1)) {return;}
+		my $uniqueid = $1;
+		
+		my $ext = '';
+		my $ext_is_external = 0;
 		if ($pkt =~ m/^Channel:\s*SIP\/([0-9]+)/mio) {
 			if (! defined($1)) {return;}
-			$ext_from = $1;
-			if ($ext_from !~ m/^[1-9]/o) {
-				$ext_from_is_external = 1;
+			$ext = $1;
+			if ($ext !~ m/^[1-9]/o) {
+				$ext_is_external = 1;
 			}
-		} elsif ($pkt =~ m/^Channel:\s*Zap\/([gr][0-9]+\/)?([0-9]+)/mio) {
+		} elsif ($pkt =~ m/^Channel:\s*Zap\/(?:[gr][0-9]+\/)?([0-9]+)/mio) {
 			if (! defined($1)) {return;}
-			$ext_from = $1;
-			$ext_from_is_external = 1;
+			$ext = $1;
+			$ext_is_external = 1;
 		} else {return;}
 		
-		if ($pkt !~ m/^Extension:\s*([0-9a-z*\-_]+)/mio) {return;}
-		if (! defined($1)) {return;}
-		my $ext_to = $1;
-		my $ext_to_is_external = 0;
-		if ($ext_to =~ m/^0/o) {
-			$ext_to_is_external = 1;
-		}
+		#print "\n UNIQUEID $uniqueid\n";
+		#print "\n EXT      $ext\n";
 		
-		if ($ext_to eq 's') {return;}
-		&handle_channelinfo(\$ext_from, $ext_from_is_external, \$ext_to, $ext_to_is_external);
+		&handle_channel_up_down(\$uniqueid, \$ext, $ext_is_external, ($evtname eq 'newchannel' ? 1:0));
 	}
+	
+	elsif ($evtname eq 'link' || $evtname eq 'unlink') {
+		#print "\nGOT EVENT $evtname:\n$pkt\n\n";
+		
+		if ($pkt !~ m/^Uniqueid1:\s*([0-9\.\-_]+)/mio) {return;}
+		if (! defined($1)) {return;}
+		my $uniqueid1 = $1;
+		
+		if ($pkt !~ m/^Uniqueid2:\s*([0-9\.\-_]+)/mio) {return;}
+		if (! defined($1)) {return;}
+		my $uniqueid2 = $1;
+		
+		&handle_channel_link_unlink(\$uniqueid1, \$uniqueid2, ($evtname eq 'link' ? 1:0));
+	}
+	
 }
 
 sub handle_extstate : locked
@@ -297,11 +346,11 @@ sub handle_extstate : locked
 		if (exists($extstates{ $ext_at_context })) {return;}
 	}
 	#print "STORE ".$ext_at_context.": ".$state ." - TIME: ". time() ."\n";
-	$extstates{ $ext_at_context } = $state;
+	$extstates  { $ext_at_context } = $state;
 	$lastchanged{ $ext_at_context } = time();
 	
-	my @write_ready;
-	my $client;
+	#my @write_ready;
+	#my $client;
 	#foreach $client ( $sel->handles() ) {
 	#foreach @handle ($sel->handles()) {
 	#foreach $fh ( @write_ready = $sel->can_write(0) ) {
@@ -311,6 +360,75 @@ sub handle_extstate : locked
 	#print $client "store ".$ext_at_context.": ".$state."\n";
 	#}
 	#print "----\n";
+}
+
+sub handle_channel_up_down : locked
+{
+	my $uniqueid        = ${$_[0]};
+	my $ext             = ${$_[1]};
+	my $ext_is_external =   $_[2];
+	my $up_down         =   $_[3];
+	
+	our %chan_to_ext;
+	our %ext_to_chan;
+	our %chanremotes;
+	our %chan_to_chan;
+	our %lastchanged;
+	
+	#print "CHAN $uniqueid with ext $ext ($ext_is_external)\n";
+	
+	if ($up_down) {
+		$chan_to_ext{ $uniqueid } = $ext;
+		$ext_to_chan{ $ext      } = $uniqueid;
+		$chanremotes{ $ext      } = $ext_is_external;
+	} else {
+		delete $chan_to_ext { $uniqueid };
+		delete $ext_to_chan { $ext      };
+		delete $chanremotes { $ext      };
+		delete $chan_to_chan{ $uniqueid };
+	}
+	$lastchanged{ $ext } = time();
+	
+	#print "KNOWN CHANNELS:\n";
+	#my $c_uniqueid = '';
+	#my $c_ext = '';
+	#while (($c_uniqueid,$c_ext) = each(%chan_to_ext)) {
+	#	print "CHANNEL: $c_uniqueid -> $c_ext\n";
+	#}
+	#print "\n";
+}
+
+sub handle_channel_link_unlink : locked
+{
+	my $uniqueid1   = ${$_[0]};
+	my $uniqueid2   = ${$_[1]};
+	my $link_unlink =   $_[2];
+	
+	our %chan_to_chan;
+	our %chan_to_ext;
+	our %lastchanged;
+	
+	if ($link_unlink) {
+		$chan_to_chan{ $uniqueid1 } = $uniqueid2;
+		$chan_to_chan{ $uniqueid2 } = $uniqueid1;
+	} else {
+		delete $chan_to_chan{ $uniqueid1 };
+		delete $chan_to_chan{ $uniqueid2 };
+	}
+	
+	my $ext = '';
+	$ext = $chan_to_ext{ $uniqueid1 };
+	if ($ext) { $lastchanged{ $ext } = time(); }
+	$ext = $chan_to_ext{ $uniqueid2 };
+	if ($ext) { $lastchanged{ $ext } = time(); }
+	
+	#print "KNOWN LINKS:\n";
+	#my $c_uniqueid1 = '';
+	#my $c_uniqueid2 = '';
+	#while (($c_uniqueid1,$c_uniqueid2) = each(%chan_to_chan)) {
+	#	print "CHANNEL: $c_uniqueid1 -> $c_uniqueid2\n";
+	#}
+	#print "\n";
 }
 
 sub handle_channelinfo : locked
@@ -324,7 +442,7 @@ sub handle_channelinfo : locked
 	our %chanremotes;
 	our %lastchanged;
 	
-	print "CHAN from $ext_from ($ext_from_is_external) to $ext_to ($ext_to_is_external)\n";
+	#print "CHAN from $ext_from ($ext_from_is_external) to $ext_to ($ext_to_is_external)\n";
 	
 	if (! $ext_from_is_external && exists($extstates{ $ext_from })) {
 		#$chanremotes{ $ext_from } = $ext_to;
@@ -493,7 +611,7 @@ sub ami_listen
 	
 	$ami->debug(0);
 	$ami->register_loggedin_cb( \&handle_loggedin );
-	my @eventtypes = ('extensionstatus','newexten');
+	my @eventtypes = ('extensionstatus', 'newexten', 'newchannel', 'hangup', 'link', 'unlink');
 	$ami->register_event_cb( \&handle_event, \@eventtypes );
 	$ami->register_response_cb( \&handle_response );
 	
@@ -566,24 +684,46 @@ my $from_time = 0;
 my $time = 0;
 #while ( @read_ready = $sel->can_read() ) { # blocks
 my %conn_close;
+#my $ie_pad = (" " x 256);
+#my $ie_pad = "/* padding for the stupid MSIE ". (" " x (256-31-3)) ." */";
+my $uniqueid;
+my $remote_ext;
+my $remote_ext_out;
 
 while (1) {
 	
 	$time = time();
-	$from_time = $time - 5;
+	$from_time = $time - 3;
 	
-	$out_all = "{";
-	$out_mod = "{";
+	$out_all = "array(\n";
+	$out_mod = "array(\n";
 	while (($ext, $stateval) = each(%extstates)) {
-		$is_external = $chanremotes{$ext} || 0;
-		$tmp = $ext .":{s:". $stateval . ($is_external ? ",e:1" : "") ."},";
+		$is_external = $chanremotes{ $ext } || 0;
+		
+		$remote_ext_out = undef;
+		$uniqueid    = $ext_to_chan{ $ext };
+		if ($uniqueid) {
+			$uniqueid = $chan_to_chan{ $uniqueid };
+			if ($uniqueid) {
+				$remote_ext = $chan_to_ext{ $uniqueid };
+				if ($remote_ext) {
+					$remote_ext_out = ",'l'=>'$remote_ext'";
+				}
+			}
+		}
+		
+		$tmp = "'". $ext ."'=>array("
+		         . "'s'=>". $stateval
+		         . ($is_external ? ",'e'=>1" : "")
+		         . ($remote_ext_out ? $remote_ext_out : "")
+		     . "),\n";
 		$out_all .= $tmp;
 		if ($lastchanged{$ext} > $from_time) {
 			$out_mod .= $tmp;
 		}
 	}
-	if (substr($out_all,-1) eq ',') { $out_all = substr($out_all,0,-1); }
-	$out_all .= "}";
+	if (substr($out_all,-2) eq ",\n") { $out_all = substr($out_all,0,-2); }
+	$out_all .= "\n)\n";
 	
 	#if ($out_mod eq "{") {$out_mod .= "0:{s:0},";}
 	#for (my $e=100; $e<=999; ++$e) {
@@ -600,9 +740,10 @@ while (1) {
 	#	$out_mod .= "},";
 	#}
 	
-	if (substr($out_mod,-1) eq ',') { $out_mod = substr($out_mod,0,-1); }
-	$out_mod .= "}";
-		
+	if (substr($out_mod,-2) eq ",\n") { $out_mod = substr($out_mod,0,-2); }
+	$out_mod .= "\n)\n";
+	
+	
 	@read_ready = $sel->can_read(0);
 	#my @data;
 	
@@ -620,18 +761,18 @@ while (1) {
 			#print $new_client "Content-Type: application/json\r\n";
 			#print $new_client "Connection: Close\r\n";
 			#print $new_client "\r\n";
-			print $new_client ($out_all ."\n==\n");
+			print $new_client ($out_all ."=====\n");
 		} else {
 			# Handle connection
 			my $input = <$client>;
 			if ($input) {chomp $input;}
 			if (!$input || $input eq '') {
 				#push( @data, fileno($client) . " has left.");
-				if ($new_client && $new_client->peerhost) {
-					#print "Client " . $new_client->peerhost . " disconnected\n";
-				} else {
-					#print "Client disconnected\n";
-				}
+				#if ($new_client && $new_client->peerhost) {
+				#	print "Client " . $new_client->peerhost . " disconnected\n";
+				#} else {
+				#	print "Client disconnected\n";
+				#}
 				$sel->remove($client);
 				delete $conn_close{fileno($client)};
 				$client->close();
@@ -649,17 +790,21 @@ while (1) {
 		#	print $client "$line\0";
 		#}
 		#print "Sending update to client ". fileno($client) ."\n";
-		print $client ($out_mod ."\n==\n");
+		print $client ($out_mod ."=====\n");
 		
 		#print "Connection will end at ". $conn_close{fileno($client)} ."\n";
 		if ($conn_close{fileno($client)} < $time) {
 			#print "END.\n";
+			#print $client ("<script type=\"text/javascript\">\n"
+			#              ."ae_close();\n"
+			#              .$ie_pad
+			#              ."\n</script>" ."\n");
 			&usleep(1000);  # 0.001 s
-			if ($new_client && $new_client->peerhost) {
-				#print "Client " . $new_client->peerhost . " disconnected\n";
-			} else {
-				#print "Client disconnected\n";
-			}
+			#if ($new_client && $new_client->peerhost) {
+			#	print "Client " . $new_client->peerhost . " disconnected\n";
+			#} else {
+			#	print "Client disconnected\n";
+			#}
 			$sel->remove($client);
 			delete $conn_close{fileno($client)};
 			$client->close();
