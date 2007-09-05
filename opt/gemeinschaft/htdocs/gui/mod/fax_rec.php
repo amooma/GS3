@@ -70,7 +70,7 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 $jobs_rec = fax_get_jobs_rec();
 
-if (is_array($jobs_rec)) {
+if (@count($jobs_rec)) {
 
 	foreach ($jobs_rec as $key => $row) {
 		if ($row[11] == $_SESSION['sudo_user']['name']) { 

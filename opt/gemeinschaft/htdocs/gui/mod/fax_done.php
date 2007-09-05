@@ -86,7 +86,7 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 $jobs_done = fax_get_jobs_done();
 
-if (is_array($jobs_done)) {
+if (@count($jobs_done)) {
 	foreach ($jobs_done as $key => $row) {
 		if (username_prep($row[12]) == "webmanag")
 				$fax_username=username_prep($row[28]);
@@ -101,7 +101,8 @@ if (is_array($jobs_done)) {
 		}
 	}
 
-	array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_done);
+	@array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_done);
+
 	unset($recdate);
 	unset($jobid);
 	

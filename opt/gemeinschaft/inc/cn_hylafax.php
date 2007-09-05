@@ -29,7 +29,7 @@
 
 ######################################################
 ##
-##   Die hier verwendeten Parameter müssen noch
+##   Die hier verwendeten Parameter mssen noch
 ##   escapt / gecastet werden!
 ##
 ######################################################
@@ -43,10 +43,14 @@ function fax_get_jobs_rec() {
 	$login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
 	if (! $login_result) return false;
 	
-	if (! ftp_raw($conn_id, 'RCVFMT "%a|%b|%d|%e|%f|%h|%i|%j|%l|%m|%n|%o|%p|%q|%r|%s|%w|%z|%Z"'))
+	if (! ftp_raw($conn_id, 'RCVFMT "%a|%b|%d|%e|%f|%h|%i|%j|%l|%m|%n|%o|%p|%p|%r|%s|%w|%z|%Z"'))
 		return false;
+	
 	$jobs_r = array();
-	$rlist = ftp_rawlist($conn_id,'recvq');
+	//$rlist = ftp_rawlist($conn_id,'recvq');
+	$rlist = ftp_rawlist($conn_id,"recvq");
+	var_dump($rlist);
+
 	foreach ($rlist as $rlist_line) {
 		$jobs_r[] = explode('|',$rlist_line);
 	}
@@ -66,6 +70,9 @@ function fax_get_jobs_done() {
 		return false;
 	$jobs_r = array();
  	$rlist = ftp_rawlist($conn_id,"doneq");
+	
+	var_dump($rlist);
+
 	foreach ($rlist as $rlist_line) {
 		$jobs_r[] = explode('|',$rlist_line);
 	}
