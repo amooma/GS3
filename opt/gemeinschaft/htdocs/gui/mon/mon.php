@@ -34,6 +34,7 @@ require_once( GS_DIR .'inc/netmask.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 //set_error_handler('err_handler_die_on_err');
 
+
 $remote_ip = @$_SERVER['REMOTE_ADDR'];
 $allowed = false;
 if (defined('GS_MONITOR_FROM_NET')) {
