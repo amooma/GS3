@@ -131,7 +131,7 @@ echo '<td>';
 echo '<select name="res">' ,"\n";
 echo '<option value="98">', __('Normale Aufl&ouml;sung') ,'</option>'."\n";
 echo '<option value="196">', __('Hohe Aufl&ouml;sung') ,'</option>'."\n";
-//echo '<option value="298">', __('Sehr hohe Aufl&ouml;sung') ,'</option>'."\n";
+echo '<option value="392">', __('Sehr hohe Aufl&ouml;sung') ,'</option>'."\n";
 echo "</select>\n";
 echo "</td>\n";
 echo "</tr>\n";

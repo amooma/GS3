@@ -75,10 +75,10 @@ if (@count($jobs_send)) {
 	$jobs_send_count = count($jobs_send);
 
 	foreach ($jobs_send as $key => $row) {
-		if (username_prep($row[12]) == "webmanag")
-				$fax_username=username_prep($row[28]);
+		if ($row[12] == "webmanag")
+				$fax_username=$row[28];
 			else
-				$fax_username=username_prep($row[12]);		
+				$fax_username=$row[12];		
 	
 		if ($fax_username == $_SESSION['sudo_user']['name']) { 
 			$recdate[$key]  = $row[32];
