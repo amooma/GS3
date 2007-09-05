@@ -97,10 +97,13 @@ function gs_m( exts )
 			if (!( el = $('e'+ext+'l') )) continue;
 			
 			if (exts[ext]['l']) {
+				/*
 				if (exts[ext]['l'].substr(0,3) != '*7*')
 					link = '&rarr; '+ exts[ext]['l'];
 				else
 					link = '&rarr; '+ 'privat';
+				*/
+				link = '&rarr; '+ exts[ext]['l'];
 			} else {
 				link = '';
 			}

@@ -108,13 +108,19 @@ while (! @fEof( $sock ) && time() < $tStart+$maxtime) {
 			echo "'$ext':{";
 			echo "s:". (int)@$info['s'];
 			if (@$info['e']) echo ",e:1";
-			if (@$info['l']) echo ",l:'". $info['l'] ."'";
+			//if (@$info['l']) echo ",l:'". $info['l'] ."'";
 			/*
 			if (@$info['l']) {
 				$rs = $db->execute('SELECT `u`.`firstname` `fn`, `u`.`lastname` `ln` FROM `users` `u` JOIN `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) WHERE `s`.`name`=\''. $db->escape($info['l']) .'\'');
 				//...
 			}
 			*/
+			if (@$info['l']) {
+				if (subStr($info['l'],0,3) != '*7*')
+					echo ",l:'". $info['l'] ."'";
+				else
+					echo ",l:'". 'privat' ."'";
+			}
 			echo "}";
 			++$i;
 			if ($i < $c) echo ",";
