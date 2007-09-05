@@ -40,7 +40,7 @@ echo '</h2>', "\n";
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
 
 
-function sec_to_hours($sec) {
+/*function sec_to_hours($sec) {
 	$hours = sprintf('%d:%02d:%02d',
 		$sec / 3600 % 24,
 		$sec / 60 % 60,
@@ -48,6 +48,8 @@ function sec_to_hours($sec) {
 	);
 	return $hours;
 }
+*/
+
 
 function query_string( $period, $src, $dst, $dur, $stat )
 {
