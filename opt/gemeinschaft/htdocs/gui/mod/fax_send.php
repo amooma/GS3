@@ -67,6 +67,7 @@ $per_page   = 10;
 $tsi        = trim(@$_REQUEST['tsi']);
 $faxnumber  = trim(@$_REQUEST['faxnumber']);
 $resolution = (int) trim(@$_REQUEST['res']);
+$document   = trim(@$_REQUEST['doc']);
 
 if (is_array($_FILES)
 &&  @array_key_exists('file', @$_FILES)
@@ -86,6 +87,17 @@ if (is_array($_FILES)
 	$file_ok = false;
 }
 
+if (($document) && ($resolution)) {
+	$fax_job_id = fax_send(
+		$user_id,
+		$_SESSION['sudo_user']['name'],
+		$faxnumber,
+		$tsi,
+		'/docq/'.$document,
+		email_by_username($_SESSION['sudo_user']['name']),
+		$resolution
+	);
+}
 
 
 
@@ -121,7 +133,7 @@ echo "</tr>\n";
 echo "<tr>\n";
 echo '<th>', __('Faxnummer'), '</th>' ,"\n";
 echo '<td>';
-echo '<input name="faxnumber" type="text" style="width:250px;" />';
+echo '<input name="faxnumber" type="text" value="'.$faxnumber.'" style="width:250px;" />';
 echo "</td>\n";
 echo "</tr>\n";
 
@@ -139,7 +151,8 @@ echo "</tr>\n";
 echo "<tr>\n";
 echo '<th>', __('Datei'), '</th>' ,"\n";
 echo '<td>';
-echo '<input name="file" type="file" />';
+if ($document) echo '<input name="doc" type="text" value="'.$document.'"/>';
+else echo '<input name="file" type="file" />';
 echo "</td>\n";
 echo "</tr>\n";
 

@@ -140,6 +140,10 @@ function fax_kill_job( $job ) {
 
 function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email, $resolution ) {
 	
+	if ($file) {
+		$remote_file = dirname($file).'/doc-'.basename ($file);
+	} else return false;
+
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
@@ -149,55 +153,30 @@ function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email,
 	if (! $login_result) return false;
 	
 	$ret_val = ftp_raw($conn_id, 'jnew');
-	//echo "<pre>\n";
-	//print_r($ret_val);
-	//echo "</pre>\n";
 	$ret_par = explode(' ',$ret_val[0]);
 	$jobid = (int)@$ret_par[array_search('jobid:',$ret_par)+1];
 	
 	if ($jobid) {
-		//echo "<pre>\n";
-		$ret_val = ftp_put($conn_id, $file, $file, FTP_BINARY);
-		//print_r($ret_val);
+		$ret_val = @ftp_put($conn_id, $remote_file, $file, FTP_BINARY);
 		$ret_val = ftp_raw($conn_id, 'job '.$jobid);
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm DIALSTRING '.$to_num);
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm TSI '.$from_num);
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm FAXNAME '.$user_id);
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm FAXNUMBER '.$from_num);
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm FROMUSER '.$user_name);
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm LASTTIME 000259');
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm NOTIFYADDR '.$user_email);
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm MAXDIALS 6');
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm MAXTRIES 6');
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm NOTIFY NONE');
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm PAGECHOP default');
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm PAGEWIDTH 209');
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm PAGELENGTH 296');
-		//print_r($ret_val);
-		$ret_val = ftp_raw($conn_id, 'jparm SCHEDPRI 127');
-		//print_r($ret_val);
+		$ret_val = ftp_raw($conn_id, 'jparm SCHEDPRI 127');;
 		$ret_val = ftp_raw($conn_id, 'jparm SENDTIME NOW');
-		//print_r($ret_val);
 		$ret_val = ftp_raw($conn_id, 'jparm VRES '.$resolution);
-		//print_r($ret_val);
-		$ret_val = ftp_raw($conn_id, 'jparm DOCUMENT '.$file);
-		//print_r($ret_val);
+		$ret_val = ftp_raw($conn_id, 'jparm DOCUMENT '.$remote_file);
 		$ret_val = ftp_raw($conn_id, 'jsubm '.$jobid);
-		//print_r($ret_val);
-		//echo "</pre>\n";
 	}
 	ftp_close($conn_id);
 	return ($ret_val ? $jobid : false);

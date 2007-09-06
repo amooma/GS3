@@ -62,12 +62,13 @@ $fnamel_all = strLen($file);
 $fname      = subStr($file, 0, $fnamel_all - $fnamel_pre);
 
 @system('cd /var/spool/hylafax/ && /var/spool/hylafax/bin/tiff2pdf -o '. escapeShellArg('/tmp/'.$fname.'.pdf') .' '. escapeShellArg('/tmp/'.$file));
-
+unlink('/tmp/'.$file);
 header('Content-Type: application/pdf');
 header('Content-Disposition: attachment; filename="'.$fname.'.pdf"');
 header('Content-Length: ' . fileSize('/tmp/'.$fname.'.pdf'));
 
 readFile('/tmp/'.$fname.'.pdf');
 
+unlink('/tmp/'.$fname.'.pdf');
 
 ?>

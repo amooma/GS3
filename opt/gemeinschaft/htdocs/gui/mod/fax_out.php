@@ -95,6 +95,8 @@ if (@count($jobs_send)) {
 	
 } else $jobs_send_count = 0;
 
+$jobs_send_count = (int) @count($jobs_send);
+
 $num_pages = ceil($jobs_send_count / $per_page);
 $mod_url = gs_url($SECTION, $MODULE).'&amp;id=';
 
