@@ -1,0 +1,96 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1873 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__);
+
+$opts = getOptsNoMultiples( '',
+	array(
+	),
+	$usage
+);
+
+$db = gs_db_master_connect();
+if (! $db)
+                die( 'Could not connect to database.' );
+
+        $rs = $db->execute(
+'SELECT `id`, `user`, `pin`
+FROM `users`
+WHERE `nobody_index` IS NULL
+ORDER BY `id`'
+        );
+        
+	if (! $rs)
+                die( 'Error.' );
+
+        $users = array();
+        while ($r = $rs->fetchRow())
+                $users[] = $r;
+
+	$file="/tmp/hylafax_hosts.hfaxd";
+	$fp=fopen($file,'w');
+	if (!$fp) {
+		echo "Cannot open $file for writing! Please check access rights!\n";
+		return 1;
+	}
+
+fwrite($fp, 'webmanag@:0:pFwOrXGI1lhp2:pFwOrXGI1lhp2'."\n");
+
+ foreach ($users as $user) {
+
+	$crypted = crypt($user['pin'],"ml");
+
+ 	fwrite($fp, $user['user']."@:".$user['id'].":$crypted\n");
+
+}
+
+	fclose($fp);
+        $conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
+        if (! $conn_id) return false;
+
+        $login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
+        if (! $login_result) return false;
+
+	if (! ftp_raw($conn_id, 'admin ablue7')) return false;
+
+	$remote_file="/etc/hosts.hfaxd";
+	
+        $ret_val = @ftp_put($conn_id, $remote_file, $file, FTP_BINARY);
+
+?>

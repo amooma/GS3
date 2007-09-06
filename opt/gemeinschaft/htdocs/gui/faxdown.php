@@ -35,14 +35,12 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );
-
-$fld = @$_REQUEST['fld'];
-$msg = @$_REQUEST['msg'];
-
 require_once( GS_DIR .'inc/cn_hylafax.php' );
-//start_session();
 
 $file = trim(@$_REQUEST['file']);
+$raw  = trim(@$_REQUEST['raw']);
+
+if (!$file) $file = $raw;
 
 if (! $file) {
 	header( 'HTTP/1.0 404 Not Found', true, 404 );
@@ -61,14 +59,20 @@ $fnamel_pre = strLen(strRChr($file, '.'));
 $fnamel_all = strLen($file);
 $fname      = subStr($file, 0, $fnamel_all - $fnamel_pre);
 
-@system('cd /var/spool/hylafax/ && /var/spool/hylafax/bin/tiff2pdf -o '. escapeShellArg('/tmp/'.$fname.'.pdf') .' '. escapeShellArg('/tmp/'.$file));
-unlink('/tmp/'.$file);
-header('Content-Type: application/pdf');
-header('Content-Disposition: attachment; filename="'.$fname.'.pdf"');
-header('Content-Length: ' . fileSize('/tmp/'.$fname.'.pdf'));
-
-readFile('/tmp/'.$fname.'.pdf');
-
-unlink('/tmp/'.$fname.'.pdf');
+if ($raw) {
+	header('Content-Type: image/tiff');
+	header('Content-Disposition: attachment; filename="'.$file.'"');
+	header('Content-Length: ' . fileSize('/tmp/'.$file));
+	readFile('/tmp/'.$file);
+	unlink('/tmp/'.$file);
+} else {
+	@system('cd /var/spool/hylafax/ && /var/spool/hylafax/bin/tiff2pdf -o '. escapeShellArg('/tmp/'.$fname.'.pdf') .' '. escapeShellArg('/tmp/'.$file));
+	unlink('/tmp/'.$file);
+	header('Content-Type: application/pdf');
+	header('Content-Disposition: attachment; filename="'.$fname.'.pdf"');
+	header('Content-Length: ' . fileSize('/tmp/'.$fname.'.pdf'));
+	readFile('/tmp/'.$fname.'.pdf');
+	unlink('/tmp/'.$fname.'.pdf');
+}
 
 ?>
