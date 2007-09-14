@@ -70,12 +70,14 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 $jobs_rec = fax_get_jobs_rec();
 
+$recdate = array();
+$jobid   = array();
 if (@count($jobs_rec)) {
 
 	foreach ($jobs_rec as $key => $row) {
 		if ($row[11] == $_SESSION['sudo_user']['name']) { 
-			$recdate[$key]  = $row[18];
-			$jobid[$key] = $row[4];
+			$recdate[$key] = $row[18];
+			$jobid  [$key] = $row[4];
 		} else {
 			unset($jobs_rec[$key]);
 	

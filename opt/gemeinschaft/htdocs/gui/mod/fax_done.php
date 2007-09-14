@@ -86,16 +86,18 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 $jobs_done = fax_get_jobs_done();
 
+$recdate = array();
+$jobid   = array();
 if (@count($jobs_done)) {
 	foreach ($jobs_done as $key => $row) {
-		if (($row[12]) == "webmanag")
-				$fax_username=$row[28];
+		if (($row[12]) === 'webmanag')
+				$fax_username = $row[28];
 			else
-				$fax_username=$row[12];		
+				$fax_username = $row[12];		
 	
 		if ($fax_username == $_SESSION['sudo_user']['name']) { 
-			$recdate[$key]  = $row[32];
-			$jobid[$key] = $row[9];
+			$recdate[$key] = $row[32];
+			$jobid  [$key] = $row[9];
 		} else {
 			unset($jobs_done[$key]);
 		}
