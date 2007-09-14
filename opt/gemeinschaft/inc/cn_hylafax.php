@@ -29,7 +29,7 @@
 
 ######################################################
 ##
-##   Die hier verwendeten Parameter mssen noch
+##   Die hier verwendeten Parameter muessen noch
 ##   escapt / gecastet werden!
 ##
 ######################################################
@@ -69,7 +69,7 @@ function fax_get_jobs_done() {
 		return false;
 	$jobs_r = array();
  	$rlist = ftp_rawlist($conn_id,"doneq");
-
+	
 	foreach ($rlist as $rlist_line) {
 		$jobs_r[] = explode('|',$rlist_line);
 	}
@@ -143,7 +143,7 @@ function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email,
 	if ($file) {
 		$remote_file = dirname($file).'/doc-'.basename ($file);
 	} else return false;
-
+	
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
