@@ -46,51 +46,48 @@ $opts = getOptsNoMultiples( '',
 );
 
 $db = gs_db_master_connect();
-if (! $db)
-                die( 'Could not connect to database.' );
+if (! $db) die( 'Could not connect to database.' );
 
-        $rs = $db->execute(
+$rs = $db->execute(
 'SELECT `id`, `user`, `pin`
 FROM `users`
 WHERE `nobody_index` IS NULL
 ORDER BY `id`'
-        );
-        
-	if (! $rs)
-                die( 'Error.' );
+);
+if (! $rs) die( 'Error.' );
 
-        $users = array();
-        while ($r = $rs->fetchRow())
-                $users[] = $r;
+$users = array();
+while ($r = $rs->fetchRow())
+	$users[] = $r;
 
-	$file="/tmp/hylafax_hosts.hfaxd";
-	$fp=fopen($file,'w');
-	if (!$fp) {
-		echo "Cannot open $file for writing! Please check access rights!\n";
-		return 1;
-	}
+$file = '/tmp/hylafax_hosts.hfaxd';
+$fp = fopen($file,'w');
+if (!$fp) {
+	echo "Cannot open $file for writing! Please check access rights!\n";
+	exit(1);
+}
 
 fwrite($fp, 'webmanag@:0:pFwOrXGI1lhp2:pFwOrXGI1lhp2'."\n");
 
- foreach ($users as $user) {
-
+foreach ($users as $user) {
 	$crypted = crypt($user['pin'],"ml");
-
- 	fwrite($fp, $user['user']."@:".$user['id'].":$crypted\n");
-
+	$tmp = $user['user'].'@:'.$user['id'].':'.$crypted."\n";
+	fwrite($fp, $tmp, strLen($tmp));
 }
 
-	fclose($fp);
-        $conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
-        if (! $conn_id) return false;
+fclose($fp);
 
-        $login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
-        if (! $login_result) return false;
 
-	if (! ftp_raw($conn_id, 'admin ablue7')) return false;
+$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
+if (! $conn_id) exit(1);
 
-	$remote_file="/etc/hosts.hfaxd";
-	
-        $ret_val = @ftp_put($conn_id, $remote_file, $file, FTP_BINARY);
+$login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
+if (! $login_result) exit(1);
+if (! ftp_raw($conn_id, 'admin ablue7')) exit(1);
+
+$remote_file = '/etc/hosts.hfaxd';
+
+$ret_val = @ftp_put($conn_id, $remote_file, $file, FTP_BINARY);
+
 
 ?>
