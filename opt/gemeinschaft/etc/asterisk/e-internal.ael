@@ -214,15 +214,15 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 	//FIXME!
-	_6. => {
-		Set(__fax_to_ext=${EXTEN:1});
-		Verbose(1,### Incoming fax to ${fax_to_ext});
-		Dial(IAX2/iaxmodem01/${fax_to_ext});
-		Dial(IAX2/iaxmodem05/${fax_to_ext});
-		// REPEAT AS MANY TIMES AS YOU HAVE IAXMODEMS CONFIGURED.
-		// EACH IAXMODEM CAN HANDLE ONE CALL AT A TIME.
-		// FIXME!?
-	}
+	//_6. => {
+	//	Set(__fax_to_ext=${EXTEN:1});
+	//	Verbose(1,### Incoming fax to ${fax_to_ext});
+	//	Dial(IAX2/iaxmodem01/${fax_to_ext});
+	//	Dial(IAX2/iaxmodem05/${fax_to_ext});
+	//	// REPEAT AS MANY TIMES AS YOU HAVE IAXMODEMS CONFIGURED.
+	//	// EACH IAXMODEM CAN HANDLE ONE CALL AT A TIME.
+	//	// FIXME!?
+	//}
 	
 	
 	//----------------------------------------------------------
