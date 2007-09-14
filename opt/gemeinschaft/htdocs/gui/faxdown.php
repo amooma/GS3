@@ -42,7 +42,15 @@ $raw  = trim(@$_REQUEST['raw']);
 
 if (!$file) $file = $raw;
 
-if (! $file) {
+$fnamel_pre = strLen(strRChr($file, '.'));
+$fnamel_all = strLen($file);
+$fname      = subStr($file, 0, $fnamel_all - $fnamel_pre);
+
+if ($raw) $realfile = '/tmp/'.$file;
+else      $realfile = '/tmp/'.$fname.'.pdf';
+$realfile = realPath($realfile);
+
+if (! $file || $realfile===false || subStr($realfile,0,5)!='/tmp/') {
 	header( 'HTTP/1.0 404 Not Found', true, 404 );
 	header( 'Status: 404 Not Found' , true, 404 );
 	die( 'File not found.' );
@@ -54,10 +62,6 @@ if (! fax_download($file)) {
 	die( 'Error.' );
 }
 
-
-$fnamel_pre = strLen(strRChr($file, '.'));
-$fnamel_all = strLen($file);
-$fname      = subStr($file, 0, $fnamel_all - $fnamel_pre);
 
 if ($raw) {
 	header('Content-Type: image/tiff');
