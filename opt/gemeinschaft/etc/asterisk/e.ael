@@ -465,10 +465,14 @@ context from-gateway {
 		Verbose(1,### Incoming call from the gateway. CallerID: ${CALLERID(all)});
 	}
 	includes {
-		voicemail-any;        // voicemail main (own mailbox)
-		to-internal-nobody;   // internal phones (nobodies)
+		//voicemail-any;        // voicemail main (own mailbox)
+		//to-internal-nobody;   // internal phones (nobodies)
 		to-internal-users;    // internal phones (users)
 	}
+	// alle Kontexte / Extensions die hier eingebunden werden muessen
+	// darauf achten, dass die Extension - falls das Gateway ein ISDN-
+	// Anschluss ist - mit der vorangestellten Kopfnummer reinkommen
+	// koennen!
 }
 
 
