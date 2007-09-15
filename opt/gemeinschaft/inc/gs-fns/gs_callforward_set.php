@@ -74,7 +74,7 @@ function gs_callforward_set( $user, $source, $case, $type, $number, $timeout=20 
 	# set call forward
 	#
 	if (GS_LVM_FORWARD_REQ_EXT_NUM) {
-		if ($number != '' && subStr($number,0,1)=='0') {
+		if ($number != '' && subStr($number,0,1)==='0' && $number != '0') {
 			$enumbers = gs_user_external_numbers_get( $user );
 			if (isGsError($enumbers))
 				return new GsError( $enumbers->getMsg() );
