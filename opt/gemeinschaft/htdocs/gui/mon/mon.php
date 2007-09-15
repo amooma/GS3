@@ -351,13 +351,15 @@ if (! $db) {
 				echo '<div class="extensions-block">', "\n";
 			}
 			$first_digit = $new_first_digit;
-			echo '<div class="first-digit">', $first_digit ,'</div>' ,"\n";
+			//echo '<div class="first-digit">', $first_digit ,'</div>' ,"\n";
 		}
 		echo '<div class="e e_ukn" id="e',$ext,'">';
 		echo '<span class="num">', $ext ,'</span>';
 		//echo '<span class="nam">', $ext_info['abbr'] ,'</span>';
 		$ext_info['ln'] = $ext_info['ln'];
-		$abbr = mb_strCut($ext_info['ln'], 0, 20-(strLen($ext)*2.8));
+		$abbr = mb_strCut($ext_info['ln'], 0, 18-(strLen($ext)*2.8));
+		if (mb_strLen($abbr) < 9 && trim($ext_info['fn']) != '')
+			$abbr = mb_subStr($ext_info['fn'],0,1) .'. '. $abbr;
 		if (mb_strLen($ext_info['ln']) > mb_strLen($abbr))
 			$abbr = mb_strCut($abbr,0,-1) .'.';
 		echo '<span class="nam">', htmlSpecialChars($abbr, ENT_QUOTES) ,'</span>';
