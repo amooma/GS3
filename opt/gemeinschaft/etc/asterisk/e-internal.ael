@@ -210,6 +210,18 @@ macro dial-internal-nobody-self( mext3 ) {
 context to-internal-users {
 	
 	//----------------------------------------------------------
+	// from ISDN
+	//----------------------------------------------------------
+	
+	//_978. => {
+	//	Set(isdn_exten=${EXTEN:3});
+	//	Verbose(1,### Incoming call from the PSTN to ${isdn_exten});
+	//	Set(__is_from_gateway=1);
+	//	jump ${isdn_exten};
+	//}
+	
+	
+	//----------------------------------------------------------
 	// Fax server
 	//----------------------------------------------------------
 	
