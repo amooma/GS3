@@ -111,9 +111,9 @@ function date_human( $ts )
 function sec_to_hours( $sec )
 {
 	return sPrintF('%d:%02d:%02d',
-		$sec / 3600 % 24,
-		$sec / 60 % 60,
-		$sec % 60
+		$sec / 3600     ,
+		$sec / 60   % 60,
+		$sec        % 60
 	);
 }
 
