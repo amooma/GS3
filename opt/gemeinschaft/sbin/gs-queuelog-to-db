@@ -45,6 +45,7 @@ function remove_lockfile()
 {
 	global $lockfile;
 	
+	@exec( 'rm -rf '. escapeShellArg($lockfile) );
 	if (@is_file($lockfile) && @is_writable($lockfile)) {
 		@unlink($lockfile);
 	}
