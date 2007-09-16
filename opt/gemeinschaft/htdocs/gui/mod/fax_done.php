@@ -88,13 +88,13 @@ $jobs_done = fax_get_jobs_done();
 
 $recdate = array();
 $jobid   = array();
-if (@count($jobs_done)) {
+if (is_array($jobs_done)) {
 	foreach ($jobs_done as $key => $row) {
 		if (($row[12]) === 'webmanag')
 				$fax_username = $row[28];
 			else
 				$fax_username = $row[12];		
-	
+		
 		if ($fax_username == $_SESSION['sudo_user']['name']) { 
 			$recdate[$key] = $row[32];
 			$jobid  [$key] = $row[9];
@@ -102,12 +102,11 @@ if (@count($jobs_done)) {
 			unset($jobs_done[$key]);
 		}
 	}
-
+	
 	@array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_done);
-
+	
 	unset($recdate);
 	unset($jobid);
-	
 	
 	$jobs_done_count = count($jobs_done);
 	
