@@ -73,14 +73,13 @@ $jobs_rec = fax_get_jobs_rec();
 $recdate = array();
 $jobid   = array();
 if (@count($jobs_rec)) {
-
+	
 	foreach ($jobs_rec as $key => $row) {
 		if ($row[11] == $_SESSION['sudo_user']['name']) { 
 			$recdate[$key] = $row[18];
 			$jobid  [$key] = $row[4];
 		} else {
 			unset($jobs_rec[$key]);
-	
 		}
 	}
 	
@@ -135,7 +134,7 @@ echo ($page+1),'/',$num_pages;
 for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 	
 	if ($i < $jobs_rec_count) {
-		echo '<tr class="', (($i%2==0) ? 'even':'odd'), '">', "\n";
+		echo '<tr class="', (($i%2==0) ? 'odd':'even'), '">', "\n";
 		
 		echo "<td>", date('d.m.y H:i:s', $jobs_rec[$i][18]), "</td>\n";
 		if (@$jobs_rec[$i][15]) echo "<td>", $jobs_rec[$i][15] ," </td>\n";
