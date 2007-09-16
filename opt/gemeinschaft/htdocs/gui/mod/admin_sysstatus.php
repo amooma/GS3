@@ -1,0 +1,211 @@
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+defined('GS_VALID') or die('No direct access.');
+
+echo '<h2>';
+if (@$MODULES[$SECTION]['icon'])
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+if (count( $MODULES[$SECTION]['sub'] ) > 1 )
+	echo $MODULES[$SECTION]['title'], ' - ';
+echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+echo '</h2>', "\n";
+
+echo "<br />\n";
+
+
+function _secs_to_days( $secs )
+{
+	$ret = ($secs < 0) ? '- ' : '';
+	$secs = abs($secs);
+	$ret.= sPrintF('%d days %d:%02d:%02d',
+		$secs / (60*60*24)     ,
+		$secs / (60*60)    % 24,
+		$secs / (60)       % 60,
+		$secs / (1)        % 60
+	);
+	return $ret;
+}
+
+
+
+#####################################################################
+#   date
+#####################################################################
+
+echo '<h3>Date</h3>' ,"\n";
+$err=0; $out=array();
+exec( 'date -R', $out, $err );
+if ($err===0) {
+	$out = trim(implode(' ', $out));
+	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">";
+	echo $out;
+	echo "\n</pre>\n";
+} else
+	echo "<p>Error.</p>\n";
+
+
+
+#####################################################################
+#   uname
+#####################################################################
+
+echo '<h3>Kernel &amp; Architecture</h3>' ,"\n";
+$err=0; $out=array();
+exec( 'uname -r ; uname -v ; uname -m ; uname -o', $out, $err );
+if ($err===0) {
+	$out = trim(implode('  ', $out));
+	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
+	echo $out;
+	echo "\n</pre>\n";
+} else
+	echo "<p>Error.</p>\n";
+
+
+
+#####################################################################
+#   uptime & loadavg
+#####################################################################
+
+if (file_exists('/proc/uptime') && file_exists('/proc/loadavg')) {
+	
+	echo '<h3>Uptime</h3>' ,"\n";
+	$out = trim(file_get_contents('/proc/uptime'));
+	$tmp = explode(' ', $out);
+	$uptime = (float)(@$tmp[0]);
+	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
+	echo date('Y-m-d H:i:s', time()-$uptime), ',  ';
+	echo '<b>', _secs_to_days($uptime) ,'</b>', "\n";
+	echo "</pre>\n";
+	
+	echo '<h3>Load average</h3>' ,"\n";
+	$out = trim(file_get_contents('/proc/loadavg'));
+	$tmp = explode(' ', $out);
+	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
+	echo '<b>', number_format((float)@$tmp[0],2,'.','') ,'</b> (1 min)  ';
+	echo '<b>', number_format((float)@$tmp[1],2,'.','') ,'</b> (5 min)  ';
+	echo '<b>', number_format((float)@$tmp[2],2,'.','') ,'</b> (15 min)';
+	echo "\n</pre>\n";
+	
+} else {
+	
+	echo '<h3>Uptime &amp; Load Average</h3>' ,"\n";
+	$err=0; $out=array();
+	exec( 'uptime', $out, $err );
+	if ($err===0) {
+		echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
+		echo trim(implode("\n", $out));
+		echo "\n</pre>\n";
+	} else
+		echo "<p>Error.</p>\n";
+	
+}
+
+
+
+#####################################################################
+#   meminfo
+#####################################################################
+
+echo '<h3>MemInfo</h3>' ,"\n";
+if (file_exists('/proc/meminfo')) {
+	
+	$out = trim(file_get_contents('/proc/meminfo'));
+	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
+	
+	//echo 'Physical', "\n";
+	if (preg_match('/^MemTotal:\s*([0-9]+)/mi', $out, $m)) {
+		$memtotal = (int)$m[1];
+		//echo '  Total: ', str_pad(ceil($memtotal/1024),4,' ',STR_PAD_LEFT) ,' MiB', "\n";
+		if (preg_match('/^MemFree:\s*([0-9]+)/mi', $out, $m)) {
+			$memfree = (int)$m[1];
+			$memused = $memtotal - $memfree;
+			//echo '  Used : ', str_pad(ceil($memused/1024),4,' ',STR_PAD_LEFT) ,' MiB', "\n";
+			echo 'RAM : ',
+				'<b>', str_pad(ceil($memtotal/1024),4,' ',STR_PAD_LEFT) ,'</b> MiB, ',
+				'<b>', str_pad(ceil($memused/$memtotal*100),2,' ',STR_PAD_LEFT) ,' %</b> used',
+				"\n";
+		}
+	}
+	//echo 'Swap', "\n";
+	if (preg_match('/^SwapTotal:\s*([0-9]+)/mi', $out, $m)) {
+		$memtotal = (int)$m[1];
+		//echo '  Total: ', str_pad(ceil($memtotal/1024),4,' ',STR_PAD_LEFT) ,' MiB', "\n";
+		if (preg_match('/^SwapFree:\s*([0-9]+)/mi', $out, $m)) {
+			$memfree = (int)$m[1];
+			$memused = $memtotal - $memfree;
+			//echo '  Used : ', str_pad(ceil($memused/1024),4,' ',STR_PAD_LEFT) ,' MiB', "\n";
+			echo 'Swap: ',
+				'<b>', str_pad(ceil($memtotal/1024),4,' ',STR_PAD_LEFT) ,'</b> MiB, ',
+				'<b>', str_pad(ceil($memused/$memtotal*100),2,' ',STR_PAD_LEFT) ,' %</b> used',
+				"\n";
+		}
+	}
+	
+	echo "</pre>\n";
+	
+} else
+	echo "<p>?</p>\n";
+
+
+
+#####################################################################
+#   df
+#####################################################################
+
+echo '<h3>DiskFree</h3>' ,"\n";
+$err=0; $out=array();
+exec( 'df -h -T -x tmpfs', $out, $err );
+if ($err===0) {
+	$out = trim(implode("\n", $out));
+	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
+	echo $out;
+	echo "\n</pre>\n";
+} else
+	echo "<p>?</p>\n";
+
+
+
+#####################################################################
+#   net dev
+#####################################################################
+
+echo '<h3>NetDev</h3>' ,"\n";
+if (file_exists('/proc/net/dev')) {
+	
+	$out = trim(file_get_contents('/proc/net/dev'));
+	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
+	echo $out;
+	echo "\n</pre>\n";
+	
+} else
+	echo "<p>?</p>\n";
+
+
+
+?>
