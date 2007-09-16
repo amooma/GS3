@@ -72,7 +72,7 @@ $jobs_rec = fax_get_jobs_rec();
 
 $recdate = array();
 $jobid   = array();
-if (@count($jobs_rec)) {
+if (is_array($jobs_rec)) {
 	
 	foreach ($jobs_rec as $key => $row) {
 		if ($row[11] == $_SESSION['sudo_user']['name']) { 

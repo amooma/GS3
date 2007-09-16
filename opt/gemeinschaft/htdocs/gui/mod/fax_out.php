@@ -73,15 +73,15 @@ $jobs_send = fax_get_jobs_send();
 
 $recdate = array();
 $jobid   = array();
-if (@count($jobs_send)) {
+if (is_array($jobs_send)) {
 	$jobs_send_count = count($jobs_send);
-
+	
 	foreach ($jobs_send as $key => $row) {
 		if ($row[12] === 'webmanag')
 				$fax_username = $row[28];
 			else
 				$fax_username = $row[12];		
-	
+		
 		if ($fax_username == $_SESSION['sudo_user']['name']) { 
 			$recdate[$key] = $row[32];
 			$jobid  [$key] = $row[9];
@@ -90,14 +90,11 @@ if (@count($jobs_send)) {
 		}
 	}
 	
-
 	@array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_send);
 	unset($recdate);
 	unset($jobid);
 	
 } else $jobs_send_count = 0;
-
-$jobs_send_count = (int) @count($jobs_send);
 
 $num_pages = ceil($jobs_send_count / $per_page);
 $mod_url = gs_url($SECTION, $MODULE).'&amp;id=';
@@ -159,7 +156,6 @@ for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 		echo "</tr>\n";
 	} 
 }
-
 
 ?>
 
