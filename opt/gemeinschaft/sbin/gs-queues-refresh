@@ -34,6 +34,7 @@ require_once( GS_DIR .'inc/log.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
+include_once( GS_DIR .'inc/find_executable.php' );
 
 
 $db = gs_db_slave_connect();
@@ -63,15 +64,14 @@ if (! is_array($our_host_ids)) $our_host_ids = array();
 
 # find asterisk (this script gets executed by cron which has a
 # different PATH !)
-$path_asterisk = array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/');
-$asterisk = '';
-foreach ($path_asterisk as $p) {
-	if (is_executable( $p.'asterisk' )) {
-		$asterisk = $p.'asterisk';
-		break;
-	}
+#
+$asterisk = find_executable( 'asterisk', array(
+	'/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/'
+));
+if (! $asterisk) {
+	echo "Could not find asterisk\n";
+	exit(1);
 }
-if ($asterisk == '') $asterisk = 'asterisk';
 
 
 # get queues
