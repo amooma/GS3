@@ -157,7 +157,7 @@ echo ($page+1),'/',$num_pages;
 for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 	
 	if ($i < $jobs_done_count) {
-		echo '<tr class="', (($i%2==0) ? 'even':'odd'), '">', "\n";
+		echo '<tr class="', (($i%2==0) ? 'odd':'even'), '">', "\n";
 		
 		echo "<td>", date('d.m.y H:i:s', $jobs_done[$i][32]) ,"</td>\n";
 		echo "<td>", $jobs_done[$i][9] ,"</td>\n";

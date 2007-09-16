@@ -142,7 +142,7 @@ echo ($page+1),'/',$num_pages;
 for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 	
 	if ($i < $jobs_send_count) {
-		echo '<tr class="', (($i%2==0) ? 'even':'odd'), '">', "\n";
+		echo '<tr class="', (($i%2==0) ? 'odd':'even'), '">', "\n";
 		
 		echo "<td>", date("d.m.y H:i:s",$jobs_send[$i][32]) ,"</td>\n";
 		echo "<td>", $jobs_send[$i][9] ,"</td>\n";
@@ -165,13 +165,4 @@ for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 
 </tbody>
 </table>
-
-
-<?php
-/*
-echo "<pre>\n";
-var_dump($jobs_send);
-echo "</pre>\n";
-*/
-?>
 
