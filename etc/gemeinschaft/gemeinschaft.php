@@ -175,7 +175,7 @@ $SNOM_ENABLED               = true;  # do provisioning for Snom?
                                      # show keyset for Snom in the GUI?
 
 $SNOM_PROV_HTTP_USER        = 'gs';
-$SNOM_PROV_HTTP_PASS        = 'gEheiM';
+$SNOM_PROV_HTTP_PASS        = 'gEheiM23y89sdo23';
   # changing these values will likely cause automatic rebooting to fail
 
 $SNOM_PROV_PB_NUM_RESULTS   = 15;
