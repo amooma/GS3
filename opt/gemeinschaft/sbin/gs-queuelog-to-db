@@ -37,6 +37,8 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/log.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/find_executable.php' );
+
 
 $lockfile = '/var/lock/gs-queuelog';
 
@@ -336,13 +338,22 @@ if (! @touch($lockfile)) {
 	exit(1);
 }
 
+$logrotate = find_executable( 'logrotate', array(
+	'/usr/sbin/', '/usr/bin/', '/sbin/', '/bin/', '/usr/local/sbin/', '/usr/local/bin/'
+));
+if (! $logrotate) {
+	echo "Could not find logrotate\n";
+	exit(1);
+}
+
+
 $DB = gs_db_master_connect();
 
 $last_timestamp = (int)$DB->executeGetOne( 'SELECT MAX(`timestamp`) FROM `queue_log`' );
 
 # rotate the log file and tell asterisk to reopen the log file
 $err=0; $out=array();
-exec( 'logrotate -s /dev/null \''. GS_DIR .'etc/logrotate-queues.conf\' >>/dev/null 2>>/dev/null', $out, $err );
+exec( escapeShellCmd($logrotate) .' -s /dev/null \''. GS_DIR .'etc/logrotate-queues.conf\' >>/dev/null 2>>/dev/null', $out, $err );
 
 $files = glob('/var/log/asterisk/queue_log.*');
 foreach ($files as $file) {
