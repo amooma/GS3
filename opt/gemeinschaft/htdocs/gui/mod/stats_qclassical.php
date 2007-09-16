@@ -345,7 +345,7 @@ AND '. $sql_time
 	$totals['avg_calldur'] += $avg_calldur;
 	
 	
-	# duration <= $waittime_level
+	# waittime <= $waittime_level
 	#
 	$num_wait_ok = (int)@$DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
@@ -360,7 +360,7 @@ AND '. $sql_time
 	$totals['num_wait_ok'] += $num_wait_ok;
 	
 	
-	# duration > $waittime_level
+	# waittime > $waittime_level
 	#
 	$num_wait_fail = (int)@$DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
