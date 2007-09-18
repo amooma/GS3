@@ -77,9 +77,7 @@ The system is going down for reboot NOW!</screen></para>
     installiert werden.<programlisting><command>apt-get install mysql-common mysql-client libmysqlclient15off libmysqlclient15-dev</command></programlisting></para>
 
     <para>Es ist extrem wichtig, daß alle Systeme die gleiche Zeit haben! Am
-    besten installieren Sie <literal>ntp</literal> (auf anderen Systemen auch
-    das Paket <literal>ntpdate</literal>, das bei RedHat und CentOS aber
-    bereits enthalten ist):<programlisting><command>apt-get install ntp ntpdate</command>
+    besten installieren Sie <literal>ntp</literal>:<programlisting><command>apt-get install ntpdate ntp ntp-simple</command>
 <command>/etc/init.d/ntp stop</command></programlisting>Jetzt sollten Sie noch
     Ihre NTP-Server in der <filename>/etc/ntp.conf</filename>
     hinzufügen.<programlisting><command>ntpdate 0.debian.pool.ntp.org</command>
