@@ -800,7 +800,7 @@ context systemalarm {
 
 
 //---------------------------------------------------------------------
-//  Call Completion (Autom. Rckruf)
+//  Call Completion (Autom. Rueckruf)
 //---------------------------------------------------------------------
 
 context call-completion {
