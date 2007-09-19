@@ -191,7 +191,7 @@ function fax_download( $file ) {
 	if (! $login_result) return false;
 	
 	if (! ftp_raw($conn_id, 'admin ablue7')) return false;
-	$ret_val = ftp_get($conn_id, '/tmp/'.$file, 'recvq/'.$file, FTP_BINARY);
+	$ret_val = @ftp_get($conn_id, '/tmp/'.$file, 'recvq/'.$file, FTP_BINARY);
 	ftp_close($conn_id);
 	return $ret_val;
 }
