@@ -36,9 +36,11 @@ macro check-valid-extension( mext ) {
 	if ("${user_id}" != "") {
 		// from internal user, store dial log (out)
 		if ("${forwarded_by}" = "" && "${forwards}" < "1" && "${origext}" = "") {
-			// only if this is the dialed number
-			// origext will be set later
-			&dial-log-store(${user_name},out,${mext});
+			// only if this is the dialed number. origext will be set later
+			if ("${is_callfile_origin}" != "1") {
+				// __is_callfile_origin is set by call-init.php
+				&dial-log-store(${user_name},out,${mext});
+			}
 		}
 	}
 	
@@ -80,12 +82,12 @@ macro check-valid-extension( mext ) {
 //---------------------------------------------------------------------
 
 macro dial-node( mext_at_node ) {
-	if ("${saved_callerid}" != "") {
-		// __saved_callerid is set by call-init.php
-		// is this needed here? call-init.php should have picked the
-		// correct node already
-		Set(CALLERID(all)=${saved_callerid});
-	}
+	//if ("${saved_callerid}" != "") {
+	//	// __saved_callerid is set by call-init.php
+	//	// is this needed here? call-init.php should have picked the
+	//	// correct node already
+	//	Set(CALLERID(all)=${saved_callerid});
+	//}
 	Verbose(1,### Dial and forget: ${mext_at_node});
 	SIPAddHeader(X-GS-user_id: ${user_id});
 	SIPAddHeader(X-GS-user_name: ${user_name});
@@ -93,6 +95,8 @@ macro dial-node( mext_at_node ) {
 	SIPAddHeader(X-GS-origext: ${origext});
 	SIPAddHeader(X-GS-clir: ${clir});
 	SIPAddHeader(X-GS-is_callcompletion: ${is_callcompletion});
+	SIPAddHeader(X-GS-is_callfile_origin: ${is_callfile_origin});
+	SIPAddHeader(X-GS-callfile_from_user: ${callfile_from_user});
 	if ("${fake_ringing}" = "1")
 		Ringing();
 	Dial(SIP/${mext_at_node},500);
@@ -160,10 +164,10 @@ context to-internal-nobody-self {
 			// from internal user, store dial log (out)
 			&dial-log-store(${user_name},out,${EXTEN});
 		}
-		if ("${saved_callerid}" != "") {
-			// __saved_callerid is set by call-init.php
-			Set(CALLERID(all)=${saved_callerid});
-		}
+		//if ("${saved_callerid}" != "") {
+		//	// __saved_callerid is set by call-init.php
+		//	Set(CALLERID(all)=${saved_callerid});
+		//}
 		&set-callerid-by-clir();
 		Verbose(1,### Call local nobody ${EXTEN}\, timeout 30);
 		Dial(SIP/${EXTEN},30);
@@ -175,10 +179,10 @@ context to-internal-nobody-self {
 			// from internal user, store dial log (out)
 			&dial-log-store(${user_name},out,${EXTEN});
 		}
-		if ("${saved_callerid}" != "") {
-			// __saved_callerid is set by call-init.php
-			Set(CALLERID(all)=${saved_callerid});
-		}
+		//if ("${saved_callerid}" != "") {
+		//	// __saved_callerid is set by call-init.php
+		//	Set(CALLERID(all)=${saved_callerid});
+		//}
 		&set-callerid-by-clir();
 		Verbose(1,### Call local nobody ${EXTEN}\, timeout 30);
 		Dial(SIP/${EXTEN},30);
@@ -404,10 +408,10 @@ context to-internal-users-self {
 			Verbose(1,### Ringer: ${ringer});
 			SIPAddHeader(Alert-Info: ${ringer});
 		}
-		if ("${saved_callerid}" != "") {
-			// __saved_callerid is set by call-init.php
-			Set(CALLERID(all)=${saved_callerid});
-		}
+		//if ("${saved_callerid}" != "") {
+		//	// __saved_callerid is set by call-init.php
+		//	Set(CALLERID(all)=${saved_callerid});
+		//}
 		Set(CALLERID(name)=Sek. ${CALLERID(name)});
 		Dial(SIP/${boss},30);
 		&hangup-proper-status();
@@ -433,10 +437,18 @@ context to-internal-users-self {
 					Set(__user_id=${SIP_HEADER(X-GS-user_id)});
 				if ("${SIP_HEADER(X-GS-user_name)}" != "")
 					Set(__user_name=${SIP_HEADER(X-GS-user_name)});
+				if ("${SIP_HEADER(X-GS-forwards)}" != "")
+					Set(__forwards=${SIP_HEADER(X-GS-forwards)});
 				if ("${SIP_HEADER(X-GS-origext)}" != "")
 					Set(__origext=${SIP_HEADER(X-GS-origext)});
 				if ("${SIP_HEADER(X-GS-clir)}" != "")
 					Set(clir=${SIP_HEADER(X-GS-clir)});  // nicht vererben
+				if ("${SIP_HEADER(X-GS-is_callcompletion)}" != "")
+					Set(__is_callcompletion=${SIP_HEADER(X-GS-is_callcompletion)});
+				if ("${SIP_HEADER(X-GS-is_callfile_origin)}" != "")
+					Set(__is_callfile_origin=${SIP_HEADER(X-GS-is_callfile_origin)});
+				if ("${SIP_HEADER(X-GS-callfile_from_user)}" != "")
+					Set(__callfile_from_user=${SIP_HEADER(X-GS-callfile_from_user)});
 			}
 		}
 		
@@ -458,10 +470,10 @@ context to-internal-users-self {
 		
 		Verbose(1,### Incoming call to ${EXTEN} at this node);
 		
-		if ("${saved_callerid}" != "") {
-			// __saved_callerid is set by call-init.php
-			Set(CALLERID(all)=${saved_callerid});
-		}
+		//if ("${saved_callerid}" != "") {
+		//	// __saved_callerid is set by call-init.php
+		//	Set(CALLERID(all)=${saved_callerid});
+		//}
 		
 		//Set(CHANNEL(language)=de);
 		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
@@ -480,6 +492,10 @@ context to-internal-users-self {
 					Set(clir=${SIP_HEADER(X-GS-clir)});  // nicht vererben
 				if ("${SIP_HEADER(X-GS-is_callcompletion)}" != "")
 					Set(__is_callcompletion=${SIP_HEADER(X-GS-is_callcompletion)});
+				if ("${SIP_HEADER(X-GS-is_callfile_origin)}" != "")
+					Set(__is_callfile_origin=${SIP_HEADER(X-GS-is_callfile_origin)});
+				if ("${SIP_HEADER(X-GS-callfile_from_user)}" != "")
+					Set(__callfile_from_user=${SIP_HEADER(X-GS-callfile_from_user)});
 			}
 			//else {
 				//if ("${CHANNEL(channeltype)}" != "Local") {
@@ -502,9 +518,14 @@ context to-internal-users-self {
 				// we already did this
 			}
 			else {
-				&is_dmz(${CALLERID(num)});
-				if ("${is_dmz}" != "1") {
-					Set(__is_call_from=external);
+				if ("${is_callfile_origin}" != "1") {
+					&is_dmz(${CALLERID(num)});
+					if ("${is_dmz}" != "1") {
+						Set(__is_call_from=external);
+					}
+					else {
+						Set(__is_call_from=internal);
+					}
 				}
 				else {
 					Set(__is_call_from=internal);
@@ -556,19 +577,31 @@ context to-internal-users-self {
 					Verbose(1,### Call completion to ${EXTEN} - don't forward);
 					Hangup();
 				}
-				Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
-				Set(__forwarded_by=${EXTEN});
-				Set(__is_from_gateway=);
-				Dial(Local/${fw_${is_call_from}_always},200);
-				&hangup-proper-status();
+				if ("${is_callfile_origin}" != "1") {
+					Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
+					Set(__forwarded_by=${EXTEN});
+					Set(__is_from_gateway=);
+					Dial(Local/${fw_${is_call_from}_always},200);
+					&hangup-proper-status();
+				}
+				else {
+					// no forwarding for callfile origin
+					Verbose(1,### Callfile: Don't forward for origin side);
+				}
 			}
 			
 			// call the user
 			//
 			//Set(dialtimeout=30);
 			#exec "/opt/gemeinschaft/etc/asterisk/e-dialtimeout-in.ael.php"
-			if ("${fw_${is_call_from}_unavail}" != "")
-				Set(dialtimeout=${fw_${is_call_from}_unavail_timeout});
+			if ("${is_callfile_origin}" != "1") {
+				if ("${fw_${is_call_from}_unavail}" != "") {
+					Set(dialtimeout=${fw_${is_call_from}_unavail_timeout});
+				}
+			}
+			else {
+				Set(dialtimeout=15);
+			}
 			
 			// get ringer
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${EXTEN},${is_call_from});
@@ -578,7 +611,12 @@ context to-internal-users-self {
 				SIPAddHeader(Alert-Info: ${ringer});
 			}
 			
-			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-pgrpdialstr.agi,${EXTEN});
+			if ("${is_callfile_origin}" != "1") {
+				AGI(/opt/gemeinschaft/dialplan-scripts/in-user-pgrpdialstr.agi,${EXTEN});
+			}
+			else {
+				Set(pgrpdialstr=);
+			}
 			if ("${dialtimeout}" != "") {
 				Verbose(1,### Call local user ${EXTEN}\, timeout: ${dialtimeout} s);
 			}
@@ -594,14 +632,20 @@ context to-internal-users-self {
 			GotoIf($["${DIALSTATUS}" = "CHANUNAVAIL"]?user_offline);
 			GotoIf($["${DIALSTATUS}" = "CONGESTION"]?user_offline);
 			*/
-			if ("${DIALSTATUS}" = "BUSY")         // busy or deflected
-				goto user_busy;
-			if ("${DIALSTATUS}" = "NOANSWER")     // does not answer the phone
-				goto user_unavail;
-			if ("${DIALSTATUS}" = "CHANUNAVAIL")  // offline
-				goto user_offline;
-			if ("${DIALSTATUS}" = "CONGESTION")   // congestion or DND
-				goto user_offline;
+			if ("${is_callfile_origin}" != "1") {
+				if ("${DIALSTATUS}" = "BUSY")         // busy or deflected
+					goto user_busy;
+				if ("${DIALSTATUS}" = "NOANSWER")     // does not answer the phone
+					goto user_unavail;
+				if ("${DIALSTATUS}" = "CHANUNAVAIL")  // offline
+					goto user_offline;
+				if ("${DIALSTATUS}" = "CONGESTION")   // congestion or DND
+					goto user_offline;
+			}
+			else {
+				Verbose(1,### Callfile: Origin user ${callfile_from_user} did not answer);
+				NoCDR();
+			}
 			Hangup();
 			
 			// user busy:

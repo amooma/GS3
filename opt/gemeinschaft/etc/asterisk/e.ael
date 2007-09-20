@@ -816,9 +816,41 @@ context call-completion {
 		//Playback(gemeinschaft/ist-jetzt-wieder-erreichbar);
 		Set(CALLERID(all)=${orig_callerid});
 		//DumpChan();
-		Set(__is_callcompletion=1); // als Flag, damit keine Mailbox aktiv wird
+		Set(__is_callcompletion=1); // no forwards and no mailbox
 		Dial(Local/${callee},15);
 		&hangup-proper-status();
+	}
+	
+}
+
+
+//---------------------------------------------------------------------
+//  dialed with HTTP GET (call-init.php -> callfile)
+//---------------------------------------------------------------------
+
+context urldial {
+	
+	_X. => jump u-${EXTEN};
+	_X  => jump u-${EXTEN};
+	
+	_u-. => {
+		Set(callfile_target=${EXTEN:2});
+		if ("${saved_callerid}" != "") {
+			// __saved_callerid is set by call-init.php
+			Set(CALLERID(all)=${saved_callerid});
+			Set(__saved_callerid=);
+		}
+		Verbose(1,### Callfile from ${callfile_from_user} to ${callfile_target});
+		Set(__is_callfile_origin=);
+		Set(__is_call_from=internal);
+		Dial(Local/${callfile_target}@from-internal-users,200);
+		&hangup-proper-status();
+	}
+	
+	failed => {
+		Verbose(1,### Callfile: Origin user ${callfile_from_user} did not answer);
+		NoCDR();
+		Hangup();
 	}
 	
 }

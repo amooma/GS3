@@ -281,6 +281,7 @@ if (! $clir) {
 	$callerid = 'Anonymous <anonymous>';
 }
 
+/*
 $call = "Channel: Local/". ($from_num ? $from_num : $user['ext']) ."\n"
       . "MaxRetries: 0\n"
       //. "RetryTime: 5\n"
@@ -291,9 +292,25 @@ $call = "Channel: Local/". ($from_num ? $from_num : $user['ext']) ."\n"
       . "Setvar: __user_id=". $user['id'] ."\n"
       . "Setvar: __user_name=". $user['ext'] ."\n"
       . "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
-      . "Setvar: __is_urldial=1\n"  # prevent vm from answering
+      . "Setvar: __is_callcompletion=1\n"  # prevent vm from answering
       . "Setvar: __saved_callerid=$callerid\n"  # always useful to know the orgin
 ;
+*/
+$call = "Channel: Local/". ($from_num ? $from_num : $user['ext']) ."\n"
+      . "MaxRetries: 0\n"
+      //. "RetryTime: 5\n"
+      . "WaitTime: 15\n"
+      . "Context: urldial\n"
+      . "Extension: $prvPrefix$to_num\n"
+      . "Callerid: PBX <call>\n"
+      . "Setvar: __user_id=". $user['id'] ."\n"
+      . "Setvar: __user_name=". $user['ext'] ."\n"
+      . "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
+      . "Setvar: __is_callfile_origin=1\n"  # no forwards and no mailbox on origin side
+      . "Setvar: __saved_callerid=". $callerid ."\n"
+      . "Setvar: __callfile_from_user=". $user['ext'] ."\n"
+;
+
 //echo $call;
 
 $filename = '/tmp/gs-'. $user['id'] .'-'. _pack_int(time()) . rand(100,999) .'.call';
