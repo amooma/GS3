@@ -197,10 +197,13 @@ $CANONIZE_OUTBOUND      = true;     # canonize numbers before matching
                                     # as is
 $CANONIZE_INTL_PREFIX   = '00';     # international prefix. Do not use "+"
                                     # (we know the canonical format is "+"!)
+                                    # in Germany: 00, USA: 011 ?
 $CANONIZE_COUNTRY_CODE  = '49';     # country code (Landesvorwahl) without
                                     # prefix
+                                    # Germany: 49, USA: 1
 $CANONIZE_NATL_PREFIX   = '0';      # National prefix
                                     # (Verkehrsausscheidungsziffer)
+                                    # in Germany: 0
 $CANONIZE_NATL_PREFIX_INTL = false; # Whether the area code needs the
                                     # national prefix even when dialing
                                     # in international format (in Italy)
