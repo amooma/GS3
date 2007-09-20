@@ -29,6 +29,11 @@
 defined('GS_VALID') or die('No direct access.');
 
 
+$get_queue_stats_from_db = true;
+# get queue statistics from database (table queue_log)?
+# otherwise the stats are taken from the manager interface
+
+
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
@@ -97,6 +102,55 @@ ORDER BY `m`.`interface`'
 		*/
 		
 		$queue_title = (trim(@$queue['title']) != '' ? trim(@$queue['title']) : '');
+		
+		
+		if ($get_queue_stats_from_db) {
+			
+			# override $queue_stats['calls'|'completed'|'abandoned'|'holdtime']
+			#
+			
+			$t = time();
+			$now_y = (int)date('Y', $t);
+			$now_m = (int)date('n', $t);
+			$now_d = (int)date('j', $t);
+			
+			$day_t_start = (int)mkTime(  0, 0, 0 , $now_m,$now_d,$now_y );
+			$day_t_end   = (int)mkTime( 23,59,59 , $now_m,$now_d,$now_y );
+			$sql_qlog_today = '(`timestamp`>='.$day_t_start .' AND `timestamp`<='.$day_t_end .')';
+			
+			$queue_stats['calls'    ] = (int)@$DB->executeGetOne(
+'SELECT COUNT(*) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
+AND '. $sql_qlog_today .'
+AND `event`=\'_ENTER\''
+			);
+			$queue_stats['completed'] = (int)@$DB->executeGetOne(
+'SELECT COUNT(*) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
+AND '. $sql_qlog_today .'
+AND `event`=\'_CONNECT\''
+			);
+			$queue_stats['abandoned'] = (int)@$DB->executeGetOne(
+'SELECT COUNT(*) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
+AND '. $sql_qlog_today .'
+AND `event`=\'_EXIT\' AND `reason`=\'ABANDON\''
+			);
+			$queue_stats['_timeout' ] = (int)@$DB->executeGetOne(
+'SELECT COUNT(*) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
+AND '. $sql_qlog_today .'
+AND `event`=\'_EXIT\' AND `reason`=\'TIMEOUT\''
+			);
+			$queue_stats['_empty'   ] = (int)@$DB->executeGetOne(
+'SELECT COUNT(*) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
+AND '. $sql_qlog_today .'
+AND `event`=\'_EXIT\' AND `reason`=\'EMPTY\''
+			);
+			$queue_stats['holdtime' ] = (int)@$DB->executeGetOne(
+'SELECT MAX(`waittime`) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
+AND '. $sql_qlog_today .'
+AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
+			);
+			
+		}
+		
 ?>
 
 <h2><?php echo @$queue['ext'], ($queue_title != '' ? (' ('. htmlEnt($queue_title) .') ') : ''); ?></h2>
@@ -106,17 +160,25 @@ ORDER BY `m`.`interface`'
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:90px;"><?php echo __('Anrufe'); ?></th>
-	<th style="width:90px;"><?php echo __('Erfolgreich'); ?></th>
-	<th style="width:90px;"><?php echo __('Aufgelegt'); ?></th>
-	<th style="width:110px;"><?php echo __('Wartezeit'); ?></th>
+	<th style="width:80px;"><nobr><?php echo __('Anrufe'     ); ?></nobr></th>
+	<th style="width:80px;"><nobr><?php echo __('Erfolgreich'); ?></nobr></th>
+	<th style="width:80px;"><nobr><?php echo __('Aufgelegt'  ); ?></nobr></th>
+	<?php if ($get_queue_stats_from_db) { ?>
+	<th style="width:80px;"><nobr><?php echo __('Timeout'    ); /*//TRANSLATE ME */ ?></nobr></th>
+	<th style="width:80px;"><nobr><?php echo __('Keine Ag.'  ); /*//TRANSLATE ME */ ?></nobr></th>
+	<?php } ?>
+	<th style="width:99px;"><nobr><?php echo __('Wartezeit'  ); ?></nobr></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-	<td class="r"><?php echo (@$queue_stats['calls'] !== null ? $queue_stats['calls'] : '?'); ?></td>
+	<td class="r"><?php echo (@$queue_stats['calls'    ] !== null ? $queue_stats['calls'    ] : '?'); ?></td>
 	<td class="r"><?php echo (@$queue_stats['completed'] !== null ? $queue_stats['completed'] : '?'); ?></td>
 	<td class="r"><?php echo (@$queue_stats['abandoned'] !== null ? $queue_stats['abandoned'] : '?'); ?></td>
+	<?php if ($get_queue_stats_from_db) { ?>
+	<td class="r"><?php echo (@$queue_stats['_timeout' ] !== null ? $queue_stats['_timeout' ] : '?'); ?></td>
+	<td class="r"><?php echo (@$queue_stats['_empty'   ] !== null ? $queue_stats['_empty'   ] : '?'); ?></td>
+	<?php } ?>
 	<td class="r"><?php
 	if (@$queue_stats['holdtime'] === null)
 		echo '?';
