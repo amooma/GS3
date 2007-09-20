@@ -312,6 +312,7 @@ $FAX_TSI_PREFIX         = @$CANONIZE_NATL_PREFIX.
 $FAX_TSI                = $FAX_TSI_PREFIX.'0,'   .
                           $FAX_TSI_PREFIX.'100,' .
                           $FAX_TSI_PREFIX.'99'   ;
+  # (TSI = Transmitting Subscriber Identification)
 
 
 /***********************************************************
