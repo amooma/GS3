@@ -6077,7 +6077,7 @@ INSERT INTO `routes` VALUES (31,1,56,'^0159',1,1,1,1,1,1,1,'00:00:00','24:00:00'
 INSERT INTO `routes` VALUES (32,1,58,'^017[69]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'O2');
 INSERT INTO `routes` VALUES (33,1,60,'^0150',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'Group3G');
 INSERT INTO `routes` VALUES (34,1,62,'^01[5-7]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'andere Handy-Gespräche');
-INSERT INTO `routes` VALUES (35,1,64,'^0[1-9][0-9]{2}',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,10,0,'Ortsnetze');
+INSERT INTO `routes` VALUES (35,1,64,'^0[2-9][0-9]',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,10,0,'Ortsnetze');
 INSERT INTO `routes` VALUES (36,1,66,'^00',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,9,0,'international');
 INSERT INTO `routes` VALUES (37,1,68,'^',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,9,0,'alles andere');
 /*!40000 ALTER TABLE `routes` ENABLE KEYS */;
