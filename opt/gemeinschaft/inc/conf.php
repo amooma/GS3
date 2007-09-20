@@ -183,6 +183,7 @@ _gscnf( 'FAX_PREFIX'                , gs_get_conf('GS_CANONIZE_NATL_PREFIX', '0'
                                       gs_get_conf('CANONIZE_LOCAL_BRANCH'  , '999'));
 _gscnf( 'FAX_TSI_PREFIX'            , ''                 );
 _gscnf( 'FAX_TSI'                   , ''                 );
+# (TSI = Transmitting Subscriber Identification)
 
 _gscnf( 'LOG_FILE'                  , '/var/log/gemeinschaft/gs.log' );
 _gscnf( 'LOG_GMT'                   , true               );
