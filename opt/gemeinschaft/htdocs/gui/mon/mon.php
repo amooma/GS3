@@ -140,6 +140,11 @@ body {
 	background-color: #0f8;
 	color: #050;
 }
+.e_hld {
+	border-color: #69a #033 #033 #69a;
+	background-color: #0ea;
+	color: #053;
+}
 .e_bse {
 	border-color: #66f #006 #006 #66f;
 	background-color: #36f;
