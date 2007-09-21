@@ -66,11 +66,14 @@ die(0);
 function _extstate_v( $state )
 {
 	static $states = array(
-		AST_MGR_EXT_UNKNOWN => 'no extension',
-		AST_MGR_EXT_IDLE    => 'idle',
-		AST_MGR_EXT_INUSE   => 'busy',
-		AST_MGR_EXT_OFFLINE => 'unreachable',
-		AST_MGR_EXT_RINGING => 'ringing'
+		AST_MGR_EXT_UNKNOWN   => 'no extension',
+		AST_MGR_EXT_IDLE      => 'idle',
+		AST_MGR_EXT_INUSE     => 'in use',
+		AST_MGR_EXT_BUSY      => 'busy',
+		AST_MGR_EXT_OFFLINE   => 'unreachable',
+		AST_MGR_EXT_RINGING   => 'ringing',
+		AST_MGR_EXT_RINGINUSE => 'in use + ringing',
+		AST_MGR_EXT_ONHOLD    => 'hold'
 	);
 	return array_key_exists($state, $states) ? $states[$state] : $state;
 }
