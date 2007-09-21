@@ -51,13 +51,13 @@ function _devstate2v( $devstate )
 	$states = array(
 		AST_DEVICE_UNKNOWN     => array('v'=>  ('?'        ), 's'=>'?'     ),
 		AST_DEVICE_NOT_INUSE   => array('v'=>__('frei'     ), 's'=>'green' ),
-		AST_DEVICE_INUSE       => array('v'=>__('belegt'   ), 's'=>'yellow'),
-		AST_DEVICE_BUSY        => array('v'=>__('belegt'   ), 's'=>'yellow'),
-		AST_DEVICE_INVALID     => array('v'=>  ('!'        ), 's'=>'red'   ),
-		AST_DEVICE_UNAVAILABLE => array('v'=>__('offline'  ), 's'=>'red'   ),
+		AST_DEVICE_INUSE       => array('v'=>__('belegt'   ), 's'=>'red'   ),
+		AST_DEVICE_BUSY        => array('v'=>__('belegt'   ), 's'=>'red'   ),
+		AST_DEVICE_INVALID     => array('v'=>  ('!'        ), 's'=>'?'     ),
+		AST_DEVICE_UNAVAILABLE => array('v'=>__('offline'  ), 's'=>'?'     ),
 		AST_DEVICE_RINGING     => array('v'=>__('klingelt' ), 's'=>'yellow'),
 		AST_DEVICE_RINGINUSE   => array('v'=>__('anklopfen'), 's'=>'yellow'),
-		AST_DEVICE_ONHOLD      => array('v'=>__('halten'   ), 's'=>'yellow')
+		AST_DEVICE_ONHOLD      => array('v'=>__('halten'   ), 's'=>'red'   )
 	);
 	return array_key_exists($devstate, $states) ? $states[$devstate] : null;
 }
