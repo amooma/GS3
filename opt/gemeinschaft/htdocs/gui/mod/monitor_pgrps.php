@@ -57,9 +57,12 @@ function _extstate2v( $extstate )
 	$states = array(
 		AST_MGR_EXT_UNKNOWN   => array('v'=>  ('?'       ), 's'=>'?'     ),
 		AST_MGR_EXT_IDLE      => array('v'=>__('frei'    ), 's'=>'green' ),
-		AST_MGR_EXT_INUSE     => array('v'=>__('belegt'  ), 's'=>'yellow'),
-		AST_MGR_EXT_OFFLINE   => array('v'=>__('offline' ), 's'=>'red'   ),
+		AST_MGR_EXT_INUSE     => array('v'=>__('belegt'  ), 's'=>'red'   ),
+		AST_MGR_EXT_BUSY      => array('v'=>__('belegt'  ), 's'=>'red'   ),
+		AST_MGR_EXT_OFFLINE   => array('v'=>__('offline' ), 's'=>'?'     ),
 		AST_MGR_EXT_RINGING   => array('v'=>__('klingelt'), 's'=>'yellow'),
+		AST_MGR_EXT_RINGINUSE => array('v'=>__('klingelt'), 's'=>'yellow'),
+		AST_MGR_EXT_ONHOLD    => array('v'=>__('Halten'  ), 's'=>'red'   ) //TRANSLATE ME
 	);
 	return array_key_exists($extstate, $states) ? $states[$extstate] : null;
 }
@@ -157,8 +160,9 @@ if (@$rs_members) {
 
 $grpstate = AST_MGR_EXT_IDLE;
 foreach ($extinfos as $ext => $info) {
-	if (@$info['info']['ext'] == @$_SESSION['sudo_user']['info']['ext']) continue;
-	if ($info['state'] == AST_MGR_EXT_RINGING) {
+	if (@$info['info']['ext'] == @$_SESSION['sudo_user']['info']['ext'])
+		continue;
+	if ($info['state'] & AST_MGR_EXT_RINGING) {
 		$grpstate = AST_MGR_EXT_RINGING;
 		break;
 	}
@@ -231,10 +235,13 @@ if (count($keys_snom) > 0) {
 		$state = array_key_exists($val, $extinfos)
 			? @$extinfos[$val]['state'] : AST_MGR_EXT_UNKNOWN;
 		switch ($state) {
-			case AST_MGR_EXT_INUSE:   $img = 'on'  ; break;
-			case AST_MGR_EXT_RINGING: $img = 'ring'; break;
+			case AST_MGR_EXT_INUSE:
+			case AST_MGR_EXT_BUSY:
+			case AST_MGR_EXT_ONHOLD:    $img = 'on'  ; break;
+			case AST_MGR_EXT_RINGING:
+			case AST_MGR_EXT_RINGINUSE: $img = 'ring'; break;
 			case AST_MGR_EXT_IDLE:
-			default:                  $img = 'off' ; break;
+			default:                    $img = 'off' ; break;
 		}
 		
 		if (subStr($val,0,2) == '*8') {
