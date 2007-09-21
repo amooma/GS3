@@ -76,11 +76,14 @@ use constant {  # "\n" is platform dependant!
 
 #use constant AST_EXTSTATE_UNKNOWN => -1;
 use constant {
-	AST_EXTSTATE_UNKNOWN  => -1,  # no hint for the extension
-	AST_EXTSTATE_IDLE     =>  0,  # registered, idle
-	AST_EXTSTATE_INUSE    =>  1,  # busy
-	AST_EXTSTATE_OFFLINE  =>  4,  # unreachable, not registered
-	AST_EXTSTATE_RINGING  =>  8   # ringing
+	AST_EXTSTATE_UNKNOWN   => -1,  # no hint for the extension
+	AST_EXTSTATE_IDLE      =>  0,  # idle
+	AST_EXTSTATE_INUSE     =>  1,  # in use
+	AST_EXTSTATE_BUSY      =>  2,  # busy
+	AST_EXTSTATE_OFFLINE   =>  4,  # unreachable, not registered
+	AST_EXTSTATE_RINGING   =>  8,  # ringing
+	AST_EXTSTATE_RINGINUSE =>  9,  # in use + ringing
+	AST_EXTSTATE_ONHOLD    => 16   # hold
 };
 
 
