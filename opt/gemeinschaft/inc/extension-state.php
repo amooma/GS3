@@ -29,14 +29,23 @@
 defined('GS_VALID') or die('No direct access.');
 
 
-# These states are used in the manager API (see
-# action_extensionstate() in manager.c). They are different from
-# the internal device states (AST_DEVICE_...)!
-define( 'AST_MGR_EXT_UNKNOWN' ,-1 );  # no hint for the extension
-define( 'AST_MGR_EXT_IDLE'    , 0 );  # registered, idle
-define( 'AST_MGR_EXT_INUSE'   , 1 );  # busy
-define( 'AST_MGR_EXT_OFFLINE' , 4 );  # unreachable, not registered
-define( 'AST_MGR_EXT_RINGING' , 8 );  # ringing
+# These states are used in the manager API (since 1.4?) (see
+# action_extensionstate() in manager.c, enum ast_extension_states in
+# pbx.h, ast_extension_state() and ast_extension_state2() in pbx.c).
+# They are different from the device states (AST_DEVICE_...)!
+#
+define( 'AST_MGR_EXT_UNKNOWN'  ,        -1  );  # no hint for the extension
+define( 'AST_MGR_EXT_IDLE'     ,         0  );  # all devices idle (but registered)
+define( 'AST_MGR_EXT_INUSE'    , 1<<0 /* 1*/);  # one or more devices busy
+define( 'AST_MGR_EXT_BUSY'     , 1<<1 /* 2*/);  # all devices busy
+define( 'AST_MGR_EXT_OFFLINE'  , 1<<2 /* 4*/);  # all devices unreachable/not registered
+define( 'AST_MGR_EXT_RINGING'  , 1<<3 /* 8*/);  # one or more devices ringing
+define( 'AST_MGR_EXT_ONHOLD'   , 1<<4 /*16*/);  # all devices on hold
+
+define( 'AST_MGR_EXT_RINGINUSE', AST_MGR_EXT_INUSE |  # one or more devices busy
+                                 AST_MGR_EXT_RINGING  # and one or more devices
+                                      /* 9*/);        # ringing
+
 
 
 function gs_extstate( $host, $exts )
