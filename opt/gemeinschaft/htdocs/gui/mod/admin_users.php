@@ -233,10 +233,17 @@ if (@$rs) {
 			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/free_icon.png" />&nbsp; ', __('offline');
 			break;
 		case AST_MGR_EXT_INUSE:
+		case AST_MGR_EXT_BUSY:
 			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" />&nbsp; ', __('spricht');
 			break;
 		case AST_MGR_EXT_RINGING:
 			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/knotify.png" />&nbsp; ', __('klingelt');
+			break;
+		case AST_MGR_EXT_RINGINUSE:
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/knotify.png" />&nbsp; ', __('Anklopfen');  //TRANSLATE ME
+			break;
+		case AST_MGR_EXT_ONHOLD:
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" />&nbsp; ', __('Halten');  //TRANSLATE ME
 			break;
 		default:
 			echo $state;
