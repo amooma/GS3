@@ -11,11 +11,14 @@
 \*******************************************************************/
 
 
-var AST_EXTSTATE_UNKNOWN  = -1  // no hint for the extension
-var AST_EXTSTATE_IDLE     =  0  // registered, idle
-var AST_EXTSTATE_INUSE    =  1  // busy
-var AST_EXTSTATE_OFFLINE  =  4  // unreachable, not registered
-var AST_EXTSTATE_RINGING  =  8  // ringing
+var AST_EXTSTATE_UNKNOWN   = -1 ;  // no hint for the extension
+var AST_EXTSTATE_IDLE      =  0 ;  // registered, idle
+var AST_EXTSTATE_INUSE     =  1 ;  // busy
+var AST_EXTSTATE_BUSY      =  2 ;  // busy
+var AST_EXTSTATE_OFFLINE   =  4 ;  // unreachable, not registered
+var AST_EXTSTATE_RINGING   =  8 ;  // ringing
+var AST_EXTSTATE_RINGINUSE =  9 ;  // busy + ringing
+var AST_EXTSTATE_ONHOLD    = 16 ;  // hold
 
 
 function get_transport_iframe()
@@ -82,12 +85,15 @@ function gs_m( exts )
 			if ((typeof el.className) != 'string') continue;
 			
 			switch (exts[ext]['s']) {
-				case AST_EXTSTATE_INUSE  :
+				case AST_EXTSTATE_INUSE    :
+				case AST_EXTSTATE_BUSY     :
 					newclass = (exts[ext]['e'] ? 'e_bse' : 'e_bsi'); break;
-				case AST_EXTSTATE_IDLE   :  newclass = 'e_idl'; break;
-				case AST_EXTSTATE_RINGING:  newclass = 'e_rng'; break;
-				case AST_EXTSTATE_OFFLINE:  newclass = 'e_off'; break;
-				default                  :  newclass = 'e_ukn';
+				case AST_EXTSTATE_ONHOLD   :  newclass = 'e_hld'; break;
+				case AST_EXTSTATE_IDLE     :  newclass = 'e_idl'; break;
+				case AST_EXTSTATE_RINGING  :
+				case AST_EXTSTATE_RINGINUSE:  newclass = 'e_rng'; break;
+				case AST_EXTSTATE_OFFLINE  :  newclass = 'e_off'; break;
+				default                    :  newclass = 'e_ukn';
 			}
 			
 			classes  = el.className.replace(/\be_[a-z]+/g, '').replace(/\s{2,}/g, '');
