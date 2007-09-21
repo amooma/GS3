@@ -33,10 +33,10 @@ function gs_log( $level, $msg, $logfile=null )
 {
 	static $logfiles = array();
 	static $levels = array(
-		GS_LOG_DEBUG   => 'DEBUG',
-		GS_LOG_NOTICE  => 'NOTICE',
-		GS_LOG_WARNING => 'WARNING',
-		GS_LOG_FATAL   => 'FATAL'
+		GS_LOG_DEBUG   => 'DBUG',
+		GS_LOG_NOTICE  => 'NOTE',
+		GS_LOG_WARNING => 'WARN',
+		GS_LOG_FATAL   => 'FATL'
 	);
 	
 	if ($level > GS_LOG_LEVEL) return true;
@@ -56,7 +56,7 @@ function gs_log( $level, $msg, $logfile=null )
 		@exec('sudo chmod 0666 '. escapeShellArg($logfile) .' 1>>/dev/null 2>>/dev/null');
 	}
 	$vLevel = @ $levels[$level];
-	if (! $vLevel) $vLevel = 'UNKNOWN';
+	if (! $vLevel) $vLevel = '????';
 	//$msg = str_replace(GS_DIR, '<GS_DIR>', $msg);
 	$msg = str_replace(GS_DIR, '', $msg);
 	$dateFn = GS_LOG_GMT ? 'gmDate' : 'date';
