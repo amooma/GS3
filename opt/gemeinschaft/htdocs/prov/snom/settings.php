@@ -144,12 +144,12 @@ if (! $db) {
 
 asterisk login (zb *991234):
 - in db nachsehen, von welchem sip-acct der user kommt
-- da die mac addr löschen und bei seinem acct eintragen
+- da die mac addr loeschen und bei seinem acct eintragen
 - reboot senden
 
 asterisk logout:
 - in db nachsehen, von welchem sip-acct der user kommt
-- die mac addr löschen
+- die mac addr loeschen
 - reboot senden
 
 nach reboot (-> php skript):
@@ -159,7 +159,7 @@ falls gefunden:
 falls nicht:
 - mac addr bei einem unbenutzten nobody eintragen
   (_user_id=NULL, regseconds < time()-24*3600)
-- secret ändern
+- secret aendern
 - provision senden
 
 */
@@ -371,12 +371,12 @@ setting('date_us_format'   , 'off'    , true);
 setting('time_24_format'   , 'on'     , true);
 setting('message_led_other', 'off'    );
 setting('use_backlight'    , 'on'     , true);
-//setting('headset_device'   , 'headset_rj', true);  # würde Default auf Headset am RJ14-Stecker setzen
+//setting('headset_device'   , 'headset_rj', true);  # wuerde Default auf Headset am RJ14-Stecker setzen
 setting('headset_device'   , 'none', true);
 setting('ethernet_detect'  , 'on'     );  # Warnung falls kein Ethernet
 setting('ethernet_replug'  , 'reboot' );
 setting('reboot_after_nr'  , '5'      );  # nach 5 Min. ohne Registrierung neu starten
-setting('admin_mode'       , 'off'    , true);  # wenn die Einstellung nicht writable ist, ist auch kein Admin-Login möglich
+setting('admin_mode'       , 'off'    , true);  # wenn die Einstellung nicht writable ist, ist auch kein Admin-Login moeglich
 setting('admin_mode_password'         , '0000');
 setting('admin_mode_password_confirm' , '0000');
 
@@ -402,7 +402,7 @@ setting('short_form'           , 'on' );  # kurze SIP-Header verwenden
 setting('subscription_delay'   , '2'  );
 setting('subscription_expiry'  , '120');  # default 3600
 setting('terminate_subscribers_on_reboot', 'on');
-setting('publish_presence'     , 'off');  # unterstützt Asterisk (noch?) nicht
+setting('publish_presence'     , 'off');  # unterstuetzt Asterisk (noch?) nicht
 setting('presence_timeout'     , '15' );  # default 15 (Minuten)
 setting('user_phone'           , 'off');  # user=phone in SIP URIs is deprecated
 setting('require_prack'        , 'on' );  # default
@@ -431,7 +431,7 @@ if ($vlan_id < 1) {
 	setting('vlan_id', $vlan_id );
 }
 */
-//setting('vlan_qos', '5' );  # Prio. 5 (0|1-7)  muß ggf. getestet werden
+//setting('vlan_qos', '5' );  # Prio. 5 (0|1-7)  muss ggf. getestet werden
 
 
 #
@@ -450,7 +450,7 @@ setting('with_flash'      , 'on' , true);
 #
 # Audio
 #
-setting('pickup_indication'    , 'on' );  # Piepton wenn Pickup möglich
+setting('pickup_indication'    , 'on' );  # Piepton wenn Pickup moeglich
 setting('keytones'             , 'on' );
 setting('holding_reminder'     , 'on' );
 setting('alert_info_playback'  , 'on' );
@@ -474,9 +474,9 @@ if ($phone_type >= '370') {
 	setting('vol_ringer'           ,  '7' , true);  # 1 - 15
 }
 setting('mwi_notification'     , 'silent');  # keine akustischen Hinweise wenn neue Nachrichten
-setting('mwi_dialtone'         , 'stutter', true);  # stotternder Wählton wenn neue Nachrichten
+setting('mwi_dialtone'         , 'stutter', true);  # stotternder Waehlton wenn neue Nachrichten
 setting('silence_compression'  , 'off');  # kann Asterisk (noch?) nicht
-setting('ringer_headset_device', 'speaker');  # Klingeltonausgabe bei Kopfhörer (headset|speaker)
+setting('ringer_headset_device', 'speaker');  # Klingeltonausgabe bei Kopfhoerer (headset|speaker)
 
 
 #
@@ -550,7 +550,7 @@ setting('redirect_time_off_code'  , '');
 #
 # Time
 #
-//setting('ntp_server'       , '192.168.1.11');  # dem DHCP überlassen
+//setting('ntp_server'       , '192.168.1.11');  # dem DHCP ueberlassen
 setting('ntp_refresh_timer'  , rand(1780,1795));  # default 3600
 setting('timezone'           , 'GER+1', true);
 //setting('utc_offset'         , date('Z'), true);  # no need to set this
@@ -571,7 +571,7 @@ setting('user_sipusername_as_line1', 'on' );  # "broken registrar"
 setting('user_srtp1'               , 'off');  # keine Verschluesselung
 setting('user_symmetrical_rtp1'    , 'off');
 setting('user_expiry1'             , '70' );  # neu registrieren, default: 86400
-setting('ring_after_delay1'        , '1'  , true);  # mit 1 Sek. Verzögerung klingeln
+setting('ring_after_delay1'        , '1'  , true);  # mit 1 Sek. Verzoegerung klingeln
 //setting('user_send_local_name1'    , 'on' );  # send display name to caller
 setting('user_send_local_name1'    , 'off');
 setting('user_dtmf_info1'          , 'off');
@@ -601,7 +601,7 @@ for ($i=2; $i<=12; ++$i) {
 setting('active_line' , '1', true);
 
 #
-# Kurzwahlen löschen
+# Kurzwahlen loeschen
 #
 for ($i=0; $i<=32; ++$i) {
 	setting('speed'. $i, '');
@@ -705,25 +705,25 @@ setting('gui_fkey4', '');
 
 
 #
-# Klingeltöne
+# Klingeltoene
 #
 setting('alert_internal_ring_text', 'alert-internal');
 setting('alert_external_ring_text', 'alert-external');
 setting('alert_group_ring_text'   , 'alert-group');
 
-# eigener Klingelton könnte so gesetzt werden statt per Alert-Info-Header:
+# eigener Klingelton koennte so gesetzt werden statt per Alert-Info-Header:
 //setting('custom_melody_url', 'http://...');
-# ist aber nur möglich für "Adressbuchklingeltöne"!?
+# ist aber nur moeglich fuer "Adressbuchklingeltoene"!?
 
 # Standard Fallback-Klingelton:
 setting('ring_sound'               , 'Ringer1');  # Ringer[1-10] / Silent
 
-# Alert-Info-Klingeltöne:
+# Alert-Info-Klingeltoene:
 setting('alert_internal_ring_sound', 'Ringer2');  # Alert-Info: alert-internal
 setting('alert_external_ring_sound', 'Ringer3');  # Alert-Info: alert-external
 setting('alert_group_ring_sound'   , 'Ringer4');  # Alert-Info: alert-group
 
-# Adressbuchklingeltöne (wir benutzen nicht das Telefon-interne Telefonbuch, diese Einstellungen werden also nicht benutzt):
+# Adressbuchklingeltoene (wir benutzen nicht das Telefon-interne Telefonbuch, diese Einstellungen werden also nicht benutzt):
 setting('friends_ring_sound'       , 'Ringer1');
 setting('family_ring_sound'        , 'Ringer1');
 setting('colleagues_ring_sound'    , 'Ringer1');
