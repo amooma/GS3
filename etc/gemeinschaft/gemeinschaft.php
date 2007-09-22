@@ -108,6 +108,12 @@ $GUI_SUDO_EXTENDED          = false;
 $GUI_QUEUE_SHOW_NUM_CALLS   = false;
   # show number of completed calls for each member in Monitor->Queues
 
+$GUI_QUEUE_INFO_FROM_DB     = false;
+  # get queue statistics for Monitor->Queues from database (table
+  # queue_log)? otherwise the stats are taken from the manager
+  # interface. does not make sense if you don't set up a cron job
+  # for /opt/gemeinschaft/sbin/gs-queuelog-to-db (every minute)
+
 $GUI_MON_NOQUEUEBLUE        = true;
   # used in Monitor->Peers. if true idle users who are not member
   # of a queue get a blue led instead of a green one
