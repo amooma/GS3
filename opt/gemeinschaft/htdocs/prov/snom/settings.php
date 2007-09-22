@@ -425,7 +425,7 @@ setting('redirect_ringing'     , 'off' );
 setting('disable_blind_transfer', 'off');
 setting('disable_deflection'   , 'off');
 setting('watch_arp_cache'      , '1'  );  # default 0
-setting('max_forwards'         , '40');  # default 70
+setting('max_forwards'         , '30');  # default 70
 setting('support_idna'         , 'off');
 setting('reject_calls_with_603', 'off');  # rejects calls with 603 instead of 486
 /*
