@@ -419,7 +419,7 @@ setting('dtmf_payload_type'    , '101');  # default
 setting('sip_proxy'            , ''   );
 setting('eth_net'              , 'auto');
 setting('eth_pc'               , 'auto');
-setting('redirect_ringing'     , 'on' , true);
+setting('redirect_ringing'     , 'off' );
 setting('disable_blind_transfer', 'off');
 setting('disable_deflection'   , 'off');
 setting('watch_arp_cache'      , '1'  );  # default 0
