@@ -557,12 +557,6 @@ setting('timezone'           , 'GER+1', true);
 
 
 #
-# Update
-#
-setting('update_policy', 'settings_only');
-
-
-#
 # Account 1
 #
 //setting('user_host1'               , '192.168.1.11');
@@ -730,14 +724,13 @@ setting('colleagues_ring_sound'    , 'Ringer1');
 setting('vip_ring_sound'           , 'Ringer1');
 
 
-
 //setting('user_alert_info1', 'http://skdjhsjd.wav');
 // "The HTTP(S) URL may point to a standard 8 kHz mono 16-bit sample WAV file."
 
 
+#
 # Misc
 #
-
 //setting('subscribe_config', 'off');  # "The phone can subscribe to setting changes delivered via SIP when this option is switched to "on"."
 //setting('pnp_config', 'off');  # "If turned to on, the phone will try to retrieve its settings via a Plug-and-Play (PnP) Server. Modern SIP PBXs/Proxys can provide the PnP configuration data for the snom phones. Please refer to the manual of your PBX/Proxy. If the PnP configuration fails, the phone will try to get the settings from a setting server)."
 setting('subscribe_config', 'off');
@@ -780,14 +773,31 @@ setting('presence_state1', 'online', true);
 setting('show_local_line', 'off');
 
 
+
+#
 # Firmware
 #
 # see
+# http://wiki.snom.com/Settings/update_policy
 # http://www.snom.com/wiki/index.php/Settings/firmware_interval
 # http://www.snom.com/wiki/index.php/Settings/firmware_status
 # http://www.snom.com/wiki/index.php/Mass_deployment#Firmware_configuration_file
 
+setting('update_policy', 'settings_only');  //FIXME - needs config param
+//setting('update_policy', 'auto_update');  //FIXME - needs config param
+# "settings_only" : loads only the settings, no firmware update
+# "ask_for_update": the user is prompted to acknowledge the firmware update
+# "auto_update"   : the user is not prompted to acknowledge the firmware update
 
+setting('firmware_interval', '1440');  # 1440 mins = 24 hrs
+setting('firmware_status', GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/sw-update.php?m='.$mac .'&u='.$user['name'] );
+# http, https, tftp are supported
+
+
+
+#
+# output settings
+#
 ob_start();
 settings_out();
 $ob = ob_get_clean();
