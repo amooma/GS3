@@ -610,6 +610,8 @@ setting('user_pname1'         , $user['name']);
 //setting('user_pname1'         , $user['name']);  # not needed for Asterisk
 setting('user_pass1'          , $user['secret']);
 //setting('user_hash1'          , md5($user['secret']));
+//setting('user_hash1'          , md5($user['name'] .':'. $host .':'. $user['secret']));
+//setting('user_hash1'          , md5($user['name'] .':'. 'asterisk' .':'. $user['secret']));
 setting('user_realname1'      , $user['callerid']);
 setting('user_idle_text1'     , $user['name'] .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
 setting('record_missed_calls1', 'off');
