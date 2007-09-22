@@ -398,7 +398,9 @@ setting('challenge_response'   , 'off');
 setting('challenge_reboot'     , 'off');
 setting('challenge_checksync'  , 'off');
 //setting('network_id_port'      , '5060');  # feste Vorgabe von 5060 funktioniert nicht im VLAN
-setting('network_id_port'      , ''   );
+setting('network_id_port'      , ''   );  # falls wir aber mal per sipsak Nachrichten
+                                          # ans Snom schicken wollen muﬂ das fest ein-
+                                          # gestellt werden
 setting('tcp_listen'           , 'off');
 setting('offer_gruu'           , 'off');
 setting('short_form'           , 'on' );  # kurze SIP-Header verwenden
@@ -573,7 +575,7 @@ setting('user_active1'             , 'on');
 setting('user_sipusername_as_line1', 'on' );  # "broken registrar"
 setting('user_srtp1'               , 'off');  # keine Verschluesselung
 setting('user_symmetrical_rtp1'    , 'off');
-setting('user_expiry1'             , '70' );  # neu registrieren, default: 3600
+setting('user_expiry1'             , '130');  # neu registrieren, default: 3600
 setting('ring_after_delay1'        , '1'  , true);  # mit 1 Sek. Verzoegerung klingeln
 //setting('user_send_local_name1'    , 'on' );  # send display name to caller
 setting('user_send_local_name1'    , 'on' );
