@@ -37,6 +37,13 @@ $allow_update    = false;  //FIXME - needs config param
 $allow_beta      = false;  //FIXME - needs config param
 $allow_v_6_to_7  = false;  //FIXME - needs config param
 
+$allow_only_specified_mac_addrs = false;
+$allowed_mac_addrs = array(
+	//'00:04:13:00:00:01',
+	//'00:04:13:00:00:02',
+	//'00:04:13:00:00:03'
+);
+
 
 $firmware_url_snom          = 'http://provisioning.snom.com/download/';
 $firmware_url_snom_from6to7 = 'http://provisioning.snom.com/from6to7/';
@@ -61,15 +68,30 @@ if (! $allow_update) {
 	die( 'Not enabled.' );
 }
 
-$mac  = preg_replace( '/[^0-9A-F]/', '', strToUpper( @$_REQUEST['m'] ) );
+$mac  = preg_replace('/[^0-9A-F]/', '', strToUpper(@$_REQUEST['m']));
 /*
 if (strLen($mac) != 12) {
 	gs_log( GS_LOG_DEBUG, "Bad MAC address \"$mac\"" );
 	die();
 }
 */
+if ($allow_only_specified_mac_addrs) {
+	$mac_allowed = false;
+	foreach ($allowed_mac_addrs as $allowed_mac) {
+		$allowed_mac = preg_replace('/[^0-9A-F]/', '', strToUpper($allowed_mac));
+		if ($allowed_mac === $mac) {
+			$mac_allowed = true;
+			break;
+		}
+	}
+	if (! $mac_allowed) {
+		gs_log( GS_LOG_DEBUG, "MAC address not allowed to upgrade firmware" );
+		die();
+	}
+}
 
-$user = preg_replace( '/[^a-z0-9_\-]/i', '', @$_REQUEST['u'] );
+
+$user = preg_replace('/[^a-z0-9_\-]/i', '', @$_REQUEST['u']);
 
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 if (preg_match('/snom([1-9][0-9]{2})/i', $ua, $m)) {  # i.e. "snom360"
@@ -106,6 +128,10 @@ function _generate_settings( $model, $appl, $rtfs, $lnux )
 		if (subStr($firmware_path,-1) != '/') $firmware_path .= '/';
 		$realfile = $firmware_path . $file;
 		if (! file_exists($realfile) || ! is_readable($realfile)) {
+			# It's important to make sure we don't point the phone to a
+			# non-existent file or else the phone needs manual interaction
+			# (something like "File not found. Press any key to continue.")
+			
 			# special directories for
 			# ...-3.38-l.bin
 			# ...-update6to7-7.1.6-bf.bin
