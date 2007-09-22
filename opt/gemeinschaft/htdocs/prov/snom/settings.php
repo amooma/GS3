@@ -392,7 +392,7 @@ setting('dhcp'                 , 'on' );
 //setting('gateway'              , '192.168.1.1');
 setting('filter_registrar'     , 'off');  # so we can reboot the phone even if not registered
 setting('enable_timer_support' , 'on' );
-setting('session_timer'        , '120');  # default 3600
+setting('session_timer'        , '130');  # default 3600
 setting('dirty_host_ttl'       , '0'  );
 setting('challenge_response'   , 'off');
 setting('challenge_reboot'     , 'off');
