@@ -97,7 +97,7 @@ $GUI_AUTH_METHOD            = 'gemeinschaft';
 
 $GUI_NUM_RESULTS            = 12;
 
-$GUI_SUDO_ADMINS            = '47110002, 47110003';
+$GUI_SUDO_ADMINS            = '47110002, 47110003, 123';
   # comma separated list of admin users who can manage *all* accounts
 
 $GUI_SUDO_EXTENDED          = false;
