@@ -81,7 +81,8 @@ $user_host   = trim(@$_REQUEST['uhost']);
 
 
 $sql_query = 'SELECT `id`, `host`
-FROM `hosts`';
+FROM `hosts`
+ORDER BY `id` ASC';
 $rs = $DB->execute($sql_query);
 
 if (@$rs) {
@@ -316,7 +317,7 @@ if (!$edit_user) {
 			echo '<td>', htmlEnt($r['usern']), '</td>';
 			echo "<td>".str_repeat("*",strlen($r['pin']))."</td>\n";
 			echo '<td>', htmlEnt($r['email']), '</td>';
-			echo '<td>', $r['hid'].' ('.$hosts[$r['hid']].') </td>';
+			echo '<td>', $r['hid'].' ('.@$hosts[$r['hid']].') </td>';
 			echo '<td>';
 			$state = gs_extstate_single( $r['ext'] );
 			switch ($state) {
