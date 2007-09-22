@@ -285,11 +285,6 @@ if (! empty($app))
 												//$new_app = '6.5.10-SIP-j';
 												$new_app = '6.5.12-beta-SIP-j';
 				}
-				/*
-				elseif (_snomAppCmp($a, '7.0.17')<0) {
-												$new_app = '7.0.17-SIP-f';
-				}
-				*/
 				elseif (_snomAppCmp($a, '7.1.19')<0) {
 												$new_app = '7.1.19-beta-SIP-f';
 				}
