@@ -28,12 +28,6 @@
 
 defined('GS_VALID') or die('No direct access.');
 
-
-$get_queue_stats_from_db = true;
-# get queue statistics from database (table queue_log)?
-# otherwise the stats are taken from the manager interface
-
-
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
@@ -44,6 +38,7 @@ echo '</h2>', "\n";
 
 
 include_once( GS_DIR .'inc/queue-status.php' );
+$get_queue_stats_from_db = gs_get_conf('GS_GUI_QUEUE_INFO_FROM_DB');
 
 function _devstate2v( $devstate )
 {
@@ -160,24 +155,49 @@ AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:80px;"><nobr><?php echo __('Anrufe'     ); ?></nobr></th>
-	<th style="width:80px;"><nobr><?php echo __('Erfolgreich'); ?></nobr></th>
-	<th style="width:80px;"><nobr><?php echo __('Aufgelegt'  ); ?></nobr></th>
+	<th style="width:85px;"><nobr><?php echo __('Anrufe'     ); ?></nobr></th>
+	<th style="width:85px;"><nobr><?php echo __('Angenommen' ); /*//TRANSLATE ME*/ ?></nobr></th>
+	<th style="width:85px;"><nobr><?php echo __('Erfolgreich'); ?></nobr></th>
+	<th style="width:85px;"><nobr><?php echo __('Aufgelegt'  ); ?></nobr></th>
 	<?php if ($get_queue_stats_from_db) { ?>
-	<th style="width:80px;"><nobr><?php echo __('Timeout'    ); /*//TRANSLATE ME */ ?></nobr></th>
-	<th style="width:80px;"><nobr><?php echo __('Keine Ag.'  ); /*//TRANSLATE ME */ ?></nobr></th>
+	<th style="width:85px;"><nobr><?php echo __('Timeout'    ); /*//TRANSLATE ME */ ?></nobr></th>
+	<th style="width:85px;"><nobr><?php echo __('Keine Ag.'  ); /*//TRANSLATE ME */ ?></nobr></th>
 	<?php } ?>
-	<th style="width:99px;"><nobr><?php echo __('Wartezeit'  ); ?></nobr></th>
+	<th style="width:85px;"><nobr><?php echo __('Wartezeit'  ); ?></nobr></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-	<td class="r"><?php echo (@$queue_stats['calls'    ] !== null ? $queue_stats['calls'    ] : '?'); ?></td>
-	<td class="r"><?php echo (@$queue_stats['completed'] !== null ? $queue_stats['completed'] : '?'); ?></td>
-	<td class="r"><?php echo (@$queue_stats['abandoned'] !== null ? $queue_stats['abandoned'] : '?'); ?></td>
+	<td class="r"><?php
+		echo (@$queue_stats['calls'    ] !== null
+		     ? $queue_stats['calls'    ] : '?');
+	?></td>
+	<td class="r"><?php
+		echo (@$queue_stats['completed'] !== null
+		     ? $queue_stats['completed'] : '?');
+	?></td>
+	<td class="r"><?php
+		if (@$queue_stats['completed'] !== null
+		&&  @$queue_stats['calls'    ] !== null)
+		{
+			if ($queue_stats['calls'    ] > 0) {
+				echo round($queue_stats['completed'] / $queue_stats['calls'] *100), ' %';
+			} else echo '0 %';
+		}
+	?></td>
+	<td class="r"><?php
+		echo (@$queue_stats['abandoned'] !== null
+		     ? $queue_stats['abandoned'] : '?');
+	?></td>
 	<?php if ($get_queue_stats_from_db) { ?>
-	<td class="r"><?php echo (@$queue_stats['_timeout' ] !== null ? $queue_stats['_timeout' ] : '?'); ?></td>
-	<td class="r"><?php echo (@$queue_stats['_empty'   ] !== null ? $queue_stats['_empty'   ] : '?'); ?></td>
+	<td class="r"><?php
+		echo (@$queue_stats['_timeout' ] !== null
+		     ? $queue_stats['_timeout' ] : '?');
+	?></td>
+	<td class="r"><?php
+		echo (@$queue_stats['_empty'   ] !== null
+		     ? $queue_stats['_empty'   ] : '?');
+	?></td>
 	<?php } ?>
 	<td class="r"><?php
 	if (@$queue_stats['holdtime'] === null)
@@ -192,6 +212,12 @@ AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
 </tr>
 </tbody>
 </table>
+
+<?php
+if ($get_queue_stats_from_db) {
+	echo '<p class="fr"><small>(', __('Je nach Konfiguration k&ouml;nnen hier kurze Verz&ouml;gerungen auftreten.') /*//TRANSLATE ME*/ ,')</small></p>';
+}
+?>
 
 <br />
 
