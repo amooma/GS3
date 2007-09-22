@@ -37,9 +37,6 @@ function gs_queue_del( $name )
 {
 	if (! preg_match( '/^[\d]+$/', $name ))
 		return new GsError( 'Queue name must be numeric.' );
-	$title = trim($title);
-	$maxlen = (int)$maxlen;
-	if ($maxlen < 0) $maxlen = 0;
 	
 	# connect to db
 	#
@@ -68,7 +65,7 @@ function gs_queue_del( $name )
 	$ok = $db->execute( 'DELETE FROM `ast_queues` WHERE `_id`='. $queue_id .' LIMIT 1' );
 	
 	if (! $ok)
-		return new GsError( 'Failed to add queue.' );
+		return new GsError( 'Failed to delete queue.' );
 	
 	return true;
 }
