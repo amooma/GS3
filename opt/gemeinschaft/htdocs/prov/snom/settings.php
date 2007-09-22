@@ -469,7 +469,7 @@ if ($phone_type >= '370') {
 	setting('vol_headset_mic'      ,  '6' , true);  # 1 - 8, Default: 4
 	setting('vol_speaker_mic'      ,  '6' , true);  # 1 - 8, Default: 4
 	setting('vol_speaker'          , '10' , true);  # 0 - 15, Default: 8
-	setting('vol_handset'          , '10' , true);  # 0 - 15, Default: 8
+	setting('vol_handset'          , '11' , true);  # 0 - 15, Default: 8
 	setting('vol_headset'          , '10' , true);  # 0 - 15, Default: 8
 	setting('vol_ringer'           ,  '7' , true);  # 1 - 15
 }
