@@ -719,6 +719,7 @@ setting('gui_fkey3', '');
 setting('gui_fkey4', '');
 
 
+
 #
 # Klingeltoene
 #
@@ -811,6 +812,32 @@ setting('update_policy', 'settings_only');  //FIXME - needs config param
 setting('firmware_interval', '1440');  # 1440 mins = 24 hrs
 setting('firmware_status', GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/sw-update.php?m='.$mac .'&u='.$user['name'] );
 # http, https, tftp are supported
+
+
+
+#
+# UI Strings
+#
+setting('calling_title'     , 'lang_calling');
+setting('connected_title'   , 'lang_connected');
+setting('disconnected_title', 'lang_terminated_finished');
+setting('ringing_title'     , 'lang_ringing');
+setting('held_by_title'     , 'lang_held_by');
+setting('enter_number_title', 'lang_enter_number');
+
+if (preg_match('/snom3[0-9]0-SIP\s+(\d+)\.(\d+)\.(\d+)/', $ua, $m)) {
+	if ((int)$m[1]===7 && (int)$m[2]===1 && (int)$m[3]===19) {
+		# 7.1.19 is a beta firmware which has English strings only
+		if (strToLower(subStr(gs_get_conf('GS_INTL_LANG'),0,2))==='de') {
+			setting('calling_title'     , 'Rufaufbau');
+			setting('connected_title'   , 'Verbunden');
+			setting('disconnected_title', 'Getrennt');
+			setting('ringing_title'     , 'Anruf');
+			setting('held_by_title'     , 'Gehalten');
+			setting('enter_number_title', 'Nummer eingeben');
+		}
+	}
+}
 
 
 

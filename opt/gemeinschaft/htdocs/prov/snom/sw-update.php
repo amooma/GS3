@@ -39,7 +39,7 @@ $allow_v_6_to_7  = false;  //FIXME - needs config param
 
 $allow_only_specified_mac_addrs = false;
 $allowed_mac_addrs = array(
-	//'00:04:13:00:00:01',
+	//'00:04:13:23:08:A4',
 	//'00:04:13:00:00:02',
 	//'00:04:13:00:00:03'
 );
