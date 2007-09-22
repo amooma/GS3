@@ -26,6 +26,9 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+# have a look at
+# http://wiki.snom.com/Settings
+
 define( 'GS_VALID', true );  /// this is a parent file
 
 header( 'Content-Type: text/plain; charset=utf-8' );
@@ -416,10 +419,13 @@ setting('dtmf_payload_type'    , '101');  # default
 setting('sip_proxy'            , ''   );
 setting('eth_net'              , 'auto');
 setting('eth_pc'               , 'auto');
-setting('redirect_ringing'     , 'off', true);
+setting('redirect_ringing'     , 'on' , true);
 setting('disable_blind_transfer', 'off');
 setting('disable_deflection'   , 'off');
 setting('watch_arp_cache'      , '1'  );  # default 0
+setting('max_forwards'         , '40');  # default 70
+setting('support_idna'         , 'off');
+setting('reject_calls_with_603', 'off');  # rejects calls with 603 instead of 486
 /*
 if ($vlan_id < 1) {
 	setting('vlan', '' );
@@ -456,6 +462,7 @@ setting('holding_reminder'     , 'on' );
 setting('alert_info_playback'  , 'on' );
 setting('mute'                 , 'off', true);  # mute mic off
 setting('disable_speaker'      , 'off', true);  # disable casing speaker off
+setting('release_sound'        , 'off');
 if ($phone_type >= '370') {
 	setting('vol_handset_mic'      ,  '5' , true);  # 1 - 8, Default: 4
 	setting('vol_headset_mic'      ,  '6' , true);  # 1 - 8, Default: 4
@@ -515,15 +522,18 @@ setting('privacy_in'             , 'off');  # accept anonymous calls
 setting('privacy_out'            , 'off');  # send caller-id
 setting('auto_dial'              , 'off');
 setting('conf_hangup'            , 'on' , true);
+setting('auto_redial'            , 'off');  # automatic redial on busy
+setting('auto_redial_value'      , '10' );  # redial after (sec)
+setting('idle_offhook'           , 'off');
+setting('transfer_on_hangup'     , 'on' );
 setting('no_dnd'                 , 'off');
-
 $dnd_mode = 'off';
 $cf = gs_callforward_get( $user['user'] );
 if (! isGsError($cf) && is_array($cf)) {
 	if ( @$cf['internal']['always']['active'] != 'no'
 	  || @$cf['external']['always']['active'] != 'no' )
 	{
-		$dnd_mode = 'on';
+		$dnd_mode = 'on';  //FIXME - bad hack!
 	}
 }
 setting('dnd_mode'               , $dnd_mode, true);
@@ -559,19 +569,28 @@ setting('timezone'           , 'GER+1', true);
 #
 # Account 1
 #
-//setting('user_host1'               , '192.168.1.11');
 setting('user_active1'             , 'on');
 setting('user_sipusername_as_line1', 'on' );  # "broken registrar"
 setting('user_srtp1'               , 'off');  # keine Verschluesselung
 setting('user_symmetrical_rtp1'    , 'off');
-setting('user_expiry1'             , '70' );  # neu registrieren, default: 86400
+setting('user_expiry1'             , '70' );  # neu registrieren, default: 3600
 setting('ring_after_delay1'        , '1'  , true);  # mit 1 Sek. Verzoegerung klingeln
 //setting('user_send_local_name1'    , 'on' );  # send display name to caller
-setting('user_send_local_name1'    , 'off');
+setting('user_send_local_name1'    , 'on' );
 setting('user_dtmf_info1'          , 'off');
 setting('user_mailbox1'            , 'mailbox');
 setting('user_dp_str1'             , ''   );
 setting('keepalive_interval1'      , '14' );
+if ($phone_type >= '360')
+	setting('user_xml_screen_url1' , ''   );
+else
+	setting('user_xml_screen_url1' , ''   );
+setting('user_event_list_subscription1', 'off');
+setting('user_event_list_uri1'     , '');
+setting('user_presence_subscription1', 'off');
+setting('user_presence_host1', '');
+setting('user_presence_buddy_list_uri1', '');
+setting('presence_state1'          , 'online', true);
 
 setting('codec1_name1', '8');  # alaw (g711a)
 setting('codec2_name1', '0');  # ulaw (g711u)
@@ -581,6 +600,21 @@ setting('codec5_name1', '9');  # g722
 setting('codec6_name1','18');  # g729a
 setting('codec7_name1', '4');  # g723.1
 setting('codec_size1' ,'20');  # 20 ms
+
+setting('user_host1'          , $host);
+setting('user_outbound1'      , '');  # outbound SIP proxy
+setting('user_proxy_require1' , '');
+setting('user_shared_line1'   , 'off');
+setting('user_name1'          , $user['name']);
+setting('user_pname1'         , $user['name']);
+//setting('user_pname1'         , $user['name']);  # not needed for Asterisk
+setting('user_pass1'          , $user['secret']);
+//setting('user_hash1'          , md5($user['secret']));
+setting('user_realname1'      , $user['callerid']);
+setting('user_idle_text1'     , $user['name'] .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
+setting('record_missed_calls1', 'off');
+setting('record_dialed_calls1', 'off');
+setting('record_received_calls1', 'off');
 
 #
 # andere Accounts
@@ -612,7 +646,6 @@ setting('log_level'    , '5' );  # 0-9, Default: 5
 # Snom-Sondertasten
 #
 setting('dkey_help'     , 'keyevent F_HELP'      );
-//setting('dkey_snom'     , 'url http://192.168.1.11/snom/webapps/menu.xml');
 setting('dkey_snom'     , 'keyevent F_SNOM'      );
 setting('dkey_conf'     , 'keyevent F_CONFERENCE');
 setting('dkey_transfer' , 'keyevent F_TRANSFER'  );
@@ -621,11 +654,14 @@ setting('dkey_dnd'      , 'keyevent F_DND'       );
 setting('dkey_record'   , 'keyevent F_REC'       );
 setting('dkey_directory', 'keyevent F_ADR_BOOK'  ); # or F_DIRECTORY
 setting('dkey_menu'     , 'keyevent F_MENU'      );
+setting('dkey_redial'   , 'keyevent F_REDIAL'    );
+
 //setting('dkey_directory', 'url http://192.168.1.11/snom/webapps/simplebook/simplebook.php');
 setting('dkey_directory', 'url '. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/pb.php?m=$mac&u=$user_name1');
 setting('dkey_redial', 'url '. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/dial-log.php?user=$user_name1');
 # so geht die Retrieve-Taste auch ohne neue Nachrichten:
 setting('dkey_retrieve', 'speed mailbox');
+
 
 
 #
@@ -638,21 +674,6 @@ setting('action_incoming_url', '');
 setting('action_outgoing_url', '');
 setting('action_missed_url'  , '');
 
-
-#
-# Account 1 aus der DB
-#
-setting('user_host1'          , $host);
-setting('user_outbound1'      , '');  # outbound SIP proxy
-setting('user_proxy_require1' , '');
-setting('user_shared_line1'   , 'off');
-setting('user_name1'          , $user['name']);
-setting('user_pname1'         , $user['name']);
-//setting('user_pname1'         , $user['name']);  # not needed for Asterisk
-setting('user_pass1'          , $user['secret']);
-setting('user_realname1'      , $user['callerid']);
-setting('user_idle_text1'     , $user['name'] .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
-setting('record_missed_calls1', 'off');
 
 
 #
@@ -767,8 +788,6 @@ setting('dual_audio_handsfree', 'off', true);
 setting('show_call_status', 'off');
 # if turned on the call progress is shown in the headline of the call
 # progress window e.g. (100 Trying, 180 Ringing etc).
-
-setting('presence_state1', 'online', true);
 
 setting('show_local_line', 'off');
 
