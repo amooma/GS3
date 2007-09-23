@@ -616,7 +616,7 @@ if (!$edit_user) {
 			<span class="sort-col"><?php echo __('Pickupgruppe'); ?></span>
 		</th>
 		<td style="width:215px;">
-<?php				echo '<select multiple name="upgroup[]" SIZE="3"> ';
+<?php				echo '<select multiple name="upgroup[]" SIZE="4"> ';
 				
 				foreach ($pgroups as $key => $pgroup) {
 					$c++;

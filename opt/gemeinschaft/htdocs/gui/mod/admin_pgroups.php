@@ -1,0 +1,344 @@
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 2364 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+defined('GS_VALID') or die('No direct access.');
+require_once( GS_DIR .'inc/extension-state.php' );
+
+echo '<h2>';
+if (@$MODULES[$SECTION]['icon'])
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+if (count( $MODULES[$SECTION]['sub'] ) > 1 )
+	echo $MODULES[$SECTION]['title'], ' - ';
+echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+echo '</h2>', "\n";
+
+echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
+
+$edit   = (int)trim(@$_REQUEST['edit']);
+$save   = (int)trim(@$_REQUEST['save']);
+$per_page = (int)GS_GUI_NUM_RESULTS;
+$page = (int)@$_REQUEST['page'];
+$title  = trim(@$_REQUEST['title']);
+$group  = (int)trim(@$_REQUEST['group']);
+$delete  = (int)trim(@$_REQUEST['delete']);
+$pudelete  = trim(@$_REQUEST['pudelete']);
+$user  = trim(@$_REQUEST['user']);
+
+if ($delete) {
+	$ret_val = gs_pickupgroup_del( $delete );
+	if (isGsError( $ret_val )) echo $ret_val->getMsg();
+}
+
+if ($pudelete) {
+	$ret_val = gs_pickupgroup_user_del( $group, $pudelete );
+	if (isGsError( $ret_val )) echo $ret_val->getMsg();
+}
+
+if ($title && !$save) {
+	$ret_val = gs_pickupgroup_add( $title );
+	if (isGsError( $ret_val )) echo $ret_val->getMsg();
+}	
+
+if ($save) {
+	$sql_query = 'UPDATE `pickupgroups` 
+		SET `title`=\''. $DB->escape($title) .'\'
+		WHERE `id`='. $save;
+	$rs = $DB->execute($sql_query);
+}
+
+if ($group && $user) {
+	$ret_val = gs_pickupgroup_user_add( $group, $user );
+	if (isGsError( $ret_val )) echo $ret_val->getMsg();
+}
+
+if (!$group) {
+	$sql_query = 'SELECT SQL_CALC_FOUND_ROWS 
+		`p`.`id` `id`, `p`.`title` `title`,
+		COUNT(`m`.`user_id`) `num_members`
+	FROM
+		`pickupgroups` `p` LEFT JOIN
+		`pickupgroups_users` `m` ON (m.group_id=p.id)
+	GROUP BY `p`.`id`
+	ORDER BY `p`.`id`
+	LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
+	
+	$rs = $DB->execute($sql_query);
+	
+	$num_total = @$DB->numFoundRows();
+	$num_pages = ceil($num_total / $per_page);
+	
+	?>	
+	
+	<table cellspacing="1" class="phonebook">
+	<thead>
+	<tr>
+		<th style="width:30px;"><?php echo __('ID'); ?></th>
+		<th style="width:150px;"><?php echo __('Bezeichnung'); ?></th>
+		<th style="width:30px;"><?php echo __('Mitglieder'); ?></th>
+		
+		<th style="width:80px;">
+	<?php
+		echo ($page+1), ' / ', $num_pages, "&nbsp; \n";
+	
+		if ($page > 0) {
+			echo
+			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page-1), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+			'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
+			'</a>', "\n";
+		} else {
+			echo
+			'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
+		}
+		
+		if ($page < $num_pages-1) {
+			echo
+			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page+1), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+			'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
+			'</a>', "\n";
+		} else {
+			echo
+			'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
+		}
+		
+	?>
+			</th>
+	</tr>
+	</thead>
+	<tbody>
+	
+	<?php
+	
+	$sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
+		? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
+	
+	if (@$rs) {
+		$i = 0;
+		while ($r = $rs->fetchRow()) {
+			echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
+	
+			if ($edit == $r['id']){
+				echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+				echo gs_form_hidden($SECTION, $MODULE), "\n";
+				echo '<input type="hidden" name="page" value="', htmlEnt($page), '" />', "\n";
+				echo '<input type="hidden" name="save" value="', $r['id'] , '" />', "\n";
+				echo '<td>', htmlEnt($r['id']);
+				echo '</td>';
+				echo '<td>';	
+				echo '<input type="text" name="title" value="'.htmlEnt($r['title']).'" size="25" maxlength="40" />';	
+				echo '</td>';
+				echo '<td>', htmlEnt($r['num_members']),'</td>';
+				echo '<td>';
+				echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
+				echo '<img alt="', __('Speichern') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/filesave.png" />
+				</button>'."\n";
+				echo "&nbsp;\n";
+				echo '<button type="cancel" title="', __('Abbrechen'), '" class="plain">';
+				echo '<img alt="', __('Abbrechen') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/cancel.png" />
+				</button>'."\n";
+				echo '</form>';
+			
+			} else {
+				
+				echo '<td>', htmlEnt($r['id']);
+				echo '</td>';
+				echo '<td>', htmlEnt($r['title']),'</td>';	
+				echo "<td>\n";
+				echo '<a href="', gs_url($SECTION, $MODULE), '&amp;group=', $r['id'], '&amp;page='.$page.'" title="', __('l&ouml;schen'), '">'.
+				htmlEnt($r['num_members']),'</a></td>';	
+	
+				echo "<td>\n";
+				
+				echo '<a href="', gs_url($SECTION, $MODULE), '&amp;edit=', $r['id'], '&amp;page='.$page.'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+				
+				echo '<a href="', gs_url($SECTION, $MODULE), '&amp;delete=', $r['id'], '&amp;page='.$page.'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			
+			}
+	
+			echo "</td>\n";
+			echo '</tr>', "\n";
+			
+		}
+	}
+	
+	?>
+	<tr>
+	<?php
+	
+	if (!$edit) {
+	
+		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+		echo gs_form_hidden($SECTION, $MODULE), "\n";
+	?>
+		<td>
+			
+		</td>
+		<td>
+			<input type="text" name="title" value="" size="25" maxlength="40" />
+		</td>
+	
+		<td></td>
+		<td>
+			<button type="submit" title="<?php echo __('Gruppe anlegen'); ?>" class="plain">
+				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+			</button>
+		</td>
+	
+		</form>
+	<?php
+	}
+	?>
+	
+	</tr>
+	
+	</tbody>
+	</table>
+
+<?php
+
+//=======================================================================================
+// show pickupgroup's memners
+//=======================================================================================
+
+} else {
+
+
+	$sql_query = 'SELECT SQL_CALC_FOUND_ROWS 
+		`u`.`user` `user`, `u`.`lastname` `ln`,
+		`u`.`firstname` `fn`, `u`.`id` `id`
+	FROM
+		`pickupgroups_users` `p`,
+		`users` `u`
+	WHERE `u`.`id` = `p`.`user_id`
+	AND `p`.`group_id` = '.$group.'
+	ORDER BY `u`.`user`
+	LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
+	
+	$rs = $DB->execute($sql_query);
+	
+	$num_total = @$DB->numFoundRows();
+	$num_pages = ceil($num_total / $per_page);
+	
+	?>	
+	
+	<table cellspacing="1" class="phonebook">
+	<thead>
+	<tr>
+		<th style="width:100px;"><?php echo __('User'); ?></th>
+		<th style="width:250px;"><?php echo __('Name'); ?></th>
+		<th style="width:80px;">
+	<?php
+		echo ($page+1), ' / ', $num_pages, "&nbsp; \n";
+	
+		if ($page > 0) {
+			echo
+			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page-1), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+			'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
+			'</a>', "\n";
+		} else {
+			echo
+			'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
+		}
+		
+		if ($page < $num_pages-1) {
+			echo
+			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page+1), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+			'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
+			'</a>', "\n";
+		} else {
+			echo
+			'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
+		}
+		
+	?>
+			</th>
+	</tr>
+	</thead>
+	<tbody>
+	
+	<?php
+	
+	$sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
+		? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
+	
+	if (@$rs) {
+		$i = 0;
+		while ($r = $rs->fetchRow()) {
+			echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
+			echo '<td>', htmlEnt($r['user']);
+			echo '</td>';
+			echo '<td>', htmlEnt($r['ln']);
+			echo ', ', htmlEnt($r['fn']);
+			echo '</td>';	
+			echo "<td>\n";
+			
+			echo '<a href="', gs_url($SECTION, 'users'), '&amp;edit=', $r['user'], '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+			
+			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;pudelete=', $r['user'], '&amp;group='.$group.'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		
+			
+	
+			echo "</td>\n";
+			echo '</tr>', "\n";
+			
+		}
+	}
+	
+	?>
+	<tr>
+	<?php
+	
+	if (!$edit) {
+	
+		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+		echo gs_form_hidden($SECTION, $MODULE), "\n";
+		echo '<input type="hidden" name="group" value="', htmlEnt($group), '" />', "\n";
+	?>
+		
+		<td>
+			<input type="text" name="user" value="" size="25" maxlength="40" />
+		</td>
+		<td></td>
+		<td>
+			<button type="submit" title="<?php echo __('Benutzer hinzuf&uuml;gen'); ?>" class="plain">
+				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+			</button>
+		</td>
+	
+		</form>
+	<?php
+	}
+	?>
+	
+	</tr>
+	
+	</tbody>
+	</table>
+
+<?php
+}
+?>
