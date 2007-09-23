@@ -842,7 +842,7 @@ if (preg_match('/snom3[0-9]0-SIP\s+(\d+)\.(\d+)\.(\d+)/', $ua, $m)) {
 		}
 	}
 }
-setting('lang_dnd_active', 'NICHT STOEREN');
+
 
 
 #
