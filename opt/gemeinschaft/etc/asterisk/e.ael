@@ -85,7 +85,7 @@ macro cmm-login( new_user_name ) {
 	
 	Wait(1);
 	Read(pass,agent-pass,10,s,3,5);
-	DeadAGI(/opt/gemeinschaft/dialplan-scripts/cmm-login.agi,${new_user_name},${pass},${user_id});
+	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-login.agi,${new_user_name},${pass},${user_id});
 	NoOp(### AGI returned: ret = ${ret});
 	if ("${ret}" = "error")
 		goto error;
@@ -98,8 +98,8 @@ macro cmm-login( new_user_name ) {
 	//TrySystem(asterisk -rx \'sip notify snom-reboot ${user_name}\');
 	//TrySystem(asterisk -rx \'sip prune realtime ${new_user_name}\');
 	//TrySystem(asterisk -rx \'sip prune realtime ${user_name}\');
-	//DeadAGI(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot.agi,${new_user_name});
-	//DeadAGI(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot.agi,${user_name});
+	//AGI(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot.agi,${new_user_name});
+	//AGI(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot.agi,${user_name});
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot ${new_user_name});
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-snom-reboot ${user_name});
 	Hangup();
@@ -125,7 +125,7 @@ macro cmm-logout() {
 	
 	Answer();
 	Wait(1);
-	DeadAGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id});
+	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id});
 	//Playback(agent-loggedoff&vm-goodbye);
 	Playback(gemeinschaft/sie-sind-abgemeldet);
 	//TrySystem(asterisk -rx \'sip notify snom-reboot ${user_name}\');
@@ -291,7 +291,7 @@ macro queue-login( queue ) {
 	
 	Answer();
 	Verbose(1,### User ${user_name} wants to log in to queue ${queue});
-	DeadAGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},login);
+	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},login);
 	if ("${agent_login_status}" = "loggedin") {
 		// fake login for the statistics:
 		QueueLog(NONE,${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGIN,fake);
@@ -310,7 +310,7 @@ macro queue-logout( queue ) {
 	
 	Answer();
 	Verbose(1,### User ${user_name} wants to log out from queue ${queue});
-	DeadAGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},logout);
+	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},logout);
 	Wait(0.5);
 	if ("${agent_login_status}" = "loggedout") {
 		Playback(agent-loggedoff);
@@ -324,7 +324,7 @@ macro queue-logout-all() {
 	
 	Answer();
 	Verbose(1,### User ${user_name} wants to log out from all queues);
-	DeadAGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},0,logoutall);
+	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},0,logoutall);
 	Wait(0.5);
 	if ("${agent_login_status}" = "loggedout") {
 		Playback(agent-loggedoff);
@@ -337,7 +337,7 @@ macro queue-logout-all() {
 macro queue-logout-all-silent() {
 	// like &queue-logout-all() but silent
 	Verbose(1,### User ${user_name} wants to log out from all queues);
-	DeadAGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},0,logoutall);
+	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},0,logoutall);
 }
 context queues-login-logout {
 	
