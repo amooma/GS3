@@ -586,10 +586,7 @@ setting('user_dtmf_info1'          , 'off');
 setting('user_mailbox1'            , 'mailbox');
 setting('user_dp_str1'             , ''   );
 setting('keepalive_interval1'      , '14' );
-if ($phone_type >= '360')
-	setting('user_xml_screen_url1' , ''   );
-else
-	setting('user_xml_screen_url1' , ''   );
+setting('user_xml_screen_url1' , ''   );
 setting('user_event_list_subscription1', 'off');
 setting('user_event_list_uri1'     , '');
 setting('user_presence_subscription1', 'off');
@@ -845,7 +842,7 @@ if (preg_match('/snom3[0-9]0-SIP\s+(\d+)\.(\d+)\.(\d+)/', $ua, $m)) {
 		}
 	}
 }
-
+setting('lang_dnd_active', 'NICHT STOEREN');
 
 
 #
