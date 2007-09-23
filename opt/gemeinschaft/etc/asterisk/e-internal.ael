@@ -1044,7 +1044,7 @@ context program-cc {
 		Verbose(1,### Caller wants call completion to user ${cc_to_ext});
 		//Set(CHANNEL(language)=de);
 		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
-		DeadAGI(/opt/gemeinschaft/dialplan-scripts/cc-program.agi,${user_name},${cc_to_ext});
+		AGI(/opt/gemeinschaft/dialplan-scripts/cc-program.agi,${user_name},${cc_to_ext});
 		Verbose(1,### Call completion programmed?: ${cc_programmed});
 		if ("${cc_programmed}" = "1") {
 			Playback(gemeinschaft/rueckruf-programmiert);
