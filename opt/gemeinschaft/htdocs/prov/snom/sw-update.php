@@ -144,7 +144,12 @@ function _generate_settings( $model, $appl, $rtfs, $lnux )
 		} else {
 			$url = $firmware_url . rawUrlEncode($file);
 			gs_log( GS_LOG_NOTICE, "Snom $mac ($phone_type, user $user): Update file: \"$file\"" );
-			echo 'firmware: '. $url ."\n";
+			$ob = 'firmware: '. $url ."\n";
+			if (! headers_sent()) {
+				header( 'Content-Length: '. strLen($ob) );
+				# avoid chunked transfer-encoding
+			}
+			echo $ob;
 		}
 	}
 	exit();
