@@ -97,9 +97,12 @@ else
 
 gs_log( GS_LOG_DEBUG, "Snom phone \"$mac\" asks for settings (UA: ...\"$ua\") - type: $phone_type" );
 
-
 $newPhoneType = 'snom-'. $phone_type;  # i.e. "snom-360"
 # to be used when auto-adding the phone
+
+
+$prov_url_snom = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/';
+
 
 require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/nobody-extensions.php' );
@@ -398,7 +401,7 @@ setting('challenge_response'   , 'off');
 setting('challenge_reboot'     , 'off');
 setting('challenge_checksync'  , 'off');
 //setting('network_id_port'      , '5060');  # feste Vorgabe von 5060 funktioniert nicht im VLAN
-setting('network_id_port'      , ''   );  # falls wir aber mal per sipsak Nachrichten
+setting('network_id_port'      , '5060'   );  # falls wir aber mal per sipsak Nachrichten
                                           # ans Snom schicken wollen muﬂ das fest ein-
                                           # gestellt werden
 setting('tcp_listen'           , 'off');
@@ -516,7 +519,7 @@ setting('intercom_enabled'       , 'off');  # brauchen wir (noch?) nicht
 setting('cmc_feature'            , 'off');
 setting('cancel_on_hold'         , 'on' );
 setting('cancel_missed'          , 'on' );
-setting('cancel_desktop'         , 'on' );
+setting('cancel_desktop'         , 'off');
 setting('cw_dialtone'            , 'on' );
 setting('auto_connect_indication', 'on' );
 setting('auto_connect_type'      , 'auto_connect_type_handsfree');
@@ -661,8 +664,8 @@ setting('dkey_menu'     , 'keyevent F_MENU'      );
 setting('dkey_redial'   , 'keyevent F_REDIAL'    );
 
 //setting('dkey_directory', 'url http://192.168.1.11/snom/webapps/simplebook/simplebook.php');
-setting('dkey_directory', 'url '. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/pb.php?m=$mac&u=$user_name1');
-setting('dkey_redial', 'url '. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/dial-log.php?user=$user_name1');
+setting('dkey_directory', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1');
+setting('dkey_redial', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1');
 # so geht die Retrieve-Taste auch ohne neue Nachrichten:
 setting('dkey_retrieve', 'speed mailbox');
 
@@ -814,7 +817,7 @@ setting('update_policy', 'settings_only');  //FIXME - needs config param
 # "auto_update"   : the user is not prompted to acknowledge the firmware update
 
 setting('firmware_interval', '1440');  # 1440 mins = 24 hrs
-setting('firmware_status', GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/sw-update.php?m='.$mac .'&u='.$user['name'] );
+setting('firmware_status', $prov_url_snom .'sw-update.php?m='.$mac .'&u='.$user['name'] );
 # http, https, tftp are supported
 
 
