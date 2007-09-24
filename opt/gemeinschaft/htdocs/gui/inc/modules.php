@@ -196,14 +196,14 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
    'sub' => array(
       'overview'     => array('title' => __('&Uuml;bersicht')),
       'users'        => array('title' => __('Benutzer')),
-      'queues'       => array('title' => __('Warteschlangen')),
-      'pgroups'      => array('title' => __('Pickupgruppen')),
-      'hosts'        => array('title' => __('Hosts')),
+      'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
+      'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
+      'hosts'        => array('title' => __('Hosts')),          //TRANSLATE ME
       'calls'        => array('title' => __('Verbindungen')),
       'nodes'        => array('title' => __('Nodes')),
-      'routes'       => array('title' => __('Routen')),       //TRANSLATE ME
-      'testroute'    => array('title' => __('Routing-Test')), //TRANSLATE ME
-      'sysstatus'    => array('title' => __('System-Status')) //TRANSLATE ME
+      'routes'       => array('title' => __('Routen')),         //TRANSLATE ME
+      'testroute'    => array('title' => __('Routing-Test')),   //TRANSLATE ME
+      'sysstatus'    => array('title' => __('System-Status'))   //TRANSLATE ME
    )
 );
 
