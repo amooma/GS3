@@ -196,10 +196,13 @@ if (! $lfound==0) {
 		gs_log( GS_LOG_NOTICE, 'Failed to find locales on your system' );
 	else {
 		$lfound = setLocale(LC_TIME, $out);
-		if (! $lfound)
+		if (! $lfound) {
 			gs_log( GS_LOG_NOTICE, 'Your system does not have any locales like "'. $lang .'_*"' );
-		else
+		} else {
 			gs_log( GS_LOG_DEBUG, 'Using locale "'. $lfound .'" as a fallback' );
+			# it's strange: 'de_DE.UTF-8', 'de_DE' (and others) cannot be
+			# set although `locale -a` has them
+		}
 	}
 }
 $wdays = array('mo'=>'Mon', 'tu'=>'Tue', 'we'=>'Wed', 'th'=>'Thu', 'fr'=>'Fri', 'sa'=>'Sat', 'su'=>'Sun');
