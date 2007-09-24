@@ -296,7 +296,7 @@ function _settings_out()
 								}
 							}
 							*/
-							gs_log( GS_LOG_WARNING, 'Please  cd '. escapeShellArg($langfiles_dir) .' && wget '. escapeShellArg($langfile_url) .' && touch '. escapeShellArg(baseName($langfile).'.done') );
+							gs_log( GS_LOG_NOTICE, 'Please  cd '. escapeShellArg($langfiles_dir) .' && wget '. escapeShellArg($langfile_url) .' && touch '. escapeShellArg(baseName($langfile).'.done') );
 						}
 					}
 				} else {
