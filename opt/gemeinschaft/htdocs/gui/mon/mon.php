@@ -63,13 +63,13 @@ if (! $allowed) {
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
-<head><![CDATA[<!--
+<head><!--<![CDATA[
                 Gemeinschaft
   @(_)=====(_)  (c) 2007, amooma GmbH - http://www.amooma.de/
  @   / ### \    Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
-                                                      GNU GPL -->]]>
+                                                      GNU GPL ]]>-->
 <title>Gemeinschaft Extension Monitor</title>
 <script type="text/javascript" src="prototype.FIXED.js"></script>
 <script type="text/javascript" src="comm.js"></script>
