@@ -616,12 +616,13 @@ if (!$edit_user) {
 			<span class="sort-col"><?php echo __('Pickupgruppe'); ?></span>
 		</th>
 		<td style="width:215px;">
-<?php				echo '<select multiple name="upgroup[]" SIZE="4"> ';
+<?php
+				echo '<select multiple="multiple" name="upgroup[]" size="4">',"\n";
 				
 				foreach ($pgroups as $key => $pgroup) {
 					$c++;
-					echo '<option value="'.$key."\" ";
-					if (@$pgroups_my[$key]) echo 'selected=\"selected\" ';
+					echo '<option value="'.$key.'" ';
+					if (@$pgroups_my[$key]) echo 'selected="selected" ';
 					echo ">$key ($pgroup)</option>\n";
 				}
 				echo '<option value=""></option>';
