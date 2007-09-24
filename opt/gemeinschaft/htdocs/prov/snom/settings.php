@@ -252,7 +252,52 @@ function _settings_out()
 							}
 						}
 						$line = '<language url="'. $prov_url_snom .'sw/'. _snomCnfXmlEsc( $a2['v'] ) .'" name="'. _snomCnfXmlEsc( $idx ) .'"'. $attrstr.' />';
-						_add_to_cat( $xml_cats, $name, $line );
+						
+						$langfile      = GS_DIR .'htdocs/prov/snom/sw/'.$a2['v'];
+						$langfile_lock = $langfile.'.lock';
+						$langfiles_dir = dirName($langfile).'/';
+						$langfile_url  = 'http://provisioning.snom.com/config/snom'.$a2['v'];
+						
+						if (file_exists($langfile)
+						&&  is_readable($langfile)
+						&&  file_exists($langfile.'.done'))
+						{
+							//gs_log(GS_LOG_DEBUG, '---1');
+							_add_to_cat( $xml_cats, $name, $line );
+						} else
+						{
+							/*
+							gs_log(GS_LOG_DEBUG, '---2');
+							if (! file_exists($langfiles_dir)) {
+								gs_log(GS_LOG_DEBUG, '---3');
+								@exec( 'sudo mkdir -p '. escapeShellArg($langfiles_dir) .' 1>>/dev/null 2>>/dev/null' );
+							}
+							if (file_exists($langfiles_dir)) {
+								gs_log(GS_LOG_DEBUG, '---4');
+								$err=0; $out=array();
+								@exec( 'sudo touch '. escapeShellArg($langfile_lock) .' && sudo chmod 666 '. escapeShellArg($langfile_lock) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+								if ($err==0) {
+									gs_log(GS_LOG_DEBUG, '---5');
+									$lockfh = @fOpen( $langfile_lock, 'wb' );
+									if ($lockfh) {
+										gs_log(GS_LOG_DEBUG, '---6');
+										$would_block = false;
+										if (@flock($lockfh, LOCK_SH, $would_block)) {
+											gs_log(GS_LOG_DEBUG, '---7');
+											if (! $would_block) {
+												gs_log(GS_LOG_DEBUG, '---8');
+												gs_log( GS_LOG_NOTICE, 'Trying to wget '. escapeShellArg($langfile_url) );
+												@exec( 'sudo cd '. escapeShellArg($langfiles_dir) .' && sudo wget -q -a /dev/null -t 1 -T 300 -nc -c '. escapeShellArg($langfile_url) .' && sudo touch '. escapeShellArg($langfile.'.done') .' 1>>/dev/null 2>>/dev/null &' );
+											}
+											@flock($lockfh, LOCK_UN);
+										}
+										@fClose($lockfh);
+									}
+								}
+							}
+							*/
+							gs_log( GS_LOG_WARNING, 'Please  cd '. escapeShellArg($langfiles_dir) .' && wget '. escapeShellArg($langfile_url) .' && touch '. escapeShellArg(baseName($langfile).'.done') );
+						}
 					}
 				} else {
 					foreach ($a1 as $idx => $a2) {
