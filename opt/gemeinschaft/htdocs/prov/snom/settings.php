@@ -171,6 +171,7 @@ function _add_to_cat( &$cats, $setting_name, $line )
 	switch ($setting_name) {
 		case 'fkey'      :  $cat = 'function-keys'    ; break;
 		case '_gui_lang' :  $cat = 'gui-languages'    ; break;
+		case '_web_lang' :  $cat = 'web-languages'    ; break;
 		//case 'firmware'  :  $cat = 'firmware-settings'; break;
 		case 'firmware'  :  $cat = ''                 ; break;
 		default          :  $cat = 'phone-settings'   ;
@@ -240,7 +241,7 @@ function _settings_out()
 				$line = '<'.$name. $attrstr.' perm="'. ($a1['w'] ? 'RW':'R') .'">'. _snomCnfXmlEsc( $a1['v'] ) .'</'.$name.'>';
 				_add_to_cat( $xml_cats, $name, $line );
 			} else {
-				if ($name !== '_gui_lang') {
+				if ($name==='_gui_lang' || $name==='_web_lang') {
 					foreach ($a1 as $idx => $a2) {
 						if ($idx === '_is_array') continue;
 						
@@ -250,7 +251,7 @@ function _settings_out()
 								$attrstr .= ' '.$attr.'="'._snomCnfXmlEsc($attrval).'"';
 							}
 						}
-						$line = '<'.$name. $attrstr.' idx="'.$idx.'" perm="'. ($a2['w'] ? 'RW':'R') .'">'. _snomCnfXmlEsc( $a2['v'] ) .'</'.$name.'>';
+						$line = '<language url="'. $prov_url_snom .'sw/'. _snomCnfXmlEsc( $a2['v'] ) .'" name="'. _snomCnfXmlEsc( $idx ) .'"'. $attrstr.' />';
 						_add_to_cat( $xml_cats, $name, $line );
 					}
 				} else {
@@ -263,7 +264,7 @@ function _settings_out()
 								$attrstr .= ' '.$attr.'="'._snomCnfXmlEsc($attrval).'"';
 							}
 						}
-						$line = '<language url="'. $prov_url_snom .'sw/'. _snomCnfXmlEsc( $a2['v'] ) .'" name="'. _snomCnfXmlEsc( $idx ) .'"'. $attrstr.' />';
+						$line = '<'.$name. $attrstr.' idx="'.$idx.'" perm="'. ($a2['w'] ? 'RW':'R') .'">'. _snomCnfXmlEsc( $a2['v'] ) .'</'.$name.'>';
 						_add_to_cat( $xml_cats, $name, $line );
 					}
 				}
