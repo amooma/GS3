@@ -26,8 +26,13 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+######################################################
+##
+##   ALL STRINGS IN HERE NEED TO BE TRANSLATED!
+##
+######################################################
+
 defined('GS_VALID') or die('No direct access.');
-require_once( GS_DIR .'inc/extension-state.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -39,15 +44,15 @@ echo '</h2>', "\n";
 
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
 
-$edit   = (int)trim(@$_REQUEST['edit']);
-$save   = (int)trim(@$_REQUEST['save']);
+$edit     = (int)trim(@$_REQUEST['edit'  ]);
+$save     = (int)trim(@$_REQUEST['save'  ]);
 $per_page = (int)GS_GUI_NUM_RESULTS;
-$page = (int)@$_REQUEST['page'];
-$queue   = trim(@$_REQUEST['queue']);
-$maxlen  = (int)trim(@$_REQUEST['maxlen']);
-$title  = trim(@$_REQUEST['title']);
-$hostid  = (int)trim(@$_REQUEST['host']);
-$delete  = trim(@$_REQUEST['delete']);
+$page     =      (int)@$_REQUEST['page'  ] ;
+$queue    =      trim(@$_REQUEST['queue' ]);
+$maxlen   = (int)trim(@$_REQUEST['maxlen']);
+$title    =      trim(@$_REQUEST['title' ]);
+$hostid   = (int)trim(@$_REQUEST['host'  ]);
+$delete   =      trim(@$_REQUEST['delete']);
 
 
 if ($delete) {
@@ -63,7 +68,7 @@ if ($queue) {
 if ($save) {
 	if ($maxlen < 0) $maxlen = 0;
 	if ($maxlen > 255) $maxlen = 255;
-
+	
 	$sql_query = 'UPDATE `ast_queues` 
 		SET `_title`=\''. $DB->escape($title) .'\',
 		`maxlen`=\''. $DB->escape($maxlen) .'\'
@@ -111,11 +116,10 @@ $num_pages = ceil($num_total / $per_page);
 	<th style="width:80px;"><?php echo __('L&auml;nge'); ?></th>
 	<th style="width:150px;"><?php echo __('Host'); ?></th>
 	<th style="width:30px;"><?php echo __('Mitglieder'); ?></th>
-	
 	<th style="width:80px;">
 <?php
 	echo ($page+1), ' / ', $num_pages, "&nbsp; \n";
-
+	
 	if ($page > 0) {
 		echo
 		'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page-1), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
@@ -137,7 +141,7 @@ $num_pages = ceil($num_total / $per_page);
 	}
 	
 ?>
-		</th>
+	</th>
 </tr>
 </thead>
 <tbody>
@@ -151,26 +155,31 @@ if (@$rs) {
 	$i = 0;
 	while ($r = $rs->fetchRow()) {
 		echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
-
+		
 		if ($edit == $r['id']){
 			echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 			echo gs_form_hidden($SECTION, $MODULE), "\n";
 			echo '<input type="hidden" name="page" value="', htmlEnt($page), '" />', "\n";
 			echo '<input type="hidden" name="save" value="', $r['id'] , '" />', "\n";
+			
 			echo '<td>', htmlEnt($r['id']);
 			echo '</td>';
+			
 			echo '<td>', htmlEnt($r['name']);
 			echo '</td>';
+			
 			echo '<td>';	
 			echo '<input type="text" name="title" value="'.htmlEnt($r['title']).'" size="25" maxlength="40" />';	
 			echo '</td>';
+			
 			echo '<td>';
 			echo '<input type="text" name="maxlen" value="'.htmlEnt($r['maxlen']).'" size="5" maxlength="3" />';	
 			echo '</td>';
+			
 			echo '<td>', $r['host_id'].' ('.@$hosts[$r['host_id']].') </td>';
-
+			
 			echo '<td>', htmlEnt($r['num_members']),'</td>';
-
+			
 			echo '<td>';
 			echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
 			echo '<img alt="', __('Speichern') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/filesave.png" />
@@ -179,33 +188,35 @@ if (@$rs) {
 			echo '<button type="cancel" title="', __('Abbrechen'), '" class="plain">';
 			echo '<img alt="', __('Abbrechen') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/cancel.png" />
 			</button>'."\n";
+			
 			echo '</form>';
-		
+			
 		} else {
 			
 			echo '<td>', htmlEnt($r['id']);
 			echo '</td>';
-	
+			
 			echo '<td>', htmlEnt($r['name']);
 			echo '</td>';
-	
-			echo '<td>', htmlEnt($r['title']),'</td>';	
+			
+			echo '<td>', htmlEnt($r['title']),'</td>';
+			
 			echo '<td>', htmlEnt($r['maxlen']);
 			echo '</td>';
+			
 			echo '<td>', $r['host_id'].' ('.@$hosts[$r['host_id']].') </td>';
 			echo '<td>', htmlEnt($r['num_members']),'</td>';	
-
+			
 			echo "<td>\n";
 			
 			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;edit=', $r['id'], '&amp;page='.$page.'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 			
 			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;delete=', $r['name'], '&amp;page='.$page.'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-		
+			
 		}
-
+		
 		echo "</td>\n";
 		echo '</tr>', "\n";
-		
 	}
 }
 
@@ -214,7 +225,7 @@ if (@$rs) {
 <?php
 
 if (!$edit) {
-
+	
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE), "\n";
 ?>
@@ -231,22 +242,23 @@ if (!$edit) {
 		<input type="text" name="maxlen" value="" size="5" maxlength="3" />
 	</td>
 	<td>
-<?php			echo "<select name=\"host\" > ";
-			foreach ($hosts as $key => $host) {
-				echo '<option value="'.$key."\">$key ($host)</option>\n";
-				
-			}
-			echo "</select></td>\n";
+<?php
+		echo "<select name=\"host\" > ";
+		foreach ($hosts as $key => $host) {
+			echo '<option value="'.$key."\">$key ($host)</option>\n";
+			
+		}
+		echo "</select></td>\n";
 ?>
 	</td>
-
+	
 	<td></td>
 	<td>
 		<button type="submit" title="<?php echo __('Host anlegen'); ?>" class="plain">
 			<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 		</button>
 	</td>
-
+	
 	</form>
 <?php
 }
