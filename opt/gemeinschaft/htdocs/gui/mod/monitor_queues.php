@@ -158,14 +158,14 @@ AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
 	<?php
 	//<th style="width:85px;"><nobr><?php echo __('Anrufe'     ); /*//FIXME //TRANSLATE ME "Anrufe"->"Anrufer" */ ? ///></nobr></th>
 	?>
-	<th style="width:85px;"><nobr><?php echo __('Angenommen' ); /*//TRANSLATE ME*/ ?></nobr></th>
-	<th style="width:85px;"><nobr><?php echo __('Erfolgreich'); ?></nobr></th>
-	<th style="width:85px;"><nobr><?php echo __('Aufgelegt'  ); ?></nobr></th>
+	<th style="width:89px;"><nobr><?php echo __('Angenommen' ); /*//TRANSLATE ME*/ ?></nobr></th>
+	<th style="width:89px;"><nobr><?php echo __('Erfolgreich'); ?></nobr></th>
+	<th style="width:89px;"><nobr><?php echo __('Aufgelegt'  ); ?></nobr></th>
 	<?php if ($get_queue_stats_from_db) { ?>
-	<th style="width:85px;"><nobr><?php echo __('Timeout'    ); /*//TRANSLATE ME */ ?></nobr></th>
-	<th style="width:85px;"><nobr><?php echo __('Keine Ag.'  ); /*//TRANSLATE ME */ ?></nobr></th>
+	<th style="width:89px;"><nobr><?php echo __('Timeout'    ); /*//TRANSLATE ME */ ?></nobr></th>
+	<th style="width:89px;"><nobr><?php echo __('Keine Ag.'  ); /*//TRANSLATE ME */ ?></nobr></th>
 	<?php } ?>
-	<th style="width:85px;"><nobr><?php echo __('Wartezeit'  ); ?></nobr></th>
+	<th style="width:89px;"><nobr><?php echo __('Wartezeit'  ); ?></nobr></th>
 </tr>
 </thead>
 <tbody>
