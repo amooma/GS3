@@ -119,7 +119,8 @@ $GUI_MON_NOQUEUEBLUE        = true;
   # of a queue get a blue led instead of a green one
 
 $GUI_MON_PEERS_ENABLED      = false;
-  # needs LDAP with Kostenstelle or a similar mechanism
+  # needs LDAP with Kostenstelle or a similar mechanism, see
+  # gui_monitor_which_peers() in htdocs/gui/inc/permissions.php
 
 
 /***********************************************************
