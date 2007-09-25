@@ -85,11 +85,11 @@ function gs_m( exts )
 			if ((typeof el.className) != 'string') continue;
 			
 			switch (exts[ext]['s']) {
+				case AST_EXTSTATE_IDLE     :  newclass = 'e_idl'; break;
 				case AST_EXTSTATE_INUSE    :
 				case AST_EXTSTATE_BUSY     :
 					newclass = (exts[ext]['e'] ? 'e_bse' : 'e_bsi'); break;
 				case AST_EXTSTATE_ONHOLD   :  newclass = 'e_hld'; break;
-				case AST_EXTSTATE_IDLE     :  newclass = 'e_idl'; break;
 				case AST_EXTSTATE_RINGING  :
 				case AST_EXTSTATE_RINGINUSE:  newclass = 'e_rng'; break;
 				case AST_EXTSTATE_OFFLINE  :  newclass = 'e_off'; break;
@@ -103,15 +103,18 @@ function gs_m( exts )
 			if (!( el = $('e'+ext+'l') )) continue;
 			
 			if (exts[ext]['l']) {
-				/*
-				if (exts[ext]['l'].substr(0,3) != '*7*')
+				if (exts[ext]['s'] === AST_EXTSTATE_ONHOLD) {
+					link = 'hold';
+				} else {
 					link = '&rarr; '+ exts[ext]['l'];
-				else
-					link = '&rarr; '+ 'privat';
-				*/
-				link = '&rarr; '+ exts[ext]['l'];
+				}
 			} else {
-				link = '';
+				if (exts[ext]['s'] === AST_EXTSTATE_ONHOLD) {
+					link = '(hold)';
+					// see bug http://bugs.digium.com/view.php?id=10474
+				} else {
+					link = '';
+				}
 			}
 			el.innerHTML = link;
 		}
