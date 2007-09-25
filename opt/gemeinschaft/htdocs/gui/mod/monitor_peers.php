@@ -64,8 +64,11 @@ function _extstate2v( $extstate )
 
 # get the peer users from ldap
 #
+if (! function_exists('gui_monitor_which_peers'))
+	die('Error. Failed to get peers.');
 $users = gui_monitor_which_peers( @$_SESSION['sudo_user']['name'] );
-if (! is_array($users)) die('Error. Failed to get peers.');
+if (! is_array($users))
+	die('Error. Failed to get peers.');
 /*
 echo "<pre>";
 print_r($users);
