@@ -29,14 +29,26 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 
+
+
+//FIXME:
 ?>
 <html>
 <head>
 	<title></title>
 </head>
 <body>
+<br />
 
-<a href="mon.php?extensions=100-599,700-999">Extensions 100-599, 700-999</a>
+<ul>
+	<li>
+		<a href="mon.php?extensions=100-599,700-999">Extensions 100-599, 700-999</a>
+	</li>
+	<li>
+		...
+	</li>
+</ul>
+
 
 </body>
 </html>
