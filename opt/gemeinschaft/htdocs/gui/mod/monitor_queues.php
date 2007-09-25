@@ -170,10 +170,12 @@ AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
 </thead>
 <tbody>
 <tr>
+	<?php /*
 	<td class="r"><?php
 		echo (@$queue_stats['calls'    ] !== null
 		     ? $queue_stats['calls'    ] : '?');
 	?></td>
+	*/ ?>
 	<td class="r"><?php
 		echo (@$queue_stats['completed'] !== null
 		     ? $queue_stats['completed'] : '?');
