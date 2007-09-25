@@ -155,7 +155,9 @@ AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:85px;"><nobr><?php echo __('Anrufe'     ); ?></nobr></th>
+	<?php
+	//<th style="width:85px;"><nobr><?php echo __('Anrufe'     ); /*//FIXME //TRANSLATE ME "Anrufe"->"Anrufer" */ ? ///></nobr></th>
+	?>
 	<th style="width:85px;"><nobr><?php echo __('Angenommen' ); /*//TRANSLATE ME*/ ?></nobr></th>
 	<th style="width:85px;"><nobr><?php echo __('Erfolgreich'); ?></nobr></th>
 	<th style="width:85px;"><nobr><?php echo __('Aufgelegt'  ); ?></nobr></th>
