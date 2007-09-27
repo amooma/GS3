@@ -178,7 +178,7 @@ if (!$group) {
 				echo '<td>', htmlEnt($r['title']),'</td>';	
 				echo "<td>\n";
 				
-				echo '<a href="', gs_url($SECTION, $MODULE), '&amp;group=', $r['id'], '&amp;page='.$page.'" title="', __('l&ouml;schen'), '">'.
+				echo '<a href="', gs_url($SECTION, $MODULE), '&amp;group=', $r['id'], '" title="', __('l&ouml;schen'), '">'.
 				htmlEnt($r['num_members']),'</a></td>';
 				
 				echo "<td>\n";
@@ -265,7 +265,7 @@ if (!$group) {
 		
 		if ($page > 0) {
 			echo
-			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page-1), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page-1),'&amp;group=', $group, '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
 			'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
 			'</a>', "\n";
 		} else {
@@ -275,7 +275,7 @@ if (!$group) {
 		
 		if ($page < $num_pages-1) {
 			echo
-			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page+1), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page+1), '&amp;group=', $group, '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
 			'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
 			'</a>', "\n";
 		} else {
