@@ -33,7 +33,7 @@ function gs_log( $level, $msg, $logfile=null )
 {
 	static $logfiles = array();
 	static $levels = array(
-		GS_LOG_DEBUG   => 'DBUG',
+		GS_LOG_DEBUG   => 'DEBG',
 		GS_LOG_NOTICE  => 'NOTE',
 		GS_LOG_WARNING => 'WARN',
 		GS_LOG_FATAL   => 'FATL'
