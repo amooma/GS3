@@ -205,7 +205,7 @@ $CANONIZE_OUTBOUND      = true;     # canonize numbers before matching
                                     # as is
 $CANONIZE_INTL_PREFIX   = '00';     # international prefix. Do not use "+"
                                     # (we know the canonical format is "+"!)
-                                    # in Germany: 00, USA: 011 ?
+                                    # in Germany: 00, USA: 011
 $CANONIZE_COUNTRY_CODE  = '49';     # country code (Landesvorwahl) without
                                     # prefix
                                     # Germany: 49, USA: 1
