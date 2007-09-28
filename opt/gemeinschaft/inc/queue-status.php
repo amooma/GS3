@@ -220,10 +220,10 @@ function gs_queue_status( $host, $ext, $getMembers, $getCallers )
 		# interface. this happens after a reload of Asterisk when
 		# no call has entered the queue using Queue() yet
 		
-		$queue_stats['calls'] = 0;
+		$queue_stats['calls'    ] = 0;
 		$queue_stats['completed'] = 0;
 		$queue_stats['abandoned'] = 0;
-		$queue_stats['holdtime'] = 0;
+		$queue_stats['holdtime' ] = 0;
 		
 		include_once( GS_DIR .'inc/db_connect.php' );
 		$db = @ gs_db_slave_connect();
