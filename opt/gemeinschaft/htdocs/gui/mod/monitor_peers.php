@@ -214,6 +214,7 @@ while ($user = $rs_users->fetchRow()) {
 <br />
 <br />
 
+<b><?php echo __('Direktgespr&auml;che'); ?></b>
 <table cellspacing="1">
 <thead>
 <tr>
