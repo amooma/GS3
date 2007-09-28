@@ -94,18 +94,12 @@ if (count($users) < 1) die('--');
 
 <?php
 
-/*
-,
-	GROUP_CONCAT(`cf`.`source`) `cf_source`,
-	GROUP_CONCAT(`cf`.`active`) `cf_active`,
-	GROUP_CONCAT(`cf`.`number_std`) `cf_n_std`,
-	GROUP_CONCAT(`cf`.`number_var`) `cf_n_var`
-	*/
 # get the corresponding users from our db
 #
-$users_sql = array();
+$tmp = array();
 foreach ($users as $user)
-	$users_sql[] = '\''. $DB->escape($user) .'\'';
+	$tmp[] = '\''. $DB->escape($user) .'\'';
+$users_sql = implode(',',$tmp);
 $rs_users = $DB->execute(
 'SELECT
 	`u`.`id`, `u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`user_comment`,
@@ -120,7 +114,7 @@ FROM
 	`ast_queue_members` `qm` ON (`qm`.`_user_id`=`u`.`id`)
 WHERE
 	`u`.`nobody_index` IS NULL AND
-	`u`.`user` IN ('. implode(',',$users_sql) .') AND
+	`u`.`user` IN ('. $users_sql .') AND
 	(`cf`.`case` IS NULL OR `cf`.`case`=\'always\')
 GROUP BY `u`.`id`
 ORDER BY `u`.`lastname`, `u`.`firstname`'
@@ -212,6 +206,74 @@ while ($user = $rs_users->fetchRow()) {
 
 ?>
 
+</tbody>
+</table>
+
+
+
+<br />
+<br />
+
+<table cellspacing="1">
+<thead>
+<tr>
+	<th style="width:110px;"><?php echo __('Heute'); /*//TRANSLATE ME*/ ?></th>
+	<th style="width:60px;" class="r"><?php echo __('intern'); /*//TRANSLATE ME*/ ?></th>
+	<th style="width:60px;" class="r"><?php echo __('extern'); /*//TRANSLATE ME*/ ?></th>
+</tr>
+</thead>
+<tbody>
+<?php
+
+function _num_calls_since( $users_sql, $t_from, $type, $external )
+{
+	global $DB;
+	return $DB->executeGetOne(
+'SELECT COUNT(*)
+FROM
+	`dial_log` `d` JOIN
+	`users` `u` ON (`d`.`user_id`=`u`.`id`)
+WHERE
+	`u`.`user` IN ('. $users_sql .') AND
+	`d`.`timestamp`>='. (int)$t_from .' AND
+	`d`.`type`=\''. $DB->escape($type) .'\' AND
+	`d`.`number` '. ($external ? '':'NOT ') .'LIKE \'0%\' AND
+	`d`.`number` NOT LIKE \'*%\''
+	);
+}
+
+$now = time();
+$y = (int)date('Y',$now);
+$m = (int)date('n',$now);
+$d = (int)date('j',$now);
+$t_from = mkTime(0,0,0,$m,$d,$y);
+
+$n_calls_in_i     = _num_calls_since( $users_sql, $t_from, 'in'    , false );
+$n_calls_in_e     = _num_calls_since( $users_sql, $t_from, 'in'    , true  );
+$n_calls_missed_i = _num_calls_since( $users_sql, $t_from, 'missed', false );
+$n_calls_missed_e = _num_calls_since( $users_sql, $t_from, 'missed', true  );
+$n_calls_out_i    = _num_calls_since( $users_sql, $t_from, 'out'   , false );
+$n_calls_out_e    = _num_calls_since( $users_sql, $t_from, 'out'   , true  );
+
+echo '<tr>';
+echo '<td>', __('Angenommen') /*//TRANSLATE ME*/, '</td>';
+echo '<td class="r">', $n_calls_in_i, '</td>';
+echo '<td class="r">', $n_calls_in_e, '</td>';
+echo '</tr>', "\n";
+
+echo '<tr>';
+echo '<td>', __('Verpasst') /*//TRANSLATE ME*/, '</td>';
+echo '<td class="r">', $n_calls_missed_i, '</td>';
+echo '<td class="r">', $n_calls_missed_e, '</td>';
+echo '</tr>', "\n";
+
+echo '<tr>';
+echo '<td>', __('Gew&auml;hlt') /*//TRANSLATE ME*/, '</td>';
+echo '<td class="r">', $n_calls_out_i, '</td>';
+echo '<td class="r">', $n_calls_out_e, '</td>';
+echo '</tr>', "\n";
+
+?>
 </tbody>
 </table>
 
