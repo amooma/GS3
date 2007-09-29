@@ -283,6 +283,7 @@ context to-internal-users {
 	// Pickup
 	//----------------------------------------------------------
 	
+	/*
 	_*8. => {
 		//&dial-node(${EXTEN}@gs-0002);
 		if ("${PICKUPMARK}" = "") {
@@ -290,13 +291,50 @@ context to-internal-users {
 			Verbose(1,### User ${user_name} tries to pickup ${pmark});
 			Pickup(${pmark}@PICKUPMARK);
 		}
-		/*
+	}
+	*/
+	
+	//----------------------------------------------------------
+	// Pickup for single users
+	//----------------------------------------------------------
+	
+	_*81*. => {
+		Set(pext=${EXTEN:4});
+		if ("${pext}" != "") {
+			Verbose(1,### User ${user_name} tries to pickup ext. ${pext});
+			Pickup(${pext}@to-internal-users-self);
+			//FIXME - this probably does not work across nodes
+		}
+	}
+	
+	//----------------------------------------------------------
+	// Pickup for pickup group extensions
+	//----------------------------------------------------------
+	
+	_*82*8*. => {
+		if ("${PICKUPMARK}" = "") {
+			Set(pmark=${EXTEN:6});
+			Verbose(1,### User ${user_name} tries to pickup group ${pmark});
+			Pickup(${pmark}@PICKUPMARK);
+		}
 		else {
 			Verbose(1,### Invalid use of pickup\, user ${user_name});
 			Hangup();
 		}
-		*/
 	}
+	
+	//----------------------------------------------------------
+	// Pickup group extensions
+	//----------------------------------------------------------
+	
+	_*8*. => {
+		//NoCDR();
+		Verbose(1,### Call to pickup group ${EXTEN:3});
+	}
+	
+	hint(SIP/2001&SIP/555) *8*00001 => {}
+	//FIXME
+	
 	
 	//regexten _*8. => NoOp(it's a pattern!);
 	//hint(SIP/2002) _*8. => NoOp(it's a pattern!);
