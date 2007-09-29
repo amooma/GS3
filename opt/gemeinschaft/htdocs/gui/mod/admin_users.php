@@ -282,14 +282,14 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<table cellspacing="1" class="phonebook">
 	<thead>
 	<tr>
-		<th style="width:253px;"><?php echo __('Name') ,', ', __('Vorname'); ?></th>
-		<th style="width:70px;"><?php echo __('Nummer'); ?></th>
-		<th style="width:93px;"><?php echo __('User'); ?></th>
-		<th style="width:93px;"><?php echo __('PIN'); ?></th>
-		<th style="width:93px;"><?php echo __('eMail'); ?></th>
-		<th style="width:45px;"><?php echo __('Host'); ?></th>
-		<th style="width:100px;"><?php echo __('Status'); ?></th>
-		<th style="width:55px;"> </th>
+		<th style="width:180px;"><?php echo __('Nachname') ,', ', __('Vorname'); ?></th>
+		<th style="width: 60px;"><?php echo __('Nummer'); ?></th>
+		<th style="width: 70px;"><?php echo __('User'  ); ?></th>
+		<th style="width: 55px;"><?php echo __('PIN'   ); ?></th>
+		<th style="width:190px;"><?php echo __('eMail' ); ?></th>
+		<th style="width:140px;"><?php echo __('Host'  ); ?></th>
+		<th style="width: 80px;"><?php echo __('Status'); ?></th>
+		<th style="width: 55px;">&nbsp;</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -336,10 +336,10 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/knotify.png" />&nbsp; ', __('klingelt');
 				break;
 			case AST_MGR_EXT_RINGINUSE:
-				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/knotify.png" />&nbsp; ', __('Anklopfen');  //TRANSLATE ME
+				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/knotify.png" />&nbsp; ', __('Anklopfen');
 				break;
 			case AST_MGR_EXT_ONHOLD:
-				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" />&nbsp; ', __('Halten');  //TRANSLATE ME
+				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" />&nbsp; ', __('Halten');
 				break;
 			default:
 				echo $state;
@@ -371,16 +371,16 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			<input type="text" name="ulname" value="" size="15" maxlength="40" style="width:125px;" /><input type="text" name="ufname" value="" size="15" maxlength="40" style="width:115px;" />
 		</td>
 		<td>
-			<input type="text" name="uext" value="" size="5" maxlength="25"  />
+			<input type="text" name="uext" value="" size="6" maxlength="6"  />
 		</td>
 		<td>
-			<input type="text" name="uuser" value="" size="5" maxlength="25"  />
+			<input type="text" name="uuser" value="" size="8" maxlength="20"  />
 		</td>
 		<td>
-			<input type="password" name="upin" value="" size="5" maxlength="25" />
+			<input type="password" name="upin" value="" size="6" maxlength="10" />
 		</td>
 		<td>
-			<input type="text" name="uemail" value="" size="15" maxlength="25" />
+			<input type="text" name="uemail" value="" size="25" maxlength="50" />
 		</td>
 		
 		<td>
@@ -560,19 +560,19 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\
 	<tr>
 		<th><?php echo __('Name'); ?>:</th>
 		<td>
-			<input type="text" name="ulname" value="<?php echo htmlEnt($r['ln']); ?>" size="20" maxlength="40"  />	
+			<input type="text" name="ulname" value="<?php echo htmlEnt($r['ln']); ?>" size="30" maxlength="40"  />	
 		</td>
 	</tr>
 	<tr>
 		<th><?php echo __('Vorname'); ?>:</th>
 		<td>
-			<input type="text" name="ufname" value="<?php echo htmlEnt($r['fn']); ?>" size="20" maxlength="40"  />	
+			<input type="text" name="ufname" value="<?php echo htmlEnt($r['fn']); ?>" size="30" maxlength="40"  />	
 		</td>
 	</tr>
 	<tr>
 		<th><?php echo __('PIN'); ?>:</th>
 		<td>
-			<input type="password" name="upin" value="<?php echo htmlEnt($r['pin']); ?>" size="20" maxlength="40"  />	
+			<input type="password" name="upin" value="<?php echo htmlEnt($r['pin']); ?>" size="8" maxlength="10"  />	
 		</td>
 	</tr>
 	<tr>
