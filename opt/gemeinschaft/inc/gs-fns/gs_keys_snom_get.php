@@ -77,7 +77,7 @@ ORDER BY `p`.`id` LIMIT 6' );
 	$k = 6;  # start at key "fkey6"/"P7"
 	while ($r = $rs->fetchRow()) {
 		$keys['f'.$k]['type'] = 'dest';
-		$keys['f'.$k]['val' ] = '*8'. str_pad($r['id'], 5, '0', STR_PAD_LEFT);
+		$keys['f'.$k]['val' ] = '*8*'. str_pad($r['id'], 5, '0', STR_PAD_LEFT);
 		$keys['f'.$k]['rw'  ] = false;
 		$keys['f'.$k]['ds'  ] = 'Grp.'. $r['id'];
 		$keys['f'.$k]['dl'  ] = 'Grp. '. (trim($r['title']) != '' ? trim($r['title']) : $r['id']);
