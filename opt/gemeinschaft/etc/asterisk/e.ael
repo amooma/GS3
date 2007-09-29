@@ -485,6 +485,7 @@ context to-gateway {
 	_0. => {
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
+			//DumpChan();
 			&dial-log-store(${user_name},out,${EXTEN});
 		}
 		&dial-gateway(${gateway_prefix}${EXTEN:1});
