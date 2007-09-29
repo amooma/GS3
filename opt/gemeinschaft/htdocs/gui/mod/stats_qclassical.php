@@ -68,7 +68,8 @@ if ($action == 'report') {
 } else {
 	$action   = '';
 	$queue_id =  0;
-	$month_d  = -1;  # previous month
+	//$month_d  = -1;  # previous month
+	$month_d  = 0;  # current month
 }
 
 
