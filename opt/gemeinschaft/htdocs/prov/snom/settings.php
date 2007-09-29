@@ -911,25 +911,26 @@ for ($i=0; $i<=137; ++$i) {
 	//setting('fkey_context', $i, 'active');
 }
 
-# keys for pickup groups
+# user defined keys
 #
-
-$rs = $db->execute( 'SELECT DISTINCT(`p`.`id`) `id` FROM `pickupgroups_users` `pu` JOIN `pickupgroups` `p` ON (`p`.`id`=`pu`.`group_id`) WHERE `pu`.`user_id`='. $user_id .' ORDER BY `p`.`id` LIMIT 6' );
-$key = 6;
-while ($r = $rs->fetchRow()) {
-	setting('fkey',$key, 'dest <sip:*8'. str_pad($r['id'], 5, '0', STR_PAD_LEFT) .'@'. $host .'>', array('context'=>'active'));
-	//psetting('fkey_context'. $key, '1');
-	//psetting('fkey_context'. $key, 'active');
-	++$key;
-}
-
 $keys = gs_keys_snom_get( $user['user'] );
 if (is_array($keys)) {
 	foreach ($keys as $kname => $kinfo) {
 		if (! preg_match('/^f(\d{1,2})$/S', $kname, $m)) continue;
 		if (trim(@$kinfo['val']) != '')
-			setting('fkey',@$m[1], 'dest <sip:'. @$kinfo['val'] .'@'. $host .'>', array('context'=>'active'));
+			setting('fkey',@$m[1], 'dest <sip:'. @$kinfo['val'] .'@'. $host .'>|*81*', array('context'=>'active'));
 	}
+}
+
+# keys for pickup groups
+#
+$rs = $db->execute( 'SELECT DISTINCT(`p`.`id`) `id` FROM `pickupgroups_users` `pu` JOIN `pickupgroups` `p` ON (`p`.`id`=`pu`.`group_id`) WHERE `pu`.`user_id`='. $user_id .' ORDER BY `p`.`id` LIMIT 6' );
+$key = 6;
+while ($r = $rs->fetchRow()) {
+	setting('fkey',$key, 'dest <sip:*8*'. str_pad($r['id'], 5, '0', STR_PAD_LEFT) .'@'. $host .'>|*82', array('context'=>'active'));
+	//psetting('fkey_context'. $key, '1');
+	//psetting('fkey_context'. $key, 'active');
+	++$key;
 }
 
 # GUI softkeys
