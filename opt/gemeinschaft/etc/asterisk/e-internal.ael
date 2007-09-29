@@ -316,6 +316,7 @@ context to-internal-users {
 			Set(pmark=${EXTEN:6});
 			Verbose(1,### User ${user_name} tries to pickup group ${pmark});
 			Pickup(${pmark}@PICKUPMARK);
+			//FIXME - this probably does not work across nodes
 		}
 		else {
 			Verbose(1,### Invalid use of pickup\, user ${user_name});
