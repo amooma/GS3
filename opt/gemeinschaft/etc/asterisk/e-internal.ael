@@ -312,15 +312,12 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 	_*82*8*. => {
+		// directly used by Snom (see htdocs/prov/snom/settings.php)
 		if ("${PICKUPMARK}" = "") {
 			Set(pmark=${EXTEN:6});
 			Verbose(1,### User ${user_name} tries to pickup group ${pmark});
 			Pickup(${pmark}@PICKUPMARK);
 			//FIXME - this probably does not work across nodes
-		}
-		else {
-			Verbose(1,### Invalid use of pickup\, user ${user_name});
-			Hangup();
 		}
 	}
 	
@@ -329,8 +326,14 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 	_*8*. => {
-		//NoCDR();
-		Verbose(1,### Call to pickup group ${EXTEN:3});
+		if ("${PICKUPMARK}" != "") {
+			//NoCDR();
+			Verbose(1,### Call to pickup group ${EXTEN:3});
+		}
+		else {
+			// used by Siemens OpenStage
+			jump *82${EXTEN};
+		}
 	}
 	
 	hint(SIP/2001&SIP/555) *8*00001 => {}
