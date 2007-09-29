@@ -55,42 +55,44 @@ $pudelete =      trim(@$_REQUEST['pudelete']);
 $user     =      trim(@$_REQUEST['user'    ]);
 
 if ($delete) {
-	$ret_val = gs_pickupgroup_del( $delete );
-	if (isGsError( $ret_val )) echo $ret_val->getMsg();
+	$ret = gs_pickupgroup_del( $delete );
+	if (isGsError( $ret )) echo $ret->getMsg();
 }
 
 if ($pudelete) {
-	$ret_val = gs_pickupgroup_user_del( $group, $pudelete );
-	if (isGsError( $ret_val )) echo $ret_val->getMsg();
+	$ret = gs_pickupgroup_user_del( $group, $pudelete );
+	if (isGsError( $ret )) echo $ret->getMsg();
 }
 
 if ($title && !$save) {
-	$ret_val = gs_pickupgroup_add( $title );
-	if (isGsError( $ret_val )) echo $ret_val->getMsg();
+	$ret = gs_pickupgroup_add( $title );
+	if (isGsError( $ret )) echo $ret->getMsg();
 }	
 
 if ($save) {
-	$sql_query = 'UPDATE `pickupgroups` 
-		SET `title`=\''. $DB->escape($title) .'\'
-		WHERE `id`='. $save;
+	$sql_query =
+'UPDATE `pickupgroups` SET
+	`title`=\''. $DB->escape($title) .'\'
+WHERE `id`='. $save;
 	$rs = $DB->execute($sql_query);
 }
 
 if ($group && $user) {
-	$ret_val = gs_pickupgroup_user_add( $group, $user );
-	if (isGsError( $ret_val )) echo $ret_val->getMsg();
+	$ret = gs_pickupgroup_user_add( $group, $user );
+	if (isGsError( $ret )) echo $ret->getMsg();
 }
 
-if (!$group) {
-	$sql_query = 'SELECT SQL_CALC_FOUND_ROWS 
-		`p`.`id` `id`, `p`.`title` `title`,
-		COUNT(`m`.`user_id`) `num_members`
-	FROM
-		`pickupgroups` `p` LEFT JOIN
-		`pickupgroups_users` `m` ON (m.group_id=p.id)
-	GROUP BY `p`.`id`
-	ORDER BY `p`.`id`
-	LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
+if (! $group) {
+	$sql_query =
+'SELECT SQL_CALC_FOUND_ROWS 
+	`p`.`id` `id`, `p`.`title` `title`,
+	COUNT(`pu`.`user_id`) `num_members`
+FROM
+	`pickupgroups` `p` LEFT JOIN
+	`pickupgroups_users` `pu` ON (`pu`.`group_id`=`p`.`id`)
+GROUP BY `p`.`id`
+ORDER BY `p`.`id`
+LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 	
 	$rs = $DB->execute($sql_query);
 	
@@ -145,6 +147,7 @@ if (!$group) {
 			echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
 			
 			if ($edit == $r['id']){
+				
 				echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 				echo gs_form_hidden($SECTION, $MODULE), "\n";
 				echo '<input type="hidden" name="page" value="', htmlEnt($page), '" />', "\n";
@@ -230,22 +233,23 @@ if (!$group) {
 
 <?php
 
-//=======================================================================================
+//===================================================================
 // show pickupgroup's memners
-//=======================================================================================
+//===================================================================
 
 } else {
 	
-	$sql_query = 'SELECT SQL_CALC_FOUND_ROWS 
-		`u`.`user` `user`, `u`.`lastname` `ln`,
-		`u`.`firstname` `fn`, `u`.`id` `id`
-	FROM
-		`pickupgroups_users` `p`,
-		`users` `u`
-	WHERE `u`.`id` = `p`.`user_id`
-	AND `p`.`group_id` = '.$group.'
-	ORDER BY `u`.`user`
-	LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
+	$sql_query =
+'SELECT SQL_CALC_FOUND_ROWS 
+	`u`.`user` `user`, `u`.`lastname` `ln`,
+	`u`.`firstname` `fn`, `u`.`id` `id`
+FROM
+	`pickupgroups_users` `pu` JOIN
+	`users` `u` ON (`u`.`id`=`pu`.`user_id`)
+WHERE
+	`pu`.`group_id` = '.$group.'
+ORDER BY `u`.`user`
+LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 	
 	$rs = $DB->execute($sql_query);
 	
@@ -259,7 +263,7 @@ if (!$group) {
 	<tr>
 		<th style="width:100px;"><?php echo __('User'); ?></th>
 		<th style="width:250px;"><?php echo __('Name'); ?></th>
-		<th style="width:80px;">
+		<th style="width: 80px;">
 	<?php
 		echo ($page+1), ' / ', $num_pages, "&nbsp; \n";
 		
@@ -298,8 +302,10 @@ if (!$group) {
 		$i = 0;
 		while ($r = $rs->fetchRow()) {
 			echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
+			
 			echo '<td>', htmlEnt($r['user']);
 			echo '</td>';
+			
 			echo '<td>', htmlEnt($r['ln']);
 			echo ', ', htmlEnt($r['fn']);
 			echo '</td>';	
