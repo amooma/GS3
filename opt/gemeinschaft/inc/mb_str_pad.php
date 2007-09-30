@@ -29,6 +29,8 @@
 defined('GS_VALID') or die('No direct access.');
 
 
+# custom function. even mbstring doesn't come with mb_str_pad()
+#
 if (! function_exists('mb_str_pad')) {
 function mb_str_pad( $str, $len, $padstr=' ', $padtype=STR_PAD_RIGHT, $enc='' )
 {
@@ -59,6 +61,27 @@ function mb_str_pad( $str, $len, $padstr=' ', $padtype=STR_PAD_RIGHT, $enc='' )
 	}
 }
 }
+
+
+# emulate mbstring's mb_convert_case() for PHP < 4.3
+#
+/*
+if (! function_exists('mb_convert_case')) {
+function mb_convert_case( $str, $mode, $enc='' )
+{
+	switch ($mode) {
+		case 1 :  # == MB_CASE_LOWER
+			return         strToLower($str) ;
+		case 0 :  # == MB_CASE_UPPER
+			return         strToUpper($str) ;
+		case 2 :  # == MB_CASE_TITLE
+			return ucWords(strToLower($str));
+		default:
+			return                    $str  ;
+	}
+}
+}
+*/
 
 
 ?>
