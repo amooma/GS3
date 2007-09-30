@@ -115,7 +115,7 @@ my $FORERUN = 5;
 
 
 # debug output is sent to stderr and is visible on the asterisk console
-use constant DEBUG_LEVEL => 2;  # 0: no debug output - each level increases verbosity
+use constant DEBUG_LEVEL => 0;  # 0: no debug output - each level increases verbosity
                                 # 2: maximum level used in the script
 
 use constant SIGNATURE => 'HASTENIX V0.3';
