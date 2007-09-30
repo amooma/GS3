@@ -24,7 +24,7 @@
 use strict;
 use warnings;
 
-use 5.008;  # perl 5.8 required for stable threading
+use 5.8.0;  # perl 5.8 required for stable threading
             # thread support must be complied into perl!
 
 use LWP::UserAgent;           # needed to get VoiceXML docs from remote host
