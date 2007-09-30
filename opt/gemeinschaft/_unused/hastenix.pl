@@ -191,7 +191,7 @@ sub xmlStart
 			# link delay such as:
 			# <field><prompt timeout="10s"/><noinput><exit/></noinput></field>
 			my $timeout = $attribs{'timeout'};
-			chop($timeout); # remove 's'
+			chop($timeout);  # remove 's'
 			$vxmlDataRef->{'timeout'} = $timeout;
 		}
 	}
