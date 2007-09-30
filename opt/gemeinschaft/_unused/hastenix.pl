@@ -24,8 +24,8 @@
 use strict;
 use warnings;
 
-use 5.008; # perl 5.8 required for stable threading
-           # thread support must be complied into perl!
+use 5.008;  # perl 5.8 required for stable threading
+            # thread support must be complied into perl!
 
 use LWP::UserAgent;           # needed to get VoiceXML docs from remote host
 use HTTP::Request::Common;    # needed to post recorded speech to remote host
@@ -94,8 +94,8 @@ my $PLAYBACK_ON_ERRORS = 1;
 # e.g. play busy tone or announcements
 #my $DIALOUT = 'Dial SIP/*@sipgate-out|30';
 #my $DIALOUT = 'Dial SIP/*';
-my $DIALOUT = 'Busy'; # transfer not allowed
-#my $DIALOUT = 'Playback demo-thanks'; # play announcement
+my $DIALOUT = 'Busy';  # transfer not allowed
+#my $DIALOUT = 'Playback demo-thanks';  # play announcement
 
 # sound files are created, while speech output is done.
 # the forerun variable specifies how many sound files are created in advance.
@@ -145,7 +145,7 @@ $userAgent->agent(SIGNATURE);
 $userAgent->parse_head(0);
 $userAgent->max_size($READLIMIT);
 
-$|=1; # force immediate output at print commands
+$|=1;  # force immediate output at print commands
 
 
 sub init_vxmlData
@@ -185,7 +185,7 @@ sub xmlStart
 	
 	elsif ($startTag eq 'prompt') {
 		$isPrompt = 1;  # true
-		$prompt_text = "";
+		$prompt_text = '';
 		
 		if (defined $attribs{'timeout'}) {
 			# link delay such as:
@@ -250,12 +250,12 @@ sub xmlStart
 		
 		if (defined $attribs{'maxtime'}) {
 			$vxmlDataRef->{'record'}->{'maxtime'} = $attribs{'maxtime'};
-			chop($vxmlDataRef->{'record'}->{'maxtime'}); # remove trailing 's'(econd)
+			chop($vxmlDataRef->{'record'}->{'maxtime'});  # remove trailing 's'(econd)
 		}
 		
 		if (defined $attribs{'finalsilence'}) {
 			$vxmlDataRef->{'record'}->{'finalsilence'} = $attribs{'finalsilence'};
-			chop($vxmlDataRef->{'record'}->{'finalsilence'}); # remove trailing s
+			chop($vxmlDataRef->{'record'}->{'finalsilence'});  # remove trailing s
 		}
 	}
 	
@@ -348,7 +348,7 @@ sub create_cache_dir
 			my @cachefiles = readdir(DIR);
 			closedir(DIR);
 			foreach (@cachefiles) {
-				unlink($sounddir .'/'. $_); # delete all files of directory
+				unlink($sounddir .'/'. $_);  # delete all files of directory
 			}
 		}
 	}
@@ -366,7 +366,7 @@ sub create_cache_dir
 		my @cachefiles = readdir(DIR);
 		closedir(DIR);
 		foreach (@cachefiles) {
-			unlink($sounddir .'/'. $_); # delete all files of directory
+			unlink($sounddir .'/'. $_);  # delete all files of directory
 		}
 	}
 	
@@ -380,7 +380,7 @@ sub retrieve_VoiceXML
 	$wavdir = &create_cache_dir($http_req{'url'}, 'cache.vxml');
 	my $vxml_file = $wavdir .'/cache.vxml';
 	
-	my $content = "";
+	my $content = '';
 	
 	if (-e $vxml_file) {
 		print STDERR "read VoiceXML document from cache\n" if (DEBUG_LEVEL >= 1);
@@ -403,7 +403,7 @@ sub retrieve_VoiceXML
 		while (my ($key, $value) = each %agi_input) {
 			$url .= uri_escape('agi_' . $key) . '=' . uri_escape($value) . '&';
 		}
-		chop($url); # remove trailing '&'
+		chop($url);  # remove trailing '&'
 		
 		if ($http_req{'method'} eq 'get') {
 			# send GET request
@@ -482,7 +482,7 @@ sub get_soundfile
 		
 		if (length($sounddata) >= $READLIMIT) {
 			print STDERR "maximum sound file size exceeded\n" if (DEBUG_LEVEL >= 1);
-			return("");
+			return('');
 		}
 		
 		# write received sound data into cache
@@ -576,7 +576,7 @@ sub sound_creator_thread
 			my $soundfile = &get_soundfile($soundfile_url);
 			
 			if ($soundfile) {
-				$prompt->{text} = ""; # text of no importance any more
+				$prompt->{text} = '';  # text of no importance any more
 				print STDERR "enqueue: $soundfile\n" if (DEBUG_LEVEL >= 1);
 				$soundfile_queue->enqueue($soundfile);
 			}
@@ -636,7 +636,7 @@ sub sound_creator_thread
 		}
 	}
 	
-	$soundfile_queue->enqueue("");  # done indication
+	$soundfile_queue->enqueue('');  # done indication
 }
 
 sub background_player
@@ -675,11 +675,11 @@ sub background_player
 					
 					print STDERR "DTMF key: $button\n" if (DEBUG_LEVEL >= 1);
 					
-					my $dest; # next destination
+					my $dest;  # next destination
 					
 					if (substr($vxmlDataRef->{'links'}->{$button},0,1) eq '#') {
 						# transfer link
-						my $form_id = substr($vxmlDataRef->{'links'}->{$button},1); # remove #
+						my $form_id = substr($vxmlDataRef->{'links'}->{$button},1);  # remove #
 						$dest =	 $vxmlDataRef->{'transfers'}->{$form_id};
 					}
 					else {
@@ -779,7 +779,7 @@ sub handle_url
 		my $dial_cmd = $DIALOUT;
 		$next_dest{'url'} =~ /:(.*)/;  # remove protocol part, e.g. tel: or sip:
 		my $dial_target = $1;
-		$dial_cmd =~ s/\*/$dial_target/; # replace '*' in $DIALOUT with $dial_target
+		$dial_cmd =~ s/\*/$dial_target/;  # replace '*' in $DIALOUT with $dial_target
 		print STDERR "DIALOUT: execute $dial_cmd\n" if (DEBUG_LEVEL >= 1);
 		
 		print "EXEC $dial_cmd\n";
