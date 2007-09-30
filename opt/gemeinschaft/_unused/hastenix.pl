@@ -19,7 +19,8 @@
 # http://www.hawhaw.de/
 # http://www.hawhaw.de/faq.htm#Hastenix0
 
-# Entabbed and formatted properly by Philipp Kempgen
+# Entabbed and formatted properly as well as some fixes/
+# improvements by Philipp Kempgen
 
 use strict;
 use warnings;
