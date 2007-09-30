@@ -55,6 +55,10 @@ if (function_exists('mb_substitute_character'))
 	# U+FFFD = 0xFFFD (utf16 hex) = 65533 (dec) = "\xEF\xBF\xBD" (utf8 hex)
 if (function_exists('mb_detect_order'))
 	@mb_detect_order('auto');
+$tmp = strToLower(trim(@ini_get('mbstring.func_overload')));
+if ($tmp === '1' || $tmp === 'on') {
+	die("mbstring.func_overload must not be enabled in php.ini\n");
+}
 
 
 # our root directory
