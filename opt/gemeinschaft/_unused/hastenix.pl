@@ -48,7 +48,7 @@ use Digest::MD5 qw(md5_hex);  # needed to create unique subdirectory names from 
 # define here the text-to-speech system installed on asterisk
 #my $TTS = 'festival';
 #my $TTS = 'cepstral';
-#my $TTS = 'generic';
+#my $TTS = 'generic';  # see $GENERIC_TTS_COMMAND
 my $TTS = 'none';
 
 # if you have installed cepstral voice(s), enter here the location of the swift
@@ -595,24 +595,24 @@ sub sound_creator_thread
 				if ($TTS eq 'cepstral') {
 					# use cepstral/swift to create wav-file
 					system($SWIFT .
-						" -p audio/channels=1,audio/sampling-rate=8000".
-						" -o ". $wavfile .
-						" -n ". $SWIFT_SPEAKER .
-						" -e utf-8".
-						" \" $text\"" );  # leading hyphen breaks cepstral => leading blank
+						" -p audio/channels=1,audio/sampling-rate=8000" .
+						" -o ". quotemeta($wavfile) .
+						" -n ". quotemeta($SWIFT_SPEAKER) .
+						" -e utf-8" .
+						" ". quotemeta(' '. $text) );  # leading hyphen breaks cepstral, leading blank is ok
 				}
 				
 				elsif ($TTS eq 'festival') {
 					# use festival/text2wave to create wav-file
-					system("echo \"$text\" | $TEXT2WAVE".
-						" -f -".
-						" -F 8000".
-						" -o ". $wavfile);
+					system("echo ". quotemeta($text) ." | ". quotemeta($TEXT2WAVE) .
+						" -f -" .
+						" -F 8000" .
+						" -o ". quotemeta($wavfile) );
 				}
 				
 				elsif ($TTS eq 'generic') {
 					# use generic tts system
-					system("echo \"$text\" | $GENERIC_TTS_COMMAND > $wavfile");
+					system("echo ". quotemeta($text) ." | $GENERIC_TTS_COMMAND > ". quotemeta($wavfile) );
 				}
 			}
 			
