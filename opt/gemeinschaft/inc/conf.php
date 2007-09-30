@@ -221,7 +221,7 @@ include_once( GS_DIR .'inc/gettext.php' );
 
 if (function_exists('date_default_timezone_set')) {
 	# PHP >= 5.1.0
-	# needed by date()
+	# needed by date() and other functions
 	@date_default_timezone_set( @date_default_timezone_get() );
 }
 
