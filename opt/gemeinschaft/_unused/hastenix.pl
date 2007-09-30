@@ -407,7 +407,7 @@ sub retrieve_VoiceXML
 		
 		if ($http_req{'method'} eq 'get') {
 			# send GET request
-			print STDERR "get VoiceXML document from (remote) webserver:\n" .
+			print STDERR "get VoiceXML document from (remote) webserver:\n".
 				$url ."\n" if (DEBUG_LEVEL >= 1);
 			my $http_request = HTTP::Request->new(GET => $url);
 			$http_request->header(accept => 'application/voicexml+xml');
@@ -415,8 +415,8 @@ sub retrieve_VoiceXML
 		}
 		else {
 			# send POST request
-			print STDERR "post file and retrieve VoiceXML response from (remote) webserver:\n" .
-			$url ."\n" if (DEBUG_LEVEL >= 1);
+			print STDERR "post file and retrieve VoiceXML response from (remote) webserver:\n".
+				$url ."\n" if (DEBUG_LEVEL >= 1);
 			$http_response = $userAgent->request(POST $url,
 				Content_Type => 'form-data',
 				Accept       => 'application/voicexml+xml',
@@ -428,7 +428,7 @@ sub retrieve_VoiceXML
 		
 		unless ($http_response->is_success) {
 			print "EXEC Playback tt-somethingwrong\n" if $PLAYBACK_ON_ERRORS;
-			die "got " . $http_response->status_line . " response for " . $http_req{'url'};
+			die "got ". $http_response->status_line ." response for ". $http_req{'url'};
 		}
 		
 		if (length($content) >= $READLIMIT) {
@@ -476,7 +476,7 @@ sub get_soundfile
 		my $sounddata = $http_response->content;  # binary sound data
 		
 		unless ($http_response->is_success) {
-			print STDERR "got " . $http_response->status_line . " response\n" if (DEBUG_LEVEL >= 1);
+			print STDERR "got ". $http_response->status_line ." response\n" if (DEBUG_LEVEL >= 1);
 			return('');
 		}
 		
@@ -597,19 +597,19 @@ sub sound_creator_thread
 					# use cepstral/swift to create wav-file
 					
 					system($SWIFT .
-						" -p audio/channels=1,audio/sampling-rate=8000" .
-						" -o " . $wavfile .
-						" -n " . $SWIFT_SPEAKER .
-						" -e utf-8" .
+						" -p audio/channels=1,audio/sampling-rate=8000".
+						" -o ". $wavfile .
+						" -n ". $SWIFT_SPEAKER .
+						" -e utf-8".
 						" \" $text\"" );  # leading hyphen breaks cepstral => leading blank
 				}
 				
 				elsif ($TTS eq 'festival') {
 					# use festival/text2wave to create wav-file
-					system("echo \"$text\" | $TEXT2WAVE" .
-						" -f -" .
-						" -F 8000" .
-						" -o " . $wavfile);
+					system("echo \"$text\" | $TEXT2WAVE".
+						" -f -".
+						" -F 8000".
+						" -o ". $wavfile);
 				}
 				
 				elsif ($TTS eq 'generic') {
