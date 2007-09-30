@@ -590,12 +590,10 @@ sub sound_creator_thread
 			unless (-e $wavfile) {
 				
 				# no wav-file existing for given prompt => create it
-				
 				print STDERR "create wav-file $wavfile (tts: $TTS)\n" if (DEBUG_LEVEL >= 1);
 				
 				if ($TTS eq 'cepstral') {
 					# use cepstral/swift to create wav-file
-					
 					system($SWIFT .
 						" -p audio/channels=1,audio/sampling-rate=8000".
 						" -o ". $wavfile .
