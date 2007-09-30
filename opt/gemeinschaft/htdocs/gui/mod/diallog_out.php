@@ -73,9 +73,9 @@ $num_pages = ceil($num_total / $per_page);
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:140px;"><span class="sort-col"><?php echo __('Nummer'); ?></span></th>
+	<th style="width:140px;"><?php echo __('Nummer'); ?></th>
 	<th style="width:210px;"><?php echo __('Name'); ?></th>
-	<th style="width:120px;"><?php echo __('Datum'); ?></th>
+	<th style="width:120px;"><span class="sort-col"><?php echo __('Datum'); ?></span></th>
 	<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
 </tr>
 </thead>
