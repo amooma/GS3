@@ -37,6 +37,26 @@ defined('GS_VALID') or die('No direct access.');
 ############################################################
 
 
+# override mbstring settings from php.ini
+#
+if (function_exists('mb_internal_encoding'))
+	@mb_internal_encoding('UTF-8');
+if (function_exists('mb_regex_encoding'))
+	@mb_regex_encoding('UTF-8');
+if (function_exists('mb_regex_set_options'))
+	@mb_regex_set_options('pr');  # default: "pr"
+if (function_exists('mb_http_output'))
+	@mb_http_output('pass');
+if (function_exists('mb_language'))
+	@mb_language('uni');
+if (function_exists('mb_substitute_character'))
+	@mb_substitute_character(0xFFFD);
+	# Unicode Replacement Character:
+	# U+FFFD = 0xFFFD (utf16 hex) = 65533 (dec) = "\xEF\xBF\xBD" (utf8 hex)
+if (function_exists('mb_detect_order'))
+	@mb_detect_order('auto');
+
+
 # our root directory
 #
 define( 'GS_DIR', realPath(dirName(__FILE__).'/../').'/' );  # DO NOT CHANGE!
