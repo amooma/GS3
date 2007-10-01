@@ -26,7 +26,7 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-# to be called from the gateway to find out the Gemeinschaft
+# to be called from a gateway to find out the Gemeinschaft
 # node to call
 
 /*
