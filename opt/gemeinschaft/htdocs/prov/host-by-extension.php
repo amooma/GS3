@@ -26,9 +26,12 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+# to be called from the gateway to find out the Gemeinschaft
+# node to call
+
 /*
 URL PARAMETERS:
-   ext=    Extension (Zielrufnummer)
+   ext=    Extension (target number)
 */
 
 @header( 'Content-Type: text/plain; charset=utf-8' );
