@@ -589,7 +589,7 @@ psetting('dhcp'                 , 'on' );
 //psetting('gateway'              , '192.168.1.1');
 psetting('filter_registrar'     , 'off');  # so we can reboot the phone even if not registered
 psetting('enable_timer_support' , 'on' );
-psetting('session_timer'        , '130');  # default 3600
+psetting('session_timer'        , '90' );  # default 3600
 psetting('dirty_host_ttl'       , '0'  );
 psetting('challenge_response'   , 'off');
 psetting('challenge_reboot'     , 'off');
@@ -602,7 +602,7 @@ psetting('tcp_listen'           , 'off');
 psetting('offer_gruu'           , 'off');
 psetting('short_form'           , 'on' );  # kurze SIP-Header verwenden
 psetting('subscription_delay'   , '2'  );
-psetting('subscription_expiry'  , '120');  # default 3600
+psetting('subscription_expiry'  , '80' );  # default 3600
 psetting('terminate_subscribers_on_reboot', 'on');
 psetting('publish_presence'     , 'off');  # unterstuetzt Asterisk (noch?) nicht
 psetting('presence_timeout'     , '15' );  # default 15 (Minuten)
@@ -785,7 +785,7 @@ setting('user_active'             ,$i, 'on' );
 setting('user_sipusername_as_line',$i, 'on' );  # "broken registrar"
 setting('user_srtp'               ,$i, 'off');  # keine Verschluesselung
 setting('user_symmetrical_rtp'    ,$i, 'off');
-setting('user_expiry'             ,$i, '130');  # neu registrieren, default: 3600
+setting('user_expiry'             ,$i, '90' );  # neu registrieren, default: 3600
 setting('ring_after_delay'        ,$i, ''   );  # mit 1 Sek. Verzoegerung klingeln
 //setting('user_send_local_name'    ,$i, 'on' );  # send display name to caller
 setting('user_send_local_name'    ,$i, 'on' );
