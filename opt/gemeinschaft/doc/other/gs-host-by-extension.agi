@@ -1,0 +1,92 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+/*
+to be called from a gateway to find out the Gemeinschaft
+node to call.
+dialplan example (AEL):
+
+	Set(ext=${EXTEN});
+	AGI(/path/to/gs-host-by-extension.agi,${ext});
+	if ("${gs_host}" != "") {
+		NoOp(### Ext. ${ext} is at node ${gs_host});
+		Dial(SIP/${ext}@${gs_host});
+	}
+	else {
+		Congestion(3);
+		Hangup();
+	}
+
+*/
+
+# configuration:
+$gemeinschaft_nodes = array(
+	array( 'host' => '192.168.1.130', 'port' => 82 ),
+	array( 'host' => '192.168.1.130', 'port' => 82 ),
+	array( 'host' => '192.168.1.130', 'port' => 82 )
+);
+# end of configuration
+
+
+
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+function _err()
+{
+	echo "SET VARIABLE gs_host\n";
+	exit(1);
+}
+
+if ($argc < 2) _err();
+$ext = trim($argv[1]);
+if (! preg_match('/^[0-9]+$/', $ext)) _err();
+
+if (count(@$gemeinschaft_nodes) < 1) _err();
+$rand = (int)rand(0, count($gemeinschaft_nodes)-1);
+$node = @$gemeinschaft_nodes[$rand];
+if (! is_array($node)) _err();
+
+$sock = @fSockOpen(@$node['host'], @$node['port'], $err, $errmsg, 8);
+if (! $sock) _err();
+
+@stream_set_timeout($sock, 4);
+@fWrite($sock, "GET /host-by-extension.php?ext=$ext HTTP/1.0\r\n\r\n");
+@fFlush($sock);
+$r = @fread($sock, 8000);
+@fClose($sock);
+
+if ($r == '') _err();
+if (! preg_match('/\r\n\r\n\s*([0-9.\-_a-zA-Z]*)/', $r, $m)) _err();
+$host = $m[1];
+echo "SET VARIABLE gs_host $host\n";
+
+
+?>
