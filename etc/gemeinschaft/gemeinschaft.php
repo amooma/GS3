@@ -327,8 +327,11 @@ $PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";  #  "
 
 $FAX_ENABLED            = true;
 $FAX_SERVER             = '127.0.0.1';
-$FAX_PORT               = 4559;     # HylaFax port
-$FAX_PREFIX             = '6';      # not used yet  //FIXME
+$FAX_PORT               = 4559;          # HylaFax port
+$FAX_HYLAFAX_ADMIN      = 'webmgr';      # admin user of your HylaFax
+                                         # (see HylaFax's hosts.hfaxd)
+$FAX_HYLAFAX_PASS       = 'a9bl2ue7';
+$FAX_PREFIX             = '6';           # not used yet  //FIXME
 $FAX_TSI_PREFIX         = @$CANONIZE_NATL_PREFIX.
                           @$CANONIZE_AREA_CODE.
                           @$CANONIZE_LOCAL_BRANCH;
