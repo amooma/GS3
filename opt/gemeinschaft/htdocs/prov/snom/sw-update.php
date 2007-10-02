@@ -69,12 +69,10 @@ if (! $allow_update) {
 }
 
 $mac  = preg_replace('/[^0-9A-F]/', '', strToUpper(@$_REQUEST['m']));
-/*
 if (strLen($mac) != 12) {
 	gs_log( GS_LOG_DEBUG, "Bad MAC address \"$mac\"" );
 	die();
 }
-*/
 if ($allow_only_specified_mac_addrs) {
 	$mac_allowed = false;
 	foreach ($allowed_mac_addrs as $allowed_mac) {
@@ -113,15 +111,8 @@ function _generate_settings( $model, $appl, $rtfs, $lnux )
 		$allow_beta, $mac, $phone_type, $user;
 		
 	$file = '';
-	if (!empty($appl)) {
-		/*
-		if (! $allow_beta)
-                           $file = $model.'-'.$appl.'-beta-SIP-j.bin';
-		else
-		*/
-                           $file = $model.'-'.$appl.'.bin';
-	}
-	elseif (!empty($rtfs)) $file = $model.'-'.$rtfs;
+	if     (!empty($appl)) $file = $model.'-'.$appl.'.bin'  ;
+	elseif (!empty($rtfs)) $file = $model.'-'.$rtfs         ;
 	elseif (!empty($lnux)) $file = $model.'-'.$lnux.'-l.bin';
 	
 	if ($file != '') {
