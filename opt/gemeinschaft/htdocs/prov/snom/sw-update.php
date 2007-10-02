@@ -61,11 +61,11 @@ header( 'Vary: *' );
 
 if (! gs_get_conf('GS_SNOM_ENABLED', true)) {
 	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
-	die( 'Not enabled.' );
+	die();
 }
 if (! $allow_update) {
 	gs_log( GS_LOG_DEBUG, "Snom firmware update not enabled" );
-	die( 'Not enabled.' );
+	die();
 }
 
 $mac  = preg_replace('/[^0-9A-F]/', '', strToUpper(@$_REQUEST['m']));
