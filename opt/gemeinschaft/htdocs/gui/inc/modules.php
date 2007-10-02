@@ -141,7 +141,7 @@ $MODULES['keys'     ]=  array('title' => __('Tastenbelegung'),
    'sub' => array(
    )
 );
-if (gs_get_conf('GS_SNOM_ENABLED')) {
+if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 $MODULES['keys'     ]['sub']['snom']
 	                 =  array('title' => __('Snom'));
 }
