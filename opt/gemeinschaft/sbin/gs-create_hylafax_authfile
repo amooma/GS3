@@ -46,7 +46,10 @@ $opts = getOptsNoMultiples( '',
 );
 
 $db = gs_db_master_connect();
-if (! $db) die( "Could not connect to database.\n" );
+if (! $db) {
+	echo "Could not connect to database.\n";
+	exit(1);
+}
 
 $rs = $db->execute(
 'SELECT `id`, `user`, `pin`
@@ -54,40 +57,74 @@ FROM `users`
 WHERE `nobody_index` IS NULL
 ORDER BY `id`'
 );
-if (! $rs) die( "Error.\n" );
+if (! $rs) {
+	echo "Error.\n";
+	exit(1);
+}
 
 $users = array();
 while ($r = $rs->fetchRow())
 	$users[] = $r;
 
-$file = '/tmp/hylafax_hosts.hfaxd';
-$fh = fOpen($file,'w');
+$file = '/tmp/gs-hylafax-hosts.hfaxd';
+$fh = @fOpen($file,'w');
 if (!$fh) {
-	echo "Cannot open $file for writing! Please check access rights!\n";
+	echo "Cannot open $file for writing! Please check access permissions!\n";
 	exit(1);
 }
 
-fWrite($fh, 'webmanag@:0:pFwOrXGI1lhp2:pFwOrXGI1lhp2'."\n");
+
+$hf_admin = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
+$hf_pass  = gs_get_conf('GS_FAX_HYLAFAX_PASS' );
+$hf_admin = preg_replace('/[^a-z0-9\-_.]/i', '', $hf_admin);
+$hf_pass  = preg_replace('/[^a-z0-9\-_.]/i', '', $hf_pass );
+
+if ($hf_admin != '') {
+	$crypted = crypt('ablue7', 'pF');
+	$tmp = $hf_admin.'@:'.'0'.':'.$crypted.':'.$crypted ."\n";
+	fWrite($fh, $tmp, strLen($tmp));
+}
 
 foreach ($users as $user) {
-	$crypted = crypt($user['pin'],"ml");
-	$tmp = $user['user'].'@:'.$user['id'].':'.$crypted."\n";
+	$crypted = crypt($user['pin'], 'ml');
+	$tmp = $user['user'].'@:'.$user['id'].':'.$crypted ."\n";
 	fWrite($fh, $tmp, strLen($tmp));
 }
 
 fClose($fh);
+echo "Written to $file\n";
 
 
-$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
-if (! $conn_id) exit(1);
 
-$login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
-if (! $login_result) exit(1);
-if (! ftp_raw($conn_id, 'admin ablue7')) exit(1);
+$hf_host = gs_get_conf('GS_FAX_SERVER');
+$hf_port = gs_get_conf('GS_FAX_PORT'  );
+
+$conn_id = @ftp_connect($hf_host, $hf_port);
+if (! $conn_id) {
+	echo "Could not connect to HylaFax server at ", $hf_host ,':', $hf_port ,"\n";
+	exit(1);
+}
+
+$login_result = @ftp_login($conn_id, $hf_admin, $hf_pass);
+//FIXME - This is a bit stupid as it requires that the
+//user already exists on the HylaFax server.
+if (! $login_result) {
+	echo "Could not login at HylaFax server at ", $hf_host ,':', $hf_port ,"\n";
+	exit(1);
+}
+if (! @ftp_raw($conn_id, 'admin '.$hf_pass)) {
+	echo "Could not login as admin at HylaFax server at ", $hf_host ,':', $hf_port ,"\n";
+	exit(1);
+}
 
 $remote_file = '/etc/hosts.hfaxd';
 
-$ret_val = @ftp_put($conn_id, $remote_file, $file, FTP_BINARY);
+if (! @ftp_put($conn_id, $remote_file, $file, FTP_BINARY)) {
+	echo "Failed to copy to HylaFax server at ", $hf_host ,':', $hf_port ,"\n";
+	exit(1);
+}
+echo "Copied to HylaFax server at ", $hf_host ,':', $hf_port ,"\n";
+echo "(You will probably need to restart the HylaFax daemon.)\n";
 
 
 ?>
