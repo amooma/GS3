@@ -46,7 +46,7 @@ $opts = getOptsNoMultiples( '',
 );
 
 $db = gs_db_master_connect();
-if (! $db) die( 'Could not connect to database.' );
+if (! $db) die( "Could not connect to database.\n" );
 
 $rs = $db->execute(
 'SELECT `id`, `user`, `pin`
@@ -54,28 +54,28 @@ FROM `users`
 WHERE `nobody_index` IS NULL
 ORDER BY `id`'
 );
-if (! $rs) die( 'Error.' );
+if (! $rs) die( "Error.\n" );
 
 $users = array();
 while ($r = $rs->fetchRow())
 	$users[] = $r;
 
 $file = '/tmp/hylafax_hosts.hfaxd';
-$fp = fopen($file,'w');
-if (!$fp) {
+$fh = fOpen($file,'w');
+if (!$fh) {
 	echo "Cannot open $file for writing! Please check access rights!\n";
 	exit(1);
 }
 
-fwrite($fp, 'webmanag@:0:pFwOrXGI1lhp2:pFwOrXGI1lhp2'."\n");
+fWrite($fh, 'webmanag@:0:pFwOrXGI1lhp2:pFwOrXGI1lhp2'."\n");
 
 foreach ($users as $user) {
 	$crypted = crypt($user['pin'],"ml");
 	$tmp = $user['user'].'@:'.$user['id'].':'.$crypted."\n";
-	fwrite($fp, $tmp, strLen($tmp));
+	fWrite($fh, $tmp, strLen($tmp));
 }
 
-fclose($fp);
+fClose($fh);
 
 
 $conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
