@@ -75,7 +75,7 @@ function _err( $msg='' )
 }
 
 
-if (! gs_get_conf('GS_SNOM_ENABLED', true)) {
+if (! gs_get_conf('GS_SNOM_PROV_ENABLED', true)) {
 	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
 	_err( 'Not enabled.' );
 }
