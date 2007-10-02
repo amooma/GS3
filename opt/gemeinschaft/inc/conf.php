@@ -158,6 +158,9 @@ _gscnf( 'SNOM_PROV_ENABLED'         , false              );
 _gscnf( 'SNOM_PROV_HTTP_USER'       , 'gs'               );
 _gscnf( 'SNOM_PROV_HTTP_PASS'       , 'fS8jr5mo6s2Zs83D' );
 _gscnf( 'SNOM_PROV_PB_NUM_RESULTS'  , 15                 );
+_gscnf( 'SNOM_PROV_FW_UPDATE'       , false              );
+_gscnf( 'SNOM_PROV_FW_BETA'         , false              );
+_gscnf( 'SNOM_PROV_FW_6TO7'         , false              );
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
 _gscnf( 'CANONIZE_INTL_PREFIX'      , '00'               );
