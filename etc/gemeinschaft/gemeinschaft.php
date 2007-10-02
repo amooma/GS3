@@ -189,6 +189,18 @@ $SNOM_PROV_HTTP_PASS        = 'gEheiM23y89sdo23';
 $SNOM_PROV_PB_NUM_RESULTS   = 15;
   # number of results in phonebook search on Snom phone
 
+  # Before you do firmware updates be sure to read
+  # doc/other/snom-and-cisco-switches.txt
+  # Set $LOG_LEVEL to "NOTICE" and
+  # tail -f /var/log/gemeinschaft/gs.log
+  # Test the update mechanism with 1 or 2 phones. This is especially
+  # important with PoE (Power over Ethernet) switches.
+$SNOM_PROV_FW_UPDATE        = false;  # allow firmware updates?
+$SNOM_PROV_FW_BETA          = false;  # allow beta versions?
+$SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
+  # upgrading vom 6 to 7 might require SNOM_PROV_FW_BETA
+
+
 //-----------------[  Siemens OpenStage  ]----------------//
 
 //...
