@@ -179,7 +179,7 @@ $PROV_DIAL_LOG_LIFE         = 14*24*3600;
 
 //---------------------[  Snom 3xx  ]---------------------//
 
-$SNOM_ENABLED               = true;  # do provisioning for Snom?
+$SNOM_PROV_ENABLED          = true;  # do provisioning for Snom?
                                      # show keyset for Snom in the GUI?
 
 $SNOM_PROV_HTTP_USER        = 'gs';
