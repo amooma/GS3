@@ -49,8 +49,8 @@
       </formalpara>
 
       <para>Natürlich kann man - abhängig vom eingesetzten DHCP-Server - auch
-      etwas ausgefeiltere Einstellungen verwenden, z.B. so
-      (ungetestet):<programlisting><emphasis role="bold">class "Snom" {
+      etwas ausgefeiltere Einstellungen verwenden, z.B. so:<programlisting><emphasis
+            role="bold">class "Snom" {
     match if substring(hardware, 1, 3) = 00:04:13;
 }</emphasis>
 
@@ -68,7 +68,7 @@ subnet 192.168.0.0 netmask 255.255.0.0 {
         on commit {
             log(info, concat("Client ",
                 binary-to-ascii(16, 8, ":", substring(hardware, 1, 6)),
-                " requests ",
+                " requests options ",
                 binary-to-ascii(16, 8, ":", option dhcp-parameter-request-list),
                 " - ",
                 pick-first-value(option vendor-class-identifier, "no vendor-id")
@@ -252,11 +252,19 @@ subnet 192.168.0.0 netmask 255.255.0.0 {
 
     <para>Um die Telefone mit der korrekten Uhrzeit zu versorgen, muß in der
     Konfiguration des DHCP-Servers ein (oder mehrere) NTP-Server<footnote>
-        <para>Installation:<programlisting><command>yum -y install ntp</command>
+        <variablelist termlength="20">
+          <varlistentry>
+            <term>CentOS:</term>
+
+            <listitem>
+              <para>Installation:<programlisting><command>yum -y install ntp</command>
 <command>chkconfig --levels 235 ntpd on</command></programlisting></para>
 
-        <para>Die <filename>/etc/ntp.conf</filename> Ihren Gegebenheiten
-        anpassen und:<programlisting><command>service ntpd start</command></programlisting></para>
+              <para>Die <filename>/etc/ntp.conf</filename> Ihren Gegebenheiten
+              anpassen und:<programlisting><command>service ntpd restart</command></programlisting></para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
       </footnote> angegeben sein.</para>
 
     <formalpara>
