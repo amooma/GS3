@@ -33,9 +33,9 @@ require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_die_on_err');
 
 
-$allow_update    = false;  //FIXME - needs config param
-$allow_beta      = false;  //FIXME - needs config param
-$allow_v_6_to_7  = false;  //FIXME - needs config param
+$allow_update    = gs_get_conf('GS_SNOM_PROV_FW_UPDATE');
+$allow_beta      = gs_get_conf('GS_SNOM_PROV_FW_BETA'  );
+$allow_v_6_to_7  = gs_get_conf('GS_SNOM_PROV_FW_6TO7'  );
 
 $allow_only_specified_mac_addrs = false;
 $allowed_mac_addrs = array(
