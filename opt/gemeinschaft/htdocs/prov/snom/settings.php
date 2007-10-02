@@ -1022,6 +1022,8 @@ psetting('show_call_status', 'off');
 
 psetting('show_local_line', 'off');
 
+psetting('logon_wizard', 'off');
+
 
 
 #####################################################################
