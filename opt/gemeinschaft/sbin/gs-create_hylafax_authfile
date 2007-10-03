@@ -30,21 +30,7 @@
 define( 'GS_VALID', true );  /// this is a parent file
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
-include_once( GS_DIR .'lib/getopt.php' );
-include_once( GS_DIR .'inc/gs-lib.php' );
-
-
-/***********************************************************
-*    the shell parameters
-***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__);
-
-$opts = getOptsNoMultiples( '',
-	array(
-	),
-	$usage
-);
-
+include_once( GS_DIR .'inc/db_connect.php' );
 
 
 $file = '/tmp/gs-hylafax-hosts.hfaxd';
