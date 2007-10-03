@@ -330,9 +330,9 @@ $FAX_PREFIX             = '6';           # not used yet  //FIXME
 $FAX_TSI_PREFIX         = @$CANONIZE_NATL_PREFIX.
                           @$CANONIZE_AREA_CODE.
                           @$CANONIZE_LOCAL_BRANCH;
-$FAX_TSI                = $FAX_TSI_PREFIX.'0,'   .
-                          $FAX_TSI_PREFIX.'100,' .
-                          $FAX_TSI_PREFIX.'99'   ;
+$FAX_TSI                = @$FAX_TSI_PREFIX.'0,'   .
+                          @$FAX_TSI_PREFIX.'100,' .
+                          @$FAX_TSI_PREFIX.'99'   ;
   # (TSI = Transmitting Subscriber Identification)
 $FAX_HYLAFAX_HOST       = '127.0.0.1';
 $FAX_HYLAFAX_PORT       = 4559;          # HylaFax port (FTP-like protocol)
