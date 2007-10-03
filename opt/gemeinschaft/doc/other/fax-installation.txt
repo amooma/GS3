@@ -166,16 +166,16 @@ allow=alaw
 
 6. Gemeinschaft konfigurieren
 
-/opt/gemeinschaft/inc/conf.php
+/etc/gemeinschaft/gemeinschaft.php
 ------------------------------------------------------------------------------------
 
-define( 'GS_FAX_SERVER'   , '127.0.0.1' );
-define( 'GS_FAX_PORT'   , '4559' );
-define( 'GS_FAX_TSI_PFEFIX', '0251' );
-define( 'GS_FAX_TSI', '02511234, 02515677' );
+$FAX_SERVER      = '127.0.0.1';
+$FAX_PORT        = 4559;
+$FAX_TSI_PFEFIX  = '0251';
+$FAX_TSI         = '02511234, 02515677';
 
 ------------------------------------------------------------------------------------
-GS_FAX_TSI_PREFIX + User-Extension = Fax-Senderkennung
-GS_FAX_TSI = Zusätzliche globale Faxnummern, die der Benutzer als Faxkennung setzen darf.
+$FAX_TSI_PREFIX + User-Extension = Fax-Senderkennung
+$FAX_TSI = Zusätzliche globale Faxnummern, die der Benutzer als Faxkennung setzen darf.
 
 
