@@ -40,7 +40,9 @@ function fax_get_jobs_rec() {
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
-	$login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
+	$login_result = ftp_login($conn_id,
+		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
+		gs_get_conf('GS_FAX_HYLAFAX_PASS' ));
 	if (! $login_result) return false;
 	
 	if (! ftp_raw($conn_id, 'RCVFMT "%a|%b|%d|%e|%f|%h|%i|%j|%l|%m|%n|%o|%p|%p|%r|%s|%w|%z|%Z"'))
@@ -62,7 +64,9 @@ function fax_get_jobs_done() {
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
-	$login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
+	$login_result = ftp_login($conn_id,
+		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
+		gs_get_conf('GS_FAX_HYLAFAX_PASS' ));
 	if (! $login_result) return false;
 	
 	if (! ftp_raw($conn_id, 'JOBFMT "%a|%b|%c|%d|%e|%f|%g|%h|%i|%j|%l|%n|%o|%p|%q|%r|%s|%t|%u|%v|%w|%x|%y|%z|%I|%K|%M|%R|%S|%V|%W|%X|%Z"'))
@@ -82,7 +86,9 @@ function fax_get_jobs_send() {
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
-	$login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
+	$login_result = ftp_login($conn_id,
+		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
+		gs_get_conf('GS_FAX_HYLAFAX_PASS' ));
 	if (! $login_result) return false;
 	
 	if (! ftp_raw($conn_id, 'JOBFMT "%a|%b|%c|%d|%e|%f|%g|%h|%i|%j|%l|%n|%o|%p|%q|%r|%s|%t|%u|%v|%w|%x|%y|%z|%I|%K|%M|%R|%S|%V|%W|%X|%Z"'))
@@ -101,7 +107,9 @@ function fax_delete_file( $file ) {
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
-	$login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
+	$login_result = ftp_login($conn_id,
+		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
+		gs_get_conf('GS_FAX_HYLAFAX_PASS' ));
 	if (! $login_result) return false;
 	
 	if (! ftp_raw($conn_id, 'admin ablue7')) return false;
@@ -115,7 +123,9 @@ function fax_delete_job( $job ) {
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
-	$login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
+	$login_result = ftp_login($conn_id,
+		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
+		gs_get_conf('GS_FAX_HYLAFAX_PASS' ));
 	if (! $login_result) return false;
 	
 	if (! ftp_raw($conn_id, 'admin ablue7')) return false;
@@ -129,7 +139,9 @@ function fax_kill_job( $job ) {
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
-	$login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
+	$login_result = ftp_login($conn_id,
+		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
+		gs_get_conf('GS_FAX_HYLAFAX_PASS' ));
 	if (! $login_result) return false;
 	
 	if (! ftp_raw($conn_id, 'admin ablue7')) return false;
@@ -149,7 +161,9 @@ function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email,
 	
 	if ($resolution < 98) $resolution = 98; 
 	
-	$login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
+	$login_result = ftp_login($conn_id,
+		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
+		gs_get_conf('GS_FAX_HYLAFAX_PASS' ));
 	if (! $login_result) return false;
 	
 	$ret_val = ftp_raw($conn_id, 'jnew');
@@ -187,10 +201,13 @@ function fax_download( $file ) {
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
-	$login_result = ftp_login($conn_id, 'webmanag', 'ablue7');
+	$hf_pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
+	$login_result = ftp_login($conn_id,
+		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
+		$hf_pass);
 	if (! $login_result) return false;
 	
-	if (! ftp_raw($conn_id, 'admin ablue7')) return false;
+	if (! ftp_raw($conn_id, 'admin '.$hf_pass)) return false;
 	$ret_val = @ftp_get($conn_id, '/tmp/'.$file, 'recvq/'.$file, FTP_BINARY);
 	ftp_close($conn_id);
 	return $ret_val;
