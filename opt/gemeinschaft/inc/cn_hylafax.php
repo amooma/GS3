@@ -35,8 +35,8 @@
 ######################################################
 
 
-function fax_get_jobs_rec() {
-	
+function fax_get_jobs_rec()
+{
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
@@ -59,8 +59,9 @@ function fax_get_jobs_rec() {
 	return $jobs_r;
 }
 
-function fax_get_jobs_done() {
-	
+
+function fax_get_jobs_done()
+{
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
@@ -81,8 +82,9 @@ function fax_get_jobs_done() {
 	return $jobs_r;
 }
 
-function fax_get_jobs_send() {
-	
+
+function fax_get_jobs_send()
+{
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
@@ -102,8 +104,9 @@ function fax_get_jobs_send() {
 	return $jobs_r;
 }
 
-function fax_delete_file( $file ) {
-	
+
+function fax_delete_file( $file )
+{
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
@@ -118,8 +121,9 @@ function fax_delete_file( $file ) {
 	return $ret_val;
 }
 
-function fax_delete_job( $job ) {
-	
+
+function fax_delete_job( $job )
+{
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
@@ -134,8 +138,9 @@ function fax_delete_job( $job ) {
 	return $ret_val;
 }
 
-function fax_kill_job( $job ) {
-	
+
+function fax_kill_job( $job )
+{
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
@@ -150,8 +155,9 @@ function fax_kill_job( $job ) {
 	return $ret_val;
 }
 
-function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email, $resolution ) {
-	
+
+function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email, $resolution )
+{
 	if ($file) {
 		$remote_file = dirname($file).'/doc-'.basename ($file);
 	} else return false;
@@ -196,8 +202,9 @@ function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email,
 	return ($ret_val ? $jobid : false);
 }
 
-function fax_download( $file ) {
-	
+
+function fax_download( $file )
+{
 	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
 	if (! $conn_id) return false;
 	
