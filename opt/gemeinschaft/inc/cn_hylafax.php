@@ -37,7 +37,9 @@
 
 function fax_get_jobs_rec()
 {
-	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
+	$conn_id = ftp_connect(
+		gs_get_conf('GS_FAX_SERVER'),
+		gs_get_conf('GS_FAX_PORT'  ));
 	if (! $conn_id) return false;
 	
 	$login_result = ftp_login($conn_id,
@@ -62,7 +64,9 @@ function fax_get_jobs_rec()
 
 function fax_get_jobs_done()
 {
-	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
+	$conn_id = ftp_connect(
+		gs_get_conf('GS_FAX_SERVER'),
+		gs_get_conf('GS_FAX_PORT'  ));
 	if (! $conn_id) return false;
 	
 	$login_result = ftp_login($conn_id,
@@ -85,7 +89,9 @@ function fax_get_jobs_done()
 
 function fax_get_jobs_send()
 {
-	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
+	$conn_id = ftp_connect(
+		gs_get_conf('GS_FAX_SERVER'),
+		gs_get_conf('GS_FAX_PORT'  ));
 	if (! $conn_id) return false;
 	
 	$login_result = ftp_login($conn_id,
@@ -107,7 +113,9 @@ function fax_get_jobs_send()
 
 function fax_delete_file( $file )
 {
-	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
+	$conn_id = ftp_connect(
+		gs_get_conf('GS_FAX_SERVER'),
+		gs_get_conf('GS_FAX_PORT'  ));
 	if (! $conn_id) return false;
 	
 	$login_result = ftp_login($conn_id,
@@ -124,7 +132,9 @@ function fax_delete_file( $file )
 
 function fax_delete_job( $job )
 {
-	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
+	$conn_id = ftp_connect(
+		gs_get_conf('GS_FAX_SERVER'),
+		gs_get_conf('GS_FAX_PORT'  ));
 	if (! $conn_id) return false;
 	
 	$login_result = ftp_login($conn_id,
@@ -141,7 +151,9 @@ function fax_delete_job( $job )
 
 function fax_kill_job( $job )
 {
-	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
+	$conn_id = ftp_connect(
+		gs_get_conf('GS_FAX_SERVER'),
+		gs_get_conf('GS_FAX_PORT'  ));
 	if (! $conn_id) return false;
 	
 	$login_result = ftp_login($conn_id,
@@ -162,7 +174,9 @@ function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email,
 		$remote_file = dirname($file).'/doc-'.basename ($file);
 	} else return false;
 	
-	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
+	$conn_id = ftp_connect(
+		gs_get_conf('GS_FAX_SERVER'),
+		gs_get_conf('GS_FAX_PORT'  ));
 	if (! $conn_id) return false;
 	
 	if ($resolution < 98) $resolution = 98; 
@@ -205,7 +219,9 @@ function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email,
 
 function fax_download( $file )
 {
-	$conn_id = ftp_connect(GS_FAX_SERVER, GS_FAX_PORT);
+	$conn_id = ftp_connect(
+		gs_get_conf('GS_FAX_SERVER'),
+		gs_get_conf('GS_FAX_PORT'  ));
 	if (! $conn_id) return false;
 	
 	$hf_pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
