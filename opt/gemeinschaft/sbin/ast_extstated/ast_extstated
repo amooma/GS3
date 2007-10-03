@@ -720,7 +720,7 @@ my $remote_ext_out;
 while (1) {
 	
 	$time = time();
-	$from_time = $time - 3;
+	$from_time = $time - 2;
 	
 	$out_all = "array(\n";
 	$out_mod = "array(\n";
@@ -849,7 +849,7 @@ while (1) {
 	
 	#undef @data;
 	#sleep(1);
-	&usleep(500000);  # 0.5 s
+	&usleep(400000);  # 0.4 s
 }
 
 
