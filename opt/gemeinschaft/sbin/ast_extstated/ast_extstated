@@ -705,6 +705,8 @@ my $ext;
 my $stateval;
 my $out_all = '';
 my $out_mod = '';
+my $out_mod_old = '';
+my $cnt_changes = 0;
 my $tmp = '';
 my $is_external = 0;
 my $from_time = 0;
@@ -724,6 +726,7 @@ while (1) {
 	
 	$out_all = "array(\n";
 	$out_mod = "array(\n";
+	$cnt_changes = 0;
 	while (($ext, $stateval) = each(%extstates)) {
 		$is_external = $chanremotes{ $ext } || 0;
 		
@@ -747,6 +750,7 @@ while (1) {
 		$out_all .= $tmp;
 		if ($lastchanged{$ext} > $from_time) {
 			$out_mod .= $tmp;
+			$cnt_changes++;
 			#if ($lastchanged{$ext} == MAXINT) {
 			#	# i.e. needs to be deleted to prevent leaking
 			#	print "deleting lastchanged info for ext. $ext\n";
@@ -816,31 +820,45 @@ while (1) {
 		}
 	}
 	
-	# Write to the clients that are available
-	foreach $client ( @write_ready = $sel->can_write(0) ) {
-		#foreach $line (@data) {
-		#	print $client "$line\0";
-		#}
-		#print "Sending update to client ". fileno($client) ."\n";
-		print $client ($out_mod ."=====\n");
-		
-		#print "Connection will end at ". $conn_close{fileno($client)} ."\n";
-		if ($conn_close{fileno($client)} < $time) {
-			#print "END.\n";
-			#print $client ("<script type=\"text/javascript\">\n"
-			#              ."ae_close();\n"
-			#              .$ie_pad
-			#              ."\n</script>" ."\n");
-			&usleep(1000);  # 0.001 s
-			#if ($new_client && $new_client->peerhost) {
-			#	print "Client " . $new_client->peerhost . " disconnected\n";
-			#} else {
-			#	print "Client disconnected\n";
+	if ($cnt_changes > 0 && $out_mod ne $out_mod_old) {
+		# Write to the clients that are available
+		foreach $client ( @write_ready = $sel->can_write(0) ) {
+			#foreach $line (@data) {
+			#	print $client "$line\0";
 			#}
-			$sel->remove($client);
-			delete $conn_close{fileno($client)};
-			$client->close();
+			#print "Sending update to client ". fileno($client) ."\n";
+			print $client ($out_mod ."=====\n");
+			
+			#print "Connection will end at ". $conn_close{fileno($client)} ."\n";
+			if ($conn_close{fileno($client)} < $time) {
+				#print "END.\n";
+				#print $client ("<script type=\"text/javascript\">\n"
+				#              ."ae_close();\n"
+				#              .$ie_pad
+				#              ."\n</script>" ."\n");
+				&usleep(100);  # 0.0001 s
+				#if ($new_client && $new_client->peerhost) {
+				#	print "Client " . $new_client->peerhost . " disconnected\n";
+				#} else {
+				#	print "Client disconnected\n";
+				#}
+				$sel->remove($client);
+				delete $conn_close{fileno($client)};
+				$client->close();
+			}
 		}
+		$out_mod_old = $out_mod;
+	} else {
+		foreach $client ( @write_ready = $sel->can_write(0) ) {
+			print $client ("array()\n=====\n");
+			if ($conn_close{fileno($client)} < $time) {
+				&usleep(100);  # 0.0001 s
+				$sel->remove($client);
+				delete $conn_close{fileno($client)};
+				$client->close();
+			}
+		}
+		&usleep(200000);  # 0.2 s
 	}
 	
 	#while (my($clnum, $conn_end) = each(%conn_close)) {
@@ -849,7 +867,7 @@ while (1) {
 	
 	#undef @data;
 	#sleep(1);
-	&usleep(400000);  # 0.4 s
+	&usleep(200000);  # 0.2 s
 }
 
 
