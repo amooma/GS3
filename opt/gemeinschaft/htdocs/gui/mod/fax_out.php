@@ -77,7 +77,7 @@ if (is_array($jobs_send)) {
 	$jobs_send_count = count($jobs_send);
 	
 	foreach ($jobs_send as $key => $row) {
-		if ($row[12] === 'webmanag')
+		if ($row[12] === gs_get_conf('GS_FAX_HYLAFAX_ADMIN'))
 				$fax_username = $row[28];
 			else
 				$fax_username = $row[12];		

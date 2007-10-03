@@ -90,7 +90,7 @@ $recdate = array();
 $jobid   = array();
 if (is_array($jobs_done)) {
 	foreach ($jobs_done as $key => $row) {
-		if (($row[12]) === 'webmanag')
+		if (($row[12]) === gs_get_conf('GS_FAX_HYLAFAX_ADMIN'))
 				$fax_username = $row[28];
 			else
 				$fax_username = $row[12];		
