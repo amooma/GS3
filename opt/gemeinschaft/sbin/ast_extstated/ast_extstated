@@ -283,6 +283,7 @@ sub handle_event
 	
 	elsif ($evtname eq 'newchannel' || $evtname eq 'hangup') {
 		#print "\nGOT EVENT $evtname:\n$pkt\n\n";
+		# see Asterisk's channel.c
 		
 		if ($pkt !~ m/^Uniqueid:\s*([0-9\.\-_]+)/mio) {return;}
 		if (! defined($1)) {return;}
@@ -290,16 +291,19 @@ sub handle_event
 		
 		my $ext = '';
 		my $ext_is_external = 0;
-		if ($pkt =~ m/^Channel:\s*SIP\/([0-9]+)/mio) {
+		if ($pkt =~ m/^Channel:\s*(?:SIP)\/([0-9]+)/mio) {
 			if (! defined($1)) {return;}
 			$ext = $1;
-			if ($ext !~ m/^[1-9]/o) {
+			if ($ext =~ m/^0/o) {
 				$ext_is_external = 1;
 			}
-		} elsif ($pkt =~ m/^Channel:\s*Zap\/(?:[gr][0-9]+\/)?([0-9]+)/mio) {
-			if (! defined($1)) {return;}
-			$ext = $1;
+		} elsif ($pkt =~ m/^Channel:\s*Zap\//mio) {
 			$ext_is_external = 1;
+			if ($pkt =~ m/^CallerIDNum:\s*([0-9*#]*)\//mio) {
+				$ext = $1 unless (!defined($1));
+			} elsif ($pkt =~ m/^Callerid:\s*[^<]*<([0-9*#]*)\//mio) {
+				$ext = $1 unless (!defined($1));
+			}
 		} else {return;}
 		
 		#print "\n UNIQUEID $uniqueid\n";
