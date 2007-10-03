@@ -203,6 +203,12 @@ _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]
 if ((float)PHP_VERSION >= 5.0)
 	$FAX_ENABLED = false;
 _gscnf( 'FAX_ENABLED'               , false              );
+_gscnf( 'FAX_PREFIX',    gs_get_conf('GS_CANONIZE_NATL_PREFIX' , '0'  ).
+                         gs_get_conf('GS_CANONIZE_AREA_CODE'   , '999').
+                         gs_get_conf('GS_CANONIZE_LOCAL_BRANCH', '999'));
+_gscnf( 'FAX_TSI_PREFIX'            , ''                 );
+_gscnf( 'FAX_TSI'                   , ''                 );
+# (TSI = Transmitting Subscriber Identification)
 _gscnf( 'FAX_HYLAFAX_HOST'          , '127.0.0.1'        );
 _gscnf( 'FAX_HYLAFAX_PORT'          , 4559               );
 $FAX_HYLAFAX_ADMIN =
@@ -213,12 +219,6 @@ $FAX_HYLAFAX_PASS  =
 	preg_replace('/[^a-z0-9\-_.]/i', '',
 	@$FAX_HYLAFAX_PASS  );
 _gscnf( 'FAX_HYLAFAX_PASS'          , 'sEcr3T'           );
-_gscnf( 'FAX_PREFIX',    gs_get_conf('GS_CANONIZE_NATL_PREFIX' , '0'  ).
-                         gs_get_conf('GS_CANONIZE_AREA_CODE'   , '999').
-                         gs_get_conf('GS_CANONIZE_LOCAL_BRANCH', '999'));
-_gscnf( 'FAX_TSI_PREFIX'            , ''                 );
-_gscnf( 'FAX_TSI'                   , ''                 );
-# (TSI = Transmitting Subscriber Identification)
 
 _gscnf( 'LOG_FILE'                  , '/var/log/gemeinschaft/gs.log' );
 _gscnf( 'LOG_GMT'                   , true               );
