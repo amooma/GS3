@@ -91,8 +91,8 @@ echo "Written to $file\n";
 
 
 
-$hf_host = gs_get_conf('GS_FAX_SERVER');
-$hf_port = gs_get_conf('GS_FAX_PORT'  );
+$hf_host = gs_get_conf('GS_FAX_HYLAFAX_HOST');
+$hf_port = gs_get_conf('GS_FAX_HYLAFAX_PORT');
 
 $conn_id = @ftp_connect($hf_host, $hf_port);
 if (! $conn_id) {
