@@ -203,8 +203,8 @@ _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]
 if ((float)PHP_VERSION >= 5.0)
 	$FAX_ENABLED = false;
 _gscnf( 'FAX_ENABLED'               , false              );
-_gscnf( 'FAX_SERVER'                , '127.0.0.1'        );
-_gscnf( 'FAX_PORT'                  , 4559               );
+_gscnf( 'FAX_HYLAFAX_HOST'          , '127.0.0.1'        );
+_gscnf( 'FAX_HYLAFAX_PORT'          , 4559               );
 $FAX_HYLAFAX_ADMIN =
 	preg_replace('/[^a-z0-9\-_.]/i', '',
 	@$FAX_HYLAFAX_ADMIN );
