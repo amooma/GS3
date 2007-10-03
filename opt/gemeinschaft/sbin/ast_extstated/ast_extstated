@@ -294,9 +294,7 @@ sub handle_event
 		if ($pkt =~ m/^Channel:\s*(?:SIP)\/([0-9]+)/mio) {
 			if (! defined($1)) {return;}
 			$ext = $1;
-			if ($ext =~ m/^0/o) {
-				$ext_is_external = 1;
-			}
+			if ($ext =~ m/^0/o) { $ext_is_external = 1; }
 		} elsif ($pkt =~ m/^Channel:\s*Zap\//mio) {
 			$ext_is_external = 1;
 			if ($pkt =~ m/^CallerIDNum:\s*([0-9*#]*)\//mio) {
@@ -322,6 +320,18 @@ sub handle_event
 		if ($pkt !~ m/^Uniqueid2:\s*([0-9\.\-_]+)/mio) {return;}
 		if (! defined($1)) {return;}
 		my $uniqueid2 = $1;
+		
+		# maybe we did not get a callerid/calleeid with the NewChannel
+		# event but now it might be available
+		my $cidnum = '';
+		if ($pkt =~ m/^CallerID1:\s*([0-9\.\-_]+)/mio) {
+			$cidnum = $1;
+			&handle_channel_up_down(\$uniqueid1, \$cidnum, (($cidnum =~ m/^0/o) ? 1:0), 1);
+		}
+		if ($pkt =~ m/^CallerID2:\s*([0-9\.\-_]+)/mio) {
+			$cidnum = $1;
+			&handle_channel_up_down(\$uniqueid2, \$cidnum, (($cidnum =~ m/^0/o) ? 1:0), 1);
+		}
 		
 		&handle_channel_link_unlink(\$uniqueid1, \$uniqueid2, ($evtname eq 'link' ? 1:0));
 	}
