@@ -425,9 +425,9 @@ sub handle_channel_link_unlink : locked
 	
 	my $ext = '';
 	$ext = $chan_to_ext{ $uniqueid1 };
-	if ($ext) { $lastchanged{ $ext } = time(); }
+	if (defined($ext)) { $lastchanged{ $ext } = time(); }
 	$ext = $chan_to_ext{ $uniqueid2 };
-	if ($ext) { $lastchanged{ $ext } = time(); }
+	if (defined($ext)) { $lastchanged{ $ext } = time(); }
 	
 	#print "KNOWN LINKS:\n";
 	#my $c_uniqueid1 = '';
