@@ -66,7 +66,7 @@ our $conn_time      = 25;
 #
 #########################################################
 
-
+#use constant MAXINT => 0x7fffffff;
 
 use constant {  # "\n" is platform dependant!
 	CR   => "\x0D",
@@ -397,15 +397,20 @@ sub handle_channel_up_down : locked
 	
 	if ($up_down) {
 		$chan_to_ext{ $uniqueid } = $ext;
-		$ext_to_chan{ $ext      } = $uniqueid;
-		$chanremotes{ $ext      } = $ext_is_external;
+		if (! $ext_is_external && exists($lastchanged{$ext})) {
+			$ext_to_chan{ $ext      } = $uniqueid;
+			$chanremotes{ $ext      } = $ext_is_external;
+			$lastchanged{ $ext      } = time();
+		}
 	} else {
 		delete $chan_to_ext { $uniqueid };
 		delete $ext_to_chan { $ext      };
 		delete $chanremotes { $ext      };
 		delete $chan_to_chan{ $uniqueid };
+		if (! $ext_is_external && exists($lastchanged{$ext})) {
+			$lastchanged{ $ext      } = time();
+		}
 	}
-	$lastchanged{ $ext } = time();
 	
 	#print "KNOWN CHANNELS:\n";
 	#my $c_uniqueid = '';
@@ -436,9 +441,13 @@ sub handle_channel_link_unlink : locked
 	
 	my $ext = '';
 	$ext = $chan_to_ext{ $uniqueid1 };
-	if (defined($ext)) { $lastchanged{ $ext } = time(); }
+	if ($ext && exists($lastchanged{$ext})) {
+		$lastchanged{ $ext } = time();
+	}
 	$ext = $chan_to_ext{ $uniqueid2 };
-	if (defined($ext)) { $lastchanged{ $ext } = time(); }
+	if ($ext && exists($lastchanged{$ext})) {
+		$lastchanged{ $ext } = time();
+	}
 	
 	#print "KNOWN LINKS:\n";
 	#my $c_uniqueid1 = '';
@@ -719,7 +728,7 @@ while (1) {
 		$is_external = $chanremotes{ $ext } || 0;
 		
 		$remote_ext_out = undef;
-		$uniqueid    = $ext_to_chan{ $ext };
+		$uniqueid = $ext_to_chan{ $ext };
 		if ($uniqueid) {
 			$uniqueid = $chan_to_chan{ $uniqueid };
 			if ($uniqueid) {
@@ -738,6 +747,11 @@ while (1) {
 		$out_all .= $tmp;
 		if ($lastchanged{$ext} > $from_time) {
 			$out_mod .= $tmp;
+			#if ($lastchanged{$ext} == MAXINT) {
+			#	# i.e. needs to be deleted to prevent leaking
+			#	print "deleting lastchanged info for ext. $ext\n";
+			#	delete $lastchanged{$ext};
+			#}
 		}
 	}
 	if (substr($out_all,-2) eq ",\n") { $out_all = substr($out_all,0,-2); }
