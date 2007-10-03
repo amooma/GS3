@@ -201,18 +201,21 @@ _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]
 # to communicate with HylaFax ftp_raw() is required, which is not
 # available in PHP < 5
 if ((float)PHP_VERSION >= 5.0)
-	_gscnf( 'FAX_ENABLED'               , false              );
-else
-	define('GS_FAX_ENABLED', false);
+	$FAX_ENABLED = false;
+_gscnf( 'FAX_ENABLED'               , false              );
 _gscnf( 'FAX_SERVER'                , '127.0.0.1'        );
 _gscnf( 'FAX_PORT'                  , 4559               );
-$FAX_HYLAFAX_ADMIN = preg_replace('/[^a-z0-9\-_.]/i', '', @$FAX_HYLAFAX_ADMIN);
+$FAX_HYLAFAX_ADMIN =
+	preg_replace('/[^a-z0-9\-_.]/i', '',
+	@$FAX_HYLAFAX_ADMIN );
 _gscnf( 'FAX_HYLAFAX_ADMIN'         , 'admin'            );
-$FAX_HYLAFAX_PASS  = preg_replace('/[^a-z0-9\-_.]/i', '', @$FAX_HYLAFAX_PASS );
+$FAX_HYLAFAX_PASS  =
+	preg_replace('/[^a-z0-9\-_.]/i', '',
+	@$FAX_HYLAFAX_PASS  );
 _gscnf( 'FAX_HYLAFAX_PASS'          , 'sEcr3T'           );
-_gscnf( 'FAX_PREFIX'                , gs_get_conf('GS_CANONIZE_NATL_PREFIX', '0'  ).
-                                      gs_get_conf('CANONIZE_AREA_CODE'     , '999').
-                                      gs_get_conf('CANONIZE_LOCAL_BRANCH'  , '999'));
+_gscnf( 'FAX_PREFIX',    gs_get_conf('GS_CANONIZE_NATL_PREFIX' , '0'  ).
+                         gs_get_conf('GS_CANONIZE_AREA_CODE'   , '999').
+                         gs_get_conf('GS_CANONIZE_LOCAL_BRANCH', '999'));
 _gscnf( 'FAX_TSI_PREFIX'            , ''                 );
 _gscnf( 'FAX_TSI'                   , ''                 );
 # (TSI = Transmitting Subscriber Identification)
