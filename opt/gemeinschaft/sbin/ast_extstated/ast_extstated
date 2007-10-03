@@ -618,7 +618,7 @@ sub ami_listen
 	
 	$ami->debug(0);
 	$ami->register_loggedin_cb( \&handle_loggedin );
-	my @eventtypes = ('extensionstatus', 'newexten', 'newchannel', 'hangup', 'link', 'unlink');
+	my @eventtypes = ('extensionstatus', 'newchannel', 'hangup', 'link', 'unlink');
 	$ami->register_event_cb( \&handle_event, \@eventtypes );
 	$ami->register_response_cb( \&handle_response );
 	
