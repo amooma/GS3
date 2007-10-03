@@ -45,26 +45,7 @@ $opts = getOptsNoMultiples( '',
 	$usage
 );
 
-$db = gs_db_master_connect();
-if (! $db) {
-	echo "Could not connect to database.\n";
-	exit(1);
-}
 
-$rs = $db->execute(
-'SELECT `id`, `user`, `pin`
-FROM `users`
-WHERE `nobody_index` IS NULL
-ORDER BY `id`'
-);
-if (! $rs) {
-	echo "Error.\n";
-	exit(1);
-}
-
-$users = array();
-while ($r = $rs->fetchRow())
-	$users[] = $r;
 
 $file = '/tmp/gs-hylafax-hosts.hfaxd';
 $fh = @fOpen($file,'w');
@@ -76,8 +57,6 @@ if (!$fh) {
 
 $hf_admin = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
 $hf_pass  = gs_get_conf('GS_FAX_HYLAFAX_PASS' );
-$hf_admin = preg_replace('/[^a-z0-9\-_.]/i', '', $hf_admin);
-$hf_pass  = preg_replace('/[^a-z0-9\-_.]/i', '', $hf_pass );
 
 if ($hf_admin != '') {
 	$crypted = crypt('ablue7', 'pF');
@@ -85,12 +64,28 @@ if ($hf_admin != '') {
 	fWrite($fh, $tmp, strLen($tmp));
 }
 
-foreach ($users as $user) {
+
+$db = gs_db_master_connect();
+if (! $db) {
+	echo "Could not connect to database.\n";
+	exit(1);
+}
+$rs = $db->execute(
+'SELECT `id`, `user`, `pin`
+FROM `users`
+WHERE `nobody_index` IS NULL
+ORDER BY `id`'
+);
+if (! $rs) {
+	echo "Error.\n";
+	exit(1);
+}
+
+while ($user = $rs->fetchRow()) {
 	$crypted = crypt($user['pin'], 'ml');
 	$tmp = $user['user'].'@:'.$user['id'].':'.$crypted ."\n";
 	fWrite($fh, $tmp, strLen($tmp));
 }
-
 fClose($fh);
 echo "Written to $file\n";
 
