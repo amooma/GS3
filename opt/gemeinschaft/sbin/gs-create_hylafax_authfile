@@ -59,7 +59,7 @@ $hf_admin = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
 $hf_pass  = gs_get_conf('GS_FAX_HYLAFAX_PASS' );
 
 if ($hf_admin != '') {
-	$crypted = crypt('ablue7', 'pF');
+	$crypted = crypt($hf_pass, 'pF');
 	$tmp = $hf_admin.'@:'.'0'.':'.$crypted.':'.$crypted ."\n";
 	fWrite($fh, $tmp, strLen($tmp));
 }
