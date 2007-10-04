@@ -29,22 +29,33 @@
 defined('GS_VALID') or die('No direct access.');
 
 require_once( GS_DIR .'inc/get-listen-to-ips.php' );
-include_once( GS_DIR .'inc/db_connect.php' );
+require_once( GS_DIR .'inc/db_connect.php' );
 //require_once( GS_DIR .'inc/util.php' );
+require_once( GS_DIR .'inc/log.php' );
+
 
 function gs_get_listen_to_ids( $primary_only=false )
 {
 	# get our IPs
 	#
 	$ips = @ gs_get_listen_to_ips( $primary_only );
-	if (! is_array($ips)) return array();
-	if (count($ips) < 1) return array();
+	if (! is_array($ips)) {
+		gs_log(GS_LOG_WARNING, "Failed to get our IP addresses!");
+		return array();
+	}
+	if (count($ips) < 1) {
+		gs_log(GS_LOG_DEBUG, "We're not configured to listen to any IP addresses");
+		return array();
+	}
 	
 	# connect to db
 	# must be to slave db so we can tell our IDs even if the master is down
 	#
 	$db = gs_db_slave_connect();
-	if (! $db) return array();
+	if (! $db) {
+		gs_log(GS_LOG_WARNING, "Failed to connect to the database!");
+		return array();
+	}
 	
 	# find the corresponding IDs
 	#
@@ -53,7 +64,10 @@ function gs_get_listen_to_ids( $primary_only=false )
 		$ips_escaped[] = '\''. $db->escape( $ip ) .'\'';
 	// count($ips) guaranteed to be > 0
 	$rs = $db->execute( 'SELECT `id` FROM `hosts` WHERE `host` IN ('. implode(',', $ips_escaped) .')' );
-	if (! $rs) return array();
+	if (! $rs) {
+		gs_log(GS_LOG_WARNING, "Database error!");
+		return array();
+	}
 	$ids = array();
 	while ($r = $rs->fetchRow())
 		$ids[] = (int)$r['id'];
@@ -65,8 +79,14 @@ function gs_get_listen_to_ids( $primary_only=false )
 function gs_get_listen_to_primary_id()
 {
 	$ids = @gs_get_listen_to_ids(true);
-	if (! is_array($ips)) return null;
-	if (count($ips) < 1) return null;
+	if (! is_array($ids)) {
+		gs_log(GS_LOG_WARNING, "Failed to get our primary IP address!");
+		return null;
+	}
+	if (count($ids) < 1) {
+		gs_log(GS_LOG_DEBUG, "Failed to get our primary IP address!");
+		return null;
+	}
 	return $ids[0];
 }
 
