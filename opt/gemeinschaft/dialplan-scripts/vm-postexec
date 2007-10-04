@@ -43,16 +43,20 @@ $mailbox = preg_replace('/[^0-9]/', '',		   @$argv[2]);
 $num_vms =						     (int)trim(@$argv[3]);
 # only messages in INBOX are counted
 
-gs_log(GS_LOG_DEBUG, "vm-postexec: context $context, mailbox $mailbox, num $num_vms");
-
 if ($context === '') {
-	echo "Context missing.\n";
+	gs_log(GS_LOG_WARNING, "Context arg missing.");
+	echo "Context arg missing.\n";
 	exit(1);
 }
 if ($mailbox === '') {
-	echo "Mailbox missing.\n";
+	gs_log(GS_LOG_WARNING, "Mailbox arg missing.");
+	echo "Mailbox arg missing.\n";
 	exit(1);
 }
+
+//gs_log(GS_LOG_DEBUG, "vm-postexec: context $context, mailbox $mailbox, num $num_vms");
+gs_log(GS_LOG_DEBUG, "Mailbox $mailbox: processing ...");
+
 
 $path = '/var/spool/asterisk/voicemail/'.$context.'/'.$mailbox.'/';
 if (! @chDir( $path )) {
@@ -136,20 +140,22 @@ foreach ($files as $filename) {
 		$info['cidname'] = '';
 	
 	$uniqueid = array(
+		'mailbox'    =>              $mailbox     ,
 		'origtime'   => (int)@$about['origtime'  ],
 		'callerchan' =>      @$about['callerchan']
 	);
 	$uniqueids[] = $uniqueid;
 	
 	# check if we already know this message by unique signature
-	# (origtime, callerchan)
+	# (mbox, origtime, callerchan)
 	#
 	if ($use_trans) $db->startTrans();
 	$rs = $db->execute(
 'SELECT
-	`id`, `mbox`, `user_id`, `folder`, `file`
+	`id`, `folder`, `file`
 FROM `vm_msgs`
 WHERE
+	`mbox`=\''      . $db->escape(        $mailbox     ) .'\' AND
 	`orig_time`='   .        (int)@$about['origtime'  ]  .' AND
 	`callerchan`=\''. $db->escape(@$about['callerchan']) .'\''
 	);
@@ -159,23 +165,27 @@ WHERE
 		
 		$changed = false;
 		//$uid_curr = (int)$r['user_id'];
-		$uid_update = '';
+		//$update_mbox = '';
+		//$update_uid  = '';
 		
+		/*
 		if ($r['mbox'  ] != $mailbox) {
-			gs_log(GS_LOG_DEBUG, "Mailbox $mailbox has a new message (was forwarded)");
+			gs_log(GS_LOG_DEBUG, "Mailbox $mailbox:  New message ". $info['fld'].'/'.$info['file'] ." (was forwarded from ". $r['mbox'] .")");
 			$changed = true;
+			$update_mbox = '`mbox`=\''. $db->escape($mailbox) .'\',';
 			$uid_curr = _mbox_to_userid( $mailbox );
-			$uid_update = '`user_id`='. ($uid_curr ? $uid_curr : 'NULL') .',';
+			$update_uid  = '`user_id`='. ($uid_curr ? $uid_curr : 'NULL') .',';
 		}
+		*/
 		if ($r['folder'] != $info['fld' ]) {
 			if (! $changed) {
 				# if the mailbox has changed a debug message about the changed
 				# folder is pointless
-				gs_log(GS_LOG_DEBUG, "A message in mailbox $mailbox was moved from folder ". $r['folder'] ." to ". $info['fld'] );
+				gs_log(GS_LOG_DEBUG, "Mailbox $mailbox: A message was moved from folder ". $r['folder'] ." to ". $info['fld'] );
 				$changed = true;
 			}
 		}
-		if ($r['file'  ] != $info['file']) {
+		if ($r['file'] != $info['file']) {
 			if (! $changed) {
 				# if the mailbox or the folder has changed a debug message
 				# about the changed filename is pointless
@@ -194,25 +204,24 @@ WHERE
 		*/
 		
 		if ($changed) {
-			//gs_log(GS_LOG_DEBUG, "Message ". $info['fld'].'/'.$info['file'] ." in mailbox $mailbox has changed" );
+			//gs_log(GS_LOG_DEBUG, "Mailbox $mailbox: Message ". $info['fld'].'/'.$info['file'] ." has changed" );
 			
 			$ok = $db->execute(
 'UPDATE `vm_msgs` SET
-	'. $uid_update .'
-	`folder`=\''. $db->escape($info['fld' ]) .'\',
-	`file`=\''  . $db->escape($info['file']) .'\'
+	`folder`=\''   . $db->escape(  $info['fld'        ]) .'\',
+	`file`=\''     . $db->escape(  $info['file'       ]) .'\'
 WHERE `id`='. (int)$r['id']
 			);
 		}
 		else {
-			gs_log(GS_LOG_DEBUG, "No changes for message ". $info['fld'].'/'.$info['file'] ." in mailbox $mailbox" );
+			gs_log(GS_LOG_DEBUG, "Mailbox $mailbox: No changes for message ". $info['fld'].'/'.$info['file'] );
 		}
 	}
 	else {
 		# we do not know the message.
 		# insert it into the database:
 		
-		gs_log(GS_LOG_DEBUG, "Mailbox $mailbox has a new message");
+		gs_log(GS_LOG_DEBUG, "Mailbox $mailbox: New message ". $info['fld'].'/'.$info['file'] );
 		
 		$uid_curr = _mbox_to_userid( $mailbox );
 		/*
@@ -253,13 +262,13 @@ WHERE `id`='. (int)$r['id']
 )'
 		);
 		if (! $ok)
-			gs_log(GS_LOG_WARNING, "Could not insert new message for mailbox $mailbox");
+			gs_log(GS_LOG_WARNING, "Mailbox $mailbox: Could not insert new message");
 	}
 	
 	if ($use_trans) {
 		$ok = $db->completeTrans();
 		if (! $ok) {
-			gs_log(GS_LOG_WARNING, "Could not commit voicemail info to database!");
+			gs_log(GS_LOG_WARNING, "Mailbox $mailbox: Could not commit voicemail info to database!");
 		}
 	}
 }
@@ -284,10 +293,10 @@ while ($r = $rs->fetchRow()) {
 		}
 	}
 	if (! $file_exists) {
-		gs_log(GS_LOG_DEBUG, "A message was deleted from mailbox $mailbox");
+		gs_log(GS_LOG_DEBUG, "Mailbox $mailbox: A message was deleted");
 		$ok = $db->execute( 'DELETE FROM `vm_msgs` WHERE `id`='. (int)$r['id'] );
 		if (! $ok)
-			gs_log(GS_LOG_WARNING, "Could not delete message from mailbox $mailbox");
+			gs_log(GS_LOG_WARNING, "Mailbox $mailbox: Could not delete message");
 	}
 }
 
