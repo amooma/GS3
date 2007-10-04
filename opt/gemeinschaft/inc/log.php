@@ -71,8 +71,7 @@ function gs_log( $level, $msg, $logfile=null )
 		//@chmod($logfile, 0666);  # in octal mode!
 		@exec('sudo chmod 0666 '. escapeShellArg($logfile) .' 1>>/dev/null 2>>/dev/null');
 	}
-	$vLevel = @$levels[$level];
-	if (! $vLevel) $vLevel = '????';
+	$vLevel = array_key_exists($level, $levels) ? $levels[$level] : '????';
 	//$msg = str_replace(GS_DIR, '<GS_DIR>', $msg);
 	$msg = str_replace(GS_DIR, '', $msg);
 	$dateFn = GS_LOG_GMT ? 'gmDate' : 'date';
