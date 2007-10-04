@@ -29,8 +29,12 @@
 defined('GS_VALID') or die('No direct access.');
 
 
+$gs_is_in_gs_log = false;
+
 function gs_log( $level, $msg, $logfile=null )
 {
+	global $gs_is_in_gs_log;
+	
 	static $logfiles = array();
 	static $levels = array(
 		GS_LOG_DEBUG   => 'DEBG',
@@ -39,23 +43,35 @@ function gs_log( $level, $msg, $logfile=null )
 		GS_LOG_FATAL   => 'FATL'
 	);
 	
+	if (@$gs_is_in_gs_log) return false;
+	# prevent recursive calls to gs_log()
+	
 	if ($level > GS_LOG_LEVEL) return true;
+	
+	$gs_is_in_gs_log = true;
+	gs_log(GS_LOG_WARNING, "TEST");
 	
 	if (! $logfile) $logfile = GS_LOG_FILE;
 	if (@subStr($logfile,0,1) != '/')
 		$logfile = '/var/log/gemeinschaft/'. $logfile;
 	
 	if (! @array_key_exists($logfile, $logfiles)) {
-		if (! file_exists($logfile)) {
-			 @ exec( 'mkdir -p '. escapeShellArg(dirName($logfile)) .' 1>>/dev/null 2>&1', $out, $err );
-			 if ($err != 0) return false;  # probably permission denied
+		if (! @file_exists($logfile)) {
+			 @exec( 'mkdir -p '. escapeShellArg(dirName($logfile)) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+			 if ($err != 0) {  # probably permission denied
+			 	$gs_is_in_gs_log = false;
+			 	return false;
+			 }
 		}
-		$logfiles[$logfile] = @ fOpen($logfile, 'ab');  # probably permission denied
-		if (! $logfiles[$logfile]) return false;
+		$logfiles[$logfile] = @fOpen($logfile, 'ab');  # probably permission denied
+		if (! $logfiles[$logfile]) {
+			$gs_is_in_gs_log = false;
+			return false;
+		}
 		//@chmod($logfile, 0666);  # in octal mode!
 		@exec('sudo chmod 0666 '. escapeShellArg($logfile) .' 1>>/dev/null 2>>/dev/null');
 	}
-	$vLevel = @ $levels[$level];
+	$vLevel = @$levels[$level];
 	if (! $vLevel) $vLevel = '????';
 	//$msg = str_replace(GS_DIR, '<GS_DIR>', $msg);
 	$msg = str_replace(GS_DIR, '', $msg);
@@ -72,7 +88,9 @@ function gs_log( $level, $msg, $logfile=null )
 	} else
 		$where = '';
 	$msg = $dateFn('Y-m-d H:i:s') .' ['. $vLevel .'] '. $where .' '. $msg ."\n";
-	return @fWrite( $logfiles[$logfile], $msg, strLen($msg) );
+	$ok = @fWrite( $logfiles[$logfile], $msg, strLen($msg) );
+	$gs_is_in_gs_log = false;
+	return $ok;
 }
 
 
