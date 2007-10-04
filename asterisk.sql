@@ -6212,6 +6212,43 @@ INSERT INTO `vm` VALUES (25,0,0);
 /*!40000 ALTER TABLE `vm` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Table structure for table `vm_msgs`
+--
+
+DROP TABLE IF EXISTS `vm_msgs`;
+CREATE TABLE `vm_msgs` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `host_id` mediumint(8) unsigned NOT NULL,
+  `mbox` varchar(8) character set ascii NOT NULL,
+  `user_id` int(10) unsigned default NULL,
+  `orig_mbox` varchar(8) character set ascii NOT NULL,
+  `folder` varchar(10) character set ascii NOT NULL,
+  `file` varchar(10) character set ascii NOT NULL,
+  `orig_time` int(10) unsigned NOT NULL,
+  `dur` smallint(5) unsigned NOT NULL,
+  `callerchan` varchar(40) character set ascii NOT NULL,
+  `cidnum` varchar(25) character set ascii NOT NULL,
+  `cidname` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `listened_to` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `user_folder_origtime` (`folder`,`orig_time`),
+  KEY `mbox_folder_origtime` (`mbox`,`folder`,`orig_time`),
+  KEY `origtime_callerchan` (`orig_time`,`callerchan`(20)),
+  KEY `hostid` (`host_id`),
+  KEY `userid_folder_origtime` (`user_id`,`folder`,`orig_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `vm_msgs`
+--
+
+LOCK TABLES `vm_msgs` WRITE;
+/*!40000 ALTER TABLE `vm_msgs` DISABLE KEYS */;
+INSERT INTO `vm_msgs` VALUES (1,1,'2001',23,'2001','Work','msg0000',1191002138,13,'SIP/555-08221190','555','Hans Test',0);
+/*!40000 ALTER TABLE `vm_msgs` ENABLE KEYS */;
+UNLOCK TABLES;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -6221,4 +6258,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-09-30  16:07:12
+-- Dump completed on 2007-10-04  16:07:12
