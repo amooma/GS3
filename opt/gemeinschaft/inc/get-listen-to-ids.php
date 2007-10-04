@@ -38,6 +38,7 @@ function gs_get_listen_to_ids( $primary_only=false )
 	#
 	$ips = @ gs_get_listen_to_ips( $primary_only );
 	if (! is_array($ips)) return array();
+	if (count($ips) < 1) return array();
 	
 	# connect to db
 	# must be to slave db so we can tell our IDs even if the master is down
@@ -58,6 +59,15 @@ function gs_get_listen_to_ids( $primary_only=false )
 		$ids[] = (int)$r['id'];
 	
 	return $ids;
+}
+
+
+function gs_get_listen_to_primary_id()
+{
+	$ids = @gs_get_listen_to_ids(true);
+	if (! is_array($ips)) return null;
+	if (count($ips) < 1) return null;
+	return $ids[0];
 }
 
 
