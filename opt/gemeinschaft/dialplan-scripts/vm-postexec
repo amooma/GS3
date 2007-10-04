@@ -1,0 +1,295 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*			Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+#
+# This script is in fact not being executed from the dialplan.
+#
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/log.php' );
+include_once( GS_DIR .'inc/get-listen-to-ids.php' );
+
+$context = preg_replace('/[^a-z0-9\-_]/i', '', @$argv[1]);
+$mailbox = preg_replace('/[^0-9]/', '',		   @$argv[2]);
+$num_vms =						     (int)trim(@$argv[3]);
+# only messages in INBOX are counted
+
+gs_log(GS_LOG_DEBUG, "vm-postexec: context $context, mailbox $mailbox, num $num_vms");
+
+if ($context === '') {
+	echo "Context missing.\n";
+	exit(1);
+}
+if ($mailbox === '') {
+	echo "Mailbox missing.\n";
+	exit(1);
+}
+
+$path = '/var/spool/asterisk/voicemail/'.$context.'/'.$mailbox.'/';
+if (! @chDir( $path )) {
+	gs_log(GS_LOG_WARNING, "Could not chdir to \"$path\".");
+	echo "Could not chdir to \"$path\".\n";
+	exit(1);
+}
+
+$db = gs_db_master_connect();
+if (! $db) {
+	gs_log(GS_LOG_WARNING, "Could not connect to database.");
+	echo "Could not connect to database.\n";
+	exit(1);
+}
+
+$use_trans = gs_get_conf('GS_DB_MASTER_TRANSACTIONS');
+
+function _mbox_to_userid( $mailbox )
+{
+	global $db;
+	$uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($mailbox) .'\'' );
+	return ($uid > 0) ? $uid : null;
+}
+
+/*
+function _userid_to_hostid( $user_id )
+{
+	global $db;
+	$hid = (int)$db->executeGetOne( 'SELECT `host_id` FROM `users` WHERE `id`='. (int)$user_id );
+	return ($hid > 0) ? $hid : null;
+}
+*/
+
+$our_host_id = (int)gs_get_listen_to_primary_id();
+if (! $our_host_id) {
+	gs_log(GS_LOG_WARNING, "Could not get our primary host ID!");
+	echo "Could not get our primary host ID!\n";
+	exit(1);
+}
+
+$uniqueids = array();
+
+$files = glob( '*/msg*.txt' );
+foreach ($files as $filename) {
+	$tmp = explode('/', $filename, 3);
+	
+	$info['fld' ] =          @$tmp[0];
+	$info['file'] = baseName(@$tmp[1],'.txt');
+	
+	$tmp = @file_get_contents( $filename );
+	$about = array();
+	preg_match_all('/^([a-z]+) *= *([^\n\r]*)/mS', $tmp, $m, PREG_SET_ORDER);
+	foreach ($m as $arr) {
+		$about[$arr[1]] = $arr[2];
+	}
+	/*
+	array
+	(
+		[origmailbox] => 2001
+		[context] => to-internal-users-self
+		[macrocontext] => 
+		[exten] => 2001
+		[priority] => 286
+		[callerchan] => SIP/555-0823e0f8
+		[callerid] => "Hans Test" <555>
+		[origdate] => Thu Aug 16 12:59:40 AM CEST 2007
+		[origtime] => 1187218780
+		[category] => 
+		[duration] => 7
+	)
+	*/
+	
+	if (preg_match('/<([^>]+)/S', @$about['callerid'], $m))
+		$info['cidnum' ] = $m[1];
+	else
+		$info['cidnum' ] = '';
+	
+	if (preg_match('/^([^<]*)/S', @$about['callerid'], $m))
+		$info['cidname'] = trim($m[1], ' "');
+	else
+		$info['cidname'] = '';
+	
+	$uniqueid = array(
+		'origtime'   => (int)@$about['origtime'  ],
+		'callerchan' =>      @$about['callerchan']
+	);
+	$uniqueids[] = $uniqueid;
+	
+	# check if we already know this message by unique signature
+	# (origtime, callerchan)
+	#
+	if ($use_trans) $db->startTrans();
+	$rs = $db->execute(
+'SELECT
+	`id`, `mbox`, `user_id`, `folder`, `file`
+FROM `vm_msgs`
+WHERE
+	`orig_time`='   .        (int)@$about['origtime'  ]  .' AND
+	`callerchan`=\''. $db->escape(@$about['callerchan']) .'\''
+	);
+	if ($r = $rs->fetchRow()) {
+		# we already know the message.
+		# check if any of the data has changed and update the database entry:
+		
+		$changed = false;
+		//$uid_curr = (int)$r['user_id'];
+		$uid_update = '';
+		
+		if ($r['mbox'  ] != $mailbox) {
+			gs_log(GS_LOG_DEBUG, "Mailbox $mailbox has a new message (was forwarded)");
+			$changed = true;
+			$uid_curr = _mbox_to_userid( $mailbox );
+			$uid_update = '`user_id`='. ($uid_curr ? $uid_curr : 'NULL') .',';
+		}
+		if ($r['folder'] != $info['fld' ]) {
+			if (! $changed) {
+				# if the mailbox has changed a debug message about the changed
+				# folder is pointless
+				gs_log(GS_LOG_DEBUG, "A message in mailbox $mailbox was moved from folder ". $r['folder'] ." to ". $info['fld'] );
+				$changed = true;
+			}
+		}
+		if ($r['file'  ] != $info['file']) {
+			if (! $changed) {
+				# if the mailbox or the folder has changed a debug message
+				# about the changed filename is pointless
+				# apart from that, this will probably only occur if a
+				# message was deleted in the same folder
+				$changed = true;
+			}
+		}
+		/*
+		if ($r['host_id'] != $our_host_id) {
+			# this can only happen if we're on some kind of a distributed file
+			# system or if someone scp'ied the files from one host to another
+			gs_log(GS_LOG_DEBUG, "Assuming distributed file system");
+			$changed = true;
+		}
+		*/
+		
+		if ($changed) {
+			//gs_log(GS_LOG_DEBUG, "Message ". $info['fld'].'/'.$info['file'] ." in mailbox $mailbox has changed" );
+			
+			$ok = $db->execute(
+'UPDATE `vm_msgs` SET
+	'. $uid_update .'
+	`folder`=\''. $db->escape($info['fld' ]) .'\',
+	`file`=\''  . $db->escape($info['file']) .'\'
+WHERE `id`='. (int)$r['id']
+			);
+		}
+		else {
+			gs_log(GS_LOG_DEBUG, "No changes for message ". $info['fld'].'/'.$info['file'] ." in mailbox $mailbox" );
+		}
+	}
+	else {
+		# we do not know the message.
+		# insert it into the database:
+		
+		gs_log(GS_LOG_DEBUG, "Mailbox $mailbox has a new message");
+		
+		$uid_curr = _mbox_to_userid( $mailbox );
+		/*
+		$uid_orig = (@$about['origmailbox'] == $mailbox)
+			? $uid_curr
+			: _mbox_to_userid( @$about['origmailbox'] );
+		*/
+		
+		$ok = $db->execute(
+'INSERT INTO `vm_msgs` (
+	`id`,
+	`host_id`,
+	`mbox`,
+	`user_id`,
+	`orig_mbox`,
+	`folder`,
+	`file`,
+	`orig_time`,
+	`dur`,
+	`callerchan`,
+	`cidnum`,
+	`cidname`,
+	`listened_to`
+) VALUES (
+	NULL,
+	'  .                     $our_host_id    .',
+	\''. $db->escape(        $mailbox      ) .'\',
+	'  .        ($uid_curr ? $uid_curr : 'NULL').',
+	\''. $db->escape(@$about['origmailbox']) .'\',
+	\''. $db->escape(  $info['fld'        ]) .'\',
+	\''. $db->escape(  $info['file'       ]) .'\',
+	'  .        (int)@$about['origtime'   ]  .',
+	'  .        (int)@$about['duration'   ]  .',
+	\''. $db->escape(@$about['callerchan' ]) .'\',
+	\''. $db->escape(  $info['cidnum'     ]) .'\',
+	\''. $db->escape(  $info['cidname'    ]) .'\',
+	0
+)'
+		);
+		if (! $ok)
+			gs_log(GS_LOG_WARNING, "Could not insert new message for mailbox $mailbox");
+	}
+	
+	if ($use_trans) {
+		$ok = $db->completeTrans();
+		if (! $ok) {
+			gs_log(GS_LOG_WARNING, "Could not commit voicemail info to database!");
+		}
+	}
+}
+
+# find messages in the database which are not available as files,
+# meaning they have been deleted:
+#
+$rs = $db->execute(
+'SELECT `id`, `orig_time`, `callerchan`
+FROM `vm_msgs`
+WHERE `mbox`=\''. $db->escape($mailbox) .'\''
+);
+while ($r = $rs->fetchRow()) {
+	$file_exists = false;
+	foreach ($uniqueids as $uniqueid) {
+		if ($uniqueid['origtime'  ] == $r['orig_time' ]
+		&&  $uniqueid['callerchan'] == $r['callerchan'])
+		{
+			# is available as file
+			$file_exists = true;
+			break;
+		}
+	}
+	if (! $file_exists) {
+		gs_log(GS_LOG_DEBUG, "A message was deleted from mailbox $mailbox");
+		$ok = $db->execute( 'DELETE FROM `vm_msgs` WHERE `id`='. (int)$r['id'] );
+		if (! $ok)
+			gs_log(GS_LOG_WARNING, "Could not delete message from mailbox $mailbox");
+	}
+}
+
+
+?>
