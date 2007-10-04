@@ -31,7 +31,7 @@ defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/util.php' );
 
 
-function gs_get_listen_to_ips()
+function gs_get_listen_to_ips( $primary_only=false )
 {
 	$file = GS_DIR .'etc/listen-to-ip';
 	if (! @file_exists( $file )) return false;
@@ -42,6 +42,10 @@ function gs_get_listen_to_ips()
 		if ($line=='' || @$line[0]=='#') continue;
 		if (! preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $line, $m)) continue;
 		$ips[] = normalizeIPs( $m[0] );
+		if ($primary_only) {
+			# only return the first IP address (our main one)
+			return $ips[0];
+		}
 	}
 	// remove duplicates:
 	$ips = array_flip(array_flip( $ips ));

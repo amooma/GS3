@@ -32,11 +32,11 @@ require_once( GS_DIR .'inc/get-listen-to-ips.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 //require_once( GS_DIR .'inc/util.php' );
 
-function gs_get_listen_to_ids()
+function gs_get_listen_to_ids( $primary_only=false )
 {
 	# get our IPs
 	#
-	$ips = @ gs_get_listen_to_ips();
+	$ips = @ gs_get_listen_to_ips( $primary_only );
 	if (! is_array($ips)) return array();
 	
 	# connect to db
