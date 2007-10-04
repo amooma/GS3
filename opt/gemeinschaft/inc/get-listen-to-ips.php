@@ -29,13 +29,20 @@
 defined('GS_VALID') or die('No direct access.');
 
 require_once( GS_DIR .'inc/util.php' );
+require_once( GS_DIR .'inc/log.php' );
 
 
 function gs_get_listen_to_ips( $primary_only=false )
 {
 	$file = GS_DIR .'etc/listen-to-ip';
-	if (! @file_exists( $file )) return false;
-	if (! is_array($lines = @file( $file ))) return false;
+	if (! @file_exists( $file )) {
+		gs_log(GS_LOG_WARNING, "File \"$file\" not found!");
+		return false;
+	}
+	if (! is_array($lines = @file( $file ))) {
+		gs_log(GS_LOG_WARNING, "Failed to read \"$file\"!");
+		return false;
+	}
 	$ips = array();
 	foreach ($lines as $line) {
 		$line = trim($line);
@@ -44,7 +51,7 @@ function gs_get_listen_to_ips( $primary_only=false )
 		$ips[] = normalizeIPs( $m[0] );
 		if ($primary_only) {
 			# only return the first IP address (our main one)
-			return $ips[0];
+			return $ips;
 		}
 	}
 	// remove duplicates:
