@@ -55,8 +55,10 @@ function gs_log( $level, $msg, $logfile=null )
 		$logfile = '/var/log/gemeinschaft/'. $logfile;
 	
 	if (! @array_key_exists($logfile, $logfiles)) {
+		$sudo = (posix_getEUid()==0 ? '' : 'sudo ');
 		if (! @file_exists($logfile)) {
-			 @exec( 'mkdir -p '. escapeShellArg(dirName($logfile)) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+			 $err=0; $out=array();
+			 @exec( $sudo.'mkdir -p '. escapeShellArg(dirName($logfile)) .' 1>>/dev/null 2>>/dev/null', $out, $err );
 			 if ($err != 0) {  # probably permission denied
 			 	$gs_is_in_gs_log = false;
 			 	return false;
@@ -68,7 +70,8 @@ function gs_log( $level, $msg, $logfile=null )
 			return false;
 		}
 		//@chmod($logfile, 0666);  # in octal mode!
-		@exec('sudo chmod 0666 '. escapeShellArg($logfile) .' 1>>/dev/null 2>>/dev/null');
+		
+		@exec( $sudo.'chmod 0666 '. escapeShellArg($logfile) .' 1>>/dev/null 2>>/dev/null');
 	}
 	$vLevel = array_key_exists($level, $levels) ? $levels[$level] : '????';
 	//$msg = str_replace(GS_DIR, '<GS_DIR>', $msg);
