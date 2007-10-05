@@ -65,7 +65,7 @@ while ($r = $rs->fetchRow()) {
 }
 
 $hosts_v = implode(', ', $hosts);
-gs_log(GS_LOG_DEBUG, "Sending phone messages as host(s) $hosts_v");
+gs_log(GS_LOG_DEBUG, "Sending phone messages to users at nodes $hosts_v");
 
 
 $rs = @$db->execute(
@@ -113,6 +113,6 @@ while ($r = $rs->fetchRow()) {
 	@fClose($sock);
 }
 
-
+gs_log(GS_LOG_DEBUG, "Done sending phone messages");
 
 ?>
