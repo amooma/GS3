@@ -186,7 +186,7 @@ if (@$_REQUEST['action']=='del') {
 
 
 
-
+/*
 # get list
 #
 $cmd = GS_DIR .'sbin/vm-local-list '. escapeShellArg( @$_SESSION['sudo_user']['info']['ext'] );
@@ -204,8 +204,6 @@ unset($out);
 if (! is_array($messages))
 	die( 'Failed to get message information.' );
 
-
-
 # sort by time
 # ...
 
@@ -215,6 +213,21 @@ $msgs = array();
 foreach ($messages as $msg) {
 	$msgs[@$msg['fld']][] = $msg;
 }
+*/
+
+$rs = $DB->execute(
+'SELECT
+	`id`, `host_id`, `folder` `fld`, `file`, `orig_time` `ts`, `dur`, `cidnum`, `cidname`
+FROM `vm_msgs`
+WHERE
+	`user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .'
+ORDER BY `folder`, `orig_time`'
+);
+$msgs = array();
+while ($msg = $rs->fetchRow()) {
+	$msgs[$msg['fld']][] = $msg;
+}
+
 
 
 foreach ($folders as $folder => $folder_title) {
