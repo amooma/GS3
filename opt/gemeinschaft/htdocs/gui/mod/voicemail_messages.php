@@ -275,7 +275,7 @@ if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
 		$dur_s = (int)($dur - $dur_m*60);
 		echo '<td class="r">', $dur_m, ':', str_pad($dur_s, 2, '0', STR_PAD_LEFT), '</td>', "\n";
 		
-		echo '<td>';
+		echo '<td class="r">';
 		echo ' <a href="', gs_url($SECTION, $MODULE), '&amp;action=play&amp;fld=', rawUrlEncode( @$msg['fld'] ), '&amp;file=', rawUrlEncode( @$msg['file'] ), '" title="', __('abspielen'), '"><img alt="', __('abspielen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/kmix.png" /></a>';
 		if (@$msg['cidnum'] != '') {
 			$sudo_url =
