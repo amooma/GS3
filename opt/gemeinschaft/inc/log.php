@@ -49,7 +49,6 @@ function gs_log( $level, $msg, $logfile=null )
 	if ($level > GS_LOG_LEVEL) return true;
 	
 	$gs_is_in_gs_log = true;
-	gs_log(GS_LOG_WARNING, "TEST");
 	
 	if (! $logfile) $logfile = GS_LOG_FILE;
 	if (@subStr($logfile,0,1) != '/')
