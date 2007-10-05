@@ -73,7 +73,7 @@ if (@$_REQUEST['action']=='play') {
 	
 	$vm_dir = '/var/spool/asterisk/voicemail/default/';
 	$origfile = $vm_dir . @$_SESSION['sudo_user']['info']['ext'] .'/'. $fld .'/'. $file .'.gsm';
-	$tmpfile = '/tmp/gs-vm-'. preg_replace('/[^\d]/', '', @$_SESSION['sudo_user']['info']['ext']) .'-'. $fld .'-'. $file .'.gsm';
+	$tmpfile = '/tmp/gs-vm-'. preg_replace('/[^0-9]/', '', @$_SESSION['sudo_user']['info']['ext']) .'-'. $fld .'-'. $file .'.gsm';
 	
 	$msg_exists = false;
 	if (array_key_exists($fld, $folders)) {
