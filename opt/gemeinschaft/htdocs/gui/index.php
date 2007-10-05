@@ -66,7 +66,7 @@ if ( @$MODULES[$SECTION]['perms'] == 'admin'
 
 function htmlEnt( $str )
 {
-	return htmlSpecialChars( $str, ENT_QUOTES );
+	return htmlSpecialChars( $str, ENT_QUOTES, 'UTF-8' );
 }
 
 function gs_url( $sect='', $mod='', $sudo_user='' )
