@@ -5900,6 +5900,28 @@ INSERT INTO `pb_prv` VALUES (57,23,'PETER','TEST','555');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `phone_msgs`
+--
+
+DROP TABLE IF EXISTS `phone_msgs`;
+CREATE TABLE `phone_msgs` (
+  `user_id` int(10) unsigned NOT NULL,
+  `text` varchar(250) collate utf8_unicode_ci NOT NULL,
+  `modified` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`user_id`),
+  KEY `modified` (`modified`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `phone_msgs`
+--
+
+LOCK TABLES `phone_msgs` WRITE;
+/*!40000 ALTER TABLE `phone_msgs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `phone_msgs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `phones`
 --
 
