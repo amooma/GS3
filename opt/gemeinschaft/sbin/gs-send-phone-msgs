@@ -1,0 +1,118 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+
+#####################################################################
+#  Pushes short status messages from table phone_msgs to phones
+#  which support this (Snom).
+#  Needs to be called by cron every minute or so.
+#####################################################################
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/log.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/get-listen-to-ids.php' );
+
+
+$our_host_ids = gs_get_listen_to_ids();
+if (! is_array($our_host_ids) || count($our_host_ids) < 1) {
+	# nothing to do
+	gs_log(GS_LOG_DEBUG, "We're not an active node. Nothing to do.");
+	exit(0);
+}
+
+
+$since = time()-60*3;
+//$since = time()-60*50000;
+
+$fake_callid = rand(1000000000,2000000000);
+
+$crlf = "\r\n";
+
+$db = gs_db_slave_connect();
+
+$hosts = array();
+$rs = $db->execute( 'SELECT `id`, `host` FROM `hosts`' );
+while ($r = $rs->fetchRow()) {
+	$hosts[(int)$r['id']] = $r['host'];
+}
+
+$hosts_v = implode(', ', $hosts);
+gs_log(GS_LOG_DEBUG, "Sending phone messages as host(s) $hosts_v");
+
+
+$rs = @$db->execute(
+'SELECT
+	`u`.`current_ip` `ip`, `s`.`name` `ext`, `u`.`host_id` `hid`, `m`.`text`
+FROM
+	`phone_msgs` `m` JOIN
+	`phones` `p` ON (`p`.`user_id`=`m`.`user_id`) JOIN
+	`users` `u` ON (`u`.`id`=`m`.`user_id`) JOIN
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
+WHERE
+	`p`.`type` LIKE \'snom%\' AND
+	`m`.`modified`>'. $since .' AND
+	`u`.`host_id` IN ('. implode(',',$our_host_ids) .')'
+);
+if (! $rs) {
+	exit(1);
+}
+while ($r = $rs->fetchRow()) {
+	$host = $hosts[$r['hid']];
+	
+	$text = $r['text'];
+	
+	$sipmsg =
+		'MESSAGE sip:'. $r['ext'] .'@'. $r['ip'] .' SIP/2.0' .$crlf.
+		'Via: SIP/2.0/UDP '.$host.':32779;rport=32779' .$crlf.
+		'To: sip:'.$r['ext'].'@'.$r['ip'] .'' .$crlf.
+		'Call-ID: '.$fake_callid.'@'.$host .$crlf.
+		'CSeq: 1 MESSAGE' .$crlf.
+		'Content-Type: text/plain; charset=utf-8' .$crlf.
+		'Max-Forwards: 20' .$crlf.
+		'From: sip:fake@'.$host.':32779;tag=fake' .$crlf.
+		'Content-Length: '.strLen($text) .$crlf.
+		'Content-Disposition: desktop' .$crlf.
+		$crlf.
+		$text;
+	
+	//echo $sipmsg, "\n";
+	
+	$sock = @fSockOpen('udp://'.$r['ip'], 5060, $err, $errmsg, 1);
+	if (! $sock) continue;
+	@stream_set_blocking($sock, 0);
+	@stream_set_timeout($sock, 1);
+	@fWrite($sock, $sipmsg, strlen($sipmsg));
+	@fClose($sock);
+}
+
+
+
+?>
