@@ -101,9 +101,51 @@ if (@$_REQUEST['action']=='play') {
 	if ($msg_exists) {
 		echo '<div class="fr" style="width:250px; border:1px solid #ccc; padding:4px; background:#eee;">', "\n";
 		echo __('Player'), "\n";
-		echo '<object id="player" type="audio/x-gsm" data="', GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=', $fld, '&amp;msg=', $file, '&amp;_=.gsm" width="250" height="18" align="right">', "\n";
-		echo sprintf(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'GSM'), "\n";
-		echo '</object></div>', "\n\n";
+		
+		if (strPos(@$_SERVER['HTTP_USER_AGENT'], 'MSIE')===false) {
+		?>
+		
+		<object
+			id="player"
+			type="audio/x-gsm"
+			data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=', $fld, '&amp;msg=', $file, '&amp;msie=.gsm'; ?>"
+			width="250"
+			height="18"
+			align="right"
+			>
+			<param name="autoplay" value="true" />
+			<param name="controller" value="true" />
+			<?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'GSM'); ?>
+			
+		</object>
+		
+		<?php
+		} else {
+		?>
+		
+		<object
+			id="player"
+			type="audio/x-gsm"
+			classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
+			codebase="http://www.apple.com/qtactivex/qtplugin.cab"
+			data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=', $fld, '&amp;msg=', $file, '&amp;msie=.gsm'; ?>"
+			width="250"
+			height="18"
+			align="right"
+			>
+			<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=', $fld, '&amp;msg=', $file, '&amp;_=.gsm'; ?>" />
+			<param name="autoplay" value="true" />
+			<param name="controller" value="true" />
+			<?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'GSM'); ?>
+			
+		</object>
+		
+		<?php
+		}
+		?>
+		
+		</div>
+		<?php
 	}
 }
 
