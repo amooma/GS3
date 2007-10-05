@@ -238,7 +238,7 @@ foreach ($folders as $folder => $folder_title) {
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:135px;"><?php echo __('Datum'); ?></th>
+	<th style="width:135px;"><?php echo __('Datum'); ?> &darr;</th>
 	<th style="width:230px;"><?php echo __('Anrufer'); ?></th>
 	<th style="width:45px;" class="r"><?php echo __('Dauer'); ?></th>
 	<th style="width:105px;">&nbsp;</th>
