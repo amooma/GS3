@@ -99,8 +99,82 @@ echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info
 		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
 			<?php echo __('Rufumleitung'); /*//TRANSLATE ME*/ ?>
 		</div>
-		<div class="td" style="padding:0.6em;">
-		
+		<div class="td" style="padding:0.0em;">
+			<?php
+			
+			$callforwards = gs_callforward_get( $_SESSION['sudo_user']['name'] );
+			if (isGsError($callforwards)) {
+				echo $callforwards->getMsg();
+			} else {
+				/*
+				echo "<pre>\n";
+				print_r($callforwards);
+				echo "</pre>\n";
+				*/
+				
+				$actives = array();
+				$internal_always = false;
+				$external_always = false;
+				foreach ($callforwards as $src => $cfs) {
+					foreach ($cfs as $case => $cf) {
+						if ($cf['active'] == 'no'
+						||  $cf['active'] == '') continue;
+						
+						$actives[] = array(
+							'src'     =>  $src,
+							'case'    =>  $case,
+							'number'  => @$cf['number_'.$cf['active']],
+							'timeout' =>  $cf['timeout']
+						);
+						if ($case==='always') {
+							if     ($src==='internal') $internal_always = true;
+							elseif ($src==='external') $external_always = true;
+						}
+					}
+				}
+				if ($internal_always || $external_always) {
+					foreach ($actives as $i => $cf) {
+						if ($cf['case'] != 'always') {
+							if ($cf['src']==='internal' && $internal_always
+							||  $cf['src']==='external' && $external_always) {
+								unset($actives[$i]);
+							}
+						}
+					}
+				}
+				unset($callforwards);
+				$i=0;
+				echo '<table cellspacing="1" style="width:100%;">' ,"\n";
+				echo '<tbody>' ,"\n";
+				foreach ($actives as $cf) {
+					echo '<tr class="', ($i%2?'even':'odd') ,'">' ,"\n";
+					echo '<td>';
+					switch ($cf['src']) {
+						case 'internal': echo __('von intern'); break;
+						case 'external': echo __('von extern'); break;
+						default        : echo htmlEnt($cf['src']);
+					}
+					echo '</td>' ,"\n";
+					echo '<td>';
+					switch ($cf['case']) {
+						case 'always' : echo __('direkt'); break;
+						case 'busy'   : echo __('besetzt'); break;
+						case 'unavail': echo __('keine Antwort'),
+						                ' <nobr>(',$cf['timeout'],' s)</nobr>'; break;
+						case 'offline': echo __('offline'); break;
+						default        : echo htmlEnt($cf['case']);
+					}
+					echo '</td>' ,"\n";
+					echo '<td> &rarr; ', htmlEnt($cf['number']) ,'</td>' ,"\n";
+					echo '</tr>' ,"\n";
+					++$i;
+				}
+				unset($actives);
+				echo '</tbody>' ,"\n";
+				echo '</table>' ,"\n";
+			}
+			
+			?>
 		</div>
 	</div>
 
