@@ -105,6 +105,7 @@ if (@$_REQUEST['action']=='play') {
 		if (strPos(@$_SERVER['HTTP_USER_AGENT'], 'MSIE')===false) {
 		?>
 		
+		<!-- W3 compliant version: -->
 		<object
 			id="player"
 			type="audio/x-gsm"
@@ -123,6 +124,7 @@ if (@$_REQUEST['action']=='play') {
 		} else {
 		?>
 		
+		<!-- MSIE version: -->
 		<object
 			id="player"
 			type="audio/x-gsm"
