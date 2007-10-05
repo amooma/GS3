@@ -59,7 +59,7 @@ WHERE
 	`d`.`user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .' AND
 	`d`.`type`=\'missed\' AND
 	`d`.`timestamp`>'. (time()-GS_PROV_DIAL_LOG_LIFE) .' AND
-	`d`.`number` != \''. $DB->escape( @$_SESSION['sudo_user']['info']['ext'] ) .'\'
+	`d`.`number` <> \''. $DB->escape( @$_SESSION['sudo_user']['info']['ext'] ) .'\'
 GROUP BY `d`.`number`
 ORDER BY `ts` DESC
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
