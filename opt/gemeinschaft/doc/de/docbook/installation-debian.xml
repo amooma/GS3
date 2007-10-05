@@ -319,13 +319,23 @@ zlib
 Server version: Apache/2.2.3
 <replaceable>[...]</replaceable></screen></para>
 
-    <para>Für die Konvertierung der Klingeltöne wird das Paket sox
-    benötigt:<programlisting><command>apt-get install sox</command></programlisting>Überprüfung:<screen>$ <command>sox -h</command>
+    <para>Zur Konvertierung von Klingeltönen, Voicemails etc. werden
+    <command>sox</command>, <command>lame</command> und
+    <command>mpg123</command> benötigt.</para>
+
+    <para><command>sox</command>:<programlisting><command>apt-get install sox</command></programlisting>Überprüfung:<screen>$ <command>sox -h</command>
 sox: Version 12.17.9
 <replaceable>[...]</replaceable></screen></para>
 
-    <para>Weiterhin wird für die Konvertierung der Klingeltöne
-    <command>mpg123</command> benötigt:<programlisting><command>apt-get install mpg123</command></programlisting>Überprüfung:<screen>$ <command>mpg123 --version</command>
+    <para><command>lame</command>:<programlisting><command>cd /usr/src/ \
+&amp;&amp; wget -c http://dfn.dl.sourceforge.net/sourceforge/lame/lame-3.97.tar.gz \
+&amp;&amp; tar -xzf lame-3.97.tar.gz \
+&amp;&amp; cd lame-3.97/ \
+&amp;&amp; ./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install</command></programlisting>Überprüfung:<screen>$ <command>lame --help</command>
+LAME 32bits version 3.97 (http://www.mp3dev.org/)
+<replaceable>[...]</replaceable></screen></para>
+
+    <para><command>mpg123</command>:<programlisting><command>apt-get install mpg123</command></programlisting>Überprüfung:<screen>$ <command>mpg123 --version</command>
 mpg123 0.61</screen></para>
 
     <important>
