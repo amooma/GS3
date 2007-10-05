@@ -132,7 +132,7 @@ echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info
 			<?php
 			$comment = gs_user_comment_get( $_SESSION['sudo_user']['name'] );
 			?>
-			<input name="comment" size="40" maxlength="80" value="<?php echo htmlEnt($comment); ?>" />
+			<input name="comment" size="40" maxlength="80" value="<?php echo htmlEnt($comment); ?>" style="max-width:99%;" />
 			<br />
 			<input type="submit" value="<?php echo __('Speichern'); ?>" />
 			</form>
