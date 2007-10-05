@@ -124,7 +124,7 @@ if (@$_REQUEST['action']=='play') {
 		} else {
 		?>
 		
-		<!-- MSIE version: -->
+		<!-- MSIE version (for QuickTime ActiveX): -->
 		<object
 			id="player"
 			type="audio/x-gsm"
