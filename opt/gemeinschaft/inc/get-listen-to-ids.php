@@ -40,7 +40,10 @@ function gs_get_listen_to_ids( $primary_only=false )
 	#
 	$ips = @ gs_get_listen_to_ips( $primary_only );
 	if (! is_array($ips)) {
-		gs_log(GS_LOG_WARNING, "Failed to get our IP addresses!");
+		# kann entweder passieren wenn wir ein Gemeinschaft-Node sind
+		# (dann ist es extrem schlecht wenn die Datei fehlt) oder wenn
+		# wir ein Web-Server ohne Asterisk sind (dann ist es ok)
+		gs_log(GS_LOG_DEBUG, "Failed to get our IP addresses");
 		return array();
 	}
 	if (count($ips) < 1) {
@@ -80,11 +83,11 @@ function gs_get_listen_to_primary_id()
 {
 	$ids = @gs_get_listen_to_ids(true);
 	if (! is_array($ids)) {
-		gs_log(GS_LOG_WARNING, "Failed to get our primary IP address!");
+		gs_log(GS_LOG_DEBUG, "Failed to get our primary IP address");
 		return null;
 	}
 	if (count($ids) < 1) {
-		gs_log(GS_LOG_DEBUG, "Failed to get our primary IP address!");
+		gs_log(GS_LOG_DEBUG, "Failed to get our primary IP address");
 		return null;
 	}
 	return $ids[0];
