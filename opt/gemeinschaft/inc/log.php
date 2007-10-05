@@ -70,7 +70,6 @@ function gs_log( $level, $msg, $logfile=null )
 			return false;
 		}
 		//@chmod($logfile, 0666);  # in octal mode!
-		
 		@exec( $sudo.'chmod 0666 '. escapeShellArg($logfile) .' 1>>/dev/null 2>>/dev/null');
 	}
 	$vLevel = array_key_exists($level, $levels) ? $levels[$level] : '????';
