@@ -70,14 +70,13 @@ if (@$_REQUEST['action']=='play') {
 	
 	$vm_dir = '/var/spool/asterisk/voicemail/default/';
 	
-	$fld  = preg_replace('/[^a-z\d]/i', '', @$_REQUEST['fld']);
-	$file = preg_replace('/[^a-z\d]/i', '', @$_REQUEST['file']);
+	$fld  = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['fld' ]);
+	$file = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['file']);
 	
 	$origfile = $vm_dir . @$_SESSION['sudo_user']['info']['ext'] .'/'. $fld .'/'. $file .'.gsm';
 	$tmpfile = '/tmp/gs-vm-'. preg_replace('/[^\d]/', '', @$_SESSION['sudo_user']['info']['ext']) .'-'. $fld .'-'. $file .'.gsm';
 	
 	$msg_exists = false;
-	
 	if (array_key_exists($fld, $folders)) {
 		$out = array();
 		if (in_array($host['id'], $our_host_ids, true)) {
@@ -98,7 +97,11 @@ if (@$_REQUEST['action']=='play') {
 			$msg_exists = true;
 		}
 	}
-	if ($msg_exists) {
+	
+	if (! $msg_exists) {
+		echo '?';
+	}
+	else {
 		echo '<div class="fr" style="width:250px; border:1px solid #ccc; padding:4px; background:#eee;">', "\n";
 		echo __('Player'), "\n";
 		
