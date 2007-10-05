@@ -199,7 +199,7 @@ if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
 		echo '<td>';
 		if ($folder=='INBOX')
 			echo '<img alt=" " src="', GS_URL_PATH, 'img/star.gif" /> ';
-		echo date_human( @$msg['ts'] );
+		echo htmlEnt(date_human( @$msg['ts'] ));
 		echo '</td>', "\n";
 		
 		echo '<td>';
