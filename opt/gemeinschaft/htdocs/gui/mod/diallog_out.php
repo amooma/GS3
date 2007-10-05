@@ -63,7 +63,7 @@ WHERE
 GROUP BY `d`.`number`
 ORDER BY `ts` DESC
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
-	);
+);
 $num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
