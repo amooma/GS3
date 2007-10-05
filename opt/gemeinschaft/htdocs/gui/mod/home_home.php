@@ -67,7 +67,7 @@ echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info
 		<?php
 		
 		$rs = $DB->execute( 'SELECT SQL_CALC_FOUND_ROWS `id`, `orig_time`, `cidnum`, `cidname` FROM `vm_msgs` WHERE `user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .' AND `folder`=\'INBOX\' ORDER BY `orig_time` DESC LIMIT 5' );
-		$num = $DB->numFoundRows();
+		$num = @$DB->numFoundRows();
 		
 		?>
 		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
@@ -112,11 +112,47 @@ echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info
 <div class="fl" style="clear:right; width:99%;">
 	
 	<div class="fl" style="width:49%; min-width:20em; max-width:35em; margin:1px;">
-		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
-			<?php echo __('Letzte entgangene Anrufe'); /*//TRANSLATE ME*/ ?>
-		</div>
-		<div class="td" style="padding:0.6em;">
+		<?php
 		
+		$rs = $DB->execute(
+'SELECT
+	MAX(`d`.`timestamp`) `ts`, `d`.`number`, `d`.`remote_name`
+FROM
+	`dial_log` `d`
+WHERE
+	`d`.`user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .' AND
+	`d`.`type`=\'missed\' AND
+	`d`.`timestamp`>'. (time()-GS_PROV_DIAL_LOG_LIFE) .' AND
+	`d`.`number` <> \''. $DB->escape( @$_SESSION['sudo_user']['info']['ext'] ) .'\'
+GROUP BY `d`.`number`
+ORDER BY `ts` DESC
+LIMIT 5'
+		);
+		//$num = @$DB->numFoundRows();
+		
+		?>
+		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
+			<?php echo __('Letzte entgangene Anrufe') /*//TRANSLATE ME*/; ?>
+		</div>
+		<div class="td" style="padding:0.0em;">
+			<?php
+			
+			echo '<table cellspacing="1" style="width:100%;">' ,"\n";
+			echo '<tbody>' ,"\n";
+			$i=0;
+			while ($r = $rs->fetchRow()) {
+				echo '<tr class="', ($i%2?'even':'odd') ,'">' ,"\n";
+				echo '<td style="width:30%;"><nobr>', htmlEnt(date_human($r['ts'])) ,'</nobr></td>' ,"\n";
+				echo '<td style="width:70%;">', htmlEnt($r['number']);
+				if ($r['remote_name'] != '') echo ' (', htmlEnt($r['remote_name']) ,')';
+				echo '</td>' ,"\n";
+				echo '</tr>' ,"\n";
+				++$i;
+			}
+			echo '</tbody>' ,"\n";
+			echo '</table>' ,"\n";
+			
+			?>
 		</div>
 	</div>
 	
