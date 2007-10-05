@@ -57,7 +57,8 @@ if (function_exists('mb_detect_order'))
 	@mb_detect_order('auto');
 $tmp = strToLower(trim(@ini_get('mbstring.func_overload')));
 if ($tmp === '1' || $tmp === 'on') {
-	die("mbstring.func_overload must not be enabled in php.ini\n");
+	echo "mbstring.func_overload must not be enabled in php.ini\n";
+	exit(1);
 }
 
 
