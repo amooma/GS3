@@ -36,11 +36,14 @@ function gs_get_listen_to_ips( $primary_only=false )
 {
 	$file = GS_DIR .'etc/listen-to-ip';
 	if (! @file_exists( $file )) {
-		gs_log(GS_LOG_WARNING, "File \"$file\" not found!");
+		# kann entweder passieren wenn wir ein Gemeinschaft-Node sind
+		# (dann ist es extrem schlecht wenn die Datei fehlt) oder wenn
+		# wir ein Web-Server ohne Asterisk sind (dann ist es ok)
+		gs_log(GS_LOG_DEBUG, "File \"$file\" not found");
 		return false;
 	}
 	if (! is_array($lines = @file( $file ))) {
-		gs_log(GS_LOG_WARNING, "Failed to read \"$file\"!");
+		gs_log(GS_LOG_DEBUG, "Failed to read \"$file\"");
 		return false;
 	}
 	$ips = array();
