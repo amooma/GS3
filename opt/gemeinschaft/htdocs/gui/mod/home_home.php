@@ -28,6 +28,9 @@
 
 defined('GS_VALID') or die('No direct access.');
 
+include_once( GS_DIR .'inc/util.php' );
+
+
 
 if (@$_REQUEST['action']=='reboot') {
 	
@@ -50,26 +53,100 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 
-echo '<br />', "\n";
-echo '<h2>', __('Willkommen'), ', ', htmlEnt( $_SESSION['sudo_user']['info']['firstname'] .' '. $_SESSION['sudo_user']['info']['lastname'] ), '!</h2><br />', "\n";
+//echo '<br />', "\n";
+echo '<h2>', __('Willkommen'), ', ', htmlEnt( $_SESSION['sudo_user']['info']['firstname'] .' '. $_SESSION['sudo_user']['info']['lastname'] ), '!</h2>', "\n";
 
 echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info']['ext'] ), '</b></p><br />', "\n";
 
 ?>
 
-<form method="get" action="<?php echo GS_URL_PATH; ?>">
-<?php echo gs_form_hidden($SECTION, $MODULE); ?>
-<input type="hidden" name="action" value="setcomment" />
-<?php echo __('Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)'); ?>:<br />
-<?php
-$comment = gs_user_comment_get( $_SESSION['sudo_user']['name'] );
-?>
-<textarea name="comment" cols="40" rows="2"><?php echo htmlEnt($comment); ?></textarea>
-<br />
-<input type="submit" value="<?php echo __('Speichern'); ?>" />
-</form>
+
+<div class="fl" style="clear:right; width:99%;">
+	
+	<div class="fl" style="width:49%; min-width:20em; max-width:35em; margin:1px;">
+		<?php
+		
+		$rs = $DB->execute( 'SELECT SQL_CALC_FOUND_ROWS `id`, `orig_time`, `cidnum`, `cidname` FROM `vm_msgs` WHERE `user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .' AND `folder`=\'INBOX\' ORDER BY `orig_time` DESC LIMIT 5' );
+		$num = $DB->numFoundRows();
+		
+		?>
+		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
+			<?php echo __('Neue Voicemail-Nachrichten') /*//TRANSLATE ME*/, ' (',$num,')'; ?>
+		</div>
+		<div class="td" style="padding:0.0em;">
+			<?php
+			
+			echo '<table cellspacing="1" style="width:100%;">' ,"\n";
+			echo '<tbody>' ,"\n";
+			$i=0;
+			while ($r = $rs->fetchRow()) {
+				echo '<tr class="', ($i%2?'even':'odd') ,'">' ,"\n";
+				echo '<td style="width:30%;"><nobr>', htmlEnt(date_human($r['orig_time'])) ,'</nobr></td>' ,"\n";
+				echo '<td style="width:70%;">', htmlEnt($r['cidnum']);
+				if ($r['cidname'] != '') echo ' (', htmlEnt($r['cidname']) ,')';
+				echo '</td>' ,"\n";
+				echo '</tr>' ,"\n";
+				++$i;
+			}
+			echo '</tbody>' ,"\n";
+			echo '</table>' ,"\n";
+			
+			?>
+		</div>
+	</div>
+	
+	<div class="fl" style="width:49%; min-width:20em; max-width:30em; margin:1px;">
+		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
+			<?php echo __('Rufumleitung'); /*//TRANSLATE ME*/ ?>
+		</div>
+		<div class="td" style="padding:0.6em;">
+		
+		</div>
+	</div>
+
+</div>
+
+<br style="clear:right" />
+<div class="fl" style="clear:right; width:100%; height:5px;"></div>
+
+<div class="fl" style="clear:right; width:99%;">
+	
+	<div class="fl" style="width:49%; min-width:20em; max-width:35em; margin:1px;">
+		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
+			<?php echo __('Letzte entgangene Anrufe'); /*//TRANSLATE ME*/ ?>
+		</div>
+		<div class="td" style="padding:0.6em;">
+		
+		</div>
+	</div>
+	
+	<div class="fl" style="width:49%; min-width:20em; max-width:30em; margin:1px;">
+		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
+			<?php echo __('Pr&auml;senz'); /*//TRANSLATE ME*/ ?>
+		</div>
+		<div class="td" style="padding:0.6em;">
+			<form method="get" action="<?php echo GS_URL_PATH; ?>">
+			<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+			<input type="hidden" name="action" value="setcomment" />
+			<?php echo __('Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)'); ?>:<br />
+			<?php
+			$comment = gs_user_comment_get( $_SESSION['sudo_user']['name'] );
+			?>
+			<input name="comment" size="40" maxlength="80" value="<?php echo htmlEnt($comment); ?>" />
+			<br />
+			<input type="submit" value="<?php echo __('Speichern'); ?>" />
+			</form>
+		</div>
+	</div>
+	
+</div>
+
+<br style="clear:right" />
+<div class="fl" style="clear:right; width:100%; height:5px;"></div>
+
 
 <br />
+<div style="height:150px;"></div>
 
 <div class="fr">
 <form method="get" action="<?php echo GS_URL_PATH; ?>">
