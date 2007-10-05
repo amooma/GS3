@@ -68,11 +68,10 @@ if (! is_array($our_host_ids))
 
 if (@$_REQUEST['action']=='play') {
 	
-	$vm_dir = '/var/spool/asterisk/voicemail/default/';
-	
 	$fld  = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['fld' ]);
 	$file = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['file']);
 	
+	$vm_dir = '/var/spool/asterisk/voicemail/default/';
 	$origfile = $vm_dir . @$_SESSION['sudo_user']['info']['ext'] .'/'. $fld .'/'. $file .'.gsm';
 	$tmpfile = '/tmp/gs-vm-'. preg_replace('/[^\d]/', '', @$_SESSION['sudo_user']['info']['ext']) .'-'. $fld .'-'. $file .'.gsm';
 	
