@@ -29,6 +29,10 @@
 defined('GS_VALID') or die('No direct access.');
 
 include_once( GS_DIR .'inc/log.php' );
+# scripts which include util.php rely on log.php being included here
+
+include_once( GS_DIR .'inc/gettext.php' );
+# needed by date_human() (see below)
 
 
 function normalizeIPs( $str ) {
@@ -98,13 +102,17 @@ function err_handler_quiet( $type, $msg, $file, $line )
 
 function date_human( $ts )
 {
-	setLocale(LC_TIME, 'de_DE');
+	$old_locale = setLocale(LC_TIME, '0');
+	setLocale(LC_TIME, 'de_DE');  //FIXME
 	if (date('Ymd', $ts) == date('Ymd'))
-		$dv = 'heute';
+		$dv = __('heute');  //TRANSLATE ME
 	elseif (date('Ymd', $ts) == date('Ymd', strToTime('-1 days', $ts)))
-		$dv = 'gestern';
-	else $dv = strFTime('%d. %b', $ts);
-	return $dv .'&nbsp; '. date('H:i', $ts);
+		$dv = __('gestern');  //TRANSLATE ME
+	else
+		$dv = strFTime(__('%d. %b'), $ts);  //TRANSLATE ME
+	$ret = $dv .', '. date(__('H:i'), $ts);  //TRANSLATE ME
+	setLocale(LC_TIME, array($old_locale, 'C'));
+	return $ret;
 }
 
 
