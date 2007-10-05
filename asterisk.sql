@@ -6296,11 +6296,11 @@ CREATE TABLE `vm_msgs` (
   `cidname` varchar(30) collate utf8_unicode_ci NOT NULL,
   `listened_to` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  KEY `user_folder_origtime` (`folder`,`orig_time`),
   KEY `mbox_folder_origtime` (`mbox`,`folder`,`orig_time`),
   KEY `origtime_callerchan` (`orig_time`,`callerchan`(20)),
   KEY `hostid` (`host_id`),
-  KEY `userid_folder_origtime` (`user_id`,`folder`,`orig_time`)
+  KEY `userid_folder_origtime` (`user_id`,`folder`,`orig_time`),
+  KEY `mbox_origtime_callerchan` (`mbox`,`orig_time`,`callerchan`(20))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
