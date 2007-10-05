@@ -70,12 +70,12 @@ $LDAP_SEARCHBASE = 'ou=People,dc=example,dc=com';
   # e.g. "ou=People,dc=example,dc=com" | "ou=users,o=Company,c=de"
 
 $LDAP_PROP_USER         = 'uid';    # e.g. "uid"
-  # the user name in the LDAP GS_LDAP_PROP_USER field must match the
-  # user name/code you use in Gemeinschaft
+  # the user name in the LDAP attribute LDAP_PROP_USER must match
+  # the user name/code you use in Gemeinschaft
   # e.g. "uid" | "employeenumber"
 
 $LDAP_PROP_UID          = 'uid';
-  # GS_LDAP_PROP_UID is the "primary key" in the "dn", normally
+  # LDAP_PROP_UID is the "primary key" in the "dn", normally
   # "uid" for users (or "cn").
 
   # for the phonebook:
@@ -159,7 +159,7 @@ $PROV_PORT                  = 82;
 $PROV_SCHEME                = 'http';  # without "://"
 $PROV_PATH                  = '/';     # with starting and trailing "/"
   # URL is build like this:
-  # <GS_PROV_SCHEME>://<GS_PROV_HOST>:<GS_PROV_PORT><GS_PROV_PATH>snom/dial-log.php
+  # <PROV_SCHEME>://<PROV_HOST>:<PROV_PORT><PROV_PATH>snom/dial-log.php
 $PROV_AUTO_ADD_PHONE        = true;
   # if a phone with a MAC address which is not in our database
   # asks for provisioning, should the phone automatically be
