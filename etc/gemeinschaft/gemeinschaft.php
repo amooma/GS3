@@ -266,6 +266,12 @@ $DP_PRV_CALL_PREFIX         = '*7*';  # e.g. "*7*", "96", ...
 *    MISC
 ***********************************************************/
 
+$LOCK_DIR               = '/var/lock/';
+  # where to write Gemeinschaft lock files. including trailing "/"!
+  # e.g. "/var/lock/" or "/tmp/". the directory must exists.
+  # does not control where apache, mysql, zaptel etc. put their
+  # lock files
+
 $CALL_INIT_FROM_NET         = '192.168.1.0/24';
   # a comma (,) separated list of IP addresses or
   # <IP address>/<netmask> pairs from where calls can be inited
