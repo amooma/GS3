@@ -188,7 +188,7 @@ WHERE
 // REALLY PRIVATE! CAREFUL WITH PARAMS - NO VALIDATION!
 function _gs_prov_phone_checkcfg_by_ip_do_snom( $ip, $reboot=true )
 {
-	@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=10 --retry-connrefused -q --user='. escapeShellArg(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. escapeShellArg(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. escapeShellArg('http://'. $ip .'/confirm.htm?REBOOT=yes') . ' >>/dev/null 2>>/dev/null &', $out, $err );
+	@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=10 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/confirm.htm?REBOOT=yes') . ' >>/dev/null 2>>/dev/null &', $out, $err );
 	// actually the value after REBOOT= does not matter
 	// is there an URL check-sync *without* reboot?
 }
@@ -267,7 +267,7 @@ function _gs_prov_phone_checkcfg_by_ext_do_snom( $ext, $reboot=true )
 	} else {
 		$cmd = 'asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\'';
 		foreach ($hosts as $host) {
-			@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. escapeShellArg($host['host']) .' '. escapeShellArg($cmd) .' >>/dev/null 2>>/dev/null &', $out, $err );
+			@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd) .' >>/dev/null 2>>/dev/null &', $out, $err );
 		}
 	}
 }
