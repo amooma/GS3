@@ -29,6 +29,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/util.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
 echo '<h2>';
@@ -144,7 +145,7 @@ if (false) {
 		
 		echo '<td class="r">';
 		$timeout = 1;
-		$cmd = 'ping -n -q -w '. $timeout .' -c 1 '. escapeShellArg($ip);
+		$cmd = 'ping -n -q -w '. $timeout .' -c 1 '. qsa($ip);
 		$out = array();
 		$start = microtime_float();
 		@exec($cmd .' >>/dev/null 2>&1', $out, $ping_err);
@@ -160,7 +161,7 @@ if (false) {
 			echo '<td class="r">';
 			if ($ping_err==0) {
 				$timeout = 2;
-				$cmd = 'PATH=$PATH:/usr/local/bin; '. GS_DIR .'sbin/check-sip-alive '. escapeShellArg('sip:checkalive@'. $ip) .' '. $timeout;
+				$cmd = 'PATH=$PATH:/usr/local/bin; '. GS_DIR .'sbin/check-sip-alive '. qsa('sip:checkalive@'. $ip) .' '. $timeout;
 				$out = array();
 				$start = microtime_float();
 				@exec($cmd .' 2>&1', $out, $err);
