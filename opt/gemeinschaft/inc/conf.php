@@ -112,6 +112,7 @@ function _gscnf( $param, $default=null )
 	}
 }
 
+
 _gscnf( 'DB_MASTER_HOST'            , '0.0.0.0'          );
 _gscnf( 'DB_MASTER_USER'            , 'root'             );
 _gscnf( 'DB_MASTER_PWD'             , ''                 );
@@ -190,6 +191,7 @@ _gscnf( 'PB_IMPORTED_TITLE'         , "Firma (aus LDAP)" );
 _gscnf( 'PB_INTERNAL_TITLE'         , "Intern"           );
 _gscnf( 'PB_PRIVATE_TITLE'          , "Pers\xC3\xB6nlich");
 
+_gscnf( 'LOCK_DIR'                  , '/var/lock/'       );
 _gscnf( 'CALL_INIT_FROM_NET'        , '0.0.0.0/32'       ); # deny all
 _gscnf( 'MONITOR_FROM_NET'          , '0.0.0.0/32'       ); # deny all
 _gscnf( 'LVM_USER_6_DIGIT_INT'      , false              );
