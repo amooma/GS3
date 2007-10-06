@@ -41,7 +41,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 
 
 $currency = 'EUR';
-//$lockfile = '/var/lock/gs-queuelog';
+
 
 if ($argc < 4) {
 	echo
@@ -95,7 +95,6 @@ function _err_handler( $type, $msg, $file, $line )
 			break;
 		default:
 			gs_log( GS_LOG_FATAL  , 'PHP: '. $msg .' in '. $file .' on line '. $line );
-			//remove_lockfile();
 			exit(1);
 	}
 }
@@ -589,28 +588,6 @@ $count = array(
 	'good_match' => 0
 );
 
-/*
-if (get_current_user() != 'root') {
-	echo "Must be run as root. Bye bye.\n";
-	exit(1);
-}
-*/
-/*
-if (@file_exists($lockfile)) {
-	$mtime = @fileMTime($lockfile);
-	if ($mtime === false || $mtime > time()-(30*60)) {
-		echo "\"$lockfile\" exists. Exit.\n";
-		exit();
-	}
-	# else assume the file is just a leftover from a previous run
-}
-if (! @touch($lockfile)) {
-	echo "Could not touch \"$lockfile\". Exit.\n";
-	exit(1);
-}
-*/
-
-
 echo "\n";
 echo "Make absolutely sure that these dates match your local time:\n";
 $date = date('Y-m-d H:i:s');
@@ -643,8 +620,6 @@ echo "\n";
 
 echo "   THAT WAS A DRY RUN. NO RECORDS WERE INSERTED!\n";
 echo "\n";
-
-//remove_lockfile();
 
 
 ?>
