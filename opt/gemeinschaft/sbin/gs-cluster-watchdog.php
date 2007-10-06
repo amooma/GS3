@@ -37,6 +37,8 @@ define( 'GS_VALID', true );  /// this is a parent file
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( '/opt/gemeinschaft/etc/gs-cluster-watchdog.conf' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
+
 
 function GetListenToIPs()
 {
@@ -127,7 +129,7 @@ function CheckIfNodeAlive( $node_id )
 {
 	global $node;
 	
-	$exec_string = GS_DIR .'sbin/check-sip-alive '. escapeShellArg( 'sip:'
+	$exec_string = GS_DIR .'sbin/check-sip-alive '. qsa( 'sip:'
 		. $node[$node_id]['extension'] .'@'. $node[$node_id]['dynamic_ip'] )
 		.' '. (int)SIP_TIMEOUT;
 	
@@ -143,7 +145,7 @@ function SendArp( $node_id )
 	
 	//$exec_string='/usr/sbin/send_arp '.$node[$node_id]['dynamic_ip'].' '.$node[$node_id]['local_mac'].' '.$node[$node_id]['broadcast']. ' FF:FF:FF:FF:FF:FF '.$node[$node_id]['local_interface'];
 	
-	$exec_string='/sbin/arping -c 3 -I '. escapeShellArg( $node[$node_id]['local_interface'] ) .' -s '. escapeShellArg( $node[$node_id]['dynamic_ip'] ) .' -A '. escapeShellArg( $node[$node_id]['broadcast'] );
+	$exec_string='/sbin/arping -c 3 -I '. qsa( $node[$node_id]['local_interface'] ) .' -s '. qsa( $node[$node_id]['dynamic_ip'] ) .' -A '. qsa( $node[$node_id]['broadcast'] );
 	
 	write_log("Execute $exec_string");
 	exec($exec_string,$ret_array,$ret_val);
@@ -153,7 +155,7 @@ function Stonith( $node_id )
 {
 	global $node;
 	
-	$exec_string=GS_DIR.'sbin/stonith.sh '. escapeShellArg( $node[$node_id]['dynamic_ip'] );
+	$exec_string=GS_DIR.'sbin/stonith.sh '. qsa( $node[$node_id]['dynamic_ip'] );
 	write_log("Execute $exec_string");
 	exec($exec_string,$ret_array,$ret_val);
 	return $ret_val;
@@ -163,10 +165,10 @@ function TakeOverIP( $node_id )
 {
 	global $node;
 	
-	$exec_string='/sbin/ifconfig '. escapeShellArg( $node[$node_id]['local_interface'] ) .' '. escapeShellArg( $node[$node_id]['dynamic_ip'] ) .' netmask '. escapeShellArg( $node[$node_id]['netmask'] ) . ' broadcast '. escapeShellArg( $node[$node_id]['broadcast'] );
+	$exec_string='/sbin/ifconfig '. qsa( $node[$node_id]['local_interface'] ) .' '. qsa( $node[$node_id]['dynamic_ip'] ) .' netmask '. qsa( $node[$node_id]['netmask'] ) . ' broadcast '. qsa( $node[$node_id]['broadcast'] );
 	write_log("Execute $exec_string");
 	exec($exec_string,$ret_array,$ret_val);
-	$exec_string='/sbin/route add -host '. escapeShellArg( $node[$node_id]['dynamic_ip'] ) .' '. escapeShellArg( $node[$node_id]['local_interface'] );
+	$exec_string='/sbin/route add -host '. qsa( $node[$node_id]['dynamic_ip'] ) .' '. qsa( $node[$node_id]['local_interface'] );
 	write_log("Execute $exec_string");
 	exec($exec_string,$ret_array,$ret_val);
 }
