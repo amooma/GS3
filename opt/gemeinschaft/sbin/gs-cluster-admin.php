@@ -33,6 +33,8 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( dirName(__FILE__) .'/../etc/gs-cluster-watchdog.conf' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
+
 
 function ReadDataFile( $data_file )
 {
@@ -68,22 +70,22 @@ function ExecuteRemoteCommands( $node_id )
 	
 	//$exec_string='/usr/sbin/send_arp '.$node[$node_id]['dynamic_ip'].' '.$node[$node_id]['remote_mac'].' '.$node[$node_id]['broadcast']. ' FF:FF:FF:FF:FF:FF '.$node[$node_id]['local_interface'];
 	
-	$cmd='/sbin/ifconfig '. escapeShellArg( $node[$node_id]['remote_interface'] ) .' '. escapeShellArg( $node[$node_id]['dynamic_ip'] ) .' netmask '. escapeShellArg( $node[$node_id]['netmask'] ) .' broadcast '. escapeShellArg( $node[$node_id]['broadcast'] );
-	$exec_string = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. escapeShellArg($node[$node_id]['static_ip']) .' '. escapeShellArg($cmd);
+	$cmd='/sbin/ifconfig '. qsa( $node[$node_id]['remote_interface'] ) .' '. qsa( $node[$node_id]['dynamic_ip'] ) .' netmask '. qsa( $node[$node_id]['netmask'] ) .' broadcast '. qsa( $node[$node_id]['broadcast'] );
+	$exec_string = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($node[$node_id]['static_ip']) .' '. qsa($cmd);
 	echo "Execute: $exec_string\n";
 	exec($exec_string,$ret_array,$ret_val);
 	
 	if ($ret_val > 0) return $ret_val;
 	
-	$cmd='/sbin/arping -c 3 -I '. escapeShellArg( $node[$node_id]['remote_interface'] ) .' -s '. escapeShellArg( $node[$node_id]['dynamic_ip'] ) .' -A '. escapeShellArg( $node[$node_id]['broadcast'] );
-	$exec_string = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. escapeShellArg($node[$node_id]['static_ip']) .' '. escapeShellArg($cmd);
+	$cmd='/sbin/arping -c 3 -I '. qsa( $node[$node_id]['remote_interface'] ) .' -s '. qsa( $node[$node_id]['dynamic_ip'] ) .' -A '. qsa( $node[$node_id]['broadcast'] );
+	$exec_string = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($node[$node_id]['static_ip']) .' '. qsa($cmd);
 	echo "Execute: $exec_string\n";
 	exec($exec_string,$ret_array,$ret_val);
 	
 	if ($ret_val > 0) return $ret_val;
 	
 	$cmd=GS_DIR.'/sbin/start-asterisk';
-	$exec_string = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. escapeShellArg($node[$node_id]['static_ip']) .' '. escapeShellArg($cmd);
+	$exec_string = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($node[$node_id]['static_ip']) .' '. qsa($cmd);
 	echo "Execute: $exec_string\n";
 	exec($exec_string,$ret_array,$ret_val);
 	
@@ -94,7 +96,7 @@ function ReleaseIP( $node_id )
 {
 	global $node;
 	
-	$exec_string='/sbin/ifconfig '. escapeShellArg( $node[$node_id]['local_interface'] ) .' down';
+	$exec_string='/sbin/ifconfig '. qsa( $node[$node_id]['local_interface'] ) .' down';
 	echo "Execute: $exec_string\n";
 	exec($exec_string,$ret_array,$ret_val);
 	
