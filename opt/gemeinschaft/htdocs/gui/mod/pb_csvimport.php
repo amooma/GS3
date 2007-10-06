@@ -34,6 +34,8 @@
 
 
 defined('GS_VALID') or die('No direct access.');
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
+
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -353,7 +355,7 @@ if ($action == 'import') {
 		@$_SESSION['sudo_user']['pb-csv-file'] = null;
 		if (@is_file($file)) {
 			$err=0; $out=array();
-			@exec( 'rm -f '. escapeShellArg($file) );
+			@exec( 'rm -f '. qsa($file) );
 		}
 		
 		echo '<br />', "\n";

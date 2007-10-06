@@ -34,6 +34,8 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/pcre_check.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
+
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -191,7 +193,7 @@ default  :
 $lfound = setLocale(LC_TIME, $l);
 if (! $lfound==0) {
 	$err=0; $out=array();
-	exec('locale -a | grep -i '. escapeShellArg('^'.$lang.'_') .' 2>>/dev/null', $out, $err);
+	exec('locale -a | grep -i '. qsa('^'.$lang.'_') .' 2>>/dev/null', $out, $err);
 	if ($err != 0)
 		gs_log( GS_LOG_NOTICE, 'Failed to find locales on your system' );
 	else {

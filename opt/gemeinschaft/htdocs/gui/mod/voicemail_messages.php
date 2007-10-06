@@ -29,6 +29,7 @@
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
 $folders = array(
@@ -82,18 +83,18 @@ if (@$_REQUEST['action']=='play') {
 		if (in_array($host['id'], $our_host_ids, true)) {
 			# user is on this host
 			if (file_exists( $origfile )) {
-				@exec( 'sudo rm -rf '. escapeShellArg($tmpfile) );
-				@exec( 'sudo cp '. escapeShellArg($origfile) .' '. escapeShellArg($tmpfile) .' && sudo chmod 666 '. escapeShellArg($tmpfile) );
+				@exec( 'sudo rm -rf '. qsa($tmpfile) );
+				@exec( 'sudo cp '. qsa($origfile) .' '. qsa($tmpfile) .' && sudo chmod 666 '. qsa($tmpfile) );
 				$msg_exists = true;
 			}
 		} else {
 			# user is not on this host
-			@exec( 'sudo rm -rf '. escapeShellArg($tmpfile) );
-			@exec( 'sudo -u root cp '. escapeShellArg($origfile) .' '. escapeShellArg($tmpfile) .' && sudo -u root chmod 666 '. escapeShellArg($tmpfile) );
+			@exec( 'sudo rm -rf '. qsa($tmpfile) );
+			@exec( 'sudo -u root cp '. qsa($origfile) .' '. qsa($tmpfile) .' && sudo -u root chmod 666 '. qsa($tmpfile) );
 			
-			$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. escapeShellArg( $tmpfile ) .' '. escapeShellArg( 'root@'. $host['host'] .':'. $tmpfile );
+			$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $tmpfile ) .' '. qsa( 'root@'. $host['host'] .':'. $tmpfile );
 			@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
-			//@exec( 'sudo rm -rf '. escapeShellArg($tmpfile) );
+			//@exec( 'sudo rm -rf '. qsa($tmpfile) );
 			$msg_exists = true;
 		}
 	}
@@ -226,14 +227,14 @@ if (@$_REQUEST['action']=='del') {
 	$fld  = preg_replace('/[^a-z\d]/i', '', @$_REQUEST['fld']);
 	$file = preg_replace('/[^a-z\d]/i', '', @$_REQUEST['file']);
 	if (array_key_exists($fld, $folders)) {
-		$cmd = GS_DIR .'sbin/vm-local-del '. escapeShellArg( @$_SESSION['sudo_user']['info']['ext'] ) .' '. escapeShellArg($fld) .' '. escapeShellArg($file);
+		$cmd = GS_DIR .'sbin/vm-local-del '. qsa( @$_SESSION['sudo_user']['info']['ext'] ) .' '. qsa($fld) .' '. qsa($file);
 		$out = array();
 		if (in_array($host['id'], $our_host_ids, true)) {
 			# user is on this host
 			@exec( 'sudo -u root '. $cmd .' 2>>/dev/null', $out, $err );
 		} else {
 			# user is not on this host
-			exec( GS_DIR .'sbin/remote-exec-do '. escapeShellArg($host['host']) .' '. escapeShellArg($cmd) .' 10 2>>/dev/null', $out, $err );
+			exec( GS_DIR .'sbin/remote-exec-do '. qsa($host['host']) .' '. qsa($cmd) .' 10 2>>/dev/null', $out, $err );
 		}
 	}
 	
@@ -244,14 +245,14 @@ if (@$_REQUEST['action']=='del') {
 /*
 # get list
 #
-$cmd = GS_DIR .'sbin/vm-local-list '. escapeShellArg( @$_SESSION['sudo_user']['info']['ext'] );
+$cmd = GS_DIR .'sbin/vm-local-list '. qsa( @$_SESSION['sudo_user']['info']['ext'] );
 $out = array();
 if (in_array($host['id'], $our_host_ids, true)) {
 	# user is on this host
 	@exec( 'sudo -u root '. $cmd .' 2>>/dev/null', $out, $err );
 } else {
 	# user is not on this host
-	exec( GS_DIR .'sbin/remote-exec-do '. escapeShellArg($host['host']) .' '. escapeShellArg($cmd) .' 10 2>>/dev/null', $out, $err );
+	exec( GS_DIR .'sbin/remote-exec-do '. qsa($host['host']) .' '. qsa($cmd) .' 10 2>>/dev/null', $out, $err );
 }
 $out = trim(implode("\n", $out));
 $messages = @unserialize( @base64_decode( $out ) );
