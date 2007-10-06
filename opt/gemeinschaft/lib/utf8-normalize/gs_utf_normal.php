@@ -29,16 +29,17 @@
 require_once dirName(__FILE__). '/UtfNormal.php';
 
 
-function gs_utf8_decompose_to_ascii( $str, $quick=false )
+function gs_utf8_decompose_to_ascii( $str )
 {
 	static $map = null;
 	if (! is_array($map))
 		$map = _gs_utf8_get_map();
 	
-	$str = $quick
-		? UtfNormal::toNFD ( strTr($str, $map) )
-		: UtfNormal::toNFKD( strTr($str, $map) );
-	$str = preg_replace('/[^a-z0-9\-_. *#\'"!$()\/]/i', '', $str);
+	$str = UtfNormal::toNFD( strTr($str, $map) );
+	
+	# return "safe" ASCII without control chars, newlines etc.
+	//$str = preg_replace('/[^a-z0-9\-_. *#\'"!$()\/]/i', '', $str);
+	$str = preg_replace('/[^\x20-\x7E]/', '', $str);
 	return $str;
 }
 
