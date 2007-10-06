@@ -93,22 +93,7 @@ function process_log( $file )
 		
 		# don't insert the old entries again:
 		if ((int)$r['ts'] < $last_timestamp) continue;
-		
-		if ($r['uid'] < 1 ) $r['uid'] = 'NULL';
-		if ($r['qid'] < 1 ) $r['qid'] = 'NULL';
-		if (! $r['callid']) $r['callid'] = 'NULL';
-		
-		$r['ts'      ] = (int)$r['ts'];
-		$r['evt'     ] = '\''. $DB->escape($r['evt']) .'\'';
-		$r['reason'  ] = db_quote_or_null( $r['reason'  ] );
-		$r['cid'     ] = db_quote_or_null( $r['cid'     ] );
-		$r['pos'     ] = db_quote_or_null( $r['pos'     ] );
-		$r['opos'    ] = db_quote_or_null( $r['opos'    ] );
-		$r['waittime'] = db_quote_or_null( $r['waittime'] );
-		$r['calldur' ] = db_quote_or_null( $r['calldur' ] );
-		$r['logindur'] = db_quote_or_null( $r['logindur'] );
-		$r['info'    ] = db_quote_or_null( $r['info'    ] );
-		
+				
 		//print_r($r);
 		$DB->execute(
 'INSERT INTO `queue_log` (
@@ -126,19 +111,19 @@ function process_log( $file )
 	`calldur`,
 	`info`
 ) VALUES (
-	'. $r['qid'     ] .',
-	'. $r['ts'      ] .',
-	'. $r['evt'     ] .',
-	'. $r['reason'  ] .',
-	'. $r['callid'  ] .',
-	'. $r['uid'     ] .',
-	'. $r['cid'     ] .',
-	'. $r['pos'     ] .',
-	'. $r['opos'    ] .',
-	'. $r['waittime'] .',
-	'. $r['logindur'] .',
-	'. $r['calldur' ] .',
-	'. $r['info'    ] .'
+	'.   db_int_or_null($r['qid'     ]) .',
+	'.             (int)$r['ts'      ]  .',
+	'.      $DB->escape($r['evt'     ]) .',
+	'. db_quote_or_null($r['reason'  ]) .',
+	'. db_quote_or_null($r['callid'  ]) .',
+	'.   db_int_or_null($r['uid'     ]) .',
+	'. db_quote_or_null($r['cid'     ]) .',
+	'.   db_int_or_null($r['pos'     ]) .',
+	'.   db_int_or_null($r['opos'    ]) .',
+	'.   db_int_or_null($r['waittime']) .',
+	'.   db_int_or_null($r['logindur']) .',
+	'.   db_int_or_null($r['calldur' ]) .',
+	'. db_quote_or_null($r['info'    ]) .'
 )' 	);
 		
 	}
@@ -154,6 +139,13 @@ function db_quote_or_null( $val )
 	global $DB;
 	
 	return $val ? ('\''. $DB->escape($val) .'\'') : 'NULL';
+}
+
+function db_int_or_null( $val )
+{
+	global $DB;
+	
+	return $val ? (int)$val : 'NULL';
 }
 
 function log_line_to_db_entry( $line )
