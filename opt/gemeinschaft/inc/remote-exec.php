@@ -27,6 +27,7 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
 function remote_exec( $host, $cmd, $timeout=10, &$out, &$err )
@@ -35,7 +36,7 @@ function remote_exec( $host, $cmd, $timeout=10, &$out, &$err )
 	if ($host=='') return false;
 	$cmd = trim($cmd);
 	if ($cmd=='') return false;
-	$full_cmd = GS_DIR .'sbin/remote-exec-do '. escapeShellArg( $host ) .' '. escapeShellArg( $cmd ) .' '. (int)$timeout;
+	$full_cmd = GS_DIR .'sbin/remote-exec-do '. qsa( $host ) .' '. qsa( $cmd ) .' '. (int)$timeout;
 	@ exec( $full_cmd, $buf_out, $buf_err );
 	$out = $buf_out;
 	$err = (int)$buf_err;
