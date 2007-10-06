@@ -100,7 +100,7 @@ function err_handler_quiet( $type, $msg, $file, $line )
 }
 
 
-function quote_shell_arg( $str )
+function qsa( $str )
 {
 	# escapeShellArg() is broken! it returns an un-quoted empty string
 	# for empty strings. (that does not count as a shell argument!)
