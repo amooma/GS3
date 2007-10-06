@@ -28,6 +28,9 @@
 
 defined('GS_VALID') or die('No direct access.');
 
+include_once( GS_DIR .'inc/quote_shell_arg.php' );
+# scripts which include util.php may rely on log.php being included here
+
 include_once( GS_DIR .'inc/log.php' );
 # scripts which include util.php rely on log.php being included here
 
@@ -97,19 +100,6 @@ function err_handler_quiet( $type, $msg, $file, $line )
 			gs_log( GS_LOG_FATAL  , 'PHP: '. $msg .' in '. $file .' on line '. $line );
 			exit(1);
 	}
-}
-
-
-function qsa( $str )
-{
-	# escapeShellArg() is broken! it returns an un-quoted empty string
-	# for empty strings. (that does not count as a shell argument!)
-	# that bug is known since at least 2002, see
-	# http://www.php.net/manual/en/function.escapeshellarg.php
-	# but has not been fixed
-	
-	$ret = escapeShellArg($str);
-	return (trim($ret) != '' ? $ret : '\'\'');
 }
 
 
