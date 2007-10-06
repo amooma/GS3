@@ -203,7 +203,7 @@ if (@$_REQUEST['action']=='play') {
 	
 	<?php
 	}
-	echo '</div>' ,"\n";
+	echo "\n", '</div>' ,"\n";
 }
 
 
