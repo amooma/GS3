@@ -46,6 +46,7 @@ require_once( GS_DIR .'inc/netmask.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 require_once( GS_DIR .'inc/remote-exec.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
 header( 'Content-Type: text/plain; charset=utf-8' );
@@ -352,7 +353,7 @@ if (in_array( $user['host_id'], $our_host_ids )) {
 	
 } else {
 	
-	$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. escapeShellArg( $filename ) .' '. escapeShellArg( 'root@'. $user['host'] .':'. $filename );
+	$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $filename ) .' '. qsa( 'root@'. $user['host'] .':'. $filename );
 	//echo $cmd, "\n";
 	@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
 	@ unlink( $filename );
@@ -361,7 +362,7 @@ if (in_array( $user['host_id'], $our_host_ids )) {
 		die_error( 'Failed to scp call file.' );
 	}
 	//remote_exec( $user['host'], $cmd, 10, $out, $err ); // <-- does not use sudo!
-	$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. escapeShellArg( $user['host'] ) .' '. escapeShellArg( 'mv '. escapeShellArg( $filename ) .' '. escapeShellArg( $spoolfile ) );
+	$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa( $user['host'] ) .' '. qsa( 'mv '. qsa( $filename ) .' '. qsa( $spoolfile ) );
 	//echo $cmd, "\n";
 	@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
 	if ($err != 0) {
