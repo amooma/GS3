@@ -33,6 +33,7 @@
 
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
 $copyright =
@@ -77,7 +78,7 @@ if (is_array($langdirs)) {
 				#
 				echo "Building $lang $domain.mo\n";
 				$mofile = preg_replace('/\.po$/', '.mo', $pofile);
-				passThru( 'msgfmt -o '. escapeShellArg($mofile) .' '. escapeShellArg($pofile) );
+				passThru( 'msgfmt -o '. qsa($mofile) .' '. qsa($pofile) );
 				
 				# build .php file for php
 				#
