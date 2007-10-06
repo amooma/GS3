@@ -36,14 +36,15 @@ function gs_utf8_decompose_to_ascii( $str )
 		$map = _gs_utf8_get_map();
 	
 	$str = UtfNormal::toNFKD( strTr($str, $map) );
-	$str = preg_replace('/[^a-z\d\-_. *#\'"!$()\/]/i', '', $str);
+	$str = preg_replace('/[^a-z0-9\-_. *#\'"!$()\/]/i', '', $str);
 	return $str;
 }
 
 
 function gs_utf8_decompose_first_to_ascii( $str )
 {
-	return gs_utf8_decompose_to_ascii( mb_subStr($str,0,1) ) . mb_subStr($str,1);
+	return gs_utf8_decompose_to_ascii( mb_subStr($str,0,1) )
+	                                 . mb_subStr($str,1  );
 }
 
 
@@ -63,8 +64,8 @@ function _gs_utf8_get_map()
 		if ($line=='' || subStr($line,0,1)=='#') continue;
 		
 		$tmp = explode(';', $line, 3);
-		$char = rTrim(@$tmp[0]);
-		$translit = trim(@$tmp[1]);
+		$char     = rTrim(@$tmp[0]);
+		$translit =  trim(@$tmp[1]);
 		if (! $translit) $map[$char] = '';
 		else {
 			$char = hexUnicodeToUtf8( $char );
