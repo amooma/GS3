@@ -71,6 +71,7 @@ if (@$_REQUEST['action']=='play') {
 	$fld  = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['fld' ]);
 	$file = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['file']);
 	
+	/*
 	$vm_dir = '/var/spool/asterisk/voicemail/default/';
 	$origfile = $vm_dir . @$_SESSION['sudo_user']['info']['ext'] .'/'. $fld .'/'. $file .'.gsm';
 	$tmpfile = '/tmp/gs-vm-'. preg_replace('/[^0-9]/', '', @$_SESSION['sudo_user']['info']['ext']) .'-'. $fld .'-'. $file .'.gsm';
@@ -111,7 +112,7 @@ if (@$_REQUEST['action']=='play') {
 		<object
 			id="player"
 			type="audio/x-gsm"
-			data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=', $fld, '&amp;msg=', $file, '&amp;msie=.gsm'; ?>"
+			data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>"
 			width="250"
 			height="18"
 			align="right"
@@ -132,12 +133,12 @@ if (@$_REQUEST['action']=='play') {
 			type="audio/x-gsm"
 			classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
 			codebase="http://www.apple.com/qtactivex/qtplugin.cab"
-			data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=', $fld, '&amp;msg=', $file, '&amp;msie=.gsm'; ?>"
+			data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>"
 			width="250"
 			height="18"
 			align="right"
 			>
-			<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=', $fld, '&amp;msg=', $file, '&amp;_=.gsm'; ?>" />
+			<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;_=.gsm'; ?>" />
 			<param name="autoplay" value="true" />
 			<param name="controller" value="true" />
 			<?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'GSM'); ?>
@@ -151,6 +152,58 @@ if (@$_REQUEST['action']=='play') {
 		</div>
 		<?php
 	}
+	*/
+	
+	# the correct MIME type for "mp3" files is "audio/mpeg", see
+	# http://www.iana.org/assignments/media-types/audio/
+	# http://www.rfc-editor.org/rfc/rfc3003.txt
+	
+	echo '<div class="fr" style="width:250px; border:1px solid #ccc; padding:4px; background:#eee;">' ,"\n";
+	echo __('Player') ,"\n";
+	
+	if (strPos(@$_SERVER['HTTP_USER_AGENT'], 'MSIE')===false) {
+	?>
+	
+	<!-- W3 compliant version: -->
+	<object
+		id="player"
+		type="audio/mpeg"
+		data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>"
+		width="250"
+		height="18"
+		align="right"
+		>
+		<param name="autoplay" value="true" />
+		<param name="controller" value="true" />
+		<?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?>
+		
+	</object>
+	
+	<?php
+	} else {
+	?>
+	
+	<!-- MSIE version (for QuickTime ActiveX): -->
+	<object
+		id="player"
+		type="audio/mpeg"
+		classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
+		codebase="http://www.apple.com/qtactivex/qtplugin.cab"
+		data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>"
+		width="250"
+		height="18"
+		align="right"
+		>
+		<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;_=.mp3'; ?>" />
+		<param name="autoplay" value="true" />
+		<param name="controller" value="true" />
+		<?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?>
+		
+	</object>
+	
+	<?php
+	}
+	echo '</div>' ,"\n";
 }
 
 
