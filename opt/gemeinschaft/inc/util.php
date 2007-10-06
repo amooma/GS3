@@ -100,6 +100,19 @@ function err_handler_quiet( $type, $msg, $file, $line )
 }
 
 
+function quote_shell_arg( $str )
+{
+	# escapeShellArg() is broken! it returns an un-quoted empty string
+	# for empty strings. (that does not count as a shell argument!)
+	# that bug is known since at least 2002, see
+	# http://www.php.net/manual/en/function.escapeshellarg.php
+	# but has not been fixed
+	
+	$ret = escapeShellArg($str);
+	return (trim($ret) != '' ? $ret : '\'\'');
+}
+
+
 function date_human( $ts )
 {
 	$old_locale = setLocale(LC_TIME, '0');
