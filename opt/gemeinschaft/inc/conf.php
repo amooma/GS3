@@ -37,6 +37,10 @@ defined('GS_VALID') or die('No direct access.');
 ############################################################
 
 
+# the E_STRICT error level (and constant) was introduced in PHP 5
+if (! defined('E_STRICT')) define('E_STRICT', 2048);
+
+
 # override mbstring settings from php.ini
 #
 if (function_exists('mb_internal_encoding'))
