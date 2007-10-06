@@ -234,6 +234,8 @@ class UtfNormal
 	/*static*/ function loadData()
 	{
 		return;  # --pk
+		# Warning: This is incomplete without loading the transliteration
+		# table!  --pk
 		/*  # --pk
 		global $utfCombiningClass;
 		if( !isset( $utfCombiningClass ) ) {
@@ -551,6 +553,8 @@ class UtfNormal
 		global $utfCompatibilityDecomp;
 		if( !isset( $utfCompatibilityDecomp ) ) {
 			//require_once( 'UtfNormalDataK.inc' );  # --pk
+			# Warning: This is incomplete without loading the transliteration
+			# table!  --pk
 		}
 		return UtfNormal::fastCombiningSort(
 			UtfNormal::fastDecompose( $string, $utfCompatibilityDecomp ) );
