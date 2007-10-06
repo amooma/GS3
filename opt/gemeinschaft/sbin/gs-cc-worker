@@ -36,6 +36,7 @@ require_once( GS_DIR .'inc/extension-state.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 require_once( GS_DIR .'inc/remote-exec.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
 $runctl_max_time = 10*60;
@@ -239,7 +240,7 @@ function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid,
 		$host = @ $hosts[$from_host_id];
 		if (! $host) return false;
 		
-		$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. escapeShellArg( $filename ) .' '. escapeShellArg( 'root@'. $host .':'. $filename );
+		$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $filename ) .' '. qsa( 'root@'. $host .':'. $filename );
 		//echo $cmd, "\n";
 		@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
 		@ unlink( $filename );
@@ -249,7 +250,7 @@ function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid,
 			return false;
 		}
 		//remote_exec( $host, $cmd, 10, $out, $err ); // <-- does not use sudo!
-		$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. escapeShellArg( $host ) .' '. escapeShellArg( 'mv '. escapeShellArg( $filename ) .' '. escapeShellArg( $spoolfile ) );
+		$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa( $host ) .' '. qsa( 'mv '. qsa( $filename ) .' '. qsa( $spoolfile ) );
 		//echo $cmd, "\n";
 		@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
 		if ($err != 0) {
