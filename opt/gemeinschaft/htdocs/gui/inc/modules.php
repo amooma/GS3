@@ -35,7 +35,7 @@ $MODULES = array();
 #####################################################################
 
 $MODULES['login'    ]=  array('title' => __('Login'),
-                              'icon'  => 'crystal-svg/%s/app/kfm_home.png',
+                              'icon'  => 'crystal-svg/%s/act/unlock.png',
                               'inmenu'=> false,
    'sub' => array(
       'login'        => array('title' => __('Login'))
