@@ -75,7 +75,7 @@ function gs_asterisks_reload( $host_ids, $dialplan_only )
 		if (! $host_ids || in_array($host['id'], $host_ids)) {
 			$cmd = '/opt/gemeinschaft/sbin/start-asterisk'. ($dialplan_only ? ' --dialplan' : '');
 			if (! in_array($host['id'], $our_host_ids)) {
-				$cmd = $sudo .'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. escapeShellArg($host['host']) .' '. escapeShellArg($cmd);
+				$cmd = $sudo .'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd);
 			}
 			@ exec( $sudo . $cmd .' 1>>/dev/null 2>&1', $out, $err );
 			$ok = $ok && ($err==0);

@@ -103,7 +103,7 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 	} else {
 		# remotely
 		$cmd = 'rm -rf /opt/gemeinschaft/htdocs/prov/ringtones/'. $user .'-'. subStr($src,0,3) .'-* 1>>/dev/null 2>>/dev/null &';
-		@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. escapeShellArg( 'root@'. GS_PROV_HOST ) .' '. escapeShellArg($cmd) .' 1>>/dev/null 2>>/dev/null' );
+		@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( 'root@'. GS_PROV_HOST ) .' '. qsa($cmd) .' 1>>/dev/null 2>>/dev/null' );
 	}
 	
 	# just remove custom ringer?
@@ -158,11 +158,11 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 		if ($we_are_the_webserver) {
 			# local
 			//rename( $outfile, GS_DIR .'htdocs/prov/ringtones/'. $newbase );
-			@exec( 'sudo mv '. escapeShellArg($outfile) .' '. escapeShellArg( GS_DIR .'htdocs/prov/ringtones/'. $newbase ), $out, $err );
+			@exec( 'sudo mv '. qsa($outfile) .' '. qsa( GS_DIR .'htdocs/prov/ringtones/'. $newbase ), $out, $err );
 		} else {
 			# remotely
-			@exec( 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. escapeShellArg($outfile) .' '. escapeShellArg( 'root@'. GS_PROV_HOST .':/opt/gemeinschaft/htdocs/prov/ringtones/'. $newbase ) .' >>/dev/null 2>>/dev/null', $out, $err );
-			//@exec( 'sudo rm -f '. escapeShellArg($outfile) .' >>/dev/null 2>&1' );
+			@exec( 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa($outfile) .' '. qsa( 'root@'. GS_PROV_HOST .':/opt/gemeinschaft/htdocs/prov/ringtones/'. $newbase ) .' >>/dev/null 2>>/dev/null', $out, $err );
+			//@exec( 'sudo rm -f '. qsa($outfile) .' >>/dev/null 2>&1' );
 			@unlink( $outfile );
 		}
 		if ($err != 0) {
