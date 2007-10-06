@@ -207,7 +207,7 @@ _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]
 
 # to communicate with HylaFax ftp_raw() is required, which is not
 # available in PHP < 5
-if ((float)PHP_VERSION >= 5.0)
+if ((float)PHP_VERSION < 5.0)
 	$FAX_ENABLED = false;
 _gscnf( 'FAX_ENABLED'               , false              );
 _gscnf( 'FAX_PREFIX',    gs_get_conf('GS_CANONIZE_NATL_PREFIX' , '0'  ).
