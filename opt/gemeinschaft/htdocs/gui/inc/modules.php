@@ -168,7 +168,7 @@ $MODULES['stats'    ]=  array('title' => __('Statistik'),     //TRANSLATE ME
 
 if (gs_get_conf('GS_FAX_ENABLED')) {
 $MODULES['fax'      ]=  array('title' => __('Fax'),           //TRANSLATE ME
-                              'icon'  => 'crystal-svg/%s/act/fileprint.png',
+                              'icon'  => 'crystal-svg/%s/app/kdeprintfax.png',
    'sub' => array(
       'rec'          => array('title' => __('Empfangen')),    //TRANSLATE ME
       'send'         => array('title' => __('Fax versenden')),//TRANSLATE ME
