@@ -40,14 +40,18 @@ function gs_utf8_decompose_to_ascii( $str )
 	return $str;
 }
 
+
 function gs_utf8_decompose_first_to_ascii( $str )
 {
 	return gs_utf8_decompose_to_ascii( mb_subStr($str,0,1) ) . mb_subStr($str,1);
 }
 
-function hexUnicodeToUtf8( $hexcp ) {
+
+function hexUnicodeToUtf8( $hexcp )
+{
 	return @codepointToUtf8( @hexDec( $hexcp ) );
 }
+
 
 function _gs_utf8_get_map()
 {
