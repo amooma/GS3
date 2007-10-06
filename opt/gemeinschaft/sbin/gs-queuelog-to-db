@@ -41,16 +41,16 @@ include_once( GS_DIR .'inc/find_executable.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
-$lockfile = '/var/lock/gs-queuelog';
+$lockfile = gs_get_conf('GS_LOCK_DIR').'gs-queuelog';
 
 
 function remove_lockfile()
 {
 	global $lockfile;
 	
-	@exec( 'rm -rf '. qsa($lockfile) );
 	if (@is_file($lockfile) && @is_writable($lockfile)) {
 		@unlink($lockfile);
+		@exec( 'rm -f '. qsa($lockfile) );
 	}
 }
 
@@ -323,18 +323,28 @@ function iface_to_agent_ext( $interface )
 set_error_handler('_err_handler');
 
 if (get_current_user() != 'root') {
+	gs_log( GS_LOG_WARNING, "Must be run as root." );
 	echo "Must be run as root. Bye bye.\n";
 	exit(1);
 }
 if (@file_exists($lockfile)) {
 	$mtime = @fileMTime($lockfile);
 	if ($mtime === false || $mtime > time()-(30*60)) {
+		gs_log( GS_LOG_NOTICE, "\"$lockfile\" exists. Exit." );
 		echo "\"$lockfile\" exists. Exit.\n";
 		exit();
 	}
 	# else assume the file is just a leftover from a previous run
 }
+$lockdir = dirName($lockfile).'/';
+if (! @is_dir($lockdir)) {
+	gs_log( GS_LOG_WARNING, "\"$lockdir\" does not exist." );
+	echo "\"$lockdir\" does not exist.\n";
+	exit(1);
+}
+unset($lockdir);
 if (! @touch($lockfile)) {
+	gs_log( GS_LOG_WARNING, "Could not touch \"$lockfile\"." );
 	echo "Could not touch \"$lockfile\". Exit.\n";
 	exit(1);
 }
@@ -343,6 +353,7 @@ $logrotate = find_executable( 'logrotate', array(
 	'/usr/sbin/', '/usr/bin/', '/sbin/', '/bin/', '/usr/local/sbin/', '/usr/local/bin/'
 ));
 if (! $logrotate) {
+	gs_log( GS_LOG_WARNING, "Could not find logrotate" );
 	echo "Could not find logrotate\n";
 	exit(1);
 }
