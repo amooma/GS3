@@ -30,6 +30,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 set_error_handler('err_handler_die_on_err');
 
 
@@ -131,7 +132,7 @@ function _generate_settings( $model, $appl, $rtfs, $lnux )
 				$wget_url = $firmware_url_snom_from6to7 . $file;
 			else
 				$wget_url = $firmware_url_snom          . $file;
-			gs_log( GS_LOG_WARNING, "Please  cd ". escapeShellArg($firmware_path) ." && wget ". escapeShellArg($wget_url) );
+			gs_log( GS_LOG_WARNING, "Please  cd ". qsa($firmware_path) ." && wget ". qsa($wget_url) );
 		} else {
 			$url = $firmware_url . rawUrlEncode($file);
 			gs_log( GS_LOG_NOTICE, "Snom $mac ($phone_type, user $user): Update file: \"$file\"" );

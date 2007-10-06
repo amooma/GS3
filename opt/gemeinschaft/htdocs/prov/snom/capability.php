@@ -28,6 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/phone-capability.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
 class PhoneCapability_snom extends PhoneCapability
@@ -73,7 +74,7 @@ class PhoneCapability_snom extends PhoneCapability
 		if (strToLower(subStr($infile, -4, 4)) == '.mp3') {
 			# convert mp3 to wav first
 			$wavfile = $infile .'.wav';
-			$cmd = $mpg123 .' -m -w - -n 1000 -q '. escapeShellArg($infile) .' > '. escapeShellArg($wavfile) .' 2>>/dev/null';
+			$cmd = $mpg123 .' -m -w - -n 1000 -q '. qsa($infile) .' > '. qsa($wavfile) .' 2>>/dev/null';
 			# cuts file after 1000 frames (around 2.3 MB, depending on the rate)
 			# don't use -r 8000 as that doesn't really work for VBR encoded MP3s
 			@exec($cmd, $out, $err);
@@ -86,7 +87,7 @@ class PhoneCapability_snom extends PhoneCapability
 		} else
 			$rm_tmp = false;
 		
-		$cmd = 'sox '. escapeShellArg($infile) .' -r 8000 -c 1 -w '. escapeShellArg($outfile) .' trim 0 125000s 2>>/dev/null';
+		$cmd = 'sox '. qsa($infile) .' -r 8000 -c 1 -w '. qsa($outfile) .' trim 0 125000s 2>>/dev/null';
 		# WAV, PCM, 8 kHz, 16 bit, mono
 		# "The time for loading the file should not be longer then 3 seconds.
 		# Size < 250 KByte."
