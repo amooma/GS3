@@ -35,6 +35,7 @@ require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 include_once( GS_DIR .'inc/find_executable.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
 $db = gs_db_slave_connect();
@@ -104,7 +105,7 @@ while ($queue = $rs->fetchRow()) {
 		if (! $host) continue;
 		
 		$cmd = 'asterisk -rx \'queue show '. $queue['ext'] .'\' 2>&1';
-		$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. escapeShellArg( $host ) .' '. escapeShellArg( $cmd ) .' 2>&1';
+		$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa( $host ) .' '. qsa( $cmd ) .' 2>&1';
 		$out = array();
 		@exec($cmd, $out, $err);
 		
