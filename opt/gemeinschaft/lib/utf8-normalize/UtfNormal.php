@@ -259,7 +259,7 @@ class UtfNormal
 		UtfNormal::loadData();
 		global $utfCheckNFC, $utfCombiningClass;
 		$len = strlen( $string );
-		for( $i = 0; $i < $len; $i++ ) {
+		for( $i = 0; $i < $len; ++$i ) {
 			$c = $string{$i};
 			$n = ord( $c );
 			if( $n < 0x80 ) {
@@ -272,7 +272,7 @@ class UtfNormal
 				$i += 2;
 			} elseif( $n >= 0xc0 ) {
 				$c = substr( $string, $i, 2 );
-				$i++;
+				++$i;
 			}
 			if( isset( $utfCheckNFC[$c] ) ) {
 				# If it's NO or MAYBE, bail and do the slow check.
@@ -572,7 +572,7 @@ class UtfNormal
 		UtfNormal::loadData();
 		$len = strlen( $string );
 		$out = '';
-		for( $i = 0; $i < $len; $i++ ) {
+		for( $i = 0; $i < $len; ++$i ) {
 			$c = $string{$i};
 			$n = ord( $c );
 			if( $n < 0x80 ) {
@@ -588,7 +588,7 @@ class UtfNormal
 				$i += 2;
 			} elseif( $n >= 0xc0 ) {
 				$c = substr( $string, $i, 2 );
-				$i++;
+				++$i;
 			}
 			if( isset( $map[$c] ) ) {
 				$out .= $map[$c];
@@ -637,7 +637,7 @@ class UtfNormal
 		$out = '';
 		$combiners = array();
 		$lastClass = -1;
-		for( $i = 0; $i < $len; $i++ ) {
+		for( $i = 0; $i < $len; ++$i ) {
 			$c = $string{$i};
 			$n = ord( $c );
 			if( $n >= 0x80 ) {
@@ -649,7 +649,7 @@ class UtfNormal
 					$i += 2;
 				} elseif( $n >= 0xc0 ) {
 					$c = substr( $string, $i, 2 );
-					$i++;
+					++$i;
 				}
 				if( isset( $utfCombiningClass[$c] ) ) {
 					$lastClass = $utfCombiningClass[$c];
@@ -696,7 +696,7 @@ class UtfNormal
 		$combining = '';
 		$x1 = ord(substr(UTF8_HANGUL_VBASE,0,1));
 		$x2 = ord(substr(UTF8_HANGUL_TEND ,0,1));
-		for( $i = 0; $i < $len; $i++ ) {
+		for( $i = 0; $i < $len; ++$i ) {
 			$c = $string{$i};
 			$n = ord( $c );
 			if       ( $n < 0x80 ) {
@@ -715,7 +715,7 @@ class UtfNormal
 				$i += 2;
 			} elseif( $n >= 0xc0 ) {
 				$c = substr( $string, $i, 2 );
-				$i++;
+				++$i;
 			}
 			$pair = $startChar . $c;
 			if( $n > 0x80 ) {
@@ -826,7 +826,7 @@ class UtfNormal
 	{
 		$len = strlen( $string );
 		$out = '';
-		for( $i = 0; $i < $len; $i++ ) {
+		for( $i = 0; $i < $len; ++$i ) {
 			$out .= $string{$i};
 		}
 		return $out;
