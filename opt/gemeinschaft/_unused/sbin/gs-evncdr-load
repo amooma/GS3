@@ -1,0 +1,625 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+
+#####################################################################
+#  Parst CSV-Dateien im EVN-Format ("Elektronischer Verbindungs-
+#  Nachweis" ?) von der Telekom
+#  CSV-Datensatz kann man bei "RechnungOnline" runterladen
+#####################################################################
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/log.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$currency = 'EUR';
+
+
+if ($argc < 4) {
+	echo
+	"  \n",
+	"  Aufruf: ". baseName($argv[0])." Dateiname FKTO MwSt-Satz\n",
+	"  \n",
+	"  Die FKTO-Nr. ist die Verrechnungsnr. (/Fakturierungskonto) bei\n",
+	"  der Telekom. Sie besteht aus Vorwahl, Nullen und Hauptrufnummer.\n",
+	"  Die FKTO ist das erste Datenfehl in jeder Zeile. Nur passende\n",
+	"  Eintraege werden akzeptiert.\n",
+	"  \n",
+	"  Bitte geben Sie die aufzuschlagende MwSt ohne \"%\" an,\n",
+	"  Also z.B. einfach 19 (oder 0)\n",
+	"  \n";
+	exit(1);
+}
+$evn_file = @$argv[1];
+if (is_dir($evn_file)) {
+	echo "\"$file\" is a directory.\n";
+	exit(1);
+}
+if (strToLower(subStr($evn_file, -4)) != '.csv') {
+	echo "File extension must be \".csv\".\n";
+	exit(1);
+}
+if (! file_exists($evn_file)) {
+	echo "File \"$file\" not found.\n";
+	exit(1);
+}
+$fkto_accept = preg_replace('/[^0-9]/', '', trim(@$argv[2]));
+$vat = (int)preg_replace('/^[\s"0]/', '', trim(@$argv[3]));
+
+
+if (! defined('E_STRICT')) define('E_STRICT', 2048);
+
+function _err_handler( $type, $msg, $file, $line )
+{
+	switch ($type) {
+		case E_NOTICE:
+		case E_USER_NOTICE:
+			if (error_reporting() != 0) {  # suppressed by @
+				gs_log( GS_LOG_NOTICE, 'PHP: '. $msg .' in '. $file .' on line '. $line );
+			}
+			break;
+		case E_STRICT:
+			if (error_reporting() != 0) {
+				gs_log( GS_LOG_DEBUG, 'PHP (Strict): '. $msg .' in '. $file .' on line '. $line );
+			} else {  # suppressed by @
+				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line );
+			}
+			break;
+		default:
+			gs_log( GS_LOG_FATAL  , 'PHP: '. $msg .' in '. $file .' on line '. $line );
+			exit(1);
+	}
+}
+
+function telekom_tarifzone_k_to_v( $k )
+{
+	$k = preg_replace('/[^A-Z0-9]/S', '', strToUpper($k));
+	$k0 = subStr($k,0,1);
+	$k1 = subStr($k,1,1);
+	$k2 = subStr($k,2,1);
+	$k3 = subStr($k,3,1);
+	
+	// zurückgegeben werden Abkürzung der Tarifgruppen bei der Telekom
+	
+	$ret = '?-'.$k;
+	switch ($k0) {
+		case 'W':                                     # W
+			$ret = 'Deu?';
+			switch (subStr($k,1,3)) {
+				case '001':                           # W001
+				case '002':                           # W002
+				case '801':                           # W801
+				case '998':                           # W998
+				case '999':                           # W999
+					$ret = 'Deu';
+					break;
+			}
+			break;
+		case 'R':                                     # R
+			//$ret = 'Deu?';
+			$ret = 'Reg?';
+			switch (subStr($k,1,3)) {
+				case '001':                           # R001
+				case '801':                           # R801
+					//$ret = 'Deu';
+					$ret = 'Reg';
+					break;
+			}
+			break;
+		case 'N':                                     # N
+			//$ret = 'City?';
+			$ret = 'Nah?';
+			switch (subStr($k,1,3)) {
+				case '001':                           # N001
+				case '801':                           # N801
+					//$ret = 'City';
+					$ret = 'Nah';
+					break;
+			}
+			break;
+		case 'O':                                     # O
+			//$ret = 'City?';
+			$ret = 'Ort?';
+			switch (subStr($k,1,3)) {
+				case '001':                           # O001
+				case '801':                           # O801
+					//$ret = 'City';
+					$ret = 'Ort';
+					break;
+			}
+			break;
+		case 'D':                                     # D
+			$ret = 'D-Netz';
+			switch (subStr($k,1,3)) {
+				case '010':                           # D010
+				case '175':                           # D175
+					//$ret = 'D1';
+					$ret = 'D1-Netz';
+					break;
+				case '176':                           # D176
+					//$ret = 'D1Ext';
+					$ret = 'D1-Netz';
+					break;
+				case '020':                           # D020
+					//$ret = 'D2';
+					$ret = 'D2-Netz';
+					break;
+			}
+			break;
+		case 'E':                                     # E
+			$ret = 'E-Netz';
+			switch (subStr($k,1,3)) {
+				case '010':                           # E010
+					//$ret = 'E1';
+					$ret = 'E1-Netz';
+					break;
+				case '020':                           # E020
+					//$ret = 'E2';
+					$ret = 'E2-Netz';
+					break;
+			}
+			break;
+		case 'B':                                     # B
+			$ret = 'Ausl/AuslF';
+			switch ($k1) {
+				case '0':                             # B0
+					switch (subStr($k,2,2)) {
+						case '11':                    # B011
+						case '15':                    # B015
+						case '21':                    # B021
+						case '22':                    # B022
+						case '24':                    # B024
+						case '31':                    # B031
+						case '41':                    # B041
+						case '51':                    # B051
+							$ret = 'Ausl';
+							break;
+						case '12':                    # B012
+						case '13':                    # B013
+						case '14':                    # B014
+						case '16':                    # B016
+						case '23':                    # B023
+						case '32':                    # B032
+						case '33':                    # B033
+						case '35':                    # B035
+						case '42':                    # B042
+						case '43':                    # B043
+						case '45':                    # B045
+							$ret = 'AuslF';
+							break;
+					}
+					break;
+				case '1':                             # B1
+					if ($k2>='0' && $k2<='5') {       # B10-B15
+						if ($k3=='0')                 # B100-B150
+							$ret = 'Ausl';
+						elseif ($k3=='5' && $k2=='5') # B155
+							$ret = 'Ausl';
+					}
+					break;
+				case '2':                             # B2
+					$k23 = subStr($k,2,2);
+					if ($k23>='08' && $k23<='20')     # B208-B220
+						$ret = 'Ausl';
+					elseif ($k23=='03')               # B203
+						$ret = 'Ausl';
+					elseif ($k23>='04' && $k23<='07')
+						$ret = 'AuslF';
+					break;
+				case '3':                             # B3
+					switch (subStr($k,2,2)) {
+						case '310':                   # B310
+						case '311':                   # B311
+							$ret = 'Ausl';
+							break;
+					}
+					break;
+			}
+			break;
+		case 'S':                                     # S
+			// Sat/Sonder/Spezial/Sonstiges/Shared?
+			$ret = 'Sonst?';
+			switch ($k1) {
+				case '0':                             # S0
+					switch (subStr($k,2,2)) {
+						case '01':                    # S001
+						case '02':                    # S002
+						case '03':                    # S003
+						case '04':                    # S004
+						case '05':                    # S005
+						case '06':                    # S006
+						case '10':                    # S010
+							$ret = 'Inmar';
+							break;
+						case '09':                    # S009
+							$ret = 'Emsat';
+							break;
+					}
+					break;
+				case '8':                             # S8
+					if ($k2=='0')                     # S80
+						// Anrufe auf 0180..
+						// (shared cost), z.B.
+						// S801 für Anruf auf 01801..
+						$ret = 'Shared';
+						// wie heißt das bei der Telekom?
+					elseif (subStr($k,2,2) == '91') { # S891
+						// Internet-by-Call?
+						$ret = 'Onl';
+					}
+					break;
+				case '1':                             # S1
+					if (subStr($k,2,2) == '91') {     # S191
+						// Internet-by-Call auf
+						// 019.. ?
+						$ret = 'Onl';
+					}
+					break;
+				case '7':                             # S7
+					if ($k2=='0') {                   # S70
+						// Anrufe auf 0700..
+						// (persönliche Vanity-Nummern)
+						$ret = 'PersV';
+						// wie heißt das bei der Telekom?
+					}
+					break;
+				case '3':                             # S3
+					if ($k2=='7') {                   # S37
+						// Anrufe auf 0137
+						// MABEZ ("Massenverkehr zu bestimmten Zeiten"),
+						// d.h. Televoting, Gewinnspiele
+						// z.B. S379 bei Anrufen auf 01379..
+						$ret = 'TeleVote';
+						// wie heißt das bei der Telekom?
+					}
+					break;
+			}
+			break;
+		case 'M':                                     # M
+			// Ausland Mobilfunk?
+			$ret = 'AuslM';
+			break;
+		case 'I':                                     # I
+			// Informationsdienste / Auskunft
+			$ret = 'Info?';  // wie heißt das bei der Telekom?
+			switch (subStr($k,1,3)) {
+				case '033':                           # I033
+				case '034':                           # I034
+					// Anrufe auf Auskunft 11833 / 11834
+					$ret = 'Info';
+					// wie heißt das bei der Telekom?
+					break;
+			}
+			break;
+		case 'X':                                     # X
+			switch (subStr($k,1,3)) {
+				case '011':                           # X011
+					$ret = 'T-Box';
+					break;
+				case '666':                           # X666
+					// steht in der Telekom-Liste, aber ohne Text
+					break;
+				case '900':                           # X900
+					// "innovative Dienst" auf Vorwahl 012?
+					$ret = 'InnovD';
+					// wie heißt das bei der Telekom?
+					break;
+			}
+			break;
+		case 'V':                                     # V
+			if ($k == 'V032') {                       # V032
+				// nicht ortsgebundene Vorwahl 032
+				$ret = 'Ortsunab';
+				// wie heißt das bei der Telekom?
+			}
+			break;
+		case 'K':                                     # K
+			$ret = 'Konf?';
+			switch (subStr($k,1,3)) {
+				case '001':                           # K001
+				case '801':                           # K801
+					$ret = 'Konf';
+					break;
+			}
+			break;
+		case 'C':                                     # C
+			$ret = 'C-Netz';
+			if ($k == 'C002') $ret = 'C-Box';         # C002
+			break;
+		case 'F':                                     # F
+			$ret = 'Scall?';
+			switch (subStr($k,1,3)) {
+				case '001':                           # F001
+				case '002':                           # F002
+				case '003':                           # F003
+				case '004':                           # F004
+					$ret = 'Scall';
+					break;
+			}
+			break;
+		case 'T':                                     # T
+			if ($k == 'T016') $ret = 'VueDxl';        # T016 (VüDxl)
+			break;
+		case '1':                                     # 1
+			if ($k == '10TD') $ret = 'Dx-P';          # 10TD
+			break;
+		case '2':                                     # 2
+			if ($k == '20TD') $ret = 'ISDN';          # 20TD
+			break;
+		case '3':                                     # 3
+			if ($k == '30TD') $ret = 'GX25';          # 30TD
+			break;
+		case '4':                                     # 4
+			if ($k == '40TD') $ret = 'LtLD';          # 40TD
+			break;
+	}
+	
+	return $ret;
+}
+
+function _gauss( $x, $k )
+{
+	# Gaussian peak, max 1, Krümmungsänderung bei ±$k
+	return exp(-pow($x,2)/pow($k,2));
+}
+
+function process_log( $file )
+{
+	global $DB, $last_timestamp, $currency, $vat, $vat_factor, $count;
+	
+	$currency = preg_replace('/[^A-Z]/', '', strToUpper($currency));
+	$vat_factor = 1.0 + ($vat/100);
+	$timeframe = 25*60;  /* allow +- 25 minutes */
+	
+	$fh = fOpen( $file, 'rb' );
+	if (! is_resource( $fh )) return false;
+	
+	while ($line = fGetS( $fh, 1000 )) {
+		
+		$count['lines']++;
+		$evn = log_line_to_db_entry( $line );
+		if (! $evn) continue;
+		$count['entries']++;
+		if (! $evn['isout']) continue;
+		//print_r($evn);
+		
+		if ($evn['ext']==='') {
+			$count['no_match']++;
+			continue;
+		}
+		
+		$evn_tstart = (int)strToTime( $evn['dstart'].' '.$evn['hstart'] );
+		
+		# find matching calls in our CDRs
+		#
+		$rs = $DB->execute(
+'SELECT `calldate`, `dst`, `dcontext`, `channel`, `dstchannel`, `billsec`, (`disposition`=\'ANSWERED\') `answered` /*, `charge` */
+ FROM   `ast_cdr`
+ WHERE
+        `calldate`>\''. date('Y-m-d H:i:s', $tstart-$timeframe) .'\'
+ AND    `calldate`<\''. date('Y-m-d H:i:s', $tstart+$timeframe) .'\'
+ AND    `src`=\''. $DB->escape($evn['ext']) .'\'
+ AND    `dst` LIKE "0%"
+ AND    `dstchannel`<>""'
+		);
+		# we don't need channel and dstchannel here but use it as
+		# a (hopefully) unique identifier for the row.
+		# checking for `dst`<>"s" and `dst`<>"h" is unnecessary as we check
+		# for `dst` LIKE "0%"
+		
+		if ($rs->numRows()===0) {
+			$count['no_match']++;
+			continue;
+		}
+		$rows = array();
+		while ($r = $rs->fetchRow()) {
+			if ($r['dst'] !== $evn['outdest']) continue;
+			
+			$rt = strToTime($r['calldate']);
+			$bonus = 1500 - abs($evn_tstart-$rt);   # max 1500
+			if ($bonus < 0) $bonus = 0;
+			
+			if ($r['answered']) $bonus += 500;      # max 1000
+			
+			$bonus += _gauss($i,8)*250;             # max  500
+			
+			# max. bonus is 3000
+			$r['__bonus'] = $bonus;
+			$rows[] = $r;
+		}
+		if (count($rows)===0) {
+			$count['no_match']++;
+			continue;
+		}
+		
+		$best_row          = null;
+		$best_bonus        = -1;
+		$second_best_row   = null;
+		$second_best_bonus = -1;
+		foreach ($rows as $r) {
+			if ($r['__bonus'] > $best_bonus) {
+				$second_best_row   = $best_row;
+				$second_best_bonus = $best_bonus;
+				$best_row          = $r;
+				$best_bonus        = $r['__bonus'];
+			} elseif ($r['__bonus'] == $best_bonus) {
+				$second_best_row   = $r;
+				$second_best_bonus = $r['__bonus'];
+			}
+		}
+		unset ($rows);
+		
+		if ($best_bonus === 0) {
+			$count['no_match']++;
+			continue;
+		} elseif ($best_bonus < 1501) {
+			$count['bad_match']++;
+			continue;
+		} elseif ($best_bonus < 2001) {
+			$count['vague_match']++;
+			continue;
+		} elseif ($best_bonus-$second_best_bonus < 501) {
+			$count['vague_match']++;
+			continue;
+		} else {
+			$count['good_match']++;
+			
+			
+			
+		}
+		
+		
+	}
+	
+}
+
+
+function db_quote_or_null( $val )
+{
+	global $DB;
+	
+	return $val ? ('\''. $DB->escape($val) .'\'') : 'NULL';
+}
+
+function log_line_to_db_entry( $line )
+{
+	global $currency, $vat_factor, $fkto_accept;
+	
+	$line = trim($line);
+	if ($line=='') return false;
+	
+	$entry = explode(';', $line, 20);
+	if (count($entry) < 10) return false;
+	
+	@list( $fkto, $tuser, $dstart, $hstart, $dur, $remote, $mat, $tarz, $units, $charge, $cur, $snum, $fnum, $rind, $ext ) = $entry;
+	
+	$fkto = trim($fkto);
+	if ($fkto !== $fkto_accept) return false;
+	
+	if (! preg_match('/^([0-9]{4})([0-9]{2})([0-9]{2})$/S', trim($dstart), $dstart))
+		return false;
+	if (! preg_match('/^([0-9]{2})([0-9]{2})([0-9]{2})$/S', trim($hstart), $hstart))
+		return false;
+	
+	$row = array(
+		//'fkto'   => $fkto,
+		//'tuser'  => trim($tuser),
+		'dstart' => $dstart[1].'-'.$dstart[2].'-'.$dstart[3],
+		'hstart' => $hstart[1].':'.$hstart[2].':'.$hstart[3],
+		'dur'    => (int)lTrim(trim($dur),'0'),
+		'remote' => trim($remote),
+		//'mat'    => $mat,  # ? Materialnummer
+		'tarz'   => preg_replace('/[^A-Z0-9\-_. ]/iS', '', trim($tarz)),
+		'tarzn'  => '',
+		'units'  => (int)lTrim(trim($units),'0'),
+		'charge' => round( (float)$charge * $vat_factor * 10000)/10000,
+		'cur'    => strToUpper(trim($cur)),
+		'snum'   => trim($snum),  # gewählte Nummer bei kommenden Verbindungen
+		                          # (z.B. 0800...), sonst leer
+		'fnum'   => trim($fnum),  # unsere Nummer bei kommenden Verbindungen,
+		                          # sonst leer
+		//'rind'   => $rind,        # Richtungskennzeichen für Service-Rufnummern
+		//                          # (z.B. 0800...) bei kommenden Verbindungen,
+		//                          # sonst leer
+		'ext'    => preg_replace('/[^0-9*]/S', '', $ext),         
+		                          # unsere Nebenstelle bei abgehenden Verbindungen,
+		                          # sonst leer
+		'isout'  => true,
+		'outdest'=> '',
+		'caller' => ''
+	);
+	
+	if ($row['cur'] == '') $row['cur'] = $currency;
+	if ($row['cur'] != $currency) return false;
+	
+	if ($row['snum'] != '' || $row['fnum'] != '') {
+		$row['isout'] = false;
+	}
+	
+	if ($row['isout'])  $row['outdest'] = $row['remote'];
+	else                $row['caller' ] = $row['remote'];
+	
+	if ($row['units'] < 1) $row['units'] = 1;
+	
+	$row['tarzn'] = telekom_tarifzone_k_to_v( $row['tarz'] );
+	
+	return $row;
+}
+
+
+
+
+
+set_error_handler('_err_handler');
+
+$count = array(
+	'lines'      => 0,
+	'entries'    => 0,
+	'bad_match'  => 0,
+	'vague_match'=> 0,
+	'good_match' => 0
+);
+
+echo "\n";
+echo "Make absolutely sure that these dates match your local time:\n";
+$date = date('Y-m-d H:i:s');
+echo "    $date\n";
+$t = strToTime($date);
+$date2 = date('Y-m-d H:i:s', $t);
+echo "    $date2\n";
+echo "\n";
+
+
+$DB = gs_db_master_connect();
+
+
+//$last_timestamp = (int)$DB->executeGetOne( 'SELECT MAX(`timestamp`) FROM `queue_log`' );
+
+process_log( $evn_file );
+
+function _strpad8l( $str ) {
+	return str_pad($str, 8, ' ', STR_PAD_LEFT);
+}
+
+echo "         Lines:", _strpad8l($count['lines'      ]) ,"\n";
+echo "         Valid:", _strpad8l($count['entries'    ]) ,"\n";
+echo " \n";
+echo "    GOOD match:", _strpad8l($count['good_match' ]) ,"\n";
+echo "   Vague match:", _strpad8l($count['vague_match']) ,"\n";
+echo "     Bad match:", _strpad8l($count['bad_match'  ]) ,"\n";
+echo "      No match:", _strpad8l($count['no_match'   ]) ,"\n";
+echo "\n";
+
+echo "   THAT WAS A DRY RUN. NO RECORDS WERE INSERTED!\n";
+echo "\n";
+
+
+?>
