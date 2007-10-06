@@ -247,7 +247,7 @@ $fake_filename = preg_replace('/[^0-9a-z\-_.]/i', '', 'vmsg_'. $ext .'_'. date('
 @readFile( $outfile );
 
 
-
+@ob_start();
 @$DB->execute(
 'UPDATE `vm_msgs` SET `listened_to`=1
 WHERE
@@ -258,5 +258,6 @@ WHERE
 
 //@exec( 'sudo rm -rf '. qsa($outfile) .' 1>>/dev/null 2>>/dev/null' );
 
+@ob_end_clean();
 
 ?>
