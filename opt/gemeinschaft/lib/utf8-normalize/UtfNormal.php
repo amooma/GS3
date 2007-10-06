@@ -26,8 +26,8 @@
 require_once dirname(__FILE__).'/UtfNormalUtil.php';
 
 global $utfCombiningClass, $utfCanonicalComp, $utfCanonicalDecomp;
-$utfCombiningClass = NULL;
-$utfCanonicalComp = NULL;
+$utfCombiningClass  = NULL;
+$utfCanonicalComp   = NULL;
 $utfCanonicalDecomp = NULL;
 
 # Load compatibility decompositions on demand if they are needed.
@@ -233,7 +233,6 @@ class UtfNormal
 	 */
 	/*static*/ function loadData()
 	{
-		//die("GS - NOT USED!");
 		return;  # --pk
 		/*  # --pk
 		global $utfCombiningClass;
@@ -524,8 +523,8 @@ class UtfNormal
 	 */
 	/*static*/ function NFD( $string )
 	{
-		UtfNormal::loadData();
 		global $utfCanonicalDecomp;
+		UtfNormal::loadData();
 		return UtfNormal::fastCombiningSort(
 			UtfNormal::fastDecompose( $string, $utfCanonicalDecomp ) );
 	}
