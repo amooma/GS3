@@ -38,6 +38,7 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/log.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/find_executable.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
 $lockfile = '/var/lock/gs-queuelog';
@@ -47,7 +48,7 @@ function remove_lockfile()
 {
 	global $lockfile;
 	
-	@exec( 'rm -rf '. escapeShellArg($lockfile) );
+	@exec( 'rm -rf '. qsa($lockfile) );
 	if (@is_file($lockfile) && @is_writable($lockfile)) {
 		@unlink($lockfile);
 	}
@@ -143,7 +144,7 @@ function process_log( $file )
 	}
 	
 	# remove the log file
-	exec( 'rm -f '. escapeShellArg($file) .' >>/dev/null 2>>/dev/null' );
+	exec( 'rm -f '. qsa($file) .' >>/dev/null 2>>/dev/null' );
 	return true;
 }
 
