@@ -30,6 +30,8 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
+require_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 
 function _not_allowed( $errmsg='' )
@@ -61,15 +63,9 @@ function _not_found( $errmsg='' )
 
 function _to_id3tag_ascii( $str )
 {
-	return $str;
-}
-
-function _escapeShellArg( $str )
-{
-	# escapeShellArg() is broken! it returns an un-quoted empty string
-	# for empty strings. that does not count as a shell argument!
-	$ret = escapeShellArg($str);
-	return (trim($ret) != '' ? $ret : '\'\'');
+	return preg_replace(
+		'/[^\x20-\x5D\x5F-\x7E]/', '',  # remove "^"
+		gs_utf8_decompose_to_ascii( $str ));
 }
 
 
@@ -137,7 +133,7 @@ if (! in_array($info['host_id'], $our_host_ids, true)) {
 	# user is on a different host
 	# copy the original file to this host:
 	$origfile = $tmpfile_base.'.alaw';
-	$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. _escapeShellArg('root@'. $host['host'] .':'. $origorigfile) .' '. _escapeShellArg($origfile);
+	$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'. $host['host'] .':'. $origorigfile) .' '. qsa($origfile);
 	$err=0; $out=array();
 	@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
 	if ($err != 0) _not_found( 'Could not get file from remote node.' );
@@ -166,7 +162,7 @@ $id3_comment = subStr(_to_id3tag_ascii( $id3_comment ),0,28);
 
 
 $outfile = $tmpfile_base.'.mp3';
-$cmd = 'sox -q -t al '. _escapeShellArg($origfile) .' -r 8000 -c 1 -s -w -t wav - 2>>/dev/null | lame --preset fast standard -m m -a -b 32 -B 96 --quiet --ignore-tag-errors --tt '. _escapeShellArg($id3_title) .' --ta '. _escapeShellArg($id3_artist) .' --tl '. _escapeShellArg($id3_album) .' --tc '. _escapeShellArg($id3_comment) .' --tg 101 - '. _escapeShellArg($outfile) .' 1>>/dev/null 2>>/dev/null';
+$cmd = 'sox -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav - 2>>/dev/null | lame --preset fast standard -m m -a -b 32 -B 96 --quiet --ignore-tag-errors --tt '. qsa($id3_title) .' --ta '. qsa($id3_artist) .' --tl '. qsa($id3_album) .' --tc '. qsa($id3_comment) .' --tg 101 - '. qsa($outfile) .' 1>>/dev/null 2>>/dev/null';
 //echo $cmd;die();
 # (ID3 tag genre 101 = "Speech")
 $err=0; $out=array();
@@ -191,8 +187,7 @@ $fake_filename = preg_replace('/[^0-9a-z\-_.]/i', '', 'vmsg_'. $ext .'_'. date('
 @readFile( $outfile );
 
 
-//@exec( 'sudo rm -rf '. _escapeShellArg($filename) .' 1>>/dev/null 2>&1' );
-//@exec( 'sudo find \'/tmp/\' -maxdepth 1 -name \'gs-vm-*\' -type f -mmin +30 | xargs rm -f 1>>/dev/null 2>&1' );
+//@exec( 'sudo rm -rf '. qsa($outfile) .' 1>>/dev/null 2>>/dev/null' );
 
 
 ?>
