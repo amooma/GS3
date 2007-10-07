@@ -148,13 +148,13 @@ if (! in_array($info['host_id'], $our_host_ids, true)) {
 	$err=0; $out=array();
 	@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
 	if ($err != 0) {
-		gs_log( GS_LOG_WARNING, 'Could not get voicemail file from remote node.' );
+		gs_log( GS_LOG_WARNING, "Could not get voicemail \"$origorigfile\" from node \"".$host['host']."\"." );
 		_not_found( 'Could not get file from remote node.' );
 	}
 } else {
 	# user is on this host
 	if (! file_exists($origorigfile)) {
-		gs_log( GS_LOG_WARNING, 'Voicemail file not found on this node.' );
+		gs_log( GS_LOG_WARNING, "Voicemail \"$origorigfile\" not found on this node." );
 		_not_found( 'File not found on this node.' );
 	}
 	$origfile = $origorigfile;
