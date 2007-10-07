@@ -246,15 +246,17 @@ $fake_filename = preg_replace('/[^0-9a-z\-_.]/i', '', 'vmsg_'. $ext .'_'. date('
 
 @readFile( $outfile );
 
+@ob_start();  # so there's no output after the content
 
-@ob_start();
-@$DB->execute(
+if (! @$info['listened_to']) {
+	@$DB->execute(
 'UPDATE `vm_msgs` SET `listened_to`=1
 WHERE
-	`m`.`user_id`=\''. $user_id .'\' AND
-	`m`.`folder`=\''. $DB->escape($fld) .'\' AND
-	`m`.`file`=\''. $DB->escape($file) .'\''
-);
+	`user_id`=\''. $user_id .'\' AND
+	`folder`=\''. $DB->escape($fld) .'\' AND
+	`file`=\''. $DB->escape($file) .'\''
+	);
+}
 
 //@exec( 'sudo rm -rf '. qsa($outfile) .' 1>>/dev/null 2>>/dev/null' );
 
