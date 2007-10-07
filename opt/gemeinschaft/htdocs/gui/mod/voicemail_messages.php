@@ -171,7 +171,7 @@ if (@$_REQUEST['action']=='play') {
 		type="audio/mpeg"
 		data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>"
 		width="250"
-		height="18"
+		height="22"
 		align="right"
 		>
 		<param name="autoplay" value="true" />
@@ -192,7 +192,7 @@ if (@$_REQUEST['action']=='play') {
 		codebase="http://www.apple.com/qtactivex/qtplugin.cab"
 		data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>"
 		width="250"
-		height="18"
+		height="22"
 		align="right"
 		>
 		<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;_=.mp3'; ?>" />
@@ -273,7 +273,7 @@ foreach ($messages as $msg) {
 
 $rs = $DB->execute(
 'SELECT
-	`id`, `host_id`, `folder` `fld`, `file`, `orig_time` `ts`, `dur`, `cidnum`, `cidname`
+	`id`, `host_id`, `folder` `fld`, `file`, `orig_time` `ts`, `dur`, `cidnum`, `cidname`, `listened_to`
 FROM `vm_msgs`
 WHERE
 	`user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .'
@@ -294,6 +294,7 @@ foreach ($folders as $folder => $folder_title) {
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
+	<th style="width:10px;">&nbsp;</th>
 	<th style="width:135px;"><?php echo __('Datum'); ?> <small>&darr;</small></th>
 	<th style="width:230px;"><?php echo __('Anrufer'); ?></th>
 	<th style="width:45px;" class="r"><?php echo __('Dauer'); ?></th>
@@ -309,9 +310,15 @@ if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
 	foreach ($msgs[$folder] as $i => $msg) {
 		echo '<tr class="', ($i%2==0 ? 'odd':'even'), '">', "\n";
 		
+		echo '<td style="vertical-align:middle;">';
+		//if ($folder=='INBOX')
+		if (! $msg['listened_to'])
+			echo '<img alt=" " src="', GS_URL_PATH, 'img/star.gif" />';
+		else
+			echo '&nbsp;';
+		echo '</td>', "\n";
+		
 		echo '<td>';
-		if ($folder=='INBOX')
-			echo '<img alt=" " src="', GS_URL_PATH, 'img/star.gif" /> ';
 		echo htmlEnt(date_human( @$msg['ts'] ));
 		echo '</td>', "\n";
 		
