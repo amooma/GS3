@@ -304,7 +304,7 @@ foreach ($folders as $folder => $folder_title) {
 <?php
 
 if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
-	echo '<tr class="odd"><td colspan="4"><i>- ', __('keine'), ' -</i></td></tr>', "\n";
+	echo '<tr class="odd"><td colspan="5"><i>- ', __('keine'), ' -</i></td></tr>', "\n";
 } else {
 	foreach ($msgs[$folder] as $i => $msg) {
 		echo '<tr class="', ($i%2==0 ? 'odd':'even'), '">', "\n";
