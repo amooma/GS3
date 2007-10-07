@@ -29,20 +29,26 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
+
 
 if ($argc != 4) {
 	echo 'Usage: ', baseName($argv[0]), " <extension> <folder> <msg>\n";
-	die(1);
+	exit(1);
 }
-$ext = preg_replace('/[^\d]/', '', $argv[1]);
-if (! $ext) die();
-$fld = preg_replace('/[^a-z\d]/i', '', $argv[2]);
-if (! $fld) die();
-$msg = preg_replace('/[^a-z\d]/i', '', $argv[3]);
-if (! $msg) die();
+$ext = preg_replace('/[^0-9]/'    , '', $argv[1]);
+if (! $ext) exit(1);
+$fld = preg_replace('/[^a-z0-9]/i', '', $argv[2]);
+if (! $fld) exit(1);
+$msg = preg_replace('/[^a-z0-9]/i', '', $argv[3]);
+if (! $msg) exit(1);
 
 
-@chdir( '/var/spool/asterisk/voicemail/default/' );
+$vmdir = '/var/spool/asterisk/voicemail/default/';
+if (! @chDir( $vmdir )) {
+	echo "Could not chdir to \"$vmdir\".\n";
+	exit(1);
+}
 $files = glob( $ext .'/'. $fld .'/'. $msg .'.*' );
 $ok = true;
 $i=0;
@@ -51,9 +57,21 @@ foreach ($files as $filename) {
 	$ok2 = @unlink($filename);
 	$ok = $ok && $ok2;
 }
-if ($i < 1) die( "ERROR. No such message.\n" );
-if (! $ok) die( "ERROR. Failed to delete message.\n" );
+if ($i < 1) {
+	echo "No such message.\n";
+	exit(0);
+}
+if (! $ok) {
+	echo "ERROR. Failed to delete message.\n";
+	exit(1);
+}
 echo "OK. Deleted.\n";
+
+
+# run vm-postexec script as defined in etc/asterisk/voicemail.conf
+# (externnotify)
+$err=0; $out=array();
+@exec( '/opt/gemeinschaft/dialplan-scripts/vm-postexec '. qsa('default') .' '. qsa($ext) .' '. qsa('999') .' 1>>/dev/null 2>>/dev/null', $out, $err );
 
 
 ?>
