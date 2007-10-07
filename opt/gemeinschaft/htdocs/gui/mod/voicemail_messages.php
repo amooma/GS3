@@ -67,7 +67,7 @@ if (! is_array($our_host_ids))
 
 
 
-if (@$_REQUEST['action']=='play') {
+if (@$_REQUEST['action']==='play') {
 	
 	$fld  = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['fld' ]);
 	$file = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['file']);
@@ -220,19 +220,20 @@ echo '</h2>', "\n";
 
 
 
-if (@$_REQUEST['action']=='del') {
+if (@$_REQUEST['action']==='del') {
 	
-	$fld  = preg_replace('/[^a-z\d]/i', '', @$_REQUEST['fld']);
-	$file = preg_replace('/[^a-z\d]/i', '', @$_REQUEST['file']);
+	$fld  = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['fld' ]);
+	$file = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['file']);
+	
 	if (array_key_exists($fld, $folders)) {
 		$cmd = GS_DIR .'sbin/vm-local-del '. qsa( @$_SESSION['sudo_user']['info']['ext'] ) .' '. qsa($fld) .' '. qsa($file);
-		$out = array();
+		$err=0; $out=array();
 		if (in_array($host['id'], $our_host_ids, true)) {
 			# user is on this host
-			@exec( 'sudo -u root '. $cmd .' 2>>/dev/null', $out, $err );
+			@exec( 'sudo '. $cmd .' 2>>/dev/null', $out, $err );
 		} else {
 			# user is not on this host
-			exec( GS_DIR .'sbin/remote-exec-do '. qsa($host['host']) .' '. qsa($cmd) .' 10 2>>/dev/null', $out, $err );
+			@exec( GS_DIR .'sbin/remote-exec-do '. qsa($host['host']) .' '. qsa($cmd) .' 10 2>>/dev/null', $out, $err );
 		}
 	}
 	
@@ -362,7 +363,7 @@ if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
 
 
 
-if (@$_REQUEST['action']=='play') {
+if (@$_REQUEST['action']==='play') {
 ?>
 
 <script type="text/javascript">
