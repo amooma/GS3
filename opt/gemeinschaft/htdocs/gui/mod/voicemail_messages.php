@@ -367,8 +367,6 @@ if (@$_REQUEST['action']=='play') {
 
 <script type="text/javascript">
 
-var player_interval = null;
-
 function check_player()
 {
 	if (! document || ! document.getElementById) {
@@ -381,7 +379,9 @@ function check_player()
 		window.clearInterval( player_interval );
 		return;
 	}
-	if (pl.GetTime() <= 0) return;
+	var playtime = 0;
+	try{ playtime = pl.GetTime(); }catch(e){ return; }
+	if (playtime <= 0) return;
 	
 	// player has started playing
 	window.clearInterval( player_interval );
@@ -392,7 +392,7 @@ function check_player()
 	par.removeChild(flag);
 }
 
-player_interval = window.setInterval('check_player();', 2000);
+var player_interval = window.setInterval('check_player();', 2000);
 
 </script>
 
