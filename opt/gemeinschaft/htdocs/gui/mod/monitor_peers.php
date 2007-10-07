@@ -233,6 +233,7 @@ WHERE
 	`d`.`number` '. ($external ? '':'NOT ') .'LIKE \'0%\' AND
 	`d`.`number` NOT LIKE \'*%\''
 	);
+	//FIXME - Amtsholung ist nicht immer "0"
 }
 
 function _num_calls_cdr_bysrc_since( $exts_sql, $t_from, $disposition, $external )
@@ -250,6 +251,7 @@ WHERE
 	`dst`<>\'s\' AND
 	`dst`<>\'h\''
 	);
+	//FIXME - Amtsholung ist nicht immer "0"
 }
 
 function _num_calls_cdr_bydst_since( $exts_sql, $t_from, $disposition, $external )
@@ -267,6 +269,7 @@ WHERE
 	`dst`<>\'s\' AND
 	`dst`<>\'h\''
 	);
+	//FIXME - Amtsholung ist nicht immer "0"
 }
 
 function _users_sql_to_exts_sql( $users_sql )
