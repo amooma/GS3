@@ -209,31 +209,23 @@ while ($user = $rs_users->fetchRow()) {
 </tbody>
 </table>
 
-
-
-<br />
 <br />
 
-<b><?php echo __('Direktgespr&auml;che'); ?></b>
-<table cellspacing="1">
-<thead>
-<tr>
-	<th style="width:110px;"><?php echo __('Heute'); /*//TRANSLATE ME*/ ?></th>
-	<th style="width:60px;" class="r"><?php echo __('intern'); /*//TRANSLATE ME*/ ?></th>
-	<th style="width:60px;" class="r"><?php echo __('extern'); /*//TRANSLATE ME*/ ?></th>
-</tr>
-</thead>
-<tbody>
 <?php
 
-function _num_calls_since( $users_sql, $t_from, $type, $external )
+
+
+
+
+
+function _num_calls_dlog_since( $users_sql, $t_from, $type, $external )
 {
 	global $DB;
 	return $DB->executeGetOne(
 'SELECT COUNT(*)
 FROM
-	`dial_log` `d` JOIN
-	`users` `u` ON (`d`.`user_id`=`u`.`id`)
+	`users` `u` JOIN
+	`dial_log` `d` ON (`d`.`user_id`=`u`.`id`)
 WHERE
 	`u`.`user` IN ('. $users_sql .') AND
 	`d`.`timestamp`>='. (int)$t_from .' AND
@@ -243,42 +235,196 @@ WHERE
 	);
 }
 
-$now = time();
-$y = (int)date('Y',$now);
-$m = (int)date('n',$now);
-$d = (int)date('j',$now);
-$t_from = mkTime(0,0,0,$m,$d,$y);
+function _num_calls_cdr_bysrc_since( $exts_sql, $t_from, $disposition, $external )
+{
+	global $DB;
+	return $DB->executeGetOne(
+'SELECT COUNT(*)
+FROM `ast_cdr`
+WHERE
+	`src` IN ('. $exts_sql .') AND
+	`dst` '. ($external ? '':'NOT ') .'LIKE \'0%\' AND
+	`calldate`>=\''. date('Y-m-d H:i:s', $t_from) .'\' AND
+	`disposition`=\''. $DB->escape($disposition) .'\' AND
+	`channel` NOT LIKE \'Local/%\' AND
+	`dst`<>\'s\' AND
+	`dst`<>\'h\''
+	);
+}
 
-$n_calls_in_i     = _num_calls_since( $users_sql, $t_from, 'in'    , false );
-$n_calls_in_e     = _num_calls_since( $users_sql, $t_from, 'in'    , true  );
-$n_calls_missed_i = _num_calls_since( $users_sql, $t_from, 'missed', false );
-$n_calls_missed_e = _num_calls_since( $users_sql, $t_from, 'missed', true  );
-$n_calls_out_i    = _num_calls_since( $users_sql, $t_from, 'out'   , false );
-$n_calls_out_e    = _num_calls_since( $users_sql, $t_from, 'out'   , true  );
+function _num_calls_cdr_bydst_since( $exts_sql, $t_from, $disposition, $external )
+{
+	global $DB;
+	return $DB->executeGetOne(
+'SELECT COUNT(*)
+FROM `ast_cdr`
+WHERE
+	`dst` IN ('. $exts_sql .') AND
+	`src` '. ($external ? '':'NOT ') .'LIKE \'0%\' AND
+	`calldate`>=\''. date('Y-m-d H:i:s', $t_from) .'\' AND
+	`disposition`=\''. $DB->escape($disposition) .'\' AND
+	`channel` NOT LIKE \'Local/%\' AND
+	`dst`<>\'s\' AND
+	`dst`<>\'h\''
+	);
+}
 
-echo '<tr>';
-echo '<td>', __('Angenommen') /*//TRANSLATE ME*/, '</td>';
-echo '<td class="r">', $n_calls_in_i, '</td>';
-echo '<td class="r">', $n_calls_in_e, '</td>';
-echo '</tr>', "\n";
+function _users_sql_to_exts_sql( $users_sql )
+{
+	global $DB;
+	$rs = $DB->execute(
+'SELECT `s`.`name` `ext`
+FROM
+	`users` `u` JOIN
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
+WHERE
+	`u`.`user` IN ('. $users_sql .')'
+	);
+	$exts = array();
+	while ($r = $rs->fetchRow()) {
+		$exts[] = '\''.$DB->escape($r['ext']).'\'';
+	}
+	return implode(',', $exts);
+}
 
-echo '<tr>';
-echo '<td>', __('Verpasst') /*//TRANSLATE ME*/, '</td>';
-echo '<td class="r">', $n_calls_missed_i, '</td>';
-echo '<td class="r">', $n_calls_missed_e, '</td>';
-echo '</tr>', "\n";
-
-echo '<tr>';
-echo '<td>', __('Gew&auml;hlt') /*//TRANSLATE ME*/, '</td>';
-echo '<td class="r">', $n_calls_out_i, '</td>';
-echo '<td class="r">', $n_calls_out_e, '</td>';
-echo '</tr>', "\n";
 
 ?>
-</tbody>
-</table>
+
+
+<div class="fl" style="clear:right; width:99%;">
+	<div class="fl" style="margin:1px;">
+		
+		<b><?php echo __('Direktgespr&auml;che') ,' (', __('heute') ,')'; /*//TRANSLATE ME*/ ?></b>
+		<table cellspacing="1">
+		<thead>
+		<tr>
+			<th style="width:110px;">&nbsp;</th>
+			<th style="width:50px;" class="r"><?php echo __('intern'); /*//TRANSLATE ME*/ ?></th>
+			<th style="width:50px;" class="r"><?php echo __('extern'); /*//TRANSLATE ME*/ ?></th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php
+		
+		$now = time();
+		$y = (int)date('Y',$now);
+		$m = (int)date('n',$now);
+		$d = (int)date('j',$now);
+		$t_from = mkTime(0,0,0,$m,$d,$y);
+		
+		$n_calls_in_i     = _num_calls_dlog_since( $users_sql, $t_from, 'in'    , false );
+		$n_calls_in_e     = _num_calls_dlog_since( $users_sql, $t_from, 'in'    , true  );
+		$n_calls_missed_i = _num_calls_dlog_since( $users_sql, $t_from, 'missed', false );
+		$n_calls_missed_e = _num_calls_dlog_since( $users_sql, $t_from, 'missed', true  );
+		$n_calls_out_i    = _num_calls_dlog_since( $users_sql, $t_from, 'out'   , false );
+		$n_calls_out_e    = _num_calls_dlog_since( $users_sql, $t_from, 'out'   , true  );
+		
+		echo '<tr>';
+		echo '<td>', __('Angenommen') /*//TRANSLATE ME*/, '</td>';
+		echo '<td class="r">', $n_calls_in_i, '</td>';
+		echo '<td class="r">', $n_calls_in_e, '</td>';
+		echo '</tr>', "\n";
+		
+		echo '<tr>';
+		echo '<td>', __('Verpasst') /*//TRANSLATE ME*/, '</td>';
+		echo '<td class="r">', $n_calls_missed_i, '</td>';
+		echo '<td class="r">', $n_calls_missed_e, '</td>';
+		echo '</tr>', "\n";
+		
+		echo '<tr>';
+		echo '<td>', __('Gew&auml;hlt') /*//TRANSLATE ME*/, '</td>';
+		echo '<td class="r">', $n_calls_out_i, '</td>';
+		echo '<td class="r">', $n_calls_out_e, '</td>';
+		echo '</tr>', "\n";
+		
+		?>
+		</tbody>
+		</table>
+		
+	</div>
+	<div class="fr" style="margin:1px;">
+		
+		<b><?php echo __('Gesamt') ,' (', __('heute') ,')'; /*//TRANSLATE ME*/ ?></b>
+		<table cellspacing="1">
+		<thead>
+		<tr>
+			<th style="width:110px;">&nbsp;</th>
+			<th style="width:50px;" class="r"><?php echo __('nach intern'); /*//TRANSLATE ME*/ ?></th>
+			<th style="width:50px;" class="r"><?php echo __('nach extern'); /*//TRANSLATE ME*/ ?></th>
+			<th style="width:50px;" class="r"><?php echo __('von intern'); /*//TRANSLATE ME*/ ?></th>
+			<th style="width:50px;" class="r"><?php echo __('von extern'); /*//TRANSLATE ME*/ ?></th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php
+		
+		$now = time();
+		$y = (int)date('Y',$now);
+		$m = (int)date('n',$now);
+		$d = (int)date('j',$now);
+		$t_from = mkTime(0,0,0,$m,$d,$y);
+		
+		$exts_sql = _users_sql_to_exts_sql( $users_sql );
+		
+		$n_calls_bysrc_answ_i = _num_calls_cdr_bysrc_since( $exts_sql, $t_from, 'ANSWERED' , false );
+		$n_calls_bysrc_answ_e = _num_calls_cdr_bysrc_since( $exts_sql, $t_from, 'ANSWERED' , true  );
+		$n_calls_bysrc_busy_i = _num_calls_cdr_bysrc_since( $exts_sql, $t_from, 'BUSY'     , false );
+		$n_calls_bysrc_busy_e = _num_calls_cdr_bysrc_since( $exts_sql, $t_from, 'BUSY'     , true  );
+		$n_calls_bysrc_noan_i = _num_calls_cdr_bysrc_since( $exts_sql, $t_from, 'NO ANSWER', false );
+		$n_calls_bysrc_noan_e = _num_calls_cdr_bysrc_since( $exts_sql, $t_from, 'NO ANSWER', true  );
+		$n_calls_bysrc_fail_i = _num_calls_cdr_bysrc_since( $exts_sql, $t_from, 'FAILED'   , false );
+		$n_calls_bysrc_fail_e = _num_calls_cdr_bysrc_since( $exts_sql, $t_from, 'FAILED'   , true  );
+		
+		$n_calls_bydst_answ_i = _num_calls_cdr_bydst_since( $exts_sql, $t_from, 'ANSWERED' , false );
+		$n_calls_bydst_answ_e = _num_calls_cdr_bydst_since( $exts_sql, $t_from, 'ANSWERED' , true  );
+		$n_calls_bydst_busy_i = _num_calls_cdr_bydst_since( $exts_sql, $t_from, 'BUSY'     , false );
+		$n_calls_bydst_busy_e = _num_calls_cdr_bydst_since( $exts_sql, $t_from, 'BUSY'     , true  );
+		$n_calls_bydst_noan_i = _num_calls_cdr_bydst_since( $exts_sql, $t_from, 'NO ANSWER', false );
+		$n_calls_bydst_noan_e = _num_calls_cdr_bydst_since( $exts_sql, $t_from, 'NO ANSWER', true  );
+		$n_calls_bydst_fail_i = _num_calls_cdr_bydst_since( $exts_sql, $t_from, 'FAILED'   , false );
+		$n_calls_bydst_fail_e = _num_calls_cdr_bydst_since( $exts_sql, $t_from, 'FAILED'   , true  );
+		
+		echo '<tr>';
+		echo '<td>', __('Erfolgreich') /*//TRANSLATE ME*/, '</td>';
+		echo '<td class="r">', $n_calls_bysrc_answ_i, '</td>';
+		echo '<td class="r">', $n_calls_bysrc_answ_e, '</td>';
+		echo '<td class="r">', $n_calls_bydst_answ_i, '</td>';
+		echo '<td class="r">', $n_calls_bydst_answ_e, '</td>';
+		echo '</tr>', "\n";
+		
+		echo '<tr>';
+		echo '<td>', __('Besetzt') /*//TRANSLATE ME*/, '</td>';
+		echo '<td class="r">', $n_calls_bysrc_busy_i, '</td>';
+		echo '<td class="r">', $n_calls_bysrc_busy_e, '</td>';
+		echo '<td class="r">', $n_calls_bydst_busy_i, '</td>';
+		echo '<td class="r">', $n_calls_bydst_busy_e, '</td>';
+		echo '</tr>', "\n";
+		
+		echo '<tr>';
+		echo '<td>', __('Keine Antwort') /*//TRANSLATE ME*/, '</td>';
+		echo '<td class="r">', $n_calls_bysrc_noan_i, '</td>';
+		echo '<td class="r">', $n_calls_bysrc_noan_e, '</td>';
+		echo '<td class="r">', $n_calls_bydst_noan_i, '</td>';
+		echo '<td class="r">', $n_calls_bydst_noan_e, '</td>';
+		echo '</tr>', "\n";
+		
+		echo '<tr>';
+		echo '<td>', __('Stau') /*//TRANSLATE ME*/, '</td>';
+		echo '<td class="r">', $n_calls_bysrc_fail_i, '</td>';
+		echo '<td class="r">', $n_calls_bysrc_fail_e, '</td>';
+		echo '<td class="r">', $n_calls_bydst_fail_i, '</td>';
+		echo '<td class="r">', $n_calls_bydst_fail_e, '</td>';
+		echo '</tr>', "\n";
+		
+		?>
+		</tbody>
+		</table>
+		
+	</div>
+</div>
+
 
 
 <script type="text/javascript">/*<![CDATA[*/
-window.setTimeout('document.location.reload();', 8000);
+window.setTimeout('document.location.reload();', 12000);
 /*]]>*/</script>
