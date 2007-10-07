@@ -154,7 +154,7 @@ if (! in_array($info['host_id'], $our_host_ids, true)) {
 } else {
 	# user is on this host
 	if (! file_exists($origorigfile)) {
-		gs_log( GS_LOG_WARNING, 'Voicemail File not found on this node.' );
+		gs_log( GS_LOG_WARNING, 'Voicemail file not found on this node.' );
 		_not_found( 'File not found on this node.' );
 	}
 	$origfile = $origorigfile;
