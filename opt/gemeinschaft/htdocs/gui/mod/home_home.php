@@ -88,6 +88,11 @@ echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info
 				echo '</tr>' ,"\n";
 				++$i;
 			}
+			if ($i===0) {
+				echo '<tr>' ,"\n";
+				echo '<td colspan="2"><i>', __('keine') /*//TRANSLATE ME*/ ,'</i></td>' ,"\n";
+				echo '</tr>' ,"\n";
+			}
 			echo '</tbody>' ,"\n";
 			echo '</table>' ,"\n";
 			
@@ -173,6 +178,11 @@ echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info
 					++$i;
 				}
 				unset($actives);
+				if ($i===0) {
+					echo '<tr>' ,"\n";
+					echo '<td><i>', __('keine') /*//TRANSLATE ME*/ ,'</i></td>' ,"\n";
+					echo '</tr>' ,"\n";
+				}
 				echo '</tbody>' ,"\n";
 				echo '</table>' ,"\n";
 			}
@@ -225,6 +235,11 @@ LIMIT 5'
 				echo '</td>' ,"\n";
 				echo '</tr>' ,"\n";
 				++$i;
+			}
+			if ($i===0) {
+				echo '<tr>' ,"\n";
+				echo '<td colspan="2"><i>', __('keine') /*//TRANSLATE ME*/ ,'</i></td>' ,"\n";
+				echo '</tr>' ,"\n";
 			}
 			echo '</tbody>' ,"\n";
 			echo '</table>' ,"\n";
