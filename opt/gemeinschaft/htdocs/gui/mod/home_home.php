@@ -150,22 +150,25 @@ echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info
 					echo '<tr class="', ($i%2?'even':'odd') ,'">' ,"\n";
 					echo '<td>';
 					switch ($cf['src']) {
-						case 'internal': echo __('von intern'); break;
-						case 'external': echo __('von extern'); break;
+						case 'internal': echo __('von intern'); break; //TRANSLATE ME
+						case 'external': echo __('von extern'); break; //TRANSLATE ME
 						default        : echo htmlEnt($cf['src']);
 					}
-					echo '</td>' ,"\n";
-					echo '<td>';
+					//echo '</td>' ,"\n";
+					//echo '<td>';
+					echo ' &nbsp; ';
 					switch ($cf['case']) {
-						case 'always' : echo __('direkt'); break;
-						case 'busy'   : echo __('besetzt'); break;
-						case 'unavail': echo __('keine Antwort'),
-						                ' <nobr>(',$cf['timeout'],' s)</nobr>'; break;
-						case 'offline': echo __('offline'); break;
+						case 'always' : echo __('sofort' ); break; //TRANSLATE ME
+						case 'busy'   : echo __('bei besetzt'); break; //TRANSLATE ME
+						case 'unavail': echo sPrintF(__('nach %s Sek.'), $cf['timeout']); break; //TRANSLATE ME
+						case 'offline': echo __('offline'); break; //TRANSLATE ME
 						default        : echo htmlEnt($cf['case']);
 					}
+					//echo '</td>' ,"\n";
+					//echo '<td>';
+					echo ' &nbsp; ';
+					echo '&rarr; &nbsp; ', htmlEnt($cf['number']);
 					echo '</td>' ,"\n";
-					echo '<td> &rarr; ', htmlEnt($cf['number']) ,'</td>' ,"\n";
 					echo '</tr>' ,"\n";
 					++$i;
 				}
