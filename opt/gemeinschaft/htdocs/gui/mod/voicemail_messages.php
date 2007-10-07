@@ -176,8 +176,7 @@ if (@$_REQUEST['action']=='play') {
 		>
 		<param name="autoplay" value="true" />
 		<param name="controller" value="true" />
-		<?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?>
-		
+		<small><?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?></small>
 	</object>
 	
 	<?php
@@ -198,8 +197,7 @@ if (@$_REQUEST['action']=='play') {
 		<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;_=.mp3'; ?>" />
 		<param name="autoplay" value="true" />
 		<param name="controller" value="true" />
-		<?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?>
-		
+		<small><?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?></small>
 	</object>
 	
 	<?php
@@ -313,7 +311,7 @@ if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
 		echo '<td style="vertical-align:middle;">';
 		//if ($folder=='INBOX')
 		if (! $msg['listened_to'])
-			echo '<img alt=" " src="', GS_URL_PATH, 'img/star.gif" />';
+			echo '<img id="', htmlEnt( 'vm-'.$msg['fld'].'-'.$msg['file'].'-flag' ) ,'" alt=" " src="', GS_URL_PATH, 'img/star.gif" />';
 		else
 			echo '&nbsp;';
 		echo '</td>', "\n";
@@ -360,5 +358,44 @@ if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
 
 <?php
 	}
+}
+
+
+
+if (@$_REQUEST['action']=='play') {
+?>
+
+<script type="text/javascript">
+
+var player_interval = null;
+
+function check_player()
+{
+	if (! document || ! document.getElementById) {
+		window.clearInterval( player_interval );
+		return;
+	}
+	var pl = document.getElementById('player');
+	if (! pl) return;
+	if (! pl.GetTime) {
+		window.clearInterval( player_interval );
+		return;
+	}
+	if (pl.GetTime() <= 0) return;
+	
+	// player has started playing
+	window.clearInterval( player_interval );
+	var flag = document.getElementById('<?php echo "vm-$fld-$file-flag"; ?>');
+	if (! flag) return;
+	var par = flag.parentNode;
+	if (! par || ! par.removeChild) return;
+	par.removeChild(flag);
+}
+
+player_interval = window.setInterval('check_player();', 2000);
+
+</script>
+
+<?php
 }
 ?>
