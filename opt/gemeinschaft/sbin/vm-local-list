@@ -27,6 +27,9 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+# NOT USED ANY MORE
+#
+
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 
