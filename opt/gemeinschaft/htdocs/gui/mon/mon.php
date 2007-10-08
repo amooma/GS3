@@ -35,6 +35,13 @@ require_once( GS_DIR .'inc/db_connect.php' );
 //set_error_handler('err_handler_die_on_err');
 
 
+header( 'Pragma: no-cache' );
+header( 'Cache-Control: private, no-cache, must-revalidate' );
+header( 'Expires: 0' );
+header( 'Vary: *' );
+header( 'Content-Type: text/html; charset=utf-8' );
+
+
 $remote_ip = @$_SERVER['REMOTE_ADDR'];
 $allowed = false;
 if (defined('GS_MONITOR_FROM_NET')) {
@@ -49,10 +56,6 @@ if (defined('GS_MONITOR_FROM_NET')) {
 if (! $allowed) {
 	header( 'HTTP/1.0 403 Forbidden', true, 403 );
 	header( 'Status: 403 Forbidden', true, 403 );
-	header( 'Pragma: no-cache' );
-	header( 'Cache-Control: private, no-cache, must-revalidate' );
-	header( 'Expires: 0' );
-	header( 'Vary: *' );
 	header( 'Content-Type: text/plain; charset=utf-8' );
 	echo "Not allowed for $remote_ip.\nSee config.\n";
 	die();
@@ -367,7 +370,7 @@ if (! $db) {
 			$abbr = mb_subStr($ext_info['fn'],0,1) .'. '. $abbr;
 		if (mb_strLen($ext_info['ln']) > mb_strLen($abbr))
 			$abbr = mb_strCut($abbr,0,-1) .'.';
-		echo '<span class="nam">', htmlSpecialChars($abbr, ENT_QUOTES) ,'</span>';
+		echo '<span class="nam">', htmlSpecialChars($abbr, ENT_QUOTES, 'UTF-8') ,'</span>';
 		echo '<span class="link" id="e',$ext,'l"></span>';
 		echo '</div>' ,"\n";
 	}
