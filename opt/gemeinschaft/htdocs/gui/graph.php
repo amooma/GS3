@@ -112,6 +112,7 @@ if ($dataset != '') {
 		
 		while ($t <= $to) {
 			$qtto = strToTime($xtstr, $t);
+			$tdiffdays = ($qtto - $t)/(60*60*24);
 			
 			$val = (int)@$db->executeGetOne(
 'SELECT COUNT(*)
@@ -123,6 +124,7 @@ WHERE
 	`dst`<>\'h\' AND
 	`dst` NOT LIKE \'*%\''
 			);
+			$val = $val/$tdiffdays;
 			$vals[] = $val;
 			if ($val > $maxval) $maxval = $val;
 			
@@ -351,7 +353,7 @@ echo '<desc>', 'Gemeinschaft statistics' ,'</desc>
 if ($dataset != '') {
 	switch ($dataset) {
 		case 'callvolume':
-			$header = __("Gespr\xC3\xA4chsaufkommen");
+			$header = __("Gespr\xC3\xA4chsaufkommen / Tag");
 			break;
 		case 'avgdur':
 			$header = __("Durchschnittliche Gespr\xC3\xA4chsdauer / s");
