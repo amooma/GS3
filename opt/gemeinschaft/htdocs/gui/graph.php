@@ -146,7 +146,7 @@ if (! function_exists('__')) {
 
 function xmlEnt( $str )
 {
-	return htmlSpecialChars($str, ENT_QUOTES, 'utf-8');
+	return htmlSpecialChars($str, ENT_QUOTES, 'UTF-8');
 }
 
 function round01( $float )
