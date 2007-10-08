@@ -11,6 +11,10 @@
  * @version 1.0
  */
 
+/*
+Fixed by Philipp Kempgen
+*/
+
 /**
  * @constructor
  */
