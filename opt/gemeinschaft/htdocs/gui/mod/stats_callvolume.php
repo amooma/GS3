@@ -133,6 +133,17 @@ if ($action == '') return;
 
 
 
+?>
+
+<span id="font-size-sensor" style="color:#fff; position:absolute; bottom:1px; right:1px;">...</span>
+
+
+
+<?php
+#####################################################################
+#    call volume {
+#####################################################################
+
 $w = 580;
 $h = 180;
 $src = '/graph.php?';
@@ -154,10 +165,7 @@ foreach ($args as $k => $v) {
 	$src .= ($i===0 ? '' : '&amp;') . rawUrlEncode($k) .'='. rawUrlEncode($v);
 	++$i;
 }
-
 ?>
-
-<span id="font-size-sensor" style="color:#fff; position:absolute; bottom:1px; right:1px;">...</span>
 
 <object
 	type="image/svg+xml"
@@ -169,6 +177,66 @@ foreach ($args as $k => $v) {
 	<param name="src" value="<?php echo $src; ?>">
 	<?php echo __('Ihr Browser kann die Datei nicht anzeigen.'); ?>
 </object>
+
+<br />
+<br />
+
+<?php
+#####################################################################
+#    } call volume
+#####################################################################
+?>
+
+
+
+<?php
+#####################################################################
+#    avg call duration {
+#####################################################################
+
+$w = 580;
+$h = 180;
+$src = '/graph.php?';
+$args = array(
+	'width'   => $w,
+	'height'  => $h,
+	'dataset' => 'avgdur',
+	'fy' => $fr_y,
+	'fm' => $fr_m,
+	'fd' => $fr_d,
+	'ty' => $to_y,
+	'tm' => $to_m,
+	'td' => $to_d,
+	'ystep'   => 0,  # auto
+	'_msie'   => '.svg'
+);
+$i=0;
+foreach ($args as $k => $v) {
+	$src .= ($i===0 ? '' : '&amp;') . rawUrlEncode($k) .'='. rawUrlEncode($v);
+	++$i;
+}
+?>
+
+<object
+	type="image/svg+xml"
+	width="<?php echo $w; ?>"
+	height="<?php echo $h; ?>"
+	data="<?php echo $src; ?>"
+	style="border:1px solid #aaa;"
+>
+	<param name="src" value="<?php echo $src; ?>">
+	<?php echo __('Ihr Browser kann die Datei nicht anzeigen.'); ?>
+</object>
+
+<br />
+<br />
+
+<?php
+#####################################################################
+#    } avg call duration
+#####################################################################
+?>
+
 
 
 
