@@ -78,6 +78,16 @@ code {
 	font-size: 1.15em;
 }
 
+input._admincfg {
+	/* used by mod/admin_config.php only */
+	font-family: Courier, Monaco, monospace;
+	font-size: 1.3em;
+	margin: -1px 0;
+	padding: 2px 5px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #bbb #fff #fff #bbb;
+}
 
 
 body {
