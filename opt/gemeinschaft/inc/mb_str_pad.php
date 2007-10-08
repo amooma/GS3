@@ -64,8 +64,12 @@ function mb_str_pad( $str, $len, $padstr=' ', $padtype=STR_PAD_RIGHT, $enc='' )
 
 
 # emulate mbstring's mb_convert_case() for PHP < 4.3
+# or PHP without mbstring
 #
-/*
+if (! defined('MB_CASE_UPPER')) define('MB_CASE_UPPER', 0);
+if (! defined('MB_CASE_LOWER')) define('MB_CASE_LOWER', 1);
+if (! defined('MB_CASE_TITLE')) define('MB_CASE_TITLE', 2);
+
 if (! function_exists('mb_convert_case')) {
 function mb_convert_case( $str, $mode, $enc='' )
 {
@@ -81,7 +85,6 @@ function mb_convert_case( $str, $mode, $enc='' )
 	}
 }
 }
-*/
 
 
 ?>
