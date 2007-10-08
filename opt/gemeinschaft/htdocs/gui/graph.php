@@ -354,7 +354,7 @@ if ($dataset != '') {
 			$header = __("Gespr\xC3\xA4chsaufkommen");
 			break;
 		case 'avgdur':
-			$header = __("Durchschnittliche Gespr\xC3\xA4chsdauer");
+			$header = __("Durchschnittliche Gespr\xC3\xA4chsdauer / s");
 			break;
 		default:
 			$header = '';
