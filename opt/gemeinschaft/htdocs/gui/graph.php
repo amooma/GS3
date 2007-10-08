@@ -40,6 +40,12 @@ echo ' <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphic
 
 
 $dataset = @$_REQUEST['dataset'];
+if ($dataset != 'callvolume'
+&&  $dataset != 'avgdur'
+) {
+	$dataset = '';
+	//FIXME
+}
 
 
 $width  = (int)@$_REQUEST['width' ];
@@ -94,17 +100,20 @@ $xfact = ($cw-1)/$i-1;
 
 
 
-if ($dataset === 'callvolume') {
+if ($dataset != '') {
 	
 	$db = @gs_db_slave_connect();
 	$t = $fr;
 	$i=0;
 	$vals = array();
 	$maxval = 0;
-	while ($t <= $to) {
-		$qtto = strToTime($xtstr, $t);
+	
+	if ($dataset === 'callvolume') {
 		
-		$val = (int)@$db->executeGetOne(
+		while ($t <= $to) {
+			$qtto = strToTime($xtstr, $t);
+			
+			$val = (int)@$db->executeGetOne(
 'SELECT COUNT(*)
 FROM `ast_cdr`
 WHERE
@@ -113,28 +122,57 @@ WHERE
 	`dst`<>\'s\' AND
 	`dst`<>\'h\' AND
 	`dst` NOT LIKE \'*%\''
-		);
-		$vals[] = $val;
-		if ($val > $maxval) $maxval = $val;
+			);
+			$vals[] = $val;
+			if ($val > $maxval) $maxval = $val;
+			
+			$t = $qtto;
+			++$i;
+		}
+		//print_r($vals);
 		
-		$t = $qtto;
-		++$i;
+	}
+	elseif ($dataset === 'avgdur') {
+		
+		$db = @gs_db_slave_connect();
+		$t = $fr;
+		$i=0;
+		$vals = array();
+		$maxval = 0;
+		while ($t <= $to) {
+			$qtto = strToTime($xtstr, $t);
+			
+			$val = (int)@$db->executeGetOne(
+'SELECT AVG(`duration`)
+FROM `ast_cdr`
+WHERE
+	`calldate`>=\''. $db->escape(gmDate('Y-m-d H:i:s', $t   )) .'\' AND
+	`calldate`< \''. $db->escape(gmDate('Y-m-d H:i:s', $qtto)) .'\' AND
+	`dst`<>\'s\' AND
+	`dst`<>\'h\' AND
+	`dst` NOT LIKE \'*%\' AND
+	`disposition`=\'ANSWERED\''
+			);
+			$vals[] = $val;
+			if ($val > $maxval) $maxval = $val;
+			
+			$t = $qtto;
+			++$i;
+		}
+		//print_r($vals);
+		
 	}
 	
+	$ystep = (float)@$_REQUEST['ystep'];
+	if ($ystep < 1) {  #auto
+		
+		$ystep = 0;
+		do {
+			++$ystep;
+		} while ( ($ch-8)/($maxval>0?$maxval:1)*$ystep <= 18 );
+	}
+	$yfact = ($maxval > 0) ? (($ch-9)/$maxval) : ($ch-8);
 }
-//print_r($vals);
-
-
-$ystep = (float)@$_REQUEST['ystep'];
-if ($ystep < 1) {  #auto
-	
-	$ystep = 0;
-	do {
-		++$ystep;
-	} while ( ($ch-8)/($maxval>0?$maxval:1)*$ystep <= 18 );
-}
-$yfact = ($maxval > 0) ? (($ch-9)/$maxval) : ($ch-8);
-
 
 
 
@@ -306,10 +344,21 @@ echo '<desc>', 'Gemeinschaft statistics' ,'</desc>
 <rect class="svgBackground" x="0" y="0" width="100%" height="100%" />
 
 <?php
+
 #####################################################################
-##                           callvolume {                          ##
+##                             output {                            ##
 #####################################################################
-if ($dataset === 'callvolume') {
+if ($dataset != '') {
+	switch ($dataset) {
+		case 'callvolume':
+			$header = __("Gespr\xC3\xA4chsaufkommen");
+			break;
+		case 'avgdur':
+			$header = __("Durchschnittliche Gespr\xC3\xA4chsdauer");
+			break;
+		default:
+			$header = '';
+	}
 ?>
 
 <g transform="translate(<?php echo $padl; ?> <?php echo $padt; ?>)">
@@ -380,14 +429,16 @@ if ($dataset === 'callvolume') {
 </g>
 
 <!-- header -->
-<text class="mainTitleB" x="<?php echo round01($width/2); ?>" y="16"><?php echo __("Gespr\xC3\xA4chsaufkommen"); ?></text>
-<text class="mainTitleF" x="<?php echo round01($width/2); ?>" y="16"><?php echo __("Gespr\xC3\xA4chsaufkommen"); ?></text>
+<text class="mainTitleB" x="<?php echo round01($width/2); ?>" y="16"><?php echo xmlEnt($header) ?></text>
+<text class="mainTitleF" x="<?php echo round01($width/2); ?>" y="16"><?php echo xmlEnt($header); ?></text>
 
 <?php
 }
 #####################################################################
-##                          } callvolume                           ##
+##                            } output                             ##
 #####################################################################
+
+
 
 
 
