@@ -59,8 +59,12 @@ var TextResizeDetector = function()
 		
 		if(iNewSize!== iCurrSize) {
 			for (var 	i=0;i <aListeners.length;i++) {
-				aListnr = aListeners[i];
-				var oArgs = {  iBase: iBase,iDelta:((iCurrSize!=-1) ? iNewSize - iCurrSize + 'px' : "0px"),iSize:iCurrSize = iNewSize};
+				var aListnr = aListeners[i];
+				var oArgs = {
+					iBase : iBase,
+					iDelta: ((iCurrSize!=-1) ? iNewSize - iCurrSize + 'px' : "0px"),
+					iSize : iCurrSize = iNewSize
+				};
 				if (!aListnr.obj) {
 					aListnr.fn('textSizeChanged',[oArgs]);
 				}
