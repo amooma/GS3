@@ -205,7 +205,8 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
       'routes'       => array('title' => __('Routen')),         //TRANSLATE ME
       'testroute'    => array('title' => __('Routing-Test')),   //TRANSLATE ME
       'cards'        => array('title' => __('PSTN-Karten')),    //TRANSLATE ME
-      'sysstatus'    => array('title' => __('System-Status'))   //TRANSLATE ME
+      'sysstatus'    => array('title' => __('System-Status')),  //TRANSLATE ME
+      'config'       => array('title' => __('Konfiguration'))  //TRANSLATE ME
    )
 );
 
