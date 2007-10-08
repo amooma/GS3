@@ -160,7 +160,8 @@ $MODULES['ringtones']=  array('title' => __('Klingelt&ouml;ne'),
 $MODULES['stats'    ]=  array('title' => __('Statistik'),     //TRANSLATE ME
                               'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
    'sub' => array(
-      'qclassical'   => array('title' => __('Q Klassisch'))   //TRANSLATE ME
+      'qclassical'   => array('title' => __('Q Klassisch')),  //TRANSLATE ME
+      'callvolume'   => array('title' => __('Gespr.-Volumen'))//TRANSLATE ME
    )
 );
 
