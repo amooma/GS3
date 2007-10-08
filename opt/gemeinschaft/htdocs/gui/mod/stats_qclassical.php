@@ -34,7 +34,6 @@
 
 
 defined('GS_VALID') or die('No direct access.');
-include_once( GS_DIR .'inc/pcre_check.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
