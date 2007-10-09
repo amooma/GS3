@@ -213,6 +213,7 @@ $MODULES['system'   ]=  array('title' => __('System'),          //TRANSLATE ME
    'sub' => array(
       'sysstatus'    => array('title' => __('System-Status')),  //TRANSLATE ME
       'network'      => array('title' => __('Netzwerk')),       //TRANSLATE ME
+      'logging'      => array('title' => __('Logging')),        //TRANSLATE ME
       'hosts'        => array('title' => __('Hosts')),          //TRANSLATE ME
       'nodesmon'     => array('title' => __('Nodes')),
       'cards'        => array('title' => __('PSTN-Karten')),    //TRANSLATE ME
