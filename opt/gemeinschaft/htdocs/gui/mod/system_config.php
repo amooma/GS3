@@ -2,7 +2,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision:2656 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -167,9 +167,13 @@ $cs = array(
 
 ?>
 
-<form method="post" action="">
+<form method="post" action="<?php echo GS_URL_PATH; ?>">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<input type="hidden" name="action" value="save" />
 
 <?php
+echo 'Ver&auml;nderungen sind momentan nicht m&ouml;glich.<br />',"\n";
+
 echo '<table cellspacing="1" style="margin-left:4em;">' ,"\n";
 echo '<tbody>' ,"\n";
 foreach ($cs as $catkey => $cat) {
@@ -204,6 +208,10 @@ foreach ($cs as $catkey => $cat) {
 }
 echo '</tbody>' ,"\n";
 echo '</table>' ,"\n";
+
+echo '<br />', "\n";
+echo '<input type="submit" value="', __('Speichern') ,'" disabled="disabled" />',"\n";
+
 ?>
 
 </form>
