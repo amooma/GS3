@@ -199,14 +199,23 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
       'users'        => array('title' => __('Benutzer')),
       'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
       'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
-      'hosts'        => array('title' => __('Hosts')),          //TRANSLATE ME
-      'nodes'        => array('title' => __('Nodes')),
       'calls'        => array('title' => __('Verbindungen')),
       'routes'       => array('title' => __('Routen')),         //TRANSLATE ME
-      'testroute'    => array('title' => __('Routing-Test')),   //TRANSLATE ME
-      'cards'        => array('title' => __('PSTN-Karten')),    //TRANSLATE ME
+      'testroute'    => array('title' => __('Routing-Test'))    //TRANSLATE ME
+   )
+);
+
+#####################################################################
+
+$MODULES['system'   ]=  array('title' => __('System'),          //TRANSLATE ME
+                              'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
+                              'perms' => 'admin',
+   'sub' => array(
       'sysstatus'    => array('title' => __('System-Status')),  //TRANSLATE ME
-      'config'       => array('title' => __('Konfiguration'))  //TRANSLATE ME
+      'hosts'        => array('title' => __('Hosts')),          //TRANSLATE ME
+      'nodes'        => array('title' => __('Nodes')),
+      'cards'        => array('title' => __('PSTN-Karten')),    //TRANSLATE ME
+      'config'       => array('title' => __('Konfiguration'))   //TRANSLATE ME
    )
 );
 
