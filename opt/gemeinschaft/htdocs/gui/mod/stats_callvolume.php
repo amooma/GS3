@@ -146,7 +146,7 @@ if ($action == '') return;
 
 $w = 580;
 $h = 180;
-$src = '/graph.php?';
+$src = GS_URL_PATH .'graph.php?';
 $args = array(
 	'width'   => $w,
 	'height'  => $h,
@@ -196,7 +196,7 @@ foreach ($args as $k => $v) {
 
 $w = 580;
 $h = 180;
-$src = '/graph.php?';
+$src = GS_URL_PATH .'graph.php?';
 $args = array(
 	'width'   => $w,
 	'height'  => $h,
@@ -240,7 +240,7 @@ foreach ($args as $k => $v) {
 
 
 
-<script type="text/javascript" src="/js/textresizedetector.js"></script>
+<script type="text/javascript" src="<?php echo GS_URL_PATH; ?>js/textresizedetector.js"></script>
 <script type="text/javascript">
 //<![CDATA[
 
