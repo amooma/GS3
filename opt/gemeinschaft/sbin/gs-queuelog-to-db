@@ -95,7 +95,7 @@ function process_log( $file )
 		if ((int)$r['ts'] < $last_timestamp) continue;
 				
 		//print_r($r);
-		$DB->execute(
+		$query =
 'INSERT INTO `queue_log` (
 	`queue_id`,
 	`timestamp`,
@@ -113,7 +113,7 @@ function process_log( $file )
 ) VALUES (
 	'.   db_int_or_null($r['qid'     ]) .',
 	'.             (int)$r['ts'      ]  .',
-	'.      $DB->escape($r['evt'     ]) .',
+	\''.    $DB->escape($r['evt'     ]) .'\',
 	'. db_quote_or_null($r['reason'  ]) .',
 	'. db_quote_or_null($r['callid'  ]) .',
 	'.   db_int_or_null($r['uid'     ]) .',
@@ -124,8 +124,10 @@ function process_log( $file )
 	'.   db_int_or_null($r['logindur']) .',
 	'.   db_int_or_null($r['calldur' ]) .',
 	'. db_quote_or_null($r['info'    ]) .'
-)' 	);
-		
+)'
+		;
+		//gs_log(GS_LOG_DEBUG, $query);
+		$DB->execute($query);
 	}
 	
 	# remove the log file
