@@ -205,5 +205,5 @@ echo "</pre>";
 ?>
 
 <script type="text/javascript">/*<![CDATA[*/
-window.setTimeout('document.location.reload();', 30000);
+window.setTimeout('document.location.reload();', 20000);
 /*]]>*/</script>
