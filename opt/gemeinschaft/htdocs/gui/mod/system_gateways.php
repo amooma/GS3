@@ -73,10 +73,12 @@ foreach ($gate_grps as $gate_grp) {
 	echo '</th>',"\n";
 	
 	echo '<th colspan="2" style="width:370px;">';
+	echo '(';
 	switch (strToLower($gate_grp['type'])) {
 		case 'balance': echo 'load balance'; break;
 		default       : echo htmlEnt($gate_grp['type']);
 	}
+	echo ')';
 	echo '</th>',"\n";
 	
 	echo '</tr>',"\n";
@@ -100,7 +102,9 @@ foreach ($gate_grps as $gate_grp) {
 		
 		echo '<td style="width:170px;"><tt>', htmlEnt($gw['name']) ,'</tt></td>',"\n";
 		
-		echo '<td style="width:170px;"><tt>', htmlEnt($gw['dialstr']) ,'</tt></td>',"\n";
+		$dialstr_html = htmlEnt($gw['dialstr']);
+		$dialstr_html = preg_replace('/\{(number|peer)\}/', '<span style="color:#0b0;">{$1}</span>', $dialstr_html);
+		echo '<td style="width:170px;"><tt>', $dialstr_html ,'</tt></td>',"\n";
 		
 		echo '</tr>',"\n";
 		++$i;
