@@ -200,8 +200,8 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
       'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
       'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
       'hosts'        => array('title' => __('Hosts')),          //TRANSLATE ME
-      'calls'        => array('title' => __('Verbindungen')),
       'nodes'        => array('title' => __('Nodes')),
+      'calls'        => array('title' => __('Verbindungen')),
       'routes'       => array('title' => __('Routen')),         //TRANSLATE ME
       'testroute'    => array('title' => __('Routing-Test')),   //TRANSLATE ME
       'cards'        => array('title' => __('PSTN-Karten')),    //TRANSLATE ME
