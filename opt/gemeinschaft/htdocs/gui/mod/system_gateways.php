@@ -73,6 +73,7 @@ if ($action == 'zapata' || $action == 'zapata_save') {
 			echo "Failed to read \"$zapata_conf_file\".\n";
 		} else {
 			echo 'Ver&auml;nderungen sind momentan nicht m&ouml;glich.<br />',"\n";
+			echo '<br />',"\n";
 			
 			echo '<form method="post" action="', GS_URL_PATH ,'">',"\n";  //FIXME
 			echo gs_form_hidden($SECTION, $MODULE);
@@ -166,12 +167,12 @@ if ($action == '') {
 	echo '</th>',"\n";
 	
 	echo '<th colspan="2" style="width:370px;">';
-	echo '(';
+	echo '<span style="font-weight:normal">(', 'strategy: ';
 	switch (strToLower($gate_grp['type'])) {
 		case 'balance': echo 'load balance'; break;
 		default       : echo htmlEnt($gate_grp['type']);
 	}
-	echo ')';
+	echo ')</span>';
 	echo '</th>',"\n";
 	
 	echo '</tr>',"\n";
