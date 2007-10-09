@@ -152,6 +152,15 @@ if ($page < $num_pages-1) {
 </thead>
 <tbody>
 
+
+<div style="max-width:600px;">
+	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/app/important.png" class="fl" />
+	<p style="margin-left:22px; font-size:1.5em; font-weight:bold; line-height:1.2em; color:#d00;">
+		<?php echo __('Achtung! Durch un&uuml;berlegte &Auml;nderungen k&ouml;nnen Sie das ordnungsgem&auml;&szlig;e Funktionieren von Gemeinschaft erheblich beeintr&auml;chtigen!'); ?>
+	</p>
+</div>
+
+
 <?php
 
 $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
