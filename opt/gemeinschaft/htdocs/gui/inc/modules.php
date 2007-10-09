@@ -215,6 +215,7 @@ $MODULES['system'   ]=  array('title' => __('System'),          //TRANSLATE ME
       'hosts'        => array('title' => __('Hosts')),          //TRANSLATE ME
       'nodesmon'     => array('title' => __('Nodes')),
       'cards'        => array('title' => __('PSTN-Karten')),    //TRANSLATE ME
+      'gateways'     => array('title' => __('Gateways')),       //TRANSLATE ME
       'config'       => array('title' => __('Konfiguration'))   //TRANSLATE ME
    )
 );
