@@ -32,6 +32,25 @@ include_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
+$action = @$_REQUEST['action'];
+if ($action != ''
+&&  $action != 'zapata'
+&&  $action != 'zapata_save'
+) {
+	$action = '';
+}
+
+
+echo '<div class="fr">',"\n";
+if ($action == '') {
+	echo '<a href="', gs_url($SECTION, $MODULE) ,'&amp;action=zapata">Zapata conf</a><br />';
+}
+elseif ($action == 'zapata') {
+	echo '<a href="', gs_url($SECTION, $MODULE) ,'&amp;action=">Gateways</a><br />';
+}
+echo '</div>',"\n";
+
+
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
@@ -41,21 +60,95 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 
+#####################################################################
+if ($action == 'zapata' || $action == 'zapata_save') {
+	echo '<h3>zapata</h3>',"\n";
+	$zapata_conf_file = GS_DIR .'etc/asterisk/zapata.conf';
+	//FIXME
+	if (! file_exists($zapata_conf_file)) {
+		echo "File \"$zapata_conf_file\" not found.\n";
+	} else {
+		$zapata_conf = @file($zapata_conf_file);
+		if (empty($zapata_conf)) {
+			echo "Failed to read \"$zapata_conf_file\".\n";
+		} else {
+			echo 'Ver&auml;nderungen sind momentan nicht m&ouml;glich.<br />',"\n";
+			
+			echo '<form method="post" action="', GS_URL_PATH ,'">',"\n";  //FIXME
+			echo gs_form_hidden($SECTION, $MODULE);
+			echo '<input type="hidden" name="action" value="zapata_save" />',"\n";
+			
+			echo '<table cellspacing="1" style="margin-left:3em;">',"\n";
+			echo '<tbody>',"\n";
+			
+			$in_channels_section = false;
+			foreach ($zapata_conf as $line) {
+				$line = trim($line);
+				if ($line==='' || subStr($line,0,1)===';') continue;
+				if (subStr($line,0,1)==='[') {
+					if ($line === '[channels]')
+						$in_channels_section = true;
+					else
+						$in_channels_section = false;
+					continue;
+				}
+				
+				if (preg_match('/^#(exec|include)\s*(.*)/S', $line, $m))
+				{
+					$key = '#'.$m[1];
+					$input_name = 'zapata-'.$m[1];  //FIXME
+					$val = trim($m[2],' "\'');
+					$size = 60;
+				}
+				elseif (preg_match('/^([a-z0-9\-_]+)\s*=[>]?\s*([^;]*)/S', $line, $m)) {
+					$key = $m[1];
+					$input_name = 'zapata-'.$key;  //FIXME
+					$val = rTrim($m[2]);
+					$size = 25;
+				}
+				else {
+					continue;
+				}
+				
+				echo '<tr class="">',"\n";
+				
+				echo '<td>',"\n";
+				echo '<label>', $key ,'</label>',"\n";
+				echo '</td>',"\n";
+				
+				echo '<td>',"\n";
+				echo '<input type="text" name="', $input_name ,'" value="', htmlEnt($val) ,'" size="', $size ,'" maxlength="50" disabled="disabled" />';
+				echo '</td>',"\n";
+				
+				echo '</tr>',"\n";
+			}
+			echo '</tbody>',"\n";
+			echo '</table>',"\n";
+			
+			echo '<br />', "\n";
+			echo '<input type="submit" value="', __('Speichern') ,'" disabled="disabled" />',"\n";
+			
+			echo '</form>',"\n";
+		}
+	}
+	echo '<br />', "\n";
+}
+#####################################################################
 
 
 
 
-
-
-# get gateway groups from DB
-#
-$rs = $DB->execute( 'SELECT `id`, `title`, `type` FROM `gate_grps` ORDER BY `title`' );
-$gate_grps = array();
-while ($r = $rs->fetchRow())
-	$gate_grps[] = $r;
-
-foreach ($gate_grps as $gate_grp) {
+#####################################################################
+if ($action == '') {
 	
+	# get gateway groups from DB
+	#
+	$rs = $DB->execute( 'SELECT `id`, `title`, `type` FROM `gate_grps` ORDER BY `title`' );
+	$gate_grps = array();
+	while ($r = $rs->fetchRow())
+		$gate_grps[] = $r;
+	
+	foreach ($gate_grps as $gate_grp) {
 ?>
 
 <table cellspacing="1" style="width:600px;">
@@ -122,6 +215,10 @@ foreach ($gate_grps as $gate_grp) {
 <br />
 
 <?php
+	}
 }
+#####################################################################
+
+
 ?>
 
