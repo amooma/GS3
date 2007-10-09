@@ -45,6 +45,9 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 		<a href="mon.php?extensions=100-599,700-999">Extensions 100-599, 700-999</a>
 	</li>
 	<li>
+		<a href="mon.php?extensions=10-9999">Extensions 10-9999</a>
+	</li>
+	<li>
 		...
 	</li>
 </ul>
