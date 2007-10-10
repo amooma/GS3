@@ -199,9 +199,9 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
       'users'        => array('title' => __('Benutzer')),
       'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
       'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
-      'calls'        => array('title' => __('Verbindungen')),
       'routes'       => array('title' => __('Routen &amp; LCR')),//TRANSLATE ME
-      'testroute'    => array('title' => __('Routing-Test'))    //TRANSLATE ME
+      'testroute'    => array('title' => __('Routing-Test')),   //TRANSLATE ME
+      'calls'        => array('title' => __('Verbindungen')),
    )
 );
 
