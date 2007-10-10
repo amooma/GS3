@@ -142,6 +142,7 @@ if ($action == 'move-up' || $action == 'move-down') {
 	`h_from`=\''. $DB->escape($h_from) .'\',
 	`h_to`=\''  . $DB->escape($h_to  ) .'\',
 	`descr`=\''. $DB->escape(trim(@$_REQUEST['r_'.$dbid.'_descr'])) .'\',
+	`lcrprfx`=\''. $DB->escape(preg_replace('/[^0-9*#]/S', '', @$_REQUEST['r_'.$dbid.'_lcrprfx'])) .'\',
 	`gw_grp_id_1`='. (array_key_exists($gg1, $ggs) ? $gg1 : '0') .',
 	`gw_grp_id_2`='. (array_key_exists($gg2, $ggs) ? $gg2 : '0') .',
 	`gw_grp_id_3`='. (array_key_exists($gg3, $ggs) ? $gg3 : '0') .'
@@ -238,6 +239,7 @@ $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 	<th><?php echo __('Wochentage'); ?></th>
 	<th><?php echo __('Uhrzeit'); ?></th>
 	<th><?php echo __('Gateway / Fallback'); ?></th>
+	<th><?php echo __('Pr&auml;fix'); ?> <sup>[2]</sup></th>
 	<th><?php echo __('Reihenfolge'); ?></th>
 </tr>
 </thead>
@@ -262,12 +264,17 @@ $rs = $DB->execute(
 'SELECT
 	`id`, `active`, `pattern`,
 	`d_mo`, `d_tu`, `d_we`, `d_th`, `d_fr`, `d_sa`, `d_su`, `h_from`, `h_to`,
-	`gw_grp_id_1` `gg1`, `gw_grp_id_2` `gg2`, `gw_grp_id_3` `gg3`, `descr`
+	`gw_grp_id_1` `gg1`, `gw_grp_id_2` `gg2`, `gw_grp_id_3` `gg3`, `lcrprfx`, `descr`
 FROM `routes`
 ORDER BY `ord`'
 );
 $i=0;
 while ($route = $rs->fetchRow()) {
+	
+	echo '<tr class="', (($i%2) ? 'even':'odd'), '">', "\n";
+	echo '<td colspan="7" style="height:5px; border-top:1px solid #000; padding:0;"></td>';
+	echo '</tr>', "\n";
+	
 	$id = $route['id'];
 	echo '<tr class="', (($i%2) ? 'even':'odd'), '">', "\n";
 	
@@ -328,25 +335,31 @@ while ($route = $rs->fetchRow()) {
 	}
 	echo '</td>', "\n";
 	
+	echo '<td rowspan="2">';
+	echo '<input type="text" name="r_',$id,'_lcrprfx" value="', htmlEnt($route['lcrprfx']), '" size="6" maxlength="6" />';
+	echo '</td>', "\n";
+	
 	echo '<td rowspan="2" class="r transp">';
 	if ($i > 0)
 		echo '<a href="', gs_url($SECTION, $MODULE), '&amp;action=move-up&amp;id=', $route['id'], '"><img alt="&uarr;" src="', GS_URL_PATH, 'img/move_up.gif" /></a>';
 	else
 		echo '<img alt="&uarr;" src="', GS_URL_PATH, 'img/move_up_d.gif" />';
 	if ($i < $rs->numRows()-1)
-		echo ' <a href="', gs_url($SECTION, $MODULE), '&amp;action=move-down&amp;id=', $route['id'], '"><img alt="&darr;" src="', GS_URL_PATH, 'img/move_down.gif" /></a>';
+		echo '&thinsp;<a href="', gs_url($SECTION, $MODULE), '&amp;action=move-down&amp;id=', $route['id'], '"><img alt="&darr;" src="', GS_URL_PATH, 'img/move_down.gif" /></a>';
 	else
-		echo ' <img alt="&darr;" src="', GS_URL_PATH, 'img/move_down_d.gif" />';
+		echo '&thinsp;<img alt="&darr;" src="', GS_URL_PATH, 'img/move_down_d.gif" />';
 	echo ' &nbsp; <a href="', gs_url($SECTION, $MODULE), '&amp;action=del&amp;id=', $route['id'], '"><img alt="-;" src="', GS_URL_PATH, 'img/minus.gif" /></a>';
 	echo '</td>', "\n";
 	
 	echo '</tr>', "\n";
 	
+	
 	echo '<tr class="', (($i%2) ? 'even':'odd'), '">', "\n";
+	
 	echo '<td colspan="2" class="r"><label for="ipt-r_',$id,'_descr">', __('Beschr.:'), '</label></td>';
 	
 	echo '<td colspan="2">';
-	echo '<input type="text" name="r_',$id,'_descr" id="ipt-r_',$id,'_descr" value="', htmlEnt(trim($route['descr'])), '" size="45" maxlength="60" style="width:97%; font-weight:bold;" />';
+	echo '<input type="text" name="r_',$id,'_descr" id="ipt-r_',$id,'_descr" value="', htmlEnt(trim($route['descr'])), '" size="45" maxlength="60" style="width:97%;" />';
 	echo '</td>', "\n";
 	
 	echo '</tr>', "\n";
@@ -355,7 +368,7 @@ while ($route = $rs->fetchRow()) {
 
 
 echo '<tr>', "\n";
-echo '<td colspan="5" class="transp">&nbsp;</td>', "\n";
+echo '<td colspan="6" class="transp">&nbsp;</td>', "\n";
 echo '<td class="r transp">';
 echo '<input type="submit" value="', __('Speichern'), '" />';
 echo '</td>', "\n";
@@ -399,16 +412,22 @@ foreach ($gw_grp_idxs as $gw_grp_idx) {
 }
 echo '</td>', "\n";
 
+echo '<td rowspan="2">';
+echo '<input type="text" name="r_',$id,'_lcrprfx" value="" size="6" maxlength="6" />';
+echo '</td>', "\n";
+
 echo '<td rowspan="2" class="r transp">&nbsp;';
 echo '</td>', "\n";
+
 
 echo '</tr>', "\n";
 
 echo '<tr class="', (($i % 2 == 0) ? 'even':'odd'), '">', "\n";
+
 echo '<td colspan="2" class="r"><label for="ipt-r_',$id,'_descr">', __('Beschr.:'), '</label></td>';
 
 echo '<td colspan="2">';
-echo '<input type="text" name="r_',$id,'_descr" id="ipt-r_',$id,'_descr" value="', htmlEnt(trim($route['descr'])), '" size="45" maxlength="60" style="width:97%;font-weight:bold;" />';
+echo '<input type="text" name="r_',$id,'_descr" id="ipt-r_',$id,'_descr" value="" size="45" maxlength="60" style="width:97%;" />';
 echo '</td>', "\n";
 
 echo '</tr>', "\n";
@@ -425,3 +444,8 @@ echo __('PCRE-Syntax ohne <code>/</code> als Begrenzer, d.h. <code>^</code> f&uu
 */
 echo __('PCRE-Syntax (&quot;Perl Compatible Regular Expression&quot;) ohne <code>/</code> als Begrenzer, d.h. <code>^</code> f&uuml;r den Anfang, <code>$</code> f&uuml;r das Ende, z.B. <code>[5-8]</code> oder <code>[57]</code> f&uuml;r Ziffern-Bereiche, <code>+</code> f&uuml;r eine Wiederholung des vorangehenden Zeichens (1 oder mehr) oder <code>*</code> f&uuml;r 0 oder mehr.');
 ?></small></p>
+
+<p class="text"><small><sup>[2]</sup> <?php
+echo __('Pr&auml;fix f&uuml;r LCR (Least Cost Routing) in der Form 010<i>xx</i>. Gilt nur f&uuml;r ISDN, nicht f&uuml;r SIP.');
+?></small></p>
+
