@@ -69,6 +69,9 @@ if ($err != 0) {
 }
 
 
+echo '<br />',"\n";
+echo '<b>Generierter Dialplan:</b>',"\n";
+
 $err=0; $out=array();
 @exec( GS_DIR .'ivrs/gen-ivr.php', $out, $err );
 if ($err != 0) {
