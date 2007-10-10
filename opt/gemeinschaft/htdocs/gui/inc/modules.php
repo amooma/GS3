@@ -200,7 +200,7 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
       'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
       'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
       'calls'        => array('title' => __('Verbindungen')),
-      'routes'       => array('title' => __('Routen')),         //TRANSLATE ME
+      'routes'       => array('title' => __('Routen &amp; LCR')),//TRANSLATE ME
       'testroute'    => array('title' => __('Routing-Test'))    //TRANSLATE ME
    )
 );
