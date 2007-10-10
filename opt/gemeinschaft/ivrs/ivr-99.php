@@ -16,7 +16,7 @@ $ivr = array(
 		'500' => array(
 			'dp' => array(
 				'play /var/lib/asterisk/sounds/de/demo-abouttotry',
-				'app Dial(IAX2/500@iax.digium-demo.com)',
+				'app Dial(IAX2/guest@misery.digium.com/s@default)',
 				'play /var/lib/asterisk/sounds/de/demo-nogo',
 				'hangup'
 			)
@@ -38,7 +38,6 @@ $ivr = array(
 		'8500' => array(
 			'dp' => array(
 				'play /var/lib/asterisk/sounds/de/vm-changeto',
-				'play /var/lib/asterisk/sounds/de/vm-press',
 				'play /var/lib/asterisk/sounds/de/vm-onefor',
 				'play /var/lib/asterisk/sounds/de/vm-INBOX',
 				'play /var/lib/asterisk/sounds/de/vm-messages',
