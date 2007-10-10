@@ -270,11 +270,18 @@ LIMIT 5'
 </div>
 
 <br style="clear:right" />
-<div class="fl" style="clear:right; width:100%; height:5px;"></div>
+<div class="fl" style="clear:right; width:99%; height:20px;"></div>
+
+<form method="post" action="<?php echo GS_URL_PATH, 'pb-dial.php'; ?>">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<?php echo __('Call-Box'); /*//TRANSLATE ME*/ ?>: &nbsp;
+<input type="text" name="n" value="" size="20" maxlength="30" />
+<input type="submit" value="<?php echo __('w&auml;hlen'); ?>" />
+</form>
 
 
 <br />
-<div style="height:150px;"></div>
+<div style="height:20px;"></div>
 
 <div class="fr">
 <form method="get" action="<?php echo GS_URL_PATH; ?>">
