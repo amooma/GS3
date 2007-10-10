@@ -188,6 +188,7 @@ if ($dial != '') {
 	<th><?php echo __('Route'); ?></th>
 	<th><?php echo __('Fallback'); ?></th>
 	<th><?php echo __('Fallback'); ?></th>
+	<th><?php echo __('Pr&auml;fix'); ?> <sup>[1]</sup></th>
 </tr>
 </thead>
 <tbody>
@@ -200,7 +201,8 @@ if ($dial != '') {
 	`pattern` `pat`,
 	`d_mo`, `d_tu`, `d_we`, `d_th`, `d_fr`, `d_sa`, `d_su`,
 	SUBSTR(`h_from`,1,5) `hf`, SUBSTR(`h_to`,1,5) `ht`,
-	`gw_grp_id_1` `gg1`, `gw_grp_id_2` `gg2`, `gw_grp_id_3` `gg3`
+	`gw_grp_id_1` `gg1`, `gw_grp_id_2` `gg2`, `gw_grp_id_3` `gg3`,
+	`lcrprfx`
 FROM `routes` USE INDEX(`ord`)
 WHERE `active`=1
 ORDER BY `ord`'
@@ -242,7 +244,6 @@ ORDER BY `ord`'
 		if ($route['gg1'] != 0) $gate_grps[] = (int)$route['gg1'];
 		if ($route['gg2'] != 0) $gate_grps[] = (int)$route['gg2'];
 		if ($route['gg3'] != 0) $gate_grps[] = (int)$route['gg3'];
-		unset($route);
 		$gg_cnt = 0;
 		foreach ($gate_grps as $ggrp_id) {
 			$gg_title = $DB->executeGetOne( 'SELECT `title` FROM `gate_grps` WHERE `id`='. $ggrp_id );
@@ -254,6 +255,9 @@ ORDER BY `ord`'
 			echo '<td>&nbsp;</td>';
 		}
 		
+		echo '<td class="pre">';
+		echo htmlEnt($route['lcrprfx']);
+		echo ' </td>', "\n";
 		
 		echo '</tr>', "\n";
 	}
@@ -264,8 +268,9 @@ ORDER BY `ord`'
 </tbody>
 </table>
 
-<br />
 <p class="text"><small>(<?php echo __('Dabei ist die Reihenfolge entscheidend; das erste zutreffende Muster gewinnt.'); ?>)</small></p>
+
+<p class="text"><small><sup>[1]</sup> <?php echo __('Pr&auml;fix f&uuml;r LCR (Least Cost Routing). Gilt nur f&uuml;r Zap-Verbindungen, nicht f&uuml;r SIP.'); ?></small></p>
 
 <?php
 }
