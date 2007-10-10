@@ -54,7 +54,8 @@ include( '/opt/gemeinschaft/ivrs/ivr-99.php' );
 $ret = gs_gen_ivr( '99', @$ivr, '99' );
 
 echo "[ivrs]\n";
-echo "exten => 99,1,Goto(ivr-99,s,1)\n";
+echo 'exten => 99,1,Macro(dial-log-store,${user_name},out,${EXTEN})' ,"\n";
+echo 'exten => 99,n,Goto(ivr-99,s,1)' ,"\n";
 echo "\n";
 echo $ret, "\n";
 
