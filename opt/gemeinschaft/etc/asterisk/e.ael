@@ -525,22 +525,37 @@ macro dial-gateway-do( mnumber ) {
 		Set(no_route=);
 		Verbose(1,### Outbound route: ${r_${r}_dial});
 		Dial(${r_${r}_dial},180);
+		Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
 		if ("${DIALSTATUS}" = "ANSWER" || "${DIALSTATUS}" = "CANCEL") {
 			Hangup();
 		}
-		else if ("${DIALSTATUS}" = "NOANSWER" || "${DIALSTATUS}" = "BUSY") {
-			Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
+		else if ("${DIALSTATUS}" = "NOANSWER") {
+			Hangup();
+		}
+		else if ("${DIALSTATUS}" = "BUSY") {
 			Busy(5);
 			Hangup();
 		}
 		else if ("${DIALSTATUS}" = "CHANUNAVAIL" || "${DIALSTATUS}" = "CONGESTION") {
-			Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
-			Verbose(1,### DIALEDTIME: ${DIALEDTIME});
-			Verbose(1,### ANSWEREDTIME: ${ANSWEREDTIME});
-			// try next gateway
+			//Verbose(1,### DIALEDTIME  : ${DIALEDTIME});
+			//Verbose(1,### ANSWEREDTIME: ${ANSWEREDTIME});
+			Verbose(1,### HANGUPCAUSE : ${HANGUPCAUSE});
+			// see Asterisk's causes.h or
+			// Q.931 Disconnect Cause Codes
+			if ("${HANGUPCAUSE}" = "66") {
+				// 66 = channel not implemented
+				Verbose(0,### You're trying to dial to channel type "${CUT(r_${r}_dial,/,1)}" which this Asterisk is not configured to handle!);
+			}
+			else if ("${HANGUPCAUSE}" = "17") {
+				// 17 = user busy
+				Verbose(1,### HANGUPCAUSE 17 = user busy);
+				Busy(5);
+				Hangup();
+			}
+			
+			// else don't hangup and try the next gateway
 		}
 		else {
-			Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
 			Congestion(5);
 			Hangup();
 		}
