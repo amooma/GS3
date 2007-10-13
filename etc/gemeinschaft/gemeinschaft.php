@@ -353,7 +353,7 @@ $FAX_HYLAFAX_PASS       = 'a9bl2ue7';
 *    LOGGING
 ***********************************************************/
 
-$LOG_LEVEL   = 'DEBUG';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
+$LOG_LEVEL   = 'NOTICE';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
 $LOG_FILE    = '/var/log/gemeinschaft/gs.log';
 $LOG_GMT     = true;                # use GMT or local time
 
