@@ -1037,15 +1037,20 @@ psetting('logon_wizard', 'off');
 # http://www.snom.com/wiki/index.php/Settings/firmware_status
 # http://www.snom.com/wiki/index.php/Mass_deployment#Firmware_configuration_file
 
-psetting('update_policy', 'settings_only');  //FIXME - needs config param
-//psetting('update_policy', 'auto_update');  //FIXME - needs config param
-# "settings_only" : loads only the settings, no firmware update
-# "ask_for_update": the user is prompted to acknowledge the firmware update
-# "auto_update"   : the user is not prompted to acknowledge the firmware update
-
-psetting('firmware_interval', '1440');  # 1440 mins = 24 hrs
-psetting('firmware_status', $prov_url_snom .'sw-update.php?m='.$mac .'&u='.$user['name'] );
-# http, https, tftp are supported
+if (gs_get_conf('GS_SNOM_PROV_FW_UPDATE')) {
+	
+	psetting('update_policy', 'auto_update');
+	# "settings_only" : loads only the settings, no firmware update
+	# "ask_for_update": the user is prompted to acknowledge the firmware update
+	# "auto_update"   : the user is not prompted to acknowledge the firmware update
+	
+	psetting('firmware_interval', '1440');  # 1440 mins = 24 hrs
+	psetting('firmware_status', $prov_url_snom .'sw-update.php?m='.$mac .'&u='.$user['name'] );
+	# http, https, tftp are supported
+}
+else {
+	psetting('update_policy', 'settings_only');
+}
 
 
 
