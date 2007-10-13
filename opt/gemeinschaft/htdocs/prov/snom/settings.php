@@ -639,6 +639,13 @@ if ($vlan_id < 1) {
 */
 //psetting('vlan_qos', '5' );  # Prio. 5 (0|1-7)  muss ggf. getestet werden
 
+# SNMP
+# see http://wiki.snom.com/SNMP
+psetting('snmp_port'            , '161');  # default: 161
+# allowed client addresses in CIDR or dotted decimal notation, multiple
+# entries separated by space. e.g. "192.168.0.0/16":
+psetting('snmp_trusted_addresses', '');
+
 
 
 #####################################################################
@@ -858,7 +865,9 @@ for ($i=0; $i<=32; ++$i) {
 #####################################################################
 
 psetting('flood_tracing', 'on');
-psetting('log_level'    , '5' );  # 0-9, Default: 5
+psetting('log_level'    , '5' );  # Log level of the maintenance web page.
+                                  # 9 is the most verbose mode. 0-9, Default: 5
+psetting('syslog_server', '');
 
 
 
@@ -1024,6 +1033,8 @@ psetting('show_call_status', 'off');
 psetting('show_local_line', 'off');
 
 psetting('logon_wizard', 'off');
+
+psetting('lcserver1', '');
 
 
 
