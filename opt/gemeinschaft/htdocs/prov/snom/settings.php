@@ -629,6 +629,8 @@ psetting('watch_arp_cache'      , '1'  );  # default: 0
 psetting('max_forwards'         , '30' );  # default: 70
 psetting('support_idna'         , 'off');
 psetting('reject_calls_with_603', 'off');  # rejects calls with 603 instead of 486
+psetting('rtp_port_start'       , '16384');
+psetting('rtp_port_end'         , '32767');
 /*
 if ($vlan_id < 1) {
 	psetting('vlan', '' );
@@ -636,7 +638,7 @@ if ($vlan_id < 1) {
 } else {
 	//psetting('vlan', ($vlan_id < 1 ? '' : 'x 0') );
 	//psetting('vlan', $vlan_id .' 5' );  # Prio. 5 (0|1-7)
-	psetting('vlan', $vlan_id );
+	psetting('vlan', $vlan_id .' '. '5' );
 	psetting('vlan_id', $vlan_id );
 }
 */
