@@ -661,6 +661,9 @@ psetting('https_port'      , '443');
 psetting('web_logout_timer', '5'  );
 psetting('with_flash'      , 'on' , true);
 
+# proxy
+psetting('http_proxy'      , '' );  # IP address or URL
+
 
 
 #####################################################################
