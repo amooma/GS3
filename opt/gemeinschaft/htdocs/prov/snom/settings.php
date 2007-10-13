@@ -652,7 +652,7 @@ psetting('snmp_trusted_addresses', '');
 # multicast (for multicast paging and text messages? as an alternative
 # to finding the provisioning server via DHCP?)
 psetting('multicast_listen'     , 'off');
-psetting('multicast_address'    , ''   );
+psetting('multicast_address'    , ''   );  # sip.mcast.net = 224.0.1.75
 psetting('multicast_port'       , ''   );
 
 
