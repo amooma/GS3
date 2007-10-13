@@ -595,10 +595,10 @@ psetting('dirty_host_ttl'       , '0'  );
 psetting('challenge_response'   , 'off');
 psetting('challenge_reboot'     , 'off');
 psetting('challenge_checksync'  , 'off');
-//psetting('network_id_port'      , '5060');  # feste Vorgabe von 5060 funktioniert nicht im VLAN
-psetting('network_id_port'      , '5060'   );  # falls wir aber mal per sipsak Nachrichten
-                                          # ans Snom schicken wollen muﬂ das fest ein-
-                                          # gestellt werden
+//psetting('network_id_port'      , '5060');  # fixed setting of 5060 does not work in
+                                              # some VLANs
+psetting('network_id_port'      , '5060');  # necessary so we can send custom messages
+                                            # to the phone
 psetting('tcp_listen'           , 'off');
 psetting('offer_gruu'           , 'off');
 psetting('short_form'           , 'on' );  # kurze SIP-Header verwenden
