@@ -569,7 +569,7 @@ psetting('tone_scheme'      , 'GER'    );
 psetting('date_us_format'   , 'off'    , true);
 psetting('time_24_format'   , 'on'     , true);
 psetting('message_led_other', 'off'    );
-psetting('use_backlight'    , 'on'     , true);
+psetting('use_backlight'    , 'on'     , true);  # always | on | off
 //psetting('headset_device'   , 'headset_rj', true);  # wuerde Default auf Headset am RJ14-Stecker setzen
 psetting('headset_device'   , 'none', true);
 psetting('ethernet_detect'  , 'on'     );  # Warnung falls kein Ethernet
@@ -591,7 +591,7 @@ psetting('dhcp'                 , 'on' );
 psetting('filter_registrar'     , 'off');  # so we can reboot the phone even if not registered
 psetting('enable_timer_support' , 'on' );
 psetting('timer_support'        , 'on' );
-psetting('session_timer'        , '90' );  # default: 3600
+psetting('session_timer'        , '140');  # default: 3600
 psetting('retry_after_failed_register', '70' );  # in seconds, default: 300
 psetting('dirty_host_ttl'       , '0'  );
 psetting('challenge_response'   , 'off');
@@ -607,7 +607,7 @@ psetting('short_form'           , 'on' );  # kurze SIP-Header verwenden
 psetting('subscription_delay'   , '2'  );
 psetting('subscription_expiry'  , '80' );  # default: 3600
 psetting('terminate_subscribers_on_reboot', 'on');
-psetting('publish_presence'     , 'off');  # unterstuetzt Asterisk (noch?) nicht
+psetting('publish_presence'     , 'off');  # unterstuetzt Asterisk nicht
 psetting('presence_timeout'     , '15' );  # default: 15 (minutes)
 psetting('sip_retry_t1'         , '900');  # default: 500 (ms)
 psetting('user_phone'           , 'off');  # user=phone in SIP URIs is deprecated
@@ -730,9 +730,11 @@ psetting('text_softkey'           , 'off');
 psetting('edit_alpha_mode'        , '123', true);
 psetting('overlap_dialing'        , 'off');
 psetting('auto_logoff_time'       , ''   );
+psetting('enable_keyboard_lock'   , 'on' );
 psetting('keyboard_lock'          , 'off');
 psetting('keyboard_lock_pw'       , ''   );
 psetting('keyboard_lock_emergency', '911 112 110 999 19222');  # default
+psetting('emergency_proxy'        , ''   );
 psetting('ldap_server'            , ''   );
 psetting('answer_after_policy'    , 'idle');
 psetting('call_join_xfer'         , 'off');
@@ -794,6 +796,7 @@ psetting('redirect_busy_on_code'   , '');
 psetting('redirect_busy_off_code'  , '');
 psetting('redirect_time_on_code'   , '');
 psetting('redirect_time_off_code'  , '');
+psetting('redirect_time'       , '');
 
 
 
@@ -817,7 +820,7 @@ setting('user_active'             ,$i, 'on' );
 setting('user_sipusername_as_line',$i, 'on' );  # "broken registrar"
 setting('user_srtp'               ,$i, 'off');  # keine Verschluesselung
 setting('user_symmetrical_rtp'    ,$i, 'off');
-setting('user_expiry'             ,$i, '90' );  # neu registrieren, default: 3600
+setting('user_expiry'             ,$i, '140');  # neu registrieren, default: 3600
 setting('ring_after_delay'        ,$i, ''   );  # mit 1 Sek. Verzoegerung klingeln
 //setting('user_send_local_name'    ,$i, 'on' );  # send display name to caller
 setting('user_send_local_name'    ,$i, 'on' );
@@ -836,8 +839,8 @@ setting('user_presence_host'          ,$i, '');
 setting('user_presence_buddy_list_uri',$i, '');
 setting('presence_state'              ,$i, 'online', null, true);
 
-setting('codec1_name',$i, '8');  # alaw (g711a)
-setting('codec2_name',$i, '0');  # ulaw (g711u)
+setting('codec1_name',$i, '8');  # g711a
+setting('codec2_name',$i, '0');  # g711u
 setting('codec3_name',$i, '3');  # gsm (full rate)
 setting('codec4_name',$i, '2');  # g726-32
 setting('codec5_name',$i, '9');  # g722
@@ -994,6 +997,8 @@ psetting('alert_group_ring_text'   , 'alert-group');
 # eigener Klingelton koennte so gesetzt werden statt per Alert-Info-Header:
 //psetting('custom_melody_url', 'http://...');
 # ist aber nur moeglich fuer "Adressbuchklingeltoene"!?
+psetting('custom_melody_url', '');
+# see http://wiki.snom.com/Settings/custom_melody_url for examples
 
 # Standard Fallback-Klingelton:
 psetting('ring_sound'               , 'Ringer1');  # Ringer[1-10] / Silent
