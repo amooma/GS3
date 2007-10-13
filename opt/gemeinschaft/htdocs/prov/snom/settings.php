@@ -590,7 +590,9 @@ psetting('dhcp'                 , 'on' );
 //psetting('gateway'              , '192.168.1.1');
 psetting('filter_registrar'     , 'off');  # so we can reboot the phone even if not registered
 psetting('enable_timer_support' , 'on' );
-psetting('session_timer'        , '90' );  # default 3600
+psetting('timer_support'        , 'on' );
+psetting('session_timer'        , '90' );  # default: 3600
+psetting('retry_after_failed_register', '70' );  # in seconds, default: 300
 psetting('dirty_host_ttl'       , '0'  );
 psetting('challenge_response'   , 'off');
 psetting('challenge_reboot'     , 'off');
@@ -603,27 +605,27 @@ psetting('tcp_listen'           , 'off');
 psetting('offer_gruu'           , 'off');
 psetting('short_form'           , 'on' );  # kurze SIP-Header verwenden
 psetting('subscription_delay'   , '2'  );
-psetting('subscription_expiry'  , '80' );  # default 3600
+psetting('subscription_expiry'  , '80' );  # default: 3600
 psetting('terminate_subscribers_on_reboot', 'on');
 psetting('publish_presence'     , 'off');  # unterstuetzt Asterisk (noch?) nicht
 psetting('presence_timeout'     , '15' );  # default 15 (Minuten)
 psetting('user_phone'           , 'off');  # user=phone in SIP URIs is deprecated
-psetting('require_prack'        , 'on' );  # default
-psetting('refer_brackets'       , 'off');  # default
+psetting('require_prack'        , 'on' );  # default: on
+psetting('refer_brackets'       , 'off');  # default: off
 psetting('offer_mpo'            , 'on' );  # default: off
 psetting('register_http_contact', 'off');
-psetting('support_rtcp'         , 'on' );  # default
+psetting('support_rtcp'         , 'on' );  # default: on
 psetting('signaling_tos'        , '160');  # default: 160, 160 = CS 5
 psetting('codec_tos'            , '184');  # default: 160, 184 = EF
-psetting('dtmf_payload_type'    , '101');  # default
+psetting('dtmf_payload_type'    , '101');  # default: 101
 psetting('sip_proxy'            , ''   );
 psetting('eth_net'              , 'auto');
 psetting('eth_pc'               , 'auto');
 psetting('redirect_ringing'     , 'off' );
 psetting('disable_blind_transfer', 'off');
 psetting('disable_deflection'   , 'off');
-psetting('watch_arp_cache'      , '1'  );  # default 0
-psetting('max_forwards'         , '30' );  # default 70
+psetting('watch_arp_cache'      , '1'  );  # default: 0
+psetting('max_forwards'         , '30' );  # default: 70
 psetting('support_idna'         , 'off');
 psetting('reject_calls_with_603', 'off');  # rejects calls with 603 instead of 486
 /*
