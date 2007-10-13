@@ -610,7 +610,8 @@ psetting('terminate_subscribers_on_reboot', 'on');
 psetting('publish_presence'     , 'off');  # unterstuetzt Asterisk (noch?) nicht
 psetting('presence_timeout'     , '15' );  # default 15 (Minuten)
 psetting('user_phone'           , 'off');  # user=phone in SIP URIs is deprecated
-psetting('require_prack'        , 'on' );  # default: on
+psetting('require_prack'        , 'off');  # default: on
+psetting('send_prack'           , 'off');  # default: on
 psetting('refer_brackets'       , 'off');  # default: off
 psetting('offer_mpo'            , 'on' );  # default: off
 psetting('register_http_contact', 'off');
@@ -647,6 +648,12 @@ psetting('snmp_port'            , '161');  # default: 161
 # allowed client addresses in CIDR or dotted decimal notation, multiple
 # entries separated by space. e.g. "192.168.0.0/16":
 psetting('snmp_trusted_addresses', '');
+
+# multicast (for multicast paging and text messages? as an alternative
+# to finding the provisioning server via DHCP?)
+psetting('multicast_listen'     , 'off');
+psetting('multicast_address'    , ''   );
+psetting('multicast_port'       , ''   );
 
 
 
