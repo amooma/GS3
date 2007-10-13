@@ -608,7 +608,8 @@ psetting('subscription_delay'   , '2'  );
 psetting('subscription_expiry'  , '80' );  # default: 3600
 psetting('terminate_subscribers_on_reboot', 'on');
 psetting('publish_presence'     , 'off');  # unterstuetzt Asterisk (noch?) nicht
-psetting('presence_timeout'     , '15' );  # default 15 (Minuten)
+psetting('presence_timeout'     , '15' );  # default: 15 (minutes)
+psetting('sip_retry_t1'         , '900');  # default: 500 (ms)
 psetting('user_phone'           , 'off');  # user=phone in SIP URIs is deprecated
 psetting('require_prack'        , 'off');  # default: on
 psetting('send_prack'           , 'off');  # default: on
@@ -672,8 +673,9 @@ psetting('https_port'      , '443');
 psetting('web_logout_timer', '5'  );
 psetting('with_flash'      , 'on' , true);
 
-# proxy
 psetting('http_proxy'      , '' );  # IP address or URL
+psetting('http_client_user', '' );
+psetting('http_client_pass', '' );
 
 
 
@@ -687,6 +689,7 @@ psetting('holding_reminder'     , 'on' );
 psetting('alert_info_playback'  , 'on' );
 psetting('mute'                 , 'off', true);  # mute mic off
 psetting('disable_speaker'      , 'off', true);  # disable casing speaker off
+psetting('dtmf_speaker_phone'   , 'off', true);
 psetting('release_sound'        , 'off');
 if ($phone_type >= '370') {
 	psetting('vol_handset_mic'      ,  '5' , true);  # 1 - 8, Default: 4
@@ -716,7 +719,7 @@ psetting('ringer_headset_device', 'speaker');  # Klingeltonausgabe bei Kopfhoere
 #  Behavior
 #####################################################################
 
-psetting('callpickup_dialoginfo'  , 'on' , true);
+psetting('callpickup_dialoginfo'  , 'on' );
 psetting('show_xml_pickup'        , 'on' );
 psetting('ringing_time'           , '500');  # wird im Dialplan begrenzt
 psetting('block_url_dialing'      , 'on' );  # nur Ziffern erlauben
@@ -753,6 +756,13 @@ psetting('auto_redial'            , 'off');  # automatic redial on busy
 psetting('auto_redial_value'      , '10' );  # redial after (sec)
 psetting('idle_offhook'           , 'off');
 psetting('transfer_on_hangup'     , 'on' );
+psetting('aoc_amount_display'     , 'off');  # off | charged | balance
+psetting('aoc_pulse_currency'     , ''   );  # e.g. "EUR" | "USD" | "$"
+psetting('aoc_cost_pulse'         , '1'  );  # e.g. 0.02
+psetting('max_boot_delay'         , '0'  );  # ? in seconds, default: 0
+psetting('mailbox_active'         , 'off');  # pay attention to the mailbox of the
+                                             # active identity only?
+psetting('speaker_dialer'         , 'on' );
 psetting('no_dnd'                 , 'off');
 $dnd_mode = 'off';
 $cf = gs_callforward_get( $user['user'] );
