@@ -276,12 +276,14 @@ $CALL_INIT_FROM_NET         = '192.168.1.0/24';
   # a comma (,) separated list of IP addresses or
   # <IP address>/<netmask> pairs from where calls can be inited
   # with HTTP GET
+  # CIDR or dotted decimal notation
   # e.g.: '127.0.0.1, 192.168.1.130/255.255.255.0, 192.168.1.130/24'
   # allow all: '0.0.0.0/0', allow none: '0.0.0.0/32'
 
 $MONITOR_FROM_NET           = '192.168.1.0/24';
   # allow access to the extension monitor panel from these network
   # ranges
+  # CIDR or dotted decimal notation
 
 $LVM_USER_6_DIGIT_INT       = false;
   # compare user names as 6 digit integers (padded with zeros (0)
@@ -351,7 +353,7 @@ $FAX_HYLAFAX_PASS       = 'a9bl2ue7';
 *    LOGGING
 ***********************************************************/
 
-$LOG_LEVEL   = 'NOTICE';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
+$LOG_LEVEL   = 'DEBUG';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
 $LOG_FILE    = '/var/log/gemeinschaft/gs.log';
 $LOG_GMT     = true;                # use GMT or local time
 
