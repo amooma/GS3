@@ -104,7 +104,7 @@ function gs_queue_add( $name, $title, $maxlen, $host_id_or_ip )
 	'. $maxlen .',
 	\'rrmemory\',
 	\'strict\',
-	\'strict\',
+	\'yes\',
 	\'no\'
 )' );
 	if (! $ok)
