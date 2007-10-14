@@ -2,7 +2,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision: 2398 $
+* $Revision$
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -46,49 +46,68 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 $types = Array("zap", "sip");
 
-$edit     = (int)trim(@$_REQUEST['edit'  ]);
-$save     = (int)trim(@$_REQUEST['save'  ]);
+$edit     = (int)trim(@$_REQUEST['edit'   ]);
+$save     = (int)trim(@$_REQUEST['save'   ]);
 $per_page = (int)GS_GUI_NUM_RESULTS;
-$page     =      (int)@$_REQUEST['page'  ] ;
-$type     =      trim(@$_REQUEST['type' ]);
-$group  = (int)trim(@$_REQUEST['group']);
-$title    =      trim(@$_REQUEST['title' ]);
-$name    =       trim(@$_REQUEST['name' ]);
-$dialstr    =    trim(@$_REQUEST['dialstr' ]);
-if (trim(@$_REQUEST['in'  ])) $allow_in = 1; else $allow_in=0;
-if (trim(@$_REQUEST['out'  ])) $allow_out = 1; else $allow_out=0;
-$delete   =  (int)trim(@$_REQUEST['delete']);
+$page     =      (int)@$_REQUEST['page'   ] ;
+$type     =      trim(@$_REQUEST['type'   ]);
+$group    = (int)trim(@$_REQUEST['group'  ]);
+$title    =      trim(@$_REQUEST['title'  ]);
+$name     =      trim(@$_REQUEST['name'   ]);
+$dialstr  =      trim(@$_REQUEST['dialstr']);
+$allow_in =     (trim(@$_REQUEST['in'     ]) ? 1 : 0);
+$allow_out=     (trim(@$_REQUEST['out'    ]) ? 1 : 0);
+$delete   = (int)trim(@$_REQUEST['delete' ]);
 
 if ($delete) {
-	$sql_query = 'DELETE FROM `gates`
-	WHERE `id` = '.$delete;
-	$rs = $DB->execute($sql_query);
+	$sql_query =
+'DELETE FROM `gates`
+WHERE `id`='.$delete;
+	$DB->execute($sql_query);
 }
 
 if ($save) {
-	$sql_query = 'UPDATE `gates` 
-		SET `title`=\''. $DB->escape($title) .'\',
-		`allow_in`='. $allow_in .',
-		`allow_out`='. $allow_out .',
-		`type`=\''. $DB->escape($type) .'\',
-		`name`=\''. $DB->escape($name) .'\',
-		`dialstr`=\''. $DB->escape($dialstr) .'\',
-		`grp_id`='. $group .'
-		WHERE `id`='. $save;
-	$rs = $DB->execute($sql_query);
+	$sql_query =
+'UPDATE `gates` SET
+	`title`=\''. $DB->escape($title) .'\',
+	`allow_in`='. $allow_in .',
+	`allow_out`='. $allow_out .',
+	`type`=\''. $DB->escape($type) .'\',
+	`name`=\''. $DB->escape($name) .'\',
+	`dialstr`=\''. $DB->escape($dialstr) .'\',
+	`grp_id`='. $group .'
+WHERE `id`='. $save;
+	$DB->execute($sql_query);
 } else {
 	if ($name && $title) {
-		$sql_query = 'INSERT INTO `gates` 
-		VALUES (NULL,'.$group.',\''.$DB->escape($type).'\',\''.
-		$DB->escape($name).'\',\''.$DB->escape($title).'\','.
-		$allow_out.','.$allow_in.',\''.$DB->escape($dialstr).'\')';
-		$rs = $DB->execute($sql_query);
+		$sql_query =
+'INSERT INTO `gates` (
+	`id`,
+	`grp_id`,
+	`type`,
+	`name`,
+	`title`,
+	`allow_out`,
+	`allow_in`,
+	`dialstr`
+) VALUES (
+	NULL,
+	'.$group.',
+	\''.$DB->escape($type).'\',
+	\''.$DB->escape($name).'\',
+	\''.$DB->escape($title).'\',
+	'.$allow_out.',
+	'.$allow_in.',
+	\''.$DB->escape($dialstr).'\'
+)';
+		$DB->execute($sql_query);
 	}
 }
 
 
 
-$sql_query = 'SELECT `id`, `title`
+$sql_query =
+'SELECT `id`, `title`
 FROM `gate_grps`
 ORDER BY `id` ASC';
 $rs = $DB->execute($sql_query);
@@ -99,8 +118,13 @@ if (@$rs) {
 	}
 }
 
-$sql_query = 'SELECT SQL_CALC_FOUND_ROWS 
-	 `g`.`id`, `g`.`type`, `g`.`name`, `g`.`title`, `allow_out`, `allow_in`, `dialstr`, `a`.`title` as `gtitle`, `a`.`type` as `gtype`, `a`.`id` as `gid` FROM `gates` `g`, `gate_grps` `a` WHERE `grp_id` = `a`.`id`
+$sql_query =
+'SELECT SQL_CALC_FOUND_ROWS 
+	`g`.`id`, `g`.`type`, `g`.`name`, `g`.`title`, `g`.`allow_out`, `g`.`allow_in`, `g`.`dialstr`,
+	`gg`.`title` `gtitle`, `gg`.`type` `gtype`, `gg`.`id` `gid`
+FROM
+	`gates` `g` JOIN
+	`gate_grps` `gg` ON (`gg`.`id`=`g`.`grp_id`)
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 
 $rs = $DB->execute($sql_query);
@@ -165,92 +189,97 @@ if (@$rs) {
 			echo gs_form_hidden($SECTION, $MODULE), "\n";
 			echo '<input type="hidden" name="page" value="', htmlEnt($page), '" />', "\n";
 			echo '<input type="hidden" name="save" value="', $r['id'] , '" />', "\n";
+			
 			echo '<td>';
-			echo '<input type="text" name="name" value="'.htmlEnt($r['name']).'" size="20" maxlength="40" />';
-			echo '</td>';
+			echo '<input type="text" name="name" value="', htmlEnt($r['name']) ,'" size="20" maxlength="40" />';
+			echo '</td>',"\n";
+			
 			echo '<td>';
-			echo '<input type="text" name="title" value="'.htmlEnt($r['title']).'" size="20" maxlength="40" />';
-			echo '</td>';
+			echo '<input type="text" name="title" value="', htmlEnt($r['title']) ,'" size="20" maxlength="40" />';
+			echo '</td>',"\n";
+			
 			echo '<td>';
-	
-			echo "<select name=\"type\" > ";
+			echo '<select name="type">',"\n";
 			foreach ($types as $key => $type) {
-				echo '<option value="'.$type.'" ', (($r['type']=="$type") ? 'selected="selected"' : ''), " \">$type</option>\n";
-				
+				echo '<option value="', htmlEnt($type) ,'"', (($r['type']==$type) ? ' selected="selected"' : ''), '>', htmlEnt($type) ,'</option>',"\n";
 			}
-			echo "</select></td>\n";
-	
+			echo '</select>',"\n";
+			echo '</td>',"\n";
+			
 			echo '</td>';
 			echo '<td>';
-			echo '<input type="text" name="dialstr" value="'.htmlEnt($r['dialstr']).'" size="20" maxlength="40" />';
-			echo '</td>';
+			echo '<input type="text" name="dialstr" value="', htmlEnt($r['dialstr']) ,'" size="20" maxlength="40" />';
+			echo '</td>',"\n";
 			
 			echo '<td>';
-			echo '<input type="checkbox" name="in" ', ($r['allow_in'] ? 'checked="checked"' : '') ,'  />';
-			echo '</td>';
+			echo '<input type="checkbox" name="in"', ($r['allow_in'] ? ' checked="checked"' : '') ,' />';
+			echo '</td>',"\n";
+			
 			echo '<td>';
-			echo '<input type="checkbox" name="out" ', ($r['allow_out'] ? 'checked="checked"' : '') ,'  />';
-			echo '</td>';
+			echo '<input type="checkbox" name="out"', ($r['allow_out'] ? ' checked="checked"' : '') ,' />';
+			echo '</td>',"\n";
+			
 			echo '<td>';
-	
-			echo "<select name=\"group\" > ";
+			echo '<select name="group">',"\n";
 			foreach ($gates as $key => $gate) {
-				echo '<option value="'.$key."\" ". (($r['gid']=="$key") ? 'selected="selected"' : '')." >$gate</option>\n";
-				
+				echo '<option value="', htmlEnt($key) ,'"', (($r['gid']==$key) ? ' selected="selected"' : '') ,'>', htmlEnt($gate) ,'</option>',"\n";
 			}
-			echo "</select></td>\n";
-			echo '</td>';
+			echo '</select>',"\n";
+			echo '</td>',"\n";
 			
-			echo '<td>';
+			echo '<td>',"\n";
 			echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
 			echo '<img alt="', __('Speichern') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/filesave.png" />
-			</button>'."\n";
+			</button>',"\n";
 			echo "&nbsp;\n";
 			echo '<button type="cancel" title="', __('Abbrechen'), '" class="plain">';
 			echo '<img alt="', __('Abbrechen') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/cancel.png" />
-			</button>'."\n";
+			</button>',"\n";
+			echo '</td>',"\n";
 			
-			echo '</form>';
+			echo '</form>',"\n";
 			
 		} else {
-			echo '<td>', htmlEnt($r['name']);
-			echo '</td>';
-			echo '<td>', htmlEnt($r['title']);
-			echo '</td>';
-			echo '<td>', htmlEnt($r['type']);
-			echo '</td>';
+			echo '<td>', htmlEnt($r['name']) ,'</td>',"\n";
 			
-			echo '<td>', htmlEnt($r['dialstr']);
-			echo '</td>';
+			echo '<td>', htmlEnt($r['title']) ,'</td>',"\n";
+			
+			echo '<td>', htmlEnt($r['type']) ,'</td>',"\n";
+			
+			echo '<td>', htmlEnt($r['dialstr']) ,'</td>',"\n";
+			
 			echo '<td>';
-			echo '<input type="checkbox" name="allow_in" ', ($r['allow_in'] ? 'checked="checked"' : '') ,' disabled="disabled" />';
-			echo "</td>\n";
+			echo '<input type="checkbox" name="allow_in"', ($r['allow_in'] ? ' checked="checked"' : '') ,' disabled="disabled" />';
+			//echo ($r['allow_in'] ? '&#x2714;' : '&#x237B;');
+			echo '</td>',"\n";
+			
 			echo '<td>';
-			echo '<input type="checkbox" name="allow_out" ', ($r['allow_out'] ? 'checked="checked"' : '') ,' disabled="disabled" />';
-			echo "</td>\n";
-			echo '<td>', htmlEnt($r['gtitle']);
-			echo '</td>';
-			echo "<td>\n";
+			echo '<input type="checkbox" name="allow_out"', ($r['allow_out'] ? ' checked="checked"' : '') ,' disabled="disabled" />';
+			//echo ($r['allow_out'] ? '&#x2714;' : '&#x237B;');
+			echo '</td>',"\n";
 			
-			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;edit=', $r['id'], '&amp;page='.$page.'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+			echo '<td>', htmlEnt($r['gtitle']) ,'</td>',"\n";
 			
-			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;delete=', $r['id'], '&amp;page='.$page.'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-			
+			echo '<td>',"\n";
+			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;edit=',$r['id'], '&amp;page=',$page ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;delete=',$r['id'], '&amp;page=',$page ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			echo '</td>',"\n";
 		}
 		
-		echo "</td>\n";
-		echo '</tr>', "\n";
+		echo '</tr>',"\n";
 	}
 }
 
 ?>
+
+
 <tr>
 <?php
 
 if (!$edit) {
-	
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE), "\n";
+	
 ?>
 	<td>
 		<input type="text" name="name" value="" size="20" maxlength="40" />
@@ -258,45 +287,41 @@ if (!$edit) {
 	<td>
 		<input type="text" name="title" value="" size="20" maxlength="40" />
 	</td>
-<td>
+	<td>
 <?php
-		echo "<select name=\"type\" > ";
+		echo '<select name="type">',"\n";
 		foreach ($types as $key => $type) {
-			echo '<option value="'.$type."\">$type</option>\n";
-			
+			echo '<option value="', htmlEnt($type) ,'">', htmlEnt($type) ,'</option>',"\n";
 		}
-		echo "</select></td>\n";
+		echo '</select>',"\n";
 ?>
 	</td>
 	<td>
 		<input type="text" name="dialstr" value="" size="20" maxlength="40" />
 	</td>
-	
 	<td>
-	<input type="checkbox" name="in" />
+		<input type="checkbox" name="in" />
 	</td>
 	<td>
-	<input type="checkbox" name="out" />
-	
+		<input type="checkbox" name="out" />
 	</td>
 	<td>
 <?php
-		echo "<select name=\"group\" > ";
+		echo '<select name="group">',"\n";
 		foreach ($gates as $key => $gate) {
-			echo '<option value="'.$key."\">$gate</option>\n";
-			
+			echo '<option value="', htmlEnt($key) ,'">', htmlEnt($gate) ,'</option>',"\n";
 		}
-		echo "</select></td>\n";
+		echo '</select>',"\n";
 ?>
 	</td>
-
 	<td>
 		<button type="submit" title="<?php echo __('Host anlegen'); ?>" class="plain">
 			<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 		</button>
 	</td>
 	
-	</form>
+</form>
+
 <?php
 }
 ?>
