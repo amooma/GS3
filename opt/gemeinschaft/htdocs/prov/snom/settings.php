@@ -949,9 +949,21 @@ psetting('action_incoming_url', 'http://192.168.1.11/snom/dial-log.php?user=$use
 psetting('action_outgoing_url', 'http://192.168.1.11/snom/dial-log.php?user=$user_name1&type=out&remote=$remote');
 psetting('action_missed_url', 'http://192.168.1.11/snom/dial-log.php?user=$user_name1&type=missed&remote=$remote');
 */
-psetting('action_incoming_url', '');
-psetting('action_outgoing_url', '');
-psetting('action_missed_url'  , '');
+psetting('action_incoming_url'       , '');
+psetting('action_outgoing_url'       , '');
+psetting('action_missed_url'         , '');
+psetting('action_dnd_on_url'         , '');
+psetting('action_dnd_off_url'        , '');
+psetting('action_redirection_on_url' , '');
+psetting('action_redirection_off_url', '');
+psetting('action_offhook_url'        , '');
+psetting('action_onhook_url'         , '');
+psetting('action_setup_url'          , '');
+psetting('action_reg_failed'         , '');
+psetting('action_connected_url'      , '');
+psetting('action_disconnected_url'   , '');
+psetting('action_log_on_url'         , '');
+psetting('action_log_off_url'        , '');
 
 
 
