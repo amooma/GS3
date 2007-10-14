@@ -931,11 +931,10 @@ psetting('dkey_directory', 'keyevent F_ADR_BOOK'  ); # or F_DIRECTORY
 psetting('dkey_menu'     , 'keyevent F_MENU'      );
 psetting('dkey_redial'   , 'keyevent F_REDIAL'    );
 
-//psetting('dkey_directory', 'url http://192.168.1.11/snom/webapps/simplebook/simplebook.php');
 psetting('dkey_directory', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1');
-psetting('dkey_redial', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1');
+psetting('dkey_redial'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1');
 # so geht die Retrieve-Taste auch ohne neue Nachrichten:
-psetting('dkey_retrieve', 'speed mailbox');
+psetting('dkey_retrieve' , 'speed mailbox');
 
 
 
