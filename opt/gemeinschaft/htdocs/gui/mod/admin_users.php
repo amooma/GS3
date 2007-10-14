@@ -626,12 +626,12 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 		echo '<select multiple="multiple" name="upgroup[]" size="4">',"\n";
 		foreach ($pgroups as $key => $pgroup) {
 			$c++;
-			echo '<option value="',$key,'" ';
-			if (@$pgroups_my[$key]) echo 'selected="selected" ';
-			echo ">$key ($pgroup)</option>\n";
+			echo '<option value="',$key,'"';
+			if (@$pgroups_my[$key]) echo ' selected="selected"';
+			echo '>', $key ,' (', htmlEnt($pgroup) ,')</option>',"\n";
 		}
-		echo '<option value=""></option>';
-		echo "</select></td>\n";
+		echo '<option value=""></option>',"\n";
+		echo '</select>',"\n";
 ?>		
 		</td>
 	</tr>
@@ -757,8 +757,8 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 	echo "</td>\n";
 	
 	echo "<td>\n";
-	echo '<button type="submit" title="'.__('Speichern').'" class="plain">', "\n";
-	echo '<img alt="'.__('Speichern').'" src="'.GS_URL_PATH.'crystal-svg/16/act/filesave.png" />', "\n";
+	echo '<button type="submit" title="', __('Speichern') ,'" class="plain">', "\n";
+	echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/filesave.png" />', "\n";
 	echo "</button>\n";
 	echo "</td>\n";
 	
