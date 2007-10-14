@@ -1053,8 +1053,15 @@ psetting('vip_ring_sound'           , 'Ringer1');
 #  Misc
 #####################################################################
 
-//psetting('subscribe_config', 'off');  # "The phone can subscribe to setting changes delivered via SIP when this option is switched to "on"."
-//psetting('pnp_config', 'off');  # "If turned to on, the phone will try to retrieve its settings via a Plug-and-Play (PnP) Server. Modern SIP PBXs/Proxys can provide the PnP configuration data for the snom phones. Please refer to the manual of your PBX/Proxy. If the PnP configuration fails, the phone will try to get the settings from a setting server)."
+//psetting('subscribe_config', 'off');
+# "The phone can subscribe to setting changes delivered via SIP when
+# this option is switched to "on"."
+//psetting('pnp_config', 'off');
+# "If turned to on, the phone will try to retrieve its settings via
+# a Plug-and-Play (PnP) Server. Modern SIP PBXs/Proxys can provide
+# the PnP configuration data for the snom phones. Please refer to the
+# manual of your PBX/Proxy. If the PnP configuration fails, the phone
+# will try to get the settings from a setting server)."
 psetting('subscribe_config', 'off');
 psetting('pnp_config'      , 'off');
 
