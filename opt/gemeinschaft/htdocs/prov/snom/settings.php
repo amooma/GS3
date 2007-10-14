@@ -831,9 +831,12 @@ setting('ring_after_delay'        ,$i, ''   );  # mit 1 Sek. Verzoegerung klinge
 setting('user_send_local_name'    ,$i, 'on' );
 setting('user_dtmf_info'          ,$i, 'off');
 setting('user_mailbox'            ,$i, 'mailbox');
-setting('user_dp_str'             ,$i, ''   );
+setting('user_dp_exp'             ,$i, ''   );  # see http://wiki.snom.com/Settings/user_dp_exp
+setting('user_dp_str'             ,$i, ''   );  # see http://wiki.snom.com/Dial_Plan
 setting('user_dp'                 ,$i, ''   );
 setting('user_q'                  ,$i, '1.0');
+setting('user_descr_contact'      ,$i, 'off');  # not supported by Asterisk anyway
+setting('user_ice'                ,$i, 'off');  # not supported by Asterisk anyway
 setting('user_moh'                ,$i, ''   );
 setting('user_auto_connect'       ,$i, 'off');
 setting('user_remove_all_bindings',$i, 'off');
@@ -850,6 +853,8 @@ setting('user_presence_subscription'  ,$i, 'off');
 setting('user_presence_host'          ,$i, '');
 setting('user_presence_buddy_list_uri',$i, '');
 setting('presence_state'              ,$i, 'online', null, true);
+setting('stun_server'             ,$i, ''   );
+setting('stun_binding_interval'   ,$i, ''   );
 
 setting('codec1_name',$i, '8');  # g711a
 setting('codec2_name',$i, '0');  # g711u
