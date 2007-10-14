@@ -670,7 +670,7 @@ psetting('http_user'       , gs_get_conf('GS_SNOM_PROV_HTTP_USER', '') );
 psetting('http_pass'       , gs_get_conf('GS_SNOM_PROV_HTTP_PASS', '') );
 psetting('http_port'       , '80' );
 psetting('https_port'      , '443');
-psetting('web_logout_timer', '5'  );
+psetting('web_logout_timer', '10' );
 psetting('with_flash'      , 'on' , true);
 
 psetting('http_proxy'      , '' );  # IP address or URL
@@ -820,7 +820,12 @@ setting('user_active'             ,$i, 'on' );
 setting('user_sipusername_as_line',$i, 'on' );  # "broken registrar"
 setting('user_srtp'               ,$i, 'off');  # keine Verschluesselung
 setting('user_symmetrical_rtp'    ,$i, 'off');
-setting('user_expiry'             ,$i, '140');  # neu registrieren, default: 3600
+setting('user_expiry'             ,$i, '60' );  # default: 3600,
+                                                # valid: 60, 600, 3600, 7200, 28800, 86400
+setting('user_subscription_expiry',$i, '60' );  # default: 3600
+setting('user_server_type'        ,$i, 'default');
+# default = Standard, broadsoft = Broadsoft, sylantro = Sylantro,
+# pbxnsip = PBXnSIP, telepo = Telepo, metaswitch = MetaSwitch
 setting('ring_after_delay'        ,$i, ''   );  # mit 1 Sek. Verzoegerung klingeln
 //setting('user_send_local_name'    ,$i, 'on' );  # send display name to caller
 setting('user_send_local_name'    ,$i, 'on' );
@@ -828,6 +833,13 @@ setting('user_dtmf_info'          ,$i, 'off');
 setting('user_mailbox'            ,$i, 'mailbox');
 setting('user_dp_str'             ,$i, ''   );
 setting('user_dp'                 ,$i, ''   );
+setting('user_q'                  ,$i, '1.0');
+setting('user_moh'                ,$i, ''   );
+setting('user_auto_connect'       ,$i, 'off');
+setting('user_remove_all_bindings',$i, 'off');
+setting('user_alert_info'         ,$i, ''   );
+setting('user_pic'                ,$i, ''   );
+# sends Call-Info: icon="http://example.com/example.jpg" header
 setting('keepalive_interval'      ,$i, '14' );
 setting('user_full_sdp_answer'    ,$i, 'on' );
 setting('user_failover_identity'  ,$i, 'none');
@@ -846,7 +858,8 @@ setting('codec4_name',$i, '2');  # g726-32
 setting('codec5_name',$i, '9');  # g722
 setting('codec6_name',$i,'18');  # g729a
 setting('codec7_name',$i, '4');  # g723.1
-setting('codec_size' ,$i,'20');  # 20 ms
+setting('codec_size' ,$i,'20');  # 20 ms, valid values: 20, 30, 40, 60
+# G.723.1 needs 30 or 60 ms. All other codecs work with 20, 40 and 60 ms only.
 
 setting('user_host'          ,$i, $host);
 setting('user_outbound'      ,$i, '');  # outbound SIP proxy
@@ -998,10 +1011,14 @@ psetting('alert_group_ring_text'   , 'alert-group');
 //psetting('custom_melody_url', 'http://...');
 # ist aber nur moeglich fuer "Adressbuchklingeltoene"!?
 psetting('custom_melody_url', '');
+setting('user_custom', 1, '');
+# PCM 8 kHz 16 bit/sample (linear) mono WAV
 # see http://wiki.snom.com/Settings/custom_melody_url for examples
 
-# Standard Fallback-Klingelton:
+# default fallback ringtone:
 psetting('ring_sound'               , 'Ringer1');  # Ringer[1-10] / Silent
+# default ringtone for identity 1:
+setting('user_ringer', 1            , 'Ringer1');  # Ringer[1-10] / Silent / Custom
 
 # Alert-Info-Klingeltoene:
 psetting('alert_internal_ring_sound', 'Ringer2');  # Alert-Info: alert-internal
@@ -1013,10 +1030,6 @@ psetting('friends_ring_sound'       , 'Ringer1');
 psetting('family_ring_sound'        , 'Ringer1');
 psetting('colleagues_ring_sound'    , 'Ringer1');
 psetting('vip_ring_sound'           , 'Ringer1');
-
-
-//psetting('user_alert_info1', 'http://skdjhsjd.wav');
-// "The HTTP(S) URL may point to a standard 8 kHz mono 16-bit sample WAV file."
 
 
 
