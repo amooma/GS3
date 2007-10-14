@@ -184,7 +184,7 @@ if (@$rs) {
 	while ($r = $rs->fetchRow()) {
 		echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
 		
-		if ($edit == $r['id']){
+		if ($edit == $r['id']) {
 			echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 			echo gs_form_hidden($SECTION, $MODULE), "\n";
 			echo '<input type="hidden" name="page" value="', htmlEnt($page), '" />', "\n";
