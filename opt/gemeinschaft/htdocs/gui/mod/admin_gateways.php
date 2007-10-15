@@ -232,7 +232,7 @@ if (@$rs) {
 			echo '<img alt="', __('Speichern') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/filesave.png" />
 			</button>',"\n";
 			echo "&nbsp;\n";
-			echo '<button type="cancel" title="', __('Abbrechen'), '" class="plain">';
+			echo '<button type="reset" title="', __('Abbrechen'), '" class="plain">';
 			echo '<img alt="', __('Abbrechen') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/cancel.png" />
 			</button>',"\n";
 			echo '</td>',"\n";
