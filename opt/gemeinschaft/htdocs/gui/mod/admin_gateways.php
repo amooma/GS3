@@ -176,9 +176,6 @@ $num_pages = ceil($num_total / $per_page);
 
 <?php
 
-$sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
-	? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
-
 if (@$rs) {
 	$i = 0;
 	while ($r = $rs->fetchRow()) {
@@ -269,14 +266,12 @@ if (@$rs) {
 		echo '</tr>',"\n";
 	}
 }
-
 ?>
-
 
 <tr>
 <?php
 
-if (!$edit) {
+if (! $edit) {
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE), "\n";
 	
