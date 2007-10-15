@@ -200,6 +200,7 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
       'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
       'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
       'gateways'     => array('title' => __('Gateways')),       //TRANSLATE ME
+      'gateways2'    => array('title' => __('Gateways').' (2)'),//TRANSLATE ME
       'routes'       => array('title' => __('Routen &amp; LCR')),//TRANSLATE ME
       'testroute'    => array('title' => __('Routing-Test')),   //TRANSLATE ME
       'ivrs'         => array('title' => __('IVRs')),           //TRANSLATE ME
@@ -219,7 +220,6 @@ $MODULES['system'   ]=  array('title' => __('System'),          //TRANSLATE ME
       'hosts'        => array('title' => __('Hosts')),          //TRANSLATE ME
       'nodesmon'     => array('title' => __('Nodes')),
       'cards'        => array('title' => __('PSTN-Karten')),    //TRANSLATE ME
-      'gateways'     => array('title' => __('Gateways')),       //TRANSLATE ME
       'config'       => array('title' => __('Konfiguration'))   //TRANSLATE ME
    )
 );
