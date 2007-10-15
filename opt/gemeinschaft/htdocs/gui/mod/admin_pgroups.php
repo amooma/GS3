@@ -82,7 +82,11 @@ if ($group && $user) {
 	if (isGsError( $ret )) echo $ret->getMsg();
 }
 
+
+
+#####################################################################
 if (! $group) {
+	
 	$sql_query =
 'SELECT SQL_CALC_FOUND_ROWS 
 	`p`.`id` `id`, `p`.`title` `title`,
@@ -100,121 +104,121 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 	$num_pages = ceil($num_total / $per_page);
 	
 ?>
+
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th style="width:30px;"><?php echo __('ID'); ?></th>
+	<th style="width:150px;"><?php echo __('Bezeichnung'); ?></th>
+	<th style="width:30px;"><?php echo __('Mitglieder'); ?></th>
+	<th style="width:80px;">
+<?php
 	
-	<table cellspacing="1" class="phonebook">
-	<thead>
-	<tr>
-		<th style="width:30px;"><?php echo __('ID'); ?></th>
-		<th style="width:150px;"><?php echo __('Bezeichnung'); ?></th>
-		<th style="width:30px;"><?php echo __('Mitglieder'); ?></th>
-		<th style="width:80px;">
-	<?php
-		echo ($page+1), ' / ', $num_pages, "&nbsp; \n";
-		
-		if ($page > 0) {
-			echo
-			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page-1), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
-			'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
-			'</a>', "\n";
-		} else {
-			echo
-			'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
-		}
-		
-		if ($page < $num_pages-1) {
-			echo
-			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page+1), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
-			'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
-			'</a>', "\n";
-		} else {
-			echo
-			'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
-		}
-	?>
-		</th>
-	</tr>
-	</thead>
-	<tbody>
+	echo ($page+1), ' / ', $num_pages, '&nbsp; ',"\n";
 	
-	<?php
+	if ($page > 0) {
+		echo
+		'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page-1), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
+		'</a>', "\n";
+	} else {
+		echo
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
+	}
 	
-	$sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
-		? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
+	if ($page < $num_pages-1) {
+		echo
+		'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page+1), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
+		'</a>', "\n";
+	} else {
+		echo
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
+	}
+?>
+	</th>
+</tr>
+</thead>
+<tbody>
+
+<?php
 	
 	if (@$rs) {
 		$i = 0;
 		while ($r = $rs->fetchRow()) {
 			echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
 			
-			if ($edit == $r['id']){
+			if ($edit == $r['id']) {
 				
 				echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 				echo gs_form_hidden($SECTION, $MODULE), "\n";
 				echo '<input type="hidden" name="page" value="', htmlEnt($page), '" />', "\n";
 				echo '<input type="hidden" name="save" value="', $r['id'] , '" />', "\n";
 				
-				echo '<td>', htmlEnt($r['id']);
-				echo '</td>';
+				echo '<td>', htmlEnt($r['id']) ,'</td>',"\n";
 				
 				echo '<td>';	
-				echo '<input type="text" name="title" value="'.htmlEnt($r['title']).'" size="25" maxlength="40" />';	
-				echo '</td>';
+				echo '<input type="text" name="title" value="', htmlEnt($r['title']) ,'" size="25" maxlength="40" />';	
+				echo '</td>',"\n";
 				
-				echo '<td>', htmlEnt($r['num_members']),'</td>';
-				echo '<td>';
+				echo '<td>', $r['num_members'] ,'</td>',"\n";
+				
+				echo '<td>',"\n";
 				
 				echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
-				echo '<img alt="', __('Speichern') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/filesave.png" />
-				</button>'."\n";
-				echo "&nbsp;\n";
-				echo '<button type="cancel" title="', __('Abbrechen'), '" class="plain">';
-				echo '<img alt="', __('Abbrechen') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/cancel.png" />
-				</button>'."\n";
+				echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" />';
+				echo '</button>' ,"\n";
 				
-				echo '</form>';
+				echo '&nbsp;',"\n";
+				
+				echo '<button type="reset" title="', __('Abbrechen'), '" class="plain">';
+				echo '<img alt="', __('Abbrechen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/cancel.png" />';
+				echo '</button>' ,"\n";
+				
+				echo '</td>',"\n";
+				
+				echo '</form>',"\n";
 			
 			} else {
 				
-				echo '<td>', htmlEnt($r['id']);
-				echo '</td>';
+				echo '<td>', htmlEnt($r['id']) ,'</td>',"\n";
 				
-				echo '<td>', htmlEnt($r['title']),'</td>';	
-				echo "<td>\n";
+				echo '<td>', htmlEnt($r['title']) ,'</td>',"\n";
 				
+				echo '<td>',"\n";
 				echo '<a href="', gs_url($SECTION, $MODULE), '&amp;group=', $r['id'], '" title="', __('l&ouml;schen'), '">'.
-				htmlEnt($r['num_members']),'</a></td>';
+				htmlEnt($r['num_members']),'</a>';
+				echo '</td>',"\n";
 				
-				echo "<td>\n";
+				echo '<td>',"\n";
 				
-				echo '<a href="', gs_url($SECTION, $MODULE), '&amp;edit=', $r['id'], '&amp;page='.$page.'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+				echo '<a href="', gs_url($SECTION, $MODULE), '&amp;edit=', $r['id'], '&amp;page=', $page ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 				
-				echo '<a href="', gs_url($SECTION, $MODULE), '&amp;delete=', $r['id'], '&amp;page='.$page.'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+				echo '<a href="', gs_url($SECTION, $MODULE), '&amp;delete=', $r['id'], '&amp;page=', $page ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 				
+				echo '</td>',"\n";
 			}
 			
-			echo "</td>\n";
-			echo '</tr>', "\n";
+			echo '</tr>',"\n";
 			
 		}
 	}
 	
-	?>
-	<tr>
-	<?php
-	
-	if (!$edit) {
+?>
+
+<tr>
+
+<?php
+	if (! $edit) {
 		
 		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 		echo gs_form_hidden($SECTION, $MODULE), "\n";
-	?>
-		<td>
-			
-		</td>
+?>
+		<td>&nbsp;</td>
 		<td>
 			<input type="text" name="title" value="" size="25" maxlength="40" />
 		</td>
-		
-		<td></td>
+		<td>&nbsp;</td>
 		<td>
 			<button type="submit" title="<?php echo __('Gruppe anlegen'); ?>" class="plain">
 				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
@@ -222,14 +226,14 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 		</td>
 		
 		</form>
-	<?php
+<?php
 	}
-	?>
-	
-	</tr>
-	
-	</tbody>
-	</table>
+?>
+
+</tr>
+
+</tbody>
+</table>
 
 <?php
 
@@ -237,7 +241,14 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 // show pickupgroup's memners
 //===================================================================
 
-} else {
+}
+#####################################################################
+
+
+#####################################################################
+#  show members {
+#####################################################################
+else {
 	
 	$sql_query =
 'SELECT SQL_CALC_FOUND_ROWS 
@@ -256,81 +267,78 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 	$num_total = @$DB->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);
 	
-	?>	
+?>	
+
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th style="width:100px;"><?php echo __('User'); ?></th>
+	<th style="width:250px;"><?php echo __('Name'); ?></th>
+	<th style="width: 80px;">
+<?php
+	echo ($page+1), ' / ', $num_pages, '&nbsp; ',"\n";
 	
-	<table cellspacing="1" class="phonebook">
-	<thead>
-	<tr>
-		<th style="width:100px;"><?php echo __('User'); ?></th>
-		<th style="width:250px;"><?php echo __('Name'); ?></th>
-		<th style="width: 80px;">
-	<?php
-		echo ($page+1), ' / ', $num_pages, "&nbsp; \n";
-		
-		if ($page > 0) {
-			echo
-			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page-1),'&amp;group=', $group, '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
-			'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
-			'</a>', "\n";
-		} else {
-			echo
-			'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
-		}
-		
-		if ($page < $num_pages-1) {
-			echo
-			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page+1), '&amp;group=', $group, '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
-			'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
-			'</a>', "\n";
-		} else {
-			echo
-			'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
-		}
-		
-	?>
-		</th>
-	</tr>
-	</thead>
-	<tbody>
+	if ($page > 0) {
+		echo
+		'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page-1),'&amp;group=', $group, '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
+		'</a>', "\n";
+	} else {
+		echo
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
+	}
 	
-	<?php
+	if ($page < $num_pages-1) {
+		echo
+		'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page+1), '&amp;group=', $group, '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
+		'</a>', "\n";
+	} else {
+		echo
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
+	}
 	
-	$sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
-		? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
+?>
+	</th>
+</tr>
+</thead>
+<tbody>
+
+<?php
 	
 	if (@$rs) {
 		$i = 0;
 		while ($r = $rs->fetchRow()) {
 			echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
 			
-			echo '<td>', htmlEnt($r['user']);
-			echo '</td>';
+			echo '<td>', htmlEnt($r['user']) ,'</td>',"\n";
 			
 			echo '<td>', htmlEnt($r['ln']);
 			echo ', ', htmlEnt($r['fn']);
-			echo '</td>';	
-			echo "<td>\n";
+			echo '</td>',"\n";
+			
+			echo '<td>',"\n";
 			
 			echo '<a href="', gs_url($SECTION, 'users'), '&amp;edit=', $r['user'], '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 			
 			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;pudelete=', $r['user'], '&amp;group=', $group ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			
-			echo "</td>\n";
+			echo '</td>',"\n";
 			echo '</tr>', "\n";
 			
 		}
 	}
 	
-	?>
-	<tr>
-	<?php
+?>
+
+<tr>
+<?php
 	
-	if (!$edit) {
-		
+	if (! $edit) {
 		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 		echo gs_form_hidden($SECTION, $MODULE), "\n";
 		echo '<input type="hidden" name="group" value="', htmlEnt($group), '" />', "\n";
-	?>
+?>
 		
 		<td>
 			<input type="text" name="user" value="" size="25" maxlength="40" />
@@ -343,15 +351,18 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 		</td>
 		
 		</form>
-	<?php
-	}
-	?>
-	
-	</tr>
-	
-	</tbody>
-	</table>
+<?php
+}
+?>
+
+</tr>
+
+</tbody>
+</table>
 
 <?php
 }
+#####################################################################
+#  show members }
+#####################################################################
 ?>
