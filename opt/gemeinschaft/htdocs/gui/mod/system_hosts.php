@@ -50,41 +50,55 @@ echo '</h2>', "\n";
 
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
 
-$edit_host = (int)trim(@$_REQUEST['edit'   ]);
-$save_host = (int)trim(@$_REQUEST['save'   ]);
-$per_page  = (int)GS_GUI_NUM_RESULTS;
-$page      =      (int)@$_REQUEST['page'   ] ;
-$host      =      trim(@$_REQUEST['host'   ]);
-$hostid    = (int)trim(@$_REQUEST['hostid' ]);
-$comment   =      trim(@$_REQUEST['comment']);
-
-$delete_host  = (int)trim(@$_REQUEST['delete']);
+$edit_host   = (int)trim(@$_REQUEST['edit'   ]);
+$save_host   = (int)trim(@$_REQUEST['save'   ]);
+$per_page    = (int)GS_GUI_NUM_RESULTS;
+$page        =      (int)@$_REQUEST['page'   ] ;
+$host        =      trim(@$_REQUEST['host'   ]);
+$hostid      = (int)trim(@$_REQUEST['hostid' ]);
+$comment     =      trim(@$_REQUEST['comment']);
+$delete_host = (int)trim(@$_REQUEST['delete']);
 
 if ($host) {
+	//FIXME
+	// check that the IP address is ok and unique
+	// ...
+	
 	if ($save_host) {
-		$sql_query = 'UPDATE `hosts` 
-		SET `host`=\''. $DB->escape($host) .'\',
-		`comment`=\''. $DB->escape($comment) .'\'
-		WHERE `id`='. $save_host;
-		$rs = $DB->execute($sql_query);
+		$sql_query =
+'UPDATE `hosts` SET
+	`host`=\''. $DB->escape($host) .'\',
+	`comment`=\''. $DB->escape($comment) .'\'
+WHERE `id`='. $save_host;
+		$DB->execute($sql_query);
 	} else {
 		if ($hostid == 0) $hostid='NULL';
-		$sql_query = 'INSERT INTO `hosts`
-		(`id`, `host`, `comment`) 
-		VALUES ('.$hostid.', \''. $DB->escape($host) .'\' ,  \''. $DB->escape($comment) .'\' ) ';
-		$rs = $DB->execute($sql_query);
+		$sql_query =
+'INSERT INTO `hosts` (
+	`id`,
+	`host`,
+	`comment`
+) VALUES (
+	'. $hostid .',
+	\''. $DB->escape($host) .'\',
+	\''. $DB->escape($comment) .'\'
+)';
+		$DB->execute($sql_query);
 	}
 }
 
 if ($delete_host) {
-	$sql_query = 'DELETE from `hosts` 
-	WHERE `id`='. $delete_host;
-	$rs = $DB->execute($sql_query);
+	$sql_query =
+'DELETE from `hosts` 
+WHERE `id`='. $delete_host;
+	$DB->execute($sql_query);
 }
+
+
 
 # get nodes from watchdog conf
 #
-include_once( GS_DIR .'etc/gs-cluster-watchdog.conf' );
+@include_once( GS_DIR .'etc/gs-cluster-watchdog.conf' );
 $nodesconf = $node;
 if (! is_array($nodesconf)) {
 	$warnings[] = __('Fehler beim Lesen der Nodes aus der Watchdog-Konfiguration!');
@@ -124,7 +138,7 @@ $num_pages = ceil($num_total / $per_page);
 	<th style="width:60px;"><?php echo __('SIP Ping'); ?></th>	
 	<th style="width:80px;">
 <?php
-echo ($page+1), ' / ', $num_pages, "&nbsp; \n";
+echo ($page+1), ' / ', $num_pages, '&nbsp; ',"\n";
 
 if ($page > 0) {
 	echo
@@ -163,9 +177,6 @@ if ($page < $num_pages-1) {
 
 <?php
 
-$sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
-	? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
-
 if (@$rs) {
 	$i = 0;
 	while ($r = $rs->fetchRow()) {
@@ -193,11 +204,11 @@ if (@$rs) {
 			echo '<td>', htmlEnt( @$nodes[$ip]['static_ip'] ) ,'</td>',"\n";
 			
 			echo '<td>';
-			echo '<input type="text" name="host" value="'.htmlEnt($r['host']).'" size="20" maxlength="25" />';
+			echo '<input type="text" name="host" value="', htmlEnt($r['host']) ,'" size="20" maxlength="25" />';
 			echo '</td>',"\n";
 			
 			echo '<td>';
-			echo '<input type="text" name="comment" value="'.htmlEnt($r['comment']).'" size="25" maxlength="25" />';
+			echo '<input type="text" name="comment" value="', htmlEnt($r['comment']) ,'" size="25" maxlength="25" />';
 			echo '</td>',"\n";
 			
 			echo '<td>', ($nodes[$ip]['active']
@@ -253,12 +264,12 @@ if (@$rs) {
 			echo '<td>';
 			
 			echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
-			echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" />
-			</button>'."\n";
+			echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" />';
+			echo '</button>' ,"\n";
 			echo "&nbsp;\n";
 			echo '<button type="reset" title="', __('Abbrechen'), '" class="plain">';
-			echo '<img alt="', __('Abbrechen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/cancel.png" />
-			</button>'."\n";
+			echo '<img alt="', __('Abbrechen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/cancel.png" />';
+			echo '</button>' ,"\n";
 			
 			echo '</td>',"\n";
 			
@@ -348,14 +359,14 @@ if (!$edit_host) {
 	<td>
 		<input type="text" name="hostid" value="" size="5" maxlength="25" />
 	</td>
-	<td></td>
+	<td>&nbsp;</td>
 	<td>
 		<input type="text" name="host" value="" size="20" maxlength="25" />
 	</td>
 	<td>
 		<input type="text" name="comment" value="" size="25" maxlength="45" />
 	</td>
-	<td></td><td></td><td></td><td></td>
+	<td colspan="4">&nbsp;</td>
 	<td>
 		<button type="submit" title="<?php echo __('Host anlegen'); ?>" class="plain">
 			<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
@@ -363,6 +374,7 @@ if (!$edit_host) {
 	</td>
 
 </form>
+
 <?php
 }
 ?>
@@ -373,6 +385,6 @@ if (!$edit_host) {
 </table>
 
 <br /><br />
-<p style="max-width:500px;"><small><sup>[1]</sup> <?php echo __('Dies ist die Adresse, die ggf. per Stonith &uuml;bernommen werden w&uuml;rde. (Die dynamische Adresse hat hier nichts mit DHCP zu tun.)'); /* //TRANSLATE ME */ ?></small></p>
+<p style="max-width:500px;"><small><sup>[1]</sup> <?php echo __('Dies ist die Adresse, die ggf. per Stonith &uuml;bernommen werden w&uuml;rde. (Die dynamische Adresse hat hier nichts mit DHCP zu tun.)'); ?></small></p>
 
 <p style="max-width:500px;"><small><sup>[2]</sup> <?php echo __('Nicht konfiguriert.'); ?></small></p>
