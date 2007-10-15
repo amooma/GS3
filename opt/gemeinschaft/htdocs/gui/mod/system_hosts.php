@@ -181,45 +181,50 @@ if (@$rs) {
 		$nodes[$ip]['active'  ] = true;
 		$nodes[$ip]['watchdog'] = false;
 
-		if ($edit_host == $r['id']){
+		if ($edit_host == $r['id']) {
+			
 			echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 			echo gs_form_hidden($SECTION, $MODULE), "\n";
 			echo '<input type="hidden" name="page" value="', htmlEnt($page), '" />', "\n";
 			echo '<input type="hidden" name="save" value="', $r['id'] , '" />', "\n";
-			echo '<td>', htmlEnt($r['id']);
-			echo '</td>';
-			echo '<td>', htmlEnt( @$nodes[$ip]['static_ip'] ), '</td>';
+			
+			echo '<td>', htmlEnt($r['id']) ,'</td>',"\n";
+			
+			echo '<td>', htmlEnt( @$nodes[$ip]['static_ip'] ) ,'</td>',"\n";
+			
 			echo '<td>';
 			echo '<input type="text" name="host" value="'.htmlEnt($r['host']).'" size="20" maxlength="25" />';
-			echo '</td>';
+			echo '</td>',"\n";
 			
 			echo '<td>';
 			echo '<input type="text" name="comment" value="'.htmlEnt($r['comment']).'" size="25" maxlength="25" />';
-			echo '</td>';
+			echo '</td>',"\n";
+			
 			echo '<td>', ($nodes[$ip]['active']
-			? '<span style="color:#0a0;">'. __('Aktiv'  ) .'</span>'
-			: '<span style="color:#777;">'. __('Reserve') .'</span>'),
-			'</td>';
+				? '<span style="color:#0a0;">'. __('Aktiv'  ) .'</span>'
+				: '<span style="color:#777;">'. __('Reserve') .'</span>');
+			echo '</td>',"\n";
+			
 			echo '<td>';
 			if ($nodes[$ip]['watchdog'])
-				echo '<img alt="ja" src="', GS_URL_PATH, 'crystal-svg/16/act/ok.png" /><sup>&nbsp;</sup>';
+				echo '<img alt="', __('ja') ,'" src="', GS_URL_PATH, 'crystal-svg/16/act/ok.png" /><sup>&nbsp;</sup>';
 			else
-				echo '<img alt="nein" src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" /><sup>[2]</sup>';
-			echo '</td>';
+				echo '<img alt="', __('nein') ,'" src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" /><sup>[2]</sup>';
+			echo '</td>',"\n";
 			
 			echo '<td class="r">';
 			$timeout = 1;
 			$cmd = 'ping -n -q -w '. $timeout .' -c 1 '. qsa($ip);
 			$out = array();
 			$start = microtime_float();
-			@exec($cmd .' >>/dev/null 2>&1', $out, $ping_err);
+			@exec($cmd .' >>/dev/null 2>>/dev/null', $out, $ping_err);
 			$time = (microtime_float() - $start) * 0.5;  # script startup time
 			if ($ping_err==0) {
 				echo '<span style="color:#0a0;">', round($time*1000), '&nbsp;ms</span>';
 			} else {
 				echo '<b style="color:#f00;">?</b>';
 			}
-			echo '</td>';
+			echo '</td>',"\n";
 			
 			if ($nodes[$ip]['active']) {
 				echo '<td class="r">';
@@ -231,62 +236,69 @@ if (@$rs) {
 					@exec($cmd .' 2>&1', $out, $err);
 					$time = (microtime_float() - $start) * 0.7;  # script startup time
 					$out = strToUpper(trim(implode("\n", $out)));
-					if ($err==0 && subStr($out,0,2)=='OK') {
+					if ($err==0 && subStr($out,0,2)==='OK') {
 						echo '<span style="color:#0a0;">', round($time*1000), '&nbsp;ms</span>';
 					} else {
-						if ($out=='FAIL')
+						if ($out==='FAIL')
 							echo '<b style="color:#f00;">&gt;', $timeout, '&nbsp;s</b>';
 						else
 							echo '<b style="color:#f00;">?</b>';
 					}
 				} else
 					echo '<b style="color:#f00;">?</b>';
-				echo '</td>';
+				echo '</td>',"\n";
 			} else
-				echo '<td class="r">-</td>';
+				echo '<td class="r">-</td>',"\n";
 			
 			echo '<td>';
+			
 			echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
-			echo '<img alt="', __('Speichern') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/filesave.png" />
+			echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" />
 			</button>'."\n";
 			echo "&nbsp;\n";
-			echo '<button type="cancel" title="', __('Abbrechen'), '" class="plain">';
-			echo '<img alt="', __('Abbrechen') ,'" src="',GS_URL_PATH,'crystal-svg/16/act/cancel.png" />
+			echo '<button type="reset" title="', __('Abbrechen'), '" class="plain">';
+			echo '<img alt="', __('Abbrechen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/cancel.png" />
 			</button>'."\n";
-			echo '</form>';
+			
+			echo '</td>',"\n";
+			
+			echo '</form>',"\n";
 			
 		} else {
 			
-			echo '<td>', htmlEnt($r['id']);
-			echo '</td>';
-			echo '<td>', htmlEnt( @$nodes[$ip]['static_ip'] ), '</td>';
-			echo '<td>', htmlEnt($r['host']);
-			echo '</td>';
-			echo '<td>', htmlEnt($r['comment']),'</td>';
+			echo '<td>', htmlEnt($r['id']) ,'</td>',"\n";
+			
+			echo '<td>', htmlEnt( @$nodes[$ip]['static_ip'] ) ,'</td>',"\n";
+			
+			echo '<td>', htmlEnt($r['host']) ,'</td>',"\n";
+			
+			echo '<td>', htmlEnt($r['comment']) ,'</td>',"\n";
+			
 			echo '<td>', ($nodes[$ip]['active']
-			? '<span style="color:#0a0;">'. __('Aktiv'  ) .'</span>'
-			: '<span style="color:#777;">'. __('Reserve') .'</span>'),
-			'</td>';
+				? '<span style="color:#0a0;">'. __('Aktiv'  ) .'</span>'
+				: '<span style="color:#777;">'. __('Reserve') .'</span>');
+			echo '</td>',"\n";
+			
 			echo '<td>';
 			if ($nodes[$ip]['watchdog'])
-				echo '<img alt="ja" src="', GS_URL_PATH, 'crystal-svg/16/act/ok.png" /><sup>&nbsp;</sup>';
+				echo '<img alt="', __('ja') ,'" src="', GS_URL_PATH, 'crystal-svg/16/act/ok.png" /><sup>&nbsp;</sup>';
 			else
-				echo '<img alt="nein" src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" /><sup>[2]</sup>';
-			echo '</td>';
+				echo '<img alt="', __('nein') ,'" src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" /><sup>[2]</sup>';
+			echo '</td>',"\n";
 			
 			echo '<td class="r">';
 			$timeout = 1;
 			$cmd = 'ping -n -q -w '. $timeout .' -c 1 '. qsa($ip);
 			$out = array();
 			$start = microtime_float();
-			@exec($cmd .' >>/dev/null 2>&1', $out, $ping_err);
+			@exec($cmd .' >>/dev/null 2>>/dev/null', $out, $ping_err);
 			$time = (microtime_float() - $start) * 0.5;  # script startup time
 			if ($ping_err==0) {
 				echo '<span style="color:#0a0;">', round($time*1000), '&nbsp;ms</span>';
 			} else {
 				echo '<b style="color:#f00;">?</b>';
 			}
-			echo '</td>';
+			echo '</td>',"\n";
 			
 			if ($nodes[$ip]['active']) {
 				echo '<td class="r">';
@@ -298,31 +310,29 @@ if (@$rs) {
 					@exec($cmd .' 2>&1', $out, $err);
 					$time = (microtime_float() - $start) * 0.7;  # script startup time
 					$out = strToUpper(trim(implode("\n", $out)));
-					if ($err==0 && subStr($out,0,2)=='OK') {
+					if ($err==0 && subStr($out,0,2)==='OK') {
 						echo '<span style="color:#0a0;">', round($time*1000), '&nbsp;ms</span>';
 					} else {
-						if ($out=='FAIL')
+						if ($out==='FAIL')
 							echo '<b style="color:#f00;">&gt;', $timeout, '&nbsp;s</b>';
 						else
 							echo '<b style="color:#f00;">?</b>';
 					}
 				} else
 					echo '<b style="color:#f00;">?</b>';
-				echo '</td>';
+				echo '</td>',"\n";
 			} else
-				echo '<td class="r">-</td>';
-			
-			
+				echo '<td class="r">-</td>',"\n";
 			
 			echo '<td>';
 			
-			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;edit=', $r['id'], '&amp;page='.$page.'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;edit=', $r['id'], '&amp;page=', $page ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 			
-			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;delete=', $r['id'], '&amp;page='.$page.'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;delete=', $r['id'], '&amp;page=', $page ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			
+			echo '</td>',"\n";
 		}
 		
-		echo "</td>\n";
 		echo '</tr>', "\n";
 	}
 }
@@ -352,7 +362,7 @@ if (!$edit_host) {
 		</button>
 	</td>
 
-	</form>
+</form>
 <?php
 }
 ?>
