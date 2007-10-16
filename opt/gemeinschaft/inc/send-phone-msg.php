@@ -64,7 +64,7 @@ function gs_send_phone_desktop_msg( $ip, $port, $ext, $registrar, $text, $extra=
 	}
 	
 	$sipmsg =
-	'MESSAGE sip:'. $ext .'@'. $ip .' SIP/2.0' ."\r\n".
+	'MESSAGE sip:'.$ext.'@'.$ip.' SIP/2.0' ."\r\n".
 	'Via: SIP/2.0/UDP '.$registrar.':'.$lPort ."\r\n".
 	'To: sip:'.$ext.'@'.$ip .'' ."\r\n".
 	'Call-ID: '.$fake_callid.'@'.$registrar ."\r\n".
