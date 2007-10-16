@@ -30,7 +30,7 @@
 defined('GS_VALID') or die('No direct access.');
 
 
-function gs_send_phone_msg( $ip, $port, $ext, $registrar, $text, $extra=array() )
+function gs_send_phone_desktop_msg( $ip, $port, $ext, $registrar, $text, $extra=array() )
 {
 	static $sock = null;
 	static $lAddr = '0.0.0.0';
