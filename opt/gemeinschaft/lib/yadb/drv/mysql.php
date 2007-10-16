@@ -719,10 +719,10 @@ class YADB_RecordSet_mysql extends YADB_RecordSet
 					$types[$i] = YADB_MTYPE_FLOAT; break;
 				case 'date':
 				case 'datetime':
+				case 'timestamp':
 					//$types[$fldObj->name] = YADB_MTYPE_STR;   break;
 					$types[$i] = YADB_MTYPE_STR;   break;
 				case 'year':
-				case 'timestamp':
 					//$types[$fldObj->name] = YADB_MTYPE_INT;   break;
 					$types[$i] = YADB_MTYPE_INT;   break;
 				default:
