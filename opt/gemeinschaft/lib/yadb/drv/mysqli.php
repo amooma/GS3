@@ -369,6 +369,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 		if ($this->_transOff > 0) return true; // we have an outermost transaction
 		
 		if ($this->_transCnt > 0) --$this->_transCnt;
+		// can we use mysqli_commit() ?
 		$ret = $this->_execute( 'COMMIT' );
 		@ mysqli_autocommit( $this->_conn, true );
 		if ($this->_drvSrvVers >= 40005)
@@ -381,6 +382,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 		if ($this->_transOff > 0) return true; // we have an outermost transaction
 		
 		if ($this->_transCnt > 0) --$this->_transCnt;
+		// can we use mysqli_rollback() ?
 		$ret = $this->_execute( 'ROLLBACK' );
 		/* "If you issue a ROLLBACK statement after updating a non-transactional table within a transaction, an ER_WARNING_NOT_COMPLETE_ROLLBACK warning occurs." */
 		@ mysqli_autocommit( $this->_conn, true );
