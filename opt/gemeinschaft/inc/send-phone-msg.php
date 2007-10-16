@@ -1,4 +1,3 @@
-#!/usr/bin/php -q
 <?php
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
