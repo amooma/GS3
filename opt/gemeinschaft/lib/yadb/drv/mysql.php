@@ -1,12 +1,4 @@
 <?php
-
-/***********************************************************
-* Requires PHP mysql extension!
-* 
-* Supported driver options for connect():
-* reuse = true,  to re-use an existing connection
-***********************************************************/
-
 /*******************************************************************\
 *                               YaDB
 * 
@@ -30,9 +22,16 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-if (!defined('YADB_DIR')) die();
+/***********************************************************
+* Requires PHP mysql extension!
+* 
+* Supported driver options for connect():
+* reuse = true,  to re-use an existing connection
+***********************************************************/
 
-@ ini_set( 'mysql.trace_mode', 0 );
+if (!defined('YADB_DIR')) die("No direct access\n");
+
+@ini_set( 'mysql.trace_mode', 0 );
 // must be off or else SELECT FOUND_ROWS() always returns 0
 
 
