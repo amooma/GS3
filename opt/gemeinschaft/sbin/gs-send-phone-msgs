@@ -39,6 +39,7 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/log.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/get-listen-to-ids.php' );
+include_once( GS_DIR .'inc/send-phone-msg.php' );
 
 
 $our_host_ids = gs_get_listen_to_ids();
@@ -53,8 +54,6 @@ $since = time()-60*3;
 //$since = time()-60*50000;
 
 $fake_callid = rand(1000000000,2000000000);
-
-$crlf = "\r\n";
 
 $db = gs_db_slave_connect();
 
@@ -86,31 +85,8 @@ if (! $rs) {
 }
 while ($r = $rs->fetchRow()) {
 	$host = $hosts[$r['hid']];
-	
 	$text = $r['text'];
-	
-	$sipmsg =
-		'MESSAGE sip:'. $r['ext'] .'@'. $r['ip'] .' SIP/2.0' .$crlf.
-		'Via: SIP/2.0/UDP '.$host.':32779;rport=32779' .$crlf.
-		'To: sip:'.$r['ext'].'@'.$r['ip'] .'' .$crlf.
-		'Call-ID: '.$fake_callid.'@'.$host .$crlf.
-		'CSeq: 1 MESSAGE' .$crlf.
-		'Content-Type: text/plain; charset=utf-8' .$crlf.
-		'Max-Forwards: 20' .$crlf.
-		'From: sip:fake@'.$host.':32779;tag=fake' .$crlf.
-		'Content-Length: '.strLen($text) .$crlf.
-		'Content-Disposition: desktop' .$crlf.
-		$crlf.
-		$text;
-	
-	//echo $sipmsg, "\n";
-	
-	$sock = @fSockOpen('udp://'.$r['ip'], 5060, $err, $errmsg, 1);
-	if (! $sock) continue;
-	@stream_set_blocking($sock, 0);
-	@stream_set_timeout($sock, 1);
-	@fWrite($sock, $sipmsg, strlen($sipmsg));
-	@fClose($sock);
+	gs_send_phone_desktop_msg( $r['ip'], 5060, $r['ext'], $host, $text, array('fake_callid'=>$fake_callid) );
 }
 
 gs_log(GS_LOG_DEBUG, "Done sending phone messages");
