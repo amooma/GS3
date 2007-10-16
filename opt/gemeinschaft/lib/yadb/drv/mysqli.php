@@ -391,7 +391,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 	
 	
 	
-	function & colsMeta( $table )
+	function & colsMeta( $table ) #TODO
 	{
 		$rs =& $this->_execute(sPrintF( $this->_metaColsSQL, $this->escape($table) ));
 		$colsMeta = false;
@@ -502,7 +502,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 	}
 	
 	
-	function _colMetaType( &$colMeta )
+	function _colMetaType( &$colMeta ) #DONE?
 	{
 		static $tMap = array(
 			'INT'       => array(YADB_MTYPE_INT, YADB_STYPE_INT_4),
