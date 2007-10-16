@@ -665,9 +665,11 @@ class YADB_RecordSet_mysqli extends YADB_RecordSet
 		{
 			// if col types already cached or able to get them:
 			// correct types, else leave all values as strings
+			$i=0;
 			foreach ($row as $col => $val) {
 				if ($row[$col] === null) continue;
-				$t = $this->_drvColTypesPHP[$col];
+				//$t = @$this->_drvColTypesPHP[$col];
+				$t = @$this->_drvColTypesPHP[$i];
 				switch ($t) {
 					case YADB_MTYPE_INT:
 						$row[$col] =    (int)$row[$col];  break;
@@ -677,6 +679,7 @@ class YADB_RecordSet_mysqli extends YADB_RecordSet
 					case YADB_MTYPE_BOOL:
 						$row[$col] =   (bool)$row[$col];  break;
 				}
+				++$i;
 			}
 		}
 		$this->_row =& $row;
@@ -753,6 +756,7 @@ class YADB_RecordSet_mysqli extends YADB_RecordSet
 		
 		$types = array();
 		$fldObjs = @ mysqli_fetch_fields( $this->_rs );
+		$i=0;
 		foreach ($fldObjs as $fldObj) {
 			if (!is_object($fldObj)) {
 				trigger_error( 'YADB: Could not get column type.', E_USER_WARNING );
@@ -762,12 +766,16 @@ class YADB_RecordSet_mysqli extends YADB_RecordSet
 			// determine corresponding PHP type:
 			// (integer, string, double, boolean)
 			if (array_key_exists($t, $mysqli_types_to_yadb_mtypes)) {
-				$types[$fldObj->name] = $mysqli_types_to_yadb_mtypes[$t];
+				//$types[$fldObj->name] = $mysqli_types_to_yadb_mtypes[$t];
+				$types[$i] = $mysqli_types_to_yadb_mtypes[$t];
 			} else {
 				// should not be necessary, but you never know
-				$types[$fldObj->name] = $fldObj->numeric ?
+				//$types[$fldObj->name] = $fldObj->numeric ?
+				//	YADB_MTYPE_FLOAT : YADB_MTYPE_STR;
+				$types[$i] = $fldObj->numeric ?
 					YADB_MTYPE_FLOAT : YADB_MTYPE_STR;
 			}
+			++$i;
 		}
 		$this->_drvColTypesPHP =& $types;
 		return true;
