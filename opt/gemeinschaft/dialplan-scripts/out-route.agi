@@ -180,6 +180,8 @@ LIMIT 8'
 				_agi_verbose("### LCR prefix $lcr_prefix ignored for non-Zap gateway ". $gate['name'] );
 				$number_final = $number_dial;
 			}
+		} else {
+			$number_final = $number_dial;
 		}
 		$dialstr = str_replace(
 			array( '{number}'  , '{peer}'      ),
