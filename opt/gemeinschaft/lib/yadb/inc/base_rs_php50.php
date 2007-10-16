@@ -22,7 +22,7 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-if (!defined('YADB_DIR')) die();
+if (!defined('YADB_DIR')) die("No direct access\n");
 
 /*
 
