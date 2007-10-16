@@ -631,6 +631,7 @@ class YADB_RecordSet_mysql extends YADB_RecordSet
 			// if col types already cached or able to get them:
 			// correct types, else leave all values as strings
 			foreach ($row as $col => $val) {
+				if ($row[$col] === null) continue;
 				$t = $this->_drvColTypesPHP[$col];
 				switch ($t) {
 					case YADB_MTYPE_INT:
