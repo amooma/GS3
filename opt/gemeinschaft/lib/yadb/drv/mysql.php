@@ -259,7 +259,7 @@ class YADB_Connection_mysql extends YADB_Connection
 	
 	function _close()
 	{
-		return is_resource($this->_conn) ? @mysql_close($this->_conn) : true;
+		return is_resource($this->_conn) ? @ mysql_close($this->_conn) : true;
 	}
 	
 	
@@ -667,7 +667,7 @@ class YADB_RecordSet_mysql extends YADB_RecordSet
 	function _close()
 	{
 		if (is_resource( $this->_rs ))
-			@mysql_free_result( $this->_rs );
+			@ mysql_free_result( $this->_rs );
 		$this->_rs = null;
 		return true;
 	}
