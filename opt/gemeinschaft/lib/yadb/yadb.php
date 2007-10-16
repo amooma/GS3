@@ -364,7 +364,8 @@ class YADB_Connection
 	* Finds version string in a string
 	***********************************************************/
 	
-	function _findVers( $str ) {
+	function _findVers( $str )
+	{
 		if ( preg_match('/[0-9]+(\.[0-9]+)+/', $str, $arr) )
 			return $arr[0];
 		return '';
@@ -378,7 +379,8 @@ class YADB_Connection
 	* preted by the driver (PHP)
 	***********************************************************/
 	
-	function connect( $host=null, $user=null, $pwd=null, $db=null, $options=array() ) {
+	function connect( $host=null, $user=null, $pwd=null, $db=null, $options=array() )
+	{
 		if (subStr($host,0,1) != ':') {
 			$tmp = explode(':', $host, 2);
 			$this->_host = $tmp[0];
@@ -638,7 +640,11 @@ class YADB_Connection
 	* Prepares an SQL query into a prepared statement.
 	***********************************************************/
 	
-	function & prepare() { $false = false; return $false; }
+	function & prepare()
+	{
+		$false = false;
+		return $false;
+	}
 	
 	
 	
@@ -864,8 +870,10 @@ class YADB_Connection
 	* Returns information about columns in a table.
 	***********************************************************/
 	
-	function & colsMeta( $table ) {
-		$false = false; return $false;
+	function & colsMeta( $table )
+	{
+		$false = false;
+		return $false;
 	}
 	
 	/***********************************************************
@@ -1144,8 +1152,10 @@ class YADB_Connection
 	* Returns a YADB result set or false.
 	***********************************************************/
 	
-	function & executeMulti( $sql ) {
-		$false = false; return $false;
+	function & executeMulti( $sql )
+	{
+		$false = false;
+		return $false;
 	}
 	
 	/***********************************************************
@@ -1369,7 +1379,7 @@ class YADB_RecordSet_empty
 ***********************************************************/
 
 if       (YADB_PHPVER >= 50200) {
-	include( YADB_DIR .'inc/base_rs_php51.php' );
+	include( YADB_DIR .'inc/base_rs_php52.php' );
 } elseif (YADB_PHPVER >= 50000) {
 	include( YADB_DIR .'inc/base_rs_php50.php' );
 } else {
@@ -1404,7 +1414,8 @@ class YADB_RecordSet extends YADB_BaseRS
 	* $this->YADB_RecordSet( $rs );   or
 	* parent::YADB_RecordSet( $rs );
 	***********************************************************/
-	function YADB_RecordSet( &$rs, &$conn, $sql ) {
+	function YADB_RecordSet( &$rs, &$conn, $sql )
+	{
 		$this->_rs = $rs;
 		$this->_conn = $conn;
 		$this->_sql = $sql;
@@ -1673,7 +1684,8 @@ class YADB_RecordSet extends YADB_BaseRS
 * loadObject().
 ***********************************************************/
 
-class YADB_RecordObject {
+class YADB_RecordObject
+{
 	var $_conn   = null;
 	var $_table  = null;
 	var $_pkCol  = null;
