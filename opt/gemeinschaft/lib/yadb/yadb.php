@@ -1,7 +1,6 @@
 <?php
 /*******************************************************************\
 *                               YaDB
-*                              0.02.06
 * 
 * Copyright 2006/2007, Philipp Kempgen <philipp.kempgen@amooma.de>,
 * amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
@@ -70,25 +69,25 @@ error_reporting(E_ALL);   // for debugging only
 
 
 if (defined('YADB_DIR'))
-	die('YADB_DIR must not be defined before inclusion.');
+	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 201); // = 0.02.01
+define('YADB_VERS', 206); // = 0.02.06
 
 /***********************************************************
 * Columns flags:
 ***********************************************************/
-define('YADB_FLAG_NOTNULL' ,  1 ); // ..00000001
-define('YADB_FLAG_AUTOINC' ,  2 ); // ..00000010
-define('YADB_FLAG_UNSIGNED',  4 ); // ..00000100
-define('YADB_FLAG_BINARY'  ,  8 ); // ..00001000
-define('YADB_FLAG_PKPART'  , 16 ); // ..00010000
-// column is part of a primary key
-define('YADB_FLAG_PKCOL'   , 32 ); // ..00100000
-// column *IS* the primary key
-define('YADB_FLAG_TRUEPK'  , 51 ); // ..00110011
-// special flag for comfortable testing if YADB_FLAG_PKCOL,
-// YADB_FLAG_PKPART, YADB_FLAG_NOTNULL and YADB_FLAG_AUTOINC
+define('YADB_FLAG_NOTNULL' ,  1 ); // 1<<0
+define('YADB_FLAG_AUTOINC' ,  2 ); // 1<<1
+define('YADB_FLAG_UNSIGNED',  4 ); // 1<<2
+define('YADB_FLAG_BINARY'  ,  8 ); // 1<<3
+define('YADB_FLAG_PKPART'  , 16 ); // 1<<4
+                                   // column is part of a primary key
+define('YADB_FLAG_PKCOL'   , 32 ); // 1<<5
+                                   // column *is* the primary key
+define('YADB_FLAG_TRUEPK'  , 51 ); // YADB_FLAG_PKCOL + YADB_FLAG_PKPART +
+                                   // YADB_FLAG_AUTOINC + YADB_FLAG_NOTNULL
+                                   // combined flag for comfortable testing
 
 /***********************************************************
 * Main meta types:
@@ -146,10 +145,9 @@ define( 'YADB_FLAG_BROWN_ARR' , 64 ); // ..01000000
 */
 
 
-
 // workaround for converting PHP versions to numbers:
 $tmp = (float)PHP_VERSION;
-if     ($tmp >= 5.0999) define('YADB_PHPVER', 50100); // >= 5.1
+if     ($tmp >= 5.1999) define('YADB_PHPVER', 50200); // >= 5.2
 elseif ($tmp >= 5.0   ) define('YADB_PHPVER', 50000); // >= 5.0
 elseif ($tmp >  4.2999) define('YADB_PHPVER', 40300); // >= 4.3
 // do not write >=4.3 here - strange floating point issue
@@ -1370,7 +1368,7 @@ class YADB_RecordSet_empty
 * Include the base record set.
 ***********************************************************/
 
-if       (YADB_PHPVER >= 50100) {
+if       (YADB_PHPVER >= 50200) {
 	include( YADB_DIR .'inc/base_rs_php51.php' );
 } elseif (YADB_PHPVER >= 50000) {
 	include( YADB_DIR .'inc/base_rs_php50.php' );
