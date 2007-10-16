@@ -820,12 +820,10 @@ context to-internal-users-self {
 					// does not leave a trace in the queue_log so fake it:
 					QueueLog(${EXTEN},${UNIQUEID},NONE,ENTERQUEUE,,${CALLERID(num)},fake);
 				}
-				else {
-					if ("${QUEUESTATUS}"="FULL") {
-						// for some strange reason does not leave a trace in the
-						// queue_log. fake it:
-						QueueLog(${EXTEN},${UNIQUEID},NONE,ENTERQUEUE,,${CALLERID(num)},fake);
-					}
+				else if ("${QUEUESTATUS}"="FULL") {
+					// for some strange reason does not leave a trace in the
+					// queue_log. fake it:
+					QueueLog(${EXTEN},${UNIQUEID},NONE,ENTERQUEUE,,${CALLERID(num)},fake);
 				}
 			}
 			else {
@@ -844,24 +842,19 @@ context to-internal-users-self {
 				//QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,pos,origpos,waittime,fake);
 				QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,,,0,fake);
 			}
-			else {
-				if ("${QUEUESTATUS}"="LEAVEEMPTY" || "${QUEUESTATUS}"="LEAVEUNAVAIL") {
-					// for some strange reason does not leave a trace in the
-					// queue_log. fake it:
-					QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,,,${queue_waittime},fake);
-				}
-				else {
-					if ("${QUEUESTATUS}"="FULL") {
-						// for some strange reason does not leave a trace in the
-						// queue_log. fake it:
-						QueueLog(${EXTEN},${UNIQUEID},NONE,_EXITFULL,,,${queue_waittime},fake);
-					}
-				}
+			else if ("${QUEUESTATUS}"="LEAVEEMPTY" || "${QUEUESTATUS}"="LEAVEUNAVAIL") {
+				// for some strange reason does not leave a trace in the
+				// queue_log. fake it:
+				QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,,,${queue_waittime},fake);
+			}
+			else if ("${QUEUESTATUS}"="FULL") {
+				// for some strange reason does not leave a trace in the
+				// queue_log. fake it:
+				QueueLog(${EXTEN},${UNIQUEID},NONE,_EXITFULL,,,${queue_waittime},fake);
 			}
 			
 			if ("${QUEUESTATUS}"="TIMEOUT") {
-				Verbose(1,### Queue ${EXTEN} is busy (no answer after timeout));
-				// forward on timeout (unavail)? ...
+				Verbose(1,### Queue ${EXTEN} is unavailable (no answer after timeout));
 				if ("${fw_${is_call_from}_timeout}" != "") {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on timeout to: ${fw_${is_call_from}_timeout});
 					Set(__forwarded_by=${EXTEN});
@@ -873,9 +866,8 @@ context to-internal-users-self {
 				Busy(5);
 				Hangup();
 			}
-			if ("${QUEUESTATUS}"="FULL") {
+			else if ("${QUEUESTATUS}"="FULL") {
 				Verbose(1,### Queue ${EXTEN} is full);
-				// forward on full (busy)? ...
 				if ("${fw_${is_call_from}_full}" != "") {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on full to: ${fw_${is_call_from}_full});
 					Set(__forwarded_by=${EXTEN});
@@ -887,9 +879,8 @@ context to-internal-users-self {
 				Busy(5);
 				Hangup();
 			}
-			if ("${QUEUESTATUS}"="JOINEMPTY" || "${QUEUESTATUS}"="LEAVEEMPTY" || "${QUEUESTATUS}"="JOINUNAVAIL" || "${QUEUESTATUS}"="LEAVEUNAVAIL") {
+			else if ("${QUEUESTATUS}"="JOINEMPTY" || "${QUEUESTATUS}"="LEAVEEMPTY" || "${QUEUESTATUS}"="JOINUNAVAIL" || "${QUEUESTATUS}"="LEAVEUNAVAIL") {
 				Verbose(1,### Queue ${EXTEN} is empty);
-				// forward on empty (offline)? ...
 				if ("${fw_${is_call_from}_empty}" != "") {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on empty to: ${fw_${is_call_from}_empty});
 					Set(__forwarded_by=${EXTEN});
@@ -1038,7 +1029,7 @@ context to-internal-users-self {
 			if ("${CALLERID(dnid)}" != "" && "${DIALEDPEERNUMBER:0:1}" != "*") {
 				//&dial-log-store(${origext},${type},${user_name});
 				&dial-log-store(${CALLERID(dnid)},${type},${CALLERID(num)});
-				//FIXME? does this always work as expected?
+				//FIXME - does not always work as expected
 			}
 		}
 	}
