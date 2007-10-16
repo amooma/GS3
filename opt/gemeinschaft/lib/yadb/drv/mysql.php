@@ -635,12 +635,12 @@ class YADB_RecordSet_mysql extends YADB_RecordSet
 				$t = $this->_drvColTypesPHP[$col];
 				switch ($t) {
 					case YADB_MTYPE_INT:
-						$row[$col] = (int)$row[$col];  break;
-					case YADB_MTYPE_STR:  break;  // already is a string
+						$row[$col] =    (int)$row[$col];  break;
+					case YADB_MTYPE_STR:                  break;  // is a string already
 					case YADB_MTYPE_FLOAT:
 						$row[$col] = (double)$row[$col];  break;
 					case YADB_MTYPE_BOOL:
-						$row[$col] = (bool)$row[$col];  break;
+						$row[$col] =   (bool)$row[$col];  break;
 				}
 			}
 		}
