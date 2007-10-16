@@ -202,9 +202,8 @@ class YADB_Connection_mysql extends YADB_Connection
 	
 	function getCharSet()
 	{
-		// do not use mysql_client_encoding() (PHP 4.3) as it
-		// does not seems to get updated if the connection
-		// charset changes
+		// do not use mysql_client_encoding() (PHP 4.3) as it does
+		// not seem to get updated if the connection charset changes
 		return @ $this->executeGetOne( 'SELECT @@character_set_connection' );
 	}
 	
@@ -314,29 +313,38 @@ class YADB_Connection_mysql extends YADB_Connection
 	function _startTrans()
 	{
 		if ($this->_transOff > 0) return true; // we already have an outermost transaction
+		
 		++$this->_transCnt;
+		
 		$ret = $this->_execute( 'SET autocommit=0' );
-		if ($this->_drvSrvVers >= 40005)
+		
+		if ($this->_drvSrvVers >= 40005) {
 			$ret = $this->_execute( 'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE' ) && $ret;
 			// http://dev.mysql.com/doc/refman/4.1/en/set-transaction.html
+		}
+		
 		/*
-		if ($this->_drvSrvVers >= 40108)
+		if ($this->_drvSrvVers >= 40108) {
 			$ret = $this->_execute( 'START TRANSACTION WITH CONSISTENT SNAPSHOT' ) && $ret;
 			// http://dev.mysql.com/doc/refman/4.1/en/commit.html
-		elseif ($this->_drvSrvVers >= 40011)
+		} elseif ($this->_drvSrvVers >= 40011) {
 			$ret = $this->_execute( 'START TRANSACTION' ) && $ret;
+		}
 		*/
-		if ($this->_drvSrvVers >= 40011)
+		if ($this->_drvSrvVers >= 40011) {
 			$ret = $this->_execute( 'START TRANSACTION /*!40108 WITH CONSISTENT SNAPSHOT */' ) && $ret;
-			// "comment" will be executed on MySQl >= 4.1.8 only
-		else
+			// comment will be executed on MySQl >= 4.1.8 only
+		} else {
 			$ret = $this->_execute( 'BEGIN' ) && $ret;
+		}
+		
 		return $ret;
 	}
 	
 	function _commitTrans()
 	{
 		if ($this->_transOff > 0) return true; // we have an outermost transaction
+		
 		if ($this->_transCnt > 0) --$this->_transCnt;
 		$ret = $this->_execute( 'COMMIT' );
 		$this->_execute( 'SET autocommit=1' );
@@ -348,6 +356,7 @@ class YADB_Connection_mysql extends YADB_Connection
 	function _rollbackTrans()
 	{
 		if ($this->_transOff > 0) return true; // we have an outermost transaction
+		
 		if ($this->_transCnt > 0) --$this->_transCnt;
 		$ret = $this->_execute( 'ROLLBACK' );
 		/* "If you issue a ROLLBACK statement after updating a non-transactional table within a transaction, an ER_WARNING_NOT_COMPLETE_ROLLBACK warning occurs." */
@@ -685,7 +694,7 @@ class YADB_RecordSet_mysql extends YADB_RecordSet
 				trigger_error( 'YADB: Could not get column type.', E_USER_WARNING );
 				return false;
 			}
-			$t = $fldObj->type;
+			$t = strToLower($fldObj->type);
 			// 'int'|'string'|'blob'|'real'|'date'|'timestamp'
 			// |'datetime'|'time'|'year' ...
 			// determine corresponding PHP type:
