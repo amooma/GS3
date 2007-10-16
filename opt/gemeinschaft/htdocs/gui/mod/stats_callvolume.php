@@ -270,23 +270,22 @@ function reload_svgs()
 
 function fontResizeInit()
 {
-	//var iBase = TextResizeDetector.addEventListener(onFontResize,null);
-	//alert("The base font size = " + iBase);
-	TextResizeDetector.addEventListener(reload_svgs,null);
+	//TextResizeDetector.addEventListener( onFontResize , null );
+	TextResizeDetector.addEventListener( reload_svgs , null );
 }
-function onFontResize(e,args)
+function onFontResize( evtname, args )
 {
 	/*
-	var msg = "Base font size: "+ args[0].iBase +"px\n";
-	msg    += "Current font size: "+ args[0].iSize +"px\n";
-	msg    += "Delta: "+ args[0].iDelta +"\n";
+	var msg = "Old font size: "+ args['old'] +"\n";
+	msg    += "New font size: "+ args['new'] +"\n";
+	msg    += "Delta: "+ args['diff'] +"\n";
 	alert(msg);
 	*/
 }
 //id of element to check for and insert control
-TextResizeDetector.TARGET_ELEMENT_ID = 'font-size-sensor';
-//function to call once TextResizeDetector has init'd
-TextResizeDetector.USER_INIT_FUNC = fontResizeInit;
+TextResizeDetector.target_el = 'font-size-sensor';
+//function to call once TextResizeDetector has inited
+TextResizeDetector.user_init_fn = fontResizeInit;
 
 //]]>
 </script>
