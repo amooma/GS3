@@ -772,8 +772,13 @@ class YADB_RecordSet_mysqli extends YADB_RecordSet
 				// should not be necessary, but you never know
 				//$types[$fldObj->name] = $fldObj->numeric ?
 				//	YADB_MTYPE_FLOAT : YADB_MTYPE_STR;
-				$types[$i] = $fldObj->numeric ?
-					YADB_MTYPE_FLOAT : YADB_MTYPE_STR;
+				//$types[$i] = $fldObj->numeric ?
+				//	YADB_MTYPE_FLOAT : YADB_MTYPE_STR;
+				//FIXME - with mysqli the field metadata object does not
+				//have a "numeric" property. the necessary information
+				//might be in "flags"
+				//for now:
+				$types[$i] = YADB_MTYPE_STR;
 			}
 			++$i;
 		}
