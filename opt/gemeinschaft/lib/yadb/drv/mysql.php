@@ -639,9 +639,11 @@ class YADB_RecordSet_mysql extends YADB_RecordSet
 			|| @ $this->_drvFetchColTypes() ) {
 			// if col types already cached or able to get them:
 			// correct types, else leave all values as strings
+			$i=0;
 			foreach ($row as $col => $val) {
 				if ($row[$col] === null) continue;
-				$t = @$this->_drvColTypesPHP[$col];
+				//$t = @$this->_drvColTypesPHP[$col];
+				$t = @$this->_drvColTypesPHP[$i];
 				switch ($t) {
 					case YADB_MTYPE_INT:
 						$row[$col] =    (int)$row[$col];  break;
@@ -651,6 +653,7 @@ class YADB_RecordSet_mysql extends YADB_RecordSet
 					case YADB_MTYPE_BOOL:
 						$row[$col] =   (bool)$row[$col];  break;
 				}
+				++$i;
 			}
 		}
 		$this->_row =& $row;
@@ -705,21 +708,28 @@ class YADB_RecordSet_mysql extends YADB_RecordSet
 			// reports it as an int which is acceptable
 			switch ($t) {  // common types first:
 				case 'int':
-					$types[$fldObj->name] = YADB_MTYPE_INT;   break;
+					//$types[$fldObj->name] = YADB_MTYPE_INT;   break;
+					$types[$i] = YADB_MTYPE_INT;   break;
 				case 'string':
 				case 'date':
-					$types[$fldObj->name] = YADB_MTYPE_STR;   break;
+					//$types[$fldObj->name] = YADB_MTYPE_STR;   break;
+					$types[$i] = YADB_MTYPE_STR;   break;
 				case 'real':
-					$types[$fldObj->name] = YADB_MTYPE_FLOAT; break;
+					//$types[$fldObj->name] = YADB_MTYPE_FLOAT; break;
+					$types[$i] = YADB_MTYPE_FLOAT; break;
 				case 'date':
 				case 'datetime':
-					$types[$fldObj->name] = YADB_MTYPE_STR;   break;
+					//$types[$fldObj->name] = YADB_MTYPE_STR;   break;
+					$types[$i] = YADB_MTYPE_STR;   break;
 				case 'year':
 				case 'timestamp':
-					$types[$fldObj->name] = YADB_MTYPE_INT;   break;
+					//$types[$fldObj->name] = YADB_MTYPE_INT;   break;
+					$types[$i] = YADB_MTYPE_INT;   break;
 				default:
 					// should not be necessary, but you never know
-					$types[$fldObj->name] = $fldObj->numeric ?
+					//$types[$fldObj->name] = $fldObj->numeric ?
+					//	YADB_MTYPE_FLOAT : YADB_MTYPE_STR;
+					$types[$i] = $fldObj->numeric ?
 						YADB_MTYPE_FLOAT : YADB_MTYPE_STR;
 					break;
 			}
