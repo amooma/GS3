@@ -79,9 +79,9 @@ class YADB_Connection_mysql extends YADB_Connection
 			return $this->_drvSrvVersArr;
 		
 		$orig = @ mysql_get_server_info($this->_conn);
-			$vstr = $this->_findVers($orig);
-			$tmp = explode('.', $vstr, 3);
-			$vint = (int)@$tmp[0]*10000 + (int)@$tmp[1]*100 + (int)@$tmp[2];
+		$vstr = $this->_findVers($orig);
+		$tmp = explode('.', $vstr, 3);
+		$vint = (int)@$tmp[0]*10000 + (int)@$tmp[1]*100 + (int)@$tmp[2];
 		$vArr = array(
 			'orig' => $orig,
 			'vstr' => $vstr,
