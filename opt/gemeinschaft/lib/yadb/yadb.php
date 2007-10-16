@@ -1,106 +1,70 @@
 <?php
-/***********************************************************
-*                        YADB 0.02.04
-* 
-* YADB is a small database abstraction layer (yet another
-* ...) designed for speed and small memory footprint. It
-* aims towards development of web applications and thus
-* provides functions for the common tasks of adding/editing
-* /deleting records through a web interface. Rows can be
-* represented as objects for convenience.
-* In fact the main goal is convenience with database
-* abstraction being just a side-effect.
-* 
-* Might provide helper functions for easy creation of forms.
-* 
-* Requires PHP >= 4.3 with built in support for either the
-* mysql or (preferably if you use MySQL >= 4.1) the mysqli
-* extension. MySQL 4.1 is recommended. (Applies to the YADB
-* mysql and mysqli drivers only.)
-* I recommend eAccelerator for additional speedup.
-* 
-* YADB triggers standard PHP errors, most of them being of
-* type E_USER_ERROR. Catch them with your own PHP error
-* handler.
-* YADB does intentionally *not* provides means of caching
-* as in a medium to large scale application you should do
-* caching anyways - outside of YADB.
-* Q: As YADB is at a very low version, is the API subject
-* to change? A: The API might change if it turns out to
-* improve things generally. But you can be assured this
-* will not happen by chance - I'm using YADB in my own
-* software.
-* 
-* @package    YADB 0.01
-* @copyright  (c) Philipp Kempgen, 2006
-* @license    http://www.gnu.org/copyleft/lgpl.html GNU LGPL
+/*******************************************************************\
+*                               YaDB
+*                              0.02.06
 * 
 * Copyright 2006/2007, Philipp Kempgen <philipp.kempgen@amooma.de>,
 * amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
-* http://www.amooma.de/;
+* http://www.amooma.de/
 * 
 * This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public License
-* (GNU/LGPL) as published by the Free Software Foundation; either
-* version 2.1 of the License, or (at your option) any later version.
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
 * 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Lesser General Public License for more details.
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
 * 
-* You should have received a copy of the GNU Lesser General Public
-* License along with this program; if not, write to the Free
-* Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-* Boston, MA 02110-1301, USA.
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
 * 
-* General database rules:
-* Don't run proprietary SQL queries or queries containing
-* non-standard SQL extensions through this API or otherwise
-* you wouldn't need YADB.
-* Wherever YADB provides functions for specific tasks (such
-* as transactions) use them instead of doing things "manu-
-* ally" or you *will* experience unexpected behavior. To
-* avoid this we would have to parse every single SQL query
-* you execute which would *dramatically* decrease speed.
-* Do not run queries which are not transaction safe in
-* YADB transactions (eg. LOCK TABLES, database definition
-* language queries).
-* Don't append a semicolon (;) to your queries.
+ *******************************************************************
+* 
+* YADB is a small database abstraction layer (yet another ...)
+* designed for speed and small memory footprint. It aims towards
+* development of web applications and thus provides functions for
+* the common tasks of adding/editing/deleting records through a web
+* interface. Rows can be represented as objects for convenience.
+* In fact the main goal is convenience with database abstraction
+* being just a side-effect.
+* 
+* Might provide helper functions for easy creation of forms.
+* 
+* Requires PHP >= 4.3 with built in support for either the mysql
+* or (preferably if you use MySQL >= 4.1) the mysqli extension.
+* MySQL >= 4.1 is recommended. I recommend eAccelerator for
+* additional speed improvements.
+* 
+* YADB triggers standard PHP errors, most of them of type
+* E_USER_ERROR. Catch them with your own PHP error handler. YADB
+* does intentionally *not* provides means of caching as you should
+* do caching anyways - outside of YADB.
 * 
 * 
-* Knowledge base:
-* 
-* It's about 1.5 x faster to use
-*     $val = $arr['val'];
-*     if     (is_integer($val)) {}
-*     elseif (is_string ($val)) {}
-*     elseif (is_double ($val)) {}
-* than
-*     $val = getType($arr['val']);
-*     switch ($b) {
-*       case 'integer': break;
-*       case 'string' : break;
-*       case 'double' : break;
-*     }
-* Take care to test the common types first.
-* 
-* $a = (int)$a;
-* is slightly faster than
-* setType($a,'integer');
+* General rules:
+* - Don't run proprietary SQL queries or queries containing
+*   non-standard SQL extensions through this API or otherwise
+*   you wouldn't need YADB.
+* - Wherever YADB provides functions for specific tasks (such as
+*   transactions) use them instead of doing things "manually"
+*   or you *will* experience unexpected behavior. To
+*   avoid this we would have to parse every single SQL query
+*   you execute which would *dramatically* decrease speed.
+* - Do not run queries which are not transaction safe in YADB
+*   transactions (eg. LOCK TABLES, database definition
+*   language queries).
+* -  Don't append a semicolon (;) to your queries.
 * 
 * 
 * Example: Instantiate a new database connection:
 * $db = YADB_newConnection('mysql');
 * or
 * $db = YADB_Connection::factory('mysql');
-* 
-* 
-* Changelog:
-* 0.02.01    Bugfix: Parameter binding was not working with
-*            execute().
-* 0.02.00    First "informal" release.
-***********************************************************/
+\*******************************************************************/
 
 error_reporting(E_ALL);   // for debugging only
 
