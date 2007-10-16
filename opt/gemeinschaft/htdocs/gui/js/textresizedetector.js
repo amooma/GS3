@@ -1,170 +1,120 @@
-/** 
- *  @fileoverview TextResizeDetector
- * 
- *  Detects changes to font sizes when user changes browser settings
- *  <br>Fires a custom event with the following data:<br><br>
- * 	iBase  : base font size  	
- *	iDelta : difference in pixels from previous setting<br>
- *  	iSize  : size in pixel of text<br>
- *  
- *  * @author Lawrence Carvalho carvalho@uk.yahoo-inc.com
- * @version 1.0
- */
 
-/*
-Fixed by Philipp Kempgen
-*/
-
-/**
- * @constructor
- */
 var TextResizeDetector = function()
 {
-    var el  = null;
-	var iIntervalDelay  = 200;
-	var iInterval = null;
-	var iCurrSize = -1;
-	var iBase = -1;
- 	var aListeners = [];
+	var el = null;
+	var interval_delay = 250;
+	var interval = null;
+	var curr_size = -1;
+	var listeners = [];
 	
- 	var createControlElement = function()
- 	{
-	 	el = document.createElement('span');
-		el.id='textResizeControl';
-		el.innerHTML='&nbsp;';
-		el.style.position="absolute";
-		el.style.left="-9999px";
-		var elC = document.getElementById(TextResizeDetector.TARGET_ELEMENT_ID);
-		// insert before firstChild
-		if (elC)
-			elC.insertBefore(el,elC.firstChild);
-		iBase = iCurrSize = TextResizeDetector.getSize();
- 	};
-	
- 	function _stopDetector()
- 	{
-		window.clearInterval(iInterval);
-		iInterval=null;
-	};
-	function _startDetector()
+	function _create_control_el()
 	{
-		if (!iInterval) {
-			iInterval = window.setInterval('TextResizeDetector.detect()',iIntervalDelay);
+		el = document.createElement('span');
+		el.id = 'text_resize_control';
+		el.innerHTML = '&nbsp;';
+		el.style.position = 'absolute';
+		el.style.top = '0px';
+		el.style.left= '0px';
+		
+		var el_container = TextResizeDetector.target_el;
+		if ((typeof el_container) === 'string')
+			el_container = document.getElementById( TextResizeDetector.target_el );
+		if (el_container)
+			el_container.insertBefore( el, el_container.firstChild );
+		curr_size = TextResizeDetector.get_size();
+	};
+	
+	function _start_detector()
+	{
+		if (! interval) {
+			interval = window.setInterval('TextResizeDetector.detect()', interval_delay);
 		}
 	};
-		
+	function _stop_detector()
+ 	{
+		window.clearInterval( interval );
+		interval = null;
+	};
+	
 	function _detect()
 	{
-		var iNewSize = TextResizeDetector.getSize();
+		var new_size = TextResizeDetector.get_size();
 		
-		if(iNewSize!== iCurrSize) {
-			for (var 	i=0;i <aListeners.length;i++) {
-				var aListnr = aListeners[i];
-				var oArgs = {
-					iBase : iBase,
-					iDelta: ((iCurrSize!=-1) ? iNewSize - iCurrSize + 'px' : "0px"),
-					iSize : iCurrSize = iNewSize
+		if (new_size !== curr_size) {
+			var listener = null;
+			for (var i=0; i<listeners.length; i++) {
+				listener = listeners[i];
+				var args = {
+					'old': curr_size +'px',
+					'new': new_size +'px',
+					'diff': ((curr_size!=-1) ? new_size - curr_size + 'px' : '0px')
 				};
-				if (!aListnr.obj) {
-					aListnr.fn('textSizeChanged',[oArgs]);
-				}
-				else  {
-					aListnr.fn.apply(aListnr.obj,['textSizeChanged',[oArgs]]);
-				}
+				curr_size = new_size;
+				if (listener['obj'])
+					listener['fn'].apply( listener['obj'], ['textsizechanged',[args]] );
+				else
+				if (listener['fn'])
+					listener['fn']( 'textsizechanged', args );
 			}
- 		}
- 		return iCurrSize;
- 	};
- 	
-	var onAvailable = function()
+		}
+		return curr_size;
+	};
+	
+	function on_avail()
 	{
-		if (!TextResizeDetector.onAvailableCount_i ) {
-			TextResizeDetector.onAvailableCount_i =0;
-		}
+		if (! TextResizeDetector.on_avail_cnt )
+			TextResizeDetector.on_avail_cnt = 0;
 		
-		if (document.getElementById(TextResizeDetector.TARGET_ELEMENT_ID)) {
+		if (document.getElementById( TextResizeDetector.target_el )) {
 			TextResizeDetector.init();
-			if (TextResizeDetector.USER_INIT_FUNC){
-				TextResizeDetector.USER_INIT_FUNC();
-			}
-			TextResizeDetector.onAvailableCount_i = null;
+			if (TextResizeDetector.user_init_fn)
+				TextResizeDetector.user_init_fn();
+			TextResizeDetector.on_avail_cnt = 0;
 		}
-		else {
-			if (TextResizeDetector.onAvailableCount_i<600) {
-	  	 	    TextResizeDetector.onAvailableCount_i++;
-				setTimeout(onAvailable,200)
-			}
+		else if (TextResizeDetector.on_avail_cnt < 500) {
+			TextResizeDetector.on_avail_cnt++;
+			window.setTimeout( on_avail, 250 );
 		}
 	};
 	
-	setTimeout(onAvailable,500);
-
- 	return {
-		/*
-		 * Initializes the detector
-		 * 
-		 * @param {String} sId The id of the element in which to create the control element
-		 */
+	window.setTimeout( on_avail, 500 );
+	
+	return {
 		init: function()
 		{
-			createControlElement();		
-			_startDetector();
+			_create_control_el();
+			_start_detector();
 		},
 		
-		/**
-		 * Adds listeners to the ontextsizechange event. 
-		 * Returns the base font size
-		 * 
-		 */
-		addEventListener: function(fn,obj,bScope)
+		addEventListener: function( fn, obj )
 		{
-			aListeners[aListeners.length] = {
-				fn: fn,
-				obj: obj
+			listeners[listeners.length] = {
+				'fn' : fn,
+				'obj': obj
 			}
-			return iBase;
 		},
 		
-		/**
-		 * performs the detection and fires textSizeChanged event
-		 * @return the current font size
-		 * @type {integer}
-		 */
-		detect:function()
+		detect: function()
 		{
 			return _detect();
 		},
 		
-		/**
-		 * Returns the height of the control element
-		 * 
-		 * @return the current height of control element
-		 * @type {integer}
-		 */
-		getSize: function()
+		get_size: function()
 		{
-				var iSize;
-				return el.offsetHeight;
+			return el.offsetHeight;
 		},
 		
-		/**
-		 * Stops the detector
-		 */
-		stopDetector:function()
+		startDetector: function()
 		{
-			return _stopDetector();
+			_start_detector()
 		},
-		
-		/*
-		 * Starts the detector
-		 */
-		startDetector:function()
+		stop_detector: function()
 		{
-			return _startDetector();
+			_stop_detector();
 		}
- 	}
- }();
+	}
+}();
 
-TextResizeDetector.TARGET_ELEMENT_ID = 'doc';
-TextResizeDetector.USER_INIT_FUNC = null;
+TextResizeDetector.target_el = document;
+TextResizeDetector.user_init_fn = null;
 
