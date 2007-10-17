@@ -29,6 +29,16 @@
 * -none-
 ***********************************************************/
 
+#####################################################################
+#
+#                        !!!  WARNING  !!!
+#
+#   There seem to be stability problems with the mysqli extension.
+#   Sometimes Apache + mod_php + mysqli does not even output
+#   response headers.
+#
+#####################################################################
+
 if (!defined('YADB_DIR')) die("No direct access\n");
 
 @ini_set( 'mysql.trace_mode', 0 );
