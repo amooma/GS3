@@ -259,6 +259,7 @@ $DP_DIALTIMEOUT_IN          = 45;
 $DP_PRV_CALL_PREFIX         = '*7*';  # e.g. "*7*", "96", ...
                                       # must not collide with any other
                                       # extension!
+  //FIXME - fix e.ael to honor this setting
 
 
 
