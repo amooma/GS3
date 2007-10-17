@@ -32,6 +32,7 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 require_once( GS_DIR .'inc/remote-exec.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
+require_once( GS_DIR .'inc/find_executable.php' );
 
 
 $etc_asterisk = GS_DIR .'etc/asterisk/';
@@ -134,27 +135,42 @@ else {
 }
 
 
+$asterisk = find_executable('asterisk',
+	array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/'));
+if (! $asterisk) {
+	echo "asterisk not found!\n";
+	die(1);
+}
+
 if ($only_dialplan) {
 	echo "Reloading only the Dialplan ...\n";
 	$start_ast = false;
 	$err=0; $out=array();
-	@exec( 'asterisk -rx \'extensions reload\' 1>>/dev/null', $out, $err );
+	@exec( $asterisk .' -rx \'extensions reload\' 1>>/dev/null', $out, $err );
 	$start_ast = $start_ast || ($err != 0);
 	$err=0; $out=array();
-	@exec( 'asterisk -rx \'ael reload\' 1>>/dev/null', $out, $err );
+	@exec( $asterisk .' -rx \'ael reload\' 1>>/dev/null', $out, $err );
 	$start_ast = $start_ast || ($err != 0);
 } else {
 	echo "Reloading Asterisk ...\n";
 	$err=0; $out=array();
-	@exec( 'asterisk -rx \'reload\' 1>>/dev/null', $out, $err );
+	@exec( $asterisk .' -rx \'reload\' 1>>/dev/null', $out, $err );
 	$start_ast = ($err != 0);
 }
 
 if ($start_ast) {
 	echo "Asterisk isn't running. Starting Asterisk ...\n";
+	
+	$safe_asterisk = find_executable('safe_asterisk',
+		array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/'));
+	if (! $safe_asterisk) {
+		echo "safe_asterisk not found!\n";
+		die(1);
+	}
+	
 	$err=0; $out=array();
 	//@exec( 'asterisk 1>>/dev/null', $out, $err );
-	@exec( 'safe_asterisk 1>>/dev/null', $out, $err );
+	@exec( $safe_asterisk .' 1>>/dev/null', $out, $err );
 	if ($err != 0) {
 		echo "Failed to start Asterisk!\n";
 		die(1);
