@@ -204,7 +204,8 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
       'routes'       => array('title' => __('Routen &amp; LCR')),//TRANSLATE ME
       'testroute'    => array('title' => __('Routing-Test')),   //TRANSLATE ME
       'ivrs'         => array('title' => __('IVRs')),           //TRANSLATE ME
-      'calls'        => array('title' => __('Verbindungen'))
+      'calls'        => array('title' => __('Verbindungen')),
+      'reload'       => array('title' => __('Reload'))          //TRANSLATE ME
    )
 );
 
