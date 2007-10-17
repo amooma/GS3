@@ -330,5 +330,5 @@ if (! $edit) {
 <br />
 <p>
 	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/info.png" />
-	<small><?php echo __('&Auml;nderungen ben&ouml;tigen einen Reload von Asterisk'); ?></small>
+	<small><?php echo __('&Auml;nderungen ben&ouml;tigen einen Dialplan-Reload und Reload von Asterisk'); ?></small>
 </p>
