@@ -384,7 +384,12 @@ if (!$edit_host) {
 </tbody>
 </table>
 
-<br /><br />
+<br />
+<p>
+	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/info.png" />
+	<small><?php echo __('&Auml;nderungen ben&ouml;tigen einen Dialplan-Reload und Reload von Asterisk'); ?></small>
+</p>
+
 <p style="max-width:500px;"><small><sup>[1]</sup> <?php echo __('Dies ist die Adresse, die ggf. per Stonith &uuml;bernommen werden w&uuml;rde. (Die dynamische Adresse hat hier nichts mit DHCP zu tun.)'); ?></small></p>
 
 <p style="max-width:500px;"><small><sup>[2]</sup> <?php echo __('Nicht konfiguriert.'); ?></small></p>
