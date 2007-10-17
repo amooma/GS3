@@ -116,10 +116,16 @@ while (! @fEof( $sock ) && time() < $tStart+$maxtime) {
 			}
 			*/
 			if (@$info['l']) {
-				if (subStr($info['l'],0,3) != '*7*')
-					echo ",l:'". $info['l'] ."'";
-				else
+				if (subStr($info['l'],0,3) === '*7*') {
 					echo ",l:'". 'privat' ."'";
+				} else {
+					if (preg_match('/[^0-9*#+]/', $info['l'])) {
+						// e.g. "offer" when offered call completion
+						echo ",l:'". "*" ."'";
+					} else {
+						echo ",l:'". $info['l'] ."'";
+					}
+				}
 			}
 			echo "}";
 			++$i;
