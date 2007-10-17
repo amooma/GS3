@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 206); // = 0.02.06
+define('YADB_VERS', 300); // = 0.03.00
 
 /***********************************************************
 * Columns flags:
@@ -172,7 +172,7 @@ else
 function & YADB_newConnection( $dbType )
 {
 	static $lastDb = '';  // last db driver loaded for circumvention of include_once() in many cases
-	static $drivers = array( 'mysql' );  // supported drivers
+	static $drivers = array( 'mysql', 'mysqli' );  // supported drivers
 	
 	$false = false;  // we must return a reference, not a value
 	if (! in_array( $dbType, $drivers )) {
