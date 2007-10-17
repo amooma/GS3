@@ -74,14 +74,10 @@ if (! function_exists('mb_convert_case')) {
 function mb_convert_case( $str, $mode, $enc='' )
 {
 	switch ($mode) {
-		case 1 :  # == MB_CASE_LOWER
-			return         strToLower($str) ;
-		case 0 :  # == MB_CASE_UPPER
-			return         strToUpper($str) ;
-		case 2 :  # == MB_CASE_TITLE
-			return ucWords(strToLower($str));
-		default:
-			return                    $str  ;
+		case MB_CASE_LOWER: return         strToLower($str) ;
+		case MB_CASE_UPPER: return         strToUpper($str) ;
+		case MB_CASE_TITLE: return ucWords(strToLower($str));
+		default           : return                    $str  ;
 	}
 }
 }
