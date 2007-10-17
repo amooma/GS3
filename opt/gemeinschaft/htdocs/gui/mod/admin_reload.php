@@ -50,37 +50,44 @@ echo '</h2>', "\n";
 <input type="hidden" name="action" value="dialplan-reload" />
 <input type="submit" value="<?php echo __('Reload Dialplan'); ?>" />
 </form>
+&nbsp;
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>" class="inline">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="reload" />
 <input type="submit" value="<?php echo __('Reload Asterisk'); ?>" />
 </form>
+&nbsp;
 
 <br />
 <hr size="1" />
 
-<pre style="margin:0.9em 0.1em; padding:0.3em; background:#eee;">
 <?php
 
 
 @flush();
-@ob_implicit_flush(1);
 $action = @$_REQUEST['action'];
 
 if ($action == 'dialplan-reload') {
+	echo '<pre style="margin:0.9em 0.1em; padding:0.3em; background:#eee;">';
 	$err=0;
+	@ob_implicit_flush(1);
 	passThru( 'sudo '. qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan', $err );
+	@ob_implicit_flush(0);
 	echo "\n";
-	echo '&rarr; <b>', ($err===0 ? 'OK' : 'ERR'), '</b>';
+	echo '&rarr; <b>', ($err===0 ? 'OK':'ERR') ,'</b>';
+	echo '</pre>';
 }
 elseif ($action == 'reload') {
+	echo '<pre style="margin:0.9em 0.1em; padding:0.3em; background:#eee;">';
 	$err=0;
+	@ob_implicit_flush(1);
 	passThru( 'sudo '. qsa(GS_DIR.'sbin/start-asterisk'), $err );
+	@ob_implicit_flush(0);
 	echo "\n";
-	echo '&rarr; <b>', ($err===0 ? 'OK' : 'ERR'), '</b>';
+	echo '&rarr; <b>', ($err===0 ? 'OK':'ERR') ,'</b>';
+	echo '</pre>';
 }
 
 
 ?>
-</pre>
