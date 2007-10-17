@@ -137,14 +137,15 @@ class YADB_Connection_mysql extends YADB_Connection
 			) $clientFlags += MYSQL_CLIENT_COMPRESS;
 			*/
 			
-			if (! @$this->_drvOpts['reuse'])
+			if (! @$this->_drvOpts['reuse']) {
 				$this->_conn = @ mysql_connect( $host, $this->_user, $this->_pwd, true, $clientFlags );
-			// always force a new connection because we might
-			// experience unexpected behaviour if we re-used
-			// an existing one - especially with transactions
-			// or different character sets
-			else
+				// always force a new connection because we might
+				// experience unexpected behaviour if we re-used
+				// an existing one - especially with transactions
+				// or different character sets
+			} else {
 				$this->_conn = @ mysql_pConnect( $host, $this->_user, $this->_pwd, $clientFlags );
+			}
 			
 		} elseif (YADB_PHPVER >= 40200) {
 			if (! @$this->_drvOpts['reuse'])
