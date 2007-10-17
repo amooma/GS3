@@ -27,7 +27,7 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
-//include_once( GS_DIR .'inc/mb_str_pad.php' );
+include_once( GS_DIR .'inc/mb_str_pad.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -152,7 +152,7 @@ $cs = array(
 		'PROV_AUTO_ADD_PHONE_HOST',
 		'PROV_DIAL_LOG_LIFE'
 	),
-	'Provisioning Snom' => array(
+	'Snom Provisioning' => array(
 		'SNOM_PROV_ENABLED',
 		'SNOM_PROV_HTTP_USER',
 		//'SNOM_PROV_HTTP_PASS',
@@ -181,7 +181,7 @@ foreach ($cs as $catkey => $cat) {
 	//echo '<legend>', _pretty_gs_const_name($catkey) ,'</legend>' ,"\n";
 	
 	echo '<tr>' ,"\n";
-	echo '<th colspan="2" class="transp"><br /><h3>', _pretty_gs_const_name($catkey) ,'</h3></th>' ,"\n";
+	echo '<th colspan="2" class="transp"><br /><h3>', $catkey ,'</h3></th>' ,"\n";
 	echo '</tr>' ,"\n";
 	
 	foreach ($cat as $key) {
