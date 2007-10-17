@@ -103,3 +103,10 @@ if (empty($ifconfig)) {
 
 
 ?>
+
+
+<br />
+<p>
+	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/info.png" />
+	<small><?php echo __('&Auml;nderungen der IP-Adressen ben&ouml;tigen einen Dialplan-Reload und Reload von Asterisk'); ?></small>
+</p>
