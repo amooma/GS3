@@ -171,9 +171,9 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 				
 				echo '&nbsp;',"\n";
 				
-				echo '<button type="reset" title="', __('Abbrechen'), '" class="plain">';
+				echo '<a href="', gs_url($SECTION,$MODULE) ,'"><button type="button" title="', __('Abbrechen'), '" class="plain">';
 				echo '<img alt="', __('Abbrechen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/cancel.png" />';
-				echo '</button>' ,"\n";
+				echo '</button></a>' ,"\n";
 				
 				echo '</td>',"\n";
 				
