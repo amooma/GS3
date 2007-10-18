@@ -34,6 +34,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
+require_once( GS_DIR .'inc/find_executable.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -48,14 +49,21 @@ echo '</h2>', "\n";
 <form method="post" action="<?php echo GS_URL_PATH; ?>" class="inline">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="dialplan-reload" />
-<input type="submit" value="<?php echo __('Reload Dialplan'); ?>" />
+<input type="submit" value="<?php echo __('Dialplan neu laden'); ?>" />
 </form>
 &nbsp;
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>" class="inline">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="reload" />
-<input type="submit" value="<?php echo __('Reload Asterisk'); ?>" />
+<input type="submit" value="<?php echo __('Asterisk neu laden'); ?>" />
+</form>
+&nbsp;
+
+<form method="post" action="<?php echo GS_URL_PATH; ?>" class="inline">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<input type="hidden" name="action" value="shutdown" />
+<input type="submit" value="<?php echo __('Ausschalten'); ?>" />
 </form>
 &nbsp;
 
@@ -65,10 +73,10 @@ echo '</h2>', "\n";
 <?php
 
 
-@flush();
 $action = @$_REQUEST['action'];
 
-if ($action == 'dialplan-reload') {
+if ($action === 'dialplan-reload') {
+	@flush();
 	echo '<pre style="margin:0.9em 0.1em; padding:0.3em; background:#eee;">';
 	$err=0;
 	@ob_implicit_flush(1);
@@ -78,7 +86,9 @@ if ($action == 'dialplan-reload') {
 	echo '&rarr; <b>', ($err===0 ? 'OK':'ERR') ,'</b>';
 	echo '</pre>';
 }
-elseif ($action == 'reload') {
+
+elseif ($action === 'reload') {
+	@flush();
 	echo '<pre style="margin:0.9em 0.1em; padding:0.3em; background:#eee;">';
 	$err=0;
 	@ob_implicit_flush(1);
@@ -87,6 +97,63 @@ elseif ($action == 'reload') {
 	echo "\n";
 	echo '&rarr; <b>', ($err===0 ? 'OK':'ERR') ,'</b>';
 	echo '</pre>';
+}
+
+elseif ($action === 'shutdown') {
+?>
+<form method="post" action="<?php echo GS_URL_PATH; ?>">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<input type="hidden" name="action" value="shutdown2" />
+<br />
+<span class="text" style="font-size:1.8em; color:#e00;">
+<?php echo __('Wollen Sie die Anlage wirklich ausschalten?'); ?>
+</span><br />
+<br />
+<input type="checkbox" name="confirm" id="ipt-shutdown-confirm" value="yes" /> <label for="ipt-shutdown-confirm"><?php echo __('Ja, ich wei&szlig; was ich tue'); ?></label><br />
+<br />
+<a href="<?php echo gs_url($SECTION,$MODULE); ?>"><button type="button"><?php echo __('Abbrechen'); ?></button></a>
+&nbsp;
+<button type="submit" style="color:#a00;"><?php echo __('Runterfahren'); ?></button>
+</form>
+<?php
+}
+
+elseif ($action === 'shutdown2') {
+	if (@$_REQUEST['confirm'] === 'yes') {
+		$shutdown = find_executable('shutdown',
+			array('/sbin/', '/bin/') );
+		if (! $shutdown) {
+			echo 'shutdown not found.' ,"\n";
+		} else {
+			@flush();
+			@ob_implicit_flush(1);
+			echo '<pre style="margin:0.9em 0.1em; padding:0.3em; background:#eee;">';
+			
+			// stop asterisk first so it can finish writing to mysql:
+			$err=0;
+			@passThru( 'sudo /etc/init.d/asterisk stop', $err );
+			
+			/*
+			if (file_exists( '/etc/init.d/mysql-ndb' )) {
+				$err=0;
+				@passThru( 'sudo /etc/init.d/mysql-ndb stop', $err );
+			}
+			if (file_exists( '/etc/init.d/mysql' )) {
+				$err=0;
+				@passThru( 'sudo /etc/init.d/mysql stop', $err );
+			}
+			if (file_exists( '/etc/init.d/mysqld' )) {
+				$err=0;
+				@passThru( 'sudo /etc/init.d/mysqld stop', $err );
+			}
+			*/
+			
+			$err=0;
+			passThru( $shutdown .' -h -p', $err );
+			
+			echo '</pre>';
+		}
+	}
 }
 
 
