@@ -336,8 +336,7 @@ context to-internal-users {
 		}
 	}
 	
-	hint(SIP/2001&SIP/555) *8*00001 => {}
-	//FIXME
+	//hint(SIP/2001&SIP/555) *8*00001 => {}
 	
 	
 	//regexten _*8. => NoOp(it's a pattern!);
