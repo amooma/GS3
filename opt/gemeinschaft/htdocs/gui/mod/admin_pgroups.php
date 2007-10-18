@@ -319,8 +319,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 			
 			echo '<td>',"\n";
 			
-			echo '<a href="', gs_url($SECTION, 'users'), '&amp;edit=', $r['user'], '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-			
 			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;pudelete=', $r['user'], '&amp;group=', $group ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			
 			echo '</td>',"\n";
