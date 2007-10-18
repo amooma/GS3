@@ -44,6 +44,8 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
+$shutdown_enabled = gs_get_conf('GS_GUI_SHUTDOWN_ENABLED');
+
 ?>
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>" class="inline">
@@ -60,12 +62,14 @@ echo '</h2>', "\n";
 </form>
 &nbsp;
 
+<?php if ($shutdown_enabled) { ?>
 <form method="post" action="<?php echo GS_URL_PATH; ?>" class="inline">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="shutdown" />
 <input type="submit" value="<?php echo __('Ausschalten'); ?>" />
 </form>
 &nbsp;
+<?php } ?>
 
 <br />
 <hr size="1" />
@@ -99,7 +103,7 @@ elseif ($action === 'reload') {
 	echo '</pre>';
 }
 
-elseif ($action === 'shutdown') {
+elseif ($action === 'shutdown' && $shutdown_enabled) {
 ?>
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
@@ -118,7 +122,7 @@ elseif ($action === 'shutdown') {
 <?php
 }
 
-elseif ($action === 'shutdown2') {
+elseif ($action === 'shutdown2' && $shutdown_enabled) {
 	if (@$_REQUEST['confirm'] === 'yes') {
 		$shutdown = find_executable('shutdown',
 			array('/sbin/', '/bin/') );
