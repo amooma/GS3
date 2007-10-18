@@ -49,7 +49,11 @@ if (! is_array($our_ids) || count($our_ids)<1) die();
 $db = gs_db_slave_connect();
 if (! $db) die();
 
+
+# hints for extensions
+#
 //$rs = $db->execute( 'SELECT `name` FROM `ast_sipfriends` ORDER BY LENGTH(`name`), `name`' );
+echo "// hints for user extensions (auto-generated):\n";
 $rs = $db->execute(
 'SELECT `s`.`name`
 FROM
@@ -57,12 +61,53 @@ FROM
 	`users` `u` ON (`u`.`id`=`s`.`_user_id`)
 WHERE `u`.`host_id` IN ('. implode(',', $our_ids) .')'
 );
-if (! $rs) die();
-while ($r = $rs->fetchRow()) {
-	echo 'hint(SIP/', $r['name'], ') ', $r['name'], ' => {}', "\n";
-	echo 'hint(SIP/', $r['name'], ') ***', $r['name'], ' => {}', "\n";
+if ($rs) {
+	while ($r = $rs->fetchRow()) {
+		echo 'hint(SIP/', $r['name'] ,') ', $r['name'] ,' => {}', "\n";
+		echo 'hint(SIP/', $r['name'] ,') ***', $r['name'] ,' => {}', "\n";
+	}
+} else {
+	echo "//ERROR\n";
 }
+echo "// end\n";
+echo "\n";
 
+
+# hints for pickup groups
+#
+echo "// hints for pickup groups (auto-generated):\n";
+$rs = $db->execute(
+'SELECT
+	`pg`.`id` `pg_id`,
+	GROUP_CONCAT(`s`.`name` SEPARATOR \',\') `pg_members`
+FROM
+	`pickupgroups` `pg` JOIN
+	`pickupgroups_users` `pu` ON (`pu`.`group_id`=`pg`.`id`) JOIN
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`pu`.`user_id`) JOIN
+	`users` `u` ON (`u`.`id`=`pu`.`user_id`)
+WHERE
+	`u`.`host_id` IN (1)
+GROUP BY `pg`.`id`'
+);
+if ($rs) {
+	while ($r = $rs->fetchRow()) {
+		$members = explode(',', $r['pg_members']);
+		if (count($members) < 1) continue;
+		
+		$devices = array();
+		foreach ($members as $ext) {
+			$ext = preg_replace('/[^0-9*a-z\-_]/iS', '', $ext);
+			if ($ext == '') continue;
+			$devices[] = 'SIP/'.$ext;
+		}
+		if (count($devices) < 1) continue;
+		
+		echo 'hint(', implode('&', $devices), ') *8*', str_pad($r['pg_id'],5,'0',STR_PAD_LEFT), ' => {}', "\n";
+	}
+} else {
+	echo "//ERROR\n";
+}
+echo "// end\n";
 echo "\n";
 
 
