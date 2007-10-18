@@ -318,6 +318,15 @@ context to-internal-users {
 			Verbose(1,### User ${user_name} tries to pickup group ${pmark});
 			Pickup(${pmark}@PICKUPMARK);
 			//FIXME - this probably does not work across nodes
+			
+			// if we got here, the pickup attempt was not successful
+			// (maybe because there wasn't even a call)
+			NoCDR();
+			// 31 = AST_CAUSE_NORMAL_UNSPECIFIED => SIP 480 Temporarily unavailable
+			Hangup(31);
+		}
+		else {
+			NoCDR();
 		}
 	}
 	
@@ -327,7 +336,7 @@ context to-internal-users {
 	
 	_*8*. => {
 		if ("${PICKUPMARK}" != "") {
-			//NoCDR();
+			NoCDR();
 			Verbose(1,### Call to pickup group ${EXTEN:3});
 		}
 		else {
@@ -426,6 +435,10 @@ context to-internal-users {
 			&hangup-proper-status();
 		}
 	}
+	
+	
+	// hints moved here from context to-internal-users-self
+	#exec "/opt/gemeinschaft/etc/asterisk/e-internal-hints.ael.php"
 }
 
 
@@ -999,7 +1012,8 @@ context to-internal-users-self {
 	}
 	
 	h => {
-		ForkCDR();
+		ResetCDR(w);
+		NoCDR();
 		if ("${confnum}" != "") {
 			Verbose(1,### Participant "${CALLERID(all)}" has left conference ${confprefix}${confnum});
 			MeetMeCount(${confnum},cnt);
@@ -1033,8 +1047,6 @@ context to-internal-users-self {
 		}
 	}
 	
-	
-	#exec "/opt/gemeinschaft/etc/asterisk/e-internal-hints.ael.php"
 }
 
 context program-cc {
