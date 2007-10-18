@@ -140,6 +140,7 @@ WHERE
 	
 	if (is_array($upgroups)) {
 		foreach ($upgroups as $upgroup) {
+			if ($upgroup < 1) continue;
 			$ret = gs_pickupgroup_user_add( $upgroup, $edit_user );	
 			if (isGsError( $ret )) echo $ret->getMsg();
 		}
@@ -382,18 +383,17 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		<td>
 			<input type="text" name="uemail" value="" size="25" maxlength="50" />
 		</td>
-		
 		<td>
 	<?php
-			echo '<select name="uhost">';
+			echo '<select name="uhost">',"\n";
 			foreach ($hosts as $key => $host) {
-				echo '<option value="',$key,"\">$key ($host)</option>\n";
+				echo '<option value="',$key,'">', $key ,' (', htmlEnt($host) ,')</option>',"\n";
 			}
-			echo "</select></td>\n";
+			echo '</select>',"\n";
 	?>
 		</td>
 		<td>
-		
+			&nbsp;
 		</td>
 		<td>
 			<button type="submit" title="<?php echo __('Benutzer anlegen'); ?>" class="plain">
@@ -585,13 +585,13 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\
 		<th><?php echo __('Host'); ?>:</th>
 		<td>
 <?php
-		echo "<select name=\"uhost\" > ";
+		echo '<select name="uhost">',"\n";
 		foreach ($hosts as $key => $host) {
-			echo '<option value="'.$key."\" ";
-			if ($r['hid'] == $key) echo 'selected=\"selected\" ';
-			echo ">$key ($host)</option>\n";
+			echo '<option value="',$key,'"';
+			if ($r['hid'] == $key) echo ' selected="selected"';
+			echo '>', $key ,' (', htmlEnt($host) ,')</option>',"\n";
 		}
-		echo "</select></td>\n";
+		echo '</select>',"\n";
 ?>
 		</td>
 	</tr>
