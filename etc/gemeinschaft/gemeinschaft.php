@@ -122,6 +122,9 @@ $GUI_MON_PEERS_ENABLED      = false;
   # needs LDAP with Kostenstelle or a similar mechanism, see
   # gui_monitor_which_peers() in htdocs/gui/inc/permissions.php
 
+$GUI_SHUTDOWN_ENABLED       = false;
+  # enable shutdown via web interface?
+
 
 /***********************************************************
 *    EXTERNAL NUMBERS BACKEND
