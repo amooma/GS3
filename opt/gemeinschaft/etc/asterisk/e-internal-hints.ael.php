@@ -45,9 +45,11 @@ echo "\n";
 
 $our_ids = @ gs_get_listen_to_ids();
 if (! is_array($our_ids) || count($our_ids)<1) die();
+//FIXME - should probably write a message to gs_log() before dying
 
 $db = gs_db_slave_connect();
 if (! $db) die();
+//FIXME - should probably write a message to gs_log() before dying
 
 
 # hints for extensions
