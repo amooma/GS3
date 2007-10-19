@@ -58,8 +58,10 @@ macro check-valid-extension( mext ) {
 		
 		if ("${is_from_gateway}" = "1") {
 			Verbose(1,### Don't allow call from the gateway to go to the gateway again - extension: ${mext});
-			Congestion(3);
-			Hangup();
+			//Congestion(3);
+			// 2 = AST_CAUSE_NO_ROUTE_TRANSIT_NET => SIP 404 Not Found
+			Set(PRI_CAUSE=2);
+			Hangup(2);
 		}
 		
 		if ("${fake_ringing}" = "1")
@@ -246,27 +248,24 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 	_Z. => {
-		if ("${is_from_gateway}" = "1" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
-			// not sure why this works because the "parent" context was
-			// "from-gateway" but obviously we are now in context
-			// "to-internal-users". well, it works :-)
-			Verbose(1,### Incoming call from the gateway to ${EXTEN});
-			Set(__is_from_gateway=1);
+		if ("${is_from_gateway}" = "1") {
+			Verbose(1,### Incoming call from a gateway to ${EXTEN});
+			//Set(__is_from_gateway=1);
 		}
-		else if ("${CHANNEL(channeltype)}" = "SIP") {
-			// this needs to be nested because Asterisk would otherwise complain
-			// ("function_sipchaninfo_read: This function can only be used on SIP channels")
-			if ("${SIPCHANINFO(peername)}" = "gateway") {
-				Verbose(1,### Incoming call from the gateway to ${EXTEN});
-				Set(__is_from_gateway=1);
-			}
-			else {
-				Set(__is_from_gateway=);
-			}
-		}
-		else {
-			Set(__is_from_gateway=);
-		}
+		//else if ("${CHANNEL(channeltype)}" = "SIP") {
+		//	// this needs to be nested because Asterisk would otherwise complain
+		//	// ("function_sipchaninfo_read: This function can only be used on SIP channels")
+		//	if ("${SIPCHANINFO(peername)}" = "gateway") {
+		//		Verbose(1,### Incoming call from a gateway to ${EXTEN});
+		//		Set(__is_from_gateway=1);
+		//	}
+		//	else {
+		//		Set(__is_from_gateway=);
+		//	}
+		//}
+		//else {
+		//	Set(__is_from_gateway=);
+		//}
 		&check-valid-extension(${EXTEN});
 		if ("${dial_to_node}" = "") {
 			Verbose(1,### Extension ${EXTEN} is at node: SELF);
@@ -373,7 +372,8 @@ context to-internal-users {
 		}
 		Verbose(1,### Incoming call to ${boss}\, direct dial);
 		
-		if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
+		//if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
+		if ("${is_from_gateway}" = "1") {
 			Verbose(1,### No direct dial from gateway);
 			Hangup();
 		}
@@ -410,7 +410,8 @@ context to-internal-users {
 			Hangup();
 		}
 		Verbose(1,### Incoming call to mailbox ${box}\, direct dial);
-		if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
+		//if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
+		if ("${is_from_gateway}" = "1") {
 			Verbose(1,### No direct dial from gateway);
 			Hangup();
 		}
@@ -439,6 +440,13 @@ context to-internal-users {
 	
 	// hints moved here from context to-internal-users-self
 	#exec "/opt/gemeinschaft/etc/asterisk/e-internal-hints.ael.php"
+	
+	//FIXME - this extension is just for testing. needs to be removed!
+	_9. => {
+		Verbose(1,#################### GATEWAY SIM ######################);
+		Dial(Local/${EXTEN:1}@from-gg-pstn);
+		Hangup();
+	}
 }
 
 
@@ -454,6 +462,7 @@ context to-internal-users-self {
 	_***-Z. => {
 		Set(boss=${EXTEN:4});
 		Set(origext=${boss});
+		Set(CALLERID(dnid)=${boss});
 		Verbose(1,### Secretary (${user_name}) to boss (${boss}) direct dial);
 		Set(__is_call_from=internal);
 		// get ringer
@@ -794,13 +803,14 @@ context to-internal-users-self {
 			Set(CALLERID(name)=Queue ${EXTEN});
 			if ("${CALLERID(num)}" = "")
 				Set(CALLERID(num)=${EXTEN});
-			Answer();
-			Wait(0.5);
+			
 			Set(ring_instead_of_moh=);
 			Set(all_busy=);
 			
 			// SONDERFALL HACK
 			//if ("${EXTEN}" = "5000") {
+			//	Answer();
+			//	Wait(0.5);
 			//	Set(ring_instead_of_moh=r);
 			//	Set(queuetimeout=30);
 			//	Verbose(1,### Sonderfall fuer Queue ${EXTEN} - klingeln statt MOH\, timeout: ${queuetimeout});
@@ -823,6 +833,8 @@ context to-internal-users-self {
 			// ENDE SONDERFALL HACK
 			
 			if ("${all_busy}" != "1") {
+				Answer();
+				Wait(0.5);
 				Set(queue_entertime=${EPOCH});
 				Queue(${EXTEN},i${ring_instead_of_moh},,,${queuetimeout});
 				Set(queue_waittime=$[${EPOCH}-${queue_entertime}]);
@@ -916,7 +928,9 @@ context to-internal-users-self {
 			} else {
 				Verbose(1,### We are not a sub-system. Hang up.);
 			}
-			Hangup();
+			// 1 = AST_CAUSE_UNALLOCATED => SIP 404 Not Found
+			Set(PRI_CAUSE=1);
+			Hangup(1);
 		
 		//}
 		
