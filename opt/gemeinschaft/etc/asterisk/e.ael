@@ -42,11 +42,20 @@ globals {
 macro hangup-proper-status() {
 	Verbose(1,### DIALSTATUS: ${DIALSTATUS});
 	if ("${DIALSTATUS}" = "BUSY") {
-		Busy(3);
+		//Busy(3);
+		// 17 = AST_CAUSE_USER_BUSY => SIP 486 Busy here
+		Set(PRI_CAUSE=17);
+		Hangup(17);
 	} else if ("${DIALSTATUS}" = "CHANUNAVAIL") {
-		Congestion(3);
+		//Congestion(3);
+		// 27 = AST_CAUSE_DESTINATION_OUT_OF_ORDER => SIP 502 Bad Gateway
+		Set(PRI_CAUSE=27);
+		Hangup(27);
 	} else if ("${DIALSTATUS}" = "CONGESTION") {
-		Congestion(3);
+		//Congestion(3);
+		// 34 = AST_CAUSE_CONGESTION => SIP 503 Service Unavailable
+		Set(PRI_CAUSE=34);
+		Hangup(34);
 	}
 	Hangup();
 }
@@ -473,29 +482,38 @@ context vm-ann-rec {
 
 
 //---------------------------------------------------------------------
-//  From the Gateway
+//  From the gateways
 //---------------------------------------------------------------------
 
-context from-gateway {
+// see hangup_cause2sip() in chan_sip.c for a list of Q.931 cause
+// codes (see causes.h) which can be translated into SIP codes
+
+// wrapper context to be used by all of the gateways
+context from-gateways {
 	
-	s => {
-		Verbose(1,### Incoming call from the gateway. CallerID: ${CALLERID(all)});
-	}
 	includes {
 		//voicemail-any;        // voicemail main (own mailbox)
 		//to-internal-nobody;   // internal phones (nobodies)
 		ivrs;                 //FIXME IVR demo
 		to-internal-users;    // internal phones (users)
 	}
-	// alle Kontexte / Extensions die hier eingebunden werden muessen
-	// darauf achten, dass die Extension - falls das Gateway ein ISDN-
-	// Anschluss ist - mit der vorangestellten Kopfnummer reinkommen
-	// koennen!
+	i => {
+		// no matching extension found in any of the included contexts.
+		// this is unlikely to happen as there is an extension for the
+		// internal users which catches almost anything.
+		Verbose(1,### No matching extension found for "${did_number}");
+		// 1 = AST_CAUSE_UNALLOCATED => SIP 404 Not Found
+		Set(PRI_CAUSE=1);
+		Hangup(1);
+	}
 }
+
+// contexts for incoming calls from the gateway groups:
+#exec "/opt/gemeinschaft/etc/asterisk/e-gategroups-in.ael.php"
 
 
 //---------------------------------------------------------------------
-//  To the Gateway
+//  To external
 //---------------------------------------------------------------------
 
 context to-gateway {
