@@ -5431,7 +5431,7 @@ CREATE TABLE `ast_queues` (
 
 LOCK TABLES `ast_queues` WRITE;
 /*!40000 ALTER TABLE `ast_queues` DISABLE KEYS */;
-INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',NULL,NULL,10,'no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','strict',NULL,NULL,NULL,'no',NULL,0,NULL);
+INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',NULL,NULL,10,'no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','yes',NULL,NULL,NULL,'no',NULL,0,NULL);
 /*!40000 ALTER TABLE `ast_queues` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5721,9 +5721,18 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `gate_grps`;
 CREATE TABLE `gate_grps` (
   `id` smallint(5) unsigned NOT NULL auto_increment,
+  `name` varchar(20) character set ascii NOT NULL,
   `title` varchar(50) collate utf8_unicode_ci NOT NULL,
   `type` varchar(20) character set ascii NOT NULL default 'balance',
+  `allow_in` tinyint(1) unsigned NOT NULL default '1',
+  `in_dest_search` varchar(50) character set ascii collate ascii_bin NOT NULL,
+  `in_dest_replace` varchar(25) character set ascii collate ascii_bin NOT NULL,
+  `in_cid_search` varchar(50) character set ascii collate ascii_bin NOT NULL,
+  `in_cid_replace` varchar(25) character set ascii collate ascii_bin NOT NULL,
+  `out_cid_search` varchar(50) character set ascii collate ascii_bin NOT NULL,
+  `out_cid_replace` varchar(25) character set ascii collate ascii_bin NOT NULL,
   PRIMARY KEY  (`id`),
+  UNIQUE KEY `name` (`name`),
   KEY `title` (`title`(8))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -5733,12 +5742,12 @@ CREATE TABLE `gate_grps` (
 
 LOCK TABLES `gate_grps` WRITE;
 /*!40000 ALTER TABLE `gate_grps` DISABLE KEYS */;
-INSERT INTO `gate_grps` VALUES (5,'SIP-ISDN-GWs intern','balance');
-INSERT INTO `gate_grps` VALUES (6,'ISDN (PRI)','balance');
-INSERT INTO `gate_grps` VALUES (7,'GSM-GW T-Mobile','balance');
-INSERT INTO `gate_grps` VALUES (8,'GSM-GW Vodafone','balance');
-INSERT INTO `gate_grps` VALUES (9,'SIP-GW (sipgate.de)','balance');
-INSERT INTO `gate_grps` VALUES (10,'SIP-GW (dus.net)','balance');
+INSERT INTO `gate_grps` VALUES (5,'campus','SIP-ISDN-GWs intern','balance',1,'','','','','','');
+INSERT INTO `gate_grps` VALUES (6,'pstn','ISDN (PRI)','balance',1,'^(?:(?:0049|0)251)?702(.*)','$1','','','^(.*)','0251702$1');
+INSERT INTO `gate_grps` VALUES (7,'gsm-t-mobile','GSM-GW T-Mobile','balance',0,'','','','','','');
+INSERT INTO `gate_grps` VALUES (8,'gsm-vodafone','GSM-GW Vodafone','balance',0,'','','','','','');
+INSERT INTO `gate_grps` VALUES (9,'sipgate','SIP-GW (sipgate.de)','balance',0,'','','','','','');
+INSERT INTO `gate_grps` VALUES (10,'dusnet','SIP-GW (dus.net)','balance',0,'','','','','','');
 /*!40000 ALTER TABLE `gate_grps` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5754,7 +5763,6 @@ CREATE TABLE `gates` (
   `name` varchar(25) character set ascii NOT NULL,
   `title` varchar(50) collate utf8_unicode_ci NOT NULL,
   `allow_out` tinyint(1) unsigned NOT NULL default '1',
-  `allow_in` tinyint(1) unsigned NOT NULL,
   `dialstr` varchar(50) character set ascii NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `name` (`name`(10)),
@@ -5768,11 +5776,11 @@ CREATE TABLE `gates` (
 
 LOCK TABLES `gates` WRITE;
 /*!40000 ALTER TABLE `gates` DISABLE KEYS */;
-INSERT INTO `gates` VALUES (5,6,'zap','gw_5_zaptel_span_1','Zaptel Span 1',1,0,'Zap/r1/{number}');
-INSERT INTO `gates` VALUES (6,6,'zap','gw_6_zaptel_span_2','Zaptel Span 2',1,0,'Zap/r2/{number}');
-INSERT INTO `gates` VALUES (7,5,'sip','gw_7_sip_isdn_intern_a','SIP-ISDN intern A',1,0,'SIP/{number}@{peer}');
-INSERT INTO `gates` VALUES (8,5,'sip','gw_8_sip_isdn_intern_b','SIP-ISDN intern B',1,0,'SIP/{number}@{peer}');
-INSERT INTO `gates` VALUES (9,8,'sip','gw_9_sip_gsm_vodafone','SIP-GSM Vodafone',1,1,'SIP/{number}@{peer}');
+INSERT INTO `gates` VALUES (5,6,'zap','gw_5_zaptel_span_1','Zaptel Span 1',1,'Zap/r1/{number}');
+INSERT INTO `gates` VALUES (6,6,'zap','gw_6_zaptel_span_2','Zaptel Span 2',1,'Zap/r2/{number}');
+INSERT INTO `gates` VALUES (7,5,'sip','gw_7_sip_isdn_intern_a','SIP-ISDN intern A',1,'SIP/{number}@{peer}');
+INSERT INTO `gates` VALUES (8,5,'sip','gw_8_sip_isdn_intern_b','SIP-ISDN intern B',1,'SIP/{number}@{peer}');
+INSERT INTO `gates` VALUES (9,8,'sip','gw_9_sip_gsm_vodafone','SIP-GSM Vodafone',1,'SIP/{number}@{peer}');
 /*!40000 ALTER TABLE `gates` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5821,6 +5829,36 @@ LOCK TABLES `instant_messaging` WRITE;
 /*!40000 ALTER TABLE `instant_messaging` DISABLE KEYS */;
 INSERT INTO `instant_messaging` VALUES (1,'jabber','homer@jabber.simpson');
 /*!40000 ALTER TABLE `instant_messaging` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itemized_bill`
+--
+
+DROP TABLE IF EXISTS `itemized_bill`;
+CREATE TABLE `itemized_bill` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `start` datetime NOT NULL,
+  `dur` mediumint(8) unsigned NOT NULL default '0',
+  `is_in` tinyint(1) unsigned NOT NULL,
+  `remote` varchar(25) collate latin1_general_ci NOT NULL,
+  `tariff_zone` char(4) character set ascii NOT NULL,
+  `units` mediumint(8) unsigned NOT NULL,
+  `charge` float NOT NULL default '0',
+  `vat` float NOT NULL,
+  `cur` char(3) character set ascii NOT NULL,
+  `ext` varchar(10) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `start` (`start`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+--
+-- Dumping data for table `itemized_bill`
+--
+
+LOCK TABLES `itemized_bill` WRITE;
+/*!40000 ALTER TABLE `itemized_bill` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itemized_bill` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -5953,6 +5991,8 @@ INSERT INTO `phones` VALUES (3,'snom360','000413233483',11,0,0);
 INSERT INTO `phones` VALUES (7,'snom360','001122334455',28,0,1174112992);
 INSERT INTO `phones` VALUES (8,'snom360','0004132308A4',25,0,1174119746);
 INSERT INTO `phones` VALUES (9,'snom360','000413000000',30,13,1177010534);
+INSERT INTO `phones` VALUES (10,'siemens-os60','0001E325E7B2',NULL,14,1187105460);
+INSERT INTO `phones` VALUES (11,'snom-370','000413260BCC',23,16,1191343858);
 /*!40000 ALTER TABLE `phones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6137,11 +6177,11 @@ LOCK TABLES `routes` WRITE;
 INSERT INTO `routes` VALUES (5,1,3,'^11[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,7,9,'','Notrufnummern etc.');
 INSERT INTO `routes` VALUES (6,1,4,'^19222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,7,9,'','Notruf Rettungsdienst');
 INSERT INTO `routes` VALUES (7,1,14,'^0900',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','Mehrwertnummern');
-INSERT INTO `routes` VALUES (8,1,8,'^118',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','Ausk√ºnfte (u.U. teuer, k√∂nnen vermitteln)');
+INSERT INTO `routes` VALUES (8,1,8,'^118',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','Auskünfte (u.U. teuer, können vermitteln)');
 INSERT INTO `routes` VALUES (9,1,10,'^09009',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Mehrwertnummern (Dialer)');
 INSERT INTO `routes` VALUES (10,1,12,'^09005',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Mehrwertnummern (Erwachsenenunterhaltung)');
 INSERT INTO `routes` VALUES (11,1,16,'^0902',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Televoting (14 ct/Anruf)');
-INSERT INTO `routes` VALUES (12,1,18,'^019[1-4]',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Internet-Zug√§nge');
+INSERT INTO `routes` VALUES (12,1,18,'^019[1-4]',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Internet-Zugänge');
 INSERT INTO `routes` VALUES (13,1,20,'^070[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','private Vanity-Nummern');
 INSERT INTO `routes` VALUES (14,1,22,'^080[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','Mehrwertnummern (kostenlos)');
 INSERT INTO `routes` VALUES (15,1,24,'^01805',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Mehrwertnummern (Hotlines/Erwachsenenunterhaltung)');
@@ -6149,7 +6189,7 @@ INSERT INTO `routes` VALUES (16,1,26,'^01802001033',1,1,1,1,1,1,1,'00:00:00','24
 INSERT INTO `routes` VALUES (17,1,28,'^0180',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','Mehrwertnummern');
 INSERT INTO `routes` VALUES (18,1,30,'^0137',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Televoting (25-100 ct/Anruf)');
 INSERT INTO `routes` VALUES (19,1,32,'^012[0-9]',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Innovative Dienste (teuer)');
-INSERT INTO `routes` VALUES (20,1,34,'^032',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','ortsunabh√§ngig, unklare Tarifierung, GSM vermeiden');
+INSERT INTO `routes` VALUES (20,1,34,'^032',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','ortsunabhängig, unklare Tarifierung, GSM vermeiden');
 INSERT INTO `routes` VALUES (21,1,36,'^0151',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'','T-Mobile D1');
 INSERT INTO `routes` VALUES (22,1,38,'^016[01489]',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'','T-Mobile D1');
 INSERT INTO `routes` VALUES (23,1,40,'^017[015]',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'','T-Mobile D1');
@@ -6163,11 +6203,57 @@ INSERT INTO `routes` VALUES (30,1,54,'^0156',1,1,1,1,1,1,1,'00:00:00','24:00:00'
 INSERT INTO `routes` VALUES (31,1,56,'^0159',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','O2');
 INSERT INTO `routes` VALUES (32,1,58,'^017[69]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','O2');
 INSERT INTO `routes` VALUES (33,1,60,'^0150',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'','Group3G');
-INSERT INTO `routes` VALUES (34,1,62,'^01[5-7]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','andere Handy-Gespr√§che');
+INSERT INTO `routes` VALUES (34,1,62,'^01[5-7]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','andere Handy-Gespräche');
 INSERT INTO `routes` VALUES (35,1,64,'^0[1-9][0-9]{2}',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,10,0,'','Ortsnetze');
 INSERT INTO `routes` VALUES (36,1,66,'^00',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,9,0,'','international');
 INSERT INTO `routes` VALUES (37,1,68,'^',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,9,0,'','alles andere');
 /*!40000 ALTER TABLE `routes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `routes_in`
+--
+
+DROP TABLE IF EXISTS `routes_in`;
+CREATE TABLE `routes_in` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `gate_grp_id` smallint(5) unsigned NOT NULL,
+  `active` tinyint(1) unsigned NOT NULL default '1',
+  `ord` int(10) unsigned NOT NULL,
+  `pattern` varchar(30) character set ascii NOT NULL,
+  `d_mo` tinyint(3) unsigned NOT NULL default '1',
+  `d_tu` tinyint(3) unsigned NOT NULL default '1',
+  `d_we` tinyint(3) unsigned NOT NULL default '1',
+  `d_th` tinyint(3) unsigned NOT NULL default '1',
+  `d_fr` tinyint(3) unsigned NOT NULL default '1',
+  `d_sa` tinyint(3) unsigned NOT NULL default '1',
+  `d_su` tinyint(3) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `to_ext` varchar(10) character set ascii NOT NULL,
+  `descr` varchar(150) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `gategrp_ord` (`gate_grp_id`,`ord`),
+  KEY `ggrp_active_mo` (`gate_grp_id`,`active`,`d_mo`,`ord`),
+  KEY `ggrp_active_tu` (`gate_grp_id`,`active`,`d_tu`,`ord`),
+  KEY `ggrp_active_we` (`gate_grp_id`,`active`,`d_we`,`ord`),
+  KEY `ggrp_active_th` (`gate_grp_id`,`active`,`d_th`,`ord`),
+  KEY `ggrp_active_fr` (`gate_grp_id`,`active`,`d_fr`,`ord`),
+  KEY `ggrp_active_sa` (`gate_grp_id`,`active`,`d_sa`,`ord`),
+  KEY `ggrp_active_su` (`gate_grp_id`,`active`,`d_su`,`ord`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `routes_in`
+--
+
+LOCK TABLES `routes_in` WRITE;
+/*!40000 ALTER TABLE `routes_in` DISABLE KEYS */;
+INSERT INTO `routes_in` VALUES (1,6,1,99999,'^(.*)',1,1,1,1,1,1,1,'00:00:00','24:00:00','$1','1:1 DID -> Extension');
+INSERT INTO `routes_in` VALUES (2,6,1,12,'^5000',1,1,1,1,1,1,1,'00:00:00','24:00:00','123','5000 auf 123');
+INSERT INTO `routes_in` VALUES (3,6,1,4,'6(.*)',1,1,1,1,1,1,1,'00:00:00','24:00:00','fax-$1','Fax');
+INSERT INTO `routes_in` VALUES (4,6,1,10,'^5000',1,1,1,1,1,0,0,'08:00:00','18:00:00','5000','5000 auf Queue wenn ge√∂ffnet');
+/*!40000 ALTER TABLE `routes_in` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6345,4 +6431,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-10-09  16:07:12
+-- Dump completed on 2007-10-19  16:07:12
