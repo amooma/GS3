@@ -1,0 +1,136 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+error_reporting(0);
+
+
+
+function _agi_str_esc( $str )
+{
+	return str_replace(
+		array( "\n" , "\r" , "\t" , ' '   ),
+		array( '\\ ', '\\ ', '\\ ', '\\ ' ),
+		$str );
+}
+
+function _agi_verbose( $str, $level=1 )
+{
+	echo 'VERBOSE '. _agi_str_esc($str) .' '. (int)$level ."\n";
+}
+
+function _err( $msg )
+{
+	_agi_verbose('### '.$msg);
+	echo "SET VARIABLE did_ext\n";
+	echo "SET VARIABLE did_ext_to\n";
+	die();
+}
+
+
+$ggrp_id = ($argc > 1) ? (int)trim($argv[1]) : '';
+if ($ggrp_id < 1) _err('Bad ggrp id');
+$number  = ($argc > 2) ?      trim($argv[2]) : '';
+if ($number == '') _err('Empty number');
+
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/log.php' );
+
+$db = gs_db_slave_connect();
+if (! $db) _err('DB error');
+
+$rs = $db->execute( 'SELECT `in_dest_search`, `in_dest_replace`, `in_cid_search`, `in_cid_replace` FROM `gate_grps` WHERE `id`='. $ggrp_id );
+if (! $rs) _err('DB error');
+$ggrp = $rs->fetchRow();
+if (! $ggrp) _err('DB error');
+
+
+
+# strip trunk prefix from DID number
+#
+
+$ggrp['in_dest_search'] = trim($ggrp['in_dest_search']);
+if ($ggrp['in_dest_search'] != '') {
+	$ggrp['in_dest_replace'] = trim($ggrp['in_dest_replace']);
+	$number = @preg_replace('/'.$ggrp['in_dest_search'].'/', $ggrp['in_dest_replace'], $number);
+}
+echo "SET VARIABLE did_ext $number\n";
+
+//FIXME - do the same thing for the callerid number
+
+
+
+# get route from DID number to extension
+#
+
+$now = time();
+$hms = date('H:i:s', $now);
+$rs = $db->execute(
+'SELECT `id`, `pattern`, `to_ext`
+FROM `routes_in`
+WHERE
+	`gate_grp_id`='. $ggrp_id .' AND
+	`active`=1 AND
+	`d_'. strToLower(subStr(date('D', $now),0,2)) .'`=1 AND
+	`h_from`<=\''. $hms .'\' AND
+	`h_to`>=\''  . $hms .'\'
+ORDER BY `ord`'
+);
+if (! $rs) _err('DB error');
+$routes = array();
+while ($route = $rs->fetchRow()) {
+	$routes[] = $route;
+}
+
+# add special 1:1 identity DID -> extension route
+# (can be disabled by adding a route to an empty extension as the last rule)
+$routes[] = array( 'id'=>0, 'pattern' => '^(.*)', 'to_ext' => '$1' );
+
+foreach ($routes as $route) {
+	$route['pattern'] = trim($route['pattern']);
+	if (@preg_match('/'.$route['pattern'].'/', $number)) {
+		if ($route['id'] !== 0)
+			_agi_verbose( "### Matching route for $number is id ". $route['id'] );
+		else
+			_agi_verbose( "### Matching route for $number is default 1:1 DID->extension route" );
+		$number = @preg_replace('/'.$route['pattern'].'/', trim($route['to_ext']), $number);
+		break;
+	}
+}
+echo "SET VARIABLE did_ext_to $number\n";
+
+
+
+?>
