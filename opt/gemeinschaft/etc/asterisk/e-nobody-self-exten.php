@@ -35,6 +35,7 @@ ob_implicit_flush(1);
 error_reporting(0);
 
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
+require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_quiet');
 require_once( GS_DIR .'inc/nobody-extensions.php' );
 
