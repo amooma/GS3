@@ -70,6 +70,7 @@ if ($rs) {
 	}
 } else {
 	echo "//ERROR\n";
+	//FIXME - should probably write a message to gs_log()
 }
 echo "// end\n";
 echo "\n";
