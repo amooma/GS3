@@ -60,33 +60,50 @@ while ($ggrp = $rs->fetchRow()) {
 	$name = preg_replace('/[^a-z0-9\-_]/i', '', $ggrp['name']);
 	
 	echo 'context from-gg-', $name ,' {' ,"\n";
-	echo "\t", '_. => {' ,"\n";
-	echo "\t\t", 'Set(__is_from_gateway=1);' ,"\n";
 	
+	echo "\t", '_. => {' ,"\n";
+	echo "\t\t", 'if ("${EXTEN}" != "h" && "${EXTEN}" != "t" && "${EXTEN}" != "i") {' ,"\n";
+	echo "\t\t\t", 'Set(__is_from_gateway=1);' ,"\n";
 	if ((int)$ggrp['allow_in']) {
 		
 		# strip prefix off DID number (sets sets did_ext) and apply
 		# redirection rules for inbound calls (sets did_ext_to):
-		echo "\t\t", 'AGI(/opt/gemeinschaft/dialplan-scripts/in-route.agi,', (int)$ggrp['id'] ,',${EXTEN});' ,"\n";
+		echo "\t\t\t", 'AGI(/opt/gemeinschaft/dialplan-scripts/in-route.agi,', (int)$ggrp['id'] ,',${EXTEN});' ,"\n";
 		# make it appear as if the caller had dialed the extension without
 		# our trunk prefix etc.:
-		echo "\t\t", 'Set(CALLERID(dnid)=${did_ext});' ,"\n";
-		echo "\t\t", 'Verbose(1,### Incoming call from gw group "', $name ,'". dnid: ${EXTEN} => ext: ${did_ext} => ${did_ext_to});' ,"\n";
-		echo "\t\t", 'Goto(from-gateways,${did_ext_to},1);' ,"\n";
+		echo "\t\t\t", 'Set(CALLERID(dnid)=${did_ext});' ,"\n";
+		echo "\t\t\t", 'Verbose(1,### Incoming call from gw group "', $name ,'". dnid: ${EXTEN} => ext: ${did_ext} => ${did_ext_to});' ,"\n";
+		echo "\t\t\t", 'if ("${did_ext_to}" != "") {' ,"\n";
+		echo "\t\t\t\t", 'Goto(from-gateways,${did_ext_to},1);' ,"\n";
+		echo "\t\t\t", '}' ,"\n";
+		echo "\t\t\t", 'else {' ,"\n";
+		echo "\t\t\t\t", '// 1 = AST_CAUSE_UNALLOCATED => SIP 404 Not Found' ,"\n";
+		# 28 = Invalid number format (address incomplete) would probably be
+		# better but Asterisk does not translate that into a SIP status code
+		echo "\t\t\t\t", 'Set(PRI_CAUSE=1);' ,"\n";
+		echo "\t\t\t\t", 'Hangup(1);' ,"\n";
+		echo "\t\t\t", '}' ,"\n";
 		
 	} else {
 		
-		echo "\t\t", 'Verbose(1,### Inbound calls not allowed for gw group "', $name ,'");' ,"\n";
+		echo "\t\t\t", 'Verbose(1,### Inbound calls not allowed for gw group "', $name ,'");' ,"\n";
 		# tell the caller that they are not allowed to call us.
-		echo "\t\t", '// 21 = AST_CAUSE_CALL_REJECTED => SIP 403 Forbidden' ,"\n";
-		echo "\t\t", 'Set(PRI_CAUSE=21);' ,"\n";
-		echo "\t\t", 'Hangup(21);' ,"\n";
+		echo "\t\t\t", '// 21 = AST_CAUSE_CALL_REJECTED => SIP 403 Forbidden' ,"\n";
+		echo "\t\t\t", 'Set(PRI_CAUSE=21);' ,"\n";
+		echo "\t\t\t", 'Hangup(21);' ,"\n";
 		
 	}
-	
+	echo "\t\t", '}' ,"\n";
 	echo "\t", '}' ,"\n";
+	
+	/*
+	echo "\t", 'h => {' ,"\n";
+	echo "\t\t", 'Verbose(1,########################just hangup);' ,"\n";
+	echo "\t\t", 'NoOp(just hangup);' ,"\n";
+	echo "\t", '}' ,"\n";
+	*/
+	
 	echo '}' ,"\n";
-
 }
 
 echo "\n";
