@@ -537,6 +537,8 @@ if ($action === 'gedit') {
 <br />
 
 <?php
+		echo '<p class="text"><img alt=" " src="', GS_URL_PATH ,'crystal-svg/16/act/info.png" /> ', __('&Auml;nderungen ben&ouml;tigen ggf. einen Dialplan-Reload und Reload von Asterisk') ,'</p>',"\n";
+		
 		echo '<p class="text"><sup>[1]</sup> ', __('Dieser Kontext mu&szlig; bei der Definition der Gateways in der sip.conf, zaptel.conf o.&auml;. angegeben werden!') ,'</p>',"\n";
 		
 		echo '<p class="text"><sup>[1]</sup> ', __('Geben Sie hier falls erforderlich ein PCRE-Muster an, das eventuelle Pr&auml;fixe von eingehend gew&auml;hlten Nummern wegschneidet, soda&szlig; nur noch die interne Durchwahl &uuml;brig bleibt! Beispiele:<br /> &nbsp;&nbsp;&nbsp; <tt>'.'s/^0251702//'.'</tt><br /> &nbsp;&nbsp;&nbsp; <tt>'.'s/^(((0049|0)251))702//'.'</tt><br /> &nbsp;&nbsp;&nbsp; <tt>'.'s/^(?:(?:0049|0)251)?702(.*)/$1/'.'</tt>') ,'</p>',"\n";
