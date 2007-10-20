@@ -289,7 +289,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		<th style="width: 55px;"><?php echo __('PIN'   ); ?></th>
 		<th style="width:190px;"><?php echo __('eMail' ); ?></th>
 		<th style="width:140px;"><?php echo __('Host'  ); ?></th>
-		<th style="width: 80px;"><?php echo __('Status'); ?></th>
+		<th style="width: 85px;"><?php echo __('Status'); ?></th>
 		<th style="width: 55px;">&nbsp;</th>
 	</tr>
 	</thead>
@@ -321,26 +321,26 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			$state = gs_extstate_single( $r['ext'] );
 			switch ($state) {
 			case AST_MGR_EXT_UNKNOWN:
-				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/important.png" />&nbsp; ', __('unbekannt');
+				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/important.png" />&nbsp;', __('?');
 				break;
 			case AST_MGR_EXT_IDLE:
-				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/greenled.png" />&nbsp; ', __('bereit');
+				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/greenled.png" />&nbsp;', __('bereit');
 				break;
 			case AST_MGR_EXT_OFFLINE:
-				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/free_icon.png" />&nbsp; ', __('offline');
+				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/free_icon.png" />&nbsp;', __('offline');
 				break;
 			case AST_MGR_EXT_INUSE:
 			case AST_MGR_EXT_BUSY:
-				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" />&nbsp; ', __('spricht');
+				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" />&nbsp;', __('spricht');
 				break;
 			case AST_MGR_EXT_RINGING:
-				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/knotify.png" />&nbsp; ', __('klingelt');
+				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/knotify.png" />&nbsp;', __('klingelt');
 				break;
 			case AST_MGR_EXT_RINGINUSE:
-				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/knotify.png" />&nbsp; ', __('Anklopfen');
+				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/app/knotify.png" />&nbsp;', __('Anklopfen');
 				break;
 			case AST_MGR_EXT_ONHOLD:
-				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" />&nbsp; ', __('Halten');
+				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" />&nbsp;', __('Halten');
 				break;
 			default:
 				echo $state;
