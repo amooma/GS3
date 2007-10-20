@@ -16,7 +16,7 @@ input[type="text"],
 input[type="file"],
 input[type="button"],
 input[type="submit"],
-input[type="cancel"],
+input[type="reset"],
 button,
 select {
 	border-width: 1px;
@@ -35,7 +35,7 @@ input[type="file"] {
 }
 input[type="button"],
 input[type="submit"],
-input[type="cancel"],
+input[type="reset"],
 button {
 	border-style: solid;
 	border-color: #fff #666 #666 #fff;
