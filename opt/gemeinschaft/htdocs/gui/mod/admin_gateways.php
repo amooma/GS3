@@ -36,6 +36,7 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
+include_once( GS_DIR .'inc/pcre_check.php' );
 
 
 $action = @$_REQUEST['action'];
@@ -174,6 +175,10 @@ if ($action === 'gsave') {
 	$allow_in = (@$_REQUEST['gg-allow_in'] ? 1 : 0);
 	$in_dest_search  = trim(@$_REQUEST['gg-in_dest_search' ]);
 	$in_dest_replace = trim(@$_REQUEST['gg-in_dest_replace']);
+	if (! is_valid_pcre( '/'.$in_dest_search.'/' )) {
+		echo 'Invalid pattern!<br />',"\n";
+		$in_dest_search = $oldgg['in_dest_search'];
+	}
 	
 	if ($ggid > 0) {
 		$DB->execute(
@@ -346,7 +351,7 @@ foreach ($ggs as $gg) {
 	echo '<option value="', $gg['id'] ,'"', ($gg['id']==$ggid ? ' selected="selected"' : '') ,'>', htmlEnt($gg['title']) ,' (', htmlEnt($gg['name']) ,')</option>',"\n";
 }
 echo '<option value="" disabled="disabled">-</option>',"\n";
-echo '<option value="0"', ($ggid < 1 ? ' selected="selected"' : '') ,'>', __('Neue Gateway-Gruppe anlegen ...') ,'</option>',"\n";
+echo '<option value="0"', (($ggid < 1 && $action != '') ? ' selected="selected"' : '') ,'>', __('Neue Gateway-Gruppe anlegen ...') ,'</option>',"\n";
 echo '</select> ',"\n";
 echo '<input type="submit" value="', __('anzeigen') ,'" />',"\n";
 echo '</form>',"\n";
