@@ -94,7 +94,7 @@ function gs_extstate( $host, $exts )
 	$states = array();
 	foreach ($exts as $ext) {
 		$req = "Action: ExtensionState\r\n"
-		     . "Context: to-internal-users-self\r\n"  // or "default"
+		     . "Context: default\r\n"  // "to-internal-users" or "default"
 		     . "Exten: ". $ext ."\r\n"
 		     . "\r\n";
 		@ fWrite( $sock, $req, strLen($req) );
