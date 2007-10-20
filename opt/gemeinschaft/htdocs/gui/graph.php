@@ -78,7 +78,7 @@ if ($to < $fr) {
 }
 $time_range = $to - $fr;
 $time_range_days = $time_range/(60*60*24);
-if     ($time_range_days <= 2     ) {$xtstr = '+1 hours' ; $xdfmt = 'h'  ;}
+if     ($time_range_days <= 2     ) {$xtstr = '+1 hours' ; $xdfmt = 'H'  ;}
 elseif ($time_range_days <= 31    ) {$xtstr = '+1 days'  ; $xdfmt = 'j'  ;}
 elseif ($time_range_days <= 31*2  ) {$xtstr = '+1 weeks' ; $xdfmt = 'M j';}
 elseif ($time_range_days <= 31*6  ) {$xtstr = '+1 months'; $xdfmt = 'M/y';}
