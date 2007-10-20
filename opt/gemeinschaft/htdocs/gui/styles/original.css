@@ -380,6 +380,19 @@ table.smalltbl td {
 }
 table.smalltbl td img {margin:-3px 0 -3px 0;}
 
+table.tinytbl {
+	padding: 0; margin: 0;
+}
+table.tinytbl td {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 10px;
+	padding: 0px 0px;
+	line-height: 10px;
+}
+table.tinytbl td input {
+	margin: 1px 2px;
+}
+
 
 .sort-col {
 	color: #082;
