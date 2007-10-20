@@ -94,7 +94,7 @@ function gs_extstate( $host, $exts )
 	$states = array();
 	foreach ($exts as $ext) {
 		$req = "Action: ExtensionState\r\n"
-		     . "Context: default\r\n"  // "to-internal-users" or "default"
+		     . "Context: to-internal-users\r\n"  // "to-internal-users" or "default"
 		     . "Exten: ". $ext ."\r\n"
 		     . "\r\n";
 		@ fWrite( $sock, $req, strLen($req) );
@@ -123,7 +123,7 @@ function gs_extstate_single( $ext )
 	include_once( GS_DIR .'inc/db_connect.php' );
 	$db = @ gs_db_slave_connect();
 	if (! $db) {
-		gs_log( GS_LOG_FATAL, 'Could not connect do slave DB!' );
+		gs_log( GS_LOG_FATAL, 'Could not connect to slave DB!' );
 		return AST_MGR_EXT_UNKNOWN;
 	}
 	$host = $db->executeGetOne(
