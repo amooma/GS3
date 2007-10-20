@@ -5391,7 +5391,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `ast_queues`;
 CREATE TABLE `ast_queues` (
   `_id` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(20) character set ascii NOT NULL default '',
+  `name` varchar(10) character set ascii NOT NULL default '',
   `_host_id` mediumint(8) unsigned NOT NULL default '1',
   `_title` varchar(50) character set utf8 collate utf8_unicode_ci NOT NULL default '',
   `musicclass` varchar(50) character set ascii default NULL,
