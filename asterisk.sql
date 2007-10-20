@@ -5765,7 +5765,7 @@ CREATE TABLE `gates` (
   `allow_out` tinyint(1) unsigned NOT NULL default '1',
   `dialstr` varchar(50) character set ascii NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `name` (`name`(10)),
+  UNIQUE KEY `name` (`name`),
   KEY `grp_title` (`grp_id`,`title`(10)),
   KEY `grp_allow_out` (`grp_id`,`allow_out`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -5776,11 +5776,11 @@ CREATE TABLE `gates` (
 
 LOCK TABLES `gates` WRITE;
 /*!40000 ALTER TABLE `gates` DISABLE KEYS */;
-INSERT INTO `gates` VALUES (5,6,'zap','gw_5_zaptel_span_1','Zaptel Span 1',1,'Zap/r1/{number}');
-INSERT INTO `gates` VALUES (6,6,'zap','gw_6_zaptel_span_2','Zaptel Span 2',1,'Zap/r2/{number}');
-INSERT INTO `gates` VALUES (7,5,'sip','gw_7_sip_isdn_intern_a','SIP-ISDN intern A',1,'SIP/{number}@{peer}');
-INSERT INTO `gates` VALUES (8,5,'sip','gw_8_sip_isdn_intern_b','SIP-ISDN intern B',1,'SIP/{number}@{peer}');
-INSERT INTO `gates` VALUES (9,8,'sip','gw_9_sip_gsm_vodafone','SIP-GSM Vodafone',1,'SIP/{number}@{peer}');
+INSERT INTO `gates` VALUES (5,6,'zap','gw_zaptel_span_1','Zaptel Span 1',1,'Zap/r1/{number}');
+INSERT INTO `gates` VALUES (6,6,'zap','gw_zaptel_span_2','Zaptel Span 2',1,'Zap/r2/{number}');
+INSERT INTO `gates` VALUES (7,5,'sip','gw_sip_isdn_intern_a','SIP-ISDN intern A',1,'SIP/{number}@{peer}');
+INSERT INTO `gates` VALUES (8,5,'sip','gw_sip_isdn_intern_b','SIP-ISDN intern B',1,'SIP/{number}@{peer}');
+INSERT INTO `gates` VALUES (9,8,'sip','gw_sip_gsm_vodafone','SIP-GSM Vodafone',1,'SIP/{number}@{peer}');
 /*!40000 ALTER TABLE `gates` ENABLE KEYS */;
 UNLOCK TABLES;
 
