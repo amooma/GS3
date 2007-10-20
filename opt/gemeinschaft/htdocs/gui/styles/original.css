@@ -12,16 +12,33 @@ a img {border: 0 transparent none;}
 input[type="text"] {
 	padding: 1px 2px;
 }
-input, select {
+input[type="text"],
+input[type="file"],
+input[type="button"],
+input[type="submit"],
+input[type="cancel"],
+button,
+select {
 	border-width: 1px;
+	color: #000;
+}
+input[type="text"],
+input[type="file"],
+select {
 	border-style: solid;
 	border-color: #666 #fff #fff #666;
-	color: #000;
 	background: #fff;
 }
 input[type="file"] {
 	/* the stupid file field does not let us override the border-width */
 	border-color: #fff #fff #fff #fff;
+}
+input[type="button"],
+input[type="submit"],
+input[type="cancel"],
+button {
+	border-style: solid;
+	border-color: #fff #666 #666 #fff;
 }
 select {background: #fff;}
 
