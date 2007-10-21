@@ -49,6 +49,6 @@ echo 'table = ast_cdr'                               ,"\n";
 echo "\n";
 
 
-gs_log(GS_LOG_DEBUG, 'cdr_mysql.conf was just loaded');
+gs_log(GS_LOG_DEBUG, 'cdr_mysql.conf has just been loaded');
 
 ?>
