@@ -41,7 +41,8 @@ function gs_db_master_connect()
 		GS_DB_MASTER_PWD,
 		GS_DB_MASTER_DB,
 		array('reuse'=>false)  // do not use. leaves lots of connections
-		))) {
+		)))
+	{
 		gs_log( GS_LOG_WARNING, 'Could not connect to master database!' );
 		return null;
 	}
@@ -58,7 +59,8 @@ function gs_db_slave_connect()
 		GS_DB_SLAVE_PWD,
 		GS_DB_SLAVE_DB,
 		array('reuse'=>false)  // do not use. leaves lots of connections
-		))) {
+		)))
+	{
 		gs_log( GS_LOG_WARNING, 'Could not connect to slave database!' );
 		return null;
 	}
