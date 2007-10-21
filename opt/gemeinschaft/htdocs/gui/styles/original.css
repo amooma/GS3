@@ -32,7 +32,7 @@ input[type="file"],
 select,
 textarea {
 	border-style: solid;
-	border-color: #666 #fff #fff #666;
+	border-color: #666 #ccc #ccc #666;
 	background: #fff;
 }
 input[type="file"] {
