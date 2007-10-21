@@ -9,22 +9,28 @@ img {vertical-align: middle;}
 
 a img {border: 0 transparent none;}
 
-input[type="text"] {
+input[type="text"],
+input[type="password"],
+input[type="file"] {
 	padding: 1px 2px;
 }
 input[type="text"],
+input[type="password"],
 input[type="file"],
 input[type="button"],
 input[type="submit"],
 input[type="reset"],
 button,
-select {
+select,
+textarea {
 	border-width: 1px;
 	color: #000;
 }
 input[type="text"],
+input[type="password"],
 input[type="file"],
-select {
+select,
+textarea {
 	border-style: solid;
 	border-color: #666 #fff #fff #666;
 	background: #fff;
