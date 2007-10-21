@@ -38,6 +38,7 @@ select:disabled,
 textarea:disabled {
 	color: #777;
 	background: #eee;
+	opacity: 0.8;
 }
 input[type="text"],
 input[type="password"],
