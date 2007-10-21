@@ -26,6 +26,19 @@ textarea {
 	border-width: 1px;
 	color: #000;
 }
+input[type="text"]:disabled,
+input[type="password"]:disabled,
+input[type="file"]:disabled,
+input[type="button"]:disabled,
+input[type="submit"]:disabled,
+input[type="reset"]:disabled,
+input[type="checkbox"]:disabled,
+button:disabled,
+select:disabled,
+textarea:disabled {
+	color: #777;
+	background: #eee;
+}
 input[type="text"],
 input[type="password"],
 input[type="file"],
