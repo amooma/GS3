@@ -9,8 +9,12 @@ function gs_gen_ivr( $ext, $ivr, $name='main', $level=0 )
 	//$ret = "\n";
 	$ret = "";
 	$ret.= "[ivr-$name]\n";
-	$ret.= "exten => s,1,Answer()\n";
-	$ret.= "exten => s,n,Wait(1)\n";
+	if ($level == 0) {
+		$ret.= "exten => s,1,Answer()\n";
+		$ret.= "exten => s,n,Wait(1)\n";
+	} else {
+		$ret.= "exten => s,1,Wait(0.5)\n";
+	}
 	if (is_array(@$ivr['dp'])) {
 		foreach ($ivr['dp'] as $step) {
 			if (! preg_match('/^([a-z]+)\s+(.*)/', $step, $m)) continue;
