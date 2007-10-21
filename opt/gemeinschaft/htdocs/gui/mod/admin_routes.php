@@ -85,6 +85,7 @@ if ($action == 'move-up' || $action == 'move-down') {
 	
 	foreach ($db_ids as $dbid) {
 		if (! array_key_exists('r_'.$dbid.'_pattern', $_REQUEST)) continue;
+		
 		$pattern = trim( @$_REQUEST['r_'.$dbid.'_pattern'] );
 		if ($dbid<1 && $pattern == '') continue;
 		$pattern = preg_replace('/[^0-9a-zA-Z\-\\\#*+\[\]\{\}\(\)|\^$.,?!=:<>]/', '', $pattern);
@@ -419,8 +420,8 @@ echo '</td>', "\n";
 echo '<td rowspan="2" class="r transp">&nbsp;';
 echo '</td>', "\n";
 
-
 echo '</tr>', "\n";
+
 
 echo '<tr class="', (($i % 2 == 0) ? 'even':'odd'), '">', "\n";
 
