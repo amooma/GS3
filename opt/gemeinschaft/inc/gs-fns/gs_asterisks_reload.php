@@ -55,7 +55,7 @@ function gs_asterisks_reload( $host_ids, $dialplan_only )
 	if (! is_array( $hosts ))
 		return new GsError( 'Failed to get hosts.' );
 	
-	# get out host IDs
+	# get our host IDs
 	#
 	$our_host_ids = @ gs_get_listen_to_ids();
 	if (isGsError( $our_host_ids ))
@@ -63,7 +63,7 @@ function gs_asterisks_reload( $host_ids, $dialplan_only )
 	if (! is_array( $our_host_ids ))
 		return new GsError( 'Failed to get our host IDs.' );
 	
-	# are we root? so we have to sudo?
+	# are we root? do we have to sudo?
 	#
 	$uid = @ posix_geteuid();
 	$uinfo = @ posix_getPwUid($uid);
