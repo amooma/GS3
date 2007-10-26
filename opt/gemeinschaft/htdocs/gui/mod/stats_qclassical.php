@@ -351,8 +351,7 @@ AND '. $sql_time
 	$num_wait_ok = (int)@$DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
-AND `event`=\'_COMPLETE\'
-AND `reason`<>\'INCOMPAT\'
+AND `event` IN (\'_COMPLETE\', \'_EXIT\')
 AND `waittime` IS NOT NULL
 AND `waittime`<='. (int)$waittime_level .'
 AND '. $sql_time
@@ -366,8 +365,7 @@ AND '. $sql_time
 	$num_wait_fail = (int)@$DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
-AND `event`=\'_COMPLETE\'
-AND `reason`<>\'INCOMPAT\'
+AND `event` IN (\'_COMPLETE\', \'_EXIT\')
 AND `waittime` IS NOT NULL
 AND `waittime`>'. (int)$waittime_level .'
 AND '. $sql_time
