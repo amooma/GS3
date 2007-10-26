@@ -176,6 +176,7 @@ function chart_fullscreen_toggle()
 	<th style="font-weight:normal;"><?php echo __('Aufgelegt'); ?></th>
 	<th style="font-weight:normal;"><?php echo __('Timeout'); ?></th>
 	<th style="font-weight:normal;"><?php echo __('keine Ag.'); ?></th>
+	<th style="font-weight:normal;"><?php echo __('voll'); ?></th>
 	<th style="font-weight:normal;"><?php echo __('Erfolgsquote'); ?></th>
 	<th style="font-weight:normal;"><?php echo __('Dauer'), ' &le;', _secs_to_minsecs($duration_level); ?></th>
 	<th style="font-weight:normal;"><?php echo __('Dauer'), ' &gt;', _secs_to_minsecs($duration_level); ?></th>
@@ -194,6 +195,7 @@ $totals = array(
 	'num_abandoned' => 0,
 	'num_timeout'   => 0,
 	'num_empty'     => 0,
+	'num_full'      => 0,
 	//'pct_connected' => 0,
 	'num_dur_lower' => 0,
 	'num_dur_higher'=> 0,
@@ -290,6 +292,24 @@ AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', $num_empty ,'</td>', "\n";
 	$totals['num_empty'] += $num_empty;
+	
+	
+	# queue full
+	#
+	$num_full = (int)@$DB->executeGetOne(
+'SELECT COUNT(*) FROM `queue_log` WHERE
+    `queue_id`='. $queue_id .'
+AND ((
+    `event`=\'_EXIT\'
+AND `reason`=\'FULL\')
+OR  `event`=\'_EXITFULL\')
+AND '. $sql_time
+	);
+	# the custom event "_EXITFULL" needs to stay here as an intermediate
+	# solution because we did not convert it to "_EXIT" with reason "FULL"
+	# in sbin/gs-queuelog-to-db up to rev. 2846. fixed in rev. 2847
+	echo '<td class="r"',$style_wd,'>', $num_full ,'</td>', "\n";
+	$totals['num_full'] += $num_full;
 	
 	
 	# % connected
@@ -412,6 +432,7 @@ echo '<td class="r" ',$style,'>', $totals['num_connected' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_abandoned' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_timeout'   ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_empty'     ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_full'      ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $pct_connected_month ,' <small>%</small></td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_dur_lower' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_dur_higher'] ,'</td>', "\n";
