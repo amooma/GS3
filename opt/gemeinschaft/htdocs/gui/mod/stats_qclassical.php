@@ -119,7 +119,7 @@ if ($action == '') return;
 
 
 $t         = (int)strToTime("$month_d months", $t);
-$num_days  = (int)date('W', $t);
+$num_days  = (int)date('t', $t);
 $y         = (int)date('Y', $t);
 $m         = (int)date('n', $t);
 $today_day = (int)date('j', $t);
@@ -202,7 +202,7 @@ $totals = array(
 	'num_wait_fail' => 0
 );
 
-for ($day=1; $day<$num_days; ++$day) {
+for ($day=1; $day<=$num_days; ++$day) {
 	
 	if ($month_d >= 0 && $day > $today_day) break;
 	
