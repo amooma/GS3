@@ -282,7 +282,7 @@ AND '. $sql_time
 	# no queue members
 	#
 	$num_empty = (int)@$DB->executeGetOne(
-'SELECT COUNT(*) FROM `queue_log` WHERE
+'SELECT COUNT(DISTINCT(`ast_call_id`)) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_EXIT\'
 AND `reason`=\'EMPTY\'
