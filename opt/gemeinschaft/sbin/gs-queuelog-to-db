@@ -254,6 +254,10 @@ function log_line_to_db_entry( $line )
 			$row['reason'  ] = 'TIMEOUT';
 			$row['pos'     ] = $d1;
 			break;
+		case '_EXITFULL':  # a custom event
+			$row['evt'     ] = '_EXIT';
+			$row['reason'  ] = 'FULL';
+			break;
 		case 'SYSCOMPAT':
 			$row['evt'     ] = '_COMPLETE';
 			$row['reason'  ] = 'INCOMPAT';
