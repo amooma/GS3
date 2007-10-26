@@ -195,8 +195,8 @@ $totals = array(
 	'num_timeout'   => 0,
 	'num_empty'     => 0,
 	'pct_connected' => 0,
-	'num_dur_lower'     => 0,
-	'num_dur_higher'   => 0,
+	'num_dur_lower' => 0,
+	'num_dur_higher'=> 0,
 	'avg_calldur'   => 0,
 	'num_wait_ok'   => 0,
 	'num_wait_fail' => 0
@@ -385,17 +385,18 @@ echo '<tr>', "\n";
 
 echo '<td class="r" ',$style,'><b>&sum;</b></td>', "\n";
 
-echo '<td class="r" ',$style,'>', $totals['num_entered'] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['num_connected'] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['num_abandoned'] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['num_timeout'] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['num_empty'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_entered'   ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_connected' ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_abandoned' ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_timeout'   ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_empty'     ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', round($totals['pct_connected']/$day*100) ,' <small>%</small></td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['num_dur_lower'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_dur_lower' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_dur_higher'] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', _secs_to_minsecs($totals['avg_calldur']/$day) ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['num_wait_ok'] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['num_wait_fail'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', _secs_to_minsecs(
+                                  $totals['avg_calldur'   ]/$day) ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_wait_ok'   ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_wait_fail' ] ,'</td>', "\n";
 
 echo '</tr>', "\n";
 
