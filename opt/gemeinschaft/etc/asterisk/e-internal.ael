@@ -848,33 +848,27 @@ context to-internal-users-self {
 					// for some strange reason does not leave a trace in the
 					// queue_log. fake it:
 					QueueLog(${EXTEN},${UNIQUEID},NONE,ENTERQUEUE,,${CALLERID(num)},fake);
+					QueueLog(${EXTEN},${UNIQUEID},NONE,_EXITFULL,,,${queue_waittime},fake);
 				}
 			}
 			else {
 				Verbose(1,### Don't even try to enter queue ${EXTEN} because: ${QUEUESTATUS});
-				//Queue(${EXTEN},irn,,,0);
 				// fake ENTERQUEUE in log:
 				QueueLog(${EXTEN},${UNIQUEID},NONE,ENTERQUEUE,,${CALLERID(num)},fake);
 				Set(queue_waittime=0);
-			}
-			// for debugging:
-			QueueLog(${EXTEN},${UNIQUEID},NONE,_debug,${QUEUESTATUS});
-			
-			if ("${QUEUESTATUS}"="JOINEMPTY" || "${QUEUESTATUS}"="JOINUNAVAIL") {
-				// does not normally seem to leave a trace in the
-				// queue_log. fake it:
-				//QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,pos,origpos,waittime,fake);
-				QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,,,0,fake);
-			}
-			else if ("${QUEUESTATUS}"="LEAVEEMPTY" || "${QUEUESTATUS}"="LEAVEUNAVAIL") {
-				// for some strange reason does not leave a trace in the
-				// queue_log. fake it:
-				QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,,,${queue_waittime},fake);
-			}
-			else if ("${QUEUESTATUS}"="FULL") {
-				// for some strange reason does not leave a trace in the
-				// queue_log. fake it:
-				QueueLog(${EXTEN},${UNIQUEID},NONE,_EXITFULL,,,${queue_waittime},fake);
+				if ("${QUEUESTATUS}"="JOINEMPTY" || "${QUEUESTATUS}"="JOINUNAVAIL") {
+					//QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,pos,origpos,waittime,fake);
+					QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,,,0,fake);
+				}
+				else if ("${QUEUESTATUS}"="LEAVEEMPTY" || "${QUEUESTATUS}"="LEAVEUNAVAIL") {
+					QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,,,${queue_waittime},fake);
+				}
+				else if ("${QUEUESTATUS}"="FULL") {
+					QueueLog(${EXTEN},${UNIQUEID},NONE,_EXITFULL,,,,fake);
+					// custom event
+				}
+				// QUEUESTATUS "TIMEOUT" cannot happen here because we did not enter
+				// the queue
 			}
 			
 			if ("${QUEUESTATUS}"="TIMEOUT") {
