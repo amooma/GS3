@@ -197,7 +197,7 @@ $totals = array(
 	'pct_connected' => 0,
 	'num_dur_lower' => 0,
 	'num_dur_higher'=> 0,
-	'avg_calldur'   => 0,
+	//'avg_calldur'   => 0,
 	'num_wait_ok'   => 0,
 	'num_wait_fail' => 0
 );
@@ -342,7 +342,7 @@ AND `calldur` IS NOT NULL
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', _secs_to_minsecs($avg_calldur) ,'</td>', "\n";
-	$totals['avg_calldur'] += $avg_calldur;
+	//$totals['avg_calldur'] += $avg_calldur;
 	
 	
 	# waittime <= $waittime_level
@@ -377,7 +377,25 @@ AND '. $sql_time
 	
 	echo '</tr>', "\n";
 }
+--$day;
 
+
+$month_t_start = (int)mkTime(  0, 0, 0, $m, 1   , $y );
+$month_t_end   = (int)mkTime( 23,59,59, $m, $day, $y );
+$sql_time_month = '(`timestamp`>='.$month_t_start .' AND `timestamp`<='.$month_t_end .')';
+
+$sum_calldur_month = (int)@$DB->executeGetOne(
+'SELECT SUM(`calldur`) FROM `queue_log` WHERE
+    `queue_id`='. $queue_id .'
+AND `event`=\'_COMPLETE\'
+AND `reason`<>\'INCOMPAT\'
+AND `calldur` IS NOT NULL
+AND '. $sql_time_month
+);
+
+$avg_calldur_month = ($totals['num_connected'] > 0)
+	? $sum_calldur_month / $totals['num_connected']
+	: 0;
 
 
 $style = 'style="border-top:3px solid #b90; background:#feb; line-height:2.5em;"';
@@ -390,11 +408,11 @@ echo '<td class="r" ',$style,'>', $totals['num_connected' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_abandoned' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_timeout'   ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_empty'     ] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', round($totals['pct_connected']/$day*100) ,' <small>%</small></td>', "\n";
+echo '<td class="r" ',$style,'>', round(
+                                  $totals['pct_connected' ]/$day*100) ,' <small>%</small></td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_dur_lower' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_dur_higher'] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', _secs_to_minsecs(
-                                  $totals['avg_calldur'   ]/$day) ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', _secs_to_minsecs($avg_calldur_month) ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_wait_ok'   ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_wait_fail' ] ,'</td>', "\n";
 
@@ -405,15 +423,8 @@ echo '</tr>', "\n";
 </tbody>
 </table>
 
-<?php
-$sum_dur = (int)@$DB->executeGetOne(
-'SELECT SUM(`calldur`) FROM `queue_log` WHERE
-    `queue_id`='. $queue_id .'
-AND `event`=\'_COMPLETE\'
-AND '. $sql_time
-);
-?>
-<p style="padding:0.5em 0;"><?php echo __('Gespr&auml;chsminuten'), ': &nbsp; ', round($sum_dur/60); ?></p>
+
+<p style="padding:0.5em 0;"><?php echo __('Gespr&auml;chsminuten'), ': &nbsp; ', round($sum_calldur_month/60); ?></p>
 
 </div>
 
