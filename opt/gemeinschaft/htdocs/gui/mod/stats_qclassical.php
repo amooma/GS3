@@ -328,7 +328,7 @@ AND `calldur`>'. (int)$service_level .'
 AND '. $sql_time
 	);
 	echo '<td class="r"',$style_wd,'>', $num_sl_fail ,'</td>', "\n";
-	$totals['num_sl_fail'] + $num_sl_fail;
+	$totals['num_sl_fail'] += $num_sl_fail;
 	
 	
 	# average duration
