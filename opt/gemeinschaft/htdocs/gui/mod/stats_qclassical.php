@@ -44,7 +44,7 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 
-$service_level  = 90;  # 90 s = 1:30 min
+$duration_level  = 90;  # 90 s = 1:30 min
 $waittime_level = 15;  # 15 s
 
 
@@ -177,8 +177,8 @@ function chart_fullscreen_toggle()
 	<th style="font-weight:normal;"><?php echo __('Timeout'); ?></th>
 	<th style="font-weight:normal;"><?php echo __('keine Ag.'); ?></th>
 	<th style="font-weight:normal;"><?php echo __('Erfolgsquote'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Dauer'), ' &le;', _secs_to_minsecs($service_level); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Dauer'), ' &gt;', _secs_to_minsecs($service_level); ?></th>
+	<th style="font-weight:normal;"><?php echo __('Dauer'), ' &le;', _secs_to_minsecs($duration_level); ?></th>
+	<th style="font-weight:normal;"><?php echo __('Dauer'), ' &gt;', _secs_to_minsecs($duration_level); ?></th>
 	<th style="font-weight:normal;"><?php echo '&empty; ', __('Dauer'); ?></th>
 	<th style="font-weight:normal;"><?php echo __('Wartez.') ,' &le;', _secs_to_minsecs($waittime_level); ?></th>
 	<th style="font-weight:normal;"><?php echo __('Wartez.') ,' &gt;', _secs_to_minsecs($waittime_level); ?></th>
@@ -195,8 +195,8 @@ $totals = array(
 	'num_timeout'   => 0,
 	'num_empty'     => 0,
 	'pct_connected' => 0,
-	'num_sl_ok'     => 0,
-	'num_sl_fail'   => 0,
+	'num_dur_lower'     => 0,
+	'num_dur_higher'   => 0,
 	'avg_calldur'   => 0,
 	'num_wait_ok'   => 0,
 	'num_wait_fail' => 0
@@ -301,34 +301,34 @@ AND '. $sql_time
 	$totals['pct_connected'] += $pct_connected;
 	
 	
-	# duration <= $service_level
+	# duration <= $duration_level
 	#
-	$num_sl_ok = (int)@$DB->executeGetOne(
+	$num_dur_lower = (int)@$DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_COMPLETE\'
 AND `reason`<>\'INCOMPAT\'
 AND `calldur` IS NOT NULL
-AND `calldur`<='. (int)$service_level .'
+AND `calldur`<='. (int)$duration_level .'
 AND '. $sql_time
 	);
-	echo '<td class="r"',$style_wd,'>', $num_sl_ok ,'</td>', "\n";
-	$totals['num_sl_ok'] += $num_sl_ok;
+	echo '<td class="r"',$style_wd,'>', $num_dur_lower ,'</td>', "\n";
+	$totals['num_dur_lower'] += $num_dur_lower;
 	
 	
-	# duration > $service_level
+	# duration > $duration_level
 	#
-	$num_sl_fail = (int)@$DB->executeGetOne(
+	$num_dur_higher = (int)@$DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_COMPLETE\'
 AND `reason`<>\'INCOMPAT\'
 AND `calldur` IS NOT NULL
-AND `calldur`>'. (int)$service_level .'
+AND `calldur`>'. (int)$duration_level .'
 AND '. $sql_time
 	);
-	echo '<td class="r"',$style_wd,'>', $num_sl_fail ,'</td>', "\n";
-	$totals['num_sl_fail'] += $num_sl_fail;
+	echo '<td class="r"',$style_wd,'>', $num_dur_higher ,'</td>', "\n";
+	$totals['num_dur_higher'] += $num_dur_higher;
 	
 	
 	# average duration
@@ -391,8 +391,8 @@ echo '<td class="r" ',$style,'>', $totals['num_abandoned'] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_timeout'] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_empty'] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', round($totals['pct_connected']/$day*100) ,' <small>%</small></td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['num_sl_ok'] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['num_sl_fail'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_dur_lower'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['num_dur_higher'] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', _secs_to_minsecs($totals['avg_calldur']/$day) ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_wait_ok'] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_wait_fail'] ,'</td>', "\n";
