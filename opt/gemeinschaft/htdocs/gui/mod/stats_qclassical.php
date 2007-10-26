@@ -234,7 +234,7 @@ for ($day=1; $day<=$num_days; ++$day) {
 	# inbound calls
 	#
 	$num_entered = (int)@$DB->executeGetOne(
-'SELECT COUNT(*) FROM `queue_log` WHERE
+'SELECT COUNT(DISTINCT(`ast_call_id`)) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_ENTER\'
 AND '. $sql_time
@@ -297,7 +297,7 @@ AND '. $sql_time
 	# queue full
 	#
 	$num_full = (int)@$DB->executeGetOne(
-'SELECT COUNT(*) FROM `queue_log` WHERE
+'SELECT COUNT(DISTINCT(`ast_call_id`)) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND ((
     `event`=\'_EXIT\'
