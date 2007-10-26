@@ -194,7 +194,7 @@ $totals = array(
 	'num_abandoned' => 0,
 	'num_timeout'   => 0,
 	'num_empty'     => 0,
-	'pct_connected' => 0,
+	//'pct_connected' => 0,
 	'num_dur_lower' => 0,
 	'num_dur_higher'=> 0,
 	//'avg_calldur'   => 0,
@@ -297,8 +297,9 @@ AND '. $sql_time
 	$pct_connected = ($num_connected > 0)
 		? ($num_connected / $num_entered)
 		: 0.0;
-	echo '<td class="r"',$style_wd,'>', round($pct_connected*100) ,' <small>%</small></td>', "\n";
-	$totals['pct_connected'] += $pct_connected;
+	$pct_connected = round($pct_connected*100);
+	echo '<td class="r"',$style_wd,'>', $pct_connected ,' <small>%</small></td>', "\n";
+	//$totals['pct_connected'] += $pct_connected;
 	
 	
 	# duration <= $duration_level
@@ -397,6 +398,11 @@ $avg_calldur_month = ($totals['num_connected'] > 0)
 	? $sum_calldur_month / $totals['num_connected']
 	: 0;
 
+$pct_connected_month = ($totals['num_connected'] > 0)
+		? ($totals['num_connected'] / $totals['num_entered'])
+		: 0.0;
+$pct_connected_month = round($pct_connected_month*100);
+
 
 $style = 'style="border-top:3px solid #b90; background:#feb; line-height:2.5em;"';
 echo '<tr>', "\n";
@@ -408,8 +414,7 @@ echo '<td class="r" ',$style,'>', $totals['num_connected' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_abandoned' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_timeout'   ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_empty'     ] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', round(
-                                  $totals['pct_connected' ]/$day*100) ,' <small>%</small></td>', "\n";
+echo '<td class="r" ',$style,'>', $pct_connected_month ,' <small>%</small></td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_dur_lower' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_dur_higher'] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', _secs_to_minsecs($avg_calldur_month) ,'</td>', "\n";
