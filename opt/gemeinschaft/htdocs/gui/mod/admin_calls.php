@@ -81,6 +81,9 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	case 'today':
 		$query_line = 'DATE_FORMAT(`calldate`,\'%Y-%m-%d\') = CURRENT_DATE()';
 		break;
+	case 'all':
+		$query_line = '';
+		break;
 	default:
 		$query_line = '`calldate` > (NOW()-INTERVAL 7 DAY)';
 	}
