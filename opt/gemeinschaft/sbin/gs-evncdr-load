@@ -424,8 +424,8 @@ function process_log( $file )
 'SELECT `calldate`, `dst`, `dcontext`, `channel`, `dstchannel`, `billsec`, (`disposition`=\'ANSWERED\') `answered` /*, `charge` */
  FROM   `ast_cdr`
  WHERE
-        `calldate`>\''. date('Y-m-d H:i:s', $tstart-$timeframe) .'\'
- AND    `calldate`<\''. date('Y-m-d H:i:s', $tstart+$timeframe) .'\'
+        `calldate`>\''. date('Y-m-d H:i:s', $evn_tstart-$timeframe) .'\'
+ AND    `calldate`<\''. date('Y-m-d H:i:s', $evn_tstart+$timeframe) .'\'
  AND    `src`=\''. $DB->escape($evn['ext']) .'\'
  AND    `dst` LIKE "0%"
  AND    `dstchannel`<>""'
