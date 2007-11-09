@@ -50,7 +50,7 @@ if ($argc < 4) {
 	"  \n",
 	"  Die FKTO-Nr. ist die Verrechnungsnr.(/Fakturierungskonto) bei\n",
 	"  der Telekom. Sie besteht aus Vorwahl, Nullen und Hauptrufnummer.\n",
-	"  Die FKTO ist das erste Datenfehl in jeder Zeile. Nur passende\n",
+	"  Die FKTO ist das erste Datenfeld in jeder Zeile. Nur passende\n",
 	"  Eintraege werden akzeptiert.\n",
 	"  \n",
 	"  Bitte geben Sie die aufzuschlagende MwSt ohne \"%\" an,\n",
