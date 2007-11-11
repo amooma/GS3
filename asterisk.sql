@@ -5840,17 +5840,18 @@ CREATE TABLE `itemized_bill` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `start` datetime NOT NULL,
   `dur` mediumint(8) unsigned NOT NULL default '0',
-  `is_in` tinyint(1) unsigned NOT NULL,
-  `remote` varchar(25) collate latin1_general_ci NOT NULL,
+  `is_out` tinyint(1) unsigned NOT NULL,
+  `ext` varchar(10) character set ascii NOT NULL,
+  `remote` varchar(25) character set ascii NOT NULL,
   `tariff_zone` char(4) character set ascii NOT NULL,
   `units` mediumint(8) unsigned NOT NULL,
   `charge` float NOT NULL default '0',
-  `vat` float NOT NULL,
   `cur` char(3) character set ascii NOT NULL,
-  `ext` varchar(10) character set ascii NOT NULL,
+  `vat` float NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `start` (`start`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+  UNIQUE KEY `start_ext_remote_dur` (`start`,`ext`,`remote`,`dur`),
+  KEY `ext` (`ext`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
 -- Dumping data for table `itemized_bill`
