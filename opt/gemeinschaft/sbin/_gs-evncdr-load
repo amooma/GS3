@@ -34,6 +34,7 @@
 #  CSV-Datensatz kann man bei "RechnungOnline" runterladen
 #####################################################################
 
+
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/log.php' );
