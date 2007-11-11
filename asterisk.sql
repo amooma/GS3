@@ -5848,9 +5848,11 @@ CREATE TABLE `itemized_bill` (
   `charge` float NOT NULL default '0',
   `cur` char(3) character set ascii NOT NULL,
   `vat` float NOT NULL,
+  `cdr_id` int(10) unsigned default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `start_ext_remote_dur` (`start`,`ext`,`remote`,`dur`),
-  KEY `ext` (`ext`)
+  KEY `ext` (`ext`),
+  KEY `cdr_id` (`cdr_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
