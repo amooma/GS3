@@ -115,8 +115,8 @@ $rs_cdr_prv = $DB->execute(
 	`_id`, `calldate`, UNIX_TIMESTAMP(`calldate`) `tstart`, `src`, `dst`, `accountcode`
 FROM `ast_cdr`
 WHERE
-	`calldate`>=\''.$yyyy.'-'.$mm.'-01\' AND
-	`calldate`<=\''.$yyyy.'-'.$mm.'-31\' AND
+	`calldate`>=\''.$yyyy.'-'.$mm.'-01 00:00:00\' AND
+	`calldate`<=\''.$yyyy.'-'.$mm.'-31 23:59:59\' AND
 	`accountcode` LIKE \'prv-%\' AND
 	`disposition`=\'ANSWERED\' AND
 	`dst` LIKE \'0%\' AND
@@ -215,7 +215,7 @@ WHERE
 	}
 	unset($evns);
 	
-	if ($best_bonus < 400) {
+	if ($best_bonus < 350) {
 		$count['bad_match']++;
 		//echo '.';
 		continue;
