@@ -94,7 +94,7 @@ Gemeinschaft auf \"". $hostname ."\"
 							(@$u['lastname'] != '' ? ' '.$u['lastname'] : ''),
 							@$u['pin']
 						);
-						$ok = @mail( $u['email'], 'Gemeinschaft Password', $msg, $headers );
+						$ok = @mail( $u['email'], 'Gemeinschaft Passwort', $msg, $headers );
 						
 						$action_info = $ok
 							? sPrintF(__('Pa&szlig;wort wurde an &quot;%s&quot; gesendet'), htmlSpecialChars($u['email']))
