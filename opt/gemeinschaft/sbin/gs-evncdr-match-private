@@ -1,0 +1,258 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/log.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$currency = 'EUR';
+
+
+if ($argc < 2) {
+	echo
+	"  \n",
+	"  Aufruf: ". baseName($argv[0])." Monat\n",
+	"  \n",
+	"  Monat im Format JJJJ-MM, also z.B. 2007-09\n",
+	"  \n";
+	exit(1);
+}
+if (! preg_match('/^([0-9]{4})-([0-9]{2})$/', @$argv[1], $m)) {
+	echo "Month not recognized.\n";
+	exit(1);
+}
+$yyyy = $m[1];
+$mm   = $m[2];
+
+
+if (! defined('E_STRICT')) define('E_STRICT', 2048);
+
+function _err_handler( $type, $msg, $file, $line )
+{
+	switch ($type) {
+		case E_NOTICE:
+		case E_USER_NOTICE:
+			if (error_reporting() != 0) {  # suppressed by @
+				gs_log( GS_LOG_NOTICE, 'PHP: '. $msg .' in '. $file .' on line '. $line );
+			}
+			break;
+		case E_STRICT:
+			if (error_reporting() != 0) {
+				gs_log( GS_LOG_DEBUG, 'PHP (Strict): '. $msg .' in '. $file .' on line '. $line );
+			} else {  # suppressed by @
+				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line );
+			}
+			break;
+		default:
+			gs_log( GS_LOG_FATAL  , 'PHP: '. $msg .' in '. $file .' on line '. $line );
+			exit(1);
+	}
+}
+
+
+function _gauss( $x, $k )
+{
+	# Gaussian peak, max 1, Krümmungsänderung bei ±$k
+	return exp(-pow($x,2)/pow($k,2));
+}
+
+function db_quote_or_null( $val )
+{
+	global $DB;
+	
+	return $val ? ('\''. $DB->escape($val) .'\'') : 'NULL';
+}
+
+
+set_error_handler('_err_handler');
+
+$count = array(
+	'prv_cdrs'    => 0,
+	'no_match'    => 0,
+	'bad_match'   => 0,
+	'good_match'  => 0
+);
+
+$area_prefix =
+	gs_get_conf('CANONIZE_NATL_PREFIX' , '0'   ) .
+	gs_get_conf('GS_CANONIZE_AREA_CODE', '9999');
+
+$DB = gs_db_master_connect();
+
+# Privategespraeche aus den CDRs (ast_cdr) abfragen
+#
+$rs_cdr_prv = $DB->execute(
+'SELECT
+	`_id`, `calldate`, UNIX_TIMESTAMP(`calldate`) `tstart`, `src`, `dst`, `accountcode`
+FROM `ast_cdr`
+WHERE
+	`calldate`>=\''.$yyyy.'-'.$mm.'-01\' AND
+	`calldate`<=\''.$yyyy.'-'.$mm.'-31\' AND
+	`accountcode` LIKE \'prv-%\' AND
+	`disposition`=\'ANSWERED\' AND
+	`dst` LIKE \'0%\' AND
+	`dstchannel`<>\'\' AND
+	NOT EXISTS (SELECT `cdr_id` FROM `itemized_bill` WHERE `cdr_id`=`ast_cdr`.`_id`)
+ORDER BY `calldate`' );
+echo "Anzahl Privatgespraeche im Monat $yyyy-$mm: ", $rs_cdr_prv->numRows(), "\n";
+while ($cdr = $rs_cdr_prv->fetchRow()) {
+	
+	$count['prv_cdrs']++;
+	
+	$cdr_real_dst = subStr($cdr['dst'],1);
+	
+	echo "\n";
+	echo 'CDR:  ', date('Y-m-d H:i:s', $cdr['tstart']) ,'  ', str_pad($cdr['src'],5,' ') ,'-> ', str_pad($cdr_real_dst,15,' ') ,"\n";
+	
+	# fuer jedes Privategespraech den am besten passenden EVN-Eintrag
+	# (aus itemized_bill) finden
+	
+	$timeframe = 10 * 60;  # +- 10 minutes
+	
+	$query =
+'SELECT
+	`id`, UNIX_TIMESTAMP(`start`) `tstart`, `ext`, `remote`
+FROM `itemized_bill`
+WHERE
+	`start`>=\''. (date('Y-m-d H:i:s', $cdr['tstart']-$timeframe)) .'\' AND
+	`start`<=\''. (date('Y-m-d H:i:s', $cdr['tstart']+$timeframe)) .'\' AND
+	`is_out`=1 AND
+	( `ext`=\''. $DB->escape($cdr['src']) .'\' OR
+	  `ext`=\'0\' ) AND
+	`cdr_id` IS NULL'
+	;
+	$rs_evns = $DB->execute($query);
+	$num = $rs_evns->numRows();
+	//echo ' ', $num;
+	if ($num===0) {
+		$count['no_match']++;
+		//echo '-';
+		continue;
+	}
+	$evns = array();
+	while ($evn = $rs_evns->fetchRow()) {
+		
+		if (subStr(subStr($evn['remote'],1),-3) !== subStr(subStr($cdr_real_dst,1),-3)
+		&&  subStr(subStr($evn['remote'],1),-3) !== subStr(subStr($cdr['dst']  ,1),-3) )
+		{
+			continue;
+		}
+		
+		echo 'EVN:  ', date('Y-m-d H:i:s', $evn['tstart']) ,'  ', str_pad($evn['ext'],5,' ') ,'-> ', str_pad($evn['remote'],15,' ') ,' ';
+		
+		$bonus = $timeframe - abs($evn['tstart']-$cdr['tstart']);   # max. 600
+		if ($bonus < 0) $bonus = 0;
+		
+		if ($evn['ext'] === $cdr['src']) {
+			$bonus += 50;                        # max.  50
+		} elseif ($cdr['src'] === 'anonymous'
+		&& $evn['ext'] === '0') {
+			$bonus += 30;                        # max.  30
+		} else {
+			echo ' bonus: ', 0 ,"\n";
+			continue;
+		}
+		if (subStr($evn['remote'],1) === subStr($cdr_real_dst,1)
+		||  subStr($evn['remote'],1) === subStr($cdr['dst']  ,1) )
+		{
+			$bonus += 100;                       # max. 100
+		} elseif ($evn['remote'] === $area_prefix.$cdr_real_dst
+		||        $evn['remote'] === $area_prefix.$cdr['dst']   )
+		{
+			$bonus +=  90;                       # max.  90
+		} elseif (subStr(subStr($evn['remote'],1),-(strLen($cdr_real_dst)-1)) === subStr($cdr_real_dst,1)) {
+			$bonus +=  80;                       # max.  80
+		}
+		
+		echo ' bonus: ', $bonus ,"\n";
+		
+		# max. bonus is 750
+		$evn['__bonus'] = $bonus;
+		$evns[] = $evn;
+	}
+	if (count($evns)===0) {
+		$count['no_match']++;
+		//echo '-';
+		continue;
+	}
+	
+	$best_bonus = -1;
+	$best_evn   = null;
+	foreach ($evns as $evn) {
+		if ($evn['__bonus'] > $best_bonus) {
+			$best_bonus = $evn['__bonus'];
+			$best_evn   = $evn;
+		}
+	}
+	unset($evns);
+	
+	if ($best_bonus < 400) {
+		$count['bad_match']++;
+		//echo '.';
+		continue;
+	}
+	
+	$count['good_match']++;
+	
+	/*
+	echo '+';
+	echo "\n";
+	echo date('H:i:s', $cdr['tstart']) ,' ', $cdr['src'] ,' ', $cdr['dst'] ,'   ';
+	echo date('H:i:s', $evn['tstart']) ,' ', $evn['ext'] ,' ', $evn['remote'], '   ';
+	echo "\n";
+	*/
+	
+	
+	# in dem EVN-Eintrag das Feld cdr_id auf die ID des CDR-Eintrags setzen
+	
+	$DB->execute( 'UPDATE `itemized_bill` SET `cdr_id`='. (int)$cdr['_id'] .' WHERE `id`='. (int)$evn['id'] );
+	
+}
+
+echo "\n";
+
+
+
+function _strpad8l( $str ) {
+	return str_pad($str, 8, ' ', STR_PAD_LEFT);
+}
+
+echo "    Prv. calls:", _strpad8l($count['prv_cdrs'   ]) ,"\n";
+echo " \n";
+echo "    GOOD match:", _strpad8l($count['good_match' ]) ,"\n";
+echo "     Bad match:", _strpad8l($count['bad_match'  ]) ,"\n";
+echo "      No match:", _strpad8l($count['no_match'   ]) ,"\n";
+echo "\n";
+
+
+
+?>
