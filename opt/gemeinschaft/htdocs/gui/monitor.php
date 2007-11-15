@@ -339,13 +339,13 @@ kSort($exts_display, SORT_STRING);
 echo '<div class="extensions-block">', "\n";
 $first_digit = null;
 foreach ($exts_display as $extension => $ext_info) {
-	$extstate = gs_extstate( "129.163.22.20", $extension );
+	$extstate = gs_extstate( '127.0.0.1', $extension );  //FIXME
 	$img = '<img alt=" " src="'. GS_URL_PATH;
 	switch ($extstate) {
-		case 0 : $img.= 'crystal-svg/16/act/greenled.png' ; break;
-		case 2 : $img.= 'crystal-svg/16/act/yellowled.png'; break;
-		case 1 : $img.= 'crystal-svg/16/act/redled.png'   ; break;
-		default      : $img.= 'crystal-svg/16/act/free_icon.png'; break;
+		case  0: $img.= 'crystal-svg/16/act/greenled.png' ; break;
+		case  2: $img.= 'crystal-svg/16/act/yellowled.png'; break;
+		case  1: $img.= 'crystal-svg/16/act/redled.png'   ; break;
+		default: $img.= 'crystal-svg/16/act/free_icon.png'; break;
 	}
 	$img.= '" /> ';	
 	$new_first_digit = subStr($extension,0,1);
@@ -368,8 +368,7 @@ foreach ($exts_display as $extension => $ext_info) {
 	echo '<span class="link" id="e',$extension,'l"></span>';
 	echo '</div>' ,"\n";
 	//echo "<tr><td> $img $extension: ".$ext_info['abbr']."</td></tr>\n";
-
-
+	
 }
 
 echo '<br class="nofloat" />', "\n";
