@@ -158,35 +158,40 @@ body {
 
 .e_st {
 	border-color: #888 #333 #222 #999;
-	background-color: #666;
+	background-color: #444;
 	color: #323;
 }
-.e_st4 {
+.e_st4 { /* AST_MGR_EXT_OFFLINE */
 	border-color: #888 #333 #222 #999;
 	background-color: #666;
 	color: #323;
 }
-.e_st0 {
+.e_st0 { /* AST_MGR_EXT_IDLE */
 	border-color: #fff #333 #222 #fff;
 	background-color: #eee;
 	color: #000;
 }
-.e_st8 {
+.e_st8 { /* AST_MGR_EXT_RINGING */
 	border-color: #990 #330 #330 #990;
 	background-color: #ff6;
 	color: #540;
 }
-.e_st1 {
+.e_st9 { /* AST_MGR_EXT_RINGINUSE (AST_MGR_EXT_INUSE + AST_MGR_EXT_RINGING) */
+	border-color: #990 #330 #330 #990;
+	background-color: #ff6;
+	color: #540;
+}
+.e_st1 { /* AST_MGR_EXT_INUSE */
 	border-color: #696 #030 #030 #696;
 	background-color: #0f8;
 	color: #050;
 }
-.e_st16 {
+.e_st16 { /* AST_MGR_EXT_ONHOLD */
 	border-color: #69a #033 #033 #69a;
 	background-color: #0ea;
 	color: #053;
 }
-.e_st2 {
+.e_st2 { /* AST_MGR_EXT_BUSY */
 	border-color: #66f #006 #006 #66f;
 	background-color: #36f;
 	color: #039;
