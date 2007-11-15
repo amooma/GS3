@@ -298,10 +298,11 @@ function telekom_tarifzone_k_to_v( $k )
 				case '3':                             # S3
 					if ($k2=='7') {                   # S37
 						// Anrufe auf 0137
-						// MABEZ ("Massenverkehr zu bestimmten Zeiten"),
+						// MABEZ ("Massenverkehr zu bestimmten Zielen"),
 						// d.h. Televoting, Gewinnspiele
 						// z.B. S379 bei Anrufen auf 01379..
-						$ret = 'TeleVote';
+						//$ret = 'TeleVote';
+						$ret = 'MaBeZ';
 						// wie heisst das bei der Telekom?
 					}
 					break;
@@ -411,13 +412,13 @@ WHERE
 
 function _echo_sum( $sum_charge, $user )
 {
-	global $sep, $euro_sign, $sum_charge_total, $send_email;
+	global $sep_tbl, $sep_sum, $euro_sign, $sum_charge_total, $send_email;
 	
 	$sum_charge_total += $sum_charge;
 	
-	echo $sep;
-	echo '| ', str_pad('Summe:',77,' ',STR_PAD_LEFT) ,' | ', str_pad(number_format($sum_charge, 2, ',', ''),5,' ',STR_PAD_LEFT) ,' ', $euro_sign ,' |' ,"\n";
-	echo $sep;
+	echo $sep_tbl;
+	echo '| ', str_pad('Summe:',61,' ',STR_PAD_LEFT) ,' |', str_pad(number_format($sum_charge, 2, ',', ''),6,' ',STR_PAD_LEFT) ,' ', $euro_sign ,' |' ,"\n";
+	echo $sep_sum;
 	
 	$out = @ob_get_clean();
 	echo "\n";
@@ -476,8 +477,10 @@ set_error_handler('_err_handler');
 $DB = gs_db_master_connect();
 
 $euro_sign = "\xE2\x82\xAC";
-$sep = '+'. str_repeat('-',89) .'+'."\n";
-$head = '| Beginn              | Rufnummer          | Tarifzone       | Dauer    | Einh. | Kosten  |' ."\n";
+$sep     = '+'. str_repeat('-',73) .'+' ."\n";
+$sep_tbl = '+---------------+-------------------+---------+---------+-------+---------+' ."\n";
+$sep_sum = '+---------------------------------------------------------------+---------+' ."\n";
+$head    = '| Beginn        | Rufnummer         | Tarifz. | Dauer   | Einh. | Kosten  |' ."\n";
 
 # `cdr`.`accountcode` is "prv-XXX"
 $rs = $DB->execute(
@@ -511,10 +514,10 @@ while ($r = $rs->fetchRow()) {
 		@ob_start();
 		echo $sep;
 		$u = _get_user_by_ext( $ext );
-		echo '| ', mb_str_pad( 'Teilnehmer:  '. $ext .'  ('. $u['fn'] .' '. $u['ln'] .')', 87, ' ', STR_PAD_RIGHT, 'UTF-8') ,' |' ,"\n";
-		echo $sep;
+		echo '| ', mb_str_pad( 'Teilnehmer:  '. $ext .'  ('. $u['fn'] .' '. $u['ln'] .')', 71, ' ', STR_PAD_RIGHT, 'UTF-8') ,' |' ,"\n";
+		echo $sep_tbl;
 		echo $head;
-		echo $sep;
+		echo $sep_tbl;
 		
 		$sum_charge = 0.0;
 	}
@@ -522,13 +525,14 @@ while ($r = $rs->fetchRow()) {
 	echo
 		'| ',
 		//str_pad($r['ext'],5,' ') ,' | ',
-		$r['start'] ,' | ',
-		str_pad($r['remote'],18,' ') ,' | ',
-		str_pad($r['tariff_zone'],4,' ') ,' ',
-		str_pad('('.telekom_tarifzone_k_to_v($r['tariff_zone']).')',10,' ') ,' | ',
-		str_pad(sec_to_hours($r['dur']),8,' ',STR_PAD_LEFT) ,' | ',
-		str_pad($r['units'],5,' ',STR_PAD_LEFT) ,' | ',
-		str_pad(number_format($r['charge_gross'], 2, ',', ''),5,' ',STR_PAD_LEFT) ,' ', $euro_sign ,' | ',
+		subStr($r['start'],8,2) ,'.  ', subStr($r['start'],11) ,' | ',
+		//str_pad($r['remote'],18,' ') ,'| ',
+		str_pad(subStr($r['remote'],0,-2).'xx',18,' ') ,'| ',
+		//str_pad($r['tariff_zone'],4,' ') ,' ',
+		str_pad(telekom_tarifzone_k_to_v($r['tariff_zone']),8,' ') ,'|',
+		str_pad(lTrim(lTrim(sec_to_hours($r['dur']),'0'),':'),8,' ',STR_PAD_LEFT) ,' |',
+		str_pad($r['units'],6,' ',STR_PAD_LEFT) ,' |',
+		str_pad(number_format($r['charge_gross'], 2, ',', ''),6,' ',STR_PAD_LEFT) ,' ', $euro_sign ,' | ',
 		"\n";
 	$sum_charge += $r['charge_gross'];
 }
@@ -536,7 +540,7 @@ if ($ext !== '') {
 	_echo_sum( $sum_charge, $u );
 }
 
-echo "\n\nGesamtkosten der Privatgespraeche im Monat $yyyy-$mm:  ", number_format($sum_charge_total, 2, ',', '') ," $euro_sign (inkl. MwSt.)\n";
+echo "\n\nGesamtkosten der Privatgespr\xC3\xA4che im Monat $yyyy-$mm:  ", number_format($sum_charge_total, 2, ',', '') ," $euro_sign (inkl. MwSt.)\n";
 
 
 echo "\n";
