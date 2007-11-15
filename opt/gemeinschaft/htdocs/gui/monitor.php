@@ -339,7 +339,7 @@ kSort($exts_display, SORT_STRING);
 echo '<div class="extensions-block">', "\n";
 $first_digit = null;
 foreach ($exts_display as $extension => $ext_info) {
-	$extstate = gs_extstate( '127.0.0.1', $extension );  //FIXME
+	$extstate = gs_extstate_single( $extension );
 	$img = '<img alt=" " src="'. GS_URL_PATH;
 	switch ($extstate) {
 		case  0: $img.= 'crystal-svg/16/act/greenled.png' ; break;
