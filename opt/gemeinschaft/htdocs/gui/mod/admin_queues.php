@@ -73,9 +73,11 @@ if ($action === 'del') {
 #                               save {
 #####################################################################
 if ($action === 'save') {
+	/*
 	echo "<pre>\n";
 	print_r($_REQUEST);
 	echo "</pre>\n";
+	*/
 	
 	$name = preg_replace('/[^0-9]/', '', @$_REQUEST['name']);
 	$title = trim(@$_REQUEST['_title']);
@@ -131,7 +133,6 @@ WHERE `_id`='.$queue_id
 	}
 	
 	$action = 'edit';
-	echo '<div class="fr"><a href="', gs_url($SECTION, $MODULE) ,'&amp;page=', $page ,'">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
 }
 #####################################################################
 #                               save }
@@ -144,6 +145,8 @@ WHERE `_id`='.$queue_id
 #                               edit {
 #####################################################################
 if ($action === 'edit') {
+	
+	echo '<div class="fr"><a href="', gs_url($SECTION, $MODULE) ,'&amp;page=', $page ,'">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
 	
 	# get hosts
 	#
