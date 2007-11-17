@@ -172,8 +172,8 @@ function chart_fullscreen_toggle()
 <tr>
 	<th style="font-weight:normal;"><?php echo __('Tag'); ?></th>
 	<th style="font-weight:normal;"><?php echo __('Anrufe'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Angenommen'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Aufgelegt'); ?></th>
+	<th style="font-weight:normal;"><?php echo __('Angen.'); ?></th>
+	<th style="font-weight:normal;"><?php echo __('Absprung'); ?></th>
 	<th style="font-weight:normal;"><?php echo __('Timeout'); ?></th>
 	<th style="font-weight:normal;"><?php echo __('keine Ag.'); ?></th>
 	<th style="font-weight:normal;"><?php echo __('voll'); ?></th>
