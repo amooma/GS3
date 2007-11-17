@@ -5324,6 +5324,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ast_cdr`;
 CREATE TABLE `ast_cdr` (
+  `_id` int(10) unsigned NOT NULL auto_increment,
   `calldate` datetime NOT NULL default '0000-00-00 00:00:00',
   `clid` varchar(50) collate latin1_general_ci NOT NULL default '',
   `src` varchar(50) collate latin1_general_ci NOT NULL default '',
