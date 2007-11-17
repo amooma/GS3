@@ -77,6 +77,7 @@ if ((typeof Event) != 'object') {
 
 var Tooltip = {
 	
+	hideTimeout: null,
 	_getElement: function()
 	{
 		var el = $('tooltip');
@@ -121,6 +122,8 @@ var Tooltip = {
 	},
 	show: function( evt, html )
 	{
+		window.clearTimeout(Tooltip.hideTimeout);
+		
 		var tooltip = Tooltip._getElement();
 		tooltip.style.left = (Event.pointerX(evt)-30)+'px';
 		tooltip.style.top  = (Event.pointerY(evt)+5)+'px';
@@ -133,6 +136,10 @@ var Tooltip = {
 	{
 		var el = Tooltip._getElement();
 		el.style.display = 'none';
+	},
+	hideDelayed: function()
+	{
+		Tooltip.hideTimeout = window.setTimeout('Tooltip.hide();', 200);
 	}
 	
 }
@@ -141,6 +148,6 @@ function tip( evt, html )
 {
 	var el = Event.element(evt);
 	Tooltip.show( evt, html );
-	Event.observe( el, 'mouseout', Tooltip.hide, false );
+	Event.observe( el, 'mouseout', Tooltip.hideDelayed, false );
 }
 
