@@ -43,6 +43,8 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
+echo '<script type="text/javascript" src="', GS_URL_PATH ,'js/tooltips.js"></script>' ,"\n";
+
 
 $duration_level  = 90;  # 90 s = 1:30 min
 $waittime_level = 15;  # 15 s
@@ -165,24 +167,62 @@ function chart_fullscreen_toggle()
 
 <div id="chart">
 <img id="chart-fullscreen-toggle" class="fr" style="cursor:pointer; margin:0 1px 1px 0;" title="Fullscreen" alt="Fullscreen" onclick="chart_fullscreen_toggle();" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/window_fullscreen.png" />
+<small>(<?php echo __('Zeiger &uuml;ber Spalten&uuml;berschriften bewegen f&uuml;r Beschreibung'); ?>)</small>
 <br style="clear:right;" />
+
+<script type="text/javascript">
+//<![CDATA[
+function mytip( evt, key )
+{
+	switch (key) {
+		case 'day':
+			return tip(evt, '<?php echo __('Tag des gew&auml;hlten Monats'); ?>');
+		case 'calls':
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue'); ?>');
+		case 'answered':
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, die von Agenten angenommen wurden'); ?>');
+		case 'abandoned':
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, bei denen der Anrufer aufgelegt hat bevor abgehoben wurde'); ?>');
+		case 'timeout':
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, die durch eine Zeit&uuml;berschreitung abgebrochen/weitergeleitet wurden. Dies kann auftreten wenn f&uuml;r die Queue eine Weiterleitung nach Zeit eingestellt ist.'); ?>');
+		case 'noag':
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, die fehlgeschlagen sind weil keine Agenten eingeloggt/frei waren'); ?>');
+		case 'full':
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, die fehlgeschlagen sind weil die maximale Anzahl an Anrufern erreicht war'); ?>');
+		case 'squota':
+			return tip(evt, '<?php echo __('Verh&auml;ltnis von angenommenen Anrufen zu eingegangenen Anrufen in Prozent'); ?>');
+		case 'durl':
+			return tip(evt, '<?php echo __('Anzahl der angenommenen Anrufe auf diese Queue, deren Gespr&auml;chsdauer k&uuml;rzer als der angeg. Wert war'); ?>');
+		case 'durg':
+			return tip(evt, '<?php echo __('Anzahl der angenommenen Anrufe auf diese Queue, deren Gespr&auml;chsdauer l&auml;nger als der angeg. Wert war'); ?>');
+		case 'duravg':
+			return tip(evt, '<?php echo __('Durchschnittliche Gespr&auml;chsdauer der angenommenen Anrufe auf diese Queue'); ?>');
+		case 'holdlsl':
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, bei denen der Anrufer weniger als die angeg. Dauer gewartet hat'); ?>');
+		case 'holdgsl':
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, bei denen der Anrufer l&auml;nger als die angeg. Dauer gewartet hat'); ?>');
+	}
+	return undefined;
+}
+//]]>
+</script>
 
 <table cellspacing="1" class="phonebook" style="border:1px solid #ccc; background:#fff;">
 <thead>
 <tr>
-	<th style="font-weight:normal;"><?php echo __('Tag'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Anrufe'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Angen.'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Absprung'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Timeout'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('keine Ag.'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('voll'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Erfolgsquote'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Dauer'), ' &le;', _secs_to_minsecs($duration_level); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Dauer'), ' &gt;', _secs_to_minsecs($duration_level); ?></th>
-	<th style="font-weight:normal;"><?php echo '&empty; ', __('Dauer'); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Wartez.') ,' &le;', _secs_to_minsecs($waittime_level); ?></th>
-	<th style="font-weight:normal;"><?php echo __('Wartez.') ,' &gt;', _secs_to_minsecs($waittime_level); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'day');"><?php echo __('Tag'); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'calls');"><?php echo __('Anrufe'); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'answered');"><?php echo __('Angen.'); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'abandoned');"><?php echo __('Absprung'); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'timeout');"><?php echo __('Timeout'); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'noag');"><?php echo __('keine Ag.'); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'full');"><?php echo __('voll'); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'squota');"><?php echo __('Erfolgsquote'); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'durl');"><?php echo __('Dauer'), ' &le;', _secs_to_minsecs($duration_level); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'durg');"><?php echo __('Dauer'), ' &gt;', _secs_to_minsecs($duration_level); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'duravg');"><?php echo '&empty; ', __('Dauer'); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'holdlsl');"><?php echo __('Wartez.') ,' &le;', _secs_to_minsecs($waittime_level); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'holdgsl');"><?php echo __('Wartez.') ,' &gt;', _secs_to_minsecs($waittime_level); ?></th>
 </tr>
 </thead>
 <tbody>
