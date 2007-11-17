@@ -1,3 +1,5 @@
+/* $Revision$ */
+
 if ((typeof $) != 'function') {
 	function $( el )
 	{
