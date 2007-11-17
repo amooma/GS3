@@ -454,8 +454,8 @@ yum remove irda-utils
     <emphasis>nicht</emphasis>):<programlisting><command>asterisk -rx 'stop now'</command>
 <command>/opt/gemeinschaft/sbin/start-asterisk</command></programlisting></para>
 
-    <para>In MySQL die Datenbank <literal>gemeinschaft</literal> anlegen und
-    <filename>gemeinschaft.sql</filename><footnote>
+    <para>In MySQL die Datenbank mit <command>mysql &lt;
+    asterisk.sql</command><footnote>
         <para>Entwicklerinfo: Die Datenbank muﬂ mit<programlisting>mysqldump --opt --skip-extended-insert --databases asterisk &gt; asterisk.sql</programlisting>exportiert
         werden. <literal>--databases</literal> ist wichtig, damit die Tabellen
         in der Datei mit <literal>CREATE TABLE</literal> erzeugt
