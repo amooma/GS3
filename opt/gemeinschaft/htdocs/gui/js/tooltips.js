@@ -113,7 +113,7 @@ var Tooltip = {
 			el2.setAttribute('id', 'tooltip-bottom');
 			el.style.margin = '0px';
 			el.style.padding = '0px';
-			el2.style.height = '12px';
+			el2.style.height = '13px';
 			el2.style.background = 'transparent url(img/tooltip.gif) no-repeat bottom';
 			el.appendChild(el2);
 		}
