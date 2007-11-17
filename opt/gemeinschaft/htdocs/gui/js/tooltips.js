@@ -140,7 +140,7 @@ var Tooltip = {
 function tip( evt, html )
 {
 	var el = Event.element(evt);
-	Event.observe( el, 'mouseout', function(){window.setTimeout('Tooltip.hide()', 200);}, false );
 	Tooltip.show( evt, html );
+	Event.observe( el, 'mouseout', Tooltip.hide, false );
 }
 
