@@ -228,6 +228,13 @@ function log_line_to_db_entry( $line )
 		case 'AGENTCALLBACKLOGIN':
 			$row['evt'     ] = '_AGENTLOGIN';
 			break;
+		/*
+		case 'ADDMEMBER':
+			# cause by AddQueueMember() in the dialplan, by the
+			# manager interface or by the CLI
+			$row['evt'     ] = '_AGENTLOGIN';
+			break;
+		*/
 		case 'AGENTLOGOFF':
 			$row['evt'     ] = '_AGENTLOGOFF';
 			$row['logindur'] = $d2;
@@ -237,6 +244,13 @@ function log_line_to_db_entry( $line )
 			$row['logindur'] = $d2;
 			$row['reason'  ] = $d3;
 			break;
+		/*
+		case 'REMOVEMEMBER':
+			# cause by RemoveQueueMember() in the dialplan, by the
+			# manager interface or by the CLI
+			$row['evt'     ] = '_AGENTLOGOFF';
+			break;
+		*/
 		case 'EXITWITHKEY':
 			$row['evt'     ] = '_EXIT';
 			$row['reason'  ] = 'KEY';
