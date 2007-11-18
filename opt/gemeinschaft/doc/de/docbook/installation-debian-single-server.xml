@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<section id="installation-1.4-debian-4.0" lang="de" revision="$Revision:473 $">
+  <!--% Copyright (c) 2006 - 2007 by 
+% Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+% Philipp Kempgen <philipp.kempgen@amooma.de>
+% Peter Kozak <peter.kozak@amooma.de>
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Installation Gemeinschaft auf Debian Linux 4.0 (Etch)</title>
+
+  <indexterm>
+    <primary>Gemeinschaft Installationsanleitung</primary>
+
+    <secondary>Debian Linux</secondary>
+  </indexterm>
+
+  <para>Es wird ein <emphasis>frisch</emphasis> installiertes Debian GNU/Linux
+  4.0 (a.k.a Etch) vorausgesetzt. Ein ISO-Image für die Installation finden
+  Sie auf <ulink
+  url="http://www.debian.org/releases/etch/debian-installer/">http://www.debian.org/releases/etch/debian-installer/</ulink>.
+  Ich empfehle das etwa 140 MB grosse Netzinstallations-CD-Image. Eine Debian
+  GNU/Linux-Installationsanleitung befindet sich unter <ulink
+  url="http://www.debian.org/releases/etch/i386/">http://www.debian.org/releases/etch/i386/</ulink>.
+  Ein allgemeines Anwenderhandbuch steht unter <ulink
+  url="http://debiananwenderhandbuch.de/"><citetitle>http://debiananwenderhandbuch.de.</citetitle></ulink></para>
+
+  <warning>
+    <para>Natürlich lässt sich Gemeinschaft auch auf jeder anderen
+    Linux-Distribution installieren. Da die Gemeinschaftsentwickler aber nicht
+    alle auf dieser Welt vorkommenden Linux-Distributionen supporten können,
+    empfehlen wir nur die in dieser Dokumentation beschriebenen. Das erspart
+    im Zwiefelsfall viel Nerven.</para>
+  </warning>
+
+  <para><emphasis>Bitte loggen Sie sich nach der Installation als Benutzer
+  root am System an und führen Sie alle hier angegebenen Befehle mit diesem
+  Benutzer aus.</emphasis></para>
+
+  <para>Als Erstes stellen Sie mit einem <command>apt-get update</command>
+  sicher, dass <code>apt-get</code> alle aktuellen Paketlisten zur Verfügung
+  hat:<screen>debian:~# apt-get update
+Ign cdrom://[Debian GNU/Linux 4.0 r0 _Etch_ - Official i386 NETINST Binary-1 20070407-11:29] etch Release.gpg
+Ign cdrom://[Debian GNU/Linux 4.0 r0 _Etch_ - Official i386 NETINST Binary-1 20070407-11:29] etch Release
+Ign cdrom://[Debian GNU/Linux 4.0 r0 _Etch_ - Official i386 NETINST Binary-1 20070407-11:29] etch/contrib Packages/DiffIndex
+Ign cdrom://[Debian GNU/Linux 4.0 r0 _Etch_ - Official i386 NETINST Binary-1 20070407-11:29] etch/main Packages/DiffIndex
+Hole:1 http://security.debian.org etch/updates Release.gpg [189B]
+OK   http://security.debian.org etch/updates Release
+Ign http://security.debian.org etch/updates/main Packages/DiffIndex   
+Hole:2 http://ftp.de.debian.org etch Release.gpg [378B]
+Ign http://security.debian.org etch/updates/contrib Packages/DiffIndex
+Ign http://security.debian.org etch/updates/main Sources/DiffIndex 
+OK   http://ftp.de.debian.org etch Release                         
+Ign http://security.debian.org etch/updates/contrib Sources/DiffIndex
+OK   http://security.debian.org etch/updates/main Packages
+OK   http://security.debian.org etch/updates/contrib Packages
+Ign http://ftp.de.debian.org etch/main Packages/DiffIndex          
+OK   http://security.debian.org etch/updates/main Sources          
+OK   http://security.debian.org etch/updates/contrib Sources       
+Ign http://ftp.de.debian.org etch/main Sources/DiffIndex           
+OK   http://ftp.de.debian.org etch/main Packages
+OK   http://ftp.de.debian.org etch/main Sources
+Es wurden 2B in 1s geholt (1B/s)
+Paketlisten werden gelesen... Fertig
+debian:~# </screen></para>
+
+  <para>Um sicherzugehen, dass alle Pakete auf dem neuesten Stand sind, führen
+  Sie noch ein <command>apt-get -y upgrade</command> aus:<screen>debian:~# apt-get -y upgrade
+Paketlisten werden gelesen... Fertig
+Abhängigkeitsbaum wird aufgebaut... Fertig
+0 aktualisiert, 0 neu installiert, 0 zu entfernen und 0 nicht aktualisiert.
+debian:~# </screen></para>
+
+  <para>Für den Fall das beim Upgrade der Pakete auch ein neuer Kernel
+  installiert wurde, müssen wir jetzt das System mit <command>shutdown -r
+  now</command> rebooten:<screen>debian:~# shutdown -r now
+
+Broadcast message from root@debian (pts/0) (Fri May  4 19:43:09 2007):
+
+The system is going down for reboot NOW!
+</screen></para>
+
+  <para>Nach dem Booten bitte wieder als root einloggen.</para>
+
+  <para>Jetzt müssen Sie eine ganze Reihe von Packeten installieren. Die
+  erfolgt mit <command>apt-get -y install build-essential libncurses5-dev
+  libcurl3-dev libvorbis-dev libspeex-dev unixodbc unixodbc-dev libiksemel-dev
+  linux-headers-`uname -r` mysql-common mysql-client libmysqlclient15off
+  libmysqlclient15-dev mysql-server ntp-simple expect sudo netcat
+  openssh-client openssh-server openssl zlib1g zlib1g-dev php5 php5-cli
+  php5-mysql php5-ldap apache2 sox mpg123</command></para>
+
+  <screen>debian:~# apt-get -y install build-essential libncurses5-dev libcurl3-dev libvorbis-dev libspeex-dev unixodbc unixodbc-dev libiksemel-dev linux-headers-`uname -r` mysql-common mysql-client libmysqlclient15off libmysqlclient15-dev ntp-simple expect sudo netcat openssh-client openssh-server openssl zlib1g zlib1g-dev php5 php5-cli php5-mysql php5-ldap apache2 sox mpg123
+Paketlisten werden gelesen... Fertig
+AbhÃ¤ngigkeitsbaum wird aufgebaut... Fertig
+Die folgenden zusÃ¤tzlichen Pakete werden installiert:
+  apache2-mpm-prefork apache2-utils apache2.2-common binutils ca-certificates
+  comerr-dev cpp cpp-4.1 defoma dpkg-dev file fontconfig fontconfig-config g++
+  g++-4.1 gcc gcc-4.1 libapache2-mod-php5 libapr1 libaprutil1 libasound2
+  libaudio2 libc6-dev libcurl3 libcurl3-openssl-dev libdbd-mysql-perl
+  libdbi-perl libexpat1 libfontconfig1 libfreetype6 libice6 libidn11
+  libidn11-dev libiksemel3 libjpeg62 libkadm55 libkrb5-dev liblcms1 libltdl3
+  libltdl3-dev libmad0 libmagic1 libmng1 libnet-daemon-perl libodbcinstq1c2
+  libogg-dev libogg0 libpcre3 libplrpc-perl libpng12-0 libpq4 libqt3-mt libsm6
+  libspeex1 libsqlite3-0 libssl-dev libssl0.9.8 libssp0 libstdc++6-4.1-dev
+  libvorbis0a libvorbisenc2 libvorbisfile3 libxcursor1 libxext6 libxfixes3
+  libxft2 libxi6 libxinerama1 libxml2 libxrandr2 libxrender1 libxt6
+  linux-headers-2.6.18-5 linux-kbuild-2.6.18 linux-kernel-headers make
+  mime-support mysql-client-5.0 ntp odbcinst1debian1 oss-compat patch
+  php5-common pkg-config ttf-dejavu ucf
+Vorgeschlagene Pakete:
+  binutils-doc doc-base cpp-doc gcc-4.1-locales defoma-doc psfontmgr
+  x-ttcidfont-conf dfontmgr debian-keyring expectk gcc-4.1-doc lib64stdc++6
+  manpages-dev autoconf automake1.9 libtool flex bison gdb gcc-doc
+  libc6-dev-amd64 lib64gcc1 lib64ssp0 php-pear libasound2-plugins nas
+  glibc-doc libcurl3-dbg dbishell libfreetype6-dev krb5-doc liblcms-utils
+  libtool-doc libcompress-zlib-perl libqt3-mt-psql libqt3-mt-mysql
+  libqt3-mt-odbc speex libstdc++6-4.1-doc make-doc-non-dfsg ntp-doc diff-doc
+  libgnome-dev libmyodbc odbc-postgresql libct1 libqt3-mt-dev
+Empfohlene Pakete:
+  libft-perl bzip2 libmudflap0-dev libgl1-mesa-glx libgl1 libglu1-mesa libglu1
+  libxmu6 xml-core debconf-utils
+Die folgenden NEUEN Pakete werden installiert:
+  apache2 apache2-mpm-prefork apache2-utils apache2.2-common binutils
+  build-essential ca-certificates comerr-dev cpp cpp-4.1 defoma dpkg-dev
+  expect file fontconfig fontconfig-config g++ g++-4.1 gcc gcc-4.1
+  libapache2-mod-php5 libapr1 libaprutil1 libasound2 libaudio2 libc6-dev
+  libcurl3 libcurl3-dev libcurl3-openssl-dev libdbd-mysql-perl libdbi-perl
+  libexpat1 libfontconfig1 libfreetype6 libice6 libidn11 libidn11-dev
+  libiksemel-dev libiksemel3 libjpeg62 libkadm55 libkrb5-dev liblcms1 libltdl3
+  libltdl3-dev libmad0 libmagic1 libmng1 libmysqlclient15-dev
+  libmysqlclient15off libncurses5-dev libnet-daemon-perl libodbcinstq1c2
+  libogg-dev libogg0 libpcre3 libplrpc-perl libpng12-0 libpq4 libqt3-mt libsm6
+  libspeex-dev libspeex1 libsqlite3-0 libssl-dev libssp0 libstdc++6-4.1-dev
+  libvorbis-dev libvorbis0a libvorbisenc2 libvorbisfile3 libxcursor1 libxext6
+  libxfixes3 libxft2 libxi6 libxinerama1 libxml2 libxrandr2 libxrender1 libxt6
+  linux-headers-2.6.18-5 linux-headers-2.6.18-5-686 linux-kbuild-2.6.18
+  linux-kernel-headers make mime-support mpg123 mysql-client mysql-client-5.0
+  mysql-common ntp ntp-simple odbcinst1debian1 openssl oss-compat patch php5
+  php5-cli php5-common php5-ldap php5-mysql pkg-config sox sudo ttf-dejavu ucf
+  unixodbc unixodbc-dev zlib1g-dev
+Die folgenden Pakete werden aktualisiert:
+  libssl0.9.8
+1 aktualisiert, 110 neu installiert, 0 zu entfernen und 4 nicht aktualisiert.
+Es mÃ¼ssen noch 66,9MB von 67,4MB Archiven geholt werden.
+Nach dem Auspacken werden 197MB Plattenplatz zusÃ¤tzlich benutzt.
+Hole:1 http://ftp.de.debian.org etch/main libxfixes3 1:4.0.1-5 [9304B]
+Hole:2 http://security.debian.org etch/updates/main libmagic1 4.17-5etch3 [275kB]
+
+[...]
+
+Richte libvorbis-dev ein (1.1.2.dfsg-1.2) ...
+Richte linux-headers-2.6.18-4 ein (2.6.18.dfsg.1-12) ...
+Richte linux-kbuild-2.6.18 ein (2.6.18-1) ...
+Richte linux-headers-2.6.18-4-686 ein (2.6.18.dfsg.1-12) ...
+Richte unixodbc-dev ein (2.2.11-13) ...
+Richte libstdc++6-4.1-dev ein (4.1.1-21) ...
+Richte g++-4.1 ein (4.1.1-21) ...
+Richte g++ ein (4.1.1-15) ...
+
+Richte build-essential ein (11.3) ...
+debian:~#</screen>
+
+  <para>Als nächstes wechseln wir mit <command>cd /usr/src</command> in das
+  Verzeichnis <filename>/usr/src</filename><screen>debian:~# cd /usr/src
+debian:/usr/src#</screen></para>
+
+  <para>Auf der Asterisk-Homepage <ulink
+  url="http://www.asterisk.org/"><citetitle>http://www.asterisk.org/</citetitle></ulink>
+  finden Sie die notwendigen Quellen, um Asterisk zu mit allen sinnvollen
+  Extras zu installieren. Laden Sie Asterisk 1.4 mit <command>wget
+  http://downloads.digium.com/pub/asterisk/asterisk-1.4-current.tar.gz</command>
+  in das Verzeichnis <filename>/usr/src/</filename> herunter:</para>
+
+  <screen>debian:/usr/src# wget http://downloads.digium.com/pub/asterisk/asterisk-1.4-current.tar.gz
+--18:53:00--  http://downloads.digium.com/pub/asterisk/asterisk-1.4-current.tar.gz
+           =&gt; `asterisk-1.4-current.tar.gz'
+Auflösen des Hostnamen »downloads.digium.com«.... 69.16.138.164
+Verbindungsaufbau zu downloads.digium.com[69.16.138.164]:80... verbunden.
+HTTP Anforderung gesendet, warte auf Antwort... 200 OK
+Länge: 10,928,902 [application/x-gzip]
+
+100%[====================================&gt;] 10,928,902   230.71K/s    ETA 00:00
+
+18:53:47 (227.00 KB/s) - »asterisk-1.4-current.tar.gz« gespeichert [10928902/10928902]
+debian:/usr/src#</screen>
+
+  <para>Weiterhin benötigen wir noch die aktuelle Zaptel-Version, die wir mit
+  <command>wget
+  http://downloads.digium.com/pub/zaptel/zaptel-1.4-current.tar.gz</command>
+  downloaden:<screen>debian:/usr/src# wget http://downloads.digium.com/pub/zaptel/zaptel-1.4-current.tar.gz
+--19:13:47--  http://downloads.digium.com/pub/zaptel/zaptel-1.4-current.tar.gz
+           =&gt; `zaptel-1.4-current.tar.gz'
+Auflösen des Hostnamen »downloads.digium.com«.... 216.27.40.102
+Verbindungsaufbau zu downloads.digium.com|216.27.40.102|:80... verbunden.
+HTTP Anforderung gesendet, warte auf Antwort... 200 OK
+Länge: 2.835.893 (2.7M) [application/x-gzip]
+
+100%[====================================&gt;] 2.835.893    119.68K/s    ETA 00:00
+
+19:14:12 (115.45 KB/s) - »zaptel-1.4-current.tar.gz« gespeichert [2835893/2835893]
+
+debian:/usr/src#</screen></para>
+
+  <para>Als letztes mit <command>wget
+  http://downloads.digium.com/pub/asterisk/asterisk-addons-1.4-current.tar.gz</command>
+  noch die Asterisk Addons downloaden:<programlisting>debian:/usr/src# wget http://downloads.digium.com/pub/asterisk/asterisk-addons-1.4-current.tar.gz
+--16:28:28--  http://downloads.digium.com/pub/asterisk/asterisk-addons-1.4-current.tar.gz
+           =&gt; `asterisk-addons-1.4-current.tar.gz'
+AuflÃ¶sen des Hostnamen Â»downloads.digium.comÂ«.... 216.27.40.102
+Verbindungsaufbau zu downloads.digium.com|216.27.40.102|:80... verbunden.
+HTTP Anforderung gesendet, warte auf Antwort... 200 OK
+LÃ¤nge: 1.002.173 (979K) [application/x-gzip]
+
+100%[====================================&gt;] 1.002.173    110.40K/s    ETA 00:00
+
+16:28:39 (96.33 KB/s) - Â»asterisk-addons-1.4-current.tar.gzÂ« gespeichert [1002173/1002173]
+
+debian:/usr/src# 
+</programlisting></para>
+
+  <para>Die komprimierten Datein werden jetzt mit <command>tar xzf
+  asterisk-1.4-current.tar.gz &amp;&amp; tar xzf zaptel-1.4-current.tar.gz
+  &amp;&amp; tar xzf asterisk-addons-1.4-current.tar.gz</command>
+  entpackt:<screen>debian:/usr/src# tar xzf asterisk-1.4-current.tar.gz &amp;&amp; tar xzf zaptel-1.4-current.tar.gz &amp;&amp; tar xzf asterisk-addons-1.4-current.tar.gz
+debian:/usr/src#   </screen></para>
+
+  <para><important>
+      <para>Bitte beachten Sie das sich die folgenden Verzeichnisnamen
+      natürlich mit aufsteigenden Versionsnummern im Laufe der Zeit verändern.
+      Es liegt in der Natur einer Dokumentation, das diese Nummern nicht
+      aktuell gehalten werden können.</para>
+    </important></para>
+
+  <para>Als erstes wechseln wir mit <command>cd zaptel-1.4.*</command> in das
+  Zaptel Verzeichnis und rufen ein <command>./configure &amp;&amp; make
+  &amp;&amp; make install &amp;&amp; make config</command> auf:<screen>debian:/usr/src# cd zaptel-1.4.*
+debian:/usr/src/zaptel-1.4.1# ./configure &amp;&amp; make &amp;&amp; make install &amp;&amp; make config
+checking for gcc... gcc
+checking for C compiler default output file name... a.out
+checking whether the C compiler works... yes
+checking whether we are cross compiling... no
+checking for suffix of executables... 
+checking for suffix of object files... o
+
+[...]
+
+install -D zaptel.init /etc/init.d/zaptel
+/usr/bin/install -c -D -m 644 zaptel.sysconfig /etc/default/zaptel
+/usr/sbin/update-rc.d zaptel defaults 15 30
+ Adding system startup for /etc/init.d/zaptel ...
+   /etc/rc0.d/K30zaptel -&gt; ../init.d/zaptel
+   /etc/rc1.d/K30zaptel -&gt; ../init.d/zaptel
+   /etc/rc6.d/K30zaptel -&gt; ../init.d/zaptel
+   /etc/rc2.d/S15zaptel -&gt; ../init.d/zaptel
+   /etc/rc3.d/S15zaptel -&gt; ../init.d/zaptel
+   /etc/rc4.d/S15zaptel -&gt; ../init.d/zaptel
+   /etc/rc5.d/S15zaptel -&gt; ../init.d/zaptel
+Zaptel has been configured.
+
+If you have any zaptel hardware it is now recommended to 
+edit /etc/default/zaptel or /etc/sysconfig/zaptel and set there an 
+optimal value for the variable MODULES .
+
+I think that the zaptel hardware you have on your system is:
+debian:/usr/src/zaptel-1.4.1#</screen></para>
+
+  <important>
+    <para>Sollten Sie über keine eingebaute Digium ISDN- oder Analog-Karte
+    verfügen, so müssen Sie manuel in der Datei
+    <filename>/etc/default/zaptel</filename> das Kommentarzeichen am Anfang
+    der Zeile <programlisting>#MODULES="$MODULES ztdummy"</programlisting>
+    entfernen! Sonst können Sie z.B. keine Konferenzräume benutzen.</para>
+  </important>
+
+  <para>Danach gehen wir mit <command>cd /usr/src/asterisk-1.4.*</command> in
+  das Asterisk Verzeichnis und führen auch dort ein <command>./configure
+  &amp;&amp; make &amp;&amp; make install &amp;&amp; make config</command>
+  aus:<screen>debian:/usr/src/zaptel-1.4.1# cd /usr/src/asterisk-1.4.*
+debian:/usr/src/asterisk-1.4.2# ./configure &amp;&amp; make &amp;&amp; make install &amp;&amp; make config
+checking build system type... i686-pc-linux-gnu
+checking host system type... i686-pc-linux-gnu
+checking for gcc... gcc
+checking for C compiler default output file name... a.out
+checking whether the C compiler works... yes
+
+[...]
+
+ +                                           +
+ + You can go ahead and install the asterisk +
+ + program documentation now or later run:   +
+ +                                           +
+ +              make progdocs                +
+ +                                           +
+ + **Note** This requires that you have      +
+ + doxygen installed on your local system    +
+ +-------------------------------------------+
+ Adding system startup for /etc/init.d/asterisk ...
+   /etc/rc2.d/K91asterisk -&gt; ../init.d/asterisk
+   /etc/rc3.d/K91asterisk -&gt; ../init.d/asterisk
+   /etc/rc4.d/K91asterisk -&gt; ../init.d/asterisk
+   /etc/rc5.d/K91asterisk -&gt; ../init.d/asterisk
+   /etc/rc2.d/S50asterisk -&gt; ../init.d/asterisk
+   /etc/rc3.d/S50asterisk -&gt; ../init.d/asterisk
+   /etc/rc4.d/S50asterisk -&gt; ../init.d/asterisk
+   /etc/rc5.d/S50asterisk -&gt; ../init.d/asterisk
+debian:/usr/src/asterisk-1.4.2#</screen></para>
+
+  <para>Die eben kompilierten Programmdateien sind jetzt auf dem System
+  installiert. Auf das <code>make samples</code> können wir verzichten, weil
+  diese Dateien im Gemeinschaftspaket enthalten sind. </para>
+
+  <para>Fertig! Asterisk ist auf Ihrem System installiert. Mit dem Befehl
+  <command>asterisk -V</command> können Sie die installierte Version
+  rausfinden (bitte achten Sie auf das großgeschriebene V):<screen>debian:/usr/src/asterisk-1.4.2# asterisk -V
+Asterisk 1.4.2
+debian:/usr/src/asterisk-1.4.2# </screen></para>
+
+  <para>Jetzt muss noch mit <command>mkdir -p /var/spool/asterisk/outgoing
+  &amp;&amp; chmod a+rwx /var/spool/asterisk/outgoing &amp;&amp; chmod a+rwx
+  /var/spool/asterisk/tmp</command> ein Verzeichnis angelegt und die
+  Schreibrechte von zwei Verzeichnissen angepasst werden:<screen>debian:/usr/src/asterisk-1.4.2# mkdir -p /var/spool/asterisk/outgoing &amp;&amp; chmod a+rwx /var/spool/asterisk/outgoing &amp;&amp; chmod a+rwx /var/spool/asterisk/tmp
+debian:/usr/src/asterisk-1.4.2# </screen></para>
+
+  <para>Installation der Asterisk Add-ons mit dem Befehl <command>cd
+  /usr/src/asterisk-addons-1.4* &amp;&amp; ./configure &amp;&amp; make
+  &amp;&amp; make install &amp;&amp; make samples</command> <screen>debian:/usr/src/asterisk-1.4.2# cd /usr/src/asterisk-addons-1.4* &amp;&amp; ./configure &amp;&amp; make &amp;&amp; make install &amp;&amp; make samples
+checking build system type... i686-pc-linux-gnu
+checking host system type... i686-pc-linux-gnu
+checking target system type... i686-pc-linux-gnu
+checking for uname... /bin/uname
+checking for gcc... gcc
+
+[...]
+
+configure: Package configured for:
+configure: OS type  : Linux
+configure: Host CPU : i686
+debian:/usr/src/asterisk-addons-1.4.4</screen></para>
+
+  <para>Halbzeit! :-)</para>
+
+  <para>Um MP3 Dateien verarbeiten zu können, muss man jetzt noch mit
+  <command>cd /usr/src/ &amp;&amp; wget
+  http://dfn.dl.sourceforge.net/sourceforge/lame/lame-3.97.tar.gz &amp;&amp;
+  tar xzf lame-3.97.tar.gz &amp;&amp; cd lame-3.97 &amp;&amp; ./configure
+  &amp;&amp; make &amp;&amp; make install</command> lame downloaden und
+  installieren<screen>debian:/usr/src/asterisk-addons-1.4.4# cd /usr/src/ &amp;&amp; wget http://dfn.dl.sourceforge.net/sourceforge/lame/lame-3.97.tar.gz &amp;&amp; tar xzf lame-3.97.tar.gz &amp;&amp; cd lame-3.97 &amp;&amp; ./configure &amp;&amp; make &amp;&amp; make install
+--19:10:17--  http://dfn.dl.sourceforge.net/sourceforge/lame/lame-3.97.tar.gz
+           =&gt; `lame-3.97.tar.gz'
+AuflÃ¶sen des Hostnamen Â»dfn.dl.sourceforge.netÂ«.... 194.95.236.6
+Verbindungsaufbau zu dfn.dl.sourceforge.net|194.95.236.6|:80... verbunden.
+HTTP Anforderung gesendet, warte auf Antwort... 200 OK
+LÃ¤nge: 1.328.058 (1.3M) [application/x-gzip]
+
+100%[====================================&gt;] 1.328.058    109.31K/s    ETA 00:00
+
+19:10:39 (101.98 KB/s) - Â»lame-3.97.tar.gzÂ« gespeichert [1328058/1328058]
+
+[...]
+
+</screen></para>
+
+  <para>usw.</para>
+</section>
