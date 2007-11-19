@@ -1,7 +1,0 @@
-http://wiki.snom.com/Mass_deployment#Download_procedure :
----cut---
-When using a Cisco Switch, please make sure to set a :
-
-  carrier-delay 60 for the interface
----cut---
-
