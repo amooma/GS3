@@ -24,19 +24,19 @@
   4.0 (a.k.a Etch) vorausgesetzt. Ein ISO-Image für die Installation finden
   Sie auf <ulink
   url="http://www.debian.org/releases/etch/debian-installer/">http://www.debian.org/releases/etch/debian-installer/</ulink>.
-  Ich empfehle das etwa 140 MB grosse Netzinstallations-CD-Image. Eine Debian
+  Ich empfehle das etwa 140 MB große Netzinstallations-CD-Image. Eine Debian
   GNU/Linux-Installationsanleitung befindet sich unter <ulink
   url="http://www.debian.org/releases/etch/i386/">http://www.debian.org/releases/etch/i386/</ulink>.
   Ein allgemeines Anwenderhandbuch steht unter <ulink
-  url="http://debiananwenderhandbuch.de/"><citetitle>http://debiananwenderhandbuch.de.</citetitle></ulink></para>
+  url="http://debiananwenderhandbuch.de/">http://debiananwenderhandbuch.de.</ulink></para>
 
-  <warning>
+  <note>
     <para>Natürlich lässt sich Gemeinschaft auch auf jeder anderen
     Linux-Distribution installieren. Da die Gemeinschaftsentwickler aber nicht
     alle auf dieser Welt vorkommenden Linux-Distributionen supporten können,
     empfehlen wir nur die in dieser Dokumentation beschriebenen. Das erspart
-    im Zwiefelsfall viel Nerven.</para>
-  </warning>
+    im Zweifelsfall viele Nerven.</para>
+  </note>
 
   <para><emphasis>Bitte loggen Sie sich nach der Installation als Benutzer
   root am System an und führen Sie alle hier angegebenen Befehle mit diesem
@@ -313,7 +313,7 @@ debian:/usr/src/asterisk-1.4.2#</screen></para>
 
   <para>Die eben kompilierten Programmdateien sind jetzt auf dem System
   installiert. Auf das <code>make samples</code> können wir verzichten, weil
-  diese Dateien im Gemeinschaftspaket enthalten sind. </para>
+  diese Dateien im Gemeinschaftspaket enthalten sind.</para>
 
   <para>Fertig! Asterisk ist auf Ihrem System installiert. Mit dem Befehl
   <command>asterisk -V</command> können Sie die installierte Version
