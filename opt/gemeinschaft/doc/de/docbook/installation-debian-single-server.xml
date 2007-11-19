@@ -224,16 +224,16 @@ LÃ¤nge: 1.002.173 (979K) [application/x-gzip]
 debian:/usr/src# 
 </programlisting></para>
 
-  <para>Die komprimierten Datein werden jetzt mit <command>tar xzf
+  <para>Die komprimierten Dateien werden jetzt mit <command>tar xzf
   asterisk-1.4-current.tar.gz &amp;&amp; tar xzf zaptel-1.4-current.tar.gz
   &amp;&amp; tar xzf asterisk-addons-1.4-current.tar.gz</command>
   entpackt:<screen>debian:/usr/src# tar xzf asterisk-1.4-current.tar.gz &amp;&amp; tar xzf zaptel-1.4-current.tar.gz &amp;&amp; tar xzf asterisk-addons-1.4-current.tar.gz
 debian:/usr/src#   </screen></para>
 
   <para><important>
-      <para>Bitte beachten Sie das sich die folgenden Verzeichnisnamen
+      <para>Bitte beachten Sie, dass sich die folgenden Verzeichnisnamen
       natürlich mit aufsteigenden Versionsnummern im Laufe der Zeit verändern.
-      Es liegt in der Natur einer Dokumentation, das diese Nummern nicht
+      Es liegt in der Natur einer Dokumentation, dass diese Nummern nicht
       aktuell gehalten werden können.</para>
     </important></para>
 
