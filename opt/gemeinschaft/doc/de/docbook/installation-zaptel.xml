@@ -887,15 +887,16 @@ T2XXP (PCI) Card 0 Span 2                RED        0          0          0     
 
     <para>In der <filename>/etc/asterisk/zapata.conf</filename><footnote>
         <para>siehe <xref linkend="install-zap-zapata.conf" /></para>
-      </footnote> haben wir alle Kan‰le der ISDN-Karte zur Gruppe 1
+      </footnote> haben wir die Kan‰le der ISDN-Karte zu Gruppen
     zusammengefaﬂt. Daraus folgt, daﬂ wir im Dialplan folgendermaﬂen
-    w‰hlen:<programlisting>Dial(Zap/g<emphasis role="bold">1</emphasis>/<replaceable>Nummer</replaceable>)</programlisting>Dadurch
-    wird immer automatisch ein freier Kanal aus der Gruppe 1 ausgew‰hlt, und
-    zwar wird dabei in der Reihenfolge 1, 2, 3, ... nach einem freien Kanal
-    gesucht. Mit einem groﬂen <literal>G</literal> ist die Reihenfolge
-    umgekehrt. Mit <literal>r</literal> wird nach dem Round-Robin-Verfahren
-    immer zuerst der n‰chste Kanal nach dem zuletzt benutzten getestet, mit
-    <literal>R</literal> der vorangehende.</para>
+    w‰hlen:<programlisting>Dial(Zap/g<emphasis role="bold">1</emphasis>/<replaceable>Telefonummer</replaceable>)</programlisting>bzw.<programlisting>Dial(Zap/g<emphasis
+          role="bold">2</emphasis>/<replaceable>Telefonummer</replaceable>)</programlisting>Dadurch
+    wird immer automatisch ein freier Kanal aus der Gruppe 1 (2, ...)
+    ausgew‰hlt, und zwar wird dabei in der Reihenfolge 1, 2, 3, ... nach einem
+    freien Kanal gesucht. Mit einem groﬂen <literal>G</literal> ist die
+    Reihenfolge umgekehrt. Mit <literal>r</literal> wird nach dem
+    Round-Robin-Verfahren immer zuerst der n‰chste Kanal nach dem zuletzt
+    benutzten getestet, mit <literal>R</literal> der vorangehende.</para>
 
     <para>Zum Testen:<programlisting>exten =&gt; _X.,1,Verbose(1,### Dial ${EXTEN})
 exten =&gt; _X.,n,Dial(Zap/r1/${EXTEN})
