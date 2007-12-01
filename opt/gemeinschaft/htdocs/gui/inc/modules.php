@@ -199,13 +199,22 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
       'users'        => array('title' => __('Benutzer')),
       'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
       'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
-      'gateways'     => array('title' => __('Gateways')),       //TRANSLATE ME
-      'routes_in'    => array('title' => __('Routen eingehend')),//TRANSLATE ME
-      'routes'       => array('title' => __('Routen &amp; LCR')),//TRANSLATE ME
-      'testroute'    => array('title' => __('Routing-Test')),   //TRANSLATE ME
       'ivrs'         => array('title' => __('IVRs')),           //TRANSLATE ME
       'calls'        => array('title' => __('Verbindungen')),
       'reload'       => array('title' => __('Reload'))          //TRANSLATE ME
+   )
+);
+
+#####################################################################
+
+$MODULES['route'    ]=  array('title' => __('Routen'),          //TRANSLATE ME
+                              'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
+                              'perms' => 'admin',
+   'sub' => array(
+      'gateways'     => array('title' => __('Gateways')),       //TRANSLATE ME
+      'routes_in'    => array('title' => __('Routen eingehend')),//TRANSLATE ME
+      'routes'       => array('title' => __('Routen &amp; LCR')),//TRANSLATE ME
+      'testroute'    => array('title' => __('Routing-Test'))    //TRANSLATE ME
    )
 );
 
