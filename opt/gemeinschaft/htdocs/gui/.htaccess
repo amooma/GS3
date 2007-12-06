@@ -1,5 +1,5 @@
-DirectoryIndex index.html index.php
-Options +FollowSymLinks -SymLinksIfOwnerMatch -Indexes
+DirectoryIndex index.php index.html
+Options +FollowSymLinks -SymLinksIfOwnerMatch -Indexes -MultiViews
 DefaultType text/html
 
 <IfModule mod_mime.c>
