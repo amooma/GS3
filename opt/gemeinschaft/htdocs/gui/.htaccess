@@ -8,6 +8,9 @@ DefaultType text/html
 	<IfModule mod_php4.c>
 		AddType application/x-httpd-php .php
 		
+		php_flag engine On
+		php_flag last_modified Off
+		php_flag xbithack Off
 		php_flag magic_quotes_gpc Off
 		php_flag track_vars Off
 		php_flag register_globals Off
@@ -17,6 +20,9 @@ DefaultType text/html
 	<IfModule mod_php5.c>
 		AddType application/x-httpd-php .php
 		
+		php_flag engine On
+		php_flag last_modified Off
+		php_flag xbithack Off
 		php_flag magic_quotes_gpc Off
 		php_flag track_vars Off
 		php_flag register_globals Off
