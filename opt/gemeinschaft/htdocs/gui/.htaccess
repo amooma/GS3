@@ -1,0 +1,69 @@
+DirectoryIndex index.html index.php
+Options +FollowSymLinks -Indexes
+DefaultType text/html
+
+<IfModule mod_mime.c>
+	AddDefaultCharset UTF-8
+	
+	<IfModule mod_php4.c>
+		AddType application/x-httpd-php .php
+		
+		php_flag magic_quotes_gpc Off
+		php_flag track_vars Off
+		php_flag register_globals Off
+		php_value include_path .
+	</IfModule>
+	
+	<IfModule mod_php5.c>
+		AddType application/x-httpd-php .php
+		
+		php_flag magic_quotes_gpc Off
+		php_flag track_vars Off
+		php_flag register_globals Off
+		php_value include_path .
+	</IfModule>
+	
+	<IfModule !mod_php4.c>
+		<IfModule !mod_php5.c>
+			<IfModule !mod_fastcgi.c>
+				<IfModule !mod_fcgid.c>
+					<IfModule mod_actions.c>
+						<IfModule mod_cgi.c>
+							AddType application/x-httpd-php .php
+							
+							Action application/x-httpd-php /cgi-bin/php
+						</IfModule>
+						<IfModule mod_cgid.c>
+							AddType application/x-httpd-php .php
+							
+							Action application/x-httpd-php /cgi-bin/php
+						</IfModule>
+					</IfModule>
+				</IfModule>
+			</IfModule>
+		</IfModule>
+	</IfModule>
+</IfModule>
+
+## Deny config.inc.php file
+#<Files config.inc.php>
+#	Order deny,allow
+#	Deny from all
+#</Files>
+	
+## Authorize for setup
+#<Files setup.php>
+#	# For Apache 1.3 and 2.0
+#	<IfModule mod_auth.c>
+#		AuthType Basic
+#		AuthName "Gemeinschaft Setup"
+#		AuthUserFile /etc/gemeinschaft/htpasswd.setup
+#	</IfModule>
+#	# For Apache 2.2
+#	<IfModule mod_authn_file.c>
+#		AuthType Basic
+#		AuthName "Gemeinschaft Setup"
+#		AuthUserFile /etc/gemeinschaft/htpasswd.setup
+#	</IfModule>
+#	Require valid-user
+#</Files>
