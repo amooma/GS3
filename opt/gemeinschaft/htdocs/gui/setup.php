@@ -199,6 +199,17 @@ function php_ini_bool_verbose( $val )
 		echo $ok ? 'OK' : 'FEHLER';
 	?></td>
 </tr>
+<tr>
+	<td>&nbsp;</td>
+	<td><?php
+		$k = 'mbstring.func_overload';
+		$v = (int)ini_get('mbstring.func_overload');
+		echo '<tt>', $k ,': ', $v ,'</tt>';
+	?></td>
+	<td><?php
+		echo ($v == 0) ? 'OK' : 'FEHLER';
+	?></td>
+</tr>
 
 <tr>
 	<td><?php echo 'Benutzer:'; ?></td>
