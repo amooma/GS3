@@ -1,8 +1,24 @@
 <?php
 
-
 die();
 
+
+
+
+
+?>
+<style type="text/css">
+body, table, td {
+	font-family: 'Lucida Sans', Arial, Helvetica, sans-serif;
+	font-size: 12px; line-height: 1.1em;
+}
+body {background: #fff;}
+td {background: #ddd; padding: 2px 0.3em;}
+.test_ok     {line-height: 1em; padding: 0 4px; background: #0f0; color: #000;}
+.test_notice {line-height: 1em; padding: 0 4px; background: #ff0; color: #000;}
+.test_warn   {line-height: 1em; padding: 0 4px; background: #f32; color: #000;}
+</style>
+<?php
 
 
 
@@ -23,6 +39,10 @@ function php_ini_bool_verbose( $val )
 {
 	return ($val == '1' || strToLower($val) == 'on') ? 'On' : 'Off';
 }
+function _test_result( $str, $status )
+{
+	echo '<span class="test_',$status,'">', htmlEnt($str) ,'</span>';
+}
 
 ?>
 
@@ -30,9 +50,9 @@ function php_ini_bool_verbose( $val )
 <table cellspacing="1" border="0">
 <thead>
 <tr>
-	<td width="160"></td>
-	<td width="300"></td>
-	<td width="150"></td>
+	<th width="140"></th>
+	<th width="300"></th>
+	<th width="130"></th>
 </tr>
 </thead>
 <tbody>
@@ -42,8 +62,12 @@ function php_ini_bool_verbose( $val )
 	<td><?php echo htmlEnt(PHP_OS); ?></td>
 	<td><?php
 		switch (PHP_OS) {
-			case 'Linux': echo 'OK'                    ; break;
-			default     : echo 'NICHT UNTERST&Uuml;TZT'; break;
+			case 'Linux':
+				echo _test_result('OK'                     ,'ok'  );
+				break;
+			default     :
+				echo _test_result('NICHT UNTERST&Uuml;TZT', 'warn');
+				break;
 		}
 	?></td>
 </tr>
@@ -53,13 +77,13 @@ function php_ini_bool_verbose( $val )
 	<td><?php echo htmlEnt(PHP_VERSION); ?></td>
 	<td><?php
 		if     (version_compare(PHP_VERSION, '5.2') >= 0)
-			echo 'OK';
+			echo _test_result('OK', 'ok');
 		elseif (version_compare(PHP_VERSION, '5'  ) >= 0)
-			echo 'NICHT UNTERST&Uuml;TZT';
+			echo _test_result('NICHT UNTERST&Uuml;TZT', 'warn');
 		elseif (version_compare(PHP_VERSION, '4.3') >= 0)
-			echo 'OK';
+			echo _test_result('OK', 'ok');
 		else
-			echo 'NICHT UNTERST&Uuml;TZT';
+			echo _test_result('NICHT UNTERST&Uuml;TZT', 'warn');
 	?></td>
 </tr>
 
@@ -67,57 +91,66 @@ function php_ini_bool_verbose( $val )
 	<td><?php echo 'PHP-Module:'; ?></td>
 	<td><tt><?php echo 'ftp'; ?></tt></td>
 	<td><?php
-		echo (extension_loaded('ftp') ? 'OK' : 'NICHT GELADEN');
+		echo (extension_loaded('ftp')
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT GELADEN', 'warn') );
 	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'ldap'; ?></tt></td>
 	<td><?php
-		echo (extension_loaded('ldap') ? 'OK' : 'NICHT GELADEN');
-	?></td>
+		echo (extension_loaded('ldap')
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT GELADEN', 'warn') );	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'mbstring'; ?></tt></td>
 	<td><?php
-		echo (extension_loaded('mbstring') ? 'OK' : 'NICHT GELADEN');
-	?></td>
+		echo (extension_loaded('mbstring')
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT GELADEN', 'warn') );	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'mysql'; ?></tt></td>
 	<td><?php
-		echo (extension_loaded('mysql') ? 'OK' : 'NICHT GELADEN');
-	?></td>
+		echo (extension_loaded('mysql')
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT GELADEN', 'warn') );	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'pcre'; ?></tt></td>
 	<td><?php
-		echo (extension_loaded('pcre') ? 'OK' : 'NICHT GELADEN');
-	?></td>
+		echo (extension_loaded('pcre')
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT GELADEN', 'warn') );	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'posix'; ?></tt></td>
 	<td><?php
-		echo (extension_loaded('posix') ? 'OK' : 'NICHT GELADEN');
-	?></td>
+		echo (extension_loaded('posix')
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT GELADEN', 'warn') );	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'session'; ?></tt></td>
 	<td><?php
-		echo (extension_loaded('session') ? 'OK' : 'NICHT GELADEN');
-	?></td>
+		echo (extension_loaded('session')
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT GELADEN', 'warn') );	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'sockets'; ?></tt></td>
 	<td><?php
-		echo (extension_loaded('sockets') ? 'OK' : 'NICHT GELADEN');
-	?></td>
+		echo (extension_loaded('sockets')
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT GELADEN', 'warn') );	?></td>
 </tr>
 
 <tr>
@@ -128,7 +161,9 @@ function php_ini_bool_verbose( $val )
 		echo '<tt>', $k ,': ', php_ini_bool_verbose($v) ,'</tt>';
 	?></td>
 	<td><?php
-		echo php_ini_false($v) ? 'OK' : 'FEHLER';
+		echo php_ini_false($v)
+			? _test_result('OK', 'ok')
+			: _test_result('FEHLER', 'warn');
 	?></td>
 </tr>
 <tr>
@@ -139,7 +174,9 @@ function php_ini_bool_verbose( $val )
 		echo '<tt>', $k ,': ', php_ini_bool_verbose($v) ,'</tt>';
 	?></td>
 	<td><?php
-		echo php_ini_false($v) ? 'OK' : 'NICHT OPTIMAL';
+		echo php_ini_false($v)
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT OPTIMAL', 'notice');
 	?></td>
 </tr>
 <tr>
@@ -150,8 +187,9 @@ function php_ini_bool_verbose( $val )
 		echo '<tt>', $k ,': ', php_ini_bool_verbose($v) ,'</tt>';
 	?></td>
 	<td><?php
-		echo php_ini_false($v) ? 'OK' : 'NICHT OPTIMAL';
-	?></td>
+		echo php_ini_false($v)
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT OPTIMAL', 'notice');	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
@@ -161,8 +199,9 @@ function php_ini_bool_verbose( $val )
 		echo '<tt>', $k ,': ', php_ini_bool_verbose($v) ,'</tt>';
 	?></td>
 	<td><?php
-		echo php_ini_false($v) ? 'OK' : 'NICHT OPTIMAL';
-	?></td>
+		echo php_ini_false($v)
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT OPTIMAL', 'notice');	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
@@ -172,8 +211,9 @@ function php_ini_bool_verbose( $val )
 		echo '<tt>', $k ,': ', php_ini_bool_verbose($v) ,'</tt>';
 	?></td>
 	<td><?php
-		echo php_ini_false($v) ? 'OK' : 'NICHT OPTIMAL';
-	?></td>
+		echo php_ini_false($v)
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT OPTIMAL', 'notice');	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
@@ -183,7 +223,9 @@ function php_ini_bool_verbose( $val )
 		echo '<tt>', $k ,': ', $v ,'</tt>';
 	?></td>
 	<td><?php
-		echo ($v >= 30 || $v == 0) ? 'OK' : 'ZU KURZ';
+		echo ($v >= 30 || $v == 0)
+			? _test_result('OK', 'ok')
+			: _test_result('ZU KURZ', 'notice');
 	?></td>
 </tr>
 <tr>
@@ -196,7 +238,9 @@ function php_ini_bool_verbose( $val )
 		echo '<tt>', $k ,' setzbar? ', ($ok ? 'ja' : 'nein') ,'</tt>';
 	?></td>
 	<td><?php
-		echo $ok ? 'OK' : 'FEHLER';
+		echo $ok
+			? _test_result('OK', 'ok')
+			: _test_result('FEHLER', 'notice');
 	?></td>
 </tr>
 <tr>
@@ -207,7 +251,9 @@ function php_ini_bool_verbose( $val )
 		echo '<tt>', $k ,': ', $v ,'</tt>';
 	?></td>
 	<td><?php
-		echo ($v == 0) ? 'OK' : 'FEHLER';
+		echo ($v == 0)
+			? _test_result('OK', 'ok')
+			: _test_result('FEHLER', 'warn');
 	?></td>
 </tr>
 
@@ -253,7 +299,11 @@ function php_ini_bool_verbose( $val )
 			}
 		}
 	?></td>
-	<td><?php echo ($ok ? 'OK' : 'FEHLER'); ?></td>
+	<td><?php
+		echo $ok
+			? _test_result('OK', 'ok')
+			: _test_result('FEHLER', 'warn');
+	?></td>
 </tr>
 
 <tr>
@@ -272,16 +322,56 @@ function php_ini_bool_verbose( $val )
 		?></td>
 		<td><?php
 		switch ($sapi) {
-			case 'apache2handler': echo 'OK'                    ; break;
-			case 'apache2filter' : echo 'OK'                    ; break;
-			case 'apache'        : echo 'OK'                    ; break;
-			case 'cgi-fcgi'      : echo 'OK'                    ; break;
-			case 'cgi'           : echo 'NICHT OPTIMAL'         ; break;
-			case 'cli'           : echo 'NICHT OPTIMAL'         ; break;
-			default              : echo 'NICHT UNTERST&Uuml;TZT'; break;
+			case 'apache2handler': echo _test_result('OK'                    , 'ok'    ); break;
+			case 'apache2filter' : echo _test_result('OK'                    , 'ok'    ); break;
+			case 'apache'        : echo _test_result('OK'                    , 'ok'    ); break;
+			case 'cgi-fcgi'      : echo _test_result('OK'                    , 'ok'    ); break;
+			case 'cgi'           : echo _test_result('NICHT OPTIMAL'         , 'notice'); break;
+			case 'cli'           : echo _test_result('NICHT OPTIMAL'         , 'notice'); break;
+			default              : echo _test_result('NICHT UNTERST&Uuml;TZT', 'warn'  ); break;
 		}
 	?></td>
 </tr>
+
+<tr>
+	<td><?php echo 'Apache-Module:'; ?></td>
+	<td><tt><?php
+		$have_apache_get_modules = false;
+		if (subStr($sapi,0,6) === 'apache') {
+			if (! function_exists('apache_get_modules')) {
+				echo 'keine Informationen';
+			} else {
+				$have_apache_get_modules = true;
+				$apache_mods = array_flip(apache_get_modules());
+				echo '&nbsp;';
+			}
+		} else {
+			echo 'nicht zutreffend';
+		}
+	?></tt></td>
+	<td>&nbsp;</td>
+</tr>
+<?php if ($have_apache_get_modules) { ?>
+<tr>
+	<td>&nbsp;</td>
+	<td><tt>mod_mime</tt></td>
+	<td><?php
+		echo array_key_exists('mod_mime', $apache_mods)
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT GELADEN', 'warn');
+	?></td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+	<td><tt>mod_rewrite</tt></td>
+	<td><?php
+		echo array_key_exists('mod_rewrite', $apache_mods)
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT OPTIMAL', 'notice');
+	?></td>
+</tr>
+<?php } ?>
+
 
 </tbody>
 </table>
