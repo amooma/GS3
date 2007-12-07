@@ -35,6 +35,14 @@ require_once( GS_HTDOCS_DIR .'inc/modules.php' );
 //set_error_handler('err_handler_die_on_err');
 
 
+function _not_found()
+{
+	@header( 'HTTP/1.0 404 Not Found', true, 404 );
+	@header( 'Status: 404 Not Found' , true, 404 );
+	echo 'Not Found.';
+	exit(1);
+}
+
 define('GS_WEB_REWRITE',
 	   array_key_exists('REDIRECT_URL'    , $_SERVER)
 	|| array_key_exists('_GS_HAVE_REWRITE', $_SERVER) );
@@ -49,16 +57,17 @@ if (isSet( $_REQUEST['s'] )) {
 	$MODULE  = '';
 }
 if (preg_match('/[^a-z0-9\\-_]/', $SECTION.$MODULE))
-	die( 'Invalid request! ');
-if (! isSet( $MODULES[$SECTION]['sub'] ))
-	die( 'Invalid request! ');
+	_not_found();
+if (! array_key_exists($SECTION, $MODULES)
+||  ! array_key_exists('sub', $MODULES[$SECTION]))
+	_not_found();
 
 if (count( $MODULES[$SECTION]['sub'] ) < 2 || ! $MODULE) {
 	list($k,$v) = each( $MODULES[$SECTION]['sub'] );
 	$MODULE = $k;
 }
-if (! isSet( $MODULES[$SECTION]['sub'][$MODULE] ))
-	die( 'Invalid request! ');
+if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub']))
+	_not_found();
 
 if ( @$MODULES[$SECTION]['perms'] == 'admin'
 &&   !(preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
