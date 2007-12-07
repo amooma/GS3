@@ -51,7 +51,7 @@ if ($number != '') {
 	
 	# search by number
 	
-	$search_url = '&amp;number='. urlEncode($number);
+	$search_url = 'number='. urlEncode($number);
 	
 	$number_sql = str_replace(
 		array( '*', '?' ),
@@ -79,7 +79,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	# search by name
 	
 	$number = '';
-	$search_url = '&amp;name='. urlEncode($name);
+	$search_url = 'name='. urlEncode($name);
 	
 	$name_sql = str_replace(
 		array( '*', '?' ),
@@ -141,7 +141,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 
 if ($page > 0) {
 	echo
-	'<a href="', gs_url($SECTION, $MODULE), $search_url, '&amp;page=', ($page-1), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+	'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
 	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
 	'</a>', "\n";
 } else {
@@ -150,7 +150,7 @@ if ($page > 0) {
 }
 if ($page < $num_pages-1) {
 	echo
-	'<a href="', gs_url($SECTION, $MODULE), $search_url, '&amp;page=', ($page+1), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+	'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
 	'<img alt="weiter" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
 	'</a>', "\n";
 } else {
