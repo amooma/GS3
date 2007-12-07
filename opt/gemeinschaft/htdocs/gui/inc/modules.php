@@ -212,9 +212,9 @@ $MODULES['routing'  ]=  array('title' => __('Routen'),          //TRANSLATE ME
                               'perms' => 'admin',
    'sub' => array(
       'gateways'     => array('title' => __('Gateways')),       //TRANSLATE ME
-      'routes_in'    => array('title' => __('Routen eingehend')),//TRANSLATE ME
-      'routes'       => array('title' => __('Routen &amp; LCR')),//TRANSLATE ME
-      'testroute'    => array('title' => __('Routing-Test'))    //TRANSLATE ME
+      'inbound'      => array('title' => __('Routen eingehend')),//TRANSLATE ME
+      'outbound'     => array('title' => __('Routen &amp; LCR')),//TRANSLATE ME
+      'test'         => array('title' => __('Routing-Test'))    //TRANSLATE ME
    )
 );
 
