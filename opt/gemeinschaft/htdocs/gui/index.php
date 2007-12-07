@@ -35,11 +35,18 @@ require_once( GS_HTDOCS_DIR .'inc/modules.php' );
 //set_error_handler('err_handler_die_on_err');
 
 
-function _not_found()
+function _not_found( $msg='Not Found.' )
 {
 	@header( 'HTTP/1.0 404 Not Found', true, 404 );
 	@header( 'Status: 404 Not Found' , true, 404 );
-	echo 'Not Found.';
+	echo $msg;
+	exit(1);
+}
+function _not_allowed( $msg='Not Allowed.' )
+{
+	@header( 'HTTP/1.0 403 Forbidden', true, 403 );
+	@header( 'Status: 403 Forbidden' , true, 403 );
+	echo $msg;
 	exit(1);
 }
 
@@ -69,10 +76,10 @@ if (count( $MODULES[$SECTION]['sub'] ) < 2 || ! $MODULE) {
 if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub']))
 	_not_found();
 
-if ( @$MODULES[$SECTION]['perms'] == 'admin'
+if ( @$MODULES[$SECTION]['perms'] === 'admin'
 &&   !(preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
 {
-	die( 'You are not an admin!' );
+	_not_allowed( 'You are not an admin.' );
 }
 
 
