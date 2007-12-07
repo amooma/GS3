@@ -82,7 +82,7 @@ $MODULES['pb'       ]['sub']['csvimport']
 
 #####################################################################
 
-$MODULES['diallog'  ]=  array('title' => __('Anruflisten'),
+$MODULES['calls'    ]=  array('title' => __('Anruflisten'),
                               'icon'  => 'crystal-svg/%s/app/karm.png',
    'sub' => array(
       'out'          => array('title' => __('gew&auml;hlt')),
