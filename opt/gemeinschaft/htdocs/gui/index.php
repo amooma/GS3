@@ -35,6 +35,10 @@ require_once( GS_HTDOCS_DIR .'inc/modules.php' );
 //set_error_handler('err_handler_die_on_err');
 
 
+define('GS_WEB_REWRITE',
+	   array_key_exists('REDIRECT_URL'    , $_SERVER)
+	|| array_key_exists('_GS_HAVE_REWRITE', $_SERVER) );
+
 # get section & module
 #
 if (isSet( $_REQUEST['s'] )) {
@@ -73,10 +77,16 @@ function gs_url( $sect='', $mod='', $sudo_user='' )
 {
 	global $SECTION, $MODULE, $_SESSION;
 	if (! $sudo_user) $sudo_user = @$_SESSION['sudo_user']['name'];
-	return GS_URL_PATH
-		.'?s='. $sect
-		. ($mod ? '&amp;m='. $mod :'')
-		. ($sudo_user ? '&amp;sudo='. $sudo_user :'');
+	if (! GS_WEB_REWRITE) {
+		return GS_URL_PATH
+			.'?s='. $sect
+			. ($mod ? '&amp;m='. $mod :'')
+			. ($sudo_user ? '&amp;sudo='. $sudo_user :'');
+	} else {
+		return GS_URL_PATH
+			. ($sudo_user ? $sudo_user : 'my') .'/'
+			. ($sect ? $sect.'/'. ($mod ? $mod.'/' : '') : '');
+	}
 }
 
 function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
@@ -94,10 +104,10 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="<?php echo @$_SESSION['isolang']; ?>" xml:lang="<?php echo @$_SESSION['isolang']; ?>">
 <head><!--<![CDATA[
                 Gemeinschaft
-  @(_)=====(_)  (c) 2007, amooma GmbH - http://www.amooma.de/
+  @(_)=====(_)  (c) 2007, amooma GmbH - http://www.amooma.de
  @   / ### \    Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
@@ -122,13 +132,13 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
 	<h1><?php echo __('Telefon-Manager'); ?></h1> 
 </div>
 <!--<img alt="Gemeinschaft" src="<?php echo GS_URL_PATH; ?>img/logo.gif" class="fr" />-->
-<div class="tty"><a href="#a-content"><?php echo __('_ Navigation &uuml;berspringen'); /*//TRANSLATE ME*/ ?></a></div>
+<div class="tty"><a href="#a-content"><?php echo __('Navigation &uuml;berspringen'); /*//TRANSLATE ME*/ ?></a></div>
 
-<span class="tty"><?php echo __('_ Sprache') /*//TRANSLATE ME*/; ?>:</span>
+<span class="tty"><?php echo __('Sprache') /*//TRANSLATE ME*/; ?>:</span>
 <a href="<?php echo gs_url($SECTION, $MODULE); ?>&amp;setlang=en_US" title="English">
-<img alt="en_US" src="<?php echo GS_URL_PATH; ?>img/lang/en_US.png" class="fr" /></a>
+<img alt="en-US" src="<?php echo GS_URL_PATH; ?>img/lang/en_US.png" class="fr" /></a>
 <a href="<?php echo gs_url($SECTION, $MODULE); ?>&amp;setlang=de_DE" title="Deutsch">
-<img alt="de_DE" src="<?php echo GS_URL_PATH; ?>img/lang/de_DE.png" class="fr" /></a>
+<img alt="de-DE" src="<?php echo GS_URL_PATH; ?>img/lang/de_DE.png" class="fr" /></a>
 </div>
 
 <div class="sidebar">
