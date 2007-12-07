@@ -59,7 +59,7 @@ $MODULES['pb'       ]=  array('title' => __('Telefonbuch'),
    )
 );
 $tmp = array(
-	15=>array('k' => 'gs' ,
+	15=>array('k' => 'common' ,
 		      's' => array('title' => __('Firma (Projekt)' ))  ),
 	25=>array('k' => 'private',
 	          's' => array('title' => __('Pers&ouml;nlich' ))  )
