@@ -1,6 +1,6 @@
 <?php
 
-//die();
+die();
 
 
 
@@ -336,7 +336,9 @@ function _test_result( $str, $status )
 	<td><?php echo 'Apache-Module:'; ?></td>
 	<td><tt><?php
 		$have_apache_get_modules = false;
-		if (subStr($sapi,0,6) === 'apache') {
+		if (subStr($sapi,0,6) !== 'apache') {
+			echo 'nicht zutreffend';
+		} else {
 			if (! function_exists('apache_get_modules')) {
 				echo 'keine Informationen';
 			} else {
@@ -344,13 +346,20 @@ function _test_result( $str, $status )
 				$apache_mods = array_flip(apache_get_modules());
 				echo '&nbsp;';
 			}
-		} else {
-			echo 'nicht zutreffend';
 		}
 	?></tt></td>
 	<td>&nbsp;</td>
 </tr>
 <?php if ($have_apache_get_modules) { ?>
+<tr>
+	<td>&nbsp;</td>
+	<td><tt>mod_env</tt></td>
+	<td><?php
+		echo array_key_exists('mod_env', $apache_mods)
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT GELADEN', 'warn');
+	?></td>
+</tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt>mod_mime</tt></td>
