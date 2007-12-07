@@ -47,11 +47,11 @@ unset($GS_URL_PATH);
 
 # some headers
 #
-header( 'Content-type: text/html; charset=utf-8' );
-header( 'Pragma: no-cache' );
-header( 'Cache-Control: private, no-cache, must-revalidate' );
-header( 'Expires: 0' );
-header( 'Vary: *' );
+@header( 'Content-type: text/html; charset=utf-8' );
+@header( 'Pragma: no-cache' );
+@header( 'Cache-Control: private, no-cache, must-revalidate' );
+@header( 'Expires: 0' );
+@header( 'Vary: *' );
 
 
 # start or bind to session
