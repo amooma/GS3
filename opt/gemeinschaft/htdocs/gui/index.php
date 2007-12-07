@@ -73,23 +73,25 @@ function htmlEnt( $str )
 	return htmlSpecialChars( $str, ENT_QUOTES, 'UTF-8' );
 }
 
-function gs_url( $sect='', $mod='', $sudo_user='' )
+function gs_url( $sect='', $mod='', $sudo_user=null, $argstr='' )
 {
 	global $SECTION, $MODULE, $_SESSION;
 	if (! $sudo_user) $sudo_user = @$_SESSION['sudo_user']['name'];
 	if (! GS_WEB_REWRITE) {
 		return GS_URL_PATH
-			.'?s='. $sect
-			. ($mod ? '&amp;m='. $mod :'')
-			. ($sudo_user ? '&amp;sudo='. $sudo_user :'');
+			.'?s='.$sect
+			. ($mod ? '&amp;m='.$mod : '')
+			. ($sudo_user ? '&amp;sudo='.$sudo_user : '')
+			. ($argstr ? '&amp;'.$argstr : '');
 	} else {
 		return GS_URL_PATH
 			. ($sudo_user ? $sudo_user : 'my') .'/'
-			. ($sect ? $sect.'/'. ($mod ? $mod.'/' : '') : '');
+			. ($sect ? $sect.'/'. ($mod ? $mod.'/' : '') : '')
+			. ($argstr ? '?'.$argstr : '');
 	}
 }
 
-function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
+function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 {
 	global $SECTION, $MODULE, $_SESSION;
 	if (! $sudo_user) $sudo_user = @$_SESSION['sudo_user']['name'];
@@ -135,9 +137,9 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user='' )
 <div class="tty"><a href="#a-content"><?php echo __('Navigation &uuml;berspringen'); /*//TRANSLATE ME*/ ?></a></div>
 
 <span class="tty"><?php echo __('Sprache') /*//TRANSLATE ME*/; ?>:</span>
-<a href="<?php echo gs_url($SECTION, $MODULE); ?>&amp;setlang=en_US" title="English">
+<a href="<?php echo gs_url($SECTION, $MODULE, null, 'setlang=en_US'); ?>" title="English">
 <img alt="en-US" src="<?php echo GS_URL_PATH; ?>img/lang/en_US.png" class="fr" /></a>
-<a href="<?php echo gs_url($SECTION, $MODULE); ?>&amp;setlang=de_DE" title="Deutsch">
+<a href="<?php echo gs_url($SECTION, $MODULE, null, 'setlang=de_DE'); ?>" title="Deutsch">
 <img alt="de-DE" src="<?php echo GS_URL_PATH; ?>img/lang/de_DE.png" class="fr" /></a>
 </div>
 
