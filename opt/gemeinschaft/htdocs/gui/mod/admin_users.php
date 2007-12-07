@@ -153,7 +153,7 @@ if (!$edit_user) {
 		
 		# search by number
 		
-		$search_url = '&amp;number='. urlEncode($number);
+		$search_url = 'number='. urlEncode($number);
 		
 		$number_sql = str_replace(
 			array( '*', '?' ),
@@ -181,7 +181,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		# search by name
 		
 		$number = '';
-		$search_url = '&amp;name='. urlEncode($name);
+		$search_url = 'name='. urlEncode($name);
 		
 		$name_sql = str_replace(
 			array( '*', '?' ),
@@ -243,7 +243,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	
 	if ($page > 0) {
 		echo
-		'<a href="', gs_url($SECTION, $MODULE), $search_url, '&amp;page=', ($page-1), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
 		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
 		'</a>', "\n";
 	} else {
@@ -252,7 +252,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	}
 	if ($page < $num_pages-1) {
 		echo
-		'<a href="', gs_url($SECTION, $MODULE), $search_url, '&amp;page=', ($page+1), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
 		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
 		'</a>', "\n";
 	} else {
@@ -271,7 +271,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	$chars['#'] = '';
 	for ($i=65; $i<=90; ++$i) $chars[chr($i)] = chr($i);
 	foreach ($chars as $cd => $cs) {
-		echo '<a href="', gs_url($SECTION, $MODULE), '&amp;name=', htmlEnt($cs), '">', htmlEnt($cd), '</a>', "\n";
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'name='. htmlEnt($cs)), '">', htmlEnt($cd), '</a>', "\n";
 	}
 	
 	?>
@@ -348,8 +348,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			echo '</td>';
 			
 			echo '<td>';
-			echo '<a href="',gs_url($SECTION, $MODULE), '&amp;edit=',rawUrlEncode($r['usern']), '&amp;name=',rawUrlEncode($name), '&amp;number=',rawUrlEncode($number), '&amp;page=',$page, '" title="',__('bearbeiten'), '"><img alt="',__('bearbeiten'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-			echo '<a href="',gs_url($SECTION, $MODULE), '&amp;delete=',rawUrlEncode($r['usern']), '&amp;name=',rawUrlEncode($name), '&amp;number=',rawUrlEncode($number), '&amp;page=',$page, '" title="',__('l&ouml;schen'), '"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='. rawUrlEncode($r['usern']) .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('bearbeiten'), '"><img alt="',__('bearbeiten'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='. rawUrlEncode($r['usern']) .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('l&ouml;schen'), '"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			echo "</td>\n";
 			
 			echo '</tr>', "\n";
@@ -679,8 +679,7 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 		echo "</td>\n";
 		
 		echo "<td>\n";
-		echo '<a href="', gs_url($SECTION, $MODULE);
-		echo '&amp;cbdelete='. rawUrlEncode($cb_entry['regexp']) .'&amp;edit=', rawUrlEncode($edit_user), '" title="', __('entfernen'), '">';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'cbdelete='. rawUrlEncode($cb_entry['regexp']) .'&amp;edit='. rawUrlEncode($edit_user)), '" title="', __('entfernen'), '">';
 		echo '<img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo "</td>\n";		
 		
@@ -738,7 +737,7 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 		echo "</td>\n";
 		
 		echo "<td>\n";
-		echo '<a href="', gs_url($SECTION, $MODULE), '&amp;extndel='. $ext_num .'&amp;edit=', rawUrlEncode($edit_user), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'extndel='.$ext_num .'&amp;edit='. rawUrlEncode($edit_user)), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo "</td>\n";		
 		
 		echo "</tr>\n";
