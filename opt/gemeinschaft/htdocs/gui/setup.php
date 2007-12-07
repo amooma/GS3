@@ -372,9 +372,13 @@ function _test_result( $str, $status )
 </tr>
 <?php } ?>
 
+<?php /*
 <tr>
 	<td>HTTP Keep-Alive:</td>
 	<td><?php
+		//flush();
+		//print_r(apache_response_headers());
+		
 		$keepalive = -1;
 		if (array_key_exists('HTTP_KEEP_ALIVE', $_SERVER)) {
 			if ((int)$_SERVER['HTTP_KEEP_ALIVE'] > 1)
@@ -396,6 +400,9 @@ function _test_result( $str, $status )
 		else                      echo _test_result('?', 'notice');
 	?></td>
 </tr>
+*/ ?>
+
+
 
 </tbody>
 </table>
