@@ -175,8 +175,10 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 	if (! @$_SESSION['real_user']['info'])
 		$_SESSION['real_user']['info'] = get_user( $_SESSION['real_user']['name'] );
 	//print_r($_SESSION);
-	if (! @$_SESSION['real_user']['info'])
-		die( sprintf(__('Unknown user "%s".'), @$_SESSION['real_user']['name']) );
+	if (! @$_SESSION['real_user']['info']) {
+		echo sprintf(__('Unknown user "%s".'), @$_SESSION['real_user']['name']), "\n";
+		exit(1);
+	}
 	
 	$_SESSION['login_ok'  ] = true;
 	$_SESSION['login_user'] = $user;
@@ -196,7 +198,7 @@ if ($_SESSION['sudo_user']['name'] == $_SESSION['real_user']['name']) {
 		// info not present (no session support) or sudo user has changed
 		$_SESSION['sudo_user']['info'] = get_user( $_SESSION['sudo_user']['name'] );
 		if (! @$_SESSION['sudo_user']['info']) {
-			echo sprintf(__('Unknown user "%s".'), @$_SESSION['sudo_user']['name']);
+			echo sprintf(__('Unknown user "%s".'), @$_SESSION['sudo_user']['name']), "\n";
 			$_SESSION['sudo_user']['name'] = $_SESSION['real_user']['name'];
 			$_SESSION['sudo_user']['info'] = $_SESSION['real_user']['info'];
 		}
