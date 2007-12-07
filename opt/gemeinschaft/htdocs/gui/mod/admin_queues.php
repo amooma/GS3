@@ -146,7 +146,7 @@ WHERE `_id`='.$queue_id
 #####################################################################
 if ($action === 'edit') {
 	
-	echo '<div class="fr"><a href="', gs_url($SECTION, $MODULE) ,'&amp;page=', $page ,'">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
+	echo '<div class="fr"><a href="', gs_url($SECTION, $MODULE, null, 'page='.$page) ,'">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
 	
 	# get hosts
 	#
@@ -324,7 +324,7 @@ WHERE
 		echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" />
 		</button>' ,"\n";
 		echo "&nbsp;\n";
-		echo '<a href="', gs_url($SECTION, $MODULE) ,'&amp;page=', $page ,'">';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'page='.$page) ,'">';
 		echo '<button type="button" title="', __('Abbrechen'), '" class="plain">';
 		echo '<img alt="', __('Abbrechen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/cancel.png" />
 		</button></a>' ,"\n";
@@ -390,7 +390,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 		echo '<nobr>';
 		if ($page > 0) {
 			echo
-			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page-1), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+			'<a href="',  gs_url($SECTION, $MODULE, null, 'page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
 			'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
 			'</a>', "\n";
 		} else {
@@ -399,7 +399,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 		}
 		if ($page < $num_pages-1) {
 			echo
-			'<a href="',  gs_url($SECTION, $MODULE), '&amp;page=', ($page+1), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+			'<a href="',  gs_url($SECTION, $MODULE, null, 'page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
 			'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
 			'</a>', "\n";
 		} else {
@@ -427,8 +427,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 		echo '<td>', $r['_host_id'] ,' (', @$hosts[$r['_host_id']] ,')</td>',"\n";
 		
 		echo '<td class="">',"\n";
-		echo '<a href="', gs_url($SECTION, $MODULE), '&amp;action=edit&amp;qid=', $r['_id'] ,'&amp;page=', $page ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-		echo '<a href="', gs_url($SECTION, $MODULE), '&amp;action=del&amp;qid=', $r['_id'] ,'&amp;qname=', $r['name'] ,'&amp;page=', $page ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;qid='.$r['_id'] .'&amp;page='.$page) ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=del&amp;qid='.$r['_id'] .'&amp;qname='.$r['name'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo '</td>',"\n";
 		
 		echo '</tr>',"\n";
@@ -436,7 +436,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 	echo '<tr class="', ((++$i%2) ? 'odd':'even'), '">', "\n";
 	echo '<td colspan="4" class="transp">&nbsp;</td>',"\n";
 	echo '<td class="transp">',"\n";
-	echo '<a href="', gs_url($SECTION, $MODULE), '&amp;action=edit&amp;qid=0&amp;page=', $page ,'" title="', __('neue Warteschlange anlegen'), '"><img alt="', __('hinzuf&uuml;gen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;qid=0&amp;page='.$page) ,'" title="', __('neue Warteschlange anlegen'), '"><img alt="', __('hinzuf&uuml;gen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
 ?>

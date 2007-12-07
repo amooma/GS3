@@ -38,10 +38,7 @@ echo '</h2>', "\n";
 
 
 
-
-
 ?>
-
 
 
 <table cellspacing="1">

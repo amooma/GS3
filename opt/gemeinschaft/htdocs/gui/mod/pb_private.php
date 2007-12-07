@@ -238,7 +238,7 @@ $chars = array();
 $chars['#'] = '';
 for ($i=65; $i<=90; ++$i) $chars[chr($i)] = chr($i);
 foreach ($chars as $cd => $cs) {
-	echo '<a href="', gs_url($SECTION, $MODULE), '&amp;name=', htmlEnt($cs), '">', htmlEnt($cd), '</a>', "\n";
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'name='. htmlEnt($cs)), '">', htmlEnt($cd), '</a>', "\n";
 }
 
 ?>
@@ -296,7 +296,7 @@ if (@$rs) {
 			echo '<button type="reset" title="', __('r&uuml;ckg&auml;ngig'), '" class="plain">';
 			echo '<img alt="', __('r&uuml;ckg&auml;ngig'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/reload.png" />';
 			echo '</button>';
-			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;page=', $page, '" title="', __('abbrechen'), '"><img alt="', __('abbrechen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/cancel.png" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'page='. $page), '" title="', __('abbrechen'), '"><img alt="', __('abbrechen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/cancel.png" /></a>';
 	
 			echo '</td>';
 			
@@ -314,8 +314,8 @@ if (@$rs) {
 				(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 				? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
 			echo '<a href="', GS_URL_PATH, 'pb-dial.php?n=', rawUrlEncode($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a> &nbsp; ';
-			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;edit=', $r['id'], '&amp;name=', rawUrlEncode($name), '&amp;number=', rawUrlEncode($number), '&amp;page=', $page, '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-			echo '<a href="', gs_url($SECTION, $MODULE), '&amp;delete='. $r['id'] .'&amp;page=', $page, '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			echo '</td>';
 			
 		}
@@ -341,7 +341,7 @@ if ($edit_entry < 1) {
 		<button type="submit" title="<?php echo __('Eintrag speichern'); ?>" class="plain">
 			<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 		</button>
-		<?php /*echo '<a href="', gs_url($SECTION, $MODULE), '&amp;page=', $page, '" title="abbrechen"><img alt="abbrechen" src="', GS_URL_PATH, 'crystal-svg/16/act/cancel.png" /></a>';*/ ?>
+		<?php /*echo '<a href="', gs_url($SECTION, $MODULE, null, 'page='.$page), '" title="abbrechen"><img alt="abbrechen" src="', GS_URL_PATH, 'crystal-svg/16/act/cancel.png" /></a>';*/ ?>
 	</td>
 <?php
 }

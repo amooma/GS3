@@ -342,14 +342,14 @@ while ($route = $rs->fetchRow()) {
 	
 	echo '<td rowspan="2" class="r transp">';
 	if ($i > 0)
-		echo '<a href="', gs_url($SECTION, $MODULE), '&amp;action=move-up&amp;id=', $route['id'], '"><img alt="&uarr;" src="', GS_URL_PATH, 'img/move_up.gif" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=move-up&amp;id='.$route['id']), '"><img alt="&uarr;" src="', GS_URL_PATH, 'img/move_up.gif" /></a>';
 	else
 		echo '<img alt="&uarr;" src="', GS_URL_PATH, 'img/move_up_d.gif" />';
 	if ($i < $rs->numRows()-1)
-		echo '&thinsp;<a href="', gs_url($SECTION, $MODULE), '&amp;action=move-down&amp;id=', $route['id'], '"><img alt="&darr;" src="', GS_URL_PATH, 'img/move_down.gif" /></a>';
+		echo '&thinsp;<a href="', gs_url($SECTION, $MODULE, null, 'action=move-down&amp;id='.$route['id']), '"><img alt="&darr;" src="', GS_URL_PATH, 'img/move_down.gif" /></a>';
 	else
 		echo '&thinsp;<img alt="&darr;" src="', GS_URL_PATH, 'img/move_down_d.gif" />';
-	echo ' &nbsp; <a href="', gs_url($SECTION, $MODULE), '&amp;action=del&amp;id=', $route['id'], '"><img alt="-;" src="', GS_URL_PATH, 'img/minus.gif" /></a>';
+	echo ' &nbsp; <a href="', gs_url($SECTION, $MODULE, null, 'action=del&amp;id='.$route['id']), '"><img alt="-;" src="', GS_URL_PATH, 'img/minus.gif" /></a>';
 	echo '</td>', "\n";
 	
 	echo '</tr>', "\n";

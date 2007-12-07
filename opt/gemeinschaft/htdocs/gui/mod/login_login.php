@@ -148,7 +148,7 @@ Gemeinschaft auf \"". $hostname ."\"
 </div>
 </form>
 </div>
-<a href="<?php echo gs_url($SECTION, $MODULE); ?>&amp;login_action=forgotpwd" style="font-size:0.95em;"><?php echo __('Pa&szlig;wort vergessen'); ?></a>
+<a href="<?php echo gs_url($SECTION, $MODULE, null, 'login_action=forgotpwd'); ?>" style="font-size:0.95em;"><?php echo __('Pa&szlig;wort vergessen'); ?></a>
 </div>
 <?php
 	
