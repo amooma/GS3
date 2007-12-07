@@ -71,6 +71,9 @@ DefaultType text/html
 	RewriteRule ^setup/        - [L]
 	#RewriteRule ^([^/]+)(?:/([^/]+))? index.php?sudo=$1&s=$1&m=$2 [QSA,L]
 	RewriteRule ^([^/]+)(?:/([^/]+))?(?:/([^/]+))? index.php?sudo=$1&s=$2&m=$3 [QSA,L]
+	<IfModule mod_env.c>
+		SetEnv _GS_HAVE_REWRITE 1
+	</IfModule>
 </IfModule>
 
 ## Deny config.inc.php file
