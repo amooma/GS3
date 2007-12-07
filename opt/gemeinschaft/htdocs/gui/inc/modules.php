@@ -207,7 +207,7 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
 
 #####################################################################
 
-$MODULES['route'    ]=  array('title' => __('Routen'),          //TRANSLATE ME
+$MODULES['routing'  ]=  array('title' => __('Routen'),          //TRANSLATE ME
                               'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
                               'perms' => 'admin',
    'sub' => array(
