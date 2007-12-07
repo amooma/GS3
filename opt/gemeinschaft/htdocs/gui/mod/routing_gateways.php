@@ -47,10 +47,10 @@ $ggid = (int)@$_REQUEST['ggid'];
 /*
 echo '<div class="fr">',"\n";
 if ($action == '') {
-	echo '<a href="', gs_url($SECTION, $MODULE) ,'&amp;action=zapata">Zapata conf</a><br />';
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=zapata') ,'">Zapata conf</a><br />';
 }
 elseif ($action == 'zapata') {
-	echo '<a href="', gs_url($SECTION, $MODULE) ,'&amp;action=">Gateways</a><br />';
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=') ,'">Gateways</a><br />';
 }
 echo '</div>',"\n";
 */
@@ -360,7 +360,7 @@ echo '<hr size="1" />',"\n";
 
 if ($ggid > 0) {
 	echo '<div class="fr">',"\n";
-	echo '<a href="', gs_url($SECTION, $MODULE), '&amp;ggid=', $ggid ,'&amp;action=ggdel" title="', __('l&ouml;schen'), '"><button type="button"><img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /> ', __('l&ouml;schen') ,'</button></a>';
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'ggid='.$ggid .'&amp;action=ggdel') ,'" title="', __('l&ouml;schen'), '"><button type="button"><img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /> ', __('l&ouml;schen') ,'</button></a>';
 	echo '</div>',"\n";
 }
 
@@ -485,7 +485,7 @@ if ($action === 'gedit') {
 		echo '<td><input type="text" name="gw-',$gw['id'],'-dialstr" value="', htmlEnt($gw['dialstr']) ,'" size="30" maxlength="50" style="font-family:monospace;" /></td>',"\n";
 		
 		echo '<td>',"\n";
-		echo '<a href="', gs_url($SECTION, $MODULE), '&amp;ggid=', $ggid ,'&amp;action=gwdel&amp;gwid=', $gw['id'] ,'" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'ggid='.$ggid .'&amp;action=gwdel&amp;gwid='.$gw['id']) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo '</td>',"\n";
 		
 		echo '</tr>',"\n";

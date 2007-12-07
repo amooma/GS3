@@ -97,7 +97,7 @@ if (is_array($jobs_send)) {
 } else $jobs_send_count = 0;
 
 $num_pages = ceil($jobs_send_count / $per_page);
-$mod_url = gs_url($SECTION, $MODULE).'&amp;id=';
+$mod_url = gs_url($SECTION, $MODULE, null, 'id=');
 
 ?>
 	<th style="width:140px;"><?php echo __('Datum'); ?></th>

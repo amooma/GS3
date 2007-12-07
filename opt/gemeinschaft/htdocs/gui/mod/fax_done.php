@@ -113,7 +113,7 @@ if (is_array($jobs_done)) {
 } else $jobs_done_count = 0;
 
 $num_pages = ceil($jobs_done_count / $per_page);
-$mod_url = gs_url($SECTION, $MODULE).'&amp;id=';
+$mod_url = gs_url($SECTION, $MODULE, null, 'id=');
 
 
 ?>

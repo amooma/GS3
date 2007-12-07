@@ -193,12 +193,13 @@ $sum_calltime = (int)@$DB->executeGetOne( 'SELECT SUM(`duration`) FROM `ast_cdr`
 // $num_total_not_null = (int) $DB->executeGetOne( 'SELECT COUNT(*) FROM `ast_cdr` WHERE `billsec` > 0');
 
 
-$mod_url = gs_url($SECTION, $MODULE)
-	.'&amp;src='   . rawUrlEncode($src)
+$mod_url = gs_url($SECTION, $MODULE, null,
+	      'src='   . rawUrlEncode($src)
 	.'&amp;dst='   . rawUrlEncode($dst)
 	.'&amp;dur='   . rawUrlEncode($dur)
 	.'&amp;stat='  . rawUrlEncode($stat)
-	.'&amp;period='. rawUrlEncode($period);
+	.'&amp;period='. rawUrlEncode($period)
+	);
 
 
 ?>
@@ -278,7 +279,7 @@ if ($page < $num_pages-1) {
 		<button type="submit" title="<?php echo __('Suchen'); ?>" class="plain">
 			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
 		</button>
-		<?php echo '<a href="'.gs_url($SECTION, $MODULE).'&page='.$page.'"><img alt="', __('Abbrechen'), '" src="', GS_URL_PATH,'crystal-svg/16/act/cancel.png" /></a>'; ?>
+		<?php echo '<a href="', gs_url($SECTION, $MODULE, null, 'page='.$page) ,'"><img alt="', __('Abbrechen'), '" src="', GS_URL_PATH,'crystal-svg/16/act/cancel.png" /></a>'; ?>
 	</td>
 </tr>
 

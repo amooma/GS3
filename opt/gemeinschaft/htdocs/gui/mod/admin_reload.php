@@ -115,7 +115,7 @@ elseif ($action === 'shutdown' && $shutdown_enabled) {
 <br />
 <input type="checkbox" name="confirm" id="ipt-shutdown-confirm" value="yes" /> <label for="ipt-shutdown-confirm"><?php echo __('Ja, ich wei&szlig; was ich tue'); ?></label><br />
 <br />
-<a href="<?php echo gs_url($SECTION,$MODULE); ?>"><button type="button"><?php echo __('Abbrechen'); ?></button></a>
+<a href="<?php echo gs_url($SECTION, $MODULE); ?>"><button type="button"><?php echo __('Abbrechen'); ?></button></a>
 &nbsp;
 <button type="submit" style="color:#a00;"><?php echo __('Runterfahren'); ?></button>
 </form>

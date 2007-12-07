@@ -2,7 +2,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision:2928 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -87,7 +87,7 @@ $num_pages = ceil($num_total / $per_page);
 
 if ($page > 0) {
 	echo
-	'<a href="', gs_url($SECTION, $MODULE), '&amp;page=', ($page-1), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+	'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
 	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
 	'</a>', "\n";
 } else {
@@ -96,7 +96,7 @@ if ($page > 0) {
 }
 if ($page < $num_pages-1) {
 	echo
-	'<a href="', gs_url($SECTION, $MODULE), '&amp;page=', ($page+1), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+	'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
 	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
 	'</a>', "\n";
 } else {
