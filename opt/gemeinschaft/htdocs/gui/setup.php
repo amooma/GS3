@@ -372,6 +372,30 @@ function _test_result( $str, $status )
 </tr>
 <?php } ?>
 
+<tr>
+	<td>HTTP Keep-Alive:</td>
+	<td><?php
+		$keepalive = -1;
+		if (array_key_exists('HTTP_KEEP_ALIVE', $_SERVER)) {
+			if ((int)$_SERVER['HTTP_KEEP_ALIVE'] > 1)
+				$keepalive = (int)$_SERVER['HTTP_KEEP_ALIVE'];
+		} elseif (array_key_exists('HTTP_CONNECTION', $_SERVER)) {
+			if (strToLower($_SERVER['HTTP_CONNECTION']) == 'keep-alive')
+				$keepalive = 1;
+			else
+				$keepalive = 0;
+		}
+		if     ($keepalive > 0) echo $keepalive;
+		elseif ($keepalive < 0) echo '?';
+		else                    echo '-';
+	?></td>
+	<td><?php
+		if     ($keepalive >= 60) echo _test_result('OK', 'ok');
+		elseif ($keepalive >   0) echo _test_result('ZU KURZ', 'warning');
+		elseif ($keepalive ==  0) echo _test_result('AUS', 'warning');
+		else                      echo _test_result('?', 'notice');
+	?></td>
+</tr>
 
 </tbody>
 </table>
