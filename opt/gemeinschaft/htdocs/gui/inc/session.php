@@ -61,14 +61,16 @@ unset($GS_URL_PATH);
 session_name('gemeinschaft');
 session_start();
 
-if (isSet($_REQUEST['setlang'])) {
+if (array_key_exists('setlang', $_REQUEST)) {
 	$setlang = preg_replace('/[^a-z\d_]/i', '', @$_REQUEST['setlang']);
 	@$_SESSION['lang'] = $setlang;
 }
-if (isSet($_SESSION['lang']))
-	gs_setlang( $_SESSION['lang'] );
+if (array_key_exists('lang', $_SESSION))
+	$ret = gs_setlang( $_SESSION['lang'] );
 else
-	gs_setlang( GS_INTL_LANG );
+	$ret = gs_setlang( GS_INTL_LANG );
+if ($ret) $_SESSION['lang'] = $ret;
+$_SESSION['isolang'] = str_replace('_', '-', $_SESSION['lang']);
 gs_loadtextdomain( 'gemeinschaft-gui' );
 gs_settextdomain( 'gemeinschaft-gui' );
 
