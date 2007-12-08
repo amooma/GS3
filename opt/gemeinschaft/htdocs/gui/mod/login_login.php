@@ -129,9 +129,9 @@ Gemeinschaft auf \"". $hostname ."\"
 } else {
 	
 ?>
-<div style="text-align:center; width:auto; margin:1em 100px 0 0;" />
+<div style="text-align:center; width:auto; margin:1em 100px 0 0;">
 <span style="color:#e00;"><?php echo (@$login_errmsg != '' && trim(@$_REQUEST['login_user']) != '') ? $login_errmsg : '&nbsp;'; ?></span>
-<div style="border:1px solid #ddd; text-align:left; width:200px; margin:0 auto; background:#eee; padding:20px 25px;" />
+<div style="border:1px solid #ddd; text-align:left; width:200px; margin:0 auto; background:#eee; padding:20px 25px;">
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
 <input type="hidden" name="s" value="home" />
 <input type="hidden" name="m" value="home" />
