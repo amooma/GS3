@@ -321,8 +321,8 @@ h1 {
 	text-decoration: none;
 	font-weight: bold;
 	display: block;
-	padding-top: 3px;
-	padding-bottom: 3px;
+	padding-top: 2px;
+	padding-bottom: 2px;
 	/*border-bottom: 1px solid #fcfcfc;*/
 	margin: 0;
 	border-width: 1px 0 1px 0;
@@ -469,5 +469,43 @@ table.tinytbl td input {
 tr.even .transp,
 tr.odd .transp {
 	background: transparent;
+}
+
+
+
+.ivr_steps {
+	border: 1px solid green;
+	margin: 1px; padding: 0;
+	line-height: 1.1em;
+	width: 30em;
+}
+.ivr_children {
+	border: 1px solid purple;
+	margin: 1px; padding: 0;
+	line-height: 1.1em;
+}
+.ivr_ext {
+	font-weight: bold;
+	color: #00a;
+}
+.ivr_ext kbd {
+	font-size: 1.1em;
+}
+.ivr_ivr {
+	border: 1px solid red;
+	margin: 5px; padding: 0;
+	line-height: 1.1em;
+}
+.ivr_children_tbl td {
+	padding: 0px;
+}
+.ivr_editor img {
+	margin: 1px;
+	line-height: 1.1em;
+}
+.ivr_editor * {
+	font-family: monospace !important;
+	font-size: 11px !important;
+	line-height: 1.1em !important;
 }
 
