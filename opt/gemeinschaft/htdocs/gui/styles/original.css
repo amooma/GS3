@@ -160,6 +160,11 @@ body, input, select, table, td {
 
 #headerboxes {
 	height: 35px;
+	/*
+	background:#ff9500;
+	border-top: 2px solid #fec446;
+	border-bottom: 2px solid #fe7700;
+	*/
 	/*background: #b7976f url(../img/header-2.jpg) no-repeat;*/
 	background: #b7976f;
 	/*border-bottom: 1px solid #7a7a7a;*/
