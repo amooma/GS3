@@ -284,7 +284,7 @@ while ($route = $rs->fetchRow()) {
 	echo '</td>', "\n";
 	
 	echo '<td>';
-	echo '<input type="text" name="r_',$id,'_pattern" value="', htmlEnt($route['pattern']), '" size="17" maxlength="30" class="pre" style="font-weight:bold;" />';
+	echo '<input type="text" name="r_',$id,'_pattern" value="', htmlEnt($route['pattern']), '" size="15" maxlength="30" class="pre" style="font-weight:bold;" />';
 	echo '</td>', "\n";
 	
 	echo '<td>';
@@ -384,7 +384,7 @@ echo '<input type="checkbox" name="r_',$id,'_active" value="1" checked="checked"
 echo '</td>', "\n";
 
 echo '<td>';
-echo '<input type="text" name="r_',$id,'_pattern" value="" size="17" maxlength="30" class="pre" style="font-weight:bold;" />';
+echo '<input type="text" name="r_',$id,'_pattern" value="" size="15" maxlength="30" class="pre" style="font-weight:bold;" />';
 echo '</td>', "\n";
 
 echo '<td>';
