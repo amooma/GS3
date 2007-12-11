@@ -92,10 +92,12 @@ function query_string( $period, $src, $dst, $dur, $stat )
 		array( '*', '?' ),
 		array( '%', '_' ),
 		$src);
+	$src_sql = str_replace('\\%', '*', $src_sql);  # make "\*" in the input a literal "*"
 	$dst_sql = str_replace(
 		array( '*', '?' ),
 		array( '%', '_' ),
 		$dst);
+	$dst_sql = str_replace('\\%', '*', $dst_sql);  # make "\*" in the input a literal "*"
 	
 	if ($src != '') {
 		if ($query_line != '') $query_line .= ' AND';
