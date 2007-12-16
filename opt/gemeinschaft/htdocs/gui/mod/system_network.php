@@ -91,7 +91,7 @@ if (empty($ifconfig)) {
 		foreach ($out as $line) {
 			$line = htmlEnt($line);
 			$line = preg_replace( '/([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/S', ' <b style="color:#00e;">$1</b>', $line);
-			if (preg_match('/^([a-z0-9\-_:]+)(.*)/iS', $line, $m))
+			if (preg_match('/^([a-z0-9\-_:.]+)(.*)/iS', $line, $m))
 				echo '<b style="color:#00e;">', $m[1] ,'</b>', $m[2], "\n";
 			else
 				echo $line, "\n";
