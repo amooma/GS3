@@ -299,7 +299,10 @@ zlib
 
     <para>Auf allen Hosts muss das Programm <command>arping</command>
     installiert werden, mit dem mittels ARP die IP-Adressen im Netzwerk
-    bekanntgegeben werden.<programlisting><command>apt-get install arping</command></programlisting>oder<programlisting><command>apt-get install iputils-arping</command></programlisting></para>
+    bekanntgegeben werden.<programlisting><command>apt-get install iputils-arping</command></programlisting><important>
+        <para>Nicht das Paket <literal>arping</literal> installieren. Es
+        enthält ein Programm mit dem gleichen Namen.</para>
+      </important></para>
   </section>
 
   <section id="install-centos-webserver">
