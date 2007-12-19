@@ -124,7 +124,7 @@ $GUI_MON_PEERS_ENABLED      = false;
 
 #$GUI_SHUTDOWN_ENABLED       = false;
   # enable shutdown via web interface?
-  # default: true for INSTALLATION_TYPE=='embedded', false
+  # default: true for INSTALLATION_TYPE=='gpbx', false
   # otherwise
 
 
@@ -274,7 +274,7 @@ $DP_PRV_CALL_PREFIX         = '*7*';  # e.g. "*7*", "96", ...
 
 $INSTALLATION_TYPE      = 'single';
   # the type of the current installation.
-  # "embedded": GPBX
+  # "gpbx"    : GPBX
   # "single"  : single-server installation
   # "cluster" : cluster setup
   # This is just a hint to the GUI and various other scripts.
