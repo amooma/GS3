@@ -250,7 +250,7 @@ $CANONIZE_CBC_PREFIX    = '010';    # Call-by-Call prefix (Germany: 010)
 ***********************************************************/
 
   # emergency numbers - no checking for permissions etc.:
-$DP_EMERGENCY_POLICE        = '110,0110';  # 911,999,767,...
+$DP_EMERGENCY_POLICE        = '110,0110';  # 110,0110,911,999,767,...
 $DP_EMERGENCY_POLICE_MAP    = '110';
 $DP_EMERGENCY_FIRE          = '112,0112';
 $DP_EMERGENCY_FIRE_MAP      = '112';
