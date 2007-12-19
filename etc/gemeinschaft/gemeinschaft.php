@@ -97,7 +97,7 @@ $GUI_AUTH_METHOD            = 'gemeinschaft';
 
 $GUI_NUM_RESULTS            = 12;
 
-$GUI_SUDO_ADMINS            = '47110002, 47110003, 123';
+$GUI_SUDO_ADMINS            = '2000, 2001, 2002, 2003';
   # comma separated list of admin users who can manage *all* accounts
 
 $GUI_SUDO_EXTENDED          = false;
@@ -269,6 +269,15 @@ $DP_PRV_CALL_PREFIX         = '*7*';  # e.g. "*7*", "96", ...
 /***********************************************************
 *    MISC
 ***********************************************************/
+
+$INSTALLATION_TYPE      = 'single';
+  # the type of the current installation.
+  # "embedded": GPBX
+  # "single"  : single-server installation
+  # "cluster" : cluster setup
+  # This is just a hint to the GUI and various other scripts.
+  # Changing it breaks things but does not change the type of
+  # your installation!
 
 $LOCK_DIR               = '/var/lock/';
   # where to write Gemeinschaft lock files. including trailing "/"!
