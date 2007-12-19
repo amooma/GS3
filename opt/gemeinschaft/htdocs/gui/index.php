@@ -29,9 +29,6 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 
-include_once( GS_DIR .'inc/gettext.php' );
-require_once( GS_DIR .'htdocs/gui/inc/session.php' );
-require_once( GS_HTDOCS_DIR .'inc/modules.php' );
 //set_error_handler('err_handler_die_on_err');
 
 
@@ -53,6 +50,48 @@ function _not_allowed( $msg='Not Allowed.' )
 define('GS_WEB_REWRITE',
 	   array_key_exists('REDIRECT_URL'    , $_SERVER)
 	|| array_key_exists('_GS_HAVE_REWRITE', $_SERVER) );
+
+
+if (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('embedded', 'single'), true)) {
+	@include_once( GS_DIR .'inc/keyval.php' );
+	$val = gs_keyval_get('setup_show');
+	if ($val==='yes') {
+		if (subStr($_SERVER['SERVER_PROTOCOL'],5) >= '1.1') {
+			@header( 'HTTP/1.1 303 See Other', true, 303 );
+			@header( 'Status: 303 See Other' , true, 303 );
+		} else {
+			@header( 'HTTP/1.0 302 Moved Temporarily', true, 302 );
+			@header( 'Status: 302 Moved Temporarily' , true, 302 );
+		}
+		$url = (array_key_exists('HTTPS', $_SERVER) ? 'https' : 'http') .'://';
+		if (array_key_exists('HTTP_HOST', $_SERVER))
+			$url .= $_SERVER['HTTP_HOST'];
+		elseif (array_key_exists('SERVER_NAME', $_SERVER))
+			$url .= $_SERVER['SERVER_NAME'];
+		else
+			$url .= @$_SERVER['SERVER_ADDR'];
+		if (array_key_exists('SERVER_PORT', $_SERVER) && @$_SERVER['SERVER_PORT'] != 80)
+			$url .= ':'.$_SERVER['SERVER_PORT'];
+		$url .= dirName($_SERVER['SCRIPT_NAME']).'/setup/';
+		@header( 'Location: '. $url );
+		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' ,"\n";
+		echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">' ,"\n";
+		echo '<head>' ,"\n";
+		echo '<title>Gemeinschaft</title>' ,"\n";
+		echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' ,"\n";
+		echo '</head>' ,"\n";
+		echo '<body>' ,"\n";
+		echo '<br /><p align="center"><a href="setup/">Setup</a></p>' ,"\n";
+		echo '</body>' ,"\n";
+		echo '</html>';		
+	}
+	exit;
+}
+
+include_once( GS_DIR .'inc/gettext.php' );
+require_once( GS_DIR .'htdocs/gui/inc/session.php' );
+require_once( GS_HTDOCS_DIR .'inc/modules.php' );
+
 
 # get section & module
 #
@@ -139,7 +178,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <meta http-equiv="cache-control" content="no-cache" />
 <!-- for stupid MSIE: -->
 <!--[if IE]><link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/msie-fix.css" /><![endif]-->
-<!--[if lte IE 6]><style type="text/css">img {behavior: url("js/pngbehavior.htc.php?msie-sucks=.htc");}</style><![endif]-->
+<!--[if lte IE 6]><style type="text/css">img {behavior: url("<?php echo GS_URL_PATH; ?>js/pngbehavior.htc.php?msie-sucks=.htc");}</style><![endif]-->
 </head>
 <body>
 
@@ -203,8 +242,6 @@ foreach ($MODULES as $sectname => $sectinfo) {
 </div>
 
 <div id="content-container">
-
-
 <div id="sudo-bar">
 <div id="sudo-info">
 <?php
@@ -239,7 +276,6 @@ if (@$_SESSION['login_ok']) {
 <br style="float:none; display:block; clear:right;" />
 </div>
 
-
 <div id="content">
 <hr class="tty" width="50%" align="left" />
 <a name="a-content" id="a-content" class="tty"></a>
@@ -265,7 +301,6 @@ if (file_exists( $file )) {
 </div>
 
 <div class="nofloat"></div>
-
 <div id="copyright">&copy; amooma gmbh</div>
 </body>
 </html>
