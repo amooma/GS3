@@ -28,18 +28,18 @@
 defined('GS_VALID') or die('No direct access.');
 
 
-gs_keyval_is_valid_key( $key )
+function gs_keyval_is_valid_key( $key )
 {
 	return (bool)preg_match('/[a-z0-9_\-][a-z0-9_\-.]*/', $key);
 }
 
-gs_keyval_get( $key )
+function gs_keyval_get( $key )
 {
 	if (! gs_keyval_is_valid_key($key)) return null;
 	return rawUrlDecode(trim((string)@file_get_contents( '/var/lib/gemeinschaft/vars/'.$key )));
 }
 
-gs_keyval_set( $key, $val )
+function gs_keyval_set( $key, $val )
 {
 	if (! gs_keyval_is_valid_key($key)) return false;
 	$val = rawUrlEncode($val);
