@@ -113,6 +113,12 @@ function _gscnf( $param, $default=null )
 }
 
 
+if (! in_array($INSTALLATION_TYPE, array('embedded', 'single', 'cluster'), true)) {
+	trigger_error( "INSTALLATION_TYPE \"$INSTALLATION_TYPE\" not recognized! Muste be one of \"embedded\", \"single\", \"cluster\".\n", E_USER_ERROR );
+	exit(1);
+}
+_gscnf( 'INSTALLATION_TYPE'         , 'single'           );
+
 _gscnf( 'DB_MASTER_HOST'            , '0.0.0.0'          );
 _gscnf( 'DB_MASTER_USER'            , 'root'             );
 _gscnf( 'DB_MASTER_PWD'             , ''                 );
