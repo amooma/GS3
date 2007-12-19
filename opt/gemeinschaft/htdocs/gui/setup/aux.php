@@ -29,12 +29,15 @@ defined('GS_VALID') or die('No direct access.');
 
 
 /*
+    setup_pwd set?
+    no  => go to setup
+    yes => depends on setup_show
+    
     Valid values for setup_show:
-                allowed  autoshow
-    "autoshow"    [x]      [x]     (sets setup_show to "once" after the setup)
-    "allowed"     [x]      [ ]
-    "forbidden"   [ ]      [ ]
-    Other values are treated as "forbidden" for security reasons.
+               autoshow  password
+    "autoshow"   [x]       [ ]    (sets setup_show to "password" after the setup)
+    "password"   [ ]       [x]
+    Other values are treated as "password" for security reasons.
 */
 
 function _gs_setup_mode()
@@ -42,7 +45,7 @@ function _gs_setup_mode()
 	if (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('embedded', 'single'), true)) {
 		@include_once( GS_DIR .'inc/keyval.php' );
 		$val = gs_keyval_get('setup_show');
-		if (in_array($val, array('autoshow','allowed'), true))
+		if (in_array($val, array('autoshow','password'), true))
 			return $val;
 	}
 	return false;
@@ -51,7 +54,7 @@ function _gs_setup_mode()
 function gs_setup_allowed( $_val=null )
 {
 	$val = ($_val===null ? _gs_setup_mode() : $_val);
-	return (in_array($val, array('autoshow','allowed'), true));
+	return (in_array($val, array('autoshow','password'), true));
 }
 
 function gs_setup_autoshow()
