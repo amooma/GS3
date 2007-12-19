@@ -151,7 +151,7 @@ _gscnf( 'GUI_QUEUE_SHOW_NUM_CALLS'  , false              );
 _gscnf( 'GUI_QUEUE_INFO_FROM_DB'    , false              );
 _gscnf( 'GUI_MON_NOQUEUEBLUE'       , true               );
 _gscnf( 'GUI_MON_PEERS_ENABLED'     , false              );
-_gscnf( 'GUI_SHUTDOWN_ENABLED'      , false              );
+_gscnf( 'GUI_SHUTDOWN_ENABLED'      , gs_get_conf('INSTALLATION_TYPE')==='embedded');
 
 _gscnf( 'EXTERNAL_NUMBERS_BACKEND'  , 'db'               );
 _gscnf( 'EXTERNAL_NUMBERS_LDAP_PROP', ''                 );
