@@ -113,8 +113,8 @@ function _gscnf( $param, $default=null )
 }
 
 
-if (! in_array($INSTALLATION_TYPE, array('embedded', 'single', 'cluster'), true)) {
-	trigger_error( "INSTALLATION_TYPE \"$INSTALLATION_TYPE\" not recognized! Muste be one of \"embedded\", \"single\", \"cluster\".\n", E_USER_ERROR );
+if (! in_array($INSTALLATION_TYPE, array('gpbx', 'single', 'cluster'), true)) {
+	trigger_error( "INSTALLATION_TYPE \"$INSTALLATION_TYPE\" not recognized! Muste be one of \"gpbx\", \"single\", \"cluster\".\n", E_USER_ERROR );
 	exit(1);
 }
 _gscnf( 'INSTALLATION_TYPE'         , 'single'           );
@@ -151,7 +151,7 @@ _gscnf( 'GUI_QUEUE_SHOW_NUM_CALLS'  , false              );
 _gscnf( 'GUI_QUEUE_INFO_FROM_DB'    , false              );
 _gscnf( 'GUI_MON_NOQUEUEBLUE'       , true               );
 _gscnf( 'GUI_MON_PEERS_ENABLED'     , false              );
-_gscnf( 'GUI_SHUTDOWN_ENABLED'      , gs_get_conf('INSTALLATION_TYPE')==='embedded');
+_gscnf( 'GUI_SHUTDOWN_ENABLED'      , gs_get_conf('INSTALLATION_TYPE')==='gpbx');
 
 _gscnf( 'EXTERNAL_NUMBERS_BACKEND'  , 'db'               );
 _gscnf( 'EXTERNAL_NUMBERS_LDAP_PROP', ''                 );
