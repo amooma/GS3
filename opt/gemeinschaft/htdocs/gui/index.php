@@ -88,6 +88,7 @@ if (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('embedded', 'single'), t
 	exit;
 }
 
+
 include_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );
 require_once( GS_HTDOCS_DIR .'inc/modules.php' );
