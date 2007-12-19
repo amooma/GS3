@@ -52,10 +52,10 @@ define('GS_WEB_REWRITE',
 	|| array_key_exists('_GS_HAVE_REWRITE', $_SERVER) );
 
 
+
 if (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('embedded', 'single'), true)) {
-	@include_once( GS_DIR .'inc/keyval.php' );
-	$val = gs_keyval_get('setup_show');
-	if ($val==='yes') {
+	require_once( GS_DIR .'htdocs/gui/setup/aux.php' );
+	if (gs_setup_autoshow()) {
 		if (subStr($_SERVER['SERVER_PROTOCOL'],5) >= '1.1') {
 			@header( 'HTTP/1.1 303 See Other', true, 303 );
 			@header( 'Status: 303 See Other' , true, 303 );
@@ -84,8 +84,8 @@ if (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('embedded', 'single'), t
 		echo '<br /><p align="center"><a href="setup/">Setup</a></p>' ,"\n";
 		echo '</body>' ,"\n";
 		echo '</html>';		
+		exit;
 	}
-	exit;
 }
 
 
