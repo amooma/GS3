@@ -114,7 +114,7 @@ function _gscnf( $param, $default=null )
 
 
 if (! in_array($INSTALLATION_TYPE, array('gpbx', 'single', 'cluster'), true)) {
-	trigger_error( "INSTALLATION_TYPE \"$INSTALLATION_TYPE\" not recognized! Muste be one of \"gpbx\", \"single\", \"cluster\".\n", E_USER_ERROR );
+	trigger_error( "INSTALLATION_TYPE \"$INSTALLATION_TYPE\" not recognized! Must be one of \"gpbx\", \"single\", \"cluster\".\n", E_USER_ERROR );
 	exit(1);
 }
 _gscnf( 'INSTALLATION_TYPE'         , 'single'           );
