@@ -45,10 +45,10 @@ gs_keyval_set( $key, $val )
 	$val = rawUrlEncode($val);
 	$fh = @fOpen( '/var/lib/gemeinschaft/vars/'.$key, 'wb' );
 	if (! $fh) return false;
-	stream_set_write_buffer($fh, 0);
-	if (! @fWrite($fh, $val, strLen($val))) return false;
+	@stream_set_write_buffer($fh, 0);
+	$ok = (bool)@fWrite($fh, $val, strLen($val));
 	@fClose($fh);
-	return true;
+	return $ok;
 }
 
 
