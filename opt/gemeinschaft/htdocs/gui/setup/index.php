@@ -26,7 +26,12 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 define( 'GS_VALID', true );  /// this is a parent file
-# do not include the main config here. this is the setup :)
+
+require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
+# do not rely on any settings in the main config!
+# this is the setup!
+include_once( GS_DIR .'inc/gettext.php' );
+include_once( GS_DIR .'htdocs/gui/setup/inc/aux.php' );
 
 
 # set URL path
@@ -63,13 +68,20 @@ if (array_key_exists('setlang', $_REQUEST)) {
 if (array_key_exists('lang', $_SESSION))
 	$ret = gs_setlang( $_SESSION['lang'] );
 else
-	$ret = gs_setlang( GS_INTL_LANG );
+	#$ret = gs_setlang( GS_INTL_LANG );
+	$ret = gs_setlang( 'de' );
 if ($ret) $_SESSION['lang'] = $ret;
 $_SESSION['isolang'] = str_replace('_', '-', $_SESSION['lang']);
 gs_loadtextdomain( 'gemeinschaft-gui' );
 gs_settextdomain( 'gemeinschaft-gui' );
 
 
+# authenticate the user
+#
+if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
+	require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );
+	
+}
 
 
 
