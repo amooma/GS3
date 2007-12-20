@@ -25,7 +25,8 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 * MA 02110-1301, USA.
 \*******************************************************************/
-#defined('GS_VALID') or die('No direct access.');
+define( 'GS_VALID', true );  /// this is a parent file
+# do not include the main config here. this is the setup :)
 
 
 # set URL path
