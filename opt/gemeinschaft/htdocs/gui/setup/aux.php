@@ -40,6 +40,7 @@ defined('GS_VALID') or die('No direct access.');
     Other values are treated as "password" for security reasons.
 */
 
+/*
 function _gs_setup_mode()
 {
 	if (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('embedded', 'single'), true)) {
@@ -62,6 +63,24 @@ function gs_setup_autoshow()
 	$val = _gs_setup_mode();
 	if (gs_setup_allowed($val)) {
 		if ($val==='autoshow') return true;
+	}
+	return false;
+}
+*/
+
+function gs_setup_possible()
+{
+	return (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('embedded', 'single'), true));
+}
+
+function gs_setup_autoshow()
+{
+	if (gs_setup_possible()) {
+		@include_once( GS_DIR .'inc/keyval.php' );
+		$val = gs_keyval_get('setup_pwd');
+		if ($val == '') return true;
+		$val = gs_keyval_get('setup_show');
+		if ($val === 'autoshow') return true;
 	}
 	return false;
 }
