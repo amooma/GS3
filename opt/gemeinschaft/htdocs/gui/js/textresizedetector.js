@@ -1,3 +1,5 @@
+/* $Revision$ */
+/* public domain */
 
 var TextResizeDetector = function()
 {
@@ -117,4 +119,3 @@ var TextResizeDetector = function()
 
 TextResizeDetector.target_el = document;
 TextResizeDetector.user_init_fn = null;
-
