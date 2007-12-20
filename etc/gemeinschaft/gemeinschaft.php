@@ -93,7 +93,8 @@ $LDAP_PROP_PHONE        = 'telephonenumber'; # e.g. "telephonenumber"
 // not used. always start session but fallback gracefully
 
 $GUI_AUTH_METHOD            = 'gemeinschaft';
-                                    # "gemeinschaft"|"webseal"
+  # "gemeinschaft": authenticate users against our internal database
+  # "webseal"     : trust the non-standard "IV-User" HTTP header
 
 $GUI_NUM_RESULTS            = 12;
 
