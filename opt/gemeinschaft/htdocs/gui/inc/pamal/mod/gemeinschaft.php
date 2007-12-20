@@ -50,7 +50,7 @@ class PAMAL_auth_gemeinschaft extends PAMAL_auth
 		if (!$db) return false;
 		
 		$pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `user`=\''. $db->escape($user_entered) .'\'' );
-		if ($pin == $pwd_entered)
+		if ($pin === $pwd_entered)
 			return $user_entered;
 		
 		return false;
