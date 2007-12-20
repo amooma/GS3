@@ -30,7 +30,7 @@ defined('PAMAL_DIR') or die('No direct access.');
 
 #####################################################################
 #	for WebSeal Tivoli Access Manager,
-#	reads user from the iv-user HTTP header
+#	reads user from the non-standard "iv-user" HTTP header
 #####################################################################
 class PAMAL_auth_webseal extends PAMAL_auth
 {
