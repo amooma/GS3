@@ -62,7 +62,7 @@ session_name('gemeinschaft');
 session_start();
 
 
-#set language
+# set language
 #
 if (array_key_exists('setlang', $_REQUEST)) {
 	$setlang = preg_replace('/[^a-z\d_]/i', '', @$_REQUEST['setlang']);
