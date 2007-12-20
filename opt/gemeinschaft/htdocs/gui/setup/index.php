@@ -30,8 +30,9 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 # do not rely on any settings in the main config!
 # this is the setup!
-include_once( GS_DIR .'inc/gettext.php' );
-include_once( GS_DIR .'htdocs/gui/setup/inc/aux.php' );
+require_once( GS_DIR .'inc/gettext.php' );
+require_once( GS_DIR .'htdocs/gui/setup/inc/aux.php' );
+require_once( GS_DIR .'inc/keyval.php' );
 
 
 # set URL path
@@ -40,6 +41,14 @@ $GS_URL_PATH = dirName(@$_SERVER['SCRIPT_NAME']);
 if (subStr($GS_URL_PATH,-1,1) != '/') $GS_URL_PATH .= '/';
 define( 'GS_URL_PATH', $GS_URL_PATH );
 unset($GS_URL_PATH);
+
+
+# setup possible on this installation?
+if (! gs_setup_possible()) {
+	@header( 'Content-Type: text/plain; charset=utf-8' );
+	echo 'Setup via GUI not possible for your installation!' ,"\n";
+	exit(1);
+}
 
 
 # some headers
@@ -78,16 +87,37 @@ gs_settextdomain( 'gemeinschaft-gui' );
 
 # authenticate the user
 #
-if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
-	require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );
-	
+$login_info   = '';
+$login_errmsg = '';
+if (! @$_SESSION['login_ok']) {
+	if (gs_setup_autoshow()) {
+		$_SESSION['login_ok'] = true;
+	}
+	else {
+		function gs_setup_auth_by_pwd()
+		{
+			$pwd_entered = @$_REQUEST['login_pwd'];
+			if ($pwd_entered=='') return false;
+			$pwd_correct = gs_keyval_get('setup_pwd');
+			if ($pwd_entered === $pwd_correct)
+				return true;
+			return false;
+		}
+		if (! gs_setup_auth_by_pwd()) {
+			$login_info = __('Sie sind nicht eingeloggt.');
+			$login_errmsg = __('Pa&szlig;wort ung&uuml;ltig');
+		}
+		else {
+			$_SESSION['login_ok'] = true;
+		}
+	}
 }
 
 
 
 
-echo GS_URL_PATH;
-
+echo GS_URL_PATH ,"<br/>\n";
+print_r($_SESSION);
 
 
 
