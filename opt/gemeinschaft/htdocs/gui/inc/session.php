@@ -61,6 +61,9 @@ unset($GS_URL_PATH);
 session_name('gemeinschaft');
 session_start();
 
+
+#set language
+#
 if (array_key_exists('setlang', $_REQUEST)) {
 	$setlang = preg_replace('/[^a-z\d_]/i', '', @$_REQUEST['setlang']);
 	@$_SESSION['lang'] = $setlang;
