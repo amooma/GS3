@@ -1,5 +1,4 @@
 <?php
-
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
