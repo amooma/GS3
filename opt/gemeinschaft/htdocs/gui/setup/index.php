@@ -53,7 +53,7 @@ if (! gs_setup_possible()) {
 
 # some headers
 #
-@header( 'Content-type: text/html; charset=utf-8' );
+@header( 'Content-Type: text/html; charset=utf-8' );
 @header( 'Pragma: no-cache' );
 @header( 'Cache-Control: private, no-cache, must-revalidate' );
 @header( 'Expires: 0' );
@@ -125,6 +125,8 @@ $step_file = GS_DIR .'htdocs/gui/setup/mod/'.$step.'.php';
 if (! file_exists($step_file)) {
 	@header( 'HTTP/1.0 404 Not Found', true, 404 );
 	@header( 'Status: 404 Not Found', true, 404 );
+	@header( 'Content-Type: text/plain; charset=utf-8' );
+	echo 'Page not found!' ,"\n";
 	exit(1);
 }
 
