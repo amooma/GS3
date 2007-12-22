@@ -2,7 +2,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision:2991 $
+* $Revision$
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -26,12 +26,48 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 defined('GS_VALID') or die('No direct access.');
-
 require_once( GS_DIR .'inc/find_executable.php' );
+$can_continue = false;
 
 
+?>
 
-echo 'Ausf&uuml;hrungsrechte: ';
+<div style="width:500px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
+<h1><?php echo 'Willkommen!'; ?></h1>
+<p>
+<?php
+	$installation_type = gs_get_conf('GS_INSTALLATION_TYPE');
+	switch ($installation_type) {
+		case 'gpbx':
+			echo 'Die folgenden Schritte leiten Sie durch die grundlegende Netzwerk-Konfiguration der <b>GPBX</b>.' ,"\n";
+			break;
+		default:
+			echo 'Die folgenden Schritte leiten Sie durch die grundlegende Netzwerk-Konfiguration der Telefonanlage <b>Gemeinschaft</b>.' ,"\n";
+			break;
+	}
+	echo 'Sie k&ouml;nnen sp&auml;ter jederzeit zum Setup zur&uuml;ckkehren um Einstellungen zu ver&auml;ndern.' ,"\n";
+?>
+</p>
+<p>
+<?php
+	echo 'Installationsart' ,': <b>';
+	switch ($installation_type) {
+		case 'gpbx'  :  echo 'GPBX'         ; break;
+		case 'single':  echo 'Einzel-Server'; break;
+		default      :  echo 'unbekannt'    ; break;
+	}
+	echo '</b>' ,"\n";
+?>
+</p>
+<hr />
+<br />
+
+
+<?php
+
+echo 'Sprache' ,': <b>', 'Deutsch' ,'</b><br />' ,"\n";
+
+echo 'Ausf&uuml;hrungsrechte' ,': <b>';
 /*
 $sapi = php_sapi_name();
 if (subStr($sapi, 0, 6) !== 'apache') {
@@ -112,12 +148,16 @@ if (! $expect) {
 				echo sPrintF('FEHLER (User &quot;%s&quot; hat nicht gen&uuml;gend Rechte)', 'root');
 			} else {
 				echo 'OK';
+				$can_continue = true;
 			}
 		}
 	}
 }
-echo '<br />' ,"\n";
+echo '</b><br />' ,"\n";
+
 
 
 
 ?>
+
+</div>
