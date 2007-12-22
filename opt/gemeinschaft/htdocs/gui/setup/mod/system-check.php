@@ -157,6 +157,17 @@ echo '</b><br />' ,"\n";
 
 
 
+?>
+<br />
+<hr />
+<?php
+
+if (! $can_continue) {
+	echo 'In diesem Setup-Schritt sind Fehler aufgetreten!' ,"\n";
+} else {
+	echo '<a class="fr" href="', GS_URL_PATH ,'setup/?step=network">weiter</a>' ,"\n";
+	echo '<br class="nofloat" />' ,"\n";
+}
 
 ?>
 
