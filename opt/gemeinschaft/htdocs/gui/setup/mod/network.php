@@ -32,7 +32,7 @@ $can_continue = false;
 
 ?>
 
-<div style="width:500px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
+<div style="width:550px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
 <h1><?php echo 'Netzwerk'; ?></h1>
 <p>
 <?php
@@ -68,6 +68,7 @@ $can_continue = false;
 			echo '<input type="text" name="ipaddr_',$i ,'" size="3" maxlength="3" class="r pre" value="', $part ,'" />';
 			if ($i < 3) echo '.';
 		}
+		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/IP-Adresse">http://de.wikipedia.org/wiki/IP-Adresse</a>' ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
@@ -75,13 +76,15 @@ $can_continue = false;
 	<th><?php echo 'Netzmaske'; ?></th>
 	<td>
 <?php
-		$netmask_parts = explode('.', '255.255.0.0');
+		$netmask = gs_keyval_get('vlan_data_netmask');
+		$netmask_parts = explode('.', $netmask);
 		for ($i=0; $i<=3; ++$i) {
 			$part = lTrim(@$netmask_parts[$i], '0');
 			if ($part == '') $part = '0';
 			echo '<input type="text" name="netmask_',$i ,'" size="3" maxlength="3" class="r pre" value="', $part ,'" />';
 			if ($i < 3) echo '.';
 		}
+		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/Netzmaske">http://de.wikipedia.org/wiki/Netzmaske</a>' ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
@@ -89,75 +92,97 @@ $can_continue = false;
 	<th><?php echo 'Router'; ?></th>
 	<td>
 <?php
-		$router_parts = explode('.', '0.0.0.1');
+		$router = gs_keyval_get('vlan_data_router');
+		$router_parts = explode('.', $router);
 		for ($i=0; $i<=3; ++$i) {
 			$part = lTrim(@$router_parts[$i], '0');
 			if ($part == '') $part = '0';
 			echo '<input type="text" name="router_',$i ,'" size="3" maxlength="3" class="r pre" value="', $part ,'" />';
 			if ($i < 3) echo '.';
 		}
+		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/Router">http://de.wikipedia.org/wiki/Router</a>' ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'DNS (1)'; ?></th>
+	<th><?php echo 'DNS-Server (1)'; ?></th>
 	<td>
 <?php
-		$dns_parts = explode('.', '0.0.0.1');
+		$dns1 = gs_keyval_get('vlan_data_dns1');
+		if (trim($dns1) != '') {
+			$dns1_parts = explode('.', $dns1);
+			for ($i=0; $i<=3; ++$i) {
+				$dns1_parts[$i] = lTrim(@$dns1_parts[$i], '0 ');
+				if ($dns1_parts[$i] == '') $dns1_parts[$i] = '0';
+			}
+		} else {
+			$dns1_parts = array('','','','');
+		}
 		for ($i=0; $i<=3; ++$i) {
-			$part = lTrim(@$dns_parts[$i], '0');
-			if ($part == '') $part = '0';
-			echo '<input type="text" name="dns1_',$i ,'" size="3" maxlength="3" class="r pre" value="', $part ,'" />';
+			echo '<input type="text" name="dns1_',$i ,'" size="3" maxlength="3" class="r pre" value="', @$dns1_parts[$i] ,'" />';
 			if ($i < 3) echo '.';
 		}
 ?>
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'DNS (2)'; ?></th>
+	<th><?php echo 'DNS-Server (2)'; ?></th>
 	<td>
 <?php
-		$dns_parts = explode('.', '0.0.0.1');
+		$dns2 = gs_keyval_get('vlan_data_dns2');
+		if (trim($dns2) != '') {
+			$dns2_parts = explode('.', $dns2);
+			for ($i=0; $i<=3; ++$i) {
+				$dns2_parts[$i] = lTrim(@$dns2_parts[$i], '0 ');
+				if ($dns2_parts[$i] == '') $dns2_parts[$i] = '0';
+			}
+		} else {
+			$dns2_parts = array('','','','');
+		}
 		for ($i=0; $i<=3; ++$i) {
-			$part = lTrim(@$dns_parts[$i], '0');
-			if ($part == '') $part = '0';
-			echo '<input type="text" name="dns2_',$i ,'" size="3" maxlength="3" class="r pre" value="', $part ,'" />';
+			echo '<input type="text" name="dns2_',$i ,'" size="3" maxlength="3" class="r pre" value="', @$dns2_parts[$i] ,'" />';
 			if ($i < 3) echo '.';
 		}
-		echo ' (', 'optional' ,')' ,"\n";
+		echo ' &nbsp; <small>(', 'optional' ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'NTP (1)'; ?></th>
+	<th><?php echo 'NTP-Server (1)'; ?></th>
 	<td>
 <?php
-		$ntp_parts = explode('.', '0.0.0.1');
-		echo '<input type="text" name="ntp1_',$i ,'" size="30" maxlength="50" class="pre" value="';
-		for ($i=0; $i<=3; ++$i) {
-			$part = lTrim(@$ntp_parts[$i], '0');
-			if ($part == '') $part = '0';
-			echo $part;
-			if ($i < 3) echo '.';
-		}
-		echo '" />' ,"\n";
+		$ntp1_addr = gs_keyval_get('vlan_data_ntp1');
+		echo '<input type="text" name="ntp1" size="30" maxlength="50" class="pre" value="', $ntp1_addr ,'" />' ,"\n";
 ?>
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'NTP (2)'; ?></th>
+	<th><?php echo 'NTP-Server (2)'; ?></th>
 	<td>
 <?php
-		$ntp_parts = explode('.', '0.0.0.1');
-		echo '<input type="text" name="ntp1_',$i ,'" size="30" maxlength="50" class="pre" value="';
-		for ($i=0; $i<=3; ++$i) {
-			$part = lTrim(@$ntp_parts[$i], '0');
-			if ($part == '') $part = '0';
-			echo $part;
-			if ($i < 3) echo '.';
-		}
-		echo '" />' ,"\n";
-		echo ' (', 'optional' ,')' ,"\n";
+		$ntp2_addr = '1.de.pool.ntp.org';
+		echo '<input type="text" name="ntp2" size="30" maxlength="50" class="pre" value="', $ntp2_addr ,'" />' ,"\n";
+		echo ' &nbsp; <small>(', 'optional' ,')</small>' ,"\n";
+?>
+	</td>
+</tr>
+<tr>
+	<th><?php echo 'NTP-Server (3)'; ?></th>
+	<td>
+<?php
+		$ntp3_addr = '2.de.pool.ntp.org';
+		echo '<input type="text" name="ntp3" size="30" maxlength="50" class="pre" value="', $ntp3_addr ,'" />' ,"\n";
+		echo ' &nbsp; <small>(', 'optional' ,')</small>' ,"\n";
+?>
+	</td>
+</tr>
+<tr>
+	<th><?php echo 'NTP-Server (4)'; ?></th>
+	<td>
+<?php
+		$ntp4_addr = '3.de.pool.ntp.org';
+		echo '<input type="text" name="ntp4" size="30" maxlength="50" class="pre" value="', $ntp4_addr ,'" />' ,"\n";
+		echo ' &nbsp; <small>(', 'optional' ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
