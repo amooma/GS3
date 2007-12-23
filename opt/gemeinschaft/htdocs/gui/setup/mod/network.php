@@ -29,6 +29,14 @@ defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/find_executable.php' );
 $can_continue = false;
 
+$action = @$_REQUEST['action'];
+
+
+/*
+$ifconfig = find_executable('ifconfig', array(
+	'/sbin/', '/bin/', '/usr/sbin/', '/usr/bin/'
+));
+*/
 
 ?>
 
@@ -76,7 +84,7 @@ function _normalize_ip_addr( $addr )
 	return $addr;
 }
 
-function _validate_input_ipaddr( &$addr, &$errmsg )
+function _input_validate_ipaddr( &$addr, &$errmsg )
 {
 	$addr = _normalize_ip_addr( $addr );
 	$errmsg = '';
@@ -108,20 +116,23 @@ function _validate_input_ipaddr( &$addr, &$errmsg )
 	}
 	return GS_VALIDATION_OK;
 }
+
+
+
+
+
+
+
 $addr = @$_REQUEST['ipaddr'][0] .'.'. @$_REQUEST['ipaddr'][1] .'.'. @$_REQUEST['ipaddr'][2] .'.'. @$_REQUEST['ipaddr'][3];
-echo _validate_input_ipaddr( $addr, $errmsg );
+echo _input_validate_ipaddr( $addr, $errmsg );
 
 
-function _have_vlan_support()
-{
-	return @file_exists( '/proc/net/vlan' );
-}
 
 
 ?>
 
 <form method="post" action="<?php echo GS_URL_PATH ,'setup/?step=network'; ?>">
-<input type="hidden" name="action" value="check" />
+<input type="hidden" name="action" value="save" />
 
 <table cellspacing="1">
 <tbody>
@@ -267,7 +278,7 @@ function _have_vlan_support()
 	<td>
 		<br />
 		<input type="reset" value="<?php echo 'Zur&uuml;cksetzen'; ?>" />
-		<input type="submit" value="<?php echo 'Eingaben pr&uuml;fen'; ?>" />
+		<input type="submit" value="<?php echo 'Speichern'; ?>" />
 	</td>
 </tr>
 </tbody>
