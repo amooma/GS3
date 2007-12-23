@@ -70,7 +70,10 @@ function gs_setup_autoshow()
 
 function gs_setup_possible()
 {
-	return (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx', 'single'), true));
+	return (
+		in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx', 'single'), true)
+		&& file_exists('/etc/debian_version')
+	);
 }
 
 function gs_setup_autoshow()
@@ -85,5 +88,14 @@ function gs_setup_autoshow()
 	return false;
 }
 
+function gs_setup_have_vlan_support()
+{
+	return @file_exists( '/proc/net/vlan' );
+}
+
+function htmlEnt( $str )
+{
+	return htmlSpecialChars($str, ENT_QUOTES, 'UTF-8');
+}
 
 ?>
