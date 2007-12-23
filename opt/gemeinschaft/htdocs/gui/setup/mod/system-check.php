@@ -32,12 +32,11 @@ $can_continue = false;
 
 ?>
 
-<div style="width:500px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
+<div style="width:550px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
 <h1><?php echo 'Willkommen!'; ?></h1>
 <p>
 <?php
-	$installation_type = gs_get_conf('GS_INSTALLATION_TYPE');
-	switch ($installation_type) {
+	switch ($GS_INSTALLATION_TYPE) {
 		case 'gpbx':
 			echo 'Die folgenden Schritte leiten Sie durch die grundlegende Netzwerk-Konfiguration der <b>GPBX</b>.' ,"\n";
 			break;
@@ -51,7 +50,7 @@ $can_continue = false;
 <p>
 <?php
 	echo 'Installationsart' ,': <b>';
-	switch ($installation_type) {
+	switch ($GS_INSTALLATION_TYPE) {
 		case 'gpbx'  :  echo 'GPBX'         ; break;
 		case 'single':  echo 'Einzel-Server'; break;
 		default      :  echo 'unbekannt'    ; break;
