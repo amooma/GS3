@@ -43,7 +43,17 @@ define( 'GS_URL_PATH', $GS_URL_PATH );
 unset($GS_URL_PATH);
 
 
+# get type of installation
+#
+$GS_INSTALLATION_TYPE = gs_get_conf('GS_INSTALLATION_TYPE');
+switch ($GS_INSTALLATION_TYPE) {
+	case 'gpbx'  :  $title = 'GPBX'         ; break;
+	default      :  $title = 'Gemeinschaft' ; break;
+}
+
+
 # setup possible on this installation?
+#
 if (! gs_setup_possible()) {
 	@header( 'Content-Type: text/plain; charset=utf-8' );
 	echo 'Setup via GUI not possible for your installation!' ,"\n";
@@ -140,7 +150,7 @@ if (! file_exists($step_file)) {
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
                                                       GNU GPL ]]>-->
-<title><?php echo __('Gemeinschaft Setup'); ?></title>
+<title><?php echo $title ,' ', 'Setup'; ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/original.css" />
 <link rel="shortcut icon" type="image/x-icon" href="<?php echo GS_URL_PATH; ?>favicon.ico" />
@@ -156,7 +166,7 @@ if (! file_exists($step_file)) {
 <div id="headerboxes">
 <div id="boxtitle">
 	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />
-	<h1><?php echo __('Gemeinschaft Setup') /*//TRANSLATE ME*/; ?></h1> 
+	<h1><?php echo $title ,' ', 'Setup'; ?></h1> 
 </div>
 </div>
 
