@@ -70,7 +70,7 @@ function gs_setup_autoshow()
 
 function gs_setup_possible()
 {
-	return (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('embedded', 'single'), true));
+	return (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx', 'single'), true));
 }
 
 function gs_setup_autoshow()
