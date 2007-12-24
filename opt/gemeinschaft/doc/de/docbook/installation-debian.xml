@@ -287,7 +287,7 @@ zlib
       </footnote> Auf dem Hotspare Asterisk danach wieder stoppen
     (<command>asterisk -rx 'stop now'</command>)!</para>
 
-    <para>Auf allen Hosts muss das Programm <command>arping</command>
+    <para>Auf allen Hosts muﬂ das Programm <command>arping</command>
     installiert werden, mit dem mittels ARP die IP-Adressen im Netzwerk
     bekanntgegeben werden.<programlisting><command>apt-get install iputils-arping</command></programlisting><important>
         <para>Nicht das Paket <literal>arping</literal> installieren. Es
