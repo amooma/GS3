@@ -133,7 +133,6 @@ function CheckIfNodeAlive( $node_id )
 		. $node[$node_id]['extension'] .'@'. $node[$node_id]['dynamic_ip'] )
 		.' '. (int)SIP_TIMEOUT;
 	
-	#$exec_string='/usr/local/bin/sipsak -s sip:'.$node[$node_id]['extension'].'@'.$node[$node_id]['dynamic_ip'];
 	exec($exec_string,$ret_array,$ret_val);
 	
 	return $ret_val;
