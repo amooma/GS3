@@ -40,7 +40,7 @@ include_once( '/opt/gemeinschaft/etc/gs-cluster-watchdog.conf' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
-function GetListenToIPs()
+function getListenToIPs()
 {
 	$file = IPFILE ;
 	if (! @file_exists( $file )) return false;
@@ -59,133 +59,143 @@ function write_log( $log_string )
 {
 	global $active;
 	
-	@$logfilep=fopen(LOGFILE,'a');
+	$logfilep = @fOpen(LOGFILE, 'a');
 	if (! $logfilep) {
 		echo "ERROR - Cannot access logfile - nothing will be logged\n";
 		echo "LOG> $log_string\n";
 		return 0;
 	}
-	$logentry = date("Y-m-d H:i:s").' '.$log_string."\n";
+	$logentry = date('Y-m-d H:i:s') .' '. $log_string ."\n";
 	if ($active > 1) echo $logentry; 
-	fwrite($logfilep,$logentry);
-	fclose($logfilep);
+	@fWrite($logfilep, $logentry, strLen($logentry));
+	fClose($logfilep);
 }
 
-function WriteIPFile( $ip_file, $ip )
+function writeIPFile( $ip_file, $ip )
 {
 	global $node;
 	global $ips;
 	
-	if (!array_search($ip, $ips)) {
-		
-		@$ipfilep=fopen($ip_file,'a');
+	if (! array_search($ip, $ips)) {
+		$ipfilep = @fOpen($ip_file, 'a');
 		if (!$ipfilep) {
 			write_log("Cannot open $ip_file for writing! Bad things will happen!");
 			return 1;
 		}
-		if (fwrite($ipfilep,$ip."\n")>6) {
+		if (@fWrite($ipfilep,$ip."\n") > 6) {
 			write_log("IP $ip written to $ip_file");
 		} else {
 			write_log("Failed to write  $ip to $ip_file");
 		}
-		fclose($ipfilep);
+		fClose($ipfilep);
 	} else {
 		write_log("IP $ip is already in $ip_file");
 	}
 }
 
-function WriteDataFile( $data_file )
+function writeDataFile( $data_file )
 {
 	global $node;
 	
 	$save_struct = serialize($node);
-	@$datafilep=fopen($data_file,'w');
+	$datafilep = @fOpen($data_file, 'wb');
 	if (!$datafilep) {
 		write_log("Cannot open $data_file for writing! Bad things will happen!");
 		return 1;
 	}  
-	fwrite($datafilep,$save_struct);
-	fclose($datafilep);
-	write_log("Data File $data_file written.");
+	@fWrite($datafilep, $save_struct, strLen($save_struct));
+	fClose($datafilep);
+	write_log("Data file $data_file written.");
 }
 
-function ReadDataFile( $data_file )
+function readDataFile( $data_file )
 {
 	global $node;
 	
-	@$datafilep=fopen($data_file,'r');
+	$datafilep = @fOpen($data_file, 'rb');
 	if (!$datafilep)  {
 		write_log("Cannot open $data_file for reading! Using cluster data from configuration. This will reset *all* states!");
 		return 1;
 	}
-	$datafilesize=filesize($data_file);
-	$save_struct=fread($datafilep,$datafilesize);
-	$node=unserialize($save_struct);
-	fclose($datafilep);
+	$datafilesize = fileSize($data_file);
+	$save_struct = @fRead($datafilep, $datafilesize);
+	$node = unSerialize($save_struct);
+	fClose($datafilep);
 }
 
 
-function CheckIfNodeAlive( $node_id )
+function checkIfNodeAlive( $node_id )
 {
 	global $node;
 	
-	$exec_string = GS_DIR .'sbin/check-sip-alive '. qsa( 'sip:'
+	$cmd = GS_DIR .'sbin/check-sip-alive '. qsa( 'sip:'
 		. $node[$node_id]['extension'] .'@'. $node[$node_id]['dynamic_ip'] )
 		.' '. (int)SIP_TIMEOUT;
 	
-	exec($exec_string,$ret_array,$ret_val);
-	
-	return $ret_val;
+	$err=0, $out=array();
+	@exec($cmd .' 1>>/dev/null 2>>/dev/null', $out, $err);
+	return $err;
 }
 
-function SendArp( $node_id )
+function sendArp( $node_id )
 {
 	global $node;
 	
-	//$exec_string='/usr/sbin/send_arp '.$node[$node_id]['dynamic_ip'].' '.$node[$node_id]['local_mac'].' '.$node[$node_id]['broadcast']. ' FF:FF:FF:FF:FF:FF '.$node[$node_id]['local_interface'];
+	//$cmd = '/usr/sbin/send_arp '.$node[$node_id]['dynamic_ip'].' '.$node[$node_id]['local_mac'].' '.$node[$node_id]['broadcast']. ' FF:FF:FF:FF:FF:FF '.$node[$node_id]['local_interface'];
 	
-	$exec_string='/sbin/arping -c 3 -I '. qsa( $node[$node_id]['local_interface'] ) .' -s '. qsa( $node[$node_id]['dynamic_ip'] ) .' -A '. qsa( $node[$node_id]['broadcast'] );
+	$cmd = '/sbin/arping -c 3 -I '. qsa( $node[$node_id]['local_interface'] ) .' -s '. qsa( $node[$node_id]['dynamic_ip'] ) .' -A '. qsa( $node[$node_id]['broadcast'] );
 	
-	write_log("Execute $exec_string");
-	exec($exec_string,$ret_array,$ret_val);
+	write_log("Execute $cmd");
+	$err=0, $out=array();
+	@exec($cmd .' 1>>/dev/null 2>>/dev/null', $out, $err);
 }
 
-function Stonith( $node_id )
+function stonith( $node_id )
 {
 	global $node;
 	
-	$exec_string=GS_DIR.'sbin/stonith.sh '. qsa( $node[$node_id]['dynamic_ip'] );
-	write_log("Execute $exec_string");
-	exec($exec_string,$ret_array,$ret_val);
-	return $ret_val;
+	$cmd = GS_DIR.'sbin/stonith.sh '. qsa( $node[$node_id]['dynamic_ip'] );
+	write_log("Execute $cmd");
+	$err=0, $out=array();
+	@exec($cmd .' 1>>/dev/null 2>>/dev/null', $out, $err);
+	return $err;
 }
 
-function TakeOverIP( $node_id )
+function takeOverIP( $node_id )
 {
 	global $node;
 	
-	$exec_string='/sbin/ifconfig '. qsa( $node[$node_id]['local_interface'] ) .' '. qsa( $node[$node_id]['dynamic_ip'] ) .' netmask '. qsa( $node[$node_id]['netmask'] ) . ' broadcast '. qsa( $node[$node_id]['broadcast'] );
-	write_log("Execute $exec_string");
-	exec($exec_string,$ret_array,$ret_val);
-	$exec_string='/sbin/route add -host '. qsa( $node[$node_id]['dynamic_ip'] ) .' '. qsa( $node[$node_id]['local_interface'] );
-	write_log("Execute $exec_string");
-	exec($exec_string,$ret_array,$ret_val);
+	$cmd = '/sbin/ifconfig '. qsa( $node[$node_id]['local_interface'] ) .' '. qsa( $node[$node_id]['dynamic_ip'] ) .' netmask '. qsa( $node[$node_id]['netmask'] ) . ' broadcast '. qsa( $node[$node_id]['broadcast'] );
+	write_log("Execute $cmd");
+	$err=0, $out=array();
+	@exec($cmd .' 1>>/dev/null', $out, $err);
+	
+	$cmd = '/sbin/route add -host '. qsa( $node[$node_id]['dynamic_ip'] ) .' '. qsa( $node[$node_id]['local_interface'] );
+	write_log("Execute $cmd");
+	$err=0, $out=array();
+	@exec($cmd .' 1>>/dev/null', $out, $err);
 }
 
-function SendAlarm( $node_id )
+function sendAlarm( $node_id )
 {
 	global $node;
 	
-	$exec_string='ALARM! (not implemented yet)';
-	write_log("$exec_string");
+	$cmd = 'ALARM! (not implemented yet)';
+	write_log("$cmd");
 }
   
-function RestartLocalAsterisk()
+function restartLocalAsterisk()
 {  
-	$exec_string=GS_DIR.'sbin/start-asterisk';
-	write_log("Execute $exec_string");
-	exec($exec_string,$ret_array,$ret_val);
-	return $ret_val;
+	$cmd = '/etc/init.d/asterisk stop';
+	write_log("Execute $cmd");
+	$err=0, $out=array();
+	@exec($cmd .' 1>>/dev/null 2>>/dev/null', $out, $err);
+	
+	$cmd = GS_DIR.'sbin/start-asterisk';
+	write_log("Execute $cmd");
+	$err=0, $out=array();
+	@exec($cmd .' 1>>/dev/null 2>>/dev/null', $out, $err);
+	return $err;
 }
 
 
@@ -201,33 +211,39 @@ if (count($argv) > 1) {
 	$active = 0;
 
 if ($active == 0) {
-	echo "This ist the cluster watchdog of the Gemeinschaft project - it should not be started directly by the user\nPlease read the documentation for usage instructions.\n";
-	die(0);
+	echo
+		"This ist the cluster watchdog of the Gemeinschaft project \n",
+		"- it should not be started directly by the user\n",
+		"Please read the documentation for usage instructions.\n";
+	exit(1);
 }
 
-$starttime=time();
-$endtime=$starttime + 60 - (SLEEP_SECONDS * 2);
+$starttime = time();
+$endtime = $starttime + 60 - (SLEEP_SECONDS * 2);
 
-ReadDataFile(DATAFILE);
+readDataFile(DATAFILE);
 
-$node[0]['pid']=getmypid();
+$node[0]['pid'] = getMyPid();
 
 for ($node_id=1; $node_id<count($node); $node_id++) {
-	if (($node[$node_id]['status'] ==  STAT_FAILED) && ($node[$node_id]['timestamp'] < (time() - (REC_PERIOD * 60))))
+	if ($node[$node_id]['status'   ] == STAT_FAILED
+	&&  $node[$node_id]['timestamp'] < (time() - REC_PERIOD*60)
+	) {
 		$node[$node_id]['status'] = STAT_NORMAL;
+	}
 }
 
-$ips=GetListenToIPs();
+$ips = getListenToIPs();
 
 while (time() < $endtime)  {
 	
 	for ($node_id=1; $node_id<count($node); $node_id++) {
 		
-		$node_status=CheckIfNodeAlive($node_id);
+		$node_status = checkIfNodeAlive($node_id);
 		
 		if ($node_status > STAT_NORMAL) {
 			if ($node_status == STAT_NORMAL) {
-				$node[$node_id]['status'] = STAT_FAILED;
+				$node[$node_id]['status'   ] = STAT_FAILED;
 				$node[$node_id]['timestamp'] = time();
 			}
 			write_log("*** Node $node_id is not alive with status ". $node[$node_id]['status'] .". Tried ". $node[$node_id]['tries'] ." times.");
@@ -235,26 +251,27 @@ while (time() < $endtime)  {
 			if ($node[$node_id]['tries'] == RETRY) {
 				if ($node_id > 0) {
 					if ($active < 3) {
-						Stonith($node_id);
-						TakeOverIP($node_id);
-						SendArp($node_id);
-						WriteIPFile(IPFILE,$node[$node_id]['dynamic_ip']);
-						RestartLocalAsterisk();
-						SendAlarm($node_id);
+						stonith($node_id);
+						takeOverIP($node_id);
+						sendArp($node_id);
+						writeIPFile(IPFILE,$node[$node_id]['dynamic_ip']);
+						restartLocalAsterisk();
+						sendAlarm($node_id);
 					}
-					$node[$node_id]['status'] = STAT_TAKEN;
+					$node[$node_id]['status'   ] = STAT_TAKEN;
 					$node[$node_id]['timestamp'] = time();
 					write_log("Set status of node $node_id to ". $node[$node_id]['status']);
-					WriteDataFile(DATAFILE);
+					writeDataFile(DATAFILE);
 				} else {
-					SendAlarm($node_id);
+					sendAlarm($node_id);
 				}
 			}
 			
 			$node[$node_id]['tries']++;
-			WriteDataFile(DATAFILE);
+			writeDataFile(DATAFILE);
 		} else {
-			if ($active > 1) write_log("Node $node_id alive with status ". $node[$node_id]['status']);
+			if ($active > 1)
+				write_log("Node $node_id alive with status ". $node[$node_id]['status']);
 		}
 	}
 	if (time() < $endtime) sleep(SLEEP_SECONDS);
