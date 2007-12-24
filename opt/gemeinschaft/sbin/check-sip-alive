@@ -39,12 +39,16 @@ set timeout [lindex $argv 1]
 # find sipsak
 if       {[file executable /usr/local/bin/sipsak  ]} {
 	set sipsak             /usr/local/bin/sipsak   ;
-} elseif {[file executable /usr/local/sbin/sipsak ]} {
-	set sipsak             /usr/local/sbin/sipsak  ;
-} elseif {[file executable /usr/sbin/sipsak       ]} {
-	set sipsak             /usr/sbin/sipsak        ;
+
 } elseif {[file executable /usr/bin/sipsak        ]} {
 	set sipsak             /usr/bin/sipsak         ;
+
+} elseif {[file executable /usr/local/sbin/sipsak ]} {
+	set sipsak             /usr/local/sbin/sipsak  ;
+
+} elseif {[file executable /usr/sbin/sipsak       ]} {
+	set sipsak             /usr/sbin/sipsak        ;
+
 } else                                               {
 	set sipsak             sipsak                  ;
 }
