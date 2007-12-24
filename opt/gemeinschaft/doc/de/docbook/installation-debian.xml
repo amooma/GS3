@@ -90,21 +90,11 @@ netcat openssh-client openssh-server</command></programlisting></para>
 
     <para>SipSak<footnote>
         <para>wird momentan vom Cluster-Watchdog benötigt</para>
-      </footnote>:<programlisting><command>cd /usr/src/ \
-&amp;&amp; wget -c http://download.berlios.de/sipsak/sipsak-0.9.6-1.tar.gz \
-&amp;&amp; tar -xzf sipsak-0.9.6-1.tar.gz \
-&amp;&amp; cd sipsak-0.9.6/ \
-&amp;&amp; ./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install</command></programlisting>Überprüfung<footnote>
-        <para><screen>$ <command>which sipsak</command>
-/usr/local/bin/sipsak</screen><filename>/usr/local/bin</filename> muß im Pfad
-        liegen! Die Environment-Variable <literal>PATH</literal> hat bei einer
-        Default-Installation folgenden Inhalt:<screen>$ <command>echo $PATH</command>
-/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</screen></para>
-      </footnote>:<screen>$ <command>sipsak -V</command>
+      </footnote>:<programlisting><command>apt-get install sipsak</command></programlisting>Überprüfung:<screen>$ <command>sipsak -V</command>
 sipsak 0.9.6  by Nils Ohlmeier
  Copyright (C) 2002-2004 FhG Fokus
  Copyright (C) 2004-2005 Nils Ohlmeier
- compiled with DEFAULT_TIMEOUT=500, FQDN_SIZE=65, RAW_SUPPORT, LONG_OPTS, OPENSSL_MD5, OPENSSL_SHA1, STR_CASE_INSENSITIVE, CMP_CASE_INSENSITIVE</screen></para>
+ compiled with DEFAULT_TIMEOUT=500, FQDN_SIZE=65, RAW_SUPPORT, LONG_OPTS, GNUTLS_MD5, SRV_SUPPORT(RULI), STR_CASE_INSENSITIVE, CMP_CASE_INSENSITIVE</screen></para>
 
     <para>Log-Verzeichnis anlegen:<programlisting><command>mkdir -p /var/log/gemeinschaft/ \
 &amp;&amp; chmod a+rwx /var/log/gemeinschaft/</command></programlisting></para>
