@@ -69,9 +69,8 @@ as</screen>Exim ist bereits installiert. Aber wir wollen Postfix :-)</para>
             <programlisting>$ <command>apt-get install postfix</command></programlisting>
 
             <para>Wenn Sie in einem kleinen Dialog gefragt werden, welche Art
-            der Konfiguration Sie wollen, empfiehlt sich "internet mit
-            Smarthost" (falls Sie bereits einen zentralen Mail-Server
-            haben).</para>
+            der Konfiguration Sie wollen, empfiehlt sich "Satelliten-System"
+            (falls Sie bereits einen zentralen Mail-Server haben).</para>
           </listitem>
         </varlistentry>
       </variablelist></para>
@@ -116,8 +115,7 @@ $ <command>/etc/init.d/postfix restart</command></programlisting>
           <term>Debian:</term>
 
           <listitem>
-            <programlisting>$ <command>FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME</command>
-$ <command>/etc/init.d/postfix restart</command></programlisting>
+            <programlisting>$ <command>/etc/init.d/postfix restart</command></programlisting>
           </listitem>
         </varlistentry>
       </variablelist></para>
