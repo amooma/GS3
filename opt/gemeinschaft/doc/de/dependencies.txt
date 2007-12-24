@@ -1,0 +1,43 @@
+/* $Revision$ */
+
+Gemeinschaft, insbesondere in der Form GPBX, ist auf Debian 4.0
+(Etch) von folgenden Paketen abh‰ngig:
+
+(auﬂer den in der Installation genannten)
+
+coreutils
+grep
+findutils
+expect
+logrotate
+ntp
+ntp-simple
+ntpdate
+apache2
+libapache2-mod-php5
+php5
+php5-cli
+php5-ldap
+php5-mysql
+mysql-server
+mysql-client
+perl
+perl-modules
+libnet-daemon-perl
+bind9
+net-tools
+hostname
+wget
+openssh-client
+openssh-server
+dhcp3-server
+
+
+
+
+
+
+Kollidiert mit:
+
+asterisk*
+
