@@ -28,11 +28,21 @@ bind9
 net-tools
 hostname
 wget
+iputils-ping
+iputils-arping
 openssh-client
 openssh-server
 dhcp3-server
+mpg123
+sox
 
 
+
+Benötigt außerdem (nicht als Paket vorhanden):
+asterisk (1.4)
+asterisk-addons (1.4)
+zaptel (1.4)
+lame (>= 3.97)
 
 
 
