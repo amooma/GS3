@@ -35,6 +35,8 @@ openssh-server
 dhcp3-server
 mpg123
 sox
+mailx
+postfix
 
 
 
