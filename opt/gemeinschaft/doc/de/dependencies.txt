@@ -5,6 +5,7 @@ Gemeinschaft, insbesondere in der Form GPBX, ist auf Debian 4.0
 Installationsanleitung genannten):
 
 coreutils
+lsb-base
 grep
 findutils
 sudo
