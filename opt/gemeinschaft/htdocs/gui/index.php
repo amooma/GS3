@@ -268,13 +268,15 @@ if (@$_SESSION['login_ok']) {
 
 ?>
 </div>
+<?php if (@$_SESSION['login_ok']) { ?>
 <form id="sudo-form" method="get" action="<?php echo GS_URL_PATH; ?>" enctype="application/x-www-form-urlencoded">
 <input type="hidden" name="s" value="<?php echo $SECTION; ?>" />
 <input type="hidden" name="m" value="<?php echo $MODULE; ?>" />
 <?php echo __('Benutzer wechseln'), ': '; ?>
-<input type="text" size="15" maxlength="30" id="sudo-user" name="sudo" value="<?php echo @$_SESSION['sudo_user']['name']; ?>" tabindex="100" <?php if (!@$_SESSION['login_ok']) echo 'disabled="disabled" '; ?>/>
+<input type="text" size="15" maxlength="30" id="sudo-user" name="sudo" value="<?php echo @$_SESSION['sudo_user']['name']; ?>" tabindex="100" />
 </form>
-<br style="float:none; display:block; clear:right;" />
+<?php } ?>
+<br style="float:none; clear:right;" />
 </div>
 
 <div id="content">
