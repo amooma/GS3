@@ -12,8 +12,12 @@ DefaultType text/html
 		php_flag last_modified Off
 		php_flag xbithack Off
 		php_flag magic_quotes_gpc Off
+		php_flag magic_quotes_runtime Off
 		php_flag track_vars Off
 		php_flag register_globals Off
+		php_flag register_long_arrays Off
+		php_value max_execution_time 35
+		php_value mbstring.func_overload 0
 		php_value include_path .
 	</IfModule>
 	
@@ -24,8 +28,12 @@ DefaultType text/html
 		php_flag last_modified Off
 		php_flag xbithack Off
 		php_flag magic_quotes_gpc Off
+		php_flag magic_quotes_runtime Off
 		php_flag track_vars Off
 		php_flag register_globals Off
+		php_flag register_long_arrays Off
+		php_value max_execution_time 35
+		php_value mbstring.func_overload 0
 		php_value include_path .
 	</IfModule>
 	
