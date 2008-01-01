@@ -6,6 +6,6 @@ body, table, td {
 }
 td {background: #fafafa; padding: 1px 0.3em;}
 td.test_res {/*line-height: 1.0em;*/ /*padding: 0 4px;*/}
-.test_ok     {background: #0f0; color: #000;}
-.test_notice {background: #ff0; color: #000;}
-.test_warn   {background: #f32; color: #000;}
+.test_ok     {background: #0f0; color: #040;}
+.test_notice {background: #ff0; color: #440;}
+.test_warn   {background: #f32; color: #400;}
