@@ -80,7 +80,7 @@ function _test_result( $str, $status )
 {
 	global $can_continue;
 	echo 'class="test_res test_',$status,'">', $str;
-	if (! in_array($status, array('ok', 'notice'), true))
+	if (in_array($status, array('warn'), true))
 		$can_continue = false;
 }
 
@@ -107,7 +107,7 @@ function _test_result( $str, $status )
 
 <tr>
 	<td><?php echo 'PHP-Version'; ?>:</td>
-	<td><?php echo htmlEnt(PHP_VERSION); ?></td>
+	<td><tt><?php echo htmlEnt(PHP_VERSION); ?></tt></td>
 	<td <?php
 		if     (version_compare(PHP_VERSION, '5.2') >= 0)
 			echo _test_result('OK', 'ok');
