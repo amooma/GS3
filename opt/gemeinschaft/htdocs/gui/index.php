@@ -201,22 +201,23 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 
 <div class="sidebar">
 <div id="menu">
-
 <ul>
 <?php
 
 foreach ($MODULES as $sectname => $sectinfo) {
-	$sect_active = ($sectname == $SECTION);
+	$sect_active = ($sectname === $SECTION);
 	
 	if (array_key_exists('inmenu', $sectinfo) && ! $sectinfo['inmenu'])
 		continue;
 	if (count($sectinfo['sub']) < 1)
 		continue;
-	
-	if ( @$sectinfo['perms'] == 'admin'
-	&&   ! (preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS))
-	)
+	if (! @$_SESSION['login_ok'] && $sectname !== 'home')
 		continue;
+	
+	if ( @$sectinfo['perms'] === 'admin' && (
+		   @$_SESSION['real_user']['name'] == ''
+		|| ! preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
+	)) continue;
 	
 	echo '<li class="'. ($sect_active ? 'expanded' : 'collapsed') .'">', "\n";
 	//echo '<a href="'. GS_URL_PATH .'?s='. $sectname .'" class="'. (($sect_active) ? 'active' : '') .'">'. $sectinfo['title'] .'</a>', "\n";
@@ -244,30 +245,28 @@ foreach ($MODULES as $sectname => $sectinfo) {
 
 <div id="content-container">
 <div id="sudo-bar">
-<div id="sudo-info">
-<?php
-
-if (@$_SESSION['login_ok']) {
-	if (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name']) {
-		echo __('Angemeldet'), ': <span class="user-name"><b>', htmlEnt(
-			@$_SESSION['real_user']['info']['firstname'] .' '.
-			@$_SESSION['real_user']['info']['lastname']
-	), '</b></span>', "\n";
+<div id="sudo-info"><?php
+	
+	if (@$_SESSION['login_ok']) {
+		if (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name']) {
+			echo __('Angemeldet'), ': <span class="user-name"><b>', htmlEnt(
+				@$_SESSION['real_user']['info']['firstname'] .' '.
+				@$_SESSION['real_user']['info']['lastname']
+		), '</b></span>';
+		} else {
+			echo __('Angemeldet'), ': <span class="user-name">', htmlEnt(
+				$_SESSION['real_user']['info']['firstname'] .' '.
+				$_SESSION['real_user']['info']['lastname']
+			), '</span> &nbsp;&nbsp; ', __('Als'), ': <span class="user-name"><b>', htmlEnt(
+				$_SESSION['sudo_user']['info']['firstname'] .' '.
+				$_SESSION['sudo_user']['info']['lastname']
+		), '</b></span>';
+		}
 	} else {
-		echo __('Angemeldet'), ': <span class="user-name">', htmlEnt(
-			$_SESSION['real_user']['info']['firstname'] .' '.
-			$_SESSION['real_user']['info']['lastname']
-		), '</span> &nbsp;&nbsp; ', __('Als'), ': <span class="user-name"><b>', htmlEnt(
-			$_SESSION['sudo_user']['info']['firstname'] .' '.
-			$_SESSION['sudo_user']['info']['lastname']
-	), '</b></span>', "\n";
+		echo __('Nicht angemeldet');
 	}
-} else {
-	echo __('Nicht angemeldet');
-}
 
-?>
-</div>
+?></div>
 <?php if (@$_SESSION['login_ok']) { ?>
 <form id="sudo-form" method="get" action="<?php echo GS_URL_PATH; ?>" enctype="application/x-www-form-urlencoded">
 <input type="hidden" name="s" value="<?php echo $SECTION; ?>" />
