@@ -122,7 +122,7 @@ function _test_result( $str, $status )
 
 <tr>
 	<td><?php echo 'PHP-Module'; ?>:</td>
-	<td><tt><?php echo 'ftp'; ?> ?</tt></td>
+	<td><tt><?php echo 'ftp'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('ftp')
 			? _test_result('OK', 'ok')
@@ -131,7 +131,7 @@ function _test_result( $str, $status )
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><tt><?php echo 'ldap'; ?> ?</tt></td>
+	<td><tt><?php echo 'ldap'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('ldap')
 			? _test_result('OK', 'ok')
@@ -139,7 +139,7 @@ function _test_result( $str, $status )
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><tt><?php echo 'mbstring'; ?> ?</tt></td>
+	<td><tt><?php echo 'mbstring'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('mbstring')
 			? _test_result('OK', 'ok')
@@ -147,7 +147,7 @@ function _test_result( $str, $status )
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><tt><?php echo 'mysql'; ?> ?</tt></td>
+	<td><tt><?php echo 'mysql'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('mysql')
 			? _test_result('OK', 'ok')
@@ -155,7 +155,7 @@ function _test_result( $str, $status )
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><tt><?php echo 'pcre'; ?> ?</tt></td>
+	<td><tt><?php echo 'pcre'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('pcre')
 			? _test_result('OK', 'ok')
@@ -163,7 +163,7 @@ function _test_result( $str, $status )
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><tt><?php echo 'posix'; ?> ?</tt></td>
+	<td><tt><?php echo 'posix'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('posix')
 			? _test_result('OK', 'ok')
@@ -171,7 +171,7 @@ function _test_result( $str, $status )
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><tt><?php echo 'session'; ?> ?</tt></td>
+	<td><tt><?php echo 'session'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('session')
 			? _test_result('OK', 'ok')
@@ -179,7 +179,7 @@ function _test_result( $str, $status )
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><tt><?php echo 'sockets'; ?> ?</tt></td>
+	<td><tt><?php echo 'sockets'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('sockets')
 			? _test_result('OK', 'ok')
@@ -319,7 +319,7 @@ function _test_result( $str, $status )
 
 <tr>
 	<td><?php echo 'Apache-Module'; ?>:</td>
-	<td><tt><?php
+	<td><?php
 		$have_apache_get_modules = false;
 		if (subStr($sapi,0,6) !== 'apache') {
 			echo 'nicht zutreffend';
@@ -332,13 +332,17 @@ function _test_result( $str, $status )
 				echo '&nbsp;';
 			}
 		}
-	?></tt></td>
-	<td>&nbsp;</td>
+	?></td>
+	<td <?php
+		echo $have_apache_get_modules
+			? _test_result('&nbsp;', '')
+			: _test_result('FEHLER', 'notice');
+	?></td>
 </tr>
 <?php if ($have_apache_get_modules) { ?>
 <tr>
 	<td>&nbsp;</td>
-	<td><tt>mod_env ?</tt></td>
+	<td><tt>mod_env</tt></td>
 	<td <?php
 		echo array_key_exists('mod_env', $apache_mods)
 			? _test_result('OK', 'ok')
@@ -347,7 +351,7 @@ function _test_result( $str, $status )
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><tt>mod_mime ?</tt></td>
+	<td><tt>mod_mime</tt></td>
 	<td <?php
 		echo array_key_exists('mod_mime', $apache_mods)
 			? _test_result('OK', 'ok')
@@ -356,7 +360,7 @@ function _test_result( $str, $status )
 </tr>
 <tr>
 	<td>&nbsp;</td>
-	<td><tt>mod_rewrite ?</tt></td>
+	<td><tt>mod_rewrite</tt></td>
 	<td <?php
 		echo array_key_exists('mod_rewrite', $apache_mods)
 			? _test_result('OK', 'ok')
