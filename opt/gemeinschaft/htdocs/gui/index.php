@@ -211,7 +211,8 @@ foreach ($MODULES as $sectname => $sectinfo) {
 		continue;
 	if (count($sectinfo['sub']) < 1)
 		continue;
-	if (! @$_SESSION['login_ok'] && $sectname !== 'home')
+	if (! @$_SESSION['login_ok']
+	&&  ! in_array($sectname, array('home','login'), true))
 		continue;
 	
 	if ( @$sectinfo['perms'] === 'admin' && (
