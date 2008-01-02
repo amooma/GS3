@@ -40,7 +40,8 @@ sox
 mailx
 postfix
 sipsak
-
+avahi-daemon
+avahi-utils
 
 
 Benötigt außerdem (nicht als Paket vorhanden):
