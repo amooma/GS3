@@ -53,7 +53,7 @@ define('GS_WEB_REWRITE',
 
 
 
-if (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('embedded', 'single'), true)) {
+if (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx', 'single'), true)) {
 	require_once( GS_DIR .'htdocs/gui/setup/inc/aux.php' );
 	if (gs_setup_autoshow()) {
 		if (subStr($_SERVER['SERVER_PROTOCOL'],5) >= '1.1') {
