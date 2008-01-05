@@ -60,199 +60,6 @@ $ifconfig = find_executable('ifconfig', array(
 <br />
 <?php
 
-echo "<pre>\n";
-print_r($_REQUEST);
-echo "</pre>\n";
-
-define( 'GS_VALIDATION_OK'    , 3 );
-define( 'GS_VALIDATION_EMPTY' , 2 );
-define( 'GS_VALIDATION_WARN'  , 1 );
-define( 'GS_VALIDATION_ERR'   , 0 );
-
-function _normalize_ip_addr( $addr )
-{
-	$addr = preg_replace('/[^0-9.]/', '', $addr);
-	if ($addr == '') return null;
-	$addr_parts = explode('.', $addr);
-	$addr = '';
-	for ($i=0; $i<=3; ++$i) {
-		$part = (int)lTrim(@$addr_parts[$i], '0 ');
-		if     ($part > 255) $part = 255;
-		elseif ($part <   0) $part =   0;
-		$addr .= $part;
-		if ($i < 3) $addr .= '.';
-	}
-	return $addr;
-}
-
-function _is_invalid_ip_addr_by_format( $addr )
-{
-	return !preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $addr);
-}
-
-function _is_invalid_ip_addr_by_net( $addr )
-{
-	return (
-		   subStr($addr,0, 2) === '0.'
-		|| subStr($addr,0, 3) === '39.'
-		|| subStr($addr,0, 4) === '127.'
-		|| subStr($addr,0, 6) === '128.0.'
-		|| subStr($addr,0, 8) === '169.254.'
-		|| subStr($addr,0, 8) === '191.255.'
-		|| subStr($addr,0, 8) === '192.0.0.'
-		|| subStr($addr,0, 8) === '192.0.2.'
-		|| subStr($addr,0,10) === '192.88.99.'
-		|| subStr($addr,0,12) === '223.255.255.'
-		|| subStr($addr,0, 4) === '224.'
-		|| subStr($addr,0, 4) === '240.'
-		|| subStr($addr,0,15) === '255.255.255.255'
-	);
-}
-
-function _is_empty_ip_addr( $addr )
-{
-	$addr = trim($addr);
-	return (
-		   $addr == ''
-		|| preg_match('/^0*\.0*\.0*\.0*$/', $addr)
-	);
-}
-
-function _input_validate_ipaddr( &$addr, &$errmsg )
-{
-	$errmsg = '';
-	if (_is_invalid_ip_addr_by_format( $addr )) {
-		$errmsg = 'Ung&uuml;ltige IP-Adresse!';
-		return GS_VALIDATION_ERR;
-	}
-	$addr = _normalize_ip_addr( $addr );
-	if ($addr === null) {
-		$errmsg = 'Ung&uuml;ltige IP-Adresse!';
-		return GS_VALIDATION_EMPTY;
-	}
-	if (_is_invalid_ip_addr_by_net( $addr )) {
-		$errmsg = 'Ung&uuml;ltige IP-Adresse!';
-		return GS_VALIDATION_ERR;
-	}
-	if (preg_match('/255/', $addr)
-	||  subStr($addr, -2) === '.0') {
-		$errmsg = 'Ung&uuml;ltige IP-Adresse!';
-		return GS_VALIDATION_ERR;
-	}
-	return GS_VALIDATION_OK;
-}
-
-function _input_validate_netmask( &$netmask, &$errmsg )
-{
-	$errmsg = '';
-	if (! in_array($netmask, array('/8', '/16', '/24'), true)) {
-		$errmsg = 'Ung&uuml;ltige Netzmaske!';
-		return GS_VALIDATION_ERR;
-	}
-	return GS_VALIDATION_OK;
-}
-
-function _input_validate_router( &$addr, &$errmsg )
-{
-	$errmsg = '';
-	if (_is_invalid_ip_addr_by_format( $addr )) {
-		$errmsg = 'Ung&uuml;ltige Router-Adresse!';
-		return GS_VALIDATION_ERR;
-	}
-	$addr = _normalize_ip_addr( $addr );
-	if ($addr === null) {
-		$errmsg = 'Ung&uuml;ltige Router-Adresse!';
-		return GS_VALIDATION_EMPTY;
-	}
-	if (_is_invalid_ip_addr_by_net( $addr )) {
-		$errmsg = 'Ung&uuml;ltige Router-Adresse!';
-		return GS_VALIDATION_ERR;
-	}
-	if (preg_match('/255/', $addr)
-	||  subStr($addr, -2) === '.0') {
-		$errmsg = 'Ung&uuml;ltige Router-Adresse!';
-		return GS_VALIDATION_ERR;
-	}
-	return GS_VALIDATION_OK;
-}
-
-function _input_validate_dns( &$addr, &$errmsg )
-{
-	$errmsg = '';
-	if (_is_empty_ip_addr( $addr )) {
-		$addr = '';
-		$errmsg = 'Leere DNS-Server-Adresse!';
-		return GS_VALIDATION_EMPTY;
-	}
-	if (_is_invalid_ip_addr_by_format( $addr )) {
-		$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
-		return GS_VALIDATION_ERR;
-	}
-	$addr = _normalize_ip_addr( $addr );
-	if ($addr === null) {
-		$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
-		return GS_VALIDATION_EMPTY;
-	}
-	if (_is_invalid_ip_addr_by_net( $addr )) {
-		$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
-		return GS_VALIDATION_ERR;
-	}
-	if (preg_match('/255/', $addr)
-	||  subStr($addr, -2) === '.0') {
-		$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
-		return GS_VALIDATION_ERR;
-	}
-	return GS_VALIDATION_OK;
-}
-
-function _input_validate_ntp( &$addr, &$errmsg )
-{
-	$errmsg = '';
-	if (_is_empty_ip_addr( $addr )) {
-		$addr = '';
-		$errmsg = 'Leere NTP-Server-Adresse!';
-		return GS_VALIDATION_EMPTY;
-	}
-	if (preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $addr)) {
-		# is IP address
-		$addr = _normalize_ip_addr( $addr );
-		if ($addr === null) {
-			$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
-			return GS_VALIDATION_EMPTY;
-		}
-		if (_is_invalid_ip_addr_by_net( $addr )) {
-			$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
-			return GS_VALIDATION_ERR;
-		}
-		if (preg_match('/255/', $addr)
-		||  subStr($addr, -2) === '.0') {
-			$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
-			return GS_VALIDATION_ERR;
-		}
-	} else {
-		# is name
-		$addr = preg_replace('[^a-z0-9.\-_]', '', strToLower($addr));
-		$addrs = getHostByNameL( $addr );
-		if (! is_array($addrs) || count($addrs) < 1) {
-			$errmsg = 'NTP-Server-Adresse kann nicht aufgel&ouml;st werden!';
-			return GS_VALIDATION_WARN;
-			# might be resolvable with the new network settings
-		}
-	}
-	return GS_VALIDATION_OK;
-}
-
-
-
-function _complain_html( $errmsg, $ignorable=false )
-{
-	echo '<p style="border:2px solid #f00; color: #b00; padding:0.3em;"><b>', ($ignorable ? 'Warnung!' : 'Fehler!') ,'</b> ', $errmsg ,'</p>' ,"\n";
-}
-
-
-
-
-
 $current_ipaddr   = @$_SERVER['SERVER_ADDR'];
 $current_netmask  = gs_keyval_get('vlan_0_netmask');
 $current_router   = gs_keyval_get('vlan_0_router');
@@ -275,6 +82,195 @@ $form_ntp4     = $current_ntp4;
 
 
 if ($action === 'save') {
+	
+	echo "<pre>\n";
+	print_r($_REQUEST);
+	echo "</pre>\n";
+	
+	define( 'GS_VALIDATION_OK'    , 3 );
+	define( 'GS_VALIDATION_EMPTY' , 2 );
+	define( 'GS_VALIDATION_WARN'  , 1 );
+	define( 'GS_VALIDATION_ERR'   , 0 );
+	
+	function _normalize_ip_addr( $addr )
+	{
+		$addr = preg_replace('/[^0-9.]/', '', $addr);
+		if ($addr == '') return null;
+		$addr_parts = explode('.', $addr);
+		$addr = '';
+		for ($i=0; $i<=3; ++$i) {
+			$part = (int)lTrim(@$addr_parts[$i], '0 ');
+			if     ($part > 255) $part = 255;
+			elseif ($part <   0) $part =   0;
+			$addr .= $part;
+			if ($i < 3) $addr .= '.';
+		}
+		return $addr;
+	}
+	
+	function _is_invalid_ip_addr_by_format( $addr )
+	{
+		return !preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $addr);
+	}
+	
+	function _is_invalid_ip_addr_by_net( $addr )
+	{
+		return (
+			   subStr($addr,0, 2) === '0.'
+			|| subStr($addr,0, 3) === '39.'
+			|| subStr($addr,0, 4) === '127.'
+			|| subStr($addr,0, 6) === '128.0.'
+			|| subStr($addr,0, 8) === '169.254.'
+			|| subStr($addr,0, 8) === '191.255.'
+			|| subStr($addr,0, 8) === '192.0.0.'
+			|| subStr($addr,0, 8) === '192.0.2.'
+			|| subStr($addr,0,10) === '192.88.99.'
+			|| subStr($addr,0,12) === '223.255.255.'
+			|| subStr($addr,0, 4) === '224.'
+			|| subStr($addr,0, 4) === '240.'
+			|| subStr($addr,0,15) === '255.255.255.255'
+		);
+	}
+	
+	function _is_empty_ip_addr( $addr )
+	{
+		$addr = trim($addr);
+		return (
+			   $addr == ''
+			|| preg_match('/^0*\.0*\.0*\.0*$/', $addr)
+		);
+	}
+	
+	function _input_validate_ipaddr( &$addr, &$errmsg )
+	{
+		$errmsg = '';
+		if (_is_invalid_ip_addr_by_format( $addr )) {
+			$errmsg = 'Ung&uuml;ltige IP-Adresse!';
+			return GS_VALIDATION_ERR;
+		}
+		$addr = _normalize_ip_addr( $addr );
+		if ($addr === null) {
+			$errmsg = 'Ung&uuml;ltige IP-Adresse!';
+			return GS_VALIDATION_EMPTY;
+		}
+		if (_is_invalid_ip_addr_by_net( $addr )) {
+			$errmsg = 'Ung&uuml;ltige IP-Adresse!';
+			return GS_VALIDATION_ERR;
+		}
+		if (preg_match('/255/', $addr)
+		||  subStr($addr, -2) === '.0') {
+			$errmsg = 'Ung&uuml;ltige IP-Adresse!';
+			return GS_VALIDATION_ERR;
+		}
+		return GS_VALIDATION_OK;
+	}
+	
+	function _input_validate_netmask( &$netmask, &$errmsg )
+	{
+		$errmsg = '';
+		if (! in_array($netmask, array('/8', '/16', '/24'), true)) {
+			$errmsg = 'Ung&uuml;ltige Netzmaske!';
+			return GS_VALIDATION_ERR;
+		}
+		return GS_VALIDATION_OK;
+	}
+	
+	function _input_validate_router( &$addr, &$errmsg )
+	{
+		$errmsg = '';
+		if (_is_invalid_ip_addr_by_format( $addr )) {
+			$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+			return GS_VALIDATION_ERR;
+		}
+		$addr = _normalize_ip_addr( $addr );
+		if ($addr === null) {
+			$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+			return GS_VALIDATION_EMPTY;
+		}
+		if (_is_invalid_ip_addr_by_net( $addr )) {
+			$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+			return GS_VALIDATION_ERR;
+		}
+		if (preg_match('/255/', $addr)
+		||  subStr($addr, -2) === '.0') {
+			$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+			return GS_VALIDATION_ERR;
+		}
+		return GS_VALIDATION_OK;
+	}
+	
+	function _input_validate_dns( &$addr, &$errmsg )
+	{
+		$errmsg = '';
+		if (_is_empty_ip_addr( $addr )) {
+			$addr = '';
+			$errmsg = 'Leere DNS-Server-Adresse!';
+			return GS_VALIDATION_EMPTY;
+		}
+		if (_is_invalid_ip_addr_by_format( $addr )) {
+			$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+			return GS_VALIDATION_ERR;
+		}
+		$addr = _normalize_ip_addr( $addr );
+		if ($addr === null) {
+			$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+			return GS_VALIDATION_EMPTY;
+		}
+		if (_is_invalid_ip_addr_by_net( $addr )) {
+			$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+			return GS_VALIDATION_ERR;
+		}
+		if (preg_match('/255/', $addr)
+		||  subStr($addr, -2) === '.0') {
+			$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+			return GS_VALIDATION_ERR;
+		}
+		return GS_VALIDATION_OK;
+	}
+	
+	function _input_validate_ntp( &$addr, &$errmsg )
+	{
+		$errmsg = '';
+		if (_is_empty_ip_addr( $addr )) {
+			$addr = '';
+			$errmsg = 'Leere NTP-Server-Adresse!';
+			return GS_VALIDATION_EMPTY;
+		}
+		if (preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $addr)) {
+			# is IP address
+			$addr = _normalize_ip_addr( $addr );
+			if ($addr === null) {
+				$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
+				return GS_VALIDATION_EMPTY;
+			}
+			if (_is_invalid_ip_addr_by_net( $addr )) {
+				$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
+				return GS_VALIDATION_ERR;
+			}
+			if (preg_match('/255/', $addr)
+			||  subStr($addr, -2) === '.0') {
+				$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
+				return GS_VALIDATION_ERR;
+			}
+		} else {
+			# is name
+			$addr = preg_replace('[^a-z0-9.\-_]', '', strToLower($addr));
+			$addrs = getHostByNameL( $addr );
+			if (! is_array($addrs) || count($addrs) < 1) {
+				$errmsg = 'NTP-Server-Adresse kann nicht aufgel&ouml;st werden!';
+				return GS_VALIDATION_WARN;
+				# might be resolvable with the new network settings
+			}
+		}
+		return GS_VALIDATION_OK;
+	}
+	
+	function _complain_html( $errmsg, $ignorable=false )
+	{
+		echo '<p style="border:2px solid #f00; color: #b00; padding:0.3em;"><b>', ($ignorable ? 'Warnung!' : 'Fehler!') ,'</b> ', $errmsg ,'</p>' ,"\n";
+	}
+	
+	
 	
 	$err_cnt  = 0;
 	$warn_cnt = 0;
