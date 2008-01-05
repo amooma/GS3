@@ -61,6 +61,11 @@ $ifconfig = find_executable('ifconfig', array(
 <?php
 
 $current_ipaddr   = @$_SERVER['SERVER_ADDR'];
+if (! $current_ipaddr
+||  subStr($current_ipaddr,0, 4) === '127.'
+) {
+	$current_ipaddr = gs_keyval_get('vlan_0_ipaddr');
+}
 $current_netmask  = gs_keyval_get('vlan_0_netmask');
 $current_router   = gs_keyval_get('vlan_0_router');
 $current_dns1     = gs_keyval_get('vlan_0_dns1');
@@ -80,12 +85,17 @@ $form_ntp2     = $current_ntp2;
 $form_ntp3     = $current_ntp3;
 $form_ntp4     = $current_ntp4;
 
+$errors_html = array();
+
+
 
 if ($action === 'save') {
 	
+	/*
 	echo "<pre>\n";
 	print_r($_REQUEST);
 	echo "</pre>\n";
+	*/
 	
 	define( 'GS_VALIDATION_OK'    , 3 );
 	define( 'GS_VALIDATION_EMPTY' , 2 );
@@ -267,7 +277,8 @@ if ($action === 'save') {
 	
 	function _complain_html( $errmsg, $ignorable=false )
 	{
-		echo '<p style="border:2px solid #f00; color: #b00; padding:0.3em;"><b>', ($ignorable ? 'Warnung!' : 'Fehler!') ,'</b> ', $errmsg ,'</p>' ,"\n";
+		global $errors_html;
+		$errors_html[] = '<p style="border:2px solid #f00; color: #b00; padding:0.3em; margin:0.4em 0 0.3em 0"><b>'. ($ignorable ? 'Warnung!' : 'Fehler!') .'</b> '. $errmsg .'</p>';
 	}
 	
 	
@@ -526,10 +537,20 @@ if ($action === 'save') {
 <tr>
 	<td>&nbsp;</td>
 	<td>
-		<br />
 <?php
-	if ($action === 'save' && $err_cnt < 1 && $warn_cnt > 0) {
-		echo '<input type="checkbox" name="dont_warn" id="ipt-dont_warn" value="1" /> <label for="ipt-dont_warn">', 'Warnungen ignorieren' ,'</label><br />' ,"\n";
+	if ($action === 'save') {
+		if (@is_array($errors_html) && count($errors_html) > 0) {
+			foreach ($errors_html as $error_html) {
+				echo $error_html ,"\n";
+			}
+		} else {
+			echo '<br />',"\n";
+		}
+		if ($err_cnt < 1 && $warn_cnt > 0) {
+			echo '<input type="checkbox" name="dont_warn" id="ipt-dont_warn" value="1" /> <label for="ipt-dont_warn">', 'Warnungen ignorieren' ,'</label><br />' ,"\n";
+		}
+	} else {
+		echo '<br />',"\n";
 	}
 ?>
 		<input type="submit" value="<?php echo 'Speichern'; ?>" />
