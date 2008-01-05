@@ -477,11 +477,13 @@ function _test_result( $str, $status )
 
 
 
-if (! $can_continue) {
-	echo 'In diesem Setup-Schritt sind Fehler aufgetreten!' ,"\n";
-} else {
-	echo '<a class="fr" href="', GS_URL_PATH ,'setup/?step=network">weiter</a>' ,"\n";
-}
+//echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/">', 'zur&uuml;ck' ,'</a></div>' ,"\n";
+echo '<div class="fr">';
+if ($can_continue)
+	echo '<a href="', GS_URL_PATH ,'setup/?step=network"><big>', 'weiter' ,'</big></a>';
+else
+	echo '<span style="color:#999;">', 'weiter' ,'</span>';
+echo '</div>' ,"\n";
 echo '<br class="nofloat" />' ,"\n";
 
 ?>
