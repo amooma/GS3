@@ -64,9 +64,10 @@ echo "<pre>\n";
 print_r($_REQUEST);
 echo "</pre>\n";
 
-define( 'GS_VALIDATION_OK'  , 2 );
-define( 'GS_VALIDATION_WARN', 1 );
-define( 'GS_VALIDATION_ERR' , 0 );
+define( 'GS_VALIDATION_OK'    , 3 );
+define( 'GS_VALIDATION_EMPTY' , 2 );
+define( 'GS_VALIDATION_WARN'  , 1 );
+define( 'GS_VALIDATION_ERR'   , 0 );
 
 function _normalize_ip_addr( $addr )
 {
@@ -84,28 +85,52 @@ function _normalize_ip_addr( $addr )
 	return $addr;
 }
 
+function _is_invalid_ip_addr_by_format( $addr )
+{
+	return !preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $addr);
+}
+
+function _is_invalid_ip_addr_by_net( $addr )
+{
+	return (
+		   subStr($addr,0, 2) === '0.'
+		|| subStr($addr,0, 3) === '39.'
+		|| subStr($addr,0, 4) === '127.'
+		|| subStr($addr,0, 6) === '128.0.'
+		|| subStr($addr,0, 8) === '169.254.'
+		|| subStr($addr,0, 8) === '191.255.'
+		|| subStr($addr,0, 8) === '192.0.0.'
+		|| subStr($addr,0, 8) === '192.0.2.'
+		|| subStr($addr,0,10) === '192.88.99.'
+		|| subStr($addr,0,12) === '223.255.255.'
+		|| subStr($addr,0, 4) === '224.'
+		|| subStr($addr,0, 4) === '240.'
+		|| subStr($addr,0,15) === '255.255.255.255'
+	);
+}
+
+function _is_empty_ip_addr( $addr )
+{
+	$addr = trim($addr);
+	return (
+		   $addr == ''
+		|| preg_match('/^0*\.0*\.0*\.0*$/', $addr)
+	);
+}
+
 function _input_validate_ipaddr( &$addr, &$errmsg )
 {
-	$addr = _normalize_ip_addr( $addr );
 	$errmsg = '';
-	if ($addr === null) {
-		$errmsg = 'IP-Adresse leer!';
+	if (_is_invalid_ip_addr_by_format( $addr )) {
+		$errmsg = 'Ung&uuml;ltige IP-Adresse!';
 		return GS_VALIDATION_ERR;
 	}
-	if (subStr($addr,0, 2) === '0.'
-	||  subStr($addr,0, 3) === '39.'
-	||  subStr($addr,0, 4) === '127.'
-	||  subStr($addr,0, 6) === '128.0.'
-	||  subStr($addr,0, 8) === '169.254.'
-	||  subStr($addr,0, 8) === '191.255.'
-	||  subStr($addr,0, 8) === '192.0.0.'
-	||  subStr($addr,0, 8) === '192.0.2.'
-	||  subStr($addr,0,10) === '192.88.99.'
-	||  subStr($addr,0,12) === '223.255.255.'
-	||  subStr($addr,0, 4) === '224.'
-	||  subStr($addr,0, 4) === '240.'
-	||  subStr($addr,0,15) === '255.255.255.255'
-	) {
+	$addr = _normalize_ip_addr( $addr );
+	if ($addr === null) {
+		$errmsg = 'Ung&uuml;ltige IP-Adresse!';
+		return GS_VALIDATION_EMPTY;
+	}
+	if (_is_invalid_ip_addr_by_net( $addr )) {
 		$errmsg = 'Ung&uuml;ltige IP-Adresse!';
 		return GS_VALIDATION_ERR;
 	}
@@ -117,16 +142,253 @@ function _input_validate_ipaddr( &$addr, &$errmsg )
 	return GS_VALIDATION_OK;
 }
 
+function _input_validate_netmask( &$netmask, &$errmsg )
+{
+	$errmsg = '';
+	if (! in_array($netmask, array('/8', '/16', '/24'), true)) {
+		$errmsg = 'Ung&uuml;ltige Netzmaske!';
+		return GS_VALIDATION_ERR;
+	}
+	return GS_VALIDATION_OK;
+}
+
+function _input_validate_router( &$addr, &$errmsg )
+{
+	$errmsg = '';
+	if (_is_invalid_ip_addr_by_format( $addr )) {
+		$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+		return GS_VALIDATION_ERR;
+	}
+	$addr = _normalize_ip_addr( $addr );
+	if ($addr === null) {
+		$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+		return GS_VALIDATION_EMPTY;
+	}
+	if (_is_invalid_ip_addr_by_net( $addr )) {
+		$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+		return GS_VALIDATION_ERR;
+	}
+	if (preg_match('/255/', $addr)
+	||  subStr($addr, -2) === '.0') {
+		$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+		return GS_VALIDATION_ERR;
+	}
+	return GS_VALIDATION_OK;
+}
+
+function _input_validate_dns( &$addr, &$errmsg )
+{
+	$errmsg = '';
+	if (_is_empty_ip_addr( $addr )) {
+		$addr = '';
+		$errmsg = 'Leere DNS-Server-Adresse!';
+		return GS_VALIDATION_EMPTY;
+	}
+	if (_is_invalid_ip_addr_by_format( $addr )) {
+		$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+		return GS_VALIDATION_ERR;
+	}
+	$addr = _normalize_ip_addr( $addr );
+	if ($addr === null) {
+		$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+		return GS_VALIDATION_EMPTY;
+	}
+	if (_is_invalid_ip_addr_by_net( $addr )) {
+		$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+		return GS_VALIDATION_ERR;
+	}
+	if (preg_match('/255/', $addr)
+	||  subStr($addr, -2) === '.0') {
+		$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+		return GS_VALIDATION_ERR;
+	}
+	return GS_VALIDATION_OK;
+}
+
+function _input_validate_ntp( &$addr, &$errmsg )
+{
+	$errmsg = '';
+	if (_is_empty_ip_addr( $addr )) {
+		$addr = '';
+		$errmsg = 'Leere NTP-Server-Adresse!';
+		return GS_VALIDATION_EMPTY;
+	}
+	if (preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $addr)) {
+		# is IP address
+		$addr = _normalize_ip_addr( $addr );
+		if ($addr === null) {
+			$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
+			return GS_VALIDATION_EMPTY;
+		}
+		if (_is_invalid_ip_addr_by_net( $addr )) {
+			$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
+			return GS_VALIDATION_ERR;
+		}
+		if (preg_match('/255/', $addr)
+		||  subStr($addr, -2) === '.0') {
+			$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
+			return GS_VALIDATION_ERR;
+		}
+	} else {
+		# is name
+		$addr = preg_replace('[^a-z0-9.\-_]', '', strToLower($addr));
+		$addrs = getHostByNameL( $addr );
+		if (! is_array($addrs) || count($addrs) < 1) {
+			$errmsg = 'NTP-Server-Adresse kann nicht aufgel&ouml;st werden!';
+			return GS_VALIDATION_WARN;
+			# might be resolvable with the new network settings
+		}
+	}
+	return GS_VALIDATION_OK;
+}
+
+
+
+function _complain_html( $errmsg, $ignorable=false )
+{
+	echo '<p style="border:2px solid #f00; color: #b00; padding:0.3em;"><b>', ($ignorable ? 'Warnung!' : 'Fehler!') ,'</b> ', $errmsg ,'</p>' ,"\n";
+}
 
 
 
 
 
+$current_ipaddr   = @$_SERVER['SERVER_ADDR'];
+$current_netmask  = gs_keyval_get('vlan_0_netmask');
+$current_router   = gs_keyval_get('vlan_0_router');
+$current_dns1     = gs_keyval_get('vlan_0_dns1');
+$current_dns2     = gs_keyval_get('vlan_0_dns2');
+$current_ntp1     = gs_keyval_get('vlan_0_ntp1');
+$current_ntp2     = gs_keyval_get('vlan_0_ntp2');
+$current_ntp3     = gs_keyval_get('vlan_0_ntp3');
+$current_ntp4     = gs_keyval_get('vlan_0_ntp4');
 
-$addr = @$_REQUEST['ipaddr'][0] .'.'. @$_REQUEST['ipaddr'][1] .'.'. @$_REQUEST['ipaddr'][2] .'.'. @$_REQUEST['ipaddr'][3];
-echo _input_validate_ipaddr( $addr, $errmsg );
+$form_ipaddr   = $current_ipaddr;
+$form_netmask  = $current_netmask;
+$form_router   = $current_router;
+$form_dns1     = $current_dns1;
+$form_dns2     = $current_dns2;
+$form_ntp1     = $current_ntp1;
+$form_ntp2     = $current_ntp2;
+$form_ntp3     = $current_ntp3;
+$form_ntp4     = $current_ntp4;
 
 
+if ($action === 'save') {
+	
+	$err_cnt  = 0;
+	$warn_cnt = 0;
+	
+	$form_ipaddr =
+		@$_REQUEST['ipaddr'][0] .'.'.
+		@$_REQUEST['ipaddr'][1] .'.'.
+		@$_REQUEST['ipaddr'][2] .'.'.
+		@$_REQUEST['ipaddr'][3] ;
+	$validation_result = _input_validate_ipaddr( $form_ipaddr, $errmsg );
+	if ($validation_result !== GS_VALIDATION_OK) {
+		$err_cnt++;
+		_complain_html( $errmsg );
+	}
+	
+	$form_netmask = @$_REQUEST['netmask'];
+	$validation_result = _input_validate_netmask( $form_netmask, $errmsg );
+	if ($validation_result !== GS_VALIDATION_OK) {
+		$err_cnt++;
+		_complain_html( $errmsg );
+	}
+	
+	$form_router =
+		@$_REQUEST['router'][0] .'.'.
+		@$_REQUEST['router'][1] .'.'.
+		@$_REQUEST['router'][2] .'.'.
+		@$_REQUEST['router'][3] ;
+	$validation_result = _input_validate_router( $form_router, $errmsg );
+	if ($validation_result !== GS_VALIDATION_OK) {
+		$err_cnt++;
+		_complain_html( $errmsg );
+	}
+	
+	$form_dns1 =
+		@$_REQUEST['dns1'][0] .'.'.
+		@$_REQUEST['dns1'][1] .'.'.
+		@$_REQUEST['dns1'][2] .'.'.
+		@$_REQUEST['dns1'][3] ;
+	$validation_result = _input_validate_dns( $form_dns1, $errmsg );
+	if ($validation_result !== GS_VALIDATION_OK) {
+		$err_cnt++;
+		_complain_html( $errmsg .' (1)' );
+	}
+	
+	$form_dns2 =
+		@$_REQUEST['dns2'][0] .'.'.
+		@$_REQUEST['dns2'][1] .'.'.
+		@$_REQUEST['dns2'][2] .'.'.
+		@$_REQUEST['dns2'][3] ;
+	$validation_result = _input_validate_dns( $form_dns2, $errmsg );
+	if ($validation_result !== GS_VALIDATION_OK) {
+		if ($validation_result === GS_VALIDATION_EMPTY) {
+			$form_dns2 = '';
+		} else {
+			$err_cnt++;
+			_complain_html( $errmsg .' (2)' );
+		}
+	}
+	
+	$form_ntp1 = @$_REQUEST['ntp1'];
+	$validation_result = _input_validate_ntp( $form_ntp1, $errmsg );
+	if ($validation_result !== GS_VALIDATION_OK) {
+		if ($validation_result === GS_VALIDATION_WARN) {
+			$warn_cnt++;
+			_complain_html( $errmsg .' (1)', true );
+		} else {
+			$err_cnt++;
+			_complain_html( $errmsg .' (1)' );
+		}
+	}
+	
+	$form_ntp2 = @$_REQUEST['ntp2'];
+	$validation_result = _input_validate_ntp( $form_ntp2, $errmsg );
+	if ($validation_result !== GS_VALIDATION_OK) {
+		if ($validation_result === GS_VALIDATION_EMPTY) {
+			$form_ntp2 = '';
+		} elseif ($validation_result === GS_VALIDATION_WARN) {
+			$warn_cnt++;
+			_complain_html( $errmsg .' (2)', true );
+		} else {
+			$err_cnt++;
+			_complain_html( $errmsg .' (2)' );
+		}
+	}
+	
+	$form_ntp3 = @$_REQUEST['ntp3'];
+	$validation_result = _input_validate_ntp( $form_ntp3, $errmsg );
+	if ($validation_result !== GS_VALIDATION_OK) {
+		if ($validation_result === GS_VALIDATION_EMPTY) {
+			$form_ntp3 = '';
+		} elseif ($validation_result === GS_VALIDATION_WARN) {
+			$warn_cnt++;
+			_complain_html( $errmsg .' (3)', true );
+		} else {
+			$err_cnt++;
+			_complain_html( $errmsg .' (3)' );
+		}
+	}
+	
+	$form_ntp4 = @$_REQUEST['ntp4'];
+	$validation_result = _input_validate_ntp( $form_ntp4, $errmsg );
+	if ($validation_result !== GS_VALIDATION_OK) {
+		if ($validation_result === GS_VALIDATION_EMPTY) {
+			$form_ntp4 = '';
+		} elseif ($validation_result === GS_VALIDATION_WARN) {
+			$warn_cnt++;
+			_complain_html( $errmsg .' (4)', true );
+		} else {
+			$err_cnt++;
+			_complain_html( $errmsg .' (4)' );
+		}
+	}
+	
+}
 
 
 ?>
@@ -140,13 +402,13 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 	<th width="100"><?php echo 'IP-Adresse'; ?></th>
 	<td>
 <?php
-		$ipaddr_parts = explode('.', @$_SERVER['SERVER_ADDR']);
+		$ipaddr_parts = explode('.', $form_ipaddr);
 		for ($i=0; $i<=3; ++$i) {
 			$part = (int)lTrim(@$ipaddr_parts[$i], '0 ');
 			echo '<input type="text" name="ipaddr[',$i,']" size="3" maxlength="3" class="r pre" value="', $part ,'" />';
 			if ($i < 3) echo '.';
 		}
-		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/IP-Adresse">http://de.wikipedia.org/wiki/IP-Adresse</a>' ,')</small>' ,"\n";
+		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/IP-Adresse">?</a>' ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
@@ -154,7 +416,6 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 	<th><?php echo 'Netzmaske'; ?></th>
 	<td>
 <?php
-		$netmask = gs_keyval_get('vlan_0_netmask');
 		/*
 		$netmask_parts = explode('.', $netmask);
 		for ($i=0; $i<=3; ++$i) {
@@ -171,10 +432,10 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 		);
 		foreach ($options as $net => $mask) {
 			$net = '/'.$net;
-			echo '<option value="',$net,'"', ($net===$netmask ? ' selected="selected"' : '') ,'>',$net,' (',$mask,')</option>' ,"\n";
+			echo '<option value="',$net,'"', ($net===$form_netmask ? ' selected="selected"' : '') ,'>',$net,' (',$mask,')</option>' ,"\n";
 		}
 		echo '</select>' ,"\n";
-		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/Netzmaske">http://de.wikipedia.org/wiki/Netzmaske</a>' ,')</small>' ,"\n";
+		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/Netzmaske">?</a>' ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
@@ -182,14 +443,13 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 	<th><?php echo 'Router'; ?></th>
 	<td>
 <?php
-		$router = gs_keyval_get('vlan_0_router');
-		$router_parts = explode('.', $router);
+		$router_parts = explode('.', $form_router);
 		for ($i=0; $i<=3; ++$i) {
 			$part = (int)lTrim(@$router_parts[$i], '0 ');
 			echo '<input type="text" name="router[',$i,']" size="3" maxlength="3" class="r pre" value="', $part ,'" />';
 			if ($i < 3) echo '.';
 		}
-		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/Router">http://de.wikipedia.org/wiki/Router</a>' ,')</small>' ,"\n";
+		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/Router">?</a>' ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
@@ -197,9 +457,8 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 	<th><?php echo 'DNS-Server (1)'; ?></th>
 	<td>
 <?php
-		$dns1 = gs_keyval_get('vlan_0_dns1');
-		if (trim($dns1) != '') {
-			$dns1_parts = explode('.', $dns1);
+		if (trim($form_dns1) != '') {
+			$dns1_parts = explode('.', $form_dns1);
 			for ($i=0; $i<=3; ++$i) {
 				$dns1_parts[$i] = (int)lTrim(@$dns1_parts[$i], '0 ');
 			}
@@ -217,9 +476,8 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 	<th><?php echo 'DNS-Server (2)'; ?></th>
 	<td>
 <?php
-		$dns2 = gs_keyval_get('vlan_0_dns2');
-		if (trim($dns2) != '') {
-			$dns2_parts = explode('.', $dns2);
+		if (trim($form_dns2) != '') {
+			$dns2_parts = explode('.', $form_dns2);
 			for ($i=0; $i<=3; ++$i) {
 				$dns2_parts[$i] = (int)lTrim(@$dns2_parts[$i], '0 ');
 			}
@@ -238,8 +496,7 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 	<th><?php echo 'NTP-Server (1)'; ?></th>
 	<td>
 <?php
-		$ntp1_addr = gs_keyval_get('vlan_0_ntp1');
-		echo '<input type="text" name="ntp1" size="30" maxlength="50" class="pre" value="', $ntp1_addr ,'" />' ,"\n";
+		echo '<input type="text" name="ntp1" size="30" maxlength="50" class="pre" value="', $form_ntp1 ,'" />' ,"\n";
 ?>
 	</td>
 </tr>
@@ -247,8 +504,7 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 	<th><?php echo 'NTP-Server (2)'; ?></th>
 	<td>
 <?php
-		$ntp2_addr = gs_keyval_get('vlan_0_ntp2');
-		echo '<input type="text" name="ntp2" size="30" maxlength="50" class="pre" value="', $ntp2_addr ,'" />' ,"\n";
+		echo '<input type="text" name="ntp2" size="30" maxlength="50" class="pre" value="', $form_ntp2 ,'" />' ,"\n";
 		echo ' &nbsp; <small>(', 'optional' ,')</small>' ,"\n";
 ?>
 	</td>
@@ -257,8 +513,7 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 	<th><?php echo 'NTP-Server (3)'; ?></th>
 	<td>
 <?php
-		$ntp3_addr = gs_keyval_get('vlan_0_ntp3');
-		echo '<input type="text" name="ntp3" size="30" maxlength="50" class="pre" value="', $ntp3_addr ,'" />' ,"\n";
+		echo '<input type="text" name="ntp3" size="30" maxlength="50" class="pre" value="', $form_ntp3 ,'" />' ,"\n";
 		echo ' &nbsp; <small>(', 'optional' ,')</small>' ,"\n";
 ?>
 	</td>
@@ -267,8 +522,7 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 	<th><?php echo 'NTP-Server (4)'; ?></th>
 	<td>
 <?php
-		$ntp4_addr = gs_keyval_get('vlan_0_ntp4');
-		echo '<input type="text" name="ntp4" size="30" maxlength="50" class="pre" value="', $ntp4_addr ,'" />' ,"\n";
+		echo '<input type="text" name="ntp4" size="30" maxlength="50" class="pre" value="', $form_ntp4 ,'" />' ,"\n";
 		echo ' &nbsp; <small>(', 'optional' ,')</small>' ,"\n";
 ?>
 	</td>
@@ -277,7 +531,11 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 	<td>&nbsp;</td>
 	<td>
 		<br />
-		<input type="reset" value="<?php echo 'Zur&uuml;cksetzen'; ?>" />
+<?php
+	if ($action === 'save' && $err_cnt < 1 && $warn_cnt > 0) {
+		echo '<input type="checkbox" name="dont_warn" id="ipt-dont_warn" value="1" /> <label for="ipt-dont_warn">', 'Warnungen ignorieren' ,'</label><br />' ,"\n";
+	}
+?>
 		<input type="submit" value="<?php echo 'Speichern'; ?>" />
 	</td>
 </tr>
@@ -292,14 +550,13 @@ echo _input_validate_ipaddr( $addr, $errmsg );
 <hr />
 <?php
 
-echo '<a class="fl" href="', GS_URL_PATH ,'setup/">zur&uuml;ck</a>' ,"\n";
-
-$can_continue = true;
-if (! $can_continue) {
-	echo 'In diesem Setup-Schritt sind Fehler aufgetreten!' ,"\n";
-} else {
-	echo '<a class="fr" href="', GS_URL_PATH ,'setup/?step=network">weiter</a>' ,"\n";
-}
+echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/">', 'zur&uuml;ck' ,'</a></div>' ,"\n";
+echo '<div class="fr">';
+if ($can_continue)
+	echo '<a href="', GS_URL_PATH ,'setup/?step=network"><big>', 'weiter' ,'</big></a>';
+else
+	echo '<span style="color:#999;">', 'weiter' ,'</span>';
+echo '</div>' ,"\n";
 echo '<br class="nofloat" />' ,"\n";
 
 ?>
