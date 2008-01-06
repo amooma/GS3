@@ -68,12 +68,13 @@ function gs_keyval_get( $key )
 	//return rawUrlDecode(trim((string)@file_get_contents( '/var/lib/gemeinschaft/vars/'.$key )));
 	$err=0; $out=array();
 	@exec( 'sudo cat '. qsa('/var/lib/gemeinschaft/vars/'.$key) .' 2>>/dev/null', $out, $err );
-	return ($err === 0 ? gs_keyval_dec(implode('',$out)) : '');
+	return ($err===0 ? gs_keyval_dec(implode('',$out)) : '');
 }
 
 function gs_keyval_set( $key, $val )
 {
 	if (! gs_keyval_is_valid_key($key)) return false;
+	if ($val === gs_keyval_get($key)) return true;  # unchanged
 	/*
 	$val = gs_keyval_enc($val);
 	$fh = @fOpen( '/var/lib/gemeinschaft/vars/'.$key, 'wb' );
@@ -89,7 +90,7 @@ function gs_keyval_set( $key, $val )
 		.' 2>>/dev/null';
 	$err=0; $out=array();
 	@exec( 'sudo sh -c '. qsa($cmd) .' 2>>/dev/null', $out, $err );
-	return ($err === 0);
+	return ($err===0);
 }
 
 
