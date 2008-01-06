@@ -26,6 +26,8 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 defined('GS_VALID') or die('No direct access.');
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
+require_once( GS_DIR .'inc/quoted_printable_encode.php' );
 
 
 function gs_keyval_is_valid_key( $key )
@@ -33,22 +35,61 @@ function gs_keyval_is_valid_key( $key )
 	return (bool)preg_match('/[a-z0-9_\-][a-z0-9_\-.]*/', $key);
 }
 
+function gs_keyval_enc( $str )
+{
+	/*
+	return str_replace(' ', '=20',
+		quoted_printable_encode($str, false));
+	*/
+	
+	$str = quoted_printable_encode($str, false);
+	
+	# encode trailing spaces:
+	do { $str = preg_replace('/ ( *)$/', '=20$1', $str, -1, $cnt); }
+	while ($cnt > 0);
+	
+	# encode leading spaces:
+	do { $str = preg_replace('/^( *) /', '$1=20', $str, -1, $cnt); }
+	while ($cnt > 0);
+	
+	return $str;
+}
+
+function gs_keyval_dec( $str )
+{
+	return quoted_printable_decode( trim( $str ) );
+}
+
+
+
 function gs_keyval_get( $key )
 {
 	if (! gs_keyval_is_valid_key($key)) return null;
-	return rawUrlDecode(trim((string)@file_get_contents( '/var/lib/gemeinschaft/vars/'.$key )));
+	//return rawUrlDecode(trim((string)@file_get_contents( '/var/lib/gemeinschaft/vars/'.$key )));
+	$err=0; $out=array();
+	@exec( 'sudo cat '. qsa('/var/lib/gemeinschaft/vars/'.$key) .' 2>>/dev/null', $out, $err );
+	return ($err === 0 ? gs_keyval_dec(implode('',$out)) : '');
 }
 
 function gs_keyval_set( $key, $val )
 {
 	if (! gs_keyval_is_valid_key($key)) return false;
-	$val = rawUrlEncode($val);
+	/*
+	$val = gs_keyval_enc($val);
 	$fh = @fOpen( '/var/lib/gemeinschaft/vars/'.$key, 'wb' );
 	if (! $fh) return false;
 	@stream_set_write_buffer($fh, 0);
 	$ok = (bool)@fWrite($fh, $val, strLen($val));
 	@fClose($fh);
 	return $ok;
+	*/
+	$cmd =
+		'echo -n '. qsa(gs_keyval_enc($val))
+		.' > '. qsa('/var/lib/gemeinschaft/vars/'.$key)
+		.' 2>>/dev/null';
+	$err=0; $out=array();
+	@exec( 'sudo sh -c '. qsa($cmd) .' 2>>/dev/null', $out, $err );
+	return ($err === 0);
 }
 
 
