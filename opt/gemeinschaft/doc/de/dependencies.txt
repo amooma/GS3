@@ -55,5 +55,6 @@ lame (>= 3.97)
 
 Kollidiert mit:
 
-asterisk*
+asterisk.*
+resolvconf
 
