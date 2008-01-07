@@ -43,36 +43,46 @@ function gs_get_listen_to_ids( $primary_only=false )
 	}
 	*/
 	
-	# get our IPs
-	#
-	$ips = @ gs_get_listen_to_ips( $primary_only );
-	if (! is_array($ips)) {
-		# kann entweder passieren wenn wir ein Gemeinschaft-Node sind
-		# (dann ist es extrem schlecht wenn die Datei fehlt) oder wenn
-		# wir ein Web-Server ohne Asterisk sind (dann ist es ok)
-		gs_log(GS_LOG_DEBUG, "Failed to get our IP addresses");
-		return array();
-	}
-	if (count($ips) < 1) {
-		gs_log(GS_LOG_DEBUG, "We're not configured to listen to any IP addresses");
-		return array();
+	if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+		
+		# get our IPs
+		#
+		$ips = @ gs_get_listen_to_ips( $primary_only );
+		if (! is_array($ips)) {
+			# kann entweder passieren wenn wir ein Gemeinschaft-Node sind
+			# (dann ist es extrem schlecht wenn die Datei fehlt) oder wenn
+			# wir ein Web-Server ohne Asterisk sind (dann ist es ok)
+			gs_log(GS_LOG_DEBUG, "Failed to get our IP addresses");
+			return array();
+		}
+		if (count($ips) < 1) {
+			gs_log(GS_LOG_DEBUG, "We're not configured to listen to any IP addresses");
+			return array();
+		}
+		
+		# connect to db
+		# must be to slave db so we can tell our IDs even if the master is down
+		#
+		$db = gs_db_slave_connect();
+		if (! $db) {
+			gs_log(GS_LOG_WARNING, "Failed to connect to the database!");
+			return array();
+		}
+		
+		# find the corresponding IDs
+		#
+		$ips_escaped = array();
+		foreach ($ips as $ip)
+			$ips_escaped[] = '\''. $db->escape( $ip ) .'\'';
+		// count($ips) guaranteed to be > 0
+		$query = 'SELECT `id` FROM `hosts` WHERE `host` IN ('. implode(',', $ips_escaped) .')';
+		
+	} else {
+		
+		$query = 'SELECT `id` FROM `hosts`';
+		
 	}
 	
-	# connect to db
-	# must be to slave db so we can tell our IDs even if the master is down
-	#
-	$db = gs_db_slave_connect();
-	if (! $db) {
-		gs_log(GS_LOG_WARNING, "Failed to connect to the database!");
-		return array();
-	}
-	
-	# find the corresponding IDs
-	#
-	$ips_escaped = array();
-	foreach ($ips as $ip)
-		$ips_escaped[] = '\''. $db->escape( $ip ) .'\'';
-	// count($ips) guaranteed to be > 0
 	$rs = $db->execute( 'SELECT `id` FROM `hosts` WHERE `host` IN ('. implode(',', $ips_escaped) .')' );
 	if (! $rs) {
 		gs_log(GS_LOG_WARNING, "Database error!");
