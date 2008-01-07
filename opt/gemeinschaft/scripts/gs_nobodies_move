@@ -41,7 +41,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 $usage = 'Moves all nobody accounts to a new host.
 Usage: '. baseName(__FILE__) .' --host=<id>|<ip>|RANDOM --force=yes';
 
-$opts = getOptsNoMultiples( '',
+$opts = @getOptsNoMultiples( '',
 	array(
 		'host=',
 		'force='

@@ -43,7 +43,7 @@ include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 $usage = 'Updates all nobody accounts to GS_NOBODY_EXTEN_PATTERN and GS_NOBODY_CID_NAME.
 Usage: '. baseName(__FILE__) .' --force=yes';
 
-$opts = getOptsNoMultiples( '',
+$opts = @getOptsNoMultiples( '',
 	array(
 		'force='
 	),

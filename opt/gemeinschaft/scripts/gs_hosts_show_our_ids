@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/get-listen-to-ids.php' );
 ***********************************************************/
 $usage = 'Usage: '. baseName(__FILE__);
 
-$opts = getOptsNoMultiples( '',
+$opts = @getOptsNoMultiples( '',
 	array(
 	),
 	$usage

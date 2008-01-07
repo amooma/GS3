@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 ***********************************************************/
 $usage = 'Usage: '. baseName(__FILE__) .' --queue=<ext> --source=internal|external --case=always|full|timeout|empty --active=no|std|var';
 
-$opts = getOptsNoMultiples( '',
+$opts = @getOptsNoMultiples( '',
 	array(
 		'queue=',
 		'source=',
