@@ -1,0 +1,76 @@
+#####################################################################
+#            Gemeinschaft - asterisk cluster gemeinschaft
+# 
+# $Revision$
+# 
+# Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+# Philipp Kempgen <philipp.kempgen@amooma.de>
+# Peter Kozak <peter.kozak@amooma.de>
+# 
+# This is a template for /etc/ntp.conf (on Debian), used
+# by the Gemeinschaft setup.
+#####################################################################
+
+# /etc/ntp.conf, configuration for ntpd
+
+driftfile /var/lib/ntp/ntp.drift
+statsdir /var/log/ntpstats/
+
+#statistics loopstats peerstats clockstats
+#filegen loopstats file loopstats type day enable
+#filegen peerstats file peerstats type day enable
+#filegen clockstats file clockstats type day enable
+
+
+# You do need to talk to an NTP server or two (or three).
+#server ntp.your-provider.example
+
+# pool.ntp.org maps to more than 300 low-stratum NTP servers.
+# Your server will pick a different set every time it starts up.
+#  *** Please consider joining the pool! ***
+#  *** <http://www.pool.ntp.org/join.html> ***
+
+__GEMEINSCHAFT_NTPCONF_SERVERS__
+
+# will be replaced by something like:
+#---cut---
+#server 0.debian.pool.ntp.org iburst dynamic
+#server 1.debian.pool.ntp.org iburst dynamic
+#server 2.debian.pool.ntp.org iburst dynamic
+#server 3.debian.pool.ntp.org iburst dynamic
+#---cut---
+
+
+# By default, exchange time with everybody, but don't allow configuration.
+# See /usr/share/doc/ntp-doc/html/accopt.html for details.
+restrict -4 default kod notrap nomodify nopeer noquery
+restrict -6 default kod notrap nomodify nopeer noquery
+
+# Local users may interrogate the ntp server more closely.
+restrict 127.0.0.1
+restrict ::1
+
+# Clients from this (example!) subnet have unlimited access,
+# but only if cryptographically authenticated
+#restrict 192.168.123.0  mask  255.255.255.0 notrust
+
+# If you want to provide time to your local subnet, change the next line.
+# (Again, the address is an example only.)
+#broadcast 192.168.123.255
+
+__GEMEINSCHAFT_NTPCONF_CLIENTS__
+
+# will be replaced by something like:
+#---cut---
+#restrict 192.168.0.0 mask 255.255.0.0 nomodify noquery nopeer notrap
+#broadcast 192.168.0.255
+#---cut---
+
+
+# If you want to listen to time broadcasts on your local subnet,
+# de-comment the next lines. Please do this only if you trust everybody
+# on the network!
+#disable auth
+#broadcastclient
