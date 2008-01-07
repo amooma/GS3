@@ -53,6 +53,7 @@ gs_log(GS_LOG_DEBUG, 'Worker started.', 'cc.log');
 $DB = gs_db_master_connect();
 $our_host_ids = array();
 $hosts = array();
+$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
 
 do {
 	$ok = @_do_one_pass();
@@ -81,7 +82,7 @@ function _extstate_v( $state )
 
 function _do_one_pass()
 {
-	global $DB, $our_host_ids, $hosts;
+	global $DB, $our_host_ids, $hosts, $GS_INSTALLATION_TYPE_SINGLE;
 	
 	gs_log(GS_LOG_DEBUG, 'Checking waiting call completions ...', 'cc.log');
 	
@@ -104,10 +105,12 @@ function _do_one_pass()
 	#
 	$ok = @ $DB->execute( 'DELETE FROM `call_completion_waiting` WHERE `t_init`<'. (time() - (int)GS_CC_TIMEOUT*60) );
 	
-	# get out host ids
-	#
-	$our_host_ids = @ gs_get_listen_to_ids();
-	if (! is_array($our_host_ids)) $our_host_ids = array();
+	if (! $GS_INSTALLATION_TYPE_SINGLE) {
+		# get out host ids
+		#
+		$our_host_ids = @ gs_get_listen_to_ids();
+		if (! is_array($our_host_ids)) $our_host_ids = array();
+	}
 	
 	# get waiting call completions
 	#
@@ -191,7 +194,7 @@ FROM
 
 function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid, $from_host_id )
 {
-	global $our_host_ids, $hosts;
+	global $our_host_ids, $hosts, $GS_INSTALLATION_TYPE_SINGLE;
 	
 	//$rr = "R\xC3\xBCckruf";
 	$rr = "RR";
@@ -224,7 +227,8 @@ function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid,
 	
 	$spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
 	
-	if (in_array( $from_host_id, $our_host_ids )) {
+	if ($GS_INSTALLATION_TYPE_SINGLE
+	||  in_array( $from_host_id, $our_host_ids )) {
 		# the Asterisk of this user and the web server both run on this host
 		
 		$ok = @ rename( $filename, $spoolfile );
