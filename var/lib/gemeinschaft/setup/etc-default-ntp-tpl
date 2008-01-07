@@ -1,0 +1,17 @@
+#####################################################################
+#            Gemeinschaft - asterisk cluster gemeinschaft
+# 
+# $Revision$
+# 
+# Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+# Philipp Kempgen <philipp.kempgen@amooma.de>
+# Peter Kozak <peter.kozak@amooma.de>
+# 
+# This is a template for /etc/default/ntp (on Debian), used
+# by the Gemeinschaft setup.
+#####################################################################
+
+# allow the time to be set even if the offset exceeds 1000 s
+NTPD_OPTS='-g'
