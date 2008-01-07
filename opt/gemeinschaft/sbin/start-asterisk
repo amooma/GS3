@@ -42,7 +42,7 @@ $gs_extensions_ael_filename = 'gs-extensions.ael';
 
 $usage = 'Usage: '. baseName(__FILE__) .' [--dialplan]';
 
-$opts = getOptsNoMultiples( '',
+$opts = @getOptsNoMultiples( '',
 	array(
 		'dialplan'
 	),
