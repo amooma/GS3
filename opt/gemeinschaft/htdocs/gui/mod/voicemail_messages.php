@@ -46,24 +46,30 @@ $folders = array(
 );
 
 
-# find host
-#
-$rs = $DB->execute(
-'SELECT `u`.`host_id` `id`, `h`.`host`
-FROM
-	`users` `u` LEFT JOIN
-	`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
-WHERE
-	`u`.`id`='. (int)@$_SESSION['sudo_user']['info']['id']
-);
-$host = $rs->fetchRow();
-if (! $host)
-	die( 'Failed to get host.' );
-
-$our_host_ids = @gs_get_listen_to_ids();
-if (! is_array($our_host_ids))
-	die( 'Failed to get our host IDs.' );
-
+$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+if (! $GS_INSTALLATION_TYPE_SINGLE) {
+	# find host
+	#
+	$rs = $DB->execute(
+	'SELECT `u`.`host_id` `id`, `h`.`host`
+	FROM
+		`users` `u` LEFT JOIN
+		`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
+	WHERE
+		`u`.`id`='. (int)@$_SESSION['sudo_user']['info']['id']
+	);
+	$host = $rs->fetchRow();
+	if (! $host)
+		die( 'Failed to get host.' );
+	
+	$our_host_ids = @gs_get_listen_to_ids();
+	if (! is_array($our_host_ids))
+		die( 'Failed to get our host IDs.' );
+	
+	$user_is_on_this_host = in_array($host['id'], $our_host_ids, true);
+} else {
+	$user_is_on_this_host = true;
+}
 
 
 
@@ -80,7 +86,7 @@ if (@$_REQUEST['action']==='play') {
 	$msg_exists = false;
 	if (array_key_exists($fld, $folders)) {
 		$out = array();
-		if (in_array($host['id'], $our_host_ids, true)) {
+		if ($user_is_on_this_host) {
 			# user is on this host
 			if (file_exists( $origfile )) {
 				@exec( 'sudo rm -rf '. qsa($tmpfile) );
@@ -228,7 +234,7 @@ if (@$_REQUEST['action']==='del') {
 	if (array_key_exists($fld, $folders)) {
 		$cmd = GS_DIR .'sbin/vm-local-del '. qsa( @$_SESSION['sudo_user']['info']['ext'] ) .' '. qsa($fld) .' '. qsa($file);
 		$err=0; $out=array();
-		if (in_array($host['id'], $our_host_ids, true)) {
+		if ($user_is_on_this_host) {
 			# user is on this host
 			@exec( 'sudo '. $cmd .' 2>>/dev/null', $out, $err );
 		} else {
@@ -246,7 +252,7 @@ if (@$_REQUEST['action']==='del') {
 #
 $cmd = GS_DIR .'sbin/vm-local-list '. qsa( @$_SESSION['sudo_user']['info']['ext'] );
 $out = array();
-if (in_array($host['id'], $our_host_ids, true)) {
+if ($user_is_on_this_host) {
 	# user is on this host
 	@exec( 'sudo -u root '. $cmd .' 2>>/dev/null', $out, $err );
 } else {
