@@ -112,10 +112,15 @@ if ($info['dur'] > 900) {  # 900 s = 15 min
 	_server_error( 'File too long.' );
 }
 
-$our_host_ids = @gs_get_listen_to_ids();
-if (! is_array($our_host_ids)) {
-	gs_log( GS_LOG_WARNING, 'Failed to get our host IDs.' );
-	_server_error( 'Failed to get our host IDs.' );
+if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+	$our_host_ids = @gs_get_listen_to_ids();
+	if (! is_array($our_host_ids)) {
+		gs_log( GS_LOG_WARNING, 'Failed to get our host IDs.' );
+		_server_error( 'Failed to get our host IDs.' );
+	}
+	$vmmsg_is_on_this_host = in_array($info['host_id'], $our_host_ids, true);
+} else {
+	$vmmsg_is_on_this_host = true;
 }
 
 
@@ -140,7 +145,7 @@ $tmpfile_base = '/tmp/gs-vm-'. preg_replace('/[^0-9]/', '', $ext) .'-'. $fld .'-
 # get file from remote host if necessary
 #
 
-if (! in_array($info['host_id'], $our_host_ids, true)) {
+if (! $vmmsg_is_on_this_host) {
 	# user is on a different host
 	# copy the original file to this host:
 	$origfile = $tmpfile_base.'.alaw';
