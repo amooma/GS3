@@ -90,10 +90,14 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 	
 	# are we the web server?
 	#
-	$our_host_ips = @gs_get_listen_to_ips();
-	if (! is_array($our_host_ips))
-		return new GsError( 'Failed to get our host IPs.' );
-	$we_are_the_webserver = in_array( GS_PROV_HOST, $our_host_ips );
+	if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+		$our_host_ips = @gs_get_listen_to_ips();
+		if (! is_array($our_host_ips))
+			return new GsError( 'Failed to get our host IPs.' );
+		$we_are_the_webserver = in_array( GS_PROV_HOST, $our_host_ips );
+	} else {
+		$we_are_the_webserver = true;
+	}
 	
 	# remove old ringer from htdocs/prov/ringtones/ dir
 	#
