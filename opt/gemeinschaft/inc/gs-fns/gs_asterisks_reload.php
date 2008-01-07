@@ -55,13 +55,16 @@ function gs_asterisks_reload( $host_ids, $dialplan_only )
 	if (! is_array( $hosts ))
 		return new GsError( 'Failed to get hosts.' );
 	
-	# get our host IDs
-	#
-	$our_host_ids = @ gs_get_listen_to_ids();
-	if (isGsError( $our_host_ids ))
-		return new GsError( $our_host_ids->getMsg() );
-	if (! is_array( $our_host_ids ))
-		return new GsError( 'Failed to get our host IDs.' );
+	$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+	if (! $GS_INSTALLATION_TYPE_SINGLE) {
+		# get our host IDs
+		#
+		$our_host_ids = @ gs_get_listen_to_ids();
+		if (isGsError( $our_host_ids ))
+			return new GsError( $our_host_ids->getMsg() );
+		if (! is_array( $our_host_ids ))
+			return new GsError( 'Failed to get our host IDs.' );
+	}
 	
 	# are we root? do we have to sudo?
 	#
@@ -74,7 +77,9 @@ function gs_asterisks_reload( $host_ids, $dialplan_only )
 	foreach ($hosts as $host) {
 		if (! $host_ids || in_array($host['id'], $host_ids)) {
 			$cmd = '/opt/gemeinschaft/sbin/start-asterisk'. ($dialplan_only ? ' --dialplan' : '');
-			if (! in_array($host['id'], $our_host_ids)) {
+			if (! $GS_INSTALLATION_TYPE_SINGLE
+			&&  ! in_array($host['id'], $our_host_ids)) {
+				# this is not the local node
 				$cmd = $sudo .'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd);
 			}
 			@ exec( $sudo . $cmd .' 1>>/dev/null 2>&1', $out, $err );
