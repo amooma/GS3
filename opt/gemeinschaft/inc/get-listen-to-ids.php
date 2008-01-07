@@ -43,7 +43,9 @@ function gs_get_listen_to_ids( $primary_only=false )
 	}
 	*/
 	
-	if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+	$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+	
+	if (! $GS_INSTALLATION_TYPE_SINGLE) {
 		
 		# get our IPs
 		#
@@ -60,14 +62,18 @@ function gs_get_listen_to_ids( $primary_only=false )
 			return array();
 		}
 		
-		# connect to db
-		# must be to slave db so we can tell our IDs even if the master is down
-		#
-		$db = gs_db_slave_connect();
-		if (! $db) {
-			gs_log(GS_LOG_WARNING, "Failed to connect to the database!");
-			return array();
-		}
+	}
+
+	# connect to db
+	# must be to slave db so we can tell our IDs even if the master is down
+	#
+	$db = gs_db_slave_connect();
+	if (! $db) {
+		gs_log(GS_LOG_WARNING, "Failed to connect to the database!");
+		return array();
+	}
+	
+	if (! $GS_INSTALLATION_TYPE_SINGLE) {
 		
 		# find the corresponding IDs
 		#
@@ -83,7 +89,7 @@ function gs_get_listen_to_ids( $primary_only=false )
 		
 	}
 	
-	$rs = $db->execute( 'SELECT `id` FROM `hosts` WHERE `host` IN ('. implode(',', $ips_escaped) .')' );
+	$rs = $db->execute( $query );
 	if (! $rs) {
 		gs_log(GS_LOG_WARNING, "Database error!");
 		return array();
