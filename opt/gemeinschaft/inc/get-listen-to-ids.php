@@ -36,10 +36,12 @@ require_once( GS_DIR .'inc/log.php' );
 
 function gs_get_listen_to_ids( $primary_only=false )
 {
+	/*
 	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 		# return special host ID
 		return array(-1);
 	}
+	*/
 	
 	# get our IPs
 	#
