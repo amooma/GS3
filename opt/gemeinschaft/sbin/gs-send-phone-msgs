@@ -42,11 +42,14 @@ include_once( GS_DIR .'inc/get-listen-to-ids.php' );
 include_once( GS_DIR .'inc/send-phone-msg.php' );
 
 
-$our_host_ids = gs_get_listen_to_ids();
-if (! is_array($our_host_ids) || count($our_host_ids) < 1) {
-	# nothing to do
-	gs_log(GS_LOG_DEBUG, "We're not an active node. Nothing to do.");
-	exit(0);
+$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+if (! $GS_INSTALLATION_TYPE_SINGLE) {
+	$our_host_ids = gs_get_listen_to_ids();
+	if (! is_array($our_host_ids) || count($our_host_ids) < 1) {
+		# nothing to do
+		gs_log(GS_LOG_DEBUG, "We're not an active node. Nothing to do.");
+		exit(0);
+	}
 }
 
 
@@ -67,7 +70,7 @@ $hosts_v = implode(', ', $hosts);
 gs_log(GS_LOG_DEBUG, "Sending phone messages to users at nodes $hosts_v");
 
 
-$rs = @$db->execute(
+$query =
 'SELECT
 	`u`.`current_ip` `ip`, `s`.`name` `ext`, `u`.`host_id` `hid`, `m`.`text`
 FROM
@@ -77,9 +80,13 @@ FROM
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE
 	`p`.`type` LIKE \'snom%\' AND
-	`m`.`modified`>'. $since .' AND
-	`u`.`host_id` IN ('. implode(',',$our_host_ids) .')'
-);
+	`m`.`modified`>'. $since
+;
+if (! $GS_INSTALLATION_TYPE_SINGLE) {
+	$query.= ' AND
+	`u`.`host_id` IN ('. implode(',',$our_host_ids) .')';
+}
+$rs = @$db->execute( $query );
 if (! $rs) {
 	exit(1);
 }
