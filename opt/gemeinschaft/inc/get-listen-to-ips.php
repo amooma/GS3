@@ -34,11 +34,13 @@ require_once( GS_DIR .'inc/log.php' );
 
 function gs_get_listen_to_ips( $primary_only=false )
 {
+	/*
 	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 		# return special address
 		//return ($primary_only ? array('255.255.255.255') : array('255.255.255.255'));
 		return array('255.255.255.255');
 	}
+	*/
 	
 	$file = GS_DIR .'etc/listen-to-ip';
 	if (! @file_exists( $file )) {
