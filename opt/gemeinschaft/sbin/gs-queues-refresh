@@ -121,5 +121,8 @@ while ($queue = $rs->fetchRow()) {
 	}
 }
 
+//FIXME - maybe every node should refresh it's local queues only
+// instead of doing it from a central server
+
 
 ?>
