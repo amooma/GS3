@@ -133,7 +133,7 @@ function RestartLocalAsterisk()
 ***********************************************************/
 $usage = 'Usage: '. baseName(__FILE__) .' [--host=<host_id>] [--release] [--show-config] [--show-data] [--clear-data]';
 
-$opts = getOptsNoMultiples( '',
+$opts = @getOptsNoMultiples( '',
 	array(
 		'host=',
 		'release',
