@@ -327,8 +327,13 @@ if (! $cf) {
 $spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
 
 
-$our_host_ids = @ gs_get_listen_to_ids();
-if (! is_array($our_host_ids)) $our_host_ids = array();
+if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+	$our_host_ids = @ gs_get_listen_to_ids();
+	if (! is_array($our_host_ids)) $our_host_ids = array();
+	$user_is_on_this_host = in_array( $user['host_id'], $our_host_ids );
+} else {
+	$user_is_on_this_host = true;
+}
 
 if ($is_LVM_agenturmitarbeiter) {
 	$hosts = gs_hosts_get();
@@ -340,7 +345,7 @@ if ($is_LVM_agenturmitarbeiter) {
 	$user['host']    = $host['host'];
 }
 
-if (in_array( $user['host_id'], $our_host_ids )) {
+if ($user_is_on_this_host) {
 	
 	# the Asterisk of this user and the web server both run on this host
 	
