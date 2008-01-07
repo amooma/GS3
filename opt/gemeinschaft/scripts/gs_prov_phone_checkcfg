@@ -44,7 +44,7 @@ Usage: '. baseName(__FILE__) .' ( --user=<usercode> | --ext=<extension> | --ip=<
 $usage = 'Reboots a phone by user code, extension, IP addr. or all phones
 Usage: '. baseName(__FILE__) .' ( --user=<usercode> | --ext=<extension> | --ip=<ip_addr> | --all=yes )';
 
-$opts = getOptsNoMultiples( '',
+$opts = @getOptsNoMultiples( '',
 	array(
 		'user=',
 		'ext=',

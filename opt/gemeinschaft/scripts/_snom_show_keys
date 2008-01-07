@@ -45,7 +45,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 ***********************************************************/
 $usage = '!!! DEPRECATED - use gs_keys_snom_get'."\n".'Usage: '. baseName(__FILE__) .' --user=<user>';
 
-$opts = getOptsNoMultiples( '',
+$opts = @getOptsNoMultiples( '',
 	array(
 		'user='
 	),

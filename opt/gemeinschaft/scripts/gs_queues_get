@@ -40,7 +40,7 @@ include_once( GS_DIR .'inc/mb_str_pad.php' );
 ***********************************************************/
 $usage = 'Usage: '. baseName(__FILE__);
 
-$opts = getOptsNoMultiples( '',
+$opts = @getOptsNoMultiples( '',
 	array(
 	),
 	$usage

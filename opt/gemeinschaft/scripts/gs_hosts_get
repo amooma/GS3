@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 ***********************************************************/
 $usage = 'Usage: '. baseName(__FILE__);
 
-$opts = getOptsNoMultiples( '',
+$opts = @getOptsNoMultiples( '',
 	array(
 	),
 	$usage
