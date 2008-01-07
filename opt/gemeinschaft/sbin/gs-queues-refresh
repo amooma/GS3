@@ -41,26 +41,29 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 $db = gs_db_slave_connect();
 $our_host_ids = array();
 $hosts = array();
+$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
 
-
-# get hosts
-#
-
-$rs = @ $db->execute( 'SELECT `id`, `host` FROM `hosts`' );
-if (! $rs) {
-	gs_log( GS_LOG_FATAL, 'Failed to get hosts!' );
-	die(1);
+if (! $GS_INSTALLATION_TYPE_SINGLE) {
+	
+	# get hosts
+	#
+	$rs = @ $db->execute( 'SELECT `id`, `host` FROM `hosts`' );
+	if (! $rs) {
+		gs_log( GS_LOG_FATAL, 'Failed to get hosts!' );
+		die(1);
+	}
+	$hosts = array();
+	while ($r = $rs->fetchRow()) {
+		$hosts[$r['id']] = $r['host'];
+	}
+	
+	
+	# get our host ids
+	#
+	$our_host_ids = @ gs_get_listen_to_ids();
+	if (! is_array($our_host_ids)) $our_host_ids = array();
+	
 }
-$hosts = array();
-while ($r = $rs->fetchRow()) {
-	$hosts[$r['id']] = $r['host'];
-}
-
-
-# get out host ids
-#
-$our_host_ids = @ gs_get_listen_to_ids();
-if (! is_array($our_host_ids)) $our_host_ids = array();
 
 
 # find asterisk (this script gets executed by cron which has a
@@ -84,7 +87,8 @@ if (! $rs) {
 $queues = array();
 while ($queue = $rs->fetchRow()) {
 	
-	if (in_array( $queue['host_id'], $our_host_ids )) {
+	if ($GS_INSTALLATION_TYPE_SINGLE
+	||  in_array( $queue['host_id'], $our_host_ids )) {
 		
 		# queue show <ext> has the side-effect of reloading the
 		# queue information from Realtime
