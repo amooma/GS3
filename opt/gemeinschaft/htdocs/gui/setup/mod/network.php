@@ -27,6 +27,8 @@
 \*******************************************************************/
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/find_executable.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
+require_once( GS_DIR .'inc/ipaddr-fns.php' );
 $can_continue = false;
 
 $action = @$_REQUEST['action'];
@@ -136,9 +138,8 @@ if ($action === 'save') {
 			|| subStr($addr,0, 8) === '192.0.2.'
 			|| subStr($addr,0,10) === '192.88.99.'
 			|| subStr($addr,0,12) === '223.255.255.'
-			|| subStr($addr,0, 4) === '224.'
-			|| subStr($addr,0, 4) === '240.'
-			|| subStr($addr,0,15) === '255.255.255.255'
+			||(subStr($addr,3, 1) ===    '.'
+			&& subStr($addr,0, 3)  >= '224')
 		);
 	}
 	
@@ -188,6 +189,11 @@ if ($action === 'save') {
 	function _input_validate_router( &$addr, &$errmsg )
 	{
 		$errmsg = '';
+		if (_is_empty_ip_addr( $addr )) {
+			$addr = '';
+			$errmsg = 'Leere Router-Adresse!';
+			return GS_VALIDATION_EMPTY;
+		}
 		if (_is_invalid_ip_addr_by_format( $addr )) {
 			$errmsg = 'Ung&uuml;ltige Router-Adresse!';
 			return GS_VALIDATION_ERR;
@@ -278,7 +284,7 @@ if ($action === 'save') {
 	function _complain_html( $errmsg, $ignorable=false )
 	{
 		global $errors_html;
-		$errors_html[] = '<p style="border:2px solid #f00; color: #b00; padding:0.3em; margin:0.4em 0 0.3em 0"><b>'. ($ignorable ? 'Warnung!' : 'Fehler!') .'</b> '. $errmsg .'</p>';
+		$errors_html[] = '<p style="border:2px solid #f00; color: #b00; padding:0.3em; margin:0.4em 0 0.3em 0">'. ($ignorable ? 'Warnung!' : 'Fehler!') .' '. $errmsg .'</p>';
 	}
 	
 	
@@ -311,8 +317,14 @@ if ($action === 'save') {
 		@$_REQUEST['router'][3] ;
 	$validation_result = _input_validate_router( $form_router, $errmsg );
 	if ($validation_result !== GS_VALIDATION_OK) {
-		$err_cnt++;
-		_complain_html( $errmsg );
+		if ($validation_result === GS_VALIDATION_EMPTY) {
+			//$warn_cnt++;
+			//_complain_html( $errmsg, true );
+			$form_router = '';
+		} else {
+			$err_cnt++;
+			_complain_html( $errmsg );
+		}
 	}
 	
 	$form_dns1 =
@@ -395,6 +407,194 @@ if ($action === 'save') {
 		}
 	}
 	
+	
+	if ($err_cnt < 1
+	&&  ($warn_cnt < 1 || @$_REQUEST['dont_warn'])) {
+		
+		# some useful net calculations
+		#
+		
+		$netmask_length = subStr($form_netmask, 1);  # first char is "/"
+		$dotted_netmask = ipv4_mask_length_to_dotted($netmask_length);
+		if (! $dotted_netmask) $dotted_netmask = '255.255.0.0';
+		
+		$dotted_network = ipv4_net_by_addr_and_mask( $form_ipaddr, $dotted_netmask );
+		if ($dotted_network === null
+		||  $dotted_network === false
+		||  $dotted_network === '') {
+			$dotted_network = '0.0.0.0';
+		}
+		
+		$dotted_bcastaddr = ipv4_bcast_by_addr_and_mask( $form_ipaddr, $dotted_netmask );
+		if ($dotted_network === null
+		||  $dotted_network === false
+		||  $dotted_network === '') {
+			$dotted_network = '255.255.255.255';
+		}
+		
+		
+		# save the changes to the keyvals
+		#
+		
+		if ($form_ipaddr   !== $current_ipaddr )
+			gs_keyval_set('vlan_0_ipaddr' , $form_ipaddr );
+		if ($form_netmask  !== $current_netmask)
+			gs_keyval_set('vlan_0_netmask', $form_netmask);
+		if ($form_router   !== $current_router )
+			gs_keyval_set('vlan_0_router' , $form_router );
+		if ($form_dns1     !== $current_dns1   )
+			gs_keyval_set('vlan_0_dns1'   , $form_dns1   );
+		if ($form_dns2     !== $current_dns2   )
+			gs_keyval_set('vlan_0_dns2'   , $form_dns2   );
+		if ($form_ntp1     !== $current_ntp1   )
+			gs_keyval_set('vlan_0_ntp1'   , $form_ntp1   );
+		if ($form_ntp2     !== $current_ntp2   )
+			gs_keyval_set('vlan_0_ntp2'   , $form_ntp2   );
+		if ($form_ntp3     !== $current_ntp3   )
+			gs_keyval_set('vlan_0_ntp3'   , $form_ntp3   );
+		if ($form_ntp4     !== $current_ntp4   )
+			gs_keyval_set('vlan_0_ntp4'   , $form_ntp4   );
+		
+		
+		# generate /etc/network/interfaces
+		#
+		
+		$interface_basename = trim(gs_keyval_get('vlan_0_interface_base'));
+		if (! $interface_basename) $interface_basename = 'eth0';
+		
+		$conf = 'allow-hotplug '. $interface_basename ."\n";
+		$conf.= 'iface '. $interface_basename .' inet static' ."\n";
+		$conf.= "\t". 'address '. $form_ipaddr ."\n";
+		$conf.= "\t". 'netmask '. $dotted_netmask ."\n";
+		if ($form_router)
+			$conf.= "\t". 'gateway '. $form_router ."\n";
+		if ($form_dns1 || $form_dns2) {
+			//$conf.= "\t". '# dns-* options are implemented by the resolvconf package, if installed' ."\n";
+			$conf.= "\t". 'dns-nameservers';
+			if ($form_dns1) $conf.= ' '.$form_dns1;
+			if ($form_dns2) $conf.= ' '.$form_dns2;
+			$conf.= "\n";
+		}
+		
+		$tpl_file = '/var/lib/gemeinschaft/setup/etc-network-interfaces-tpl';
+		$err=0; $out=array();
+		@exec( 'sudo chmod a+r '. qsa($tpl_file) .' 2>>/dev/null', $out, $err );
+		$tpl = file_get_contents($tpl_file);
+		$tpl = preg_replace('/\r\n?/', "\n", $tpl);
+		$tpl = trim(preg_replace('/^[ \t]*#[^\n]*\n?/m', '', $tpl));
+		$tpl = preg_replace('/\n{3,}/', "\n\n", $tpl);
+		$tpl = preg_replace('/^[ \t]*__GEMEINSCHAFT_INTERFACES__/m', $conf, $tpl);
+		
+		$data = '# AUTO-GENERATED BY GEMEINSCHAFT' ."\n";
+		$data.= '# template:' ."\n";
+		$data.= '# '. $tpl_file ."\n";
+		$data.= "\n";
+		$data.= $tpl ."\n";
+		
+		$cmd = 'echo -n '. qsa($data) .' > '. qsa('/etc/network/interfaces') .' 2>>/dev/null';
+		$err=0; $out=array();
+		@exec( 'sudo sh -c '. qsa($cmd) .' 2>>/dev/null', $out, $err );
+		
+		
+		# generate /etc/resolv.conf
+		#
+		
+		$have_bind =
+			   file_exists('/etc/init.d/bind9')
+			|| file_exists('/etc/init.d/bind');
+		
+		$conf = '';
+		if ($have_bind) $conf.= 'nameserver 127.0.0.1' ."\n";
+		if ($form_dns1) $conf.= 'nameserver '. $form_dns1 ."\n";
+		if ($form_dns2) $conf.= 'nameserver '. $form_dns2 ."\n";
+		
+		$tpl_file = '/var/lib/gemeinschaft/setup/etc-resolv.conf-tpl';
+		$err=0; $out=array();
+		@exec( 'sudo chmod a+r '. qsa($tpl_file) .' 2>>/dev/null', $out, $err );
+		$tpl = file_get_contents($tpl_file);
+		$tpl = preg_replace('/\r\n?/', "\n", $tpl);
+		$tpl = trim(preg_replace('/^[ \t]*#[^\n]*\n?/m', '', $tpl));
+		$tpl = preg_replace('/\n{3,}/', "\n\n", $tpl);
+		$tpl = preg_replace('/^[ \t]*__GEMEINSCHAFT_RESOLVCONF__/m', $conf, $tpl);
+		
+		$data = '# AUTO-GENERATED BY GEMEINSCHAFT' ."\n";
+		$data.= '# template:' ."\n";
+		$data.= '# '. $tpl_file ."\n";
+		$data.= "\n";
+		$data.= $tpl ."\n";
+		
+		$cmd = 'echo -n '. qsa($data) .' > '. qsa('/etc/resolv.conf') .' 2>>/dev/null';
+		$err=0; $out=array();
+		@exec( 'sudo sh -c '. qsa($cmd) .' 2>>/dev/null', $out, $err );
+		
+		
+		# generate /etc/default/ntp
+		#
+		
+		$tpl_file = '/var/lib/gemeinschaft/setup/etc-default-ntp-tpl';
+		$err=0; $out=array();
+		@exec( 'sudo chmod a+r '. qsa($tpl_file) .' 2>>/dev/null', $out, $err );
+		$tpl = file_get_contents($tpl_file);
+		$tpl = preg_replace('/\r\n?/', "\n", $tpl);
+		$tpl = trim(preg_replace('/^[ \t]*#[^\n]*\n?/m', '', $tpl));
+		$tpl = preg_replace('/\n{3,}/', "\n\n", $tpl);
+		
+		$data = '# AUTO-GENERATED BY GEMEINSCHAFT' ."\n";
+		$data.= '# template:' ."\n";
+		$data.= '# '. $tpl_file ."\n";
+		$data.= "\n";
+		$data.= $tpl ."\n";
+		
+		$cmd = 'echo -n '. qsa($data) .' > '. qsa('/etc/default/ntp') .' 2>>/dev/null';
+		$err=0; $out=array();
+		@exec( 'sudo sh -c '. qsa($cmd) .' 2>>/dev/null', $out, $err );
+		
+		
+		# generate /etc/ntp.conf
+		#
+		
+		$conf_s = '';
+		if ($form_ntp1) $conf_s.= 'server '. $form_ntp1 .' iburst dynamic' ."\n";
+		if ($form_ntp2) $conf_s.= 'server '. $form_ntp2 .' iburst dynamic' ."\n";
+		if ($form_ntp3) $conf_s.= 'server '. $form_ntp3 .' iburst dynamic' ."\n";
+		if ($form_ntp4) $conf_s.= 'server '. $form_ntp4 .' iburst dynamic' ."\n";
+		
+		$conf_c = 'restrict '. $dotted_network .' mask '. $dotted_netmask .' nomodify noquery nopeer notrap' ."\n";
+		$conf_c.= 'broadcast '. $dotted_bcastaddr ."\n";
+		
+		$tpl_file = '/var/lib/gemeinschaft/setup/etc-ntp.conf-tpl';
+		$err=0; $out=array();
+		@exec( 'sudo chmod a+r '. qsa($tpl_file) .' 2>>/dev/null', $out, $err );
+		$tpl = file_get_contents($tpl_file);
+		$tpl = preg_replace('/\r\n?/', "\n", $tpl);
+		$tpl = trim(preg_replace('/^[ \t]*#[^\n]*\n?/m', '', $tpl));
+		$tpl = preg_replace('/\n{3,}/', "\n\n", $tpl);
+		$tpl = preg_replace('/^[ \t]*__GEMEINSCHAFT_NTPCONF_SERVERS__/m', $conf_s, $tpl);
+		$tpl = preg_replace('/^[ \t]*__GEMEINSCHAFT_NTPCONF_CLIENTS__/m', $conf_c, $tpl);
+		
+		$data = '# AUTO-GENERATED BY GEMEINSCHAFT' ."\n";
+		$data.= '# template:' ."\n";
+		$data.= '# '. $tpl_file ."\n";
+		$data.= "\n";
+		$data.= $tpl ."\n";
+		
+		$cmd = 'echo -n '. qsa($data) .' > '. qsa('/etc/ntp.conf') .' 2>>/dev/null';
+		$err=0; $out=array();
+		@exec( 'sudo sh -c '. qsa($cmd) .' 2>>/dev/null', $out, $err );
+		
+		
+		
+		
+		
+		/*
+		$has_netif_changes =
+			(  $form_ipaddr  !== $current_ipaddr
+			|| $form_netmask !== $current_netmask
+			);
+		*/
+		
+		echo " --ok";
+	}
 }
 
 
@@ -450,10 +650,16 @@ if ($action === 'save') {
 	<th><?php echo 'Router'; ?></th>
 	<td>
 <?php
-		$router_parts = explode('.', $form_router);
+		if (trim($form_router) != '') {
+			$router_parts = explode('.', $form_router);
+			for ($i=0; $i<=3; ++$i) {
+				$router_parts[$i] = (int)lTrim(@$router_parts[$i], '0 ');
+			}
+		} else {
+			$router_parts = array('','','','');
+		}
 		for ($i=0; $i<=3; ++$i) {
-			$part = (int)lTrim(@$router_parts[$i], '0 ');
-			echo '<input type="text" name="router[',$i,']" size="3" maxlength="3" class="r pre" value="', $part ,'" />';
+			echo '<input type="text" name="router[',$i,']" size="3" maxlength="3" class="r pre" value="', @$router_parts[$i] ,'" />';
 			if ($i < 3) echo '.';
 		}
 		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/Router">?</a>' ,')</small>' ,"\n";
@@ -553,7 +759,7 @@ if ($action === 'save') {
 		echo '<br />',"\n";
 	}
 ?>
-		<input type="submit" value="<?php echo 'Speichern'; ?>" />
+		<input type="submit" value="<?php echo 'Speichern'; ?>" style="margin-top:0.3em;" />
 	</td>
 </tr>
 </tbody>
