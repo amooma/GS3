@@ -1,0 +1,115 @@
+#!/usr/bin/perl
+
+#####################################################################
+#                             getnetifs
+# 
+# $Revision$
+# 
+# Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+# Philipp Kempgen <philipp.kempgen@amooma.de>
+# Peter Kozak <peter.kozak@amooma.de>
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#####################################################################
+
+use Getopt::Std;
+use File::Basename;
+
+use IO::Socket;
+use IO::Interface qw(:flags);
+
+sub usage()
+{
+	my $name = basename($0);
+	print STDERR << "EOF";
+
+Outputs a list of network interfaces to be easily parsable
+(as a replacement for `ifconfig`).
+
+Usage: $name [-ha]
+
+  -h  : This help message.
+  -a  : Display all interfaces, even if down.
+
+EOF
+	exit 1;
+}
+
+%options=();
+getopts('ha', \%options) or usage();
+if (defined($options{'h'})) {usage();}
+
+
+my $s = IO::Socket::INET->new(Proto => 'udp');
+my @interfaces = $s->if_list;
+
+sub b2s
+{
+	my $v = shift;
+	return ($v ? 'yes' : 'no');
+}
+sub s2s
+{
+	my $v = shift;
+	return (defined($v) ? $v : '');
+}
+sub i2s
+{
+	my $v = shift;
+	return (defined($v) ? $v : '');
+}
+
+
+for my $if (@interfaces) {
+	my $flags = $s->if_flags($if);
+	if (!($flags & IFF_UP)) {
+		if (!defined($options{'a'})) {
+			next;
+		}
+	}
+	
+	print $if ,"\n";
+	
+	print "\t", 'index       = ',    i2s($s->if_index($if)         )  ,"\n";
+	print "\t", 'addr        = ',    s2s($s->if_addr($if)          )  ,"\n";
+	print "\t", 'broadcast   = ',    s2s($s->if_broadcast($if)     )  ,"\n";
+	print "\t", 'netmask     = ',    s2s($s->if_netmask($if)       )  ,"\n";
+	print "\t", 'dstaddr     = ',    s2s($s->if_dstaddr($if)       )  ,"\n";
+	print "\t", 'hwaddr      = ', uc(s2s($s->if_hwaddr($if)        )) ,"\n";
+	print "\t", 'mtu         = ',    i2s($s->if_mtu($if)           )  ,"\n";
+	print "\t", 'metric      = ',    i2s($s->if_metric($if)        )  ,"\n";
+	
+	print "\t", 'up          = ',    b2s($flags & IFF_UP          ) ,"\n"; # 1<< 0
+	print "\t", 'broadcast   = ',    b2s($flags & IFF_BROADCAST   ) ,"\n"; # 1<< 1
+	#print "\t", 'debug       = ',    b2s($flags & IFF_DEBUG       ) ,"\n"; # 1<< 2
+	print "\t", 'loopback    = ',    b2s($flags & IFF_LOOPBACK    ) ,"\n"; # 1<< 3
+	print "\t", 'pt2pt       = ',    b2s($flags & IFF_POINTOPOINT ) ,"\n"; # 1<< 4
+	print "\t", 'notrailers  = ',    b2s($flags & IFF_NOTRAILERS  ) ,"\n"; # 1<< 5
+	print "\t", 'running     = ',    b2s($flags & IFF_RUNNING     ) ,"\n"; # 1<< 6
+	print "\t", 'noarp       = ',    b2s($flags & IFF_NOARP       ) ,"\n"; # 1<< 7
+	print "\t", 'promiscuous = ',    b2s($flags & IFF_PROMISC     ) ,"\n"; # 1<< 8
+	print "\t", 'allmulti    = ',    b2s($flags & IFF_ALLMULTI    ) ,"\n"; # 1<< 9
+	#print "\t", 'master      = ',    b2s($flags & IFF_MASTER      ) ,"\n"; # 1<<10
+	#print "\t", 'slave       = ',    b2s($flags & IFF_SLAVE       ) ,"\n"; # 1<<11
+	print "\t", 'multicast   = ',    b2s($flags & IFF_MULTICAST   ) ,"\n"; # 1<<12
+	#print "\t", 'portsel     = ',    b2s($flags & IFF_PORTSEL     ) ,"\n"; # 1<<13
+	#print "\t", 'automedia   = ',    b2s($flags & IFF_AUTOMEDIA   ) ,"\n"; # 1<<14
+	
+	print "\n";
+}
+
