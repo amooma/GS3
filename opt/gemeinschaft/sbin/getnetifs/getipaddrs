@@ -1,0 +1,82 @@
+#!/usr/bin/perl
+
+#####################################################################
+#                            getipaddrs
+# 
+# $Revision$
+# 
+# Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+# Philipp Kempgen <philipp.kempgen@amooma.de>
+# Peter Kozak <peter.kozak@amooma.de>
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#####################################################################
+
+use Getopt::Std;
+use File::Basename;
+
+use IO::Socket;
+use IO::Interface qw(:flags);
+
+sub usage()
+{
+	my $name = basename($0);
+	print STDERR << "EOF";
+
+Outputs a list of IP addresses on this host to be easily
+parsable (as a replacement for `ifconfig`).
+
+Usage: $name [-h]
+
+  -h  : This help message.
+  -m  : Print IP addresses with netmask bits in CIDR format.
+
+EOF
+	exit 1;
+}
+
+%options=();
+getopts('hm', \%options) or usage();
+if (defined($options{'h'})) {usage();}
+if (defined($options{'m'})) {
+	require Net::Netmask;
+}
+
+
+my $s = IO::Socket::INET->new(Proto => 'udp');
+my @interfaces = $s->if_list;
+
+for my $if (@interfaces) {
+	my $flags = $s->if_flags($if);
+	if (!($flags & IFF_UP)) {
+		next;
+	}
+	
+	if (! defined($s->if_addr($if))
+	||  ! defined($s->if_netmask($if))) {
+		next;
+	}
+	
+	print $s->if_addr($if);
+	if (defined($options{'m'})) {
+		my $nm = Net::Netmask->new( $s->if_addr($if), $s->if_netmask($if) );
+		print '/', $nm->bits();
+	}
+	print "\n";
+}
+
