@@ -37,8 +37,8 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 {
 	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
-	if (! preg_match( '/^[1-9]\d{2,4}$/', $ext ))
-		return new GsError( 'Please use 3-5 digit extension.' );
+	if (! preg_match( '/^[1-9][0-9]{1,4}$/', $ext ))
+		return new GsError( 'Please use 2-5 digit extension.' );
 	if (! preg_match( '/^[\d]+$/', $pin ))
 		return new GsError( 'PIN must be numeric.' );
 	//if (! preg_match( '/^[a-zA-Z\d.\-\_ ]+$/', $firstname ))
