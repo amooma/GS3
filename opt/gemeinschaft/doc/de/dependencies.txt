@@ -44,6 +44,7 @@ postfix
 sipsak
 avahi-daemon
 avahi-utils
+ifupdown
 
 
 Benötigt außerdem (nicht als Paket vorhanden):
