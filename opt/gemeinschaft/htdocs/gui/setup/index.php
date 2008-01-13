@@ -208,12 +208,7 @@ if (@$_SESSION['login_ok'] && $step !== 'network') {
 
 <?php
 
-//echo GS_URL_PATH ,"<br/>\n";
-print_r($_SESSION);
-print_r($_COOKIE);
-
 @include_once( $step_file );
-
 
 ?>
 
