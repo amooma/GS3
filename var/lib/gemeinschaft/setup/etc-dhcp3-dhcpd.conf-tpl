@@ -1,0 +1,117 @@
+#####################################################################
+#            Gemeinschaft - asterisk cluster gemeinschaft
+# 
+# $Revision$
+# 
+# Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+# Philipp Kempgen <philipp.kempgen@amooma.de>
+# Peter Kozak <peter.kozak@amooma.de>
+# 
+# This is a template for /etc/dhcp3/dhcpd.conf (on Debian), used
+# by the Gemeinschaft setup.
+#####################################################################
+
+# global
+#
+#option subnet-mask 255.255.0.0;
+__GEMEINSCHAFT_DHCPD_OPTION_NETMASK__
+#option broadcast-address 192.168.255.255;
+__GEMEINSCHAFT_DHCPD_OPTION_BCASTADDR__
+#option routers 192.168.1.1;
+__GEMEINSCHAFT_DHCPD_OPTION_ROUTERS__
+#option domain-name-servers dns1.example.com, dns2.example.com;
+__GEMEINSCHAFT_DHCPD_OPTION_DNSSERVERS__
+#option ntp-servers ntp.example.com, 192.168.1.130;
+__GEMEINSCHAFT_DHCPD_OPTION_NTPSERVERS__
+
+default-lease-time  600000;
+max-lease-time     7200000;
+
+#authoritative;
+ddns-update-style none;
+
+
+# classes for the phones
+#
+class "Snom" {
+	match if substring(hardware, 1, 3) = 00:04:13;
+}
+class "SiemensPhone" {
+	match if substring(hardware, 1, 3) = 00:01:E3;
+}
+class "PolycomSoundPoint" {
+	match if substring(hardware, 1, 3) = 00:04:F2;
+}
+class "PolycomSoundStation" {
+	match if substring(hardware, 1, 3) = 00:E0:75;
+}
+
+# define option space for Siemens OptiPoint / OpenStage phones:
+option space OptiIpPhone;
+option OptiIpPhone.magic   code 1 = string;
+option OptiIpPhone.vlanid  code 2 = unsigned integer 32;
+option OptiIpPhone.dls     code 3 = string;
+
+
+subnet __GEMEINSCHAFT_DHCPD_SUBNET__ netmask __GEMEINSCHAFT_DHCPD_NETMASK__ {
+	default-lease-time 6048000;  # 70 days
+	max-lease-time     6912000;  # 80 days
+	option subnet-mask __GEMEINSCHAFT_DHCPD_NETMASK__;
+	
+	########################################################
+	#  Snom
+	########################################################
+	pool {
+		allow members of "Snom";
+		
+		#range 192.168.1.10 192.168.1.19;
+		#range 192.168.1.21 192.168.1.254;
+		__GEMEINSCHAFT_DHCPD_RANGES__
+		
+		# DHCP options 66/67
+		option tftp-server-name "http://__GEMEINSCHAFT_DHCPD_PROVADDR__:__GEMEINSCHAFT_DHCPD_PROVPORT__";
+		option bootfile-name "snom/settings.php?mac={mac}";
+	}
+	
+	########################################################
+	#  Siemens OpenStage
+	########################################################
+	pool {
+		allow members of "SiemensPhone";
+		
+		__GEMEINSCHAFT_DHCPD_RANGES__
+		
+		vendor-option-space        OptiIpPhone;
+		option OptiIpPhone.magic   53:69:65:6D:65:6E:73:00:00:00;
+		option OptiIpPhone.dls     "sdlp://__GEMEINSCHAFT_DHCPD_PROVADDR__:18443";
+	}
+	
+	########################################################
+	#  Polycom
+	########################################################
+	pool {
+		allow members of "PolycomSoundPoint";
+		allow members of "PolycomSoundStation";
+		
+		__GEMEINSCHAFT_DHCPD_RANGES__
+		
+		option tftp-server-name "http://__GEMEINSCHAFT_DHCPD_PROVADDR__:__GEMEINSCHAFT_DHCPD_PROVPORT__/polycom/";
+	}
+	
+	########################################################
+	#  other
+	########################################################
+	pool {
+		deny members of "Snom";
+		deny members of "SiemensPhone";
+		deny members of "PolycomSoundPoint";
+		deny members of "PolycomSoundStation";
+		
+		__GEMEINSCHAFT_DHCPD_RANGES__
+		
+		default-lease-time 1036800;  # 12 days
+		max-lease-time     1296000;  # 15 days
+	}
+}
