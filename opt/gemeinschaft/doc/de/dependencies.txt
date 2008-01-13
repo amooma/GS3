@@ -45,6 +45,7 @@ sipsak
 avahi-daemon
 avahi-utils
 ifupdown
+nmap
 
 
 Benötigt außerdem (nicht als Paket vorhanden):
