@@ -33,6 +33,8 @@ use File::Basename;
 use IO::Socket;
 use IO::Interface qw(:flags);
 
+$SIG{__WARN__} = sub { die($_[0]); };
+
 sub usage()
 {
 	my $name = basename($0);
@@ -51,7 +53,10 @@ EOF
 }
 
 %options=();
-getopts('hm', \%options) or usage();
+{
+	local $SIG{__WARN__} = 'IGNORE';
+	getopts('hm', \%options) or usage();
+}
 if (defined($options{'h'})) {usage();}
 if (defined($options{'m'})) {
 	require Net::Netmask;
