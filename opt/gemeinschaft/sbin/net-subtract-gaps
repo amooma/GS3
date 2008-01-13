@@ -1,0 +1,135 @@
+#!/usr/bin/perl
+
+#####################################################################
+#                         net-subtract-gaps
+# 
+# $Revision$
+# 
+# Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+# Philipp Kempgen <philipp.kempgen@amooma.de>
+# Peter Kozak <peter.kozak@amooma.de>
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#####################################################################
+
+use Getopt::Long qw(:config no_ignore_case require_order nopass_through);
+use File::Basename;
+
+use Net::Netmask;
+
+$SIG{__WARN__} = sub { die($_[0]); };
+
+sub usage()
+{
+	my $name = basename($0);
+	print STDERR << "EOF";
+
+Usage: $name [--help] --net net [--excl net [--excl net [...]]] [--single]
+
+  --help   : This help message.
+  --net    : Network in CIDR format.
+  --excl   : Network to exclude in CIDR format.
+  --single : Do not print ranges consisting of just a single address
+             as ranges.
+
+Example: $name \\
+             --net '192.168.1.0/255.255.255.0' \\
+             --excl '192.168.1.4/32' \\
+             --excl '192.168.1.20/32' \\
+             --single
+
+EOF
+	exit 1;
+}
+
+my $opt_net_cidr = '';
+my @opt_excludes_cidr = ();
+my $opt_single = 0;
+{
+	local $SIG{__WARN__} = 'IGNORE';
+	GetOptions(
+		'help|h|?'  => sub { usage(); },
+		'net=s'     => \$opt_net_cidr,
+		'excl=s'    => \@opt_excludes_cidr,
+		'single'    => \$opt_single
+	) or usage();
+}
+$opt_net_cidr ne '' or usage();
+#my $num_excludes = @opt_excludes_cidr;
+
+
+my $netblock = Net::Netmask->new( $opt_net_cidr );
+
+my $base  = Net::Netmask->new( $netblock->base()     .'/32' );
+my $bcast = Net::Netmask->new( $netblock->broadcast().'/32' );
+my @excludes = ($base, $bcast);
+
+#my $exclude1 = Net::Netmask->new( '192.168.1.3', '255.255.255.255' );
+#my $exclude2 = Net::Netmask->new( '192.168.1.5', '255.255.255.255' );
+for my $exclude (@opt_excludes_cidr) {
+	push( @excludes, Net::Netmask->new( $exclude ) );
+}
+
+my @blocks = cidrs2inverse($netblock, @excludes);
+#@blocks = cidrs2cidrs(@blocks);
+
+my $is_first = 1;
+my $range_from = '';
+my $range_to   = '';
+my $prev_next  = '';
+my $prev_last  = '';
+for my $block (@blocks) {
+	if ($range_from eq '') {$range_from = $block->base();     }
+	if ($range_to   eq '') {$range_to   = $block->broadcast();}
+	
+	if ($block->base() eq $prev_next) {
+		#print "adjacent    ";
+		#print $block->base() ,' - ', $block->broadcast() , '   ', $block->next() ,"\n";
+	}
+	else {
+		#print "gap before  ";
+		if ($is_first) {
+			#print "\n";
+			$is_first = 0;
+		} else {
+			if ($opt_single && $range_from eq $prev_last) {
+				print $range_from ,"\n";
+			} else {
+				print $range_from ,' - ', $prev_last ,"\n";
+			}
+		}
+		$range_from = $block->base();
+	}
+	
+	$prev_last = $block->broadcast();
+	$prev_next = $block->next();
+}
+
+if ('' eq $prev_next) {
+	#print "adjacent    ";
+	#print $block->base() ,' - ', $block->broadcast() , '   ', $block->next() ,"\n";
+}
+else {
+	#print "gap before  ";
+	if ($is_first) {
+		#print "\n";
+		$is_first = 0;
+	} else {
+		print $range_from ,' - ', $prev_last ,"\n";
+	}
+}
