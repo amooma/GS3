@@ -929,7 +929,7 @@ if ($action !== 'save2') {
 	echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=system-check">', 'zur&uuml;ck' ,'</a></div>' ,"\n";
 	echo '<div class="fr">';
 	if ($can_continue)
-		echo '<a href="', GS_URL_PATH ,'setup/?step=dhcp"><big>', 'weiter' ,'</big></a>';
+		echo '<a href="', GS_URL_PATH ,'setup/?step=dhcpd"><big>', 'weiter' ,'</big></a>';
 	else
 		echo '<span style="color:#999;">', 'weiter' ,'</span>';
 	echo '</div>' ,"\n";
@@ -987,7 +987,6 @@ if ($action === 'save2') {
 		
 		
 		gs_keyval_set('setup_net_has_changes', 'no');
-		//gs_keyval_set('setup_show', 'password');
 		
 		if     ($save2_action==='reboot'  ) $cmd = '/sbin/shutdown -r now';
 		elseif ($save2_action==='shutdown') $cmd = '/sbin/shutdown -h -P now';
