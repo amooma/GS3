@@ -2,6 +2,7 @@
 --   Gemeinschaft database
 --   This file was created with
 --   mysqldump --opt --skip-extended-insert --databases asterisk > asterisk.sql
+--   (that's what usr/share/doc/gemeinschaft/get-database-dump.php does)
 --   
 --   $Revision$
 -- ----------------------------------------------------------------------------
@@ -11,7 +12,7 @@
 --
 -- Host: localhost    Database: asterisk
 -- ------------------------------------------------------
--- Server version	5.0.32-Debian_7etch1-log
+-- Server version	5.0.32-Debian_7etch3-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
