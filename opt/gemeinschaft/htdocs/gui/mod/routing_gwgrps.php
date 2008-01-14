@@ -450,7 +450,7 @@ if ($action === 'gedit') {
 <tr>
 	<th style="width:40px;"><?php echo __('Typ'); ?></th>
 	<th style="width:180px;"><?php echo __('Name'); ?><sup>[3]</sup></th>
-	<th style="width:160px;"><?php echo __('Title'); ?></th>
+	<th style="width:160px;"><?php echo __('Titel'); ?></th>
 	<th style="width:35px;"><?php echo __('Abg.'); ?><sup>[4]</sup></th>
 	<th style="width:180px;"><?php echo __('W&auml;hlstring'); ?><sup>[5]</sup></th>
 	<th style="width:25px;">&nbsp;</th>
