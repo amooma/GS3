@@ -677,6 +677,19 @@ if ($action === 'save') {
 		@exec( 'sudo sh -c '. qsa($cmd) .' 2>>/dev/null', $out, $err );
 		
 		
+		# update database table "hosts"
+		#
+		require_once( GS_DIR .'inc/db_connect.php' );
+		$db = gs_db_master_connect();
+		if ($db) {
+			$tmp = $db->escape($form_ipaddr);
+			switch ($GS_INSTALLATION_TYPE) {
+				case 'gpbx': $tmp2 = $db->escape( 'GPBX' );
+				default    : $tmp2 = $db->escape( 'Gemeinschaft (single)' );
+			}
+			@$db->execute( 'UPDATE `hosts` SET `host`=\''. $tmp .'\', `comment`=\''. $tmp2 .'\' WHERE `id`=1' );
+			@$db->execute( 'UPDATE `hosts` SET `host`=\''. $tmp .'\', `comment`=\''. $tmp2 .'\'' );
+		}
 		
 		
 		/*
