@@ -43,15 +43,19 @@ require_once( GS_DIR .'inc/db_connect.php' );
 
 echo "\n";
 
-$our_ids = @ gs_get_listen_to_ids();
-if (! is_array($our_ids) || count($our_ids)<1) die();
-//FIXME - should probably write a message to gs_log() before dying
+$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+
+if (! $GS_INSTALLATION_TYPE_SINGLE) {
+	$our_ids = @ gs_get_listen_to_ids();
+	if (! is_array($our_ids) || count($our_ids)<1) die();
+	//FIXME - should probably write a message to gs_log() before dying
+} else {
+	$our_ids = array();
+}
 
 $db = gs_db_slave_connect();
 if (! $db) die();
 //FIXME - should probably write a message to gs_log() before dying
-
-$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
 
 
 # hints for extensions
