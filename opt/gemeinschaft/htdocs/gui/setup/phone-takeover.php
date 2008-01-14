@@ -135,6 +135,13 @@ function _snom_setting( $ip, $https, $user, $pass, $key, $val )
 	return $ret;
 }
 
+function _snom_reboot( $ip, $https, $user, $pass )
+{
+	$cmd = 'curl -q --silent --retry 0 --insecure --proxy-anyauth --max-redirs 5 --anyauth'. ($user=='' ? '' : ' --user '.qsa($user .':'. $pass)) .' --max-time 4 --write-out '. qsa('### %{http_code} ###') .' '. qsa( ($https?'https':'http') .'://'. $ip.'/dummy.htm?REBOOT=true' ) .' 2>>/dev/null';
+	$err=0; $out=array();
+	@exec( $cmd, $out, $err );
+}
+
 
 $ip     = @$_REQUEST['ip'    ];
 $type   = @$_REQUEST['type'  ];
@@ -210,20 +217,23 @@ elseif ($action === 'takeover') {
 			$credentials = array(
 				array('u'=>''             , 'p'=>''    ),
 				array('u'=>'admin'        , 'p'=>'0000'),
-				array('u'=>'Administrator', 'p'=>'0000'),
-				array('u'=>'admin'        , 'p'=>'123' ),
-				array('u'=>'Administrator', 'p'=>'123' ),
 				array('u'=>'admin'        , 'p'=>'1234'),
-				array('u'=>'Administrator', 'p'=>'1234')
+				array('u'=>'admin'        , 'p'=>'123' ),
+				array('u'=>gs_get_conf('GS_SNOM_PROV_HTTP_USER'), 'p'=>gs_get_conf('GS_SNOM_PROV_HTTP_PASS')),
+				array('u'=>'Administrator', 'p'=>'0000'),
+				array('u'=>'Administrator', 'p'=>'1234'),
+				array('u'=>'Administrator', 'p'=>'123' )
 			);
 			$success = false;
 			$reachable = false;
 			$all_401_403 = true;
 			foreach ($credentials as $creds) {
-				$ret = _snom_setting( $ip, $https_open, $creds['u'], $creds['p'], 'dnd_mode', 'on' );
+				$ret = _snom_setting( $ip, $https_open, $creds['u'], $creds['p'], 'dnd_mode', 'off' );
 				if ($ret['http_code'] === 200) {
 					$success = true;
 					$all_401_403 = false;
+					$valid_user = $creds['u'];
+					$valid_pass = $creds['p'];
 					break;
 				}
 				if ($ret['http_code'] >= 100) {
@@ -245,13 +255,13 @@ elseif ($action === 'takeover') {
 			}
 			
 			$myipaddr = trim(gs_keyval_get('vlan_0_ipaddr'));
-			$ret = _snom_setting( $ip, $https_open, $user, $pass, 'setting_server', 'http://'.$myipaddr.':80/gemeinschaft/prov/snom/' );
+			$ret = _snom_setting( $ip, $https_open, $valid_user, $valid_pass, 'setting_server', 'http://'.$myipaddr.':80/gemeinschaft/prov/snom/' );
 			if ($ret['http_code'] !== 200) {
 				echo 'Fehler!' ,"\n";
 				exit(1);
 			}
 			echo 'OK' ,"\n";
-			echo urlEncode('http://'.$myipaddr.':80/gemeinschaft/prov/snom/');
+			_snom_reboot( $ip, $https_open, $valid_user, $valid_pass );
 			exit(0);
 			
 			break;
