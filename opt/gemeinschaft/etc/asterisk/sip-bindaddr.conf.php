@@ -39,6 +39,13 @@ require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_quiet');
 require_once( GS_DIR .'inc/get-listen-to-ips.php' );
 
+if ($argc > 1) {
+	$conffile = strToLower($argv[1]);
+} else {
+	gs_log(GS_LOG_WARNING, 'Called without an argument!');
+	exit(1);
+}
+
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	$ipaddrs = gs_get_listen_to_ips(true);
 	if (! is_array($ipaddrs) || count($ipaddrs) < 1) {
@@ -51,9 +58,21 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 } else {
 	$bindaddr = '0.0.0.0';  # bind to all interfaces which are "UP"
 }
-echo 'bindaddr=', $bindaddr ,"\n";
 
+gs_log(GS_LOG_DEBUG, 'Determined '. $bindaddr .' as our bindaddr for '. strToUpper($conffile) );
 
-gs_log(GS_LOG_DEBUG, 'Determined '. $bindaddr .' as our bindaddr for SIP');
+if ($conffile === 'sip') {
+	echo 'bindaddr=', $bindaddr ,"\n";
+}
+elseif ($conffile === 'iax') {
+	if ($bindaddr === '0.0.0.0')
+		echo ';bindaddr=', $bindaddr ,"\n";
+	else
+		echo 'bindaddr=', $bindaddr ,"\n";
+}
+else {
+	gs_log(GS_LOG_WARNING, 'Argument "'. $conffile .'" is unknown!');
+	exit(1);
+}
 
 ?>
