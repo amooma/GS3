@@ -5353,8 +5353,8 @@ CREATE TABLE `ast_cdr` (
 
 LOCK TABLES `ast_cdr` WRITE;
 /*!40000 ALTER TABLE `ast_cdr` DISABLE KEYS */;
-INSERT INTO `ast_cdr` VALUES ('2007-05-10 12:37:45','\"Homer Simpson\" <2001>','2001','h','default','Local/*800001@default-2de1,2','','NoOp','Finish if-to-internal-users-self-79',1,0,'NO ANSWER',3,'','');
-INSERT INTO `ast_cdr` VALUES ('2007-05-10 12:37:45','\"Homer Simpson\" <2001>','2001','h','to-internal-users-self','SIP/2001-0a004f38','Local/*800001@default-2de1,1','NoOp','Finish if-to-internal-users-self-79',4,3,'ANSWERED',3,'','');
+INSERT INTO `ast_cdr` VALUES (1,'2007-05-10 12:37:45','\"Homer Simpson\" <2001>','2001','h','default','Local/*800001@default-2de1,2','','NoOp','Finish if-to-internal-users-self-79',1,0,'NO ANSWER',3,'','');
+INSERT INTO `ast_cdr` VALUES (2,'2007-05-10 12:37:45','\"Homer Simpson\" <2001>','2001','h','to-internal-users-self','SIP/2001-0a004f38','Local/*800001@default-2de1,1','NoOp','Finish if-to-internal-users-self-79',4,3,'ANSWERED',3,'','');
 /*!40000 ALTER TABLE `ast_cdr` ENABLE KEYS */;
 UNLOCK TABLES;
 
