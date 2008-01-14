@@ -104,7 +104,8 @@ WHERE
 ORDER BY `g`.`id`'
 );
 while ($gw = $rs->fetchRow()) {
-	echo 'register => '. $gw['user'] .':'. $gw['pwd'] .':'. $gw['user'] .'@'. $gw['host'] .'/'. $gw['user'] .'' ,"\n";
+	//echo 'register => '. $gw['user'] .':'. $gw['pwd'] .':'. $gw['user'] .'@'. $gw['host'] .'/'. $gw['user'] .'' ,"\n";
+	echo 'register => '. $gw['user'] .'@'. $gw['name'] ,"\n";
 }
 echo "\n";
 
