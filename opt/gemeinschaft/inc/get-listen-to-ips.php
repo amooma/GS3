@@ -43,7 +43,7 @@ function gs_get_listen_to_ips( $primary_only=false )
 	*/
 	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 		require_once( GS_DIR .'inc/keyval.php' );
-		return trim(gs_keyval_get('vlan_0_ipaddr'));
+		return array(trim(gs_keyval_get('vlan_0_ipaddr')));
 	}
 	
 	$file = GS_DIR .'etc/listen-to-ip';
