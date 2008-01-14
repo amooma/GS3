@@ -51,18 +51,23 @@ $db = gs_db_slave_connect();
 if (! $db) die();
 //FIXME - should probably write a message to gs_log() before dying
 
+$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+
 
 # hints for extensions
 #
 //$rs = $db->execute( 'SELECT `name` FROM `ast_sipfriends` ORDER BY LENGTH(`name`), `name`' );
 echo "// hints for user extensions (auto-generated):\n";
-$rs = $db->execute(
+$query =
 'SELECT `s`.`name`
 FROM
 	`ast_sipfriends` `s` JOIN
-	`users` `u` ON (`u`.`id`=`s`.`_user_id`)
-WHERE `u`.`host_id` IN ('. implode(',', $our_ids) .')'
-);
+	`users` `u` ON (`u`.`id`=`s`.`_user_id`)'
+;
+if (! $GS_INSTALLATION_TYPE_SINGLE) {
+	$query.= "\n". 'WHERE `u`.`host_id` IN ('. implode(',', $our_ids) .')';
+}
+$rs = $db->execute($query);
 if ($rs) {
 	while ($r = $rs->fetchRow()) {
 		echo 'hint(SIP/', $r['name'] ,') ', $r['name'] ,' => {}', "\n";
@@ -79,7 +84,7 @@ echo "\n";
 # hints for pickup groups
 #
 echo "// hints for pickup groups (auto-generated):\n";
-$rs = $db->execute(
+$query =
 'SELECT
 	`pg`.`id` `pg_id`,
 	GROUP_CONCAT(`s`.`name` SEPARATOR \',\') `pg_members`
@@ -87,11 +92,13 @@ FROM
 	`pickupgroups` `pg` JOIN
 	`pickupgroups_users` `pu` ON (`pu`.`group_id`=`pg`.`id`) JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`pu`.`user_id`) JOIN
-	`users` `u` ON (`u`.`id`=`pu`.`user_id`)
-WHERE
-	`u`.`host_id` IN (1)
-GROUP BY `pg`.`id`'
-);
+	`users` `u` ON (`u`.`id`=`pu`.`user_id`)'
+;
+if (! $GS_INSTALLATION_TYPE_SINGLE) {
+	$query.= "\n". 'WHERE `u`.`host_id` IN ('. implode(',', $our_ids) .')';
+}
+$query.= "\n". 'GROUP BY `pg`.`id`';
+$rs = $db->execute($query);
 if ($rs) {
 	while ($r = $rs->fetchRow()) {
 		$members = explode(',', $r['pg_members']);
