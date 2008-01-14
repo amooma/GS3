@@ -53,7 +53,8 @@ define('GS_WEB_REWRITE',
 
 
 
-if (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx', 'single'), true)) {
+$GS_INSTALLATION_TYPE = gs_get_conf('GS_INSTALLATION_TYPE');
+if (in_array($GS_INSTALLATION_TYPE, array('gpbx', 'single'), true)) {
 	require_once( GS_DIR .'htdocs/gui/setup/inc/aux.php' );
 	if (gs_setup_autoshow()) {
 		if (subStr($_SERVER['SERVER_PROTOCOL'],5) >= '1.1') {
@@ -186,8 +187,13 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <div id="topheader"></div>
 <div id="headerboxes">
 <div id="boxtitle">
-	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />
-	<h1><?php echo __('Telefon-Manager'); ?></h1> 
+<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />
+<h1><?php
+	switch ($GS_INSTALLATION_TYPE) {
+		case 'gpbx': echo 'GPBX'               ; break;
+		default    : echo __('Telefon-Manager');
+	}
+?></h1> 
 </div>
 <!--<img alt="Gemeinschaft" src="<?php echo GS_URL_PATH; ?>img/logo.gif" class="fr" />-->
 <div class="tty"><a href="#a-content"><?php echo __('Navigation &uuml;berspringen'); /*//TRANSLATE ME*/ ?></a></div>
@@ -232,7 +238,7 @@ foreach ($MODULES as $sectname => $sectinfo) {
 			if (array_key_exists('inmenu', $modinfo) && ! $modinfo['inmenu'])
 				continue;
 			
-			echo "\t", '<li class="leaf"><a href="'. gs_url($sectname, $modname) .'" class="'. ($modname==$MODULE ? 'active' : '') .'"><img alt=" " src="', GS_URL_PATH, 'img/tree.gif" />'. $modinfo['title'] .'</a></li>', "\n";
+			echo '<li class="leaf"><a href="'. gs_url($sectname, $modname) .'" class="'. ($modname==$MODULE ? 'active' : '') .'"><img alt=" " src="', GS_URL_PATH, 'img/tree.gif" />'. $modinfo['title'] .'</a></li>', "\n";
 		}
 		echo '</ul>', "\n";
 	}
