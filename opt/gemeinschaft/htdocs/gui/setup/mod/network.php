@@ -683,7 +683,7 @@ if ($action === 'save') {
 		$db = gs_db_master_connect();
 		if ($db) {
 			$tmp = $db->escape($form_ipaddr);
-			switch (gs_get_conf('GS_INSTALLATION_TYPE')) {
+			switch ($GS_INSTALLATION_TYPE) {
 				case 'gpbx': $tmp2 = 'GPBX'                  ; break;
 				default    : $tmp2 = 'Gemeinschaft (single)' ;
 			}
