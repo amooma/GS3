@@ -5340,6 +5340,7 @@ CREATE TABLE `ast_cdr` (
   `amaflags` tinyint(3) unsigned NOT NULL default '0',
   `accountcode` varchar(20) collate latin1_general_ci NOT NULL default '',
   `userfield` varchar(255) collate latin1_general_ci NOT NULL default '',
+  PRIMARY KEY  (`_id`),
   KEY `calldate` (`calldate`),
   KEY `accountcode` (`accountcode`),
   KEY `src_disposition` (`src`,`disposition`(4)),
@@ -6435,4 +6436,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-10-19  16:07:12
+-- Dump completed on 2008-01-14  11:07:12
