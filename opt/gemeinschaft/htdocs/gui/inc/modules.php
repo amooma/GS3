@@ -211,7 +211,8 @@ $MODULES['routing'  ]=  array('title' => __('Routen'),          //TRANSLATE ME
                               'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
                               'perms' => 'admin',
    'sub' => array(
-      'gateways'     => array('title' => __('Gateways')),       //TRANSLATE ME
+      'gws-sip'      => array('title' => __('SIP-Gateways')),   //TRANSLATE ME
+      'gwgrps'       => array('title' => __('Gateway-Gruppen')),//TRANSLATE ME
       'inbound'      => array('title' => __('Routen eingehend')),//TRANSLATE ME
       'outbound'     => array('title' => __('Routen &amp; LCR')),//TRANSLATE ME
       'test'         => array('title' => __('Routing-Test'))    //TRANSLATE ME
