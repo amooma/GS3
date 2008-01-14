@@ -208,7 +208,6 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 	}
 ?>
 </div>
-<?php /*<img alt="Gemeinschaft" src="<?php echo GS_URL_PATH; ?>img/logo.gif" class="fr" />*/ ?>
 <div class="tty"><a href="#a-content"><?php echo __('Navigation &uuml;berspringen'); /*//TRANSLATE ME*/ ?></a></div>
 
 <span class="tty"><?php echo __('Sprache') /*//TRANSLATE ME*/; ?>:</span>
