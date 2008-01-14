@@ -192,15 +192,23 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <div id="topheader"></div>
 <div id="headerboxes">
 <div id="boxtitle">
-<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />
-<h1><?php
+<?php
 	switch ($GS_INSTALLATION_TYPE) {
-		case 'gpbx': echo    'GPBX'            ; break;
-		default    : echo __('Telefon-Manager');
+		case 'gpbx':
+			echo '<div style="position:relative;top:0;left:0;" class="fl">' ,"\n";
+			echo '<h1 style="margin:0;padding:0;">' ,"\n";
+			echo '<img style="position:absolute;top:2px;left:2px;z-index:1;" alt=" " src="', GS_URL_PATH ,'img/gpbx-shadow-32.png" />' ,"\n";
+			echo '<img style="position:absolute;top:0px;left:0px;z-index:2;" alt="GPBX" src="', GS_URL_PATH ,'img/gpbx-32.png" />' ,"\n";
+			echo '</h1>' ,"\n";
+			echo '</div>' ,"\n";
+			break;
+		default    :
+			echo '<img alt=" " src="', GS_URL_PATH ,'crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />' ,"\n";
+			echo '<h1>', __('Telefon-Manager') ,'</h1>' ,"\n";
 	}
-?></h1> 
+?>
 </div>
-<!--<img alt="Gemeinschaft" src="<?php echo GS_URL_PATH; ?>img/logo.gif" class="fr" />-->
+<?php /*<img alt="Gemeinschaft" src="<?php echo GS_URL_PATH; ?>img/logo.gif" class="fr" />*/ ?>
 <div class="tty"><a href="#a-content"><?php echo __('Navigation &uuml;berspringen'); /*//TRANSLATE ME*/ ?></a></div>
 
 <span class="tty"><?php echo __('Sprache') /*//TRANSLATE ME*/; ?>:</span>
