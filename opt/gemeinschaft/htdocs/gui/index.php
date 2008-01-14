@@ -171,7 +171,12 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
                                                       GNU GPL ]]>-->
-<title><?php echo __('Gemeinschaft Telefon-Manager'); ?></title>
+<title><?php
+	switch ($GS_INSTALLATION_TYPE) {
+		case 'gpbx': echo    'GPBX'                         ; break;
+		default    : echo __('Gemeinschaft Telefon-Manager');
+	}
+?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/original.css" />
 <link rel="shortcut icon" type="image/x-icon" href="<?php echo GS_URL_PATH; ?>favicon.ico" />
@@ -190,7 +195,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />
 <h1><?php
 	switch ($GS_INSTALLATION_TYPE) {
-		case 'gpbx': echo 'GPBX'               ; break;
+		case 'gpbx': echo    'GPBX'            ; break;
 		default    : echo __('Telefon-Manager');
 	}
 ?></h1> 
