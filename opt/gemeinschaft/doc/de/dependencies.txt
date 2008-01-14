@@ -46,6 +46,7 @@ avahi-daemon
 avahi-utils
 ifupdown
 nmap
+curl
 
 
 Benötigt außerdem (nicht als Paket vorhanden):
