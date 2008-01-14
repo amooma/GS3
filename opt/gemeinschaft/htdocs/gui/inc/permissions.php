@@ -35,12 +35,12 @@ require_once( GS_DIR .'inc/ldap.php' );
 
 /*
 In eine ggf. vom Admin anpaßbare Funktion ausgelagert, da es sich
-generisch nicht definieren läßt, daß z.B. für die Editier-Rechte die
-ersten 4 Stellen einer Kostenstellennr. aus dem LDAP ausschlaggebend
-sind.
-Muß true oder false zurückgeben.
+generisch nicht definieren laesst, dass z.B. fuer die Editier-Rechte
+die ersten 4 Stellen einer Kostenstellennr. aus dem LDAP ausschlag-
+gebend sind.
+Muß true oder false zurueckgeben.
 
-Der Funktion wird der Gemeinschafts-Username übergeben.
+Der Funktion wird der Gemeinschafts-Username uebergeben.
 
 Um diese Lookups abzuschalten einfach in der inc/conf.php
 GS_GUI_SUDO_EXTENDED auf false setzen.
