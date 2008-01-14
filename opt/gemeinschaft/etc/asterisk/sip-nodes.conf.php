@@ -120,7 +120,7 @@ ORDER BY `g`.`id`'
 );
 while ($gw = $rs->fetchRow()) {
 	echo '[', $gw['name'] ,']' ,"\n";
-	echo 'type = friend' ,"\n";
+	echo 'type = peer' ,"\n";
 	echo 'host = '    , $gw['host'] ,"\n";
 	echo 'port = 5060' ,"\n";
 	echo 'username = ', $gw['user'] ,"\n";
