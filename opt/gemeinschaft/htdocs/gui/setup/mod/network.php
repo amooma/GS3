@@ -683,10 +683,11 @@ if ($action === 'save') {
 		$db = gs_db_master_connect();
 		if ($db) {
 			$tmp = $db->escape($form_ipaddr);
-			switch ($GS_INSTALLATION_TYPE) {
-				case 'gpbx': $tmp2 = $db->escape( 'GPBX' );
-				default    : $tmp2 = $db->escape( 'Gemeinschaft (single)' );
+			switch (gs_get_conf('GS_INSTALLATION_TYPE')) {
+				case 'gpbx': $tmp2 = 'GPBX'                  ; break;
+				default    : $tmp2 = 'Gemeinschaft (single)' ;
 			}
+			$tmp2 = $db->escape($tmp2);
 			@$db->execute( 'UPDATE `hosts` SET `host`=\''. $tmp .'\', `comment`=\''. $tmp2 .'\' WHERE `id`=1' );
 			@$db->execute( 'UPDATE `hosts` SET `host`=\''. $tmp .'\', `comment`=\''. $tmp2 .'\'' );
 		}
