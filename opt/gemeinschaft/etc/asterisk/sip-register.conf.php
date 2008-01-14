@@ -40,44 +40,47 @@ set_error_handler('err_handler_quiet');
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
 
-
-$our_ids = @ gs_get_listen_to_ids();
-if (! is_array($our_ids)) $our_ids = array();
-//echo 'OUR IDS: ', implode(', ', $our_ids), "\n";
-
-$hosts = @ gs_hosts_get();
-if (isGsError( $hosts )) $hosts = array();
-if (! $hosts)            $hosts = array();
-//echo "HOSTS:\n"; print_r($hosts);
-
-$min_our_ids = (count($our_ids) > 0) ? min($our_ids) : 0;
-$outUser = 'gs-'. str_pad( $min_our_ids, 4, '0', STR_PAD_LEFT );
-
-$out = '';
-
-foreach ($hosts as $host) {
-	if (in_array( (int)$host['id'], $our_ids )) {
-		//echo "SKIPPING ", $host['id'], "\n";
-		continue;
-	} else
-		//echo "DOING ", $host['id'], "\n";
+if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	
-	# it's one of the other nodes
+	$our_ids = @ gs_get_listen_to_ids();
+	if (! is_array($our_ids)) $our_ids = array();
+	//echo 'OUR IDS: ', implode(', ', $our_ids), "\n";
 	
-	$inUser = 'gs-'. str_pad( $host['id'], 4, '0', STR_PAD_LEFT );
-	$inPass = 'thiS is rEally seCret.';
-	$inPass = subStr( str_replace(
-		array( '+', '/', '=' ),
-		array( '', '', ''  ),
-		base64_encode( $inPass )
-	), 0, 25 );
-	$outPass = $inPass;
+	$hosts = @ gs_hosts_get();
+	if (isGsError( $hosts )) $hosts = array();
+	if (! $hosts)            $hosts = array();
+	//echo "HOSTS:\n"; print_r($hosts);
 	
-	$name = str_pad( $host['id'], 4, '0', STR_PAD_LEFT );
-	$out .= 'register => '. $outUser .'@gs-'. $name .'/'. $inUser ."\n";
+	$min_our_ids = (count($our_ids) > 0) ? min($our_ids) : 0;
+	$outUser = 'gs-'. str_pad( $min_our_ids, 4, '0', STR_PAD_LEFT );
+	
+	$out = '';
+	foreach ($hosts as $host) {
+		if (in_array( (int)$host['id'], $our_ids )) {
+			//echo "SKIPPING ", $host['id'], "\n";
+			continue;
+		} else
+			//echo "DOING ", $host['id'], "\n";
+		
+		# it's one of the other nodes
+		
+		$inUser = 'gs-'. str_pad( $host['id'], 4, '0', STR_PAD_LEFT );
+		$inPass = 'thiS is rEally seCret.';
+		$inPass = subStr( str_replace(
+			array( '+', '/', '=' ),
+			array( '', '', ''  ),
+			base64_encode( $inPass )
+		), 0, 25 );
+		$outPass = $inPass;
+		
+		$name = str_pad( $host['id'], 4, '0', STR_PAD_LEFT );
+		$out .= 'register => '. $outUser .'@gs-'. $name .'/'. $inUser ."\n";
+	}
+	echo "\n", $out;
+	
 }
+echo "\n";
 
-echo "\n", $out, "\n";
 
 
 ?>
