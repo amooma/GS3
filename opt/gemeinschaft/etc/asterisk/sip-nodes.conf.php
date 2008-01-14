@@ -37,10 +37,11 @@ error_reporting(0);
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_quiet');
-require_once( GS_DIR .'inc/get-listen-to-ids.php' );
-require_once( GS_DIR .'inc/gs-lib.php' );
 
 if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+	
+	require_once( GS_DIR .'inc/get-listen-to-ids.php' );
+	require_once( GS_DIR .'inc/gs-lib.php' );
 	
 	$our_ids = @ gs_get_listen_to_ids();
 	if (! is_array($our_ids)) $our_ids = array();
@@ -95,6 +96,46 @@ setvar=__from_node=yes
 	
 }
 echo "\n";
+
+
+
+# get gateways from DB
+#
+require_once( GS_DIR .'inc/db_connect.php' );
+$DB = gs_db_master_connect();
+if (! $DB) {
+	exit(1);
+}
+$rs = $DB->execute(
+'SELECT
+	`g`.`name`, `g`.`host`, `g`.`user`, `g`.`pwd`,
+	`gg`.`name` `gg_name`
+FROM
+	`gates` `g` JOIN
+	`gate_grps` `gg` ON (`gg`.`id`=`g`.`grp_id`)
+WHERE
+	`g`.`type`=\'sip\' AND
+	`g`.`host` IS NOT NULL
+ORDER BY `g`.`id`'
+);
+while ($gw = $rs->fetchRow()) {
+	echo '[', $gw['name'] ,']' ,"\n";
+	echo 'type = friend' ,"\n";
+	echo 'host = '    , $gw['host'] ,"\n";
+	echo 'port = 5060' ,"\n";
+	echo 'username = ', $gw['user'] ,"\n";
+	echo 'secret = '  , $gw['pwd' ] ,"\n";
+	echo 'nat = yes' ,"\n";
+	echo 'dtmfmode = rfc2833' ,"\n";
+	echo 'insecure = port,invite' ,"\n";
+	echo 'canreinvite = no' ,"\n";
+	echo 'call-limit = 0' ,"\n";
+	echo 'registertimeout = 60' ,"\n";
+	echo 't38pt_udptl = yes' ,"\n";
+	echo 'setvar=__is_from_gateway=1' ,"\n";
+	echo 'context = from-gg-', $gw['gg_name'] ,"\n";
+	echo "\n";
+}
 
 
 ?>
