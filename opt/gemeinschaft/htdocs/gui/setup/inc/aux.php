@@ -71,7 +71,8 @@ function gs_setup_autoshow()
 function gs_setup_possible()
 {
 	return (
-		in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx', 'single'), true)
+		//in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx', 'single'), true)
+		in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx'), true)
 		&& file_exists('/etc/debian_version')
 	);
 }
