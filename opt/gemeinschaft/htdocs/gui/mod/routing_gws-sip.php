@@ -158,6 +158,11 @@ if ($action === 'edit') {
 		# get gateway group from DB
 		$rs = $DB->execute( 'SELECT `grp_id`, `name`, `title`, `allow_out`, `host`, `user`, `pwd` FROM `gates` WHERE `id`='.$gwid );
 		$gw = $rs->fetchRow();
+		/*
+		echo "<pre>\n";
+		print_r($gw);
+		echo "</pre>\n";
+		*/
 		if (! $gw) return;
 	}
 	else {
@@ -200,14 +205,14 @@ if ($action === 'edit') {
 	echo '<tr>',"\n";
 	echo '<th>', __('Benutzername') ,':</th>',"\n";
 	echo '<td>',"\n";
-	echo '<input type="text" name="gw-user" value="', htmlEnt($gw['user']) ,'" size="25" maxlength="25" style="width:97%;" />',"\n";
+	echo '<input type="text" name="gw-user" value="', htmlEnt($gw['user']) ,'" size="25" maxlength="35" style="width:97%;" />',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
 	echo '<th>', __('Pa&szlig;wort') ,':</th>',"\n";
 	echo '<td>',"\n";
-	echo '<input type="text" name="gw-pwd" value="', htmlEnt($gw['pwd']) ,'" size="25" maxlength="25" style="width:97%;" />',"\n";
+	echo '<input type="text" name="gw-pwd" value="', htmlEnt($gw['pwd']) ,'" size="25" maxlength="35" style="width:97%;" />',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
 	
@@ -273,18 +278,35 @@ if ($action === '') {
 <tr>
 	<th style="width:150px;"><?php echo __('Gateway'); ?></th>
 	<th style="width:150px;"><?php echo __('Gruppe'); ?></th>
-	<th style="width:200px;"><?php echo __('Account'); ?></th>
+	<th style="width:150px;"><?php echo __('Host'); ?></th>
+	<th style="width:40px;"><?php echo __('Reg.?'); ?></th>
 	<th style="width:55px;">&nbsp;</th>
 </tr>
 </thead>
 <tbody>
 <?php
-
+	
+	$err=0; $out=array();
+	@exec( 'sudo asterisk -rx \'sip show registry\' 2>>/dev/null', $out, $err );
+	$regs = array();
+	if ($err === 0) {
+		foreach ($out as $line) {
+			if (! preg_match('/(gw_[0-9]+_[a-z0-9\-_]*)/', $line, $m))
+				continue;
+			$peername = $m[1];
+			if (! preg_match('/\b((?:Un)?[Rr]egistered)/', $line, $m)) {
+				$regs[$peername] = false;
+				continue;
+			}
+			$regs[$peername] = ($m[1] === 'Registered');
+		}
+	}
+	
 	# get gateways from DB
 	#
 	$rs = $DB->execute(
 'SELECT
-	`g`.`id`, `g`.`title`, `g`.`host`, `g`.`user`,
+	`g`.`id`, `g`.`name`, `g`.`title`, `g`.`host`,
 	`gg`.`id` `gg_id`, `gg`.`title` `gg_title`
 FROM
 	`gates` `g` LEFT JOIN
@@ -315,7 +337,14 @@ ORDER BY `g`.`grp_id`, `g`.`title`'
 		
 		//echo '<td><input type="checkbox" name="gw-',$gw['id'],'-allow_out" value="1" ', ($gw['allow_out'] ? 'checked="checked" ' : '') ,'/></td>',"\n";
 		
-		echo '<td>', htmlEnt($gw['user']) ,'@', htmlEnt($gw['host']) ,'</td>',"\n";
+		echo '<td>', htmlEnt($gw['host']) ,'</td>',"\n";
+		
+		echo '<td>';
+		if (@$regs[$gw['name']])
+			echo '<img alt=" " src="', GS_URL_PATH ,'crystal-svg/16/act/greenled.png" />';
+		else
+			echo '&nbsp;';
+		echo '</td>',"\n";
 		
 		echo '<td>',"\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;gw-id='.$gw['id']) ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
