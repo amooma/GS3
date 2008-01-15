@@ -2,7 +2,7 @@
 /*******************************************************************\
 *                               YaDB
 * 
-* Copyright 2006/2007, Philipp Kempgen <philipp.kempgen@amooma.de>,
+* Copyright 2006-2008, Philipp Kempgen <philipp.kempgen@amooma.de>,
 * amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 * 
@@ -636,23 +636,25 @@ class YADB_RecordSet_mysql extends YADB_RecordSet
 		}
 		// as MySQL returns all values as strings we need to
 		// correct fields types:
-		if ( is_array($this->_drvColTypesPHP)
-			|| @ $this->_drvFetchColTypes() ) {
+		if (is_array($this->_drvColTypesPHP)
+		||  @ $this->_drvFetchColTypes()) {
 			// if col types already cached or able to get them:
 			// correct types, else leave all values as strings
 			$i=0;
 			foreach ($row as $col => $val) {
-				if ($row[$col] === null) continue;
-				//$t = @$this->_drvColTypesPHP[$col];
-				$t = @$this->_drvColTypesPHP[$i];
-				switch ($t) {
-					case YADB_MTYPE_INT:
-						$row[$col] =    (int)$row[$col];  break;
-					case YADB_MTYPE_STR:                  break;  // is a string already
-					case YADB_MTYPE_FLOAT:
-						$row[$col] = (double)$row[$col];  break;
-					case YADB_MTYPE_BOOL:
-						$row[$col] =   (bool)$row[$col];  break;
+				if ($row[$col] !== null) {
+					//$t = @$this->_drvColTypesPHP[$col];
+					$t = @$this->_drvColTypesPHP[$i];
+					switch ($t) {
+						case YADB_MTYPE_INT:
+							$row[$col] =    (int)$row[$col];  break;
+						case YADB_MTYPE_STR:
+															  break;  // is a string already
+						case YADB_MTYPE_FLOAT:
+							$row[$col] = (double)$row[$col];  break;
+						case YADB_MTYPE_BOOL:
+							$row[$col] =   (bool)$row[$col];  break;
+					}
 				}
 				++$i;
 			}
