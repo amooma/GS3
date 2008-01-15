@@ -158,11 +158,6 @@ if ($action === 'edit') {
 		# get gateway group from DB
 		$rs = $DB->execute( 'SELECT `grp_id`, `name`, `title`, `allow_out`, `host`, `user`, `pwd` FROM `gates` WHERE `id`='.$gwid );
 		$gw = $rs->fetchRow();
-		/*
-		echo "<pre>\n";
-		print_r($gw);
-		echo "</pre>\n";
-		*/
 		if (! $gw) return;
 	}
 	else {
