@@ -2,7 +2,7 @@
 /*******************************************************************\
 *                               YaDB
 * 
-* Copyright 2006/2007, Philipp Kempgen <philipp.kempgen@amooma.de>,
+* Copyright 2006-2008, Philipp Kempgen <philipp.kempgen@amooma.de>,
 * amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 * 
@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 300); // = 0.03.00
+define('YADB_VERS', 400); // = 0.04.00
 
 /***********************************************************
 * Columns flags:
