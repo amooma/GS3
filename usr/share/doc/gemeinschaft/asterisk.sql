@@ -5767,6 +5767,9 @@ CREATE TABLE `gates` (
   `title` varchar(50) collate utf8_unicode_ci NOT NULL,
   `allow_out` tinyint(1) unsigned NOT NULL default '1',
   `dialstr` varchar(50) character set ascii NOT NULL,
+  `host` varchar(50) collate utf8_unicode_ci default NULL,
+  `user` varchar(35) collate utf8_unicode_ci default NULL,
+  `pwd` varchar(35) collate utf8_unicode_ci default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `grp_title` (`grp_id`,`title`(10)),
@@ -5779,11 +5782,11 @@ CREATE TABLE `gates` (
 
 LOCK TABLES `gates` WRITE;
 /*!40000 ALTER TABLE `gates` DISABLE KEYS */;
-INSERT INTO `gates` VALUES (5,6,'zap','gw_zaptel_span_1','Zaptel Span 1',1,'Zap/r1/{number}');
-INSERT INTO `gates` VALUES (6,6,'zap','gw_zaptel_span_2','Zaptel Span 2',1,'Zap/r2/{number}');
-INSERT INTO `gates` VALUES (7,5,'sip','gw_sip_isdn_intern_a','SIP-ISDN intern A',1,'SIP/{number}@{peer}');
-INSERT INTO `gates` VALUES (8,5,'sip','gw_sip_isdn_intern_b','SIP-ISDN intern B',1,'SIP/{number}@{peer}');
-INSERT INTO `gates` VALUES (9,8,'sip','gw_sip_gsm_vodafone','SIP-GSM Vodafone',1,'SIP/{number}@{peer}');
+INSERT INTO `gates` VALUES (5,6,'zap','gw_zaptel_span_1','Zaptel Span 1',1,'Zap/r1/{number}',NULL,NULL,NULL);
+INSERT INTO `gates` VALUES (6,6,'zap','gw_zaptel_span_2','Zaptel Span 2',1,'Zap/r2/{number}',NULL,NULL,NULL);
+INSERT INTO `gates` VALUES (7,5,'sip','gw_sip_isdn_intern_a','SIP-ISDN intern A',1,'SIP/{number}@{peer}','sip.example.com','abc','123');
+INSERT INTO `gates` VALUES (8,5,'sip','gw_sip_isdn_intern_b','SIP-ISDN intern B',1,'SIP/{number}@{peer}','sip.example.com','abc','123');
+INSERT INTO `gates` VALUES (9,8,'sip','gw_sip_gsm_vodafone','SIP-GSM Vodafone',1,'SIP/{number}@{peer}','sip.example.com','abc','123');
 /*!40000 ALTER TABLE `gates` ENABLE KEYS */;
 UNLOCK TABLES;
 
