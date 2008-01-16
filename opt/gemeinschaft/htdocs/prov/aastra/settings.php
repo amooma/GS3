@@ -265,12 +265,6 @@ if ($phoneIP) {
 # store new ip address:
 $db->execute( 'UPDATE `users` SET `current_ip`='. ($phoneIP ? ('\''. $db->escape($phoneIP) .'\'') : 'NULL') .' WHERE `id`='. $user_id );
 
-/*
-echo "<pre>\n";
-echo "uid: $user_id\n";
-var_dump($user);
-*/
-
 psetting('sip mode', '0');
 psetting('sip screen name',	$user['name'] .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
 psetting('sip display name',	$user['firstname'].' '.$user['lastname']);
@@ -281,7 +275,5 @@ psetting('sip password',	$user['secret']);
 psetting('sip registrar ip',	$host);
 psetting('sip registrar port', '5060');
 psetting('sip registration period', '3600');
-
-//echo "</pre>\n";
 
 ?>
