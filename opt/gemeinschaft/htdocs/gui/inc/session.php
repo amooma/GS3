@@ -93,11 +93,11 @@ function ldap_user_map( $user )
 		array(GS_LDAP_PROP_USER) );
 	if (isGsError( $u )) {
 		//echo $u->$msg;
-		echo sprintf(__('Failed to get LDAP user "%s".'), $user), "\n";
+		echo sPrintF(__('Failed to get LDAP user "%s".'), $user), "\n";
 		return false;
 	}
 	if (! is_array( $u )) {
-		echo sprintf(__('No user "%s" in LDAP.'), $user), "\n";
+		echo sPrintF(__('No user "%s" in LDAP.'), $user), "\n";
 		return false;
 	}
 	$lc_GS_LDAP_PROP_USER = strToLower(GS_LDAP_PROP_USER);
@@ -158,7 +158,7 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 	if (! $user) {
 		$_SESSION['login_ok'  ] = false;
 		$_SESSION['login_user'] = false;
-		$login_info = sprintf(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod());
+		$login_info = sPrintF(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod());
 		$login_errmsg = __('Benutzer oder Pa&szlig;wort ung&uuml;ltig');
 		return;
 	}
@@ -168,10 +168,10 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 		$_SESSION['real_user']['name'] = @ldap_user_map( $_SESSION['real_user']['_origname'] );
 	//}
 	if (! $_SESSION['real_user']['name']) {
-		//die( sprintf(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod()) );
+		//die( sPrintF(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod()) );
 		$_SESSION['login_ok'  ] = false;
 		$_SESSION['login_user'] = false;
-		$login_info = sprintf(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod());
+		$login_info = sPrintF(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod());
 		return;
 	}
 	
@@ -179,7 +179,7 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 		$_SESSION['real_user']['info'] = get_user( $_SESSION['real_user']['name'] );
 	//print_r($_SESSION);
 	if (! @$_SESSION['real_user']['info']) {
-		echo sprintf(__('Unknown user "%s".'), @$_SESSION['real_user']['name']), "\n";
+		echo sPrintF(__('Unknown user "%s".'), @$_SESSION['real_user']['name']), "\n";
 		exit(1);
 	}
 	
@@ -201,7 +201,7 @@ if ($_SESSION['sudo_user']['name'] == $_SESSION['real_user']['name']) {
 		// info not present (no session support) or sudo user has changed
 		$_SESSION['sudo_user']['info'] = get_user( $_SESSION['sudo_user']['name'] );
 		if (! @$_SESSION['sudo_user']['info']) {
-			echo sprintf(__('Unknown user "%s".'), @$_SESSION['sudo_user']['name']), "\n";
+			echo sPrintF(__('Unknown user "%s".'), @$_SESSION['sudo_user']['name']), "\n";
 			$_SESSION['sudo_user']['name'] = $_SESSION['real_user']['name'];
 			$_SESSION['sudo_user']['info'] = $_SESSION['real_user']['info'];
 		}
@@ -235,7 +235,7 @@ if ($_SESSION['sudo_user']['name'] == $_SESSION['real_user']['name']) {
 	}
 }
 if (! $sudo_allowed) {
-	echo sprintf(__('You are not allowed to act as "%s".'), @$_SESSION['sudo_user']['name']);
+	echo sPrintF(__('You are not allowed to act as "%s".'), @$_SESSION['sudo_user']['name']);
 	$_SESSION['sudo_user']['name'] = $_SESSION['real_user']['name'];
 	$_SESSION['sudo_user']['info'] = $_SESSION['real_user']['info'];
 }
