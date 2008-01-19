@@ -46,10 +46,6 @@ unset($GS_URL_PATH);
 # get type of installation
 #
 $GS_INSTALLATION_TYPE = gs_get_conf('GS_INSTALLATION_TYPE');
-switch ($GS_INSTALLATION_TYPE) {
-	case 'gpbx'  :  $title = 'GPBX'         ; break;
-	default      :  $title = 'Gemeinschaft' ; break;
-}
 
 
 # setup possible on this installation?
@@ -169,7 +165,13 @@ if (! file_exists($step_file)) {
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
                                                       GNU GPL ]]>-->
-<title><?php echo $title ,' ', 'Setup'; ?></title>
+<title><?php
+	switch ($GS_INSTALLATION_TYPE) {
+		case 'gpbx': echo 'GPBX'        ; break;
+		default    : echo 'Gemeinschaft';
+	}
+	echo ' ', 'Setup';
+?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/original.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>setup/setup.css" />
@@ -185,8 +187,22 @@ if (! file_exists($step_file)) {
 <div id="topheader"></div>
 <div id="headerboxes">
 <div id="boxtitle">
-	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />
-	<h1><?php echo $title ,' ', 'Setup'; ?></h1> 
+<?php
+	switch ($GS_INSTALLATION_TYPE) {
+		case 'gpbx':
+			echo '<div style="position:relative;top:0;left:0;" class="fl">' ,"\n";
+			echo '<h1 style="margin:0;padding:0;">' ,"\n";
+			echo '<img style="position:absolute;top:2px;left:2px;z-index:1;" alt=" " src="', GS_URL_PATH ,'img/gpbx-shadow-32.png" />' ,"\n";
+			echo '<img style="position:absolute;top:0px;left:0px;z-index:2;" alt="GPBX" src="', GS_URL_PATH ,'img/gpbx-32.png" />' ,"\n";
+			echo '<div style="margin:2px 0 0 120px; font-weight:normal;">', 'Setup' ,'</div>' ,"\n";
+			echo '</h1>' ,"\n";
+			echo '</div>' ,"\n";
+			break;
+		default    :
+			echo '<img alt=" " src="', GS_URL_PATH ,'crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />' ,"\n";
+			echo '<h1>', 'Gemeinschaft' ,' ', 'Setup' ,'</h1>' ,"\n";
+	}
+?>
 </div>
 </div>
 <div align="right">
