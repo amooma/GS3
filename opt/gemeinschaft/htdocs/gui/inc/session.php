@@ -28,7 +28,6 @@
 
 defined('GS_VALID') or die('No direct access.');
 
-require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );
 require_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'inc/ldap.php' );
@@ -152,6 +151,8 @@ $login_info   = '';
 $login_errmsg = '';
 
 if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
+	
+	require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );
 	
 	$PAM = new PAMAL( GS_GUI_AUTH_METHOD );
 	$user = $PAM->getUser();
