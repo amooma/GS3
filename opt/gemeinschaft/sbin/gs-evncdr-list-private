@@ -53,7 +53,7 @@ if ($argc < 2) {
 	exit(1);
 }
 if (! preg_match('/^([0-9]{4})-([0-9]{2})$/', @$argv[1], $m)) {
-	echo "Month not recognized.\n";
+	echo "Monat nicht erkannt!\n";
 	exit(1);
 }
 $yyyy = $m[1];
