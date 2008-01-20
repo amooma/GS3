@@ -1,0 +1,164 @@
+#!/usr/bin/perl
+
+#####################################################################
+#            Gemeinschaft - asterisk cluster gemeinschaft
+# 
+# $Revision$
+# 
+# Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+# Philipp Kempgen <philipp.kempgen@amooma.de>
+# Peter Kozak <peter.kozak@amooma.de>
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#####################################################################
+
+use IO::Socket::Multicast;
+
+$SIG{PIPE}     = 'IGNORE';
+$SIG{HUP}      = 'IGNORE';
+$SIG{__WARN__} = 'IGNORE';
+
+$0 = 'sip.mcast.net-responder';
+
+
+my $prov_url_base = 'http://192.168.1.130/gemeinschaft/prov/';
+
+
+# create multicast socket
+my $sock = IO::Socket::Multicast->new(
+	Proto      => 'udp',
+	LocalPort  => 5060,
+	LocalAddr  => '224.0.1.75',  # sip.mcast.net
+	Reuse      => 1,
+	ReuseAddr  => 1
+)
+or die "socket: $@\n";  # yes, it uses $@ here
+
+# add a multicast group
+$sock->mcast_add( '224.0.1.75' );  # sip.mcast.net
+
+# turn off local mirroring
+$sock->mcast_loopback(0);
+
+# set TTL (default 1)
+$sock->mcast_ttl(255);
+
+
+
+my $in   = '';
+my $buf  = '';
+my $pkt  = '';
+my $resp = '';
+
+while ($sock->recv($in, 8192)) {
+	$buf .= $in;
+	while ($buf =~ m/^(.*?)\r\n\r\n/so) {
+	#while ($buf =~ m/^((?:[^\r\n]+\r\n)*)\r\n/so) {
+		if (! defined($&)) {next;}
+		$buf = substr($buf, length($&));
+		if (! defined($1)) {next;}
+		$pkt = $1;
+		if ($pkt ne '') {
+			#print STDOUT "IN--------------------------------------------------------{\n";
+			#print STDOUT $pkt, "\n";
+			#print STDOUT "----------------------------------------------------------}\n";
+			if ($pkt =~ m/^SUBSCRIBE/so) {
+				
+				if (($pkt =~ m/MAC%3[aA]000413/so || $pkt =~ m/snom/so) && $pkt =~ m/^(?:Accept): application\/url/mso) {
+					
+					my $remote_addr = '224.0.1.75';
+					my $remote_port = '5060';
+					if ($pkt =~ m/^(?:Contact|m): ([^\r\n]*)\r\n/mso) {
+						my $tmp = $1;
+						if ($tmp =~ m/([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/so) {
+							$remote_addr = $1;
+						}
+						if ($tmp =~ m/:([0-9]{4,5})/so) {
+							$remote_port = $1;
+						}
+					}
+					
+					my $header_from   = '';
+					my $header_to     = '';
+					my $header_callid = '';
+					my $header_event = '';
+					
+					$resp = 'SIP/2.0 200 OK' ."\r\n";
+					if ($pkt =~ m/^(?:Via|v):[^\r\n]*\r\n/mso) {
+						$resp.= $&;
+					}
+					if ($pkt =~ m/^(?:From|f):[^\r\n]*\r\n/mso) {
+						$header_from = $&;
+						$resp.= $&;
+					}
+					if ($pkt =~ m/^(?:To|t):[^\r\n]*\r\n/mso) {
+						$header_to = $&;
+						$resp.= $&;
+					}
+					if ($pkt =~ m/^(?:Call-ID|i):[^\r\n]*\r\n/mso) {
+						$header_callid = $&;
+						$resp.= $&;
+					}
+					if ($pkt =~ m/^(?:CSeq):[^\r\n]*\r\n/mso) {
+						$resp.= $&;
+					}
+					if ($pkt =~ m/^(?:Expires):[^\r\n]*\r\n/mso) {
+						$resp.= $&;
+					}
+					if ($pkt =~ m/^(?:Event|o):[^\r\n]*\r\n/mso) {
+						$header_event = $&;
+					}
+					$resp.= 'Contact: <sip:224.0.1.75:5060>' ."\r\n";
+					$resp.= 'Content-Length: 0' ."\r\n";
+					$resp.= "\r\n";
+					
+					#print STDOUT "OUT-------------------------------------------------------{\n";
+					#print STDOUT $resp, "\n";
+					#print STDOUT "----------------------------------------------------------}\n";
+					$sock->mcast_send( $resp, $remote_addr.':'.$remote_port );
+					
+					$resp = 'NOTIFY '. $remote_addr.':'.$remote_port .' SIP/2.0' ."\r\n";
+					$resp.= 'Via: SIP/2.0/UDP 224.0.1.75:5060;rport' ."\r\n";
+					$resp.= 'Max-Forwards: 20' ."\r\n";
+					$resp.= 'Contact: <sip:224.0.1.75:5060>' ."\r\n";
+					$resp.= $header_from;
+					$resp.= $header_to;
+					$resp.= $header_callid;
+					$resp.= 'CSeq: 3 NOTIFY' ."\r\n";
+					$resp.= 'Content-Type: application/url' ."\r\n";
+					$resp.= $header_event;
+					$resp.= 'Subscription-State: terminated;reason=timeout' ."\r\n";
+					my $content = $prov_url_base .'snom/settings.php?mac={mac}&pnp=1';
+					$resp.= 'Content-Length: '. length($content) ."\r\n";
+					$resp.= "\r\n";
+					$resp.= $content;
+					
+					#print STDOUT "OUT-------------------------------------------------------{\n";
+					#print STDOUT $resp, "\n";
+					#print STDOUT "----------------------------------------------------------}\n";
+					$sock->mcast_send( $resp, $remote_addr.':'.$remote_port );
+					
+					print STDOUT "Responded to Snom at ", $remote_addr ,"\n";
+					
+				}
+				
+			}
+		}
+	}
+}
+
