@@ -1122,7 +1122,7 @@ if (gs_get_conf('GS_SNOM_PROV_FW_UPDATE')) {
 	psetting('firmware_interval', '1440');  # 1440 mins = 24 hrs
 	psetting('firmware_status', $prov_url_snom .'sw-update.php?m='.$mac .'&u='.$user['name'] );
 	# http, https, tftp are supported
-	# default: /snom360/snom360-firmware.htm
+	# default: /snom360/snom360-firmware.htm, /snom370/snom370-firmware.htm
 }
 else {
 	psetting('update_policy', 'settings_only');
