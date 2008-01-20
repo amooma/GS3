@@ -173,6 +173,9 @@ function _add_to_cat( &$cats, $setting_name, $line )
 		case 'fkey'      :  $cat = 'function-keys'    ; break;
 		case '_gui_lang' :  $cat = 'gui-languages'    ; break;
 		case '_web_lang' :  $cat = 'web-languages'    ; break;
+		//case 'phrases'   :  $cat = 'phrases'          ; break;
+		//case 'phonebook' :  $cat = 'phone-book'       ; break;
+		//case 'dialplan'  :  $cat = 'dialplan'         ; break;
 		//case 'firmware'  :  $cat = 'firmware-settings'; break;
 		case 'firmware'  :  $cat = ''                 ; break;
 		default          :  $cat = 'phone-settings'   ;
