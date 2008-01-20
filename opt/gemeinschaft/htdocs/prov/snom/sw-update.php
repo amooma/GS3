@@ -136,7 +136,7 @@ function _generate_settings( $model, $appl, $rtfs, $lnux )
 		} else {
 			$url = $firmware_url . rawUrlEncode($file);
 			gs_log( GS_LOG_NOTICE, "Snom $mac ($phone_type, user $user): Update file: \"$file\"" );
-			//$ob = 'pnp_config: off' ."\n";
+			//$ob = 'pnp_config$: off' ."\n";
 			$ob = 'firmware: '. $url ."\n";
 			if (! headers_sent()) {
 				header( 'Content-Length: '. strLen($ob) );
@@ -254,10 +254,12 @@ if (! empty($app))
 		if         (_snomAppCmp($a, '5'     )<0)  $new_app = '5.5a-SIP-j';
 		elseif ($ready_for_v6)
 		{
-			if     (_snomAppCmp($a, '6.5.10')<0)  $new_app = '6.5.10-SIP-j';
+			//if     (_snomAppCmp($a, '6.5.10')<0)  $new_app = '6.5.10-SIP-j';
+			if     (_snomAppCmp($a, '6.5.15')<0)  $new_app = '6.5.15-SIP-j';
 			elseif (_snomAppCmp($a, '7')>=0)
 			{
-				if (_snomAppCmp($a, '7.1.6' )<0)  $new_app = '7.1.6-SIP-f';
+				//if (_snomAppCmp($a, '7.1.6' )<0)  $new_app = '7.1.6-SIP-f';
+				if (_snomAppCmp($a, '7.1.30')<0)  $new_app = '7.1.30-SIP-f';
 			}
 		}
 	} else
@@ -265,8 +267,9 @@ if (! empty($app))
 		if         (_snomAppCmp($a, '5'     )<0)  $new_app = '5.5a-SIP-j';
 		elseif ($ready_for_v6)
 		{
-			if     (_snomAppCmp($a, '6'     )<0)  $new_app = '6.5.10-SIP-j';
-			elseif (_snomAppCmp($a, '6.5.12')<0)  $new_app = '6.5.12-beta-SIP-j';
+			//if     (_snomAppCmp($a, '6'     )<0)  $new_app = '6.5.10-SIP-j';
+			//elseif (_snomAppCmp($a, '6.5.12')<0)  $new_app = '6.5.12-beta-SIP-j';
+			if     (_snomAppCmp($a, '6.5.15')<0)  $new_app = '6.5.15-SIP-j';
 			elseif (_snomAppCmp($a, '7'     )<0) {
 				if ($ready_for_v6_to_7) {
 					gs_log( GS_LOG_NOTICE, "Snom $mac ($phone_type, user $user): Ready to go from v. 6 to 7" );
@@ -281,10 +284,13 @@ if (! empty($app))
 					# on the old multiple flash partition structure and
 					# have to be downgraded as usual to v6 first"
 												//$new_app = '6.5.10-SIP-j';
-												$new_app = '6.5.12-beta-SIP-j';
+												//$new_app = '6.5.12-beta-SIP-j';
+												$new_app = '6.5.15-SIP-j';
 				}
-				elseif (_snomAppCmp($a, '7.1.19')<0) {
-												$new_app = '7.1.19-beta-SIP-f';
+				//elseif (_snomAppCmp($a, '7.1.19')<0) {
+				//								$new_app = '7.1.19-beta-SIP-f';
+				elseif (_snomAppCmp($a, '7.1.30')<0) {
+												$new_app = '7.1.30-SIP-f';
 				}
 			}
 		}
