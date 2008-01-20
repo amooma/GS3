@@ -1167,7 +1167,8 @@ if (preg_match('/snom3[0-9]0-SIP\s+(\d+)\.(\d+)\.(\d+)/', $ua, $m)) {
 #  Language files
 #####################################################################
 
-$lang_releases = array(  # sorted descending!
+$lang_releases = array(  # in descending order!
+	'7.1.30',
 	'7.1.19',
 	'7.1.17',
 	'7.1.10',
