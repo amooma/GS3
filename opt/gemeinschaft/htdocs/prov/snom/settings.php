@@ -635,15 +635,11 @@ psetting('rtp_port_end'         , '32767');
 /*
 if ($vlan_id < 1) {
 	psetting('vlan', '' );
-	psetting('vlan_id', '' );
 } else {
-	//psetting('vlan', ($vlan_id < 1 ? '' : 'x 0') );
-	//psetting('vlan', $vlan_id .' 5' );  # Prio. 5 (0|1-7)
-	psetting('vlan', $vlan_id .' '. '5' );
-	psetting('vlan_id', $vlan_id );
+	psetting('vlan', $vlan_id .' '. '5' );  # Prio. 5 (0|1-7)
 }
 */
-//psetting('vlan_qos', '5' );  # Prio. 5 (0|1-7)  muss ggf. getestet werden
+psetting('vlan_port_tagging', 'off' );
 
 # SNMP
 # see http://wiki.snom.com/SNMP
