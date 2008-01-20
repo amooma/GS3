@@ -136,6 +136,7 @@ function _generate_settings( $model, $appl, $rtfs, $lnux )
 		} else {
 			$url = $firmware_url . rawUrlEncode($file);
 			gs_log( GS_LOG_NOTICE, "Snom $mac ($phone_type, user $user): Update file: \"$file\"" );
+			//$ob = 'pnp_config: off' ."\n";
 			$ob = 'firmware: '. $url ."\n";
 			if (! headers_sent()) {
 				header( 'Content-Length: '. strLen($ob) );
