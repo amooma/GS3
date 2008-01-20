@@ -826,7 +826,7 @@ setting('user_subscription_expiry',$i, '60' );  # default: 3600
 setting('user_server_type'        ,$i, 'default');
 # default = Standard, broadsoft = Broadsoft, sylantro = Sylantro,
 # pbxnsip = PBXnSIP, telepo = Telepo, metaswitch = MetaSwitch
-setting('ring_after_delay'        ,$i, ''   );  # mit 1 Sek. Verzoegerung klingeln
+setting('ring_after_delay'        ,$i, ''   );
 //setting('user_send_local_name'    ,$i, 'on' );  # send display name to caller
 setting('user_send_local_name'    ,$i, 'on' );
 setting('user_dtmf_info'          ,$i, 'off');
