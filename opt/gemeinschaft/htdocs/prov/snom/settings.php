@@ -564,14 +564,14 @@ $db->execute( 'UPDATE `users` SET `current_ip`='. ($phoneIP ? ('\''. $db->escape
 
 psetting('language'         , 'Deutsch', true);
 psetting('web_language'     , 'Deutsch', true);
-psetting('display_method'   , 'display_name_number', true);
+psetting('display_method'   , 'display_name_number');
 psetting('tone_scheme'      , 'GER'    );
 psetting('date_us_format'   , 'off'    , true);
 psetting('time_24_format'   , 'on'     , true);
 psetting('message_led_other', 'off'    );
 psetting('use_backlight'    , 'on'     , true);  # always | on | off
 //psetting('headset_device'   , 'headset_rj', true);  # wuerde Default auf Headset am RJ14-Stecker setzen
-psetting('headset_device'   , 'none', true);
+psetting('headset_device'   , 'none'   , true);
 psetting('ethernet_detect'  , 'on'     );  # Warnung falls kein Ethernet
 psetting('ethernet_replug'  , 'reboot' );
 psetting('reboot_after_nr'  , '5'      );  # nach 5 Min. ohne Registrierung neu starten
@@ -709,7 +709,7 @@ if ($phone_type >= '370') {
 	psetting('vol_ringer'           ,  '7' , true);  # 1 - 15
 }
 psetting('mwi_notification'     , 'silent');  # keine akustischen Hinweise wenn neue Nachrichten
-psetting('mwi_dialtone'         , 'stutter', true);  # stotternder Waehlton wenn neue Nachrichten
+psetting('mwi_dialtone'         , 'stutter');  # stotternder Waehlton wenn neue Nachrichten
 psetting('silence_compression'  , 'off');  # kann Asterisk (noch?) nicht
 psetting('ringer_headset_device', 'speaker');  # Klingeltonausgabe bei Kopfhoerer (headset|speaker)
 
@@ -912,7 +912,9 @@ for ($i=0; $i<=32; ++$i) {
 psetting('flood_tracing', 'on');
 psetting('log_level'    , '5' );  # Log level of the maintenance web page.
                                   # 9 is the most verbose mode. 0-9, Default: 5
-psetting('syslog_server', '');
+psetting('syslog_server', ''  );
+psetting('lcserver1'    , ''  );
+psetting('vpn_netcatserver', ''  );
 
 
 
@@ -1098,8 +1100,6 @@ psetting('show_call_status', 'off');
 psetting('show_local_line', 'off');
 
 psetting('logon_wizard', 'off');
-
-psetting('lcserver1', '');
 
 
 
