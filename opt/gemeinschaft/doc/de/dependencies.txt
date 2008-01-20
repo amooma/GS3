@@ -26,8 +26,9 @@ mysql-client
 perl
 perl-modules
 libnet-daemon-perl
-libio-interface-perl
 libnet-netmask-perl
+libio-interface-perl
+libio-socket-multicast-perl
 bind9
 net-tools
 hostname
