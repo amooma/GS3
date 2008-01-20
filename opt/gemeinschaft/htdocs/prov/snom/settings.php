@@ -1192,43 +1192,43 @@ if ($lang_vers) {
 	# http://provisioning.snom.com/config/snomlang-7.1.19/
 	# etc.
 	
-	setting( '_gui_lang', 'Cestina'      , $langdir.'gui_lang_CZ.xml' );
-	setting( '_gui_lang', 'Dansk'        , $langdir.'gui_lang_DK.xml' );
+	//setting( '_gui_lang', 'Cestina'      , $langdir.'gui_lang_CZ.xml' );
+	//setting( '_gui_lang', 'Dansk'        , $langdir.'gui_lang_DK.xml' );
 	setting( '_gui_lang', 'Deutsch'      , $langdir.'gui_lang_DE.xml' );
 	setting( '_gui_lang', 'English(US) ' , $langdir.'gui_lang_EN.xml' );
-	setting( '_gui_lang', 'English(UK) ' , $langdir.'gui_lang_UK.xml' );
-	setting( '_gui_lang', 'Espanol'      , $langdir.'gui_lang_SP.xml' );
-	setting( '_gui_lang', 'Francais'     , $langdir.'gui_lang_FR.xml' );
-	setting( '_gui_lang', 'Italiano'     , $langdir.'gui_lang_IT.xml' );
-	setting( '_gui_lang', 'Japanese'     , $langdir.'gui_lang_JP.xml' );
-	setting( '_gui_lang', 'Nederlands'   , $langdir.'gui_lang_NL.xml' );
-	setting( '_gui_lang', 'Norsk'        , $langdir.'gui_lang_NO.xml' );
-	setting( '_gui_lang', 'Polski'       , $langdir.'gui_lang_PL.xml' );
-	setting( '_gui_lang', 'Portugues'    , $langdir.'gui_lang_PT.xml' );
-	setting( '_gui_lang', 'Russian'      , $langdir.'gui_lang_RU.xml' );
-	setting( '_gui_lang', 'Slovencina'   , $langdir.'gui_lang_SK.xml' );
-	setting( '_gui_lang', 'Suomi'        , $langdir.'gui_lang_FI.xml' );
-	setting( '_gui_lang', 'Svenska'      , $langdir.'gui_lang_SW.xml' );  # gui lang: SW, web lang: SV!
-	setting( '_gui_lang', 'Turkce'       , $langdir.'gui_lang_TR.xml' );
+	//setting( '_gui_lang', 'English(UK) ' , $langdir.'gui_lang_UK.xml' );
+	//setting( '_gui_lang', 'Espanol'      , $langdir.'gui_lang_SP.xml' );
+	//setting( '_gui_lang', 'Francais'     , $langdir.'gui_lang_FR.xml' );
+	//setting( '_gui_lang', 'Italiano'     , $langdir.'gui_lang_IT.xml' );
+	//setting( '_gui_lang', 'Japanese'     , $langdir.'gui_lang_JP.xml' );
+	//setting( '_gui_lang', 'Nederlands'   , $langdir.'gui_lang_NL.xml' );
+	//setting( '_gui_lang', 'Norsk'        , $langdir.'gui_lang_NO.xml' );
+	//setting( '_gui_lang', 'Polski'       , $langdir.'gui_lang_PL.xml' );
+	//setting( '_gui_lang', 'Portugues'    , $langdir.'gui_lang_PT.xml' );
+	//setting( '_gui_lang', 'Russian'      , $langdir.'gui_lang_RU.xml' );
+	//setting( '_gui_lang', 'Slovencina'   , $langdir.'gui_lang_SK.xml' );
+	//setting( '_gui_lang', 'Suomi'        , $langdir.'gui_lang_FI.xml' );
+	//setting( '_gui_lang', 'Svenska'      , $langdir.'gui_lang_SW.xml' );  # gui lang: SW, web lang: SV!
+	//setting( '_gui_lang', 'Turkce'       , $langdir.'gui_lang_TR.xml' );
 	
-	setting( '_web_lang', 'Cestina'      , $langdir.'web_lang_CZ.xml' );
-	setting( '_web_lang', 'Dansk'        , $langdir.'web_lang_DK.xml' );
+	//setting( '_web_lang', 'Cestina'      , $langdir.'web_lang_CZ.xml' );
+	//setting( '_web_lang', 'Dansk'        , $langdir.'web_lang_DK.xml' );
 	setting( '_web_lang', 'Deutsch'      , $langdir.'web_lang_DE.xml' );
 	setting( '_web_lang', 'English(US)'  , $langdir.'web_lang_EN.xml' );
-	//setting( '_web_lang', 'English(UK)'  , $langdir.'web_lang_UK.xml' );
-	setting( '_web_lang', 'Espanol'      , $langdir.'web_lang_SP.xml' );
-	setting( '_web_lang', 'Francais'     , $langdir.'web_lang_FR.xml' );
-	setting( '_web_lang', 'Italiano'     , $langdir.'web_lang_IT.xml' );
-	setting( '_web_lang', 'Japanese'     , $langdir.'web_lang_JP.xml' );
-	setting( '_web_lang', 'Nederlands'   , $langdir.'web_lang_NL.xml' );
-	setting( '_web_lang', 'Norsk'        , $langdir.'web_lang_NO.xml' );
-	//setting( '_web_lang', 'Polski'       , $langdir.'web_lang_PL.xml' );
-	setting( '_web_lang', 'Portugues'    , $langdir.'web_lang_PT.xml' );
-	setting( '_web_lang', 'Russian'      , $langdir.'web_lang_RU.xml' );
-	//setting( '_web_lang', 'Slovencina'   , $langdir.'web_lang_SK.xml' );
-	setting( '_web_lang', 'Suomi'        , $langdir.'web_lang_FI.xml' );
-	setting( '_web_lang', 'Svenska'      , $langdir.'web_lang_SV.xml' );  # gui lang: SW, web lang: SV!
-	setting( '_web_lang', 'Turkce'       , $langdir.'web_lang_TR.xml' );
+	////setting( '_web_lang', 'English(UK)'  , $langdir.'web_lang_UK.xml' );
+	//setting( '_web_lang', 'Espanol'      , $langdir.'web_lang_SP.xml' );
+	//setting( '_web_lang', 'Francais'     , $langdir.'web_lang_FR.xml' );
+	//setting( '_web_lang', 'Italiano'     , $langdir.'web_lang_IT.xml' );
+	//setting( '_web_lang', 'Japanese'     , $langdir.'web_lang_JP.xml' );
+	//setting( '_web_lang', 'Nederlands'   , $langdir.'web_lang_NL.xml' );
+	//setting( '_web_lang', 'Norsk'        , $langdir.'web_lang_NO.xml' );
+	////setting( '_web_lang', 'Polski'       , $langdir.'web_lang_PL.xml' );
+	//setting( '_web_lang', 'Portugues'    , $langdir.'web_lang_PT.xml' );
+	//setting( '_web_lang', 'Russian'      , $langdir.'web_lang_RU.xml' );
+	////setting( '_web_lang', 'Slovencina'   , $langdir.'web_lang_SK.xml' );
+	//setting( '_web_lang', 'Suomi'        , $langdir.'web_lang_FI.xml' );
+	//setting( '_web_lang', 'Svenska'      , $langdir.'web_lang_SV.xml' );  # gui lang: SW, web lang: SV!
+	//setting( '_web_lang', 'Turkce'       , $langdir.'web_lang_TR.xml' );
 }
 
 
