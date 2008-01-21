@@ -275,5 +275,6 @@ psetting('sip password',	$user['secret']);
 psetting('sip registrar ip',	$host);
 psetting('sip registrar port', '5060');
 psetting('sip registration period', '3600');
-
+psetting('sip outbound proxy',	$host);
+psetting('sip outbound proxy port', '5060');
 ?>
