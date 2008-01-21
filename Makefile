@@ -6,7 +6,7 @@
 # Pakete und prueft, ob ide nicht als Pakete vorhandene
 # Software installiert ist.
 
-check-gpbx-dependencies:
+gpbx-check-dependencies:
 	
 	@echo '*************** Check if we are on Debian ***************'
 	cat /etc/debian_version | grep '4\.'
