@@ -84,6 +84,7 @@ $GUI_QUEUE_INFO_FROM_DB     = true;
 $GUI_MON_NOQUEUEBLUE        = false;
 $GUI_MON_PEERS_ENABLED      = false;
 $GUI_SHUTDOWN_ENABLED       = true;
+$GUI_LANGS                  = 'de_DE:de_DE:de-DE:Deutsch';
 
 
 /***********************************************************
