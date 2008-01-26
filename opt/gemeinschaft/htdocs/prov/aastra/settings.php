@@ -265,17 +265,17 @@ if ($phoneIP) {
 # store new ip address:
 $db->execute( 'UPDATE `users` SET `current_ip`='. ($phoneIP ? ('\''. $db->escape($phoneIP) .'\'') : 'NULL') .' WHERE `id`='. $user_id );
 
-psetting('sip mode', '0');
-psetting('sip screen name',	$user['name'] .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
-psetting('sip display name',	$user['firstname'].' '.$user['lastname']);
-psetting('sip user name',	$user['name']);
-psetting('sip vmail',		$user['mailbox']);
-psetting('sip auth name',	$user['name']);
-psetting('sip password',	$user['secret']);
-psetting('sip registrar ip',	$host);
-psetting('sip registrar port', '5060');
-psetting('sip registration period', '3600');
-psetting('sip outbound proxy',	$host);
-psetting('sip outbound proxy port', '5060');
+psetting('sip mode'                , '0');  # ?
+psetting('sip screen name'         , $user['name'] .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
+psetting('sip display name'        , $user['firstname'].' '.$user['lastname']);
+psetting('sip user name'           , $user['name']);
+psetting('sip vmail'               , $user['mailbox']);
+psetting('sip auth name'           , $user['name']);
+psetting('sip password'            , $user['secret']);
+psetting('sip registrar ip'        , $host);
+psetting('sip registrar port'      , '5060');
+psetting('sip registration period' , '3600');
+psetting('sip outbound proxy'      , $host);
+psetting('sip outbound proxy port' , '5060');
 
 ?>
