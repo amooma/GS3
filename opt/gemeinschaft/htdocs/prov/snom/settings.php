@@ -73,7 +73,7 @@ function _snomCnfXmlEsc( $str )
 
 
 $mac = preg_replace( '/[^0-9A-F]/', '', strToUpper( @$_REQUEST['mac'] ) );
-if (strLen($mac) != 12) {
+if (strLen($mac) !== 12) {
 	gs_log( GS_LOG_NOTICE, "Snom provisioning: Invalid MAC address \"$mac\" (wrong length)" );
 	# don't explain this to the users
 	die( 'No! See log for details.' );
@@ -91,16 +91,15 @@ if ($mac === '000000000000') {
 
 # make sure the phone is a Snom:
 #
-if (subStr($mac,0,6) != '000413') {
+if (subStr($mac,0,6) !== '000413') {
 	gs_log( GS_LOG_NOTICE, "Snom provisioning: MAC address \"$mac\" is not a Snom phone" );
 	# don't explain this to the users
 	die( 'No! See log for details.' );
 }
 
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
-//if (isSet( $ua )) {
 if (! preg_match('/^Mozilla/i', $ua)
- || ! preg_match('/snom\d{3}/i', $ua) ) {
+||  ! preg_match('/snom[0-9]{3}/i', $ua) ) {
 	gs_log( GS_LOG_WARNING, "Phone with MAC \"$mac\" (Snom) has invalid User-Agent (\"". $ua ."\")" );
 	# don't explain this to the users
 	die( 'No! See log for details.' );
