@@ -169,7 +169,7 @@ _gscnf( 'PROV_AUTO_ADD_PHONE'       , false              );
 _gscnf( 'PROV_AUTO_ADD_PHONE_HOST'  , 'first'            );
 _gscnf( 'PROV_DIAL_LOG_LIFE'        , 14*24*3600         );
 
-_gscnf( 'SNOM_PROV_ENABLED'         , false              );
+_gscnf( 'SNOM_PROV_ENABLED'         , true               );
 _gscnf( 'SNOM_PROV_HTTP_USER'       , 'gs'               );
 _gscnf( 'SNOM_PROV_HTTP_PASS'       , 'fS8jr5mo6s2Zs83D' );
 _gscnf( 'SNOM_PROV_PB_NUM_RESULTS'  , 15                 );
