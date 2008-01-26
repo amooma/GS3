@@ -1,0 +1,12 @@
+/* $Revision$ */
+
+#headerboxes {
+	background: #0b4;
+	border-top: 1px solid #3e3;
+	border-bottom: 1px solid #393;
+}
+
+#sudo-info .user-name {
+	color: #090;
+}
+
