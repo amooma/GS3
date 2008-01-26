@@ -353,10 +353,12 @@ echo '<desc>', 'Gemeinschaft statistics' ,'</desc>
 if ($dataset != '') {
 	switch ($dataset) {
 		case 'callvolume':
-			$header = __("Gespr\xC3\xA4chsaufkommen / Tag");
+			//$header = __("Gespr\xC3\xA4chsaufkommen / Tag");
+			$header = __("Gespr\xC3\xA4chsaufkommen");
 			break;
 		case 'avgdur':
-			$header = __("Durchschnittliche Gespr\xC3\xA4chsdauer / s");
+			//$header = __("Durchschnittliche Gespr\xC3\xA4chsdauer / s");
+			$header = __("Durchschnittliche Gespr\xC3\xA4chsdauer");
 			break;
 		default:
 			$header = '';
