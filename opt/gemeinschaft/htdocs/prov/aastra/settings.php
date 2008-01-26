@@ -248,6 +248,8 @@ if (! $user) {
 # get the IP address of the phone:
 #
 $phoneIP = @ normalizeIPs( @$_SERVER['REMOTE_ADDR'] );
+/*
+//FIXME - we should add a setting AASTRA_PROV_TRUST_PROXIES = '192.168.1.7, 192.168.1.8'
 if (isSet( $_SERVER['HTTP_X_FORWARDED_FOR'] )) {
 	if (preg_match( '/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', lTrim( $_SERVER['HTTP_X_FORWARDED_FOR'] ), $m ))
 		$phoneIP = isSet( $m[0] ) ? @ normalizeIPs( $m[0] ) : null;
@@ -256,6 +258,7 @@ if (isSet( $_SERVER['HTTP_X_REAL_IP'] )) {
 	if (preg_match( '/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', lTrim( $_SERVER['HTTP_X_REAL_IP'] ), $m ))
 		$phoneIP = isSet( $m[0] ) ? @ normalizeIPs( $m[0] ) : null;
 }
+*/
 
 if ($phoneIP) {
 	# unset all ip addresses which are the same as the new one and
