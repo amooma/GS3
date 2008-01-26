@@ -147,6 +147,8 @@ $GUI_MON_PEERS_ENABLED      = false;
 
 $GUI_LANGS = 'de_DE:de_DE:de-DE:Deutsch, en_US:en_US:en-US:English';
 
+$GUI_ADDITIONAL_STYLESHEET = 'gemeinschaft.css';
+
 
 
 /***********************************************************
