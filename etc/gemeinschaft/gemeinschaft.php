@@ -389,5 +389,16 @@ $LOG_GMT     = true;                # use GMT or local time
 
 
 
+/***********************************************************
+*    INCLUDES
+***********************************************************/
+
+if (@$INSTALLATION_TYPE === 'gpbx') {
+	$inc_file = '/etc/gemeinschaft/gemeinschaft-gpbx.php';
+	if (file_exists($inc_file)) {
+		include_once($inc_file);
+	}
+}
+
 // NO NEWLINES AFTER THE CLOSING TAG!
 ?>
