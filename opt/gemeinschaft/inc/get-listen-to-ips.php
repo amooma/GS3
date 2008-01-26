@@ -30,7 +30,8 @@ defined('GS_VALID') or die('No direct access.');
 
 require_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/log.php' );
-if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+//if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+if (gs_get_conf('GS_INSTALLATION_TYPE') === 'gpbx') {
 	require_once( GS_DIR .'inc/keyval.php' );
 }
 
@@ -45,6 +46,7 @@ function gs_get_listen_to_ips( $primary_only=false )
 	}
 	*/
 	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+	//if (gs_get_conf('GS_INSTALLATION_TYPE') === 'gpbx') {
 		return array(trim(gs_keyval_get('vlan_0_ipaddr')));
 	}
 	
