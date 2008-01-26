@@ -177,6 +177,8 @@ _gscnf( 'SNOM_PROV_FW_UPDATE'       , false              );
 _gscnf( 'SNOM_PROV_FW_BETA'         , false              );
 _gscnf( 'SNOM_PROV_FW_6TO7'         , false              );
 
+_gscnf( 'AASTRA_PROV_ENABLED'       , true               );
+
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
 _gscnf( 'CANONIZE_INTL_PREFIX'      , '00'               );
 _gscnf( 'CANONIZE_COUNTRY_CODE'     , '49'               );
