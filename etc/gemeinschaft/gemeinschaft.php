@@ -34,6 +34,21 @@ defined('GS_VALID') or die('No direct access.');
 
 
 /***********************************************************
+*    TYPE OF INSTALLATION
+***********************************************************/
+
+$INSTALLATION_TYPE      = 'single';
+  # the type of the current installation.
+  # "gpbx"    : GPBX
+  # "single"  : single-server installation
+  # "cluster" : cluster setup
+  # This is just a hint to the GUI and various other scripts.
+  # Changing it breaks things but does not change the type of
+  # your installation!
+
+
+
+/***********************************************************
 *    DB
 ***********************************************************/
 
@@ -280,15 +295,6 @@ $DP_PRV_CALL_PREFIX         = '*7*';  # e.g. "*7*", "96", ...
 /***********************************************************
 *    MISC
 ***********************************************************/
-
-$INSTALLATION_TYPE      = 'single';
-  # the type of the current installation.
-  # "gpbx"    : GPBX
-  # "single"  : single-server installation
-  # "cluster" : cluster setup
-  # This is just a hint to the GUI and various other scripts.
-  # Changing it breaks things but does not change the type of
-  # your installation!
 
 $LOCK_DIR               = '/var/lock/';
   # where to write Gemeinschaft lock files. including trailing "/"!
