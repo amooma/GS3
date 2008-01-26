@@ -156,6 +156,9 @@ $action = @$_REQUEST['action'];
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/original.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>setup/setup.css" />
+<?php if ($GUI_ADDITIONAL_STYLESHEET = gs_get_conf('GS_GUI_ADDITIONAL_STYLESHEET')) { ?>
+<link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/<?php echo rawUrlEncode($GUI_ADDITIONAL_STYLESHEET); ?>" />
+<?php } ?>
 <style type="text/css">
 	body, table, td {
 		font-family: 'Lucida Sans', Arial, Helvetica, sans-serif;
