@@ -145,6 +145,9 @@ $GUI_MON_PEERS_ENABLED      = false;
   # default: true for INSTALLATION_TYPE=='gpbx', false
   # otherwise
 
+$GUI_LANGS = 'de_DE:de_DE:de-DE:Deutsch, en_US:en_US:en-US:English';
+
+
 
 /***********************************************************
 *    EXTERNAL NUMBERS BACKEND
