@@ -52,7 +52,7 @@ function psetting( $name, $val, $writeable=false )
 
 
 
-if (! gs_get_conf('GS_AASTRA_PROV_ENABLED', true)) {
+if (! gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Aastra provisioning not enabled" );
 	die( 'Not enabled.' );
 }
