@@ -155,6 +155,7 @@ _gscnf( 'GUI_MON_NOQUEUEBLUE'       , true               );
 _gscnf( 'GUI_MON_PEERS_ENABLED'     , false              );
 _gscnf( 'GUI_SHUTDOWN_ENABLED'      , gs_get_conf('INSTALLATION_TYPE')==='gpbx');
 _gscnf( 'GUI_LANGS'                 , 'de_DE:de_DE:de-DE:Deutsch, en_US:en_US:en-US:English' );
+_gscnf( 'GUI_ADDITIONAL_STYLESHEET'                      );
 
 _gscnf( 'EXTERNAL_NUMBERS_BACKEND'  , 'db'               );
 _gscnf( 'EXTERNAL_NUMBERS_LDAP_PROP', ''                 );
