@@ -322,6 +322,6 @@ if (file_exists( $file )) {
 </div>
 
 <div class="nofloat"></div>
-<div id="copyright">&copy; amooma gmbh</div>
+<div id="copyright">&copy; <a target="_blank" href="http://www.amooma.de/"><img alt="amooma" src="<?php echo GS_URL_PATH; ?>img/amooma.png" /></a></div>
 </body>
 </html>
