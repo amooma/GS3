@@ -58,7 +58,7 @@ if (! gs_get_conf('GS_AASTRA_PROV_ENABLED', true)) {
 }
 
 $mac = preg_replace( '/[^0-9A-F]/', '', strToUpper( @$_REQUEST['mac'] ) );
-if (strLen($mac) != 12) {
+if (strLen($mac) !== 12) {
 	gs_log( GS_LOG_NOTICE, "Aastra provisioning: Invalid MAC address \"$mac\" (wrong length)" );
 	# don't explain this to the users
 	die( 'No! See log for details.' );
@@ -68,26 +68,27 @@ if (hexDec(subStr($mac,0,2)) % 2 == 1) {
 	# don't explain this to the users
 	die( 'No! See log for details.' );
 }
-if ($mac == '000000000000') {
+if ($mac === '000000000000') {
 	gs_log( GS_LOG_NOTICE, "Aastra provisioning: Invalid MAC address \"$mac\" (huh?)" );
 	# don't explain this to the users
 	die( 'No! See log for details.' );
 }
 
-# make sure the phone is a Aastra:
+# make sure the phone is an Aastra:
 #
-if (subStr($mac,0,6) != '00085D') {
-	gs_log( GS_LOG_NOTICE, "Aastra provisioning: MAC address \"$mac\" is not a Aastra phone" );
+if (subStr($mac,0,6) !== '00085D') {
+	gs_log( GS_LOG_NOTICE, "Aastra provisioning: MAC address \"$mac\" is not an Aastra phone" );
 	# don't explain this to the users
 	die( 'No! See log for details.' );
 }
 
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
+//FIXME - do some more checks here
 
 gs_log( GS_LOG_DEBUG, "Aastra phone \"$mac\" asks for settings (UA: ...\"$ua\") " );
 
-$ua_arr=explode(" ", $ua );
-$phone_type = str_replace("Aastra", "", $ua_arr[0]);
+$ua_arr = explode(' ', $ua);
+$phone_type = str_replace('Aastra', '', $ua_arr[0]);  //FIXME
 if ($phone_type == $ua_arr[0]) $phone_type = 'unknown';
 $newPhoneType = 'aastra-'. $phone_type;
 
