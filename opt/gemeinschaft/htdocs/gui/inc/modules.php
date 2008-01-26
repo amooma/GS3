@@ -226,14 +226,22 @@ $MODULES['system'   ]=  array('title' => __('System'),          //TRANSLATE ME
                               'perms' => 'admin',
    'sub' => array(
       'sysstatus'    => array('title' => __('System-Status')),  //TRANSLATE ME
-      'network'      => array('title' => __('Netzwerk')),       //TRANSLATE ME
-      //'logging'      => array('title' => __('Logging')),        //TRANSLATE ME
-      'hosts'        => array('title' => __('Hosts')),          //TRANSLATE ME
-      'nodesmon'     => array('title' => __('Nodes')),
-      'cards'        => array('title' => __('PSTN-Karten'))     //TRANSLATE ME
-      //'config'       => array('title' => __('Konfiguration'))   //TRANSLATE ME
+      'network'      => array('title' => __('Netzwerk'))        //TRANSLATE ME
+      //'logging'      => array('title' => __('Logging'))         //TRANSLATE ME
    )
 );
+if (gs_get_conf('GS_INSTALLATION_TYPE') !== 'gpbx') {
+$MODULES['system'   ]['sub'][
+      'hosts']       =  array('title' => __('Hosts'));          //TRANSLATE ME
+}
+$MODULES['system'   ]['sub'][
+      'nodesmon']    =  array('title' => __('Nodes'));
+$MODULES['system'   ]['sub'][
+      'cards']       =  array('title' => __('PSTN-Karten'));    //TRANSLATE ME
+/*
+$MODULES['system'   ]['sub'][
+      'config']      =  array('title' => __('Konfiguration'));  //TRANSLATE ME
+*/
 
 #####################################################################
 
