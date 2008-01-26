@@ -83,7 +83,7 @@ if (hexDec(subStr($mac,0,2)) % 2 == 1) {
 	# don't explain this to the users
 	die( 'No! See log for details.' );
 }
-if ($mac == '000000000000') {
+if ($mac === '000000000000') {
 	gs_log( GS_LOG_NOTICE, "Snom provisioning: Invalid MAC address \"$mac\" (huh?)" );
 	# don't explain this to the users
 	die( 'No! See log for details.' );
