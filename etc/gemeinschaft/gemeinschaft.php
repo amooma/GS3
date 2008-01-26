@@ -209,6 +209,12 @@ $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
   # upgrading vom 6 to 7 might require SNOM_PROV_FW_BETA
 
 
+//----------------------[  Aastra  ]----------------------//
+
+$AASTRA_PROV_ENABLED        = true;  # do provisioning for Aastra?
+                                     # show keyset for Aastra in the GUI?
+
+
 //-----------------[  Siemens OpenStage  ]----------------//
 
 //...
