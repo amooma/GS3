@@ -42,7 +42,7 @@ function aastra_transmit() {
 function aastra_push($phone_ip) {
 	global $xml_buffer;
 	
-	$prov_host = gs_get_conf('GS_PROV_HOST', '127.0.0.1');
+	$prov_host = gs_get_conf('GS_PROV_HOST');
 	$xml_buffer = 'xml='.$xml_buffer;
 
 	$header = "POST / HTTP/1.1\r\n";
