@@ -152,7 +152,7 @@ $cs = array(
 		'PROV_AUTO_ADD_PHONE_HOST',
 		'PROV_DIAL_LOG_LIFE'
 	),
-	'Snom Provisioning' => array(
+	'Provisioning Snom' => array(
 		'SNOM_PROV_ENABLED',
 		'SNOM_PROV_HTTP_USER',
 		//'SNOM_PROV_HTTP_PASS',
@@ -161,6 +161,9 @@ $cs = array(
 		'SNOM_PROV_FW_BETA',
 		'SNOM_PROV_FW_6TO7'
 	),
+	'Provisioning Aastra' => array(
+		'AASTRA_PROV_ENABLED'
+	)
 );
 
 
