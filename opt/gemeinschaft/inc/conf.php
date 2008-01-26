@@ -198,7 +198,7 @@ _gscnf( 'DP_PRV_CALL_PREFIX'        , '*7*'              );
 
 _gscnf( 'PB_IMPORTED_ENABLED'       , false              );
 _gscnf( 'PB_IMPORTED_ORDER'         , 2                  );
-_gscnf( 'PB_IMPORTED_TITLE'         , "Firma (aus LDAP)" );
+_gscnf( 'PB_IMPORTED_TITLE'         , "Importiert"       );
 _gscnf( 'PB_INTERNAL_TITLE'         , "Intern"           );
 _gscnf( 'PB_PRIVATE_TITLE'          , "Pers\xC3\xB6nlich");
 
