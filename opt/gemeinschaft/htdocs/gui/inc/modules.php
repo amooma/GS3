@@ -73,12 +73,12 @@ if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 }
 kSort($tmp);
 foreach ($tmp as $arr) {
-$MODULES['pb'       ]['sub'][$arr['k']]
-                     = $arr['s'];
+$MODULES['pb'       ]['sub'][
+      $arr['k']]     = $arr['s'];
 }
 
-$MODULES['pb'       ]['sub']['csvimport']
-	                 =  array('title' => __('CSV-Import'));   //TRANSLATE ME
+$MODULES['pb'       ]['sub'][
+      'csvimport']   =  array('title' => __('CSV-Import'));   //TRANSLATE ME
 
 #####################################################################
 
@@ -121,8 +121,8 @@ $MODULES['monitor'  ]=  array('title' => __('Monitor'),
    )
 );
 if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
-$MODULES['monitor'  ]['sub']['peers']
-	                 =  array('title' => __('Kollegen'));
+$MODULES['monitor'  ]['sub'][
+      'peers']       =  array('title' => __('Kollegen'));
 }
 
 #####################################################################
@@ -142,8 +142,8 @@ $MODULES['keys'     ]=  array('title' => __('Tastenbelegung'),
    )
 );
 if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
-$MODULES['keys'     ]['sub']['snom']
-	                 =  array('title' => __('Snom'));
+$MODULES['keys'     ]['sub'][
+      'snom']        =  array('title' => __('Snom'));
 }
 
 #####################################################################
