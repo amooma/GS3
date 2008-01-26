@@ -210,11 +210,18 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 </div>
 <div class="tty"><a href="#a-content"><?php echo __('Navigation &uuml;berspringen'); /*//TRANSLATE ME*/ ?></a></div>
 
-<span class="tty"><?php echo __('Sprache') /*//TRANSLATE ME*/; ?>:</span>
-<a href="<?php echo gs_url($SECTION, $MODULE, null, 'setlang=en_US'); ?>" title="English">
-<img alt="en-US" src="<?php echo GS_URL_PATH; ?>img/lang/en_US.png" class="fr" /></a>
-<a href="<?php echo gs_url($SECTION, $MODULE, null, 'setlang=de_DE'); ?>" title="Deutsch">
-<img alt="de-DE" src="<?php echo GS_URL_PATH; ?>img/lang/de_DE.png" class="fr" /></a>
+<?php
+	$langs = explode(',', gs_get_conf('GS_GUI_LANGS'));
+	if (count($langs) > 1) {
+		echo '<span class="tty">', __('Sprache') /*//TRANSLATE ME*/ ,':</span>' ,"\n";
+		$langs = array_reverse($langs);
+		foreach ($langs as $tmp) {
+			$l = explode(':', trim($tmp));
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'setlang='.@$l[0]) ,'" title="', @$l[3] ,'">' ,"\n";
+			echo '<img alt="', @$l[2] ,'" src="', GS_URL_PATH ,'img/lang/', @$l[1] ,'.png" class="fr" /></a>' ,"\n";
+		}
+	}
+?>
 </div>
 
 <div class="sidebar">
