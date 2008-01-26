@@ -60,7 +60,7 @@ header( 'Pragma: no-cache' );
 header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
 
-if (! gs_get_conf('GS_SNOM_PROV_ENABLED', true)) {
+if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
 	die();
 }
