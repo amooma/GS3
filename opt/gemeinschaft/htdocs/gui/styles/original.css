@@ -381,8 +381,15 @@ h1 {
 
 #copyright {
 	text-align: center;
-	font-size: 0.95em;
-	color: #bbb;
+	font-size: 0.96em;
+}
+#copyright,
+#copyright a {
+	color: #00c;
+	text-decoration: none;
+}
+#copyright img {
+	vertical-align: -5%;
 }
 
 
