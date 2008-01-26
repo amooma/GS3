@@ -31,6 +31,8 @@ defined('GS_VALID') or die('No direct access.');
 ///     MAKE SURE THAT THIS FILE IS VALID PHP CODE!      ///
 ////////////////////////////////////////////////////////////
 
+// GPBX: override defaults from /etc/gemeinschaft/gemeinschaft.php
+
 
 
 /***********************************************************
