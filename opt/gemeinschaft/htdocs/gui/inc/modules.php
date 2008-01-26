@@ -230,8 +230,8 @@ $MODULES['system'   ]=  array('title' => __('System'),          //TRANSLATE ME
       'logging'      => array('title' => __('Logging')),        //TRANSLATE ME
       'hosts'        => array('title' => __('Hosts')),          //TRANSLATE ME
       'nodesmon'     => array('title' => __('Nodes')),
-      'cards'        => array('title' => __('PSTN-Karten')),    //TRANSLATE ME
-      'config'       => array('title' => __('Konfiguration'))   //TRANSLATE ME
+      'cards'        => array('title' => __('PSTN-Karten'))     //TRANSLATE ME
+      //'config'       => array('title' => __('Konfiguration'))   //TRANSLATE ME
    )
 );
 
