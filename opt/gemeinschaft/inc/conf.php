@@ -147,6 +147,7 @@ _gscnf( 'LDAP_PROP_PHONE'           , 'telephonenumber'  );
 
 _gscnf( 'GUI_AUTH_METHOD'           , 'gemeinschaft'     );
 _gscnf( 'GUI_NUM_RESULTS'           , 12                 );
+$GUI_SUDO_ADMINS = 'sysadmin,'. @$GUI_SUDO_ADMINS;
 _gscnf( 'GUI_SUDO_ADMINS'           , ''                 );
 _gscnf( 'GUI_SUDO_EXTENDED'         , false              );
 _gscnf( 'GUI_QUEUE_SHOW_NUM_CALLS'  , false              );
