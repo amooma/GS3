@@ -56,6 +56,10 @@ echo '</h2>', "\n";
 //echo '<br />', "\n";
 echo '<h2>', __('Willkommen'), ', ', htmlEnt( $_SESSION['sudo_user']['info']['firstname'] .' '. $_SESSION['sudo_user']['info']['lastname'] ), '!</h2>', "\n";
 
+if ($_SESSION['sudo_user']['name'] === 'sysadmin') {
+	return;
+}
+
 echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info']['ext'] ), '</b></p><br />', "\n";
 
 ?>
