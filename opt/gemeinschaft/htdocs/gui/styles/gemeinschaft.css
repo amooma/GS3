@@ -11,6 +11,10 @@
 	border-bottom: 1px solid #041;
 }
 
+.sidebar, #sudo-bar {
+	border-top: 1px solid #030;
+}
+
 #sudo-info .user-name {
 	color: #090;
 }
