@@ -1,9 +1,14 @@
 /* $Revision$ */
 
+#topheader {
+	height: 4px;
+	background: #000;
+}
+
 #headerboxes {
-	background: #0b4;
-	border-top: 1px solid #3e3;
-	border-bottom: 1px solid #393;
+	background: #0b3;
+	border-top: 1px solid #0f1;
+	border-bottom: 1px solid #041;
 }
 
 #sudo-info .user-name {
