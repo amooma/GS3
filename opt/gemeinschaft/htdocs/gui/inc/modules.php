@@ -237,7 +237,7 @@ $MODULES['system'   ]['sub'][
 $MODULES['system'   ]['sub'][
       'nodesmon']    =  array('title' => __('Nodes'));
 $MODULES['system'   ]['sub'][
-      'cards']       =  array('title' => __('PSTN-Karten'));    //TRANSLATE ME
+      'cards']       =  array('title' => __('PCI-Karten'));     //TRANSLATE ME
 /*
 $MODULES['system'   ]['sub'][
       'config']      =  array('title' => __('Konfiguration'));  //TRANSLATE ME
