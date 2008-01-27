@@ -176,9 +176,19 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 		return;
 	}
 	
-	if (! @$_SESSION['real_user']['info'])
-		$_SESSION['real_user']['info'] = get_user( $_SESSION['real_user']['name'] );
-	//print_r($_SESSION);
+	if (! @$_SESSION['real_user']['info']) {
+		if ($_SESSION['real_user']['name'] !== 'sysadmin') {
+			$_SESSION['real_user']['info'] = get_user( $_SESSION['real_user']['name'] );
+		} else {
+			$_SESSION['real_user']['info'] = array(
+				'id'        => -1,
+				'user'      => $_SESSION['real_user']['name'],
+				'firstname' => '',
+				'lastname'  => 'sysadmin',
+				'ext'       => '-'
+			);
+		}
+	}
 	if (! @$_SESSION['real_user']['info']) {
 		echo sPrintF(__('Unknown user "%s".'), @$_SESSION['real_user']['name']), "\n";
 		exit(1);
@@ -218,7 +228,11 @@ if ($_SESSION['sudo_user']['name'] == $_SESSION['real_user']['name']) {
 	//echo "IT'S *YOUR* ACCOUNT";
 	$sudo_allowed = true;
 } else {
-	if (preg_match('/\\b'.($_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) {
+	if ($_SESSION['real_user']['name'] === 'sysadmin') {
+		# allow sysadmin to edit any account
+		//echo "YOU ARE A SYSADMIN";
+		$sudo_allowed = true;
+	} elseif (preg_match('/\\b'.($_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) {
 		# allow admins to edit any account
 		//echo "YOU ARE AN ADMIN";
 		$sudo_allowed = true;
