@@ -243,7 +243,7 @@ foreach ($MODULES as $sectname => $sectinfo) {
 	&&  ! in_array($sectname, array('home','login'), true))
 		continue;
 	
-	if ($_SESSION['sudo_user']['name'] !== 'sysadmin') {
+	if (@$_SESSION['sudo_user']['name'] !== 'sysadmin') {
 		if (@$sectinfo['perms'] === 'admin' && (
 			   @$_SESSION['real_user']['name'] == ''
 			|| ! preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
