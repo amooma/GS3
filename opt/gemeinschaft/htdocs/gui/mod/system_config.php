@@ -197,7 +197,7 @@ foreach ($cs as $catkey => $cat) {
 			case 'boolean':
 				echo '<input type="checkbox" name="GS_', htmlEnt($key) ,'" id="ipt-GS_', htmlEnt($key) ,'" ', ($val ? 'checked="checked"' : '') ,' disabled="disabled" />';
 				break;
-			case 'interger':
+			case 'integer':
 			case 'string':
 			default:
 				echo '<input type="text" name="GS_', htmlEnt($key) ,'" id="ipt-GS_', htmlEnt($key) ,'" value="', htmlEnt($val) ,'" size="30" class="_admincfg" disabled="disabled" />';
