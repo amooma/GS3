@@ -33,6 +33,7 @@ defined('GS_VALID') or die('No direct access.');
 
 // GPBX: override defaults from /etc/gemeinschaft/gemeinschaft.php
 
+include_once( GS_DIR .'inc/keyval.php' );
 
 
 /***********************************************************
@@ -104,7 +105,7 @@ $EXTERNAL_NUMBERS_BACKEND   = 'db';
 *    PROVISIONING
 ***********************************************************/
 
-$PROV_HOST                  = '192.168.1.130'; ###########################
+$PROV_HOST                  = trim(gs_keyval_get('vlan_0_ipaddr'));
 $PROV_PORT                  = 80;
 $PROV_SCHEME                = 'http';
 $PROV_PATH                  = '/gemeinschaft/prov/';
@@ -142,40 +143,15 @@ $AASTRA_PROV_ENABLED        = true;
 *    CANONICAL PHONE NUMBERS (FQTN)
 ***********************************************************/
 
-$CANONIZE_OUTBOUND      = true;     # canonize numbers before matching
-                                    # against routes? also determines
-                                    # whether we dial in national form or
-                                    # as is
-$CANONIZE_INTL_PREFIX   = '00';     # international prefix. Do not use "+"
-                                    # (we know the canonical format is "+"!)
-                                    # in Germany: 00, USA: 011
-                                    ###########################
-$CANONIZE_COUNTRY_CODE  = '49';     # country code (Landesvorwahl) without
-                                    # prefix
-                                    # Germany: 49, USA: 1
-                                    ###########################
-$CANONIZE_NATL_PREFIX   = '0';      # National prefix
-                                    # (Verkehrsausscheidungsziffer)
-                                    # in Germany: 0
-                                    ###########################
-$CANONIZE_NATL_PREFIX_INTL = false; # Whether the area code needs the
-                                    # national prefix even when dialing
-                                    # in international format (in Italy)
-                                    ###########################
-$CANONIZE_AREA_CODE     = '251';    # Area code (Ortsvorwahl) without
-                                    # national prefix
-                                    ###########################
-$CANONIZE_LOCAL_BRANCH  = '702';    # Private branch (private Kopfnummer).
-                                    # If all you have is a single phone
-                                    # number put your local number in here,
-                                    # i.e. the rest after the area code
-                                    ###########################
-$CANONIZE_SPECIAL       = '/^1(?:1[0-9]{1,5}|9222)/';
-                                    # numbers matching this pattern will
-                                    # not be prefixed with anything
-                                    ###########################
-$CANONIZE_CBC_PREFIX    = '010';    # Call-by-Call prefix (Germany: 010)
-                                    ###########################
+$CANONIZE_OUTBOUND         =     trim(gs_keyval_get('canonize_outbound'        )) === 'yes';
+$CANONIZE_INTL_PREFIX      =     trim(gs_keyval_get('canonize_intl_prefix'     ));
+$CANONIZE_COUNTRY_CODE     =     trim(gs_keyval_get('canonize_country_code'    ));
+$CANONIZE_NATL_PREFIX      =     trim(gs_keyval_get('canonize_natl_prefix'     ));
+$CANONIZE_NATL_PREFIX_INTL =     trim(gs_keyval_get('canonize_natl_prefix_intl')) === 'yes';
+$CANONIZE_AREA_CODE        =     trim(gs_keyval_get('canonize_area_code'       ));
+$CANONIZE_LOCAL_BRANCH     =     trim(gs_keyval_get('canonize_local_branch'    ));
+$CANONIZE_SPECIAL          = '/'.trim(gs_keyval_get('canonize_special'         )).'/';
+$CANONIZE_CBC_PREFIX       =     trim(gs_keyval_get('canonize_cbc_prefix'      ));
 
 
 /***********************************************************
