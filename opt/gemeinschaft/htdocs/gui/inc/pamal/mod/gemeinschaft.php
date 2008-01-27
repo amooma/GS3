@@ -34,26 +34,34 @@ defined('PAMAL_DIR') or die('No direct access.');
 class PAMAL_auth_gemeinschaft extends PAMAL_auth
 {
 	# constructor:
-	function PAMAL_auth_gemeinschaft() {
+	function PAMAL_auth_gemeinschaft()
+	{
 		$this->_user = $this->_getUser();
 	}
 	
 	# private, returns the user:
-	function _getUser() {
-		$user_entered = trim( @$_REQUEST['login_user'] );
-		$pwd_entered =        @$_REQUEST['login_pwd' ]  ;
+	function _getUser()
+	{
+		$user_entered =   trim( @$_REQUEST['login_user'] );
+		$pwd_entered  = @$_REQUEST['login_pwd' ]  ;
 		
 		if ($user_entered=='' || $pwd_entered=='')
 			return false;
 		
-		$db = gs_db_slave_connect();
-		if (!$db) return false;
+		if ($user_entered === 'sysadmin'
+		&&  in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx', 'single'), true)
+		) {
+			require_once( GS_DIR .'inc/keyval.php' );
+			$pin = trim(gs_keyval_get('setup_pwd'));
+			if ($pin == '') $pin = false;
+		}
+		else {
+			$db = gs_db_slave_connect();
+			if (!$db) return false;
+			$pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `user`=\''. $db->escape($user_entered) .'\'' );
+		}
 		
-		$pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `user`=\''. $db->escape($user_entered) .'\'' );
-		if ($pin === $pwd_entered)
-			return $user_entered;
-		
-		return false;
+		return ($pin === $pwd_entered) ? $user_entered : false;
 	}
 }
 
