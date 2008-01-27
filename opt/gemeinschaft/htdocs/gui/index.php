@@ -117,8 +117,8 @@ if (count( $MODULES[$SECTION]['sub'] ) < 2 || ! $MODULE) {
 if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub']))
 	_not_found();
 
-if ( @$MODULES[$SECTION]['perms'] === 'admin'
-&&   !(preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
+if (@$MODULES[$SECTION]['perms'] === 'admin'
+&&  !(preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
 {
 	_not_allowed( 'You are not an admin.' );
 }
@@ -243,10 +243,17 @@ foreach ($MODULES as $sectname => $sectinfo) {
 	&&  ! in_array($sectname, array('home','login'), true))
 		continue;
 	
-	if ( @$sectinfo['perms'] === 'admin' && (
-		   @$_SESSION['real_user']['name'] == ''
-		|| ! preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
-	)) continue;
+	if ($_SESSION['sudo_user']['name'] !== 'sysadmin') {
+		if (@$sectinfo['perms'] === 'admin' && (
+			   @$_SESSION['real_user']['name'] == ''
+			|| ! preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
+		))
+			continue;
+	} else {
+		if (@$sectinfo['perms'] !== 'admin'
+		&&  ! in_array($sectname, array('home','login','logout'), true))
+			continue;
+	}
 	
 	echo '<li class="'. ($sect_active ? 'expanded' : 'collapsed') .'">', "\n";
 	//echo '<a href="'. GS_URL_PATH .'?s='. $sectname .'" class="'. (($sect_active) ? 'active' : '') .'">'. $sectinfo['title'] .'</a>', "\n";
