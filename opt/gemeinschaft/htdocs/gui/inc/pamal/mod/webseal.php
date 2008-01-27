@@ -35,12 +35,14 @@ defined('PAMAL_DIR') or die('No direct access.');
 class PAMAL_auth_webseal extends PAMAL_auth
 {
 	# constructor:
-	function PAMAL_auth_webseal() {
+	function PAMAL_auth_webseal()
+	{
 		$this->_user = $this->_getUser();
 	}
 	
 	# private, returns the user:
-	function _getUser() {
+	function _getUser()
+	{
 		$user = trim( @$_SERVER['HTTP_IV_USER'] );
 		//$user = @$_REQUEST['user'];
 		if ($user && strToLower($user) != 'unauthenticated')
