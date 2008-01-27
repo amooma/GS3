@@ -212,12 +212,19 @@ $MODULES['routing'  ]=  array('title' => __('Routen'),          //TRANSLATE ME
                               'perms' => 'admin',
    'sub' => array(
       'gws-sip'      => array('title' => __('SIP-Gateways')),   //TRANSLATE ME
-      'gwgrps'       => array('title' => __('Gateway-Gruppen')),//TRANSLATE ME
-      'inbound'      => array('title' => __('Routen eingehend')),//TRANSLATE ME
-      'outbound'     => array('title' => __('Routen &amp; LCR')),//TRANSLATE ME
-      'test'         => array('title' => __('Routing-Test'))    //TRANSLATE ME
+      'gwgrps'       => array('title' => __('Gateway-Gruppen')) //TRANSLATE ME
    )
 );
+if ($GS_INSTALLATION_TYPE === 'gpbx') {
+$MODULES['routing'  ]['sub'][
+      'e164']        =  array('title' => __('E.164'));          //TRANSLATE ME
+}
+$MODULES['routing'  ]['sub'][
+      'inbound']     =  array('title' => __('Routen eingehend'));//TRANSLATE ME
+$MODULES['routing'  ]['sub'][
+      'outbound']    =  array('title' => __('Routen &amp; LCR'));//TRANSLATE ME
+$MODULES['routing'  ]['sub'][
+      'test']        =  array('title' => __('Routing-Test'));   //TRANSLATE ME
 
 #####################################################################
 
@@ -230,7 +237,7 @@ $MODULES['system'   ]=  array('title' => __('System'),          //TRANSLATE ME
       //'logging'      => array('title' => __('Logging'))         //TRANSLATE ME
    )
 );
-if (gs_get_conf('GS_INSTALLATION_TYPE') !== 'gpbx') {
+if ($GS_INSTALLATION_TYPE !== 'gpbx') {
 $MODULES['system'   ]['sub'][
       'hosts']       =  array('title' => __('Hosts'));          //TRANSLATE ME
 }
