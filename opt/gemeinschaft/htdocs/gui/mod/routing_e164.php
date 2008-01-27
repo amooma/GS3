@@ -51,6 +51,48 @@ if (gs_get_conf('GS_INSTALLATION_TYPE') !== 'gpbx') {
 }
 
 
+$action = @$_REQUEST['action'];
+if ($action === 'save') {
+	
+	$canonize_outbound = (bool)@$_REQUEST['canonize_outbound'];
+	gs_keyval_set('canonize_outbound', $canonize_outbound ? 'yes':'no');
+	
+	$canonize_intl_prefix = @$_REQUEST['canonize_intl_prefix'];
+	$canonize_intl_prefix = preg_replace('/[^0-9*#]/', '', $canonize_intl_prefix);
+	gs_keyval_set('canonize_intl_prefix', $canonize_intl_prefix);
+	
+	$canonize_country_code = @$_REQUEST['canonize_country_code'];
+	$canonize_country_code = preg_replace('/[^0-9*#]/', '', $canonize_country_code);
+	gs_keyval_set('canonize_country_code', $canonize_country_code);
+	
+	$canonize_natl_prefix = @$_REQUEST['canonize_natl_prefix'];
+	$canonize_natl_prefix = preg_replace('/[^0-9*#]/', '', $canonize_natl_prefix);
+	gs_keyval_set('canonize_natl_prefix', $canonize_natl_prefix);
+	
+	$canonize_natl_prefix_intl = (bool)@$_REQUEST['canonize_natl_prefix_intl'];
+	gs_keyval_set('canonize_natl_prefix_intl', $canonize_natl_prefix_intl ? 'yes':'no');
+	
+	$canonize_area_code = @$_REQUEST['canonize_area_code'];
+	$canonize_area_code = preg_replace('/[^0-9*#]/', '', $canonize_area_code);
+	gs_keyval_set('canonize_area_code', $canonize_area_code);
+	
+	$canonize_local_branch = @$_REQUEST['canonize_local_branch'];
+	$canonize_local_branch = preg_replace('/[^0-9*#]/', '', $canonize_local_branch);
+	gs_keyval_set('canonize_local_branch', $canonize_local_branch);
+	
+	$canonize_special = @$_REQUEST['canonize_special'];
+	$canonize_special = trim($canonize_special);
+	if (is_valid_pcre( '/'.$canonize_special.'/' ))
+		gs_keyval_set('canonize_special', $canonize_special);
+	else
+		echo '<b>', 'Invalid pattern!' ,'</b><br />' ,"\n";
+	
+	$canonize_cbc_prefix = @$_REQUEST['canonize_cbc_prefix'];
+	$canonize_cbc_prefix = preg_replace('/[^0-9*#]/', '', $canonize_cbc_prefix);
+	gs_keyval_set('canonize_cbc_prefix', $canonize_cbc_prefix);
+	
+}
+
 
 
 ?>
@@ -71,7 +113,7 @@ if (gs_get_conf('GS_INSTALLATION_TYPE') !== 'gpbx') {
 		&nbsp;
 	</th>
 	<td>
-		<input type="checkbox" name="canonize_outbound" id="ipt-canonize_outbound"<?php if ($val) echo ' checked="checked"'; ?> />
+		<input type="checkbox" name="canonize_outbound" id="ipt-canonize_outbound" value="1"<?php if ($val) echo ' checked="checked"'; ?> />
 		<label for="ipt-canonize_outbound"><b><?php echo __('Kanonisieren?'); ?></b></label>
 	</td>
 	<td class="transp">
@@ -136,7 +178,7 @@ if (gs_get_conf('GS_INSTALLATION_TYPE') !== 'gpbx') {
 		&nbsp;
 	</th>
 	<td>
-		<input type="checkbox" name="canonize_natl_prefix_intl" id="ipt-canonize_natl_prefix_intl"<?php if ($val) echo ' checked="checked"'; ?> />
+		<input type="checkbox" name="canonize_natl_prefix_intl" id="ipt-canonize_natl_prefix_intl" value="1"<?php if ($val) echo ' checked="checked"'; ?> />
 		<label for="ipt-canonize_natl_prefix_intl"><b><?php echo __('Internat. mit Ortspr&auml;fix?'); ?></b></label>
 	</td>
 	<td class="transp">
