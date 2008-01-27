@@ -185,7 +185,7 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 				'user'      => $_SESSION['real_user']['name'],
 				'firstname' => '',
 				'lastname'  => 'sysadmin',
-				'ext'       => '-'
+				'ext'       => ''
 			);
 		}
 	}
