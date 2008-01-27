@@ -35,12 +35,14 @@ defined('PAMAL_DIR') or die('No direct access.');
 class PAMAL_auth_dummy extends PAMAL_auth
 {
 	# constructor:
-	function PAMAL_auth_dummy() {
+	function PAMAL_auth_dummy()
+	{
 		$this->_user = $this->_getUser();
 	}
 	
 	# private, returns the user:
-	function _getUser() {
+	function _getUser()
+	{
 		return 'root';
 	}
 }
