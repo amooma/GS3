@@ -566,10 +566,11 @@ if ($action === 'save') {
 		#
 		
 		$conf_s = '';
-		if ($form_ntp1) $conf_s.= 'server '. $form_ntp1 .' iburst dynamic' ."\n";
-		if ($form_ntp2) $conf_s.= 'server '. $form_ntp2 .' iburst dynamic' ."\n";
-		if ($form_ntp3) $conf_s.= 'server '. $form_ntp3 .' iburst dynamic' ."\n";
-		if ($form_ntp4) $conf_s.= 'server '. $form_ntp4 .' iburst dynamic' ."\n";
+		if ($form_ntp1) $conf_s.= 'server '. $form_ntp1 .' iburst' ."\n";
+		if ($form_ntp2) $conf_s.= 'server '. $form_ntp2 .' iburst' ."\n";
+		if ($form_ntp3) $conf_s.= 'server '. $form_ntp3 .' iburst' ."\n";
+		if ($form_ntp4) $conf_s.= 'server '. $form_ntp4 .' iburst' ."\n";
+		# (ntp on Debian does not support the "dynamic" keyword)
 		
 		$conf_c = 'restrict '. $dotted_network .' mask '. $dotted_netmask .' nomodify noquery nopeer notrap' ."\n";
 		$conf_c.= 'broadcast '. $dotted_bcastaddr ."\n";
