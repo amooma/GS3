@@ -27,6 +27,9 @@ statsdir /var/log/ntpstats/
 # You do need to talk to an NTP server or two (or three).
 #server ntp.your-provider.example
 
+server 127.127.1.0                # local clock pseudo address
+fudge  127.127.1.0  stratum 10    # bad stratum
+
 # pool.ntp.org maps to more than 300 low-stratum NTP servers.
 # Your server will pick a different set every time it starts up.
 #  *** Please consider joining the pool! ***
