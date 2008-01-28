@@ -36,11 +36,12 @@ __GEMEINSCHAFT_NTPCONF_SERVERS__
 
 # will be replaced by something like:
 #---cut---
-#server 0.debian.pool.ntp.org iburst dynamic
-#server 1.debian.pool.ntp.org iburst dynamic
-#server 2.debian.pool.ntp.org iburst dynamic
-#server 3.debian.pool.ntp.org iburst dynamic
+#server 0.debian.pool.ntp.org iburst
+#server 1.debian.pool.ntp.org iburst
+#server 2.debian.pool.ntp.org iburst
+#server 3.debian.pool.ntp.org iburst
 #---cut---
+# (ntp on Debian does not support the "dynamic" keyword)
 
 
 # By default, exchange time with everybody, but don't allow configuration.
