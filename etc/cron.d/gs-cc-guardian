@@ -1,0 +1,7 @@
+# Gemeinschaft
+# $Revision$
+
+# call completion
+
+* *  * * *   root   sleep 2; /opt/gemeinschaft/sbin/gs-cc-guardian 1>>/dev/null 2>>/dev/null
+

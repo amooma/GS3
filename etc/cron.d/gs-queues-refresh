@@ -1,0 +1,7 @@
+# Gemeinschaft
+# $Revision$
+
+# refresh the state of queue members
+
+* *  * * *   root   sleep 8; /opt/gemeinschaft/sbin/gs-queues-refresh 1>>/dev/null 2>>/dev/null
+
