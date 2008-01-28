@@ -34,40 +34,86 @@ require_once( GS_DIR .'inc/log.php' );
 
 $process_name = 'gs-cc-worker';
 
+if (defined('STDIN' )) @fClose(STDIN );
+if (defined('STDOUT')) @fClose(STDOUT);
+if (defined('STDERR')) @fClose(STDERR);
 
-$t_start = time();
-gs_log(GS_LOG_DEBUG, 'Guardian started.', 'cc.log');
-while (time() < $t_start+50) {
-	$ok = @ _check_worker_alive();
-	sleep( 5 );
+$pid = getMyPid();
+gs_log(GS_LOG_DEBUG, 'Guardian ('. $pid .') started.', 'cc.log');
+
+
+
+# some of the guardians seem to get stuck in a read() system call
+# for a long time
+#
+$err=0; $out=array();
+@exec( 'ps axww --format \'pid etime command\' --no-headers | grep gs-cc-guardian | grep -v grep 2>>/dev/null', $out, $err );
+if ($err === 0) {
+	foreach ($out as $line) {
+		if (preg_match('/^\s*([0-9]+)\s+([0-9]{1,2}):([0-9]{2})\s/', $line, $m)) {
+			$oldpid = (int)lTrim($m[1],'0');
+			$sh      = 0;
+			$sm      = (int)lTrim($m[2],'0');
+			$ss      = (int)lTrim($m[3],'0');
+		}
+		elseif (preg_match('/^\s*([0-9]+)\s+([0-9]{1,2}):([0-9]{2}):([0-9]{2})\s/', $line, $m)) {
+			$oldpid = (int)lTrim($m[1],'0');
+			$sh      = (int)lTrim($m[2],'0');
+			$sm      = (int)lTrim($m[3],'0');
+			$ss      = (int)lTrim($m[4],'0');
+		}
+		else {
+			continue;
+		}
+		$secs_running = $sh*3600 + $sm*60 + $ss;
+		if ($secs_running < 110) continue;
+		
+		gs_log(GS_LOG_NOTICE, 'Killing old guardian '. $oldpid .' (running for '. $secs_running .' secs) ...', 'cc.log');
+		@exec( 'kill '. $oldpid .' 1>>/dev/null 2>>/dev/null' );
+		
+	}
 }
-gs_log(GS_LOG_DEBUG, 'Guardian ended normally.', 'cc.log');
-die(0);
+
+
+
+$sleep = 8;
+$t_end = time() + 60 - $sleep - 6;
+$r = ceil(($t_end - $t_start) / $sleep) + 1;
+while (time() < $t_end && $r > 0) {
+	@set_time_limit(10+$sleep);
+	$ok = @_check_worker_alive();
+	sleep( $sleep );
+	--$r;
+}
+gs_log(GS_LOG_DEBUG, 'Guardian ('. $pid .') ended normally.', 'cc.log');
+exit(0);
 
 
 function _check_worker_alive()
 {
 	global $process_name;
 	
-	@ exec( 'ps -NC grep | grep gs-cc-worker 2>>/dev/null', $out, $err );
-	if ($err == 1)
+	$err=0; $out=array();
+	@exec( 'ps -NC grep | grep gs-cc-worker 2>>/dev/null', $out, $err );
+	if ($err === 1)
 		$running = false;
 	else {
-		if ($err != 0) {
+		if ($err !== 0) {
 			gs_log(GS_LOG_FATAL, 'Failed to exec ps ax in Call Completion Guardian!');
 			gs_log(GS_LOG_FATAL, 'Failed to check if worker is alive!.', 'cc.log');
 			return false;
 		}
 		$running = false;
 		foreach ($out as $line) {
-			if ( strPos($line, $process_name) !== false
-			 && strPos($line, 'grep') === false )
+			if (strPos($line, $process_name) !== false
+			&&  strPos($line, 'grep') === false)
 				$running = true;
 		}
 	}
 	if (! $running) {
-		@ exec( GS_DIR .'sbin/'. $process_name .' &', $out, $err );
-		if ($err != 0) {
+		$err=0; $out=array();
+		@exec( GS_DIR .'sbin/'. $process_name .' 2>>/dev/null &', $out, $err );
+		if ($err !== 0) {
 			gs_log(GS_LOG_FATAL, 'Failed to start Call Completion Worker! ('. implode(' ', $out) .')');
 			gs_log(GS_LOG_FATAL, 'Worker not running. Failed to start worker! ('. implode(' ', $out) .')', 'cc.log');
 			return false;

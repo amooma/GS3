@@ -45,7 +45,7 @@ $runctl_t_start = time();
 @ set_time_limit( (int)($runctl_max_time * 1.5) + 30 );
 $max_exec_time = (int)@ini_get('max_execution_time');
 if ($max_exec_time < 1) $max_exec_time = $runctl_max_time;
-$max_exec_time = (int)($max_exec_time * 0.95);
+$max_exec_time = (int)($max_exec_time * 0.90);
 $runctl_t_stop = $runctl_t_start + $max_exec_time;
 
 gs_log(GS_LOG_DEBUG, 'Worker started.', 'cc.log');
@@ -57,9 +57,11 @@ $GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
 
 do {
 	$ok = @_do_one_pass();
-	sleep( $ok ? 7 : 21 );
+	sleep( $ok ? 8 : 21 );
 } while (time() < $runctl_t_stop);
-@ exec( 'find \'/tmp/\' -maxdepth 1 -name \'gs-cc-*.call\' -type f -mmin +10 | xargs rm -f 1>>/dev/null 2>&1' );
+
+
+@ exec( 'find \'/tmp/\' -maxdepth 1 -name \'gs-cc-*.call\' -type f -mmin +10 | xargs rm -f 1>>/dev/null 2>>/dev/null' );
 gs_log(GS_LOG_DEBUG, 'Worker ended normally.', 'cc.log');
 die(0);
 
@@ -106,8 +108,7 @@ function _do_one_pass()
 	$ok = @ $DB->execute( 'DELETE FROM `call_completion_waiting` WHERE `t_init`<'. (time() - (int)GS_CC_TIMEOUT*60) );
 	
 	if (! $GS_INSTALLATION_TYPE_SINGLE) {
-		# get out host ids
-		#
+		# get our host ids
 		$our_host_ids = @ gs_get_listen_to_ids();
 		if (! is_array($our_host_ids)) $our_host_ids = array();
 	}
@@ -201,7 +202,7 @@ function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid,
 	$cid_to_caller = "$rr ". ($cid_to_caller ? $cid_to_caller : '<*>');
 	$cid_to_callee = $cid_to_callee ? $cid_to_callee : "$rr <*>";
 	$call = "Channel: SIP/$from\n"
-      . "MaxRetries: 20\n"
+      . "MaxRetries: 1\n"
       . "WaitTime: 20\n"
       . "Context: call-completion\n"
       . "Extension: cc-$to\n"
@@ -246,9 +247,10 @@ function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid,
 		
 		$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $filename ) .' '. qsa( 'root@'. $host .':'. $filename );
 		//echo $cmd, "\n";
-		@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
+		$err=0; $out=array();
+		@ exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
 		@ unlink( $filename );
-		if ($err != 0) {
+		if ($err !== 0) {
 			gs_log(GS_LOG_WARNING, 'Failed to scp call file "'. $filename .'" to '. $host);
 			gs_log(GS_LOG_WARNING, 'Failed to scp call file "'. $filename .'" to '. $host, 'cc.log');
 			return false;
@@ -256,8 +258,9 @@ function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid,
 		//remote_exec( $host, $cmd, 10, $out, $err ); // <-- does not use sudo!
 		$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa( $host ) .' '. qsa( 'mv '. qsa( $filename ) .' '. qsa( $spoolfile ) );
 		//echo $cmd, "\n";
-		@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
-		if ($err != 0) {
+		$err=0; $out=array();
+		@ exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		if ($err !== 0) {
 			gs_log(GS_LOG_WARNING, 'Failed to mv call file "'. $filename .'" on '. $host .' to "'. $spoolfile .'"');
 			gs_log(GS_LOG_WARNING, 'Failed to mv call file "'. $filename .'" on '. $host .' to "'. $spoolfile .'"', 'cc.log');
 			return false;
