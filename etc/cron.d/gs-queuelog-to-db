@@ -1,0 +1,7 @@
+# Gemeinschaft
+# $Revision$
+
+# insert queue log into the database
+
+* *  * * *   root   sleep 12; /opt/gemeinschaft/sbin/gs-queuelog-to-db 1>>/dev/null 2>>/dev/null
+
