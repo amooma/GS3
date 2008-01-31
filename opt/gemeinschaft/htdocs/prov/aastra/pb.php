@@ -54,7 +54,8 @@ function _err( $msg='' )
 
 function _get_userid()
 {
-	global $_SERVER;
+	global $_SERVER, $db;
+	
 	$remote_addr = @$_SERVER['REMOTE_ADDR'];
 	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 	if ($user_id < 1) _err( 'Unknown user.' );
