@@ -48,6 +48,7 @@ avahi-utils
 ifupdown
 nmap
 curl
+psmisc
 
 
 Benötigt außerdem (nicht als Paket vorhanden):
