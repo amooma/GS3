@@ -54,8 +54,10 @@ $typeToTitle = array(
 );
 
 $remote_addr = @$_SERVER['REMOTE_ADDR'];
-
 $user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
+
+$url_aastra_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)). GS_PROV_PATH .'aastra/dial-log.php';
+
 
 if (! $type) {
 	
@@ -65,7 +67,7 @@ if (! $type) {
 	foreach ($typeToTitle as $key => $title) {
 		aastra_write('<MenuItem>');
 		aastra_write('<Prompt>'.$title.'</Prompt>');
-		aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$key.'</URI>');
+		aastra_write('<URI>'. $url_aastra_dl .'?t='.$key.'</URI>');
 		//aastra_write('<Selection>0&amp;menu_pos=1</Selection>'."\n";
 		aastra_write('</MenuItem>');
 	} 
@@ -82,7 +84,7 @@ if (! $type) {
 	
 } elseif ($type==='out' || $type==='in' || $type==='missed') {
 	
-	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php">');
+	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_dl .'">');
 	aastra_write('<Title>'.$typeToTitle[$type].'</Title>');
 	
 	$query =
@@ -117,7 +119,7 @@ LIMIT '.$num_results;
 			aastra_write('<MenuItem>');
 			aastra_write('<Prompt>'.$entry_name.'</Prompt>');
 			aastra_write('<Dial>'.$r['number'].'</Dial>');
-			aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$type.'d&amp;e='.$r['ts'].'</URI>');
+			aastra_write('<URI>'. $url_aastra_dl .'?t='.$type.'d&amp;e='.$r['ts'].'</URI>');
 			aastra_write('</MenuItem>');
 			
 		}
@@ -142,7 +144,7 @@ LIMIT '.$num_results;
 } elseif ($type==='outd' || $type==='ind' || $type==='missedd') {
 	
 	$type = substr($type,0,strlen($type)-1);
-	aastra_write('<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$type.'">');
+	aastra_write('<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction="'. $url_aastra_dl .'?t='.$type.'">');
 	
 	$query =
 'SELECT
