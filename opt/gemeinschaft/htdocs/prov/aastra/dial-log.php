@@ -42,6 +42,16 @@ function _err( $msg='' )
 	exit(1);  //FIXME - return XML
 }
 
+function _get_userid()
+{
+	global $_SERVER, $db;
+	
+	$remote_addr = @$_SERVER['REMOTE_ADDR'];
+	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
+	if ($user_id < 1) _err( 'Unknown user.' );
+	return $user_id;
+}
+
 $type = trim( @$_REQUEST['t'] );
 if (! in_array( $type, array('in','out','missed', 'ind','outd','missedd'), true )) {
 	$type = false;
@@ -59,9 +69,7 @@ $typeToTitle = array(
 	'in'     => "Angenommen"
 );
 
-$remote_addr = @$_SERVER['REMOTE_ADDR'];
-$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
-if ($user_id < 1) _err( 'Unknown user.' );
+$user_id = _get_userid();
 
 
 $url_aastra_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)). GS_PROV_PATH .'aastra/dial-log.php';
