@@ -190,7 +190,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		) .'%';
 		$rs = $DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
-	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`,`u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`
+	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
@@ -455,7 +455,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	
 	$rs = $DB->execute(
 'SELECT
-	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`,`u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`
+	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
@@ -542,10 +542,10 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\
 <table cellspacing="1">
 <thead>
 	<tr>
-		<th style="width:200px;">
+		<th style="width:180px;">
 			<?php echo __('Benutzer'); ?>
 		</th>
-		<td style="width:300px;">
+		<td style="width:280px;">
 			<?php echo htmlEnt($edit_user); ?>	
 		</td>
 	</tr>
@@ -558,15 +558,15 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\
 		</td>
 	</tr>
 	<tr>
-		<th><?php echo __('Name'); ?>:</th>
+		<th><?php echo __('Nachname'); ?>:</th>
 		<td>
-			<input type="text" name="ulname" value="<?php echo htmlEnt($r['ln']); ?>" size="30" maxlength="40" />
+			<input type="text" name="ulname" value="<?php echo htmlEnt($r['ln']); ?>" size="30" maxlength="50" />
 		</td>
 	</tr>
 	<tr>
 		<th><?php echo __('Vorname'); ?>:</th>
 		<td>
-			<input type="text" name="ufname" value="<?php echo htmlEnt($r['fn']); ?>" size="30" maxlength="40" />
+			<input type="text" name="ufname" value="<?php echo htmlEnt($r['fn']); ?>" size="30" maxlength="50" />
 		</td>
 	</tr>
 	<tr>
@@ -576,7 +576,13 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\
 		</td>
 	</tr>
 	<tr>
-		<th><?php echo __('eMail'); ?>:</th>
+		<th><?php echo __('SIP-Pa&szlig;wort'); ?>:</th>
+		<td>
+			<?php echo htmlEnt($r['secret']); ?>
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __('E-Mail'); ?>:</th>
 		<td>
 			<input type="text" name="uemail" value="<?php echo htmlEnt($r['email']); ?>" size="40" maxlength="60" />
 		</td>
@@ -618,10 +624,10 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 <table cellspacing="1">
 <thead>
 	<tr>
-		<th style="width:200px;">
+		<th style="width:180px;">
 			<?php echo __('Pickupgruppe'); ?>
 		</th>
-		<td style="width:300px;">
+		<td style="width:280px;">
 <?php
 		echo '<select multiple="multiple" name="upgroup[]" size="4">',"\n";
 		foreach ($pgroups as $key => $pgroup) {
@@ -654,10 +660,10 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 <table cellspacing="1">
 <thead>
 	<tr>
-		<th style="width:200px;">
+		<th style="width:180px;">
 			<?php echo __('Anrufsperre'); ?>
 		</th>
-		<th style="width:237px;">
+		<th style="width:217px;">
 			<?php echo __('Entsperr-PIN'); ?>
 		</th>
 		<th style="width:50px;">
@@ -714,10 +720,10 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 <table cellspacing="1">
 <thead>
 	<tr>
-		<th style="width:200px;">
+		<th style="width:180px;">
 			<?php echo __('Externe Rufnummern'); ?>
 		</th>
-		<th style="width:237px;">
+		<th style="width:217px;">
 			<?php echo __('Rufnummer'); ?>
 		</th>
 		<th style="width:50px;">
