@@ -55,7 +55,7 @@ $typeToTitle = array(
 
 $remote_addr = @$_SERVER['REMOTE_ADDR'];
 
-$user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $remote_addr.'\'' );
+$user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 
 if (!$type) {
 
