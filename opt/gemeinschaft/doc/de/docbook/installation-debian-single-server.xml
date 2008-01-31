@@ -13,13 +13,18 @@
 % Free Documentation License".
 % Asterisk training and consulting is offered at http://www.amooma.de-->
 
-  <title>Installation Gemeinschaft auf Debian Linux 4.0 (Etch)</title>
+  <title>Installation Gemeinschaft auf Debian 4.0 (Etch) als
+  Einzel-Server-System</title>
 
   <indexterm>
     <primary>Gemeinschaft Installationsanleitung</primary>
 
     <secondary>Debian Linux</secondary>
   </indexterm>
+
+  <important>
+    <para>Diese Installationsanleitung ist unvollständig!</para>
+  </important>
 
   <para>Es wird ein <emphasis>frisch</emphasis> installiertes Debian GNU/Linux
   4.0 (a.k.a Etch) vorausgesetzt. Ein ISO-Image für die Installation finden
