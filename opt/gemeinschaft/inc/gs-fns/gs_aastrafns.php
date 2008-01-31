@@ -25,63 +25,72 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 * MA 02110-1301, USA.
 \*******************************************************************/
+
 defined('GS_VALID') or die('No direct access.');
 
 define( 'GS_AASTRA_PUSH_MAXLEN', 10000 );
 
-function aastra_transmit()
-{
+function aastra_transmit() {
 	global $aastra_xml_buffer;
-	
+
 	header( 'Content-Type: text/xml' );
-	header( 'Content-Length: '. strlen($aastra_xml_buffer) );
+	header( 'Content-Length: '.strlen($aastra_xml_buffer) );
 	header( 'Connection: Close ' );
-	
+
 	echo $aastra_xml_buffer;
-	$aastra_xml_buffer = '';
+	$aastra_xml_buffer='';
 	return 1;
 }
 
-function aastra_push( $phone_ip )
-{
+function aastra_push($phone_ip) {
 	global $aastra_xml_buffer;
 	
-	$prov_host = gs_get_conf('GS_PROV_HOST');
+	$prov_host = gs_get_conf('GS_PROV_HOST', '127.0.0.1');
 	$aastra_xml_buffer = 'xml='.$aastra_xml_buffer;
-	
+
 	$header = "POST / HTTP/1.1\r\n";
 	$header.= "Host: $phone_ip\r\n";	
 	$header.= "Referer: $prov_host\r\n";
 	//$header.= "Connection: Keep-Alive\r\n";
 	$header.= "Connection: Close\r\n";
 	$header.= "Content-Type: text/xml\r\n";
-	$header.= "Content-Length: ". strlen($aastra_xml_buffer) ."\r\n";
+	$header.= "Content-Length: ".strlen($aastra_xml_buffer)."\r\n";
 	$header.= "\r\n";
 	
-	$socket = @fsockopen($phone_ip, 80, $error_no, $error_str, 4);
-	if (! $socket) return 0;
-	stream_set_timeout($socket, 4);
-	fwrite($socket, $header.$aastra_xml_buffer);
-	fflush($socket);
-	$response = fgets($socket);
-	fclose($socket);
-	if (strpos($response, '200 OK') === false) {
+	$socket = @fsockopen ( $phone_ip, 80, $error_no, $error_str, 4);
+	if($socket) {
+		stream_set_timeout($socket, 4);
+		fwrite($socket, $header.$aastra_xml_buffer);
+		flush($socket);
+		$response = fgets($socket);
+		fclose($socket);
+	
+	} else {
+		gs_log(GS_LOG_WARNING, "Aastra: Failed to open socket");
+		return 0;
+	}
+	if (strpos($response,"200 OK") === false) {
 		gs_log(GS_LOG_WARNING, "Aastra: Failed to push $ret_val bytes to phone $phone_ip");
 		return 0;
 	}
 	$ret_val = strlen($aastra_xml_buffer);
 	gs_log(GS_LOG_DEBUG, "Aastra: Pushed $ret_val bytes to phone $phone_ip");
-	$aastra_xml_buffer = '';
+	$aastra_xml_buffer='';
 	return $ret_val;
 }
 
 
-function aawrite( $text )
-{
+function aawrite($text) {
 	global $aastra_xml_buffer;
 	$aastra_xml_buffer .= $text."\n";
 }
 
 
-
+function aastra_reboot($phone_ip) {
+	aawrite('<AastraIPPhoneExecute>');
+	aawrite('<ExecuteItem URI="Command: Reset" />');
+	aawrite('</AastraIPPhoneExecute>');
+	$ret_val = aastra_push($phone_ip);
+	return $ret_val;
+}
 ?>
