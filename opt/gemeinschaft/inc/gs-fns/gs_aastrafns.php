@@ -85,7 +85,6 @@ function aawrite($text) {
 	$aastra_xml_buffer .= $text."\n";
 }
 
-
 function aastra_reboot($phone_ip) {
 	aawrite('<AastraIPPhoneExecute>');
 	aawrite('<ExecuteItem URI="Command: Reset" />');

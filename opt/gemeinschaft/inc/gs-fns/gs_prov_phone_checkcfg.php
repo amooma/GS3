@@ -28,6 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 
+require_once( GS_DIR .'inc/gs-fns/gs_aastrafns.php' );
 
 /***********************************************************
 *    make a phone re-check it's config and
@@ -180,6 +181,7 @@ WHERE
 	// damn - we have already remove the user id from the phones table
 	_gs_prov_phone_checkcfg_by_ip_do_snom   ( $ip, $reboot );
 	_gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot );
+	_gs_prov_phone_checkcfg_by_ip_do_aastra ( $ip, $reboot );
 	
 	//return $err == 0;
 	return true;
@@ -205,6 +207,12 @@ function _gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot=true, $pre_sleep
 		gs_log( GS_LOG_WARNING, "Siemens provisioning not available" );
 	}
 }
+
+function _gs_prov_phone_checkcfg_by_ip_do_aastra( $ip, $reboot=true )
+{
+	aastra_reboot($ip);
+}
+
 
 // PRIVATE:
 function _gs_prov_phone_checkcfg_by_ext_do( $ext, $reboot=true )
