@@ -30,11 +30,11 @@ defined('GS_VALID') or die('No direct access.');
 
 require_once( GS_DIR .'inc/gs-fns/gs_aastrafns.php' );
 
+
 /***********************************************************
 *    make a phone re-check it's config and
 *    optionally reboot
 ***********************************************************/
-
 
 function gs_prov_phone_checkcfg_by_user( $usercode, $reboot=true )
 {
@@ -178,7 +178,7 @@ WHERE
 		_gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot );
 	}
 	*/
-	// damn - we have already remove the user id from the phones table
+	# damn - we did already remove the user id from the phones table
 	_gs_prov_phone_checkcfg_by_ip_do_snom   ( $ip, $reboot );
 	_gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot );
 	_gs_prov_phone_checkcfg_by_ip_do_aastra ( $ip, $reboot );
