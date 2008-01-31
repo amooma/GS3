@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<section id="installation-debian-single" lang="de" revision="$Revision$">
+<section id="installation-debian-single" lang="de"
+         revision="$Revision$">
   <!--% Copyright (c) 2006 - 2007 by 
 % Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 % Philipp Kempgen <philipp.kempgen@amooma.de>
@@ -90,15 +91,15 @@ The system is going down for reboot NOW!
   <para>Jetzt müssen Sie eine ganze Reihe von Paketen installieren. Die
   erfolgt mit <command>apt-get -y install build-essential libncurses5-dev
   libcurl3-dev libvorbis-dev libspeex-dev unixodbc unixodbc-dev libiksemel-dev
-  linux-headers-`uname -r` mysql-common mysql-server mysql-client libmysqlclient15off
-  libmysqlclient15-dev ntp-simple expect sudo netcat
+  linux-headers-`uname -r` mysql-common mysql-server mysql-client
+  libmysqlclient15off libmysqlclient15-dev ntp-simple expect sudo netcat
   openssh-client openssh-server openssl zlib1g zlib1g-dev php5 php5-cli
   php5-mysql php5-ldap apache2 sox mpg123</command></para>
 
   <screen>debian:~# apt-get -y install build-essential libncurses5-dev libcurl3-dev libvorbis-dev libspeex-dev unixodbc unixodbc-dev libiksemel-dev linux-headers-`uname -r` mysql-common mysql-server mysql-client libmysqlclient15off libmysqlclient15-dev ntp-simple expect sudo netcat openssh-client openssh-server openssl zlib1g zlib1g-dev php5 php5-cli php5-mysql php5-ldap apache2 sox mpg123
 Paketlisten werden gelesen... Fertig
-AbhÃ¤ngigkeitsbaum wird aufgebaut... Fertig
-Die folgenden zusÃ¤tzlichen Pakete werden installiert:
+Abhängigkeitsbaum wird aufgebaut... Fertig
+Die folgenden zusätzlichen Pakete werden installiert:
   apache2-mpm-prefork apache2-utils apache2.2-common binutils ca-certificates
   comerr-dev cpp cpp-4.1 defoma dpkg-dev file fontconfig fontconfig-config g++
   g++-4.1 gcc gcc-4.1 libapache2-mod-php5 libapr1 libaprutil1 libasound2
@@ -147,8 +148,8 @@ Die folgenden NEUEN Pakete werden installiert:
 Die folgenden Pakete werden aktualisiert:
   libssl0.9.8
 1 aktualisiert, 110 neu installiert, 0 zu entfernen und 4 nicht aktualisiert.
-Es mÃ¼ssen noch 66,9MB von 67,4MB Archiven geholt werden.
-Nach dem Auspacken werden 197MB Plattenplatz zusÃ¤tzlich benutzt.
+Es müssen noch 66,9MB von 67,4MB Archiven geholt werden.
+Nach dem Auspacken werden 197MB Plattenplatz zusätzlich benutzt.
 Hole:1 http://ftp.de.debian.org etch/main libxfixes3 1:4.0.1-5 [9304B]
 Hole:2 http://security.debian.org etch/updates/main libmagic1 4.17-5etch3 [275kB]
 
@@ -164,11 +165,11 @@ Richte g++-4.1 ein (4.1.1-21) ...
 Richte g++ ein (4.1.1-15) ...
 
 Richte build-essential ein (11.3) ...
-debian:~#</screen>
+debian:~# </screen>
 
   <para>Als nächstes wechseln wir mit <command>cd /usr/src</command> in das
   Verzeichnis <filename>/usr/src</filename><screen>debian:~# cd /usr/src
-debian:/usr/src#</screen></para>
+debian:/usr/src# </screen></para>
 
   <para>Auf der Asterisk-Homepage <ulink
   url="http://www.asterisk.org/"><citetitle>http://www.asterisk.org/</citetitle></ulink>
@@ -188,7 +189,7 @@ Länge: 10,928,902 [application/x-gzip]
 100%[====================================&gt;] 10,928,902   230.71K/s    ETA 00:00
 
 18:53:47 (227.00 KB/s) - »asterisk-1.4-current.tar.gz« gespeichert [10928902/10928902]
-debian:/usr/src#</screen>
+debian:/usr/src# </screen>
 
   <para>Weiterhin benötigen wir noch die aktuelle Zaptel-Version, die wir mit
   <command>wget
@@ -205,30 +206,29 @@ Länge: 2.835.893 (2.7M) [application/x-gzip]
 
 19:14:12 (115.45 KB/s) - »zaptel-1.4-current.tar.gz« gespeichert [2835893/2835893]
 
-debian:/usr/src#</screen></para>
+debian:/usr/src# </screen></para>
 
   <para>Als letztes mit <command>wget
   http://downloads.digium.com/pub/asterisk/asterisk-addons-1.4-current.tar.gz</command>
   noch die Asterisk Addons downloaden:<programlisting>debian:/usr/src# wget http://downloads.digium.com/pub/asterisk/asterisk-addons-1.4-current.tar.gz
 --16:28:28--  http://downloads.digium.com/pub/asterisk/asterisk-addons-1.4-current.tar.gz
            =&gt; `asterisk-addons-1.4-current.tar.gz'
-AuflÃ¶sen des Hostnamen Â»downloads.digium.comÂ«.... 216.27.40.102
+Auflösen des Hostnamen »downloads.digium.com«.... 216.27.40.102
 Verbindungsaufbau zu downloads.digium.com|216.27.40.102|:80... verbunden.
 HTTP Anforderung gesendet, warte auf Antwort... 200 OK
-LÃ¤nge: 1.002.173 (979K) [application/x-gzip]
+Länge: 1.002.173 (979K) [application/x-gzip]
 
 100%[====================================&gt;] 1.002.173    110.40K/s    ETA 00:00
 
-16:28:39 (96.33 KB/s) - Â»asterisk-addons-1.4-current.tar.gzÂ« gespeichert [1002173/1002173]
+16:28:39 (96.33 KB/s) - »asterisk-addons-1.4-current.tar.gz« gespeichert [1002173/1002173]
 
-debian:/usr/src# 
-</programlisting></para>
+debian:/usr/src# </programlisting></para>
 
   <para>Die komprimierten Dateien werden jetzt mit <command>tar xzf
   asterisk-1.4-current.tar.gz &amp;&amp; tar xzf zaptel-1.4-current.tar.gz
   &amp;&amp; tar xzf asterisk-addons-1.4-current.tar.gz</command>
   entpackt:<screen>debian:/usr/src# tar xzf asterisk-1.4-current.tar.gz &amp;&amp; tar xzf zaptel-1.4-current.tar.gz &amp;&amp; tar xzf asterisk-addons-1.4-current.tar.gz
-debian:/usr/src#   </screen></para>
+debian:/usr/src# </screen></para>
 
   <para><important>
       <para>Bitte beachten Sie, dass sich die folgenden Verzeichnisnamen
@@ -268,7 +268,7 @@ edit /etc/default/zaptel or /etc/sysconfig/zaptel and set there an
 optimal value for the variable MODULES .
 
 I think that the zaptel hardware you have on your system is:
-debian:/usr/src/zaptel-1.4.1#</screen></para>
+debian:/usr/src/zaptel-1.4.1# </screen></para>
 
   <important>
     <para>Sollten Sie über keine eingebaute Digium ISDN- oder Analog-Karte
@@ -309,7 +309,7 @@ checking whether the C compiler works... yes
    /etc/rc3.d/S50asterisk -&gt; ../init.d/asterisk
    /etc/rc4.d/S50asterisk -&gt; ../init.d/asterisk
    /etc/rc5.d/S50asterisk -&gt; ../init.d/asterisk
-debian:/usr/src/asterisk-1.4.2#</screen></para>
+debian:/usr/src/asterisk-1.4.2# </screen></para>
 
   <para>Die eben kompilierten Programmdateien sind jetzt auf dem System
   installiert. Auf das <code>make samples</code> können wir verzichten, weil
@@ -353,14 +353,14 @@ debian:/usr/src/asterisk-addons-1.4.4</screen></para>
   installieren<screen>debian:/usr/src/asterisk-addons-1.4.4# cd /usr/src/ &amp;&amp; wget http://dfn.dl.sourceforge.net/sourceforge/lame/lame-3.97.tar.gz &amp;&amp; tar xzf lame-3.97.tar.gz &amp;&amp; cd lame-3.97 &amp;&amp; ./configure &amp;&amp; make &amp;&amp; make install
 --19:10:17--  http://dfn.dl.sourceforge.net/sourceforge/lame/lame-3.97.tar.gz
            =&gt; `lame-3.97.tar.gz'
-AuflÃ¶sen des Hostnamen Â»dfn.dl.sourceforge.netÂ«.... 194.95.236.6
+Auflösen des Hostnamen »dfn.dl.sourceforge.net«.... 194.95.236.6
 Verbindungsaufbau zu dfn.dl.sourceforge.net|194.95.236.6|:80... verbunden.
 HTTP Anforderung gesendet, warte auf Antwort... 200 OK
-LÃ¤nge: 1.328.058 (1.3M) [application/x-gzip]
+Länge: 1.328.058 (1.3M) [application/x-gzip]
 
 100%[====================================&gt;] 1.328.058    109.31K/s    ETA 00:00
 
-19:10:39 (101.98 KB/s) - Â»lame-3.97.tar.gzÂ« gespeichert [1328058/1328058]
+19:10:39 (101.98 KB/s) - »lame-3.97.tar.gz« gespeichert [1328058/1328058]
 
 [...]
 
