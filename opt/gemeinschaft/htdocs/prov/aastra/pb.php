@@ -36,21 +36,36 @@ require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_aastrafns.php' );
 $xml_buffer = '';
 
-
-function aastra_textscreen($title,$text)
+/*
+function aastra_textscreen( $title, $text )
 {
 	aastra_write('<AastraIPPhoneTextScreen destroyOnExit="yes">');
 	aastra_write('<Title>'.$title.'<Title>');
-	aastra_write('<Text>'.$title.'<Text>');
+	aastra_write('<Text>'.$text.'<Text>');
 	aastra_write('</AastraIPPhoneTextScreen>');
+}
+*/
+
+function _err( $msg='' )
+{
+	//aastra_textscreen( 'Error', ($msg != '' ? $msg : 'Unknown error') );
+	exit(1);  //FIXME - return XML
+}
+
+function _get_userid()
+{
+	global $_SERVER;
+	$remote_addr = @$_SERVER['REMOTE_ADDR'];
+	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
+	if ($user_id < 1) _err( 'Unknown user.' );
+	return $user_id;
 }
 
 $type = trim( @$_REQUEST['t'] );
 if (! in_array( $type, array('gs','prv','imported', 'gss','prvs'), true )) {
 	$type = false;
 }
-$page = (int)trim( @$_REQUEST['p'] );
-
+$page  = (int)trim( @$_REQUEST['p'] );
 $entry = (int)trim( @$_REQUEST['e'] );
 
 
@@ -174,8 +189,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	
 } elseif ($type==='prv') {
 	
-	$remote_addr = @$_SERVER['REMOTE_ADDR'];
-	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
+	$user_id = _get_userid();
 	
 	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_pb .'">');
 	
@@ -239,8 +253,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	
 } elseif ($type==='prvs') {
 	
-	$remote_addr = @$_SERVER['REMOTE_ADDR'];
-	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
+	$user_id = _get_userid();
 	
 	aastra_write('<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction="'. $url_aastra_pb .'?t=prv">');
 	
@@ -277,8 +290,7 @@ AND
 	
 } elseif ($type==='gss') {
 	
-	$remote_addr = @$_SERVER['REMOTE_ADDR'];
-	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
+	$user_id = _get_userid();
 	
 	aastra_write('<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction="'. $url_aastra_pb .'?t=gs">');
 	
