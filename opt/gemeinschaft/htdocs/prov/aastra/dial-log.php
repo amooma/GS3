@@ -100,6 +100,7 @@ LIMIT '.$num_results;
 	//echo $query;
 	
 	$rs = $db->execute( $query );
+	if ($rs) 
 	while ($r = $rs->fetchRow()) {
 		
 		$entry_name = $r['number'];
