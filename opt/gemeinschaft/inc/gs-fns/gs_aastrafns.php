@@ -37,6 +37,7 @@ function aastra_transmit() {
 	header( 'Content-Length: '.strlen($aastra_xml_buffer) );
 	header( 'Connection: Close ' );
 
+	$aastra_xml_buffer = utf8_decode($aastra_xml_buffer);
 	echo $aastra_xml_buffer;
 	$aastra_xml_buffer='';
 	return 1;
@@ -66,7 +67,7 @@ function aastra_push($phone_ip) {
 		fclose($socket);
 	
 	} else {
-		gs_log(GS_LOG_WARNING, "Aastra: Failed to open socket");
+		gs_log(GS_LOG_WARNING, "Aastra: Failed to open socket - IP: ".$phone_ip);
 		return 0;
 	}
 	if (strpos($response,"200 OK") === false) {
