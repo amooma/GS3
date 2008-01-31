@@ -37,7 +37,7 @@ require_once( GS_DIR .'inc/gs-fns/gs_aastrafns.php' );
 $xml_buffer = '';
 
 $type = trim( @$_REQUEST['t'] );
-if (! in_array( $type, array('in','out','missed', 'ind', 'outd', 'missedd'), true )) {
+if (! in_array( $type, array('in','out','missed', 'ind','outd','missedd'), true )) {
 	$type = false;
 }
 
@@ -92,7 +92,7 @@ if (! $type) {
 FROM `dial_log`
 WHERE
 	`user_id`='. $user_id .' AND
-	`type`=\''. $db->escape($type) .'\'
+	`type`=\''. $type .'\'
 GROUP BY `number`
 ORDER BY `ts` DESC
 LIMIT '.$num_results;
@@ -151,7 +151,7 @@ FROM
 	`users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
 WHERE
 	`d`.`user_id`='. $user_id .' AND
-	`d`.`type`=\''. $db->escape($type) .'\' AND
+	`d`.`type`=\''. $type .'\' AND
 	`d`.`timestamp`='. $timestamp .'
 GROUP BY `number`
 LIMIT 1';
