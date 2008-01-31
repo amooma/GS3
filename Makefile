@@ -71,6 +71,7 @@ gpbx-check-dependencies:
 		avahi-utils \
 		ifupdown \
 		nmap \
-		curl
+		curl \
+		psmisc
 	@#apt-get install postfix
 
