@@ -102,7 +102,7 @@ if ($user_id < 1)
 $typeToTitle = array(
 	'out'    => "Gew\xC3\xA4hlt",
 	'missed' => "Verpasst",
-	'in'     => "Angenommen",
+	'in'     => "Angenommen"
 );
 
 
