@@ -438,8 +438,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	</table>
 <?php
 } else {
-
-/*
+	
+	/*
 	$sql_query = 'SELECT `id`, `title`
 	FROM `pickupgroups`';
 	$rs = $DB->execute($sql_query);
@@ -450,9 +450,9 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			$pgroups[$r['id']] = $r['title'];
 		}
 	}
-*/
-
-
+	*/
+	
+	
 	$rs = $DB->execute(
 'SELECT
 	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`,`u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`
