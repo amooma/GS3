@@ -100,26 +100,27 @@ LIMIT '.$num_results;
 	//echo $query;
 	
 	$rs = $db->execute( $query );
-	if ($rs) 
-	while ($r = $rs->fetchRow()) {
-		
-		$entry_name = $r['number'];
-		if ($r['remote_name'] != '') {
-			$entry_name .= ' '. $r['remote_name'];
+	if ($rs) {
+		while ($r = $rs->fetchRow()) {
+			
+			$entry_name = $r['number'];
+			if ($r['remote_name'] != '') {
+				$entry_name .= ' '. $r['remote_name'];
+			}
+			if ($type === 'missed') {
+				$when = date('H:i', (int)$r['ts']);
+				$entry_name = $when .'  '. $entry_name;
+			}
+			if ($r['num_calls'] > 1) {
+				$entry_name .= ' ('. $r['num_calls'] .')';
+			}
+			aastra_write('<MenuItem>');
+			aastra_write('<Prompt>'.$entry_name.'</Prompt>');
+			aastra_write('<Dial>'.$r['number'].'</Dial>');
+			aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$type.'d&amp;e='.$r['ts'].'</URI>');
+			aastra_write('</MenuItem>');
+			
 		}
-		if ($type === 'missed') {
-			$when = date('H:i', (int)$r['ts']);
-			$entry_name = $when .'  '. $entry_name;
-		}
-		if ($r['num_calls'] > 1) {
-			$entry_name .= ' ('. $r['num_calls'] .')';
-		}
-		aastra_write('<MenuItem>');
-		aastra_write('<Prompt>'.$entry_name.'</Prompt>');
-		aastra_write('<Dial>'.$r['number'].'</Dial>');
-		aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$type.'d&amp;e='.$r['ts'].'</URI>');
-		aastra_write('</MenuItem>');
-		
 	}
 	
 	aastra_write('<SoftKey index="1">');
