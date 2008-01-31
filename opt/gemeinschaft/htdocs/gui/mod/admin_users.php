@@ -141,7 +141,7 @@ WHERE
 	if (is_array($upgroups)) {
 		foreach ($upgroups as $upgroup) {
 			if ($upgroup < 1) continue;
-			$ret = gs_pickupgroup_user_add( $upgroup, $edit_user );	
+			$ret = gs_pickupgroup_user_add( $upgroup, $edit_user );
 			if (isGsError( $ret )) echo $ret->getMsg();
 		}
 	}
@@ -284,12 +284,12 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<thead>
 	<tr>
 		<th style="width:180px;"><?php echo __('Nachname') ,', ', __('Vorname'); ?></th>
-		<th style="width: 60px;"><?php echo __('Nummer'); ?></th>
-		<th style="width: 70px;"><?php echo __('User'  ); ?></th>
-		<th style="width: 55px;"><?php echo __('PIN'   ); ?></th>
-		<th style="width:190px;"><?php echo __('eMail' ); ?></th>
-		<th style="width:140px;"><?php echo __('Host'  ); ?></th>
-		<th style="width: 85px;"><?php echo __('Status'); ?></th>
+		<th style="width: 60px;"><?php echo __('Durchwahl'); ?></th>
+		<th style="width: 70px;"><?php echo __('User'     ); ?></th>
+		<th style="width: 55px;"><?php echo __('PIN'      ); ?></th>
+		<th style="width:190px;"><?php echo __('E-Mail'   ); ?></th>
+		<th style="width:140px;"><?php echo __('Host'     ); ?></th>
+		<th style="width: 85px;"><?php echo __('Status'   ); ?></th>
 		<th style="width: 55px;">&nbsp;</th>
 	</tr>
 	</thead>
@@ -454,7 +454,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 
 
 	$rs = $DB->execute(
-'SELECT 
+'SELECT
 	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`,`u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`
 FROM
 	`users` `u` JOIN
@@ -487,7 +487,7 @@ GROUP BY `p`.`id`';
 	}
 	
 	$sql_query =
-'SELECT `p`.`group_id` 
+'SELECT `p`.`group_id`
 FROM
 	`pickupgroups_users` `p` JOIN
 	`users` `u` ON (`p`.`user_id`=`u`.`id`)
@@ -560,25 +560,25 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\
 	<tr>
 		<th><?php echo __('Name'); ?>:</th>
 		<td>
-			<input type="text" name="ulname" value="<?php echo htmlEnt($r['ln']); ?>" size="30" maxlength="40"  />	
+			<input type="text" name="ulname" value="<?php echo htmlEnt($r['ln']); ?>" size="30" maxlength="40" />
 		</td>
 	</tr>
 	<tr>
 		<th><?php echo __('Vorname'); ?>:</th>
 		<td>
-			<input type="text" name="ufname" value="<?php echo htmlEnt($r['fn']); ?>" size="30" maxlength="40"  />	
+			<input type="text" name="ufname" value="<?php echo htmlEnt($r['fn']); ?>" size="30" maxlength="40" />
 		</td>
 	</tr>
 	<tr>
 		<th><?php echo __('PIN'); ?>:</th>
 		<td>
-			<input type="password" name="upin" value="<?php echo htmlEnt($r['pin']); ?>" size="8" maxlength="10"  />	
+			<input type="password" name="upin" value="<?php echo htmlEnt($r['pin']); ?>" size="8" maxlength="10" />
 		</td>
 	</tr>
 	<tr>
 		<th><?php echo __('eMail'); ?>:</th>
 		<td>
-			<input type="text" name="uemail" value="<?php echo htmlEnt($r['email']); ?>" size="40" maxlength="60"  />	
+			<input type="text" name="uemail" value="<?php echo htmlEnt($r['email']); ?>" size="40" maxlength="60" />
 		</td>
 	</tr>
 	<tr>
@@ -666,7 +666,7 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 	</tr>
 </thead>
 <tbody>
-<?php	
+<?php
 	foreach ($callblocking as $key => $cb_entry) {
 		echo "<tr>\n";
 		
@@ -726,7 +726,7 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 	</tr>
 </thead>
 <tbody>
-<?php	
+<?php
 	foreach ($ext_nums as $ext_num) {
 		echo "<tr>\n";
 		
