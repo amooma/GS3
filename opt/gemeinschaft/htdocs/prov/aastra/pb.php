@@ -75,6 +75,10 @@ foreach ($tmp as $arr) {
 	$typeToTitle[$arr['k']] = $arr['v'];
 }
 
+
+$url_aastra_pb = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)). GS_PROV_PATH .'aastra/pb.php';
+
+
 if (! $type) {
 	
 	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none">');
@@ -83,7 +87,7 @@ if (! $type) {
 	foreach ($typeToTitle as $key => $title) {
 		aastra_write('<MenuItem>');
 		aastra_write('<Prompt>'.$title.'</Prompt>');
-		aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php?t='.$key.'</URI>');
+		aastra_write('<URI>'. $url_aastra_pb .'?t='.$key.'</URI>');
 		//aastra_write('<Selection>0&amp;menu_pos=1</Selection>'."\n";
 		aastra_write('</MenuItem>');
 	} 
@@ -106,7 +110,7 @@ if (! $type) {
 	
 } elseif ($type==='gs') {
 	
-	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php">');
+	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_pb .'">');
 	
 	$query =
 'SELECT `u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
@@ -134,7 +138,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 			aastra_write('<MenuItem>');
 			aastra_write('<Prompt>'.$name.' - '.$number.'</Prompt>');
 			aastra_write('<Dial>'.$number.'</Dial>');
-			aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php?t=gss&amp;e='.$r['id'].'</URI>');
+			aastra_write('<URI>'. $url_aastra_pb .'?t=gss&amp;e='.$r['id'].'</URI>');
 			aastra_write('</MenuItem>');
 		}
 	}
@@ -155,13 +159,13 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	if ($page > 0) {
 		aastra_write('<SoftKey index="3">');
 		aastra_write('<Label>&lt;&lt;'.($page).'</Label>');
-		aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php?t=prv&amp;p='.($page-1).'</URI>');
+		aastra_write('<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page-1).'</URI>');
 		aastra_write('</SoftKey>');
 	}
 	if ($page < $num_pages-1) {
 		aastra_write('<SoftKey index="6">');
 		aastra_write('<Label>&gt;&gt;'.($page+2).'</Label>');
-		aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php?t=prv&amp;p='.($page+1).'</URI>');
+		aastra_write('<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page+1).'</URI>');
 		aastra_write('</SoftKey>');
 	}
 	
@@ -173,7 +177,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	$remote_addr = @$_SERVER['REMOTE_ADDR'];
 	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 	
-	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php">');
+	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_pb .'">');
 	
 	$query =
 'SELECT SQL_CALC_FOUND_ROWS
@@ -199,7 +203,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 			aastra_write('<MenuItem>');
 			aastra_write('<Prompt>'.$name.' - '.$r['number'].'</Prompt>');
 			aastra_write('<Dial>'.$r['number'].'</Dial>');
-			aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php?t=prvs&amp;e='.$r['id'].'</URI>');
+			aastra_write('<URI>'. $url_aastra_pb .'?t=prvs&amp;e='.$r['id'].'</URI>');
 			aastra_write('</MenuItem>');
 		}
 	}
@@ -220,13 +224,13 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	if ($page > 0) {
 		aastra_write('<SoftKey index="3">');
 		aastra_write('<Label>&lt;&lt;'.($page).'</Label>');
-		aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php?t=prv&amp;p='.($page-1).'</URI>');
+		aastra_write('<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page-1).'</URI>');
 		aastra_write('</SoftKey>');
 	}
 	if ($page < $num_pages-1) {
 		aastra_write('<SoftKey index="6">');
 		aastra_write('<Label>&gt;&gt;'.($page+2).'</Label>');
-		aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php?t=prv&amp;p='.($page+1).'</URI>');
+		aastra_write('<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page+1).'</URI>');
 		aastra_write('</SoftKey>');
 	}
 	
@@ -238,7 +242,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	$remote_addr = @$_SERVER['REMOTE_ADDR'];
 	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 	
-	aastra_write('<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php?t=prv">');
+	aastra_write('<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction="'. $url_aastra_pb .'?t=prv">');
 	
 	$query =
 'SELECT `id`, `lastname` `ln`, `firstname` `fn`, `number`
@@ -276,7 +280,7 @@ AND
 	$remote_addr = @$_SERVER['REMOTE_ADDR'];
 	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 	
-	aastra_write('<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php?t=gs">');
+	aastra_write('<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction="'. $url_aastra_pb .'?t=gs">');
 	
 	$query =
 'SELECT `u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `number`
@@ -307,7 +311,7 @@ WHERE
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="3">');
 	aastra_write('<Label>&lt;&lt;</Label>');
-	aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/pb.php?t=gs</URI>');
+	aastra_write('<URI>'. $url_aastra_pb .'?t=gs</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="6">');
 	aastra_write('<Label>&gt;&gt;</Label>');
