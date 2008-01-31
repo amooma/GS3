@@ -36,6 +36,12 @@ require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_aastrafns.php' );
 $xml_buffer = '';
 
+function _err( $msg='' )
+{
+	//aastra_textscreen( 'Error', ($msg != '' ? $msg : 'Unknown error') );
+	exit(1);  //FIXME - return XML
+}
+
 $type = trim( @$_REQUEST['t'] );
 if (! in_array( $type, array('in','out','missed', 'ind','outd','missedd'), true )) {
 	$type = false;
@@ -55,11 +61,18 @@ $typeToTitle = array(
 
 $remote_addr = @$_SERVER['REMOTE_ADDR'];
 $user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
+if ($user_id < 1) _err( 'Unknown user.' );
+
 
 $url_aastra_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)). GS_PROV_PATH .'aastra/dial-log.php';
 
 
 if (! $type) {
+	
+	# delete outdated entries
+	#
+	@$db->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `timestamp`<'. (time()-(int)GS_PROV_DIAL_LOG_LIFE) );
+	
 	
 	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none">');
 	aastra_write('<Title>'.__('Anrufliste').'</Title>');
@@ -199,9 +212,5 @@ LIMIT 1';
 }
 
 aastra_transmit();
-
-# delete outdated entries
-#
-@$db->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `timestamp`<'. (time()-(int)GS_PROV_DIAL_LOG_LIFE) );
 
 ?>
