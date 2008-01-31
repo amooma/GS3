@@ -42,11 +42,12 @@ header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
 
 
-function snomXmlEsc( $str ) {
+function snomXmlEsc( $str )
+{
 	return str_replace(
 		array('<', '>', '"'   , "\n"),
 		array('_', '_', '\'\'', ' ' ),
-	$str);
+		$str);
 	# the stupid Snom does not understand &lt;, &gt, &amp;, &quot; or &apos;
 	# - neither as named nor as numbered entities
 }
