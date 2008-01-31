@@ -1,0 +1,42 @@
+#!/bin/sh
+# Gemeinschaft
+# $Revision$
+
+DAEMON=/opt/gemeinschaft/sbin/ast_extstated/ast_extstated
+EXECUTABLE=`basename 'ast_extstated'`
+DESC="Gemeinschaft Extension State Daemon"
+ARGS=
+
+if ! [ -x $DAEMON ] ; then
+	echo "ERROR: $DAEMON not found"
+	exit 1
+fi
+
+case "$1" in
+	start)
+		echo "Starting $DESC ..."
+		start-stop-daemon --start --oknodo --chdir `dirname "$DAEMON"` \
+			--exec $DAEMON -- $ARGS
+		;;
+	stop)
+		echo "Stopping $DESC ..."
+		killall -INT $EXECUTABLE 1>>/dev/null 2>>/dev/null
+		sleep 1
+		killall -INT $EXECUTABLE 1>>/dev/null 2>>/dev/null
+		;;
+	reload)
+		echo "Reloading $DESC ..."
+		killall -HUP $EXECUTABLE 1>>/dev/null 2>>/dev/null
+		;;
+	restart|force-reload)
+		$0 stop
+		sleep 2
+		$0 start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|reload|force-reload}" >&2
+		exit 1
+		;;
+esac
+
+exit 0
