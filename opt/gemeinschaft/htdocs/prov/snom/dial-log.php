@@ -110,6 +110,9 @@ $typeToTitle = array(
 ob_start();
 
 
+$url_snom_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)). GS_PROV_PATH .'snom/dial-log.php';
+
+
 #################################### INITIAL SCREEN {
 if (! $type) {
 	
@@ -130,7 +133,7 @@ if (! $type) {
 			echo "\n",
 			     '<MenuItem>', "\n",
 			       '<Name>', snomXmlEsc( $title ) ,'</Name>', "\n",
-			       '<URL>', GS_PROV_SCHEME,'://', GS_PROV_HOST, (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)), GS_PROV_PATH, 'snom/dial-log.php?user=',$user, '&type=',$t, '</URL>', "\n",
+			       '<URL>', $url_snom_dl ,'?user=',$user, '&type=',$t, '</URL>', "\n",
 			     '</MenuItem>', "\n";
 			# Snom does not understand &amp; !
 		}
