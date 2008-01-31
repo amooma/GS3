@@ -42,11 +42,12 @@ header( 'Vary: *' );
 require_once( '../../../inc/conf.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 
-function snomXmlEsc( $str ) {
+function snomXmlEsc( $str )
+{
 	return str_replace(
 		array('<', '>', '"'   , "\n"),
 		array('_', '_', '\'\'', ' ' ),
-	$str);
+		$str);
 	# the stupid Snom does not understand &lt;, &gt, &amp;, &quot; or &apos;
 	# - neither as named nor as numbered entities
 }
