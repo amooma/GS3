@@ -41,7 +41,7 @@ if (! in_array( $type, array('in','out','missed', 'ind', 'outd', 'missedd'), tru
 	$type = false;
 }
 
-$timestamp = trim( @$_REQUEST['e'] );
+$timestamp = (int)@$_REQUEST['e'];
 $number = trim( @$_REQUEST['n'] );
 
 $num_results = (int)gs_get_conf('GS_AASTRA_PROV_PB_NUM_RESULTS', 10);
@@ -55,7 +55,7 @@ $typeToTitle = array(
 
 $remote_addr = @$_SERVER['REMOTE_ADDR'];
 
-$user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
+$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 
 if (! $type) {
 	
@@ -69,7 +69,7 @@ if (! $type) {
 		//aastra_write('<Selection>0&amp;menu_pos=1</Selection>'."\n";
 		aastra_write('</MenuItem>');
 	} 
-
+	
 	aastra_write('<SoftKey index="1">');
 	aastra_write('<Label>OK</Label>');
 	aastra_write('<URI>SoftKey:Select</URI>');
@@ -79,9 +79,9 @@ if (! $type) {
 	aastra_write('<URI>SoftKey:Exit</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('</AastraIPPhoneTextMenu>');
-
-} else if ($type=='out' || $type=='in' || $type=='missed') {
-
+	
+} elseif ($type==='out' || $type==='in' || $type==='missed') {
+	
 	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php">');
 	aastra_write('<Title>'.$typeToTitle[$type].'</Title>');
 	
@@ -92,13 +92,13 @@ if (! $type) {
 FROM `dial_log`
 WHERE
 	`user_id`='. $user_id .' AND
-	`type`=\''. $type .'\'
+	`type`=\''. $db->escape($type) .'\'
 GROUP BY `number`
 ORDER BY `ts` DESC
 LIMIT '.$num_results;
-
+	
 	//echo $query;
-
+	
 	$rs = $db->execute( $query );
 	while ($r = $rs->fetchRow()) {
 		
@@ -106,7 +106,7 @@ LIMIT '.$num_results;
 		if ($r['remote_name'] != '') {
 			$entry_name .= ' '. $r['remote_name'];
 		}
-		if ($type=='missed') {
+		if ($type === 'missed') {
 			$when = date('H:i', (int)$r['ts']);
 			$entry_name = $when .'  '. $entry_name;
 		}
@@ -118,7 +118,7 @@ LIMIT '.$num_results;
 		aastra_write('<Dial>'.$r['number'].'</Dial>');
 		aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$type.'d&amp;e='.$r['ts'].'</URI>');
 		aastra_write('</MenuItem>');
-	
+		
 	}
 	
 	aastra_write('<SoftKey index="1">');
@@ -133,33 +133,34 @@ LIMIT '.$num_results;
 	aastra_write('<Label>'.__('Abbrechen').'</Label>');
 	aastra_write('<URI>SoftKey:Exit</URI>');
 	aastra_write('</SoftKey>');
-
+	
 	aastra_write('</AastraIPPhoneTextMenu>');
 	
 	
-} else if ($type=='outd' || $type=='ind' || $type=='missedd') {
-
-	$type=substr($type,0,strlen($type)-1);
+} elseif ($type==='outd' || $type==='ind' || $type==='missedd') {
+	
+	$type = substr($type,0,strlen($type)-1);
 	aastra_write('<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$type.'">');
 	
 	$query =
 'SELECT
 	`d`.`timestamp` `ts`, `d`.`number` `number`, `d`.`remote_name` `remote_name`, `d`.`remote_user_id` `remote_user_id`, `u`.`firstname` `fn`, `u`.`lastname` `ln`,
-	COUNT(*) `num_calls` 
-FROM `dial_log` `d` LEFT JOIN `users` `u`
-ON `d`.`remote_user_id` = `u`.`id`
+	COUNT(*) `num_calls`
+FROM
+	`dial_log` `d` LEFT JOIN
+	`users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
 WHERE
 	`d`.`user_id`='. $user_id .' AND
-	`d`.`type`=\''. $type .'\' AND
-	`d`.`timestamp`=\''. $timestamp .'\'
+	`d`.`type`=\''. $db->escape($type) .'\' AND
+	`d`.`timestamp`='. $timestamp .'
 GROUP BY `number`
 LIMIT 1';
-
+	
 	//echo $query;
-
+	
 	$rs = $db->execute( $query );
 	if ($rs->numRows() !== 0) {
-
+		
 		$r = $rs->fetchRow();
 		
 		$name = '';
@@ -168,13 +169,13 @@ LIMIT 1';
 			if ($r['ln'] != '') $name.= ', '.$r['fn'];
 			if ($name == '') $name = $r['remote_name'];
 		} 
-
+		
 		$when = date('d.m.Y H:i:s', (int)$r['ts']);
-
+		
 		if ($r['num_calls'] > 1) {
 			$num_calls = ' ('. $r['num_calls'] .')';
 		}		
-
+		
 		aastra_write('<Line Align="left">'.$name.'</Line>');
 		aastra_write('<Line Align="right" Size="double">'.$r['number'].'</Line>');
 		aastra_write('<Line Align="left">'.$when.'</Line>');
@@ -188,9 +189,8 @@ LIMIT 1';
 	aastra_write('<Label>'.__('Abbrechen').'</Label>');
 	aastra_write('<URI>SoftKey:Exit</URI>');
 	aastra_write('</SoftKey>');
-
-	aastra_write('</AastraIPPhoneFormattedTextScreen>');
 	
+	aastra_write('</AastraIPPhoneFormattedTextScreen>');
 	
 }
 
@@ -198,5 +198,6 @@ aastra_transmit();
 
 # delete outdated entries
 #
-$db->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `timestamp`<'. (time()-(int)GS_PROV_DIAL_LOG_LIFE) );
+@$db->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `timestamp`<'. (time()-(int)GS_PROV_DIAL_LOG_LIFE) );
 
+?>
