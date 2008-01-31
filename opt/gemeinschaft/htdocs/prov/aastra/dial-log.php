@@ -50,43 +50,40 @@ $db = gs_db_slave_connect();
 $typeToTitle = array(
 	'out'    => "Gewählt",
 	'missed' => "Verpasst",
-	'in'     => "Angenommen",
+	'in'     => "Angenommen"
 );
 
 $remote_addr = @$_SERVER['REMOTE_ADDR'];
 
 $user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 
-if (!$type) {
-
+if (! $type) {
 	
-	
-	
-	aawrite('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none">');
-	aawrite('<Title>'.__('Anrufliste').'</Title>');
+	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none">');
+	aastra_write('<Title>'.__('Anrufliste').'</Title>');
 	
 	foreach ($typeToTitle as $key => $title) {
-		aawrite('<MenuItem>');
-		aawrite('<Prompt>'.$title.'</Prompt>');
-		aawrite('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$key.'</URI>');
-		//aawrite('<Selection>0&amp;menu_pos=1</Selection>'."\n";
-		aawrite('</MenuItem>');
+		aastra_write('<MenuItem>');
+		aastra_write('<Prompt>'.$title.'</Prompt>');
+		aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$key.'</URI>');
+		//aastra_write('<Selection>0&amp;menu_pos=1</Selection>'."\n";
+		aastra_write('</MenuItem>');
 	} 
 
-	aawrite('<SoftKey index="1">');
-	aawrite('<Label>OK</Label>');
-	aawrite('<URI>SoftKey:Select</URI>');
-	aawrite('</SoftKey>');
-	aawrite('<SoftKey index="4">');
-	aawrite('<Label>'.__('Abbrechen').'</Label>');
-	aawrite('<URI>SoftKey:Exit</URI>');
-	aawrite('</SoftKey>');
-	aawrite('</AastraIPPhoneTextMenu>');
+	aastra_write('<SoftKey index="1">');
+	aastra_write('<Label>OK</Label>');
+	aastra_write('<URI>SoftKey:Select</URI>');
+	aastra_write('</SoftKey>');
+	aastra_write('<SoftKey index="4">');
+	aastra_write('<Label>'.__('Abbrechen').'</Label>');
+	aastra_write('<URI>SoftKey:Exit</URI>');
+	aastra_write('</SoftKey>');
+	aastra_write('</AastraIPPhoneTextMenu>');
 
 } else if ($type=='out' || $type=='in' || $type=='missed') {
 
-	aawrite('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php">');
-	aawrite('<Title>'.$typeToTitle[$type].'</Title>');
+	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php">');
+	aastra_write('<Title>'.$typeToTitle[$type].'</Title>');
 	
 	$query =
 'SELECT
@@ -116,34 +113,34 @@ LIMIT '.$num_results;
 		if ($r['num_calls'] > 1) {
 			$entry_name .= ' ('. $r['num_calls'] .')';
 		}
-		aawrite('<MenuItem>');
-		aawrite('<Prompt>'.$entry_name.'</Prompt>');
-		aawrite('<Dial>'.$r['number'].'</Dial>');
-		aawrite('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$type.'d&amp;e='.$r['ts'].'</URI>');
-		aawrite('</MenuItem>');
+		aastra_write('<MenuItem>');
+		aastra_write('<Prompt>'.$entry_name.'</Prompt>');
+		aastra_write('<Dial>'.$r['number'].'</Dial>');
+		aastra_write('<URI>http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$type.'d&amp;e='.$r['ts'].'</URI>');
+		aastra_write('</MenuItem>');
 	
 	}
 	
-	aawrite('<SoftKey index="1">');
-	aawrite('<Label>OK</Label>');
-	aawrite('<URI>SoftKey:Select</URI>');
-	aawrite('</SoftKey>');
-	aawrite('<SoftKey index="2">');
-	aawrite('<Label>'.__('Anrufen').'</Label>');
-	aawrite('<URI>SoftKey:Dial2</URI>');
-	aawrite('</SoftKey>');
-	aawrite('<SoftKey index="4">');
-	aawrite('<Label>'.__('Abbrechen').'</Label>');
-	aawrite('<URI>SoftKey:Exit</URI>');
-	aawrite('</SoftKey>');
+	aastra_write('<SoftKey index="1">');
+	aastra_write('<Label>OK</Label>');
+	aastra_write('<URI>SoftKey:Select</URI>');
+	aastra_write('</SoftKey>');
+	aastra_write('<SoftKey index="2">');
+	aastra_write('<Label>'.__('Anrufen').'</Label>');
+	aastra_write('<URI>SoftKey:Dial2</URI>');
+	aastra_write('</SoftKey>');
+	aastra_write('<SoftKey index="4">');
+	aastra_write('<Label>'.__('Abbrechen').'</Label>');
+	aastra_write('<URI>SoftKey:Exit</URI>');
+	aastra_write('</SoftKey>');
 
-	aawrite('</AastraIPPhoneTextMenu>');
+	aastra_write('</AastraIPPhoneTextMenu>');
 	
 	
 } else if ($type=='outd' || $type=='ind' || $type=='missedd') {
 
 	$type=substr($type,0,strlen($type)-1);
-	aawrite('<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$type.'">');
+	aastra_write('<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction = "http://'.GS_PROV_HOST.':'.GS_PROV_PORT.'/aastra/dial-log.php?t='.$type.'">');
 	
 	$query =
 'SELECT
@@ -178,21 +175,21 @@ LIMIT 1';
 			$num_calls = ' ('. $r['num_calls'] .')';
 		}		
 
-		aawrite('<Line Align="left">'.$name.'</Line>');
-		aawrite('<Line Align="right" Size="double">'.$r['number'].'</Line>');
-		aawrite('<Line Align="left">'.$when.'</Line>');
+		aastra_write('<Line Align="left">'.$name.'</Line>');
+		aastra_write('<Line Align="right" Size="double">'.$r['number'].'</Line>');
+		aastra_write('<Line Align="left">'.$when.'</Line>');
 	}
 	
-	aawrite('<SoftKey index="2">');
-	aawrite('<Label>'.__('Anrufen').'</Label>');
-	aawrite('<URI>Dial:'.$r['number'].'</URI>');
-	aawrite('</SoftKey>');
-	aawrite('<SoftKey index="4">');
-	aawrite('<Label>'.__('Abbrechen').'</Label>');
-	aawrite('<URI>SoftKey:Exit</URI>');
-	aawrite('</SoftKey>');
+	aastra_write('<SoftKey index="2">');
+	aastra_write('<Label>'.__('Anrufen').'</Label>');
+	aastra_write('<URI>Dial:'.$r['number'].'</URI>');
+	aastra_write('</SoftKey>');
+	aastra_write('<SoftKey index="4">');
+	aastra_write('<Label>'.__('Abbrechen').'</Label>');
+	aastra_write('<URI>SoftKey:Exit</URI>');
+	aastra_write('</SoftKey>');
 
-	aawrite('</AastraIPPhoneFormattedTextScreen>');
+	aastra_write('</AastraIPPhoneFormattedTextScreen>');
 	
 	
 }
