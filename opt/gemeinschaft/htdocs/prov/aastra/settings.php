@@ -50,7 +50,35 @@ function psetting( $name, $val, $writeable=false )
 	setting( $name, null, $val, null, $writeable );
 }
 
+function aastra_get_keys($model) {
+	global $db;
+	global $user_id;
 
+	$query =
+'SELECT
+	`key`, `function`, `number`, `title`, `flags`
+FROM `softkeys`
+WHERE
+	`user_id`='. $user_id. '
+AND
+	`phone_type`=\''. $db->escape($model). '\'';
+
+	$rs = $db->execute( $query );
+
+	if ($rs) {
+	
+	while (@$r = $rs->fetchRow()) {
+		$key_function = 'speeddial';
+		if ($r['function'] == 'Dial') $key_function = 'blf';
+	
+		psetting($r['key'].' type', $key_function);
+		psetting($r['key'].' label',$r['title']);
+		psetting($r['key'].' value',$r['number']);
+	}
+	} else return 0;
+
+	return 1;
+}
 
 if (! gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Aastra provisioning not enabled" );
@@ -89,7 +117,7 @@ gs_log( GS_LOG_DEBUG, "Aastra phone \"$mac\" asks for settings (UA: ...\"$ua\") 
 
 $ua_arr = explode(' ', $ua);
 $phone_type = str_replace('Aastra', '', $ua_arr[0]);  //FIXME
-if ($phone_type == $ua_arr[0]) $phone_type = 'unknown';
+if ($phone_type == $ua_arr[0]) $phone_type = '57i';
 $newPhoneType = 'aastra-'. $phone_type;
 
 $prov_url_aastra = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'aastra/';
@@ -268,6 +296,10 @@ if ($phoneIP) {
 }
 # store new ip address:
 $db->execute( 'UPDATE `users` SET `current_ip`='. ($phoneIP ? ('\''. $db->escape($phoneIP) .'\'') : 'NULL') .' WHERE `id`='. $user_id );
+
+#get aastra softkeys
+aastra_get_keys($newPhoneType);
+
 
 psetting('sip mode'                , '0');  # ?
 psetting('sip screen name'         , $user['name'] .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
