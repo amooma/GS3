@@ -48,7 +48,7 @@ $num_results = (int)gs_get_conf('GS_AASTRA_PROV_PB_NUM_RESULTS', 10);
 $db = gs_db_slave_connect();
 
 $typeToTitle = array(
-	'out'    => "Gewählt",
+	'out'    => "Gew\xC3\xA4hlt",
 	'missed' => "Verpasst",
 	'in'     => "Angenommen"
 );
