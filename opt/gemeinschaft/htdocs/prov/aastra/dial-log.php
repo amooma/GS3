@@ -54,8 +54,6 @@ $typeToTitle = array(
 );
 
 $remote_addr = @$_SERVER['REMOTE_ADDR'];
-	
-$remote_addr = '192.168.0.201';
 
 $user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $remote_addr.'\'' );
 
