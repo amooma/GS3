@@ -59,13 +59,13 @@ function aastra_push( $phone_ip )
 	$header.= "\r\n";
 	
 	$socket = @fsockopen($phone_ip, 80, $error_no, $error_str, 4);
-	if ($socket) {
-		fputs($socket, $header.$aastra_xml_buffer);
-		flush();
-		$response = fgets($socket);
-		fclose($socket);
-	} else return 0;
-	if (strpos($response, "200 OK") === false) {
+	if (! $socket) return 0;
+	stream_set_timeout($socket, 4);
+	fwrite($socket, $header.$aastra_xml_buffer);
+	fflush($socket);
+	$response = fgets($socket);
+	fclose($socket);
+	if (strpos($response, '200 OK') === false) {
 		gs_log(GS_LOG_WARNING, "Aastra: Failed to push $ret_val bytes to phone $phone_ip");
 		return 0;
 	}
