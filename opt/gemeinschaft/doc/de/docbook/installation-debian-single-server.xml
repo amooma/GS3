@@ -95,7 +95,7 @@ The system is going down for reboot NOW!
   openssh-client openssh-server openssl zlib1g zlib1g-dev php5 php5-cli
   php5-mysql php5-ldap apache2 sox mpg123</command></para>
 
-  <screen>debian:~# apt-get -y install build-essential libncurses5-dev libcurl3-dev libvorbis-dev libspeex-dev unixodbc unixodbc-dev libiksemel-dev linux-headers-`uname -r` mysql-common mysql-client libmysqlclient15off libmysqlclient15-dev ntp-simple expect sudo netcat openssh-client openssh-server openssl zlib1g zlib1g-dev php5 php5-cli php5-mysql php5-ldap apache2 sox mpg123
+  <screen>debian:~# apt-get -y install build-essential libncurses5-dev libcurl3-dev libvorbis-dev libspeex-dev unixodbc unixodbc-dev libiksemel-dev linux-headers-`uname -r` mysql-common mysql-client libmysqlclient15off libmysqlclient15-dev ntp-simple expect sudo netcat openssh-client openssh-server openssl zlib1g zlib1g-dev php5 php5-cli php5-mysql mysql-server php5-ldap apache2 sox mpg123
 Paketlisten werden gelesen... Fertig
 Abhängigkeitsbaum wird aufgebaut... Fertig
 Die folgenden zusätzlichen Pakete werden installiert:
