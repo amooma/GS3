@@ -50,10 +50,10 @@ function psetting( $name, $val, $writeable=false )
 	setting( $name, null, $val, null, $writeable );
 }
 
-function aastra_get_keys($model) {
+function aastra_get_keys( $user_id, $model )
+{
 	global $db;
-	global $user_id;
-
+	
 	$query =
 'SELECT
 	`key`, `function`, `number`, `title`, `flags`
@@ -62,22 +62,20 @@ WHERE
 	`user_id`='. $user_id. '
 AND
 	`phone_type`=\''. $db->escape($model). '\'';
-
-	$rs = $db->execute( $query );
-
-	if ($rs) {
 	
-	while (@$r = $rs->fetchRow()) {
+	$rs = $db->execute( $query );
+	if (! $rs) return false;
+	
+	while ($r = @$rs->fetchRow()) {
 		$key_function = 'speeddial';
 		if ($r['function'] == 'Dial') $key_function = 'blf';
-	
-		psetting($r['key'].' type', $key_function);
-		psetting($r['key'].' label',$r['title']);
-		psetting($r['key'].' value',$r['number']);
+		
+		psetting($r['key'].' type' , $key_function);
+		psetting($r['key'].' label', $r['title']);
+		psetting($r['key'].' value', $r['number']);
 	}
-	} else return 0;
-
-	return 1;
+	
+	return true;
 }
 
 if (! gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
@@ -298,7 +296,7 @@ if ($phoneIP) {
 $db->execute( 'UPDATE `users` SET `current_ip`='. ($phoneIP ? ('\''. $db->escape($phoneIP) .'\'') : 'NULL') .' WHERE `id`='. $user_id );
 
 #get aastra softkeys
-aastra_get_keys($newPhoneType);
+aastra_get_keys( $user_id, $newPhoneType );
 
 
 psetting('sip mode'                , '0');  # ?
