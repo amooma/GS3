@@ -1,0 +1,25 @@
+# Gemeinschaft
+# $Revision$
+# Rotate Asterisk's logs - Asterisk itself doesn't care to rotate them.
+# Do not rotate queue_log, we do that in /etc/cron.d/gs-queuelog-to-db
+
+/var/log/asterisk/event_log
+/var/log/asterisk/messages
+/var/log/asterisk/debug
+/var/log/asterisk/full
+/var/log/asterisk/cdr-csv/*.csv
+/var/log/asterisk/cdr-custom/*.csv
+{
+	weekly
+	rotate 5
+	notifempty
+	missingok
+	compress
+	delaycompress
+	create 666 root root
+	sharedscripts
+	postrotate
+		/usr/sbin/asterisk -rx 'logger reload' 1>>/dev/null 2>>/dev/null
+	endscript
+}
+
