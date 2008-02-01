@@ -36,16 +36,6 @@ require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_aastrafns.php' );
 $xml_buffer = '';
 
-/*
-function aastra_textscreen( $title, $text )
-{
-	aastra_write('<AastraIPPhoneTextScreen destroyOnExit="yes">');
-	aastra_write('<Title>'.$title.'<Title>');
-	aastra_write('<Text>'.$text.'<Text>');
-	aastra_write('</AastraIPPhoneTextScreen>');
-}
-*/
-
 function _err( $msg='' )
 {
 	//aastra_textscreen( 'Error', ($msg != '' ? $msg : 'Unknown error') );
