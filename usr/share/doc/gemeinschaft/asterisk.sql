@@ -6099,7 +6099,8 @@ CREATE TABLE `queue_log` (
   KEY `queue_timestamp` (`queue_id`,`timestamp`),
   KEY `queue_event_timestamp` (`queue_id`,`event`,`timestamp`),
   KEY `queue_event_reason_timestamp` (`queue_id`,`event`,`reason`,`timestamp`),
-  KEY `timestamp` (`timestamp`)
+  KEY `timestamp` (`timestamp`),
+  KEY `ast_call_id` (`ast_call_id`(25))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
