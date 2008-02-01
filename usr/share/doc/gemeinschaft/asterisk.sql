@@ -6260,7 +6260,7 @@ LOCK TABLES `routes_in` WRITE;
 /*!40000 ALTER TABLE `routes_in` DISABLE KEYS */;
 INSERT INTO `routes_in` VALUES (1,6,1,99999,'^(.*)',1,1,1,1,1,1,1,'00:00:00','24:00:00','$1','1:1 DID -> Extension');
 INSERT INTO `routes_in` VALUES (2,6,1,12,'^5000',1,1,1,1,1,1,1,'00:00:00','24:00:00','123','5000 auf 123');
-INSERT INTO `routes_in` VALUES (3,6,1,4,'6(.*)',1,1,1,1,1,1,1,'00:00:00','24:00:00','fax-$1','Fax');
+-- INSERT INTO `routes_in` VALUES (3,6,1,4,'6(.*)',1,1,1,1,1,1,1,'00:00:00','24:00:00','fax-$1','Fax');
 INSERT INTO `routes_in` VALUES (4,6,1,10,'^5000',1,1,1,1,1,0,0,'08:00:00','18:00:00','5000','5000 auf Queue wenn ge√∂ffnet');
 /*!40000 ALTER TABLE `routes_in` ENABLE KEYS */;
 UNLOCK TABLES;
