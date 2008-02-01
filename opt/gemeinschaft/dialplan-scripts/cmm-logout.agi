@@ -40,7 +40,7 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
-$db =  gs_db_master_connect();
+$db = gs_db_master_connect();
 if ($db) {
 	$rs = $db->execute( 'SELECT `id` FROM `phones` WHERE `user_id`='. $user_id );
 	while ($phone = $rs->fetchRow()) {
