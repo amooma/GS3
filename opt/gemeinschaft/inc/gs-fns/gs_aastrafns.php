@@ -113,7 +113,7 @@ function aastra_push_statusline( $phone_ip, $text, $index=0, $type='', $timeout=
 	aastra_write('</AastraIPPhoneStatus>');
 	
 	$ret_val = aastra_push($phone_ip);
-
+	
 	return $ret_val;
 }
 
