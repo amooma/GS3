@@ -5327,6 +5327,7 @@ DROP TABLE IF EXISTS `ast_cdr`;
 CREATE TABLE `ast_cdr` (
   `_id` int(10) unsigned NOT NULL auto_increment,
   `calldate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `uniqueid` varchar(32) character set ascii collate ascii_bin NOT NULL,
   `clid` varchar(50) collate latin1_general_ci NOT NULL default '',
   `src` varchar(50) collate latin1_general_ci NOT NULL default '',
   `dst` varchar(50) collate latin1_general_ci NOT NULL default '',
@@ -5345,7 +5346,8 @@ CREATE TABLE `ast_cdr` (
   KEY `calldate` (`calldate`),
   KEY `accountcode` (`accountcode`),
   KEY `src_disposition` (`src`,`disposition`(4)),
-  KEY `dst_disposition` (`dst`,`disposition`(4))
+  KEY `dst_disposition` (`dst`,`disposition`(4)),
+  KEY `uniqueid` (`uniqueid`(25))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
