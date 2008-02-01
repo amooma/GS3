@@ -2,8 +2,8 @@
 # $Revision$
 
 /var/log/gemeinschaft/gs.log {
-	daily
-	size 5M
+	weekly
+	size 50M
 	rotate 1
 	notifempty
 	missingok
@@ -13,8 +13,8 @@
 }
 
 /var/log/gemeinschaft/cc.log {
-	daily
-	size 5M
+	weekly
+	size 50M
 	rotate 1
 	notifempty
 	missingok
