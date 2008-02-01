@@ -6087,7 +6087,7 @@ CREATE TABLE `queue_log` (
   `timestamp` int(10) unsigned NOT NULL default '0',
   `event` varchar(15) character set ascii NOT NULL default '',
   `reason` varchar(10) character set ascii default NULL,
-  `ast_call_id` varchar(20) character set ascii default NULL,
+  `ast_call_id` varchar(32) character set ascii collate ascii_bin default NULL,
   `user_id` int(10) unsigned default NULL,
   `caller` varchar(50) collate utf8_unicode_ci default NULL,
   `pos` mediumint(8) unsigned default NULL,
