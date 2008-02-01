@@ -3,7 +3,6 @@
 
 /var/log/gemeinschaft/gs.log {
 	weekly
-	size 50M
 	rotate 1
 	notifempty
 	missingok
@@ -14,7 +13,6 @@
 
 /var/log/gemeinschaft/cc.log {
 	weekly
-	size 50M
 	rotate 1
 	notifempty
 	missingok
