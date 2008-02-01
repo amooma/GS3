@@ -119,7 +119,8 @@ if (! $type) {
 	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_pb .'">');
 	
 	$query =
-'SELECT `u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
+'SELECT SQL_CALC_FOUND_ROWS 
+	`u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
@@ -165,13 +166,13 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	if ($page > 0) {
 		aastra_write('<SoftKey index="3">');
 		aastra_write('<Label>&lt;&lt;'.($page).'</Label>');
-		aastra_write('<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page-1).'</URI>');
+		aastra_write('<URI>'. $url_aastra_pb .'?t=gs&amp;p='.($page-1).'</URI>');
 		aastra_write('</SoftKey>');
 	}
 	if ($page < $num_pages-1) {
 		aastra_write('<SoftKey index="6">');
 		aastra_write('<Label>&gt;&gt;'.($page+2).'</Label>');
-		aastra_write('<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page+1).'</URI>');
+		aastra_write('<URI>'. $url_aastra_pb .'?t=gs&amp;p='.($page+1).'</URI>');
 		aastra_write('</SoftKey>');
 	}
 	
