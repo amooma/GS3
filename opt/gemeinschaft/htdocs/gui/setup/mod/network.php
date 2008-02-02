@@ -483,7 +483,7 @@ if ($action === 'save') {
 		$conf.= "\n";
 		$conf.= 'auto '. $interface_basename .':zc' ."\n";
 		$conf.= 'iface '. $interface_basename .':zc inet static' ."\n";
-		$conf.= "\t". 'address '. '169.254.1.130' ."\n";
+		$conf.= "\t". 'address '. '169.254.1.131' ."\n";
 		$conf.= "\t". 'netmask '. '255.255.0.0' ."\n";
 		$conf.= "\n";
 		
