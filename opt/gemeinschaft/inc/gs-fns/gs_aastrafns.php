@@ -99,8 +99,8 @@ function aastra_reboot( $phone_ip )
 function aastra_textscreen( $title, $text )
 {
 	aastra_write('<AastraIPPhoneTextScreen destroyOnExit="yes">');
-	aastra_write('<Title>'.$title.'<Title>');
-	aastra_write('<Text>'.$text.'<Text>');
+	aastra_write('<Title>'.$title.'</Title>');
+	aastra_write('<Text>'.$text.'</Text>');
 	aastra_write('</AastraIPPhoneTextScreen>');
 }
 
