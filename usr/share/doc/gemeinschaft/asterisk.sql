@@ -5784,11 +5784,11 @@ CREATE TABLE `gates` (
 
 LOCK TABLES `gates` WRITE;
 /*!40000 ALTER TABLE `gates` DISABLE KEYS */;
-INSERT INTO `gates` VALUES (5,6,'zap','gw_zaptel_span_1','Zaptel Span 1',1,'Zap/r1/{number}',NULL,NULL,NULL);
-INSERT INTO `gates` VALUES (6,6,'zap','gw_zaptel_span_2','Zaptel Span 2',1,'Zap/r2/{number}',NULL,NULL,NULL);
-INSERT INTO `gates` VALUES (7,5,'sip','gw_sip_isdn_intern_a','SIP-ISDN intern A',1,'SIP/{number}@{peer}','sip.example.com','abc','123');
-INSERT INTO `gates` VALUES (8,5,'sip','gw_sip_isdn_intern_b','SIP-ISDN intern B',1,'SIP/{number}@{peer}','sip.example.com','abc','123');
-INSERT INTO `gates` VALUES (9,8,'sip','gw_sip_gsm_vodafone','SIP-GSM Vodafone',1,'SIP/{number}@{peer}','sip.example.com','abc','123');
+INSERT INTO `gates` VALUES (5,6,'zap','gw_5_zaptelspan1','Zaptel Span 1',1,'Zap/r1/{number}',NULL,NULL,NULL);
+INSERT INTO `gates` VALUES (6,6,'zap','gw_6_zaptelspan2','Zaptel Span 2',1,'Zap/r2/{number}',NULL,NULL,NULL);
+INSERT INTO `gates` VALUES (7,5,'sip','gw_7_sipisdninterna','SIP-ISDN intern A',1,'SIP/{number}@{peer}','sip.example.com','abc','123');
+INSERT INTO `gates` VALUES (8,5,'sip','gw_8_sipisdninternb','SIP-ISDN intern B',1,'SIP/{number}@{peer}','sip.example.com','abc','123');
+INSERT INTO `gates` VALUES (9,8,'sip','gw_9_sipgsmvodafone','SIP-GSM Vodafone',1,'SIP/{number}@{peer}','sip.example.com','abc','123');
 /*!40000 ALTER TABLE `gates` ENABLE KEYS */;
 UNLOCK TABLES;
 
