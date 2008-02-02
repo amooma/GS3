@@ -97,7 +97,6 @@ if ($action === 'save') {
 'REPLACE INTO `gates` (
 	`id`,
 	`grp_id`,
-	`type`,
 	`name`,
 	`title`,
 	`allow_out`,
@@ -108,7 +107,6 @@ if ($action === 'save') {
 ) VALUES (
 	'. (int)$gwid .',
 	'. ((int)@$_REQUEST['gw-grp_id'] > 0 ? (int)@$_REQUEST['gw-grp_id'] : 'NULL') .',
-	\'sip\',
 	\''. $DB->escape($sip_friend_name) .'\',
 	\''. $DB->escape(trim(@$_REQUEST['gw-title'])) .'\',
 	'. (@$_REQUEST['gw-allow_out'] ? 1 : 0) .',
@@ -155,14 +153,22 @@ if ($action === 'edit') {
 
 <?php
 	if ($gwid > 0) {
-		# get gateway group from DB
-		$rs = $DB->execute( 'SELECT `grp_id`, `name`, `title`, `allow_out`, `host`, `user`, `pwd` FROM `gates` WHERE `id`='.$gwid );
+		# get gateway from DB
+		$rs = $DB->execute( 'SELECT `grp_id`, `type`, `name`, `title`, `allow_out`, `host`, `user`, `pwd` FROM `gates` WHERE `id`='.$gwid );
 		$gw = $rs->fetchRow();
-		if (! $gw) return;
+		if (! $gw) {
+			echo 'Gateway not found.';
+			return;
+		}
+		if ($gw['type'] !== 'sip') {
+			echo 'Not a SIP gateway.';
+			return;
+		}
 	}
 	else {
 		$gw = array(
 			'grp_id'     => null,
+			'type'       => 'sip',
 			'name'       => '',
 			'title'      => '',
 			'allow_out'  => 1,
@@ -351,7 +357,7 @@ ORDER BY `g`.`grp_id`, `g`.`title`'
 	}
 	echo '<tr class="', ($i%2===0?'odd':'even') ,'">',"\n";
 	echo '<td colspan="4" class="transp">',"\n";
-	echo '<td>',"\n";
+	echo '<td class="transp">',"\n";
 	echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;gw-id=0') ,'" title="', __('hinzuf&uuml;gen'), '"><img alt="', __('hinzuf&uuml;gen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
