@@ -29,6 +29,7 @@ PRIORITY=0
 # set to the system's maximum files open devided by two, if not set here.
 # MAXFILES=32768
 
+
 # since we're going to change priority and open files limits, we need to be
 # root. if running asterisk as other users, pass that to asterisk on the command
 # line.
@@ -39,7 +40,7 @@ then
 	echo "This is NOT suitable for large systems." >&2
 	PRIORITY=0
 else
-	if `echo $OSTYPE | grep linux 2>&1 > /dev/null `
+	if `echo $OSTYPE | grep linux 2>&1 >/dev/null `
 	then
 		# maximum number of open files is set to the system maximum divided by two if
 		# MAXFILES is not set.
@@ -52,7 +53,7 @@ else
 			fi
 		fi
 		SYSCTL_MAXFILES="fs.file-max"
-	elif `echo $OSTYPE | grep darwin 2>&1 > /dev/null `
+	elif `echo $OSTYPE | grep darwin 2>&1 >/dev/null`
 	then
 		SYSCTL_MAXFILES="kern.maxfiles"
 	fi
@@ -90,7 +91,7 @@ if [ "$TTY" != "" ]; then
 		exit 1
 	fi
 	ASTARGS="${ASTARGS} -vg"
-	if [ "$CONSOLE" == "yes" ]; then
+	if [ "$CONSOLE" = "yes" ]; then
 		ASTARGS="${ASTARGS} -c"
 	fi
 fi
@@ -170,7 +171,7 @@ run_asterisk()
 		sleep $SLEEPSECS
 		if [ $KILLALLMPG123 ]
 		then
-			killall -9 mpg123
+			killall -q -9 mpg123
 		fi
 	done
 }
