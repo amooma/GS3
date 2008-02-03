@@ -174,7 +174,8 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <title><?php
 	switch ($GS_INSTALLATION_TYPE) {
 		case 'gpbx': echo    'GPBX'                         ; break;
-		default    : echo __('Gemeinschaft Telefon-Manager');
+		//default    : echo __('Gemeinschaft Telefon-Manager');
+		default    : echo    'Gemeinschaft';
 	}
 ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -207,7 +208,8 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 			break;
 		default    :
 			echo '<img alt=" " src="', GS_URL_PATH ,'crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />' ,"\n";
-			echo '<h1>', __('Telefon-Manager') ,'</h1>' ,"\n";
+			//echo '<h1>', __('Telefon-Manager') ,'</h1>' ,"\n";
+			echo '<h1>', 'Gemeinschaft' ,'</h1>' ,"\n";
 	}
 ?>
 </div>
