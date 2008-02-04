@@ -140,7 +140,7 @@ if ($err===0) {
 				case '0002': $descr = '100APC (ISDN)'; break;
 			}
 		}
-		elseif ($vendorid === 'e159') {  # Xilinx
+		elseif ($vendorid === '10ee') {  # Xilinx
 			$is_known = true;
 			$vendor = 'Xilinx';
 			switch ($devid) {
