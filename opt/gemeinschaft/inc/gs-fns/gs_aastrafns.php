@@ -104,12 +104,11 @@ function aastra_textscreen( $title, $text )
 	aastra_write('</AastraIPPhoneTextScreen>');
 }
 
-function aastra_push_statusline( $phone_ip, $text, $index=0, $type='', $timeout=3 )
+function aastra_push_statusline( $phone_ip, $text, $index=0, $type='', $timeout=3, $beep=false )
 {
-	aastra_write('<AastraIPPhoneStatus>');
+	aastra_write('<AastraIPPhoneStatus Beep="'. ($beep?'yes':'no') .'">');
 	aastra_write('<Session>gemeinschaft</Session>');
-	if ($type == 'alert') $type='type="alert"';
-	aastra_write('<Message index="'.$index.'" '.$type.' timeout="'.$timeout.'">'.$text.'</Message>');
+	aastra_write('<Message index="'.$index .'"'. ($type != '' ? ' type="'.$type.'"' : '') .' timeout="'.$timeout .'">'. $text .'</Message>');
 	aastra_write('</AastraIPPhoneStatus>');
 	
 	$ret_val = aastra_push($phone_ip);
