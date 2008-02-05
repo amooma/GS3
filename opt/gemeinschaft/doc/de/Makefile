@@ -36,21 +36,21 @@ prereq:
 		echo '************************************************************'; \
 		echo '*  Installing DocBook utils using yum ...                  *'; \
 		echo '************************************************************'; \
-		yum -y install docbook-dtds docbook-style-xsl docbook-utils-pdf; \
+		sudo yum -y install docbook-dtds docbook-style-xsl docbook-utils-pdf; \
 	\
 	else if [ `which up2date 2>>/dev/null` ]; then \
 		# RedHat \
 		echo '************************************************************'; \
 		echo '*  Installing DocBook utils using up2date ...              *'; \
 		echo '************************************************************'; \
-		up2date -f -i docbook-dtds docbook-style-xsl docbook-utils-pdf; \
+		sudo up2date -f -i docbook-dtds docbook-style-xsl docbook-utils-pdf; \
 	\
 	else if [ `which apt-get 2>>/dev/null` ]; then \
 		# Debian \
 		echo '************************************************************'; \
 		echo '*  Installing DocBook utils using apt-get ...              *'; \
 		echo '************************************************************'; \
-		apt-get -y install docbook-xml docbook-xsl docbook-utils xsltproc xmlto; \
+		sudo apt-get -y install docbook-xml docbook-xsl docbook-utils xsltproc xmlto; \
 	\
 	else \
 		echo '************************************************************'; \
