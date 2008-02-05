@@ -28,7 +28,7 @@
 # this Makefile is not nice but sort of works  :)
 
 
-all: prereq tohtml topdf
+all: prereq html pdf
 
 prereq:
 	@ if [ `which yum 2>>/dev/null` ]; then \
@@ -59,7 +59,7 @@ prereq:
 	fi; fi; fi
 
 
-tohtml:
+html: prereq
 	@ if [ ! -x /usr/bin/docbook2html ]; then \
 		echo '************************************************************'; \
 		echo '*  DocBook utils are not installed.                        *'; \
@@ -84,7 +84,7 @@ tohtml:
 	@ echo '************************************************************';
 
 
-topdf:
+pdf: prereq
 	@ if [ ! -x /usr/bin/docbook2pdf ]; then \
 		echo '************************************************************'; \
 		echo '*  DocBook utils are not installed.                        *'; \
@@ -113,3 +113,7 @@ topdf:
 clean:
 	rm -rf html/*
 	rm -rf pdf/*
+
+
+.PHONY: all prereq html pdf
+
