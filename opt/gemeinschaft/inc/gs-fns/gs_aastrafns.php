@@ -28,7 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 
-define( 'GS_AASTRA_PUSH_MAXLEN', 10000 );
+defined('GS_AASTRA_PUSH_MAXLEN') or define( 'GS_AASTRA_PUSH_MAXLEN', 10000 );
 
 function aastra_transmit()
 {
