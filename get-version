@@ -1,0 +1,75 @@
+#!/bin/sh
+# $Revision$
+
+
+TAGBASE=${1}
+#TAGBASE="."
+
+if [ -d .svn ]
+then
+	PARTS=`LANG=C svn info ${TAGBASE} | grep ^URL | awk '{print $2;}' | sed -e 's:^.*/gemeinschaft/::' | sed -e 's:/: :g'`
+	#echo "PARTS: ${PARTS}"
+	PART1=`echo ${PARTS} | awk '{print $1;}'`
+	#echo "PART1: ${PART1}"
+	
+	REV=`svnversion -c ${1} | cut -d: -f2 | grep -o -E '[0-9]+' \
+		| sed -e 's:^[0-9]$:0\0:' \
+		| sed -e 's:^[0-9][0-9]$:0\0:' \
+		| sed -e 's:^[0-9][0-9][0-9]$:0\0:' \
+		| sed -e 's:^[0-9][0-9][0-9][0-9]$:0\0:' \
+		| sed -e 's:^[0-9][0-9][0-9][0-9][0-9]$:0\0:'`
+	#echo "REV: ${REV}"
+	
+	if [ "${PART1}" = "trunk" ]
+	then
+		echo trunk-r${REV}
+		exit 0
+	fi
+	
+	IS_TAG=0
+	IS_BRANCH=0
+	
+	for PART in ${PARTS}
+	do
+		if [ ${IS_TAG} != 0 ]
+		then
+			RESULT="${PART}"
+			break
+		fi
+		
+		if [ ${IS_BRANCH} != 0 ]
+		then
+			if [ -z ${RESULT} ]
+			then
+				RESULT="${PART}"
+			else
+				RESULT="${RESULT}-${PART}"
+			fi
+			break
+		fi
+		
+		if [ "${PART}" = "branches" ]
+		then
+			IS_BRANCH=1
+			RESULT="branch"
+			continue
+		fi
+		
+		if [ "${PART}" = "tags" ]
+		then
+			IS_TAG=1
+			continue
+		fi
+	done
+	
+	if [ ${IS_TAG} != 0 ]
+	then
+		echo ${RESULT}
+	else
+		if [ "${RESULT}" = "" ]
+		then
+			RESULT="unknown"
+		fi
+		echo ${RESULT}-r${REV}
+	fi
+fi
