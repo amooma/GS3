@@ -68,8 +68,12 @@ then
 	else
 		if [ "${RESULT}" = "" ]
 		then
-			RESULT="unknown"
+			# neither in "tags" nor in "branches"
+			RESULT="other"
 		fi
 		echo ${RESULT}-r${REV}
 	fi
 fi
+
+echo unknown
+exit 1
