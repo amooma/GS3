@@ -118,7 +118,7 @@ class "Aastra" {
 	
 	option tftp-server-name "http://__GEMEINSCHAFT_DHCPD_PROVADDR__/gemeinschaft/prov/aastra/";
 	# Aastra does not support any ":port" in the URL, not even ":80"
-	# for firmware versions < 2.1.2
+	# for firmware app versions < 2.1.2
 	
 	default-lease-time 3024000;  # 35 days
 	max-lease-time     3456000;  # 40 days
