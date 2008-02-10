@@ -37,6 +37,7 @@ $0 = 'sip.mcast.net-responder';
 
 
 my $prov_url_base = 'http://192.168.1.130/gemeinschaft/prov/';
+my $debug_level = 2;
 
 
 # create multicast socket
@@ -74,9 +75,11 @@ while ($sock->recv($in, 8192)) {
 		if (! defined($1)) {next;}
 		$pkt = $1;
 		if ($pkt ne '') {
-			#print STDOUT "IN--------------------------------------------------------{\n";
-			#print STDOUT $pkt, "\n";
-			#print STDOUT "----------------------------------------------------------}\n";
+			if ($debug_level >= 2) {
+				print STDOUT "IN--------------------------------------------------------{\n";
+				print STDOUT $pkt, "\n";
+				print STDOUT "----------------------------------------------------------}\n";
+			}
 			if ($pkt =~ m/^SUBSCRIBE/so) {
 				
 				if (($pkt =~ m/MAC%3[aA]000413/so || $pkt =~ m/snom/so) && $pkt =~ m/^(?:Accept): application\/url/mso) {
@@ -127,9 +130,11 @@ while ($sock->recv($in, 8192)) {
 					$resp.= 'Content-Length: 0' ."\r\n";
 					$resp.= "\r\n";
 					
-					#print STDOUT "OUT-------------------------------------------------------{\n";
-					#print STDOUT $resp, "\n";
-					#print STDOUT "----------------------------------------------------------}\n";
+					if ($debug_level >= 2) {
+						print STDOUT "OUT-------------------------------------------------------{\n";
+						print STDOUT $resp, "\n";
+						print STDOUT "----------------------------------------------------------}\n";
+					}
 					$sock->mcast_send( $resp, $remote_addr.':'.$remote_port );
 					
 					$resp = 'NOTIFY '. $remote_addr.':'.$remote_port .' SIP/2.0' ."\r\n";
@@ -148,12 +153,16 @@ while ($sock->recv($in, 8192)) {
 					$resp.= "\r\n";
 					$resp.= $content;
 					
-					#print STDOUT "OUT-------------------------------------------------------{\n";
-					#print STDOUT $resp, "\n";
-					#print STDOUT "----------------------------------------------------------}\n";
+					if ($debug_level >= 2) {
+						print STDOUT "OUT-------------------------------------------------------{\n";
+						print STDOUT $resp, "\n";
+						print STDOUT "----------------------------------------------------------}\n";
+					}
 					$sock->mcast_send( $resp, $remote_addr.':'.$remote_port );
 					
-					print STDOUT "Responded to Snom at ", $remote_addr ,"\n";
+					if ($debug_level >= 1) {
+						print STDOUT "Responded to Snom at ", $remote_addr ,"\n";
+					}
 					
 				}
 				
