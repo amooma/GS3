@@ -364,6 +364,15 @@ function _test_result( $str, $status )
 	<td <?php
 		echo array_key_exists('mod_rewrite', $apache_mods)
 			? _test_result('OK', 'ok')
+			: _test_result('NICHT GELADEN', 'warn');
+	?></td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+	<td><tt>mod_alias</tt></td>
+	<td <?php
+		echo array_key_exists('mod_alias', $apache_mods)
+			? _test_result('OK', 'ok')
 			: _test_result('NICHT OPTIMAL', 'notice');
 	?></td>
 </tr>
