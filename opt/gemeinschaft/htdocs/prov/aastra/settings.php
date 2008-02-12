@@ -70,10 +70,13 @@ function aastra_get_expansion_modules() {
 }
 
 
-function aastra_get_keys( $user_id, $model )
+function aastra_get_keys( $user_id, $model, $module = 0 )
 {
 	global $db;
-	
+
+	$module_sql = '';
+	if ($module) $module_sql = 'AND `key` LIKE \'expmod'.$module.'%\'';	
+
 	$query =
 'SELECT
 	`key`, `function`, `number`, `title`, `flags`
@@ -81,7 +84,7 @@ FROM `softkeys`
 WHERE
 	`user_id`='. $user_id. '
 AND
-	`phone_type`=\''. $db->escape($model). '\'';
+	`phone_type`=\''. $db->escape($model). '\''.$module_sql;
 	
 	$rs = $db->execute( $query );
 	if (! $rs) return false;
@@ -317,8 +320,8 @@ aastra_get_keys( $user_id, $newPhoneType );
 #get modules softkeys
 $exp_mods = aastra_get_expansion_modules();
 
-foreach ($exp_mods as $exp_mod) {
-	aastra_get_keys( $user_id,  $exp_mod);
+foreach ($exp_mods as $key => $exp_mod) {
+	aastra_get_keys( $user_id,  $exp_mod, ($key+1));
 }
 
 psetting('sip mode'                , '0');  # ?
