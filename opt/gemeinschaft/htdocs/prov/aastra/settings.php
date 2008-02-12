@@ -50,6 +50,26 @@ function psetting( $name, $val, $writeable=false )
 	setting( $name, null, $val, null, $writeable );
 }
 
+function aastra_get_expansion_modules() {
+	
+	$exp_mod = Array();
+	if (@$_SERVER["HTTP_X_AASTRA_EXPMOD1"]) {
+		$exp_mod[0] = 'aastra-'.strtolower  ($_SERVER["HTTP_X_AASTRA_EXPMOD1"]);
+		gs_log( GS_LOG_DEBUG, 'Expasion module 1 : '.$exp_mod[0]);
+	}	
+	if (@$_SERVER["HTTP_X_AASTRA_EXPMOD2"]) {
+		$exp_mod[1] = 'aastra-'.strtolower($_SERVER["HTTP_X_AASTRA_EXPMOD2"]);
+		gs_log( GS_LOG_DEBUG, 'Expasion module 2 : '.$exp_mod[1]);
+	}
+	if (@$_SERVER["HTTP_X_AASTRA_EXPMOD3"]) {
+		$exp_mod[2] = 'aastra-'.strtolower($_SERVER["HTTP_X_AASTRA_EXPMOD3"]);
+		gs_log( GS_LOG_DEBUG, 'Expasion module 3 : '.$exp_mod[3]);
+	}
+	
+	return $exp_mod;
+}
+
+
 function aastra_get_keys( $user_id, $model )
 {
 	global $db;
@@ -69,10 +89,14 @@ AND
 	while ($r = @$rs->fetchRow()) {
 		$key_function = 'speeddial';
 		if ($r['function'] == 'Dial') $key_function = 'blf';
-		
-		psetting($r['key'].' type' , $key_function);
-		psetting($r['key'].' label', $r['title']);
-		psetting($r['key'].' value', $r['number']);
+				
+		if (preg_match('/^expmod\d{1}page\d{1}/',$r['key'])) {
+			psetting($r['key'], $r['title']);
+		} else {
+			psetting($r['key'].' type' , $key_function);
+			psetting($r['key'].' label', $r['title']);
+			psetting($r['key'].' value', $r['number']);
+		}
 	}
 	
 	return true;
@@ -133,18 +157,6 @@ if (! $db) {
 # do we know the phone?
 #
 
-/*
-$query =
-'SELECT `user_id`, `vlan_id`
-FROM `phones`
-WHERE `mac_addr`=\''. $mac .'\'
-ORDER BY `id` LIMIT 1';
-$rs = $db->execute( $query );
-$r = $rs->fetchRow();
-if ($r) {
-	$user_id = (int)$r['user_id'];
-	$vlan_id = (int)$r['vlan_id'];
-*/
 $query =
 'SELECT `user_id`
 FROM `phones`
@@ -275,17 +287,6 @@ if (! $user) {
 # get the IP address of the phone:
 #
 $phoneIP = @ normalizeIPs( @$_SERVER['REMOTE_ADDR'] );
-/*
-//FIXME - we should add a setting AASTRA_PROV_TRUST_PROXIES = '192.168.1.7, 192.168.1.8'
-if (isSet( $_SERVER['HTTP_X_FORWARDED_FOR'] )) {
-	if (preg_match( '/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', lTrim( $_SERVER['HTTP_X_FORWARDED_FOR'] ), $m ))
-		$phoneIP = isSet( $m[0] ) ? @ normalizeIPs( $m[0] ) : null;
-}
-if (isSet( $_SERVER['HTTP_X_REAL_IP'] )) {
-	if (preg_match( '/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', lTrim( $_SERVER['HTTP_X_REAL_IP'] ), $m ))
-		$phoneIP = isSet( $m[0] ) ? @ normalizeIPs( $m[0] ) : null;
-}
-*/
 
 if ($phoneIP) {
 	# unset all ip addresses which are the same as the new one and
@@ -295,9 +296,30 @@ if ($phoneIP) {
 # store new ip address:
 $db->execute( 'UPDATE `users` SET `current_ip`='. ($phoneIP ? ('\''. $db->escape($phoneIP) .'\'') : 'NULL') .' WHERE `id`='. $user_id );
 
+#allow to push config from this host
+psetting('xml application post list', GS_PROV_HOST);
+
+#set some default keys
+psetting('services script',$prov_url_aastra.'pb.php');
+psetting('callers list script', $prov_url_aastra.'dial-log.php');
+
+psetting('softkey1 type' , 'xml');
+psetting('softkey1 label', __('Telefonb.'));
+psetting('softkey1 value', $prov_url_aastra.'pb.php');
+
+psetting('softkey2 type' , 'xml');
+psetting('softkey2 label', __('Anrufliste.'));
+psetting('softkey2 value', $prov_url_aastra.'dial-log.php');
+
 #get aastra softkeys
 aastra_get_keys( $user_id, $newPhoneType );
 
+#get modules softkeys
+$exp_mods = aastra_get_expansion_modules();
+
+foreach ($exp_mods as $exp_mod) {
+	aastra_get_keys( $user_id,  $exp_mod);
+}
 
 psetting('sip mode'                , '0');  # ?
 psetting('sip screen name'         , $user['name'] .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
