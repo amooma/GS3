@@ -28,7 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 
-if (! defined('GS_AASTRA_PUSH_MAXLEN')) define( 'GS_AASTRA_PUSH_MAXLEN', 10000 );
+//define( 'GS_AASTRA_PUSH_MAXLEN', 10000 );  //FIXME - not used
 
 
 function aastra_transmit()
