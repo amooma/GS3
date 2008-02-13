@@ -51,8 +51,8 @@ function psetting( $name, $val, $writeable=false )
 	setting( $name, null, $val, null, $writeable );
 }
 
-function aastra_get_expansion_modules() {
-	
+function aastra_get_expansion_modules()
+{
 	$exp_mod = array();
 	if (@$_SERVER['HTTP_X_AASTRA_EXPMOD1']) {
 		$exp_mod[0] = 'aastra-'. strToLower($_SERVER['HTTP_X_AASTRA_EXPMOD1']);
