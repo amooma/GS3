@@ -71,7 +71,7 @@ function aastra_get_expansion_modules() {
 }
 
 
-function aastra_get_keys( $user_id, $model, $module = 0 )
+function aastra_keys_out( $user_id, $model, $module = 0 )
 {
 	global $db;
 	
@@ -94,9 +94,9 @@ $module_sql;
 	
 	while ($r = @$rs->fetchRow()) {
 		$key_function = 'speeddial';
-		if ($r['function'] == 'Dial') $key_function = 'blf';
+		if ($r['function'] === 'Dial') $key_function = 'blf';
 		
-		if (preg_match('/^expmod\d{1}page\d{1}/',$r['key'])) {
+		if (preg_match('/^expmod\d{1}page\d{1}/', $r['key'])) {
 			psetting($r['key'], $r['title']);
 		} else {
 			psetting($r['key'].' type' , $key_function);
@@ -334,14 +334,13 @@ psetting('softkey2 label'     , __('Anrufliste'));
 psetting('softkey2 value'     , $prov_url_aastra.'dial-log.php');
 
 
-# get aastra softkeys
-aastra_get_keys( $user_id, $newPhoneType );
+# get softkeys
+aastra_keys_out( $user_id, $newPhoneType );
 
-# get modules softkeys
+# get softkeys on expansion modules
 $exp_mods = aastra_get_expansion_modules();
-
 foreach ($exp_mods as $key => $exp_mod) {
-	aastra_get_keys( $user_id, $exp_mod, ($key+1));
+	aastra_keys_out( $user_id, $exp_mod, ($key+1));
 }
 
 
