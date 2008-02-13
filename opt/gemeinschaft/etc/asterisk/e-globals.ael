@@ -26,11 +26,6 @@
 //---------------------------------------------------------------------
 
 
-gateway_host=gateway;   // gateway for everything except internal phones,
-                        // i.e. the name of the sip peer
-                        // Not used any longer. This information is now
-                        // in the database.
-
 gateway_prefix=;        // if 0... was dialed internally to get
                         // an outside line, what should the prefix
                         // be to the gateway?
