@@ -29,6 +29,7 @@
 define( 'GS_VALID', true );  /// this is a parent file
 
 
+header( 'Content-Type: text/plain; charset=utf-8' );
 header( 'Expires: 0' );
 header( 'Pragma: no-cache' );
 header( 'Cache-Control: private, no-cache, must-revalidate' );
@@ -42,7 +43,7 @@ set_error_handler('err_handler_die_on_err');
 
 function setting( $name, $idx, $val, $attrs=null, $writeable=false )
 {
-	echo "$name: $val\n";
+	echo $name ,': ', str_replace(array("\n", "\r"), array(' ', ' '), $val) ,"\n";
 }
 
 function psetting( $name, $val, $writeable=false )
@@ -313,6 +314,9 @@ if ($phoneIP) {
 $db->execute( 'UPDATE `users` SET `current_ip`='. ($phoneIP ? ('\''. $db->escape($phoneIP) .'\'') : 'NULL') .' WHERE `id`='. $user_id );
 
 
+ob_start();
+
+
 # allow to push config from this host
 psetting('xml application post list', GS_PROV_HOST);
 
@@ -326,7 +330,7 @@ psetting('softkey1 label'     , __('Tel.buch'));
 psetting('softkey1 value'     , $prov_url_aastra.'pb.php');
 
 psetting('softkey2 type'      , 'xml');
-psetting('softkey2 label'     , __('Anrufliste.'));
+psetting('softkey2 label'     , __('Anrufliste'));
 psetting('softkey2 value'     , $prov_url_aastra.'dial-log.php');
 
 
@@ -353,5 +357,10 @@ psetting('sip registrar port'      , '5060');
 psetting('sip registration period' , '3600');
 psetting('sip outbound proxy'      , $host);
 psetting('sip outbound proxy port' , '5060');
+
+
+if (! headers_sent())
+	header( 'Content-Length: '. @ob_get_length() );
+@ob_flush();
 
 ?>
