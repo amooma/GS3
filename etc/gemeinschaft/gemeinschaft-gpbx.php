@@ -132,6 +132,7 @@ $SNOM_PROV_FW_6TO7          = false;
 //----------------------[  Aastra  ]----------------------//
 
 $AASTRA_PROV_ENABLED        = true;
+$AASTRA_PROV_PB_NUM_RESULTS = 10;
 
 
 //-----------------[  Siemens OpenStage  ]----------------//
