@@ -71,7 +71,7 @@ function aastra_get_expansion_modules() {
 }
 
 
-function aastra_keys_out( $user_id, $model, $module = 0 )
+function aastra_keys_out( $user_id, $phone_model, $module = 0 )
 {
 	global $db;
 	
@@ -85,8 +85,8 @@ function aastra_keys_out( $user_id, $model, $module = 0 )
 	`key`, `function`, `number`, `title`, `flags`
 FROM `softkeys`
 WHERE
-	`user_id`='. $user_id. ' AND
-	`phone_type`=\''. $db->escape($model). '\''.
+	`user_id`='. (int)$user_id. ' AND
+	`phone_type`=\''. $db->escape($phone_model). '\''.
 $module_sql;
 	
 	$rs = $db->execute( $query );
