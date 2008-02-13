@@ -1241,12 +1241,10 @@ if ($lang_vers) {
 #####################################################################
 ob_start();
 _settings_out();
-$ob = ob_get_clean();
 if (! headers_sent()) {
 	# avoid chunked transfer-encoding
-	header( 'Content-Length: '. strLen($ob) );
+	header( 'Content-Length: '. @ob_get_length() );
 }
-echo $ob;
-
+@ob_flush();
 
 ?>
