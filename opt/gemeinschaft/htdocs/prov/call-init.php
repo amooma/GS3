@@ -360,7 +360,7 @@ if ($user_is_on_this_host) {
 	
 	$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $filename ) .' '. qsa( 'root@'. $user['host'] .':'. $filename );
 	//echo $cmd, "\n";
-	@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
+	@ exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
 	@ unlink( $filename );
 	if ($err != 0) {
 		gs_log( GS_LOG_WARNING, 'Failed to scp call file "'. $filename .'" to '. $user['host'] );
@@ -369,7 +369,7 @@ if ($user_is_on_this_host) {
 	//remote_exec( $user['host'], $cmd, 10, $out, $err ); // <-- does not use sudo!
 	$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa( $user['host'] ) .' '. qsa( 'mv '. qsa( $filename ) .' '. qsa( $spoolfile ) );
 	//echo $cmd, "\n";
-	@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
+	@ exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
 	if ($err != 0) {
 		gs_log( GS_LOG_WARNING, 'Failed to mv call file "'. $filename .'" on '. $user['host'] .' to "'. $spoolfile .'"' );
 		die_error( 'Failed to mv call file on remote host.' );
