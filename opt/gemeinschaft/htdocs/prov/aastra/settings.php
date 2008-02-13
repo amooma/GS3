@@ -145,7 +145,7 @@ gs_log( GS_LOG_DEBUG, "Aastra phone \"$mac\" asks for settings (UA: ...\"$ua\") 
 
 $ua_arr = explode(' ', $ua);
 $phone_type = str_replace('Aastra', '', $ua_arr[0]);  //FIXME
-if ($phone_type == $ua_arr[0]) $phone_type = '57i';
+if ($phone_type === @$ua_arr[0]) $phone_type = '57i';
 $newPhoneType = 'aastra-'. $phone_type;
 
 $prov_url_aastra = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'aastra/';
