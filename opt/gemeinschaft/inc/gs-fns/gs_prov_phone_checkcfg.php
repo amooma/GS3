@@ -256,6 +256,7 @@ WHERE
 	// damn - we have already remove the user id from the phones table
 	_gs_prov_phone_checkcfg_by_ext_do_snom   ( $ext, $reboot );
 	_gs_prov_phone_checkcfg_by_ext_do_siemens( $ext, $reboot );
+	//FIXME - aastra?
 	
 	//return $err == 0;
 	return true;
