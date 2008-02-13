@@ -33,7 +33,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 
 require_once( '../../../inc/conf.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
-require_once( GS_DIR .'inc/gs-fns/gs_aastrafns.php' );
+require_once( GS_DIR .'inc/aastra-fns.php' );
 $xml_buffer = '';
 
 function _err( $msg='' )
