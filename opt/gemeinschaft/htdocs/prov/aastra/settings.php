@@ -359,8 +359,10 @@ psetting('sip outbound proxy'      , $host);
 psetting('sip outbound proxy port' , '5060');
 
 
-if (! headers_sent())
+if (! headers_sent()) {
+	# avoid chunked transfer-encoding
 	header( 'Content-Length: '. @ob_get_length() );
+}
 @ob_flush();
 
 ?>
