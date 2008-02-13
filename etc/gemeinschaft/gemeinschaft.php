@@ -183,9 +183,12 @@ $NOBODY_CID_NAME        = 'Namenlos-';
 ***********************************************************/
 
 $PROV_HOST                  = '192.168.1.130';
-$PROV_PORT                  = 82;
+//$PROV_PORT                  = 82;
+$PROV_PORT                  = 80;
 $PROV_SCHEME                = 'http';  # without "://"
-$PROV_PATH                  = '/';     # with starting and trailing "/"
+//$PROV_PATH                  = '/';
+//$PROV_PATH                  = '/gemeinschaft/prov/';
+  # with starting and trailing "/"
   # URL is build like this:
   # <PROV_SCHEME>://<PROV_HOST>:<PROV_PORT><PROV_PATH>snom/dial-log.php
 $PROV_AUTO_ADD_PHONE        = true;
