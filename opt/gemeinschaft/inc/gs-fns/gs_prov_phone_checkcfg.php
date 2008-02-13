@@ -28,7 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 
-require_once( GS_DIR .'inc/gs-fns/gs_aastrafns.php' );
+require_once( GS_DIR .'inc/aastra-fns.php' );
 
 
 /***********************************************************
