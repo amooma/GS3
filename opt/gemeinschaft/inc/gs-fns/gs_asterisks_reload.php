@@ -82,7 +82,7 @@ function gs_asterisks_reload( $host_ids, $dialplan_only )
 				# this is not the local node
 				$cmd = $sudo .'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd);
 			}
-			@ exec( $sudo . $cmd .' 1>>/dev/null 2>&1', $out, $err );
+			@ exec( $sudo . $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
 			$ok = $ok && ($err==0);
 		}
 	}
