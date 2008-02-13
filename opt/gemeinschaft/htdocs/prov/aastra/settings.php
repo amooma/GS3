@@ -71,7 +71,7 @@ function aastra_get_expansion_modules() {
 }
 
 
-function aastra_keys_out( $user_id, $phone_model, $module = 0 )
+function aastra_keys_out( $user_id, $phone_model, $module=0 )
 {
 	global $db;
 	
