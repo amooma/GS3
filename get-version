@@ -28,9 +28,11 @@ then
 	
 	IS_TAG=0
 	IS_BRANCH=0
+	IS_TEAM_BRANCH=0
 	
 	for PART in ${PARTS}
 	do
+		
 		if [ ${IS_TAG} != 0 ]
 		then
 			RESULT="${PART}"
@@ -38,6 +40,17 @@ then
 		fi
 		
 		if [ ${IS_BRANCH} != 0 ]
+		then
+			if [ -z ${RESULT} ]
+			then
+				RESULT="${PART}"
+			else
+				RESULT="${RESULT}-${PART}"
+			fi
+			break
+		fi
+		
+		if [ ${IS_TEAM_BRANCH} != 0 ]
 		then
 			if [ -z ${RESULT} ]
 			then
@@ -60,6 +73,13 @@ then
 			IS_TAG=1
 			continue
 		fi
+		
+		if [ "${PART}" = "team" ]
+		then
+			IS_TEAM_BRANCH=1
+			continue
+		fi
+		
 	done
 	
 	if [ ${IS_TAG} != 0 ]
