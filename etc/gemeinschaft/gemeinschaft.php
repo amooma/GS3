@@ -115,7 +115,8 @@ $GUI_AUTH_METHOD            = 'gemeinschaft';
 
 $GUI_NUM_RESULTS            = 12;
 
-$GUI_SUDO_ADMINS            = '2000, 2001, 2002, 2003';
+//$GUI_SUDO_ADMINS            = '2000, 2001, 2002, 2003, peter';
+$GUI_SUDO_ADMINS            = '';
   # comma separated list of admin users who can manage *all* accounts
 
 $GUI_SUDO_EXTENDED          = false;
