@@ -716,7 +716,7 @@ context private-call {
 		Set(__is_private_call=1);
 		Verbose(1,### Private call from user ${user_name} to ${number});
 		//&dial-gateway(${number});
-		Dial(Local/${number});
+		Dial(Local/${number}/n);
 		&hangup-proper-status();
 	}
 	//_96. => {
@@ -844,7 +844,7 @@ context systemalarm {
 		while ("${systemalarm_${i}}" != "") {
 			Verbose(0,######### SYSTEM-ALARM - i=${i} - dial ${systemalarm_${i}});
 			!!!!!!!
-			Dial(Local/${systemalarm_${i}},20,g); // hier noch irgendwas mit Makro ...
+			Dial(Local/${systemalarm_${i}}/n,20,g); // hier noch irgendwas mit Makro ...
 			i=${i}+1;
 		}
 		*/
@@ -872,7 +872,7 @@ context call-completion {
 		Set(CALLERID(all)=${orig_callerid});
 		//DumpChan();
 		Set(__is_callcompletion=1); // no forwards and no mailbox
-		Dial(Local/${callee},15);
+		Dial(Local/${callee}/n,15);
 		&hangup-proper-status();
 	}
 	
@@ -898,7 +898,7 @@ context urldial {
 		Verbose(1,### Callfile from ${callfile_from_user} to ${callfile_target});
 		Set(__is_callfile_origin=);
 		Set(__is_call_from=internal);
-		Dial(Local/${callfile_target}@from-internal-users,200);
+		Dial(Local/${callfile_target}@from-internal-users/n,200);
 		&hangup-proper-status();
 	}
 	
