@@ -444,7 +444,7 @@ context to-internal-users {
 	//FIXME - this extension is just for testing. needs to be removed!
 	_9. => {
 		Verbose(1,#################### GATEWAY SIM ######################);
-		Dial(Local/${EXTEN:1}@from-gg-pstn);
+		Dial(Local/${EXTEN:1}@from-gg-pstn/n);
 		Hangup();
 	}
 }
@@ -644,7 +644,7 @@ context to-internal-users-self {
 					Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 					Set(__forwarded_by=${EXTEN});
 					Set(__is_from_gateway=);
-					Dial(Local/${fw_${is_call_from}_always},200);
+					Dial(Local/${fw_${is_call_from}_always}/n,200);
 					&hangup-proper-status();
 				}
 				else {
@@ -725,7 +725,7 @@ context to-internal-users-self {
 					Verbose(1,### Called user: ${EXTEN}\, forward on busy to: ${fw_${is_call_from}_busy});
 					Set(__forwarded_by=${EXTEN});
 					Set(__is_from_gateway=);
-					Dial(Local/${fw_${is_call_from}_busy},200);
+					Dial(Local/${fw_${is_call_from}_busy}/n,200);
 					&hangup-proper-status();
 				}
 				goto user_uncallable;
@@ -744,7 +744,7 @@ context to-internal-users-self {
 					Verbose(1,### Called user ${EXTEN} - forward on unavail to: ${fw_${is_call_from}_unavail});
 					Set(__forwarded_by=${EXTEN});
 					Set(__is_from_gateway=);
-					Dial(Local/${fw_${is_call_from}_unavail},200);
+					Dial(Local/${fw_${is_call_from}_unavail}/n,200);
 					&hangup-proper-status();
 				}
 				goto user_uncallable;
@@ -763,7 +763,7 @@ context to-internal-users-self {
 					Verbose(1,### Called user: ${EXTEN} - forward on offline to: ${fw_${is_call_from}_offline});
 					Set(__forwarded_by=${EXTEN});
 					Set(__is_from_gateway=);
-					Dial(Local/${fw_${is_call_from}_offline},200);
+					Dial(Local/${fw_${is_call_from}_offline}/n,200);
 					Congestion(3);
 					&hangup-proper-status();
 				}
@@ -785,7 +785,7 @@ context to-internal-users-self {
 				Verbose(1,### Called queue: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 				Set(__forwarded_by=${EXTEN});
 				Set(__is_from_gateway=);
-				Dial(Local/${fw_${is_call_from}_always},900);
+				Dial(Local/${fw_${is_call_from}_always}/n,900);
 				&hangup-proper-status();
 			}
 			
@@ -877,7 +877,7 @@ context to-internal-users-self {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on timeout to: ${fw_${is_call_from}_timeout});
 					Set(__forwarded_by=${EXTEN});
 					Set(__is_from_gateway=);
-					Dial(Local/${fw_${is_call_from}_timeout},900);
+					Dial(Local/${fw_${is_call_from}_timeout}/n,900);
 					&hangup-proper-status();
 				}
 				Playback(gemeinschaft/queue-all-busy);
@@ -890,7 +890,7 @@ context to-internal-users-self {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on full to: ${fw_${is_call_from}_full});
 					Set(__forwarded_by=${EXTEN});
 					Set(__is_from_gateway=);
-					Dial(Local/${fw_${is_call_from}_full},900);
+					Dial(Local/${fw_${is_call_from}_full}/n,900);
 					&hangup-proper-status();
 				}
 				Playback(gemeinschaft/queue-all-busy);
@@ -903,7 +903,7 @@ context to-internal-users-self {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on empty to: ${fw_${is_call_from}_empty});
 					Set(__forwarded_by=${EXTEN});
 					Set(__is_from_gateway=);
-					Dial(Local/${fw_${is_call_from}_empty},900);
+					Dial(Local/${fw_${is_call_from}_empty}/n,900);
 					&hangup-proper-status();
 				}
 				Busy(5);
