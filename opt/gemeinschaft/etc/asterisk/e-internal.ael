@@ -442,11 +442,11 @@ context to-internal-users {
 	#exec "/opt/gemeinschaft/etc/asterisk/e-internal-hints.ael.php"
 	
 	//FIXME - this extension is just for testing. needs to be removed!
-	_9. => {
-		Verbose(1,#################### GATEWAY SIM ######################);
-		Dial(Local/${EXTEN:1}@from-gg-pstn/n);
-		Hangup();
-	}
+	//_9. => {
+	//	Verbose(1,#################### GATEWAY SIM ######################);
+	//	Dial(Local/${EXTEN:1}@from-gg-pstn/n);
+	//	Hangup();
+	//}
 }
 
 
