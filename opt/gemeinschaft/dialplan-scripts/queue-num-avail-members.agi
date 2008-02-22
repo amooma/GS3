@@ -28,6 +28,8 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -38,7 +40,6 @@ $queue_name = trim(@$argv[1]);
 if (! preg_match('/^\d+$/', $queue_name))  // is not just digits
 	die();
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/queue-status.php' );
 
@@ -82,14 +83,14 @@ if (! is_array($queue_stats) || ! is_array($queue_stats['members']))
 	die();
 
 $num_members = count( $queue_stats['members'] );
-echo "SET VARIABLE queue_num_members ", $num_members, "\n";
+echo 'SET VARIABLE queue_num_members '. gs_agi_str_esc($num_members) ."\n";
 
 $num_avail = 0;
 foreach ($queue_stats['members'] as $member) {
 	if (_devstate2avail( @$member['devstate'] ))
 		++$num_avail;
 }
-echo "SET VARIABLE queue_avail_members ", $num_avail, "\n";
+echo 'SET VARIABLE queue_avail_members '. gs_agi_str_esc($num_avail) ."\n";
 
 
 ?>

@@ -28,6 +28,8 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -36,18 +38,17 @@ ob_implicit_flush(1);
 $ext  = trim(@$argv[1]);
 
 if (! $ext || ! preg_match('/^\d+$/', $ext)) {  // is not just digits
-	echo "SET VARIABLE cc_possible 0\n";
+	echo 'SET VARIABLE cc_possible '. gs_agi_str_esc('0') ."\n";
 	die();
 }
 
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/extension-state.php' );
 
 
 $state = @ gs_extstate_single( $ext );
 
-echo "SET VARIABLE cc_possible ". (int)@gs_ast_extstate_offer_cc( $state ) ."\n";
+echo 'SET VARIABLE cc_possible '. gs_agi_str_esc((int)@gs_ast_extstate_offer_cc( $state )) ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 

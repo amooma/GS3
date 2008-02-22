@@ -28,6 +28,8 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -41,7 +43,6 @@ if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
 }
 
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
@@ -86,22 +87,28 @@ while ($r = $rs->fetchRow()) {
 foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {
 		//if ($fw['number'] != '') {
-			echo "SET VARIABLE fw_". $source ."_". $case . rTrim( " ". $fw['number'] ) ."\n";
+			echo 'SET VARIABLE fw_'.$source.'_'.$case .' '. gs_agi_str_esc($fw['number']) ."\n";
 			//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 		//}
 	}
 }
-if ($forwards['internal']['unavail']['number'] != '')
-	echo "SET VARIABLE fw_internal_unavail_timeout ".
-		$forwards['internal']['unavail']['timeout'] ."\n";
-else
-	echo "SET VARIABLE fw_internal_unavail_timeout\n";
+
+if ($forwards['internal']['unavail']['number'] != '') {
+	echo 'SET VARIABLE fw_internal_unavail_timeout '.
+		gs_agi_str_esc( $forwards['internal']['unavail']['timeout'] ) ."\n";
+} else {
+	echo 'SET VARIABLE fw_internal_unavail_timeout '.
+		gs_agi_str_esc('') ."\n";
+}
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-if ($forwards['external']['unavail']['number'] != '')
-	echo "SET VARIABLE fw_external_unavail_timeout ".
-		$forwards['external']['unavail']['timeout'] ."\n";
-else
-	echo "SET VARIABLE fw_external_unavail_timeout\n";
+
+if ($forwards['external']['unavail']['number'] != '') {
+	echo 'SET VARIABLE fw_external_unavail_timeout '.
+		gs_agi_str_esc( $forwards['external']['unavail']['timeout'] ) ."\n";
+} else {
+	echo 'SET VARIABLE fw_external_unavail_timeout '.
+		gs_agi_str_esc('') ."\n";
+}
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 

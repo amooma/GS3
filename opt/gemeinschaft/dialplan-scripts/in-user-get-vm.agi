@@ -28,6 +28,8 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -41,7 +43,6 @@ if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
 }
 
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
@@ -64,9 +65,9 @@ if ($r = $rs->fetchRow()) {
 	$vm['external_active'] = $r['external_active'];
 }
 
-echo "SET VARIABLE vm_internal_active ". $vm['internal_active'] ."\n";
+echo 'SET VARIABLE vm_internal_active '. gs_agi_str_esc( $vm['internal_active'] ) ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-echo "SET VARIABLE vm_external_active ". $vm['external_active'] ."\n";
+echo 'SET VARIABLE vm_external_active '. gs_agi_str_esc( $vm['external_active'] ) ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
@@ -82,7 +83,7 @@ foreach ($msgs as $src => $ignore) {
 		$msgs[$src] = $fname;
 }
 foreach ($msgs as $src => $file) {
-	echo "SET VARIABLE vm_announce_". $src ." ". $file ."\n";
+	echo 'SET VARIABLE vm_announce_'.$src .' '. gs_agi_str_esc($file) ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 }
 

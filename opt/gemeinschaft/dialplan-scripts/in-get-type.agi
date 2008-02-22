@@ -28,6 +28,8 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -36,18 +38,17 @@ ob_implicit_flush(1);
 $ext  = trim(@$argv[1]);
 
 if (! $ext) {
-	echo "SET VARIABLE __exttype\n";
+	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
-	echo "SET VARIABLE __exttype unknown\n";
+	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
@@ -57,7 +58,7 @@ $db = gs_db_slave_connect();
 #
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 if ($num > 0) {
-	echo "SET VARIABLE __exttype user\n";
+	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('user') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -66,7 +67,7 @@ if ($num > 0) {
 #
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queues` WHERE `name`=\''. $db->escape($ext) .'\'' );
 if ($num > 0) {
-	echo "SET VARIABLE __exttype queue\n";
+	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('queue') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -77,7 +78,7 @@ if ($num > 0) {
 
 
 
-echo "SET VARIABLE __exttype unknown\n";
+echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 

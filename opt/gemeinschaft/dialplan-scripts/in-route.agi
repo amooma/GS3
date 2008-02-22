@@ -28,6 +28,8 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -36,24 +38,11 @@ error_reporting(0);
 
 
 
-function _agi_str_esc( $str )
-{
-	return str_replace(
-		array( "\n" , "\r" , "\t" , ' '   ),
-		array( '\\ ', '\\ ', '\\ ', '\\ ' ),
-		$str );
-}
-
-function _agi_verbose( $str, $level=1 )
-{
-	echo 'VERBOSE '. _agi_str_esc($str) .' '. (int)$level ."\n";
-}
-
 function _err( $msg )
 {
-	_agi_verbose('### '.$msg);
-	echo "SET VARIABLE did_ext\n";
-	echo "SET VARIABLE did_ext_to\n";
+	gs_agi_verbose('### '.$msg);
+	echo 'SET VARIABLE did_ext '. gs_agi_str_esc('') ."\n";
+	echo 'SET VARIABLE did_ext_to '. gs_agi_str_esc('') ."\n";
 	die();
 }
 
@@ -64,7 +53,6 @@ $number  = ($argc > 2) ?      trim($argv[2]) : '';
 if ($number == '') _err('Empty number');
 
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
 $db = gs_db_slave_connect();
@@ -85,7 +73,7 @@ if ($ggrp['in_dest_search'] != '') {
 	$ggrp['in_dest_replace'] = trim($ggrp['in_dest_replace']);
 	$number = @preg_replace('/'.$ggrp['in_dest_search'].'/', $ggrp['in_dest_replace'], $number);
 }
-echo "SET VARIABLE did_ext $number\n";
+echo 'SET VARIABLE did_ext '. gs_agi_str_esc($number) ."\n";
 
 //FIXME - do the same thing for the callerid number
 
@@ -121,14 +109,14 @@ foreach ($routes as $route) {
 	$route['pattern'] = trim($route['pattern']);
 	if (@preg_match('/'.$route['pattern'].'/', $number)) {
 		if ($route['id'] !== 0)
-			_agi_verbose( "### Matching route for $number is id ". $route['id'] );
+			gs_agi_verbose( "### Matching route for $number is id ". $route['id'] );
 		else
-			_agi_verbose( "### Matching route for $number is default 1:1 DID->extension route" );
+			gs_agi_verbose( "### Matching route for $number is default 1:1 DID->extension route" );
 		$number = @preg_replace('/'.$route['pattern'].'/', trim($route['to_ext']), $number);
 		break;
 	}
 }
-echo "SET VARIABLE did_ext_to $number\n";
+echo 'SET VARIABLE did_ext_to '. gs_agi_str_esc($number) ."\n";
 
 
 
