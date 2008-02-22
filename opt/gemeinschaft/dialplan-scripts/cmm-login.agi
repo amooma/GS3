@@ -28,6 +28,8 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -38,23 +40,22 @@ $pass      = trim(@$argv[2]);
 $old_uid   = (int)trim(@$argv[3]);
 
 if (! $new_uname) {
-	echo "SET VARIABLE ret unknown\n";
+	echo 'SET VARIABLE ret '. gs_agi_str_esc('unknown') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 if (! $pass) {
-	echo "SET VARIABLE ret badpass\n";
+	echo 'SET VARIABLE ret '. gs_agi_str_esc('badpass') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 if (! $old_uid) {
-	echo "SET VARIABLE ret error\n";
+	echo 'SET VARIABLE ret '. gs_agi_str_esc('error') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
@@ -63,20 +64,20 @@ $db = gs_db_master_connect();
 $new_uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($new_uname) .'\'' );
 if ($new_uid < 1) {
 	# unknown user
-	echo "SET VARIABLE ret unknown\n";
+	echo 'SET VARIABLE ret '. gs_agi_str_esc('unknown') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 $pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `id`='. $new_uid );
 if (trim($pin)=='') {
 	# db error, unknown user
-	echo "SET VARIABLE ret unknown\n";
+	echo 'SET VARIABLE ret '. gs_agi_str_esc('unknown') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 if ($pin != $pass) {
 	# wrong password
-	echo "SET VARIABLE ret badpass\n";
+	echo 'SET VARIABLE ret '. gs_agi_str_esc('badpass') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -94,13 +95,13 @@ $db->execute( 'UPDATE `phones` SET `user_id`=NULL WHERE `user_id` IN ('. $old_ui
 # log in the new user:
 $ok = $db->execute( 'UPDATE `phones` SET `user_id`='. $new_uid .' WHERE `id`='. $phone_id );
 if (! $ok) {
-	echo "SET VARIABLE ret error\n";
+	echo 'SET VARIABLE ret '. gs_agi_str_esc('error') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
 
-echo "SET VARIABLE ret ok\n";
+echo 'SET VARIABLE ret '. gs_agi_str_esc('ok') ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 

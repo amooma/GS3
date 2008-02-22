@@ -28,6 +28,8 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -36,24 +38,19 @@ ob_implicit_flush(1);
 $uname  = trim(@$argv[1]);
 
 if (! $uname) {
-	echo "SET VARIABLE ret 0\n";
+	echo 'SET VARIABLE ret '. gs_agi_str_esc('0') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
 
-//echo dirName(__FILE__).'/../inc/';
-//die("\n");
-
-
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
 $db = gs_db_slave_connect();
 
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($uname) .'\'' );
-echo 'SET VARIABLE ret '. ($num > 0 ? '1' : '0') ."\n";
+echo 'SET VARIABLE ret '. gs_agi_str_esc($num > 0 ? '1' : '0') ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 

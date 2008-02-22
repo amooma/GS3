@@ -28,6 +28,8 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -37,27 +39,14 @@ error_reporting(0);
 
 function _no_more_routes( $idx=1 )
 {
-	echo 'SET VARIABLE r_'.$idx.'_dial' ."\n";
+	echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc('') ."\n";
 	die();
-}
-
-function _agi_str_esc( $str )
-{
-	return str_replace(
-		array( "\n" , "\r" , "\t" , ' '   ),
-		array( '\\ ', '\\ ', '\\ ', '\\ ' ),
-		$str );
-}
-
-function _agi_verbose( $str, $level=1 )
-{
-	echo 'VERBOSE '. _agi_str_esc($str) .' '. (int)$level ."\n";
 }
 
 
 $number = ($argc > 1) ? trim($argv[1]) : '';
 if ($number == '') {
-	_agi_verbose("### Empty number");
+	gs_agi_verbose("### Empty number");
 	echo "HANGUP\n";
 	_no_more_routes();
 }
@@ -65,7 +54,6 @@ $is_sub_system = ($argc > 2) ? strToLower(trim($argv[2])) : '';
 $is_sub_system = ($is_sub_system=='1' || $is_sub_system=='yes');
 
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
@@ -75,17 +63,17 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 	$canonical = new CanonicalPhoneNumber( $number );
 	
 	if (@$canonical->is_call_by_call) {
-		_agi_verbose("### $number has a call-by-call prefix");
+		gs_agi_verbose("### $number has a call-by-call prefix");
 		echo "HANGUP\n";
 		_no_more_routes();
 	}
 	elseif (@$canonical->in_prv_branch) {
 		if ($is_sub_system) {
 			# allow to go to the outside
-			_agi_verbose("### $number is in private branch but we are a sub-system");
+			gs_agi_verbose("### $number is in private branch but we are a sub-system");
 			$number_dial = trim( @$canonical->dial );
 		} else {
-			_agi_verbose("### $number is in private branch and we are not a sub-system");
+			gs_agi_verbose("### $number is in private branch and we are not a sub-system");
 			/*
 			# don't dial to the outside
 			echo "HANGUP\n";
@@ -94,12 +82,12 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 			# dial our extension
 			$exten = trim( @$canonical->extn );
 			if ($exten != '') {
-				echo "SET VARIABLE __is_from_gateway 1\n";
+				echo 'SET VARIABLE __is_from_gateway '. gs_agi_str_esc('1') ."\n";
 				$idx = 1;
-				echo 'SET VARIABLE r_'.$idx.'_dial Local/'. $exten .'@to-internal-users' ."\n";
+				echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc( 'Local/'. $exten .'@to-internal-users' ) ."\n";
 				_no_more_routes(++$idx);
 			} else {
-				_agi_verbose("### Empty number");
+				gs_agi_verbose("### Empty number");
 				echo "HANGUP\n";
 				_no_more_routes();
 			}
@@ -110,7 +98,7 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 	}
 	
 	if ($number_dial == '') {
-		_agi_verbose("### Empty number");
+		gs_agi_verbose("### Empty number");
 		echo "HANGUP\n";
 		_no_more_routes();
 	}
@@ -174,22 +162,22 @@ LIMIT 8'
 	while ($gate = $rs->fetchRow()) {
 		if ($lcr_prefix != '') {
 			if (strToLower($gate['type']) === 'zap') {
-				_agi_verbose("### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
+				gs_agi_verbose("### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
 				$number_final = $lcr_prefix . $number_dial;
 			} else {
-				_agi_verbose("### LCR prefix $lcr_prefix ignored for non-Zap gateway ". $gate['name'] );
+				gs_agi_verbose("### LCR prefix $lcr_prefix ignored for non-Zap gateway ". $gate['name'] );
 				$number_final = $number_dial;
 			}
 		} else {
 			$number_final = $number_dial;
 		}
 		$dialstr = str_replace(
-			array( '{number}'  , '{peer}'      ),
+			array( '{number}'   , '{peer}'      ),
 			array( $number_final, $gate['name'] ),
 			$gate['dialstr']
 		);
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
-		echo 'SET VARIABLE r_'.$idx.'_dial '.$dialstr ."\n";
+		echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc($dialstr) ."\n";
 		++$idx;
 	}
 }

@@ -28,6 +28,8 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -37,7 +39,7 @@ $user_name = trim(@$argv[1]);
 $to        = trim(@$argv[2]);
 
 if (! preg_match('/^[0-9]*$/', $user_name)) {
-	echo "SET VARIABLE dial_allowed no\n";
+	echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('no') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -45,14 +47,13 @@ if (! preg_match('/^[0-9]*$/', $user_name)) {
 /*
 if ($user_id < 1) {
 	# originator is external
-	echo "SET VARIABLE dial_allowed no\n";
+	echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('no') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 */
 
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
@@ -64,7 +65,7 @@ $user_id = $db->executeGetOne(
 );
 if ($user_id < 1) {
 	// forwarded by a queue
-	echo "SET VARIABLE dial_allowed yes\n";
+	echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('yes') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -75,17 +76,17 @@ if ($rs) {
 	while ($row = $rs->fetchRow()) {
 		if (preg_match( '°'. $row['regexp'] .'°', $to )) {
 			if ($row['pin']=='') {
-				echo "SET VARIABLE dial_allowed no\n";
+				echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('no') ."\n";
 			} else {
-				echo "SET VARIABLE dial_allowed pin\n";
-				echo "SET VARIABLE dial_pin ". $row['pin'] ."\n";
+				echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('pin') ."\n";
+				echo 'SET VARIABLE dial_pin '. gs_agi_str_esc($row['pin']) ."\n";
 			}
 			die();
 		}
 	}
 }
 
-echo "SET VARIABLE dial_allowed yes\n";
+echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('yes') ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 

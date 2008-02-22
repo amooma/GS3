@@ -28,6 +28,8 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -36,13 +38,12 @@ ob_implicit_flush(1);
 $ext  = trim(@$argv[1]);
 
 if (! $ext || ! preg_match('/^[0-9]+$/', $ext)) {
-	echo "SET VARIABLE user_code\n";
+	echo 'SET VARIABLE user_code '. gs_agi_str_esc('') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
@@ -57,13 +58,13 @@ FROM
 WHERE `s`.`name`=\''. $ext .'\''
 );
 if (! $usercode) {
-	echo "SET VARIABLE user_code\n";
+	echo 'SET VARIABLE user_code '. gs_agi_str_esc('') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
 
-echo "SET VARIABLE user_code ". $usercode ."\n";
+echo 'SET VARIABLE user_code '. gs_agi_str_esc($usercode) ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
