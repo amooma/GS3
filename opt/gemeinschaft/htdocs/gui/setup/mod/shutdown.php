@@ -50,6 +50,7 @@ defined('GS_VALID') or die('No direct access.');
 
 <?php
 
-@exec( 'sudo sh -c \'sleep 2; /opt/gemeinschaft/sbin/gpbx-pre-shutdown 1>>/dev/null 2>>/dev/null; /sbin/shutdown -h -P now 1>>/dev/null 2>>/dev/null &\' 0<&- 1>&- 2>&- &' );
+//@exec( 'sudo sh -c \'sleep 2; /opt/gemeinschaft/sbin/gpbx-pre-shutdown 1>>/dev/null 2>>/dev/null; /sbin/shutdown -h -P now 1>>/dev/null 2>>/dev/null &\' 0<&- 1>&- 2>&- &' );
+@exec( 'sudo sh -c \'sleep 2; /sbin/shutdown -h -P now 1>>/dev/null 2>>/dev/null &\' 0<&- 1>&- 2>&- &' );
 
 ?>
