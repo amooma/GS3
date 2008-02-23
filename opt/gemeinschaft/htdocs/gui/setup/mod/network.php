@@ -1006,6 +1006,7 @@ if ($action === 'save2') {
 		if     ($save2_action==='reboot'  ) $cmd = '/sbin/shutdown -r now';
 		elseif ($save2_action==='shutdown') $cmd = '/sbin/shutdown -h -P now';
 		//@exec( 'sudo sh -c \'sleep 2; /opt/gemeinschaft/sbin/gpbx-pre-shutdown 1>>/dev/null 2>>/dev/null; '. $cmd .' 1>>/dev/null 2>>/dev/null &\' 0<&- 1>&- 2>&- &' );
+		@exec( 'sudo sh -c \'sleep 2; '. $cmd .' 1>>/dev/null 2>>/dev/null &\' 0<&- 1>&- 2>&- &' );
 		
 	}
 }
