@@ -58,7 +58,7 @@ function gui_sudo_allowed( $real_user, $sudo_user )
 	
 	foreach ($kkr as $kr)
 		foreach ($kks as $ks)
-			if (subStr($kr,0,4) == subStr($ks,0,4)) return true;
+			if (subStr($kr,0,2) === subStr($ks,0,2)) return true;
 	return false;
 }
 
@@ -96,7 +96,7 @@ function gui_monitor_which_peers( $sudo_user )
 	
 	$filter = '';
 	foreach ($kks as $ks) {
-		$filter .= '('. $kostenstelle_prop .'='. subStr($ks,0,4) .'*)';
+		$filter .= '('. $kostenstelle_prop .'='. subStr($ks,0,2) .'*)';
 	}
 	$filter = '(|'. $filter .')';
 	//echo $filter, "<br />\n";
