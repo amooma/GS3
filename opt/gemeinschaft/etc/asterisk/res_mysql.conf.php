@@ -43,8 +43,11 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 function _grep_mysql_socket( $str )
 {
 	if (preg_match('/(\/(?:var|tmp)\/[a-z\.\-_\/]+)/', $str, $m)) {
-		if (@fileType($m[1])==='socket') {
-			return $m[1];
+		$filename = $m[1];
+		if (@file_exists($filename)) {
+			if (@fileType($filename) === 'socket') {
+				return $m[1];
+			}
 		}
 	}
 	return null;
