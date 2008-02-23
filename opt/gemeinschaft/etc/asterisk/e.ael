@@ -494,7 +494,7 @@ context from-gateways {
 	includes {
 		//voicemail-any;        // voicemail main (own mailbox)
 		//to-internal-nobody;   // internal phones (nobodies)
-		ivrs;                 //FIXME IVR demo
+		//ivrs;                 //FIXME IVR demo
 		to-internal-users;    // internal phones (users)
 	}
 	i => {
@@ -740,7 +740,7 @@ context private-call {
 context from-internal-nobody {
 	
 	includes {
-		ivrs;                 //FIXME IVR demo
+		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
 		voicemail-any;        // voicemail main (any mailbox)
@@ -754,7 +754,7 @@ context from-internal-nobody {
 context from-internal-users {
 	
 	includes {
-		ivrs;                 //FIXME IVR demo
+		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
 		vm-ann-rec;           // record vm-box announcements
