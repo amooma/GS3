@@ -245,6 +245,8 @@ $MODULES['system'   ]['sub'][
       'nodesmon']    =  array('title' => __('Nodes'));
 $MODULES['system'   ]['sub'][
       'cards']       =  array('title' => __('PCI-Karten'));     //TRANSLATE ME
+$MODULES['system'   ]['sub'][
+      'isdnports']   =  array('title' => __('ISDN-Ports'));     //TRANSLATE ME
 /*
 $MODULES['system'   ]['sub'][
       'config']      =  array('title' => __('Konfiguration'));  //TRANSLATE ME
