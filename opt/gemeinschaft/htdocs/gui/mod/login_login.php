@@ -40,7 +40,8 @@ echo '</h2>', "\n";
 
 
 
-if (@$_REQUEST['login_action'] == 'forgotpwd') {
+if (@$_REQUEST['login_action'] === 'forgotpwd') {
+	
 	$login_user = trim(@$_REQUEST['login_user']);
 	if ($login_user == '') {
 		$action_info = '';
@@ -63,7 +64,7 @@ if (@$_REQUEST['login_action'] == 'forgotpwd') {
 					else {
 						
 						@exec('hostname 2>>/dev/null', $out, $err);
-						if ($err == 0) {
+						if ($err === 0) {
 							$hostname = trim(implode(' ', $out));
 							if (! $hostname) $hostname = '127.0.0.1';
 						} else
@@ -126,7 +127,8 @@ Gemeinschaft auf \"". $hostname ."\"
 </div>
 <?php
 	
-} else {
+}
+else {
 	
 ?>
 <div style="text-align:center; width:auto; margin:1em 100px 0 0;">
