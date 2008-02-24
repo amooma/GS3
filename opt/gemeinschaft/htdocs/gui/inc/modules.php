@@ -243,10 +243,12 @@ $MODULES['system'   ]['sub'][
 }
 $MODULES['system'   ]['sub'][
       'nodesmon']    =  array('title' => __('Nodes'));
+if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 $MODULES['system'   ]['sub'][
       'cards']       =  array('title' => __('PCI-Karten'));     //TRANSLATE ME
 $MODULES['system'   ]['sub'][
       'isdnports']   =  array('title' => __('ISDN-Ports'));     //TRANSLATE ME
+}
 /*
 $MODULES['system'   ]['sub'][
       'config']      =  array('title' => __('Konfiguration'));  //TRANSLATE ME
