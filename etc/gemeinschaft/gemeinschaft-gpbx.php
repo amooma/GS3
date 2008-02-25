@@ -183,6 +183,7 @@ $INTL_USE_GETTEXT       = false;
 $INTL_ASTERISK_LANG     = 'de';
 $USERCOMMENT_OFFTIME    = 'Feierabend';
 $EMAIL_PATTERN_VALID    = '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i';
+$EMAIL_DELIVERY         = 'direct-smtp';
 
 
 /***********************************************************
