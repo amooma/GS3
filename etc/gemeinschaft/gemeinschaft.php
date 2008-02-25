@@ -356,6 +356,13 @@ $USERCOMMENT_OFFTIME    = 'Feierabend';  # e.g. "off-time"
 
 $EMAIL_PATTERN_VALID    = '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i';
 
+$EMAIL_DELIVERY         = 'sendmail';
+  # how to deliver e-mails to the users ("forgot password" function etc.)
+  # "sendmail"    :  use PHP's mail() - needs *a* local sendmail (e.g.
+  #                  sendmail / postfix / exim)
+  # "direct-smtp" :  connect to the MX servers of the recipient directly
+  #                  via SMTP
+
 
 
 /***********************************************************
