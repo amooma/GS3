@@ -100,6 +100,7 @@ Gemeinschaft auf \"". $hostname ."\"
 								'Reply-To: "'. 'Nicht antworten' .'" <noreply@noreply.local>' ."\r\n".
 								'MIME-Version: 1.0' ."\r\n".
 								'Content-Type: text/plain; charset=utf-8';
+							
 							$ok = @mail( $u['email'], 'Gemeinschaft Passwort', $msg, $headers );
 							
 							$action_info = $ok
