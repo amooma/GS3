@@ -84,11 +84,12 @@ Viele Gr\xC3\xBC\xC3\x9Fe,
  Gemeinschaft
 -- 
 Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht.
-Gemeinschaft auf \"". $hostname ."\"
+Gemeinschaft auf \"%s\"
 ",
 							(@$u['firstname'] != '' ? $u['firstname'] : '') .
 							(@$u['lastname'] != '' ? ' '.$u['lastname'] : ''),
-							@$u['pin']
+							@$u['pin'],
+							$hostname
 						);
 						
 						$GS_EMAIL_DELIVERY = gs_get_conf('GS_EMAIL_DELIVERY');
