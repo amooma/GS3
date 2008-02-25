@@ -66,40 +66,109 @@ if (@$_REQUEST['login_action'] === 'forgotpwd') {
 						@exec('hostname 2>>/dev/null', $out, $err);
 						if ($err === 0) {
 							$hostname = trim(implode(' ', $out));
-							if (! $hostname) $hostname = '127.0.0.1';
+							if (! $hostname) $hostname = 'localhost';
 						} else
-							$hostname = '127.0.0.1';
+							$hostname = 'localhost';
 						
-						$headers =
-							'From: "Gemeinschaft" <root>' ."\r\n".
-							'Reply-To: "'. 'Nicht antworten' .'" <noreply@noreply.local>' ."\r\n".
-							'MIME-Version: 1.0' ."\r\n".
-							'Content-Type: text/plain; charset=utf-8';
 						$msg = sPrintF(
 "Hallo %s
 
- Sie (oder jemand, der sich als Sie ausgeben wollte) haben in der
+Sie (oder jemand, der sich als Sie ausgeben wollte) haben in der
 Web-Oberfl\xC3\xA4che von Gemeinschaft die Zusendung Ihres Pa\xC3\x9Fwortes
 angefordert.
 
- Ihre PIN-Nummer lautet:  %s
+Ihre PIN-Nummer lautet:  %s
 
 Viele Gr\xC3\xBC\xC3\x9Fe,
  Gemeinschaft
-
-Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht.
 -- 
+Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht.
 Gemeinschaft auf \"". $hostname ."\"
 ",
 							(@$u['firstname'] != '' ? $u['firstname'] : '') .
 							(@$u['lastname'] != '' ? ' '.$u['lastname'] : ''),
 							@$u['pin']
 						);
-						$ok = @mail( $u['email'], 'Gemeinschaft Passwort', $msg, $headers );
 						
-						$action_info = $ok
-							? sPrintF(__('Pa&szlig;wort wurde an &quot;%s&quot; gesendet'), htmlSpecialChars($u['email']))
-							: sPrintF(__('Fehler beim Senden an &quot;%s&quot;'), htmlSpecialChars($u['email']));
+						$GS_EMAIL_DELIVERY = gs_get_conf('GS_EMAIL_DELIVERY');
+						
+						if ($GS_EMAIL_DELIVERY === 'sendmail') {
+							
+							$headers =
+								'From: "Gemeinschaft" <root>' ."\r\n".
+								'Reply-To: "'. 'Nicht antworten' .'" <noreply@noreply.local>' ."\r\n".
+								'MIME-Version: 1.0' ."\r\n".
+								'Content-Type: text/plain; charset=utf-8';
+							$ok = @mail( $u['email'], 'Gemeinschaft Passwort', $msg, $headers );
+							
+							$action_info = $ok
+								? sPrintF(__('Pa&szlig;wort wurde an <tt>%s</tt> gesendet'), htmlEnt($u['email']))
+								: sPrintF(__('Fehler beim Senden an <tt>%s</tt>'), htmlEnt($u['email']));
+							
+						}
+						elseif ($GS_EMAIL_DELIVERY === 'direct-smtp') {
+							
+							require_once( GS_DIR .'lib/phpmailer/class.phpmailer.php' );
+							$mail = new PHPMailer();
+							$mail->CharSet = 'utf-8';
+							$mail->SetLanguage(
+								strToLower(subStr( gs_get_conf('GS_INTL_LANG') ,0,2)),
+								GS_DIR .'lib/phpmailer/language/' );
+							$mail->Hostname = $hostname;
+							$mail->From = 'root@'.$hostname;
+							$mail->FromName = 'Gemeinschaft';
+							$mail->AddReplyTo( '', 'Nicht antworten' );
+							$mail->AddAddress(
+								$u['email'],
+								(@$u['firstname'] != '' ? $u['firstname'] : '') .
+								(@$u['lastname'] != '' ? ' '.$u['lastname'] : '')
+								);
+							$mail->Subject = "Gemeinschaft Pa\xC3\x9Fwort";
+							$mail->Body = $msg;
+							$mail->IsSMTP();
+							//$mail->SMTPDebug = true;
+							$mail->Timeout = 10;
+							if (! preg_match('/@([^@]+)/', $u['email'], $m)) {
+								$ok = false;
+								$action_info = sPrintF(__('Fehler beim Senden an <tt>%s</tt>'), htmlEnt($u['email'])) .'<br />(no host)';
+							} else {
+								$host = $m[1];
+								$mx_hosts   = array();
+								$mx_weights = array();
+								getMXRR($host, $mx_hosts, $mx_weights);
+								$mxs = array();
+								if (@count($mx_hosts) > 0) {
+									for($i=0; $i<count($mx_hosts); ++$i) {
+										$mxs[$mx_hosts[$i]] = @$mx_weights[$i];
+									}
+									aSort($mxs, SORT_NUMERIC);
+								} else {
+									$mxs[$host] = 0;  # RFC 2821
+								}
+								//echo "<pre>\n"; print_r($mxs); echo "</pre>\n";
+								
+								while (list($mx_host, $mx_weight) = each($mxs)) {
+									//echo "<b>$mx_host</b><br />\n";
+									@set_time_limit(30);
+									$mail->Host = $mx_host;
+									//echo "<pre>\n";
+									$ok = @$mail->Send();
+									//echo "</pre>\n";
+									if ($ok) break;
+								}
+								
+								$action_info = $ok
+									? sPrintF(__('Pa&szlig;wort wurde an <tt>%s</tt> gesendet'), htmlEnt($u['email']))
+									: sPrintF(__('Fehler beim Senden an <tt>%s</tt>'), htmlEnt($u['email'])) .'<br />('. $mail->ErrorInfo .')';
+							}
+							
+						}
+						else {
+							
+							$action_info = 'Unknown <tt>EMAIL_DELIVERY</tt> &quot;<tt>'. htmlEnt($GS_EMAIL_DELIVERY) .'</tt>&quot;!';
+							
+						}
+						
 					}
 				}
 			}
