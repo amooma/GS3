@@ -42,7 +42,8 @@ if ($argc < 2) {
 }
 $param = $argv[1];
 $val = gs_keyval_get($param);
-echo serialize($val), "\n";
+//echo serialize($val), "\n";
+echo $val, "\n";
 
 
 ?>

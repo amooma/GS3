@@ -46,7 +46,8 @@ if (subStr($param,0,3) === 'GS_') {
 }
 $param = 'GS_'.$param;
 $val = gs_get_conf($param);
-echo serialize($val), "\n";
+//echo serialize($val), "\n";
+echo $val, "\n";
 
 
 ?>
