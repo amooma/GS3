@@ -67,8 +67,9 @@ if (@$_REQUEST['login_action'] === 'forgotpwd') {
 						if ($err === 0) {
 							$hostname = trim(implode(' ', $out));
 							if (! $hostname) $hostname = 'localhost';
-						} else
+						} else {
 							$hostname = 'localhost';
+						}
 						
 						$msg = sPrintF(
 "Hallo %s
