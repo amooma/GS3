@@ -91,9 +91,9 @@ INSERT INTO `area_codes` VALUES ('49','0180',0,'Geteilte-Kosten-Dienste');
 INSERT INTO `area_codes` VALUES ('49','0181',0,'Internationale Virtuelle Private Netze (IVPN)');
 INSERT INTO `area_codes` VALUES ('49','019',0,'Online-Dienste etc.');
 INSERT INTO `area_codes` VALUES ('49','0198',0,'Routingnummern?');
-INSERT INTO `area_codes` VALUES ('49','01987',0,'Routingnummern fÃ¼r 116xxx');
-INSERT INTO `area_codes` VALUES ('49','01988',0,'Routingnummern fÃ¼r entgeltfreie Mehrwertdienste');
-INSERT INTO `area_codes` VALUES ('49','01989',0,'Routingnummern fÃ¼r Auskunftsdienste');
+INSERT INTO `area_codes` VALUES ('49','01987',0,'Routingnummern für 116xxx');
+INSERT INTO `area_codes` VALUES ('49','01988',0,'Routingnummern für entgeltfreie Mehrwertdienste');
+INSERT INTO `area_codes` VALUES ('49','01989',0,'Routingnummern für Auskunftsdienste');
 INSERT INTO `area_codes` VALUES ('49','0199',0,'Netzinterne Verkehrslenkung');
 INSERT INTO `area_codes` VALUES ('49','0201',1,'Essen');
 INSERT INTO `area_codes` VALUES ('49','0202',1,'Wuppertal');
@@ -2626,8 +2626,8 @@ INSERT INTO `area_codes` VALUES ('49','04974',1,'Neuharlingersiel');
 INSERT INTO `area_codes` VALUES ('49','04975',1,'Westerholt Ostfriesl');
 INSERT INTO `area_codes` VALUES ('49','04976',1,'Spiekeroog');
 INSERT INTO `area_codes` VALUES ('49','04977',1,'Blomberg Ostfriesl');
-INSERT INTO `area_codes` VALUES ('49','0500',0,'(Reserve fÃ¼r Telekommunikationsdienste)');
-INSERT INTO `area_codes` VALUES ('49','0501',0,'(Reserve fÃ¼r Telekommunikationsdienste)');
+INSERT INTO `area_codes` VALUES ('49','0500',0,'(Reserve für Telekommunikationsdienste)');
+INSERT INTO `area_codes` VALUES ('49','0501',0,'(Reserve für Telekommunikationsdienste)');
 INSERT INTO `area_codes` VALUES ('49','05021',1,'Nienburg Weser');
 INSERT INTO `area_codes` VALUES ('49','05022',1,'Wietzen');
 INSERT INTO `area_codes` VALUES ('49','05023',1,'Liebenau Kr Nienburg Weser');
@@ -3205,13 +3205,13 @@ INSERT INTO `area_codes` VALUES ('49','05975',1,'Rheine-Mesum');
 INSERT INTO `area_codes` VALUES ('49','05976',1,'Salzbergen');
 INSERT INTO `area_codes` VALUES ('49','05977',1,'Spelle');
 INSERT INTO `area_codes` VALUES ('49','05978',1,'Hörstel-Dreierwalde');
-INSERT INTO `area_codes` VALUES ('49','0600',0,'(Reserve fÃ¼r Telekommunikationsdienste)');
+INSERT INTO `area_codes` VALUES ('49','0600',0,'(Reserve für Telekommunikationsdienste)');
 INSERT INTO `area_codes` VALUES ('49','06002',1,'Ober-Mörlen');
 INSERT INTO `area_codes` VALUES ('49','06003',1,'Rosbach v d Höhe');
 INSERT INTO `area_codes` VALUES ('49','06004',1,'Lich-Eberstadt');
 INSERT INTO `area_codes` VALUES ('49','06007',1,'Rosbach-Rodheim');
 INSERT INTO `area_codes` VALUES ('49','06008',1,'Echzell');
-INSERT INTO `area_codes` VALUES ('49','0601',0,'(Reserve fÃ¼r Telekommunikationsdienste)');
+INSERT INTO `area_codes` VALUES ('49','0601',0,'(Reserve für Telekommunikationsdienste)');
 INSERT INTO `area_codes` VALUES ('49','06020',1,'Heigenbrücken');
 INSERT INTO `area_codes` VALUES ('49','06021',1,'Aschaffenburg');
 INSERT INTO `area_codes` VALUES ('49','06022',1,'Obernburg a Main');
@@ -3794,8 +3794,8 @@ INSERT INTO `area_codes` VALUES ('49','06894',1,'St Ingbert');
 INSERT INTO `area_codes` VALUES ('49','06897',1,'Sulzbach Saar');
 INSERT INTO `area_codes` VALUES ('49','06898',1,'Völklingen');
 INSERT INTO `area_codes` VALUES ('49','069',1,'Frankfurt am Main');
-INSERT INTO `area_codes` VALUES ('49','0700',0,'PersÃ¶nliche Rufnummern');
-INSERT INTO `area_codes` VALUES ('49','0701',0,'(Reserve fÃ¼r PersÃ¶nliche Rufnummern)');
+INSERT INTO `area_codes` VALUES ('49','0700',0,'Persönliche Rufnummern');
+INSERT INTO `area_codes` VALUES ('49','0701',0,'(Reserve für Persönliche Rufnummern)');
 INSERT INTO `area_codes` VALUES ('49','07021',1,'Kirchheim unter Teck');
 INSERT INTO `area_codes` VALUES ('49','07022',1,'Nürtingen');
 INSERT INTO `area_codes` VALUES ('49','07023',1,'Weilheim an der Teck');
@@ -4307,7 +4307,7 @@ INSERT INTO `area_codes` VALUES ('49','07975',1,'Untergröningen');
 INSERT INTO `area_codes` VALUES ('49','07976',1,'Sulzbach-Laufen');
 INSERT INTO `area_codes` VALUES ('49','07977',1,'Oberrot b Gaildorf');
 INSERT INTO `area_codes` VALUES ('49','0800',0,'Entgeltfreie Telefondienste');
-INSERT INTO `area_codes` VALUES ('49','0801',0,'(Reserve fÃ¼r Entgeltfreie Telefondienste)');
+INSERT INTO `area_codes` VALUES ('49','0801',0,'(Reserve für Entgeltfreie Telefondienste)');
 INSERT INTO `area_codes` VALUES ('49','08020',1,'Weyarn');
 INSERT INTO `area_codes` VALUES ('49','08021',1,'Waakirchen');
 INSERT INTO `area_codes` VALUES ('49','08022',1,'Tegernsee');
@@ -4752,11 +4752,11 @@ INSERT INTO `area_codes` VALUES ('49','08868',1,'Schwabsoien');
 INSERT INTO `area_codes` VALUES ('49','08869',1,'Kinsau');
 INSERT INTO `area_codes` VALUES ('49','089',1,'München');
 INSERT INTO `area_codes` VALUES ('49','0900',0,'Premium-Rate-Dienste');
-INSERT INTO `area_codes` VALUES ('49','0901',0,'(Reserve fÃ¼r Telekommunikationsdienste)');
-INSERT INTO `area_codes` VALUES ('49','0902',0,'(Reserve fÃ¼r Telekommunikationsdienste)');
-INSERT INTO `area_codes` VALUES ('49','0903',0,'(Reserve fÃ¼r Telekommunikationsdienste)');
-INSERT INTO `area_codes` VALUES ('49','0904',0,'(Reserve fÃ¼r Telekommunikationsdienste)');
-INSERT INTO `area_codes` VALUES ('49','0905',0,'(Reserve fÃ¼r Telekommunikationsdienste)');
+INSERT INTO `area_codes` VALUES ('49','0901',0,'(Reserve für Telekommunikationsdienste)');
+INSERT INTO `area_codes` VALUES ('49','0902',0,'(Reserve für Telekommunikationsdienste)');
+INSERT INTO `area_codes` VALUES ('49','0903',0,'(Reserve für Telekommunikationsdienste)');
+INSERT INTO `area_codes` VALUES ('49','0904',0,'(Reserve für Telekommunikationsdienste)');
+INSERT INTO `area_codes` VALUES ('49','0905',0,'(Reserve für Telekommunikationsdienste)');
 INSERT INTO `area_codes` VALUES ('49','0906',1,'Donauwörth');
 INSERT INTO `area_codes` VALUES ('49','09070',1,'Tapfheim');
 INSERT INTO `area_codes` VALUES ('49','09071',1,'Dillingen a d Donau');
@@ -5313,7 +5313,7 @@ INSERT INTO `area_codes` VALUES ('49','09976',1,'Rötz');
 INSERT INTO `area_codes` VALUES ('49','09977',1,'Arnschwang');
 INSERT INTO `area_codes` VALUES ('49','09978',1,'Schönthal Oberpf');
 INSERT INTO `area_codes` VALUES ('49','11',0,'diverse netzinterne Nutzung');
-INSERT INTO `area_codes` VALUES ('49','115',0,'BehÃ¶rdenruf');
+INSERT INTO `area_codes` VALUES ('49','115',0,'Behördenruf');
 INSERT INTO `area_codes` VALUES ('49','116',0,'Harmonisierte Dienste von sozialem Wert');
 INSERT INTO `area_codes` VALUES ('49','118',0,'Auskunftsdienste');
 /*!40000 ALTER TABLE `area_codes` ENABLE KEYS */;
@@ -5328,27 +5328,27 @@ CREATE TABLE `ast_cdr` (
   `_id` int(10) unsigned NOT NULL auto_increment,
   `calldate` datetime NOT NULL default '0000-00-00 00:00:00',
   `uniqueid` varchar(32) character set ascii collate ascii_bin NOT NULL,
-  `clid` varchar(50) collate latin1_general_ci NOT NULL default '',
-  `src` varchar(50) collate latin1_general_ci NOT NULL default '',
-  `dst` varchar(50) collate latin1_general_ci NOT NULL default '',
-  `dcontext` varchar(50) collate latin1_general_ci NOT NULL default '',
-  `channel` varchar(50) collate latin1_general_ci NOT NULL default '',
-  `dstchannel` varchar(50) collate latin1_general_ci NOT NULL default '',
-  `lastapp` varchar(50) collate latin1_general_ci NOT NULL default '',
-  `lastdata` varchar(80) collate latin1_general_ci NOT NULL default '',
+  `clid` varchar(80) collate utf8_unicode_ci NOT NULL default '',
+  `src` varchar(30) collate ascii_general_ci NOT NULL default '',
+  `dst` varchar(30) collate ascii_general_ci NOT NULL default '',
+  `dcontext` varchar(50) collate ascii_general_ci NOT NULL default '',
+  `channel` varchar(60) collate ascii_general_ci NOT NULL default '',
+  `dstchannel` varchar(60) collate ascii_general_ci NOT NULL default '',
+  `lastapp` varchar(30) collate ascii_general_ci NOT NULL default '',
+  `lastdata` varchar(80) collate ascii_general_ci NOT NULL default '',
   `duration` mediumint(8) unsigned NOT NULL default '0',
   `billsec` mediumint(8) unsigned NOT NULL default '0',
-  `disposition` varchar(20) collate latin1_general_ci NOT NULL default '',
+  `disposition` varchar(15) collate ascii_general_ci NOT NULL default '',
   `amaflags` tinyint(3) unsigned NOT NULL default '0',
-  `accountcode` varchar(20) collate latin1_general_ci NOT NULL default '',
-  `userfield` varchar(255) collate latin1_general_ci NOT NULL default '',
+  `accountcode` varchar(25) collate ascii_general_ci NOT NULL default '',
+  `userfield` varchar(255) collate ascii_general_ci NOT NULL default '',
   PRIMARY KEY  (`_id`),
   KEY `calldate` (`calldate`),
   KEY `accountcode` (`accountcode`),
-  KEY `src_disposition` (`src`,`disposition`(4)),
-  KEY `dst_disposition` (`dst`,`disposition`(4)),
+  KEY `src_disposition` (`src`(25),`disposition`(4)),
+  KEY `dst_disposition` (`dst`(25),`disposition`(4)),
   KEY `uniqueid` (`uniqueid`(25))
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=ascii COLLATE=ascii_general_ci;
 
 --
 -- Dumping data for table `ast_cdr`
@@ -6441,4 +6441,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-01-14  11:07:12
+-- Dump completed on 2008-02-29  11:07:12
