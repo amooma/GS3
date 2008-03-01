@@ -193,9 +193,9 @@
       </indexterm>
 
       <para>Da das einzige Wildcard in LDAP-Abfragen <code>*</code> ist, kann
-      so keine Suche mit Pattern implementiert werden, die für die T9-Suche
-      per Telefon-Interface notwendig wäre. Aus diesem Grund besteht die
-      Möglichkeit, ein Telefonbuch in Form einer TSV<footnote>
+      so keine Suche mit Pattern implementiert werden, die für die
+      Namens-Suche per Telefon-Ziffernblock notwendig wäre. Aus diesem Grund
+      besteht die Möglichkeit, ein Telefonbuch in Form einer TSV<footnote>
           <para>Tab-Separated Values</para>
         </footnote>-Datei zu importieren (die z.B. aus dem LDAP exportiert
       wurde). Das Skript
