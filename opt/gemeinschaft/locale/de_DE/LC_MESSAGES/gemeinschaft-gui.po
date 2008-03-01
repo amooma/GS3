@@ -882,10 +882,10 @@ msgstr "<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nne
 
 #: mod/help_snom.php:149
 msgid ""
-"<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z."
-"B. 63437 f&uuml;r MEIER dr&uuml;cken."
-msgstr "<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z."
-"B. 63437 f&uuml;r MEIER dr&uuml;cken."
+"<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> z.B. 63437 f&uuml;r MEIER "
+"dr&uuml;cken (&auml;hnlich &quot;T9&quot;)."
+msgstr "<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> z.B. 63437 f&uuml;r MEIER "
+"dr&uuml;cken (&auml;hnlich &quot;T9&quot;)."
 
 #: mod/help_snom.php:159
 msgid ""

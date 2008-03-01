@@ -857,9 +857,9 @@ msgstr "<b>Redial</b><br /> By pressing redial you can redial the numbers of out
 
 #: mod/help_snom.php:149
 msgid ""
-"<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> T9-Modus zum Suchen, also z."
-"B. 63437 f&uuml;r MEIER dr&uuml;cken."
-msgstr "<b>Phonebook</b> (Company / private)<br /> T9 mode for searching, e.g. press 63437 for MEIER."
+"<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> z.B. 63437 f&uuml;r MEIER "
+"dr&uuml;cken (&auml;hnlich &quot;T9&quot;)."
+msgstr "<b>Phonebook</b> (Company / private)<br /> enter 63437 for MEIER (similar to &quot;T9&quot;)."
 
 #: mod/help_snom.php:159
 msgid ""
