@@ -130,9 +130,13 @@
         <listitem>
           <para>Öffnet das Telefonbuch.</para>
 
-          <para>Belegt mit dem Firmen-Telefonbuch. T9-Modus zum Suchen, also
-          z.B. <literal>63437</literal> für <literal>MEIER</literal>
-          drücken.</para>
+          <para>Belegt mit dem Firmen-Telefonbuch. Such-Modus ähnlich dem
+          bekannten "T9", also z.B. <literal>63437</literal> für
+          <literal>MEIER</literal> eintippen. (Technisch hat die Suche nichts
+          mit T9 gemeinsam. Während bei T9 Wörterlisten zum Einsatz kommen
+          wird hier bei Eingabe von z.B. <literal>63437</literal> nach
+          passenden Treffern für das Suchmuster
+          <literal>[MNO][DEF][GHI][DEF][PQRS]</literal> gesucht.)</para>
         </listitem>
       </varlistentry>
 
