@@ -1,0 +1,111 @@
+#####################################################################
+                 Coding Guidelines for Gemeinschaft
+
+$Revision$
+#####################################################################
+
+As most of Gemeinschaft is written in PHP just search the web
+for "php coding guidelines".
+
+Read
+http://www.evolt.org/article/PHP_coding_guidelines/18/60247/
+http://www.buxaprojects.com/en/php_coding_guidelines.htm
+http://www.buxaprojects.com/de/php_coding_guidelines.htm
+etc.
+
+Try to stick to our guidelines as much as possible but: Nothing
+is carved in stone and exceptions are allowed if made for a good
+reason.
+The most important rule is readability.
+
+
+
+File formatting:
+====================================
+
+General:
+Use the full-form PHP tags: "<?php" and "?>". Short tags like "<?"
+are never allowed.
+For files that contain only PHP code do not add a line-break
+after the closing tag ("?>").
+
+Indentation:
+Use tabs! Tabs are good. Never assume everyone else has set their tab
+width to the same value you have. Do not use spaces for indentation.
+
+Maximum line length:
+Try not to write lines longer than 80 chars but sometimes one cannot
+really avoid it so we don't have a hard limit here.
+
+Line feeds:
+\n (LF)
+No trailing spaces.
+
+Strings (in PHP):
+Double quotes are perfectly ok, but never use double quotes when
+single quotes would do.
+$str = "Just more work for the parser.";  # bad
+$str = 'This is much better.';            # good
+
+Function definitions:
+The curly braces ("{") should always be placed on a line on their own.
+
+Calling functions:
+get_user_data($username, $password);    # good
+get_user_data( $username, $password );  # good
+get_user_data ($username,$password);    # bad
+
+Conditionals:
+if (condition) {                        # good
+if ( long_condition ) {                 # good
+if(condition){                          # bad
+
+
+
+Naming conventions:
+====================================
+
+File names:
+Only lowercase alphanumerical characters ("a-z0-9"), dash ("-") and
+underscore ("_") are allowed. Spaces are prohibited.
+External libraries may use uppercase alphanumerical characters.
+
+Variable names:
+$current_user is better than $currentUser and much better than
+$CurrentUser.
+
+Function names:
+get_current_user() is better than getCurrentUser and much better than
+GetCurrentUser().
+
+Class names:
+Start with an uppercase letter: ExampleClass.
+
+
+
+Database queries:
+====================================
+
+Use YaDB (there are many examples in the code), never call
+mysql_...() directly.
+
+Quote table/column identifiers in "`".
+
+Reserved SQL words (SELECT, FROM, WHERE, COUNT(), ...) must be
+written in uppercase.
+
+
+
+Version control:
+====================================
+
+Never mix up changes which do not belong together in one commit.
+Try to understand why that would make it impossible to use tools
+like svnmerge.
+
+In general set files to use SVN keyword substitution of the file
+revision: "#Revision: 0 #" ("$" replaced by "#" to avoid substitution
+here). Do not enable keyword substitution for files belonging to
+external libraries.
+
+
