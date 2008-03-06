@@ -5809,8 +5809,7 @@ CREATE TABLE `hosts` (
 
 LOCK TABLES `hosts` WRITE;
 /*!40000 ALTER TABLE `hosts` DISABLE KEYS */;
-INSERT INTO `hosts` VALUES (1,'192.168.1.130','ast 1');
-INSERT INTO `hosts` VALUES (2,'192.168.1.140','ast 2');
+INSERT INTO `hosts` VALUES (1,'192.168.1.130','Gemeinschaft 001');
 /*!40000 ALTER TABLE `hosts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6336,7 +6335,7 @@ INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'');
 INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,'192.168.1.202','');
 INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,'192.168.1.201','');
 INSERT INTO `users` VALUES (22,'47110001','123','Bart','Simpson','','',NULL,1,NULL,'');
-INSERT INTO `users` VALUES (23,'47110002','123','Homer','Simpson','','',NULL,2,'192.168.1.247','');
+INSERT INTO `users` VALUES (23,'47110002','123','Homer','Simpson','','',NULL,1,'192.168.1.247','');
 INSERT INTO `users` VALUES (24,'47110003','123','Marge','Simpson','','',NULL,1,'192.168.1.249','');
 INSERT INTO `users` VALUES (25,'47110004','123','Lisa','Simpson','','',NULL,1,'192.168.1.247','');
 INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'');
