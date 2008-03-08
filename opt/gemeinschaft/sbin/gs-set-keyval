@@ -44,10 +44,10 @@ $param = $argv[1];
 $val   = $argv[2];
 $ok = gs_keyval_set($param, $val);
 if ($ok) {
-	echo "Parameter $param set\n"
+	echo "Parameter $param set\n";
 	exit(0);
 } else {
-	echo "Failed to set parameter $param\n"
+	echo "Failed to set parameter $param\n";
 	exit(1);
 }
 
