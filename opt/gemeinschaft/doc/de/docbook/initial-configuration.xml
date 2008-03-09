@@ -254,4 +254,27 @@ Warning: Permanently added '192.168.1.140' (RSA) to the list of known hosts.
       <filename>/etc/ssh/sshd_config</filename><literallayout>UseDNS no</literallayout>eintragen.</para>
     </section>
   </section>
+
+  <section id="gui-admin-login">
+    <title>Anmeldung als Admin im Web-Interface</title>
+
+    <para>Immer wieder taucht die Frage auf wie man sich nach der Installation
+    in der Web-Oberfläche als Admin anmelden kann. Grundsätzlich kann jeder
+    Benutzer auch gleichzeitig Admin sein. Welche Benutzer dieses Recht haben
+    legt man in der <filename>/etc/gemeinschaft/gemeinschaft.php</filename>
+    fest:<literallayout>$GUI_SUDO_ADMINS = 'philipp, stefan, peter';</literallayout></para>
+
+    <para>Zusätzlich gibt es bei einem Einzelserver-Gemeinschaft (also bei
+    <literal>$INSTALLATION_TYPE = 'single';</literal> - das gilt aber nur für
+    <literal>$GUI_AUTH_METHOD = 'gemeinschaft';</literal> nicht für
+    <literal>'webseal'</literal>) aber auch einen reinen Admin-Account
+    (<literal>sysadmin</literal>). Um sich als <literal>sysadmin</literal>
+    einloggen zu können muß man aus Sicherheitsgründen zuerst ein Paßwort
+    setzen:</para>
+
+    <literallayout>/opt/gemeinschaft/scripts/gs_sysadmin_pwd_set --pwd='abc9fgh'</literallayout>
+
+    <para>Jetzt kann man sich mit dem gesetzten Paßwort (im Beispiel
+    <literal>abc9fgh</literal>) anmelden.</para>
+  </section>
 </section>
