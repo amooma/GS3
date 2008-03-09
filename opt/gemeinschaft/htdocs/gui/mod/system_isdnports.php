@@ -141,9 +141,9 @@ if ($err===0) {
 		++$i;
 	}
 	
-	if ($i == 0) {
+	if ($i === 0) {
 		echo '<tr>' ,"\n";
-		echo '<td colspan="3">', '--' ,'</td>' ,"\n";
+		echo '<td colspan="6">', '--' ,'</td>' ,"\n";
 		echo '</tr>' ,"\n";
 	}
 	
