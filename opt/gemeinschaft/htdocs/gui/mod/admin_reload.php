@@ -44,7 +44,9 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
-$shutdown_enabled = gs_get_conf('GS_GUI_SHUTDOWN_ENABLED');
+$shutdown_enabled =
+	   gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')
+	&& gs_get_conf('GS_GUI_SHUTDOWN_ENABLED');
 
 ?>
 
