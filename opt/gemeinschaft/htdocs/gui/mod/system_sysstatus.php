@@ -64,7 +64,7 @@ exec( 'date -R', $out, $err );
 if ($err===0) {
 	$out = trim(implode(' ', $out));
 	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">";
-	echo $out;
+	echo htmlEnt($out);
 	echo "\n</pre>\n";
 } else
 	echo "<p>Error.</p>\n";
@@ -81,7 +81,7 @@ exec( 'uname -r ; uname -v ; uname -m ; uname -o', $out, $err );
 if ($err===0) {
 	$out = trim(implode('  ', $out));
 	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
-	echo $out;
+	echo htmlEnt($out);
 	echo "\n</pre>\n";
 } else
 	echo "<p>Error.</p>\n";
@@ -119,7 +119,7 @@ if (file_exists('/proc/uptime') && file_exists('/proc/loadavg')) {
 	exec( 'uptime', $out, $err );
 	if ($err===0) {
 		echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
-		echo trim(implode("\n", $out));
+		echo htmlEnt(trim(implode("\n", $out)));
 		echo "\n</pre>\n";
 	} else
 		echo "<p>Error.</p>\n";
@@ -186,6 +186,8 @@ exec( 'df -h -T -x tmpfs', $out, $err );
 if ($err===0) {
 	$out = trim(implode("\n", $out));
 	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
+	$out = htmlEnt($out);
+	$out = preg_replace('/(\/dev\/[a-z0-9\-_.]+)/', '<b>$1</b>', $out);
 	echo $out;
 	echo "\n</pre>\n";
 } else
@@ -202,7 +204,7 @@ if (file_exists('/proc/net/dev')) {
 	
 	$out = trim(file_get_contents('/proc/net/dev'));
 	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
-	echo $out;
+	echo htmlEnt($out);
 	echo "\n</pre>\n";
 	
 } else
