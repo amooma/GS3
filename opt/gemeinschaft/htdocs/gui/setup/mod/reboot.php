@@ -39,7 +39,7 @@ defined('GS_VALID') or die('No direct access.');
 <h1><?php echo 'Neustart'; ?></h1>
 <p align="center">
 	<?php echo 'Das System wird jetzt neugestartet.'; ?><br />
-	<?php echo 'Bitte haben Sie etwas Geduld. Vorzeitiges Ausschalten kann zu Datenverlust f&uuml;hren.'; ?>
+	<?php echo 'Bitte haben Sie etwas Geduld. Trennen der Stromversorgung / Reset kann zu Datenverlust f&uuml;hren.'; ?>
 </p>
 <p align="center">
 	<img alt=" " src="<?php echo GS_URL_PATH; ?>img/wait-net.gif" />
