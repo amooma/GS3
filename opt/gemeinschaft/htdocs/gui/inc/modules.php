@@ -246,8 +246,13 @@ $MODULES['system'   ]['sub'][
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 $MODULES['system'   ]['sub'][
       'cards']       =  array('title' => __('PCI-Karten'));     //TRANSLATE ME
+if ($GS_INSTALLATION_TYPE !== 'gpbx') {  //FIXME
 $MODULES['system'   ]['sub'][
       'isdnports']   =  array('title' => __('ISDN-Ports'));     //TRANSLATE ME
+} else {  //FIXME
+$MODULES['system'   ]['sub'][
+      'gpbx-b410p']  =  array('title' => __('ISDN-Ports (BRI)'));//TRANSLATE ME
+}
 }
 /*
 $MODULES['system'   ]['sub'][
