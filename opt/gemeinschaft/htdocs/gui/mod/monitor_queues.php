@@ -89,6 +89,8 @@ ORDER BY `m`.`interface`'
 		
 		# get queue stats from manager interface
 		#
+		if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
+			$queue['host'] = '127.0.0.1';
 		$queue_stats = gs_queue_status( $queue['host'], $queue['ext'], true, true );
 		/*
 		echo "<pre>";
