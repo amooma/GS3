@@ -277,7 +277,7 @@ if (@$rs_members) {
 				$img.= '" /> ';
 			} else
 				$img = '<img alt=" " src="'. GS_URL_PATH .'crystal-svg/16/act/free_icon.png" /> ';
-			echo '<td>', $img, ($devstate !== null ? $devstate['v'] : '?'), '</td>';
+			echo '<td>', $img, (@$devstate['v'] ? $devstate['v'] : '?'), '</td>';
 			
 			if (GS_GUI_QUEUE_SHOW_NUM_CALLS) {
 				echo '<td class="r">', (@$memberinfo['calls'] !== null ? @$memberinfo['calls'] : '?'), '</td>';
