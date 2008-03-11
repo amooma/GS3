@@ -148,7 +148,7 @@ function gui_monitor_which_peers( $sudo_user )
 	if (false)
 		return _gui_monitor_which_peers_lvm( $sudo_user );
 	else
-		return false;
+		return array();
 }
 
 
