@@ -142,7 +142,7 @@ $GUI_MON_NOQUEUEBLUE        = true;
   # used in Monitor->Peers. if true idle users who are not member
   # of a queue get a blue led instead of a green one
 
-$GUI_MON_PEERS_ENABLED      = true;
+$GUI_MON_PEERS_ENABLED      = false;
   # needs LDAP with Kostenstelle or a similar mechanism, see
   # gui_monitor_which_peers() in htdocs/gui/inc/permissions.php .
   # also see GUI_PERMISSIONS_METHOD
