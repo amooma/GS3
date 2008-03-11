@@ -151,7 +151,7 @@ if (@$rs_members) {
 				$img.= '" /> ';
 			} else
 				$img = '<img alt=" " src="'. GS_URL_PATH .'crystal-svg/16/act/free_icon.png" /> ';
-			echo '<td>', $img, ($extstatev ? $extstatev['v'] : '?'), '</td>';
+			echo '<td>', $img, (@$extstatev['v'] ? $extstatev['v'] : '?'), '</td>';
 			
 			echo '</tr>', "\n";
 		}

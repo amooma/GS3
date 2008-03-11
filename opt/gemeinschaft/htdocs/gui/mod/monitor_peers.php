@@ -164,7 +164,7 @@ while ($user = $rs_users->fetchRow()) {
 		$img.= '" />&nbsp;';
 	} else
 		$img = '<img alt=" " src="'. GS_URL_PATH .'crystal-svg/16/act/free_icon.png" />&nbsp;';
-	echo '<td>', $img, ($extstatev ? $extstatev['v'] : '?'), '</td>';
+	echo '<td>', $img, (@$extstatev['v'] ? $extstatev['v'] : '?'), '</td>';
 	
 	echo '<td>';
 	if (strLen($user['forwards']) < 2)
