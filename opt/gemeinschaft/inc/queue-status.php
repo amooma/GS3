@@ -79,6 +79,9 @@ function gs_queue_status( $host, $ext, $getMembers, $getCallers )
 {
 	static $hosts = array();
 	
+	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
+		$host = '127.0.0.1';
+	
 	if (! isSet($hosts[$host])) {
 		$hosts[$host] = array(
 			'sock'    => null,
