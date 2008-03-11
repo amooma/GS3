@@ -68,6 +68,9 @@ function _extstate2v( $extstate )
 }
 
 
+$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+
+
 # get the pickup groups for the current user
 #
 $rs_groups = $DB->execute(
@@ -135,6 +138,8 @@ if (@$rs_members) {
 			if ($r['fn'] != '') echo ', ', htmlEnt($r['fn']);
 			echo '</td>';
 			
+			if ($GS_INSTALLATION_TYPE_SINGLE)
+				$r['host'] = '127.0.0.1';
 			$extstate = gs_extstate( $r['host'], $r['ext'] );
 			$extinfos[$r['ext']]['info'] = $r;
 			$extinfos[$r['ext']]['state'] = $extstate;
