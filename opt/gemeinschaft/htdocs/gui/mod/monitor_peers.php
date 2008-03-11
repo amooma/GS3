@@ -61,6 +61,8 @@ function _extstate2v( $extstate )
 }
 
 
+$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+
 
 # get the peer users from ldap
 #
@@ -141,8 +143,10 @@ while ($user = $rs_users->fetchRow()) {
 	if ($user['fn'] != '') echo ', ', htmlEnt($user['fn']);
 	echo '</td>';
 	
+	if ($GS_INSTALLATION_TYPE_SINGLE)
+		$user['host'] = '127.0.0.1';
 	$extstate = gs_extstate( $user['host'], $user['ext'] );
-	$extinfos[$user['ext']]['info'] = $user;
+	$extinfos[$user['ext']]['info' ] = $user;
 	$extinfos[$user['ext']]['state'] = $extstate;
 	$extstatev = _extstate2v( $extstate );
 	if (defined('GS_GUI_MON_NOQUEUEBLUE') && GS_GUI_MON_NOQUEUEBLUE) {
