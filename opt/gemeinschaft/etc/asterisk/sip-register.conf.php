@@ -106,8 +106,9 @@ ORDER BY `g`.`id`'
 while ($gw = $rs->fetchRow()) {
 	if ($gw['user'] != '' && $gw['host'] != '') {
 		//echo 'register => '. $gw['user'] .':'. $gw['pwd'] .':'. $gw['user'] .'@'. $gw['host'] .'/'. $gw['user'] .'' ,"\n";
-		//echo 'register => '. $gw['user'] .'@'. $gw['name'] ,"\n";
+		echo 'register => '. $gw['user'] .'@'. $gw['name'] ,"\n";
 		// WARNING[13092]: chan_sip.c:4650 sip_register: Format for registration is user[:secret[:authuser]]@host[:port][/contact]
+		/*
 		echo 'register => ', $gw['user'];  # user
 		if ($gw['pwd'] != '') {
 			echo ':', $gw['pwd'];
@@ -119,6 +120,7 @@ while ($gw = $rs->fetchRow()) {
 		if ($gw['user'] != '') {
 			echo '/', $gw['user'];  # contact
 		}
+		*/
 		echo "\n";
 	}
 	
