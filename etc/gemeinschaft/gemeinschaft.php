@@ -381,7 +381,7 @@ $PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";  #  "
 *    FAX
 ***********************************************************/
 
-$FAX_ENABLED            = true;
+$FAX_ENABLED            = false;
 $FAX_PREFIX             = '6';           # not used yet  //FIXME
 $FAX_TSI_PREFIX         = @$CANONIZE_NATL_PREFIX.
                           @$CANONIZE_AREA_CODE.
