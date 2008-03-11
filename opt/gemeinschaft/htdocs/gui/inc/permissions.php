@@ -34,11 +34,11 @@ require_once( GS_DIR .'inc/ldap.php' );
 
 
 /*
-In eine ggf. vom Admin anpaﬂbare Funktion ausgelagert, da es sich
+In eine ggf. vom Admin anpassbare Funktion ausgelagert, da es sich
 generisch nicht definieren laesst, dass z.B. fuer die Editier-Rechte
 die ersten 4 Stellen einer Kostenstellennr. aus dem LDAP ausschlag-
 gebend sind.
-Muﬂ true oder false zurueckgeben.
+Muss true oder false zurueckgeben.
 
 Der Funktion wird der Gemeinschafts-Username uebergeben.
 
