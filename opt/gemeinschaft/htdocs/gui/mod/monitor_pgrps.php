@@ -250,7 +250,7 @@ if (@count($keys_snom) > 0) {
 		}
 		
 		if (subStr($val,0,2) == '*8') {
-			$title = __('Gruppe') .' '. lTrim(subStr($val,2),'0');
+			$title = __('Gruppe') .' '. lTrim(subStr($val,2),'0*');
 		} elseif (@is_array($extinfos[$val]['info'])) {
 			$title = '';
 			if (@$extinfos[$val]['info']['fn'] !='')
