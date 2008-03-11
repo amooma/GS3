@@ -58,6 +58,9 @@ function gs_extstate( $host, $exts )
 	} else
 		$return_single = false;
 	
+	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
+		$host = '127.0.0.1';
+	
 	if (! isSet($hosts[$host])) {
 		$hosts[$host] = array(
 			'sock'    => null,
