@@ -232,11 +232,20 @@ $MODULES['system'   ]=  array('title' => __('System'),          //TRANSLATE ME
                               'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
                               'perms' => 'admin',
    'sub' => array(
-      'sysstatus'    => array('title' => __('System-Status')),  //TRANSLATE ME
-      'network'      => array('title' => __('Netzwerk'))        //TRANSLATE ME
-      //'logging'      => array('title' => __('Logging'))         //TRANSLATE ME
    )
 );
+if ($GS_INSTALLATION_TYPE === 'gpbx') {
+$MODULES['system'   ]['sub'][
+      'gpbx-diskusage']=array('title' => __('Speicherplatz'));  //TRANSLATE ME
+}
+$MODULES['system'   ]['sub'][
+      'sysstatus']   =  array('title' => __('System-Status'));  //TRANSLATE ME
+$MODULES['system'   ]['sub'][
+      'network']     =  array('title' => __('Netzwerk'));       //TRANSLATE ME
+/*
+$MODULES['system'   ]['sub'][
+      'logging']     =  array('title' => __('Logging'));        //TRANSLATE ME
+*/
 if ($GS_INSTALLATION_TYPE !== 'gpbx') {
 $MODULES['system'   ]['sub'][
       'hosts']       =  array('title' => __('Hosts'));          //TRANSLATE ME
