@@ -89,7 +89,7 @@ function _gui_sudo_allowed_lvm( $real_user, $sudo_user )
 
 function gui_sudo_allowed( $real_user, $sudo_user )
 {
-	if (false)
+	if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') === 'lvm')
 		return _gui_sudo_allowed_lvm( $real_user, $sudo_user );
 	else
 		return false;
@@ -145,7 +145,7 @@ function _gui_monitor_which_peers_lvm( $sudo_user )
 
 function gui_monitor_which_peers( $sudo_user )
 {
-	if (false)
+	if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') === 'lvm')
 		return _gui_monitor_which_peers_lvm( $sudo_user );
 	else
 		return array();
