@@ -124,17 +124,18 @@ while ($gw = $rs->fetchRow()) {
 	
 	echo '[', $gw['name'] ,']' ,"\n";
 	echo 'type = peer' ,"\n";
-	echo 'host = '    , $gw['host'] ,"\n";
+	echo 'host = ' , $gw['host'] ,"\n";
 	echo 'port = 5060' ,"\n";
 	echo 'username = ', $gw['user'] ,"\n";
-	echo 'secret = '  , $gw['pwd' ] ,"\n";
+	echo 'secret = ' , $gw['pwd' ] ,"\n";
 	echo 'nat = yes' ,"\n";
 	echo 'dtmfmode = rfc2833' ,"\n";
 	echo 'insecure = port,invite' ,"\n";
-	echo 'canreinvite = no' ,"\n";
+	//echo 'canreinvite = no' ,"\n";
+	echo 'canreinvite = nonat' ,"\n";
 	echo 'call-limit = 0' ,"\n";
 	echo 'registertimeout = 60' ,"\n";
-	echo 't38pt_udptl = yes' ,"\n";
+	//echo 't38pt_udptl = yes' ,"\n";
 	echo 'setvar=__is_from_gateway=1' ,"\n";
 	echo 'context = from-gg-', $gw['gg_name'] ,"\n";
 	echo "\n";
