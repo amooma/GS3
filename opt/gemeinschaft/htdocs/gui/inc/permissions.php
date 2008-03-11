@@ -34,36 +34,24 @@ require_once( GS_DIR .'inc/ldap.php' );
 
 
 /*
-In eine ggf. vom Admin anpassbare Funktion ausgelagert, da es sich
-generisch nicht definieren laesst, dass z.B. fuer die Editier-Rechte
+Die API fuer den Rest von Gemeinschaft sind hier die Funktionen
+gui_sudo_allowed() und gui_monitor_which_peers().
+Sie koennen ggf. vom Admin angepasst werden, da es sich nicht
+generisch definieren laesst, dass z.B. fuer die Editier-Rechte
 die ersten 4 Stellen einer Kostenstellennr. aus dem LDAP ausschlag-
 gebend sind.
-Muss true oder false zurueckgeben.
+gui_sudo_allowed() muss true oder false zurueckgeben.
+gui_monitor_which_peers() muss false oder ein Array der ueberwachbaren
+User zurueckgeben.
 
-Der Funktion wird der Gemeinschafts-Username uebergeben.
+Um diese Lookups abzuschalten in der inc/conf.php GUI_SUDO_EXTENDED
+auf false setzen.
 
-Um diese Lookups abzuschalten einfach in der inc/conf.php
-GS_GUI_SUDO_EXTENDED auf false setzen.
-
-siehe auch session.php ldap_user_map()
+Siehe auch session.php ldap_user_map()
 */
 
 
-function gui_sudo_allowed( $real_user, $sudo_user )
-{
-	$kkr = @_get_kostenstellen( $real_user );
-	if ($kkr == false || ! is_array( $kkr )) return false;
-	$kks = @_get_kostenstellen( $sudo_user );
-	if ($kks == false || ! is_array( $kks )) return false;
-	
-	foreach ($kkr as $kr)
-		foreach ($kks as $ks)
-			if (subStr($kr,0,2) === subStr($ks,0,2)) return true;
-	return false;
-}
-
-
-function _get_kostenstellen( $user )
+function _get_kostenstellen_lvm( $user )
 {
 	$kostenstelle_prop = 'kostenstelle';
 	
@@ -86,9 +74,31 @@ function _get_kostenstellen( $user )
 }
 
 
-function gui_monitor_which_peers( $sudo_user )
+function _gui_sudo_allowed_lvm( $real_user, $sudo_user )
 {
-	$kks = @_get_kostenstellen( $sudo_user );
+	$kkr = @_get_kostenstellen_lvm( $real_user );
+	if ($kkr == false || ! is_array( $kkr )) return false;
+	$kks = @_get_kostenstellen_lvm( $sudo_user );
+	if ($kks == false || ! is_array( $kks )) return false;
+	
+	foreach ($kkr as $kr)
+		foreach ($kks as $ks)
+			if (subStr($kr,0,2) === subStr($ks,0,2)) return true;
+	return false;
+}
+
+function gui_sudo_allowed( $real_user, $sudo_user )
+{
+	if (false)
+		return _gui_sudo_allowed_lvm( $real_user, $sudo_user );
+	else
+		return false;
+}
+
+
+function _gui_monitor_which_peers_lvm( $sudo_user )
+{
+	$kks = @_get_kostenstellen_lvm( $sudo_user );
 	if ($kks == false || ! is_array( $kks )) return false;
 	
 	$kostenstelle_prop = 'kostenstelle';
@@ -117,9 +127,9 @@ function gui_monitor_which_peers( $sudo_user )
 	foreach ($matches as $match) {
 		if (! is_array( $match[$lc_GS_LDAP_PROP_USER] )) continue;
 		foreach ($match[$lc_GS_LDAP_PROP_USER] as $mm) {
-			if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
+			if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
 				$mm = str_pad($mm, 6, '0', STR_PAD_LEFT);
-				# without leading "0" in our LDAP
+				# without leading "0" in their LDAP database
 			}
 			$peers[] = $mm;
 		}
@@ -131,6 +141,14 @@ function gui_monitor_which_peers( $sudo_user )
 	*/
 	
 	return $peers;
+}
+
+function gui_monitor_which_peers( $sudo_user )
+{
+	if (false)
+		return _gui_monitor_which_peers_lvm( $sudo_user );
+	else
+		return false;
 }
 
 
