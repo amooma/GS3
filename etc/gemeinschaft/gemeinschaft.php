@@ -40,7 +40,8 @@ defined('GS_VALID') or die('No direct access.');
 $INSTALLATION_TYPE      = 'single';
   # the type of the current installation.
   # "gpbx"    : GPBX
-  # "single"  : single-server installation
+  # "single"  : single-server installation (Gemeinschaft,
+  #             Asterisk and MySQL on one server)
   # "cluster" : cluster setup
   # This is just a hint to the GUI and various other scripts.
   # Changing it breaks things but does not change the type of
