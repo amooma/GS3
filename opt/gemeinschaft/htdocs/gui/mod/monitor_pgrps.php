@@ -201,9 +201,9 @@ echo "</pre>";
 
 <?php
 
-$keys_snom = $_SESSION['sudo_user']['keys']['snom'];
+$keys_snom = @$_SESSION['sudo_user']['keys']['snom'];
 
-if (count($keys_snom) > 0) {
+if (@count($keys_snom) > 0) {
 	$len = 7;
 	foreach ($keys_snom as $kname => $kinfo) {
 		if (strLen($kinfo['val']) > $len)
