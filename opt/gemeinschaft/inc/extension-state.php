@@ -120,21 +120,26 @@ function gs_extstate( $host, $exts )
 
 function gs_extstate_single( $ext )
 {
-	include_once( GS_DIR .'inc/db_connect.php' );
-	$db = @ gs_db_slave_connect();
-	if (! $db) {
-		gs_log( GS_LOG_FATAL, 'Could not connect to slave DB!' );
-		return AST_MGR_EXT_UNKNOWN;
-	}
-	$host = $db->executeGetOne(
+	if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+		include_once( GS_DIR .'inc/db_connect.php' );
+		$db = @ gs_db_slave_connect();
+		if (! $db) {
+			gs_log( GS_LOG_FATAL, 'Could not connect to slave DB!' );
+			return AST_MGR_EXT_UNKNOWN;
+		}
+		$host = $db->executeGetOne(
 'SELECT `h`.`host`
 FROM
 	`ast_sipfriends` `s` JOIN
 	`users` `u` ON (`u`.`id`=`s`.`_user_id`) JOIN
 	`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
 WHERE `s`.`name`=\''. $db->escape($ext) .'\'' );
-	if (! $host)  # not a user
-		return AST_MGR_EXT_UNKNOWN;
+		if (! $host)  # not a user
+			return AST_MGR_EXT_UNKNOWN;
+	}
+	else {
+		$host = '127.0.0.1';
+	}
 	
 	return gs_extstate( $host, $ext );
 }
