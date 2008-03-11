@@ -154,7 +154,7 @@ if ($only_dialplan) {
 } else {
 	echo "Reloading Asterisk ...\n";
 	$err=0; $out=array();
-	@exec( $asterisk .' -rx \'reload\' 1>>/dev/null', $out, $err );
+	@exec( $asterisk .' -rx \'module reload\' 1>>/dev/null', $out, $err );
 	$start_ast = ($err != 0);
 }
 
