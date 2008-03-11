@@ -119,6 +119,9 @@ WHERE
 ORDER BY `g`.`id`'
 );
 while ($gw = $rs->fetchRow()) {
+	if ($gw['name'] == '') continue;
+	if ($gw['host'] == '') continue;
+	
 	echo '[', $gw['name'] ,']' ,"\n";
 	echo 'type = peer' ,"\n";
 	echo 'host = '    , $gw['host'] ,"\n";
