@@ -141,7 +141,7 @@ if (@$rs_members) {
 			if ($GS_INSTALLATION_TYPE_SINGLE)
 				$r['host'] = '127.0.0.1';
 			$extstate = gs_extstate( $r['host'], $r['ext'] );
-			$extinfos[$r['ext']]['info'] = $r;
+			$extinfos[$r['ext']]['info' ] = $r;
 			$extinfos[$r['ext']]['state'] = $extstate;
 			$extstatev = _extstate2v( $extstate );
 			
