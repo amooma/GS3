@@ -54,7 +54,7 @@ $DB_MASTER_HOST         = '127.0.0.1';
 $DB_MASTER_USER         = 'root';
 $DB_MASTER_PWD          = '';
 $DB_MASTER_DB           = 'asterisk';
-$DB_MASTER_TRANSACTIONS = true;
+$DB_MASTER_TRANSACTIONS = false;
 
 
 //----------------------[  Slave  ]-----------------------//
