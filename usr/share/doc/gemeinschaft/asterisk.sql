@@ -5445,7 +5445,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `ast_sipfriends`;
 CREATE TABLE `ast_sipfriends` (
   `_user_id` int(10) unsigned NOT NULL default '0',
-  `name` varchar(8) character set ascii NOT NULL default '',
+  `name` varchar(10) character set ascii NOT NULL default '',
   `secret` varchar(16) character set ascii NOT NULL default '1234',
   `type` enum('friend','user','peer') character set ascii NOT NULL default 'friend',
   `host` varchar(50) collate latin1_general_ci NOT NULL default 'dynamic',
@@ -5468,7 +5468,7 @@ CREATE TABLE `ast_sipfriends` (
   PRIMARY KEY  (`_user_id`),
   UNIQUE KEY `name` (`name`),
   KEY `host` (`host`(25)),
-  KEY `mailbox` (`mailbox`(8)),
+  KEY `mailbox` (`mailbox`(10)),
   KEY `context` (`context`(25))
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
