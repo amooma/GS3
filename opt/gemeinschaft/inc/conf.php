@@ -121,6 +121,10 @@ _gscnf( 'INSTALLATION_TYPE'         , 'single'           );
 $INSTALLATION_TYPE_SINGLE = (in_array(GS_INSTALLATION_TYPE, array('gpbx', 'single'), true));
 _gscnf( 'INSTALLATION_TYPE_SINGLE'  , false              );
 
+if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+	$DB_MASTER_HOST = '127.0.0.1';
+	$DB_SLAVE_HOST  = '127.0.0.1';
+}
 _gscnf( 'DB_MASTER_HOST'            , '0.0.0.0'          );
 _gscnf( 'DB_MASTER_USER'            , 'root'             );
 _gscnf( 'DB_MASTER_PWD'             , ''                 );
