@@ -33,6 +33,7 @@
 
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
