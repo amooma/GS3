@@ -77,13 +77,18 @@ if (is_array($langdirs)) {
 				
 				# build .mo file for gettext
 				#
-				echo "Building $lang $domain.mo\n";
+				echo "Building $lang $domain.mo ...\n";
 				$mofile = preg_replace('/\.po$/', '.mo', $pofile);
-				passThru( 'msgfmt -o '. qsa($mofile) .' '. qsa($pofile) );
+				passThru( 'msgfmt -o '. qsa($mofile) .' '. qsa($pofile), $err );
+				if ($err !== 0) {
+					echo "  Failed.";
+					if ($err === 127) echo " (msgfmt not found. gettext not installed?)";
+					echo "\n";
+				}
 				
 				# build .php file for php
 				#
-				echo "Building $lang $domain.php\n";
+				echo "Building $lang $domain.php ...\n";
 				$phpout = po_to_php( $pofile );
 				if (! is_array($phpout)) $phpout = array();
 				$phpout = '<'."?php\n"
