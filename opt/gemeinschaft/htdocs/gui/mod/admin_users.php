@@ -372,10 +372,10 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			<input type="text" name="ulname" value="" size="15" maxlength="40" style="width:125px;" /><input type="text" name="ufname" value="" size="15" maxlength="40" style="width:115px;" />
 		</td>
 		<td>
-			<input type="text" name="uext" value="" size="10" maxlength="10"  />
+			<input type="text" name="uext" value="" size="10" maxlength="10" />
 		</td>
 		<td>
-			<input type="text" name="uuser" value="" size="8" maxlength="20"  />
+			<input type="text" name="uuser" value="" size="8" maxlength="20" />
 		</td>
 		<td>
 			<input type="password" name="upin" value="" size="6" maxlength="10" />
@@ -698,10 +698,10 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 	echo '<input type="hidden" name="edit" value="', htmlEnt($edit_user), '" />', "\n";
 	
 	echo "<td>\n";
-		echo '<input type="text" name="cbregexp" value="" size="20" maxlength="40"  />';	
+		echo '<input type="text" name="cbregexp" value="" size="20" maxlength="40" />';	
 	echo "</td>\n";
 	echo "<td>\n";
-		echo '<input type="text" name="cbpin" value="" size="20" maxlength="40"  />';	
+		echo '<input type="text" name="cbpin" value="" size="20" maxlength="40" />';	
 	echo "</td>\n";
 	echo "<td>\n";
 	echo '<button type="submit" title="', __('Speichern') ,'" class="plain">', "\n";
@@ -758,7 +758,7 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 	echo "<td>&nbsp;</td>\n";
 	
 	echo "<td>\n";
-	echo '<input type="text" name="extnum" value="" size="20" maxlength="40"  />';	
+	echo '<input type="text" name="extnum" value="" size="20" maxlength="40" />';	
 	echo "</td>\n";
 	
 	echo "<td>\n";
