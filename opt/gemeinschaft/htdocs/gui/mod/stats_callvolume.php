@@ -175,7 +175,7 @@ foreach ($args as $k => $v) {
 	style="border:1px solid #aaa;"
 >
 	<param name="src" value="<?php echo $src; ?>">
-	<?php echo __('Ihr Browser kann die Datei nicht anzeigen.'); ?>
+	<?php echo __('Ihr Browser kann die SVG-Grafik nicht anzeigen.'); ?>
 </object>
 
 <br />
@@ -225,7 +225,7 @@ foreach ($args as $k => $v) {
 	style="border:1px solid #aaa;"
 >
 	<param name="src" value="<?php echo $src; ?>">
-	<?php echo __('Ihr Browser kann die Datei nicht anzeigen.'); ?>
+	<?php echo __('Ihr Browser kann die SVG-Grafik nicht anzeigen.'); ?>
 </object>
 
 <br />
