@@ -211,8 +211,8 @@ $MODULES['routing'  ]=  array('title' => __('Routen'),          //TRANSLATE ME
                               'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
                               'perms' => 'admin',
    'sub' => array(
-      'gws-sip'      => array('title' => __('SIP-Gateways')),   //TRANSLATE ME
-      'gwgrps'       => array('title' => __('Gateway-Gruppen')) //TRANSLATE ME
+      'gwgrps'       => array('title' => __('Gateway-Gruppen')),//TRANSLATE ME
+      'gws-sip'      => array('title' => __('SIP-Gateways'))    //TRANSLATE ME
    )
 );
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
