@@ -372,7 +372,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			<input type="text" name="ulname" value="" size="15" maxlength="40" style="width:125px;" /><input type="text" name="ufname" value="" size="15" maxlength="40" style="width:115px;" />
 		</td>
 		<td>
-			<input type="text" name="uext" value="" size="6" maxlength="6"  />
+			<input type="text" name="uext" value="" size="10" maxlength="10"  />
 		</td>
 		<td>
 			<input type="text" name="uuser" value="" size="8" maxlength="20"  />
