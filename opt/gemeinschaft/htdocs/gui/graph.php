@@ -367,7 +367,7 @@ if ($dataset != '') {
 
 <g transform="translate(<?php echo $padl; ?> <?php echo $padt; ?>)">
 	
-	<rect class="graphBackground" x="0" y="0" width="<?php echo $cw; ?>" height="<?php echo $ch; ?>"  />
+	<rect class="graphBackground" x="0" y="0" width="<?php echo $cw; ?>" height="<?php echo $ch; ?>" />
 	
 	<a xlink:href="http://www.amooma.de/" target="_blank">
 		<text class="copy" x="<?php echo $width-$padl-2; ?>" y="<?php echo $height-$padt-3; ?>">gemeinschaft</text>
