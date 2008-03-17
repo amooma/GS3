@@ -212,7 +212,8 @@ $MODULES['routing'  ]=  array('title' => __('Routen'),          //TRANSLATE ME
                               'perms' => 'admin',
    'sub' => array(
       'gwgrps'       => array('title' => __('Gateway-Gruppen')),//TRANSLATE ME
-      'gws-sip'      => array('title' => __('SIP-Gateways'))    //TRANSLATE ME
+      'gws-sip'      => array('title' => __('SIP-Gateways')),   //TRANSLATE ME
+      'gws-misdn'    => array('title' => __('BRI-Gateways'))    //TRANSLATE ME
    )
 );
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
