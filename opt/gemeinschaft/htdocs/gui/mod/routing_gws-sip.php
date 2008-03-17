@@ -80,7 +80,7 @@ if ($action === 'save') {
 	\'gw_tmp_'. rand(100000,999999) .'\',
 	\'\',
 	0,
-	\''. $DB->escape( 'SIP/{number}@{peer}' ) .'\',
+	\''. $DB->escape( 'SIP/{number}@{gateway}' ) .'\',
 	\'\',
 	\'\',
 	\'\'
@@ -110,7 +110,7 @@ if ($action === 'save') {
 	\''. $DB->escape($sip_friend_name) .'\',
 	\''. $DB->escape(trim(@$_REQUEST['gw-title'])) .'\',
 	'. (@$_REQUEST['gw-allow_out'] ? 1 : 0) .',
-	\''. $DB->escape( 'SIP/{number}@{peer}' ) .'\',
+	\''. $DB->escape( 'SIP/{number}@{gateway}' ) .'\',
 	\''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.]/', '', @$_REQUEST['gw-host'])) .'\',
 	\''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-user'])) .'\',
 	\''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-pwd'])) .'\'
