@@ -152,33 +152,38 @@ foreach ($gate_grps as $ggrp_id) {
 	//$rs = $db->execute( 'SELECT * FROM `gate_grps` WHERE `id`='. $ggrp_id );
 	
 	$rs = $db->execute(
-'SELECT `type`, `name`, `title`, `dialstr`
+'SELECT `type`, `name`, `dialstr`
 FROM `gates`
-WHERE `grp_id`='. $ggrp_id .' AND `allow_out`=1
+WHERE
+	`grp_id`='. $ggrp_id .' AND
+	`allow_out`=1
 ORDER BY RAND()
-LIMIT 8'
+LIMIT 9'
 	);
 	//while ($gate = $rs->fetchRow()) $gates[] = $gate;
 	while ($gate = $rs->fetchRow()) {
 		if ($lcr_prefix != '') {
-			if (strToLower($gate['type']) === 'zap') {
+			if (in_array($gate['type'], array('zap','misdn'), true)) {
 				gs_agi_verbose("### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
 				$number_final = $lcr_prefix . $number_dial;
 			} else {
-				gs_agi_verbose("### LCR prefix $lcr_prefix ignored for non-Zap gateway ". $gate['name'] );
+				gs_agi_verbose("### LCR prefix $lcr_prefix ignored for non-hardware gateway ". $gate['name'] );
 				$number_final = $number_dial;
 			}
 		} else {
 			$number_final = $number_dial;
 		}
+		$dialstr = str_replace('{peer}', '{gateway}', $gate['dialstr']);
 		$dialstr = str_replace(
-			array( '{number}'   , '{peer}'      ),
+			array( '{number}'   , '{gateway}'   ),
 			array( $number_final, $gate['name'] ),
 			$gate['dialstr']
 		);
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
-		echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc($dialstr) ."\n";
-		++$idx;
+		if ($dialstr != '') {
+			echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc($dialstr) ."\n";
+			++$idx;
+		}
 	}
 }
 _no_more_routes($idx);
