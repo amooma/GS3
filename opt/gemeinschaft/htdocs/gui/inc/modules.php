@@ -262,6 +262,8 @@ $MODULES['system'   ]['sub'][
 $MODULES['system'   ]['sub'][
       'gpbx-b410p']  =  array('title' => __('ISDN-Ports (BRI)'));//TRANSLATE ME
 }
+$MODULES['system'   ]['sub'][
+      'shutdown']    =  array('title' => __('Ausschalten'));    //TRANSLATE ME
 }
 /*
 $MODULES['system'   ]['sub'][
