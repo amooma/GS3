@@ -5773,7 +5773,8 @@ CREATE TABLE `gates` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `grp_title` (`grp_id`,`title`(10)),
-  KEY `grp_allow_out` (`grp_id`,`allow_out`)
+  KEY `grp_allow_out` (`grp_id`,`allow_out`),
+  KEY `type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
