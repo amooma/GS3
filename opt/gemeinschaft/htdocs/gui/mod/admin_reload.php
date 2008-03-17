@@ -44,9 +44,11 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
+/*
 $shutdown_enabled =
 	   gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')
 	&& gs_get_conf('GS_GUI_SHUTDOWN_ENABLED');
+*/
 
 ?>
 
@@ -64,14 +66,14 @@ $shutdown_enabled =
 </form>
 &nbsp;
 
-<?php if ($shutdown_enabled) { ?>
+<?php /* if ($shutdown_enabled) { ?>
 <form method="post" action="<?php echo GS_URL_PATH; ?>" class="inline">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="shutdown" />
 <input type="submit" value="<?php echo __('Ausschalten'); ?>" />
 </form>
 &nbsp;
-<?php } ?>
+<?php } */ ?>
 
 <br />
 <hr size="1" />
@@ -105,6 +107,7 @@ elseif ($action === 'reload') {
 	echo '</pre>';
 }
 
+/*
 elseif ($action === 'shutdown' && $shutdown_enabled) {
 ?>
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
@@ -139,7 +142,7 @@ elseif ($action === 'shutdown2' && $shutdown_enabled) {
 			$err=0;
 			@passThru( 'sudo /etc/init.d/asterisk stop', $err );
 			
-			/*
+			/ *
 			if (file_exists( '/etc/init.d/mysql-ndb' )) {
 				$err=0;
 				@passThru( 'sudo /etc/init.d/mysql-ndb stop', $err );
@@ -152,7 +155,7 @@ elseif ($action === 'shutdown2' && $shutdown_enabled) {
 				$err=0;
 				@passThru( 'sudo /etc/init.d/mysqld stop', $err );
 			}
-			*/
+			* /
 			
 			$err=0;
 			passThru( 'sudo '. $shutdown .' -t 10 -h -P now 2>&1', $err );
@@ -162,6 +165,7 @@ elseif ($action === 'shutdown2' && $shutdown_enabled) {
 		}
 	}
 }
+*/
 
 
 ?>
