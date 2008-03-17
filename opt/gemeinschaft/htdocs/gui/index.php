@@ -118,9 +118,11 @@ if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub']))
 	_not_found();
 
 if (@$MODULES[$SECTION]['perms'] === 'admin'
-&&  !(preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
+&&  !(preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
 {
-	_not_allowed( 'You are not an admin.' );
+	//_not_allowed( 'You are not an admin.' );
+	$SECTION = 'home';
+	$MODULE  = 'home';
 }
 
 
@@ -161,6 +163,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 }
 
 
+//echo "<pre>"; print_r($_SESSION); echo "</pre>";
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php echo @$_SESSION['isolang']; ?>" xml:lang="<?php echo @$_SESSION['isolang']; ?>">
@@ -226,6 +229,16 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 			echo '<img alt="', @$l[2] ,'" src="', GS_URL_PATH ,'img/lang/', @$l[1] ,'.png" class="fr" /></a>' ,"\n";
 		}
 	}
+	if (@$_SESSION['login_ok']) {
+		if (@$_SESSION['sudo_user']['name'] === 'sysadmin'
+		|| (@$_SESSION['sudo_user']['name'] != ''
+		&&  preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
+		)) {
+			if (! in_array($SECTION, array('logout'), true)) {
+				echo '<a href="', gs_url('system', 'shutdown') ,'" title="', __('Auschalten / Neustarten ...') ,'" class="fr" style="display:block; margin:1px 6px;"><img alt="', __('Ausschalten ...') ,'" src="', GS_URL_PATH ,'img/power.png" /></a>' ,"\n";
+			}
+		}
+	}
 ?>
 </div>
 
@@ -242,19 +255,22 @@ foreach ($MODULES as $sectname => $sectinfo) {
 	if (count($sectinfo['sub']) < 1)
 		continue;
 	if (! @$_SESSION['login_ok']
-	&&  ! in_array($sectname, array('home','login'), true))
+	&&  ! in_array($sectname, array('home','login'), true)) {
 		continue;
+	}
 	
 	if (@$_SESSION['sudo_user']['name'] !== 'sysadmin') {
 		if (@$sectinfo['perms'] === 'admin' && (
-			   @$_SESSION['real_user']['name'] == ''
-			|| ! preg_match('/\\b'.(@$_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
-		))
+			   @$_SESSION['sudo_user']['name'] == ''
+			|| ! preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
+		)) {
 			continue;
+		}
 	} else {
 		if (@$sectinfo['perms'] !== 'admin'
-		&&  ! in_array($sectname, array('home','login','logout'), true))
+		&&  ! in_array($sectname, array('home','login','logout'), true)) {
 			continue;
+		}
 	}
 	
 	echo '<li class="'. ($sect_active ? 'expanded' : 'collapsed') .'">', "\n";
@@ -266,8 +282,9 @@ foreach ($MODULES as $sectname => $sectinfo) {
 	if (count($sectinfo['sub']) > 1) {
 		echo '<ul class="menu">', "\n";
 		foreach ($sectinfo['sub'] as $modname => $modinfo) {
-			if (array_key_exists('inmenu', $modinfo) && ! $modinfo['inmenu'])
+			if (array_key_exists('inmenu', $modinfo) && ! $modinfo['inmenu']) {
 				continue;
+			}
 			
 			echo '<li class="leaf"><a href="'. gs_url($sectname, $modname) .'" class="'. ($modname==$MODULE ? 'active' : '') .'"><img alt=" " src="', GS_URL_PATH, 'img/tree.gif" />'. $modinfo['title'] .'</a></li>', "\n";
 		}
