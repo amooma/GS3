@@ -113,7 +113,7 @@ echo '
 	class="fl"
 >
 	<param name="src" value="', $src ,'">
-	', __('Ihr Browser kann die Datei nicht anzeigen.') ,'
+	', __('Ihr Browser kann die SVG-Datei nicht anzeigen.') ,'
 </object>
 ';
 
