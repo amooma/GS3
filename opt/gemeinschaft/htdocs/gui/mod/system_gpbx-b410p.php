@@ -39,6 +39,8 @@ echo '</h2>', "\n";
 
 //echo "<br />\n";
 
+echo '<p class="text"><small>', __('&Auml;nderungen ben&ouml;tigen ggf. einen Neustart der Anlage.') ,'</small></p>' ,"\n";
+
 
 $err=0; $out=array();
 @exec('lspci -n 2>>/dev/null', $out, $err);
