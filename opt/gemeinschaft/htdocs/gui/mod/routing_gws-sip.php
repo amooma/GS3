@@ -94,27 +94,16 @@ if ($action === 'save') {
 	$sip_friend_name = subStr('gw_'.$gwid.'_'.$sip_friend_name, 0, 20);
 	
 	$query =
-'REPLACE INTO `gates` (
-	`id`,
-	`grp_id`,
-	`name`,
-	`title`,
-	`allow_out`,
-	`dialstr`,
-	`host`,
-	`user`,
-	`pwd`
-) VALUES (
-	'. (int)$gwid .',
-	'. ((int)@$_REQUEST['gw-grp_id'] > 0 ? (int)@$_REQUEST['gw-grp_id'] : 'NULL') .',
-	\''. $DB->escape($sip_friend_name) .'\',
-	\''. $DB->escape(trim(@$_REQUEST['gw-title'])) .'\',
-	'. (@$_REQUEST['gw-allow_out'] ? 1 : 0) .',
-	\''. $DB->escape( 'SIP/{number}@{gateway}' ) .'\',
-	\''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.]/', '', @$_REQUEST['gw-host'])) .'\',
-	\''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-user'])) .'\',
-	\''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-pwd'])) .'\'
-)'
+'UPDATE `gates` SET
+	`grp_id` = '. ((int)@$_REQUEST['gw-grp_id'] > 0 ? (int)@$_REQUEST['gw-grp_id'] : 'NULL') .',
+	`name` = \''. $DB->escape($sip_friend_name) .'\',
+	`title` = \''. $DB->escape(trim(@$_REQUEST['gw-title'])) .'\',
+	`allow_out` = '. (@$_REQUEST['gw-allow_out'] ? 1 : 0) .',
+	`dialstr` = \''. $DB->escape( 'SIP/{number}@{gateway}' ) .'\',
+	`host` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.]/', '', @$_REQUEST['gw-host'])) .'\',
+	`user` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-user'])) .'\',
+	`pwd` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-pwd'])) .'\'
+WHERE `id`='. (int)$gwid
 	;
 	//echo "<pre>$query</pre>\n";
 	$DB->execute($query);
