@@ -195,7 +195,7 @@ $PROV_HOST                  = '192.168.1.130';
 $PROV_PORT                  = 80;
 $PROV_SCHEME                = 'http';  # without "://"
 //$PROV_PATH                  = '/';
-//$PROV_PATH                  = '/gemeinschaft/prov/';
+$PROV_PATH                  = '/gemeinschaft/prov/';
   # with starting and trailing "/"
   # URL is build like this:
   # <PROV_SCHEME>://<PROV_HOST>:<PROV_PORT><PROV_PATH>snom/dial-log.php
