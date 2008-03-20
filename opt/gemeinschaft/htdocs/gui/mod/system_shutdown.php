@@ -124,9 +124,9 @@ else {
 			} else {
 				
 				if ($action === 'shutdown2')
-					$shutdown_args = '-t 30 -h -P now';
+					$shutdown_args = ' -h -P now';
 				else
-					$shutdown_args = '-t 30 -r now';
+					$shutdown_args = ' -r now';
 				
 				@flush();
 				@ob_implicit_flush(1);
