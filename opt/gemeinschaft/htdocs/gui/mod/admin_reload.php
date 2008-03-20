@@ -158,7 +158,7 @@ elseif ($action === 'shutdown2' && $shutdown_enabled) {
 			* /
 			
 			$err=0;
-			passThru( 'sudo '. $shutdown .' -t 10 -h -P now 2>&1', $err );
+			passThru( 'sudo '. $shutdown .' -h -P now 2>&1', $err );
 			echo "\n";
 			echo '&rarr; <b>', ($err===0 ? 'OK':'ERR ('.$err.')') ,'</b>';
 			echo '</pre>';
