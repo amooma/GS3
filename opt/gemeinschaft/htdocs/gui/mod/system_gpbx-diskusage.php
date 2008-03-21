@@ -80,6 +80,15 @@ if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 
 
 $err=0; $out=array();
+@exec( 'LANG=C du -s --block-size=1000000  /mnt/userdata/upgrades 2>>/dev/null', $out, $err );
+if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
+	$upgrades_blocks_mb_used = (int)$m[1];
+} else {
+	$upgrades_blocks_mb_used = null;
+}
+
+
+$err=0; $out=array();
 @exec( 'LANG=C du -s --block-size=1000000  /mnt/userdata/user/voicemail 2>>/dev/null', $out, $err );
 if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 	$vm_blocks_mb_used = (int)$m[1];
@@ -159,6 +168,16 @@ if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 	<td class="r"><?php
 		if ($ringtones_blocks_mb_used)
 			echo $ringtones_blocks_mb_used ,'&nbsp;MB';
+		else
+			echo '?';
+	?></td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+	<td><?php echo __('Upgrades'); ?></td>
+	<td class="r"><?php
+		if ($upgrades_blocks_mb_used)
+			echo $upgrades_blocks_mb_used ,'&nbsp;MB';
 		else
 			echo '?';
 	?></td>
