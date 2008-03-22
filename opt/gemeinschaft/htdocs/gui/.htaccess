@@ -59,6 +59,22 @@ DefaultType text/html
 	</IfModule>
 </IfModule>
 
+<IfModule mod_expires.c>
+	ExpiresActive On
+	
+	ExpiresByType image/gif  "now plus 12 hours"
+	ExpiresByType image/jpeg "now plus 12 hours"
+	ExpiresByType image/jpg  "now plus 12 hours"
+	ExpiresByType image/png  "now plus 12 hours"
+	
+	ExpiresByType text/html                "now plus 6 hours"
+	ExpiresByType application/xhtml+xml    "now plus 6 hours"
+	ExpiresByType text/plain               "now plus 6 hours"
+	ExpiresByType text/css                 "now plus 6 hours"
+	ExpiresByType text/javascript          "now plus 6 hours"
+	ExpiresByType application/x-javascript "now plus 6 hours"
+</IfModule>
+
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	#RewriteCond %{REQUEST_FILENAME} !-f
