@@ -145,7 +145,7 @@ if (@$_REQUEST['action']==='play') {
 			height="18"
 			align="right"
 			>
-			<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;_=.gsm'; ?>" />
+			<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>" />
 			<param name="autoplay" value="true" />
 			<param name="controller" value="true" />
 			<?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'GSM'); ?>
@@ -200,7 +200,7 @@ if (@$_REQUEST['action']==='play') {
 		height="22"
 		align="right"
 		>
-		<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;_=.mp3'; ?>" />
+		<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>" />
 		<param name="autoplay" value="true" />
 		<param name="controller" value="true" />
 		<small><?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?></small>
