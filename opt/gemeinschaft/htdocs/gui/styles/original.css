@@ -214,7 +214,7 @@ body, input, select, table, td {
 	float: right;
 	width: 30%;
 	text-align: right;
-	padding: 0; margin: 0 1px 0 0;
+	padding: 0; margin: 0 3px 1px 0;
 }
 #sudo-user {
 	border: 1px inset #fff;
