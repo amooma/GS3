@@ -5,13 +5,10 @@
 */
 
 #content-container {
-	position: absolute;
 	width: auto;
 }
 #content {
 	width: auto;
-	padding: 1em 1.5em;
-	margin: 0;
 }
 
 #menu ul li ul {
