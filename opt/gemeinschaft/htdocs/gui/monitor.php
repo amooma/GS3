@@ -117,7 +117,8 @@ function get_ext_ranges( $ext_ranges )
 <meta http-equiv="pragma" content="no-cache" />
 <meta http-equiv="cache-control" content="no-cache" />
 <!-- for stupid MSIE: -->
-<!--[if IE]><link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/msie-fix.css" /><![endif]-->
+<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/msie-fix-6.css" /><![endif]-->
+<!--[if gte IE 7]><link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/msie-fix-7.css" /><![endif]-->
 <!--[if lt IE 7]><style type="text/css">img {behavior: url("js/pngbehavior.htc.php?msie-sucks=.htc");}</style><![endif]-->
 </head>
 <body>
