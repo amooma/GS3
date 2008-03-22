@@ -376,6 +376,15 @@ function _test_result( $str, $status )
 			: _test_result('NICHT OPTIMAL', 'notice');
 	?></td>
 </tr>
+<tr>
+	<td>&nbsp;</td>
+	<td><tt>mod_expires</tt></td>
+	<td <?php
+		echo array_key_exists('mod_expires', $apache_mods)
+			? _test_result('OK', 'ok')
+			: _test_result('NICHT OPTIMAL', 'notice');
+	?></td>
+</tr>
 <?php } ?>
 
 <tr>
