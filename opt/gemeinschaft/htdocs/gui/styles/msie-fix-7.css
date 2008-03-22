@@ -7,9 +7,6 @@
 #content-container {
 	position: absolute;
 	width: auto;
-	top: 50px;
-	left: 170px;
-	float: left;
 }
 #content {
 	width: auto;
@@ -24,9 +21,7 @@
 	display: block;
 }
 #menu li {
-	border-width: 1px 0 1px 0;
-	border-style: solid;
-	border-color: #eee #eee #ccc #eee;
 	margin: 0;
+	font-size: 11px;
 }
 
