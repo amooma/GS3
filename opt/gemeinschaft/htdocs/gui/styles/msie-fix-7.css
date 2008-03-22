@@ -19,6 +19,14 @@
 }
 #menu li {
 	margin: 0;
-	font-size: 11px;
 }
 
+#sudo-bar {
+	padding-bottom: 3px;
+}
+#sudo-form {
+	margin-top: -2px;
+}
+#sudo-user {
+	margin-bottom: -1px;
+}
