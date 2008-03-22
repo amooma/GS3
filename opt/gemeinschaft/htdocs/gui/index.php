@@ -192,7 +192,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <meta http-equiv="cache-control" content="no-cache" />
 <!-- for stupid MSIE: -->
 <!--[if IE]><link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/msie-fix.css" /><![endif]-->
-<!--[if lte IE 6]><style type="text/css">img {behavior: url("<?php echo GS_URL_PATH; ?>js/pngbehavior.htc.php?msie-sucks=.htc");}</style><![endif]-->
+<!--[if lt IE 7]><style type="text/css">img {behavior: url("<?php echo GS_URL_PATH; ?>js/pngbehavior.htc.php?msie-sucks=.htc");}</style><![endif]-->
 </head>
 <body>
 
