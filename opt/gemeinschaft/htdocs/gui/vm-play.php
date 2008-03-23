@@ -63,6 +63,13 @@ function _not_found( $errmsg='' )
 	exit(1);
 }
 
+function _not_modified()
+{
+	header( 'HTTP/1.0 304 Not Modified', true, 304 );
+	header( 'Status: 304 Not Modified', true, 304 );
+	exit(0);
+}
+
 function _to_id3tag_ascii( $str )
 {
 	return preg_replace(
@@ -107,6 +114,13 @@ $info = $rs->fetchRow();
 if (! $info) {
 	_not_found();
 }
+
+$etag = gmDate('Ymd') .'-'. md5( $user_id .'-'. $fld .'-'. $file .'-'. $info['host_id'] .'-'. $info['orig_time'] .'-'. $info['dur'] .'-'. $info['cidnum'] );
+if (array_key_exists('HTTP_IF_NONE_MATCH', $_SERVER)
+&&  $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
+	_not_modified();
+}
+
 if ($info['dur'] > 900) {  # 900 s = 15 min
 	gs_log( GS_LOG_NOTICE, 'Voicemail too long for web.' );
 	_server_error( 'File too long.' );
@@ -248,6 +262,7 @@ $fake_filename = preg_replace('/[^0-9a-z\-_.]/i', '', 'vmsg_'. $ext .'_'. date('
 # short in QuickTime and maybe other players
 @header( 'Transfer-Encoding: identity' );
 @header( 'Content-Length: '. (int)@fileSize($outfile) );
+@header( 'ETag: '. $etag );
 
 @readFile( $outfile );
 
