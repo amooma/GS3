@@ -40,29 +40,31 @@ $gs_extensions_ael_filename = 'gs-extensions.ael';
 
 
 
-$usage = 'Usage: '. baseName(__FILE__) .' [--dialplan]';
+$usage = 'Usage: '. baseName(__FILE__) .'';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'dialplan'
 	),
 	$usage
 );
 
-$only_dialplan = array_key_exists('dialplan', $opts);
+$only_dialplan = true;
 
 
 
 function ael_file_realname( $file )
 {
 	global $etc_asterisk;
-	return (@ $file{0} == '/') ? $file : ($etc_asterisk . $file);
+	return (@$file{0} === '/') ? $file : ($etc_asterisk . $file);
 }
 
 function ael_get_file_content( $file )
 {
-	if (! file_exists( $file ) || ! is_readable( $file )) return false;
-	$content = @ file_get_contents( $file );
+	if (! file_exists( $file )
+	||  ! is_readable( $file )) {
+		return false;
+	}
+	$content = @file_get_contents( $file );
 	return is_string($content) ? $content : false;
 }
 
@@ -111,72 +113,23 @@ $extensions_ael = ael_get_file_content( $gs_extensions_ael_filename );
 while (! ael_eval_includes()) {}
 
 $extensions_ael_filename = $etc_asterisk .'extensions.ael';
-if (file_exists( $extensions_ael_filename )) {
-	/*
-	echo "Moving extensions.ael out of the way ...\n";
-	$err=0; $out=array();
-	@exec( 'mv '. qsa( $extensions_ael_filename ) .' '. qsa( dirName( $extensions_ael_filename ) .'/extensions.ael.bak.'. time() ) .' 1>>/dev/null 2>&1' );
-	*/
-}
 
 
-$f = @ fOpen( $extensions_ael_filename, 'wb' );
+
+$f = @fOpen($extensions_ael_filename, 'wb');
 if (! $f)
 	echo "Could not open $extensions_ael_filename for writing!\n";
-else {
-	$extensions_ael =
+	exit(1);
+}
+
+$extensions_ael =
 "//------------------------------------------------------------------//\n".
-"//         WRITTEN BY /opt/gemeinschaft/sbin/start-asterisk         //\n".
+"// ". str_pad('WRITTEN BY /opt/gemeinschaft/sbin/'. baseName(__FILE__), 64, ' ', STR_PAD_BOTH) ." //\n".
 "//------------------------------------------------------------------//\n".
 "\n". $extensions_ael;
-	fWrite( $f, $extensions_ael, strLen($extensions_ael) );
-	fClose( $f );
-	echo "extensions.ael written.\n";
-}
-
-
-$asterisk = find_executable('asterisk',
-	array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/'));
-if (! $asterisk) {
-	echo "asterisk not found!\n";
-	die(1);
-}
-
-if ($only_dialplan) {
-	echo "Reloading only the Dialplan ...\n";
-	$start_ast = false;
-	$err=0; $out=array();
-	@exec( $asterisk .' -rx \'extensions reload\' 1>>/dev/null', $out, $err );
-	$start_ast = $start_ast || ($err != 0);
-	$err=0; $out=array();
-	@exec( $asterisk .' -rx \'ael reload\' 1>>/dev/null', $out, $err );
-	$start_ast = $start_ast || ($err != 0);
-} else {
-	echo "Reloading Asterisk ...\n";
-	$err=0; $out=array();
-	@exec( $asterisk .' -rx \'module reload\' 1>>/dev/null', $out, $err );
-	$start_ast = ($err != 0);
-}
-
-if ($start_ast) {
-	echo "Asterisk isn't running. Starting Asterisk ...\n";
-	
-	$safe_asterisk = find_executable('safe_asterisk',
-		array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/'));
-	if (! $safe_asterisk) {
-		echo "safe_asterisk not found!\n";
-		die(1);
-	}
-	
-	$err=0; $out=array();
-	//@exec( 'asterisk 1>>/dev/null', $out, $err );
-	@exec( $safe_asterisk .' 1>>/dev/null', $out, $err );
-	if ($err != 0) {
-		echo "Failed to start Asterisk!\n";
-		die(1);
-	}
-}
-echo "OK\n";
+@fWrite($f, $extensions_ael, strLen($extensions_ael));
+@fClose($f);
+echo "extensions.ael written.\n";
 
 
 ?>
