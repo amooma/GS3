@@ -50,6 +50,7 @@ $only_dialplan = array_key_exists('dialplan', $opts);
 
 $err=0; $out=array();
 @exec( '/opt/gemeinschaft/sbin/gs-ast-dialplan-gen', $out, $err );
+echo implode("\n", $out), "\n";
 if ($err !== 0)
 	echo "Failed to generate dialplan.\n";
 else
