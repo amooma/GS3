@@ -160,7 +160,7 @@ if (! file_exists($step_file)) {
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php echo @$_SESSION['isolang']; ?>" xml:lang="<?php echo @$_SESSION['isolang']; ?>">
 <head><!--<![CDATA[
                 Gemeinschaft
-  @(_)=====(_)  (c) 2007, amooma GmbH - http://www.amooma.de
+  @(_)=====(_)  (c) 2007-2008, amooma GmbH - http://www.amooma.de
  @   / ### \    Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
