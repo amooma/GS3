@@ -62,10 +62,11 @@ DefaultType text/html
 <IfModule mod_expires.c>
 	ExpiresActive On
 	
-	ExpiresByType image/gif  "now plus 12 hours"
-	ExpiresByType image/jpeg "now plus 12 hours"
-	ExpiresByType image/jpg  "now plus 12 hours"
-	ExpiresByType image/png  "now plus 12 hours"
+	ExpiresByType image/gif      "now plus 12 hours"
+	ExpiresByType image/jpeg     "now plus 12 hours"
+	ExpiresByType image/jpg      "now plus 12 hours"
+	ExpiresByType image/png      "now plus 12 hours"
+	ExpiresByType image/svg+xml  "now plus 12 hours"
 	
 	ExpiresByType text/html                "now plus 6 hours"
 	ExpiresByType application/xhtml+xml    "now plus 6 hours"
