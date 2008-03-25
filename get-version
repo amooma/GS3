@@ -30,7 +30,7 @@ then
 	
 	if [ "${PART1}" = "trunk" ]
 	then
-		echo trunk-r${REV}
+		echo -n "trunk-r${REV}"
 		exit 0
 	fi
 	
@@ -92,7 +92,7 @@ then
 	
 	if [ ${IS_TAG} != 0 ]
 	then
-		echo ${RESULT}
+		echo -n "${RESULT}"
 		exit 0
 	else
 		if [ "${RESULT}" = "" ]
@@ -102,13 +102,13 @@ then
 		fi
 		if [ ${IS_TEAM_BRANCH} != 0 ]
 		then
-			echo team-${RESULT}-r${REV}
+			echo -n "team-${RESULT}-r${REV}"
 		else
-			echo ${RESULT}-r${REV}
+			echo -n "${RESULT}-r${REV}"
 		fi
 		exit 0
 	fi
 fi
 
-echo unknown
+echo -n "unknown"
 exit 1
