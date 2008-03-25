@@ -72,7 +72,8 @@ function ael_get_file_content( $file )
 function ael_eval_includes()
 {
 	global $extensions_ael;
-	$pattern = '/^\s*#(include|exec)\s+(.*)/mi';
+	
+	$pattern = '/^[ \t]*#([iI]nclude|[eE]xec)[ \t]+([^\n\r]*)/mS';
 	if (preg_match( $pattern, $extensions_ael )) {
 		$extensions_ael = preg_replace_callback( $pattern, 'ael_eval_callback', $extensions_ael );
 		return false;
@@ -85,21 +86,23 @@ function ael_eval_callback( $m )
 	$directive = strToLower($m[1]);
 	$filename = ael_file_realname( trim( $m[2], '"\'<>`´' ) );
 		
-	if ($directive == 'include') {
+	if ($directive === 'include') {
 		
 		$filename = ael_file_realname( $filename );
+		//echo "    incl $filename\n";
 		$content = ael_get_file_content( $filename );
 		if (is_string($content))
 			return $content;
 		else
 			return "// WARNING: Could not find included file \"$filename\"!";
 		
-	} elseif ($directive == 'exec') {
+	} elseif ($directive === 'exec') {
 		
 		$filename = ael_file_realname( $filename );
+		//echo "    exec $filename\n";
 		$err=0; $out=array();
 		@exec( escapeShellCmd($filename) .' 2>>/dev/null', $out, $err );
-		if (is_array($out) && $err == 0)
+		if ($err === 0 && is_array($out))
 			return implode("\n", $out);
 		else
 			return "// WARNING: Could not exec included script \"$filename\"!";
@@ -113,7 +116,8 @@ echo "Generating extensions.ael ...\n";
 
 $gs_extensions_ael_filename = ael_file_realname( $gs_extensions_ael_filename );
 $extensions_ael = ael_get_file_content( $gs_extensions_ael_filename );
-while (! ael_eval_includes()) {}
+$pass = 0;
+while (! ael_eval_includes()) { /*echo "  pass ".(++$pass).":\n";*/ }
 
 $extensions_ael_filename = $etc_asterisk .'extensions.ael';
 
