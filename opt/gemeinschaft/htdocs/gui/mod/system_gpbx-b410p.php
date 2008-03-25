@@ -43,7 +43,7 @@ echo '<p class="text"><small>', __('&Auml;nderungen ben&ouml;tigen ggf. einen Ne
 
 
 $err=0; $out=array();
-@exec('lspci -n 2>>/dev/null', $out, $err);
+@exec('sudo lspci -n 2>>/dev/null', $out, $err);
 if ($err !== 0) {
 	echo 'Error.<br />' ,"\n";
 	return;
@@ -80,14 +80,14 @@ if (@$_REQUEST['action'] === 'save') {
 	# write /etc/misdn-init.conf
 	if (@file_exists  ('/usr/local/bin/gpbx-cards-conf')
 	&&  @is_executable('/usr/local/bin/gpbx-cards-conf')) {
-		@exec( '/usr/local/bin/gpbx-cards-conf conf 1>>/dev/null 2>>/dev/null' );
+		@exec( 'sudo /usr/local/bin/gpbx-cards-conf conf 1>>/dev/null 2>>/dev/null' );
 	}
 	
 	# restart mISDN:
-	@exec( '/etc/init.d/misdn-init restart 1>>/dev/null 2>>/dev/null' );
+	@exec( 'sudo /etc/init.d/misdn-init restart 1>>/dev/null 2>>/dev/null' );
 	
 	# reload Asterisk:
-	@exec( '/opt/gemeinschaft/sbin/start-asterisk 1>>/dev/null 2>>/dev/null' );
+	@exec( 'sudo /opt/gemeinschaft/sbin/start-asterisk 1>>/dev/null 2>>/dev/null' );
 	
 }
 
@@ -124,7 +124,7 @@ echo '
 $ports_protocols = array(1=>'ptp', 2=>'ptp', 3=>'ptp', 4=>'ptp');
 
 //$err=0; $out=array();
-//@exec('/opt/gemeinschaft/sbin/gs-get-keyval cards_bri_1_ports_te_ptp 2>>/dev/null', $out, $err);
+//@exec('sudo /opt/gemeinschaft/sbin/gs-get-keyval cards_bri_1_ports_te_ptp 2>>/dev/null', $out, $err);
 //if (preg_match_all('/[0-9]+/', @$out[0], $m)) {
 if (preg_match_all('/[0-9]+/', gs_keyval_get('cards_bri_1_ports_te_ptp'), $m)) {
 	foreach ($m[0] as $port) {
@@ -135,7 +135,7 @@ if (preg_match_all('/[0-9]+/', gs_keyval_get('cards_bri_1_ports_te_ptp'), $m)) {
 	}
 }
 //$err=0; $out=array();
-//@exec('/opt/gemeinschaft/sbin/gs-get-keyval cards_bri_1_ports_te_ptmp 2>>/dev/null', $out, $err);
+//@exec('sudo /opt/gemeinschaft/sbin/gs-get-keyval cards_bri_1_ports_te_ptmp 2>>/dev/null', $out, $err);
 //if (preg_match_all('/[0-9]+/', @$out[0], $m)) {
 if (preg_match_all('/[0-9]+/', gs_keyval_get('cards_bri_1_ports_te_ptmp'), $m)) {
 	foreach ($m[0] as $port) {
@@ -149,7 +149,7 @@ if (preg_match_all('/[0-9]+/', gs_keyval_get('cards_bri_1_ports_te_ptmp'), $m)) 
 
 $asterisk_misdn_ports = array();
 $err=0; $out=array();
-@exec( 'asterisk -rx \'misdn show stacks\' | grep -E \'Port [0-9]+\' 2>>/dev/null', $out, $err );
+@exec( 'sudo asterisk -rx \'misdn show stacks\' | grep -E \'Port [0-9]+\' 2>>/dev/null', $out, $err );
 /*
   * Port 1 Type TE Prot. PMP L2Link DOWN L1Link:DOWN Blocked:0  Debug:0
   * Port 2 Type TE Prot. PMP L2Link DOWN L1Link:DOWN Blocked:0  Debug:0
