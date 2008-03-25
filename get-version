@@ -10,12 +10,14 @@
 #	cd ${TAGBASE}   || exit 1
 #fi
 
+SVN_REPO_NAME="gemeinschaft"
+
 TAGBASE="."
 cd `dirname $0`
 
 if [ -d .svn ]
 then
-	PARTS=`LANG=C svn info ${TAGBASE} 2>>/dev/null | grep ^URL | awk '{print $2;}' | sed -e 's:^.*/gemeinschaft/::' | sed -e 's:/: :g'`
+	PARTS=`LANG=C svn info ${TAGBASE} 2>>/dev/null | grep ^URL | awk '{print $2;}' | sed -e 's:^.*/${SVN_REPO_NAME}/::' | sed -e 's:/: :g'`
 	#echo "PARTS: ${PARTS}"
 	PART1=`echo "${PARTS}" | awk '{print $1;}'`
 	#echo "PART1: ${PART1}"
