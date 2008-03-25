@@ -35,10 +35,6 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 require_once( GS_DIR .'inc/find_executable.php' );
 
 
-$etc_asterisk = GS_DIR .'etc/asterisk/';
-$gs_extensions_ael_filename = 'gs-extensions.ael';
-
-
 
 $usage = 'Usage: '. baseName(__FILE__) .' [--dialplan]';
 
@@ -52,87 +48,12 @@ $opts = @getOptsNoMultiples( '',
 $only_dialplan = array_key_exists('dialplan', $opts);
 
 
-
-function ael_file_realname( $file )
-{
-	global $etc_asterisk;
-	return (@ $file{0} == '/') ? $file : ($etc_asterisk . $file);
-}
-
-function ael_get_file_content( $file )
-{
-	if (! file_exists( $file ) || ! is_readable( $file )) return false;
-	$content = @ file_get_contents( $file );
-	return is_string($content) ? $content : false;
-}
-
-// returns false if needs another pass or true if done
-function ael_eval_includes()
-{
-	global $extensions_ael;
-	$pattern = '/^\s*#(include|exec)\s+(.*)/mi';
-	if (preg_match( $pattern, $extensions_ael )) {
-		$extensions_ael = preg_replace_callback( $pattern, 'ael_eval_callback', $extensions_ael );
-		return false;
-	}
-	return true;
-}
-
-function ael_eval_callback( $m )
-{
-	$directive = strToLower($m[1]);
-	$filename = ael_file_realname( trim( $m[2], '"\'<>`´' ) );
-		
-	if ($directive == 'include') {
-		
-		$filename = ael_file_realname( $filename );
-		$content = ael_get_file_content( $filename );
-		if (is_string($content))
-			return $content;
-		else
-			return "// WARNING: Could not find included file \"$filename\"!";
-		
-	} elseif ($directive == 'exec') {
-		
-		$filename = ael_file_realname( $filename );
-		$err=0; $out=array();
-		@exec( escapeShellCmd($filename) .' 2>>/dev/null', $out, $err );
-		if (is_array($out) && $err == 0)
-			return implode("\n", $out);
-		else
-			return "// WARNING: Could not exec included script \"$filename\"!";
-		
-	}
-}
-
-
-$gs_extensions_ael_filename = ael_file_realname( $gs_extensions_ael_filename );
-$extensions_ael = ael_get_file_content( $gs_extensions_ael_filename );
-while (! ael_eval_includes()) {}
-
-$extensions_ael_filename = $etc_asterisk .'extensions.ael';
-if (file_exists( $extensions_ael_filename )) {
-	/*
-	echo "Moving extensions.ael out of the way ...\n";
-	$err=0; $out=array();
-	@exec( 'mv '. qsa( $extensions_ael_filename ) .' '. qsa( dirName( $extensions_ael_filename ) .'/extensions.ael.bak.'. time() ) .' 1>>/dev/null 2>&1' );
-	*/
-}
-
-
-$f = @ fOpen( $extensions_ael_filename, 'wb' );
-if (! $f)
-	echo "Could not open $extensions_ael_filename for writing!\n";
-else {
-	$extensions_ael =
-"//------------------------------------------------------------------//\n".
-"//         WRITTEN BY /opt/gemeinschaft/sbin/start-asterisk         //\n".
-"//------------------------------------------------------------------//\n".
-"\n". $extensions_ael;
-	fWrite( $f, $extensions_ael, strLen($extensions_ael) );
-	fClose( $f );
-	echo "extensions.ael written.\n";
-}
+$err=0; $out=array();
+@exec( '/opt/gemeinschaft/sbin/gs-ast-dialplan-gen', $out, $err );
+if ($err !== 0)
+	echo "Failed to generate dialplan.\n";
+else
+	echo "Dialplan generated.\n";
 
 
 $asterisk = find_executable('asterisk',
