@@ -36,68 +36,44 @@ require_once( GS_DIR .'inc/find_executable.php' );
 
 
 
-$usage = 'Usage: '. baseName(__FILE__) .' [--dialplan]';
+$usage = 'Usage: '. baseName(__FILE__) .' [--generate]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'dialplan'
+		'generate'
 	),
 	$usage
 );
 
-$only_dialplan = array_key_exists('dialplan', $opts);
+$generate_dialplan = array_key_exists('generate', $opts);
 
 
-$err=0; $out=array();
-@exec( '/opt/gemeinschaft/sbin/gs-ast-dialplan-gen', $out, $err );
-if ($err !== 0)
-	echo "Failed to generate dialplan.\n";
-else
-	echo "Dialplan generated.\n";
+if ($generate_dialplan) {
+	$err=0; $out=array();
+	@exec( '/opt/gemeinschaft/sbin/gs-ast-dialplan-gen', $out, $err );
+	echo implode("\n", $out), "\n";
+	if ($err !== 0)
+		echo "Failed to generate dialplan.\n";
+	else
+		echo "Dialplan generated.\n";
+}
 
 
 $asterisk = find_executable('asterisk',
 	array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/'));
 if (! $asterisk) {
-	echo "asterisk not found!\n";
-	die(1);
+	echo "asterisk not found.\n";
+	exit(0);
+	# do not consider that an error
 }
 
-if ($only_dialplan) {
-	echo "Reloading only the Dialplan ...\n";
-	$start_ast = false;
-	$err=0; $out=array();
-	@exec( $asterisk .' -rx \'extensions reload\' 1>>/dev/null', $out, $err );
-	$start_ast = $start_ast || ($err != 0);
-	$err=0; $out=array();
-	@exec( $asterisk .' -rx \'ael reload\' 1>>/dev/null', $out, $err );
-	$start_ast = $start_ast || ($err != 0);
-} else {
-	echo "Reloading Asterisk ...\n";
-	$err=0; $out=array();
-	@exec( $asterisk .' -rx \'module reload\' 1>>/dev/null', $out, $err );
-	$start_ast = ($err != 0);
-}
+echo "Reloading the dialplan ...\n";
+$err=0; $out=array();
+@exec( $asterisk .' -rx \'extensions reload\' 1>>/dev/null', $out, $err );
+$err=0; $out=array();
+@exec( $asterisk .' -rx \'ael reload\' 1>>/dev/null', $out, $err );
 
-if ($start_ast) {
-	echo "Asterisk isn't running. Starting Asterisk ...\n";
-	
-	$safe_asterisk = find_executable('safe_asterisk',
-		array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/'));
-	if (! $safe_asterisk) {
-		echo "safe_asterisk not found!\n";
-		die(1);
-	}
-	
-	$err=0; $out=array();
-	//@exec( 'asterisk 1>>/dev/null', $out, $err );
-	@exec( $safe_asterisk .' 1>>/dev/null', $out, $err );
-	if ($err != 0) {
-		echo "Failed to start Asterisk!\n";
-		die(1);
-	}
-}
-echo "OK\n";
+echo "Done.\n"
 
 
 ?>
