@@ -55,8 +55,9 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 $gw_types = array(
-	'sip' => 'SIP',
-	'zap' => 'ISDN'
+	'sip'   => 'SIP',
+	'misdn' => 'ISDN',
+	'zap'   => 'ISDN'
 );
 
 
