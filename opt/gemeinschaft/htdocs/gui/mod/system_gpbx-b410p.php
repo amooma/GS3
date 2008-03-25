@@ -282,7 +282,7 @@ echo '</form>' ,"\n";
 
 echo '<p class="text"><small>', __('Bitte beachten Sie, da&szlig; die Karte bei der GPBX bauartbedingt &quot;auf dem Kopf liegend&quot; eingebaut ist. Port 1 befindet sich also (von der R&uuml;ckseite betrachtet) an der rechten Geh&auml;useseite.') ,' ', __('Bitte verwenden Sie die Ports in der angegebenen Reihenfolge, also mit 1 beginnend.') ,'</small></p>' ,"\n";
 
-echo '<p class="text"><small><sup>[1]</sup> ', __('PtP (Point-to-Point, Punkt-zu-Punkt) bei einem Mehrger&auml;teanschlu&szlig;, PtMP (Point-to-MultiPoint, Punkt-zu-MultiPunkt) bei einem Anlagenanschlu&szlig;.') ,'</small></p>' ,"\n";
+echo '<p class="text"><small><sup>[1]</sup> ', __('PtP (Point-to-Point) bei einem Anlagenanschlu&szlig;, PtMP (Point-to-MultiPoint) bei einem Mehrger&auml;teanschlu&szlig;.') ,'</small></p>' ,"\n";
 
 
 
