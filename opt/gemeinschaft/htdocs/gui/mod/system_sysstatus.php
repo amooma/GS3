@@ -183,7 +183,7 @@ if (file_exists('/proc/meminfo')) {
 echo '<h3>DiskFree</h3>' ,"\n";
 $err=0; $out=array();
 if (gs_get_conf('GS_INSTALLATION_TYPE') === 'gpbx')
-	exec( 'df -H -x tmpfs | grep -v \' /live_media\'', $out, $err );
+	exec( 'df -H -x tmpfs | grep -v \' /live\'', $out, $err );
 else
 	exec( 'df -H -T -x tmpfs', $out, $err );
 if ($err===0) {
