@@ -42,7 +42,7 @@ echo "<br />\n";
 
 /*
 $err=0; $out=array();
-@exec( 'df --block-size=1000000 | grep \'^[ ]*'..'/dev/\' | grep \'% [ ]*'..'/[ ]*$\' 2>>/dev/null', $out, $err );
+@exec( 'sudo df --block-size=1000000 | grep \'^[ ]*'..'/dev/\' | grep \'% [ ]*'..'/[ ]*$\' 2>>/dev/null', $out, $err );
 if ($err !== 0) {
 	echo 'Error.';
 	return;
@@ -58,7 +58,7 @@ $sys_blocks_mb_total = (int)$m[1];
 
 
 $err=0; $out=array();
-@exec( 'df --block-size=1000000 | grep \'^[ ]*/dev/\' | grep \'% [ ]*/mnt/userdata[ ]*$\' 2>>/dev/null', $out, $err );
+@exec( 'sudo df --block-size=1000000 | grep \'^[ ]*/dev/\' | grep \'% [ ]*/mnt/userdata[ ]*$\' 2>>/dev/null', $out, $err );
 if ($err===0 && preg_match('/ +([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)/', @$out[0], $m)) {
 	$userdata_blocks_mb_total = (int)$m[1];
 	$userdata_blocks_mb_used  = (int)$m[2];
@@ -71,7 +71,7 @@ if ($err===0 && preg_match('/ +([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)/', @$out[0
 
 
 $err=0; $out=array();
-@exec( 'cd /mnt/userdata/gpbx/ && LANG=C du -sc --block-size=1000000 db logs vals | grep total | tail -n 1 2>>/dev/null', $out, $err );
+@exec( 'cd /mnt/userdata/gpbx/ && LANG=C sudo du -sc --block-size=1000000 db logs vals | grep total | tail -n 1 2>>/dev/null', $out, $err );
 if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 	$db_blocks_mb_used = (int)$m[1];
 } else {
@@ -80,7 +80,7 @@ if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 
 
 $err=0; $out=array();
-@exec( 'LANG=C du -s --block-size=1000000  /mnt/userdata/upgrades 2>>/dev/null', $out, $err );
+@exec( 'LANG=C sudo du -s --block-size=1000000  /mnt/userdata/upgrades 2>>/dev/null', $out, $err );
 if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 	$upgrades_blocks_mb_used = (int)$m[1];
 } else {
@@ -89,7 +89,7 @@ if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 
 
 $err=0; $out=array();
-@exec( 'LANG=C du -s --block-size=1000000  /mnt/userdata/user/voicemail 2>>/dev/null', $out, $err );
+@exec( 'LANG=C sudo du -s --block-size=1000000  /mnt/userdata/user/voicemail 2>>/dev/null', $out, $err );
 if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 	$vm_blocks_mb_used = (int)$m[1];
 } else {
@@ -98,7 +98,7 @@ if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 
 
 $err=0; $out=array();
-@exec( 'LANG=C du -s --block-size=1000000  /mnt/userdata/user/voicemail-ann 2>>/dev/null', $out, $err );
+@exec( 'LANG=C sudo du -s --block-size=1000000  /mnt/userdata/user/voicemail-ann 2>>/dev/null', $out, $err );
 if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 	$vmann_blocks_mb_used = (int)$m[1];
 } else {
@@ -107,7 +107,7 @@ if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 
 
 $err=0; $out=array();
-@exec( 'LANG=C du -s --block-size=1000000  /mnt/userdata/user/ringtones 2>>/dev/null', $out, $err );
+@exec( 'LANG=C sudo du -s --block-size=1000000  /mnt/userdata/user/ringtones 2>>/dev/null', $out, $err );
 if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 	$ringtones_blocks_mb_used = (int)$m[1];
 } else {
