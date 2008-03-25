@@ -140,29 +140,29 @@ if (file_exists('/proc/meminfo')) {
 	
 	//echo 'Physical', "\n";
 	if (preg_match('/^MemTotal:\s*([0-9]+)/mi', $out, $m)) {
-		$memtotal = (int)$m[1];
+		$memtotal = (int)((int)$m[1] * 1024 / 1000);  # kiB -> kB
 		//echo '  Total: ', str_pad(ceil($memtotal/1024),4,' ',STR_PAD_LEFT) ,' MiB', "\n";
 		if (preg_match('/^MemFree:\s*([0-9]+)/mi', $out, $m)) {
-			$memfree = (int)$m[1];
+			$memfree = (int)((int)$m[1] * 1024 / 1000);  # kiB -> kB
 			$memused = $memtotal - $memfree;
 			//echo '  Used : ', str_pad(ceil($memused/1024),4,' ',STR_PAD_LEFT) ,' MiB', "\n";
 			echo 'RAM : ',
-				'<b>', str_pad(ceil($memtotal/1024),4,' ',STR_PAD_LEFT) ,'</b> MiB, ',
+				'<b>', str_pad(ceil($memtotal/1000),4,' ',STR_PAD_LEFT) ,'</b> MB, ',
 				'<b>', str_pad(ceil($memused/$memtotal*100),2,' ',STR_PAD_LEFT) ,' %</b> used',
 				"\n";
 		}
 	}
 	//echo 'Swap', "\n";
 	if (preg_match('/^SwapTotal:\s*([0-9]+)/mi', $out, $m)) {
-		$memtotal = (int)$m[1];
+		$memtotal = (int)((int)$m[1] * 1024 / 1000);  # kiB -> kB
 		if ($memtotal > 0) {  # avoid division by 0
 			//echo '  Total: ', str_pad(ceil($memtotal/1024),4,' ',STR_PAD_LEFT) ,' MiB', "\n";
 			if (preg_match('/^SwapFree:\s*([0-9]+)/mi', $out, $m)) {
-				$memfree = (int)$m[1];
+				$memfree = (int)((int)$m[1] * 1024 / 1000);  # kiB -> kB
 				$memused = $memtotal - $memfree;
 				//echo '  Used : ', str_pad(ceil($memused/1024),4,' ',STR_PAD_LEFT) ,' MiB', "\n";
 				echo 'Swap: ',
-					'<b>', str_pad(ceil($memtotal/1024),4,' ',STR_PAD_LEFT) ,'</b> MiB, ',
+					'<b>', str_pad(ceil($memtotal/1000),4,' ',STR_PAD_LEFT) ,'</b> MB, ',
 					'<b>', str_pad(ceil($memused/$memtotal*100),2,' ',STR_PAD_LEFT) ,' %</b> used',
 					"\n";
 			}
