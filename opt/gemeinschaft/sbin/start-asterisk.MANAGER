@@ -1,5 +1,11 @@
 #!/usr/bin/php -q
 <?php
+
+# NOT USED
+exit(1);
+
+
+
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
