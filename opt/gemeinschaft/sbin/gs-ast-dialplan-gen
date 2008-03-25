@@ -108,6 +108,9 @@ function ael_eval_callback( $m )
 }
 
 
+
+echo "Generating extensions.ael ...\n";
+
 $gs_extensions_ael_filename = ael_file_realname( $gs_extensions_ael_filename );
 $extensions_ael = ael_get_file_content( $gs_extensions_ael_filename );
 while (! ael_eval_includes()) {}
@@ -117,7 +120,7 @@ $extensions_ael_filename = $etc_asterisk .'extensions.ael';
 
 
 $f = @fOpen($extensions_ael_filename, 'wb');
-if (! $f)
+if (! $f) {
 	echo "Could not open $extensions_ael_filename for writing!\n";
 	exit(1);
 }
