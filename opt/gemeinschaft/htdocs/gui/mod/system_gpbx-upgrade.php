@@ -245,7 +245,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 	
 	set_time_limit(15+30);
 	$err=0; $out=array();
-	@exec( 'curl -s -S -I -m 15 --retry 0 -f -k -L --max-redirs 5 -A '. qsa('GPBX') .' '. qsa($gpbx_upgrade_file) .' 2>&1', $out, $err );
+	@exec( 'curl -s -S -I -m 15 --retry 0 -f -k -L --max-redirs 5 -A '. qsa('GPBX') .' -H '. qsa('Accept: application/x-tar;q=1.0, application/tar;q=0.9, application/octet-stream;q=0.8, */*;q=0.1') .' '. qsa($gpbx_upgrade_file) .' 2>&1', $out, $err );
 	set_time_limit(30);
 	$out = implode("\n", $out);
 	if ($err !== 0) {
@@ -257,7 +257,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 		echo 'Fehler beim Abfragen der Dateigr&ouml;&szlig;e per HTTP HEAD.' ,'<br />',"\n";
 		return;
 	}
-	if (! preg_match('/^\s*Content-Type:\s*(application\/(?:x-tar|tar|x-gtar|gtar|octet-stream))/mi', $out, $m)) {
+	if (! preg_match( '/^\s*Content-Type:\s*(application\/(?:(?:x-)(?:tar|gtar|ustar|octet-stream)))/mi', $out, $m)) {
 		echo sPrintF('Fehlerhafter Content-Type. &quot;%s&quot; erwartet, &quot;%s&quot; erhalten', 'application/x-tar', htmlEnt($m[1])) ,'<br />' ,"\n";
 		return;
 	}
