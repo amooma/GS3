@@ -307,6 +307,15 @@ gpbx_upgrade_descr     = Ganz+viele+Verbesserungen%21
 gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2.html
 ';*/
 	
+	$gpbx_upgrade_version = '';
+	if (preg_match('/^\s*gpbx_upgrade_version\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
+		$gpbx_upgrade_version = _upgrade_info_decode_val($m[1]);
+	}
+	if ($gpbx_upgrade_version != '') {
+		echo '<p><b>', 'Version' ,':</b> &nbsp; ', "\n";
+		echo '<tt>', htmlEnt($gpbx_upgrade_version) ,'</tt></p>' ,"\n";
+	}
+	
 	$gpbx_upgrade_descr = '';
 	if (preg_match('/^\s*gpbx_upgrade_descr\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
 		$gpbx_upgrade_descr = _upgrade_info_decode_val($m[1]);
@@ -360,6 +369,15 @@ gpbx_upgrade_version   = 2
 gpbx_upgrade_descr     = Ganz+viele+Verbesserungen%21
 gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2.html
 ';*/
+	
+	$gpbx_upgrade_version = '';
+	if (preg_match('/^\s*gpbx_upgrade_version\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
+		$gpbx_upgrade_version = _upgrade_info_decode_val($m[1]);
+	}
+	if ($gpbx_upgrade_version != '') {
+		echo '<p><b>', 'Version' ,':</b> &nbsp; ', "\n";
+		echo '<tt>', htmlEnt($gpbx_upgrade_version) ,'</tt></p>' ,"\n";
+	}
 	
 	$gpbx_upgrade_descr = '';
 	if (preg_match('/^\s*gpbx_upgrade_descr\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
