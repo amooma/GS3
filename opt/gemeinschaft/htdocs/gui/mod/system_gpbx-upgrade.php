@@ -251,6 +251,10 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 		echo 'Fehler beim Abfragen der Dateigr&ouml;&szlig;e per HTTP HEAD.' ,'<br />',"\n";
 		return;
 	}
+	if (! preg_match('/^\s*Content-Type:\s*(application\/(?:x-tar|tar|x-gtar|gtar|octet-stream))/mi', $out, $m)) {
+		echo sPrintF('Fehlerhafter Content-Type. &quot;%s&quot; erwartet, &quot;%s&quot; erhalten', 'application/x-tar', htmlEnt($m[1])) ,'<br />' ,"\n";
+		return;
+	}
 	$content_length_mb = ceil((int)$m[1] / 1000000);
 	if ($disk_free_mb < $content_length_mb + $disk_free_spare_mb) {
 		echo 'Zu wenig Speicherplatz. (weniger als '. round($content_length_mb + $disk_free_spare_mb) .' MB)';
