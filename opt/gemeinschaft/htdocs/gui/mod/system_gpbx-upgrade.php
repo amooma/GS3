@@ -1,0 +1,434 @@
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+######################################################
+##
+##   ALL STRINGS IN HERE NEED TO BE TRANSLATED!
+##
+######################################################
+
+defined('GS_VALID') or die('No direct access.');
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
+//require_once( GS_DIR .'inc/find_executable.php' );
+
+echo '<h2>';
+if (@$MODULES[$SECTION]['icon'])
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+if (count( $MODULES[$SECTION]['sub'] ) > 1 )
+	echo $MODULES[$SECTION]['title'], ' - ';
+echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+echo '</h2>', "\n";
+
+if (gs_get_conf('GS_INSTALLATION_TYPE') !== 'gpbx') {
+	echo "Not available on non-GPBX systems.\n";
+	return;
+}
+
+$gpbx_userdata = '/mnt/userdata/';
+$disk_free_spare_mb = 50;   # MB, not MiB
+
+
+
+function _encode_val( $str )
+{
+	return urlEncode($str);
+}
+
+function _upgrade_info_decode_val( $str )
+{
+	return urlDecode($str);
+}
+
+
+
+
+
+# set auto-check?
+#
+
+if (@$_POST['action'] === 'set-auto-check') {
+	
+	@exec( 'sudo sh -c '. qsa('echo -n "'. (@$_REQUEST['auto_check']==='1' ? 'yes':'no') .'" > '. qsa($gpbx_userdata.'upgrades/auto-check') .' 2>>/dev/null') .' 2>>/dev/null' );
+	
+}
+
+
+
+
+# search for upgrades now?
+#
+
+if (@$_POST['action'] === 'upgrade-check-now') {
+	
+	@exec( 'sudo /usr/local/bin/gpbx-upgrade-info 2>>/dev/null' );
+	clearStatCache();
+	
+}
+
+
+
+
+# do upgrade?
+#
+
+if (@$_POST['action'] === 'upgrade'
+&&  @$_POST['upgrade_confirmed'] === '1'
+&&  ! file_exists('/tmp/gpbx-downloading-upgrade.lock')
+&&  file_exists($gpbx_userdata.'upgrades/upgrade-info')
+) {
+	
+	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
+	
+	$gpbx_upgrade_cs_md5 = null;
+	if (preg_match('/^\s*gpbx_upgrade_cs_md5\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
+		$gpbx_upgrade_cs_md5 = strToLower(_upgrade_info_decode_val($m[1]));
+	}
+	$gpbx_upgrade_cs_md5_real = strToLower(trim(@shell_exec( 'md5sum -b '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null | grep -i -o -E \'[0-9a-z]{32}\' 2>>/dev/null' )));
+	if (! preg_match('/[a-z]{32}/', $gpbx_upgrade_cs_md5_real)) {
+		echo 'Runtergeladenes Upgrade konnte nicht verifiziert werden!';
+		@exec( 'sudo rm -rf '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null' );
+		return;
+	}
+	if ($gpbx_upgrade_cs_md5_real !== $gpbx_upgrade_cs_md5) {
+		echo 'Fehlerhafter Download!';
+		@exec( 'sudo rm -rf '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null' );
+		return;
+	}
+	
+	
+	$err=0; $out=array();
+	@exec( 'sudo sh -c '. qsa('echo -n "yes" > '. qsa($gpbx_userdata.'upgrades/upgrade-do') .' 2>>/dev/null') .' 2>>/dev/null', $out, $err );
+	if ($err !== 0) {
+		echo 'Fehler.';
+		print_r($err);
+		return;
+	}
+	
+	
+	
+	
+	
+	echo '<p class="text"><big><b>', 'Das Upgrade wird nun installiert.<br />Bitte haben Sie Geduld!<br />Unterbrechen Sie keinesfalls die Stromzufuhr!' ,'</b></big></p>' ,"\n";
+	
+	@exec( 'sudo sh -c '. qsa('sleep 1 ; shutdown -r now') .' 2>>/dev/null &', $out, $err );
+	
+	return;
+	
+}
+
+
+
+
+# make sure to set upgrade-do to "no"
+#
+
+$upgrade_do_old = @file_get_contents($gpbx_userdata.'upgrades/upgrade-do');
+if ($upgrade_do_old != 'no') {
+	@exec( 'sudo sh -c '. qsa('echo -n "no" > '. qsa($gpbx_userdata.'upgrades/upgrade-do') .' 2>>/dev/null') .' 2>>/dev/null', $out, $err );
+}
+
+
+
+
+# start download?
+#
+
+if (@$_POST['action'] === 'download-upgrade'
+&&  ! file_exists('/tmp/gpbx-downloading-upgrade.lock')
+&&  file_exists($gpbx_userdata.'upgrades/upgrade-info')
+) {
+	
+	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
+	/*$upgrade_info = '
+gpbx_upgrade_file      = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fimage.img
+gpbx_upgrade_size      = 260000000
+gpbx_upgrade_req_size  = 550000000
+gpbx_upgrade_cs_md5    = 50bd740c69e63abc6f83310113c95c2f
+gpbx_upgrade_version   = 2
+gpbx_upgrade_descr     = Ganz+viele+Verbesserungen%21
+gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2.html
+';*/
+	
+	$gpbx_upgrade_file = null;
+	if (! preg_match('/^\s*gpbx_upgrade_file\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
+		echo 'Missing download URL.';
+		return;
+	}
+	$m[1] = _upgrade_info_decode_val($m[1]);
+	if (! preg_match('/^https?:\/\//', $m[1])) {
+		echo 'Invalid download URL.';
+		return;
+	}
+	$gpbx_upgrade_file = $m[1];
+	
+	$disk_free_mb = (int)trim(@shell_exec( 'LANG=C df --block-size=1000000 '. qsa($gpbx_userdata.'upgrades/dl/') .' 2>>/dev/null | grep '. qsa(' /') .' | sed '. qsa('s/\s\s*/ /g') .' | cut -d '. qsa(' ') .' -f 4' ));
+	
+	$gpbx_upgrade_size_mb = null;
+	if (preg_match('/^\s*gpbx_upgrade_size\s*=\s*([\s]*)/m', $upgrade_info, $m)) {
+		$gpbx_upgrade_size_mb = ceil((int)_upgrade_info_decode_val($m[1]) / 1000000);
+	}
+	if ($disk_free_mb < $gpbx_upgrade_size_mb + $disk_free_spare_mb) {
+		echo 'Zu wenig Speicherplatz. (weniger als '. round($gpbx_upgrade_size_mb + $disk_free_spare_mb) .' MB)';
+		return;
+	}
+	
+	$gpbx_upgrade_req_size_mb = null;
+	if (preg_match('/^\s*gpbx_upgrade_req_size\s*=\s*([\s]*)/m', $upgrade_info, $m)) {
+		$gpbx_upgrade_req_size_mb = ceil((int)_upgrade_info_decode_val($m[1]) / 1000000);
+	}
+	if ($disk_free_mb < $gpbx_upgrade_req_size_mb + $disk_free_spare_mb) {
+		echo 'Zu wenig Speicherplatz. (weniger als '. round($gpbx_upgrade_req_size_mb + $disk_free_spare_mb) .' MB)';
+		return;
+	}
+	
+	set_time_limit(15+30);
+	$err=0; $out=array();
+	@exec( 'curl -s -S -I -m 15 --retry 0 -f -k -L --max-redirs 5 --max-filesize 1000000 -A '. qsa('GPBX') .' '. qsa($gpbx_upgrade_file) .' 2>&1', $out, $err );
+	set_time_limit(30);
+	$out = implode("\n", $out);
+	if ($err !== 0) {
+		echo 'Fehler beim Abfragen von Datei-Informationen per HTTP HEAD.' ,'<br />',"\n";
+		echo '<pre>', htmlEnt($out) ,'</pre>';
+		return;
+	}
+	if (! preg_match('/^\s*Content-Length:\s*([0-9]+)/mi', $out, $m)) {
+		echo 'Fehler beim Abfragen der Dateigr&ouml;&szlig;e per HTTP HEAD.' ,'<br />',"\n";
+		return;
+	}
+	$content_length_mb = ceil((int)$m[1] / 1000000);
+	if ($disk_free_mb < $content_length_mb + $disk_free_spare_mb) {
+		echo 'Zu wenig Speicherplatz. (weniger als '. round($content_length_mb + $disk_free_spare_mb) .' MB)';
+		return;
+	}
+	
+	$download_script = '/usr/local/bin/gpbx-upgrade-download';
+	if (! file_exists($download_script)) {
+		echo 'Error.';
+		return;
+	}
+	//$download_script = '/opt/gpbx-svn/trunk/deb-factory/custom/gemeinschaft/usr-local-bin-gpbx-upgrade-download';
+	$err=0; $out=array();
+	@exec( 'sudo '. $download_script .' '. qsa($gpbx_upgrade_file) .' '. qsa(($content_length_mb+4)*1000000) .' '. qsa('GPBX') .' 2>>/dev/null &', $out, $err );
+	//echo $err;
+	//echo "<pre>", implode("\n",$out) ,"</pre>";
+	if ($err !== 0) {
+		echo 'Fehler.';
+		return;
+	}
+	
+	
+	sleep(1);
+	clearStatCache();
+}
+
+
+
+
+# download in progress?
+#
+
+if (file_exists('/tmp/gpbx-downloading-upgrade.lock')) {
+	
+	echo '<br /><p>', 'Momentan wird ein Upgrade heruntergeladen.' ,'</p>' ,"\n";
+	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
+	//$upgrade_info = ' gpbx_upgrade_size = 250420000 ';
+	if (preg_match('/^\s*gpbx_upgrade_size\s*=\s*([\s]*)/m', $upgrade_info, $m)) {
+		$upgrade_size = (int)_upgrade_info_decode_val($m[1]);
+		if ($upgrade_size > 50) {
+			if (file_exists($gpbx_userdata.'upgrades/dl/download')) {
+				$download_size = @fileSize($gpbx_userdata.'upgrades/dl/download');
+				//$download_size = 210420000;
+				if ($download_size !== false) {
+					echo '<p>', 'Fortschritt' ,': &nbsp; <b>', number_format($download_size/$upgrade_size*100, 2, ',', '') ,' %</b>';
+					if     ($upgrade_size > 1000000) {$factor = 1000000; $units = 'MB';}
+					elseif ($upgrade_size >    1000) {$factor =    1000; $units = 'kB';}
+					else                             {$factor =       1; $units =  'B';}
+					echo ' &nbsp; (', round($download_size/$factor) ,' / ', round($upgrade_size/$factor) ,' ', $units ,')</p>' ,"\n";
+					echo '<pre>';
+					$chars_total = 60;
+					$chars_done = floor($download_size/$upgrade_size*$chars_total);
+					echo '|', str_repeat('=', $chars_done) ,'&gt;', str_repeat(' ', $chars_total-$chars_done) ,'|';
+					echo '</pre><br />' ,"\n";
+				}
+			}
+		}
+	}
+	echo '<br /><a href="', gs_url($SECTION, $MODULE) ,'"><button type="button">', 'Anzeige aktualisieren' ,'</button></a><br />' ,"\n";
+	echo '<script type="text/javascript">' ,"\n";
+	echo 'window.setTimeout("try{ document.location.href = \'', gs_url($SECTION, $MODULE) ,'\'; }catch(e){}", 10000);' ,"\n";
+	echo '</script>' ,"\n";
+	
+	return;
+}
+
+
+
+
+# downloaded upgrade file available?
+#
+
+if (file_exists($gpbx_userdata.'upgrades/dl/download')
+&&  file_exists($gpbx_userdata.'upgrades/upgrade-info')) {
+	
+	echo '<p>', 'Ein Upgrade wurde heruntergeladen.' ,'</p>' ,"\n";
+	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
+	/*$upgrade_info = '
+gpbx_upgrade_file      = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fimage.img
+gpbx_upgrade_size      = 260000000
+gpbx_upgrade_req_size  = 550000000
+gpbx_upgrade_cs_md5    = 50bd740c69e63abc6f83310113c95c2f
+gpbx_upgrade_version   = 2
+gpbx_upgrade_descr     = Ganz+viele+Verbesserungen%21
+gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2.html
+';*/
+	
+	$gpbx_upgrade_descr = '';
+	if (preg_match('/^\s*gpbx_upgrade_descr\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
+		$gpbx_upgrade_descr = _upgrade_info_decode_val($m[1]);
+	}
+	if ($gpbx_upgrade_descr != '') {
+		echo '<b>', 'Beschreibung' ,':</b>', "\n";
+		echo '<pre>', htmlEnt($gpbx_upgrade_descr) ,'</pre>' ,"\n";
+	}
+	
+	$gpbx_upgrade_descr_url = '';
+	if (preg_match('/^\s*gpbx_upgrade_descr_url\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
+		$m[1] = _upgrade_info_decode_val($m[1]);
+		if (preg_match('/^https?:\/\//', $m[1])) {
+			$gpbx_upgrade_descr_url = $m[1];
+		}
+	}
+	if ($gpbx_upgrade_descr_url != '') {
+		echo '<p><a target="_blank" href="', htmlEnt($gpbx_upgrade_descr_url) ,'">', 'Weitere Informationen' ,'</a></p>' ,"\n";
+	}
+	
+	echo '<p class="text" style="background:#ffc; border:2px solid #fea; padding:0.5em; line-height:1.1em;">', '<b>Hinweis</b>: W&auml;hrend der Installation eines Upgrades darf die Stromzufuhr der GPBX nicht unterbrochen werden, sonst wird das System zerst&ouml;rt! Betreiben Sie die GPBX am besten an einer USV (Unterbrechungsfreie Strom-Versorgung). Die Installation erfolgt auf eigene Gefahr. Ihre Einstellungen und Daten werden nach M&ouml;glichkeit in das neue System &uuml;bernommen, dies kann jedoch nicht garantiert werden.' ,'</p>' ,"\n";
+	
+	echo '<form method="post" action="', GS_URL_PATH ,'">' ,"\n";
+	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="action" value="upgrade" />' ,"\n";
+	echo '<input type="checkbox" name="upgrade_confirmed" id="ipt-upgrade_confirmed" value="1" />' ,"\n";
+	echo '<label for="ipt-upgrade_confirmed">', 'Hinweis gelesen' ,'</label><br />' ,"\n";
+	echo '<input type="submit" value="', 'Upgrade durchf&uuml;hren' ,'" style="margin-top:5px; background:#fdd; color:#d00;" />' ,"\n";
+	echo '</form>' ,"\n";
+	
+	return;
+}
+
+
+
+
+# upgrade available?
+#
+
+if (trim(@file_get_contents($gpbx_userdata.'upgrades/upgrade-avail')) === 'yes'
+&&  file_exists($gpbx_userdata.'upgrades/upgrade-info')) {
+	
+	echo '<p>', 'Ein Upgrade ist verf&uuml;gbar.' ,'</p>' ,"\n";
+	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
+	/*$upgrade_info = '
+gpbx_upgrade_file      = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fimage.img
+gpbx_upgrade_size      = 260000000
+gpbx_upgrade_req_size  = 550000000
+gpbx_upgrade_cs_md5    = 50bd740c69e63abc6f83310113c95c2f
+gpbx_upgrade_version   = 2
+gpbx_upgrade_descr     = Ganz+viele+Verbesserungen%21
+gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2.html
+';*/
+	
+	$gpbx_upgrade_descr = '';
+	if (preg_match('/^\s*gpbx_upgrade_descr\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
+		$gpbx_upgrade_descr = _upgrade_info_decode_val($m[1]);
+	}
+	if ($gpbx_upgrade_descr != '') {
+		echo '<b>', 'Beschreibung' ,':</b>', "\n";
+		echo '<pre>', htmlEnt($gpbx_upgrade_descr) ,'</pre>' ,"\n";
+	}
+	
+	$gpbx_upgrade_descr_url = '';
+	if (preg_match('/^\s*gpbx_upgrade_descr_url\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
+		$m[1] = _upgrade_info_decode_val($m[1]);
+		if (preg_match('/^https?:\/\//', $m[1])) {
+			$gpbx_upgrade_descr_url = $m[1];
+		}
+	}
+	if ($gpbx_upgrade_descr_url != '') {
+		echo '<p><a target="_blank" href="', htmlEnt($gpbx_upgrade_descr_url) ,'">', 'Weitere Informationen' ,'</a></p>' ,"\n";
+	}
+	
+	echo '<br />',"\n";
+	echo '<form method="post" action="', GS_URL_PATH ,'">' ,"\n";
+	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="action" value="download-upgrade" />' ,"\n";
+	echo '<p class="text">', 'Wollen Sie das Upgrade herunterladen? W&auml;hrend des Downloads kann es - abh&auml;ngig von Ihrer Internet-Anbindung - zu Beeintr&auml;chtigungen der Sprachqualit&auml;t kommen.', '</p>',"\n";
+	echo '<input type="submit" value="', 'Upgrade herunterladen' ,'" style="margin-top:5px; background:#fdd; color:#d00;" />' ,"\n";
+	echo '</form>' ,"\n";
+	
+	return;
+}
+
+
+
+
+
+
+/*
+$gpbx_version = trim(@file_get_contents( $gpbx_userdata.'gpbx/gpbx-version' ));
+echo '<p>Installierte GPBX-Version: ', ($gpbx_version != '' ? htmlEnt($gpbx_version) : '?') ,'</p>' ,"\n";
+*/
+
+?>
+
+<form method="post" action="<?php echo GS_URL_PATH; ?>">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<input type="hidden" name="action" value="set-auto-check" />
+<fieldset><legend><?php echo 'Automatisch suchen'; ?></legend>
+<p class="text" style="margin-bottom:0; padding-bottom:1px;"><?php
+	echo 'Soll automatisch regelm&auml;&szlig;ig nach verf&uuml;gbaren Upgrades gesucht werden? (Dazu m&uuml;ssen Informationen &uuml;ber die momentan installierte Version und die Hardware &uuml;bermittelt werden.)';
+?></p>
+<?php
+	$auto_check = trim(@file_get_contents( $gpbx_userdata.'upgrades/auto-check' ));
+?>
+<input type="checkbox" name="auto_check" id="ipt-auto_check" value="1"<?php if ($auto_check === 'yes') echo ' checked="checked"'; ?> />
+ <label for="ipt-auto_check"><?php echo 'Automatisch suchen'; ?></label><br />
+<input type="submit" value="<?php echo 'Speichern'; ?>" style="margin-top:5px;" />
+</fieldset>
+</form>
+
+
+<form method="post" action="<?php echo GS_URL_PATH; ?>">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<input type="hidden" name="action" value="upgrade-check-now" />
+<fieldset><legend><?php echo 'Jetzt suchen'; ?></legend>
+<p class="text" style="margin-bottom:0; padding-bottom:1px;"><?php
+	echo 'Jetzt nach verf&uuml;gbaren Upgrades suchen?';
+?></p>
+<input type="submit" value="<?php echo 'Suchen'; ?>" style="margin-top:5px;" />
+</fieldset>
+</form>
+
