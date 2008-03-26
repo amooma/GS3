@@ -100,8 +100,19 @@ if (@$_REQUEST['action'] === 'abort-download') {
 	
 	# abort the process:
 	@exec( 'sudo kill -INT `cat /tmp/gpbx-downloading-upgrade.pid 2>>/dev/null` 2>>/dev/null' );
+	$err=0; $out=array();
+	@exec( 'sudo ps ax 2>>/dev/null | grep gpbx-upgrade-download | grep -v grep 2>>/dev/null', $out, $err );
+	if ($err === 0) {
+		foreach ($out as $line) {
+			if (preg_match('/^\s*([0-9]+)/m', $line, $m)) {
+				@exec( 'sudo kill -INT '. $m[1] .' 2>>/dev/null' );
+			}
+		}
+	}
+	
 	# remove the download:
 	@exec( 'sudo rm -f '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null' );
+	
 	# release the lock:
 	@exec( 'sudo rm -f /tmp/gpbx-downloading-upgrade.pid 2>>/dev/null' );
 	clearStatCache();
@@ -270,7 +281,9 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 # download in progress?
 #
 
-if (file_exists('/tmp/gpbx-downloading-upgrade.pid')) {
+
+if (file_exists('/tmp/gpbx-downloading-upgrade.pid')
+|| (int)@shell_exec('sudo ps ax 2>>/dev/null | grep gpbx-upgrade-download | grep -v grep | wc -l') > 0) {
 	
 	echo '<br /><p>', 'Momentan wird ein Upgrade heruntergeladen.' ,'</p>' ,"\n";
 	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
