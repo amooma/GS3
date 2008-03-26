@@ -287,7 +287,6 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 # download in progress?
 #
 
-
 if (file_exists('/tmp/gpbx-downloading-upgrade.pid')
 || (int)@shell_exec('sudo ps ax 2>>/dev/null | grep gpbx-upgrade-download | grep -v grep | wc -l') > 0) {
 	
