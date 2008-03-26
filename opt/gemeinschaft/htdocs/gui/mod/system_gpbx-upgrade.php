@@ -226,6 +226,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 		return;
 	}
 	
+	/*
 	$gpbx_upgrade_req_size_mb = null;
 	if (preg_match('/^\s*gpbx_upgrade_req_size\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
 		$gpbx_upgrade_req_size_mb = ceil((int)_upgrade_info_decode_val($m[1]) / 1000000);
@@ -234,6 +235,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 		echo 'Zu wenig Speicherplatz. (weniger als '. round($gpbx_upgrade_req_size_mb + $disk_free_spare_mb) .' MB)';
 		return;
 	}
+	*/
 	
 	set_time_limit(15+30);
 	$err=0; $out=array();
