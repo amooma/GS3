@@ -133,6 +133,12 @@ if (@$_POST['action'] === 'upgrade'
 	
 	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
 	
+	if (strToLower(trim(@shell_exec( 'file '. qsa($gpbx_userdata.'upgrades/dl/download 2>>/dev/null | grep -i -o tar' )))) !== 'tar') {
+		echo 'Fehlerhafter Dateityp. (tar erwartet.)';
+		@exec( 'sudo rm -rf '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null' );
+		return;
+	}
+	
 	$gpbx_upgrade_cs_md5 = null;
 	if (preg_match('/^\s*gpbx_upgrade_cs_md5\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
 		$gpbx_upgrade_cs_md5 = strToLower(_upgrade_info_decode_val($m[1]));
