@@ -93,12 +93,30 @@ if (@$_POST['action'] === 'upgrade-check-now') {
 
 
 
+# abort download?
+#
+
+if (@$_REQUEST['action'] === 'abort-download') {
+	
+	# abort the process:
+	@exec( 'sudo kill -INT `cat /tmp/gpbx-downloading-upgrade.pid 2>>/dev/null` 2>>/dev/null' );
+	# remove the download:
+	@exec( 'sudo rm -f '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null' );
+	# release the lock:
+	@exec( 'sudo rm -f /tmp/gpbx-downloading-upgrade.pid 2>>/dev/null' );
+	clearStatCache();
+	
+}
+
+
+
+
 # do upgrade?
 #
 
 if (@$_POST['action'] === 'upgrade'
 &&  @$_POST['upgrade_confirmed'] === '1'
-&&  ! file_exists('/tmp/gpbx-downloading-upgrade.lock')
+&&  ! file_exists('/tmp/gpbx-downloading-upgrade.pid')
 &&  file_exists($gpbx_userdata.'upgrades/upgrade-info')
 ) {
 	
@@ -159,7 +177,7 @@ if ($upgrade_do_old != 'no') {
 #
 
 if (@$_POST['action'] === 'download-upgrade'
-&&  ! file_exists('/tmp/gpbx-downloading-upgrade.lock')
+&&  ! file_exists('/tmp/gpbx-downloading-upgrade.pid')
 &&  file_exists($gpbx_userdata.'upgrades/upgrade-info')
 ) {
 	
@@ -189,7 +207,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 	$disk_free_mb = (int)trim(@shell_exec( 'LANG=C df --block-size=1000000 '. qsa($gpbx_userdata.'upgrades/dl/') .' 2>>/dev/null | grep '. qsa(' /') .' | sed '. qsa('s/\s\s*/ /g') .' | cut -d '. qsa(' ') .' -f 4' ));
 	
 	$gpbx_upgrade_size_mb = null;
-	if (preg_match('/^\s*gpbx_upgrade_size\s*=\s*([\s]*)/m', $upgrade_info, $m)) {
+	if (preg_match('/^\s*gpbx_upgrade_size\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
 		$gpbx_upgrade_size_mb = ceil((int)_upgrade_info_decode_val($m[1]) / 1000000);
 	}
 	if ($disk_free_mb < $gpbx_upgrade_size_mb + $disk_free_spare_mb) {
@@ -198,7 +216,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 	}
 	
 	$gpbx_upgrade_req_size_mb = null;
-	if (preg_match('/^\s*gpbx_upgrade_req_size\s*=\s*([\s]*)/m', $upgrade_info, $m)) {
+	if (preg_match('/^\s*gpbx_upgrade_req_size\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
 		$gpbx_upgrade_req_size_mb = ceil((int)_upgrade_info_decode_val($m[1]) / 1000000);
 	}
 	if ($disk_free_mb < $gpbx_upgrade_req_size_mb + $disk_free_spare_mb) {
@@ -233,7 +251,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 	}
 	//$download_script = '/opt/gpbx-svn/trunk/deb-factory/custom/gemeinschaft/usr-local-bin-gpbx-upgrade-download';
 	$err=0; $out=array();
-	@exec( 'sudo '. $download_script .' '. qsa($gpbx_upgrade_file) .' '. qsa(($content_length_mb+4)*1000000) .' '. qsa('GPBX') .' 2>>/dev/null &', $out, $err );
+	@exec( 'sudo sh -c '. qsa( $download_script .' '. qsa($gpbx_upgrade_file) .' '. qsa(($content_length_mb+4)*1000000) .' '. qsa('GPBX') .' 1>>/dev/null 2>>/dev/null &') .' 0<&- 1>&- 2>&- &', $out, $err );
 	//echo $err;
 	//echo "<pre>", implode("\n",$out) ,"</pre>";
 	if ($err !== 0) {
@@ -252,19 +270,19 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 # download in progress?
 #
 
-if (file_exists('/tmp/gpbx-downloading-upgrade.lock')) {
+if (file_exists('/tmp/gpbx-downloading-upgrade.pid')) {
 	
 	echo '<br /><p>', 'Momentan wird ein Upgrade heruntergeladen.' ,'</p>' ,"\n";
 	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
 	//$upgrade_info = ' gpbx_upgrade_size = 250420000 ';
-	if (preg_match('/^\s*gpbx_upgrade_size\s*=\s*([\s]*)/m', $upgrade_info, $m)) {
+	if (preg_match('/^\s*gpbx_upgrade_size\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
 		$upgrade_size = (int)_upgrade_info_decode_val($m[1]);
 		if ($upgrade_size > 50) {
 			if (file_exists($gpbx_userdata.'upgrades/dl/download')) {
 				$download_size = @fileSize($gpbx_userdata.'upgrades/dl/download');
 				//$download_size = 210420000;
 				if ($download_size !== false) {
-					echo '<p>', 'Fortschritt' ,': &nbsp; <b>', number_format($download_size/$upgrade_size*100, 2, ',', '') ,' %</b>';
+					echo '<p>', 'Fortschritt' ,': &nbsp; <b>', number_format($download_size/$upgrade_size*100, 1, ',', '') ,' %</b>';
 					if     ($upgrade_size > 1000000) {$factor = 1000000; $units = 'MB';}
 					elseif ($upgrade_size >    1000) {$factor =    1000; $units = 'kB';}
 					else                             {$factor =       1; $units =  'B';}
@@ -279,6 +297,7 @@ if (file_exists('/tmp/gpbx-downloading-upgrade.lock')) {
 		}
 	}
 	echo '<br /><a href="', gs_url($SECTION, $MODULE) ,'"><button type="button">', 'Anzeige aktualisieren' ,'</button></a><br />' ,"\n";
+	echo '<br /><a href="', gs_url($SECTION, $MODULE, null, 'action=abort-download') ,'"><button type="button">', 'Download abbrechen' ,'</button></a><br />' ,"\n";
 	echo '<script type="text/javascript">' ,"\n";
 	echo 'window.setTimeout("try{ document.location.href = \'', gs_url($SECTION, $MODULE) ,'\'; }catch(e){}", 10000);' ,"\n";
 	echo '</script>' ,"\n";
