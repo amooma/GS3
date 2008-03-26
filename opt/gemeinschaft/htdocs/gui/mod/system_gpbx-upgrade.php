@@ -156,13 +156,6 @@ if (@$_POST['action'] === 'upgrade'
 	}
 	
 	
-	$err=0; $out=array();
-	@exec( 'sudo sh -c '. qsa('echo -n "yes" > '. qsa($gpbx_userdata.'upgrades/upgrade-do') .' 2>>/dev/null') .' 2>>/dev/null', $out, $err );
-	if ($err !== 0) {
-		echo 'Fehler.';
-		return;
-	}
-	
 	if     (@file_exists('/dev/hdc')) $flash_dev = 'hdc';
 	elseif (@file_exists('/dev/hda')) $flash_dev = 'hda';
 	else {
@@ -175,10 +168,18 @@ if (@$_POST['action'] === 'upgrade'
 	$err=0; $out=array();
 	@exec( 'sudo sh -c '. qsa('mkdir /mnt/booter && mount /dev/'.$booter_dev.' /mnt/booter && grub-set-default --root-directory=/mnt/booter 1') .' 2>>/dev/null', $out, $err );
 	if ($err !== 0) {
-		echo '<p class="text">', 'Bei der Vorbereitung des Upgrades ist ein Fehler aufgetreten!<br />Bitte haben Sie Geduld!<br />Unterbrechen Sie keinesfalls die Stromzufuhr!' ,'</p>' ,"\n";
+		echo '<p class="text">', 'Bei der Vorbereitung des Upgrades ist ein Fehler aufgetreten.' ,'</p>' ,"\n";
 	} else {
 		echo '<p class="text"><big><b>', 'Das Upgrade wird nun installiert.<br />Bitte haben Sie Geduld!<br />Unterbrechen Sie keinesfalls die Stromzufuhr!' ,'</b></big></p>' ,"\n";
 	}
+	
+	$err=0; $out=array();
+	@exec( 'sudo sh -c '. qsa('echo -n "yes" > '. qsa($gpbx_userdata.'upgrades/upgrade-do') .' 2>>/dev/null') .' 2>>/dev/null', $out, $err );
+	if ($err !== 0) {
+		echo 'Fehler.';
+		return;
+	}
+	
 	@exec( 'sudo sh -c '. qsa('sleep 1 ; shutdown -r now') .' 2>>/dev/null &', $out, $err );
 	
 	return;
