@@ -805,7 +805,8 @@ context to-internal-users-self {
 			if ("${CALLERID(num)}" = "")
 				Set(CALLERID(num)=${EXTEN});
 			
-			Set(ring_instead_of_moh=);
+			//Set(ring_instead_of_moh=);
+			// ring_instead_of_moh is now set by in-queue-get-fw.agi
 			Set(all_busy=);
 			
 			// SONDERFALL HACK
@@ -834,10 +835,15 @@ context to-internal-users-self {
 			// ENDE SONDERFALL HACK
 			
 			if ("${all_busy}" != "1") {
-				Answer();
-				Wait(0.5);
+				if ("${ring_instead_of_moh}" = "r") {
+					Progress();
+				}
+				else {
+					Set(ring_instead_of_moh=);
+					Answer();
+				}
 				Set(queue_entertime=${EPOCH});
-				Queue(${EXTEN},i${ring_instead_of_moh},,,${queuetimeout});
+				Queue(${EXTEN},${ring_instead_of_moh},,,${queuetimeout});
 				Set(queue_waittime=$[${EPOCH}-${queue_entertime}]);
 				Verbose(1,### Tried to enter queue ${EXTEN}\, result: ${QUEUESTATUS}\, waittime: ${queue_waittime});
 				
