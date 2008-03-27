@@ -113,7 +113,7 @@ if ($r = $rs->fetchRow()) {
 		$ring_instead_of_moh = true;
 	}
 }
-echo 'SET VARIABLE ring_instead_of_moh '. gs_agi_str_esc( $ring_instead_of_moh ? 'yes':'no' ) ."\n";
+echo 'SET VARIABLE ring_instead_of_moh '. gs_agi_str_esc( $ring_instead_of_moh ? 'r':'' ) ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
