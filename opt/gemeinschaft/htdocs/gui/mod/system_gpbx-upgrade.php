@@ -264,7 +264,16 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 		return;
 	}
 	
-	if (! preg_match( '/^\s*Content-Type:\s*(application\/(?:(?:x-)(?:tar|gtar|ustar|octet-stream)))/mi', $out, $m)) {
+	$content_type = '';
+	if (preg_match( '/^\s*Content-Type:\s*([a-z0-9\-_]+\/[a-z0-9\-_]+)/mi', $out, $m)) {
+		$content_type = $m[1];
+	}
+	if (! in_array($content_type, array(
+		'application/x-tar'  , 'application/tar'  ,
+		'application/x-gtar' , 'application/gtar' ,
+		'application/x-ustar', 'application/ustar',
+		'application/octet-stream'
+	), true)) {
 		echo sPrintF('Fehlerhafter Content-Type. &quot;%s&quot; erwartet, &quot;%s&quot; erhalten', 'application/x-tar', htmlEnt($m[1])) ,'<br />' ,"\n";
 		return;
 	}
