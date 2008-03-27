@@ -52,6 +52,8 @@ $queue_id = (int)$db->executeGetOne( 'SELECT `_id` FROM `ast_queues` WHERE `name
 if ($queue_id < 1) die();
 
 
+# get call forwards
+#
 
 $forwards = array(
 		'internal'=> array(
@@ -99,6 +101,20 @@ if ($forwards['external']['timeout']['number'] != '') {
 	echo 'SET VARIABLE fw_internal_timeout_timeout '. gs_agi_str_esc( $forwards['external']['timeout']['timeout'] ) ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 }
+
+
+# get settings
+#
+
+$ring_instead_of_moh = false;
+$rs = $db->execute( 'SELECT `musicclass` FROM `ast_queues` WHERE `_id`='. $queue_id );
+if ($r = $rs->fetchRow()) {
+	if (trim($r['musicclass']) == '') {
+		$ring_instead_of_moh = true;
+	}
+}
+echo 'SET VARIABLE ring_instead_of_moh '. gs_agi_str_esc( $ring_instead_of_moh ? 'yes':'no' ) ."\n";
+//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
 ?>
