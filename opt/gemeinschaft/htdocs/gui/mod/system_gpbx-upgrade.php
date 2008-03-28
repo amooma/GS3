@@ -99,6 +99,7 @@ if (@$_POST['action'] === 'upgrade-check-now') {
 if (@$_REQUEST['action'] === 'abort-download') {
 	
 	# abort the process:
+	@exec( 'sudo killall curl 2>>/dev/null' );
 	@exec( 'sudo kill -INT `cat /tmp/gpbx-downloading-upgrade.pid 2>>/dev/null` 2>>/dev/null' );
 	$err=0; $out=array();
 	@exec( 'sudo ps ax 2>>/dev/null | grep gpbx-upgrade-download | grep -v grep 2>>/dev/null', $out, $err );
