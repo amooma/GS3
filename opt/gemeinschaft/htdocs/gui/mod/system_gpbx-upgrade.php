@@ -144,8 +144,8 @@ if (@$_POST['action'] === 'upgrade'
 	if (preg_match('/^\s*gpbx_upgrade_cs_md5\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
 		$gpbx_upgrade_cs_md5 = strToLower(_upgrade_info_decode_val($m[1]));
 	}
-	$gpbx_upgrade_cs_md5_real = strToLower(trim(@shell_exec( 'md5sum -b '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null | grep -i -o -E \'[0-9a-z]{32}\' 2>>/dev/null' )));
-	if (! preg_match('/[a-z]{32}/', $gpbx_upgrade_cs_md5_real)) {
+	$gpbx_upgrade_cs_md5_real = strToLower(trim(@shell_exec( 'md5sum -b '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null | grep -i -o -E \'[0-9a-f]{32}\' 2>>/dev/null' )));
+	if (! preg_match('/[0-9a-f]{32}/', $gpbx_upgrade_cs_md5_real)) {
 		echo 'Runtergeladenes Upgrade konnte nicht verifiziert werden!';
 		@exec( 'sudo rm -rf '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null' );
 		return;
