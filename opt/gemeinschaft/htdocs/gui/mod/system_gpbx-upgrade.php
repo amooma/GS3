@@ -232,6 +232,18 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 	}
 	$gpbx_upgrade_file = $m[1];
 	
+	$gpbx_upgrade_script = null;
+	if (! preg_match('/^\s*gpbx_upgrade_script\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
+		echo 'Missing upgrade script URL.';
+		return;
+	}
+	$m[1] = _upgrade_info_decode_val($m[1]);
+	if (! preg_match('/^https?:\/\//', $m[1])) {
+		echo 'Invalid upgrade script URL.';
+		return;
+	}
+	$gpbx_upgrade_script = $m[1];
+	
 	$disk_free_mb = (int)trim(@shell_exec( 'LANG=C df --block-size=1000000 '. qsa($gpbx_userdata.'upgrades/dl/') .' 2>>/dev/null | grep '. qsa(' /') .' | sed '. qsa('s/\s\s*/ /g') .' | cut -d '. qsa(' ') .' -f 4' ));
 	
 	$gpbx_upgrade_size_mb = null;
@@ -296,7 +308,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 	}
 	//$download_script = '/opt/gpbx-svn/trunk/deb-factory/custom/gemeinschaft/usr-local-bin-gpbx-upgrade-download';
 	$err=0; $out=array();
-	@exec( 'sudo sh -c '. qsa( $download_script .' '. qsa($gpbx_upgrade_file) .' '. qsa(($content_length_mb+4)*1000000) .' '. qsa('GPBX') .' 1>>/dev/null 2>>/dev/null &') .' 0<&- 1>&- 2>&- &', $out, $err );
+	@exec( 'sudo sh -c '. qsa( $download_script .' '. qsa($gpbx_upgrade_script) .' '. qsa($gpbx_upgrade_file) .' '. qsa(($content_length_mb+4)*1000000) .' '. qsa('GPBX') .' 1>>/dev/null 2>>/dev/null &') .' 0<&- 1>&- 2>&- &', $out, $err );
 	//echo $err;
 	//echo "<pre>", implode("\n",$out) ,"</pre>";
 	if ($err !== 0) {
