@@ -63,7 +63,7 @@ $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="canonize" />
 
-<label for="ipt-number"><?php echo __('Telefonnummer'); ?>:</label><br />
+<label for="ipt-number"><?php echo sPrintF(__('Telefonnummer (ohne %s zur Amtsholung)'), '0'); ?>:</label><br />
 <input type="text" name="number" id="ipt-number" value="<?php echo $number; ?>" size="25" maxlength="30" />
 
 <input type="submit" value="<?php echo __('Testen'); ?>" />
