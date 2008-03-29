@@ -75,8 +75,7 @@ $current_user is better than $currentUser and much better than
 $CurrentUser.
 
 Function names:
-get_current_user() is better than getCurrentUser and much better than
-GetCurrentUser().
+gs_foo_bar() is better than gsFooBar() and much better than GsFooBar().
 
 Class names:
 Start with an uppercase letter: ExampleClass.
