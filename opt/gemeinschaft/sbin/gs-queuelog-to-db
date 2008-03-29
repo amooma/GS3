@@ -334,9 +334,10 @@ function iface_to_agent_ext( $interface )
 
 set_error_handler('_err_handler');
 
-if (get_current_user() != 'root') {
-	gs_log( GS_LOG_WARNING, "Must be run as root." );
-	echo "Must be run as root. Bye bye.\n";
+$current_euid = posix_geteuid();
+if ($current_euid !== 0) {
+	gs_log( GS_LOG_WARNING, "Must be run as root (you are $current_euid)." );
+	echo "Must be run as root (you are $current_euid). Bye bye.\n";
 	exit(1);
 }
 if (@file_exists($lockfile)) {
