@@ -136,7 +136,7 @@ if ($action === 'save') {
 		<input type="text" name="canonize_intl_prefix" id="ipt-canonize_intl_prefix" value="<?php echo htmlEnt($val); ?>" size="10" maxlength="5" class="_admincfg" />
 	</td>
 	<td class="transp">
-		<small><?php echo __('Dtl.: <code>00</code>. Geben Sie hier nicht <code>+</code> ein!'); ?></small>
+		<small><?php echo __('In Deutschland: <code>00</code>. Geben Sie hier nicht <code>+</code> ein!'); ?></small>
 	</td>
 </tr>
 
@@ -151,7 +151,7 @@ if ($action === 'save') {
 		<input type="text" name="canonize_country_code" id="ipt-canonize_country_code" value="<?php echo htmlEnt($val); ?>" size="10" maxlength="4" class="_admincfg" />
 	</td>
 	<td class="transp">
-		<small><?php echo __('Dtl.: <code>49</code>'); ?></small>
+		<small><?php echo __('In Deutschland: <code>49</code>'); ?></small>
 	</td>
 </tr>
 
@@ -166,7 +166,7 @@ if ($action === 'save') {
 		<input type="text" name="canonize_natl_prefix" id="ipt-canonize_natl_prefix" value="<?php echo htmlEnt($val); ?>" size="10" maxlength="3" class="_admincfg" />
 	</td>
 	<td class="transp">
-		<small><?php echo __('Dtl.: <code>0</code>'); ?></small>
+		<small><?php echo __('In Deutschland: <code>0</code>'); ?></small>
 	</td>
 </tr>
 
@@ -182,7 +182,7 @@ if ($action === 'save') {
 		<label for="ipt-canonize_natl_prefix_intl"><b><?php echo __('Internat. mit Ortspr&auml;fix?'); ?></b></label>
 	</td>
 	<td class="transp">
-		<small><?php echo __('Dtl.: nein, Italien: ja'); ?></small>
+		<small><?php echo __('In Deutschland: nein'); ?></small>
 	</td>
 </tr>
 
@@ -236,7 +236,7 @@ if ($action === 'save') {
 		&nbsp;
 	</th>
 	<td colspan="2" class="transp">
-		<small><?php echo __('PCRE-Muster f&uuml;r Nummern ohne Vorwahl, z.B. <code>110</code>, <code>112</code>, <code>19222</code>, Dtl.: <code>^1(?:1[0-9]{1,5}|9222)</code>'); ?></small>
+		<small><?php echo __('PCRE-Muster f&uuml;r Nummern ohne Vorwahl, z.B. <code>110</code>, <code>112</code>, <code>19222</code>. In Deutschland: <code>^1(?:1[0-9]{1,5}|9222)</code>'); ?></small>
 	</td>
 </tr>
 
@@ -251,7 +251,7 @@ if ($action === 'save') {
 		<input type="text" name="canonize_cbc_prefix" id="ipt-canonize_cbc_prefix" value="<?php echo htmlEnt($val); ?>" size="10" maxlength="8" class="_admincfg" />
 	</td>
 	<td class="transp">
-		<small><?php echo __('Dtl.: <code>010</code>'); ?></small>
+		<small><?php echo __('In Deutschland: <code>010</code>'); ?></small>
 	</td>
 </tr>
 
