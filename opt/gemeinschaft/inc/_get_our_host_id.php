@@ -2,7 +2,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision:3061 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -30,7 +30,6 @@
 /*                                                              */
 /*                          DEPRECATED                          */
 /*                                                              */
-
 
 
 defined('GS_VALID') or die('No direct access.');
