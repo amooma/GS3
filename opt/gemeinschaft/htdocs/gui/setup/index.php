@@ -198,7 +198,7 @@ if (! file_exists($step_file)) {
 			echo '<h1 style="margin:0;padding:0;">' ,"\n";
 			echo '<img style="position:absolute;top:2px;left:2px;z-index:1;" alt=" " src="', GS_URL_PATH ,'img/gpbx-shadow-32.png" />' ,"\n";
 			echo '<img style="position:absolute;top:0px;left:0px;z-index:2;" alt="GPBX" src="', GS_URL_PATH ,'img/gpbx-32.png" />' ,"\n";
-			echo '<div style="margin:2px 0 0 120px; font-weight:normal;">', 'Setup' ,'</div>' ,"\n";
+			echo '<div style="margin:0 0 0 125px;"><b>[', 'setup' ,']</b></div>' ,"\n";
 			echo '</h1>' ,"\n";
 			echo '</div>' ,"\n";
 			break;
