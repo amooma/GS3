@@ -1003,6 +1003,11 @@ if ($action === 'save2') {
 		
 		gs_keyval_set('setup_net_has_changes', 'no');
 		
+		if (@file_exists('/usr/sbin/gs-pre-shutdown')) {
+			$err=0; $out=array();
+			@exec( 'sudo gs-pre-shutdown 2>>/dev/null', $out, $err );
+		}
+		
 		if     ($save2_action==='reboot'  ) $cmd = '/sbin/shutdown -r now';
 		elseif ($save2_action==='shutdown') $cmd = '/sbin/shutdown -h -P now';
 		//@exec( 'sudo sh -c \'sleep 2; /opt/gemeinschaft/sbin/gpbx-pre-shutdown 1>>/dev/null 2>>/dev/null; '. $cmd .' 1>>/dev/null 2>>/dev/null &\' 0<&- 1>&- 2>&- &' );
