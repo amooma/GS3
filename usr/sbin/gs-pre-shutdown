@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Gemeinschaft
+# $Revision$
+
+
+# This file could be replaced/changed to do some custom
+# stuff before Gemeinschaft calls shutdown.
+
+
+
