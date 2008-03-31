@@ -5762,7 +5762,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `gates`;
 CREATE TABLE `gates` (
   `id` smallint(5) unsigned NOT NULL auto_increment,
-  `grp_id` smallint(5) unsigned NOT NULL,
+  `grp_id` smallint(5) unsigned default NULL,
   `type` varchar(10) character set ascii NOT NULL default 'sip',
   `name` varchar(25) character set ascii NOT NULL,
   `title` varchar(50) collate utf8_unicode_ci NOT NULL,
