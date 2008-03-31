@@ -209,9 +209,18 @@ if (! file_exists($step_file)) {
 ?>
 </div>
 </div>
-<div align="right">
+
+<div>
+<div class="fl l" style="width:40%;">
 <?php
-if (@$_SESSION['login_ok'] && $step !== 'network') {
+	if (gs_keyval_get('setup_show') !== 'autoshow') {
+		echo '<a href="', gs_get_conf('GS_URL_PATH') ,'">', 'zum normalen Interface' ,'</a>', "\n";
+	}
+?>
+</div>
+<div class="fr r" style="width:60%;">
+<?php
+	if (@$_SESSION['login_ok'] && $step !== 'network') {
 ?>
 	<form class="inline" method="post" action="<?php echo GS_URL_PATH ,'setup/?step=reboot'; ?>">
 		<input type="hidden" name="action" value="reboot" />
@@ -222,14 +231,13 @@ if (@$_SESSION['login_ok'] && $step !== 'network') {
 		<input type="submit" value="<?php echo 'Herunterfahren'; ?>" />
 	</form>
 <?php
-}
+	}
 ?>
+</div>
 </div>
 
 <?php
-
-@include_once( $step_file );
-
+	@include_once( $step_file );
 ?>
 
 </body>
