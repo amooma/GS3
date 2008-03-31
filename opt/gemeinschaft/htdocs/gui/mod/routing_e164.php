@@ -212,7 +212,7 @@ if ($action === 'save') {
 		<input type="text" name="canonize_local_branch" id="ipt-canonize_local_branch" value="<?php echo htmlEnt($val); ?>" size="10" maxlength="8" class="_admincfg" />
 	</td>
 	<td class="transp">
-		<small><?php echo __('Der auf die Ortsvorwahl folgende, f&uuml;r alle Durchwahlen feststehende Teil.'); ?></small>
+		<small><?php echo __('Anlagenanschlu&szlig;: Der auf die Ortsvorwahl folgende, f&uuml;r alle Durchwahlen feststehende Teil.<br />Mehrger&auml;teanschlu&szlig;: <tt>99999999</tt>!'); ?></small>
 	</td>
 </tr>
 
