@@ -499,7 +499,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 
 
 /*
-$gpbx_version = trim(@file_get_contents( $gpbx_userdata.'gpbx/gpbx-version' ));
+$gpbx_version = trim(@file_get_contents( '/etc/gemeinschaft/.gpbx-version' ));
 echo '<p>Installierte GPBX-Version: ', ($gpbx_version != '' ? htmlEnt($gpbx_version) : '?') ,'</p>' ,"\n";
 */
 
