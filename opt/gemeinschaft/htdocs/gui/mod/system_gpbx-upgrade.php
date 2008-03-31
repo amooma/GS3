@@ -183,7 +183,7 @@ if (@$_POST['action'] === 'upgrade'
 	
 	if (@file_exists('/usr/sbin/gs-pre-shutdown')) {
 		$err=0; $out=array();
-		@exec( 'sudo gs-pre-shutdown 2>>/dev/null', $out, $err );
+		@exec( 'sudo /usr/sbin/gs-pre-shutdown 2>>/dev/null', $out, $err );
 	}
 	
 	$err=0; $out=array();
