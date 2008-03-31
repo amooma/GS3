@@ -137,7 +137,7 @@ elseif ($action === 'shutdown2' && $shutdown_enabled) {
 			
 			if (@file_exists('/usr/sbin/gs-pre-shutdown')) {
 				$err=0; $out=array();
-				@exec( 'sudo gs-pre-shutdown 2>>/dev/null', $out, $err );
+				@exec( 'sudo /usr/sbin/gs-pre-shutdown 2>>/dev/null', $out, $err );
 			}
 			
 			@flush();
