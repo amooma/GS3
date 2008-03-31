@@ -52,7 +52,7 @@ defined('GS_VALID') or die('No direct access.');
 
 if (@file_exists('/usr/sbin/gs-pre-shutdown')) {
 	$err=0; $out=array();
-	@exec( 'sudo gs-pre-shutdown 2>>/dev/null', $out, $err );
+	@exec( 'sudo /usr/sbin/gs-pre-shutdown 2>>/dev/null', $out, $err );
 }
 
 //@exec( 'sudo sh -c \'sleep 2; /opt/gemeinschaft/sbin/gpbx-pre-shutdown 1>>/dev/null 2>>/dev/null; /sbin/shutdown -h -P now 1>>/dev/null 2>>/dev/null &\' 0<&- 1>&- 2>&- &' );
