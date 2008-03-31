@@ -693,6 +693,13 @@ if ($action === 'save') {
 			@$db->execute( 'UPDATE `hosts` SET `host`=\''. $tmp .'\', `comment`=\''. $tmp2 .'\'' );
 		}
 		
+		# for the GPBX {
+		if (@file_exists('/usr/local/bin/gpbx-db-dump')) {
+			$err=0; $out=array();
+			@exec( 'sudo /usr/local/bin/gpbx-db-dump save 2>>/dev/null', $out, $err );
+		}
+		# }
+		
 		
 		/*
 		$has_netif_changes =
