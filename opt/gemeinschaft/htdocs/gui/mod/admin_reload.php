@@ -134,6 +134,12 @@ elseif ($action === 'shutdown2' && $shutdown_enabled) {
 		if (! $shutdown) {
 			echo 'shutdown not found.' ,"\n";
 		} else {
+			
+			if (@file_exists('/usr/sbin/gs-pre-shutdown')) {
+				$err=0; $out=array();
+				@exec( 'sudo gs-pre-shutdown 2>>/dev/null', $out, $err );
+			}
+			
 			@flush();
 			@ob_implicit_flush(1);
 			echo '<pre style="margin:0.9em 0.1em; padding:0.3em; background:#eee;">';
