@@ -57,6 +57,8 @@ echo '</h2>', "\n";
 echo '<h2>', __('Willkommen'), ', ', htmlEnt( $_SESSION['sudo_user']['info']['firstname'] .' '. $_SESSION['sudo_user']['info']['lastname'] ), '!</h2>', "\n";
 
 if ($_SESSION['sudo_user']['name'] === 'sysadmin') {
+	echo '<br /><br /><br /><br />', "\n";
+	echo '<a href="', gs_get_conf('GS_URL_PATH'),'setup/">', 'zum Setup' ,'</a><br />' ,"\n";
 	return;
 }
 
