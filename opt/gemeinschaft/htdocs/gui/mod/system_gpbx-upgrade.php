@@ -317,7 +317,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 	}
 	
 	
-	sleep(1);
+	sleep(4);
 	clearStatCache();
 }
 
