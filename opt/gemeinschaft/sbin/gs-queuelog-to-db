@@ -342,7 +342,7 @@ if ($current_euid !== 0) {
 }
 if (@file_exists($lockfile)) {
 	$mtime = @fileMTime($lockfile);
-	if ($mtime === false || $mtime > time()-(30*60)) {
+	if ($mtime === false || $mtime > time()-(10*60)) {
 		gs_log( GS_LOG_NOTICE, "\"$lockfile\" exists. Exit." );
 		echo "\"$lockfile\" exists. Exit.\n";
 		exit();
