@@ -634,6 +634,11 @@ class YADB_Connection_mysqli extends YADB_Connection
 	}
 	
 	
+	function __toString()
+	{
+		return '['.get_class($this).']';
+	}
+	
 }
 
 
@@ -797,6 +802,10 @@ class YADB_RecordSet_mysqli extends YADB_RecordSet
 	}
 	
 	
+	function __toString()
+	{
+		return '['.get_class($this).']';
+	}
 	
 }
 
