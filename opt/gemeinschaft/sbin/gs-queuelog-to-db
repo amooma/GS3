@@ -41,7 +41,7 @@ include_once( GS_DIR .'inc/find_executable.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
-$lockfile = gs_get_conf('GS_LOCK_DIR').'gs-queuelog';
+$lockfile = gs_get_conf('GS_LOCK_DIR').'gs-queuelog.lock';
 
 
 function remove_lockfile()
