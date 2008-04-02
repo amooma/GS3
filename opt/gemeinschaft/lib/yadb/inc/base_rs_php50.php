@@ -38,7 +38,8 @@ foreach ($rs as $rowPos => $row) {
 */
 class YADB_BaseRS implements IteratorAggregate
 {
-	function getIterator() {
+	function getIterator()
+	{
 		return new YADB_RSIterator( $this );
 	}
 	
@@ -75,7 +76,8 @@ class YADB_RSIterator implements SeekableIterator
 	function __construct( $rs ) { $this->_rs = $rs; }
 	function hasNext()  { return !$this->_rs->EOF;    }
 	//FIXME ?
-	function __call( $func, $params ) {
+	function __call( $func, $params )
+	{
 		return call_user_func_array(
 			array( $this->_rs, $func ), $params );
 	}
