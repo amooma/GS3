@@ -69,11 +69,4 @@ function gs_db_slave_connect()
 }
 
 
-// deprecated! use $db->escape()
-function db_esc( $str, $dbConn=null ) {
-	if ($dbConn) return $dbConn->escape( $str );
-	return mysql_real_escape_string( $str );
-}
-
-
 ?>
