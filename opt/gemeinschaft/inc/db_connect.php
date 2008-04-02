@@ -36,9 +36,18 @@ $gs_db_conn_master = null;
 $gs_db_conn_slave  = null;
 
 
+function gs_db_slave_is_master()
+{
+	return ( GS_DB_MASTER_HOST === GS_DB_SLAVE_HOST
+	      && GS_DB_MASTER_USER === GS_DB_SLAVE_USER
+	      && GS_DB_MASTER_PWD  === GS_DB_SLAVE_PWD
+	      && GS_DB_MASTER_DB   === GS_DB_SLAVE_DB   );
+}
+
+
 function & gs_db_master_connect()
 {
-	global $gs_db_conn_master;
+	global $gs_db_conn_master, $gs_db_conn_slave;
 	
 	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
 		$bt = debug_backtrace();
@@ -78,13 +87,16 @@ function & gs_db_master_connect()
 	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
 	
 	$gs_db_conn_master = $db;
+	if (gs_db_slave_is_master()) {
+		$gs_db_conn_slave = $db;
+	}
 	return $gs_db_conn_master;
 }
 
 
 function & gs_db_slave_connect()
 {
-	global $gs_db_conn_slave;
+	global $gs_db_conn_slave, $gs_db_conn_master;
 	
 	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
 		$bt = debug_backtrace();
@@ -124,6 +136,9 @@ function & gs_db_slave_connect()
 	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
 	
 	$gs_db_conn_slave = $db;
+	if (gs_db_slave_is_master()) {
+		$gs_db_conn_master = $db;
+	}
 	return $gs_db_conn_slave;
 }
 
