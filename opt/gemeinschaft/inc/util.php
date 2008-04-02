@@ -44,8 +44,8 @@ function normalizeIPs( $str ) {
 }
 
 
-if (! defined('E_STRICT'           )) define('E_STRICT           ', 2048);
-if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 4096);
+if (! defined('E_STRICT'           )) define('E_STRICT           ', 2048); # since PHP 5
+if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 4096); # since PHP 5.2
 
 function err_handler_die_on_err( $type, $msg, $file, $line )
 {
@@ -68,12 +68,12 @@ function err_handler_die_on_err( $type, $msg, $file, $line )
 		case E_ERROR:
 		case E_USER_ERROR:
 			gs_log( GS_LOG_FATAL  , 'PHP: '. $msg .' in '. $file .' on line '. $line );
-			echo "FATAL ERROR.\n";
+			echo "A fatal error occurred.\n";
 			die(1);
 			break;
 		default:
 			gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
-			echo "WARNING.\n";
+			echo "A warning occurred.\n";
 			die(1);
 			break;
 	}
