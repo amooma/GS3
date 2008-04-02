@@ -28,8 +28,9 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
+require_once( GS_DIR .'inc/util.php' );
 
-//set_error_handler('err_handler_die_on_err');
+set_error_handler('err_handler_die_on_err');
 
 
 function _not_found( $msg='Not Found.' )
