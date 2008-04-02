@@ -1231,6 +1231,15 @@ class YADB_Connection
 	
 	
 	/***********************************************************
+	* Just to be on the safe side.
+	***********************************************************/
+	function __toString()
+	{
+		return '['.get_class($this).']';
+	}
+	
+	
+	/***********************************************************
 	* Returns a record object or false on error.
 	* 
 	* Table row must have a meta-type "P" or "R" column -
@@ -1312,8 +1321,6 @@ class YADB_Connection
 	function getLastInsertId() { return false; }
 	
 	
-	
-	
 }
 
 
@@ -1346,6 +1353,11 @@ class YADB_Statement
 	function getSql()    { return $this->_sql;  }
 	function getDriver() { return $this->_drv;  }
 	function getStmt()   { return $this->_stmt; }
+	
+	function __toString()
+	{
+		return '['.get_class($this).']';
+	}
 }
 
 
@@ -1368,6 +1380,11 @@ class YADB_RecordSet_empty
 	function numCols() { return 0; }
 	function fetchRow() { return false; }
 	function close() { return true; }
+	
+	function __toString()
+	{
+		return '['.get_class($this).']';
+	}
 }
 */
 
@@ -1670,7 +1687,13 @@ class YADB_RecordSet extends YADB_BaseRS
 	function _fetchColsMeta() { return false; }
 	*/
 	
-	
+	/***********************************************************
+	* Just to be on the safe side.
+	***********************************************************/
+	function __toString()
+	{
+		return '['.get_class($this).']';
+	}
 	
 }
 
@@ -1923,7 +1946,13 @@ class YADB_RecordObject
 	}
 	
 	
-	
+	/***********************************************************
+	* Just to be on the safe side.
+	***********************************************************/
+	function __toString()
+	{
+		return '['.get_class($this).']';
+	}
 }
 
 
