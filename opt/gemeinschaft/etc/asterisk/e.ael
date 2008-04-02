@@ -588,6 +588,12 @@ macro dial-gateway-do( mnumber ) {
 				Busy(5);
 				Hangup();
 			}
+			else if ("${HANGUPCAUSE}" = "18") {
+				// 18 = no user responding
+				Verbose(1,### HANGUPCAUSE 18 = no user responding);
+				Congestion(5);
+				Hangup();
+			}
 			
 			// else don't hangup and try the next gateway
 		}
