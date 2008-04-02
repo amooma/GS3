@@ -243,6 +243,10 @@ $MODULES['system'   ]['sub'][
       'sysstatus']   =  array('title' => __('System-Status'));  //TRANSLATE ME
 $MODULES['system'   ]['sub'][
       'network']     =  array('title' => __('Netzwerk'));       //TRANSLATE ME
+if ($GS_INSTALLATION_TYPE === 'gpbx') {
+$MODULES['system'  ]['sub'][
+      'dhcp-leases'] =  array('title' => __('DHCP-Leases'));
+}
 /*
 $MODULES['system'   ]['sub'][
       'logging']     =  array('title' => __('Logging'));        //TRANSLATE ME
