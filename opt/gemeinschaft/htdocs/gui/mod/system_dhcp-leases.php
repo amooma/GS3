@@ -29,6 +29,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/find_executable.php' );
+require_once( GS_DIR .'inc/keyval.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -37,6 +38,12 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
+
+
+if (gs_keyval_get('dhcp_daemon_start') !== 'yes') {
+	echo 'Der DHCP-Server auf diesem System ist nicht aktiviert.';
+	return;
+}
 
 
 if (file_exists('/var/lib/dhcp3/dhcpd.leases')) {
