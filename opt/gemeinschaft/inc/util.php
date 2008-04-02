@@ -44,7 +44,8 @@ function normalizeIPs( $str ) {
 }
 
 
-if (! defined('E_STRICT')) define('E_STRICT', 2048);
+if (! defined('E_STRICT'           )) define('E_STRICT           ', 2048);
+if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 4096);
 
 function err_handler_die_on_err( $type, $msg, $file, $line )
 {
