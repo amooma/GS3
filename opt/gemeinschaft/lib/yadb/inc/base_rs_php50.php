@@ -43,13 +43,10 @@ class YADB_BaseRS implements IteratorAggregate
 		return new YADB_RSIterator( $this );
 	}
 	
-	/*
 	function __toString()
 	{
-		# don't know what to return
-		return '[YADB recordset]';
+		return '['.get_class($this).']';
 	}
-	*/
 }
 
 
@@ -85,13 +82,10 @@ class YADB_RSIterator implements SeekableIterator
 	# see
 	# http://cvs.php.net/viewvc.cgi/php-src/ext/spl/examples/cachingiterator.inc
 	
-	/*
 	function __toString()
 	{
-		# don't know what to return
-		return '[YADB record]';
+		return '['.get_class($this).']';
 	}
-	*/
 }
 
 
