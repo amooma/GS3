@@ -314,7 +314,7 @@ $DP_PRV_CALL_PREFIX         = '*7*';  # e.g. "*7*", "96", ...
 *    MISC
 ***********************************************************/
 
-$LOCK_DIR               = '/var/lock/';
+$LOCK_DIR               = '/tmp/';
   # where to write Gemeinschaft lock files. including trailing "/"!
   # e.g. "/var/lock/" or "/tmp/". the directory must exists.
   # does not control where apache, mysql, zaptel etc. put their
