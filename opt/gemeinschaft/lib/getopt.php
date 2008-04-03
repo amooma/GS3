@@ -299,4 +299,32 @@ function getOptsNoMultiples( $short, $long, $cliHelp=null )
 }
 
 
+function getOptsMultiples( $short, $long, $cliHelp=null )
+{
+	$short .= '?';
+	if (! is_array($long )) $long = array();
+	array_push( $long, 'help' );
+	
+	$args = Console_Getopt::readPHPArgv();
+	$opts = array();
+	if (! Getopt_isError($args)) {
+		unset($args[0]);
+		$o = Console_Getopt::getopt( $args, $short, $long, $cliHelp );
+		if (is_array($o[0])) {
+			foreach ($o[0] as $oo) {
+				if (subStr($oo[0],0,2)=='--') $oo[0] = subStr($oo[0],2);
+				$opts[] = $oo;
+			}
+		}
+	} else {
+		handleGetOptError( $args, $short, $long, $cliHelp );
+		die(1);
+	}
+	if (array_key_exists('?',$opts) || array_key_exists('help',$opts)) {
+		getOptUsageOut( $short, $long, $cliHelp );
+	}
+	return $opts;
+}
+
+
 ?>
