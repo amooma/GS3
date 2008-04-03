@@ -36,7 +36,7 @@ function aastra_transmit()
 	global $aastra_xml_buffer;
 	
 	header( 'Content-Type: text/xml' );
-	header( 'Content-Length: '.strlen($aastra_xml_buffer) );
+	header( 'Content-Length: '.strLen($aastra_xml_buffer) );
 	header( 'Connection: Close ' );
 	
 	$aastra_xml_buffer = utf8_decode($aastra_xml_buffer);
@@ -52,6 +52,9 @@ function aastra_push( $phone_ip )
 	$prov_host = gs_get_conf('GS_PROV_HOST');
 	$aastra_xml_buffer = 'xml='.$aastra_xml_buffer;
 	
+	//FIXME - call wget or something. this function should not block
+	// for so long!
+	
 	$header = "POST / HTTP/1.1\r\n";
 	$header.= "Host: $phone_ip\r\n";	
 	$header.= "Referer: $prov_host\r\n";
@@ -61,21 +64,21 @@ function aastra_push( $phone_ip )
 	$header.= "Content-Length: ".strlen($aastra_xml_buffer)."\r\n";
 	$header.= "\r\n";
 	
-	$socket = @fsockopen( $phone_ip, 80, $error_no, $error_str, 4);
+	$socket = @fSockOpen( $phone_ip, 80, $error_no, $error_str, 4);
 	if (! $socket) {
 		gs_log(GS_LOG_WARNING, "Aastra: Failed to open socket - IP: $phone_ip");
 		return 0;
 	}
 	stream_set_timeout($socket, 4);
-	fwrite($socket, $header.$aastra_xml_buffer);
-	fflush($socket);
-	$response = fgets($socket);
-	fclose($socket);
-	if (strpos($response, '200 OK') === false) {
+	@fWrite($socket, $header.$aastra_xml_buffer);
+	@fFlush($socket);
+	$response = @fGetS($socket);
+	@fClose($socket);
+	if (strPos($response, '200 OK') === false) {
 		gs_log(GS_LOG_WARNING, "Aastra: Failed to push $ret_val bytes to phone $phone_ip");
 		return 0;
 	}
-	$ret_val = strlen($aastra_xml_buffer);
+	$ret_val = strLen($aastra_xml_buffer);
 	gs_log(GS_LOG_DEBUG, "Aastra: Pushed $ret_val bytes to phone $phone_ip");
 	$aastra_xml_buffer = '';
 	return $ret_val;
