@@ -200,6 +200,8 @@ _gscnf( 'SNOM_PROV_FW_UPDATE'       , false              );
 _gscnf( 'SNOM_PROV_FW_BETA'         , false              );
 _gscnf( 'SNOM_PROV_FW_6TO7'         , false              );
 
+_gscnf( 'SIEMENS_PROV_ENABLED'      , true               );
+
 _gscnf( 'AASTRA_PROV_ENABLED'       , true               );
 _gscnf( 'AASTRA_PROV_PB_NUM_RESULTS', 10                 );
 
