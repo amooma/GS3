@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 401); // = 0.04.01
+define('YADB_VERS', 402); // = 0.04.02
 
 /***********************************************************
 * Columns flags:
