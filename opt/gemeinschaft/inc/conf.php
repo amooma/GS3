@@ -65,6 +65,11 @@ if ($tmp >= '1' || $tmp === 'on') {
 	exit(1);
 }
 
+# other php.ini settings
+#
+ini_set('html_errors', false);  # or else we'd have HTML in our log file for
+                                # PHP errors
+
 
 # our root directory
 #
