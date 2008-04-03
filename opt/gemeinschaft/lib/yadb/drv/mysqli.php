@@ -41,8 +41,9 @@
 
 if (!defined('YADB_DIR')) die("No direct access\n");
 
-@ini_set( 'mysql.trace_mode', 0 );
+ini_set('mysql.trace_mode', 0);
 // must be off or else SELECT FOUND_ROWS() always returns 0
+ini_set('mysqli.reconnect', true);
 
 
 class YADB_Connection_mysqli extends YADB_Connection
