@@ -138,6 +138,7 @@ $AASTRA_PROV_PB_NUM_RESULTS = 10;
 
 //-----------------[  Siemens OpenStage  ]----------------//
 
+$SIEMENS_PROV_ENABLED       = false;
 //...
 
 
