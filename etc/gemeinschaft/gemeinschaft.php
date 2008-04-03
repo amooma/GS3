@@ -218,8 +218,8 @@ $PROV_DIAL_LOG_LIFE         = 14*24*3600;
 
 //---------------------[  Snom 3xx  ]---------------------//
 
-$SNOM_PROV_ENABLED          = true;  # do provisioning for Snom?
-                                     # show keyset for Snom in the GUI?
+$SNOM_PROV_ENABLED          = true;   # do provisioning for Snom?
+                                      # show keyset for Snom in the GUI?
 
 $SNOM_PROV_HTTP_USER        = 'gs';
 $SNOM_PROV_HTTP_PASS        = 'gEheiM23y89sdo23';
@@ -242,8 +242,8 @@ $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 
 //----------------------[  Aastra  ]----------------------//
 
-$AASTRA_PROV_ENABLED        = true;  # do provisioning for Aastra?
-                                     # show keyset for Aastra in the GUI?
+$AASTRA_PROV_ENABLED        = true;   # do provisioning for Aastra?
+                                      # show keyset for Aastra in the GUI?
 $AASTRA_PROV_PB_NUM_RESULTS = 10;
   # number of results in phonebook search on Aastra phone
 
