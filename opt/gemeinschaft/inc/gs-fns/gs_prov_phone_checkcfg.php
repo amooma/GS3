@@ -108,7 +108,7 @@ function gs_prov_phone_checkcfg_all( $reboot=true )
 {
 	$db = gs_db_master_connect();
 	
-	gs_log(GS_LOG_DEBUG, "phone_checkcfg all phones");
+	gs_log(GS_LOG_DEBUG, 'phone_checkcfg all phones');
 	
 	$rs = $db->execute(
 'SELECT `s`.`name`, `u`.`current_ip` `ip`
@@ -136,7 +136,7 @@ function _gs_prov_phone_checkcfg_by_ip_do( $ip, $reboot=true )
 	/*
 	$db = @gs_db_slave_connect();
 	if (! $db) {
-		gs_log(GS_LOG_WARNING, "Failed to connect to DB");
+		gs_log(GS_LOG_WARNING, 'Failed to connect to DB');
 		return false;
 	}
 	$rs = @$db->execute(
@@ -148,7 +148,7 @@ WHERE
 	`u`.`current_ip`=\''. $db->escape($ip) .'\''
 	);
 	if (! $rs) {
-		gs_log(GS_LOG_WARNING, "DB error");
+		gs_log(GS_LOG_WARNING, 'DB error');
 		return false;
 	}
 	$is_snom    = false;
@@ -179,9 +179,16 @@ WHERE
 	}
 	*/
 	# damn - we did already remove the user id from the phones table
-	_gs_prov_phone_checkcfg_by_ip_do_snom   ( $ip, $reboot );
-	_gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot );
-	_gs_prov_phone_checkcfg_by_ip_do_aastra ( $ip, $reboot );
+	
+	if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ip_do_snom   ( $ip, $reboot );
+	}
+	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot );
+	}
+	if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ip_do_aastra ( $ip, $reboot );
+	}
 	
 	//return $err == 0;
 	return true;
@@ -204,7 +211,7 @@ function _gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot=true, $pre_sleep
 		include_once( $file );
 		@_gs_siemens_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot, $pre_sleep );
 	} else {
-		gs_log( GS_LOG_WARNING, "Siemens provisioning not available" );
+		gs_log(GS_LOG_NOTICE, 'Siemens provisioning not available');
 	}
 }
 
@@ -225,7 +232,7 @@ function _gs_prov_phone_checkcfg_by_ext_do( $ext, $reboot=true )
 	/*
 	$db = @gs_db_slave_connect();
 	if (! $db) {
-		gs_log(GS_LOG_WARNING, "Failed to connect to DB");
+		gs_log(GS_LOG_WARNING, 'Failed to connect to DB');
 		return false;
 	}
 	$phone_type = strToLower( (string)@$db->executeGetOne(
@@ -254,9 +261,16 @@ WHERE
 	}
 	*/
 	// damn - we have already remove the user id from the phones table
-	_gs_prov_phone_checkcfg_by_ext_do_snom   ( $ext, $reboot );
-	_gs_prov_phone_checkcfg_by_ext_do_siemens( $ext, $reboot );
-	//FIXME - aastra?
+	
+	if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ext_do_snom   ( $ext, $reboot );
+	}
+	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ext_do_siemens( $ext, $reboot );
+	}
+	if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
+		//FIXME - aastra?
+	}
 	
 	//return $err == 0;
 	return true;
@@ -298,7 +312,7 @@ function _gs_prov_phone_checkcfg_by_ext_do_siemens( $ext, $reboot=true )
 	# IP address
 	$db = @gs_db_slave_connect();
 	if (! $db) {
-		gs_log(GS_LOG_WARNING, "Failed to connect to DB");
+		gs_log(GS_LOG_WARNING, 'Failed to connect to DB');
 		return;
 	}
 	$ip = @$db->executeGetOne(
@@ -309,7 +323,7 @@ FROM
 WHERE `s`.`name`=\''. $db->escape($ext) .'\''
 	);
 	if (! $ip || ! preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $ip)) {
-		gs_log(GS_LOG_WARNING, "Bad IP");
+		gs_log(GS_LOG_WARNING, 'Bad IP');
 		return;
 	}
 	
