@@ -51,7 +51,7 @@ function & gs_db_master_connect()
 	
 	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
 		$bt = debug_backtrace();
-		if (array_key_exists(0, $bt)) {
+		if (is_array($bt) && array_key_exists(0, $bt)) {
 			$caller_info = @$bt[0]['file'] .':'. @$bt[0]['line'];
 			unset($bt);
 		} else {
@@ -100,7 +100,7 @@ function & gs_db_slave_connect()
 	
 	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
 		$bt = debug_backtrace();
-		if (array_key_exists(0, $bt)) {
+		if (is_array($bt) && array_key_exists(0, $bt)) {
 			$caller_info = @$bt[0]['file'] .':'. @$bt[0]['line'];
 			unset($bt);
 		} else {
