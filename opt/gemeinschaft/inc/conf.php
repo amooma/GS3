@@ -67,8 +67,18 @@ if ($tmp >= '1' || $tmp === 'on') {
 
 # other php.ini settings
 #
+ini_set('display_errors', false);
+ini_set('log_errors', false);
+ini_set('track_errors', false);
+ini_set('default_socket_timeout', 20);
 ini_set('html_errors', false);  # or else we'd have HTML in our log file for
                                 # PHP errors
+ini_set('tidy.clean_output', false);
+ini_set('soap.wsdl_cache_enabled', true);
+ini_set('soap.wsdl_cache_ttl', 86400);
+ob_implicit_flush(0);
+set_magic_quotes_runtime(0);
+set_time_limit(35);
 
 
 # our root directory
