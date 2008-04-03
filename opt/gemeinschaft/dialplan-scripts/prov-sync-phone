@@ -38,9 +38,9 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 
-$uname = trim(@$argv[1]);
+$ext = trim(@$argv[1]);
 
-if (! $uname) {
+if (! $ext) {
 	die();
 }
 
@@ -59,7 +59,7 @@ $current_ip = $db->executeGetOne(
 FROM
 	`ast_sipfriends` `s` JOIN
 	`users` `u` ON (`u`.`id`=`s`.`_user_id`)
-WHERE `s`.`name`=\''. $db->escape($uname) .'\''
+WHERE `s`.`name`=\''. $db->escape($ext) .'\''
 );
 if ($current_ip) {
 	@file_get_contents( 'http://'. $current_ip .'/confirm.htm?REBOOT=yes' );
@@ -67,10 +67,10 @@ if ($current_ip) {
 */
 
 
-//@exec( 'asterisk -rx \'sip notify snom-reboot '. $uname .'\' >>/dev/null 2>&1' );
-//@exec( 'asterisk -rx \'sip prune realtime '. $uname .'\' >>/dev/null 2>&1' );
+//@exec( 'asterisk -rx \'sip notify snom-reboot '. $ext .'\' >>/dev/null 2>&1' );
+//@exec( 'asterisk -rx \'sip prune realtime '. $ext .'\' >>/dev/null 2>&1' );
 
-@ gs_prov_phone_checkcfg_by_ext( $uname, true );
+@gs_prov_phone_checkcfg_by_ext( $ext, true );
 
 
 ?>
