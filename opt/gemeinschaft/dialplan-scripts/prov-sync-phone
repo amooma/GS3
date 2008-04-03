@@ -27,30 +27,38 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-
 # this script is not just for Snom phones but others like
 # Siemens as well!
 
-
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
 
-ini_set('implicit_flush', 1);
-ob_implicit_flush(1);
+$opts = getOptsMultiples('',
+	array(
+		'ext=',
+		'ip='
+	),
+	'Wrong usage!'
+);
 
-
-$ext = trim(@$argv[1]);
-
-if (! $ext) {
-	die();
+foreach ($opts as $opt) {
+	switch ($opt[0]) {
+		case 'ext':
+			gs_prov_phone_checkcfg_by_ext( $opt[1], false );
+			break;
+		case 'ip':
+			gs_prov_phone_checkcfg_by_ip( $opt[1], false );
+			break;
+	}
 }
 
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
-include_once( GS_DIR .'inc/gs-lib.php' );
-
-/*include_once( GS_DIR .'inc/db_connect.php' );
 
 
+/*
+include_once( GS_DIR .'inc/db_connect.php' );
 
 $db = gs_db_master_connect();
 
@@ -64,13 +72,10 @@ WHERE `s`.`name`=\''. $db->escape($ext) .'\''
 if ($current_ip) {
 	@file_get_contents( 'http://'. $current_ip .'/confirm.htm?REBOOT=yes' );
 }
+
+@exec( 'asterisk -rx \'sip notify snom-reboot '. $ext .'\' >>/dev/null 2>&1' );
+@exec( 'asterisk -rx \'sip prune realtime '. $ext .'\' >>/dev/null 2>&1' );
 */
-
-
-//@exec( 'asterisk -rx \'sip notify snom-reboot '. $ext .'\' >>/dev/null 2>&1' );
-//@exec( 'asterisk -rx \'sip prune realtime '. $ext .'\' >>/dev/null 2>&1' );
-
-@gs_prov_phone_checkcfg_by_ext( $ext, true );
 
 
 ?>
