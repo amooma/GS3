@@ -250,7 +250,7 @@ $AASTRA_PROV_PB_NUM_RESULTS = 10;
 
 //-----------------[  Siemens OpenStage  ]----------------//
 
-$SIEMENS_PROV_ENABLED       = true;  # do provisioning for Siemens?
+$SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
 //...
 
 
