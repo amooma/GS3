@@ -275,6 +275,9 @@ define( 'GS_LOG_LEVEL', constant('GS_LOG_'.$LOG_LEVEL) );
 # include gettext functions here because conf.php is included
 # in every file
 include_once( GS_DIR .'inc/gettext.php' );
+# logger:
+include_once( GS_DIR .'inc/log.php' );
+
 
 if (function_exists('date_default_timezone_set')) {
 	# PHP >= 5.1.0
