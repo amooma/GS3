@@ -77,7 +77,8 @@ if ($err === 0) {
 
 
 $sleep = 8;
-$t_end = time() + 60 - $sleep - 6;
+$t_start = time();
+$t_end = $t_start + 60 - $sleep - 6;
 $r = ceil(($t_end - $t_start) / $sleep) + 1;
 while (time() < $t_end && $r > 0) {
 	@set_time_limit(10+$sleep);
