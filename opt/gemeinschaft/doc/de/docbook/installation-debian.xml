@@ -100,7 +100,7 @@ sipsak 0.9.6  by Nils Ohlmeier
 &amp;&amp; chmod a+rwx /var/log/gemeinschaft/</command></programlisting></para>
   </section>
 
-  <section id="install-centos-mysql-master">
+  <section id="install-debian-mysql-master">
     <title>Installation des MySQL-Masters</title>
 
     <para>Auf diesem Rechner soll nur der MySQL-Server als Master
@@ -128,7 +128,7 @@ Query OK, 0 rows affected (0.01 sec)
 </screen></para>
   </section>
 
-  <section id="install-centos-asterisk">
+  <section id="install-debian-asterisk">
     <title>Installation der Asterisk-Server</title>
 
     <para>Auf den Asterisk-Servern soll neben Asterisk auch jeweils ein
@@ -295,7 +295,7 @@ zlib
       </important></para>
   </section>
 
-  <section id="install-centos-webserver">
+  <section id="install-debian-webserver">
     <title>Installation des Web-Servers</title>
 
     <para>Auf diesem Rechner soll nur das Web-Interface laufen.</para>
@@ -389,7 +389,7 @@ User www-data</screen></para>
       </footnote>:<screen>www-data   ALL=(ALL)   NOPASSWD: ALL</screen></para>
   </section>
 
-  <section id="install-centos-dhcp-server">
+  <section id="install-debian-dhcp-server">
     <title>Installation des DHCP-Servers</title>
 
     <para>Wird hier nur der Vollständigkeit halber genannt. Der DHCP-Server
@@ -403,14 +403,14 @@ User www-data</screen></para>
     linkend="dhcp-server" />).</para>
   </section>
 
-  <section id="deinstall-centos-services">
+  <section id="deinstall-debian-services">
     <title>Entfernen überflüssiger Dienste etc.</title>
 
     <para>Optional kann man darüber nachdenken, evtl. überflüssige Dienste zu
     entfernen:<programlisting>FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME</programlisting></para>
   </section>
 
-  <section id="install-centos-optional">
+  <section id="install-debian-optional">
     <title>Optionale Pakete</title>
 
     <para>Wer gerne mal schnell einen (unsicheren!) NFS-Server
@@ -424,7 +424,7 @@ User www-data</screen></para>
     (nicht wie auch üblich <literal>/phpMyAdmin/</literal>)</para>
   </section>
 
-  <section id="install-centos-core">
+  <section id="install-debian-core">
     <title>Installation des Projekts Gemeinschaft</title>
 
     <para>Gemeinschaft muß auf <emphasis role="bold">allen</emphasis>
