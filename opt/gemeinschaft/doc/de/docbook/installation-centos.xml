@@ -103,7 +103,7 @@ sipsak 0.9.6  by Nils Ohlmeier
 mysql  Ver 14.7 Distrib 4.1.20, for redhat-linux-gnu (i686) using readline 4.3</screen></para>
 
     <para>Dann MySQL als Master einrichten<footnoteref
-    linkend="footnote-mysql-replikation" />, siehe <xref
+    linkend="install-centos-footnote-mysql-replikation" />, siehe <xref
     linkend="mysql-replikation" />.</para>
 
     <para>Auf den MySQL-Master muß von allen Rechnern aus zugegriffen werden
@@ -233,7 +233,7 @@ zlib
     <xref linkend="php-sicherheit" /> beschrieben vornehmen.</para>
 
     <para>Danach MySQL als Client einrichten<footnote
-        id="footnote-mysql-replikation">
+        id="install-centos-footnote-mysql-replikation">
         <para>bzw. falls alles auf <emphasis>einem</emphasis> Server laufen
         soll muß die Master-Client-Replikation natürlich nicht eingerichtet
         werden</para>
