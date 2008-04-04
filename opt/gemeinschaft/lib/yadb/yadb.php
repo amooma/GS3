@@ -663,7 +663,12 @@ class YADB_Connection
 		
 		if (is_array($rs->_row)) {
 			if (count($rs->_row) < $rs->_numCols) {
-				trigger_error( 'YADB: Non-unique column names in a query are not supported. Fix your query.', E_USER_WARNING );
+				$caller_info = '';
+				$bt = debug_backtrace();
+				if (is_array($bt) && is_array($bt[0])) {
+					$caller_info = @$bt[0]['file'] . ':'. @$bt[0]['line'];
+				}
+				trigger_error( 'YADB: Non-unique column names in a query are not supported. Fix your query. ('. $caller_info .')', E_USER_WARNING );
 			}
 		}
 		
