@@ -67,7 +67,8 @@ if ($tmp >= '1' || $tmp === 'on') {
 
 # other php.ini settings
 #
-ini_set('display_errors', false);
+ini_set('display_errors', true);  # to be changed when our error handler is installed
+error_reporting(E_ALL ^ E_NOTICE);
 ini_set('log_errors', false);
 ini_set('track_errors', false);
 ini_set('default_socket_timeout', 20);
@@ -274,17 +275,20 @@ define( 'GS_LOG_LEVEL', constant('GS_LOG_'.$LOG_LEVEL) );
 
 
 
-# include gettext functions here because conf.php is included
-# in every file
-include_once( GS_DIR .'inc/gettext.php' );
-# logger:
-include_once( GS_DIR .'inc/log.php' );
-
-
 if (function_exists('date_default_timezone_set')) {
 	# PHP >= 5.1.0
 	# needed by date() and other functions
 	@date_default_timezone_set( @date_default_timezone_get() );
 }
+
+# logger and error handler:
+require_once( GS_DIR .'inc/util.php' );
+set_error_handler('err_handler_die_on_err');
+ini_set('display_errors', false);
+
+# include gettext functions here because conf.php is included
+# in every file
+include_once( GS_DIR .'inc/gettext.php' );
+
 
 ?>
