@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 402); // = 0.04.02
+define('YADB_VERS', 403); // = 0.04.03
 
 /***********************************************************
 * Columns flags:
@@ -660,6 +660,13 @@ class YADB_Connection
 				$rs = $this->_execute( $sql, $inputArr );
 		} else
 			$rs = $this->_execute( $sql );
+		
+		if (is_array($rs->_row)) {
+			if (count($rs->_row) < $rs->_numCols) {
+				trigger_error( 'YADB: Non-unique column names in a query are not supported. Fix your query.', E_USER_WARNING );
+			}
+		}
+		
 		return $rs;
 	}
 	
