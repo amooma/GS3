@@ -105,4 +105,7 @@
 
   <xi:include href="installation-centos.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="installation-debian.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 </section>
