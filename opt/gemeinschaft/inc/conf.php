@@ -42,9 +42,12 @@ if (! defined('E_STRICT'           )) define('E_STRICT           ', 2048);
 # since PHP 5.2:
 if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 4096);
 
-#  available since PHP 4.4.0 and 5.0.5:
-if (! defined('PHP_INT_MAX' )) define('PHP_INT_MAX' , 2147483647);
+# available since PHP 4.4.0 and 5.0.5:
 if (! defined('PHP_INT_SIZE')) define('PHP_INT_SIZE', 4);
+if (! defined('PHP_INT_MAX' )) define('PHP_INT_MAX' , 2147483647);
+# not available by default:
+if (! defined('PHP_INT_MIN' )) define('PHP_INT_MIN' , (int)(PHP_INT_MAX+1));
+
 
 # override mbstring settings from php.ini
 #
