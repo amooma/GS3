@@ -39,6 +39,8 @@ defined('GS_VALID') or die('No direct access.');
 
 # the E_STRICT error level (and constant) was introduced in PHP 5:
 if (! defined('E_STRICT'           )) define('E_STRICT           ', 2048);
+# since PHP 5.2:
+if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 4096);
 
 #  available since PHP 4.4.0 and 5.0.5:
 if (! defined('PHP_INT_MAX' )) define('PHP_INT_MAX' , 2147483647);
