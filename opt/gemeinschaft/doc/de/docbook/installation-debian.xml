@@ -112,7 +112,7 @@ sipsak 0.9.6  by Nils Ohlmeier
 mysql  Ver 14.12 Distrib 5.0.32, for pc-linux-gnu (i486) using readline 5.2</screen></para>
 
     <para>Dann MySQL als Master einrichten<footnoteref
-    linkend="footnote-mysql-replikation" />, siehe <xref
+    linkend="install-debian-footnote-mysql-replikation" />, siehe <xref
     linkend="mysql-replikation" />.</para>
 
     <para>Auf den MySQL-Master muß von allen Rechnern aus zugegriffen werden
@@ -253,7 +253,7 @@ zlib
     <xref linkend="php-sicherheit" /> beschrieben vornehmen.</para>
 
     <para>Danach MySQL als Client einrichten<footnote
-        id="footnote-mysql-replikation">
+        id="install-debian-footnote-mysql-replikation">
         <para>bzw. falls alles auf <emphasis>einem</emphasis> Server laufen
         soll muß die Master-Client-Replikation natürlich nicht eingerichtet
         werden</para>
