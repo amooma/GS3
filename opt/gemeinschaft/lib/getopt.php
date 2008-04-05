@@ -25,7 +25,7 @@
  * @author Andrei Zmievski <andrei@php.net>
  *
  */
-class Console_Getopt {
+//class Console_Getopt {
 	/**
 	 * Parses the command-line options.
 	 *
@@ -62,7 +62,7 @@ class Console_Getopt {
 	 * @access public
 	 *
 	 */
-	function getopt( $args, $short_options, $long_options = null, $cliHelp=null )
+	function Console_Getopt_getopt( $args, $short_options, $long_options = null, $cliHelp=null )
 	{
 		// in case you pass directly readPHPArgv() as the first arg
 		if (Getopt_isError($args)) return $args;
@@ -91,11 +91,11 @@ class Console_Getopt {
 				$non_opts = array_merge($non_opts, array_slice($args, $i));
 				break;
 			} elseif (strlen($arg) > 1 && $arg{1} == '-') {
-				$error = Console_Getopt::_parseLongOption(substr($arg, 2), $long_options, $opts, $args);
+				$error = _Console_Getopt_parseLongOption(substr($arg, 2), $long_options, $opts, $args);
 				if (Getopt_isError($error))
 					handleGetOptError( $error, $short_options, $long_options, $cliHelp );
 			} else {
-				$error = Console_Getopt::_parseShortOption(substr($arg, 1), $short_options, $opts, $args);
+				$error = _Console_Getopt_parseShortOption(substr($arg, 1), $short_options, $opts, $args);
 				if (Getopt_isError($error))
 					handleGetOptError( $error, $short_options, $long_options, $cliHelp );
 			}
@@ -107,7 +107,7 @@ class Console_Getopt {
 	/**
 	 * @access private
 	 */
-	function _parseShortOption($arg, $short_options, &$opts, &$args)
+	function _Console_Getopt_parseShortOption( $arg, $short_options, &$opts, &$args )
 	{
 		for ($i = 0; $i < strlen($arg); $i++) {
 			$opt = $arg{$i};
@@ -145,7 +145,7 @@ class Console_Getopt {
 	/**
 	 * @access private
 	 */
-	function _parseLongOption($arg, $long_options, &$opts, &$args)
+	function _Console_Getopt_parseLongOption( $arg, $long_options, &$opts, &$args )
 	{
 		@list($opt, $opt_arg) = explode('=', $arg);
 		$opt_len = strlen($opt);
@@ -198,7 +198,7 @@ class Console_Getopt {
 	* @access public
 	* @return mixed the $argv PHP array or PEAR error if not registered
 	*/
-	function readPHPArgv()
+	function Console_Getopt_readPHPArgv()
 	{
 		global $argv;
 		if (!is_array($argv)) {
@@ -211,8 +211,8 @@ class Console_Getopt {
 		}
 		return $argv;
 	}
-
-}
+	
+//}
 
 
 
@@ -275,11 +275,11 @@ function getOptsNoMultiples( $short, $long, $cliHelp=null )
 	if (! is_array($long )) $long = array();
 	array_push( $long, 'help' );
 	
-	$args = Console_Getopt::readPHPArgv();
+	$args = Console_Getopt_readPHPArgv();
 	$opts = array();
 	if (! Getopt_isError($args)) {
 		unset($args[0]);
-		$o = Console_Getopt::getopt( $args, $short, $long, $cliHelp );
+		$o = Console_Getopt_getopt( $args, $short, $long, $cliHelp );
 		if (is_array($o[0])) {
 			foreach ($o[0] as $oo) {
 				$optName = $oo[0];
@@ -304,11 +304,11 @@ function getOptsMultiples( $short, $long, $cliHelp=null )
 	if (! is_array($long )) $long = array();
 	array_push( $long, 'help' );
 	
-	$args = Console_Getopt::readPHPArgv();
+	$args = Console_Getopt_readPHPArgv();
 	$opts = array();
 	if (! Getopt_isError($args)) {
 		unset($args[0]);
-		$o = Console_Getopt::getopt( $args, $short, $long, $cliHelp );
+		$o = Console_Getopt_getopt( $args, $short, $long, $cliHelp );
 		if (is_array($o[0])) {
 			foreach ($o[0] as $oo) {
 				if (subStr($oo[0],0,2)=='--') $oo[0] = subStr($oo[0],2);
