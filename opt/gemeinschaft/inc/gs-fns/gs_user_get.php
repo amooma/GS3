@@ -57,7 +57,7 @@ function gs_user_get( $user )
 	`u`.`id`, `u`.`user`, `u`.`pin`, `u`.`email`,
 	`u`.`lastname`, `u`.`firstname`, `u`.`honorific`, `u`.`nobody_index`,
 	`s`.`name` `ext`, `s`.`callerid`, `s`.`mailbox`,
-	`h`.`id`, `host_id`, `h`.`host`
+	`h`.`id` `host_id`, `h`.`host`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) LEFT JOIN
