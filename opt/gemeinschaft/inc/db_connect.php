@@ -62,10 +62,10 @@ function & gs_db_master_connect()
 	&&  method_exists($gs_db_conn_master, 'isConnected')
 	&&  $gs_db_conn_master->isConnected())
 	{
-		gs_log( GS_LOG_DEBUG, 'Using the existing master DB connection '. $caller_info );
+		gs_log( GS_LOG_DEBUG, 'Using the existing master DB connection'. $caller_info );
 		return $gs_db_conn_master;
 	}
-	gs_log( GS_LOG_DEBUG, 'Opening a new master DB connection '. $caller_info );
+	gs_log( GS_LOG_DEBUG, 'Opening a new master DB connection'. $caller_info );
 	
 	if (!( $db = YADB_newConnection( 'mysql' ) )) {
 		$null = null;
@@ -110,10 +110,10 @@ function & gs_db_slave_connect()
 	&&  method_exists($gs_db_conn_slave, 'isConnected')
 	&&  $gs_db_conn_slave->isConnected())
 	{
-		gs_log( GS_LOG_DEBUG, 'Using the existing slave DB connection '. $caller_info );
+		gs_log( GS_LOG_DEBUG, 'Using the existing slave DB connection'. $caller_info );
 		return $gs_db_conn_slave;
 	}
-	gs_log( GS_LOG_DEBUG, 'Opening a new slave DB connection '. $caller_info );
+	gs_log( GS_LOG_DEBUG, 'Opening a new slave DB connection'. $caller_info );
 	
 	if (!( $db = YADB_newConnection( 'mysql' ) )) {
 		$null = null;
