@@ -87,7 +87,7 @@ ini_set('soap.wsdl_cache_enabled', true);
 ini_set('soap.wsdl_cache_ttl', 86400);
 ob_implicit_flush(0);
 set_magic_quotes_runtime(0);
-set_time_limit(35);
+set_time_limit(65);
 
 
 # our root directory
