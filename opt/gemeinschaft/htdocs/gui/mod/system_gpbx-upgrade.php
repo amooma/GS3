@@ -134,11 +134,13 @@ if (@$_POST['action'] === 'upgrade'
 	
 	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
 	
+	/*
 	if (strToLower(trim(@shell_exec( 'file '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null | grep -i -o tar 2>>/dev/null' ))) !== 'tar') {
 		echo 'Fehlerhafter Dateityp. (tar erwartet.)';
 		@exec( 'sudo rm -rf '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null' );
 		return;
 	}
+	*/
 	
 	$gpbx_upgrade_cs_md5 = null;
 	if (preg_match('/^\s*gpbx_upgrade_cs_md5\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
@@ -274,7 +276,8 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 	
 	set_time_limit(20+30);
 	$err=0; $out=array();
-	@exec( 'curl -s -S -I -m 20 --retry 0 -f -k -L --max-redirs 5 -A '. qsa('GPBX') .' -H '. qsa('Accept: application/x-tar;q=1.0, application/tar;q=0.9, application/octet-stream;q=0.8, */*;q=0.1') .' '. qsa($gpbx_upgrade_file) .' 2>&1', $out, $err );
+	//@exec( 'curl -s -S -I -m 20 --retry 0 -f -k -L --max-redirs 5 -A '. qsa('GPBX') .' -H '. qsa('Accept: application/x-tar;q=1.0, application/tar;q=0.9, application/octet-stream;q=0.8, */*;q=0.1') .' '. qsa($gpbx_upgrade_file) .' 2>&1', $out, $err );
+	@exec( 'curl -s -S -I -m 20 --retry 0 -f -k -L --max-redirs 5 -A '. qsa('GPBX') .' -H '. qsa('Accept: */*') .' '. qsa($gpbx_upgrade_file) .' 2>&1', $out, $err );
 	set_time_limit(30);
 	$out = implode("\n", $out);
 	if ($err !== 0) {
@@ -287,6 +290,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 	if (preg_match( '/^\s*Content-Type:\s*([a-z0-9\-_]+\/[a-z0-9\-_]+)/mi', $out, $m)) {
 		$content_type = $m[1];
 	}
+	/*
 	if (! in_array($content_type, array(
 		'application/x-tar'  , 'application/tar'  ,
 		'application/x-gtar' , 'application/gtar' ,
@@ -296,6 +300,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 		echo sPrintF('Fehlerhafter Content-Type. &quot;%s&quot; erwartet, &quot;%s&quot; erhalten', 'application/x-tar', htmlEnt($m[1])) ,'<br />' ,"\n";
 		return;
 	}
+	*/
 	
 	if (! preg_match('/^\s*Content-Length:\s*([0-9]+)/mi', $out, $m)) {
 		echo 'Fehler beim Abfragen der Dateigr&ouml;&szlig;e per HTTP HEAD.' ,'<br />',"\n";
