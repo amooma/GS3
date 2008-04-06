@@ -60,11 +60,11 @@ ini_set('session.use_cookies', 1);
 ini_set('session.use_only_cookies', 0);
 ini_set('session.use_trans_sid', 0);
 ini_set('session.hash_function', 1);
-ini_set('session.hash_bits_per_character', 6);
+ini_set('session.hash_bits_per_character', 5);
 if (version_compare(phpVersion(), '5.2.0', '>='))
-	session_set_cookie_params( 0, GS_URL_PATH, '', true, true );
+	session_set_cookie_params( 0, GS_URL_PATH, '', false, false );
 else
-	session_set_cookie_params( 0, GS_URL_PATH, '', true );
+	session_set_cookie_params( 0, GS_URL_PATH, '', false );
 session_name('gemeinschaft');
 session_start();
 
