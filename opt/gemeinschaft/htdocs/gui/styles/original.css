@@ -178,6 +178,7 @@ body, input, select, table, td {
 #boxtitle h1 {
 	color: #fff;
 	font-size: 20px;
+	font-weight: normal;
 	line-height: 1.6em;
 	display: inline;
 	margin: 0;
