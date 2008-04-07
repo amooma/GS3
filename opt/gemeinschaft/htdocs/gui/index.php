@@ -212,7 +212,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 			echo '</div>' ,"\n";
 			break;
 		default    :
-			echo '<img alt=" " src="', GS_URL_PATH ,'crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />' ,"\n";
+			echo '<img alt=" " src="', GS_URL_PATH ,'img/gemeinschaft-32.png" class="fl" />' ,"\n";
 			//echo '<h1>', __('Telefon-Manager') ,'</h1>' ,"\n";
 			echo '<h1>', 'Gemeinschaft' ,'</h1>' ,"\n";
 	}
