@@ -360,6 +360,6 @@ if (file_exists( $file )) {
 </div>
 
 <div class="nofloat"></div>
-<div id="copyright">&copy; <a target="_blank" href="http://www.amooma.de/"><img alt="amooma" src="<?php echo GS_URL_PATH; ?>img/amooma.png" /></a></div>
+<div id="copyright"><a target="_blank" href="http://www.amooma.de/"><img alt="&copy; amooma" src="<?php echo GS_URL_PATH; ?>img/amooma-c.gif" /></a></div>
 </body>
 </html>
