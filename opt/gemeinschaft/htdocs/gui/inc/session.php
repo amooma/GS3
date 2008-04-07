@@ -66,6 +66,10 @@ if (version_compare(phpVersion(), '5.2.0', '>='))
 else
 	session_set_cookie_params( 0, GS_URL_PATH, '', false );
 session_name('gemeinschaft');
+$_REQUEST['gemeinschaft'] = preg_replace('[^0-9a-zA-Z\-,]', '', @$_REQUEST['gemeinschaft']);
+$_COOKIE['gemeinschaft']  = preg_replace('[^0-9a-zA-Z\-,]', '', @$_COOKIE['gemeinschaft']);
+if ($_REQUEST['gemeinschaft'] == '') unset($_REQUEST['gemeinschaft']);
+if ($_COOKIE['gemeinschaft']  == '') unset($_COOKIE['gemeinschaft']);
 session_start();
 
 
