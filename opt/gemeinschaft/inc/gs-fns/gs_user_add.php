@@ -35,8 +35,8 @@ defined('GS_VALID') or die('No direct access.');
 
 function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, $email )
 {
-	if (! preg_match( '/^[a-zA-Z0-9]+$/', $user ))
-		return new GsError( 'User must be alphanumeric.' );
+	if (! preg_match( '/^[a-z0-9\-_]+$/', $user ))
+		return new GsError( 'User must be lowercase alphanumeric.' );
 	if (in_array($user, array('sysadmin', 'admin', 'root', 'setup', 'my', 'gemeinschaft'), true))
 		return new GsError( sPrintF('"%s" is a reserved username.', $user) );
 	
