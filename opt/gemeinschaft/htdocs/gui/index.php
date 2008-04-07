@@ -221,6 +221,17 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <div class="tty"><a href="#a-content"><?php echo __('Navigation &uuml;berspringen'); /*//TRANSLATE ME*/ ?></a></div>
 
 <?php
+	if (@$_SESSION['login_ok']) {
+		if (@$_SESSION['sudo_user']['name'] === 'sysadmin'
+		|| (@$_SESSION['sudo_user']['name'] != ''
+		&&  preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
+		)) {
+			if (! in_array($SECTION, array('logout'), true)) {
+				echo '<a href="', gs_url('system', 'shutdown') ,'" title="', __('Auschalten / Neustarten ...') ,'" class="fr" style="display:block; margin:1px 6px;"><img alt="', __('Ausschalten ...') ,'" src="', GS_URL_PATH ,'img/power.png" /></a>' ,"\n";
+			}
+		}
+	}
+	
 	$langs = explode(',', gs_get_conf('GS_GUI_LANGS'));
 	if (count($langs) > 1) {
 		echo '<div id="langs">' ,"\n";
@@ -232,16 +243,6 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 			echo '<img alt="', @$l[2] ,'" src="', GS_URL_PATH ,'img/lang/', @$l[1] ,'.png" /></a>' ,"\n";
 		}
 		echo '</div>' ,"\n";
-	}
-	if (@$_SESSION['login_ok']) {
-		if (@$_SESSION['sudo_user']['name'] === 'sysadmin'
-		|| (@$_SESSION['sudo_user']['name'] != ''
-		&&  preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
-		)) {
-			if (! in_array($SECTION, array('logout'), true)) {
-				echo '<a href="', gs_url('system', 'shutdown') ,'" title="', __('Auschalten / Neustarten ...') ,'" class="fr" style="display:block; margin:1px 6px;"><img alt="', __('Ausschalten ...') ,'" src="', GS_URL_PATH ,'img/power.png" /></a>' ,"\n";
-			}
-		}
 	}
 ?>
 </div>
