@@ -1,21 +1,39 @@
 /* $Revision$ */
 
+body {
+	background: #fff;
+}
+
 #topheader {
-	height: 4px;
+	height: 1px;
 	background: #000;
 }
 
 #headerboxes {
-	background: #00e;
-	border-top: 1px solid #33f;
-	border-bottom: 1px solid #00b;
+	background: #00f;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #99f #004 #004 #66f;
 }
 
 .sidebar, #sudo-bar {
-	border-top: 1px solid #030;
+	border-top: 1px solid #eee;
+}
+#sudo-bar {
+	border-bottom: 1px solid #ccf;
 }
 
 #sudo-info .user-name {
 	color: #090;
+}
+
+.sidebar,
+#sudo-bar {
+	background: #ddf;
+}
+
+#content {
+	background: #fff;
+	min-height: 347px;
 }
 
