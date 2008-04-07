@@ -194,7 +194,16 @@ body, input, select, table, td {
 }
 */
 
-
+#langs {
+	float: right;
+	margin-right: 5px;
+	margin-top: 1px;
+	width: 25%;
+	text-align: right;
+}
+#langs img {
+	margin: 1px 1px 0 1px;
+}
 
 #sudo-bar {
 	background: #e0e0e0;
