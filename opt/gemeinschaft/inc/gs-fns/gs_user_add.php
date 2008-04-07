@@ -37,6 +37,9 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 {
 	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
+	if (in_array($user, array('sysadmin', 'admin', 'root'), true))
+		return new GsError( sPrintF('"%s" is a reserved username.', $user) );
+	
 	if (! preg_match( '/^[1-9][0-9]{1,9}$/', $ext ))
 		return new GsError( 'Please use 2-10 digit extension.' );
 	if (! preg_match( '/^[\d]+$/', $pin ))
