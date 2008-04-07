@@ -203,7 +203,7 @@ if (! file_exists($step_file)) {
 			echo '</div>' ,"\n";
 			break;
 		default    :
-			echo '<img alt=" " src="', GS_URL_PATH ,'crystal-svg/32/app/yast_PhoneTTOffhook.png" class="fl" />' ,"\n";
+			echo '<img alt=" " src="', GS_URL_PATH ,'img/gemeinschaft-32.png" class="fl" />' ,"\n";
 			echo '<h1>', 'Gemeinschaft' ,' ', 'Setup' ,'</h1>' ,"\n";
 	}
 ?>
