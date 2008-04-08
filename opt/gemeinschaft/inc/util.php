@@ -28,6 +28,16 @@
 
 defined('GS_VALID') or die('No direct access.');
 
+
+function gs_file_get_contents( $file )
+{
+	if (@file_exists($file)) {
+		return @file_get_contents($file);
+	}
+	return false;
+}
+
+
 include_once( GS_DIR .'inc/quote_shell_arg.php' );
 # scripts which include util.php may rely on log.php being included here
 
