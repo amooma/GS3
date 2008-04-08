@@ -267,6 +267,10 @@ $MODULES['system'   ]['sub'][
 $MODULES['system'   ]['sub'][
       'gpbx-b410p']  =  array('title' => __('ISDN-Ports (BRI)'));//TRANSLATE ME
 }
+if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+$MODULES['system'   ]['sub'][
+      'asterisk-log']=  array('title' => __('Asterisk-Log'));   //TRANSLATE ME
+}
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
 $MODULES['system'   ]['sub'][
       'gpbx-upgrade']=  array('title' => __('Upgrade'));        //TRANSLATE ME
