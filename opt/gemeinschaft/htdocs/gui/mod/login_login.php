@@ -31,7 +31,8 @@ defined('GS_VALID') or die('No direct access.');
 
 
 if (gs_get_conf('GS_INSTALLATION_TYPE') === 'gpbx') {
-	if (trim(@file_get_contents('/mnt/userdata/upgrades/upgrade-avail')) === 'yes') {
+	if (file_exists('/mnt/userdata/upgrades/upgrade-avail')
+	&&  trim(@file_get_contents('/mnt/userdata/upgrades/upgrade-avail')) === 'yes') {
 		echo '<p align="center" style="font-size:0.94em; margin:0 auto 0.5em auto; padding:0.5em; border:1px solid #fd9; background:#ffc; color:#444; line-height:1em;">';
 		echo __('Ein Software-Upgrade ist verf&uuml;gbar. F&uuml;r mehr Informationen bitte mit dem Administrator-Account anmelden.');
 		echo '</p>' ,"\n";
