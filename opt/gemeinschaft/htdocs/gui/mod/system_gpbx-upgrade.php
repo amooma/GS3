@@ -180,7 +180,7 @@ if (@$_POST['action'] === 'upgrade'
 	if ($err !== 0) {
 		echo '<p class="text">', 'Bei der Vorbereitung des Upgrades ist ein Fehler aufgetreten.' ,'</p>' ,"\n";
 	} else {
-		echo '<p class="text"><big><b>', 'Das Upgrade wird nun installiert.<br />Bitte haben Sie Geduld!<br />Unterbrechen Sie keinesfalls die Stromzufuhr!' ,'</b></big></p>' ,"\n";
+		echo '<p class="text"><big><b>', 'Das Upgrade wird nun installiert.<br />Bitte haben Sie Geduld!<br />Unterbrechen Sie keinesfalls die Stromzufuhr!<br />Das Upgrade dauert ca. 15 Minuten.' ,'</b></big></p>' ,"\n";
 	}
 	
 	$err=0; $out=array();
@@ -431,7 +431,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 		echo '<p><a target="_blank" href="', htmlEnt($gpbx_upgrade_descr_url) ,'">', 'Weitere Informationen' ,'</a></p>' ,"\n";
 	}
 	
-	echo '<p class="text" style="background:#ffc; border:2px solid #fea; padding:0.5em; line-height:1.1em;">', '<b>Hinweis</b>: W&auml;hrend der Installation eines Upgrades darf die Stromzufuhr der GPBX nicht unterbrochen werden, sonst wird das System zerst&ouml;rt! Betreiben Sie die GPBX am besten an einer USV (Unterbrechungsfreie Strom-Versorgung). Die Installation erfolgt auf eigene Gefahr. Ihre Einstellungen und Daten werden nach M&ouml;glichkeit in das neue System &uuml;bernommen, dies kann jedoch nicht garantiert werden.' ,'</p>' ,"\n";
+	echo '<p class="text" style="background:#ffc; border:2px solid #fea; padding:0.5em; line-height:1.1em;">', '<b>Hinweis</b>: W&auml;hrend der Installation eines Upgrades darf die Stromzufuhr der GPBX nicht unterbrochen werden, sonst wird das System zerst&ouml;rt! Betreiben Sie die GPBX am besten an einer USV (Unterbrechungsfreie Strom-Versorgung). Die Installation erfolgt auf eigene Gefahr. Ihre Einstellungen und Daten werden nach M&ouml;glichkeit in das neue System &uuml;bernommen, dies kann jedoch nicht garantiert werden. Das Upgrade dauert ca. 15 Minuten.' ,'</p>' ,"\n";
 	
 	echo '<form method="post" action="', GS_URL_PATH ,'">' ,"\n";
 	echo gs_form_hidden($SECTION, $MODULE);
