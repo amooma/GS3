@@ -57,6 +57,13 @@ echo '</h2>', "\n";
 echo '<h2>', __('Willkommen'), ', ', htmlEnt( $_SESSION['sudo_user']['info']['firstname'] .' '. $_SESSION['sudo_user']['info']['lastname'] ), '!</h2>', "\n";
 
 if ($_SESSION['sudo_user']['name'] === 'sysadmin') {
+	echo '<br />', "\n";
+	$installed_gpbx_vers = trim(@gs_file_get_contents( '/etc/gemeinschaft/.gpbx-version' ));
+	$installed_gs_vers   = trim(@gs_file_get_contents( '/etc/gemeinschaft/.gemeinschaft-version' ));
+	if ($installed_gs_vers != '')
+		echo '<small>Gemeinschaft version ', htmlEnt($installed_gs_vers) ,'</small><br />' ,"\n";
+	if ($installed_gpbx_vers != '')
+		echo '<small>GPBX version ', htmlEnt($installed_gpbx_vers) ,'</small><br />' ,"\n";
 	echo '<br /><br /><br /><br />', "\n";
 	echo '<a href="', gs_get_conf('GS_URL_PATH'),'setup/">', 'zum Setup' ,'</a><br />' ,"\n";
 	return;
