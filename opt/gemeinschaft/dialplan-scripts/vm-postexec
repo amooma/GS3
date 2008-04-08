@@ -106,7 +106,7 @@ foreach ($files as $filename) {
 	$info['fld' ] =          @$tmp[0];
 	$info['file'] = baseName(@$tmp[1],'.txt');
 	
-	$tmp = @file_get_contents( $filename );
+	$tmp = @gs_file_get_contents( $filename );
 	$about = array();
 	preg_match_all('/^([a-z]+) *= *([^\n\r]*)/mS', $tmp, $m, PREG_SET_ORDER);
 	foreach ($m as $arr) {
