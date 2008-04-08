@@ -86,7 +86,7 @@ function binary_to_hex( $str )
 */
 
 
-$data = @file_get_contents($leases_file);
+$data = @gs_file_get_contents($leases_file);
 
 echo "<pre>";
 $leases = array();
