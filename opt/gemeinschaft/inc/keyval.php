@@ -65,7 +65,6 @@ function gs_keyval_dec( $str )
 function gs_keyval_get( $key )
 {
 	if (! gs_keyval_is_valid_key($key)) return null;
-	//return rawUrlDecode(trim((string)@file_get_contents( '/var/lib/gemeinschaft/vars/'.$key )));
 	$err=0; $out=array();
 	@exec( 'sudo cat '. qsa('/var/lib/gemeinschaft/vars/'.$key) .' 2>>/dev/null', $out, $err );
 	return ($err===0 ? gs_keyval_dec(implode('',$out)) : '');
