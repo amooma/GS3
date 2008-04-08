@@ -271,12 +271,14 @@ if ($action === 'save') {
 		} else {
 			# is name
 			$addr = preg_replace('[^a-z0-9.\-_]', '', strToLower($addr));
+			/*
 			$addrs = getHostByNameL( $addr );
 			if (! is_array($addrs) || count($addrs) < 1) {
 				$errmsg = 'NTP-Server-Adresse kann nicht aufgel&ouml;st werden!';
 				return GS_VALIDATION_WARN;
 				# might be resolvable with the new network settings
 			}
+			*/
 		}
 		return GS_VALIDATION_OK;
 	}
