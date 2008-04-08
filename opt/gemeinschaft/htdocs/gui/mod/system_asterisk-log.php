@@ -44,7 +44,7 @@ echo "<br />\n";
 
 echo '<b>', 'tail -n 250 /var/log/asterisk/messages' ,'</b>' ,"\n";
 $err=0; $out=array();
-@exec( 'sudo tail -n 250 /var/log/asterisk/messages 2>>/dev/null', $out, $err );
+@exec( 'sudo tail -n 250 /var/log/asterisk/messages 2>>/dev/null | grep -v -i '. qsa('Empty Extension') .' 2>>/dev/null', $out, $err );
 if ($err !== 0) {
 	echo '-';
 	return;
