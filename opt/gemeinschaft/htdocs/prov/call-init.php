@@ -349,8 +349,10 @@ if ($user_is_on_this_host) {
 	
 	# the Asterisk of this user and the web server both run on this host
 	
-	$ok = @ rename( $filename, $spoolfile );
-	if ($ok < 1) {
+	//$ok = @ rename( $filename, $spoolfile );
+	$err=0; $out=array();
+	@ exec( 'sudo mv '. qsa($filename) .' '. qsa($spoolfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+	if ($err !== 0) {
 		@ unlink( $filename );
 		gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"' );
 		die_error( 'Failed to move call file.' );
