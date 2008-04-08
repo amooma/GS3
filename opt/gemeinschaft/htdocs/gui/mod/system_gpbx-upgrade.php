@@ -66,6 +66,13 @@ function _upgrade_info_decode_val( $str )
 
 
 
+$installed_gpbx_vers = @gs_file_get_contents( $gpbx_userdata .'gpbx/gpbx-version' );
+$installed_gs_vers   = @gs_file_get_contents( $gpbx_userdata .'gpbx/gemeinschaft-version' );
+echo "\n";
+echo '<!-- installed gpbx version: ', preg_replace('/[\-]{2,}/', '-', htmlEnt($installed_gpbx_vers)) ,' -->' ,"\n";
+echo '<!-- installed gemeinschaft version: ', preg_replace('/[\-]{2,}/', '-', htmlEnt($installed_gs_vers)) ,' -->' ,"\n";
+echo "\n";
+
 
 
 # set auto-check?
