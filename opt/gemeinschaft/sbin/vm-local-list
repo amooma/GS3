@@ -50,7 +50,7 @@ foreach ($files as $filename) {
 	$info['fld' ] = @$tmp[1];
 	$info['file'] = baseName(@$tmp[2],'.txt');
 	
-	$msg = @file_get_contents( $filename );
+	$msg = @gs_file_get_contents( $filename );
 	
 	preg_match('/^callerid\s*=\s*(.*)/mS', $msg, $m);
 	$cid = @$m[1];
