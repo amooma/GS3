@@ -493,7 +493,7 @@ if ($action === 'save') {
 		$tpl_file = '/var/lib/gemeinschaft/setup/etc-network-interfaces-tpl';
 		$err=0; $out=array();
 		@exec( 'sudo chmod a+r '. qsa($tpl_file) .' 2>>/dev/null', $out, $err );
-		$tpl = file_get_contents($tpl_file);
+		$tpl = gs_file_get_contents($tpl_file);
 		$tpl = preg_replace('/\r\n?/', "\n", $tpl);
 		$tpl = trim(preg_replace('/^[ \t]*#[^\n]*\n?/m', '', $tpl));
 		$tpl = preg_replace('/\n{3,}/', "\n\n", $tpl);
@@ -525,7 +525,7 @@ if ($action === 'save') {
 		$tpl_file = '/var/lib/gemeinschaft/setup/etc-resolv.conf-tpl';
 		$err=0; $out=array();
 		@exec( 'sudo chmod a+r '. qsa($tpl_file) .' 2>>/dev/null', $out, $err );
-		$tpl = file_get_contents($tpl_file);
+		$tpl = gs_file_get_contents($tpl_file);
 		$tpl = preg_replace('/\r\n?/', "\n", $tpl);
 		$tpl = trim(preg_replace('/^[ \t]*#[^\n]*\n?/m', '', $tpl));
 		$tpl = preg_replace('/\n{3,}/', "\n\n", $tpl);
@@ -548,7 +548,7 @@ if ($action === 'save') {
 		$tpl_file = '/var/lib/gemeinschaft/setup/etc-default-ntp-tpl';
 		$err=0; $out=array();
 		@exec( 'sudo chmod a+r '. qsa($tpl_file) .' 2>>/dev/null', $out, $err );
-		$tpl = file_get_contents($tpl_file);
+		$tpl = gs_file_get_contents($tpl_file);
 		$tpl = preg_replace('/\r\n?/', "\n", $tpl);
 		$tpl = trim(preg_replace('/^[ \t]*#[^\n]*\n?/m', '', $tpl));
 		$tpl = preg_replace('/\n{3,}/', "\n\n", $tpl);
@@ -580,7 +580,7 @@ if ($action === 'save') {
 		$tpl_file = '/var/lib/gemeinschaft/setup/etc-ntp.conf-tpl';
 		$err=0; $out=array();
 		@exec( 'sudo chmod a+r '. qsa($tpl_file) .' 2>>/dev/null', $out, $err );
-		$tpl = file_get_contents($tpl_file);
+		$tpl = gs_file_get_contents($tpl_file);
 		$tpl = preg_replace('/\r\n?/', "\n", $tpl);
 		$tpl = trim(preg_replace('/^[ \t]*#[^\n]*\n?/m', '', $tpl));
 		$tpl = preg_replace('/\n{3,}/', "\n\n", $tpl);
@@ -604,7 +604,7 @@ if ($action === 'save') {
 		$tpl_file = '/var/lib/gemeinschaft/setup/etc-dhcp3-dhcpd.conf-tpl';
 		$err=0; $out=array();
 		@exec( 'sudo chmod a+r '. qsa($tpl_file) .' 2>>/dev/null', $out, $err );
-		$tpl = file_get_contents($tpl_file);
+		$tpl = gs_file_get_contents($tpl_file);
 		$tpl = preg_replace('/\r\n?/', "\n", $tpl);
 		$tpl = trim(preg_replace('/^[ \t]*#[^\n]*\n?/m', '', $tpl));
 		$tpl = preg_replace('/\n{3,}/', "\n\n", $tpl);

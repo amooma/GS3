@@ -89,7 +89,7 @@ if ($action === 'save') {
 
 
 if ($action === 'save' && ! $new_dhcp_daemon_start) {
-	$dhcpdconf = @file_get_contents( '/etc/dhcp3/dhcpd.conf' );
+	$dhcpdconf = @gs_file_get_contents( '/etc/dhcp3/dhcpd.conf' );
 	$dhcpdconf = preg_replace('/\r\n?/', "\n", $dhcpdconf);
 	$dhcpdconf = trim(preg_replace('/^[ \t]*#[^\n]*\n?/m', '', $dhcpdconf));
 	$dhcpdconf = preg_replace('/\n{3,}/', "\n\n", $dhcpdconf);
