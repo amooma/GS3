@@ -64,7 +64,7 @@ function ael_get_file_content( $file )
 	||  ! is_readable( $file )) {
 		return false;
 	}
-	$content = @file_get_contents( $file );
+	$content = @gs_file_get_contents( $file );
 	return is_string($content) ? $content : false;
 }
 
