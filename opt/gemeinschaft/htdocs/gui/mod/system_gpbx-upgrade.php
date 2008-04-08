@@ -132,7 +132,7 @@ if (@$_POST['action'] === 'upgrade'
 &&  file_exists($gpbx_userdata.'upgrades/upgrade-info')
 ) {
 	
-	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
+	$upgrade_info = @gs_file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
 	
 	/*
 	if (strToLower(trim(@shell_exec( 'file '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null | grep -i -o tar 2>>/dev/null' ))) !== 'tar') {
@@ -201,7 +201,7 @@ if (@$_POST['action'] === 'upgrade'
 # make sure to set upgrade-do to "no"
 #
 
-$upgrade_do_old = @file_get_contents($gpbx_userdata.'upgrades/upgrade-do');
+$upgrade_do_old = @gs_file_get_contents($gpbx_userdata.'upgrades/upgrade-do');
 if ($upgrade_do_old != 'no') {
 	@exec( 'sudo sh -c '. qsa('echo -n "no" > '. qsa($gpbx_userdata.'upgrades/upgrade-do') .' 2>>/dev/null') .' 2>>/dev/null', $out, $err );
 }
@@ -217,7 +217,7 @@ if (@$_POST['action'] === 'download-upgrade'
 &&  file_exists($gpbx_userdata.'upgrades/upgrade-info')
 ) {
 	
-	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
+	$upgrade_info = @gs_file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
 	/*$upgrade_info = '
 gpbx_upgrade_file      = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fimage.img
 gpbx_upgrade_size      = 260000000
@@ -342,7 +342,7 @@ if (file_exists('/tmp/gpbx-downloading-upgrade.pid')
 || (int)@shell_exec('sudo ps ax 2>>/dev/null | grep gpbx-upgrade-download | grep -v grep | wc -l') > 0) {
 	
 	echo '<br /><p>', 'Momentan wird ein Upgrade heruntergeladen.' ,'</p>' ,"\n";
-	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
+	$upgrade_info = @gs_file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
 	//$upgrade_info = ' gpbx_upgrade_size = 250420000 ';
 	if (preg_match('/^\s*gpbx_upgrade_size\s*=\s*([^\s]*)/m', $upgrade_info, $m)) {
 		$upgrade_size = (int)_upgrade_info_decode_val($m[1]);
@@ -384,7 +384,7 @@ if (file_exists($gpbx_userdata.'upgrades/dl/download')
 &&  file_exists($gpbx_userdata.'upgrades/upgrade-info')) {
 	
 	echo '<p>', 'Ein Upgrade wurde heruntergeladen.' ,'</p>' ,"\n";
-	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
+	$upgrade_info = @gs_file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
 	/*$upgrade_info = '
 gpbx_upgrade_file      = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fimage.img
 gpbx_upgrade_size      = 260000000
@@ -443,11 +443,11 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 # upgrade available?
 #
 
-if (trim(@file_get_contents($gpbx_userdata.'upgrades/upgrade-avail')) === 'yes'
+if (trim(@gs_file_get_contents($gpbx_userdata.'upgrades/upgrade-avail')) === 'yes'
 &&  file_exists($gpbx_userdata.'upgrades/upgrade-info')) {
 	
 	echo '<p>', 'Ein Upgrade ist verf&uuml;gbar.' ,'</p>' ,"\n";
-	$upgrade_info = @file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
+	$upgrade_info = @gs_file_get_contents($gpbx_userdata.'upgrades/upgrade-info');
 	/*$upgrade_info = '
 gpbx_upgrade_file      = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fimage.img
 gpbx_upgrade_size      = 260000000
@@ -504,7 +504,7 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 
 
 /*
-$gpbx_version = trim(@file_get_contents( '/etc/gemeinschaft/.gpbx-version' ));
+$gpbx_version = trim(@gs_file_get_contents( '/etc/gemeinschaft/.gpbx-version' ));
 echo '<p>Installierte GPBX-Version: ', ($gpbx_version != '' ? htmlEnt($gpbx_version) : '?') ,'</p>' ,"\n";
 */
 
@@ -518,7 +518,7 @@ echo '<p>Installierte GPBX-Version: ', ($gpbx_version != '' ? htmlEnt($gpbx_vers
 	echo 'Soll automatisch regelm&auml;&szlig;ig nach verf&uuml;gbaren Upgrades gesucht werden? (Dazu m&uuml;ssen Informationen &uuml;ber die momentan installierte Version und die Hardware &uuml;bermittelt werden.)';
 ?></p>
 <?php
-	$auto_check = trim(@file_get_contents( $gpbx_userdata.'upgrades/auto-check' ));
+	$auto_check = trim(@gs_file_get_contents( $gpbx_userdata.'upgrades/auto-check' ));
 ?>
 <input type="checkbox" name="auto_check" id="ipt-auto_check" value="1"<?php if ($auto_check === 'yes') echo ' checked="checked"'; ?> />
  <label for="ipt-auto_check"><?php echo 'Automatisch suchen'; ?></label><br />
