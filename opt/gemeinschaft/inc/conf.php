@@ -85,8 +85,17 @@ ini_set('html_errors', false);  # or else we'd have HTML in our log file for
 ini_set('tidy.clean_output', false);
 ini_set('soap.wsdl_cache_enabled', true);
 ini_set('soap.wsdl_cache_ttl', 86400);
-ob_implicit_flush(0);
+//ob_implicit_flush(false);  # do not set to false! breaks various things like
+                             # the #exec'ed scripts in asterisk conf files!
+ini_set('output_buffering', false);
+ini_set('output_handler', '');
+//if (extension_loaded('zlib')) {
+	//ini_set('zlib.output_compression', 'on');
+	//ini_set('zlib.output_compression_level', 5);
+	//ini_set('zlib.output_handler', '');
+//}
 set_magic_quotes_runtime(0);
+//set_include_path('.');
 set_time_limit(65);
 
 
