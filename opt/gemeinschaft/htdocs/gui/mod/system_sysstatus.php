@@ -95,7 +95,7 @@ if ($err===0) {
 if (file_exists('/proc/uptime') && file_exists('/proc/loadavg')) {
 	
 	echo '<h3>Uptime</h3>' ,"\n";
-	$out = trim(file_get_contents('/proc/uptime'));
+	$out = trim(gs_file_get_contents('/proc/uptime'));
 	$tmp = explode(' ', $out);
 	$uptime = (float)(@$tmp[0]);
 	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
@@ -104,7 +104,7 @@ if (file_exists('/proc/uptime') && file_exists('/proc/loadavg')) {
 	echo "</pre>\n";
 	
 	echo '<h3>Load average</h3>' ,"\n";
-	$out = trim(file_get_contents('/proc/loadavg'));
+	$out = trim(gs_file_get_contents('/proc/loadavg'));
 	$tmp = explode(' ', $out);
 	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
 	echo '<b>', number_format((float)@$tmp[0],2,'.','') ,'</b> (1 min)  ';
@@ -135,7 +135,7 @@ if (file_exists('/proc/uptime') && file_exists('/proc/loadavg')) {
 echo '<h3>MemInfo</h3>' ,"\n";
 if (file_exists('/proc/meminfo')) {
 	
-	$out = trim(file_get_contents('/proc/meminfo'));
+	$out = trim(gs_file_get_contents('/proc/meminfo'));
 	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
 	
 	//echo 'Physical', "\n";
@@ -205,7 +205,7 @@ if ($err===0) {
 echo '<h3>NetDev</h3>' ,"\n";
 if (file_exists('/proc/net/dev')) {
 	
-	$out = trim(file_get_contents('/proc/net/dev'));
+	$out = trim(gs_file_get_contents('/proc/net/dev'));
 	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
 	echo htmlEnt($out);
 	echo "\n</pre>\n";
