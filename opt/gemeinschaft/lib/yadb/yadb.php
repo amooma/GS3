@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 403); // = 0.04.03
+define('YADB_VERS', 404); // = 0.04.04
 
 /***********************************************************
 * Columns flags:
@@ -661,7 +661,7 @@ class YADB_Connection
 		} else
 			$rs = $this->_execute( $sql );
 		
-		if (is_array($rs->_row)) {
+		if (is_object($rs) && is_array($rs->_row)) {
 			if (count($rs->_row) < $rs->_numCols) {
 				$caller_info = '';
 				$bt = debug_backtrace();
