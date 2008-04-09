@@ -24,6 +24,7 @@ DefaultType text/html
 		php_flag allow_url_include Off
 		php_flag file_uploads On
 		php_value upload_max_filesize 4000000
+		php_flag always_populate_raw_post_data Off
 	</IfModule>
 	
 	<IfModule mod_php5.c>
@@ -45,6 +46,7 @@ DefaultType text/html
 		php_flag allow_url_include Off
 		php_flag file_uploads On
 		php_value upload_max_filesize 6000000
+		php_flag always_populate_raw_post_data Off
 	</IfModule>
 	
 	<IfModule !mod_php4.c>
