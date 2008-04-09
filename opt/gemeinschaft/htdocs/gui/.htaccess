@@ -19,6 +19,11 @@ DefaultType text/html
 		php_value max_execution_time 35
 		php_value mbstring.func_overload 0
 		php_value include_path .
+		php_flag define_syslog_variables Off
+		php_flag allow_url_fopen On
+		php_flag allow_url_include Off
+		php_flag file_uploads On
+		php_value upload_max_filesize 4000000
 	</IfModule>
 	
 	<IfModule mod_php5.c>
@@ -35,6 +40,11 @@ DefaultType text/html
 		php_value max_execution_time 35
 		php_value mbstring.func_overload 0
 		php_value include_path .
+		php_flag define_syslog_variables Off
+		php_flag allow_url_fopen On
+		php_flag allow_url_include Off
+		php_flag file_uploads On
+		php_value upload_max_filesize 6000000
 	</IfModule>
 	
 	<IfModule !mod_php4.c>
