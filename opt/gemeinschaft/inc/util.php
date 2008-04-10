@@ -149,6 +149,7 @@ function sec_to_hours( $sec )
 # cli scripts could use the return value of this to determine if
 # they want to pretty-print their output or otherwise use a parseable
 # output format
+/*
 function stdout_is_console()
 {
 	if (defined('STDOUT')) {
@@ -156,9 +157,11 @@ function stdout_is_console()
 		if ($s && @$s['dev'] === 11) {  # /dev/pts/0
 			return true;
 		}
+		# /dev/pts/0 might as well be device 10
 	}
 	return false;
 }
+*/
 
 
 ?>
