@@ -130,6 +130,23 @@ if (@$_REQUEST['action'] === 'abort-download') {
 
 
 
+# delete downloaded upgrade?
+#
+
+if (@$_POST['action'] === 'delete'
+&&  @$_POST['delete_confirmed'] === '1'
+) {
+	
+	@exec( 'sudo rm -rf '. qsa($gpbx_userdata.'upgrades/upgrade-info') .' 2>>/dev/null' );
+	@exec( 'sudo rm -rf '. qsa($gpbx_userdata.'upgrades/dl/download') .' 2>>/dev/null' );
+	@exec( 'sudo rm -rf '. qsa($gpbx_userdata.'upgrades/dl/update_script.sh') .' 2>>/dev/null' );
+	@exec( 'sudo sh -c '. qsa('echo -n "no" > '. qsa($gpbx_userdata.'upgrades/upgrade-avail') .' 2>>/dev/null') .' 2>>/dev/null' );
+	
+}
+
+
+
+
 # do upgrade?
 #
 
@@ -282,11 +299,11 @@ if (@$_POST['action'] === 'upload-upgrade'
 	echo " * \n"; @ob_flush(); @flush();
 	
 	$err=0;
-	@passThru('sudo sh -c '. qsa(sPrintF( $extract_file_cmd, qsa('./update_script.sh') ) .' 2>&1'), $err);
+	@passThru('sudo sh -c '. qsa(sPrintF( $extract_file_cmd, qsa('./dl/update_script.sh') ) .' 2>&1'), $err);
 	if ($err != 0) {
-		echo "<br />\nError while extracting ./update_script.sh .<br />\n";
+		echo "<br />\nError while extracting ./dl/update_script.sh .<br />\n";
 		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/dl/download' ) .' 2>>/dev/null');
-		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/update_script.sh' ) .' 2>>/dev/null');
+		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/dl/update_script.sh' ) .' 2>>/dev/null');
 		return;
 	}
 	echo " * \n"; @ob_flush(); @flush();
@@ -296,7 +313,7 @@ if (@$_POST['action'] === 'upload-upgrade'
 	if ($err != 0) {
 		echo "<br />\nError while extracting ./upgrade-info .<br />\n";
 		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/dl/download' ) .' 2>>/dev/null');
-		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/update_script.sh' ) .' 2>>/dev/null');
+		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/dl/update_script.sh' ) .' 2>>/dev/null');
 		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/upgrade-info' ) .' 2>>/dev/null');
 		return;
 	}
@@ -537,6 +554,15 @@ gpbx_upgrade_descr_url = http%3A%2F%2Fwww.amooma.de%2Fgpbx-upgrade%2Fchangelog-2
 	echo '<input type="checkbox" name="upgrade_confirmed" id="ipt-upgrade_confirmed" value="1" />' ,"\n";
 	echo '<label for="ipt-upgrade_confirmed">', 'Hinweis gelesen' ,'</label><br />' ,"\n";
 	echo '<input type="submit" value="', 'Upgrade durchf&uuml;hren' ,'" style="margin-top:5px; background:#fdd; color:#d00;" />' ,"\n";
+	echo '</form>' ,"\n";
+	
+	echo '<br />' ,"\n";
+	echo '<form method="post" action="', GS_URL_PATH ,'">' ,"\n";
+	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="action" value="delete" />' ,"\n";
+	echo '<input type="checkbox" name="delete_confirmed" id="ipt-delete_confirmed" value="1" />' ,"\n";
+	echo '<label for="ipt-delete_confirmed">', 'Runtergeladenes Upgrade l&ouml;schen' ,'</label><br />' ,"\n";
+	echo '<input type="submit" value="', 'L&ouml;schen' ,'" style="margin-top:5px; background:#fdd; color:#d00;" />' ,"\n";
 	echo '</form>' ,"\n";
 	
 	return;
