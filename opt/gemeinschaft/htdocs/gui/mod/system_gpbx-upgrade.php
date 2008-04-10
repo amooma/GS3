@@ -50,7 +50,7 @@ if (gs_get_conf('GS_INSTALLATION_TYPE') !== 'gpbx') {
 }
 
 $gpbx_userdata = '/mnt/userdata/';
-$disk_free_spare_mb = 50;   # MB, not MiB
+$disk_free_spare_mb = 10;   # MB, not MiB
 
 
 
@@ -211,6 +211,104 @@ if (@$_POST['action'] === 'upgrade'
 $upgrade_do_old = @gs_file_get_contents($gpbx_userdata.'upgrades/upgrade-do');
 if ($upgrade_do_old != 'no') {
 	@exec( 'sudo sh -c '. qsa('echo -n "no" > '. qsa($gpbx_userdata.'upgrades/upgrade-do') .' 2>>/dev/null') .' 2>>/dev/null', $out, $err );
+}
+
+
+
+
+# manual upload?
+#
+
+if (@$_POST['action'] === 'upload-upgrade'
+&&  ! file_exists('/tmp/gpbx-downloading-upgrade.pid')
+) {
+	
+	if (! defined('UPLOAD_ERR_NO_TMP_DIR')) define('UPLOAD_ERR_NO_TMP_DIR', 6);
+	if (! defined('UPLOAD_ERR_CANT_WRITE')) define('UPLOAD_ERR_CANT_WRITE', 7);
+	if (! defined('UPLOAD_ERR_EXTENSION' )) define('UPLOAD_ERR_EXTENSION' , 8);
+	
+	//print_r($_FILES);
+	if (! is_array(@$_FILES['upgrade-file'])) {
+		echo 'Error.';
+		return;
+	}
+	switch (@$_FILES['upgrade-file']['error']) {
+		case UPLOAD_ERR_NO_FILE:
+			echo 'No file was uploaded.'; break;
+		case UPLOAD_ERR_PARTIAL:
+			echo 'The file was only partially uploaded.'; break;
+		case UPLOAD_ERR_FORM_SIZE:
+		case UPLOAD_ERR_INI_SIZE:
+			echo 'The file exceeds the maximum size.'; break;
+		case UPLOAD_ERR_NO_TMP_DIR:
+			echo 'Temporary folder missing.'; break;
+		case UPLOAD_ERR_CANT_WRITE:
+			echo 'Failed to write file.'; break;
+		case UPLOAD_ERR_EXTENSION:
+			echo 'File upload stopped by extension.'; break;
+	}
+	if (@$_FILES['upgrade-file']['error'] !== UPLOAD_ERR_OK) {
+		return;
+	}
+	if ((int)@$_FILES['upgrade-file']['size'] < 1) {
+		echo 'File is empty.';
+		return;
+	}
+	
+	$disk_free_mb = (int)trim(@shell_exec( 'LANG=C df --block-size=1000000 '. qsa($gpbx_userdata.'upgrades/dl/') .' 2>>/dev/null | grep '. qsa(' /') .' | sed '. qsa('s/\s\s*/ /g') .' | cut -d '. qsa(' ') .' -f 4' ));
+	$gpbx_upgrade_size_mb = ceil((int)@$_FILES['upgrade-file']['size'] / 1000000);
+	if ($disk_free_mb < $gpbx_upgrade_size_mb + $disk_free_spare_mb) {
+		echo 'Zu wenig Speicherplatz. (weniger als '. round($gpbx_upgrade_size_mb + $disk_free_spare_mb) .' MB)';
+		return;
+	}
+	
+	$out = @shell_exec( 'file '. qsa(@$_FILES['upgrade-file']['tmp_name']) .' 2>>/dev/null' );
+	if (! preg_match('/tar/i', $out)) {
+		echo 'Invalid file type.';
+		return;
+	}
+	
+	echo 'Extracting ...' ,'<br />',"\n"; @ob_flush(); @flush();
+	set_time_limit(25*60);
+	$extract_file_cmd = 'cd '. qsa($gpbx_userdata.'upgrades/') .' && tar -x --overwrite --no-same-owner --mode=0666 -f '. qsa($_FILES['upgrade-file']['tmp_name']) .' %s 2>&1';
+	
+	$err=0;
+	@passThru('sudo sh -c '. qsa(sPrintF( $extract_file_cmd, qsa('./dl/download') ) .' 2>&1'), $err);
+	if ($err != 0) {
+		echo "<br />\nError while extracting ./dl/download .<br />\n";
+		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/dl/download' ) .' 2>>/dev/null');
+		return;
+	}
+	echo " * \n"; @ob_flush(); @flush();
+	
+	$err=0;
+	@passThru('sudo sh -c '. qsa(sPrintF( $extract_file_cmd, qsa('./update_script.sh') ) .' 2>&1'), $err);
+	if ($err != 0) {
+		echo "<br />\nError while extracting ./update_script.sh .<br />\n";
+		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/dl/download' ) .' 2>>/dev/null');
+		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/update_script.sh' ) .' 2>>/dev/null');
+		return;
+	}
+	echo " * \n"; @ob_flush(); @flush();
+	
+	$err=0;
+	@passThru('sudo sh -c '. qsa(sPrintF( $extract_file_cmd, qsa('./upgrade-info') ) .' 2>&1'), $err);
+	if ($err != 0) {
+		echo "<br />\nError while extracting ./upgrade-info .<br />\n";
+		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/dl/download' ) .' 2>>/dev/null');
+		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/update_script.sh' ) .' 2>>/dev/null');
+		@exec('sudo rm -rf '. qsa( $gpbx_userdata.'upgrades/upgrade-info' ) .' 2>>/dev/null');
+		return;
+	}
+	echo " * \n"; @ob_flush(); @flush();
+	
+	@exec( 'sudo sh -c '. qsa('echo -n "yes" > '. qsa($gpbx_userdata.'upgrades/upgrade-avail') .' 2>>/dev/null') .' 2>>/dev/null' );
+	echo " * \n"; @ob_flush(); @flush();
+	
+	sleep(1);
+	clearStatCache();
+	echo "Done extracting.<br />\n"; @ob_flush(); @flush();
+	
 }
 
 
@@ -520,7 +618,8 @@ echo '<p>Installierte GPBX-Version: ', ($gpbx_version != '' ? htmlEnt($gpbx_vers
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="set-auto-check" />
-<fieldset><legend><?php echo 'Automatisch suchen'; ?></legend>
+<fieldset style="background:#dfd; max-width:48em;">
+<legend style="font-weight:bold;"><?php echo 'Automatisch suchen'; ?></legend>
 <p class="text" style="margin-bottom:0; padding-bottom:1px;"><?php
 	echo 'Soll automatisch regelm&auml;&szlig;ig nach verf&uuml;gbaren Upgrades gesucht werden? (Dazu m&uuml;ssen Informationen &uuml;ber die momentan installierte Version und die Hardware &uuml;bermittelt werden.)';
 ?></p>
@@ -533,15 +632,31 @@ echo '<p>Installierte GPBX-Version: ', ($gpbx_version != '' ? htmlEnt($gpbx_vers
 </fieldset>
 </form>
 
-
+<br />
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="upgrade-check-now" />
-<fieldset><legend><?php echo 'Jetzt suchen'; ?></legend>
+<fieldset style="background:#dfd; max-width:48em;">
+<legend style="font-weight:bold;"><?php echo 'Jetzt suchen'; ?></legend>
 <p class="text" style="margin-bottom:0; padding-bottom:1px;"><?php
 	echo 'Jetzt nach verf&uuml;gbaren Upgrades suchen?';
 ?></p>
 <input type="submit" value="<?php echo 'Suchen'; ?>" style="margin-top:5px;" />
+</fieldset>
+</form>
+
+<br />
+<form method="post" action="<?php echo GS_URL_PATH; ?>" enctype="multipart/form-data">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<input type="hidden" name="action" value="upload-upgrade" />
+<fieldset style="background:#fdd; max-width:48em;">
+<legend style="font-weight:bold;"><?php echo 'Manuell'; ?></legend>
+<p class="text" style="margin-bottom:0; padding-bottom:1px;"><?php
+	echo 'Upgrade manuell einspielen.' ,' <span style="color:#e00;">(', 'Nur f&uuml;r Entwickler!' ,')</span>';
+?></p>
+<input type="hidden" name="MAX_FILE_SIZE" value="350000000" />
+Datei: <input type="file" name="upgrade-file" size="60" maxlength="350000000" style="font-size:10px;" /><br />
+<input type="submit" value="<?php echo 'Hochladen'; ?>" style="margin-top:5px;" />
 </fieldset>
 </form>
 
