@@ -25,8 +25,8 @@ DefaultType text/html
 		php_flag allow_url_fopen On
 		php_flag allow_url_include Off
 		php_flag file_uploads On
-		php_value upload_max_filesize 4000000
-		php_value post_max_size 6000000
+		#php_value upload_max_filesize 4000000
+		#php_value post_max_size 6000000
 		php_flag always_populate_raw_post_data Off
 	</IfModule>
 	
@@ -50,8 +50,8 @@ DefaultType text/html
 		php_flag allow_url_fopen On
 		php_flag allow_url_include Off
 		php_flag file_uploads On
-		php_value upload_max_filesize 6000000
-		php_value post_max_size 8000000
+		#php_value upload_max_filesize 6000000
+		#php_value post_max_size 8000000
 		php_flag always_populate_raw_post_data Off
 	</IfModule>
 	
