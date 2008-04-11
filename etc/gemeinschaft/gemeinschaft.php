@@ -409,7 +409,10 @@ $FAX_HYLAFAX_PASS       = 'a9bl2ue7';
 *    LOGGING
 ***********************************************************/
 
+$LOG_TO      = 'file';              # 'file'|'syslog'
 $LOG_LEVEL   = 'NOTICE';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
+
+# these settings affect only file logging:
 $LOG_FILE    = '/var/log/gemeinschaft/gs.log';
 $LOG_GMT     = true;                # use GMT or local time
 
