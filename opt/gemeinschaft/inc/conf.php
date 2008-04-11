@@ -99,6 +99,15 @@ set_magic_quotes_runtime(0);
 set_time_limit(65);
 
 
+# STDIN, STDOUT, STDERR
+#
+# http://bugs.php.net/bug.php?id=43283
+# http://bugs.centos.org/view.php?id=1633
+if (! defined('STDIN' )) define('STDIN' , @fOpen('php://stdin' , 'rb'));
+if (! defined('STDOUT')) define('STDOUT', @fOpen('php://stdout', 'wb'));
+if (! defined('STDERR')) define('STDERR', @fOpen('php://stderr', 'wb'));
+
+
 # our root directory
 #
 define( 'GS_DIR', realPath(dirName(__FILE__).'/../').'/' );  # DO NOT CHANGE!
