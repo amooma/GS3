@@ -292,6 +292,7 @@ $FAX_HYLAFAX_PASS  =
 	@$FAX_HYLAFAX_PASS  );
 _gscnf( 'FAX_HYLAFAX_PASS'          , 'sEcr3T'           );
 
+_gscnf( 'LOG_TO'                    , 'file'             );
 _gscnf( 'LOG_FILE'                  , '/var/log/gemeinschaft/gs.log' );
 _gscnf( 'LOG_GMT'                   , true               );
 $LOG_LEVEL = strToUpper(@$LOG_LEVEL);
