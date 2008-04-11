@@ -146,22 +146,32 @@ function sec_to_hours( $sec )
 }
 
 
+
+# like posix_isatty() but suppresses the "cannot seek on a pipe" warning
+# which occurs for posix_isatty(STDOUT)
+#
+function gs_isatty( $fd )
+{
+	if (! function_exists('posix_isatty')) return false;
+	set_error_handler( create_function(
+		'$type, $msg, $file, $line',
+		'/* ignore error */'
+	));
+	$isatty = @posix_isatty($fd);
+	@restore_error_handler();
+	return $isatty;
+}
+
+
 # cli scripts could use the return value of this to determine if
 # they want to pretty-print their output or otherwise use a parseable
 # output format
-/*
-function stdout_is_console()
+#
+function gs_stdout_is_console()
 {
-	if (defined('STDOUT')) {
-		$s = @fStat(STDOUT);
-		if ($s && @$s['dev'] === 11) {  # /dev/pts/0
-			return true;
-		}
-		# /dev/pts/0 might as well be device 10
-	}
-	return false;
+	if (! defined('STDOUT')) return false;
+	return gs_isatty(STDOUT);
 }
-*/
 
 
 ?>
