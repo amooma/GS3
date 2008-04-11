@@ -78,7 +78,7 @@ function err_handler_die_on_err( $type, $msg, $file, $line )
 		case E_ERROR:
 		case E_USER_ERROR:
 			gs_log( GS_LOG_FATAL  , 'PHP: '. $msg .' in '. $file .' on line '. $line );
-			echo "A fatal error occurred.\n";
+			echo "A fatal error occurred. See log for details.\n";
 			die(1);
 			break;
 		case E_RECOVERABLE_ERROR:
@@ -86,7 +86,7 @@ function err_handler_die_on_err( $type, $msg, $file, $line )
 			break;
 		default:
 			gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
-			echo "A warning occurred.\n";
+			echo "A warning occurred. See log for details.\n";
 			die(1);
 			break;
 	}
