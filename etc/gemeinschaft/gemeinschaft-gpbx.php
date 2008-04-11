@@ -212,6 +212,7 @@ $FAX_HYLAFAX_HOST       = '127.0.0.1';
 *    LOGGING
 ***********************************************************/
 
+$LOG_TO      = 'file';
 $LOG_LEVEL   = 'FATAL';
 $LOG_FILE    = '/var/log/gemeinschaft/gs.log';
 $LOG_GMT     = true;
