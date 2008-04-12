@@ -295,6 +295,7 @@ _gscnf( 'FAX_HYLAFAX_PASS'          , 'sEcr3T'           );
 _gscnf( 'LOG_TO'                    , 'file'             );
 _gscnf( 'LOG_FILE'                  , '/var/log/gemeinschaft/gs.log' );
 _gscnf( 'LOG_GMT'                   , true               );
+_gscnf( 'LOG_SYSLOG_FACILITY'       , 'local5'           );
 $LOG_LEVEL = strToUpper(@$LOG_LEVEL);
 if (! in_array($LOG_LEVEL, array('FATAL', 'WARNING', 'NOTICE', 'DEBUG'), true))
 	$LOG_LEVEL = 'NOTICE';
