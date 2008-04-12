@@ -1,5 +1,14 @@
 /* $Revision$ */
 
+function gs_remove_onunload_from_iframe( el )
+{
+	if ((typeof el) == 'string')
+		el = document.getElementById(el);
+	
+	if (el && el.contentWindow && el.contentWindow.onunload)
+		el.contentWindow.onunload = function(){};
+}
+
 function gs_sandbox_iframe( el )
 {
 	if ((typeof el) == 'string')
