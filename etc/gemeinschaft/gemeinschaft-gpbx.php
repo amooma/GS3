@@ -216,6 +216,7 @@ $LOG_TO      = 'file';
 $LOG_LEVEL   = 'FATAL';
 $LOG_FILE    = '/var/log/gemeinschaft/gs.log';
 $LOG_GMT     = true;
+$LOG_SYSLOG_FACILITY    = 'local5';
 
 
 // NO NEWLINES AFTER THE CLOSING TAG!
