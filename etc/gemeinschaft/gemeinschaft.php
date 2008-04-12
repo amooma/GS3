@@ -416,6 +416,9 @@ $LOG_LEVEL   = 'NOTICE';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
 $LOG_FILE    = '/var/log/gemeinschaft/gs.log';
 $LOG_GMT     = true;                # use GMT or local time
 
+# these settings affect only logging to syslog:
+$LOG_SYSLOG_FACILITY    = 'local5'; # 'local0'-'local7' | 'user'
+
 
 
 /***********************************************************
