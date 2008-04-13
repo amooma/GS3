@@ -86,7 +86,7 @@ if (! @$_SESSION['login_ok']) {
 	</tr>
 	<tr>
 		<th class="transp"><?php echo 'Pa&szlig;wort'; ?>:</th>
-		<td class="transp"><input type="text" name="login_pwd" value="" size="25" maxlength="30" /></td>
+		<td class="transp"><input type="password" name="login_pwd" value="" size="25" maxlength="30" /></td>
 	</tr>
 	<tr>
 		<td class="transp">&nbsp;</td>
