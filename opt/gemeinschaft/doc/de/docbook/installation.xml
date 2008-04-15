@@ -103,9 +103,9 @@
     etc.</para>
   </section>
 
-  <xi:include href="installation-centos.xml" parse="xml"
+  <xi:include href="installation-centos-4.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-  <xi:include href="installation-debian.xml" parse="xml"
+  <xi:include href="installation-debian-4.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 </section>
