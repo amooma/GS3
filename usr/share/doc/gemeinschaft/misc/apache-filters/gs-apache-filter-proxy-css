@@ -1,0 +1,70 @@
+#!/usr/bin/perl -w
+#####################################################################
+#                            Gemeinschaft
+# 
+# $Revision$
+# 
+# Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+# Philipp Kempgen <philipp.kempgen@amooma.de>
+# Peter Kozak <peter.kozak@amooma.de>
+# 
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#####################################################################
+
+use strict;
+
+my $do_replace = 1;
+my $junction = '';
+my $proxy_base = '';
+
+binmode(STDIN);
+binmode(STDOUT);
+
+$ENV{'REQUEST_URI'} =~ m°/([a-zA-Z0-9.\-_]+)°;
+if (defined($1)) {
+	$junction = $1;
+} else {
+	print STDERR "Got bad REQUEST_URI\n";
+	$do_replace = 0;
+}
+
+$ENV{'SCRIPT_URI'} =~ m°(https?://[a-zA-Z0-9.\-_:]+)°;
+if (defined($1)) {
+	$proxy_base = $1.'/'.$junction;
+} else {
+	print STDERR "Got bad SCRIPT_URI\n";
+	$do_replace = 0;
+}
+
+if ($do_replace) {
+	#my $junction_pattern = $junction;
+	#$junction_pattern =~ s°\.°\\.°g;
+	while (<STDIN>) {
+		$_ =~ s°((?:^|\s|:)url\(\s*["']?)/°$1$proxy_base/°go;
+		print STDOUT $_;
+	}
+	exit 0;
+}
+else {
+	print STDERR "Passing input unmodified ...\n";
+	while (<STDIN>) {
+		print STDOUT $_;
+	}
+	exit 1;
+}
+
