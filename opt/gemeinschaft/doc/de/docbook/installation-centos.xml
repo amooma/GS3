@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<section id="installation-centos" revision="$Revision$">
+<section id="installation-centos-4" revision="$Revision$">
   <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
 % under the terms of the GNU Free Documentation License, Version 1.2
@@ -23,7 +23,7 @@
     <command>yum install</command>.</para>
   </note>
 
-  <section id="install-centos-common">
+  <section id="install-centos-4-common">
     <title>Gemeinsame Installationsschritte</title>
 
     <para>Diese Schritte werden auf allen Rechnern ausgeführt.</para>
@@ -91,7 +91,7 @@ sipsak 0.9.6  by Nils Ohlmeier
 &amp;&amp; chmod a+rwx /var/log/gemeinschaft/</command></programlisting></para>
   </section>
 
-  <section id="install-centos-mysql-master">
+  <section id="install-centos-4-mysql-master">
     <title>Installation des MySQL-Masters</title>
 
     <para>Auf diesem Rechner soll nur der MySQL-Server als Master
@@ -103,7 +103,7 @@ sipsak 0.9.6  by Nils Ohlmeier
 mysql  Ver 14.7 Distrib 4.1.20, for redhat-linux-gnu (i686) using readline 4.3</screen></para>
 
     <para>Dann MySQL als Master einrichten<footnoteref
-    linkend="install-centos-footnote-mysql-replikation" />, siehe <xref
+    linkend="install-centos-4-footnote-mysql-replikation" />, siehe <xref
     linkend="mysql-replikation" />.</para>
 
     <para>Auf den MySQL-Master muß von allen Rechnern aus zugegriffen werden
@@ -119,7 +119,7 @@ Query OK, 0 rows affected (0.01 sec)
 </screen></para>
   </section>
 
-  <section id="install-centos-asterisk">
+  <section id="install-centos-4-asterisk">
     <title>Installation der Asterisk-Server</title>
 
     <para>Auf den Asterisk-Servern soll neben Asterisk auch jeweils ein
@@ -233,7 +233,7 @@ zlib
     <xref linkend="php-sicherheit" /> beschrieben vornehmen.</para>
 
     <para>Danach MySQL als Client einrichten<footnote
-        id="install-centos-footnote-mysql-replikation">
+        id="install-centos-4-footnote-mysql-replikation">
         <para>bzw. falls alles auf <emphasis>einem</emphasis> Server laufen
         soll muß die Master-Client-Replikation natürlich nicht eingerichtet
         werden</para>
@@ -273,14 +273,14 @@ zlib
     Paket:<programlisting><command>yum -y install iputils</command></programlisting></para>
   </section>
 
-  <section id="install-centos-webserver">
+  <section id="install-centos-4-webserver">
     <title>Installation des Web-Servers</title>
 
     <para>Auf diesem Rechner soll nur das Web-Interface laufen.</para>
 
     <para>PHP installieren:<programlisting><command>yum -y install php php-mbstring php-mysql php-ldap</command></programlisting>(Überprüfung
     wie beim Installieren von PHP in <xref
-    linkend="install-centos-asterisk" />) und in der
+    linkend="install-centos-4-asterisk" />) und in der
     <filename>/etc/php.ini</filename> die Einstellungen wie in <xref
     linkend="php-sicherheit" /> beschrieben vornehmen.</para>
 
@@ -368,7 +368,7 @@ User apache</screen></para>
       </footnote>:<screen>apache   ALL=(ALL)   NOPASSWD: ALL</screen></para>
   </section>
 
-  <section id="install-centos-dhcp-server">
+  <section id="install-centos-4-dhcp-server">
     <title>Installation des DHCP-Servers</title>
 
     <para>Wird hier nur der Vollständigkeit halber genannt. Der DHCP-Server
@@ -382,7 +382,7 @@ User apache</screen></para>
     linkend="dhcp-server" />).</para>
   </section>
 
-  <section id="deinstall-centos-services">
+  <section id="deinstall-centos-4-services">
     <title>Entfernen überflüssiger Dienste etc.</title>
 
     <para>Optional kann man darüber nachdenken, evtl. überflüssige Dienste zu
@@ -401,7 +401,7 @@ yum remove irda-utils
 </programlisting></para>
   </section>
 
-  <section id="install-centos-optional">
+  <section id="install-centos-4-optional">
     <title>Optionale Pakete</title>
 
     <para>Wer gerne mal schnell einen (unsicheren!) NFS-Server
@@ -418,7 +418,7 @@ yum remove irda-utils
 &amp;&amp; ln -s phpMyAdmin-2.10.0.2-english phpMyAdmin</command></programlisting></para>
   </section>
 
-  <section id="install-centos-core">
+  <section id="install-centos-4-core">
     <title>Installation des Projekts Gemeinschaft</title>
 
     <para>Gemeinschaft muß auf <emphasis role="bold">allen</emphasis>
