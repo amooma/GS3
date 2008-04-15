@@ -13,7 +13,7 @@
 % Free Documentation License".
 % Asterisk training and consulting is offered at http://www.amooma.de-->
 
-  <title>Installation Gemeinschaft auf Debian 4.0 (Etch) als
+  <title>Installation Gemeinschaft auf Debian 4 (Etch) als
   Einzel-Server-System</title>
 
   <indexterm>
@@ -27,8 +27,8 @@
   </important>
 
   <para>Es wird ein <emphasis>frisch</emphasis> installiertes Debian GNU/Linux
-  4.0 (a.k.a Etch) vorausgesetzt. Ein ISO-Image für die Installation finden
-  Sie auf <ulink
+  4 (a.k.a Etch) vorausgesetzt. Ein ISO-Image für die Installation finden Sie
+  auf <ulink
   url="http://www.debian.org/releases/etch/debian-installer/">http://www.debian.org/releases/etch/debian-installer/</ulink>.
   Ich empfehle das etwa 140 MB große Netzinstallations-CD-Image. Eine Debian
   GNU/Linux-Installationsanleitung befindet sich unter <ulink
