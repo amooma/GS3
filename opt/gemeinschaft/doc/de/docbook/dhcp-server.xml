@@ -13,8 +13,8 @@
 
   <para>Die grundlegende Einrichtung und Konfiguration eines
   DHCP-Servers<footnote>
-      <para><xref linkend="install-centos-dhcp-server" />, <xref
-      linkend="install-debian-dhcp-server" /></para>
+      <para><xref linkend="install-centos-4-dhcp-server" />, <xref
+      linkend="install-debian-4-dhcp-server" /></para>
     </footnote> wird hier nicht weiter erläutert. Es werden nur die für das
   Provisioning der Snom-Telefone entscheidende Einstellungen genannt.</para>
 
