@@ -54,11 +54,4 @@
     <para>Falls nicht anders angegeben gelten Pfade relativ zum Verzeichnis
     <filename>/opt/gemeinschaft/</filename>.</para>
   </section>
-
-  <section id="vorbemerkungen-dns">
-    <title>DNS</title>
-
-    <para>Für das ganze System ist ein funktionierender DNS-Server von
-    Bedeutung.</para>
-  </section>
 </section>
