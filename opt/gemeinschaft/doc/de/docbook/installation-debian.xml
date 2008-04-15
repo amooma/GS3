@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<section id="installation-debian" revision="$Revision$">
+<section id="installation-debian-4" revision="$Revision$">
   <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
 % under the terms of the GNU Free Documentation License, Version 1.2
@@ -33,7 +33,7 @@ deb-src http://security.debian.org/ etch/updates main contrib</screen>
     Installation der neuen Header) erneut kompiliert werden.</para>
   </note>
 
-  <section id="install-debian-common">
+  <section id="install-debian-4-common">
     <title>Gemeinsame Installationsschritte</title>
 
     <para>Diese Schritte werden auf allen Rechnern ausgeführt.</para>
@@ -100,7 +100,7 @@ sipsak 0.9.6  by Nils Ohlmeier
 &amp;&amp; chmod a+rwx /var/log/gemeinschaft/</command></programlisting></para>
   </section>
 
-  <section id="install-debian-mysql-master">
+  <section id="install-debian-4-mysql-master">
     <title>Installation des MySQL-Masters</title>
 
     <para>Auf diesem Rechner soll nur der MySQL-Server als Master
@@ -112,7 +112,7 @@ sipsak 0.9.6  by Nils Ohlmeier
 mysql  Ver 14.12 Distrib 5.0.32, for pc-linux-gnu (i486) using readline 5.2</screen></para>
 
     <para>Dann MySQL als Master einrichten<footnoteref
-    linkend="install-debian-footnote-mysql-replikation" />, siehe <xref
+    linkend="install-debian-4-footnote-mysql-replikation" />, siehe <xref
     linkend="mysql-replikation" />.</para>
 
     <para>Auf den MySQL-Master muß von allen Rechnern aus zugegriffen werden
@@ -128,7 +128,7 @@ Query OK, 0 rows affected (0.01 sec)
 </screen></para>
   </section>
 
-  <section id="install-debian-asterisk">
+  <section id="install-debian-4-asterisk">
     <title>Installation der Asterisk-Server</title>
 
     <para>Auf den Asterisk-Servern soll neben Asterisk auch jeweils ein
@@ -253,7 +253,7 @@ zlib
     <xref linkend="php-sicherheit" /> beschrieben vornehmen.</para>
 
     <para>Danach MySQL als Client einrichten<footnote
-        id="install-debian-footnote-mysql-replikation">
+        id="install-debian-4-footnote-mysql-replikation">
         <para>bzw. falls alles auf <emphasis>einem</emphasis> Server laufen
         soll muß die Master-Client-Replikation natürlich nicht eingerichtet
         werden</para>
@@ -295,14 +295,14 @@ zlib
       </important></para>
   </section>
 
-  <section id="install-debian-webserver">
+  <section id="install-debian-4-webserver">
     <title>Installation des Web-Servers</title>
 
     <para>Auf diesem Rechner soll nur das Web-Interface laufen.</para>
 
     <para>PHP installieren:<programlisting><command>apt-get install php5 php5-cli php5-mysql php5-ldap</command></programlisting>(Überprüfung
     wie beim Installieren von PHP in <xref
-    linkend="install-debian-asterisk" />) und in der
+    linkend="install-debian-4-asterisk" />) und in der
     <filename>/etc/php.ini</filename> die Einstellungen wie in <xref
     linkend="php-sicherheit" /> beschrieben vornehmen.</para>
 
@@ -389,7 +389,7 @@ User www-data</screen></para>
       </footnote>:<screen>www-data   ALL=(ALL)   NOPASSWD: ALL</screen></para>
   </section>
 
-  <section id="install-debian-dhcp-server">
+  <section id="install-debian-4-dhcp-server">
     <title>Installation des DHCP-Servers</title>
 
     <para>Wird hier nur der Vollständigkeit halber genannt. Der DHCP-Server
@@ -403,14 +403,14 @@ User www-data</screen></para>
     linkend="dhcp-server" />).</para>
   </section>
 
-  <section id="deinstall-debian-services">
+  <section id="deinstall-debian-4-services">
     <title>Entfernen überflüssiger Dienste etc.</title>
 
     <para>Optional kann man darüber nachdenken, evtl. überflüssige Dienste zu
     entfernen:<programlisting>FIXME_FIXME_FIXME_FIXME_FIXME_FIXME_FIXME</programlisting></para>
   </section>
 
-  <section id="install-debian-optional">
+  <section id="install-debian-4-optional">
     <title>Optionale Pakete</title>
 
     <para>Wer gerne mal schnell einen (unsicheren!) NFS-Server
@@ -424,7 +424,7 @@ User www-data</screen></para>
     (nicht wie auch üblich <literal>/phpMyAdmin/</literal>)</para>
   </section>
 
-  <section id="install-debian-core">
+  <section id="install-debian-4-core">
     <title>Installation des Projekts Gemeinschaft</title>
 
     <para>Gemeinschaft muß auf <emphasis role="bold">allen</emphasis>
