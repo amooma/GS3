@@ -46,13 +46,6 @@
 
     <para>RedHat: siehe <ulink
     url="http://www.redhat.com/">http://www.redhat.com/</ulink></para>
-
-    <para>Das Skript <filename>usr/bin/ssh-copy-id</filename> ist Teil von
-    OpenSSH unter einer BSD-Lizenz<footnote>
-        <para>siehe <ulink
-        url="http://www.openssh.com/">http://www.openssh.com/</ulink>, <ulink
-        url="http://www.openbsd.org/cgi-bin/cvsweb/src/usr.bin/ssh/LICENCE?rev=HEAD">http://www.openbsd.org/cgi-bin/cvsweb/src/usr.bin/ssh/LICENCE?rev=HEAD</ulink></para>
-      </footnote></para>
   </section>
 
   <section id="vorbemerkungen-pfade">
