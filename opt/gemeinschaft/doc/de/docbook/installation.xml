@@ -21,9 +21,9 @@
           <term>Linux</term>
 
           <listitem>
-            <para>aktuelle Installation. Momentan wird ein RedHat Enterprise
-            Linux (RHEL 4) oder CentOS 4 auf einem i686-System
-            vorausgesetzt.</para>
+            <para>aktuelle Installation. Momentan wird ein Debian 4 ("Etch")
+            oder ein RedHat Enterprise Linux (RHEL 4) bzw. CentOS 4 auf einem
+            i686-System vorausgesetzt.</para>
           </listitem>
         </varlistentry>
 
@@ -31,8 +31,7 @@
           <term>Asterisk</term>
 
           <listitem>
-            <para>in Version 1.4.x mit <literal>res_mysql</literal> aus den
-            Addons</para>
+            <para>in Version 1.4.x mit den Addons</para>
           </listitem>
         </varlistentry>
 
@@ -83,14 +82,6 @@
     ...</para>
 
     <para>Zusätzlich: <command>mpg123</command>, <command>sox</command></para>
-
-    <important>
-      <para>Die Installation der Asteriske erfolgt auf Rechnern <emphasis
-      role="bold">ohne</emphasis> ISDN-Hardware! Für Gespräche über ISDN wird
-      ein ISDN-zu-SIP-Gateway vorausgesetzt. Alle Telefone werden per SIP an
-      die Asterisk-Server angebunden. Der Codec G.711a wird als
-      Mindeststandard vereinbart.</para>
-    </important>
 
     <para>Die Installationsanleitung ist in die verschiedenen Rechner
     (MySQL-Master, Asterisk-Server, Web-Server) aufgeteilt. Natürlich kann
