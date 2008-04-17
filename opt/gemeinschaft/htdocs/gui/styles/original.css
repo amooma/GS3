@@ -9,23 +9,19 @@ img {vertical-align: middle;}
 
 a img {border: 0 transparent none;}
 
-input[type="text"],
-input[type="password"],
-input[type="file"] {
-	padding: 1px 2px;
-}
+
+/*
+Note: Do not override border and background on UI controls or
+Firefox 3 will not use the native controls of the operating system.
+*/
+
 input[type="text"],
 input[type="password"],
 input[type="file"],
-input[type="button"],
-input[type="submit"],
-input[type="reset"],
-button,
-select,
 textarea {
-	border-width: 1px;
-	color: #000;
+	padding: 1px 1px;
 }
+
 input[type="text"]:disabled,
 input[type="password"]:disabled,
 input[type="file"]:disabled,
@@ -37,30 +33,44 @@ button:disabled,
 select:disabled,
 textarea:disabled {
 	color: #777;
-	background: #eee;
+	/*background: #eee;*/
 	opacity: 0.8;
 }
+
 input[type="text"],
 input[type="password"],
 input[type="file"],
 select,
 textarea {
+	color: #000;
+	/*
+	border-width: 1px;
 	border-style: solid;
 	border-color: #666 #ccc #ccc #666;
 	background: #fff;
+	*/
 }
+
 input[type="file"] {
 	/* the stupid file field does not let us override the border-width */
-	border-color: #fff #fff #fff #fff;
+	/*border-color: #fff #fff #fff #fff;*/
 }
+
 input[type="button"],
 input[type="submit"],
 input[type="reset"],
 button {
+	color: #000;
+	/*
+	border-width: 1px;
 	border-style: solid;
 	border-color: #fff #666 #666 #fff;
+	*/
 }
-select {background: #fff;}
+
+select {/*background: #fff;*/}
+
+
 
 table {
 	margin: 0 0 1px 0; padding: 0; border-width: 0;
