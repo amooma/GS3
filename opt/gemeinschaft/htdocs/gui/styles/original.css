@@ -67,6 +67,11 @@ button {
 	border-color: #fff #666 #666 #fff;
 	*/
 }
+input[type="button"],
+input[type="submit"],
+button {
+	color: #00b;
+}
 
 select {/*background: #fff;*/}
 
@@ -311,7 +316,7 @@ h1 {
 #menu {
 	/*font-size: 0.95em;*/
 	line-height: 1.5em;
-	margin: 21px 0.1em 1em 0.1em;
+	margin: 24px 0.1em 1em 0.1em;
 	min-height: 360px;
 }
 
