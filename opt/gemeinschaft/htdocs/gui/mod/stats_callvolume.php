@@ -103,17 +103,17 @@ if ($action === 'report') {
 <tr>
 	<th class="r" style="vertical-align:middle;"><?php echo __('Vom'); ?>:</th>
 	<td>
-		<input name="fr_y" id="ipt-fr_y" size="4" maxlength="4" value="<?php echo $fr_y; ?>" class="r" />-
-		<input name="fr_m" id="ipt-fr_m" size="2" maxlength="2" value="<?php echo $fr_m; ?>" class="r" />-
-		<input name="fr_d" id="ipt-fr_d" size="2" maxlength="2" value="<?php echo $fr_d; ?>" class="r" />
+		<input type="text" name="fr_y" id="ipt-fr_y" size="4" maxlength="4" value="<?php echo $fr_y; ?>" class="r" />-
+		<input type="text" name="fr_m" id="ipt-fr_m" size="2" maxlength="2" value="<?php echo $fr_m; ?>" class="r" />-
+		<input type="text" name="fr_d" id="ipt-fr_d" size="2" maxlength="2" value="<?php echo $fr_d; ?>" class="r" />
 	</td>
 </tr>
 <tr>
 	<th class="r" style="vertical-align:middle;"><?php echo __('Bis'); ?>:</th>
 	<td>
-		<input name="to_y" id="ipt-to_y" size="4" maxlength="4" value="<?php echo $to_y; ?>" class="r" />-
-		<input name="to_m" id="ipt-to_m" size="2" maxlength="2" value="<?php echo $to_m; ?>" class="r" />-
-		<input name="to_d" id="ipt-to_d" size="2" maxlength="2" value="<?php echo $to_d; ?>" class="r" />
+		<input type="text" name="to_y" id="ipt-to_y" size="4" maxlength="4" value="<?php echo $to_y; ?>" class="r" />-
+		<input type="text" name="to_m" id="ipt-to_m" size="2" maxlength="2" value="<?php echo $to_m; ?>" class="r" />-
+		<input type="text" name="to_d" id="ipt-to_d" size="2" maxlength="2" value="<?php echo $to_d; ?>" class="r" />
 	</td>
 </tr>
 </tbody>
