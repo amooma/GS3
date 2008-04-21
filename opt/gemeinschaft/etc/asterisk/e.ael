@@ -88,14 +88,14 @@ macro cmm-login( new_user_name ) {
 	
 	Answer();
 	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-check-user.agi,${new_user_name});
-	NoOp(### AGI returned: ret = ${ret});
+	//NoOp(### AGI returned: ret = ${ret});
 	if ("${ret}" != "1")
 		goto unknown;
 	
 	Wait(1);
 	Read(pass,agent-pass,10,s,3,5);
 	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-login.agi,${new_user_name},${pass},${user_id});
-	NoOp(### AGI returned: ret = ${ret});
+	//NoOp(### AGI returned: ret = ${ret});
 	if ("${ret}" = "error")
 		goto error;
 	if ("${ret}" != "ok")
@@ -103,8 +103,17 @@ macro cmm-login( new_user_name ) {
 	
 	//Playback(agent-loginok);
 	Playback(gemeinschaft/sie-sind-jetzt-angemeldet);
-	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext=${new_user_name});
-	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext=${user_name});
+	Playback(gemeinschaft/bitte-warten-sie);
+	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${new_user_name}');
+	if ("${user_name}" != "${new_user_name}") {
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
+	}
+	if ("${CHANNEL(channeltype)}" = "SIP") {
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(peerip)}');
+		if ("${SIPCHANINFO(recvip)}" != "${SIPCHANINFO(peerip)}") {
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(recvip)}');
+		}
+	}
 	Hangup();
 	
 	unknown:
@@ -131,7 +140,14 @@ macro cmm-logout() {
 	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id});
 	//Playback(agent-loggedoff&vm-goodbye);
 	Playback(gemeinschaft/sie-sind-abgemeldet);
-	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext=${user_name});
+	Playback(gemeinschaft/bitte-warten-sie);
+	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
+	if ("${CHANNEL(channeltype)}" = "SIP") {
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(peerip)}');
+		if ("${SIPCHANINFO(recvip)}" != "${SIPCHANINFO(peerip)}") {
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(recvip)}');
+		}
+	}
 	Hangup();	
 }
 
