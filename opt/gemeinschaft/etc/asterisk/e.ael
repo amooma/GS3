@@ -173,8 +173,6 @@ context to-conferences {
 	c-empty => {
 		Set(confnum=0);
 		Verbose(1,### Trying to enter new empty conference);
-		if ("${fake_ringing}" = "1")
-			Ringing();
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
 			&dial-log-store(${user_name},out,${confprefix}${confnum});
@@ -217,8 +215,6 @@ context to-conferences {
 	_c-XX. => {
 		Set(confnum=${EXTEN:2});
 		Verbose(1,### Call to conference ${confprefix}${confnum});
-		if ("${fake_ringing}" = "1")
-			Ringing();
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
 			&dial-log-store(${user_name},out,${confprefix}${confnum});

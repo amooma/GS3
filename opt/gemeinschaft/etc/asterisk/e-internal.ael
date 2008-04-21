@@ -64,8 +64,6 @@ macro check-valid-extension( mext ) {
 			Hangup(2);
 		}
 		
-		if ("${fake_ringing}" = "1")
-			Ringing();
 		if ("${is_sub_system}" = "yes") {
 			Verbose(1,### We are a sub-system. Dial to the gateway.);
 			&dial-gateway(${mext});
@@ -74,8 +72,6 @@ macro check-valid-extension( mext ) {
 		}
 		Hangup();
 	}
-	if ("${fake_ringing}" = "1")
-		Ringing();
 }
 
 
@@ -99,8 +95,6 @@ macro dial-node( mext_at_node ) {
 	SIPAddHeader(X-GS-is_callcompletion: ${is_callcompletion});
 	SIPAddHeader(X-GS-is_callfile_origin: ${is_callfile_origin});
 	SIPAddHeader(X-GS-callfile_from_user: ${callfile_from_user});
-	if ("${fake_ringing}" = "1")
-		Ringing();
 	Dial(SIP/${mext_at_node},500);
 	Verbose(1,### Tried to call ${mext_at_node} but: ${DIALSTATUS});
 	&hangup-proper-status();
