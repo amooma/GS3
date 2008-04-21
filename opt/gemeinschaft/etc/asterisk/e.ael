@@ -119,12 +119,12 @@ macro cmm-login( new_user_name ) {
 	unknown:
 		Wait(1);
 		Playback(vm-incorrect&vm-goodbye);
-		Wait(1);
+		Wait(0.5);
 		Hangup();
 	
 	error:
 		Playback(tt-somethingwrong);
-		Wait(1);
+		Wait(0.5);
 		Hangup();
 }
 
@@ -136,7 +136,7 @@ macro cmm-login( new_user_name ) {
 macro cmm-logout() {
 	
 	Answer();
-	Wait(1);
+	Wait(0.5);
 	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id});
 	//Playback(agent-loggedoff&vm-goodbye);
 	Playback(gemeinschaft/sie-sind-abgemeldet);
@@ -288,7 +288,7 @@ context to-conferences-self {
 		Set(confnum=${EXTEN:2});
 		Verbose(1,### Entering conference ${confprefix}${confnum});
 		Answer();
-		Wait(1);
+		Wait(0.5);
 		MeetMe(${confnum},DcoT);
 		Hangup();
 	}
@@ -394,7 +394,7 @@ context voicemail-self {
 	mailbox => {
 		//Set(CHANNEL(language)=en);  // derzeit notwendig da der dt. Sprachbaustein "eine" im Englischen fehlt
 		Answer();
-		Wait(1);
+		Wait(0.5);
 		VoiceMailMain(${user_name},s);
 	}
 	asterisk  => jump mailbox;
@@ -431,7 +431,7 @@ context voicemail-any-self {
 		Verbose(1,### Check mailbox ${vmbox} at this node);
 		//Set(CHANNEL(language)=en);  // derzeit notwendig da der dt. Sprachbaustein "eine" im Englischen fehlt
 		Answer();
-		Wait(1);
+		Wait(0.5);
 		VoiceMailMain(${vmbox});
 	}
 	
@@ -446,7 +446,7 @@ macro vm-record( msource ) {
 	
 	if ("${msource}" = "internal" || "${msource}" = "external") {
 		Answer();
-		Wait(1);
+		Wait(0.5);
 		Playback(vm-extension);
 		SayDigits(${user_name});
 		Playback(vm-rec-unv);
