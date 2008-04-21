@@ -386,7 +386,7 @@ context voicemail-self {
 	#include "/opt/gemeinschaft/etc/asterisk/e-number-vmm-self.ael"
 }
 
-// Voicemail abfragen mit beliebieger Mailbox
+// Voicemail abfragen mit beliebiger Mailbox
 
 context voicemail-any {
 	
