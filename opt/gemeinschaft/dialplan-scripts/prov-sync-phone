@@ -44,6 +44,8 @@ $opts = getOptsMultiples('',
 );
 
 foreach ($opts as $opt) {
+	$opt[1] = trim($opt[1]);
+	if ($opt[1] == '') continue;
 	switch ($opt[0]) {
 		case 'ext':
 			gs_prov_phone_checkcfg_by_ext( $opt[1], false );
