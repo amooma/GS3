@@ -965,6 +965,9 @@ context to-internal-users-self {
 			Verbose(1,###### CALLERID(ani)  : ${CALLERID(ani)});
 			Verbose(1,###### CALLERID(dnid) : ${CALLERID(dnid)});
 			Verbose(1,###### CALLERID(rdnis): ${CALLERID(rdnis)});
+			Verbose(1,###### CALLERID(num)  : ${CALLERID(num)});
+			Verbose(1,###### origext        : ${origext});
+			Verbose(1,###### user_name      : ${user_name});
 			*/
 			if ("${CALLERID(dnid)}" != "" && "${DIALEDPEERNUMBER:0:1}" != "*") {
 				//&dial-log-store(${origext},${type},${user_name});
