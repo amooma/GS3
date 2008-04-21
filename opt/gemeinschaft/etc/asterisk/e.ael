@@ -103,12 +103,6 @@ macro cmm-login( new_user_name ) {
 	
 	//Playback(agent-loginok);
 	Playback(gemeinschaft/sie-sind-jetzt-angemeldet);
-	//TrySystem(asterisk -rx \'sip notify snom-reboot ${new_user_name}\');
-	//TrySystem(asterisk -rx \'sip notify snom-reboot ${user_name}\');
-	//TrySystem(asterisk -rx \'sip prune realtime ${new_user_name}\');
-	//TrySystem(asterisk -rx \'sip prune realtime ${user_name}\');
-	//AGI(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone.agi,${new_user_name});
-	//AGI(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone.agi,${user_name});
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext=${new_user_name});
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext=${user_name});
 	Hangup();
@@ -137,8 +131,6 @@ macro cmm-logout() {
 	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id});
 	//Playback(agent-loggedoff&vm-goodbye);
 	Playback(gemeinschaft/sie-sind-abgemeldet);
-	//TrySystem(asterisk -rx \'sip notify snom-reboot ${user_name}\');
-	//TrySystem(asterisk -rx \'sip prune realtime ${user_name}\');
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext=${user_name});
 	Hangup();	
 }
