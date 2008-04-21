@@ -48,10 +48,10 @@ foreach ($opts as $opt) {
 	if ($opt[1] == '') continue;
 	switch ($opt[0]) {
 		case 'ext':
-			gs_prov_phone_checkcfg_by_ext( $opt[1], false );
+			@gs_prov_phone_checkcfg_by_ext( $opt[1], false );
 			break;
 		case 'ip':
-			gs_prov_phone_checkcfg_by_ip( $opt[1], false );
+			@gs_prov_phone_checkcfg_by_ip( $opt[1], false );
 			break;
 	}
 }
