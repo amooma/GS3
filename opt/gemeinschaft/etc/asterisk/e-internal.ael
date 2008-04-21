@@ -51,7 +51,7 @@ macro check-valid-extension( mext ) {
 		Verbose(1,### Extension ${mext} is unknown);
 		/*
 		Answer();
-		Wait(1);
+		Wait(0.5);
 		Playback(invalid);
 		Hangup();
 		*/
@@ -969,7 +969,7 @@ context to-internal-users-self {
 			}
 			// vm
 			Answer();
-			Wait(1);
+			Wait(0.5);
 			Set(vm_announce_file=${vm_announce_${vm_source}});
 			if ("${vm_announce_file}" = "") {
 				Playback(vm-theperson);
@@ -1000,7 +1000,7 @@ context to-internal-users-self {
 		user_uncallable_offer_cc:
 			Verbose(1,### Called user ${EXTEN} unreachable (${DIALSTATUS})\, offer call completion);
 			Answer();
-			Wait(1);
+			Wait(0.5);
 			Set(vm_announce_file=${vm_announce_${vm_source}});
 			if ("${vm_announce_file}" = "") {
 				Playback(vm-theperson);
