@@ -49,12 +49,6 @@ macro check-valid-extension( mext ) {
 	Verbose(1,### Extension ${mext} is of type ${exttype});
 	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference") {
 		Verbose(1,### Extension ${mext} is unknown);
-		/*
-		Answer();
-		Wait(0.5);
-		Playback(invalid);
-		Hangup();
-		*/
 		
 		if ("${is_from_gateway}" = "1") {
 			Verbose(1,### Don't allow call from the gateway to go to the gateway again - extension: ${mext});
@@ -107,32 +101,6 @@ macro dial-node( mext_at_node ) {
 
 context to-internal-nobody {
 	
-	/*
-	_9XXXX => {
-		&check-valid-extension(${EXTEN});
-		if ("${dial_to_node}" = "") {
-			Verbose(1,### Extension ${EXTEN} is at node: SELF);
-			goto to-internal-nobody-self|${EXTEN}|1;
-		}
-		else {
-			&dial-node(${EXTEN}@${dial_to_node});
-			&hangup-proper-status();
-		}
-	}
-	_9XXXXX => {
-		&check-valid-extension(${EXTEN});
-		if ("${dial_to_node}" = "") {
-			Verbose(1,### Extension ${EXTEN} is at node: SELF);
-			goto to-internal-nobody-self|${EXTEN}|1;
-		}
-		else {
-			&dial-node(${EXTEN}@${dial_to_node});
-			&hangup-proper-status();
-		}
-	}
-	*/
-	//_95XXXX => &dial-internal-nobody(${EXTEN});
-	
 	#exec "/opt/gemeinschaft/etc/asterisk/e-nobody-exten.php"
 	
 }
@@ -153,39 +121,6 @@ context to-internal-nobody-self {
 	
 	// in this context it is guaranteed that the called extension is at
 	// the local node
-	/*
-	_9XXXX => {
-		Verbose(1,### Incoming call to ${EXTEN} at this node);
-		if ("${user_id}" != "") {
-			// from internal user, store dial log (out)
-			&dial-log-store(${user_name},out,${EXTEN});
-		}
-		//if ("${saved_callerid}" != "") {
-		//	// __saved_callerid is set by call-init.php
-		//	Set(CALLERID(all)=${saved_callerid});
-		//}
-		&set-callerid-by-clir();
-		Verbose(1,### Call local nobody ${EXTEN}\, timeout 30);
-		Dial(SIP/${EXTEN},30);
-		&hangup-proper-status();
-	}
-	_9XXXXX => {
-		Verbose(1,### Incoming call to ${EXTEN} at this node);
-		if ("${user_id}" != "") {
-			// from internal user, store dial log (out)
-			&dial-log-store(${user_name},out,${EXTEN});
-		}
-		//if ("${saved_callerid}" != "") {
-		//	// __saved_callerid is set by call-init.php
-		//	Set(CALLERID(all)=${saved_callerid});
-		//}
-		&set-callerid-by-clir();
-		Verbose(1,### Call local nobody ${EXTEN}\, timeout 30);
-		Dial(SIP/${EXTEN},30);
-		&hangup-proper-status();
-	}
-	*/
-	//_95XXXX => &dial-internal-nobody-self(${EXTEN});
 	
 	#exec "/opt/gemeinschaft/etc/asterisk/e-nobody-self-exten.php"
 	
@@ -482,7 +417,6 @@ context to-internal-users-self {
 	_**Z. => {
 		Set(box=${EXTEN:2});
 		Set(origext=${box});
-		//Set(CHANNEL(language)=de);
 		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		Verbose(1,### Direct dial to mailbox ${box} on this node);
 		Set(__is_call_from=internal);
@@ -532,7 +466,6 @@ context to-internal-users-self {
 		//	Set(CALLERID(all)=${saved_callerid});
 		//}
 		
-		//Set(CHANNEL(language)=de);
 		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		if ("${from_node}" = "yes") {
 			Verbose(1,### Incoming call to ${EXTEN} is from another node);
@@ -605,12 +538,6 @@ context to-internal-users-self {
 		Verbose(1,### Incoming call to ${EXTEN}\, type: ${exttype}\, forwards: ${forwards});
 		
 		// is it a user? is it a queue?
-		//switch (${exttype}) {
-		/*
-		GotoIf($["${exttype}" = "user"]?to_user);
-		GotoIf($["${exttype}" = "queue"]?to_queue);
-		GotoIf($["${exttype}" = "unknown"]?to_unknown);
-		*/
 		if ("${exttype}" = "user")
 			goto to_user;
 		if ("${exttype}" = "queue")
@@ -649,7 +576,6 @@ context to-internal-users-self {
 			
 			// call the user
 			//
-			//Set(dialtimeout=30);
 			#exec "/opt/gemeinschaft/etc/asterisk/e-dialtimeout-in.ael.php"
 			if ("${is_callfile_origin}" != "1") {
 				if ("${fw_${is_call_from}_unavail}" != "") {
@@ -682,13 +608,6 @@ context to-internal-users-self {
 			}
 			Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout});
 			
-			//switch (${DIALSTATUS}) {
-			/*
-			GotoIf($["${DIALSTATUS}" = "BUSY"]?user_busy);
-			GotoIf($["${DIALSTATUS}" = "NOANSWER"]?user_unavail);
-			GotoIf($["${DIALSTATUS}" = "CHANUNAVAIL"]?user_offline);
-			GotoIf($["${DIALSTATUS}" = "CONGESTION"]?user_offline);
-			*/
 			if ("${is_callfile_origin}" != "1") {
 				if ("${DIALSTATUS}" = "BUSY")         // busy or deflected
 					goto user_busy;
@@ -773,6 +692,7 @@ context to-internal-users-self {
 			//Verbose(1,### Called queue: ${EXTEN});
 			
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-queue-get-fw.agi,${EXTEN});
+			// sets fw_*_* and ring_instead_of_moh
 			
 			// forward (case=always) active?
 			if ("${fw_${is_call_from}_always}" != "") {
@@ -799,8 +719,6 @@ context to-internal-users-self {
 			if ("${CALLERID(num)}" = "")
 				Set(CALLERID(num)=${EXTEN});
 			
-			//Set(ring_instead_of_moh=);
-			// ring_instead_of_moh is now set by in-queue-get-fw.agi
 			Set(all_busy=);
 			
 			// SONDERFALL HACK
@@ -1062,7 +980,6 @@ context program-cc {
 	
 	offer => {
 		Answer();
-		//Set(CHANNEL(language)=de);
 		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		Wait(0.5);
 		Set(TIMEOUT(digit)=5);
@@ -1080,7 +997,6 @@ context program-cc {
 	}
 	1 => {
 		Verbose(1,### Caller wants to leave voicemail for user ${cc_to_ext});
-		//Set(CHANNEL(language)=de);
 		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		//Playback(beep);
 		if ("${vm_${vm_source}_active}" = "1") {
@@ -1095,7 +1011,6 @@ context program-cc {
 	}
 	* => {
 		Verbose(1,### Caller wants call completion to user ${cc_to_ext});
-		//Set(CHANNEL(language)=de);
 		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		AGI(/opt/gemeinschaft/dialplan-scripts/cc-program.agi,${user_name},${cc_to_ext});
 		Verbose(1,### Call completion programmed?: ${cc_programmed});
