@@ -101,10 +101,12 @@ if ($action === 'save') {
 	`allow_out` = '. (@$_REQUEST['gw-allow_out'] ? 1 : 0) .',
 	`dialstr` = \''. $DB->escape( 'SIP/{number}@{gateway}' ) .'\',
 	`host` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.]/', '', @$_REQUEST['gw-host'])) .'\',
-	`user` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-user'])) .'\',
+	`user` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.@]/', '', @$_REQUEST['gw-user'])) .'\',
 	`pwd` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-pwd'])) .'\'
 WHERE `id`='. (int)$gwid
 	;
+	// allow "@" in SIP username so you can enter user@fromdomain
+	// (e.g. 12345@sipgate.de) as your username to register with sipgate.de
 	//echo "<pre>$query</pre>\n";
 	$DB->execute($query);
 	
