@@ -242,7 +242,8 @@ $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 
 //----------------------[  Aastra  ]----------------------//
 
-$AASTRA_PROV_ENABLED        = true;   # do provisioning for Aastra?
+# experimental!
+$AASTRA_PROV_ENABLED        = false;  # do provisioning for Aastra?
                                       # show keyset for Aastra in the GUI?
 $AASTRA_PROV_PB_NUM_RESULTS = 10;
   # number of results in phonebook search on Aastra phone
