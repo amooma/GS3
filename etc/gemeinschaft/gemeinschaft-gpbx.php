@@ -121,7 +121,7 @@ $PROV_DIAL_LOG_LIFE         = 14*24*3600;
 
 //---------------------[  Snom 3xx  ]---------------------//
 
-$SNOM_PROV_ENABLED          = true;
+$SNOM_PROV_ENABLED          = false;
 $SNOM_PROV_HTTP_USER        = '';
 $SNOM_PROV_HTTP_PASS        = '';
 $SNOM_PROV_PB_NUM_RESULTS   = 15;
@@ -132,7 +132,7 @@ $SNOM_PROV_FW_6TO7          = false;
 
 //----------------------[  Aastra  ]----------------------//
 
-$AASTRA_PROV_ENABLED        = true;
+$AASTRA_PROV_ENABLED        = false;
 $AASTRA_PROV_PB_NUM_RESULTS = 10;
 
 
