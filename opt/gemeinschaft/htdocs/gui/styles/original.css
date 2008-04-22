@@ -19,7 +19,7 @@ input[type="text"],
 input[type="password"],
 input[type="file"],
 textarea {
-	padding: 1px 1px;
+	padding: 0px 1px;
 }
 
 input[type="text"]:disabled,
@@ -76,7 +76,6 @@ button {
 select {/*background: #fff;*/}
 
 
-
 table {
 	margin: 0 0 1px 0; padding: 0; border-width: 0;
 }
@@ -86,14 +85,20 @@ small {
 	line-height: 1.2em;
 }
 
-button {
-	cursor: pointer;  /* to make <button>s indistinguishable from <a>s from
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+	/*cursor: pointer;*/  /* to make <button>s indistinguishable from <a>s from
 	                     from the users' perspective */
 }
 
 option {margin: 0; padding: 0 2px;}
 
-sup {font-weight: normal;}
+sup, sub {font-weight: normal; font-size: 75%;}
+sup {vertical-align: top;}
+sub {vertical-align: bottom;}
+
 
 /*
 	shortcuts
@@ -153,6 +158,10 @@ input._admincfg {
 	border-color: #bbb #fff #fff #bbb;
 }
 
+
+/*
+	layout
+*/
 
 body {
 	text-align: left;
