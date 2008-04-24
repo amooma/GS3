@@ -127,8 +127,8 @@ if (! @$_SESSION['login_ok']) {
 	}
 	else {
 		if (! gs_setup_auth_by_pwd()) {
-			$login_info = 'Sie sind nicht eingeloggt.';
-			$login_errmsg = 'Benutzername/Pa&szlig;wort falsch.';
+			$login_info = __('Sie sind nicht eingeloggt.');
+			$login_errmsg = __('Benutzername/Pa&szlig;wort falsch.');
 		}
 		else {
 			$_SESSION['login_ok'] = true;
@@ -214,7 +214,7 @@ if (! file_exists($step_file)) {
 <div class="fl l" style="width:40%;">
 <?php
 	if (gs_keyval_get('setup_show') !== 'autoshow') {
-		echo '<a href="', gs_get_conf('GS_URL_PATH') ,'">', 'zum normalen Interface' ,'</a>', "\n";
+		echo '<a href="', gs_get_conf('GS_URL_PATH') ,'">', __('zum normalen Interface') ,'</a>', "\n";
 	}
 ?>
 </div>
@@ -224,11 +224,11 @@ if (! file_exists($step_file)) {
 ?>
 	<form class="inline" method="post" action="<?php echo GS_URL_PATH ,'setup/?step=reboot'; ?>">
 		<input type="hidden" name="action" value="reboot" />
-		<input type="submit" value="<?php echo 'Neustarten'; ?>" />
+		<input type="submit" value="<?php echo __('Neustarten'); ?>" />
 	</form>
 	<form class="inline" method="post" action="<?php echo GS_URL_PATH ,'setup/?step=shutdown'; ?>">
 		<input type="hidden" name="action" value="shutdown" />
-		<input type="submit" value="<?php echo 'Herunterfahren'; ?>" />
+		<input type="submit" value="<?php echo __('Herunterfahren'); ?>" />
 	</form>
 <?php
 	}

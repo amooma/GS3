@@ -33,20 +33,20 @@ if (trim(gs_keyval_get('setup_show')) === 'autoshow')
 ?>
 
 <div style="width:550px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
-<h1><?php echo 'Fertig'; ?></h1>
+<h1><?php echo __('Fertig'); ?></h1>
 <p>
 <?php
 	switch ($GS_INSTALLATION_TYPE) {
 		case 'gpbx':
-			echo 'Die grundlegende Netzwerk-Konfiguration der GPBX ist jetzt abgeschlossen. Bitte nehmen Sie die weiteren Einstellungen im Administrator-Bereich der normalen Web-Oberfl&auml;che vor. Nat&uuml;rlich k&ouml;nnen Sie auch sp&auml;ter wieder das Setup aufrufen.';
+			echo __('Die grundlegende Netzwerk-Konfiguration der GPBX ist jetzt abgeschlossen. Bitte nehmen Sie die weiteren Einstellungen im Administrator-Bereich der normalen Web-Oberfl&auml;che vor. Nat&uuml;rlich k&ouml;nnen Sie auch sp&auml;ter wieder das Setup aufrufen.');
 			break;
 		default:
-			echo 'Die grundlegende Netzwerk-Konfiguration des Systems ist jetzt abgeschlossen. Bitte nehmen Sie die weiteren Einstellungen im Administrator-Bereich der normalen Web-Oberfl&auml;che vor. Nat&uuml;rlich k&ouml;nnen Sie auch sp&auml;ter wieder das Setup aufrufen.';
+			echo __('Die grundlegende Netzwerk-Konfiguration des Systems ist jetzt abgeschlossen. Bitte nehmen Sie die weiteren Einstellungen im Administrator-Bereich der normalen Web-Oberfl&auml;che vor. Nat&uuml;rlich k&ouml;nnen Sie auch sp&auml;ter wieder das Setup aufrufen.');
 	}
 ?>
 </p>
 <p align="center">
-	<a href="<?php echo GS_URL_PATH; ?>">zum normalen Web-Interface</a>
+	<a href="<?php echo GS_URL_PATH; ?>"><?php echo __('zum normalen Web-Interface'); ?></a>
 </p>
 
 <br />
@@ -55,7 +55,7 @@ if (trim(gs_keyval_get('setup_show')) === 'autoshow')
 
 <?php
 
-echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=phones-scan">', 'zur&uuml;ck' ,'</a></div>' ,"\n";
+echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=phones-scan">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
 echo '<div class="fr">';
 echo '</div>' ,"\n";
 echo '<br class="nofloat" />' ,"\n";

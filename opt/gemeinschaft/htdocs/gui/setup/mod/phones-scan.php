@@ -35,12 +35,12 @@ if (trim(gs_keyval_get('setup_show')) === 'autoshow')
 ?>
 
 <div style="width:550px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
-<h1><?php echo 'Telefone suchen'; ?></h1>
+<h1><?php echo __('Telefone suchen'); ?></h1>
 <p>
 	<div class="fr">
-	<a href="<?php echo GS_URL_PATH; ?>setup/?step=phones-scan"><button class="button"><?php echo 'Erneut suchen'; ?></button></a>
+	<a href="<?php echo GS_URL_PATH; ?>setup/?step=phones-scan"><button class="button"><?php echo __('Erneut suchen'); ?></button></a>
 	</div>
-	<?php echo 'Netzwerk nach IP-Telefonen scannen.'; ?>
+	<?php echo __('Netzwerk nach IP-Telefonen scannen.'); ?>
 </p>
 <br class="nofloat" />
 <hr />
@@ -79,9 +79,9 @@ else {
 		echo '<table cellspacing="1">' ,"\n";
 		echo '<thead>' ,"\n";
 		echo '<tr>' ,"\n";
-		echo '<th>', 'MAC-Adr.' ,'</th>' ,"\n";
-		echo '<th>', 'IP-Adr.' ,'</th>' ,"\n";
-		echo '<th>', 'Typ' ,'</th>' ,"\n";
+		echo '<th>', __('MAC-Adr.') ,'</th>' ,"\n";
+		echo '<th>', __('IP-Adr.') ,'</th>' ,"\n";
+		echo '<th>', __('Typ') ,'</th>' ,"\n";
 		echo '<th>&nbsp;</th>' ,"\n";
 		echo '</tr>' ,"\n";
 		echo '</thead>' ,"\n";
@@ -175,12 +175,12 @@ else {
 
 <?php
 
-echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=dhcpd">', 'zur&uuml;ck' ,'</a></div>' ,"\n";
+echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=dhcpd">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
 echo '<div class="fr">';
 if ($can_continue)
-	echo '<a href="', GS_URL_PATH ,'setup/?step=done"><big>', 'weiter' ,'</big></a>';
+	echo '<a href="', GS_URL_PATH ,'setup/?step=done"><big>', __('weiter') ,'</big></a>';
 else
-	echo '<span style="color:#999;">', 'weiter' ,'</span>';
+	echo '<span style="color:#999;">', __('weiter') ,'</span>';
 echo '</div>' ,"\n";
 echo '<br class="nofloat" />' ,"\n";
 

@@ -49,7 +49,7 @@ $ifconfig = find_executable('ifconfig', array(
 ?>
 
 <div style="width:550px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
-<h1><?php echo 'Netzwerk'; ?></h1>
+<h1><?php echo __('Netzwerk'); ?></h1>
 <?php
 
 if ($action === '' || $action === 'save') {
@@ -156,21 +156,21 @@ if ($action === 'save') {
 	{
 		$errmsg = '';
 		if (_is_invalid_ip_addr_by_format( $addr )) {
-			$errmsg = 'Ung&uuml;ltige IP-Adresse!';
+			$errmsg = __('Ung&uuml;ltige IP-Adresse!');
 			return GS_VALIDATION_ERR;
 		}
 		$addr = _normalize_ip_addr( $addr );
 		if ($addr === null) {
-			$errmsg = 'Ung&uuml;ltige IP-Adresse!';
+			$errmsg = __('Ung&uuml;ltige IP-Adresse!');
 			return GS_VALIDATION_EMPTY;
 		}
 		if (_is_invalid_ip_addr_by_net( $addr )) {
-			$errmsg = 'Ung&uuml;ltige IP-Adresse!';
+			$errmsg = __('Ung&uuml;ltige IP-Adresse!');
 			return GS_VALIDATION_ERR;
 		}
 		if (preg_match('/255/', $addr)
 		||  subStr($addr, -2) === '.0') {
-			$errmsg = 'Ung&uuml;ltige IP-Adresse!';
+			$errmsg = __('Ung&uuml;ltige IP-Adresse!');
 			return GS_VALIDATION_ERR;
 		}
 		return GS_VALIDATION_OK;
@@ -180,7 +180,7 @@ if ($action === 'save') {
 	{
 		$errmsg = '';
 		if (! in_array($netmask, array('/8', '/16', '/24'), true)) {
-			$errmsg = 'Ung&uuml;ltige Netzmaske!';
+			$errmsg = __('Ung&uuml;ltige Netzmaske!');
 			return GS_VALIDATION_ERR;
 		}
 		return GS_VALIDATION_OK;
@@ -191,25 +191,25 @@ if ($action === 'save') {
 		$errmsg = '';
 		if (_is_empty_ip_addr( $addr )) {
 			$addr = '';
-			$errmsg = 'Leere Router-Adresse!';
+			$errmsg = __('Leere Router-Adresse!');
 			return GS_VALIDATION_EMPTY;
 		}
 		if (_is_invalid_ip_addr_by_format( $addr )) {
-			$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+			$errmsg = __('Ung&uuml;ltige Router-Adresse!');
 			return GS_VALIDATION_ERR;
 		}
 		$addr = _normalize_ip_addr( $addr );
 		if ($addr === null) {
-			$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+			$errmsg = __('Ung&uuml;ltige Router-Adresse!');
 			return GS_VALIDATION_EMPTY;
 		}
 		if (_is_invalid_ip_addr_by_net( $addr )) {
-			$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+			$errmsg = __('Ung&uuml;ltige Router-Adresse!');
 			return GS_VALIDATION_ERR;
 		}
 		if (preg_match('/255/', $addr)
 		||  subStr($addr, -2) === '.0') {
-			$errmsg = 'Ung&uuml;ltige Router-Adresse!';
+			$errmsg = __('Ung&uuml;ltige Router-Adresse!');
 			return GS_VALIDATION_ERR;
 		}
 		return GS_VALIDATION_OK;
@@ -220,25 +220,25 @@ if ($action === 'save') {
 		$errmsg = '';
 		if (_is_empty_ip_addr( $addr )) {
 			$addr = '';
-			$errmsg = 'Leere DNS-Server-Adresse!';
+			$errmsg = __('Leere DNS-Server-Adresse!');
 			return GS_VALIDATION_EMPTY;
 		}
 		if (_is_invalid_ip_addr_by_format( $addr )) {
-			$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+			$errmsg = __('Ung&uuml;ltige DNS-Server-Adresse!');
 			return GS_VALIDATION_ERR;
 		}
 		$addr = _normalize_ip_addr( $addr );
 		if ($addr === null) {
-			$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+			$errmsg = __('Ung&uuml;ltige DNS-Server-Adresse!');
 			return GS_VALIDATION_EMPTY;
 		}
 		if (_is_invalid_ip_addr_by_net( $addr )) {
-			$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+			$errmsg = __('Ung&uuml;ltige DNS-Server-Adresse!');
 			return GS_VALIDATION_ERR;
 		}
 		if (preg_match('/255/', $addr)
 		||  subStr($addr, -2) === '.0') {
-			$errmsg = 'Ung&uuml;ltige DNS-Server-Adresse!';
+			$errmsg = __('Ung&uuml;ltige DNS-Server-Adresse!');
 			return GS_VALIDATION_ERR;
 		}
 		return GS_VALIDATION_OK;
@@ -249,23 +249,23 @@ if ($action === 'save') {
 		$errmsg = '';
 		if (_is_empty_ip_addr( $addr )) {
 			$addr = '';
-			$errmsg = 'Leere NTP-Server-Adresse!';
+			$errmsg = __('Leere NTP-Server-Adresse!');
 			return GS_VALIDATION_EMPTY;
 		}
 		if (preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $addr)) {
 			# is IP address
 			$addr = _normalize_ip_addr( $addr );
 			if ($addr === null) {
-				$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
+				$errmsg = __('Ung&uuml;ltige NTP-Server-Adresse!');
 				return GS_VALIDATION_EMPTY;
 			}
 			if (_is_invalid_ip_addr_by_net( $addr )) {
-				$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
+				$errmsg = __('Ung&uuml;ltige NTP-Server-Adresse!');
 				return GS_VALIDATION_ERR;
 			}
 			if (preg_match('/255/', $addr)
 			||  subStr($addr, -2) === '.0') {
-				$errmsg = 'Ung&uuml;ltige NTP-Server-Adresse!';
+				$errmsg = __('Ung&uuml;ltige NTP-Server-Adresse!');
 				return GS_VALIDATION_ERR;
 			}
 		} else {
@@ -722,12 +722,12 @@ if ($action !== 'save2') {
 			echo '<p>' ,"\n";
 			switch ($GS_INSTALLATION_TYPE) {
 				case 'gpbx':
-					echo 'Bitte stellen Sie die gew&uuml;nschte IP-Adresse der GPBX ein. Geben Sie au&szlig;erdem die Netzmaske Ihres Netzwerkes sowie die Adresse Ihres Routers, Nameservers und Zeitservers an.' ,"\n";
-					echo 'Die Netzwerkkarte der GPBX wird dann auf diese Werte eingestellt.' ,"\n";
+					echo __('Bitte stellen Sie die gew&uuml;nschte IP-Adresse der GPBX ein. Geben Sie au&szlig;erdem die Netzmaske Ihres Netzwerkes sowie die Adresse Ihres Routers, Nameservers und Zeitservers an.') ,"\n";
+					echo __('Die Netzwerkkarte der GPBX wird dann auf diese Werte eingestellt.') ,"\n";
 					break;
 				default:
-					echo 'Bitte stellen Sie die gew&uuml;nschte IP-Adresse des Gemeinschafts-Servers ein. Geben Sie au&szlig;erdem die Netzmaske Ihres Netzwerkes sowie die Adresse Ihres Routers, Nameservers und Zeitservers an.' ,"\n";
-					echo 'Die Netzwerkkarte wird dann auf diese Werte eingestellt.' ,"\n";
+					echo __('Bitte stellen Sie die gew&uuml;nschte IP-Adresse des Gemeinschafts-Servers ein. Geben Sie au&szlig;erdem die Netzmaske Ihres Netzwerkes sowie die Adresse Ihres Routers, Nameservers und Zeitservers an.') ,"\n";
+					echo __('Die Netzwerkkarte wird dann auf diese Werte eingestellt.') ,"\n";
 					break;
 			}
 			echo '</p>' ,"\n";
@@ -736,7 +736,7 @@ if ($action !== 'save2') {
 		$disabled = '';
 	} else {
 		echo '<p>' ,"\n";
-		echo 'Die Netzwerk-Einstellungen wurden gespeichert, sind aber noch nicht aktiv.' ,"\n";
+		echo __('Die Netzwerk-Einstellungen wurden gespeichert, sind aber noch nicht aktiv.') ,"\n";
 		echo '</p>' ,"\n";
 		echo '<hr />' ,"\n";
 		$disabled = ' disabled="disabled"';
@@ -753,7 +753,7 @@ if ($action === '' || $action === 'save') {
 <table cellspacing="1">
 <tbody>
 <tr>
-	<th width="100"><?php echo 'IP-Adresse'; ?></th>
+	<th width="100"><?php echo __('IP-Adresse'); ?></th>
 	<td>
 <?php
 		$ipaddr_parts = explode('.', $form_ipaddr);
@@ -762,12 +762,12 @@ if ($action === '' || $action === 'save') {
 			echo '<input type="text" name="ipaddr[',$i,']" size="3" maxlength="3" class="r pre" value="', $part ,'"', $disabled ,' />';
 			if ($i < 3) echo '.';
 		}
-		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/IP-Adresse">?</a>' ,')</small>' ,"\n";
+		echo ' &nbsp; <small>(', '<a target="_blank" href="', __('http://de.wikipedia.org/wiki/IP-Adresse') ,'">?</a>' ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'Netzmaske'; ?></th>
+	<th><?php echo __('Netzmaske'); ?></th>
 	<td>
 <?php
 		echo '<select name="netmask" class="pre"', $disabled ,'>' ,"\n";
@@ -781,12 +781,12 @@ if ($action === '' || $action === 'save') {
 			echo '<option value="',$net,'"', ($net===$form_netmask ? ' selected="selected"' : '') ,'>',$net,' (',$mask,')</option>' ,"\n";
 		}
 		echo '</select>' ,"\n";
-		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/Netzmaske">?</a>' ,')</small>' ,"\n";
+		echo ' &nbsp; <small>(', '<a target="_blank" href="', __('http://de.wikipedia.org/wiki/Netzmaske') ,'">?</a>' ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'Router'; ?></th>
+	<th><?php echo __('Router'); ?></th>
 	<td>
 <?php
 		if (trim($form_router) != '') {
@@ -801,12 +801,12 @@ if ($action === '' || $action === 'save') {
 			echo '<input type="text" name="router[',$i,']" size="3" maxlength="3" class="r pre" value="', @$router_parts[$i] ,'"', $disabled ,' />';
 			if ($i < 3) echo '.';
 		}
-		echo ' &nbsp; <small>(', '<a target="_blank" href="http://de.wikipedia.org/wiki/Router">?</a>' ,')</small>' ,"\n";
+		echo ' &nbsp; <small>(', '<a target="_blank" href="', __('http://de.wikipedia.org/wiki/Router') ,'">?</a>' ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'DNS-Server (1)'; ?></th>
+	<th><?php echo __('DNS-Server') ,' (1)'; ?></th>
 	<td>
 <?php
 		if (trim($form_dns1) != '') {
@@ -825,7 +825,7 @@ if ($action === '' || $action === 'save') {
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'DNS-Server (2)'; ?></th>
+	<th><?php echo __('DNS-Server') ,' (2)'; ?></th>
 	<td>
 <?php
 		if (trim($form_dns2) != '') {
@@ -840,12 +840,12 @@ if ($action === '' || $action === 'save') {
 			echo '<input type="text" name="dns2[',$i,']" size="3" maxlength="3" class="r pre" value="', @$dns2_parts[$i] ,'"', $disabled ,' />';
 			if ($i < 3) echo '.';
 		}
-		echo ' &nbsp; <small>(', 'optional' ,')</small>' ,"\n";
+		echo ' &nbsp; <small>(', __('optional') ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'NTP-Server (1)'; ?></th>
+	<th><?php echo __('NTP-Server') ,' (1)'; ?></th>
 	<td>
 <?php
 		echo '<input type="text" name="ntp1" size="30" maxlength="50" class="pre" value="', $form_ntp1 ,'"', $disabled ,' />' ,"\n";
@@ -853,29 +853,29 @@ if ($action === '' || $action === 'save') {
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'NTP-Server (2)'; ?></th>
+	<th><?php echo __('NTP-Server') ,' (2)'; ?></th>
 	<td>
 <?php
 		echo '<input type="text" name="ntp2" size="30" maxlength="50" class="pre" value="', $form_ntp2 ,'"', $disabled ,' />' ,"\n";
-		echo ' &nbsp; <small>(', 'optional' ,')</small>' ,"\n";
+		echo ' &nbsp; <small>(', __('optional') ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'NTP-Server (3)'; ?></th>
+	<th><?php echo __('NTP-Server') ,' (3)'; ?></th>
 	<td>
 <?php
 		echo '<input type="text" name="ntp3" size="30" maxlength="50" class="pre" value="', $form_ntp3 ,'"', $disabled ,' />' ,"\n";
-		echo ' &nbsp; <small>(', 'optional' ,')</small>' ,"\n";
+		echo ' &nbsp; <small>(', __('optional') ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
 <tr>
-	<th><?php echo 'NTP-Server (4)'; ?></th>
+	<th><?php echo __('NTP-Server') ,' (4)'; ?></th>
 	<td>
 <?php
 		echo '<input type="text" name="ntp4" size="30" maxlength="50" class="pre" value="', $form_ntp4 ,'"', $disabled ,' />' ,"\n";
-		echo ' &nbsp; <small>(', 'optional' ,')</small>' ,"\n";
+		echo ' &nbsp; <small>(', __('optional') ,')</small>' ,"\n";
 ?>
 	</td>
 </tr>
@@ -893,13 +893,13 @@ if ($action === '' || $action === 'save') {
 			echo '<br />',"\n";
 		}
 		if ($err_cnt < 1 && $warn_cnt > 0) {
-			echo '<input type="checkbox" name="dont_warn" id="ipt-dont_warn" value="1" /> <label for="ipt-dont_warn">', 'Warnungen ignorieren' ,'</label><br />' ,"\n";
+			echo '<input type="checkbox" name="dont_warn" id="ipt-dont_warn" value="1" /> <label for="ipt-dont_warn">', __('Warnungen ignorieren') ,'</label><br />' ,"\n";
 		}
 	} else {
 		echo '<br />',"\n";
 	}
 ?>
-		<input type="submit" value="<?php echo 'Speichern'; ?>" style="margin-top:0.3em;" />
+		<input type="submit" value="<?php echo __('Speichern'); ?>" style="margin-top:0.3em;" />
 	</td>
 </tr>
 <?php } ?>
@@ -915,7 +915,7 @@ if ($action !== 'save2') {
 ?>
 
 <p align="center">
-	<?php echo 'Wie wollen Sie fortfahren?'; ?>
+	<?php echo __('Wie wollen Sie fortfahren?'); ?>
 </p>
 <div style="margin:0 4em;">
 	
@@ -923,16 +923,16 @@ if ($action !== 'save2') {
 	<input type="hidden" name="action" value="save2" />
 	
 	<input type="radio" name="save2_action" id="ipt-save2_action-back" value="" />
-	<label for="ipt-save2_action-back"><?php echo 'Einstellungen nochmal ver&auml;ndern'; ?></label><br />
+	<label for="ipt-save2_action-back"><?php echo __('Einstellungen nochmal ver&auml;ndern'); ?></label><br />
 	
 	<input type="radio" name="save2_action" id="ipt-save2_action-reboot" value="reboot" checked="checked" />
-	<label for="ipt-save2_action-reboot"><?php echo 'Einstellungen &uuml;bernehmen und System neustarten'; ?></label><br />
+	<label for="ipt-save2_action-reboot"><?php echo __('Einstellungen &uuml;bernehmen und System neustarten'); ?></label><br />
 	
 	<input type="radio" name="save2_action" id="ipt-save2_action-shutdown" value="shutdown" />
-	<label for="ipt-save2_action-shutdown"><?php echo 'Einstellungen &uuml;bernehmen und  System herunterfahren'; ?></label><br />
+	<label for="ipt-save2_action-shutdown"><?php echo __('Einstellungen &uuml;bernehmen und  System herunterfahren'); ?></label><br />
 	
 	<div align="right">
-	<input type="submit" value="<?php echo 'OK'; ?>" />
+	<input type="submit" value="<?php echo __('OK'); ?>" />
 	</div>
 	
 	</form>
@@ -950,12 +950,12 @@ if ($action !== 'save2') {
 		(  trim(gs_keyval_get('setup_net_has_changes')) !== 'yes'
 		&& $action !== 'save2' );
 	
-	echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=system-check">', 'zur&uuml;ck' ,'</a></div>' ,"\n";
+	echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=system-check">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
 	echo '<div class="fr">';
 	if ($can_continue)
-		echo '<a href="', GS_URL_PATH ,'setup/?step=dhcpd"><big>', 'weiter' ,'</big></a>';
+		echo '<a href="', GS_URL_PATH ,'setup/?step=dhcpd"><big>', __('weiter') ,'</big></a>';
 	else
-		echo '<span style="color:#999;">', 'weiter' ,'</span>';
+		echo '<span style="color:#999;">', __('weiter') ,'</span>';
 	echo '</div>' ,"\n";
 	echo '<br class="nofloat" />' ,"\n";
 
@@ -966,8 +966,8 @@ else {
 ?>
 
 <p align="center">
-	<?php echo 'Das System wird jetzt neugestartet.'; ?><br />
-	<?php echo 'Bitte haben Sie etwas Geduld. Vorzeitiges Ausschalten kann zu Datenverlust f&uuml;hren.'; ?>
+	<?php echo __('Das System wird jetzt neugestartet.'); ?><br />
+	<?php echo __('Bitte haben Sie etwas Geduld. Vorzeitiges Ausschalten kann zu Datenverlust f&uuml;hren.'); ?>
 </p>
 <p align="center">
 	<img alt=" " src="<?php echo GS_URL_PATH; ?>img/wait-net.gif" />
@@ -980,8 +980,8 @@ else {
 ?>
 
 <p align="center">
-	<?php echo 'Das System wird jetzt heruntergefahren.'; ?><br />
-	<?php echo 'Bitte haben Sie etwas Geduld. Vorzeitiges Ausschalten kann zu Datenverlust f&uuml;hren.'; ?>
+	<?php echo __('Das System wird jetzt heruntergefahren.'); ?><br />
+	<?php echo __('Bitte haben Sie etwas Geduld. Vorzeitiges Ausschalten kann zu Datenverlust f&uuml;hren.'); ?>
 </p>
 <p align="center">
 	<img alt=" " src="<?php echo GS_URL_PATH; ?>img/wait-net.gif" />
