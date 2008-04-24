@@ -119,7 +119,7 @@ if ($err===0 && preg_match('/^\s*([0-9]+)/', @$out[0], $m)) {
 
 ?>
 
-<h3>Daten-Partition</h3>
+<h3><?php echo __('Daten-Partition'); ?></h3>
 <table cellspacing="1" style="margin-left:20px;">
 <tbody>
 
