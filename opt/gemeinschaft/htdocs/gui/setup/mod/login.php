@@ -37,13 +37,13 @@ $change_pwd_msg = '';
 if ($action === 'setpwd') {
 	$newpwd = trim(@$_REQUEST['change_login_pwd1']);
 	if ($newpwd !== trim(@$_REQUEST['change_login_pwd2'])) {
-		$change_pwd_msg = 'Die Pa&szlig;w&ouml;rter stimmen nicht &uuml;berein!';
+		$change_pwd_msg = __('Die Pa&szlig;w&ouml;rter stimmen nicht &uuml;berein!');
 	} elseif ($newpwd === '') {
-		$change_pwd_msg = 'Das Pa&szlig;wort darf nicht leer sein!';
+		$change_pwd_msg = __('Das Pa&szlig;wort darf nicht leer sein!');
 	} else {
 		gs_keyval_set('setup_pwd', $newpwd);
 		$keyval_setup_pwd = $newpwd;
-		$change_pwd_msg = 'Das Pa&szlig;wort wurde gespeichert.';
+		$change_pwd_msg = __('Das Pa&szlig;wort wurde gespeichert.');
 		$change_pwd_ok = true;
 	}
 }
@@ -64,7 +64,7 @@ if ($action === 'setpwd') {
 if (! @$_SESSION['login_ok']) {
 ?>
 
-<h1><?php echo 'Login'; ?></h1>
+<h1><?php echo __('Login'); ?></h1>
 <p align="center" style="color:#e00;">
 <?php
 	if (! @$_SESSION['login_ok']
@@ -81,16 +81,16 @@ if (! @$_SESSION['login_ok']) {
 <table cellspacing="1" style="margin:0 auto;">
 <tbody>
 	<tr>
-		<th class="transp"><?php echo 'Benutzer'; ?>:</th>
+		<th class="transp"><?php echo __('Benutzer'); ?>:</th>
 		<td class="transp"><input type="text" name="login_user" value="sysadmin" size="25" maxlength="30" /></td>
 	</tr>
 	<tr>
-		<th class="transp"><?php echo 'Pa&szlig;wort'; ?>:</th>
+		<th class="transp"><?php echo __('Pa&szlig;wort'); ?>:</th>
 		<td class="transp"><input type="password" name="login_pwd" value="" size="25" maxlength="30" /></td>
 	</tr>
 	<tr>
 		<td class="transp">&nbsp;</td>
-		<td class="transp"><br /><input type="submit" value="<?php echo 'Einloggen'; ?>" /></td>
+		<td class="transp"><br /><input type="submit" value="<?php echo __('Einloggen'); ?>" /></td>
 	</tr>
 </tbody>
 </table>
@@ -112,12 +112,12 @@ if (! @$_SESSION['login_ok']) {
 else {
 ?>
 
-<h1><?php echo 'Pa&szlig;wort &auml;ndern'; ?></h1>
+<h1><?php echo __('Pa&szlig;wort &auml;ndern'); ?></h1>
 <p>
-	<?php echo 'Bitte setzen Sie ein Pa&szlig;wort um den Setup-Bereich gegen unbefugte Zugriffe zu sch&uuml;tzen. Das Pa&szlig;wort sollte mindestens 8 Zeichen lang sein und aus Buchstaben, Zahlen und Sonderzeichen wie z.B. <code>#</code>, <code>!</code> oder <code>=</code> bestehen.'; ?>
+	<?php echo __('Bitte setzen Sie ein Pa&szlig;wort um den Setup-Bereich gegen unbefugte Zugriffe zu sch&uuml;tzen. Das Pa&szlig;wort sollte mindestens 8 Zeichen lang sein und aus Buchstaben, Zahlen und Sonderzeichen wie z.B. <code>#</code>, <code>!</code> oder <code>=</code> bestehen.'); ?>
 </p>
 <p>
-	<?php echo '<b>Achtung:</b> Vergessen Sie dieses Pa&szlig;wort nicht!'; ?>
+	<?php echo __('<b>Achtung:</b> Vergessen Sie dieses Pa&szlig;wort nicht!'); ?>
 </p>
 <form method="post" action="<?php echo GS_URL_PATH; ?>setup/?step=login">
 <input type="hidden" name="action" value="setpwd" />
@@ -129,20 +129,20 @@ if (@$change_pwd_msg != '') {
 <table cellspacing="1" style="margin:0 auto;">
 <tbody>
 	<tr>
-		<th class="transp r"><?php echo 'Benutzer'; ?></th>
+		<th class="transp r"><?php echo __('Benutzer'); ?></th>
 		<td class="transp"><input type="text" name="change_login_user" value="sysadmin" size="25" maxlength="30" disabled="disabled" /></td>
 	</tr>
 	<tr>
-		<th class="transp r"><?php echo 'Neues Pa&szlig;wort'; ?></th>
+		<th class="transp r"><?php echo __('Neues Pa&szlig;wort'); ?></th>
 		<td class="transp"><input type="password" name="change_login_pwd1" value="<?php echo htmlEnt($keyval_setup_pwd); ?>" size="25" maxlength="30" /></td>
 	</tr>
 	<tr>
-		<th class="transp r"><?php echo 'Pa&szlig;wort wiederholen'; ?></th>
+		<th class="transp r"><?php echo __('Pa&szlig;wort wiederholen'); ?></th>
 		<td class="transp"><input type="password" name="change_login_pwd2" value="<?php echo htmlEnt($keyval_setup_pwd); ?>" size="25" maxlength="30" /></td>
 	</tr>
 	<tr>
 		<td class="transp">&nbsp;</td>
-		<td class="transp"><br /><input type="submit" value="<?php echo 'Pa&szlig;wort &auml;ndern'; ?>" /></td>
+		<td class="transp"><br /><input type="submit" value="<?php echo __('Pa&szlig;wort &auml;ndern'); ?>" /></td>
 	</tr>
 </tbody>
 </table>
@@ -163,9 +163,9 @@ if (@$change_pwd_msg != '') {
 //echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/">', 'zur&uuml;ck' ,'</a></div>' ,"\n";
 echo '<div class="fr">';
 if ($can_continue)
-	echo '<a href="', GS_URL_PATH ,'setup/?step=system-check"><big>', 'weiter' ,'</big></a>';
+	echo '<a href="', GS_URL_PATH ,'setup/?step=system-check"><big>', __('weiter') ,'</big></a>';
 else
-	echo '<span style="color:#999;">', 'weiter' ,'</span>';
+	echo '<span style="color:#999;">', __('weiter') ,'</span>';
 echo '</div>' ,"\n";
 echo '<br class="nofloat" />' ,"\n";
 

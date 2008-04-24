@@ -36,10 +36,10 @@ defined('GS_VALID') or die('No direct access.');
 
 <div style="width:550px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
 
-<h1><?php echo 'Neustart'; ?></h1>
+<h1><?php echo __('Neustart'); ?></h1>
 <p align="center">
-	<?php echo 'Das System wird jetzt neugestartet.'; ?><br />
-	<?php echo 'Bitte haben Sie etwas Geduld. Trennen der Stromversorgung / Reset kann zu Datenverlust f&uuml;hren.'; ?>
+	<?php echo __('Das System wird jetzt neugestartet.'); ?><br />
+	<?php echo __('Bitte haben Sie etwas Geduld. Trennen der Stromversorgung / Reset kann zu Datenverlust f&uuml;hren.'); ?>
 </p>
 <p align="center">
 	<img alt=" " src="<?php echo GS_URL_PATH; ?>img/wait-net.gif" />

@@ -51,15 +51,15 @@ if ($action === 'save') {
 ?>
 
 <div style="width:550px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
-<h1><?php echo 'DHCP-Server'; ?></h1>
+<h1><?php echo __('DHCP-Server'); ?></h1>
 <p>
 <?php
 	switch ($GS_INSTALLATION_TYPE) {
 		case 'gpbx':
-			echo 'F&uuml;r das automatische Einrichten (Provisioning) der Telefone wird ein DHCP-Server ben&ouml;tigt. Sie k&ouml;nnen entweder den DHCP-Server auf der GPBX verwenden oder einen bereits vorhandenen DHCP-Server entsprechend konfigurieren.';
+			echo __('F&uuml;r das automatische Einrichten (Provisioning) der Telefone wird ein DHCP-Server ben&ouml;tigt. Sie k&ouml;nnen entweder den DHCP-Server auf der GPBX verwenden oder einen bereits vorhandenen DHCP-Server entsprechend konfigurieren.');
 			break;
 		default:
-			echo 'F&uuml;r das automatische Einrichten (Provisioning) der Telefone wird ein DHCP-Server ben&ouml;tigt. Sie k&ouml;nnen entweder den DHCP-Server auf diesem System verwenden oder einen bereits vorhandenen DHCP-Server entsprechend konfigurieren.';
+			echo __('F&uuml;r das automatische Einrichten (Provisioning) der Telefone wird ein DHCP-Server ben&ouml;tigt. Sie k&ouml;nnen entweder den DHCP-Server auf diesem System verwenden oder einen bereits vorhandenen DHCP-Server entsprechend konfigurieren.');
 	}
 ?>
 </p>
@@ -71,15 +71,15 @@ if ($action === 'save') {
 <tbody>
 	<tr>
 		<td class="transp r"><input type="radio" name="dhcpd" id="ipt-dhcpd-1" value="1"<?php if ($current_dhcp_daemon_start) echo ' checked="checked"'; ?> /></td>
-		<td class="transp"><label for="ipt-dhcpd-1"><?php echo 'Mitgelieferten DHCP-Server aktivieren.<br />(empfohlen)'; ?></label></td>
+		<td class="transp"><label for="ipt-dhcpd-1"><?php echo __('Mitgelieferten DHCP-Server aktivieren.<br />(empfohlen)'); ?></label></td>
 	</tr>
 	<tr>
 		<td class="transp r"><input type="radio" name="dhcpd" id="ipt-dhcpd-0" value="0"<?php if (! $current_dhcp_daemon_start) echo ' checked="checked"'; ?> /></td>
-		<td class="transp"><label for="ipt-dhcpd-0"><?php echo 'Vorhandenen DHCP-Server verwenden.<br />(nur f&uuml;r erfahrene Anwender, Speichern f&uuml;r Beispiel-Konfiguration)'; ?></label></td>
+		<td class="transp"><label for="ipt-dhcpd-0"><?php echo __('Vorhandenen DHCP-Server verwenden.<br />(nur f&uuml;r erfahrene Anwender, Speichern f&uuml;r Beispiel-Konfiguration)'); ?></label></td>
 	</tr>
 	<tr>
 		<td class="transp">&nbsp;</td>
-		<td class="transp"><br /><input type="submit" value="<?php echo 'Speichern'; ?>" /></td>
+		<td class="transp"><br /><input type="submit" value="<?php echo __('Speichern'); ?>" /></td>
 	</tr>
 </tbody>
 </table>
@@ -96,7 +96,7 @@ if ($action === 'save' && ! $new_dhcp_daemon_start) {
 ?>
 <hr />
 <p>
-	<?php echo 'Bitte konfigurieren Sie Ihren vorhandenen DHCP-Server wie folgt (Beispiel f&uuml;r den ISC DHCPd 3):'; ?>
+	<?php echo __('Bitte konfigurieren Sie Ihren vorhandenen DHCP-Server wie folgt (Beispiel f&uuml;r den ISC DHCPd 3)'); ?>
 </p>
 
 <textarea cols="50" rows="60" readonly="readonly" style="width:99%; padding:2px 0 2px 4px;"><?php
@@ -115,12 +115,12 @@ if ($action === 'save' && ! $new_dhcp_daemon_start) {
 
 <?php
 
-echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=network">', 'zur&uuml;ck' ,'</a></div>' ,"\n";
+echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=network">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
 echo '<div class="fr">';
 if ($can_continue)
-	echo '<a href="', GS_URL_PATH ,'setup/?step=phones-scan"><big>', 'weiter' ,'</big></a>';
+	echo '<a href="', GS_URL_PATH ,'setup/?step=phones-scan"><big>', __('weiter') ,'</big></a>';
 else
-	echo '<span style="color:#999;">', 'weiter' ,'</span>';
+	echo '<span style="color:#999;">', __('weiter') ,'</span>';
 echo '</div>' ,"\n";
 echo '<br class="nofloat" />' ,"\n";
 

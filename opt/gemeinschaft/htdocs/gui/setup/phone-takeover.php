@@ -186,7 +186,7 @@ if ($action == '') {
 	echo '<input type="hidden" name="type" value="', $type ,'" />' ,"\n";
 	
 	echo '<input type="hidden" name="action" value="takeover" />' ,"\n";
-	echo '<input type="submit" value="', '&Uuml;bernehmen' ,'" />' ,"\n";
+	echo '<input type="submit" value="', __('&Uuml;bernehmen') ,'" />' ,"\n";
 	echo '</form>' ,"\n";
 }
 elseif ($action === 'takeover') {
@@ -248,9 +248,9 @@ elseif ($action === 'takeover') {
 			}
 			if (! $success) {
 				if (! $reachable) {
-					echo 'Verbindung fehlgeschlagen.' ,"\n";
+					echo __('Verbindung fehlgeschlagen.') ,"\n";
 				} elseif ($all_401_403) {
-					echo 'Nicht autorisiert.' ,"\n";
+					echo __('Nicht autorisiert.') ,"\n";
 				} else {
 					echo 'Fehler.' ,"\n";
 				}

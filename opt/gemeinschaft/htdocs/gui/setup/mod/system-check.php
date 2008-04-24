@@ -33,30 +33,30 @@ $can_continue = true;
 ?>
 
 <div style="width:550px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
-<h1><?php echo 'Willkommen!'; ?></h1>
+<h1><?php echo __('Willkommen!'); ?></h1>
 <p>
 <?php
 	switch ($GS_INSTALLATION_TYPE) {
 		case 'gpbx':
-			echo 'Die folgenden Schritte leiten Sie durch die grundlegende Netzwerk-Konfiguration der <b>GPBX</b>.' ,"\n";
+			echo __('Die folgenden Schritte leiten Sie durch die grundlegende Netzwerk-Konfiguration der <b>GPBX</b>.') ,"\n";
 			break;
 		default:
-			echo 'Die folgenden Schritte leiten Sie durch die grundlegende Netzwerk-Konfiguration der Telefonanlage <b>Gemeinschaft</b>.' ,"\n";
+			echo __('Die folgenden Schritte leiten Sie durch die grundlegende Netzwerk-Konfiguration der Telefonanlage <b>Gemeinschaft</b>.') ,"\n";
 			break;
 	}
-	echo 'Sie k&ouml;nnen sp&auml;ter jederzeit zum Setup zur&uuml;ckkehren um Einstellungen zu ver&auml;ndern.' ,"\n";
+	echo __('Sie k&ouml;nnen sp&auml;ter jederzeit zum Setup zur&uuml;ckkehren um Einstellungen zu ver&auml;ndern.') ,"\n";
 ?>
 </p>
 <p>
 <?php
-	echo 'Installationsart' ,': <b>';
+	echo __('Installationsart') ,': <b>';
 	switch ($GS_INSTALLATION_TYPE) {
-		case 'gpbx'  :  echo 'GPBX'         ; break;
-		case 'single':  echo 'Einzel-Server'; break;
-		default      :  echo 'unbekannt'    ; break;
+		case 'gpbx'  :  echo    'GPBX'          ; break;
+		case 'single':  echo __('Einzel-Server'); break;
+		default      :  echo    'unbekannt'     ; break;
 	}
 	echo '</b>, ';
-	echo 'Sprache' ,': <b>', 'Deutsch' ,'</b><br />' ,"\n";
+	echo __('Sprache') ,': <b>', __('Deutsch') ,'</b><br />' ,"\n";
 ?>
 </p>
 <hr />
@@ -91,42 +91,42 @@ function _test_result( $str, $status )
 <tbody>
 
 <tr>
-	<td width="120"><?php echo 'Betriebssystem'; ?>:</td>
+	<td width="120"><?php echo __('Betriebssystem'); ?>:</td>
 	<td width="240"><?php echo htmlEnt(PHP_OS); ?></td>
 	<td width="110" <?php
 		switch (PHP_OS) {
 			case 'Linux':
-				echo _test_result('OK'                     ,'ok'  );
+				echo _test_result(__('OK'                    ), 'ok'  );
 				break;
 			default     :
-				echo _test_result('NICHT UNTERST&Uuml;TZT', 'warn');
+				echo _test_result(__('NICHT UNTERST&Uuml;TZT'), 'warn');
 				break;
 		}
 	?></td>
 </tr>
 
 <tr>
-	<td><?php echo 'PHP-Version'; ?>:</td>
+	<td><?php echo __('PHP-Version'); ?>:</td>
 	<td><tt><?php echo htmlEnt(PHP_VERSION); ?></tt></td>
 	<td <?php
 		if     (version_compare(PHP_VERSION, '5.2') >= 0)
-			echo _test_result('OK', 'ok');
+			echo _test_result(__('OK'), 'ok');
 		elseif (version_compare(PHP_VERSION, '5'  ) >= 0)
-			echo _test_result('NICHT UNTERST&Uuml;TZT', 'warn');
+			echo _test_result(__('NICHT UNTERST&Uuml;TZT'), 'warn');
 		elseif (version_compare(PHP_VERSION, '4.3') >= 0)
-			echo _test_result('OK', 'ok');
+			echo _test_result(__('OK'), 'ok');
 		else
-			echo _test_result('NICHT UNTERST&Uuml;TZT', 'warn');
+			echo _test_result(__('NICHT UNTERST&Uuml;TZT'), 'warn');
 	?></td>
 </tr>
 
 <tr>
-	<td><?php echo 'PHP-Module'; ?>:</td>
+	<td><?php echo __('PHP-Module'); ?>:</td>
 	<td><tt><?php echo 'ftp'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('ftp')
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT GELADEN', 'warn') );
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT GELADEN'), 'warn') );
 	?></td>
 </tr>
 <tr>
@@ -134,60 +134,67 @@ function _test_result( $str, $status )
 	<td><tt><?php echo 'ldap'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('ldap')
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT GELADEN', 'warn') );	?></td>
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT GELADEN'), 'warn') );
+	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'mbstring'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('mbstring')
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT GELADEN', 'warn') );	?></td>
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT GELADEN'), 'warn') );
+	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'mysql'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('mysql')
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT GELADEN', 'warn') );	?></td>
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT GELADEN'), 'warn') );
+	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'pcre'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('pcre')
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT GELADEN', 'warn') );	?></td>
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT GELADEN'), 'warn') );
+	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'posix'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('posix')
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT GELADEN', 'warn') );	?></td>
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT GELADEN'), 'warn') );
+	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'session'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('session')
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT GELADEN', 'warn') );	?></td>
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT GELADEN'), 'warn') );
+	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
 	<td><tt><?php echo 'sockets'; ?></tt></td>
 	<td <?php
 		echo (extension_loaded('sockets')
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT GELADEN', 'warn') );	?></td>
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT GELADEN'), 'warn') );
+	?></td>
 </tr>
 
 <tr>
-	<td><?php echo 'PHP-Optionen'; ?>:</td>
+	<td><?php echo __('PHP-Optionen'); ?>:</td>
 	<td><?php
 		$k = 'safe_mode';
 		$v = ini_get($k);
@@ -195,8 +202,8 @@ function _test_result( $str, $status )
 	?></td>
 	<td <?php
 		echo php_ini_false($v)
-			? _test_result('OK', 'ok')
-			: _test_result('FEHLER', 'warn');
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('FEHLER'), 'warn');
 	?></td>
 </tr>
 <tr>
@@ -208,8 +215,8 @@ function _test_result( $str, $status )
 	?></td>
 	<td <?php
 		echo php_ini_false($v)
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT OPTIMAL', 'notice');
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT OPTIMAL'), 'notice');
 	?></td>
 </tr>
 <tr>
@@ -221,8 +228,9 @@ function _test_result( $str, $status )
 	?></td>
 	<td <?php
 		echo php_ini_false($v)
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT OPTIMAL', 'notice');	?></td>
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT OPTIMAL'), 'notice');
+	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
@@ -233,8 +241,9 @@ function _test_result( $str, $status )
 	?></td>
 	<td <?php
 		echo php_ini_false($v)
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT OPTIMAL', 'notice');	?></td>
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT OPTIMAL'), 'notice');
+	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
@@ -245,8 +254,9 @@ function _test_result( $str, $status )
 	?></td>
 	<td <?php
 		echo php_ini_false($v)
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT OPTIMAL', 'notice');	?></td>
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT OPTIMAL'), 'notice');
+	?></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
@@ -257,8 +267,8 @@ function _test_result( $str, $status )
 	?></td>
 	<td <?php
 		echo ($v >= 30 || $v == 0)
-			? _test_result('OK', 'ok')
-			: _test_result('ZU KURZ', 'notice');
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('ZU KURZ'), 'notice');
 	?></td>
 </tr>
 <tr>
@@ -268,12 +278,12 @@ function _test_result( $str, $status )
 		$k = 'max_execution_time';
 		$v = (int)ini_get('max_execution_time');
 		$ok = ($v == 40);
-		echo '<tt>', $k ,' setzbar? ', ($ok ? 'ja' : 'nein') ,'</tt>';
+		echo '<tt>', $k ,' ', __('setzbar?') ,' ', ($ok ? __('ja') : __('nein')) ,'</tt>';
 	?></td>
 	<td <?php
 		echo $ok
-			? _test_result('OK', 'ok')
-			: _test_result('FEHLER', 'notice');
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('FEHLER'), 'notice');
 	?></td>
 </tr>
 <tr>
@@ -285,8 +295,8 @@ function _test_result( $str, $status )
 	?></td>
 	<td <?php
 		echo ($v == 0)
-			? _test_result('OK', 'ok')
-			: _test_result('FEHLER', 'warn');
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('FEHLER'), 'warn');
 	?></td>
 </tr>
 
@@ -300,32 +310,32 @@ function _test_result( $str, $status )
 			case 'apache'        : echo 'Apache 1 + <tt>mod_php</tt>'; break;
 			case 'cgi-fcgi'      : echo 'FCGI'                       ; break;
 			case 'cgi'           : echo 'CGI'                        ; break;
-			case 'cli'           : echo 'CLI (RedHat?)'              ; break;
+			case 'cli'           : echo 'CLI'                        ; break;
 			default              : echo $sapi                        ; break;
 		}
 		?></td>
 		<td <?php
 		switch ($sapi) {
-			case 'apache2handler': echo _test_result('OK'                    , 'ok'    ); break;
-			case 'apache2filter' : echo _test_result('OK'                    , 'ok'    ); break;
-			case 'apache'        : echo _test_result('OK'                    , 'ok'    ); break;
-			case 'cgi-fcgi'      : echo _test_result('OK'                    , 'ok'    ); break;
-			case 'cgi'           : echo _test_result('NICHT OPTIMAL'         , 'notice'); break;
-			case 'cli'           : echo _test_result('NICHT OPTIMAL'         , 'notice'); break;
-			default              : echo _test_result('NICHT UNTERST&Uuml;TZT', 'warn'  ); break;
+			case 'apache2handler': echo _test_result(__('OK'                    ), 'ok'    ); break;
+			case 'apache2filter' : echo _test_result(__('OK'                    ), 'ok'    ); break;
+			case 'apache'        : echo _test_result(__('OK'                    ), 'ok'    ); break;
+			case 'cgi-fcgi'      : echo _test_result(__('OK'                    ), 'ok'    ); break;
+			case 'cgi'           : echo _test_result(__('NICHT OPTIMAL'         ), 'notice'); break;
+			case 'cli'           : echo _test_result(__('NICHT OPTIMAL'         ), 'notice'); break;
+			default              : echo _test_result(__('NICHT UNTERST&Uuml;TZT'), 'warn'  ); break;
 		}
 	?></td>
 </tr>
 
 <tr>
-	<td><?php echo 'Apache-Module'; ?>:</td>
+	<td><?php echo __('Apache-Module'); ?>:</td>
 	<td><?php
 		$have_apache_get_modules = false;
 		if (subStr($sapi,0,6) !== 'apache') {
-			echo 'nicht zutreffend';
+			echo '&nbsp;';
 		} else {
 			if (! function_exists('apache_get_modules')) {
-				echo 'keine Informationen';
+				echo '?';
 			} else {
 				$have_apache_get_modules = true;
 				$apache_mods = array_flip(apache_get_modules());
@@ -336,7 +346,7 @@ function _test_result( $str, $status )
 	<td <?php
 		echo $have_apache_get_modules
 			? _test_result('&nbsp;', '')
-			: _test_result('FEHLER', 'notice');
+			: _test_result(__('FEHLER'), 'notice');
 	?></td>
 </tr>
 <?php if ($have_apache_get_modules) { ?>
@@ -345,8 +355,8 @@ function _test_result( $str, $status )
 	<td><tt>mod_env</tt></td>
 	<td <?php
 		echo array_key_exists('mod_env', $apache_mods)
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT GELADEN', 'warn');
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT GELADEN'), 'warn');
 	?></td>
 </tr>
 <tr>
@@ -354,8 +364,8 @@ function _test_result( $str, $status )
 	<td><tt>mod_mime</tt></td>
 	<td <?php
 		echo array_key_exists('mod_mime', $apache_mods)
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT GELADEN', 'warn');
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT GELADEN'), 'warn');
 	?></td>
 </tr>
 <tr>
@@ -363,8 +373,8 @@ function _test_result( $str, $status )
 	<td><tt>mod_rewrite</tt></td>
 	<td <?php
 		echo array_key_exists('mod_rewrite', $apache_mods)
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT GELADEN', 'warn');
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT GELADEN'), 'warn');
 	?></td>
 </tr>
 <tr>
@@ -372,8 +382,8 @@ function _test_result( $str, $status )
 	<td><tt>mod_alias</tt></td>
 	<td <?php
 		echo array_key_exists('mod_alias', $apache_mods)
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT OPTIMAL', 'notice');
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT OPTIMAL'), 'notice');
 	?></td>
 </tr>
 <tr>
@@ -381,14 +391,14 @@ function _test_result( $str, $status )
 	<td><tt>mod_expires</tt></td>
 	<td <?php
 		echo array_key_exists('mod_expires', $apache_mods)
-			? _test_result('OK', 'ok')
-			: _test_result('NICHT OPTIMAL', 'notice');
+			? _test_result(__('OK'), 'ok')
+			: _test_result(__('NICHT OPTIMAL'), 'notice');
 	?></td>
 </tr>
 <?php } ?>
 
 <tr>
-	<td><?php echo 'Benutzer'; ?>:</td>
+	<td><?php echo __('Benutzer'); ?>:</td>
 	<td><?php
 		$euser = posix_getpwuid(posix_geteuid());
 		if (is_array($euser))
@@ -438,7 +448,7 @@ function _test_result( $str, $status )
 </tr>
 <?php */ ?>
 <tr>
-	<td><?php echo 'Ausf&uuml;hrungsrechte'; ?>:</td>
+	<td><?php echo __('Ausf&uuml;hrungsrechte'); ?>:</td>
 	<td>&nbsp;</td>
 	<td <?php
 		$user_info = @posix_getpwuid(@posix_geteuid());
@@ -495,12 +505,12 @@ function _test_result( $str, $status )
 
 
 
-echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=login">', 'zur&uuml;ck' ,'</a></div>' ,"\n";
+echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=login">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
 echo '<div class="fr">';
 if ($can_continue)
-	echo '<a href="', GS_URL_PATH ,'setup/?step=network"><big>', 'weiter' ,'</big></a>';
+	echo '<a href="', GS_URL_PATH ,'setup/?step=network"><big>', __('weiter') ,'</big></a>';
 else
-	echo '<span style="color:#999;">', 'weiter' ,'</span>';
+	echo '<span style="color:#999;">', __('weiter') ,'</span>';
 echo '</div>' ,"\n";
 echo '<br class="nofloat" />' ,"\n";
 
