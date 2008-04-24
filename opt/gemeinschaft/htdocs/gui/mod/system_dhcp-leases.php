@@ -41,7 +41,7 @@ echo '</h2>', "\n";
 
 
 if (gs_keyval_get('dhcp_daemon_start') !== 'yes') {
-	echo 'Der DHCP-Server auf diesem System ist nicht aktiviert.';
+	echo __('Der DHCP-Server auf diesem System ist nicht aktiviert.');
 	return;
 }
 
@@ -188,12 +188,12 @@ echo "</pre>";
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th><?php echo 'IP-Adresse'; ?></th>
-	<th><?php echo 'MAC-Adresse'; ?></th>
-	<th><?php echo 'G&uuml;ltig von'; ?></th>
-	<th><?php echo 'G&uuml;ltig bis'; ?></th>
-	<th><?php echo 'Name'; ?></th>
-	<th><?php echo 'Hersteller'; ?></th>
+	<th><?php echo __('IP-Adresse'); ?></th>
+	<th><?php echo __('MAC-Adresse'); ?></th>
+	<th><?php echo __('G&uuml;ltig von'); ?></th>
+	<th><?php echo __('G&uuml;ltig bis'); ?></th>
+	<th><?php echo __('Name'); ?></th>
+	<th><?php echo __('Hersteller'); ?></th>
 </tr>
 </thead>
 <tbody>
