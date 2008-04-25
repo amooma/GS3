@@ -899,6 +899,7 @@ if ($action === '' || $action === 'save') {
 		echo '<br />',"\n";
 	}
 ?>
+		<input type="reset" value="<?php echo __('Verwerfen'); ?>" style="margin-top:0.3em;" />
 		<input type="submit" value="<?php echo __('Speichern'); ?>" style="margin-top:0.3em;" />
 	</td>
 </tr>
