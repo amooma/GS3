@@ -162,6 +162,8 @@ if (@$change_pwd_msg != '') {
 
 //echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/">', 'zur&uuml;ck' ,'</a></div>' ,"\n";
 echo '<div class="fr">';
+if (gs_keyval_get('setup_pwd') == '')
+	$can_continue = false;
 if ($can_continue) {
 	switch ($GS_INSTALLATION_TYPE) {
 		# "system-check" unnecessary for the GPBX
