@@ -79,7 +79,10 @@ if ($action === 'save') {
 	</tr>
 	<tr>
 		<td class="transp">&nbsp;</td>
-		<td class="transp"><br /><input type="submit" value="<?php echo __('Speichern'); ?>" /></td>
+		<td class="transp"><br />
+			<input type="reset" value="<?php echo __('Verwerfen'); ?>" />
+			<input type="submit" value="<?php echo __('Speichern'); ?>" />
+		</td>
 	</tr>
 </tbody>
 </table>
