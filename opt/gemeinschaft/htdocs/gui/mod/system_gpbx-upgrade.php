@@ -64,6 +64,33 @@ function _upgrade_info_decode_val( $str )
 	return urlDecode($str);
 }
 
+function _find_disk( $preferred_device=null )
+{
+	$devs = array();
+	if ($preferred_device) {
+		$devs[] = $preferred_device;
+	}
+	
+	$tmp = @glob('/dev/hd?');
+	if (is_array($tmp)) {
+		foreach ($tmp as $dev) {
+			$devs[] = baseName($dev);
+		}
+	}
+	
+	foreach ($devs as $dev) {
+		$filetype = @fileType('/dev/'.$dev);
+		if ($filetype === 'block') {
+			if (file_exists('/proc/ide/'.$dev.'/media')) {
+				if (trim(@file_get_contents('/proc/ide/'.$dev.'/media')) === 'disk') {
+					return $dev;
+				}
+			}
+		}
+	}
+	
+	return null;
+}
 
 
 $installed_gpbx_vers = @gs_file_get_contents( '/etc/gemeinschaft/.gpbx-version' );
@@ -183,9 +210,8 @@ if (@$_POST['action'] === 'upgrade'
 	}
 	
 	
-	if     (@file_exists('/dev/hdc')) $flash_dev = 'hdc';
-	elseif (@file_exists('/dev/hda')) $flash_dev = 'hda';
-	else {
+	$flash_dev = _find_disk('hda');
+	if (! $flash_dev) {
 		echo 'Flash-Device nicht gefunden.';
 		return;
 	}
