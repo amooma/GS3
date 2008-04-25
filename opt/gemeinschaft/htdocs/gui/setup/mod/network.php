@@ -950,7 +950,12 @@ if ($action !== 'save2') {
 		(  trim(gs_keyval_get('setup_net_has_changes')) !== 'yes'
 		&& $action !== 'save2' );
 	
-	echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=system-check">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
+	switch ($GS_INSTALLATION_TYPE) {
+		# "system-check" unnecessary for the GPBX
+		case 'gpbx': $prev_step = 'login'       ; break;
+		default    : $prev_step = 'system-check'; break;
+	}
+	echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=',$prev_step ,'">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
 	echo '<div class="fr">';
 	if ($can_continue)
 		echo '<a href="', GS_URL_PATH ,'setup/?step=dhcpd"><big>', __('weiter') ,'</big></a>';

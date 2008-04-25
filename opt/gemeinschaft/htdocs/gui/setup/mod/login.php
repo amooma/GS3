@@ -162,10 +162,16 @@ if (@$change_pwd_msg != '') {
 
 //echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/">', 'zur&uuml;ck' ,'</a></div>' ,"\n";
 echo '<div class="fr">';
-if ($can_continue)
-	echo '<a href="', GS_URL_PATH ,'setup/?step=system-check"><big>', __('weiter') ,'</big></a>';
-else
+if ($can_continue) {
+	switch ($GS_INSTALLATION_TYPE) {
+		# "system-check" unnecessary for the GPBX
+		case 'gpbx': $next_step = 'network'     ; break;
+		default    : $next_step = 'system-check'; break;
+	}
+	echo '<a href="', GS_URL_PATH ,'setup/?step=',$next_step ,'"><big>', __('weiter') ,'</big></a>';
+} else {
 	echo '<span style="color:#999;">', __('weiter') ,'</span>';
+}
 echo '</div>' ,"\n";
 echo '<br class="nofloat" />' ,"\n";
 
