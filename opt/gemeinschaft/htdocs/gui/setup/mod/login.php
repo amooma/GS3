@@ -134,11 +134,11 @@ if (@$change_pwd_msg != '') {
 	</tr>
 	<tr>
 		<th class="transp r"><?php echo __('Neues Pa&szlig;wort'); ?></th>
-		<td class="transp"><input type="password" name="change_login_pwd1" value="<?php echo htmlEnt($keyval_setup_pwd); ?>" size="25" maxlength="30" /></td>
+		<td class="transp"><input type="password" name="change_login_pwd1" value="" size="25" maxlength="30" /></td>
 	</tr>
 	<tr>
 		<th class="transp r"><?php echo __('Pa&szlig;wort wiederholen'); ?></th>
-		<td class="transp"><input type="password" name="change_login_pwd2" value="<?php echo htmlEnt($keyval_setup_pwd); ?>" size="25" maxlength="30" /></td>
+		<td class="transp"><input type="password" name="change_login_pwd2" value="" size="25" maxlength="30" /></td>
 	</tr>
 	<tr>
 		<td class="transp">&nbsp;</td>
