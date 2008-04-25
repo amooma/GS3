@@ -48,6 +48,8 @@ $ifconfig = find_executable('ifconfig', array(
 
 ?>
 
+<script type="text/javascript" src="<?php echo GS_URL_PATH; ?>js/unsaved-changes.js"></script>
+
 <div style="width:550px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
 <h1><?php echo __('Netzwerk'); ?></h1>
 <?php
@@ -1032,3 +1034,9 @@ if ($action === 'save2') {
 }
 
 ?>
+
+<script type="text/javascript">
+try{
+	gs_prevent_unsaved_changes( '<?php echo __('Sie haben noch nicht alle \u00C4nderungen gespeichert! Sie sollten zuerst speichern oder die \u00C4nderungen verwerfen.'); ?>' );
+}catch(e){}
+</script>
