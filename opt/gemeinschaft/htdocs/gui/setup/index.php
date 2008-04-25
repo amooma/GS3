@@ -96,7 +96,13 @@ gs_settextdomain( 'gemeinschaft-gui' );
 # get step
 #
 $step = preg_replace('/[^a-z0-9\-_]/', '', @$_REQUEST['step']);
-if ($step == '') $step = 'system-check';
+if ($step == '') {
+	switch ($GS_INSTALLATION_TYPE) {
+		# "system-check" unnecessary for the GPBX
+		case 'gpbx': $step = 'network'     ; break;
+		default    : $step = 'system-check'; break;
+	}
+}
 
 
 # authenticate the user
