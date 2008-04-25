@@ -84,10 +84,20 @@ function err_handler_die_on_err( $type, $msg, $file, $line )
 		case E_RECOVERABLE_ERROR:
 			gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
 			break;
+		case E_WARNING:
+		case E_USER_WARNING:
+			if (error_reporting() != 0) {
+				gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
+				echo "A warning occurred. See log for details.\n";
+				exit(1);
+			} else {  # suppressed by @
+				gs_log( GS_LOG_DEBUG, 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
+			}
+			break;
 		default:
 			gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
 			echo "A warning occurred. See log for details.\n";
-			die(1);
+			exit(1);
 			break;
 	}
 }
@@ -112,6 +122,15 @@ function err_handler_quiet( $type, $msg, $file, $line )
 			break;
 		case E_RECOVERABLE_ERROR:
 			gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
+			break;
+		case E_WARNING:
+		case E_USER_WARNING:
+			if (error_reporting() != 0) {
+				gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
+				exit(1);
+			} else {  # suppressed by @
+				gs_log( GS_LOG_DEBUG, 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
+			}
 			break;
 		default:
 			gs_log( GS_LOG_FATAL  , 'PHP: '. $msg .' in '. $file .' on line '. $line );
