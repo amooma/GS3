@@ -213,8 +213,9 @@ if (! file_exists($step_file)) {
 <div>
 <div class="fl l" style="width:40%;">
 <?php
-	if (gs_keyval_get('setup_show') !== 'autoshow') {
-		echo '<a href="', gs_get_conf('GS_URL_PATH') ,'">', __('zum normalen Interface') ,'</a>', "\n";
+	if (gs_keyval_get('setup_show') !== 'autoshow'
+	&&  gs_keyval_get('setup_pwd') !== '') {
+		echo '<a href="', gs_get_conf('GS_URL_PATH') ,'">', __('zum normalen Web-Interface') ,'</a>', "\n";
 	}
 ?>
 </div>
