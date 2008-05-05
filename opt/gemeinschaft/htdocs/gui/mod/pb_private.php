@@ -43,17 +43,16 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 $per_page = (int)GS_GUI_NUM_RESULTS;
 
-$name        = trim(@$_REQUEST['name']);
-$number      = trim(@$_REQUEST['number']);
-$save_lname   = trim(@$_REQUEST['slname']);
-$save_fname   = trim(@$_REQUEST['sfname']);
-$save_number = trim(@$_REQUEST['snumber']);
-$page = (int)@$_REQUEST['page'];
-$delete_entry = (int)trim(@$_REQUEST['delete']);
-$edit_entry   = (int)trim(@$_REQUEST['edit']);
-$save_entry   = (int)trim(@$_REQUEST['save']);
+$name         =      trim(@$_REQUEST['name'   ]);
+$number       =      trim(@$_REQUEST['number' ]);
+$save_lname   =      trim(@$_REQUEST['slname' ]);
+$save_fname   =      trim(@$_REQUEST['sfname' ]);
+$save_number  =      trim(@$_REQUEST['snumber']);
+$page         = (int)    (@$_REQUEST['page'   ]);
+$delete_entry = (int)trim(@$_REQUEST['delete' ]);
+$edit_entry   = (int)trim(@$_REQUEST['edit'   ]);
+$save_entry   = (int)trim(@$_REQUEST['save'   ]);
 
-//$user_id = (int)$DB->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape(@$_SESSION['sudo_user']['name']).'\'' );
 $user_id = (int)@$_SESSION['sudo_user']['info']['id'];
 
 if ($delete_entry > 0) {
@@ -103,20 +102,7 @@ if ($number != '') {
 		array( '%', '_' ),
 		$number
 	) .'%';
-
-/*
-	echo 'SELECT SQL_CALC_FOUND_ROWS
-	`id`, `lastname`, `firstname`, `number` 
-FROM
-	`pb_prv` 
-WHERE	
-	`number` LIKE \''. $DB->escape($number_sql) .'\'
-AND `user_id`='. $user_id .'
-ORDER BY `lastname`, `firstname`
-LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
-*/
 	
-
 	$rs = $DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
 	`id`, `lastname`, `firstname`, `number` 
@@ -143,20 +129,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		array( '%', '_' ),
 		$name
 	) .'%';
-
-/*
-echo 'SELECT SQL_CALC_FOUND_ROWS
-	`id`, `lastname`, `firstname`, `number`
-FROM
-	`pb_prv` 
-WHERE
-	( `lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR
-	`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci )
-AND `user_id`='. $DB->escape($user_id).'
-ORDER BY `lastname`, `firstname`
-LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
-*/
-
+	
 	$rs = $DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
 	`id`, `lastname`, `firstname`, `number`

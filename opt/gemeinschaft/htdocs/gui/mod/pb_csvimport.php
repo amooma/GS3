@@ -61,7 +61,7 @@ if ($action == ''
 */
 
 
-if ($action == 'upload') {
+if ($action === 'upload') {
 	
 	# delete old files:
 	$err=0; $out=array();
@@ -104,7 +104,7 @@ if ($action == 'upload') {
 }
 
 
-if ($action == 'preview' || $action == 'import') {
+if ($action === 'preview' || $action === 'import') {
 	
 	if (! @array_key_exists('pb-csv-file', @$_SESSION['sudo_user'])
 	||  ! is_file(@$_SESSION['sudo_user']['pb-csv-file']) )
@@ -193,7 +193,7 @@ if ($action == 'preview' || $action == 'import') {
 }
 
 
-if ($action == 'preview') {
+if ($action === 'preview') {
 	
 	if (! @is_array(@$records) || count($records)<1) {
 		echo 'Error.';
@@ -326,7 +326,7 @@ if ($action == 'preview') {
 }
 
 
-if ($action == 'import') {
+if ($action === 'import') {
 	
 	if (! @is_array(@$records) || count($records)<1) {
 		echo 'Error.';
