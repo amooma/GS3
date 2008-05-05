@@ -54,23 +54,3 @@ body {
 	border-color: #eee #fff #fff #eee;
 }
 
-table.successbox {
-	margin-left:200px;
-	margin-bottom:10px;
-	padding: 5px;
-	align: center;
-	text-align: center;
-	border: 2px solid green;
-	background-color: #ffffff;
-}
-
-table.errorbox {
-	margin-left:200px;
-	margin-bottom:10px;
-	padding: 5px;
-	align: center;
-	text-align: center;
-	border: 2px solid red;
-	background-color: #ffffff;
-}
-

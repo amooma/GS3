@@ -564,3 +564,19 @@ tr.odd .transp {
 	line-height: 1.1em !important;
 }
 
+
+table.successbox,
+table.errorbox {
+	margin-left: 200px;
+	margin-bottom: 10px;
+	padding: 5px;
+	text-align: center;
+	background-color: #fff;
+}
+table.successbox {
+	border: 2px solid green;
+}
+table.errorbox {
+	border: 2px solid red;
+}
+
