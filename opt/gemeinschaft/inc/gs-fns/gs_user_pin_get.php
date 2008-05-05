@@ -29,7 +29,7 @@ defined('GS_VALID') or die('No direct access.');
 
 
 /***********************************************************
-*    gets a user's comment
+*    gets a user's PIN
 ***********************************************************/
 
 function gs_user_pin_get( $user )
@@ -49,7 +49,7 @@ function gs_user_pin_get( $user )
 	if (! $user_id)
 		return new GsError( 'Unknown user.' );
 	
-	# get comment
+	# get PIN
 	#
 	$pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `id`='. $user_id );
 	return $pin;

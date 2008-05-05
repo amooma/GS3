@@ -29,7 +29,7 @@ defined('GS_VALID') or die('No direct access.');
 
 
 /***********************************************************
-*    sets a user's comment
+*    sets a user's PIN
 ***********************************************************/
 
 function gs_user_pin_set( $user, $pin='' )
@@ -53,7 +53,7 @@ function gs_user_pin_set( $user, $pin='' )
 	if (! $user_id)
 		return new GsError( 'Unknown user.' );
 	
-	# set comment
+	# set PIN
 	#
 	$ok = $db->execute( 'UPDATE `users` SET `pin`=\''. $db->escape($pin) .'\' WHERE `id`='. $user_id );
 	if (! $ok)
