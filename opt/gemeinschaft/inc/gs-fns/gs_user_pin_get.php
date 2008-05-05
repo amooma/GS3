@@ -34,7 +34,7 @@ defined('GS_VALID') or die('No direct access.');
 
 function gs_user_pin_get( $user )
 {
-	if (! preg_match( '/^[\w\d]+$/', $user ))
+	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	
 	# connect to db
