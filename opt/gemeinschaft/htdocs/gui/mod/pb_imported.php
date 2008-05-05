@@ -43,9 +43,9 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 $per_page = (int)GS_GUI_NUM_RESULTS;
 
-$name = trim(@$_REQUEST['name']);
-$number = trim(@$_REQUEST['number']);
-$page = (int)@$_REQUEST['page'];
+$name   =  trim(@$_REQUEST['name'  ]);
+$number =  trim(@$_REQUEST['number']);
+$page   = (int)(@$_REQUEST['page'  ]);
 
 
 if ($number != '') {
