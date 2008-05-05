@@ -179,6 +179,13 @@ $MODULES['fax'      ]=  array('title' => __('Fax'),           //TRANSLATE ME
 );
 }
 
+$MODULES['pin']=  array('title' => __('PIN &auml;ndern'),
+                              'icon'  => 'crystal-svg/%s/app/pin.png',
+   'sub' => array(
+      'pin'    => array('title' => __('PIN &auml;ndern'))
+   )
+);
+
 #####################################################################
 
 $MODULES['help'     ]=  array('title' => __('Hilfe'),

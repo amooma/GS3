@@ -116,4 +116,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_snom_keys_get.php' );  # old
 include_once( GS_DIR .'inc/gs-fns/gs_keys_snom_get.php' );  # new
 
+include_once( GS_DIR .'inc/gs-fns/gs_user_pin_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_pin_set.php' );
+
 ?>
