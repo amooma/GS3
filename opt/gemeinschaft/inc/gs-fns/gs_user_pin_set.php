@@ -34,11 +34,13 @@ defined('GS_VALID') or die('No direct access.');
 
 function gs_user_pin_set( $user, $pin='' )
 {
-	
-	if (! preg_match( '/^[\w\d]+$/', $user ))
+	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	if (! preg_match( '/^[\d]+$/', $pin ))
 		return new GsError( 'PIN must be numeric.' );
+	if (strLen($pin) < 3)
+		return new GsError( 'PIN too short.' );
+	
 	# connect to db
 	#
 	$db = gs_db_master_connect();
@@ -48,8 +50,6 @@ function gs_user_pin_set( $user, $pin='' )
 	# get user_id
 	#
 	$user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
-	$firstname = $db->executeGetOne( 'SELECT `Firstname` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
-	$lastname = $db->executeGetOne( 'SELECT `Lastname` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 	if (! $user_id)
 		return new GsError( 'Unknown user.' );
 	
@@ -57,10 +57,10 @@ function gs_user_pin_set( $user, $pin='' )
 	#
 	$ok = $db->execute( 'UPDATE `users` SET `pin`=\''. $db->escape($pin) .'\' WHERE `id`='. $user_id );
 	if (! $ok)
-		return new GsError( 'Failed to set pin.' );
-        $ok = $db->execute( 'UPDATE `ast_voicemail` SET `password`=\''. $db->escape($pin) .'\', `fullname`=\''. $db->escape($firstname .' '. $lastname) .'\' WHERE `_user_id`='. $user_id );
+		return new GsError( 'Failed to set PIN.' );
+	$ok = $db->execute( 'UPDATE `ast_voicemail` SET `password`=\''. $db->escape($pin) .'\' WHERE `_user_id`='. $user_id );
 	if (! $ok)
-		return new GsError( 'Failed to change mailbox.' );
+		return new GsError( 'Failed to change mailbox PIN.' );
 	return true;
 }
 
