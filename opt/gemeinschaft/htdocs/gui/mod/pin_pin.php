@@ -83,11 +83,9 @@ if (@$_REQUEST['action']==='save') {
 </div>
 
 <?php if ($msg != '') { ?>
-<table class="<?php echo ($success ? 'successbox' : 'errorbox'); ?>">
-<tbody><tr><td>
+<div class="<?php echo ($success ? 'successbox' : 'errorbox'); ?>">
 	<?php echo $msg; ?>
-</td></tr></tbody>
-</table>
+</div>
 <?php } ?>
 
 <form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
