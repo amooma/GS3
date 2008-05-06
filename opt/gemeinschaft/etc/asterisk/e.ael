@@ -563,7 +563,8 @@ macro dial-gateway-do( mnumber ) {
 	while ("${r_${r}_dial}" != "") {
 		//Verbose(1,### route: r_${r});
 		Set(no_route=);
-		Verbose(1,### Outbound route: ${r_${r}_dial});
+		Set(CALLERID(num)=${r_${r}_cid});
+		Verbose(1,### Outbound route: ${r_${r}_dial} - Caller ID: ${CALLERID(num)});
 		Dial(${r_${r}_dial},180);
 		Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
 		if ("${DIALSTATUS}" = "ANSWER" || "${DIALSTATUS}" = "CANCEL") {
