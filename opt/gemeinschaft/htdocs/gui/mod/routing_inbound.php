@@ -249,19 +249,18 @@ foreach ($ggs as $gg) {
 }
 echo '</select> ',"\n";
 echo '<input type="submit" value="', __('anzeigen') ,'" />',"\n";
-echo '</form>',"\n";
 ?>
+</form>
 
 <hr size="1" />
 
 <?php
 
 #####################################################################
-if ($action == 'edit') {
+if ($action === 'edit') {
 ?>
 
 <p class="text"><small><?php echo __('Diese W&auml;hlregeln f&uuml;r eingehende Routen werden von oben nach unten abgearbeitet bis eine Regel zutrifft. Dabei wird die gew&auml;hlte Durchwahl mit dem Muster verglichen.'); ?></small></p>
-
 
 
 
@@ -332,8 +331,10 @@ ORDER BY `ord`'
 		if     ($mf <  0) $mf =  0;
 		elseif ($mf > 59) $mf = 59;
 		$mf = str_pad($mf, 2, '0', STR_PAD_LEFT);
-		echo '<nobr><input type="text" name="r_',$id,'_h_from_h" value="', $hf, '" size="2" maxlength="2" class="r" />';
-		echo ':<input type="text" name="r_',$id,'_h_from_m" value="', $mf, '" size="2" maxlength="2" class="r" /></nobr>';
+		echo '<span class="nobr">';
+		echo '<input type="text" name="r_',$id,'_h_from_h" value="', $hf, '" size="2" maxlength="2" class="r" />:';
+		echo '<input type="text" name="r_',$id,'_h_from_m" value="', $mf, '" size="2" maxlength="2" class="r" /> -';
+		echo '</span> ', "\n";
 		$tmp = explode(':', $route['h_to']);
 		$ht = (int)lTrim(@$tmp[0], '0-');
 		if     ($ht <  0) $ht =  0;
@@ -347,8 +348,10 @@ ORDER BY `ord`'
 			$ht = $hf;
 			$hm = $mf;
 		}
-		echo ' - <nobr><input type="text" name="r_',$id,'_h_to_h" value="', $ht, '" size="2" maxlength="2" class="r" />';
-		echo ':<input type="text" name="r_',$id,'_h_to_m" value="', $mt, '" size="2" maxlength="2" class="r" /></nobr>';
+		echo '<span class="nobr">';
+		echo '<input type="text" name="r_',$id,'_h_to_h" value="', $ht, '" size="2" maxlength="2" class="r" />:';
+		echo '<input type="text" name="r_',$id,'_h_to_m" value="', $mt, '" size="2" maxlength="2" class="r" />';
+		echo '</span>';
 		echo '</td>', "\n";
 		
 		echo '<td>';
@@ -413,10 +416,14 @@ ORDER BY `ord`'
 	echo '</td>', "\n";
 	
 	echo '<td>';
-	echo '<nobr><input type="text" name="r_',$id,'_h_from_h" value="00" size="2" maxlength="2" class="r" />';
-	echo ':<input type="text" name="r_',$id,'_h_from_m" value="00" size="2" maxlength="2" class="r" /></nobr>';
-	echo ' - <nobr><input type="text" name="r_',$id,'_h_to_h" value="24" size="2" maxlength="2" class="r" />';
-	echo ':<input type="text" name="r_',$id,'_h_to_m" value="00" size="2" maxlength="2" class="r" /></nobr>';
+	echo '<span class="nobr">';
+	echo '<input type="text" name="r_',$id,'_h_from_h" value="00" size="2" maxlength="2" class="r" />:';
+	echo '<input type="text" name="r_',$id,'_h_from_m" value="00" size="2" maxlength="2" class="r" /> -';
+	echo '</span> ', "\n";
+	echo '<span class="nobr">';
+	echo '<input type="text" name="r_',$id,'_h_to_h" value="24" size="2" maxlength="2" class="r" />:';
+	echo '<input type="text" name="r_',$id,'_h_to_m" value="00" size="2" maxlength="2" class="r" />';
+	echo '</span>';
 	echo '</td>', "\n";
 	
 	echo '<td>';
@@ -469,10 +476,14 @@ ORDER BY `ord`'
 	echo '</td>', "\n";
 	
 	echo '<td class="transp">';
-	echo '<nobr><input type="text" value="00" size="2" maxlength="2" class="r" disabled="disabled" />';
-	echo ':<input type="text" value="00" size="2" maxlength="2" class="r" disabled="disabled" /></nobr>';
-	echo ' - <nobr><input type="text" value="24" size="2" maxlength="2" class="r"class="r" disabled="disabled" />';
-	echo ':<input type="text" value="00" size="2" maxlength="2" class="r" disabled="disabled" /></nobr>';
+	echo '<span class="nobr">';
+	echo '<input type="text" value="00" size="2" maxlength="2" class="r" disabled="disabled" />:';
+	echo '<input type="text" value="00" size="2" maxlength="2" class="r" disabled="disabled" /> -';
+	echo '</span> ', "\n";
+	echo '<span class="nobr">';
+	echo '<input type="text" value="24" size="2" maxlength="2" class="r" disabled="disabled" />:';
+	echo '<input type="text" value="00" size="2" maxlength="2" class="r" disabled="disabled" />';
+	echo '</span>';
 	echo '</td>', "\n";
 	
 	echo '<td class="transp">';
@@ -497,7 +508,7 @@ ORDER BY `ord`'
 
 </tbody>
 </table>
-
+</form>
 
 <br />
 <br />

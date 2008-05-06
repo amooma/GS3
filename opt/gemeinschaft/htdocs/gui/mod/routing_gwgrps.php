@@ -263,7 +263,7 @@ WHERE `id`='.$ggid
 	echo '<th>', __('Art') ,':</th>',"\n";
 	echo '<td>',"\n";
 	echo '<select name="gg-type" disabled="disabled">',"\n";
-	echo '<option name="balance" selected="selected">Load Balance</option>',"\n";
+	echo '<option value="balance" selected="selected">Load Balance</option>',"\n";
 	echo '</select>',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
@@ -279,9 +279,9 @@ WHERE `id`='.$ggid
 	echo '<th>&nbsp;</th>',"\n";
 	echo '<td>',"\n";
 	echo __('Suchen/Ersetzen-Muster (um Pr&auml;fix wegzuschneiden)') ,'<sup>[1]</sup>:',"\n";
-	echo '<div style="font-family:monospace;"',"\n";
-	echo '<nobr>s/<input type="text" name="gg-in_dest_search" value="', htmlEnt($gg['in_dest_search']) ,'" size="35" maxlength="50" style="font-family:monospace;" /></nobr><br />',"\n";
-	echo '<nobr>&nbsp;/<input type="text" name="gg-in_dest_replace" value="', htmlEnt($gg['in_dest_replace']) ,'" size="35" maxlength="20" style="font-family:monospace;" />/</nobr>',"\n";
+	echo '<div class="nobr" style="font-family:monospace;">',"\n";
+	echo 's/<input type="text" name="gg-in_dest_search" value="', htmlEnt($gg['in_dest_search']) ,'" size="35" maxlength="50" style="font-family:monospace;" /><br />',"\n";
+	echo '&nbsp;/<input type="text" name="gg-in_dest_replace" value="', htmlEnt($gg['in_dest_replace']) ,'" size="35" maxlength="20" style="font-family:monospace;" />/',"\n";
 	echo '</div>',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
