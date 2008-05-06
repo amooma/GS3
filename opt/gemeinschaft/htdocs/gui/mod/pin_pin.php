@@ -41,6 +41,11 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
+if ($_SESSION['sudo_user']['name'] === 'sysadmin') {
+	echo 'Not possible for sysadmin. Use the setup.';
+	return;
+}
+
 $msg = '';
 $success = false;
 
@@ -123,7 +128,7 @@ if (@$_REQUEST['action']==='save') {
 		</td>
 	</tr>
 	<tr>
-		<td colspan="2" class="quickchars r">
+		<td colspan="2" class="transp r">
 			<br />
 			<button type="submit">
 				<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
