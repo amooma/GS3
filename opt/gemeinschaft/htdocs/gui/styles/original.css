@@ -135,6 +135,10 @@ sub {vertical-align: bottom;}
 	}
 }
 
+.nobr {
+	white-space: nowrap;
+	/* like <nobr></nobr> in HTML 4 */
+}
 
 .pre {
 	white-space: pre !important;
