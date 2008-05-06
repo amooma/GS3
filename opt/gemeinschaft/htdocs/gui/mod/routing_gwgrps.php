@@ -74,7 +74,9 @@ if ($action === 'gsave') {
 	`type`,
 	`allow_in`,
 	`in_dest_search`,
-	`in_dest_replace`
+	`in_dest_replace`,
+	`out_cid_search`,
+	`out_cid_replace`
 FROM
 	`gate_grps`
 WHERE `id`='.$ggid
@@ -88,7 +90,9 @@ WHERE `id`='.$ggid
 			'type'            => '',
 			'allow_in'        => 0,
 			'in_dest_search'  => '',
-			'in_dest_replace' => ''
+			'in_dest_replace' => '',
+			'out_cid_search'  => '',
+			'out_cid_replace' => ''
 		);
 	}
 	
@@ -102,27 +106,37 @@ WHERE `id`='.$ggid
 	$type = 'balance';
 	$allow_in = (@$_REQUEST['gg-allow_in'] ? 1 : 0);
 	$in_dest_search  = trim(@$_REQUEST['gg-in_dest_search' ]);
-	$in_dest_replace = trim(@$_REQUEST['gg-in_dest_replace']);
-	if (! is_valid_pcre( '/'.$in_dest_search.'/' )) {
+	$in_dest_replace = preg_replace('/[^0-9+$]/', '', trim(@$_REQUEST['gg-in_dest_replace']));
+	if (! is_valid_pcre( '/'.$in_dest_search.'/', $in_dest_replace )) {
 		echo 'Invalid pattern!<br />',"\n";
-		$in_dest_search = $oldgg['in_dest_search'];
+		$in_dest_search  = $oldgg['in_dest_search' ];
+		$in_dest_replace = $oldgg['in_dest_replace'];
+	}
+	$out_cid_search  = trim(@$_REQUEST['gg-out_cid_search' ]);
+	$out_cid_replace = preg_replace('/[^0-9+$]/', '', trim(@$_REQUEST['gg-out_cid_replace']));
+	if (! is_valid_pcre( '/'.$out_cid_search.'/', $out_cid_replace )) {
+		echo 'Invalid pattern!<br />',"\n";
+		$out_cid_search  = $oldgg['out_cid_search' ];
+		$out_cid_replace = $oldgg['out_cid_replace'];
 	}
 	
 	if ($ggid > 0) {
 		$DB->execute(
 'UPDATE `gate_grps` SET
-	`title`=\''. $DB->escape($title) .'\',
-	`type`=\''. $DB->escape($type) .'\',
-	`allow_in`='. $allow_in .',
-	`in_dest_search`=\''. $DB->escape($in_dest_search) .'\',
-	`in_dest_replace`=\''. $DB->escape($in_dest_replace) .'\'
+	`title`=\''.           $DB->escape($title          ) .'\',
+	`type`=\''.            $DB->escape($type           ) .'\',
+	`allow_in`='.                      $allow_in         .',
+	`in_dest_search`=\'' . $DB->escape($in_dest_search ) .'\',
+	`in_dest_replace`=\''. $DB->escape($in_dest_replace) .'\',
+	`out_cid_search`=\'' . $DB->escape($out_cid_search ) .'\',
+	`out_cid_replace`=\''. $DB->escape($out_cid_replace) .'\'
 WHERE `id`='.$ggid
 		);
 		// separate query because there's a "unique" constraint on the name
 		// column:
 		$DB->execute(
 'UPDATE `gate_grps` SET
-	`name`=\''. $DB->escape($name) .'\'
+	`name`=\''.            $DB->escape($name           ) .'\'
 WHERE `id`='.$ggid
 		);
 	}
@@ -135,15 +149,19 @@ WHERE `id`='.$ggid
 	`type`,
 	`allow_in`,
 	`in_dest_search`,
-	`in_dest_replace`
+	`in_dest_replace`,
+	`out_cid_search`,
+	`out_cid_replace`
 ) VALUES (
 	NULL,
-	\''. $DB->escape($name) .'\',
-	\''. $DB->escape($title) .'\',
-	\''. $DB->escape($type) .'\',
-	'. $allow_in .',
-	\''. $DB->escape($in_dest_search) .'\',
-	\''. $DB->escape($in_dest_replace) .'\'
+	\''. $DB->escape($name           ) .'\',
+	\''. $DB->escape($title          ) .'\',
+	\''. $DB->escape($type           ) .'\',
+	'.               $allow_in         .',
+	\''. $DB->escape($in_dest_search ) .'\',
+	\''. $DB->escape($in_dest_replace) .'\',
+	\''. $DB->escape($out_cid_search ) .'\',
+	\''. $DB->escape($out_cid_replace) .'\'
 )'
 		);
 		$ggid = (int)$DB->getLastInsertId();
@@ -227,7 +245,9 @@ if ($action === 'gedit') {
 	`type`,
 	`allow_in`,
 	`in_dest_search`,
-	`in_dest_replace`
+	`in_dest_replace`,
+	`out_cid_search`,
+	`out_cid_replace`
 FROM
 	`gate_grps`
 WHERE `id`='.$ggid
@@ -242,7 +262,9 @@ WHERE `id`='.$ggid
 			'type'           => 'balance',
 			'allow_in'       => '',
 			'in_dest_search' => '',
-			'in_dest_replace'=> ''
+			'in_dest_replace'=> '',
+			'out_cid_search' => '^(.*)',
+			'out_cid_replace'=> '$1'
 		);
 	}
 	
@@ -255,7 +277,7 @@ WHERE `id`='.$ggid
 
 <?php
 	echo '<tr>',"\n";
-	echo '<th style="width:70px;">', __('Titel') ,':</th>',"\n";
+	echo '<th style="width:80px;">', __('Titel') ,':</th>',"\n";
 	echo '<th style="width:340px;"><input type="text" name="gg-title" value="', htmlEnt($gg['title']) ,'" size="30" maxlength="35" style="font-weight:bold; width:97%;" /></th>',"\n";
 	echo '</tr>',"\n";
 	
@@ -276,12 +298,23 @@ WHERE `id`='.$ggid
 	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
-	echo '<th>&nbsp;</th>',"\n";
+	echo '<th>', __('Durchwahl') ,':</th>',"\n";
 	echo '<td>',"\n";
-	echo __('Suchen/Ersetzen-Muster (um Pr&auml;fix wegzuschneiden)') ,'<sup>[1]</sup>:',"\n";
+	echo __('Suchen/Ersetzen-Muster (um Pr&auml;fix wegzuschneiden)') ,' <sup>[1]</sup>:',"\n";
 	echo '<div class="nobr" style="font-family:monospace;">',"\n";
 	echo 's/<input type="text" name="gg-in_dest_search" value="', htmlEnt($gg['in_dest_search']) ,'" size="35" maxlength="50" style="font-family:monospace;" /><br />',"\n";
 	echo '&nbsp;/<input type="text" name="gg-in_dest_replace" value="', htmlEnt($gg['in_dest_replace']) ,'" size="35" maxlength="20" style="font-family:monospace;" />/',"\n";
+	echo '</div>',"\n";
+	echo '</td>',"\n";
+	echo '</tr>',"\n";
+	
+	echo '<tr>',"\n";
+	echo '<th>', __('Caller-ID') ,':</th>',"\n";
+	echo '<td>',"\n";
+	echo __('Suchen/Ersetzen-Muster f&uuml;r ausgehende Caller-ID') ,' <sup>[2]</sup>:',"\n";
+	echo '<div class="nobr" style="font-family:monospace;">',"\n";
+	echo 's/<input type="text" name="gg-out_cid_search" value="', htmlEnt($gg['out_cid_search']) ,'" size="35" maxlength="50" style="font-family:monospace;" /><br />',"\n";
+	echo '&nbsp;/<input type="text" name="gg-out_cid_replace" value="', htmlEnt($gg['out_cid_replace']) ,'" size="35" maxlength="20" style="font-family:monospace;" />/',"\n";
 	echo '</div>',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
@@ -331,6 +364,11 @@ WHERE `id`='.$ggid
 <?php
 		echo '<p class="text"><sup>[1]</sup> ', sPrintF(
 			__('Geben Sie hier falls erforderlich ein <a href="%s" target="_blank">PCRE</a>-Muster an, das eventuelle Pr&auml;fixe von eingehend gew&auml;hlten Nummern wegschneidet, soda&szlig; nur noch die interne Durchwahl &uuml;brig bleibt! Beispiele:<br /> &nbsp;&nbsp;&nbsp; <tt>'.'s/^0251702//'.'</tt><br /> &nbsp;&nbsp;&nbsp; <tt>'.'s/^(((0049|0)251))702//'.'</tt><br /> &nbsp;&nbsp;&nbsp; <tt>'.'s/^(?:(?:0049|0)251)?702(.*)/$1/'.'</tt>'),
+			__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
+		) ,'</p>',"\n";
+		
+		echo '<p class="text"><sup>[2]</sup> ', sPrintF(
+			__('Suchen/Ersetzen-Muster (<a href="%s" target="_blank">PCRE</a>) f&uuml;r die Absenderrufnummer bei abgehenden Anrufen. Beispiele:<br /> Nur die Durchwahl &uuml;bermitteln: <tt>s/^(.*)/$1/</tt><br /> Nationales Format: <tt>s/^(.*)/030123456$1/</tt><br /> Internationales Format: <tt>s/^(.*)/004930123456$1/</tt> oder <tt>s/^(.*)/+4930123456$1/</tt><br /> F&uuml;r alle Benutzer die gleiche Nummer &uuml;bertragen: <tt>s/^(.*)/00493012345612/</tt><br /> Normalerweise sollten Sie das nationale oder internationale Format verwenden.'),
 			__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
 		) ,'</p>',"\n";
 		
