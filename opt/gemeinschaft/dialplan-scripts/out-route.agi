@@ -64,7 +64,7 @@ if ($user_cid_num == '') {
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
-//$qualify_cid = true;
+$qualify_cid = true;
 
 if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 	
@@ -77,7 +77,7 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 		_no_more_routes();
 	}
 	elseif (@$canonical->in_prv_branch) {
-		//$qualify_cid = false;
+		$qualify_cid = false;
 		if ($is_sub_system) {
 			# allow to go to the outside
 			gs_agi_verbose("### $number is in private branch but we are a sub-system");
@@ -95,6 +95,7 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 				echo 'SET VARIABLE __is_from_gateway '. gs_agi_str_esc('1') ."\n";
 				$idx = 1;
 				echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc( 'Local/'. $exten .'@to-internal-users' ) ."\n";
+				echo 'SET VARIABLE r_'.$idx.'_cid '. gs_agi_str_esc($user_cid_num) ."\n";
 				_no_more_routes(++$idx);
 			} else {
 				gs_agi_verbose("### Empty number");
@@ -161,7 +162,7 @@ $idx = 1;
 foreach ($gate_grps as $ggrp_id) {
 	
 	$out_cid_num = $user_cid_num;
-	//if ($qualify_cid) {
+	if ($qualify_cid) {
 		$rs = $db->execute(
 'SELECT `out_cid_search` `cid_s`, `out_cid_replace` `cid_r`
 FROM `gate_grps`
@@ -176,7 +177,7 @@ WHERE `id`='. $ggrp_id
 			$out_cid_num = preg_replace('/[^0-9+]/', '',
 				@preg_replace( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'], $out_cid_num ));
 		}
-	//}
+	}
 	
 	$rs = $db->execute(
 'SELECT `type`, `name`, `dialstr`
@@ -189,8 +190,6 @@ LIMIT 9'
 	);
 	//while ($gate = $rs->fetchRow()) $gates[] = $gate;
 	while ($gate = $rs->fetchRow()) {
-		echo 'SET VARIABLE r_'.$idx.'_cid '. gs_agi_str_esc($out_cid_num) ."\n";
-		
 		if ($lcr_prefix != '') {
 			if (in_array($gate['type'], array('zap','misdn'), true)) {
 				gs_agi_verbose("### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
@@ -211,6 +210,7 @@ LIMIT 9'
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
 		if ($dialstr != '') {
 			echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc($dialstr) ."\n";
+			echo 'SET VARIABLE r_'.$idx.'_cid '. gs_agi_str_esc($out_cid_num) ."\n";
 			++$idx;
 		}
 	}
