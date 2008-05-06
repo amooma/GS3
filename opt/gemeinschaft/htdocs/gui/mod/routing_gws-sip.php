@@ -249,14 +249,10 @@ ORDER BY `title`'
 <br />
 <p class="text"><sup>[1]</sup> <?php echo __('Gateways m&uuml;ssen jeweils einer Gateway-Gruppe zugeordnet werden damit sie benutzt werden k&ouml;nnen.'); ?></p>
 
-<?php
-	}
-?>
-
 </form>
 
 <?php
-
+}
 #####################################################################
 
 
@@ -347,7 +343,7 @@ ORDER BY `g`.`grp_id`, `g`.`title`'
 		++$i;
 	}
 	echo '<tr class="', ($i%2===0?'odd':'even') ,'">',"\n";
-	echo '<td colspan="4" class="transp">',"\n";
+	echo '<td colspan="4" class="transp">&nbsp;</td>',"\n";
 	echo '<td class="transp">',"\n";
 	echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;gw-id=0') ,'" title="', __('hinzuf&uuml;gen'), '"><img alt="', __('hinzuf&uuml;gen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 	echo '</td>',"\n";

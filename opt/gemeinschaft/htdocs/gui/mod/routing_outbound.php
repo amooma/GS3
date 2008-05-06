@@ -289,8 +289,8 @@ while ($route = $rs->fetchRow()) {
 	
 	echo '<td>';
 	foreach ($wdaysl as $col => $v) {
-		echo '<nobr><input type="checkbox" name="r_',$id,'_d_',$col,'" id="ipt-r_',$id,'_d_',$col,'" value="1" ', ($route['d_'.$col] ? 'checked="checked" ' : ''), '/>';
-		echo '<label for="ipt-r_',$id,'_d_',$col,'">', $v, '</label></nobr>';
+		echo '<span class="nobr"><input type="checkbox" name="r_',$id,'_d_',$col,'" id="ipt-r_',$id,'_d_',$col,'" value="1" ', ($route['d_'.$col] ? 'checked="checked" ' : ''), '/>';
+		echo '<label for="ipt-r_',$id,'_d_',$col,'">', $v, '</label></span>';
 	}
 	echo '</td>', "\n";
 	
@@ -304,8 +304,10 @@ while ($route = $rs->fetchRow()) {
 	if     ($mf <  0) $mf =  0;
 	elseif ($mf > 59) $mf = 59;
 	$mf = str_pad($mf, 2, '0', STR_PAD_LEFT);
-	echo '<nobr><input type="text" name="r_',$id,'_h_from_h" value="', $hf, '" size="2" maxlength="2" class="r" />';
-	echo ':<input type="text" name="r_',$id,'_h_from_m" value="', $mf, '" size="2" maxlength="2" class="r" /></nobr>';
+	echo '<span class="nobr">';
+	echo '<input type="text" name="r_',$id,'_h_from_h" value="', $hf, '" size="2" maxlength="2" class="r" />:';
+	echo '<input type="text" name="r_',$id,'_h_from_m" value="', $mf, '" size="2" maxlength="2" class="r" /> -';
+	echo '</span> ', "\n";
 	$tmp = explode(':', $route['h_to']);
 	$ht = (int)lTrim(@$tmp[0], '0-');
 	if     ($ht <  0) $ht =  0;
@@ -319,8 +321,10 @@ while ($route = $rs->fetchRow()) {
 		$ht = $hf;
 		$hm = $mf;
 	}
-	echo ' - <nobr><input type="text" name="r_',$id,'_h_to_h" value="', $ht, '" size="2" maxlength="2" class="r" />';
-	echo ':<input type="text" name="r_',$id,'_h_to_m" value="', $mt, '" size="2" maxlength="2" class="r" /></nobr>';
+	echo '<span class="nobr">';
+	echo '<input type="text" name="r_',$id,'_h_to_h" value="', $ht, '" size="2" maxlength="2" class="r" />:';
+	echo '<input type="text" name="r_',$id,'_h_to_m" value="', $mt, '" size="2" maxlength="2" class="r" />';
+	echo '</span>';
 	echo '</td>', "\n";
 	
 	echo '<td rowspan="2">';
@@ -389,16 +393,20 @@ echo '</td>', "\n";
 
 echo '<td>';
 foreach ($wdaysl as $col => $v) {
-	echo '<nobr><input type="checkbox" name="r_',$id,'_d_',$col,'" id="ipt-r_',$id,'_d_',$col,'" value="1" checked="checked" />';
-	echo '<label for="ipt-r_',$id,'_d_',$col,'">', $v, '</label></nobr>';
+	echo '<span class="nobr"><input type="checkbox" name="r_',$id,'_d_',$col,'" id="ipt-r_',$id,'_d_',$col,'" value="1" checked="checked" />';
+	echo '<label for="ipt-r_',$id,'_d_',$col,'">', $v, '</label></span>';
 }
 echo '</td>', "\n";
 
 echo '<td>';
-echo '<nobr><input type="text" name="r_',$id,'_h_from_h" value="00" size="2" maxlength="2" class="r" />';
-echo ':<input type="text" name="r_',$id,'_h_from_m" value="00" size="2" maxlength="2" class="r" /></nobr>';
-echo ' - <nobr><input type="text" name="r_',$id,'_h_to_h" value="24" size="2" maxlength="2" class="r" />';
-echo ':<input type="text" name="r_',$id,'_h_to_m" value="00" size="2" maxlength="2" class="r" /></nobr>';
+echo '<span class="nobr">';
+echo '<input type="text" name="r_',$id,'_h_from_h" value="00" size="2" maxlength="2" class="r" />:';
+echo '<input type="text" name="r_',$id,'_h_from_m" value="00" size="2" maxlength="2" class="r" /> -';
+echo '</span> ', "\n";
+echo '<span class="nobr">';
+echo '<input type="text" name="r_',$id,'_h_to_h" value="24" size="2" maxlength="2" class="r" />:';
+echo '<input type="text" name="r_',$id,'_h_to_m" value="00" size="2" maxlength="2" class="r" />';
+echo '</span>';
 echo '</td>', "\n";
 
 echo '<td rowspan="2">';
@@ -437,6 +445,7 @@ echo '</tr>', "\n";
 
 </tbody>
 </table>
+</form>
 
 <br />
 <p class="text"><small><sup>[1]</sup> <?php

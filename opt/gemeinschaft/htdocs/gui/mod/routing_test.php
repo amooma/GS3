@@ -221,11 +221,11 @@ ORDER BY `ord`'
 		echo htmlEnt(implode(', ', $wd_out));
 		echo '</td>', "\n";
 		*/
-		echo '<td class="pre"><nobr>';
+		echo '<td class="pre">';
 		foreach ($wdays as $col => $v) {
 			echo (@$route['d_'.$col] ? htmlEnt($v) : '&nbsp;&nbsp;'), ' ';
 		}
-		echo '</nobr></td>', "\n";
+		echo '</td>', "\n";
 		
 		echo '<td class="pre">';
 		/*
@@ -270,7 +270,7 @@ ORDER BY `ord`'
 
 <p class="text"><small>(<?php echo __('Dabei ist die Reihenfolge entscheidend; das erste zutreffende Muster gewinnt.'); ?>)</small></p>
 
-<p class="text"><small><sup>[1]</sup> <?php echo __('Pr&auml;fix f&uuml;r LCR (Least Cost Routing). Gilt nur f&uuml;r Zap-Verbindungen, nicht f&uuml;r SIP.'); ?></small></p>
+<p class="text"><small><sup>[1]</sup> <?php echo __('Pr&auml;fix f&uuml;r LCR (Least Cost Routing). Gilt nur f&uuml;r ISDN-Verbindungen, nicht f&uuml;r SIP.'); ?></small></p>
 
 <?php
 }
