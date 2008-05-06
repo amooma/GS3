@@ -146,7 +146,7 @@ sub {vertical-align: bottom;}
 	font-size: 1.15em !important;
 }
 
-code, tt {
+code, tt, samp, kbd {
 	font-family: Courier, Monaco, monospace;
 	font-size: 1.13em;
 }
