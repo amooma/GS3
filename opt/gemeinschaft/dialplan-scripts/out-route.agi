@@ -30,6 +30,7 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
+require_once( GS_DIR .'inc/pcre_check.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -50,12 +51,20 @@ if ($number == '') {
 	echo "HANGUP\n";
 	_no_more_routes();
 }
+
 $is_sub_system = ($argc > 2) ? strToLower(trim($argv[2])) : '';
 $is_sub_system = ($is_sub_system=='1' || $is_sub_system=='yes');
 
+$user_cid_num = ($argc > 3) ? preg_replace('/[^0-9]/', '', $argv[3]) : '';
+# caller ID (= extension) of the user
+if ($user_cid_num == '') {
+	$user_cid_num = '0';  # main number on a PtP interface
+}
 
 include_once( GS_DIR .'inc/db_connect.php' );
 
+
+//$qualify_cid = true;
 
 if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 	
@@ -68,6 +77,7 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 		_no_more_routes();
 	}
 	elseif (@$canonical->in_prv_branch) {
+		//$qualify_cid = false;
 		if ($is_sub_system) {
 			# allow to go to the outside
 			gs_agi_verbose("### $number is in private branch but we are a sub-system");
@@ -149,7 +159,24 @@ if (count($gate_grps) < 1) _no_more_routes();
 $gates = array();
 $idx = 1;
 foreach ($gate_grps as $ggrp_id) {
-	//$rs = $db->execute( 'SELECT * FROM `gate_grps` WHERE `id`='. $ggrp_id );
+	
+	$out_cid_num = $user_cid_num;
+	//if ($qualify_cid) {
+		$rs = $db->execute(
+'SELECT `out_cid_search` `cid_s`, `out_cid_replace` `cid_r`
+FROM `gate_grps`
+WHERE `id`='. $ggrp_id
+		);
+		if (!($ggrp = $rs->fetchRow())) continue;
+		
+		$ggrp['cid_s'] = trim($ggrp['cid_s']);
+		if ($ggrp['cid_s'] != ''
+		&&  is_valid_pcre( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'] ))
+		{
+			$out_cid_num = preg_replace('/[^0-9+]/', '',
+				@preg_replace( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'], $out_cid_num ));
+		}
+	//}
 	
 	$rs = $db->execute(
 'SELECT `type`, `name`, `dialstr`
@@ -162,6 +189,8 @@ LIMIT 9'
 	);
 	//while ($gate = $rs->fetchRow()) $gates[] = $gate;
 	while ($gate = $rs->fetchRow()) {
+		echo 'SET VARIABLE r_'.$idx.'_cid '. gs_agi_str_esc($out_cid_num) ."\n";
+		
 		if ($lcr_prefix != '') {
 			if (in_array($gate['type'], array('zap','misdn'), true)) {
 				gs_agi_verbose("### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
