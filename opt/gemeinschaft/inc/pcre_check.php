@@ -48,17 +48,22 @@ function _pcre_check_counting_err_hdlr( $type, $msg, $file, $line )
 *    checks if a string is a valid PCRE
 ***********************************************************/
 
-function is_valid_pcre( $pcre )
+function is_valid_pcre( $pattern, $replace=null )
 {
 	global $_pcre_err_cnt;
 	
 	error_reporting(E_ALL ^ E_NOTICE);
 	# set counting error handler:
 	set_error_handler('_pcre_check_counting_err_hdlr');
+	$_pcre_err_cnt = 0;
 	# try to compile the regex:
-	preg_match($pcre, '');
+	if ($replace === null || $replace === false) {
+		preg_match($pattern, '');
+	} else {
+		preg_replace($pattern, $replace, '');
+	}
 	# any errors?:
-	$ok = ($_pcre_err_cnt == 0);
+	$ok = ($_pcre_err_cnt === 0);
 	# restore the error handler to the previous one:
 	restore_error_handler();
 	return $ok;
