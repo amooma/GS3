@@ -569,18 +569,23 @@ tr.odd .transp {
 }
 
 
-table.successbox,
-table.errorbox {
-	margin-left: 200px;
-	margin-bottom: 10px;
+.successbox,
+.errorbox {
+	margin: 0 0px 10px 0px;
+	min-width: 10em;
 	padding: 5px;
 	text-align: center;
 	background-color: #fff;
+	-moz-border-radius: 5px;
 }
-table.successbox {
-	border: 2px solid green;
+.successbox {
+	border: 2px solid #0c0;
+	background-color: #e9ffe9;
+	color: #050;
 }
-table.errorbox {
-	border: 2px solid red;
+.errorbox {
+	border: 2px solid #f30;
+	background-color: #ffe6e3;
+	color: #500;
 }
 
