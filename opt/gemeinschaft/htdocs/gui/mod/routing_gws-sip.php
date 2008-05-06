@@ -176,7 +176,7 @@ if ($action === 'edit') {
 
 <?php
 	echo '<tr>',"\n";
-	echo '<th style="width:100px;">', __('Titel') ,':</th>',"\n";
+	echo '<th style="width:120px;">', __('Titel') ,':</th>',"\n";
 	echo '<th style="width:260px;"><input type="text" name="gw-title" value="', htmlEnt($gw['title']) ,'" size="30" maxlength="35" style="font-weight:bold; width:97%;" /></th>',"\n";
 	echo '</tr>',"\n";
 	
@@ -195,7 +195,7 @@ if ($action === 'edit') {
 	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
-	echo '<th>', __('Benutzername') ,':</th>',"\n";
+	echo '<th>', __('Benutzername') ,': <sup>[1]</sup></th>',"\n";
 	echo '<td>',"\n";
 	echo '<input type="text" name="gw-user" value="', htmlEnt($gw['user']) ,'" size="25" maxlength="35" style="width:97%;" />',"\n";
 	echo '</td>',"\n";
@@ -216,7 +216,7 @@ if ($action === 'edit') {
 	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
-	echo '<th>', __('Gruppe') ,': <sup>[1]</sup></th>',"\n";
+	echo '<th>', __('Gruppe') ,': <sup>[2]</sup></th>',"\n";
 	echo '<td>';
 	echo '<select name="gw-grp_id" style="width:97%;">',"\n";
 	echo '<option value=""', ($gw['grp_id'] < 1 ? ' selected="selected"' : '') ,'>-- ', __('nicht zugeordnet') ,' --</option>' ,"\n";
@@ -247,6 +247,7 @@ ORDER BY `title`'
 <br />
 <br />
 <br />
+<p class="text"><sup>[1]</sup> <?php echo __('Abh&auml;ngig vom SIP-Provider kann es erforderlich sein die Form <tt>benutzer@domain</tt> anzugeben. (<tt>domain</tt> wird dann im <tt>From</tt>-Header verwendet, was <tt>fromdomain</tt> in Asterisk entspricht.)'); ?></p>
 <p class="text"><sup>[1]</sup> <?php echo __('Gateways m&uuml;ssen jeweils einer Gateway-Gruppe zugeordnet werden damit sie benutzt werden k&ouml;nnen.'); ?></p>
 
 </form>
