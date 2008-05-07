@@ -61,7 +61,7 @@ $i=0;
 foreach ($cards as $c) {
 	if ($c['known']) {
 		echo '<tr class="', ($i%2 ? 'even':'odd') ,'">' ,"\n";
-		echo '<td>', $c['vendorid'] ,':', $c['devid'] ,':', $c['subvendorid'] ,':', $c['subdevid'] ,'</td>' ,"\n";
+		echo '<td><tt>', $c['vendorid'] ,':', $c['devid'] ,':', $c['subvendorid'] ,':', $c['subdevid'] ,'</tt></td>' ,"\n";
 		echo '<td>', ($c['vendor'] != '' ? htmlEnt($c['vendor']) : '?') ,'</td>' ,"\n";
 		echo '<td>', ($c['descr'] != '' ? htmlEnt($c['descr']) : '&nbsp;') ,'</td>' ,"\n";
 		echo '<td class="r">', ($c['revision'] != '' ? htmlEnt($c['revision']) : '&nbsp;') ,'</td>' ,"\n";
