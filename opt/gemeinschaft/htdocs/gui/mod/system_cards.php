@@ -50,6 +50,7 @@ if (! is_array($cards)) {
 
 echo '<table cellspacing="1">' ,"\n";
 echo '<thead>' ,"\n";
+echo '<th>PCI card ID</th>' ,"\n";
 echo '<th>Vendor</th>' ,"\n";
 echo '<th>Device</th>' ,"\n";
 echo '<th>Rev.</th>' ,"\n";
@@ -60,6 +61,7 @@ $i=0;
 foreach ($cards as $c) {
 	if ($c['known']) {
 		echo '<tr class="', ($i%2 ? 'even':'odd') ,'">' ,"\n";
+		echo '<td>', $c['vendorid'] ,':', $c['devid'] ,':', $c['subvendorid'] ,':', $c['subdevid'] ,'</td>' ,"\n";
 		echo '<td>', ($c['vendor'] != '' ? htmlEnt($c['vendor']) : '?') ,'</td>' ,"\n";
 		echo '<td>', ($c['descr'] != '' ? htmlEnt($c['descr']) : '&nbsp;') ,'</td>' ,"\n";
 		echo '<td class="r">', ($c['revision'] != '' ? htmlEnt($c['revision']) : '&nbsp;') ,'</td>' ,"\n";
