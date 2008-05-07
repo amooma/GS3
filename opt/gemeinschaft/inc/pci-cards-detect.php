@@ -103,8 +103,11 @@ function gs_pci_cards_detect()
 		$c['vendor'] = '';
 		$c['descr' ] = '';
 		$c['known' ] = false;
-		//$c['driver'] = '';
-		//$c['kmod'  ] = '';
+		
+		$c['driver'] = '';
+		$c['kmod'  ] = '';
+		//$c['ports' ] = 0;
+		//$c['chans' ] = 0;
 		
 		switch ($c['vendorid']) {
 		
@@ -112,37 +115,55 @@ function gs_pci_cards_detect()
 			$c['vendor'] = 'Digium';
 			switch ($c['devid']) {
 				case '0120':
-					$c['descr'] = 'TE120p (1-port PRI, 3rd gen., PCIe 3.3v)';
+					$c['descr' ] = 'TE120p/TE121/TE122 (1-port PRI, 3rd gen., PCIe 3.3v)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wcte12xp';
 					break;
 				case '0205':
-					$c['descr'] = 'TE205p/TE207p (2-port PRI, 3rd gen.)';
+					$c['descr' ] = 'TE205p/TE207p (2-port PRI, 3rd gen.)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '0210':
-					$c['descr'] = 'TE210p/TE212p (2-port PRI, 3rd gen.)';
+					$c['descr' ] = 'TE210p/TE212p (2-port PRI, 3rd gen.)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '0220':
-					$c['descr'] = 'TE220/TE220b (2-port PRI, 3rd gen., PCIe 3.3v)';
+					$c['descr' ] = 'TE220/TE220b (2-port PRI, 3rd gen., PCIe 3.3v)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '0405':
-					$c['descr'] = 'TE405p/TE407p (4-port PRI, 3rd gen., 5.0v)';
+					$c['descr' ] = 'TE405p/TE407p (4-port PRI, 3rd gen., 5.0v)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '0406':
-					$c['descr'] = 'TE406p (4-port PRI, 3rd gen., 5.0v)';
+					$c['descr' ] = 'TE406p (4-port PRI, 3rd gen., 5.0v)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '0410':
-					$c['descr'] = 'TE410p/TE412p (4-port PRI, 3rd gen., 3.3v)';
+					$c['descr' ] = 'TE410p/TE412p (4-port PRI, 3rd gen., 3.3v)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '0411':
-					$c['descr'] = 'TE411p (4-port PRI, 3rd gen., 3.3v)';
+					$c['descr' ] = 'TE411p (4-port PRI, 3rd gen., 3.3v)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '0420':
-					$c['descr'] = 'TE420/TE420b (4-port PRI, 3rd gen., PCIe 3.3v)';
+					$c['descr' ] = 'TE420/TE420b (4-port PRI, 3rd gen., PCIe 3.3v)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '2400':
-					$c['descr'] = 'TDM2400 (analog)';
+					$c['descr' ] = 'TDM2400 (analog)';
 					break;
 				case 'b410':
-					$c['descr'] = 'B410p (4-port BRI)';
+					$c['descr' ] = 'B410p (4-port BRI)';
 					break;
 			}
 			break;
@@ -153,21 +174,21 @@ function gs_pci_cards_detect()
 			switch ($c['devid']) {
 				case '0001':
 					if     ($c['subvendorid'] === '0059' && $c['subdevid'] === '0001') {
-						$c['descr'] = '3XX (128k ISDN-S/T)';
+						$c['descr' ] = '3XX (128k ISDN-S/T)';
 					} elseif ($c['subvendorid'] === '0059' && $c['subdevid'] === '0003') {
-						$c['descr'] = '3XX (128k ISDN-U)';
+						$c['descr' ] = '3XX (128k ISDN-U)';
 					} elseif ($c['subvendorid'] === '00a7' && $c['subdevid'] === '0001') {
-						$c['descr'] = 'Teles S0 ISDN';
+						$c['descr' ] = 'Teles S0 ISDN';
 					} elseif ($c['subvendorid'] === '8086' && $c['subdevid'] === '0003') {
-						$c['descr'] = 'Digium X100p/X101p (analog FXO)';
+						$c['descr' ] = 'Digium X100p/X101p (analog FXO)';
 					} elseif ($c['subvendorid'] === 'b1d9' && $c['subdevid'] === '0003') {
-						$c['descr'] = 'Digium TDM400p/A400p (4x analog FXO/FXS)';
+						$c['descr' ] = 'Digium TDM400p/A400p (4x analog FXO/FXS)';
 					} else {
-						$c['descr'] = '3XX (modem/ISDN)';
+						$c['descr' ] = '3XX (modem/ISDN)';
 					}
 					break;
 				case '0002':
-					$c['descr'] = '100APC (ISDN)';
+					$c['descr' ] = '100APC (ISDN)';
 					break;
 			}
 			break;
@@ -176,19 +197,29 @@ function gs_pci_cards_detect()
 			$c['vendor'] = 'Xilinx';
 			switch ($c['devid']) {
 				case '0205':
-					$c['descr'] = 'Digium TE205p (2-port PRI, 1st/2nd gen.)';
+					$c['descr' ] = 'Digium TE205p (2-port PRI, 1st/2nd gen.)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '0210':
-					$c['descr'] = 'Digium TE210p (2-port PRI, 1st/2nd gen.)';
+					$c['descr' ] = 'Digium TE210p (2-port PRI, 1st/2nd gen.)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '0314':
-					$c['descr'] = 'Digium TE405p/TE410p (4-port PRI, 1st gen.)';
+					$c['descr' ] = 'Digium TE405p/TE410p (4-port PRI, 1st gen.)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '0405':
-					$c['descr'] = 'Digium TE405p (4-port PRI, 2nd gen.)';
+					$c['descr' ] = 'Digium TE405p (4-port PRI, 2nd gen.)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 				case '0410':
-					$c['descr'] = 'Digium TE410p (4-port PRI, 2nd gen.)';
+					$c['descr' ] = 'Digium TE410p (4-port PRI, 2nd gen.)';
+					$c['driver'] = 'zaptel';
+					$c['kmod'  ] = 'wct4xxp';
 					break;
 			}
 			break;
@@ -197,7 +228,7 @@ function gs_pci_cards_detect()
 			$c['vendor'] = 'Motorola';
 			switch ($c['devid']) {
 				case '5608':
-					$c['descr'] = 'Digium X100p (analog FXO)';
+					$c['descr' ] = 'Digium X100p (analog FXO)';
 					break;
 			}
 			break;
@@ -206,40 +237,62 @@ function gs_pci_cards_detect()
 			$c['vendor'] = 'Cologne';
 			switch ($c['devid']) {
 				case '2bd0':
-					$c['descr'] = 'HFC-S 2BDS0 (BRI)';
+					$c['descr' ] = 'HFC-S 2BDS0 (BRI)';
+					$c['driver'] = 'misdn';
+					$c['kmod'  ] = 'hfcmulti';
 					break;
 				case '8b4d':
-					$c['descr'] = 'HFC-4S 8B4D4S0 (BRI, 4 S/T)';
+					$c['descr' ] = 'HFC-4S 8B4D4S0 (BRI, 4 S/T)';
+					$c['driver'] = 'misdn';
+					$c['kmod'  ] = 'hfcmulti';
 					break;
 				case '0b4d':
-					$c['descr'] = 'HFC-8S 16B8D8S0 (BRI, 8 S/T)';
+					$c['descr' ] = 'HFC-8S 16B8D8S0 (BRI, 8 S/T)';
+					$c['driver'] = 'misdn';
+					$c['kmod'  ] = 'hfcmulti';
 					break;
 				case '08b4':
-					$c['descr'] = 'HFC-4S (4-port BRI)';
+					$c['descr' ] = 'HFC-4S (4-port BRI)';
+					$c['driver'] = 'misdn';
+					$c['kmod'  ] = 'hfcmulti';
 					break;
 				case '16b8':
-					$c['descr'] = 'HFC-8S (8-port BRI)';
+					$c['descr' ] = 'HFC-8S (8-port BRI)';
+					$c['driver'] = 'misdn';
+					$c['kmod'  ] = 'hfcmulti';
 					break;
 				case '30b1':
-					$c['descr'] = 'HFC-E1 (PRI)';
+					$c['descr' ] = 'HFC-E1 (PRI)';
 					break;
 				case 'f001':
-					$c['descr'] = 'HFC-4GSM (GSM)';
+					$c['descr' ] = 'HFC-4GSM (GSM)';
+					break;
+			}
+			break;
+		
+		case 'affe':  # Sirrix
+			$c['vendor'] = 'Sirrix';
+			switch ($c['devid']) {
+				case 'dead':  # affe:dead :-)
+					$c['descr' ] = '4S0 (4-port BRI)';
+					break;
+				case '02e1':
+					$c['descr' ] = '2E1 (2-port PRI)';
 					break;
 			}
 			break;
 		
 		default:
 			if     ($c['class'] === '0204') {
-				$c['descr'] = 'unknown ISDN controller';
+				$c['descr' ] = 'unknown ISDN controller';
 			}
 			elseif ($c['class'] === '0780') {
-				$c['descr'] = 'unknown communication controller';
+				$c['descr' ] = 'unknown communication controller';
 			}
 		
 		}
 		
-		if ($c['vendor'] != '' && $c['descr'] != '') {
+		if ($c['vendor'] != '' && $c['descr' ] != '') {
 			$c['known'] = true;
 		}
 		$cards[] = $c;
