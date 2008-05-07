@@ -44,7 +44,7 @@ function gs_pci_cards_detect()
 	
 	$err=0; $out=array();
 	@exec( $lspci.' -m -n 2>>/dev/null', $out, $err );
-	/*
+	
 	$out = array(
 		'09:00.0 "Class 0200" "14e4" "164c" -r12 "1028" "01b2"',
 		'0c:00.0 "Class 0604" "11ab" "1111" "" ""',
@@ -53,7 +53,7 @@ function gs_pci_cards_detect()
 		'00:00.0 "Class 0000" "e159" "0001" "b1d9" "0003"',
 		'00:00.0 "Class 0204" "e159" "0001" "0000" "0000"',
 	);
-	*/
+	
 	
 	if ($err !== 0) {
 		gs_log(GS_LOG_WARNING, 'lspci failed.');
@@ -84,15 +84,15 @@ function gs_pci_cards_detect()
 		if (preg_match('/\b([0-9a-z]{4})\b/S', $devid, $m2))
 			$c['devid'] = $m2[1];
 		
-		$c['devid2'] = strToLower($m[1][3]);
+		$c['subvendorid'] = strToLower($m[1][3]);
 		$m2 = array();
-		if (preg_match('/\b([0-9a-z]{4})\b/S', $devid2, $m2))
-			$c['devid2'] = $m2[1];
+		if (preg_match('/\b([0-9a-z]{4})\b/S', $subvendorid, $m2))
+			$c['subvendorid'] = $m2[1];
 		
-		$c['devid3'] = strToLower($m[1][4]);
+		$c['subdevid'] = strToLower($m[1][4]);
 		$m2 = array();
-		if (preg_match('/\b([0-9a-z]{4})\b/S', $devid3, $m2))
-			$c['devid3'] = $m2[1];
+		if (preg_match('/\b([0-9a-z]{4})\b/S', $subdevid, $m2))
+			$c['subdevid'] = $m2[1];
 		
 		$c['revision'] = '';
 		$m2 = array();
@@ -128,15 +128,15 @@ function gs_pci_cards_detect()
 			$c['known' ] = true;
 			switch ($c['devid']) {
 				case '0001':
-					if     ($c['devid2'] === '0059' && $c['devid3'] === '0001')
+					if     ($c['subvendorid'] === '0059' && $c['subdevid'] === '0001')
 						$c['descr'] = '3XX (128k ISDN-S/T)';
-					elseif ($c['devid2'] === '0059' && $c['devid3'] === '0003')
+					elseif ($c['subvendorid'] === '0059' && $c['subdevid'] === '0003')
 						$c['descr'] = '3XX (128k ISDN-U)';
-					elseif ($c['devid2'] === '00a7' && $c['devid3'] === '0001')
+					elseif ($c['subvendorid'] === '00a7' && $c['subdevid'] === '0001')
 						$c['descr'] = 'Teles S0 ISDN';
-					elseif ($c['devid2'] === '8086' && $c['devid3'] === '0003')
+					elseif ($c['subvendorid'] === '8086' && $c['subdevid'] === '0003')
 						$c['descr'] = 'Digium X100p/X101p (analog FXO)';
-					elseif ($c['devid2'] === 'b1d9' && $c['devid3'] === '0003')
+					elseif ($c['subvendorid'] === 'b1d9' && $c['subdevid'] === '0003')
 						$c['descr'] = 'Digium TDM400p/A400p (4x analog FXO/FXS)';
 					else
 						$c['descr'] = '3XX (modem/ISDN)';
@@ -160,6 +160,19 @@ function gs_pci_cards_detect()
 			$c['vendor'] = 'Motorola';
 			switch ($c['devid']) {
 				case '5608': $c['descr'] = 'Digium X100p (analog FXO)'; break;
+			}
+			break;
+		
+		case '1397':  # Cologne Chip Designs
+			$c['vendor'] = 'Cologne';
+			switch ($c['devid']) {
+				case '2bd0': $c['descr'] = 'HFC-S 2BDS0 (BRI)'; break;
+				case '8b4d': $c['descr'] = 'HFC-4S 8B4D4S0 (BRI, 4 S/T)'; break;
+				case '0b4d': $c['descr'] = 'HFC-8S 16B8D8S0 (BRI, 8 S/T)'; break;
+				case '08b4': $c['descr'] = 'HFC-4S (4-port BRI)'; break;
+				case '16b8': $c['descr'] = 'HFC-8S (8-port BRI)'; break;
+				case '30b1': $c['descr'] = 'HFC-E1 (PRI)'; break;
+				case 'f001': $c['descr'] = 'HFC-4GSM (GSM)'; break;
 			}
 			break;
 		
