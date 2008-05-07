@@ -71,7 +71,7 @@ foreach ($cards as $c) {
 }
 if ($i == 0) {
 	echo '<tr>' ,"\n";
-	echo '<td colspan="3">', '--' ,'</td>' ,"\n";
+	echo '<td colspan="4">', '--' ,'</td>' ,"\n";
 	echo '</tr>' ,"\n";
 }
 
