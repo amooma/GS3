@@ -44,7 +44,7 @@ function gs_pci_cards_detect()
 	
 	$err=0; $out=array();
 	@exec( $lspci.' -m -n 2>>/dev/null', $out, $err );
-	
+	/*
 	$out = array(
 		'09:00.0 "Class 0200" "14e4" "164c" -r12 "1028" "01b2"',
 		'0c:00.0 "Class 0604" "11ab" "1111" "" ""',
@@ -53,7 +53,7 @@ function gs_pci_cards_detect()
 		'00:00.0 "Class 0000" "e159" "0001" "b1d9" "0003"',
 		'00:00.0 "Class 0204" "e159" "0001" "0000" "0000"',
 	);
-	
+	*/
 	
 	if ($err !== 0) {
 		gs_log(GS_LOG_WARNING, 'lspci failed.');
