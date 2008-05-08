@@ -54,3 +54,35 @@ body {
 	border-color: #eee #fff #fff #eee;
 }
 
+
+th, .th {
+	background: #d0d3ff;
+	color: #04a;
+}
+td, .td {
+	background: #f0f0f3;
+}
+tr.even td {
+	background: #e9e9eb;
+}
+tr.odd td {
+	background: #f6f6f6;
+}
+
+#content h2 {
+	color: #00a;
+}
+#content h3 {
+	color: #36f;
+}
+
+.sort-col {
+	color: #0a3;
+}
+
+.quickchars a {
+	color: #9ae;
+}
+.quickchars a:hover {
+	color: #00e;
+}
