@@ -84,7 +84,7 @@ ORDER BY `p`.`id`'
 
 
 if ($rs_groups->numRows()==0) {
-	echo __('Sie sind Mitglied keiner Pickup-Gruppe.'), '<br />';
+	echo __('Sie sind nicht Mitglied einer Pickup-Gruppe.'), '<br />';  //TRANSLATE ME
 } else {
 	while ($pgrp = $rs_groups->fetchRow()) {
 		
@@ -197,9 +197,11 @@ echo "</pre>";
 <table cellspacing="1" class="smalltbl">
 <thead>
 <tr>
-	<th style="width:55px;" class="quickchars">&nbsp;</th>
+	<th style="width:25px;" class="transp">&nbsp;</th>
+	<th style="width:25px;" class="transp">&nbsp;</th>
 	<th style="width:140px;"><?php echo __('Snom-Tasten'); ?></th>
-	<th style="width:55px;" class="quickchars">&nbsp;</th>
+	<th style="width:25px;" class="transp">&nbsp;</th>
+	<th style="width:25px;" class="transp">&nbsp;</th>
 </tr>
 </thead>
 <tbody>
@@ -220,9 +222,10 @@ if (@count($keys_snom) > 0) {
 	$right = 6;
 	$left = 0;
 	for ($i=0; $i<12; ++$i) {
-		echo '<tr class="', ($i%2 ? 'even':'odd'), '">', "\n";
+		$i_even = !($i%2===0);  # :-)
+		echo '<tr class="', ($i_even ? 'even':'odd'), '">', "\n";
 		
-		$knum = ($i%2 ? $left : $right);
+		$knum = ($i_even ? $left : $right);
 		$keyv = 'P'. str_replace(' ', '&nbsp;', str_pad($knum+1, 2, ' ', STR_PAD_LEFT));
 		$keyinfo = @$keys_snom['f'.$knum];
 		if (! is_array($keyinfo)) $keyinfo = array();
@@ -260,24 +263,36 @@ if (@count($keys_snom) > 0) {
 			$title = $val;
 		}
 		
-		echo '<td', ($i%2 ? '':' style="background:transparent;"'), '>';
-		echo ($i%2)
-			? '<img alt=" " src="'. GS_URL_PATH .'img/snom_fkleft_'.$img.'.gif" /> '. $keyv
+		echo '<td class="r transp">';
+		echo ($i_even)
+			? '<img alt=" " src="'. GS_URL_PATH .'img/snom_fkleft_'.$img.'.gif" />'
 			: '&nbsp;';
 		echo '</td>', "\n";
 		
-		echo '<td class="', ($i%2 ? 'l':'r'), '">', "\n";
+		echo '<td class="l', ($i_even ? '':' transp'), '">';
+		echo ($i_even)
+			? $keyv
+			: '&nbsp;';
+		echo '</td>', "\n";
+		
+		echo '<td class="', ($i_even ? 'l':'r'), '">', "\n";
 		echo htmlEnt($title);
 		echo '</td>', "\n";
 		
-		echo '<td class="r"', ($i%2 ? ' style="background:transparent;"':''), '>';
-		echo ($i%2)
+		echo '<td class="r', ($i_even ? ' transp':''), '">';
+		echo ($i_even)
 			? '&nbsp;'
-			: $keyv. ' <img alt=" " src="'. GS_URL_PATH .'img/snom_fkright_'.$img.'.gif" />';
+			: $keyv;
+		echo '</td>', "\n";
+		
+		echo '<td class="l transp">';
+		echo ($i_even)
+			? '&nbsp;'
+			: '<img alt=" " src="'. GS_URL_PATH .'img/snom_fkright_'.$img.'.gif" />';
 		echo '</td>', "\n";
 		
 		echo '</tr>', "\n";
-		if ($i % 2) ++$left;
+		if ($i_even) ++$left;
 		else ++$right;
 	}	
 }
