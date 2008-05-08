@@ -84,48 +84,48 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 <tbody>
 
 <tr class="even">
-	<td><b><?php echo __('Kanonisch'); ?>:</b></td>
-	<td class="pre r"><?php echo $canonical->norm; ?></td>
+	<th><?php echo __('Kanonisch'); ?>:</th>
+	<td class="r"><tt><?php echo $canonical->norm; ?></tt></td>
 </tr>
 
 <tr class="odd">
-	<td><b><?php echo __('International'); ?>:</b></td>
-	<td class="pre r"><?php echo $canonical->intl; ?></td>
+	<th><?php echo __('International'); ?>:</th>
+	<td class="r"><tt><?php echo $canonical->intl; ?></tt></td>
 </tr>
 
 <tr class="even">
-	<td><b><?php echo __('National'); ?>:</b></td>
-	<td class="pre r"><?php echo $canonical->natl; ?></td>
+	<th><?php echo __('National'); ?>:</th>
+	<td class="r"><tt><?php echo $canonical->natl; ?></tt></td>
 </tr>
 
 <tr class="odd">
-	<td><b><?php echo __('Innerorts'); ?>:</b></td>
-	<td class="pre r"><?php echo $canonical->locl; ?></td>
+	<th><?php echo __('Innerorts'); ?>:</th>
+	<td class="r"><tt><?php echo $canonical->locl; ?></tt></td>
 </tr>
 
 <tr class="even">
-	<td><b><?php echo __('In eigener Telefonanlage?'); ?>:</b></td>
-	<td class="pre"><?php echo ($canonical->in_prv_branch ? __('ja') : __('nein')); ?></td>
+	<th><?php echo __('In eigener Telefonanlage?'); ?>:</th>
+	<td><?php echo ($canonical->in_prv_branch ? __('ja') : __('nein')); ?></td>
 </tr>
 
 <tr class="odd">
-	<td><b><?php echo __('Durchwahl'); ?>:</b></td>
-	<td class="pre r"><?php echo $canonical->extn; ?></td>
+	<th><?php echo __('Durchwahl'); ?>:</th>
+	<td class="r"><tt><?php echo $canonical->extn; ?></tt></td>
 </tr>
 
 <tr class="even">
-	<td><b><?php echo __('Sondernummer?'); ?>:</b></td>
-	<td class="pre"><?php echo ($canonical->is_special ? __('ja') : __('nein')); ?></td>
+	<th><?php echo __('Sondernummer?'); ?>:</th>
+	<td><?php echo ($canonical->is_special ? __('ja') : __('nein')); ?></td>
 </tr>
 
 <tr class="odd">
-	<td><b><?php echo __('Call-by-Call?'); ?>:</b></td>
-	<td class="pre"><?php echo ($canonical->is_call_by_call ? __('ja') : __('nein')); ?></td>
+	<th><?php echo __('Call-by-Call?'); ?>:</th>
+	<td><?php echo ($canonical->is_call_by_call ? __('ja') : __('nein')); ?></td>
 </tr>
 
 <tr class="even">
-	<td><b><?php echo __('Ergebnis'); ?>:</b></td>
-	<td class="pre r"><?php echo $canonical->dial; ?></td>
+	<th><?php echo __('Ergebnis'); ?>:</th>
+	<td class="r"><tt><?php echo $canonical->dial; ?></tt></td>
 </tr>
 
 </tbody>
