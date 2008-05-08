@@ -55,10 +55,6 @@ body {
 }
 
 
-th, .th {
-	background: #d0d3ff;
-	color: #04a;
-}
 td, .td {
 	background: #f0f0f3;
 }
@@ -67,6 +63,16 @@ tr.even td {
 }
 tr.odd td {
 	background: #f6f6f6;
+}
+th, .th {
+	background: #d0d3ff;
+	color: #04a;
+}
+tbody tr.even th {
+	background: #d0d3ff;
+}
+tbody tr.odd th {
+	background: #e0e0ff;
 }
 
 #content h2 {

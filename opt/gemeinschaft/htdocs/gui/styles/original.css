@@ -455,13 +455,6 @@ th, td, .td {
 	padding: 2px 6px;
 	text-align: left;
 }
-th, td.th, .th {
-	background: #dde7c4;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	font-weight: bold;
-	vertical-align: middle;
-}
 td, .td {
 	background: #eee;
 	vertical-align: top;
@@ -472,6 +465,28 @@ tr.even td {
 tr.odd td {
 	background: #f3f3f3;
 }
+
+th, td.th, .th {
+	background: #dde7c4;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	font-weight: bold;
+	vertical-align: middle;
+}
+tbody th {
+	padding: 2px 6px;
+	text-align: left;
+	vertical-align: top;
+}
+/*
+tbody tr.even th {
+	background: #dde7c4;
+}
+tbody tr.odd th {
+	background: #dde7c4;
+}
+*/
+
 
 table.phonebook td,
 table.phonebook input,
