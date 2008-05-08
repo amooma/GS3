@@ -75,7 +75,7 @@ ORDER BY `q`.`name`'
 
 
 if ($rs_queues->numRows()==0) {
-	echo __('Sie sind Mitglied keiner Warteschlange.'), '<br />';
+	echo __('Sie sind nicht Mitglied einer Warteschlange.'), '<br />';  //TRANSLATEME
 } else {
 	while ($queue = $rs_queues->fetchRow()) {
 		
