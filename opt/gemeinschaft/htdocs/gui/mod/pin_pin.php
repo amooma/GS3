@@ -82,9 +82,13 @@ if (@$_REQUEST['action']==='save') {
 
 <div style="max-width:600px;">
 	<img alt=" " src="/gemeinschaft/crystal-svg/16/act/info.png" class="fl" />
-	<p style="margin-left:22px;">
-		<?php echo __('Die PIN dient zum Einloggen an einem Telefon sowie zur Anmeldung an dieser Weboberfl&auml;che. Die PIN darf ausschlie&szlig;lich Ziffern enthalten, muss mindestens 4 und h&ouml;chstens 10 Stellen lang sein.'); ?>
-	</p>
+	<p style="margin-left:22px;"><?php
+		if (gs_get_conf('GS_GUI_AUTH_METHOD') !== 'webseal') {
+			echo __('Die PIN dient zum Einloggen an einem Telefon, zum Abfragen der eigenen Mailbox von einem fremden Telefon aus sowie zur Anmeldung an dieser Weboberfl&auml;che. Die PIN darf ausschlie&szlig;lich Ziffern enthalten, muss mindestens 4 und h&ouml;chstens 10 Stellen lang sein.');
+		} else {
+			echo __('Die PIN dient zum Einloggen an einem Telefon sowie zum Abfragen der eigenen Mailbox von einem fremden Telefon aus. Die PIN darf ausschlie&szlig;lich Ziffern enthalten, muss mindestens 4 und h&ouml;chstens 10 Stellen lang sein.');
+		}
+	?></p>
 </div>
 
 <?php if ($msg != '') { ?>
