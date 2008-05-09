@@ -105,6 +105,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 	
 ?>
 
+<form method="post" action="<?php echo GS_URL_PATH; ?>">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
@@ -142,13 +144,12 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 <tbody>
 
 <?php
-	
 	if (@$rs) {
 		$i = 0;
 		while ($r = $rs->fetchRow()) {
 			echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
 			
-			if ($edit == $r['id']) {
+			if ($edit === $r['id']) {
 				
 				echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 				echo gs_form_hidden($SECTION, $MODULE), "\n";
@@ -203,17 +204,12 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 			
 		}
 	}
-	
 ?>
-
-<tr>
 
 <?php
 	if (! $edit) {
-		
-		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
-		echo gs_form_hidden($SECTION, $MODULE), "\n";
 ?>
+	<tr>
 		<td>&nbsp;</td>
 		<td>
 			<input type="text" name="title" value="" size="25" maxlength="40" />
@@ -224,25 +220,20 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			</button>
 		</td>
-		
-		</form>
+	</tr>
 <?php
 	}
 ?>
 
-</tr>
-
 </tbody>
 </table>
+</form>
 
 <?php
 
-//===================================================================
-// show pickupgroup's memners
-//===================================================================
-
 }
 #####################################################################
+
 
 
 #####################################################################
