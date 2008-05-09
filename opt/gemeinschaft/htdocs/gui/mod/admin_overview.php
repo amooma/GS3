@@ -65,17 +65,17 @@ function get_last_phone_date( $DB ) {
 ?>
 
 <table cellspacing="1" class="phonebook">
-<thead>
+<tbody>
+
 <tr>
-	<th style="width:270px;">
+	<td class="transp" style="width:18em;"></td>
+	<td class="transp" style="width:12em;"></td>
+</tr>
+<tr>
+	<th colspan="2">
 		<span class="sort-col"><?php echo __('Benutzer'); ?></span>
 	</th>
-	<th style="width:200px;">
-		&nbsp;
-	</th>
 </tr>
-</thead>
-<tbody>
 <tr>
 	<th><?php echo __('Eingerichtete Benutzer'); ?>:</th>
 	<td><?php echo count_users_configured($DB); ?></td>
@@ -84,21 +84,15 @@ function get_last_phone_date( $DB ) {
 	<th><?php echo __('Eingeloggte Benutzer'); ?>:</th>
 	<td><?php echo count_users_logged_in($DB); ?></td>
 </tr>
-</tbody>
-</table>
 
-<table cellspacing="1" class="phonebook">
-<thead>
 <tr>
-	<th style="width:270px;">
+	<td colspan="2" class="transp"></td>
+</tr>
+<tr>
+	<th colspan="2">
 		<span class="sort-col"><?php echo __('Endger&auml;te'); ?></span>
 	</th>
-	<th style="width:200px;">
-		&nbsp;
-	</th>
 </tr>
-</thead>
-<tbody>
 <tr>
 	<th><?php echo __('Eingerichtete Endger&auml;te'); ?>:</th>
 	<td><?php echo count_phones_configured($DB); ?></td>
