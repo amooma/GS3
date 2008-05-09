@@ -265,7 +265,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	</tr>
 	<tr>
 		<td colspan="2" class="quickchars">
-	<?php
+<?php
 	
 	$chars = array();
 	$chars['#'] = '';
@@ -274,7 +274,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'name='. htmlEnt($cs)), '">', htmlEnt($cd), '</a>', "\n";
 	}
 	
-	?>
+?>
 		</td>
 	</tr>
 	</tbody>
@@ -283,12 +283,12 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<table cellspacing="1" class="phonebook">
 	<thead>
 	<tr>
-		<th style="width:180px;"><?php echo __('Nachname') ,', ', __('Vorname'); ?></th>
-		<th style="width: 60px;"><?php echo __('Durchwahl'); ?></th>
+		<th style="width:180px;" class="sort-col"><?php echo __('Nachname') ,', ', __('Vorname'); ?></th>
+		<th style="width: 60px;"><?php echo __('Nebenst.' ); /*//TRANSLATEME*/ ?></th>
 		<th style="width: 70px;"><?php echo __('User'     ); ?></th>
 		<th style="width: 55px;"><?php echo __('PIN'      ); ?></th>
-		<th style="width:190px;"><?php echo __('E-Mail'   ); ?></th>
-		<th style="width:140px;"><?php echo __('Host'     ); ?></th>
+		<th style="width:165px;"><?php echo __('E-Mail'   ); ?></th>
+		<th style="width: 42px;"><?php echo __('Host'     ); ?></th>
 		<th style="width: 85px;"><?php echo __('Status'   ); ?></th>
 		<th style="width: 55px;">&nbsp;</th>
 	</tr>
@@ -314,8 +314,15 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			echo '<td>', $r['ext'], '</td>' ,"\n";
 			echo '<td>', htmlEnt($r['usern']), '</td>' ,"\n";
 			echo '<td>', str_repeat('*', strLen($r['pin'])) ,'</td>' ,"\n";
-			echo '<td>', htmlEnt($r['email']) ,'</td>' ,"\n";
-			echo '<td>', $r['hid'].' ('.@$hosts[$r['hid']].') </td>' ,"\n";
+			$email_display = $r['email'];
+			if (mb_strLen($email_display) < 20) {
+				$email_display = htmlEnt($email_display);
+			} else {
+				$email_display = htmlEnt(mb_substr($email_display, 0, 18)) .'&#8230;';
+			}
+			echo '<td>', $email_display ,'</td>' ,"\n";
+			//echo '<td>', $r['hid'] ,' (',@$hosts[$r['hid']],') </td>' ,"\n";
+			echo '<td class="r">', $r['hid'] ,'</td>' ,"\n";
 			
 			echo '<td>';
 			$state = gs_extstate_single( $r['ext'] );
@@ -363,31 +370,34 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	
 	if (!$edit_user) {
 		
+		//FIXME - tr > form is invalid
 		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 		echo gs_form_hidden($SECTION, $MODULE), "\n";
 		echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
 		echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
 	?>
 		<td>
-			<input type="text" name="ulname" value="" size="15" maxlength="40" style="width:125px;" /><input type="text" name="ufname" value="" size="15" maxlength="40" style="width:115px;" />
+			<input type="text" name="ulname" value="" size="15" maxlength="40" style="width:80px;" title="<?php echo __('Nachname'); ?>" />,
+			<input type="text" name="ufname" value="" size="15" maxlength="40" style="width:70px;" title="<?php echo __('Vorname'); ?>" />
 		</td>
 		<td>
-			<input type="text" name="uext" value="" size="10" maxlength="10" />
+			<input type="text" name="uext" value="" size="8" maxlength="10" />
 		</td>
 		<td>
 			<input type="text" name="uuser" value="" size="8" maxlength="20" />
 		</td>
 		<td>
-			<input type="password" name="upin" value="" size="6" maxlength="10" />
+			<input type="password" name="upin" value="" size="5" maxlength="10" />
 		</td>
 		<td>
-			<input type="text" name="uemail" value="" size="25" maxlength="50" />
+			<input type="text" name="uemail" value="" size="20" maxlength="50" />
 		</td>
-		<td>
+		<td class="r">
 	<?php
-			echo '<select name="uhost">',"\n";
+			echo '<select name="uhost" style="min-width:42px;">',"\n";
 			foreach ($hosts as $key => $host) {
-				echo '<option value="',$key,'">', $key ,' (', htmlEnt($host) ,')</option>',"\n";
+				//echo '<option value="',$key,'">', $key ,'</option>',"\n";
+				echo '<option value="',$key,'">', $key ,'</option>',"\n";
 			}
 			echo '</select>',"\n";
 	?>
@@ -416,18 +426,15 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<table cellspacing="1" class="phonebook">
 	<thead>
 	<tr>
-		<th style="width:220px;">
+		<th colspan="2">
 			<span class="sort-col"><?php echo __('Benutzer'); ?></span>
-		</th>
-		<th style="width:75px;">
-			&nbsp;
 		</th>
 	</tr>
 	</thead>
 	<tbody>
 	<tr>
 		<th><?php echo __('Eingerichtete Benutzer'); ?>:</th>
-		<td class="r"><?php echo count_users_configured($DB); ?></td>
+		<td class="r" style="min-width:4em;"><?php echo count_users_configured($DB); ?></td>
 	</tr>
 	<tr>
 		<th><?php echo __('Eingeloggte Benutzer'); ?>:
@@ -451,7 +458,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		}
 	}
 	*/
-	
 	
 	$rs = $DB->execute(
 'SELECT
@@ -515,7 +521,6 @@ ORDER BY LENGTH(`regexp`) DESC';
 		}
 	}
 	
-	
 	$sql_query =
 'SELECT `number`
 FROM `users_external_numbers`
@@ -552,7 +557,7 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\
 </thead>
 <tbody>
 	<tr>
-		<th><?php echo __('Durchwahl'); ?>:</th>
+		<th><?php echo __('Nebenstelle'); /*//TRANSLATEME*/ ?>:</th>
 		<td>
 			<?php echo $r['ext']; ?>
 		</td>
@@ -693,16 +698,19 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 	}
 	
 	echo "<tr>\n";
+	//FIXME - tr > form is invalid
 	echo '<form method="post" action="', GS_URL_PATH  ,'">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE), "\n";
 	echo '<input type="hidden" name="edit" value="', htmlEnt($edit_user), '" />', "\n";
 	
 	echo "<td>\n";
-		echo '<input type="text" name="cbregexp" value="" size="20" maxlength="40" />';	
+	echo '<input type="text" name="cbregexp" value="" size="20" maxlength="40" />';	
 	echo "</td>\n";
+	
 	echo "<td>\n";
-		echo '<input type="text" name="cbpin" value="" size="20" maxlength="40" />';	
+	echo '<input type="text" name="cbpin" value="" size="20" maxlength="40" />';	
 	echo "</td>\n";
+	
 	echo "<td>\n";
 	echo '<button type="submit" title="', __('Speichern') ,'" class="plain">', "\n";
 	echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/filesave.png" />', "\n";
@@ -750,7 +758,7 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 	}
 	
 	echo "<tr>\n";
-	
+	//FIXME - tr > form is invalid
 	echo '<form method="post" action="', GS_URL_PATH  ,'">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE), "\n";
 	echo '<input type="hidden" name="edit" value="', htmlEnt($edit_user), '" />', "\n";
@@ -768,7 +776,6 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 	echo "</td>\n";
 	
 	echo "</form>\n";
-	
 	echo "</tr>\n";
 ?>
 </tbody>
