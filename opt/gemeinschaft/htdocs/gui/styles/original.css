@@ -20,6 +20,7 @@ input[type="password"],
 input[type="file"],
 textarea {
 	padding: 0px 1px;
+	margin: 0;
 }
 
 input[type="text"]:disabled,
