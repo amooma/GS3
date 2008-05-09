@@ -449,7 +449,7 @@ h1 {
 button.plain {
 	border: 0 transparent none;
 	margin: 0 0;
-	padding: 2px;
+	padding: 0 0;
 	vertical-align: middle;
 	background: transparent;
 }
