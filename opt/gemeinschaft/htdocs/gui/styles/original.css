@@ -100,6 +100,17 @@ sup, sub {font-weight: normal; font-size: 75%;}
 sup {vertical-align: top;}
 sub {vertical-align: bottom;}
 
+*:lang(C)     > * { quotes: '"'     '"'     "'"     "'"    ; }
+*[lang|="C"]  > * { quotes: '"'     '"'     "'"     "'"    ; }
+:lang(en)     > * { quotes: "\201C" "\201D" "\2018" "\2019"; }
+*[lang|="en"] > * { quotes: "\201C" "\201D" "\2018" "\2019"; }
+:lang(de)     > * { quotes: "\201E" "\201C" "\201A" "\2018"; }
+*[lang|="de"] > * { quotes: "\201E" "\201C" "\201A" "\2018"; }
+
+q:before { content: open-quote; }
+q:after  { content: close-quote; }
+
+
 
 /*
 	shortcuts
