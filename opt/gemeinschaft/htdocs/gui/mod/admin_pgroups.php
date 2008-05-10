@@ -85,6 +85,8 @@ if ($group && $user) {
 
 
 #####################################################################
+#  show pickup group {
+#####################################################################
 if (! $group) {
 	
 	$sql_query =
@@ -107,6 +109,13 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<?php
+if ($edit > 0) {
+	echo '<input type="hidden" name="page" value="', htmlEnt($page), '" />', "\n";
+	echo '<input type="hidden" name="save" value="', $edit , '" />', "\n";
+}
+?>
+
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
@@ -116,6 +125,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 	<th style="width:80px;">
 <?php
 	
+	//echo __('S.') /*//TRANSLATEME*/ ,' ';
 	echo ($page+1), ' / ', $num_pages, '&nbsp; ',"\n";
 	
 	if ($page > 0) {
@@ -151,18 +161,13 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 			
 			if ($edit === $r['id']) {
 				
-				echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
-				echo gs_form_hidden($SECTION, $MODULE), "\n";
-				echo '<input type="hidden" name="page" value="', htmlEnt($page), '" />', "\n";
-				echo '<input type="hidden" name="save" value="', $r['id'] , '" />', "\n";
-				
-				echo '<td>', htmlEnt($r['id']) ,'</td>',"\n";
+				echo '<td class="r">', htmlEnt($r['id']) ,'</td>',"\n";
 				
 				echo '<td>';	
 				echo '<input type="text" name="title" value="', htmlEnt($r['title']) ,'" size="25" maxlength="40" />';	
 				echo '</td>',"\n";
 				
-				echo '<td>', $r['num_members'] ,'</td>',"\n";
+				echo '<td class="r">', $r['num_members'] ,'</td>',"\n";
 				
 				echo '<td>',"\n";
 				
@@ -177,18 +182,16 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 				echo '</button></a>' ,"\n";
 				
 				echo '</td>',"\n";
-				
-				echo '</form>',"\n";
-			
+							
 			} else {
 				
-				echo '<td>', htmlEnt($r['id']) ,'</td>',"\n";
+				echo '<td class="r">', htmlEnt($r['id']) ,'</td>',"\n";
 				
 				echo '<td>', htmlEnt($r['title']) ,'</td>',"\n";
 				
-				echo '<td>',"\n";
-				echo '<a href="', gs_url($SECTION, $MODULE, null, 'group='.$r['id']) ,'" title="', __('l&ouml;schen'), '">'.
-				htmlEnt($r['num_members']),'</a>';
+				echo '<td class="r">',"\n";
+				echo '<a href="', gs_url($SECTION, $MODULE, null, 'group='.$r['id']) ,'" title="', __('l&ouml;schen'), '">',
+				$r['num_members'] ,'</a>';
 				echo '</td>',"\n";
 				
 				echo '<td>',"\n";
@@ -201,15 +204,14 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 			}
 			
 			echo '</tr>',"\n";
-			
 		}
 	}
 ?>
 
 <?php
 	if (! $edit) {
+		echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
 ?>
-	<tr>
 		<td>&nbsp;</td>
 		<td>
 			<input type="text" name="title" value="" size="25" maxlength="40" />
@@ -220,8 +222,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			</button>
 		</td>
-	</tr>
 <?php
+		echo '</tr>',"\n";
 	}
 ?>
 
@@ -233,6 +235,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 
 }
 #####################################################################
+#  show pickup group }
+#####################################################################
 
 
 
@@ -241,6 +245,21 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 #####################################################################
 else {
 	
+	$query =
+'SELECT `title`
+FROM `pickupgroups`
+WHERE `id`='. $group;
+	$rs = $DB->execute($query);
+	$pgrp = $rs->fetchRow();
+	if (! $pgrp) {
+		echo 'Group not found!';
+		return;
+	}
+	
+	echo '<h3>', __('Mitglieder der Ruf&uuml;bernahme-Gruppe');
+	echo ' <q>', htmlEnt($pgrp['title']) ,'</q> (ID ', $group ,')';
+	echo '</h3>' ,"\n";
+		
 	$sql_query =
 'SELECT SQL_CALC_FOUND_ROWS 
 	`u`.`user` `user`, `u`.`lastname` `ln`,
@@ -249,7 +268,7 @@ FROM
 	`pickupgroups_users` `pu` JOIN
 	`users` `u` ON (`u`.`id`=`pu`.`user_id`)
 WHERE
-	`pu`.`group_id` = '.$group.'
+	`pu`.`group_id`='.$group.'
 ORDER BY `u`.`user`
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 	
@@ -258,13 +277,18 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 	$num_total = @$DB->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);
 	
-?>	
-
+	
+	if (! $edit) {
+		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+		echo gs_form_hidden($SECTION, $MODULE), "\n";
+		echo '<input type="hidden" name="group" value="', htmlEnt($group), '" />', "\n";
+	}
+?>
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:100px;"><?php echo __('User'); ?></th>
-	<th style="width:250px;"><?php echo __('Name'); ?></th>
+	<th style="width:120px;"><?php echo __('User'); ?></th>
+	<th style="width:230px;"><?php echo __('Name'); ?></th>
 	<th style="width: 80px;">
 <?php
 	echo ($page+1), ' / ', $num_pages, '&nbsp; ',"\n";
@@ -296,7 +320,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 <tbody>
 
 <?php
-	
 	if (@$rs) {
 		$i = 0;
 		while ($r = $rs->fetchRow()) {
@@ -318,38 +341,30 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 		}
 	}
 	
-?>
-
-<tr>
-<?php
-	
 	if (! $edit) {
-		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
-		echo gs_form_hidden($SECTION, $MODULE), "\n";
-		echo '<input type="hidden" name="group" value="', htmlEnt($group), '" />', "\n";
+		echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
 ?>
-		
 		<td>
-			<input type="text" name="user" value="" size="25" maxlength="40" />
+			<input type="text" name="user" value="" size="15" maxlength="25" />
 		</td>
-		<td></td>
+		<td>&nbsp;</td>
 		<td>
 			<button type="submit" title="<?php echo __('Benutzer hinzuf&uuml;gen'); ?>" class="plain">
 				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			</button>
 		</td>
-		
-		</form>
 <?php
-}
+		echo '</tr>', "\n";
+	}
 ?>
-
-</tr>
 
 </tbody>
 </table>
-
 <?php
+	if (! $edit) {
+		echo '</form>' ,"\n";
+	}
+	
 }
 #####################################################################
 #  show members }
