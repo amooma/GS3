@@ -44,8 +44,7 @@ gui_sudo_allowed() muss true oder false zurueckgeben.
 gui_monitor_which_peers() muss false oder ein Array der ueberwachbaren
 User zurueckgeben.
 
-Um diese Lookups abzuschalten in der inc/conf.php GUI_SUDO_EXTENDED
-auf false setzen.
+Um diese Lookups abzuschalten GUI_SUDO_EXTENDED auf false setzen.
 
 Siehe auch session.php ldap_user_map()
 */
