@@ -63,6 +63,63 @@ $copyright =
 * MA 02110-1301, USA.
 \*******************************************************************/';
 
+
+function _po_to_php_store_msg( &$trans, &$msgid, &$msgstr )
+{
+	$msgstr = str_replace(
+		array('\n', '\r', '\t', '\"'),
+		array("\n", "\r", "\t", '"' ),
+		$msgstr);
+	
+	if ($msgstr != '') {
+		$trans[$msgid] = $msgstr;
+	}
+	
+	$msgstr = '';
+}
+
+function _po_to_php( $pofile )
+{
+	$lines = file($pofile);
+	if (! is_array($lines)) return false;
+	
+	$trans = array();
+	$msgid = null;
+	$msgstr = '';
+	$context = 'msgstr';
+	
+	foreach ($lines as $line) {
+		$line = trim($line);
+		if ($line=='' || subStr($line,0,1)==='#') continue;
+		
+		if (preg_match('/^msgid\s*"(.*)"/iS', $line, $m)) {
+			if ($msgid !== null) {
+				_po_to_php_store_msg( $trans, $msgid, $msgstr );
+			}
+			
+			$context = 'msgid';
+			$msgid   = $m[1];
+		}
+		elseif (preg_match('/^msgstr\s*"(.*)"/iS', $line, $m)) {
+			$context = 'msgstr';
+			$msgstr  = $m[1];
+		}
+		else {
+			if ($context === 'msgstr') {
+				$msgstr .= trim($line, '"');
+			} else {
+				$msgid  .= trim($line, '"');
+			}
+		}
+	}
+	if ($msgid !== null) {
+		_po_to_php_store_msg( $trans, $msgid, $msgstr );
+	}
+	
+	return $trans;
+}
+
+
 $dir = dirName(__FILE__).'/';
 
 $langdirs = glob( $dir.'*_*/' );
@@ -75,6 +132,7 @@ if (is_array($langdirs)) {
 				$domain = baseName($pofile, '.po');
 				$lang = baseName(dirName(dirName($pofile)));
 				
+				/*
 				# build .mo file for gettext
 				#
 				echo "Building $lang $domain.mo ...\n";
@@ -85,11 +143,12 @@ if (is_array($langdirs)) {
 					if ($err === 127) echo " (msgfmt not found. gettext not installed?)";
 					echo "\n";
 				}
+				*/
 				
 				# build .php file for php
 				#
 				echo "Building $lang $domain.php ...\n";
-				$phpout = po_to_php( $pofile );
+				$phpout = _po_to_php( $pofile );
 				if (! is_array($phpout)) $phpout = array();
 				$phpout = '<'."?php\n"
 					. "// AUTO-GENERATED FILE. TO MAKE CHANGES EDIT\n"
@@ -107,52 +166,6 @@ if (is_array($langdirs)) {
 			}
 		}
 	}
-}
-
-function po_to_php( $pofile )
-{
-	$lines = file($pofile);
-	if (! is_array($lines)) return false;
-	
-	$trans = array();
-	$msgid = null;
-	$msgstr = '';
-	$context = 'msgstr';
-	
-	foreach ($lines as $line) {
-		$line = trim($line);
-		if ($line=='' || subStr($line,0,1)=='#') continue;
-		
-		if (preg_match('/msgid\s*"(.*)"/iS', $line, $m)) {
-			if ($msgid !== null) {
-				$trans[$msgid] = str_replace(
-					array('\n', '\r', '\t', '\"'),
-					array("\n", "\r", "\t", '"' ),
-					$msgstr);
-				$msgstr = '';
-			}
-			
-			$msgid = $m[1];
-			$context = 'msgid';
-		} elseif (preg_match('/msgstr\s*"(.*)"/iS', $line, $m)) {
-			$msgstr = $m[1];
-			$context = 'msgstr';
-		} else {
-			if ($context == 'msgstr')
-				$msgstr .= trim($line, '"');
-			else
-				$msgid .= trim($line, '"');
-		}
-	}
-	if ($msgid !== null) {
-		$trans[$msgid] = str_replace(
-			array('\n', '\r', '\t', '\"'),
-			array("\n", "\r", "\t", '"' ),
-			$msgstr);
-		$msgstr = '';
-	}
-	
-	return $trans;
 }
 
 
