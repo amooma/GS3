@@ -30,8 +30,9 @@ defined('GS_VALID') or die('No direct access.');
 
 require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
-require_once( GS_DIR .'inc/ldap.php' );
-
+if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') === 'lvm') {
+	require_once( GS_DIR .'inc/ldap.php' );
+}
 
 /*
 Die API fuer den Rest von Gemeinschaft sind hier die Funktionen
