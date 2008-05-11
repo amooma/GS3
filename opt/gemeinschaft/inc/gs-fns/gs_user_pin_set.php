@@ -36,10 +36,12 @@ function gs_user_pin_set( $user, $pin='' )
 {
 	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
-	if (! preg_match( '/^[\d]+$/', $pin ))
+	if (! preg_match( '/^[0-9]+$/', $pin ))
 		return new GsError( 'PIN must be numeric.' );
 	if (strLen($pin) < 3)
-		return new GsError( 'PIN too short.' );
+		return new GsError( 'PIN too short (min. 3 digits).' );
+	if (strLen($pin) > 10)
+		return new GsError( 'PIN too long (max. 10 digits).' );
 	
 	# connect to db
 	#
