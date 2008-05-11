@@ -108,7 +108,7 @@ $LDAP_PROP_PHONE        = 'telephonenumber'; # e.g. "telephonenumber"
 //$GUI_SESSIONS           = false;    # use sessions?
 // not used. always start session but fallback gracefully
 
-$GUI_AUTH_METHOD            = 'gemeinschaft';
+#$GUI_AUTH_METHOD            = 'gemeinschaft';
   # "gemeinschaft": Authenticate users against our internal database.
   # "webseal"     : Trust the non-standard "IV-User" HTTP header.
   #                 Make sure every access goes through WebSeal
@@ -131,6 +131,12 @@ $GUI_SUDO_ADMINS            = '';
   # certain other user. "gemeinschaft" or "lvm". ugly solution.
   # see GUI_SUDO_EXTENDED, GUI_MON_PEERS_ENABLED and
   # htdocs/gui/inc/permissions.php. deprecated.
+
+#$GUI_USER_MAP_METHOD        = '';
+  # determines the method used to map legacy usernames to usernames
+  # in Gemeinschaft. "" or "lvm". something like the "lvm" method
+  # (see gs_legacy_user_map() in htdocs/gui/inc/session.php) can
+  # be handy if GUI_AUTH_METHOD is "webseal".
 
 $GUI_QUEUE_SHOW_NUM_CALLS   = false;
   # show number of completed calls for each member in Monitor->Queues
