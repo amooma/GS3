@@ -119,6 +119,7 @@ else {
 					}
 				}
 			}
+			unset($accept_langs, $accept_lang, $qval, $ret);
 		}
 	}
 }
