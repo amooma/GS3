@@ -37,8 +37,12 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 {
 	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
-	if (! preg_match( '/^[\d]+$/', $pin ))
+	if (! preg_match( '/^[0-9]+$/', $pin ))
 		return new GsError( 'PIN must be numeric.' );
+	if (strLen($pin) < 3)
+		return new GsError( 'PIN too short (min. 3 digits).' );
+	if (strLen($pin) > 10)
+		return new GsError( 'PIN too long (max. 10 digits).' );
 	//if (! preg_match( '/^[a-zA-Z\d.\-\_ ]+$/', $firstname ))
 	//	return new GsError( 'Invalid characters in first name.' );
 	$firstname = preg_replace('/\s+/', ' ', trim($firstname));
