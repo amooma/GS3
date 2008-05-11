@@ -49,8 +49,9 @@ function _not_allowed( $msg='Not Allowed.' )
 }
 
 define('GS_WEB_REWRITE',
-	   array_key_exists('REDIRECT_URL'    , $_SERVER)
-	|| array_key_exists('_GS_HAVE_REWRITE', $_SERVER) );
+	   array_key_exists('REDIRECT_URL'             , $_SERVER)
+	|| array_key_exists('_GS_HAVE_REWRITE'         , $_SERVER)
+	|| array_key_exists('REDIRECT__GS_HAVE_REWRITE', $_SERVER) );
 
 
 
