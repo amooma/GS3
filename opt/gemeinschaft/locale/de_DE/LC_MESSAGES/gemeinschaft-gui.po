@@ -1,3 +1,4 @@
+#
 # Gemeinschaft - GUI - German
 # Copyright (C) 2007 amooma GmbH
 # This file is distributed under the same license as Gemeinschaft.
