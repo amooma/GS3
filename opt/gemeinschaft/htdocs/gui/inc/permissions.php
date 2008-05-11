@@ -46,7 +46,7 @@ User zurueckgeben.
 
 Um diese Lookups abzuschalten GUI_SUDO_EXTENDED auf false setzen.
 
-Siehe auch session.php ldap_user_map()
+Siehe auch session.php gs_legacy_user_map()
 */
 
 
