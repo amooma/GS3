@@ -149,6 +149,28 @@ if (! function_exists('dcngettext')) {
 # Gemeinschaft functions {
 #####################################################################
 
+function gs_lang_name_internal( $lang )
+{
+	return preg_replace('/[^a-z\-]/', '',
+		str_replace('_','-', strToLower($lang)));
+}
+
+function gs_lang_name_mixed( $lang )
+{
+	$lang = str_replace('_','-', $lang);
+	if (preg_match('/^([a-z]{2}|x)-([a-z]{2,})/i', $lang, $m)) {
+		if ($m[1] !== 'x') {
+			$lang = strToLower($m[1]) .'-'.
+				(strLen($m[2])===2 ? strToUpper($m[2]) : strToLower($m[2]));
+		} else {
+			$lang = strToLower($m[0]);
+		}
+	} else {
+		$lang = 'x-unknown';
+	}
+	return $lang;
+}
+
 function gs_get_enabled_langs()
 {
 	$lang_defs = explode(',', gs_get_conf('GS_GUI_LANGS'));
