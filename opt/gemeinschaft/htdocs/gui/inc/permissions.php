@@ -56,7 +56,7 @@ function _get_kostenstellen_lvm( $user )
 	$kostenstelle_prop = 'kostenstelle';
 	
 	$ldap = gs_ldap_connect();
-	if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
+	if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
 		$user = preg_replace('/^0+/', '', $user);
 		# without leading "0" in our LDAP
 	}
