@@ -75,29 +75,29 @@ $DB_SLAVE_DB            = 'asterisk';
 *    LDAP
 ***********************************************************/
 
-$LDAP_HOST              = '192.168.1.130';
-$LDAP_SSL               = false;
-$LDAP_PORT              = 0;        # 0 for default (389 / 636)
-$LDAP_BINDDN            = 'cn=root,dc=example,dc=com';  # i.e. the rootdn
-$LDAP_PWD               = 'secret';
-$LDAP_PROTOCOL          = 3;        # protocol version. 2|3
+#$LDAP_HOST              = '192.168.1.130';
+#$LDAP_SSL               = false;
+#$LDAP_PORT              = 0;        # 0 for default (389 / 636)
+#$LDAP_BINDDN            = 'cn=root,dc=example,dc=com';  # i.e. the rootdn
+#$LDAP_PWD               = 'secret';
+#$LDAP_PROTOCOL          = 3;        # protocol version. 2|3
 
-$LDAP_SEARCHBASE = 'ou=People,dc=example,dc=com';
+#$LDAP_SEARCHBASE = 'ou=People,dc=example,dc=com';
   # e.g. "ou=People,dc=example,dc=com" | "ou=users,o=Company,c=de"
 
-$LDAP_PROP_USER         = 'uid';    # e.g. "uid"
+#$LDAP_PROP_USER         = 'uid';    # e.g. "uid"
   # the user name in the LDAP attribute LDAP_PROP_USER must match
   # the user name/code you use in Gemeinschaft
   # e.g. "uid" | "employeenumber"
 
-$LDAP_PROP_UID          = 'uid';
+#$LDAP_PROP_UID          = 'uid';
   # LDAP_PROP_UID is the "primary key" in the "dn", normally
   # "uid" for users (or "cn").
 
   # for the phonebook:
-$LDAP_PROP_FIRSTNAME    = 'givenname';       # e.g. "givenname"
-$LDAP_PROP_LASTNAME     = 'sn';              # e.g. "sn"
-$LDAP_PROP_PHONE        = 'telephonenumber'; # e.g. "telephonenumber"
+#$LDAP_PROP_FIRSTNAME    = 'givenname';       # e.g. "givenname"
+#$LDAP_PROP_LASTNAME     = 'sn';              # e.g. "sn"
+#$LDAP_PROP_PHONE        = 'telephonenumber'; # e.g. "telephonenumber"
 
 
 
