@@ -1072,7 +1072,7 @@ msgid "Einloggen in die Warteschlange mit der angegebenen Durchwahl"
 msgstr "Einloggen in die Warteschlange mit der angegebenen Durchwahl"
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 935
-msgid "Einstellungen &uuml;bernehmen und  System herunterfahren"
+msgid "Einstellungen &uuml;bernehmen und System herunterfahren"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 932
