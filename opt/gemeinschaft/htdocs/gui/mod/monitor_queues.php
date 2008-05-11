@@ -160,27 +160,23 @@ AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<?php
-	//<th style="width:85px;"><nobr><?php echo __('Anrufe'     ); /*//FIXME //TRANSLATE ME "Anrufe"->"Anrufer" */ ? ///></nobr></th>
-	?>
-	<th style="width:89px;"><nobr><?php echo __('Angenommen' ); /*//TRANSLATE ME*/ ?></nobr></th>
-	<th style="width:89px;"><nobr><?php echo __('Erfolgreich'); ?></nobr></th>
-	<th style="width:89px;"><nobr><?php echo __('Aufgelegt'  ); ?></nobr></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Anrufe'      ); /*//TRANSLATE ME*/ ?></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Angenommen'  ); /*//TRANSLATE ME*/ ?></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Erfolgreich' ); ?></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Aufgegeben'  ); ?></th>
 	<?php if ($get_queue_stats_from_db) { ?>
-	<th style="width:89px;"><nobr><?php echo __('Timeout'    ); /*//TRANSLATE ME */ ?></nobr></th>
-	<th style="width:89px;"><nobr><?php echo __('Keine Ag.'  ); /*//TRANSLATE ME */ ?></nobr></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Nicht angen.'); /*//TRANSLATE ME */ ?></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Niemand frei'); /*//TRANSLATE ME */ ?></th>
 	<?php } ?>
-	<th style="width:89px;"><nobr><?php echo __('Wartezeit'  ); ?></nobr></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Wartezeit'   ); ?></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-	<?php /*
 	<td class="r"><?php
 		echo (@$queue_stats['calls'    ] !== null
 		     ? $queue_stats['calls'    ] : '?');
 	?></td>
-	*/ ?>
 	<td class="r"><?php
 		echo (@$queue_stats['completed'] !== null
 		     ? $queue_stats['completed'] : '?');
@@ -191,7 +187,9 @@ AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
 		{
 			if ($queue_stats['calls'    ] > 0) {
 				echo round($queue_stats['completed'] / $queue_stats['calls'] *100), ' %';
-			} else echo '0 %';
+			} else {
+				echo '0 %';
+			}
 		}
 	?></td>
 	<td class="r"><?php
@@ -235,9 +233,9 @@ if ($get_queue_stats_from_db) {
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:65px;"><?php echo __('Nummer'); ?></th>
-	<th style="width:203px;"><?php echo __('Name'); ?></th>
-	<th style="width:100px;"><?php echo __('Status'); ?></th>
+	<th style="width:65px;"><?php echo __('Nebenst.'); ?></th>
+	<th style="width:215px;"><?php echo __('Name'); ?></th>
+	<th style="width:89px;"><?php echo __('Status'); ?></th>
 	<?php if (GS_GUI_QUEUE_SHOW_NUM_CALLS) { ?>
 	<th style="width:50px;" class="r"><?php echo __('Anrufe'); ?></th>
 	<th style="width:110px;" class="r"><?php echo __('zuletzt'); ?></th>
@@ -308,7 +306,7 @@ if (@$rs_members) {
 <thead>
 <tr>
 	<th style="width:30px;" class="r"><?php echo __('Pos.'); ?></th>
-	<th style="width:273px;"><?php echo __('Nummer'); ?></th>
+	<th style="width:273px;"><?php echo __('Rufummer'); ?></th>
 	<th style="width:65px;" class="r"><?php echo __('Wartezeit'); ?></th>
 </tr>
 </thead>
