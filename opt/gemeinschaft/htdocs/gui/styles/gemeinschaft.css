@@ -41,6 +41,11 @@ body {
 	border-color: #99f #004 #004 #66f;
 }
 
+#langs > a {
+	color: #000;  /* or else alt texts would be invisible */
+	font-size: 0.9em;
+}
+
 .sidebar, #sudo-bar {
 	border-top: 1px solid #f0f0ff;
 }
