@@ -171,6 +171,11 @@ function gs_lang_name_mixed( $lang )
 	return $lang;
 }
 
+function gs_lang_name_filesystem( $lang )
+{
+	return str_replace('-','_', gs_lang_name_mixed($lang));
+}
+
 function gs_get_enabled_langs()
 {
 	$lang_defs = explode(',', gs_get_conf('GS_GUI_LANGS'));
