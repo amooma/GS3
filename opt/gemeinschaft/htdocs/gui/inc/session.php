@@ -139,6 +139,9 @@ gs_settextdomain( 'gemeinschaft-gui' );
 # functions to map from some legacy user name to the current one
 #
 
+//FIXME - this custom function should probably somehow be moved to
+// /etc/gemeinschaft/custom-functions.php or
+// /etc/gemeinschaft/custom-functions.examples.php
 function _gs_legacy_user_map_lvm( $user )
 {
 	if (! $user) return false;
