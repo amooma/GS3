@@ -149,12 +149,14 @@ if (! function_exists('dcngettext')) {
 # Gemeinschaft functions {
 #####################################################################
 
+# en-us
 function gs_lang_name_internal( $lang )
 {
 	return preg_replace('/[^a-z0-9\-]/', '',
 		str_replace('_','-', strToLower($lang)));
 }
 
+# en-US
 function gs_lang_name_mixed( $lang )
 {
 	$lang = str_replace('_','-', $lang);
@@ -171,6 +173,7 @@ function gs_lang_name_mixed( $lang )
 	return $lang;
 }
 
+# en_US
 function gs_lang_name_locale( $lang )
 {
 	if (! preg_match('/^([a-z0-9\-_]+)([@a-z0-9\-_]*)/i', $lang, $m)) {
@@ -178,6 +181,7 @@ function gs_lang_name_locale( $lang )
 	}
 	return str_replace('-','_', gs_lang_name_mixed($m[1])) . $m[2];
 }
+
 
 function gs_get_enabled_langs()
 {
