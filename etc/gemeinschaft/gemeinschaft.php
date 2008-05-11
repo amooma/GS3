@@ -174,7 +174,7 @@ $GUI_ADDITIONAL_STYLESHEET = 'gemeinschaft.css';
 ***********************************************************/
 
 $EXTERNAL_NUMBERS_BACKEND   = 'db'; # "db"|"ldap"
-$EXTERNAL_NUMBERS_LDAP_PROP = 'telephoneNumber';
+#$EXTERNAL_NUMBERS_LDAP_PROP = 'telephoneNumber';
   # e.g. "externaltelephone"
 
 
@@ -231,8 +231,9 @@ $PROV_DIAL_LOG_LIFE         = 14*24*3600;
 $SNOM_PROV_ENABLED          = true;   # do provisioning for Snom?
                                       # show keyset for Snom in the GUI?
 
-$SNOM_PROV_HTTP_USER        = 'gs';
-$SNOM_PROV_HTTP_PASS        = 'gEheiM23y89sdo23';
+$SNOM_PROV_HTTP_USER        = '';     # e.g. "gs"
+$SNOM_PROV_HTTP_PASS        = '';     # e.g. "gEheiM23y89sdo23"
+  # to password protect the phone's web gui.
   # changing these values will likely cause automatic rebooting to fail
 
 $SNOM_PROV_PB_NUM_RESULTS   = 15;
@@ -252,8 +253,8 @@ $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 
 //----------------------[  Aastra  ]----------------------//
 
-# experimental!
 $AASTRA_PROV_ENABLED        = false;  # do provisioning for Aastra?
+                                      # experimental!
                                       # show keyset for Aastra in the GUI?
 $AASTRA_PROV_PB_NUM_RESULTS = 10;
   # number of results in phonebook search on Aastra phone
@@ -345,13 +346,13 @@ $MONITOR_FROM_NET           = '192.168.1.0/24';
   # ranges
   # CIDR or dotted decimal notation
 
-$LVM_USER_6_DIGIT_INT       = false;
+#$LVM_USER_6_DIGIT_INT       = false;
   # compare user names as 6 digit integers (padded with zeros (0)
   # on the left. currently used by htdocs/prov/call-init.php and
   # inc/gs-fns/gs_user_external_number*. should normally be off
   # because usernames are strings. deprecated.
 
-$LVM_CALL_INIT_USERS_500000 = false;
+#$LVM_CALL_INIT_USERS_500000 = false;
   # should normally be off. deprecated.
 
 $LVM_FORWARD_REQ_EXT_NUM    = true;
@@ -374,7 +375,7 @@ $INTL_ASTERISK_LANG     = 'de';
 
 $USERCOMMENT_OFFTIME    = 'Feierabend';  # e.g. "off-time"
 
-$EMAIL_PATTERN_VALID    = '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i';
+#$EMAIL_PATTERN_VALID    = '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i';
 
 $EMAIL_DELIVERY         = 'sendmail';
   # how to deliver e-mails to the users ("forgot password" function etc.)
