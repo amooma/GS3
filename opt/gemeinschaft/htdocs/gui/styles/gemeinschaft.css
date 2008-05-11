@@ -43,7 +43,6 @@ body {
 
 #langs > a {
 	color: #000;  /* or else alt texts would be invisible */
-	font-size: 0.9em;
 }
 
 .sidebar, #sudo-bar {

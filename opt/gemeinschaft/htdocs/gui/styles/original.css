@@ -254,6 +254,9 @@ select {
 #langs img {
 	margin: 1px 1px 0 1px;
 }
+#langs > a {
+	font-size: 0.9em;
+}
 
 #sudo-bar {
 	background: #e0e0e0;
