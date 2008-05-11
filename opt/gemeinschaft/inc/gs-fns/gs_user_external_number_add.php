@@ -28,8 +28,9 @@
 
 defined('GS_VALID') or die('No direct access.');
 
-if (strToLower(GS_EXTERNAL_NUMBERS_BACKEND) == 'ldap')
+if (GS_EXTERNAL_NUMBERS_BACKEND === 'ldap') {
 	include_once( GS_DIR .'inc/ldap.php' );
+}
 
 
 /***********************************************************
@@ -57,7 +58,7 @@ function gs_user_external_number_add( $user, $number )
 	
 	# add number
 	#
-	switch (strToLower(GS_EXTERNAL_NUMBERS_BACKEND)) {
+	switch (GS_EXTERNAL_NUMBERS_BACKEND) {
 		
 		case 'ldap':
 			$ldap = gs_ldap_connect();
@@ -66,15 +67,15 @@ function gs_user_external_number_add( $user, $number )
 			
 			# find ldap user name
 			#
-			if (GS_LDAP_PROP_UID == GS_LDAP_PROP_USER) {
+			if (GS_LDAP_PROP_UID === GS_LDAP_PROP_USER) {
 				$ldap_uid = $user;
-				if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
+				if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
 					$user = preg_replace('/^0+/', '', $user);
 					# if the usernames in your LDAP are integers without
 					# a leading "0"
 				}
 			} else {
-				if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
+				if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
 					$user = preg_replace('/^0+/', '', $user);
 					# if the usernames in your LDAP are integers without
 					# a leading "0"

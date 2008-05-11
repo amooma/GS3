@@ -28,8 +28,9 @@
 
 defined('GS_VALID') or die('No direct access.');
 
-if (strToLower(GS_EXTERNAL_NUMBERS_BACKEND) == 'ldap')
+if (GS_EXTERNAL_NUMBERS_BACKEND === 'ldap') {
 	include_once( GS_DIR .'inc/ldap.php' );
+}
 
 
 /***********************************************************
@@ -55,7 +56,7 @@ function gs_user_external_numbers_get( $user )
 	
 	# get external numbers
 	#
-	switch (strToLower(GS_EXTERNAL_NUMBERS_BACKEND)) {
+	switch (GS_EXTERNAL_NUMBERS_BACKEND) {
 		
 		case 'ldap':
 			//ldapsearch -x -D 'cn=root,dc=example,dc=com' -w secret -b 'ou=People,dc=example,dc=com' '(uid=demo2)' telephoneNumber
@@ -65,7 +66,7 @@ function gs_user_external_numbers_get( $user )
 				return new GsError( 'Could not connect to LDAP server.' );
 			
 			$ldap_user = $user;
-			if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
+			if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
 				$ldap_user = preg_replace('/^0+/', '', $ldap_user);
 				# if the usernames in your LDAP are integers without a
 				# leading "0"
