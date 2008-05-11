@@ -73,18 +73,59 @@ if ($_COOKIE['gemeinschaft']  == '') unset($_COOKIE['gemeinschaft']);
 session_start();
 
 
+function parse_http_accept_header( $data )
+{
+	$accept = array();
+	$parts = explode(',', $data);
+	foreach ($parts as $part) {
+		$val_q = explode(';', $part);
+		$q = 10;
+		if (array_key_exists(1, $val_q)) {
+			$val_q[1] = trim($val_q[1]);
+			if (subStr($val_q[1], 0, 2) === 'q=') {
+				$q = (int)((float)subStr($val_q[1], 2)*10);
+				if     ($q <  0) $q = 0;
+				elseif ($q > 10) $q = 10;
+			}
+		}
+		$accept[trim(@$val_q[0])] = $q;
+	}
+	aRSort($accept);
+	return $accept;
+}
+
+
 # set language
 #
 if (array_key_exists('setlang', $_REQUEST)) {
-	$setlang = preg_replace('/[^a-z\d_]/i', '', @$_REQUEST['setlang']);
-	@$_SESSION['lang'] = $setlang;
+	@$_SESSION['lang'] = gs_lang_name_locale( @$_REQUEST['setlang'] );
 }
-if (array_key_exists('lang', $_SESSION))
-	$ret = gs_setlang( $_SESSION['lang'] );
-else
-	$ret = gs_setlang( GS_INTL_LANG );
+else {
+	if (! array_key_exists('lang', $_SESSION)) {
+		# try to use the best language according to the Accept-Language header
+		if (array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)) {
+			$accept_langs = parse_http_accept_header( $_SERVER['HTTP_ACCEPT_LANGUAGE'] );
+			foreach ($accept_langs as $accept_lang => $qval) {
+				if ($qval > 0) {
+					//echo "trying to set $accept_lang ... ";
+					$ret = gs_setlang( gs_lang_name_locale( $accept_lang ));
+					//FIXME - works for "de-de" but not for "de" - fix gs_setlang()?
+					if ($ret) {
+						$_SESSION['lang'] = $ret;
+						//echo " worked ($ret) ";
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+if (! array_key_exists('lang', $_SESSION)) {
+	$_SESSION['lang'] = GS_INTL_LANG;
+}
+$ret = gs_setlang( $_SESSION['lang'] );
 if ($ret) $_SESSION['lang'] = $ret;
-$_SESSION['isolang'] = str_replace('_', '-', $_SESSION['lang']);
+$_SESSION['isolang'] = gs_lang_name_internal( $_SESSION['lang'] );
 gs_loadtextdomain( 'gemeinschaft-gui' );
 gs_settextdomain( 'gemeinschaft-gui' );
 
