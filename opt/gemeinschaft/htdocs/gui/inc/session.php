@@ -30,7 +30,9 @@ defined('GS_VALID') or die('No direct access.');
 
 require_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
-require_once( GS_DIR .'inc/ldap.php' );
+if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') === 'lvm') {
+	require_once( GS_DIR .'inc/ldap.php' );
+}
 require_once( GS_DIR .'inc/db_connect.php' );
 
 
@@ -133,44 +135,50 @@ gs_loadtextdomain( 'gemeinschaft-gui' );
 gs_settextdomain( 'gemeinschaft-gui' );
 
 
-# function to map from some legacy user name to the current one
+
+# functions to map from some legacy user name to the current one
 #
-/*
-function ldap_user_map( $user )
+
+function _gs_legacy_user_map_lvm( $user )
 {
 	if (! $user) return false;
 	
-	if (GS_LDAP_PROP_UID == GS_LDAP_PROP_USER) return $user;
+	if (GS_LDAP_PROP_UID === GS_LDAP_PROP_USER) return $user;
 	
 	$ldap = gs_ldap_connect();
 	$u = gs_ldap_get_first( $ldap, GS_LDAP_SEARCHBASE,
 		'('. GS_LDAP_PROP_UID .'='. $user .')',
 		array(GS_LDAP_PROP_USER) );
-	if (isGsError( $u )) {
+	if (isGsError($u)) {
 		//echo $u->$msg;
-		echo sPrintF(__('Failed to get LDAP user "%s".'), $user), "\n";
+		echo sPrintF(__('Failed to get user "%s" from LDAP server.'), $user), "\n";
 		return false;
 	}
-	if (! is_array( $u )) {
-		echo sPrintF(__('No user "%s" in LDAP.'), $user), "\n";
+	if (! is_array($u)) {
+		echo sPrintF(__('User "%s" not found in LDAP database.'), $user), "\n";
 		return false;
 	}
 	$lc_GS_LDAP_PROP_USER = strToLower(GS_LDAP_PROP_USER);
 	if (! isSet( $u[$lc_GS_LDAP_PROP_USER]    )) return false;
 	if (! isSet( $u[$lc_GS_LDAP_PROP_USER][0] )) return false;
 	$ret = $u[$lc_GS_LDAP_PROP_USER][0];
-	if (defined('GS_LVM_USER_6_DIGIT_INT') && GS_LVM_USER_6_DIGIT_INT) {
+	//if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
+	// this check is not really needed as this is a custom function anyway
 		$ret = str_pad($ret, 6, '0', STR_PAD_LEFT);
-	}
+	//}
 	return $ret;
 }
-*/
-function ldap_user_map( $user )
+
+function gs_legacy_user_map( $user )
 {
-	if (! $user) return false;
-	
-	return $user;
+	if (gs_get_conf('GS_GUI_USER_MAP_METHOD') === 'lvm') {
+		return _gs_legacy_user_map_lvm( $user );
+	} else {
+		if (! $user) return false;
+		return $user;
+	}
 }
+
 
 
 # connect to db
@@ -222,7 +230,7 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 	$_SESSION['real_user']['_origname'] = preg_replace( '/[^a-z0-9_\-]/', '', $user );
 	
 	//if (! @$_SESSION['real_user']['name']) {
-		$_SESSION['real_user']['name'] = @ldap_user_map( $_SESSION['real_user']['_origname'] );
+		$_SESSION['real_user']['name'] = @gs_legacy_user_map( $_SESSION['real_user']['_origname'] );
 	//}
 	if (! $_SESSION['real_user']['name']) {
 		//die( sPrintF(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod()) );
