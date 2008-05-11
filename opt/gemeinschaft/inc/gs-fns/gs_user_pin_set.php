@@ -40,7 +40,7 @@ function gs_user_pin_set( $user, $pin='' )
 		return new GsError( 'PIN must be numeric.' );
 	if (strLen($pin) < 3)
 		return new GsError( 'PIN too short (min. 3 digits).' );
-	if (strLen($pin) > 10)
+	elseif (strLen($pin) > 10)
 		return new GsError( 'PIN too long (max. 10 digits).' );
 	
 	# connect to db
