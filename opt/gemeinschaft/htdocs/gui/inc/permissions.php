@@ -51,6 +51,9 @@ Siehe auch session.php gs_legacy_user_map()
 */
 
 
+//FIXME - this custom function should probably somehow be moved to
+// /etc/gemeinschaft/custom-functions.php or
+// /etc/gemeinschaft/custom-functions.examples.php
 function _get_kostenstellen_lvm( $user )
 {
 	$kostenstelle_prop = 'kostenstelle';
@@ -75,6 +78,9 @@ function _get_kostenstellen_lvm( $user )
 }
 
 
+//FIXME - this custom function should probably somehow be moved to
+// /etc/gemeinschaft/custom-functions.php or
+// /etc/gemeinschaft/custom-functions.examples.php
 function _gui_sudo_allowed_lvm( $real_user, $sudo_user )
 {
 	$kkr = @_get_kostenstellen_lvm( $real_user );
@@ -98,6 +104,9 @@ function gui_sudo_allowed( $real_user, $sudo_user )
 }
 
 
+//FIXME - this custom function should probably somehow be moved to
+// /etc/gemeinschaft/custom-functions.php or
+// /etc/gemeinschaft/custom-functions.examples.php
 function _gui_monitor_which_peers_lvm( $sudo_user )
 {
 	$kks = @_get_kostenstellen_lvm( $sudo_user );
