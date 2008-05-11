@@ -182,22 +182,12 @@ function gs_get_enabled_langs()
 	$langs = array();
 	foreach ($lang_defs as $tmp) {
 		$parts = explode(':', trim($tmp));
+		$lang_name = gs_lang_name_internal(@$parts[0]);
 		$lang_info = array();
-		$iso = str_replace('_','-', @$parts[0]);
-		if (preg_match('/^([a-z]{2}|x)-([a-z]{2,})$/i', $iso, $m)) {
-			if ($m[1] !== 'x') {
-				$iso = strToLower($m[1]) .'-'.
-					(strLen($m[2])===2 ? strToUpper($m[2]) : strToLower($m[2]));
-			} else {
-				$iso = strToLower($m[0]);
-			}
-		} else {
-			$iso = 'x-unknown';
-		}
 		$lang_info['icon'   ] = @$parts[1];
 		//$lang_info['iconalt'] = @$parts[2];
 		$lang_info['title'  ] = @$parts[3];
-		$langs[$iso] = $lang_info;
+		$langs[$lang_name] = $lang_info;
 	}
 	return $langs;
 }
