@@ -127,11 +127,10 @@ $GUI_SUDO_ADMINS            = '';
   # method used see GUI_PERMISSIONS_METHOD.
 
 #$GUI_PERMISSIONS_METHOD     = 'gemeinschaft';
-  # Determines the method used to find out if a user can act as a
-  # certain other user. "gemeinschaft" or "lvm". Ugly solution.
-  # See GUI_SUDO_EXTENDED, GUI_MON_PEERS_ENABLED and
-  # htdocs/gui/inc/permissions.php
-  # Deprecated!
+  # determines the method used to find out if a user can act as a
+  # certain other user. "gemeinschaft" or "lvm". ugly solution.
+  # see GUI_SUDO_EXTENDED, GUI_MON_PEERS_ENABLED and
+  # htdocs/gui/inc/permissions.php. deprecated.
 
 $GUI_QUEUE_SHOW_NUM_CALLS   = false;
   # show number of completed calls for each member in Monitor->Queues
@@ -343,10 +342,11 @@ $MONITOR_FROM_NET           = '192.168.1.0/24';
 $LVM_USER_6_DIGIT_INT       = false;
   # compare user names as 6 digit integers (padded with zeros (0)
   # on the left. currently used by htdocs/prov/call-init.php and
-  # inc/gs-fns/gs_user_external_number*. should normally be off.
+  # inc/gs-fns/gs_user_external_number*. should normally be off
+  # because usernames are strings. deprecated.
 
 $LVM_CALL_INIT_USERS_500000 = false;
-  # should normally be off
+  # should normally be off. deprecated.
 
 $LVM_FORWARD_REQ_EXT_NUM    = true;
   # if true call forwards can be set to numbers in a user's list of
