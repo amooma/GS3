@@ -151,14 +151,14 @@ if (! function_exists('dcngettext')) {
 
 function gs_lang_name_internal( $lang )
 {
-	return preg_replace('/[^a-z\-]/', '',
+	return preg_replace('/[^a-z0-9\-]/', '',
 		str_replace('_','-', strToLower($lang)));
 }
 
 function gs_lang_name_mixed( $lang )
 {
 	$lang = str_replace('_','-', $lang);
-	if (preg_match('/^([a-z]{2}|x)-([a-z]{2,})/i', $lang, $m)) {
+	if (preg_match('/^([a-z]{2}|x)[\-_]([a-z0-9\-_]{2,})/i', $lang, $m)) {
 		if ($m[1] !== 'x') {
 			$lang = strToLower($m[1]) .'-'.
 				(strLen($m[2])===2 ? strToUpper($m[2]) : strToLower($m[2]));
@@ -171,9 +171,12 @@ function gs_lang_name_mixed( $lang )
 	return $lang;
 }
 
-function gs_lang_name_filesystem( $lang )
+function gs_lang_name_locale( $lang )
 {
-	return str_replace('-','_', gs_lang_name_mixed($lang));
+	if (! preg_match('/^([a-z0-9\-_]+)([@a-z0-9\-_]*)/i', $lang, $m)) {
+		return 'x_unknown';
+	}
+	return str_replace('-','_', gs_lang_name_mixed($m[1])) . $m[2];
 }
 
 function gs_get_enabled_langs()
@@ -206,6 +209,8 @@ $g_gs_textdomain = null;
 function gs_setlang( $locale )
 {
 	global $g_gs_language;
+	
+	$locale = gs_lang_name_locale($locale);
 	
 	if (GS_INTL_USE_GETTEXT && extension_loaded('gettext')) {
 		
