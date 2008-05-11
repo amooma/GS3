@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-10 12:00+0200\n"
+"POT-Creation-Date: 2008-05-11 22:20+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: German <>\n"
@@ -436,9 +436,9 @@ msgstr ""
 msgid "Audio-Datei"
 msgstr "Audio-Datei"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 111
-msgid "Aufgelegt"
-msgstr "Aufgelegt"
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 166
+msgid "Aufgegeben"
+msgstr "Aufgegeben"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_out.php, line: 107
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_done.php, line: 124
@@ -1168,6 +1168,11 @@ msgstr ""
 msgid "FEHLER"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 157
+#, php-format
+msgid "Failed to get user \"%s\" from LDAP server."
+msgstr "Fehler beim Abfragen des Benutzers \"%s\" vom LDAP-Server."
+#
 # File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 129
 msgid "Failed to get user."
 msgstr "Fehler beim Abfragen des Benutzers."
@@ -1564,10 +1569,6 @@ msgstr ""
 msgid "Kanonisierung ist nicht aktiviert!"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 171
-msgid "Keine Ag."
-msgstr ""
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 418
 msgid "Keine Antwort"
 msgstr ""
@@ -1859,6 +1860,10 @@ msgstr ""
 msgid "Nicht angemeldet"
 msgstr "Nicht angemeldet"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 168
+msgid "Nicht angen."
+msgstr "Nicht angen."
+#
 # File: opt/gemeinschaft/htdocs/gui/setup/phone-takeover.php, line: 253
 msgid "Nicht autorisiert."
 msgstr ""
@@ -1871,6 +1876,10 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 191
 msgid "Nicht konfiguriert."
 msgstr "Nicht konfiguriert."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 169
+msgid "Niemand frei"
+msgstr "Niemand frei"
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 119
 msgid "Nodes"
@@ -2169,6 +2178,10 @@ msgid ""
 msgstr ""
 "Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
 "deaktivieren"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 309
+msgid "Rufummer"
+msgstr "Rufummer"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 108
 msgid "SIP Ping"
@@ -2545,6 +2558,11 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 198
 msgid "User"
 msgstr "User"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 161
+#, php-format
+msgid "User \"%s\" not found in LDAP database."
+msgstr "Benutzer \"%s\" nicht im LDAP gefunden."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 167
 msgid ""
@@ -3227,6 +3245,10 @@ msgstr "zur&uuml;ckbl&auml;ttern"
 #~ msgid "Anrufdauer insges."
 #~ msgstr "Anrufdauer insges."
 #
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 111
+#~ msgid "Aufgelegt"
+#~ msgstr "Aufgelegt"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 72
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 104
