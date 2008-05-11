@@ -306,7 +306,7 @@ if (@$rs_members) {
 <thead>
 <tr>
 	<th style="width:30px;" class="r"><?php echo __('Pos.'); ?></th>
-	<th style="width:273px;"><?php echo __('Rufummer'); ?></th>
+	<th style="width:273px;"><?php echo __('Rufnummer'); ?></th>
 	<th style="width:65px;" class="r"><?php echo __('Wartezeit'); ?></th>
 </tr>
 </thead>
