@@ -232,18 +232,19 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 		}
 	}
 	
-	$langs = explode(',', gs_get_conf('GS_GUI_LANGS'));
+	$langs = gs_get_enabled_langs();
 	if (count($langs) > 1) {
 		echo '<div id="langs">' ,"\n";
 		echo '<span class="tty">', __('Sprache') /*//TRANSLATE ME*/ ,':</span>' ,"\n";
 		//$langs = array_reverse($langs);
-		foreach ($langs as $tmp) {
-			$l = explode(':', trim($tmp));
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'setlang='.@$l[0]) ,'" title="', @$l[3] ,'">' ,"\n";
-			echo '<img alt="', @$l[2] ,'" src="', GS_URL_PATH ,'img/lang/', @$l[1] ,'.png" /></a>' ,"\n";
+		foreach ($langs as $iso => $l) {
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'setlang='.@$iso) ,'" title="', htmlEnt(@$l['title']) ,'">' ,"\n";
+			echo '<img alt="', @$iso ,'" src="', GS_URL_PATH ,'img/lang/', @$l['icon'] ,'.png" /></a>' ,"\n";
 		}
 		echo '</div>' ,"\n";
+		unset($iso, $l);
 	}
+	unset($langs);
 ?>
 </div>
 
