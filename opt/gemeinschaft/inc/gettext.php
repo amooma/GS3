@@ -156,7 +156,7 @@ function gs_lang_name_internal( $lang )
 		str_replace('_','-', strToLower($lang)));
 }
 
-# en-US
+# en-US (but en-cockney, x-klingon)
 function gs_lang_name_mixed( $lang )
 {
 	$lang = str_replace('_','-', $lang);
