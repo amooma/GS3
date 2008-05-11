@@ -56,16 +56,17 @@ function _get_kostenstellen_lvm( $user )
 	$kostenstelle_prop = 'kostenstelle';
 	
 	$ldap = gs_ldap_connect();
-	if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
+	//if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
+	// this check is not really needed as this is a custom function anyway
 		$user = preg_replace('/^0+/', '', $user);
-		# without leading "0" in our LDAP
-	}
+		# without leading "0" in their LDAP
+	//}
 	$u = gs_ldap_get_first( $ldap, GS_LDAP_SEARCHBASE,
 		'('. GS_LDAP_PROP_USER .'='. $user .')',
 		array($kostenstelle_prop) );
-	if (isGsError( $u )) return false;
-	if (! is_array( $u )) {
-		echo "Failed to get (". GS_LDAP_PROP_USER ."=". $user .") from LDAP.\n";
+	if (isGsError($u)) return false;
+	if (! is_array($u)) {
+		echo "Failed to get (". GS_LDAP_PROP_USER ."=". $user .") from LDAP server.\n";
 		return false;
 	}
 	$kostenstelle_prop = strToLower($kostenstelle_prop);
@@ -77,13 +78,14 @@ function _get_kostenstellen_lvm( $user )
 function _gui_sudo_allowed_lvm( $real_user, $sudo_user )
 {
 	$kkr = @_get_kostenstellen_lvm( $real_user );
-	if ($kkr == false || ! is_array( $kkr )) return false;
+	if ($kkr === false || ! is_array($kkr)) return false;
 	$kks = @_get_kostenstellen_lvm( $sudo_user );
-	if ($kks == false || ! is_array( $kks )) return false;
+	if ($kks === false || ! is_array($kks)) return false;
 	
 	foreach ($kkr as $kr)
 		foreach ($kks as $ks)
-			if (subStr($kr,0,2) === subStr($ks,0,2)) return true;
+			if (subStr($kr,0,2) === subStr($ks,0,2))
+				return true;
 	return false;
 }
 
@@ -99,7 +101,7 @@ function gui_sudo_allowed( $real_user, $sudo_user )
 function _gui_monitor_which_peers_lvm( $sudo_user )
 {
 	$kks = @_get_kostenstellen_lvm( $sudo_user );
-	if ($kks == false || ! is_array( $kks )) return false;
+	if ($kks === false || ! is_array($kks)) return false;
 	
 	$kostenstelle_prop = 'kostenstelle';
 	$limit = 100;
@@ -127,10 +129,11 @@ function _gui_monitor_which_peers_lvm( $sudo_user )
 	foreach ($matches as $match) {
 		if (! is_array( $match[$lc_GS_LDAP_PROP_USER] )) continue;
 		foreach ($match[$lc_GS_LDAP_PROP_USER] as $mm) {
-			if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
+			//if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
+			// this check is not really needed as this is a custom function anyway
 				$mm = str_pad($mm, 6, '0', STR_PAD_LEFT);
 				# without leading "0" in their LDAP database
-			}
+			//}
 			$peers[] = $mm;
 		}
 	}
