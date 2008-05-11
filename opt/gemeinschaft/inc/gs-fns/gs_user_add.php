@@ -42,8 +42,12 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 	
 	if (! preg_match( '/^[1-9][0-9]{1,9}$/', $ext ))
 		return new GsError( 'Please use 2-10 digit extension.' );
-	if (! preg_match( '/^[\d]+$/', $pin ))
+	if (! preg_match( '/^[0-9]+$/', $pin ))
 		return new GsError( 'PIN must be numeric.' );
+	if (strLen($pin) < 3)
+		return new GsError( 'PIN too short (min. 3 digits).' );
+	if (strLen($pin) > 10)
+		return new GsError( 'PIN too long (max. 10 digits).' );
 	//if (! preg_match( '/^[a-zA-Z\d.\-\_ ]+$/', $firstname ))
 	//	return new GsError( 'Invalid characters in first name.' );
 	$firstname = preg_replace('/\s+/', ' ', trim($firstname));
