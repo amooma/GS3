@@ -56,11 +56,13 @@ unset($GS_URL_PATH);
 # start or bind to session
 # (start session even if GS_GUI_SESSIONS==false so $_SESSION is
 # superglobal)
+ini_set('session.referer_check', '');
 ini_set('session.use_cookies', 1);
 ini_set('session.use_only_cookies', 0);
 ini_set('session.use_trans_sid', 0);
 ini_set('session.hash_function', 1);
 ini_set('session.hash_bits_per_character', 5);
+ini_set('session.entropy_length', 0);
 if (version_compare(phpVersion(), '5.2.0', '>='))
 	session_set_cookie_params( 0, GS_URL_PATH, '', false, false );
 else
