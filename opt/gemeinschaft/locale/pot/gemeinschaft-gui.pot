@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-11 22:20+0200\n"
+"POT-Creation-Date: 2008-05-11 22:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1053,7 +1053,7 @@ msgid "Einloggen in die Warteschlange mit der angegebenen Durchwahl"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 935
-msgid "Einstellungen &uuml;bernehmen und  System herunterfahren"
+msgid "Einstellungen &uuml;bernehmen und System herunterfahren"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 932
@@ -2190,6 +2190,7 @@ msgstr ""
 msgid "Routing-Test"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 309
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 735
 msgid "Rufnummer"
 msgstr ""
@@ -2223,10 +2224,6 @@ msgstr ""
 msgid ""
 "Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
 "deaktivieren"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 309
-msgid "Rufummer"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 138
