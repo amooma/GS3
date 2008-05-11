@@ -262,12 +262,15 @@ function __( $msg )
 {
 	global $g_gs_textdomain, $g_gs_LANG;
 	
-	if (GS_INTL_USE_GETTEXT && extension_loaded('gettext'))
+	if (GS_INTL_USE_GETTEXT && extension_loaded('gettext')) {
 		return gettext( $msg );
-	else {
-		if ( @is_array($g_gs_LANG['current'][$g_gs_textdomain])
-		  && array_key_exists($msg, @$g_gs_LANG['current'][$g_gs_textdomain]) )
-			return @$g_gs_LANG['current'][$g_gs_textdomain][$msg];
+	} else {
+		if (@is_array($g_gs_LANG['current'][$g_gs_textdomain])
+		&&  array_key_exists($msg, $g_gs_LANG['current'][$g_gs_textdomain])
+		&&  $g_gs_LANG['current'][$g_gs_textdomain][$msg] != '')
+		{
+			return $g_gs_LANG['current'][$g_gs_textdomain][$msg];
+		}
 		return $msg;
 	}
 }
