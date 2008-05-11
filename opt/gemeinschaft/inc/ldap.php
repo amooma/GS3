@@ -32,6 +32,10 @@ include_once( GS_DIR .'lib/yadb/yadb.php' );
 include_once( GS_DIR .'inc/log.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 
+# simply including this file does not break anything, even if the
+# LDAP extension for PHP is not available. (but calling the
+# functions would be fatal.)
+
 
 function gs_ldap_connect()
 {
