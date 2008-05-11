@@ -135,7 +135,7 @@ while ($user = $rs_users->fetchRow()) {
 	# this damn function returns array(0=>'') for an empty string
 	if (@$queues[0]=='') $queues = array();
 	
-	echo '<tr class="', ((++$i % 2 == 0) ? 'even':'odd'), '">';
+	echo '<tr class="', ((++$i % 2 === 0) ? 'even':'odd'), '">';
 	
 	echo '<td>', htmlEnt($user['ext']), '</td>';
 	
@@ -149,8 +149,8 @@ while ($user = $rs_users->fetchRow()) {
 	$extinfos[$user['ext']]['info' ] = $user;
 	$extinfos[$user['ext']]['state'] = $extstate;
 	$extstatev = _extstate2v( $extstate );
-	if (defined('GS_GUI_MON_NOQUEUEBLUE') && GS_GUI_MON_NOQUEUEBLUE) {
-		if ($extstate == AST_MGR_EXT_IDLE && count($queues) < 1) {
+	if (gs_get_conf('GS_GUI_MON_NOQUEUEBLUE')) {
+		if ($extstate === AST_MGR_EXT_IDLE && count($queues) < 1) {
 			# blue LED for available users who are not member of a queue
 			$extstatev['s'] = 'blue';
 		}
