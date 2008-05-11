@@ -24,20 +24,27 @@ _pot:
 		! -path '* *' \
 		-print0 \
 	| xargs -0 grep -I -l '__(' \
-	| xgettext -f - -L 'PHP' -d '${GETTEXT_DOMAIN}' -o '${DIR}/pot/${GETTEXT_DOMAIN}.pot' --copyright-holder='${COPYRIGHT_HOLDER}' --keyword='__' --from-code='UTF-8' -n -F --strict
+	| xgettext -f - -L 'PHP' -d '${GETTEXT_DOMAIN}' -o '${DIR}/pot/${GETTEXT_DOMAIN}.pot' --copyright-holder='${COPYRIGHT_HOLDER}' --keyword='__' --from-code='UTF-8' -n -s --strict
+
+sort-po:
+	@for LANGDIR in ${LANGS} ;\
+	do \
+		echo "### Sorting strings in $${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po ..." ;\
+		msgcat -n -s --strict -o "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" ;\
+	done
 
 update-po: _pot
 	@for LANGDIR in ${LANGS} ;\
 	do \
 		echo "### Merging ${GETTEXT_DOMAIN}.pot into $${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po ..." ;\
-		msgmerge -U --strict --add-location -N "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" "pot/${GETTEXT_DOMAIN}.pot" ;\
+		msgmerge -N -U --add-location -s --strict "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" "pot/${GETTEXT_DOMAIN}.pot" ;\
 	done
 
 gen-mo:
 	@for LANGDIR in ${LANGS} ;\
 	do \
 		echo "### Generating $${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.mo ..." ;\
-		msgfmt -o "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.mo" "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" ;\
+		msgfmt -c --strict --statistics -o "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.mo" "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" ;\
 	done
 
 gen-php:
