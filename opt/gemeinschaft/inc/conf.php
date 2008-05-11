@@ -197,6 +197,7 @@ $GUI_SUDO_ADMINS = 'sysadmin,'. @$GUI_SUDO_ADMINS;
 _gscnf( 'GUI_SUDO_ADMINS'           , ''                 );
 _gscnf( 'GUI_SUDO_EXTENDED'         , false              );
 _gscnf( 'GUI_PERMISSIONS_METHOD'    , 'gemeinschaft'     );
+_gscnf( 'GUI_USER_MAP_METHOD'       , ''                 );
 _gscnf( 'GUI_QUEUE_SHOW_NUM_CALLS'  , false              );
 _gscnf( 'GUI_QUEUE_INFO_FROM_DB'    , false              );
 _gscnf( 'GUI_MON_NOQUEUEBLUE'       , true               );
