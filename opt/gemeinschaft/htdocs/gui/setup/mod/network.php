@@ -932,7 +932,7 @@ if ($action !== 'save2') {
 	<label for="ipt-save2_action-reboot"><?php echo __('Einstellungen &uuml;bernehmen und System neustarten'); ?></label><br />
 	
 	<input type="radio" name="save2_action" id="ipt-save2_action-shutdown" value="shutdown" />
-	<label for="ipt-save2_action-shutdown"><?php echo __('Einstellungen &uuml;bernehmen und  System herunterfahren'); ?></label><br />
+	<label for="ipt-save2_action-shutdown"><?php echo __('Einstellungen &uuml;bernehmen und System herunterfahren'); ?></label><br />
 	
 	<div align="right">
 	<input type="submit" value="<?php echo __('OK'); ?>" />
