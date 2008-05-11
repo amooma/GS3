@@ -171,7 +171,7 @@ function gs_setlang( $locale )
 				setLocale( LC_MESSAGES, $locale );
 		}
 		putEnv( 'LANGUAGE='. $locale );
-		putEnv( 'LANG='. $locale );
+		putEnv( 'LANG='    . $locale );
 		return setLocale(LC_MESSAGES,'0');
 		
 	} else {
@@ -180,7 +180,7 @@ function gs_setlang( $locale )
 		foreach ($langdirs as $langdir) {
 			$langdir = baseName($langdir);
 			$lc_locale = strToLower($locale);
-			if ($lc_locale == strToLower($langdir)) {
+			if ($lc_locale === strToLower($langdir)) {
 				$g_gs_language = $langdir;
 				return $langdir;
 			}
@@ -188,7 +188,7 @@ function gs_setlang( $locale )
 		foreach ($langdirs as $langdir) {
 			$langdir = baseName($langdir);
 			$lc_lang_locale = strToLower(subStr($locale,0,2));
-			if ($lc_lang_locale == strToLower(subStr($langdir,0,2))) {
+			if ($lc_lang_locale === strToLower(subStr($langdir,0,2))) {
 				$g_gs_language = $langdir;
 				return $langdir;
 			}
@@ -218,7 +218,7 @@ function gs_loadtextdomain( $domain )
 		if (! file_exists($file)) return false;
 		include_once( $file );
 		
-		if ($g_gs_language == $g_gs_default_locale) {
+		if ($g_gs_language === $g_gs_default_locale) {
 			$g_gs_LANG['current'][$domain] = @$g_gs_LANG[$g_gs_default_locale][$domain];
 		} else {
 			$file = str_replace(
