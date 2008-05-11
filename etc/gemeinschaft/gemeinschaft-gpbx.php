@@ -81,6 +81,7 @@ $GUI_NUM_RESULTS            = 12;
 $GUI_SUDO_ADMINS            = '';
 $GUI_SUDO_EXTENDED          = false;
 $GUI_PERMISSIONS_METHOD     = 'gemeinschaft';
+$GUI_USER_MAP_METHOD        = '';
 $GUI_QUEUE_SHOW_NUM_CALLS   = false;
 $GUI_QUEUE_INFO_FROM_DB     = true;
 $GUI_MON_NOQUEUEBLUE        = false;
