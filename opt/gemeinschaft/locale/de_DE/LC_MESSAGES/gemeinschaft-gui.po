@@ -17,981 +17,57 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 #
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 35
-msgid "Login"
-msgstr "Login"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 35
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 38
-msgid "Home"
-msgstr "Home"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 42
-msgid "Telefonbuch"
-msgstr "Telefonbuch"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 45
-msgid "Firma (aus LDAP)"
-msgstr "Firma (aus LDAP)"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 45
-msgid "Firma (Projekt)"
-msgstr "Firma"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 46
-msgid "Firma (LDAP)"
-msgstr "Firma (LDAP)"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 47
-msgid "Pers&ouml;nlich"
-msgstr "Pers&ouml;nlich"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 51
-msgid "Anruflisten"
-msgstr "Anruflisten"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 54
-msgid "gew&auml;hlt"
-msgstr "gew&auml;hlt"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 55
-msgid "verpasst"
-msgstr "verpasst"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 56
-msgid "angenommen"
-msgstr "angenommen"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 60
-msgid "Voicemail"
-msgstr "Voicemail"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 63
-msgid "Nachrichten"
-msgstr "Nachrichten"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 67
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 70
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 39
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 68
-msgid "Rufumleitung"
-msgstr "Rufumleitung"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 71
-msgid "externe Nummern"
-msgstr "Externe Nummern"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 75
-msgid "Monitor"
-msgstr "Monitor"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 78
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 83
-msgid "Queues"
-msgstr "Queues"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 79
-msgid "Gruppen"
-msgstr "Gruppen"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 80
-msgid "Kollegen"
-msgstr "Kollegen"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 83
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 86
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 84
-msgid "Dienstmerkmale"
-msgstr "Dienstmerkmale"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 90
-# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 98
-msgid "Tastenbelegung"
-msgstr "Tastenbelegung"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 93
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 108
-msgid "Snom"
-msgstr "Snom"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 97
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 100
-msgid "Klingelt&ouml;ne"
-msgstr "Klingelt&ouml;ne"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 104
-msgid "Hilfe"
-msgstr "Hilfe"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 107
-msgid "Service-Nummern"
-msgstr "Service-Nummern"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 112
-msgid "Administration"
-msgstr "Administration"
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 116
 msgid "&Uuml;bersicht"
 msgstr "&Uuml;bersicht"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 117
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 71
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 261
-msgid "Benutzer"
-msgstr "Benutzer"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 118
-msgid "Verbindungen"
-msgstr "Verbindungen"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 119
-msgid "Nodes"
-msgstr "Nodes"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 134
-msgid "Logout"
-msgstr "Abmelden"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 90
-#, php-format
-msgid "Failed to get LDAP user \"%s\"."
-msgstr "Fehler beim Abfragen des LDAP-Benutzers \"%s\"."
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 94
-#, php-format
-msgid "No user \"%s\" in LDAP."
-msgstr "Benutzer \"%s\" nicht im LDAP."
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 129
-msgid "Failed to get user."
-msgstr "Fehler beim Abfragen des Benutzers."
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 144
-#, php-format
-msgid "You are not logged in (authentication method: \"%s\")."
-msgstr "Sie sind nicht eingeloggt (Authentisierungsmethode: \"%s\")."
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 150
-# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 165
-#, php-format
-msgid "Unknown user \"%s\"."
-msgstr "Benutzer \"%s\" unbekannt."
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 157
-msgid "Benutzer oder Pa&szlig;wort ung&uuml;ltig"
-msgstr "Benutzer oder Pa&szlig;wort ung&uuml;ltig"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 199
-#, php-format
-msgid "You are not allowed to act as \"%s\"."
-msgstr "Sie d&uuml;rfen nicht als \"%s\" agieren."
-#
-# File: opt/gemeinschaft/htdocs/gui/index.php, line: 104
-msgid "Gemeinschaft Telefon-Manager"
-msgstr "Gemeinschaft Telefon-Manager"
-#
-# File: opt/gemeinschaft/htdocs/gui/index.php, line: 118
-msgid "Telefon-Manager"
-msgstr "Telefon-Manager"
-#
-# File: opt/gemeinschaft/htdocs/gui/index.php, line: 169
-# File: opt/gemeinschaft/htdocs/gui/index.php, line: 174
-msgid "Angemeldet"
-msgstr "Angemeldet"
-#
-# File: opt/gemeinschaft/htdocs/gui/index.php, line: 177
-msgid "Als"
-msgstr "Als"
-#
-# File: opt/gemeinschaft/htdocs/gui/index.php, line: 187
-msgid "Benutzer wechseln"
-msgstr "Benutzer wechseln"
-#
-# File: opt/gemeinschaft/htdocs/gui/index.php, line: 190
-msgid "Nicht angemeldet"
-msgstr "Nicht angemeldet"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 180
-msgid "Zeitraum"
-msgstr "Zeitraum"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 181
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 263
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 185
-msgid "Anrufer"
-msgstr "Anrufer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 182
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 264
-msgid "Ziel"
-msgstr "Ziel"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 183
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 265
-msgid "Anrufdauer"
-msgstr "Anrufdauer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 185
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 128
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 79
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 79
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 79
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 117
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 185
-msgid "Seite"
-msgstr "Seite"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 191
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 156
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 90
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 90
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 90
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 145
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 213
-msgid "zur&uuml;ckbl&auml;ttern"
-msgstr "zur&uuml;ckbl&auml;ttern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 192
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 196
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 157
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 161
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 91
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 95
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 91
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 95
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 91
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 95
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 146
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 150
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 214
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 218
-msgid "zur&uuml;ck"
-msgstr "zur&uuml;ck"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 201
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 165
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 99
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 99
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 99
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 154
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 222
-msgid "weiterbl&auml;ttern"
-msgstr "weiterbl&auml;ttern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 202
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 206
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 166
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 170
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 100
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 104
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 100
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 104
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 100
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 104
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 159
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 223
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 227
-msgid "weiter"
-msgstr "weiter"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 217
-msgid "alle"
-msgstr "alle"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 218
-msgid "ein Monat"
-msgstr "ein Monat"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 219
-msgid "diesen Monat"
-msgstr "diesen Monat"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 220
-msgid "eine Woche"
-msgstr "eine Woche"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 221
-msgid "diese Woche"
-msgstr "diese Woche"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 222
-msgid "ein Tag"
-msgstr "ein Tag"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 223
-msgid "heute"
-msgstr "heute"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 224
-msgid "eine Stunde"
-msgstr "eine Stunde"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 225
 msgid "15 Minuten"
 msgstr "15 Minuten"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 239
-msgid "alle Verb."
-msgstr "alle Verb."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 240
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 289
-msgid "beantwortet"
-msgstr "beantwortet"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 241
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 292
-msgid "keine Antwort"
-msgstr "keine Antwort"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 242
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 298
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 49
-msgid "besetzt"
-msgstr "besetzt"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 243
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 295
-msgid "fehlgeschlagen"
-msgstr "fehlgeschlagen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 247
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 248
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 138
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 147
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 127
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 136
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 138
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 147
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 195
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 204
-msgid "Suchen"
-msgstr "Suchen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 250
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 106
-msgid "Abbrechen"
-msgstr "Abbrechen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 262
-msgid "Zeit"
-msgstr "Zeit"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 266
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 200
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 111
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 107
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 81
-msgid "Status"
-msgstr "Status"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 301
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 227
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 195
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 211
-msgid "unbekannt"
-msgstr "unbekannt"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 320
-msgid "Verbindungsstatistik"
-msgstr "Verbindungsstatistik"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 329
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 108
-msgid "Anrufe"
-msgstr "Anrufe"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 333
-msgid "Anrufdauer insges."
-msgstr "Anrufdauer insges."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 337
-msgid "Anrufdauer im Durchschnitt"
-msgstr "Anrufdauer im Durchschnitt"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 340
-msgid "keine Anrufe"
-msgstr "keine Anrufe"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 345
-msgid "Verbindungszeit"
-msgstr "Verbindungszeit"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 50
-msgid "Fehler beim Lesen der Nodes aus der Watchdog-Konfiguration!"
-msgstr "Fehler beim Lesen der Nodes aus der Watchdog-Konfiguration!"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 68
-msgid "Fehler beim Abfragen der Hosts aus der Datenbank!"
-msgstr "Fehler beim Abfragen der Hosts aus der Datenbank!"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 101
-msgid "IP (stat.)"
-msgstr "IP (stat.)"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 102
-msgid "IP (dyn.)"
-msgstr "IP (dyn.)"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 103
-msgid "Kommentar"
-msgstr "Kommentar"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 104
-msgid "ID"
-msgstr "ID"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 105
-msgid "Rolle"
-msgstr "Rolle"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 106
-msgid "Stonith"
-msgstr "Stonith"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 107
-msgid "Ping"
-msgstr "Ping"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 108
-msgid "SIP Ping"
-msgstr "SIP-Ping"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 135
-msgid "Aktiv"
-msgstr "Aktiv"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 136
-msgid "Reserve"
-msgstr "Reserve"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 191
-msgid "Nicht konfiguriert."
-msgstr "Nicht konfiguriert."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 80
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 270
-msgid "Eingerichtete Benutzer"
-msgstr "Eingerichtete Benutzer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 84
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 274
-msgid "Eingeloggte Benutzer"
-msgstr "Eingeloggte Benutzer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 94
-msgid "Endger&auml;te"
-msgstr "Endger&auml;te"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 103
-msgid "Eingerichtete Endger&auml;te"
-msgstr "Eingerichtete Endger&auml;te"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 107
-msgid "Verwendete Endger&auml;te"
-msgstr "Aktive Endger&auml;te"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 111
-msgid "Letztes Endger&auml;t eingetragen"
-msgstr "Letztes Endger&auml;t eingetragen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 126
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 137
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 115
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 126
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 126
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 137
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 183
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 194
-msgid "Name suchen"
-msgstr "Name suchen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 127
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 146
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 116
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 135
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 127
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 146
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 184
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 203
-msgid "Nummer suchen"
-msgstr "Nummer suchen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 196
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 77
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 77
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 77
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 110
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 106
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 186
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 184
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 80
-msgid "Name"
-msgstr "Name"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 197
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 76
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 76
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 76
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 79
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 148
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 109
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 105
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 173
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 189
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 187
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 266
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 79
-msgid "Nummer"
-msgstr "Nummer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 198
-msgid "User"
-msgstr "User"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 199
-msgid "Host"
-msgstr "Host"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 230
-msgid "bereit"
-msgstr "bereit"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 233
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 61
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 52
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 52
-msgid "offline"
-msgstr "offline"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 236
-msgid "spricht"
-msgstr "spricht"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 239
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 62
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 53
-msgid "klingelt"
-msgstr "klingelt"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 78
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 78
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 78
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 184
-msgid "Datum"
-msgstr "Datum"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 134
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 134
-# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 134
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 214
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 216
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 316
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 225
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 227
-msgid "w&auml;hlen"
-msgstr "w&auml;hlen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 66
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 72
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 48
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 102
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 159
-# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 48
-# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 52
-# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 80
-# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 84
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 151
-msgid "Fehler beim Abfragen."
-msgstr "Fehler beim Abfragen."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 90
-msgid "CLIR nach intern"
-msgstr "CLIR nach intern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 93
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 105
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 114
-msgid "an"
-msgstr "an"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 95
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 107
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 116
-msgid "aus"
-msgstr "aus"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 98
-msgid ""
-"Rufnummernunterdr&uuml;ckung. Bei &quot;an&quot; wird die Nummer "
-"unterdr&uuml;ckt, bei &quot;aus&quot; wird sie mitgesendet."
-msgstr ""
-"Rufnummernunterdr&uuml;ckung. Bei &quot;an&quot; wird die Nummer "
-"unterdr&uuml;ckt, bei &quot;aus&quot; wird sie mitgesendet."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 102
-msgid "CLIR nach extern"
-msgstr "CLIR nach extern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 111
-msgid "Anklopfen"
-msgstr "Anklopfen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 119
-msgid "Das Verhalten ist ggf. von Ihrem Endger&auml;t abh&auml;ngig."
-msgstr "Das Verhalten ist ggf. von Ihrem Endger&auml;t abh&auml;ngig."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 130
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 267
-# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 160
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 342
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 256
-msgid "Speichern"
-msgstr "Speichern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 39
-msgid "Eigene externe Nummern"
-msgstr "Eigene externe Nummern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 54
-msgid ""
-"Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern "
-"weiterleiten:"
-msgstr ""
-"Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern "
-"weiterleiten:"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 59
-msgid "Externe Nummern"
-msgstr "Externe Nummern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 67
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 121
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 118
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 183
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 233
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 194
-msgid "keine"
-msgstr "keine"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 84
-msgid ""
-"Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die "
-"Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden sollen."
-msgstr ""
-"Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die "
-"Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden sollen."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 44
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 42
-msgid "intern"
-msgstr "intern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 45
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 43
-msgid "extern"
-msgstr "extern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 48
-msgid "immer"
-msgstr "immer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 50
-msgid "keine Antw."
-msgstr "keine Antw."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 51
-msgid "offline/DND"
-msgstr "offline/DND"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 55
-msgid "Std."
-msgstr "Std."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 56
-msgid "Tmp."
-msgstr "Tmp."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 73
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 130
-msgid ""
-"Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-"
-"St&ouml;ren-Funktion am Telefon ben&ouml;tigt."
-msgstr ""
-"Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-"
-"St&ouml;ren-Funktion am Telefon ben&ouml;tigt."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 76
-msgid "Fehler beim Setzen der Std.-Umleitungsnummer"
-msgstr "Fehler beim Setzen der Std.-Umleitungsnummer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 80
-msgid "Fehler beim Setzen der Tempor&auml;ren Umleitungsnummer"
-msgstr "Fehler beim Setzen der Tempor&auml;ren Umleitungsnummer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 84
-msgid "Fehler beim Aktivieren der Umleitungsnummer"
-msgstr "Fehler beim Aktivieren der Umleitungsnummer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 183
-msgid "Umleitungsnummern"
-msgstr "Umleitungsnummern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 188
-msgid "Standardnummer"
-msgstr "Standardnummer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 194
-msgid "Tempor&auml;re Nummer"
-msgstr "Tempor&auml;re Nummer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 201
-msgid "nicht leer!"
-msgstr "nicht leer!"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 207
-msgid "Umleiten in folgenden F&auml;llen"
-msgstr "Umleiten in folgenden F&auml;llen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 218
-msgid "Mailbox"
-msgstr "Mailbox"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 225
-msgid "von"
-msgstr "von"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 240
-msgid "An"
-msgstr "An"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 241
-msgid "Aus"
-msgstr "Aus"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 252
-msgid "nach"
-msgstr "nach"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 259
-msgid ""
-"Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung "
-"eingestellt haben."
-msgstr ""
-"Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung "
-"eingestellt haben."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 39
-msgid "Rufumleitung Warteschleifen"
-msgstr "Rufumleitung Warteschleifen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 49
-msgid "voll"
-msgstr "voll"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 51
-msgid "leer"
-msgstr "leer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 129
-msgid "Anzeigen"
-msgstr "Anzeigen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 173
-msgid "Bitte w&auml;hlen Sie eine Warteschleife."
-msgstr "Bitte w&auml;hlen Sie eine Warteschleife."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 45
-msgid "Ein-/Ausloggen am Telefon"
-msgstr "Ein-/Ausloggen am Telefon"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 50
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 108
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 165
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 171
-msgid "Durchwahl"
-msgstr "Durchwahl"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 52
-msgid ""
-"Einloggen an einem Telefon. Dabei wird die Eingabe der PIN-Nummer verlangt."
-msgstr ""
-"Einloggen an einem Telefon. Dabei wird die Eingabe der PIN-Nummer verlangt."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 58
-msgid "Ausloggen"
-msgstr "Ausloggen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 75
-msgid ""
-"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
-"auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt "
-"&quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)"
-msgstr ""
-"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
-"auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt "
-"&quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 81
-msgid ""
-"Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern und extern im Fall "
-"&quot;immer&quot; auf die angegebene Nummer programmieren"
-msgstr ""
-"Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern und extern im Fall "
-"&quot;immer&quot; auf die angegebene Nummer programmieren"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 87
-msgid ""
-"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
-"deaktivieren"
-msgstr ""
-"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
-"deaktivieren"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 97
-msgid "Mailbox abfragen"
-msgstr "Mailbox abfragen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 104
-msgid ""
-"Eigene Mailbox abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;"
-"Retrieve&quot;-Taste gedr&uuml;ckt werden.)"
-msgstr ""
-"Eigene Mailbox abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;"
-"Retrieve&quot;-Taste gedr&uuml;ckt werden.)"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 110
-msgid "Andere Mailbox abfragen (mit PIN)"
-msgstr "Andere Mailbox abfragen (mit PIN)"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 120
-msgid "Abwesenheitsansage aufzeichnen"
-msgstr "Abwesenheitsansage aufzeichnen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 127
-msgid "Abwesenheitsansage f&uuml;r Anrufe von intern aufzeichnen"
-msgstr "Abwesenheitsansage f&uuml;r Anrufe von intern aufzeichnen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 133
-msgid "Abwesenheitsansage f&uuml;r Anrufe von extern aufzeichnen"
-msgstr "Abwesenheitsansage f&uuml;r Anrufe von extern aufzeichnen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 143
-msgid "Privatgespr&auml;che"
-msgstr "Privatgespr&auml;che"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 150
-msgid "Privatgespr&auml;ch f&uuml;hren"
-msgstr "Privatgespr&auml;ch f&uuml;hren"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 160
-msgid "Warteschlangen"
-msgstr "Warteschlangen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 167
-msgid "Einloggen in die Warteschlange mit der angegebenen Durchwahl"
-msgstr "Einloggen in die Warteschlange mit der angegebenen Durchwahl"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 173
-msgid "Ausloggen aus der Warteschlange mit der angegebenen Durchwahl"
-msgstr "Ausloggen aus der Warteschlange mit der angegebenen Durchwahl"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 179
-msgid "Ausloggen aus allen Warteschlangen"
-msgstr "Ausloggen aus allen Warteschlangen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 189
-msgid "Konferenzen"
-msgstr "Konferenzen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 194
-msgid "Konf.nr."
-msgstr "Konf.nr."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 196
-msgid ""
-"Einen Konferenzraum (nach 88 eine 3- oder 4-stellige Nummer) betreten bzw. "
-"er&ouml;ffnen. Wenn die Konferenz leer ist, kann eine PIN-Nr. gesetzt werden "
-"(f&uuml;r keine PIN # dr&uuml;cken). Ansonsten muss eine ggf. f&uuml;r "
-"diesen Raum gesetzte PIN eingegeben werden."
-msgstr ""
-"Einen Konferenzraum (nach 88 eine 3- oder 4-stellige Nummer) betreten bzw. "
-"er&ouml;ffnen. Wenn die Konferenz leer ist, kann eine PIN-Nr. gesetzt werden "
-"(f&uuml;r keine PIN # dr&uuml;cken). Ansonsten muss eine ggf. f&uuml;r "
-"diesen Raum gesetzte PIN eingegeben werden."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 200
-msgid "oder"
-msgstr "oder"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 202
-msgid ""
-"Einen freien Konferenzraum finden. Die Nummer der Konferenz wird beim "
-"Betreten angesagt. (Die anderen Teilnehmer w&auml;hlen dann <code>88 "
-"<i>Konferenznr.</i></code>, s.o.)"
-msgstr ""
-"Einen freien Konferenzraum finden. Die Nummer der Konferenz wird beim "
-"Betreten angesagt. (Die anderen Teilnehmer w&auml;hlen dann <code>88 "
-"<i>Konferenznr.</i></code>, s.o.)"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 50
-msgid ""
-"Das SIP-Telefon Snom 360 bietet neben den &uuml;blichen Zifferntasten eine "
-"ganze Reihe n&uuml;tzlicher Funktionstasten, die bis zu einem gewissen Grad "
-"konfigurierbar sind. Die wichtigsten Tasten und Funktionen werden an dieser "
-"Stelle kurz aufgef&uuml;hrt. Eine genaue Beschreibung der Tasten finden Sie "
-"in dem &uuml;ber 100 Seiten starken Handbuch zu ihrem Snom-Telefon."
-msgstr ""
-"Das SIP-Telefon Snom 360 bietet neben den &uuml;blichen Zifferntasten eine "
-"ganze Reihe n&uuml;tzlicher Funktionstasten, die bis zu einem gewissen Grad "
-"konfigurierbar sind. Die wichtigsten Tasten und Funktionen werden an dieser "
-"Stelle kurz aufgef&uuml;hrt. Eine genaue Beschreibung der Tasten finden Sie "
-"in dem &uuml;ber 100 Seiten starken Handbuch zu ihrem Snom-Telefon."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 51
-msgid "Snom 360 Doku"
-msgstr "Snom 360 Doku"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 58
-msgid "Snom 360 Tasten"
-msgstr "Snom 360 Tasten"
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 66
 msgid "4 Softkeys unter dem Bildschirm"
 msgstr "4 Softkeys unter dem Bildschirm"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 69
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 188
 msgid ""
-"Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die "
-"Bedeutungen werden ggf. am unteren Rand des Displays angezeigt."
+"<b>12 Leitungstasten</b><br /> Diese Tasten lassen sich mit Rufnummern "
+"programmieren.<br /> Im Men&uuml;punkt &quot;Tastenbelegung&quot; k&ouml;"
+"nnen Sie Ihre Einstellung ansehen und ver&auml;ndern."
 msgstr ""
-"Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die "
-"Bedeutungen werden ggf. am unteren Rand des Displays angezeigt."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 79
-msgid "<b>Lautst&auml;rke</b> des H&ouml;rers oder Lautsprechers -/+"
-msgstr "<b>Lautst&auml;rke</b> des H&ouml;rers oder Lautsprechers -/+"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 89
-msgid "<b>Stummschaltung</b> des Mikrofons ein/aus"
-msgstr "<b>Stummschaltung</b> des Mikrofons ein/aus"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 99
-msgid "<b>Lauth&ouml;ren</b> ein/aus"
-msgstr "<b>Lauth&ouml;ren</b> ein/aus"
+"<b>12 Leitungstasten</b><br /> Diese Tasten lassen sich mit Rufnummern "
+"programmieren.<br /> Im Men&uuml;punkt &quot;Tastenbelegung&quot; k&ouml;"
+"nnen Sie Ihre Einstellung ansehen und ver&auml;ndern."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 109
 msgid "<b>Abbrechen</b><br /> Gespr&auml;ch beenden, Gespr&auml;ch abweisen"
 msgstr "<b>Abbrechen</b><br /> Gespr&auml;ch beenden, Gespr&auml;ch abweisen"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 116
-msgid "OK"
-msgstr "OK"
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 119
 msgid "<b>Best&auml;tigen</b><br /> W&auml;hlen, Gespr&auml;ch annehmen"
 msgstr "<b>Best&auml;tigen</b><br /> W&auml;hlen, Gespr&auml;ch annehmen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 169
+msgid ""
+"<b>Halten</b> (R&uuml;ckfrage)<br /> Wenn Sie diese Taste w&auml;hrend eines "
+"Gespr&auml;chs dr&uuml;cken, wird Ihr Gespr&auml;chspartner auf Halten "
+"gesetzt. Danach k&ouml;nnen Sie eine weitere Verbindung zu einem anderen "
+"Teilnehmer herstellen. Mit den leuchtenden Leitungstasten k&ouml;nnen Sie "
+"zwischen beiden Leitungen hin- und herschalten (Makeln)."
+msgstr ""
+"<b>Halten</b> (R&uuml;ckfrage)<br /> Wenn Sie diese Taste w&auml;hrend eines "
+"Gespr&auml;chs dr&uuml;cken, wird Ihr Gespr&auml;chspartner auf Halten "
+"gesetzt. Danach k&ouml;nnen Sie eine weitere Verbindung zu einem anderen "
+"Teilnehmer herstellen. Mit den leuchtenden Leitungstasten k&ouml;nnen Sie "
+"zwischen beiden Leitungen hin- und herschalten (Makeln)."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 99
+msgid "<b>Lauth&ouml;ren</b> ein/aus"
+msgstr "<b>Lauth&ouml;ren</b> ein/aus"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 79
+msgid "<b>Lautst&auml;rke</b> des H&ouml;rers oder Lautsprechers -/+"
+msgstr "<b>Lautst&auml;rke</b> des H&ouml;rers oder Lautsprechers -/+"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 129
 msgid ""
@@ -1005,17 +81,23 @@ msgstr ""
 "Anzahl alter und neuer Nachrichten wird zus&auml;tzlich auch auf dem Display "
 "angezeigt."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 139
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 179
 msgid ""
-"<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nnen "
-"Sie die letzten angerufenen Nummern erneut anrufen und sehen angenommene und "
-"verpasste Anrufe. W&auml;hlen Sie zun&auml;chst mit den Pfeiltasten die "
-"Nummer aus und dr&uuml;cken danach die OK-Taste."
+"<b>Nicht st&ouml;ren</b> ein/aus<br /> Wenn dieser Modus aktiviert ist, "
+"werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem "
+"Display links unten das Symbol und &quot;Inaktiv&quot; angezeigt. Auf Ihre "
+"ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&auml;ren Sie "
+"gar nicht eingeloggt, also offline."
 msgstr ""
-"<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nnen "
-"Sie die letzten angerufenen Nummern erneut anrufen und sehen angenommene und "
-"verpasste Anrufe. W&auml;hlen Sie zun&auml;chst mit den Pfeiltasten die "
-"Nummer aus und dr&uuml;cken danach die OK-Taste."
+"<b>Nicht st&ouml;ren</b> ein/aus<br /> Wenn dieser Modus aktiviert ist, "
+"werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem "
+"Display links unten das Symbol und &quot;Inaktiv&quot; angezeigt. Auf Ihre "
+"ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&auml;ren Sie "
+"gar nicht eingeloggt, also offline."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 89
+msgid "<b>Stummschaltung</b> des Mikrofons ein/aus"
+msgstr "<b>Stummschaltung</b> des Mikrofons ein/aus"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 149
 msgid ""
@@ -1053,79 +135,157 @@ msgstr ""
 "sprechen. Durch Dr&uuml;cken der Transfer-Taste oder durch Auflegen werden "
 "die beiden Teilnehmer verbunden."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 169
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 139
 msgid ""
-"<b>Halten</b> (R&uuml;ckfrage)<br /> Wenn Sie diese Taste w&auml;hrend eines "
-"Gespr&auml;chs dr&uuml;cken, wird Ihr Gespr&auml;chspartner auf Halten "
-"gesetzt. Danach k&ouml;nnen Sie eine weitere Verbindung zu einem anderen "
-"Teilnehmer herstellen. Mit den leuchtenden Leitungstasten k&ouml;nnen Sie "
-"zwischen beiden Leitungen hin- und herschalten (Makeln)."
+"<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nnen "
+"Sie die letzten angerufenen Nummern erneut anrufen und sehen angenommene und "
+"verpasste Anrufe. W&auml;hlen Sie zun&auml;chst mit den Pfeiltasten die "
+"Nummer aus und dr&uuml;cken danach die OK-Taste."
 msgstr ""
-"<b>Halten</b> (R&uuml;ckfrage)<br /> Wenn Sie diese Taste w&auml;hrend eines "
-"Gespr&auml;chs dr&uuml;cken, wird Ihr Gespr&auml;chspartner auf Halten "
-"gesetzt. Danach k&ouml;nnen Sie eine weitere Verbindung zu einem anderen "
-"Teilnehmer herstellen. Mit den leuchtenden Leitungstasten k&ouml;nnen Sie "
-"zwischen beiden Leitungen hin- und herschalten (Makeln)."
+"<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nnen "
+"Sie die letzten angerufenen Nummern erneut anrufen und sehen angenommene und "
+"verpasste Anrufe. W&auml;hlen Sie zun&auml;chst mit den Pfeiltasten die "
+"Nummer aus und dr&uuml;cken danach die OK-Taste."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 179
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 250
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 106
+msgid "Abbrechen"
+msgstr "Abbrechen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 120
+msgid "Abwesenheitsansage aufzeichnen"
+msgstr "Abwesenheitsansage aufzeichnen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 133
+msgid "Abwesenheitsansage f&uuml;r Anrufe von extern aufzeichnen"
+msgstr "Abwesenheitsansage f&uuml;r Anrufe von extern aufzeichnen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 127
+msgid "Abwesenheitsansage f&uuml;r Anrufe von intern aufzeichnen"
+msgstr "Abwesenheitsansage f&uuml;r Anrufe von intern aufzeichnen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 259
 msgid ""
-"<b>Nicht st&ouml;ren</b> ein/aus<br /> Wenn dieser Modus aktiviert ist, "
-"werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem "
-"Display links unten das Symbol und &quot;Inaktiv&quot; angezeigt. Auf Ihre "
-"ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&auml;ren Sie "
-"gar nicht eingeloggt, also offline."
+"Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung "
+"eingestellt haben."
 msgstr ""
-"<b>Nicht st&ouml;ren</b> ein/aus<br /> Wenn dieser Modus aktiviert ist, "
-"werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem "
-"Display links unten das Symbol und &quot;Inaktiv&quot; angezeigt. Auf Ihre "
-"ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&auml;ren Sie "
-"gar nicht eingeloggt, also offline."
+"Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung "
+"eingestellt haben."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 188
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 112
+msgid "Administration"
+msgstr "Administration"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 135
+msgid "Aktiv"
+msgstr "Aktiv"
+#
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 177
+msgid "Als"
+msgstr "Als"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 36
+msgid "Alte"
+msgstr "Alte"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 240
+msgid "An"
+msgstr "An"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 110
+msgid "Andere Mailbox abfragen (mit PIN)"
+msgstr "Andere Mailbox abfragen (mit PIN)"
+#
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 169
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 174
+msgid "Angemeldet"
+msgstr "Angemeldet"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 111
+msgid "Anklopfen"
+msgstr "Anklopfen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 183
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 265
+msgid "Anrufdauer"
+msgstr "Anrufdauer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 337
+msgid "Anrufdauer im Durchschnitt"
+msgstr "Anrufdauer im Durchschnitt"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 333
+msgid "Anrufdauer insges."
+msgstr "Anrufdauer insges."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 329
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 108
+msgid "Anrufe"
+msgstr "Anrufe"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 181
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 263
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 185
+msgid "Anrufer"
+msgstr "Anrufer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 168
+msgid "Anrufer(p)"
+msgstr "Anrufer"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 51
+msgid "Anruflisten"
+msgstr "Anruflisten"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 129
+msgid "Anzeigen"
+msgstr "Anzeigen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 37
+msgid "Arbeit"
+msgstr "Arbeit"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 54
 msgid ""
-"<b>12 Leitungstasten</b><br /> Diese Tasten lassen sich mit Rufnummern "
-"programmieren.<br /> Im Men&uuml;punkt &quot;Tastenbelegung&quot; k&ouml;"
-"nnen Sie Ihre Einstellung ansehen und ver&auml;ndern."
+"Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern "
+"weiterleiten:"
 msgstr ""
-"<b>12 Leitungstasten</b><br /> Diese Tasten lassen sich mit Rufnummern "
-"programmieren.<br /> Im Men&uuml;punkt &quot;Tastenbelegung&quot; k&ouml;"
-"nnen Sie Ihre Einstellung ansehen und ver&auml;ndern."
+"Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern "
+"weiterleiten:"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 42
-msgid "Willkommen"
-msgstr "Willkommen"
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 202
+msgid "Audio-Datei"
+msgstr "Audio-Datei"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 44
-msgid "Ihre Durchwahl"
-msgstr "Ihre Durchwahl"
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 111
+msgid "Aufgelegt"
+msgstr "Aufgelegt"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 63
-msgid "Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)"
-msgstr "Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)"
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 241
+msgid "Aus"
+msgstr "Aus"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 78
-msgid "Telefon neustarten"
-msgstr "Telefon neustarten"
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 58
+msgid "Ausloggen"
+msgstr "Ausloggen"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 167
-msgid ""
-"Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu "
-"gestartet haben!"
-msgstr ""
-"Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu "
-"gestartet haben!"
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 179
+msgid "Ausloggen aus allen Warteschlangen"
+msgstr "Ausloggen aus allen Warteschlangen"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 55
-msgid "Benutzer nicht vorhanden"
-msgstr "Benutzer nicht vorhanden"
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 173
+msgid "Ausloggen aus der Warteschlange mit der angegebenen Durchwahl"
+msgstr "Ausloggen aus der Warteschlange mit der angegebenen Durchwahl"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 57
-msgid "Benutzername"
-msgstr "Benutzername"
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 84
+msgid "Bemerkung"
+msgstr "Bemerkung"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 60
-msgid "Pa&szlig;wort"
-msgstr "Pa&szlig;wort"
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 117
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 71
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 261
+msgid "Benutzer"
+msgstr "Benutzer"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 60
 msgid "Benutzer hat keine E-Mail-Adresse"
@@ -1135,181 +295,21 @@ msgstr "Benutzer hat keine E-Mail-Adresse"
 msgid "Benutzer hat keine g&uuml;tige E-Mail-Adresse"
 msgstr "Benutzer hat keine g&uuml;tige E-Mail-Adresse"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 65
-msgid "Einloggen"
-msgstr "Einloggen"
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 55
+msgid "Benutzer nicht vorhanden"
+msgstr "Benutzer nicht vorhanden"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 100
-msgid "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
-msgstr "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 157
+msgid "Benutzer oder Pa&szlig;wort ung&uuml;ltig"
+msgstr "Benutzer oder Pa&szlig;wort ung&uuml;ltig"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 101
-msgid "Fehler beim Senden an &quot;%s&quot;"
-msgstr "Fehler beim Senden an &quot;%s&quot;"
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 187
+msgid "Benutzer wechseln"
+msgstr "Benutzer wechseln"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 121
-msgid "Pa&szlig;wort mailen"
-msgstr "Pa&szlig;wort mailen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 151
-msgid "Pa&szlig;wort vergessen"
-msgstr "Pa&szlig;wort vergessen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/logout_logout.php, line: 49
-msgid "Sie sind jetzt abgemeldet."
-msgstr "Sie sind jetzt abgemeldet."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 81
-msgid "Umleitung"
-msgstr "Umleitung"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 84
-msgid "Bemerkung"
-msgstr "Bemerkung"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 59
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 48
-msgid "frei"
-msgstr "frei"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 60
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 49
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 50
-msgid "belegt"
-msgstr "belegt"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 81
-msgid "Sie sind Mitglied keiner Pickup-Gruppe."
-msgstr "Sie sind Mitglied keiner Pickup-Gruppe."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 192
-msgid "Snom-Tasten"
-msgstr "Snom-Tasten"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 241
-msgid "Gruppe"
-msgstr "Gruppe"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 54
-msgid "anklopfen"
-msgstr "anklopfen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 55
-msgid "halten"
-msgstr "halten"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 75
-msgid "Sie sind Mitglied keiner Warteschlange."
-msgstr "Sie sind Mitglied keiner Warteschlange."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 101
-msgid "Mitglieder"
-msgstr "Mitglieder"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 105
-msgid "Statistik"
-msgstr "Statistik"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 110
-msgid "Erfolgreich"
-msgstr "Erfolgreich"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 111
-msgid "Aufgelegt"
-msgstr "Aufgelegt"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 109
-msgid "zuletzt"
-msgstr "zuletzt"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 168
-msgid "Anrufer(p)"
-msgstr "Anrufer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 172
-msgid "Pos."
-msgstr "Pos."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 174
-msgid "Wartezeit"
-msgstr "Wartezeit"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 72
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 104
-msgid "Could not connect to LDAP server."
-msgstr "Konnte nicht mit dem LDAP-Server verbinden."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 156
-#, php-format
-msgid "mehr als %d Treffer"
-msgstr "mehr als %d Treffer"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 263
-msgid "Nachname"
-msgstr "Nachname"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 263
-msgid "Vorname"
-msgstr "Vorname"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 293
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 341
-msgid "Eintrag speichern"
-msgstr "Eintrag speichern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 294
-msgid "speichern"
-msgstr "speichern"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 296
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 297
-msgid "r&uuml;ckg&auml;ngig"
-msgstr "r&uuml;ckg&auml;ngig"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 299
-msgid "abbrechen"
-msgstr "abbrechen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 317
-msgid "bearbeiten"
-msgstr "bearbeiten"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 318
-msgid "entfernen"
-msgstr "entfernen"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 74
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 113
-#, php-format
-msgid "Datei-Upload f&uuml;r %s fehlgeschlagen."
-msgstr "Datei-Upload f&uuml;r %s fehlgeschlagen."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 88
-#, php-format
-msgid "Datei f&uuml;r %s keine Audio-Datei"
-msgstr "Datei f&uuml;r %s keine Audio-Datei"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 88
-msgid "Erlaubte Formate"
-msgstr "Erlaubte Formate"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 91
-msgid "Zugriffsverletzung!"
-msgstr "Zugriffsverletzung!"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 97
-#, php-format
-msgid "Fehler beim Upload f&uuml;r %s."
-msgstr "Fehler beim Upload f&uuml;r %s."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 107
-#, php-format
-msgid "Datei f&uuml;r %s zu gro&szlig;."
-msgstr "Datei f&uuml;r %s zu gro&szlig;."
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 125
-msgid "Fehler beim Setzen des eigenen Klingeltons."
-msgstr "Fehler beim Setzen des eigenen Klingeltons."
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 57
+msgid "Benutzername"
+msgstr "Benutzername"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 163
 msgid ""
@@ -1320,6 +320,45 @@ msgstr ""
 "Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark "
 "von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. "
 "wird also ein anderer als der hier eingestellte Klingelton gespielt."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 173
+msgid "Bitte w&auml;hlen Sie eine Warteschleife."
+msgstr "Bitte w&auml;hlen Sie eine Warteschleife."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 84
+msgid ""
+"Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die "
+"Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden sollen."
+msgstr ""
+"Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die "
+"Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden sollen."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 102
+msgid "CLIR nach extern"
+msgstr "CLIR nach extern"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 90
+msgid "CLIR nach intern"
+msgstr "CLIR nach intern"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 72
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 104
+msgid "Could not connect to LDAP server."
+msgstr "Konnte nicht mit dem LDAP-Server verbinden."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 50
+msgid ""
+"Das SIP-Telefon Snom 360 bietet neben den &uuml;blichen Zifferntasten eine "
+"ganze Reihe n&uuml;tzlicher Funktionstasten, die bis zu einem gewissen Grad "
+"konfigurierbar sind. Die wichtigsten Tasten und Funktionen werden an dieser "
+"Stelle kurz aufgef&uuml;hrt. Eine genaue Beschreibung der Tasten finden Sie "
+"in dem &uuml;ber 100 Seiten starken Handbuch zu ihrem Snom-Telefon."
+msgstr ""
+"Das SIP-Telefon Snom 360 bietet neben den &uuml;blichen Zifferntasten eine "
+"ganze Reihe n&uuml;tzlicher Funktionstasten, die bis zu einem gewissen Grad "
+"konfigurierbar sind. Die wichtigsten Tasten und Funktionen werden an dieser "
+"Stelle kurz aufgef&uuml;hrt. Eine genaue Beschreibung der Tasten finden Sie "
+"in dem &uuml;ber 100 Seiten starken Handbuch zu ihrem Snom-Telefon."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 173
 msgid ""
@@ -1333,41 +372,675 @@ msgstr ""
 "Klingeltondatei eingestellt sein, nicht f&uuml;r beides. Die L&auml;nge wird "
 "auf wenige Sekunden begrenzt."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 200
-msgid "Von"
-msgstr "Von"
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 119
+msgid "Das Verhalten ist ggf. von Ihrem Endger&auml;t abh&auml;ngig."
+msgstr "Das Verhalten ist ggf. von Ihrem Endger&auml;t abh&auml;ngig."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 202
-msgid "Audio-Datei"
-msgstr "Audio-Datei"
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 88
+#, php-format
+msgid "Datei f&uuml;r %s keine Audio-Datei"
+msgstr "Datei f&uuml;r %s keine Audio-Datei"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 220
-msgid "Lautlos"
-msgstr "Lautlos"
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 107
+#, php-format
+msgid "Datei f&uuml;r %s zu gro&szlig;."
+msgstr "Datei f&uuml;r %s zu gro&szlig;."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 238
-msgid "eigene beibehalten"
-msgstr "eigene beibehalten"
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 74
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 113
+#, php-format
+msgid "Datei-Upload f&uuml;r %s fehlgeschlagen."
+msgstr "Datei-Upload f&uuml;r %s fehlgeschlagen."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 35
-msgid "Neue"
-msgstr "Neue"
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 78
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 78
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 78
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 184
+msgid "Datum"
+msgstr "Datum"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 36
-msgid "Alte"
-msgstr "Alte"
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 186
+msgid "Dauer"
+msgstr "Dauer"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 37
-msgid "Arbeit"
-msgstr "Arbeit"
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 83
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 86
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 84
+msgid "Dienstmerkmale"
+msgstr "Dienstmerkmale"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 69
+msgid ""
+"Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die "
+"Bedeutungen werden ggf. am unteren Rand des Displays angezeigt."
+msgstr ""
+"Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die "
+"Bedeutungen werden ggf. am unteren Rand des Displays angezeigt."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 50
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 108
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 165
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 171
+msgid "Durchwahl"
+msgstr "Durchwahl"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 104
+msgid ""
+"Eigene Mailbox abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;"
+"Retrieve&quot;-Taste gedr&uuml;ckt werden.)"
+msgstr ""
+"Eigene Mailbox abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;"
+"Retrieve&quot;-Taste gedr&uuml;ckt werden.)"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 39
+msgid "Eigene externe Nummern"
+msgstr "Eigene externe Nummern"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 45
+msgid "Ein-/Ausloggen am Telefon"
+msgstr "Ein-/Ausloggen am Telefon"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 196
+msgid ""
+"Einen Konferenzraum (nach 88 eine 3- oder 4-stellige Nummer) betreten bzw. "
+"er&ouml;ffnen. Wenn die Konferenz leer ist, kann eine PIN-Nr. gesetzt werden "
+"(f&uuml;r keine PIN # dr&uuml;cken). Ansonsten muss eine ggf. f&uuml;r "
+"diesen Raum gesetzte PIN eingegeben werden."
+msgstr ""
+"Einen Konferenzraum (nach 88 eine 3- oder 4-stellige Nummer) betreten bzw. "
+"er&ouml;ffnen. Wenn die Konferenz leer ist, kann eine PIN-Nr. gesetzt werden "
+"(f&uuml;r keine PIN # dr&uuml;cken). Ansonsten muss eine ggf. f&uuml;r "
+"diesen Raum gesetzte PIN eingegeben werden."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 202
+msgid ""
+"Einen freien Konferenzraum finden. Die Nummer der Konferenz wird beim "
+"Betreten angesagt. (Die anderen Teilnehmer w&auml;hlen dann <code>88 "
+"<i>Konferenznr.</i></code>, s.o.)"
+msgstr ""
+"Einen freien Konferenzraum finden. Die Nummer der Konferenz wird beim "
+"Betreten angesagt. (Die anderen Teilnehmer w&auml;hlen dann <code>88 "
+"<i>Konferenznr.</i></code>, s.o.)"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 84
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 274
+msgid "Eingeloggte Benutzer"
+msgstr "Eingeloggte Benutzer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 80
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 270
+msgid "Eingerichtete Benutzer"
+msgstr "Eingerichtete Benutzer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 103
+msgid "Eingerichtete Endger&auml;te"
+msgstr "Eingerichtete Endger&auml;te"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 65
+msgid "Einloggen"
+msgstr "Einloggen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 52
+msgid ""
+"Einloggen an einem Telefon. Dabei wird die Eingabe der PIN-Nummer verlangt."
+msgstr ""
+"Einloggen an einem Telefon. Dabei wird die Eingabe der PIN-Nummer verlangt."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 167
+msgid "Einloggen in die Warteschlange mit der angegebenen Durchwahl"
+msgstr "Einloggen in die Warteschlange mit der angegebenen Durchwahl"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 293
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 341
+msgid "Eintrag speichern"
+msgstr "Eintrag speichern"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 94
+msgid "Endger&auml;te"
+msgstr "Endger&auml;te"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 110
+msgid "Erfolgreich"
+msgstr "Erfolgreich"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 88
+msgid "Erlaubte Formate"
+msgstr "Erlaubte Formate"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 59
+msgid "Externe Nummern"
+msgstr "Externe Nummern"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 90
+#, php-format
+msgid "Failed to get LDAP user \"%s\"."
+msgstr "Fehler beim Abfragen des LDAP-Benutzers \"%s\"."
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 129
+msgid "Failed to get user."
+msgstr "Fehler beim Abfragen des Benutzers."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 38
 msgid "Familie"
 msgstr "Familie"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 68
+msgid "Fehler beim Abfragen der Hosts aus der Datenbank!"
+msgstr "Fehler beim Abfragen der Hosts aus der Datenbank!"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 66
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 72
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 48
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 102
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 159
+# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 48
+# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 52
+# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 80
+# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 84
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 151
+msgid "Fehler beim Abfragen."
+msgstr "Fehler beim Abfragen."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 84
+msgid "Fehler beim Aktivieren der Umleitungsnummer"
+msgstr "Fehler beim Aktivieren der Umleitungsnummer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 50
+msgid "Fehler beim Lesen der Nodes aus der Watchdog-Konfiguration!"
+msgstr "Fehler beim Lesen der Nodes aus der Watchdog-Konfiguration!"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 101
+msgid "Fehler beim Senden an &quot;%s&quot;"
+msgstr "Fehler beim Senden an &quot;%s&quot;"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 76
+msgid "Fehler beim Setzen der Std.-Umleitungsnummer"
+msgstr "Fehler beim Setzen der Std.-Umleitungsnummer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 80
+msgid "Fehler beim Setzen der Tempor&auml;ren Umleitungsnummer"
+msgstr "Fehler beim Setzen der Tempor&auml;ren Umleitungsnummer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 125
+msgid "Fehler beim Setzen des eigenen Klingeltons."
+msgstr "Fehler beim Setzen des eigenen Klingeltons."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 97
+#, php-format
+msgid "Fehler beim Upload f&uuml;r %s."
+msgstr "Fehler beim Upload f&uuml;r %s."
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 46
+msgid "Firma (LDAP)"
+msgstr "Firma (LDAP)"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 45
+msgid "Firma (Projekt)"
+msgstr "Firma"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 45
+msgid "Firma (aus LDAP)"
+msgstr "Firma (aus LDAP)"
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 39
 msgid "Freunde"
 msgstr "Freunde"
+#
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 104
+msgid "Gemeinschaft Telefon-Manager"
+msgstr "Gemeinschaft Telefon-Manager"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 241
+msgid "Gruppe"
+msgstr "Gruppe"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 79
+msgid "Gruppen"
+msgstr "Gruppen"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 104
+msgid "Hilfe"
+msgstr "Hilfe"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 35
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 38
+msgid "Home"
+msgstr "Home"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 199
+msgid "Host"
+msgstr "Host"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 104
+msgid "ID"
+msgstr "ID"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 102
+msgid "IP (dyn.)"
+msgstr "IP (dyn.)"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 101
+msgid "IP (stat.)"
+msgstr "IP (stat.)"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 105
+#, php-format
+msgid "Ihr Browser kann die %s-Datei nicht abspielen."
+msgstr "Ihr Browser kann die %s-Datei nicht abspielen."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 63
+msgid "Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)"
+msgstr "Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 44
+msgid "Ihre Durchwahl"
+msgstr "Ihre Durchwahl"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 97
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 100
+msgid "Klingelt&ouml;ne"
+msgstr "Klingelt&ouml;ne"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 80
+msgid "Kollegen"
+msgstr "Kollegen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 103
+msgid "Kommentar"
+msgstr "Kommentar"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 194
+msgid "Konf.nr."
+msgstr "Konf.nr."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 189
+msgid "Konferenzen"
+msgstr "Konferenzen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 220
+msgid "Lautlos"
+msgstr "Lautlos"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 111
+msgid "Letztes Endger&auml;t eingetragen"
+msgstr "Letztes Endger&auml;t eingetragen"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 35
+msgid "Login"
+msgstr "Login"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 134
+msgid "Logout"
+msgstr "Abmelden"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 218
+msgid "Mailbox"
+msgstr "Mailbox"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 97
+msgid "Mailbox abfragen"
+msgstr "Mailbox abfragen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 101
+msgid "Mitglieder"
+msgstr "Mitglieder"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 75
+msgid "Monitor"
+msgstr "Monitor"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 263
+msgid "Nachname"
+msgstr "Nachname"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 63
+msgid "Nachrichten"
+msgstr "Nachrichten"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 196
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 77
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 77
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 77
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 110
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 106
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 186
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 184
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 80
+msgid "Name"
+msgstr "Name"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 126
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 137
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 115
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 126
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 126
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 137
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 183
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 194
+msgid "Name suchen"
+msgstr "Name suchen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 35
+msgid "Neue"
+msgstr "Neue"
+#
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 190
+msgid "Nicht angemeldet"
+msgstr "Nicht angemeldet"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 191
+msgid "Nicht konfiguriert."
+msgstr "Nicht konfiguriert."
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 94
+#, php-format
+msgid "No user \"%s\" in LDAP."
+msgstr "Benutzer \"%s\" nicht im LDAP."
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 119
+msgid "Nodes"
+msgstr "Nodes"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 197
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 76
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 76
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 76
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 79
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 148
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 109
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 105
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 173
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 189
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 187
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 266
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 79
+msgid "Nummer"
+msgstr "Nummer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 127
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 146
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 116
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 135
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 127
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 146
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 184
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 203
+msgid "Nummer suchen"
+msgstr "Nummer suchen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 116
+msgid "OK"
+msgstr "OK"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 60
+msgid "Pa&szlig;wort"
+msgstr "Pa&szlig;wort"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 121
+msgid "Pa&szlig;wort mailen"
+msgstr "Pa&szlig;wort mailen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 151
+msgid "Pa&szlig;wort vergessen"
+msgstr "Pa&szlig;wort vergessen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 100
+msgid "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
+msgstr "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 47
+msgid "Pers&ouml;nlich"
+msgstr "Pers&ouml;nlich"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 107
+msgid "Ping"
+msgstr "Ping"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 103
+msgid "Player"
+msgstr "Player"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 172
+msgid "Pos."
+msgstr "Pos."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 150
+msgid "Privatgespr&auml;ch f&uuml;hren"
+msgstr "Privatgespr&auml;ch f&uuml;hren"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 143
+msgid "Privatgespr&auml;che"
+msgstr "Privatgespr&auml;che"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 78
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 83
+msgid "Queues"
+msgstr "Queues"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 136
+msgid "Reserve"
+msgstr "Reserve"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 105
+msgid "Rolle"
+msgstr "Rolle"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 98
+msgid ""
+"Rufnummernunterdr&uuml;ckung. Bei &quot;an&quot; wird die Nummer "
+"unterdr&uuml;ckt, bei &quot;aus&quot; wird sie mitgesendet."
+msgstr ""
+"Rufnummernunterdr&uuml;ckung. Bei &quot;an&quot; wird die Nummer "
+"unterdr&uuml;ckt, bei &quot;aus&quot; wird sie mitgesendet."
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 67
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 70
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 39
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 68
+msgid "Rufumleitung"
+msgstr "Rufumleitung"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 39
+msgid "Rufumleitung Warteschleifen"
+msgstr "Rufumleitung Warteschleifen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 75
+msgid ""
+"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
+"auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt "
+"&quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)"
+msgstr ""
+"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
+"auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt "
+"&quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 87
+msgid ""
+"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
+"deaktivieren"
+msgstr ""
+"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
+"deaktivieren"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 108
+msgid "SIP Ping"
+msgstr "SIP-Ping"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 185
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 128
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 79
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 79
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 79
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 117
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 185
+msgid "Seite"
+msgstr "Seite"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 107
+msgid "Service-Nummern"
+msgstr "Service-Nummern"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 81
+msgid "Sie sind Mitglied keiner Pickup-Gruppe."
+msgstr "Sie sind Mitglied keiner Pickup-Gruppe."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 75
+msgid "Sie sind Mitglied keiner Warteschlange."
+msgstr "Sie sind Mitglied keiner Warteschlange."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/logout_logout.php, line: 49
+msgid "Sie sind jetzt abgemeldet."
+msgstr "Sie sind jetzt abgemeldet."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 73
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 130
+msgid ""
+"Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-"
+"St&ouml;ren-Funktion am Telefon ben&ouml;tigt."
+msgstr ""
+"Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-"
+"St&ouml;ren-Funktion am Telefon ben&ouml;tigt."
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 93
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 108
+msgid "Snom"
+msgstr "Snom"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 51
+msgid "Snom 360 Doku"
+msgstr "Snom 360 Doku"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 58
+msgid "Snom 360 Tasten"
+msgstr "Snom 360 Tasten"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 192
+msgid "Snom-Tasten"
+msgstr "Snom-Tasten"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 130
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 267
+# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 160
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 342
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 256
+msgid "Speichern"
+msgstr "Speichern"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 188
+msgid "Standardnummer"
+msgstr "Standardnummer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 105
+msgid "Statistik"
+msgstr "Statistik"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 266
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 200
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 111
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 107
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 81
+msgid "Status"
+msgstr "Status"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 55
+msgid "Std."
+msgstr "Std."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 106
+msgid "Stonith"
+msgstr "Stonith"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 247
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 248
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 138
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 147
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 127
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 136
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 138
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 147
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 195
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 204
+msgid "Suchen"
+msgstr "Suchen"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 90
+# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 98
+msgid "Tastenbelegung"
+msgstr "Tastenbelegung"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 78
+msgid "Telefon neustarten"
+msgstr "Telefon neustarten"
+#
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 118
+msgid "Telefon-Manager"
+msgstr "Telefon-Manager"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 42
+msgid "Telefonbuch"
+msgstr "Telefonbuch"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 194
+msgid "Tempor&auml;re Nummer"
+msgstr "Tempor&auml;re Nummer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 81
+msgid ""
+"Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern und extern im Fall "
+"&quot;immer&quot; auf die angegebene Nummer programmieren"
+msgstr ""
+"Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern und extern im Fall "
+"&quot;immer&quot; auf die angegebene Nummer programmieren"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 56
+msgid "Tmp."
+msgstr "Tmp."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 207
+msgid "Umleiten in folgenden F&auml;llen"
+msgstr "Umleiten in folgenden F&auml;llen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 81
+msgid "Umleitung"
+msgstr "Umleitung"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 183
+msgid "Umleitungsnummern"
+msgstr "Umleitungsnummern"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 150
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 165
+#, php-format
+msgid "Unknown user \"%s\"."
+msgstr "Benutzer \"%s\" unbekannt."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 198
+msgid "User"
+msgstr "User"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 167
+msgid ""
+"Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu "
+"gestartet haben!"
+msgstr ""
+"Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu "
+"gestartet haben!"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 118
+msgid "Verbindungen"
+msgstr "Verbindungen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 320
+msgid "Verbindungsstatistik"
+msgstr "Verbindungsstatistik"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 345
+msgid "Verbindungszeit"
+msgstr "Verbindungszeit"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 107
+msgid "Verwendete Endger&auml;te"
+msgstr "Aktive Endger&auml;te"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 40
 msgid "Verzeichnis 5"
@@ -1389,23 +1062,350 @@ msgstr "Verzeichnis 8"
 msgid "Verzeichnis 9"
 msgstr "Verzeichnis 9"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 103
-msgid "Player"
-msgstr "Player"
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 60
+msgid "Voicemail"
+msgstr "Voicemail"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 105
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 200
+msgid "Von"
+msgstr "Von"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 263
+msgid "Vorname"
+msgstr "Vorname"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 160
+msgid "Warteschlangen"
+msgstr "Warteschlangen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 174
+msgid "Wartezeit"
+msgstr "Wartezeit"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 42
+msgid "Willkommen"
+msgstr "Willkommen"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 199
 #, php-format
-msgid "Ihr Browser kann die %s-Datei nicht abspielen."
-msgstr "Ihr Browser kann die %s-Datei nicht abspielen."
+msgid "You are not allowed to act as \"%s\"."
+msgstr "Sie d&uuml;rfen nicht als \"%s\" agieren."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 186
-msgid "Dauer"
-msgstr "Dauer"
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 144
+#, php-format
+msgid "You are not logged in (authentication method: \"%s\")."
+msgstr "Sie sind nicht eingeloggt (Authentisierungsmethode: \"%s\")."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 262
+msgid "Zeit"
+msgstr "Zeit"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 180
+msgid "Zeitraum"
+msgstr "Zeitraum"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 182
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 264
+msgid "Ziel"
+msgstr "Ziel"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 91
+msgid "Zugriffsverletzung!"
+msgstr "Zugriffsverletzung!"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 299
+msgid "abbrechen"
+msgstr "abbrechen"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 220
 msgid "abspielen"
 msgstr "abspielen"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 217
+msgid "alle"
+msgstr "alle"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 239
+msgid "alle Verb."
+msgstr "alle Verb."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 93
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 105
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 114
+msgid "an"
+msgstr "an"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 56
+msgid "angenommen"
+msgstr "angenommen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 54
+msgid "anklopfen"
+msgstr "anklopfen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 95
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 107
+# File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 116
+msgid "aus"
+msgstr "aus"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 240
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 289
+msgid "beantwortet"
+msgstr "beantwortet"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 317
+msgid "bearbeiten"
+msgstr "bearbeiten"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 60
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 49
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 50
+msgid "belegt"
+msgstr "belegt"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 230
+msgid "bereit"
+msgstr "bereit"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 242
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 298
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 49
+msgid "besetzt"
+msgstr "besetzt"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 221
+msgid "diese Woche"
+msgstr "diese Woche"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 219
+msgid "diesen Monat"
+msgstr "diesen Monat"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 238
+msgid "eigene beibehalten"
+msgstr "eigene beibehalten"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 218
+msgid "ein Monat"
+msgstr "ein Monat"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 222
+msgid "ein Tag"
+msgstr "ein Tag"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 224
+msgid "eine Stunde"
+msgstr "eine Stunde"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 220
+msgid "eine Woche"
+msgstr "eine Woche"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 318
+msgid "entfernen"
+msgstr "entfernen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 45
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 43
+msgid "extern"
+msgstr "extern"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 71
+msgid "externe Nummern"
+msgstr "Externe Nummern"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 243
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 295
+msgid "fehlgeschlagen"
+msgstr "fehlgeschlagen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 59
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 48
+msgid "frei"
+msgstr "frei"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 54
+msgid "gew&auml;hlt"
+msgstr "gew&auml;hlt"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 55
+msgid "halten"
+msgstr "halten"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 223
+msgid "heute"
+msgstr "heute"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 48
+msgid "immer"
+msgstr "immer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 44
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 42
+msgid "intern"
+msgstr "intern"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 67
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 121
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 118
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 183
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 233
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 194
+msgid "keine"
+msgstr "keine"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 340
+msgid "keine Anrufe"
+msgstr "keine Anrufe"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 50
+msgid "keine Antw."
+msgstr "keine Antw."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 241
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 292
+msgid "keine Antwort"
+msgstr "keine Antwort"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 239
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 62
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 53
+msgid "klingelt"
+msgstr "klingelt"
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 229
 msgid "l&ouml;schen"
 msgstr "l&ouml;schen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 51
+msgid "leer"
+msgstr "leer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 156
+#, php-format
+msgid "mehr als %d Treffer"
+msgstr "mehr als %d Treffer"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 252
+msgid "nach"
+msgstr "nach"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 201
+msgid "nicht leer!"
+msgstr "nicht leer!"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 200
+msgid "oder"
+msgstr "oder"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 233
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 61
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 52
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 52
+msgid "offline"
+msgstr "offline"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 51
+msgid "offline/DND"
+msgstr "offline/DND"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 296
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 297
+msgid "r&uuml;ckg&auml;ngig"
+msgstr "r&uuml;ckg&auml;ngig"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 294
+msgid "speichern"
+msgstr "speichern"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 236
+msgid "spricht"
+msgstr "spricht"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 301
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 227
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 195
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 211
+msgid "unbekannt"
+msgstr "unbekannt"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 55
+msgid "verpasst"
+msgstr "verpasst"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 49
+msgid "voll"
+msgstr "voll"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 225
+msgid "von"
+msgstr "von"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 134
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 134
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 134
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 214
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 216
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 316
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 225
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 227
+msgid "w&auml;hlen"
+msgstr "w&auml;hlen"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 202
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 206
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 166
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 170
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 100
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 104
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 100
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 104
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 100
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 104
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 159
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 223
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 227
+msgid "weiter"
+msgstr "weiter"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 201
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 165
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 99
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 99
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 99
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 154
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 222
+msgid "weiterbl&auml;ttern"
+msgstr "weiterbl&auml;ttern"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 109
+msgid "zuletzt"
+msgstr "zuletzt"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 192
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 196
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 157
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 161
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 91
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 95
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 91
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 95
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 91
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 95
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 146
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 150
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 214
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 218
+msgid "zur&uuml;ck"
+msgstr "zur&uuml;ck"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 191
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 156
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_in.php, line: 90
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_missed.php, line: 90
+# File: opt/gemeinschaft/htdocs/gui/mod/diallog_out.php, line: 90
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_gs.php, line: 145
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 213
+msgid "zur&uuml;ckbl&auml;ttern"
+msgstr "zur&uuml;ckbl&auml;ttern"
