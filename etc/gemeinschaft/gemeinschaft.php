@@ -120,15 +120,18 @@ $GUI_NUM_RESULTS            = 12;
 $GUI_SUDO_ADMINS            = '';
   # comma separated list of admin users who can manage *all* accounts
 
-$GUI_SUDO_EXTENDED          = false;
-  # whether to include htdocs/gui/inc/permissions.php and consult
+#$GUI_SUDO_EXTENDED          = false;
+  # Whether to include htdocs/gui/inc/permissions.php and consult
   # gui_sudo_allowed() to find out if a user can act as a certain
-  # other user (you may need to adjust this function!).
-  # also see GUI_PERMISSIONS_METHOD
+  # other user. (You may need to adjust this function!). For the
+  # method used see GUI_PERMISSIONS_METHOD.
 
-$GUI_PERMISSIONS_METHOD     = 'gemeinschaft';
-  # "gemeinschaft" or "lvm". ugly hack, see GUI_SUDO_EXTENDED,
-  # GUI_MON_PEERS_ENABLED and htdocs/gui/inc/permissions.php
+#$GUI_PERMISSIONS_METHOD     = 'gemeinschaft';
+  # Determines the method used to find out if a user can act as a
+  # certain other user. "gemeinschaft" or "lvm". Ugly solution.
+  # See GUI_SUDO_EXTENDED, GUI_MON_PEERS_ENABLED and
+  # htdocs/gui/inc/permissions.php
+  # Deprecated!
 
 $GUI_QUEUE_SHOW_NUM_CALLS   = false;
   # show number of completed calls for each member in Monitor->Queues
@@ -143,10 +146,12 @@ $GUI_MON_NOQUEUEBLUE        = true;
   # used in Monitor->Peers. if true idle users who are not member
   # of a queue get a blue led instead of a green one
 
-$GUI_MON_PEERS_ENABLED      = false;
-  # needs LDAP with Kostenstelle or a similar mechanism, see
-  # gui_monitor_which_peers() in htdocs/gui/inc/permissions.php .
-  # also see GUI_PERMISSIONS_METHOD
+#$GUI_MON_PEERS_ENABLED      = false;
+  # Whether to enable the peers monitor. The visible peers for each
+  # user depend on the GUI_PERMISSIONS_METHOD setting.
+  # For GUI_PERMISSIONS_METHOD=="lvm" an LDAP with Kostenstelle
+  # is required, see gui_monitor_which_peers() in
+  # htdocs/gui/inc/permissions.php
 
 #$GUI_SHUTDOWN_ENABLED       = false;
   # enable shutdown via web interface?
