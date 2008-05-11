@@ -238,9 +238,9 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 		echo '<div id="langs">' ,"\n";
 		echo '<span class="tty">', __('Sprache') /*//TRANSLATE ME*/ ,':</span>' ,"\n";
 		//$langs = array_reverse($langs);
-		foreach ($langs as $iso => $l) {
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'setlang='.@$iso) ,'" title="', htmlEnt(@$l['title']) ,'">' ,"\n";
-			echo '<img alt="', @$iso ,'" src="', GS_URL_PATH ,'img/lang/', @$l['icon'] ,'.png" /></a>' ,"\n";
+		foreach ($langs as $lang_name => $l) {
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'setlang='.@$lang_name) ,'" title="', htmlEnt(@$l['title']) ,'">' ,"\n";
+			echo '<img alt="', @$lang_name ,'" src="', GS_URL_PATH ,'img/lang/', htmlEnt(@$l['icon']) ,'.png" /></a>' ,"\n";
 		}
 		echo '</div>' ,"\n";
 		unset($iso, $l);
