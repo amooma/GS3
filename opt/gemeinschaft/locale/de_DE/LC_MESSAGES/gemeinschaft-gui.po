@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-11 22:20+0200\n"
+"POT-Creation-Date: 2008-05-12 17:16+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: German <>\n"
@@ -435,10 +435,6 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 202
 msgid "Audio-Datei"
 msgstr "Audio-Datei"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 166
-msgid "Aufgegeben"
-msgstr "Aufgegeben"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_out.php, line: 107
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_done.php, line: 124
@@ -1836,7 +1832,7 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 87
 msgid "Neue Voicemail-Nachrichten"
-msgstr ""
+msgstr "Neue Sprachnachrichten"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 181
 msgid "Neue Warteschlange"
@@ -2178,10 +2174,6 @@ msgid ""
 msgstr ""
 "Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
 "deaktivieren"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 309
-msgid "Rufummer"
-msgstr "Rufummer"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 108
 msgid "SIP Ping"
@@ -3245,6 +3237,10 @@ msgstr "zur&uuml;ckbl&auml;ttern"
 #~ msgid "Anrufdauer insges."
 #~ msgstr "Anrufdauer insges."
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 166
+#~ msgid "Aufgegeben"
+#~ msgstr "Aufgegeben"
+#
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 111
 #~ msgid "Aufgelegt"
@@ -3255,67 +3251,58 @@ msgstr "zur&uuml;ckbl&auml;ttern"
 #~ msgid "Could not connect to LDAP server."
 #~ msgstr "Konnte nicht mit dem LDAP-Server verbinden."
 #
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 90
 #~ msgid "Failed to get LDAP user \"%s\"."
 #~ msgstr "Fehler beim Abfragen des LDAP-Benutzers \"%s\"."
-#
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 101
 #~ msgid "Fehler beim Senden an &quot;%s&quot;"
 #~ msgstr "Fehler beim Senden an &quot;%s&quot;"
 #
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 46
 #~ msgid "Firma (LDAP)"
 #~ msgstr "Firma (LDAP)"
-#
 #
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 104
 #~ msgid "Gemeinschaft Telefon-Manager"
 #~ msgstr "Gemeinschaft Telefon-Manager"
 #
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 94
 #~ msgid "No user \"%s\" in LDAP."
 #~ msgstr "Benutzer \"%s\" nicht im LDAP."
-#
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 100
 #~ msgid "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
 #~ msgstr "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 309
+#~ msgid "Rufummer"
+#~ msgstr "Rufummer"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 81
 #~ msgid "Sie sind Mitglied keiner Pickup-Gruppe."
 #~ msgstr "Sie sind Mitglied keiner Pickup-Gruppe."
 #
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 75
 #~ msgid "Sie sind Mitglied keiner Warteschlange."
 #~ msgstr "Sie sind Mitglied keiner Warteschlange."
 #
-#
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 118
 #~ msgid "Telefon-Manager"
 #~ msgstr "Telefon-Manager"
-#
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 240
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 289
 #~ msgid "beantwortet"
 #~ msgstr "beantwortet"
 #
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 340
 #~ msgid "keine Anrufe"
 #~ msgstr "keine Anrufe"
 #
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 156
 #~ msgid "mehr als %d Treffer"
 #~ msgstr "mehr als %d Treffer"
-#
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 51
 #~ msgid "offline/DND"

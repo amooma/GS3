@@ -30,7 +30,7 @@
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
   '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 4126 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2008-05-11 22:20+0200
+POT-Creation-Date: 2008-05-12 17:16+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -76,7 +76,6 @@ Content-Transfer-Encoding: 8bit
   'Arbeit' => 'Arbeit',
   'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:' => 'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:',
   'Audio-Datei' => 'Audio-Datei',
-  'Aufgegeben' => 'Aufgegeben',
   'Aus' => 'Aus',
   'Ausloggen' => 'Ausloggen',
   'Ausloggen aus allen Warteschlangen' => 'Ausloggen aus allen Warteschlangen',
@@ -164,6 +163,7 @@ Content-Transfer-Encoding: 8bit
   'Name' => 'Name',
   'Name suchen' => 'Name suchen',
   'Neue' => 'Neue',
+  'Neue Voicemail-Nachrichten' => 'Neue Sprachnachrichten',
   'Nicht angemeldet' => 'Nicht angemeldet',
   'Nicht angen.' => 'Nicht angen.',
   'Nicht konfiguriert.' => 'Nicht konfiguriert.',
@@ -189,7 +189,6 @@ Content-Transfer-Encoding: 8bit
   'Rufumleitung Warteschleifen' => 'Rufumleitung Warteschleifen',
   'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)' => 'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)',
   'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; deaktivieren' => 'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; deaktivieren',
-  'Rufummer' => 'Rufummer',
   'SIP Ping' => 'SIP-Ping',
   'Seite' => 'Seite',
   'Service-Nummern' => 'Service-Nummern',

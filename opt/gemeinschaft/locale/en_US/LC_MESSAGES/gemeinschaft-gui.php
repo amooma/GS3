@@ -30,7 +30,7 @@
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
   '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 4126 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2008-05-11 22:20+0200
+POT-Creation-Date: 2008-05-12 17:16+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: English <>
@@ -93,7 +93,6 @@ Content-Transfer-Encoding: 8bit
   'Asterisk-Log' => 'Asterisk Log',
   'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:' => 'Except for internal numbers you may forward calls to the following external numbers:',
   'Audio-Datei' => 'Audio file',
-  'Aufgegeben' => 'Abandoned',
   'Aufl&ouml;sung' => 'Resolution',
   'Aus' => 'Off',
   'Auschalten / Neustarten ...' => 'Shutdown / Reboot ...',
@@ -369,7 +368,6 @@ Content-Transfer-Encoding: 8bit
   'Rufumleitung Warteschleifen' => 'Call Forwards for Queues',
   'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)' => 'Activate call forwarding for calls from internal and external in case &quot;always&quot; to the default number. (A default number needs to be set in menu &quot;Rufumleitung&quot;!)',
   'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; deaktivieren' => 'Deactivate call forwarding for calls from internal and external in case &quot;always&quot;',
-  'Rufummer' => 'Phone number',
   'SIP Ping' => 'SIP ping',
   'SIP-Gateways' => 'SIP gateways',
   'SIP-Pa&szlig;wort' => 'SIP password',
