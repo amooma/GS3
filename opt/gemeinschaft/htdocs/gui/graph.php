@@ -32,7 +32,7 @@ require_once( GS_DIR .'htdocs/gui/inc/session.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 
 
-@header('Content-Type: image/svg+xml');
+@header('Content-Type: image/svg+xml; charset=utf-8');
 @header('Content-Disposition: inline');
 
 echo '<','?xml version="1.0" encoding="utf-8" ?','>' ,"\n";
