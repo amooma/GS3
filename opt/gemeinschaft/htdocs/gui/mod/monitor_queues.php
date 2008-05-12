@@ -163,7 +163,7 @@ AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
 	<th style="width:89px;" class="nobr"><?php echo __('Anrufe'      ); /*//TRANSLATE ME*/ ?></th>
 	<th style="width:89px;" class="nobr"><?php echo __('Angenommen'  ); /*//TRANSLATE ME*/ ?></th>
 	<th style="width:89px;" class="nobr"><?php echo __('Erfolgreich' ); ?></th>
-	<th style="width:89px;" class="nobr"><?php echo __('Aufgegeben'  ); ?></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Absprung'    ); ?></th>
 	<?php if ($get_queue_stats_from_db) { ?>
 	<th style="width:89px;" class="nobr"><?php echo __('Nicht angen.'); /*//TRANSLATE ME */ ?></th>
 	<th style="width:89px;" class="nobr"><?php echo __('Niemand frei'); /*//TRANSLATE ME */ ?></th>
