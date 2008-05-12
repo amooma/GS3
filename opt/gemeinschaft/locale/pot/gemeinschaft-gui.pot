@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-11 22:22+0200\n"
+"POT-Creation-Date: 2008-05-12 17:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -173,6 +173,7 @@ msgid ""
 "tt>-Header verwendet, was <tt>fromdomain</tt> in Asterisk entspricht.)"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 166
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 216
 msgid "Absprung"
 msgstr ""
@@ -420,10 +421,6 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 199
 msgid "Audio-Datei"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 166
-msgid "Aufgegeben"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_out.php, line: 107
