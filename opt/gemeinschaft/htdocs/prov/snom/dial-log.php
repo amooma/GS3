@@ -172,10 +172,11 @@ LIMIT 20';
 		if ($r['remote_name'] != '') {
 			$entry_name .= ' '. $r['remote_name'];
 		}
-		if ($type=='missed') {
+		if (date('dm') == date('dm', (int)$r['ts']))
 			$when = date('H:i', (int)$r['ts']);
-			$entry_name = $when .'  '. $entry_name;
-		}
+		else
+			$when = date('d.m.', (int)$r['ts']);
+		$entry_name = $when .'  '. $entry_name;
 		if ($r['num_calls'] > 1) {
 			$entry_name .= ' ('. $r['num_calls'] .')';
 		}
@@ -189,7 +190,7 @@ LIMIT 20';
 	
 	echo "\n",
 	     '</SnomIPPhoneDirectory>';
-	
+
 }
 #################################### DIAL LOG }
 
