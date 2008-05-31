@@ -190,7 +190,7 @@ LIMIT 20';
 	
 	echo "\n",
 	     '</SnomIPPhoneDirectory>';
-
+	
 }
 #################################### DIAL LOG }
 
