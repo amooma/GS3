@@ -3232,7 +3232,6 @@ msgstr "zur&uuml;ck"
 msgid "zur&uuml;ckbl&auml;ttern"
 msgstr "zur&uuml;ckbl&auml;ttern"
 #
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 333
 #~ msgid "Anrufdauer insges."
 #~ msgstr "Anrufdauer insges."
@@ -3240,7 +3239,6 @@ msgstr "zur&uuml;ckbl&auml;ttern"
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 166
 #~ msgid "Aufgegeben"
 #~ msgstr "Aufgegeben"
-#
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 111
 #~ msgid "Aufgelegt"

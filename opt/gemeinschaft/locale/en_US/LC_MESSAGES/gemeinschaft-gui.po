@@ -3217,7 +3217,6 @@ msgstr "prev."
 msgid "zur&uuml;ckbl&auml;ttern"
 msgstr "prev. page"
 #
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 333
 #~ msgid "Anrufdauer insges."
 #~ msgstr "Call duration (overall)"
