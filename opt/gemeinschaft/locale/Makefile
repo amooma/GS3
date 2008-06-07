@@ -38,6 +38,9 @@ update-po: _pot
 	do \
 		echo "### Merging ${GETTEXT_DOMAIN}.pot into $${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po ..." ;\
 		msgmerge -N -U --add-location -s --strict "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" "pot/${GETTEXT_DOMAIN}.pot" ;\
+		echo "### Removing duplicate empty lines in $${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po ..." ;\
+		cat "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" | uniq > "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po.uniq" ;\
+		mv "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po.uniq" "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" ;\
 	done
 
 gen-mo:
