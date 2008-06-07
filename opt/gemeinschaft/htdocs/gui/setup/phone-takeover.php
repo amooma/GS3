@@ -31,7 +31,7 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 # do not rely on any settings in the main config!
 # this is the setup!
 require_once( GS_DIR .'inc/gettext.php' );
-require_once( GS_DIR .'htdocs/gui/setup/inc/aux.php' );
+require_once( GS_DIR .'htdocs/gui/setup/inc/aux-fns.php' );
 require_once( GS_DIR .'inc/keyval.php' );
 
 # set URL path
