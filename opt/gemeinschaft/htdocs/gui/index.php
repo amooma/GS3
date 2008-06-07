@@ -57,7 +57,7 @@ define('GS_WEB_REWRITE',
 
 $GS_INSTALLATION_TYPE = gs_get_conf('GS_INSTALLATION_TYPE');
 if (in_array($GS_INSTALLATION_TYPE, array('gpbx', 'single'), true)) {
-	require_once( GS_DIR .'htdocs/gui/setup/inc/aux.php' );
+	require_once( GS_DIR .'htdocs/gui/setup/inc/aux-fns.php' );
 	if (gs_setup_autoshow()) {
 		if (subStr($_SERVER['SERVER_PROTOCOL'],5) >= '1.1') {
 			@header( 'HTTP/1.1 303 See Other', true, 303 );
