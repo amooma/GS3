@@ -75,12 +75,12 @@ while ($r = $rs->fetchRow()) {
 	$number_std = trim( $r['number_std'] );
 	$number_var = trim( $r['number_var'] );
 	$number = '';
-	if     ($r['active']=='std' && $number_std != '')
+	if     ($r['active']==='std' && $number_std != '')
 		$number = $number_std;
-	elseif ($r['active']=='var' && $number_var != '')
+	elseif ($r['active']==='var' && $number_var != '')
 		$number = $number_var;
 	$forwards[$r['source']][$r['case']]['number'] = $number;
-	if ($r['case']=='unavail' && $number != '')
+	if ($r['case']==='timeout' && $number != '')
 		$forwards[$r['source']][$r['case']]['timeout'] = $r['timeout'];
 }
 
