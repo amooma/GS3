@@ -536,6 +536,28 @@ Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
       </indexterm></title>
 
     <para>Zeigt die in der Datenbank eingetragenen Asterisk-Hosts an.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>[--foreign=<replaceable>0|1</replaceable>]</code></term>
+
+        <listitem>
+          <para>Optionale Beschränkung mit <literal>0</literal> auf nur Nodes
+          von Gemeinschaft oder mit <literal>1</literal> auf nur
+          Fremd-Registrare (Filialen).</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><code>[--group=<replaceable>Gruppen-ID</replaceable>]</code></term>
+
+        <listitem>
+          <para>Optionale Beschränkung auf Hosts die zu der angegebenen Gruppe
+          gehören. (Hosts die zu keiner Gruppe gehören haben die Gruppen-ID
+          <literal>0</literal>.)</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
   </section>
 
   <section id="gs_hosts_show_our_ids">

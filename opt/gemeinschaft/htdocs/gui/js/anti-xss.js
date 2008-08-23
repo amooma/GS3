@@ -26,8 +26,8 @@ function gs_sandbox_iframe( el )
 	try{ el.contentWindow.open    = function(){return null;};  }catch(e){}
 	try{ el.contentWindow.close   = function(){};              }catch(e){}
 	try{ el.contentWindow.alert   = function(){};              }catch(e){}
-	try{ el.contentWindow.confirm = function(){return false;}; }catch(e){}
-	try{ el.contentWindow.prompt  = function(){return null;};  }catch(e){}
+	//try{ el.contentWindow.confirm = function(){return false;}; }catch(e){}
+	//try{ el.contentWindow.prompt  = function(){return null;};  }catch(e){}
 	try{ el.contentWindow.print   = function(){};              }catch(e){}
 	
 	try{ if (el.contentWindow.frameElement      ) {

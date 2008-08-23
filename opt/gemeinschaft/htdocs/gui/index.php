@@ -56,7 +56,7 @@ define('GS_WEB_REWRITE',
 
 
 $GS_INSTALLATION_TYPE = gs_get_conf('GS_INSTALLATION_TYPE');
-if (in_array($GS_INSTALLATION_TYPE, array('gpbx', 'single'), true)) {
+if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	require_once( GS_DIR .'htdocs/gui/setup/inc/aux-fns.php' );
 	if (gs_setup_autoshow()) {
 		if (subStr($_SERVER['SERVER_PROTOCOL'],5) >= '1.1') {
@@ -93,7 +93,7 @@ if (in_array($GS_INSTALLATION_TYPE, array('gpbx', 'single'), true)) {
 
 
 include_once( GS_DIR .'inc/gettext.php' );
-require_once( GS_DIR .'htdocs/gui/inc/session.php' );
+require_once( GS_DIR .'htdocs/gui/inc/session.php' );  # defines $DB
 require_once( GS_HTDOCS_DIR .'inc/modules.php' );
 
 
@@ -106,18 +106,173 @@ if (isSet( $_REQUEST['s'] )) {
 	$SECTION = 'home';
 	$MODULE  = '';
 }
-if (preg_match('/[^a-z0-9\\-_]/', $SECTION.$MODULE))
+if (preg_match('/[^a-z0-9\\-_]/', $SECTION.$MODULE)) {
 	_not_found();
+}
+
+
+# BOI menu
+#
+$boi_menu_error_msg = false;
+if (gs_get_conf('GS_BOI_ENABLED')
+&&  $_SESSION['sudo_user']['boi_host_id'] > 0
+&&  $SECTION !== 'logout')
+{
+	include_once( GS_DIR .'inc/boi-soap/boi-api.php' );
+	$api = gs_host_get_api( $_SESSION['sudo_user']['boi_host_id'] );
+	switch ($api) {
+		case 'm01':
+		case 'm02':
+			$menu = false;
+			
+			$boi_soap_role = preg_replace('/^boi-/', '', $_SESSION['sudo_user']['boi_role']);
+			$boi_soap_ext =
+				in_array($_SESSION['sudo_user']['boi_role'], array('gs', 'boi-user'))
+				? $_SESSION['sudo_user']['info']['ext']
+				: '';
+			
+			if ($boi_soap_ext != '') {
+				$hp_route_prefix = (string)$DB->executeGetOne(
+					'SELECT `value` FROM `host_params` '.
+					'WHERE '.
+						'`host_id`='. (int)$_SESSION['sudo_user']['boi_host_id'] .' AND '.
+						'`param`=\'route_prefix\''
+					);
+				$sub_ext = (subStr($boi_soap_ext,0,strLen($hp_route_prefix)) === $hp_route_prefix)
+					? subStr($boi_soap_ext, strLen($hp_route_prefix)) : $boi_soap_ext;
+				gs_log( GS_LOG_DEBUG, "Mapping ext. $boi_soap_ext to $sub_ext for SOAP call" );
+				$boi_soap_ext = $sub_ext;
+				unset($sub_ext);
+			}
+			
+			$boi_menu_key =
+				$api .'-'.
+				$boi_soap_role .'-'.
+				@$_SESSION['sudo_user']['boi_host'] .'-'.
+				//@$_SESSION['sudo_user']['name'] .'-'.
+				$boi_soap_ext;
+			if (array_key_exists('boi_menu_cache', $_SESSION['sudo_user'])
+			&&  is_array($_SESSION['sudo_user']['boi_menu_cache'])
+			&&  $_SESSION['sudo_user']['boi_menu_cache']['key'] === $boi_menu_key
+			&&  $_SESSION['sudo_user']['boi_menu_cache']['expires'] > time()
+			) {
+				gs_log( GS_LOG_DEBUG, 'Using BOI menu "'.$boi_menu_key.'" from cache (expires in '. ($_SESSION['sudo_user']['boi_menu_cache']['expires'] - time()) .' s)' );
+				$menu = $_SESSION['sudo_user']['boi_menu_cache']['menu'];
+				if ($_SESSION['sudo_user']['boi_menu_cache']['expires'] > time()+180) {
+					$_SESSION['sudo_user']['boi_menu_cache']['expires'] = time()+180;
+				}
+			}
+			else {
+				//gs_log( GS_LOG_DEBUG, 'BOI menu "'.$boi_menu_key.'" not cached' );
+				
+				//if (! class_exists('SoapClient')) {
+				if (! extension_loaded('soap')) {
+					$boi_menu_error_msg = 'Fehler beim Abfragen des Men&uuml;s der Agentur.';
+				} else {
+					include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
+					
+					$soap_faultcode = null;
+					if ($_SESSION['sudo_user']['boi_session'] === null) {
+						# start a new session at the branch office PBX
+						$_SESSION['sudo_user']['boi_session']
+							= gs_boi_start_gui_session(
+								$api,
+								$_SESSION['sudo_user']['boi_host'],
+								$boi_soap_role,
+								$boi_soap_ext,
+								$soap_faultcode  # by reference
+								);
+						if (! $_SESSION['sudo_user']['boi_session'])
+							$_SESSION['sudo_user']['boi_session'] = null;
+					}
+					
+					if ($soap_faultcode === 'HTTP') {
+						gs_log( GS_LOG_DEBUG, 'Skipping SOAP call to get menu. Server not reachable.' );
+					} else {
+						$menu = @gs_boi_get_gui_menu(
+							$api,
+							$_SESSION['sudo_user']['boi_host'],
+							$boi_soap_role,
+							$boi_soap_ext,
+							$_SESSION['sudo_user']['boi_session']
+							);
+					}
+					unset($soap_faultcode);
+				}
+				
+				$expires = ($boi_menu_error_msg === false ? 180 : 50);
+				gs_log( GS_LOG_DEBUG, 'Caching BOI menu "'.$boi_menu_key.'" (expires in '.$expires.' s)' );
+				$_SESSION['sudo_user']['boi_menu_cache'] = array(
+					'key'     => $boi_menu_key,
+					'expires' => time()+$expires,
+					'menu'    => $menu
+				);
+				unset($expires);
+			}
+			unset($boi_soap_role);
+			unset($boi_soap_ext);
+			//unset($boi_menu_key);
+			
+			if (! is_array($menu)) {
+				if ($boi_menu_error_msg === false) {
+					$boi_menu_error_msg = 'Fehler beim Abfragen des Men&uuml;s der Agentur.';
+				}
+			} else {
+				/*
+				$MODULES['boi-diallog'] = array(
+					'is_boi'=> true,
+					'title' => 'Anruflisten',
+					'icon'  => 'crystal-svg/%s/act/misc.png',
+					'sub'   => array(
+						'in' => array('title'=>'eingehend'),
+						'out' => array('title'=>'ausgehend')
+					)
+				);
+				$MODULES['boi-help'] = array(
+					'is_boi'=> true,
+					'title' => 'Hilfe',
+					'icon'  => 'crystal-svg/%s/act/misc.png',
+					'sub'   => array(
+						'snom' => array('title'=>'Snom'),
+						'os' => array('title'=>'OpenStage')
+					)
+				);
+				*/
+				$MODULES = array_merge($MODULES, $menu);
+			}
+			unset($menu);
+			break;
+		
+		case '':
+			# host does not provide any API
+			break;
+		
+		default:
+			gs_log( GS_LOG_WARNING, 'Invalid API "'.$api.'" for host '. $_SESSION['sudo_user']['boi_host'] );
+			$boi_menu_error_msg = 'Fehler beim Abfragen des Men&uuml;s der Agentur.';
+	}
+}
+
+
+# get section & module
+#
 if (! array_key_exists($SECTION, $MODULES)
 ||  ! array_key_exists('sub', $MODULES[$SECTION]))
-	_not_found();
+{
+	//_not_found();
+	$SECTION = 'home';
+	$MODULE  = '';
+}
 
 if (count( $MODULES[$SECTION]['sub'] ) < 2 || ! $MODULE) {
 	list($k,$v) = each( $MODULES[$SECTION]['sub'] );
 	$MODULE = $k;
 }
-if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub']))
-	_not_found();
+if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub'])) {
+	//_not_found();
+	$SECTION = 'home';
+	$MODULE  = '';
+}
 
 if (@$MODULES[$SECTION]['perms'] === 'admin'
 &&  !(preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
@@ -126,7 +281,30 @@ if (@$MODULES[$SECTION]['perms'] === 'admin'
 	$SECTION = 'home';
 	$MODULE  = 'home';
 }
+if ($_SESSION['sudo_user']['boi_host_id'] > 0
+&&  $_SESSION['sudo_user']['boi_role'] !== 'gs'
+&&  array_key_exists('boi_ok', $MODULES[$SECTION])
+&&  $sectinfo['boi_ok'] == false) {
+	$SECTION = 'home';
+	$MODULE  = 'home';
+}
 
+if (@array_key_exists('is_boi', @$MODULES[$SECTION])
+&&  @$MODULES[$SECTION]['is_boi']) {
+	if (! headers_sent()) {
+		$etag = $boi_menu_key .'-'. $SECTION .'-'. $MODULE .'-'. date('YmdHi');
+		header( 'Pragma: no-cache' );
+		header( 'Cache-Control: private, must-revalidate' );
+		header( 'ETag: '. $etag );
+		if (array_key_exists('HTTP_IF_NONE_MATCH', $_SERVER)
+		&&  $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
+			header( 'HTTP/1.1 304 Not Modified', true, 304 );
+			header( 'Status: 304 Not Modified' , true, 304 );
+			gs_log( GS_LOG_DEBUG, "Page not modified ($etag)" );
+			exit(0);
+		}
+	}
+}
 
 
 function htmlEnt( $str )
@@ -189,6 +367,41 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/<?php echo rawUrlEncode($GUI_ADDITIONAL_STYLESHEET); ?>" />
 <?php } ?>
 <link rel="shortcut icon" type="image/x-icon" href="<?php echo GS_URL_PATH; ?>favicon.ico" />
+<?php
+	if (array_key_exists('is_boi', $MODULES[$SECTION])
+	&&  $MODULES[$SECTION]['is_boi'])
+	{
+		echo '<script type="text/javascript" src="', GS_URL_PATH ,'js/anti-xss.js"></script>', "\n";
+	}
+	
+	$reverse_proxy = gs_get_conf('GS_BOI_GUI_REVERSE_PROXY');
+	if (! preg_match('/^https?:\/\//', $reverse_proxy))
+		$reverse_proxy = 'http://'.$reverse_proxy;
+	if (subStr($reverse_proxy,-1) != '/')
+		$reverse_proxy.= '/';
+	
+	/*
+	if (gs_get_conf('GS_BOI_ENABLED')) {
+?>
+<script type="text/javascript">
+//<![CDATA[
+function gs_boi_menu_sc( url )
+{
+	if (document.getElementById) {
+		if ((ifrm = document.getElementById('boi-content'))) {
+			var src = '<?php echo htmlEnt($reverse_proxy); ?>' + 'http' +'/'+ '<?php echo $_SESSION['sudo_user']['boi_host']; ?>' + url + (url.indexOf('?')==-1 ? '?':'&amp;') + 'SESSID=' + '<?php echo $_SESSION['sudo_user']['boi_session']; ?>';
+			ifrm.src = src;
+			return false;
+		}
+	}
+	return true;
+}
+//]]>
+</script>
+<?php
+	}
+	*/
+?>
 <!-- for stupid MSIE: -->
 <!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/msie-fix-6.css" /><![endif]-->
 <!--[if gte IE 7]><link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/msie-fix-7.css" /><![endif]-->
@@ -222,7 +435,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <div class="tty"><a href="#a-content"><?php echo __('Navigation &uuml;berspringen'); /*//TRANSLATE ME*/ ?></a></div>
 
 <?php
-	if (@$_SESSION['login_ok']) {
+	if (@$_SESSION['login_ok'] && gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 		if (@$_SESSION['sudo_user']['name'] === 'sysadmin'
 		|| (@$_SESSION['sudo_user']['name'] != ''
 		&&  preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
@@ -265,6 +478,12 @@ foreach ($MODULES as $sectname => $sectinfo) {
 	&&  ! in_array($sectname, array('home','login'), true)) {
 		continue;
 	}
+	if ($_SESSION['sudo_user']['boi_host_id'] > 0
+	&&  $_SESSION['sudo_user']['boi_role'] !== 'gs'
+	&&  array_key_exists('boi_ok', $sectinfo)
+	&&  $sectinfo['boi_ok'] == false) {
+		continue;
+	}
 	
 	if (@$_SESSION['sudo_user']['name'] !== 'sysadmin') {
 		if (@$sectinfo['perms'] === 'admin' && (
@@ -292,8 +511,15 @@ foreach ($MODULES as $sectname => $sectinfo) {
 			if (array_key_exists('inmenu', $modinfo) && ! $modinfo['inmenu']) {
 				continue;
 			}
-			
-			echo '<li class="leaf"><a href="'. gs_url($sectname, $modname) .'" class="'. ($modname==$MODULE ? 'active' : '') .'"><img alt=" " src="', GS_URL_PATH, 'img/tree.gif" />'. $modinfo['title'] .'</a></li>', "\n";
+			echo '<li class="leaf"><a href="', gs_url($sectname, $modname) ,'" class="';
+			if ($modname == $MODULE) echo 'active';
+			echo '"';
+			/*
+			if (array_key_exists('boi_url', $modinfo)) {
+				echo ' onclick="try{ return gs_boi_menu_sc(\'', htmlEnt($modinfo['boi_url']) ,'\'); }catch(e){}"';
+			}
+			*/
+			echo '><img alt=" " src="', GS_URL_PATH ,'img/tree.gif" />', $modinfo['title'] ,'</a></li>', "\n";
 		}
 		echo '</ul>', "\n";
 	}
@@ -302,21 +528,28 @@ foreach ($MODULES as $sectname => $sectinfo) {
 
 ?>
 </ul>
+<?php
+if (gs_get_conf('GS_BOI_ENABLED') && $boi_menu_error_msg !== false) {
+	echo '<div class="errorbox" style="min-width:auto; max-width:90%; margin:1.5em auto; padding:3px; font-size:95%; line-height:120%;">', ($boi_menu_error_msg) ,'</div>' ,"\n";
+	unset($boi_menu_error_msg);
+}
+?>
 </div>
 </div>
 
 <div id="content-container">
 <div id="sudo-bar">
-<div id="sudo-info"><?php
+<div id="sudo-info">
+<?php
 	
 	if (@$_SESSION['login_ok']) {
 		if (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name']) {
-			echo __('Angemeldet'), ': <span class="user-name"><b>', htmlEnt(
+			echo __('Angemeldet'), ': <span class="user-name nobr"><b>', htmlEnt(
 				@$_SESSION['real_user']['info']['firstname'] .' '.
 				@$_SESSION['real_user']['info']['lastname']
 		), '</b></span>';
 		} else {
-			echo __('Angemeldet'), ': <span class="user-name">', htmlEnt(
+			echo __('Angemeldet'), ': <span class="user-name nobr">', htmlEnt(
 				$_SESSION['real_user']['info']['firstname'] .' '.
 				$_SESSION['real_user']['info']['lastname']
 			), '</span> &nbsp;&nbsp; ', __('Als'), ': <span class="user-name"><b>', htmlEnt(
@@ -329,18 +562,143 @@ foreach ($MODULES as $sectname => $sectinfo) {
 	}
 
 ?></div>
-<?php if (@$_SESSION['login_ok']) { ?>
-<form id="sudo-form" method="get" action="<?php echo GS_URL_PATH; ?>" enctype="application/x-www-form-urlencoded">
-<input type="hidden" name="s" value="<?php echo $SECTION; ?>" />
-<input type="hidden" name="m" value="<?php echo $MODULE; ?>" />
-<?php echo __('Benutzer wechseln'), ': '; ?>
-<input type="text" size="15" maxlength="30" id="sudo-user" name="sudo" value="<?php echo @$_SESSION['sudo_user']['name']; ?>" tabindex="100" />
-</form>
-<?php } ?>
+<?php
+	if (@$_SESSION['login_ok']) {
+		echo '<form id="sudo-form" method="get" action="', GS_URL_PATH ,'" enctype="application/x-www-form-urlencoded">' ,"\n";
+		echo '<input type="hidden" name="s" value="', $SECTION ,'" />' ,"\n";
+		echo '<input type="hidden" name="m" value="', $MODULE ,'" />' ,"\n";
+		if (! gs_get_conf('GS_BOI_ENABLED')) {
+			
+			echo __('Benutzer wechseln') ,': ';
+			echo '<input type="text" size="15" maxlength="30" id="sudo-user" name="sudo" value="', @$_SESSION['sudo_user']['name'] ,'" tabindex="100" />' ,"\n";
+			
+		} else {
+			
+			/*
+			$db_slave = gs_db_slave_connect();
+			if (! $db_slave) {
+				echo 'Could not connect to DB.';
+				return;
+			}
+			*/
+			
+			echo '<div class="nobr fr">' ,"\n";
+			echo ' &nbsp;<button type="submit">&rarr;</button>';
+			echo '</div>' ,"\n";
+			
+			echo '<div class="nobr fr">' ,"\n";
+			echo ' &nbsp;&nbsp; ', __('Benutzer') ,': ';
+			echo '<input type="text" size="10" maxlength="30" id="sudo-user" name="sudo" value="', @$_SESSION['sudo_user']['name'] ,'" tabindex="102" />' ,"\n";
+			echo '</div>' ,"\n";
+			
+			$roles = array();
+			if ($_SESSION['real_user']['name'] === 'sysadmin'
+			||  preg_match('/\\b'.($_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) {
+				$roles = array(
+					'gs'             => __('Zentrale'),
+					'boi-user'       => __('Agentur-Benutzer'),
+					'boi-localadmin' => __('Agentur-Admin'),
+					'boi-sysadmin'   => __('Agentur-Sysadmin')
+				);
+			} else {
+				if (! $_SESSION['real_user']['info']['host_is_foreign']) {
+					$roles['gs'] = __('Zentrale');
+				} else {
+					$roles['boi-user'] = __('Agentur-Benutzer');
+					if (true) {  //FIXME
+						$roles['boi-localadmin'] = __('Agentur-Admin');
+						$roles['boi-sysadmin'  ] = __('Agentur-Sysadmin');
+					}
+				}
+			}
+			echo '<div class="nobr fr">' ,"\n";
+			echo ' &nbsp;&nbsp; ', __('Rolle') ,':',"\n";
+			echo '<select name="boi_role" tabindex="101" onchange="this.form.submit();">' ,"\n";
+			foreach ($roles as $role => $title) {
+				echo '<option value="',$role ,'"';
+				if ($role === $_SESSION['sudo_user']['boi_role'])
+					echo ' selected="selected"';
+				echo '>', $title ,'</option>' ,"\n";
+			}
+			echo '</select>' ,"\n";
+			echo '</div>' ,"\n";
+			
+			echo '<div class="nobr fr">' ,"\n";
+			if ($_SESSION['real_user']['name'] === 'sysadmin'
+			||  preg_match('/\\b'.($_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) {
+				$query =
+'(SELECT 0 `id`, \''. $DB->escape(__('Zentrale')) .'\' `comment`, 0 `ord`
+)
+UNION
+(SELECT `id`, `comment`, 1 `ord`
+FROM `hosts`
+WHERE `is_foreign`=1
+)
+ORDER BY `ord`, `comment`'
+				;
+			} else {
+				if (! $_SESSION['real_user']['info']['host_is_foreign']) {
+					$query =
+'(SELECT 0 `id`, \''. $DB->escape(__('Zentrale')) .'\' `comment`, 0 `ord`
+)
+UNION
+(SELECT `h`.`id`, `h`.`comment`, 1 `ord`
+FROM
+	`hosts` `h` JOIN
+	`boi_perms` `p` ON (`p`.`host_id`=`h`.`id`)
+WHERE
+	`p`.`user_id`='. (int)$_SESSION['real_user']['info']['id'] .' AND
+	`h`.`is_foreign`=1 AND
+	`p`.`roles`<>\'\'
+)
+ORDER BY `ord`, `comment`'
+					;
+				} else {
+					$query =
+'(SELECT `h`.`id`, `h`.`comment`, 0 `ord`
+FROM `hosts` `h`
+WHERE `h`.`id`='. (int)$_SESSION['real_user']['info']['host_id'] .'
+)
+UNION
+(SELECT `h`.`id`, `h`.`comment`, 1 `ord`
+FROM
+	`hosts` `h` JOIN
+	`boi_perms` `p` ON (`p`.`host_id`=`h`.`id`)
+WHERE
+	`p`.`user_id`='. (int)$_SESSION['real_user']['info']['id'] .' AND
+	`h`.`is_foreign`=1 AND
+	`p`.`roles`<>\'\'
+)
+ORDER BY `ord`, `comment`'
+					;
+				}
+			}
+			$rs = $DB->execute($query);
+			echo ' &nbsp;&nbsp; ', __('Registrar') ,':',"\n";
+			echo '<select name="boi_host_id" tabindex="100" onchange="this.form.submit();">' ,"\n";
+			while ($r = $rs->fetchRow()) {
+				echo '<option value="',$r['id'],'"';
+				if ($r['id'] === $_SESSION['sudo_user']['boi_host_id']) {
+					echo ' selected="selected"';
+				}
+				echo '>', htmlEnt(mb_subStr($r['comment'],0,20));
+				if ($r['id'] === $_SESSION['real_user']['info']['host_id']
+				||  (! $_SESSION['real_user']['info']['host_is_foreign'] && $r['id'] === 0)
+				) {
+					echo ' &bull;';
+				}
+				echo '</option>' ,"\n";
+			}
+			echo '</select>' ,"\n";
+			echo '</div>' ,"\n";
+			
+		}
+		echo '</form>' ,"\n";
+	}
+?>
 <br style="float:none; clear:right;" />
 </div>
 
-<div id="content">
 <hr class="tty" width="50%" align="left" />
 <a name="a-content" id="a-content" class="tty"></a>
 
@@ -352,16 +710,43 @@ if (!@$_SESSION['login_ok']) {
 	$MODULE  = 'login';
 }
 
-$file = GS_HTDOCS_DIR .'mod/'. $SECTION .'_'. $MODULE .'.php';
-if (file_exists( $file )) {
-	include $file;
-} else {
-	echo 'Error. Module &quot;'. $SECTION .'_'. $MODULE .'&quot; is missing.';
+if (! array_key_exists('is_boi', $MODULES[$SECTION])
+||  ! $MODULES[$SECTION]['is_boi'])
+{
+	echo '<div id="content">' ,"\n";
+	$file = GS_HTDOCS_DIR .'mod/'. $SECTION .'_'. $MODULE .'.php';
+	if (file_exists( $file )) {
+		include $file;
+	} else {
+		echo 'Error. Module &quot;'. $SECTION .'_'. $MODULE .'&quot; is missing.';
+	}
+	echo '</div>' ,"\n";
+}
+else {
+	echo '<div style="width:auto; margin-left:170px; padding:0; position:relative; top:0; left:0;">' ,"\n";
+	if (! @array_key_exists('boi_url', @$MODULES[$SECTION]['sub'][$MODULE])) {
+		echo 'Error.';
+	} else {
+		echo '<iframe id="boi-content" src="';
+		
+		echo $reverse_proxy;
+		unset($reverse_proxy);
+		
+		echo 'http' ,'/', $_SESSION['sudo_user']['boi_host'];
+		echo htmlEnt($MODULES[$SECTION]['sub'][$MODULE]['boi_url']);
+		
+		echo (strPos($MODULES[$SECTION]['sub'][$MODULE]['boi_url'], '?') === false)
+			? '?':'&amp;';
+		echo 'SESSID=', htmlEnt(@$_SESSION['sudo_user']['boi_session']);
+		
+		echo '" style="width:100%; position:absolute; left:0; top:0; margin:0; padding:0; border-width:1px 0 0 0; border-style:solid none none none; border-color:#99f transparent transparent #eef; background:transparent; min-height:370px; height:100em;"></iframe>' ,"\n";
+	}
+	echo '</div>' ,"\n";
+	echo '<script type="text/javascript">try {gs_sandbox_iframe("boi-content");} catch(e){}</script>' ,"\n";
 }
 
 ?>
 
-</div>
 </div>
 
 <div class="nofloat"></div>

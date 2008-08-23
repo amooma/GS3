@@ -33,7 +33,7 @@ input[type="checkbox"]:disabled,
 button:disabled,
 select:disabled,
 textarea:disabled {
-	color: #777;
+	color: #666;
 	/*background: #eee;*/
 	opacity: 0.8;
 }
@@ -81,7 +81,9 @@ table {
 	margin: 0 0 1px 0; padding: 0; border-width: 0;
 }
 
-small {
+small,
+.small
+{
 	font-size: 0.93em;
 	line-height: 1.2em;
 }
@@ -129,6 +131,22 @@ q:after  { content: close-quote; }
 .r {text-align: right;}
 .c {text-align: center;}
 
+.m,
+tr.m td,
+tr.m th {
+	vertical-align: middle;
+}
+.t,
+tr.t td,
+tr.t th {
+	vertical-align: top;
+}
+.b,
+tr.b td,
+tr.b th {
+	vertical-align: bottom;
+}
+
 .debug {
 	border: 2px dashed red !important;
 }
@@ -164,7 +182,7 @@ q:after  { content: close-quote; }
 
 code, tt, samp, kbd {
 	font-family: Courier, Monaco, monospace;
-	font-size: 1.13em;
+	font-size: 1.05em;
 }
 
 input._admincfg {
@@ -263,26 +281,27 @@ select {
 	padding: 3px 0 2px 0;
 	font-size: 0.92em;
 	color: #866;
+	margin-left: 170px;
 }
 #sudo-info .user-name {
 	color: #0a3;
 }
 #sudo-info {
 	float: left;
-	width: 40%;
+	width: 30%;
 	text-align: left;
 	padding: 0; margin: 0 0 0 2px;
 }
 #sudo-form {
 	float: right;
-	width: 30%;
+	width: 67%;
 	text-align: right;
-	padding: 0; margin: 0 3px 1px 0;
+	padding: 0; margin: 0 5px 1px 0;
 }
 #sudo-user {
 	border: 1px inset #fff;
 	margin: 0; padding: 1px 2px 0px 2px;
-	width: 118px;
+	/*width: 118px;*/
 	font-size: 0.92em;
 }
 

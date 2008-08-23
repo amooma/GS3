@@ -38,6 +38,8 @@ header( 'Vary: *' );
 
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
+require_once( GS_DIR .'inc/gs-lib.php' );
+require_once( GS_DIR .'inc/prov-fns.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 set_error_handler('err_handler_die_on_err');
 
@@ -71,7 +73,8 @@ function aastra_get_expansion_modules()
 }
 
 
-function aastra_keys_out( $user_id, $phone_model, $module=0 )
+/*
+function aastra_keys_out( $user_id, $phone_type, $module=0 )
 {
 	global $db;
 	
@@ -86,7 +89,7 @@ function aastra_keys_out( $user_id, $phone_model, $module=0 )
 FROM `softkeys`
 WHERE
 	`user_id`='. (int)$user_id. ' AND
-	`phone_type`=\''. $db->escape($phone_model). '\''.
+	`phone_type`=\''. $db->escape($phone_type). '\''.
 $module_sql;
 	
 	$rs = $db->execute( $query );
@@ -107,10 +110,16 @@ $module_sql;
 	
 	return true;
 }
+*/
 
 if (! gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Aastra provisioning not enabled" );
 	die( 'Not enabled.' );
+}
+
+$requester = gs_prov_check_trust_requester();
+if (! $requester['allowed']) {
+	die( 'No! See log for details.' );
 }
 
 $mac = preg_replace( '/[^0-9A-F]/', '', strToUpper( @$_REQUEST['mac'] ) );
@@ -141,14 +150,14 @@ if (subStr($mac,0,6) !== '00085D') {
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 //FIXME - do some more checks here
 
-gs_log( GS_LOG_DEBUG, "Aastra phone \"$mac\" asks for settings (UA: ...\"$ua\") " );
-
 $ua_arr = explode(' ', $ua);
-$phone_type = str_replace('Aastra', '', $ua_arr[0]);  //FIXME
-if ($phone_type === @$ua_arr[0]) $phone_type = '57i';
-$newPhoneType = 'aastra-'. $phone_type;
+$phone_model = str_replace('Aastra', '', $ua_arr[0]);  //FIXME
+if ($phone_model === @$ua_arr[0]) $phone_model = '57i';
+$phone_type = 'aastra-'.$phone_model;
 
-$prov_url_aastra = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'aastra/';
+gs_log( GS_LOG_DEBUG, "Aastra phone \"$mac\" asks for settings (UA: ...\"$ua\") - model $phone_model" );
+
+$prov_url_aastra = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'aastra/';
 
 require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/nobody-extensions.php' );
@@ -160,158 +169,89 @@ if (! $db) {
 	die( 'Could not connect to DB.' );
 }
 
+
 # do we know the phone?
 #
-
-$query =
-'SELECT `user_id`
-FROM `phones`
-WHERE `mac_addr`=\''. $mac .'\'
-ORDER BY `id` LIMIT 1';
-$rs = $db->execute( $query );
-$r = $rs->fetchRow();
-if ($r) {
-	$user_id = (int)$r['user_id'];
-} else {
+$user_id = @gs_prov_user_id_by_mac_addr( $db, $mac );
+if ($user_id < 1) {
 	if (! GS_PROV_AUTO_ADD_PHONE) {
-		gs_log( GS_LOG_NOTICE, "Unknown Aastra phone \"$mac\" not added to DB" );
-		die( 'Unknown phone. (Set GS_PROV_AUTO_ADD_PHONE = true in order to auto-add)' );
+		gs_log( GS_LOG_NOTICE, "New phone $mac not added to DB. Enable PROV_AUTO_ADD_PHONE" );
+		die( 'Unknown phone. (Enable PROV_AUTO_ADD_PHONE in order to auto-add)' );
 	}
 	gs_log( GS_LOG_NOTICE, "Adding new Aastra phone $mac to DB" );
 	
-	# add a nobody user:
-	#
-	$newNobodyIndex = (int)( (int)$db->executeGetOne( 'SELECT MAX(`nobody_index`) FROM `users`' ) + 1 );
-	$user_code = 'nobody-'. str_pad($newNobodyIndex, 5, '0', STR_PAD_LEFT);
-	switch (GS_PROV_AUTO_ADD_PHONE_HOST) {
-		case 'last':
-			$host_id_sql = 'SELECT MAX(`id`) FROM `hosts`'; break;
-		case 'random':
-			$host_id_sql = 'SELECT `id` FROM `hosts` ORDER BY RAND() LIMIT 1'; break;
-		case 'first':
-		default:
-			$host_id_sql = 'SELECT MIN(`id`) FROM `hosts`'; break;
+	$user_id = @gs_prov_add_phone_get_nobody_user_id( $db, $mac, $phone_type, $requester['phone_ip'] );
+	if ($user_id < 1) {
+		gs_log( GS_LOG_WARNING, "Failed to add nobody user for new phone $mac" );
+		die( 'Failed to add nobody user for new phone.' );
 	}
-	$db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `honorific`, `email`, `nobody_index`, `host_id`) VALUES (NULL, \''. $user_code .'\', \'\', \'\', \'\', \'\', \'\', '. $newNobodyIndex .', ('. $host_id_sql .'))' );
-	$user_id = (int)$db->getLastInsertId();
-	if ($user_id < 1) die( 'Unknown phone. Failed to add nobody user.' );
-	
-	# add a SIP account:
-	#
-	//$user_name = '9'. str_pad($newNobodyIndex, 5, '0', STR_PAD_LEFT);
-	$user_name = gs_nobody_index_to_extension( $newNobodyIndex );
-	$secret = rand(10000000,99999999) . mt_rand(10000000,99999999) . rand(10000000,99999999);
-	$db->execute( 'INSERT INTO `ast_sipfriends` (`_user_id`, `name`, `secret`, `context`, `callerid`, `setvar`) VALUES ('. $user_id .', \''. $user_name .'\', \''. $db->escape($secret) .'\', \'from-internal-nobody\', _utf8\''. $db->escape(GS_NOBODY_CID_NAME . $newNobodyIndex) .' <'. $user_name .'>\', \'__user_id='. $user_id .';__user_name='. $user_name .'\')' );
-	
-	# add the phone:
-	#
-	$db->execute( 'INSERT INTO `phones` (`id`, `type`, `mac_addr`, `user_id`, `nobody_index`, `added`) VALUES (NULL, \''. $db->escape($newPhoneType) .'\', \''. $mac .'\', '. $user_id .', '. $newNobodyIndex .', '. time() .')' );
-	
-	unset($user_name);
 }
+
 
 # is it a valid user id?
 #
-
 $num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `id`='. $user_id );
 if ($num < 1)
 	$user_id = 0;
 
 if ($user_id < 1) {
 	# something bad happened, nobody (not even a nobody user) is logged
-	# in at that phone. assign an unused nobody user:
-	
-	$user_id = (int)$db->executeGetOne(
-'SELECT `u`.`id`
-FROM
-	`users` `u` JOIN
-	`phones` `p` ON (`p`.`nobody_index`=`u`.`nobody_index`)
-WHERE
-	`p`.`mac_addr`=\''. $mac .'\' AND
-	`p`.`nobody_index`>=1
-LIMIT 1'
-	);
+	# in at that phone. assign the default nobody user of the phone:
+	$user_id = @gs_prov_assign_default_nobody( $db, $mac, null );
 	if ($user_id < 1) {
-		$user_id = (int)$db->executeGetOne(
-'SELECT `id`
-FROM `users`
-WHERE
-	`nobody_index` IS NOT NULL AND
-	`id` NOT IN (SELECT `user_id` FROM `phones` WHERE `user_id` IS NOT NULL)
-ORDER BY RAND() LIMIT 1'
-	);
-		if ($user_id < 1)
-			die( 'No unused nobody accounts left.' );
+		die( 'Failed to assign nobody account to phone '. $mac );
 	}
-	$ok = $db->execute( 'UPDATE `phones` SET `user_id`='. $user_id .' WHERE `mac_addr`=\''. $mac .'\' LIMIT 1'  );
-	if (! $ok) die( 'DB error.' );
-	$rs = $db->execute( $query );
-	$r = $rs->fetchRow();
-	if (! $r) die( 'Failed to assign nobody account to phone "'. $mac .'".' );
-	$user_id = (int)$r['user_id'];
 }
-if ($user_id < 1) die( 'DB error.' );
 
-# if no host specified, select one (randomly?)
+
+# get host for user
 #
-
-$host = $db->executeGetOne(
-'SELECT `h`.`host`
-FROM
-	`users` `u` LEFT JOIN
-	`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
-WHERE `u`.`id`='. $user_id .'
-LIMIT 1'
-	);
-
+$host = @gs_prov_get_host_for_user_id( $db, $user_id );
 if (! $host) {
-	$rs = $db->execute( 'SELECT `host` FROM `hosts` ORDER BY RAND() LIMIT 1' );
-	$r = $rs->fetchRow();
-	if (! $r)
-		die( 'No hosts known.' );
-	
-	$host = trim( $r['host'] );
+	die( 'Failed to find host.' );
 }
+$pbx = $host;  # $host might be changed if SBC configured
+
 
 # who is logged in at that phone?
 #
-
-$rs = $db->execute(
-'SELECT
-	`u`.`user`, `u`.`firstname`, `u`.`lastname`, `u`.`honorific`,
-	`s`.`name`, `s`.`secret`, `s`.`callerid`, `s`.`mailbox`
-FROM
-	`users` `u` JOIN
-	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-WHERE `u`.`id`='. $user_id
-);
-$user = $rs->fetchRow();
-if (! $user) {
+$user = @gs_prov_get_user_info( $db, $user_id );
+if (! is_array($user)) {
 	die( 'DB error.' );
 }
 
-# get the IP address of the phone:
-#
-$phoneIP = @ normalizeIPs( @$_SERVER['REMOTE_ADDR'] );
-/*
-//FIXME - we should add a setting AASTRA_PROV_TRUST_PROXIES = '192.168.1.7, 192.168.1.8'
-if (isSet( $_SERVER['HTTP_X_FORWARDED_FOR'] )) {
-	if (preg_match( '/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', lTrim( $_SERVER['HTTP_X_FORWARDED_FOR'] ), $m ))
-		$phoneIP = isSet( $m[0] ) ? @ normalizeIPs( $m[0] ) : null;
-}
-if (isSet( $_SERVER['HTTP_X_REAL_IP'] )) {
-	if (preg_match( '/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', lTrim( $_SERVER['HTTP_X_REAL_IP'] ), $m ))
-		$phoneIP = isSet( $m[0] ) ? @ normalizeIPs( $m[0] ) : null;
-}
-*/
 
-if ($phoneIP) {
-	# unset all IP addresses which are the same as the new one and
-	# thus cannot be valid any longer:
-	$db->execute( 'UPDATE `users` SET `current_ip`=NULL WHERE `current_ip`=\''. $db->escape($phoneIP) .'\'' );
+# store the user's current IP address in the database:
+#
+if (! @gs_prov_update_user_ip( $db, $user_id, $requester['phone_ip'] )) {
+	gs_log( GS_LOG_WARNING, 'Failed to store current IP addr of user ID '. $user_id );
 }
-# store new IP address:
-$db->execute( 'UPDATE `users` SET `current_ip`='. ($phoneIP ? ('\''. $db->escape($phoneIP) .'\'') : 'NULL') .' WHERE `id`='. $user_id );
+
+
+# get SIP proxy to be set as the phone's outbound proxy
+#
+$sip_proxy_and_sbc = gs_prov_get_wan_outbound_proxy( $db, $requester['phone_ip'], $user_id );
+if ($sip_proxy_and_sbc['sip_server_from_wan'] != '') {
+	$host = $sip_proxy_and_sbc['sip_server_from_wan'];
+}
+
+
+# get extension without route prefix
+#
+if (gs_get_conf('GS_BOI_ENABLED')) {
+	$hp_route_prefix = (string)$DBM->executeGetOne(
+		'SELECT `value` FROM `host_params` '.
+		'WHERE '.
+			'`host_id`='. (int)$user['host_id'] .' AND '.
+			'`param`=\'route_prefix\''
+		);
+	$user_ext = (subStr($user['name'],0,strLen($hp_route_prefix)) === $hp_route_prefix)
+		? subStr($user['name'], strLen($hp_route_prefix)) : $user['name'];
+		gs_log( GS_LOG_DEBUG, "Mapping ext. ". $user['name'] ." to $user_ext for provisioning - route_prefix: $hp_route_prefix, host id: ". $user['host_id'] );
+} else {
+	$user_ext = $user['name'];
+}
+
 
 
 ob_start();
@@ -325,6 +265,7 @@ psetting('xml application post list', GS_PROV_HOST);
 psetting('services script'    , $prov_url_aastra.'pb.php');
 psetting('callers list script', $prov_url_aastra.'dial-log.php');
 
+/* //FIXME
 psetting('softkey1 type'      , 'xml');
 psetting('softkey1 label'     , __('Tel.buch'));
 psetting('softkey1 value'     , $prov_url_aastra.'pb.php');
@@ -332,32 +273,81 @@ psetting('softkey1 value'     , $prov_url_aastra.'pb.php');
 psetting('softkey2 type'      , 'xml');
 psetting('softkey2 label'     , __('Anrufliste'));
 psetting('softkey2 value'     , $prov_url_aastra.'dial-log.php');
+*/
 
 
 # get softkeys
-aastra_keys_out( $user_id, $newPhoneType );
+//aastra_keys_out( $user_id, $phone_type );
 
 # get softkeys on expansion modules
+/*  //FIXME
 $exp_mods = aastra_get_expansion_modules();
 foreach ($exp_mods as $key => $exp_mod) {
 	aastra_keys_out( $user_id, $exp_mod, ($key+1));
 }
+*/
 
+
+
+#####################################################################
+#  SIP
+#####################################################################
 
 psetting('sip mode'                , '0');  # ?
-psetting('sip screen name'         , $user['name'] .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
+psetting('sip screen name'         , $user_ext .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
 psetting('sip display name'        , $user['firstname'].' '.$user['lastname']);
-psetting('sip user name'           , $user['name']);
-psetting('sip vmail'               , $user['mailbox']);
-psetting('sip auth name'           , $user['name']);
+psetting('sip user name'           , $user_ext);
+psetting('sip vmail'               , 'voicemail');
+psetting('sip auth name'           , $user_ext);
 psetting('sip password'            , $user['secret']);
 psetting('sip registrar ip'        , $host);
 psetting('sip registrar port'      , '5060');
 psetting('sip registration period' , '3600');
-psetting('sip outbound proxy'      , $host);
+psetting('sip outbound proxy'      , ($sip_proxy_and_sbc['sip_proxy_from_wan'] != '' ? $sip_proxy_and_sbc['sip_proxy_from_wan'] : $host) );
 psetting('sip outbound proxy port' , '5060');
 
 
+
+#####################################################################
+#  Override provisioning parameters
+#####################################################################
+
+$prov_params = null;
+$GS_ProvParams = gs_get_prov_params_obj( $phone_type );
+if ($GS_ProvParams->set_user( $user['user'] )) {
+	if ($GS_ProvParams->retrieve_params( $phone_type, array(
+		'{GS_PROV_HOST}'      => gs_get_conf('GS_PROV_HOST'),
+		'{GS_P_PBX}'          => $pbx,
+		'{GS_P_EXTEN}'        => $user_ext,
+		'{GS_P_ROUTE_PREFIX}' => $hp_route_prefix,
+		'{GS_P_USER}'         => $user['user']
+	) )) {
+		$prov_params = $GS_ProvParams->get_params();
+	}
+}
+if (! is_array($prov_params)) {
+	gs_log( GS_LOG_WARNING, 'Failed to get provisioning parameters' );
+} else {
+	foreach ($prov_params as $param_name => $param_arr) {
+	foreach ($param_arr as $param_index => $param_value) {
+		if ($param_index == -1) {
+			# not an array
+			gs_log( GS_LOG_DEBUG, "Overriding prov. param \"$param_name\": \"$param_value\"" );
+			setting( $param_name, null        , $param_value );
+		} else {
+			# array
+			gs_log( GS_LOG_DEBUG, "Overriding prov. param \"$param_name\"[$param_index]: \"$param_value\"" );
+			setting( $param_name, $param_index, $param_value );
+		}
+	}
+	}
+}
+
+
+
+#####################################################################
+#  output
+#####################################################################
 if (! headers_sent()) {
 	# avoid chunked transfer-encoding
 	header( 'Content-Length: '. @ob_get_length() );

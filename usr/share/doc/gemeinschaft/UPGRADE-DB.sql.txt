@@ -1,0 +1,380 @@
+-- ------------------------------------------------------------------
+-- CHANGES TO THE DATABASE
+-- $Revision$
+-- ------------------------------------------------------------------
+
+
+--
+-- since rev. 3968
+--
+
+
+--
+-- Create new table `boi_perms`:
+--
+
+CREATE TABLE IF NOT EXISTS `boi_perms` (
+  `user_id` int(10) unsigned NOT NULL,
+  `host_id` mediumint(8) unsigned NOT NULL,
+  `roles` varchar(8) character set ascii NOT NULL,
+  PRIMARY KEY  (`user_id`,`host_id`),
+  UNIQUE KEY `host_user` (`host_id`,`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Modify `host` column in table `hosts`:
+--
+
+ALTER TABLE `hosts`
+  CHANGE `host` `host` VARCHAR(15) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL;
+
+
+--
+-- Add new column `is_foreign` in table `hosts`:
+--
+
+ALTER TABLE `hosts` ADD
+  `is_foreign` TINYINT(1) UNSIGNED NOT NULL default '0' AFTER `comment`;
+ALTER TABLE `hosts` ADD
+  INDEX `is_foreign_id` (`is_foreign`,`id`);
+ALTER TABLE `hosts` ADD
+  INDEX `is_foreign_host` (`is_foreign`,`host`);
+
+
+--
+-- Add index for column `comment` in table `hosts`:
+--
+
+ALTER TABLE `hosts` ADD
+  INDEX `comment` (`comment`(20));
+ALTER TABLE `hosts` ADD
+  INDEX `foreign_comment` (`is_foreign`,`comment`(20));
+
+
+--
+-- Add new column `group_id` in table `hosts`:
+--
+
+ALTER TABLE `hosts` ADD
+  `group_id` MEDIUMINT(8) UNSIGNED NOT NULL default '0' AFTER `is_foreign`;
+ALTER TABLE `hosts` ADD
+  INDEX `group_id` (`group_id`);
+
+
+--
+-- Create new table `softkey_profiles`:
+--
+
+CREATE TABLE IF NOT EXISTS `softkey_profiles` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `is_user_profile` tinyint(1) unsigned NOT NULL default '0',
+  `title` varchar(50) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `title` (`title`(45)),
+  KEY `is_user_profile_title` (`is_user_profile`,`title`(45))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Create new table `softkeys`:
+--
+
+-- Old structure was:
+-- CREATE TABLE IF NOT EXISTS `softkeys` (
+--   `user_id` int(10) unsigned NOT NULL default '0',
+--   `phone` varchar(20) NOT NULL default '',
+--   `key` varchar(10) NOT NULL default '',
+--   `number` varchar(30) NOT NULL default '',
+--   PRIMARY KEY  (`user_id`,`phone`,`key`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
+
+DROP TABLE IF EXISTS `softkeys`;
+CREATE TABLE IF NOT EXISTS `softkeys` (
+  `profile_id` int(10) unsigned NOT NULL default '0',
+  `phone_type` varchar(20) NOT NULL,
+  `key` varchar(10) NOT NULL,
+  `function` varchar(15) NOT NULL,
+  `data` varchar(100) NOT NULL,
+  `label` varchar(40) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `user_writeable` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`profile_id`,`phone_type`,`key`),
+  KEY `phone_type_key` (`phone_type`,`key`),
+  KEY `phone_type_function` (`phone_type`,`function`)
+) ENGINE=InnoDB DEFAULT CHARSET=ascii;
+
+
+--
+-- Add new column `softkey_profile_id` in table `users`:
+--
+
+ALTER TABLE `users` ADD
+  `softkey_profile_id` INT(10) UNSIGNED default NULL AFTER `user_comment`;
+ALTER TABLE `users` ADD
+  INDEX `softkey_profile_id` (`softkey_profile_id`);
+
+
+--
+-- Create new table `user_groups`:
+--
+
+CREATE TABLE IF NOT EXISTS `user_groups` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `lft` mediumint(8) unsigned NOT NULL,
+  `rgt` mediumint(8) unsigned NOT NULL,
+  `name` varchar(20) character set ascii NOT NULL,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `softkey_profile_id` int(10) unsigned default NULL,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `lft` (`lft`),
+  UNIQUE KEY `rgt` (`rgt`),
+  KEY `softkey_profile_id` (`softkey_profile_id`),
+  KEY `title` (`title`(40)),
+  KEY `lft_rgt` (`lft`,`rgt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `user_groups` VALUES (1,1,2,'root-node','Root node',NULL,NULL);
+
+
+--
+-- Add new column `group_id` in table `users`:
+--
+
+ALTER TABLE `users` ADD
+  `group_id` MEDIUMINT(8) UNSIGNED default NULL AFTER `user_comment`;
+ALTER TABLE `users` ADD
+  INDEX `group_id` (`group_id`);
+
+
+--
+-- Change index `mac_addr` in table `phones` to a unique index:
+--
+
+ALTER TABLE `phones`
+  DROP INDEX `mac_addr`, ADD UNIQUE `mac_addr` (`mac_addr`);
+
+
+--
+-- Create new table `host_params`:
+--
+
+CREATE TABLE IF NOT EXISTS `host_params` (
+  `host_id` mediumint(8) unsigned NOT NULL,
+  `param` varchar(25) character set ascii NOT NULL,
+  `value` varchar(100) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`host_id`,`param`),
+  KEY `param_value` (`param`,`value`(20))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `host_params` (`host_id`, `param`, `value`)
+  (SELECT `id`, 'api', 'm01' FROM `hosts` WHERE `is_foreign`=1);
+
+
+--
+-- Create new table `prov_param_profiles`:
+--
+
+CREATE TABLE IF NOT EXISTS `prov_param_profiles` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `is_group_profile` tinyint(1) unsigned NOT NULL default '1',
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `is_group_profile_title` (`is_group_profile`,`title`(45)),
+  KEY `title` (`title`(45))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Create new table `prov_params`:
+--
+
+CREATE TABLE IF NOT EXISTS `prov_params` (
+  `profile_id` int(10) unsigned NOT NULL,
+  `phone_type` varchar(20) character set ascii NOT NULL,
+  `param` varchar(50) character set ascii NOT NULL,
+  `index` smallint(5) NOT NULL default '-1',
+  `value` varchar(100) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`profile_id`,`phone_type`,`param`,`index`),
+  KEY `phone_type_param_index` (`phone_type`,`param`,`index`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Add new column `prov_param_profile_id` in table `user_groups`:
+--
+
+ALTER TABLE `user_groups` ADD
+  `prov_param_profile_id` INT UNSIGNED NULL AFTER `softkey_profile_id`;
+ALTER TABLE `user_groups` ADD
+  INDEX `prov_param_profile_id` (`prov_param_profile_id`);
+
+
+--
+-- Create new view `ast_sipfriends_gs`:
+--
+
+/*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 CREATE ALGORITHM=MERGE */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `ast_sipfriends_gs` AS (
+  SELECT
+    `s`.`_user_id`, `s`.`name`, `s`.`secret`, `s`.`type`, `s`.`host`,
+    `s`.`defaultip`, `s`.`context`, `s`.`callerid`, `s`.`mailbox`,
+    `s`.`callgroup`, `s`.`pickupgroup`, `s`.`setvar`, `s`.`call-limit`,
+    `s`.`subscribecontext`, `s`.`regcontext`, `s`.`ipaddr`, `s`.`port`,
+    `s`.`regseconds`, `s`.`username`, `s`.`regserver`, `s`.`fullcontact`
+  FROM
+    `ast_sipfriends` `s` JOIN
+    `users` `u` ON (`u`.`id` = `s`.`_user_id`) JOIN
+    `hosts` `h` ON (`h`.`id` = `u`.`host_id`)
+  WHERE `h`.`is_foreign`=0
+) */
+/*!50002 WITH CASCADED CHECK OPTION */;
+
+
+--
+-- Add foreign key constraints (optional):
+--
+
+ALTER TABLE `ast_queue_members`
+  ADD CONSTRAINT `ast_queue_members_ibfk_1`
+  FOREIGN KEY (`_queue_id`) REFERENCES `ast_queues` (`_id`);
+ALTER TABLE `ast_queue_members`
+  ADD CONSTRAINT `ast_queue_members_ibfk_2`
+  FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `ast_queues`
+  ADD CONSTRAINT `ast_queues_ibfk_1`
+  FOREIGN KEY (`_host_id`) REFERENCES `hosts` (`id`);
+
+ALTER TABLE `ast_sipfriends`
+  ADD CONSTRAINT `ast_sipfriends_ibfk_1`
+  FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `ast_voicemail`
+  ADD CONSTRAINT `ast_voicemail_ibfk_1`
+  FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `boi_perms`
+  ADD CONSTRAINT `boi_perms_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+ALTER TABLE `boi_perms`
+  ADD CONSTRAINT `boi_perms_ibfk_2`
+  FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`);
+
+ALTER TABLE `callblocking`
+  ADD CONSTRAINT `callblocking_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `callforwards`
+  ADD CONSTRAINT `callforwards_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `callwaiting`
+  ADD CONSTRAINT `callwaiting_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `clir`
+  ADD CONSTRAINT `clir_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `conferences`
+  ADD CONSTRAINT `conferences_ibfk_1`
+  FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`);
+
+ALTER TABLE `dial_log`
+  ADD CONSTRAINT `dial_log_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `gates`
+  ADD CONSTRAINT `gates_ibfk_1`
+  FOREIGN KEY (`grp_id`) REFERENCES `gate_grps` (`id`);
+
+ALTER TABLE `host_params`
+  ADD CONSTRAINT `host_params_ibfk_1`
+  FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `instant_messaging`
+  ADD CONSTRAINT `instant_messaging_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `pb_prv`
+  ADD CONSTRAINT `pb_prv_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `phones`
+  ADD CONSTRAINT `phones_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `pickupgroups_users`
+  ADD CONSTRAINT `pickupgroups_users_ibfk_1`
+  FOREIGN KEY (`group_id`) REFERENCES `pickupgroups` (`id`);
+ALTER TABLE `pickupgroups_users`
+  ADD CONSTRAINT `pickupgroups_users_ibfk_2`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `prov_params`
+  ADD CONSTRAINT `prov_params_ibfk_1`
+  FOREIGN KEY (`profile_id`) REFERENCES `prov_param_profiles` (`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `queue_callforwards`
+  ADD CONSTRAINT `queue_callforwards_ibfk_1`
+  FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`);
+
+ALTER TABLE `queue_log`
+  ADD CONSTRAINT `queue_log_ibfk_1`
+  FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`);
+
+ALTER TABLE `ringtones`
+  ADD CONSTRAINT `ringtones_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `routes_in`
+  ADD CONSTRAINT `routes_in_ibfk_1`
+  FOREIGN KEY (`gate_grp_id`) REFERENCES `gate_grps` (`id`);
+
+ALTER TABLE `softkeys`
+  ADD CONSTRAINT `softkeys_ibfk_1`
+  FOREIGN KEY (`profile_id`) REFERENCES `softkey_profiles` (`id`);
+
+ALTER TABLE `user_groups`
+  ADD CONSTRAINT `user_groups_ibfk_6`
+  FOREIGN KEY (`prov_param_profile_id`) REFERENCES `prov_param_profiles` (`id`);
+ALTER TABLE `user_groups`
+  ADD CONSTRAINT `user_groups_ibfk_5`
+  FOREIGN KEY (`softkey_profile_id`) REFERENCES `softkey_profiles` (`id`);
+
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_4`
+  FOREIGN KEY (`softkey_profile_id`) REFERENCES `softkey_profiles` (`id`)
+  ON DELETE SET NULL ON UPDATE SET NULL;
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_2`
+  FOREIGN KEY (`group_id`) REFERENCES `user_groups` (`id`)
+  ON DELETE SET NULL ON UPDATE SET NULL;
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_3`
+  FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`);
+
+ALTER TABLE `users_external_numbers`
+  ADD CONSTRAINT `users_external_numbers_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `vm`
+  ADD CONSTRAINT `vm_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `vm_msgs`
+  ADD CONSTRAINT `vm_msgs_ibfk_1`
+  FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`);
+ALTER TABLE `vm_msgs`
+  ADD CONSTRAINT `vm_msgs_ibfk_2`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+
+
+

@@ -65,8 +65,7 @@ while ($r = $rs->fetchRow())
 if ($action == 'move-up' || $action == 'move-down') {
 	
 	if ($id > 0) {
-		if (gs_get_conf('GS_DB_MASTER_TRANSACTIONS'))
-			@$DB->startTrans();
+		gs_db_start_trans($DB);
 		$rs = $DB->execute( 'SELECT `id` FROM `routes_in` WHERE `gate_grp_id`='. $ggid .' ORDER BY `ord`' );
 		$ord = 4;
 		while ($r = $rs->fetchRow()) {
@@ -76,8 +75,7 @@ if ($action == 'move-up' || $action == 'move-down') {
 				$DB->execute( 'UPDATE `routes_in` SET `ord`='. ($ord + ($action=='move-up' ? -3 : 3)) .' WHERE `id`='. (int)$r['id'] );
 			$ord += 2;
 		}
-		if (gs_get_conf('GS_DB_MASTER_TRANSACTIONS'))
-			@$DB->completeTrans();
+		gs_db_commit_trans($DB);
 		
 		@$DB->execute( 'OPTIMIZE TABLE `routes_in`' );
 		@$DB->execute( 'ANALYZE TABLE `routes_in`' );
@@ -135,8 +133,7 @@ elseif ($action == 'save') {
 		if ($h_to < $h_from) $h_to = $h_from;
 		
 		if ($dbid<1) {
-			if (gs_get_conf('GS_DB_MASTER_TRANSACTIONS'))
-				@$DB->startTrans();
+			gs_db_start_trans($DB);
 			$ord = (int)$DB->executeGetOne( 'SELECT MAX(`ord`) FROM `routes_in`' ) + 1;
 		}
 		$query =
@@ -161,8 +158,7 @@ elseif ($action == 'save') {
 		;
 		$ok = $DB->execute($query);
 		if ($dbid<1) {
-			if (gs_get_conf('GS_DB_MASTER_TRANSACTIONS'))
-				@$DB->completeTrans();
+			gs_db_commit_trans($DB);
 		}
 	}
 	

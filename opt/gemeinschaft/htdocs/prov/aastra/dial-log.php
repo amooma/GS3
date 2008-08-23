@@ -72,7 +72,7 @@ $typeToTitle = array(
 $user_id = _get_userid();
 
 
-$url_aastra_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)). GS_PROV_PATH .'aastra/dial-log.php';
+$url_aastra_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'aastra/dial-log.php';
 
 
 if (! $type) {

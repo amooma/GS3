@@ -56,7 +56,7 @@ Siehe auch session.php gs_legacy_user_map()
 // /etc/gemeinschaft/custom-functions.examples.php
 function _get_kostenstellen_lvm( $user )
 {
-	$kostenstelle_prop = 'kostenstelle';
+	$kostenstelle_prop = 'lvmkostenstelle';
 	
 	$ldap = gs_ldap_connect();
 	//if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
@@ -112,7 +112,7 @@ function _gui_monitor_which_peers_lvm( $sudo_user )
 	$kks = @_get_kostenstellen_lvm( $sudo_user );
 	if ($kks === false || ! is_array($kks)) return false;
 	
-	$kostenstelle_prop = 'kostenstelle';
+	$kostenstelle_prop = 'lvmkostenstelle';
 	$limit = 100;
 	
 	$filter = '';

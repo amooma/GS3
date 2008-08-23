@@ -1,0 +1,139 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/quote_shell_arg.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__);
+
+$opts = @getOptsNoMultiples( '',
+	array(
+	),
+	$usage
+);
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+$users = @ gs_users_get();
+if (isGsError( $users )) gs_script_error( $us->getMsg() );
+if (! $users)            gs_script_error();
+
+echo 'cd ', qsa(dirName(__FILE__).'/'), "\n\n";
+
+foreach ($users as $u) {
+	if (subStr($u['user'],0,7) === 'nobody-') {
+		continue;
+	}
+	
+	echo '### ', trim(qsa($u['user']),'\'') ,"\n";
+	echo './gs_user_add',
+		' --user='     , qsa($u['user'     ]) ,
+		' --ext='      , qsa($u['ext'      ]) ,
+		' --pin='      , qsa($u['pin'      ]) ,
+		' --firstname=', qsa($u['firstname']) ,
+		' --lastname=' , qsa($u['lastname' ]) ,
+		' --email='    , qsa($u['email'    ]) ,
+		' --host='     , qsa($u['host'     ]) ,
+		"\n";
+	
+	$ret = @ gs_clir_get( $u['user'] );
+	if (isGsError($ret)) {
+		echo '# Failed to get settings for CLIR!',"\n";
+	} else {
+		echo './gs_clir_activate --user=', qsa($u['user']) ,' --dest=internal --active=', qsa($ret['internal_restrict']) ,"\n";
+		echo './gs_clir_activate --user=', qsa($u['user']) ,' --dest=external --active=', qsa($ret['external_restrict']) ,"\n";
+	}
+	
+	$ret = @ gs_user_external_numbers_get( $u['user'] );
+	if (isGsError($ret)) {
+		echo '# Failed to get external numbers!',"\n";
+	} else {
+		foreach ($ret as $number ) {
+			echo './gs_user_external_number_add --user=', qsa($u['user']) ,' --number=', qsa($number) ,"\n";
+		}
+	}
+	
+	$ret = @ gs_callforward_get( $u['user'] );
+	if (isGsError($ret)) {
+		echo '# Failed to get call forwards!',"\n";
+	} else {
+		foreach ($ret as $src => $callfw) {
+			foreach ($callfw as $case => $fw) {
+				if ($fw['number_std'] != '') {
+					echo './gs_callforward_set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --timeout=', qsa($fw['timeout']) ,' --type=std --number=', qsa($fw['number_std']) ,"\n";
+				}
+				if ($fw['number_var'] != '') {
+					echo './gs_callforward_set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --timeout=', qsa($fw['timeout']) ,' --type=var --number=', qsa($fw['number_var']) ,"\n";
+				}
+				if ($fw['active'] != 'no') {
+					echo './gs_callforward_activate --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --active=', qsa($fw['active']) ,"\n";
+				}
+			}
+		}
+	}
+	
+	$ret = @ gs_callwaiting_get( $u['user'] );
+	if (isGsError($ret)) {
+		echo '# Failed to get settings for call waiting!',"\n";
+	} else {
+		echo './gs_callwaiting_activate --user=', qsa($u['user']) ,' --active=', ($ret ?'yes':'no') ,"\n";
+	}
+	
+	$ret =  @ gs_ringtones_get( $u['user'] );
+	if (isGsError($ret)) {
+		echo '# Failed to get settings for ringtones!',"\n";
+	} else {
+		foreach ($ret as $src => $rt) {
+			echo './gs_ringtone_set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --bellcore=', qsa($rt['bellcore']) ,"\n";
+		}
+	}
+	
+	$ret = @ gs_vm_get( $u['user'] );
+	if (isGsError($ret)) {
+		echo '# Failed to get settings for voicemail!',"\n";
+	} else {
+		echo './gs_vm_activate --user=', qsa($u['user']) ,' --source=internal --active=', ($ret['internal_active'] ?'yes':'no') ,"\n";
+		echo './gs_vm_activate --user=', qsa($u['user']) ,' --source=external --active=', ($ret['external_active'] ?'yes':'no') ,"\n";
+	}
+	
+	echo "\n";
+}
+	
+
+?>

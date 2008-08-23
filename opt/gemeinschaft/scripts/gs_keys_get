@@ -1,0 +1,158 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --phone=<phone-type>';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'user=',
+		'phone='
+	),
+	$usage
+);
+if (! isSet($opts['user'])
+||  ! isSet($opts['phone'])
+) {
+	gs_script_invalid_usage( $usage );
+}
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+$keys = @gs_keys_get_by_user( $opts['user'], $opts['phone'] );
+if (isGsError( $keys )) gs_script_error( $keys->getMsg() );
+if (! is_array($keys))  gs_script_error();
+
+$fields = array(
+	'key'            => 4,
+	'function'       => 5,
+	'data'           => 5,
+	'label'          => 2,
+	'user_writeable' => 1
+);
+$fieldsAbbr = array(
+	'key'            => 'key',
+	'function'       => 'function',
+	'data'           => 'data',
+	'label'          => 'label',
+	'user_writeable' => 'w'
+);
+
+if (gs_stdout_is_console()) {
+	
+	$fieldsPad = array(
+		'key'            => STR_PAD_RIGHT,
+		'function'       => STR_PAD_RIGHT,
+		'data'           => STR_PAD_RIGHT,
+		'label'          => STR_PAD_RIGHT,
+		'user_writeable' => STR_PAD_RIGHT
+	);
+	
+	foreach ($fields as $field => $length) {
+		if (strLen($fieldsAbbr[$field]) > $length)
+			$fields[$field] = strLen($fieldsAbbr[$field]);
+	}
+	foreach ($keys as $ignore => $keydefs) {
+		if (array_key_exists('slf', $keydefs)) {
+			$key = $keydefs['slf'];
+		} elseif (array_key_exists('inh', $keydefs)) {
+			$key = $keydefs['inh'];
+		} else {
+			continue;
+		}
+		foreach ($fields as $field => $length) {
+			//$user[$field] = str_replace( '"', '\\"', $user[$field] );
+			if (strLen($key[$field]) > $length)
+				$fields[$field] = strLen($key[$field]);
+		}
+	}
+	
+	$header = '| ';
+	foreach ($fields as $field => $length) {
+		$header.= str_pad( $fieldsAbbr[$field], $length, ' ' ) .' | ';
+	}
+	$sep = str_repeat( '-', strLen($header)-1 );
+	
+	echo $sep, "\n";
+	echo $header, "\n";
+	echo $sep, "\n";
+	foreach ($keys as $ignore => $keydefs) {
+		if (array_key_exists('slf', $keydefs)) {
+			$key = $keydefs['slf'];
+		} elseif (array_key_exists('inh', $keydefs)) {
+			$key = $keydefs['inh'];
+		} else {
+			continue;
+		}
+		echo '| ';
+		foreach ($fields as $field => $length) {
+			echo str_pad( $key[$field], $length, ' ', $fieldsPad[$field] ), ' | ';
+		}
+		echo "\n";
+	}
+	echo $sep, "\n";
+
+}
+else {
+	
+	echo '# ';
+	foreach ($fields as $field => $length) {
+		echo gs_add_c_slashes( $fieldsAbbr[$field] ) ,"\t";
+	}
+	echo "\n";
+	
+	foreach ($keys as $ignore => $keydefs) {
+		if (array_key_exists('slf', $keydefs)) {
+			$key = $keydefs['slf'];
+		} elseif (array_key_exists('inh', $keydefs)) {
+			$key = $keydefs['inh'];
+		} else {
+			continue;
+		}
+		foreach ($fields as $field => $length) {
+			echo gs_add_c_slashes( $key[$field] ) ,"\t";
+		}
+		echo "\n";
+	}
+	
+}
+
+
+?>

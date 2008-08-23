@@ -282,7 +282,7 @@ function _gs_prov_phone_checkcfg_by_ext_do_snom( $ext, $reboot=true )
 	$sip_notify = $reboot ? 'snom-reboot' : 'snom-check-cfg';
 	@exec( 'sudo asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
 	
-	$hosts = @gs_hosts_get();
+	$hosts = @gs_hosts_get(false);
 	if (isGsError($hosts)) {
 		gs_log(GS_LOG_WARNING, 'Failed to get hosts - '. $hosts->getMsg());
 	} elseif (! is_array($hosts)) {
@@ -290,7 +290,7 @@ function _gs_prov_phone_checkcfg_by_ext_do_snom( $ext, $reboot=true )
 	} else {
 		$cmd = 'asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\'';
 		foreach ($hosts as $host) {
-			@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd) .' >>/dev/null 2>>/dev/null &', $out, $err );
+			@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd) .' >>/dev/null 2>>/dev/null &' );
 		}
 	}
 }

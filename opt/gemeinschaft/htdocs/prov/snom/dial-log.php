@@ -110,7 +110,7 @@ $typeToTitle = array(
 ob_start();
 
 
-$url_snom_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)). GS_PROV_PATH .'snom/dial-log.php';
+$url_snom_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/dial-log.php';
 
 
 #################################### INITIAL SCREEN {

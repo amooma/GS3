@@ -1,0 +1,91 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<username>';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'user='
+	),
+	$usage
+);
+if (! isSet($opts['user'])
+) {
+	echo $usage ,"\n\n";
+	die(1);
+}
+if (preg_match('/[^a-z0-9\-_]/', $opts['user'])) {
+	echo $usage ,"\n\n";
+	die(1);
+}
+
+
+/***********************************************************
+***********************************************************/
+$db = gs_db_master_connect();
+if (! $db) {
+	echo "DB error\n";
+	die(1);
+}
+$rs = $db->execute(
+	'SELECT '.
+		'`u`.`user`, `u`.`current_ip`, '.
+		'`s`.`name` `ext`, '.
+		'`p`.`mac_addr` '.
+	'FROM '.
+		'`users` `u` LEFT JOIN '.
+		'`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) LEFT JOIN '.
+		'`phones` `p` ON (`p`.`user_id`=`u`.`id`) '.
+	'WHERE '.
+		'`u`.`user`=\''. $db->escape($opts['user']) .'\''
+	);
+if (!($r = $rs->fetchRow())) {
+	echo "User not found.\n\n";
+	exit(-1);
+}
+
+echo '       user: ', $r['user'      ] ,"\n";
+echo '        ext: ', $r['ext'       ] ,"\n";
+echo '  logged in: ',($r['mac_addr'  ]=='' ? 'no':'yes') ,"\n";
+echo '   mac addr: ', $r['mac_addr'  ] ,"\n";
+echo '    ip addr: ', $r['current_ip'] ,"\n";
+echo "\n";
+
+
+?>

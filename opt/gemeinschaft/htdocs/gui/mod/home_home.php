@@ -31,16 +31,20 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/util.php' );
 
 
+if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
+	
+	if (@$_REQUEST['action'] === 'reboot') {
+		
+		gs_prov_phone_checkcfg_by_ext( $_SESSION['sudo_user']['info']['ext'], true );
+		
+	}
+	elseif (@$_REQUEST['action'] === 'setcomment') {
+		
+		$comment = rTrim(mb_subStr(trim( @$_REQUEST['comment'] ),0,200));
+		gs_user_comment_set( $_SESSION['sudo_user']['name'], $comment );
+		
+	}
 
-if (@$_REQUEST['action']=='reboot') {
-	
-	gs_prov_phone_checkcfg_by_ext( $_SESSION['sudo_user']['info']['ext'], true );
-	
-} elseif (@$_REQUEST['action']=='setcomment') {
-	
-	$comment = rTrim(mb_subStr(trim( @$_REQUEST['comment'] ),0,200));
-	gs_user_comment_set( $_SESSION['sudo_user']['name'], $comment );
-	
 }
 
 
@@ -71,8 +75,10 @@ if ($_SESSION['sudo_user']['name'] === 'sysadmin') {
 
 echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info']['ext'] ), '</b></p><br />', "\n";
 
-?>
 
+
+if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
+?>
 
 <div class="fl" style="clear:right; width:99%;">
 	
@@ -95,8 +101,13 @@ echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info
 			while ($r = $rs->fetchRow()) {
 				echo '<tr class="', ($i%2?'even':'odd') ,'">' ,"\n";
 				echo '<td style="width:30%;"><nobr>', htmlEnt(date_human($r['orig_time'])) ,'</nobr></td>' ,"\n";
-				echo '<td style="width:70%;">', htmlEnt($r['cidnum']);
-				if ($r['cidname'] != '') echo ' (', htmlEnt($r['cidname']) ,')';
+				echo '<td style="width:70%;">';
+				if (@$r['cidnum'] != '') {
+					echo htmlEnt($r['cidnum']);
+					if ($r['cidname'] != '') echo ' (', htmlEnt($r['cidname']) ,')';
+				} else {
+					echo '<i>', __('anonym'), '</i>';
+				}
 				echo '</td>' ,"\n";
 				echo '</tr>' ,"\n";
 				++$i;
@@ -285,13 +296,16 @@ LIMIT 5'
 <br style="clear:right" />
 <div class="fl" style="clear:right; width:99%; height:20px;"></div>
 
-<form method="post" action="<?php echo GS_URL_PATH, 'pb-dial.php'; ?>">
+<form method="post" action="<?php echo GS_URL_PATH, 'srv/pb-dial.php'; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <?php echo __('Call-Box'); /*//TRANSLATE ME*/ ?>: &nbsp;
 <input type="text" name="n" value="" size="20" maxlength="30" />
 <input type="submit" value="<?php echo __('w&auml;hlen'); ?>" />
 </form>
 
+<?php
+}
+?>
 
 <br />
 <div style="height:20px;"></div>
@@ -300,7 +314,7 @@ LIMIT 5'
 <form method="get" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="reboot" />
-<input type="submit" value="<?php echo __('Telefon neustarten'); ?>" />
+<input type="submit" value="<?php echo __('Telefon resynchronisieren'); ?>" />
 </form>
 </div>
 

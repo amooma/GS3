@@ -1,7 +1,7 @@
 #!/usr/bin/php -q
 <?php
 /*******************************************************************\
-*			Gemeinschaft - asterisk cluster gemeinschaft
+*            Gemeinschaft - asterisk cluster gemeinschaft
 * 
 * $Revision$
 * 
@@ -39,8 +39,8 @@ include_once( GS_DIR .'inc/log.php' );
 include_once( GS_DIR .'inc/get-listen-to-ids.php' );
 
 $context = preg_replace('/[^a-z0-9\-_]/i', '', @$argv[1]);
-$mailbox = preg_replace('/[^0-9]/', '',		   @$argv[2]);
-$num_vms =						     (int)trim(@$argv[3]);
+$mailbox = preg_replace('/[^0-9]/', '',        @$argv[2]);
+$num_vms =                           (int)trim(@$argv[3]);
 # only messages in INBOX are counted
 
 if ($context === '') {
@@ -72,7 +72,6 @@ if (! $db) {
 	exit(1);
 }
 
-$use_trans = gs_get_conf('GS_DB_MASTER_TRANSACTIONS');
 
 function _mbox_to_userid( $mailbox )
 {
@@ -149,7 +148,7 @@ foreach ($files as $filename) {
 	# check if we already know this message by unique signature
 	# (mbox, origtime, callerchan)
 	#
-	if ($use_trans) $db->startTrans();
+	gs_db_start_trans($db);
 	$rs = $db->execute(
 'SELECT
 	`id`, `folder`, `file`
@@ -265,11 +264,8 @@ WHERE `id`='. (int)$r['id']
 			gs_log(GS_LOG_WARNING, "Mailbox $mailbox: Could not insert new message");
 	}
 	
-	if ($use_trans) {
-		$ok = $db->completeTrans();
-		if (! $ok) {
-			gs_log(GS_LOG_WARNING, "Mailbox $mailbox: Could not commit voicemail info to database!");
-		}
+	if (! gs_db_commit_trans($db)) {
+		gs_log(GS_LOG_WARNING, "Mailbox $mailbox: Could not commit voicemail info to database!");
 	}
 }
 

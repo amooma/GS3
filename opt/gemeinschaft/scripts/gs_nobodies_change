@@ -27,6 +27,11 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+//FIXME
+echo "Not yet BOI safe.\n";
+exit(1);
+
+
 define( 'GS_VALID', true );  /// this is a parent file
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );

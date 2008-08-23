@@ -71,27 +71,51 @@ $db = gs_db_slave_connect();
 
 # is it a user?
 #
-$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
-if ($num > 0) {
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('user') ."\n";
-	$host_id = $db->executeGetOne( 'SELECT `u`.`host_id` FROM `ast_sipfriends` `s` JOIN `users` `u` ON (`u`.`id`=`s`.`_user_id`) WHERE `s`.`name`=\''. $db->escape($ext) .'\'' );
-	if ($host_id < 1)
-		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
-	else
-		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( get_at_dial( $host_id ) ) ."\n";
+//$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
+$rs = $db->execute(
+'SELECT `u`.`host_id`, `h`.`is_foreign`, `h`.`host`
+FROM
+	`ast_sipfriends` `s` JOIN
+	`users` `u` ON (`u`.`id`=`s`.`_user_id`) JOIN
+	`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
+WHERE `s`.`name`=\''. $db->escape($ext) .'\''
+);
+if ($r = $rs->fetchRow()) {
+	if (! $r['is_foreign']) {
+		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('user') ."\n";
+		if ($r['host_id'] < 1) {
+			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
+		} else {
+			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( get_at_dial( $r['host_id'] ) ) ."\n";
+		}
+	} else {
+		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('foreign') ."\n";
+		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( $r['host'] ) ."\n";
+	}
 	die();
 }
 
 # is it a queue?
 #
-$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queues` WHERE `name`=\''. $db->escape($ext) .'\'' );
-if ($num > 0) {
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('queue') ."\n";
-	$host_id = $db->executeGetOne( 'SELECT `_host_id` FROM `ast_queues` WHERE `name`=\''. $db->escape($ext) .'\'' );
-	if ($host_id < 1)  // should never happen
-		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
-	else
-		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( get_at_dial( $host_id ) ) ."\n";
+$rs = $db->execute(
+'SELECT `q`.`_host_id` `host_id`, `h`.`is_foreign`, `h`.`host`
+FROM
+	`ast_queues` `q` JOIN
+	`hosts` `h` ON (`h`.`id`=`q`.`_host_id`)
+WHERE `q`.`name`=\''. $db->escape($ext) .'\''
+);
+if ($r = $rs->fetchRow()) {
+	if (! $r['is_foreign']) {
+		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('queue') ."\n";
+		if ($r['host_id'] < 1) {  // should never happen
+			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
+		} else {
+			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( get_at_dial( $r['host_id'] ) ) ."\n";
+		}
+	} else {
+		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('foreign') ."\n";
+		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( $r['host'] ) ."\n";
+	}
 	die();
 }
 

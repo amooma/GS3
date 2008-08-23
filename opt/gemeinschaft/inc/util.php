@@ -54,14 +54,19 @@ function normalizeIPs( $str ) {
 }
 
 
-if (! defined('E_STRICT'           )) define('E_STRICT           ', 2048); # since PHP 5
+# error levels introduced in newer versions of PHP:
+if (! defined('E_STRICT'           )) define('E_STRICT'           , 2048); # since PHP 5
 if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 4096); # since PHP 5.2
+if (! defined('E_DEPRECATED'       )) define('E_DEPRECATED'       , 8192); # since PHP 5.3
+if (! defined('E_USER_DEPRECATED'  )) define('E_USER_DEPRECATED'  ,16384); # since PHP 5.3
 
 function err_handler_die_on_err( $type, $msg, $file, $line )
 {
 	switch ($type) {
 		case E_NOTICE:
 		case E_USER_NOTICE:
+		case E_DEPRECATED:
+		case E_USER_DEPRECATED:
 			if (error_reporting() != 0) {
 				gs_log( GS_LOG_NOTICE, 'PHP: '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
@@ -107,6 +112,8 @@ function err_handler_quiet( $type, $msg, $file, $line )
 	switch ($type) {
 		case E_NOTICE:
 		case E_USER_NOTICE:
+		case E_DEPRECATED:
+		case E_USER_DEPRECATED:
 			if (error_reporting() != 0) {
 				gs_log( GS_LOG_NOTICE, 'PHP: '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @

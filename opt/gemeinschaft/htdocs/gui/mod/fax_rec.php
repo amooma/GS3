@@ -143,12 +143,12 @@ for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 		echo "<td>", round($jobs_rec[$i][10] / 1024) ," kB</td>\n";
 		echo "<td>", $jobs_rec[$i][12] ,"</td>\n";
 		echo "<td>", $jobs_rec[$i][14] ," lpi</td>\n";
-		//echo '<td><a href="faxdown.php?file=',$jobs_rec[$i][4],'">', $jobs_rec[$i][4] ,"</a></td>\n";
+		//echo '<td><a href="srv/faxdown.php?file=',$jobs_rec[$i][4],'">', $jobs_rec[$i][4] ,"</a></td>\n";
 		echo "<td>", $jobs_rec[$i][1] ,"</td>\n";
 		echo "<td>\n";
 		echo '<a href="',$mod_url,'&amp;delete=',$jobs_rec[$i][4],'&amp;page=',$page,'" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-		echo ' &nbsp; <a href="faxdown.php?file='.$jobs_rec[$i][4].'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/app/pdf.png" /></a>'."\n";
-		echo ' &nbsp; <a href="faxdown.php?raw='.$jobs_rec[$i][4].'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/act/colorize.png" /></a>'."\n";
+		echo ' &nbsp; <a href="srv/faxdown.php?file='.$jobs_rec[$i][4].'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/app/pdf.png" /></a>'."\n";
+		echo ' &nbsp; <a href="srv/faxdown.php?raw='.$jobs_rec[$i][4].'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/act/colorize.png" /></a>'."\n";
 		echo "</td>\n";
 		
 		echo "</tr>\n";

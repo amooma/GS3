@@ -173,11 +173,11 @@ foreach ($chars as $cd => $cs) {
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:270px;">
-		<?php echo ($number=='') ? '<span class="sort-col">'. __('Name') .'</span>' : __('Name'); ?>
+	<th style="width:270px;"<?php if ($number=='') echo ' class="sort-col"'; ?>>
+		<?php echo __('Name'); ?>
 	</th>
-	<th style="width:200px;">
-		<?php echo ($number=='') ? __('Nummer') : '<span class="sort-col">'. __('Nummer') .'</span>'; ?>
+	<th style="width:200px;"<?php if ($number!='') echo ' class="sort-col"'; ?>>
+		<?php echo __('Nummer'); ?>
 	</th>
 	<th style="width:100px;">&nbsp;</th>
 </tr>
@@ -203,7 +203,7 @@ if (@$rs) {
 			(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 			? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
 		if ($r['ext'] != $_SESSION['sudo_user']['info']['ext'])
-			echo '<a href="', GS_URL_PATH, 'pb-dial.php?n=', rawUrlEncode($r['ext']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a>';
+			echo '<a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', rawUrlEncode($r['ext']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a>';
 		else echo '&nbsp;';
 		echo '</td>';
 		

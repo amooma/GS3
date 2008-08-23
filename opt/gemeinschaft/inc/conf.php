@@ -37,10 +37,11 @@ defined('GS_VALID') or die('No direct access.');
 ############################################################
 
 
-# the E_STRICT error level (and constant) was introduced in PHP 5:
-if (! defined('E_STRICT'           )) define('E_STRICT           ', 2048);
-# since PHP 5.2:
-if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 4096);
+# error levels introduced in newer versions of PHP:
+if (! defined('E_STRICT'           )) define('E_STRICT'           , 2048); # since PHP 5
+if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 4096); # since PHP 5.2
+if (! defined('E_DEPRECATED'       )) define('E_DEPRECATED'       , 8192); # since PHP 5.3
+if (! defined('E_USER_DEPRECATED'  )) define('E_USER_DEPRECATED'  ,16384); # since PHP 5.3
 
 # available since PHP 4.4.0 and 5.0.5:
 if (! defined('PHP_INT_SIZE')) define('PHP_INT_SIZE', 4);
@@ -190,6 +191,7 @@ _gscnf( 'LDAP_PROP_UID'             , 'uid'              );
 _gscnf( 'LDAP_PROP_FIRSTNAME'       , 'givenname'        );
 _gscnf( 'LDAP_PROP_LASTNAME'        , 'sn'               );
 _gscnf( 'LDAP_PROP_PHONE'           , 'telephonenumber'  );
+_gscnf( 'LDAP_PROP_EMAIL'           , 'mail'             );
 
 _gscnf( 'GUI_AUTH_METHOD'           , 'gemeinschaft'     );
 _gscnf( 'GUI_NUM_RESULTS'           , 12                 );
@@ -199,7 +201,7 @@ _gscnf( 'GUI_SUDO_EXTENDED'         , false              );
 _gscnf( 'GUI_PERMISSIONS_METHOD'    , 'gemeinschaft'     );
 _gscnf( 'GUI_USER_MAP_METHOD'       , ''                 );
 _gscnf( 'GUI_QUEUE_SHOW_NUM_CALLS'  , false              );
-_gscnf( 'GUI_QUEUE_INFO_FROM_DB'    , false              );
+_gscnf( 'GUI_QUEUE_INFO_FROM_DB'    , true               );
 _gscnf( 'GUI_MON_NOQUEUEBLUE'       , true               );
 _gscnf( 'GUI_MON_PEERS_ENABLED'     , false              );
 _gscnf( 'GUI_SHUTDOWN_ENABLED'      , gs_get_conf('INSTALLATION_TYPE')==='gpbx');
@@ -219,8 +221,12 @@ _gscnf( 'PROV_PATH'                 , '/'                );
 _gscnf( 'PROV_AUTO_ADD_PHONE'       , false              );
 _gscnf( 'PROV_AUTO_ADD_PHONE_HOST'  , 'first'            );
 _gscnf( 'PROV_DIAL_LOG_LIFE'        , 14*24*3600         );
+_gscnf( 'PROV_PROXIES_TRUST'        , ''                 );
+_gscnf( 'PROV_PROXIES_XFF_HEADER'   , 'X-Forwarded-For'  );
+_gscnf( 'PROV_ALLOW_NET'            , '0.0.0.0/0'        );
+_gscnf( 'PROV_LAN_NETS'             , '0.0.0.0/0'        );
 
-_gscnf( 'SNOM_PROV_ENABLED'         , true               );
+_gscnf( 'SNOM_PROV_ENABLED'         , false              );
 _gscnf( 'SNOM_PROV_HTTP_USER'       , ''                 );
 _gscnf( 'SNOM_PROV_HTTP_PASS'       , ''                 );
 _gscnf( 'SNOM_PROV_PB_NUM_RESULTS'  , 15                 );
@@ -228,9 +234,9 @@ _gscnf( 'SNOM_PROV_FW_UPDATE'       , false              );
 _gscnf( 'SNOM_PROV_FW_BETA'         , false              );
 _gscnf( 'SNOM_PROV_FW_6TO7'         , false              );
 
-_gscnf( 'SIEMENS_PROV_ENABLED'      , true               );
+_gscnf( 'SIEMENS_PROV_ENABLED'      , false              );
 
-_gscnf( 'AASTRA_PROV_ENABLED'       , true               );
+_gscnf( 'AASTRA_PROV_ENABLED'       , false              );
 _gscnf( 'AASTRA_PROV_PB_NUM_RESULTS', 10                 );
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
@@ -238,17 +244,20 @@ _gscnf( 'CANONIZE_INTL_PREFIX'      , '00'               );
 _gscnf( 'CANONIZE_COUNTRY_CODE'     , '49'               );
 _gscnf( 'CANONIZE_NATL_PREFIX'      , '0'                );
 _gscnf( 'CANONIZE_NATL_PREFIX_INTL' , false              );
-_gscnf( 'CANONIZE_AREA_CODE'        , ''                 );
-_gscnf( 'CANONIZE_LOCAL_BRANCH'     , ''                 );
+_gscnf( 'CANONIZE_AREA_CODE'        , '999'              );
+_gscnf( 'CANONIZE_LOCAL_BRANCH'     , '999999'           );
 _gscnf( 'CANONIZE_SPECIAL'          , '/^1(?:1[0-9]{1,5}|9222)/' );
 _gscnf( 'CANONIZE_CBC_PREFIX'       , '010'              );
 
+_gscnf( 'DP_SUBSYSTEM'              , false              );
 _gscnf( 'DP_EMERGENCY_POLICE'       , '110,0110'         );
 _gscnf( 'DP_EMERGENCY_POLICE_MAP'   , '110'              );
 _gscnf( 'DP_EMERGENCY_FIRE'         , '112,0112'         );
 _gscnf( 'DP_EMERGENCY_FIRE_MAP'     , '112'              );
 _gscnf( 'DP_DIALTIMEOUT_IN'         , 45                 );
 _gscnf( 'DP_PRV_CALL_PREFIX'        , '*7*'              );
+_gscnf( 'DP_FORWARD_REQ_EXT_NUM'    , true               );
+_gscnf( 'DP_ALLOW_DIRECT_DIAL'      , false              );
 
 _gscnf( 'PB_IMPORTED_ENABLED'       , false              );
 _gscnf( 'PB_IMPORTED_ORDER'         , 2                  );
@@ -261,7 +270,6 @@ _gscnf( 'CALL_INIT_FROM_NET'        , '0.0.0.0/32'       ); # deny all
 _gscnf( 'MONITOR_FROM_NET'          , '0.0.0.0/32'       ); # deny all
 _gscnf( 'LVM_USER_6_DIGIT_INT'      , false              );
 _gscnf( 'LVM_CALL_INIT_USERS_500000', false              );
-_gscnf( 'LVM_FORWARD_REQ_EXT_NUM'   , true               );
 _gscnf( 'CC_TIMEOUT'                , 60                 );
 _gscnf( 'INTL_LANG'                 , 'de_DE'            );
 _gscnf( 'INTL_USE_GETTEXT'          , false              );
@@ -292,6 +300,13 @@ $FAX_HYLAFAX_PASS  =
 	preg_replace('/[^a-z0-9\-_.]/i', '',
 	@$FAX_HYLAFAX_PASS  );
 _gscnf( 'FAX_HYLAFAX_PASS'          , 'sEcr3T'           );
+
+_gscnf( 'BOI_ENABLED'               , false              );
+_gscnf( 'BOI_API_DEFAULT'           , 'm01'              );
+_gscnf( 'BOI_BRANCH_NETMASK'        , '/24'              );
+_gscnf( 'BOI_BRANCH_PBX'            , '0.0.0.130'        );
+_gscnf( 'BOI_NOBODY_EXTEN_PATTERN'  , '95xxxx'           );
+_gscnf( 'BOI_GUI_REVERSE_PROXY'     , 'http://'. gs_get_conf('GS_PROV_HOST') .':8080/' );
 
 _gscnf( 'LOG_TO'                    , 'file'             );
 _gscnf( 'LOG_FILE'                  , '/var/log/gemeinschaft/gs.log' );

@@ -5373,7 +5373,9 @@ CREATE TABLE `ast_queue_members` (
   PRIMARY KEY  (`queue_name`,`interface`),
   UNIQUE KEY `queue_id_user_id` (`_queue_id`,`_user_id`),
   KEY `_user_id` (`_user_id`),
-  KEY `interface` (`interface`(15))
+  KEY `interface` (`interface`(15)),
+  CONSTRAINT `ast_queue_members_ibfk_1` FOREIGN KEY (`_queue_id`) REFERENCES `ast_queues` (`_id`),
+  CONSTRAINT `ast_queue_members_ibfk_2` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
@@ -5382,8 +5384,6 @@ CREATE TABLE `ast_queue_members` (
 
 LOCK TABLES `ast_queue_members` WRITE;
 /*!40000 ALTER TABLE `ast_queue_members` DISABLE KEYS */;
-INSERT INTO `ast_queue_members` VALUES ('5000',1,'SIP/2001',23,0);
-INSERT INTO `ast_queue_members` VALUES ('5000',1,'SIP/2002',24,0);
 /*!40000 ALTER TABLE `ast_queue_members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5425,7 +5425,8 @@ CREATE TABLE `ast_queues` (
   `timeoutrestart` tinyint(1) unsigned default NULL,
   PRIMARY KEY  (`_id`),
   UNIQUE KEY `name` (`name`),
-  KEY `host_name` (`_host_id`,`name`)
+  KEY `host_name` (`_host_id`,`name`),
+  CONSTRAINT `ast_queues_ibfk_1` FOREIGN KEY (`_host_id`) REFERENCES `hosts` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
@@ -5469,7 +5470,8 @@ CREATE TABLE `ast_sipfriends` (
   UNIQUE KEY `name` (`name`),
   KEY `host` (`host`(25)),
   KEY `mailbox` (`mailbox`(10)),
-  KEY `context` (`context`(25))
+  KEY `context` (`context`(25)),
+  CONSTRAINT `ast_sipfriends_ibfk_1` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
@@ -5499,6 +5501,37 @@ INSERT INTO `ast_sipfriends` VALUES (30,'950013','3707760381117896','friend','dy
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ast_sipfriends_gs`
+--
+
+DROP TABLE IF EXISTS `ast_sipfriends_gs`;
+/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 CREATE TABLE `ast_sipfriends_gs` (
+  `_user_id` int(10) unsigned,
+  `name` varchar(10),
+  `secret` varchar(16),
+  `type` enum('friend','user','peer'),
+  `host` varchar(50),
+  `defaultip` varchar(15),
+  `context` varchar(50),
+  `callerid` varchar(80),
+  `mailbox` varchar(25),
+  `callgroup` varchar(20),
+  `pickupgroup` varchar(20),
+  `setvar` varchar(50),
+  `call-limit` tinyint(3) unsigned,
+  `subscribecontext` varchar(50),
+  `regcontext` varchar(50),
+  `ipaddr` varchar(15),
+  `port` varchar(5),
+  `regseconds` int(10) unsigned,
+  `username` varchar(25),
+  `regserver` varchar(50),
+  `fullcontact` varchar(100)
+) */;
+
+--
 -- Table structure for table `ast_voicemail`
 --
 
@@ -5518,7 +5551,8 @@ CREATE TABLE `ast_voicemail` (
   UNIQUE KEY `context_mailbox` (`context`,`mailbox`),
   KEY `fullname` (`fullname`(20)),
   KEY `_user_id` (`_user_id`),
-  KEY `mailbox_context` (`mailbox`,`context`(20))
+  KEY `mailbox_context` (`mailbox`,`context`(20)),
+  CONSTRAINT `ast_voicemail_ibfk_1` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
@@ -5532,6 +5566,30 @@ INSERT INTO `ast_voicemail` VALUES (10,23,'2001','default','123','','Homer Simps
 INSERT INTO `ast_voicemail` VALUES (11,24,'2002','default','123','','Marge Simpson','germany','no','no');
 INSERT INTO `ast_voicemail` VALUES (12,25,'2003','default','123','','Lisa Simpson','germany','no','no');
 /*!40000 ALTER TABLE `ast_voicemail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `boi_perms`
+--
+
+DROP TABLE IF EXISTS `boi_perms`;
+CREATE TABLE `boi_perms` (
+  `user_id` int(10) unsigned NOT NULL,
+  `host_id` mediumint(8) unsigned NOT NULL,
+  `roles` varchar(8) character set ascii NOT NULL,
+  PRIMARY KEY  (`user_id`,`host_id`),
+  UNIQUE KEY `host_user` (`host_id`,`user_id`),
+  CONSTRAINT `boi_perms_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `boi_perms_ibfk_2` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `boi_perms`
+--
+
+LOCK TABLES `boi_perms` WRITE;
+/*!40000 ALTER TABLE `boi_perms` DISABLE KEYS */;
+/*!40000 ALTER TABLE `boi_perms` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -5572,7 +5630,8 @@ CREATE TABLE `callblocking` (
   `regexp` varchar(40) character set ascii NOT NULL default '',
   `pin` varchar(10) character set ascii collate ascii_bin NOT NULL default '',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `user_regex` (`user_id`,`regexp`)
+  UNIQUE KEY `user_regex` (`user_id`,`regexp`),
+  CONSTRAINT `callblocking_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -5600,7 +5659,8 @@ CREATE TABLE `callforwards` (
   `number_std` varchar(50) character set ascii NOT NULL default '',
   `number_var` varchar(50) character set ascii NOT NULL default '',
   `active` enum('no','std','var') character set ascii NOT NULL default 'no',
-  PRIMARY KEY  (`user_id`,`source`,`case`)
+  PRIMARY KEY  (`user_id`,`source`,`case`),
+  CONSTRAINT `callforwards_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -5609,15 +5669,6 @@ CREATE TABLE `callforwards` (
 
 LOCK TABLES `callforwards` WRITE;
 /*!40000 ALTER TABLE `callforwards` DISABLE KEYS */;
-INSERT INTO `callforwards` VALUES (23,'internal','unavail',20,'90001','','std');
-INSERT INTO `callforwards` VALUES (24,'internal','always',0,'888','8','no');
-INSERT INTO `callforwards` VALUES (24,'internal','busy',0,'888','8','no');
-INSERT INTO `callforwards` VALUES (24,'internal','unavail',18,'888','8','no');
-INSERT INTO `callforwards` VALUES (24,'internal','offline',0,'888','8','no');
-INSERT INTO `callforwards` VALUES (24,'external','always',0,'99999','66','no');
-INSERT INTO `callforwards` VALUES (24,'external','busy',0,'99999','66','no');
-INSERT INTO `callforwards` VALUES (24,'external','unavail',18,'99999','66','no');
-INSERT INTO `callforwards` VALUES (24,'external','offline',0,'99999','66','no');
 /*!40000 ALTER TABLE `callforwards` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5629,7 +5680,8 @@ DROP TABLE IF EXISTS `callwaiting`;
 CREATE TABLE `callwaiting` (
   `user_id` int(10) unsigned NOT NULL default '0',
   `active` tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`user_id`)
+  PRIMARY KEY  (`user_id`),
+  CONSTRAINT `callwaiting_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -5651,7 +5703,8 @@ CREATE TABLE `clir` (
   `user_id` int(10) unsigned NOT NULL default '0',
   `internal_restrict` enum('no','once','yes') character set ascii NOT NULL default 'no',
   `external_restrict` enum('no','once','yes') character set ascii NOT NULL default 'no',
-  PRIMARY KEY  (`user_id`)
+  PRIMARY KEY  (`user_id`),
+  CONSTRAINT `clir_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -5678,7 +5731,8 @@ CREATE TABLE `conferences` (
   `ext` varchar(10) character set latin1 collate latin1_general_ci NOT NULL default '',
   `host_id` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`ext`),
-  KEY `host_ext` (`host_id`,`ext`)
+  KEY `host_ext` (`host_id`,`ext`),
+  CONSTRAINT `conferences_ibfk_1` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -5705,7 +5759,8 @@ CREATE TABLE `dial_log` (
   KEY `timestamp` (`timestamp`),
   KEY `user_timestamp` (`user_id`,`timestamp`),
   KEY `user_type_number_timestamp` (`user_id`,`type`,`number`(10),`timestamp`),
-  KEY `user_type_timestamp` (`user_id`,`type`,`timestamp`)
+  KEY `user_type_timestamp` (`user_id`,`type`,`timestamp`),
+  CONSTRAINT `dial_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -5776,7 +5831,8 @@ CREATE TABLE `gates` (
   UNIQUE KEY `name` (`name`),
   KEY `grp_title` (`grp_id`,`title`(10)),
   KEY `grp_allow_out` (`grp_id`,`allow_out`),
-  KEY `type` (`type`)
+  KEY `type` (`type`),
+  CONSTRAINT `gates_ibfk_1` FOREIGN KEY (`grp_id`) REFERENCES `gate_grps` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -5798,16 +5854,46 @@ INSERT INTO `gates` VALUES (19,12,'misdn','gw_19_briport4','BRI Port 4',1,'mISDN
 UNLOCK TABLES;
 
 --
+-- Table structure for table `host_params`
+--
+
+DROP TABLE IF EXISTS `host_params`;
+CREATE TABLE `host_params` (
+  `host_id` mediumint(8) unsigned NOT NULL,
+  `param` varchar(25) character set ascii NOT NULL,
+  `value` varchar(100) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`host_id`,`param`),
+  KEY `param_value` (`param`,`value`(20)),
+  CONSTRAINT `host_params_ibfk_1` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `host_params`
+--
+
+LOCK TABLES `host_params` WRITE;
+/*!40000 ALTER TABLE `host_params` DISABLE KEYS */;
+/*!40000 ALTER TABLE `host_params` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `hosts`
 --
 
 DROP TABLE IF EXISTS `hosts`;
 CREATE TABLE `hosts` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `host` varchar(50) character set ascii NOT NULL default '',
+  `host` varchar(15) character set ascii NOT NULL default '',
   `comment` varchar(50) collate utf8_unicode_ci NOT NULL default '',
+  `is_foreign` tinyint(1) unsigned NOT NULL default '0',
+  `group_id` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `host` (`host`)
+  UNIQUE KEY `host` (`host`),
+  KEY `group_id` (`group_id`),
+  KEY `is_foreign_id` (`is_foreign`,`id`),
+  KEY `is_foreign_host` (`is_foreign`,`host`),
+  KEY `foreign_comment` (`is_foreign`,`comment`(20)),
+  KEY `comment` (`comment`(20))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -5816,7 +5902,7 @@ CREATE TABLE `hosts` (
 
 LOCK TABLES `hosts` WRITE;
 /*!40000 ALTER TABLE `hosts` DISABLE KEYS */;
-INSERT INTO `hosts` VALUES (1,'192.168.1.130','Gemeinschaft 001');
+INSERT INTO `hosts` VALUES (1,'192.168.1.130','Gemeinschaft 1',0,0);
 /*!40000 ALTER TABLE `hosts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5830,7 +5916,8 @@ CREATE TABLE `instant_messaging` (
   `type` varchar(25) character set ascii NOT NULL default '',
   `contact` varchar(80) character set ascii NOT NULL default '',
   PRIMARY KEY  (`user_id`,`type`),
-  KEY `type` (`type`)
+  KEY `type` (`type`),
+  CONSTRAINT `instant_messaging_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -5918,7 +6005,8 @@ CREATE TABLE `pb_prv` (
   PRIMARY KEY  (`id`),
   KEY `uid_lastname_firstname` (`user_id`,`lastname`(15),`firstname`(10)),
   KEY `uid_firstname_lastname` (`user_id`,`firstname`(10),`lastname`(10)),
-  KEY `uid_number` (`user_id`,`number`(10))
+  KEY `uid_number` (`user_id`,`number`(10)),
+  CONSTRAINT `pb_prv_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -5927,28 +6015,6 @@ CREATE TABLE `pb_prv` (
 
 LOCK TABLES `pb_prv` WRITE;
 /*!40000 ALTER TABLE `pb_prv` DISABLE KEYS */;
-INSERT INTO `pb_prv` VALUES (32,23,'','Testuser1','1234');
-INSERT INTO `pb_prv` VALUES (33,23,'','Testuser2','12345');
-INSERT INTO `pb_prv` VALUES (34,23,'','Testuser3-1','654321');
-INSERT INTO `pb_prv` VALUES (35,23,'','Testuser4','123456');
-INSERT INTO `pb_prv` VALUES (36,23,'','Testuser5','123456');
-INSERT INTO `pb_prv` VALUES (37,23,'','Testuser6','123456');
-INSERT INTO `pb_prv` VALUES (41,23,'','Testuser10','123456');
-INSERT INTO `pb_prv` VALUES (42,23,'','Testuser11','123456');
-INSERT INTO `pb_prv` VALUES (43,23,'','Testuser12','123456');
-INSERT INTO `pb_prv` VALUES (44,23,'','Testuser13','123456');
-INSERT INTO `pb_prv` VALUES (45,23,'','Testuser14','123456');
-INSERT INTO `pb_prv` VALUES (46,23,'','Testuser15','123456');
-INSERT INTO `pb_prv` VALUES (47,23,'','Testuser16-1','123456');
-INSERT INTO `pb_prv` VALUES (48,23,'','Testuser17','123456');
-INSERT INTO `pb_prv` VALUES (49,23,'','Testuser18','123456');
-INSERT INTO `pb_prv` VALUES (50,23,'','Testuser19','123456');
-INSERT INTO `pb_prv` VALUES (51,23,'','Testuser20','123456');
-INSERT INTO `pb_prv` VALUES (52,23,'','Testuser99','1234');
-INSERT INTO `pb_prv` VALUES (53,23,'HANS','TEST','1234');
-INSERT INTO `pb_prv` VALUES (54,23,'','abc','123');
-INSERT INTO `pb_prv` VALUES (56,23,'','abc3','123');
-INSERT INTO `pb_prv` VALUES (57,23,'PETER','TEST','555');
 /*!40000 ALTER TABLE `pb_prv` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5987,11 +6053,12 @@ CREATE TABLE `phones` (
   `nobody_index` mediumint(8) unsigned NOT NULL default '0',
   `added` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  KEY `mac_addr` (`mac_addr`),
+  UNIQUE KEY `mac_addr` (`mac_addr`),
   KEY `user_id` (`user_id`),
   KEY `added` (`added`),
   KEY `type` (`type`),
-  KEY `nobody_index` (`nobody_index`)
+  KEY `nobody_index` (`nobody_index`),
+  CONSTRAINT `phones_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6041,7 +6108,9 @@ CREATE TABLE `pickupgroups_users` (
   `group_id` int(10) unsigned NOT NULL default '0',
   `user_id` int(10) unsigned NOT NULL default '0',
   KEY `group_id` (`group_id`),
-  KEY `user_id` (`user_id`)
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `pickupgroups_users_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `pickupgroups` (`id`),
+  CONSTRAINT `pickupgroups_users_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6057,6 +6126,54 @@ INSERT INTO `pickupgroups_users` VALUES (1,22);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `prov_param_profiles`
+--
+
+DROP TABLE IF EXISTS `prov_param_profiles`;
+CREATE TABLE `prov_param_profiles` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `is_group_profile` tinyint(1) unsigned NOT NULL default '1',
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `is_group_profile_title` (`is_group_profile`,`title`(45)),
+  KEY `title` (`title`(45))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `prov_param_profiles`
+--
+
+LOCK TABLES `prov_param_profiles` WRITE;
+/*!40000 ALTER TABLE `prov_param_profiles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `prov_param_profiles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `prov_params`
+--
+
+DROP TABLE IF EXISTS `prov_params`;
+CREATE TABLE `prov_params` (
+  `profile_id` int(10) unsigned NOT NULL,
+  `phone_type` varchar(20) character set ascii NOT NULL,
+  `param` varchar(50) character set ascii NOT NULL,
+  `index` smallint(5) NOT NULL default '-1',
+  `value` varchar(100) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`profile_id`,`phone_type`,`param`,`index`),
+  KEY `phone_type_param_index` (`phone_type`,`param`,`index`),
+  CONSTRAINT `prov_params_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `prov_param_profiles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `prov_params`
+--
+
+LOCK TABLES `prov_params` WRITE;
+/*!40000 ALTER TABLE `prov_params` DISABLE KEYS */;
+/*!40000 ALTER TABLE `prov_params` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `queue_callforwards`
 --
 
@@ -6069,7 +6186,8 @@ CREATE TABLE `queue_callforwards` (
   `number_std` varchar(50) character set ascii NOT NULL default '',
   `number_var` varchar(50) character set ascii NOT NULL default '',
   `active` enum('no','std','var') character set ascii NOT NULL default 'no',
-  PRIMARY KEY  (`queue_id`,`source`,`case`)
+  PRIMARY KEY  (`queue_id`,`source`,`case`),
+  CONSTRAINT `queue_callforwards_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6106,7 +6224,8 @@ CREATE TABLE `queue_log` (
   KEY `queue_event_timestamp` (`queue_id`,`event`,`timestamp`),
   KEY `queue_event_reason_timestamp` (`queue_id`,`event`,`reason`,`timestamp`),
   KEY `timestamp` (`timestamp`),
-  KEY `ast_call_id` (`ast_call_id`(25))
+  KEY `ast_call_id` (`ast_call_id`(25)),
+  CONSTRAINT `queue_log_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6115,13 +6234,6 @@ CREATE TABLE `queue_log` (
 
 LOCK TABLES `queue_log` WRITE;
 /*!40000 ALTER TABLE `queue_log` DISABLE KEYS */;
-INSERT INTO `queue_log` VALUES (NULL,1172387005,'QUEUESTART',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (1,1172387014,'_ENTER',NULL,'1172387014.0',NULL,'2000',NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (1,1172387017,'_CONNECT',NULL,'1172387014.0',23,NULL,NULL,NULL,3,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (1,1172387036,'_COMPLETE','AGENT','1172387014.0',23,NULL,NULL,NULL,3,NULL,19,NULL);
-INSERT INTO `queue_log` VALUES (1,1172387045,'_ENTER',NULL,'1172387045.2',NULL,'2000',NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (1,1172387048,'_CONNECT',NULL,'1172387045.2',24,NULL,NULL,NULL,3,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (1,1172387066,'_COMPLETE','TRANSFER','1172387045.2',24,NULL,NULL,NULL,3,NULL,18,'2001@default');
 /*!40000 ALTER TABLE `queue_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6135,7 +6247,8 @@ CREATE TABLE `ringtones` (
   `src` enum('internal','external') collate latin1_general_ci NOT NULL default 'internal',
   `bellcore` tinyint(3) unsigned NOT NULL default '1',
   `file` varchar(40) collate latin1_general_ci default NULL,
-  PRIMARY KEY  (`user_id`,`src`)
+  PRIMARY KEY  (`user_id`,`src`),
+  CONSTRAINT `ringtones_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
@@ -6256,7 +6369,8 @@ CREATE TABLE `routes_in` (
   KEY `ggrp_active_th` (`gate_grp_id`,`active`,`d_th`,`ord`),
   KEY `ggrp_active_fr` (`gate_grp_id`,`active`,`d_fr`,`ord`),
   KEY `ggrp_active_sa` (`gate_grp_id`,`active`,`d_sa`,`ord`),
-  KEY `ggrp_active_su` (`gate_grp_id`,`active`,`d_su`,`ord`)
+  KEY `ggrp_active_su` (`gate_grp_id`,`active`,`d_su`,`ord`),
+  CONSTRAINT `routes_in_ibfk_1` FOREIGN KEY (`gate_grp_id`) REFERENCES `gate_grps` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6273,16 +6387,45 @@ INSERT INTO `routes_in` VALUES (4,6,0,10,'^5000',1,1,1,1,1,0,0,'08:00:00','18:00
 UNLOCK TABLES;
 
 --
+-- Table structure for table `softkey_profiles`
+--
+
+DROP TABLE IF EXISTS `softkey_profiles`;
+CREATE TABLE `softkey_profiles` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `is_user_profile` tinyint(1) unsigned NOT NULL default '0',
+  `title` varchar(50) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `title` (`title`(45)),
+  KEY `is_user_profile_title` (`is_user_profile`,`title`(45))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `softkey_profiles`
+--
+
+LOCK TABLES `softkey_profiles` WRITE;
+/*!40000 ALTER TABLE `softkey_profiles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `softkey_profiles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `softkeys`
 --
 
 DROP TABLE IF EXISTS `softkeys`;
 CREATE TABLE `softkeys` (
-  `user_id` int(10) unsigned NOT NULL default '0',
-  `phone` varchar(20) NOT NULL default '',
-  `key` varchar(10) NOT NULL default '',
-  `number` varchar(30) NOT NULL default '',
-  PRIMARY KEY  (`user_id`,`phone`,`key`)
+  `profile_id` int(10) unsigned NOT NULL default '0',
+  `phone_type` varchar(20) NOT NULL,
+  `key` varchar(10) NOT NULL,
+  `function` varchar(15) NOT NULL,
+  `data` varchar(100) NOT NULL,
+  `label` varchar(40) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `user_writeable` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`profile_id`,`phone_type`,`key`),
+  KEY `phone_type_key` (`phone_type`,`key`),
+  KEY `phone_type_function` (`phone_type`,`function`),
+  CONSTRAINT `softkeys_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `softkey_profiles` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
 
 --
@@ -6291,12 +6434,42 @@ CREATE TABLE `softkeys` (
 
 LOCK TABLES `softkeys` WRITE;
 /*!40000 ALTER TABLE `softkeys` DISABLE KEYS */;
-INSERT INTO `softkeys` VALUES (23,'snom','f1','');
-INSERT INTO `softkeys` VALUES (23,'snom','f10','');
-INSERT INTO `softkeys` VALUES (23,'snom','f11','2211');
-INSERT INTO `softkeys` VALUES (23,'snom','f3','44');
-INSERT INTO `softkeys` VALUES (23,'snom','f8','99');
 /*!40000 ALTER TABLE `softkeys` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_groups`
+--
+
+DROP TABLE IF EXISTS `user_groups`;
+CREATE TABLE `user_groups` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `lft` mediumint(8) unsigned NOT NULL,
+  `rgt` mediumint(8) unsigned NOT NULL,
+  `name` varchar(20) character set ascii NOT NULL,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `softkey_profile_id` int(10) unsigned default NULL,
+  `prov_param_profile_id` int(10) unsigned default NULL,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `lft` (`lft`),
+  UNIQUE KEY `rgt` (`rgt`),
+  KEY `softkey_profile_id` (`softkey_profile_id`),
+  KEY `title` (`title`(40)),
+  KEY `lft_rgt` (`lft`,`rgt`),
+  KEY `prov_param_profile_id` (`prov_param_profile_id`),
+  CONSTRAINT `user_groups_ibfk_6` FOREIGN KEY (`prov_param_profile_id`) REFERENCES `prov_param_profiles` (`id`),
+  CONSTRAINT `user_groups_ibfk_5` FOREIGN KEY (`softkey_profile_id`) REFERENCES `softkey_profiles` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `user_groups`
+--
+
+LOCK TABLES `user_groups` WRITE;
+/*!40000 ALTER TABLE `user_groups` DISABLE KEYS */;
+INSERT INTO `user_groups` VALUES (1,1,2,'root-node','Root node',NULL,NULL);
+/*!40000 ALTER TABLE `user_groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6316,13 +6489,20 @@ CREATE TABLE `users` (
   `host_id` mediumint(8) unsigned default '1',
   `current_ip` varchar(15) character set ascii default NULL,
   `user_comment` varchar(200) collate utf8_unicode_ci NOT NULL default '',
+  `group_id` mediumint(8) unsigned default NULL,
+  `softkey_profile_id` int(10) unsigned default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `user` (`user`),
   KEY `lastname_firstname` (`lastname`(15),`firstname`(15)),
   KEY `firstname_lastname` (`firstname`(15),`lastname`(15)),
   KEY `nobody_index` (`nobody_index`),
   KEY `host_id` (`host_id`),
-  KEY `current_ip` (`current_ip`)
+  KEY `current_ip` (`current_ip`),
+  KEY `group_id` (`group_id`),
+  KEY `softkey_profile_id` (`softkey_profile_id`),
+  CONSTRAINT `users_ibfk_4` FOREIGN KEY (`softkey_profile_id`) REFERENCES `softkey_profiles` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `users_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `user_groups` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `users_ibfk_3` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6331,23 +6511,23 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,'192.168.1.249','');
-INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'');
-INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,'192.168.1.202','');
-INSERT INTO `users` VALUES (8,'nobody-00004','','','','','',4,1,NULL,'');
-INSERT INTO `users` VALUES (9,'nobody-00005','','','','','',5,1,'192.168.1.202','');
-INSERT INTO `users` VALUES (10,'nobody-00006','','','','','',6,1,'192.168.1.247','');
-INSERT INTO `users` VALUES (11,'nobody-00007','','','','','',7,1,NULL,'');
-INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'');
-INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,'192.168.1.202','');
-INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,'192.168.1.201','');
-INSERT INTO `users` VALUES (22,'47110001','123','Bart','Simpson','','',NULL,1,NULL,'');
-INSERT INTO `users` VALUES (23,'47110002','123','Homer','Simpson','','',NULL,1,'192.168.1.247','');
-INSERT INTO `users` VALUES (24,'47110003','123','Marge','Simpson','','',NULL,1,'192.168.1.249','');
-INSERT INTO `users` VALUES (25,'47110004','123','Lisa','Simpson','','',NULL,1,'192.168.1.247','');
-INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'');
-INSERT INTO `users` VALUES (29,'nobody-00012','','','','','',12,1,'192.168.1.201','');
-INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,'192.168.1.109','');
+INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,'192.168.1.249','',NULL,NULL);
+INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'',NULL,NULL);
+INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,'192.168.1.202','',NULL,NULL);
+INSERT INTO `users` VALUES (8,'nobody-00004','','','','','',4,1,NULL,'',NULL,NULL);
+INSERT INTO `users` VALUES (9,'nobody-00005','','','','','',5,1,'192.168.1.202','',NULL,NULL);
+INSERT INTO `users` VALUES (10,'nobody-00006','','','','','',6,1,'192.168.1.247','',NULL,NULL);
+INSERT INTO `users` VALUES (11,'nobody-00007','','','','','',7,1,NULL,'',NULL,NULL);
+INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'',NULL,NULL);
+INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,'192.168.1.202','',NULL,NULL);
+INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,'192.168.1.201','',NULL,NULL);
+INSERT INTO `users` VALUES (22,'47110001','123','Bart','Simpson','','',NULL,1,NULL,'',NULL,NULL);
+INSERT INTO `users` VALUES (23,'47110002','123','Homer','Simpson','','',NULL,1,'192.168.1.247','',NULL,NULL);
+INSERT INTO `users` VALUES (24,'47110003','123','Marge','Simpson','','',NULL,1,'192.168.1.249','',NULL,NULL);
+INSERT INTO `users` VALUES (25,'47110004','123','Lisa','Simpson','','',NULL,1,'192.168.1.247','',NULL,NULL);
+INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'',NULL,NULL);
+INSERT INTO `users` VALUES (29,'nobody-00012','','','','','',12,1,'192.168.1.201','',NULL,NULL);
+INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,'192.168.1.109','',NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6360,7 +6540,8 @@ CREATE TABLE `users_external_numbers` (
   `user_id` int(10) unsigned NOT NULL default '0',
   `number` varchar(25) character set latin1 collate latin1_general_ci NOT NULL default '',
   PRIMARY KEY  (`user_id`,`number`),
-  KEY `number` (`number`)
+  KEY `number` (`number`),
+  CONSTRAINT `users_external_numbers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6383,7 +6564,8 @@ CREATE TABLE `vm` (
   `user_id` int(10) unsigned NOT NULL default '0',
   `internal_active` tinyint(1) unsigned NOT NULL default '0',
   `external_active` tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`user_id`)
+  PRIMARY KEY  (`user_id`),
+  CONSTRAINT `vm_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6425,7 +6607,9 @@ CREATE TABLE `vm_msgs` (
   KEY `origtime_callerchan` (`orig_time`,`callerchan`(20)),
   KEY `hostid` (`host_id`),
   KEY `userid_folder_origtime` (`user_id`,`folder`,`orig_time`),
-  KEY `mbox_origtime_callerchan` (`mbox`,`orig_time`,`callerchan`(20))
+  KEY `mbox_origtime_callerchan` (`mbox`,`orig_time`,`callerchan`(20)),
+  CONSTRAINT `vm_msgs_ibfk_1` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`),
+  CONSTRAINT `vm_msgs_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6438,6 +6622,25 @@ INSERT INTO `vm_msgs` VALUES (1,1,'2001',23,'2001','Work','msg0000',1191002138,1
 /*!40000 ALTER TABLE `vm_msgs` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Current Database: `asterisk`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `asterisk` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
+
+USE `asterisk`;
+
+--
+-- View structure for view `ast_sipfriends_gs`
+--
+
+/*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 CREATE ALGORITHM=MERGE */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact` from ((`ast_sipfriends` `s` join `users` `u` on((`u`.`id` = `s`.`_user_id`))) join `hosts` `h` on((`h`.`id` = `u`.`host_id`))) where (`h`.`is_foreign` = 0)) */
+/*!50002 WITH CASCADED CHECK OPTION */;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -6447,4 +6650,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-02-29  11:07:12
+-- Dump completed on 2008-05-29  11:07:12

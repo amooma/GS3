@@ -75,8 +75,10 @@ ORDER BY `q`.`name`'
 
 
 if ($rs_queues->numRows()==0) {
-	echo __('Sie sind nicht Mitglied einer Warteschlange.'), '<br />';  //TRANSLATEME
+	echo __('Sie sind nicht Mitglied einer Warteschlange.') ,'<br />', "\n";
+	$slow_refresh = true;
 } else {
+	$slow_refresh = false;
 	while ($queue = $rs_queues->fetchRow()) {
 		
 		# get queue members from db
@@ -360,5 +362,5 @@ if (is_array( @$queue_stats['callers'] )) {
 ?>
 
 <script type="text/javascript">/*<![CDATA[*/
-window.setTimeout('document.location.reload();', 20000);
+window.setTimeout('document.location.reload();', <?php echo $slow_refresh ? '40000':'15000'; ?>);
 /*]]>*/</script>

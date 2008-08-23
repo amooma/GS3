@@ -79,7 +79,10 @@ class "Snom" {
 #  Siemens OpenStage
 ########################################################
 class "SiemensPhone" {
-	match if substring(hardware, 1, 3) = 00:01:E3;
+	match if (
+		(substring(hardware, 1, 3) = 00:01:E3) or
+		(substring(hardware, 1, 3) = 00:1A:E8)
+	);
 	
 	vendor-option-space        OptiIpPhone;
 	option OptiIpPhone.magic   53:69:65:6D:65:6E:73:00:00:00;  # "SIEMENS\0\0\0"

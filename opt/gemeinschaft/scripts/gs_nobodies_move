@@ -27,6 +27,11 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+//FIXME
+echo "Not yet BOI safe.\n";
+exit(1);
+
+
 define( 'GS_VALID', true );  /// this is a parent file
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
@@ -89,6 +94,10 @@ if ($opts['host'] != 'RANDOM') {
 		passthru( GS_DIR .'scripts/gs_hosts_get' );
 		die(1);
 	}
+	if ($h['is_foreign']) {
+		echo "Cannot move nobodies to foreign host!\n";
+		die(1);
+	}
 	$host_id   = $h['id'];
 	$host_host = $h['host'];
 	
@@ -104,8 +113,11 @@ if ($opts['host'] != 'RANDOM') {
 'SELECT `u`.`id`, `u`.`user` `uc`, `s`.`name` `ext`
 FROM
 	`users` `u` LEFT JOIN
-	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-WHERE `u`.`nobody_index`>0'
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) LEFT JOIN
+	`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
+WHERE
+	`u`.`nobody_index`>0 AND
+	`h`.`is_foreign`<>1'
 	);
 	echo 'Rebooting: ';
 	while ($u = $rs->fetchRow()) {
@@ -144,8 +156,11 @@ WHERE `u`.`nobody_index`>0'
 'SELECT `u`.`id`, `u`.`user` `uc`, `s`.`name` `ext`
 FROM
 	`users` `u` LEFT JOIN
-	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-WHERE `u`.`nobody_index`>0'
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) LEFT JOIN
+	`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
+WHERE
+	`u`.`nobody_index`>0 AND
+	`h`.`is_foreign`<>1'
 	);
 	if (! $rs) {
 		echo "Error.\n";

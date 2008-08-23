@@ -55,8 +55,9 @@ function gs_extstate( $host, $exts )
 	if (! is_array($exts)) {
 		$exts = array($exts);
 		$return_single = true;
-	} else
+	} else {
 		$return_single = false;
+	}
 	
 	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
 		$host = '127.0.0.1';
@@ -69,30 +70,46 @@ function gs_extstate( $host, $exts )
 	}
 	if (! is_resource($hosts[$host]['sock'])) {
 		
-		if ($hosts[$host]['lasttry'] > time()-3600) {
+		if ($hosts[$host]['lasttry'] > time()-60) {
 			# we have tried less than a minute ago
 			$hosts[$host]['lasttry'] = time();
-			return AST_MGR_EXT_UNKNOWN;
+			return $return_single ? AST_MGR_EXT_UNKNOWN : array();
 		}
 		$hosts[$host]['lasttry'] = time();
 		
-		$sock = @ fSockOpen( $host, 5038, $err, $errMsg, 4 );
-		if (! is_resource($sock))
-			return AST_MGR_EXT_UNKNOWN;
+		$sock = @ fSockOpen( $host, 5038, $err, $errMsg, 2 );
+		if (! is_resource($sock)) {
+			gs_log( GS_LOG_WARNING, 'Connection to AMI on '.$host.' failed' );
+			return $return_single ? AST_MGR_EXT_UNKNOWN : array();
+		}
+		$data = _sock_read( $sock, 3, '/[\\r\\n]/' );
+		if (! preg_match('/^Asterisk [^\/]+\/(\d(?:\.\d)?)/mis', $data, $m)) {
+			gs_log( GS_LOG_WARNING, 'Incompatible Asterisk manager interface on '.$host );
+			$m = array(1=>'0.0');
+		} else {
+			if ($m[1] > '1.1') {
+				# Asterisk 1.4: manager 1.0
+				# Asterisk 1.6: manager 1.1
+				gs_log( GS_LOG_NOTICE, 'Asterisk manager interface on '.$host.' speaks a new protocol version ('.$m[1].')' );
+				# let's try anyway and hope to understand it
+			}
+		}
 		$hosts[$host]['sock'] = $sock;
 		$req = "Action: Login\r\n"
 		     . "Username: ". "gscc" ."\r\n"
-		     . "Secret: ". "gspass" ."\r\n"
+		     . "Secret: ". "gspass" ."\r\n"  //FIXME
 		     . "Events: off\r\n"
 		     . "\r\n";
 		@ fWrite( $sock, $req, strLen($req) );
 		@ fFlush( $sock );
-		$data = _sock_read( $sock, 5, '/\\r\\n\\r\\n/' );
+		$data = _sock_read( $sock, 5, '/\\r\\n\\r\\n/S' );
 		if (! preg_match('/Authentication accepted/i', $data)) {
+			gs_log( GS_LOG_WARNING, 'Authentication to AMI on '.$host.' failed' );
 			$hosts[$host]['sock'] = null;
 		}
-	} else
+	} else {
 		$sock = $hosts[$host]['sock'];
+	}
 	
 	$states = array();
 	foreach ($exts as $ext) {
@@ -102,7 +119,7 @@ function gs_extstate( $host, $exts )
 		     . "\r\n";
 		@ fWrite( $sock, $req, strLen($req) );
 		@ fFlush( $sock );
-		$resp = trim( _sock_read( $sock, 3, '/\\r\\n\\r\\n/' ) );
+		$resp = trim( _sock_read( $sock, 3, '/\\r\\n\\r\\n/S' ) );
 		//echo "\n$resp\n\n";
 		$states[$ext] = AST_MGR_EXT_UNKNOWN;
 		if (! preg_match('/^Response:\s*Success/is', $resp)) continue;
@@ -113,12 +130,13 @@ function gs_extstate( $host, $exts )
 		$states[$resp_ext] = $resp_state;
 	}
 	
-	if (! $return_single)
-		return $states;
-	else
+	if ($return_single) {
 		return array_key_exists( $exts[0], $states )
 			? $states[$exts[0]]
 			: AST_MGR_EXT_UNKNOWN;
+	} else {
+		return $states;
+	}
 }
 
 function gs_extstate_single( $ext )

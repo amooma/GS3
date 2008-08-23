@@ -74,7 +74,6 @@ if (@$_REQUEST['action']=='save') {
 
 
 
-//$keys = gs_user_snom_keys_get( $_SESSION['sudo_user']['name'] );
 $keys = gs_keys_snom_get( $_SESSION['sudo_user']['name'] );
 if (isGsError($keys)) {
 	echo __('Fehler beim Abfragen.'), '<br />', $keys->getMsg();

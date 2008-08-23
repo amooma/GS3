@@ -33,7 +33,7 @@ defined('GS_VALID') or die('No direct access.');
 *    returns an array of the hosts
 ***********************************************************/
 
-function gs_hosts_get()
+function gs_hosts_get( $foreign=false, $group_id=null )
 {
 	# connect to db
 	#
@@ -43,11 +43,20 @@ function gs_hosts_get()
 	
 	# get hosts
 	#
-	$rs = $db->execute(
-'SELECT `id`, `host`, `comment`
+	$where = array();
+	if ($foreign !== null) {
+		$where[] = '`is_foreign`='. ($foreign ? '1':'0');
+	}
+	if ($group_id !== null) {
+		$where[] = '`group_id`='. (int)$group_id;
+	}
+	$query =
+'SELECT `id`, `host`, `comment`, `is_foreign`, `group_id`
 FROM `hosts`
-ORDER BY `id`'
-	);
+'. (count($where)===0 ? '' : ('WHERE '.implode(' AND ', $where))) .'
+ORDER BY `is_foreign`,`host`'
+	;
+	$rs = $db->execute($query);
 	if (! $rs)
 		return new GsError( 'Error.' );
 	

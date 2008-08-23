@@ -106,25 +106,8 @@ ORDER BY `g`.`id`'
 while ($gw = $rs->fetchRow()) {
 	if ($gw['host'] != '' && $gw['user'] != '') {
 		
-		//echo 'register => '. $gw['user'] .':'. $gw['pwd'] .':'. $gw['user'] .'@'. $gw['host'] .'/'. $gw['user'] .'' ,"\n";
+		// Format for registration is user[:secret[:authuser]]@host[:port][/contact]
 		
-		//echo 'register => '. $gw['user'] .'@'. $gw['name'] ,"\n";
-		// WARNING[13092]: chan_sip.c:4650 sip_register: Format for registration is user[:secret[:authuser]]@host[:port][/contact]
-		/*
-		echo 'register => ', $gw['user'];  # user
-		if ($gw['pwd'] != '') {
-			echo ':', $gw['pwd'];
-			if ($gw['user'] != '') {
-				echo ':', $gw['user'];  # authuser
-			}
-		}
-		echo '@', $gw['host'];
-		if ($gw['user'] != '') {
-			echo '/', $gw['user'];  # contact
-		}
-		*/
-		
-		//$gw['user'] .= '@sipdomain.dom';
 		if (preg_match('/@([^@]*)$/', $gw['user'], $m)) {
 			$gw['fromdomain'] = $m[1];  # domain for the From header. like
 			                            # setting fromdomain in the peer definition
@@ -132,7 +115,6 @@ while ($gw = $rs->fetchRow()) {
 		} else {
 			$gw['fromdomain'] = '';
 		}
-		//print_r($gw);
 		
 		echo 'register => ', $gw['user'];  # user
 		if ($gw['fromdomain'] != '') {
@@ -144,7 +126,8 @@ while ($gw = $rs->fetchRow()) {
 				echo ':', $gw['user'];     # authuser
 			}
 		}
-		echo '@', $gw['name'];             # peer definition
+		//echo '@', $gw['name'];             # peer definition
+		echo '@', $gw['host'];             # host
 		if ($gw['user'] != '') {
 			echo '/', $gw['user'];         # contact
 		}

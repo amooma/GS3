@@ -62,7 +62,7 @@ function & gs_db_master_connect()
 	&&  method_exists($gs_db_conn_master, 'isConnected')
 	&&  $gs_db_conn_master->isConnected())
 	{
-		gs_log( GS_LOG_DEBUG, 'Using the existing master DB connection'. $caller_info );
+		//gs_log( GS_LOG_DEBUG, 'Using the existing master DB connection'. $caller_info );
 		return $gs_db_conn_master;
 	}
 	gs_log( GS_LOG_DEBUG, 'Opening a new master DB connection'. $caller_info );
@@ -79,7 +79,9 @@ function & gs_db_master_connect()
 		array('reuse'=>false)  // do not use. leaves lots of connections
 		)))
 	{
-		gs_log( GS_LOG_WARNING, 'Could not connect to master database!' );
+		$lastNativeError    = @$db->getLastNativeError();
+		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
+		gs_log( GS_LOG_WARNING, 'Could not connect to master database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
 		$null = null;
 		return $null;
 	}
@@ -110,7 +112,7 @@ function & gs_db_slave_connect()
 	&&  method_exists($gs_db_conn_slave, 'isConnected')
 	&&  $gs_db_conn_slave->isConnected())
 	{
-		gs_log( GS_LOG_DEBUG, 'Using the existing slave DB connection'. $caller_info );
+		//gs_log( GS_LOG_DEBUG, 'Using the existing slave DB connection'. $caller_info );
 		return $gs_db_conn_slave;
 	}
 	gs_log( GS_LOG_DEBUG, 'Opening a new slave DB connection'. $caller_info );
@@ -127,7 +129,9 @@ function & gs_db_slave_connect()
 		array('reuse'=>false)  // do not use. leaves lots of connections
 		)))
 	{
-		gs_log( GS_LOG_WARNING, 'Could not connect to slave database!' );
+		$lastNativeError    = @$db->getLastNativeError();
+		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
+		gs_log( GS_LOG_WARNING, 'Could not connect to slave database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
 		$null = null;
 		return $null;
 	}
@@ -138,6 +142,30 @@ function & gs_db_slave_connect()
 		$gs_db_conn_master = $db;
 	}
 	return $gs_db_conn_slave;
+}
+
+
+function gs_db_start_trans( &$dbConn )
+{
+	if (gs_get_conf('GS_DB_MASTER_TRANSACTIONS')) {
+		@$dbConn->startTrans();
+	}
+}
+
+function gs_db_commit_trans( &$dbConn )
+{
+	if (gs_get_conf('GS_DB_MASTER_TRANSACTIONS')) {
+		return @$dbConn->completeTrans();
+	}
+	return true;
+}
+
+function gs_db_rollback_trans( &$dbConn )
+{
+	if (gs_get_conf('GS_DB_MASTER_TRANSACTIONS')) {
+		return @$dbConn->completeTrans(false);
+	}
+	return false;
 }
 
 

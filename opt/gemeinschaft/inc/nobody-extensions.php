@@ -28,16 +28,19 @@
 
 defined('GS_VALID') or die('No direct access.');
 
-$gsDefaultNobodyPattern = '9xxxxx';
-// will only be used if GS_EXTEN_NOBODY_PATTERN has bad syntax
+$gsDefaultNobodyPattern        = '9xxxxx';
+// will only be used if NOBODY_EXTEN_PATTERN has bad syntax
+$gsDefaultNobodyPatternForeign = '9xxxxx';
+// will only be used if BOI_NOBODY_EXTEN_PATTERN has bad syntax
 
 
 // don't call from anywhere except in this file
-function gs_conf_nobody_pattern()
+function gs_conf_nobody_pattern( $at_boi_host=false )
 {
-	global $gsDefaultNobodyPattern;
+	global $gsDefaultNobodyPattern, $gsDefaultNobodyPatternForeign;
 	
-	$pattern = strToLower(trim( GS_NOBODY_EXTEN_PATTERN ));
+	$pattern = strToLower(trim(
+		$at_boi_host ? GS_BOI_NOBODY_EXTEN_PATTERN : GS_NOBODY_EXTEN_PATTERN ));
 	if (! preg_match('/^\d+x+$/', $pattern))
 		$pattern = $gsDefaultNobodyPattern;
 	return $pattern;
@@ -46,12 +49,12 @@ function gs_conf_nobody_pattern()
 
 function gs_nobody_pattern()
 {
-	return '_'. str_replace('x', 'X', gs_conf_nobody_pattern());
+	return '_'. str_replace('x', 'X', gs_conf_nobody_pattern(false));
 }
 
-function gs_nobody_index_to_extension( $index )
+function gs_nobody_index_to_extension( $index, $at_boi_host=false )
 {
-	$start = (int)preg_replace('/[^\d]/', '0', gs_conf_nobody_pattern());
+	$start = (int)preg_replace('/[^\d]/', '0', gs_conf_nobody_pattern($at_boi_host));
 	return (string)( $start + (int)$index );
 }
 

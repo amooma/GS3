@@ -37,21 +37,28 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 # functions would be fatal.)
 
 
-function gs_ldap_connect()
+function gs_ldap_connect( $host=null, $port=null, $binddn=null, $pwd=null, $proto=null, $ssl=null )
 {
 	if (! function_exists('ldap_connect')) {
 		gs_log( GS_LOG_FATAL, 'This PHP does not support LDAP (module missing)!' );
 		return null;
 	}
 	
-	$uri = (GS_LDAP_SSL ? 'ldaps' : 'ldap') .'://'. GS_LDAP_HOST
-		. (GS_LDAP_PORT < 1 ? '' : ':'. (int)GS_LDAP_PORT) .'/';
+	if ($host   === null) $host   = GS_LDAP_HOST;
+	if ($port   === null) $port   = GS_LDAP_PORT;
+	if ($binddn === null) $binddn = GS_LDAP_BINDDN;
+	if ($pwd    === null) $pwd    = GS_LDAP_PWD;
+	if ($proto  === null) $proto  = GS_LDAP_PROTOCOL;
+	if ($ssl    === null) $ssl    = GS_LDAP_SSL;
 	
-	if (! GS_LDAP_SSL) {
-		if (GS_LDAP_PORT < 1)
-			$ldap = @ ldap_connect( GS_LDAP_HOST );
+	$uri = ($ssl ? 'ldaps':'ldap') .'://'. $host
+		. ($port < 1 ? '' : ':'.(int)$port) .'/';
+	
+	if (! $ssl) {
+		if ($port < 1)
+			$ldap = @ ldap_connect( $host );
 		else
-			$ldap = @ ldap_connect( GS_LDAP_HOST, (int)GS_LDAP_PORT );
+			$ldap = @ ldap_connect( $host, (int)$port );
 	} else {
 			$ldap = @ ldap_connect( $uri );
 	}
@@ -60,15 +67,15 @@ function gs_ldap_connect()
 		return null;
 	}
 	
-	$ok = @ ldap_set_option( $ldap, LDAP_OPT_PROTOCOL_VERSION, (int)GS_LDAP_PROTOCOL );
+	$ok = @ ldap_set_option( $ldap, LDAP_OPT_PROTOCOL_VERSION, (int)$proto );
 	if (! $ok) {
-		gs_log( GS_LOG_WARNING, 'Could not set LDAP protocol version to '. (int)GS_LDAP_PROTOCOL .'!' );
+		gs_log( GS_LOG_WARNING, 'Could not set LDAP protocol version to '. (int)$proto .'!' );
 		return null;
 	}
 	
-	$ok = @ ldap_bind( $ldap, GS_LDAP_BINDDN, GS_LDAP_PWD );
+	$ok = @ ldap_bind( $ldap, $binddn, $pwd );
 	if (! $ok) {
-		gs_log( GS_LOG_WARNING, 'Could not connect to LDAP server "'. $uri .'" as "'. GS_LDAP_BINDDN .'"! - '. gs_get_ldap_error($ldap) );
+		gs_log( GS_LOG_WARNING, 'Could not connect to LDAP server "'. $uri .'" as "'. $binddn .'"! - '. gs_get_ldap_error($ldap) );
 		return null;
 	}
 	
@@ -89,6 +96,35 @@ function gs_get_ldap_error( $ldap_conn )
 		return ' NO LDAP SUPPORT';
 	}
 	return '['. @ldap_errNo($ldap_conn) .'] '. @ldap_error($ldap_conn);
+}
+
+
+
+function ldap_prop_abbr( $prop )
+{
+	static $to_short = array(
+		'userid'            => 'uid',
+		'commonname'        => 'cn',
+		'surname'           => 'sn',
+		'givenname'         => 'gn',
+		'country'           => 'c',
+		'state'             => 'st',
+		'organization'      => 'o',
+		'organizationalunit'=> 'ou'
+	);
+	$prop = strToLower($prop);
+	return (array_key_exists($prop, $to_short) ? $to_short[$prop] : $prop);
+}
+
+
+function ldap_prop_equal( $a, $b )
+{
+	$a = strToLower($a);
+	$b = strToLower($b);
+	if ($a === $b) return true;
+	$a = ldap_prop_abbr($a);
+	$b = ldap_prop_abbr($b);
+	return ($a === $b);
 }
 
 
@@ -142,6 +178,7 @@ function gs_ldap_get_list( $ldap_conn, $base, $filter='', $props=array(), $limit
 		}
 	}
 	*/
+	$ret = array();
 	$numRows = @$res['count'];
 	unset( $res['count'] );
 	for ($i=0; $i<$numRows; ++$i) {
@@ -156,6 +193,7 @@ function gs_ldap_get_list( $ldap_conn, $base, $filter='', $props=array(), $limit
 			unset( $res[$i][$key] );
 			$res[$i][strToLower($key)] = $arr;
 		}
+		/*
 		if (count($props) > 0) {
 			foreach ($props as $wanted_prop) {
 				$wanted_prop = strToLower($wanted_prop);
@@ -163,9 +201,23 @@ function gs_ldap_get_list( $ldap_conn, $base, $filter='', $props=array(), $limit
 					$res[$i][$wanted_prop] = array();
 			}
 		}
+		*/
+		if (count($props) > 0) {
+			$ret[$i] = array();
+			foreach ($res[$i] as $returned_prop => $arr) {
+				foreach ($props as $wanted_prop) {
+					if (ldap_prop_equal($returned_prop, $wanted_prop)) {
+						$ret[$i][$wanted_prop] = $arr;
+					}
+				}
+			}
+		} else {
+			$ret[$i] = $res[$i];
+		}
+		unset($res[$i]);
 	}
 	
-	return $res;
+	return $ret;
 }
 
 

@@ -159,7 +159,7 @@ if (false) {
 		
 		if ($node['active']) {
 			echo '<td class="r">';
-			if ($ping_err==0) {
+			if ($ping_err === 0) {
 				$timeout = 2;
 				$cmd = 'PATH=$PATH:/usr/local/bin; '. GS_DIR .'sbin/check-sip-alive '. qsa('sip:checkalive@'. $ip) .' '. $timeout;
 				$out = array();
@@ -167,7 +167,7 @@ if (false) {
 				@exec($cmd .' 2>&1', $out, $err);
 				$time = (microtime_float() - $start) * 0.7;  # script startup time
 				$out = strToUpper(trim(implode("\n", $out)));
-				if ($err==0 && subStr($out,0,2)=='OK') {
+				if ($err===0 && subStr($out,0,2)==='OK') {
 					echo '<span style="color:#0a0;">', round($time*1000), '&nbsp;ms</span>';
 				} else {
 					if ($out=='FAIL')

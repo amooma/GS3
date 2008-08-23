@@ -31,6 +31,10 @@
 #
 # DEPRECATED - use gs_keys_snom_get
 #
+echo "DEPRECATED!\n";
+exit(1);
+
+
 
 
 define( 'GS_VALID', true );  /// this is a parent file

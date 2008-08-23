@@ -26,6 +26,10 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+#
+# legacy call-init script !
+#
+
 /*
 URL PARAMETERS:
    user=    Benutzername
@@ -35,8 +39,8 @@ URL PARAMETERS:
    from=    Ausgangsnummer
    cidnum=  Caller-ID-Nummer
    /callerid=
-   clir=1   zur Rufnummernunterdrückung
-   prv=1    für Privatgespräch
+   clir=1   zur Rufnummernunterdrueckung
+   prv=1    fuer Privatgespraech
 */
 
 
@@ -47,7 +51,6 @@ require_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 require_once( GS_DIR .'inc/remote-exec.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
-
 
 header( 'Content-Type: text/plain; charset=utf-8' );
 header( 'Pragma: no-cache' );
@@ -101,23 +104,25 @@ function _pack_int( $int ) {
 
 
 
-$remote_ip = @ $_SERVER['REMOTE_ADDR'];
+$remote_ip = @$_SERVER['REMOTE_ADDR'];
 
 $networks = explode(',', GS_CALL_INIT_FROM_NET);
 $allowed = false;
 foreach ($networks as $net) {
 	if (ip_addr_in_network( $remote_ip, trim($net) )) {
 		$allowed = true;
+		$net = trim($net);
 		break;
 	}
 }
-if ($allowed)
+if ($allowed) {
 	gs_log( GS_LOG_DEBUG, "IP $remote_ip is in $net => allowed to init call" );
-else {
+} else {
 	gs_log( GS_LOG_NOTICE, "IP $remote_ip is not in GS_CALL_INIT_FROM_NET => not allowed to init call" );
 	die_not_allowed( 'You are not allowed to init a call.' );
 }
 
+gs_log( GS_LOG_WARNING, 'Using legacy call-init script!' );
 
 
 # user
@@ -163,22 +168,24 @@ if (! $is_LVM_agenturmitarbeiter) {
 
 # from number
 #
-if (! isSet( $_REQUEST['from'] ))
+if (! isSet( $_REQUEST['from'] )) {
 	$from_num = null;  # i.e. use default
-else {
+} else {
 	$from_num = _normalize_number( $_REQUEST['from'] );
 }
-if ($from_num == $user['ext'])
+if ($from_num === $user['ext']) {
 	$from_num = null;
+}
 if ($from_num) {
 	if (! $is_LVM_agenturmitarbeiter) {
-		$user_external_numbers = @ gs_user_external_numbers_get( $user_code );
+		$user_external_numbers = @gs_user_external_numbers_get( $user_code );
 		if (isGsError($user_external_numbers)) {
 			gs_log( GS_LOG_WARNING, $user_external_numbers->getMsg() );
 			$user_external_numbers = array();
 		}
-		if (! is_array($user_external_numbers))
+		if (! is_array($user_external_numbers)) {
 			$user_external_numbers = array();
+		}
 		if (! in_array($from_num, $user_external_numbers, true)) {
 			gs_log( GS_LOG_WARNING, 'User '. $user_code .' does not have "'. $from_num .'" in external numbers. Falling back to default number "'. $user['ext'] .'".' );
 			$from_num = null;
@@ -191,30 +198,34 @@ if ($from_num) {
 		die_invalid( 'LVM Agenturmitarbeiter - must use from=' );
 	}
 }
+$from_num_effective = ($from_num ? $from_num : $user['ext']);
 
 
 # cidnum
 #
-if (isSet( $_REQUEST['cidnum'] ))
+if (isSet( $_REQUEST['cidnum'] )) {
 	$cidnum = _normalize_number( $_REQUEST['cidnum'] );
-elseif (isSet( $_REQUEST['callerid'] ))
+} elseif (isSet( $_REQUEST['callerid'] )) {
 	$cidnum = _normalize_number( $_REQUEST['callerid'] );
-else
+} else {
 	$cidnum = null;  # i.e. use the default
+}
 
-if ($cidnum == $user['ext'])
+if ($cidnum === $user['ext']) {
 	$cidnum = null;
+}
 if ($cidnum) {
 	if (! $is_LVM_agenturmitarbeiter) {
 		if (! is_array($user_external_numbers)) {
 			# we might already have that
-			$user_external_numbers = @ gs_user_external_numbers_get( $user_code );
+			$user_external_numbers = @gs_user_external_numbers_get( $user_code );
 			if (isGsError($user_external_numbers)) {
 				gs_log( GS_LOG_WARNING, $user_external_numbers->getMsg() );
 				$user_external_numbers = array();
 			}
-			if (! is_array($user_external_numbers))
+			if (! is_array($user_external_numbers)) {
 				$user_external_numbers = array();
+			}
 		}
 		if (! in_array($cidnum, $user_external_numbers, true)) {
 			gs_log( GS_LOG_WARNING, 'User '. $user_code .' does not have "'. $cidnum .'" in external numbers. Falling back to default number (from=) as CIDnum.' );
@@ -233,48 +244,48 @@ if (! isSet( $_REQUEST['to'] ))
 	die_invalid( 'No phone number specified. Use to=' );
 $to_num = _normalize_number( $_REQUEST['to'] );
 
-if ( ($from_num && $to_num == $from_num)
-||   (! $from_num && $to_num == $user['ext']) )
+if ( (  $from_num && $to_num === $from_num   )
+||   (! $from_num && $to_num === $user['ext']) )
 {
 	# from_num and to_num must not be the same - would probably result
 	# in voicemail picking up the phone
 	gs_log( GS_LOG_NOTICE, 'Won\'t make a call when from and to numbers are equal ('. $to_num .').' );
-	die_invalid( 'Can\'t make a call from "'. ($from_num ? $from_num : $user['ext']) .'" to "'. $to_num .'".' );
+	die_invalid( 'Can\'t make a call from "'. $from_num_effective .'" to "'. $to_num .'".' );
 }
 
 
 # CLIR
 #
-if (! isSet( $_REQUEST['clir'] ))
+if (! isSet( $_REQUEST['clir'] )) {
 	$clir = false;
-else {
+} else {
 	$clir = strToLower(trim( $_REQUEST['clir'] ));
-	$clir = ($clir > 0 || $clir=='yes' || $clir=='true');
+	$clir = ($clir > 0 || $clir==='yes' || $clir==='true');
 }
 
 # private call
 #
-if (! isSet( $_REQUEST['prv'] ))
+if (! isSet( $_REQUEST['prv'] )) {
 	$prv = false;
-else {
+} else {
 	$prv = strToLower(trim( $_REQUEST['prv'] ));
-	$prv = ($prv > 0 || $prv=='yes' || $prv=='true');
+	$prv = ($prv > 0 || $prv==='yes' || $prv==='true');
 }
 $prvPrefix = $prv ? '*7*' : '';
 
 
 
 
-gs_log( GS_LOG_DEBUG, "Init call - user: $user_code, from: ". ($from_num ? $from_num : '(default)') .", to: $to_num, clir: ". ($clir ? 'yes':'no') );
+gs_log( GS_LOG_DEBUG, "Init call - user: $user_code, from: ". ($from_num ? $from_num : 'default ('.$from_num_effective.')') .", to: $to_num, clir: ". ($clir ? 'yes':'no') );
 
 if (! $clir) {
 	if (! $is_LVM_agenturmitarbeiter) {
 		$firstname_abbr = mb_subStr($user['firstname'],0,1);
 		$firstname_abbr = ($firstname_abbr != '') ? $firstname_abbr .'. ' : '';
 		if (! $cidnum)
-			$callerid = $firstname_abbr . $user['lastname'] .' <'. ($from_num ? $from_num : $user['ext']) .'>';
+			$callerid = $firstname_abbr . $user['lastname'] .' <'. $from_num_effective .'>';
 		else
-			$callerid = $firstname_abbr . $user['lastname'] .' <'. ($cidnum ? $cidnum : ($from_num ? $from_num : $user['ext'])) .'>';
+			$callerid = $firstname_abbr . $user['lastname'] .' <'. ($cidnum ? $cidnum : $from_num_effective) .'>';
 	} else {
 		$callerid = 'Agenturmitarbeiter <anonymous>';
 	}
@@ -283,7 +294,7 @@ if (! $clir) {
 }
 
 /*
-$call = "Channel: Local/". ($from_num ? $from_num : $user['ext']) ."\n"
+$call = "Channel: Local/". $from_num_effective ."\n"
       . "MaxRetries: 0\n"
       //. "RetryTime: 5\n"
       . "WaitTime: 15\n"
@@ -297,7 +308,7 @@ $call = "Channel: Local/". ($from_num ? $from_num : $user['ext']) ."\n"
       . "Setvar: __saved_callerid=$callerid\n"  # always useful to know the orgin
 ;
 */
-$call = "Channel: Local/". ($from_num ? $from_num : $user['ext']) ."\n"
+$call = "Channel: Local/". $from_num_effective ."\n"
       . "MaxRetries: 0\n"
       //. "RetryTime: 5\n"
       . "WaitTime: 15\n"
@@ -315,20 +326,20 @@ $call = "Channel: Local/". ($from_num ? $from_num : $user['ext']) ."\n"
 //echo $call;
 
 $filename = '/tmp/gs-'. $user['id'] .'-'. _pack_int(time()) . rand(100,999) .'.call';
-$cf = @ fOpen( $filename, 'wb' );
+$cf = @fOpen( $filename, 'wb' );
 if (! $cf) {
 	gs_log( GS_LOG_WARNING, 'Failed to write call file "'. $filename .'"' );
 	die_error( 'Failed to write call file.' );
 }
-@ fWrite( $cf, $call, strLen($call) );
-@ fClose( $cf );
-@ chmod( $filename, 00666 );
+@fWrite( $cf, $call, strLen($call) );
+@fClose( $cf );
+@chmod( $filename, 00666 );
 
 $spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
 
 
 if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
-	$our_host_ids = @ gs_get_listen_to_ids();
+	$our_host_ids = @gs_get_listen_to_ids();
 	if (! is_array($our_host_ids)) $our_host_ids = array();
 	$user_is_on_this_host = in_array( $user['host_id'], $our_host_ids );
 } else {
@@ -349,21 +360,22 @@ if ($user_is_on_this_host) {
 	
 	# the Asterisk of this user and the web server both run on this host
 	
-	//$ok = @ rename( $filename, $spoolfile );
+	//$ok = @rename( $filename, $spoolfile );
 	$err=0; $out=array();
-	@ exec( 'sudo mv '. qsa($filename) .' '. qsa($spoolfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
-	if ($err !== 0) {
-		@ unlink( $filename );
+	@exec( 'sudo mv '. qsa($filename) .' '. qsa($spoolfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+	if ($err != 0) {
+		@unlink( $filename );
 		gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"' );
 		die_error( 'Failed to move call file.' );
 	}
 	
-} else {
+}
+else {
 	
 	$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $filename ) .' '. qsa( 'root@'. $user['host'] .':'. $filename );
 	//echo $cmd, "\n";
-	@ exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
-	@ unlink( $filename );
+	@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
+	@unlink( $filename );
 	if ($err != 0) {
 		gs_log( GS_LOG_WARNING, 'Failed to scp call file "'. $filename .'" to '. $user['host'] );
 		die_error( 'Failed to scp call file.' );
@@ -371,7 +383,7 @@ if ($user_is_on_this_host) {
 	//remote_exec( $user['host'], $cmd, 10, $out, $err ); // <-- does not use sudo!
 	$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa( $user['host'] ) .' '. qsa( 'mv '. qsa( $filename ) .' '. qsa( $spoolfile ) );
 	//echo $cmd, "\n";
-	@ exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
+	@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
 	if ($err != 0) {
 		gs_log( GS_LOG_WARNING, 'Failed to mv call file "'. $filename .'" on '. $user['host'] .' to "'. $spoolfile .'"' );
 		die_error( 'Failed to mv call file on remote host.' );
@@ -379,7 +391,7 @@ if ($user_is_on_this_host) {
 	
 }
 
-die_ok( "OK. Calling $to_num from ". ($from_num ? $from_num : $user['ext']) ." ..." );
+die_ok( "OK. Calling $to_num from $from_num_effective ..." );
 
 
 ?>

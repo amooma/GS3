@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 404); // = 0.04.04
+define('YADB_VERS', 408); // = 0.04.08
 
 /***********************************************************
 * Columns flags:
@@ -397,8 +397,8 @@ class YADB_Connection
 		
 		if ($this->_connect()) return true;
 		
-		trigger_error( 'YADB: Could not connect to "'. $host .'" as user "'. $user .'" '. ($this->_pwd ? 'using password' : 'without password') .', database "'. $this->_db .'".', E_USER_WARNING );
 		$this->_conn = null;
+		trigger_error( 'YADB: Could not connect to "'. $host .'" as user "'. $user .'" '. ($this->_pwd ? 'using password' : 'without password') .', database "'. $this->_db .'".', E_USER_WARNING );
 		return false;
 	}
 	
@@ -1331,6 +1331,23 @@ class YADB_Connection
 	
 	
 	function getLastInsertId() { return false; }
+	
+	
+	function getLastNativeError()
+	{
+		return null;
+	}
+	
+	function getLastNativeErrorMsg()
+	{
+		return 'Unknown error';
+	}
+	
+	function getLastErrorCode()
+	{
+		return 'HY000';  # general unmapped error
+	}
+	
 	
 	
 }

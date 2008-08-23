@@ -66,8 +66,9 @@ if ($err===0) {
 	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">";
 	echo htmlEnt($out);
 	echo "\n</pre>\n";
-} else
+} else {
 	echo "<p>Error.</p>\n";
+}
 
 
 
@@ -80,11 +81,14 @@ $err=0; $out=array();
 exec( 'uname -r ; uname -v ; uname -m ; uname -o', $out, $err );
 if ($err===0) {
 	$out = trim(implode('  ', $out));
+	$out = htmlEnt($out);
+	$out = preg_replace('/(?<=^|\s)([1-9]\.[1-9]{1,2}[.0-9\-_a-zA-Z]+)/', '<b>$1</b>', $out);
 	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
-	echo htmlEnt($out);
+	echo $out;
 	echo "\n</pre>\n";
-} else
+} else {
 	echo "<p>Error.</p>\n";
+}
 
 
 
@@ -116,13 +120,14 @@ if (file_exists('/proc/uptime') && file_exists('/proc/loadavg')) {
 	
 	echo '<h3>Uptime &amp; Load Average</h3>' ,"\n";
 	$err=0; $out=array();
-	exec( 'uptime', $out, $err );
+	exec( 'LANG=C uptime', $out, $err );
 	if ($err===0) {
 		echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
 		echo htmlEnt(trim(implode("\n", $out)));
 		echo "\n</pre>\n";
-	} else
+	} else {
 		echo "<p>Error.</p>\n";
+	}
 	
 }
 
@@ -171,8 +176,9 @@ if (file_exists('/proc/meminfo')) {
 	
 	echo "</pre>\n";
 	
-} else
+} else {
 	echo "<p>?</p>\n";
+}
 
 
 
@@ -182,19 +188,22 @@ if (file_exists('/proc/meminfo')) {
 
 echo '<h3>DiskFree</h3>' ,"\n";
 $err=0; $out=array();
-if (gs_get_conf('GS_INSTALLATION_TYPE') === 'gpbx')
-	exec( 'df -H -x tmpfs | grep -v \' /live\'', $out, $err );
-else
-	exec( 'df -H -T -x tmpfs', $out, $err );
+if (gs_get_conf('GS_INSTALLATION_TYPE') === 'gpbx') {
+	exec( 'LANG=C df -H -x tmpfs | grep -v \' /live\'', $out, $err );
+} else {
+	exec( 'LANG=C df -H -T -x tmpfs', $out, $err );
+}
 if ($err===0) {
 	$out = trim(implode("\n", $out));
 	echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">\n";
 	$out = htmlEnt($out);
-	$out = preg_replace('/(\/dev\/[a-z0-9\-_.]+)/', '<b>$1</b>', $out);
+	$out = preg_replace('/(\/dev(?:\/[a-zA-Z0-9\-_.]+)+)/', '<b>$1</b>', $out);
+	# needs to match e.g. "/dev/hda1", "/dev/mapper/VolGroup00-LogVol00"
 	echo $out;
 	echo "\n</pre>\n";
-} else
+} else {
 	echo "<p>?</p>\n";
+}
 
 
 
@@ -210,9 +219,9 @@ if (file_exists('/proc/net/dev')) {
 	echo htmlEnt($out);
 	echo "\n</pre>\n";
 	
-} else
+} else {
 	echo "<p>?</p>\n";
-
+}
 
 
 ?>

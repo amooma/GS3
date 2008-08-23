@@ -57,8 +57,9 @@ if       {[file executable /usr/local/bin/sipsak  ]} {
 log_user 0
 set timeout $timeout
 set match_max 4000
-spawn $sipsak -s $sipuri --hostname localhost -v
+spawn $sipsak -s $sipuri -E udp -m 10 --hostname localhost -v
 expect {
+	-re "^SIP/\[1-9\]"        {send_user "OK\n"  ; exit 0;}
 	-re "200 \[Oo\]\[Kk\]"    {send_user "OK\n"  ; exit 0;}
 	-re "\[Nn\]ot \[Ff\]ound" {send_user "OK\n"  ; exit 0;}
 	"timeout"                 {send_user "FAIL\n"; exit 1;}

@@ -73,8 +73,10 @@ function gs_callforward_set( $user, $source, $case, $type, $number, $timeout=20 
 	
 	# set call forward
 	#
-	if (GS_LVM_FORWARD_REQ_EXT_NUM) {
+	if (gs_get_conf('GS_DP_FORWARD_REQ_EXT_NUM')) {
 		if ($number != '' && subStr($number,0,1)==='0' && $number != '0') {
+		//FIXME - use the rules for canonization to check if the number
+		// is external
 			$enumbers = gs_user_external_numbers_get( $user );
 			if (isGsError($enumbers))
 				return new GsError( $enumbers->getMsg() );

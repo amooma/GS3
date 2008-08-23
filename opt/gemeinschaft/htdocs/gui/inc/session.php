@@ -198,10 +198,12 @@ function get_user( $user )
 	
 	$rs = $DB->execute(
 'SELECT
-	`u`.`id`, `u`.`user`, `u`.`firstname`, `u`.`lastname`, `s`.`name` `ext`
+	`u`.`id`, `u`.`user`, `u`.`firstname`, `u`.`lastname`, `s`.`name` `ext`,
+	`u`.`host_id`, `h`.`is_foreign` `host_is_foreign`
 FROM
 	`users` `u` JOIN
-	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) LEFT JOIN
+	`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
 WHERE `u`.`user`=\''. $DB->escape($user) .'\''
 );
 	if (! $rs)
@@ -212,12 +214,36 @@ WHERE `u`.`user`=\''. $DB->escape($user) .'\''
 }
 
 
+# define indices
+#
+
+if (! array_key_exists('real_user', $_SESSION)) {
+	$_SESSION['real_user'] = array();
+}
+if (! array_key_exists('sudo_user', $_SESSION)) {
+	$_SESSION['sudo_user'] = array();
+}
+if (! array_key_exists('boi_host_id', $_SESSION['sudo_user'])) {
+	$_SESSION['sudo_user']['boi_host_id'] = null;
+}
+if (! array_key_exists('boi_host', $_SESSION['sudo_user'])) {
+	$_SESSION['sudo_user']['boi_host'] = null;
+}
+if (! array_key_exists('boi_role', $_SESSION['sudo_user'])) {
+	$_SESSION['sudo_user']['boi_role'] = null;
+}
+
+
+
 # authenticate the user
 #
 $login_info   = '';
 $login_errmsg = '';
+$is_login     = false;
 
 if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
+	
+	$_SESSION['sudo_user']['boi_session'] = null;
 	
 	require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );
 	
@@ -248,11 +274,13 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 			$_SESSION['real_user']['info'] = get_user( $_SESSION['real_user']['name'] );
 		} else {
 			$_SESSION['real_user']['info'] = array(
-				'id'        => -1,
-				'user'      => $_SESSION['real_user']['name'],
-				'firstname' => '',
-				'lastname'  => $_SESSION['real_user']['name'],
-				'ext'       => ''
+				'id'              => -1,
+				'user'            => $_SESSION['real_user']['name'],
+				'firstname'       => '',
+				'lastname'        => $_SESSION['real_user']['name'],
+				'ext'             => '',
+				'host_id'         => 0,
+				'host_is_foreign' => 0
 			);
 		}
 	}
@@ -263,7 +291,8 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 	
 	$_SESSION['login_ok'  ] = true;
 	$_SESSION['login_user'] = $user;
-
+	$_SESSION['sudo_user']['boi_session'] = null;
+	$is_login = true;
 }
 
 $_SESSION['sudo_user']['name'] = @$_REQUEST['sudo'];
@@ -274,7 +303,7 @@ if ($_SESSION['sudo_user']['name'] == $_SESSION['real_user']['name']) {
 	$_SESSION['sudo_user']['info'] = $_SESSION['real_user']['info'];
 } else {
 	if (! @$_SESSION['sudo_user']['info']
-	  || @$_SESSION['sudo_user']['info']['user'] != $_SESSION['sudo_user']['name'] )
+	||  @$_SESSION['sudo_user']['info']['user'] != $_SESSION['sudo_user']['name'] )
 	{
 		// info not present (no session support) or sudo user has changed
 		$_SESSION['sudo_user']['info'] = get_user( $_SESSION['sudo_user']['name'] );
@@ -283,6 +312,7 @@ if ($_SESSION['sudo_user']['name'] == $_SESSION['real_user']['name']) {
 			$_SESSION['sudo_user']['name'] = $_SESSION['real_user']['name'];
 			$_SESSION['sudo_user']['info'] = $_SESSION['real_user']['info'];
 		}
+		$_SESSION['sudo_user']['boi_session'] = null;
 	}
 }
 
@@ -320,6 +350,109 @@ if (! $sudo_allowed) {
 	echo sPrintF(__('You are not allowed to act as "%s".'), @$_SESSION['sudo_user']['name']);
 	$_SESSION['sudo_user']['name'] = $_SESSION['real_user']['name'];
 	$_SESSION['sudo_user']['info'] = $_SESSION['real_user']['info'];
+	$_SESSION['sudo_user']['boi_session'] = null;
 }
+
+
+
+# BOI
+#
+
+if (! array_key_exists('boi_host_id', $_SESSION['sudo_user'])
+||  $_SESSION['sudo_user']['boi_host_id'] === null
+||  $is_login)
+{
+	$_SESSION['sudo_user']['boi_host_id'] =
+		! $_SESSION['real_user']['info']['host_is_foreign']
+		? 0
+		: $_SESSION['real_user']['info']['host_id'];
+	$_SESSION['sudo_user']['boi_session'] = null;
+}
+if (! array_key_exists('boi_role', $_SESSION['sudo_user'])
+||  $_SESSION['sudo_user']['boi_role'] === null
+||  $is_login)
+{
+	$_SESSION['sudo_user']['boi_role'] =
+		! $_SESSION['real_user']['info']['host_is_foreign']
+		? 'gs'
+		: 'boi-user';
+	$_SESSION['sudo_user']['boi_session'] = null;
+}
+
+if (gs_get_conf('GS_BOI_ENABLED')) {
+	
+	//echo "<pre>"; print_r($_SESSION); echo "</pre>";
+	
+	// set default values for user ...
+	
+	if ($_SESSION['real_user']['name'] === 'sysadmin') {
+		
+		
+		
+		
+		
+	}
+
+}
+
+
+
+$get_host = false;
+if (gs_get_conf('GS_BOI_ENABLED') && $is_login) {
+	$get_host = true;
+}
+if (array_key_exists('boi_host_id', $_REQUEST)) {
+	$_REQUEST['boi_host_id'] = (int)$_REQUEST['boi_host_id'];
+	
+	//FIXME check ...
+	
+	if ($_REQUEST['boi_host_id'] !== $_SESSION['sudo_user']['boi_host_id']) {
+		$_SESSION['sudo_user']['boi_session'] = null;
+		
+		$_SESSION['sudo_user']['boi_host_id'] = $_REQUEST['boi_host_id'];
+		if ($_REQUEST['boi_host_id'] < 1) {
+			$_SESSION['sudo_user']['boi_host'] = null;
+		} else {
+			$get_host = true;
+		}
+	}
+}
+if ($get_host) {
+	if ($_SESSION['sudo_user']['boi_host_id'] < 1) {
+		$_SESSION['sudo_user']['boi_host'] = null;
+	} else {
+		$db = gs_db_slave_connect();
+		if (!$db) {
+			echo 'Could not connect to DB.';
+		} else {
+			$_SESSION['sudo_user']['boi_host'] =
+				$db->executeGetOne( 'SELECT `host` FROM `hosts` WHERE `id`='. (int)$_SESSION['sudo_user']['boi_host_id'] );
+			if (! $_SESSION['sudo_user']['boi_host']) {
+				echo 'Failed to get host.';
+			}
+		}
+	}
+}
+
+if (array_key_exists('boi_role', $_REQUEST)) {
+	$_REQUEST['boi_role'] = $_REQUEST['boi_role'];
+	
+	//FIXME check ...
+	
+	if ($_REQUEST['boi_role'] !== $_SESSION['sudo_user']['boi_role']) {
+		$_SESSION['sudo_user']['boi_session'] = null;
+		
+		$_SESSION['sudo_user']['boi_role'] = $_REQUEST['boi_role'];
+	}
+}
+
+
+
+
+if (! array_key_exists('boi_session', $_SESSION['sudo_user'])) {
+	$_SESSION['sudo_user']['boi_session'] = null;
+}
+
+
 
 ?>
