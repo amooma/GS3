@@ -28,9 +28,9 @@
 \*******************************************************************/
 
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 4488 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 4800 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2008-06-23 01:41+0200
+POT-Creation-Date: 2008-08-23 17:40+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -60,7 +60,6 @@ Content-Transfer-Encoding: 8bit
   'Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung eingestellt haben.' => 'Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung eingestellt haben.',
   'Admin-Rechte' => 'Admin-Rechte',
   'Administration' => 'Administration',
-  'Agentur' => 'Agentur',
   'Agentur-Admin' => 'Agentur-Admin',
   'Agentur-Benutzer' => 'Agentur-Benutzer',
   'Agentur-Sysadmin' => 'Agentur-Sysadmin',
@@ -78,7 +77,6 @@ Content-Transfer-Encoding: 8bit
   'Anrufer' => 'Anrufer',
   'Anrufer(p)' => 'Anrufer',
   'Anruflisten' => 'Anruflisten',
-  'Anzeige-Text' => 'Anzeige-Text',
   'Anzeigen' => 'Anzeigen',
   'Arbeit' => 'Arbeit',
   'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:' => 'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:',
@@ -152,8 +150,6 @@ Content-Transfer-Encoding: 8bit
   'Fehler beim Setzen des eigenen Klingeltons.' => 'Fehler beim Setzen des eigenen Klingeltons.',
   'Fehler beim Speichern' => 'Fehler beim Speichern',
   'Fehler beim Upload f&uuml;r %s.' => 'Fehler beim Upload f&uuml;r %s.',
-  'Firma (Projekt)' => 'Firma',
-  'Firma (aus LDAP)' => 'Firma (aus LDAP)',
   'Fremd-Host' => 'Fremd-Host',
   'Fremd-Hosts' => 'Fremd-Hosts',
   'Freunde' => 'Freunde',
@@ -276,7 +272,6 @@ Content-Transfer-Encoding: 8bit
   'aus' => 'aus',
   'bearbeiten' => 'bearbeiten',
   'belegt' => 'belegt',
-  'bereit' => 'bereit',
   'besetzt' => 'besetzt',
   'diese Woche' => 'diese Woche',
   'diesen Monat' => 'diesen Monat',
