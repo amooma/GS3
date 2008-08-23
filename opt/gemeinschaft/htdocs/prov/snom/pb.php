@@ -129,7 +129,7 @@ foreach ($tmp as $arr) {
 }
 
 
-$url_snom_pb = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)). GS_PROV_PATH .'snom/pb.php';
+$url_snom_pb = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/pb.php';
 
 
 

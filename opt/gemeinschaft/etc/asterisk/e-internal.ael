@@ -47,7 +47,7 @@ macro check-valid-extension( mext ) {
 	// is it to one of *our* extensions?
 	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${mext});
 	Verbose(1,### Extension ${mext} is of type ${exttype});
-	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference") {
+	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference" && "${exttype}" != "foreign") {
 		Verbose(1,### Extension ${mext} is unknown);
 		
 		if ("${is_from_gateway}" = "1") {
@@ -86,6 +86,7 @@ macro dial-node( mext_at_node ) {
 	SIPAddHeader(X-GS-forwards: ${forwards});
 	SIPAddHeader(X-GS-origext: ${origext});
 	SIPAddHeader(X-GS-clir: ${clir});
+	SIPAddHeader(X-GS-src: ${is_call_from});
 	SIPAddHeader(X-GS-is_callcompletion: ${is_callcompletion});
 	SIPAddHeader(X-GS-is_callfile_origin: ${is_callfile_origin});
 	SIPAddHeader(X-GS-callfile_from_user: ${callfile_from_user});
@@ -201,8 +202,20 @@ context to-internal-users {
 			goto to-internal-users-self|${EXTEN}|1;
 		}
 		else {
-			&dial-node(${EXTEN}@${dial_to_node});
-			&hangup-proper-status();
+			if ("${exttype}" != "foreign") {
+				&dial-node(${EXTEN}@${dial_to_node});
+				&hangup-proper-status();
+			}
+			else {
+				if ("${is_sub_system}" = "yes") {
+					Verbose(1,### We are a sub-system. Dial to the gateway for foreign ext. ${EXTEN}.);
+					&dial-gateway(${EXTEN});
+				} else {
+					Verbose(1,### We are not a sub-system. Call foreign ext. ${EXTEN} directly.);
+					Dial(SIP/${EXTEN}@${dial_to_node},70);
+				}
+				Hangup();
+			}
 		}
 	}
 	
@@ -230,8 +243,9 @@ context to-internal-users {
 		Set(pext=${EXTEN:4});
 		if ("${pext}" != "") {
 			Verbose(1,### User ${user_name} tries to pickup ext. ${pext});
+			//FIXME - add pickup group check
 			Pickup(${pext}@to-internal-users-self);
-			//FIXME - this probably does not work across nodes
+			//FIXME - does not work across nodes
 		}
 	}
 	
@@ -244,8 +258,9 @@ context to-internal-users {
 		if ("${PICKUPMARK}" = "") {
 			Set(pmark=${EXTEN:6});
 			Verbose(1,### User ${user_name} tries to pickup group ${pmark});
+			//FIXME - add pickup group check
 			Pickup(${pmark}@PICKUPMARK);
-			//FIXME - this probably does not work across nodes
+			//FIXME - does not work across nodes
 			
 			// if we got here, the pickup attempt was not successful
 			// (maybe because there wasn't even a call)
@@ -434,6 +449,8 @@ context to-internal-users-self {
 					Set(__origext=${SIP_HEADER(X-GS-origext)});
 				if ("${SIP_HEADER(X-GS-clir)}" != "")
 					Set(clir=${SIP_HEADER(X-GS-clir)});  // nicht vererben
+				if ("${SIP_HEADER(X-GS-src)}" != "")
+					Set(__is_call_from=${SIP_HEADER(X-GS-src)});
 				if ("${SIP_HEADER(X-GS-is_callcompletion)}" != "")
 					Set(__is_callcompletion=${SIP_HEADER(X-GS-is_callcompletion)});
 				if ("${SIP_HEADER(X-GS-is_callfile_origin)}" != "")
@@ -480,6 +497,8 @@ context to-internal-users-self {
 					Set(__origext=${SIP_HEADER(X-GS-origext)});
 				if ("${SIP_HEADER(X-GS-clir)}" != "")
 					Set(clir=${SIP_HEADER(X-GS-clir)});  // nicht vererben
+				if ("${SIP_HEADER(X-GS-src)}" != "")
+					Set(__is_call_from=${SIP_HEADER(X-GS-src)});
 				if ("${SIP_HEADER(X-GS-is_callcompletion)}" != "")
 					Set(__is_callcompletion=${SIP_HEADER(X-GS-is_callcompletion)});
 				if ("${SIP_HEADER(X-GS-is_callfile_origin)}" != "")

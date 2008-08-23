@@ -39,6 +39,8 @@ header( 'Vary: *' );
 
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
+require_once( GS_DIR .'inc/gs-lib.php' );
+require_once( GS_DIR .'inc/prov-fns.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 set_error_handler('err_handler_die_on_err');
 
@@ -71,6 +73,11 @@ function _snomCnfXmlEsc( $str )
 		$str);
 }
 
+
+$requester = gs_prov_check_trust_requester();
+if (! $requester['allowed']) {
+	die( 'No! See log for details.' );
+}
 
 $mac = preg_replace( '/[^0-9A-F]/', '', strToUpper( @$_REQUEST['mac'] ) );
 if (strLen($mac) !== 12) {
@@ -113,20 +120,20 @@ if (preg_match('/^Mozilla\/\d\.\d\s*\(compatible;\s*/i', $ua, $m)) {
 # 360: "Mozilla/4.0 (compatible; snom360-SIP 6.5.2; snom360 ramdisk v3.31; snom360 linux 3.25)"
 # 370: "Mozilla/4.0 (compatible; snom370-SIP 7.1.2)"
 if (preg_match('/snom([1-9][0-9]{2})/i', $ua, $m))  # i.e. "snom360"
-	$phone_type = $m[1];
+	$phone_model = $m[1];
 else
-	$phone_type = 'unknown';
+	$phone_model = 'unknown';
 
-$newPhoneType = 'snom-'. $phone_type;  # i.e. "snom-360"
+$phone_type = 'snom-'.$phone_model;  # i.e. "snom-360"
 # to be used when auto-adding the phone
 
 $fw_vers = (preg_match('/snom[0-9]{3}-SIP\s+(\d+\.\d+\.\d+)/', $ua, $m))
 	? $m[1] : '0.0.0';
 $fw_vers_nrml = _snom_normalize_version( $fw_vers );
 
-gs_log( GS_LOG_DEBUG, "Snom phone \"$mac\" asks for settings (UA: ...\"$ua\") - type: $phone_type" );
+gs_log( GS_LOG_DEBUG, "Snom phone \"$mac\" asks for settings (UA: ...\"$ua\") - model: $phone_model" );
 
-$prov_url_snom = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/';
+$prov_url_snom = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/';
 
 
 require_once( GS_DIR .'inc/db_connect.php' );
@@ -368,149 +375,51 @@ falls nicht:
 
 # do we know the phone?
 #
-
-/*
-$query =
-'SELECT `user_id`, `vlan_id`
-FROM `phones`
-WHERE `mac_addr`=\''. $mac .'\'
-ORDER BY `id` LIMIT 1';
-$rs = $db->execute( $query );
-$r = $rs->fetchRow();
-if ($r) {
-	$user_id = (int)$r['user_id'];
-	$vlan_id = (int)$r['vlan_id'];
-*/
-$query =
-'SELECT `user_id`
-FROM `phones`
-WHERE `mac_addr`=\''. $mac .'\'
-ORDER BY `id` LIMIT 1';
-$rs = $db->execute( $query );
-$r = $rs->fetchRow();
-if ($r) {
-	$user_id = (int)$r['user_id'];
-} else {
+$user_id = @gs_prov_user_id_by_mac_addr( $db, $mac );
+if ($user_id < 1) {
 	if (! GS_PROV_AUTO_ADD_PHONE) {
-		gs_log( GS_LOG_NOTICE, "Unknown Snom phone \"$mac\" not added to DB" );
-		die( 'Unknown phone. (Set GS_PROV_AUTO_ADD_PHONE = true in order to auto-add)' );
+		gs_log( GS_LOG_NOTICE, "New phone $mac not added to DB. Enable PROV_AUTO_ADD_PHONE" );
+		die( 'Unknown phone. (Enable PROV_AUTO_ADD_PHONE in order to auto-add)' );
 	}
 	gs_log( GS_LOG_NOTICE, "Adding new Snom phone $mac to DB" );
 	
-	# add a nobody user:
-	#
-	$newNobodyIndex = (int)( (int)$db->executeGetOne( 'SELECT MAX(`nobody_index`) FROM `users`' ) + 1 );
-	$user_code = 'nobody-'. str_pad($newNobodyIndex, 5, '0', STR_PAD_LEFT);
-	switch (GS_PROV_AUTO_ADD_PHONE_HOST) {
-		case 'last':
-			$host_id_sql = 'SELECT MAX(`id`) FROM `hosts`'; break;
-		case 'random':
-			$host_id_sql = 'SELECT `id` FROM `hosts` ORDER BY RAND() LIMIT 1'; break;
-		case 'first':
-		default:
-			$host_id_sql = 'SELECT MIN(`id`) FROM `hosts`'; break;
+	$user_id = @gs_prov_add_phone_get_nobody_user_id( $db, $mac, $phone_type, $requester['phone_ip'] );
+	if ($user_id < 1) {
+		gs_log( GS_LOG_WARNING, "Failed to add nobody user for new phone $mac" );
+		die( 'Failed to add nobody user for new phone.' );
 	}
-	$db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `honorific`, `email`, `nobody_index`, `host_id`) VALUES (NULL, \''. $user_code .'\', \'\', \'\', \'\', \'\', \'\', '. $newNobodyIndex .', ('. $host_id_sql .'))' );
-	$user_id = (int)$db->getLastInsertId();
-	if ($user_id < 1) die( 'Unknown phone. Failed to add nobody user.' );
-	
-	# add a SIP account:
-	#
-	//$user_name = '9'. str_pad($newNobodyIndex, 5, '0', STR_PAD_LEFT);
-	$user_name = gs_nobody_index_to_extension( $newNobodyIndex );
-	$secret = rand(10000000,99999999) . mt_rand(10000000,99999999) . rand(10000000,99999999);
-	$db->execute( 'INSERT INTO `ast_sipfriends` (`_user_id`, `name`, `secret`, `context`, `callerid`, `setvar`) VALUES ('. $user_id .', \''. $user_name .'\', \''. $db->escape($secret) .'\', \'from-internal-nobody\', _utf8\''. $db->escape(GS_NOBODY_CID_NAME . $newNobodyIndex) .' <'. $user_name .'>\', \'__user_id='. $user_id .';__user_name='. $user_name .'\')' );
-	
-	# add the phone:
-	#
-	$db->execute( 'INSERT INTO `phones` (`id`, `type`, `mac_addr`, `user_id`, `nobody_index`, `added`) VALUES (NULL, \''. $db->escape($newPhoneType) .'\', \''. $mac .'\', '. $user_id .', '. $newNobodyIndex .', '. time() .')' );
-	
-	unset($user_name);
 }
-
 
 
 # is it a valid user id?
 #
-
 $num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `id`='. $user_id );
 if ($num < 1)
 	$user_id = 0;
 
 if ($user_id < 1) {
 	# something bad happened, nobody (not even a nobody user) is logged
-	# in at that phone. assign an unused nobody user:
-	
-	$user_id = (int)$db->executeGetOne(
-'SELECT `u`.`id`
-FROM
-	`users` `u` JOIN
-	`phones` `p` ON (`p`.`nobody_index`=`u`.`nobody_index`)
-WHERE
-	`p`.`mac_addr`=\''. $mac .'\' AND
-	`p`.`nobody_index`>=1
-LIMIT 1'
-	);
+	# in at that phone. assign the default nobody user of the phone:
+	$user_id = @gs_prov_assign_default_nobody( $db, $mac, null );
 	if ($user_id < 1) {
-		$user_id = (int)$db->executeGetOne(
-'SELECT `id`
-FROM `users`
-WHERE
-	`nobody_index` IS NOT NULL AND
-	`id` NOT IN (SELECT `user_id` FROM `phones` WHERE `user_id` IS NOT NULL)
-ORDER BY RAND() LIMIT 1'
-	);
-		if ($user_id < 1)
-			die( 'No unused nobody accounts left.' );
+		die( 'Failed to assign nobody account to phone '. $mac );
 	}
-	$ok = $db->execute( 'UPDATE `phones` SET `user_id`='. $user_id .' WHERE `mac_addr`=\''. $mac .'\' LIMIT 1'  );
-	if (! $ok) die( 'DB error.' );
-	$rs = $db->execute( $query );
-	$r = $rs->fetchRow();
-	if (! $r) die( 'Failed to assign nobody account to phone "'. $mac .'".' );
-	$user_id = (int)$r['user_id'];
 }
-if ($user_id < 1) die( 'DB error.' );
 
 
-
-# if no host specified, select one (randomly?)
+# get host for user
 #
-
-$host = $db->executeGetOne(
-'SELECT `h`.`host`
-FROM
-	`users` `u` LEFT JOIN
-	`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
-WHERE `u`.`id`='. $user_id .'
-LIMIT 1'
-	);
-
+$host = @gs_prov_get_host_for_user_id( $db, $user_id );
 if (! $host) {
-	$rs = $db->execute( 'SELECT `host` FROM `hosts` ORDER BY RAND() LIMIT 1' );
-	$r = $rs->fetchRow();
-	if (! $r)
-		die( 'No hosts known.' );
-	
-	$host = trim( $r['host'] );
+	die( 'Failed to find host.' );
 }
-
+$pbx = $host;  # $host might be changed if SBC configured
 
 
 # who is logged in at that phone?
 #
-
-$rs = $db->execute(
-'SELECT
-	`u`.`user`, `u`.`firstname`, `u`.`lastname`, `u`.`honorific`,
-	`s`.`name`, `s`.`secret`, `s`.`callerid`, `s`.`mailbox`
-FROM
-	`users` `u` JOIN
-	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-WHERE `u`.`id`='. $user_id
-);
-$user = $rs->fetchRow();
-if (! $user) {
+$user = @gs_prov_get_user_info( $db, $user_id );
+if (! is_array($user)) {
 	die( 'DB error.' );
 }
 
@@ -519,7 +428,7 @@ if (! $user) {
 #
 # EDIT: don't do that! -> race condition
 # the Snoms try to authenticate with their old account after reboot
-# before they fetch theit new settings
+# before they fetch their new settings
 #
 //sRand(); mt_sRand();
 //$secret = rand(10000, 99999) . mt_rand(10000, 99999) . rand(100000, 999999);
@@ -536,30 +445,34 @@ $user['secret'] = $secret;
 
 # store the user's current IP address in the database:
 #
+if (! @gs_prov_update_user_ip( $db, $user_id, $requester['phone_ip'] )) {
+	gs_log( GS_LOG_WARNING, 'Failed to store current IP addr of user ID '. $user_id );
+}
 
-# get the IP address of the phone:
+
+# get SIP proxy to be set as the phone's outbound proxy
 #
-$phoneIP = @ normalizeIPs( @$_SERVER['REMOTE_ADDR'] );
-/*
-//FIXME - we should add a setting SNOM_PROV_TRUST_PROXIES = '192.168.1.7, 192.168.1.8'
-if (isSet( $_SERVER['HTTP_X_FORWARDED_FOR'] )) {
-	if (preg_match( '/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', lTrim( $_SERVER['HTTP_X_FORWARDED_FOR'] ), $m ))
-		$phoneIP = isSet( $m[0] ) ? @ normalizeIPs( $m[0] ) : null;
+$sip_proxy_and_sbc = gs_prov_get_wan_outbound_proxy( $db, $requester['phone_ip'], $user_id );
+if ($sip_proxy_and_sbc['sip_server_from_wan'] != '') {
+	$host = $sip_proxy_and_sbc['sip_server_from_wan'];
 }
-if (isSet( $_SERVER['HTTP_X_REAL_IP'] )) {
-	if (preg_match( '/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', lTrim( $_SERVER['HTTP_X_REAL_IP'] ), $m ))
-		$phoneIP = isSet( $m[0] ) ? @ normalizeIPs( $m[0] ) : null;
-}
-*/
 
-if ($phoneIP) {
-	# unset all ip addresses which are the same as the new one and
-	# thus cannot be valid any longer:
-	$db->execute( 'UPDATE `users` SET `current_ip`=NULL WHERE `current_ip`=\''. $db->escape($phoneIP) .'\'' );
-}
-# store new ip address:
-$db->execute( 'UPDATE `users` SET `current_ip`='. ($phoneIP ? ('\''. $db->escape($phoneIP) .'\'') : 'NULL') .' WHERE `id`='. $user_id );
 
+# get extension without route prefix
+#
+if (gs_get_conf('GS_BOI_ENABLED')) {
+	$hp_route_prefix = (string)$DBM->executeGetOne(
+		'SELECT `value` FROM `host_params` '.
+		'WHERE '.
+			'`host_id`='. (int)$user['host_id'] .' AND '.
+			'`param`=\'route_prefix\''
+		);
+	$user_ext = (subStr($user['name'],0,strLen($hp_route_prefix)) === $hp_route_prefix)
+		? subStr($user['name'], strLen($hp_route_prefix)) : $user['name'];
+		gs_log( GS_LOG_DEBUG, "Mapping ext. ". $user['name'] ." to $user_ext for provisioning - route_prefix: $hp_route_prefix, host id: ". $user['host_id'] );
+} else {
+	$user_ext = $user['name'];
+}
 
 
 
@@ -625,7 +538,8 @@ psetting('support_rtcp'         , 'on' );  # default: on
 psetting('signaling_tos'        , '160');  # default: 160, 160 = CS 5
 psetting('codec_tos'            , '184');  # default: 160, 184 = EF
 psetting('dtmf_payload_type'    , '101');  # default: 101
-psetting('sip_proxy'            , ''   );
+psetting('sip_proxy'            , $sip_proxy_and_sbc['sip_proxy_from_wan'] );
+psetting('emergency_proxy'      , $sip_proxy_and_sbc['sip_proxy_from_wan'] );
 psetting('eth_net'              , 'auto');
 psetting('eth_pc'               , 'auto');
 psetting('redirect_ringing'     , 'off' );
@@ -635,8 +549,10 @@ psetting('watch_arp_cache'      , '1'  );  # default: 0
 psetting('max_forwards'         , '30' );  # default: 70
 psetting('support_idna'         , 'off');
 psetting('reject_calls_with_603', 'off');  # rejects calls with 603 instead of 486
+psetting('naptr_sip_uri'        , 'off');
 psetting('rtp_port_start'       , '16384');
 psetting('rtp_port_end'         , '32767');
+psetting('rtp_keepalive'        , 'on' );
 /*
 if ($vlan_id < 1) {
 	psetting('vlan', '' );
@@ -692,7 +608,7 @@ psetting('mute'                 , 'off', true);  # mute mic off
 psetting('disable_speaker'      , 'off', true);  # disable casing speaker off
 psetting('dtmf_speaker_phone'   , 'off', true);
 psetting('release_sound'        , 'off');
-if ($phone_type >= '370') {
+if ($phone_model >= '370') {
 	psetting('vol_handset_mic'      ,  '5' , true);  # 1 - 8, Default: 4
 	psetting('vol_headset_mic'      ,  '6' , true);  # 1 - 8, Default: 4
 	psetting('vol_speaker_mic'      ,  '4' , true);  # 1 - 8, Default: 4
@@ -722,6 +638,7 @@ psetting('ringer_headset_device', 'speaker');  # Klingeltonausgabe bei Kopfhoere
 
 psetting('callpickup_dialoginfo'  , 'on' );
 psetting('show_xml_pickup'        , 'on' );
+psetting('show_name_dialog'       , 'off');
 psetting('ringing_time'           , '500');  # wird im Dialplan begrenzt
 psetting('block_url_dialing'      , 'on' );  # nur Ziffern erlauben
 psetting('ringer_animation'       , 'on' , true);
@@ -735,7 +652,6 @@ psetting('enable_keyboard_lock'   , 'on' );
 psetting('keyboard_lock'          , 'off');
 psetting('keyboard_lock_pw'       , ''   );
 psetting('keyboard_lock_emergency', '911 112 110 999 19222');  # default
-psetting('emergency_proxy'        , ''   );
 psetting('ldap_server'            , ''   );
 psetting('answer_after_policy'    , 'idle');
 psetting('call_join_xfer'         , 'off');
@@ -758,6 +674,8 @@ psetting('conf_hangup'            , 'on' , true);
 psetting('auto_redial'            , 'off');  # automatic redial on busy
 psetting('auto_redial_value'      , '10' );  # redial after (sec)
 psetting('idle_offhook'           , 'off');
+psetting('speaker_receive_call'   , 'on' );
+psetting('global_missed_counter'  , 'on' );
 psetting('transfer_on_hangup'     , 'on' );
 psetting('aoc_amount_display'     , 'off');  # off | charged | balance
 psetting('aoc_pulse_currency'     , ''   );  # e.g. "EUR" | "USD" | "$"
@@ -868,18 +786,18 @@ setting('codec_size' ,$i,'20');  # 20 ms, valid values: 20, 30, 40, 60
 # G.723.1 needs 30 or 60 ms. All other codecs work with 20, 40 and 60 ms only.
 
 setting('user_host'          ,$i, $host);
-setting('user_outbound'      ,$i, '');  # outbound SIP proxy
+setting('user_outbound'      ,$i, $sip_proxy_and_sbc['sip_proxy_from_wan']);
 setting('user_proxy_require' ,$i, '');
 setting('user_shared_line'   ,$i, 'off');
-setting('user_name'          ,$i, $user['name']);
-setting('user_pname'         ,$i, $user['name']);
-//setting('user_pname'         ,$i, $user['name']);  # not needed for Asterisk
+setting('user_name'          ,$i, $user_ext);
+setting('user_pname'         ,$i, $user_ext);
+//setting('user_pname'         ,$i, $user_ext);  # not needed for Asterisk
 setting('user_pass'          ,$i, $user['secret']);
 //setting('user_hash'          ,$i, md5($user['secret']));
-//setting('user_hash'          ,$i, md5($user['name'] .':'. $host .':'. $user['secret']));
-//setting('user_hash'          ,$i, md5($user['name'] .':'. 'asterisk' .':'. $user['secret']));
+//setting('user_hash'          ,$i, md5($user_ext .':'. $host .':'. $user['secret']));
+//setting('user_hash'          ,$i, md5($user_ext .':'. 'asterisk' .':'. $user['secret']));
 setting('user_realname'      ,$i, $user['callerid']);
-setting('user_idle_text'     ,$i, $user['name'] .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
+setting('user_idle_text'     ,$i, $user_ext .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
 setting('record_missed_calls'  ,$i, 'off');
 setting('record_dialed_calls'  ,$i, 'off');
 setting('record_received_calls',$i, 'off');
@@ -937,7 +855,7 @@ psetting('dkey_redial'   , 'keyevent F_REDIAL'    );
 psetting('dkey_directory', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1');
 psetting('dkey_redial'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1');
 # so geht die Retrieve-Taste auch ohne neue Nachrichten:
-psetting('dkey_retrieve' , 'speed mailbox');
+psetting('dkey_retrieve' , 'speed voicemail');
 
 
 
@@ -975,10 +893,13 @@ psetting('action_log_off_url'        , '');
 
 # reset all keys
 #
-for ($i=0; $i<=137; ++$i) {
+$max_key = 12+(42*3) -1;
+for ($i=0; $i<=$max_key; ++$i) {
 	setting('fkey'        , $i, 'line', array('context'=>'active'));
 	//setting('fkey_context', $i, 'active');
 }
+
+/*  //FIXME
 
 # user defined keys
 #
@@ -1001,6 +922,37 @@ while ($r = $rs->fetchRow()) {
 	//psetting('fkey_context'. $key, 'active');
 	++$key;
 }
+*/
+
+$softkeys = null;
+$GS_Softkeys = gs_get_key_prov_obj( $phone_type );
+if ($GS_Softkeys->set_user( $user['user'] )) {
+	if ($GS_Softkeys->retrieve_keys( $phone_type, array(
+		'{GS_PROV_HOST}'      => gs_get_conf('GS_PROV_HOST'),
+		'{GS_P_PBX}'          => $pbx,
+		'{GS_P_EXTEN}'        => $user_ext,
+		'{GS_P_ROUTE_PREFIX}' => $hp_route_prefix,
+		'{GS_P_USER}'         => $user['user']
+	) )) {
+		$softkeys = $GS_Softkeys->get_keys();
+	}
+}
+if (! is_array($softkeys)) {
+	gs_log( GS_LOG_WARNING, 'Failed to get softkeys' );
+} else {
+	foreach ($softkeys as $key_name => $key_defs) {
+		if (array_key_exists('slf', $key_defs)) {
+			$key_def = $key_defs['slf'];
+		} elseif (array_key_exists('inh', $key_defs)) {
+			$key_def = $key_defs['inh'];
+		} else {
+			continue;
+		}
+		$key_idx = (int)lTrim(subStr($key_name,1),'0');
+		setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
+	}
+}
+
 
 # GUI softkeys
 #
@@ -1170,6 +1122,7 @@ if (preg_match('/snom3[0-9]0-SIP\s+(\d+)\.(\d+)\.(\d+)/', $ua, $m)) {
 #####################################################################
 
 $lang_releases = array(  # in descending order!
+	'7.1.33',
 	'7.1.30',
 	'7.1.19',
 	'7.1.17',
@@ -1232,6 +1185,43 @@ if ($lang_vers) {
 	//setting( '_web_lang', 'Suomi'        , $langdir.'web_lang_FI.xml' );
 	//setting( '_web_lang', 'Svenska'      , $langdir.'web_lang_SV.xml' );  # gui lang: SW, web lang: SV!
 	//setting( '_web_lang', 'Turkce'       , $langdir.'web_lang_TR.xml' );
+}
+
+
+
+#####################################################################
+#  Override provisioning parameters
+#####################################################################
+
+$prov_params = null;
+$GS_ProvParams = gs_get_prov_params_obj( $phone_type );
+if ($GS_ProvParams->set_user( $user['user'] )) {
+	if ($GS_ProvParams->retrieve_params( $phone_type, array(
+		'{GS_PROV_HOST}'      => gs_get_conf('GS_PROV_HOST'),
+		'{GS_P_PBX}'          => $pbx,
+		'{GS_P_EXTEN}'        => $user_ext,
+		'{GS_P_ROUTE_PREFIX}' => $hp_route_prefix,
+		'{GS_P_USER}'         => $user['user']
+	) )) {
+		$prov_params = $GS_ProvParams->get_params();
+	}
+}
+if (! is_array($prov_params)) {
+	gs_log( GS_LOG_WARNING, 'Failed to get provisioning parameters' );
+} else {
+	foreach ($prov_params as $param_name => $param_arr) {
+	foreach ($param_arr as $param_index => $param_value) {
+		if ($param_index == -1) {
+			# not an array
+			gs_log( GS_LOG_DEBUG, "Overriding prov. param \"$param_name\": \"$param_value\"" );
+			setting( $param_name, null        , $param_value );
+		} else {
+			# array
+			gs_log( GS_LOG_DEBUG, "Overriding prov. param \"$param_name\"[$param_index]: \"$param_value\"" );
+			setting( $param_name, $param_index, $param_value );
+		}
+	}
+	}
 }
 
 

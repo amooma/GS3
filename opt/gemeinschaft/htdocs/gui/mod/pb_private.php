@@ -232,11 +232,11 @@ echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:270px;">
-		<?php echo ($number=='') ? '<span class="sort-col">'. __('Nachname') .', '. __('Vorname') .'</span>' : _('Nachname') .', '. __('Vorname'); ?>
+	<th style="width:270px;"<?php if ($number=='') echo ' class="sort-col"'; ?>>
+		<?php echo __('Nachname') .', '. __('Vorname'); ?>
 	</th>
-	<th style="width:200px;">
-		<?php echo ($number=='') ? __('Nummer') : '<span class="sort-col">'. __('Nummer'), '</span>'; ?>
+	<th style="width:200px;"<?php if ($number!='') echo ' class="sort-col"'; ?>>
+		<?php echo __('Nummer'); ?>
 	</th>
 	<th style="width:100px;">&nbsp;</th>
 </tr>
@@ -286,7 +286,7 @@ if (@$rs) {
 			$sudo_url =
 				(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 				? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
-			echo '<a href="', GS_URL_PATH, 'pb-dial.php?n=', rawUrlEncode($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a> &nbsp; ';
+			echo '<a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', rawUrlEncode($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a> &nbsp; ';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			echo '</td>';

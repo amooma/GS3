@@ -55,7 +55,10 @@ if ($number == '') {
 $is_sub_system = ($argc > 2) ? strToLower(trim($argv[2])) : '';
 $is_sub_system = ($is_sub_system=='1' || $is_sub_system=='yes');
 
-$user_cid_num = ($argc > 3) ? preg_replace('/[^0-9]/', '', $argv[3]) : '';
+//$user_cid_num = ($argc > 3) ? preg_replace('/[^0-9]/', '', $argv[3]) : '';
+$user_cid_num = ($argc > 3) ? trim($argv[3]) : '';
+# "anonymous" is a valid caller ID number in SIP
+
 # caller ID (= extension) of the user
 if ($user_cid_num == '') {
 	$user_cid_num = '0';  # main number on a PtP interface
@@ -162,7 +165,9 @@ $idx = 1;
 foreach ($gate_grps as $ggrp_id) {
 	
 	$out_cid_num = $user_cid_num;
-	if ($qualify_cid) {
+	if ($qualify_cid
+	&&  ! preg_match('/[^0-9+*#]/', $out_cid_num))  # no action for "anonymous"
+	{
 		$rs = $db->execute(
 'SELECT `out_cid_search` `cid_s`, `out_cid_replace` `cid_r`
 FROM `gate_grps`

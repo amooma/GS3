@@ -42,13 +42,17 @@ include_once( GS_DIR .'inc/extension-state.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 
 
-/*if (! is_array( @$_SESSION['sudo_user']['keys'] )
- || @$_SESSION['sudo_user']['keys']['t'] < time()-60*1 ) {*/
+/*
+//if (! is_array( @$_SESSION['sudo_user']['keys'] )
+//||  @$_SESSION['sudo_user']['keys']['t'] < time()-60*1 )
+//{
 	$_SESSION['sudo_user']['keys']['snom'] = gs_keys_snom_get( @$_SESSION['sudo_user']['name'] );
-	/*$_SESSION['sudo_user']['keys']['t'] = time();*/
-/*}*/
-if (! is_array( $_SESSION['sudo_user']['keys']['snom'] ))
+	//$_SESSION['sudo_user']['keys']['t'] = time();
+//}
+if (! is_array( $_SESSION['sudo_user']['keys']['snom'] )) {
 	$_SESSION['sudo_user']['keys']['snom'] = array();
+}
+*/
 
 
 function _extstate2v( $extstate )
@@ -84,7 +88,8 @@ ORDER BY `p`.`id`'
 
 
 if ($rs_groups->numRows()==0) {
-	echo __('Sie sind nicht Mitglied einer Pickup-Gruppe.'), '<br />';  //TRANSLATE ME
+	echo __('Sie sind nicht Mitglied einer Pickup-Gruppe.') ,'<br />',"\n";
+	return;
 } else {
 	while ($pgrp = $rs_groups->fetchRow()) {
 		
@@ -193,6 +198,9 @@ echo "</pre>";
 ?>
 
 
+<?php
+/*  ###########################################
+// not sure what to do with this code
 
 <table cellspacing="1" class="smalltbl">
 <thead>
@@ -302,7 +310,10 @@ if (@count($keys_snom) > 0) {
 </tbody>
 </table>
 
+<?php
+*/  ###########################################
+?>
 
 <script type="text/javascript">/*<![CDATA[*/
-window.setTimeout('document.location.reload();', 5000);
+window.setTimeout('document.location.reload();', 9000);
 /*]]>*/</script>

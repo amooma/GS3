@@ -335,8 +335,7 @@ if ($action === 'import') {
 		$user_id = (int)@$_SESSION['sudo_user']['info']['id'];
 		$query_start = 'INSERT INTO `pb_prv` (`user_id`, `firstname`, `lastname`, `number`) VALUES '."\n";
 		$sql_values = array();
-		if (gs_get_conf('GS_DB_MASTER_TRANSACTIONS'))
-			$DB->startTrans();
+		gs_db_start_trans($DB);
 		foreach ($records as $r) {
 			$sql_values[] = '('. $user_id .', \''. $DB->escape($r['fn']) .'\', \''. $DB->escape($r['ln']) .'\', \''. $DB->escape($r['nrimp']) .'\')';
 			if (count($sql_values) == 10) {
@@ -350,7 +349,8 @@ if ($action === 'import') {
 			$sql_values = array();
 			$DB->execute($query);
 		}
-		$ok = (gs_get_conf('GS_DB_MASTER_TRANSACTIONS') ? @$DB->completeTrans() : true);
+		//$ok = (gs_get_conf('GS_DB_MASTER_TRANSACTIONS') ? @$DB->completeTrans() : true);
+		$ok = gs_db_commit_trans($DB);
 		$file = @$_SESSION['sudo_user']['pb-csv-file'];
 		@$_SESSION['sudo_user']['pb-csv-file'] = null;
 		if (@is_file($file)) {
@@ -461,7 +461,7 @@ if (@$rs) {
 			$sudo_url =
 				(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 				? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
-			echo '<a href="', GS_URL_PATH, 'pb-dial.php?n=', htmlEnt($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a> &nbsp; ';
+			echo '<a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', htmlEnt($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a> &nbsp; ';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			echo '</td>';

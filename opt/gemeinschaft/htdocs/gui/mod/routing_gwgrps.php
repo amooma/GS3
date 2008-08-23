@@ -363,7 +363,7 @@ WHERE `id`='.$ggid
 
 <?php
 		echo '<p class="text"><sup>[1]</sup> ', sPrintF(
-			__('Geben Sie hier falls erforderlich ein <a href="%s" target="_blank">PCRE</a>-Muster an, das eventuelle Pr&auml;fixe von eingehend gew&auml;hlten Nummern wegschneidet, soda&szlig; nur noch die interne Durchwahl &uuml;brig bleibt! Beispiele:<br /> &nbsp;&nbsp;&nbsp; <tt>'.'s/^0251702//'.'</tt><br /> &nbsp;&nbsp;&nbsp; <tt>'.'s/^(((0049|0)251))702//'.'</tt><br /> &nbsp;&nbsp;&nbsp; <tt>'.'s/^(?:(?:0049|0)251)?702(.*)/$1/'.'</tt>'),
+			__('Geben Sie hier falls erforderlich ein <a href="%s" target="_blank">PCRE</a>-Muster an, das eventuelle Pr&auml;fixe von eingehend gew&auml;hlten Nummern wegschneidet, soda&szlig; nur noch die interne Durchwahl &uuml;brig bleibt! Beispiele:<br /> &nbsp;&nbsp;&nbsp; <tt>s/^0251702//</tt><br /> &nbsp;&nbsp;&nbsp; <tt>s/^(((0049|0)251))702//</tt><br /> &nbsp;&nbsp;&nbsp; <tt>s/^(?:(?:0049|0)251)?702(.*)/$1/</tt>'),
 			__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
 		) ,'</p>',"\n";
 		

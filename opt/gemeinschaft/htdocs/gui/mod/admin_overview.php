@@ -98,10 +98,6 @@ function get_last_phone_date( $DB ) {
 	<td><?php echo count_phones_configured($DB); ?></td>
 </tr>
 <tr>
-	<th><?php echo __('Verwendete Endger&auml;te'); ?>:</th>
-	<td><?php echo count_users_logged_in($DB); ?></td>
-</tr>
-<tr>
 	<th><?php echo __('Letztes Endger&auml;t eingetragen'); ?>:</th>
 	<td><?php echo get_last_phone_date($DB); ?></td>
 </tr>

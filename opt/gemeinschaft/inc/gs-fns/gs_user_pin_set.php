@@ -49,20 +49,108 @@ function gs_user_pin_set( $user, $pin='' )
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
 	
+	# start transaction
+	#
+	gs_db_start_trans($db);
+	
 	# get user_id
 	#
 	$user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
-	if (! $user_id)
+	if (! $user_id) {
+		gs_db_rollback_trans($db);
 		return new GsError( 'Unknown user.' );
+	}
 	
 	# set PIN
 	#
 	$ok = $db->execute( 'UPDATE `users` SET `pin`=\''. $db->escape($pin) .'\' WHERE `id`='. $user_id );
-	if (! $ok)
+	if (! $ok) {
+		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to set PIN.' );
+	}
 	$ok = $db->execute( 'UPDATE `ast_voicemail` SET `password`=\''. $db->escape($pin) .'\' WHERE `_user_id`='. $user_id );
-	if (! $ok)
-		return new GsError( 'Failed to change mailbox PIN.' );
+	if (! $ok) {
+		gs_db_rollback_trans($db);
+		return new GsError( 'Failed to change PIN.' );
+	}
+	
+	# get host
+	#
+	$host_id = (int)$db->executeGetOne( 'SELECT `host_id` FROM `users` WHERE `id`='. $user_id );
+	if ($host_id < 1) {
+		gs_db_rollback_trans($db);
+		return new GsError( 'Failed to change PIN.' );
+	}
+	$host = gs_host_by_id_or_ip($host_id);
+	if (isGsError($host)) {
+		gs_db_rollback_trans($db);
+		return new GsError( 'Failed to change PIN. ('. $host->getMsg() .')' );
+	}
+	if (! is_array($host)) {
+		gs_db_rollback_trans($db);
+		return new GsError( 'Failed to change PIN.' );
+	}
+	
+	# change PIN on foreign host
+	#
+	if ($host['is_foreign']) {
+		include_once( GS_DIR .'inc/boi-soap/boi-api.php' );
+		$api = gs_host_get_api( $host['id'] );
+		switch ($api) {
+			case 'm01':
+			case 'm02':
+				$rs = $db->execute(
+					'SELECT '.
+						'`u`.`firstname`, `u`.`lastname`, `u`.`email`, '.
+						'`s`.`secret` `sip_pwd`, `s`.`name` `ext` '.
+					'FROM '.
+						'`users` `u` JOIN '.
+						'`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) '.
+					'WHERE `u`.`id`='. $user_id
+					);
+				if (! $userinfo = $rs->getRow()) {
+					gs_db_rollback_trans($db);
+					return new GsError( 'Failed to get user.' );
+				}
+				$ext = $userinfo['ext'];
+				
+				$hp_route_prefix = (string)$db->executeGetOne(
+					'SELECT `value` FROM `host_params` '.
+					'WHERE `host_id`='. (int)$host['id'] .' AND `param`=\'route_prefix\'' );
+				$sub_ext = (subStr($ext,0,strLen($hp_route_prefix)) === $hp_route_prefix)
+					? subStr($ext, strLen($hp_route_prefix)) : $ext;
+				gs_log( GS_LOG_DEBUG, "Mapping ext. $ext to $sub_ext for SOAP call" );
+				
+				//if (! class_exists('SoapClient')) {
+				if (! extension_loaded('soap')) {
+					gs_db_rollback_trans($db);
+					return new GsError( 'Failed to change PIN on foreign host (SoapClient not available).' );
+				}
+				include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
+				$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $user, $userinfo['sip_pwd'], $pin, $userinfo['firstname'], $userinfo['lastname'], $userinfo['email'] );
+				if (! $ok) {
+					gs_db_rollback_trans($db);
+					return new GsError( 'Failed to change PIN on foreign host (SOAP error).' );
+				}
+				break;
+			
+			case '':
+				# host does not provide any API
+				gs_log( GS_LOG_NOTICE, 'Changing PIN of user '.$user.' on foreign host '.$host['host'].' without any API' );
+				break;
+			
+			default:
+				gs_log( GS_LOG_WARNING, 'Failed to change PIN of user '.$user.' on foreign host '.$host['host'].' - invalid API "'.$api.'"' );
+				gs_db_rollback_trans($db);
+				return new GsError( 'Failed to add user on foreign host (Invalid API).' );
+		}
+	}
+	
+	# commit transaction
+	#
+	if (! gs_db_commit_trans($db)) {
+		return new GsError( 'Failed to change PIN.' );
+	}
 	return true;
 }
 

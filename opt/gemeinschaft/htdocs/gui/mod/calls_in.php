@@ -131,7 +131,7 @@ if (@$rs) {
 			? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
 		echo '<td>';
 		if ($r['number'] != $_SESSION['sudo_user']['info']['ext'])
-			echo '<a href="', GS_URL_PATH, 'pb-dial.php?n=', htmlEnt($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a>';
+			echo '<a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', htmlEnt($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a>';
 		else echo '&nbsp;';
 		echo '</td>';
 		echo '</tr>', "\n";

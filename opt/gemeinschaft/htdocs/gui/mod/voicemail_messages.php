@@ -119,7 +119,7 @@ if (@$_REQUEST['action']==='play') {
 		<object
 			id="player"
 			type="audio/x-gsm"
-			data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>"
+			data="<?php echo GS_URL_PATH, 'srv/vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>"
 			width="250"
 			height="18"
 			align="right"
@@ -140,12 +140,12 @@ if (@$_REQUEST['action']==='play') {
 			type="audio/x-gsm"
 			classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
 			codebase="http://www.apple.com/qtactivex/qtplugin.cab"
-			data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>"
+			data="<?php echo GS_URL_PATH, 'srv/vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>"
 			width="250"
 			height="18"
 			align="right"
 			>
-			<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>" />
+			<param name="src" value="<?php echo GS_URL_PATH, 'srv/vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>" />
 			<param name="autoplay" value="true" />
 			<param name="controller" value="true" />
 			<?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'GSM'); ?>
@@ -175,7 +175,7 @@ if (@$_REQUEST['action']==='play') {
 	<object
 		id="player"
 		type="audio/mpeg"
-		data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>"
+		data="<?php echo GS_URL_PATH, 'srv/vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>"
 		width="250"
 		height="22"
 		align="right"
@@ -195,12 +195,12 @@ if (@$_REQUEST['action']==='play') {
 		type="audio/mpeg"
 		classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
 		codebase="http://www.apple.com/qtactivex/qtplugin.cab"
-		data="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>"
+		data="<?php echo GS_URL_PATH, 'srv/vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>"
 		width="250"
 		height="22"
 		align="right"
 		>
-		<param name="src" value="<?php echo GS_URL_PATH, 'vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>" />
+		<param name="src" value="<?php echo GS_URL_PATH, 'srv/vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>" />
 		<param name="autoplay" value="true" />
 		<param name="controller" value="true" />
 		<small><?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?></small>
@@ -332,8 +332,9 @@ if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
 			echo htmlEnt( $msg['cidnum'] );
 			if (@$msg['cidname'] != '')
 				echo ' &nbsp; (', htmlEnt( $msg['cidname'] ), ')';
-		} else
-			echo '<i>', __('unbekannt'), '</i>';
+		} else {
+			echo '<i>', __('anonym'), '</i>';
+		}
 		echo '</td>', "\n";
 		
 		$dur = abs((int)@$msg['dur']);
@@ -347,7 +348,7 @@ if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
 			$sudo_url =
 				(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 				? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
-			echo ' &nbsp; <a href="', GS_URL_PATH, 'pb-dial.php?n=', htmlEnt(@$msg['cidnum']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a>';
+			echo ' &nbsp; <a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', htmlEnt(@$msg['cidnum']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a>';
 		} else {
 			echo ' &nbsp; <img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook-cust-dis.png" />';
 		}

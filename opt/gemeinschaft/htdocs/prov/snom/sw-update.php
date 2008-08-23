@@ -50,7 +50,7 @@ $firmware_url_snom          = 'http://provisioning.snom.com/download/';
 $firmware_url_snom_from6to7 = 'http://provisioning.snom.com/from6to7/';
 $firmware_path              = '/opt/gemeinschaft/htdocs/prov/snom/sw/';
 
-$firmware_url = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)) . GS_PROV_PATH .'snom/sw/';
+$firmware_url = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/sw/';
 
 
 header( 'Content-Type: text/plain; charset=utf-8' );

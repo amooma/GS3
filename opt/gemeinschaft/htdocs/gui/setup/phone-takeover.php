@@ -262,7 +262,7 @@ elseif ($action === 'takeover') {
 			$ret = _snom_setting( $ip, $https_open, $valid_user, $valid_pass, 'setting_server', 'http://'.$myipaddr.':80/gemeinschaft/prov/snom/settings.php?mac={mac}' );
 			*/
 			$GS_PROV_PORT = (int)gs_get_conf('GS_PROV_PORT');
-			$setting_server_url = gs_get_conf('GS_PROV_SCHEME') .'://'. gs_get_conf('GS_PROV_HOST') . ($GS_PROV_PORT !== 80 ? ':'.$GS_PROV_PORT : '') . gs_get_conf('GS_PROV_PATH') .'snom/settings.php?mac={mac}';
+			$setting_server_url = gs_get_conf('GS_PROV_SCHEME') .'://'. gs_get_conf('GS_PROV_HOST') . ($GS_PROV_PORT ? ':'.$GS_PROV_PORT : '') . gs_get_conf('GS_PROV_PATH') .'snom/settings.php?mac={mac}';
 			$ret = _snom_setting( $ip, $https_open, $valid_user, $valid_pass, 'setting_server', $setting_server_url );
 			
 			if ($ret['http_code'] !== 200) {

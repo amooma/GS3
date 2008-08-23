@@ -74,7 +74,7 @@ if (! $allowed) {
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
                                                       GNU GPL ]]>-->
 <title>Gemeinschaft Extension Monitor</title>
-<script type="text/javascript" src="prototype.FIXED.js"></script>
+<script type="text/javascript" src="../js/prototype.js"></script>
 <script type="text/javascript" src="comm.js"></script>
 <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" />
 <meta http-equiv="imagetoolbar" content="no" />

@@ -15,7 +15,7 @@
     <title>Initiierung von Gesprächen per HTTP GET</title>
 
     <para>Über eine URL können Gespräche per HTTP GET initiiert werden. Die
-    URL ist abhängig von den EInstellungen in
+    URL ist abhängig von den Einstellungen in
     <filename>/opt/gemeinschaft/inc/conf.php</filename> und setzt sich wie
     folgt zusammen:<literallayout><replaceable>&lt;GS_PROV_SCHEME&gt;</replaceable>://<replaceable>&lt;GS_PROV_HOST&gt;</replaceable>:<replaceable>&lt;GS_PROV_PORT&gt;</replaceable><replaceable>&lt;GS_PROV_PATH&gt;</replaceable>call-init.php</literallayout>also
     z.B.:<literallayout>http://192.168.1.130:82/call-init.php</literallayout></para>

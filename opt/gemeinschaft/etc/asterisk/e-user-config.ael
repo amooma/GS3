@@ -54,15 +54,19 @@ context user-config {
 	//-------------------------------------------------------------
 	
 	*90 => {
+		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(internal,1);
 	}
 	*90* => {
+		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(internal,0);
 	}
 	*91 => {
+		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(external,1);
 	}
 	*91* => {
+		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(external,0);
 	}
 	
@@ -72,9 +76,11 @@ context user-config {
 	//-------------------------------------------------------------
 	
 	*92 => {
+		Set(CDR(amaflags)=OMIT);
 		&user-config-call-waiting(1);
 	}
 	*92* => {
+		Set(CDR(amaflags)=OMIT);
 		&user-config-call-waiting(0);
 	}
 	
@@ -84,6 +90,7 @@ context user-config {
 	//-------------------------------------------------------------
 	
 	_*9[34][01]. => {
+		Set(CDR(amaflags)=OMIT);
 		Set(number=${EXTEN:4});
 		if ("${EXTEN:2:1}" = "3") {
 			Set(type=std);
@@ -121,6 +128,7 @@ context user-config {
 	}
 	
 	_*95XX => {
+		Set(CDR(amaflags)=OMIT);
 		Set(timeout=${EXTEN:3});
 		Verbose(1,### User ${user_name}: set Unavail Timeout to ${timeout});
 		&usercode-by-ext(${user_name});
@@ -137,24 +145,28 @@ context user-config {
 	}
 	
 	_*9*[01][0-3] => {
+		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,${EXTEN:3:1},${EXTEN:4:1},1);
 		Wait(0.5);
 		Playback(beep);
 		Hangup();
 	}
 	_*9*[01][0-3]* => {
+		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,${EXTEN:3:1},${EXTEN:4:1},0);
 		Wait(0.5);
 		Playback(beep);
 		Hangup();
 	}
 	_*9**[01][0-3] => {
+		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(var,${EXTEN:4:1},${EXTEN:5:1},1);
 		Wait(0.5);
 		Playback(beep);
 		Hangup();
 	}
 	_*9**[01][0-3]* => {
+		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(var,${EXTEN:4:1},${EXTEN:5:1},0);
 		Wait(0.5);
 		Playback(beep);
@@ -162,6 +174,7 @@ context user-config {
 	}
 	
 	*2 => {
+		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,0,0,1);
 		&user-call-forward-activate-numeric(std,1,0,1);
 		&queue-logout-all-silent();
@@ -171,6 +184,7 @@ context user-config {
 	}
 	dnd-on => {
 		// like *2 but silent
+		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,0,0,1);
 		&user-call-forward-activate-numeric(std,1,0,1);
 		&queue-logout-all-silent();
@@ -178,6 +192,7 @@ context user-config {
 	}
 	
 	*2* => {
+		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
 		Wait(0.5);
@@ -186,12 +201,14 @@ context user-config {
 	}
 	dnd-off => {
 		// like *2* but silent
+		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
 		Hangup();
 	}
 	
 	_*2X. => {
+		Set(CDR(amaflags)=OMIT);
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -213,9 +230,11 @@ context user-config {
 	//-------------------------------------------------------------
 	
 	*96 => {
+		Set(CDR(amaflags)=OMIT);
 		&user-config-comment(1);
 	}
 	*96* => {
+		Set(CDR(amaflags)=OMIT);
 		&user-config-comment(0);
 	}
 }

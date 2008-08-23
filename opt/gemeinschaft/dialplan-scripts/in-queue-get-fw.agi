@@ -56,13 +56,13 @@ if ($queue_id < 1) die();
 #
 
 $forwards = array(
-		'internal'=> array(
+	'internal'=> array(
 		'always'  => array( 'number'=>'' ),
 		'full'    => array( 'number'=>'' ),
 		'empty'   => array( 'number'=>'' ),
 		'timeout' => array( 'number'=>'', 'timeout'=>15 )
 	),
-		'external'=> array(
+	'external'=> array(
 		'always'  => array( 'number'=>'' ),
 		'full'    => array( 'number'=>'' ),
 		'empty'   => array( 'number'=>'' ),
@@ -98,7 +98,7 @@ if ($forwards['internal']['timeout']['number'] != '') {
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 }
 if ($forwards['external']['timeout']['number'] != '') {
-	echo 'SET VARIABLE fw_internal_timeout_timeout '. gs_agi_str_esc( $forwards['external']['timeout']['timeout'] ) ."\n";
+	echo 'SET VARIABLE fw_external_timeout_timeout '. gs_agi_str_esc( $forwards['external']['timeout']['timeout'] ) ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 }
 

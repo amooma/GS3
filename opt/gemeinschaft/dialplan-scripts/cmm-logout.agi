@@ -29,6 +29,7 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/log.php' );
 //require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
@@ -36,38 +37,60 @@ ob_implicit_flush(1);
 
 
 $user_id  = (int)trim(@$argv[1]);
-if ($user_id < 1) die();
+if ($user_id < 1) {
+	gs_log( GS_LOG_NOTICE, "Mobility: No user ID specified" );
+	echo 'HANGUP' ."\n";
+	die();
+}
+$is_from_gateway = trim(@$argv[2]);
+if ($is_from_gateway == '1') {
+	if (! gs_get_conf('GS_BOI_ENABLED')) {
+		gs_log( GS_LOG_NOTICE, "Mobility: User from gateway tries to log out but BOI is not enabled" );
+		echo 'HANGUP' ."\n";
+		die();
+	}
+}
 
 include_once( GS_DIR .'inc/db_connect.php' );
 
 
 $db = gs_db_master_connect();
-if ($db) {
-	$rs = $db->execute( 'SELECT `id` FROM `phones` WHERE `user_id`='. $user_id );
-	while ($phone = $rs->fetchRow()) {
-		
-		# assign an unused nobody user
-		#
+if (! $db) {
+	gs_log( GS_LOG_NOTICE, "Mobility: DB connection failed" );
+	echo 'HANGUP' ."\n";
+	die();
+}
+
+$rs = $db->execute( 'SELECT `id`, `mac_addr`, `nobody_index` FROM `phones` WHERE `user_id`='. $user_id );
+while ($phone = $rs->fetchRow()) {
+	
+	# assign the default nobody
+	#
+	$phone['nobody_index'] = (int)$phone['nobody_index'];
+	if ($phone['nobody_index'] < 1) {
+		gs_log( GS_LOG_WARNING, "Phone ". $phone['mac_addr'] ." does not have a default nobody user" );
+		$new_user_id = null;
+	} else {
 		$new_user_id = (int)$db->executeGetOne(
-'SELECT `id` FROM `users`
-WHERE
-	`nobody_index` IS NOT NULL AND
-	`id` NOT IN (SELECT `user_id` FROM `phones` WHERE `user_id` IS NOT NULL)
-ORDER BY RAND() LIMIT 1'
-		);
-		$db_user_id = $new_user_id ? $new_user_id : 'NULL';
-		$db->execute( 'UPDATE `phones` SET `user_id`='. $db_user_id .' WHERE `id`='. (int)$phone['id'] );
-		
-		//if ($new_user_id)
-		//	$db->execute( 'UPDATE `users` SET `current_ip`=NULL WHERE `id`='. $new_user_id );
-		
+			'SELECT `id` FROM `users` WHERE `nobody_index`='. $phone['nobody_index']
+			);
+		if ($new_user_id < 1) {
+			gs_log( GS_LOG_WARNING, "Could not find user with nobody index ". $phone['nobody_index'] ." for phone ". $phone['mac_addr'] );
+		}
 	}
+	gs_log( GS_LOG_DEBUG, "Mobility: Assigning nobody user with ID ". ($new_user_id > 0 ? $new_user_id : 'NULL') ." to phone ". $phone['mac_addr'] );
+	$db->execute( 'UPDATE `phones` SET `user_id`='. ($new_user_id > 0 ? $new_user_id : 'NULL') .' WHERE `id`='. (int)$phone['id'] .' AND `user_id`='. $user_id );
+	
+	//if ($new_user_id)
+	//	$db->execute( 'UPDATE `users` SET `current_ip`=NULL WHERE `id`='. $new_user_id );
+	
 }
 
 # log out of all queues
 #
-$user_ext = (int)$db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
-if ($user_id > 0) {
+$user_ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
+$user_ext = preg_replace('/[^0-9]/', '', $user_ext);
+if ($user_ext != '') {
 	ob_start();
 	@exec( GS_DIR .'dialplan-scripts/queue-login-logout.agi '. $user_ext .' 0 logoutall 1>>/dev/null 2>>/dev/null' );
 	ob_end_clean();

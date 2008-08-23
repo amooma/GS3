@@ -45,12 +45,12 @@ function gs_host_by_id_or_ip( $id_or_ip )
 	$id_or_ip = trim($id_or_ip);
 	
 	if ((string)$id_or_ip === (string)(int)$id_or_ip) {
-		$rs = $db->execute( 'SELECT `id`, `host`, `comment` FROM `hosts` WHERE `id`='. (int)$id_or_ip );
+		$rs = $db->execute( 'SELECT `id`, `host`, `comment`, `is_foreign` FROM `hosts` WHERE `id`='. (int)$id_or_ip );
 	} else {
 		if (! preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $id_or_ip))
 			return new GsError( 'Unknown host.' );
 		
-		$rs = $db->execute( 'SELECT `id`, `host`, `comment` FROM `hosts` WHERE `host`=\''. $db->escape($id_or_ip) .'\'' );
+		$rs = $db->execute( 'SELECT `id`, `host`, `comment`, `is_foreign` FROM `hosts` WHERE `host`=\''. $db->escape($id_or_ip) .'\'' );
 	}
 	if (! $rs)
 		return new GsError( 'Failed to get host.' );

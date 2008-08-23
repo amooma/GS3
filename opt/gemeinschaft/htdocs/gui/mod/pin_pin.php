@@ -8,6 +8,7 @@
 * http://www.amooma.de/
 *
 * Author: Henning Holtschneider <henning@loca.net>
+* + Amooma
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -29,8 +30,8 @@
 //TRANSLATEME
 //
 
-
 defined('GS_VALID') or die('No direct access.');
+
 
 
 echo '<h2>';
@@ -56,7 +57,7 @@ if (@$_REQUEST['action']==='save') {
 	$type_old_pin   = trim(@$_REQUEST['oldpin']);
 	$new_pin        = trim(@$_REQUEST['newpin']);
 	$new_pin_repeat = trim(@$_REQUEST['newpinrepeat']);
-	
+		
 	if ($db_pin != $type_old_pin) {
 		$msg = __('Alte PIN falsch!');
 	} elseif ($new_pin != $new_pin_repeat) {
@@ -72,7 +73,7 @@ if (@$_REQUEST['action']==='save') {
 		if (isGsError($pinerror)) {
 			$msg = $pinerror->getMsg();
 		} else {
-			$msg = __('Die PIN wurde erfolgreich ge&auml;ndert!');
+			$msg = __('Die PIN wurde ge&auml;ndert.');
 			$success = true;
 		}
 	}
@@ -111,9 +112,26 @@ if (@$_REQUEST['action']==='save') {
 		<td>
 			<?php echo __('Alte PIN'); ?>:
 		</td>
+<?php
+if ($_SESSION['sudo_user']['boi_host_id'] > 0
+&&  $_SESSION['sudo_user']['boi_role'] !== 'gs') {
+	$oldpin = gs_user_pin_get($_SESSION['sudo_user']['name']);
+	if (isGsError($oldpin) || ! is_string($oldpin)) {
+		$oldpin = '';
+	}
+?>
+		<td>
+			<input type="text" name="oldpin" value="<?php echo htmlEnt($oldpin); ?>" readonly="readonly" size="10" maxlength="10" />
+		</td>
+<?php
+} else {
+?>
 		<td>
 			<input type="password" name="oldpin" value="" size="10" maxlength="10" />
 		</td>
+<?php
+}
+?>
 	</tr>
 	<tr class="even">
 		<td>

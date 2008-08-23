@@ -146,7 +146,7 @@ if ($action == '') return;
 
 $w = 580;
 $h = 180;
-$src = GS_URL_PATH .'graph.php?';
+$src = GS_URL_PATH .'srv/graph.php?';
 $args = array(
 	'width'   => $w,
 	'height'  => $h,
@@ -196,7 +196,7 @@ foreach ($args as $k => $v) {
 
 $w = 580;
 $h = 180;
-$src = GS_URL_PATH .'graph.php?';
+$src = GS_URL_PATH .'srv/graph.php?';
 $args = array(
 	'width'   => $w,
 	'height'  => $h,

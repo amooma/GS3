@@ -342,7 +342,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 		// returns true for UPDATE, DELETE, DROP etc.
 		// returns false on error.
 		if (!$rs)
-			trigger_error( 'YADB: Query failed.', E_USER_WARNING );
+			trigger_error( 'YADB: Query failed: '. str_replace(array("\n","\t"), array('\n','\t'), $sql) .';', E_USER_WARNING );
 		return $rs;
 	}
 	
@@ -381,7 +381,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 		
 		if ($this->_transCnt > 0) --$this->_transCnt;
 		// can we use mysqli_commit() ?
-		$ret = $this->_execute( 'COMMIT' );
+		$ret = $this->_execute( 'COMMIT /*!50003 AND NO CHAIN NO RELEASE */' );
 		@ mysqli_autocommit( $this->_conn, true );
 		if ($this->_drvSrvVers >= 40005)
 			$this->_execute( 'SET TRANSACTION ISOLATION LEVEL REPEATABLE READ' );
@@ -394,7 +394,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 		
 		if ($this->_transCnt > 0) --$this->_transCnt;
 		// can we use mysqli_rollback() ?
-		$ret = $this->_execute( 'ROLLBACK' );
+		$ret = $this->_execute( 'ROLLBACK /*!50003 AND NO CHAIN NO RELEASE */' );
 		/* "If you issue a ROLLBACK statement after updating a non-transactional table within a transaction, an ER_WARNING_NOT_COMPLETE_ROLLBACK warning occurs." */
 		@ mysqli_autocommit( $this->_conn, true );
 		if ($this->_drvSrvVers >= 40005)

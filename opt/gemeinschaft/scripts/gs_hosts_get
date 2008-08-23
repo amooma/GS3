@@ -37,10 +37,12 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__);
+$usage = 'Usage: '. baseName(__FILE__) .' [--foreign=0|1] [--group=group_id]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
+		'foreign=',
+		'group='
 	),
 	$usage
 );
@@ -49,19 +51,26 @@ $opts = @getOptsNoMultiples( '',
 /***********************************************************
 *    call the function
 ***********************************************************/
-$hosts = @ gs_hosts_get();
+$hosts = @gs_hosts_get(
+	array_key_exists('foreign', $opts) ? (bool)(int)$opts['foreign'] : null,
+	array_key_exists('group'  , $opts) ?       (int)$opts['group'  ] : null
+);
 if (isGsError( $hosts )) gs_script_error( $hosts->getMsg() );
-if (! $hosts)            gs_script_error();
+if (! is_array($hosts))  gs_script_error();
 
 $fields = array(
 	'id'         => 1,
 	'host'       => 15,
-	'comment'    => 1
+	'comment'    => 1,
+	'is_foreign' => 1,
+	'group_id'   => 1
 );
 $fieldsAbbr = array(
 	'id'         => 'id',
 	'host'       => 'host',
-	'comment'    => 'comment'
+	'comment'    => 'comment',
+	'is_foreign' => 'foreign?',
+	'group_id'   => 'grp_id'
 );
 
 if (gs_stdout_is_console()) {
@@ -69,7 +78,9 @@ if (gs_stdout_is_console()) {
 	$fieldsPad = array(
 		'id'         => STR_PAD_LEFT,
 		'host'       => STR_PAD_RIGHT,
-		'comment'    => STR_PAD_RIGHT
+		'comment'    => STR_PAD_RIGHT,
+		'is_foreign' => STR_PAD_LEFT,
+		'group_id'   => STR_PAD_LEFT
 	);
 	
 	foreach ($fields as $field => $length) {

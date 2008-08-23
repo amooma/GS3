@@ -44,7 +44,7 @@ $file = '/opt/gemeinschaft-siemens/prov-settings.php';
 if (file_exists( $file ) && is_readable( $file )) {
 	include_once( $file );
 } else {
-	gs_log( GS_LOG_WARNING, "Siemens provisioning not available" );
+	gs_log( GS_LOG_DEBUG, "Siemens provisioning not available" );
 	if (! headers_sent())
 		header( 'Content-Type: text/plain' );
 	die( 'Gemeinschaft add-on Siemens provisioning not available!' );

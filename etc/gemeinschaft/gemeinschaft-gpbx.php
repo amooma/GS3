@@ -88,6 +88,7 @@ $GUI_MON_NOQUEUEBLUE        = false;
 $GUI_MON_PEERS_ENABLED      = false;
 $GUI_SHUTDOWN_ENABLED       = true;
 $GUI_LANGS                  = 'de_DE:de_DE:de-DE:Deutsch';
+$GUI_ADDITIONAL_STYLESHEET  = 'gemeinschaft.css';
 
 
 /***********************************************************
@@ -108,12 +109,16 @@ $EXTERNAL_NUMBERS_BACKEND   = 'db';
 ***********************************************************/
 
 $PROV_HOST                  = trim(gs_keyval_get('vlan_0_ipaddr'));
-$PROV_PORT                  = 80;
+$PROV_PORT                  = 0;
 $PROV_SCHEME                = 'http';
 $PROV_PATH                  = '/gemeinschaft/prov/';
 $PROV_AUTO_ADD_PHONE        = true;
 $PROV_AUTO_ADD_PHONE_HOST   = 'first';
 $PROV_DIAL_LOG_LIFE         = 14*24*3600;
+$PROV_PROXIES_TRUST         = '';
+$PROV_PROXIES_XFF_HEADER    = 'X-Forwarded-For';
+$PROV_ALLOW_NET             = '0.0.0.0/0';
+$PROV_LAN_NETS              = '0.0.0.0/0';
 
 
 /***********************************************************
@@ -122,7 +127,7 @@ $PROV_DIAL_LOG_LIFE         = 14*24*3600;
 
 //---------------------[  Snom 3xx  ]---------------------//
 
-$SNOM_PROV_ENABLED          = false;
+$SNOM_PROV_ENABLED          = true;
 $SNOM_PROV_HTTP_USER        = '';
 $SNOM_PROV_HTTP_PASS        = '';
 $SNOM_PROV_PB_NUM_RESULTS   = 15;
@@ -162,12 +167,15 @@ $CANONIZE_CBC_PREFIX       =     trim(gs_keyval_get('canonize_cbc_prefix'      )
 *    DIALPLAN SETTINGS
 ***********************************************************/
 
+$DP_SUBSYSTEM               = false;
 $DP_EMERGENCY_POLICE        = '0110';
 $DP_EMERGENCY_POLICE_MAP    = '110';
 $DP_EMERGENCY_FIRE          = '0112';
 $DP_EMERGENCY_FIRE_MAP      = '112';
 $DP_DIALTIMEOUT_IN          = 90;
 $DP_PRV_CALL_PREFIX         = '*7*';
+$DP_FORWARD_REQ_EXT_NUM     = true;
+$DP_ALLOW_DIRECT_DIAL       = true;
 
 
 /***********************************************************
@@ -179,7 +187,6 @@ $CALL_INIT_FROM_NET         = '0.0.0.0/0';  //FIXME
 $MONITOR_FROM_NET           = '0.0.0.0/32';
 $LVM_USER_6_DIGIT_INT       = false;
 $LVM_CALL_INIT_USERS_500000 = false;
-$LVM_FORWARD_REQ_EXT_NUM    = true;
 $CC_TIMEOUT             =  60;
 $INTL_LANG              = 'de_DE';
 $INTL_USE_GETTEXT       = false;
@@ -207,6 +214,14 @@ $PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";
 $FAX_ENABLED            = false;
 $FAX_PREFIX             = '6';
 $FAX_HYLAFAX_HOST       = '127.0.0.1';
+
+
+/***********************************************************
+*    BRANCH OFFICE INTEGRATION (BOI)
+***********************************************************/
+
+$BOI_ENABLED            = false;
+$BOI_WSDL_VERSION       = '1.0';
 
 
 /***********************************************************

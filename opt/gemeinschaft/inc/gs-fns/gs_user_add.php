@@ -37,9 +37,14 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 {
 	if (! preg_match( '/^[a-z0-9\-_]+$/', $user ))
 		return new GsError( 'User must be lowercase alphanumeric.' );
-	if (in_array($user, array('sysadmin', 'admin', 'root', 'setup', 'my', 'gemeinschaft'), true))
-		return new GsError( sPrintF('"%s" is a reserved username.', $user) );
-	
+	if (in_array($user, array(
+		'sysadmin', 'admin', 'root', 'setup', 'my', 'gemeinschaft',
+		'prov', 'img', 'js', 'mon', 'styles', 'soap', 'srv'
+		), true)
+	||  preg_match('/^nobody-/', $user))
+	{
+		return new GsError( sPrintF('"%s" cannot be used as a username.', $user) );
+	}
 	if (! preg_match( '/^[1-9][0-9]{1,9}$/', $ext ))
 		return new GsError( 'Please use 2-10 digit extension.' );
 	if (! preg_match( '/^[0-9]+$/', $pin ))
@@ -67,72 +72,149 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
 	
+	# start transaction
+	#
+	gs_db_start_trans($db);
+	
 	# check if user exists
 	#
 	$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
-	if ($num > 0)
+	if ($num > 0) {
+		gs_db_rollback_trans($db);
 		return new GsError( 'User exists.' );
+	}
 	
 	# check if ext exists
 	#
 	$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
-	if ($num > 0)
+	if ($num > 0) {
+		gs_db_rollback_trans($db);
 		return new GsError( 'Extension exists.' );
+	}
 	
 	# check if queue with same ext exists
 	#
 	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queues` WHERE `name`=\''. $db->escape($ext) .'\'' );
-	if ($num > 0)
+	if ($num > 0) {
+		gs_db_rollback_trans($db);
 		return new GsError( 'A queue with that name already exists.' );
+	}
 	
 	# check if host exists
 	#
 	$host = gs_host_by_id_or_ip( $host_id_or_ip );	
-	if (isGsError( $host ))
+	if (isGsError( $host )) {
+		gs_db_rollback_trans($db);
 		return new GsError( $host->getMsg() );
-	if (! is_array( $host ))
+	}
+	if (! is_array( $host )) {
+		gs_db_rollback_trans($db);
 		return new GsError( 'Unknown host.' );
+	}
 	
 	# add user
 	#
 	$ok = $db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `email`, `nobody_index`, `host_id`) VALUES (NULL, \''. $db->escape($user) .'\', \''. $db->escape($pin) .'\', _utf8\''. $db->escape($firstname) .'\', _utf8\''. $db->escape($lastname) .'\', _utf8\''. $db->escape($email) .'\', NULL, '. $host['id'] .')' );
-	if (! $ok)
+	if (! $ok) {
+		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to add user (table users).' );
+	}
 	
 	# get user_id
 	#
 	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
-	if (! $user_id)
+	if (! $user_id) {
+		gs_db_rollback_trans($db);
 		return new GsError( 'DB error.' );
+	}
 	
 	# add sip account
 	#
 	$callerid = trim( gs_utf8_decompose_to_ascii( $firstname .' '. $lastname )) .' <'. $ext .'>';
-	$ok = $db->execute( 'INSERT INTO `ast_sipfriends` (`_user_id`, `name`, `secret`, `callerid`, `mailbox`, `setvar`) VALUES ('. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape(rand(10000,99999).rand(10000,99999)) .'\', _utf8\''. $db->escape($callerid) .'\', \''. $db->escape($ext) .'\', \''. $db->escape('__user_id='. $user_id .';__user_name='. $ext) .'\')' );
-	if (! $ok)
+	$sip_pwd = rand(10000,99999).rand(10000,99999);
+	$ok = $db->execute( 'INSERT INTO `ast_sipfriends` (`_user_id`, `name`, `secret`, `callerid`, `mailbox`, `setvar`) VALUES ('. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($sip_pwd) .'\', _utf8\''. $db->escape($callerid) .'\', \''. $db->escape($ext) .'\', \''. $db->escape('__user_id='. $user_id .';__user_name='. $ext) .'\')' );
+	if (! $ok) {
+		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to add user (table ast_sipfriends).' );
+	}
 	
 	# add mailbox
 	#
-	$ok = $db->execute( 'INSERT INTO `ast_voicemail` (`_uniqueid`, `_user_id`, `mailbox`, `password`, `email`, `fullname`) VALUES (NULL, '. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($pin) .'\', \'\', _utf8\''. $db->escape($firstname .' '. $lastname) .'\')' );
-	if (! $ok)
-		return new GsError( 'Failed to add user (table ast_voicemail).' );
+	if (! $host['is_foreign']) {
+		$ok = $db->execute( 'INSERT INTO `ast_voicemail` (`_uniqueid`, `_user_id`, `mailbox`, `password`, `email`, `fullname`) VALUES (NULL, '. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($pin) .'\', \'\', _utf8\''. $db->escape($firstname .' '. $lastname) .'\')' );
+		if (! $ok) {
+			gs_db_rollback_trans($db);
+			return new GsError( 'Failed to add user (table ast_voicemail).' );
+		}
+	}
 	
 	# add mailbox (de)active entry
 	#
-	$ok = $db->execute( 'INSERT INTO `vm` (`user_id`, `internal_active`, `external_active`) VALUES ('. $user_id .', 0, 0)' );
-	if (! $ok)
-		return new GsError( 'Failed to add user (table vm).' );
+	if (! $host['is_foreign']) {
+		$ok = $db->execute( 'INSERT INTO `vm` (`user_id`, `internal_active`, `external_active`) VALUES ('. $user_id .', 0, 0)' );
+		if (! $ok) {
+			gs_db_rollback_trans($db);
+			return new GsError( 'Failed to add user (table vm).' );
+		}
+	}
+	
+	# add user on foreign host
+	#
+	if ($host['is_foreign']) {
+		include_once( GS_DIR .'inc/boi-soap/boi-api.php' );
+		$api = gs_host_get_api( $host['id'] );
+		switch ($api) {
+			case 'm01':
+			case 'm02':
+				$hp_route_prefix = (string)$db->executeGetOne(
+					'SELECT `value` FROM `host_params` '.
+					'WHERE `host_id`='. (int)$host['id'] .' AND `param`=\'route_prefix\'' );
+				$sub_ext = (subStr($ext,0,strLen($hp_route_prefix)) === $hp_route_prefix)
+					? subStr($ext, strLen($hp_route_prefix)) : $ext;
+				gs_log( GS_LOG_DEBUG, "Mapping ext. $ext to $sub_ext for SOAP call" );
+				
+				//if (! class_exists('SoapClient')) {
+				if (! extension_loaded('soap')) {
+					gs_db_rollback_trans($db);
+					return new GsError( 'Failed to add user on foreign host (SoapClient not available).' );
+				}
+				include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
+				$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email );
+				if (! $ok) {
+					gs_db_rollback_trans($db);
+					return new GsError( 'Failed to add user on foreign host (SOAP error).' );
+				}
+				break;
+			
+			case '':
+				# host does not provide any API
+				gs_log( GS_LOG_NOTICE, 'Adding user '.$user.' on foreign host '.$host['host'].' without any API' );
+				break;
+			
+			default:
+				gs_log( GS_LOG_WARNING, 'Failed to add user '.$user.' on foreign host '.$host['host'].' - invalid API "'.$api.'"' );
+				gs_db_rollback_trans($db);
+				return new GsError( 'Failed to add user on foreign host (Invalid API).' );
+		}
+	}
+	
+	# commit transaction
+	#
+	if (! gs_db_commit_trans($db)) {
+		return new GsError( 'Failed to add user.' );
+	}
 	
 	# reload dialplan (hints!)
 	#
-	//@ exec( GS_DIR .'sbin/start-asterisk --dialplan' );  // <-- not the same host!!!
-	//$ok = @ gs_asterisks_reload( array($host['id']), true );
-	$ok = @ gs_asterisks_reload( array($host['id']), false );
-	if (isGsError( $ok ))
-		return new GsError( $ok->getMsg() );
-	if (! $ok)
-		return new GsError( 'Failed to reload dialplan.' );
+	if (! $host['is_foreign']) {
+		//@ exec( GS_DIR .'sbin/start-asterisk --dialplan' );  // <-- not the same host!!!
+		//$ok = @ gs_asterisks_reload( array($host['id']), true );
+		$ok = @ gs_asterisks_reload( array($host['id']), false );
+		if (isGsError( $ok ))
+			return new GsError( $ok->getMsg() );
+		if (! $ok)
+			return new GsError( 'Failed to reload dialplan.' );
+	}
 	
 	return true;
 }

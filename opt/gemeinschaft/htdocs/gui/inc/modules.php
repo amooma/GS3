@@ -55,12 +55,13 @@ $MODULES['home'     ]=  array('title' => __('Home'),
 
 $MODULES['pb'       ]=  array('title' => __('Telefonbuch'),
                               'icon'  => 'crystal-svg/%s/act/contents.png',
+                              'boi_ok'=> false,  //FIXME?
    'sub' => array(
    )
 );
 $tmp = array(
 	15=>array('k' => 'common' ,
-		      's' => array('title' => __('Firma (Projekt)' ))  ),
+		      's' => array('title' => __('Gemeinschaft' ))  ),
 	25=>array('k' => 'private',
 	          's' => array('title' => __('Pers&ouml;nlich' ))  )
 );
@@ -68,7 +69,7 @@ if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
 	$tmp[$pos] = array(
 	          'k' => 'imported',
-	          's' => array('title' => __('Firma (aus LDAP)'))
+	          's' => array('title' => __('Importiert'))
 	);
 }
 kSort($tmp);
@@ -84,6 +85,7 @@ $MODULES['pb'       ]['sub'][
 
 $MODULES['calls'    ]=  array('title' => __('Anruflisten'),
                               'icon'  => 'crystal-svg/%s/app/karm.png',
+                              'boi_ok'=> false,
    'sub' => array(
       'out'          => array('title' => __('gew&auml;hlt')),
       'missed'       => array('title' => __('verpasst')),
@@ -95,6 +97,7 @@ $MODULES['calls'    ]=  array('title' => __('Anruflisten'),
 
 $MODULES['voicemail']=  array('title' => __('Voicemail'),
                               'icon'  => 'crystal-svg/%s/act/inbox.png',
+                              'boi_ok'=> false,
    'sub' => array(
       'messages'     => array('title' => __('Nachrichten'))
    )
@@ -104,6 +107,7 @@ $MODULES['voicemail']=  array('title' => __('Voicemail'),
 
 $MODULES['forwards' ]=  array('title' => __('Rufumleitung'),
                               'icon'  => 'crystal-svg/%s/app/yast_route.png',
+                              'boi_ok'=> false,
    'sub' => array(
       'forwards'     => array('title' => __('Rufumleitung')),
       'extnumbers'   => array('title' => __('externe Nummern')),
@@ -115,6 +119,7 @@ $MODULES['forwards' ]=  array('title' => __('Rufumleitung'),
 
 $MODULES['monitor'  ]=  array('title' => __('Monitor'),
                               'icon'  => 'crystal-svg/%s/app/display.png',
+                              'boi_ok'=> false,
    'sub' => array(
       'queues'       => array('title' => __('Queues')),
       'pgrps'        => array('title' => __('Gruppen'))
@@ -129,6 +134,7 @@ $MODULES['monitor'  ]['sub'][
 
 $MODULES['features' ]=  array('title' => __('Dienstmerkmale'),
                               'icon'  => 'crystal-svg/%s/act/configure.png',
+                              'boi_ok'=> false,
    'sub' => array(
       'features'     => array('title' => __('Dienstmerkmale'))
    )
@@ -141,10 +147,8 @@ $MODULES['keys'     ]=  array('title' => __('Tastenbelegung'),
    'sub' => array(
    )
 );
-if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 $MODULES['keys'     ]['sub'][
-      'snom']        =  array('title' => __('Snom'));
-}
+      'keyprof'     ]=  array('title' => __('Tastenbelegung'));
 
 #####################################################################
 
@@ -159,6 +163,7 @@ $MODULES['ringtones']=  array('title' => __('Klingelt&ouml;ne'),
 
 $MODULES['stats'    ]=  array('title' => __('Statistik'),     //TRANSLATE ME
                               'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
+                              'boi_ok'=> false,
    'sub' => array(
       'qclassical'   => array('title' => __('Q Klassisch')),  //TRANSLATE ME
       'callvolume'   => array('title' => __('Gespr.-Volumen'))//TRANSLATE ME
@@ -170,6 +175,7 @@ $MODULES['stats'    ]=  array('title' => __('Statistik'),     //TRANSLATE ME
 if (gs_get_conf('GS_FAX_ENABLED')) {
 $MODULES['fax'      ]=  array('title' => __('Fax'),           //TRANSLATE ME
                               'icon'  => 'crystal-svg/%s/app/kdeprintfax.png',
+                              'boi_ok'=> false,
    'sub' => array(
       'rec'          => array('title' => __('Empfangen')),    //TRANSLATE ME
       'send'         => array('title' => __('Fax versenden')),//TRANSLATE ME
@@ -190,6 +196,7 @@ $MODULES['pin']=  array('title' => __('PIN &auml;ndern'),
 
 $MODULES['help'     ]=  array('title' => __('Hilfe'),
                               'icon'  => 'crystal-svg/%s/act/help.png',
+                              'boi_ok'=> false,
    'sub' => array(
       'numbers'      => array('title' => __('Service-Nummern')),
       'snom'         => array('title' => __('Snom'))
@@ -201,14 +208,32 @@ $MODULES['help'     ]=  array('title' => __('Hilfe'),
 $MODULES['admin'    ]=  array('title' => __('Administration'),
                               'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
                               'perms' => 'admin',
+                              'boi_ok'=> false,
    'sub' => array(
       'overview'     => array('title' => __('&Uuml;bersicht')),
       'users'        => array('title' => __('Benutzer')),
+      'groups'       => array('title' => __('Benutzergruppen')),
       'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
       'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
       //'ivrs'         => array('title' => __('IVRs')),           //TRANSLATE ME
       'calls'        => array('title' => __('Verbindungen')),
       'reload'       => array('title' => __('Reload'))          //TRANSLATE ME
+   )
+);
+if (gs_get_conf('GS_BOI_ENABLED')) {
+$MODULES['admin'    ]['sub'][
+      'boi-perms']   =  array('title' => __('Lokale Admins'));  //TRANSLATE ME
+}
+
+#####################################################################
+
+$MODULES['prov'     ]=  array('title' => __('Provisioning'),
+                              'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
+                              'perms' => 'admin',
+                              'boi_ok'=> false,
+   'sub' => array(
+      'keyprof'      => array('title' => __('Tasten-Profile')),
+      'provparams'   => array('title' => __('Parameter'))
    )
 );
 
@@ -217,6 +242,7 @@ $MODULES['admin'    ]=  array('title' => __('Administration'),
 $MODULES['routing'  ]=  array('title' => __('Routen'),          //TRANSLATE ME
                               'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
                               'perms' => 'admin',
+                              'boi_ok'=> false,
    'sub' => array(
       'gwgrps'       => array('title' => __('Gateway-Gruppen')),//TRANSLATE ME
       'gws-sip'      => array('title' => __('SIP-Gateways')),   //TRANSLATE ME
@@ -239,6 +265,7 @@ $MODULES['routing'  ]['sub'][
 $MODULES['system'   ]=  array('title' => __('System'),          //TRANSLATE ME
                               'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
                               'perms' => 'admin',
+                              'boi_ok'=> false,
    'sub' => array(
    )
 );
@@ -258,12 +285,16 @@ $MODULES['system'  ]['sub'][
 $MODULES['system'   ]['sub'][
       'logging']     =  array('title' => __('Logging'));        //TRANSLATE ME
 */
+$MODULES['system'   ]['sub'][
+      'nodesmon']    =  array('title' => __('Nodes-Status'));
 if ($GS_INSTALLATION_TYPE !== 'gpbx') {
 $MODULES['system'   ]['sub'][
       'hosts']       =  array('title' => __('Hosts'));          //TRANSLATE ME
-}
+if (gs_get_conf('GS_BOI_ENABLED')) {
 $MODULES['system'   ]['sub'][
-      'nodesmon']    =  array('title' => __('Nodes'));
+      'hosts-foreign']= array('title' => __('Hosts (fremde)')); //TRANSLATE ME
+}
+}
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 $MODULES['system'   ]['sub'][
       'cards']       =  array('title' => __('PCI-Karten'));     //TRANSLATE ME
@@ -292,12 +323,14 @@ $MODULES['system'   ]['sub'][
 
 #####################################################################
 
+if (gs_get_conf('GS_GUI_AUTH_METHOD') !== 'webseal') {
 $MODULES['logout'   ]=  array('title' => __('Logout'),
                               'icon'  => 'crystal-svg/%s/act/exit.png',
    'sub' => array(
       'logout'       => array('title' => __('Logout'))
    )
 );
+}
 
 #####################################################################
 

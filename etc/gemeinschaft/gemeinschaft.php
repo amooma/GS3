@@ -98,6 +98,7 @@ $DB_SLAVE_DB            = 'asterisk';
 #$LDAP_PROP_FIRSTNAME    = 'givenname';       # e.g. "givenname"
 #$LDAP_PROP_LASTNAME     = 'sn';              # e.g. "sn"
 #$LDAP_PROP_PHONE        = 'telephonenumber'; # e.g. "telephonenumber"
+#$LDAP_PROP_EMAIL        = 'mail';            # e.g. "mail"
 
 
 
@@ -141,7 +142,7 @@ $GUI_SUDO_ADMINS            = '';
 $GUI_QUEUE_SHOW_NUM_CALLS   = false;
   # show number of completed calls for each member in Monitor->Queues
 
-$GUI_QUEUE_INFO_FROM_DB     = false;
+$GUI_QUEUE_INFO_FROM_DB     = true;
   # get queue statistics for Monitor->Queues from database (table
   # queue_log)? otherwise the stats are taken from the manager
   # interface. does not make sense if you don't set up a cron job
@@ -163,9 +164,9 @@ $GUI_MON_NOQUEUEBLUE        = true;
   # default: true for INSTALLATION_TYPE=='gpbx', false
   # otherwise
 
-$GUI_LANGS = 'de_DE:de_DE:de-DE:Deutsch, en_US:en_US:en-US:English';
+#$GUI_LANGS = 'de_DE:de_DE:de-DE:Deutsch, en_US:en_US:en-US:English';
 
-$GUI_ADDITIONAL_STYLESHEET = 'gemeinschaft.css';
+#$GUI_ADDITIONAL_STYLESHEET  = 'gemeinschaft.css';
 
 
 
@@ -188,6 +189,7 @@ $NOBODY_EXTEN_PATTERN   = '95xxxx';
   # the pattern - once or multiple times. Take care that there
   # is enough room for all of your phones! E.g. "95xxxx" can
   # hold a maximum of 9999 phones.
+  # It it strongly recommended not to change this value!
   # Call scripts/gs_nobodies_change if you ever change this!
 
 $NOBODY_CID_NAME        = 'Namenlos-';
@@ -201,10 +203,8 @@ $NOBODY_CID_NAME        = 'Namenlos-';
 ***********************************************************/
 
 $PROV_HOST                  = '192.168.1.130';
-//$PROV_PORT                  = 82;
-$PROV_PORT                  = 80;
-$PROV_SCHEME                = 'http';  # without "://"
-//$PROV_PATH                  = '/';
+#$PROV_PORT                  = 0;  # 0 for default port for $PROV_SCHEME
+#$PROV_SCHEME                = 'http';  # without "://"
 $PROV_PATH                  = '/gemeinschaft/prov/';
   # with starting and trailing "/"
   # URL is build like this:
@@ -214,11 +214,38 @@ $PROV_AUTO_ADD_PHONE        = true;
   # asks for provisioning, should the phone automatically be
   # added and a user account be created?
 $PROV_AUTO_ADD_PHONE_HOST   = 'first';
-  # which of the hosts should the new phone be assigned to?
+  # which of the hosts should the new nobody account be assigned to?
   # can be "first", "last" or "random"
-$PROV_DIAL_LOG_LIFE         = 14*24*3600;
+$PROV_DIAL_LOG_LIFE         = 14*24*3600;  # 14 days
   # for how long to keep the dial log entries (dialed, missed,
   # in; CDR will be stored forever)
+
+//$PROV_PROXIES_TRUST         = '';
+  # trust the $PROV_PROXIES_XFF_HEADER header of requests for
+  # configuration from these proxies.
+  # e.g. '192.168.1.2, 192.168.1.3'
+  # the proxy must pass the phone's User-Agent header unmodified.
+//$PROV_PROXIES_XFF_HEADER    = 'X-Forwarded-For';
+  # 'X-Forwarded-For' is the de-facto standard but depending on the
+  # proxy it might be 'X-Real-IP' or 'X-Client-IP'. case-insensitive.
+$PROV_ALLOW_NET             = '0.0.0.0/0';
+//$PROV_ALLOW_NET             = '192.168.0.0/16';
+  # comma (,) separated list of <IP address>/<netmask> pairs (CIDR
+  # or dotted decimal notation) of phones which may ask for
+  # configuration.
+  # e.g.: '192.168.1.0/255.255.255.0, 192.168.0.0/16'
+  # allow all: '0.0.0.0/0', allow none: '0.0.0.0/32'
+
+//$PROV_LAN_NETS = '0.0.0.0/0';
+  # CIDR notation, comma-separated
+  # e.g. '10.0.0.0/8, 127.0.0.0/8, 169.254.0.0/16, 172.16.0.0/12, 192.168.0.0/16'
+  # every phone which is not in one of these subnets is regarded
+  # as being in the WAN. if a phone in the WAN needs to register
+  # at a SIP server in the LAN the corresponding sip_proxy_from_wan
+  # address from table host_params (if any) will be set as the
+  # phone's outbound proxy (which is inbound from Gemeinschaft's
+  # point of view)
+  # default: '0.0.0.0/0' => all in LAN => no proxy
 
 
 
@@ -304,6 +331,10 @@ $CANONIZE_CBC_PREFIX    = '010';    # Call-by-Call prefix (Germany: 010)
 *    DIALPLAN SETTINGS
 ***********************************************************/
 
+$DP_SUBSYSTEM               = false;
+  # are we a sub-system behind another PBX in the same private
+  # branch? if true dial outbound for unknown numbers
+
   # emergency numbers - no checking for permissions etc.:
 $DP_EMERGENCY_POLICE        = '110,0110';  # 110,0110,911,999,767,...
 $DP_EMERGENCY_POLICE_MAP    = '110';
@@ -316,10 +347,19 @@ $DP_EMERGENCY_FIRE_MAP      = '112';
 $DP_DIALTIMEOUT_IN          = 45;
   # default timeout when dialing to internal users
 
-$DP_PRV_CALL_PREFIX         = '*7*';  # e.g. "*7*", "96", ...
-                                      # must not collide with any other
-                                      # extension!
+#$DP_PRV_CALL_PREFIX         = '*7*';
+  # e.g. "*7*", "96", ...
+  # must not collide with any other extension!
   //FIXME - fix e.ael to honor this setting
+
+$DP_FORWARD_REQ_EXT_NUM     = true;
+  # if true call forwards can be set to numbers in a user's list of
+  # external numbers only - apart from numbers not starting in "0"
+  # which are always allowed
+
+$DP_ALLOW_DIRECT_DIAL       = false;
+  # allow direct dialing to an extension (overrides call forwards),
+  # for boss/secretary functionality
 
 
 
@@ -350,21 +390,16 @@ $MONITOR_FROM_NET           = '192.168.1.0/24';
   # compare user names as 6 digit integers (padded with zeros (0)
   # on the left. currently used by htdocs/prov/call-init.php and
   # inc/gs-fns/gs_user_external_number*. should normally be off
-  # because usernames are strings. deprecated.
+  # because usernames are alphanumeric strings. deprecated.
 
 #$LVM_CALL_INIT_USERS_500000 = false;
   # should normally be off. deprecated.
-
-$LVM_FORWARD_REQ_EXT_NUM    = true;
-  # if true call forwards can be set to numbers in a user's list of
-  # external numbers only - apart from numbers not starting in "0"
-  # which are always allowed
 
 $CC_TIMEOUT             =  60;      # timeout of programmed call
                                     # completions in minutes
 
 $INTL_LANG              = 'de_DE';  # "de_DE" or "en_US"
-$INTL_USE_GETTEXT       = false;
+#$INTL_USE_GETTEXT       = false;
   # whether to use gettext files or php arrays. gettext seems to have
   # problems on some systems
 
@@ -390,18 +425,20 @@ $EMAIL_DELIVERY         = 'sendmail';
 *    PHONEBOOK
 ***********************************************************/
 
-$PB_IMPORTED_ENABLED    = false;
-$PB_IMPORTED_ORDER      = 2;                    # 1|2|3
-$PB_IMPORTED_TITLE      = "Firma (aus LDAP)";   # short! no HTML entities!
+#$PB_IMPORTED_ENABLED    = false;
+#$PB_IMPORTED_ORDER      = 2;                    # 1|2|3
+#$PB_IMPORTED_TITLE      = "Firma (aus LDAP)";   # short! no HTML entities!
 
-$PB_INTERNAL_TITLE      = "Intern";             #  "
-$PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";  #  "
+#$PB_INTERNAL_TITLE      = "Intern";             #  "
+#$PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";  #  "
+
 
 
 /***********************************************************
 *    FAX
 ***********************************************************/
 
+/*
 $FAX_ENABLED            = false;
 $FAX_PREFIX             = '6';           # not used yet  //FIXME
 $FAX_TSI_PREFIX         = @$CANONIZE_NATL_PREFIX.
@@ -416,6 +453,39 @@ $FAX_HYLAFAX_PORT       = 4559;          # HylaFax port (FTP-like protocol)
 $FAX_HYLAFAX_ADMIN      = 'webmgr';      # admin user of your HylaFax
                                          # (see HylaFax's hosts.hfaxd)
 $FAX_HYLAFAX_PASS       = 'a9bl2ue7';
+*/
+
+
+
+/***********************************************************
+*    BRANCH OFFICE INTEGRATION (BOI)
+***********************************************************/
+
+$BOI_ENABLED            = false;
+
+$BOI_API_DEFAULT        = '';
+  # default API (add users, GUI integration, ...) when adding new
+  # foreign hosts
+  # ""   : no API
+  # "m01": SOAP-API 1.0, WSDL definition slightly invalid but works
+  #        and thus left as is for backward compatibility
+
+$BOI_BRANCH_NETMASK     = '/24';        # CIDR notation, e.g. "/24"
+$BOI_BRANCH_PBX         = '0.0.0.130';  # e.g. "0.0.0.130"
+  # will be added to the network address. example: new phone
+  # requests settings, IP 10.1.2.190 => network addr. is
+  # 10.1.2.0 => registrar addr. is 10.1.2.130. if that host
+  # exists add the nobody user there, else add the nobody user
+  # to a Gemeinschaft host according to PROV_AUTO_ADD_PHONE_HOST
+
+$BOI_NOBODY_EXTEN_PATTERN = '95xxxx';
+  # like NOBODY_EXTEN_PATTERN but for foreign hosts
+
+//$BOI_GUI_REVERSE_PROXY    = 'http://'. @$PROV_HOST .':8080/';
+//$BOI_GUI_REVERSE_PROXY    = 'http://192.168.1.130:8080/';
+  # scheme, host, port, path (including trailing "/") to the reverse
+  # proxy for GUI integration
+
 
 
 /***********************************************************
@@ -426,7 +496,7 @@ $LOG_TO      = 'file';              # 'file'|'syslog'
 $LOG_LEVEL   = 'NOTICE';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
 
 # these settings affect only file logging:
-$LOG_FILE    = '/var/log/gemeinschaft/gs.log';
+#$LOG_FILE    = '/var/log/gemeinschaft/gs.log';
 $LOG_GMT     = true;                # use GMT or local time
 
 # these settings affect only logging to syslog:
@@ -445,5 +515,8 @@ if (@$INSTALLATION_TYPE === 'gpbx') {
 	}
 }
 
-// NO NEWLINES AFTER THE CLOSING TAG!
+/* NO NEWLINES AFTER THE CLOSING TAG!
+ * (Yeah, I like vim. But you vim people have to understand
+ * that \n is a line-feed - not an end-of-line marker.)
+ */
 ?>

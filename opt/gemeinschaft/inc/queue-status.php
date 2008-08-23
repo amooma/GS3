@@ -90,30 +90,47 @@ function gs_queue_status( $host, $ext, $getMembers, $getCallers )
 	}
 	if (! is_resource($hosts[$host]['sock'])) {
 		
-		if ($hosts[$host]['lasttry'] > time()-3600) {
+		if ($hosts[$host]['lasttry'] > time()-60) {
 			# we have tried less than a minute ago
 			$hosts[$host]['lasttry'] = time();
 			return false;
 		}
 		$hosts[$host]['lasttry'] = time();
 		
-		$sock = @ fSockOpen( $host, 5038, $err, $errMsg, 4 );
-		if (! is_resource($sock)) return false;
+		$sock = @ fSockOpen( $host, 5038, $err, $errMsg, 2 );
+		if (! is_resource($sock)) {
+			gs_log( GS_LOG_WARNING, 'Connection to AMI on '.$host.' failed' );
+			return false;
+		}
+		$data = _sock_read( $sock, 3, '/[\\r\\n]/' );
+		if (! preg_match('/^Asterisk [^\/]+\/(\d(?:\.\d)?)/mis', $data, $m)) {
+			gs_log( GS_LOG_WARNING, 'Incompatible Asterisk manager interface on '.$host );
+			$m = array(1=>'0.0');
+		} else {
+			if ($m[1] > '1.1') {
+				# Asterisk 1.4: manager 1.0
+				# Asterisk 1.6: manager 1.1
+				gs_log( GS_LOG_NOTICE, 'Asterisk manager interface on '.$host.' speaks a new protocol version ('.$m[1].')' );
+				# let's try anyway and hope to understand it
+			}
+		}
 		$hosts[$host]['sock'] = $sock;
 		$req = "Action: Login\r\n"
 		     . "Username: ". "gscc" ."\r\n"
-		     . "Secret: ". "gspass" ."\r\n"
+		     . "Secret: ". "gspass" ."\r\n"  //FIXME
 		     . "Events: off\r\n"
 		     . "\r\n";
 		@ fWrite( $sock, $req, strLen($req) );
 		@ fFlush( $sock );
-		$data = _sock_read2( $sock, 5, '/\\r\\n\\r\\n/' );
+		$data = _sock_read2( $sock, 5, '/\\r\\n\\r\\n/S' );
 		if (! preg_match('/Authentication accepted/i', $data)) {
+			gs_log( GS_LOG_WARNING, 'Authentication to AMI on '.$host.' failed' );
 			$hosts[$host]['sock'] = null;
 			return false;
 		}
-	} else
+	} else {
 		$sock = $hosts[$host]['sock'];
+	}
 	
 	$queue_stats = array(
 		'maxlen'    => null,

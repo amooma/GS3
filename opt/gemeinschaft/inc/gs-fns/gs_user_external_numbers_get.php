@@ -78,7 +78,7 @@ function gs_user_external_numbers_get( $user )
 			if (isGsError($userArr))
 				return new GsError( $userArr->getMsg() );
 			if (! is_array($userArr)) {
-				//return new GsError( 'User "'. GS_LDAP_USER_PROP .'='. $user .','. GS_LDAP_SEARCHBASE .'" not in LDAP.' );
+				//return new GsError( 'User "'. GS_LDAP_PROP_USER .'='. $user .','. GS_LDAP_SEARCHBASE .'" not in LDAP.' );
 				$numbers = array();
 			} else {
 				foreach ($userArr as $key => $arr) {

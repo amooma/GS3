@@ -29,6 +29,7 @@
 defined('GS_VALID') or die('No direct access.');
 
 include_once( GS_DIR .'inc/conf.php' );  # should already be included anyway
+include_once( GS_DIR .'inc/log.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
@@ -113,8 +114,15 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_del.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
 
-include_once( GS_DIR .'inc/gs-fns/gs_user_snom_keys_get.php' );  # old
-include_once( GS_DIR .'inc/gs-fns/gs_keys_snom_get.php' );  # new
+//include_once( GS_DIR .'inc/gs-fns/gs_user_snom_keys_get.php' );  # really old
+//include_once( GS_DIR .'inc/gs-fns/gs_keys_snom_get.php' );  # old
+include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_keys_get_snom.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_keys_get_siemens.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_keys_get_unknown.php' );
+
+include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get.php' );
+//include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get_unknown.php' );
 
 include_once( GS_DIR .'inc/gs-fns/gs_user_pin_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_pin_set.php' );

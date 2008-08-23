@@ -212,7 +212,7 @@ if (isGsError($results)) {
 			(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 			? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
 		if (@$r[GS_LDAP_PROP_PHONE][0] != $_SESSION['sudo_user']['info']['ext'])
-			echo '<a href="', GS_URL_PATH, 'pb-dial.php?n=', htmlEnt(@$r[GS_LDAP_PROP_PHONE][0]), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a>';
+			echo '<a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', htmlEnt(@$r[GS_LDAP_PROP_PHONE][0]), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a>';
 		else echo '&nbsp;';
 		echo '</td>';
 		

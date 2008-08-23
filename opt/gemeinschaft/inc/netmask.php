@@ -38,7 +38,7 @@ function ip_addr_dec( $ip )
 		return 0;
 	$ipDec = 0;
 	for ($i=4; $i>0; --$i)
-			$ipDec += ($m[$i] < 256 ? $m[$i] : 255) * pow(256,4-$i);
+		$ipDec += ($m[$i] < 256 ? $m[$i] : 255) * pow(256,4-$i);
 	return $ipDec;
 	//$ipBin = str_pad(decBin($ipDec), 32, '0', STR_PAD_LEFT);
 	//return $ipBin;
@@ -74,6 +74,39 @@ function ip_addr_in_network( $ip, $networkDef )
 			return false;
 	}
 	return true;
+}
+
+# checks if an IP address is in a list of comma-separated networks
+# in CIDR notation
+#
+function ip_addr_in_network_list( $ip, $network_list )
+{
+	$networks = explode(',', $network_list);
+	foreach ($networks as $net) {
+		if (ip_addr_in_network( $ip, trim(normalizeIPs($net)) )) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function ip_addr_network_add_sub( $network, $sub_ip )
+{
+	# simple OR for 2 binary strings, eg.
+	#    11000000101010000000000100000000
+	#    00000000000000000000000010000010
+	# => 11000000101010000000000110000010
+	$binary_net = ip_addr_decbin(ip_addr_dec( $network ));
+	$binary_sub = ip_addr_decbin(ip_addr_dec( $sub_ip  ));
+	if (strLen($binary_net) != 32
+	||  strLen($binary_sub) != 32) return false;
+	$binary_ip  = '';
+	for ($i=0; $i<32; ++$i) {
+		$binary_ip .=
+			($binary_net{$i}=='1' || $binary_sub{$i}=='1') ? '1':'0';
+	}
+	$ip = long2ip(binDec( $binary_ip ));
+	return $ip ? $ip : false;
 }
 
 

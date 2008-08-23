@@ -57,6 +57,34 @@ function hexUnicodeToUtf8( $hexcp )
 }
 
 
+# escapes non-ASCII characters in an UTF-8 string to JavaScript
+# style \uXXXX sequences
+function utf8_to_unicode_uhex( $str )
+{
+	return preg_replace(
+		'/[\x{00}-\x{1F}\x{7F}-\x{7FFFFFFF}]/uSe',
+		'sPrintF("\\u%04x", utf8ToCodepoint("$0"))',
+		str_replace(
+			array( '\\'  , "\x08", "\x0C", "\n" , "\r" , "\t"  ),
+			array( '\\\\', '\\b' , '\\f' , '\\n', '\\r', '\\t' ),
+			$str
+			)
+		);
+}
+
+# quotes a string according to RFC 4627 (JSON)
+function utf8_json_quote( $str )
+{
+	return
+		'"'.
+		str_replace(
+			array( '"'  , '/'   ),
+			array( '\\"', '\\/' ),
+			utf8_to_unicode_uhex( $str )) .
+		'"';
+}
+
+
 function _gs_utf8_get_map()
 {
 	$map = array();

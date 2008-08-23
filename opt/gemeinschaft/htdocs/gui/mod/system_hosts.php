@@ -50,48 +50,131 @@ echo '</h2>', "\n";
 
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
 
+$host_apis = array(
+	''    => '-',
+	'm01' => '1.0'
+	//'m02' => '1.1'
+);
+
 $edit_host   = (int)trim(@$_REQUEST['edit'   ]);
 $save_host   = (int)trim(@$_REQUEST['save'   ]);
 $per_page    = (int)GS_GUI_NUM_RESULTS;
-$page        =      (int)@$_REQUEST['page'   ] ;
+$page        =     (int)(@$_REQUEST['page'   ]);
 $host        =      trim(@$_REQUEST['host'   ]);
 $hostid      = (int)trim(@$_REQUEST['hostid' ]);
 $comment     =      trim(@$_REQUEST['comment']);
-$delete_host = (int)trim(@$_REQUEST['delete']);
+$delete_host = (int)trim(@$_REQUEST['delete' ]);
 
 if ($host) {
-	//FIXME
-	// check that the IP address is ok and unique
-	// ...
+	$host = normalizeIPs($host);
+	$bInvalHostName = false;
+	if (! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $host)) {
+		# not an IP address. => resolve hostname
+		$addresses = @gethostbynamel($host);
+		
+		if (count($addresses) < 1) {
+			echo '<div class="errorbox">';
+			echo sPrintF(__('Hostname &quot;%s&quot; konnte nicht aufgel&ouml;st werden.'), htmlEnt($host));
+			echo '</div>',"\n";
+			$bInvalHostName = true;
+		}
+		elseif (count($addresses) > 1) {
+			echo '<div class="errorbox">';
+			echo sPrintF(__('Hostname &quot;%s&quot; kann nicht verwendet werden, da er zu mehr als einer IP-Adresse aufgel&ouml;st wird.'), htmlEnt($host));
+			echo '</div>',"\n";
+			$bInvalHostName = true;
+		}
+		elseif (count($addresses) == 1) {
+			if (strlen($addresses[0]) == 0) {
+				echo '<div class="errorbox">';
+				echo sPrintF(__('Hostname &quot;%s&quot; konnte nicht aufgel&ouml;st werden.'), htmlEnt($host));
+				echo '</div>',"\n";		
+				$bInvalHostName = true;
+			}
+			$host = $addresses[0];
+		}
+	}
 	
-	if ($save_host) {
-		$sql_query =
+	if (! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $host) ) {
+		if (! $bInvalHostName) {
+			echo '<div class="errorbox">';
+			echo sPrintF(__('Ung&uuml;ltige IP-Adresse &quot;%s&quot;!'), htmlEnt($host));
+			echo '</div>',"\n";
+		}
+	}
+	else {
+		
+		if ($save_host) {
+			$sql_query =
 'UPDATE `hosts` SET
 	`host`=\''. $DB->escape($host) .'\',
 	`comment`=\''. $DB->escape($comment) .'\'
-WHERE `id`='. $save_host;
-		$DB->execute($sql_query);
-	} else {
-		if ($hostid == 0) $hostid='NULL';
-		$sql_query =
+WHERE
+	`id`='. $save_host .' AND
+	`is_foreign`=0'
+			;
+			$ok = $DB->execute($sql_query);
+			$host_id = $save_host;
+			if (! $ok) {
+				echo '<div class="errorbox">';
+				echo sPrintF(__('Fehler beim &Auml;ndern von Host %u'),
+					$save_host);
+				echo '</div>',"\n";
+			}
+		}
+		else {
+			@$DB->execute('OPTIMIZE TABLE `hosts`');  # recalculate next auto-increment value
+			@$DB->execute('ANALYZE TABLE `hosts`');
+			
+			$sql_query =
 'INSERT INTO `hosts` (
 	`id`,
 	`host`,
-	`comment`
+	`comment`,
+	`is_foreign`
 ) VALUES (
-	'. $hostid .',
+	NULL,
 	\''. $DB->escape($host) .'\',
-	\''. $DB->escape($comment) .'\'
-)';
-		$DB->execute($sql_query);
+	\''. $DB->escape($comment) .'\',
+	0
+)'
+			;
+			$ok = $DB->execute($sql_query);
+			if ($ok) {
+				$host_id = (int)$DB->getLastInsertId();
+			} else {
+				$host_id = 0;
+				echo '<div class="errorbox">';
+				echo sPrintF(__('Fehler beim Hinzuf&uuml;gen von Host &quot;%s&quot;'),
+					htmlEnt($host));
+				echo '</div>',"\n";
+			}
+		}
+		
+		if ($host_id > 0) {
+			$DB->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'api\', \''. $DB->escape(trim(@$_REQUEST['hp_api'])) .'\')' );
+			$DB->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'sip_proxy_from_wan\', \''. $DB->escape(trim(@$_REQUEST['hp_sip_proxy_from_wan'])) .'\')' );
+			$DB->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'sip_server_from_wan\', \''. $DB->escape(trim(@$_REQUEST['hp_sip_server_from_wan'])) .'\')' );
+		}
 	}
 }
 
 if ($delete_host) {
+	# delete BOI permissions
+	@$DB->execute( 'DELETE FROM `boi_perms` WHERE `host_id`='. $delete_host );
+	
+	# delete host params
+	@$DB->execute( 'DELETE FROM `host_params` WHERE `host_id`='. $delete_host );
+	
 	$sql_query =
-'DELETE from `hosts` 
-WHERE `id`='. $delete_host;
+'DELETE FROM `hosts` 
+WHERE
+	`id`='. $delete_host .' AND
+	`is_foreign`=0'
+	;
 	$DB->execute($sql_query);
+	@$DB->execute('OPTIMIZE TABLE `hosts`');  # recalculate next auto-increment value
+	@$DB->execute('ANALYZE TABLE `hosts`');
 }
 
 
@@ -113,10 +196,20 @@ foreach ($nodesconf as $node) {
 }
 
 
-$sql_query = 'SELECT SQL_CALC_FOUND_ROWS `id`, `host`, `comment`
-FROM `hosts`
-ORDER BY `id` ASC
-LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
+$sql_query =
+	'SELECT SQL_CALC_FOUND_ROWS '.
+		'`h`.`id`, `h`.`host`, `h`.`comment`, `h`.`group_id`, '.
+		'`p1`.`value` `hp_api`, '.
+		'`p2`.`value` `hp_sip_proxy_from_wan`, '.
+		'`p3`.`value` `hp_sip_server_from_wan` '.
+	'FROM '.
+		'`hosts` `h` LEFT JOIN '.
+		'`host_params` `p1` ON (`p1`.`host_id`=`h`.`id` AND `p1`.`param`=\'api\') LEFT JOIN '.
+		'`host_params` `p2` ON (`p2`.`host_id`=`h`.`id` AND `p2`.`param`=\'sip_proxy_from_wan\') LEFT JOIN '.
+		'`host_params` `p3` ON (`p3`.`host_id`=`h`.`id` AND `p3`.`param`=\'sip_server_from_wan\') '.
+	'WHERE `h`.`is_foreign`=0 '.
+	'ORDER BY `h`.`id` '.
+	'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 
 $rs = $DB->execute($sql_query);
 
@@ -125,13 +218,22 @@ $num_pages = ceil($num_total / $per_page);
 
 ?>	
 
+<div style="max-width:600px;">
+	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/app/important.png" class="fl" />
+	<p style="margin-left:22px; font-size:1.5em; font-weight:bold; line-height:1.2em; color:#d00;">
+		<?php echo __('Achtung! Durch un&uuml;berlegte &Auml;nderungen k&ouml;nnen Sie das ordnungsgem&auml;&szlig;e Funktionieren von Gemeinschaft erheblich beeintr&auml;chtigen!'); ?>
+	</p>
+</div>
+
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:50px;"><?php echo __('ID'); ?></th>
-	<th style="width:100px;"><?php echo __('IP (stat.)'); ?></th>
-	<th style="width:100px;"><?php echo __('IP (dyn.)'); ?> <sup>[1]</sup></th>
-	<th style="width:85px;"><?php echo __('Kommentar'); ?></th>
+	<th style="width:55px;" class="sort-col"><?php echo __('ID'); ?></th>
+	<th style="width:120px;"><?php echo __('IP (stat.)'); ?> <sup>[1]</sup></th>
+	<th style="width:125px;"><?php echo __('IP (VoIP)'); ?> <sup>[2]</sup></th>
+	<th style="width:140px;"><?php echo __('Kommentar'); ?></th>
+	<th style="width:125px;"><?php echo __('SIP-Proxy WAN'); ?> <sup>[3]</sup></th>
+	<th style="width:125px;"><?php echo __('SIP-SBC WAN'); ?> <sup>[4]</sup></th>
 	<th style="width:60px;"><?php echo __('Rolle'); ?></th>
 	<th style="width:45px;"><?php echo __('Stonith'); ?></th>
 	<th style="width:50px;"><?php echo __('Ping'); ?></th>
@@ -166,16 +268,9 @@ if ($page < $num_pages-1) {
 </thead>
 <tbody>
 
-
-<div style="max-width:600px;">
-	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/app/important.png" class="fl" />
-	<p style="margin-left:22px; font-size:1.5em; font-weight:bold; line-height:1.2em; color:#d00;">
-		<?php echo __('Achtung! Durch un&uuml;berlegte &Auml;nderungen k&ouml;nnen Sie das ordnungsgem&auml;&szlig;e Funktionieren von Gemeinschaft erheblich beeintr&auml;chtigen!'); ?>
-	</p>
-</div>
-
-
 <?php
+
+@flush();
 
 if (@$rs) {
 	$i = 0;
@@ -199,16 +294,36 @@ if (@$rs) {
 			echo '<input type="hidden" name="page" value="', htmlEnt($page), '" />', "\n";
 			echo '<input type="hidden" name="save" value="', $r['id'] , '" />', "\n";
 			
-			echo '<td>', htmlEnt($r['id']) ,'</td>',"\n";
+			echo '<td class="r">', htmlEnt($r['id']) ,'</td>',"\n";
 			
 			echo '<td>', htmlEnt( @$nodes[$ip]['static_ip'] ) ,'</td>',"\n";
 			
 			echo '<td>';
-			echo '<input type="text" name="host" value="', htmlEnt($r['host']) ,'" size="20" maxlength="25" />';
+			echo '<input type="text" name="host" value="', htmlEnt($r['host']) ,'" size="15" maxlength="15" style="width:95%;" />';
 			echo '</td>',"\n";
 			
 			echo '<td>';
-			echo '<input type="text" name="comment" value="', htmlEnt($r['comment']) ,'" size="25" maxlength="25" />';
+			echo '<input type="text" name="comment" value="', htmlEnt($r['comment']) ,'" size="20" maxlength="45" style="width:95%;" />';
+			echo '</td>',"\n";
+			
+			/*
+			echo '<td>';
+			echo '<select name="hp_api">' ,"\n";
+			foreach ($host_apis as $api => $title) {
+				echo '<option value="', htmlEnt($api) ,'"';
+				if ($api == $r['hp_api']) echo ' selected="selected"';
+				echo '>', htmlEnt($title) ,'</option>' ,"\n";
+			}
+			echo '</select>';
+			echo '</td>',"\n";
+			*/
+			
+			echo '<td>';
+			echo '<input type="text" name="hp_sip_proxy_from_wan" value="', htmlEnt($r['hp_sip_proxy_from_wan']) ,'" size="15" maxlength="15" style="width:95%;" />';
+			echo '</td>',"\n";
+			
+			echo '<td>';
+			echo '<input type="text" name="hp_sip_server_from_wan" value="', htmlEnt($r['hp_sip_server_from_wan']) ,'" size="15" maxlength="15" style="width:95%;" />';
 			echo '</td>',"\n";
 			
 			echo '<td>', ($nodes[$ip]['active']
@@ -230,7 +345,7 @@ if (@$rs) {
 			$start = microtime_float();
 			@exec($cmd .' >>/dev/null 2>>/dev/null', $out, $ping_err);
 			$time = (microtime_float() - $start) * 0.5;  # script startup time
-			if ($ping_err==0) {
+			if ($ping_err === 0) {
 				echo '<span style="color:#0a0;">', round($time*1000), '&nbsp;ms</span>';
 			} else {
 				echo '<b style="color:#f00;">?</b>';
@@ -239,15 +354,15 @@ if (@$rs) {
 			
 			if ($nodes[$ip]['active']) {
 				echo '<td class="r">';
-				if ($ping_err==0) {
+				if ($ping_err === 0) {
 					$timeout = 2;
 					$cmd = 'PATH=$PATH:/usr/local/bin; '. GS_DIR .'sbin/check-sip-alive '. qsa('sip:checkalive@'. $ip) .' '. $timeout;
 					$out = array();
 					$start = microtime_float();
 					@exec($cmd .' 2>&1', $out, $err);
-					$time = (microtime_float() - $start) * 0.7;  # script startup time
+					$time = (microtime_float() - $start) * 0.8;  # script startup time
 					$out = strToUpper(trim(implode("\n", $out)));
-					if ($err==0 && subStr($out,0,2)==='OK') {
+					if ($err===0 && subStr($out,0,2)==='OK') {
 						echo '<span style="color:#0a0;">', round($time*1000), '&nbsp;ms</span>';
 					} else {
 						if ($out==='FAIL')
@@ -267,9 +382,10 @@ if (@$rs) {
 			echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" />';
 			echo '</button>' ,"\n";
 			echo "&nbsp;\n";
-			echo '<button type="reset" title="', __('Abbrechen'), '" class="plain">';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'page='.$page) ,'">';
+			echo '<button type="button" title="', __('Abbrechen'), '" class="plain">';
 			echo '<img alt="', __('Abbrechen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/cancel.png" />';
-			echo '</button>' ,"\n";
+			echo '</button></a>' ,"\n";
 			
 			echo '</td>',"\n";
 			
@@ -277,13 +393,19 @@ if (@$rs) {
 			
 		} else {
 			
-			echo '<td>', htmlEnt($r['id']) ,'</td>',"\n";
+			echo '<td class="r">', htmlEnt($r['id']) ,'</td>',"\n";
 			
 			echo '<td>', htmlEnt( @$nodes[$ip]['static_ip'] ) ,'</td>',"\n";
 			
 			echo '<td>', htmlEnt($r['host']) ,'</td>',"\n";
 			
 			echo '<td>', htmlEnt($r['comment']) ,'</td>',"\n";
+			
+			//echo '<td>', htmlEnt(array_key_exists($r['hp_api'], $host_apis) ? $host_apis[$r['hp_api']] : $r['hp_api']) ,'</td>',"\n";
+			
+			echo '<td>', htmlEnt($r['hp_sip_proxy_from_wan']) ,'</td>',"\n";
+			
+			echo '<td>', htmlEnt($r['hp_sip_server_from_wan']) ,'</td>',"\n";
 			
 			echo '<td>', ($nodes[$ip]['active']
 				? '<span style="color:#0a0;">'. __('Aktiv'  ) .'</span>'
@@ -304,7 +426,7 @@ if (@$rs) {
 			$start = microtime_float();
 			@exec($cmd .' >>/dev/null 2>>/dev/null', $out, $ping_err);
 			$time = (microtime_float() - $start) * 0.5;  # script startup time
-			if ($ping_err==0) {
+			if ($ping_err === 0) {
 				echo '<span style="color:#0a0;">', round($time*1000), '&nbsp;ms</span>';
 			} else {
 				echo '<b style="color:#f00;">?</b>';
@@ -313,15 +435,15 @@ if (@$rs) {
 			
 			if ($nodes[$ip]['active']) {
 				echo '<td class="r">';
-				if ($ping_err==0) {
+				if ($ping_err === 0) {
 					$timeout = 2;
 					$cmd = 'PATH=$PATH:/usr/local/bin; '. GS_DIR .'sbin/check-sip-alive '. qsa('sip:checkalive@'. $ip) .' '. $timeout;
 					$out = array();
 					$start = microtime_float();
 					@exec($cmd .' 2>&1', $out, $err);
-					$time = (microtime_float() - $start) * 0.7;  # script startup time
+					$time = (microtime_float() - $start) * 0.8;  # script startup time
 					$out = strToUpper(trim(implode("\n", $out)));
-					if ($err==0 && subStr($out,0,2)==='OK') {
+					if ($err===0 && subStr($out,0,2)==='OK') {
 						echo '<span style="color:#0a0;">', round($time*1000), '&nbsp;ms</span>';
 					} else {
 						if ($out==='FAIL')
@@ -345,6 +467,7 @@ if (@$rs) {
 		}
 		
 		echo '</tr>', "\n";
+		@flush();
 	}
 }
 
@@ -356,17 +479,26 @@ if (!$edit_host) {
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE), "\n";
 ?>
-	<td>
-		<input type="text" name="hostid" value="" size="5" maxlength="25" />
+	<td class="r">
+		&nbsp;
 	</td>
 	<td>&nbsp;</td>
 	<td>
-		<input type="text" name="host" value="" size="20" maxlength="25" />
+		<input type="text" name="host" value="" size="15" maxlength="15" style="width:95%;" />
 	</td>
 	<td>
-		<input type="text" name="comment" value="" size="25" maxlength="45" />
+		<input type="text" name="comment" value="" size="20" maxlength="45" style="width:95%;" />
 	</td>
-	<td colspan="4">&nbsp;</td>
+	<td>
+		<input type="text" name="hp_sip_proxy_from_wan" value="" size="15" maxlength="15" style="width:95%;" />
+	</td>
+	<td>
+		<input type="text" name="hp_sip_server_from_wan" value="" size="15" maxlength="15" style="width:95%;" />
+	</td>
+	<td colspan="4">
+		&nbsp;
+		<input type="hidden" name="hp_api" value="" />
+	</td>
 	<td>
 		<button type="submit" title="<?php echo __('Host anlegen'); ?>" class="plain">
 			<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
@@ -377,6 +509,7 @@ if (!$edit_host) {
 
 <?php
 }
+@flush();
 ?>
 
 </tr>
@@ -390,6 +523,12 @@ if (!$edit_host) {
 	<small><?php echo __('&Auml;nderungen ben&ouml;tigen einen Dialplan-Reload und Reload von Asterisk'); ?></small>
 </p>
 
-<p style="max-width:500px;"><small><sup>[1]</sup> <?php echo __('Dies ist die Adresse, die ggf. per Stonith &uuml;bernommen werden w&uuml;rde. (Die dynamische Adresse hat hier nichts mit DHCP zu tun.)'); ?></small></p>
+<p style="max-width:500px;"><small><sup>[1]</sup> <?php echo __('Zus&auml;tzliche statische IP-Adresse die von Gemeinschaft nicht ver&auml;ndert wird.'); ?></small></p>
 
-<p style="max-width:500px;"><small><sup>[2]</sup> <?php echo __('Nicht konfiguriert.'); ?></small></p>
+<p style="max-width:500px;"><small><sup>[2]</sup> <?php echo __('Dies ist die f&uuml;r Gemeinschaft prim&auml;re IP-Adresse, die bei einem Ausfall von einem der anderen Nodes per Stonith und Gratuitous ARP &uuml;bernommen werden w&uuml;rde.'); ?>
+<?php echo "\n", __('Wenn Sie in dieses Feld einen Hostnamen eintragen wird er automatisch permanent zu einer IP-Adresse aufgel&ouml;st.'); ?></small></p>
+
+<p style="max-width:500px;"><small><sup>[3]</sup> <?php echo sPrintF(__('Diese IP-Adresse wird beim Provisioning von Telefonen im WAN (also au&szlig;erhalb der LAN-Netze &quot;%s&quot;) die einen Registrar im LAN haben als Outbound Proxy gesetzt (d.h. inbound aus Sicht von Gemeinschaft). F&uuml;r keinen Proxy das Feld leer lassen.'), htmlEnt(gs_get_conf('GS_PROV_LAN_NETS'))); ?></small></p>
+
+<p style="max-width:500px;"><small><sup>[4]</sup> <?php echo sPrintF(__('Diese IP-Adresse wird beim Provisioning von Telefonen im WAN (also au&szlig;erhalb der LAN-Netze &quot;%s&quot;) die einen Registrar im LAN haben als Server/Registrar gesetzt. (Mu&szlig; vom Session Border Controller auf den tats&auml;chlichen Server umgeleitet werden.) F&uuml;r den normalen Server das Feld leer lassen.'), htmlEnt(gs_get_conf('GS_PROV_LAN_NETS'))); ?></small></p>
+

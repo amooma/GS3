@@ -65,14 +65,30 @@ while ($ggrp = $rs->fetchRow()) {
 	echo "\t\t", 'if ("${EXTEN}" != "h" && "${EXTEN}" != "t" && "${EXTEN}" != "i") {' ,"\n";
 	echo "\t\t\t", 'Set(__is_from_gateway=1);' ,"\n";
 	if ((int)$ggrp['allow_in']) {
+		echo "\t\t\t", 'Set(did_full=${EXTEN});' ,"\n";
+		
+		/*
+		# hack for Sipgate.de {
+		if (preg_match('/\bsipgate\b/i', $name)) {
+			echo "\t\t\t", "\n";
+			echo "\t\t\t", 'Set(did_full=${SIP_HEADER(To)});' ,"\n";
+			echo "\t\t\t", 'Set(did_full=${CUT(did_full,@,1)});' ,"\n";
+			//echo "\t\t\t", 'Set(did_full=${did_full:5});' ,"\n";
+			# You should cut off the prefix with the gateway group's
+			# search/replace PCRE.
+			echo "\t\t\t", 'Verbose(1,##### Inbound call from Sipgate to ${did_full});' ,"\n";
+			echo "\t\t\t", "\n";
+		}
+		# hack for Sipgate.de }
+		*/
 		
 		# strip prefix off DID number (sets sets did_ext) and apply
 		# redirection rules for inbound calls (sets did_ext_to):
-		echo "\t\t\t", 'AGI(/opt/gemeinschaft/dialplan-scripts/in-route.agi,', (int)$ggrp['id'] ,',${EXTEN});' ,"\n";
+		echo "\t\t\t", 'AGI(/opt/gemeinschaft/dialplan-scripts/in-route.agi,', (int)$ggrp['id'] ,',${did_full});' ,"\n";
 		# make it appear as if the caller had dialed the extension without
 		# our trunk prefix etc.:
 		echo "\t\t\t", 'Set(CALLERID(dnid)=${did_ext});' ,"\n";
-		echo "\t\t\t", 'Verbose(1,### Incoming call from gw group "', $name ,'". dnid: ${EXTEN} => ext: ${did_ext} => ${did_ext_to});' ,"\n";
+		echo "\t\t\t", 'Verbose(1,### Inbound call from gw group "', $name ,'". dnid: ${did_full} => ext: ${did_ext} => ${did_ext_to});' ,"\n";
 		echo "\t\t\t", 'if ("${did_ext_to}" != "") {' ,"\n";
 		echo "\t\t\t\t", 'Goto(from-gateways,${did_ext_to},1);' ,"\n";
 		echo "\t\t\t", '}' ,"\n";
@@ -95,13 +111,6 @@ while ($ggrp = $rs->fetchRow()) {
 	}
 	echo "\t\t", '}' ,"\n";
 	echo "\t", '}' ,"\n";
-	
-	/*
-	echo "\t", 'h => {' ,"\n";
-	echo "\t\t", 'Verbose(1,########################just hangup);' ,"\n";
-	echo "\t\t", 'NoOp(just hangup);' ,"\n";
-	echo "\t", '}' ,"\n";
-	*/
 	
 	echo '}' ,"\n";
 }

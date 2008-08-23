@@ -115,6 +115,11 @@ Gemeinschaft auf \"%s\"
 								'Content-Type: text/plain; charset=utf-8';
 							
 							$ok = @mail( $u['email'], 'Gemeinschaft Passwort', $msg, $headers );
+							if ($ok) {
+								gs_log( GS_LOG_NOTICE, 'Sent PIN number for user '. $login_user .' to "'. $u['email'] .'" via '. $GS_EMAIL_DELIVERY );
+							} else {
+								gs_log( GS_LOG_WARNING, 'Failed to send PIN number for user '. $login_user .' to "'. $u['email'] .'" via '. $GS_EMAIL_DELIVERY );
+							}
 							
 							$action_info = $ok
 								? sPrintF(__('Pa&szlig;wort wurde an <tt>%s</tt> gesendet'), htmlEnt($u['email']))
@@ -147,6 +152,7 @@ Gemeinschaft auf \"%s\"
 								$ok = false;
 								$action_info = sPrintF(__('Fehler beim Senden an <tt>%s</tt>'), htmlEnt($u['email'])) .'<br />(no host)';
 							} else {
+								$ok = false;
 								$host = $m[1];
 								$mx_hosts   = array();
 								$mx_weights = array();
@@ -170,6 +176,11 @@ Gemeinschaft auf \"%s\"
 									$ok = @$mail->Send();
 									//echo "</pre>\n";
 									if ($ok) break;
+								}
+								if ($ok) {
+									gs_log( GS_LOG_NOTICE, 'Sent PIN number for user '. $login_user .' to "'. $u['email'] .'" via '. $GS_EMAIL_DELIVERY );
+								} else {
+									gs_log( GS_LOG_WARNING, 'Failed to send PIN number for user '. $login_user .' to "'. $u['email'] .'" via '. $GS_EMAIL_DELIVERY );
 								}
 								
 								$action_info = $ok
@@ -200,6 +211,7 @@ Gemeinschaft auf \"%s\"
 
 <label for="ipt-login_user"><?php echo __('Benutzername'); ?>:</label><br />
 <input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="20" value="<?php echo @$_REQUEST['login_user']; ?>" style="width:150px; font-size:1.2em;" /><br />
+<script type="text/javascript">/*<![CDATA[*/ try{ document.getElementById('ipt-login_user').focus(); }catch(e){} /*]]>*/</script>
 
 <br />
 <div style="text-align:right;">
@@ -218,12 +230,31 @@ else {
 <div style="text-align:center; width:auto; margin:1em 100px 0 0;">
 <span style="color:#e00;"><?php echo (@$login_errmsg != '' && trim(@$_REQUEST['login_user']) != '') ? $login_errmsg : '&nbsp;'; ?></span>
 <div style="border:1px solid #ddd; text-align:left; width:200px; margin:0 auto; background:#eee; padding:20px 25px;">
-<form method="post" action="<?php echo GS_URL_PATH; ?>">
-<input type="hidden" name="s" value="home" />
-<input type="hidden" name="m" value="home" />
+<?php
+if (isSet( $_REQUEST['s'] )
+&& ! in_array($_REQUEST['s'], array('','login','logout'), true)) {
+	$requested_section = @$_REQUEST['s'];
+	$requested_module  = @$_REQUEST['m'];
+} else {
+	$requested_section = 'home';
+	$requested_module  = '';
+}
+//echo " $requested_section $requested_module ";
+?>
+<form method="post" action="<?php echo GS_URL_PATH ,'?s=',urlEncode($requested_section);
+if ($requested_module) echo '&amp;m=',urlEncode($requested_module);
+foreach ($_GET as $k => $v) {
+	if (! in_array($k, array('s','m','login_pwd'), true)) {
+		echo '&amp;', urlEncode($k) ,'=', urlEncode($v);
+	}
+}
+?>">
+<input type="hidden" name="s" value="<?php echo htmlEnt($requested_section); ?>" />
+<input type="hidden" name="m" value="<?php echo htmlEnt($requested_module); ?>" />
 
 <label for="ipt-login_user"><?php echo __('Benutzername'); ?>:</label><br />
 <input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="20" value="<?php echo @$_REQUEST['login_user']; ?>" style="width:150px; font-size:1.2em;" /><br />
+<script type="text/javascript">/*<![CDATA[*/ try{ document.getElementById('ipt-login_user').focus(); }catch(e){} /*]]>*/</script>
 
 <label for="ipt-login_pwd"><?php echo __('Pa&szlig;wort'); ?>:</label><br />
 <input name="login_pwd" id="ipt-login_pwd" type="password" size="15" maxlength="20" value="" style="width:150px; font-size:1.2em;" /><br />
@@ -233,6 +264,7 @@ else {
 	<input type="submit" value="<?php echo __('Einloggen'); ?>" />
 </div>
 </form>
+
 </div>
 <a href="<?php echo gs_url($SECTION, $MODULE, null, 'login_action=forgotpwd'); ?>" style="font-size:0.95em;"><?php echo __('Pa&szlig;wort vergessen'); ?></a>
 </div>
