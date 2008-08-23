@@ -10,6 +10,9 @@ GETTEXT_DOMAIN=gemeinschaft-gui
 
 targets:
 	@echo
+	@echo "Attention! Run make in /usr/src/gemeinschaft-trunk/opt/gemeinschaft/locale"
+	@echo "(not /opt/gemeinschaft/locale)
+	@echo
 	@echo "Targets:"
 	@echo "make update-po : Update the .po files"
 	@echo "make all       : Generate .php and .mo files"
