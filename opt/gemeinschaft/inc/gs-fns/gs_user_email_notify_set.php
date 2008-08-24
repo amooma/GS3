@@ -53,9 +53,22 @@ function gs_user_email_notify_set( $user, $notify )
 	if (! $user_id)
 		return new GsError( 'Unknown user.' );
 	
+	if ($notify != 0) {
+		
+		# get host_id
+		#
+		$host_id = (int)$db->executeGetOne( 'SELECT `host_id` FROM `users` WHERE `id`='. $user_id );
+		
+		# get is_foreign
+		#
+		$is_foreign = (int)$db->executeGetOne( 'SELECT `is_foreign` FROM `hosts` WHERE `id`='. $host_id );
+		if ($is_foreign)
+			return new GsError( 'Can\'t activate email notification for foreign user.' );
+	}
+	
 	# set email notification
 	#
-	$ok = $db->execute( 'UPDATE `vm` SET `email_notify`='. $notify .' WHERE `user_id`='. $user_id );
+	$ok = $db->execute( 'UPDATE `vm` SET `email_notify`='. (int)$notify .' WHERE `user_id`='. $user_id );
 	if (! $ok)
 		return new GsError( 'Failed to set email notification.' );
 	return true;
