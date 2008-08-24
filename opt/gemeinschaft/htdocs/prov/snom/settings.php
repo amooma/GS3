@@ -44,11 +44,6 @@ require_once( GS_DIR .'inc/prov-fns.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 set_error_handler('err_handler_die_on_err');
 
-if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
-	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
-	die( 'Not enabled.' );
-}
-
 function _snom_normalize_version( $appvers )
 {
 	$tmp = explode('.', $appvers);
@@ -73,27 +68,46 @@ function _snomCnfXmlEsc( $str )
 		$str);
 }
 
+function _settings_err( $msg='' )
+{
+	@ob_end_clean();
+	@ob_start();
+	echo '<!-- // ', _snomCnfXmlEsc($msg != '' ? str_replace('--','- -',$msg) : 'Error') ,' // -->',"\n";
+	if (! headers_sent()) {
+		header( 'Content-Type: text/plain; charset=utf-8' );
+		# the Content-Type header is ignored by the Snom
+		header( 'Content-Length: '. (int)@ob_get_length() );
+	}
+	@ob_end_flush();
+	exit(1);
+}
+
+if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
+	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
+	_settings_err( 'Not enabled.' );
+}
+
 
 $requester = gs_prov_check_trust_requester();
 if (! $requester['allowed']) {
-	die( 'No! See log for details.' );
+	_settings_err( 'No! See log for details.' );
 }
 
 $mac = preg_replace( '/[^0-9A-F]/', '', strToUpper( @$_REQUEST['mac'] ) );
 if (strLen($mac) !== 12) {
 	gs_log( GS_LOG_NOTICE, "Snom provisioning: Invalid MAC address \"$mac\" (wrong length)" );
 	# don't explain this to the users
-	die( 'No! See log for details.' );
+	_settings_err( 'No! See log for details.' );
 }
 if (hexDec(subStr($mac,0,2)) % 2 == 1) {
 	gs_log( GS_LOG_NOTICE, "Snom provisioning: Invalid MAC address \"$mac\" (multicast address)" );
 	# don't explain this to the users
-	die( 'No! See log for details.' );
+	_settings_err( 'No! See log for details.' );
 }
 if ($mac === '000000000000') {
 	gs_log( GS_LOG_NOTICE, "Snom provisioning: Invalid MAC address \"$mac\" (huh?)" );
 	# don't explain this to the users
-	die( 'No! See log for details.' );
+	_settings_err( 'No! See log for details.' );
 }
 
 # make sure the phone is a Snom:
@@ -101,7 +115,7 @@ if ($mac === '000000000000') {
 if (subStr($mac,0,6) !== '000413') {
 	gs_log( GS_LOG_NOTICE, "Snom provisioning: MAC address \"$mac\" is not a Snom phone" );
 	# don't explain this to the users
-	die( 'No! See log for details.' );
+	_settings_err( 'No! See log for details.' );
 }
 
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
@@ -109,7 +123,7 @@ if (! preg_match('/^Mozilla/i', $ua)
 ||  ! preg_match('/snom[0-9]{3}/i', $ua) ) {
 	gs_log( GS_LOG_WARNING, "Phone with MAC \"$mac\" (Snom) has invalid User-Agent (\"". $ua ."\")" );
 	# don't explain this to the users
-	die( 'No! See log for details.' );
+	_settings_err( 'No! See log for details.' );
 }
 if (preg_match('/^Mozilla\/\d\.\d\s*\(compatible;\s*/i', $ua, $m)) {
 	$ua = rTrim(subStr( $ua, strLen($m[0]) ), ' )');
@@ -344,7 +358,7 @@ function _settings_out()
 $db = gs_db_master_connect();
 if (! $db) {
 	gs_log( GS_LOG_WARNING, "Snom phone asks for settings - Could not connect to DB" );
-	die( 'Could not connect to DB.' );
+	_settings_err( 'Could not connect to DB.' );
 }
 
 /*
@@ -379,14 +393,14 @@ $user_id = @gs_prov_user_id_by_mac_addr( $db, $mac );
 if ($user_id < 1) {
 	if (! GS_PROV_AUTO_ADD_PHONE) {
 		gs_log( GS_LOG_NOTICE, "New phone $mac not added to DB. Enable PROV_AUTO_ADD_PHONE" );
-		die( 'Unknown phone. (Enable PROV_AUTO_ADD_PHONE in order to auto-add)' );
+		_settings_err( 'Unknown phone. (Enable PROV_AUTO_ADD_PHONE in order to auto-add)' );
 	}
 	gs_log( GS_LOG_NOTICE, "Adding new Snom phone $mac to DB" );
 	
 	$user_id = @gs_prov_add_phone_get_nobody_user_id( $db, $mac, $phone_type, $requester['phone_ip'] );
 	if ($user_id < 1) {
 		gs_log( GS_LOG_WARNING, "Failed to add nobody user for new phone $mac" );
-		die( 'Failed to add nobody user for new phone.' );
+		_settings_err( 'Failed to add nobody user for new phone.' );
 	}
 }
 
@@ -402,7 +416,7 @@ if ($user_id < 1) {
 	# in at that phone. assign the default nobody user of the phone:
 	$user_id = @gs_prov_assign_default_nobody( $db, $mac, null );
 	if ($user_id < 1) {
-		die( 'Failed to assign nobody account to phone '. $mac );
+		_settings_err( 'Failed to assign nobody account to phone '. $mac );
 	}
 }
 
@@ -411,7 +425,7 @@ if ($user_id < 1) {
 #
 $host = @gs_prov_get_host_for_user_id( $db, $user_id );
 if (! $host) {
-	die( 'Failed to find host.' );
+	_settings_err( 'Failed to find host.' );
 }
 $pbx = $host;  # $host might be changed if SBC configured
 
@@ -420,7 +434,7 @@ $pbx = $host;  # $host might be changed if SBC configured
 #
 $user = @gs_prov_get_user_info( $db, $user_id );
 if (! is_array($user)) {
-	die( 'DB error.' );
+	_settings_err( 'DB error.' );
 }
 
 # change the ip account's secret for improved security and to kick
