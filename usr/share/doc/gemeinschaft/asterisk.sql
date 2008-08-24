@@ -6564,6 +6564,7 @@ CREATE TABLE `vm` (
   `user_id` int(10) unsigned NOT NULL default '0',
   `internal_active` tinyint(1) unsigned NOT NULL default '0',
   `external_active` tinyint(1) unsigned NOT NULL default '0',
+  `email_notify` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`user_id`),
   CONSTRAINT `vm_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
