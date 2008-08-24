@@ -376,5 +376,17 @@ ALTER TABLE `vm_msgs`
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 
+--
+-- since rev. 4804
+--
+
+
+--
+-- Add new column `email_notify` in table `vm`:
+--
+
+ALTER TABLE `vm` ADD
+  `email_notify` TINYINT(1) UNSIGNED NOT NULL default '0' AFTER `external_active`;
+
 
 
