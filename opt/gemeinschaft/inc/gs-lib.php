@@ -127,4 +127,9 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_pin_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_pin_set.php' );
 
+include_once( GS_DIR .'inc/gs-fns/gs_user_email_notify_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_email_notify_set.php' );
+
+include_once( GS_DIR .'inc/gs-fns/gs_user_email_address_get.php' );
+
 ?>
