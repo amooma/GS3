@@ -30,10 +30,10 @@ defined('GS_VALID') or die('No direct access.');
 
 
 /***********************************************************
-*    gets a user's comment
+*    gets a user's email notification setting
 ***********************************************************/
 
-function gs_user_mailnotify_get( $user )
+function gs_user_email_notify_get( $user )
 {
 	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -50,7 +50,7 @@ function gs_user_mailnotify_get( $user )
 	if (! $user_id)
 		return new GsError( 'Unknown user.' );
 	
-	# get comment
+	# get email notification
 	#
 	$notify = (int)$db->executeGetOne( 'SELECT `email_notify` FROM `vm` WHERE `user_id`='. $user_id );
 	return $notify;

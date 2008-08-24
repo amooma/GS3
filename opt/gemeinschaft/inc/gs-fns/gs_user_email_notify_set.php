@@ -30,16 +30,16 @@ defined('GS_VALID') or die('No direct access.');
 
 
 /***********************************************************
-*    sets a user's comment
+*    sets a user's email notification setting
 ***********************************************************/
 
-function gs_user_mailnotify_set( $user, $notify )
+function gs_user_email_notify_set( $user, $notify )
 {
 	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	$notify = (int)$notify;
-	if($notify != 0 && $notify != 1)
-		return new GsError( 'Argument2 must be 1 or 2.' );
+	if (! in_array($notify, array(0,1), true))
+		return new GsError( 'Notify must be 0 or 1.' );
 	
 	# connect to db
 	#
@@ -53,11 +53,11 @@ function gs_user_mailnotify_set( $user, $notify )
 	if (! $user_id)
 		return new GsError( 'Unknown user.' );
 	
-	# set comment
+	# set email notification
 	#
 	$ok = $db->execute( 'UPDATE `vm` SET `email_notify`='. $notify .' WHERE `user_id`='. $user_id );
 	if (! $ok)
-		return new GsError( 'Failed to set comment.' );
+		return new GsError( 'Failed to set email notification.' );
 	return true;
 }
 
