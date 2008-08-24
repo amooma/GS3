@@ -57,12 +57,13 @@ $actives = array(
 	'var' => __('Tmp.')
 );
 
+$show_email_notification = ! @$_SESSION['sudo_user']['info']['host_is_foreign'];
 
 
 
 $warnings = array();
 
-if (@$_REQUEST['action']=='save') {
+if (@$_REQUEST['action']==='save') {
 	
 	$num_std = preg_replace('/[^\d]/', '', @$_REQUEST['num-std']);
 	$num_var = preg_replace('/[^\d]/', '', @$_REQUEST['num-var']);
@@ -93,6 +94,18 @@ if (@$_REQUEST['action']=='save') {
 	$vm_external = (bool)@$_REQUEST['vm-external'];
 	gs_vm_activate( $_SESSION['sudo_user']['name'], 'internal', $vm_internal );
 	gs_vm_activate( $_SESSION['sudo_user']['name'], 'external', $vm_external );
+	
+	if ($show_email_notification) {
+		$email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
+		$email_notify = @$_REQUEST['email_notify'];
+		if ($email_address == '') $email_notify = 'off';
+		switch ($email_notify) {
+			case 'on' : $email_notify = 1; break;
+			case 'off':
+			default   : $email_notify = 0;
+		}
+		gs_user_email_notify_set( $_SESSION['sudo_user']['name'], $email_notify );
+	}
 	
 }
 
@@ -260,6 +273,9 @@ foreach ($sources as $src => $srctitle) {
 	
 	echo '</tr>', "\n";
 }
+
+$email_notify = (int)gs_user_email_notify_get( $_SESSION['sudo_user']['name'] );
+$email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 ?>
 
 <tr>
@@ -275,9 +291,54 @@ foreach ($sources as $src => $srctitle) {
 		<small><?php echo __('Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung eingestellt haben.'); ?></small>
 	</td>
 </tr>
+</tbody>
+</table>
+
+<?php if ($show_email_notification) { ?>
+<br />
+<table cellspacing="1">
+<thead>
 <tr>
-	<td colspan="6" class="quickchars r">
-		<br />
+	<th colspan="6"><?php echo __('E-Mail-Benachrichtigung bei eingehenden Voicemails'); ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td style="width:140px;"><?php echo __('E-Mail-Adresse'); ?></td>
+	<td style="width:422px;">
+		<input type="text" name="email_address" value="<?php echo htmlEnt($email_address); ?>" size="40" maxlength="50" disabled="disabled" />
+	</td>
+</tr>
+<tr>
+	<td><?php echo __('Benachrichtigung'); ?></td>
+	<td>
+<?php
+	$disabled = ($email_address == '');
+	if ($disabled) $email_notify = false;
+	
+	echo '<input type="radio" name="email_notify" value="on" id="ipt-email_notify-on"';
+	if ($email_notify) echo ' checked="checked"';
+	if ($disabled) echo ' disabled="disabled"';
+	echo ' />';
+	echo '<label for="ipt-email_notify-on">', __('an') ,'</label>' ,"\n";
+	
+	echo '<input type="radio" name="email_notify" value="off" id="ipt-email_notify-off"';
+	if (! $email_notify) echo ' checked="checked"';
+	if ($disabled) echo ' disabled="disabled"';
+	echo ' />';
+	echo '<label for="ipt-email_notify-off">', __('aus') ,'</label>' ,"\n";
+?>
+	</td>
+</tr>
+</tbody>
+</table>
+<?php } ?>
+
+<br />
+<table cellspacing="1">
+<tbody>
+<tr>
+	<td style="width:575px;" class="quickchars r">
 		<button type="submit">
 			<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			<?php echo __('Speichern'); ?>
@@ -288,4 +349,3 @@ foreach ($sources as $src => $srctitle) {
 </table>
 
 </form>
-
