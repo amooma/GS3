@@ -92,8 +92,12 @@ if (@$_REQUEST['action']==='save') {
 	
 	$vm_internal = (bool)@$_REQUEST['vm-internal'];
 	$vm_external = (bool)@$_REQUEST['vm-external'];
-	gs_vm_activate( $_SESSION['sudo_user']['name'], 'internal', $vm_internal );
-	gs_vm_activate( $_SESSION['sudo_user']['name'], 'external', $vm_external );
+	$ret = gs_vm_activate( $_SESSION['sudo_user']['name'], 'internal', $vm_internal );
+	if (isGsError($ret))
+		$warnings['vm_act_i'] = __('Fehler beim (De-)Aktivieren der Mailbox von intern') .' ('. $ret->getMsg() .')';
+	$ret = gs_vm_activate( $_SESSION['sudo_user']['name'], 'external', $vm_external );
+	if (isGsError($ret))
+		$warnings['vm_act_e'] = __('Fehler beim (De-)Aktivieren der Mailbox von extern') .' ('. $ret->getMsg() .')';
 	
 	if ($show_email_notification) {
 		$email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
@@ -104,7 +108,9 @@ if (@$_REQUEST['action']==='save') {
 			case 'off':
 			default   : $email_notify = 0;
 		}
-		gs_user_email_notify_set( $_SESSION['sudo_user']['name'], $email_notify );
+		$ret = gs_user_email_notify_set( $_SESSION['sudo_user']['name'], $email_notify );
+		if (isGsError($ret))
+			$warnings['vm_email_n'] = __('Fehler beim (De-)Aktivieren der E-Mail-Benachrichtigung') .' ('. $ret->getMsg() .')';
 	}
 	
 }
