@@ -618,9 +618,21 @@ if ($phone_layout) {
 			5 => array('from'=>1401, 'to'=>1412, 'shifted'=>true,
 				'title'=> __('Erweiterungs-Modul') .' 2, '. __('Shift-Ebene'))
 		);
-		if ($phone_type === 'siemens-os60') {
-                	$key_levels[0]['to']=8;
-                	$key_levels[1]['to']=1008;
+		switch ($phone_type) {
+			case 'siemens-os60':
+				$key_levels[0]['to'  ] =    8;
+				$key_levels[1]['to'  ] = 1008;
+				break;
+			case 'siemens-os40':
+				$key_levels[0]['to'  ] =    6;
+				$key_levels[1]['to'  ] = 1006;
+				break;
+			case 'siemens-os20':
+				$key_levels[0]['from'] =    0;
+				$key_levels[1]['from'] =    0;
+				$key_levels[0]['to'  ] =    0;
+				$key_levels[1]['to'  ] =    0;
+				break;
 		}
 		break;
 	}
@@ -662,21 +674,6 @@ if ($phone_layout) {
 		
 		$row = 0;
 		for ($i=$key_level_info['from']; $i<=$key_level_info['to']; ++$i) {
-			
-			switch ($phone_layout) {
-			case 'siemens':
-				if ($phone_type === 'siemens-os60'
-				&& (($key_level_idx==0 && $i >    8)
-				||  ($key_level_idx==1 && $i > 1008))) {
-					continue;
-				}
-				if ($phone_type === 'siemens-os40'
-				&& (($key_level_idx==0 && $i >    6)
-				||  ($key_level_idx==1 && $i > 1006))) {
-					continue;
-				}
-				break;
-			}
 			
 			if ($phone_layout === 'snom') {
 				$knum  = ($i%2===($key_level_idx+1)%2 ? $left : $right);
