@@ -618,6 +618,10 @@ if ($phone_layout) {
 			5 => array('from'=>1401, 'to'=>1412, 'shifted'=>true,
 				'title'=> __('Erweiterungs-Modul') .' 2, '. __('Shift-Ebene'))
 		);
+		if ($phone_type === 'siemens-os60') {
+                	$key_levels[0]['to']=8;
+                	$key_levels[1]['to']=1008;
+		}
 		break;
 	}
 	
