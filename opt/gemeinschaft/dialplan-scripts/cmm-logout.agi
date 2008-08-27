@@ -37,11 +37,6 @@ ob_implicit_flush(1);
 
 
 $user_id  = (int)trim(@$argv[1]);
-if ($user_id < 1) {
-	gs_log( GS_LOG_NOTICE, "Mobility: No user ID specified" );
-	echo 'HANGUP' ."\n";
-	die();
-}
 $is_from_gateway = trim(@$argv[2]);
 if ($is_from_gateway == '1') {
 	if (! gs_get_conf('GS_BOI_ENABLED')) {
@@ -50,15 +45,27 @@ if ($is_from_gateway == '1') {
 		die();
 	}
 }
+$caller_id  = preg_replace('/[^0-9]/', '', @$argv[3]);
+$caller_ext = $caller_id;
 
 include_once( GS_DIR .'inc/db_connect.php' );
 
-
 $db = gs_db_master_connect();
 if (! $db) {
-	gs_log( GS_LOG_NOTICE, "Mobility: DB connection failed" );
-	echo 'HANGUP' ."\n";
-	die();
+        gs_log( GS_LOG_NOTICE, "Mobility: DB connection failed" );
+        echo 'HANGUP' ."\n";
+        die();
+}
+
+if ($user_id < 1) { 
+        # fall back to caller ID
+        $user_id = (int)$db->executeGetOne(
+                'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($caller_ext) .'\'' );
+        if ($user_id < 1) {
+                gs_log( GS_LOG_NOTICE, "Mobility: Neither user ID nor caller ID specified" );
+                echo 'HANGUP' ."\n";
+                die();
+        }
 }
 
 $rs = $db->execute( 'SELECT `id`, `mac_addr`, `nobody_index` FROM `phones` WHERE `user_id`='. $user_id );

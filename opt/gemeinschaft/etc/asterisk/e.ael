@@ -139,7 +139,7 @@ macro cmm-logout() {
 	Set(CDR(amaflags)=OMIT);
 	Answer();
 	Wait(0.5);
-	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id},${is_from_gateway});
+	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id},${is_from_gateway},${CALLERID(num)});
 	//Playback(agent-loggedoff&vm-goodbye);
 	Playback(gemeinschaft/sie-sind-abgemeldet);
 	Playback(gemeinschaft/bitte-warten-sie);
