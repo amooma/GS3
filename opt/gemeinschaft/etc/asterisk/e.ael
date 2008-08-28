@@ -107,7 +107,11 @@ macro cmm-login( new_user_name ) {
 	Playback(gemeinschaft/bitte-warten-sie);
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${new_user_name}');
 	if ("${user_name}" != "${new_user_name}") {
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
+		if ("${user_name}" != "") {
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
+		} else {
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${CALLERID(num)}');
+		}
 	}
 	if ("${CHANNEL(channeltype)}" = "SIP") {
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(peerip)}');
