@@ -243,6 +243,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 							return new GsError( 'Failed to add user on new foreign host (SOAP error).' );
 						}
 					}
+					break;
 				
 				case '':
 					# host does not provide any API
@@ -282,6 +283,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 							return new GsError( 'Failed to modify user on foreign host (SOAP error).' );
 						}
 					}
+					break;
 				
 				case '':
 					# host does not provide any API
