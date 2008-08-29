@@ -140,13 +140,14 @@ function gs_get_soap_client( $api, $service, $host )
 }
 
 
-function _gs_boi_update_extension( $api, $host, $route_prefix, $ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email )
+function _gs_boi_update_extension( $api, $host, $route_prefix, $ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email, &$soap_faultcode )
 {
 	$old_default_socket_timeout = ini_get('default_socket_timeout');
 	ini_set('default_socket_timeout', 8);
 	$old_soap_wsdl_cache_ttl    = ini_get('soap.wsdl_cache_ttl');
 	ini_set('soap.wsdl_cache_ttl'   , 3600);
 	
+	$soap_faultcode = null;
 	$SoapClient = gs_get_soap_client( $api, 'updateextension', $host );
 	if (! $SoapClient) return false;
 	
@@ -191,6 +192,7 @@ function _gs_boi_update_extension( $api, $host, $route_prefix, $ext, $user, $sip
 	}
 	catch(SOAPFault $SoapFault) {
 		gs_log(GS_LOG_WARNING, 'SOAP error: '. $SoapFault->faultstring .' ('. @$SoapFault->faultcode .')' );
+		$soap_faultcode = @$SoapFault->faultcode;
 		return false;
 	}
 	
@@ -198,16 +200,16 @@ function _gs_boi_update_extension( $api, $host, $route_prefix, $ext, $user, $sip
 	ini_set('soap.wsdl_cache_ttl'   , $old_soap_wsdl_cache_ttl);
 }
 
-function gs_boi_update_extension( $api, $host, $route_prefix, $ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email )
+function gs_boi_update_extension( $api, $host, $route_prefix, $ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email, &$soap_faultcode )
 {
 	gs_log(GS_LOG_DEBUG, "BOI SOAP: Updating ext. $route_prefix-$ext at host $host" );
-	return _gs_boi_update_extension( $api, $host, $route_prefix, $ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email );
+	return _gs_boi_update_extension( $api, $host, $route_prefix, $ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email, /*&*/$soap_faultcode );
 }
 
-function gs_boi_delete_extension( $api, $host, $route_prefix, $ext )
+function gs_boi_delete_extension( $api, $host, $route_prefix, $ext, &$soap_faultcode )
 {
 	gs_log(GS_LOG_DEBUG, "BOI SOAP: Deleting ext. $route_prefix-$ext at host $host" );
-	return _gs_boi_update_extension( $api, $host, $route_prefix, $ext, '', '', '', '', '', '' );
+	return _gs_boi_update_extension( $api, $host, $route_prefix, $ext, '', '', '', '', '', '', /*&*/$soap_faultcode );
 }
 
 
