@@ -56,6 +56,100 @@ $host_apis = array(
 	//'m02' => '1.1'
 );
 
+function _update_users( $DB, $host_id, $host, $api, &$msg )
+{
+	$host_id = (int)$host_id;
+	$num_users_total = (int)$DB->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `host_id`='. $host_id );
+	$num_users_updated = 0;
+	$msg = '';
+	if ($num_users_total < 1) return null;
+	switch ($api) {
+		case 'm01':
+		case 'm02':
+			# update all users on the host
+			
+			$hp_route_prefix = (string)$DB->executeGetOne(
+				'SELECT `value` FROM `host_params` '.
+				'WHERE `host_id`='. $host_id .' AND `param`=\'route_prefix\'' );
+			if (! extension_loaded('soap')) {
+				$msg = 'Failed to sync users on foreign host (SoapClient not available).';
+				return false;
+			}
+			include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
+			$rs = $DB->execute(
+				'SELECT '.
+					'`u`.`user`, `u`.`pin`, `u`.`firstname`, `u`.`lastname`, `u`.`email`, '.
+					'`s`.`secret` `sip_pwd`, `s`.`name` `ext` '.
+				'FROM '.
+					'`users` `u` JOIN '.
+					'`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) '.
+				'WHERE `u`.`host_id`='. $host_id
+				);
+			if ($rs->numRows() == 0) return null;
+			$soap_errors = array();
+			while ($userinfo = $rs->fetchRow()) {
+				$ext = $userinfo['ext'];
+				$sub_ext = (subStr($ext,0,strLen($hp_route_prefix)) === $hp_route_prefix)
+					? subStr($ext, strLen($hp_route_prefix)) : $ext;
+				gs_log( GS_LOG_DEBUG, "Mapping ext. $ext to $sub_ext for SOAP call" );
+				
+				$ok = gs_boi_update_extension( $api, $host, $hp_route_prefix, $sub_ext, $userinfo['user'], $userinfo['sip_pwd'], $userinfo['pin'], $userinfo['firstname'], $userinfo['lastname'], $userinfo['email'], /*&*/$soap_faultcode );
+				if (! $ok) {
+					# SOAP error
+					if (strToUpper($soap_faultcode) === 'HTTP') {
+						# SOAP error: Could not connect to host
+						$msg = sPrintF(__('Die Benutzer auf Host %s konnten nicht aktualisiert werden! (Verbindung fehlgeschlagen.)'),
+							(htmlEnt($host).' (ID '.$host_id.')')
+							);
+						return false;
+					}
+					if (! array_key_exists($soap_faultcode, $soap_errors))
+						$soap_errors[$soap_faultcode] = 1;
+					else
+						$soap_errors[$soap_faultcode] = $soap_errors[$soap_faultcode] + 1;
+				} else {
+					++$num_users_updated;
+				}
+			}
+			
+			if ($num_users_updated < $num_users_total) {
+				$msg = sPrintF(__('%u von %u Benutzern auf Host %s konnten nicht aktualisiert werden!'),
+					($num_users_total - $num_users_updated),
+					$num_users_total,
+					(htmlEnt($host).' (ID '.$host_id.')')
+					);
+				if (count($soap_errors) > 0) {
+					$msg.= ' (SOAP errors: ';
+					$i=0;
+					foreach ($soap_errors as $soap_faultcode => $num) {
+						if ($i===0) ++$i;
+						else $msg.= ', ';
+						$msg.= htmlEnt($soap_faultcode) .' ('.$num.')';
+					}
+					$msg.= ')';
+				}
+				return false;
+			} else {
+				$msg = sPrintF(__('Die Benutzer auf Host %s wurden aktualisiert.'),
+					(htmlEnt($host).' (ID '.$host_id.')')
+					);
+				return true;
+			}
+			break;
+		
+		case '':
+			# host does not provide any API
+			return null;
+			break;
+		
+		default:
+			$msg = 'Failed to sync users on foreign host! (unknown API)';
+			return false;
+			# unknown API
+	}
+	return null;
+}
+
 $edit_host   = (int)trim(@$_REQUEST['edit'   ]);
 $save_host   = (int)trim(@$_REQUEST['save'   ]);
 $per_page    = (int)GS_GUI_NUM_RESULTS;
@@ -193,10 +287,10 @@ WHERE
 		}
 		
 		if ($api_update_users) {
-			$num_users = $DB->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `host_id`='. $host_id );
-			if ($num_users > 0) {
-				//FIXME - SOAP call to update all users on this host
-				echo '<p class="text">Denken Sie daran, da&szlig; die f&uuml;r diesen Host angelegten Benutzer ('.$num_users.') nicht auf dem Fremd-Host aktualisiert wurden.</p>' ,"\n";
+			$msg = '';
+			$ret = _update_users( $DB, $host_id, $host, $_REQUEST['hp_api'], /*&*/$msg );
+			if ($ret !== null) {
+				echo '<div class="', ($ret ? 'successbox':'errorbox') ,'">', $msg ,'</div>',"\n";
 			}
 		}
 	}
