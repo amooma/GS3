@@ -205,7 +205,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 							return new GsError( 'Failed to delete user on old foreign host (SOAP error).' );
 						}
 					}
-					breaks;
+					break;
 				
 				case '':
 					# host does not provide any API
