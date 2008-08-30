@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# Philipp Kempgen
+# (c) Philipp Kempgen
+# GNU/GPL
 
 if [ -z $1 ]; then
 	echo "Arg. 1 must be the file/folder or URL"
@@ -26,11 +27,13 @@ fi
 for (( REV_TO = $ARG_REV_FROM; $REV_TO <= $ARG_REV_TO; REV_TO++ ))
 do
 	echo ""
+	echo "########################################################################"
+	
 	REV_FROM=$(( $REV_TO - 1 ))
 	svn log -r "${REV_TO}" "${ARG_FILE}"
+	echo ""
 	svn diff --notice-ancestry -r "${REV_FROM}:${REV_TO}" "${ARG_FILE}"
 	
-	echo ""
 	echo ""
 	echo ""
 done
