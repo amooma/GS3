@@ -31,9 +31,12 @@ do
 	
 	REV_FROM=$(( $REV_TO - 1 ))
 	svn log -r "${REV_TO}" "${ARG_FILE}"
+	[ "x$?" != "x0" ] && exit $?
 	echo ""
 	svn diff --notice-ancestry -r "${REV_FROM}:${REV_TO}" "${ARG_FILE}"
+	[ "x$?" != "x0" ] && exit $?
 	
+	echo ""
 	echo ""
 	echo ""
 done
