@@ -60,8 +60,13 @@ if (! $db) {
 	gs_script_error( 'Could not connect to database.' );
 }
 
-$user_ids = $db->execute( 'SELECT `id`, `current_ip` FROM `users` WHERE `host_id` = '. $host['id'] );
-
+$phones = $db->execute(
+	'SELECT `p`.`mac_addr`, `u`.`current_ip` '.
+	'FROM '.
+		'`users` `u` JOIN '.
+		'`phones` `p` ON (`p`.`user_id`=`u`.`id`) '.
+	'WHERE `u`.`host_id` = '. $host['id']
+	);
 
 $sep = str_repeat('-', 39);
 echo $sep ,"\n";
@@ -71,18 +76,9 @@ echo str_pad( "mac_addr" ,16, " ", STR_PAD_BOTH) . " |\n";
 
 echo $sep ,"\n";
 
-while ($r = $user_ids->fetchRow()) {
-	
-	if (! strlen($r['current_ip']))
-		continue;
-	
-	$mac = $db->executeGetOne( 'SELECT `mac_addr` FROM `phones` WHERE `user_id`='. $r['id']);
-	
-	if (! strlen($mac))
-		continue;
-	
+while ($r = $phones->fetchRow()) {
 	echo '| ', str_pad($r['current_ip'], 16, ' ', STR_PAD_BOTH) ,' | ';
-	echo str_pad($mac, 16, ' ', STR_PAD_BOTH) ,' |',"\n";
+	echo str_pad($r['mac_addr'], 16, ' ', STR_PAD_BOTH) ,' |',"\n";
 }
 
 echo $sep ,"\n";
