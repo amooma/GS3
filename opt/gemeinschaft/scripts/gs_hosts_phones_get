@@ -37,7 +37,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --host=<host_id>';
+$usage = 'Usage: '. baseName(__FILE__) .' --host=<host_id|ip_addr>';
 
 $opts = @getOptsNoMultiples( '',
 	array(
@@ -51,19 +51,16 @@ if (! array_key_exists('host', $opts)) {
 
 
 
+$host = gs_host_by_id_or_ip( $opts['host'] );
+if (isGsError($host))  gs_script_error( $host->getMsg() );
+if (! is_array($host)) gs_script_error();
+
 $db = gs_db_master_connect();
 if (! $db) {
 	gs_script_error( 'Could not connect to database.' );
 }
 
-$id = $db->executeGetOne( 'SELECT `id` FROM `hosts` WHERE `id`='. $opts['host'] );
-
-if ($id != $opts['host']) {
-	gs_script_error( $opts['host'] .' is not a valid host ID.' );
-}
-
-
-$user_ids = $db->execute('SELECT id,current_ip FROM users WHERE `host_id` = '. $id);
+$user_ids = $db->execute( 'SELECT `id`, `current_ip` FROM `users` WHERE `host_id` = '. $host['id'] );
 
 
 $sep = str_repeat('-', 39);
