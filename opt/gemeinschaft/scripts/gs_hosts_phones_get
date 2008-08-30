@@ -77,8 +77,9 @@ echo str_pad( "mac_addr" ,16, " ", STR_PAD_BOTH) . " |\n";
 echo $sep ,"\n";
 
 while ($r = $phones->fetchRow()) {
-	echo '| ', str_pad($r['current_ip'], 16, ' ', STR_PAD_BOTH) ,' | ';
-	echo str_pad($r['mac_addr'], 16, ' ', STR_PAD_BOTH) ,' |',"\n";
+	echo '| ', str_pad($r['current_ip'], 16, ' ', STR_PAD_BOTH) ,' ';
+	echo '| ', str_pad($r['mac_addr'  ], 16, ' ', STR_PAD_BOTH) ,' ';
+	echo '|',"\n";
 }
 
 echo $sep ,"\n";
