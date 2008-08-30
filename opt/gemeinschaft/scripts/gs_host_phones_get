@@ -64,40 +64,59 @@ if (! $db) {
 	gs_script_error( 'Could not connect to database.' );
 }
 
-$phones = $db->execute(
-	'SELECT `p`.`mac_addr`, `u`.`current_ip` '.
+$rs = $db->execute(
+	'SELECT `p`.`mac_addr`, `u`.`current_ip`, `u`.`user` '.
 	'FROM '.
 		'`phones` `p` JOIN '.
 		'`users` `u` ON (`u`.`id`=`p`.`user_id`) '.
 	'WHERE `u`.`host_id` = '. $host['id'] .' '.
 	'ORDER BY `p`.`mac_addr`'
 	);
+$phones = array();
+while ($r = $rs->fetchRow()) {
+	$phones[] = $r;
+}
 
 $fields = array(
 	'mac_addr'   => 17,
-	'current_ip' => 15
+	'current_ip' => 15,
+	'user'       =>  2
 );
 $fieldsAbbr = array(
 	'mac_addr'   => 'mac_addr',
-	'current_ip' => 'current_ip'
+	'current_ip' => 'current_ip',
+	'user'       => 'current_user'
 );
 
 if (gs_stdout_is_console()) {
 	
 	$fieldsPad = array(
 		'mac_addr'   => STR_PAD_RIGHT,
-		'current_ip' => STR_PAD_RIGHT
+		'current_ip' => STR_PAD_RIGHT,
+		'user'       => STR_PAD_RIGHT
 	);
 	
-	$sep = str_repeat('-', 39);
-	echo $sep ,"\n";
 	foreach ($fields as $field => $length) {
-		echo '| ', str_pad( $fieldsAbbr[$field], $length, ' ' ) ,' ';
+		if (strLen($fieldsAbbr[$field]) > $length)
+			$fields[$field] = strLen($fieldsAbbr[$field]);
 	}
-	echo '|',"\n";
-	echo $sep ,"\n";
+	foreach ($phones as $ignore => $r) {
+		foreach ($fields as $field => $length) {
+			if (strLen($r[$field]) > $length)
+				$fields[$field] = strLen($r[$field]);
+		}
+	}
 	
-	while ($r = $phones->fetchRow()) {
+	$header = '| ';
+	foreach ($fields as $field => $length) {
+		$header.= str_pad( $fieldsAbbr[$field], $length, ' ' ) .' | ';
+	}
+	$sep = str_repeat( '-', strLen($header)-1 );
+	echo $sep, "\n";
+	echo $header, "\n";
+	echo $sep, "\n";
+	
+	foreach ($phones as $r) {
 		$r['mac_addr'] = preg_replace('/:$/', '', preg_replace('/(.{2})/', '$1:', $r['mac_addr']));
 		foreach ($fields as $field => $length) {
 			echo '| ', str_pad( $r[$field], $length, ' ', $fieldsPad[$field] ) ,' ';
@@ -114,7 +133,7 @@ if (gs_stdout_is_console()) {
 	}
 	echo "\n";
 	
-	while ($r = $phones->fetchRow()) {
+	foreach ($phones as $r) {
 		foreach ($fields as $field => $length) {
 			echo gs_add_c_slashes( $r[$field] ) ,"\t";
 		}
