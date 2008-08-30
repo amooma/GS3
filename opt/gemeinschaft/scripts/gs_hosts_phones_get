@@ -56,48 +56,45 @@ if (! $db) {
 	gs_script_error( "Could not connect to database." );
 }
 
-
 $id = $db->executeGetOne( 'SELECT `id` FROM `hosts` WHERE `id`='. $opts['host'] );
 
-if($id != $opts['host'] ) {
-  echo $opts['host'] . " is not an valid Hostid\n";
-  exit();
+if ($id != $opts['host']) {
+	echo $opts['host'] . " is not an valid Hostid\n";
+	exit();
 }
 
 
 $user_ids = $db->execute('SELECT id,current_ip FROM users WHERE `host_id` = '. $id);
 
-for($i = 0; $i<39; $i++)
-  echo "-";
+for ($i=0; $i<39; $i++)
+	echo "-";
 
 echo "\n";
 
 echo "| " . str_pad( "current_ip", 16, " ", STR_PAD_BOTH) , " | ";
 echo str_pad( "mac_addr" ,16, " ", STR_PAD_BOTH) . " |\n";
 
-for($i = 0; $i<39; $i++)
-  echo "-";
+for ($i=0; $i<39; $i++)
+	echo "-";
 
 echo "\n";
 
 while ($r = $user_ids->fetchRow()) {
-
-if(!strlen($r['current_ip']))
-  continue;
-
-$mac = $db->executeGetOne( 'SELECT `mac_addr` FROM `phones` WHERE `user_id`='. $r['id']);
-
-if(!strlen($mac))
-  continue;
-
-   echo "| ". str_pad($r['current_ip'], 16, " ", STR_PAD_BOTH) , " | ";
-   echo str_pad($mac, 16, " ", STR_PAD_BOTH) . " |\n";
-
-
+	
+	if (! strlen($r['current_ip']))
+		continue;
+	
+	$mac = $db->executeGetOne( 'SELECT `mac_addr` FROM `phones` WHERE `user_id`='. $r['id']);
+	
+	if (! strlen($mac))
+		continue;
+	
+	echo '| ', str_pad($r['current_ip'], 16, ' ', STR_PAD_BOTH) ,' | ';
+	echo str_pad($mac, 16, ' ', STR_PAD_BOTH) ,' |',"\n";
 }
 
-for($i = 0; $i<39; $i++)
-  echo "-";
+for ($i=0; $i<39; $i++)
+	echo "-";
 
 echo "\n";
 
