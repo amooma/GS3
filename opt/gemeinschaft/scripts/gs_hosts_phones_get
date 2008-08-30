@@ -53,14 +53,13 @@ if (! array_key_exists('host', $opts)) {
 
 $db = gs_db_master_connect();
 if (! $db) {
-	gs_script_error( "Could not connect to database." );
+	gs_script_error( 'Could not connect to database.' );
 }
 
 $id = $db->executeGetOne( 'SELECT `id` FROM `hosts` WHERE `id`='. $opts['host'] );
 
 if ($id != $opts['host']) {
-	echo $opts['host'] . " is not an valid Hostid\n";
-	exit();
+	gs_script_error( $opts['host'] .' is not a valid host ID.' );
 }
 
 
