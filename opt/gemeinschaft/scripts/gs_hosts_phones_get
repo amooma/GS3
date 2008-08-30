@@ -45,11 +45,8 @@ $opts = @getOptsNoMultiples( '',
 	),
 	$usage
 );
-
-if(!array_key_exists('host', $opts)) {
-
-echo $usage . "\n";
-exit();
+if (! array_key_exists('host', $opts)) {
+	gs_script_invalid_usage( $usage );
 }
 
 
