@@ -63,26 +63,60 @@ if (! $db) {
 $phones = $db->execute(
 	'SELECT `p`.`mac_addr`, `u`.`current_ip` '.
 	'FROM '.
-		'`users` `u` JOIN '.
-		'`phones` `p` ON (`p`.`user_id`=`u`.`id`) '.
-	'WHERE `u`.`host_id` = '. $host['id']
+		'`phones` `p` JOIN '.
+		'`users` `u` ON (`u`.`id`=`p`.`user_id`) '.
+	'WHERE `u`.`host_id` = '. $host['id'] .' '.
+	'ORDER BY `p`.`mac_addr`'
 	);
 
-$sep = str_repeat('-', 39);
-echo $sep ,"\n";
+$fields = array(
+	'mac_addr'   => 17,
+	'current_ip' => 15
+);
+$fieldsAbbr = array(
+	'mac_addr'   => 'mac_addr',
+	'current_ip' => 'current_ip'
+);
 
-echo '| ', str_pad('mac_addr'  , 16, ' ', STR_PAD_BOTH) ,' ';
-echo '| ', str_pad('current_ip', 16, ' ', STR_PAD_BOTH) ,' ';
-echo '|',"\n";
-
-echo $sep ,"\n";
-
-while ($r = $phones->fetchRow()) {
-	echo '| ', str_pad($r['mac_addr'  ], 16, ' ', STR_PAD_BOTH) ,' ';
-	echo '| ', str_pad($r['current_ip'], 16, ' ', STR_PAD_BOTH) ,' ';
+if (gs_stdout_is_console()) {
+	
+	$fieldsPad = array(
+		'mac_addr'   => STR_PAD_RIGHT,
+		'current_ip' => STR_PAD_RIGHT
+	);
+	
+	$sep = str_repeat('-', 39);
+	echo $sep ,"\n";
+	foreach ($fields as $field => $length) {
+		echo '| ', str_pad( $fieldsAbbr[$field], $length, ' ' ) ,' ';
+	}
 	echo '|',"\n";
+	echo $sep ,"\n";
+	
+	while ($r = $phones->fetchRow()) {
+		$r['mac_addr'] = preg_replace('/:$/', '', preg_replace('/(.{2})/', '$1:', $r['mac_addr']));
+		foreach ($fields as $field => $length) {
+			echo '| ', str_pad( $r[$field], $length, ' ', $fieldsPad[$field] ) ,' ';
+		}
+		echo '|',"\n";
+	}
+	echo $sep ,"\n";
+	
+} else {
+	
+	echo '# ';
+	foreach ($fields as $field => $length) {
+		echo gs_add_c_slashes( $fieldsAbbr[$field] ) ,"\t";
+	}
+	echo "\n";
+	
+	while ($r = $phones->fetchRow()) {
+		foreach ($fields as $field => $length) {
+			echo gs_add_c_slashes( $r[$field] ) ,"\t";
+		}
+		echo "\n";
+	}
+	
 }
-
-echo $sep ,"\n";
 
 ?>
