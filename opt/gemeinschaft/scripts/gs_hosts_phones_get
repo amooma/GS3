@@ -37,7 +37,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' [--host=<hostid>]';
+$usage = 'Usage: '. baseName(__FILE__) .' --host=<host_id>';
 
 $opts = @getOptsNoMultiples( '',
 	array(
