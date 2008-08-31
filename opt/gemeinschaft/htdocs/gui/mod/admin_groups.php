@@ -47,8 +47,6 @@ echo '</h2>', "\n";
 $action = @$_REQUEST['action'];
 if (! in_array($action, array('', 'save', 'delete'), true))
 	$action = '';
-$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
-
 
 
 #####################################################################
@@ -60,35 +58,15 @@ if ($action === 'save') {
 			continue;
 		$group_id       = (int)$m[1];
 		$name           = trim(@$_REQUEST['group-'.$group_id.'-name']);
-		$name = preg_replace('/[^a-z0-9\-_]/', '', strToLower($name));
+		$name 			= preg_replace('/[^a-z0-9\-_]/', '', strToLower($name));
 		$title          = trim(@$_REQUEST['group-'.$group_id.'-title']);
 		$key_profile_id = (int)@$_REQUEST['group-'.$group_id.'-softkey_profile_id'];
-		if ($key_profile_id < 1) $key_profile_id = null;
 		$prov_param_profile_id = (int)@$_REQUEST['group-'.$group_id.'-prov_param_profile_id'];
-		if ($prov_param_profile_id < 1) $prov_param_profile_id = null;
 		$parent_id      = (int)@$_REQUEST['group-'.$group_id.'-parent_id'];
-		if ($parent_id < 1) $parent_id = null;
 		
-		if ($group_id < 1) {
-			if ($name != '') {
-				# insert
-				$group_id = $mptt->insert($parent_id, array(
-					'name'                  => $name,
-					'title'                 => $title,
-					'softkey_profile_id'    => $key_profile_id,
-					'prov_param_profile_id' => $prov_param_profile_id
-					));
-			}
-		}
-		if ($group_id > 0) {
-			$DB->execute(
-				'UPDATE `user_groups` SET '.
-					'`name`=\''. $DB->escape($name) .'\', '.
-					'`title`=\''. $DB->escape($title) .'\', '.
-					'`softkey_profile_id`='. ($key_profile_id > 0 ? $key_profile_id : 'NULL') .', '.
-					'`prov_param_profile_id`='. ($prov_param_profile_id > 0 ? $prov_param_profile_id : 'NULL') .' '.
-				'WHERE `id`='. $group_id
-				);
+		$ret = gs_group_add($group_id, $name, $title, $parent_id, $key_profile_id, $prov_param_profile_id);
+		if (isGsError($ret)) {
+			echo $ret->getMsg(); //TODO: print this message in an errorbox
 		}
 	}
 	
@@ -103,8 +81,9 @@ if ($action === 'save') {
 #####################################################################
 if ($action === 'delete') {
 	$group_id = (int)@$_REQUEST['id'];
-	if ($group_id > 0) {
-		$mptt->delete($group_id, true);
+	$ret = gs_group_del($group_id);
+	if (isGsError($ret)) {
+		echo $ret->getMsg(); //TODO: print this message in an errorbox
 	}
 	
 	$action = '';  # view
@@ -134,9 +113,10 @@ if ($action == '') {
 </thead>
 <tbody>
 <?php
-$groups = $mptt->get_tree_as_list( null );
-if (! is_array($groups)) {
-	echo '<tr><td>', 'Failed to get list.' ,'</td></tr>';
+
+$groups = gs_groups_get();
+if (isGsError($groups)) {
+	echo '<tr><td>', $groups->getMsg() ,'</td></tr>';
 } else {
 	$softkey_profiles = array();
 	$rs = $DB->execute('SELECT `id`, `title` FROM `softkey_profiles` WHERE `is_user_profile`=0 ORDER BY `title`');
@@ -266,6 +246,7 @@ if (! is_array($groups)) {
 <?php
 	echo '<br /><br /><br />',"\n";
 	echo '<small>DB-Analyse' ,':',"\n";
+	$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
 	echo 'MPTT-Struktur ist ', ($mptt->quick_sanity_check() ? 'in Ordnung' : 'FEHLERHAFT') ,'</small><br />',"\n";
 }
 #####################################################################
