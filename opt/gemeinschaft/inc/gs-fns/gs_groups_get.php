@@ -36,19 +36,15 @@ require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
 function gs_groups_get()
 {
-	# connect to db
-	#
 	$DB = gs_db_master_connect();
 	if (! $DB)
 		return new GsError( 'Could not connect to database.' );
-		
+	
 	$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
 	$groups = $mptt->get_tree_as_list( null );
-	
 	if (! is_array($groups)) {
 		return new GsError( 'Failed to get the list of groups' );
 	}
-	
 	return $groups;
 }
 	
