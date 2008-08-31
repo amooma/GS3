@@ -26,7 +26,6 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
