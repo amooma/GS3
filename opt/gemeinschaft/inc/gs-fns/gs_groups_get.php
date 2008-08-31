@@ -30,6 +30,10 @@ defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
 
+/***********************************************************
+*    returns an array of the user groups
+***********************************************************/
+
 function gs_groups_get()
 {
 	# connect to db
