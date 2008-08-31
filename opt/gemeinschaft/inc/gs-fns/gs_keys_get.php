@@ -27,7 +27,6 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
-
 include_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
 
