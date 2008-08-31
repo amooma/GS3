@@ -30,6 +30,10 @@ defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
 
+/***********************************************************
+*    adds a user group
+***********************************************************/
+
 function gs_group_add($group_id, $group_name, $title, $parent_id, $key_profile_id, $prov_param_profile_id)
 {
 	if ($key_profile_id < 1) $key_profile_id = null;

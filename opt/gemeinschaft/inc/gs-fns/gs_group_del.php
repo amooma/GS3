@@ -30,6 +30,10 @@ defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
 
+/***********************************************************
+*    deletes a user group
+***********************************************************/
+
 function gs_group_del($group_id)
 {	
 	if ($group_id < 1)
