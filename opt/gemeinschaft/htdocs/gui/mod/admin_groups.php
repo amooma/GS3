@@ -69,9 +69,9 @@ if ($action === 'save') {
 		
 		$ret = gs_group_change( $group_id, $parent_id, $name, $title, $key_profile_id, $prov_param_profile_id );
 		if (isGsError($ret)) {
-			echo '<div class="errorbox">', $ret->getMsg() ,'<div>',"\n";
+			echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 		} elseif (! $ret) {
-			echo '<div class="errorbox">', __('Gruppe konnte nicht gespeichert werden.') ,'<div>',"\n";
+			echo '<div class="errorbox">', __('Gruppe konnte nicht gespeichert werden.') ,'</div>',"\n";
 		}
 	}
 	
@@ -88,9 +88,9 @@ if ($action === 'delete') {
 	$group_id = (int)@$_REQUEST['id'];
 	$ret = gs_group_del( $group_id );
 	if (isGsError($ret)) {
-		echo '<div class="errorbox">', $ret->getMsg() ,'<div>',"\n";
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	} elseif (! $ret) {
-		echo '<div class="errorbox">', __('Gruppe konnte nicht gel&ouml;scht werden.') ,'<div>',"\n";
+		echo '<div class="errorbox">', __('Gruppe konnte nicht gel&ouml;scht werden.') ,'</div>',"\n";
 	}
 	
 	$action = '';  # view
