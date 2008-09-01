@@ -31,12 +31,13 @@ require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
 
 /***********************************************************
-*    adds a user group
+*    changes a user group
 ***********************************************************/
 
-function gs_group_add( $id, $name, $title, $parent_id, $softkey_profile_id, $prov_param_profile_id )
+function gs_group_change( $id, $name, $title, $parent_id, $softkey_profile_id, $prov_param_profile_id )
 {
 	$id = (int)$id;
+	if ($id < 1) $id = 0;  # add
 	$parent_id = (int)$parent_id;
 	if ($parent_id < 1) $parent_id = null;
 	$name = preg_replace('/[^a-z0-9\-_]/', '', strToLower($name));
