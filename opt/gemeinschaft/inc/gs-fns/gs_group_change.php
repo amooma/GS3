@@ -31,25 +31,23 @@ require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
 
 /***********************************************************
-*    changes a user group
+*    changes (/adds) a user group
 ***********************************************************/
 
-function gs_group_change( $id, $name, $title, $parent_id, $softkey_profile_id, $prov_param_profile_id )
+function gs_group_change( $id, $parent_id, $name, $title, $softkey_profile_id=null, $prov_param_profile_id=null )
 {
 	$id = (int)$id;
 	if ($id < 1) $id = 0;  # add
 	$parent_id = (int)$parent_id;
 	if ($parent_id < 1) $parent_id = null;
 	$name = preg_replace('/[^a-z0-9\-_]/', '', strToLower($name));
+	if (! preg_match( '/^[a-z0-9\-_]+$/', $name ))
+		return new GsError( 'Invalid group name.' );
 	$title = trim($title);
 	$softkey_profile_id = (int)$softkey_profile_id;
 	if ($softkey_profile_id < 1) $softkey_profile_id = null;
 	$prov_param_profile_id = (int)$prov_param_profile_id;
 	if ($prov_param_profile_id < 1) $prov_param_profile_id = null;
-	
-	
-	if ($name == '')
-		return new GsError( 'group_name is empty!' );
 	
 	# connect to db
 	#
