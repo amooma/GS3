@@ -34,13 +34,20 @@ require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 *    adds a user group
 ***********************************************************/
 
-function gs_group_add( $group_id, $group_name, $title, $parent_id, $key_profile_id, $prov_param_profile_id )
+function gs_group_add( $id, $name, $title, $parent_id, $softkey_profile_id, $prov_param_profile_id )
 {
-	if ($key_profile_id < 1) $key_profile_id = null;
-	if ($prov_param_profile_id < 1) $prov_param_profile_id = null;
+	$id = (int)$id;
+	$parent_id = (int)$parent_id;
 	if ($parent_id < 1) $parent_id = null;
+	$name = preg_replace('/[^a-z0-9\-_]/', '', strToLower($name));
+	$title = trim($title);
+	$softkey_profile_id = (int)$softkey_profile_id;
+	if ($softkey_profile_id < 1) $softkey_profile_id = null;
+	$prov_param_profile_id = (int)$prov_param_profile_id;
+	if ($prov_param_profile_id < 1) $prov_param_profile_id = null;
 	
-	if ($group_name == '')
+	
+	if ($name == '')
 		return new GsError( 'group_name is empty!' );
 	
 	# connect to db
@@ -51,23 +58,23 @@ function gs_group_add( $group_id, $group_name, $title, $parent_id, $key_profile_
 	
 	$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
 	
-	if ($group_id < 1) {
+	if ($id < 1) {
 		# insert
-		$group_id = $mptt->insert($parent_id, array(
-			'name'                  => $group_name,
-			'title'                 => $title,
-			'softkey_profile_id'    => $key_profile_id,
-			'prov_param_profile_id' => $prov_param_profile_id
+		$id = $mptt->insert($parent_id, array(
+			'name'                   => $name,
+			'title'                  => $title,
+			'softkey_profile_id'     => $softkey_profile_id,
+			'prov_param_profile_id'  => $prov_param_profile_id
 			));
 	}
-	if ($group_id > 0) {
+	if ($id > 0) {
 		$DB->execute(
 			'UPDATE `user_groups` SET '.
-				'`name`=\''. $DB->escape($group_name) .'\', '.
+				'`name`=\''. $DB->escape($name) .'\', '.
 				'`title`=\''. $DB->escape($title) .'\', '.
-				'`softkey_profile_id`='. ($key_profile_id > 0 ? $key_profile_id : 'NULL') .', '.
+				'softkey_profile_id`='. ($softkey_profile_id > 0 ? $softkey_profile_id : 'NULL') .', '.
 				'`prov_param_profile_id`='. ($prov_param_profile_id > 0 ? $prov_param_profile_id : 'NULL') .' '.
-			'WHERE `id`='. $group_id
+			'WHERE `id`='. $id
 			);
 	}
 }
