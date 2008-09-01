@@ -59,23 +59,31 @@ function gs_group_change( $id, $parent_id, $name, $title, $softkey_profile_id=nu
 	
 	if ($id < 1) {
 		# insert
-		$id = $mptt->insert($parent_id, array(
+		$id = (int)$mptt->insert($parent_id, array(
 			'name'                   => $name,
 			'title'                  => $title,
 			'softkey_profile_id'     => $softkey_profile_id,
 			'prov_param_profile_id'  => $prov_param_profile_id
 			));
+		if ($id < 1) {
+			return new GsError( 'Failed to add group.' );
+		}
 	}
 	if ($id > 0) {
-		$DB->execute(
+		$ok = $DB->execute(
 			'UPDATE `user_groups` SET '.
 				'`name`=\''. $DB->escape($name) .'\', '.
 				'`title`=\''. $DB->escape($title) .'\', '.
-				'softkey_profile_id`='. ($softkey_profile_id > 0 ? $softkey_profile_id : 'NULL') .', '.
+				'`softkey_profile_id`='. ($softkey_profile_id > 0 ? $softkey_profile_id : 'NULL') .', '.
 				'`prov_param_profile_id`='. ($prov_param_profile_id > 0 ? $prov_param_profile_id : 'NULL') .' '.
 			'WHERE `id`='. $id
 			);
+		if (! $ok) {
+			return new GsError( 'Failed to change group.' );
+		}
+		return $id;
 	}
+	return false;
 }
 
 
