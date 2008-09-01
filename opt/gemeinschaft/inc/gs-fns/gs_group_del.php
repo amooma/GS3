@@ -34,20 +34,18 @@ require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 *    deletes a user group
 ***********************************************************/
 
-function gs_group_del($group_id)
-{	
+function gs_group_del( $group_id )
+{
 	if ($group_id < 1)
-		return new GsError( 'invalid group_id' );
-
-	# connect to db
-	#
+		return new GsError( 'Invalid group ID.' );
+	
 	$DB = gs_db_master_connect();
 	if (! $DB)
 		return new GsError( 'Could not connect to database.' );
-		
+	
 	$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
 	$mptt->delete($group_id, true);
 }
-	
-	
+
+
 ?>
