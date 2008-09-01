@@ -104,7 +104,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_comment_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_ip_by_user.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_ip_by_ext.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_groups_get.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_group_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_group_change.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_group_del.php' );
 //include_once( GS_DIR .'inc/gs-fns/gs_vm_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
