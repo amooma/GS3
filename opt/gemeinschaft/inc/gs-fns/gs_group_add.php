@@ -34,7 +34,7 @@ require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 *    adds a user group
 ***********************************************************/
 
-function gs_group_add($group_id, $group_name, $title, $parent_id, $key_profile_id, $prov_param_profile_id)
+function gs_group_add( $group_id, $group_name, $title, $parent_id, $key_profile_id, $prov_param_profile_id )
 {
 	if ($key_profile_id < 1) $key_profile_id = null;
 	if ($prov_param_profile_id < 1) $prov_param_profile_id = null;
@@ -48,29 +48,29 @@ function gs_group_add($group_id, $group_name, $title, $parent_id, $key_profile_i
 	$DB = gs_db_master_connect();
 	if (! $DB)
 		return new GsError( 'Could not connect to database.' );
-		
+	
 	$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
 	
 	if ($group_id < 1) {
-			# insert
-			$group_id = $mptt->insert($parent_id, array(
-					'name'                  => $group_name,
-					'title'                 => $title,
-					'softkey_profile_id'    => $key_profile_id,
-					'prov_param_profile_id' => $prov_param_profile_id
-					));
-		}
+		# insert
+		$group_id = $mptt->insert($parent_id, array(
+			'name'                  => $group_name,
+			'title'                 => $title,
+			'softkey_profile_id'    => $key_profile_id,
+			'prov_param_profile_id' => $prov_param_profile_id
+			));
+	}
 	if ($group_id > 0) {
-			$DB->execute(
-				'UPDATE `user_groups` SET '.
-					'`name`=\''. $DB->escape($group_name) .'\', '.
-					'`title`=\''. $DB->escape($title) .'\', '.
-					'`softkey_profile_id`='. ($key_profile_id > 0 ? $key_profile_id : 'NULL') .', '.
-					'`prov_param_profile_id`='. ($prov_param_profile_id > 0 ? $prov_param_profile_id : 'NULL') .' '.
-				'WHERE `id`='. $group_id
-				);
-		}
+		$DB->execute(
+			'UPDATE `user_groups` SET '.
+				'`name`=\''. $DB->escape($group_name) .'\', '.
+				'`title`=\''. $DB->escape($title) .'\', '.
+				'`softkey_profile_id`='. ($key_profile_id > 0 ? $key_profile_id : 'NULL') .', '.
+				'`prov_param_profile_id`='. ($prov_param_profile_id > 0 ? $prov_param_profile_id : 'NULL') .' '.
+			'WHERE `id`='. $group_id
+			);
+	}
 }
-	
-	
+
+
 ?>
