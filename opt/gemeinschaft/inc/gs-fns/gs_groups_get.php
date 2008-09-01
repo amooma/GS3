@@ -47,6 +47,6 @@ function gs_groups_get()
 	}
 	return $groups;
 }
-	
-	
+
+
 ?>
