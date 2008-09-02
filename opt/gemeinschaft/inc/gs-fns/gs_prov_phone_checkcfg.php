@@ -28,7 +28,28 @@
 
 defined('GS_VALID') or die('No direct access.');
 
+require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/aastra-fns.php' );
+
+
+function _gs_prov_phone_checkcfg_exclude_ip( $ip )
+{
+	$db = gs_db_slave_connect();
+	if (! $db) return false;
+	$is_server = (int)$db->executeGetOne(
+		'SELECT 1 '.
+		'FROM `host_params` '.
+		'WHERE '.
+			'`param` IN (\'sip_proxy_from_wan\', \'sip_server_from_wan\') AND '.
+			'`value`=\'10.2.2.23\' '.
+		'LIMIT 1'
+		);
+	if ($is_server) {
+		gs_log(GS_LOG_DEBUG, "IP $ip is a server, not a phone");
+		return true;
+	}
+	return false;
+}
 
 
 /***********************************************************
@@ -197,6 +218,7 @@ WHERE
 // REALLY PRIVATE! CAREFUL WITH PARAMS - NO VALIDATION!
 function _gs_prov_phone_checkcfg_by_ip_do_snom( $ip, $reboot=true )
 {
+	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
 	@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/confirm.htm?REBOOT=yes') . ' >>/dev/null 2>>/dev/null &', $out, $err );
 	// actually the value after REBOOT= does not matter
 	// is there an URL check-sync *without* reboot?
