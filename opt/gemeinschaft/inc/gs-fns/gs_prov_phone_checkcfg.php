@@ -228,7 +228,7 @@ function _gs_prov_phone_checkcfg_by_ip_do_snom( $ip, $reboot=true )
 function _gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot=true, $pre_sleep=0 )
 {
 	$file = '/opt/gemeinschaft-siemens/prov-checkcfg.php';
-		
+	
 	if (file_exists( $file ) && is_readable( $file )) {
 		include_once( $file );
 		@_gs_siemens_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot, $pre_sleep );
@@ -239,6 +239,7 @@ function _gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot=true, $pre_sleep
 
 function _gs_prov_phone_checkcfg_by_ip_do_aastra( $ip, $reboot=true )
 {
+	//FIXME
 	aastra_reboot($ip);
 }
 
