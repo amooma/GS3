@@ -501,7 +501,7 @@ psetting('tone_scheme'      , 'GER'    );
 psetting('date_us_format'   , 'off'    , true);
 psetting('time_24_format'   , 'on'     , true);
 psetting('message_led_other', 'off'    );
-psetting('use_backlight'    , 'on'     , true);  # always | on | off
+psetting('use_backlight'    , 'on'     , true);  # always | on | off | dim (370, >= 7.1.33)
 //psetting('headset_device'   , 'headset_rj', true);  # wuerde Default auf Headset am RJ14-Stecker setzen
 psetting('headset_device'   , 'none'   , true);
 psetting('ethernet_detect'  , 'on'     );  # Warnung falls kein Ethernet
@@ -546,6 +546,7 @@ psetting('user_phone'           , 'off');  # user=phone in SIP URIs is deprecate
 psetting('require_prack'        , 'off');  # default: on
 psetting('send_prack'           , 'off');  # default: on
 psetting('refer_brackets'       , 'off');  # default: off
+psetting('encode_display_name'  , 'on' );
 psetting('offer_mpo'            , 'on' );  # default: off
 psetting('register_http_contact', 'off');
 psetting('support_rtcp'         , 'on' );  # default: on
@@ -758,11 +759,11 @@ setting('user_expiry'             ,$i, '60' );  # default: 3600,
 setting('user_subscription_expiry',$i, '60' );  # default: 3600
 setting('user_server_type'        ,$i, 'default');
 # default = Standard, broadsoft = Broadsoft, sylantro = Sylantro,
-# pbxnsip = PBXnSIP, telepo = Telepo, metaswitch = MetaSwitch
+# pbxnsip = PBXnSIP, telepo = Telepo, metaswitch = MetaSwitch,
+# nortel = Nortel (since firmware 7.3.2)
 setting('ring_after_delay'        ,$i, ''   );
-//setting('user_send_local_name'    ,$i, 'on' );  # send display name to caller
-setting('user_send_local_name'    ,$i, 'on' );
-setting('user_dtmf_info'          ,$i, 'off');
+setting('user_send_local_name'    ,$i, 'on' );  # send display name to caller
+setting('user_dtmf_info'          ,$i, (_snomAppCmp($fw_vers_nrml, '7.1.33') >0) ? 'sip_info_only':'on');
 setting('user_mailbox'            ,$i, 'mailbox');
 setting('user_dp_exp'             ,$i, ''   );  # see http://wiki.snom.com/Settings/user_dp_exp
 setting('user_dp_str'             ,$i, ''   );  # see http://wiki.snom.com/Dial_Plan
@@ -805,7 +806,6 @@ setting('user_proxy_require' ,$i, '');
 setting('user_shared_line'   ,$i, 'off');
 setting('user_name'          ,$i, $user_ext);
 setting('user_pname'         ,$i, $user_ext);
-//setting('user_pname'         ,$i, $user_ext);  # not needed for Asterisk
 setting('user_pass'          ,$i, $user['secret']);
 //setting('user_hash'          ,$i, md5($user['secret']));
 //setting('user_hash'          ,$i, md5($user_ext .':'. $host .':'. $user['secret']));
