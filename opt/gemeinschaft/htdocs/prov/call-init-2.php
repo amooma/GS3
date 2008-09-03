@@ -374,12 +374,12 @@ if (! $clir) {
 
 if (! $is_foreign) {
 	
-	$to_num = (subStr($to_num_obj->dial,0,1) === '0')
-		? '0'.$to_num_obj->dial
+	//FIXME? - is this code correct for numbers in the same area?
+	$to_num = (subStr($to_num_obj->dial,0,1) === '0')  # intl. or natl.
+		? '0'.$to_num_obj->dial   # Amtsholung
 		:     $to_num_obj->dial;
-	
-	$from_num_dial = (subStr($from_num_effective_obj->dial,0,1) === '0')
-		? '0'.$from_num_effective_obj->dial
+	$from_num_dial = (subStr($from_num_effective_obj->dial,0,1) === '0')  # intl. or natl.
+		? '0'.$from_num_effective_obj->dial   # Amtsholung
 		:     $from_num_effective_obj->dial;
 	
 	$call
