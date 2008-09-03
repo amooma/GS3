@@ -469,7 +469,7 @@ else {
 				if (! $ok) {
 					die_error( 'Failed to initate call on foreign host (SOAP error).' );
 				}
-				die_ok( "OK. Calling $to_num_obj->norm from $from_num_effective_obj->norm with userid $user_code on host ". $user['host'] ."..." );
+				die_ok( "OK. Calling ". $to_num_obj->norm ." from ". $from_num_effective_obj->norm ." (user $user_code) on host ". $user['host'] ."..." );
 			}
 			break;
 		
@@ -487,7 +487,7 @@ else {
 }
 
 
-die_ok( "OK. Calling $to_num from $from_num_effective_obj->dial ..." );
+die_ok( "OK. Calling $to_num from ". $from_num_effective_obj->dial ." ..." );
 
 
 ?>
