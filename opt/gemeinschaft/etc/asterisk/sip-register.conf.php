@@ -36,6 +36,7 @@ error_reporting(0);
 
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
+require_once( GS_DIR .'inc/log.php' );
 set_error_handler('err_handler_quiet');
 
 if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
@@ -53,32 +54,36 @@ if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	//echo "HOSTS:\n"; print_r($hosts);
 	
 	$min_our_ids = (count($our_ids) > 0) ? min($our_ids) : 0;
-	$outUser = 'gs-'. str_pad( $min_our_ids, 4, '0', STR_PAD_LEFT );
-	
-	$out = '';
-	foreach ($hosts as $host) {
-		if (in_array( (int)$host['id'], $our_ids )) {
-			//echo "SKIPPING ", $host['id'], "\n";
-			continue;
-		} else {
-			//echo "DOING ", $host['id'], "\n";
+	if ($min_our_ids < 1) {
+		gs_log(GS_LOG_WARNING, 'This server is not configured to be a Gemeinschaft node. Not registering to other nodes.');
+	} else {
+		$outUser = 'gs-'. str_pad( $min_our_ids, 4, '0', STR_PAD_LEFT );
+		
+		$out = '';
+		foreach ($hosts as $host) {
+			if (in_array( (int)$host['id'], $our_ids )) {
+				//echo "SKIPPING ", $host['id'], "\n";
+				continue;
+			} else {
+				//echo "DOING ", $host['id'], "\n";
+			}
+			
+			# it's one of the other nodes
+			
+			$inUser = 'gs-'. str_pad( $host['id'], 4, '0', STR_PAD_LEFT );
+			$inPass = 'thiS is rEally seCret.';
+			$inPass = subStr( str_replace(
+				array( '+', '/', '=' ),
+				array( '', '', ''  ),
+				base64_encode( $inPass )
+			), 0, 25 );
+			$outPass = $inPass;
+			
+			$name = str_pad( $host['id'], 4, '0', STR_PAD_LEFT );
+			$out .= 'register => '. $outUser .'@gs-'. $name .'/'. $inUser ."\n";
 		}
-		
-		# it's one of the other nodes
-		
-		$inUser = 'gs-'. str_pad( $host['id'], 4, '0', STR_PAD_LEFT );
-		$inPass = 'thiS is rEally seCret.';
-		$inPass = subStr( str_replace(
-			array( '+', '/', '=' ),
-			array( '', '', ''  ),
-			base64_encode( $inPass )
-		), 0, 25 );
-		$outPass = $inPass;
-		
-		$name = str_pad( $host['id'], 4, '0', STR_PAD_LEFT );
-		$out .= 'register => '. $outUser .'@gs-'. $name .'/'. $inUser ."\n";
+		echo "\n", $out;
 	}
-	echo "\n", $out;
 	
 }
 echo "\n";
