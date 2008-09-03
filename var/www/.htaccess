@@ -1,3 +1,6 @@
+# Gemeinschaft
+# $Revision$
+
 <IfModule mod_alias.c>
 	RedirectMatch ^/$ /gemeinschaft/
 	RedirectMatch ^/setup/?$ /gemeinschaft/setup/
