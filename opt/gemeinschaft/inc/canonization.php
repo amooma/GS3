@@ -61,7 +61,7 @@ class CanonicalPhoneNumber
 	function CanonicalPhoneNumber( $number )
 	{
 		$this->_INTL = $this->_cnf('GS_CANONIZE_INTL_PREFIX' , '00' );
-		if ($this->_INTL == '+' || $this->_INTL == '')
+		if ($this->_INTL === '+' || $this->_INTL == '')
 			$this->_INTL = '00';
 		$this->_CNTR = $this->_cnf('GS_CANONIZE_COUNTRY_CODE', '49' );
 		$this->_NATL = $this->_cnf('GS_CANONIZE_NATL_PREFIX' , '0'  );
