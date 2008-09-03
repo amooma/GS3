@@ -60,8 +60,9 @@ if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 		if (in_array( (int)$host['id'], $our_ids )) {
 			//echo "SKIPPING ", $host['id'], "\n";
 			continue;
-		} else
+		} else {
 			//echo "DOING ", $host['id'], "\n";
+		}
 		
 		# it's one of the other nodes
 		
