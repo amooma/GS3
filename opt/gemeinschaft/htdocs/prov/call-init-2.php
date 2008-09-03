@@ -216,7 +216,13 @@ if ($from_num) {
 		unset($from_num_obj);
 	}
 }
-$from_num_effective = ($from_num ? $from_num : GS_CANONIZE_NATL_PREFIX.GS_CANONIZE_AREA_CODE.GS_CANONIZE_LOCAL_BRANCH.$user['ext']);
+$from_num_effective = ($from_num
+	? $from_num
+	: GS_CANONIZE_NATL_PREFIX .
+	  GS_CANONIZE_AREA_CODE .
+	  GS_CANONIZE_LOCAL_BRANCH .
+	  $user['ext']
+	);
 $from_num_effective_obj = new CanonicalPhoneNumber( $from_num_effective );
 
 
