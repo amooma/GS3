@@ -4,13 +4,17 @@
 </IfModule>
 
 
-## not really necessary, but you never know ...
-#<IfModule mod_rewrite.c>
-#        RewriteEngine On
-#        
-#        #RewriteRule ^snom[0-9]{3}/snom{3}\.htm                /gemeinschaft/prov/snom/settings.php?mac=000413000000    [L]
-#        RewriteRule ^snom[0-9]{3}/snom-([0-9a-fA-F]{12})\.htm /gemeinschaft/prov/snom/settings.php?mac=$1              [L]
-#        RewriteRule ^snom[0-9]{3}/snom{3}-firmware\.htm       /gemeinschaft/prov/snom/sw-update.php?m=000413000000&u=  [L]
-#        
-#</IfModule>
-
+# keep in sync with prov/.htaccess
+#
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	
+	# Snom. Not really necessary.
+	#RewriteRule ^snom[0-9]{3}\.htm$                   gemeinschaft/prov/snom/settings.php?mac=000000000000 [G,L]
+	RewriteRule ^snom[0-9]{3}\.htm$                   gemeinschaft/prov/snom/settings-fail.php [L]
+	# Snom. Not really necessary.
+	RewriteRule ^snom[0-9]{3}-([0-9A-Fa-f]*)\.htm$    gemeinschaft/prov/snom/settings.php?mac=$1 [L]
+	# Snom. Not really necessary.
+	RewriteRule ^snom[0-9]{3}/snom{3}-firmware\.htm$  gemeinschaft/prov/snom/sw-update.php?m=000000000000&u= [L]
+	
+</IfModule>
