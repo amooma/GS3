@@ -242,8 +242,8 @@ if ($cidnum === $user['ext']) {
 	}
 	unset($cidnum_obj);  # cidnum might be modified later
 }
-#TODO: Check the Cidnum for the Appliance?
-if ($cidnum && ! $is_foreign) {
+if ($cidnum) {
+if (! $is_foreign) {
 	# get external numbers
 	if (! is_array($user_external_numbers)) {
 		$user_external_numbers = @gs_user_external_numbers_get( $user_code );
@@ -287,6 +287,10 @@ if ($cidnum && ! $is_foreign) {
 		unset($in_external_numbers);
 		unset($cidnum_obj);
 	}
+}/* else {
+	# user on a foreign host
+	# as it's not us to initiate the call we don't care to check the cidnum
+}*/
 }
 
 
