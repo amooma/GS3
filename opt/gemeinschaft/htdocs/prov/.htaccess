@@ -1,0 +1,17 @@
+# Gemeinschaft
+# $Revision$
+
+# keep in sync with var/www/.htaccess
+#
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	
+	# Snom. Not really necessary.
+	#RewriteRule ^snom[0-9]{3}\.htm$                   snom/settings.php?mac=000000000000 [G,L]
+	RewriteRule ^snom[0-9]{3}\.htm$                   snom/settings-fail.php [L]
+	# Snom. Not really necessary.
+	RewriteRule ^snom[0-9]{3}-([0-9A-Fa-f]*)\.htm$    snom/settings.php?mac=$1 [L]
+	# Snom. Not really necessary.
+	RewriteRule ^snom[0-9]{3}/snom{3}-firmware\.htm$  snom/sw-update.php?m=000000000000&u= [L]
+	
+</IfModule>
