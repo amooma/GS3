@@ -368,22 +368,13 @@ if (! $clir) {
 
 if (! $is_foreign) {
 	
-	if (strLen($to_num_obj->dial) > 0
-	&&  $to_num_obj->dial[0] == '0') {
-		$to_num = '0'.$to_num_obj->dial;
-	} else {
-		$to_num = $to_num_obj->dial;
-	}
+	$to_num = (subStr($to_num_obj->dial,0,1) === '0')
+		? '0'.$to_num_obj->dial
+		:     $to_num_obj->dial;
 	
-	if (strLen($from_num_effective_obj->dial) > 0
-	&&  $from_num_effective_obj->dial[0] == '0') {
-		$from_num_dial = '0'.$from_num_effective_obj->dial;
-	} else {
-		$from_num_dial = $from_num_effective_obj->dial;
-	}
-	
-	//var_dump($from_num_effective_obj);
-	//var_dump($to_num_obj);
+	$from_num_dial = (subStr($from_num_effective_obj->dial,0,1) === '0')
+		? '0'.$from_num_effective_obj->dial
+		:     $from_num_effective_obj->dial;
 	
 	$call
 		= "Channel: Local/". $from_num_dial ."\n"
