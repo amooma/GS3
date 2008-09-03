@@ -216,10 +216,9 @@ if ($from_num) {
 		unset($from_num_obj);
 	}
 }
-$from_num_effective = ($from_num ? $from_num : $user['ext']);
+
+$from_num_effective = ($from_num ? $from_num : GS_CANONIZE_NATL_PREFIX.GS_CANONIZE_AREA_CODE.GS_CANONIZE_LOCAL_BRANCH.$user['ext']);
 $from_num_effective_obj = new CanonicalPhoneNumber( $from_num_effective );
-
-
 
 #####################################################################
 # cidnum
@@ -242,7 +241,10 @@ if ($cidnum === $user['ext']) {
 	}
 	unset($cidnum_obj);  # cidnum might be modified later
 }
-if ($cidnum) {
+
+
+#TODO: Check the Cidnum for the Appliance?
+if ($cidnum && !$is_foreign ) {
 	# get external numbers
 	if (! is_array($user_external_numbers)) {
 		$user_external_numbers = @gs_user_external_numbers_get( $user_code );
@@ -362,9 +364,21 @@ if (! $clir) {
 
 
 if (! $is_foreign) {
+	
+	if (strlen($to_num_obj->dial) && ($to_num_obj->dial[0] == "0")) $to_num = '0'.$to_num_obj->dial;
+	else $to_num = $to_num_obj->dial;
 
+	if (strlen($from_num_effective_obj->dial) && 
+($from_num_effective_obj->dial[0] == "0")) $from_num_dial = '0'.$from_num_effective_obj->dial;
+	else $from_num_dial = $from_num_effective_obj->dial;
+
+//	 var_dump( $from_num_effective_obj);
+//       var_dump(  $to_num_obj);
+
+	
+	
 	$call
-		= "Channel: Local/". $from_num_effective ."\n"
+		= "Channel: Local/". $from_num_dial ."\n"
 		. "MaxRetries: 0\n"
 		. "WaitTime: 15\n"
 		. "Context: urldial\n"
@@ -446,11 +460,13 @@ else {
 				die_error( 'Failed to initiate call on foreign host (SoapClient not available).' );
 			} else {
 				include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
-				$ok = gs_boi_call_init( $api, $user['host'], $user_code, $to_num_obj->intl, $from_num_effective, $cidnum, $clir, $prv );
+
+				$ok = gs_boi_call_init( $api, $user['host'], $user_code, $to_num_obj->norm, $from_num_effective_obj->norm, $cidnum, $clir, $prv );
+				
 				if (! $ok) {
 					die_error( 'Failed to initate call on foreign host (SOAP error).' );
 				}
-				die_ok( "OK. Calling $to_num from $from_num_effective ..." );
+				die_ok( "OK. Calling $to_num_obj->norm from $from_num_effective_obj->norm with userid $user_code on host " . $user['host'] . "..." );
 			}
 			break;
 		
@@ -468,7 +484,7 @@ else {
 }
 
 
-die_ok( "OK. Calling $to_num from $from_num_effective ..." );
+die_ok( "OK. Calling $to_num from $from_num_effective_obj->dial ..." );
 
 
 ?>
