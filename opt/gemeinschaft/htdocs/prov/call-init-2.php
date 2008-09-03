@@ -218,9 +218,9 @@ if ($from_num) {
 }
 $from_num_effective = ($from_num
 	? $from_num
-	: GS_CANONIZE_NATL_PREFIX .
-	  GS_CANONIZE_AREA_CODE .
-	  GS_CANONIZE_LOCAL_BRANCH .
+	: gs_get_conf('GS_CANONIZE_NATL_PREFIX') .
+	  gs_get_conf('GS_CANONIZE_AREA_CODE') .
+	  gs_get_conf('GS_CANONIZE_LOCAL_BRANCH') .
 	  $user['ext']
 	);
 $from_num_effective_obj = new CanonicalPhoneNumber( $from_num_effective );
