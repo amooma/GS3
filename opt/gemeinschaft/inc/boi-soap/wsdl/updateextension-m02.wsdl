@@ -14,6 +14,7 @@
 	<!-- List of supported parameter keys:
 		parameter name="SubscriberSIPName"          - SIP username
 		parameter name="SubscriberAccountPasswd"    - SIP password
+		parameter name="SubscriberIntNumber"        - phone number in intl. format (+49...)
 		parameter name="SubscriberVmPin"            - PIN
 		parameter name="SubscriberPersNr"           - username
 		parameter name="SubscriberName"             - display name
