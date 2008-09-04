@@ -314,7 +314,7 @@ LIMIT 5'
 <form method="get" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="reboot" />
-<input type="submit" value="<?php echo __('Telefon resynchronisieren'); ?>" />
+<input type="submit" value="<?php echo __('Telefon aktualisieren'); ?>" />
 </form>
 </div>
 
