@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 408); // = 0.04.08
+define('YADB_VERS', 409); // = 0.04.09
 
 /***********************************************************
 * Columns flags:
@@ -1289,7 +1289,7 @@ class YADB_Connection
 				return $false;
 			}
 			if ($rs->EOF) {
-				echo 'SELECT * FROM '. $this->quoteCol($table) .' WHERE '. $this->quoteCol($pkCol) .'='. (int)$pkVal;
+				//echo 'SELECT * FROM '. $this->quoteCol($table) .' WHERE '. $this->quoteCol($pkCol) .'='. (int)$pkVal;
 				trigger_error( 'YADB: Could not create object. Not found.', E_USER_NOTICE );
 				return $false;
 			}
@@ -1927,7 +1927,7 @@ class YADB_RecordObject
 			if ($saved) {
 				// on UPDATE row id remains, on INSERT get new one:
 				if ($this->_pkVal > 0)  $rowId = $this->_pkVal;
-				else  $rowId = $this->_conn->getLastInsertId();	
+				else $rowId = $this->_conn->getLastInsertId();
 			} else
 				$rowId = false;
 		}
