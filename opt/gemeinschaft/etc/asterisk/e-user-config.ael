@@ -111,17 +111,17 @@ context user-config {
 		Wait(0.5);
 		//Playback(beep);
 		if ("${type}" = "std") {
-			Playback(gemeinschaft/standard);
+			Playback(/opt/gemeinschaft/sounds/de-DE/standard);
 		} else {
-			Playback(gemeinschaft/variable);
+			Playback(/opt/gemeinschaft/sounds/de-DE/variable);
 		}
-		Playback(gemeinschaft/rufumleitungsnummer&gemeinschaft/fuer-anrufe&gemeinschaft/von);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitungsnummer&/opt/gemeinschaft/sounds/de-DE/fuer-anrufe&/opt/gemeinschaft/sounds/de-DE/von);
 		if ("${source}" = "internal") {
-			Playback(gemeinschaft/intern);
+			Playback(/opt/gemeinschaft/sounds/de-DE/intern);
 		} else {
-			Playback(gemeinschaft/extern);
+			Playback(/opt/gemeinschaft/sounds/de-DE/extern);
 		}
-		Playback(gemeinschaft/eingestellt);
+		Playback(/opt/gemeinschaft/sounds/de-DE/eingestellt);
 		Wait(0.5);
 		SayDigits(${number});
 		Hangup();
@@ -179,7 +179,7 @@ context user-config {
 		&user-call-forward-activate-numeric(std,1,0,1);
 		&queue-logout-all-silent();
 		Wait(0.5);
-		Playback(gemeinschaft/rufumleitung&gemeinschaft/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
 	}
 	dnd-on => {
@@ -196,7 +196,7 @@ context user-config {
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
 		Wait(0.5);
-		Playback(gemeinschaft/rufumleitung&gemeinschaft/deaktiviert);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/deaktiviert);
 		Hangup();
 	}
 	dnd-off => {
@@ -220,7 +220,7 @@ context user-config {
 		&user-call-forward-activate-numeric(var,1,0,1);
 		&queue-logout-all-silent();
 		Wait(0.5);
-		Playback(gemeinschaft/rufumleitung&gemeinschaft/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
 	}
 	
@@ -291,11 +291,11 @@ macro user-config-call-waiting( mactive_num ) {
 	TrySystem(/opt/gemeinschaft/scripts/gs_callwaiting_activate --user='${user_code}' --active='${mactive}');
 	Wait(0.5);
 	//Playback(beep);
-	Playback(gemeinschaft/anklopfen);
+	Playback(/opt/gemeinschaft/sounds/de-DE/anklopfen);
 	if ("${mactive}" = "yes") {
-		Playback(gemeinschaft/eingeschaltet);
+		Playback(/opt/gemeinschaft/sounds/de-DE/eingeschaltet);
 	} else {
-		Playback(gemeinschaft/ausgeschaltet);
+		Playback(/opt/gemeinschaft/sounds/de-DE/ausgeschaltet);
 	}
 	Hangup();
 }

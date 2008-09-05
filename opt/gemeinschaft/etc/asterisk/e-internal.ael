@@ -818,7 +818,7 @@ context to-internal-users-self {
 					Dial(Local/${fw_${is_call_from}_timeout}/n,900);
 					&hangup-proper-status();
 				}
-				Playback(gemeinschaft/queue-all-busy);
+				Playback(/opt/gemeinschaft/sounds/de-DE/queue-all-busy);
 				Busy(5);
 				Hangup();
 			}
@@ -831,7 +831,7 @@ context to-internal-users-self {
 					Dial(Local/${fw_${is_call_from}_full}/n,900);
 					&hangup-proper-status();
 				}
-				Playback(gemeinschaft/queue-all-busy);
+				Playback(/opt/gemeinschaft/sounds/de-DE/queue-all-busy);
 				Busy(5);
 				Hangup();
 			}
@@ -1008,11 +1008,11 @@ context program-cc {
 		Set(TIMEOUT(response)=10);
 		
 		for (i=0; ${i}<3; i=${i}+1) {
-			//Playback(gemeinschaft/druecken-sie-die-1-um-einen-automatischen-rueckruf-zu-programmieren);
+			//Playback(/opt/gemeinschaft/sounds/de-DE/druecken-sie-die-1-um-einen-automatischen-rueckruf-zu-programmieren);
 			if ("${vm_${vm_source}_active}" = "1") {
-				Background(gemeinschaft/um-eine-nachricht-zu-hinterlassen-druecken-sie-die&digits/1,m);
+				Background(/opt/gemeinschaft/sounds/de-DE/um-eine-nachricht-zu-hinterlassen-druecken-sie-die&digits/1,m);
 			}
-			Background(gemeinschaft/fuer-einen-automatischen-rueckruf-druecken-sie-die&gemeinschaft/stern-taste,m);
+			Background(/opt/gemeinschaft/sounds/de-DE/fuer-einen-automatischen-rueckruf-druecken-sie-die&/opt/gemeinschaft/sounds/de-DE/stern-taste,m);
 			WaitExten();
 		}
 		
@@ -1037,7 +1037,7 @@ context program-cc {
 		AGI(/opt/gemeinschaft/dialplan-scripts/cc-program.agi,${user_name},${cc_to_ext});
 		Verbose(1,### Call completion programmed?: ${cc_programmed});
 		if ("${cc_programmed}" = "1") {
-			Playback(gemeinschaft/rueckruf-programmiert);
+			Playback(/opt/gemeinschaft/sounds/de-DE/rueckruf-programmiert);
 			Verbose(1,### Call completion programmed from ${user_name} to ${cc_to_ext});
 		}
 		else {
