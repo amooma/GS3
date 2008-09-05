@@ -103,8 +103,8 @@ macro cmm-login( new_user_name ) {
 		goto unknown;
 	
 	//Playback(agent-loginok);
-	Playback(gemeinschaft/sie-sind-jetzt-angemeldet);
-	Playback(gemeinschaft/bitte-warten-sie);
+	Playback(/opt/gemeinschaft/sounds/de-DE/sie-sind-jetzt-angemeldet);
+	Playback(/opt/gemeinschaft/sounds/de-DE/bitte-warten-sie);
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${new_user_name}');
 	if ("${user_name}" != "${new_user_name}") {
 		if ("${user_name}" != "") {
@@ -145,8 +145,8 @@ macro cmm-logout() {
 	Wait(0.5);
 	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id},${is_from_gateway},${CALLERID(num)});
 	//Playback(agent-loggedoff&vm-goodbye);
-	Playback(gemeinschaft/sie-sind-abgemeldet);
-	Playback(gemeinschaft/bitte-warten-sie);
+	Playback(/opt/gemeinschaft/sounds/de-DE/sie-sind-abgemeldet);
+	Playback(/opt/gemeinschaft/sounds/de-DE/bitte-warten-sie);
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
 	if ("${CHANNEL(channeltype)}" = "SIP") {
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(peerip)}');
@@ -895,7 +895,7 @@ context call-completion {
 		Answer();
 		Wait(0.5);
 		//SayDigits(${callee});
-		//Playback(gemeinschaft/ist-jetzt-wieder-erreichbar);
+		//Playback(/opt/gemeinschaft/sounds/de-DE/ist-jetzt-wieder-erreichbar);
 		Set(CALLERID(all)=${orig_callerid});
 		//DumpChan();
 		Set(__is_callcompletion=1); // no forwards and no mailbox
