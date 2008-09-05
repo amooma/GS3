@@ -753,12 +753,12 @@ context to-internal-users-self {
 			//		Set(all_busy=1);
 			//		if ("${queue_num_members}" = "0") {
 			//			// empty:
-			//			SET(QUEUESTATUS=JOINEMPTY);
+			//			Set(QUEUESTATUS=JOINEMPTY);
 			//			Verbose(1,### Sonderfall fuer Queue ${EXTEN} - keine Agenten\, behandeln wie ${QUEUESTATUS});
 			//		}
 			//		else {
 			//			// treat like full:
-			//			SET(QUEUESTATUS=FULL);
+			//			Set(QUEUESTATUS=FULL);
 			//			Verbose(1,### Sonderfall fuer Queue ${EXTEN} - alle besetzt\, behandeln wie ${QUEUESTATUS});
 			//		}
 			//	}
