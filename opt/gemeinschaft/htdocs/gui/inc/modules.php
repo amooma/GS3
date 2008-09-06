@@ -84,7 +84,7 @@ $MODULES['pb'       ]['sub'][
 }
 
 $MODULES['pb'       ]['sub'][
-		'csvimport']   =  array('title' => __('CSV-Import'));   //TRANSLATE ME
+		'csvimport']   =  array('title' => __('CSV-Import'));
 
 #####################################################################
 
@@ -174,12 +174,12 @@ $MODULES['ringtones']=  array(
 #####################################################################
 
 $MODULES['stats'    ]=  array(
-	'title' => __('Statistik'),     //TRANSLATE ME
+	'title' => __('Statistik'),
 	'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
 	'boi_ok'=> false,
 	'sub' => array(
-		'qclassical'   => array('title' => __('Q Klassisch')),  //TRANSLATE ME
-		'callvolume'   => array('title' => __('Gespr.-Volumen'))//TRANSLATE ME
+		'qclassical'   => array('title' => __('Q Klassisch')),
+		'callvolume'   => array('title' => __('Gespr.-Volumen'))
 	)
 );
 
@@ -187,14 +187,14 @@ $MODULES['stats'    ]=  array(
 
 if (gs_get_conf('GS_FAX_ENABLED')) {
 $MODULES['fax'      ]=  array(
-	'title' => __('Fax'),           //TRANSLATE ME
+	'title' => __('Fax'),
 	'icon'  => 'crystal-svg/%s/app/kdeprintfax.png',
 	'boi_ok'=> false,
 	'sub' => array(
-		'rec'          => array('title' => __('Empfangen')),    //TRANSLATE ME
-		'send'         => array('title' => __('Fax versenden')),//TRANSLATE ME
-		'out'          => array('title' => __('Ausgang')),      //TRANSLATE ME
-		'done'         => array('title' => __('Gesendet'))      //TRANSLATE ME
+		'rec'          => array('title' => __('Empfangen')),
+		'send'         => array('title' => __('Fax versenden')),
+		'out'          => array('title' => __('Ausgang')),
+		'done'         => array('title' => __('Gesendet'))
 	)
 );
 }
@@ -230,16 +230,16 @@ $MODULES['admin'    ]=  array(
 		'overview'     => array('title' => __('&Uuml;bersicht')),
 		'users'        => array('title' => __('Benutzer')),
 		'groups'       => array('title' => __('Benutzergruppen')),
-		'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
-		'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
-		//'ivrs'         => array('title' => __('IVRs')),           //TRANSLATE ME
+		'queues'       => array('title' => __('Warteschlangen')),
+		'pgroups'      => array('title' => __('PickUp-Gruppen')),
+		//'ivrs'         => array('title' => __('IVRs')),
 		'calls'        => array('title' => __('CDRs')),
-		'reload'       => array('title' => __('Reload'))          //TRANSLATE ME
+		'reload'       => array('title' => __('Reload'))
 	)
 );
 if (gs_get_conf('GS_BOI_ENABLED')) {
 $MODULES['admin'    ]['sub'][
-		'boi-perms']   =  array('title' => __('Lokale Admins'));  //TRANSLATE ME
+		'boi-perms']   =  array('title' => __('Lokale Admins'));
 }
 
 #####################################################################
@@ -258,31 +258,31 @@ $MODULES['prov'     ]=  array(
 #####################################################################
 
 $MODULES['routing'  ]=  array(
-	'title' => __('Routen'),          //TRANSLATE ME
+	'title' => __('Routen'),
 	'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
 	'perms' => 'admin',
 	'boi_ok'=> false,
 	'sub' => array(
-		'gwgrps'       => array('title' => __('Gateway-Gruppen')),//TRANSLATE ME
-		'gws-sip'      => array('title' => __('SIP-Gateways')),   //TRANSLATE ME
-		'gws-misdn'    => array('title' => __('BRI-Gateways'))    //TRANSLATE ME
+		'gwgrps'       => array('title' => __('Gateway-Gruppen')),
+		'gws-sip'      => array('title' => __('SIP-Gateways')),
+		'gws-misdn'    => array('title' => __('BRI-Gateways'))
 	)
 );
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
 $MODULES['routing'  ]['sub'][
-		'e164']        =  array('title' => __('E.164'));          //TRANSLATE ME
+		'e164']        =  array('title' => __('E.164'));
 }
 $MODULES['routing'  ]['sub'][
-		'inbound']     =  array('title' => __('Routen eingehend'));//TRANSLATE ME
+		'inbound']     =  array('title' => __('Routen eingehend'));
 $MODULES['routing'  ]['sub'][
-		'outbound']    =  array('title' => __('Routen &amp; LCR'));//TRANSLATE ME
+		'outbound']    =  array('title' => __('Routen &amp; LCR'));
 $MODULES['routing'  ]['sub'][
-		'test']        =  array('title' => __('Routing-Test'));   //TRANSLATE ME
+		'test']        =  array('title' => __('Routing-Test'));
 
 #####################################################################
 
 $MODULES['system'   ]=  array(
-	'title' => __('System'),          //TRANSLATE ME
+	'title' => __('System'),
 	'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
 	'perms' => 'admin',
 	'boi_ok'=> false,
@@ -291,54 +291,54 @@ $MODULES['system'   ]=  array(
 );
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
 $MODULES['system'   ]['sub'][
-		'gpbx-diskusage']=array('title' => __('Speicherplatz'));  //TRANSLATE ME
+		'gpbx-diskusage']=array('title' => __('Speicherplatz'));
 }
 $MODULES['system'   ]['sub'][
-		'sysstatus']   =  array('title' => __('System-Status'));  //TRANSLATE ME
+		'sysstatus']   =  array('title' => __('System-Status'));
 $MODULES['system'   ]['sub'][
-		'network']     =  array('title' => __('Netzwerk'));       //TRANSLATE ME
+		'network']     =  array('title' => __('Netzwerk'));
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
 $MODULES['system'  ]['sub'][
 		'dhcp-leases'] =  array('title' => __('DHCP-Leases'));
 }
 /*
 $MODULES['system'   ]['sub'][
-		'logging']     =  array('title' => __('Logging'));        //TRANSLATE ME
+		'logging']     =  array('title' => __('Logging'));
 */
 $MODULES['system'   ]['sub'][
 		'nodesmon']    =  array('title' => __('Nodes-Status'));
 if ($GS_INSTALLATION_TYPE !== 'gpbx') {
 $MODULES['system'   ]['sub'][
-		'hosts']       =  array('title' => __('Hosts'));          //TRANSLATE ME
+		'hosts']       =  array('title' => __('Hosts'));
 if (gs_get_conf('GS_BOI_ENABLED')) {
 $MODULES['system'   ]['sub'][
-		'hosts-foreign']= array('title' => __('Hosts (fremde)')); //TRANSLATE ME
+		'hosts-foreign']= array('title' => __('Hosts (fremde)'));
 }
 }
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 $MODULES['system'   ]['sub'][
-		'cards']       =  array('title' => __('PCI-Karten'));     //TRANSLATE ME
+		'cards']       =  array('title' => __('PCI-Karten'));
 if ($GS_INSTALLATION_TYPE !== 'gpbx') {  //FIXME
 $MODULES['system'   ]['sub'][
-		'isdnports']   =  array('title' => __('ISDN-Ports'));     //TRANSLATE ME
+		'isdnports']   =  array('title' => __('ISDN-Ports'));
 } else {  //FIXME
 $MODULES['system'   ]['sub'][
-		'gpbx-b410p']  =  array('title' => __('ISDN-Ports (BRI)'));//TRANSLATE ME
+		'gpbx-b410p']  =  array('title' => __('ISDN-Ports (BRI)'));
 }
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 $MODULES['system'   ]['sub'][
-		'asterisk-log']=  array('title' => __('Asterisk-Log'));   //TRANSLATE ME
+		'asterisk-log']=  array('title' => __('Asterisk-Log'));
 }
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
 $MODULES['system'   ]['sub'][
-		'gpbx-upgrade']=  array('title' => __('Upgrade'));        //TRANSLATE ME
+		'gpbx-upgrade']=  array('title' => __('Upgrade'));
 }
 $MODULES['system'   ]['sub'][
-		'shutdown']    =  array('title' => __('Ausschalten'));    //TRANSLATE ME
+		'shutdown']    =  array('title' => __('Ausschalten'));
 }
 /*
 $MODULES['system'   ]['sub'][
-		'config']      =  array('title' => __('Konfiguration'));  //TRANSLATE ME
+		'config']      =  array('title' => __('Konfiguration'));
 */
 
 #####################################################################
