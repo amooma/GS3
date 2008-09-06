@@ -94,7 +94,7 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 		
 		?>
 		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
-			<?php echo __('Neue Voicemail-Nachrichten') /*//TRANSLATE ME*/, ' (',$num,')'; ?>
+			<?php echo __('Neue Voicemail-Nachrichten') ,' (',$num,')'; ?>
 		</div>
 		<div class="td" style="padding:0.0em;">
 			<?php
@@ -118,7 +118,7 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 			}
 			if ($i===0) {
 				echo '<tr>' ,"\n";
-				echo '<td colspan="2"><i>', __('keine') /*//TRANSLATE ME*/ ,'</i></td>' ,"\n";
+				echo '<td colspan="2"><i>', __('keine') ,'</i></td>' ,"\n";
 				echo '</tr>' ,"\n";
 			}
 			echo '</tbody>' ,"\n";
@@ -130,7 +130,7 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 	
 	<div class="fl" style="width:49%; min-width:20em; max-width:30em; margin:1px;">
 		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
-			<?php echo __('Rufumleitung'); /*//TRANSLATE ME*/ ?>
+			<?php echo __('Rufumleitung'); ?>
 		</div>
 		<div class="td" style="padding:0.0em;">
 			<?php
@@ -183,18 +183,18 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 					echo '<tr class="', ($i%2?'even':'odd') ,'">' ,"\n";
 					echo '<td>';
 					switch ($cf['src']) {
-						case 'internal': echo __('von intern'); break; //TRANSLATE ME
-						case 'external': echo __('von extern'); break; //TRANSLATE ME
+						case 'internal': echo __('von intern'); break;
+						case 'external': echo __('von extern'); break;
 						default        : echo htmlEnt($cf['src']);
 					}
 					//echo '</td>' ,"\n";
 					//echo '<td>';
 					echo ' &nbsp; ';
 					switch ($cf['case']) {
-						case 'always' : echo __('sofort' ); break; //TRANSLATE ME
-						case 'busy'   : echo __('bei besetzt'); break; //TRANSLATE ME
-						case 'unavail': echo sPrintF(__('nach %s Sek.'), $cf['timeout']); break; //TRANSLATE ME
-						case 'offline': echo __('offline'); break; //TRANSLATE ME
+						case 'always' : echo __('sofort' ); break;
+						case 'busy'   : echo __('bei besetzt'); break;
+						case 'unavail': echo sPrintF(__('nach %s Sek.'), $cf['timeout']); break;
+						case 'offline': echo __('offline'); break;
 						default        : echo htmlEnt($cf['case']);
 					}
 					//echo '</td>' ,"\n";
@@ -208,7 +208,7 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 				unset($actives);
 				if ($i===0) {
 					echo '<tr>' ,"\n";
-					echo '<td><i>', __('keine') /*//TRANSLATE ME*/ ,'</i></td>' ,"\n";
+					echo '<td><i>', __('keine') ,'</i></td>' ,"\n";
 					echo '</tr>' ,"\n";
 				}
 				echo '</tbody>' ,"\n";
@@ -247,7 +247,7 @@ LIMIT 5'
 		
 		?>
 		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
-			<?php echo __('Letzte entgangene Anrufe') /*//TRANSLATE ME*/; ?>
+			<?php echo __('Letzte entgangene Anrufe'); ?>
 		</div>
 		<div class="td" style="padding:0.0em;">
 			<?php
@@ -266,7 +266,7 @@ LIMIT 5'
 			}
 			if ($i===0) {
 				echo '<tr>' ,"\n";
-				echo '<td colspan="2"><i>', __('keine') /*//TRANSLATE ME*/ ,'</i></td>' ,"\n";
+				echo '<td colspan="2"><i>', __('keine') ,'</i></td>' ,"\n";
 				echo '</tr>' ,"\n";
 			}
 			echo '</tbody>' ,"\n";
@@ -278,7 +278,7 @@ LIMIT 5'
 	
 	<div class="fl" style="width:49%; min-width:20em; max-width:30em; margin:1px;">
 		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
-			<?php echo __('Pr&auml;senz'); /*//TRANSLATE ME*/ ?>
+			<?php echo __('Pr&auml;senz'); ?>
 		</div>
 		<div class="td" style="padding:0.6em;">
 			<form method="get" action="<?php echo GS_URL_PATH; ?>">
@@ -302,7 +302,7 @@ LIMIT 5'
 
 <form method="post" action="<?php echo GS_URL_PATH, 'srv/pb-dial.php'; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
-<?php echo __('Call-Box'); /*//TRANSLATE ME*/ ?>: &nbsp;
+<?php echo __('Call-Box'); ?>: &nbsp;
 <input type="text" name="n" value="" size="20" maxlength="30" />
 <input type="submit" value="<?php echo __('w&auml;hlen'); ?>" />
 </form>

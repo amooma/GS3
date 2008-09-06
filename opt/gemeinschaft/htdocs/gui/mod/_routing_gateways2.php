@@ -28,11 +28,6 @@
 
 die();
 
-######################################################
-##
-##   ALL STRINGS IN HERE NEED TO BE TRANSLATED!
-##
-######################################################
 
 defined('GS_VALID') or die('No direct access.');
 

@@ -26,12 +26,6 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-######################################################
-##
-##   ALL STRINGS IN HERE NEED TO BE TRANSLATED!
-##
-######################################################
-
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 require_once( GS_DIR .'inc/find_executable.php' );

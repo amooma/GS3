@@ -54,8 +54,8 @@ function _extstate2v( $extstate )
 		AST_MGR_EXT_BUSY      => array('v'=>__('belegt'   ), 's'=>'red'   ),
 		AST_MGR_EXT_OFFLINE   => array('v'=>__('offline'  ), 's'=>'?'     ),
 		AST_MGR_EXT_RINGING   => array('v'=>__('klingelt' ), 's'=>'yellow'),
-		AST_MGR_EXT_RINGINUSE => array('v'=>__('anklopfen'), 's'=>'yellow'), //TRANSLATE ME
-		AST_MGR_EXT_ONHOLD    => array('v'=>__('halten'   ), 's'=>'red'   )  //TRANSLATE ME
+		AST_MGR_EXT_RINGINUSE => array('v'=>__('anklopfen'), 's'=>'yellow'),
+		AST_MGR_EXT_ONHOLD    => array('v'=>__('halten'   ), 's'=>'red'   )
 	);
 	return array_key_exists($extstate, $states) ? $states[$extstate] : null;
 }
@@ -308,13 +308,13 @@ WHERE
 <div class="fl" style="clear:right; width:99%;">
 	<div class="fl" style="margin:1px;">
 		
-		<b><?php echo __('Direktgespr&auml;che') ,' (', __('heute') ,')'; /*//TRANSLATE ME*/ ?></b>
+		<b><?php echo __('Direktgespr&auml;che') ,' (', __('heute') ,')'; ?></b>
 		<table cellspacing="1">
 		<thead>
 		<tr>
 			<th style="width:110px;">&nbsp;</th>
-			<th style="width:50px;" class="r"><?php echo __('intern'); /*//TRANSLATE ME*/ ?></th>
-			<th style="width:50px;" class="r"><?php echo __('extern'); /*//TRANSLATE ME*/ ?></th>
+			<th style="width:50px;" class="r"><?php echo __('intern'); ?></th>
+			<th style="width:50px;" class="r"><?php echo __('extern'); ?></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -334,19 +334,19 @@ WHERE
 		$n_calls_out_e    = _num_calls_dlog_since( $users_sql, $t_from, 'out'   , true  );
 		
 		echo '<tr>';
-		echo '<td>', __('Angenommen') /*//TRANSLATE ME*/, '</td>';
+		echo '<td>', __('Angenommen'), '</td>';
 		echo '<td class="r">', $n_calls_in_i, '</td>';
 		echo '<td class="r">', $n_calls_in_e, '</td>';
 		echo '</tr>', "\n";
 		
 		echo '<tr>';
-		echo '<td>', __('Verpasst') /*//TRANSLATE ME*/, '</td>';
+		echo '<td>', __('Verpasst'), '</td>';
 		echo '<td class="r">', $n_calls_missed_i, '</td>';
 		echo '<td class="r">', $n_calls_missed_e, '</td>';
 		echo '</tr>', "\n";
 		
 		echo '<tr>';
-		echo '<td>', __('Gew&auml;hlt') /*//TRANSLATE ME*/, '</td>';
+		echo '<td>', __('Gew&auml;hlt'), '</td>';
 		echo '<td class="r">', $n_calls_out_i, '</td>';
 		echo '<td class="r">', $n_calls_out_e, '</td>';
 		echo '</tr>', "\n";
@@ -358,15 +358,15 @@ WHERE
 	</div>
 	<div class="fr" style="margin:1px;">
 		
-		<b><?php echo __('Gesamt') ,' (', __('heute') ,')'; /*//TRANSLATE ME*/ ?></b>
+		<b><?php echo __('Gesamt') ,' (', __('heute') ,')'; ?></b>
 		<table cellspacing="1">
 		<thead>
 		<tr>
 			<th style="width:110px;">&nbsp;</th>
-			<th style="width:50px;" class="r"><?php echo __('nach intern'); /*//TRANSLATE ME*/ ?></th>
-			<th style="width:50px;" class="r"><?php echo __('nach extern'); /*//TRANSLATE ME*/ ?></th>
-			<th style="width:50px;" class="r"><?php echo __('von intern'); /*//TRANSLATE ME*/ ?></th>
-			<th style="width:50px;" class="r"><?php echo __('von extern'); /*//TRANSLATE ME*/ ?></th>
+			<th style="width:50px;" class="r"><?php echo __('nach intern'); ?></th>
+			<th style="width:50px;" class="r"><?php echo __('nach extern'); ?></th>
+			<th style="width:50px;" class="r"><?php echo __('von intern'); ?></th>
+			<th style="width:50px;" class="r"><?php echo __('von extern'); ?></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -399,7 +399,7 @@ WHERE
 		$n_calls_bydst_fail_e = _num_calls_cdr_bydst_since( $exts_sql, $t_from, 'FAILED'   , true  );
 		
 		echo '<tr>';
-		echo '<td>', __('Erfolgreich') /*//TRANSLATE ME*/, '</td>';
+		echo '<td>', __('Erfolgreich'), '</td>';
 		echo '<td class="r">', $n_calls_bysrc_answ_i, '</td>';
 		echo '<td class="r">', $n_calls_bysrc_answ_e, '</td>';
 		echo '<td class="r">', $n_calls_bydst_answ_i, '</td>';
@@ -407,7 +407,7 @@ WHERE
 		echo '</tr>', "\n";
 		
 		echo '<tr>';
-		echo '<td>', __('Besetzt') /*//TRANSLATE ME*/, '</td>';
+		echo '<td>', __('Besetzt'), '</td>';
 		echo '<td class="r">', $n_calls_bysrc_busy_i, '</td>';
 		echo '<td class="r">', $n_calls_bysrc_busy_e, '</td>';
 		echo '<td class="r">', $n_calls_bydst_busy_i, '</td>';
@@ -415,7 +415,7 @@ WHERE
 		echo '</tr>', "\n";
 		
 		echo '<tr>';
-		echo '<td>', __('Keine Antwort') /*//TRANSLATE ME*/, '</td>';
+		echo '<td>', __('Keine Antwort'), '</td>';
 		echo '<td class="r">', $n_calls_bysrc_noan_i, '</td>';
 		echo '<td class="r">', $n_calls_bysrc_noan_e, '</td>';
 		echo '<td class="r">', $n_calls_bydst_noan_i, '</td>';
@@ -423,7 +423,7 @@ WHERE
 		echo '</tr>', "\n";
 		
 		echo '<tr>';
-		echo '<td>', __('Stau') /*//TRANSLATE ME*/, '</td>';
+		echo '<td>', __('Stau'), '</td>';
 		echo '<td class="r">', $n_calls_bysrc_fail_i, '</td>';
 		echo '<td class="r">', $n_calls_bysrc_fail_e, '</td>';
 		echo '<td class="r">', $n_calls_bydst_fail_i, '</td>';

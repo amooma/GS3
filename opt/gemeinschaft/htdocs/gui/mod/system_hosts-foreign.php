@@ -26,12 +26,6 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-######################################################
-##
-##   ALL STRINGS IN HERE NEED TO BE TRANSLATED!
-##
-######################################################
-
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-fns/gs_user_del.php' );
 

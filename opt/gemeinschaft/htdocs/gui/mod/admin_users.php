@@ -26,12 +26,6 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-######################################################
-##
-##   ALL STRINGS IN HERE NEED TO BE TRANSLATED!
-##
-######################################################
-
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/extension-state.php' );
 require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
@@ -317,7 +311,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<tr>
 		<th style="width: 70px;"><?php echo __('User'     ); ?></th>
 		<th style="width:180px;"<?php if ($number=='') echo ' class="sort-col"'; ?>><?php echo __('Nachname') ,', ', __('Vorname'); ?></th>
-		<th style="width: 60px;"<?php if ($number!='') echo ' class="sort-col"'; ?>><?php echo __('Nebenst.' ); /*//TRANSLATEME*/ ?></th>
+		<th style="width: 60px;"<?php if ($number!='') echo ' class="sort-col"'; ?>><?php echo __('Nebenst.' ); ?></th>
 		<th style="width: 55px;"><?php echo __('PIN'      ); ?></th>
 		<th style="width:165px;"><?php echo __('E-Mail'   ); ?></th>
 		<th style="width: 42px;"><?php echo __('Host'     ); ?></th>
@@ -686,7 +680,7 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\
 </thead>
 <tbody>
 	<tr>
-		<th><?php echo __('Nebenstelle'); /*//TRANSLATEME*/ ?>:</th>
+		<th><?php echo __('Nebenstelle'); ?>:</th>
 		<td>
 			<?php
 				if ($r['hp_route_prefix'] != ''

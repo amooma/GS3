@@ -26,12 +26,6 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-######################################################
-##
-##   ALL STRINGS IN HERE NEED TO BE TRANSLATED!
-##
-######################################################
-
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_del.php' );
@@ -129,7 +123,7 @@ if ($edit > 0) {
 	<th style="width:80px;">
 <?php
 	
-	//echo __('S.') /*//TRANSLATEME*/ ,' ';
+	//echo __('S.') ,' ';
 	echo ($page+1), ' / ', $num_pages, '&nbsp; ',"\n";
 	
 	if ($page > 0) {

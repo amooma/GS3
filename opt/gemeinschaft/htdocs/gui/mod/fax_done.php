@@ -26,12 +26,6 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-######################################################
-##
-##   ALL STRINGS IN HERE NEED TO BE TRANSLATED!
-##
-######################################################
-
 defined('GS_VALID') or die('No direct access.');
 if ((float)PHP_VERSION < 5.0) {
 	# to communicate with HylaFax inc/cn_hylafax.php uses ftp_raw(),

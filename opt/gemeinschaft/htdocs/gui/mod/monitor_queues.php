@@ -162,13 +162,13 @@ AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:89px;" class="nobr"><?php echo __('Anrufe'      ); /*//TRANSLATE ME*/ ?></th>
-	<th style="width:89px;" class="nobr"><?php echo __('Angenommen'  ); /*//TRANSLATE ME*/ ?></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Anrufe'      ); ?></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Angenommen'  ); ?></th>
 	<th style="width:89px;" class="nobr"><?php echo __('Erfolgreich' ); ?></th>
 	<th style="width:89px;" class="nobr"><?php echo __('Absprung'    ); ?></th>
 	<?php if ($get_queue_stats_from_db) { ?>
-	<th style="width:89px;" class="nobr"><?php echo __('Nicht angen.'); /*//TRANSLATE ME */ ?></th>
-	<th style="width:89px;" class="nobr"><?php echo __('Niemand frei'); /*//TRANSLATE ME */ ?></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Nicht angen.'); ?></th>
+	<th style="width:89px;" class="nobr"><?php echo __('Niemand frei'); ?></th>
 	<?php } ?>
 	<th style="width:89px;" class="nobr"><?php echo __('Wartezeit'   ); ?></th>
 </tr>
@@ -224,7 +224,7 @@ AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
 
 <?php
 if ($get_queue_stats_from_db) {
-	echo '<p class="fr"><small>(', __('Je nach Konfiguration k&ouml;nnen hier kurze Verz&ouml;gerungen auftreten.') /*//TRANSLATE ME*/ ,')</small></p>';
+	echo '<p class="fr"><small>(', __('Je nach Konfiguration k&ouml;nnen hier kurze Verz&ouml;gerungen auftreten.') ,')</small></p>';
 }
 ?>
 
