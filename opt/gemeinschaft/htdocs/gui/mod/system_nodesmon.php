@@ -192,7 +192,7 @@ if (false) {
 <br />
 <br />
 
-<p style="max-width:500px;"><small><sup>[1]</sup> <?php echo __('Dies ist die Adresse, die ggf. per Stonith &uuml;bernommen werden w&uuml;rde. (Die dynamische Adresse hat hier nichts mit DHCP zu tun.)'); /* //TRANSLATE ME */ ?></small></p>
+<p style="max-width:500px;"><small><sup>[1]</sup> <?php echo __('Dies ist die Adresse, die ggf. per Stonith &uuml;bernommen werden w&uuml;rde. (Die dynamische Adresse hat hier nichts mit DHCP zu tun.)'); ?></small></p>
 
 <p style="max-width:500px;"><small><sup>[2]</sup> <?php echo __('Nicht konfiguriert.'); ?></small></p>
 

@@ -273,7 +273,7 @@ if ($page < $num_pages-1) {
 	<td>
 		<select name="stat" style="width:135px;" onchange="this.form.submit();">
 		<option value=""         <?php if ($stat===''         ) echo ' selected="selected"'; ?>><?php echo __('alle Verb.'    ); ?></option>
-		<option value="answered" <?php if ($stat==='answered' ) echo ' selected="selected"'; ?>><?php echo __('angenommen'    ); /*//TRANSLATEME*/ ?></option>
+		<option value="answered" <?php if ($stat==='answered' ) echo ' selected="selected"'; ?>><?php echo __('angenommen'    ); ?></option>
 		<option value="no answer"<?php if ($stat==='no answer') echo ' selected="selected"'; ?>><?php echo __('keine Antwort' ); ?></option>
 		<option value="busy"     <?php if ($stat==='busy'     ) echo ' selected="selected"'; ?>><?php echo __('besetzt'       ); ?></option>
 		<option value="failed"   <?php if ($stat==='failed'   ) echo ' selected="selected"'; ?>><?php echo __('fehlgeschlagen'); ?></option>
@@ -322,7 +322,7 @@ if (@$rs) {
 		
 		switch ($r['disposition']) {
 		case 'ANSWERED':
-			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/greenled.png" /> ', __('angenommen') /*//TRANSLATEME*/;			
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/greenled.png" /> ', __('angenommen');			
 			break;
 		case 'NO ANSWER':
 			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/free_icon.png" /> ', __('keine Antwort');			
@@ -363,7 +363,7 @@ if (@$rs) {
 	<td class="r" style="min-width:6em;"><?php echo $num_total; ?></td>
 </tr>
 <tr>
-	<th><?php echo __('Anrufdauer insgesamt'); /*//TRANSLATEME*/ ?>:</th>
+	<th><?php echo __('Anrufdauer insgesamt'); ?>:</th>
 	<td class="r"><?php echo sec_to_hours( $sum_talktime ); ?></td>
 </tr>
 <tr>
