@@ -432,7 +432,7 @@ function gs_boi_menu_sc( url )
 	}
 ?>
 </div>
-<div class="tty"><a href="#a-content"><?php echo __('Navigation &uuml;berspringen'); /*//TRANSLATE ME*/ ?></a></div>
+<div class="tty"><a href="#a-content"><?php echo __('Navigation &uuml;berspringen'); ?></a></div>
 
 <?php
 	if (@$_SESSION['login_ok'] && gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
@@ -449,7 +449,7 @@ function gs_boi_menu_sc( url )
 	$langs = gs_get_enabled_langs();
 	if (count($langs) > 1) {
 		echo '<div id="langs">' ,"\n";
-		echo '<span class="tty">', __('Sprache') /*//TRANSLATE ME*/ ,':</span>' ,"\n";
+		echo '<span class="tty">', __('Sprache') ,':</span>' ,"\n";
 		//$langs = array_reverse($langs);
 		foreach ($langs as $lang_name => $l) {
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'setlang='.@$lang_name) ,'" title="', htmlEnt(@$l['title']) ,'">' ,"\n";
