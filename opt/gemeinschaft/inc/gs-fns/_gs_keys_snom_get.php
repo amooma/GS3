@@ -27,7 +27,7 @@
 \*******************************************************************/
 
 #
-# DEPRECATED
+# DEPRECATED - use the functions in gs_keys_get.php
 #
 
 
