@@ -151,12 +151,12 @@ function date_human( $ts )
 	$old_locale = setLocale(LC_TIME, '0');
 	setLocale(LC_TIME, 'de_DE');  //FIXME
 	if (date('Ymd', $ts) == date('Ymd'))
-		$dv = __('heute');  //TRANSLATE ME
+		$dv = __('heute');
 	elseif (date('Ymd', $ts) == date('Ymd', strToTime('-1 days', $ts)))
-		$dv = __('gestern');  //TRANSLATE ME
+		$dv = __('gestern');
 	else
-		$dv = strFTime(__('%d. %b'), $ts);  //TRANSLATE ME
-	$ret = $dv .', '. date(__('H:i'), $ts);  //TRANSLATE ME
+		$dv = strFTime(__('%d. %b'), $ts);
+	$ret = $dv .', '. date(__('H:i'), $ts);
 	setLocale(LC_TIME, array($old_locale, 'C'));
 	return $ret;
 }
