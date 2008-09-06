@@ -33,6 +33,8 @@
 ######################################################
 
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/gs-fns/gs_queue_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_queue_del.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])

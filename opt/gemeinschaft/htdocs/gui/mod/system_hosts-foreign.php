@@ -33,6 +33,7 @@
 ######################################################
 
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/gs-fns/gs_user_del.php' );
 
 function microtime_float()
 {

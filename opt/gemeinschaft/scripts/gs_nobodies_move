@@ -38,6 +38,9 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 
 
 /***********************************************************

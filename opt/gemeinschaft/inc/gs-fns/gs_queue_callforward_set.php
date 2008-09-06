@@ -27,6 +27,9 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callforward_set.php' );
 
 
 /***********************************************************

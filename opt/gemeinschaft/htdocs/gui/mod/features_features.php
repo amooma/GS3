@@ -27,6 +27,10 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_activate.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_clir_activate.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_clir_get.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])

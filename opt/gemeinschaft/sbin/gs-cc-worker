@@ -34,6 +34,7 @@ require_once( GS_DIR .'inc/log.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/extension-state.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 require_once( GS_DIR .'inc/remote-exec.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );

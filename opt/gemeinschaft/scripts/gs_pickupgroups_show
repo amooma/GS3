@@ -31,6 +31,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_pickupgroups_show.php' );
 include_once( GS_DIR .'inc/mb_str_pad.php' );
 
 

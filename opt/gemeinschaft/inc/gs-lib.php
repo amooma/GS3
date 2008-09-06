@@ -66,6 +66,7 @@ function getBoolByWord( $boolWord ) {
 }
 
 
+/*
 // include_once( the functions of our script functions library.
 // they are in separate files so they can easily be worked
 // on independently
@@ -134,5 +135,6 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_email_notify_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_email_notify_set.php' );
 
 include_once( GS_DIR .'inc/gs-fns/gs_user_email_address_get.php' );
+*/
 
 ?>

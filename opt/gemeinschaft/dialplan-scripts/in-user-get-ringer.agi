@@ -61,6 +61,7 @@ echo 'SET VARIABLE ringer '. gs_agi_str_esc($ringer) ."\n";
 
 include_once( GS_DIR .'inc/db_connect.php' );
 //include_once( GS_DIR .'inc/gs-lib.php' );
+//include_once( GS_DIR .'inc/gs-fns/gs_ringtones_get.php' );
 
 $db = gs_db_slave_connect();
 if (! $db) die();

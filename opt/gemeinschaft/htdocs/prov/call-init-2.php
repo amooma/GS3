@@ -44,6 +44,8 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'inc/netmask.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 require_once( GS_DIR .'inc/remote-exec.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );

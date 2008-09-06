@@ -33,6 +33,10 @@
 ######################################################
 
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_del.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_del.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])

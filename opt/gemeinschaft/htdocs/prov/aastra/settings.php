@@ -161,7 +161,7 @@ $prov_url_aastra = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_
 
 require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/nobody-extensions.php' );
-require_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get.php' );
 
 $db = gs_db_master_connect();
 if (! $db) {
