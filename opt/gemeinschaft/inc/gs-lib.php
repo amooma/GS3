@@ -34,17 +34,20 @@ include_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
-function gs_script_invalid_usage( $usage=null ) {
+function gs_script_invalid_usage( $usage=null )
+{
 	echo ( $usage ? $usage : 'Error' ), "\n\n";
 	die(1);
 }
 
-function gs_script_error( $msg='' ) {
+function gs_script_error( $msg='' )
+{
 	echo 'Error. ', $msg, "\n\n";
 	die(1);
 }
 
-class GsError {
+class GsError
+{
 	var $_msg = '';
 	// the constructor:
 	function GsError( $msg ) {
@@ -55,11 +58,13 @@ class GsError {
 	}
 }
 
-function isGsError( $err ) {
+function isGsError( $err )
+{
 	return (is_object($err) && strToLower(@ get_class($err))=='gserror');
 }
 
-function getBoolByWord( $boolWord ) {
+function getBoolByWord( $boolWord )
+{
 	if ($boolWord===true || $boolWord===1) return true;
 	$boolWord = strToLower($boolWord);
 	return in_array( $boolWord, array('yes','true','1','on','y'), true );
