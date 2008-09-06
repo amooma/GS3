@@ -34,301 +34,322 @@ $MODULES = array();
 
 #####################################################################
 
-$MODULES['login'    ]=  array('title' => __('Login'),
-                              'icon'  => 'crystal-svg/%s/act/unlock.png',
-                              'inmenu'=> false,
-   'sub' => array(
-      'login'        => array('title' => __('Login'))
-   )
+$MODULES['login'    ]=  array(
+	'title' => __('Login'),
+	'icon'  => 'crystal-svg/%s/act/unlock.png',
+	'inmenu'=> false,
+	'sub' => array(
+		'login'        => array('title' => __('Login'))
+	)
 );
 
 #####################################################################
 
-$MODULES['home'     ]=  array('title' => __('Home'),
-                              'icon'  => 'crystal-svg/%s/app/kfm_home.png',
-   'sub' => array(
-      'home'         => array('title' => __('Home'))
-   )
+$MODULES['home'     ]=  array(
+	'title' => __('Home'),
+	'icon'  => 'crystal-svg/%s/app/kfm_home.png',
+	'sub' => array(
+		'home'         => array('title' => __('Home'))
+	)
 );
 
 #####################################################################
 
-$MODULES['pb'       ]=  array('title' => __('Telefonbuch'),
-                              'icon'  => 'crystal-svg/%s/act/contents.png',
-                              'boi_ok'=> false,  //FIXME?
-   'sub' => array(
-   )
+$MODULES['pb'       ]=  array(
+	'title' => __('Telefonbuch'),
+	'icon'  => 'crystal-svg/%s/act/contents.png',
+	'boi_ok'=> false,  //FIXME?
+	'sub' => array(
+	)
 );
 $tmp = array(
-	15=>array('k' => 'common' ,
-		      's' => array('title' => __('Gemeinschaft' ))  ),
-	25=>array('k' => 'private',
-	          's' => array('title' => __('Pers&ouml;nlich' ))  )
+	15=>array(
+		'k' => 'common' ,
+		's' => array('title' => __('Gemeinschaft' ))  ),
+	25=>array(
+		'k' => 'private',
+		's' => array('title' => __('Pers&ouml;nlich' ))  )
 );
 if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
 	$tmp[$pos] = array(
-	          'k' => 'imported',
-	          's' => array('title' => __('Importiert'))
+		'k' => 'imported',
+		's' => array('title' => __('Importiert'))
 	);
 }
 kSort($tmp);
 foreach ($tmp as $arr) {
 $MODULES['pb'       ]['sub'][
-      $arr['k']]     = $arr['s'];
+		$arr['k']]     = $arr['s'];
 }
 
 $MODULES['pb'       ]['sub'][
-      'csvimport']   =  array('title' => __('CSV-Import'));   //TRANSLATE ME
+		'csvimport']   =  array('title' => __('CSV-Import'));   //TRANSLATE ME
 
 #####################################################################
 
-$MODULES['calls'    ]=  array('title' => __('Anruflisten'),
-                              'icon'  => 'crystal-svg/%s/app/karm.png',
-                              'boi_ok'=> false,
-   'sub' => array(
-      'out'          => array('title' => __('gew&auml;hlt')),
-      'missed'       => array('title' => __('verpasst')),
-      'in'           => array('title' => __('angenommen'))
-   )
+$MODULES['calls'    ]=  array(
+	'title' => __('Anruflisten'),
+	'icon'  => 'crystal-svg/%s/app/karm.png',
+	'boi_ok'=> false,
+	'sub' => array(
+		'out'          => array('title' => __('gew&auml;hlt')),
+		'missed'       => array('title' => __('verpasst')),
+		'in'           => array('title' => __('angenommen'))
+	)
 );
 
 #####################################################################
 
-$MODULES['voicemail']=  array('title' => __('Voicemail'),
-                              'icon'  => 'crystal-svg/%s/act/inbox.png',
-                              'boi_ok'=> false,
-   'sub' => array(
-      'messages'     => array('title' => __('Nachrichten'))
-   )
+$MODULES['voicemail']=  array(
+	'title' => __('Voicemail'),
+	'icon'  => 'crystal-svg/%s/act/inbox.png',
+	'boi_ok'=> false,
+	'sub' => array(
+		'messages'     => array('title' => __('Nachrichten'))
+	)
 );
 
 #####################################################################
 
-$MODULES['forwards' ]=  array('title' => __('Rufumleitung'),
-                              'icon'  => 'crystal-svg/%s/app/yast_route.png',
-                              'boi_ok'=> false,
-   'sub' => array(
-      'forwards'     => array('title' => __('Rufumleitung')),
-      'extnumbers'   => array('title' => __('externe Nummern')),
-      'queues'       => array('title' => __('Queues'))
-   )
+$MODULES['forwards' ]=  array(
+	'title' => __('Rufumleitung'),
+	'icon'  => 'crystal-svg/%s/app/yast_route.png',
+	'boi_ok'=> false,
+	'sub' => array(
+		'forwards'     => array('title' => __('Rufumleitung')),
+		'extnumbers'   => array('title' => __('externe Nummern')),
+		'queues'       => array('title' => __('Queues'))
+	)
 );
 
 #####################################################################
 
-$MODULES['monitor'  ]=  array('title' => __('Monitor'),
-                              'icon'  => 'crystal-svg/%s/app/display.png',
-                              'boi_ok'=> false,
-   'sub' => array(
-      'queues'       => array('title' => __('Queues')),
-      'pgrps'        => array('title' => __('Gruppen'))
-   )
+$MODULES['monitor'  ]=  array(
+	'title' => __('Monitor'),
+	'icon'  => 'crystal-svg/%s/app/display.png',
+	'boi_ok'=> false,
+	'sub' => array(
+		'queues'       => array('title' => __('Queues')),
+		'pgrps'        => array('title' => __('Gruppen'))
+	)
 );
 if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
 $MODULES['monitor'  ]['sub'][
-      'peers']       =  array('title' => __('Kollegen'));
+		'peers']       =  array('title' => __('Kollegen'));
 }
 
 #####################################################################
 
-$MODULES['features' ]=  array('title' => __('Dienstmerkmale'),
-                              'icon'  => 'crystal-svg/%s/act/configure.png',
-                              'boi_ok'=> false,
-   'sub' => array(
-      'features'     => array('title' => __('Dienstmerkmale'))
-   )
+$MODULES['features' ]=  array(
+	'title' => __('Dienstmerkmale'),
+	'icon'  => 'crystal-svg/%s/act/configure.png',
+	'boi_ok'=> false,
+	'sub' => array(
+		'features'     => array('title' => __('Dienstmerkmale'))
+	)
 );
 
 #####################################################################
 
-$MODULES['keys'     ]=  array('title' => __('Tastenbelegung'),
-                              'icon'  => 'crystal-svg/%s/app/keyboard.png',
-   'sub' => array(
-   )
+$MODULES['keys'     ]=  array(
+	'title' => __('Tastenbelegung'),
+	'icon'  => 'crystal-svg/%s/app/keyboard.png',
+	'sub' => array(
+	)
 );
 $MODULES['keys'     ]['sub'][
-      'keyprof'     ]=  array('title' => __('Tastenbelegung'));
+		'keyprof'     ]=  array('title' => __('Tastenbelegung'));
 
 #####################################################################
 
-$MODULES['ringtones']=  array('title' => __('Klingelt&ouml;ne'),
-                              'icon'  => 'crystal-svg/%s/app/knotify.png',
-   'sub' => array(
-      'ringtones'    => array('title' => __('Klingelt&ouml;ne'))
-   )
+$MODULES['ringtones']=  array(
+	'title' => __('Klingelt&ouml;ne'),
+	'icon'  => 'crystal-svg/%s/app/knotify.png',
+	'sub' => array(
+		'ringtones'    => array('title' => __('Klingelt&ouml;ne'))
+	)
 );
 
 #####################################################################
 
-$MODULES['stats'    ]=  array('title' => __('Statistik'),     //TRANSLATE ME
-                              'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
-                              'boi_ok'=> false,
-   'sub' => array(
-      'qclassical'   => array('title' => __('Q Klassisch')),  //TRANSLATE ME
-      'callvolume'   => array('title' => __('Gespr.-Volumen'))//TRANSLATE ME
-   )
+$MODULES['stats'    ]=  array(
+	'title' => __('Statistik'),     //TRANSLATE ME
+	'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
+	'boi_ok'=> false,
+	'sub' => array(
+		'qclassical'   => array('title' => __('Q Klassisch')),  //TRANSLATE ME
+		'callvolume'   => array('title' => __('Gespr.-Volumen'))//TRANSLATE ME
+	)
 );
 
 #####################################################################
 
 if (gs_get_conf('GS_FAX_ENABLED')) {
-$MODULES['fax'      ]=  array('title' => __('Fax'),           //TRANSLATE ME
-                              'icon'  => 'crystal-svg/%s/app/kdeprintfax.png',
-                              'boi_ok'=> false,
-   'sub' => array(
-      'rec'          => array('title' => __('Empfangen')),    //TRANSLATE ME
-      'send'         => array('title' => __('Fax versenden')),//TRANSLATE ME
-      'out'          => array('title' => __('Ausgang')),      //TRANSLATE ME
-      'done'         => array('title' => __('Gesendet'))      //TRANSLATE ME
-   )
+$MODULES['fax'      ]=  array(
+	'title' => __('Fax'),           //TRANSLATE ME
+	'icon'  => 'crystal-svg/%s/app/kdeprintfax.png',
+	'boi_ok'=> false,
+	'sub' => array(
+		'rec'          => array('title' => __('Empfangen')),    //TRANSLATE ME
+		'send'         => array('title' => __('Fax versenden')),//TRANSLATE ME
+		'out'          => array('title' => __('Ausgang')),      //TRANSLATE ME
+		'done'         => array('title' => __('Gesendet'))      //TRANSLATE ME
+	)
 );
 }
 
-$MODULES['pin']=  array('title' => __('PIN &auml;ndern'),
-                              'icon'  => 'crystal-svg/%s/app/pin.png',
-   'sub' => array(
-      'pin'    => array('title' => __('PIN &auml;ndern'))
-   )
+$MODULES['pin']=  array(
+	'title' => __('PIN &auml;ndern'),
+	'icon'  => 'crystal-svg/%s/app/pin.png',
+	'sub' => array(
+		'pin'    => array('title' => __('PIN &auml;ndern'))
+	)
 );
 
 #####################################################################
 
-$MODULES['help'     ]=  array('title' => __('Hilfe'),
-                              'icon'  => 'crystal-svg/%s/act/help.png',
-                              'boi_ok'=> false,
-   'sub' => array(
-      'numbers'      => array('title' => __('Service-Nummern')),
-      'snom'         => array('title' => __('Snom'))
-   )
+$MODULES['help'     ]=  array(
+	'title' => __('Hilfe'),
+	'icon'  => 'crystal-svg/%s/act/help.png',
+	'boi_ok'=> false,
+	'sub' => array(
+		'numbers'      => array('title' => __('Service-Nummern')),
+		'snom'         => array('title' => __('Snom'))
+	)
 );
 
 #####################################################################
 
-$MODULES['admin'    ]=  array('title' => __('Administration'),
-                              'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
-                              'perms' => 'admin',
-                              'boi_ok'=> false,
-   'sub' => array(
-      'overview'     => array('title' => __('&Uuml;bersicht')),
-      'users'        => array('title' => __('Benutzer')),
-      'groups'       => array('title' => __('Benutzergruppen')),
-      'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
-      'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
-      //'ivrs'         => array('title' => __('IVRs')),           //TRANSLATE ME
-      'calls'        => array('title' => __('Verbindungen')),
-      'reload'       => array('title' => __('Reload'))          //TRANSLATE ME
-   )
+$MODULES['admin'    ]=  array(
+	'title' => __('Administration'),
+	'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
+	'perms' => 'admin',
+	'boi_ok'=> false,
+	'sub' => array(
+		'overview'     => array('title' => __('&Uuml;bersicht')),
+		'users'        => array('title' => __('Benutzer')),
+		'groups'       => array('title' => __('Benutzergruppen')),
+		'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
+		'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
+		//'ivrs'         => array('title' => __('IVRs')),           //TRANSLATE ME
+		'calls'        => array('title' => __('Verbindungen')),
+		'reload'       => array('title' => __('Reload'))          //TRANSLATE ME
+	)
 );
 if (gs_get_conf('GS_BOI_ENABLED')) {
 $MODULES['admin'    ]['sub'][
-      'boi-perms']   =  array('title' => __('Lokale Admins'));  //TRANSLATE ME
+		'boi-perms']   =  array('title' => __('Lokale Admins'));  //TRANSLATE ME
 }
 
 #####################################################################
 
-$MODULES['prov'     ]=  array('title' => __('Provisioning'),
-                              'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
-                              'perms' => 'admin',
-                              'boi_ok'=> false,
-   'sub' => array(
-      'keyprof'      => array('title' => __('Tasten-Profile')),
-      'provparams'   => array('title' => __('Parameter'))
-   )
+$MODULES['prov'     ]=  array(
+	'title' => __('Provisioning'),
+	'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
+	'perms' => 'admin',
+	'boi_ok'=> false,
+	'sub' => array(
+		'keyprof'      => array('title' => __('Tasten-Profile')),
+		'provparams'   => array('title' => __('Parameter'))
+	)
 );
 
 #####################################################################
 
-$MODULES['routing'  ]=  array('title' => __('Routen'),          //TRANSLATE ME
-                              'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
-                              'perms' => 'admin',
-                              'boi_ok'=> false,
-   'sub' => array(
-      'gwgrps'       => array('title' => __('Gateway-Gruppen')),//TRANSLATE ME
-      'gws-sip'      => array('title' => __('SIP-Gateways')),   //TRANSLATE ME
-      'gws-misdn'    => array('title' => __('BRI-Gateways'))    //TRANSLATE ME
-   )
-);
-if ($GS_INSTALLATION_TYPE === 'gpbx') {
-$MODULES['routing'  ]['sub'][
-      'e164']        =  array('title' => __('E.164'));          //TRANSLATE ME
-}
-$MODULES['routing'  ]['sub'][
-      'inbound']     =  array('title' => __('Routen eingehend'));//TRANSLATE ME
-$MODULES['routing'  ]['sub'][
-      'outbound']    =  array('title' => __('Routen &amp; LCR'));//TRANSLATE ME
-$MODULES['routing'  ]['sub'][
-      'test']        =  array('title' => __('Routing-Test'));   //TRANSLATE ME
-
-#####################################################################
-
-$MODULES['system'   ]=  array('title' => __('System'),          //TRANSLATE ME
-                              'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
-                              'perms' => 'admin',
-                              'boi_ok'=> false,
-   'sub' => array(
-   )
+$MODULES['routing'  ]=  array(
+	'title' => __('Routen'),          //TRANSLATE ME
+	'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
+	'perms' => 'admin',
+	'boi_ok'=> false,
+	'sub' => array(
+		'gwgrps'       => array('title' => __('Gateway-Gruppen')),//TRANSLATE ME
+		'gws-sip'      => array('title' => __('SIP-Gateways')),   //TRANSLATE ME
+		'gws-misdn'    => array('title' => __('BRI-Gateways'))    //TRANSLATE ME
+	)
 );
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
+$MODULES['routing'  ]['sub'][
+		'e164']        =  array('title' => __('E.164'));          //TRANSLATE ME
+}
+$MODULES['routing'  ]['sub'][
+		'inbound']     =  array('title' => __('Routen eingehend'));//TRANSLATE ME
+$MODULES['routing'  ]['sub'][
+		'outbound']    =  array('title' => __('Routen &amp; LCR'));//TRANSLATE ME
+$MODULES['routing'  ]['sub'][
+		'test']        =  array('title' => __('Routing-Test'));   //TRANSLATE ME
+
+#####################################################################
+
+$MODULES['system'   ]=  array(
+	'title' => __('System'),          //TRANSLATE ME
+	'icon'  => 'crystal-svg/%s/app/yast_sysadmin.png',
+	'perms' => 'admin',
+	'boi_ok'=> false,
+	'sub' => array(
+	)
+);
+if ($GS_INSTALLATION_TYPE === 'gpbx') {
 $MODULES['system'   ]['sub'][
-      'gpbx-diskusage']=array('title' => __('Speicherplatz'));  //TRANSLATE ME
+		'gpbx-diskusage']=array('title' => __('Speicherplatz'));  //TRANSLATE ME
 }
 $MODULES['system'   ]['sub'][
-      'sysstatus']   =  array('title' => __('System-Status'));  //TRANSLATE ME
+		'sysstatus']   =  array('title' => __('System-Status'));  //TRANSLATE ME
 $MODULES['system'   ]['sub'][
-      'network']     =  array('title' => __('Netzwerk'));       //TRANSLATE ME
+		'network']     =  array('title' => __('Netzwerk'));       //TRANSLATE ME
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
 $MODULES['system'  ]['sub'][
-      'dhcp-leases'] =  array('title' => __('DHCP-Leases'));
+		'dhcp-leases'] =  array('title' => __('DHCP-Leases'));
 }
 /*
 $MODULES['system'   ]['sub'][
-      'logging']     =  array('title' => __('Logging'));        //TRANSLATE ME
+		'logging']     =  array('title' => __('Logging'));        //TRANSLATE ME
 */
 $MODULES['system'   ]['sub'][
-      'nodesmon']    =  array('title' => __('Nodes-Status'));
+		'nodesmon']    =  array('title' => __('Nodes-Status'));
 if ($GS_INSTALLATION_TYPE !== 'gpbx') {
 $MODULES['system'   ]['sub'][
-      'hosts']       =  array('title' => __('Hosts'));          //TRANSLATE ME
+		'hosts']       =  array('title' => __('Hosts'));          //TRANSLATE ME
 if (gs_get_conf('GS_BOI_ENABLED')) {
 $MODULES['system'   ]['sub'][
-      'hosts-foreign']= array('title' => __('Hosts (fremde)')); //TRANSLATE ME
+		'hosts-foreign']= array('title' => __('Hosts (fremde)')); //TRANSLATE ME
 }
 }
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 $MODULES['system'   ]['sub'][
-      'cards']       =  array('title' => __('PCI-Karten'));     //TRANSLATE ME
+		'cards']       =  array('title' => __('PCI-Karten'));     //TRANSLATE ME
 if ($GS_INSTALLATION_TYPE !== 'gpbx') {  //FIXME
 $MODULES['system'   ]['sub'][
-      'isdnports']   =  array('title' => __('ISDN-Ports'));     //TRANSLATE ME
+		'isdnports']   =  array('title' => __('ISDN-Ports'));     //TRANSLATE ME
 } else {  //FIXME
 $MODULES['system'   ]['sub'][
-      'gpbx-b410p']  =  array('title' => __('ISDN-Ports (BRI)'));//TRANSLATE ME
+		'gpbx-b410p']  =  array('title' => __('ISDN-Ports (BRI)'));//TRANSLATE ME
 }
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 $MODULES['system'   ]['sub'][
-      'asterisk-log']=  array('title' => __('Asterisk-Log'));   //TRANSLATE ME
+		'asterisk-log']=  array('title' => __('Asterisk-Log'));   //TRANSLATE ME
 }
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
 $MODULES['system'   ]['sub'][
-      'gpbx-upgrade']=  array('title' => __('Upgrade'));        //TRANSLATE ME
+		'gpbx-upgrade']=  array('title' => __('Upgrade'));        //TRANSLATE ME
 }
 $MODULES['system'   ]['sub'][
-      'shutdown']    =  array('title' => __('Ausschalten'));    //TRANSLATE ME
+		'shutdown']    =  array('title' => __('Ausschalten'));    //TRANSLATE ME
 }
 /*
 $MODULES['system'   ]['sub'][
-      'config']      =  array('title' => __('Konfiguration'));  //TRANSLATE ME
+		'config']      =  array('title' => __('Konfiguration'));  //TRANSLATE ME
 */
 
 #####################################################################
 
 if (gs_get_conf('GS_GUI_AUTH_METHOD') !== 'webseal') {
-$MODULES['logout'   ]=  array('title' => __('Logout'),
-                              'icon'  => 'crystal-svg/%s/act/exit.png',
-   'sub' => array(
-      'logout'       => array('title' => __('Logout'))
-   )
+$MODULES['logout'   ]=  array(
+	'title' => __('Logout'),
+	'icon'  => 'crystal-svg/%s/act/exit.png',
+	'sub' => array(
+		'logout'       => array('title' => __('Logout'))
+	)
 );
 }
 
