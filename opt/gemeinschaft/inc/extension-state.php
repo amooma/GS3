@@ -102,10 +102,17 @@ function gs_extstate( $host, $exts )
 		     . "\r\n";
 		@ fWrite( $sock, $req, strLen($req) );
 		@ fFlush( $sock );
-		$data = _sock_read( $sock, 5, '/\\r\\n\\r\\n/S' );
-		if (! preg_match('/Authentication accepted/i', $data)) {
+		$data = _sock_read( $sock, 3, '/\\r\\n\\r\\n/S' );
+		if ($data === false) {
+			gs_log( GS_LOG_WARNING, 'Authentication to AMI on '.$host.' failed (timeout)' );
+			$hosts[$host]['sock'] = null;
+			return $return_single ? AST_MGR_EXT_UNKNOWN : array();
+		}
+		elseif (! preg_match('/Authentication accepted/i', $data)) {
+			gs_log( GS_LOG_WARNING, $data );
 			gs_log( GS_LOG_WARNING, 'Authentication to AMI on '.$host.' failed' );
 			$hosts[$host]['sock'] = null;
+			return $return_single ? AST_MGR_EXT_UNKNOWN : array();
 		}
 	} else {
 		$sock = $hosts[$host]['sock'];
@@ -176,6 +183,10 @@ function _sock_read( $sock, $timeout, $stop_regex )
 		$data .= @ fRead( $sock, 8192 );
 		if (@ preg_match($stop_regex, $data)) break;
 		uSleep(1000);  # sleep 0.001 secs
+	}
+	if ($data === '') {
+		# assume timeout
+		return false;
 	}
 	return $data;
 }
