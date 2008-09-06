@@ -233,7 +233,7 @@ $MODULES['admin'    ]=  array(
 		'queues'       => array('title' => __('Warteschlangen')), //TRANSLATE ME
 		'pgroups'      => array('title' => __('PickUp-Gruppen')), //TRANSLATE ME
 		//'ivrs'         => array('title' => __('IVRs')),           //TRANSLATE ME
-		'calls'        => array('title' => __('Verbindungen')),
+		'calls'        => array('title' => __('CDRs')),
 		'reload'       => array('title' => __('Reload'))          //TRANSLATE ME
 	)
 );
