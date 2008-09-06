@@ -171,7 +171,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 			$clientFlags += MYSQLI_CLIENT_COMPRESS;
 		}
 		
-		mysqli_options($this->_conn, MYSQLI_OPT_CONNECT_TIMEOUT, 5);
+		mysqli_options($this->_conn, MYSQLI_OPT_CONNECT_TIMEOUT, 10);
 		
 		if (! @ mysqli_real_connect( $this->_conn,
 			$host,
