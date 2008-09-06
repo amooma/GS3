@@ -109,7 +109,6 @@ function gs_extstate( $host, $exts )
 			return $return_single ? AST_MGR_EXT_UNKNOWN : array();
 		}
 		elseif (! preg_match('/Authentication accepted/i', $data)) {
-			gs_log( GS_LOG_WARNING, $data );
 			gs_log( GS_LOG_WARNING, 'Authentication to AMI on '.$host.' failed' );
 			$hosts[$host]['sock'] = null;
 			return $return_single ? AST_MGR_EXT_UNKNOWN : array();
