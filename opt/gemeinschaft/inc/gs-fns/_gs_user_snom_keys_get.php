@@ -27,6 +27,7 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/gs-lib.php' );
 
 #
 # DEPRECATED - use gs_keys_snom_get()

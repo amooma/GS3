@@ -34,6 +34,9 @@
 
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_groups_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_group_change.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_group_del.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])

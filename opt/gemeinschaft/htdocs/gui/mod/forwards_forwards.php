@@ -27,6 +27,14 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/gs-fns/gs_callforward_activate.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callforward_set.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_email_address_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_email_notify_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_email_notify_set.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_vm_get.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])

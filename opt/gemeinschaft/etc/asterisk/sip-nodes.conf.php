@@ -42,6 +42,7 @@ if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	
 	require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 	require_once( GS_DIR .'inc/gs-lib.php' );
+	include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
 	
 	$our_ids = @ gs_get_listen_to_ids();
 	if (! is_array($our_ids)) $our_ids = array();

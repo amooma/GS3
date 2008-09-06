@@ -26,6 +26,8 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 
 
 /***********************************************************

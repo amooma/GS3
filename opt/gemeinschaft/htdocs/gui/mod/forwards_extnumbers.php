@@ -41,6 +41,7 @@ echo '</h2>', "\n";
 
 
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
 
 
 $enumbers = gs_user_external_numbers_get( $_SESSION['sudo_user']['name'] );

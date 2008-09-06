@@ -29,6 +29,12 @@
 defined('GS_VALID') or die('No direct access.');
 
 require_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_ip_by_ext.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_ip_by_user.php' );
+
 require_once( GS_DIR .'inc/aastra-fns.php' );
 
 

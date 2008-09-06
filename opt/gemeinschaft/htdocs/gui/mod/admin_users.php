@@ -35,6 +35,13 @@
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/extension-state.php' );
 require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_change.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_del.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_del.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callblocking_set.php' );
 require_once( GS_DIR .'inc/boi-soap/boi-api.php' );
 
 echo '<h2>';

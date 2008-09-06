@@ -32,6 +32,21 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callforward_activate.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callforward_set.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_activate.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_clir_activate.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_clir_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ringtone_set.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ringtones_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_users_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_vm_get.php' );
 include_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
