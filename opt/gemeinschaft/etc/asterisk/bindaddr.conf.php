@@ -52,11 +52,28 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 		$bindaddr = '0.0.0.0';  # bind to all interfaces which are "UP"
 	} else {
 		$bindaddr = trim($ipaddrs[0]);
-		if (! preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $bindaddr))
+		if (! preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $bindaddr)) {
 			$bindaddr = '0.0.0.0';  # bind to all interfaces which are "UP"
+		}
 	}
 } else {
-	$bindaddr = '0.0.0.0';  # bind to all interfaces which are "UP"
+	//$bindaddr = '0.0.0.0';  # bind to all interfaces which are "UP"
+	
+	$ipaddrs = gs_get_listen_to_ips();
+	if (! is_array($ipaddrs) || count($ipaddrs) < 1) {
+		$bindaddr = '0.0.0.0';  # bind to all interfaces which are "UP"
+	} else {
+		if (count($ipaddrs) == 1) {
+			$bindaddr = trim($ipaddrs[0]);
+			if (! preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $bindaddr)) {
+				$bindaddr = '0.0.0.0';  # bind to all interfaces which are "UP"
+			}
+		}
+		else {
+			# Asterisk does not support multiple bindaddr statements
+			$bindaddr = '0.0.0.0';  # bind to all interfaces which are "UP"
+		}
+	}
 }
 
 gs_log(GS_LOG_DEBUG, 'Determined '. $bindaddr .' as our bindaddr for '. strToUpper($conffile) );
