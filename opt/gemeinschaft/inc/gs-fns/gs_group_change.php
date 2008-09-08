@@ -60,6 +60,9 @@ function gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_i
 	
 	if ($id < 1) {
 		# insert
+		if ($parent_id < 1) {
+			return new GsError( 'Failed to add group without parent.' );
+		}
 		$id = (int)$mptt->insert($parent_id, array(
 			'name'                   => $name_new,
 			'title'                  => $title,
