@@ -11,7 +11,7 @@
 /var/log/asterisk/cdr-custom/*.csv
 {
 	weekly
-	rotate 5
+	rotate 1
 	notifempty
 	missingok
 	compress
