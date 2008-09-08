@@ -63,7 +63,7 @@ if (! isSet($opts['parent-id'])
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = gs_group_add( $opts['parent-id'], $opts['name'], $opts['title'], $opts['softkey-profile-id'], $opts['prov-param-profile-id']);
+$ret = gs_group_add( $opts['parent-id'], $opts['name'], $opts['title'], $opts['softkey-profile-id'], $opts['prov-param-profile-id'] );
 
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
