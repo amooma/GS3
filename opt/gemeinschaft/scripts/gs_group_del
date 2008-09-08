@@ -54,7 +54,7 @@ if (! isSet($opts['group'])) {
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_group_del( $opts['group'] );
+$ret = @ gs_group_del_by_name( $opts['group'] );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 echo "Group deleted.\n";
