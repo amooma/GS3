@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_group_del.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --group=<id>';
+$usage = 'Usage: '. baseName(__FILE__) .' --group=<name>';
 
 $opts = @getOptsNoMultiples( '',
 	array(

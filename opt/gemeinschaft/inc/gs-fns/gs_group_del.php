@@ -49,5 +49,22 @@ function gs_group_del( $id )
 	return $mptt->delete( $id, true );
 }
 
+function gs_group_del_by_name( $group )
+{
+	if (! preg_match( '/^[a-z0-9\-_]+$/', $group ))
+		return new GsError( 'Group must be alphanumeric.' );
+	
+	# connect to db
+	#
+	$db = gs_db_master_connect();
+	if (! $db)
+		return new GsError( 'Could not connect to database.' );
+	
+	$group_id = (int)$db->executeGetOne( 'SELECT `id` FROM `user_groups` WHERE `name`=\''. $db->escape($group) .'\'' );
+	if ($group_id < 1)
+		return new GsError( 'Unknown group.' );
+	
+	return gs_group_del( $group_id );
+}
 
 ?>
