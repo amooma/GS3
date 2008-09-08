@@ -90,9 +90,45 @@ function gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_i
 	return false;
 }
 
+function gs_group_change_by_name( $name, $parent_name, $name_new, $title, $softkey_profile_id=null, $prov_param_profile_id=null )
+{
+	if (! preg_match( '/^[a-z0-9\-_]+$/', $name ))
+		return new GsError( 'Group must be alphanumeric.' );
+	if (! preg_match( '/^[a-z0-9\-_]+$/', $parent_name ))
+		return new GsError( 'Group must be alphanumeric.' );
+	
+	# connect to db
+	#
+	$db = gs_db_master_connect();
+	if (! $db)
+		return new GsError( 'Could not connect to database.' );
+	
+	$id = (int)$db->executeGetOne( 'SELECT `id` FROM `user_groups` WHERE `name`=\''. $db->escape($name) .'\'' );
+	if ($id < 1)
+		return new GsError( 'Unknown group "'.$name.'".' );
+	
+	if ($parent_name === null
+	||  $parent_name === false
+	||  $parent_name === '')
+	{
+		$parent_id = null;
+	} else {
+		$parent_id = (int)$db->executeGetOne( 'SELECT `id` FROM `user_groups` WHERE `name`=\''. $db->escape($parent_name) .'\'' );
+		if ($parent_id < 1)
+			$parent_id = null;
+	}
+	
+	return gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_id, $prov_param_profile_id );
+}
+
 function gs_group_add( $parent_id, $name_new, $title, $softkey_profile_id=null, $prov_param_profile_id=null )
 {
 	return gs_group_change( null, $parent_id, $name_new, $title, $softkey_profile_id, $prov_param_profile_id );
+}
+
+function gs_group_add_by_name( $parent_name, $name_new, $title, $softkey_profile_id=null, $prov_param_profile_id=null )
+{
+	return gs_group_change_by_name( null, $parent_name, $name_new, $title, $softkey_profile_id, $prov_param_profile_id );
 }
 
 ?>
