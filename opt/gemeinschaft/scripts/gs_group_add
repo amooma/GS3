@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_group_change.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --parent-id=<id> --name=<name> --title=<title> --softkey-profile-id=<id> --prov-param-profile-id=<id>';
+$usage = 'Usage: '. baseName(__FILE__) .' --parent-id=<id> --name=<name> --title=<title> [--softkey-profile-id=<id>] [--prov-param-profile-id=<id>]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
@@ -53,8 +53,6 @@ $opts = @getOptsNoMultiples( '',
 if (! isSet($opts['parent-id'])
  || ! isSet($opts['name'])
  || ! isSet($opts['title'])
- || ! isSet($opts['softkey-profile-id'])
- || ! isSet($opts['prov-param-profile-id'])
  ) {
 	gs_script_invalid_usage( $usage );
 }
