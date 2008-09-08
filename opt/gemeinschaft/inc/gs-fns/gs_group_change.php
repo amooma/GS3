@@ -121,14 +121,14 @@ function gs_group_change_by_name( $name, $parent_name, $name_new, $title, $softk
 	return gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_id, $prov_param_profile_id );
 }
 
-function gs_group_add( $parent_id, $name_new, $title, $softkey_profile_id=null, $prov_param_profile_id=null )
+function gs_group_add( $parent_id, $name, $title, $softkey_profile_id=null, $prov_param_profile_id=null )
 {
-	return gs_group_change( null, $parent_id, $name_new, $title, $softkey_profile_id, $prov_param_profile_id );
+	return gs_group_change( null, $parent_id, $name, $title, $softkey_profile_id, $prov_param_profile_id );
 }
 
-function gs_group_add_by_name( $parent_name, $name_new, $title, $softkey_profile_id=null, $prov_param_profile_id=null )
+function gs_group_add_by_name( $parent_name, $name, $title, $softkey_profile_id=null, $prov_param_profile_id=null )
 {
-	return gs_group_change_by_name( null, $parent_name, $name_new, $title, $softkey_profile_id, $prov_param_profile_id );
+	return gs_group_change_by_name( null, $parent_name, $name, $title, $softkey_profile_id, $prov_param_profile_id );
 }
 
 ?>
