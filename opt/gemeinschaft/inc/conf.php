@@ -204,7 +204,7 @@ _gscnf( 'GUI_QUEUE_SHOW_NUM_CALLS'  , false              );
 _gscnf( 'GUI_QUEUE_INFO_FROM_DB'    , true               );
 _gscnf( 'GUI_MON_NOQUEUEBLUE'       , true               );
 _gscnf( 'GUI_MON_PEERS_ENABLED'     , false              );
-_gscnf( 'GUI_SHUTDOWN_ENABLED'      , gs_get_conf('INSTALLATION_TYPE')==='gpbx');
+_gscnf( 'GUI_SHUTDOWN_ENABLED'      , gs_get_conf('GS_INSTALLATION_TYPE')==='gpbx');
 _gscnf( 'GUI_LANGS'                 , 'de_DE:de_DE:de-DE:Deutsch, en_US:en_US:en-US:English' );
 _gscnf( 'GUI_ADDITIONAL_STYLESHEET' , 'gemeinschaft.css' );
 
