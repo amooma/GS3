@@ -429,7 +429,7 @@ if (@$rs) {
 			echo '<td class="r">', htmlEnt($r['id']) ,'</td>',"\n";
 						
 			echo '<td>';
-			echo '<input type="text" name="host" value="', htmlEnt($r['host']) ,'" size="15" maxlength="15" style="width:95%;" />';
+			echo '<input type="text" name="host" value="', htmlEnt($r['host']) ,'" size="15" maxlength="30" style="width:95%;" />';
 			echo '</td>',"\n";
 			
 			echo '<td>';
@@ -520,7 +520,7 @@ if (!$edit_host) {
 		&nbsp;
 	</td>
 	<td>
-		<input type="text" name="host" value="" size="15" maxlength="15" style="width:95%;" />
+		<input type="text" name="host" value="" size="15" maxlength="30" style="width:95%;" />
 	</td>
 	<td>
 		<input type="text" name="comment" value="" size="20" maxlength="45" style="width:95%;" />
