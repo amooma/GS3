@@ -49,12 +49,11 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 	
 	# get user_id
 	#
-	$res = $db->execute( 'SELECT * FROM `users` WHERE `user`=\''. $db->escape($username) .'\'' );
-	
-	if (! $res)
+	$rs = $db->execute( 'SELECT `id`, `prov_profile_id` FROM `users` WHERE `user`=\''. $db->escape($username) .'\'' );
+	if (! $rs)
 		return new GsError( 'Error.' );
 	
-	$user = $res->fetchRow();
+	$user = $rs->fetchRow();
 	if (! $user)
 		return new GsError( 'Error.' );
 	
