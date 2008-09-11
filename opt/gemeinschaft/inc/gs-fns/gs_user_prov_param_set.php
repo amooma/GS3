@@ -48,7 +48,7 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 	
 	# get user_id
 	#
-	$res = $db->execute( "SELECT * from users where user = ". $db->escape($username) );
+	$res = $db->execute( 'SELECT * FROM `users` WHERE `user`=\''. $db->escape($username) .'\'' );
 	
 	if (! $res)
 		return new GsError( 'Error.' );
@@ -65,14 +65,14 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 	# does an provisioning parameter profile already exists for this user?
 	if (! $user['prov_profile_id']) {
 		# no -> create a new one
-		$ok = $db->execute( 'INSERT INTO `prov_param_profiles` (`is_group_profile`, `title`) VALUES (0 , "u-' . $db->escape($username) .'")' );
+		$ok = $db->execute( 'INSERT INTO `prov_param_profiles` (`is_group_profile`, `title`) VALUES (0 , \''. $db->escape('u-'.$username) .'\')' );
 		if (! $ok)
 			return new GsError( 'Failed to add a new prov_param_profile' );
 		
-		$id = $db->executeGetOne( 'SELECT `id` FROM `prov_param_profiles` WHERE title="u-'.$db->escape($username).'"' );
+		$id = (int)$db->executeGetOne( 'SELECT `id` FROM `prov_param_profiles` WHERE `title`=\''. $db->escape('u-'.$username) .'\'' );
 		
 		if (! $id)
-			return new GsError( 'Error');
+			return new GsError( 'Error' );
 		
 		# update user
 		$ok = $db->execute( 'UPDATE `users` SET `prov_profile_id`='. $id .' WHERE `id`='. $user['id'] );
@@ -80,11 +80,11 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 			return new GsError( 'Failed to assing the new prov_param_profile to the user' );
 	}
 	else {
-		$id = $user['prov_profile_id'];
+		$id = (int)$user['prov_profile_id'];
 	}
 	
 	# add the parameter to the Profile
-	$ok = $db->execute( 'REPLACE INTO `prov_params` (`profile_id`, `phone_type` , `param` , `index` , `value`) VALUES ("'.$id.'", "siemens-os60", "'.$db->escape($param).'", "-1", "'.$db->escape($value).'")' );
+	$ok = $db->execute( 'REPLACE INTO `prov_params` (`profile_id`, `phone_type` , `param` , `index` , `value`) VALUES ('. $id .', \'siemens-os60\', \''. $db->escape($param) .'\', -1, \''. $db->escape($value) .'\')' );
 	if (! $ok)
 		return new GsError( 'Failed to add the Parameter to the Profile' );
 	
