@@ -38,19 +38,23 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_prov_param_set.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --param=<param> --value=<value> --index --phone-type';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --param=<param> --value=<value> --index=<index> --phone-type=<phone-type>';
 
 $opts = @getOptsNoMultiples( '',
 	array(
 		'user=',
 		'param=',
-		'value='
+		'value=',
+		'index=',
+		'phone-type='
 	),
 	$usage
 );
 if (! isSet($opts['user'])
  || ! isSet($opts['param'])
  || ! isSet($opts['value'])
+ || ! isSet($opts['index'])
+ || ! isSet($opts['phone-type'])
  ) {
 	gs_script_invalid_usage( $usage );
 }
@@ -59,7 +63,7 @@ if (! isSet($opts['user'])
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_user_prov_param_set($opts['user'] ,  $opts['param'], $opts['value']);
+$ret = @ gs_user_prov_param_set($opts['user'] , $opts['index'], $opts['phone-type'], $opts['param'], $opts['value']);
 if (isGsError( $ret ))  gs_script_error( $ret->getMsg() );
 if (! $ret)             gs_script_error();
 
