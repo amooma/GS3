@@ -54,8 +54,6 @@ $DB_MASTER_HOST         = '127.0.0.1';
 $DB_MASTER_USER         = 'root';
 $DB_MASTER_PWD          = '';
 $DB_MASTER_DB           = 'asterisk';
-$DB_MASTER_TRANSACTIONS = false;
-
 
 //----------------------[  Slave  ]-----------------------//
 
@@ -63,6 +61,11 @@ $DB_SLAVE_HOST          = '127.0.0.1';
 $DB_SLAVE_USER          = 'root';
 $DB_SLAVE_PWD           = '';
 $DB_SLAVE_DB            = 'asterisk';
+
+//-----------------------[  Misc  ]-----------------------//
+
+$DB_MASTER_TRANSACTIONS = false;
+$DB_SIP_REG_UPDATE      = true;
 
 
 /***********************************************************

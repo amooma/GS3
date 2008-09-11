@@ -179,6 +179,8 @@ _gscnf( 'DB_SLAVE_USER'             , 'root'             );
 _gscnf( 'DB_SLAVE_PWD'              , ''                 );
 _gscnf( 'DB_SLAVE_DB'               , 'asterisk'         );
 
+_gscnf( 'DB_SIP_REG_UPDATE'         , gs_get_conf('GS_INSTALLATION_TYPE_SINGLE') );
+
 _gscnf( 'LDAP_HOST'                 , '0.0.0.0'          );
 _gscnf( 'LDAP_SSL'                  , false              );
 _gscnf( 'LDAP_PORT'                 , 0                  );
