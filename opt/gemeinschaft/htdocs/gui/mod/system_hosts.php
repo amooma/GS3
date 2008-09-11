@@ -293,7 +293,7 @@ if (@$rs) {
 			echo '<td>', htmlEnt( @$nodes[$ip]['static_ip'] ) ,'</td>',"\n";
 			
 			echo '<td>';
-			echo '<input type="text" name="host" value="', htmlEnt($r['host']) ,'" size="15" maxlength="15" style="width:95%;" />';
+			echo '<input type="text" name="host" value="', htmlEnt($r['host']) ,'" size="15" maxlength="30" style="width:95%;" />';
 			echo '</td>',"\n";
 			
 			echo '<td>';
@@ -478,7 +478,7 @@ if (!$edit_host) {
 	</td>
 	<td>&nbsp;</td>
 	<td>
-		<input type="text" name="host" value="" size="15" maxlength="15" style="width:95%;" />
+		<input type="text" name="host" value="" size="15" maxlength="30" style="width:95%;" />
 	</td>
 	<td>
 		<input type="text" name="comment" value="" size="20" maxlength="45" style="width:95%;" />
