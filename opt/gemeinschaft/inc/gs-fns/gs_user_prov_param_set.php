@@ -31,8 +31,9 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 
+
 /***********************************************************
-*    set an provisioning parameter for the user
+*    set a provisioning parameter for a user
 ***********************************************************/
 
 function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value )
@@ -62,7 +63,7 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 	
 	$id = 0;
 	
-	# does an provisioning parameter profile already exists for this user?
+	# does a provisioning parameter profile already exists for this user?
 	if (! $user['prov_profile_id']) {
 		# no -> create a new one
 		$ok = $db->execute( 'INSERT INTO `prov_param_profiles` (`is_group_profile`, `title`) VALUES (0 , \''. $db->escape('u-'.$username) .'\')' );
@@ -86,7 +87,7 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 	# add the parameter to the Profile
 	$ok = $db->execute( 'REPLACE INTO `prov_params` (`profile_id`, `phone_type` , `param` , `index` , `value`) VALUES ('. $id .', \'siemens-os60\', \''. $db->escape($param) .'\', -1, \''. $db->escape($value) .'\')' );
 	if (! $ok)
-		return new GsError( 'Failed to add the Parameter to the Profile' );
+		return new GsError( 'Failed to add the parameter to the profile' );
 	
 	return true;
 }
