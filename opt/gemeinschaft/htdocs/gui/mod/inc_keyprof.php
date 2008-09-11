@@ -53,6 +53,7 @@ $key_functions_snom = array(
 	'speed' => __('externes Ziel'),     # external dest.
 	'line'  => __('Leitung')            # line
 );
+$key_function_none_snom = 'none';
 
 $key_functions_siemens = array(
 	'f0'  => __('Leer'),                  # clear
@@ -72,6 +73,7 @@ $key_functions_siemens = array(
 	'f50' => __('R&uuml;ckfrage'),        # consultation
 	'f58' => __('Fn.-Schalter')           # feature toggle
 );
+$key_function_none_siemens = 'f0';
 $key_functions_siemens_shifted_ok = array('f0', 'f1', 'f3',
 	'f11', 'f12', 'f13', 'f14', 'f16', 'f17', 'f19', 'f22',
 	'f30', 'f45', 'f46', 'f47', 'f48', 'f49', 'f50');
@@ -128,10 +130,13 @@ if ($phone_type == '') {
 }
 if (in_array($phone_type, array('snom-360', 'snom-370'), true)) {
 	$phone_layout = 'snom';
+	$key_function_none = $key_function_none_snom;
 } elseif (in_array($phone_type, array('siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
 	$phone_layout = 'siemens';
+	$key_function_none = $key_function_none_siemens;
 } else {
 	$phone_layout = false;
+	$key_function_none = false;
 }
 
 
@@ -189,6 +194,12 @@ if ($action === 'save') {
 			else
 			$key_user_writable = true;
 			
+			# keys without a function don't have a label or data
+			if ($key_function === $key_function_none) {
+				$key_label = '';
+				$key_data  = '';
+			}
+			
 			// validate function ? ...
 			
 			if ($key_inherit || $key_function == '') {  # inherit
@@ -210,7 +221,18 @@ if ($action === 'save') {
 					'(`profile_id`, `phone_type`, `key`, `function`, `data`, `label`, `user_writeable`) '.
 				'VALUES '."\n".
 					implode(",\n", $save_keys) );
-			# delete unnecessary entries
+			
+			# keys without a function don't have a label or data
+			$DB->execute(
+				'UPDATE `softkeys` SET '.
+					'`label`=\'\', '.
+					'`data`=\'\' '.
+				'WHERE '.
+					'`profile_id`='. $profile_id .' AND '.
+					'`phone_type`=\''. $DB->escape($phone_type) .'\' AND '.
+					'`function`=\''. $DB->escape($key_function_none) .'\'' );
+			
+			# delete unnecessary (inherited) entries
 			$DB->execute(
 				'DELETE FROM `softkeys` '.
 				'WHERE '.
