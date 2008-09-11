@@ -33,7 +33,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 
 
 /***********************************************************
-*    set a provisioning parameter for a user
+*    sets (/deletes) a provisioning parameter for a user
 ***********************************************************/
 
 function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value )
@@ -83,10 +83,25 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 		$prov_profile_id = (int)$user['prov_profile_id'];
 	}
 	
-	# add the parameter to the profile
-	$ok = $db->execute( 'REPLACE INTO `prov_params` (`profile_id`, `phone_type` , `param` , `index` , `value`) VALUES ('. $prov_profile_id .', \''. $db->escape($phone_type) .'\', \''. $db->escape($param) .'\', '. $index .', \''. $db->escape($value) .'\')' );
-	if (! $ok)
-		return new GsError( 'Failed to add the parameter to the profile' );
+	if ($value !== null) {
+		# set the parameter
+		$ok = $db->execute( 'REPLACE INTO `prov_params` (`profile_id`, `phone_type` , `param` , `index` , `value`) VALUES ('. $prov_profile_id .', \''. $db->escape($phone_type) .'\', \''. $db->escape($param) .'\', '. $index .', \''. $db->escape($value) .'\')' );
+		if (! $ok)
+			return new GsError( 'Failed to add the parameter to the profile' );
+	}
+	else {
+		# delete the parameter
+		$ok = $db->execute(
+			'DELETE FROM `prov_params` '.
+			'WHERE '.
+				'`profile_id`='. $prov_profile_id .' AND '.
+				'`phone_type`=\''. $db->escape($phone_type) .'\' AND '.
+				'`param`=\''. $db->escape($param) .'\' AND '.
+				'`index`='. $index
+			);
+		if (! $ok)
+			return new GsError( 'Failed to delete the parameter' );
+	}
 	
 	return true;
 }
