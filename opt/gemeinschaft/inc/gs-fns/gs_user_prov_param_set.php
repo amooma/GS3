@@ -49,7 +49,7 @@ function gs_user_prov_param_set( $username, $phone_type, $param, $index, $value 
 	
 	# get user_id
 	#
-	$rs = $db->execute( 'SELECT `id`, `prov_profile_id` FROM `users` WHERE `user`=\''. $db->escape($username) .'\'' );
+	$rs = $db->execute( 'SELECT `id`, `prov_param_profile_id` FROM `users` WHERE `user`=\''. $db->escape($username) .'\'' );
 	if (! $rs)
 		return new GsError( 'DB error.' );
 	
@@ -75,12 +75,12 @@ function gs_user_prov_param_set( $username, $phone_type, $param, $index, $value 
 			return new GsError( 'DB error' );
 		
 		# update user
-		$ok = $db->execute( 'UPDATE `users` SET `prov_profile_id`='. $prov_profile_id .' WHERE `id`='. $user['id'] );
+		$ok = $db->execute( 'UPDATE `users` SET `prov_param_profile_id`='. $prov_profile_id .' WHERE `id`='. $user['id'] );
 		if (! $ok)
 			return new GsError( 'Failed to assign the new prov_param_profile to the user' );
 	}
 	else {
-		$prov_profile_id = (int)$user['prov_profile_id'];
+		$prov_profile_id = (int)$user['prov_param_profile_id'];
 	}
 	
 	if ($value !== null) {
