@@ -35,11 +35,11 @@ include_once( GS_DIR .'inc/db_connect.php' );
 *    set an provisioning parameter for the user
 ***********************************************************/
 
-function gs_user_prov_param_set( $username, $index ,$phone_type , $param, $value )
+function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value )
 {
 	if (! preg_match( '/^[a-zA-Z\d\-]+$/', $username ))
 		return new GsError( 'User must be alphanumeric.' );
-
+	
 	# connect to db
 	#
 	$db = gs_db_master_connect();
@@ -48,46 +48,46 @@ function gs_user_prov_param_set( $username, $index ,$phone_type , $param, $value
 	
 	# get user_id
 	#
-	$res = $db->execute("SELECT * from users where user = ".$db->escape($username));
-
+	$res = $db->execute( "SELECT * from users where user = ". $db->escape($username) );
+	
 	if (! $res)
 		return new GsError( 'Error.' );
 	
 	$user = $res->fetchRow();
 	if (! $user)
 		return new GsError( 'Error.' );
-
+	
 	if ($user['id'] < 1)
 		return new GsError( 'Unknown user.' );
-
+	
 	$id = 0;
-
+	
 	# does an provisioning parameter profile already exists for this user?
-	if(!$user['prov_profile_id'] )	{
+	if (! $user['prov_profile_id']) {
 		# no -> create a new one
 		$ok = $db->execute( 'INSERT INTO `prov_param_profiles` (`is_group_profile`, `title`) VALUES (0 , "u-' . $db->escape($username) .'")' );
 		if (! $ok)
 			return new GsError( 'Failed to add a new prov_param_profile' );
-
-		$id = $db->executeGetOne('SELECT `id` FROM `prov_param_profiles` WHERE title="u-'.$db->escape($username).'"');
-
-		if(!$id)
+		
+		$id = $db->executeGetOne( 'SELECT `id` FROM `prov_param_profiles` WHERE title="u-'.$db->escape($username).'"' );
+		
+		if (! $id)
 			return new GsError( 'Error');
-		#update user
+		
+		# update user
 		$ok = $db->execute( 'UPDATE `users` SET `prov_profile_id`='. $id .' WHERE `id`='. $user['id'] );
 		if (! $ok)
 			return new GsError( 'Failed to assing the new prov_param_profile to the user' );
-
-		}
-	else	{
+	}
+	else {
 		$id = $user['prov_profile_id'];
 	}
-
-	#add the parameter to the Profile
+	
+	# add the parameter to the Profile
 	$ok = $db->execute( 'REPLACE INTO `prov_params` (`profile_id`, `phone_type` , `param` , `index` , `value`) VALUES ("'.$id.'", "siemens-os60", "'.$db->escape($param).'", "-1", "'.$db->escape($value).'")' );
 	if (! $ok)
 		return new GsError( 'Failed to add the Parameter to the Profile' );
-
+	
 	return true;
 }
 
