@@ -51,13 +51,10 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 	#
 	$rs = $db->execute( 'SELECT `id`, `prov_profile_id` FROM `users` WHERE `user`=\''. $db->escape($username) .'\'' );
 	if (! $rs)
-		return new GsError( 'Error.' );
+		return new GsError( 'DB error.' );
 	
 	$user = $rs->fetchRow();
 	if (! $user)
-		return new GsError( 'Error.' );
-	
-	if ($user['id'] < 1)
 		return new GsError( 'Unknown user.' );
 	
 	$id = 0;
