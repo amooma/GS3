@@ -57,8 +57,6 @@ function gs_user_prov_param_set( $username, $index ,$phone_type , $param, $value
 	if (! $user)
 		return new GsError( 'Error.' );
 
-	print_r($user);
-
 	if ($user['id'] < 1)
 		return new GsError( 'Unknown user.' );
 
