@@ -36,7 +36,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 *    sets (/deletes) a provisioning parameter for a user
 ***********************************************************/
 
-function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value )
+function gs_user_prov_param_set( $username, $phone_type, $param, $index, $value )
 {
 	if (! preg_match( '/^[a-zA-Z\d\-]+$/', $username ))
 		return new GsError( 'User must be alphanumeric.' );
