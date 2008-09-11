@@ -59,8 +59,6 @@ $DB_MASTER_HOST         = '192.168.1.130';
 $DB_MASTER_USER         = 'root';
 $DB_MASTER_PWD          = '';
 $DB_MASTER_DB           = 'asterisk';
-$DB_MASTER_TRANSACTIONS = true;     # use transactions?
-
 
 //----------------------[  Slave  ]-----------------------//
 
@@ -68,6 +66,16 @@ $DB_SLAVE_HOST          = '127.0.0.1';
 $DB_SLAVE_USER          = 'root';
 $DB_SLAVE_PWD           = '';
 $DB_SLAVE_DB            = 'asterisk';
+
+//-----------------------[  Misc  ]-----------------------//
+
+$DB_MASTER_TRANSACTIONS = true;     # use transactions?
+$DB_SIP_REG_UPDATE      = false;
+  # Send SIP registry updates to slave database? Attention:
+  # Asterisk will update the fields on the *slave* database
+  # connection, so if you use this make sure the slave is
+  # in fact not a slave but a node of a MySQL cluster! It's
+  # safe to use this with INSTALLATION_TYPE = "single".
 
 
 
