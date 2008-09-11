@@ -57,7 +57,7 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 	if (! $user)
 		return new GsError( 'Unknown user.' );
 	
-	$id = 0;
+	$prov_profile_id = 0;
 	
 	# does a provisioning parameter profile already exists for this user?
 	if (! $user['prov_profile_id']) {
@@ -66,22 +66,22 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 		if (! $ok)
 			return new GsError( 'Failed to add a new prov_param_profile' );
 		
-		$id = (int)$db->executeGetOne( 'SELECT `id` FROM `prov_param_profiles` WHERE `title`=\''. $db->escape('u-'.$username) .'\'' );
+		$prov_profile_id = (int)$db->getLastInsertId();
 		
-		if (! $id)
-			return new GsError( 'Error' );
+		if (! $prov_profile_id)
+			return new GsError( 'DB error' );
 		
 		# update user
-		$ok = $db->execute( 'UPDATE `users` SET `prov_profile_id`='. $id .' WHERE `id`='. $user['id'] );
+		$ok = $db->execute( 'UPDATE `users` SET `prov_profile_id`='. $prov_profile_id .' WHERE `id`='. $user['id'] );
 		if (! $ok)
 			return new GsError( 'Failed to assing the new prov_param_profile to the user' );
 	}
 	else {
-		$id = (int)$user['prov_profile_id'];
+		$prov_profile_id = (int)$user['prov_profile_id'];
 	}
 	
 	# add the parameter to the profile
-	$ok = $db->execute( 'REPLACE INTO `prov_params` (`profile_id`, `phone_type` , `param` , `index` , `value`) VALUES ('. $id .', \''. $db->escape($phone_type) .'\', \''. $db->escape($param) .'\', -1, \''. $db->escape($value) .'\')' );
+	$ok = $db->execute( 'REPLACE INTO `prov_params` (`profile_id`, `phone_type` , `param` , `index` , `value`) VALUES ('. $prov_profile_id .', \''. $db->escape($phone_type) .'\', \''. $db->escape($param) .'\', -1, \''. $db->escape($value) .'\')' );
 	if (! $ok)
 		return new GsError( 'Failed to add the parameter to the profile' );
 	
