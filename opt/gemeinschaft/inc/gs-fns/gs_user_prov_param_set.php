@@ -77,7 +77,7 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 		# update user
 		$ok = $db->execute( 'UPDATE `users` SET `prov_profile_id`='. $prov_profile_id .' WHERE `id`='. $user['id'] );
 		if (! $ok)
-			return new GsError( 'Failed to assing the new prov_param_profile to the user' );
+			return new GsError( 'Failed to assign the new prov_param_profile to the user' );
 	}
 	else {
 		$prov_profile_id = (int)$user['prov_profile_id'];
