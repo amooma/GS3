@@ -41,7 +41,8 @@ set_error_handler('err_handler_quiet');
 $GS_DB_SIP_REG_UPDATE = gs_get_conf('GS_DB_SIP_REG_UPDATE');
 
 echo 'rtupdate=',      ($GS_DB_SIP_REG_UPDATE ? 'yes':'no') ,"\n";
-echo 'rtsavesysname=', ($GS_DB_SIP_REG_UPDATE ? 'yes':'no') ,"\n";
+//echo 'rtsavesysname=', ($GS_DB_SIP_REG_UPDATE ? 'yes':'no') ,"\n";
+echo 'rtsavesysname=no' ,"\n";
 
 echo "\n";
 
