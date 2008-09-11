@@ -67,7 +67,6 @@ function gs_user_prov_param_set( $username, $index ,$phone_type , $param, $value
 	# does an provisioning parameter profile already exists for this user?
 	if(!$user['prov_profile_id'] )	{
 		# no -> create a new one
-		echo "profile_id does not exist. creating a new one\n";
 		$ok = $db->execute( 'INSERT INTO `prov_param_profiles` (`is_group_profile`, `title`) VALUES (0 , "u-' . $db->escape($username) .'")' );
 		if (! $ok)
 			return new GsError( 'Failed to add a new prov_param_profile' );
@@ -87,7 +86,6 @@ function gs_user_prov_param_set( $username, $index ,$phone_type , $param, $value
 	}
 
 	#add the parameter to the Profile
-	echo "add parameter";
 	$ok = $db->execute( 'REPLACE INTO `prov_params` (`profile_id`, `phone_type` , `param` , `index` , `value`) VALUES ("'.$id.'", "siemens-os60", "'.$db->escape($param).'", "-1", "'.$db->escape($value).'")' );
 	if (! $ok)
 		return new GsError( 'Failed to add the Parameter to the Profile' );
