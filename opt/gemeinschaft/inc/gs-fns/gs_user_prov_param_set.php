@@ -57,6 +57,9 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 	if (! $user)
 		return new GsError( 'Unknown user.' );
 	
+	if ($index === null) $index = -1;
+	else $index = (int)$index;
+	
 	$prov_profile_id = 0;
 	
 	# does a provisioning parameter profile already exists for this user?
@@ -81,7 +84,7 @@ function gs_user_prov_param_set( $username, $index, $phone_type, $param, $value 
 	}
 	
 	# add the parameter to the profile
-	$ok = $db->execute( 'REPLACE INTO `prov_params` (`profile_id`, `phone_type` , `param` , `index` , `value`) VALUES ('. $prov_profile_id .', \''. $db->escape($phone_type) .'\', \''. $db->escape($param) .'\', -1, \''. $db->escape($value) .'\')' );
+	$ok = $db->execute( 'REPLACE INTO `prov_params` (`profile_id`, `phone_type` , `param` , `index` , `value`) VALUES ('. $prov_profile_id .', \''. $db->escape($phone_type) .'\', \''. $db->escape($param) .'\', '. $index .', \''. $db->escape($value) .'\')' );
 	if (! $ok)
 		return new GsError( 'Failed to add the parameter to the profile' );
 	
