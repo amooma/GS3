@@ -284,8 +284,8 @@ if ($type === 'imported') {
 		$likeLn = array();
 		foreach ($keyPatternsLike[$keys{0}] as $char) {
 			$l = 'LIKE \''. $db->escape($char) .'%\'';
-			$likeFn[] = '`u`.`firstname` '. $l;
-			$likeLn[] = '`u`.`lastname` '.  $l;
+			$likeFn[] = '`firstname` '. $l;
+			$likeLn[] = '`lastname` '.  $l;
 		}
 		$likeFn = '('. implode(' OR ', $likeFn) .')';
 		$likeLn = '('. implode(' OR ', $likeLn) .')';
@@ -295,9 +295,9 @@ if ($type === 'imported') {
 	if ($keys != '') {
 		$where = '
 	  ('. ($likeLn ? ($likeLn .' AND ') : '') .'
-	  `u`.`lastname`  REGEXP \'^'. $db->escape($regex) .'\' ) OR
+	  `lastname`  REGEXP \'^'. $db->escape($regex) .'\' ) OR
 	  ('. ($likeFn ? ($likeFn .' AND ') : '') .'
-	  `u`.`firstname` REGEXP \'^'. $db->escape($regex) .'\' )';
+	  `firstname` REGEXP \'^'. $db->escape($regex) .'\' )';
 	}
 	$query =
 'SELECT `lastname` `ln`, `firstname` `fn`, `number` `ext`
