@@ -227,7 +227,7 @@ function defineKey( $keyDef )
 	$args = array();
 	$args[] = 't='. $type;
 	$args[] = 'k='. $keys . $keyDef['name'];
-	if ($type == 'prv') {
+	if ($type === 'prv') {
 		$args[] = 'm='. $mac;
 		$args[] = 'u='. $user;
 	}
@@ -253,7 +253,7 @@ function defineBackKey()
 	$args = array();
 	$args[] = 't='. $type;
 	$args[] = 'k='. subStr($keys,0,-1);
-	if ($type == 'prv') {
+	if ($type === 'prv') {
 		$args[] = 'm='. $mac;
 		$args[] = 'u='. $user;
 	}
@@ -270,7 +270,7 @@ $num_results = (int)gs_get_conf('GS_SNOM_PROV_PB_NUM_RESULTS', 10);
 
 
 #################################### IMPORTED PHONEBOOK {
-if ($type == 'imported') {
+if ($type === 'imported') {
 	
 	// we don't need $user for this
 	
@@ -343,7 +343,7 @@ LIMIT '. $num_results;
 
 
 #################################### INTERNAL PHONEBOOK {
-if ($type == 'gs') {
+if ($type === 'gs') {
 	
 	// we don't need $user for this
 	
@@ -420,7 +420,7 @@ LIMIT '. $num_results;
 
 
 #################################### PRIVATE PHONEBOOK {
-if ($type == 'prv') {
+if ($type === 'prv') {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
 	$user = trim( @ $_REQUEST['u'] );
