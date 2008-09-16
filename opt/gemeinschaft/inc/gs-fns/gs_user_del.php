@@ -50,13 +50,14 @@ function gs_user_del( $user )
 	
 	# get user_id, nobody_index and softkey_profile_id
 	#
-	$rs = $db->execute( 'SELECT `id`, `nobody_index`, `softkey_profile_id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
+	$rs = $db->execute( 'SELECT `id`, `nobody_index`, `softkey_profile_id`, `prov_param_profile_id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
 	if (! $rs)
 		return new GsError( 'DB error.' );
 	if (! ($r = $rs->fetchRow()))
 		return new GsError( 'Unknown user.' );
 	$user_id            = (int)$r['id'];
 	$softkey_profile_id = (int)$r['softkey_profile_id'];
+	$prov_profile_id    = (int)$r['prov_param_profile_id'];
 	/*
 	if ($r['nobody_index'] > 0)
 		return new GsError( 'Cannot delete nobody user.' );
@@ -143,6 +144,12 @@ function gs_user_del( $user )
 		$db->execute( 'DELETE FROM `softkey_profiles` WHERE `id`='. $softkey_profile_id .' AND `is_user_profile`=1' );
 	}
 	
+	# delete prov_params
+	if ($prov_profile_id > 0) {
+		$db->execute( 'DELETE FROM `prov_params` WHERE `profile_id`='. $prov_profile_id );
+		$db->execute( 'DELETE FROM `prov_param_profiles` WHERE `id`='. $prov_profile_id .' AND `is_group_profile`=0' );
+	}
+
 	# do a clean logout from the current phone
 	#
 	$db->execute( 'UPDATE `phones` SET `user_id`=NULL WHERE `user_id`='. $user_id );
