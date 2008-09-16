@@ -145,11 +145,12 @@ function gs_user_del( $user )
 	}
 	
 	# delete prov_params
+	#
 	if ($prov_profile_id > 0) {
 		$db->execute( 'DELETE FROM `prov_params` WHERE `profile_id`='. $prov_profile_id );
 		$db->execute( 'DELETE FROM `prov_param_profiles` WHERE `id`='. $prov_profile_id .' AND `is_group_profile`=0' );
 	}
-
+	
 	# do a clean logout from the current phone
 	#
 	$db->execute( 'UPDATE `phones` SET `user_id`=NULL WHERE `user_id`='. $user_id );
