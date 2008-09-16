@@ -605,10 +605,9 @@ if (gs_get_conf('GS_BOI_ENABLED') && $boi_menu_error_msg !== false) {
 					$roles['gs'] = __('Zentrale');
 				} else {
 					$roles['boi-user'] = __('Agentur-Benutzer');
-					$rs = $DB->executeGetOne('SELECT `roles` FROM `boi_perms` WHERE `user_id`=' . $_SESSION["id"]);
-					if ($rs = 'l') {  //FIXME: is this the only role?
+					$db_roles = $DB->executeGetOne( 'SELECT `roles` FROM `boi_perms` WHERE `user_id`='. (int)$_SESSION['real_user']['info']['id'] );
+					if (strPos($db_roles,'l') !== false) {
 						$roles['boi-localadmin'] = __('Agentur-Admin');
-						//$roles['boi-sysadmin'  ] = __('Agentur-Sysadmin');
 					}
 				}
 			}
