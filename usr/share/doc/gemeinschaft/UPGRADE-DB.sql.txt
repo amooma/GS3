@@ -389,4 +389,23 @@ ALTER TABLE `vm` ADD
   `email_notify` TINYINT(1) UNSIGNED NOT NULL default '0' AFTER `external_active`;
 
 
+--
+-- since rev. 4980
+--
+
+
+--
+-- Add new column `prov_param_profile_id` in table `users`:
+--
+
+ALTER TABLE `users` ADD
+  `prov_param_profile_id` INT UNSIGNED NULL AFTER `softkey_profile_id`;
+ALTER TABLE `users` ADD
+  INDEX `prov_param_profile_id` (`prov_param_profile_id`);
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_5`
+  FOREIGN KEY (`prov_param_profile_id`) REFERENCES `prov_param_profiles` (`id`)
+  ON DELETE SET NULL ON UPDATE SET NULL;
+
+
 

@@ -6491,6 +6491,7 @@ CREATE TABLE `users` (
   `user_comment` varchar(200) collate utf8_unicode_ci NOT NULL default '',
   `group_id` mediumint(8) unsigned default NULL,
   `softkey_profile_id` int(10) unsigned default NULL,
+  `prov_param_profile_id` int(10) unsigned default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `user` (`user`),
   KEY `lastname_firstname` (`lastname`(15),`firstname`(15)),
@@ -6500,7 +6501,9 @@ CREATE TABLE `users` (
   KEY `current_ip` (`current_ip`),
   KEY `group_id` (`group_id`),
   KEY `softkey_profile_id` (`softkey_profile_id`),
+  KEY `prov_param_profile_id` (`prov_param_profile_id`),
   CONSTRAINT `users_ibfk_4` FOREIGN KEY (`softkey_profile_id`) REFERENCES `softkey_profiles` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `users_ibfk_5` FOREIGN KEY (`prov_param_profile_id`) REFERENCES `prov_param_profiles` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `users_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `user_groups` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `users_ibfk_3` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -6511,23 +6514,23 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,'192.168.1.249','',NULL,NULL);
-INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'',NULL,NULL);
-INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,'192.168.1.202','',NULL,NULL);
-INSERT INTO `users` VALUES (8,'nobody-00004','','','','','',4,1,NULL,'',NULL,NULL);
-INSERT INTO `users` VALUES (9,'nobody-00005','','','','','',5,1,'192.168.1.202','',NULL,NULL);
-INSERT INTO `users` VALUES (10,'nobody-00006','','','','','',6,1,'192.168.1.247','',NULL,NULL);
-INSERT INTO `users` VALUES (11,'nobody-00007','','','','','',7,1,NULL,'',NULL,NULL);
-INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'',NULL,NULL);
-INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,'192.168.1.202','',NULL,NULL);
-INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,'192.168.1.201','',NULL,NULL);
-INSERT INTO `users` VALUES (22,'47110001','123','Bart','Simpson','','',NULL,1,NULL,'',NULL,NULL);
-INSERT INTO `users` VALUES (23,'47110002','123','Homer','Simpson','','',NULL,1,'192.168.1.247','',NULL,NULL);
-INSERT INTO `users` VALUES (24,'47110003','123','Marge','Simpson','','',NULL,1,'192.168.1.249','',NULL,NULL);
-INSERT INTO `users` VALUES (25,'47110004','123','Lisa','Simpson','','',NULL,1,'192.168.1.247','',NULL,NULL);
-INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'',NULL,NULL);
-INSERT INTO `users` VALUES (29,'nobody-00012','','','','','',12,1,'192.168.1.201','',NULL,NULL);
-INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,'192.168.1.109','',NULL,NULL);
+INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,'192.168.1.249','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,'192.168.1.202','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (8,'nobody-00004','','','','','',4,1,NULL,'',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (9,'nobody-00005','','','','','',5,1,'192.168.1.202','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (10,'nobody-00006','','','','','',6,1,'192.168.1.247','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (11,'nobody-00007','','','','','',7,1,NULL,'',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,'192.168.1.202','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,'192.168.1.201','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (22,'47110001','123','Bart','Simpson','','',NULL,1,NULL,'',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (23,'47110002','123','Homer','Simpson','','',NULL,1,'192.168.1.247','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (24,'47110003','123','Marge','Simpson','','',NULL,1,'192.168.1.249','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (25,'47110004','123','Lisa','Simpson','','',NULL,1,'192.168.1.247','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (29,'nobody-00012','','','','','',12,1,'192.168.1.201','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,'192.168.1.109','',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
