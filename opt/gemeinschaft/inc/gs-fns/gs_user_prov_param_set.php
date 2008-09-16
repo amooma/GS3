@@ -63,7 +63,7 @@ function gs_user_prov_param_set( $username, $phone_type, $param, $index, $value 
 	$prov_profile_id = 0;
 	
 	# does a provisioning parameter profile already exists for this user?
-	if (! $user['prov_profile_id']) {
+	if (! $user['prov_param_profile_id']) {
 		# no -> create a new one
 		$ok = $db->execute( 'INSERT INTO `prov_param_profiles` (`is_group_profile`, `title`) VALUES (0 , \''. $db->escape('u-'.$username) .'\')' );
 		if (! $ok)
