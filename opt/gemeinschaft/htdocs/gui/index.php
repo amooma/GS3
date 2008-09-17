@@ -674,7 +674,7 @@ ORDER BY `ord`, `comment`'
 				}
 			}
 			$rs = $DB->execute($query);
-			echo ' &nbsp;&nbsp; ', __('Registrar') ,':',"\n";
+			echo ' &nbsp;&nbsp; ', __('Anlage') ,':',"\n";
 			echo '<select name="boi_host_id" tabindex="100" onchange="this.form.submit();">' ,"\n";
 			while ($r = $rs->fetchRow()) {
 				echo '<option value="',$r['id'],'"';
