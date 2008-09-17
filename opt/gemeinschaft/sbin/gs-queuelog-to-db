@@ -373,6 +373,10 @@ if (! $logrotate) {
 
 
 $DB = gs_db_master_connect();
+if (! $DB) {
+	gs_log( GS_LOG_WARNING, "Could not connect to master database" );
+	exit(1);
+}
 
 $last_timestamp = (int)$DB->executeGetOne( 'SELECT MAX(`timestamp`) FROM `queue_log`' );
 
