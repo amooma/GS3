@@ -54,12 +54,10 @@ if (! isSet($opts['user'])
 
 
 /***********************************************************
-*    make the magic
+*    set BOI admin permissions
 ***********************************************************/
 
-$username = $opts['user'];
-$host_id_or_ip = $opts['host'];
-if (! preg_match( '/^[a-zA-Z\d\-]+$/', $username )) {
+if (! preg_match( '/^[a-zA-Z\d\-]+$/', $opts['user'] )) {
 	echo "User must be alphanumeric.\n";
 	exit(1);
 }
@@ -74,33 +72,32 @@ if (! $db) {
 
 # get user_id
 #
-$user = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($username) .'\'' );
-if (! $user) {
-	echo "Database error.\n";
+$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($opts['user']) .'\'' );
+if (! $user_id) {
+	echo "User not found.\n";
 	exit(1);
 }
 
 # check if host id/ip is valid
 #
-$host = gs_host_by_id_or_ip( $host_id_or_ip );	
+$host = gs_host_by_id_or_ip( $opts['host'] );	
 if (isGsError( $host )) {
-	echo $host->getMsg() . "\n";
+	echo $host->getMsg() ,"\n";
 	exit(1);
 }
 if (! is_array( $host )) {
-	echo "Unknown host.\n";
+	echo "Host not found.\n";
 	exit(1);
 }
 
-# execute MySQL query
+# set permissions
 #
-$ok = $db->execute( 'REPLACE INTO `boi_perms` (`user_id`, `host_id` , `roles`) VALUES (\''. $user .'\', \''. $host['id'] .'\', \'l\')' );
+$ok = $db->execute( 'REPLACE INTO `boi_perms` (`user_id`, `host_id` , `roles`) VALUES ('. $user_id .', '. (int)$host['id'] .', \'l\')' );
 if (! $ok) {
-	echo( "Failed to add User to Admins-group\n" );
+	echo "Failed to set permissions.\n";
 	exit(1);
 }
 
-
-echo "done.\n";
+echo "Done.\n";
 
 ?>
