@@ -1,0 +1,104 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php');
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --host=<ip|id>';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'user=',
+		'host='
+	),
+	$usage
+);
+if (! isSet($opts['user']) || !isSet($opts['host']) ) {
+	gs_script_invalid_usage( $usage );
+}
+
+
+/***********************************************************
+*    make the magic
+***********************************************************/
+
+$username = $opts['user'];
+$host_id_or_ip = $opts['host'];
+if (! preg_match( '/^[a-zA-Z\d\-]+$/', $username )) {
+	echo "User must be alphanumeric.\n";
+	exit();
+}
+
+# connect to db
+#
+$db = gs_db_master_connect();
+if (! $db) {
+	echo "Could not connect to database.\n";
+	exit();
+}
+
+# get user_id
+#
+$user = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($username) .'\'' );
+if (! $user) {
+	echo "Database error.\n";
+	exit();
+}
+
+#check if host id/ip is valid
+#
+$host = gs_host_by_id_or_ip( $host_id_or_ip );	
+if (isGsError( $host )) {
+	echo $host->getMsg() . "\n";
+	exit();
+}
+if (! is_array( $host )) {
+	echo "Unknown host.\n";
+	exit();
+}
+
+#execute MySQL query
+#
+$ok = $db->execute( 'DELETE FROM `boi_perms` WHERE `user_id`=\''. $user .'\' AND `host_id`=\''.$host['id'].'\'');
+if (! $ok) {
+	echo( "Failed to delete User from Admins-group\n" );
+	exit();
+}
+
+echo "done.\n";
+
+?>
