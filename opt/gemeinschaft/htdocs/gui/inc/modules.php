@@ -46,10 +46,10 @@ $MODULES['login'    ]=  array(
 #####################################################################
 
 $MODULES['home'     ]=  array(
-	'title' => __('Home'),
+	'title' => __('Startseite'),
 	'icon'  => 'crystal-svg/%s/app/kfm_home.png',
 	'sub' => array(
-		'home'         => array('title' => __('Home'))
+		'home'         => array('title' => __('Startseite'))
 	)
 );
 
