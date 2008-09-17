@@ -102,7 +102,7 @@ $MODULES['calls'    ]=  array(
 #####################################################################
 
 $MODULES['voicemail']=  array(
-	'title' => __('Voicemail'),
+	'title' => __('Anrufbeantworter'),
 	'icon'  => 'crystal-svg/%s/act/inbox.png',
 	'boi_ok'=> false,
 	'sub' => array(
