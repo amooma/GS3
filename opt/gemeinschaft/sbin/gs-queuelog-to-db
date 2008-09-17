@@ -157,7 +157,7 @@ function log_line_to_db_entry( $line )
 	
 	$entry = explode('|', $line);
 	@list( $ts, $callid, $queue, $iface, $evt, $d1, $d2, $d3, $d4 ) = $entry;
-	if ($callid=='NONE' || $callid=='NULL') $callid = false;
+	if ($callid==='NONE' || $callid==='NULL') $callid = false;
 	
 	# get user id:
 	$agent_ext = iface_to_agent_ext( $iface );
@@ -301,7 +301,7 @@ function queue_name_to_id( $name )
 	global $DB;
 	static $queues;
 	
-	if ($name=='NONE' || $name=='NULL') return false;
+	if ($name==='NONE' || $name==='NULL') return false;
 	if (! isSet( $queues[$name] )) {
 		$id = (int)$DB->executeGetOne( 'SELECT `_id` FROM `ast_queues` WHERE `name`=\''. $DB->escape($name) .'\'' );
 		$queues[$name] = ($id > 0) ? $id : false;
@@ -382,7 +382,7 @@ $last_timestamp = (int)$DB->executeGetOne( 'SELECT MAX(`timestamp`) FROM `queue_
 
 # rotate the log file and tell asterisk to reopen the log file
 $err=0; $out=array();
-exec( escapeShellCmd($logrotate) .' -s /dev/null \''. GS_DIR .'etc/logrotate-queues.conf\' >>/dev/null 2>>/dev/null', $out, $err );
+exec( escapeShellCmd($logrotate) .' -s /dev/null '. escapeShellArg(GS_DIR .'etc/logrotate-queues.conf') .' >>/dev/null 2>>/dev/null', $out, $err );
 
 $files = glob('/var/log/asterisk/queue_log.*');
 foreach ($files as $file) {
