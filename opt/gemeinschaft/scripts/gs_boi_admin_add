@@ -47,7 +47,8 @@ $opts = @getOptsNoMultiples( '',
 	),
 	$usage
 );
-if (! isSet($opts['user']) || !isSet($opts['host']) ) {
+if (! isSet($opts['user'])
+||  ! isSet($opts['host'])) {
 	gs_script_invalid_usage( $usage );
 }
 
@@ -79,7 +80,7 @@ if (! $user) {
 	exit();
 }
 
-#check if host id/ip is valid
+# check if host id/ip is valid
 #
 $host = gs_host_by_id_or_ip( $host_id_or_ip );	
 if (isGsError( $host )) {
@@ -91,7 +92,7 @@ if (! is_array( $host )) {
 	exit();
 }
 
-#execute MySQL query
+# execute MySQL query
 #
 $ok = $db->execute( 'REPLACE INTO `boi_perms` (`user_id`, `host_id` , `roles`) VALUES (\''. $user .'\', \''. $host['id'] .'\', \'l\')' );
 if (! $ok) {
