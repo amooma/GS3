@@ -123,7 +123,7 @@ function gs_get_soap_client( $api, $service, $host )
 				'compression'        => null,  // makes debugging easier
 				'trace'              => false,
 				'exceptions'         => true,
-				'connection_timeout' => 7,
+				'connection_timeout' => 6,
 				'user_agent'         => 'Gemeinschaft',
 				'features'           => SOAP_SINGLE_ELEMENT_ARRAYS
 			)
