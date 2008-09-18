@@ -47,13 +47,14 @@ $opts = @getOptsNoMultiples( '',
 		'param=',
 		'index=',
 		'value=',
+		'delete'
 	),
 	$usage
 );
 if (! isSet($opts['user'])
  || ! isSet($opts['phone-type'])
  || ! isSet($opts['param'])
- || (! isSet($opts['value']) && ! isSet($opts['delete']) )
+ || (! isSet($opts['value']) && ! array_key_exists('delete',$opts) )
  ) {
 	gs_script_invalid_usage( $usage );
 }
@@ -74,7 +75,9 @@ $ret = @ gs_user_prov_param_set( $opts['user'], $opts['phone-type'], $opts['para
 if (isGsError( $ret ))  gs_script_error( $ret->getMsg() );
 if (! $ret)             gs_script_error();
 
-echo "Set provisoning parameter.\n";
-
+if ($opts['value'] === null)
+	echo "Deleted provisoning parameter.\n";
+else
+	echo "Set provisoning parameter.\n";
 
 ?>
