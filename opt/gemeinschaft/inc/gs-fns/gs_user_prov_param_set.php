@@ -57,6 +57,13 @@ function gs_user_prov_param_set( $username, $phone_type, $param, $index, $value 
 	if (! $user)
 		return new GsError( 'Unknown user.' );
 	
+	if ($value !== null) {
+		# check phone type
+		$ok = $db->executeGetOne( 'SELECT 1 FROM `phones` WHERE `type`=\''. $db->escape($phone_type) .'\' LIMIT 1' );
+		if (! $ok)
+			return new GsError( 'Invalid phone type.' );
+	}
+	
 	if ($index === null) $index = -1;
 	else $index = (int)$index;
 	
