@@ -710,8 +710,29 @@ if (!@$_SESSION['login_ok']) {
 	$MODULE  = 'login';
 }
 
-if (! array_key_exists('is_boi', $MODULES[$SECTION])
-||  ! $MODULES[$SECTION]['is_boi'])
+$boi_home_override = false;
+if (gs_get_conf('GS_BOI_ENABLED')
+&&  $_SESSION['sudo_user']['boi_host_id'] > 0
+&&  $SECTION === 'home'
+&&  in_array($MODULE, array('','home'), true)
+&&  @$_SESSION['login_ok']
+) {
+	$boi_home = explode('/', gs_get_conf(@$_SESSION['sudo_user']['boi_role'] === 'boi-user' ? 'GS_BOI_GUI_HOME_USER' : 'GS_BOI_GUI_HOME_ADMIN'));
+	$boi_home_section = 'boi-'.@$boi_home[0];
+	$boi_home_module  =        @$boi_home[1];
+	if (array_key_exists($boi_home_section, $MODULES)
+	&&  array_key_exists('sub', $MODULES[$boi_home_section])
+	&&  array_key_exists($boi_home_module, $MODULES[$boi_home_section]['sub'])
+	) {
+		$boi_home_override = true;
+		$SECTION = $boi_home_section;
+		$MODULE  = $boi_home_module;
+	}
+}
+
+if ((! array_key_exists('is_boi', $MODULES[$SECTION])
+||   ! $MODULES[$SECTION]['is_boi'])
+&&   ! $boi_home_override)
 {
 	echo '<div id="content">' ,"\n";
 	$file = GS_HTDOCS_DIR .'mod/'. $SECTION .'_'. $MODULE .'.php';
@@ -728,7 +749,6 @@ else {
 		echo 'Error.';
 	} else {
 		echo '<iframe id="boi-content" src="';
-		
 		echo $reverse_proxy;
 		unset($reverse_proxy);
 		

@@ -309,6 +309,8 @@ _gscnf( 'BOI_BRANCH_NETMASK'        , '/24'              );
 _gscnf( 'BOI_BRANCH_PBX'            , '0.0.0.130'        );
 _gscnf( 'BOI_NOBODY_EXTEN_PATTERN'  , '95xxxx'           );
 _gscnf( 'BOI_GUI_REVERSE_PROXY'     , 'http://'. gs_get_conf('GS_PROV_HOST') .':8080/' );
+_gscnf( 'BOI_GUI_HOME_USER'         , 'information/praesenzmonitor' );
+_gscnf( 'BOI_GUI_HOME_ADMIN'        , 'information/status' );
 
 _gscnf( 'LOG_TO'                    , 'file'             );
 _gscnf( 'LOG_FILE'                  , '/var/log/gemeinschaft/gs.log' );
