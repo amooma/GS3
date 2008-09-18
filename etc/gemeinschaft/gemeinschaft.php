@@ -494,6 +494,10 @@ $BOI_NOBODY_EXTEN_PATTERN = '95xxxx';
   # scheme, host, port, path (including trailing "/") to the reverse
   # proxy for GUI integration
 
+//$BOI_GUI_HOME_USER      = 'information/praesenzmonitor';
+//$BOI_GUI_HOME_ADMIN     = 'information/status';
+  # overrides the GUI's "home" page for foreign users
+
 
 
 /***********************************************************
