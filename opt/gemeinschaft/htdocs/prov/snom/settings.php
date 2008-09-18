@@ -155,6 +155,7 @@ require_once( GS_DIR .'inc/nobody-extensions.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_prov_params_get.php' );
 
 
 $settings = array();
@@ -1206,7 +1207,7 @@ if ($lang_vers) {
 
 
 #####################################################################
-#  Override provisioning parameters
+#  Override provisioning parameters (group profile)
 #####################################################################
 
 $prov_params = null;
@@ -1223,22 +1224,47 @@ if ($GS_ProvParams->set_user( $user['user'] )) {
 	}
 }
 if (! is_array($prov_params)) {
-	gs_log( GS_LOG_WARNING, 'Failed to get provisioning parameters' );
+	gs_log( GS_LOG_WARNING, 'Failed to get provisioning parameters (group)' );
 } else {
 	foreach ($prov_params as $param_name => $param_arr) {
 	foreach ($param_arr as $param_index => $param_value) {
 		if ($param_index == -1) {
 			# not an array
-			gs_log( GS_LOG_DEBUG, "Overriding prov. param \"$param_name\": \"$param_value\"" );
+			gs_log( GS_LOG_DEBUG, "Overriding group prov. param \"$param_name\": \"$param_value\"" );
 			setting( $param_name, null        , $param_value );
 		} else {
 			# array
-			gs_log( GS_LOG_DEBUG, "Overriding prov. param \"$param_name\"[$param_index]: \"$param_value\"" );
+			gs_log( GS_LOG_DEBUG, "Overriding group prov. param \"$param_name\"[$param_index]: \"$param_value\"" );
 			setting( $param_name, $param_index, $param_value );
 		}
 	}
 	}
 }
+unset($prov_params);
+unset($GS_ProvParams);
+
+
+#####################################################################
+#  Override provisioning parameters (user profile)
+#####################################################################
+$prov_params = @gs_user_prov_params_get( $user['user'], $phone_type );
+if (! is_array($prov_params)) {
+	gs_log( GS_LOG_WARNING, 'Failed to get provisioning parameters (user)' );
+} else {
+	foreach ($prov_params as $p) {
+		if ($p['index'] === null
+		||  $p['index'] ==  -1) {
+			# not an array
+			gs_log( GS_LOG_DEBUG, 'Overriding user prov. param "'.$p['param'].'": "'.$p['value'].'"' );
+			setting( $p['param'], null       , $p['value'] );
+		} else {
+			# array
+			gs_log( GS_LOG_DEBUG, 'Overriding user prov. param "'.$p['param'].'"['.$p['index'].']: "'.$p['value'].'"' );
+			setting( $p['param'], $p['index'], $p['value'] );
+		}
+	}
+}
+unset($prov_params);
 
 
 
