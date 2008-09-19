@@ -478,7 +478,7 @@ if ($sip_proxy_and_sbc['sip_server_from_wan'] != '') {
 # get extension without route prefix
 #
 if (gs_get_conf('GS_BOI_ENABLED')) {
-	$hp_route_prefix = (string)$DBM->executeGetOne(
+	$hp_route_prefix = (string)$db->executeGetOne(
 		'SELECT `value` FROM `host_params` '.
 		'WHERE '.
 			'`host_id`='. (int)$user['host_id'] .' AND '.
