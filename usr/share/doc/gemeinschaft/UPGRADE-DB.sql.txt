@@ -409,3 +409,17 @@ ALTER TABLE `users`
 
 
 
+--
+-- since rev. 5048
+--
+
+
+
+--
+-- Add new column `firmware_cur` in table `phones`:
+--
+
+ALTER TABLE `phones` ADD
+  `firmware_cur` VARCHAR(25) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL AFTER `added`;
+
+

@@ -6052,6 +6052,7 @@ CREATE TABLE `phones` (
   `user_id` int(10) unsigned default NULL,
   `nobody_index` mediumint(8) unsigned NOT NULL default '0',
   `added` int(10) unsigned NOT NULL default '0',
+  `firmware_cur` varchar(25) collate ascii_general_ci NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `mac_addr` (`mac_addr`),
   KEY `user_id` (`user_id`),
