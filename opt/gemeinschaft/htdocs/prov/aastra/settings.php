@@ -222,6 +222,17 @@ if (! is_array($user)) {
 }
 
 
+# store the current firmware version in the database:
+#
+/*
+@$db->execute(
+	'UPDATE `phones` SET '.
+		'`firmware_cur`=\''. $db->escape($fw_vers_nrml) .'\' '.
+	'WHERE `mac_addr`=\''. $db->escape($mac) .'\''
+	);
+*/
+
+
 # store the user's current IP address in the database:
 #
 if (! @gs_prov_update_user_ip( $db, $user_id, $requester['phone_ip'] )) {
