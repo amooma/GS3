@@ -133,12 +133,12 @@ if (preg_match('/^Mozilla\/\d\.\d\s*\(compatible;\s*/i', $ua, $m)) {
 # user-agents:
 # 360: "Mozilla/4.0 (compatible; snom360-SIP 6.5.2; snom360 ramdisk v3.31; snom360 linux 3.25)"
 # 370: "Mozilla/4.0 (compatible; snom370-SIP 7.1.2)"
-if (preg_match('/snom([1-9][0-9]{2})/i', $ua, $m))  # i.e. "snom360"
+if (preg_match('/snom([1-9][0-9]{2})/i', $ua, $m))  # e.g. "snom360"
 	$phone_model = $m[1];
 else
 	$phone_model = 'unknown';
 
-$phone_type = 'snom-'.$phone_model;  # i.e. "snom-360"
+$phone_type = 'snom-'.$phone_model;  # e.g. "snom-360"
 # to be used when auto-adding the phone
 
 $fw_vers = (preg_match('/snom[0-9]{3}-SIP\s+(\d+\.\d+\.\d+)/', $ua, $m))
