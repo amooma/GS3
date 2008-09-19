@@ -250,6 +250,7 @@ $MODULES['prov'     ]=  array(
 	'perms' => 'admin',
 	'boi_ok'=> false,
 	'sub' => array(
+		'phones'       => array('title' => __('Telefone')),
 		'keyprof'      => array('title' => __('Tasten-Profile')),
 		'provparams'   => array('title' => __('Parameter'))
 	)
