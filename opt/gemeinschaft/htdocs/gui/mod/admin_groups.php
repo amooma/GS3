@@ -193,6 +193,8 @@ if (isGsError($groups)) {
 				echo ' selected="selected"';
 			echo '>', $num_e_m ,'</option>' ,"\n";
 		}
+		if ($node['show_ext_modules'] > 3 && $node['show_ext_modules'] < 255)
+			echo '<option value="', $node['show_ext_modules'] ,'" selected="selected">', $node['show_ext_modules'] ,'</option>' ,"\n";
 		echo '<option value="255"';
 		if ($node['show_ext_modules'] == 255)
 			echo ' selected="selected"';
