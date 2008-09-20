@@ -635,7 +635,7 @@ if ($phone_layout) {
 			1 => array('from'=>1001, 'to'=>1009, 'shifted'=>true,
 				'title'=> htmlEnt($phone_type_title) .', '. __('Shift-Ebene'))
 			);
-		if ($show_ext_modules >= 1 || !$is_user_profile) { 
+		if ($show_ext_modules >= 1) { 
 			$key_levels += array(
 				2 => array('from'=> 301, 'to'=> 312, 'shifted'=>false,
 					'title'=> __('Erweiterungs-Modul') .' 1'),
@@ -643,7 +643,7 @@ if ($phone_layout) {
 					'title'=> __('Erweiterungs-Modul') .' 1, '. __('Shift-Ebene')),
 				);
 		}
-		if ($show_ext_modules >= 2 || !$is_user_profile) { 
+		if ($show_ext_modules >= 2) { 
 			$key_levels += array(
 				4 => array('from'=> 401, 'to'=> 412, 'shifted'=>false,
 					'title'=> __('Erweiterungs-Modul') .' 2'),
