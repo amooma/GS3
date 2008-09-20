@@ -434,4 +434,34 @@ ALTER TABLE `user_groups` ADD
   `show_ext_modules` TINYINT(1) UNSIGNED NOT NULL DEFAULT '255' AFTER `prov_param_profile_id`;
 
 
+--
+-- since rev. 5082
+--
+
+
+--
+-- Create new table `prov_jobs`:
+--
+
+CREATE TABLE IF NOT EXISTS `prov_jobs` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `inserted` int(10) unsigned NOT NULL default '0',
+  `running` tinyint(1) unsigned NOT NULL default '0',
+  `trigger` enum('client','server') character set ascii NOT NULL default 'client',
+  `phone_id` int(10) unsigned NOT NULL,
+  `type` varchar(10) character set ascii NOT NULL default 'settings',
+  `immediate` tinyint(1) unsigned NOT NULL default '0',
+  `minute` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `hour` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `day` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `month` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `dow` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `data` varchar(100) character set ascii collate ascii_bin NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `phone_id` (`phone_id`),
+  KEY `immediate` (`immediate`),
+  KEY `inserted` (`inserted`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
