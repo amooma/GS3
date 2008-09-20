@@ -408,11 +408,9 @@ ALTER TABLE `users`
   ON DELETE SET NULL ON UPDATE SET NULL;
 
 
-
 --
 -- since rev. 5048
 --
-
 
 
 --
@@ -421,7 +419,6 @@ ALTER TABLE `users`
 
 ALTER TABLE `phones` ADD
   `firmware_cur` VARCHAR(25) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL AFTER `added`;
-
 
 
 --
