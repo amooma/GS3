@@ -41,7 +41,7 @@ function gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_i
 	if ($id < 1) $id = 0;  # add
 	$parent_id = (int)$parent_id;
 	if ($parent_id < 1) $parent_id = null;
-
+	
 	$name_new = preg_replace('/[^a-z0-9\-_]/', '', strToLower($name_new));
 	if (! preg_match( '/^[a-z0-9\-_]+$/', $name_new ))
 		return new GsError( 'Invalid group name.' );
@@ -121,10 +121,10 @@ function gs_group_change_by_name( $name, $parent_name, $name_new, $title, $softk
 			$parent_id = null;
 	}
 	
-	return gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_id, $prov_param_profile_id, $show_ext_modules);
+	return gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_id, $prov_param_profile_id, $show_ext_modules );
 }
 
-function gs_group_add( $parent_id, $name, $title, $softkey_profile_id=null, $prov_param_profile_id=null,$show_ext_modules=255  )
+function gs_group_add( $parent_id, $name, $title, $softkey_profile_id=null, $prov_param_profile_id=null, $show_ext_modules=255 )
 {
 	return gs_group_change( null, $parent_id, $name, $title, $softkey_profile_id, $prov_param_profile_id, $show_ext_modules );
 }
