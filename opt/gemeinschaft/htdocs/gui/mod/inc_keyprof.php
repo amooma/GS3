@@ -105,7 +105,7 @@ if (! $is_user_profile) {
 	$user_id = (int)@$_SESSION['sudo_user']['info']['id'];
 	$profile_id = (int)$DB->executeGetOne(
 		'SELECT `softkey_profile_id` FROM `users` WHERE `id`='. $user_id );
-	$show_ext_modules = (int)$DB->executeGetOne('SELECT `g`.`show_ext_modules` FROM `users` `u` JOIN `user_groups` `g` ON (`g`.`id`=`u`.`group_id`) WHERE `u`.`id` = "'.$user_id.'"' );
+	$show_ext_modules = (int)$DB->executeGetOne( 'SELECT `g`.`show_ext_modules` FROM `users` `u` JOIN `user_groups` `g` ON (`g`.`id`=`u`.`group_id`) WHERE `u`.`id`='.$user_id );
 }
 if ($profile_id < 1) $profile_id = 0;
 
