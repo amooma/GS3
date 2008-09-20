@@ -50,6 +50,10 @@ function gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_i
 	if ($softkey_profile_id < 1) $softkey_profile_id = null;
 	$prov_param_profile_id = (int)$prov_param_profile_id;
 	if ($prov_param_profile_id < 1) $prov_param_profile_id = null;
+	$show_ext_modules = (int)$show_ext_modules;
+	if ($show_ext_modules > 255
+	||  $show_ext_modules === null
+	||  $show_ext_modules < 0 ) $show_ext_modules = 255;
 	
 	# connect to db
 	#
@@ -82,7 +86,7 @@ function gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_i
 				'`title`=\''. $DB->escape($title) .'\', '.
 				'`softkey_profile_id`='. ($softkey_profile_id > 0 ? $softkey_profile_id : 'NULL') .', '.
 				'`prov_param_profile_id`='. ($prov_param_profile_id > 0 ? $prov_param_profile_id : 'NULL') .', '.
-				'`show_ext_modules`='. ($show_ext_modules > 0 ? $show_ext_modules : 'NULL') .' '.
+				'`show_ext_modules`='. ($show_ext_modules) .' '.
 			'WHERE `id`='. $id
 			);
 		if (! $ok) {
