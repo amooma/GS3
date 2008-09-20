@@ -1,0 +1,182 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .'';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+	),
+	$usage
+);
+
+
+/***********************************************************
+*    get provisioning jobs
+***********************************************************/
+
+# connect to db
+#
+$db = gs_db_master_connect();
+if (! $db) {
+	echo "Could not connect to database.\n";
+	exit(1);
+}
+
+# get jobs
+#
+$jobs = array();
+$rs = $db->execute(
+	'SELECT '.
+		'`j`.`id`, `j`.`inserted`, `j`.`running`, `j`.`trigger`, '.
+		'`p`.`mac_addr`, `j`.`type`, `j`.`immediate`, '.
+		'`j`.`minute`, `j`.`hour`, `j`.`day`, `j`.`month`, `j`.`dow`, '.
+		'`j`.`data` '.
+	'FROM '.
+		'`prov_jobs` `j` LEFT JOIN '.
+		'`phones` `p` ON (`p`.`id`=`j`.`phone_id`) '.
+	'ORDER BY `j`.`inserted`'
+	);
+while (! $rs->EOF) {
+	$jobs[] = $rs->fetchRow();
+}
+
+$fields = array(
+	'id'         => 2,
+	'inserted'   => 6,
+	'running'    => 1,
+	'immediate'  => 1,
+	'trigger'    => 6,
+	'mac_addr'   => 12,
+	'type'       => 5,
+	'minute'     => 3,
+	'hour'       => 3,
+	'day'        => 3,
+	'month'      => 3,
+	'dow'        => 3,
+	'data'       => 1
+);
+$fieldsAbbr = array(
+	'id'         => 'id',
+	'inserted'   => 'inserted',
+	'running'    => 'r',
+	'immediate'  => 'i',
+	'trigger'    => 'trigger',
+	'mac_addr'   => 'mac_addr',
+	'type'       => 'type',
+	'minute'     => 'mi',
+	'hour'       => 'hr',
+	'day'        => 'day',
+	'month'      => 'mon',
+	'dow'        => 'dow',
+	'data'       => 'data'
+);
+
+if (gs_stdout_is_console()) {
+	
+	$fieldsPad = array(
+		'id'         => STR_PAD_LEFT,
+		'inserted'   => STR_PAD_RIGHT,
+		'running'    => STR_PAD_LEFT,
+		'trigger'    => STR_PAD_RIGHT,
+		'mac_addr'   => STR_PAD_RIGHT,
+		'type'       => STR_PAD_RIGHT,
+		'immediate'  => STR_PAD_LEFT,
+		'minute'     => STR_PAD_RIGHT,
+		'hour'       => STR_PAD_RIGHT,
+		'day'        => STR_PAD_RIGHT,
+		'month'      => STR_PAD_RIGHT,
+		'dow'        => STR_PAD_RIGHT,
+		'data'       => STR_PAD_RIGHT
+	);
+	
+	foreach ($fields as $field => $length) {
+		if (strLen($fieldsAbbr[$field]) > $length)
+			$fields[$field] = strLen($fieldsAbbr[$field]);
+	}
+	foreach ($jobs as $ignore => $job) {
+		foreach ($fields as $field => $length) {
+			if ($field === 'inserted')
+				$jobs[$ignore][$field] = $job[$field] = date('Y-m-d H:i:s', $job[$field]);
+			if ($field === 'running')
+				$jobs[$ignore][$field] = $job[$field] = ($job[$field] ? 'r':'');
+			if ($field === 'immediate')
+				$jobs[$ignore][$field] = $job[$field] = ($job[$field] ? 'i':'');
+			if (strLen($job[$field]) > $length)
+				$fields[$field] = strLen($job[$field]);
+		}
+	}
+	
+	$header = '| ';
+	foreach ($fields as $field => $length) {
+		$header.= str_pad( $fieldsAbbr[$field], $length, ' ' ) .' | ';
+	}
+	$sep = str_repeat( '-', strLen($header)-1 );
+	
+	echo $sep, "\n";
+	echo $header, "\n";
+	echo $sep, "\n";
+	foreach ($jobs as $job) {
+		echo '| ';
+		foreach ($fields as $field => $length) {
+			echo str_pad( $job[$field], $length, ' ', $fieldsPad[$field] ), ' | ';
+		}
+		echo "\n";
+	}
+	echo $sep, "\n";
+	
+}
+else {
+	
+	echo '# ';
+	foreach ($fields as $field => $length) {
+		echo gs_add_c_slashes( $fieldsAbbr[$field] ) ,"\t";
+	}
+	echo "\n";
+	
+	foreach ($jobs as $job) {
+		foreach ($fields as $field => $length) {
+			echo gs_add_c_slashes( $job[$field] ) ,"\t";
+		}
+		echo "\n";
+	}
+	
+}
+
+
+?>
