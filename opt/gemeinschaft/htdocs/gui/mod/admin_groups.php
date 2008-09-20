@@ -58,13 +58,15 @@ if ($action === 'save') {
 		$name = preg_replace('/[^a-z0-9\-_]/', '', strToLower($name));
 		$title          = trim(@$_REQUEST['group-'.$group_id.'-title']);
 		$key_profile_id = (int)@$_REQUEST['group-'.$group_id.'-softkey_profile_id'];
+		$show_ext_modules = (int)@$_REQUEST['group-'.$group_id.'-show_ext_modules'];
+
 		if ($key_profile_id < 1) $key_profile_id = null;
 		$prov_param_profile_id = (int)@$_REQUEST['group-'.$group_id.'-prov_param_profile_id'];
 		if ($prov_param_profile_id < 1) $prov_param_profile_id = null;
 		$parent_id      = (int)@$_REQUEST['group-'.$group_id.'-parent_id'];
 		if ($parent_id < 1) $parent_id = null;
-		
-		$ret = gs_group_change( $group_id, $parent_id, $name, $title, $key_profile_id, $prov_param_profile_id );
+
+		$ret = gs_group_change( $group_id, $parent_id, $name, $title, $key_profile_id, $prov_param_profile_id, $show_ext_modules );
 		if (isGsError($ret)) {
 			echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 		} elseif (! $ret) {
@@ -112,6 +114,7 @@ if ($action == '') {
 	<th style="min-width:12em;width:18em;"><?php echo __('Titel'); ?></th>
 	<th style="min-width:5em;"><?php echo __('Tastenprofil'); ?></th>
 	<th style="min-width:5em;"><?php echo __('Prov.-Param.-Profil'); ?></th>
+	<th style="min-width:5em;"><?php echo __('Anz. Ext.-Module'); ?></th>
 	<th style="min-width:3em;">&nbsp;</th>
 </tr>
 </thead>
@@ -178,6 +181,20 @@ if (isGsError($groups)) {
 		}
 		echo '</select>', "\n";
 		echo '</td>', "\n";
+		echo '<td>', "\n";
+		echo '<select name="group-',$node['id'],'-show_ext_modules">', "\n";
+		echo '<option value="255"';
+		if($node['show_ext_modules'])
+			echo ' selected="selected"';
+		echo '>alle</option>' ,"\n";
+		for($i=0; $i<=2; $i++) {
+			echo '<option value="',$i ,'"';
+			if ($node['show_ext_modules'] == $i)
+				echo ' selected="selected"';
+			echo '>', htmlEnt($i) ,'</option>' ,"\n";
+		}
+		echo '</select>', "\n";
+		echo '</td>', "\n";
 		echo '<td class="r">', "\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=delete&amp;id='.$node['id']) ,'"><img alt="', __('L&ouml;schen') ,'" title="', __('L&ouml;schen') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/editdelete.png" /></a>';
 		echo '</td>', "\n";
@@ -235,6 +252,15 @@ if (isGsError($groups)) {
 		echo '>', htmlEnt($profile['title']) ,'</option>' ,"\n";
 	}
 	echo '</select>', "\n";
+	echo '<td>', "\n";
+	echo '<select name="group-0-show_ext_modules">', "\n";
+	echo '<option value="255" selected="selected">alle</option>',"\n";
+	for($i=0; $i<=2; $i++) {
+		echo '<option value="',$i ,'"';
+		echo '>', htmlEnt($i) ,'</option>' ,"\n";
+		}
+	echo '</select>', "\n";
+	echo '</td>', "\n";
 	echo '</td>', "\n";
 	echo '<td class="r">&nbsp;<br />', "\n";
 	echo '<button type="submit" class="plain" title="', __('Speichern') ,'"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/filesave.png" /></button>';
