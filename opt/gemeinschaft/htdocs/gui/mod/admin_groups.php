@@ -58,14 +58,13 @@ if ($action === 'save') {
 		$name = preg_replace('/[^a-z0-9\-_]/', '', strToLower($name));
 		$title          = trim(@$_REQUEST['group-'.$group_id.'-title']);
 		$key_profile_id = (int)@$_REQUEST['group-'.$group_id.'-softkey_profile_id'];
-		$show_ext_modules = (int)@$_REQUEST['group-'.$group_id.'-show_ext_modules'];
-
 		if ($key_profile_id < 1) $key_profile_id = null;
 		$prov_param_profile_id = (int)@$_REQUEST['group-'.$group_id.'-prov_param_profile_id'];
 		if ($prov_param_profile_id < 1) $prov_param_profile_id = null;
 		$parent_id      = (int)@$_REQUEST['group-'.$group_id.'-parent_id'];
 		if ($parent_id < 1) $parent_id = null;
-
+		$show_ext_modules = (int)@$_REQUEST['group-'.$group_id.'-show_ext_modules'];
+		
 		$ret = gs_group_change( $group_id, $parent_id, $name, $title, $key_profile_id, $prov_param_profile_id, $show_ext_modules );
 		if (isGsError($ret)) {
 			echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
@@ -114,7 +113,7 @@ if ($action == '') {
 	<th style="min-width:12em;width:18em;"><?php echo __('Titel'); ?></th>
 	<th style="min-width:5em;"><?php echo __('Tastenprofil'); ?></th>
 	<th style="min-width:5em;"><?php echo __('Prov.-Param.-Profil'); ?></th>
-	<th style="min-width:5em;"><?php echo __('Anz. Ext.-Module'); ?></th>
+	<th style="min-width:5em;"><?php echo __('Erw.-Module'); ?> <sup>[1]</sup></th>
 	<th style="min-width:3em;">&nbsp;</th>
 </tr>
 </thead>
@@ -147,12 +146,15 @@ if (isGsError($groups)) {
 			continue;
 		}
 		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+		
 		echo '<td class="l nobr">';
 		echo @str_repeat('&nbsp;&nbsp;&nbsp;', $node['__mptt_level']-$root_level-1);
 		echo '<img alt="&bull;" src="', GS_URL_PATH ,'img/tree.gif' ,'" />';
 		echo '<input type="text" name="group-',$node['id'],'-name" value="', htmlEnt($node['name']) ,'" size="12" maxlength="20" />';
 		echo '</td>' ,"\n";
+		
 		echo '<td>', '<input type="text" name="group-',$node['id'],'-title" value="', htmlEnt($node['title']) ,'" size="25" maxlength="50" style="width:96%;" />' ,'</td>' ,"\n";
+		
 		echo '<td>', "\n";
 		echo '<select name="group-',$node['id'],'-softkey_profile_id">', "\n";
 		echo '<option value=""';
@@ -167,6 +169,7 @@ if (isGsError($groups)) {
 		}
 		echo '</select>', "\n";
 		echo '</td>', "\n";
+		
 		echo '<td>', "\n";
 		echo '<select name="group-',$node['id'],'-prov_param_profile_id">', "\n";
 		echo '<option value=""';
@@ -181,36 +184,43 @@ if (isGsError($groups)) {
 		}
 		echo '</select>', "\n";
 		echo '</td>', "\n";
+		
 		echo '<td>', "\n";
 		echo '<select name="group-',$node['id'],'-show_ext_modules">', "\n";
-		echo '<option value="255"';
-		if($node['show_ext_modules'])
-			echo ' selected="selected"';
-		echo '>alle</option>' ,"\n";
-		for($i=0; $i<=2; $i++) {
-			echo '<option value="',$i ,'"';
-			if ($node['show_ext_modules'] == $i)
+		for ($num_e_m=0; $num_e_m<=3; ++$num_e_m) {
+			echo '<option value="',$num_e_m ,'"';
+			if ($node['show_ext_modules'] == $num_e_m)
 				echo ' selected="selected"';
-			echo '>', htmlEnt($i) ,'</option>' ,"\n";
+			echo '>', $num_e_m ,'</option>' ,"\n";
 		}
+		echo '<option value="255"';
+		if ($node['show_ext_modules'] == 255)
+			echo ' selected="selected"';
+		echo '>', __('alle') ,'</option>' ,"\n";
 		echo '</select>', "\n";
 		echo '</td>', "\n";
+		
 		echo '<td class="r">', "\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=delete&amp;id='.$node['id']) ,'"><img alt="', __('L&ouml;schen') ,'" title="', __('L&ouml;schen') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/editdelete.png" /></a>';
 		echo '</td>', "\n";
+		
 		echo '</tr>' ,"\n";
 		++$i;
 	}
 	
 	echo '<tr>' ,"\n";
-	echo '<td colspan="4" class="transp">&nbsp;</td>', "\n";
+	
+	echo '<td colspan="5" class="transp">&nbsp;</td>', "\n";
+	
 	echo '<td class="transp r">', "\n";
 	echo '<button type="submit" class="plain" title="', __('Speichern') ,'"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/filesave.png" /></button>';
 	echo '</td>' ,"\n";
+	
 	echo '</tr>' ,"\n";
 	
 	$i=0;
 	echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+	
 	echo '<td class="l nobr">';
 	echo __('Neue Gruppe') ,'<br />';
 	echo '<input type="text" name="group-0-name" value="" size="12" maxlength="20" /><br />';
@@ -234,7 +244,9 @@ if (isGsError($groups)) {
 	}
 	echo '</select>' ,"\n";
 	echo '</td>' ,"\n";
+	
 	echo '<td>&nbsp;<br /><input type="text" name="group-0-title" value="" size="25" maxlength="50" style="width:96%;" /></td>' ,"\n";
+	
 	echo '<td>&nbsp;<br />', "\n";
 	echo '<select name="group-0-softkey_profile_id">', "\n";
 	echo '<option value="" selected="selected">--</option>' ,"\n";
@@ -244,6 +256,7 @@ if (isGsError($groups)) {
 	}
 	echo '</select>', "\n";
 	echo '</td>', "\n";
+	
 	echo '<td>&nbsp;<br />', "\n";
 	echo '<select name="group-0-prov_param_profile_id">', "\n";
 	echo '<option value="" selected="selected">--</option>' ,"\n";
@@ -252,19 +265,22 @@ if (isGsError($groups)) {
 		echo '>', htmlEnt($profile['title']) ,'</option>' ,"\n";
 	}
 	echo '</select>', "\n";
-	echo '<td>', "\n";
+	echo '</td>', "\n";
+	
+	echo '<td>&nbsp;<br />', "\n";
 	echo '<select name="group-0-show_ext_modules">', "\n";
-	echo '<option value="255" selected="selected">alle</option>',"\n";
-	for($i=0; $i<=2; $i++) {
-		echo '<option value="',$i ,'"';
-		echo '>', htmlEnt($i) ,'</option>' ,"\n";
-		}
+	for ($num_e_m=0; $num_e_m<=3; ++$num_e_m) {
+		echo '<option value="',$num_e_m ,'"';
+		echo '>', $num_e_m ,'</option>' ,"\n";
+	}
+	echo '<option value="255" selected="selected">', __('alle') ,'</option>',"\n";
 	echo '</select>', "\n";
 	echo '</td>', "\n";
-	echo '</td>', "\n";
+	
 	echo '<td class="r">&nbsp;<br />', "\n";
 	echo '<button type="submit" class="plain" title="', __('Speichern') ,'"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/filesave.png" /></button>';
 	echo '</td>', "\n";
+	
 	echo '</tr>' ,"\n";
 	++$i;
 }
@@ -274,10 +290,12 @@ if (isGsError($groups)) {
 </form>
 
 <?php
-	echo '<br /><br /><br />',"\n";
+	echo '<br /><br />',"\n";
 	echo '<small>DB-Analyse' ,':',"\n";
 	$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
 	echo 'MPTT-Struktur ist ', ($mptt->quick_sanity_check() ? 'in Ordnung' : 'FEHLERHAFT') ,'</small><br />',"\n";
+	echo '<br />',"\n";
+	echo '<p class="text small"><sup>[1]</sup> ', __('Bestimmt wieviele Telefon-Erweiterungsmodule/-Beistellmodule angezeigt werden.') ,'</p>' ,"\n";
 }
 #####################################################################
 # view }
