@@ -619,37 +619,49 @@ if ($phone_layout) {
 	
 	switch ($phone_layout) {
 	case 'snom':
-		$key_levels = array(
-			0 => array('from'=>   0, 'to'=>  11, 'shifted'=>false,
-				'title'=> htmlEnt($phone_type_title)),
-			1 => array('from'=>  12, 'to'=>  32, 'shifted'=>false,
-				'title'=> __('Erweiterungs-Modul') .' 1'),
-			2 => array('from'=>  33, 'to'=>  53, 'shifted'=>false,
-				'title'=> __('Erweiterungs-Modul') .' 2')
+		//if ($show_ext_modules >= 0) {
+			$key_levels = array(
+				0 => array('from'=>   0, 'to'=>  11, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title))
 			);
+		//}
+		if ($show_ext_modules >= 1) {
+			$key_levels += array(
+				1 => array('from'=>  12, 'to'=>  32, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1')
+			);
+		}
+		if ($show_ext_modules >= 2) {
+			$key_levels += array(
+				2 => array('from'=>  33, 'to'=>  53, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2')
+			);
+		}
 		break;
 	case 'siemens':
-		$key_levels = array(
-			0 => array('from'=>   1, 'to'=>   9, 'shifted'=>false,
-				'title'=> htmlEnt($phone_type_title)),
-			1 => array('from'=>1001, 'to'=>1009, 'shifted'=>true,
-				'title'=> htmlEnt($phone_type_title) .', '. __('Shift-Ebene'))
+		//if ($show_ext_modules >= 0) {
+			$key_levels = array(
+				0 => array('from'=>   1, 'to'=>   9, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title)),
+				1 => array('from'=>1001, 'to'=>1009, 'shifted'=>true,
+					'title'=> htmlEnt($phone_type_title) .', '. __('Shift-Ebene'))
 			);
-		if ($show_ext_modules >= 1) { 
+		//}
+		if ($show_ext_modules >= 1) {
 			$key_levels += array(
 				2 => array('from'=> 301, 'to'=> 312, 'shifted'=>false,
 					'title'=> __('Erweiterungs-Modul') .' 1'),
 				3 => array('from'=>1301, 'to'=>1312, 'shifted'=>true,
 					'title'=> __('Erweiterungs-Modul') .' 1, '. __('Shift-Ebene')),
-				);
+			);
 		}
-		if ($show_ext_modules >= 2) { 
+		if ($show_ext_modules >= 2) {
 			$key_levels += array(
 				4 => array('from'=> 401, 'to'=> 412, 'shifted'=>false,
 					'title'=> __('Erweiterungs-Modul') .' 2'),
 				5 => array('from'=>1401, 'to'=>1412, 'shifted'=>true,
 					'title'=> __('Erweiterungs-Modul') .' 2, '. __('Shift-Ebene'))
-				);
+			);
 		}
 		switch ($phone_type) {
 			case 'siemens-os60':
