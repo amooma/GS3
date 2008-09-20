@@ -113,7 +113,7 @@ if ($action == '') {
 	<th style="min-width:12em;width:18em;"><?php echo __('Titel'); ?></th>
 	<th style="min-width:5em;"><?php echo __('Tastenprofil'); ?></th>
 	<th style="min-width:5em;"><?php echo __('Prov.-Param.-Profil'); ?></th>
-	<th style="min-width:5em;"><?php echo __('Erw.-Module'); ?> <sup>[1]</sup></th>
+	<th style="min-width:5em;"><?php echo __('Erw.-Mod.'); ?><sup>[1]</sup></th>
 	<th style="min-width:3em;">&nbsp;</th>
 </tr>
 </thead>
