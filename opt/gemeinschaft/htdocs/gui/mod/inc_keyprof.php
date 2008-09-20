@@ -98,12 +98,14 @@ $action = @$_REQUEST['action'];
 if (! in_array($action, array('', 'save', 'delete'), true))
 	$action = '';
 
+$show_ext_modules = 255;
 if (! $is_user_profile) {
 	$profile_id = (int)@$_REQUEST['profile_id'];
 } else {
 	$user_id = (int)@$_SESSION['sudo_user']['info']['id'];
 	$profile_id = (int)$DB->executeGetOne(
 		'SELECT `softkey_profile_id` FROM `users` WHERE `id`='. $user_id );
+	$show_ext_modules = (int)$DB->executeGetOne('SELECT `g`.`show_ext_modules` FROM `users` `u` JOIN `user_groups` `g` ON (`g`.`id`=`u`.`group_id`) WHERE `u`.`id` = "'.$user_id.'"' );
 }
 if ($profile_id < 1) $profile_id = 0;
 
@@ -631,16 +633,24 @@ if ($phone_layout) {
 			0 => array('from'=>   1, 'to'=>   9, 'shifted'=>false,
 				'title'=> htmlEnt($phone_type_title)),
 			1 => array('from'=>1001, 'to'=>1009, 'shifted'=>true,
-				'title'=> htmlEnt($phone_type_title) .', '. __('Shift-Ebene')),
-			2 => array('from'=> 301, 'to'=> 312, 'shifted'=>false,
-				'title'=> __('Erweiterungs-Modul') .' 1'),
-			3 => array('from'=>1301, 'to'=>1312, 'shifted'=>true,
-				'title'=> __('Erweiterungs-Modul') .' 1, '. __('Shift-Ebene')),
-			4 => array('from'=> 401, 'to'=> 412, 'shifted'=>false,
-				'title'=> __('Erweiterungs-Modul') .' 2'),
-			5 => array('from'=>1401, 'to'=>1412, 'shifted'=>true,
-				'title'=> __('Erweiterungs-Modul') .' 2, '. __('Shift-Ebene'))
+				'title'=> htmlEnt($phone_type_title) .', '. __('Shift-Ebene'))
 		);
+		if($show_ext_modules > 0 || !$is_user_profile) { 
+			$key_levels += array(
+				2 => array('from'=> 301, 'to'=> 312, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1'),
+				3 => array('from'=>1301, 'to'=>1312, 'shifted'=>true,
+					'title'=> __('Erweiterungs-Modul') .' 1, '. __('Shift-Ebene')),
+				);
+			}
+		if($show_ext_modules > 1 || !$is_user_profile) { 
+			$key_levels += array(
+				4 => array('from'=> 401, 'to'=> 412, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2'),
+				5 => array('from'=>1401, 'to'=>1412, 'shifted'=>true,
+					'title'=> __('Erweiterungs-Modul') .' 2, '. __('Shift-Ebene'))
+				);
+			}
 		switch ($phone_type) {
 			case 'siemens-os60':
 				$key_levels[0]['to'  ] =    8;
