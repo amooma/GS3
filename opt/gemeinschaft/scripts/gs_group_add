@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_group_change.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --parent=<name> --name=<name> --title=<title> [--softkey-profile-id=<id>] [--prov-param-profile-id=<id>]';
+$usage = 'Usage: '. baseName(__FILE__) .' --parent=<name> --name=<name> --title=<title> [--softkey-profile-id=<id>] [--prov-param-profile-id=<id>] [--show-ext-modules=<num>]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
@@ -46,7 +46,8 @@ $opts = @getOptsNoMultiples( '',
 		'name=',
 		'title=',
 		'softkey-profile-id=',
-		'prov-param-profile-id='
+		'prov-param-profile-id=',
+		'show-ext-modules='
 	),
 	$usage
 );
@@ -57,11 +58,17 @@ if (! isSet($opts['parent'])
 	gs_script_invalid_usage( $usage );
 }
 
+if (! array_key_exists('show-ext-modules', $opts)) {
+	$opts['show-ext-modules'] === null;
+} else {
+	$opts['show-ext-modules'] = (int)$opts['show-ext-modules'];
+}
+
 
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_group_add_by_name( $opts['parent'], $opts['name'], $opts['title'], $opts['softkey-profile-id'], $opts['prov-param-profile-id'] );
+$ret = @ gs_group_add_by_name( $opts['parent'], $opts['name'], $opts['title'], $opts['softkey-profile-id'], $opts['prov-param-profile-id'], $opts['show-ext-modules'] );
 
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
