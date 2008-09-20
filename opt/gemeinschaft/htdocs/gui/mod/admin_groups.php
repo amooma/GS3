@@ -295,7 +295,7 @@ if (isGsError($groups)) {
 	$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
 	echo 'MPTT-Struktur ist ', ($mptt->quick_sanity_check() ? 'in Ordnung' : 'FEHLERHAFT') ,'</small><br />',"\n";
 	echo '<br />',"\n";
-	echo '<p class="text small"><sup>[1]</sup> ', __('Bestimmt wieviele Telefon-Erweiterungsmodule/-Beistellmodule angezeigt werden.') ,'</p>' ,"\n";
+	echo '<p class="text small"><sup>[1]</sup> ', __('Bestimmt wieviele Telefon-Erweiterungsmodule/-Beistellmodule in der Benutzer-Tastenbelegungsmaske angezeigt werden.') ,'</p>' ,"\n";
 }
 #####################################################################
 # view }
