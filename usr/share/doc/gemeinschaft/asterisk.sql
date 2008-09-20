@@ -6127,6 +6127,40 @@ INSERT INTO `pickupgroups_users` VALUES (1,22);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `prov_jobs`
+--
+
+CREATE TABLE IF NOT EXISTS `prov_jobs` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `inserted` int(10) unsigned NOT NULL default '0',
+  `running` tinyint(1) unsigned NOT NULL default '0',
+  `trigger` enum('client','server') character set ascii NOT NULL default 'client',
+  `phone_id` int(10) unsigned NOT NULL,
+  `type` varchar(10) character set ascii NOT NULL default 'settings',
+  `immediate` tinyint(1) unsigned NOT NULL default '0',
+  `minute` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `hour` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `day` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `month` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `dow` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `data` varchar(100) character set ascii collate ascii_bin NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `phone_id` (`phone_id`),
+  KEY `immediate` (`immediate`),
+  KEY `inserted` (`inserted`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+--
+-- Dumping data for table `prov_jobs`
+--
+
+LOCK TABLES `prov_param_profiles` WRITE;
+/*!40000 ALTER TABLE `prov_param_profiles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `prov_param_profiles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `prov_param_profiles`
 --
 
