@@ -6451,6 +6451,7 @@ CREATE TABLE `user_groups` (
   `title` varchar(50) collate utf8_unicode_ci NOT NULL,
   `softkey_profile_id` int(10) unsigned default NULL,
   `prov_param_profile_id` int(10) unsigned default NULL,
+  `show_ext_modules` tinyint(1) unsigned NOT NULL default '255',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `lft` (`lft`),
@@ -6469,7 +6470,7 @@ CREATE TABLE `user_groups` (
 
 LOCK TABLES `user_groups` WRITE;
 /*!40000 ALTER TABLE `user_groups` DISABLE KEYS */;
-INSERT INTO `user_groups` VALUES (1,1,2,'root-node','Root node',NULL,NULL);
+INSERT INTO `user_groups` VALUES (1,1,2,'root-node','Root node',NULL,NULL,255);
 /*!40000 ALTER TABLE `user_groups` ENABLE KEYS */;
 UNLOCK TABLES;
 

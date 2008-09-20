@@ -423,3 +423,18 @@ ALTER TABLE `phones` ADD
   `firmware_cur` VARCHAR(25) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL AFTER `added`;
 
 
+
+--
+-- since rev. 5063
+--
+
+
+--
+-- Add new column `show_ext_modules` in table `user_groups`:
+--
+
+ALTER TABLE `user_groups` ADD
+  `show_ext_modules` TINYINT(1) UNSIGNED NOT NULL DEFAULT '255' AFTER `prov_param_profile_id`;
+
+
+
