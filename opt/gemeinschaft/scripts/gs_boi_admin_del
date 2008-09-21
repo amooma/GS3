@@ -80,7 +80,7 @@ if (! $user_id) {
 
 # check if host id/ip is valid
 #
-$host = gs_host_by_id_or_ip( $opts['host'] );	
+$host = gs_host_by_id_or_ip( $opts['host'] );
 if (isGsError( $host )) {
 	echo $host->getMsg() ,"\n";
 	exit(1);
