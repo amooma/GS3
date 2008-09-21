@@ -93,7 +93,7 @@ if ($allow_only_specified_mac_addrs) {
 $user = preg_replace('/[^a-z0-9_\-]/i', '', @$_REQUEST['u']);
 
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
-if (preg_match('/snom([1-9][0-9]{2})/i', $ua, $m)) {  # i.e. "snom360"
+if (preg_match('/snom([1-9][0-9]{2})/i', $ua, $m)) {  # e.g. "snom360"
 	$phone_type = $m[1];
 } else {
 	gs_log( GS_LOG_DEBUG, "Could not recognize User-Agent" );
