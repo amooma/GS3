@@ -226,18 +226,20 @@ gs_log( GS_LOG_DEBUG, "Snom $mac ($phone_type, user $user) has app \"$app\"" );
 
 $a = _snom_normalize_version( (!empty($app)) ? $app : '0.0.0' );
 
-$ready_for_v6 =     _snomAppCmp($a, '6'  )>=0
-                ||( _snomAppCmp($a, '5.5')>=0
-                &&  empty($rootfs_ramdisk)
-                &&  $rootfs_jffs2 >= '3.36'
-                &&  $linux >= '3.25'
-                );
-$ready_for_v6_to_7 =    $allow_v_6_to_7
-                    && _snomAppCmp($a, '6.5.10')>=0
-                    && _snomAppCmp($a, '7'     )< 0
-                    && empty($rootfs_ramdisk)
-                    && $rootfs_jffs2 >= '3.36'
-                    && $linux >= '3.38';
+$ready_for_v6 =
+	   _snomAppCmp($a, '6'  )>=0
+	||(_snomAppCmp($a, '5.5')>=0
+	&& empty($rootfs_ramdisk)
+	&& $rootfs_jffs2 >= '3.36'
+	&& $linux >= '3.25'
+	);
+$ready_for_v6_to_7 =
+	   $allow_v_6_to_7
+	&& _snomAppCmp($a, '6.5.10')>=0
+	&& _snomAppCmp($a, '7'     )< 0
+	&& empty($rootfs_ramdisk)
+	&& $rootfs_jffs2 >= '3.36'
+	&& $linux >= '3.38';
 
 
 #################################################################
