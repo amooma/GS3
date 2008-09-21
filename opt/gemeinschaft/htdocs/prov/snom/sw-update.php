@@ -282,7 +282,14 @@ while ($job = $rs->fetchRow()) {
 	gs_log( GS_LOG_DEBUG, "Phone $mac: Job ".$job['id'].": Rule matches" );
 	
 	$new_app = _snom_normalize_version( $job['data'] );
-	gs_log( GS_LOG_NOTICE, "Phone $mac: Update app $a -> $new_app" );
+	if ('x'.$new_app == 'x'.$a) {
+		gs_log( GS_LOG_NOTICE, "Phone $mac: App $a == $new_app" );
+		$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']).' AND `running`=0' );
+		continue;
+	}
+	
+	gs_log( GS_LOG_NOTICE, "Phone $mac: Upgrade app $a -> $new_app" );
+	$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']) );
 	_generate_settings( $phone_model, $new_app, null, null );
 	
 	break;
