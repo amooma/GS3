@@ -268,7 +268,7 @@ while ($job = $rs->fetchRow()) {
 	$c = new CronRule();
 	$ok = $c->set_rule( $job['minute'] .' '. $job['hour'] .' '. $job['day'] .' '. $job['month'] .' '. $job['dow'] );
 	if (! $ok) {
-		gs_log( GS_LOG_NOTICE, "Phone $mac: Job ".$job['id']." has a bad cron rule (". $c->err_msg ."). Deleting ..." );
+		gs_log( GS_LOG_WARNING, "Phone $mac: Job ".$job['id']." has a bad cron rule (". $c->err_msg ."). Deleting ..." );
 		$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']).' AND `running`=0' );
 		unset($c);
 		continue;
@@ -282,6 +282,11 @@ while ($job = $rs->fetchRow()) {
 	gs_log( GS_LOG_DEBUG, "Phone $mac: Job ".$job['id'].": Rule matches" );
 	
 	$new_app = _snom_normalize_version( $job['data'] );
+	if (subStr($new_app,0,2)=='00') {
+		gs_log( GS_LOG_NOTICE, "Phone $mac: Bad new app vers. $new_app" );
+		$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']).' AND `running`=0' );
+		continue;
+	}
 	if ('x'.$new_app == 'x'.$a) {
 		gs_log( GS_LOG_NOTICE, "Phone $mac: App $a == $new_app" );
 		$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']).' AND `running`=0' );
