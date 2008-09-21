@@ -208,7 +208,7 @@ if (count($phones) < 1) {
 	exit(0);
 }
 
-@$db->execute( 'ANALYZE TABLE `prov_jobs`' );
+@$db->execute( 'OPTIMIZE TABLE `prov_jobs`' );
 
 $num_ok = 0;
 foreach ($phones as $phone) {
@@ -245,8 +245,6 @@ foreach ($phones as $phone) {
 		);
 	if ($ok) ++$num_ok;
 }
-
-@$db->execute( 'ANALYZE TABLE `prov_jobs`' );
 
 if ($num_ok === count($phones)) {
 	echo "$num_ok job(s) inserted.\n";
