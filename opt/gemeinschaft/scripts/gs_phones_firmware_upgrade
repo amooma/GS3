@@ -1,0 +1,261 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/cron-rule.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage =
+	"Usage:". "\n".
+	baseName(__FILE__) ."\n".
+	"  (--mac=<mac-addr> | --by-user=<user> | --by-exten=<exten> | --by-host=<ip|id>)" ."\n".
+	"  [--min=<ctr>] [--hr=<ctr>] [--day=<ctr>] [--mon=<ctr>] [--dow=<ctr>]" ."\n".
+	"  --vers=<version>" ."\n".
+	"\n".
+	"<ctr> = crontab rule, e.g. \"*\" | \"3\" | \"2,5,6\" | \"3-5\" | \"*/5\" | \"Sat-Sun\"". "\n".
+	"Useful examples for firmware upgrades:" ."\n".
+	"  --dow='Sat,Sun' --hr='1-5'   (Saturday and Sunday, 1-5 h)" ."\n".
+	"  --day=18 --mon=5             (on the 18th of May)" ."\n";
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'mac=',
+		'by-user=',
+		'by-exten=',
+		'by-host=',
+		
+		'min=',
+		'hr=',
+		'day=',
+		'mon=',
+		'dow=',
+		
+		'vers='
+	),
+	$usage
+);
+
+$cnt_selectors = 0;
+if (isSet($opts['mac'     ])) $cnt_selectors++;
+if (isSet($opts['by-user' ])) $cnt_selectors++;
+if (isSet($opts['by-exten'])) $cnt_selectors++;
+if (isSet($opts['by-host' ])) $cnt_selectors++;
+if ($cnt_selectors !== 1) {
+	gs_script_invalid_usage( $usage );
+}
+
+if (! isSet($opts['vers'])) {
+	gs_script_invalid_usage( $usage );
+}
+
+if (! array_key_exists('min', $opts) || $opts['min'] == '') $opts['min'] = '*';
+if (! array_key_exists('hr' , $opts) || $opts['hr' ] == '') $opts['hr' ] = '*';
+if (! array_key_exists('day', $opts) || $opts['day'] == '') $opts['day'] = '*';
+if (! array_key_exists('mon', $opts) || $opts['mon'] == '') $opts['mon'] = '*';
+if (! array_key_exists('dow', $opts) || $opts['dow'] == '') $opts['dow'] = '*';
+
+
+
+/***********************************************************
+*    add provisioning job
+***********************************************************/
+
+# connect to db
+#
+$db = gs_db_master_connect();
+if (! $db) {
+	echo "Could not connect to database.\n";
+	exit(1);
+}
+
+# validate cron rule
+#
+$c = new CronRule();
+$ok = $c->set_rule( $opts['min'] .' '. $opts['hr'] .' '. $opts['day'] .' '. $opts['mon'] .' '. $opts['dow'] );
+if (! $ok) {
+	echo $c->err_msg ,"\n";
+	exit(1);
+}
+unset($c);
+
+
+# find phones
+#
+$phones = array();
+
+if (isSet($opts['mac'])) {
+	$opts['mac'] = preg_replace('/[^0-9A-Z]/', '', strToUpper($opts['mac']));
+	$rs = $db->execute(
+		'SELECT `p`.`id`, `p`.`mac_addr` '.
+		'FROM '.
+			'`phones` `p` '.
+		'WHERE `p`.`mac_addr`=\''. $db->escape($opts['mac']) .'\'' );
+	if (! $phone = $rs->fetchRow()) {
+		echo "Phone not found.\n";
+		exit(1);
+	}
+	$phones[] = $phone;
+}
+
+if (isSet($opts['by-user'])) {
+	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($opts['by-user']) .'\'' );
+	if ($user_id < 1) {
+		echo "User not found.\n";
+		exit(1);
+	}
+	$rs = $db->execute(
+		'SELECT `p`.`id`, `p`.`mac_addr` '.
+		'FROM '.
+			'`phones` `p` JOIN '.
+			'`users` `u` ON (`p`.`user_id`=`u`.`id`) '.
+		'WHERE `u`.`id`='. $user_id );
+	while ($phone = $rs->fetchRow()) {
+		$phones[] = $phone;
+	}
+	if (count($phones) < 1) {
+		echo "User not logged in at any phone.\n";
+		exit(1);
+	}
+}
+
+if (isSet($opts['by-exten'])) {
+	$user_id = (int)$db->executeGetOne(
+		'SELECT `u`.`id` '.
+		'FROM '.
+			'`users` `u` JOIN '.
+			'`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) '.
+		'WHERE `s`.`name`=\''. $db->escape($opts['by-exten']) .'\'' );
+	if ($user_id < 1) {
+		echo "Extension not found.\n";
+		exit(1);
+	}
+	$rs = $db->execute(
+		'SELECT `p`.`id`, `p`.`mac_addr` '.
+		'FROM '.
+			'`phones` `p` JOIN '.
+			'`users` `u` ON (`p`.`user_id`=`u`.`id`) '.
+		'WHERE `u`.`id`='. $user_id );
+	while ($phone = $rs->fetchRow()) {
+		$phones[] = $phone;
+	}
+	if (count($phones) < 1) {
+		echo "User not logged in at any phone.\n";
+		exit(1);
+	}
+}
+
+if (isSet($opts['by-host'])) {
+	include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php');
+	$host = gs_host_by_id_or_ip( $opts['by-host'] );
+	if (isGsError($host)) {
+		echo $host->getMsg() ,"\n";
+		exit(1);
+	}
+	if (! is_array($host)) {
+		echo "Host not found.\n";
+		exit(1);
+	}
+	$rs = $db->execute(
+		'SELECT `p`.`id`, `p`.`mac_addr` '.
+		'FROM '.
+			'`phones` `p` JOIN '.
+			'`users` `u` ON (`p`.`user_id`=`u`.`id`) '.
+		'WHERE `u`.`host_id`='. (int)$host['id'] );
+	while ($phone = $rs->fetchRow()) {
+		$phones[] = $phone;
+	}
+	if (count($phones) < 1) {
+		echo "Host does not have any phones. No action required.\n";
+		exit(0);
+	}
+}
+
+if (count($phones) < 1) {
+	echo "No phones. No action required.\n";
+	exit(0);
+}
+
+$num_ok = 0;
+foreach ($phones as $phone) {
+	$ok = $db->execute(
+		'INSERT INTO `prov_jobs` ('.
+			'`id`, '.
+			'`inserted`, '.
+			'`running`, '.
+			'`trigger`, '.
+			'`phone_id`, '.
+			'`type`, '.
+			'`immediate`, '.
+			'`minute`, '.
+			'`hour`, '.
+			'`day`, '.
+			'`month`, '.
+			'`dow`, '.
+			'`data` '.
+		') VALUES ('.
+			'NULL, '.
+			((int)time()) .', '.
+			'0, '.
+			'\'client\', '.
+			((int)$phone['id']) .', '.
+			'\'firmware\', '.
+			'0, '.
+			'\''. $db->escape($opts['min']) .'\', '.
+			'\''. $db->escape($opts['hr' ]) .'\', '.
+			'\''. $db->escape($opts['day']) .'\', '.
+			'\''. $db->escape($opts['mon']) .'\', '.
+			'\''. $db->escape($opts['dow']) .'\', '.
+			'\''. $db->escape($opts['vers']) .'\' '.
+		')'
+		);
+	if ($ok) ++$num_ok;
+}
+
+if ($num_ok === count($phones)) {
+	echo "$num_ok job(s) inserted.\n";
+	exit(0);
+}
+elseif (count($phones)>0 && $num_ok === 0) {
+	echo "Failed to insert jobs.\n";
+	exit(1);
+}
+elseif (count($phones)>0 && $num_ok < count($phones)) {
+	echo "$num_ok job(s) inserted but failed to insert ".(count($phones)-$num_ok)." jobs.\n";
+	exit(0);
+}
+
+
+?>
