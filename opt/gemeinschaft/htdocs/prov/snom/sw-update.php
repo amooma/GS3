@@ -32,26 +32,16 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 set_error_handler('err_handler_die_on_err');
+require_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/cron-rule.php' );
 
 
 $allow_update    = gs_get_conf('GS_SNOM_PROV_FW_UPDATE');
-$allow_beta      = gs_get_conf('GS_SNOM_PROV_FW_BETA'  );
+$allow_beta      = gs_get_conf('GS_SNOM_PROV_FW_BETA'  );  # no longer used
 $allow_v_6_to_7  = gs_get_conf('GS_SNOM_PROV_FW_6TO7'  );
 
-$allow_only_specified_mac_addrs = false;
-$allowed_mac_addrs = array(
-	//'00:04:13:23:08:A4',
-	//'00:04:13:00:00:02',
-	//'00:04:13:00:00:03'
-);
-
-
-$firmware_url_snom          = 'http://provisioning.snom.com/download/';
-$firmware_url_snom_from6to7 = 'http://provisioning.snom.com/from6to7/';
-$firmware_path              = '/opt/gemeinschaft/htdocs/prov/snom/sw/';
-
-$firmware_url = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/sw/';
-
+$firmware_path   = '/opt/gemeinschaft/htdocs/prov/snom/sw/';
+$firmware_url    = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/sw/';
 
 header( 'Content-Type: text/plain; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -74,26 +64,12 @@ if (strLen($mac) != 12) {
 	gs_log( GS_LOG_DEBUG, "Bad MAC address \"$mac\"" );
 	die();
 }
-if ($allow_only_specified_mac_addrs) {
-	$mac_allowed = false;
-	foreach ($allowed_mac_addrs as $allowed_mac) {
-		$allowed_mac = preg_replace('/[^0-9A-F]/', '', strToUpper($allowed_mac));
-		if ($allowed_mac === $mac) {
-			$mac_allowed = true;
-			break;
-		}
-	}
-	if (! $mac_allowed) {
-		gs_log( GS_LOG_DEBUG, "MAC address not allowed to upgrade firmware" );
-		die();
-	}
-}
 
 
 $user = preg_replace('/[^a-z0-9_\-]/i', '', @$_REQUEST['u']);
 
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
-if (preg_match('/snom([1-9][0-9]{2})/i', $ua, $m)) {  # i.e. "snom360"
+if (preg_match('/snom([1-9][0-9]{2})/i', $ua, $m)) {  # e.g. "snom360"
 	$phone_type = $m[1];
 } else {
 	gs_log( GS_LOG_DEBUG, "Could not recognize User-Agent" );
@@ -107,7 +83,6 @@ $phone_model = 'snom'.$phone_type;
 function _generate_settings( $model, $appl, $rtfs, $lnux )
 {
 	global
-		$firmware_url_snom, $firmware_url_snom_from6to7,
 		$firmware_url, $firmware_path,
 		$allow_beta, $mac, $phone_type, $user;
 		
@@ -123,17 +98,9 @@ function _generate_settings( $model, $appl, $rtfs, $lnux )
 			# It's important to make sure we don't point the phone to a
 			# non-existent file or else the phone needs manual interaction
 			# (something like "File not found. Press any key to continue.")
-			
-			# special directories for
-			# ...-3.38-l.bin
-			# ...-update6to7-7.1.6-bf.bin
-			if (preg_match('/-3\.38-l\.bin$/i', $file)
-			||  preg_match('/-update6to7-7\.1\.6-bf\.bin$/i', $file))
-				$wget_url = $firmware_url_snom_from6to7 . $file;
-			else
-				$wget_url = $firmware_url_snom          . $file;
-			gs_log( GS_LOG_WARNING, "Please  cd ". qsa($firmware_path) ." && wget ". qsa($wget_url) );
-		} else {
+			gs_log( GS_LOG_WARNING, "File \"$realfile\" not found" );
+		}
+		else {
 			$url = $firmware_url . rawUrlEncode($file);
 			gs_log( GS_LOG_NOTICE, "Snom $mac ($phone_type, user $user): Update file: \"$file\"" );
 			//$ob = 'pnp_config$: off' ."\n";
@@ -242,113 +209,83 @@ $ready_for_v6_to_7 =
 	&& $linux >= '3.38';
 
 
-#################################################################
-#  application
-#################################################################
-
-$new_app = '';
-if (! empty($app))
-{
-	$a = _snom_normalize_version( $app );
-	
-	if (! $allow_beta)
-	{
-		if         (_snomAppCmp($a, '5'     )<0)  $new_app = '5.5a-SIP-j';
-		elseif ($ready_for_v6)
-		{
-			//if     (_snomAppCmp($a, '6.5.10')<0)  $new_app = '6.5.10-SIP-j';
-			if     (_snomAppCmp($a, '6.5.15')<0)  $new_app = '6.5.15-SIP-j';
-			elseif (_snomAppCmp($a, '7')>=0)
-			{
-				//if (_snomAppCmp($a, '7.1.6' )<0)  $new_app = '7.1.6-SIP-f';
-				if (_snomAppCmp($a, '7.1.30')<0)  $new_app = '7.1.30-SIP-f';
-			}
-		}
-	} else
-	{
-		if         (_snomAppCmp($a, '5'     )<0)  $new_app = '5.5a-SIP-j';
-		elseif ($ready_for_v6)
-		{
-			//if     (_snomAppCmp($a, '6'     )<0)  $new_app = '6.5.10-SIP-j';
-			//elseif (_snomAppCmp($a, '6.5.12')<0)  $new_app = '6.5.12-beta-SIP-j';
-			if     (_snomAppCmp($a, '6.5.15')<0)  $new_app = '6.5.15-SIP-j';
-			elseif (_snomAppCmp($a, '7'     )<0) {
-				if ($ready_for_v6_to_7) {
-					gs_log( GS_LOG_NOTICE, "Snom $mac ($phone_type, user $user): Ready to go from v. 6 to 7" );
-												$new_app = 'update6to7-7.1.6-bf';
-					# special from6to7 app
-				}
-			}
-			elseif (_snomAppCmp($a, '7')>=0)
-			{
-				if   (_snomAppCmp($a, '7.0.17')<0) {
-					# "Phones running version 7 but below 7.0.17 are still
-					# on the old multiple flash partition structure and
-					# have to be downgraded as usual to v6 first"
-												//$new_app = '6.5.10-SIP-j';
-												//$new_app = '6.5.12-beta-SIP-j';
-												$new_app = '6.5.15-SIP-j';
-				}
-				//elseif (_snomAppCmp($a, '7.1.19')<0) {
-				//								$new_app = '7.1.19-beta-SIP-f';
-				elseif (_snomAppCmp($a, '7.1.30')<0) {
-												$new_app = '7.1.30-SIP-f';
-				}
-			}
-		}
-	}
-}
-if ($new_app != '') {
-	gs_log( GS_LOG_NOTICE, "Snom $mac ($phone_type, user $user): Update app $app -> $new_app" );
-	_generate_settings( $phone_model, $new_app, null, null );
-}
-
-
-#################################################################
-#  rootfs
-#################################################################
-
+# linux
+#
 if (_snomAppCmp($a, '7'     )<0) {
-	$new_rootfs = '';
-	$old_rootfs = '';
-	if (! empty($rootfs_ramdisk))
-	{
-									$new_rootfs = 'ramdiskToJffs2-3.36-br.bin';
+	if (! empty($linux)) {
+		if ($linux < '3.25') {
+			gs_log( GS_LOG_NOTICE, "Phone $mac: Please upgrade the phone's linux from $linux to 3.38" );
+			exit(0);
+		}
 	}
-	elseif (! empty($rootfs_jffs2))
-	{
+}
+
+# rootfs
+#
+if (_snomAppCmp($a, '7'     )<0) {
+	if (! empty($rootfs_ramdisk)) {
+		gs_log( GS_LOG_NOTICE, "Phone $mac: Please upgrade the phone's rootfs from ramdisk to Jffs2-3.36" );
+		exit(0);
+	}
+	elseif (! empty($rootfs_jffs2)) {
 		if ($rootfs_jffs2 < '3.36') {
-									$new_rootfs = 'ramdiskToJffs2-3.36-br.bin';
+			gs_log( GS_LOG_NOTICE, "Phone $mac: Please upgrade the phone's rootfs from $rootfs_jffs2 to Jffs2-3.36" );
+			exit(0);
 		}
-	}
-	if ($new_rootfs != '') {
-		gs_log( GS_LOG_NOTICE, "Snom $mac ($phone_type, user $user): Update rootfs $old_rootfs -> $new_rootfs" );
-		_generate_settings( $phone_model, null, $new_rootfs, null );
 	}
 }
 
 
-#################################################################
-#  linux
-#################################################################
+# application
+#
 
-if (_snomAppCmp($a, '7'     )<0) {
-	$new_linux = '';
-	if (! empty($linux))
-	{
-		if       ($linux < '3.25') {
-										$new_linux = '3.25';
-		} elseif (_snomAppCmp($a, '6')>=0
-		&&        $allow_v_6_to_7
-		&&        $linux < '3.38') {
-			# 3.38 is a special from6to7 linux
-										$new_linux = '3.38';
-		}
+if (_snomAppCmp($a, '5'     )<0) {
+	gs_log( GS_LOG_NOTICE, "Phone $mac: Please upgrade the firmware from $a to 6.5 or higher" );
+}
+
+$db = gs_db_master_connect();
+if (! $db) {
+	gs_log( GS_LOG_WARNING, "Snom phone asks for firmware - Could not connect to DB" );
+	exit(0);
+}
+
+$rs = $db->execute(
+	'SELECT `id`, `running`, `minute`, `hour`, `day`, `month`, `dow`, `data` '.
+	'FROM `prov_jobs` '.
+	'WHERE `phone_id`=1 AND `type`=\'firmware\' '.
+	'ORDER BY `running` DESC, `inserted`' );
+if (! $rs) {
+	gs_log( GS_LOG_WARNING, "DB error" );
+	exit(0);
+}
+while ($job = $rs->fetchRow()) {
+	if ($job['running']) {
+		gs_log( GS_LOG_NOTICE, "Phone $mac: A firmware job is already running" );
+		exit(0);
 	}
-	if ($new_linux != '') {
-		gs_log( GS_LOG_NOTICE, "Snom $mac ($phone_type, user $user): Update linux $linux -> $new_linux" );
-		_generate_settings( $phone_model, null, null, $new_linux );
+	
+	# check cron rule
+	$c = new CronRule();
+	$ok = $c->set_rule( $job['minute'] .' '. $job['hour'] .' '. $job['day'] .' '. $job['month'] .' '. $job['dow'] );
+	if (! $ok) {
+		gs_log( GS_LOG_NOTICE, "Phone $mac: Job ".$job['id']." has a bad cron rule (". $c->err_msg ."). Deleting ..." );
+		$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']).' AND `running`=0' );
+		unset($c);
+		continue;
 	}
+	if (! $c->validate_time()) {
+		gs_log( GS_LOG_DEBUG, "Phone $mac: Job ".$job['id'].": Rule does not match" );
+		unset($c);
+		continue;
+	}
+	unset($c);
+	gs_log( GS_LOG_DEBUG, "Phone $mac: Job ".$job['id'].": Rule matches" );
+	
+	$new_app = _snom_normalize_version( $job['data'] );
+	gs_log( GS_LOG_NOTICE, "Phone $mac: Update app $a -> $new_app" );
+	_generate_settings( $phone_model, $new_app, null, null );
+	
+	break;
 }
 
 
