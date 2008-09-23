@@ -203,19 +203,17 @@ default  :
 	$l = array('C');
 }
 $lfound = setLocale(LC_TIME, $l);
-if (! $lfound==0) {
+if ($lfound === false) {
 	$err=0; $out=array();
 	exec('locale -a | grep -i '. qsa('^'.$lang.'_') .' 2>>/dev/null', $out, $err);
 	if ($err != 0)
 		gs_log( GS_LOG_NOTICE, 'Failed to find locales on your system' );
 	else {
 		$lfound = setLocale(LC_TIME, $out);
-		if (! $lfound) {
+		if ($lfound === false) {
 			gs_log( GS_LOG_NOTICE, 'Your system does not have any locales like "'. $lang .'_*"' );
 		} else {
 			gs_log( GS_LOG_DEBUG, 'Using locale "'. $lfound .'" as a fallback' );
-			# it's strange: 'de_DE.UTF-8', 'de_DE' (and others) cannot be
-			# set although `locale -a` has them
 		}
 	}
 }
