@@ -105,7 +105,7 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 	
 	# check if host exists
 	#
-	$host = gs_host_by_id_or_ip( $host_id_or_ip );	
+	$host = gs_host_by_id_or_ip( $host_id_or_ip );
 	if (isGsError( $host )) {
 		gs_db_rollback_trans($db);
 		return new GsError( $host->getMsg() );
