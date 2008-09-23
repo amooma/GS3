@@ -193,7 +193,7 @@ if ($lfound === false) {
 		if ($lfound === false) {
 			gs_log( GS_LOG_NOTICE, 'Your system does not have any locales like "'. $lang .'_*"' );
 		} else {
-			gs_log( GS_LOG_DEBUG, 'Using locale "'. $lfound .'" as a fallback' );
+			gs_log( GS_LOG_NOTICE, 'Using locale "'. $lfound .'" as a fallback' );
 		}
 	}
 }
