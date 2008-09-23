@@ -82,7 +82,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	#
 	$old_host_id = (int)$db->executeGetOne( 'SELECT `host_id` FROM `users` WHERE `id`='. $user_id );
 	
-	$old_host = gs_host_by_id_or_ip( $old_host_id );	
+	$old_host = gs_host_by_id_or_ip( $old_host_id );
 	if (isGsError($old_host) || ! is_array($old_host)) {
 		$old_host = false;
 	}
@@ -90,7 +90,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	
 	# check if (new) host exists
 	#
-	$host = gs_host_by_id_or_ip( $host_id_or_ip );	
+	$host = gs_host_by_id_or_ip( $host_id_or_ip );
 	if (isGsError( $host )) {
 		gs_db_rollback_trans($db);
 		return new GsError( $host->getMsg() );
