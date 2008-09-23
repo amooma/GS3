@@ -69,7 +69,7 @@ function gs_user_del( $user )
 	//if (! $host_id)
 	//	return new GsError( 'Unknown host.' );
 	
-	$host = gs_host_by_id_or_ip( $host_id );	
+	$host = gs_host_by_id_or_ip( $host_id );
 	if (isGsError($host) || ! is_array($host)) {
 		$host = false;
 	}
