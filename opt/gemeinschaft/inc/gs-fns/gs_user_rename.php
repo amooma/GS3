@@ -168,7 +168,7 @@ function gs_user_rename( $username, $new_username )
 	# commit transaction
 	#
 	if (! gs_db_commit_trans($db)) {
-		@$db->execute( 'UPDATE `users` SET `user`=\''. $db->escape($opts['user']) .'\' WHERE `id`='. $user_id );
+		@$db->execute( 'UPDATE `users` SET `user`=\''. $db->escape($username) .'\' WHERE `id`='. $user_id );
 		return new GsError( 'Failed to rename user.' );
 	}
 	
