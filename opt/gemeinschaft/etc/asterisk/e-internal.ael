@@ -628,14 +628,23 @@ context to-internal-users-self {
 			Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout});
 			
 			if ("${is_callfile_origin}" != "1") {
-				if ("${DIALSTATUS}" = "BUSY")         // busy or deflected
+				Set(is_dnd=0);
+				if ("${DIALSTATUS}" = "BUSY") {         // busy or deflected
 					goto user_busy;
-				if ("${DIALSTATUS}" = "NOANSWER")     // does not answer the phone
+				}
+				if ("${DIALSTATUS}" = "NOANSWER") {     // does not answer the phone
 					goto user_unavail;
-				if ("${DIALSTATUS}" = "CHANUNAVAIL")  // offline
+				}
+				if ("${DIALSTATUS}" = "CHANUNAVAIL") {  // offline
 					goto user_offline;
-				if ("${DIALSTATUS}" = "CONGESTION")   // congestion or DND
+				}
+				if ("${DIALSTATUS}" = "CONGESTION") {   // congestion or DND
+					if ("${CDR(duration)}" = "0" || "${CDR(duration)}" = "1") {
+						Verbose(1,### Local user ${EXTEN} is on DND);
+						Set(is_dnd=1);
+					}
 					goto user_offline;
+				}
 			}
 			else {
 				Verbose(1,### Callfile: Origin user ${callfile_from_user} did not answer);
@@ -888,10 +897,15 @@ context to-internal-users-self {
 			if ("${vm_real_source}" = "internal") {
 				if ("${DIALSTATUS}" = "BUSY" || "${DIALSTATUS}" = "CHANUNAVAIL" || "${DIALSTATUS}" = "CONGESTION") {
 					// call completion possible?
-					AGI(/opt/gemeinschaft/dialplan-scripts/cc-get-possible.agi,${EXTEN});
-					Verbose(1,### Call completion to ${EXTEN} possible?: ${cc_possible});
-					if ("${cc_possible}" = "1" && "${EXTEN}" != "${user_name}")
-						goto user_uncallable_offer_cc;
+					if ("${is_dnd}" = "1") {
+						Verbose(1,### Call completion to ${EXTEN} possible?: 0 - DND);
+					}
+					else {
+						AGI(/opt/gemeinschaft/dialplan-scripts/cc-get-possible.agi,${EXTEN});
+						Verbose(1,### Call completion to ${EXTEN} possible?: ${cc_possible});
+						if ("${cc_possible}" = "1" && "${EXTEN}" != "${user_name}")
+							goto user_uncallable_offer_cc;
+					}
 				}
 			}
 			if ("${vm_${vm_source}_active}" != "1")
