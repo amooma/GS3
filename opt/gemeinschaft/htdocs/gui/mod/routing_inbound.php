@@ -193,14 +193,14 @@ if (! $lang)
 	$lang = gs_get_conf('GS_INTL_LANG', 'de_DE');
 $lang = strToLower(subStr($lang,0,2));
 switch ($lang) {
-case 'de':
-	$l = array('de_DE.UTF-8', 'de_DE.utf8', 'de_DE.iso88591', 'de_DE.iso885915@euro', 'de_DE.ISO8859-1', 'de_DE.ISO8859-15', 'de_DE@euro', 'de_DE', 'de');
-	break;
-case 'en':
-	$l = array('en_US.utf8', 'en_US.iso88591', 'en_US.ISO8859-1', 'en_US.US-ASCII', 'en_US', 'en');
-	break;
-default  :
-	$l = array('C');
+	case 'de':
+		$l = array('de_DE.UTF-8', 'de_DE.utf8', 'de_DE.iso88591', 'de_DE.iso885915@euro', 'de_DE.ISO8859-1', 'de_DE.ISO8859-15', 'de_DE@euro', 'de_DE', 'de');
+		break;
+	case 'en':
+		$l = array('en_US.utf8', 'en_US.iso88591', 'en_US.ISO8859-1', 'en_US.US-ASCII', 'en_US', 'en');
+		break;
+	default  :
+		$l = array('C');
 }
 $lfound = setLocale(LC_TIME, $l);
 if ($lfound === false) {
