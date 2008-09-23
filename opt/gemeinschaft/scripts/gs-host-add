@@ -37,14 +37,14 @@ include_once( GS_DIR .'inc/gs-fns/gs_host_add.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip> --comment=<comment> [--sip-proxy=<ip> --sip-sbc=<ip>]';
+$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip> --comment=<comment> [--sip-proxy=<ip>] [--sip-sbc=<ip>]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
 		'host=',
 		'comment=',
-		'sip-proxy',
-		'sip-sbc'
+		'sip-proxy=',
+		'sip-sbc='
 	),
 	$usage
 );
@@ -59,14 +59,12 @@ if (! isSet($opts['host'])
 *    call the function
 ***********************************************************/
 
-$sipproxy=NULL;
-$sipsbc=NULL;
-if (isSet( $opts['sip-proxy']) )
-	$sipproxy = $opts['sip-proxy'];
-if (isSet( $opts['sip-sbc']) )
-	$sipsbc = $opts['sip-sbc'];
+if (! isSet($opts['sip-proxy']))
+	$opts['sip-proxy'] = null;
+if (! isSet($opts['sip-sbc'  ]))
+	$opts['sip-sbc'  ] = null;
 
-$ret = @ gs_host_add( $opts['host'], $opts['comment'], $sipproxy, $sipsbc );
+$ret = @ gs_host_add( $opts['host'], $opts['comment'], $opts['sip-proxy'], $opts['sip-sbc'] );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 echo "Host added.\n";
