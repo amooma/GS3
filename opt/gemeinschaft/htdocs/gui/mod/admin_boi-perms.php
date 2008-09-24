@@ -35,16 +35,18 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
+
 $per_page = (int)GS_GUI_NUM_RESULTS;
-$action  =      @$_REQUEST['action' ];
-$host_id = (int)@$_REQUEST['p_host_id'];
-$user_id = (int)@$_REQUEST['p_user_id'];
-$page    = (int)@$_REQUEST['page'     ] ;
-$name    = trim(@$_REQUEST['name'     ]);
-$host    = trim(@$_REQUEST['host'     ]);
+$action   =      @$_REQUEST['action'   ] ;
+$host_id  = (int)@$_REQUEST['p_host_id'] ;
+$user_id  = (int)@$_REQUEST['p_user_id'] ;
+$page     = (int)@$_REQUEST['page'     ] ;
+$u_rname  = trim(@$_REQUEST['u_rname'  ]);
+$host     = trim(@$_REQUEST['host'     ]);
 
 if ($action == '') $action = 'view';
 if (@$_REQUEST['p_user'] != '') $action = 'add';
+
 
 if ($action === 'add') {
 	$user_id = (int)$DB->executeGetOne(
@@ -107,23 +109,22 @@ if (preg_match('/^edit_([0-9]+)_([0-9]+)/', $action, $m)) {
 	$action = 'edit';
 }
 
+
 $search_sql = '';
-
-if ($name.$host) {
-
-	if ($name) $search_sql = ' WHERE (`u`.`firstname` LIKE \''.$DB->escape($name).'%\' OR `u`.`lastname` LIKE \''.$DB->escape($name).'%\') ';
+if ($u_rname || $host) {
+	if ($u_rname) {
+		$search_sql = ' WHERE (`u`.`firstname` LIKE \''. $DB->escape($u_rname).'%\' OR `u`.`lastname` LIKE \''. $DB->escape($u_rname).'%\') ';
+	}
 	if ($host) { 
 		if ($search_sql) $search_sql .= ' AND ';
 		else $search_sql  = ' WHERE ';
-		$search_sql .= ' (`h`.`host` LIKE \'%'.$DB->escape($host).'%\') ';
+		$search_sql .= ' (`h`.`host` LIKE \'%'. $DB->escape($host).'%\') ';
 	}
 }
 
 ?>
 
 
-<form method="post" action="<?php echo GS_URL_PATH; ?>">
-<?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <?php
 
 $DB->execute( 'DELETE FROM `boi_perms` WHERE `roles`=\'\'' );
@@ -136,11 +137,10 @@ FROM
 	`boi_perms` `p` JOIN
 	`users` `u` ON (`u`.`id`=`p`.`user_id`) JOIN
 	`hosts` `h` ON (`h`.`id`=`p`.`host_id`)
-'.$search_sql.'
+'. $search_sql .'
 ORDER BY
 	`h`.`host`, `u`.`user`
-	
-LIMIT 
+LIMIT
 	'. ($page*(int)$per_page) .','. (int)$per_page
 );
 
@@ -148,7 +148,9 @@ $num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
 ?>
- <table cellspacing="1" class="phonebook">
+
+<form method="get" action="<?php echo GS_URL_PATH; ?>">
+<table cellspacing="1" class="phonebook">
 <thead>
 <tr>
 	<th style="width:253px;"><?php echo __('Name suchen'); ?></th>
@@ -158,10 +160,9 @@ $num_pages = ceil($num_total / $per_page);
 </thead>
 <tbody>
 <tr>
-	<form method="get" action="<?php echo GS_URL_PATH; ?>">
 	<td>
 		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
-		<input type="text" name="name" value="<?php echo htmlEnt($name); ?>" size="25" style="width:200px;" />
+		<input type="text" name="u_rname" value="<?php echo htmlEnt($u_rname); ?>" size="25" style="width:200px;" />
 		<button type="submit" title="<?php echo __('Name suchen'); ?>" class="plain">
 			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
 		</button>
@@ -173,10 +174,9 @@ $num_pages = ceil($num_total / $per_page);
 			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
 		</button>
 	</td>
-	</form>
 	<td rowspan="2">
  <?php
-
+	
 	if ($page > 0) {
 		echo
 		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
@@ -202,22 +202,24 @@ $num_pages = ceil($num_total / $per_page);
 	<tr>
 		<td colspan="2" class="quickchars">
 <?php
-
+	
 	$chars = array();
 	$chars['#'] = '';
 	for ($i=65; $i<=90; ++$i) $chars[chr($i)] = chr($i);
 	foreach ($chars as $cd => $cs) {
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'name='. htmlEnt($cs)), '">', htmlEnt($cd), '</a>', "\n";
 	}
-
+	
 ?>
 		</td>
 	</tr>
-	</tbody>
-	</table>
+</tbody>
+</table>
+</form>
 
 
-
+<form method="post" action="<?php echo GS_URL_PATH; ?>">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <table cellspacing="1">
 <thead>
 <tr>
