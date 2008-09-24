@@ -6130,7 +6130,8 @@ UNLOCK TABLES;
 -- Table structure for table `prov_jobs`
 --
 
-CREATE TABLE IF NOT EXISTS `prov_jobs` (
+DROP TABLE IF EXISTS `prov_jobs`;
+CREATE TABLE `prov_jobs` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `inserted` int(10) unsigned NOT NULL default '0',
   `running` tinyint(1) unsigned NOT NULL default '0',
