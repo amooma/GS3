@@ -6149,7 +6149,7 @@ CREATE TABLE IF NOT EXISTS `prov_jobs` (
   KEY `immediate` (`immediate`),
   KEY `inserted` (`inserted`),
   KEY `type` (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `prov_jobs`
