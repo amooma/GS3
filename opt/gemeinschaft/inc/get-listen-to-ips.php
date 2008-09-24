@@ -45,8 +45,8 @@ function gs_get_listen_to_ips( $primary_only=false )
 		return array('255.255.255.255');
 	}
 	*/
-	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
-	//if (gs_get_conf('GS_INSTALLATION_TYPE') === 'gpbx') {
+	//if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+	if (gs_get_conf('GS_INSTALLATION_TYPE') === 'gpbx') {
 		return array(trim(gs_keyval_get('vlan_0_ipaddr')));
 	}
 	
