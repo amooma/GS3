@@ -35,10 +35,14 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
-
+$per_page = (int)GS_GUI_NUM_RESULTS;
 $action  =      @$_REQUEST['action' ];
 $host_id = (int)@$_REQUEST['p_host_id'];
 $user_id = (int)@$_REQUEST['p_user_id'];
+$page    = (int)@$_REQUEST['page'     ] ;
+$name    = trim(@$_REQUEST['name'     ]);
+$host    = trim(@$_REQUEST['host'     ]);
+
 if ($action == '') $action = 'view';
 if (@$_REQUEST['p_user'] != '') $action = 'add';
 
@@ -106,9 +110,20 @@ if (preg_match('/^edit_([0-9]+)_([0-9]+)/', $action, $m)) {
 	$action = 'edit';
 }
 
+$search_sql = '';
 
+if ($name.$host) {
+
+	if ($name) $search_sql = ' WHERE (`u`.`firstname` LIKE \''.$DB->escape($name).'%\' OR `u`.`lastname` LIKE \''.$DB->escape($name).'%\') ';
+	if ($host) { 
+		if ($search_sql) $search_sql .= ' AND ';
+		else $search_sql  = ' WHERE ';
+		$search_sql .= ' (`h`.`host` LIKE \'%'.$DB->escape($host).'%\') ';
+	}
+}
 
 ?>
+
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
@@ -116,7 +131,7 @@ if (preg_match('/^edit_([0-9]+)_([0-9]+)/', $action, $m)) {
 
 $DB->execute( 'DELETE FROM `boi_perms` WHERE `roles`=\'\'' );
 $rs = $DB->execute(
-'SELECT
+'SELECT	SQL_CALC_FOUND_ROWS
 	`p`.`user_id`, `u`.`user`, `u`.`firstname` `u_fn`, `u`.`lastname` `u_ln`,
 	`p`.`host_id`, `h`.`host`, `h`.`comment` `h_comment`,
 	`p`.`roles`
@@ -124,11 +139,88 @@ FROM
 	`boi_perms` `p` JOIN
 	`users` `u` ON (`u`.`id`=`p`.`user_id`) JOIN
 	`hosts` `h` ON (`h`.`id`=`p`.`host_id`)
+'.$search_sql.'
 ORDER BY
 	`h`.`host`, `u`.`user`
-'
+	
+LIMIT 
+	'. ($page*(int)$per_page) .','. (int)$per_page
 );
+
+$num_total = @$DB->numFoundRows();
+$num_pages = ceil($num_total / $per_page);
+
 ?>
+ <table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th style="width:253px;"><?php echo __('Name suchen'); ?></th>
+	<th style="width:234px;"><?php echo __('Host suchen'); ?></th>
+	<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<form method="get" action="<?php echo GS_URL_PATH; ?>">
+	<td>
+		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+		<input type="text" name="name" value="<?php echo htmlEnt($name); ?>" size="25" style="width:200px;" />
+		<button type="submit" title="<?php echo __('Name suchen'); ?>" class="plain">
+			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
+		</button>
+	</td>
+	<td>
+		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+		<input type="text" name="host" value="<?php echo htmlEnt($host); ?>" size="15" style="width:130px;" />
+		<button type="submit" title="<?php echo __('Nummer suchen'); ?>" class="plain">
+			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
+		</button>
+	</td>
+	</form>
+	<td rowspan="2">
+ <?php
+
+	if ($page > 0) {
+		echo
+		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
+		'</a>', "\n";
+	} else {
+		echo
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust-dis.png" />', "\n";
+	}
+	if ($page < $num_pages-1) {
+		echo
+		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
+		'</a>', "\n";
+	} else {
+		echo
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust-dis.png" />', "\n";
+	}
+	
+	?>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="quickchars">
+<?php
+
+	$chars = array();
+	$chars['#'] = '';
+	for ($i=65; $i<=90; ++$i) $chars[chr($i)] = chr($i);
+	foreach ($chars as $cd => $cs) {
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'name='. htmlEnt($cs)), '">', htmlEnt($cd), '</a>', "\n";
+	}
+
+?>
+		</td>
+	</tr>
+	</tbody>
+	</table>
+
+
+
 <table cellspacing="1">
 <thead>
 <tr>
