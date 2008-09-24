@@ -110,20 +110,18 @@ if (preg_match('/^edit_([0-9]+)_([0-9]+)/', $action, $m)) {
 }
 
 
-$search_sql = '';
-if ($u_rname || $host) {
-	if ($u_rname) {
-		$search_sql = ' WHERE (`u`.`firstname` LIKE \''. $DB->escape($u_rname).'%\' OR `u`.`lastname` LIKE \''. $DB->escape($u_rname).'%\') ';
-	}
-	if ($host) { 
-		if ($search_sql) $search_sql .= ' AND ';
-		else $search_sql  = ' WHERE ';
-		$search_sql .= ' (`h`.`host` LIKE \'%'. $DB->escape($host).'%\') ';
-	}
+$where = array();
+if ($u_rname) {
+	$where[] =
+		'`u`.`user` LIKE \''. $DB->escape($u_rname).'%\' OR '.
+		'`u`.`firstname` LIKE \''. $DB->escape($u_rname).'%\' OR '.
+		'`u`.`lastname` LIKE \''. $DB->escape($u_rname).'%\'';
+}
+if ($host) { 
+	$where[] = '`h`.`host` LIKE \'%'. $DB->escape($host).'%\'';
 }
 
 ?>
-
 
 <?php
 
@@ -137,7 +135,7 @@ FROM
 	`boi_perms` `p` JOIN
 	`users` `u` ON (`u`.`id`=`p`.`user_id`) JOIN
 	`hosts` `h` ON (`h`.`id`=`p`.`host_id`)
-'. $search_sql .'
+'. (count($where)>0 ? ' WHERE ('.implode(') AND (',$where).') ' : '') .'
 ORDER BY
 	`h`.`host`, `u`.`user`
 LIMIT
