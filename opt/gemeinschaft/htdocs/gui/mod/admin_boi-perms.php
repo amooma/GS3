@@ -46,9 +46,6 @@ $host    = trim(@$_REQUEST['host'     ]);
 if ($action == '') $action = 'view';
 if (@$_REQUEST['p_user'] != '') $action = 'add';
 
-//echo "<pre>\n"; print_r($_REQUEST); echo "</pre>\n";
-
-
 if ($action === 'add') {
 	$user_id = (int)$DB->executeGetOne(
 		'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape(trim(@$_REQUEST['p_user'])) .'\'' );
