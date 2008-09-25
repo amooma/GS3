@@ -145,15 +145,18 @@ function _update_users( $DB, $host_id, $host, $api, &$msg )
 	return null;
 }
 
-$edit_host   = (int)trim(@$_REQUEST['edit'   ]);
-$save_host   = (int)trim(@$_REQUEST['save'   ]);
-$per_page    = (int)GS_GUI_NUM_RESULTS;
-$page        =     (int)(@$_REQUEST['page'   ]);
-$host        =      trim(@$_REQUEST['host'   ]);
-$hostid      = (int)trim(@$_REQUEST['hostid' ]);
-$comment     =      trim(@$_REQUEST['comment']);
-$group_id    = (int)trim(@$_REQUEST['grp_id' ]);
-$delete_host = (int)trim(@$_REQUEST['delete' ]);
+$edit_host     = (int)trim(@$_REQUEST['edit'   ]);
+$save_host     = (int)trim(@$_REQUEST['save'   ]);
+$per_page      = (int)GS_GUI_NUM_RESULTS;
+$page          =     (int)(@$_REQUEST['page'   ]);
+$host          =      trim(@$_REQUEST['host'   ]);
+$hostid        = (int)trim(@$_REQUEST['hostid' ]);
+$comment       =      trim(@$_REQUEST['comment']);
+$group_id      = (int)trim(@$_REQUEST['grp_id' ]);
+$delete_host   = (int)trim(@$_REQUEST['delete' ]);
+$search_number =      trim(@$_REQUEST['number' ]);
+$search_ip     =      trim(@$_REQUEST['ipaddr' ]);
+
 
 if ($host) {
 	$host = normalizeIPs($host);
@@ -339,7 +342,9 @@ if ($delete_host) {
 	}
 }
 
-
+$sql_search = '';
+if ($search_ip) $sql_search .= ' AND `h`.`host` LIKE \'%'.$DB->escape($search_ip).'%\'';
+if ($search_number) $sql_search .= ' AND `p4`.`value` LIKE \''.$DB->escape($search_number).'%\'';
 
 $sql_query =
 	'SELECT SQL_CALC_FOUND_ROWS '.
@@ -355,6 +360,7 @@ $sql_query =
 		'`host_params` `p3` ON (`p3`.`host_id`=`h`.`id` AND `p3`.`param`=\'sip_server_from_wan\') LEFT JOIN '.
 		'`host_params` `p4` ON (`p4`.`host_id`=`h`.`id` AND `p4`.`param`=\'route_prefix\') '.
 	'WHERE `h`.`is_foreign`=1 '.
+	 $sql_search.' '.
 	'ORDER BY `h`.`host` '.
 	'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 
@@ -366,10 +372,69 @@ $num_pages = ceil($num_total / $per_page);
 ?>	
 
 <table cellspacing="1" class="phonebook">
+	<thead>
+	<tr>
+		<th style="width:253px;"><?php echo __('IP-Adresse suchen'); ?></th>
+		<th style="width:234px;"><?php echo __('Pr&auml;fix suchen'); ?></th>
+		<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<form method="get" action="<?php echo GS_URL_PATH; ?>">
+		<td>
+
+		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+		<input type="text" name="ipaddr" value="<?php echo htmlEnt($search_ip); ?>" size="25" style="width:200px;" /
+		<button type="submit" title="<?php echo __('Name suchen'); ?>" class="plain">
+			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
+		</button>
+	</td>
+	<td>
+		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+		<input type="text" name="number" value="<?php echo htmlEnt($search_number); ?>" size="15" style="width:130px;" />
+		<button type="submit" title="<?php echo __('Nummer suchen'); ?>" class="plain">
+			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
+		</button>
+	</td>
+	</form>
+		<td rowspan="2">
+
+
+	<?php
+	
+	if ($page > 0) {
+		echo
+		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
+		'</a>', "\n";
+	} else {
+		echo
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust-dis.png" />', "\n";
+	}
+	if ($page < $num_pages-1) {
+		echo
+		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
+		'</a>', "\n";
+	} else {
+		echo
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust-dis.png" />', "\n";
+	}
+	
+	?>
+		</td>
+	</tr>
+	</tbody>
+	</table>
+
+
+<table cellspacing="1" class="phonebook">
 <thead>
 <tr>
 	<th style="width:55px;"><?php echo __('ID'); ?></th>
 	<th style="width:125px;" class="sort-col"><?php echo __('IP-Adresse'); ?> <sup>[1]</sup></th>
+	<th style="width:125px;"><?php echo __('Host'); ?> </th>
 	<th style="width:150px;"><?php echo __('Kommentar'); ?></th>
 	<th style="width:65px;"><?php echo __('Pr&auml;fix'); ?> <sup>[2]</sup></th>
 	<th style="width:50px;"><?php echo __('API'); ?> <sup>[3]</sup></th>
@@ -378,6 +443,8 @@ $num_pages = ceil($num_total / $per_page);
 	<th style="width:80px;"><?php echo __('Gruppen-ID'); ?></th>
 	<th style="width:80px;">
 <?php
+
+/*
 echo ($page+1), ' / ', $num_pages, '&nbsp; ',"\n";
 
 if ($page > 0) {
@@ -399,7 +466,7 @@ if ($page < $num_pages-1) {
 	echo
 	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
 }
-
+*/
 ?>
 	</th>
 </tr>
@@ -410,6 +477,7 @@ if ($page < $num_pages-1) {
 
 if (@$rs) {
 	$i = 0;
+	$dnslookup   = true;
 	while ($r = $rs->fetchRow()) {
 		echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
 		
@@ -431,7 +499,8 @@ if (@$rs) {
 			echo '<td>';
 			echo '<input type="text" name="host" value="', htmlEnt($r['host']) ,'" size="15" maxlength="30" style="width:95%;" />';
 			echo '</td>',"\n";
-			
+			echo '<td>';
+			echo '</td>',"\n";
 			echo '<td>';
 			echo '<input type="text" name="comment" value="', htmlEnt($r['comment']) ,'" size="20" maxlength="45" style="width:95%;" />';
 			echo '</td>',"\n";
@@ -482,6 +551,18 @@ if (@$rs) {
 			echo '<td class="r">', htmlEnt($r['id']) ,'</td>',"\n";
 						
 			echo '<td>', htmlEnt($r['host']) ,'</td>',"\n";
+
+			$hostname = '';	
+			if ($dnslookup) {
+				$starttime = time();
+				$hostname = gethostbyaddr($r['host']);
+				if ((time() - $starttime) > 2) {
+					 $dnslookup = false;
+					 $hostname = '';
+				}
+			} 
+
+			echo '<td>', htmlEnt($hostname) ,'</td>',"\n";
 			
 			echo '<td>', htmlEnt($r['comment']) ,'</td>',"\n";
 			
@@ -522,6 +603,7 @@ if (!$edit_host) {
 	<td>
 		<input type="text" name="host" value="" size="15" maxlength="30" style="width:95%;" />
 	</td>
+	<td></td>
 	<td>
 		<input type="text" name="comment" value="" size="20" maxlength="45" style="width:95%;" />
 	</td>
