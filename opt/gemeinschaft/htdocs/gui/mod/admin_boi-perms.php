@@ -205,7 +205,7 @@ $num_pages = ceil($num_total / $per_page);
 	$chars['#'] = '';
 	for ($i=65; $i<=90; ++$i) $chars[chr($i)] = chr($i);
 	foreach ($chars as $cd => $cs) {
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'name='. htmlEnt($cs)), '">', htmlEnt($cd), '</a>', "\n";
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'u_rname='. htmlEnt($cs)), '">', htmlEnt($cd), '</a>', "\n";
 	}
 	
 ?>
