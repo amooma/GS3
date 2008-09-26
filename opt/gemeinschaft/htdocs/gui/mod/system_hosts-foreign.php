@@ -430,16 +430,14 @@ $num_pages = ceil($num_total / $per_page);
 <tr>
 	<th style="width:55px;"><?php echo __('ID'); ?></th>
 	<th style="width:125px;" class="sort-col"><?php echo __('IP-Adresse'); ?> <sup>[1]</sup></th>
-	<th style="width:125px;"><?php echo __('Host'); ?> </th>
+	<th style="width:125px;"><?php echo __('Hostname'); ?> </th>
 	<th style="width:150px;"><?php echo __('Kommentar'); ?></th>
 	<th style="width:65px;"><?php echo __('Pr&auml;fix'); ?> <sup>[2]</sup></th>
 	<th style="width:50px;"><?php echo __('API'); ?> <sup>[3]</sup></th>
 	<th style="width:125px;"><?php echo __('SIP-Proxy WAN'); ?> <sup>[4]</sup></th>
 	<th style="width:125px;"><?php echo __('SIP-SBC WAN'); ?> <sup>[5]</sup></th>
 	<th style="width:80px;"><?php echo __('Gruppen-ID'); ?></th>
-	<th style="width:70px;">
-		&nbsp;
-	</th>
+	<th style="width:70px;">&nbsp;</th>
 </tr>
 </thead>
 <tbody>
@@ -466,12 +464,15 @@ if (@$rs) {
 			echo '<input type="hidden" name="save" value="', $r['id'] , '" />', "\n";
 			
 			echo '<td class="r">', htmlEnt($r['id']) ,'</td>',"\n";
-						
+			
 			echo '<td>';
 			echo '<input type="text" name="host" value="', htmlEnt($r['host']) ,'" size="15" maxlength="30" style="width:95%;" />';
 			echo '</td>',"\n";
+			
 			echo '<td>';
+			echo '&nbsp;';
 			echo '</td>',"\n";
+			
 			echo '<td>';
 			echo '<input type="text" name="comment" value="', htmlEnt($r['comment']) ,'" size="20" maxlength="45" style="width:95%;" />';
 			echo '</td>',"\n";
@@ -520,19 +521,19 @@ if (@$rs) {
 		} else {
 			
 			echo '<td class="r">', htmlEnt($r['id']) ,'</td>',"\n";
-						
+			
 			echo '<td>', htmlEnt($r['host']) ,'</td>',"\n";
-
-			$hostname = '';	
+			
+			$hostname = '';
 			if ($dnslookup) {
 				$starttime = time();
 				$hostname = gethostbyaddr($r['host']);
 				if ((time() - $starttime) > 2) {
-					 $dnslookup = false;
-					 $hostname = '';
+					$dnslookup = false;
+					$hostname = '';
 				}
-			} 
-
+			}
+			
 			echo '<td>', htmlEnt($hostname) ,'</td>',"\n";
 			
 			echo '<td>', htmlEnt($r['comment']) ,'</td>',"\n";
@@ -574,7 +575,7 @@ if (!$edit_host) {
 	<td>
 		<input type="text" name="host" value="" size="15" maxlength="30" style="width:95%;" />
 	</td>
-	<td></td>
+	<td>&nbsp;</td>
 	<td>
 		<input type="text" name="comment" value="" size="20" maxlength="45" style="width:95%;" />
 	</td>
