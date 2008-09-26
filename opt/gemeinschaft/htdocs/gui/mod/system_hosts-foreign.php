@@ -405,7 +405,7 @@ $num_pages = ceil($num_total / $per_page);
 	
 	if ($page > 0) {
 		echo
-		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+		'<a href="', gs_url($SECTION, $MODULE, null, 'ipaddr='.htmlEnt($search_ip).'&amp;number='.htmlEnt($search_number) .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
 		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
 		'</a>', "\n";
 	} else {
@@ -414,7 +414,7 @@ $num_pages = ceil($num_total / $per_page);
 	}
 	if ($page < $num_pages-1) {
 		echo
-		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+		'<a href="', gs_url($SECTION, $MODULE, null, 'ipaddr='.htmlEnt($search_ip).'&amp;number='.htmlEnt($search_number) .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
 		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
 		'</a>', "\n";
 	} else {
