@@ -371,37 +371,32 @@ $num_pages = ceil($num_total / $per_page);
 
 ?>	
 
+<form method="get" action="<?php echo GS_URL_PATH; ?>">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <table cellspacing="1" class="phonebook">
-	<thead>
-	<tr>
-		<th style="width:253px;"><?php echo __('IP-Adresse suchen'); ?></th>
-		<th style="width:234px;"><?php echo __('Pr&auml;fix suchen'); ?></th>
-		<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<form method="get" action="<?php echo GS_URL_PATH; ?>">
-		<td>
-
-		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<thead>
+<tr>
+	<th style="width:253px;"><?php echo __('IP-Adresse suchen'); ?></th>
+	<th style="width:234px;"><?php echo __('Pr&auml;fix suchen'); ?></th>
+	<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>
 		<input type="text" name="ipaddr" value="<?php echo htmlEnt($search_ip); ?>" size="25" style="width:200px;" /
 		<button type="submit" title="<?php echo __('Name suchen'); ?>" class="plain">
 			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
 		</button>
 	</td>
 	<td>
-		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
 		<input type="text" name="number" value="<?php echo htmlEnt($search_number); ?>" size="15" style="width:130px;" />
 		<button type="submit" title="<?php echo __('Nummer suchen'); ?>" class="plain">
 			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
 		</button>
 	</td>
-	</form>
-		<td rowspan="2">
-
-
-	<?php
+	<td rowspan="2">
+<?php
 	
 	if ($page > 0) {
 		echo
@@ -422,11 +417,12 @@ $num_pages = ceil($num_total / $per_page);
 		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust-dis.png" />', "\n";
 	}
 	
-	?>
-		</td>
-	</tr>
-	</tbody>
-	</table>
+?>
+	</td>
+</tr>
+</tbody>
+</table>
+</form>
 
 
 <table cellspacing="1" class="phonebook">
@@ -441,33 +437,8 @@ $num_pages = ceil($num_total / $per_page);
 	<th style="width:125px;"><?php echo __('SIP-Proxy WAN'); ?> <sup>[4]</sup></th>
 	<th style="width:125px;"><?php echo __('SIP-SBC WAN'); ?> <sup>[5]</sup></th>
 	<th style="width:80px;"><?php echo __('Gruppen-ID'); ?></th>
-	<th style="width:80px;">
-<?php
-
-/*
-echo ($page+1), ' / ', $num_pages, '&nbsp; ',"\n";
-
-if ($page > 0) {
-	echo
-	'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
-	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
-	'</a>', "\n";
-} else {
-	echo
-	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
-}
-
-if ($page < $num_pages-1) {
-	echo
-	'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
-	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
-	'</a>', "\n";
-} else {
-	echo
-	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
-}
-*/
-?>
+	<th style="width:70px;">
+		&nbsp;
 	</th>
 </tr>
 </thead>
