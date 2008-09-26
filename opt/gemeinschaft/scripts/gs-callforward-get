@@ -38,11 +38,12 @@ include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user>';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> [--regen]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'user='
+		'user=',
+		'regen'
 	),
 	$usage
 );
@@ -57,6 +58,26 @@ if (! isSet($opts['user'])) {
 $cf = @ gs_callforward_get( $opts['user'] );
 if (isGsError( $cf )) gs_script_error( $cf->getMsg() );
 if (! $cf)            gs_script_error();
+
+if (array_key_exists('regen', $opts)) {
+	include_once( GS_DIR .'inc/quote_shell_arg.php' );
+	foreach ($cf as $source => $arr1) {
+		foreach ($arr1 as $case => $arr) {
+			foreach (array('std','var') as $std_var) {
+				echo './gs-callforward-set --user=',qsa($opts['user']),' --source=',qsa($source),' --case=',qsa($case), ($case==='timeout' ? ' --timeout='.((int)$arr['timeout']) : '') ,' --type=',qsa($std_var),' --number=',qsa(@$arr['number_'.$std_var]),'' ,"\n";
+			}
+		}
+	}
+	foreach ($cf as $source => $arr1) {
+		foreach ($arr1 as $case => $arr) {
+			foreach (array('std','var') as $std_var) {
+				echo './gs-callforward-activate --user=',qsa($opts['user']),' --source=',qsa($source),' --case=',qsa($case),' --active=',qsa($arr['active']),'' ,"\n";
+			}
+		}
+	}
+	exit(0);
+}
+
 
 $nStdLen = strLen('number_std');
 $nVarLen = strLen('number_var');
