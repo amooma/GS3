@@ -260,6 +260,7 @@ _gscnf( 'DP_DIALTIMEOUT_IN'         , 45                 );
 _gscnf( 'DP_PRV_CALL_PREFIX'        , '*7*'              );
 _gscnf( 'DP_FORWARD_REQ_EXT_NUM'    , true               );
 _gscnf( 'DP_ALLOW_DIRECT_DIAL'      , false              );
+_gscnf( 'DP_CONNID'                 , false              );
 
 _gscnf( 'PB_IMPORTED_ENABLED'       , false              );
 _gscnf( 'PB_IMPORTED_ORDER'         , 2                  );
