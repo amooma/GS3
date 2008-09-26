@@ -102,10 +102,14 @@ function gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_i
 
 function gs_group_change_by_name( $name, $parent_name, $name_new, $title, $softkey_profile_id=null, $prov_param_profile_id=null, $show_ext_modules=255 )
 {
-	if (! preg_match( '/^[a-z0-9\-_]+$/', $name ))
-		return new GsError( 'Group must be alphanumeric.' );
+	if ($name !== null && $name !== '') {
+		if (! preg_match( '/^[a-z0-9\-_]+$/', $name ))
+			return new GsError( 'Group name must be alphanumeric.' );
+	}
+	if (! preg_match( '/^[a-z0-9\-_]+$/', $name_new ))
+		return new GsError( 'Group name must be alphanumeric.' );
 	if (! preg_match( '/^[a-z0-9\-_]+$/', $parent_name ))
-		return new GsError( 'Group must be alphanumeric.' );
+		return new GsError( 'Parent group name must be alphanumeric.' );
 	
 	# connect to db
 	#
@@ -113,9 +117,14 @@ function gs_group_change_by_name( $name, $parent_name, $name_new, $title, $softk
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
 	
-	$id = (int)$db->executeGetOne( 'SELECT `id` FROM `user_groups` WHERE `name`=\''. $db->escape($name) .'\'' );
-	if ($id < 1)
-		return new GsError( 'Unknown group "'.$name.'".' );
+	if ($name === null || $name === '') {
+		# add
+		$id = null;
+	} else {
+		$id = (int)$db->executeGetOne( 'SELECT `id` FROM `user_groups` WHERE `name`=\''. $db->escape($name) .'\'' );
+		if ($id < 1)
+			return new GsError( 'Unknown group "'.$name.'".' );
+	}
 	
 	if ($parent_name === null
 	||  $parent_name === false
