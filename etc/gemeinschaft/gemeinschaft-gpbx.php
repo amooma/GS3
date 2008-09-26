@@ -179,6 +179,7 @@ $DP_DIALTIMEOUT_IN          = 90;
 $DP_PRV_CALL_PREFIX         = '*7*';
 $DP_FORWARD_REQ_EXT_NUM     = true;
 $DP_ALLOW_DIRECT_DIAL       = true;
+$DP_CONNID                  = false;
 
 
 /***********************************************************
