@@ -39,11 +39,12 @@ include_once( GS_DIR .'inc/mb_str_pad.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --pgroup=<id>';
+$usage = 'Usage: '. baseName(__FILE__) .' --pgroup=<id> [--regen]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'pgroup='
+		'pgroup=',
+		'regen'
 	),
 	$usage
 );
@@ -61,6 +62,11 @@ if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 if (! is_array($ret))  gs_script_error();
 
+if (array_key_exists('regen', $opts)) {
+	include_once( GS_DIR .'inc/quote_shell_arg.php' );
+	echo './gs-pickupgroup-add --title=',qsa($ret['title']),'' ,"\n";
+	exit(0);
+}
 
 
 $sep = "-----------------------------------------------------------------------------------------";
