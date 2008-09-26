@@ -38,11 +38,12 @@ include_once( GS_DIR .'inc/gs-fns/gs_vm_get.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user>';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> [--regen]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'user='
+		'user=',
+		'regen'
 	),
 	$usage
 );
@@ -57,6 +58,13 @@ if (! isSet( $opts['user'] )) {
 $ret = @ gs_vm_get( $opts['user'] );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
+
+if (array_key_exists('regen', $opts)) {
+	include_once( GS_DIR .'inc/quote_shell_arg.php' );
+	echo './gs-vm-activate --user=',qsa($opts['user']),' --source=',qsa('internal'),' --active=',qsa(@$ret['internal_active'] ?'yes':'no'),'' ,"\n";
+	echo './gs-vm-activate --user=',qsa($opts['user']),' --source=',qsa('external'),' --active=',qsa(@$ret['external_active'] ?'yes':'no'),'' ,"\n";
+	exit(0);
+}
 
 foreach ($ret as $k => $v) {
 	echo str_pad(''. $k .' ', 17, ' ', STR_PAD_RIGHT) .': '. str_replace("\n", ' ', (int)$v) .''."\n";
