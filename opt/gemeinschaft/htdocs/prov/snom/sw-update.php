@@ -249,10 +249,19 @@ if (! $db) {
 	exit(0);
 }
 
+$phone_id = (int)$db->executeGetOne(
+	'SELECT `id` '.
+	'FROM `phones` '.
+	'WHERE `mac_addr`=\''. $db->escape($mac) .'\''
+	);
+if (! $phone_id) {
+	gs_log( GS_LOG_WARNING, "DB error" );
+	exit(0);
+}
 $rs = $db->execute(
 	'SELECT `id`, `running`, `minute`, `hour`, `day`, `month`, `dow`, `data` '.
 	'FROM `prov_jobs` '.
-	'WHERE `phone_id`=1 AND `type`=\'firmware\' '.
+	'WHERE `phone_id`='.$phone_id.' AND `type`=\'firmware\' '.
 	'ORDER BY `running` DESC, `inserted`' );
 if (! $rs) {
 	gs_log( GS_LOG_WARNING, "DB error" );
