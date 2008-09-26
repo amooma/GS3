@@ -28,6 +28,8 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-fns/gs_user_del.php' );
+include_once( GS_DIR .'inc/find_executable.php' );
+include_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 function microtime_float()
 {
@@ -50,6 +52,37 @@ $host_apis = array(
 	'm01' => '1.0'
 	//'m02' => '1.1'
 );
+
+function _getHostByAddr_timeout( $ip, $timeout=2, $fallback=false )
+{
+	static $host_bin = null;
+	if ($host_bin === null) {
+		$host_bin = find_executable('host', array(
+			'/usr/bin/', '/usr/sbin/', '/bin/', '/sbin/'
+			));
+		if (empty($host_bin)) $host_bin = false;
+	}
+	if ($host_bin) {
+		$err=0; $out=array();
+		exec( 'LANG=C '.$host_bin.' -W '.((int)abs($timeout)).' '. qsa($ip) .' 2>>/dev/null', $out, $err );
+		if ($err == 0) {
+			if (preg_match('/pointer ([a-z0-9.\-_]+)/i', implode("\n",$out), $m)) {
+				$host = $m[1];
+				if (subStr($host,-1)==='.') $host = subStr($host,0,-1);
+				return $host;
+			}
+		}
+	} else {
+		if ($fallback) {
+			$host = getHostByAddr($ip);
+			if (empty($host) || $host == $ip) {
+				return false;
+			}
+			return $host;
+		}
+	}
+	return false;
+}
 
 function _update_users( $DB, $host_id, $host, $api, &$msg )
 {
@@ -446,7 +479,6 @@ $num_pages = ceil($num_total / $per_page);
 
 if (@$rs) {
 	$i = 0;
-	$dnslookup   = true;
 	while ($r = $rs->fetchRow()) {
 		echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
 		
@@ -524,17 +556,10 @@ if (@$rs) {
 			
 			echo '<td>', htmlEnt($r['host']) ,'</td>',"\n";
 			
-			$hostname = '';
-			if ($dnslookup) {
-				$starttime = time();
-				$hostname = gethostbyaddr($r['host']);
-				if ((time() - $starttime) > 2) {
-					$dnslookup = false;
-					$hostname = '';
-				}
-			}
+			@ob_flush(); @flush();
+			$hostname = _getHostByAddr_timeout( $r['host'], 2, true );
 			
-			echo '<td>', htmlEnt($hostname) ,'</td>',"\n";
+			echo '<td>', (empty($hostname) ? '?' : htmlEnt($hostname)) ,'</td>',"\n";
 			
 			echo '<td>', htmlEnt($r['comment']) ,'</td>',"\n";
 			
