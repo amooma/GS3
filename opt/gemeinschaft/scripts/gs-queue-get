@@ -39,11 +39,12 @@ include_once( GS_DIR .'inc/mb_str_pad.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --queue=<extension>';
+$usage = 'Usage: '. baseName(__FILE__) .' --queue=<extension> [--regen]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'queue='
+		'queue=',
+		'regen'
 	),
 	$usage
 );
@@ -60,6 +61,11 @@ $queue =  gs_queue_get( $opts['queue'] );
 if (isGsError( $queue )) gs_script_error( $queue->getMsg() );
 if (! is_array($queue))  gs_script_error();
 
+if (array_key_exists('regen', $opts)) {
+	include_once( GS_DIR .'inc/quote_shell_arg.php' );
+	echo './gs-queue-add --queue=',qsa($queue['ext']),' --title=',qsa($queue['title']),' --maxlen=',((int)$queue['maxlen']),' --host=',qsa($queue['host']),'' ,"\n";
+	exit(0);
+}
 
 
 echo '      id: ', $queue['id'     ], "\n";
