@@ -39,11 +39,12 @@ include_once( GS_DIR .'inc/mb_str_pad.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user>';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> [--regen]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'user='
+		'user=',
+		'regen'
 	),
 	$usage
 );
@@ -58,6 +59,12 @@ if (! isSet($opts['user'])) {
 $user = @ gs_user_get( $opts['user'] );
 if (isGsError( $user )) gs_script_error( $user->getMsg() );
 if (! $user)            gs_script_error();
+
+if (array_key_exists('regen', $opts)) {
+	include_once( GS_DIR .'inc/quote_shell_arg.php' );
+	echo './gs-user-add --user=',qsa($user['user']),' --ext=',qsa($user['ext']),' --pin=',qsa($user['pin']),' --firstname=',qsa($user['firstname']),' --lastname=',qsa($user['lastname']),' --email=',qsa($user['email']),' --host=',qsa($user['host']),'' ,"\n";
+	exit(0);
+}
 
 $fields = array(
 	'id'         => 2,
