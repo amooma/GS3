@@ -52,7 +52,7 @@ macro pass-connid() {
 			}
 			if ("${connid}" = "") {
 				Set(__connid=${STRFTIME(,,%Y%m%d-%H%M%S)}-${CUT(UNIQUEID,.,2-)}-${system_ip}-${RAND(100000000,999999999)});
-				# e.g. 20080923-080136-5-192.168.1.130-380845309
+				// e.g. 20080923-080136-5-192.168.1.130-380845309
 				Verbose(2,### Generated ConnID: ${connid});
 			}
 		}
