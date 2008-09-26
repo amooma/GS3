@@ -38,11 +38,12 @@ include_once( GS_DIR .'inc/gs-fns/gs_ringtones_get.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user>';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> [--regen]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'user='
+		'user=',
+		'regen'
 	),
 	$usage
 );
@@ -58,8 +59,17 @@ $ringtones = @ gs_ringtones_get( $opts['user'] );
 if (isGsError( $ringtones )) gs_script_error( $ringtones->getMsg() );
 if (! is_array($ringtones))  gs_script_error();
 
-
 $sources = array('internal', 'external');
+
+if (array_key_exists('regen', $opts)) {
+	include_once( GS_DIR .'inc/quote_shell_arg.php' );
+	foreach ($sources as $source) {
+		$bellcore = @$ringtones[$source]['bellcore'];
+		echo './gs-ringtone-set --user=',qsa($opts['user']),' --source=',qsa($source),' --bellcore=',((int)$bellcore),'' ,"\n";
+	}
+	exit(0);
+}
+
 
 $sep = "---------------------------------------------------------\n";
 echo $sep;
