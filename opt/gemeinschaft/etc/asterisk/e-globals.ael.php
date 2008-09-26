@@ -36,6 +36,7 @@ error_reporting(0);
 
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
+require_once( GS_DIR .'inc/log.php' );
 set_error_handler('err_handler_quiet');
 
 
@@ -44,6 +45,49 @@ echo 'is_sub_system=', ($is_sub_system ? 'yes':'no') ,';',"\n";
 
 $allow_direct_dial = gs_get_conf('GS_DP_ALLOW_DIRECT_DIAL');
 echo 'allow_direct_dial=', ($allow_direct_dial ? 'yes':'no') ,';',"\n";
+
+
+require_once( GS_DIR .'inc/get-listen-to-ips.php' );
+$our_ips = gs_get_listen_to_ips(true);
+if (count($our_ips) > 10) {
+	$our_ip = $our_ips[0];
+}
+else {
+	$err=0; $out=array();
+	@exec( '/opt/gemeinschaft/sbin/getnetifs/getipaddrs 2>>/dev/null', $out, $err );
+	$addrs = array();
+	if ($err != 0) {
+		gs_log( GS_LOG_DEBUG, "getipaddrs failed (exit code $err)" );
+		# not really a problem as we don't really need the system_ip
+	} else {
+		foreach ($out as $line) {
+			if (preg_match('/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/', $line, $m)) {
+				$addrs[] = $m[0];
+			}
+		}
+	}
+	//if (($addr = gs_keyval_get('vlan_0_ipaddr'))) $addrs[] = $addr;
+	$good_addrs = array();
+	foreach ($addrs as $addr) {
+		if (subStr($addr,0,4) === '127.'    ) continue;
+		if (subStr($addr,0,8) === '169.254.') continue;
+		$good_addrs[] = $addr;
+	}
+	unset($addrs);
+	if (count($good_addrs) > 0) {
+		$our_ip = $good_addrs[0];
+	}
+	else {
+		$our_ip = '0.0.0.0';
+	}
+}
+echo 'system_ip=', $our_ip ,';',"\n";
+# not really useful for technical purposes.
+# more like a "system name"
+
+
+$connid_enabled = gs_get_conf('GS_DP_CONNID');
+echo 'connid_enabled=', ($connid_enabled ? '1':'0') ,';',"\n";
 
 
 ?>

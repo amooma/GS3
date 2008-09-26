@@ -36,6 +36,33 @@ globals {
 
 
 //---------------------------------------------------------------------
+//  Macro to get or generate a "connection ID"
+//---------------------------------------------------------------------
+
+macro pass-connid() {
+	// generates a "connection ID" to be used in a custom X-Org-ConnID header.
+	// sets ${connid}.
+	if ("${connid_enabled}" = "1") {
+		if ("${connid}" = "") {
+			if ("${CHANNEL(channeltype)}" = "SIP") {
+				if ("${SIP_HEADER(X-Org-ConnID)}" != "") {
+					Set(__connid=${SIP_HEADER(X-Org-ConnID)});
+					Verbose(2,### Received ConnID: ${connid});
+				}
+			}
+			if ("${connid}" = "") {
+				Set(__connid=${STRFTIME(,,%Y%m%d-%H%M%S)}-${CUT(UNIQUEID,.,2-)}-${system_ip}-${RAND(100000000,999999999)});
+				# e.g. 20080923-080136-5-192.168.1.130-380845309
+				Verbose(2,### Generated ConnID: ${connid});
+			}
+		}
+		Set(CDR(x_connid)=${connid});
+		Set(__SIPADDHEADER_connid=X-Org-ConnID: ${connid});
+	}
+}
+
+
+//---------------------------------------------------------------------
 //  Macro to signal dialstatus
 //---------------------------------------------------------------------
 
@@ -186,6 +213,7 @@ context to-conferences {
 	c-empty => {
 		Set(confnum=0);
 		Verbose(1,### Trying to enter new empty conference);
+		&pass-connid();
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
 			&dial-log-store(${user_name},out,${confprefix}${confnum});
@@ -228,6 +256,7 @@ context to-conferences {
 	_c-XX. => {
 		Set(confnum=${EXTEN:2});
 		Verbose(1,### Call to conference ${confprefix}${confnum});
+		&pass-connid();
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
 			&dial-log-store(${user_name},out,${confprefix}${confnum});
@@ -292,6 +321,7 @@ context to-conferences-self {
 	_c-XX. => {
 		Set(confnum=${EXTEN:2});
 		Verbose(1,### Entering conference ${confprefix}${confnum});
+		&pass-connid();
 		Answer();
 		Wait(0.5);
 		MeetMe(${confnum},DcoT);
@@ -923,6 +953,7 @@ context urldial {
 			Set(__saved_callerid=);
 		}
 		Verbose(1,### Callfile from ${callfile_from_user} to ${callfile_target});
+		&pass-connid();
 		Set(__is_callfile_origin=);
 		Set(__is_call_from=internal);
 		Dial(Local/${callfile_target}@from-internal-users/n,200);

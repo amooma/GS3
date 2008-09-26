@@ -196,6 +196,7 @@ context to-internal-users {
 		//else {
 		//	Set(__is_from_gateway=);
 		//}
+		&pass-connid();
 		&check-valid-extension(${EXTEN});
 		if ("${dial_to_node}" = "") {
 			Verbose(1,### Extension ${EXTEN} is at node: SELF);
@@ -315,6 +316,7 @@ context to-internal-users {
 			Hangup();
 		}
 		Verbose(1,### Incoming call to ${boss}\, direct dial);
+		&pass-connid();
 		
 		//if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
 		if ("${is_from_gateway}" = "1") {
@@ -409,6 +411,7 @@ context to-internal-users-self {
 		Set(CALLERID(dnid)=${boss});
 		Verbose(1,### Secretary (${user_name}) to boss (${boss}) direct dial);
 		Set(__is_call_from=internal);
+		&pass-connid();
 		// get ringer
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${boss},${is_call_from});
 		if ("${ringer}" != "") {
@@ -515,6 +518,7 @@ context to-internal-users-self {
 				//}
 			//}
 		}
+		&pass-connid();
 		
 		if ("${forwards}" = "") {
 			Set(__forwards=-1);
