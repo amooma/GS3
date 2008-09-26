@@ -67,6 +67,7 @@ if (array_key_exists('regen', $opts)) {
 		$bellcore = @$ringtones[$source]['bellcore'];
 		echo './gs-ringtone-set --user=',qsa($opts['user']),' --source=',qsa($source),' --bellcore=',((int)$bellcore),'' ,"\n";
 	}
+	# optional file can't be preserved!
 	exit(0);
 }
 
