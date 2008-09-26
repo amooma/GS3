@@ -38,11 +38,12 @@ include_once( GS_DIR .'inc/gs-fns/gs_clir_get.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user>';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> [--regen]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
 		'user=',
+		'regen'
 	),
 	$usage
 );
@@ -57,6 +58,13 @@ if (! isSet( $opts['user'] )) {
 $ret = @ gs_clir_get( $opts['user'] );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
+
+if (array_key_exists('regen', $opts)) {
+	include_once( GS_DIR .'inc/quote_shell_arg.php' );
+	echo './gs-clir-activate --user=',qsa($opts['user']),' --dest=',qsa('internal'),' --active=',qsa(@$ret['internal_restrict']==='yes' ?'yes':'no'),'' ,"\n";
+	echo './gs-clir-activate --user=',qsa($opts['user']),' --dest=',qsa('external'),' --active=',qsa(@$ret['external_restrict']==='yes' ?'yes':'no'),'' ,"\n";
+	exit(0);
+}
 
 foreach ($ret as $k => $v) {
 	echo str_pad(''. $k .' ', 20, ' ', STR_PAD_RIGHT) .': '. str_replace("\n", ' ', $v) .''."\n";
