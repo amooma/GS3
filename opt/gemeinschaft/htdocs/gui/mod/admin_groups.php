@@ -55,6 +55,8 @@ if ($action === 'save') {
 			continue;
 		$group_id       = (int)$m[1];
 		$name           = trim(@$_REQUEST['group-'.$group_id.'-name']);
+		if ($group_id == 0 && $name == '')
+			continue;
 		$name = preg_replace('/[^a-z0-9\-_]/', '', strToLower($name));
 		$title          = trim(@$_REQUEST['group-'.$group_id.'-title']);
 		$key_profile_id = (int)@$_REQUEST['group-'.$group_id.'-softkey_profile_id'];
