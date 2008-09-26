@@ -559,7 +559,7 @@ if (@$rs) {
 			@ob_flush(); @flush();
 			$hostname = _getHostByAddr_timeout( $r['host'], 2, true );
 			
-			echo '<td>', (empty($hostname) ? '?' : htmlEnt($hostname)) ,'</td>',"\n";
+			echo '<td>(', (empty($hostname) ? '?' : htmlEnt($hostname)) ,')</td>',"\n";
 			
 			echo '<td>', htmlEnt($r['comment']) ,'</td>',"\n";
 			
