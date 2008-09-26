@@ -82,6 +82,5 @@ echo $sep, "\n";
 if ($host_confict) {
 	echo "CONFICT: ALL MEMBERS OF A GROUP MUST BE ON THE SAME HOST!\n";
 }
-echo "\n";
 
 ?>
