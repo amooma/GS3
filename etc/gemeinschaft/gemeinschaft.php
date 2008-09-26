@@ -369,6 +369,10 @@ $DP_ALLOW_DIRECT_DIAL       = false;
   # allow direct dialing to an extension (overrides call forwards),
   # for boss/secretary functionality
 
+//$DP_CONNID                  = false;
+  # pass (/generate) a "connection ID" via the custom X-Org-ConnID
+  # SIP header, store in CDR(x_connid)
+
 
 
 /***********************************************************
