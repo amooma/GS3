@@ -55,6 +55,6 @@ foreach ($ret as $entry) {
 	echo "| ", str_pad($entry['id'],6,' '), ' | ', mb_str_pad($entry['title'],50,' '), "|\n";
 }
 
-echo $sep, "\n\n";
+echo $sep, "\n";
 
 ?>
