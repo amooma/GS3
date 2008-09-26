@@ -71,7 +71,7 @@ if ($action === 'save') {
 		if (isGsError($ret)) {
 			echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 		} elseif (! $ret) {
-			echo '<div class="errorbox">', __('Gruppe konnte nicht gespeichert werden.') ,'</div>',"\n";
+			echo '<div class="errorbox">', sPrintF(__('Gruppe &quot;%s&quot; konnte nicht gespeichert werden.'), htmlEnt($name)) ,'</div>',"\n";
 		}
 	}
 	
