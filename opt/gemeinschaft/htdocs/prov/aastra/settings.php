@@ -259,7 +259,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 		);
 	$user_ext = (subStr($user['name'],0,strLen($hp_route_prefix)) === $hp_route_prefix)
 		? subStr($user['name'], strLen($hp_route_prefix)) : $user['name'];
-		gs_log( GS_LOG_DEBUG, "Mapping ext. ". $user['name'] ." to $user_ext for provisioning - route_prefix: $hp_route_prefix, host id: ". $user['host_id'] );
+	gs_log( GS_LOG_DEBUG, "Mapping ext. ". $user['name'] ." to $user_ext for provisioning - route_prefix: $hp_route_prefix, host id: ". $user['host_id'] );
 } else {
 	$user_ext = $user['name'];
 }
