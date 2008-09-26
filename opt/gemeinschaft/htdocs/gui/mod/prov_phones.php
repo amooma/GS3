@@ -87,7 +87,7 @@ if ($action === 'view') {
 	//echo "<pre>"; print_r($_REQUEST); echo "</pre>";
 	$where = array();
 	if ($mac_addr_internal != '') {
-		$where[] = '`p`.`mac_addr` LIKE \''. $DB->escape($mac_addr_internal) .'%\'';
+		$where[] = '`p`.`mac_addr` LIKE \'%'. $DB->escape($mac_addr_internal) .'%\'';
 	}
 	if ($pbx_id === 0) {
 		$where[] = '`h`.`is_foreign`=0';
