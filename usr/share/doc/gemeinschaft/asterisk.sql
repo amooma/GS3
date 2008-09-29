@@ -6156,9 +6156,9 @@ CREATE TABLE `prov_jobs` (
 -- Dumping data for table `prov_jobs`
 --
 
-LOCK TABLES `prov_param_profiles` WRITE;
-/*!40000 ALTER TABLE `prov_param_profiles` DISABLE KEYS */;
-/*!40000 ALTER TABLE `prov_param_profiles` ENABLE KEYS */;
+LOCK TABLES `prov_jobs` WRITE;
+/*!40000 ALTER TABLE `prov_jobs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `prov_jobs` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
