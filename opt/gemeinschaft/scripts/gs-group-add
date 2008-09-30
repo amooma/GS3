@@ -51,8 +51,7 @@ $opts = @getOptsNoMultiples( '',
 	),
 	$usage
 );
-if (! isSet($opts['parent'])
- || ! isSet($opts['name'])
+if (! isSet($opts['name'])
  || ! isSet($opts['title'])
  ) {
 	gs_script_invalid_usage( $usage );
@@ -63,6 +62,9 @@ if (! array_key_exists('show-ext-modules', $opts)) {
 } else {
 	$opts['show-ext-modules'] = (int)$opts['show-ext-modules'];
 }
+
+if (! array_key_exists('parent', $opts))
+	$opts['parent'] === null;
 
 
 /***********************************************************
