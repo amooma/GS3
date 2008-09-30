@@ -63,7 +63,6 @@ if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 
 
 $per_page = (int)GS_GUI_NUM_RESULTS;
-$per_page = 3;
 
 $mac_addr_internal = _mac_addr_internal(@$_REQUEST['mac']);
 $mac_addr_display  = _mac_addr_display( $mac_addr_internal );
