@@ -68,8 +68,8 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 		return new GsError( 'Invalid e-mail address.' );
 	if ($group != '' && ! preg_match( '/^[0-9]+$/', $group ))
 		return new GsError( 'Group must be numeric.' );	
-
-
+	if($group == '')
+		$group = "NULL";
 	include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 	
 	# connect to db
@@ -117,10 +117,10 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 		gs_db_rollback_trans($db);
 		return new GsError( 'Unknown host.' );
 	}
-	
+
 	# add user
 	#
-	$ok = $db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `email`, `nobody_index`, `host_id`, `group_id`) VALUES (NULL, \''. $db->escape($user) .'\', \''. $db->escape($pin) .'\', _utf8\''. $db->escape($firstname) .'\', _utf8\''. $db->escape($lastname) .'\', _utf8\''. $db->escape($email) .'\', NULL, '. $host['id'] .', '. $db->escape((int)$group). ' )' );
+	$ok = $db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `email`, `nobody_index`, `host_id`, `group_id`) VALUES (NULL, \''. $db->escape($user) .'\', \''. $db->escape($pin) .'\', _utf8\''. $db->escape($firstname) .'\', _utf8\''. $db->escape($lastname) .'\', _utf8\''. $db->escape($email) .'\', NULL, '. $host['id'] .', '. $db->escape($group). ' )' );
 	if (! $ok) {
 		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to add user (table users).' );
