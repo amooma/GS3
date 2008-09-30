@@ -40,6 +40,8 @@ $new_ext         =      trim(@$argv[1]);
 $pass            =      trim(@$argv[2]);
 $old_uid         = (int)trim(@$argv[3]);
 $is_from_gateway =      trim(@$argv[4]);
+$caller_ext      =      trim(@$argv[5]);
+
 if ($is_from_gateway == '1') {
 	if (! gs_get_conf('GS_BOI_ENABLED')) {
 		gs_log( GS_LOG_NOTICE, "Mobility: User from gateway tries to log in but BOI is not enabled" );
@@ -60,13 +62,6 @@ if (! $pass) {
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
-if ($old_uid < 1) {
-	gs_log( GS_LOG_NOTICE, "Mobility: Old user ID not specified" );
-	echo 'SET VARIABLE ret '. gs_agi_str_esc('error') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
-}
-
 
 include_once( GS_DIR .'inc/db_connect.php' );
 
@@ -77,6 +72,18 @@ if (! $db) {
 	echo 'HANGUP' ."\n";
 	die();
 }
+
+if ($old_uid < 1) {
+	$old_uid = (int)$db->executeGetOne(
+		'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($caller_ext) .'\'' );
+	if ($old_uid < 1) {
+		gs_log( GS_LOG_NOTICE, "Mobility: Neither old user ID nor caller ID specified" );
+		echo 'SET VARIABLE ret '. gs_agi_str_esc('error') ."\n";
+		die();
+	}
+	echo 'SET VARIABLE user_name '. $caller_ext ."\n";
+}
+
 
 $new_uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($new_ext) .'\'' );
 if ($new_uid < 1) {

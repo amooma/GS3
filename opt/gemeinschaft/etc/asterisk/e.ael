@@ -122,7 +122,7 @@ macro cmm-login( new_user_name ) {
 	
 	Wait(1);
 	Read(pass,agent-pass,10,s,3,5);
-	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-login.agi,${new_user_name},${pass},${user_id},${is_from_gateway});
+	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-login.agi,${new_user_name},${pass},${user_id},${is_from_gateway},${CALLERID(num)});
 	//NoOp(### AGI returned: ret = ${ret});
 	if ("${ret}" = "error")
 		goto error;
