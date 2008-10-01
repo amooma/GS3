@@ -82,7 +82,22 @@ if ($action === 'dialplan-reload') {
 	echo '<pre style="margin:0.9em 0.1em; padding:0.3em; background:#eee;">';
 	$err=0;
 	@ob_implicit_flush(1);
-	passThru( 'sudo '. qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan', $err );
+	
+	$sql_query = 'select `*` from `hosts` where `is_foreign`=0';
+	$rs = $DB->execute( 'SELECT `host` FROM `hosts` WHERE `is_foreign` = 0' );
+	while($r = $rs->fetchRow())
+	{
+		if($r['host'] == "127.0.0.1")   {
+			gs_log(GS_LOG_DEBUG, "Reloading local Asterisk-Dialplan");
+			passThru( "sudo " . qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan', $err );
+		}
+		else {
+			gs_log(GS_LOG_DEBUG, "Reloading Asterisk-Dialplan on " . $r['host']);
+			echo "Executing Asterisk-Dialplan reload on " . $r['host'] . "<br>";
+			passThru( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -lroot ' . qsa($r['host']) . " ". qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan', $err );
+		}
+	}
+	
 	@ob_implicit_flush(0);
 	echo "\n";
 	echo '&rarr; <b>', ($err===0 ? 'OK':'ERR') ,'</b>';
@@ -94,12 +109,28 @@ elseif ($action === 'reload') {
 	echo '<pre style="margin:0.9em 0.1em; padding:0.3em; background:#eee;">';
 	$err=0;
 	@ob_implicit_flush(1);
-	passThru( 'sudo '. qsa(GS_DIR.'sbin/start-asterisk'), $err );
+	$sql_query = 'select `*` from `hosts` where `is_foreign`=0';
+	$rs = $DB->execute( 'SELECT `host` FROM `hosts` WHERE `is_foreign` = 0' );
+	while($r = $rs->fetchRow())
+	{
+		if($r['host'] == "127.0.0.1")   {
+			gs_log(GS_LOG_DEBUG, "Reloading local Asterisk");
+			passThru( "sudo " . qsa(GS_DIR.'sbin/start-asterisk'), $err );
+		}
+		else {
+			gs_log(GS_LOG_DEBUG, "Reloading Asterisk on " . $r['host']);
+			echo "Executing Asterisk reload on " . $r['host'] . "<br>";
+			passThru( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -lroot ' . qsa($r['host']) . " ". qsa(GS_DIR.'sbin/start-asterisk') , $err );
+		}
+	}
+
 	@ob_implicit_flush(0);
 	echo "\n";
 	echo '&rarr; <b>', ($err===0 ? 'OK':'ERR') ,'</b>';
 	echo '</pre>';
 }
+
+
 
 /*
 elseif ($action === 'shutdown' && $shutdown_enabled) {
