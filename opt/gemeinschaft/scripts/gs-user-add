@@ -68,7 +68,7 @@ if (! isSet($opts['user'])
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_user_add( $opts['user'], $opts['ext'], $opts['pin'], $opts['firstname'], $opts['lastname'], $opts['host'], $opts['email'], $opts['group']);
+$ret = @ gs_user_add( $opts['user'], $opts['ext'], $opts['pin'], $opts['firstname'], $opts['lastname'], $opts['host'], $opts['email'], (array_key_exists('group', $opts) ? $opts['group'] : null) );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 echo "User added.\n";
