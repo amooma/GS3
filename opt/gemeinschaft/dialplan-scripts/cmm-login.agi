@@ -81,9 +81,8 @@ if ($old_uid < 1) {
 		echo 'SET VARIABLE ret '. gs_agi_str_esc('error') ."\n";
 		die();
 	}
-	echo 'SET VARIABLE user_name '. $caller_ext ."\n";
+	echo 'SET VARIABLE user_name '. gs_agi_str_esc($caller_ext) ."\n";
 }
-
 
 $new_uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($new_ext) .'\'' );
 if ($new_uid < 1) {
