@@ -12,67 +12,65 @@ if ((typeof Event) != 'object') {
 	if (! window.Event) {
 		var Event = new Object();
 	}
-	var Event = {
-		observe: function( el, name, cb, useCapture )
-		{
-			el = $(el);
-			if (!el) return;
-			useCapture = useCapture || false;
-			if (name == 'keypress' &&
-			    (/*Prototype.Browser.WebKit ||*/ el.attachEvent))
-				name = 'keydown';
-			if (el.addEventListener)
-				el.addEventListener(name, cb, useCapture);
-			else if (el.attachEvent)
-				el.attachEvent('on'+name, cb);
-		},
-		stopObserving: function( el, name, cb, useCapture )
-		{
-			el = $(el);
-			if (!el) return;
-			useCapture = useCapture || false;
-			if (name == 'keypress' &&
-			    (/*Prototype.Browser.WebKit ||*/ el.attachEvent))
-				name = 'keydown';
-			if (el.removeEventListener)
-				el.removeEventListener(name, cb, useCapture);
-			else if (el.detachEvent) {
-				try{ el.detachEvent('on'+name, cb); } catch(e){}
-			}
-		},
-		el: function( evt )
-		{
-			if (evt && evt.target)
-				return $(evt.target);
-			if (! evt) evt = window.event;
-			return $(evt.srcElement);
-		},
-		element: function( evt )
-		{
-			return Event.el( evt );
-		},
-		posX: function( evt )
-		{
-			if (! evt) evt = window.event;
-			return evt.pageX || (evt.clientX +
-				(document.documentElement.scrollLeft || document.body.scrollLeft));
-		},
-		pointerX: function( evt )
-		{
-			return Event.posX( evt );
-		},
-		posY: function( evt )
-		{
-			if (! evt) evt = window.event;
-			return evt.pageY || (evt.clientY +
-				(document.documentElement.scrollTop || document.body.scrollTop));
-		},
-		pointerY: function( evt )
-		{
-			return Event.posY( evt );
-		}
-	}
 }
+Event.observe = function( el, name, cb, useCapture )
+	{
+		el = $(el);
+		if (!el) return;
+		useCapture = useCapture || false;
+		if (name == 'keypress' &&
+			(/*Prototype.Browser.WebKit ||*/ el.attachEvent))
+			name = 'keydown';
+		if (el.addEventListener)
+			el.addEventListener(name, cb, useCapture);
+		else if (el.attachEvent)
+			el.attachEvent('on'+name, cb);
+	};
+Event.stopObserving = function( el, name, cb, useCapture )
+	{
+		el = $(el);
+		if (!el) return;
+		useCapture = useCapture || false;
+		if (name == 'keypress' &&
+			(/*Prototype.Browser.WebKit ||*/ el.attachEvent))
+			name = 'keydown';
+		if (el.removeEventListener)
+			el.removeEventListener(name, cb, useCapture);
+		else if (el.detachEvent) {
+			try{ el.detachEvent('on'+name, cb); } catch(e){}
+		}
+	};
+Event.el = function( evt )
+	{
+		if (evt && evt.target)
+			return $(evt.target);
+		if (! evt) evt = window.event;
+		return $(evt.srcElement);
+	};
+Event.element = function( evt )
+	{
+		return Event.el( evt );
+	};
+Event.posX = function( evt )
+	{
+		if (! evt) evt = window.event;
+		return evt.pageX || (evt.clientX +
+			(document.documentElement.scrollLeft || document.body.scrollLeft));
+	};
+Event.pointerX = function( evt )
+	{
+		return Event.posX( evt );
+	};
+Event.posY = function( evt )
+	{
+		if (! evt) evt = window.event;
+		return evt.pageY || (evt.clientY +
+			(document.documentElement.scrollTop || document.body.scrollTop));
+	};
+Event.pointerY = function( evt )
+	{
+		return Event.posY( evt );
+	};
 
 
 var Tooltip = {
