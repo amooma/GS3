@@ -36,7 +36,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 *    adds a user account
 ***********************************************************/
 
-function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, $email, $group=NULL )
+function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, $email, $group_id=NULL )
 {
 	if (! preg_match( '/^[a-z0-9\-_]+$/', $user ))
 		return new GsError( 'User must be lowercase alphanumeric.' );
@@ -66,10 +66,11 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 		return new GsError( 'GS_EMAIL_PATTERN_VALID not defined.' );
 	if ($email != '' && ! preg_match( GS_EMAIL_PATTERN_VALID, $email ))
 		return new GsError( 'Invalid e-mail address.' );
-	if ($group != '' && ! preg_match( '/^[0-9]+$/', $group ))
-		return new GsError( 'Group must be numeric.' );
-	if ($group == '')
-		$group = "NULL";
+	if ($group_id != null && $group_id != '' && ! preg_match( '/^[0-9]+$/', $group_id ))
+		return new GsError( 'Group ID must be numeric.' );
+	$group_id = (int)$group_id;
+	if ($group_id < 1)
+		$group_id = null;
 	include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 	
 	# connect to db
@@ -120,7 +121,7 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 	
 	# add user
 	#
-	$ok = $db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `email`, `nobody_index`, `host_id`, `group_id`) VALUES (NULL, \''. $db->escape($user) .'\', \''. $db->escape($pin) .'\', _utf8\''. $db->escape($firstname) .'\', _utf8\''. $db->escape($lastname) .'\', _utf8\''. $db->escape($email) .'\', NULL, '. $host['id'] .', '. $db->escape($group). ' )' );
+	$ok = $db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `email`, `nobody_index`, `host_id`, `group_id`) VALUES (NULL, \''. $db->escape($user) .'\', \''. $db->escape($pin) .'\', _utf8\''. $db->escape($firstname) .'\', _utf8\''. $db->escape($lastname) .'\', _utf8\''. $db->escape($email) .'\', NULL, '. $host['id'] .', '. ($group_id > 0 ? $group_id : 'NULL') .' )' );
 	if (! $ok) {
 		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to add user (table users).' );
