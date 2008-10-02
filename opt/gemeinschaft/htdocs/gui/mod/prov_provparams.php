@@ -36,6 +36,7 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
+
 $phone_types = array();
 if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	$phone_types['snom-360'    ] = 'Snom 360';
@@ -46,6 +47,7 @@ if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 	$phone_types['siemens-os60'] = 'Siemens OpenStage 60';
 	$phone_types['siemens-os80'] = 'Siemens OpenStage 80';
 }
+
 
 $action = @$_REQUEST['action'];
 if (! in_array($action, array('', 'save', 'delete'), true))
