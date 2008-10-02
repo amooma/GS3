@@ -30,6 +30,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/log.php' );
 
 @header( 'Vary: *' );
 @header( 'Cache-Control: private, must-revalidate' );
@@ -41,6 +42,7 @@ function _not_allowed( $errmsg='' )
 	@header( 'Status: 403 Forbidden' , true, 403 );
 	@header( 'Content-Type: text/plain; charset=utf-8' );
 	echo '/*  ', ($errmsg ? $errmsg : 'Not authorized.') ,'  */';
+	gs_log( GS_LOG_DEBUG, ($errmsg ? $errmsg : 'Not authorized.') );
 	exit(1);
 }
 
@@ -50,6 +52,7 @@ function _server_error( $errmsg='' )
 	@header( 'Status: 500 Internal Server Error' , true, 500 );
 	@header( 'Content-Type: text/plain; charset=utf-8' );
 	echo '/*  ', ($errmsg ? $errmsg : 'Internal Server Error.') ,'  */';
+	gs_log( GS_LOG_DEBUG, ($errmsg ? $errmsg : 'Internal Server Error.') );
 	exit(1);
 }
 
@@ -59,6 +62,7 @@ function _not_found( $errmsg='' )
 	@header( 'Status: 404 Not Found' , true, 404 );
 	@header( 'Content-Type: text/plain; charset=utf-8' );
 	echo '/*  ', ($errmsg ? $errmsg : 'Not found.') ,'  */';
+	gs_log( GS_LOG_DEBUG, ($errmsg ? $errmsg : 'Not found.') );
 	exit(1);
 }
 
@@ -81,7 +85,7 @@ if (! array_key_exists('u', $_REQUEST)) {
 }
 $user = $_REQUEST['u'];
 if (! preg_match('/^[a-z0-9\-_]+$/', $user)) {
-	_not_found( 'Invalid username.' );
+	_not_found( 'Invalid username "'.$user.'".' );
 }
 
 $GS_LDAP_HOST = gs_get_conf('GS_LDAP_HOST');
@@ -130,9 +134,9 @@ $users_arr = gs_ldap_get_list( $ldap_conn, gs_get_conf('GS_LDAP_SEARCHBASE'),
 if (isGsError($users_arr))
 	_server_error( $user_arr->getMsg() );
 if (! is_array($users_arr) || count($users_arr) < 1)
-	_not_found( 'User not found in LDAP.' );
+	_not_found( 'User "'.$user.'" not found in LDAP.' );
 if (count($users_arr) > 1)
-	_server_error( 'LDAP search did not return a unique user.' );
+	_server_error( 'LDAP search did not return a unique user for "'.$user.'".' );
 $user_arr = $users_arr[0];
 unset($users_arr);
 
@@ -162,6 +166,7 @@ if (array_key_exists($GS_LDAP_PROP_PHONE, $user_arr)) {
 	unset($cpn);
 }
 unset($user_arr);
+gs_log( GS_LOG_DEBUG, 'Found user "'.$user.'" ('. trim($user_info['fn'].' '.$user_info['ln']) .') in LDAP' );
 
 
 
