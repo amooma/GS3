@@ -42,7 +42,7 @@ function _not_allowed( $errmsg='' )
 	@header( 'Status: 403 Forbidden' , true, 403 );
 	@header( 'Content-Type: text/plain; charset=utf-8' );
 	echo '/*  ', ($errmsg ? $errmsg : 'Not authorized.') ,'  */';
-	gs_log( GS_LOG_DEBUG, ($errmsg ? $errmsg : 'Not authorized.') );
+	gs_log( GS_LOG_NOTICE, ($errmsg ? $errmsg : 'LDAP lookup: Not authorized') );
 	exit(1);
 }
 
@@ -52,7 +52,7 @@ function _server_error( $errmsg='' )
 	@header( 'Status: 500 Internal Server Error' , true, 500 );
 	@header( 'Content-Type: text/plain; charset=utf-8' );
 	echo '/*  ', ($errmsg ? $errmsg : 'Internal Server Error.') ,'  */';
-	gs_log( GS_LOG_DEBUG, ($errmsg ? $errmsg : 'Internal Server Error.') );
+	gs_log( GS_LOG_NOTICE, ($errmsg ? $errmsg : 'LDAP lookup: Error') );
 	exit(1);
 }
 
@@ -62,7 +62,7 @@ function _not_found( $errmsg='' )
 	@header( 'Status: 404 Not Found' , true, 404 );
 	@header( 'Content-Type: text/plain; charset=utf-8' );
 	echo '/*  ', ($errmsg ? $errmsg : 'Not found.') ,'  */';
-	gs_log( GS_LOG_DEBUG, ($errmsg ? $errmsg : 'Not found.') );
+	gs_log( GS_LOG_DEBUG, ($errmsg ? $errmsg : 'LDAP lookup: User not found') );
 	exit(1);
 }
 
