@@ -25,25 +25,76 @@
 # MA 02110-1301, USA.
 #####################################################################
 
-# this Makefile is not nice but sort of works  :)
-
 xmllint=$(shell which xmllint)
+xmlto=$(shell which xmlto)
 docbook2html=$(shell which docbook2html)
 docbook2pdf=$(shell which docbook2pdf)
+man_orig=$(wildcard docbook/scripts/*.xml)
+man_man=$(patsubst %.xml,%.man,$(patsubst docbook/scripts/%,man/%,$(man_orig)))
 
-
-first:
+help:
 	@ echo "Targets:"
-	@ echo "  make html : Generate HTML pages"
-	@ echo "  make pdf  : Generate PDF"
+	@ echo "  make html-jw  : Generate HTML pages using jade/jw"
+	@ echo "  make html-xsl : Generate HTML pages using xmlto"
+	@ echo "  make html     : Generate HTML pages using the preferred conversion (html-xsl)"
+	@ echo "  make pdf      : Generate PDF"
+	@ echo "  make man      : Generate man pages"
 	@ echo ""
 
-all: html pdf
 
-html:
-	@ if [ -z "$(xmllint)" -o -z "$(docbook2html)" ]; then \
+_xmllint:
+	@ if [ -z "${xmllint}" ]; then \
 		echo '************************************************************'; \
-		echo '*  xmllint or docbook2html not found.                      *'; \
+		echo '*  xmllint not found.                                      *'; \
+		echo '*  Please install DocBook Utils.                           *'; \
+		if [ `which aptitude 2>>/dev/null` ]; then \
+			echo '*  ( sudo aptitude install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
+		else \
+		if [ `which apt-get 2>>/dev/null` ]; then \
+			echo '*  ( sudo apt-get install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
+		else \
+		if [ `which yum 2>>/dev/null` ]; then \
+			echo '*  ( sudo yum install docbook-utils docbook-dtds docbook-style-xsl )'; \
+		else \
+		if [ `which up2date 2>>/dev/null` ]; then \
+			echo '*  ( sudo up2date -i docbook-utils docbook-dtds docbook-style-xsl )'; \
+		fi; fi; fi; fi; \
+		echo '************************************************************'; \
+		exit 1; \
+	fi
+
+
+_xmlto:
+	@ if [ -z "${xmlto}" ]; then \
+		echo '************************************************************'; \
+		echo '*  xmlto not found.                                        *'; \
+		echo '*  Please install xmlto.                                   *'; \
+		if [ `which aptitude 2>>/dev/null` ]; then \
+			echo '*  ( sudo aptitude install xsltproc xmlto )                *'; \
+		else \
+		if [ `which apt-get 2>>/dev/null` ]; then \
+			echo '*  ( sudo apt-get install xsltproc xmlto )                 *'; \
+		else \
+		if [ `which yum 2>>/dev/null` ]; then \
+			echo '*  ( sudo yum install xmlto )                              *'; \
+		else \
+		if [ `which up2date 2>>/dev/null` ]; then \
+			echo '*  ( sudo up2date -i xmlto )                               *'; \
+		fi; fi; fi; fi; \
+		echo '************************************************************'; \
+		exit 1; \
+	fi
+
+
+docbook/_HANDBUCH-one-file.xml: _xmllint
+	@ echo "Resolving XIncludes in docbook/HANDBUCH.xml ..."
+	${xmllint} --xinclude --output docbook/_HANDBUCH-one-file.xml docbook/HANDBUCH.xml
+
+
+html-jw: docbook/_HANDBUCH-one-file.xml
+	@ if [ -z "${docbook2html}" ]; then \
+		echo '************************************************************'; \
+		echo '*  docbook2html not found.                                 *'; \
 		echo '*  Please install DocBook Utils.                           *'; \
 		if [ `which aptitude 2>>/dev/null` ]; then \
 			echo '*  ( sudo aptitude install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
@@ -65,22 +116,36 @@ html:
 	@ echo '*  Making HTML ...                                         *';
 	@ echo '************************************************************';
 	
-	@ echo "Resolving XIncludes ..."
-	$(xmllint) --xinclude --output docbook/HANDBUCH-complete.xml docbook/HANDBUCH.xml
-	
 	@ echo "Transforming to HTML ..."
 	mkdir -p html
-	$(docbook2html) -e no-idref -o html/ docbook/HANDBUCH-complete.xml
-	rm -f docbook/HANDBUCH-complete.xml
+	${docbook2html} -e no-idref -o html/ docbook/_HANDBUCH-one-file.xml
+	rm -f docbook/_HANDBUCH-one-file.xml
 	@ echo '************************************************************';
 	@ echo '*  HTML done.                                              *';
 	@ echo '************************************************************';
 
 
-pdf:
-	@ if [ -z "$(xmllint)" -o -z "$(docbook2pdf)" ]; then \
+html-xsl: _xmlto docbook/_HANDBUCH-one-file.xml
+	@ echo '************************************************************';
+	@ echo '*  Making HTML ...                                         *';
+	@ echo '************************************************************';
+	
+	@ echo "Transforming to HTML ..."
+	mkdir -p html
+	${docbook2html} -e no-idref -o html/ docbook/_HANDBUCH-one-file.xml
+	rm -f docbook/_HANDBUCH-one-file.xml
+	@ echo '************************************************************';
+	@ echo '*  HTML done.                                              *';
+	@ echo '************************************************************';
+
+
+html: html-xsl
+
+
+pdf: docbook/_HANDBUCH-one-file.xml
+	@ if [ -z "${docbook2pdf}" ]; then \
 		echo '************************************************************'; \
-		echo '*  xmllint or docbook2pdf not found.                       *'; \
+		echo '*  docbook2pdf not found.                                  *'; \
 		echo '*  Please install DocBook Utils.                           *'; \
 		if [ `which aptitude 2>>/dev/null` ]; then \
 			echo '*  ( sudo aptitude install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
@@ -102,23 +167,45 @@ pdf:
 	@ echo '*  Making PDF ...                                          *';
 	@ echo '************************************************************';
 	
-	@ echo "Resolving XIncludes ..."
-	$(xmllint) --xinclude --output docbook/HANDBUCH-complete.xml docbook/HANDBUCH.xml
-	
 	@ echo "Transforming to PDF ..."
 	mkdir -p pdf
-	$(docbook2pdf) -e no-idref -o pdf/ docbook/HANDBUCH-complete.xml
-	rm -f docbook/HANDBUCH-complete.xml
-	mv pdf/HANDBUCH-complete.pdf pdf/HANDBUCH.pdf
+	${docbook2pdf} -e no-idref -o pdf/ docbook/_HANDBUCH-one-file.xml
+	rm -f docbook/_HANDBUCH-one-file.xml
+	mv pdf/_HANDBUCH-one-file.pdf pdf/HANDBUCH.pdf
 	@ echo '************************************************************';
 	@ echo '*  PDF done.                                               *';
 	@ echo '************************************************************';
 
 
+$(man_man): man/%.man: docbook/scripts/%.xml
+	@ echo "*** $@ $* ..."
+	cd "$(dir $<)" && ${xmllint} --xinclude --output $(patsubst %.xml,_%.xml.one-file,$*.xml) $*.xml
+	${xmlto} --skip-validation -o man/ man docbook/scripts/$(patsubst %.xml,_%.xml.one-file,$*.xml)
+
+
+_man: _xmllint _xmlto $(man_man)
+
+
+man: _xmllint _xmlto
+	@ echo '************************************************************';
+	@ echo '*  Making man pages ...                                    *';
+	@ echo '************************************************************';
+	
+	@ echo "Transforming to man pages ..."
+	mkdir -p man
+	$(MAKE) _man
+	@ echo '************************************************************';
+	@ echo '*  Man pages done.                                         *';
+	@ echo '************************************************************';
+
+
 clean:
+	rm -f docbook/_HANDBUCH-one-file.xml
+	rm -rf docbook/scripts/_*.xml.one-file
 	rm -rf html/*
 	rm -rf pdf/*
+	rm -rf man/*
 
 
-.PHONY: first all html pdf
+.PHONY: help _xmllint _xmlto html-jw html-xsl html pdf _man man
 
