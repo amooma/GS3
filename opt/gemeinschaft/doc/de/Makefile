@@ -36,9 +36,11 @@ help:
 	@ echo "Targets:"
 	@ echo "  make html-jw  : Generate HTML pages using jade/jw"
 	@ echo "  make html-xsl : Generate HTML pages using xmlto"
-	@ echo "  make html     : Generate HTML pages using the preferred conversion (html-xsl)"
-	@ echo "  make pdf      : Generate PDF"
-	@ echo "  make man      : Generate man pages"
+	@ echo "  make html     : Generate HTML pages using the preferred conversion (= html-xsl)"
+	@ echo "  make pdf-jw   : Generate PDF using jade/jw"
+	@ echo "  make pdf      : Generate PDF using the preferred conversion (= pdf-jw)"
+	@ echo "  make man-xsl  : Generate man pages using xmlto"
+	@ echo "  make man      : Generate man pages using the preferred conversion (= man-xsl)"
 	@ echo ""
 
 
@@ -86,12 +88,7 @@ _xmlto:
 	fi
 
 
-docbook/_HANDBUCH-one-file.xml: _xmllint
-	@ echo "Resolving XIncludes in docbook/HANDBUCH.xml ..."
-	${xmllint} --xinclude --output docbook/_HANDBUCH-one-file.xml docbook/HANDBUCH.xml
-
-
-html-jw: docbook/_HANDBUCH-one-file.xml
+_docbook2html:
 	@ if [ -z "${docbook2html}" ]; then \
 		echo '************************************************************'; \
 		echo '*  docbook2html not found.                                 *'; \
@@ -111,38 +108,9 @@ html-jw: docbook/_HANDBUCH-one-file.xml
 		echo '************************************************************'; \
 		exit 1; \
 	fi
-	
-	@ echo '************************************************************';
-	@ echo '*  Making HTML ...                                         *';
-	@ echo '************************************************************';
-	
-	@ echo "Transforming to HTML ..."
-	mkdir -p html
-	${docbook2html} -e no-idref -o html/ docbook/_HANDBUCH-one-file.xml
-	rm -f docbook/_HANDBUCH-one-file.xml
-	@ echo '************************************************************';
-	@ echo '*  HTML done.                                              *';
-	@ echo '************************************************************';
 
 
-html-xsl: _xmlto docbook/_HANDBUCH-one-file.xml
-	@ echo '************************************************************';
-	@ echo '*  Making HTML ...                                         *';
-	@ echo '************************************************************';
-	
-	@ echo "Transforming to HTML ..."
-	mkdir -p html
-	${docbook2html} -e no-idref -o html/ docbook/_HANDBUCH-one-file.xml
-	rm -f docbook/_HANDBUCH-one-file.xml
-	@ echo '************************************************************';
-	@ echo '*  HTML done.                                              *';
-	@ echo '************************************************************';
-
-
-html: html-xsl
-
-
-pdf: docbook/_HANDBUCH-one-file.xml
+_docbook2pdf:
 	@ if [ -z "${docbook2pdf}" ]; then \
 		echo '************************************************************'; \
 		echo '*  docbook2pdf not found.                                  *'; \
@@ -162,7 +130,45 @@ pdf: docbook/_HANDBUCH-one-file.xml
 		echo '************************************************************'; \
 		exit 1; \
 	fi
+
+
+docbook/_HANDBUCH-one-file.xml: _xmllint
+	@ echo "Resolving XIncludes in docbook/HANDBUCH.xml ..."
+	${xmllint} --xinclude --output docbook/_HANDBUCH-one-file.xml docbook/HANDBUCH.xml
+
+
+html-jw: docbook/_HANDBUCH-one-file.xml _docbook2html
+	@ echo '************************************************************';
+	@ echo '*  Making HTML ...                                         *';
+	@ echo '************************************************************';
 	
+	@ echo "Transforming to HTML ..."
+	mkdir -p html
+	${docbook2html} -e no-idref -o html/ docbook/_HANDBUCH-one-file.xml
+	rm -f docbook/_HANDBUCH-one-file.xml
+	@ echo '************************************************************';
+	@ echo '*  HTML done.                                              *';
+	@ echo '************************************************************';
+
+
+html-xsl: docbook/_HANDBUCH-one-file.xml _xmlto
+	@ echo '************************************************************';
+	@ echo '*  Making HTML ...                                         *';
+	@ echo '************************************************************';
+	
+	@ echo "Transforming to HTML ..."
+	mkdir -p html
+	${xmlto} -o html/ xhtml docbook/_HANDBUCH-one-file.xml
+	rm -f docbook/_HANDBUCH-one-file.xml
+	@ echo '************************************************************';
+	@ echo '*  HTML done.                                              *';
+	@ echo '************************************************************';
+
+
+html: html-xsl
+
+
+pdf-jw: docbook/_HANDBUCH-one-file.xml _docbook2pdf
 	@ echo '************************************************************';
 	@ echo '*  Making PDF ...                                          *';
 	@ echo '************************************************************';
@@ -177,26 +183,32 @@ pdf: docbook/_HANDBUCH-one-file.xml
 	@ echo '************************************************************';
 
 
+pdf: pdf-jw
+
+
 $(man_man): man/%.man: docbook/scripts/%.xml
 	@ echo "*** $@ $* ..."
 	cd "$(dir $<)" && ${xmllint} --xinclude --output $(patsubst %.xml,_%.xml.one-file,$*.xml) $*.xml
 	${xmlto} --skip-validation -o man/ man docbook/scripts/$(patsubst %.xml,_%.xml.one-file,$*.xml)
 
 
-_man: _xmllint _xmlto $(man_man)
+_man-xsl: _xmllint _xmlto $(man_man)
 
 
-man: _xmllint _xmlto
+man-xsl: _xmllint _xmlto
 	@ echo '************************************************************';
 	@ echo '*  Making man pages ...                                    *';
 	@ echo '************************************************************';
 	
 	@ echo "Transforming to man pages ..."
 	mkdir -p man
-	$(MAKE) _man
+	$(MAKE) _man-xsl
 	@ echo '************************************************************';
 	@ echo '*  Man pages done.                                         *';
 	@ echo '************************************************************';
+
+
+man: man-xsl
 
 
 clean:
@@ -207,5 +219,5 @@ clean:
 	rm -rf man/*
 
 
-.PHONY: help _xmllint _xmlto html-jw html-xsl html pdf _man man
+.PHONY: help _xmllint _xmlto _docbook2html _docbook2pdf html-jw html-xsl html pdf _man-xsl man-xsl man
 
