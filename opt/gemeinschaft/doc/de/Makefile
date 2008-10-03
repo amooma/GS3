@@ -72,16 +72,16 @@ _xmlto:
 		echo '*  xmlto not found.                                        *'; \
 		echo '*  Please install xmlto.                                   *'; \
 		if [ `which aptitude 2>>/dev/null` ]; then \
-			echo '*  ( sudo aptitude install xsltproc xmlto )                *'; \
+			echo '*  ( sudo aptitude install xsltproc xmlto docbook-xml docbook-xsl )'; \
 		else \
 		if [ `which apt-get 2>>/dev/null` ]; then \
-			echo '*  ( sudo apt-get install xsltproc xmlto )                 *'; \
+			echo '*  ( sudo apt-get install xsltproc xmlto docbook-xml docbook-xsl )'; \
 		else \
 		if [ `which yum 2>>/dev/null` ]; then \
-			echo '*  ( sudo yum install xmlto )                              *'; \
+			echo '*  ( sudo yum install xmlto docbook-dtds docbook-style-xsl )'; \
 		else \
 		if [ `which up2date 2>>/dev/null` ]; then \
-			echo '*  ( sudo up2date -i xmlto )                               *'; \
+			echo '*  ( sudo up2date -i xmlto docbook-dtds docbook-style-xsl )'; \
 		fi; fi; fi; fi; \
 		echo '************************************************************'; \
 		exit 1; \
@@ -94,16 +94,16 @@ _docbook2html:
 		echo '*  docbook2html not found.                                 *'; \
 		echo '*  Please install DocBook Utils.                           *'; \
 		if [ `which aptitude 2>>/dev/null` ]; then \
-			echo '*  ( sudo aptitude install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
+			echo '*  ( sudo aptitude install docbook-utils )                 *'; \
 		else \
 		if [ `which apt-get 2>>/dev/null` ]; then \
-			echo '*  ( sudo apt-get install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
+			echo '*  ( sudo apt-get install docbook-utils )                  *'; \
 		else \
 		if [ `which yum 2>>/dev/null` ]; then \
-			echo '*  ( sudo yum install docbook-utils docbook-dtds docbook-style-xsl )'; \
+			echo '*  ( sudo yum install docbook-utils )                      *'; \
 		else \
 		if [ `which up2date 2>>/dev/null` ]; then \
-			echo '*  ( sudo up2date -i docbook-utils docbook-dtds docbook-style-xsl )'; \
+			echo '*  ( sudo up2date -i docbook-utils )                       *'; \
 		fi; fi; fi; fi; \
 		echo '************************************************************'; \
 		exit 1; \
@@ -158,7 +158,7 @@ html-xsl: docbook/_HANDBUCH-one-file.xml _xmlto
 	
 	@ echo "Transforming to HTML ..."
 	mkdir -p html
-	${xmlto} -o html/ xhtml docbook/_HANDBUCH-one-file.xml
+	${xmlto} --skip-validation -o html/ xhtml docbook/_HANDBUCH-one-file.xml
 	rm -f docbook/_HANDBUCH-one-file.xml
 	@ echo '************************************************************';
 	@ echo '*  HTML done.                                              *';
