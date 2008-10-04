@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<section id="installation-zap" revision="$Revision$">
+<chapter id="installation-zap" revision="$Revision$">
   <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
 % under the terms of the GNU Free Documentation License, Version 1.2
@@ -907,4 +907,4 @@ exten =&gt; _X.,n,Verbose(1,### PRIREDIRECTREASON: ${PRIREDIRECTREASON})
 exten =&gt; _X.,n,Verbose(1,### CALLEDTON        : ${CALLEDTON})
 exten =&gt; _X.,n,Hangup()</programlisting></para>
   </section>
-</section>
+</chapter>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<section id="vorbemerkungen" revision="$Revision$">
+<chapter id="vorbemerkungen" revision="$Revision$">
   <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
 % under the terms of the GNU Free Documentation License, Version 1.2
@@ -11,41 +11,12 @@
 
   <title>Vorbemerkungen</title>
 
-  <section>
+  <section id="vorbemerkungen-lizenz">
     <title>Lizenz</title>
 
     <para><quote>Gemeinschaft</quote> ist unter der GNU GPL<footnote>
         <para>siehe <xref linkend="gpl" /></para>
       </footnote> veröffentlicht.</para>
-
-    <para>YaDB: GNU GPL</para>
-
-    <para>Asterisk (GNU GPL oder proprietär) is ein registriertes Warenzeichen
-    von Digium<footnote>
-        <para><ulink
-        url="http://www.digium.com/">http://www.digium.com/</ulink></para>
-      </footnote>.</para>
-
-    <para>PHP: PHP License<footnote>
-        <para><ulink
-        url="http://www.php.net/license/">http://www.php.net/license/</ulink></para>
-      </footnote></para>
-
-    <para>MySQL: für Open-Source-Projekte: GNU GPL<footnote>
-        <para>siehe <ulink
-        url="http://www.mysql.com/company/legal/licensing/">http://www.mysql.com/company/legal/licensing/</ulink></para>
-      </footnote></para>
-
-    <para>Apache: Apache License<footnote>
-        <para><ulink
-        url="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</ulink></para>
-      </footnote></para>
-
-    <para>CentOS: siehe <ulink
-    url="http://www.centos.org/">http://www.centos.org/</ulink></para>
-
-    <para>RedHat: siehe <ulink
-    url="http://www.redhat.com/">http://www.redhat.com/</ulink></para>
   </section>
 
   <section id="vorbemerkungen-pfade">
@@ -54,4 +25,4 @@
     <para>Falls nicht anders angegeben gelten Pfade relativ zum Verzeichnis
     <filename>/opt/gemeinschaft/</filename>.</para>
   </section>
-</section>
+</chapter>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<article id="gemeinschaft" lang="de" revision="$Revision$">
+<book id="gemeinschaft" lang="de" revision="$Revision$">
   <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
 % under the terms of the GNU Free Documentation License, Version 1.2
@@ -15,7 +15,7 @@
 
   <subtitle>Asterisk-Cluster-Gemeinschaft</subtitle>
 
-  <articleinfo>
+  <bookinfo>
     <author id="amooma-gmbh">
       <surname>amooma GmbH</surname>
 
@@ -45,7 +45,7 @@
 
       <email>peter.kozak@amooma.de</email>
     </author>
-  </articleinfo>
+  </bookinfo>
 
   <xi:include href="vorbemerkungen.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
@@ -96,4 +96,4 @@
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <index id="stichwortverzeichnis"></index>
-</article>
+</book>
