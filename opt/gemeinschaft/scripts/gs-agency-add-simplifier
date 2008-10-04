@@ -40,8 +40,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_add.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-//$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dnsname> --comment=<host_comment> --prefix=<prefix> --group=<user_group_id> --user=<username> --exten=<exten> [--is-admin]';
-$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dnsname> --comment=<host_comment> --prefix=<prefix> --user=<username> --exten=<exten> [--is-admin]';
+//$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dns_name> --comment=<host_comment> --prefix=<prefix> --group=<user_group_id> --user=<username> --exten=<exten> [--is-admin]';
+$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dns_name> --comment=<host_comment> --prefix=<prefix> --user=<username> --exten=<exten> [--is-admin]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
