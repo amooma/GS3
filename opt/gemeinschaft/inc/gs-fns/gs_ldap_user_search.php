@@ -38,6 +38,26 @@ include_once( GS_DIR .'inc/ldap.php' );
 
 function gs_ldap_user_search( $user )
 {
+	if (! preg_match('/^[a-z0-9\-_]+$/', $user)) {
+		return new GsError( 'Invalid username "'.$user.'".' );
+	}
+	
+	$GS_LDAP_HOST = gs_get_conf('GS_LDAP_HOST');
+	if (in_array($GS_LDAP_HOST, array(null, false, '', '0.0.0.0'), true)) {
+		return new GsError( 'LDAP not configured.' );
+	}
+	if (! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $GS_LDAP_HOST)) {
+		$tmp = getHostByName($GS_LDAP_HOST);
+		if ($tmp == $GS_LDAP_HOST) {
+			return new GsError( 'Failed to look up LDAP server.' );
+		}
+		$GS_LDAP_HOST = $tmp;
+	}
+	$tmp = @ip2long($GS_LDAP_HOST);
+	if (in_array($tmp, array(false, null, -1, 0), true)) {
+		return new GsError( 'LDAP not configured (bad IP address).' );
+	}
+	
 	if (!($ldap_conn = gs_ldap_connect(
 		$GS_LDAP_HOST
 	))) {
