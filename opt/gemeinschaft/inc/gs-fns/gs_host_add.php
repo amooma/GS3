@@ -41,7 +41,6 @@ function gs_host_add( $host_ip_or_name, $comment, $sip_proxy_from_wan=null, $sip
 		return new GsError('Invalid host.');
 	
 	$host = normalizeIPs($host_ip_or_name);
-	$bInvalHostName = false;
 	if (! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $host)) {
 		# not an IP address. => resolve hostname
 		$addresses = @gethostbynamel($host);
