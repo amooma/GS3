@@ -67,6 +67,11 @@ if (! isSet($opts['host'])
 $opts['is-admin'] = array_key_exists('is-admin', $opts);
 //$opts['prefix'  ] = subStr($opts['prefix'],0,3).'00';  // ?
 
+if (! gs_get_conf('GS_BOI_ENABLED')) {
+	echo 'Branch office integration not enabled.' ,"\n";
+	exit(1);
+}
+
 
 /***********************************************************
 *    connect to database
