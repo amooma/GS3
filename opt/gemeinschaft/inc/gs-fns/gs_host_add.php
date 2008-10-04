@@ -60,10 +60,10 @@ function gs_host_add( $host_ip_or_name, $comment, $sip_proxy_from_wan=null, $sip
 		$host = $host_ip_or_name;
 	}
 	
-	if (! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $sip_proxy_from_wan)) {
+	if ($sip_proxy_from_wan != "" && ! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $sip_proxy_from_wan)) {
 		return new GsError( 'Invalid IP address of SIP proxy from WAN.' );
 	}
-	if (! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $sip_sbc_from_wan)) {
+	if ($sip_sbc_from_wan != "" && ! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $sip_sbc_from_wan)) {
 		return new GsError( 'Invalid IP address of SIP SBC from WAN.' );
 	}
 	
@@ -98,8 +98,10 @@ function gs_host_add( $host_ip_or_name, $comment, $sip_proxy_from_wan=null, $sip
 		return new GsError( 'Failed to add host '. $host );
 	
 	$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'api\', \''. $db->escape($api) .'\')' );
-	$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'sip_proxy_from_wan\', \''. $db->escape($sip_proxy_from_wan) .'\')' );
-	$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'sip_server_from_wan\', \''. $db->escape($sip_sbc_from_wan) .'\')' );
+	if($sip_proxy_from_wan != "")
+		$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'sip_proxy_from_wan\', \''. $db->escape($sip_proxy_from_wan) .'\')' );
+	if($sip_sbc_from_wan != "")
+		$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'sip_server_from_wan\', \''. $db->escape($sip_sbc_from_wan) .'\')' );
 	
 	return true;
 }
