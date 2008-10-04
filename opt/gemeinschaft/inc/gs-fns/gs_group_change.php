@@ -67,9 +67,16 @@ function gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_i
 	$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
 	
 	if ($id < 1) {
-		# insert
+		# add
 		if ($parent_id < 1) {
-			return new GsError( 'Failed to add group without parent.' );
+			//return new GsError( 'Failed to add group without parent.' );
+			$root_node = $mptt->find_root_node();
+			if (! is_array($root_node))
+				return new GsError( 'Failed to find top-level group.' );
+			$parent_id = (int)@$root_node['id'];
+			if ($parent_id < 1) {
+				return new GsError( 'Failed to add group without parent.' );
+			}
 		}
 		$id = (int)$mptt->insert($parent_id, array(
 			'name'                   => $name_new,
@@ -108,8 +115,6 @@ function gs_group_change_by_name( $name, $parent_name, $name_new, $title, $softk
 	}
 	if (! preg_match( '/^[a-z0-9\-_]+$/', $name_new ))
 		return new GsError( 'Group name must be alphanumeric.' );
-	if (! preg_match( '/^[a-z0-9\-_]+$/', $parent_name ))
-		return new GsError( 'Parent group name must be alphanumeric.' );
 	
 	# connect to db
 	#
@@ -132,9 +137,11 @@ function gs_group_change_by_name( $name, $parent_name, $name_new, $title, $softk
 	{
 		$parent_id = null;
 	} else {
+		if (! preg_match( '/^[a-z0-9\-_]+$/', $parent_name ))
+			return new GsError( 'Parent group name must be alphanumeric.' );
 		$parent_id = (int)$db->executeGetOne( 'SELECT `id` FROM `user_groups` WHERE `name`=\''. $db->escape($parent_name) .'\'' );
 		if ($parent_id < 1)
-			$parent_id = null;
+			return new GsError( 'Parent group not found.' );
 	}
 	
 	return gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_id, $prov_param_profile_id, $show_ext_modules );
