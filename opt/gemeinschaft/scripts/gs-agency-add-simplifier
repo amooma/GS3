@@ -1,0 +1,177 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* Soren Sprenger <soeren.sprenger@amooma.de> 
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_host_foreign_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ldap_user_search.php' );
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dnsname> --comment=<host_comment> --prefix=<prefix> --group=<user_groupid> --user=<username> --exten=<exten> --isadmin=<true|false>';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'host=',
+		'comment=',
+		'prefix=',
+		'group=',
+		'user=',
+		'exten=',
+		'isadmin='
+	),
+	$usage
+);
+if (! isSet($opts['host'])
+ || ! isSet($opts['comment'])
+ || ! isSet($opts['prefix'])
+ || ! isSet($opts['group'])
+ || ! isSet($opts['user'])
+ || ! isSet($opts['exten'])
+ || ! isSet($opts['isadmin'])
+ ) {
+	gs_script_invalid_usage( $usage );
+}
+
+/***********************************************************
+*    connect to Database
+***********************************************************/
+$db = gs_db_master_connect();
+	if (! $db)
+		return new GsError( 'Could not connect to database.' );
+
+/***********************************************************
+*    check if host exists
+***********************************************************/
+
+	$opts['host'] = normalizeIPs($opts['host']);
+	$bInvalHostName = false;
+	if (! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $opts['host'])) {
+		# not an IP address. => resolve hostname
+		$addresses = @gethostbynamel($opts['host']);
+		
+		if (count($addresses) < 1) {
+			echo 'Could not resolve hostname: '. $opts['host'];
+			exit(1);
+		} elseif (count($addresses) > 1) {
+			echo 'Hostname '. $opts['host'] .' cannot be used because it\'s resolved to more than one IP addr.';
+			exit(1);
+		} elseif (count($addresses) == 1) {
+			if (strlen($addresses[0]) == 0) {
+				echo 'Could not resolve hostname: '. $opts['host'];
+				exit(1);
+				}
+			$opts['host'] = $addresses[0];
+		}
+	}
+
+$existing_hosts = @ gs_hosts_get(true);
+
+$found = false;
+for ($i=0; $i<count($existing_hosts); $i++) {
+	if ($existing_hosts[$i]['host'] === $opts['host']) {
+		echo "Host already exist, so i do not add a new one.\n";
+		$found = true;
+		break;
+	}
+}
+/***********************************************************
+*    call the function to add the Host 
+***********************************************************/
+
+if (!$found) {
+	echo "Adding Host...\n";
+	#creating group_id
+	
+	$ret = @ gs_host_foreign_add( $opts['host'], $opts['comment'], substr($opts['prefix'],0,3)."00", $opts['prefix'] );
+	if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
+	if (! $ret)            gs_script_error();
+	
+}
+
+/***********************************************************
+*    get user Informations from LDAP
+***********************************************************/
+#get informations from LDAP
+$user_info = gs_ldap_user_search($opts['user']);
+if (isGsError( $user_info )) gs_script_error( $user_info->getMsg() );
+if (! $user_info)            gs_script_error();
+
+#generate pin
+$pin = mt_rand(100000,999999);
+
+
+/***********************************************************
+*    call the function to add the User
+***********************************************************/
+$ret = @ gs_user_add( $opts['user'], $opts['exten'], $pin, $user_info['fn'], $user_info['ln'], $opts['host'], $user_info['email'] );
+if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
+if (! $ret)            gs_script_error();
+echo "User added.\n";
+
+/***********************************************************
+*    if required - add user to local admins
+***********************************************************/
+if($opts['isadmin'] == 'true') {
+
+	$host = gs_host_by_id_or_ip( $opts['host'] );
+	if (isGsError( $host )) {
+		echo $host->getMsg() ,"\n";
+		exit(1);
+	}
+
+	if (! is_array( $host )) {
+		echo "Host not found.\n";
+		exit(1);
+	}
+
+	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($opts['user']) .'\'' );
+	if (! $user_id) {
+		echo "User not found.\n";
+		exit(1);
+	}
+	
+	$ok = $db->execute( 'REPLACE INTO `boi_perms` (`user_id`, `host_id` , `roles`) VALUES ('. $user_id .', '. (int)$host['id'] .', \'l\')' );
+	if (! $ok) {
+		echo "Failed to set boi-permissions.\n";
+		exit(1);
+	}
+	echo "put user '".$opts['user']."' to lokal admins on host ".$host['host'].".\n";
+}
+
+echo "done.\n";
+
+?>
