@@ -43,27 +43,35 @@ $opts = @getOptsNoMultiples( '',
 	array(
 		'host=',
 		'comment=',
+//		'foreign=',
 		'sip-proxy=',
 		'sip-sbc='
 	),
 	$usage
 );
 if (! isSet($opts['host'])
- || ! isSet($opts['comment']))
-  {
+ || ! isSet($opts['comment'])
+// || ! isSet($opts['foreign'])
+ ) {
 	gs_script_invalid_usage( $usage );
 }
 
-/***********************************************************
-*    call the function
-***********************************************************/
+//$opts['foreign'] = ($opts['foreign'] == '1' || $opts['foreign'] != '0' || $opts['foreign'] != '');
+$opts['foreign'  ] = false;
+$opts['group-id' ] = null;
+$opts['prefix'   ] = '';
 
 if (! isSet($opts['sip-proxy']))
 	$opts['sip-proxy'] = null;
 if (! isSet($opts['sip-sbc'  ]))
 	$opts['sip-sbc'  ] = null;
 
-$ret = @ gs_host_add( $opts['host'], $opts['comment'], $opts['sip-proxy'], $opts['sip-sbc'] );
+
+/***********************************************************
+*    call the function
+***********************************************************/
+
+$ret = @ gs_host_add( $opts['host'], $opts['comment'], $opts['foreign'], $opts['group-id'], $opts['prefix'], $opts['sip-proxy'], $opts['sip-sbc'] );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 echo "Host added.\n";

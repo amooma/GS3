@@ -35,7 +35,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 *    adds a new host
 ***********************************************************/
 
-function gs_host_add( $host_ip_or_name, $comment, $sip_proxy_from_wan=null, $sip_sbc_from_wan=null )
+function gs_host_add( $host_ip_or_name, $comment, $foreign=false, $group_id=null, $boi_prefix='', $sip_proxy_from_wan=null, $sip_sbc_from_wan=null )
 {
 	if (! $host_ip_or_name)
 		return new GsError('Invalid host.');
@@ -59,6 +59,22 @@ function gs_host_add( $host_ip_or_name, $comment, $sip_proxy_from_wan=null, $sip
 		$host = $host_ip_or_name;
 	}
 	
+	$group_id = (int)$group_id;
+	if ($group_id < 1) $group_id = null;
+	
+	if (! $foreign) {
+		if ($boi_prefix != '') {
+			return new GsError( 'Route prefix not allowed for non-foreign hosts.' );
+		}
+	} else {
+		if ($boi_prefix == '') {
+			return new GsError( 'Foreign hosts must have a route prefix.' );
+		}
+		if (! preg_match('/^[1-9][0-9]*$/', $boi_prefix)) {
+			return new GsError( 'Route prefix must be numeric.' );
+		}
+	}
+	
 	if ($sip_proxy_from_wan != "" && ! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $sip_proxy_from_wan)) {
 		return new GsError( 'Invalid IP address of SIP proxy from WAN.' );
 	}
@@ -66,7 +82,11 @@ function gs_host_add( $host_ip_or_name, $comment, $sip_proxy_from_wan=null, $sip
 		return new GsError( 'Invalid IP address of SIP SBC from WAN.' );
 	}
 	
-	$api = gs_get_conf('GS_BOI_API_DEFAULT');
+	if ($foreign) {
+		$api = gs_get_conf('GS_BOI_API_DEFAULT');
+	} else {
+		$api = '';
+	}
 	
 	# connect to db
 	#
@@ -82,12 +102,14 @@ function gs_host_add( $host_ip_or_name, $comment, $sip_proxy_from_wan=null, $sip
 		`id`,
 		`host`,
 		`comment`,
-		`is_foreign`
+		`is_foreign`,
+		`group_id`
 	) VALUES (
 		NULL,
 		\''. $db->escape($host) .'\',
 		\''. $db->escape($comment) .'\',
-		0
+		'. ($foreign ?1:0) .',
+		'. (int)$group_id .'
 	)';
 	$ok = $db->execute($sql_query);
 	if (! $ok)
@@ -97,10 +119,12 @@ function gs_host_add( $host_ip_or_name, $comment, $sip_proxy_from_wan=null, $sip
 		return new GsError( 'Failed to add host '. $host );
 	
 	$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'api\', \''. $db->escape($api) .'\')' );
-	if ($sip_proxy_from_wan != "")
+	if ($sip_proxy_from_wan != '')
 		$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'sip_proxy_from_wan\', \''. $db->escape($sip_proxy_from_wan) .'\')' );
-	if ($sip_sbc_from_wan != "")
+	if ($sip_sbc_from_wan != '')
 		$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'sip_server_from_wan\', \''. $db->escape($sip_sbc_from_wan) .'\')' );
+	if ($foreign)
+		$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'route_prefix\', \''. $db->escape($boi_prefix) .'\')' );
 	
 	return true;
 }
