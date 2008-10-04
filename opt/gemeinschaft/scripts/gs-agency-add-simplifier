@@ -41,8 +41,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_ldap_user_search.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-//$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dnsname> --comment=<host_comment> --prefix=<prefix> --group=<user_group_id> --user=<username> --exten=<exten> [--isadmin]';
-$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dnsname> --comment=<host_comment> --prefix=<prefix> --user=<username> --exten=<exten> [--isadmin]';
+//$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dnsname> --comment=<host_comment> --prefix=<prefix> --group=<user_group_id> --user=<username> --exten=<exten> [--is-admin]';
+$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dnsname> --comment=<host_comment> --prefix=<prefix> --user=<username> --exten=<exten> [--is-admin]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
@@ -51,7 +51,7 @@ $opts = @getOptsNoMultiples( '',
 		'prefix=',
 		'user=',
 		'exten=',
-		'isadmin'
+		'is-admin'
 	),
 	$usage
 );
@@ -64,8 +64,8 @@ if (! isSet($opts['host'])
 	gs_script_invalid_usage( $usage );
 }
 
-$opts['isadmin'] = array_key_exists('isadmin', $opts);
-//$opts['prefix' ] = subStr($opts['prefix'],0,3).'00';  // ?
+$opts['is-admin'] = array_key_exists('is-admin', $opts);
+//$opts['prefix'  ] = subStr($opts['prefix'],0,3).'00';  // ?
 
 
 /***********************************************************
@@ -151,7 +151,7 @@ echo "User added.\n";
 *    if required add user to local branch office admins
 ***********************************************************/
 
-if ($opts['isadmin']) {
+if ($opts['is-admin']) {
 	
 	$host = gs_host_by_id_or_ip( $opts['host'] );
 	if (isGsError($host)) {
