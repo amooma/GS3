@@ -27,14 +27,21 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-require_once( GS_DIR .'inc/ldap.php' );
+defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/ldap.php' );
 
-function gs_ldap_user_search($user)
+
+/***********************************************************
+*    find a user in LDAP
+***********************************************************/
+
+function gs_ldap_user_search( $user )
 {
 	if (!($ldap_conn = gs_ldap_connect(
 		$GS_LDAP_HOST
 	))) {
-		return new GsError('Could not connect to LDAP server.' );
+		return new GsError( 'Could not connect to LDAP server.' );
 	}
 
 	$req_props = array();
@@ -47,7 +54,6 @@ function gs_ldap_user_search($user)
 	if ($GS_LDAP_PROP_EMAIL     != '') $req_props[] = $GS_LDAP_PROP_EMAIL;
 	if ($GS_LDAP_PROP_PHONE     != '') $req_props[] = $GS_LDAP_PROP_PHONE;
 	
-	
 	$users_arr = gs_ldap_get_list( $ldap_conn, gs_get_conf('GS_LDAP_SEARCHBASE'),
 		gs_get_conf('GS_LDAP_PROP_USER') .'='. $user,
 		$req_props,
@@ -59,9 +65,9 @@ function gs_ldap_user_search($user)
 	if (isGsError($users_arr))
 		return $users_arr;
 	if (! is_array($users_arr) || count($users_arr) < 1)
-		return new GsError('User "'.$user.'" not found in LDAP.');
+		return new GsError( 'User "'.$user.'" not found in LDAP.' );
 	if (count($users_arr) > 1)
-		return new GsError('LDAP search did not return a unique user for "'.$user.'".' );
+		return new GsError( 'LDAP search did not return a unique user for "'.$user.'".' );
 	$user_arr = $users_arr[0];
 	unset($users_arr);
 	
@@ -94,4 +100,5 @@ function gs_ldap_user_search($user)
 	gs_log( GS_LOG_DEBUG, 'Found user "'.$user.'" ('. trim($user_info['fn'].' '.$user_info['ln']) .') in LDAP' );
 	return $user_info;
 }
+
 ?>
