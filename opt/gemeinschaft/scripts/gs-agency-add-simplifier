@@ -41,14 +41,14 @@ include_once( GS_DIR .'inc/gs-fns/gs_ldap_user_search.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dnsname> --comment=<host_comment> --prefix=<prefix> --group=<user_groupid> --user=<username> --exten=<exten> [--isadmin]';
+//$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dnsname> --comment=<host_comment> --prefix=<prefix> --group=<user_group_id> --user=<username> --exten=<exten> [--isadmin]';
+$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dnsname> --comment=<host_comment> --prefix=<prefix> --user=<username> --exten=<exten> [--isadmin]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
 		'host=',
 		'comment=',
 		'prefix=',
-		'group=',
 		'user=',
 		'exten=',
 		'isadmin'
@@ -58,7 +58,6 @@ $opts = @getOptsNoMultiples( '',
 if (! isSet($opts['host'])
  || ! isSet($opts['comment'])
  || ! isSet($opts['prefix'])
- || ! isSet($opts['group'])
  || ! isSet($opts['user'])
  || ! isSet($opts['exten'])
  ) {
