@@ -41,7 +41,7 @@ Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
 
   <para>Die Skripte sind hier in alphabetischer Reihenfolge aufgeführt; als
   Einstieg sollten Sie jedoch mit <command>gs_users_get</command> und
-  <command>gs_user_add</command> beginnen, da es das Verstädnis für die
+  <command>gs_user_add</command> beginnen, da es das Verständnis für die
   weiteren Skripte erleichtert.</para>
 
   <section>
