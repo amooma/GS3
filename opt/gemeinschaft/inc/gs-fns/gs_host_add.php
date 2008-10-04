@@ -35,7 +35,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 *    adds a new host
 ***********************************************************/
 
-function gs_host_add( $host_ip_or_name, $comment, $foreign, $sip_proxy_from_wan=null, $sip_sbc_from_wan=null )
+function gs_host_add( $host_ip_or_name, $comment, $sip_proxy_from_wan=null, $sip_sbc_from_wan=null )
 {
 	if (! $host_ip_or_name)
 		return new GsError('Invalid host.');
@@ -88,7 +88,7 @@ function gs_host_add( $host_ip_or_name, $comment, $foreign, $sip_proxy_from_wan=
 		NULL,
 		\''. $db->escape($host) .'\',
 		\''. $db->escape($comment) .'\',
-		'.($foreign ?1:0).'
+		0
 	)';
 	$ok = $db->execute($sql_query);
 	if (! $ok)
