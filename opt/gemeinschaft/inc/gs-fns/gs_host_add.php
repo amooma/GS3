@@ -98,9 +98,9 @@ function gs_host_add( $host_ip_or_name, $comment, $sip_proxy_from_wan=null, $sip
 		return new GsError( 'Failed to add host '. $host );
 	
 	$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'api\', \''. $db->escape($api) .'\')' );
-	if($sip_proxy_from_wan != "")
+	if ($sip_proxy_from_wan != "")
 		$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'sip_proxy_from_wan\', \''. $db->escape($sip_proxy_from_wan) .'\')' );
-	if($sip_sbc_from_wan != "")
+	if ($sip_sbc_from_wan != "")
 		$db->execute( 'REPLACE INTO `host_params` (`host_id`, `param`, `value`) VALUES ('. $host_id .', \'sip_server_from_wan\', \''. $db->escape($sip_sbc_from_wan) .'\')' );
 	
 	return true;
