@@ -145,6 +145,12 @@ if ($host_id < 1) {
 *    get user info from LDAP
 ***********************************************************/
 
+$GS_LDAP_HOST = gs_get_conf('GS_LDAP_HOST');
+if (in_array($GS_LDAP_HOST, array(null, false, '', '0.0.0.0'), true)) {
+	echo "This script need LDAP but LDAP is not configured.\n";
+	exit(1);
+}
+
 # get info from LDAP
 $user_info = gs_ldap_user_search( $opts['user'] );
 if (isGsError($user_info))  gs_script_error( $user_info->getMsg() );
