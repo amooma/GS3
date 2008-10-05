@@ -136,7 +136,7 @@ else {
 
 if ($host_id < 1) {
 	echo "Adding host ...\n";
-	$ret = @ gs_host_foreign_add( $opts['host'], $opts['comment'], null, $opts['prefix'], $opts['prefix'] );
+	$ret = @ gs_host_foreign_add( $opts['host'], $opts['comment'], null, $opts['prefix'] );
 	if (isGsError($ret)) gs_script_error( $ret->getMsg() );
 	if (! $ret)          gs_script_error();
 }
