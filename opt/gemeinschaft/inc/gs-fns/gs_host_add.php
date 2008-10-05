@@ -75,10 +75,10 @@ function gs_host_add( $host_ip_or_name, $comment, $foreign=false, $group_id=null
 		}
 	}
 	
-	if ($sip_proxy_from_wan != "" && ! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $sip_proxy_from_wan)) {
+	if ($sip_proxy_from_wan != '' && ! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $sip_proxy_from_wan)) {
 		return new GsError( 'Invalid IP address of SIP proxy from WAN.' );
 	}
-	if ($sip_sbc_from_wan != "" && ! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $sip_sbc_from_wan)) {
+	if ($sip_sbc_from_wan != '' && ! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $sip_sbc_from_wan)) {
 		return new GsError( 'Invalid IP address of SIP SBC from WAN.' );
 	}
 	
