@@ -1,16 +1,21 @@
 #!/bin/sh
-
+#
+# Prints SVN log and diff incrementally between two specific
+# revisions.
+#
 # (c) Philipp Kempgen
 # GNU/GPL
 
+USAGE="Usage:  $0 <file|dir|URL> <revision> [<revision-to>]\n"
+
 if [ -z $1 ]; then
-	echo "Arg. 1 must be the file/folder or URL"
+	echo -e "$USAGE" >&2
 	exit 1
 fi
 ARG_FILE=$1
 
 if [ -z $2 ]; then
-	echo "Arg. 2 must be the revision"
+	echo -e "$USAGE" >&2
 	exit 1
 fi
 ARG_REV=$2
@@ -23,6 +28,11 @@ else
 	ARG_REV_TO=$ARG_REV
 fi
 
+SVN=`which svn`
+if [ -z "$SVN" ]; then
+	echo "svn command not found." >&2
+	exit 1
+fi
 
 for (( REV_TO = $ARG_REV_FROM; $REV_TO <= $ARG_REV_TO; REV_TO++ ))
 do
@@ -30,13 +40,12 @@ do
 	echo "########################################################################"
 	
 	REV_FROM=$(( $REV_TO - 1 ))
-	svn log -r "${REV_TO}" "${ARG_FILE}"
+	$SVN log -r "${REV_TO}" "${ARG_FILE}"
 	[ "x$?" != "x0" ] && exit $?
 	echo ""
-	svn diff --notice-ancestry -r "${REV_FROM}:${REV_TO}" "${ARG_FILE}"
+	$SVN diff --notice-ancestry -r "${REV_FROM}:${REV_TO}" "${ARG_FILE}"
 	[ "x$?" != "x0" ] && exit $?
 	
-	echo ""
 	echo ""
 	echo ""
 done
