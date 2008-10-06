@@ -119,6 +119,16 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 		return new GsError( 'Unknown host.' );
 	}
 	
+	# check if user group exists
+	#
+	if ($group_id > 0) {
+		$num = $db->executeGetOne( 'SELECT 1 FROM `user_groups` WHERE `id`='. (int)$group_id );
+		if ($num < 1) {
+			gs_db_rollback_trans($db);
+			return new GsError( 'Unknown user group ID '. $group_id );
+		}
+	}
+	
 	# add user
 	#
 	$ok = $db->execute( 'INSERT INTO `users` (`id`, `user`, `pin`, `firstname`, `lastname`, `email`, `nobody_index`, `host_id`, `group_id`) VALUES (NULL, \''. $db->escape($user) .'\', \''. $db->escape($pin) .'\', _utf8\''. $db->escape($firstname) .'\', _utf8\''. $db->escape($lastname) .'\', _utf8\''. $db->escape($email) .'\', NULL, '. $host['id'] .', '. ($group_id > 0 ? $group_id : 'NULL') .' )' );
