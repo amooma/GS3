@@ -87,7 +87,6 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 		$old_host = false;
 	}
 	
-	
 	# check if (new) host exists
 	#
 	$host = gs_host_by_id_or_ip( $host_id_or_ip );
