@@ -67,8 +67,10 @@ $name        = trim(@$_REQUEST['name'     ]);
 $number      = trim(@$_REQUEST['number'   ]);
 $page        = (int)@$_REQUEST['page'     ] ;
 $edit_user   = trim(@$_REQUEST['edit'     ]);
-$save_user   = trim(@$_REQUEST['save'     ]);
 $delete_user = trim(@$_REQUEST['delete'   ]);
+$action      = trim(@$_REQUEST['action'   ]);
+if (! in_array($action, array('view','save','add','del','list'), true))
+	$action = 'list';
 
 $cbdelete    = trim(@$_REQUEST['cbdelete' ]);
 $cbregexp    = trim(@$_REQUEST['cbregexp' ]);
@@ -77,11 +79,11 @@ $cbpin       = trim(@$_REQUEST['cbpin'    ]);
 $extnum      = trim(@$_REQUEST['extnum'   ]);
 $extnumdel   = trim(@$_REQUEST['extndel'  ]);
 
-$upgroups    =      @$_REQUEST['upgroup'  ] ;
-$upgrouped   =      @$_REQUEST['upgrouped'] ;
+$u_pgrps     =      @$_REQUEST['u_pgrps'  ] ;
+$u_pgrp_ed   =      @$_REQUEST['u_pgrp_ed'] ;
 
-$ugroup_ed   =      @$_REQUEST['ugroup_ed'] ;
-$ugroup_id   = (int)@$_REQUEST['ugroup_id'] ;
+$u_grp_ed    =      @$_REQUEST['u_grp_ed' ] ;
+$u_grp_id    = (int)@$_REQUEST['u_grp_id' ] ;
 
 $user_fname  = trim(@$_REQUEST['ufname'   ]);
 $user_lname  = trim(@$_REQUEST['ulname'   ]);
@@ -93,73 +95,93 @@ $user_host   = trim(@$_REQUEST['uhost'    ]);
 
 
 
-if ($delete_user) {
-	$ret = gs_user_del( $delete_user );
-	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+if ($action === 'del') {
+	
+	if ($delete_user) {
+		$ret = gs_user_del( $delete_user );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	
+	$action = 'list';
 }
-if ($save_user) {
-	$ret = gs_user_change( $save_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email );
-	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
-	if (! isGsError( $ret )) {
-		$boi_api = gs_host_get_api((int)$user_host);
-		if ($boi_api == '') {
-			$uid = (int)$DB->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape($save_user) .'\'' );
-			if ($uid > 0) {
-				$DB->execute( 'UPDATE `ast_sipfriends` SET `secret`=\''. $DB->escape(preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['usecret'])) .'\' WHERE `_user_id`='. $uid );
+
+if ($action === 'add') {
+	
+	if ($user_name) {
+		$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_host, $user_email );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	
+	$action = 'list';
+}
+
+if ($action === 'save') {
+	
+	if ($edit_user) {
+		$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		if (! isGsError( $ret )) {
+			$boi_api = gs_host_get_api((int)$user_host);
+			if ($boi_api == '') {
+				$uid = (int)$DB->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape($edit_user) .'\'' );
+				if ($uid > 0) {
+					$DB->execute( 'UPDATE `ast_sipfriends` SET `secret`=\''. $DB->escape(preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['usecret'])) .'\' WHERE `_user_id`='. $uid );
+				}
 			}
 		}
 	}
-}
-if ($user_name) {
-	$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_host, $user_email );
-	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
-}
-if ($cbdelete) {
-	$ret = gs_callblocking_delete( $edit_user, $cbdelete );
-	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
-}
-if ($extnumdel) {
-	$ret = gs_user_external_number_del( $edit_user, $extnumdel );
-	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
-}
-if ($cbregexp) {
-	$ret = gs_callblocking_set( $edit_user, $cbregexp, $cbpin );
-	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
-}
-if ($extnum) {
-	$ret = gs_user_external_number_add( $edit_user, $extnum );
-	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
-}
-
-
-
-if ($upgrouped && $edit_user) {
-	$sql_query = 'DELETE `p`
-FROM `pickupgroups_users` `p` , `users` `u`
-WHERE
-	`p`.`user_id` = `u`.`id` AND
-	`u`.`user` = \''.$DB->escape($edit_user).'\'';
+	if ($cbdelete) {
+		$ret = gs_callblocking_delete( $edit_user, $cbdelete );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	if ($extnumdel) {
+		$ret = gs_user_external_number_del( $edit_user, $extnumdel );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	if ($cbregexp) {
+		$ret = gs_callblocking_set( $edit_user, $cbregexp, $cbpin );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	if ($extnum) {
+		$ret = gs_user_external_number_add( $edit_user, $extnum );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
 	
-	$rs = $DB->execute($sql_query);
-	
-	if (is_array($upgroups)) {
-		foreach ($upgroups as $upgroup) {
-			if ($upgroup < 1) continue;
-			$ret = gs_pickupgroup_user_add( $upgroup, $edit_user );
-			if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	if ($u_pgrp_ed && $edit_user) {
+		
+		$sql_query =
+			'DELETE `p` '.
+			'FROM `pickupgroups_users` `p` , `users` `u` '.
+			'WHERE '.
+				'`p`.`user_id` = `u`.`id` AND '.
+				'`u`.`user` = \''. $DB->escape($edit_user) .'\''
+			;
+		$ok = $DB->execute($sql_query);
+		
+		if (is_array($u_pgrps)) {
+			foreach ($u_pgrps as $u_pgrp) {
+				if ($u_pgrp < 1) continue;
+				$ret = gs_pickupgroup_user_add( $u_pgrp, $edit_user );
+				if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+			}
 		}
 	}
+	
+	if ($u_grp_ed && $edit_user) {
+		$query =
+			'UPDATE `users` SET '.
+				'`group_id`='. ($u_grp_id > 0 ? $u_grp_id : 'NULL') .' '.
+			'WHERE `user`=\''. $DB->escape($edit_user) .'\'';
+		$ok = $DB->execute($query);
+	}
+	
+	$action = 'list';
 }
 
-if ($ugroup_ed && $edit_user) {
-	$query =
-		'UPDATE `users` SET '.
-			'`group_id`='. ($ugroup_id > 0 ? $ugroup_id : 'NULL') .' '.
-		'WHERE `user`=\''. $DB->escape($edit_user) .'\'';
-	$ok = $DB->execute($query);
-}
 
-if (!$edit_user) {
+
+
+if ($action === 'list') {
 	
 	$use_ldap = false;
 	if (! in_array(gs_get_conf('GS_LDAP_HOST'), array(null, false, '', '0.0.0.0'), true)) {
@@ -307,6 +329,13 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	</tbody>
 	</table>
 	
+<?php
+	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+	echo gs_form_hidden($SECTION, $MODULE), "\n";
+	echo '<input type="hidden" name="action" value="add" />', "\n";
+	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
+	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
+?>
 	<table cellspacing="1" class="phonebook">
 	<thead>
 	<tr>
@@ -395,8 +424,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			echo '</td>';
 			
 			echo '<td>';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='. rawUrlEncode($r['usern']) .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('bearbeiten'), '"><img alt="',__('bearbeiten'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='. rawUrlEncode($r['usern']) .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('l&ouml;schen'), '"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='. rawUrlEncode($r['usern']) .'&amp;action=view&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('bearbeiten'), '"><img alt="',__('bearbeiten'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='. rawUrlEncode($r['usern']) .'&amp;action=del&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('l&ouml;schen'), '"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			echo "</td>\n";
 			
 			echo '</tr>', "\n";
@@ -408,13 +437,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<tr>
 	<?php
 	
-	if (!$edit_user) {
+	//if (! $edit_user) {
 		
-		//FIXME - tr > form is invalid
-		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
-		echo gs_form_hidden($SECTION, $MODULE), "\n";
-		echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
-		echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
 	?>
 		<td>
 			<input type="text" name="uuser" id="ipt-uuser" value="" size="8" maxlength="20" />
@@ -481,15 +505,15 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			</button>
 		</td>
 		
-		</form>
 	<?php
-	}
+	//}
 	?>
 	
 	</tr>
 	
 	</tbody>
 	</table>
+	</form>
 	
 <?php
 	if ($use_ldap) {
@@ -677,8 +701,14 @@ ORDER BY LENGTH(`number`) DESC';
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php
 echo gs_form_hidden($SECTION, $MODULE), "\n";
-echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\n";
+echo '<input type="hidden" name="edit" value="', htmlEnt($edit_user), '" />', "\n";
+echo '<input type="hidden" name="action" value="save" />', "\n";
 ?>
+
+<button type="submit" title="<?php echo __('Speichern'); ?>" class="plain" style="margin:3px 1px 3px 450px;">
+	<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+</button>
+
 <table cellspacing="1">
 <thead>
 	<tr>
@@ -782,28 +812,16 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\
 ?>
 		</td>
 	</tr>
-	<tr>
-		<th>&nbsp;</th>
-		<th>
-			<button type="submit" title="<?php echo __('Speichern'); ?>" class="plain">
-				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
-			</button>
-		</th>
-	</tr>
 </tbody>
 </table>
-</form>
 
 <br />
 
-<form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php
-echo gs_form_hidden($SECTION, $MODULE), "\n";
-echo '<input type="hidden" name="edit" value="', htmlEnt($edit_user), '" />', "\n";
-echo '<input type="hidden" name="ugroup_ed" value="yes" />', "\n";
+echo '<input type="hidden" name="u_grp_ed" value="yes" />', "\n";
 ?>
 <table cellspacing="1">
-<thead>
+<tbody>
 	<tr>
 		<th style="width:180px;">
 			<?php echo __('Benutzergruppe'); ?>
@@ -812,7 +830,7 @@ echo '<input type="hidden" name="ugroup_ed" value="yes" />', "\n";
 <?php
 		$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
 		$u_groups = $mptt->get_tree_as_list( null );
-		echo '<select name="ugroup_id">',"\n";
+		echo '<select name="u_grp_id">',"\n";
 		echo '<option value=""';
 		if ($r['group_id'] == '')
 			echo ' selected="selected"';
@@ -839,38 +857,23 @@ echo '<input type="hidden" name="ugroup_ed" value="yes" />', "\n";
 ?>		
 		</td>
 	</tr>
-</thead>
-<tbody>
-	<tr>
-		<th>&nbsp;</th>
-		<th>
-			<button type="submit" title="<?php echo __('Speichern'); ?>" class="plain">
-				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
-			</button>
-		</th>
-	</tr>
 </tbody>
 </table>
-</form>
 
 <br />
 
-<form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php
-echo gs_form_hidden($SECTION, $MODULE), "\n";
-echo '<input type="hidden" name="edit" value="', htmlEnt($edit_user), '" />', "\n";
-echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
-// upgrouped? edit pickup group?
+echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 ?>
 <table cellspacing="1">
-<thead>
+<tbody>
 	<tr>
 		<th style="width:180px;">
 			<?php echo __('Pickupgruppe'); ?>
 		</th>
 		<td style="width:280px;">
 <?php
-		echo '<select multiple="multiple" name="upgroup[]" size="4">',"\n";
+		echo '<select multiple="multiple" name="u_pgrps[]" size="4">',"\n";
 		foreach ($pgroups as $key => $pgroup) {
 			echo '<option value="',$key,'"';
 			if (@$pgroups_my[$key]) echo ' selected="selected"';
@@ -881,19 +884,8 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 ?>		
 		</td>
 	</tr>
-</thead>
-<tbody>
-	<tr>
-		<th>&nbsp;</th>
-		<th>
-			<button type="submit" title="<?php echo __('Speichern'); ?>" class="plain">
-				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
-			</button>
-		</th>
-	</tr>
 </tbody>
 </table>
-</form>
 
 <br />
 
@@ -925,7 +917,7 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 		echo "</td>\n";
 		
 		echo "<td>\n";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'cbdelete='. rawUrlEncode($cb_entry['regexp']) .'&amp;edit='. rawUrlEncode($edit_user)), '" title="', __('entfernen'), '">';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'cbdelete='. rawUrlEncode($cb_entry['regexp']) .'&amp;edit='. rawUrlEncode($edit_user)), '&amp;action=save" title="', __('entfernen'), '">';
 		echo '<img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo "</td>\n";		
 		
@@ -933,10 +925,6 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 	}
 	
 	echo "<tr>\n";
-	//FIXME - tr > form is invalid
-	echo '<form method="post" action="', GS_URL_PATH  ,'">', "\n";
-	echo gs_form_hidden($SECTION, $MODULE), "\n";
-	echo '<input type="hidden" name="edit" value="', htmlEnt($edit_user), '" />', "\n";
 	
 	echo "<td>\n";
 	echo '<input type="text" name="cbregexp" value="" size="20" maxlength="40" />';	
@@ -947,12 +935,13 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 	echo "</td>\n";
 	
 	echo "<td>\n";
+	/*
 	echo '<button type="submit" title="', __('Speichern') ,'" class="plain">', "\n";
 	echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/filesave.png" />', "\n";
 	echo "</button>\n";
+	*/
 	echo "</td>\n";
 	
-	echo "</form>\n";
 	echo "</tr>\n";
 ?>
 </tbody>
@@ -986,17 +975,13 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 		echo "</td>\n";
 		
 		echo "<td>\n";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'extndel='.$ext_num .'&amp;edit='. rawUrlEncode($edit_user)), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'extndel='.$ext_num .'&amp;edit='. rawUrlEncode($edit_user)), '&amp;action=save" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo "</td>\n";		
 		
 		echo "</tr>\n";
 	}
 	
 	echo "<tr>\n";
-	//FIXME - tr > form is invalid
-	echo '<form method="post" action="', GS_URL_PATH  ,'">', "\n";
-	echo gs_form_hidden($SECTION, $MODULE), "\n";
-	echo '<input type="hidden" name="edit" value="', htmlEnt($edit_user), '" />', "\n";
 	
 	echo "<td>&nbsp;</td>\n";
 	
@@ -1005,16 +990,21 @@ echo '<input type="hidden" name="upgrouped" value="yes" />', "\n";
 	echo "</td>\n";
 	
 	echo "<td>\n";
+	/*
 	echo '<button type="submit" title="', __('Speichern') ,'" class="plain">', "\n";
 	echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/filesave.png" />', "\n";
 	echo "</button>\n";
+	*/
 	echo "</td>\n";
 	
-	echo "</form>\n";
 	echo "</tr>\n";
 ?>
 </tbody>
 </table>
+
+<button type="submit" title="<?php echo __('Speichern'); ?>" class="plain" style="margin:3px 1px 3px 450px;">
+	<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+</button>
 
 <?php
 }
