@@ -113,7 +113,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<td>
 		<form method="get" action="<?php echo GS_URL_PATH; ?>">
 		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
-		<input type="text" name="name" value="<?php echo htmlEnt($name); ?>" size="25" style="width:200px;" />
+		<input type="text" name="name" id="ipt-name" value="<?php echo htmlEnt($name); ?>" size="25" style="width:200px;" />
+		<script type="text/javascript">/*<![CDATA[*/ try{ document.getElementById('ipt-name').focus(); }catch(e){} /*]]>*/</script>
 		<button type="submit" title="<?php echo __('Name suchen'); ?>" class="plain">
 			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
 		</button>
