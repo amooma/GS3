@@ -94,6 +94,9 @@ $user_pin    = trim(@$_REQUEST['upin'     ]);
 $user_email  = trim(@$_REQUEST['uemail'   ]);
 $user_host   = trim(@$_REQUEST['uhost'    ]);
 
+$bp_add_h    = (int)@$_REQUEST['bp_add_h' ] ;
+$bp_del_h    = (int)@$_REQUEST['bp_del_h' ] ;
+
 
 
 if ($action === 'del') {
@@ -126,6 +129,13 @@ if ($action === 'edit') {
 		$ret = gs_user_external_number_del( $edit_user, $extnumdel );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	}
+	if ($bp_del_h > 0) {
+		$uid = (int)$DB->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape($edit_user) .'\'' );
+		if ($uid > 0) {
+			$query = 'DELETE FROM `boi_perms` WHERE `user_id`='.$uid.' AND `host_id`='.$bp_del_h;
+			$ok = $DB->execute($query);
+		}
+	}
 	
 	$action = 'edit';
 }
@@ -155,7 +165,6 @@ if ($action === 'save') {
 	}
 	
 	if ($u_pgrp_ed && $edit_user) {
-		
 		$sql_query =
 			'DELETE `p` '.
 			'FROM `pickupgroups_users` `p` , `users` `u` '.
@@ -180,6 +189,17 @@ if ($action === 'save') {
 				'`group_id`='. ($u_grp_id > 0 ? $u_grp_id : 'NULL') .' '.
 			'WHERE `user`=\''. $DB->escape($edit_user) .'\'';
 		$ok = $DB->execute($query);
+	}
+	
+	if ($bp_add_h > 0 && $edit_user) {
+		$user_id = (int)$DB->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape($edit_user) .'\'' );
+		if ($user_id > 0) {
+			$host_exists = $DB->executeGetOne( 'SELECT 1 FROM `hosts` WHERE `id`='. $bp_add_h );
+			if ($host_exists) {
+				$query = 'REPLACE INTO `boi_perms` (`user_id`, `host_id` , `roles`) VALUES ('. $user_id .', '. $bp_add_h .', \'l\')';
+				$ok = $DB->execute($query);
+			}
+		}
 	}
 	
 	$action = 'list';
@@ -688,6 +708,26 @@ ORDER BY LENGTH(`number`) DESC';
 		}
 	}
 	
+	if (gs_get_conf('GS_BOI_ENABLED')) {
+	$sql_query =
+		'SELECT '.
+			'`p`.`host_id`, `p`.`roles`, '.
+			'`h`.`comment`, `h`.`host` '.
+		'FROM '.
+			'`boi_perms` `p` JOIN '.
+			'`hosts` `h` ON (`h`.`id`=`p`.`host_id`) '.
+		'WHERE `p`.`user_id`='. (int)$r['uid'] .' '.
+		'ORDER BY `h`.`comment`';
+	
+	$rs = $DB->execute($sql_query);
+	$boi_perms = array();
+	if (@$rs) {
+		while ($r_bp = $rs->fetchRow()) {
+			$boi_perms[] = $r_bp;
+		}
+	}
+	}
+	
 ?>
 
 
@@ -902,8 +942,9 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 </thead>
 <tbody>
 <?php
+	$i=0;
 	foreach ($callblocking as $key => $cb_entry) {
-		echo "<tr>\n";
+		echo '<tr class="',($i%2===0 ?'odd':'even'),'">' ,"\n";
 		
 		echo "<td>\n";
 		echo htmlEnt($cb_entry['regexp']);	
@@ -919,9 +960,10 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 		echo "</td>\n";		
 		
 		echo "</tr>\n";
+		++$i;
 	}
 	
-	echo "<tr>\n";
+	echo '<tr class="',($i%2===0 ?'odd':'even'),'">' ,"\n";
 	
 	echo "<td>\n";
 	echo '<input type="text" name="cbregexp" value="" size="20" maxlength="40" />';	
@@ -962,8 +1004,9 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 </thead>
 <tbody>
 <?php
+	$i=0;
 	foreach ($ext_nums as $ext_num) {
-		echo "<tr>\n";
+		echo '<tr class="',($i%2===0 ?'odd':'even'),'">' ,"\n";
 		
 		echo "<td>&nbsp;</td>\n";
 		
@@ -976,9 +1019,10 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 		echo "</td>\n";		
 		
 		echo "</tr>\n";
+		++$i;
 	}
 	
-	echo "<tr>\n";
+	echo '<tr class="',($i%2===0 ?'odd':'even'),'">' ,"\n";
 	
 	echo "<td>&nbsp;</td>\n";
 	
@@ -999,6 +1043,9 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 </tbody>
 </table>
 
+<?php
+if (gs_get_conf('GS_BOI_ENABLED')) {
+?>
 <br />
 
 <table cellspacing="1">
@@ -1007,7 +1054,7 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 		<th style="width:180px;">
 			<?php echo __('Lokale Admin-Rechte'); ?>
 		</th>
-		<th style="width:217px;">
+		<th style="width:217px;" colspan="2">
 			<?php echo __('Anlage'); ?>
 		</th>
 		<th style="width:50px;">
@@ -1016,13 +1063,73 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 	</tr>
 </thead>
 <tbody>
-
+<?php
+	$i=0;
+	foreach ($boi_perms as $p) {
+		if (strPos($p['roles'],'l') === false) continue;
+		echo '<tr class="',($i%2===0 ?'odd':'even'),'">' ,"\n";
+		echo "<td>&nbsp;</td>\n";
+		
+		echo '<td>', htmlEnt($p['comment']) ,'</td>' ,"\n";
+		
+		echo '<td>', htmlEnt($p['host']) ,'</td>' ,"\n";
+		
+		echo "<td>\n";
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'bp_del_h='.$p['host_id'] .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo "</td>\n";
+		
+		echo "</tr>\n";
+		++$i;
+	}
+	
+	echo '<tr class="',($i%2===0 ?'odd':'even'),'">' ,"\n";
+	echo "<td>&nbsp;</td>\n";
+	
+	echo '<td colspan="2">' ,"\n";
+	echo '<select name="bp_add_h">' ,"\n";
+	echo '<option value="">', __('hinzuf&uuml;gen ...') ,'</option>',"\n";
+	$rs_hosts = $DB->execute(
+		'SELECT `id`, `host`, `comment` '.
+		'FROM `hosts` '.
+		'WHERE `is_foreign`=1 AND `id` NOT IN ( '.
+			'SELECT `host_id` '.
+			'FROM `boi_perms` '.
+			'WHERE `user_id`='.(int)$r['uid'].' AND `roles`<>\'\' '.
+		') '.
+		'ORDER BY `comment`'
+		);
+	echo '<optgroup label="', __('Fremd-Hosts') ,'">',"\n";
+	while ($h = $rs_hosts->fetchRow()) {
+		echo '<option value="',$h['id'],'">';
+		$comment = mb_subStr($h['comment'], 0, 25+1);
+		if (mb_strLen($comment) > 25)
+			$comment = mb_subStr($h['comment'], 0, 25-1) ."\xE2\x80\xA6";
+		elseif (trim($comment) === '') $comment = '#'.$h['id'];
+		echo htmlEnt($comment) ,' -- ', htmlEnt($h['host']);
+		if ($h['id'] == $r['hid']) echo ' (&bull;)';
+		echo '</option>',"\n";
+	}
+	echo '</optgroup>',"\n";
+	echo '</select>' ,"\n";
+	echo '</td>' ,"\n";
+	
+	echo "<td>\n";
+	//echo '[save]';
+	echo "</td>\n";
+	
+	echo "</tr>\n";
+?>
 </tbody>
 </table>
+<?php
+}
+?>
 
 <button type="submit" title="<?php echo __('Speichern'); ?>" class="plain" style="margin:3px 1px 3px 450px;">
 	<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 </button>
+
+</form>
 
 <?php
 }
