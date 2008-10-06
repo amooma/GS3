@@ -213,7 +213,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		$rs = $DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
 	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`,
-	`h`.`is_foreign`,
+	`h`.`is_foreign`, `h`.`comment` `h_comment`,
 	`hp1`.`value` `hp_route_prefix`
 FROM
 	`users` `u` JOIN
@@ -357,8 +357,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 				$email_display = htmlEnt(mb_substr($email_display, 0, 18)) .'&#8230;';
 			}
 			echo '<td>', $email_display ,'</td>' ,"\n";
-			//echo '<td>', $r['hid'] ,' (',@$hosts[$r['hid']],') </td>' ,"\n";
-			echo '<td class="r">', $r['hid'] ,'</td>' ,"\n";
+			echo '<td>', htmlEnt($r['h_comment']) ,'</td>' ,"\n";
 			
 			echo '<td>';
 			if (! $r['is_foreign']) {
@@ -436,24 +435,36 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<?php
 			echo '<select name="uhost" id="ipt-uhost" style="min-width:42px;">',"\n";
 			
-			$rs_hosts = $DB->execute('SELECT `id`, `host`, `comment` FROM `hosts` WHERE `is_foreign`=0 ORDER BY `id`');
+			echo '<optgroup label="Gemeinschaft">',"\n";
+			$rs_hosts = $DB->execute('SELECT `id`, `host`, `comment` FROM `hosts` WHERE `is_foreign`=0 ORDER BY `comment`');
 			while ($h = $rs_hosts->fetchRow()) {
 				echo '<option value="',$h['id'] ,'"';
-				echo ' title="Gemeinschaft ', htmlEnt($h['host']) ,' (', htmlEnt($h['comment']) ,')"';
 				if ($h['id'] == $r['hid']) echo ' selected="selected"';
-				echo '>', $h['id'] ,'</option>',"\n";
+				$comment = mb_subStr($h['comment'], 0, 20+1);
+				if (mb_strLen($comment) > 20)
+					$comment = mb_subStr($h['comment'], 0, 20-1) ."\xE2\x80\xA6";
+				elseif (trim($comment) === '') $comment = '#'.$h['id'];
+				echo ' title="', htmlEnt($h['host']) ,'"';
+				echo '>', htmlEnt($comment) ,'</option>',"\n";
 			}
+			echo '</optgroup>',"\n";
 			unset($rs_hosts);
 			
-			$rs_hosts = $DB->execute('SELECT `id`, `host`, `comment` FROM `hosts` WHERE `is_foreign`=1 ORDER BY `host`');
+			$rs_hosts = $DB->execute('SELECT `id`, `host`, `comment` FROM `hosts` WHERE `is_foreign`=1 ORDER BY `comment`');
 			if ($rs_hosts->numRows() != 0) {
-				echo '<option value="" disabled="disabled">--</option>',"\n";
+				//echo '<option value="" disabled="disabled">--</option>',"\n";
+				echo '<optgroup label="', __('Fremd-Hosts') ,'">',"\n";
 				while ($h = $rs_hosts->fetchRow()) {
 					echo '<option value="',$h['id'] ,'"';
-					echo ' title="', __('Fremd-Host') ,' ', htmlEnt($h['host']) ,' (', htmlEnt($h['comment']) ,')"';
 					if ($h['id'] == $r['hid']) echo ' selected="selected"';
-					echo '>', $h['id'] ,'</option>',"\n";
+					$comment = mb_subStr($h['comment'], 0, 20+1);
+					if (mb_strLen($comment) > 20)
+						$comment = mb_subStr($h['comment'], 0, 20-1) ."\xE2\x80\xA6";
+					elseif (trim($comment) === '') $comment = '#'.$h['id'];
+					echo ' title="', htmlEnt($h['host']) ,'"';
+					echo '>', htmlEnt($comment) ,'</option>',"\n";
 				}
+				echo '</optgroup>',"\n";
 			}
 			unset($rs_hosts);
 			
@@ -737,19 +748,20 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\
 		echo '<select name="uhost">',"\n";
 		
 		echo '<optgroup label="Gemeinschaft">',"\n";
-		$rs_hosts = $DB->execute('SELECT `id`, `host`, `comment` FROM `hosts` WHERE `is_foreign`=0 ORDER BY `id`');
+		$rs_hosts = $DB->execute('SELECT `id`, `host`, `comment` FROM `hosts` WHERE `is_foreign`=0 ORDER BY `comment`');
 		while ($h = $rs_hosts->fetchRow()) {
 			echo '<option value="',$h['id'] ,'"';
 			if ($h['id'] == $r['hid']) echo ' selected="selected"';
 			$comment = mb_subStr($h['comment'], 0, 25+1);
 			if (mb_strLen($comment) > 25)
 				$comment = mb_subStr($h['comment'], 0, 25-1) ."\xE2\x80\xA6";
-			echo '>', htmlEnt($h['host']) ,' (#', $h['id'] ,', ', htmlEnt($comment) ,')</option>',"\n";
+			elseif (trim($comment) === '') $comment = '#'.$h['id'];
+			echo '>', htmlEnt($comment) ,' -- ', htmlEnt($h['host']) ,'</option>',"\n";
 		}
 		echo '</optgroup>',"\n";
 		unset($rs_hosts);
 		
-		$rs_hosts = $DB->execute('SELECT `id`, `host`, `comment` FROM `hosts` WHERE `is_foreign`=1 ORDER BY `host`');
+		$rs_hosts = $DB->execute('SELECT `id`, `host`, `comment` FROM `hosts` WHERE `is_foreign`=1 ORDER BY `comment`');
 		if ($rs_hosts->numRows() != 0) {
 			echo '<optgroup label="', __('Fremd-Hosts') ,'">',"\n";
 			while ($h = $rs_hosts->fetchRow()) {
@@ -758,7 +770,8 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_user), '" />', "\
 				$comment = mb_subStr($h['comment'], 0, 25+1);
 				if (mb_strLen($comment) > 25)
 					$comment = mb_subStr($h['comment'], 0, 25-1) ."\xE2\x80\xA6";
-				echo '>', htmlEnt($h['host']) ,' (#', $h['id'] ,', ', htmlEnt($comment) ,')</option>',"\n";
+				elseif (trim($comment) === '') $comment = '#'.$h['id'];
+				echo '>', htmlEnt($comment) ,' -- ', htmlEnt($h['host']) ,'</option>',"\n";
 			}
 			echo '</optgroup>',"\n";
 		}
