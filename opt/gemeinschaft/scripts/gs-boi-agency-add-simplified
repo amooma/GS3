@@ -147,7 +147,7 @@ else {
 
 if ($host_id < 1) {
 	echo "Adding host ...\n";
-	$host_group_id = (int)substr($opts['prefix'],0,3).'00';
+	$host_group_id = (int)(substr($opts['prefix'],0,3).'00');
 	$ret = @ gs_host_foreign_add( $opts['host'], $opts['comment'], $host_group_id, $opts['prefix'] );
 	if (isGsError($ret)) gs_script_error( $ret->getMsg() );
 	if (! $ret)          gs_script_error();
