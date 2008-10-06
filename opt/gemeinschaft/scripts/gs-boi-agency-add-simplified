@@ -41,7 +41,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_add.php' );
 *    the shell parameters
 ***********************************************************/
 //$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dns_name> --comment=<host_comment> --prefix=<prefix> --group=<user_group_id> --user=<username> --exten=<exten> [--is-admin]';
-$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dns_name> --comment=<host_comment> --prefix=<prefix> --user=<username> --exten=<exten> [--is-admin]';
+$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dns_name> --comment=<host_comment> --prefix=<prefix> --user=<username> --exten=<exten> --group=<user_group_id> [--is-admin]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
@@ -50,6 +50,7 @@ $opts = @getOptsNoMultiples( '',
 		'prefix=',
 		'user=',
 		'exten=',
+		'group=',
 		'is-admin'
 	),
 	$usage
@@ -59,6 +60,7 @@ if (! isSet($opts['host'])
  || ! isSet($opts['prefix'])
  || ! isSet($opts['user'])
  || ! isSet($opts['exten'])
+ || ! isSet($opts['group'])
  ) {
 	gs_script_invalid_usage( $usage );
 }
@@ -136,7 +138,8 @@ else {
 
 if ($host_id < 1) {
 	echo "Adding host ...\n";
-	$ret = @ gs_host_foreign_add( $opts['host'], $opts['comment'], null, $opts['prefix'] );
+	$host_group = substr($opts['prefix'],0,3)."00"; 
+	$ret = @ gs_host_foreign_add( $opts['host'], $opts['comment'], $host_group, $opts['prefix'] );
 	if (isGsError($ret)) gs_script_error( $ret->getMsg() );
 	if (! $ret)          gs_script_error();
 }
@@ -164,7 +167,7 @@ $pin = mt_rand(100000,999999);
 *    add the user
 ***********************************************************/
 
-$ret = @ gs_user_add( $opts['user'], $opts['exten'], $pin, $user_info['fn'], $user_info['ln'], $opts['host'], $user_info['email'] );
+$ret = @ gs_user_add( $opts['user'], $opts['exten'], $pin, $user_info['fn'], $user_info['ln'], $opts['host'], $user_info['email'], $opts['group'] );
 if (isGsError($ret)) gs_script_error( $ret->getMsg() );
 if (! $ret)          gs_script_error();
 echo "User added.\n";
