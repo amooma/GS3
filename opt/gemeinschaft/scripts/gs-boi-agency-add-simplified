@@ -41,7 +41,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_add.php' );
 *    the shell parameters
 ***********************************************************/
 //$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dns_name> --comment=<host_comment> --prefix=<prefix> --group=<user_group_id> --user=<username> --exten=<exten> [--is-admin]';
-$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dns_name> --comment=<host_comment> --prefix=<prefix> --user=<username> --exten=<exten> --group=<user_group_id> [--is-admin]';
+$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip|dns_name> --comment=<host_comment> --prefix=<prefix> --user=<username> --exten=<exten> --group=0|<user_group_id> [--is-admin]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
@@ -66,6 +66,15 @@ if (! isSet($opts['host'])
 }
 
 $opts['is-admin'] = array_key_exists('is-admin', $opts);
+
+if (! array_key_exists('group', $opts)) {
+	$opts['group'] = null;
+} else {
+	$opts['group'] = (int)$opts['group'];
+	if ($opts['group'] < 1)
+		$opts['group'] = null;
+}
+
 
 if (! gs_get_conf('GS_BOI_ENABLED')) {
 	echo 'Branch office integration not enabled.' ,"\n";
