@@ -655,36 +655,36 @@ WHERE `u`.`user` = \''.$DB->escape($edit_user).'\'';
 	$rs = $DB->execute($sql_query);
 	$pgroups_my = array();
 	if (@$rs) {
-		while ($r_pg = $rs->fetchRow()) {
-			$pgroups_my[$r_pg['group_id']] = $r_pg['group_id'];
+		while ($r_pu = $rs->fetchRow()) {
+			$pgroups_my[$r_pu['group_id']] = $r_pu['group_id'];
 		}
 	}
 	
 	$sql_query =
 'SELECT `id`, `regexp`, `pin`
 FROM `callblocking`
-WHERE `user_id`='. $r['uid'] .'
+WHERE `user_id`='. (int)$r['uid'] .'
 ORDER BY LENGTH(`regexp`) DESC';
 	
 	$rs = $DB->execute($sql_query);
 	$callblocking = array();
 	if (@$rs) {
-		while ($r_pg = $rs->fetchRow()) {
-			$callblocking[$r_pg['id']] = $r_pg;
+		while ($r_cb = $rs->fetchRow()) {
+			$callblocking[$r_cb['id']] = $r_cb;
 		}
 	}
 	
 	$sql_query =
 'SELECT `number`
 FROM `users_external_numbers`
-WHERE `user_id`='. $r['uid'] .'
+WHERE `user_id`='. (int)$r['uid'] .'
 ORDER BY LENGTH(`number`) DESC';
 	
 	$rs = $DB->execute($sql_query);
 	$ext_nums = array();
 	if (@$rs) {
-		while ($r_pg = $rs->fetchRow()) {
-			$ext_nums[] = $r_pg['number'];
+		while ($r_en = $rs->fetchRow()) {
+			$ext_nums[] = $r_en['number'];
 		}
 	}
 	
@@ -996,6 +996,27 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 	
 	echo "</tr>\n";
 ?>
+</tbody>
+</table>
+
+<br />
+
+<table cellspacing="1">
+<thead>
+	<tr>
+		<th style="width:180px;">
+			<?php echo __('Lokale Admin-Rechte'); ?>
+		</th>
+		<th style="width:217px;">
+			<?php echo __('Anlage'); ?>
+		</th>
+		<th style="width:50px;">
+			&nbsp;
+		</th>
+	</tr>
+</thead>
+<tbody>
+
 </tbody>
 </table>
 
