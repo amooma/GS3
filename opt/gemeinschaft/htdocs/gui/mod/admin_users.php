@@ -592,20 +592,8 @@ new Ajax.Request(
 	<?php } ?>
 	
 <?php
-} else {
-	
-	/*
-	$sql_query = 'SELECT `id`, `title`
-	FROM `pickupgroups`';
-	$rs = $DB->execute($sql_query);
-	
-	$pgroups = array();
-	if (@$rs) {
-		while ($r = $rs->fetchRow()) {
-			$pgroups[$r['id']] = $r['title'];
-		}
-	}
-	*/
+}
+else {
 	
 	$rs = $DB->execute(
 'SELECT
@@ -629,8 +617,6 @@ WHERE
 	
 	$boi_api = ($hid > 0) ? gs_host_get_api($hid) : '__fail_api';
 	
-	
-	//$sql_query = 'SELECT `id`, `title` FROM `pickupgroups`';
 	
 	$sql_query =
 'SELECT `p`.`id`, `p`.`title`, `u`.`host_id`
