@@ -394,7 +394,7 @@ $sql_query =
 		'`host_params` `p4` ON (`p4`.`host_id`=`h`.`id` AND `p4`.`param`=\'route_prefix\') '.
 	'WHERE `h`.`is_foreign`=1 '.
 	 $sql_search.' '.
-	'ORDER BY `h`.`host` '.
+	'ORDER BY `h`.`comment` '.
 	'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 
 $rs = $DB->execute($sql_query);
@@ -461,10 +461,9 @@ $num_pages = ceil($num_total / $per_page);
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:55px;"><?php echo __('ID'); ?></th>
-	<th style="width:125px;" class="sort-col"><?php echo __('IP-Adresse'); ?> <sup>[1]</sup></th>
-	<th style="width:125px;"><?php echo __('Hostname'); ?> </th>
-	<th style="width:150px;"><?php echo __('Kommentar'); ?></th>
+	<th style="width:150px;" class="sort-col"><?php echo __('Bezeichnung'); ?></th>
+	<th style="width:125px;"><?php echo __('IP-Adresse'); ?> <sup>[1]</sup></th>
+	<th style="width:125px;"><?php echo __('DNS-Name'); ?> </th>
 	<th style="width:65px;"><?php echo __('Pr&auml;fix'); ?> <sup>[2]</sup></th>
 	<th style="width:50px;"><?php echo __('API'); ?> <sup>[3]</sup></th>
 	<th style="width:125px;"><?php echo __('SIP-Proxy WAN'); ?> <sup>[4]</sup></th>
@@ -495,18 +494,12 @@ if (@$rs) {
 			echo '<input type="hidden" name="page" value="', htmlEnt($page), '" />', "\n";
 			echo '<input type="hidden" name="save" value="', $r['id'] , '" />', "\n";
 			
-			echo '<td class="r">', htmlEnt($r['id']) ,'</td>',"\n";
-			
-			echo '<td>';
-			echo '<input type="text" name="host" value="', htmlEnt($r['host']) ,'" size="15" maxlength="30" style="width:95%;" />';
-			echo '</td>',"\n";
-			
-			echo '<td>';
-			echo '&nbsp;';
-			echo '</td>',"\n";
-			
 			echo '<td>';
 			echo '<input type="text" name="comment" value="', htmlEnt($r['comment']) ,'" size="20" maxlength="45" style="width:95%;" />';
+			echo '</td>',"\n";
+			
+			echo '<td colspan="2">';
+			echo '<input type="text" name="host" value="', htmlEnt($r['host']) ,'" size="15" maxlength="30" style="width:95%;" />';
 			echo '</td>',"\n";
 			
 			echo '<td>';
@@ -552,7 +545,7 @@ if (@$rs) {
 			
 		} else {
 			
-			echo '<td class="r">', htmlEnt($r['id']) ,'</td>',"\n";
+			echo '<td>', htmlEnt($r['comment']) ,'</td>',"\n";
 			
 			echo '<td>', htmlEnt($r['host']) ,'</td>',"\n";
 			
@@ -560,8 +553,6 @@ if (@$rs) {
 			$hostname = _getHostByAddr_timeout( $r['host'], 2, true );
 			
 			echo '<td>(', (empty($hostname) ? '?' : htmlEnt($hostname)) ,')</td>',"\n";
-			
-			echo '<td>', htmlEnt($r['comment']) ,'</td>',"\n";
 			
 			echo '<td>', htmlEnt($r['hp_route_prefix']) ,'</td>',"\n";
 			
@@ -594,15 +585,11 @@ if (!$edit_host) {
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE), "\n";
 ?>
-	<td class="r">
-		&nbsp;
-	</td>
-	<td>
-		<input type="text" name="host" value="" size="15" maxlength="30" style="width:95%;" />
-	</td>
-	<td>&nbsp;</td>
 	<td>
 		<input type="text" name="comment" value="" size="20" maxlength="45" style="width:95%;" />
+	</td>
+	<td colspan="2">
+		<input type="text" name="host" value="" size="15" maxlength="30" style="width:95%;" />
 	</td>
 	<td>
 		<input type="text" name="hp_route_prefix" value="" size="8" maxlength="10" style="width:92%;" />
