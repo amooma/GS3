@@ -66,10 +66,11 @@ $per_page = (int)GS_GUI_NUM_RESULTS;
 $name        = trim(@$_REQUEST['name'     ]);
 $number      = trim(@$_REQUEST['number'   ]);
 $page        = (int)@$_REQUEST['page'     ] ;
+
 $edit_user   = trim(@$_REQUEST['edit'     ]);
 $delete_user = trim(@$_REQUEST['delete'   ]);
 $action      = trim(@$_REQUEST['action'   ]);
-if (! in_array($action, array('view','save','add','del','list'), true))
+if (! in_array($action, array('view','save','add','del','list','edit'), true))
 	$action = 'list';
 
 $cbdelete    = trim(@$_REQUEST['cbdelete' ]);
@@ -115,6 +116,20 @@ if ($action === 'add') {
 	$action = 'list';
 }
 
+if ($action === 'edit') {
+	
+	if ($cbdelete) {
+		$ret = gs_callblocking_delete( $edit_user, $cbdelete );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	if ($extnumdel) {
+		$ret = gs_user_external_number_del( $edit_user, $extnumdel );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	
+	$action = 'edit';
+}
+
 if ($action === 'save') {
 	
 	if ($edit_user) {
@@ -129,14 +144,6 @@ if ($action === 'save') {
 				}
 			}
 		}
-	}
-	if ($cbdelete) {
-		$ret = gs_callblocking_delete( $edit_user, $cbdelete );
-		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
-	}
-	if ($extnumdel) {
-		$ret = gs_user_external_number_del( $edit_user, $extnumdel );
-		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	}
 	if ($cbregexp) {
 		$ret = gs_callblocking_set( $edit_user, $cbregexp, $cbpin );
@@ -335,6 +342,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	echo '<input type="hidden" name="action" value="add" />', "\n";
 	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
 	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
+	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 ?>
 	<table cellspacing="1" class="phonebook">
 	<thead>
@@ -689,6 +697,9 @@ ORDER BY LENGTH(`number`) DESC';
 echo gs_form_hidden($SECTION, $MODULE), "\n";
 echo '<input type="hidden" name="edit" value="', htmlEnt($edit_user), '" />', "\n";
 echo '<input type="hidden" name="action" value="save" />', "\n";
+echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
+echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
+echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 ?>
 
 <button type="submit" title="<?php echo __('Speichern'); ?>" class="plain" style="margin:3px 1px 3px 450px;">
@@ -903,7 +914,7 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 		echo "</td>\n";
 		
 		echo "<td>\n";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'cbdelete='. rawUrlEncode($cb_entry['regexp']) .'&amp;edit='. rawUrlEncode($edit_user)), '&amp;action=save" title="', __('entfernen'), '">';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'cbdelete='. rawUrlEncode($cb_entry['regexp']) .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '">';
 		echo '<img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo "</td>\n";		
 		
@@ -961,7 +972,7 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 		echo "</td>\n";
 		
 		echo "<td>\n";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'extndel='.$ext_num .'&amp;edit='. rawUrlEncode($edit_user)), '&amp;action=save" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'extndel='.$ext_num .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo "</td>\n";		
 		
 		echo "</tr>\n";
