@@ -202,7 +202,8 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 						gs_log( GS_LOG_DEBUG, "Mapping ext. $ext to $sub_ext for SOAP call" );
 						
 						include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
-						$ok = gs_boi_delete_extension( $api, $old_host['host'], $hp_route_prefix, $sub_ext, $soap_fault );
+						$soap_faultcode = null;
+						$ok = gs_boi_delete_extension( $api, $old_host['host'], $hp_route_prefix, $sub_ext, $soap_faultcode );
 						if (! $ok) {
 							gs_db_rollback_trans($db);
 							return new GsError( 'Failed to delete user on old foreign host (SOAP error).' );
