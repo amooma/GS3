@@ -240,7 +240,8 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 						gs_log( GS_LOG_DEBUG, "Mapping ext. $ext to $sub_ext for SOAP call" );
 						
 						include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
-						$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email, $soap_fault );
+						$soap_faultcode = null;
+						$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email, $soap_faultcode );
 						if (! $ok) {
 							gs_db_rollback_trans($db);
 							return new GsError( 'Failed to add user on new foreign host (SOAP error).' );
@@ -280,7 +281,8 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 						gs_log( GS_LOG_DEBUG, "Mapping ext. $ext to $sub_ext for SOAP call" );
 						
 						include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
-						$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email );
+						$soap_faultcode = null;
+						$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email, $soap_faultcode );
 						if (! $ok) {
 							gs_db_rollback_trans($db);
 							return new GsError( 'Failed to modify user on foreign host (SOAP error).' );
