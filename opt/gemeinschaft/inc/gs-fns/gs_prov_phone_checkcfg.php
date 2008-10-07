@@ -47,7 +47,7 @@ function _gs_prov_phone_checkcfg_exclude_ip( $ip )
 		'FROM `host_params` '.
 		'WHERE '.
 			'`param` IN (\'sip_proxy_from_wan\', \'sip_server_from_wan\') AND '.
-			'`value`=\'10.2.2.23\' '.
+			'`value`=\''. $db->escape($ip) .'\' '.
 		'LIMIT 1'
 		);
 	if ($is_server) {
