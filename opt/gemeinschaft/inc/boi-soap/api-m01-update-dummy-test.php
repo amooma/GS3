@@ -50,7 +50,7 @@ $lastname     = '';
 $email        = '';
 
 
-$ret = gs_boi_update_extension( 'm01', $host, $ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email );
+$ret = gs_boi_update_extension( 'm01', $host, $ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email, $soap_fault );
 var_export($ret);
 echo "\n";
 
