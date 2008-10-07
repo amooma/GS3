@@ -196,7 +196,7 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 					return new GsError( 'Failed to add user on foreign host (SoapClient not available).' );
 				}
 				include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
-				$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email );
+				$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $user, $sip_pwd, $pin, $firstname, $lastname, $email, $soap_fault );
 				if (! $ok) {
 					gs_db_rollback_trans($db);
 					return new GsError( 'Failed to add user on foreign host (SOAP error).' );
