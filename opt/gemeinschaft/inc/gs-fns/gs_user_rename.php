@@ -143,7 +143,7 @@ function gs_user_rename( $username, $new_username )
 					gs_log( GS_LOG_DEBUG, "Mapping ext. $ext to $sub_ext for SOAP call" );
 					
 					include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
-					$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $new_username, $sip_pwd, $user_info['pin'], $user_info['firstname'], $user_info['lastname'], $user_info['email'] );
+					$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $new_username, $sip_pwd, $user_info['pin'], $user_info['firstname'], $user_info['lastname'], $user_info['email'], $soap_fault );
 					if (! $ok) {
 						@$db->execute( 'UPDATE `users` SET `user`=\''. $db->escape($username) .'\' WHERE `id`='. $user_id );
 						gs_db_rollback_trans($db);

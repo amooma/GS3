@@ -196,7 +196,7 @@ function gs_user_del( $user )
 						return new GsError( 'Failed to delete user on foreign host (SoapClient not available).' );
 					}
 					include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
-					$ok = gs_boi_delete_extension( $api, $host['host'], $hp_route_prefix, $sub_ext );
+					$ok = gs_boi_delete_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $soap_fault );
 					if (! $ok) {
 						return new GsError( 'Failed to delete user on foreign host (SOAP error).' );
 					}
