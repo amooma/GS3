@@ -129,7 +129,8 @@ function gs_user_pin_set( $user, $pin='' )
 					return new GsError( 'Failed to change PIN on foreign host (SoapClient not available).' );
 				}
 				include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
-				$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $user, $userinfo['sip_pwd'], $pin, $userinfo['firstname'], $userinfo['lastname'], $userinfo['email'], $soap_fault );
+				$soap_faultcode = null;
+				$ok = gs_boi_update_extension( $api, $host['host'], $hp_route_prefix, $sub_ext, $user, $userinfo['sip_pwd'], $pin, $userinfo['firstname'], $userinfo['lastname'], $userinfo['email'], $soap_faultcode );
 				if (! $ok) {
 					gs_db_rollback_trans($db);
 					return new GsError( 'Failed to change PIN on foreign host (SOAP error).' );
