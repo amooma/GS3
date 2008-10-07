@@ -70,7 +70,7 @@ $page        = (int)@$_REQUEST['page'     ] ;
 $edit_user   = trim(@$_REQUEST['edit'     ]);
 $delete_user = trim(@$_REQUEST['delete'   ]);
 $action      = trim(@$_REQUEST['action'   ]);
-if (! in_array($action, array('view','save','add','del','list','edit'), true))
+if (! in_array($action, array('list','del','add','add-and-view','view','edit','save'), true))
 	$action = 'list';
 
 $cbdelete    = trim(@$_REQUEST['cbdelete' ]);
@@ -109,14 +109,23 @@ if ($action === 'del') {
 	$action = 'list';
 }
 
-if ($action === 'add') {
+if ($action === 'add' || $action === 'add-and-view') {
 	
 	if ($user_name) {
 		$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_host, $user_email );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		
+		if ($action === 'add-and-view') {
+			$action = 'view';
+			$edit_user = $user_name;
+		} else {
+			$action = 'list';
+		}
+	}
+	else {
+		$action = 'list';
 	}
 	
-	$action = 'list';
 }
 
 if ($action === 'edit') {
@@ -528,7 +537,10 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			&nbsp;
 		</td>
 		<td>
-			<button type="submit" title="<?php echo __('Benutzer anlegen'); ?>" class="plain">
+			<button type="submit" title="<?php echo __('Benutzer anlegen'); ?>" class="plain" name="action" value="add">
+				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+			</button>
+			<button type="submit" title="<?php echo __('Benutzer anlegen und bearbeiten'); ?>" class="plain" name="action" value="add-and-view">
 				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			</button>
 		</td>
