@@ -27,8 +27,12 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );  # for utf8_json_quote()
+if ($is_user_profile) {
+include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
+}
 
 if (! isSet($is_user_profile)) {
 	echo 'Error.';
@@ -95,8 +99,10 @@ $key_default = array(
 
 
 $action = @$_REQUEST['action'];
-if (! in_array($action, array('', 'save', 'delete'), true))
+if (! in_array($action, array('', 'save', 'save-and-resync', 'delete'), true))
 	$action = '';
+if ($action === 'save-and-resync' && ! $is_user_profile)
+	$action = 'save';
 
 $show_ext_modules = 255;
 if (! $is_user_profile) {
@@ -145,7 +151,7 @@ if (in_array($phone_type, array('snom-360', 'snom-370'), true)) {
 #####################################################################
 # save {
 #####################################################################
-if ($action === 'save') {
+if ($action === 'save' || $action === 'save-and-resync') {
 	//echo "<pre>"; print_r($_REQUEST); echo "</pre>";
 	
 	$do_save_keys = false;
@@ -247,6 +253,13 @@ if ($action === 'save') {
 		}
 	}
 	
+	if ($action === 'save-and-resync') {
+		$ret = gs_prov_phone_checkcfg_by_user( @$_SESSION['sudo_user']['name'], false );
+		if (isGsError($ret) || ! $ret) {
+			// does not happen
+			echo '<div class="errorbox">', __('Fehler beim Aktualisieren des Telefons') ,'</div>' ,"\n";
+		}
+	}
 	
 	$action = '';  # view
 }
@@ -464,10 +477,16 @@ if (! $profile_id && ! $is_user_profile) {  # do not show keys for new profiles 
 	echo '<br style="clear:right;" />' ,"\n";
 	
 	$save_bt = '<p class="r">' ."\n";
-	$save_bt.= '<button type="submit" title="'. __('Speichern') .'">' ."\n";
+	$save_bt.= '<button type="submit" title="'. __('Speichern') .'" name="action" value="save">' ."\n";
 	$save_bt.= '<img alt=" " src="'. GS_URL_PATH .'crystal-svg/16/act/filesave.png" />' ."\n";
 	$save_bt.= __('Speichern') ."\n";
 	$save_bt.= '</button>' ."\n";
+	if ($is_user_profile) {
+		$save_bt.= '<button type="submit" title="'. __('Speichern und Telefon aktualisieren') .'" name="action" value="save-and-resync">' ."\n";
+		$save_bt.= '<img alt=" " src="'. GS_URL_PATH .'crystal-svg/16/act/filesave.png" />' ."\n";
+		$save_bt.= __('Speichern und Telefon aktualisieren') ."\n";
+		$save_bt.= '</button>' ."\n";
+	}
 	$save_bt.= '</p>' ."\n";
 	
 	//echo '<p><b>', sPrintF(__('Softkeys am %s'), htmlEnt($phone_type_title)) ,'</b></p>' ,"\n";
