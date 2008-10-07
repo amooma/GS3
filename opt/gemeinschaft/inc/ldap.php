@@ -79,6 +79,8 @@ function gs_ldap_connect( $host=null, $port=null, $binddn=null, $pwd=null, $prot
 		return null;
 	}
 	
+	@ ldap_set_option( $ldap, LDAP_OPT_TIMELIMIT, 5 );
+	
 	return $ldap;
 }
 
