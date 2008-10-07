@@ -326,7 +326,8 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 					@gs_db_rollback_trans($db);
 					return false;
 				}
-				$ok = gs_boi_update_extension( $api, $boi_host, '', $user_ext, $username, $sip_pwd, '', '', '', '', $soap_fault );
+				$soap_faultcode = null;
+				$ok = gs_boi_update_extension( $api, $boi_host, '', $user_ext, $username, $sip_pwd, '', '', '', '', $soap_faultcode );
 				if (! $ok) {
 					gs_log( GS_LOG_WARNING, "Failed to add nobody user $username on foreign host $boi_host (SOAP error)" );
 					if (! $add_nobody_locally_if_foreign_failed) { // normal behavior
