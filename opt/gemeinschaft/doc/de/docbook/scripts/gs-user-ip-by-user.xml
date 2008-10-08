@@ -44,7 +44,8 @@
   <refnamediv>
     <refname>gs-user-ip-by-user</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Telefon-IP-Adresse zu
+    einem Benutzer finden</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -66,7 +67,8 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Zeigt die IP-Adresse des Telefon-Endgeräts an auf dem ein Benutzer
+    momentan angemeldet ist.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +77,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--user</option>=<replaceable>user</replaceable></term>
+
         <listitem>
           <para>Benutzername</para>
         </listitem>
