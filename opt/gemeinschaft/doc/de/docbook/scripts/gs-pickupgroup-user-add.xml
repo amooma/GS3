@@ -44,7 +44,8 @@
   <refnamediv>
     <refname>gs-pickupgroup-user-add</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Rufübernahme-Gruppe
+    erweitern</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -66,7 +67,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Fügt einen Benutzer zu einer Rufübernahme-Gruppe hinzu.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +76,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--pgroup</option>=<replaceable>id</replaceable></term>
+
         <listitem>
           <para>ID der Pickup-Gruppe</para>
         </listitem>
@@ -82,6 +84,7 @@
 
       <varlistentry>
         <term><option>--user</option>=<replaceable>user</replaceable></term>
+
         <listitem>
           <para>Benutzername</para>
         </listitem>
