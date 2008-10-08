@@ -44,12 +44,14 @@
   <refnamediv>
     <refname>gs-prov-phone-checkcfg</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Telefon
+    resynchronisieren</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: ( --user=&lt;usercode&gt; | --ext=&lt;extension&gt; | --ip=&lt;ip_addr&gt; | --all=yes ) --reboot=yes|no</command>
+      <command>Usage: ( --user=&lt;usercode&gt; | --ext=&lt;extension&gt; |
+      --ip=&lt;ip_addr&gt; | --all=yes ) --reboot=yes|no</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -66,7 +68,9 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Veranlaﬂt ein Telefon dazu, sich erneut die jeweiligen
+    Provisioning-Einstellungen zu holen. Dies kann mit einem Neustart des
+    Ger‰ts verbunden sein.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +79,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--user</option>=<replaceable>usercode</replaceable></term>
+
         <listitem>
           <para>Benutzername</para>
         </listitem>
@@ -82,6 +87,7 @@
 
       <varlistentry>
         <term><option>--ext</option>=<replaceable>extension</replaceable></term>
+
         <listitem>
           <para>Nebenstelle</para>
         </listitem>
@@ -89,6 +95,7 @@
 
       <varlistentry>
         <term><option>--ip</option>=<replaceable>ip_addr</replaceable></term>
+
         <listitem>
           <para>ip_addr</para>
         </listitem>
@@ -96,6 +103,7 @@
 
       <varlistentry>
         <term><option>--all</option>=<replaceable>yes</replaceable></term>
+
         <listitem>
           <para>yes</para>
         </listitem>
@@ -103,6 +111,7 @@
 
       <varlistentry>
         <term><option>--reboot</option>=<replaceable>yes</replaceable></term>
+
         <listitem>
           <para>yes</para>
         </listitem>

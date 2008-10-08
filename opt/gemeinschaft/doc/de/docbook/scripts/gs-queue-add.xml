@@ -44,12 +44,14 @@
   <refnamediv>
     <refname>gs-queue-add</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Warteschleife
+    anlegen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: --queue=&lt;extension&gt; --title=&quot;whatever you like&quot; --maxlen=0|1-255 --host=&lt;id&gt;|&lt;ip&gt;</command>
+      <command>Usage: --queue=&lt;extension&gt; --title="whatever you like"
+      --maxlen=0|1-255 --host=&lt;id&gt;|&lt;ip&gt;</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -66,7 +68,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Legt eine Warteschleife an.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +77,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--queue</option>=<replaceable>extension</replaceable></term>
+
         <listitem>
           <para>Queue-Nebenstelle</para>
         </listitem>
@@ -82,6 +85,7 @@
 
       <varlistentry>
         <term><option>--title</option></term>
+
         <listitem>
           <para>Bezeichnung</para>
         </listitem>
@@ -89,6 +93,7 @@
 
       <varlistentry>
         <term><option>--maxlen</option>=<replaceable>0</replaceable></term>
+
         <listitem>
           <para>0</para>
         </listitem>
@@ -96,6 +101,7 @@
 
       <varlistentry>
         <term><option>--host</option>=<replaceable>id</replaceable></term>
+
         <listitem>
           <para>Host</para>
         </listitem>
