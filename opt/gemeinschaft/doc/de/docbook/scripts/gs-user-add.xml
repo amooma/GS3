@@ -44,12 +44,16 @@
   <refnamediv>
     <refname>gs-user-add</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Benutzer
+    anlegen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; --firstname=&lt;firstname&gt; --lastname=&lt;lastname&gt; --email=&lt;email&gt; --host=&lt;id&gt;|&lt;ip&gt; [--group=&lt;id&gt;]</command>
+      <command>Usage: --user=&lt;user&gt; --ext=&lt;1234&gt;
+      --pin=&lt;123456&gt; --firstname=&lt;firstname&gt;
+      --lastname=&lt;lastname&gt; --email=&lt;email&gt;
+      --host=&lt;id&gt;|&lt;ip&gt; [--group=&lt;id&gt;]</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -66,7 +70,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Legt einen Benutzer an.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +79,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--user</option>=<replaceable>user</replaceable></term>
+
         <listitem>
           <para>Benutzername</para>
         </listitem>
@@ -82,6 +87,7 @@
 
       <varlistentry>
         <term><option>--ext</option>=<replaceable>1234</replaceable></term>
+
         <listitem>
           <para>Nebenstelle</para>
         </listitem>
@@ -89,6 +95,7 @@
 
       <varlistentry>
         <term><option>--pin</option>=<replaceable>123456</replaceable></term>
+
         <listitem>
           <para>PIN-Nummer</para>
         </listitem>
@@ -96,6 +103,7 @@
 
       <varlistentry>
         <term><option>--firstname</option>=<replaceable>firstname</replaceable></term>
+
         <listitem>
           <para>Vorname</para>
         </listitem>
@@ -103,6 +111,7 @@
 
       <varlistentry>
         <term><option>--lastname</option>=<replaceable>lastname</replaceable></term>
+
         <listitem>
           <para>Nachname</para>
         </listitem>
@@ -110,6 +119,7 @@
 
       <varlistentry>
         <term><option>--email</option>=<replaceable>email</replaceable></term>
+
         <listitem>
           <para>E-Mail-Adresse</para>
         </listitem>
@@ -117,6 +127,7 @@
 
       <varlistentry>
         <term><option>--host</option>=<replaceable>id</replaceable></term>
+
         <listitem>
           <para>Host</para>
         </listitem>
@@ -124,6 +135,7 @@
 
       <varlistentry>
         <term><option>--group</option>=<replaceable>id</replaceable></term>
+
         <listitem>
           <para>Gruppe</para>
         </listitem>

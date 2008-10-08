@@ -44,7 +44,8 @@
   <refnamediv>
     <refname>gs-user-by-mac-addr</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Benutzer auf einem
+    Endgerät finden</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -66,7 +67,8 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Zeigt an welcher Benutzer momentan auf einem bestimmten Endgerät
+    (MAC-Adresse) angemeldet ist.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +77,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--mac</option>=<replaceable>mac_addr</replaceable></term>
+
         <listitem>
           <para>mac_addr</para>
         </listitem>
