@@ -44,7 +44,8 @@
   <refnamediv>
     <refname>gs-queue-callforward-get</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Rufumleitungen für
+    eine Warteschleife anzeigen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -66,7 +67,8 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Zeigt die für eine Warteschleife eingerichteten Rufumleitungen
+    an.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +77,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--queue</option>=<replaceable>ext</replaceable></term>
+
         <listitem>
           <para>Queue-Nebenstelle</para>
         </listitem>
@@ -82,8 +85,10 @@
 
       <varlistentry>
         <term><option>--regen</option></term>
+
         <listitem>
-          <para>Regenerieren-Funktion. Gibt den Aufruf des entsprechenden Skripts zum Anlegen des gleichen Eintrags aus.</para>
+          <para>Regenerieren-Funktion. Gibt den Aufruf des entsprechenden
+          Skripts zum Anlegen des gleichen Eintrags aus.</para>
         </listitem>
       </varlistentry>
 
