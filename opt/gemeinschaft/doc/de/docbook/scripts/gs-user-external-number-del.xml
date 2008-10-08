@@ -44,7 +44,8 @@
   <refnamediv>
     <refname>gs-user-external-number-del</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Externe Rufnummer
+    löschen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -66,7 +67,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Löscht eine externe Rufnummer eines Benutzers.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +76,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--user</option>=<replaceable>user</replaceable></term>
+
         <listitem>
           <para>Benutzername</para>
         </listitem>
@@ -82,6 +84,7 @@
 
       <varlistentry>
         <term><option>--number</option>=<replaceable>number</replaceable></term>
+
         <listitem>
           <para>Ziel-Rufnummer</para>
         </listitem>
