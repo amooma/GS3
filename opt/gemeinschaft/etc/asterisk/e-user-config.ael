@@ -107,7 +107,7 @@ context user-config {
 		if ("${user_code}" = "")
 			Hangup();
 		Answer();
-		TrySystem(/opt/gemeinschaft/scripts/gs_callforward_number_set --user='${user_code}' --source='${source}' --type='${type}' --number='${number}');
+		TrySystem(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='${source}' --type='${type}' --number='${number}');
 		Wait(0.5);
 		//Playback(beep);
 		if ("${type}" = "std") {
@@ -135,7 +135,7 @@ context user-config {
 		if ("${user_code}" = "")
 			Hangup();
 		Answer();
-		TrySystem(/opt/gemeinschaft/scripts/gs_callforward_timeout_set --user='${user_code}' --timeout='${timeout}');
+		TrySystem(/opt/gemeinschaft/scripts/gs-callforward-timeout-set --user='${user_code}' --timeout='${timeout}');
 		Wait(0.5);
 		//Playback(beep);
 		Playback(klingeldauer);
@@ -214,8 +214,8 @@ context user-config {
 			Hangup();
 		Answer();
 		Set(tonumber=${EXTEN:2});
-		System(/opt/gemeinschaft/scripts/gs_callforward_number_set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
-		System(/opt/gemeinschaft/scripts/gs_callforward_number_set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
 		&user-call-forward-activate-numeric(var,0,0,1);
 		&user-call-forward-activate-numeric(var,1,0,1);
 		&queue-logout-all-silent();
@@ -270,7 +270,7 @@ macro user-config-clir( mdest, mactive_num ) {
 	
 	Verbose(1,### User ${user_name}: set CLIR ${mdest}: ${mactive});
 	Answer();
-	TrySystem(/opt/gemeinschaft/scripts/gs_clir_activate --user='${user_code}' --dest='${mdest}' --active='${mactive}');
+	TrySystem(/opt/gemeinschaft/scripts/gs-clir-activate --user='${user_code}' --dest='${mdest}' --active='${mactive}');
 	Wait(0.5);
 	Playback(beep);
 	Hangup();
@@ -288,7 +288,7 @@ macro user-config-call-waiting( mactive_num ) {
 	
 	Verbose(1,### User ${user_name}: set Call Waiting: ${mactive});
 	Answer();
-	TrySystem(/opt/gemeinschaft/scripts/gs_callwaiting_activate --user='${user_code}' --active='${mactive}');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callwaiting-activate --user='${user_code}' --active='${mactive}');
 	Wait(0.5);
 	//Playback(beep);
 	Playback(/opt/gemeinschaft/sounds/de-DE/anklopfen);
@@ -336,6 +336,6 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 	Verbose(1,### User ${user_name}: set call forward ${msource} ${mtype} ${mcase} ${mactive_num});
 	
 	Answer();
-	System(/opt/gemeinschaft/scripts/gs_callforward_activate --user='${user_code}' --source='${msource}' --case='${mcase}' --active='${mactive}');
+	System(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='${msource}' --case='${mcase}' --active='${mactive}');
 }
 
