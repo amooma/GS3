@@ -94,7 +94,7 @@ if ($opts['host'] != 'RANDOM') {
 		if (isGsError( $h ))
 			echo $h->getMsg(), "\n";
 		echo "Valid hosts are:\n";
-		passthru( GS_DIR .'scripts/gs_hosts_get' );
+		passthru( GS_DIR .'scripts/gs-hosts-get' );
 		die(1);
 	}
 	if ($h['is_foreign']) {
