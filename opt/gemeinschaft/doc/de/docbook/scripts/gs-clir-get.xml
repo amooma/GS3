@@ -44,7 +44,8 @@
   <refnamediv>
     <refname>gs-clir-get</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>:
+    Rufnummernunterdrückungs-Einstellung anzeigen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -66,7 +67,8 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Zeigt an ob ein Benutzer Rufnummernunterdrückung aktiviert
+    hat.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +77,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--user</option>=<replaceable>user</replaceable></term>
+
         <listitem>
           <para>Benutzername</para>
         </listitem>
@@ -82,8 +85,10 @@
 
       <varlistentry>
         <term><option>--regen</option></term>
+
         <listitem>
-          <para>Regenerieren-Funktion. Gibt den Aufruf des entsprechenden Skripts zum Anlegen des gleichen Eintrags aus.</para>
+          <para>Regenerieren-Funktion. Gibt den Aufruf des entsprechenden
+          Skripts zum Anlegen des gleichen Eintrags aus.</para>
         </listitem>
       </varlistentry>
 
