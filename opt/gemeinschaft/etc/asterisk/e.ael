@@ -346,14 +346,14 @@ macro queue-login( queue ) {
 	&usercode-by-ext(${user_name});
 	if ("${user_code}" = "")
 		Hangup();
-	TrySystem(/opt/gemeinschaft/scripts/gs_callforward_activate --user='${user_code}' --source='internal' --case='always' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs_callforward_activate --user='${user_code}' --source='internal' --case='busy' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs_callforward_activate --user='${user_code}' --source='internal' --case='unavail' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs_callforward_activate --user='${user_code}' --source='internal' --case='offline' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs_callforward_activate --user='${user_code}' --source='external' --case='always' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs_callforward_activate --user='${user_code}' --source='external' --case='busy' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs_callforward_activate --user='${user_code}' --source='external' --case='unavail' --active='no');
-	TrySystem(/opt/gemeinschaft/scripts/gs_callforward_activate --user='${user_code}' --source='external' --case='offline' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='internal' --case='always' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='internal' --case='busy' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='internal' --case='unavail' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='internal' --case='offline' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='external' --case='always' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='external' --case='busy' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='external' --case='unavail' --active='no');
+	TrySystem(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='external' --case='offline' --active='no');
 	
 	Verbose(1,### Log user ${user_name} in to queue ${queue});
 	*/
