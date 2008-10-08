@@ -44,12 +44,13 @@
   <refnamediv>
     <refname>gs-phones-firmware-upgrade</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Firmware-Upgrade auf
+    Telefonen durchführen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: </command>
+      <command>Usage:</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -66,14 +67,14 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Erzeugt für die angegebenen Telefone einen
+    Firmware-Upgrade-Job.</para>
   </refsection>
 
   <refsection>
     <title>Parameter</title>
 
     <variablelist>
-
       <varlistentry>
         <term><option>--help</option></term>
 

@@ -44,12 +44,14 @@
   <refnamediv>
     <refname>gs-nobodies-move</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Dummy-User
+    verschieben</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: --host=&lt;id&gt;|&lt;ip&gt;|RANDOM --force=yes</command>
+      <command>Usage: --host=&lt;id&gt;|&lt;ip&gt;|RANDOM
+      --force=yes</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -66,7 +68,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Verschiebt die Dummy-User auf einen anderen Node.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +77,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--host</option>=<replaceable>id</replaceable></term>
+
         <listitem>
           <para>Host</para>
         </listitem>
@@ -82,6 +85,7 @@
 
       <varlistentry>
         <term><option>--force</option>=<replaceable>yes</replaceable></term>
+
         <listitem>
           <para>erzwingen</para>
         </listitem>

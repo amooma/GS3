@@ -44,7 +44,8 @@
   <refnamediv>
     <refname>gs-pickupgroup-del</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Rufübernahme-Gruppe
+    löschen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -66,7 +67,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Löscht eine Rufübernahme-Gruppe.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +76,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--pgroup</option>=<replaceable>id</replaceable></term>
+
         <listitem>
           <para>ID der Pickup-Gruppe</para>
         </listitem>

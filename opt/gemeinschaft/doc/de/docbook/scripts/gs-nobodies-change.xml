@@ -44,7 +44,8 @@
   <refnamediv>
     <refname>gs-nobodies-change</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Dummy-User
+    aktualisieren</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -66,7 +67,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Aktualisiert die Dummy-User in der Datenbank.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +76,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--force</option>=<replaceable>yes</replaceable></term>
+
         <listitem>
           <para>erzwingen</para>
         </listitem>
