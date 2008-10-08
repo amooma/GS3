@@ -44,12 +44,16 @@
   <refnamediv>
     <refname>gs-group-add</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Benutzergruppe
+    hinzufügen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: [--parent=&lt;name&gt;] --name=&lt;name&gt; --title=&lt;title&gt; [--softkey-profile-id=&lt;id&gt;] [--prov-param-profile-id=&lt;id&gt;] [--show-ext-modules=&lt;num&gt;]</command>
+      <command>Usage: [--parent=&lt;name&gt;] --name=&lt;name&gt;
+      --title=&lt;title&gt; [--softkey-profile-id=&lt;id&gt;]
+      [--prov-param-profile-id=&lt;id&gt;]
+      [--show-ext-modules=&lt;num&gt;]</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -66,7 +70,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Legt eine Benutzergruppe an.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +79,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--parent</option>=<replaceable>name</replaceable></term>
+
         <listitem>
           <para>name</para>
         </listitem>
@@ -82,6 +87,7 @@
 
       <varlistentry>
         <term><option>--name</option>=<replaceable>name</replaceable></term>
+
         <listitem>
           <para>name</para>
         </listitem>
@@ -89,6 +95,7 @@
 
       <varlistentry>
         <term><option>--title</option>=<replaceable>title</replaceable></term>
+
         <listitem>
           <para>Bezeichnung</para>
         </listitem>
@@ -96,6 +103,7 @@
 
       <varlistentry>
         <term><option>--softkey-profile-id</option>=<replaceable>id</replaceable></term>
+
         <listitem>
           <para>id</para>
         </listitem>
@@ -103,6 +111,7 @@
 
       <varlistentry>
         <term><option>--prov-param-profile-id</option>=<replaceable>id</replaceable></term>
+
         <listitem>
           <para>id</para>
         </listitem>
@@ -110,6 +119,7 @@
 
       <varlistentry>
         <term><option>--show-ext-modules</option>=<replaceable>num</replaceable></term>
+
         <listitem>
           <para>num</para>
         </listitem>

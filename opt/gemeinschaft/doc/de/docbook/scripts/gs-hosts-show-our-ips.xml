@@ -44,12 +44,13 @@
   <refnamediv>
     <refname>gs-hosts-show-our-ips</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Eigene
+    Node-IP-Adressen anzeigen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: </command>
+      <command>Usage:</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -66,14 +67,14 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Zeigt die IP-Adressen der Gemeinschaft-Nodes an für die dieser Node
+    zuständig ist.</para>
   </refsection>
 
   <refsection>
     <title>Parameter</title>
 
     <variablelist>
-
       <varlistentry>
         <term><option>--help</option></term>
 
