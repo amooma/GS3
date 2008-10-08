@@ -272,7 +272,7 @@ Warning: Permanently added '192.168.1.140' (RSA) to the list of known hosts.
     einloggen zu können muß man aus Sicherheitsgründen zuerst ein Paßwort
     setzen:</para>
 
-    <literallayout>/opt/gemeinschaft/scripts/gs_sysadmin_pwd_set --pwd='abc9fgh'</literallayout>
+    <literallayout>/opt/gemeinschaft/scripts/gs-sysadmin-pwd-set --pwd='abc9fgh'</literallayout>
 
     <para>Jetzt kann man sich mit dem gesetzten Paßwort (im Beispiel
     <literal>abc9fgh</literal>) anmelden.</para>
