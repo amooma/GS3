@@ -44,7 +44,8 @@
   <refnamediv>
     <refname>gs-callwaiting-activate</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Anklopfen
+    aktivieren/deaktivieren</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -66,7 +67,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Schaltet Anklopfen für einen Benutzer an oder aus.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +76,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--user</option>=<replaceable>user</replaceable></term>
+
         <listitem>
           <para>Benutzername</para>
         </listitem>
@@ -82,6 +84,7 @@
 
       <varlistentry>
         <term><option>--active</option>=<replaceable>no</replaceable></term>
+
         <listitem>
           <para>aktive Regel</para>
         </listitem>
