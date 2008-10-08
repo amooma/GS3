@@ -44,7 +44,7 @@
           <listitem>
             <para>(optional) Telefonnummer des anrufenden Teilnehmers, falls
             von dessen Std.-Nr. abweichend. Muﬂ mit den entsprechenden
-            Skripten (<filename>scripts/gs_user_external_number_add</filename>
+            Skripten (<filename>scripts/gs-user-external-number-add</filename>
             etc.) in der Datenbank bzw. im LDAP<footnote>
                 <para>Ob die MySQL-Datenbank oder LDAP als Backend verwendet
                 wird, h‰ngt von der Einstellung
