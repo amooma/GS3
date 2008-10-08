@@ -44,12 +44,15 @@
   <refnamediv>
     <refname>gs-user-change</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Benutzer
+    ändern</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: --user=&lt;user&gt; --pin=&lt;123456&gt; --firstname=&lt;firstname&gt; --lastname=&lt;lastname&gt; --email=&lt;email&gt; --host=&lt;id&gt;|&lt;ip&gt; [--force]</command>
+      <command>Usage: --user=&lt;user&gt; --pin=&lt;123456&gt;
+      --firstname=&lt;firstname&gt; --lastname=&lt;lastname&gt;
+      --email=&lt;email&gt; --host=&lt;id&gt;|&lt;ip&gt; [--force]</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -66,7 +69,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Ändert ein Benutzer-Konto.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +78,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--user</option>=<replaceable>user</replaceable></term>
+
         <listitem>
           <para>Benutzername</para>
         </listitem>
@@ -82,6 +86,7 @@
 
       <varlistentry>
         <term><option>--pin</option>=<replaceable>123456</replaceable></term>
+
         <listitem>
           <para>PIN-Nummer</para>
         </listitem>
@@ -89,6 +94,7 @@
 
       <varlistentry>
         <term><option>--firstname</option>=<replaceable>firstname</replaceable></term>
+
         <listitem>
           <para>Vorname</para>
         </listitem>
@@ -96,6 +102,7 @@
 
       <varlistentry>
         <term><option>--lastname</option>=<replaceable>lastname</replaceable></term>
+
         <listitem>
           <para>Nachname</para>
         </listitem>
@@ -103,6 +110,7 @@
 
       <varlistentry>
         <term><option>--email</option>=<replaceable>email</replaceable></term>
+
         <listitem>
           <para>E-Mail-Adresse</para>
         </listitem>
@@ -110,6 +118,7 @@
 
       <varlistentry>
         <term><option>--host</option>=<replaceable>id</replaceable></term>
+
         <listitem>
           <para>Host</para>
         </listitem>
@@ -117,6 +126,7 @@
 
       <varlistentry>
         <term><option>--force</option></term>
+
         <listitem>
           <para>erzwingen</para>
         </listitem>
