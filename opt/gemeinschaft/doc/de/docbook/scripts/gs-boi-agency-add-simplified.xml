@@ -44,12 +44,16 @@
   <refnamediv>
     <refname>gs-boi-agency-add-simplified</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Zweigstelle und einen
+    Benutzer aus dem LDAP anlegen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: --host=&lt;ip|dns_name&gt; --comment=&lt;host_comment&gt; --prefix=&lt;prefix&gt; --group=&lt;user_group_id&gt; --user=&lt;username&gt; --exten=&lt;exten&gt; [--is-admin]</command>
+      <command>Usage: --host=&lt;ip|dns_name&gt;
+      --comment=&lt;host_comment&gt; --prefix=&lt;prefix&gt;
+      --group=&lt;user_group_id&gt; --user=&lt;username&gt;
+      --exten=&lt;exten&gt; [--is-admin]</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -66,7 +70,9 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Legt eine Zweigstelle (Fremd-Host) an, sucht Informationen über den
+    angegeben Benutzer aus dem LDAP, legt diesen Benutzer an und gibt ihm
+    optional lokale Admin-Rechte.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +81,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--host</option>=<replaceable>ip</replaceable></term>
+
         <listitem>
           <para>Host</para>
         </listitem>
@@ -82,6 +89,7 @@
 
       <varlistentry>
         <term><option>--comment</option>=<replaceable>host_comment</replaceable></term>
+
         <listitem>
           <para>Kommentar</para>
         </listitem>
@@ -89,6 +97,7 @@
 
       <varlistentry>
         <term><option>--prefix</option>=<replaceable>prefix</replaceable></term>
+
         <listitem>
           <para>prefix</para>
         </listitem>
@@ -96,6 +105,7 @@
 
       <varlistentry>
         <term><option>--group</option>=<replaceable>user_group_id</replaceable></term>
+
         <listitem>
           <para>Gruppe</para>
         </listitem>
@@ -103,6 +113,7 @@
 
       <varlistentry>
         <term><option>--user</option>=<replaceable>username</replaceable></term>
+
         <listitem>
           <para>Benutzername</para>
         </listitem>
@@ -110,6 +121,7 @@
 
       <varlistentry>
         <term><option>--exten</option>=<replaceable>exten</replaceable></term>
+
         <listitem>
           <para>Nebenstelle</para>
         </listitem>
@@ -117,6 +129,7 @@
 
       <varlistentry>
         <term><option>--is-admin</option></term>
+
         <listitem>
           <para></para>
         </listitem>

@@ -44,7 +44,8 @@
   <refnamediv>
     <refname>gs-boi-admins-get</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Lokale Admin-Rechte
+    in Zweigstellen anzeigen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -66,7 +67,8 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Zeigt an welche Benutzer lokale Admin-Rechte für Zweigstellen
+    (Fremd-Hosts) haben.</para>
   </refsection>
 
   <refsection>
@@ -75,6 +77,7 @@
     <variablelist>
       <varlistentry>
         <term><option>--sort-by-host</option></term>
+
         <listitem>
           <para></para>
         </listitem>
