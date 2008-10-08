@@ -44,12 +44,13 @@
   <refnamediv>
     <refname>gs-users-regen</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: ZWECK</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Benutzer
+    regenerieren</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: </command>
+      <command>Usage:</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -66,14 +67,14 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>BESCHREIBUNG</para>
+    <para>Gibt die Aufrufe der entsprechenden Skripte zum Anlegen aller
+    Benutzer und der jeweiligen Einstellungen aus.</para>
   </refsection>
 
   <refsection>
     <title>Parameter</title>
 
     <variablelist>
-
       <varlistentry>
         <term><option>--help</option></term>
 
