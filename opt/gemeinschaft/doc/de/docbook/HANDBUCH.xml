@@ -71,9 +71,6 @@
   <xi:include href="verzeichnisstruktur.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-  <xi:include href="php-sicherheit.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
   <xi:include href="cluster-watchdog.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
@@ -92,10 +89,13 @@
   <xi:include href="datenbank-tabellen.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-  <xi:include href="gnu-gpl.xml" parse="xml"
+  <xi:include href="admin-scripts-alt.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-  <xi:include href="admin-scripts-alt.xml" parse="xml"
+  <xi:include href="php-sicherheit.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="gnu-gpl.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <index id="stichwortverzeichnis"></index>
