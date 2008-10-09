@@ -105,7 +105,7 @@ mbstring.func_overload = 0             ; wichtig. die Byte-Funktionen müssen als
 
     <para>Ein beliebter Angriff auf nachlässig programmierte Skripte. Wie das
     funktioniert, kann man hundertfach im Internet nachlesen. In allen
-    Skripten dieses Systems wird solche EInschleusung zweifach
+    Skripten dieses Systems wird solche Einschleusung zweifach
     verhindert:</para>
 
     <procedure>
