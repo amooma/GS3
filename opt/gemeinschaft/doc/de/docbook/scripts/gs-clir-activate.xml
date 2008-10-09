@@ -68,8 +68,9 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Schaltet für einen Benutzer die Rufnummernunterdrückung ein oder
-    aus.</para>
+    <para>Schaltet für einen Benutzer die Rufnummernunterdrückung ein
+    (<acronym lang="en">CLIR</acronym>) oder aus (<acronym
+    lang="en">CLIP</acronym>).</para>
   </refsection>
 
   <refsection>
@@ -85,10 +86,11 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--dest</option>=<replaceable>internal</replaceable></term>
+        <term><option>--dest</option>=<literal>internal</literal>|<literal>external</literal></term>
 
         <listitem>
-          <para>internal</para>
+          <para>Festlegung der Funktion auf interne oder externe
+          Anrufziele.</para>
         </listitem>
       </varlistentry>
 
@@ -96,7 +98,7 @@
         <term><option>--active</option>=<replaceable>yes</replaceable></term>
 
         <listitem>
-          <para>aktive Regel</para>
+          <para>Rufnummernunterdrückung an / aus.</para>
         </listitem>
       </varlistentry>
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<refentry id="man-gs-callforward-number-set" lang="de" revision="$Revision$">
+<refentry id="man-gs-callforward-number-set" lang="de"
+          revision="$Revision$">
   <!--
 % Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
@@ -84,7 +85,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--source</option>=<replaceable>internal</replaceable></term>
+        <term><option>--source</option>=<literal>internal</literal>|<literal>external</literal></term>
 
         <listitem>
           <para>Quelle des Anrufs</para>
@@ -92,7 +93,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--type</option>=<replaceable>std</replaceable></term>
+        <term><option>--type</option>=<literal>std</literal>|<literal>var</literal></term>
 
         <listitem>
           <para>Art</para>

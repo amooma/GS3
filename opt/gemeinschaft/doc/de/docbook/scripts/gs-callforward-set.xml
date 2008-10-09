@@ -85,7 +85,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--source</option>=<replaceable>internal</replaceable></term>
+        <term><option>--source</option>=<literal>internal</literal>|<literal>external</literal></term>
 
         <listitem>
           <para>Quelle des Anrufs</para>
@@ -93,7 +93,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--case</option>=<replaceable>always</replaceable></term>
+        <term><option>--case</option>=<literal>always</literal>|<literal>busy</literal>|<literal>unavail</literal>|<literal>offline</literal></term>
 
         <listitem>
           <para>Fall</para>
@@ -104,7 +104,9 @@
         <term><option>--timeout</option>=<replaceable>timeout</replaceable></term>
 
         <listitem>
-          <para>Zeitdauer</para>
+          <para>Zeitdauer in Sekunden, nach deren Verstreichen die
+          Weiterleitung aktiv wird. Nur sinnvoll bei
+          <literal>--case=unavail</literal></para>
         </listitem>
       </varlistentry>
 
