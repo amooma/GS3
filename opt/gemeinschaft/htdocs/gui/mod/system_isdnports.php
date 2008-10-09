@@ -41,7 +41,7 @@ echo "<br />\n";
 
 echo '<h3>BRI (mISDN)</h3>' ,"\n";
 $err=0; $out=array();
-@exec( 'asterisk -rx \'misdn show stacks\' | grep -E \'Port [0-9]+\' 2>>/dev/null', $out, $err );
+@exec( 'sudo asterisk -rx \'misdn show stacks\' | grep -E \'Port [0-9]+\' 2>>/dev/null', $out, $err );
 /*
   * Port 1 Type TE Prot. PMP L2Link DOWN L1Link:DOWN Blocked:0  Debug:0
   * Port 2 Type TE Prot. PMP L2Link DOWN L1Link:DOWN Blocked:0  Debug:0
