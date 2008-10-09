@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<refentry id="command-ID" revision="$Revision$">
+<refentry id="command-ID" lang="de" revision="$Revision$">
   <!--
 % Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
@@ -80,7 +80,7 @@
 
     <variablelist>
       <varlistentry>
-        <term><option>--host</option>=<replaceable>ip</replaceable></term>
+        <term><option>--host</option>=<replaceable>IP-Adresse</replaceable>|<replaceable>ID</replaceable></term>
 
         <listitem>
           <para>Host</para>
@@ -88,31 +88,32 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--comment</option>=<replaceable>host_comment</replaceable></term>
+        <term><option>--comment</option>=<replaceable>Kommentar</replaceable></term>
 
         <listitem>
-          <para>Kommentar</para>
+          <para>Host-Bezeichnung / Kommentar</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--prefix</option>=<replaceable>prefix</replaceable></term>
+        <term><option>--prefix</option>=<replaceable>Präfix</replaceable></term>
 
         <listitem>
-          <para>prefix</para>
+          <para>Präfix</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--group</option>=<replaceable>user_group_id</replaceable></term>
+        <term><option>--group</option>=<replaceable>Benutzer-Gruppen-ID</replaceable></term>
 
         <listitem>
-          <para>Gruppe</para>
+          <para>ID der Benutzergruppe des anzulegendes Benutzers.
+          <literal>0</literal> für keine Gruppe.</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--user</option>=<replaceable>username</replaceable></term>
+        <term><option>--user</option>=<replaceable>Benutzer</replaceable></term>
 
         <listitem>
           <para>Benutzername</para>
@@ -120,7 +121,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--exten</option>=<replaceable>exten</replaceable></term>
+        <term><option>--exten</option>=<replaceable>Nebenstelle</replaceable></term>
 
         <listitem>
           <para>Nebenstelle</para>
@@ -131,7 +132,7 @@
         <term><option>--is-admin</option></term>
 
         <listitem>
-          <para></para>
+          <para>Dem Benutzer lokale Admin-Rechte geben.</para>
         </listitem>
       </varlistentry>
 
