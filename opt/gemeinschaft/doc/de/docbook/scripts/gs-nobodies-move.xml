@@ -76,10 +76,13 @@
 
     <variablelist>
       <varlistentry>
-        <term><option>--host</option>=<replaceable>id</replaceable></term>
+        <term><option>--host</option>=<replaceable>ID</replaceable>|<replaceable>IP-Adresse</replaceable>|<literal>RANDOM</literal></term>
 
         <listitem>
-          <para>Host</para>
+          <para>Die ID oder IP-Adresse des neuen Nodes wie mit
+          <literal><command>gs_hosts_get</command></literal> angezeigt oder
+          <literal>RANDOM</literal> um die Accounts zuf‰llig zu
+          verteilen.</para>
         </listitem>
       </varlistentry>
 
@@ -87,7 +90,8 @@
         <term><option>--force</option>=<replaceable>yes</replaceable></term>
 
         <listitem>
-          <para>erzwingen</para>
+          <para>Erzwingen. Da das eine schwerwiegende Operation ist, muﬂ zur
+          Sicherheit <literal>--force=yes</literal> angegeben werden.</para>
         </listitem>
       </varlistentry>
 
