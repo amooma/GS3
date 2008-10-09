@@ -77,7 +77,7 @@
   <xi:include href="cluster-watchdog.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-  <xi:include href="admin-scripts-alt.xml" parse="xml"
+  <xi:include href="admin-scripts.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <xi:include href="service-nummern.xml" parse="xml"
@@ -93,6 +93,9 @@
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <xi:include href="gnu-gpl.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="admin-scripts-alt.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <index id="stichwortverzeichnis"></index>
