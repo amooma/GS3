@@ -39,7 +39,7 @@ if ($action === 'save') {
 	gs_keyval_set('dhcp_daemon_start', ($new_dhcp_daemon_start ? 'yes':'no'));
 	
 	$err=0; $out=array();
-	@exec( '/etc/init.d/dhcp3-server '. ($new_dhcp_daemon_start ? 'restart' : 'stop') .' 2>>/dev/null' );
+	@exec( 'sudo /etc/init.d/dhcp3-server '. ($new_dhcp_daemon_start ? 'restart' : 'stop') .' 2>>/dev/null' );
 	
 	$current_dhcp_daemon_start = $new_dhcp_daemon_start;
 	
