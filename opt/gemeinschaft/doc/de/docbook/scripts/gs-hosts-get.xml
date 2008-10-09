@@ -76,18 +76,22 @@
 
     <variablelist>
       <varlistentry>
-        <term><option>--foreign</option>=<replaceable>0</replaceable></term>
+        <term><option>--foreign</option>=<literal>0</literal>|<literal>1</literal></term>
 
         <listitem>
-          <para>0</para>
+          <para>Optionale Beschränkung mit <literal>0</literal> auf nur Nodes
+          von Gemeinschaft oder mit <literal>1</literal> auf nur
+          Fremd-Registrare (Filialen).</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--group</option>=<replaceable>group_id</replaceable></term>
+        <term><option>--group</option>=<replaceable>Gruppen-ID</replaceable></term>
 
         <listitem>
-          <para>Gruppe</para>
+          <para>Optionale Beschränkung auf Hosts die zu der angegebenen Gruppe
+          gehören. (Hosts die zu keiner Gruppe gehören haben die Gruppen-ID
+          <literal>0</literal>.)</para>
         </listitem>
       </varlistentry>
 
