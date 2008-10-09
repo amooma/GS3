@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<refentry id="command-ID" revision="$Revision$">
+<refentry id="command-ID" lang="de" revision="$Revision$">
   <!--
 % Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
@@ -76,7 +76,7 @@
 
     <variablelist>
       <varlistentry>
-        <term><option>--user</option>=<replaceable>user</replaceable></term>
+        <term><option>--user</option>=<replaceable>Benutzer</replaceable></term>
 
         <listitem>
           <para>Benutzername</para>
@@ -84,15 +84,16 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--regexp</option>=<replaceable>regexp</replaceable></term>
+        <term><option>--regexp</option>=<replaceable>RegExp</replaceable></term>
 
         <listitem>
-          <para>regexp</para>
+          <para>Regulärer Ausdruck (<foreignphrase lang="en">regular
+          expression</foreignphrase>, PCRE)</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--pin</option>=<replaceable>pin</replaceable></term>
+        <term><option>--pin</option>=<replaceable>PIN</replaceable></term>
 
         <listitem>
           <para>PIN-Nummer</para>
@@ -103,7 +104,7 @@
         <term><option>--delete</option></term>
 
         <listitem>
-          <para>loeschen</para>
+          <para>Rufnummernsperre löschen.</para>
         </listitem>
       </varlistentry>
 
