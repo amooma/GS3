@@ -1012,7 +1012,7 @@ if ($action === 'save2') {
 		
 		# nach dem Aendern der Netzwerkeinstellungen muss Asterisk neu
 		# gestartet werden
-		//@exec( '/opt/gemeinschaft/sbin/start-asterisk 1>>/dev/null 2>>/dev/null' );
+		//@exec( 'sudo /opt/gemeinschaft/sbin/start-asterisk 1>>/dev/null 2>>/dev/null' );
 		# vorher muss das evtl. geanderte Netzwerk-Interface (eth0)
 		# per ifup --force eth0 geupdated werden
 		
