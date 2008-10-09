@@ -15,241 +15,235 @@
       <secondary>zur Administration</secondary>
     </indexterm></title>
 
-  <section id="admin-scripts-hinweise">
-    <title>Hinweise</title>
+  <bridgehead>Hinweise</bridgehead>
 
-    <para>Pfad: <filename>/opt/gemeinschaft/scripts/</filename></para>
+  <para>Pfad: <filename>/opt/gemeinschaft/scripts/</filename></para>
 
-    <para>Alle Skripte setzen voraus, daß unter
-    <filename>/usr/bin/php</filename> ein PHP-Interpreter (min. 4.3.8, besser
-    5.1 mit dem Modul <literal>mysql</literal>) liegt.</para>
+  <para>Alle Skripte setzen voraus, daß unter
+  <filename>/usr/bin/php</filename> ein PHP-Interpreter (min. 4.3.8, besser
+  5.1 mit dem Modul <literal>mysql</literal>) liegt.</para>
 
-    <para>Generell wird beim Aufruf mit dem Parameter <literal>-?</literal>
-    oder <literal>--help</literal> (oder auch ohne Parameter) eine kurze
-    Parameter-Übersicht ausgegeben. Beispielsweise so:<screen><prompt>$ </prompt><command>./gs-user-add --help</command>
+  <para>Generell wird beim Aufruf mit dem Parameter <literal>-?</literal> oder
+  <literal>--help</literal> (oder auch ohne Parameter) eine kurze
+  Parameter-Übersicht ausgegeben. Beispielsweise so:<screen><prompt>$ </prompt><command>./gs-user-add --help</command>
 Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; --firstname=&lt;firstname&gt; --lastname=&lt;lastname&gt; --email=&lt;email&gt; --host=&lt;id&gt;|&lt;ip&gt;</screen>Die
-    Reihenfolge der Parameter ist beliebig. Falls ein Wert Leerzeichen oder
-    Shell-Sonderzeichen enthält, muß er natürlich in doppelte
-    (<literal>"</literal>) oder einfache (<literal>'</literal>)
-    Anführungszeichen eingeschlossen sein (wie man das auch sonst auf der
-    Shell kennt).</para>
+  Reihenfolge der Parameter ist beliebig. Falls ein Wert Leerzeichen oder
+  Shell-Sonderzeichen enthält, muß er natürlich in doppelte
+  (<literal>"</literal>) oder einfache (<literal>'</literal>)
+  Anführungszeichen eingeschlossen sein (wie man das auch sonst auf der Shell
+  kennt).</para>
 
-    <para>Wie mit <literal>getopt</literal> üblich ist das Gleichheitszeichen
-    (<literal>=</literal>) zwischen Argumentname und -wert optional. Als
-    Erleichterung kann der Argumentname, solange er noch eindeutig ist,
-    abgekürzt werden. Statt<literallayout><command>./gs-user-get --user=123</command></literallayout>könnte
-    man beispielsweise auch folgendes schreiben:<literallayout><command>./gs-user-get --u 123</command></literallayout></para>
+  <para>Wie mit <literal>getopt</literal> üblich ist das Gleichheitszeichen
+  (<literal>=</literal>) zwischen Argumentname und -wert optional. Als
+  Erleichterung kann der Argumentname, solange er noch eindeutig ist,
+  abgekürzt werden. Statt<literallayout><command>./gs-user-get --user=123</command></literallayout>könnte
+  man beispielsweise auch folgendes schreiben:<literallayout><command>./gs-user-get --u 123</command></literallayout></para>
 
-    <para>Die Skripte sind hier in alphabetischer Reihenfolge aufgeführt; als
-    Einstieg sollten Sie jedoch mit
-    <literal><command>gs-users-get</command></literal> und
-    <literal><command>gs-user-add</command></literal> beginnen, da es das
-    Verständnis für die weiteren Skripte erleichtert.</para>
-  </section>
+  <para>Die Skripte sind hier in alphabetischer Reihenfolge aufgeführt; als
+  Einstieg sollten Sie jedoch mit
+  <literal><command>gs-users-get</command></literal> und
+  <literal><command>gs-user-add</command></literal> beginnen, da es das
+  Verständnis für die weiteren Skripte erleichtert.</para>
 
-  <section id="admin-scripts-man-pages">
-    <title>Man-Pages der Skripte</title>
+  <para>Im folgenden finden Sie die Handbuch-Seiten
+  (<literal><command>man</command></literal> pages) der einzelnen
+  Skripte.</para>
 
-    <para>Im folgenden finden Sie die Handbuch-Seiten
-    (<literal><command>man</command></literal> pages) der einzelnen
-    Skripte.</para>
+  <xi:include href="scripts/gs-boi-admin-add.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-boi-admin-add.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-boi-admin-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-boi-admin-del.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-boi-admins-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-boi-admins-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-boi-agency-add-simplified.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-boi-agency-add-simplified.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-callblocking-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-callblocking-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-callblocking-set.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-callblocking-set.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-callforward-activate.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-callforward-activate.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-callforward-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-callforward-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-callforward-number-set.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-callforward-number-set.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-callforward-set.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-callforward-set.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-callforward-timeout-set.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-callforward-timeout-set.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-callwaiting-activate.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-callwaiting-activate.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-callwaiting-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-callwaiting-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-clir-activate.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-clir-activate.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-clir-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-clir-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-group-add.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-group-add.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-group-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-group-del.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-groups-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-groups-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-host-add.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-host-add.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-host-phones-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-host-phones-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-hosts-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-hosts-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-hosts-show-our-ids.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-hosts-show-our-ids.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-hosts-show-our-ips.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-hosts-show-our-ips.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-keys-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-keys-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-nobodies-change.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-nobodies-change.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-nobodies-move.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-nobodies-move.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-phones-firmware-upgrade.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-phones-firmware-upgrade.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-pickupgroup-add.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-pickupgroup-add.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-pickupgroup-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-pickupgroup-del.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-pickupgroup-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-pickupgroup-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-pickupgroup-user-add.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-pickupgroup-user-add.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-pickupgroup-user-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-pickupgroup-user-del.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-pickupgroups-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-pickupgroups-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-prov-job-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-prov-job-del.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-prov-jobs-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-prov-jobs-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-prov-phone-checkcfg.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-prov-phone-checkcfg.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-queue-add.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-queue-add.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-queue-callforward-activate.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-queue-callforward-activate.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-queue-callforward-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-queue-callforward-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-queue-callforward-set.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-queue-callforward-set.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-queue-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-queue-del.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-queue-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-queue-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-queues-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-queues-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-ringtone-set.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-ringtone-set.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-ringtones-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-ringtones-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-sysadmin-pwd-set.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-sysadmin-pwd-set.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-add.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-add.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-by-mac-addr.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-by-mac-addr.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-change.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-change.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-comment-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-comment-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-comment-set.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-comment-set.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-del.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-external-number-add.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-external-number-add.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-external-number-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-external-number-del.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-external-numbers-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-external-numbers-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-ip-by-ext.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-ip-by-ext.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-ip-by-user.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-ip-by-user.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-mac-addr-by-user.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-mac-addr-by-user.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-prov-param-set.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-prov-param-set.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-prov-params-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-prov-params-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-user-rename.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-user-rename.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-users-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-users-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-users-regen.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-users-regen.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="scripts/gs-vm-activate.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    <xi:include href="scripts/gs-vm-activate.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-    <xi:include href="scripts/gs-vm-get.xml" parse="xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
-  </section>
+  <xi:include href="scripts/gs-vm-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 </chapter>
