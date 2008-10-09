@@ -46,88 +46,88 @@ help:
 
 _xmllint:
 	@ if [ -z "${xmllint}" ]; then \
-		echo '************************************************************'; \
-		echo '*  xmllint not found.                                      *'; \
-		echo '*  Please install DocBook Utils.                           *'; \
+		echo '############################################################'; \
+		echo '#  xmllint not found.                                      #'; \
+		echo '#  Please install DocBook Utils.                           #'; \
 		if [ `which aptitude 2>>/dev/null` ]; then \
-			echo '*  ( sudo aptitude install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
+			echo '#  ( sudo aptitude install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
 		else \
 		if [ `which apt-get 2>>/dev/null` ]; then \
-			echo '*  ( sudo apt-get install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
+			echo '#  ( sudo apt-get install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
 		else \
 		if [ `which yum 2>>/dev/null` ]; then \
-			echo '*  ( sudo yum install docbook-utils docbook-dtds docbook-style-xsl )'; \
+			echo '#  ( sudo yum install docbook-utils docbook-dtds docbook-style-xsl )'; \
 		else \
 		if [ `which up2date 2>>/dev/null` ]; then \
-			echo '*  ( sudo up2date -i docbook-utils docbook-dtds docbook-style-xsl )'; \
+			echo '#  ( sudo up2date -i docbook-utils docbook-dtds docbook-style-xsl )'; \
 		fi; fi; fi; fi; \
-		echo '************************************************************'; \
+		echo '############################################################'; \
 		exit 1; \
 	fi
 
 
 _xmlto:
 	@ if [ -z "${xmlto}" ]; then \
-		echo '************************************************************'; \
-		echo '*  xmlto not found.                                        *'; \
-		echo '*  Please install xmlto.                                   *'; \
+		echo '############################################################'; \
+		echo '#  xmlto not found.                                        #'; \
+		echo '#  Please install xmlto.                                   #'; \
 		if [ `which aptitude 2>>/dev/null` ]; then \
-			echo '*  ( sudo aptitude install xsltproc xmlto docbook-xml docbook-xsl )'; \
+			echo '#  ( sudo aptitude install xsltproc xmlto docbook-xml docbook-xsl )'; \
 		else \
 		if [ `which apt-get 2>>/dev/null` ]; then \
-			echo '*  ( sudo apt-get install xsltproc xmlto docbook-xml docbook-xsl )'; \
+			echo '#  ( sudo apt-get install xsltproc xmlto docbook-xml docbook-xsl )'; \
 		else \
 		if [ `which yum 2>>/dev/null` ]; then \
-			echo '*  ( sudo yum install xmlto docbook-dtds docbook-style-xsl )'; \
+			echo '#  ( sudo yum install xmlto docbook-dtds docbook-style-xsl )'; \
 		else \
 		if [ `which up2date 2>>/dev/null` ]; then \
-			echo '*  ( sudo up2date -i xmlto docbook-dtds docbook-style-xsl )'; \
+			echo '#  ( sudo up2date -i xmlto docbook-dtds docbook-style-xsl )'; \
 		fi; fi; fi; fi; \
-		echo '************************************************************'; \
+		echo '############################################################'; \
 		exit 1; \
 	fi
 
 
 _docbook2html:
 	@ if [ -z "${docbook2html}" ]; then \
-		echo '************************************************************'; \
-		echo '*  docbook2html not found.                                 *'; \
-		echo '*  Please install DocBook Utils.                           *'; \
+		echo '############################################################'; \
+		echo '#  docbook2html not found.                                 #'; \
+		echo '#  Please install DocBook Utils.                           #'; \
 		if [ `which aptitude 2>>/dev/null` ]; then \
-			echo '*  ( sudo aptitude install docbook-utils )                 *'; \
+			echo '#  ( sudo aptitude install docbook-utils )                 #'; \
 		else \
 		if [ `which apt-get 2>>/dev/null` ]; then \
-			echo '*  ( sudo apt-get install docbook-utils )                  *'; \
+			echo '#  ( sudo apt-get install docbook-utils )                  #'; \
 		else \
 		if [ `which yum 2>>/dev/null` ]; then \
-			echo '*  ( sudo yum install docbook-utils )                      *'; \
+			echo '#  ( sudo yum install docbook-utils )                      #'; \
 		else \
 		if [ `which up2date 2>>/dev/null` ]; then \
-			echo '*  ( sudo up2date -i docbook-utils )                       *'; \
+			echo '#  ( sudo up2date -i docbook-utils )                       #'; \
 		fi; fi; fi; fi; \
-		echo '************************************************************'; \
+		echo '############################################################'; \
 		exit 1; \
 	fi
 
 
 _docbook2pdf:
 	@ if [ -z "${docbook2pdf}" ]; then \
-		echo '************************************************************'; \
-		echo '*  docbook2pdf not found.                                  *'; \
-		echo '*  Please install DocBook Utils.                           *'; \
+		echo '############################################################'; \
+		echo '#  docbook2pdf not found.                                  #'; \
+		echo '#  Please install DocBook Utils.                           #'; \
 		if [ `which aptitude 2>>/dev/null` ]; then \
-			echo '*  ( sudo aptitude install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
+			echo '#  ( sudo aptitude install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
 		else \
 		if [ `which apt-get 2>>/dev/null` ]; then \
-			echo '*  ( sudo apt-get install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
+			echo '#  ( sudo apt-get install docbook-xml docbook-xsl docbook-utils xsltproc xmlto )'; \
 		else \
 		if [ `which yum 2>>/dev/null` ]; then \
-			echo '*  ( sudo yum install docbook-utils docbook-utils-pdf docbook-dtds docbook-style-xsl )'; \
+			echo '#  ( sudo yum install docbook-utils docbook-utils-pdf docbook-dtds docbook-style-xsl )'; \
 		else \
 		if [ `which up2date 2>>/dev/null` ]; then \
-			echo '*  ( sudo up2date -i docbook-utils docbook-utils-pdf docbook-dtds docbook-style-xsl )'; \
+			echo '#  ( sudo up2date -i docbook-utils docbook-utils-pdf docbook-dtds docbook-style-xsl )'; \
 		fi; fi; fi; fi; \
-		echo '************************************************************'; \
+		echo '############################################################'; \
 		exit 1; \
 	fi
 
@@ -138,74 +138,75 @@ docbook/_HANDBUCH-one-file.xml: _xmllint
 
 
 html-jw: docbook/_HANDBUCH-one-file.xml _docbook2html
-	@ echo '************************************************************';
-	@ echo '*  Making HTML ...                                         *';
-	@ echo '************************************************************';
+	@ echo '############################################################';
+	@ echo '#  Making HTML ...                                         #';
+	@ echo '############################################################';
 	
 	@ echo "Transforming to HTML ..."
 	mkdir -p html
 	${docbook2html} -e no-idref -o html/ docbook/_HANDBUCH-one-file.xml
 	rm -f docbook/_HANDBUCH-one-file.xml
-	@ echo '************************************************************';
-	@ echo '*  HTML done.                                              *';
-	@ echo '************************************************************';
+	@ echo '############################################################';
+	@ echo '#  HTML done.                                              #';
+	@ echo '############################################################';
 
 
 html-xsl: docbook/_HANDBUCH-one-file.xml _xmlto
-	@ echo '************************************************************';
-	@ echo '*  Making HTML ...                                         *';
-	@ echo '************************************************************';
+	@ echo '############################################################';
+	@ echo '#  Making HTML ...                                         #';
+	@ echo '############################################################';
 	
 	@ echo "Transforming to HTML ..."
 	mkdir -p html
 	${xmlto} --skip-validation -o html/ xhtml docbook/_HANDBUCH-one-file.xml
 	rm -f docbook/_HANDBUCH-one-file.xml
-	@ echo '************************************************************';
-	@ echo '*  HTML done.                                              *';
-	@ echo '************************************************************';
+	@ echo '############################################################';
+	@ echo '#  HTML done.                                              #';
+	@ echo '############################################################';
 
 
 html: html-xsl
 
 
 pdf-jw: docbook/_HANDBUCH-one-file.xml _docbook2pdf
-	@ echo '************************************************************';
-	@ echo '*  Making PDF ...                                          *';
-	@ echo '************************************************************';
+	@ echo '############################################################';
+	@ echo '#  Making PDF ...                                          #';
+	@ echo '############################################################';
 	
 	@ echo "Transforming to PDF ..."
 	mkdir -p pdf
 	${docbook2pdf} -e no-idref -o pdf/ docbook/_HANDBUCH-one-file.xml
 	rm -f docbook/_HANDBUCH-one-file.xml
 	mv pdf/_HANDBUCH-one-file.pdf pdf/HANDBUCH.pdf
-	@ echo '************************************************************';
-	@ echo '*  PDF done.                                               *';
-	@ echo '************************************************************';
+	@ echo '############################################################';
+	@ echo '#  PDF done.                                               #';
+	@ echo '############################################################';
 
 
 pdf: pdf-jw
 
 
 $(man_man): man/%.man: docbook/scripts/%.xml
-	@ echo "*** $@ $* ..."
+	@ echo "### $@ $* ..."
 	cd "$(dir $<)" && ${xmllint} --xinclude --output $(patsubst %.xml,_%.xml.one-file,$*.xml) $*.xml
 	${xmlto} --skip-validation -o man/ man docbook/scripts/$(patsubst %.xml,_%.xml.one-file,$*.xml)
+	@ echo ""
 
 
 _man-xsl: _xmllint _xmlto $(man_man)
 
 
 man-xsl: _xmllint _xmlto
-	@ echo '************************************************************';
-	@ echo '*  Making man pages ...                                    *';
-	@ echo '************************************************************';
+	@ echo '############################################################';
+	@ echo '#  Making man pages ...                                    #';
+	@ echo '############################################################';
 	
 	@ echo "Transforming to man pages ..."
 	mkdir -p man
 	$(MAKE) _man-xsl
-	@ echo '************************************************************';
-	@ echo '*  Man pages done.                                         *';
-	@ echo '************************************************************';
+	@ echo '############################################################';
+	@ echo '#  Man pages done.                                         #';
+	@ echo '############################################################';
 
 
 man: man-xsl
