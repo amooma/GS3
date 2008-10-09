@@ -88,7 +88,34 @@
 
         <listitem>
           <para>Regulärer Ausdruck (<foreignphrase lang="en">regular
-          expression</foreignphrase>, PCRE)</para>
+          expression</foreignphrase>, PCRE) zur Definition der
+          Rufnumernsperre.</para>
+
+          <para>Das Pattern ist eine normale Perl Regular Expression, also
+          inklusive <literal>^</literal>, <literal>$</literal>,
+          <literal>[0-9]</literal>, <literal>{}</literal> usw. aber ohne die
+          Begrenzer (<literal>/</literal>) am Anfang und Ende. Die Pattern
+          sind Verbote, wenn also eines auf die gewählte Nummer zutrifft, ist
+          das Wählen nicht erlaubt. Dabei ist die Länge der Pattern
+          ausschlaggebend: längere Pattern werden zuerst überprüft (und bei
+          Zutreffen wird abgebrochen).</para>
+
+          <para>Beispiel: Für einen User sind zwei Pattern eingetragen:
+          <literal>^0190[5]</literal> (ohne PIN) und <literal>^0</literal>
+          (mit PIN). Die erste dieser beiden Regeln wird immer zuerst
+          überprüft, da sie mehr Zeichen hat (8) als die zweite (2). Wählen
+          auf <literal>01907333</literal> wäre mit Eingabe der PIN erlaubt -
+          nur die zweite Regel trifft zu. Wählen auf
+          <literal>01905333</literal> wäre verboten, da bereits die erste der
+          Regeln zutrifft, die auch keine PIN erlaubt. Wählen auf
+          <literal>301905333</literal> wäre erlaubt - keine Regel matcht. Um
+          einer Regel höhere Priorität zu geben, kann man sie länger machen,
+          also z.B. mit <literal>()()()()()()</literal> am Ende auffüllen.
+          Wenn wir aus der Regel <literal>^0</literal> testweise
+          <literal>^0()()()()()()</literal> machen, wäre sie mit 14 Zeichen
+          die längste Regel und würde immer zuerst überprüft. Damit wäre
+          Wählen auf <literal>01905333</literal> jetzt mit Eingabe der PIN
+          erlaubt.</para>
         </listitem>
       </varlistentry>
 
@@ -96,7 +123,7 @@
         <term><option>--pin</option>=<replaceable>PIN</replaceable></term>
 
         <listitem>
-          <para>PIN-Nummer</para>
+          <para>PIN-Nummer (Paßwort) zur Umgehung der Rufnummersperre</para>
         </listitem>
       </varlistentry>
 
