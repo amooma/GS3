@@ -13,7 +13,7 @@
 
   <para>PHP wird/wurde h‰ufig als unsichere Programmiersprache bezeichnet, was
   sie nicht ist. Das h‰ngt wohl mit der groﬂen Verbreitung und der flachen
-  Lernkurve zusammen, wodurch viele unerfahrene Programmierer eine unmenge
+  Lernkurve zusammen, wodurch viele unerfahrene Programmierer eine Unmenge
   unsicherer Programme schreiben.</para>
 
   <para>Grunds‰tzliche Einstellungen (in der <filename>/etc/php.ini</filename>
