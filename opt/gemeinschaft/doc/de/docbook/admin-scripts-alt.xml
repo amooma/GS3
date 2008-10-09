@@ -44,7 +44,7 @@ Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
   <command>gs_user_add</command> beginnen, da es das Verständnis für die
   weiteren Skripte erleichtert.</para>
 
-  <section>
+  <section id="gs_callblocking_get">
     <title><command>gs_callblocking_get</command><indexterm>
         <primary><command>gs_callblocking_get</command></primary>
       </indexterm><indexterm>
@@ -64,7 +64,7 @@ Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
     </variablelist>
   </section>
 
-  <section>
+  <section id="gs_callblocking_set">
     <title><command>gs_callblocking_set</command><indexterm>
         <primary><command>gs_callblocking_get</command></primary>
       </indexterm><indexterm>
@@ -766,7 +766,7 @@ Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
     </variablelist>
   </section>
 
-  <section>
+  <section id="gs_pickupgroups_show">
     <title><command>gs_pickupgroups_show</command><indexterm>
         <primary><command>gs_pickupgroups_show</command></primary>
       </indexterm><indexterm>
