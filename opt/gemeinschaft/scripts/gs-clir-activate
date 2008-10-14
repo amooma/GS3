@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_clir_activate.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --dest=internal|external --active=yes|no';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --dest=internal|external --active=yes|no|once';
 
 $opts = @getOptsNoMultiples( null,
 	array(
