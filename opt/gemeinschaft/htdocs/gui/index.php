@@ -676,7 +676,9 @@ ORDER BY `ord`, `comment`'
 			$rs = $DB->execute($query);
 			echo ' &nbsp;&nbsp; ', __('Anlage') ,':',"\n";
 			echo '<select name="boi_host_id" tabindex="100" onchange="this.form.submit();">' ,"\n";
+			$tmp_host_id = null;
 			while ($r = $rs->fetchRow()) {
+				if ($tmp_host_id !== null) continue;  # do not show foreign host twice for local admins
 				echo '<option value="',$r['id'],'"';
 				if ($r['id'] === $_SESSION['sudo_user']['boi_host_id']) {
 					echo ' selected="selected"';
@@ -686,9 +688,11 @@ ORDER BY `ord`, `comment`'
 				||  (! $_SESSION['real_user']['info']['host_is_foreign'] && $r['id'] === 0)
 				) {
 					echo ' &bull;';
+					$tmp_host_id = $r['id'];
 				}
 				echo '</option>' ,"\n";
 			}
+			unset($tmp_host_id);
 			echo '</select>' ,"\n";
 			echo '</div>' ,"\n";
 			
