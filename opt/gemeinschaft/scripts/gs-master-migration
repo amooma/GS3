@@ -1,0 +1,235 @@
+#!/usr/bin/php
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* Soeren Sprenger <soeren.sprenger@amooma.de> 
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+
+//Local Functions
+global $db_conn_master, $db_conn_slave;
+
+function & db_master_connect($host, $user, $pass)
+{
+	global $db_conn_master, $db_conn_slave;
+	
+	$caller_info = '';
+	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
+		$bt = debug_backtrace();
+		if (is_array($bt) && array_key_exists(0, $bt)) {
+			$caller_info = ' (for '. @$bt[0]['file'] .':'. @$bt[0]['line'] .')';
+			unset($bt);
+		}
+	}
+	
+	if (getType($db_conn_master) === 'object'
+	&&  method_exists($db_conn_master, 'isConnected')
+	&&  $db_conn_master->isConnected())
+	{
+		//gs_log( GS_LOG_DEBUG, 'Using the existing master DB connection'. $caller_info );
+		return $db_conn_master;
+	}
+	gs_log( GS_LOG_DEBUG, 'Opening a new DB connection'. $caller_info );
+	
+	if (!( $db = YADB_newConnection( 'mysql' ) )) {
+		$null = null;
+		return $null;
+	}
+	if (!( $db->connect(
+		$host,
+		$user,
+		$pass,
+		'asterisk',
+		array('reuse'=>false)  // do not use. leaves lots of connections
+		)))
+	{
+		$lastNativeError    = @$db->getLastNativeError();
+		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
+		gs_log( GS_LOG_WARNING, 'Could not connect to database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
+		$null = null;
+		return $null;
+	}
+	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
+	
+	$db_conn_master = $db;
+	return $db_conn_master;
+}
+
+
+function & db_slave_connect($host, $user, $pass)
+{
+	global $db_conn_slave, $db_conn_master;
+	
+	$caller_info = '';
+	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
+		$bt = debug_backtrace();
+		if (is_array($bt) && array_key_exists(0, $bt)) {
+			$caller_info = ' (for '. @$bt[0]['file'] .':'. @$bt[0]['line'] .')';
+			unset($bt);
+		}
+	}
+	
+	if (getType($db_conn_slave) === 'object'
+	&&  method_exists($db_conn_slave, 'isConnected')
+	&&  $db_conn_slave->isConnected())
+	{
+		//gs_log( GS_LOG_DEBUG, 'Using the existing slave DB connection'. $caller_info );
+		return $db_conn_slave;
+	}
+	gs_log( GS_LOG_DEBUG, 'Opening a new slave DB connection'. $caller_info );
+	
+	if (!( $db = YADB_newConnection( 'mysql' ) )) {
+		$null = null;
+		return $null;
+	}
+	if (!( $db->connect(
+		$host,
+		$user,
+		$pass,
+		"asterisk",
+		array('reuse'=>false)  // do not use. leaves lots of connections
+		)))
+	{
+		$lastNativeError    = @$db->getLastNativeError();
+		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
+		gs_log( GS_LOG_WARNING, 'Could not connect to slave database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
+		$null = null;
+		return $null;
+	}
+	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
+	
+	$db_conn_slave = $db;
+	return $db_conn_slave;
+}
+
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --old-master=<ip> --new-master=<ip>';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'old-master=',
+		'new-master='
+	),
+	$usage
+);
+if (! isSet($opts['old-master'])
+ || ! isSet($opts['new-master'])
+ ) {
+	gs_script_invalid_usage( $usage );
+}
+
+
+//connection to the old master
+$old_master = db_master_connect($opts['old-master'], "root", "");
+$new_master = db_slave_connect ($opts['new-master'], "root", "");
+
+$ok = $old_master->execute("FLUSH TABLES WITH READ LOCK");
+if (! $ok)  {
+	echo "Failed to Lock Tables";
+	exit(1);
+}
+
+sleep(2);
+
+$res = $old_master->execute("SHOW MASTER STATUS");
+$master_status = $res->fetchRow();
+
+$res = $new_master->execute("SHOW SLAVE STATUS");
+$slave_status = $res->fetchRow();
+
+$do_dump=false;
+
+if($slave_status['Master_Log_File'] != $master_status['File']) {
+	echo "Master bin-log-file differs from slave, dumping database\n";
+	$do_dump = true;
+}
+
+
+if(!$do_dump && $slave_status['Read_Master_Log_Pos'] != $master_status['Position']) {
+	echo "Master bin-log position differs from slave, dumping database\n";
+	$do_dump = true;
+}
+
+
+if($do_dump) {
+	echo "Automaticly dump of Database is currently not implemited.\nPlease do it manually.\n";
+	exit(0);
+}
+else {
+	echo "The New-Master's database is clean, so i don't need a Database dump\n";
+}
+
+echo "Stopping Slave on new Master\n";
+$ok = $new_master->execute("STOP SLAVE");
+if(!$ok)
+	echo "Failed to stop slave on new master\n";
+
+echo "Reset Slave on new Master\n";
+$ok = $new_master->execute("RESET SLAVE");
+if(!$ok)
+	echo "Failed to reset slave on new master\n";
+
+echo "Reset Master on new Master\n";
+$ok = $new_master->execute("RESET MASTER");
+if(!$ok)
+	echo "Failed to reset the new master\n";
+
+echo "Adding permissions on new Master\n";
+$new_master->execute("GRANT REPLICATION SLAVE ON *.* TO 'root'@'%' IDENTIFIED BY ''");
+
+
+echo "Setting the old Master to run as a Slave\n";
+$ok = $old_master->execute("STOP SLAVE");
+$ok = $old_master->execute("RESET SLAVE");
+$ok = $old_master->execute("RESET MASTER");
+
+
+$sql_query = "CHANGE MASTER TO MASTER_HOST='" . $opts['new-master'] ."', MASTER_USER='root',  MASTER_PASSWORD=''";
+
+$ok = $old_master->execute($sql_query);
+if(!$ok) {
+	echo "Failed to set old Master to an Slave!\n";
+	exit(1);
+}
+echo "Starting Slave on old Master\n";
+$ok = $old_master->execute("START SLAVE");
+echo "Unlock Tables on old Master\n";
+$ok = $old_master->execute("UNLOCK TABLES");
+
+
+echo "\ndone.\nPlease don't forget to set the New master_host in the gemeinschaft.php";
+?>
+
+
