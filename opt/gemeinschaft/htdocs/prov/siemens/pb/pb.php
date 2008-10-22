@@ -86,17 +86,21 @@ function write_alert($message, $alert_type="ERROR") {
 
 $user = trim( @ $_REQUEST['user'] );
 $phonenumber  = trim( @ $_REQUEST['phonenumber'] );
+$search =  trim( @ $_REQUEST['search'] );
+$name_search =  trim( @ $_REQUEST['name'] );
 
 if (!$user) $user = $phonenumber;
-$url= GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/dial-log/dlog.php';
+$url= GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/pb/pb.php';
 
 $img_url = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/img/';
 
 if (! preg_match('/^\d+$/', $user))
 	write_alert( 'Benutzer '.$user.' unbekannt!' );
-$type = trim( @ $_REQUEST['type'] );
-if (! in_array( $type, array('in','out','missed'), true ))
+$type = trim( @$_REQUEST['type'] );
+if (! in_array( $type, array('gs','prv','imported'), true )) {
 	$type = false;
+}
+
 $dial = trim( @ $_REQUEST['dial'] );
 
 $db = gs_db_slave_connect();
@@ -107,11 +111,72 @@ $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHE
 if ($user_id < 1)
 	write_alert( 'Unknown user.' );
 
+/*
 $typeToTitle = array(
 	'out'    => "Gew\xC3\xA4hlt",
 	'missed' => "Verpasst",
 	'in'     => "Angenommen"
 );
+*/
+
+$tmp = array(
+	15=>array('k' => 'gs' ,
+			'v' => gs_get_conf('GS_PB_INTERNAL_TITLE', "Intern") ),
+	25=>array('k' => 'prv',
+			'v' => gs_get_conf('GS_PB_PRIVATE_TITLE', "Pers\xC3\xB6nlich" ) )
+);
+if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
+	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
+	$tmp[$pos] = array(
+			'k' => 'imported',
+			'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', "Importiert")
+	);
+}
+kSort($tmp);
+foreach ($tmp as $arr) {
+	$typeToTitle[$arr['k']] = $arr['v'];
+}
+
+if ($search) { 
+
+	if (!$name_search) {
+		xml('<?xml version="1.0" encoding="UTF-8" ?>');
+		xml('<IppDisplay>');
+		xml('<IppScreen ID="3" HiddenCount="2" CommandCount="2">');
+		xml('<IppForm ItemCount="1">');
+		xml('<Title>Name suchen:</Title>');
+		xml('<Url>'.$url.'</Url>');
+		xml('<IppTextField MaxSize="30" Constraint="ANY" Default="'.$name_search.'" Key="name">');
+		xml('<Label>Name:</Label>');
+		xml('<Text>'.$name_search.'</Text>');
+		xml('</IppTextField>');
+		xml('</IppForm>');
+		xml('<IppCommand Type="SELECT" Priority="0">');
+		xml('<Label>Suchen</Label>');
+		xml('<ScreenID>1</ScreenID>');
+		xml('</IppCommand>');
+		xml('<IppCommand Type="SCREEN" Priority="0">');
+		xml('<Label>Abbrechen</Label>');
+		xml('<ScreenID>1</ScreenID>');
+		xml('</IppCommand>');
+		
+		xml('<IppHidden Type="VALUE" Key="user">');;
+		xml('<Value>'.$user.'</Value>');
+		xml('</IppHidden>');
+		xml('<IppHidden Type="VALUE" Key="search">');;
+		xml('<Value>'.$search.'</Value>');
+		xml('</IppHidden>');
+		xml('</IppScreen>');
+		xml('</IppDisplay>');
+	} else {
+		$type = $search;
+	}
+} 
+
+
+
+
+
 
 #########################################################
 # Static entry screen
@@ -124,28 +189,26 @@ if (!$type) {
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="1" CommandCount="1">');
 	xml('<IppList Type="IMPLICIT" Count="'.count($typeToTitle).'">');
-	xml('<Title>'.$user.' - Anruflisten</Title>');
+	xml('<Title>'.$user.' - Telefonbuch</Title>');
 	xml('<Url>'.$url.'</Url>');
 	$i=0;
 	foreach ($typeToTitle as $t => $title) {
-		$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE `user_id`='. $user_id .' AND `type`=\''. $t .'\'' );
+		
+		switch ($t) {
+			case 'gs' : 
+				$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `nobody_index` IS NULL' );
+				$image = $img_url.'contents.png';
+				break;
+			case 'prv':
+				 $num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `pb_prv` WHERE `user_id` ='. $user_id );
+				$image = $img_url.'yast_sysadmin.png';
+				break;
+			default : $num_calls = 0;
+
+		}
 		$i++;
 		if ($i==1) xml('<Option ID="'.$i.'" Selected="TRUE" Key="type" Value="'.$t.'">');
 			else xml('<Option ID="'.$i.'" Selected="FALSE" Key="type" Value="'.$t.'">');
-		 switch ($t) {
-			case 'out' : 
-				$image = $img_url.'keyboard.png';
-				break;
-			case 'missed':
-				$image = $img_url.'karm.png';
-				break;
-			case 'in':
-			$image = $img_url.'yast_sysadmin.png';
-			break;
-		default : 
-				$image="";
-		}
-
 		xml('<OptionText>'.$title.' ('.$num_calls.')'.'</OptionText>');
 		xml('<Image>'.$image.'</Image>');
 		xml('</Option>');
@@ -160,22 +223,52 @@ if (!$type) {
 } else {
 
 #########################################################
-# User dial logs
+# Phone Books
 #########################################################
 
-	$query =
-'SELECT SQL_CALC_FOUND_ROWS
-	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
-COUNT(*) `num_calls`
-FROM `dial_log`
+	$page = 0;
+	$per_page = 150;
+
+	$name_sql = str_replace(
+		array( '*', '?' ),
+		array( '%', '_' ),
+		$name_search
+	) .'%';
+
+	switch ($type) {
+	
+	case 'gs' :
+		$query =
+'SELECT SQL_CALC_FOUND_ROWS 
+	`u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `number`
+FROM
+	`users` `u` JOIN
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE
-	`user_id`='. $user_id .' AND
-	`type`=\''. $type .'\'
-GROUP BY `number`
-ORDER BY `ts` DESC
-LIMIT 20';
+	`u`.`nobody_index` IS NULL AND (
+	`u`.`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci 
+	)
+ORDER BY `u`.`lastname`, `u`.`firstname`
+LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
+		break;
+	case 'prv' :
+		$query =
+'SELECT SQL_CALC_FOUND_ROWS
+	`id`, `lastname` `ln`, `firstname` `fn`, `number`
+FROM
+	`pb_prv`
+WHERE
+	`user_id`='. $user_id .' AND (
+	`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci 
+	)
+ORDER BY `lastname`, `firstname`
+LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
+		break;
+	default:
+		$query = '';
+	}
+
 	$rs = $db->execute( $query );
-	$per_page = 15;
 	$num_total = @$db->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);
 	$entries =  (($num_total > $per_page) ? $per_page : $num_total );
@@ -184,28 +277,24 @@ LIMIT 20';
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="1" CommandCount="1">');
 	xml('<IppList Type="IMPLICIT" Count="'.($entries+1).'">');
-	xml('<Title>'.$user.' - '.$typeToTitle[$type].'</Title>');
+	xml('<Title>'.$user.' - Telefonbuch: '.$typeToTitle[$type].'</Title>');
 	xml('<Url>'.$url.'</Url>');
 	$i=1;
 	xml('<Option ID="'.$i.'" Selected="TRUE" Key="type" Value="none">');
 	xml('<OptionText>Zurück</OptionText>');
 	xml('<Image>'.$img_url.'previous.png</Image>');
 	xml('</Option>');
+	if ($num_total > 6) {
+		$i++;
+		xml('<Option ID="'.$i.'" Selected="FALSE" Key="search" Value="'.$type.'">');
+		xml('<OptionText>Suchen</OptionText>');
+		xml('<Image>'.$img_url.'search.png</Image>');
+		xml('</Option>');
+	}
 	
 	while ($r = $rs->fetchRow()) {
 		$i++;   
-		$entry_name = $r['number'];
-		if ($r['remote_name'] != '') {
-			$entry_name .= ' '. $r['remote_name'];
-		}
-		if (date('dm') == date('dm', (int)$r['ts']))
-			$when = date('H:i', (int)$r['ts']);
-		else
-			$when = date('d.m.', (int)$r['ts']);
-		$entry_name = $when .'  '. $entry_name;
-		if ($r['num_calls'] > 1) {
-			$entry_name .= ' ('. $r['num_calls'] .')';
-		}
+		$entry_name = $r['ln'].', '.$r['fn'].' - '. $r['number'];
 		xml('<Option ID="'.$i.'" Selected="FALSE" Key="dial" Value="'.$r['number'].'">');
 		xml('<OptionText>'.$entry_name.'</OptionText>');
 		xml('<Image></Image>');
