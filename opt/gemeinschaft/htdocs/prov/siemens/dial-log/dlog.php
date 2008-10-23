@@ -164,7 +164,7 @@ if (! $type) {
 		xml('</Option>');
 	}
 	xml('</IppList>');
-	xml('<IppHidden Type="VALUE" Key="user">');;
+	xml('<IppHidden Type="VALUE" Key="user">');
 	xml('<Value>'.$user.'</Value>');
 	xml('</IppHidden>');
 	xml('</IppScreen>');
