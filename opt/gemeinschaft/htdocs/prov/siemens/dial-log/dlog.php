@@ -36,25 +36,24 @@ $xml_buf = '';
 require_once( '../../../../inc/conf.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 
-function xml($string) {
+function xml( $string )
+{
 	global $xml_buf;
-	
 	$xml_buf .= $string."\n";
-
 }
 
-function xml_output() {
+function xml_output()
+{
 	global $xml_buf;
 	header( 'X-Powered-By: Gemeinschaft' );
 	header( 'Content-Type: text/xml' );
 	header( 'Content-Length: '. strLen($xml_buf) );
-	
 	echo $xml_buf;
-
 }
 
-function dial_number($number) {
-	xml('<?xml version="1.0" encoding="UTF-8" ?>');
+function dial_number( $number )
+{
+	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
 	xml('<IppAlert Type="INFO" Delay="3000">');
@@ -67,11 +66,11 @@ function dial_number($number) {
 	xml('</IppAction>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
-
 }
 
-function write_alert($message, $alert_type="ERROR") {
-	xml('<?xml version="1.0" encoding="UTF-8" ?>');
+function write_alert( $message, $alert_type='ERROR' )
+{
+	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
 	xml('<IppAlert Type="'.$alert_type.'" Delay="5000">');
@@ -84,20 +83,25 @@ function write_alert($message, $alert_type="ERROR") {
 }
 
 
-$user = trim( @ $_REQUEST['user'] );
-$phonenumber  = trim( @ $_REQUEST['phonenumber'] );
+$user         = trim(@$_REQUEST['user'       ]);
+$phonenumber  = trim(@$_REQUEST['phonenumber']);
 
-if (!$user) $user = $phonenumber;
+if (! $user) $user = $phonenumber;
+
 $url= GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/dial-log/dlog.php';
-
 $img_url = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/img/';
 
-if (! preg_match('/^\d+$/', $user))
+if (! preg_match('/^\d+$/', $user)) {
 	write_alert( 'Benutzer '.$user.' unbekannt!' );
-$type = trim( @ $_REQUEST['type'] );
-if (! in_array( $type, array('in','out','missed'), true ))
+}
+
+$type = trim(@$_REQUEST['type']);
+if (! in_array( $type, array('in','out','missed'), true )) {
 	$type = false;
-$dial = trim( @ $_REQUEST['dial'] );
+}
+
+$dial = trim(@$_REQUEST['dial']);
+
 
 $db = gs_db_slave_connect();
 
@@ -107,45 +111,52 @@ $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHE
 if ($user_id < 1)
 	write_alert( 'Unknown user.' );
 
+
 $typeToTitle = array(
 	'out'    => "Gew\xC3\xA4hlt",
 	'missed' => "Verpasst",
 	'in'     => "Angenommen"
 );
 
+
+
 #########################################################
-# Static entry screen
+# Dial
 #########################################################
 
 if ($dial) dial_number($dial);
 
-if (!$type) {
-	xml('<?xml version="1.0" encoding="UTF-8" ?>');
+
+#########################################################
+# Static entry screen
+#########################################################
+
+if (! $type) {
+	
+	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="1" CommandCount="1">');
-	xml('<IppList Type="IMPLICIT" Count="'.count($typeToTitle).'">');
+	xml('<IppList Type="IMPLICIT" Count="'. count($typeToTitle) .'">');
 	xml('<Title>'.$user.' - Anruflisten</Title>');
 	xml('<Url>'.$url.'</Url>');
 	$i=0;
 	foreach ($typeToTitle as $t => $title) {
 		$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE `user_id`='. $user_id .' AND `type`=\''. $t .'\'' );
 		$i++;
-		if ($i==1) xml('<Option ID="'.$i.'" Selected="TRUE" Key="type" Value="'.$t.'">');
-			else xml('<Option ID="'.$i.'" Selected="FALSE" Key="type" Value="'.$t.'">');
-		 switch ($t) {
-			case 'out' : 
+		xml('<Option ID="'.$i.'" Selected="'.($i===1 ?'TRUE':'FALSE').'" Key="type" Value="'.$t.'">');
+		switch ($t) {
+			case 'out':
 				$image = $img_url.'keyboard.png';
 				break;
 			case 'missed':
 				$image = $img_url.'karm.png';
 				break;
 			case 'in':
-			$image = $img_url.'yast_sysadmin.png';
-			break;
-		default : 
+				$image = $img_url.'yast_sysadmin.png';
+				break;
+			default:
 				$image="";
 		}
-
 		xml('<OptionText>'.$title.' ('.$num_calls.')'.'</OptionText>');
 		xml('<Image>'.$image.'</Image>');
 		xml('</Option>');
@@ -156,13 +167,16 @@ if (!$type) {
 	xml('</IppHidden>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
+	
+}
 
-} else {
 
 #########################################################
 # User dial logs
 #########################################################
 
+else {
+	
 	$query =
 'SELECT SQL_CALC_FOUND_ROWS
 	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
@@ -174,26 +188,27 @@ WHERE
 GROUP BY `number`
 ORDER BY `ts` DESC
 LIMIT 20';
-	$rs = $db->execute( $query );
+	$rs = $db->execute($query);
 	$per_page = 15;
 	$num_total = @$db->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);
 	$entries =  (($num_total > $per_page) ? $per_page : $num_total );
-
-	xml('<?xml version="1.0" encoding="UTF-8" ?>');
+	
+	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="1" CommandCount="1">');
 	xml('<IppList Type="IMPLICIT" Count="'.($entries+1).'">');
-	xml('<Title>'.$user.' - '.$typeToTitle[$type].'</Title>');
+	xml('<Title>'.$user.' - '. (@$typeToTitle[$type]) .'</Title>');
 	xml('<Url>'.$url.'</Url>');
+	
 	$i=1;
 	xml('<Option ID="'.$i.'" Selected="TRUE" Key="type" Value="none">');
-	xml('<OptionText>Zurück</OptionText>');
+	xml('<OptionText>'."Zur\xC3\xBCck".'</OptionText>');
 	xml('<Image>'.$img_url.'previous.png</Image>');
 	xml('</Option>');
 	
 	while ($r = $rs->fetchRow()) {
-		$i++;   
+		$i++;
 		$entry_name = $r['number'];
 		if ($r['remote_name'] != '') {
 			$entry_name .= ' '. $r['remote_name'];
@@ -218,8 +233,13 @@ LIMIT 20';
 	xml('</IppHidden>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
-
+	
 }
+
+
+#########################################################
+# Output
+#########################################################
 
 xml_output();
 
