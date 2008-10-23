@@ -57,6 +57,7 @@ function dial_number($number) {
 	xml('<?xml version="1.0" encoding="UTF-8" ?>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
+	xml('<IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" /> ');
 	xml('<IppAlert Type="INFO" Delay="3000">');
 	xml('<Title>Anruf</Title>');
 	xml('<Text>Rufe an: '.$number.'</Text>');
@@ -83,41 +84,83 @@ function write_alert($message, $alert_type="ERROR") {
 	xml('</IppDisplay>');
 }
 
+$keyPatterns = array(  # must be valid in MySQL!
+	'0' => "[ -.,_0]",
+	'1' => "[ -.,_1]",
+	'2' => "[abc2\xC3\xA4]",   # a dieresis
+	'3' => "[def3\xC3\xA9]",   # e acute
+	'4' => "[ghi4\xC3\xAF]",   # i dieresis
+	'5' => "[jkl5]",
+	'6' => "[mno6\xC3\xB6]",   # o dieresis
+	'7' => "[pqrs7\xC3\x9F]",  # sharp s
+	'8' => "[tuv8\xC3\xBC]",   # u dieresis
+	'9' => "[wxyz9]",
+);
 
 $user = trim( @ $_REQUEST['user'] );
 $phonenumber  = trim( @ $_REQUEST['phonenumber'] );
 $search =  trim( @ $_REQUEST['search'] );
 $name_search =  trim( @ $_REQUEST['name'] );
+$ip_addr = trim ( @ $_REQUEST['ipaddress'] );
+$keys =  trim ( @ $_REQUEST['keys'] );
+$key = trim ( @ $_REQUEST['key'] );
+
+$keys .= $key;
+
+if ($key == '*') $keys = '';
+
+$type = trim( @$_REQUEST['type'] );
+
+if ($type=='none') {
+	$keys='';
+}
+
+
+
+$tab = trim( @ $_REQUEST['tab'] );
+if ($tab) {
+	$tab =  @preg_replace('/^internal:/', '', $tab);
+	if ($tab == 'XMLPhonebook') $tab='prv';
+	$type = $tab;
+} 
 
 if (!$user) $user = $phonenumber;
-$url= GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/pb/pb.php';
 
+$url= GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/pb/pb.php';
 $img_url = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/img/';
 
-if (! preg_match('/^\d+$/', $user))
+if (! preg_match('/^\d+$/', $user)) {
 	write_alert( 'Benutzer '.$user.' unbekannt!' );
-$type = trim( @$_REQUEST['type'] );
+	xml_output();
+	exit;
+}
+//$type = trim( @$_REQUEST['type'] );
+
 if (! in_array( $type, array('gs','prv','imported'), true )) {
 	$type = false;
 }
+
+
+
 
 $dial = trim( @ $_REQUEST['dial'] );
 
 $db = gs_db_slave_connect();
 
+
+
 # get user_id
 #
-$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
-if ($user_id < 1)
-	write_alert( 'Unknown user.' );
 
-/*
-$typeToTitle = array(
-	'out'    => "Gew\xC3\xA4hlt",
-	'missed' => "Verpasst",
-	'in'     => "Angenommen"
-);
-*/
+$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($ip_addr) .'\'' );
+
+if (!$user_id) $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
+
+if ($user_id < 1) {
+	write_alert( 'Unknown user.' );
+	xml_output();
+	exit;
+}
 
 $tmp = array(
 	15=>array('k' => 'gs' ,
@@ -142,7 +185,7 @@ if ($search) {
 	if (!$name_search) {
 		xml('<?xml version="1.0" encoding="UTF-8" ?>');
 		xml('<IppDisplay>');
-		xml('<IppScreen ID="3" HiddenCount="2" CommandCount="2">');
+		xml('<IppScreen ID="3" HiddenCount="3" CommandCount="2">');
 		xml('<IppForm ItemCount="1">');
 		xml('<Title>Name suchen:</Title>');
 		xml('<Url>'.$url.'</Url>');
@@ -166,6 +209,9 @@ if ($search) {
 		xml('<IppHidden Type="VALUE" Key="search">');;
 		xml('<Value>'.$search.'</Value>');
 		xml('</IppHidden>');
+		xml('<IppHidden Type="VALUE" Key="tab">');;
+		xml('<Value>'.$tab.'</Value>');
+		xml('</IppHidden>');
 		xml('</IppScreen>');
 		xml('</IppDisplay>');
 	} else {
@@ -187,7 +233,8 @@ if ($dial) dial_number($dial);
 if (!$type) {
 	xml('<?xml version="1.0" encoding="UTF-8" ?>');
 	xml('<IppDisplay>');
-	xml('<IppScreen ID="1" HiddenCount="1" CommandCount="1">');
+	xml('<IppScreen ID="1" HiddenCount="2" CommandCount="1">');
+	xml('<IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" /> ');
 	xml('<IppList Type="IMPLICIT" Count="'.count($typeToTitle).'">');
 	xml('<Title>'.$user.' - Telefonbuch</Title>');
 	xml('<Url>'.$url.'</Url>');
@@ -217,6 +264,9 @@ if (!$type) {
 	xml('<IppHidden Type="VALUE" Key="user">');;
 	xml('<Value>'.$user.'</Value>');
 	xml('</IppHidden>');
+	xml('<IppHidden Type="VALUE" Key="tab">');;
+	xml('<Value>'.$tab.'</Value>');
+	xml('</IppHidden>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
 
@@ -235,6 +285,16 @@ if (!$type) {
 		$name_search
 	) .'%';
 
+	if ($keys) {
+		$key_array = str_split($keys);
+		$key_sql = ' AND `lastname` REGEXP \'^';
+		foreach ($key_array as $search_key) {
+			$key_sql .= $keyPatterns[$search_key]; 
+
+		}
+		 $key_sql .= '\'';
+	}
+
 	switch ($type) {
 	
 	case 'gs' :
@@ -247,7 +307,7 @@ FROM
 WHERE
 	`u`.`nobody_index` IS NULL AND (
 	`u`.`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci 
-	)
+	) '.$key_sql.'
 ORDER BY `u`.`lastname`, `u`.`firstname`
 LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		break;
@@ -260,13 +320,28 @@ FROM
 WHERE
 	`user_id`='. $user_id .' AND (
 	`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci 
-	)
+	) '.$key_sql.'
 ORDER BY `lastname`, `firstname`
 LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		break;
-	default:
+	case 'imported':
+		$query =
+'SELECT SQL_CALC_FOUND_ROWS 
+	`u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `number`
+FROM
+	`users` `u` JOIN
+	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
+WHERE
+	`u`.`nobody_index` IS NULL AND (
+	`u`.`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci 
+	)
+ORDER BY `u`.`lastname`, `u`.`firstname`
+LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;		
+		break;
+	default:	
 		$query = '';
 	}
+
 
 	$rs = $db->execute( $query );
 	$num_total = @$db->numFoundRows();
@@ -275,15 +350,18 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 
 	xml('<?xml version="1.0" encoding="UTF-8" ?>');
 	xml('<IppDisplay>');
-	xml('<IppScreen ID="1" HiddenCount="1" CommandCount="1">');
+	xml('<IppScreen ID="1" HiddenCount="3" CommandCount="1">');
+	xml('<IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" /> ');
 	xml('<IppList Type="IMPLICIT" Count="'.($entries+1).'">');
 	xml('<Title>'.$user.' - Telefonbuch: '.$typeToTitle[$type].'</Title>');
 	xml('<Url>'.$url.'</Url>');
 	$i=1;
-	xml('<Option ID="'.$i.'" Selected="TRUE" Key="type" Value="none">');
-	xml('<OptionText>Zurück</OptionText>');
-	xml('<Image>'.$img_url.'previous.png</Image>');
-	xml('</Option>');
+	if (1) {
+		xml('<Option ID="'.$i.'" Selected="TRUE" Key="type" Value="none">');
+		xml('<OptionText>Zurück</OptionText>');
+		xml('<Image>'.$img_url.'previous.png</Image>');
+		xml('</Option>');
+	}
 	if ($num_total > 6) {
 		$i++;
 		xml('<Option ID="'.$i.'" Selected="FALSE" Key="search" Value="'.$type.'">');
@@ -305,9 +383,16 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	xml('<IppHidden Type="VALUE" Key="user">');
 	xml('<Value>'.$user.'</Value>');
 	xml('</IppHidden>');
+	xml('<IppHidden Type="VALUE" Key="tab">');;
+	xml('<Value>'.$tab.'</Value>');
+	xml('</IppHidden>');
+	xml('<IppHidden Type="VALUE" Key="keys">');;
+	xml('<Value>'.$keys.'</Value>');
+	xml('</IppHidden>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
 
+	
 }
 
 xml_output();
