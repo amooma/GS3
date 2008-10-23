@@ -105,11 +105,14 @@ $dial = trim(@$_REQUEST['dial']);
 
 $db = gs_db_slave_connect();
 
+
 # get user_id
 #
+
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1)
 	write_alert( 'Unknown user.' );
+
 
 
 $typeToTitle = array(
