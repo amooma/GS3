@@ -46,9 +46,9 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 	if ($bellcore < 0 || $bellcore > 10)
 		return new GsError( 'Bellcore must be between 1 and 10 or 0 for silent.' );
 	
-	if (! $change_file)
+	if (! $change_file) {
 		$file = null;
-	else {
+	} else {
 		if (! $file) {
 			# to remove a custom ringer
 			$file = null;
