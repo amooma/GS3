@@ -136,7 +136,7 @@ function gs_user_del( $user )
 	# delete BOI permissions
 	#
 	$db->execute( 'DELETE FROM `boi_perms` WHERE `user_id`='. $user_id );
-
+	
 	# delete ringtones
 	#
 	$db->execute( 'DELETE FROM `ringtones` WHERE `user_id`='. $user_id );
