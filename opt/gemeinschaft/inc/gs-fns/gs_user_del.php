@@ -76,7 +76,7 @@ function gs_user_del( $user )
 	
 	# get user's sip name
 	#
-	$ext = $db->executeGetOne( 'SELECT `name` FROMISDN Explained `ast_sipfriends` WHERE `_user_id`='. $user_id );
+	$ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
 	
 	# reboot phone
 	#
