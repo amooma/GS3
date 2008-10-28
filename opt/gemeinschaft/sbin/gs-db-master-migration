@@ -34,105 +34,7 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 
-# local functions, almost identical to gs_db_master_connect()
-# resp. gs_db_slave_connect() in inc/db_connect.php
-
-$db_conn_master = null;
-$db_conn_slave  = null;
-
-function & db_master_connect( $host, $user, $pass )
-{
-	global $db_conn_master, $db_conn_slave;
-	
-	$caller_info = '';
-	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
-		$bt = debug_backtrace();
-		if (is_array($bt) && array_key_exists(0, $bt)) {
-			$caller_info = ' (for '. @$bt[0]['file'] .':'. @$bt[0]['line'] .')';
-			unset($bt);
-		}
-	}
-	
-	if (getType($db_conn_master) === 'object'
-	&&  method_exists($db_conn_master, 'isConnected')
-	&&  $db_conn_master->isConnected())
-	{
-		//gs_log( GS_LOG_DEBUG, 'Using the existing master DB connection'. $caller_info );
-		return $db_conn_master;
-	}
-	gs_log( GS_LOG_DEBUG, 'Opening a new DB connection'. $caller_info );
-	
-	if (!( $db = YADB_newConnection( 'mysql' ) )) {
-		$null = null;
-		return $null;
-	}
-	if (!( $db->connect(
-		$host,
-		$user,
-		$pass,
-		GS_DB_MASTER_DB,
-		array('reuse'=>false)  // do not use. leaves lots of connections
-		)))
-	{
-		$lastNativeError    = @$db->getLastNativeError();
-		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
-		gs_log( GS_LOG_WARNING, 'Could not connect to database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
-		$null = null;
-		return $null;
-	}
-	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
-	
-	$db_conn_master = $db;
-	return $db_conn_master;
-}
-
-
-function & db_slave_connect( $host, $user, $pass )
-{
-	global $db_conn_slave, $db_conn_master;
-	
-	$caller_info = '';
-	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
-		$bt = debug_backtrace();
-		if (is_array($bt) && array_key_exists(0, $bt)) {
-			$caller_info = ' (for '. @$bt[0]['file'] .':'. @$bt[0]['line'] .')';
-			unset($bt);
-		}
-	}
-	
-	if (getType($db_conn_slave) === 'object'
-	&&  method_exists($db_conn_slave, 'isConnected')
-	&&  $db_conn_slave->isConnected())
-	{
-		//gs_log( GS_LOG_DEBUG, 'Using the existing slave DB connection'. $caller_info );
-		return $db_conn_slave;
-	}
-	gs_log( GS_LOG_DEBUG, 'Opening a new slave DB connection'. $caller_info );
-	
-	if (!( $db = YADB_newConnection( 'mysql' ) )) {
-		$null = null;
-		return $null;
-	}
-	if (!( $db->connect(
-		$host,
-		$user,
-		$pass,
-		GS_DB_MASTER_DB,
-		array('reuse'=>false)  // do not use. leaves lots of connections
-		)))
-	{
-		$lastNativeError    = @$db->getLastNativeError();
-		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
-		gs_log( GS_LOG_WARNING, 'Could not connect to slave database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
-		$null = null;
-		return $null;
-	}
-	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
-	
-	$db_conn_slave = $db;
-	return $db_conn_slave;
-}
-
+include_once( GS_DIR .'inc/gs_topology_lib.php' );
 
 
 /***********************************************************
@@ -152,107 +54,22 @@ $opts = @getOptsNoMultiples( '',
 if (! isSet($opts['old-master'])
 ||  ! isSet($opts['new-master'])
 ||  ! isSet($opts['user'])
-||  ! isSet($opts['pass'])
 ) {
 	gs_script_invalid_usage( $usage );
 }
 
+if(!isSet($opts['pass']))
+	$opts['pass'] = "";
 
-# connect
-$old_master = db_master_connect( $opts['old-master'], $opts['user'], $opts['pass'] );
-$new_master = db_slave_connect ( $opts['new-master'], $opts['user'], $opts['pass'] );
+$ret = gs_db_master_migration($opts['old-master'], $opts['new-master'], $opts['user'], $opts['pass']);
 
-$ok = $old_master->execute( 'FLUSH TABLES WITH READ LOCK' );
-if (! $ok)  {
-	echo "Failed to Lock Tables\n";
-	exit(1);
-}
-
-sleep(2);
-
-$res = $old_master->execute( 'SHOW MASTER STATUS' );
-$master_status = $res->fetchRow();
-
-$res = $new_master->execute( 'SHOW SLAVE STATUS' );
-$slave_status = $res->fetchRow();
-
-$do_dump = false;
-
-if (@$slave_status['Master_Log_File'] != @$master_status['File']) {
-	echo "Master bin-log file differs from slave, dumping database\n";
-	$do_dump = true;
-}
-elseif (@$slave_status['Read_Master_Log_Pos'] != @$master_status['Position']) {
-	echo "Master bin-log position differs from slave, dumping database\n";
-	$do_dump = true;
-}
-
-
-if ($do_dump) {
-	echo "Copying database dump currently not implemented.\nPlease do it manually.\n";
-	$old_master->execute( 'UNLOCK TABLES' );
-	exit(1);
-}
-else {
-	echo "The new master's database is up to date. No need for a database dump.\n";
-}
-
-echo "Stopping Slave on new Master\n";
-$ok = $new_master->execute( 'STOP SLAVE' );
-if (! $ok) {
-	echo "  Failed to stop slave on new master\n";
-}
-
-echo "Resetting Slave on new Master\n";
-$ok = $new_master->execute( 'RESET SLAVE' );
-if (! $ok) {
-	echo "  Failed to reset slave on new master\n";
-}
-
-echo "Resetting Master on new Master\n";
-$ok = $new_master->execute( 'RESET MASTER' );
-if (! $ok) {
-	echo "  Failed to reset the new master\n";
-}
-
-echo "Adding permissions on new Master\n";
-$new_master->execute(
-	'GRANT REPLICATION SLAVE '.
-	'ON *.* '.
-	'TO \''. $new_master->escape($opts['user']) .'\'@\'%\' '.
-	'IDENTIFIED BY \''. $new_master->escape($opts['pass']) .'\''
-	);
-
-echo "Setting the old Master to run as a Slave\n";
-$ok = $old_master->execute( 'STOP SLAVE' );
-$ok = $old_master->execute( 'RESET SLAVE' );
-$ok = $old_master->execute( 'RESET MASTER' );
-
-
-$ok = $old_master->execute(
-	'CHANGE MASTER TO '.
-		'MASTER_HOST=\''    . $old_master->escape($opts['new-master']) .'\', '.
-		'MASTER_USER=\''    . $old_master->escape($opts['user'      ]) .'\', '.
-		'MASTER_PASSWORD=\''. $old_master->escape($opts['pass'      ]) .'\''
-	);
-if (! $ok) {
-	echo "Failed to change old Master to a Slave!\n";
-	exit(1);
-}
-echo "Starting Slave on old Master\n";
-$ok = $old_master->execute( 'START SLAVE' );
-if (! $ok) {
-	echo "Failed to start Slave on old Master!\n";
-	exit(1);
-}
-echo "Unlock Tables on old Master\n";
-$ok = $old_master->execute( 'UNLOCK TABLES' );
+if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 
 
 echo "\n";
-echo "Done.\n";
+echo "Database Master Moved.\n";
 echo "Don't forget to adjust DB_MASTER_HOST in /etc/gemeinschaft.php\n";
-echo "if required (in case it's not a \"virtual\" IP address anyway).\n"
+echo "if required (in case it's not a \"virtual\" IP address anyway).\n";
 echo "\n";
 
 ?>
