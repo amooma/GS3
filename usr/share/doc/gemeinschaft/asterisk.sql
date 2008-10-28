@@ -5490,10 +5490,10 @@ INSERT INTO `ast_sipfriends` VALUES (11,'950007','5827043803','friend','dynamic'
 INSERT INTO `ast_sipfriends` VALUES (12,'950008','7012962864','friend','dynamic',NULL,'from-internal-nobody','Namenlos-12 <950008>','','1','1','__user_id=12;__user_name=950008',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
 INSERT INTO `ast_sipfriends` VALUES (13,'950009','7583683190','friend','dynamic',NULL,'from-internal-nobody','Namenlos-13 <950009>','','1','1','__user_id=13;__user_name=950009',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
 INSERT INTO `ast_sipfriends` VALUES (14,'950010','6879527634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-14 <950010>','','1','1','__user_id=14;__user_name=950010',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (22,'2000','5826899294','friend','dynamic',NULL,'from-internal-users','Bart Simpson <2000>','2000','1','1','__user_id=22;__user_name=2000',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (23,'2001','4813474487','friend','dynamic',NULL,'from-internal-users','Homer Simpson <2001>','2001','1','1','__user_id=23;__user_name=2001',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (24,'2002','6907087521','friend','dynamic',NULL,'from-internal-users','Marge Simpson <2002>','2002','1','1','__user_id=24;__user_name=2002',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (25,'2003','9293349941','friend','dynamic',NULL,'from-internal-users','Lisa Simpson <2003>','2003','1','1','__user_id=25;__user_name=2003',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
+INSERT INTO `ast_sipfriends` VALUES (22,'2000','5826899294','friend','dynamic',NULL,'from-internal-users','Bart Muster <2000>','2000','1','1','__user_id=22;__user_name=2000',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
+INSERT INTO `ast_sipfriends` VALUES (23,'2001','4813474487','friend','dynamic',NULL,'from-internal-users','Homer Muster <2001>','2001','1','1','__user_id=23;__user_name=2001',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
+INSERT INTO `ast_sipfriends` VALUES (24,'2002','6907087521','friend','dynamic',NULL,'from-internal-users','Marge Muster <2002>','2002','1','1','__user_id=24;__user_name=2002',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
+INSERT INTO `ast_sipfriends` VALUES (25,'2003','9293349941','friend','dynamic',NULL,'from-internal-users','Lisa Muster <2003>','2003','1','1','__user_id=25;__user_name=2003',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
 INSERT INTO `ast_sipfriends` VALUES (28,'950011','7364863263482634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-28 <950011>','','1','1','__user_id=28;__user_name=950011',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
 INSERT INTO `ast_sipfriends` VALUES (29,'950012','7364863263482634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-29 <950012>','','1','1','__user_id=29;__user_name=950012',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
 INSERT INTO `ast_sipfriends` VALUES (30,'950013','3707760381117896','friend','dynamic',NULL,'from-internal-nobody','Namenlos-13 <950013>','','1','1','__user_id=30;__user_name=950013',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
@@ -5561,10 +5561,10 @@ CREATE TABLE `ast_voicemail` (
 
 LOCK TABLES `ast_voicemail` WRITE;
 /*!40000 ALTER TABLE `ast_voicemail` DISABLE KEYS */;
-INSERT INTO `ast_voicemail` VALUES (9,22,'2000','default','123','','Bart Simpson','germany','no','no');
-INSERT INTO `ast_voicemail` VALUES (10,23,'2001','default','123','','Homer Simpson','germany','no','no');
-INSERT INTO `ast_voicemail` VALUES (11,24,'2002','default','123','','Marge Simpson','germany','no','no');
-INSERT INTO `ast_voicemail` VALUES (12,25,'2003','default','123','','Lisa Simpson','germany','no','no');
+INSERT INTO `ast_voicemail` VALUES (9,22,'2000','default','123','','Bart Muster','germany','no','no');
+INSERT INTO `ast_voicemail` VALUES (10,23,'2001','default','123','','Homer Muster','germany','no','no');
+INSERT INTO `ast_voicemail` VALUES (11,24,'2002','default','123','','Marge Muster','germany','no','no');
+INSERT INTO `ast_voicemail` VALUES (12,25,'2003','default','123','','Lisa Muster','germany','no','no');
 /*!40000 ALTER TABLE `ast_voicemail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6559,10 +6559,10 @@ INSERT INTO `users` VALUES (11,'nobody-00007','','','','','',7,1,NULL,'',NULL,NU
 INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'',NULL,NULL,NULL);
 INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,'192.168.1.202','',NULL,NULL,NULL);
 INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,'192.168.1.201','',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (22,'47110001','123','Bart','Simpson','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (23,'47110002','123','Homer','Simpson','','',NULL,1,'192.168.1.247','',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (24,'47110003','123','Marge','Simpson','','',NULL,1,'192.168.1.249','',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (25,'47110004','123','Lisa','Simpson','','',NULL,1,'192.168.1.247','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (22,'47110001','123','Bart','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (23,'47110002','123','Homer','Muster','','',NULL,1,'192.168.1.247','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (24,'47110003','123','Marge','Muster','','',NULL,1,'192.168.1.249','',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (25,'47110004','123','Lisa','Muster','','',NULL,1,'192.168.1.247','',NULL,NULL,NULL);
 INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'',NULL,NULL,NULL);
 INSERT INTO `users` VALUES (29,'nobody-00012','','','','','',12,1,'192.168.1.201','',NULL,NULL,NULL);
 INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,'192.168.1.109','',NULL,NULL,NULL);
