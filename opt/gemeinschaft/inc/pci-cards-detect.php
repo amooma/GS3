@@ -67,38 +67,38 @@ function gs_pci_cards_detect()
 		preg_match_all('/"([^"]*)"/', $line, $m, PREG_PATTERN_ORDER);
 		if (count($m[1]) < 5) continue;
 		
-		$c = array();
+		$c = array(
+			'class'       => null,
+			'vendorid'    => null,
+			'devid'       => null,
+			'subvendorid' => null,
+			'subdevid'    => null,
+			'revision'    => null
+		);
 		
-		$c['class'] = strToLower($m[1][0]);
 		$m2 = array();
-		if (preg_match('/\b([0-9a-z]{4})\b/S', $class, $m2))
-			$c['class'] = $m2[1];
+		if (preg_match('/\b([0-9a-z]{4})\b/S', $m[1][0], $m2))
+			$c['class'      ] = $m2[1];
 		
-		$c['vendorid'] = strToLower($m[1][1]);
 		$m2 = array();
-		if (preg_match('/\b([0-9a-z]{4})\b/S', $vendorid, $m2))
-			$c['vendorid'] = $m2[1];
+		if (preg_match('/\b([0-9a-z]{4})\b/S', $m[1][1], $m2))
+			$c['vendorid'   ] = $m2[1];
 		
-		$c['devid'] = strToLower($m[1][2]);
 		$m2 = array();
-		if (preg_match('/\b([0-9a-z]{4})\b/S', $devid, $m2))
-			$c['devid'] = $m2[1];
+		if (preg_match('/\b([0-9a-z]{4})\b/S', $m[1][2], $m2))
+			$c['devid'      ] = $m2[1];
 		
-		$c['subvendorid'] = strToLower($m[1][3]);
 		$m2 = array();
-		if (preg_match('/\b([0-9a-z]{4})\b/S', $subvendorid, $m2))
+		if (preg_match('/\b([0-9a-z]{4})\b/S', $m[1][3], $m2))
 			$c['subvendorid'] = $m2[1];
 		
-		$c['subdevid'] = strToLower($m[1][4]);
 		$m2 = array();
-		if (preg_match('/\b([0-9a-z]{4})\b/S', $subdevid, $m2))
-			$c['subdevid'] = $m2[1];
+		if (preg_match('/\b([0-9a-z]{4})\b/S', $m[1][4], $m2))
+			$c['subdevid'   ] = $m2[1];
 		
-		$c['revision'] = '';
 		$m2 = array();
 		if (preg_match('/\s+-r([0-9a-z]{2})\b/S', $line, $m2))
-			$c['revision'] = $m2[1];
-		
+			$c['revision'   ] = $m2[1];
 		
 		$c['vendor'] = '';
 		$c['descr' ] = '';
