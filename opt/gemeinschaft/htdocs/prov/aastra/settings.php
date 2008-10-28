@@ -261,6 +261,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 		? subStr($user['name'], strLen($hp_route_prefix)) : $user['name'];
 	gs_log( GS_LOG_DEBUG, "Mapping ext. ". $user['name'] ." to $user_ext for provisioning - route_prefix: $hp_route_prefix, host id: ". $user['host_id'] );
 } else {
+	$hp_route_prefix = '';
 	$user_ext = $user['name'];
 }
 
