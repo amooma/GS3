@@ -110,7 +110,7 @@ if (! defined('STDERR')) define('STDERR', @fOpen('php://stderr', 'wb'));
 
 
 # our root directory
-
+#
 define( 'GS_DIR', realPath(dirName(__FILE__).'/../').'/' );  # DO NOT CHANGE!
 
 
