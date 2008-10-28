@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<section id="installation-trunk-single-debian" revision="$Revision$">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Installation des SVN-Trunks als Einzel-Server-System</title>
+
+  <para>Hier beschreiben wir wie man die aktuelle Entwicklerversion (den
+  <quote><foreignphrase lang="en">trunk</foreignphrase></quote> aus dem SVN)
+  von Gemeinschaft als Einzel-Server-System installiert, d.h. MySQL, Asterisk,
+  Apache und Gemeinschaft laufen auf einem einzigen Rechner.</para>
+
+  <note>
+    <para>Natürlich lassen sich die einzelnen Teile auch auf mehrere Rechner
+    aufteilen.</para>
+  </note>
+
+  <para>Als Beispiel-System nehmen wir ein <ulink
+  url="http://www.debian.org/">Debian</ulink> 4 (<quote><foreignphrase
+  lang="en">Etch</foreignphrase></quote>) oder 5 (<quote><foreignphrase
+  lang="en">Lenny</foreignphrase></quote>) in Minimal-Installation, also ohne
+  die <quote><foreignphrase
+  lang="en">Desktop</foreignphrase></quote>-Paketauswahl.</para>
+
+  <note>
+    <para>Gemeinschaft läßt sich auch auf anderen Systemen (RedHat, CentOS,
+    ...) installieren, aber es ist fast unmöglich für alle Versionen von
+    Gemeinschaft für alle Systeme stets aktuelle Installationsanleitungen
+    bereitzustellen, daher muß man sich für ein System entscheiden.</para>
+  </note>
+
+  <section id="installation-trunk-single-debian-dependencies">
+    <title>Abhängigkeiten installieren</title>
+
+    <para>Zuerst muß natürlich die Software installiert werden die zum Betrieb
+    von Gemeinschaft vorausgesetzt wird bzw. auch eine <foreignphrase
+    lang="en">Build</foreignphrase>-Umgebung damit man z.B. Asterisk
+    kompilieren kann.</para>
+
+    <para>Wie diese Software installiert wird hat genaugenommen nichts mit der
+    Installation von Gemeinschaft zu tun. Wir wollen es hier aber trotzdem
+    kurz beschreiben. (Für ausführliche Anleitungen kann man andere, externe
+    Quellen zu Rate ziehen.)</para>
+
+    <para>Die Installationsschritte werden als Benutzer
+    <literal>root</literal> durchgeführt.</para>
+
+    <note>
+      <para>Gerade wenn man ein Kernel-Modul wie Zaptel einsetzt, das ja gegen
+      die Kernel-Header kompiliert wird, sollte man darauf achten, daß man
+      sich in seiner <filename>/etc/apt/sources.list</filename>
+      <emphasis>explizit</emphasis> für eine stabile Version entscheidet (z.B.
+      <literal>etch</literal> oder <literal>lenny</literal>) und nicht einfach
+      <literal>stable</literal> da stehen hat.</para>
+
+      <para>Beispiel Etch:<screen>deb     http://ftp.de.debian.org/debian/ etch main
+deb-src http://ftp.de.debian.org/debian/ etch main
+
+deb     http://security.debian.org/ etch/updates main contrib
+deb-src http://security.debian.org/ etch/updates main contrib</screen></para>
+
+      <para>Beispiel Lenny:<screen>deb     http://ftp.de.debian.org/debian/ lenny main
+deb-src http://ftp.de.debian.org/debian/ lenny main
+
+deb     http://security.debian.org/ lenny/updates main
+deb-src http://security.debian.org/ lenny/updates main</screen></para>
+
+      <para>Sonst könnte man irgendwann versehentlich mal den Kernel upgraden
+      - Zaptel wäre dann gegen die falschen Kernel-Header verlinkt und müßte
+      (nach Installation der neuen Header) erneut kompiliert werden.</para>
+    </note>
+
+    <bridgehead>Upgrade</bridgehead>
+
+    <para>Es versteht sich eigentlich fast von selbst daß man auf einer
+    frischen Installation erst mal alle Pakete aktualisiert:<screen>gemeinschaft:~# <command>aptitude update</command></screen><screen>gemeinschaft:~# <command>aptitude upgrade</command></screen></para>
+
+    <para>Falls von dem Upgrade auch der Kernel betroffen ist muß das System
+    vor dem Ausführen weiterer Schritte neugestartet werden:<screen>gemeinschaft:~# <command>reboot</command></screen></para>
+
+    <bridgehead>Standard-Pakete</bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install coreutils lsb-base grep findutils sudo wget curl cron expect logrotate hostname net-tools ifupdown iputils-ping netcat openssh-client openssh-server</command></screen>
+
+    <bridgehead>Weitere Pakete</bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install psmisc dnsutils iputils-arping pciutils bzip2</command></screen>
+
+    <bridgehead>VIM</bridgehead>
+
+    <para>Wer zum Arbeiten gerne einen kompletten vim benutzt kann ihn so
+    installieren:<screen>gemeinschaft:~# <command>aptitude install vim</command></screen></para>
+
+    <bridgehead>Locale</bridgehead>
+
+    <para>Für einige Funktionen im Web-Interface von Gemeinschaft ist es
+    schöner die der Sprache entsprechende Locale installiert zu haben. Dieser
+    Schritt ist aber optional.<screen>gemeinschaft:~# <command>aptitude install locales</command>
+gemeinschaft:~# <command>dpkg-reconfigure locales</command></screen>Im Dialog
+    <quote>Locales to be generated</quote> von
+    <literal>dpkg-reconfigure</literal> die gewünschten Locales auswählen
+    (momentan sind nur <literal>de_<replaceable>*</replaceable></literal> und
+    <literal>en_<replaceable>*</replaceable></literal> sinnvoll), also z.B.
+    <literal>de_DE.UTF-8</literal> und/oder
+    <literal>en_US.UTF-8</literal>:<screen>  &#9484;-----------&#9508; Configuring locales &#9500;-----------&#9488;
+  &#9474; Locales to be generated:                    &#9474;
+  &#9474;                                             &#9474;
+  &#9474;    [ ] de_CH.UTF-8 UTF-8                    &#9474;
+  &#9474;    [ ] de_DE@euro ISO-8859-15               &#9474;
+  &#9474;    [ ] de_DE ISO-8859-1                     &#9474;
+  &#9474;    [*] de_DE.UTF-8 UTF-8                    &#9474;
+  &#9474;                                             &#9474;
+  &#9474;          &lt;Ok&gt;              &lt;Cancel&gt;         &#9474;
+  &#9474;                                             &#9474;
+  &#9492;---------------------------------------------&#9496;</screen>Was man
+    im Dialog <quote>Default locale for the system environment</quote>
+    auswählt spielt für Gemeinschaft keine Rolle. Damit legt man die
+    Default-Sprache des Betriebssystems fest. Es ist kein Problem einfach
+    <quote><foreignphrase
+    lang="en"><literal>None</literal></foreignphrase></quote> (was quasi
+    gleichbedeutend ist mit Englisch) auszuwählen:<screen>  &#9484;-----------&#9508; Configuring locales &#9500;-----------&#9488;
+  &#9474; Default locale for the system environment:  &#9474;
+  &#9474;                                             &#9474;
+  &#9474;                 <emphasis role="bold">None</emphasis>                        &#9474;
+  &#9474;                 de_DE.UTF-8                 &#9474;
+  &#9474;                 en_US.UTF-8                 &#9474;
+  &#9474;                                             &#9474;
+  &#9474;          &lt;Ok&gt;              &lt;Cancel&gt;         &#9474;
+  &#9474;                                             &#9474;
+  &#9492;---------------------------------------------&#9496;</screen><screen>Generating locales (this might take a while)...
+  de_DE.UTF-8... done
+  en_US.UTF-8... done
+Generation complete.</screen>(Es sei nur am Rande erwähnt daß man alternativ
+    zu <literal><command>dpkg-reconfigure locales</command></literal> die
+    Datei <filename>/etc/locale.gen</filename> direkt editieren und danach
+    <literal><command>locale-gen</command></literal> ausführen könnte.)</para>
+
+    <bridgehead>Caching Nameserver<indexterm>
+        <primary>bind</primary>
+      </indexterm><indexterm>
+        <primary>named</primary>
+      </indexterm><indexterm>
+        <primary>caching-nameserver</primary>
+      </indexterm><indexterm>
+        <primary>nameserver</primary>
+      </indexterm><indexterm>
+        <primary><filename>resolv.conf</filename></primary>
+      </indexterm></bridgehead>
+
+    <para>Selbst wenn Asterisk offenbar keine DNS-Lookups machen müßte, da man
+    überall IP-Adressen verwendet hat, so wird es mit einem langsamen
+    DNS-Server doch fast unbenutzbar langsam. Um das Problem zu umgehen,
+    sollte man unbedingt einen lokalen <foreignphrase lang="en">Caching
+    Nameserver</foreignphrase> installieren. Auf einem VoIP-System ist ein
+    <foreignphrase lang="en">Caching Nameserver</foreignphrase> eigentlich ein
+    Muß!<screen>gemeinschaft:~# <command>aptitude install bind9</command></screen></para>
+
+    <para>Den lokalen Nameserver in der <filename>/etc/resolv.conf</filename>
+    vor den vorhandenen Eintrag schreiben (neuer Eintrag hier fett):<screen><emphasis
+          role="bold">nameserver 127.0.0.1</emphasis>
+nameserver 192.168.2.1</screen></para>
+
+    <para>In der <filename>/etc/bind/named.conf.local</filename> muß man jetzt
+    noch die Zeile<literallayout>include "/etc/bind/zones.rfc1918";</literallayout>hinzufügen
+    (auf einem Debian steht die Zeile schon drin, man muß nur die
+    Kommentarzeichen davor entfernen), danach:</para>
+
+    <screen>gemeinschaft:~# <command>/etc/init.d/bind9 restart</command></screen>
+
+    <para>Testen:<screen>gemeinschaft:~# <command>nslookup www.amooma.de</command>
+Server:     127.0.0.1
+Address:    127.0.0.1#53
+
+Non-authoritative answer:
+Name:    www.amooma.de
+Address: 212.227.96.103</screen>Hier sollte jetzt (spätestens beim 2. Aufruf)
+    als Adresse des DNS-Servers <literal>127.0.0.1</literal> stehen.</para>
+
+    <bridgehead>NTP</bridgehead>
+
+    <para>Es ist extrem wichtig, daß das System die korrekte Uhrzeit hat! An
+    <literal>ntp</literal> führt eigentlich kein Weg vorbei:</para>
+
+    <variablelist termlength="10">
+      <varlistentry>
+        <term>Etch:</term>
+
+        <listitem>
+          <screen>gemeinschaft:~# <command>aptitude install ntp ntp-simple ntpdate</command></screen>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Lenny:</term>
+
+        <listitem>
+          <screen>gemeinschaft:~# <command>aptitude install ntp ntpdate</command></screen>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <screen>gemeinschaft:~# <command>/etc/init.d/ntp stop</command>
+Stopping NTP server: ntpd.</screen>
+
+    <note>
+      <para>Falls man in seinem internen Firmennetz eigene NTP-Server betreibt
+      sollte man die jetzt zur <filename>/etc/ntp.conf</filename>
+      hinzufügen.</para>
+    </note>
+
+    <para>Initial die Zeit setzen:<screen>gemeinschaft:~# <command>ntpdate 0.debian.pool.ntp.org</command>
+26 Oct 20:37:41 ntpdate[5122]: adjust time server 195.238.144.37 offset 0.154922 sec</screen></para>
+
+    <para>NTP starten:<screen>gemeinschaft:~# <command>/etc/init.d/ntp start</command>
+Starting NTP server: ntpd.</screen></para>
+
+    <note>
+      <para>Von welchen NTP-Server gerade die Zeit bezogen wird läßt sich
+      jederzeit überprüfen:<screen>gemeinschaft:~# <command>ntpq -p</command>
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
++195.238.144.37  217.91.44.17     2 u   39   64  377   20.861  113.205  73.724
+-84-16-235-166.i 88.198.34.47     3 u   42   64  377   50.396   17.538 112.912
++crux.pmsf.net   131.188.3.221    2 u   10   64  377   52.257   56.817  86.465
+*zit-net2.uni-pa .DCF.            1 u   43   64  377   64.569  136.264  72.789</screen></para>
+    </note>
+
+    <bridgehead>Build-Umgebung<footnote>
+        <para>zum Kompilieren von Asterisk</para>
+      </footnote></bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install gcc g++ binutils libtool make</command></screen>
+
+    <bridgehead>Perl</bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install perl perl-modules libnet-daemon-perl libnet-netmask-perl libio-interface-perl libio-socket-multicast-perl</command></screen>
+
+    <bridgehead>SipSak<footnote>
+        <para>wird momentan nur vom Cluster-Watchdog benötigt, nicht auf einem
+        Einzel-Server</para>
+      </footnote></bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install sipsak</command></screen>
+
+    <bridgehead>MySQL-Client</bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install mysql-client</command></screen>
+
+    <bridgehead>MySQL-Client-Entwicklungspaket<footnote>
+        <para>zum Kompilieren des MySQL-Add-Ons von Asterisk</para>
+      </footnote></bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install libmysqlclient-dev</command></screen>
+
+    <bridgehead>MySQL-Server</bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install mysql-server</command></screen>
+
+    <note>
+      <para>Für ein Mehr-Server-System müßte an dieser Stelle ggf. ein
+      MySQL-Cluster oder Replikation (<xref linkend="mysql-replikation" />)
+      eingerichtet werden.</para>
+    </note>
+
+    <bridgehead>Apache</bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install apache2</command></screen>
+
+    <bridgehead>PHP</bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install php5-cli libapache2-mod-php5 php5-mysql php5-ldap</command></screen>
+
+    <bridgehead>Sox</bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install sox</command></screen>
+
+    <bridgehead>Mpg123</bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install mpg123</command></screen>
+
+    <bridgehead>Lame<footnote>
+        <para>Wegen seiner Fähigkeit MPEG 1 Layer 3 (<quote>MP3</quote>) zu
+        kodieren ist LAME aus patentrechtlichen Gründen und aufgrund der
+        Debian-Richtlinien auf Debian nicht direkt als Paket verfügbar.</para>
+      </footnote></bridgehead>
+
+    <screen>gemeinschaft:~# <command>cd /usr/src/</command>
+gemeinschaft:/usr/src# <command>wget 'http://dfn.dl.sourceforge.net/sourceforge/lame/lame-398-2.tar.gz'</command>
+<replaceable>[...]</replaceable>
+gemeinschaft:/usr/src# <command>tar -xzf lame-398-2.tar.gz</command> 
+gemeinschaft:/usr/src# <command>cd lame-398-2</command>
+gemeinschaft:/usr/src/lame-398-2# <command>./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install</command>
+gemeinschaft:/usr/src/lame-398-2# <command>cd</command>
+gemeinschaft:~# </screen>
+
+    <bridgehead>Zaptel und Asterisk</bridgehead>
+
+    <para>Die Kernel-Header werden installiert, da sie für die Übersetzung von
+    Zaptel (<literal>ztdummy</literal> für die
+    <code>MeetMe()</code>-Konferenzen) benötigt werden:<screen>gemeinschaft:~# <command>aptitude install linux-headers-`uname -r` linux-kernel-headers</command></screen></para>
+
+    <para>Weitere benötigte Entwicklungs-Pakte etc.:<screen>gemeinschaft:~# <command>aptitude install bison byacc flex libnewt0.52 libnewt-dev ncurses-base ncurses-bin ncurses-dev ncurses-term libncurses4 libncurses5 libncurses-dev openssl zlib1g zlib1g-dev</command></screen></para>
+
+    <bridgehead>Zaptel</bridgehead>
+
+    <screen>gemeinschaft:~# <command>cd /usr/src/</command>
+gemeinschaft:/usr/src# <command>wget 'http://downloads.digium.com/pub/zaptel/releases/zaptel-1.4.12.1.tar.gz'</command>
+<replaceable>[...]</replaceable>
+gemeinschaft:/usr/src# <command>tar -xzf zaptel-1.4.12.1.tar.gz</command> 
+gemeinschaft:/usr/src# <command>cd zaptel-1.4.12.1</command>
+gemeinschaft:/usr/src/zaptel-1.4.12.1# <command>./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config</command>
+<replaceable>[...]</replaceable>
+gemeinschaft:/usr/src/zaptel-1.4.12.1# rm -rf firmware/zaptel-fw-*
+gemeinschaft:/usr/src/zaptel-1.4.12.1# cd
+gemeinschaft:~# </screen>
+
+    <para>Ggf. paßt man jetzt die <filename>/etc/default/zaptel</filename> an,
+    so daß nur die Treiber geladen werden die man benötigt. Ohne ISDN-Karten
+    kann man dann einfach<screen>gemeinschaft:~# <command>modprobe ztdummy</command></screen>ausführen.
+    Theoretisch könnten wir direkt fortfahren, aber nach der Installation von
+    Kernel-Modulen ist es sicherer das System neuzustarten um zu prüfen daß
+    die Module automatisch korrekt geladen werden.<screen>gemeinschaft:~# <command>reboot &amp;&amp; exit</command></screen><screen>gemeinschaft:~# <command>dmesg | grep -iE 'zap|zt'</command>
+[   20.891315] Zapata Telephony Interface Registered on major 196
+[   20.891356] Zaptel Version: 1.4.12.1
+[   20.891368] Zaptel Echo Canceller: MG2
+[   21.956022] ztdummy: Trying to load High Resolution Timer
+[   21.956022] ztdummy: Initialized High Resolution Timer
+[   21.956022] ztdummy: Starting High Resolution Timer
+[   21.956022] ztdummy: High Resolution Timer started, good to go</screen></para>
+
+    <bridgehead>Asterisk</bridgehead>
+
+    <para>Falls es sich um ein Upgrade handelt, müssen die Asterisk-Module
+    gelöscht werden:<screen>gemeinschaft:~# <command>rm -rf /usr/lib/asterisk/modules/*</command></screen></para>
+
+    <para>Asterisk installieren:<screen>gemeinschaft:~# <command>cd /usr/src/</command>
+gemeinschaft:/usr/src# <command>wget 'http://downloads.digium.com/pub/asterisk/releases/asterisk-1.4.21.2.tar.gz'</command>
+<replaceable>[...]</replaceable>
+gemeinschaft:/usr/src# <command>tar -xzf asterisk-1.4.21.2.tar.gz</command> 
+gemeinschaft:/usr/src# <command>cd asterisk-1.4.21.2</command>
+gemeinschaft:/usr/src/asterisk-1.4.21.2# <command>./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config</command>
+<replaceable>[...]</replaceable>
+gemeinschaft:/usr/src/asterisk-1.4.21.2# <command>make samples</command>
+gemeinschaft:/usr/src/asterisk-1.4.21.2# <command>cd</command>
+gemeinschaft:~# </screen></para>
+
+    <para>Asterisk installiert (mit <literal>make config</literal>) die
+    Start-/Stop-Skripte auf Debian für falsche Runlevel, so daß Asterisk beim
+    Runterfahren des Systems nicht sauber gestoppt wird. Das sollte man
+    beheben:<screen>gemeinschaft:~# <command>update-rc.d -f asterisk remove</command>
+<replaceable>[...]</replaceable>
+gemeinschaft:~# <command>update-rc.d asterisk defaults 50 15</command>
+<replaceable>[...]</replaceable></screen></para>
+
+    <para>Verzeichnis für Call-Files anlegen und freigeben (damit z.B. vom
+    Web-Server geschrieben werden kann):<screen>gemeinschaft:~# <command>mkdir -p /var/spool/asterisk/outgoing</command>
+gemeinschaft:~# <command>chmod a+rwx /var/spool/asterisk/outgoing/</command>
+gemeinschaft:~# <command>chmod a+rwx /var/spool/asterisk/tmp/</command></screen></para>
+
+    <para>Asterisk-Addons installieren:<screen>gemeinschaft:~# <command>cd /usr/src/</command>
+gemeinschaft:/usr/src# <command>wget 'http://downloads.digium.com/pub/asterisk/releases/asterisk-addons-1.4.7.tar.gz'</command>
+gemeinschaft:/usr/src# <command>tar -xzf asterisk-addons-1.4.7.tar.gz</command> 
+gemeinschaft:/usr/src# <command>cd asterisk-addons-1.4.7</command>
+gemeinschaft:/usr/src/asterisk-addons-1.4.7# <command>./configure</command> </screen>Jetzt
+    können wir in <literal>menuselect</literal> die Module rauswerfen die wir
+    nicht benötigen (<literal>chan_ooh323</literal>,
+    <literal>format_mp3</literal>). Wir brauchen lediglich
+    <literal>app_addon_sql_mysql</literal>,
+    <literal>cdr_addon_mysql</literal>,
+    <literal>res_config_mysql</literal>:<screen>gemeinschaft:/usr/src/asterisk-addons-1.4.7# <command>make menuselect</command>
+<replaceable>[interaktiver Dialog]</replaceable>
+menuselect changes saved!
+gemeinschaft:/usr/src/asterisk-addons-1.4.7# <command>make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make samples</command>
+<replaceable>[...]</replaceable>
+gemeinschaft:/usr/src/asterisk-addons-1.4.7# <command>cd</command>
+gemeinschaft:~# </screen></para>
+
+    <para>Dabei muß die Datei
+    <filename>/usr/lib/asterisk/modules/res_config_mysql.so</filename> erzeugt
+    worden sein:<screen>gemeinschaft:~# <command>ls /usr/lib/asterisk/modules/res_config_mysql.so</command> 
+/usr/lib/asterisk/modules/res_config_mysql.so</screen></para>
+
+    <bridgehead>Source-Code entfernen</bridgehead>
+
+    <para>Dieser Schritt ist keineswegs notwendig, schafft aber locker 150 MB
+    Platz.<screen>gemeinschaft:~# <command>cd /usr/src/</command>
+gemeinschaft:/usr/src# <command>rm -rf asterisk-1.4.21.2*</command>
+gemeinschaft:/usr/src# <command>rm -rf asterisk-addons-1.4.7*</command>
+gemeinschaft:/usr/src# <command>rm -rf lame-398-2*</command>
+gemeinschaft:/usr/src# <command>rm -rf zaptel-1.4.12.1*</command></screen><important>
+        <para>Kommen Sie bitte nicht auf die Idee einfach <literal><command>rm
+        -rf /usr/src/*</command></literal> auszuführen! In dem Verzeichnis
+        befinden sich nämlich auch z.B. die Kernel-Header-Dateien, und die
+        müssen da bleiben!</para>
+      </important></para>
+  </section>
+
+  <section id="installation-trunk-single-debian-gemeinschaft">
+    <title>Installation von Gemeinschaft</title>
+
+    <para>Jetzt kommen wir zur eigentlichen Installation von Gemeinschaft
+    selbst. Um die aktuelle Entwickler-Version von Gemeinschaft aus dem SVN
+    auszuchecken benötigt man natürlich einen SVN-Client:<screen>gemeinschaft:~# <command>aptitude install subversion</command></screen></para>
+
+    <important>
+      <para>Im folgenden werden wir mit <literal><command>ln
+      -s</command></literal> eine Reihe von sogenannten symbolischen Links
+      (Symlinks) anlegen. Dabei ist es bei Verzeichnisse von entscheidender
+      Bedeutung daß man sich nicht von der Auto-Vervollständigung der Shell
+      fehlleiten läßt sondern die Verzeichnisnamen exakt wie hier beschrieben
+      <emphasis>ohne</emphasis> abschließenden
+      <quote><literal>/</literal></quote> (Slash) eingibt!</para>
+    </important>
+
+    <bridgehead>Deutsche Sprachbausteine für Asterisk</bridgehead>
+
+    <para><screen>gemeinschaft:~# <command>cd /usr/src/</command>
+gemeinschaft:/usr/src# <command>svn checkout 'https://svn.amooma.com/asterisk-sounds-de/trunk' asterisk-sounds-de-trunk</command>
+<replaceable>[...]</replaceable>
+gemeinschaft:/usr/src# <command>cd /var/lib/asterisk/sounds/</command>
+gemeinschaft:/var/lib/asterisk/sounds# <command>ln -s /usr/src/asterisk-sounds-de-trunk de</command>
+gemeinschaft:/var/lib/asterisk/sounds# <command>ls -ld de</command>
+lrwxrwxrwx 1 root root 33 2008-10-27 19:17 de -&gt; /usr/src/asterisk-sounds-de-trunk</screen></para>
+
+    <bridgehead>Gemeinschaft</bridgehead>
+
+    <para>Auschecken:<screen>gemeinschaft:~# cd /usr/src/
+gemeinschaft:/usr/src# svn checkout 'https://svn.amooma.com/gemeinschaft/trunk' gemeinschaft-trunk</screen></para>
+
+    <para>Einen Symlink anlegen (das hat den Vorteil daß man später ggf.
+    leichter zwischen verschiedenen Versionen von Gemeinschaft wechseln
+    kann):<screen>gemeinschaft:/usr/src# <command>ln -s gemeinschaft-trunk gemeinschaft</command>
+gemeinschaft:/usr/src# <command>ls -ld gemeinschaft</command>
+lrwxrwxrwx 1 root src 18 2008-10-27 19:26 gemeinschaft -&gt; gemeinschaft-trunk</screen></para>
+
+    <para>In MySQL mit folgenden Befehlen einen Benutzer
+    <quote><literal>gemeinschaft</literal></quote> anlegen, der auf die
+    Datenbank <quote><literal>asterisk</literal></quote> (die wir gleich
+    einspielen werden) zugreifen darf (bitte statt
+    <quote><literal>geheim</literal></quote> ein besseres Paßwort
+    wählen!):<screen>gemeinschaft:~# <command>mysql</command> 
+[...]
+mysql&gt; <command>GRANT ALL ON `asterisk`.* TO 'gemeinschaft'@'localhost' IDENTIFIED BY '<replaceable>geheim</replaceable>';</command>
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; <command>GRANT ALL ON `asterisk`.* TO 'gemeinschaft'@'%' IDENTIFIED BY '<replaceable>geheim</replaceable>';</command>
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; <command>SHOW GRANTS FOR 'gemeinschaft'@'localhost';</command>
++---------------------------------------------------------------------------------------------------------------------+
+| Grants for gemeinschaft@localhost                                                                                   |
++---------------------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO 'gemeinschaft'@'localhost' IDENTIFIED BY PASSWORD '*462366917EEDD1970A48E87D8EF59EB67D2CA26F' | 
+| GRANT ALL PRIVILEGES ON `asterisk`.* TO 'gemeinschaft'@'localhost'                                                  | 
++---------------------------------------------------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql&gt; <command>SHOW GRANTS FOR 'gemeinschaft'@'%';</command>
++-------------------------------------------------------------------------------------------------------------+
+| Grants for gemeinschaft@%                                                                                   |
++-------------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO 'gemeinschaft'@'%' IDENTIFIED BY PASSWORD '*462366917EEDD1970A48E87D8EF59EB67D2CA26F' | 
+| GRANT ALL PRIVILEGES ON `asterisk`.* TO 'gemeinschaft'@'%'                                                  | 
++-------------------------------------------------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+
+mysql&gt; <command>FLUSH PRIVILEGES;</command>
+Query OK, 0 rows affected (0.01 sec)
+
+mysql&gt; exit
+Bye</screen>Testen:<screen>gemeinschaft:/usr/src# <command>mysql -u gemeinschaft -p -e 'SELECT "ok"'</command>
+Enter password: 
++----+
+| ok |
++----+
+| ok | 
++----+</screen>Das ist erfreulich. (Eine schlechte Meldung wäre z.B.
+    <quote><literal>ERROR 1045 (28000): Access denied for user
+    'gemeinschaft'@'localhost' (using password:
+    YES)</literal></quote>.)</para>
+
+    <para>Datenbank einspielen:<screen>gemeinschaft:/usr/src# <command>cd /usr/src/gemeinschaft/usr/share/doc/gemeinschaft/</command>
+gemeinschaft:/usr/src/gemeinschaft/usr/share/doc/gemeinschaft# <command>mysql -u gemeinschaft -p &lt; asterisk.sql</command> 
+Enter password: </screen></para>
+
+    <para>Gemeinschaft mittels Symlinks <quote>installieren</quote>:</para>
+
+    <para>Apache-Konfiguration für Gemeinschaft:<screen>gemeinschaft:~# <command>cd /etc/apache2/conf.d/</command>
+gemeinschaft:/etc/apache2/conf.d# <command>ln -s /usr/src/gemeinschaft/etc/apache2/conf.d/gemeinschaft.conf</command></screen></para>
+
+    <para>Rewriting aktivieren (optional):<screen>gemeinschaft:~# <command>a2enmod rewrite</command></screen></para>
+
+    <para>Apache neu starten:<screen>gemeinschaft:~# <command>/etc/init.d/apache2 restart</command></screen></para>
+
+    <para>Der Web-Server muß mit <literal><command>sudo</command></literal>
+    ohne Paßwort als <literal>root</literal> Befehle ausführen können. Das
+    erreicht man, indem man <literal><command>visudo</command></literal>
+    aufruft und in die Datei folgende Zeile einträgt<footnote>
+        <para>Unter Debian läuft der Apache per Default als User
+        <literal>www-data</literal>. Das müssen Sie natürlich ggf. anpassen.
+        Als welcher User der Apache läuft, steht in der
+        <filename>apache2.conf</filename>:<screen>gemeinschaft:~# <command>cat /etc/apache2/apache2.conf /etc/apache2/envvars 2&gt;&gt;/dev/null | grep -E '^User |APACHE_RUN_USER'</command>
+User ${APACHE_RUN_USER}
+export APACHE_RUN_USER=www-data</screen></para>
+      </footnote>:<literallayout>www-data   ALL=(ALL)  NOPASSWD: ALL</literallayout></para>
+
+    <para>Asterisk-Konfiguration:<screen>gemeinschaft:~# <command>cd /etc/</command>
+gemeinschaft:/etc# <command>rm -rf asterisk/</command>
+gemeinschaft:/etc# <command>ln -s /usr/src/gemeinschaft/etc/asterisk</command></screen></para>
+
+    <para>Gemeinschaft-Konfiguration:<screen>gemeinschaft:~# <command>cd /etc/</command>
+gemeinschaft:/etc# <command>ln -s /usr/src/gemeinschaft/etc/gemeinschaft</command></screen></para>
+
+    <para>Jetzt kann man die
+    <filename>/etc/gemeinschaft/gemeinschaft.php</filename> editieren, also
+    Datenbank-Benutzer und -Paßwort usw. eintragen. IP-Adresse des Rechners in
+    <filename>/opt/gemeinschaft/etc/listen-to-ip</filename> eintragen.</para>
+
+    <para>IP-Adresse in Datenbank eintragen:<screen>gemeinschaft:~# <command>mysql</command>
+<replaceable>[...]</replaceable>
+mysql&gt; <command>USE asterisk;</command>
+<replaceable>[...]</replaceable>
+mysql&gt; <command>UPDATE hosts SET host='192.168.1.130' WHERE id=1;</command>
+<replaceable>[...]</replaceable>
+mysql&gt; <command>SELECT * FROM hosts;</command>
++----+---------------+----------------+------------+----------+
+| id | host          | comment        | is_foreign | group_id |
++----+---------------+----------------+------------+----------+
+|  1 | 192.168.1.130 | Gemeinschaft 1 |          0 |        0 | 
++----+---------------+----------------+------------+----------+
+1 row in set (0.00 sec)</screen></para>
+
+    <para>Haupt-Verzeichnis von Gemeinschaft:<screen>gemeinschaft:~# <command>cd /opt/</command>
+gemeinschaft:/opt# <command>ln -s /usr/src/gemeinschaft/opt/gemeinschaft</command></screen></para>
+
+    <para>Doku:<screen>gemeinschaft:~# <command>cd /usr/share/doc</command>
+gemeinschaft:/usr/share/doc# <command>ln -s /usr/src/gemeinschaft/usr/share/doc/gemeinschaft</command></screen></para>
+
+    <para>Log-Verzeichnis (ein Symlink wäre hier kontraproduktiv):<screen>gemeinschaft:~# <command>mkdir -p /var/log/gemeinschaft</command>
+gemeinschaft:~# <command>chmod a+rwx /var/log/gemeinschaft/</command></screen></para>
+
+    <para>Web-Verzeichnis:<screen>gemeinschaft:~# <command>cd /var/www/</command>
+gemeinschaft:/var/www# <command>ln -s /usr/src/gemeinschaft/var/www/gemeinschaft</command>
+gemeinschaft:/var/www# <command>ln -s /usr/src/gemeinschaft/var/www/.htaccess</command> </screen></para>
+
+    <para>Weitere Dateien:<screen>gemeinschaft:~# <command>cd /var/lib/</command>
+gemeinschaft:/var/lib# <command>ln -s /usr/src/gemeinschaft/var/lib/gemeinschaft</command></screen></para>
+
+    <para>Sprach-Prompts von <literal>.wav</literal> nach
+    <literal>.alaw</literal> konvertieren:<screen>gemeinschaft:~# <command>cd /var/lib/asterisk/sounds/de</command>
+gemeinschaft:/var/lib/asterisk/sounds/de# <command>/opt/gemeinschaft/sbin/sounds-wav-to-alaw.sh</command> 
+gemeinschaft:/var/lib/asterisk/sounds/de# <command>cd</command>
+gemeinschaft:~# <command>chown -R root:root /var/lib/asterisk/sounds</command></screen></para>
+
+    <para>Asterisk-Dialplan für Gemeinschaft initialisieren:<screen>gemeinschaft:~# <command>/etc/init.d/asterisk stop</command>
+gemeinschaft:~# <command>/opt/gemeinschaft/sbin/gs-ast-dialplan-gen</command> 
+Generating extensions.ael ...
+extensions.ael written.
+gemeinschaft:~# <command>/etc/init.d/asterisk start</command></screen></para>
+
+    <para>Logrotate-Regeln:<screen>gemeinschaft:~# <command>cd /etc/logrotate.d/</command>
+gemeinschaft:/etc/logrotate.d# <command>ln -s /usr/src/gemeinschaft/etc/logrotate.d/asterisk</command> 
+gemeinschaft:/etc/logrotate.d# <command>ln -s /usr/src/gemeinschaft/etc/logrotate.d/gemeinschaft</command> </screen></para>
+
+    <para>Cron-Skripte:<screen>gemeinschaft:~# <command>cd /etc/cron.d</command>
+gemeinschaft:/etc/cron.d# <command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-cc-guardian</command> 
+gemeinschaft:/etc/cron.d# <command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-queuelog-to-db</command> 
+gemeinschaft:/etc/cron.d# <command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-queues-refresh</command> </screen></para>
+
+    <bridgehead>DHCP-Server</bridgehead>
+
+    <screen>gemeinschaft:~# <command>aptitude install dhcp3-server</command>
+gemeinschaft:~# <command>cd /etc/dhcp3/</command>
+gemeinschaft:/etc/dhcp3# <command>rm dhcpd.conf</command> 
+gemeinschaft:/etc/dhcp3# <command>ln -s /usr/src/gemeinschaft/usr/share/doc/gemeinschaft/misc/dhcpd-3-example.conf dhcpd.conf</command></screen>
+
+    <para>/etc/dhcp3/dhcpd.conf anpassen, dann</para>
+
+    <screen>gemeinschaft:/etc/dhcp3# <command>/etc/init.d/dhcp3-server restart</command></screen>
+  </section>
+
+  <section id="update-trunk-single-gemeinschaft">
+    <title>Gemeinschaft-Trunk updaten</title>
+
+    <para>Hat man gerade Gemeinschaft frisch installiert so ist dieser
+    Abschnitt natürlich nicht interessant. Will man aber später mal den Trunk
+    von Gemeinschaft auf die aktuelle Revision (also den aktuellen
+    Entwicklungsstand) aktualisieren, so geht das ganz einfach so:</para>
+
+    <screen>gemeinschaft:~# <command>cd /usr/src/gemeinschaft-trunk/</command></screen>
+
+    <para>Die momentan installierte Revision herausfinden:<screen>gemeinschaft:/usr/src/gemeinschaft-trunk# <command>svnversion</command> 
+5340</screen></para>
+
+    <para>Updaten:<screen>gemeinschaft:/usr/src/gemeinschaft-trunk# <command>svn update</command>
+<replaceable>[...]</replaceable>
+Updated to revision 5342.</screen></para>
+
+    <para>Die alte und die neue Revision sind wichtig, denn da wir hier ja mit
+    der aktuellen Entwicklungsversion arbeiten müssen wir uns um eventuelle
+    Änderungen an der Datenbank-Struktur manuell kümmern. Dazu liest man in
+    der Datei
+    <filename>usr/share/doc/gemeinschaft/UPGRADE-DB.sql.txt</filename> nach,
+    ob es seit der alten Revision irgendwelche Änderungen gab und führt ggf.
+    die angegebenen SQL-Befehle in MySQL
+    (<literal><command>mysql</command></literal>) aus.</para>
+  </section>
+</section>
