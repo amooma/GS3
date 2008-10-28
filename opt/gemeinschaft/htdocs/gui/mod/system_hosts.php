@@ -264,7 +264,7 @@ if ($page < $num_pages-1) {
 
 <?php
 
-@flush();
+@ob_flush(); @flush();
 
 if (@$rs) {
 	$i = 0;
@@ -413,6 +413,7 @@ if (@$rs) {
 				echo '<img alt="', __('nein') ,'" src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" /><sup>[2]</sup>';
 			echo '</td>',"\n";
 			
+			@ob_flush(); @flush();
 			echo '<td class="r">';
 			$timeout = 1;
 			$cmd = 'ping -n -q -w '. $timeout .' -c 1 '. qsa($ip);
@@ -428,6 +429,7 @@ if (@$rs) {
 			echo '</td>',"\n";
 			
 			if ($nodes[$ip]['active']) {
+				@ob_flush(); @flush();
 				echo '<td class="r">';
 				if ($ping_err === 0) {
 					$timeout = 2;
@@ -448,8 +450,9 @@ if (@$rs) {
 				} else
 					echo '<b style="color:#f00;">?</b>';
 				echo '</td>',"\n";
-			} else
+			} else {
 				echo '<td class="r">-</td>',"\n";
+			}
 			
 			echo '<td>';
 			
@@ -461,7 +464,7 @@ if (@$rs) {
 		}
 		
 		echo '</tr>', "\n";
-		@flush();
+		@ob_flush(); @flush();
 	}
 }
 
@@ -503,7 +506,7 @@ if (!$edit_host) {
 
 <?php
 }
-@flush();
+@ob_flush(); @flush();
 ?>
 
 </tr>

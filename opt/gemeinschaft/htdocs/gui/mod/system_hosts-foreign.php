@@ -476,6 +476,8 @@ $num_pages = ceil($num_total / $per_page);
 
 <?php
 
+@ob_flush(); @flush();
+
 if (@$rs) {
 	$i = 0;
 	while ($r = $rs->fetchRow()) {
