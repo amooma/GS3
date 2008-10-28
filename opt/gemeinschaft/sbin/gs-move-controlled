@@ -36,133 +36,10 @@ exit(1);
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs_topology_lib.php' );
 
 //Local Functions
 
-function TrySsh($Server) {
-	$cmd = "ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@".$Server." 'echo \"Hello World\"'" ;
-
-	@ exec( $sudo . $cmd , $out, $err );
-
-	$ok = true;
-	$ok = $ok && ($err==0);
-	if (! $ok) {
-		return new GsError( 'Could not SSH to '.$Server );
-		}
-
-	return 0;
-}
-
-function CheckGemeinschaft_php($Server, $Master_Host) {
-
-	$cmd = "ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@".$Server." 'grep DB_MASTER_HOST /etc/gemeinschaft/gemeinschaft.php'" ;
-
-	@ exec( $sudo . $cmd , $out, $err );
-
-	$ok = true;
-	$ok = $ok && ($err==0);
-	if (! $ok) {
-		return new GsError( 'Could not SSH to '.$Server );
-		}
-	preg_match("/'[a-zA-Z0-9.]+'/", $out[0], $res);
-	preg_match("/[a-zA-Z0-9.]+/", $res[0], $res1);
-	if($res1[0] != $Master_Host)
-		return new GsError( 'Error, Master host in gemeinschaft.php ('.$res1[0].') on host ' .$Server. ' differs with the Master host in the Topology ('.$Master_Host.')!');
-
-	return 0;
-}
-
-# local functions, almost identical to gs_db_master_connect()
-# resp. gs_db_slave_connect() in inc/db_connect.php
-
-function & db_master_connect( $host, $user, $pass, &$db_conn_master )
-{
- 	$caller_info = '';
-	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
-		$bt = debug_backtrace();
-		if (is_array($bt) && array_key_exists(0, $bt)) {
-			$caller_info = ' (for '. @$bt[0]['file'] .':'. @$bt[0]['line'] .')';
-			unset($bt);
-		}
-	}
-	
-	if (getType($db_conn_master) === 'object'
-	&&  method_exists($db_conn_master, 'isConnected')
-	&&  $db_conn_master->isConnected())
-	{
-		//gs_log( GS_LOG_DEBUG, 'Using the existing master DB connection'. $caller_info );
-		return $db_conn_master;
-	}
-	gs_log( GS_LOG_DEBUG, 'Opening a new DB connection'. $caller_info );
-	
-	if (!( $db = YADB_newConnection( 'mysql' ) )) {
-		$null = null;
-		return $null;
-	}
-	if (!( $db->connect(
-		$host,
-		$user,
-		$pass,
-		GS_DB_MASTER_DB,
-		array('reuse'=>false)  // do not use. leaves lots of connections
-		)))
-	{
-		$lastNativeError    = @$db->getLastNativeError();
-		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
-		gs_log( GS_LOG_WARNING, 'Could not connect to database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
-		$null = null;
-		return $null;
-	}
-	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
-	
-	$db_conn_master = $db;
-	return $db_conn_master;
-}
-
-
-function & db_slave_connect( $host, $user, $pass, &$db_conn_slave )
-{
-	$caller_info = '';
-	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
-		$bt = debug_backtrace();
-		if (is_array($bt) && array_key_exists(0, $bt)) {
-			$caller_info = ' (for '. @$bt[0]['file'] .':'. @$bt[0]['line'] .')';
-			unset($bt);
-		}
-	}
-	
-	if (getType($db_conn_slave) === 'object'
-	&&  method_exists($db_conn_slave, 'isConnected')
-	&&  $db_conn_slave->isConnected())
-	{
-		//gs_log( GS_LOG_DEBUG, 'Using the existing slave DB connection'. $caller_info );
-		return $db_conn_slave;
-	}
-	gs_log( GS_LOG_DEBUG, 'Opening a new slave DB connection'. $caller_info );
-	
-	if (!( $db = YADB_newConnection( 'mysql' ) )) {
-		$null = null;
-		return $null;
-	}
-	if (!( $db->connect(
-		$host,
-		$user,
-		$pass,
-		GS_DB_MASTER_DB,
-		array('reuse'=>false)  // do not use. leaves lots of connections
-		)))
-	{
-		$lastNativeError    = @$db->getLastNativeError();
-		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
-		gs_log( GS_LOG_WARNING, 'Could not connect to slave database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
-		$null = null;
-		return $null;
-	}
-	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
-	
-	$db_conn_slave = $db;
-	return $db_conn_slave;
-}
 
 
 
@@ -179,13 +56,14 @@ $opts = @getOptsNoMultiples( '',
 	$usage
 );
 
-$run_tests=false;
+$only_run_tests=false;
 if(isSet($opts['test']))
-  $run_tests=true;
+  $only_run_tests=true;
 else if (!isSet($opts['force']) || ($opts['force'] != "yes")
  ) {
 	gs_script_invalid_usage( $usage );
 }
+
 
 $conf = '/etc/gemeinschaft/topology.php';
 if (! file_exists( $conf )) {
@@ -200,168 +78,109 @@ if (! file_exists( $conf )) {
 }
 
 
-if($run_tests) {
-	//make an Array of the machines
-	$hosts = array(
-		//Database Server in RZ A
-		"DB_MASTER_SERVER1" => array("host" => $DB_MASTER_SERVER1, "con" => null, "disc" => "Database Server in RZ A"),
-		//Database Server in RZ B
-		"DB_MASTER_SERVER2" => array("host" => $DB_MASTER_SERVER2, "con" => null, "disc" => "Database Server in RZ B"),
-		//Web/Provisioning Server in RZ A
-		"WEB_MASTER_SERVER1" => array("host" => $WEB_MASTER_SERVER1, "con" => null, "disc" => "Web/Provisioning Server in RZ A"),
-		//Web/Provisioning Server in RZ B
-		"WEB_MASTER_SERVER2" => array("host" => $WEB_MASTER_SERVER2, "con" => null, "disc" => "Web/Provisioning Server in RZ B"),
-		//Telephony Server in RZ A
-		"TE_MASTER_SERVER1" => array("host" => $TE_MASTER_SERVER1, "con" => null, "disc" => "Telephony Server in RZ A (MASTER)"),
-		"TE_MASTER_BACKUP1" => array("host" => $TE_MASTER_BACKUP1, "con" => null, "disc" => "Telephony Server in RZ A (BACKUP)"),
-		//Telephony Server in RZ B
-		"TE_MASTER_SERVER2" => array("host" => $TE_MASTER_SERVER2, "con" => null, "disc" => "Telephony Server in RZ B (MASTER)"),
-		"TE_MASTER_BACKUP2" => array("host" => $TE_MASTER_BACKUP2, "con" => null, "disc" => "Telephony Server in RZ B (BACKUP)")
-		);
-		//look if we can acces each Machine via ssh
-	echo "Stage 1: Trying to reach each System via SSH...\n";
-	
-	foreach ( $hosts as $host) {
-		echo $host['disc']."... ";
-		$ok = TrySsh($host['host']);
-		if (isGsError( $ok )) {
-			echo $ok->getMsg()."\n";
-			exit(1);
-		}
-		echo "ok.\n";
+//make an Array of the machines
+$hosts = array(
+	//Database Server in RZ A
+	"DB_MASTER_SERVER1" => array("host" => $DB_MASTER_SERVER1, "con" => null, "disc" => "Database Server in RZ A"),
+	//Database Server in RZ B
+	"DB_MASTER_SERVER2" => array("host" => $DB_MASTER_SERVER2, "con" => null, "disc" => "Database Server in RZ B"),
+	//Web/Provisioning Server in RZ A
+	"WEB_MASTER_SERVER1" => array("host" => $WEB_MASTER_SERVER1, "con" => null, "disc" => "Web/Provisioning Server in RZ A"),
+	//Web/Provisioning Server in RZ B
+	"WEB_MASTER_SERVER2" => array("host" => $WEB_MASTER_SERVER2, "con" => null, "disc" => "Web/Provisioning Server in RZ B"),
+	//Telephony Server in RZ A
+	"TE_MASTER_SERVER1" => array("host" => $TE_MASTER_SERVER1, "con" => null, "disc" => "Telephony Server in RZ A (MASTER)"),
+	"TE_MASTER_BACKUP1" => array("host" => $TE_MASTER_BACKUP1, "con" => null, "disc" => "Telephony Server in RZ A (BACKUP)"),
+	//Telephony Server in RZ B
+	"TE_MASTER_SERVER2" => array("host" => $TE_MASTER_SERVER2, "con" => null, "disc" => "Telephony Server in RZ B (MASTER)"),
+	"TE_MASTER_BACKUP2" => array("host" => $TE_MASTER_BACKUP2, "con" => null, "disc" => "Telephony Server in RZ B (BACKUP)")
+	);
+
+
+RunTests($hosts);
+
+if($only_run_tests) {
+	echo "\nDone.\n";
+	exit(1);
+}
+
+echo "\n\nTests Done.\n";
+
+## Stage 1 Migrate Master
+#
+echo "\n\n Migrate the Master Server:\n\n";
+
+$new_master=null;
+$old_master=null;
+
+if($CUR_RZ == 'A') {
+	$old_master=$DB_MASTER_SERVER1_SERVICE_IP;
+	$new_master=$DB_MASTER_SERVER2_SERVICE_IP;
+}
+else {
+	$old_master=$DB_MASTER_SERVER2_SERVICE_IP;
+	$new_master=$DB_MASTER_SERVER1_SERVICE_IP;
+}
+
+$ok = gs_db_master_migration($old_master, $new_master, $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS);
+if (isGsError( $ok )) {
+	echo "ERROR:" .$ok->getMsg();
+	exit(1);
 	}
-	
-	echo "SSH seams to be working...\n\n";
-	echo "============================\n\n";
-	echo "Stage 2: Trying to reach each system via MySQL\n";
-			
-	foreach ($hosts as $key => $value) {
-		echo $hosts[$key]['disc']."... ";
-		if($key == 'DB_MASTER_SERVER1' && $CUR_RZ=='A')
-			$hosts[$key]['con'] = db_master_connect($hosts[$key]['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con']);
-		else if($key == 'DB_MASTER_SERVER2' && $CUR_RZ=='B')
-			$hosts[$key]['con'] = db_master_connect($hosts[$key]['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con']);
-		else
-			$hosts[$key]['con'] = db_slave_connect($hosts[$key]['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con']);
 
-		if(!$hosts[$key]['con']) {
-			echo "Could not connect to ". $hosts[$key]['host'] ."\n";
-			exit(1);
-		}
-		echo "ok.\n";
-	}	
+echo "\n\nMigration done.\n";
+echo "\n\n====================\n\n";
+## Stage 2 Resync Slaves
+#
+echo "Resyncing all Slaves with the new Master.\n";
 
-	
-	echo "MySQL connections seams to be working...\n\n";
-	echo "============================\n\n";
-	echo "Stage 3: Checking REPLICATION-process on each system via MySQL\n";
-	$warningcounter=0;
-	foreach ( $hosts as $key => $host) {
-		if($key == 'DB_MASTER_SERVER1' && $CUR_RZ=='A') {
-			echo "(MASTER)".$host['disc']."... ";
-			$ok = $host['con']->execute("SHOW MASTER STATUS");
-			if (!$ok) {
-				echo "Cant execute SHOW MASTER STATUS on " .$host['host'];
-				exit(1);
-			}
-			$master_status = $ok->fetchRow();
-			if(!isSet($master_status['Position']) || !isSet($master_status['File'])) {
-				echo "Error, Master not running on " .$host['host']."\n";
-				exit(1);
-			}
-			echo "ok.\n";
+foreach ( $hosts as $key => $host) {
+	if($key == 'DB_MASTER_SERVER1' || $key == 'DB_MASTER_SERVER2') 
+		continue; //One Master ist Still resynced and the other is Still the master
+	echo $host['disc']."...\n ";
+	if($CUR_RZ=='B' && $host['host'] == $DB_MASTER_SERVER1_SERVICE_IP) {
+		echo "Skipping, cause' it's the same host of \$DB_MASTER_SERVER1_SERVICE_IP. This host dont need to be a slave of hisself";
+		continue;
+	}
+	if($CUR_RZ=='A' && $host['host'] == $DB_MASTER_SERVER2_SERVICE_IP) {
+		echo "Skipping, cause' it's the same host of \$DB_MASTER_SERVER2_SERVICE_IP This host dont need to be a slave of hisself\n";
+		continue;
 		}
-		else if($key == 'DB_MASTER_SERVER2' && $CUR_RZ=='B') {
-			echo "(MASTER) ".$host['disc']."... ";
-			$ok = $host['con']->execute("SHOW MASTER STATUS");
-			if (!$ok) {
-				echo "Cant execute SHOW MASTER STATUS on " .$host['host']."\n";
-				exit(1);
-			}
-			$master_status = $ok->fetchRow();
-			if(!isSet($master_status['Position']) || !isSet($master_status['File'])) {
-				echo "Error, Master not running on " .$host['host']."\n";
-				exit(1);
-			}
-			echo "ok.\n";
-		}
-		else {
-			$bOk = true;
-			echo $host['disc']."... ";
-			$ok = $host['con']->execute("SHOW SLAVE STATUS");
-			if (!$ok) {
-				echo "Cant execute SHOW SLAVE STATUS on " .$host['host'];
-				exit(1);
-			}
-			$slave_status = $ok->fetchRow();
-			if($slave_status["Slave_IO_State"] == "") {
-				echo "WARNING: Slave on ". $host['host'] ." is not running! ";
-				$bOk = false;
-				++$warningcounter;
-			}
-			
- 			if($CUR_RZ=='A' && $slave_status["Master_Host"] != $hosts['DB_MASTER_SERVER1']['host']) {
-				echo "WARNING: Slave on ". $host['host'] ." has the wrong Master!\n";
-				echo "The Master on the Host is: ".$slave_status["Master_Host"]." and schould be ". $hosts['DB_MASTER_SERVER1']['host']."\n";
-				echo "You may execute:\n";
-				echo "gs-db-master-resync --master=".$hosts['DB_MASTER_SERVER1']['host']." --slave=".$host['host']." --user=".$SUPER_MYSQL_USER." --pass=".$SUPER_MYSQL_PASS."\n";
-				$bOk = false;
-				++$warningcounter;
-			}
-			if($CUR_RZ=='B' && $slave_status["Master_Host"] != $hosts['DB_MASTER_SERVER2']['host']) {
-				echo "WARNING: Slave on ". $host['host'] ." has the wrong Master!\n";
-				echo "The Master on the Host is: ".$slave_status["Master_Host"]." and schould be ". $hosts['DB_MASTER_SERVER2']['host']."\n";
-				echo "You may execute:\n";
-				echo "gs-db-master-resync --master=".$hosts['DB_MASTER_SERVER1']['host']." --slave=".$host['host']." --user=".$SUPER_MYSQL_USER." --pass=".$SUPER_MYSQL_PASS."\n";
-				$bOk = false;
-				++$warningcounter;
-			}
-
-			if($bOk)
-				echo "ok.\n";
-			else
-				echo "a warning occoured\n";
-
-		}
-	} // foreach ( $hosts as $key => $host)
-	
-	if($warningcounter) {
-		echo "Found ". $warningcounter ." warnings. Please try to Fix them!\n";
+		
+	gs_db_slave_resync( $new_master, $host['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS);
+	if (isGsError( $ok )) {
+		echo "ERROR:" .$ok->getMsg();
 		exit(1);
 	}
-	echo "REPLICATION seams to be working...\n\n";
-	echo "============================\n\n";
-	echo "Stage 4: Checking gemeinschaft.php for variable \$DB_MASTER_HOST on each system via SSH\n";
+} // foreach ( $hosts as $key => $host)
 
-	$master_host = null;
-	if($CUR_RZ=='A')
-		$master_host = $hosts['DB_MASTER_SERVER1']['host'];
-	else 
-		$master_host = $hosts['DB_MASTER_SERVER2']['host'];
 
-	foreach ( $hosts as $host) {
-		echo $host['disc']."... ";
-		$ok = CheckGemeinschaft_php($host['host'], $master_host);
-		if (isGsError( $ok )) {
-			echo $ok->getMsg()."\n";
-			exit(1);
-		}
-		echo "ok.\n";
+
+## Stage 3 Move Service IPs of the Web-Services
+#
+
+## Stage 4 Edit gemeinschaft.php of each Host
+#
+
+foreach ( $hosts as $key => $host) {
+	$ok = ChangeGemeinschaft_php($host['host'], $new_master);
+	if (isGsError( $ok )) {
+		echo "ERROR:" .$ok->getMsg();
+		exit(1);
 	}
+}
 
-	echo "the variable \$DB_MASTER_HOST in the gemeinschaft.php on each Host seams to be ok.\n\n";
-
-	echo "All systems should be up and running properly\n";
-	
-	//TODO: add Test to check if the Virtual Interfaces exists
+## Stage 5 Set $CUR_RZ to the new one
+#
 
 
-} // if($run_tests)
+## Stage 6 Re-Run tests again
+#
+
+echo "\nDone.\n";
+echo "The Current Operating RZ is: ". $CUR_RZ."\n";
 
 
-
-
-echo "\ndone\n";
 ?>
 
 
