@@ -205,7 +205,7 @@ WHERE
 		_gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot );
 	}
 	*/
-	# damn - we did already remove the user id from the phones table
+	# damn - we did already removed the user id from the phones table
 	
 	if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ip_do_snom   ( $ip, $reboot );
@@ -304,7 +304,7 @@ WHERE
 		_gs_prov_phone_checkcfg_by_ext_do_siemens( $ext, $reboot );
 	}
 	*/
-	// damn - we have already remove the user id from the phones table
+	// damn - we have already removed the user id from the phones table
 	
 	if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ext_do_snom   ( $ext, $reboot );
