@@ -138,6 +138,10 @@ $SNOM_PROV_FW_UPDATE        = false;
 $SNOM_PROV_FW_BETA          = false;
 $SNOM_PROV_FW_6TO7          = false;
 
+//----------------------[  Snom M3  ]---------------------//
+
+$SNOM_PROV_M3_ACCOUNTS      = 1;
+
 
 //----------------------[  Aastra  ]----------------------//
 

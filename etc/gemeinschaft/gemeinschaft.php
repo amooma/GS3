@@ -285,6 +285,9 @@ $SNOM_PROV_FW_BETA          = false;  # allow beta versions?
 $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
   # upgrading vom 6 to 7 might require SNOM_PROV_FW_BETA
 
+
+//----------------------[  Snom M3  ]---------------------//
+
 $SNOM_PROV_M3_ACCOUNTS      = 1;
   # set to 0 to disable Snom M3 provisioning
 
