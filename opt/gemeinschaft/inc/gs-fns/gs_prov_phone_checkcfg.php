@@ -210,6 +210,12 @@ WHERE
 	if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ip_do_snom   ( $ip, $reboot );
 	}
+
+	if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
+		_gs_prov_phone_checkcfg_by_ip_do_snom_m3   ( $ip, $reboot );
+	}
+
+
 	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot );
 	}
@@ -227,9 +233,17 @@ function _gs_prov_phone_checkcfg_by_ip_do_snom( $ip, $reboot=true )
 	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
 	
 	@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/confirm.htm?REBOOT=yes') . ' >>/dev/null 2>>/dev/null &', $out, $err );
-	// actually the value after REBOOT= does not matter
-	// is there an URL check-sync *without* reboot?
+	// actually the value after REBOOT= does not matter - the M3 hast to be rebooted to read ist config
 }
+
+// REALLY PRIVATE! CAREFUL WITH PARAMS - NO VALIDATION!
+function _gs_prov_phone_checkcfg_by_ip_do_snom_m3( $ip, $reboot=true )
+{
+	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
+	
+	@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/reboot.html') . ' >>/dev/null 2>>/dev/null &', $out, $err );
+}
+
 
 // REALLY PRIVATE! CAREFUL WITH PARAMS - NO VALIDATION!
 function _gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot=true, $pre_sleep=0 )
@@ -295,11 +309,14 @@ WHERE
 	if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ext_do_snom   ( $ext, $reboot );
 	}
+	if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
+		_gs_prov_phone_checkcfg_by_ext_do_snom_m3   ( $ext, $reboot );
+	}
 	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ext_do_siemens( $ext, $reboot );
 	}
 	if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
-		//FIXME - aastra?
+		_gs_prov_phone_checkcfg_by_ext_do_aastra( $ext, $reboot );
 	}
 	
 	//return $err == 0;
@@ -323,6 +340,36 @@ function _gs_prov_phone_checkcfg_by_ext_do_snom( $ext, $reboot=true )
 			@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd) .' >>/dev/null 2>>/dev/null &' );
 		}
 	}
+}
+
+function _gs_prov_phone_checkcfg_by_ext_do_snom_m3( $ext, $reboot=true )
+{
+	# We will run into trouble if the IP is not in the database anymore
+	$db = @gs_db_slave_connect();
+	if (! $db) {
+		gs_log(GS_LOG_WARNING, 'Failed to connect to DB');
+		return;
+	}
+	$ip = @$db->executeGetOne(
+'SELECT `u`.`current_ip`
+FROM
+	`ast_sipfriends` `s` JOIN
+	`users` `u` ON (`u`.`id`=`s`.`_user_id`)
+WHERE `s`.`name`=\''. $db->escape($ext) .'\''
+	);
+
+	$query = 'SELECT `u`.`current_ip`
+	FROM
+		`ast_sipfriends` `s` JOIN
+		`users` `u` ON (`u`.`id`=`s`.`_user_id`)
+			WHERE `s`.`name`=\''. $db->escape($ext) .'\'';
+
+	if (! $ip || ! preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $ip)) {
+		gs_log(GS_LOG_WARNING, 'Bad IP : '.$query);
+		return;
+	}
+	
+	_gs_prov_phone_checkcfg_by_ip_do_snom_m3( $ip, $reboot, 2 );
 }
 
 // REALLY PRIVATE! CAREFUL WITH PARAMS - NO VALIDATION!
@@ -360,5 +407,27 @@ WHERE `s`.`name`=\''. $db->escape($ext) .'\''
 	_gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot, 2 );
 }
 
+function _gs_prov_phone_checkcfg_by_ext_do_aastra( $ext, $reboot=true )
+{
+	# We will run into trouble if the IP is not in the database anymore
+	$db = @gs_db_slave_connect();
+	if (! $db) {
+		gs_log(GS_LOG_WARNING, 'Failed to connect to DB');
+		return;
+	}
+	$ip = @$db->executeGetOne(
+'SELECT `u`.`current_ip`
+FROM
+	`ast_sipfriends` `s` JOIN
+	`users` `u` ON (`u`.`id`=`s`.`_user_id`)
+WHERE `s`.`name`=\''. $db->escape($ext) .'\''
+	);
+	if (! $ip || ! preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $ip)) {
+		gs_log(GS_LOG_WARNING, 'Bad IP : '.$ip);
+		return;
+	}
+	
+	_gs_prov_phone_checkcfg_by_ip_do_aastra( $ip, $reboot, 2 );
+}
 
 ?>
