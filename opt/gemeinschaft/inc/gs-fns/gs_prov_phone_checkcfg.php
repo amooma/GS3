@@ -182,9 +182,9 @@ WHERE
 	$is_siemens = false;
 	while ($r = $rs->fetchRow()) {
 		$tmp = strToLower($r['type']);
-		if     (subStr($tmp,0,4)=='snom')
+		if     (subStr($tmp,0,4)==='snom')
 			$is_snom    = true;
-		elseif (subStr($tmp,0,7)=='siemens')
+		elseif (subStr($tmp,0,7)==='siemens')
 			$is_siemens = true;
 	}
 	
@@ -288,11 +288,11 @@ WHERE
 	`s`.`name`=\''. $db->escape($ext) .'\''
 	));  # remember ast_sipfriends.name is unique
 	
-	if       (subStr($phone_type,0,4)=='snom') {
+	if       (subStr($phone_type,0,4)==='snom') {
 		gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ext \"$ext\" (snom)");
 		_gs_prov_phone_checkcfg_by_ext_do_snom   ( $ext, $reboot );
 	}
-	elseif (subStr($phone_type,0,7)=='siemens') {
+	elseif (subStr($phone_type,0,7)==='siemens') {
 		gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ext \"$ext\" (siemens)");
 		_gs_prov_phone_checkcfg_by_ext_do_siemens( $ext, $reboot );
 	}
