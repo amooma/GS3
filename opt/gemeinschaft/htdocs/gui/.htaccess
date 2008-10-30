@@ -111,8 +111,10 @@ DefaultType text/html
 	RewriteRule ^setup/        - [L]
 	RewriteRule ^soap/         - [L]
 	#RewriteRule ^([^/]+)(?:/([^/]+))? index.php?sudo=$1&s=$1&m=$2 [QSA,L]
+	
 	RewriteRule ^m3/settings/([0-9A-Fa-f]*)\.cfg$ prov/snom/settings-m3.php?mac=$1 [QSA,L]
-	RewriteRule ^m3/firmware/(.*)$ prov/snom/sw/m3/$1 [QSA,L]
+	RewriteRule ^m3/firmware/(.*)$ prov/snom/sw-m3/$1 [QSA,L]
+	
 	RewriteRule ^([^/]+)(?:/([^/]+))?(?:/([^/]+))? index.php?sudo=$1&s=$2&m=$3 [QSA,L]
 	<IfModule mod_env.c>
 		SetEnv _GS_HAVE_REWRITE 1
