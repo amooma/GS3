@@ -104,7 +104,7 @@ function gs_prov_check_trust_requester()
 #
 function gs_prov_user_id_by_mac_addr( $db, $mac_addr )
 {
-	$mac_addr = preg_replace('/[^0-9A-F]/', '', strToUpper($mac_addr));
+	$mac_addr = preg_replace('/[^0-9A-F\-]/', '', strToUpper($mac_addr));
 	$query =
 		'SELECT `user_id` '.
 		'FROM `phones` '.
@@ -230,7 +230,7 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 {
 	$add_nobody_locally_if_foreign_failed = false;  # hack
 	
-	$mac_addr = preg_replace('/[^0-9A-F]/', '', strToUpper($mac_addr));
+	$mac_addr = preg_replace('/[^0-9A-F\-]/', '', strToUpper($mac_addr));
 		
 	@gs_db_start_trans($db);
 	
