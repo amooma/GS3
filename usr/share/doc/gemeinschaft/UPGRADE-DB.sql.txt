@@ -465,3 +465,20 @@ CREATE TABLE IF NOT EXISTS `prov_jobs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+--
+-- since rev. 5387
+--
+
+
+--
+-- Add index for `remote_user_id` and foreign key constraint in table `dial_log`:
+--
+
+ALTER TABLE `dial_log`
+  ADD INDEX `remote_user_id` (`remote_user_id`);
+ALTER TABLE `dial_log`
+  ADD CONSTRAINT `dial_log_ibfk_2`
+  FOREIGN KEY (`remote_user_id`) REFERENCES `users` (`id`)
+  ON DELETE SET NULL ON UPDATE SET NULL;
+
+

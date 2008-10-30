@@ -5760,7 +5760,9 @@ CREATE TABLE `dial_log` (
   KEY `user_timestamp` (`user_id`,`timestamp`),
   KEY `user_type_number_timestamp` (`user_id`,`type`,`number`(10),`timestamp`),
   KEY `user_type_timestamp` (`user_id`,`type`,`timestamp`),
-  CONSTRAINT `dial_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  KEY `remote_user_id` (`remote_user_id`),
+  CONSTRAINT `dial_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `dial_log_ibfk_2` FOREIGN KEY (`remote_user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6687,4 +6689,4 @@ USE `asterisk`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-05-29  11:07:12
+-- Dump completed on 2008-10-30  12:00:00
