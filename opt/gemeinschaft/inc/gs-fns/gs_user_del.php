@@ -92,6 +92,7 @@ function gs_user_del( $user )
 	# delete dial log
 	#
 	$db->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id );
+	$db->execute( 'UPDATE `dial_log` SET `remote_user_id`=NULL WHERE `remote_user_id`='. $user_id );
 	
 	# delete call waiting settings
 	#
