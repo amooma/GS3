@@ -476,6 +476,8 @@ CREATE TABLE IF NOT EXISTS `prov_jobs` (
 
 ALTER TABLE `dial_log`
   ADD INDEX `remote_user_id` (`remote_user_id`);
+UPDATE `dial_log` SET `remote_user_id`=NULL
+  WHERE `remote_user_id` NOT IN (SELECT `id` FROM `users`);
 ALTER TABLE `dial_log`
   ADD CONSTRAINT `dial_log_ibfk_2`
   FOREIGN KEY (`remote_user_id`) REFERENCES `users` (`id`)
