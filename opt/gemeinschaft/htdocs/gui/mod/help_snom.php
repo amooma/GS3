@@ -126,7 +126,7 @@ echo '</h2>', "\n";
 		<small>Retrieve</small>
 	</td>
 	<td>
-		<?php echo __('<b>Mailbox</b> abfragen<br /> Hat die Mailbox ein Gespr&auml;ch f&uuml;r Sie aufgezeichnet, wird dies durch Blinken der Message-LED signalisiert. Die Anzahl alter und neuer Nachrichten wird zus&auml;tzlich auch auf dem Display angezeigt.'); ?>
+		<?php echo __('<b>Anrufbeantworter</b> abfragen<br /> Hat der Anrufbeantworter ein Gespr&auml;ch f&uuml;r Sie aufgezeichnet, wird dies durch Blinken der Message-LED signalisiert. Die Anzahl alter und neuer Nachrichten wird zus&auml;tzlich auch auf dem Display angezeigt.'); ?>
 	</td>
 </tr>
 

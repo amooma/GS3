@@ -102,10 +102,10 @@ if (@$_REQUEST['action']==='save') {
 	$vm_external = (bool)@$_REQUEST['vm-external'];
 	$ret = gs_vm_activate( $_SESSION['sudo_user']['name'], 'internal', $vm_internal );
 	if (isGsError($ret))
-		$warnings['vm_act_i'] = __('Fehler beim (De-)Aktivieren der Mailbox von intern') .' ('. $ret->getMsg() .')';
+		$warnings['vm_act_i'] = __('Fehler beim (De-)Aktivieren des Anrufbeantworters von intern') .' ('. $ret->getMsg() .')';
 	$ret = gs_vm_activate( $_SESSION['sudo_user']['name'], 'external', $vm_external );
 	if (isGsError($ret))
-		$warnings['vm_act_e'] = __('Fehler beim (De-)Aktivieren der Mailbox von extern') .' ('. $ret->getMsg() .')';
+		$warnings['vm_act_e'] = __('Fehler beim (De-)Aktivieren des Anrufbeantworters von extern') .' ('. $ret->getMsg() .')';
 	
 	if ($show_email_notification) {
 		$email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
@@ -258,7 +258,7 @@ if (is_array($warnings) && count($warnings) > 0) {
 foreach ($cases as $case => $ctitle) {
 	echo '<td style="width:85px;">', $ctitle, '</td>', "\n";
 }
-echo '<td style="width:80px;">', __('Mailbox'), '</td>', "\n";
+echo '<td style="width:80px;">', __('AB'), '</td>', "\n";
 
 ?>
 </tr>
@@ -302,7 +302,7 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 </tr>
 <tr>
 	<td colspan="6" class="quickchars">
-		<small><?php echo __('Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung eingestellt haben.'); ?></small>
+		<small><?php echo __('Achtung: Ihr Anrufbeantworter wird nur dann aktiv, wenn Sie keine Weiterleitung eingestellt haben.'); ?></small>
 	</td>
 </tr>
 </tbody>

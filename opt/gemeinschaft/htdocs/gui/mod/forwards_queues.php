@@ -299,7 +299,7 @@ if (is_array($warnings) && count($warnings) > 0) {
 foreach ($cases as $case => $ctitle) {
 	echo '<td style="width:85px;">', $ctitle, '</td>', "\n";
 }
-//echo '<td style="width:80px;">', __('Mailbox'), '</td>', "\n";
+//echo '<td style="width:80px;">', __('AB'), '</td>', "\n";
 
 ?>
 </tr>
