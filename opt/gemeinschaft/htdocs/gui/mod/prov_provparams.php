@@ -47,7 +47,16 @@ if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 	$phone_types['siemens-os60'] = 'Siemens OpenStage 60';
 	$phone_types['siemens-os80'] = 'Siemens OpenStage 80';
 }
+if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
+	$phone_types['snom-m3'    ] = 'Snom M3';
+}
 
+if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
+	$phone_types['aastra-57i'] = 'Aastra 57i';
+	$phone_types['aastra-55i'] = 'Aastra 55i';
+	$phone_types['aastra-53i'] = 'Aastra 53i';
+	$phone_types['aastra-51i'] = 'Aastra 51i';
+}
 
 $action = @$_REQUEST['action'];
 if (! in_array($action, array('', 'save', 'delete'), true))
