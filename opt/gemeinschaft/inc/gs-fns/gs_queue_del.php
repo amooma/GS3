@@ -61,6 +61,10 @@ function gs_queue_del( $name )
 	#
 	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_queue_id`='. $queue_id );
 	
+	# delete queue log
+	#
+	$db->execute( 'DELETE FROM `queue_log` WHERE `queue_id`='. $queue_id );
+	
 	# delete queue
 	#
 	$ok = $db->execute( 'DELETE FROM `ast_queues` WHERE `_id`='. $queue_id .' LIMIT 1' );
