@@ -335,7 +335,7 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 						return false;
 					} else {  //FIXME - remove me - ugly hack
 						$host_id = 1;
-						gs_log( GS_LOG_DEBUG, "Adding nobody user at foreign host failed. Updating user $username, id: $user_id to host id $host_id" );
+						gs_log( GS_LOG_DEBUG, "Failed to add nobody user on foreign host. Updating user $username, id: $user_id to host id $host_id" );
 						
 						$ok = $db->execute(
 							'UPDATE `users` SET '.
