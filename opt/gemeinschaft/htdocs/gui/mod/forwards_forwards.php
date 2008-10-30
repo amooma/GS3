@@ -302,7 +302,8 @@ try { document.getElementById('ext-num-select-var').style.display = 'inline'; } 
 <table cellspacing="1">
 <thead>
 <tr>
-	<th colspan="6"><?php echo __('Umleiten in folgenden F&auml;llen'); ?></th>
+	<th colspan="5"><?php echo __('Umleiten in folgenden F&auml;llen'); ?></th>
+	<th>&nbsp;</th>
 </tr>
 </thead>
 <tbody>
@@ -353,10 +354,11 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 		<?php echo __('nach'); ?>
 		<input type="text" name="timeout" value="<?php echo $timeout; ?>" size="3" maxlength="3" class="r" />&nbsp;s
 	</td>
-	<td colspan="2">&nbsp;</td>
+	<td colspan="1">&nbsp;</td>
+	<td colspan="1">&nbsp;</td>
 </tr>
 <tr>
-	<td colspan="6" class="quickchars">
+	<td colspan="6" class="transp">
 		<small><?php echo __('Achtung: Ihr Anrufbeantworter wird nur dann aktiv, wenn Sie keine Weiterleitung eingestellt haben.'); ?></small>
 	</td>
 </tr>
@@ -407,7 +409,7 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 <table cellspacing="1">
 <tbody>
 <tr>
-	<td style="width:575px;" class="quickchars r">
+	<td style="width:575px;" class="transp r">
 		<button type="submit">
 			<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			<?php echo __('Speichern'); ?>
