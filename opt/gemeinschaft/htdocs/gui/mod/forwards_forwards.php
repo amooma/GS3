@@ -35,6 +35,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_email_notify_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_email_notify_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -214,7 +215,29 @@ if (is_array($warnings) && count($warnings) > 0) {
 </div>
 <?php
 }
+
+
+$e_numbers = gs_user_external_numbers_get( $_SESSION['sudo_user']['name'] );
+
 ?>
+
+<script type="text/javascript">
+//<![CDATA[
+function gs_num_sel( el )
+{
+try {
+	if (el.value == '') return;
+	switch (el.id) {
+		case 'sel-num-std': var text_el_id = 'ipt-num-std'; break;
+		case 'sel-num-var': var text_el_id = 'ipt-num-var'; break;
+		default: return;
+	}
+	document.getElementById(text_el_id).value = el.value;
+	//el.value = '';
+} catch(e){}
+}
+//]]>
+</script>
 
 <form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
 <input type="hidden" name="action" value="save" />
@@ -229,14 +252,38 @@ if (is_array($warnings) && count($warnings) > 0) {
 <tr class="even">
 	<td style="width:170px;"><?php echo __('Standardnummer'); ?></td>
 	<td style="width:392px;">
-		<input type="text" name="num-std" value="<?php echo htmlEnt($number_std); ?>" size="30" style="width:220px;" maxlength="25" />
-		<small>(<?php echo __('nicht leer!'); ?>)</small>
+		<input type="text" name="num-std" id="ipt-num-std" value="<?php echo htmlEnt($number_std); ?>" size="30" style="width:220px;" maxlength="25" />
+		<div id="ext-num-select-1" style="display:inline;">
+		&larr;<select name="_ignore-1" id="sel-num-std" onchange="gs_num_sel(this);">
+<?php
+	if (! isGsError($e_numbers) && is_array($e_numbers)) {
+		echo '<option value="">', __('einf&uuml;gen &hellip;') ,'</option>' ,"\n";
+		foreach ($e_numbers as $e_number) {
+			echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
+		}
+	}
+?>
+		</select>
+		</div>
+		<?php /* <small>(<?php echo __('nicht leer!'); ?>)</small> */ ?>
 	</td>
 </tr>
 <tr class="even">
 	<td><?php echo __('Tempor&auml;re Nummer'); ?></td>
 	<td>
-		<input type="text" name="num-var" value="<?php echo htmlEnt($number_var); ?>" size="30" style="width:220px;" maxlength="25" />
+		<input type="text" name="num-var" id="ipt-num-var" value="<?php echo htmlEnt($number_var); ?>" size="30" style="width:220px;" maxlength="25" />
+		<div id="ext-num-select-1" style="display:inline;">
+		&larr;<select name="_ignore-2" id="sel-num-var" onchange="gs_num_sel(this);">
+<?php
+	if (! isGsError($e_numbers) && is_array($e_numbers)) {
+		echo '<option value="">', __('einf&uuml;gen &hellip;') ,'</option>' ,"\n";
+		foreach ($e_numbers as $e_number) {
+			echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
+		}
+	}
+?>
+		</select>
+		</div>
 	</td>
 </tr>
 </tbody>
