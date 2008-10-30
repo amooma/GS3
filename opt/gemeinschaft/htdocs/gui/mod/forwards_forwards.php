@@ -253,7 +253,7 @@ try {
 	<td style="width:170px;"><?php echo __('Standardnummer'); ?></td>
 	<td style="width:392px;">
 		<input type="text" name="num-std" id="ipt-num-std" value="<?php echo htmlEnt($number_std); ?>" size="30" style="width:220px;" maxlength="25" />
-		<div id="ext-num-select-1" style="display:inline;">
+		<div id="ext-num-select-std" style="display:none;">
 		&larr;<select name="_ignore-1" id="sel-num-std" onchange="gs_num_sel(this);">
 <?php
 	if (! isGsError($e_numbers) && is_array($e_numbers)) {
@@ -272,7 +272,7 @@ try {
 	<td><?php echo __('Tempor&auml;re Nummer'); ?></td>
 	<td>
 		<input type="text" name="num-var" id="ipt-num-var" value="<?php echo htmlEnt($number_var); ?>" size="30" style="width:220px;" maxlength="25" />
-		<div id="ext-num-select-1" style="display:inline;">
+		<div id="ext-num-select-var" style="display:none;">
 		&larr;<select name="_ignore-2" id="sel-num-var" onchange="gs_num_sel(this);">
 <?php
 	if (! isGsError($e_numbers) && is_array($e_numbers)) {
@@ -288,6 +288,14 @@ try {
 </tr>
 </tbody>
 </table>
+
+<script type="text/javascript">
+//<![CDATA[
+// show selectors if javascript is available
+try { document.getElementById('ext-num-select-std').style.display = 'inline'; } catch(e){}
+try { document.getElementById('ext-num-select-var').style.display = 'inline'; } catch(e){}
+//]]>
+</script>
 
 <br />
 
