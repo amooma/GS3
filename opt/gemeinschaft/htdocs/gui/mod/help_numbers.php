@@ -94,20 +94,20 @@ echo '</h2>', "\n";
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th colspan="2"><?php echo __('Mailbox abfragen'); ?></th>
+	<th colspan="2"><?php echo __('Anrufbeantworter abfragen'); ?></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 	<td style="width:140px;"><code>80</code></td>
 	<td style="width:420px;">
-		<?php echo __('Eigene Mailbox abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;Retrieve&quot;-Taste gedr&uuml;ckt werden.)'); ?>
+		<?php echo __('Eigenen Anrufbeantworter abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;Retrieve&quot;-Taste gedr&uuml;ckt werden.)'); ?>
 	</td>
 </tr>
 <tr>
 	<td><code>80 <i><?php echo __('Durchwahl'); ?></i></code></td>
 	<td>
-		<?php echo __('Andere Mailbox abfragen (mit PIN)'); ?>
+		<?php echo __('Anderen Anrufbeantworter abfragen (mit PIN)'); ?>
 	</td>
 </tr>
 </tbody>
