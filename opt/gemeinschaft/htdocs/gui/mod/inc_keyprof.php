@@ -741,7 +741,7 @@ if ($phone_layout) {
 				$key_levels[0]['title']=   __('Obere Tasten');
 				$key_levels[1]['title']=   __('Untere Tasten');
 				$key_levels[0]['from'] =   1;
-				$key_levels[0]['to'  ] =   10;
+				$key_levels[0]['to'  ] =   6;
 				$key_levels[1]['from'] =   101;
 				$key_levels[1]['to'  ] =   120;
 				break;
