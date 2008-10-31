@@ -65,11 +65,33 @@ option OptiIpPhone.dls     code 3 = string;
 #  Snom
 ########################################################
 class "Snom" {
-	match if substring(hardware, 1, 3) = 00:04:13;
+	match if (
+		(substring(hardware, 1, 3) = 00:04:13)
+		and not (substring(pick-first-value(option vendor-class-identifier, ""), 0, 8) = "snom-m3-")
+	);
 	
 	# DHCP options 66/67
 	option tftp-server-name "http://__GEMEINSCHAFT_DHCPD_PROVADDR__:__GEMEINSCHAFT_DHCPD_PROVPORT__";
 	option bootfile-name "gemeinschaft/prov/snom/settings.php?mac={mac}";
+	
+	default-lease-time 2764800;  # 32 days
+	max-lease-time     3024000;  # 35 days
+}
+
+########################################################
+#  Snom
+########################################################
+class "SnomM3" {
+	match if (
+		(substring(hardware, 1, 3) = 00:04:13)
+		and (substring(pick-first-value(option vendor-class-identifier, ""), 0, 8) = "snom-m3-")
+	);
+	
+	# untested
+	# DHCP option 160
+	#option option-160       "http://__GEMEINSCHAFT_DHCPD_PROVADDR__:__GEMEINSCHAFT_DHCPD_PROVPORT__/gemeinschaft/prov/snom/settings-m3.php?mac={mac}";
+	# DHCP option 66
+	option tftp-server-name "http://__GEMEINSCHAFT_DHCPD_PROVADDR__:__GEMEINSCHAFT_DHCPD_PROVPORT__/gemeinschaft/prov/snom/settings-m3.php?mac={mac}";
 	
 	default-lease-time 2764800;  # 32 days
 	max-lease-time     3024000;  # 35 days
