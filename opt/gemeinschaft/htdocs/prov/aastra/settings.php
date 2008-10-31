@@ -137,8 +137,19 @@ function aastra_get_softkeys($user_id, $phone_type )
 		while ($r = @$rs->fetchRow()) {
 			
 			$key_num = (int) preg_replace('/[^0-9]/', '', @$r['key']);
-			if ($key_num >=1) $key_name = 'topsoftkey'.$key_num;
-			if ($key_num >=100) $key_name = 'softkey'.($key_num-100);
+			switch ($phone_type) {
+			
+			case 'aastra-57i':
+				if ($key_num >=1) $key_name = 'topsoftkey'.$key_num;
+				if ($key_num >=100) $key_name = 'softkey'.($key_num-100);
+				break;
+			case 'aastra-55i':
+				if ($key_num >=1) $key_name = 'prgkey'.$key_num;
+				if ($key_num >=100) $key_name = 'softkey'.($key_num-100);	
+				break;
+			default:
+				$key_name = 'prgkey'.$key_num;
+			}
 			$softkeys[$key_name] = $r;
 		}
 		
@@ -331,7 +342,10 @@ psetting('xml application post list', GS_PROV_HOST);
 psetting('services script'    , $prov_url_aastra.'pb.php');
 psetting('callers list script', $prov_url_aastra.'dial-log.php');
 
-/* //FIXME
+# Set phonebook and dial-log keys as default - will be overwritten by a softkey from db.
+# From firmware version 2.3 on there is a default softkey "Webapps" which causes an extremely long boot process
+# by trying to connect "rcs.aastra.com". We have to overwrite it on the first occasion.
+
 psetting('softkey1 type'      , 'xml');
 psetting('softkey1 label'     , __('Tel.buch'));
 psetting('softkey1 value'     , $prov_url_aastra.'pb.php');
@@ -339,7 +353,7 @@ psetting('softkey1 value'     , $prov_url_aastra.'pb.php');
 psetting('softkey2 type'      , 'xml');
 psetting('softkey2 label'     , __('Anrufliste'));
 psetting('softkey2 value'     , $prov_url_aastra.'dial-log.php');
-*/
+
 
 
 # get softkeys
