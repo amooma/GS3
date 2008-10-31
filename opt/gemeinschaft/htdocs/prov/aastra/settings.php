@@ -112,6 +112,59 @@ $module_sql;
 }
 */
 
+function aastra_get_softkeys($user_id, $phone_type )
+{
+	global $db;
+	$softkeys = Array();
+
+	$sql_query = 'SELECT `group_id`, `softkey_profile_id`  FROM `users` WHERE `id`='. $user_id;
+
+
+	$rs = $db->execute( $sql_query );
+	if (! $rs) return false;
+
+	$r = @$rs->fetchRow();
+	
+	$group_id = (int)@$r['group_id'];
+	$softkey_profile_id = (int)@$r['softkey_profile_id'];
+	
+	if ($group_id) {
+		$sql_query = 'SELECT `s`.`key`, `s`.`function`, `s`.`data`, `s`.`label`, `s`.`user_writeable` FROM `softkeys` `s` JOIN `user_groups` `u` ON (`u`.`softkey_profile_id` = `s`.`profile_id`) WHERE `u`.`id` = '.$group_id.' AND `s`.`phone_type` = \''.$phone_type.'\'' ; 
+
+		$rs = $db->execute( $sql_query );
+		if (! $rs) break;
+	
+		while ($r = @$rs->fetchRow()) {
+			
+			$key_num = (int) preg_replace('/[^0-9]/', '', @$r['key']);
+			if ($key_num >=1) $key_name = 'topsoftkey'.$key_num;
+			if ($key_num >=100) $key_name = 'softkey'.($key_num-100);
+			$softkeys[$key_name] = $r;
+		}
+		
+	}
+
+	if ($softkey_profile_id) {
+		$sql_query = 'SELECT `key`, `function`, `data`, `label` FROM `softkeys` WHERE `profile_id` = '.$softkey_profile_id.' AND `phone_type` = \''.$phone_type.'\'' ; 
+
+		$rs = $db->execute( $sql_query );
+		if (! $rs) break;
+	
+		while ($r = @$rs->fetchRow()) {
+			
+			$key_num = (int) preg_replace('/[^0-9]/', '', @$r['key']);
+			if ($key_num >=1) $key_name = 'topsoftkey'.$key_num;
+			if ($key_num >=100) $key_name = 'softkey'.($key_num-100);
+			$softkeys[$key_name] = $r;
+		}
+		
+	}
+	
+
+	return $softkeys;
+}
+
+
 if (! gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Aastra provisioning not enabled" );
 	die( 'Not enabled.' );
@@ -291,6 +344,29 @@ psetting('softkey2 value'     , $prov_url_aastra.'dial-log.php');
 
 # get softkeys
 //aastra_keys_out( $user_id, $phone_type );
+
+$softkeys = aastra_get_softkeys( $user_id, $phone_type );
+if (is_array($softkeys)) {
+	foreach ($softkeys as $key_name => $softkey) {
+		
+		switch ($softkey['function']) {
+		
+		case 'directory':
+			psetting($key_name.' type'      , 'xml');
+			psetting($key_name.' value'      , $prov_url_aastra.'pb.php');
+			break;
+		case 'callers':
+			psetting($key_name.' type'      , 'xml');
+			psetting($key_name.' value'      , $prov_url_aastra.'dial-log.php');
+			break;
+		default:
+			psetting($key_name.' type'      , $softkey['function']);
+			psetting($key_name.' value'      , $softkey['data']);
+		}
+		psetting($key_name.' label'      , $softkey['label']);
+	}
+}
+
 
 # get softkeys on expansion modules
 /*  //FIXME
