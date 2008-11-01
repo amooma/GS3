@@ -172,22 +172,20 @@ function _settings_out()
 {
 	global $settings, $fw_vers_nrml;
 	
-	//if (true) {
-		header( 'Content-Type: text/plain; charset=utf-8' );
-		# the Content-Type header is ignored by the Snom M3
-		
-		foreach ($settings as $name => $a1) {
-			if (! array_key_exists('_is_array', $a1)) {
-				echo '%',$name,'%:', str_replace("\0",'\\0', $a1['v']) ,"\n";
-			} else {
-				foreach ($a1 as $idx => $a2) {
-					if ($idx === '_is_array') continue;
-					echo '%',$name,$idx,'%:', str_replace("\0",'\\0', $a2['v']) ,"\n";
-				}
+	header( 'Content-Type: text/plain; charset=utf-8' );
+	# the Content-Type header is ignored by the Snom M3
+	
+	foreach ($settings as $name => $a1) {
+		if (! array_key_exists('_is_array', $a1)) {
+			echo '%',$name,'%:', str_replace("\0",'\\0', $a1['v']) ,"\n";
+		} else {
+			foreach ($a1 as $idx => $a2) {
+				if ($idx === '_is_array') continue;
+				echo '%',$name,$idx,'%:', str_replace("\0",'\\0', $a2['v']) ,"\n";
 			}
 		}
-		unset($settings);
-	//}
+	}
+	unset($settings);
 	echo 'END_OF_FILE', "\n";
 }
 
