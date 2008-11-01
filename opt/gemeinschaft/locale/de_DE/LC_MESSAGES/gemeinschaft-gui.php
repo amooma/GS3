@@ -28,9 +28,9 @@
 \*******************************************************************/
 
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 4800 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 5417 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2008-08-23 17:40+0200
+POT-Creation-Date: 2008-11-01 17:22+0100
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -38,6 +38,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 ',
+  '%s auf \\"%s\\"' => '%s auf "%s"',
+  '%u von %u Benutzern auf Host %s konnten nicht aktualisiert werden!' => '%u von %u Benutzern auf Host %s konnten nicht aktualisiert werden!',
   '&Uuml;bersicht' => '&Uuml;bersicht',
   '15 Minuten' => '15 Minuten',
   '4 Softkeys unter dem Bildschirm' => '4 Softkeys unter dem Bildschirm',
@@ -47,17 +49,17 @@ Content-Transfer-Encoding: 8bit
   '<b>Halten</b> (R&uuml;ckfrage)<br /> Wenn Sie diese Taste w&auml;hrend eines Gespr&auml;chs dr&uuml;cken, wird Ihr Gespr&auml;chspartner auf Halten gesetzt. Danach k&ouml;nnen Sie eine weitere Verbindung zu einem anderen Teilnehmer herstellen. Mit den leuchtenden Leitungstasten k&ouml;nnen Sie zwischen beiden Leitungen hin- und herschalten (Makeln).' => '<b>Halten</b> (R&uuml;ckfrage)<br /> Wenn Sie diese Taste w&auml;hrend eines Gespr&auml;chs dr&uuml;cken, wird Ihr Gespr&auml;chspartner auf Halten gesetzt. Danach k&ouml;nnen Sie eine weitere Verbindung zu einem anderen Teilnehmer herstellen. Mit den leuchtenden Leitungstasten k&ouml;nnen Sie zwischen beiden Leitungen hin- und herschalten (Makeln).',
   '<b>Lauth&ouml;ren</b> ein/aus' => '<b>Lauth&ouml;ren</b> ein/aus',
   '<b>Lautst&auml;rke</b> des H&ouml;rers oder Lautsprechers -/+' => '<b>Lautst&auml;rke</b> des H&ouml;rers oder Lautsprechers -/+',
-  '<b>Mailbox</b> abfragen<br /> Hat die Mailbox ein Gespr&auml;ch f&uuml;r Sie aufgezeichnet, wird dies durch Blinken der Message-LED signalisiert. Die Anzahl alter und neuer Nachrichten wird zus&auml;tzlich auch auf dem Display angezeigt.' => '<b>Mailbox</b> abfragen<br /> Hat die Mailbox ein Gespr&auml;ch f&uuml;r Sie aufgezeichnet, wird dies durch Blinken der Message-LED signalisiert. Die Anzahl alter und neuer Nachrichten wird zus&auml;tzlich auch auf dem Display angezeigt.',
   '<b>Nicht st&ouml;ren</b> ein/aus<br /> Wenn dieser Modus aktiviert ist, werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem Display links unten das Symbol und &quot;Inaktiv&quot; angezeigt. Auf Ihre ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&auml;ren Sie gar nicht eingeloggt, also offline.' => '<b>Nicht st&ouml;ren</b> ein/aus<br /> Wenn dieser Modus aktiviert ist, werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem Display links unten das Symbol und &quot;Inaktiv&quot; angezeigt. Auf Ihre ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&auml;ren Sie gar nicht eingeloggt, also offline.',
   '<b>Stummschaltung</b> des Mikrofons ein/aus' => '<b>Stummschaltung</b> des Mikrofons ein/aus',
   '<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> z.B. 63437 f&uuml;r MEIER dr&uuml;cken (&auml;hnlich &quot;T9&quot;).' => '<b>Telefonbuch</b> (Firma / pers&ouml;nlich)<br /> z.B. 63437 f&uuml;r MEIER dr&uuml;cken (&auml;hnlich &quot;T9&quot;).',
   '<b>Vermitteln</b><br /> Es gibt zwei Wege, wie Sie Ihren Gespr&auml;chspartner mit einer anderen Nummer verbinden k&ouml;nnen:<br /> <i>Direktes Verbinden</i>: Wenn Sie w&auml;hrend eines Gespr&auml;chs die Transfer-Taste dr&uuml;cken, wird Ihr Gespr&auml;chsparter auf Halten gesetzt. Geben Sie danach die Nummer an, mit der Sie den Anrufer verbinden m&ouml;chten. Durch Dr&uuml;cken der OK-Taste wird der Teilnehmer dann mit der gew&auml;hlten Nummer verbunden.<br /> <i>Verbinden mit R&uuml;ckfrage</i>: Dr&uuml;cken Sie hierzu w&auml;hrend eines Gespr&auml;chs die Hold-Taste um Ihren Gespr&auml;chspartner zu halten und w&auml;hlen dann die Nummer, mit der Sie ihn verbinden m&ouml;chten. Sie k&ouml;nnen jetzt mit dem zweiten Teilnehmer sprechen. Durch Dr&uuml;cken der Transfer-Taste oder durch Auflegen werden die beiden Teilnehmer verbunden.' => '<b>Vermitteln</b><br /> Es gibt zwei Wege, wie Sie Ihren Gespr&auml;chspartner mit einer anderen Nummer verbinden k&ouml;nnen:<br /> <i>Direktes Verbinden</i>: Wenn Sie w&auml;hrend eines Gespr&auml;chs die Transfer-Taste dr&uuml;cken, wird Ihr Gespr&auml;chsparter auf Halten gesetzt. Geben Sie danach die Nummer an, mit der Sie den Anrufer verbinden m&ouml;chten. Durch Dr&uuml;cken der OK-Taste wird der Teilnehmer dann mit der gew&auml;hlten Nummer verbunden.<br /> <i>Verbinden mit R&uuml;ckfrage</i>: Dr&uuml;cken Sie hierzu w&auml;hrend eines Gespr&auml;chs die Hold-Taste um Ihren Gespr&auml;chspartner zu halten und w&auml;hlen dann die Nummer, mit der Sie ihn verbinden m&ouml;chten. Sie k&ouml;nnen jetzt mit dem zweiten Teilnehmer sprechen. Durch Dr&uuml;cken der Transfer-Taste oder durch Auflegen werden die beiden Teilnehmer verbunden.',
   '<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nnen Sie die letzten angerufenen Nummern erneut anrufen und sehen angenommene und verpasste Anrufe. W&auml;hlen Sie zun&auml;chst mit den Pfeiltasten die Nummer aus und dr&uuml;cken danach die OK-Taste.' => '<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nnen Sie die letzten angerufenen Nummern erneut anrufen und sehen angenommene und verpasste Anrufe. W&auml;hlen Sie zun&auml;chst mit den Pfeiltasten die Nummer aus und dr&uuml;cken danach die OK-Taste.',
+  'AB' => 'AB',
+  'API' => 'API',
   'Abbrechen' => 'Abbrechen',
   'Abwesenheitsansage aufzeichnen' => 'Abwesenheitsansage aufzeichnen',
   'Abwesenheitsansage f&uuml;r Anrufe von extern aufzeichnen' => 'Abwesenheitsansage f&uuml;r Anrufe von extern aufzeichnen',
   'Abwesenheitsansage f&uuml;r Anrufe von intern aufzeichnen' => 'Abwesenheitsansage f&uuml;r Anrufe von intern aufzeichnen',
-  'Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung eingestellt haben.' => 'Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung eingestellt haben.',
   'Admin-Rechte' => 'Admin-Rechte',
   'Administration' => 'Administration',
   'Agentur-Admin' => 'Agentur-Admin',
@@ -67,9 +69,9 @@ Content-Transfer-Encoding: 8bit
   'Als' => 'Als',
   'Alte' => 'Alte',
   'An' => 'An',
-  'Andere Mailbox abfragen (mit PIN)' => 'Andere Mailbox abfragen (mit PIN)',
   'Angemeldet' => 'Angemeldet',
   'Anklopfen' => 'Anklopfen',
+  'Anlage' => 'Anlage',
   'Anlegen' => 'Anlegen',
   'Anrufdauer' => 'Anrufdauer',
   'Anrufdauer im Durchschnitt' => 'Anrufdauer im Durchschnitt',
@@ -107,10 +109,10 @@ Content-Transfer-Encoding: 8bit
   'Datei-Upload f&uuml;r %s fehlgeschlagen.' => 'Datei-Upload f&uuml;r %s fehlgeschlagen.',
   'Datum' => 'Datum',
   'Dauer' => 'Dauer',
+  'Die Voicemail erreichte Sie auf Durchwahl %s.' => 'Die Nachricht erreichte Sie auf Durchwahl %s.',
   'Dienstmerkmale' => 'Dienstmerkmale',
   'Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die Bedeutungen werden ggf. am unteren Rand des Displays angezeigt.' => 'Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die Bedeutungen werden ggf. am unteren Rand des Displays angezeigt.',
   'Durchwahl' => 'Durchwahl',
-  'Eigene Mailbox abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;Retrieve&quot;-Taste gedr&uuml;ckt werden.)' => 'Eigene Mailbox abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;Retrieve&quot;-Taste gedr&uuml;ckt werden.)',
   'Eigene externe Nummern' => 'Eigene externe Nummern',
   'Ein-/Ausloggen am Telefon' => 'Ein-/Ausloggen am Telefon',
   'Einen Konferenzraum (nach 88 eine 3- oder 4-stellige Nummer) betreten bzw. er&ouml;ffnen. Wenn die Konferenz leer ist, kann eine PIN-Nr. gesetzt werden (f&uuml;r keine PIN # dr&uuml;cken). Ansonsten muss eine ggf. f&uuml;r diesen Raum gesetzte PIN eingegeben werden.' => 'Einen Konferenzraum (nach 88 eine 3- oder 4-stellige Nummer) betreten bzw. er&ouml;ffnen. Wenn die Konferenz leer ist, kann eine PIN-Nr. gesetzt werden (f&uuml;r keine PIN # dr&uuml;cken). Ansonsten muss eine ggf. f&uuml;r diesen Raum gesetzte PIN eingegeben werden.',
@@ -150,14 +152,12 @@ Content-Transfer-Encoding: 8bit
   'Fehler beim Setzen des eigenen Klingeltons.' => 'Fehler beim Setzen des eigenen Klingeltons.',
   'Fehler beim Speichern' => 'Fehler beim Speichern',
   'Fehler beim Upload f&uuml;r %s.' => 'Fehler beim Upload f&uuml;r %s.',
-  'Fremd-Host' => 'Fremd-Host',
   'Fremd-Hosts' => 'Fremd-Hosts',
   'Freunde' => 'Freunde',
   'Funktion' => 'Funktion',
   'Gruppe' => 'Gruppe',
   'Gruppen' => 'Gruppen',
   'Hilfe' => 'Hilfe',
-  'Home' => 'Home',
   'Host' => 'Host',
   'ID' => 'ID',
   'IP (dyn.)' => 'IP (dyn.)',
@@ -174,8 +174,6 @@ Content-Transfer-Encoding: 8bit
   'Letztes Endger&auml;t eingetragen' => 'Letztes Endger&auml;t eingetragen',
   'Login' => 'Login',
   'Logout' => 'Abmelden',
-  'Mailbox' => 'Mailbox',
-  'Mailbox abfragen' => 'Mailbox abfragen',
   'Mitglieder' => 'Mitglieder',
   'Monitor' => 'Monitor',
   'Nachname' => 'Nachname',
@@ -205,7 +203,6 @@ Content-Transfer-Encoding: 8bit
   'Queues' => 'Queues',
   'Reserve' => 'Reserve',
   'Rolle' => 'Rolle',
-  'Rufnummernunterdr&uuml;ckung. Bei &quot;an&quot; wird die Nummer unterdr&uuml;ckt, bei &quot;aus&quot; wird sie mitgesendet.' => 'Rufnummernunterdr&uuml;ckung. Bei &quot;an&quot; wird die Nummer unterdr&uuml;ckt, bei &quot;aus&quot; wird sie mitgesendet.',
   'Rufumleitung' => 'Rufumleitung',
   'Rufumleitung Warteschleifen' => 'Rufumleitung Warteschleifen',
   'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)' => 'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)',
@@ -228,7 +225,6 @@ Content-Transfer-Encoding: 8bit
   'Stonith' => 'Stonith',
   'Suchen' => 'Suchen',
   'Tastenbelegung' => 'Tastenbelegung',
-  'Telefon resynchronisieren' => 'Telefon resynchronisieren',
   'Telefon-Typ' => 'Telefon-Typ',
   'Telefonbuch' => 'Telefonbuch',
   'Tempor&auml;re Nummer' => 'Tempor&auml;re Nummer',
@@ -241,7 +237,6 @@ Content-Transfer-Encoding: 8bit
   'User' => 'User',
   'User \\"%s\\" not found in LDAP database.' => 'Benutzer "%s" nicht im LDAP gefunden.',
   'Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu gestartet haben!' => 'Ver&auml;nderungen werden erst dann aktiv, sobald Sie Ihr Telefon neu gestartet haben!',
-  'Verbindungen' => 'Verbindungen',
   'Verbindungsstatistik' => 'Verbindungsstatistik',
   'Verbindungszeit' => 'Verbindungszeit',
   'Verzeichnis 5' => 'Verzeichnis 5',
@@ -249,7 +244,6 @@ Content-Transfer-Encoding: 8bit
   'Verzeichnis 7' => 'Verzeichnis 7',
   'Verzeichnis 8' => 'Verzeichnis 8',
   'Verzeichnis 9' => 'Verzeichnis 9',
-  'Voicemail' => 'Voicemail',
   'Von' => 'Von',
   'Vorname' => 'Vorname',
   'Warteschlangen' => 'Warteschlangen',
@@ -297,7 +291,6 @@ Content-Transfer-Encoding: 8bit
   'l&ouml;schen' => 'l&ouml;schen',
   'leer' => 'leer',
   'nach' => 'nach',
-  'nicht leer!' => 'nicht leer!',
   'oder' => 'oder',
   'offline' => 'offline',
   'r&uuml;ckg&auml;ngig' => 'r&uuml;ckg&auml;ngig',
