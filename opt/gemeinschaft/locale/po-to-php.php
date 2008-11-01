@@ -66,13 +66,17 @@ $copyright =
 
 function _po_to_php_store_msg( &$trans, &$msgid, &$msgstr )
 {
+	$msgid_tmp = str_replace(
+		array('\n', '\r', '\t', '\\"'),
+		array("\n", "\r", "\t", '"'  ),
+		$msgid);
 	$msgstr = str_replace(
-		array('\n', '\r', '\t', '\"'),
-		array("\n", "\r", "\t", '"' ),
+		array('\n', '\r', '\t', '\\"'),
+		array("\n", "\r", "\t", '"'  ),
 		$msgstr);
 	
 	if ($msgstr != '') {
-		$trans[$msgid] = $msgstr;
+		$trans[$msgid_tmp] = $msgstr;
 	}
 	
 	$msgstr = '';
