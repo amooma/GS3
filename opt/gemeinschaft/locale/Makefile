@@ -42,6 +42,8 @@ sort-po: _check-cwd
 	do \
 		echo "### Sorting strings in $${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po ..." ;\
 		msgcat -n -s --strict -o "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" ;\
+		cat "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" | uniq > "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po.tmp" ;\
+		mv "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po.tmp" "$${LANGDIR}/LC_MESSAGES/${GETTEXT_DOMAIN}.po" ;\
 	done
 
 update-po: _check-cwd _pot
