@@ -236,6 +236,8 @@ if ($action === 'save' || $action === 'save-and-resync') {
 			else
 			$key_user_writable = true;
 			
+			$key_function = preg_replace('/[^a-zA-Z0-9\-_.]/S', '', $key_function);
+			
 			# keys without a function don't have a label or data
 			if ($key_function === $key_function_none) {
 				$key_label = '';
