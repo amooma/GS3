@@ -37,7 +37,7 @@ header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
 
 
-require_once( dirName(__FILE__) .'/../../../../inc/conf.php' );
+require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'inc/prov-fns.php' );
