@@ -14,4 +14,11 @@
 	# Snom. Not really necessary.
 	RewriteRule ^snom[0-9]{3}/snom{3}-firmware\.htm$  snom/sw-update.php?m=000000000000&u= [L]
 	
+	# Snom M3
+	#RewriteRule ^Config/([0-9A-Fa-f]*)\.(cfg|cry)$       snom/settings-m3.php?mac=$1&fmt=$2 [QSA,L]
+	RewriteRule ^Config/([0-9A-Fa-f]*)\.(cfg)$           snom/settings-m3.php?mac=$1&fmt=$2 [QSA,L]
+	#RewriteRule ^m3/settings/([0-9A-Fa-f]*)\.(cfg|cry)$  snom/settings-m3.php?mac=$1&fmt=$2 [QSA,L]
+	RewriteRule ^m3/settings/([0-9A-Fa-f]*)\.(cfg)$      snom/settings-m3.php?mac=$1&fmt=$2 [QSA,L]
+	RewriteRule ^m3/firmware/(.*)$                    snom/sw-m3/$1 [QSA,L]
+	
 </IfModule>
