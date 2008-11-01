@@ -180,12 +180,12 @@ function _settings_out()
 			if (subStr($name,0,1) === '_') continue;
 			
 			if (! array_key_exists('_is_array', $a1)) {
-				echo '%', $name, '%:', $a1['v'], "\n";
+				echo '%',$name,'%:', str_replace("\0",'\\0', $a1['v']) ,"\n";
 			} else {
 				foreach ($a1 as $idx => $a2) {
 					if ($idx === '_is_array') continue;
 					
-					echo '%', $name, $idx, '%:', $a2['v'], "\n";
+					echo '%',$name,$idx,'%:', str_replace("\0",'\\0', $a2['v']) ,"\n";
 				}
 			}
 		}
