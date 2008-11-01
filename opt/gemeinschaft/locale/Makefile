@@ -70,5 +70,5 @@ gen-php: _check-cwd
 all: gen-mo gen-php
 
 
-.PHONY: help _check-cwd _pot update-po gen-mo gen-php all
+.PHONY: help _check-cwd _pot update-po sort-po gen-mo gen-php all
 
