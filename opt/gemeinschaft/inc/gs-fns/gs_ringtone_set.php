@@ -141,7 +141,7 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 		return new GsError( 'Failed to copy file to "'. $infile .'".' );
 	
 	include_once( GS_DIR .'inc/phone-capability.php' );
-	$phone_types = array('snom');
+	$phone_types = array('snom');  //FIXME
 	$errors = array();
 	$new_ringer_basename = $user .'-'. subStr($src,0,3) .'-'. $rand;
 	foreach ($phone_types as $phone_type) {
