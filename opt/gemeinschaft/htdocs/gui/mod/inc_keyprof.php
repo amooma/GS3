@@ -44,23 +44,23 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	$phone_types['snom-360'    ] = 'Snom 360';
 	$phone_types['snom-370'    ] = 'Snom 370';
 }
-if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
-	$phone_types['siemens-os40'] = 'Siemens OpenStage 40';
-	$phone_types['siemens-os60'] = 'Siemens OpenStage 60';
-	$phone_types['siemens-os80'] = 'Siemens OpenStage 80';
-}
-
 /*
 # Maybe there will be some reason for enabling keys on Snom M3 phones in future.
 if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 	$phone_types['snom-m3'    ] = 'Snom M3';
 }
 */
-if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
-	$phone_types['aastra-57i'] = 'Aastra 57i';
-	$phone_types['aastra-55i'] = 'Aastra 55i';
-	$phone_types['aastra-53i'] = 'Aastra 53i';
+if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
+	$phone_types['siemens-os40'] = 'Siemens OpenStage 40';
+	$phone_types['siemens-os60'] = 'Siemens OpenStage 60';
+	$phone_types['siemens-os80'] = 'Siemens OpenStage 80';
 }
+if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
+	$phone_types['aastra-53i'] = 'Aastra 53i';
+	$phone_types['aastra-55i'] = 'Aastra 55i';
+	$phone_types['aastra-57i'] = 'Aastra 57i';
+}
+
 
 $key_functions_snom = array(
 	'none'  => __('Leer'),              # none
@@ -101,17 +101,18 @@ foreach ($key_functions_siemens as $k => $v) {
 unset($key_functions_siemens_shifted_ok);
 
 $key_functions_aastra = array(
-	'empty'  => __('Leer'),              
-	'speeddial'  => __('Direktwahl'),     
-	'blf' => __('Kurzwahl'),
-	'park' => __('Parken'),
-	'pickup' => __('Heranholen'),
-	'callers' => __('Anrufliste'),
+	'empty'     => __('Leer'),
+	'blf'       => __('Nebenstelle'),
+	'speeddial' => __('Zielwahl'),
+	//'line'    => __('Leitung'),
+	'park'      => __('Parken'),
+	'pickup'    => __('Heranholen'),
+	'callers'   => __('Anrufliste'),
 	'directory' => __('Telefonbuch')
-	//'line'  => __('Leitung')
 );
 
 $key_function_none_aastra = 'none';
+
 
 $key_default = array(
 	'function'       => '',
@@ -165,7 +166,7 @@ if (in_array($phone_type, array('snom-360', 'snom-370'), true)) {
 } elseif (in_array($phone_type, array('siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
 	$phone_layout = 'siemens';
 	$key_function_none = $key_function_none_siemens;
-} elseif (in_array($phone_type, array('aastra-57i', 'aastra-55i', 'aastra-53i'), true)) {
+} elseif (in_array($phone_type, array('aastra-53i', 'aastra-55i', 'aastra-57i'), true)) {
 	$phone_layout = 'aastra';
 	$key_function_none = $key_function_none_aastra;
 } else {
@@ -725,35 +726,46 @@ if ($phone_layout) {
 				break;
 		}
 		break;
-
 	case 'aastra':
-		
+		//if ($show_ext_modules >= 0) {
+		//}
 		switch ($phone_type) {
 			case 'aastra-57i':
-				$key_levels[0]['title']=   __('Obere Tasten');
-				$key_levels[1]['title']=   __('Untere Tasten');
-				$key_levels[0]['from'] =   1;
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
+				$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten');
+				$key_levels[0]['from'] =    1;
 				$key_levels[0]['to'  ] =   10;
-				$key_levels[1]['from'] =   101;
-				$key_levels[1]['to'  ] =   120;
+				$key_levels[1]['from'] =  101;
+				$key_levels[1]['to'  ] =  120;
 				break;
 			case 'aastra-55i':
-				$key_levels[0]['title']=   __('Obere Tasten');
-				$key_levels[1]['title']=   __('Untere Tasten');
-				$key_levels[0]['from'] =   1;
-				$key_levels[0]['to'  ] =   6;
-				$key_levels[1]['from'] =   101;
-				$key_levels[1]['to'  ] =   120;
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
+				$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten');
+				$key_levels[0]['from'] =    1;
+				$key_levels[0]['to'  ] =    6;
+				$key_levels[1]['from'] =  101;
+				$key_levels[1]['to'  ] =  120;
 				break;
 			case 'aastra-53i':
-				$key_levels[0]['title']=   __('Untere Tasten');
-				$key_levels[0]['from'] =    101;
-				$key_levels[0]['to'  ] =    120;
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten');
+				$key_levels[0]['from'] =  101;
+				$key_levels[0]['to'  ] =  120;
 				break;
-		}	
-	
+		}
+		/*
+		if ($show_ext_modules >= 1) {
+			$key_levels += array(
+				//FIXME
+			);
+		}
+		if ($show_ext_modules >= 2) {
+			$key_levels += array(
+				//FIXME
+			);
+		}
+		*/
 		break;
-}
+	}
 	
 	if ($phone_layout === 'snom') $table_cols = 5;
 	else                          $table_cols = 6;
@@ -818,10 +830,8 @@ if ($phone_layout) {
 					default : $keyv.= '?';
 				}
 			} elseif ($phone_layout === 'aastra') {
-				
-				if ($knum >= 1) $keyv = 'T'. str_replace(' ', '&nbsp;', str_pad($knum, 2, ' ', STR_PAD_LEFT));
-				if ($knum >= 100) $keyv = 'D'. str_replace(' ', '&nbsp;', str_pad($knum-100, 2, ' ', STR_PAD_LEFT));
-
+				if ($knum >=   1) $keyv = 'T'. str_replace(' ','&nbsp;', str_pad($knum    , 2, ' ', STR_PAD_LEFT));
+				if ($knum >= 100) $keyv = 'D'. str_replace(' ','&nbsp;', str_pad($knum-100, 2, ' ', STR_PAD_LEFT));
 			} else {
 				$keyv = 'F'.$knump;
 			}
