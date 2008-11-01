@@ -444,7 +444,7 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 	echo "Unlock Tables on old Master\n";
 	$ok = $old_master->execute( 'UNLOCK TABLES' );
 
-	return 0;
+	return true;
 }
 
 function gs_db_slave_resync( $master_host, $slave_host, $user, $pass)
