@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<section id="installation-trunk-single-debian" revision="$Revision$">
+<section id="installation-trunk-single-debian" lang="de"
+         revision="$Revision$">
   <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
 % under the terms of the GNU Free Documentation License, Version 1.2
@@ -519,7 +520,10 @@ gemeinschaft:/etc# <command>ln -s /usr/src/gemeinschaft/etc/gemeinschaft</comman
 
     <para>Jetzt kann man die
     <filename>/etc/gemeinschaft/gemeinschaft.php</filename> editieren, also
-    Datenbank-Benutzer und -Paßwort usw. eintragen. IP-Adresse des Rechners in
+    Datenbank-Benutzer und -Paßwort usw. eintragen. Für die Betriebsart als
+    Einzel-Server-System stellt man<programlisting>$INSTALLATION_TYPE = 'single';</programlisting>ein.</para>
+
+    <para>IP-Adresse des Rechners in
     <filename>/opt/gemeinschaft/etc/listen-to-ip</filename> eintragen.</para>
 
     <para>IP-Adresse in Datenbank eintragen:<screen>gemeinschaft:~# <command>mysql</command>
