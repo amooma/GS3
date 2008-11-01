@@ -69,6 +69,8 @@ class "Snom" {
 		(substring(hardware, 1, 3) = 00:04:13)
 		and not (substring(pick-first-value(option vendor-class-identifier, ""), 0, 8) = "snom-m3-")
 	);
+	# store vendor-class-identifier in the lease:
+	set vendor-class-identifier = pick-first-value(option vendor-class-identifier, "snom-");
 	
 	# DHCP options 66/67
 	option tftp-server-name "http://__GEMEINSCHAFT_DHCPD_PROVADDR__:__GEMEINSCHAFT_DHCPD_PROVPORT__";
@@ -86,12 +88,15 @@ class "SnomM3" {
 		(substring(hardware, 1, 3) = 00:04:13)
 		and (substring(pick-first-value(option vendor-class-identifier, ""), 0, 8) = "snom-m3-")
 	);
+	# store vendor-class-identifier in the lease:
+	set vendor-class-identifier = pick-first-value(option vendor-class-identifier, "snom-m3-");
 	
 	# untested
 	# DHCP option 160
-	#option option-160       "http://__GEMEINSCHAFT_DHCPD_PROVADDR__:__GEMEINSCHAFT_DHCPD_PROVPORT__/gemeinschaft/prov/snom/settings-m3.php?mac={mac}";
+	#option option-160       "__GEMEINSCHAFT_DHCPD_PROVADDR__";
 	# DHCP option 66
-	option tftp-server-name "http://__GEMEINSCHAFT_DHCPD_PROVADDR__:__GEMEINSCHAFT_DHCPD_PROVPORT__/gemeinschaft/prov/snom/settings-m3.php?mac={mac}";
+	option tftp-server-name "__GEMEINSCHAFT_DHCPD_PROVADDR__";
+	# the Snom M3 will try TFTP and HTTP and fetch /m3/settings/<mac>.cfg (|.cry)
 	
 	default-lease-time 2764800;  # 32 days
 	max-lease-time     3024000;  # 35 days
