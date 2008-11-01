@@ -51,6 +51,7 @@ if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 }
 */
 if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
+	$phone_types['siemens-os20'] = 'Siemens OpenStage 20';
 	$phone_types['siemens-os40'] = 'Siemens OpenStage 40';
 	$phone_types['siemens-os60'] = 'Siemens OpenStage 60';
 	$phone_types['siemens-os80'] = 'Siemens OpenStage 80';
@@ -154,7 +155,8 @@ if ($phone_type == '') {
 		elseif (array_key_exists('snom-370', $phone_types)) $phone_type = 'snom-370';
 	} else
 	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
-		if     (array_key_exists('siemens-os40', $phone_types)) $phone_type = 'siemens-os40';
+		if     (array_key_exists('siemens-os20', $phone_types)) $phone_type = 'siemens-os20';
+		elseif (array_key_exists('siemens-os40', $phone_types)) $phone_type = 'siemens-os40';
 		elseif (array_key_exists('siemens-os60', $phone_types)) $phone_type = 'siemens-os60';
 		elseif (array_key_exists('siemens-os80', $phone_types)) $phone_type = 'siemens-os80';
 	} else
@@ -168,7 +170,7 @@ if ($phone_type == '') {
 if (in_array($phone_type, array('snom-360', 'snom-370'), true)) {
 	$phone_layout = 'snom';
 	$key_function_none = $key_function_none_snom;
-} elseif (in_array($phone_type, array('siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
+} elseif (in_array($phone_type, array('siemens-os20', 'siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
 	$phone_layout = 'siemens';
 	$key_function_none = $key_function_none_siemens;
 } elseif (in_array($phone_type, array('aastra-51i', 'aastra-53i', 'aastra-55i', 'aastra-57i'), true)) {
@@ -724,10 +726,8 @@ if ($phone_layout) {
 				$key_levels[1]['to'  ] = 1006;
 				break;
 			case 'siemens-os20':
-				$key_levels[0]['from'] =    0;
-				$key_levels[1]['from'] =    0;
-				$key_levels[0]['to'  ] =    0;
-				$key_levels[1]['to'  ] =    0;
+				unset($key_levels[0]);
+				unset($key_levels[1]);
 				break;
 		}
 		break;
