@@ -179,7 +179,7 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	$body.= '-- ' ."\n";
 	$body.= str_replace(array('\\\\n','\\n'), array("\n","\n"),
 		__('Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht.')) ."\n";
-	$body.= sPrintF(__('%s auf \"%s\"'), 'Gemeinschaft', $hostname) ."\n";
+	$body.= sPrintF(__('%s auf "%s"'), 'Gemeinschaft', $hostname) ."\n";
 	
 	$file_name = baseName($outfile);
 	$GS_EMAIL_DELIVERY = gs_get_conf('GS_EMAIL_DELIVERY');
