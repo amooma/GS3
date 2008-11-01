@@ -728,8 +728,12 @@ if ($phone_layout) {
 				$key_levels[1]['to'  ] = 1006;
 				break;
 			case 'siemens-os20':
-				unset($key_levels[0]);
-				unset($key_levels[1]);
+				$key_levels[0]['from'] =    0;
+				$key_levels[1]['from'] =    0;
+				$key_levels[0]['to'  ] =   -1;
+				$key_levels[1]['to'  ] =   -1;
+				//unset($key_levels[0]);
+				//unset($key_levels[1]);
 				break;
 		}
 		break;
