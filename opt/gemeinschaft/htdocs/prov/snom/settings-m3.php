@@ -174,17 +174,14 @@ function _settings_out()
 	
 	//if (true) {
 		header( 'Content-Type: text/plain; charset=utf-8' );
-		# the Content-Type header is ignored by the Snom
+		# the Content-Type header is ignored by the Snom M3
 		
 		foreach ($settings as $name => $a1) {
-			if (subStr($name,0,1) === '_') continue;
-			
 			if (! array_key_exists('_is_array', $a1)) {
 				echo '%',$name,'%:', str_replace("\0",'\\0', $a1['v']) ,"\n";
 			} else {
 				foreach ($a1 as $idx => $a2) {
 					if ($idx === '_is_array') continue;
-					
 					echo '%',$name,$idx,'%:', str_replace("\0",'\\0', $a2['v']) ,"\n";
 				}
 			}
