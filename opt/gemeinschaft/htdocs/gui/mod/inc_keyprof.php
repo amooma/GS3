@@ -107,8 +107,9 @@ $key_functions_aastra = array(
 	//'line'    => __('Leitung'),
 	'park'      => __('Parken'),
 	'pickup'    => __('Heranholen'),
-	'callers'   => __('Anrufliste'),
-	'directory' => __('Telefonbuch')
+	'xml'       => __('Applikation'),
+	'_callers'  => __('Anrufliste'),   # defined by Gemeinschaft
+	'_dir'      => __('Telefonbuch')   # defined by Gemeinschaft
 );
 
 $key_function_none_aastra = 'none';
