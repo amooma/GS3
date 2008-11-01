@@ -342,18 +342,18 @@ psetting('xml application post list', GS_PROV_HOST);
 psetting('services script'    , $prov_url_aastra.'pb.php');
 psetting('callers list script', $prov_url_aastra.'dial-log.php');
 
-# Set phonebook and dial-log keys as default - will be overwritten by a softkey from db.
-# From firmware version 2.3 on there is a default softkey "Webapps" which causes an extremely long boot process
-# by trying to connect "rcs.aastra.com". We have to overwrite it on the first occasion.
+# From firmware version 2.3 on there is a default softkey "Webapps"
+# which causes an extremely long boot process by trying to connect
+# to "rcs.aastra.com". We have to overwrite it on the first occasion.
+//FIXME ...
 
-psetting('softkey1 type'      , 'xml');
-psetting('softkey1 label'     , __('Tel.buch'));
-psetting('softkey1 value'     , $prov_url_aastra.'pb.php');
+psetting('softkey1 type'   , 'xml');
+psetting('softkey1 value'  , $prov_url_aastra.'pb.php');
+psetting('softkey1 label'  , __('Tel.buch'));
 
-psetting('softkey2 type'      , 'xml');
-psetting('softkey2 label'     , __('Anrufliste'));
-psetting('softkey2 value'     , $prov_url_aastra.'dial-log.php');
-
+psetting('softkey2 type'   , 'xml');
+psetting('softkey2 value'  , $prov_url_aastra.'dial-log.php');
+psetting('softkey2 label'  , __('Anrufliste'));
 
 
 # get softkeys
@@ -362,22 +362,21 @@ psetting('softkey2 value'     , $prov_url_aastra.'dial-log.php');
 $softkeys = aastra_get_softkeys( $user_id, $phone_type );
 if (is_array($softkeys)) {
 	foreach ($softkeys as $key_name => $softkey) {
-		
 		switch ($softkey['function']) {
-		
-		case 'directory':
-			psetting($key_name.' type'      , 'xml');
-			psetting($key_name.' value'      , $prov_url_aastra.'pb.php');
+		case '_dir':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'pb.php';
+			$softkey['label'   ] = __('Tel.buch');
 			break;
-		case 'callers':
-			psetting($key_name.' type'      , 'xml');
-			psetting($key_name.' value'      , $prov_url_aastra.'dial-log.php');
+		case '_callers':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'dial-log.php';
+			$softkey['label'   ] = __('Anrufliste');
 			break;
-		default:
-			psetting($key_name.' type'      , $softkey['function']);
-			psetting($key_name.' value'      , $softkey['data']);
 		}
-		psetting($key_name.' label'      , $softkey['label']);
+		psetting($key_name.' type' , $softkey['function']);
+		psetting($key_name.' value', $softkey['data'    ]);
+		psetting($key_name.' label', $softkey['label'   ]);
 	}
 }
 
