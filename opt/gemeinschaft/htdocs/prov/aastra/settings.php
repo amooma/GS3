@@ -112,66 +112,52 @@ $module_sql;
 }
 */
 
-function aastra_get_softkeys($user_id, $phone_type )
+function aastra_get_softkeys( $user_id, $phone_type )
 {
 	global $db;
-	$softkeys = Array();
-
+	$softkeys = array();
 	$sql_query = 'SELECT `group_id`, `softkey_profile_id`  FROM `users` WHERE `id`='. $user_id;
-
-
-	$rs = $db->execute( $sql_query );
+	$rs = $db->execute($sql_query);
 	if (! $rs) return false;
-
-	$r = @$rs->fetchRow();
-	
-	$group_id = (int)@$r['group_id'];
+	$r = $rs->fetchRow();
+	$group_id           = (int)@$r['group_id'];
 	$softkey_profile_id = (int)@$r['softkey_profile_id'];
 	
 	if ($group_id) {
-		$sql_query = 'SELECT `s`.`key`, `s`.`function`, `s`.`data`, `s`.`label`, `s`.`user_writeable` FROM `softkeys` `s` JOIN `user_groups` `u` ON (`u`.`softkey_profile_id` = `s`.`profile_id`) WHERE `u`.`id` = '.$group_id.' AND `s`.`phone_type` = \''.$phone_type.'\'' ; 
-
-		$rs = $db->execute( $sql_query );
-		if (! $rs) break;
-	
-		while ($r = @$rs->fetchRow()) {
-			
+		$sql_query = 'SELECT `s`.`key`, `s`.`function`, `s`.`data`, `s`.`label`, `s`.`user_writeable` FROM `softkeys` `s` JOIN `user_groups` `u` ON (`u`.`softkey_profile_id` = `s`.`profile_id`) WHERE `u`.`id` = '.$group_id.' AND `s`.`phone_type` = \''.$phone_type.'\'' ;
+		$rs = $db->execute($sql_query);
+		if (! $rs) return false;
+		while ($r = $rs->fetchRow()) {
 			$key_num = (int) preg_replace('/[^0-9]/', '', @$r['key']);
 			switch ($phone_type) {
-			
 			case 'aastra-57i':
-				if ($key_num >=1) $key_name = 'topsoftkey'.$key_num;
-				if ($key_num >=100) $key_name = 'softkey'.($key_num-100);
+				if ($key_num >=  1) $key_name = 'topsoftkey'.($key_num);
+				if ($key_num >=100) $key_name = 'softkey'   .($key_num-100);
 				break;
 			case 'aastra-55i':
-				if ($key_num >=1) $key_name = 'prgkey'.$key_num;
-				if ($key_num >=100) $key_name = 'softkey'.($key_num-100);	
+				if ($key_num >=  1) $key_name = 'prgkey'    .($key_num);
+				if ($key_num >=100) $key_name = 'softkey'   .($key_num-100);	
 				break;
 			default:
 				$key_name = 'prgkey'.$key_num;
 			}
 			$softkeys[$key_name] = $r;
 		}
-		
 	}
-
-	if ($softkey_profile_id) {
-		$sql_query = 'SELECT `key`, `function`, `data`, `label` FROM `softkeys` WHERE `profile_id` = '.$softkey_profile_id.' AND `phone_type` = \''.$phone_type.'\'' ; 
-
-		$rs = $db->execute( $sql_query );
-		if (! $rs) break;
 	
-		while ($r = @$rs->fetchRow()) {
-			
+	if ($softkey_profile_id) {
+		$sql_query = 'SELECT `key`, `function`, `data`, `label` FROM `softkeys` WHERE `profile_id` = '.$softkey_profile_id.' AND `phone_type` = \''.$phone_type.'\'' ;
+		$rs = $db->execute($sql_query);
+		if (! $rs) return false;
+		while ($r = $rs->fetchRow()) {
 			$key_num = (int) preg_replace('/[^0-9]/', '', @$r['key']);
-			if ($key_num >=1) $key_name = 'topsoftkey'.$key_num;
-			if ($key_num >=100) $key_name = 'softkey'.($key_num-100);
+			if ($key_num >=  1) $key_name = 'topsoftkey'.($key_num);
+			if ($key_num >=100) $key_name = 'softkey'   .($key_num-100);
 			$softkeys[$key_name] = $r;
 		}
 		
 	}
 	
-
 	return $softkeys;
 }
 
