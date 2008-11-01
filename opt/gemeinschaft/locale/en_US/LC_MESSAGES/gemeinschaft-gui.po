@@ -2678,8 +2678,8 @@ msgid ""
 "Rufnummernunterdr&uuml;ckung. Bei <q>an</q> wird die Nummer unterdr&uuml;"
 "ckt<sup>[1]</sup>, bei <q>aus</q> wird sie mitgesendet."
 msgstr ""
-"Calling Line Identification Restriction. <q>on&</q> to restrict<sup>[1]</sup>,"
-" <q>off</q> to send your number."
+"Calling Line Identification Restriction. <q>on&</q> to restrict<sup>[1]</"
+"sup>, <q>off</q> to send your number."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 59
 msgid "Rufton aus"
