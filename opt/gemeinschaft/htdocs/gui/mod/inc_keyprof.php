@@ -417,9 +417,9 @@ echo '<small>(', __('Vor dem Wechsel ggf. &Auml;nderungen speichern!') ,')</smal
 
 ?>
 <hr />
-<?php if (! $is_user_profile) { ?>
+<?php /*if (! $is_user_profile) { ?>
 <br />
-<?php } ?>
+<?php }*/ ?>
 <?php
 
 if (! $is_user_profile) {
@@ -508,7 +508,7 @@ if (! $profile_id && ! $is_user_profile) {  # do not show keys for new profiles 
 		$phone_type = @key($phone_types);
 	}
 	
-	echo '<br style="clear:right;" />' ,"\n";
+	//echo '<br style="clear:right;" />' ,"\n";
 	
 	$save_bt = '<p class="r">' ."\n";
 	$save_bt.= '<button type="submit" title="'. __('Speichern') .'" name="action" value="save">' ."\n";
@@ -666,6 +666,8 @@ try {
 #################################################################
 if ($phone_layout) {
 	
+	echo '<h3 style="margin:0; padding:1px 0; font-size:100%;">', htmlEnt($phone_type_title) ,'</h3>', "\n";
+	
 	$show_variables = true;
 	
 	echo $save_bt;
@@ -781,10 +783,13 @@ if ($phone_layout) {
 	echo '<table cellspacing="1">' ,"\n";
 	echo '<tbody>' ,"\n";
 	
+	$is_first_table = true;
 	foreach ($key_levels as $key_level_idx => $key_level_info) {
 		
-		if ($key_level_idx > 0) {
+		if (! $is_first_table) {
 			echo '<tr><td colspan="',$table_cols,'" class="transp">&nbsp;</td></tr>' ,"\n";
+		} else {
+			$is_first_table = false;
 		}
 		echo '<tr>' ,"\n";
 		echo '	<th colspan="',$table_cols,'" class="c m" style="padding:0.6em;">', $key_level_info['title'] ,'</th>' ,"\n";
@@ -991,6 +996,7 @@ if ($phone_layout) {
 	}
 	echo '</tbody>' ,"\n";
 	echo '</table>' ,"\n";
+	echo '<br />' ,"\n";
 	echo $save_bt;
 }
 #################################################################
