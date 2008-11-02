@@ -27,6 +27,9 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/log.php' );
+include_once( GS_DIR .'inc/quote_shell_arg.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
 
 
 function _validate_ip_addr( $ipaddr )
@@ -45,232 +48,292 @@ function _validate_ip_addr( $ipaddr )
 	return $ipaddr;
 }
 
-function RunTests($hosts) {
+
+function _try_ssh( $server )
+{
+	$cmd = 'echo '. qsa('Hello World');
+	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
+	
+	$err=0; $out=array();
+	@exec( $sudo . $cmd, $out, $err );
+	if ($err != 0)
+		return new GsError( 'Could not SSH to '. $server );
+	
+	return true;
+}
+
+
+function _check_etc_gemeinschaft_php( $server, $master_host )
+{
+	$cmd = 'grep '. qsa('DB_MASTER_HOST') .' '. qsa('/etc/gemeinschaft/gemeinschaft.php');
+	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
+	
+	$err=0; $out=array();
+	@exec( $sudo . $cmd, $out, $err );
+	if ($err != 0)
+		return new GsError( 'Could not SSH to '. $server );
+	
+	@preg_match("/'[a-zA-Z0-9.]+'/", $out[0], $m );  //FIXME
+	@preg_match("/[a-zA-Z0-9.]+/"  ,  @$m[0], $m1);  //FIXME
+	if (@$m1[0] != $master_host) {
+		return new GsError( 'Master host in gemeinschaft.php ('.$m1[0].') on host '. $server .' differs from the Master host in the Topology ('.$master_Host.')!' );
+	}
+	$master_host = _validate_ip_addr(@$m1[0]);
+	if (! $master_host)
+		return new GsError( 'Invalid IP address "'.$master_host.'"' );
+	
+	return true;
+}
+
+
+function _change_etc_gemeinschaft_php( $server, $master_host )
+{
+	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
+		return new GsError( 'Not allowed on single server systems.' );
+	
+	$cmd = 'grep '. qsa('DB_MASTER_HOST') .' '. qsa('/etc/gemeinschaft/gemeinschaft.php');
+	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
+	
+	$err=0; $out=array();
+	@exec( $sudo . $cmd, $out, $err );
+	if ($err != 0)
+		return new GsError( 'Could not SSH to '. $server );
+	
+	$master_host_old = _validate_ip_addr(@$out[0]);
+	if (! $master_host_old)
+		return new GsError( 'Invalid IP address "'.$master_host_old.'"' );
+	
+	$master_host     = _validate_ip_addr($master_host);
+	if (! $master_host)
+		return new GsError( 'Invalid IP address "'.$master_host.'"' );
+	
+	$file = '/etc/gemeinschaft/gemeinschaft.php';
+	$sed_cmd = 's/'.$master_host_old.'/\$DB_MASTER_HOST = \''.$master_host.'\';/g';  //FIXME
+	$cmd = 'sed '. qsa($sed_cmd)
+		. ' '. qsa($file)
+		.' > '. qsa($file.'.tmp')
+		.' && mv '. qsa($file.'.tmp')
+		.' '. qsa($file);
+	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
+	
+	$err=0; $out=array();
+	@exec( $sudo . $cmd, $out, $err );
+	if ($err != 0)
+		return new GsError( 'Could not execute SED via SSH on '. $server );
+	
+	return true;
+}
+
+
+function _run_topology_tests( $hosts )
+{
+	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+		trigger_error( "Not allowed on single server systems.\n", E_USER_ERROR );
+		exit(1);
+	}
+	
 	$conf = '/etc/gemeinschaft/topology.php';
-	if (! file_exists( $conf )) {
+	if (! file_exists($conf)) {
 		trigger_error( "Config file \"$conf\" not found!\n", E_USER_ERROR );
 		exit(1);
 	} else {
-		if ((@include( $conf )) === false) {
+		if ((@include($conf)) === false) {
 			// () around the include are important!
 			trigger_error( "Could not include config file \"$conf\"!\n", E_USER_ERROR );
 			exit(1);
 		}
 	}
-
-
-	echo "Current RZ=" . $CUR_RZ."\n";
-
-//look if we can acces each Machine via ssh
-	echo "Stage 1: Trying to reach each System via SSH...\n";
 	
-	foreach ( $hosts as $host) {
-		echo $host['disc']."... ";
-		$ok = TrySsh($host['host']);
-		if (isGsError( $ok )) {
-			echo $ok->getMsg()."\n";
+	echo "Current EDPC (de: RZ): ", $CUR_RZ ,"\n";
+	
+	echo "Stage 1: Trying to reach each system via SSH ...\n";
+	
+	foreach ($hosts as $host) {
+		echo $host['desc'] ,"... ";
+		$ok = _try_ssh($host['host']);
+		if (isGsError($ok)) {
+			echo $ok->getMsg() ,"\n";
+			exit(1);
+		} elseif (! $ok) {
+			echo 'Error' ,"\n";
 			exit(1);
 		}
 		echo "ok.\n";
 	}
+	echo "SSH seems to be working.\n\n";
 	
-	echo "SSH seams to be working...\n\n";
 	echo "============================\n\n";
-	echo "Stage 2: Trying to reach each system via MySQL\n";
-			
-	foreach ($hosts as $key => $value) {
-		echo $hosts[$key]['disc']."... ";
-		if($key == 'DB_MASTER_SERVER1' && $CUR_RZ=='A')
-			$hosts[$key]['con'] = db_master_connect($hosts[$key]['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con']);
-		else if($key == 'DB_MASTER_SERVER2' && $CUR_RZ=='B')
-			$hosts[$key]['con'] = db_master_connect($hosts[$key]['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con']);
-		else
-			$hosts[$key]['con'] = db_slave_connect($hosts[$key]['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con']);
-
-		if(!$hosts[$key]['con']) {
+	echo "Stage 2: Trying to reach each system via MySQL ...\n";
+	
+	foreach ($hosts as $key => $info) {
+		echo $arr['desc'] ,"... ";
+		
+		if       ($key === 'DB_MASTER_SERVER1' && $CUR_RZ === 'A') {
+			$hosts[$key]['con'] = db_master_connect( $hosts[$key]['host'],
+				$SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con'] );
+		} elseif ($key === 'DB_MASTER_SERVER2' && $CUR_RZ === 'B') {
+			$hosts[$key]['con'] = db_master_connect( $hosts[$key]['host'],
+				$SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con'] );
+		} else {
+			$hosts[$key]['con'] = db_slave_connect ( $hosts[$key]['host'],
+				$SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con'] );
+		}
+		
+		if (! $hosts[$key]['con']) {
 			echo "Could not connect to ". $hosts[$key]['host'] ."\n";
 			exit(1);
 		}
 		echo "ok.\n";
-	}	
-
+	}
+	echo "MySQL connections seems to be working.\n\n";
 	
-	echo "MySQL connections seams to be working...\n\n";
 	echo "============================\n\n";
-	echo "Stage 3: Checking REPLICATION-process on each system via MySQL\n";
-	$warningcounter=0;
-	foreach ( $hosts as $key => $host) {
-		if($key == 'DB_MASTER_SERVER1' && $CUR_RZ=='A') {
-			echo "(MASTER)".$host['disc']."... ";
-			$ok = $host['con']->execute("SHOW MASTER STATUS");
-			if (!$ok) {
-				echo "Cant execute SHOW MASTER STATUS on " .$host['host'];
+	echo "Stage 3: Checking replication process on each system via MySQL ...\n";
+	$warningcounter = 0;
+	foreach ($hosts as $key => $host) {
+		if ($key === 'DB_MASTER_SERVER1' && $CUR_RZ === 'A') {
+			echo "(MASTER) ", $host['desc'] ,"... ";
+			$rs = $host['con']->execute( 'SHOW MASTER STATUS' );
+			if (! $rs) {
+				echo "Could not execute SHOW MASTER STATUS on ", $host['host'] ,"\n";
 				exit(1);
 			}
-			$master_status = $ok->fetchRow();
-			if(!isSet($master_status['Position']) || !isSet($master_status['File'])) {
-				echo "Error, Master not running on " .$host['host']."\n";
+			$master_status = $rs->fetchRow();
+			if (! isSet($master_status['Position'])
+			||  ! isSet($master_status['File'])) {
+				echo "Error. Master not running on ", $host['host'] ,"\n";
 				exit(1);
 			}
 			echo "ok.\n";
 		}
-		else if($key == 'DB_MASTER_SERVER2' && $CUR_RZ=='B') {
-			echo "(MASTER) ".$host['disc']."... ";
-			$ok = $host['con']->execute("SHOW MASTER STATUS");
-			if (!$ok) {
-				echo "Cant execute SHOW MASTER STATUS on " .$host['host']."\n";
+		elseif ($key == 'DB_MASTER_SERVER2' && $CUR_RZ === 'B') {
+			echo "(MASTER) ", $host['desc'] ,"... ";
+			$rs = $host['con']->execute( 'SHOW MASTER STATUS' );
+			if (! $rs) {
+				echo "Could not execute SHOW MASTER STATUS on ", $host['host'] ,"\n";
 				exit(1);
 			}
-			$master_status = $ok->fetchRow();
-			if(!isSet($master_status['Position']) || !isSet($master_status['File'])) {
-				echo "Error, Master not running on " .$host['host']."\n";
+			$master_status = $rs->fetchRow();
+			if (! isSet($master_status['Position'])
+			||  ! isSet($master_status['File'])) {
+				echo "Error. Master not running on ", $host['host'] ,"\n";
 				exit(1);
 			}
 			echo "ok.\n";
 		}
 		else {
 			$bOk = true;
-			echo $host['disc']."... ";
-
-			if($CUR_RZ=='A' && $host['host'] == $DB_MASTER_SERVER1_SERVICE_IP) {
-				echo "Skipping, cause' it's the same host of \$DB_MASTER_SERVER1_SERVICE_IP. This host dont need to be a slave of hisself";
+			echo $host['desc'] ,"... ";
+			
+			if ($CUR_RZ === 'A' && $host['host'] === $DB_MASTER_SERVER1_SERVICE_IP) {
+				echo "Skipping, because it's the same host as DB_MASTER_SERVER1_SERVICE_IP.\n";
+				echo "This host does not need to be a slave to himself.";
 				continue;
-				}
-			if($CUR_RZ=='B' && $host['host'] == $DB_MASTER_SERVER2_SERVICE_IP) {
-				echo "Skipping, cause' it's the same host of \$DB_MASTER_SERVER2_SERVICE_IP This host dont need to be a slave of hisself\n";
+			}
+			if ($CUR_RZ === 'B' && $host['host'] === $DB_MASTER_SERVER2_SERVICE_IP) {
+				echo "Skipping, because it's the same host as DB_MASTER_SERVER2_SERVICE_IP.\n";
+				echo "This host does not need to be a slave to himself.\n";
 				continue;
-				}
-
-
-			$ok = $host['con']->execute("SHOW SLAVE STATUS");
-			if (!$ok) {
-				echo "Cant execute SHOW SLAVE STATUS on " .$host['host'];
+			}
+			
+			$rs = $host['con']->execute( 'SHOW SLAVE STATUS' );
+			if (! $rs) {
+				echo "Could not execute SHOW SLAVE STATUS on ", $host['host'] ,"\n";
 				exit(1);
 			}
-			$slave_status = $ok->fetchRow();
-			if($slave_status["Slave_IO_State"] == "") {
-				echo "WARNING: Slave on ". $host['host'] ." is not running! ";
+			$slave_status = $rs->fetchRow();
+			if (@$slave_status['Slave_IO_State'] == '') {
+				echo "WARNING: Slave on ", $host['host'] ," is not running!\n";
 				$bOk = false;
 				++$warningcounter;
 			}
 			
- 			if($CUR_RZ=='A' && $slave_status["Master_Host"] != $hosts['DB_MASTER_SERVER1']['host']) {
-				echo "WARNING: Slave on ". $host['host'] ." has the wrong Master!\n";
-				echo "The Master on the Host is: ".$slave_status["Master_Host"]." and schould be ". $hosts['DB_MASTER_SERVER1']['host']."\n";
-				echo "You may execute:\n";
-				echo "gs-db-slave-replication-setup --master=".$hosts['DB_MASTER_SERVER1']['host']." --slave=".$host['host']." --user=".$SUPER_MYSQL_USER." --pass=".$SUPER_MYSQL_PASS."\n";
+ 			if ($CUR_RZ === 'A' && @$slave_status['Master_Host'] != $hosts['DB_MASTER_SERVER1']['host']) {
+				echo "WARNING: Slave on ", $host['host'] ," has the wrong Master!\n";
+				echo "The Master on that host is: ", $slave_status["Master_Host"] ,"\n";
+				echo "but should be ", $hosts['DB_MASTER_SERVER1']['host'] ,"\n";
+				echo "You may want to execute:\n";
+				echo "gs-db-slave-replication-setup"
+					," --master=", qsa($hosts['DB_MASTER_SERVER1']['host'])
+					," --slave=", qsa($host['host'])
+					," --user=",qsa($SUPER_MYSQL_USER)
+					," --pass=", qsa($SUPER_MYSQL_PASS)
+					,"\n";
 				$bOk = false;
 				++$warningcounter;
 			}
-			if($CUR_RZ=='B' && $slave_status["Master_Host"] != $hosts['DB_MASTER_SERVER2']['host']) {
-				echo "WARNING: Slave on ". $host['host'] ." has the wrong Master!\n";
-				echo "The Master on the Host is: ".$slave_status["Master_Host"]." and schould be ". $hosts['DB_MASTER_SERVER2']['host']."\n";
-				echo "You may execute:\n";
-				echo "gs-db-slave-replication-setup --master=".$hosts['DB_MASTER_SERVER1']['host']." --slave=".$host['host']." --user=".$SUPER_MYSQL_USER." --pass=".$SUPER_MYSQL_PASS."\n";
+			if ($CUR_RZ === 'B' && @$slave_status['Master_Host'] != $hosts['DB_MASTER_SERVER2']['host']) {
+				echo "WARNING: Slave on ", $host['host'] ," has the wrong Master!\n";
+				echo "The Master on that host is: ", $slave_status["Master_Host"] ,"\n";
+				echo "but should be ", $hosts['DB_MASTER_SERVER2']['host'] ,"\n";
+				echo "You may want to execute:\n";
+				echo "gs-db-slave-replication-setup"
+					," --master=", qsa($hosts['DB_MASTER_SERVER2']['host'])
+					," --slave=", qsa($host['host'])
+					," --user=",qsa($SUPER_MYSQL_USER)
+					," --pass=", qsa($SUPER_MYSQL_PASS)
+					,"\n";
 				$bOk = false;
 				++$warningcounter;
 			}
-
-			if($bOk)
+			
+			if ($bOk)
 				echo "ok.\n";
 			else
-				echo "a warning occoured\n";
-
+				echo "a warning occurred.\n";
 		}
-	} // foreach ( $hosts as $key => $host)
+	} // foreach ($hosts as $key => $host)
 	
-	if($warningcounter) {
-		echo "Found ". $warningcounter ." warnings. Please try to Fix them!\n";
+	if ($warningcounter > 0) {
+		echo "Found ", $warningcounter ," warnings. Please try to fix them!\n";
 		exit(1);
 	}
-	echo "REPLICATION seams to be working...\n\n";
+	echo "Replication seems to be working.\n\n";
+	
 	echo "============================\n\n";
-	echo "Stage 4: Checking gemeinschaft.php for variable \$DB_MASTER_HOST on each system via SSH\n";
-
+	echo "Stage 4: Checking gemeinschaft.php for variable DB_MASTER_HOST on each system ...\n";
+	
 	$master_host = null;
-	if($CUR_RZ=='A')
+	if       ($CUR_RZ === 'A') {
 		$master_host = $DB_MASTER_SERVER1_SERVICE_IP;
-	else 
+	} elseif ($CUR_RZ === 'B') {
 		$master_host = $DB_MASTER_SERVER2_SERVICE_IP;
-
-	foreach ( $hosts as $host) {
-		echo $host['disc']."... ";
-		$ok = CheckGemeinschaft_php($host['host'], $master_host);
-		if (isGsError( $ok )) {
-			echo $ok->getMsg()."\n";
+	} else {
+		echo "Error.\n";
+		exit(1);
+	}
+	
+	foreach ($hosts as $host) {
+		echo $host['desc'] ,"... ";
+		$ok = _check_etc_gemeinschaft_php( $host['host'], $master_host );
+		if (isGsError($ok)) {
+			echo $ok->getMsg() ,"\n";
+			exit(1);
+		} elseif (! $ok) {
+			echo 'Error' ,"\n";
 			exit(1);
 		}
 		echo "ok.\n";
 	}
-
-	echo "the variable \$DB_MASTER_HOST in the gemeinschaft.php on each Host seams to be ok.\n\n";
-
-	echo "All systems should be up and running properly\n";
+	echo "The DB_MASTER_HOST setting in gemeinschaft.php on each host seems to be ok.\n\n";
 	
-	//TODO: add Test to check if the Virtual Interfaces exists
-	//TODO: add Test to check if Webservices are running
-	//TODO: add Test to check if Voice-Services are running
-	//TODO: add Test of the listen-to-ip File
-
-	return 0;
+	echo "All systems should be up and running properly.\n";
+	
+	//TODO: add test to check if the Virtual Interfaces exists
+	//TODO: add test to check if Web services are running
+	//TODO: add test to check if Voice services are running
+	//TODO: add test for the listen-to-ip file
+	
+	return true;
 }
 
 
-function TrySsh($Server) {
-	$cmd = "ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@".$Server." 'echo \"Hello World\"'" ;
 
-	@ exec( $sudo . $cmd , $out, $err );
 
-	$ok = true;
-	$ok = $ok && ($err==0);
-	if (! $ok) {
-		return new GsError( 'Could not SSH to '.$Server );
-		}
 
-	return 0;
-}
 
-function CheckGemeinschaft_php($Server, $Master_Host) {
 
-	$cmd = "ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@".$Server." 'grep DB_MASTER_HOST /etc/gemeinschaft/gemeinschaft.php'" ;
 
-	@ exec( $sudo . $cmd , $out, $err );
-
-	$ok = true;
-	$ok = $ok && ($err==0);
-	if (! $ok) {
-		return new GsError( 'Could not SSH to '.$Server );
-		}
-	preg_match("/'[a-zA-Z0-9.]+'/", $out[0], $res);
-	preg_match("/[a-zA-Z0-9.]+/", $res[0], $res1);
-	if($res1[0] != $Master_Host)
-		return new GsError( 'Error, Master host in gemeinschaft.php ('.$res1[0].') on host ' .$Server. ' differs with the Master host in the Topology ('.$Master_Host.')!');
-
-	return 0;
-}
-
-function ChangeGemeinschaft_php($Server, $Master_Host) {
-
-	$cmd = "ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@".$Server." 'grep DB_MASTER_HOST /etc/gemeinschaft/gemeinschaft.php'" ;
-
-	@ exec( $sudo . $cmd , $out, $err );
-
-	$ok = true;
-	$ok = $ok && ($err==0);
-	if (! $ok) {
-		return new GsError( 'Could not SSH to '.$Server );
-		}
-	$cmd = "ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@".
-$Server." 'sed \"s/".$out[0]."/\$DB_MASTER_HOST = '".$Master_Host."';/g\" /etc/gemeinschaft/gemeinschaft.php > /etc/gemeinschaft/gemeinschaft.php.tmp && mv /etc/gemeinschaft/gemeinschaft.php.tmp /etc/gemeinschaft/gemeinschaft.php'" ;
-
-	@ exec( $sudo . $cmd , $out, $err );
-	$ok = true;
-	$ok = $ok && ($err==0);
-	if (! $ok) {
-		return new GsError( 'Could not execute SED via SSH on '.$Server );
-		}
-	return 0;
-}
 
 
 
@@ -370,6 +433,9 @@ function & db_slave_connect( $host, $user, $pass, &$db_conn_slave )
 
 function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pass)
 {
+	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
+		return new GsError( 'Not allowed on single server systems.' );
+	
 	$old_master_host = _validate_ip_addr($old_master_host);
 	$new_master_host = _validate_ip_addr($new_master_host);
 	if (! $old_master_host)
@@ -382,6 +448,8 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 		return new GsError( 'IP address on localhost not allowed for new DB master.' );
 	if ($new_master_host == $old_master_host)
 		return new GsError( 'New DB master == old DB master.' );
+	if (strLen($pass) < 4)
+		return new GsError( 'Password too short.' );
 	
 	# connect
 	$old_master = db_master_connect( $old_master_host, $user, $pass, $old_master );
@@ -510,73 +578,82 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 	return true;
 }
 
-function gs_db_setup_replication( $master_host, $slave_host, $user, $pass)
+
+function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 {
+	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
+		return new GsError( 'Not allowed on single server systems.' );
+	
 	# are we root? do we have to sudo?
 	#
-	$uid = @ posix_geteuid();
-	$uinfo = @ posix_getPwUid($uid);
-	$uname = @ $uinfo['name'];
-	$sudo = ($uname=='root') ? '' : 'sudo ';
+	$uid = @posix_geteuid();
+	$uinfo = @posix_getPwUid($uid);
+	$uname = @$uinfo['name'];
+	$sudo = ($uname==='root') ? '' : 'sudo ';
 	
-	#get binlog position
+	# get binlog position
 	#
-	$master = db_master_connect($master_host, $user, $pass, $master);
-	$res = $master->execute("SHOW MASTER STATUS");
-	$master_status = $res->fetchRow();
+	/*
+	$master = db_master_connect( $master_host, $user, $pass, $master );
+	if (! $master)
+		return new GsError( 'Failed to connect to master database.' );
+	$rs = $master->execute( 'SHOW MASTER STATUS' );
+	if (! $rs)
+		return new GsError( 'DB error.' );
+	$master_status = $rs->fetchRow();
+	*/
 	
+	# Stop Slave
+	$slave  = db_slave_connect( $slave_host  , $user, $pass, $slave );
+	if (! $slave)
+		return new GsError( 'Failed to connect to slave database.' );
+	$ok = $slave->execute( 'STOP SLAVE' );
+	if (! $ok)
+		return new GsError( 'Failed to stop database slave replication' );
 	
-	#Stop Slave
-	$slave  = db_slave_connect($slave_host , $user, $pass, $slave);
-	$ok = $slave->execute('STOP SLAVE');
-	if (! $ok) {
-		return new GsError( "Failed to Stop Slave-Replication Process");
-		}
+	$dump_filename = '/tmp/gs-db-resync-dump-'. rand() .'.sql';
 	
-	
-	$dump_filename = "/tmp/db-resync-dump-" . rand() .".sql";
-	
-	#dump master database
+	# dump Master database
 	#
-	$sshcommand = "'mysqldump --databases asterisk --opt --skip-extended-insert  --single-transaction --lock-tables'";
+	$cmd = 'mysqldump --databases asterisk --opt --skip-extended-insert  --single-transaction --lock-tables';
+	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$master_host) .' '
+		. qsa($cmd) .' > '. qsa($dump_filename) .' 2>>/dev/null';
 	
-	$cmd = "ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@".$master_host." " . $sshcommand." > ".$dump_filename;
+	$err=0; $out=array();
+	@exec( $sudo . $cmd, $out, $err );
+	if ($err != 0)
+		return new GsError( 'Failed to save dump of master database!' );
 	
-	@ exec( $sudo . $cmd , $out, $err );
-	
-	$ok = true;
-	$ok = $ok && ($err==0);
-	if (! $ok) {
-		return new GsError( "Failed to dump Master Database!");
-		
-		}
-	
-	#restore dump on Slave
+	# restore dump on Slave
 	#
-	$cmd = "cat ".$dump_filename." | ssh -o StrictHostKeyChecking=no -o BatchMode=yes root@".$slave_host." 'mysql asterisk' ";
+	$cmd = 'cat '. qsa($dump_filename)
+		.' | ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$slave_host)
+		.' '. qsa( 'mysql asterisk' );
+	//FIXME - instead of cat, copy the dump to the slave first
 	
-	@ exec( $sudo . $cmd , $out, $err );
+	$err=0; $out=array();
+	@exec( $sudo . $cmd, $out, $err );
+	if ($err != 0)
+		return new GsError( 'Failed to restore database dump on slave!' );
 	
-	#start slave-replication on Slave
+	# start replication on Slave
 	#
-	
-	$query = 'CHANGE MASTER TO '.
+	$query =
+		'CHANGE MASTER TO '.
 			'MASTER_HOST=\''    . $master->escape($master_host) .'\', '.
 			'MASTER_USER=\''    . $master->escape($user) .'\', '.
 			'MASTER_PASSWORD=\''. $master->escape($pass) .'\', '.
-			'MASTER_LOG_FILE=\''. $master_status['File']  .'\', '.
-			'MASTER_LOG_POS=' . $master_status['Position'];
-	
+			'MASTER_LOG_FILE=\''. $master->escape($master_status['File']) .'\', '.
+			'MASTER_LOG_POS='   . (int)$master_status['Position']
+		;
 	$ok = $slave->execute($query);
-	if (! $ok) {
-		return new GsError("Failed to Change Master on Slave!");
-		}
+	if (! $ok)
+		return new GsError( 'Failed to Change Master on Slave!' );
 	
-	$ok = $slave->execute('START SLAVE');
-	if (! $ok) {
-		return new GsError("Failed to Start Slave-Replication Process");
-		}
-
+	$ok = $slave->execute( 'START SLAVE' );
+	if (! $ok)
+		return new GsError( 'Failed to Start Slave Replication Process' );
+	
 	return true;
 }
 
