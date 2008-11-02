@@ -70,10 +70,10 @@ if (@fileSize($leases_file) > 1000000) {
 }
 
 
-/*
+
 function un_octal_escape( $str )
 {
-	return preg_replace_callback('/\\\([0-7]{3})/S', create_function(
+	return preg_replace_callback('/\\\([0-7]{1,3})/S', create_function(
 		'$m',
 		'return chr(octDec($m[1]));'
 	), $str);
@@ -89,12 +89,12 @@ function binary_to_hex( $str )
 	}
 	return $ret;
 }
-*/
+
 
 
 $data = @gs_file_get_contents($leases_file);
 
-echo "<pre>";
+//echo "<pre>\n";
 $leases = array();
 $m = array();
 preg_match_all('/^lease\s+([0-9.]{7,15})\s+\{[^}]*\}/msS', $data, $m, PREG_SET_ORDER);
@@ -116,6 +116,7 @@ foreach ($m as $lease_def) {
 	preg_match_all('/^\s*([a-z\-]+)\s*([^;\n$]*)/mS', $lease_def, $lm, PREG_SET_ORDER);
 	foreach ($lm as $line_def) {
 		switch ($line_def[1]) {
+			
 			case 'starts':
 				if (preg_match('/^[0-6]\s+([0-9]{4})\/([0-9]{2})\/([0-9]{2})\s+([0-9]{2}):([0-9]{2}):([0-9]{2})/S', $line_def[2], $p)) {
 					$lease['start'] = gmMkTime(
@@ -123,6 +124,7 @@ foreach ($m as $lease_def) {
 						(int)lTrim($p[2],'0'), (int)lTrim($p[3],'0'), (int)lTrim($p[1],'0'));
 				}
 				break;
+			
 			case 'ends':
 				if (preg_match('/^[0-6]\s+([0-9]{4})\/([0-9]{2})\/([0-9]{2})\s+([0-9]{2}):([0-9]{2}):([0-9]{2})/S', $line_def[2], $p)) {
 					$lease['end'] = gmMkTime(
@@ -133,6 +135,7 @@ foreach ($m as $lease_def) {
 					$lease['end'] = PHP_INT_MAX;
 				}
 				break;
+			
 			case 'hardware':
 				if (preg_match('/^([a-z0-9\-_]+)\s+(([0-9a-zA-Z]{1,2}:?)+)/S', $line_def[2], $p)) {
 					$lease['hwt'] = $p[1];
@@ -155,11 +158,13 @@ foreach ($m as $lease_def) {
 					$lease['mac'] = $p[2];
 				}
 				break;
+			
 			case 'client-hostname':
 				if (preg_match('/^"?([a-zA-Z0-9\-_.]+)/S', $line_def[2], $p)) {
 					$lease['name'] = $p[1];
 				}
 				break;
+			
 			/*
 			case 'uid':
 				if (preg_match('/^"([^";\n]+)/S', $line_def[2], $p)) {
@@ -170,24 +175,41 @@ foreach ($m as $lease_def) {
 				}
 				break;
 			*/
+			
 			case 'binding':
 				if (preg_match('/^state\s+([a-z0-9]+)/S', $line_def[2], $p)) {
 					$lease['bstate'] = $p[1];
 				}
 				break;
 			
+			case 'abandoned':
+				$lease['abd'] = true;
+				break;
 			
-			
+			case 'set':
+				# custom variable in the lease
+				$setm = array();
+				preg_match_all('/^\s*([a-z\-_]+)\s*=?\s*([^;\n$]*)/mS', $line_def[2], $setm, PREG_SET_ORDER);
+				foreach ($setm as $set_def) {
+					switch ($set_def[1]) {
+						case 'vendor-class-identifier':
+							$val = trim($set_def[2], '"');
+							$lease['vci'] = $val;
+							break;
+					}
+				}
+				break;
 		}
 	}
 	
+	if ($lease['bstate'] !== 'active') continue;
 	$leases[$ip_addr] = $lease;
 	
 	//print_r($lease_def);
 	//print_r($lease);
 }
 
-echo "</pre>";
+//echo "</pre>\n";
 
 ?>
 
@@ -199,7 +221,7 @@ echo "</pre>";
 	<th><?php echo __('G&uuml;ltig von'); ?></th>
 	<th><?php echo __('G&uuml;ltig bis'); ?></th>
 	<th><?php echo __('Name'); ?></th>
-	<th><?php echo __('Hersteller'); ?></th>
+	<th><?php echo __('Hersteller / Modell'); ?></th>
 </tr>
 </thead>
 <tbody>
@@ -220,12 +242,22 @@ echo "</pre>";
 		elseif ($lease['end'] < PHP_INT_MAX)
 			echo htmlEnt(date('d.m.Y, H:i:s', $lease['end']));
 		else
-			echo 'endlos';
+			echo __('endlos');
+		if (array_key_exists('abd',$lease) && $lease['abd'])
+			echo ' (a!)';
 		echo '</td>';
 		echo '<td>', htmlEnt(strToLower($lease['name'])) ,'</td>';
+		
 		echo '<td>';
 		switch (strToUpper(subStr($lease['mac'],0,8))) {
-			case '00:04:13': echo 'Snom'        ; break;
+			case '00:04:13': echo 'Snom'        ;
+				if (array_key_exists('vci',$lease)) {
+					if     (strToLower(subStr($lease['vci'],0,7)) === 'snom-m3')
+						echo ' (M3)';
+					elseif (strToLower(subStr($lease['vci'],0,4)) === 'snom')
+						echo ' (Snom)';
+				}
+				break;
 			case '00:04:F2': echo 'Polycom'     ; break;
 			case '00:01:E3': echo 'Siemens'     ; break;
 			case '00:08:5D': echo 'Aastra'      ; break;
