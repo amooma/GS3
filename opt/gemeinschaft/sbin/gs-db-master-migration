@@ -57,7 +57,7 @@ if (! isSet($opts['old-master'])
 	gs_script_invalid_usage( $usage );
 }
 
-if (!isSet($opts['pass'])) $opts['pass'] = '';
+if (! isSet($opts['pass'])) $opts['pass'] = '';
 
 
 /***********************************************************
