@@ -60,14 +60,14 @@ function dial_number( $number )
 	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
-	xml('<IppAlert Type="INFO" Delay="3000">');
-	xml('<Title>Anruf</Title>');
-	xml('<Text>Rufe an: '.$number.'</Text>');
-	xml('<Image></Image>');
-	xml('</IppAlert>');
-	xml('<IppAction Type="MAKECALL">');
-	xml('<Number>'.$number.'</Number>');
-	xml('</IppAction>');
+	xml('  <IppAlert Type="INFO" Delay="3000">');
+	xml('    <Title>Anruf</Title>');
+	xml('    <Text>Rufe an: '.$number.'</Text>');
+	xml('    <Image></Image>');
+	xml('  </IppAlert>');
+	xml('  <IppAction Type="MAKECALL">');
+	xml('    <Number>'.$number.'</Number>');
+	xml('  </IppAction>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
 	xml_output();
@@ -78,11 +78,11 @@ function write_alert( $message, $alert_type='ERROR' )
 	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
-	xml('<IppAlert Type="'.$alert_type.'" Delay="5000">');
-	xml('<Title>Info</Title>');
-	xml('<Text>'.$message.'</Text>');
-	xml('<Image></Image>');
-	xml('</IppAlert>');
+	xml('  <IppAlert Type="'.$alert_type.'" Delay="5000">');
+	xml('    <Title>Info</Title>');
+	xml('    <Text>'.$message.'</Text>');
+	xml('    <Image></Image>');
+	xml('  </IppAlert>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
 	xml_output();
@@ -145,14 +145,14 @@ if (! $type) {
 	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="1" CommandCount="1">');
-	xml('<IppList Type="IMPLICIT" Count="'. count($typeToTitle) .'">');
-	xml('<Title>'.$user.' - Anruflisten</Title>');
-	xml('<Url>'.$url.'</Url>');
+	xml('  <IppList Type="IMPLICIT" Count="'. count($typeToTitle) .'">');
+	xml('    <Title>'.$user.' - Anruflisten</Title>');
+	xml('    <Url>'.$url.'</Url>');
 	$i=0;
 	foreach ($typeToTitle as $t => $title) {
 		$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE `user_id`='. $user_id .' AND `type`=\''. $t .'\'' );
 		$i++;
-		xml('<Option ID="'.$i.'" Selected="'.($i===1 ?'TRUE':'FALSE').'" Key="type" Value="'.$t.'">');
+		xml('    <Option ID="'.$i.'" Selected="'.($i===1 ?'TRUE':'FALSE').'" Key="type" Value="'.$t.'">');
 		switch ($t) {
 			case 'out':
 				$image = $img_url.'keyboard.png';
@@ -166,14 +166,14 @@ if (! $type) {
 			default:
 				$image="";
 		}
-		xml('<OptionText>'.$title.' ('.$num_calls.')'.'</OptionText>');
-		xml('<Image>'.$image.'</Image>');
-		xml('</Option>');
+		xml('      <OptionText>'.$title.' ('.$num_calls.')'.'</OptionText>');
+		xml('      <Image>'.$image.'</Image>');
+		xml('    </Option>');
 	}
-	xml('</IppList>');
-	xml('<IppHidden Type="VALUE" Key="user">');
-	xml('<Value>'.$user.'</Value>');
-	xml('</IppHidden>');
+	xml('  </IppList>');
+	xml('  <IppHidden Type="VALUE" Key="user">');
+	xml('    <Value>'.$user.'</Value>');
+	xml('  </IppHidden>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
 	
@@ -206,15 +206,15 @@ LIMIT 20';
 	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="1" CommandCount="1">');
-	xml('<IppList Type="IMPLICIT" Count="'.($entries+1).'">');
-	xml('<Title>'.$user.' - '. (@$typeToTitle[$type]) .'</Title>');
-	xml('<Url>'.$url.'</Url>');
+	xml('  <IppList Type="IMPLICIT" Count="'.($entries+1).'">');
+	xml('    <Title>'.$user.' - '. (@$typeToTitle[$type]) .'</Title>');
+	xml('    <Url>'.$url.'</Url>');
 	
 	$i=1;
-	xml('<Option ID="'.$i.'" Selected="TRUE" Key="type" Value="none">');
-	xml('<OptionText>'."Zur\xC3\xBCck".'</OptionText>');
-	xml('<Image>'.$img_url.'previous.png</Image>');
-	xml('</Option>');
+	xml('    <Option ID="'.$i.'" Selected="TRUE" Key="type" Value="none">');
+	xml('      <OptionText>'."Zur\xC3\xBCck".'</OptionText>');
+	xml('      <Image>'.$img_url.'previous.png</Image>');
+	xml('    </Option>');
 	
 	while ($r = $rs->fetchRow()) {
 		$i++;
@@ -230,16 +230,16 @@ LIMIT 20';
 		if ($r['num_calls'] > 1) {
 			$entry_name .= ' ('. $r['num_calls'] .')';
 		}
-		xml('<Option ID="'.$i.'" Selected="FALSE" Key="dial" Value="'.$r['number'].'">');
-		xml('<OptionText>'.$entry_name.'</OptionText>');
-		xml('<Image></Image>');
-		xml('</Option>');
+		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="dial" Value="'.$r['number'].'">');
+		xml('      <OptionText>'.$entry_name.'</OptionText>');
+		xml('      <Image></Image>');
+		xml('    </Option>');
 	}
 	
-	xml('</IppList>');
-	xml('<IppHidden Type="VALUE" Key="user">');
-	xml('<Value>'.$user.'</Value>');
-	xml('</IppHidden>');
+	xml('  </IppList>');
+	xml('  <IppHidden Type="VALUE" Key="user">');
+	xml('    <Value>'.$user.'</Value>');
+	xml('  </IppHidden>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
 	
