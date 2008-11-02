@@ -1,4 +1,3 @@
-
 <?php
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
@@ -29,6 +28,22 @@
 \*******************************************************************/
 defined('GS_VALID') or die('No direct access.');
 
+
+function _validate_ip_addr( $ipaddr )
+{
+	$ipaddr = trim($ipaddr);
+	if (! preg_match('/^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/', $ipaddr, $m))
+		return false;
+	for ($i=1; $i<=4; ++$i) {
+		$m[$i] = (int)lTrim($m[$i],'0');
+		if ($m[$i] > 255) return false;
+	}
+	$ipaddr = $m[1].'.'.$m[2].'.'.$m[3].'.'.$m[4];
+	if (in_array( @ip2long($ipaddr), array(false, null, -1, 0), true)) {
+		return false;
+	}
+	return $ipaddr;
+}
 
 function RunTests($hosts) {
 	$conf = '/etc/gemeinschaft/topology.php';
@@ -355,73 +370,118 @@ function & db_slave_connect( $host, $user, $pass, &$db_conn_slave )
 
 function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pass)
 {
+	$old_master_host = _validate_ip_addr($old_master_host);
+	$new_master_host = _validate_ip_addr($new_master_host);
+	if (! $old_master_host)
+		return new GsError( 'Invalid IP address (old DB master).' );
+	if (! $new_master_host)
+		return new GsError( 'Invalid IP address (new DB master).' );
+	if (subStr($old_master_host,0,4) == '127.')
+		return new GsError( 'IP address on localhost not allowed for old DB master.' );
+	if (subStr($new_master_host,0,4) == '127.')
+		return new GsError( 'IP address on localhost not allowed for new DB master.' );
+	if ($new_master_host == $old_master_host)
+		return new GsError( 'New DB master == old DB master.' );
+	
 	# connect
 	$old_master = db_master_connect( $old_master_host, $user, $pass, $old_master );
+	if (! $old_master)
+		return new GsError( 'Failed to connect to old master DB.' );
 	$new_master = db_slave_connect ( $new_master_host, $user, $pass, $new_master );
+	if (! $new_master)
+		return new GsError( 'Failed to connect to new master DB.' );
 	
 	echo "Moving $old_master_host to $new_master_host\n";
 
 	$ok = $old_master->execute( 'FLUSH TABLES WITH READ LOCK' );
 	if (! $ok)  {
-		return new GsError( 'Failed to Lock Tables.' );
+		return new GsError( 'Failed to lock tables.' );
 	}
 	
 	sleep(2);
 	
-	$res = $old_master->execute( 'SHOW MASTER STATUS' );
-	$master_status = $res->fetchRow();
+	$rs = $old_master->execute( 'SHOW MASTER STATUS' );
+	if (! $rs) {
+		@$old_master->execute( 'UNLOCK TABLES' );
+		return new GsError( 'Error on old DB master.' );
+	}
+	$master_status = $rs->fetchRow();
+	if (! array_key_exists('File'    , $master_status)
+	||  ! array_key_exists('Position', $master_status)) {
+		@$old_master->execute( 'UNLOCK TABLES' );
+		return new GsError( 'Error on old DB master.' );
+	}
 	
-	$res = $new_master->execute( 'SHOW SLAVE STATUS' );
-	$slave_status = $res->fetchRow();
+	$rs = $new_master->execute( 'SHOW SLAVE STATUS' );
+	if (! $rs) {
+		@$old_master->execute( 'UNLOCK TABLES' );
+		return new GsError( 'Error on new DB master.' );
+	}
+	$slave_status = $rs->fetchRow();
+	if (! array_key_exists('Master_Log_File'    , $slave_status)
+	||  ! array_key_exists('Read_Master_Log_Pos', $slave_status)) {
+		@$old_master->execute( 'UNLOCK TABLES' );
+		return new GsError( 'Error on new DB master.' );
+	}
 	
 	$do_dump = false;
 	
 	if ($slave_status['Master_Log_File'] != $master_status['File']) {
-		echo "Master bin-log file (".$master_status['File'].") differs from slave (".$slave_status['Master_Log_File']."), dumping database\n";
+		echo "Master bin-log file (". $master_status['File'] .") differs from slave (". $slave_status['Master_Log_File'] .")\n";
 		$do_dump = true;
 	}
-	elseif (@$slave_status['Read_Master_Log_Pos'] != @$master_status['Position']) {
-		echo "Master bin-log position differs from slave, dumping database\n";
+	elseif ($slave_status['Read_Master_Log_Pos'] != $master_status['Position']) {
+		echo "Master bin-log position (". $master_status['Position'] .") differs from slave (". $slave_status['Read_Master_Log_Pos'] .")\n";
 		$do_dump = true;
 	}
-	
 	
 	if ($do_dump) {
-		
+		echo "Dumping database ...\n";
 		$old_master->execute( 'UNLOCK TABLES' );
-		return new GsError( "Copying database dump currently not implemented.\nPlease do it manually.\n");
+		return new GsError( "Copying database dump currently not implemented. Please do it manually." );
 	}
 	else {
 		echo "The new master's database is up to date. No need for a database dump.\n";
 	}
 	
-	echo "Stopping Slave on new Master\n";
+	echo "Stopping Slave on new Master ...\n";
 	$ok = $new_master->execute( 'STOP SLAVE' );
 	if (! $ok) {
-		echo "  Failed to stop slave on new master\n";
+		@$new_master->execute( 'START SLAVE' );
+		@$old_master->execute( 'UNLOCK TABLES' );
+		return new GsError( "Failed to stop slave on new master" );
 	}
 	
-	echo "Resetting Slave on new Master\n";
+	echo "Resetting Slave on new Master ...\n";
 	$ok = $new_master->execute( 'RESET SLAVE' );
 	if (! $ok) {
-		echo "  Failed to reset slave on new master\n";
+		@$new_master->execute( 'START SLAVE' );
+		@$old_master->execute( 'UNLOCK TABLES' );
+		return new GsError( "Failed to reset slave on new master" );
 	}
 	
-	echo "Resetting Master on new Master\n";
+	echo "Resetting Master on new Master ...\n";
 	$ok = $new_master->execute( 'RESET MASTER' );
 	if (! $ok) {
-		echo "  Failed to reset the new master\n";
+		@$new_master->execute( 'START SLAVE' );
+		@$old_master->execute( 'UNLOCK TABLES' );
+		return new GsError( "Failed to reset the new master!!!" );
 	}
 	
-	echo "Adding permissions on new Master\n";
-	$new_master->execute(
+	echo "Adding permissions on new Master ...\n";
+	$ok = $new_master->execute(
 		'GRANT REPLICATION SLAVE '.
 		'ON *.* '.
 		'TO \''. $new_master->escape($user) .'\'@\'%\' '.
 		'IDENTIFIED BY \''. $new_master->escape($pass) .'\''
 		);
+	if (! $ok) {
+		@$new_master->execute( 'START SLAVE' );
+		@$old_master->execute( 'UNLOCK TABLES' );
+		return new GsError( "Failed to grant replication permissions on new master!" );
+	}
 	
-	echo "Setting the old Master to run as a Slave\n";
+	echo "Setting the old Master to run as a Slave ...\n";
 	$ok = $old_master->execute( 'STOP SLAVE' );
 	$ok = $old_master->execute( 'RESET SLAVE' );
 	$ok = $old_master->execute( 'RESET MASTER' );
@@ -434,16 +494,19 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 			'MASTER_PASSWORD=\''. $old_master->escape($pass) .'\''
 		);
 	if (! $ok) {
+		@$new_master->execute( 'START SLAVE' );
+		@$old_master->execute( 'UNLOCK TABLES' );
 		return new GsError( "Failed to change old Master to a Slave!");
 	}
 	echo "Starting Slave on old Master\n";
 	$ok = $old_master->execute( 'START SLAVE' );
 	if (! $ok) {
-		return new GsError("Failed to start Slave on old Master!");
+		@$old_master->execute( 'UNLOCK TABLES' );
+		return new GsError( "Failed to start Slave on old Master!" );
 	}
 	echo "Unlock Tables on old Master\n";
 	$ok = $old_master->execute( 'UNLOCK TABLES' );
-
+	
 	return true;
 }
 
