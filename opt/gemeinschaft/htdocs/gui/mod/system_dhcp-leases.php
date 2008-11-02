@@ -47,10 +47,16 @@ if (gs_keyval_get('dhcp_daemon_start') !== 'yes') {
 
 
 if (file_exists('/var/lib/dhcp3/dhcpd.leases')) {
+	# Debian 4
 	$leases_file = '/var/lib/dhcp3/dhcpd.leases';
 }
 elseif (file_exists('/var/lib/dhcp/dhcpd.leases')) {
+	# Debian 5?
 	$leases_file = '/var/lib/dhcp/dhcpd.leases';
+}
+elseif (file_exists('/var/lib/dhcpd/dhcpd.leases')) {
+	# RedHat
+	$leases_file = '/var/lib/dhcpd/dhcpd.leases';
 }
 else {
 	echo 'dhcpd.leases not found.';
