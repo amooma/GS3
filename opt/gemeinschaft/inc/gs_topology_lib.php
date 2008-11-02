@@ -143,7 +143,7 @@ function RunTests($hosts) {
 				echo "WARNING: Slave on ". $host['host'] ." has the wrong Master!\n";
 				echo "The Master on the Host is: ".$slave_status["Master_Host"]." and schould be ". $hosts['DB_MASTER_SERVER1']['host']."\n";
 				echo "You may execute:\n";
-				echo "gs-db-master-resync --master=".$hosts['DB_MASTER_SERVER1']['host']." --slave=".$host['host']." --user=".$SUPER_MYSQL_USER." --pass=".$SUPER_MYSQL_PASS."\n";
+				echo "gs-db-slave-replication-setup --master=".$hosts['DB_MASTER_SERVER1']['host']." --slave=".$host['host']." --user=".$SUPER_MYSQL_USER." --pass=".$SUPER_MYSQL_PASS."\n";
 				$bOk = false;
 				++$warningcounter;
 			}
@@ -151,7 +151,7 @@ function RunTests($hosts) {
 				echo "WARNING: Slave on ". $host['host'] ." has the wrong Master!\n";
 				echo "The Master on the Host is: ".$slave_status["Master_Host"]." and schould be ". $hosts['DB_MASTER_SERVER2']['host']."\n";
 				echo "You may execute:\n";
-				echo "gs-db-master-resync --master=".$hosts['DB_MASTER_SERVER1']['host']." --slave=".$host['host']." --user=".$SUPER_MYSQL_USER." --pass=".$SUPER_MYSQL_PASS."\n";
+				echo "gs-db-slave-replication-setup --master=".$hosts['DB_MASTER_SERVER1']['host']." --slave=".$host['host']." --user=".$SUPER_MYSQL_USER." --pass=".$SUPER_MYSQL_PASS."\n";
 				$bOk = false;
 				++$warningcounter;
 			}
