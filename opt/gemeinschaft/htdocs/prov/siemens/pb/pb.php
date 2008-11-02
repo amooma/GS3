@@ -27,29 +27,32 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-
 define( 'GS_VALID', true );  /// this is a parent file
-
-$xml_buf = '';
-
-
 require_once( '../../../../inc/conf.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
+
+header( 'Content-Type: text/xml; charset=utf-8' );
+header( 'Expires: 0' );
+header( 'Pragma: no-cache' );
+header( 'Cache-Control: private, no-cache, must-revalidate' );
+header( 'Vary: *' );
+
+$xml_buf = '';
 
 function xml( $string )
 {
 	global $xml_buf;
-	
 	$xml_buf .= $string."\n";
 }
 
 function xml_output()
 {
 	global $xml_buf;
-	header( 'X-Powered-By: Gemeinschaft' );
-	header( 'Content-Type: text/xml' );
-	header( 'Content-Length: '. strLen($xml_buf) );
+	@header( 'X-Powered-By: Gemeinschaft' );
+	@header( 'Content-Type: text/xml; charset=utf-8' );
+	@header( 'Content-Length: '. strLen($xml_buf) );
 	echo $xml_buf;
+	exit;
 }
 
 function dial_number( $number )
@@ -57,17 +60,18 @@ function dial_number( $number )
 	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
-	xml('<IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
-	xml('<IppAlert Type="INFO" Delay="3000">');
-	xml('<Title>Anruf</Title>');
-	xml('<Text>Rufe an: '.$number.'</Text>');
-	xml('<Image></Image>');
-	xml('</IppAlert>');
-	xml('<IppAction Type="MAKECALL">');
-	xml('<Number>'.$number.'</Number>');
-	xml('</IppAction>');
+	xml('  <IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
+	xml('  <IppAlert Type="INFO" Delay="3000">');
+	xml('    <Title>Anruf</Title>');
+	xml('    <Text>Rufe an: '.$number.'</Text>');
+	xml('    <Image></Image>');
+	xml('  </IppAlert>');
+	xml('  <IppAction Type="MAKECALL">');
+	xml('    <Number>'.$number.'</Number>');
+	xml('  </IppAction>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
+	xml_output();
 }
 
 function write_alert( $message, $alert_type='ERROR' )
@@ -75,13 +79,14 @@ function write_alert( $message, $alert_type='ERROR' )
 	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
-	xml('<IppAlert Type="'.$alert_type.'" Delay="5000">');
-	xml('<Title>Info</Title>');
-	xml('<Text>'.$message.'</Text>');
-	xml('<Image></Image>');
-	xml('</IppAlert>');
+	xml('  <IppAlert Type="'.$alert_type.'" Delay="5000">');
+	xml('    <Title>Info</Title>');
+	xml('    <Text>'.$message.'</Text>');
+	xml('    <Image></Image>');
+	xml('  </IppAlert>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
+	xml_output();
 }
 
 $keyPatterns = array(  # must be valid in MySQL!
@@ -124,13 +129,12 @@ if ($tab) {
 
 if (! $user) $user = $phonenumber;
 
-$url= GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/pb/pb.php';
-$img_url = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/img/';
+$url_prov_siemens = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/';
+$url     = $url_prov_siemens .'pb/pb.php';
+$img_url = $url_prov_siemens .'img/';
 
 if (! preg_match('/^\d+$/', $user)) {
 	write_alert( 'Benutzer '.$user.' unbekannt!' );
-	xml_output();
-	exit;
 }
 
 if (! in_array( $type, array('gs','prv','imported'), true )) {
@@ -150,8 +154,6 @@ if ($user_id < 1) {
 	$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 	if ($user_id < 1) {
 		write_alert( 'Unknown user.' );
-		xml_output();
-		exit;
 	}
 }
 
