@@ -340,10 +340,12 @@ function _run_topology_tests( $hosts )
 
 # local functions, almost identical to gs_db_master_connect()
 # resp. gs_db_slave_connect() in inc/db_connect.php
+# The difference is that these local functions do not use
+# global $gs_db_conn_master, $gs_db_conn_slave;
 
 function & _db_master_connect( $host, $user, $pass, &$db_conn_master )
 {
- 	$caller_info = '';
+	$caller_info = '';
 	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
 		$bt = debug_backtrace();
 		if (is_array($bt) && array_key_exists(0, $bt)) {
@@ -414,7 +416,7 @@ function & _db_slave_connect( $host, $user, $pass, &$db_conn_slave )
 		$host,
 		$user,
 		$pass,
-		GS_DB_MASTER_DB,
+		GS_DB_SLAVE_DB,
 		array('reuse'=>false)  // do not use. leaves lots of connections
 		)))
 	{
@@ -452,9 +454,11 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 		return new GsError( 'Password too short.' );
 	
 	# connect
+	$old_master = null;
 	$old_master = _db_master_connect( $old_master_host, $user, $pass, $old_master );
 	if (! $old_master)
 		return new GsError( 'Failed to connect to old master DB.' );
+	$new_master = null;
 	$new_master = _db_slave_connect ( $new_master_host, $user, $pass, $new_master );
 	if (! $new_master)
 		return new GsError( 'Failed to connect to new master DB.' );
@@ -594,6 +598,7 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	# get binlog position
 	#
 	/*
+	$master = null;
 	$master = _db_master_connect( $master_host, $user, $pass, $master );
 	if (! $master)
 		return new GsError( 'Failed to connect to master database.' );
@@ -604,6 +609,7 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	*/
 	
 	# Stop Slave
+	$slave  = null;
 	$slave  = _db_slave_connect( $slave_host  , $user, $pass, $slave );
 	if (! $slave)
 		return new GsError( 'Failed to connect to slave database.' );
