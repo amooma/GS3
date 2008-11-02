@@ -227,7 +227,7 @@ function _run_topology_tests( $hosts )
 			
 			if ($CUR_RZ === 'A' && $host['host'] === $DB_MASTER_SERVER1_SERVICE_IP) {
 				echo "Skipping, because it's the same host as DB_MASTER_SERVER1_SERVICE_IP.\n";
-				echo "This host does not need to be a slave to himself.";
+				echo "This host does not need to be a slave to himself.\n";
 				continue;
 			}
 			if ($CUR_RZ === 'B' && $host['host'] === $DB_MASTER_SERVER2_SERVICE_IP) {
