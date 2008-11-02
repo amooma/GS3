@@ -162,10 +162,10 @@ foreach ( $hosts as $key => $host) {
 ## Stage 4 Edit gemeinschaft.php of each Host
 #
 
-foreach ( $hosts as $key => $host) {
-	$ok = ChangeGemeinschaft_php($host['host'], $new_master);
-	if (isGsError( $ok )) {
-		echo "ERROR:" .$ok->getMsg();
+foreach ($hosts as $key => $host) {
+	$ok = _change_etc_gemeinschaft_php( $host['host'], $new_master );
+	if (isGsError($ok)) {
+		echo "ERROR: ", $ok->getMsg() ,"\n";
 		exit(1);
 	}
 }
