@@ -55,7 +55,7 @@ function gs_db_is_connected( &$conn )
 }
 
 
-function gs_db_connect( &$conn=null, $tag='', $host, $user, $pwd, $db=null, $_backtrace_level=0 )
+function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, $_backtrace_level=0 )
 {
 	$caller_info = '';
 	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
