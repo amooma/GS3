@@ -444,6 +444,19 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 		echo "The new master's database is up to date. No need for a database dump.\n";
 	}
 	
+	echo "Adding permissions on new Master ...\n";
+	$ok = $new_master->execute(
+		'GRANT REPLICATION SLAVE '.
+		'ON *.* '.
+		'TO \''. $new_master->escape($user) .'\'@\'%\' '.
+		'IDENTIFIED BY \''. $new_master->escape($pass) .'\''
+		);
+	$new_master->execute( 'FLUSH PRIVILEGES' );
+	if (! $ok) {
+		@$old_master->execute( 'UNLOCK TABLES' );
+		return new GsError( "Failed to grant replication permissions on new master!" );
+	}
+	
 	echo "Stopping Slave on new Master ...\n";
 	$ok = $new_master->execute( 'STOP SLAVE' );
 	if (! $ok) {
@@ -466,19 +479,6 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 		@$new_master->execute( 'START SLAVE' );
 		@$old_master->execute( 'UNLOCK TABLES' );
 		return new GsError( "Failed to reset the new master!!!" );
-	}
-	
-	echo "Adding permissions on new Master ...\n";
-	$ok = $new_master->execute(
-		'GRANT REPLICATION SLAVE '.
-		'ON *.* '.
-		'TO \''. $new_master->escape($user) .'\'@\'%\' '.
-		'IDENTIFIED BY \''. $new_master->escape($pass) .'\''
-		);
-	if (! $ok) {
-		@$new_master->execute( 'START SLAVE' );
-		@$old_master->execute( 'UNLOCK TABLES' );
-		return new GsError( "Failed to grant replication permissions on new master!" );
 	}
 	
 	echo "Setting the old Master to run as a Slave ...\n";
