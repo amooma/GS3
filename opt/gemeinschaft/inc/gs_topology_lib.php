@@ -168,18 +168,25 @@ function _run_topology_tests( $hosts )
 	foreach ($hosts as $key => $info) {
 		echo $arr['desc'] ,"... ";
 		
+		$ok = false;
 		if       ($key === 'DB_MASTER_SERVER1' && $CUR_RZ === 'A') {
-			$hosts[$key]['con'] = _db_master_connect( $hosts[$key]['host'],
-				$SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con'] );
+			$hosts[$key]['con'] = null;
+			$ok = gs_db_connect( $hosts[$key]['con'], 'master',
+				$hosts[$key]['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS,
+				GS_DB_MASTER_DB, 1 );
 		} elseif ($key === 'DB_MASTER_SERVER2' && $CUR_RZ === 'B') {
-			$hosts[$key]['con'] = _db_master_connect( $hosts[$key]['host'],
-				$SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con'] );
+			$hosts[$key]['con'] = null;
+			$ok = gs_db_connect( $hosts[$key]['con'], 'master',
+				$hosts[$key]['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS,
+				GS_DB_MASTER_DB, 1 );
 		} else {
-			$hosts[$key]['con'] = _db_slave_connect ( $hosts[$key]['host'],
-				$SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con'] );
+			$hosts[$key]['con'] = null;
+			$ok = gs_db_connect( $hosts[$key]['con'], 'slave' ,
+				$hosts[$key]['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS,
+				GS_DB_SLAVE_DB , 1 );
 		}
 		
-		if (! $hosts[$key]['con']) {
+		if (! $ok) {
 			echo "Could not connect to ". $hosts[$key]['host'] ."\n";
 			exit(1);
 		}
@@ -328,111 +335,6 @@ function _run_topology_tests( $hosts )
 }
 
 
-
-
-
-
-
-
-
-
-
-
-# local functions, almost identical to gs_db_master_connect()
-# resp. gs_db_slave_connect() in inc/db_connect.php
-# The difference is that these local functions do not use
-# global $gs_db_conn_master, $gs_db_conn_slave;
-
-function & _db_master_connect( $host, $user, $pass, &$db_conn_master )
-{
-	$caller_info = '';
-	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
-		$bt = debug_backtrace();
-		if (is_array($bt) && array_key_exists(0, $bt)) {
-			$caller_info = ' (for '. @$bt[0]['file'] .':'. @$bt[0]['line'] .')';
-			unset($bt);
-		}
-	}
-	
-	if (getType($db_conn_master) === 'object'
-	&&  method_exists($db_conn_master, 'isConnected')
-	&&  $db_conn_master->isConnected())
-	{
-		//gs_log( GS_LOG_DEBUG, 'Using the existing master DB connection'. $caller_info );
-		return $db_conn_master;
-	}
-	gs_log( GS_LOG_DEBUG, 'Opening a new DB connection'. $caller_info );
-	
-	if (!( $db = YADB_newConnection( 'mysql' ) )) {
-		$null = null;
-		return $null;
-	}
-	if (!( $db->connect(
-		$host,
-		$user,
-		$pass,
-		GS_DB_MASTER_DB,
-		array('reuse'=>false)  // do not use. leaves lots of connections
-		)))
-	{
-		$lastNativeError    = @$db->getLastNativeError();
-		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
-		gs_log( GS_LOG_WARNING, 'Could not connect to database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
-		$null = null;
-		return $null;
-	}
-	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
-	
-	$db_conn_master = $db;
-	return $db_conn_master;
-}
-
-
-function & _db_slave_connect( $host, $user, $pass, &$db_conn_slave )
-{
-	$caller_info = '';
-	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
-		$bt = debug_backtrace();
-		if (is_array($bt) && array_key_exists(0, $bt)) {
-			$caller_info = ' (for '. @$bt[0]['file'] .':'. @$bt[0]['line'] .')';
-			unset($bt);
-		}
-	}
-	
-	if (getType($db_conn_slave) === 'object'
-	&&  method_exists($db_conn_slave, 'isConnected')
-	&&  $db_conn_slave->isConnected())
-	{
-		//gs_log( GS_LOG_DEBUG, 'Using the existing slave DB connection'. $caller_info );
-		return $db_conn_slave;
-	}
-	gs_log( GS_LOG_DEBUG, 'Opening a new slave DB connection'. $caller_info );
-	
-	if (!( $db = YADB_newConnection( 'mysql' ) )) {
-		$null = null;
-		return $null;
-	}
-	if (!( $db->connect(
-		$host,
-		$user,
-		$pass,
-		GS_DB_SLAVE_DB,
-		array('reuse'=>false)  // do not use. leaves lots of connections
-		)))
-	{
-		$lastNativeError    = @$db->getLastNativeError();
-		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
-		gs_log( GS_LOG_WARNING, 'Could not connect to slave database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
-		$null = null;
-		return $null;
-	}
-	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
-	
-	$db_conn_slave = $db;
-	return $db_conn_slave;
-}
-
-
 function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pass)
 {
 	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
@@ -455,12 +357,12 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 	
 	# connect
 	$old_master = null;
-	$old_master = _db_master_connect( $old_master_host, $user, $pass, $old_master );
-	if (! $old_master)
+	$ok = gs_db_connect( $old_master, 'master', $old_master_host, $user, $pass, GS_DB_MASTER_DB, 1 );
+	if (! $ok)
 		return new GsError( 'Failed to connect to old master DB.' );
 	$new_master = null;
-	$new_master = _db_slave_connect ( $new_master_host, $user, $pass, $new_master );
-	if (! $new_master)
+	$ok = gs_db_connect( $new_master, 'slave' , $new_master_host, $user, $pass, GS_DB_SLAVE_DB , 1 );
+	if (! $ok)
 		return new GsError( 'Failed to connect to new master DB.' );
 	
 	echo "Moving $old_master_host to $new_master_host\n";
@@ -599,8 +501,8 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	#
 	/*
 	$master = null;
-	$master = _db_master_connect( $master_host, $user, $pass, $master );
-	if (! $master)
+	$ok = gs_db_connect( $master, 'master', $master_host, $user, $pass, GS_DB_MASTER_DB, 1 );
+	if (! $ok)
 		return new GsError( 'Failed to connect to master database.' );
 	$rs = $master->execute( 'SHOW MASTER STATUS' );
 	if (! $rs)
@@ -610,8 +512,8 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	
 	# Stop Slave
 	$slave  = null;
-	$slave  = _db_slave_connect( $slave_host  , $user, $pass, $slave );
-	if (! $slave)
+	$ok = gs_db_connect( $slave , 'slave' , $slave_host , $user, $pass, GS_DB_SLAVE_DB , 1 );
+	if (! $ok)
 		return new GsError( 'Failed to connect to slave database.' );
 	$ok = $slave->execute( 'STOP SLAVE' );
 	if (! $ok)
