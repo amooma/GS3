@@ -97,7 +97,7 @@ $hosts = array(
 	);
 
 
-RunTests($hosts);
+_run_topology_tests($hosts);
 
 if($only_run_tests) {
 	echo "\nDone.\n";
