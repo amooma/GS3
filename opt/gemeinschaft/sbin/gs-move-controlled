@@ -81,19 +81,19 @@ if (! file_exists( $conf )) {
 //make an Array of the machines
 $hosts = array(
 	//Database Server in RZ A
-	"DB_MASTER_SERVER1" => array("host" => $DB_MASTER_SERVER1, "con" => null, "disc" => "Database Server in RZ A"),
+	"DB_MASTER_SERVER1" => array("host" => $DB_MASTER_SERVER1, "con" => null, "desc" => "Database Server in RZ A"),
 	//Database Server in RZ B
-	"DB_MASTER_SERVER2" => array("host" => $DB_MASTER_SERVER2, "con" => null, "disc" => "Database Server in RZ B"),
+	"DB_MASTER_SERVER2" => array("host" => $DB_MASTER_SERVER2, "con" => null, "desc" => "Database Server in RZ B"),
 	//Web/Provisioning Server in RZ A
-	"WEB_MASTER_SERVER1" => array("host" => $WEB_MASTER_SERVER1, "con" => null, "disc" => "Web/Provisioning Server in RZ A"),
+	"WEB_MASTER_SERVER1" => array("host" => $WEB_MASTER_SERVER1, "con" => null, "desc" => "Web/Provisioning Server in RZ A"),
 	//Web/Provisioning Server in RZ B
-	"WEB_MASTER_SERVER2" => array("host" => $WEB_MASTER_SERVER2, "con" => null, "disc" => "Web/Provisioning Server in RZ B"),
+	"WEB_MASTER_SERVER2" => array("host" => $WEB_MASTER_SERVER2, "con" => null, "desc" => "Web/Provisioning Server in RZ B"),
 	//Telephony Server in RZ A
-	"TE_MASTER_SERVER1" => array("host" => $TE_MASTER_SERVER1, "con" => null, "disc" => "Telephony Server in RZ A (MASTER)"),
-	"TE_MASTER_BACKUP1" => array("host" => $TE_MASTER_BACKUP1, "con" => null, "disc" => "Telephony Server in RZ A (BACKUP)"),
+	"TE_MASTER_SERVER1" => array("host" => $TE_MASTER_SERVER1, "con" => null, "desc" => "Telephony Server in RZ A (MASTER)"),
+	"TE_MASTER_BACKUP1" => array("host" => $TE_MASTER_BACKUP1, "con" => null, "desc" => "Telephony Server in RZ A (BACKUP)"),
 	//Telephony Server in RZ B
-	"TE_MASTER_SERVER2" => array("host" => $TE_MASTER_SERVER2, "con" => null, "disc" => "Telephony Server in RZ B (MASTER)"),
-	"TE_MASTER_BACKUP2" => array("host" => $TE_MASTER_BACKUP2, "con" => null, "disc" => "Telephony Server in RZ B (BACKUP)")
+	"TE_MASTER_SERVER2" => array("host" => $TE_MASTER_SERVER2, "con" => null, "desc" => "Telephony Server in RZ B (MASTER)"),
+	"TE_MASTER_BACKUP2" => array("host" => $TE_MASTER_BACKUP2, "con" => null, "desc" => "Telephony Server in RZ B (BACKUP)")
 	);
 
 
@@ -137,7 +137,7 @@ echo "Resyncing all Slaves with the new Master.\n";
 foreach ( $hosts as $key => $host) {
 	if($key == 'DB_MASTER_SERVER1' || $key == 'DB_MASTER_SERVER2') 
 		continue; //One Master ist Still resynced and the other is Still the master
-	echo $host['disc']."...\n ";
+	echo $host['desc']."...\n ";
 	if($CUR_RZ=='B' && $host['host'] == $DB_MASTER_SERVER1_SERVICE_IP) {
 		echo "Skipping, cause' it's the same host of \$DB_MASTER_SERVER1_SERVICE_IP. This host dont need to be a slave of hisself";
 		continue;
