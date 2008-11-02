@@ -188,32 +188,32 @@ if ($search) {
 		xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 		xml('<IppDisplay>');
 		xml('<IppScreen ID="3" HiddenCount="3" CommandCount="2">');
-		xml('<IppForm ItemCount="1">');
-		xml('<Title>Name suchen:</Title>');
-		xml('<Url>'.$url.'</Url>');
-		xml('<IppTextField MaxSize="30" Constraint="ANY" Default="'.$name_search.'" Key="name">');
-		xml('<Label>Name:</Label>');
-		xml('<Text>'.$name_search.'</Text>');
-		xml('</IppTextField>');
-		xml('</IppForm>');
-		xml('<IppCommand Type="SELECT" Priority="0">');
-		xml('<Label>Suchen</Label>');
-		xml('<ScreenID>1</ScreenID>');
-		xml('</IppCommand>');
-		xml('<IppCommand Type="SCREEN" Priority="0">');
-		xml('<Label>Abbrechen</Label>');
-		xml('<ScreenID>1</ScreenID>');
-		xml('</IppCommand>');
+		xml('  <IppForm ItemCount="1">');
+		xml('    <Title>Name suchen:</Title>');
+		xml('    <Url>'.$url.'</Url>');
+		xml('    <IppTextField MaxSize="30" Constraint="ANY" Default="'.$name_search.'" Key="name">');
+		xml('      <Label>Name:</Label>');
+		xml('      <Text>'.$name_search.'</Text>');
+		xml('    </IppTextField>');
+		xml('  </IppForm>');
+		xml('  <IppCommand Type="SELECT" Priority="0">');
+		xml('    <Label>Suchen</Label>');
+		xml('    <ScreenID>1</ScreenID>');
+		xml('  </IppCommand>');
+		xml('  <IppCommand Type="SCREEN" Priority="0">');
+		xml('    <Label>Abbrechen</Label>');
+		xml('    <ScreenID>1</ScreenID>');
+		xml('  </IppCommand>');
 		
-		xml('<IppHidden Type="VALUE" Key="user">');
-		xml('<Value>'.$user.'</Value>');
-		xml('</IppHidden>');
-		xml('<IppHidden Type="VALUE" Key="search">');
-		xml('<Value>'.$search.'</Value>');
-		xml('</IppHidden>');
-		xml('<IppHidden Type="VALUE" Key="tab">');
-		xml('<Value>'.$tab.'</Value>');
-		xml('</IppHidden>');
+		xml('  <IppHidden Type="VALUE" Key="user">');
+		xml('    <Value>'.$user.'</Value>');
+		xml('  </IppHidden>');
+		xml('  <IppHidden Type="VALUE" Key="search">');
+		xml('    <Value>'.$search.'</Value>');
+		xml('  </IppHidden>');
+		xml('  <IppHidden Type="VALUE" Key="tab">');
+		xml('    <Value>'.$tab.'</Value>');
+		xml('  </IppHidden>');
 		xml('</IppScreen>');
 		xml('</IppDisplay>');
 	} else {
@@ -239,14 +239,14 @@ if (! $type) {
 	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="2" CommandCount="1">');
-	xml('<IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
-	xml('<IppList Type="IMPLICIT" Count="'. count($typeToTitle) .'">');
-	xml('<Title>'.$user.' - Telefonbuch</Title>');
-	xml('<Url>'.$url.'</Url>');
+	xml('  <IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
+	xml('  <IppList Type="IMPLICIT" Count="'. count($typeToTitle) .'">');
+	xml('    <Title>'.$user.' - Telefonbuch</Title>');
+	xml('    <Url>'.$url.'</Url>');
 	$i=0;
 	foreach ($typeToTitle as $t => $title) {
 		$i++;
-		xml('<Option ID="'.$i.'" Selected="'.($i===1 ?'TRUE':'FALSE').'" Key="type" Value="'.$t.'">');
+		xml('    <Option ID="'.$i.'" Selected="'.($i===1 ?'TRUE':'FALSE').'" Key="type" Value="'.$t.'">');
 		switch ($t) {
 			case 'gs':
 				$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `nobody_index` IS NULL' );
@@ -259,17 +259,17 @@ if (! $type) {
 			default:
 				$num_calls = 0;
 		}
-		xml('<OptionText>'.$title.' ('.$num_calls.')'.'</OptionText>');
-		xml('<Image>'.$image.'</Image>');
-		xml('</Option>');
+		xml('      <OptionText>'.$title.' ('.$num_calls.')'.'</OptionText>');
+		xml('      <Image>'.$image.'</Image>');
+		xml('    </Option>');
 	}
-	xml('</IppList>');
-	xml('<IppHidden Type="VALUE" Key="user">');
-	xml('<Value>'.$user.'</Value>');
-	xml('</IppHidden>');
-	xml('<IppHidden Type="VALUE" Key="tab">');
-	xml('<Value>'.$tab.'</Value>');
-	xml('</IppHidden>');
+	xml('  </IppList>');
+	xml('  <IppHidden Type="VALUE" Key="user">');
+	xml('    <Value>'.$user.'</Value>');
+	xml('  </IppHidden>');
+	xml('  <IppHidden Type="VALUE" Key="tab">');
+	xml('    <Value>'.$tab.'</Value>');
+	xml('  </IppHidden>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
 	
@@ -356,45 +356,45 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	xml('<'.'?xml version="1.0" encoding="UTF-8" ?'.'>');
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="3" CommandCount="1">');
-	xml('<IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
-	xml('<IppList Type="IMPLICIT" Count="'.($entries+1).'">');
-	xml('<Title>'.$user.' - Telefonbuch: '. (@$typeToTitle[$type]) .'</Title>');
-	xml('<Url>'.$url.'</Url>');
+	xml('  <IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
+	xml('  <IppList Type="IMPLICIT" Count="'.($entries+1).'">');
+	xml('    <Title>'.$user.' - Telefonbuch: '. (@$typeToTitle[$type]) .'</Title>');
+	xml('    <Url>'.$url.'</Url>');
 	
 	$i=1;
 	//if (true) {
-		xml('<Option ID="'.$i.'" Selected="TRUE" Key="type" Value="none">');
-		xml('<OptionText>'."Zur\xC3\xBCck".'</OptionText>');
-		xml('<Image>'.$img_url.'previous.png</Image>');
-		xml('</Option>');
+		xml('    <Option ID="'.$i.'" Selected="TRUE" Key="type" Value="none">');
+		xml('      <OptionText>'."Zur\xC3\xBCck".'</OptionText>');
+		xml('      <Image>'.$img_url.'previous.png</Image>');
+		xml('    </Option>');
 	//}
 	if ($num_total > 6) {
 		$i++;
-		xml('<Option ID="'.$i.'" Selected="FALSE" Key="search" Value="'.$type.'">');
-		xml('<OptionText>Suchen</OptionText>');
-		xml('<Image>'.$img_url.'search.png</Image>');
-		xml('</Option>');
+		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="search" Value="'.$type.'">');
+		xml('      <OptionText>Suchen</OptionText>');
+		xml('      <Image>'.$img_url.'search.png</Image>');
+		xml('    </Option>');
 	}
 	
 	while ($r = $rs->fetchRow()) {
 		$i++;
 		$entry_name = $r['ln'].', '.$r['fn'].' - '. $r['number'];
-		xml('<Option ID="'.$i.'" Selected="FALSE" Key="dial" Value="'.$r['number'].'">');
-		xml('<OptionText>'.$entry_name.'</OptionText>');
-		xml('<Image></Image>');
-		xml('</Option>');
+		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="dial" Value="'.$r['number'].'">');
+		xml('      <OptionText>'.$entry_name.'</OptionText>');
+		xml('      <Image></Image>');
+		xml('    </Option>');
 	}
 	
-	xml('</IppList>');
-	xml('<IppHidden Type="VALUE" Key="user">');
-	xml('<Value>'.$user.'</Value>');
-	xml('</IppHidden>');
-	xml('<IppHidden Type="VALUE" Key="tab">');
-	xml('<Value>'.$tab.'</Value>');
-	xml('</IppHidden>');
-	xml('<IppHidden Type="VALUE" Key="keys">');
-	xml('<Value>'.$keys.'</Value>');
-	xml('</IppHidden>');
+	xml('  </IppList>');
+	xml('  <IppHidden Type="VALUE" Key="user">');
+	xml('    <Value>'.$user.'</Value>');
+	xml('  </IppHidden>');
+	xml('  <IppHidden Type="VALUE" Key="tab">');
+	xml('    <Value>'.$tab.'</Value>');
+	xml('  </IppHidden>');
+	xml('  <IppHidden Type="VALUE" Key="keys">');
+	xml('    <Value>'.$keys.'</Value>');
+	xml('  </IppHidden>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
 	
