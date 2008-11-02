@@ -33,7 +33,6 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
-
 include_once( GS_DIR .'inc/gs_topology_lib.php' );
 
 
@@ -58,17 +57,21 @@ if (! isSet($opts['old-master'])
 	gs_script_invalid_usage( $usage );
 }
 
-if(!isSet($opts['pass']))
-	$opts['pass'] = "";
+if (!isSet($opts['pass'])) $opts['pass'] = '';
 
-$ret = gs_db_master_migration($opts['old-master'], $opts['new-master'], $opts['user'], $opts['pass']);
 
-if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
+/***********************************************************
+*    change to a different database master
+***********************************************************/
+
+$ret = gs_db_master_migration( $opts['old-master'], $opts['new-master'], $opts['user'], $opts['pass'] );
+if (isGsError($ret)) gs_script_error( $ret->getMsg() );
+if (! $ret)          gs_script_error();
 
 
 echo "\n";
-echo "Database Master Moved.\n";
-echo "Don't forget to adjust DB_MASTER_HOST in /etc/gemeinschaft.php\n";
+echo "Database Master moved.\n";
+echo "Don't forget to adjust DB_MASTER_HOST in /etc/gemeinschaft/gemeinschaft.php\n";
 echo "if required (in case it's not a \"virtual\" IP address anyway).\n";
 echo "\n";
 
