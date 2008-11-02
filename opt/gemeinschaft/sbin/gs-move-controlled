@@ -30,7 +30,7 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 
-echo "This Skript is not ready to use at the moment.\nSorry.\n";
+echo "This script is not ready to use at the moment.\nSorry.\n";
 exit(1);
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
@@ -38,7 +38,11 @@ include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs_topology_lib.php' );
 
-//Local Functions
+if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+	echo "Not allowed on single server systems.\n";
+	exit(1);
+}
+
 
 
 
@@ -46,7 +50,7 @@ include_once( GS_DIR .'inc/gs_topology_lib.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = "This Skript will move Gemeinschaft from one environment to an other.\nAll configurations have to be done in a config-file (topologie.php)\n\nUsage: ". baseName(__FILE__) .' --test=yes | --force=yes';
+$usage = "This script will move Gemeinschaft from one environment to an other.\nAll configurations have to be done in a config-file (topologie.php)\n\nUsage: ". baseName(__FILE__) .' --test=yes | --force=yes';
 
 $opts = @getOptsNoMultiples( '',
 	array(
