@@ -27,14 +27,17 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-
 define( 'GS_VALID', true );  /// this is a parent file
-
-$xml_buf = '';
-
-
 require_once( '../../../../inc/conf.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
+
+header( 'Content-Type: text/xml; charset=utf-8' );
+header( 'Expires: 0' );
+header( 'Pragma: no-cache' );
+header( 'Cache-Control: private, no-cache, must-revalidate' );
+header( 'Vary: *' );
+
+$xml_buf = '';
 
 function xml( $string )
 {
@@ -45,10 +48,11 @@ function xml( $string )
 function xml_output()
 {
 	global $xml_buf;
-	header( 'X-Powered-By: Gemeinschaft' );
-	header( 'Content-Type: text/xml' );
-	header( 'Content-Length: '. strLen($xml_buf) );
+	@header( 'X-Powered-By: Gemeinschaft' );
+	@header( 'Content-Type: text/xml; charset=utf-8' );
+	@header( 'Content-Length: '. strLen($xml_buf) );
 	echo $xml_buf;
+	exit;
 }
 
 function dial_number( $number )
@@ -66,6 +70,7 @@ function dial_number( $number )
 	xml('</IppAction>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
+	xml_output();
 }
 
 function write_alert( $message, $alert_type='ERROR' )
@@ -80,6 +85,7 @@ function write_alert( $message, $alert_type='ERROR' )
 	xml('</IppAlert>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
+	xml_output();
 }
 
 
@@ -88,8 +94,9 @@ $phonenumber  = trim(@$_REQUEST['phonenumber']);
 
 if (! $user) $user = $phonenumber;
 
-$url= GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/dial-log/dlog.php';
-$img_url = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/img/';
+$url_prov_siemens = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'siemens/';
+$url     = $url_prov_siemens .'dial-log/dlog.php';
+$img_url = $url_prov_siemens .'img/';
 
 if (! preg_match('/^\d+$/', $user)) {
 	write_alert( 'Benutzer '.$user.' unbekannt!' );
