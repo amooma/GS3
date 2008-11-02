@@ -514,7 +514,7 @@ function gs_db_slave_resync( $master_host, $slave_host, $user, $pass)
 		return new GsError("Failed to Start Slave-Replication Process");
 		}
 
-	return 0;
+	return true;
 }
 
 ?>
