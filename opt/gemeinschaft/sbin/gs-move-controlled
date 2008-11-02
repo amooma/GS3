@@ -43,14 +43,13 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	exit(1);
 }
 
-
-
-
-
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = "This script will move Gemeinschaft from one environment to an other.\nAll configurations have to be done in a config-file (topologie.php)\n\nUsage: ". baseName(__FILE__) .' --test=yes | --force=yes';
+$usage =
+'Script to move Gemeinschaft from one environment to another.'."\n".
+'All configuration has to be done in /etc/gemeinschaft/topology.php.'."\n\n".
+'Usage: '. baseName(__FILE__) .' (--test=yes | --force=yes)';
 
 $opts = @getOptsNoMultiples( '',
 	array(
@@ -60,21 +59,23 @@ $opts = @getOptsNoMultiples( '',
 	$usage
 );
 
-$only_run_tests=false;
-if(isSet($opts['test']))
-  $only_run_tests=true;
-else if (!isSet($opts['force']) || ($opts['force'] != "yes")
- ) {
-	gs_script_invalid_usage( $usage );
+$only_run_tests = false;
+if (isSet($opts['test'])) {
+	if ($opts['test'] !== 'yes') gs_script_invalid_usage( $usage );
+	$only_run_tests = true;
+}
+else {
+	if (! isSet($opts['force'])
+	||  $opts['force'] !== 'yes') gs_script_invalid_usage( $usage );
 }
 
 
 $conf = '/etc/gemeinschaft/topology.php';
-if (! file_exists( $conf )) {
+if (! file_exists($conf)) {
 	trigger_error( "Config file \"$conf\" not found!\n", E_USER_ERROR );
 	exit(1);
 } else {
-	if ((@include( $conf )) === false) {
+	if ((@include($conf)) === false) {
 		// () around the include are important!
 		trigger_error( "Could not include config file \"$conf\"!\n", E_USER_ERROR );
 		exit(1);
@@ -82,109 +83,133 @@ if (! file_exists( $conf )) {
 }
 
 
-//make an Array of the machines
-$hosts = array(
-	//Database Server in RZ A
-	"DB_MASTER_SERVER1" => array("host" => $DB_MASTER_SERVER1, "con" => null, "desc" => "Database Server in RZ A"),
-	//Database Server in RZ B
-	"DB_MASTER_SERVER2" => array("host" => $DB_MASTER_SERVER2, "con" => null, "desc" => "Database Server in RZ B"),
-	//Web/Provisioning Server in RZ A
-	"WEB_MASTER_SERVER1" => array("host" => $WEB_MASTER_SERVER1, "con" => null, "desc" => "Web/Provisioning Server in RZ A"),
-	//Web/Provisioning Server in RZ B
-	"WEB_MASTER_SERVER2" => array("host" => $WEB_MASTER_SERVER2, "con" => null, "desc" => "Web/Provisioning Server in RZ B"),
-	//Telephony Server in RZ A
-	"TE_MASTER_SERVER1" => array("host" => $TE_MASTER_SERVER1, "con" => null, "desc" => "Telephony Server in RZ A (MASTER)"),
-	"TE_MASTER_BACKUP1" => array("host" => $TE_MASTER_BACKUP1, "con" => null, "desc" => "Telephony Server in RZ A (BACKUP)"),
-	//Telephony Server in RZ B
-	"TE_MASTER_SERVER2" => array("host" => $TE_MASTER_SERVER2, "con" => null, "desc" => "Telephony Server in RZ B (MASTER)"),
-	"TE_MASTER_BACKUP2" => array("host" => $TE_MASTER_BACKUP2, "con" => null, "desc" => "Telephony Server in RZ B (BACKUP)")
-	);
+# array of the machines
+$servers = array(
+	# Database Server in RZ A
+	'DB_MASTER_SERVER1'  => array('host' => $DB_MASTER_SERVER1  , 'con'=>null, 'desc' => "Database Server in EDPC A" ),
+	# Database Server in RZ B
+	'DB_MASTER_SERVER2'  => array('host' => $DB_MASTER_SERVER2  , 'con'=>null, 'desc' => "Database Server in EDPC B" ),
+	
+	# Web/Provisioning Server in RZ A
+	'WEB_MASTER_SERVER1' => array('host' => $WEB_MASTER_SERVER1 , 'con'=>null, 'desc' => "Web/Provisioning Server in EDPC A" ),
+	# Web/Provisioning Server in RZ B
+	'WEB_MASTER_SERVER2' => array('host' => $WEB_MASTER_SERVER2 , 'con'=>null, 'desc' => "Web/Provisioning Server in EDPC B" ),
+	
+	# Telephony Server in RZ A
+	'TE_MASTER_SERVER1'  => array('host' => $TE_MASTER_SERVER1  , 'con'=>null, 'desc' => "Telephony Server in EDPC A (Master)" ),
+	'TE_MASTER_BACKUP1'  => array('host' => $TE_MASTER_BACKUP1  , 'con'=>null, 'desc' => "Telephony Server in EDPC A (Backup)" ),
+	# Telephony Server in EDPC B
+	'TE_MASTER_SERVER2'  => array('host' => $TE_MASTER_SERVER2  , 'con'=>null, 'desc' => "Telephony Server in EDPC B (Master)" ),
+	'TE_MASTER_BACKUP2'  => array('host' => $TE_MASTER_BACKUP2  , 'con'=>null, 'desc' => "Telephony Server in EDPC B (Backup)" )
+);
 
 
-_run_topology_tests($hosts);
+_run_topology_tests($servers);
 
-if($only_run_tests) {
+if ($only_run_tests) {
 	echo "\nDone.\n";
-	exit(1);
+	exit(0);
 }
 
 echo "\n\nTests Done.\n";
 
-## Stage 1 Migrate Master
+
+## Stage 1: Migrate Master
 #
-echo "\n\n Migrate the Master Server:\n\n";
+echo "\n\n Migrate the Database Master server:\n\n";
 
-$new_master=null;
-$old_master=null;
+$new_master = null;
+$old_master = null;
 
-if($CUR_RZ == 'A') {
-	$old_master=$DB_MASTER_SERVER1_SERVICE_IP;
-	$new_master=$DB_MASTER_SERVER2_SERVICE_IP;
+if ($CUR_RZ === 'A') {
+	$old_master = $DB_MASTER_SERVER1_SERVICE_IP;
+	$new_master = $DB_MASTER_SERVER2_SERVICE_IP;
+}
+elseif ($CUR_RZ === 'B') {
+	$old_master = $DB_MASTER_SERVER2_SERVICE_IP;
+	$new_master = $DB_MASTER_SERVER1_SERVICE_IP;
 }
 else {
-	$old_master=$DB_MASTER_SERVER2_SERVICE_IP;
-	$new_master=$DB_MASTER_SERVER1_SERVICE_IP;
+	echo "\nError.\n";
+	exit(1);
 }
 
-$ok = gs_db_master_migration($old_master, $new_master, $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS);
-if (isGsError( $ok )) {
-	echo "ERROR:" .$ok->getMsg();
+$ok = gs_db_master_migration( $old_master, $new_master, $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS );
+if (isGsError($ok)) {
+	echo "ERROR: ", $ok->getMsg() ,"\n";
 	exit(1);
-	}
+} elseif (! $ok) {
+	echo "ERROR.\n";
+	exit(1);
+}
 
 echo "\n\nMigration done.\n";
+
 echo "\n\n====================\n\n";
-## Stage 2 Resync Slaves
+
+
+## Stage 2: Resync Slaves
 #
 echo "Resyncing all Slaves with the new Master.\n";
 
-foreach ( $hosts as $key => $host) {
-	if($key == 'DB_MASTER_SERVER1' || $key == 'DB_MASTER_SERVER2') 
-		continue; //One Master ist Still resynced and the other is Still the master
-	echo $host['desc']."...\n ";
-	if($CUR_RZ=='B' && $host['host'] == $DB_MASTER_SERVER1_SERVICE_IP) {
-		echo "Skipping, cause' it's the same host of \$DB_MASTER_SERVER1_SERVICE_IP. This host dont need to be a slave of hisself";
+foreach ($servers as $key => $host) {
+	if ($key === 'DB_MASTER_SERVER1'
+	||  $key === 'DB_MASTER_SERVER2')
+		continue;
+	echo $host['desc'] ,"...\n ";
+	if ($CUR_RZ === 'B' && $host['host'] === $DB_MASTER_SERVER1_SERVICE_IP) {
+		echo "Skipping, because it's the same host as DB_MASTER_SERVER1_SERVICE_IP.\n";
+		echo "This host does not need to be a slave to himself.\n";
 		continue;
 	}
-	if($CUR_RZ=='A' && $host['host'] == $DB_MASTER_SERVER2_SERVICE_IP) {
-		echo "Skipping, cause' it's the same host of \$DB_MASTER_SERVER2_SERVICE_IP This host dont need to be a slave of hisself\n";
+	if ($CUR_RZ === 'A' && $host['host'] === $DB_MASTER_SERVER2_SERVICE_IP) {
+		echo "Skipping, because it's the same host as DB_MASTER_SERVER2_SERVICE_IP.\n";
+		echo "This host does not need to be a slave to himself.\n";
 		continue;
-		}
-		
-	gs_db_setup_replication( $new_master, $host['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS);
-	if (isGsError( $ok )) {
-		echo "ERROR:" .$ok->getMsg();
+	}
+	
+	$ok = gs_db_setup_replication( $new_master, $host['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS );
+	if (isGsError($ok)) {
+		echo "ERROR: ", $ok->getMsg() ,"\n";
+		exit(1);
+	} elseif (! $ok) {
+		echo "ERROR.\n";
 		exit(1);
 	}
-} // foreach ( $hosts as $key => $host)
+} // foreach ($servers as $key => $host)
 
 
 
-## Stage 3 Move Service IPs of the Web-Services
+## Stage 3: Move Service IP addresses of the Web Services
 #
 
-## Stage 4 Edit gemeinschaft.php of each Host
+
+## Stage 4: Edit gemeinschaft.php on each server
 #
 
-foreach ($hosts as $key => $host) {
+foreach ($servers as $key => $host) {
 	$ok = _change_etc_gemeinschaft_php( $host['host'], $new_master );
 	if (isGsError($ok)) {
 		echo "ERROR: ", $ok->getMsg() ,"\n";
 		exit(1);
+	} elseif (! $ok) {
+		echo "ERROR.\n";
+		exit(1);
 	}
 }
 
-## Stage 5 Set $CUR_RZ to the new one
+## Stage 5: Set $CUR_RZ to the new one
 #
 
 
-## Stage 6 Re-Run tests again
+## Stage 6: Re-Run Tests
 #
+
+
+
 
 echo "\nDone.\n";
-echo "The Current Operating RZ is: ". $CUR_RZ."\n";
-
+echo "The Current Operating EDPC (de: RZ) is now: ". $CUR_RZ."\n";
+echo "\n";
 
 ?>
-
-
