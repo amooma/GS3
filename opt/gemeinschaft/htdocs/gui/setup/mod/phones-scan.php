@@ -59,7 +59,7 @@ function mac_addr_to_phone_type( $mac )
 }
 
 $err=0; $out=array();
-@exec( 'sudo ping -n -i 0.4 -w 2 -b 255.255.255.255 1>>/dev/null 2>>/dev/null', $out, $err );
+@exec( 'LANG=C sudo ping -n -i 0.4 -w 2 -b 255.255.255.255 1>>/dev/null 2>>/dev/null', $out, $err );
 if ($err !== 0) {
 	echo 'Could not ping.';
 	if ($err === 127)
@@ -68,7 +68,7 @@ if ($err !== 0) {
 }
 else {
 	$err=0; $out=array();
-	@exec( 'sudo arp -n -a 2>>/dev/null', $out, $err );
+	@exec( 'LANG=C sudo arp -n -a 2>>/dev/null', $out, $err );
 	if ($err !== 0) {
 		echo 'Could not read arp table.';
 		if ($err === 127)
