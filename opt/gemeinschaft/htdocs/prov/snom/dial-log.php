@@ -30,6 +30,9 @@
 # indented XML
 
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( '../../../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gettext.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -37,10 +40,6 @@ header( 'Expires: 0' );
 header( 'Pragma: no-cache' );
 header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
-
-
-require_once( '../../../inc/conf.php' );
-require_once( GS_DIR .'inc/db_connect.php' );
 
 function snomXmlEsc( $str )
 {
@@ -67,11 +66,12 @@ function _err( $msg='' )
 {
 	@ob_end_clean();
 	ob_start();
-	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
-	     '<SnomIPPhoneText>', "\n",
-	       '<Title>', 'Error', '</Title>', "\n",
-	       '<Text>', snomXmlEsc( 'Error: '. $msg ), '</Text>', "\n",
-	     '</SnomIPPhoneText>', "\n";
+	echo
+		'<?','xml version="1.0" encoding="utf-8"?','>', "\n",
+		'<SnomIPPhoneText>', "\n",
+			'<Title>', __('Fehler'), '</Title>', "\n",
+			'<Text>', snomXmlEsc( __('Fehler') .': '. $msg ), '</Text>', "\n",
+		'</SnomIPPhoneText>', "\n";
 	_ob_send();
 }
 
@@ -100,9 +100,9 @@ if ($user_id < 1)
 
 
 $typeToTitle = array(
-	'out'    => "Gew\xC3\xA4hlt",
-	'missed' => "Verpasst",
-	'in'     => "Angenommen"
+	'out'    => __("Gew\xC3\xA4hlt"),
+	'missed' => __("Verpasst"),
+	'in'     => __("Angenommen")
 );
 
 
@@ -123,24 +123,27 @@ if (! $type) {
 	
 	
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
-	echo '<SnomIPPhoneMenu>', "\n",
-	       '<Title>Anruflisten</Title>', "\n";
+	echo
+		'<SnomIPPhoneMenu>', "\n",
+			'<Title>', __('Anruflisten') ,'</Title>', "\n";
 	
 	foreach ($typeToTitle as $t => $title) {
 		
 		$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE `user_id`='. $user_id .' AND `type`=\''. $t .'\'' );
 		if ($num_calls > 0) {
-			echo "\n",
-			     '<MenuItem>', "\n",
-			       '<Name>', snomXmlEsc( $title ) ,'</Name>', "\n",
-			       '<URL>', $url_snom_dl ,'?user=',$user, '&type=',$t, '</URL>', "\n",
-			     '</MenuItem>', "\n";
+			echo
+				"\n",
+				'<MenuItem>', "\n",
+					'<Name>', snomXmlEsc( $title ) ,'</Name>', "\n",
+					'<URL>', $url_snom_dl ,'?user=',$user, '&type=',$t, '</URL>', "\n",
+				'</MenuItem>', "\n";
 			# Snom does not understand &amp; !
 		}
 	}
 	
-	echo "\n",
-	     '</SnomIPPhoneMenu>';
+	echo
+		"\n",
+		'</SnomIPPhoneMenu>';
 	
 }
 #################################### INITIAL SCREEN }
@@ -151,8 +154,9 @@ if (! $type) {
 else {
 	
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
-	echo '<SnomIPPhoneDirectory>', "\n",
-       '<Title>', snomXmlEsc( $typeToTitle[$type] ) ,'</Title>', "\n";
+	echo
+		'<SnomIPPhoneDirectory>', "\n",
+			'<Title>', snomXmlEsc( $typeToTitle[$type] ) ,'</Title>', "\n";
 	
 	$query =
 'SELECT
@@ -180,16 +184,18 @@ LIMIT 20';
 		if ($r['num_calls'] > 1) {
 			$entry_name .= ' ('. $r['num_calls'] .')';
 		}
-		echo "\n",
-			 '<DirectoryEntry>', "\n",
-			   '<Name>', snomXmlEsc( $entry_name ) ,'</Name>', "\n",
-			   '<Telephone>', snomXmlEsc( $r['number'] ) ,'</Telephone>', "\n",
-			 '</DirectoryEntry>', "\n";
+		echo
+			"\n",
+			'<DirectoryEntry>', "\n",
+				'<Name>', snomXmlEsc( $entry_name ) ,'</Name>', "\n",
+				'<Telephone>', snomXmlEsc( $r['number'] ) ,'</Telephone>', "\n",
+			'</DirectoryEntry>', "\n";
 		
 	}
 	
-	echo "\n",
-	     '</SnomIPPhoneDirectory>';
+	echo
+		"\n",
+		'</SnomIPPhoneDirectory>';
 	
 }
 #################################### DIAL LOG }
