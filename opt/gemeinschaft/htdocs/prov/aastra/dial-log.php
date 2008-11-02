@@ -30,10 +30,11 @@
 # indented XML
 
 define( 'GS_VALID', true );  /// this is a parent file
-
 require_once( '../../../inc/conf.php' );
-require_once( GS_DIR .'inc/db_connect.php' );
-require_once( GS_DIR .'inc/aastra-fns.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/aastra-fns.php' );
+include_once( GS_DIR .'inc/gettext.php' );
+
 $xml_buffer = '';
 
 function _err( $msg='' )
@@ -64,9 +65,9 @@ $num_results = (int)gs_get_conf('GS_AASTRA_PROV_PB_NUM_RESULTS', 10);
 $db = gs_db_slave_connect();
 
 $typeToTitle = array(
-	'out'    => "Gew\xC3\xA4hlt",
-	'missed' => "Verpasst",
-	'in'     => "Angenommen"
+	'out'    => __("Gew\xC3\xA4hlt"),
+	'missed' => __("Verpasst"),
+	'in'     => __("Angenommen")
 );
 
 $user_id = _get_userid();
@@ -83,7 +84,7 @@ if (! $type) {
 	
 	
 	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none">');
-	aastra_write('<Title>'.__('Anrufliste').'</Title>');
+	aastra_write('<Title>'. __('Anrufliste') .'</Title>');
 	
 	foreach ($typeToTitle as $key => $title) {
 		aastra_write('<MenuItem>');
@@ -94,11 +95,11 @@ if (! $type) {
 	} 
 	
 	aastra_write('<SoftKey index="1">');
-	aastra_write('<Label>OK</Label>');
+	aastra_write('<Label>'. __('OK') .'</Label>');
 	aastra_write('<URI>SoftKey:Select</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="4">');
-	aastra_write('<Label>'.__('Abbrechen').'</Label>');
+	aastra_write('<Label>'. __('Abbrechen') .'</Label>');
 	aastra_write('<URI>SoftKey:Exit</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('</AastraIPPhoneTextMenu>');
@@ -106,7 +107,7 @@ if (! $type) {
 } elseif ($type==='out' || $type==='in' || $type==='missed') {
 	
 	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_dl .'">');
-	aastra_write('<Title>'.$typeToTitle[$type].'</Title>');
+	aastra_write('<Title>'. $typeToTitle[$type] .'</Title>');
 	
 	$query =
 'SELECT
@@ -139,24 +140,24 @@ LIMIT '.$num_results;
 				$entry_name .= ' ('. $r['num_calls'] .')';
 			}
 			aastra_write('<MenuItem>');
-			aastra_write('<Prompt>'.$entry_name.'</Prompt>');
-			aastra_write('<Dial>'.$r['number'].'</Dial>');
-			aastra_write('<URI>'. $url_aastra_dl .'?t='.$type.'d&amp;e='.$r['ts'].'</URI>');
+			aastra_write('<Prompt>'. $entry_name .'</Prompt>');
+			aastra_write('<Dial>'. $r['number'] .'</Dial>');
+			aastra_write('<URI>'. $url_aastra_dl .'?t='.$type.'d&amp;e='.$r['ts'] .'</URI>');
 			aastra_write('</MenuItem>');
 			
 		}
 	}
 	
 	aastra_write('<SoftKey index="1">');
-	aastra_write('<Label>OK</Label>');
+	aastra_write('<Label>'. __('OK') .'</Label>');
 	aastra_write('<URI>SoftKey:Select</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="2">');
-	aastra_write('<Label>'.__('Anrufen').'</Label>');
+	aastra_write('<Label>'. __('Anrufen') .'</Label>');
 	aastra_write('<URI>SoftKey:Dial2</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="4">');
-	aastra_write('<Label>'.__('Abbrechen').'</Label>');
+	aastra_write('<Label>'. __('Abbrechen') .'</Label>');
 	aastra_write('<URI>SoftKey:Exit</URI>');
 	aastra_write('</SoftKey>');
 	
@@ -202,17 +203,17 @@ LIMIT 1';
 			$num_calls = ' ('. $r['num_calls'] .')';
 		}		
 		
-		aastra_write('<Line Align="left">'.$name.'</Line>');
-		aastra_write('<Line Align="right" Size="double">'.$r['number'].'</Line>');
-		aastra_write('<Line Align="left">'.$when.'</Line>');
+		aastra_write('<Line Align="left">'. $name .'</Line>');
+		aastra_write('<Line Align="right" Size="double">'. $r['number'] .'</Line>');
+		aastra_write('<Line Align="left">'. $when .'</Line>');
 	}
 	
 	aastra_write('<SoftKey index="2">');
-	aastra_write('<Label>'.__('Anrufen').'</Label>');
-	aastra_write('<URI>Dial:'.$r['number'].'</URI>');
+	aastra_write('<Label>'. __('Anrufen') .'</Label>');
+	aastra_write('<URI>Dial:'. $r['number'] .'</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="4">');
-	aastra_write('<Label>'.__('Abbrechen').'</Label>');
+	aastra_write('<Label>'. __('Abbrechen') .'</Label>');
 	aastra_write('<URI>SoftKey:Exit</URI>');
 	aastra_write('</SoftKey>');
 	
