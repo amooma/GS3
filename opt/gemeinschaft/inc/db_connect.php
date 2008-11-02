@@ -38,108 +38,109 @@ $gs_db_conn_slave  = null;
 
 function gs_db_slave_is_master()
 {
-	return ( GS_DB_MASTER_HOST === GS_DB_SLAVE_HOST
-	      && GS_DB_MASTER_USER === GS_DB_SLAVE_USER
-	      && GS_DB_MASTER_PWD  === GS_DB_SLAVE_PWD
-	      && GS_DB_MASTER_DB   === GS_DB_SLAVE_DB   );
+	return
+		(  GS_DB_MASTER_HOST === GS_DB_SLAVE_HOST
+		&& GS_DB_MASTER_USER === GS_DB_SLAVE_USER
+		&& GS_DB_MASTER_PWD  === GS_DB_SLAVE_PWD
+		&& GS_DB_MASTER_DB   === GS_DB_SLAVE_DB   );
 }
 
 
-function & gs_db_master_connect()
+function gs_db_is_connected( &$conn )
 {
-	global $gs_db_conn_master, $gs_db_conn_slave;
-	
+	return
+		(  getType($conn) === 'object'
+		&& method_exists($conn, 'isConnected')
+		&& $conn->isConnected() );
+}
+
+
+function gs_db_connect( &$conn=null, $tag='', $host, $user, $pwd, $db=null, $_backtrace_level=0 )
+{
 	$caller_info = '';
 	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
 		$bt = debug_backtrace();
-		if (is_array($bt) && array_key_exists(0, $bt)) {
-			$caller_info = ' (for '. @$bt[0]['file'] .':'. @$bt[0]['line'] .')';
+		if (is_array($bt) && array_key_exists($_backtrace_level, $bt)) {
+			$caller_info = ' for '. @$bt[$_backtrace_level]['file'] .':'. @$bt[$_backtrace_level]['line'] .'';
 			unset($bt);
 		}
 	}
 	
-	if (getType($gs_db_conn_master) === 'object'
-	&&  method_exists($gs_db_conn_master, 'isConnected')
-	&&  $gs_db_conn_master->isConnected())
-	{
-		//gs_log( GS_LOG_DEBUG, 'Using the existing master DB connection'. $caller_info );
-		return $gs_db_conn_master;
+	if (gs_db_is_connected($conn)) {
+		gs_log( GS_LOG_DEBUG, 'Using existing DB connection'. ($tag != '' ? ' ('.$tag.')':'') . $caller_info );
+		return 2;  # using the existing connection
 	}
-	gs_log( GS_LOG_DEBUG, 'Opening a new master DB connection'. $caller_info );
+	gs_log( GS_LOG_DEBUG, 'New DB connection'. ($tag != '' ? ' ('.$tag.')':'') . $caller_info );
 	
-	if (!( $db = YADB_newConnection( 'mysql' ) )) {
-		$null = null;
-		return $null;
+	if (!( $conn = YADB_newConnection( 'mysql' ) )) {
+		$conn = null;
+		return false;
 	}
-	if (!( $db->connect(
-		GS_DB_MASTER_HOST,
-		GS_DB_MASTER_USER,
-		GS_DB_MASTER_PWD,
-		GS_DB_MASTER_DB,
+	if (!( $conn->connect(
+		$host,
+		$user,
+		$pwd,
+		$db,
 		array('reuse'=>false)  // do not use. leaves lots of connections
 		)))
 	{
 		$lastNativeError    = @$db->getLastNativeError();
 		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
-		gs_log( GS_LOG_WARNING, 'Could not connect to master database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
+		gs_log( GS_LOG_WARNING, 'Could not connect to database'. ($tag != '' ? ' ('.$tag.')':'') .'!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
+		$conn = null;
+		return false;
+	}
+	@ $conn->setCharSet( 'utf8', 'utf8_unicode_ci' );
+	
+	return 1;  # opened a new connection
+}
+
+
+function & gs_db_master_connect( $_backtrace_level=0 )
+{
+	global $gs_db_conn_master, $gs_db_conn_slave;
+	
+	$ret = gs_db_connect(
+		$gs_db_conn_master,
+		'master',
+		GS_DB_MASTER_HOST,
+		GS_DB_MASTER_USER,
+		GS_DB_MASTER_PWD,
+		GS_DB_MASTER_DB,
+		++$_backtrace_level
+	);
+	if (! $ret) {
 		$null = null;
 		return $null;
 	}
-	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
 	
-	$gs_db_conn_master = $db;
-	if (gs_db_slave_is_master()) {
-		$gs_db_conn_slave = $db;
+	if (gs_db_slave_is_master() && ! gs_db_is_connected($gs_db_conn_slave)) {
+		$gs_db_conn_slave = $gs_db_conn_master;
 	}
 	return $gs_db_conn_master;
 }
 
 
-function & gs_db_slave_connect()
+function & gs_db_slave_connect( $_backtrace_level=0 )
 {
 	global $gs_db_conn_slave, $gs_db_conn_master;
 	
-	$caller_info = '';
-	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
-		$bt = debug_backtrace();
-		if (is_array($bt) && array_key_exists(0, $bt)) {
-			$caller_info = ' (for '. @$bt[0]['file'] .':'. @$bt[0]['line'] .')';
-			unset($bt);
-		}
-	}
-	
-	if (getType($gs_db_conn_slave) === 'object'
-	&&  method_exists($gs_db_conn_slave, 'isConnected')
-	&&  $gs_db_conn_slave->isConnected())
-	{
-		//gs_log( GS_LOG_DEBUG, 'Using the existing slave DB connection'. $caller_info );
-		return $gs_db_conn_slave;
-	}
-	gs_log( GS_LOG_DEBUG, 'Opening a new slave DB connection'. $caller_info );
-	
-	if (!( $db = YADB_newConnection( 'mysql' ) )) {
-		$null = null;
-		return $null;
-	}
-	if (!( $db->connect(
+	$ret = gs_db_connect(
+		$gs_db_conn_slave,
+		'slave',
 		GS_DB_SLAVE_HOST,
 		GS_DB_SLAVE_USER,
 		GS_DB_SLAVE_PWD,
 		GS_DB_SLAVE_DB,
-		array('reuse'=>false)  // do not use. leaves lots of connections
-		)))
-	{
-		$lastNativeError    = @$db->getLastNativeError();
-		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
-		gs_log( GS_LOG_WARNING, 'Could not connect to slave database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
+		++$_backtrace_level
+	);
+	if (! $ret) {
 		$null = null;
 		return $null;
 	}
-	@ $db->setCharSet( 'utf8', 'utf8_unicode_ci' );
 	
-	$gs_db_conn_slave = $db;
-	if (gs_db_slave_is_master()) {
-		$gs_db_conn_master = $db;
+	if (gs_db_slave_is_master() && ! gs_db_is_connected($gs_db_conn_master)) {
+		$gs_db_conn_master = $gs_db_conn_slave;
 	}
 	return $gs_db_conn_slave;
 }
