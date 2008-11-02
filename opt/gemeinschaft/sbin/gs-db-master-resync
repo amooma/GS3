@@ -51,20 +51,23 @@ $opts = @getOptsNoMultiples( '',
 	$usage
 );
 if (! isSet($opts['master'])
- || ! isSet($opts['slave'])
- ||  ! isSet($opts['user'])
- ) {
+||  ! isSet($opts['slave'])
+||  ! isSet($opts['user'])
+) {
 	gs_script_invalid_usage( $usage );
 }
 
-if(!isSet($opts['pass']))
-	$opts['pass'] = "";
-
-$ret = gs_db_slave_resync( $opts['master'], $opts['slave'], $opts['user'], $opts['pass']);
-if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
+if (! isSet($opts['pass'])) $opts['pass'] = '';
 
 
-echo "\ndone\n";
+/***********************************************************
+*    re-setup master-slave replication
+***********************************************************/
+
+$ret = gs_db_setup_replication( $opts['master'], $opts['slave'], $opts['user'], $opts['pass'] );
+if (isGsError($ret)) gs_script_error( $ret->getMsg() );
+if (! $ret)          gs_script_error();
+
+echo "\n", "Done.\n";
+
 ?>
-
-

@@ -147,7 +147,7 @@ foreach ( $hosts as $key => $host) {
 		continue;
 		}
 		
-	gs_db_slave_resync( $new_master, $host['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS);
+	gs_db_setup_replication( $new_master, $host['host'], $SUPER_MYSQL_USER, $SUPER_MYSQL_PASS);
 	if (isGsError( $ok )) {
 		echo "ERROR:" .$ok->getMsg();
 		exit(1);

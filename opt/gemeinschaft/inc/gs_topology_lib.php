@@ -447,7 +447,7 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 	return true;
 }
 
-function gs_db_slave_resync( $master_host, $slave_host, $user, $pass)
+function gs_db_setup_replication( $master_host, $slave_host, $user, $pass)
 {
 	# are we root? do we have to sudo?
 	#
