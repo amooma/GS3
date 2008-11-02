@@ -357,7 +357,7 @@ psetting('GMT_TIME_ZONE', 1);
 #####################################################################
 psetting('MANAGEMENT_TRANSFER_PROTOCOL', 1);  # 0=TFTP, 1=HTTP
 psetting('NETWORK_TFTP_SERVER' , '"'.gs_get_conf('GS_PROV_HOST').'"');
-psetting('NETWORK_FWU_SERVER'  , '"192.168.1.130"');
+psetting('NETWORK_FWU_SERVER'  , '"'.gs_get_conf('GS_PROV_HOST').'"');
 psetting('FWU_TFTP_SERVER_PATH', '"m3/firmware/"');
 psetting('VOIP_LOG_AUTO_UPLOAD', 0);
 
