@@ -30,10 +30,11 @@
 # indented XML
 
 define( 'GS_VALID', true );  /// this is a parent file
-
 require_once( '../../../inc/conf.php' );
-require_once( GS_DIR .'inc/db_connect.php' );
-require_once( GS_DIR .'inc/aastra-fns.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/aastra-fns.php' );
+include_once( GS_DIR .'inc/gettext.php' );
+
 $xml_buffer = '';
 
 function _err( $msg='' )
@@ -66,16 +67,18 @@ $per_page = (int)gs_get_conf('GS_AASTRA_PROV_PB_NUM_RESULTS', 10);
 $db = gs_db_slave_connect();
 
 $tmp = array(
-	15=>array('k' => 'gs' ,
-	          'v' => gs_get_conf('GS_PB_INTERNAL_TITLE', "Intern") ),
-	25=>array('k' => 'prv',
-	          'v' => gs_get_conf('GS_PB_PRIVATE_TITLE', "Pers\xC3\xB6nlich" ) )
+	15=>array(
+		'k' => 'gs' ,
+		'v' => gs_get_conf('GS_PB_INTERNAL_TITLE', __("Intern")) ),
+	25=>array(
+		'k' => 'prv',
+		'v' => gs_get_conf('GS_PB_PRIVATE_TITLE' , __("Pers\xC3\xB6nlich")) )
 );
 if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
 	$tmp[$pos] = array(
-	          'k' => 'imported',
-	          'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', "Importiert")
+		'k' => 'imported',
+		'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', __("Importiert"))
 	);
 }
 kSort($tmp);
@@ -89,17 +92,17 @@ $url_aastra_pb = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PR
 
 if ($search) {
 	aastra_write('<AastraIPPhoneInputScreen type = "string">');
-	aastra_write('<Title>'.__('Suchen').'</Title>');
-	aastra_write('<Prompt>'.__('Name:').'</Prompt>');
+	aastra_write('<Title>'. __('Suchen') .'</Title>');
+	aastra_write('<Prompt>'. __('Name') .':</Prompt>');
 	aastra_write('<URL>'.$url_aastra_pb .'?t='.$type.'</URL>');
 	aastra_write('<Parameter>n</Parameter>');
 	aastra_write('<Default></Default>');
 	aastra_write('<SoftKey index="1">');
-	aastra_write('<Label>OK</Label>');
+	aastra_write('<Label>'. __('OK') .'</Label>');
 	aastra_write('<URI>SoftKey:Submit</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="4">');
-	aastra_write('<Label>'.__('Abbrechen').'</Label>');
+	aastra_write('<Label>'. __('Abbrechen') .'</Label>');
 	aastra_write('<URI>SoftKey:Exit</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="2">');
@@ -111,22 +114,22 @@ if ($search) {
 } elseif (! $type) {
 	
 	aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none">');
-	aastra_write('<Title>'.__('Telefonbuch').'</Title>');
+	aastra_write('<Title>'. __('Telefonbuch') .'</Title>');
 	
 	foreach ($typeToTitle as $key => $title) {
 		aastra_write('<MenuItem>');
-		aastra_write('<Prompt>'.$title.'</Prompt>');
-		aastra_write('<URI>'. $url_aastra_pb .'?t='.$key.'</URI>');
+		aastra_write('<Prompt>'. $title .'</Prompt>');
+		aastra_write('<URI>'. $url_aastra_pb .'?t='.$key .'</URI>');
 		//aastra_write('<Selection>0&amp;menu_pos=1</Selection>'."\n";
 		aastra_write('</MenuItem>');
 	} 
 	
 	aastra_write('<SoftKey index="1">');
-	aastra_write('<Label>OK</Label>');
+	aastra_write('<Label>'. __('OK') .'</Label>');
 	aastra_write('<URI>SoftKey:Select</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="4">');
-	aastra_write('<Label>'.__('Abbrechen').'</Label>');
+	aastra_write('<Label>'. __('Abbrechen') .'</Label>');
 	aastra_write('<URI>SoftKey:Exit</URI>');
 	aastra_write('</SoftKey>');
 	
@@ -171,50 +174,53 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	$rs = $db->execute($query);
 	if ($rs->numRows() !== 0) {
 		aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_pb .'">');
-		aastra_write('<Title>'.$page_title.'</Title>');
+		aastra_write('<Title>'. $page_title .'</Title>');
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$number = $r['ext'];
 			aastra_write('<MenuItem>');
-			aastra_write('<Prompt>'.$name.' - '.$number.'</Prompt>');
-			aastra_write('<Dial>'.$number.'</Dial>');
-			aastra_write('<URI>'. $url_aastra_pb .'?t=gss&amp;e='.$r['id'].'</URI>');
+			aastra_write('<Prompt>'. $name .' - '. $number .'</Prompt>');
+			aastra_write('<Dial>'. $number .'</Dial>');
+			aastra_write('<URI>'. $url_aastra_pb .'?t=gss&amp;e='.$r['id'] .'</URI>');
 			aastra_write('</MenuItem>');
 		}
 		
 		aastra_write('<SoftKey index="1">');
-		aastra_write('<Label>OK</Label>');
+		aastra_write('<Label>'. __('OK') .'</Label>');
 		aastra_write('<URI>SoftKey:Select</URI>');
 		aastra_write('</SoftKey>');
 		aastra_write('<SoftKey index="2">');
-		aastra_write('<Label>'.__('Anrufen').'</Label>');
+		aastra_write('<Label>'. __('Anrufen') .'</Label>');
 		aastra_write('<URI>SoftKey:Dial2</URI>');
 		aastra_write('</SoftKey>');
 		aastra_write('<SoftKey index="4">');
-		aastra_write('<Label>'.__('Abbrechen').'</Label>');
+		aastra_write('<Label>'. __('Abbrechen') .'</Label>');
 		aastra_write('<URI>SoftKey:Exit</URI>');
 		aastra_write('</SoftKey>');
 		aastra_write('<SoftKey index="5">');
-		aastra_write('<Label>'.__('Suchen').'</Label>');
+		aastra_write('<Label>'. __('Suchen') .'</Label>');
 		aastra_write('<URI>'. $url_aastra_pb .'?t=gs&amp;s=1</URI>');
 		aastra_write('</SoftKey>');	
 		
 		if ($page > 0) {
 			aastra_write('<SoftKey index="3">');
 			aastra_write('<Label>&lt;&lt;'.($page).'</Label>');
-			aastra_write('<URI>'. $url_aastra_pb .'?t=gs&amp;p='.($page-1).'&amp;n='.$name_search.'</URI>');
+			aastra_write('<URI>'. $url_aastra_pb .'?t=gs&amp;p='.($page-1).'&amp;n='.$name_search .'</URI>');
 			aastra_write('</SoftKey>');
 		}
 		if ($page < $num_pages-1) {
 			aastra_write('<SoftKey index="6">');
 			aastra_write('<Label>&gt;&gt;'.($page+2).'</Label>');
-			aastra_write('<URI>'. $url_aastra_pb .'?t=gs&amp;p='.($page+1).'&amp;n='.$name_search.'</URI>');
+			aastra_write('<URI>'. $url_aastra_pb .'?t=gs&amp;p='.($page+1).'&amp;n='.$name_search .'</URI>');
 			aastra_write('</SoftKey>');
 		}
 		
 		aastra_write('</AastraIPPhoneTextMenu>');
 	} else {
-		aastra_textscreen(__('Nicht gefunden'),__('Teilnehmer').' &quot;'.$name_search.'&quot; '.__('nicht gefunden!'));
+		aastra_textscreen(
+			__('Nicht gefunden'),
+			sprintF(__('Teilnehmer &quot;%s&quot; nicht gefunden.'), $name_search)
+			);
 	}
 	
 	
@@ -253,50 +259,53 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	
 	if ($rs && $rs->numRows() !== 0) {
 		aastra_write('<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_pb .'">');
-		aastra_write('<Title>'.$page_title.'</Title>');
+		aastra_write('<Title>'. $page_title .'</Title>');
 		
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			aastra_write('<MenuItem>');
-			aastra_write('<Prompt>'.$name.' - '.$r['number'].'</Prompt>');
-			aastra_write('<Dial>'.$r['number'].'</Dial>');
-			aastra_write('<URI>'. $url_aastra_pb .'?t=prvs&amp;e='.$r['id'].'</URI>');
+			aastra_write('<Prompt>'. $name .' - '. $r['number'] .'</Prompt>');
+			aastra_write('<Dial>'. $r['number'] .'</Dial>');
+			aastra_write('<URI>'. $url_aastra_pb .'?t=prvs&amp;e='.$r['id'] .'</URI>');
 			aastra_write('</MenuItem>');
 		}
 		
 		aastra_write('<SoftKey index="1">');
-		aastra_write('<Label>OK</Label>');
+		aastra_write('<Label>'. __('OK') .'</Label>');
 		aastra_write('<URI>SoftKey:Select</URI>');
 		aastra_write('</SoftKey>');
 		aastra_write('<SoftKey index="2">');
-		aastra_write('<Label>'.__('Anrufen').'</Label>');
+		aastra_write('<Label>'. __('Anrufen') .'</Label>');
 		aastra_write('<URI>SoftKey:Dial2</URI>');
 		aastra_write('</SoftKey>');
 		aastra_write('<SoftKey index="4">');
-		aastra_write('<Label>'.__('Abbrechen').'</Label>');
+		aastra_write('<Label>'. __('Abbrechen') .'</Label>');
 		aastra_write('<URI>SoftKey:Exit</URI>');
 		aastra_write('</SoftKey>');
 		aastra_write('<SoftKey index="5">');
-		aastra_write('<Label>'.__('Suchen').'</Label>');
+		aastra_write('<Label>'. __('Suchen') .'</Label>');
 		aastra_write('<URI>'. $url_aastra_pb .'?t='.$type.'&amp;s=1</URI>');
 		aastra_write('</SoftKey>');	
 		
 		if ($page > 0) {
 			aastra_write('<SoftKey index="3">');
 			aastra_write('<Label>&lt;&lt;'.($page).'</Label>');
-			aastra_write('<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page-1).'&amp;n='.$name_search.'</URI>');
+			aastra_write('<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page-1).'&amp;n='.$name_search .'</URI>');
 			aastra_write('</SoftKey>');
 		}
 		if ($page < $num_pages-1) {
 			aastra_write('<SoftKey index="6">');
 			aastra_write('<Label>&gt;&gt;'.($page+2).'</Label>');
-			aastra_write('<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page+1).'&amp;n='.$name_search.'</URI>');
+			aastra_write('<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page+1).'&amp;n='.$name_search .'</URI>');
 			aastra_write('</SoftKey>');
 		}
 		
 		aastra_write('</AastraIPPhoneTextMenu>');
 	} else {
-		aastra_textscreen(__('Nicht gefunden'),__('Teilnehmer').' &quot;'.$name_search.'&quot; '.__('nicht gefunden!'));
+		aastra_textscreen(
+			__('Nicht gefunden'),
+			sprintF(__('Teilnehmer &quot;%s&quot; nicht gefunden.'), $name_search)
+			);
 	}
 	
 	
@@ -318,20 +327,20 @@ AND
 	$rs = $db->execute($query);
 	if ($rs->numRows() !== 0) {
 		$r = $rs->fetchRow();
-		aastra_write('<Line Align="left">'.$r['ln'].' '.$r['fn'].'</Line>');
-		aastra_write('<Line Align="right" Size="double">'.$r['number'].'</Line>');
+		aastra_write('<Line Align="left">'. $r['ln'].' '.$r['fn'] .'</Line>');
+		aastra_write('<Line Align="right" Size="double">'. $r['number'] .'</Line>');
 	}
 	
 	aastra_write('<SoftKey index="1">');
-	aastra_write('<Label>OK</Label>');
+	aastra_write('<Label>'. __('OK') .'</Label>');
 	aastra_write('<URI>SoftKey:Select</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="2">');
-	aastra_write('<Label>'.__('Anrufen').'</Label>');
+	aastra_write('<Label>'. __('Anrufen') .'</Label>');
 	aastra_write('<URI>Dial:'.$r['number'].'</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="4">');
-	aastra_write('<Label>'.__('Abbrechen').'</Label>');
+	aastra_write('<Label>'. __('Abbrechen') .'</Label>');
 	aastra_write('<URI>SoftKey:Exit</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('</AastraIPPhoneFormattedTextScreen>');
@@ -354,20 +363,20 @@ WHERE
 	$rs = $db->execute($query);
 	if ($rs->numRows() !== 0) {
 		$r = $rs->fetchRow();
-		aastra_write('<Line Align="left">'.$r['ln'].' '.$r['fn'].'</Line>');
-		aastra_write('<Line Align="right" Size="double">'.$r['number'].'</Line>');
+		aastra_write('<Line Align="left">'. $r['ln'].' '.$r['fn'] .'</Line>');
+		aastra_write('<Line Align="right" Size="double">'. $r['number'] .'</Line>');
 	}
 	
 	aastra_write('<SoftKey index="1">');
-	aastra_write('<Label>OK</Label>');
+	aastra_write('<Label>'. __('OK') .'</Label>');
 	aastra_write('<URI>SoftKey:Select</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="2">');
-	aastra_write('<Label>'.__('Anrufen').'</Label>');
+	aastra_write('<Label>'. __('Anrufen') .'</Label>');
 	aastra_write('<URI>Dial:'.$r['number'].'</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="4">');
-	aastra_write('<Label>'.__('Abbrechen').'</Label>');
+	aastra_write('<Label>'. __('Abbrechen') .'</Label>');
 	aastra_write('<URI>SoftKey:Exit</URI>');
 	aastra_write('</SoftKey>');
 	aastra_write('<SoftKey index="3">');
