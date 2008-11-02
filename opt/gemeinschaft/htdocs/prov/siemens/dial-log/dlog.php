@@ -29,7 +29,8 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( '../../../../inc/conf.php' );
-require_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gettext.php' );
 
 header( 'Content-Type: text/xml; charset=utf-8' );
 header( 'Expires: 0' );
@@ -61,12 +62,12 @@ function dial_number( $number )
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
 	xml('  <IppAlert Type="INFO" Delay="3000">');
-	xml('    <Title>Anruf</Title>');
-	xml('    <Text>Rufe an: '.$number.'</Text>');
+	xml('    <Title>'. __('Anruf') .'</Title>');
+	xml('    <Text>'. __('Rufe an:') .' '. $number .'</Text>');
 	xml('    <Image></Image>');
 	xml('  </IppAlert>');
 	xml('  <IppAction Type="MAKECALL">');
-	xml('    <Number>'.$number.'</Number>');
+	xml('    <Number>'. $number .'</Number>');
 	xml('  </IppAction>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
@@ -79,8 +80,8 @@ function write_alert( $message, $alert_type='ERROR' )
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
 	xml('  <IppAlert Type="'.$alert_type.'" Delay="5000">');
-	xml('    <Title>Info</Title>');
-	xml('    <Text>'.$message.'</Text>');
+	xml('    <Title>'. __('Fehler') .'</Title>');
+	xml('    <Text>'. $message .'</Text>');
 	xml('    <Image></Image>');
 	xml('  </IppAlert>');
 	xml('</IppScreen>');
@@ -99,7 +100,7 @@ $url     = $url_prov_siemens .'dial-log/dlog.php';
 $img_url = $url_prov_siemens .'img/';
 
 if (! preg_match('/^\d+$/', $user)) {
-	write_alert( 'Benutzer '.$user.' unbekannt!' );
+	write_alert( 'Unknown user.' );
 }
 
 $type = trim(@$_REQUEST['type']);
@@ -122,9 +123,9 @@ if ($user_id < 1)
 
 
 $typeToTitle = array(
-	'out'    => "Gew\xC3\xA4hlt",
-	'missed' => "Verpasst",
-	'in'     => "Angenommen"
+	'out'    => __("Gew\xC3\xA4hlt"),
+	'missed' => __("Verpasst"),
+	'in'     => __("Angenommen")
 );
 
 
@@ -146,7 +147,7 @@ if (! $type) {
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="1" CommandCount="1">');
 	xml('  <IppList Type="IMPLICIT" Count="'. count($typeToTitle) .'">');
-	xml('    <Title>'.$user.' - Anruflisten</Title>');
+	xml('    <Title>'. $user .' - '. __('Anruflisten') .'</Title>');
 	xml('    <Url>'.$url.'</Url>');
 	$i=0;
 	foreach ($typeToTitle as $t => $title) {
@@ -166,7 +167,7 @@ if (! $type) {
 			default:
 				$image="";
 		}
-		xml('      <OptionText>'.$title.' ('.$num_calls.')'.'</OptionText>');
+		xml('      <OptionText>'. $title .' ('.$num_calls.')' .'</OptionText>');
 		xml('      <Image>'.$image.'</Image>');
 		xml('    </Option>');
 	}
@@ -207,12 +208,12 @@ LIMIT 20';
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="1" CommandCount="1">');
 	xml('  <IppList Type="IMPLICIT" Count="'.($entries+1).'">');
-	xml('    <Title>'.$user.' - '. (@$typeToTitle[$type]) .'</Title>');
+	xml('    <Title>'. $user .' - '. (@$typeToTitle[$type]) .'</Title>');
 	xml('    <Url>'.$url.'</Url>');
 	
 	$i=1;
 	xml('    <Option ID="'.$i.'" Selected="TRUE" Key="type" Value="none">');
-	xml('      <OptionText>'."Zur\xC3\xBCck".'</OptionText>');
+	xml('      <OptionText>'. __("Zur\xC3\xBCck") .'</OptionText>');
 	xml('      <Image>'.$img_url.'previous.png</Image>');
 	xml('    </Option>');
 	
