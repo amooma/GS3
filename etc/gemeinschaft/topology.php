@@ -32,34 +32,46 @@ defined('GS_VALID') or die('No direct access.');
 ///     MAKE SURE THAT THIS FILE IS VALID PHP CODE!      ///
 ////////////////////////////////////////////////////////////
 
-$CUR_RZ='B';
+# If you don't understand this file you don't need it.
+# If you do, please edit the values very carefully and
+# remove/comment-out this trigger_error statement:
+trigger_error("\n PLEASE EDIT /etc/gemeinschaft/topology.php !\n", E_USER_ERROR);
 
-$SUPER_MYSQL_USER='root';
-$SUPER_MYSQL_PASS='';
 
-//Database Server in RZ A
+  # RZ = Rechenzentrum = EDPC = Electronic Data Processing Center
+
+  # Current EDPC:
+$CUR_RZ = 'B';  # valid values: 'A' or 'B'
+
+  # MySQL user account with "SUPER" privileges
+$SUPER_MYSQL_USER = 'root';
+$SUPER_MYSQL_PASS = 'c734fkjdh3kdn';
+
+  # Database master server in EDPC A:
 $DB_MASTER_SERVER1 = '192.168.23.3';
-//Database Server in RZ B
+  # Database master server in EDPC B:
 $DB_MASTER_SERVER2 = '192.168.23.74';
 
-//This ip will be written in the gemeinschaft.php and will be used für the Replication
+  # Database master servers (virtual IP addresses):
+  # This IP address will be written to /etc/gemeinschaft/gemeinschaft.php
+  # and will be used for the database replication:
 $DB_MASTER_SERVER1_SERVICE_IP = '192.168.23.3';
 $DB_MASTER_SERVER2_SERVICE_IP = '192.168.23.74';
 
-//Web/Provisioning Server in RZ A
-$WEB_MASTER_SERVER1 = '192.168.23.74';
-$WEB_MASTER_SERVER1_VIRT_INT = 'eth0:0';
+  # Web/Provisioning server in EDPC A:
+$WEB_MASTER_SERVER1          = '192.168.23.74';
+$WEB_MASTER_SERVER1_VIRT_IFC = 'eth0:0';  # unused
 
-//Web/Provisioning Server in RZ B
-$WEB_MASTER_SERVER2 = '192.168.23.74';
-$WEB_MASTER_SERVER2_VIRT_INT = 'eth0:0';
+  # Web/Provisioning server in EDPC B:
+$WEB_MASTER_SERVER2          = '192.168.23.74';
+$WEB_MASTER_SERVER2_VIRT_IFC = 'eth0:0';  # unused
 
-//Telephony Server in RZ A
+  # Telephony servers in EDPC A:
 $TE_MASTER_SERVER1 = '192.168.23.74';
 $TE_MASTER_BACKUP1 = '192.168.23.74';
 
-//Telephony Server in RZ B
+  # Telephony servers in EDPC B:
 $TE_MASTER_SERVER2 = '192.168.23.74';
 $TE_MASTER_BACKUP2 = '192.168.23.74';
 
-?>
+
