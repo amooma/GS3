@@ -30,9 +30,9 @@
 # indented XML
 
 define( 'GS_VALID', true );  /// this is a parent file
-
 require_once( '../../../inc/conf.php' );
-require_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gettext.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -40,7 +40,6 @@ header( 'Expires: 0' );
 header( 'Pragma: no-cache' );
 header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
-
 
 function snomXmlEsc( $str )
 {
@@ -67,11 +66,12 @@ function _err( $msg='' )
 {
 	@ob_end_clean();
 	ob_start();
-	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
-	     '<SnomIPPhoneText>', "\n",
-	       '<Title>', 'Error', '</Title>', "\n",
-	       '<Text>', snomXmlEsc( 'Error: '. $msg ), '</Text>', "\n",
-	     '</SnomIPPhoneText>', "\n";
+	echo
+		'<?','xml version="1.0" encoding="utf-8"?','>', "\n",
+		'<SnomIPPhoneText>', "\n",
+			'<Title>', __('Fehler'), '</Title>', "\n",
+			'<Text>', snomXmlEsc( __('Fehler') .': '. $msg ), '</Text>', "\n",
+		'</SnomIPPhoneText>', "\n";
 	_ob_send();
 }
 
@@ -111,16 +111,18 @@ $typeToTitle = array(
 );
 */
 $tmp = array(
-	15=>array('k' => 'gs' ,
-	          'v' => gs_get_conf('GS_PB_INTERNAL_TITLE', "Intern") ),
-	25=>array('k' => 'prv',
-	          'v' => gs_get_conf('GS_PB_PRIVATE_TITLE', "Pers\xC3\xB6nlich" ) )
+	15=>array(
+		'k' => 'gs' ,
+		'v' => gs_get_conf('GS_PB_INTERNAL_TITLE', __("Intern")) ),
+	25=>array(
+		'k' => 'prv',
+		'v' => gs_get_conf('GS_PB_PRIVATE_TITLE' , __("Pers\xC3\xB6nlich")) )
 );
 if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
 	$tmp[$pos] = array(
-	          'k' => 'imported',
-	          'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', "Importiert")
+		'k' => 'imported',
+		'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', __("Importiert"))
 	);
 }
 kSort($tmp);
@@ -141,9 +143,10 @@ if (! $type) {
 	$user_id = getUserID( $user );
 	
 	ob_start();
-	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
-	     '<SnomIPPhoneMenu>', "\n",
-	       '<Title>Telefonbuch</Title>', "\n\n";
+	echo
+		'<?','xml version="1.0" encoding="utf-8"?','>', "\n",
+		'<SnomIPPhoneMenu>', "\n",
+			'<Title>', __('Telefonbuch') ,'</Title>', "\n\n";
 	foreach ($typeToTitle as $t => $title) {
 		$cq = 'SELECT COUNT(*) FROM ';
 		switch ($t) {
@@ -153,10 +156,11 @@ if (! $type) {
 		default        : $cq  = false;
 		}
 		$c = $cq ? (' ('. (int)@$db->executeGetOne( $cq ) .')') : '';
-		echo '<MenuItem>', "\n",
-		       '<Name>', snomXmlEsc($title), $c, '</Name>', "\n",
-		       '<URL>', $url_snom_pb, '?m=',$mac, '&u=',$user, '&t=',$t, '</URL>', "\n",
-		     '</MenuItem>', "\n\n";
+		echo
+			'<MenuItem>', "\n",
+				'<Name>', snomXmlEsc($title), $c, '</Name>', "\n",
+				'<URL>', $url_snom_pb, '?m=',$mac, '&u=',$user, '&t=',$t, '</URL>', "\n",
+			'</MenuItem>', "\n\n";
 		# in XML the & must normally be encoded as &amp; but not for
 		# the stupid Snom!
 	}
@@ -231,10 +235,11 @@ function defineKey( $keyDef )
 		$args[] = 'm='. $mac;
 		$args[] = 'u='. $user;
 	}
-	echo '<SoftKeyItem>',
-	       '<Name>', $keyDef['label'], '</Name>',
-	       '<URL>', $url_snom_pb, '?', implode('&', $args), '</URL>',
-	     '</SoftKeyItem>', "\n";
+	echo
+		'<SoftKeyItem>',
+			'<Name>', $keyDef['label'], '</Name>',
+			'<URL>', $url_snom_pb, '?', implode('&', $args), '</URL>',
+		'</SoftKeyItem>', "\n";
 	# Snom does not understand &amp; !
 }
 function defineKeys()
@@ -257,10 +262,11 @@ function defineBackKey()
 		$args[] = 'm='. $mac;
 		$args[] = 'u='. $user;
 	}
-	echo '<SoftKeyItem>',
-	       '<Name>#</Name>',
-	       '<URL>', $url_snom_pb, '?', implode('&', $args), '</URL>',
-	     '</SoftKeyItem>', "\n";
+	echo
+		'<SoftKeyItem>',
+			'<Name>#</Name>',
+			'<URL>', $url_snom_pb, '?', implode('&', $args), '</URL>',
+		'</SoftKeyItem>', "\n";
 	# Snom does not understand &amp; !
 }
 
@@ -308,29 +314,32 @@ LIMIT '. $num_results;
 	$rs = $db->execute($query);
 	if ($rs->numRows() !== 0) {
 		
-		echo '<SnomIPPhoneDirectory>', "\n",
-		       '<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
-		       '<Prompt>Prompt</Prompt>', "\n";
+		echo
+			'<SnomIPPhoneDirectory>', "\n",
+				'<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
+				'<Prompt>Prompt</Prompt>', "\n";
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$number = $r['ext'];
-			echo '<DirectoryEntry>',
-			       '<Name>', snomXmlEsc( $name ) ,'</Name>',
-			       '<Telephone>', $number ,'</Telephone>',
-			     '</DirectoryEntry>', "\n";
+			echo
+				'<DirectoryEntry>',
+					'<Name>', snomXmlEsc( $name ) ,'</Name>',
+					'<Telephone>', $number ,'</Telephone>',
+				'</DirectoryEntry>', "\n";
 		}
 		defineKeys();
 		echo '</SnomIPPhoneDirectory>', "\n";
 		
 	} else {
 		
-		echo '<SnomIPPhoneText>', "\n",
-		       '<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
-		       '<Prompt>Prompt</Prompt>', "\n";
+		echo
+			'<SnomIPPhoneText>', "\n",
+				'<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
+				'<Prompt>Prompt</Prompt>', "\n";
 		if (strLen($keys) > 0) {
-			echo '<Text>', snomXmlEsc( "Keine Treffer f\xC3\xBCr \"$keys\". Dr\xC3\xBCcken Sie # um die letzte Eingabe zu widerrufen." ), '</Text>', "\n";
+			echo '<Text>', snomXmlEsc( sPrintF(__("Keine Treffer f\xC3\xBCr \"%s\". Dr\xC3\xBCcken Sie # um die letzte Eingabe zu widerrufen."), $keys) ), '</Text>', "\n";
 		} else {
-			echo '<Text>', snomXmlEsc( "Dieses Telefonbuch enth\xC3\xA4lt keine Eintr\xC3\xA4ge." ), '</Text>', "\n";
+			echo '<Text>', snomXmlEsc( __("Dieses Telefonbuch enth\xC3\xA4lt keine Eintr\xC3\xA4ge.") ), '</Text>', "\n";
 		}
 		defineBackKey();
 		echo '</SnomIPPhoneText>', "\n";
@@ -385,29 +394,32 @@ LIMIT '. $num_results;
 	$rs = $db->execute($query);
 	if ($rs->numRows() !== 0) {
 		
-		echo '<SnomIPPhoneDirectory>', "\n",
-		       '<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
-		       '<Prompt>Prompt</Prompt>', "\n";
+		echo
+			'<SnomIPPhoneDirectory>', "\n",
+				'<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
+				'<Prompt>Prompt</Prompt>', "\n";
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$number = $r['ext'];
-			echo '<DirectoryEntry>',
-			       '<Name>', snomXmlEsc( $name ) ,'</Name>',
-			       '<Telephone>', $number ,'</Telephone>',
-			     '</DirectoryEntry>', "\n";
+			echo
+				'<DirectoryEntry>',
+					'<Name>', snomXmlEsc( $name ) ,'</Name>',
+					'<Telephone>', $number ,'</Telephone>',
+				'</DirectoryEntry>', "\n";
 		}
 		defineKeys();
 		echo '</SnomIPPhoneDirectory>', "\n";
 		
 	} else {
 		
-		echo '<SnomIPPhoneText>', "\n",
-		       '<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
-		       '<Prompt>Prompt</Prompt>', "\n";
+		echo
+			'<SnomIPPhoneText>', "\n",
+				'<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
+				'<Prompt>Prompt</Prompt>', "\n";
 		if (strLen($keys) > 0) {
-			echo '<Text>', snomXmlEsc( "Keine Treffer f\xC3\xBCr \"$keys\". Dr\xC3\xBCcken Sie # um die letzte Eingabe zu widerrufen." ), '</Text>', "\n";
+			echo '<Text>', snomXmlEsc( sPrintF(__("Keine Treffer f\xC3\xBCr \"%s\". Dr\xC3\xBCcken Sie # um die letzte Eingabe zu widerrufen."), $keys) ), '</Text>', "\n";
 		} else {
-			echo '<Text>', snomXmlEsc( "Dieses Telefonbuch enth\xC3\xA4lt keine Eintr\xC3\xA4ge." ), '</Text>', "\n";
+			echo '<Text>', snomXmlEsc( __("Dieses Telefonbuch enth\xC3\xA4lt keine Eintr\xC3\xA4ge.") ), '</Text>', "\n";
 		}
 		defineBackKey();
 		echo '</SnomIPPhoneText>', "\n";
@@ -472,29 +484,32 @@ LIMIT '. $num_results;
 	$rs = $db->execute($query);
 	if ($rs->numRows() !== 0) {
 		
-		echo '<SnomIPPhoneDirectory>', "\n",
-		       '<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
-		       '<Prompt>Prompt</Prompt>', "\n";
+		echo
+			'<SnomIPPhoneDirectory>', "\n",
+				'<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
+				'<Prompt>Prompt</Prompt>', "\n";
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$number = $r['number'];
-			echo '<DirectoryEntry>',
-			       '<Name>', snomXmlEsc( $name ) ,'</Name>',
-			       '<Telephone>', $number ,'</Telephone>',
-			     '</DirectoryEntry>', "\n";
+			echo
+				'<DirectoryEntry>',
+					'<Name>', snomXmlEsc( $name ) ,'</Name>',
+					'<Telephone>', $number ,'</Telephone>',
+				'</DirectoryEntry>', "\n";
 		}
 		defineKeys();
 		echo '</SnomIPPhoneDirectory>', "\n";
 		
 	} else {
 		
-		echo '<SnomIPPhoneText>', "\n",
-		       '<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
-		       '<Prompt>Prompt</Prompt>', "\n";
+		echo
+			'<SnomIPPhoneText>', "\n",
+				'<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
+				'<Prompt>Prompt</Prompt>', "\n";
 		if (strLen($keys) > 0) {
-			echo '<Text>', snomXmlEsc( "Keine Treffer f\xC3\xBCr \"$keys\". Dr\xC3\xBCcken Sie # um die letzte Eingabe zu widerrufen." ), '</Text>', "\n";
+			echo '<Text>', snomXmlEsc( sPrintF(__("Keine Treffer f\xC3\xBCr \"%s\". Dr\xC3\xBCcken Sie # um die letzte Eingabe zu widerrufen."), $keys) ), '</Text>', "\n";
 		} else {
-			echo '<Text>', snomXmlEsc( "Ihr pers\xC3\xB6nliches Telefonbuch enth\xC3\xA4lt keine Eintr\xC3\xA4ge." ), '</Text>', "\n";
+			echo '<Text>', snomXmlEsc( __("Ihr pers\xC3\xB6nliches Telefonbuch enth\xC3\xA4lt keine Eintr\xC3\xA4ge.") ), '</Text>', "\n";
 		}
 		defineBackKey();
 		echo '</SnomIPPhoneText>', "\n";
