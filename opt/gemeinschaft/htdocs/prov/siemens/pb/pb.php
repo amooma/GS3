@@ -29,7 +29,8 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( '../../../../inc/conf.php' );
-require_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gettext.php' );
 
 header( 'Content-Type: text/xml; charset=utf-8' );
 header( 'Expires: 0' );
@@ -62,12 +63,12 @@ function dial_number( $number )
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
 	xml('  <IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
 	xml('  <IppAlert Type="INFO" Delay="3000">');
-	xml('    <Title>Anruf</Title>');
-	xml('    <Text>Rufe an: '.$number.'</Text>');
+	xml('    <Title>'. __('Anruf') .'</Title>');
+	xml('    <Text>'. __('Rufe an:') .' '. $number .'</Text>');
 	xml('    <Image></Image>');
 	xml('  </IppAlert>');
 	xml('  <IppAction Type="MAKECALL">');
-	xml('    <Number>'.$number.'</Number>');
+	xml('    <Number>'. $number .'</Number>');
 	xml('  </IppAction>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
@@ -80,8 +81,8 @@ function write_alert( $message, $alert_type='ERROR' )
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
 	xml('  <IppAlert Type="'.$alert_type.'" Delay="5000">');
-	xml('    <Title>Info</Title>');
-	xml('    <Text>'.$message.'</Text>');
+	xml('    <Title>'. __('Fehler') .'</Title>');
+	xml('    <Text>'. $message .'</Text>');
 	xml('    <Image></Image>');
 	xml('  </IppAlert>');
 	xml('</IppScreen>');
@@ -134,7 +135,7 @@ $url     = $url_prov_siemens .'pb/pb.php';
 $img_url = $url_prov_siemens .'img/';
 
 if (! preg_match('/^\d+$/', $user)) {
-	write_alert( 'Benutzer '.$user.' unbekannt!' );
+	write_alert( 'Unknown user.' );
 }
 
 if (! in_array( $type, array('gs','prv','imported'), true )) {
@@ -161,15 +162,15 @@ if ($user_id < 1) {
 
 $tmp = array(
 	15=>array('k' => 'gs' ,
-			'v' => gs_get_conf('GS_PB_INTERNAL_TITLE', "Intern") ),
+			'v' => gs_get_conf('GS_PB_INTERNAL_TITLE', __("Intern")) ),
 	25=>array('k' => 'prv',
-			'v' => gs_get_conf('GS_PB_PRIVATE_TITLE', "Pers\xC3\xB6nlich" ) )
+			'v' => gs_get_conf('GS_PB_PRIVATE_TITLE' , __("Pers\xC3\xB6nlich")) )
 );
 if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
 	$tmp[$pos] = array(
 			'k' => 'imported',
-			'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', "Importiert")
+			'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', __("Importiert"))
 	);
 }
 kSort($tmp);
@@ -189,19 +190,19 @@ if ($search) {
 		xml('<IppDisplay>');
 		xml('<IppScreen ID="3" HiddenCount="3" CommandCount="2">');
 		xml('  <IppForm ItemCount="1">');
-		xml('    <Title>Name suchen:</Title>');
+		xml('    <Title>'. __('Name suchen') .':</Title>');
 		xml('    <Url>'.$url.'</Url>');
 		xml('    <IppTextField MaxSize="30" Constraint="ANY" Default="'.$name_search.'" Key="name">');
-		xml('      <Label>Name:</Label>');
-		xml('      <Text>'.$name_search.'</Text>');
+		xml('      <Label>'. __('Name') .':</Label>');
+		xml('      <Text>'. $name_search .'</Text>');
 		xml('    </IppTextField>');
 		xml('  </IppForm>');
 		xml('  <IppCommand Type="SELECT" Priority="0">');
-		xml('    <Label>Suchen</Label>');
+		xml('    <Label>'. __('Suchen') .'</Label>');
 		xml('    <ScreenID>1</ScreenID>');
 		xml('  </IppCommand>');
 		xml('  <IppCommand Type="SCREEN" Priority="0">');
-		xml('    <Label>Abbrechen</Label>');
+		xml('    <Label>'. __('Abbrechen') .'</Label>');
 		xml('    <ScreenID>1</ScreenID>');
 		xml('  </IppCommand>');
 		
@@ -241,7 +242,7 @@ if (! $type) {
 	xml('<IppScreen ID="1" HiddenCount="2" CommandCount="1">');
 	xml('  <IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
 	xml('  <IppList Type="IMPLICIT" Count="'. count($typeToTitle) .'">');
-	xml('    <Title>'.$user.' - Telefonbuch</Title>');
+	xml('    <Title>'. $user .' - '. __('Telefonbuch') .'</Title>');
 	xml('    <Url>'.$url.'</Url>');
 	$i=0;
 	foreach ($typeToTitle as $t => $title) {
@@ -259,7 +260,7 @@ if (! $type) {
 			default:
 				$num_calls = 0;
 		}
-		xml('      <OptionText>'.$title.' ('.$num_calls.')'.'</OptionText>');
+		xml('      <OptionText>'. $title .' ('.$num_calls.')' .'</OptionText>');
 		xml('      <Image>'.$image.'</Image>');
 		xml('    </Option>');
 	}
@@ -358,20 +359,20 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	xml('<IppScreen ID="1" HiddenCount="3" CommandCount="1">');
 	xml('  <IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
 	xml('  <IppList Type="IMPLICIT" Count="'.($entries+1).'">');
-	xml('    <Title>'.$user.' - Telefonbuch: '. (@$typeToTitle[$type]) .'</Title>');
+	xml('    <Title>'. $user .' - '. __('Telefonbuch') .': '. (@$typeToTitle[$type]) .'</Title>');
 	xml('    <Url>'.$url.'</Url>');
 	
 	$i=1;
 	//if (true) {
 		xml('    <Option ID="'.$i.'" Selected="TRUE" Key="type" Value="none">');
-		xml('      <OptionText>'."Zur\xC3\xBCck".'</OptionText>');
+		xml('      <OptionText>'. __("Zur\xC3\xBCck") .'</OptionText>');
 		xml('      <Image>'.$img_url.'previous.png</Image>');
 		xml('    </Option>');
 	//}
 	if ($num_total > 6) {
 		$i++;
 		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="search" Value="'.$type.'">');
-		xml('      <OptionText>Suchen</OptionText>');
+		xml('      <OptionText>'. __('Suchen') .'</OptionText>');
 		xml('      <Image>'.$img_url.'search.png</Image>');
 		xml('    </Option>');
 	}
