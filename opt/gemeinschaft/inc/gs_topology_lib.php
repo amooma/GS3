@@ -169,13 +169,13 @@ function _run_topology_tests( $hosts )
 		echo $arr['desc'] ,"... ";
 		
 		if       ($key === 'DB_MASTER_SERVER1' && $CUR_RZ === 'A') {
-			$hosts[$key]['con'] = db_master_connect( $hosts[$key]['host'],
+			$hosts[$key]['con'] = _db_master_connect( $hosts[$key]['host'],
 				$SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con'] );
 		} elseif ($key === 'DB_MASTER_SERVER2' && $CUR_RZ === 'B') {
-			$hosts[$key]['con'] = db_master_connect( $hosts[$key]['host'],
+			$hosts[$key]['con'] = _db_master_connect( $hosts[$key]['host'],
 				$SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con'] );
 		} else {
-			$hosts[$key]['con'] = db_slave_connect ( $hosts[$key]['host'],
+			$hosts[$key]['con'] = _db_slave_connect ( $hosts[$key]['host'],
 				$SUPER_MYSQL_USER, $SUPER_MYSQL_PASS, $hosts[$key]['con'] );
 		}
 		
@@ -341,7 +341,7 @@ function _run_topology_tests( $hosts )
 # local functions, almost identical to gs_db_master_connect()
 # resp. gs_db_slave_connect() in inc/db_connect.php
 
-function & db_master_connect( $host, $user, $pass, &$db_conn_master )
+function & _db_master_connect( $host, $user, $pass, &$db_conn_master )
 {
  	$caller_info = '';
 	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
@@ -386,7 +386,7 @@ function & db_master_connect( $host, $user, $pass, &$db_conn_master )
 }
 
 
-function & db_slave_connect( $host, $user, $pass, &$db_conn_slave )
+function & _db_slave_connect( $host, $user, $pass, &$db_conn_slave )
 {
 	$caller_info = '';
 	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
@@ -452,10 +452,10 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 		return new GsError( 'Password too short.' );
 	
 	# connect
-	$old_master = db_master_connect( $old_master_host, $user, $pass, $old_master );
+	$old_master = _db_master_connect( $old_master_host, $user, $pass, $old_master );
 	if (! $old_master)
 		return new GsError( 'Failed to connect to old master DB.' );
-	$new_master = db_slave_connect ( $new_master_host, $user, $pass, $new_master );
+	$new_master = _db_slave_connect ( $new_master_host, $user, $pass, $new_master );
 	if (! $new_master)
 		return new GsError( 'Failed to connect to new master DB.' );
 	
@@ -594,7 +594,7 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	# get binlog position
 	#
 	/*
-	$master = db_master_connect( $master_host, $user, $pass, $master );
+	$master = _db_master_connect( $master_host, $user, $pass, $master );
 	if (! $master)
 		return new GsError( 'Failed to connect to master database.' );
 	$rs = $master->execute( 'SHOW MASTER STATUS' );
@@ -604,7 +604,7 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	*/
 	
 	# Stop Slave
-	$slave  = db_slave_connect( $slave_host  , $user, $pass, $slave );
+	$slave  = _db_slave_connect( $slave_host  , $user, $pass, $slave );
 	if (! $slave)
 		return new GsError( 'Failed to connect to slave database.' );
 	$ok = $slave->execute( 'STOP SLAVE' );
