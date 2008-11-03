@@ -31,7 +31,7 @@ DAEMON=/opt/gemeinschaft/sbin/ast_extstated/ast_extstated
 EXECUTABLE=`basename 'ast_extstated'`
 DESC="Gemeinschaft Extension State Daemon"
 ARGS=
-
+ 
 if ! [ -x $DAEMON ] ; then
 	echo "ERROR: $DAEMON not found"
 	exit 1
