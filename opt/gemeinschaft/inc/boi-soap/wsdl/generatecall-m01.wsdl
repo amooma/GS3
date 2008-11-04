@@ -30,7 +30,9 @@
 	-->
 	<message name="GenerateCallResponse">
 		<part name="errorcode" type="xsd:integer"/>
+		<!--
 		<part name="errormsg"  type="xsd:string"/>
+		-->
 	</message>
 	
 	<portType name="GenerateCallPortType">

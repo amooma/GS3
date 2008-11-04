@@ -40,12 +40,14 @@
 	</message>
 	
 	
+	<!--
 	<message name="GetServerInfoRequest">
 	</message>
 	
 	<message name="GetServerInfoResponse">
 		<part name="info"       type="soapenc:Array" soapenc:arrayType="soapenc:Array[]"/>
 	</message>
+	-->
 	
 	
 	<portType name="GUIIntegrationType">
@@ -61,10 +63,12 @@
 			<input  message="tns:DestroySessionRequest"/>
 			<output message="tns:DestroySessionResponse"/>
 		</operation>
+		<!--
 		<operation name="getServerInfo">
 			<input  message="tns:GetServerInfoRequest"/>
 			<output message="tns:GetServerInfoResponse"/>
 		</operation>
+		-->
 	</portType>
 	
 	<binding name="PBXSoapBinding" type="tns:GUIIntegrationType">
@@ -96,6 +100,7 @@
 				<soap:body use="literal"/>
 			</output>
 		</operation>
+		<!--
 		<operation name="getServerInfo">
 			<soap:operation soapAction="urn:guiServer#getServerInfo"/>
 			<input>
@@ -105,6 +110,7 @@
 				<soap:body use="literal"/>
 			</output>
 		</operation>
+		-->
 	</binding>
 	
 	<service name="GUIIntegrationService">

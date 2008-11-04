@@ -174,7 +174,8 @@ function _gs_boi_update_extension( $api, $host, $route_prefix, $ext, $user, $sip
 				array('SubscriberVmEmail'       => $email ),
 				array('SubscriberOutboundProxy' => '' ),
 				array('SubscriberTelType'       => '' )
-			)
+			),
+			'update'  # update
 		);
 		if ($ret === null || $ret === false) {
 			gs_log(GS_LOG_WARNING, 'Got empty SOAP response!');
