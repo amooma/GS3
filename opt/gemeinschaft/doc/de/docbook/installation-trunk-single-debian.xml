@@ -17,7 +17,9 @@
     GmbH</ulink></corpauthor>
 
     <legalnotice>
-      <para>Lizenz: GNU FDL</para>
+      <para>Lizenz: <ulink url="http://www.gnu.org/licenses/fdl.html">GNU
+      FDL</ulink> (Gemeinschaft: <ulink
+      url="http://www.gnu.org/licenses/gpl.html">GNU GPL</ulink>)</para>
     </legalnotice>
   </sectioninfo>
 
@@ -26,8 +28,9 @@
 
   <para>Hier beschreiben wir wie man die aktuelle Entwicklerversion (den
   <quote><foreignphrase lang="en">trunk</foreignphrase></quote> aus dem SVN)
-  von Gemeinschaft als Einzel-Server-System installiert, d.h. MySQL, Asterisk,
-  Apache und Gemeinschaft laufen auf einem einzigen Rechner.</para>
+  von <ulink url="http://www.amooma.de/gemeinschaft/">Gemeinschaft</ulink> als
+  Einzel-Server-System installiert, d.h. MySQL, Asterisk, Apache und
+  Gemeinschaft laufen auf einem einzigen Rechner.</para>
 
   <note>
     <para>Natürlich lassen sich die einzelnen Teile auch auf mehrere Rechner
