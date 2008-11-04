@@ -151,6 +151,41 @@ function _gs_boi_update_extension( $api, $host, $route_prefix, $ext, $user, $sip
 	$SoapClient = gs_get_soap_client( $api, 'updateextension', $host );
 	if (! $SoapClient) return false;
 	
+	if ($user == '') {  # i.e. delete
+		try {
+			$ret = @$SoapClient->updateExtension(
+				$ext,
+				array(
+					array('SubscriberPersNr'        => $user ),
+					array('SubscriberSIPName'       => $ext ),
+					array('SubscriberAccountPasswd' => $sip_pwd ),
+					array('SubscriberIntNumber'     =>
+						(($user != '') ? (
+							'+'.gs_get_conf('GS_CANONIZE_COUNTRY_CODE') .
+							(gs_get_conf('GS_CANONIZE_NATL_PREFIX_INTL')
+								? gs_get_conf('GS_CANONIZE_NATL_PREFIX') : '') .
+							gs_get_conf('GS_CANONIZE_AREA_CODE') .
+							gs_get_conf('GS_CANONIZE_LOCAL_BRANCH') .
+							$route_prefix .
+							$ext
+						) : '')
+					),
+					array('SubscriberVmPin'         => $pin ),
+					array('SubscriberName'          => trim($firstname .' '. $lastname) ),
+					array('SubscriberVmEmail'       => $email ),
+					array('SubscriberOutboundProxy' => '' ),
+					array('SubscriberTelType'       => '' )
+				),
+				'default'  # reset to default values
+			);
+		}
+		catch(SOAPFault $SoapFault) {
+			gs_log(GS_LOG_NOTICE, 'SOAP error: '. $SoapFault->faultstring .' ('. @$SoapFault->faultcode .')' );
+			//$soap_faultcode = @$SoapFault->faultcode;
+			//return false;
+		}
+	}
+	
 	try {
 		$ret = @$SoapClient->updateExtension(
 			$ext,
