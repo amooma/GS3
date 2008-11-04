@@ -95,31 +95,31 @@ deb-src http://security.debian.org/ lenny/updates main</screen></para>
     <bridgehead>Upgrade</bridgehead>
 
     <para>Es versteht sich eigentlich fast von selbst daß man auf einer
-    frischen Installation erst mal alle Pakete aktualisiert:<screen>gemeinschaft:~# <command>aptitude update</command></screen><screen>gemeinschaft:~# <command>aptitude upgrade</command></screen></para>
+    frischen Installation erst mal alle Pakete aktualisiert:<screen><prompt>gemeinschaft:~# </prompt><command>aptitude update</command></screen><screen><prompt>gemeinschaft:~# </prompt><command>aptitude upgrade</command></screen></para>
 
     <para>Falls von dem Upgrade auch der Kernel betroffen ist muß das System
-    vor dem Ausführen weiterer Schritte neugestartet werden:<screen>gemeinschaft:~# <command>reboot</command></screen></para>
+    vor dem Ausführen weiterer Schritte neugestartet werden:<screen><prompt>gemeinschaft:~# </prompt><command>reboot</command></screen></para>
 
     <bridgehead>Standard-Pakete</bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install coreutils lsb-base grep findutils sudo wget curl cron expect logrotate hostname net-tools ifupdown iputils-ping netcat openssh-client openssh-server</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install coreutils lsb-base grep findutils sudo wget curl cron expect logrotate hostname net-tools ifupdown iputils-ping netcat openssh-client openssh-server</command></screen>
 
     <bridgehead>Weitere Pakete</bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install psmisc dnsutils iputils-arping pciutils bzip2</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install psmisc dnsutils iputils-arping pciutils bzip2</command></screen>
 
     <bridgehead>VIM</bridgehead>
 
     <para>Wer zum Arbeiten gerne einen kompletten vim benutzt kann ihn so
-    installieren:<screen>gemeinschaft:~# <command>aptitude install vim</command></screen></para>
+    installieren:<screen><prompt>gemeinschaft:~# </prompt><command>aptitude install vim</command></screen></para>
 
     <bridgehead>Locale</bridgehead>
 
     <para>Für einige Funktionen im Web-Interface von Gemeinschaft ist es
     schöner die der Sprache entsprechende Locale installiert zu haben. Dieser
-    Schritt ist aber optional.<screen>gemeinschaft:~# <command>aptitude install locales</command>
-gemeinschaft:~# <command>dpkg-reconfigure locales</command></screen>Im Dialog
-    <quote>Locales to be generated</quote> von
+    Schritt ist aber optional.<screen><prompt>gemeinschaft:~# </prompt><command>aptitude install locales</command>
+<prompt>gemeinschaft:~# </prompt><command>dpkg-reconfigure locales</command></screen>Im
+    Dialog <quote>Locales to be generated</quote> von
     <literal>dpkg-reconfigure</literal> die gewünschten Locales auswählen
     (momentan sind nur <literal>de_<replaceable>*</replaceable></literal> und
     <literal>en_<replaceable>*</replaceable></literal> sinnvoll), also z.B.
@@ -175,7 +175,7 @@ Generation complete.</screen>(Es sei nur am Rande erwähnt daß man alternativ
     sollte man unbedingt einen lokalen <foreignphrase lang="en">Caching
     Nameserver</foreignphrase> installieren. Auf einem VoIP-System ist ein
     <foreignphrase lang="en">Caching Nameserver</foreignphrase> eigentlich ein
-    Muß!<screen>gemeinschaft:~# <command>aptitude install bind9</command></screen></para>
+    Muß!<screen><prompt>gemeinschaft:~# </prompt><command>aptitude install bind9</command></screen></para>
 
     <para>Den lokalen Nameserver in der <filename>/etc/resolv.conf</filename>
     vor den vorhandenen Eintrag schreiben (neuer Eintrag hier fett):<screen><emphasis
@@ -187,9 +187,9 @@ nameserver 192.168.2.1</screen></para>
     (auf einem Debian steht die Zeile schon drin, man muß nur die
     Kommentarzeichen davor entfernen), danach:</para>
 
-    <screen>gemeinschaft:~# <command>/etc/init.d/bind9 restart</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>/etc/init.d/bind9 restart</command></screen>
 
-    <para>Testen:<screen>gemeinschaft:~# <command>nslookup www.amooma.de</command>
+    <para>Testen:<screen><prompt>gemeinschaft:~# </prompt><command>nslookup www.amooma.de</command>
 Server:     127.0.0.1
 Address:    127.0.0.1#53
 
@@ -208,7 +208,7 @@ Address: 212.227.96.103</screen>Hier sollte jetzt (spätestens beim 2. Aufruf)
         <term>Etch:</term>
 
         <listitem>
-          <screen>gemeinschaft:~# <command>aptitude install ntp ntp-simple ntpdate</command></screen>
+          <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install ntp ntp-simple ntpdate</command></screen>
         </listitem>
       </varlistentry>
 
@@ -216,12 +216,12 @@ Address: 212.227.96.103</screen>Hier sollte jetzt (spätestens beim 2. Aufruf)
         <term>Lenny:</term>
 
         <listitem>
-          <screen>gemeinschaft:~# <command>aptitude install ntp ntpdate</command></screen>
+          <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install ntp ntpdate</command></screen>
         </listitem>
       </varlistentry>
     </variablelist>
 
-    <screen>gemeinschaft:~# <command>/etc/init.d/ntp stop</command>
+    <screen><prompt>gemeinschaft:~# </prompt><command>/etc/init.d/ntp stop</command>
 Stopping NTP server: ntpd.</screen>
 
     <note>
@@ -230,15 +230,15 @@ Stopping NTP server: ntpd.</screen>
       hinzufügen.</para>
     </note>
 
-    <para>Initial die Zeit setzen:<screen>gemeinschaft:~# <command>ntpdate 0.debian.pool.ntp.org</command>
+    <para>Initial die Zeit setzen:<screen><prompt>gemeinschaft:~# </prompt><command>ntpdate 0.debian.pool.ntp.org</command>
 26 Oct 20:37:41 ntpdate[5122]: adjust time server 195.238.144.37 offset 0.154922 sec</screen></para>
 
-    <para>NTP starten:<screen>gemeinschaft:~# <command>/etc/init.d/ntp start</command>
+    <para>NTP starten:<screen><prompt>gemeinschaft:~# </prompt><command>/etc/init.d/ntp start</command>
 Starting NTP server: ntpd.</screen></para>
 
     <note>
       <para>Von welchen NTP-Server gerade die Zeit bezogen wird läßt sich
-      jederzeit überprüfen:<screen>gemeinschaft:~# <command>ntpq -p</command>
+      jederzeit überprüfen:<screen><prompt>gemeinschaft:~# </prompt><command>ntpq -p</command>
      remote           refid      st t when poll reach   delay   offset  jitter
 ==============================================================================
 +195.238.144.37  217.91.44.17     2 u   39   64  377   20.861  113.205  73.724
@@ -251,54 +251,53 @@ Starting NTP server: ntpd.</screen></para>
         <para>zum Kompilieren von Asterisk</para>
       </footnote></bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install gcc g++ binutils libtool make</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install gcc g++ binutils libtool make</command></screen>
 
     <bridgehead>Perl</bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install perl perl-modules libnet-daemon-perl libnet-netmask-perl libio-interface-perl libio-socket-multicast-perl</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install perl perl-modules libnet-daemon-perl libnet-netmask-perl libio-interface-perl libio-socket-multicast-perl</command></screen>
 
     <bridgehead>SipSak<footnote>
         <para>wird momentan nur vom Cluster-Watchdog benötigt, nicht auf einem
         Einzel-Server</para>
       </footnote></bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install sipsak</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install sipsak</command></screen>
 
     <bridgehead>MySQL-Client</bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install mysql-client</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install mysql-client</command></screen>
 
     <bridgehead>MySQL-Client-Entwicklungspaket<footnote>
         <para>zum Kompilieren des MySQL-Add-Ons von Asterisk</para>
       </footnote></bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install libmysqlclient-dev</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install libmysqlclient-dev</command></screen>
 
     <bridgehead>MySQL-Server</bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install mysql-server</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install mysql-server</command></screen>
 
     <note>
       <para>Für ein Mehr-Server-System müßte an dieser Stelle ggf. ein
-      MySQL-Cluster oder Replikation (<xref linkend="mysql-replikation" />)
-      eingerichtet werden.</para>
+      MySQL-Cluster oder Replikation eingerichtet werden.</para>
     </note>
 
     <bridgehead>Apache</bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install apache2</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install apache2</command></screen>
 
     <bridgehead>PHP</bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install php5-cli libapache2-mod-php5 php5-mysql php5-ldap</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install php5-cli libapache2-mod-php5 php5-mysql php5-ldap</command></screen>
 
     <bridgehead>Sox</bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install sox</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install sox</command></screen>
 
     <bridgehead>Mpg123</bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install mpg123</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install mpg123</command></screen>
 
     <bridgehead>Lame<footnote>
         <para>Wegen seiner Fähigkeit MPEG 1 Layer 3 (<quote>MP3</quote>) zu
@@ -306,42 +305,42 @@ Starting NTP server: ntpd.</screen></para>
         Debian-Richtlinien auf Debian nicht direkt als Paket verfügbar.</para>
       </footnote></bridgehead>
 
-    <screen>gemeinschaft:~# <command>cd /usr/src/</command>
-gemeinschaft:/usr/src# <command>wget 'http://dfn.dl.sourceforge.net/sourceforge/lame/lame-398-2.tar.gz'</command>
+    <screen><prompt>gemeinschaft:~# </prompt><command>cd /usr/src/</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>wget 'http://dfn.dl.sourceforge.net/sourceforge/lame/lame-398-2.tar.gz'</command>
 <replaceable>[...]</replaceable>
-gemeinschaft:/usr/src# <command>tar -xzf lame-398-2.tar.gz</command> 
-gemeinschaft:/usr/src# <command>cd lame-398-2</command>
-gemeinschaft:/usr/src/lame-398-2# <command>./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install</command>
-gemeinschaft:/usr/src/lame-398-2# <command>cd</command>
-gemeinschaft:~# </screen>
+<prompt>gemeinschaft:/usr/src# </prompt><command>tar -xzf lame-398-2.tar.gz</command> 
+<prompt>gemeinschaft:/usr/src# </prompt><command>cd lame-398-2</command>
+<prompt>gemeinschaft:/usr/src/lame-398-2# </prompt><command>./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install</command>
+<prompt>gemeinschaft:/usr/src/lame-398-2# </prompt><command>cd</command>
+<prompt>gemeinschaft:~# </prompt></screen>
 
     <bridgehead>Zaptel und Asterisk</bridgehead>
 
     <para>Die Kernel-Header werden installiert, da sie für die Übersetzung von
     Zaptel (<literal>ztdummy</literal> für die
-    <code>MeetMe()</code>-Konferenzen) benötigt werden:<screen>gemeinschaft:~# <command>aptitude install linux-headers-`uname -r` linux-kernel-headers</command></screen></para>
+    <code>MeetMe()</code>-Konferenzen) benötigt werden:<screen><prompt>gemeinschaft:~# </prompt><command>aptitude install linux-headers-`uname -r` linux-kernel-headers</command></screen></para>
 
-    <para>Weitere benötigte Entwicklungs-Pakte etc.:<screen>gemeinschaft:~# <command>aptitude install bison byacc flex libnewt0.52 libnewt-dev ncurses-base ncurses-bin ncurses-dev ncurses-term libncurses4 libncurses5 libncurses-dev openssl zlib1g zlib1g-dev</command></screen></para>
+    <para>Weitere benötigte Entwicklungs-Pakte etc.:<screen><prompt>gemeinschaft:~# </prompt><command>aptitude install bison byacc flex libnewt0.52 libnewt-dev ncurses-base ncurses-bin ncurses-dev ncurses-term libncurses4 libncurses5 libncurses-dev openssl zlib1g zlib1g-dev</command></screen></para>
 
     <bridgehead>Zaptel</bridgehead>
 
-    <screen>gemeinschaft:~# <command>cd /usr/src/</command>
-gemeinschaft:/usr/src# <command>wget 'http://downloads.digium.com/pub/zaptel/releases/zaptel-1.4.12.1.tar.gz'</command>
+    <screen><prompt>gemeinschaft:~# </prompt><command>cd /usr/src/</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>wget 'http://downloads.digium.com/pub/zaptel/releases/zaptel-1.4.12.1.tar.gz'</command>
 <replaceable>[...]</replaceable>
-gemeinschaft:/usr/src# <command>tar -xzf zaptel-1.4.12.1.tar.gz</command> 
-gemeinschaft:/usr/src# <command>cd zaptel-1.4.12.1</command>
-gemeinschaft:/usr/src/zaptel-1.4.12.1# <command>./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>tar -xzf zaptel-1.4.12.1.tar.gz</command> 
+<prompt>gemeinschaft:/usr/src# </prompt><command>cd zaptel-1.4.12.1</command>
+<prompt>gemeinschaft:/usr/src/zaptel-1.4.12.1# </prompt><command>./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config</command>
 <replaceable>[...]</replaceable>
-gemeinschaft:/usr/src/zaptel-1.4.12.1# rm -rf firmware/zaptel-fw-*
-gemeinschaft:/usr/src/zaptel-1.4.12.1# cd
-gemeinschaft:~# </screen>
+<prompt>gemeinschaft:/usr/src/zaptel-1.4.12.1# </prompt>rm -rf firmware/zaptel-fw-*
+<prompt>gemeinschaft:/usr/src/zaptel-1.4.12.1# </prompt>cd
+<prompt>gemeinschaft:~# </prompt></screen>
 
     <para>Ggf. paßt man jetzt die <filename>/etc/default/zaptel</filename> an,
     so daß nur die Treiber geladen werden die man benötigt. Ohne ISDN-Karten
-    kann man dann einfach<screen>gemeinschaft:~# <command>modprobe ztdummy</command></screen>ausführen.
+    kann man dann einfach<screen><prompt>gemeinschaft:~# </prompt><command>modprobe ztdummy</command></screen>ausführen.
     Theoretisch könnten wir direkt fortfahren, aber nach der Installation von
     Kernel-Modulen ist es sicherer das System neuzustarten um zu prüfen daß
-    die Module automatisch korrekt geladen werden.<screen>gemeinschaft:~# <command>reboot &amp;&amp; exit</command></screen><screen>gemeinschaft:~# <command>dmesg | grep -iE 'zap|zt'</command>
+    die Module automatisch korrekt geladen werden.<screen><prompt>gemeinschaft:~# </prompt><command>reboot &amp;&amp; exit</command></screen><screen><prompt>gemeinschaft:~# </prompt><command>dmesg | grep -iE 'zap|zt'</command>
 [   20.891315] Zapata Telephony Interface Registered on major 196
 [   20.891356] Zaptel Version: 1.4.12.1
 [   20.891368] Zaptel Echo Canceller: MG2
@@ -353,63 +352,63 @@ gemeinschaft:~# </screen>
     <bridgehead>Asterisk</bridgehead>
 
     <para>Falls es sich um ein Upgrade handelt, müssen die Asterisk-Module
-    gelöscht werden:<screen>gemeinschaft:~# <command>rm -rf /usr/lib/asterisk/modules/*</command></screen></para>
+    gelöscht werden:<screen><prompt>gemeinschaft:~# </prompt><command>rm -rf /usr/lib/asterisk/modules/*</command></screen></para>
 
-    <para>Asterisk installieren:<screen>gemeinschaft:~# <command>cd /usr/src/</command>
-gemeinschaft:/usr/src# <command>wget 'http://downloads.digium.com/pub/asterisk/releases/asterisk-1.4.21.2.tar.gz'</command>
+    <para>Asterisk installieren:<screen><prompt>gemeinschaft:~# </prompt><command>cd /usr/src/</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>wget 'http://downloads.digium.com/pub/asterisk/releases/asterisk-1.4.21.2.tar.gz'</command>
 <replaceable>[...]</replaceable>
-gemeinschaft:/usr/src# <command>tar -xzf asterisk-1.4.21.2.tar.gz</command> 
-gemeinschaft:/usr/src# <command>cd asterisk-1.4.21.2</command>
-gemeinschaft:/usr/src/asterisk-1.4.21.2# <command>./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>tar -xzf asterisk-1.4.21.2.tar.gz</command> 
+<prompt>gemeinschaft:/usr/src# </prompt><command>cd asterisk-1.4.21.2</command>
+<prompt>gemeinschaft:/usr/src/asterisk-1.4.21.2# </prompt><command>./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config</command>
 <replaceable>[...]</replaceable>
-gemeinschaft:/usr/src/asterisk-1.4.21.2# <command>make samples</command>
-gemeinschaft:/usr/src/asterisk-1.4.21.2# <command>cd</command>
-gemeinschaft:~# </screen></para>
+<prompt>gemeinschaft:/usr/src/asterisk-1.4.21.2# </prompt><command>make samples</command>
+<prompt>gemeinschaft:/usr/src/asterisk-1.4.21.2# </prompt><command>cd</command>
+<prompt>gemeinschaft:~# </prompt></screen></para>
 
     <para>Asterisk installiert (mit <literal>make config</literal>) die
     Start-/Stop-Skripte auf Debian für falsche Runlevel, so daß Asterisk beim
     Runterfahren des Systems nicht sauber gestoppt wird. Das sollte man
-    beheben:<screen>gemeinschaft:~# <command>update-rc.d -f asterisk remove</command>
+    beheben:<screen><prompt>gemeinschaft:~# </prompt><command>update-rc.d -f asterisk remove</command>
 <replaceable>[...]</replaceable>
-gemeinschaft:~# <command>update-rc.d asterisk defaults 50 15</command>
+<prompt>gemeinschaft:~# </prompt><command>update-rc.d asterisk defaults 50 15</command>
 <replaceable>[...]</replaceable></screen></para>
 
     <para>Verzeichnis für Call-Files anlegen und freigeben (damit z.B. vom
-    Web-Server geschrieben werden kann):<screen>gemeinschaft:~# <command>mkdir -p /var/spool/asterisk/outgoing</command>
-gemeinschaft:~# <command>chmod a+rwx /var/spool/asterisk/outgoing/</command>
-gemeinschaft:~# <command>chmod a+rwx /var/spool/asterisk/tmp/</command></screen></para>
+    Web-Server geschrieben werden kann):<screen><prompt>gemeinschaft:~# </prompt><command>mkdir -p /var/spool/asterisk/outgoing</command>
+<prompt>gemeinschaft:~# </prompt><command>chmod a+rwx /var/spool/asterisk/outgoing/</command>
+<prompt>gemeinschaft:~# </prompt><command>chmod a+rwx /var/spool/asterisk/tmp/</command></screen></para>
 
-    <para>Asterisk-Addons installieren:<screen>gemeinschaft:~# <command>cd /usr/src/</command>
-gemeinschaft:/usr/src# <command>wget 'http://downloads.digium.com/pub/asterisk/releases/asterisk-addons-1.4.7.tar.gz'</command>
-gemeinschaft:/usr/src# <command>tar -xzf asterisk-addons-1.4.7.tar.gz</command> 
-gemeinschaft:/usr/src# <command>cd asterisk-addons-1.4.7</command>
-gemeinschaft:/usr/src/asterisk-addons-1.4.7# <command>./configure</command> </screen>Jetzt
+    <para>Asterisk-Addons installieren:<screen><prompt>gemeinschaft:~# </prompt><command>cd /usr/src/</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>wget 'http://downloads.digium.com/pub/asterisk/releases/asterisk-addons-1.4.7.tar.gz'</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>tar -xzf asterisk-addons-1.4.7.tar.gz</command> 
+<prompt>gemeinschaft:/usr/src# </prompt><command>cd asterisk-addons-1.4.7</command>
+<prompt>gemeinschaft:/usr/src/asterisk-addons-1.4.7# </prompt><command>./configure</command> </screen>Jetzt
     können wir in <literal>menuselect</literal> die Module rauswerfen die wir
     nicht benötigen (<literal>chan_ooh323</literal>,
     <literal>format_mp3</literal>). Wir brauchen lediglich
     <literal>app_addon_sql_mysql</literal>,
     <literal>cdr_addon_mysql</literal>,
-    <literal>res_config_mysql</literal>:<screen>gemeinschaft:/usr/src/asterisk-addons-1.4.7# <command>make menuselect</command>
+    <literal>res_config_mysql</literal>:<screen><prompt>gemeinschaft:/usr/src/asterisk-addons-1.4.7# </prompt><command>make menuselect</command>
 <replaceable>[interaktiver Dialog]</replaceable>
 menuselect changes saved!
-gemeinschaft:/usr/src/asterisk-addons-1.4.7# <command>make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make samples</command>
+<prompt>gemeinschaft:/usr/src/asterisk-addons-1.4.7# </prompt><command>make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make samples</command>
 <replaceable>[...]</replaceable>
-gemeinschaft:/usr/src/asterisk-addons-1.4.7# <command>cd</command>
-gemeinschaft:~# </screen></para>
+<prompt>gemeinschaft:/usr/src/asterisk-addons-1.4.7# </prompt><command>cd</command>
+<prompt>gemeinschaft:~# </prompt></screen></para>
 
     <para>Dabei muß die Datei
     <filename>/usr/lib/asterisk/modules/res_config_mysql.so</filename> erzeugt
-    worden sein:<screen>gemeinschaft:~# <command>ls /usr/lib/asterisk/modules/res_config_mysql.so</command> 
+    worden sein:<screen><prompt>gemeinschaft:~# </prompt><command>ls /usr/lib/asterisk/modules/res_config_mysql.so</command> 
 /usr/lib/asterisk/modules/res_config_mysql.so</screen></para>
 
     <bridgehead>Source-Code entfernen</bridgehead>
 
     <para>Dieser Schritt ist keineswegs notwendig, schafft aber locker 150 MB
-    Platz.<screen>gemeinschaft:~# <command>cd /usr/src/</command>
-gemeinschaft:/usr/src# <command>rm -rf asterisk-1.4.21.2*</command>
-gemeinschaft:/usr/src# <command>rm -rf asterisk-addons-1.4.7*</command>
-gemeinschaft:/usr/src# <command>rm -rf lame-398-2*</command>
-gemeinschaft:/usr/src# <command>rm -rf zaptel-1.4.12.1*</command></screen><important>
+    Platz.<screen><prompt>gemeinschaft:~# </prompt><command>cd /usr/src/</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>rm -rf asterisk-1.4.21.2*</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>rm -rf asterisk-addons-1.4.7*</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>rm -rf lame-398-2*</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>rm -rf zaptel-1.4.12.1*</command></screen><important>
         <para>Kommen Sie bitte nicht auf die Idee einfach <literal><command>rm
         -rf /usr/src/*</command></literal> auszuführen! In dem Verzeichnis
         befinden sich nämlich auch z.B. die Kernel-Header-Dateien, und die
@@ -422,7 +421,7 @@ gemeinschaft:/usr/src# <command>rm -rf zaptel-1.4.12.1*</command></screen><impor
 
     <para>Jetzt kommen wir zur eigentlichen Installation von Gemeinschaft
     selbst. Um die aktuelle Entwickler-Version von Gemeinschaft aus dem SVN
-    auszuchecken benötigt man natürlich einen SVN-Client:<screen>gemeinschaft:~# <command>aptitude install subversion</command></screen></para>
+    auszuchecken benötigt man natürlich einen SVN-Client:<screen><prompt>gemeinschaft:~# </prompt><command>aptitude install subversion</command></screen></para>
 
     <important>
       <para>Im folgenden werden wir mit <literal><command>ln
@@ -436,23 +435,23 @@ gemeinschaft:/usr/src# <command>rm -rf zaptel-1.4.12.1*</command></screen><impor
 
     <bridgehead>Deutsche Sprachbausteine für Asterisk</bridgehead>
 
-    <para><screen>gemeinschaft:~# <command>cd /usr/src/</command>
-gemeinschaft:/usr/src# <command>svn checkout 'https://svn.amooma.com/asterisk-sounds-de/trunk' asterisk-sounds-de-trunk</command>
+    <para><screen><prompt>gemeinschaft:~# </prompt><command>cd /usr/src/</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>svn checkout 'https://svn.amooma.com/asterisk-sounds-de/trunk' asterisk-sounds-de-trunk</command>
 <replaceable>[...]</replaceable>
-gemeinschaft:/usr/src# <command>cd /var/lib/asterisk/sounds/</command>
-gemeinschaft:/var/lib/asterisk/sounds# <command>ln -s /usr/src/asterisk-sounds-de-trunk de</command>
-gemeinschaft:/var/lib/asterisk/sounds# <command>ls -ld de</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>cd /var/lib/asterisk/sounds/</command>
+<prompt>gemeinschaft:/var/lib/asterisk/sounds# </prompt><command>ln -s /usr/src/asterisk-sounds-de-trunk de</command>
+<prompt>gemeinschaft:/var/lib/asterisk/sounds# </prompt><command>ls -ld de</command>
 lrwxrwxrwx 1 root root 33 2008-10-27 19:17 de -&gt; /usr/src/asterisk-sounds-de-trunk</screen></para>
 
     <bridgehead>Gemeinschaft</bridgehead>
 
-    <para>Auschecken:<screen>gemeinschaft:~# cd /usr/src/
-gemeinschaft:/usr/src# svn checkout 'https://svn.amooma.com/gemeinschaft/trunk' gemeinschaft-trunk</screen></para>
+    <para>Auschecken:<screen><prompt>gemeinschaft:~# </prompt>cd /usr/src/
+<prompt>gemeinschaft:/usr/src# </prompt>svn checkout 'https://svn.amooma.com/gemeinschaft/trunk' gemeinschaft-trunk</screen></para>
 
     <para>Einen Symlink anlegen (das hat den Vorteil daß man später ggf.
     leichter zwischen verschiedenen Versionen von Gemeinschaft wechseln
-    kann):<screen>gemeinschaft:/usr/src# <command>ln -s gemeinschaft-trunk gemeinschaft</command>
-gemeinschaft:/usr/src# <command>ls -ld gemeinschaft</command>
+    kann):<screen><prompt>gemeinschaft:/usr/src# </prompt><command>ln -s gemeinschaft-trunk gemeinschaft</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>ls -ld gemeinschaft</command>
 lrwxrwxrwx 1 root src 18 2008-10-27 19:26 gemeinschaft -&gt; gemeinschaft-trunk</screen></para>
 
     <para>In MySQL mit folgenden Befehlen einen Benutzer
@@ -460,7 +459,7 @@ lrwxrwxrwx 1 root src 18 2008-10-27 19:26 gemeinschaft -&gt; gemeinschaft-trunk<
     Datenbank <quote><literal>asterisk</literal></quote> (die wir gleich
     einspielen werden) zugreifen darf (bitte statt
     <quote><literal>geheim</literal></quote> ein besseres Paßwort
-    wählen!):<screen>gemeinschaft:~# <command>mysql</command> 
+    wählen!):<screen><prompt>gemeinschaft:~# </prompt><command>mysql</command> 
 [...]
 mysql&gt; <command>GRANT ALL ON `asterisk`.* TO 'gemeinschaft'@'localhost' IDENTIFIED BY '<replaceable>geheim</replaceable>';</command>
 Query OK, 0 rows affected (0.00 sec)
@@ -490,7 +489,7 @@ mysql&gt; <command>FLUSH PRIVILEGES;</command>
 Query OK, 0 rows affected (0.01 sec)
 
 mysql&gt; exit
-Bye</screen>Testen:<screen>gemeinschaft:/usr/src# <command>mysql -u gemeinschaft -p -e 'SELECT "ok"'</command>
+Bye</screen>Testen:<screen><prompt>gemeinschaft:/usr/src# </prompt><command>mysql -u gemeinschaft -p -e 'SELECT "ok"'</command>
 Enter password: 
 +----+
 | ok |
@@ -501,18 +500,18 @@ Enter password:
     'gemeinschaft'@'localhost' (using password:
     YES)</literal></quote>.)</para>
 
-    <para>Datenbank einspielen:<screen>gemeinschaft:/usr/src# <command>cd /usr/src/gemeinschaft/usr/share/doc/gemeinschaft/</command>
-gemeinschaft:/usr/src/gemeinschaft/usr/share/doc/gemeinschaft# <command>mysql -u gemeinschaft -p &lt; asterisk.sql</command> 
+    <para>Datenbank einspielen:<screen><prompt>gemeinschaft:/usr/src# </prompt><command>cd /usr/src/gemeinschaft/usr/share/doc/gemeinschaft/</command>
+<prompt>gemeinschaft:/usr/src/gemeinschaft/usr/share/doc/gemeinschaft# </prompt><command>mysql -u gemeinschaft -p &lt; asterisk.sql</command> 
 Enter password: </screen></para>
 
     <para>Gemeinschaft mittels Symlinks <quote>installieren</quote>:</para>
 
-    <para>Apache-Konfiguration für Gemeinschaft:<screen>gemeinschaft:~# <command>cd /etc/apache2/conf.d/</command>
-gemeinschaft:/etc/apache2/conf.d# <command>ln -s /usr/src/gemeinschaft/etc/apache2/conf.d/gemeinschaft.conf</command></screen></para>
+    <para>Apache-Konfiguration für Gemeinschaft:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/apache2/conf.d/</command>
+<prompt>gemeinschaft:/etc/apache2/conf.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/apache2/conf.d/gemeinschaft.conf</command></screen></para>
 
-    <para>Rewriting aktivieren (optional):<screen>gemeinschaft:~# <command>a2enmod rewrite</command></screen></para>
+    <para>Rewriting aktivieren (optional):<screen><prompt>gemeinschaft:~# </prompt><command>a2enmod rewrite</command></screen></para>
 
-    <para>Apache neu starten:<screen>gemeinschaft:~# <command>/etc/init.d/apache2 restart</command></screen></para>
+    <para>Apache neu starten:<screen><prompt>gemeinschaft:~# </prompt><command>/etc/init.d/apache2 restart</command></screen></para>
 
     <para>Der Web-Server muß mit <literal><command>sudo</command></literal>
     ohne Paßwort als <literal>root</literal> Befehle ausführen können. Das
@@ -521,17 +520,17 @@ gemeinschaft:/etc/apache2/conf.d# <command>ln -s /usr/src/gemeinschaft/etc/apach
         <para>Unter Debian läuft der Apache per Default als User
         <literal>www-data</literal>. Das müssen Sie natürlich ggf. anpassen.
         Als welcher User der Apache läuft, steht in der
-        <filename>apache2.conf</filename>:<screen>gemeinschaft:~# <command>cat /etc/apache2/apache2.conf /etc/apache2/envvars 2&gt;&gt;/dev/null | grep -E '^User |APACHE_RUN_USER'</command>
+        <filename>apache2.conf</filename>:<screen><prompt>gemeinschaft:~# </prompt><command>cat /etc/apache2/apache2.conf /etc/apache2/envvars 2&gt;&gt;/dev/null | grep -E '^User |APACHE_RUN_USER'</command>
 User ${APACHE_RUN_USER}
 export APACHE_RUN_USER=www-data</screen></para>
       </footnote>:<literallayout>www-data   ALL=(ALL)  NOPASSWD: ALL</literallayout></para>
 
-    <para>Asterisk-Konfiguration:<screen>gemeinschaft:~# <command>cd /etc/</command>
-gemeinschaft:/etc# <command>rm -rf asterisk/</command>
-gemeinschaft:/etc# <command>ln -s /usr/src/gemeinschaft/etc/asterisk</command></screen></para>
+    <para>Asterisk-Konfiguration:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/</command>
+<prompt>gemeinschaft:/etc# </prompt><command>rm -rf asterisk/</command>
+<prompt>gemeinschaft:/etc# </prompt><command>ln -s /usr/src/gemeinschaft/etc/asterisk</command></screen></para>
 
-    <para>Gemeinschaft-Konfiguration:<screen>gemeinschaft:~# <command>cd /etc/</command>
-gemeinschaft:/etc# <command>ln -s /usr/src/gemeinschaft/etc/gemeinschaft</command></screen></para>
+    <para>Gemeinschaft-Konfiguration:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/</command>
+<prompt>gemeinschaft:/etc# </prompt><command>ln -s /usr/src/gemeinschaft/etc/gemeinschaft</command></screen></para>
 
     <para>Jetzt kann man die
     <filename>/etc/gemeinschaft/gemeinschaft.php</filename> editieren, also
@@ -541,11 +540,11 @@ gemeinschaft:/etc# <command>ln -s /usr/src/gemeinschaft/etc/gemeinschaft</comman
     <para>IP-Adresse des Rechners in
     <filename>/opt/gemeinschaft/etc/listen-to-ip</filename> eintragen.</para>
 
-    <para>IP-Adresse in Datenbank eintragen:<screen>gemeinschaft:~# <command>mysql</command>
+    <para>IP-Adresse in Datenbank eintragen:<screen><prompt>gemeinschaft:~# </prompt><command>mysql</command>
 <replaceable>[...]</replaceable>
 mysql&gt; <command>USE asterisk;</command>
 <replaceable>[...]</replaceable>
-mysql&gt; <command>UPDATE hosts SET host='192.168.1.130' WHERE id=1;</command>
+mysql&gt; <command>UPDATE hosts SET host='<replaceable>192.168.1.130</replaceable>' WHERE id=1;</command>
 <replaceable>[...]</replaceable>
 mysql&gt; <command>SELECT * FROM hosts;</command>
 +----+---------------+----------------+------------+----------+
@@ -555,53 +554,53 @@ mysql&gt; <command>SELECT * FROM hosts;</command>
 +----+---------------+----------------+------------+----------+
 1 row in set (0.00 sec)</screen></para>
 
-    <para>Haupt-Verzeichnis von Gemeinschaft:<screen>gemeinschaft:~# <command>cd /opt/</command>
-gemeinschaft:/opt# <command>ln -s /usr/src/gemeinschaft/opt/gemeinschaft</command></screen></para>
+    <para>Haupt-Verzeichnis von Gemeinschaft:<screen><prompt>gemeinschaft:~# </prompt><command>cd /opt/</command>
+<prompt>gemeinschaft:/opt# </prompt><command>ln -s /usr/src/gemeinschaft/opt/gemeinschaft</command></screen></para>
 
-    <para>Doku:<screen>gemeinschaft:~# <command>cd /usr/share/doc</command>
-gemeinschaft:/usr/share/doc# <command>ln -s /usr/src/gemeinschaft/usr/share/doc/gemeinschaft</command></screen></para>
+    <para>Doku:<screen><prompt>gemeinschaft:~# </prompt><command>cd /usr/share/doc</command>
+<prompt>gemeinschaft:/usr/share/doc# </prompt><command>ln -s /usr/src/gemeinschaft/usr/share/doc/gemeinschaft</command></screen></para>
 
-    <para>Log-Verzeichnis (ein Symlink wäre hier kontraproduktiv):<screen>gemeinschaft:~# <command>mkdir -p /var/log/gemeinschaft</command>
-gemeinschaft:~# <command>chmod a+rwx /var/log/gemeinschaft/</command></screen></para>
+    <para>Log-Verzeichnis (ein Symlink wäre hier kontraproduktiv):<screen><prompt>gemeinschaft:~# </prompt><command>mkdir -p /var/log/gemeinschaft</command>
+<prompt>gemeinschaft:~# </prompt><command>chmod a+rwx /var/log/gemeinschaft/</command></screen></para>
 
-    <para>Web-Verzeichnis:<screen>gemeinschaft:~# <command>cd /var/www/</command>
-gemeinschaft:/var/www# <command>ln -s /usr/src/gemeinschaft/var/www/gemeinschaft</command>
-gemeinschaft:/var/www# <command>ln -s /usr/src/gemeinschaft/var/www/.htaccess</command> </screen></para>
+    <para>Web-Verzeichnis:<screen><prompt>gemeinschaft:~# </prompt><command>cd /var/www/</command>
+<prompt>gemeinschaft:/var/www# </prompt><command>ln -s /usr/src/gemeinschaft/var/www/gemeinschaft</command>
+<prompt>gemeinschaft:/var/www# </prompt><command>ln -s /usr/src/gemeinschaft/var/www/.htaccess</command> </screen></para>
 
-    <para>Weitere Dateien:<screen>gemeinschaft:~# <command>cd /var/lib/</command>
-gemeinschaft:/var/lib# <command>ln -s /usr/src/gemeinschaft/var/lib/gemeinschaft</command></screen></para>
+    <para>Weitere Dateien:<screen><prompt>gemeinschaft:~# </prompt><command>cd /var/lib/</command>
+<prompt>gemeinschaft:/var/lib# </prompt><command>ln -s /usr/src/gemeinschaft/var/lib/gemeinschaft</command></screen></para>
 
     <para>Sprach-Prompts von <literal>.wav</literal> nach
-    <literal>.alaw</literal> konvertieren:<screen>gemeinschaft:~# <command>cd /var/lib/asterisk/sounds/de</command>
-gemeinschaft:/var/lib/asterisk/sounds/de# <command>/opt/gemeinschaft/sbin/sounds-wav-to-alaw.sh</command> 
-gemeinschaft:/var/lib/asterisk/sounds/de# <command>cd</command>
-gemeinschaft:~# <command>chown -R root:root /var/lib/asterisk/sounds</command></screen></para>
+    <literal>.alaw</literal> konvertieren:<screen><prompt>gemeinschaft:~# </prompt><command>cd /var/lib/asterisk/sounds/de</command>
+<prompt>gemeinschaft:/var/lib/asterisk/sounds/de# </prompt><command>/opt/gemeinschaft/sbin/sounds-wav-to-alaw.sh</command> 
+<prompt>gemeinschaft:/var/lib/asterisk/sounds/de# </prompt><command>cd</command>
+<prompt>gemeinschaft:~# </prompt><command>chown -R root:root /var/lib/asterisk/sounds</command></screen></para>
 
-    <para>Asterisk-Dialplan für Gemeinschaft initialisieren:<screen>gemeinschaft:~# <command>/etc/init.d/asterisk stop</command>
-gemeinschaft:~# <command>/opt/gemeinschaft/sbin/gs-ast-dialplan-gen</command> 
+    <para>Asterisk-Dialplan für Gemeinschaft initialisieren:<screen><prompt>gemeinschaft:~# </prompt><command>/etc/init.d/asterisk stop</command>
+<prompt>gemeinschaft:~# </prompt><command>/opt/gemeinschaft/sbin/gs-ast-dialplan-gen</command> 
 Generating extensions.ael ...
 extensions.ael written.
-gemeinschaft:~# <command>/etc/init.d/asterisk start</command></screen></para>
+<prompt>gemeinschaft:~# </prompt><command>/etc/init.d/asterisk start</command></screen></para>
 
-    <para>Logrotate-Regeln:<screen>gemeinschaft:~# <command>cd /etc/logrotate.d/</command>
-gemeinschaft:/etc/logrotate.d# <command>ln -s /usr/src/gemeinschaft/etc/logrotate.d/asterisk</command> 
-gemeinschaft:/etc/logrotate.d# <command>ln -s /usr/src/gemeinschaft/etc/logrotate.d/gemeinschaft</command> </screen></para>
+    <para>Logrotate-Regeln:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/logrotate.d/</command>
+<prompt>gemeinschaft:/etc/logrotate.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/logrotate.d/asterisk</command> 
+<prompt>gemeinschaft:/etc/logrotate.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/logrotate.d/gemeinschaft</command> </screen></para>
 
-    <para>Cron-Skripte:<screen>gemeinschaft:~# <command>cd /etc/cron.d</command>
-gemeinschaft:/etc/cron.d# <command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-cc-guardian</command> 
-gemeinschaft:/etc/cron.d# <command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-queuelog-to-db</command> 
-gemeinschaft:/etc/cron.d# <command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-queues-refresh</command> </screen></para>
+    <para>Cron-Skripte:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/cron.d</command>
+<prompt>gemeinschaft:/etc/cron.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-cc-guardian</command> 
+<prompt>gemeinschaft:/etc/cron.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-queuelog-to-db</command> 
+<prompt>gemeinschaft:/etc/cron.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-queues-refresh</command> </screen></para>
 
     <bridgehead>DHCP-Server</bridgehead>
 
-    <screen>gemeinschaft:~# <command>aptitude install dhcp3-server</command>
-gemeinschaft:~# <command>cd /etc/dhcp3/</command>
-gemeinschaft:/etc/dhcp3# <command>rm dhcpd.conf</command> 
-gemeinschaft:/etc/dhcp3# <command>ln -s /usr/src/gemeinschaft/usr/share/doc/gemeinschaft/misc/dhcpd-3-example.conf dhcpd.conf</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install dhcp3-server</command>
+<prompt>gemeinschaft:~# </prompt><command>cd /etc/dhcp3/</command>
+<prompt>gemeinschaft:/etc/dhcp3# </prompt><command>rm dhcpd.conf</command> 
+<prompt>gemeinschaft:/etc/dhcp3# </prompt><command>ln -s /usr/src/gemeinschaft/usr/share/doc/gemeinschaft/misc/dhcpd-3-example.conf dhcpd.conf</command></screen>
 
     <para><filename>/etc/dhcp3/dhcpd.conf</filename> anpassen, dann</para>
 
-    <screen>gemeinschaft:/etc/dhcp3# <command>/etc/init.d/dhcp3-server restart</command></screen>
+    <screen><prompt>gemeinschaft:/etc/dhcp3# </prompt><command>/etc/init.d/dhcp3-server restart</command></screen>
   </section>
 
   <section id="update-trunk-single-gemeinschaft">
@@ -612,12 +611,12 @@ gemeinschaft:/etc/dhcp3# <command>ln -s /usr/src/gemeinschaft/usr/share/doc/geme
     von Gemeinschaft auf die aktuelle Revision (also den aktuellen
     Entwicklungsstand) aktualisieren, so geht das ganz einfach so:</para>
 
-    <screen>gemeinschaft:~# <command>cd /usr/src/gemeinschaft-trunk/</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>cd /usr/src/gemeinschaft-trunk/</command></screen>
 
-    <para>Die momentan installierte Revision herausfinden:<screen>gemeinschaft:/usr/src/gemeinschaft-trunk# <command>svnversion</command> 
+    <para>Die momentan installierte Revision herausfinden:<screen><prompt>gemeinschaft:/usr/src/gemeinschaft-trunk# </prompt><command>svnversion</command> 
 5340</screen></para>
 
-    <para>Updaten:<screen>gemeinschaft:/usr/src/gemeinschaft-trunk# <command>svn update</command>
+    <para>Updaten:<screen><prompt>gemeinschaft:/usr/src/gemeinschaft-trunk# </prompt><command>svn update</command>
 <replaceable>[...]</replaceable>
 Updated to revision 5342.</screen></para>
 
