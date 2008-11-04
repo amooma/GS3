@@ -22,9 +22,14 @@
 		parameter name="SubscriberTelType"          - phone type
 		parameter name="SubscriberOutboundProxy"    - outbound proxy
 	-->
+	<!-- List of supported actions:
+		- "update" : normal update
+		- "default": reset to default values (?)
+	-->
 	<message name="UpdateExtensionRequest">
 		<part name="extension" type="xsd:string"/>
 		<part name="data"      type="soapenc:Array" soapenc:arrayType="soapenc:Array[]"/>
+		<part name="action"    type="xsd:string"/>
 	</message>
 	
 	<!--
@@ -36,12 +41,14 @@
 	</message>
 	
 	
+	<!--
 	<message name="GetServerInfoRequest">
 	</message>
 	
 	<message name="GetServerInfoResponse">
 		<part name="info"      type="soapenc:Array" soapenc:arrayType="soapenc:Array[]"/>
 	</message>
+	-->
 	
 	
 	<portType name="UpdateExtensionPortType">
@@ -49,10 +56,12 @@
 			<input  message="tns:UpdateExtensionRequest"/>
 			<output message="tns:UpdateExtensionResponse"/>
 		</operation>
+		<!--
 		<operation name="getServerInfo">
 			<input  message="tns:GetServerInfoRequest"/>
 			<output message="tns:GetServerInfoResponse"/>
 		</operation>
+		-->
 	</portType>
 	
 	<binding name="UpdateExtensionBinding" type="tns:UpdateExtensionPortType">
@@ -66,6 +75,7 @@
 				<soap:body use="literal"/>
 			</output>
 		</operation>
+		<!--
 		<operation name="getServerInfo">
 			<soap:operation soapAction="urn:extensionServer#getServerInfo"/>
 			<input>
@@ -75,6 +85,7 @@
 				<soap:body use="literal"/>
 			</output>
 		</operation>
+		-->
 	</binding>
 	
 	<service name="UpdateExtensionService">
