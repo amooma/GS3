@@ -41,6 +41,7 @@ help:
 	@ echo "  make pdf      : Generate PDF using the preferred conversion (= pdf-jw)"
 	@ echo "  make man-xsl  : Generate man pages using xmlto"
 	@ echo "  make man      : Generate man pages using the preferred conversion (= man-xsl)"
+	@ echo "  make installation-trunk-single-html : Generate installation-trunk-single"
 	@ echo ""
 
 
@@ -166,6 +167,58 @@ html-xsl: docbook/_HANDBUCH-one-file.xml _xmlto
 
 
 html: html-xsl
+
+
+installation-trunk-single-html: installation-trunk-single.html
+installation-trunk-single.html: docbook/installation-trunk-single-debian.xml
+	@ if [ ! -f "/etc/debian_version" ]; then \
+		echo '############################################################'; \
+		echo '#  Currently not implemented for distributions other than Debian.'; \
+		echo '############################################################'; \
+		exit 1; \
+	fi
+	@ if [ -z `which xsltproc` ]; then \
+		echo '############################################################'; \
+		echo '#  xsltproc not found.'; \
+		echo '#  ( aptitude install xsltproc )'; \
+		echo '############################################################'; \
+		exit 1; \
+	fi
+	@ if [ ! -f "/usr/share/xml/docbook/stylesheet/nwalsh/xhtml/onechunk.xsl" ]; then \
+		echo '############################################################'; \
+		echo '#  DocBook stylesheets not found.'; \
+		echo '#  ( aptitude install docbook-xsl docbook-xml )'; \
+		echo '############################################################'; \
+		exit 1; \
+	fi
+	# 'chunker.output.indent' 'yes' break <pre>
+	xsltproc --nonet --novalid --xinclude \
+		--stringparam 'base.dir' './' \
+		--stringparam 'use.id.as.filename' '1' \
+		--stringparam 'root.filename' 'installation-trunk-single' \
+		--stringparam 'html.ext' '.html' \
+		--stringparam 'html.stylesheet' 'css/style.css' \
+		--stringparam 'admon.graphics' '0' \
+		--stringparam 'admon.textlabel' '1' \
+		--stringparam 'toc.section.depth' '2' \
+		--stringparam 'toc.max.depth' '8' \
+		--stringparam 'generate.section.toc.level' '10' \
+		--stringparam 'chapter.autolabel' '1' \
+		--stringparam 'section.autolabel' '1' \
+		--stringparam 'section.autolabel.max.depth' '2' \
+		--stringparam 'section.label.includes.component.label' '1' \
+		--stringparam 'appendix.autolabel' 'A' \
+		--stringparam 'autotoc.label.separator' ' - ' \
+		--stringparam 'autotoc.label.in.hyperlink' '1' \
+		--stringparam 'preface.autolabel' 'i' \
+		--stringparam 'chunker.output.indent' 'no' \
+		--stringparam 'html.extra.head.links' '1' \
+		--stringparam 'ulink.target' '_blank' \
+		--stringparam 'css.decoration' '0' \
+		--stringparam 'generate.index' '0' \
+		--stringparam 'id.warnings' '0' \
+		'/usr/share/xml/docbook/stylesheet/nwalsh/xhtml/onechunk.xsl' \
+		'docbook/installation-trunk-single-debian.xml'
 
 
 pdf-jw: docbook/_HANDBUCH-one-file.xml _docbook2pdf
