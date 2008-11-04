@@ -520,7 +520,9 @@ Enter password: </screen></para>
         <para>Unter Debian läuft der Apache per Default als User
         <literal>www-data</literal>. Das müssen Sie natürlich ggf. anpassen.
         Als welcher User der Apache läuft, steht in der
-        <filename>apache2.conf</filename>:<screen><prompt>gemeinschaft:~# </prompt><command>cat /etc/apache2/apache2.conf /etc/apache2/envvars 2&gt;&gt;/dev/null | grep -E '^User |APACHE_RUN_USER'</command>
+        <filename>apache2.conf</filename>:</para>
+
+        <para><screen><prompt>gemeinschaft:~# </prompt><command>cat /etc/apache2/apache2.conf /etc/apache2/envvars 2&gt;&gt;/dev/null | grep -E '^User |APACHE_RUN_USER'</command>
 User ${APACHE_RUN_USER}
 export APACHE_RUN_USER=www-data</screen></para>
       </footnote>:<literallayout>www-data   ALL=(ALL)  NOPASSWD: ALL</literallayout></para>
