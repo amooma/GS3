@@ -10,7 +10,19 @@
 % Free Documentation License".
 % Asterisk training and consulting is offered at http://www.amooma.de-->
 
-  <title>Installation des SVN-Trunks als Einzel-Server-System</title>
+  <sectioninfo>
+    <date>Datei-Revision: $Revision$</date>
+
+    <corpauthor><ulink url="http://www.amooma.de/">Amooma
+    GmbH</ulink></corpauthor>
+
+    <legalnotice>
+      <para>Lizenz: GNU FDL</para>
+    </legalnotice>
+  </sectioninfo>
+
+  <title>Installation des SVN-Trunks von Gemeinschaft als
+  Einzel-Server-System</title>
 
   <para>Hier beschreiben wir wie man die aktuelle Entwicklerversion (den
   <quote><foreignphrase lang="en">trunk</foreignphrase></quote> aus dem SVN)
@@ -584,7 +596,7 @@ gemeinschaft:~# <command>cd /etc/dhcp3/</command>
 gemeinschaft:/etc/dhcp3# <command>rm dhcpd.conf</command> 
 gemeinschaft:/etc/dhcp3# <command>ln -s /usr/src/gemeinschaft/usr/share/doc/gemeinschaft/misc/dhcpd-3-example.conf dhcpd.conf</command></screen>
 
-    <para>/etc/dhcp3/dhcpd.conf anpassen, dann</para>
+    <para><filename>/etc/dhcp3/dhcpd.conf</filename> anpassen, dann</para>
 
     <screen>gemeinschaft:/etc/dhcp3# <command>/etc/init.d/dhcp3-server restart</command></screen>
   </section>
