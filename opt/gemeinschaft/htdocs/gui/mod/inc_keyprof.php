@@ -57,7 +57,7 @@ if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 	$phone_types['siemens-os80'] = 'Siemens OpenStage 80';
 }
 if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
-	$phone_types['aastra-51i'] = 'Aastra 51i';
+	//$phone_types['aastra-51i'] = 'Aastra 51i';
 	$phone_types['aastra-53i'] = 'Aastra 53i';
 	$phone_types['aastra-55i'] = 'Aastra 55i';
 	$phone_types['aastra-57i'] = 'Aastra 57i';
@@ -161,8 +161,8 @@ if ($phone_type == '') {
 		elseif (array_key_exists('siemens-os80', $phone_types)) $phone_type = 'siemens-os80';
 	} else
 	if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
-		if     (array_key_exists('aastra-51i', $phone_types)) $phone_type = 'aastra-51i';
-		elseif (array_key_exists('aastra-53i', $phone_types)) $phone_type = 'aastra-53i';
+		//if     (array_key_exists('aastra-51i', $phone_types)) $phone_type = 'aastra-51i';
+		if     (array_key_exists('aastra-53i', $phone_types)) $phone_type = 'aastra-53i';
 		elseif (array_key_exists('aastra-55i', $phone_types)) $phone_type = 'aastra-55i';
 		elseif (array_key_exists('aastra-57i', $phone_types)) $phone_type = 'aastra-57i';
 	}
@@ -173,7 +173,7 @@ if (in_array($phone_type, array('snom-360', 'snom-370'), true)) {
 } elseif (in_array($phone_type, array('siemens-os20', 'siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
 	$phone_layout = 'siemens';
 	$key_function_none = $key_function_none_siemens;
-} elseif (in_array($phone_type, array('aastra-51i', 'aastra-53i', 'aastra-55i', 'aastra-57i'), true)) {
+} elseif (in_array($phone_type, array(/*'aastra-51i',*/ 'aastra-53i', 'aastra-55i', 'aastra-57i'), true)) {
 	$phone_layout = 'aastra';
 	$key_function_none = $key_function_none_aastra;
 } else {
@@ -765,8 +765,10 @@ if ($phone_layout) {
 				$key_levels[0]['from'] =  101;
 				$key_levels[0]['to'  ] =  120;
 				break;
+			/*
 			case 'aastra-51i':
 				break;
+			*/
 		}
 		/*
 		if ($show_ext_modules >= 1) {
