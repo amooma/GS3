@@ -36,11 +36,10 @@ function aastra_transmit()
 	global $aastra_xml_buffer;
 	
 	header( 'Content-Type: text/xml' );
-	header( 'Content-Length: '.strLen($aastra_xml_buffer) );
-	header( 'Connection: Close ' );
+	header( 'Content-Length: '. strLen($aastra_xml_buffer) );
+	header( 'Connection: Close' );
 	
-	$aastra_xml_buffer = utf8_decode($aastra_xml_buffer);
-	echo $aastra_xml_buffer;
+	echo utf8_decode($aastra_xml_buffer);  # ?
 	$aastra_xml_buffer = '';
 	return true;
 }
@@ -50,74 +49,72 @@ function aastra_push( $phone_ip )
 	global $aastra_xml_buffer;
 	
 	$prov_host = gs_get_conf('GS_PROV_HOST');
-	$aastra_xml_buffer = 'xml='.$aastra_xml_buffer;
 	
 	//FIXME - call wget or something. this function should not block
 	// for so long!
 	
-	$header = "POST / HTTP/1.1\r\n";
-	$header.= "Host: $phone_ip\r\n";	
-	$header.= "Referer: $prov_host\r\n";
-	//$header.= "Connection: Keep-Alive\r\n";
-	$header.= "Connection: Close\r\n";
-	$header.= "Content-Type: text/xml\r\n";
-	$header.= "Content-Length: ".strlen($aastra_xml_buffer)."\r\n";
-	$header.= "\r\n";
+	$data = "POST / HTTP/1.1\r\n";
+	$data.= "Host: $phone_ip\r\n";	
+	$data.= "Referer: $prov_host\r\n";
+	$data.= "Connection: Close\r\n";
+	$data.= "Content-Type: text/xml\r\n";
+	$data.= "Content-Length: ". (strLen('xml=') + strLen($aastra_xml_buffer)) ."\r\n";
+	$data.= "\r\n";
+	$data.= 'xml='.$aastra_xml_buffer;
+	$aastra_xml_buffer = '';
 	
-	$socket = @fSockOpen( $phone_ip, 80, $error_no, $error_str, 4);
+	$socket = @fSockOpen( $phone_ip, 80, $error_no, $error_str, 4 );
 	if (! $socket) {
 		gs_log(GS_LOG_NOTICE, "Aastra: Failed to open socket - IP: $phone_ip");
 		return 0;
 	}
 	stream_set_timeout($socket, 4);
-	@fWrite($socket, $header.$aastra_xml_buffer);
+	$bytes_written = (int)@fWrite($socket, $data, strLen($data));
 	@fFlush($socket);
 	$response = @fGetS($socket);
 	@fClose($socket);
-	if (strPos($response, '200 OK') === false) {
-		gs_log(GS_LOG_WARNING, "Aastra: Failed to push $ret_val bytes to phone $phone_ip");
+	if (strPos($response, '200') === false) {
+		gs_log(GS_LOG_WARNING, "Aastra: Failed to push XML to phone $phone_ip");
 		return 0;
 	}
-	$ret_val = strLen($aastra_xml_buffer);
-	gs_log(GS_LOG_DEBUG, "Aastra: Pushed $ret_val bytes to phone $phone_ip");
-	$aastra_xml_buffer = '';
-	return $ret_val;
+	gs_log(GS_LOG_DEBUG, "Aastra: Pushed $bytes_written bytes to phone $phone_ip");
+	return $bytes_written;
 }
 
 
-function aastra_write( $text )
+function aastra_write( $str )
 {
 	global $aastra_xml_buffer;
-	$aastra_xml_buffer .= $text."\n";
+	$aastra_xml_buffer .= $str."\n";
 }
 
 function aastra_reboot( $phone_ip )
 {
 	aastra_write('<AastraIPPhoneExecute>');
-	aastra_write('<ExecuteItem URI="Command: Reset" />');
+	aastra_write('	<ExecuteItem URI="Command: Reset" />');
 	aastra_write('</AastraIPPhoneExecute>');
-	$ret_val = aastra_push($phone_ip);
-	return $ret_val;
+	
+	$bytes_written = aastra_push($phone_ip);
+	return $bytes_written;
 }
 
 function aastra_textscreen( $title, $text )
 {
 	aastra_write('<AastraIPPhoneTextScreen destroyOnExit="yes">');
-	aastra_write('<Title>'.$title.'</Title>');
-	aastra_write('<Text>'.$text.'</Text>');
+	aastra_write('	<Title>'.$title.'</Title>');
+	aastra_write('	<Text>'.$text.'</Text>');
 	aastra_write('</AastraIPPhoneTextScreen>');
 }
 
 function aastra_push_statusline( $phone_ip, $text, $index=0, $type='', $timeout=3, $beep=false )
 {
 	aastra_write('<AastraIPPhoneStatus Beep="'. ($beep?'yes':'no') .'">');
-	aastra_write('<Session>gemeinschaft</Session>');
-	aastra_write('<Message index="'.$index .'"'. ($type != '' ? ' type="'.$type.'"' : '') .' timeout="'.$timeout .'">'. $text .'</Message>');
+	aastra_write('	<Session>gemeinschaft</Session>');
+	aastra_write('	<Message index="'.$index .'"'. ($type != '' ? ' type="'.$type.'"' : '') .' timeout="'.$timeout .'">'. $text .'</Message>');
 	aastra_write('</AastraIPPhoneStatus>');
 	
-	$ret_val = aastra_push($phone_ip);
-	
-	return $ret_val;
+	$bytes_written = aastra_push($phone_ip);
+	return $bytes_written;
 }
 
 ?>
