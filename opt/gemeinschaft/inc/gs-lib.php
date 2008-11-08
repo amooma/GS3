@@ -28,7 +28,6 @@
 
 defined('GS_VALID') or die('No direct access.');
 
-include_once( GS_DIR .'inc/conf.php' );  # should already be included anyway
 include_once( GS_DIR .'inc/log.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
