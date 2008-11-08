@@ -30,7 +30,7 @@
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
   '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 5417 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2008-11-01 17:22+0100
+POT-Creation-Date: 2008-11-08 15:53+0100
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -73,6 +73,7 @@ Content-Transfer-Encoding: 8bit
   'Anklopfen' => 'Anklopfen',
   'Anlage' => 'Anlage',
   'Anlegen' => 'Anlegen',
+  'Anruf' => 'Anruf',
   'Anrufdauer' => 'Anrufdauer',
   'Anrufdauer im Durchschnitt' => 'Anrufdauer im Durchschnitt',
   'Anrufe' => 'Anrufe',
@@ -112,6 +113,7 @@ Content-Transfer-Encoding: 8bit
   'Die Voicemail erreichte Sie auf Durchwahl %s.' => 'Die Nachricht erreichte Sie auf Durchwahl %s.',
   'Dienstmerkmale' => 'Dienstmerkmale',
   'Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die Bedeutungen werden ggf. am unteren Rand des Displays angezeigt.' => 'Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die Bedeutungen werden ggf. am unteren Rand des Displays angezeigt.',
+  'Dieses Telefonbuch enthält keine Einträge.' => 'Dieses Telefonbuch enthält keine Einträge.',
   'Durchwahl' => 'Durchwahl',
   'Eigene externe Nummern' => 'Eigene externe Nummern',
   'Ein-/Ausloggen am Telefon' => 'Ein-/Ausloggen am Telefon',
@@ -155,8 +157,10 @@ Content-Transfer-Encoding: 8bit
   'Fremd-Hosts' => 'Fremd-Hosts',
   'Freunde' => 'Freunde',
   'Funktion' => 'Funktion',
+  'Gewählt' => 'Gewählt',
   'Gruppe' => 'Gruppe',
   'Gruppen' => 'Gruppen',
+  'Hersteller / Modell' => 'Hersteller / Modell',
   'Hilfe' => 'Hilfe',
   'Host' => 'Host',
   'ID' => 'ID',
@@ -164,7 +168,9 @@ Content-Transfer-Encoding: 8bit
   'IP (stat.)' => 'IP (stat.)',
   'Ihr Browser kann die %s-Datei nicht abspielen.' => 'Ihr Browser kann die %s-Datei nicht abspielen.',
   'Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)' => 'Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)',
+  'Ihr persönliches Telefonbuch enthält keine Einträge.' => 'Ihr persönliches Telefonbuch enthält keine Einträge.',
   'Ihre Durchwahl' => 'Ihre Durchwahl',
+  'Intern' => 'Intern',
   'Klingelt&ouml;ne' => 'Klingelt&ouml;ne',
   'Kollegen' => 'Kollegen',
   'Kommentar' => 'Kommentar',
@@ -175,6 +181,7 @@ Content-Transfer-Encoding: 8bit
   'Login' => 'Login',
   'Logout' => 'Abmelden',
   'Mitglieder' => 'Mitglieder',
+  'Mitglieder der Rufannahme-Gruppe' => 'Mitglieder der Rufannahme-Gruppe',
   'Monitor' => 'Monitor',
   'Nachname' => 'Nachname',
   'Nachrichten' => 'Nachrichten',
@@ -195,6 +202,7 @@ Content-Transfer-Encoding: 8bit
   'Pa&szlig;wort mailen' => 'Pa&szlig;wort mailen',
   'Pa&szlig;wort vergessen' => 'Pa&szlig;wort vergessen',
   'Pers&ouml;nlich' => 'Pers&ouml;nlich',
+  'Persönlich' => 'Persönlich',
   'Ping' => 'Ping',
   'Player' => 'Player',
   'Pos.' => 'Pos.',
@@ -203,6 +211,7 @@ Content-Transfer-Encoding: 8bit
   'Queues' => 'Queues',
   'Reserve' => 'Reserve',
   'Rolle' => 'Rolle',
+  'Rufannahmegrp.' => 'Rufannahmegrp.',
   'Rufumleitung' => 'Rufumleitung',
   'Rufumleitung Warteschleifen' => 'Rufumleitung Warteschleifen',
   'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)' => 'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)',

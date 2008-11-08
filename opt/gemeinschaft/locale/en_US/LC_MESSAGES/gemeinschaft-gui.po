@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-01 17:22+0100\n"
+"POT-Creation-Date: 2008-11-08 15:53+0100\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: English <>\n"
@@ -366,6 +366,11 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 321
 msgid "Anlegen"
 msgstr "Add"
+#
+# File: opt/gemeinschaft/htdocs/prov/siemens/dial-log/dlog.php, line: 65
+# File: opt/gemeinschaft/htdocs/prov/siemens/pb/pb.php, line: 66
+msgid "Anruf"
+msgstr "Call"
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 105
 msgid "Anrufbeantworter"
@@ -1174,6 +1179,11 @@ msgid ""
 "mit dem Muster verglichen."
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 342
+# File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 422
+msgid "Dieses Telefonbuch enthält keine Einträge."
+msgstr "This phonebook does not contain any entries."
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 311
 msgid "Direktgespr&auml;che"
 msgstr ""
@@ -1686,6 +1696,12 @@ msgstr ""
 msgid "Gew&auml;hlt"
 msgstr "Dialed"
 #
+# File: opt/gemeinschaft/htdocs/prov/siemens/dial-log/dlog.php, line: 126
+# File: opt/gemeinschaft/htdocs/prov/aastra/dial-log.php, line: 68
+# File: opt/gemeinschaft/htdocs/prov/snom/dial-log.php, line: 103
+msgid "Gewählt"
+msgstr "Dialed"
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_rec.php, line: 101
 msgid "Gr&ouml;&szlig;e"
 msgstr "Size"
@@ -1732,9 +1748,9 @@ msgstr "Hold"
 msgid "Heranholen"
 msgstr "Pickup"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 196
-msgid "Hersteller"
-msgstr "Vendor"
+# File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 224
+msgid "Hersteller / Modell"
+msgstr "Vendor / Model"
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/index.php, line: 238
 msgid "Herunterfahren"
@@ -1860,6 +1876,10 @@ msgstr "Your browser is unable to display the SVG image."
 msgid "Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)"
 msgstr "Your comment for colleagues (e.g. &quot;off-time&quot;)"
 #
+# File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 512
+msgid "Ihr persönliches Telefonbuch enthält keine Einträge."
+msgstr "Your private phonebook does not contain any entries."
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 44
 msgid "Ihre Durchwahl"
 msgstr "Your extension"
@@ -1916,6 +1936,12 @@ msgstr ""
 msgid "Installationsart"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/prov/siemens/pb/pb.php, line: 165
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 72
+# File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 116
+msgid "Intern"
+msgstr "Internal"
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_e164.php, line: 182
 msgid "Internat. mit Ortspr&auml;fix?"
 msgstr "Intl. with area prefix?"
@@ -1968,6 +1994,14 @@ msgstr "No answer"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 140
 msgid "Keine Telefonnummer angegeben."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 340
+# File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 420
+# File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 510
+#, php-format
+msgid ""
+"Keine Treffer für \"%s\". Drücken Sie # um die letzte Eingabe zu widerrufen."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 240
@@ -2130,8 +2164,8 @@ msgstr "Enable provided DHCP server.<br />(recommended)"
 msgid "Mitglieder"
 msgstr "Members"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 259
-msgid "Mitglieder der Ruf&uuml;bernahme-Gruppe"
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 258
+msgid "Mitglieder der Rufannahme-Gruppe"
 msgstr "Members of pickup group"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 96
@@ -2221,10 +2255,6 @@ msgstr "Name"
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 194
 msgid "Name suchen"
 msgstr "Search by name"
-#
-# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 93
-msgid "Name:"
-msgstr "Name:"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 97
 msgid "National"
@@ -2484,9 +2514,11 @@ msgstr "Park"
 msgid "Pers&ouml;nlich"
 msgstr "Private"
 #
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 208
-msgid "PickUp-Gruppen"
-msgstr "Pickup groups"
+# File: opt/gemeinschaft/htdocs/prov/siemens/pb/pb.php, line: 167
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 75
+# File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 119
+msgid "Persönlich"
+msgstr "Private"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 633
 msgid "Pickupgruppe"
@@ -2665,9 +2697,19 @@ msgstr "Router"
 msgid "Routing-Test"
 msgstr "Routing test"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 60
-msgid "Rufgruppe"
-msgstr "Group pickup"
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 41
+msgid "Rufannahme-Gruppen"
+msgstr "Pickup groups"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
+msgid "Rufannahmegrp."
+msgstr "Pickup grp."
+#
+# File: opt/gemeinschaft/htdocs/prov/siemens/dial-log/dlog.php, line: 66
+# File: opt/gemeinschaft/htdocs/prov/siemens/pb/pb.php, line: 67
+msgid "Rufe an:"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 735
 msgid "Rufnummer"
@@ -3003,9 +3045,10 @@ msgstr "Delete softkey profile"
 msgid "Tastenprofil"
 msgstr "Key profile"
 #
-# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 217
-# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 299
-msgid "Teilnehmer"
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 222
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 307
+#, php-format
+msgid "Teilnehmer &quot;%s&quot; nicht gefunden."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 279
@@ -3398,6 +3441,11 @@ msgstr "Selected dialing"
 msgid "Zugriffsverletzung!"
 msgstr "Access violation!"
 #
+# File: opt/gemeinschaft/htdocs/prov/siemens/dial-log/dlog.php, line: 216
+# File: opt/gemeinschaft/htdocs/prov/siemens/pb/pb.php, line: 368
+msgid "Zurück"
+msgstr "Back"
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 432
 msgid ""
 "Zus&auml;tzliche statische IP-Adresse die von Gemeinschaft nicht ver&auml;"
@@ -3546,6 +3594,10 @@ msgstr "permit inbound calls"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 253
 msgid "einmal"
 msgstr "once"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 245
+msgid "endlos"
+msgstr "infinite"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 318
 msgid "entfernen"
@@ -3742,11 +3794,6 @@ msgstr "no"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 439
 msgid "neue Warteschlange anlegen"
 msgstr "add new queue"
-#
-# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 217
-# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 299
-msgid "nicht gefunden!"
-msgstr "not found!"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 295
 msgid "nicht wenn keine Agenten angemeldet"
@@ -4017,6 +4064,10 @@ msgstr "prev. page"
 #~ msgid "Gemeinschaft Telefon-Manager"
 #~ msgstr "Gemeinschaft Phone Manager"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 196
+#~ msgid "Hersteller"
+#~ msgstr "Vendor"
+#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 35
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 38
 #~ msgid "Home"
@@ -4030,6 +4081,14 @@ msgstr "prev. page"
 #~ msgid "Mailbox abfragen"
 #~ msgstr "Check mailbox"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 259
+#~ msgid "Mitglieder der Ruf&uuml;bernahme-Gruppe"
+#~ msgstr "Members of pickup group"
+#
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 93
+#~ msgid "Name:"
+#~ msgstr "Name:"
+#
 # File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 94
 #~ msgid "No user \"%s\" in LDAP."
 #~ msgstr "No user \"%s\" in LDAP."
@@ -4042,9 +4101,17 @@ msgstr "prev. page"
 #~ msgid "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
 #~ msgstr "Password sent to &quot;%s&quot;"
 #
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 208
+#~ msgid "PickUp-Gruppen"
+#~ msgstr "Pickup groups"
+#
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 677
 #~ msgid "Registrar"
 #~ msgstr "Registrar"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 60
+#~ msgid "Rufgruppe"
+#~ msgstr "Group pickup"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 98
 #~ msgid ""
@@ -4135,6 +4202,11 @@ msgstr "prev. page"
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 156
 #~ msgid "mehr als %d Treffer"
 #~ msgstr "more than %d matches"
+#
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 217
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 299
+#~ msgid "nicht gefunden!"
+#~ msgstr "not found!"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 201
 #~ msgid "nicht leer!"
