@@ -37,7 +37,8 @@ if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
-echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+//echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+echo __('Rufannahme-Gruppen');
 echo '</h2>', "\n";
 
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
@@ -254,7 +255,7 @@ WHERE `id`='. $group;
 		return;
 	}
 	
-	echo '<h3>', __('Mitglieder der Ruf&uuml;bernahme-Gruppe');
+	echo '<h3>', __('Mitglieder der Rufannahme-Gruppe');
 	echo ' <q>', htmlEnt($pgrp['title']) ,'</q> (ID ', $group ,')';
 	echo '</h3>' ,"\n";
 		
