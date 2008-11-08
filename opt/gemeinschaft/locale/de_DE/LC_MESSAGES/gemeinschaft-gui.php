@@ -28,9 +28,9 @@
 \*******************************************************************/
 
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 5417 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 5485 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2008-11-08 15:53+0100
+POT-Creation-Date: 2008-11-08 16:10+0100
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -211,7 +211,9 @@ Content-Transfer-Encoding: 8bit
   'Queues' => 'Queues',
   'Reserve' => 'Reserve',
   'Rolle' => 'Rolle',
-  'Rufannahmegrp.' => 'Rufannahmegrp.',
+  'Rufannahme-Gruppe' => 'Rufannahme-Gruppe',
+  'Rufannahmegrp.#pl' => 'Rufannahmegrp.',
+  'Rufgrp.annahme' => 'Rufannahmegrp.',
   'Rufumleitung' => 'Rufumleitung',
   'Rufumleitung Warteschleifen' => 'Rufumleitung Warteschleifen',
   'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)' => 'Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)',
