@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-08 16:06+0100\n"
+"POT-Creation-Date: 2008-11-08 16:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2846,10 +2846,6 @@ msgstr ""
 msgid "Rufannahme-Gruppen"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
-msgid "Rufannahmegrp."
-msgstr ""
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
 msgid "Rufannahmegrp.#pl"
 msgstr ""
@@ -2857,6 +2853,10 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/prov/siemens/dial-log/dlog.php, line: 66
 # File: opt/gemeinschaft/htdocs/prov/siemens/pb/pb.php, line: 67
 msgid "Rufe an:"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
+msgid "Rufgrp.annahme"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 311

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-08 16:06+0100\n"
+"POT-Creation-Date: 2008-11-08 16:10+0100\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: English <>\n"
@@ -2701,11 +2701,6 @@ msgstr "Pickup group"
 msgid "Rufannahme-Gruppen"
 msgstr "Pickup groups"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
-msgid "Rufannahmegrp."
-msgstr "Pickup grp."
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
 msgid "Rufannahmegrp.#pl"
 msgstr "Pickup groups"
@@ -2714,6 +2709,10 @@ msgstr "Pickup groups"
 # File: opt/gemeinschaft/htdocs/prov/siemens/pb/pb.php, line: 67
 msgid "Rufe an:"
 msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
+msgid "Rufgrp.annahme"
+msgstr "Group pickup"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 735
 msgid "Rufnummer"
@@ -4116,6 +4115,11 @@ msgstr "prev. page"
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 677
 #~ msgid "Registrar"
 #~ msgstr "Registrar"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
+#~ msgid "Rufannahmegrp."
+#~ msgstr "Pickup grp."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 60
 #~ msgid "Rufgruppe"

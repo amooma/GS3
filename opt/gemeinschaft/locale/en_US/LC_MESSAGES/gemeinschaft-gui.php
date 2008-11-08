@@ -28,9 +28,9 @@
 \*******************************************************************/
 
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 5418 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 5485 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2008-11-08 15:53+0100
+POT-Creation-Date: 2008-11-08 16:10+0100
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: English <>
@@ -410,7 +410,6 @@ Content-Transfer-Encoding: 8bit
   'Parken' => 'Park',
   'Pers&ouml;nlich' => 'Private',
   'Persönlich' => 'Private',
-  'Pickupgruppe' => 'Pickup group',
   'Ping' => 'Ping',
   'Player' => 'Player',
   'Port' => 'Port',
@@ -445,8 +444,10 @@ Content-Transfer-Encoding: 8bit
   'Routen eingehend' => 'Inbound routes',
   'Router' => 'Router',
   'Routing-Test' => 'Routing test',
+  'Rufannahme-Gruppe' => 'Pickup group',
   'Rufannahme-Gruppen' => 'Pickup groups',
-  'Rufannahmegrp.' => 'Pickup grp.',
+  'Rufannahmegrp.#pl' => 'Pickup groups',
+  'Rufgrp.annahme' => 'Group pickup',
   'Rufnummer' => 'Phone number',
   'Rufnummernunterdr&uuml;ckung. Bei <q>an</q> wird die Nummer unterdr&uuml;ckt<sup>[1]</sup>, bei <q>aus</q> wird sie mitgesendet.' => 'Calling Line Identification Restriction. <q>on&</q> to restrict<sup>[1]</sup>, <q>off</q> to send your number.',
   'Rufton aus' => 'Ringer off',

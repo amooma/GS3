@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-08 16:06+0100\n"
+"POT-Creation-Date: 2008-11-08 16:10+0100\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: German <>\n"
@@ -2704,11 +2704,6 @@ msgstr "Rufannahme-Gruppe"
 msgid "Rufannahme-Gruppen"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
-msgid "Rufannahmegrp."
-msgstr "Rufannahmegrp."
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
 msgid "Rufannahmegrp.#pl"
 msgstr "Rufannahmegrp."
@@ -2717,6 +2712,10 @@ msgstr "Rufannahmegrp."
 # File: opt/gemeinschaft/htdocs/prov/siemens/pb/pb.php, line: 67
 msgid "Rufe an:"
 msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
+msgid "Rufgrp.annahme"
+msgstr "Rufannahmegrp."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 735
 msgid "Rufnummer"
@@ -4099,6 +4098,11 @@ msgstr "zur&uuml;ckbl&auml;ttern"
 # File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 100
 #~ msgid "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
 #~ msgstr "Pa&szlig;wort wurde an &quot;%s&quot; gesendet"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
+#~ msgid "Rufannahmegrp."
+#~ msgstr "Rufannahmegrp."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 98
 #~ msgid ""
