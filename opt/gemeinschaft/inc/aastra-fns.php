@@ -66,7 +66,7 @@ function aastra_push( $phone_ip )
 	
 	$socket = @fSockOpen( $phone_ip, 80, $error_no, $error_str, 4);
 	if (! $socket) {
-		gs_log(GS_LOG_WARNING, "Aastra: Failed to open socket - IP: $phone_ip");
+		gs_log(GS_LOG_NOTICE, "Aastra: Failed to open socket - IP: $phone_ip");
 		return 0;
 	}
 	stream_set_timeout($socket, 4);
