@@ -918,7 +918,7 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 <tbody>
 	<tr>
 		<th style="width:180px;">
-			<?php echo __('Pickupgruppe'); ?>
+			<?php echo __('Rufannahme-Gruppe'); ?>
 		</th>
 		<td style="width:280px;">
 <?php
