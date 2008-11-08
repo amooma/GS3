@@ -39,8 +39,8 @@ $xml_buffer = '';
 
 function _err( $msg='' )
 {
-	//aastra_textscreen( 'Error', ($msg != '' ? $msg : 'Unknown error') );
-	exit(1);  //FIXME - return XML
+	aastra_textscreen( 'Error', ($msg != '' ? $msg : 'Unknown error') );
+	exit(1);
 }
 
 function _get_userid()
@@ -121,7 +121,7 @@ if ($search) {
 		aastra_write('<MenuItem>');
 		aastra_write('	<Prompt>'. $title .'</Prompt>');
 		aastra_write('	<URI>'. $url_aastra_pb .'?t='.$key .'</URI>');
-		//aastra_write('	<Selection>0&amp;menu_pos=1</Selection>'."\n";
+		//aastra_write('	<Selection>0&amp;menu_pos=1</Selection>');
 		aastra_write('</MenuItem>');
 	} 
 	
