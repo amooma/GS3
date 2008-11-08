@@ -30,7 +30,7 @@
 # indented XML
 
 define( 'GS_VALID', true );  /// this is a parent file
-require_once( '../../../inc/conf.php' );
+require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
 include_once( GS_DIR .'inc/gettext.php' );
