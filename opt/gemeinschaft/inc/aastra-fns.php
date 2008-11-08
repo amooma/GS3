@@ -35,11 +35,15 @@ function aastra_transmit()
 {
 	global $aastra_xml_buffer;
 	
-	header( 'Content-Type: text/xml' );
-	header( 'Content-Length: '. strLen($aastra_xml_buffer) );
-	header( 'Connection: Close' );
+	@header( 'Content-Type: text/xml' );
+	@header( 'Content-Length: '. strLen($aastra_xml_buffer) );
+	@header( 'Connection: Close' );
 	
-	echo utf8_decode($aastra_xml_buffer);  # ?
+	//echo utf8_decode($aastra_xml_buffer);
+	if (subStr($aastra_xml_buffer,0,5) !== '<'.'?xml') {
+		echo '<','?xml version="1.0" encoding="UTF-8"?','>',"\n";
+	}
+	echo $aastra_xml_buffer;
 	$aastra_xml_buffer = '';
 	return true;
 }
@@ -52,6 +56,12 @@ function aastra_push( $phone_ip )
 	
 	//FIXME - call wget or something. this function should not block
 	// for so long!
+	
+	if (subStr($aastra_xml_buffer,0,5) !== '<'.'?xml') {
+		$aastra_xml_buffer =
+			'<'.'?xml version="1.0" encoding="UTF-8"?'.'>'."\n".
+			$aastra_xml_buffer;
+	}
 	
 	$data = "POST / HTTP/1.1\r\n";
 	$data.= "Host: $phone_ip\r\n";	
