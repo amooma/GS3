@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-08 15:53+0100\n"
+"POT-Creation-Date: 2008-11-08 16:06+0100\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: German <>\n"
@@ -2523,10 +2523,6 @@ msgstr "Pers&ouml;nlich"
 msgid "Persönlich"
 msgstr "Persönlich"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 633
-msgid "Pickupgruppe"
-msgstr ""
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 107
 msgid "Ping"
 msgstr "Ping"
@@ -2700,6 +2696,10 @@ msgstr ""
 msgid "Routing-Test"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 921
+msgid "Rufannahme-Gruppe"
+msgstr "Rufannahme-Gruppe"
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 41
 msgid "Rufannahme-Gruppen"
 msgstr ""
@@ -2707,6 +2707,10 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
 msgid "Rufannahmegrp."
+msgstr "Rufannahmegrp."
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
+msgid "Rufannahmegrp.#pl"
 msgstr "Rufannahmegrp."
 #
 # File: opt/gemeinschaft/htdocs/prov/siemens/dial-log/dlog.php, line: 66
