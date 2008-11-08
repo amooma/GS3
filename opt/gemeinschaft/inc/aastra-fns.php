@@ -30,7 +30,7 @@ defined('GS_VALID') or die('No direct access.');
 
 //define( 'GS_AASTRA_PUSH_MAXLEN', 10000 );  //FIXME - not used
 
-$aastra_xml_buffer = '';
+//$aastra_xml_buffer = '';
 
 
 function aastra_transmit_str( $xml )
@@ -49,6 +49,7 @@ function aastra_transmit_str( $xml )
 	return true;
 }
 
+/*
 function aastra_transmit()
 {
 	global $aastra_xml_buffer;
@@ -56,6 +57,7 @@ function aastra_transmit()
 	$aastra_xml_buffer = '';
 	return $ret;
 }
+*/
 
 function aastra_push_str( $phone_ip, $xml )
 {
@@ -98,6 +100,7 @@ function aastra_push_str( $phone_ip, $xml )
 	return $bytes_written;
 }
 
+/*
 function aastra_push( $phone_ip )
 {
 	global $aastra_xml_buffer;
@@ -105,13 +108,15 @@ function aastra_push( $phone_ip )
 	$aastra_xml_buffer = '';
 	return $bytes_written;
 }
+*/
 
-
+/*
 function aastra_write( $str )
 {
 	global $aastra_xml_buffer;
 	$aastra_xml_buffer .= $str."\n";
 }
+*/
 
 function aastra_reboot( $phone_ip )
 {
@@ -139,7 +144,7 @@ function aastra_push_statusline( $phone_ip, $text, $index=0, $type='', $timeout=
 	$xml.= '	<Message index="'.$index .'"'. ($type != '' ? ' type="'.$type.'"' : '') .' timeout="'.$timeout .'">'. $text .'</Message>' ."\n";
 	$xml.= '</AastraIPPhoneStatus>' ."\n";
 	
-	return aastra_push( $phone_ip, $xml );
+	return aastra_push_str( $phone_ip, $xml );
 }
 
 ?>
