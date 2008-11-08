@@ -231,7 +231,7 @@ $MODULES['admin'    ]=  array(
 		'users'        => array('title' => __('Benutzer')),
 		'groups'       => array('title' => __('Benutzergruppen')),
 		'queues'       => array('title' => __('Warteschlangen')),
-		'pgroups'      => array('title' => __('Rufannahmegrp.')),
+		'pgroups'      => array('title' => __('Rufannahmegrp.#pl')),
 		//'ivrs'         => array('title' => __('IVRs')),
 		'calls'        => array('title' => __('CDRs')),
 		'reload'       => array('title' => __('Reload'))
