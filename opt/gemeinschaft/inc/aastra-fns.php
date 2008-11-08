@@ -30,51 +30,55 @@ defined('GS_VALID') or die('No direct access.');
 
 //define( 'GS_AASTRA_PUSH_MAXLEN', 10000 );  //FIXME - not used
 
+$aastra_xml_buffer = '';
+
+
+function aastra_transmit_str( $xml )
+{
+	//$xml = utf8_decode($xml);
+	if (subStr($xml,0,5) !== '<'.'?xml') {
+		$xmlpi = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>'."\n";
+	} else {
+		$xmlpi = '';
+	}
+	
+	@header( 'Content-Type: text/xml; charset=utf-8' );
+	@header( 'Content-Length: '. (strLen($xmlpi) + strLen($xml)) );
+	//@header( 'Connection: Close' );
+	echo $xmlpi, $xml;
+	return true;
+}
 
 function aastra_transmit()
 {
 	global $aastra_xml_buffer;
-	
-	if (subStr($aastra_xml_buffer,0,5) !== '<'.'?xml') {
-		$aastra_xml_buffer =
-			'<'.'?xml version="1.0" encoding="UTF-8"?'.'>'."\n".
-			$aastra_xml_buffer;
-	}
-	
-	@header( 'Content-Type: text/xml' );
-	@header( 'Content-Length: '. strLen($aastra_xml_buffer) );
-	@header( 'Connection: Close' );
-	
-	//echo utf8_decode($aastra_xml_buffer);
-	echo $aastra_xml_buffer;
+	$ret = aastra_transmit_str( $aastra_xml_buffer );
 	$aastra_xml_buffer = '';
-	return true;
+	return $ret;
 }
 
-function aastra_push( $phone_ip )
+function aastra_push_str( $phone_ip, $xml )
 {
-	global $aastra_xml_buffer;
-	
 	$prov_host = gs_get_conf('GS_PROV_HOST');
 	
 	//FIXME - call wget or something. this function should not block
 	// for so long!
 	
-	if (subStr($aastra_xml_buffer,0,5) !== '<'.'?xml') {
-		$aastra_xml_buffer =
-			'<'.'?xml version="1.0" encoding="UTF-8"?'.'>'."\n".
-			$aastra_xml_buffer;
+	//$xml = utf8_decode($xml);
+	if (subStr($xml,0,5) !== '<'.'?xml') {
+		$xmlpi = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>'."\n";
+	} else {
+		$xmlpi = '';
 	}
 	
 	$data = "POST / HTTP/1.1\r\n";
 	$data.= "Host: $phone_ip\r\n";	
 	$data.= "Referer: $prov_host\r\n";
 	$data.= "Connection: Close\r\n";
-	$data.= "Content-Type: text/xml\r\n";
-	$data.= "Content-Length: ". (strLen('xml=') + strLen($aastra_xml_buffer)) ."\r\n";
+	$data.= "Content-Type: text/xml; charset=utf-8\r\n";
+	$data.= "Content-Length: ". (strLen('xml=') + strLen($xmlpi) + strLen($xml)) ."\r\n";
 	$data.= "\r\n";
-	$data.= 'xml='.$aastra_xml_buffer;
-	$aastra_xml_buffer = '';
+	$data.= 'xml='. $xmlpi . $xml;
 	
 	$socket = @fSockOpen( $phone_ip, 80, $error_no, $error_str, 4 );
 	if (! $socket) {
@@ -94,6 +98,14 @@ function aastra_push( $phone_ip )
 	return $bytes_written;
 }
 
+function aastra_push( $phone_ip )
+{
+	global $aastra_xml_buffer;
+	$bytes_written = aastra_push_str( $phone_ip, $aastra_xml_buffer );
+	$aastra_xml_buffer = '';
+	return $bytes_written;
+}
+
 
 function aastra_write( $str )
 {
@@ -103,31 +115,31 @@ function aastra_write( $str )
 
 function aastra_reboot( $phone_ip )
 {
-	aastra_write('<AastraIPPhoneExecute>');
-	aastra_write('	<ExecuteItem URI="Command: Reset" />');
-	aastra_write('</AastraIPPhoneExecute>');
+	$xml = '<AastraIPPhoneExecute>' ."\n";
+	$xml.= '	<ExecuteItem URI="Command: Reset" />' ."\n";
+	$xml.= '</AastraIPPhoneExecute>' ."\n";
 	
-	$bytes_written = aastra_push($phone_ip);
-	return $bytes_written;
+	return aastra_push_str( $phone_ip, $xml );
 }
 
 function aastra_textscreen( $title, $text )
 {
-	aastra_write('<AastraIPPhoneTextScreen destroyOnExit="yes">');
-	aastra_write('	<Title>'.$title.'</Title>');
-	aastra_write('	<Text>'.$text.'</Text>');
-	aastra_write('</AastraIPPhoneTextScreen>');
+	$xml = '<AastraIPPhoneTextScreen destroyOnExit="yes">' ."\n";
+	$xml.= '	<Title>'. $title .'</Title>' ."\n";
+	$xml.= '	<Text>'. $text .'</Text>' ."\n";
+	$xml.= '</AastraIPPhoneTextScreen>' ."\n";
+	
+	aastra_transmit_str( $xml );
 }
 
 function aastra_push_statusline( $phone_ip, $text, $index=0, $type='', $timeout=3, $beep=false )
 {
-	aastra_write('<AastraIPPhoneStatus Beep="'. ($beep?'yes':'no') .'">');
-	aastra_write('	<Session>gemeinschaft</Session>');
-	aastra_write('	<Message index="'.$index .'"'. ($type != '' ? ' type="'.$type.'"' : '') .' timeout="'.$timeout .'">'. $text .'</Message>');
-	aastra_write('</AastraIPPhoneStatus>');
+	$xml = '<AastraIPPhoneStatus Beep="'. ($beep?'yes':'no') .'">' ."\n";
+	$xml.= '	<Session>gemeinschaft</Session>' ."\n";
+	$xml.= '	<Message index="'.$index .'"'. ($type != '' ? ' type="'.$type.'"' : '') .' timeout="'.$timeout .'">'. $text .'</Message>' ."\n";
+	$xml.= '</AastraIPPhoneStatus>' ."\n";
 	
-	$bytes_written = aastra_push($phone_ip);
-	return $bytes_written;
+	return aastra_push( $phone_ip, $xml );
 }
 
 ?>
