@@ -146,6 +146,21 @@ function err_handler_quiet( $type, $msg, $file, $line )
 }
 
 
+function gs_shutdown_fn()
+{
+	# log fatal E_ERROR errors which the error handler cannot catch
+	if (function_exists('error_get_last')) {  # PHP >= 5.2
+		$e = error_get_last();
+		if (is_array($e)) {
+			if ($e['type'] === E_ERROR) {  # non-catchable fatal error
+				err_handler_quiet( $e['type'], $e['message'], $e['file'], $e['line'] );
+			}
+		}
+	}
+}
+register_shutdown_function('gs_shutdown_fn');
+
+
 function date_human( $ts )
 {
 	$old_locale = setLocale(LC_TIME, '0');
