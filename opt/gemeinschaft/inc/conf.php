@@ -38,10 +38,10 @@ defined('GS_VALID') or die('No direct access.');
 
 
 # error levels introduced in newer versions of PHP:
-if (! defined('E_STRICT'           )) define('E_STRICT'           , 2048); # since PHP 5
-if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 4096); # since PHP 5.2
-if (! defined('E_DEPRECATED'       )) define('E_DEPRECATED'       , 8192); # since PHP 5.3
-if (! defined('E_USER_DEPRECATED'  )) define('E_USER_DEPRECATED'  ,16384); # since PHP 5.3
+if (! defined('E_STRICT'           )) define('E_STRICT'           , 1<<11); # since PHP 5
+if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 1<<12); # since PHP 5.2
+if (! defined('E_DEPRECATED'       )) define('E_DEPRECATED'       , 1<<13); # since PHP 5.3
+if (! defined('E_USER_DEPRECATED'  )) define('E_USER_DEPRECATED'  , 1<<14); # since PHP 5.3
 
 # available since PHP 4.4.0 and 5.0.5:
 if (! defined('PHP_INT_SIZE')) define('PHP_INT_SIZE', 4);
