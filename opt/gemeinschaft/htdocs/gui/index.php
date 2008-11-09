@@ -99,9 +99,9 @@ require_once( GS_HTDOCS_DIR .'inc/modules.php' );
 
 # get section & module
 #
-if (isSet( $_REQUEST['s'] )) {
-	$SECTION = @$_REQUEST['s'];
-	$MODULE  = @$_REQUEST['m'];
+if (array_key_exists('s', $_REQUEST)) {
+	$SECTION = $_REQUEST['s'];
+	$MODULE  = array_key_exists('m', $_REQUEST) ? $_REQUEST['m'] : '';
 } else {	
 	$SECTION = 'home';
 	$MODULE  = '';
@@ -274,7 +274,8 @@ if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub'])) {
 	$MODULE  = '';
 }
 
-if (@$MODULES[$SECTION]['perms'] === 'admin'
+if (array_key_exists('perms', $MODULES[$SECTION])
+&&  $MODULES[$SECTION]['perms'] === 'admin'
 &&  !(preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
 {
 	//_not_allowed( 'You are not an admin.' );
@@ -486,9 +487,10 @@ foreach ($MODULES as $sectname => $sectinfo) {
 	}
 	
 	if (@$_SESSION['sudo_user']['name'] !== 'sysadmin') {
-		if (@$sectinfo['perms'] === 'admin' && (
-			   @$_SESSION['sudo_user']['name'] == ''
-			|| ! preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
+		if (array_key_exists('perms', $sectinfo)
+		&&  $sectinfo['perms'] === 'admin'
+		&&  (@$_SESSION['sudo_user']['name'] == ''
+		|| ! preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
 		)) {
 			continue;
 		}
