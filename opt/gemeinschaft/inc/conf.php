@@ -166,7 +166,12 @@ _gscnf( 'INSTALLATION_TYPE_SINGLE'  , false              );
 
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	$DB_MASTER_HOST = '127.0.0.1';
-	$DB_SLAVE_HOST  = '127.0.0.1';
+	# single server => db slave = db master,
+	# so gs_db_slave_is_master() returns true
+	$DB_SLAVE_HOST  = gs_get_conf('GS_DB_MASTER_HOST');
+	$DB_SLAVE_USER  = gs_get_conf('GS_DB_MASTER_USER');
+	$DB_SLAVE_PWD   = gs_get_conf('GS_DB_MASTER_PWD' );
+	$DB_SLAVE_DB    = gs_get_conf('GS_DB_MASTER_DB'  );
 }
 _gscnf( 'DB_MASTER_HOST'            , '0.0.0.0'          );
 _gscnf( 'DB_MASTER_USER'            , 'root'             );
