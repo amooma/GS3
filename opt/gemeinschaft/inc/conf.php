@@ -166,12 +166,6 @@ _gscnf( 'INSTALLATION_TYPE_SINGLE'  , false              );
 
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	$DB_MASTER_HOST = '127.0.0.1';
-	# single server => db slave = db master,
-	# so gs_db_slave_is_master() returns true
-	$DB_SLAVE_HOST  = gs_get_conf('GS_DB_MASTER_HOST');
-	$DB_SLAVE_USER  = gs_get_conf('GS_DB_MASTER_USER');
-	$DB_SLAVE_PWD   = gs_get_conf('GS_DB_MASTER_PWD' );
-	$DB_SLAVE_DB    = gs_get_conf('GS_DB_MASTER_DB'  );
 }
 _gscnf( 'DB_MASTER_HOST'            , '0.0.0.0'          );
 _gscnf( 'DB_MASTER_USER'            , 'root'             );
@@ -179,6 +173,14 @@ _gscnf( 'DB_MASTER_PWD'             , ''                 );
 _gscnf( 'DB_MASTER_DB'              , 'asterisk'         );
 _gscnf( 'DB_MASTER_TRANSACTIONS'    , true               );
 
+if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+	# single server => db slave = db master,
+	# so gs_db_slave_is_master() returns true
+	$DB_SLAVE_HOST  = gs_get_conf('GS_DB_MASTER_HOST');
+	$DB_SLAVE_USER  = gs_get_conf('GS_DB_MASTER_USER');
+	$DB_SLAVE_PWD   = gs_get_conf('GS_DB_MASTER_PWD' );
+	$DB_SLAVE_DB    = gs_get_conf('GS_DB_MASTER_DB'  );
+}
 _gscnf( 'DB_SLAVE_HOST'             , '127.0.0.1'        );
 _gscnf( 'DB_SLAVE_USER'             , 'root'             );
 _gscnf( 'DB_SLAVE_PWD'              , ''                 );
@@ -341,6 +343,9 @@ if (function_exists('date_default_timezone_set')) {
 require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_die_on_err');
 ini_set('display_errors', false);
+
+//ini_set('log_errors', true);
+//ini_set('error_log', '/var/log/gemeinschaft/gs.log');
 
 # include gettext functions here because conf.php is included
 # in every file
