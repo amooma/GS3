@@ -34,15 +34,16 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_comment_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_comment_set.php' );
 
+$action = array_key_exists('action', $_REQUEST) ? $_REQUEST['action'] : '';
 
 if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 	
-	if (@$_REQUEST['action'] === 'reboot') {
+	if ($action === 'reboot') {
 		
 		gs_prov_phone_checkcfg_by_ext( $_SESSION['sudo_user']['info']['ext'], true );
 		
 	}
-	elseif (@$_REQUEST['action'] === 'setcomment') {
+	elseif ($action === 'setcomment') {
 		
 		$comment = rTrim(mb_subStr(trim( @$_REQUEST['comment'] ),0,200));
 		gs_user_comment_set( $_SESSION['sudo_user']['name'], $comment );
