@@ -30,8 +30,8 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 
-echo "This script is not ready to use at the moment.\nSorry.\n";
-exit(1);
+#echo "This script is not ready to use at the moment.\nSorry.\n";
+#exit(1);
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
@@ -182,6 +182,41 @@ foreach ($servers as $key => $host) {
 
 ## Stage 3: Move Service IP addresses of the Web Services
 #
+echo "Move Service IP addresses of the Web Services.\n";
+$up_ifc = null;
+$down_ifc = null;
+$up_server = null;
+$down_server = null;
+
+if ($CUR_RZ === 'A') {
+	$down_ifc = $WEB_MASTER_SERVER1_VIRT_IFC;
+	$down_server = $WEB_MASTER_SERVER1;
+	$up_ifc = $WEB_MASTER_SERVER2_VIRT_IFC;
+	$up_server = $WEB_MASTER_SERVER2;
+}
+else {
+	$down_ifc = $WEB_MASTER_SERVER2_VIRT_IFC;
+	$down_server = $WEB_MASTER_SERVER2;
+	$up_ifc = $WEB_MASTER_SERVER1_VIRT_IFC;
+	$up_server = $WEB_MASTER_SERVER1;
+}
+
+$cmd = 'echo '. qsa('ifdown '.$down_ifc);
+$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$down_server) .' '. qsa($cmd);
+$err=0; $out=array();
+@exec( $sudo . $cmd, $out, $err );
+if ($err != 0) {
+	echo( 'Could not bring down '. $down_ifc .' via SSH on '. $down_server );
+}
+
+$cmd = 'echo '. qsa('ifup '.$up_ifc);
+$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$up_server) .' '. qsa($cmd);
+$err=0; $out=array();
+@exec( $sudo . $cmd, $out, $err );
+if ($err != 0) {
+	echo( 'Could not bring up '. $up_ifc .' via SSH on '. $up_server );
+}
+
 
 
 ## Stage 4: Edit gemeinschaft.php on each server
