@@ -166,7 +166,7 @@ function _run_topology_tests( $hosts )
 	echo "Stage 2: Trying to reach each system via MySQL ...\n";
 	
 	foreach ($hosts as $key => $info) {
-		echo $arr['desc'] ,"... ";
+		echo $info['desc'] ,"... ";
 		
 		$ok = false;
 		if       ($key === 'DB_MASTER_SERVER1' && $CUR_RZ === 'A') {
@@ -352,8 +352,8 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 		return new GsError( 'IP address on localhost not allowed for new DB master.' );
 	if ($new_master_host == $old_master_host)
 		return new GsError( 'New DB master == old DB master.' );
-	if (strLen($pass) < 4)
-		return new GsError( 'Password too short.' );
+	//if (strLen($pass) < 4) // ok its not clever to do this without password, but then we have to check this in Tests too - FIXME
+	//	return new GsError( 'Password too short.' ); 
 	
 	# connect
 	$old_master = null;
@@ -499,6 +499,7 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	
 	# get binlog position
 	#
+	
 	$master = null;
 	$ok = gs_db_connect( $master, 'master', $master_host, $user, $pass, GS_DB_MASTER_DB, 1 );
 	if (! $ok)
@@ -507,11 +508,9 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	if (! $rs)
 		return new GsError( 'DB error.' );
 	$master_status = $rs->fetchRow();
-	if (! $master_status)
-		return new GsError( 'DB error.' );
+	
 	
 	# Stop Slave
-	#
 	$slave  = null;
 	$ok = gs_db_connect( $slave , 'slave' , $slave_host , $user, $pass, GS_DB_SLAVE_DB , 1 );
 	if (! $ok)
