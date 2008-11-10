@@ -499,7 +499,6 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	
 	# get binlog position
 	#
-	/*
 	$master = null;
 	$ok = gs_db_connect( $master, 'master', $master_host, $user, $pass, GS_DB_MASTER_DB, 1 );
 	if (! $ok)
@@ -508,7 +507,8 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	if (! $rs)
 		return new GsError( 'DB error.' );
 	$master_status = $rs->fetchRow();
-	*/
+	if (! $master_status)
+		return new GsError( 'DB error.' );
 	
 	# Stop Slave
 	$slave  = null;
