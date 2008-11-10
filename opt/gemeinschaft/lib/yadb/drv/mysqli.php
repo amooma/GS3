@@ -316,7 +316,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 		http://dev.mysql.com/doc/refman/5.1/en/select.html
 		http://dev.mysql.com/doc/refman/5.1/en/information-functions.html
 		*/
-		if ($calcAll && strToUpper(subStr($sql,0,7))==='SELECT ')
+		if ($calcAll && strToUpper(subStr($sql,0,6))==='SELECT')
 			$sql = 'SELECT SQL_CALC_FOUND_ROWS'. subStr($sql,6);
 		return $sql . $lim;
 	}
