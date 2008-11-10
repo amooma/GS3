@@ -56,14 +56,14 @@ $INSTALLATION_TYPE      = 'single';
 //----------------------[  Master  ]----------------------//
 
 $DB_MASTER_HOST         = '192.168.1.130';
-$DB_MASTER_USER         = 'root';
+$DB_MASTER_USER         = 'gemeinschaft';
 $DB_MASTER_PWD          = '';
 $DB_MASTER_DB           = 'asterisk';
 
 //----------------------[  Slave  ]-----------------------//
 
 $DB_SLAVE_HOST          = '127.0.0.1';
-$DB_SLAVE_USER          = 'root';
+$DB_SLAVE_USER          = 'gemeinschaft';
 $DB_SLAVE_PWD           = '';
 $DB_SLAVE_DB            = 'asterisk';
 
