@@ -132,9 +132,9 @@ class YADB_Connection_mysql extends YADB_Connection
 			// no connection compression for localhost:
 			/*
 			if (
-				$this->_host != null &&
-				$this->_host != '' &&
-				$this->_host != 'localhost'
+				$this->_host !== null &&
+				$this->_host !== '' &&
+				$this->_host !== 'localhost'
 			) $clientFlags += MYSQL_CLIENT_COMPRESS;
 			*/
 			
@@ -193,7 +193,7 @@ class YADB_Connection_mysql extends YADB_Connection
 			return @ mysql_escape_string( $str );
 			
 			// the 3 lines in following do not seem to be needed (?)
-			if ($this->replaceQuote[0]=='\\')
+			if ($this->replaceQuote[0]==='\\')
 				$str = str_replace( array('\\',"\0"), array('\\\\',"\\\0"), $str );
 			return str_replace( '\'', $this->replaceQuote, $str );
 		}
@@ -277,7 +277,7 @@ class YADB_Connection_mysql extends YADB_Connection
 		http://dev.mysql.com/doc/refman/5.1/en/select.html
 		http://dev.mysql.com/doc/refman/5.1/en/information-functions.html
 		*/
-		if ($calcAll && strToUpper(subStr($sql,0,7))=='SELECT ')
+		if ($calcAll && strToUpper(subStr($sql,0,7))==='SELECT ')
 			$sql = 'SELECT SQL_CALC_FOUND_ROWS'. subStr($sql,6);
 		return $sql . $lim;
 	}
@@ -416,15 +416,15 @@ class YADB_Connection_mysql extends YADB_Connection
 				}
 				
 				/*
-				$col['notnull'] = ($row['Null'] != 'YES');
-				$col['pri']     = ($row['Key'] == 'PRI');
+				$col['notnull'] = ($row['Null'] !== 'YES');
+				$col['pri']     = ($row['Key'] === 'PRI');
 				$col['autoinc'] = (strPos($row['Extra'], 'auto_increment') !== false);
 				$col['bin']     = (strPos($type, 'bin') !== false || strPos($type, 'blob') !== false);
 				$col['unsig']   = (strPos($type, 'unsigned') !== false);
 				*/
-				if ($row['Null'] != 'YES')
+				if ($row['Null'] !== 'YES')
 					$col['flg'] |= YADB_FLAG_NOTNULL;
-				if ($row['Key'] == 'PRI') {
+				if ($row['Key'] === 'PRI') {
 					$col['flg'] |= YADB_FLAG_PKPART
 						| YADB_FLAG_PKCOL;
 					// assume that the column is the only one which
@@ -439,7 +439,7 @@ class YADB_Connection_mysql extends YADB_Connection
 					|| strPos($t, 'blob') !== false)
 					$col['flg'] |= YADB_FLAG_BINARY;
 				
-				$col['def'] = ($row['Default']=='' || $row['Default']=='NULL') ? '' : $row['Default'];
+				$col['def'] = ($row['Default']=='' || $row['Default']==='NULL') ? '' : $row['Default'];
 				if (!($col['flg'] & YADB_FLAG_NOTNULL) && $col['def']=='')
 					$col['def'] = null;
 				
@@ -447,8 +447,8 @@ class YADB_Connection_mysql extends YADB_Connection
 				$col['mty'] = $mt[0];
 				// correct sub type for varchar/varbinary if
 				// necessary:
-				if (($col['nty']=='VARCHAR'
-					|| $col['nty']=='VARBINARY')
+				if (($col['nty']==='VARCHAR'
+					|| $col['nty']==='VARBINARY')
 					&& $col['len'] > 255)
 					$col['sty'] = YADB_STYPE_STR_2;
 				else
@@ -534,9 +534,9 @@ class YADB_Connection_mysql extends YADB_Connection
 		
 		return ( @ isSet($tMap[$t]) ? $tMap[$t] : array(0,0) );
 		
-		//if ($metaType=='I' && $colMeta['pri'])
+		//if ($metaType==='I' && $colMeta['pri'])
 		//	$metaType = $colMeta['autoinc'] ? 'R' : 'P';
-		//if ($metaType=='C' && $colMeta['bin'])
+		//if ($metaType==='C' && $colMeta['bin'])
 		//	$metaType = 'X';
 		
 		// correct sub type for varchar/varbinary

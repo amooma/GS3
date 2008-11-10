@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 410); // = 0.04.10
+define('YADB_VERS', 411); // = 0.04.11
 
 /***********************************************************
 * Columns flags:
@@ -180,7 +180,7 @@ function & YADB_newConnection( $dbType )
 		trigger_error( 'YADB: Driver "'. $dbType .'" not supported.', E_USER_WARNING );
 		return $false;
 	}
-	if ( $dbType != $lastDb ) {
+	if ($dbType !== $lastDb) {
 		$file = YADB_DIR .'drv/'. $dbType .'.php';
 		include_once $file;
 		$lastDb = $dbType;
@@ -262,7 +262,7 @@ class YADB_Connection
 	{
 		//$this->__construct( $dbType );
 		
-		if ( strToLower(get_class($this))=='yadb_connection' )
+		if ( strToLower(get_class($this))==='yadb_connection' )
 			die('YADB: YADB_Connection is an abstract class - cannot instantiate. Use YADB_newConnection() or ::factory().');
 		$this->_dbType = $dbType;
 	}
@@ -274,7 +274,7 @@ class YADB_Connection
 	/*
 	function __construct( $dbType )
 	{
-		if ( strToLower(get_class($this))=='yadb_connection' )
+		if ( strToLower(get_class($this))==='yadb_connection' )
 			die('YADB: YADB_Connection is an abstract class - cannot instantiate. Use YADB_newConnection() or ::factory().');
 		$this->_dbType = $dbType;
 	}
@@ -405,7 +405,7 @@ class YADB_Connection
 	
 	function connect( $host=null, $user=null, $pwd=null, $db=null, $options=array() )
 	{
-		if (subStr($host,0,1) != ':') {
+		if (subStr($host,0,1) !== ':') {
 			$tmp = explode(':', $host, 2);
 			$this->_host = $tmp[0];
 			$this->_port = (@ isSet($tmp[1])) ? abs((int)$tmp[1]) : 0;
@@ -470,7 +470,7 @@ class YADB_Connection
 	function escape( $str )
 	{
 		if (!get_magic_quotes_gpc()) {
-			if ($this->_replaceQuote[0]=='\\')
+			if ($this->_replaceQuote[0]==='\\')
 				$str = str_replace( array('\\',"\0"), array('\\\\',"\\\0"), $str );
 			return str_replace( '\'', $this->_replaceQuote, $str );
 		}
@@ -478,7 +478,7 @@ class YADB_Connection
 		// undo magic quotes for " :
 		$str = str_replace( '\\"', '"' , $str );
 		
-		if ($this->_replaceQuote=='\\\'') return $str;
+		if ($this->_replaceQuote==='\\\'') return $str;
 		// ' already quoted, no need to change anything
 		else {  // change \' to '' for sybase/mssql
 			$str = str_replace( '\\\\', '\\', $str );
@@ -855,13 +855,13 @@ class YADB_Connection
 			foreach($inputArr as $v) {
 				$sql .= $sqlArr[$i];
 				// quote only strings:
-				if ($v==null)
+				if ($v===null)
 					trigger_error( 'YADB: Binding of NULL values probably not supported by driver.', E_USER_NOTICE );
 				$sql .= $this->quote($v);
 				++$i;
 			}
 			if (@ isSet($sqlArr[$i])) $sql .= $sqlArr[$i];
-			if ($i+1 != count($sqlArr)) {
+			if ($i+1 !== count($sqlArr)) {
 				trigger_error( 'YADB: Input array does not match "?".', E_USER_WARNING );
 				return false;
 			}
@@ -1048,7 +1048,7 @@ class YADB_Connection
 				if ($isDateTime===true) return 'T';
 				return 'D';
 			default:
-				if ($type=='LONG' && $dbms=='oci8') return 'B';
+				if ($type==='LONG' && $dbms==='oci8') return 'B';
 				return $tMap;
 		}
 		
@@ -1295,7 +1295,7 @@ class YADB_Connection
 		$cols = $this->colsMeta( $table );
 		$pkCol = null;
 		foreach ($cols as $colName => $colMeta) {
-			if ($colMeta['mty'] == YADB_MTYPE_INT
+			if ($colMeta['mty'] === YADB_MTYPE_INT
 				&& ($colMeta['mty'] & YADB_FLAG_TRUEPK)) {
 				$pkCol = $colName;
 				break;
@@ -1498,13 +1498,13 @@ class YADB_RecordSet extends YADB_BaseRS
 			$this->_numCols = 0;
 			//$this->_EOF       = true;
 		}
-		if ( !($this->_numRows===0) && $this->_numCols > 0 && $this->_rowPos == -1 ) {
+		if ( !($this->_numRows===0) && $this->_numCols > 0 && $this->_rowPos === -1 ) {
 			// if the rs has rows (even if count is unknown) and
 			// cols and the record position is at the beginning
 			// (before the first row)
 			$this->_rowPos = 0;
-			//if ( $this->_eof = ($this->_fetch()==false) ) {
-			if ( $this->_fetchRow()==false ) {
+			//if ( $this->_eof = ($this->_fetch()===false) ) {
+			if ( $this->_fetchRow()===false ) {
 				$this->_numRows = 0;  // _numRows could be null
 			}
 		} else
@@ -1611,7 +1611,7 @@ class YADB_RecordSet extends YADB_BaseRS
 	***********************************************************/
 	function move( $rowNum )
 	{
-		if ($rowNum == $this->_rowPos) return true;
+		if ($rowNum ===$this->_rowPos) return true;
 		if ($rowNum >= $this->_numRows || $rowNum < 0) return false;
 		
 		//$this->_eof = false;
@@ -1651,7 +1651,7 @@ class YADB_RecordSet extends YADB_BaseRS
 	***********************************************************/
 	function moveFirst()
 	{
-		if ($this->_rowPos == 0) return true;
+		if ($this->_rowPos === 0) return true;
 		return $this->move(0);
 	}
 	
@@ -1787,7 +1787,7 @@ class YADB_RecordObject
 	function simpleHtmlForm()
 	{
 		foreach ($this->_fields as $colName => $colMeta) {
-			if ($colName != $this->_pkCol) {
+			if ($colName !== $this->_pkCol) {
 				echo '<label for="', $this->genHtmlInputName($colName), '">', $colName, '</label> &nbsp; ', "\n";
 				echo '<input type="text" name="', $this->genHtmlInputName($colName),'" value="', $colMeta['val'],'" /><br />', "\n";
 			}
@@ -1852,7 +1852,7 @@ class YADB_RecordObject
 	{
 		foreach ($_REQUEST['yadb']['obj'][$this->_table] as $pkVal => $props) {
 			foreach ($props as $prop => $propVal) {
-				if ($prop != $this->_pkCol) {
+				if ($prop !== $this->_pkCol) {
 					@ $this->setProp( $prop );
 				}
 			}
@@ -1936,7 +1936,7 @@ class YADB_RecordObject
 				if ($isFirst) { $values = ') VALUES ('; $isFirst=false; }
 				else { $sql .= ',';  $values .= ', '; }
 				$sql .= $this->_conn->quoteCol( $colName );
-				if ($colName != $this->_pkCol)
+				if ($colName !== $this->_pkCol)
 					$values .= $this->_conn->quote( $field['val'] );
 				else
 					$values .= $this->_conn->quote( null );
@@ -1995,7 +1995,7 @@ class YADB_RecordObject
 		// we cannot access the array entry with a negative number
 		// what's the reason for that???
 		foreach ($_REQUEST['yadb']['obj'][$this->_table][$this->_pkVal] as $prop => $val)
-			if ($prop != $this->_pkCol)  $this->set( $prop, $val );
+			if ($prop !== $this->_pkCol)  $this->set( $prop, $val );
 	}
 	
 	
@@ -2027,7 +2027,7 @@ function YADB_debug_backtrace()
 			for ($j=0; $j<count($bt[$i]['args'])-1; ++$j)
 				echo $bt[$i]['args'][$j], ', ';
 			echo $bt[$i]['args'][$j], ' )';
-			echo '    from  ', (subStr( $bt[$i]['file'], 0, strLen(YADB_DIR) ) == YADB_DIR) ? subStr( $bt[$i]['file'], strLen(YADB_DIR) ) : $bt[$i]['file'], ', ', $bt[$i]['line'];
+			echo '    from  ', (subStr( $bt[$i]['file'], 0, strLen(YADB_DIR) ) === YADB_DIR) ? subStr( $bt[$i]['file'], strLen(YADB_DIR) ) : $bt[$i]['file'], ', ', $bt[$i]['line'];
 			echo "\n";
 			++$indent;
 		}
