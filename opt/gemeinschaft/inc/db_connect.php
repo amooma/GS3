@@ -84,8 +84,8 @@ function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, 
 		array('reuse'=>false)  // do not use. leaves lots of connections
 		)))
 	{
-		$lastNativeError    = @$db->getLastNativeError();
-		$lastNativeErrorMsg = @$db->getLastNativeErrorMsg();
+		$lastNativeError    = @$conn->getLastNativeError();
+		$lastNativeErrorMsg = @$conn->getLastNativeErrorMsg();
 		gs_log( GS_LOG_WARNING, 'Could not connect to database'. ($tag != '' ? ' ('.$tag.')':'') .'!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
 		$conn = null;
 		return false;
