@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/php -q
 <?php
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
@@ -194,9 +194,9 @@ foreach ($servers as $key => $host) {
 ## Stage 3: Move Service IP addresses of the Web Services
 #
 echo "Move Service IP addresses of the Web Services.\n";
-$up_ifc = null;
-$down_ifc = null;
-$up_server = null;
+$up_ifc      = null;
+$down_ifc    = null;
+$up_server   = null;
 $down_server = null;
 
 if ($CUR_RZ === 'A') {
@@ -258,4 +258,3 @@ echo "\nDone.\n";
 echo "The Current Operating EDPC (de: RZ) is now: ". $CUR_RZ."\n";
 echo "\n";
 
-?>
