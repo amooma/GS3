@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 411); // = 0.04.11
+define('YADB_VERS', 412); // = 0.04.12
 
 /***********************************************************
 * Columns flags:
@@ -251,6 +251,7 @@ class YADB_Connection
 	var $_transErr        = false; /// must be set to true if an SQL error occurs within a nested transaction so the outermost transaction will auto-rollback
 	var $_queryErrFn      = null;  /// if set to a method name this function will be called if a query fails. this is used as a monitor for nested transactions
 	
+	var $_customQueryCb   = null; /// if set this function will be called before executing a query. if the function returns false the query will not even be executed but fail
 	var $_customAttrs     = array(); /// custom attributes which can be set by the user to identify the connection
 	
 	
@@ -672,6 +673,11 @@ class YADB_Connection
 	
 	
 	
+	function setQueryCb( $fn )
+	{
+		$this->_customQueryCb = $fn;
+	}
+	
 	
 	function & execute( $sql, $inputArr=null )
 	{
@@ -704,7 +710,7 @@ class YADB_Connection
 	// params to plain SQL queries (_hasBindParams=true)
 	function & _execute( $sql, $inputArr=null )
 	{
-		$rs = @ $this->_query( $sql, $inputArr );
+		$rs = @ $this->_queryMon( $sql, $inputArr );
 		
 		if (!$rs) {
 			// query failed. error handling:
@@ -735,15 +741,34 @@ class YADB_Connection
 	
 	
 	/***********************************************************
+	* Wrapper for _query(). Calls the $_customQueryCb callback
+	* if set.
+	***********************************************************/
+	
+	function _queryMon( $sql, $inputArr=null )
+	{
+		$fn = $this->_customQueryCb;
+		if (function_exists($fn)) {
+			if (@ $fn( $sql, $inputArr ) === false) {
+				trigger_error( 'YADB: Custom callback made the query fail deliberately.', E_USER_NOTICE );
+				return false;
+			}
+		}
+		return $this->_query( $sql, $inputArr );
+	}
+	
+	/***********************************************************
 	* The most low-level function which really sends queries
 	* to the database. Returns a result resource which is
 	* specific to the driver or false on error. The driver
 	* should simply return true for inserts/updates/deletes
-	* for lower overhead.
+	* for lower overhead. _queryMon() is the only function
+	* which is allowed to call _query().
 	***********************************************************/
 	
 	function _query( $sql, $inputArr=null )
 	{
+		trigger_error( 'YADB: Query failed. (Dummy function in abstract class)', E_USER_WARNING );
 		return false;
 	}
 	
@@ -768,7 +793,7 @@ class YADB_Connection
 			$sql = $this->_emulateVarBind( $sql, $inputArr );
 			if (empty($sql)) return false;
 		}
-		return $this->_query( $sql );
+		return $this->_queryMon( $sql );
 	}
 	*/
 	
@@ -779,7 +804,7 @@ class YADB_Connection
 	
 	/***********************************************************
 	* See execute().
-	* or _query() but tells the driver that we're not
+	* or _queryMon() but tells the driver that we're not
 	* interested in a full result set but only in the value
 	* of one field. Returns the value or null on error.
 	* Attention: The return value null can either be the value
@@ -805,7 +830,7 @@ class YADB_Connection
 	
 	
 	/***********************************************************
-	* Like _query() but requires the query to be a prepared
+	* Like _queryMon() but requires the query to be a prepared
 	* statement.
 	***********************************************************/
 	
@@ -820,7 +845,7 @@ class YADB_Connection
 		// the instanceOf type operator as it will cause a parse
 		// error in PHP 4.
 		
-		return $this->_query( $stmt->getSql(), $inputArr );
+		return $this->_queryMon( $stmt->getSql(), $inputArr );
 	}
 	
 	
