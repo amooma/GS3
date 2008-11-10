@@ -168,7 +168,7 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	$DB_MASTER_HOST = '127.0.0.1';
 }
 _gscnf( 'DB_MASTER_HOST'            , '0.0.0.0'          );
-_gscnf( 'DB_MASTER_USER'            , 'root'             );
+_gscnf( 'DB_MASTER_USER'            , 'gemeinschaft'     );
 _gscnf( 'DB_MASTER_PWD'             , ''                 );
 _gscnf( 'DB_MASTER_DB'              , 'asterisk'         );
 _gscnf( 'DB_MASTER_TRANSACTIONS'    , true               );
@@ -182,7 +182,7 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	$DB_SLAVE_DB    = gs_get_conf('GS_DB_MASTER_DB'  );
 }
 _gscnf( 'DB_SLAVE_HOST'             , '127.0.0.1'        );
-_gscnf( 'DB_SLAVE_USER'             , 'root'             );
+_gscnf( 'DB_SLAVE_USER'             , 'gemeinschaft'     );
 _gscnf( 'DB_SLAVE_PWD'              , ''                 );
 _gscnf( 'DB_SLAVE_DB'               , 'asterisk'         );
 
