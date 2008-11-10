@@ -54,6 +54,12 @@ function _try_ssh( $server )
 	$cmd = 'echo '. qsa('Hello World');
 	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
 	
+	# are we root? do we have to sudo?
+	$uid = @posix_geteuid();
+	$uinfo = @posix_getPwUid($uid);
+	$uname = @$uinfo['name'];
+	$sudo = ($uname==='root') ? '' : 'sudo ';
+	
 	$err=0; $out=array();
 	@exec( $sudo . $cmd, $out, $err );
 	if ($err != 0)
@@ -67,6 +73,12 @@ function _check_etc_gemeinschaft_php( $server, $master_host )
 {
 	$cmd = 'grep '. qsa('DB_MASTER_HOST') .' '. qsa('/etc/gemeinschaft/gemeinschaft.php');
 	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
+	
+	# are we root? do we have to sudo?
+	$uid = @posix_geteuid();
+	$uinfo = @posix_getPwUid($uid);
+	$uname = @$uinfo['name'];
+	$sudo = ($uname==='root') ? '' : 'sudo ';
 	
 	$err=0; $out=array();
 	@exec( $sudo . $cmd, $out, $err );
@@ -93,6 +105,12 @@ function _change_etc_gemeinschaft_php( $server, $master_host )
 	
 	$cmd = 'grep '. qsa('DB_MASTER_HOST') .' '. qsa('/etc/gemeinschaft/gemeinschaft.php');
 	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
+	
+	# are we root? do we have to sudo?
+	$uid = @posix_geteuid();
+	$uinfo = @posix_getPwUid($uid);
+	$uname = @$uinfo['name'];
+	$sudo = ($uname==='root') ? '' : 'sudo ';
 	
 	$err=0; $out=array();
 	@exec( $sudo . $cmd, $out, $err );
@@ -491,7 +509,6 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 		return new GsError( 'Not allowed on single server systems.' );
 	
 	# are we root? do we have to sudo?
-	#
 	$uid = @posix_geteuid();
 	$uinfo = @posix_getPwUid($uid);
 	$uname = @$uinfo['name'];
