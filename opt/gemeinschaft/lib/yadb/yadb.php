@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 412); // = 0.04.12
+define('YADB_VERS', 414); // = 0.04.14
 
 /***********************************************************
 * Columns flags:
@@ -401,7 +401,8 @@ class YADB_Connection
 	* Connect to database
 	* $host can be "host|ip[:port]" or ":/path/to/socket"
 	* $options is an associative array of options to be inter-
-	* preted by the driver (PHP)
+	* preted by the driver (PHP). Drivers are supposed to
+	* implement "timeout" (connect timeout).
 	***********************************************************/
 	
 	function connect( $host=null, $user=null, $pwd=null, $db=null, $options=array() )
@@ -423,7 +424,8 @@ class YADB_Connection
 		if ($this->_connect()) return true;
 		
 		$this->_conn = null;
-		trigger_error( 'YADB: Could not connect to "'. $host .'" as user "'. $user .'" '. ($this->_pwd ? 'using password' : 'without password') .', database "'. $this->_db .'".', E_USER_WARNING );
+		//trigger_error( 'YADB: Could not connect to "'. $host .'" as user "'. $user .'" '. ($this->_pwd ? 'using password' : 'without password') .', database "'. $this->_db .'".', E_USER_WARNING );
+		trigger_error( 'YADB: Could not connect to mysql://'. $user . ($this->_pwd ? '' : ':') .'@'. $host .'/'. $this->_db , E_USER_WARNING );
 		return false;
 	}
 	

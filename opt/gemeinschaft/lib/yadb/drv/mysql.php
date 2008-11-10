@@ -33,7 +33,6 @@ if (!defined('YADB_DIR')) die("No direct access\n");
 
 ini_set('mysql.trace_mode', 0);
 // must be off or else SELECT FOUND_ROWS() always returns 0
-ini_set('mysql.connect_timeout', 10);  # instead of the default 60
 
 
 class YADB_Connection_mysql extends YADB_Connection
@@ -121,6 +120,9 @@ class YADB_Connection_mysql extends YADB_Connection
 	
 	function _connect()
 	{
+		ini_set('mysql.connect_timeout',
+			(array_key_exists('timeout', $this->_drvOpts) ? $this->_drvOpts['timeout'] : 10) );
+		
 		if (empty($this->_socket)) {
 			$host = $this->_host;
 			if (!empty($this->_port))  $host .= ':'. $this->_port;
