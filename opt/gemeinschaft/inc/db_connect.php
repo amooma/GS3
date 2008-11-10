@@ -55,6 +55,27 @@ function gs_db_is_connected( &$conn )
 }
 
 
+
+function gs_sql_is_readonly( $sql )
+{
+	return preg_match( '/^[\\s\\(]*(?:SELECT|SET\\s+(?:NAMES|collation|autocommit|TRANSACTION|@*(?!global))|START\\s+TRANS|COMMIT|BEGIN|ROLLBACK|SHOW|DESCRIBE|EXPLAIN)/iS', $sql);
+	# Note: COMMIT does not mean something has been written.
+	# The "bad" queries are: UPDATE, INSERT, DELETE, REPLACE, ALTER, CREATE ...
+}
+
+function gs_yadb_sql_query_cb_readonly( &$yadbConn, $sql, $bindParams=null )
+{
+	if (! $yadbConn->getCustomAttr('w')
+	&&  ! gs_sql_is_readonly($sql)) {
+		//$sql = str_replace(array("\n","\r","\t"), array('\\n','\\r','\\t'), $sql);
+		$sql = preg_replace('/\\s+/', ' ', $sql);
+		gs_log( GS_LOG_WARNING, 'Non-read-only SQL query on slave DB in fallback mode: "'.$sql.'"' );
+		return false;  # do not execute the query
+	}
+	return true;
+}
+
+
 function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, $_backtrace_level=0 )
 {
 	$caller_info = '';
@@ -67,10 +88,10 @@ function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, 
 	}
 	
 	if (gs_db_is_connected($conn)) {
-		gs_log( GS_LOG_DEBUG, 'Using existing DB connection'. ($tag != '' ? ' ('.$tag.')':'') . $caller_info );
+		gs_log( GS_LOG_DEBUG, 'Using existing'. ($tag != '' ? ' "'.$tag.'"':'') .' DB connection'. ($conn->getCustomAttr('w') ? '':' (read-only)') . $caller_info );
 		return 2;  # using the existing connection
 	}
-	gs_log( GS_LOG_DEBUG, 'New DB connection'. ($tag != '' ? ' ('.$tag.')':'') . $caller_info );
+	gs_log( GS_LOG_DEBUG, 'New'. ($tag != '' ? ' "'.$tag.'"':'') .' DB connection' . $caller_info );
 	
 	if (!( $conn = YADB_newConnection( 'mysql' ) )) {
 		$conn = null;
@@ -81,12 +102,14 @@ function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, 
 		$user,
 		$pwd,
 		$db,
-		array('reuse'=>false)  // do not use. leaves lots of connections
-		)))
+		array(
+			'reuse'=>false,  # do not use. leaves lots of connections
+			'timeout'=>8
+		))))
 	{
 		$lastNativeError    = @$conn->getLastNativeError();
 		$lastNativeErrorMsg = @$conn->getLastNativeErrorMsg();
-		gs_log( GS_LOG_WARNING, 'Could not connect to database'. ($tag != '' ? ' ('.$tag.')':'') .'!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
+		gs_log( GS_LOG_WARNING, 'Could not connect to'. ($tag != '' ? ' "'.$tag.'"':'') .' database!'. ($lastNativeError ? ' (#'.$lastNativeError.' - '.$lastNativeErrorMsg.')' : '') );
 		$conn = null;
 		return false;
 	}
@@ -96,7 +119,7 @@ function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, 
 }
 
 
-function & gs_db_master_connect( $_backtrace_level=0 )
+function & gs_db_master_connect( $_backtrace_level=0, $read_fallback_slave=true )
 {
 	global $gs_db_conn_master, $gs_db_conn_slave;
 	
@@ -109,13 +132,34 @@ function & gs_db_master_connect( $_backtrace_level=0 )
 		GS_DB_MASTER_DB,
 		++$_backtrace_level
 	);
-	if (! $ret) {
+	if ($ret === 1) {  # new connection
+		$gs_db_conn_master->setCustomAttr('w',true);  # writeable
+	}
+	elseif (! $ret) {
+		if ($read_fallback_slave) {
+			# if the consumer wants a connection to the master database
+			# but the master is down, give them a connection to the slave
+			# instead and attach the gs_yadb_sql_query_cb_readonly()
+			# callback to make it read-only. if someone tries to write
+			# to the connection that callback deliberately makes the
+			# query fail.
+			gs_log( GS_LOG_NOTICE, 'Failed to connect to master database. Fallback to slave (read-only) ...' );
+			$gs_db_conn_slave = gs_db_slave_connect();
+			if (! $gs_db_conn_slave) {
+				$null = null;
+				return $null;
+			}
+			$gs_db_conn_slave->setCustomAttr('w',false);  # not writeable
+			$gs_db_conn_slave->setQueryCb('gs_yadb_sql_query_cb_readonly');
+			$gs_db_conn_master = $gs_db_conn_slave;  # do not use "=&" here
+			return $gs_db_conn_slave;
+		}
 		$null = null;
 		return $null;
 	}
 	
 	if (gs_db_slave_is_master() && ! gs_db_is_connected($gs_db_conn_slave)) {
-		$gs_db_conn_slave = $gs_db_conn_master;
+		$gs_db_conn_slave =& $gs_db_conn_master;
 	}
 	return $gs_db_conn_master;
 }
@@ -140,7 +184,7 @@ function & gs_db_slave_connect( $_backtrace_level=0 )
 	}
 	
 	if (gs_db_slave_is_master() && ! gs_db_is_connected($gs_db_conn_master)) {
-		$gs_db_conn_master = $gs_db_conn_slave;
+		$gs_db_conn_master =& $gs_db_conn_slave;
 	}
 	return $gs_db_conn_slave;
 }
