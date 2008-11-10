@@ -212,7 +212,7 @@ else { # $CUR_RZ === 'B'
 	$up_server   = $WEB_MASTER_SERVER1;
 }
 
-$cmd = 'echo '. qsa('ifdown '.$down_ifc);
+$cmd = 'ifdown '.qsa($down_ifc);
 $cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$down_server) .' '. qsa($cmd);
 $err=0; $out=array();
 @exec( $sudo . $cmd, $out, $err );
@@ -220,7 +220,7 @@ if ($err != 0) {
 	echo 'Could not bring down ', $down_ifc ,' via SSH on ', $down_server ,"\n";
 }
 
-$cmd = 'echo '. qsa('ifup '.$up_ifc);
+$cmd = 'ifup '.qsa($up_ifc);
 $cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$up_server) .' '. qsa($cmd);
 $err=0; $out=array();
 @exec( $sudo . $cmd, $out, $err );
