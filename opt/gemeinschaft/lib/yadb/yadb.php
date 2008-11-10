@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 409); // = 0.04.09
+define('YADB_VERS', 410); // = 0.04.10
 
 /***********************************************************
 * Columns flags:
@@ -251,6 +251,8 @@ class YADB_Connection
 	var $_transErr        = false; /// must be set to true if an SQL error occurs within a nested transaction so the outermost transaction will auto-rollback
 	var $_queryErrFn      = null;  /// if set to a method name this function will be called if a query fails. this is used as a monitor for nested transactions
 	
+	var $_customAttrs     = array(); /// custom attributes which can be set by the user to identify the connection
+	
 	
 	/***********************************************************
 	* The constructor (PHP 4). Calls __construct().
@@ -282,6 +284,28 @@ class YADB_Connection
 	function & factory( $dbType )
 	{
 		return YADB_newConnection( $dbType );
+	}
+	
+	
+	/***********************************************************
+	* Getters/setters for custom attributes
+	***********************************************************/
+	
+	function setCustomAttr( $name, $val )
+	{
+		$this->_customAttrs[$name] = $val;
+	}
+	
+	function getCustomAttr( $name )
+	{
+		return array_key_exists($name, $this->_customAttrs)
+			? $this->_customAttrs[$name]
+			: null;
+	}
+	
+	function getCustomAttrs()
+	{
+		return $this->_customAttrs;
 	}
 	
 	
