@@ -749,7 +749,7 @@ class YADB_Connection
 	{
 		$fn = $this->_customQueryCb;
 		if (function_exists($fn)) {
-			if (@ $fn( $sql, $inputArr ) === false) {
+			if (@ $fn( /*&*/$this, $sql, $inputArr ) === false) {
 				trigger_error( 'YADB: Custom callback made the query fail deliberately.', E_USER_NOTICE );
 				return false;
 			}
