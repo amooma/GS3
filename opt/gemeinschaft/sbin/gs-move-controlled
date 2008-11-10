@@ -37,6 +37,7 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs_topology_lib.php' );
+include_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	echo "Not allowed on single server systems.\n";
@@ -114,6 +115,16 @@ if ($only_run_tests) {
 echo "\n\nTests Done.\n";
 
 
+
+
+# are we root? do we have to sudo?
+#
+$uid = @posix_geteuid();
+$uinfo = @posix_getPwUid($uid);
+$uname = @$uinfo['name'];
+$sudo = ($uname==='root') ? '' : 'sudo ';
+
+
 ## Stage 1: Migrate Master
 #
 echo "\n\n Migrate the Database Master server:\n\n";
@@ -189,16 +200,16 @@ $up_server = null;
 $down_server = null;
 
 if ($CUR_RZ === 'A') {
-	$down_ifc = $WEB_MASTER_SERVER1_VIRT_IFC;
+	$down_ifc    = $WEB_MASTER_SERVER1_VIRT_IFC;
 	$down_server = $WEB_MASTER_SERVER1;
-	$up_ifc = $WEB_MASTER_SERVER2_VIRT_IFC;
-	$up_server = $WEB_MASTER_SERVER2;
+	$up_ifc      = $WEB_MASTER_SERVER2_VIRT_IFC;
+	$up_server   = $WEB_MASTER_SERVER2;
 }
-else {
-	$down_ifc = $WEB_MASTER_SERVER2_VIRT_IFC;
+else { # $CUR_RZ === 'B'
+	$down_ifc    = $WEB_MASTER_SERVER2_VIRT_IFC;
 	$down_server = $WEB_MASTER_SERVER2;
-	$up_ifc = $WEB_MASTER_SERVER1_VIRT_IFC;
-	$up_server = $WEB_MASTER_SERVER1;
+	$up_ifc      = $WEB_MASTER_SERVER1_VIRT_IFC;
+	$up_server   = $WEB_MASTER_SERVER1;
 }
 
 $cmd = 'echo '. qsa('ifdown '.$down_ifc);
@@ -206,7 +217,7 @@ $cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$down_se
 $err=0; $out=array();
 @exec( $sudo . $cmd, $out, $err );
 if ($err != 0) {
-	echo( 'Could not bring down '. $down_ifc .' via SSH on '. $down_server );
+	echo 'Could not bring down ', $down_ifc ,' via SSH on ', $down_server ,"\n";
 }
 
 $cmd = 'echo '. qsa('ifup '.$up_ifc);
@@ -214,7 +225,7 @@ $cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$up_serv
 $err=0; $out=array();
 @exec( $sudo . $cmd, $out, $err );
 if ($err != 0) {
-	echo( 'Could not bring up '. $up_ifc .' via SSH on '. $up_server );
+	echo 'Could not bring up ', $up_ifc ,' via SSH on ', $up_server ,"\n";
 }
 
 
