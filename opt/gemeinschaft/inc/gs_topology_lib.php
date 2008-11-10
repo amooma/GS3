@@ -511,6 +511,7 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 		return new GsError( 'DB error.' );
 	
 	# Stop Slave
+	#
 	$slave  = null;
 	$ok = gs_db_connect( $slave , 'slave' , $slave_host , $user, $pass, GS_DB_SLAVE_DB , 1 );
 	if (! $ok)
