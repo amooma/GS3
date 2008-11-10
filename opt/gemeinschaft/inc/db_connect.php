@@ -88,7 +88,8 @@ function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, 
 	}
 	
 	if (gs_db_is_connected($conn)) {
-		gs_log( GS_LOG_DEBUG, 'Using existing'. ($tag != '' ? ' "'.$tag.'"':'') .' DB connection'. ($conn->getCustomAttr('w') ? '':' (read-only)') . $caller_info );
+		//gs_log( GS_LOG_DEBUG, 'Using existing'. ($tag != '' ? ' "'.$tag.'"':'') .' DB connection'. ($conn->getCustomAttr('w') ? '':' (read-only)') . $caller_info );
+		// don't flood the log
 		return 2;  # using the existing connection
 	}
 	gs_log( GS_LOG_DEBUG, 'New'. ($tag != '' ? ' "'.$tag.'"':'') .' DB connection' . $caller_info );
