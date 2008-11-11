@@ -334,15 +334,13 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	case 'imported':
 		$query =
 'SELECT SQL_CALC_FOUND_ROWS 
-	`u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `number`
+	`lastname` `ln`, `firstname` `fn`, `number`
 FROM
-	`users` `u` JOIN
-	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
+	`pb_ldap` 
 WHERE
-	`u`.`nobody_index` IS NULL AND (
-	`u`.`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
-	)
-ORDER BY `u`.`lastname`, `u`.`firstname`
+	( `lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
+	) '.$key_sql.'
+ORDER BY `lastname`, `firstname`
 LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		break;
 	default:
@@ -359,12 +357,13 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	xml('<IppScreen ID="1" HiddenCount="3" CommandCount="1">');
 	xml('  <IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
 	xml('  <IppList Type="IMPLICIT" Count="'.($entries+1).'">');
-	xml('    <Title>'. $user .' - '. __('Telefonbuch') .': '. (@$typeToTitle[$type]) .'</Title>');
+	if (!$keys)	xml('<Title>'.'Telefonbuch '.(@$typeToTitle[$type]).' ('.$num_total.')'.'</Title>');
+	else 		xml('<Title>'.'Telefonbuch '.(@$typeToTitle[$type]).' ('.$num_total.') '.' : '.$keys.'</Title>');
 	xml('    <Url>'.$url.'</Url>');
 	
 	$i=1;
 	//if (true) {
-		xml('    <Option ID="'.$i.'" Selected="TRUE" Key="type" Value="none">');
+		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="type" Value="none">');
 		xml('      <OptionText>'. __("Zur\xC3\xBCck") .'</OptionText>');
 		xml('      <Image>'.$img_url.'previous.png</Image>');
 		xml('    </Option>');
@@ -380,7 +379,8 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	while ($r = $rs->fetchRow()) {
 		$i++;
 		$entry_name = $r['ln'].', '.$r['fn'].' - '. $r['number'];
-		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="dial" Value="'.$r['number'].'">');
+		$selected = ($num_total == '1') ? 'TRUE' : 'FALSE' ;
+		xml('    <Option ID="'.$i.'" Selected="'.$selected.'" Key="dial" Value="'.$r['number'].'">');
 		xml('      <OptionText>'.$entry_name.'</OptionText>');
 		xml('      <Image></Image>');
 		xml('    </Option>');
