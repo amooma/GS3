@@ -333,10 +333,10 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		break;
 	case 'imported':
 		$query =
-'SELECT SQL_CALC_FOUND_ROWS 
+'SELECT SQL_CALC_FOUND_ROWS
 	`lastname` `ln`, `firstname` `fn`, `number`
 FROM
-	`pb_ldap` 
+	`pb_ldap`
 WHERE
 	( `lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
 	) '.$key_sql.'
@@ -357,8 +357,10 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	xml('<IppScreen ID="1" HiddenCount="3" CommandCount="1">');
 	xml('  <IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
 	xml('  <IppList Type="IMPLICIT" Count="'.($entries+1).'">');
-	if (!$keys)	xml('<Title>'.'Telefonbuch '.(@$typeToTitle[$type]).' ('.$num_total.')'.'</Title>');
-	else 		xml('<Title>'.'Telefonbuch '.(@$typeToTitle[$type]).' ('.$num_total.') '.' : '.$keys.'</Title>');
+	if ($keys == '')
+		xml('    <Title>'. __('Telefonbuch') .' '.(@$typeToTitle[$type]).' ('.$num_total.')' .'</Title>');
+	else
+		xml('    <Title>'. __('Telefonbuch') .' '.(@$typeToTitle[$type]).' ('.$num_total.')' .' : '.$keys .'</Title>');
 	xml('    <Url>'.$url.'</Url>');
 	
 	$i=1;
@@ -379,7 +381,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	while ($r = $rs->fetchRow()) {
 		$i++;
 		$entry_name = $r['ln'].', '.$r['fn'].' - '. $r['number'];
-		$selected = ($num_total == '1') ? 'TRUE' : 'FALSE' ;
+		$selected = ($num_total == 1) ? 'TRUE':'FALSE';  # select first entry if there's only 1
 		xml('    <Option ID="'.$i.'" Selected="'.$selected.'" Key="dial" Value="'.$r['number'].'">');
 		xml('      <OptionText>'.$entry_name.'</OptionText>');
 		xml('      <Image></Image>');
