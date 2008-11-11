@@ -56,14 +56,14 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	$phone_types['snom-370'    ] = 'Snom 370';
 }
 
+if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
+	$phone_types['snom-m3'    ] = 'Snom M3';
+}
+
 if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 	$phone_types['siemens-os40'] = 'Siemens OpenStage 40';
 	$phone_types['siemens-os60'] = 'Siemens OpenStage 60';
 	$phone_types['siemens-os80'] = 'Siemens OpenStage 80';
-}
-
-if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
-	$phone_types['snom-m3'    ] = 'Snom M3';
 }
 
 if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
