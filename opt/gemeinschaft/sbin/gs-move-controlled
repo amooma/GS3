@@ -104,7 +104,6 @@ $servers = array(
 	'TE_MASTER_BACKUP2'  => array('host' => $TE_MASTER_BACKUP2  , 'con'=>null, 'desc' => "Telephony Server in EDPC B (Backup)" )
 );
 
-
 _run_topology_tests($servers);
 
 if ($only_run_tests) {
@@ -189,7 +188,7 @@ foreach ($servers as $key => $host) {
 	}
 } // foreach ($servers as $key => $host)
 
-
+echo "\n\n====================\n\n";
 
 ## Stage 3: Move Service IP addresses of the Web Services
 #
@@ -229,11 +228,13 @@ if ($err != 0) {
 }
 
 
-
+echo "\n\n====================\n\n";
 ## Stage 4: Edit gemeinschaft.php on each server
 #
+echo "Edit gemeinschaft.php on each server\n";
 
 foreach ($servers as $key => $host) {
+	echo $host['desc'] ,"...\n ";
 	$ok = _change_etc_gemeinschaft_php( $host['host'], $new_master );
 	if (isGsError($ok)) {
 		echo "ERROR: ", $ok->getMsg() ,"\n";
@@ -244,14 +245,32 @@ foreach ($servers as $key => $host) {
 	}
 }
 
+echo "\n\n====================\n\n";
+
 ## Stage 5: Set $CUR_RZ to the new one
 #
+echo "Edit topology.php on each server\n";
 
+if($CUR_RZ == 'A')
+	$CUR_RZ = 'B';
+else 
+	$CUR_RZ = 'A';
+
+foreach ($servers as $key => $host) {
+	echo $host['desc'] ,"...\n ";
+	$ok = _change_etc_topology_php( $host['host'], $CUR_RZ );
+	if (isGsError($ok)) {
+		echo "ERROR: ", $ok->getMsg() ,"\n";
+		exit(1);
+	} elseif (! $ok) {
+		echo "ERROR.\n";
+		exit(1);
+	}
+}
 
 ## Stage 6: Re-Run Tests
 #
-
-
+_run_topology_tests($servers);
 
 
 echo "\nDone.\n";
