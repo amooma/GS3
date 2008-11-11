@@ -152,7 +152,7 @@ if ($search) {
 	) .'%';
 	
 	$query =
-'SELECT SQL_CALC_FOUND_ROWS 
+'SELECT SQL_CALC_FOUND_ROWS
 	`u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
 FROM
 	`users` `u` JOIN
