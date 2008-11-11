@@ -88,7 +88,7 @@ function _check_etc_gemeinschaft_php( $server, $master_host )
 	@preg_match("/'[a-zA-Z0-9.]+'/", $out[0], $m );  //FIXME
 	@preg_match("/[a-zA-Z0-9.]+/"  ,  @$m[0], $m1);  //FIXME
 	if (@$m1[0] != $master_host) {
-		return new GsError( 'Master host in gemeinschaft.php ('.$m1[0].') on host '. $server .' differs from the Master host in the Topology ('.$master_Host.')!' );
+		return new GsError( 'Master host in gemeinschaft.php ('.$m1[0].') on host '. $server .' differs from the Master host in the Topology ('.$master_host.')!' );
 	}
 	$master_host = _validate_ip_addr(@$m1[0]);
 	if (! $master_host)
@@ -116,22 +116,62 @@ function _change_etc_gemeinschaft_php( $server, $master_host )
 	@exec( $sudo . $cmd, $out, $err );
 	if ($err != 0)
 		return new GsError( 'Could not SSH to '. $server );
-	
-	$master_host_old = _validate_ip_addr(@$out[0]);
+
+	@preg_match("/'[a-zA-Z0-9.]+'/", $out[0], $m );  //FIXME
+	@preg_match("/[a-zA-Z0-9.]+/"  ,  @$m[0], $m1);  //FIXME
+	$master_host_old = _validate_ip_addr($m1[0]);
 	if (! $master_host_old)
-		return new GsError( 'Invalid IP address "'.$master_host_old.'"' );
-	
+		return new GsError( 'Invalid (old) IP address "'.$master_host_old.'"' );
+
 	$master_host     = _validate_ip_addr($master_host);
 	if (! $master_host)
 		return new GsError( 'Invalid IP address "'.$master_host.'"' );
 	
 	$file = '/etc/gemeinschaft/gemeinschaft.php';
-	$sed_cmd = 's/'.$master_host_old.'/\$DB_MASTER_HOST = \''.$master_host.'\';/g';  //FIXME
+	$sed_cmd = 's/'.$out[0].'/\$DB_MASTER_HOST = \''.$master_host.'\';/g';  //FIXME
 	$cmd = 'sed '. qsa($sed_cmd)
 		. ' '. qsa($file)
 		.' > '. qsa($file.'.tmp')
 		.' && mv '. qsa($file.'.tmp')
 		.' '. qsa($file);
+
+	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
+	
+	$err=0; $out=array();
+	@exec( $sudo . $cmd, $out, $err );
+	if ($err != 0)
+		return new GsError( 'Could not execute SED via SSH on '. $server );
+	
+	return true;
+}
+
+function _change_etc_topology_php( $server, $new_rz )
+{
+	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
+		return new GsError( 'Not allowed on single server systems.' );
+	
+	$cmd = 'grep '. qsa('CUR_RZ') .' '. qsa('/etc/gemeinschaft/topology.php');
+	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
+	
+	# are we root? do we have to sudo?
+	$uid = @posix_geteuid();
+	$uinfo = @posix_getPwUid($uid);
+	$uname = @$uinfo['name'];
+	$sudo = ($uname==='root') ? '' : 'sudo ';
+	
+	$err=0; $out=array();
+	@exec( $sudo . $cmd, $out, $err );
+	if ($err != 0)
+		return new GsError( 'Could not SSH to '. $server );
+	//replace the found line in the file with our new one.
+	$file = '/etc/gemeinschaft/topology.php';
+	$sed_cmd = 's/'.$out[0].'/\$CUR_RZ = \''.$new_rz.'\';/g';  //FIXME
+	$cmd = 'sed '. qsa($sed_cmd)
+		. ' '. qsa($file)
+		.' > '. qsa($file.'.tmp')
+		.' && mv '. qsa($file.'.tmp')
+		.' '. qsa($file);
+
 	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
 	
 	$err=0; $out=array();
@@ -344,6 +384,7 @@ function _run_topology_tests( $hosts )
 	
 	echo "All systems should be up and running properly.\n";
 	
+	//TODO: add test of topology.php on each server
 	//TODO: add test to check if the Virtual Interfaces exists
 	//TODO: add test to check if Web services are running
 	//TODO: add test to check if Voice services are running
@@ -477,14 +518,15 @@ function gs_db_master_migration( $old_master_host, $new_master_host, $user, $pas
 	$ok = $old_master->execute( 'STOP SLAVE' );
 	$ok = $old_master->execute( 'RESET SLAVE' );
 	$ok = $old_master->execute( 'RESET MASTER' );
-	sleep(1);
 	
+	sleep(1);
 	$ok = $old_master->execute(
 		'CHANGE MASTER TO '.
 			'MASTER_HOST=\''    . $old_master->escape($new_master_host) .'\', '.
 			'MASTER_USER=\''    . $old_master->escape($user) .'\', '.
 			'MASTER_PASSWORD=\''. $old_master->escape($pass) .'\''
 		);
+	
 	if (! $ok) {
 		@$new_master->execute( 'START SLAVE' );
 		@$old_master->execute( 'UNLOCK TABLES' );
