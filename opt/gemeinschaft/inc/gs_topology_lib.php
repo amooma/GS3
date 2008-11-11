@@ -116,13 +116,13 @@ function _change_etc_gemeinschaft_php( $server, $master_host )
 	@exec( $sudo . $cmd, $out, $err );
 	if ($err != 0)
 		return new GsError( 'Could not SSH to '. $server );
-
+	
 	@preg_match("/'[a-zA-Z0-9.]+'/", $out[0], $m );  //FIXME
 	@preg_match("/[a-zA-Z0-9.]+/"  ,  @$m[0], $m1);  //FIXME
 	$master_host_old = _validate_ip_addr($m1[0]);
 	if (! $master_host_old)
 		return new GsError( 'Invalid (old) IP address "'.$master_host_old.'"' );
-
+	
 	$master_host     = _validate_ip_addr($master_host);
 	if (! $master_host)
 		return new GsError( 'Invalid IP address "'.$master_host.'"' );
@@ -134,7 +134,7 @@ function _change_etc_gemeinschaft_php( $server, $master_host )
 		.' > '. qsa($file.'.tmp')
 		.' && mv '. qsa($file.'.tmp')
 		.' '. qsa($file);
-
+	
 	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
 	
 	$err=0; $out=array();
@@ -171,7 +171,7 @@ function _change_etc_topology_php( $server, $new_rz )
 		.' > '. qsa($file.'.tmp')
 		.' && mv '. qsa($file.'.tmp')
 		.' '. qsa($file);
-
+	
 	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$server) .' '. qsa($cmd);
 	
 	$err=0; $out=array();
