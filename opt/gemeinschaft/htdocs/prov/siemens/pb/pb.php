@@ -250,17 +250,22 @@ if (! $type) {
 		xml('    <Option ID="'.$i.'" Selected="'.($i===1 ?'TRUE':'FALSE').'" Key="type" Value="'.$t.'">');
 		switch ($t) {
 			case 'gs':
-				$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `nobody_index` IS NULL' );
+				$c = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `nobody_index` IS NULL' );
 				$image = $img_url.'contents.png';
 				break;
 			case 'prv':
-				$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `pb_prv` WHERE `user_id`='. $user_id );
+				$c = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `pb_prv` WHERE `user_id`='. $user_id );
 				$image = $img_url.'yast_sysadmin.png';
 				break;
+			case 'imported':
+				$c = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `pb_ldap`' );
+				$image = $img_url.'contents.png';
+				break;
 			default:
-				$num_calls = 0;
+				$c = 0;
+				$image = '';
 		}
-		xml('      <OptionText>'. $title .' ('.$num_calls.')' .'</OptionText>');
+		xml('      <OptionText>'. $title .' ('.$c.')' .'</OptionText>');
 		xml('      <Image>'.$image.'</Image>');
 		xml('    </Option>');
 	}
