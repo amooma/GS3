@@ -78,24 +78,37 @@ $shutdown_enabled =
 $action = @$_REQUEST['action'];
 
 if ($action === 'dialplan-reload') {
-	@flush();
+	@ob_flush(); @flush();
 	echo '<pre style="margin:0.9em 0.1em; padding:0.3em; background:#eee;">';
 	$err=0;
 	@ob_implicit_flush(1);
 	
+	gs_log(GS_LOG_DEBUG, "Reloading local Asterisk dialplan");
+	echo "Reloading <b>local</b> Asterisk dialplan\n";
+	@ob_flush(); @flush();
+	passThru( 'sudo '. qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan', $err );
+	echo "\n", '&rarr; <b>', ($err==0 ? 'OK':'ERR') ,'</b>' ,"\n\n";
+	
 	$rs = $DB->execute( 'SELECT `host` FROM `hosts` WHERE `is_foreign` = 0' );
 	while ($r = $rs->fetchRow())
 	{
-		if ($r['host'] === '127.0.0.1') {
+		/*
+		if ($r['host'] === '127.0.0.1') {  //FIXME
 			gs_log(GS_LOG_DEBUG, "Reloading local Asterisk dialplan");
+			echo "Reloading <b>local</b> Asterisk dialplan\n";
+			@ob_flush(); @flush();
 			passThru( 'sudo '. qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan', $err );
 		}
 		else {
+		*/
 			gs_log(GS_LOG_DEBUG, "Reloading Asterisk dialplan on ". $r['host']);
-			echo "Reloading Asterisk dialplan on ". $r['host'] ,"\n";
-			passThru( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($r['host']) .' '. qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan', $err );
+			echo "Reloading Asterisk dialplan on <b>", $r['host'] ,"</b>\n";
+			@ob_flush(); @flush();
+			passThru( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=6 -l root '. qsa($r['host']) .' '. qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan', $err );
+		/*
 		}
-		echo "\n", '&rarr; <b>', ($err==0 ? 'OK':'ERR') ,'</b>';
+		*/
+		echo "\n", '&rarr; <b>', ($err==0 ? 'OK':'ERR') ,'</b>' ,"\n\n";
 	}
 	
 	@ob_implicit_flush(0);
@@ -108,19 +121,32 @@ elseif ($action === 'reload') {
 	$err=0;
 	@ob_implicit_flush(1);
 	
+	gs_log(GS_LOG_DEBUG, "Reloading local Asterisk");
+	echo "Reloading <b>local</b> Asterisk\n";
+	@ob_flush(); @flush();
+	passThru( 'sudo '. qsa(GS_DIR.'sbin/start-asterisk'), $err );
+	echo "\n", '&rarr; <b>', ($err==0 ? 'OK':'ERR') ,'</b>' ,"\n\n";
+	
 	$rs = $DB->execute( 'SELECT `host` FROM `hosts` WHERE `is_foreign` = 0' );
 	while ($r = $rs->fetchRow())
 	{
-		if ($r['host'] === '127.0.0.1') {
+		/*
+		if ($r['host'] === '127.0.0.1') {  //FIXME
 			gs_log(GS_LOG_DEBUG, "Reloading local Asterisk");
+			echo "Reloading <b>local</b> Asterisk\n";
+			@ob_flush(); @flush();
 			passThru( 'sudo '. qsa(GS_DIR.'sbin/start-asterisk'), $err );
 		}
 		else {
+		*/
 			gs_log(GS_LOG_DEBUG, "Reloading Asterisk on ". $r['host']);
-			echo "Reloading Asterisk on ". $r['host'] ,"\n";
-			passThru( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($r['host']) .' '. qsa(GS_DIR.'sbin/start-asterisk') , $err );
+			echo "Reloading Asterisk on <b>", $r['host'] ,"</b>\n";
+			@ob_flush(); @flush();
+			passThru( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=6 -l root '. qsa($r['host']) .' '. qsa(GS_DIR.'sbin/start-asterisk') , $err );
+		/*
 		}
-		echo "\n", '&rarr; <b>', ($err==0 ? 'OK':'ERR') ,'</b>';
+		*/
+		echo "\n", '&rarr; <b>', ($err==0 ? 'OK':'ERR') ,'</b>' ,"\n\n";
 	}
 	
 	@ob_implicit_flush(0);
