@@ -154,7 +154,6 @@ if (isGsError($ok)) {
 }
 
 echo "\n\nMigration done.\n";
-
 echo "\n\n====================\n\n";
 
 
@@ -189,6 +188,7 @@ foreach ($servers as $key => $host) {
 } // foreach ($servers as $key => $host)
 
 echo "\n\n====================\n\n";
+
 
 ## Stage 3: Move Service IP addresses of the Web Services
 #
@@ -227,8 +227,9 @@ if ($err != 0) {
 	echo 'Could not bring up ', $up_ifc ,' via SSH on ', $up_server ,"\n";
 }
 
-
 echo "\n\n====================\n\n";
+
+
 ## Stage 4: Edit gemeinschaft.php on each server
 #
 echo "Edit gemeinschaft.php on each server\n";
@@ -247,18 +248,19 @@ foreach ($servers as $key => $host) {
 
 echo "\n\n====================\n\n";
 
+
 ## Stage 5: Set $CUR_RZ to the new one
 #
 echo "Edit topology.php on each server\n";
 
-if($CUR_RZ == 'A')
-	$CUR_RZ = 'B';
-else 
-	$CUR_RZ = 'A';
+if ($CUR_RZ === 'A')
+	$CUR_RZ_NEW = 'B';
+else
+	$CUR_RZ_NEW = 'A';
 
 foreach ($servers as $key => $host) {
 	echo $host['desc'] ,"...\n ";
-	$ok = _change_etc_topology_php( $host['host'], $CUR_RZ );
+	$ok = _change_etc_topology_php( $host['host'], $CUR_RZ_NEW );
 	if (isGsError($ok)) {
 		echo "ERROR: ", $ok->getMsg() ,"\n";
 		exit(1);
@@ -268,9 +270,14 @@ foreach ($servers as $key => $host) {
 	}
 }
 
+echo "\n\n====================\n\n";
+
+
 ## Stage 6: Re-Run Tests
 #
 _run_topology_tests($servers);
+
+echo "\n\n====================\n\n";
 
 
 echo "\nDone.\n";
