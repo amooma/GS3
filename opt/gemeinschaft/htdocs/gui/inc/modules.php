@@ -252,7 +252,8 @@ $MODULES['prov'     ]=  array(
 	'sub' => array(
 		'phones'       => array('title' => __('Telefone')),
 		'keyprof'      => array('title' => __('Tasten-Profile')),
-		'provparams'   => array('title' => __('Parameter'))
+		'provparams'   => array('title' => __('Parameter')),
+		'jobs'         => array('title' => __('Jobs'))
 	)
 );
 
