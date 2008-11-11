@@ -236,7 +236,7 @@ if ($action === 'view') {
 
 $i=0;
 while ($phone = $rs_phones->fetchRow()) {
-	echo '<tr>' ,"\n";
+	echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
 	
 	echo '<td><tt>', htmlEnt(_mac_addr_display($phone['mac_addr'])) ,'</tt></td>' ,"\n";
 	
@@ -296,6 +296,7 @@ while ($phone = $rs_phones->fetchRow()) {
 	*/
 	
 	echo '</tr>' ,"\n";
+	++$i;
 }
 
 ?>
