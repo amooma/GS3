@@ -90,6 +90,7 @@ foreach ($tmp as $arr) {
 $url_aastra_pb = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'aastra/pb.php';
 
 
+#################################### SEARCH SCREEN {
 if ($search) {
 	
 	$xml = '<AastraIPPhoneInputScreen type = "string">' ."\n";
@@ -112,7 +113,12 @@ if ($search) {
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '</AastraIPPhoneInputScreen>' ."\n";
 	
-} elseif (! $type) {
+}
+#################################### SEARCH SCREEN }
+
+
+#################################### INITIAL SCREEN {
+elseif (! $type) {
 	
 	$xml = '<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none">' ."\n";
 	$xml.= '<Title>'. __('Telefonbuch') .'</Title>' ."\n";
@@ -141,7 +147,12 @@ if ($search) {
 	$xml.= '</AastraIPPhoneTextMenu>' ."\n";
 	
 	
-} elseif ($type==='gs') {
+}
+#################################### INITIAL SCREEN }
+
+
+#################################### INTERNAL PHONEBOOK {
+elseif ($type==='gs') {
 	
 	$search_url = 'name='. urlEncode($name_search);
 	
@@ -228,7 +239,12 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	}
 	
 	
-} elseif ($type==='prv') {
+}
+#################################### INTERNAL PHONEBOOK }
+
+
+#################################### PRIVATE PHONEBOOK {
+elseif ($type==='prv') {
 	
 	$search_url = 'name='. urlEncode($name_search);
 	
@@ -316,7 +332,12 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	}
 	
 	
-} elseif ($type==='prvs') {
+}
+#################################### PRIVATE PHONEBOOK }
+
+
+#################################### PRIVATE PHONEBOOK (calling?) {
+elseif ($type==='prvs') {
 	
 	$user_id = _get_userid();
 	
@@ -352,7 +373,12 @@ AND
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '</AastraIPPhoneFormattedTextScreen>' ."\n";
 	
-} elseif ($type==='gss') {
+}
+#################################### PRIVATE PHONEBOOK (calling?) }
+
+
+#################################### INTERNAL PHONEBOOK (calling?) {
+elseif ($type==='gss') {
 	
 	$user_id = _get_userid();
 	
@@ -396,6 +422,15 @@ WHERE
 	$xml.= '</AastraIPPhoneFormattedTextScreen>' ."\n";
 	
 }
+#################################### INTERNAL PHONEBOOK (calling?) }
+
+
+#################################### IMPORTED PHONEBOOK {
+elseif ($type==='imported') {
+	//FIXME
+}
+#################################### IMPORTED PHONEBOOK }
+
 
 aastra_transmit_str( $xml );
 
