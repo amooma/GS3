@@ -32,6 +32,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_prov_jobs_get.php' );
 
 
 /***********************************************************
@@ -50,31 +51,10 @@ $opts = @getOptsNoMultiples( '',
 *    get provisioning jobs
 ***********************************************************/
 
-# connect to db
-#
-$db = gs_db_master_connect();
-if (! $db) {
-	echo "Could not connect to database.\n";
-	exit(1);
-}
+$jobs = @gs_prov_jobs_get();
+if (isGsError($jobs))  gs_script_error( $jobs->getMsg() );
+if (! is_array($jobs)) gs_script_error();
 
-# get jobs
-#
-$jobs = array();
-$rs = $db->execute(
-	'SELECT '.
-		'`j`.`id`, `j`.`inserted`, `j`.`running`, `j`.`trigger`, '.
-		'`p`.`mac_addr`, `j`.`type`, `j`.`immediate`, '.
-		'`j`.`minute`, `j`.`hour`, `j`.`day`, `j`.`month`, `j`.`dow`, '.
-		'`j`.`data` '.
-	'FROM '.
-		'`prov_jobs` `j` LEFT JOIN '.
-		'`phones` `p` ON (`p`.`id`=`j`.`phone_id`) '.
-	'ORDER BY `j`.`inserted`'
-	);
-while (! $rs->EOF) {
-	$jobs[] = $rs->fetchRow();
-}
 
 $fields = array(
 	'id'         => 2,
