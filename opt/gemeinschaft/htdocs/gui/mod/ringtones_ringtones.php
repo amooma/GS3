@@ -255,7 +255,7 @@ if (@$ringtones[$source]['file']) {
 ?>
 <p class="small" style="max-width:48em;">
 	<sup>[2]</sup>
-	<?php echo __('Das Siemens OpenStage kann in der derzeitigen Firmware noch nicht zwischen intern und extern unterscheiden. Die Ruftonmelodie kann nur am Telefon eingestellt werden!'); ?>
+	<?php echo __('Das Siemens OpenStage kann in der derzeitigen Firmware noch nicht zwischen intern und extern unterscheiden. Es wird daher die Ruftonmelodie für intern verwendet!'); ?>
 </p>
 <?php
 //}
