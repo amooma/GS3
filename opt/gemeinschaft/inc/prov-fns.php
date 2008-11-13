@@ -33,7 +33,7 @@ require_once( GS_DIR .'inc/netmask.php' );
 require_once( GS_DIR .'inc/ipaddr-fns.php' );
 require_once( GS_DIR .'inc/log.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
-
+require_once( GS_DIR .'inc/nobody-extensions.php' );
 
 
 function gs_prov_check_trust_requester()
@@ -266,7 +266,20 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 	# add a nobody user
 	#
 	$new_nobody_index = (int)( (int)$db->executeGetOne( 'SELECT MAX(`nobody_index`) FROM `users`' ) + 1 );
-	$username = 'nobody-'. str_pad($new_nobody_index, 5, '0', STR_PAD_LEFT);
+
+	$new_nobody_num  = 0;
+	$hp_route_prefix = 0;
+	$soap_user_ext   = 0;
+	if ($boi_host_id > 0) {
+		$new_nobody_num = (int)$db->executeGetOne( 'SELECT COUNT(`user`) FROM `users` WHERE `nobody_index` IS NOT NULL AND `host_id`='.$boi_host_id);
+		$hp_route_prefix = (string)$db->executeGetOne(
+							'SELECT `value` FROM `host_params` '.
+							'WHERE `host_id`='. (int)$boi_host_id .' AND `param`=\'route_prefix\'' );
+		$username = 'nobody-'.$hp_route_prefix.'-'. str_pad($new_nobody_num, 5, '0', STR_PAD_LEFT);
+	}
+	else {
+		$username = 'nobody-'. str_pad($new_nobody_index, 5, '0', STR_PAD_LEFT);
+	}
 	$ok = $db->execute(
 		'INSERT INTO `users` '.
 		'(`id`, `user`, `pin`, `firstname`, `lastname`, `honorific`, `email`, `nobody_index`, `host_id`) '.
@@ -281,11 +294,16 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 	} else {
 		//gs_log( GS_LOG_DEBUG, 'Nobody user '. $username .' added to database (pending)' );
 	}
-	
+	sleep(1);
 	# add a SIP account:
 	#
-	//$user_ext = '9'. str_pad($new_nobody_index, 5, '0', STR_PAD_LEFT);
-	$user_ext = gs_nobody_index_to_extension( $new_nobody_index, ($boi_host_id > 0) );
+	if ($boi_host_id > 0) {
+		$user_ext = $hp_route_prefix . gs_nobody_index_to_extension( $new_nobody_num, true );
+		$soap_user_ext = gs_nobody_index_to_extension( $new_nobody_num, true );
+	}
+	else {
+		$user_ext = gs_nobody_index_to_extension( $new_nobody_index, false );	
+	}
 	$sip_pwd = gs_prov_gen_sip_pwd();
 	$ok = $db->execute(
 		'INSERT INTO `ast_sipfriends` '.
@@ -327,7 +345,7 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 					return false;
 				}
 				$soap_faultcode = null;
-				$ok = gs_boi_update_extension( $api, $boi_host, '', $user_ext, $username, $sip_pwd, '', '', '', '', $soap_faultcode );
+				$ok = gs_boi_update_extension( $api, $boi_host, '', $soap_user_ext, $username, $sip_pwd, '', '', '', '', $soap_faultcode );
 				if (! $ok) {
 					gs_log( GS_LOG_WARNING, "Failed to add nobody user $username on foreign host $boi_host (SOAP error)" );
 					if (! $add_nobody_locally_if_foreign_failed) { // normal behavior
