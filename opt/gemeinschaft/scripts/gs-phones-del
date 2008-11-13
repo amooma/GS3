@@ -1,0 +1,184 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
+
+function info ($message)
+{
+	global $silent;
+
+	if (!$silent) echo $message."\n";
+
+}
+
+function delete_nobody_user ($nobody_index)
+{
+	global $db;
+
+	$user_id = $db->executegetOne( 'SELECT `id` FROM `users` WHERE `nobody_index` = '.$nobody_index);
+	
+	if (!$user_id) {
+		echo "Failed to find nobody user for index $nobody_index.\n";
+		return 0;
+	}
+
+	
+
+	# delete sip peer
+	#
+	$db->execute( 'DELETE FROM `ast_sipfriends` WHERE `_user_id` = '.$user_id );
+	
+	# delete dial log
+	#
+	$ok = $db->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id );
+	
+	# delete user
+	#
+	$ok = $db->execute( 'DELETE FROM `users` WHERE `id` = '.$user_id );
+	if (! $ok) {
+		echo "Failed to delete nobody user $user_id ($nobody_index).\n";
+		return 0;
+	}
+
+}
+
+function delete_phone ($mac_addr)
+{
+	global $db;
+
+	
+
+	$db->execute( 'DELETE FROM `prov_siemens` WHERE `mac_addr` = \''.$mac_addr.'\'' );
+
+	$ok = $db->execute( 'DELETE FROM `phones` WHERE `mac_addr` = \''.$mac_addr.'\'' );
+	if (! $ok) {
+		echo "Failed to delete phone $mac_addr.\n";
+		return 0;
+	}
+
+}
+
+function trigger_phone_by_user($user_id)
+{
+	global $db;
+
+	$current_ip = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id` = '.$user_id);
+
+	if (!$current_ip) {
+		echo "Failed to get current IP for user $user_id \n";
+		return 0;
+	}
+	$ret = @ gs_prov_phone_checkcfg_by_ip( $current_ip, $reboot );
+	if (!$ret) {
+		echo "Failed to sync phone $current_ip \n";
+		return 0;
+	}
+
+	return $ret;
+}
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .'( --mac=<mac-addr> | --days=<days>)';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'mac=',
+		'days=',
+		'show-only',
+		'checkcfg-only',
+		'silent'
+	),
+	$usage
+);
+if (! (isSet($opts['mac'])) && !  (isSet($opts['days']))
+) {
+	gs_script_invalid_usage( $usage );
+}
+$mac = preg_replace('/[^0-9A-Z]/', '', strToUpper(@$opts['mac']));
+$days = (int)$opts['days'];
+$silent = array_key_exists('silent',$opts);
+$trigger = array_key_exists('checkcfg-only',$opts);
+$show = array_key_exists('show-only',$opts);
+
+/***********************************************************
+*    get the phone IDs
+***********************************************************/
+
+# connect to db
+#
+$db = gs_db_master_connect();
+
+if (! $db) {
+	echo "Could not connect to database.\n";
+	exit(1);
+}
+
+if ($days) {
+	$timestamp = time() - (86400 * $days);
+
+	$rs = $db->execute( 'SELECT `p`.`id` `phone_id`, `p`.`mac_addr` `mac_addr`, `p`.`user_id` `user_id`, `p`.`nobody_index` `nobody_index`, `p`.`type` `type`, `s`.`t_last_contact` `t_last_contact` FROM `prov_siemens` `s` JOIN `phones` `p` ON (`p`.`mac_addr` = `s`.`mac_addr`) WHERE `t_last_contact` < '.$timestamp);
+
+	if (!$rs) {
+		echo "Could not read any entries.\n";
+		exit(1);
+	}
+	while ($r = $rs->fetchRow()) {
+		
+		if ($trigger) {
+			info('Triggering phone '.$r['phone_id'].' (id:'.$r['phone_id'].')');
+			trigger_phone_by_user($r['user_id']);
+		} 
+		elseif ($show) {
+			info('Found '.$r['type'].' phone '.$r['mac_addr'].', last contact '.date('d.m.Y H:i:s',$r['t_last_contact']));
+		} else {
+			info('Deleting phone '.$r['phone_id'].' (id:'.$r['phone_id'].')');
+			
+			delete_nobody_user($r['nobody_index']);
+			delete_phone($r['mac_addr']);
+		}
+	}
+}
+
+if ($mac) {
+	$nobody_index = $db->executegetOne( 'SELECT `nobody_index` FROM `phones` WHERE `mac_addr` = \''.$mac.'\'');
+	info("Deleting phone mac: ".$mac.' and nobody user '.$nobody_index);
+	delete_nobody_user($nobody_index);
+	delete_phone($mac);
+	
+}
+
+
+?>
