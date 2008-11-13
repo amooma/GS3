@@ -125,6 +125,8 @@ if ($type === 'none') {
 if ($tab) {
 	$tab =  @preg_replace('/^internal:/', '', $tab);
 	if ($tab === 'XMLPhonebook') $tab = 'prv';
+	else if ($tab === 'XMLPhonebook_2') $tab = 'gs';
+	else if ($tab === 'XMLPhonebook_3') $tab = 'imported';
 	$type = $tab;
 }
 
