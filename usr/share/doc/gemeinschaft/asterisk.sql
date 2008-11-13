@@ -5446,7 +5446,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `ast_sipfriends`;
 CREATE TABLE `ast_sipfriends` (
   `_user_id` int(10) unsigned NOT NULL default '0',
-  `name` varchar(10) character set ascii NOT NULL default '',
+  `name` varchar(16) character set ascii NOT NULL default '',
   `secret` varchar(16) character set ascii NOT NULL default '1234',
   `type` enum('friend','user','peer') character set ascii NOT NULL default 'friend',
   `host` varchar(50) collate latin1_general_ci NOT NULL default 'dynamic',

@@ -511,5 +511,15 @@ ALTER
   ;
 
 
+--
+-- since rev. 5559
+--
 
+
+--
+-- Resize 'name' column for storing long dummy-user names:
+--
+
+ALTER TABLE `ast_sipfriends`
+   MODIFY COLUMN `name` VARCHAR(16);
 
