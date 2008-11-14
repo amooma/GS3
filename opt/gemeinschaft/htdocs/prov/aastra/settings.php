@@ -327,6 +327,8 @@ psetting('xml application post list', GS_PROV_HOST);
 # set some default keys
 psetting('services script'    , $prov_url_aastra.'pb.php');
 psetting('callers list script', $prov_url_aastra.'dial-log.php');
+psetting('redial script'      , $prov_url_aastra.'dial-log.php?t=out');
+psetting('redial disabled'    , '0');
 
 # From firmware version 2.3 on there is a default softkey "Webapps"
 # which causes an extremely long boot process by trying to connect
