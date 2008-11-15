@@ -262,13 +262,13 @@ if ($action == '') {
 	<th style="width:150px;"><?php echo __('Gateway'); ?></th>
 	<th style="width:150px;"><?php echo __('Gruppe'); ?></th>
 	<th style="width:150px;"><?php echo __('Host'); ?></th>
-	<th style="width:40px;"><?php echo __('Reg.?'); ?></th>
 	<th style="width:55px;">&nbsp;</th>
 </tr>
 </thead>
 <tbody>
 <?php
 	
+	/*
 	$err=0; $out=array();
 	@exec( 'sudo asterisk -rx \'sip show registry\' 2>>/dev/null', $out, $err );
 	$regs = array();
@@ -284,6 +284,7 @@ if ($action == '') {
 			$regs[$peername] = ($m[1] === 'Registered');
 		}
 	}
+	*/
 	
 	# get gateways from DB
 	#
@@ -322,12 +323,14 @@ ORDER BY `g`.`grp_id`, `g`.`title`'
 		
 		echo '<td>', htmlEnt($gw['host']) ,'</td>',"\n";
 		
+		/*
 		echo '<td>';
 		if (@$regs[$gw['name']])
 			echo '<img alt=" " src="', GS_URL_PATH ,'crystal-svg/16/act/greenled.png" />';
 		else
 			echo '&nbsp;';
 		echo '</td>',"\n";
+		*/
 		
 		echo '<td>',"\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;gw-id='.$gw['id']) ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
@@ -338,7 +341,7 @@ ORDER BY `g`.`grp_id`, `g`.`title`'
 		++$i;
 	}
 	echo '<tr class="', ($i%2===0?'odd':'even') ,'">',"\n";
-	echo '<td colspan="4" class="transp">&nbsp;</td>',"\n";
+	echo '<td colspan="3" class="transp">&nbsp;</td>',"\n";
 	echo '<td class="transp">',"\n";
 	echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;gw-id=0') ,'" title="', __('hinzuf&uuml;gen'), '"><img alt="', __('hinzuf&uuml;gen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 	echo '</td>',"\n";
@@ -347,6 +350,25 @@ ORDER BY `g`.`grp_id`, `g`.`title`'
 ?>
 </tbody>
 </table>
+
+<br />
+<br />
+<?php echo __('Registrierungs-Status'); ?><?php echo ' (',__('lokaler Asterisk'),')'; ?><br />
+<div style="font-family:monospace; white-space:pre; background:#eee; border:1px solid #e9e9e9; padding:1px 3px;"><?php
+	$err=0; $out=array();
+	@exec( 'sudo asterisk -rx '.qsa('sip show registry').' 2>>/dev/null', $out, $err );
+	if ($err !== 0) {
+		echo '?';
+	} else {
+		foreach ($out as $line) {
+			echo preg_replace(
+				array( '/^(\s*)([a-zA-Z0-9.\-_]+[.\-_][a-zA-Z0-9.\-_]+)/', '/\b(Registered|Unregistered|Rejected)\b/' ),
+				array( '$1<b>$2</b>', '<b>$1</b>' ),
+				rTrim($line)) ,"\n";
+		}
+	}
+?></div>
+
 
 <?php
 }
