@@ -58,7 +58,7 @@ function gs_db_is_connected( &$conn )
 
 function gs_sql_is_readonly( $sql )
 {
-	return preg_match( '/^[\\s\\(]*(?:SELECT|SET\\s+(?:NAMES|collation|autocommit|TRANSACTION|@*(?!global))|START\\s+TRANS|COMMIT|BEGIN|ROLLBACK|SHOW|DESCRIBE|EXPLAIN)/iS', $sql);
+	return preg_match( '/^[\\s\\(]*(?:SELECT|SET\\s+(?:NAMES|collation|autocommit|TRANSACTION|@*(?!global)|SESSION)|START\\s+TRANS|COMMIT|BEGIN|ROLLBACK|SHOW|DESCRIBE|EXPLAIN)/iS', $sql);
 	# Note: COMMIT does not mean something has been written.
 	# The "bad" queries are: UPDATE, INSERT, DELETE, REPLACE, ALTER, CREATE ...
 }
