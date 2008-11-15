@@ -517,9 +517,9 @@ ALTER
 
 
 --
--- Resize 'name' column for storing long dummy-user names:
+-- Resize column `name` in table `ast_sipfriends` for storing long dummy-user extensions:
 --
 
 ALTER TABLE `ast_sipfriends`
-   MODIFY COLUMN `name` VARCHAR(16);
+  CHANGE `name` `name` VARCHAR(16) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL;
 
