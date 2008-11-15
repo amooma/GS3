@@ -100,14 +100,14 @@ WHERE `id`='.$ggid
 	$type = 'balance';
 	$allow_in = (@$_REQUEST['gg-allow_in'] ? 1 : 0);
 	$in_dest_search  = trim(@$_REQUEST['gg-in_dest_search' ]);
-	$in_dest_replace = preg_replace('/[^0-9+a-zA-Z\-_$]/', '', trim(@$_REQUEST['gg-in_dest_replace']));
+	$in_dest_replace = preg_replace('/[^0-9+a-zA-Z\-_.$]/', '', trim(@$_REQUEST['gg-in_dest_replace']));
 	if (! is_valid_pcre( '/'.$in_dest_search.'/', $in_dest_replace )) {
 		echo 'Invalid pattern!<br />',"\n";
 		$in_dest_search  = $oldgg['in_dest_search' ];
 		$in_dest_replace = $oldgg['in_dest_replace'];
 	}
 	$out_cid_search  = trim(@$_REQUEST['gg-out_cid_search' ]);
-	$out_cid_replace = preg_replace('/[^0-9+a-zA-Z\-_$]/', '', trim(@$_REQUEST['gg-out_cid_replace']));
+	$out_cid_replace = preg_replace('/[^0-9+a-zA-Z\-_.$]/', '', trim(@$_REQUEST['gg-out_cid_replace']));
 	if (! is_valid_pcre( '/'.$out_cid_search.'/', $out_cid_replace )) {
 		echo 'Invalid pattern!<br />',"\n";
 		$out_cid_search  = $oldgg['out_cid_search' ];
