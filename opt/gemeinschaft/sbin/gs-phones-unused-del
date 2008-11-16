@@ -87,14 +87,14 @@ function _delete_nobody_user( $nobody_index )
 function _delete_phone( $mac_addr )
 {
 	global $db;
+		
+	gs_db_start_trans($db);
 	
-	//FIXME - use transactions
-	
-	//start transaction
 	$phone_id = (int)$db->executeGetOne( 'SELECT `id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac_addr) .'\'' );
 	if ($phone_id < 1) {
 		_info( "Phone $mac_addr not found." );
-		//rollback transaction
+		if (! gs_db_rollback_trans($db))
+			_info( "Failed to rollback transaction!" );
 		return false;
 	}
 	$nobody_index = (int)$db->executeGetOne( 'SELECT `nobody_index` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac_addr) .'\'' );
@@ -102,7 +102,8 @@ function _delete_phone( $mac_addr )
 		//FIXME - why does this script only work if a _nobody_ user is logged
 		// in at a phone?
 		_info( "User at phone $mac_addr is not a nobody user." );
-		//rollback transaction
+		if (! gs_db_rollback_trans($db))
+			_info( "Failed to rollback transaction!" );
 		return false;
 	}
 	
@@ -113,23 +114,23 @@ function _delete_phone( $mac_addr )
 	$ok = $db->execute( 'DELETE FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac_addr) .'\'' );
 	if (! $ok) {
 		_info( "Failed to delete phone $mac_addr." );
-		//rollback transaction
+		if (! gs_db_rollback_trans($db))
+			_info( "Failed to rollback transaction!" );
 		return false;
 	}
 	
 	$ok = _delete_nobody_user( $nobody_index );
 	if (! $ok) {
 		_info( "Failed to delete nobody user index $nobody_index" );
-		//rollback transaction
+		if (! gs_db_rollback_trans($db))
+			_info( "Failed to rollback transaction!" );
 		return false;
 	}
 	
-	//commit transaction
-	$ok = true;
-	if (! $ok) {
+	if (! gs_db_commit_trans($db)) {
 		_info( "Failed to delete phone $mac_addr." );
+		return false;
 	}
-	
 	return true;
 }
 
