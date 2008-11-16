@@ -123,11 +123,12 @@ if ($type === 'none') {
 }
 
 if ($tab) {
-	$tab =  @preg_replace('/^internal:/', '', $tab);
-	if ($tab === 'XMLPhonebook') $tab = 'prv';
-	else if ($tab === 'XMLPhonebook_2') $tab = 'gs';
-	else if ($tab === 'XMLPhonebook_3') $tab = 'imported';
-	$type = $tab;
+	$tab = @preg_replace('/^internal:/', '', $tab);  // ?
+	switch ($tab) {
+		case 'XMLPhonebook'  : $type = 'prv';
+		case 'XMLPhonebook_2': $type = 'gs';
+		case 'XMLPhonebook_3': $type = 'imported';
+	}
 }
 
 if (! $user) $user = $phonenumber;
