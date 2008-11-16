@@ -266,15 +266,15 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 	# add a nobody user
 	#
 	$new_nobody_index = (int)( (int)$db->executeGetOne( 'SELECT MAX(`nobody_index`) FROM `users`' ) + 1 );
-
+	
 	$new_nobody_num  = 0;
 	$hp_route_prefix = 0;
 	$soap_user_ext   = 0;
 	if ($boi_host_id > 0) {
-		$new_nobody_num = (int)$db->executeGetOne( 'SELECT COUNT(`user`) FROM `users` WHERE `nobody_index` IS NOT NULL AND `host_id`='.$boi_host_id);
+		$new_nobody_num = (int)$db->executeGetOne( 'SELECT COUNT(`user`) FROM `users` WHERE `nobody_index` IS NOT NULL AND `host_id`='.$boi_host_id );
 		$hp_route_prefix = (string)$db->executeGetOne(
-							'SELECT `value` FROM `host_params` '.
-							'WHERE `host_id`='. (int)$boi_host_id .' AND `param`=\'route_prefix\'' );
+			'SELECT `value` FROM `host_params` '.
+			'WHERE `host_id`='. (int)$boi_host_id .' AND `param`=\'route_prefix\'' );
 		$username = 'nobody-'.$hp_route_prefix.'-'. str_pad($new_nobody_num, 5, '0', STR_PAD_LEFT);
 	}
 	else {
@@ -294,15 +294,15 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 	} else {
 		//gs_log( GS_LOG_DEBUG, 'Nobody user '. $username .' added to database (pending)' );
 	}
-	sleep(1);
+	
 	# add a SIP account:
 	#
 	if ($boi_host_id > 0) {
 		$user_ext = $hp_route_prefix . gs_nobody_index_to_extension( $new_nobody_num, true );
-		$soap_user_ext = gs_nobody_index_to_extension( $new_nobody_num, true );
+		$soap_user_ext =               gs_nobody_index_to_extension( $new_nobody_num, true );
 	}
 	else {
-		$user_ext = gs_nobody_index_to_extension( $new_nobody_index, false );	
+		$user_ext = gs_nobody_index_to_extension( $new_nobody_index, false );
 	}
 	$sip_pwd = gs_prov_gen_sip_pwd();
 	$ok = $db->execute(
