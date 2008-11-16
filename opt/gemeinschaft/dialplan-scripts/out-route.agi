@@ -166,7 +166,7 @@ foreach ($gate_grps as $ggrp_id) {
 	
 	$out_cid_num = $user_cid_num;
 	if ($qualify_cid
-	&&  ! preg_match('/[^0-9+*#]/', $out_cid_num))  # no action for "anonymous"
+	&&  ! in_array(strToLower($out_cid_num), array('anonymous', 'unknown', ''), true))  # no action for "anonymous"
 	{
 		$rs = $db->execute(
 'SELECT `out_cid_search` `cid_s`, `out_cid_replace` `cid_r`
@@ -179,7 +179,7 @@ WHERE `id`='. $ggrp_id
 		if ($ggrp['cid_s'] != ''
 		&&  is_valid_pcre( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'] ))
 		{
-			$out_cid_num = preg_replace('/[^0-9+]/', '',
+			$out_cid_num = preg_replace('/[^0-9+a-zA-Z\-_.]/', '',
 				@preg_replace( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'], $out_cid_num ));
 		}
 	}
