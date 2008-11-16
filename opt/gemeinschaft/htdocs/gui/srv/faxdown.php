@@ -48,20 +48,30 @@ $fnamel_pre = strLen(strRChr($file, '.'));
 $fnamel_all = strLen($file);
 $fname      = subStr($file, 0, $fnamel_all - $fnamel_pre);
 
-if ($raw) $realfile = '/tmp/'.$file;
-else      $realfile = '/tmp/'.$fname.'.pdf';
-$realfile = realPath($realfile);
+if ($raw) $fullfile = '/tmp/'.$file;
+else      $fullfile = '/tmp/'.$fname.'.pdf';
 
-if (! $file || $realfile===false || subStr($realfile,0,5)!='/tmp/') {
-	header( 'HTTP/1.0 404 Not Found', true, 404 );
-	header( 'Status: 404 Not Found' , true, 404 );
-	die( 'File not found.' );
+$realdir = realPath(dirName($fullfile));
+if (empty($file) || empty($realdir) || subStr($realdir,0,5) !== '/tmp/') {
+	header('HTTP/1.0 403 Forbidden', true, 403);
+	header('Status: 403 Forbidden' , true, 403);
+	header('Content-Type: text/plain');
+	die( 'Bad filename.' );
 }
 
 if (! fax_download($file)) {
-	header( 'HTTP/1.0 500 Internal Server Error', true, 500 );
-	header( 'Status: 500 Internal Server Error' , true, 500 );
-	die( 'Error.' );
+	header('HTTP/1.0 500 Internal Server Error', true, 500);
+	header('Status: 500 Internal Server Error' , true, 500);
+	header('Content-Type: text/plain');
+	die( 'Error. Failed to retrieve fax.' );
+}
+
+$realfile = realPath($fullfile);
+if (empty($realfile) || subStr($realfile,0,5) !== '/tmp/') {
+	header('HTTP/1.0 500 Internal Server Error', true, 500);
+	header('Status: 500 Internal Server Error' , true, 500);
+	header('Content-Type: text/plain');
+	die( 'Error. Failed to retrieve fax.' );
 }
 
 
