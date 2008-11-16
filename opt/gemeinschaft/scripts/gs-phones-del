@@ -37,7 +37,6 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 function _info( $message )
 {
 	global $silent;
-	
 	if (! $silent) echo $message,"\n";
 }
 
@@ -105,17 +104,19 @@ function _trigger_phone_by_user_id( $user_id )
 	return true;
 }
 
+
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' (--mac=<mac-addr> | --days=<days>)';
+$usage = 'Usage: '. baseName(__FILE__) .' (--mac=<mac-addr> | --days=<days-since-last-contact>) (--show|--trigger|--delete) [--silent]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
 		'mac=',
 		'days=',
-		'show-only',
-		'checkcfg-only',
+		'show',
+		'trigger',
+		'delete',
 		'silent'
 	),
 	$usage
@@ -125,11 +126,15 @@ if (! isSet($opts['mac'])
 ) {
 	gs_script_invalid_usage( $usage );
 }
-$mac     = preg_replace('/[^0-9A-Z]/', '', strToUpper($opts['mac']));
-$days    = (int)$opts['days'];
+$mac     = preg_replace('/[^0-9A-Z]/', '', strToUpper(@$opts['mac']));
+$days    = (int)@$opts['days'];
 $silent  = array_key_exists('silent', $opts);
-$trigger = array_key_exists('checkcfg-only', $opts);
-$show    = array_key_exists('show-only', $opts);
+
+if     (array_key_exists('show'   , $opts)) $action = 'show';
+elseif (array_key_exists('trigger', $opts)) $action = 'trigger';
+elseif (array_key_exists('delete' , $opts)) $action = 'delete';
+else gs_script_invalid_usage( $usage );
+
 
 /***********************************************************
 *    get the phone IDs
@@ -144,43 +149,75 @@ if (! $db) {
 }
 
 if ($days) {
+	
 	$timestamp = time() - (86400 * $days);
 	
-	$rs = $db->execute(
+	$rs = @$db->execute(
 		'SELECT '.
 			'`p`.`id` `phone_id`, `p`.`mac_addr` `mac_addr`, `p`.`user_id` `user_id`, `p`.`nobody_index` `nobody_index`, `p`.`type` `type`, '.
 			'`s`.`t_last_contact` `t_last_contact` '.
 		'FROM '.
-			'`prov_siemens` `s` JOIN '.
-			'`phones` `p` ON (`p`.`mac_addr` = `s`.`mac_addr`) '.
-		'WHERE `t_last_contact` < '.$timestamp
+			'`phones` `p` JOIN '.
+			'`prov_siemens` `s` ON (`s`.`mac_addr`=`p`.`mac_addr`) '.
+		'WHERE '.
+			'`p`.`type` LIKE \'siemens-os%\' AND '.
+			'`s`.`t_last_contact` < '. $timestamp
 		);
 	if (! $rs) {
 		echo "Could not read any entries.\n";
-		exit(1);
+		echo "(Implemented for Siemens phones only.)\n";
+		exit(0);
 	}
 	while ($r = $rs->fetchRow()) {
-		
-		if ($trigger) {
-			_info( 'Triggering phone '.$r['mac_addr'].' (ID:'.$r['phone_id'].')' );
-			_trigger_phone_by_user_id($r['user_id']);
-		}
-		elseif ($show) {
-			_info( 'Found '.$r['type'].' phone '.$r['mac_addr'].', last contact '.date('d.m.Y H:i:s',$r['t_last_contact']) );
-		}
-		else {
-			_info( 'Deleting phone '.$r['mac_addr'].' (ID:'.$r['phone_id'].')' );
-			_delete_nobody_user( $r['nobody_index'] );
-			_delete_phone( $r['mac_addr'] );
+		switch ($action) {
+			
+			case 'show':
+				_info( 'Found '.$r['type'].' phone '.$r['mac_addr'].', last contact '. date('Y-m-d H:i:s', $r['t_last_contact']) );
+				break;
+			
+			case 'trigger':
+				_info( 'Triggering phone '.$r['mac_addr'].' (ID: '.$r['phone_id'].')' );
+				_trigger_phone_by_user_id( $r['user_id'] );
+				break;
+			
+			case 'delete':
+				_info( 'Deleting phone '.$r['mac_addr'].' (ID: '.$r['phone_id'].')' );
+				$ok = _delete_nobody_user( $r['nobody_index'] );
+				if ($ok) {
+					_delete_phone( $r['mac_addr'] );
+				}
+				break;
 		}
 	}
+	
 }
-
-if ($mac) {
-	$nobody_index = (int)$db->executeGetOne( 'SELECT `nobody_index` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
-	_info( 'Deleting phone '.$mac.' and nobody user with index '.$nobody_index );
-	_delete_nobody_user( $nobody_index );
-	_delete_phone( $mac );
+elseif ($mac) {
+	
+	switch ($action) {
+		
+		case 'show':
+			echo "Show by MAC addr. not implemented.\n";
+			exit(1);
+			break;
+		
+		case 'trigger':
+			echo "Trigger by MAC addr. not implemented.\n";
+			exit(1);
+			break;
+		
+		case 'delete':
+			$nobody_index = (int)$db->executeGetOne( 'SELECT `nobody_index` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
+			_info( 'Deleting nobody user with index '.$nobody_index.' and phone '.$mac );
+			$ok = _delete_nobody_user( $nobody_index );
+			if ($ok) {
+				$ok = _delete_phone( $mac );
+				if ($ok) {
+					exit(0);
+				}
+			}
+			exit(1);
+			break;
+	}
 }
 
 
