@@ -34,6 +34,9 @@ include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 
+//FIXME - why does this script only work if a _nobody_ user is logged
+// in at a phone?
+
 function _info( $message )
 {
 	global $silent;
@@ -50,6 +53,14 @@ function _delete_nobody_user( $nobody_index )
 		echo "Failed to find nobody user for index $nobody_index.\n";
 		return false;
 	}
+	
+	//FIXME - see gs_user_del()
+	// there's much more to delete
+	
+	//FIXME - call BOI API for foreign user
+	echo "FIXME - Not implemented.\n";
+	return false;
+	
 	
 	# delete sip peer
 	#
@@ -89,15 +100,14 @@ function _trigger_phone_by_user_id( $user_id )
 {
 	global $db;
 	
-	$current_ip = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. (int)$user_id );
-	
-	if (! $current_ip) {
-		echo "Failed to get current IP address for user ID $user_id\n";
+	$username = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. (int)$user_id );
+	if (! $username) {
+		echo "Failed to get username user ID $user_id\n";
 		return false;
 	}
-	$ret = @ gs_prov_phone_checkcfg_by_ip( $current_ip, true );
-	if (! $ret) {
-		echo "Failed to sync phone $current_ip\n";
+	$ok = @ gs_prov_phone_checkcfg_by_user( $username, true );
+	if (! $ok) {
+		echo "Failed to sync phone of user $username\n";
 		return false;
 	}
 	
@@ -182,6 +192,7 @@ if ($days) {
 			
 			case 'delete':
 				_info( 'Deleting phone '.$r['mac_addr'].' (ID: '.$r['phone_id'].')' );
+				//FIXME - use a transaction
 				$ok = _delete_nobody_user( $r['nobody_index'] );
 				if ($ok) {
 					_delete_phone( $r['mac_addr'] );
@@ -208,6 +219,7 @@ elseif ($mac) {
 		case 'delete':
 			$nobody_index = (int)$db->executeGetOne( 'SELECT `nobody_index` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
 			_info( 'Deleting nobody user with index '.$nobody_index.' and phone '.$mac );
+			//FIXME - use a transaction
 			$ok = _delete_nobody_user( $nobody_index );
 			if ($ok) {
 				$ok = _delete_phone( $mac );
