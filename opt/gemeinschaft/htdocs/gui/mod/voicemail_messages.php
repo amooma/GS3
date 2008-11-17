@@ -182,7 +182,7 @@ if (@$_REQUEST['action']==='play') {
 		>
 		<param name="autoplay" value="true" />
 		<param name="controller" value="true" />
-		<small><?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?></small>
+		<small><?php echo sPrintF(__('Datei nicht gefunden oder Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?></small>
 	</object>
 	
 	<?php
@@ -203,7 +203,7 @@ if (@$_REQUEST['action']==='play') {
 		<param name="src" value="<?php echo GS_URL_PATH, 'srv/vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.mp3'; ?>" />
 		<param name="autoplay" value="true" />
 		<param name="controller" value="true" />
-		<small><?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?></small>
+		<small><?php echo sPrintF(__('Datei nicht gefunden oder Ihr Browser kann die %s-Datei nicht abspielen.'), 'MP3'); ?></small>
 	</object>
 	
 	<?php
