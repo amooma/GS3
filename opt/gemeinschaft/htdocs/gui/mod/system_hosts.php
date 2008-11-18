@@ -154,6 +154,9 @@ WHERE
 }
 
 if ($delete_host) {
+	
+	gs_db_start_trans($DB);
+	
 	# delete BOI permissions
 	@$DB->execute( 'DELETE FROM `boi_perms` WHERE `host_id`='. $delete_host );
 	
@@ -167,6 +170,14 @@ WHERE
 	`is_foreign`=0'
 	;
 	$DB->execute($sql_query);
+	
+	if (! gs_db_commit_trans($DB)) {
+		echo '<div class="errorbox">';
+		echo sPrintF(__('Host &quot;%s&quot; konnte nicht gel&ouml;scht werden.'),
+			htmlEnt($host));
+		echo '</div>',"\n";
+	}
+	
 	@$DB->execute('OPTIMIZE TABLE `hosts`');  # recalculate next auto-increment value
 	@$DB->execute('ANALYZE TABLE `hosts`');
 }
