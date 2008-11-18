@@ -368,7 +368,11 @@ if ($delete_host) {
 		;
 		$DB->execute($sql_query);
 		
-		$ok = gs_db_commit_trans($DB);
+		if (! gs_db_commit_trans($DB)) {
+			echo '<div class="errorbox">';
+			echo __('Host konnte nicht gel&ouml;scht werden.');
+			echo '</div>',"\n";
+		}
 		
 		@$DB->execute('OPTIMIZE TABLE `hosts`');  # recalculate next auto-increment value
 		@$DB->execute('ANALYZE TABLE `hosts`');

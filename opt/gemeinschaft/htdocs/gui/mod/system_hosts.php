@@ -173,8 +173,7 @@ WHERE
 	
 	if (! gs_db_commit_trans($DB)) {
 		echo '<div class="errorbox">';
-		echo sPrintF(__('Host &quot;%s&quot; konnte nicht gel&ouml;scht werden.'),
-			htmlEnt($host));
+		echo __('Host konnte nicht gel&ouml;scht werden.');
 		echo '</div>',"\n";
 	}
 	
