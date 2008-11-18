@@ -98,6 +98,20 @@ $file    = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['msg']);
 if ($ext == '') _not_allowed();
 
 
+$sox  = find_executable('sox', array(
+	'/usr/bin/', '/usr/local/bin/', '/usr/sbin/', '/usr/local/sbin/' ));
+if (! $sox) {
+	gs_log( GS_LOG_WARNING, 'sox - command not found.' );
+	_server_error( 'Failed to convert file.' );
+}
+$lame = find_executable('lame', array(
+	'/usr/local/bin/', '/usr/bin/', '/usr/local/sbin/', '/usr/sbin/' ));
+if (! $lame) {
+	gs_log( GS_LOG_WARNING, 'lame - command not found.' );
+	_server_error( 'Failed to convert file.' );
+}
+
+
 $rs = $DB->execute(
 'SELECT
 	`m`.`host_id`, `m`.`orig_time`, `m`.`dur`, `m`.`cidnum`, `m`.`cidname`, `m`.`listened_to`, `m`.`orig_mbox`,
@@ -137,13 +151,6 @@ if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	$vmmsg_is_on_this_host = true;
 }
 
-
-/*
-$sox  = find_executable('sox', array(
-	'/usr/bin/', '/usr/local/bin/', '/usr/sbin/', '/usr/local/sbin/' ));
-$lame = find_executable('sox', array(
-	'/usr/local/bin/', '/usr/bin/', '/usr/local/sbin/', '/usr/sbin/' ));
-*/
 
 
 $vm_dir = '/var/spool/asterisk/voicemail/';
@@ -206,9 +213,10 @@ $id3_comment = subStr(_to_id3tag_ascii( $id3_comment ),0,28);
 
 error_reporting(0);
 ini_set('display_errors', false);
+@set_time_limit(10);
 
 $outfile = $tmpfile_base.'.mp3';
-$cmd = 'sox -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav - 2>>/dev/null | lame --preset fast standard -m m -a -b 32 -B 96 --quiet --ignore-tag-errors --tt '. qsa($id3_title) .' --ta '. qsa($id3_artist) .' --tl '. qsa($id3_album) .' --tc '. qsa($id3_comment) .' --tg 101 - '. qsa($outfile) .' 2>&1 1>>/dev/null';
+$cmd = $sox.' -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav - 2>>/dev/null | '.$lame.' --preset fast standard -m m -a -b 32 -B 96 --quiet --ignore-tag-errors --tt '. qsa($id3_title) .' --ta '. qsa($id3_artist) .' --tl '. qsa($id3_album) .' --tc '. qsa($id3_comment) .' --tg 101 - '. qsa($outfile) .' 2>&1 1>>/dev/null';
 # (ID3 tag genre 101 = "Speech")
 $err=0; $out=array();
 @exec( $cmd, $out, $err );
@@ -283,6 +291,6 @@ WHERE
 
 //@exec( 'sudo rm -rf '. qsa($outfile) .' 1>>/dev/null 2>>/dev/null' );
 
-@ob_end_clean();
+@ob_clean();
 
 ?>
