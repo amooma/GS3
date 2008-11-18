@@ -78,6 +78,16 @@ function _to_id3tag_ascii( $str )
 }
 
 
+$formats = array( # internal name to info
+	'mp3'  => array( 'title'=>'MP3' , 'ext'=>'mp3' , 'mime'=>'audio/mpeg'   ),  # RFC 3003
+	//'al'   => array( 'title'=>'Alaw', 'ext'=>'al'  , 'mime'=>'audio/PCMA'   ),  # RFC 4856
+	//'ul'   => array( 'title'=>'Ulaw', 'ext'=>'au'  , 'mime'=>'audio/basic'  ),
+	'wav'  => array( 'title'=>'Wave', 'ext'=>'wav' , 'mime'=>'audio/x-wav'  ),
+);
+# For MIME types see http://www.iana.org/assignments/media-types/audio/
+# Keep in sync with mod/voicemail_messages.php
+
+
 @header( 'Vary: *' );
 @header( 'Cache-Control: private, must-revalidate' );
 
@@ -94,21 +104,29 @@ $user_id = (int)@$_SESSION['sudo_user']['info']['id'];
 $ext     =      @$_SESSION['sudo_user']['info']['ext'];
 $fld     = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['fld']);
 $file    = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['msg']);
+$fmt     = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['fmt']);
+if (! array_key_exists($fmt, $formats)) {
+	_server_error( 'Unknown format requested.' );
+}
 
 if ($ext == '') _not_allowed();
 
 
-$sox  = find_executable('sox', array(
-	'/usr/bin/', '/usr/local/bin/', '/usr/sbin/', '/usr/local/sbin/' ));
-if (! $sox) {
-	gs_log( GS_LOG_WARNING, 'sox - command not found.' );
-	_server_error( 'Failed to convert file.' );
+if (in_array($fmt, array('mp3', 'wav'), true)) {
+	$sox  = find_executable('sox', array(
+		'/usr/bin/', '/usr/local/bin/', '/usr/sbin/', '/usr/local/sbin/' ));
+	if (! $sox) {
+		gs_log( GS_LOG_WARNING, 'sox - command not found.' );
+		_server_error( 'Failed to convert file.' );
+	}
 }
-$lame = find_executable('lame', array(
-	'/usr/local/bin/', '/usr/bin/', '/usr/local/sbin/', '/usr/sbin/' ));
-if (! $lame) {
-	gs_log( GS_LOG_WARNING, 'lame - command not found.' );
-	_server_error( 'Failed to convert file.' );
+if (in_array($fmt, array('mp3'), true)) {
+	$lame = find_executable('lame', array(
+		'/usr/local/bin/', '/usr/bin/', '/usr/local/sbin/', '/usr/sbin/' ));
+	if (! $lame) {
+		gs_log( GS_LOG_WARNING, 'lame - command not found.' );
+		_server_error( 'Failed to convert file.' );
+	}
 }
 
 
@@ -129,7 +147,7 @@ if (! $info) {
 	_not_found();
 }
 
-$etag = gmDate('Ymd') .'-'. md5( $user_id .'-'. $fld .'-'. $file .'-'. $info['host_id'] .'-'. $info['orig_time'] .'-'. $info['dur'] .'-'. $info['cidnum'] );
+$etag = gmDate('Ymd') .'-'. md5( $user_id .'-'. $fld .'-'. $file .'-'. $info['host_id'] .'-'. $info['orig_time'] .'-'. $info['dur'] .'-'. $info['cidnum'] ) .'-'. $fmt;
 if (array_key_exists('HTTP_IF_NONE_MATCH', $_SERVER)
 &&  $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
 	_not_modified();
@@ -186,44 +204,62 @@ if (! $vmmsg_is_on_this_host) {
 	$origfile = $origorigfile;
 }
 
-
-# convert file from original format (aLaw) to WAV (signed linear PCM,
-# 8000 Hz sampling rate, 16 bits/sample), then to MP3
-#
-
-$err=0;
-@exec( 'sudo chmod a+r '. qsa($origfile) .' 1>>/dev/null 2>>/dev/null' );
+$err=0; $out=array();
+@exec( 'sudo chmod a+r '. qsa($origfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
 if ($err != 0) {
 	gs_log( GS_LOG_WARNING, 'Can\'t read \"$origfile\".' );
 	_server_error( 'Failed to convert file.' );
 }
-
-$id3_artist  = $info['cidnum'] . ($info['cidname'] != '' ? ' ('.$info['cidname'].')' : '');
-$id3_album   = subStr(_to_id3tag_ascii( $ext         ),0,30);
-$id3_title   = date('Y-m-d H:i', $info['orig_time']) .' - '. $id3_artist;
-$id3_artist  = subStr(_to_id3tag_ascii( $id3_artist  ),0,30);
-$id3_title   = subStr(_to_id3tag_ascii( $id3_title   ),0,30);
-$id3_comment = '';
-if ($info['orig_mbox'] != $ext
-&&  $info['orig_mbox'] != '') {
-	$id3_comment .= '<< '.$info['orig_mbox'];
-}
-$id3_comment = subStr(_to_id3tag_ascii( $id3_comment ),0,28);
 
 
 error_reporting(0);
 ini_set('display_errors', false);
 @set_time_limit(10);
 
-$outfile = $tmpfile_base.'.mp3';
-$cmd = $sox.' -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav - 2>>/dev/null | '.$lame.' --preset fast standard -m m -a -b 32 -B 96 --quiet --ignore-tag-errors --tt '. qsa($id3_title) .' --ta '. qsa($id3_artist) .' --tl '. qsa($id3_album) .' --tc '. qsa($id3_comment) .' --tg 101 - '. qsa($outfile) .' 2>&1 1>>/dev/null';
-# (ID3 tag genre 101 = "Speech")
-$err=0; $out=array();
-@exec( $cmd, $out, $err );
-if ($err != 0) {
-	gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file. ('.trim(implode(' - ',$out)).')' );
-	_server_error( 'Failed to convert file.' );
+
+$outfile = $tmpfile_base .'.'. $formats[$fmt]['ext'];
+
+if ($fmt === 'mp3') {
+	# convert file from original format (aLaw) to WAV (signed linear PCM,
+	# 8000 Hz sampling rate, 16 bits/sample), then to MP3
+	#
+	
+	$id3_artist  = $info['cidnum'] . ($info['cidname'] != '' ? ' ('.$info['cidname'].')' : '');
+	$id3_album   = subStr(_to_id3tag_ascii( $ext         ),0,30);
+	$id3_title   = date('Y-m-d H:i', $info['orig_time']) .' - '. $id3_artist;
+	$id3_artist  = subStr(_to_id3tag_ascii( $id3_artist  ),0,30);
+	$id3_title   = subStr(_to_id3tag_ascii( $id3_title   ),0,30);
+	$id3_comment = '';
+	if ($info['orig_mbox'] != $ext
+	&&  $info['orig_mbox'] != '') {
+		$id3_comment .= '<< '.$info['orig_mbox'];
+	}
+	$id3_comment = subStr(_to_id3tag_ascii( $id3_comment ),0,28);
+	
+	$cmd = $sox.' -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav - 2>>/dev/null | '.$lame.' --preset fast standard -m m -a -b 32 -B 96 --quiet --ignore-tag-errors --tt '. qsa($id3_title) .' --ta '. qsa($id3_artist) .' --tl '. qsa($id3_album) .' --tc '. qsa($id3_comment) .' --tg 101 - '. qsa($outfile) .' 2>&1 1>>/dev/null';
+	# (ID3 tag genre 101 = "Speech")
+	$err=0; $out=array();
+	@exec( $cmd, $out, $err );
+	if ($err != 0) {
+		gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file to '.$fmt.'. ('.trim(implode(' - ',$out)).')' );
+		_server_error( 'Failed to convert file.' );
+	}
 }
+elseif ($fmt === 'al') {
+	# nothing to do
+	# $origfile == $tmpfile_base.'.alaw';
+	$outfile = $origfile;
+}
+elseif ($fmt === 'wav') {
+	$cmd = $sox.' -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav '. qsa($outfile) .' 1>>/dev/null';
+	$err=0; $out=array();
+	@exec( $cmd, $out, $err );
+	if ($err != 0) {
+		gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file to '.$fmt.'. ('.trim(implode(' - ',$out)).')' );
+		_server_error( 'Failed to convert file.' );
+	}
+}
+
 if (! file_exists($outfile)) {
 	gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file.' );
 	_server_error( 'Failed to convert file.' );
@@ -260,12 +296,9 @@ if (! file_exists($outfile)) {
 
 
 
-# the correct MIME type for "mp3" files is "audio/mpeg", see
-# http://www.iana.org/assignments/media-types/audio/
-# http://www.rfc-editor.org/rfc/rfc3003.txt
-@header( 'Content-Type: audio/mpeg' );
+@header( 'Content-Type: '. $formats[$fmt]['mime'] );
 
-$fake_filename = preg_replace('/[^0-9a-z\-_.]/i', '', 'vmsg_'. $ext .'_'. date('Ymd_Hi', $info['orig_time']) .'_'. subStr(md5(date('s', $info['orig_time']).$info['cidnum']),0,2) .'.mp3' );
+$fake_filename = preg_replace('/[^0-9a-z\-_.]/i', '', 'vm_'. $ext .'_'. date('Ymd_Hi', $info['orig_time']) .'_'. subStr(md5(date('s', $info['orig_time']).$info['cidnum']),0,4) .'.'. $formats[$fmt]['ext'] );
 @header( 'Content-Disposition: inline; filename='.$fake_filename );
 
 # set Content-Length to prevent Apache(/PHP?) from using
