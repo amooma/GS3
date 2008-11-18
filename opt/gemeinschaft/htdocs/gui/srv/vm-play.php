@@ -204,13 +204,16 @@ if ($info['orig_mbox'] != $ext
 $id3_comment = subStr(_to_id3tag_ascii( $id3_comment ),0,28);
 
 
+error_reporting(0);
+ini_set('display_errors', false);
+
 $outfile = $tmpfile_base.'.mp3';
-$cmd = 'sox -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav - 2>>/dev/null | lame --preset fast standard -m m -a -b 32 -B 96 --quiet --ignore-tag-errors --tt '. qsa($id3_title) .' --ta '. qsa($id3_artist) .' --tl '. qsa($id3_album) .' --tc '. qsa($id3_comment) .' --tg 101 - '. qsa($outfile) .' 1>>/dev/null 2>>/dev/null';
+$cmd = 'sox -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav - 2>>/dev/null | lame --preset fast standard -m m -a -b 32 -B 96 --quiet --ignore-tag-errors --tt '. qsa($id3_title) .' --ta '. qsa($id3_artist) .' --tl '. qsa($id3_album) .' --tc '. qsa($id3_comment) .' --tg 101 - '. qsa($outfile) .' 2>&1 1>>/dev/null';
 # (ID3 tag genre 101 = "Speech")
 $err=0; $out=array();
 @exec( $cmd, $out, $err );
 if ($err != 0) {
-	gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file.' );
+	gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file. ('.trim(implode(' - ',$out)).')' );
 	_server_error( 'Failed to convert file.' );
 }
 if (! file_exists($outfile)) {
