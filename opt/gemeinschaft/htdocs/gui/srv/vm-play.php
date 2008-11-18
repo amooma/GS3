@@ -170,11 +170,11 @@ if (! $vmmsg_is_on_this_host) {
 	# user is on a different host
 	# copy the original file to this host:
 	$origfile = $tmpfile_base.'.alaw';
-	$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'. $host['host'] .':'. $origorigfile) .' '. qsa($origfile);
+	$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'. $info['host'] .':'. $origorigfile) .' '. qsa($origfile);
 	$err=0; $out=array();
 	@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
 	if ($err != 0) {
-		gs_log( GS_LOG_WARNING, "Could not get voicemail \"$origorigfile\" from node \"".$host['host']."\"." );
+		gs_log( GS_LOG_WARNING, "Could not get voicemail \"$origorigfile\" from node \"".$info['host']."\"." );
 		_not_found( 'Could not get file from remote node.' );
 	}
 } else {
