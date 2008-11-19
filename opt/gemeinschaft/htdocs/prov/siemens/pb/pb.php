@@ -125,11 +125,9 @@ if ($type === 'none') {
 if ($tab) {
 	$tab = @preg_replace('/^internal:/', '', $tab);  // ?
 	switch ($tab) {
-		case 'XMLPhonebook'  : $type = 'prv';
-					break;
-		case 'XMLPhonebook_2': $type = 'gs';
-					break;
-		case 'XMLPhonebook_3': $type = 'imported';
+		case 'XMLPhonebook'  : $type = 'prv'      ; break;
+		case 'XMLPhonebook_2': $type = 'gs'       ; break;
+		case 'XMLPhonebook_3': $type = 'imported' ; break;
 	}
 }
 
@@ -155,8 +153,8 @@ $db = gs_db_slave_connect();
 
 # get user_id
 #
-
-if ($ip_addr != '') $user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($ip_addr) .'\'' );
+if ($ip_addr != '')
+	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($ip_addr) .'\'' );
 else $user_id = 0;
 
 if ($user_id < 1) {
@@ -377,15 +375,14 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	xml('    <Url>'.$url.'</Url>');
 	
 	$i=1;
-
+	//if (true) {
 		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="type" Value="none">');
 		xml('      <OptionText>'. __("Zur\xC3\xBCck") .'</OptionText>');
 		xml('      <Image>'.$img_url.'previous.png</Image>');
 		xml('    </Option>');
-	
-
-# Alternative search method. Not really necessary anymore due to new keypad functions.
-/*
+	//}
+	# Alternative search method. Not really necessary anymore due to new keypad functions.
+	/*
 	if ($num_total > 6) {
 		$i++;
 		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="search" Value="'.$type.'">');
@@ -393,7 +390,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		xml('      <Image>'.$img_url.'search.png</Image>');
 		xml('    </Option>');
 	}
-*/	
+	*/
 	while ($r = $rs->fetchRow()) {
 		$i++;
 		$entry_name = $r['ln'].', '.$r['fn'].' - '. $r['number'];
