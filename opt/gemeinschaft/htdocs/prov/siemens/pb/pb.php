@@ -294,7 +294,7 @@ if (! $type) {
 else {
 	
 	$page = 0;
-	$per_page = 150;
+	$per_page = 15; # Number of phonebook entries sent to the phone.
 	
 	$name_sql = str_replace(
 		array( '*', '?' ),
@@ -374,12 +374,15 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	xml('    <Url>'.$url.'</Url>');
 	
 	$i=1;
-	//if (true) {
+
 		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="type" Value="none">');
 		xml('      <OptionText>'. __("Zur\xC3\xBCck") .'</OptionText>');
 		xml('      <Image>'.$img_url.'previous.png</Image>');
 		xml('    </Option>');
-	//}
+	
+
+# Alternative search method. Not really necessary anymore due to new keypad functions.
+/*
 	if ($num_total > 6) {
 		$i++;
 		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="search" Value="'.$type.'">');
@@ -387,7 +390,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		xml('      <Image>'.$img_url.'search.png</Image>');
 		xml('    </Option>');
 	}
-	
+*/	
 	while ($r = $rs->fetchRow()) {
 		$i++;
 		$entry_name = $r['ln'].', '.$r['fn'].' - '. $r['number'];
