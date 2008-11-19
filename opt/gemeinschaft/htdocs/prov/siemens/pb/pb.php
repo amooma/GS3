@@ -155,7 +155,10 @@ $db = gs_db_slave_connect();
 
 # get user_id
 #
-$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($ip_addr) .'\'' );
+
+if ($ip_addr != '') $user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($ip_addr) .'\'' );
+else $user_id = 0;
+
 if ($user_id < 1) {
 	$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 	if ($user_id < 1) {
