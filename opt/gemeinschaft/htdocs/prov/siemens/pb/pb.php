@@ -367,7 +367,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	xml('<IppDisplay>');
 	xml('<IppScreen ID="1" HiddenCount="3" CommandCount="1">');
 	xml('  <IppKey Keypad="YES" SendKeys="YES" BufferKeys="NO" BufferLength="0" TermKey="" UrlKey="key" />');
-	xml('  <IppList Type="IMPLICIT" Count="'.($entries+1).'">');
+	xml('  <IppList Type="IMPLICIT" Count="'.($entries+1).'" Columns="3">');
 	if ($keys == '')
 		xml('    <Title>'. __('Telefonbuch') .' '.(@$typeToTitle[$type]).' ('.$num_total.')' .'</Title>');
 	else
@@ -378,6 +378,8 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	//if (true) {
 		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="type" Value="none">');
 		xml('      <OptionText>'. __("Zur\xC3\xBCck") .'</OptionText>');
+		xml('      <OptionText> </OptionText>');
+		xml('      <OptionText> </OptionText>');
 		xml('      <Image>'.$img_url.'previous.png</Image>');
 		xml('    </Option>');
 	//}
@@ -393,10 +395,11 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	*/
 	while ($r = $rs->fetchRow()) {
 		$i++;
-		$entry_name = $r['ln'].', '.$r['fn'].' - '. $r['number'];
 		$selected = ($num_total == 1) ? 'TRUE':'FALSE';  # select first entry if there's only 1
 		xml('    <Option ID="'.$i.'" Selected="'.$selected.'" Key="dial" Value="'.$r['number'].'">');
-		xml('      <OptionText>'.$entry_name.'</OptionText>');
+		xml('      <OptionText State="NORMAL">'.$r['ln'].', '.$r['fn'].'</OptionText>');
+		xml('      <OptionText>'.@substr($r['number'],0,5).' </OptionText>');
+		xml('      <OptionText>'.@substr($r['number'],5).' </OptionText>');
 		xml('      <Image></Image>');
 		xml('    </Option>');
 	}
