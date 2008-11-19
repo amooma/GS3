@@ -46,14 +46,21 @@ $folders = array(
 );
 
 $formats = array( # internal name to info
-	'mp3'  => array( 'title'=>'MP3' , 'ext'=>'mp3' , 'mime'=>'audio/mpeg'   ),  # RFC 3003
-	//'al'   => array( 'title'=>'Alaw', 'ext'=>'al'  , 'mime'=>'audio/PCMA'   ),  # RFC 4856
-	//'ul'   => array( 'title'=>'Ulaw', 'ext'=>'au'  , 'mime'=>'audio/basic'  ),
-	'wav'  => array( 'title'=>'Wave', 'ext'=>'wav' , 'mime'=>'audio/x-wav'  ),
+	'wav-pcma' => array( 'title'=>'aLaw', 'ext'=>'alaw.wav', 'mime'=>'audio/x-wav'  ),
+	//'pcma'     => array( 'title'=>'aLaw', 'ext'=>'al'      , 'mime'=>'audio/PCMA'   ),  # RFC 4856
+	'mp3'      => array( 'title'=>'MP3' , 'ext'=>'mp3'     , 'mime'=>'audio/mpeg'   ),  # RFC 3003
+	'sun-pcmu' => array( 'title'=>'Au'  , 'ext'=>'au'      , 'mime'=>'audio/basic'  ),  # RFC 2046
+	'wav-pcm'  => array( 'title'=>'sLin', 'ext'=>'slin.wav', 'mime'=>'audio/x-wav'  ),
 );
 # For MIME types see http://www.iana.org/assignments/media-types/audio/
 # Keep in sync with srv/vm-play.php
 
+
+$fmt  = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['fmt' ]);
+if (! array_key_exists($fmt, $formats)) {
+	reset($formats);
+	$fmt = key($formats);
+}
 
 $GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
 if (! $GS_INSTALLATION_TYPE_SINGLE) {
@@ -91,6 +98,14 @@ if (! $GS_INSTALLATION_TYPE_SINGLE) {
 <input type="hidden" name="action" value="play" />
 <?php
 
+echo '<div class="fr" style="clear:right; width:250px; padding:0 3px 4px 3px; margin-top:-5px;">' ,"\n";
+foreach ($formats as $fmt_name => $fmt_info) {
+	echo '<input type="radio" name="fmt" value="',$fmt_name,'" id="ipt-fmt-',$fmt_name,'"';
+	if ($fmt_name === $fmt) echo ' checked="checked"';
+	echo '/><label for="ipt-fmt-',$fmt_name,'"><small>',htmlEnt($fmt_info['title']),'</small></label>' ,"\n";
+}
+echo "\n", '</div>' ,"\n";
+
 if (@$_REQUEST['action']==='play') {
 	
 	/*
@@ -100,10 +115,6 @@ if (@$_REQUEST['action']==='play') {
 	$play = explode('--', @$_REQUEST['play']);
 	$fld  = preg_replace('/[^a-z0-9\-_]/i', '', @$play[0]);
 	$file = preg_replace('/[^a-z0-9\-_]/i', '', @$play[1]);
-	$fmt  = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['fmt' ]);
-	if (! array_key_exists($fmt, $formats)) {
-		$fmt = 'mp3';
-	}
 	
 	/*
 	$vm_dir = '/var/spool/asterisk/voicemail/default/';
@@ -188,18 +199,6 @@ if (@$_REQUEST['action']==='play') {
 	}
 	*/
 	
-	# the correct MIME type for "mp3" files is "audio/mpeg", see
-	# http://www.iana.org/assignments/media-types/audio/
-	# http://www.rfc-editor.org/rfc/rfc3003.txt
-	
-	echo '<div class="fr" style="clear:right; width:250px; padding:0 3px 4px 3px; margin-top:-5px;">' ,"\n";
-	foreach ($formats as $fmt_name => $fmt_info) {
-		echo '<input type="radio" name="fmt" value="',$fmt_name,'" id="ipt-fmt-',$fmt_name,'"';
-		if ($fmt_name === $fmt) echo ' checked="checked"';
-		echo '/><label for="ipt-fmt-',$fmt_name,'"><small>',htmlEnt($fmt_info['title']),'</small></label>' ,"\n";
-	}
-	echo "\n", '</div>' ,"\n";
-	
 	echo '<div class="fr" style="clear:right; width:250px; border:1px solid #ccc; padding:3px; background:#eee;">' ,"\n";
 	//echo __('Player') ,"\n";
 	
@@ -224,7 +223,7 @@ if (@$_REQUEST['action']==='play') {
 		>
 		<param name="autoplay" value="true" />
 		<param name="controller" value="true" />
-		<small><?php echo sPrintF(__('Datei nicht gefunden oder Ihr Browser kann die %s-Datei nicht abspielen.'), $formats[$fmt]['title']); ?></small>
+		<small><?php echo htmlEnt(sPrintF(__("Datei nicht gefunden, Konvertierungsfehler oder fehlendes Plugin f\xC3\xBCr %s"), $formats[$fmt]['title'])); ?></small>
 	</object>
 	
 <?php
@@ -245,7 +244,7 @@ if (@$_REQUEST['action']==='play') {
 		<param name="src" value="<?php echo $audio_url_esc; ?>" />
 		<param name="autoplay" value="true" />
 		<param name="controller" value="true" />
-		<small><?php echo sPrintF(__('Datei nicht gefunden oder Ihr Browser kann die %s-Datei nicht abspielen.'), $formats[$fmt]['title']); ?></small>
+		<small><?php echo htmlEnt(sPrintF(__("Datei nicht gefunden, Konvertierungsfehler oder fehlendes Plugin f\xC3\xBCr %s"), $formats[$fmt]['title'])); ?></small>
 	</object>
 	
 <?php
