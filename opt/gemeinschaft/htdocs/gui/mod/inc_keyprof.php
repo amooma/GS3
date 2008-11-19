@@ -74,6 +74,7 @@ $key_function_none_snom = 'none';
 $key_functions_siemens = array(
 	'f0'  => __('Leer'),                  # clear
 	'f1'  => __('Zielwahl'),              # selected dialing
+	'f59' => __('Nebenstelle/BLF'),       # extension
 	'f9'  => __('Rufton aus'),            # ringer off
 	'f10' => __('Halten'),                # hold
 	'f11' => __('Makeln'),                # alternate
