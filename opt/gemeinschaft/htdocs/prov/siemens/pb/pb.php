@@ -126,7 +126,9 @@ if ($tab) {
 	$tab = @preg_replace('/^internal:/', '', $tab);  // ?
 	switch ($tab) {
 		case 'XMLPhonebook'  : $type = 'prv';
+					break;
 		case 'XMLPhonebook_2': $type = 'gs';
+					break;
 		case 'XMLPhonebook_3': $type = 'imported';
 	}
 }
