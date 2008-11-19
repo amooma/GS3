@@ -115,33 +115,32 @@ $type         = trim(@$_REQUEST['type'       ]);
 $tab          = trim(@$_REQUEST['tab'        ]);
 
 
+# workaround for an OpenStage bug. it puts "#" in the URL unescaped
+#
 if ($user.$phonenumber == '') {
-	$url = explode('?', basename($_SERVER['REQUEST_URI']));
-	$params = explode('&',$url[1]);
+	$url = explode('?', baseName($_SERVER['REQUEST_URI']));
+	$params = explode('&',@$url[1]);
 	foreach ($params as $param) {
 		$values = $params = explode('=',$param);
 		switch ($values[0]) {
-			case 'key': $key=$values[1]; break;
-			case 'keys': $keys=$values[1]; break;
-			case 'user': $user=$values[1]; break;
-			case 'phonenumber': $phonenumber=$values[1]; break;
-			case 'tab': $tab=$values[1]; break;
-			case 'type': $type=$values[1]; break;
+			case 'key'        : $key         = @$values[1]; break;
+			case 'keys'       : $keys        = @$values[1]; break;
+			case 'user'       : $user        = @$values[1]; break;
+			case 'phonenumber': $phonenumber = @$values[1]; break;
+			case 'tab'        : $tab         = @$values[1]; break;
+			case 'type'       : $type        = @$values[1]; break;
 		}
 	}
 }
 
-$keys .= $key;
 
-if ($key === '*') $keys = @substr($keys,0,-2);
-
-
-if ($key === '#') $keys = '';
+if     ($key === '*') $keys = @subStr($keys,0,-1);
+elseif ($key === '#') $keys = '';
+else                  $keys .= $key;
 
 if ($type === 'none') {
 	$keys = '';
 }
-
 
 
 
