@@ -79,10 +79,11 @@ function _to_id3tag_ascii( $str )
 
 
 $formats = array( # internal name to info
-	'mp3'  => array( 'title'=>'MP3' , 'ext'=>'mp3' , 'mime'=>'audio/mpeg'   ),  # RFC 3003
-	//'al'   => array( 'title'=>'Alaw', 'ext'=>'al'  , 'mime'=>'audio/PCMA'   ),  # RFC 4856
-	//'ul'   => array( 'title'=>'Ulaw', 'ext'=>'au'  , 'mime'=>'audio/basic'  ),
-	'wav'  => array( 'title'=>'Wave', 'ext'=>'wav' , 'mime'=>'audio/x-wav'  ),
+	'wav-pcma' => array( 'title'=>'aLaw', 'ext'=>'alaw.wav', 'mime'=>'audio/x-wav'  ),
+	//'pcma'     => array( 'title'=>'aLaw', 'ext'=>'al'      , 'mime'=>'audio/PCMA'   ),  # RFC 4856
+	'mp3'      => array( 'title'=>'MP3' , 'ext'=>'mp3'     , 'mime'=>'audio/mpeg'   ),  # RFC 3003
+	'sun-pcmu' => array( 'title'=>'Au'  , 'ext'=>'au'      , 'mime'=>'audio/basic'  ),  # RFC 2046
+	'wav-pcm'  => array( 'title'=>'sLin', 'ext'=>'slin.wav', 'mime'=>'audio/x-wav'  ),
 );
 # For MIME types see http://www.iana.org/assignments/media-types/audio/
 # Keep in sync with mod/voicemail_messages.php
@@ -112,13 +113,15 @@ if (! array_key_exists($fmt, $formats)) {
 if ($ext == '') _not_allowed();
 
 
-if (in_array($fmt, array('mp3', 'wav'), true)) {
+if (in_array($fmt, array('mp3', 'wav-pcm', 'sun-pcmu'), true)) {
 	$sox  = find_executable('sox', array(
 		'/usr/bin/', '/usr/local/bin/', '/usr/sbin/', '/usr/local/sbin/' ));
 	if (! $sox) {
 		gs_log( GS_LOG_WARNING, 'sox - command not found.' );
 		_server_error( 'Failed to convert file.' );
 	}
+} else {
+	$sox = '/bin/false';
 }
 if (in_array($fmt, array('mp3'), true)) {
 	$lame = find_executable('lame', array(
@@ -127,6 +130,8 @@ if (in_array($fmt, array('mp3'), true)) {
 		gs_log( GS_LOG_WARNING, 'lame - command not found.' );
 		_server_error( 'Failed to convert file.' );
 	}
+} else {
+	$lame = '/bin/false';
 }
 
 
@@ -245,12 +250,69 @@ if ($fmt === 'mp3') {
 		_server_error( 'Failed to convert file.' );
 	}
 }
-elseif ($fmt === 'al') {
+elseif ($fmt === 'pcma') {
+	# not supported by any players
+	
 	# nothing to do
 	# $origfile == $tmpfile_base.'.alaw';
 	$outfile = $origfile;
 }
-elseif ($fmt === 'wav') {
+elseif ($fmt === 'wav-pcma') {
+	# A-law logarithmic PCM in WAVE container
+	# same format as "alaw" in Asterisk, plus an additional file header
+	# => no conversion required
+	
+	/*
+	$cmd = $sox.' -q -t al '. qsa($origfile) .' -r 8000 -c 1 -A -b -t wav '. qsa($outfile) .' 1>>/dev/null';
+	gs_log( GS_LOG_DEBUG, $cmd);
+	$err=0; $out=array();
+	@exec( $cmd, $out, $err );
+	if ($err != 0) {
+		gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file to '.$fmt.'. ('.trim(implode(' - ',$out)).')' );
+		_server_error( 'Failed to convert file.' );
+	}
+	*/
+	
+	# http://de.wikipedia.org/wiki/RIFF_WAVE#Beispiel_eines_allgemein_lesbaren_WAVE-Dateiformates
+	# (RIFF is little-endian!)
+	$dlen = (int)@fileSize($origfile);  # 90400
+	$wav_alaw_header
+		='RIFF'              # chunk ID
+		.pack('V', 50+$dlen) # chunk size = file size - 8 = 50+$dlen
+		.'WAVE'              # chunk format = WAVE
+		
+		.'fmt '              # header sub-chunk ID
+		.pack('V',    18)    # header sub-chunk length = 18
+		.pack('v',     6)    # data format = 6 (Alaw)
+		.pack('v',     1)    # channels = 1
+		.pack('V',  8000)    # sample rate = 8000
+		.pack('V',  8000)    # bytes/second = sample rate * channels * bits/sample / 8 = 8000*1*1 = 8000
+		.pack('v',     1)    # block align = channels * bits/sample / 8 = 1*8/8 = 1
+		.pack('v',     8)    # bits/sample = 8
+		.pack('v',     0)    # optional extra-param size
+		//.''                  # optional extra-params
+		
+		.'fact'              # fact sub-chunk ID
+		.pack('V',     4)    # fact sub-chunk length = 4
+		.pack('V', $dlen)    # data length = $dlen
+		
+		.'data'              # data sub-chunk ID
+		.pack('V', $dlen)    # data sub-chunk length = $dlen
+		;
+	
+	$outfile = $origfile;  # to soothe the file_exists() check
+}
+elseif ($fmt === 'sun-pcmu') {
+	$cmd = $sox.' -q -t al '. qsa($origfile) .' -r 8000 -c 1 -U -b -t au '. qsa($outfile) .' 1>>/dev/null';
+	$err=0; $out=array();
+	@exec( $cmd, $out, $err );
+	if ($err != 0) {
+		gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file to '.$fmt.'. ('.trim(implode(' - ',$out)).')' );
+		_server_error( 'Failed to convert file.' );
+	}
+}
+elseif ($fmt === 'wav-pcm') {
+	# signed linear PCM in WAVE container
 	$cmd = $sox.' -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav '. qsa($outfile) .' 1>>/dev/null';
 	$err=0; $out=array();
 	@exec( $cmd, $out, $err );
@@ -297,18 +359,26 @@ if (! file_exists($outfile)) {
 
 
 @header( 'Content-Type: '. $formats[$fmt]['mime'] );
-
 $fake_filename = preg_replace('/[^0-9a-z\-_.]/i', '', 'vm_'. $ext .'_'. date('Ymd_Hi', $info['orig_time']) .'_'. subStr(md5(date('s', $info['orig_time']).$info['cidnum']),0,4) .'.'. $formats[$fmt]['ext'] );
 @header( 'Content-Disposition: inline; filename='.$fake_filename );
+@header( 'ETag: '. $etag );
 
 # set Content-Length to prevent Apache(/PHP?) from using
 # "Transfer-Encoding: chunked" which makes the sound file appear too
 # short in QuickTime and maybe other players
 @header( 'Transfer-Encoding: identity' );
-@header( 'Content-Length: '. (int)@fileSize($outfile) );
-@header( 'ETag: '. $etag );
 
-@readFile( $outfile );
+if ($fmt === 'wav-pcma') {
+	@header( 'Content-Length: '. ((int)strLen($wav_alaw_header) + (int)@fileSize($origfile)) );
+	echo $wav_alaw_header;
+	@readFile( $origfile );
+}
+else {
+	@header( 'Content-Length: '. (int)@fileSize($outfile) );
+	@readFile( $outfile );
+}
+
+
 
 @ob_start();  # so there's no output after the content
 
