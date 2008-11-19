@@ -63,10 +63,14 @@ function _not_found( $errmsg='' )
 	exit(1);
 }
 
-function _not_modified()
+function _not_modified( $etag='', $attach=false, $fake_filename='' )
 {
 	header( 'HTTP/1.0 304 Not Modified', true, 304 );
 	header( 'Status: 304 Not Modified', true, 304 );
+	if (! empty($etag))
+		header( 'ETag: '. $etag );
+	if (! empty($fake_filename))
+		header( 'Content-Disposition: '.($attach ? 'attachment':'inline').'; filename="'.$fake_filename.'"' );
 	exit(0);
 }
 
@@ -109,6 +113,8 @@ $fmt     = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['fmt']);
 if (! array_key_exists($fmt, $formats)) {
 	_server_error( 'Unknown format requested.' );
 }
+$attach  = (@$_REQUEST['disp'] === 'attach');
+
 
 if ($ext == '') _not_allowed();
 
@@ -153,9 +159,10 @@ if (! $info) {
 }
 
 $etag = gmDate('Ymd') .'-'. md5( $user_id .'-'. $fld .'-'. $file .'-'. $info['host_id'] .'-'. $info['orig_time'] .'-'. $info['dur'] .'-'. $info['cidnum'] ) .'-'. $fmt;
+$fake_filename = preg_replace('/[^0-9a-z\-_.]/i', '', 'vm_'. $ext .'_'. date('Ymd_Hi', $info['orig_time']) .'_'. subStr(md5(date('s', $info['orig_time']).$info['cidnum']),0,4) .'.'. $formats[$fmt]['ext'] );
 if (array_key_exists('HTTP_IF_NONE_MATCH', $_SERVER)
 &&  $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
-	_not_modified();
+	_not_modified( $etag, $attach, $fake_filename );
 }
 
 if ($info['dur'] > 900) {  # 900 s = 15 min
@@ -360,7 +367,7 @@ if (! file_exists($outfile)) {
 
 @header( 'Content-Type: '. $formats[$fmt]['mime'] );
 $fake_filename = preg_replace('/[^0-9a-z\-_.]/i', '', 'vm_'. $ext .'_'. date('Ymd_Hi', $info['orig_time']) .'_'. subStr(md5(date('s', $info['orig_time']).$info['cidnum']),0,4) .'.'. $formats[$fmt]['ext'] );
-@header( 'Content-Disposition: inline; filename='.$fake_filename );
+@header( 'Content-Disposition: '.($attach ? 'attachment':'inline').'; filename="'.$fake_filename.'"' );
 @header( 'ETag: '. $etag );
 
 # set Content-Length to prevent Apache(/PHP?) from using

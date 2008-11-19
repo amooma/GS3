@@ -201,13 +201,23 @@ if (@$_REQUEST['action']==='play') {
 	}
 	*/
 	
-	echo '<div class="fr" style="clear:right; width:250px; border:1px solid #ccc; padding:3px; background:#eee;">' ,"\n";
+	echo '<div class="fr" style="clear:right; width:250px; border:1px solid #ccc; padding:3px 3px 1px 3px; background:#eee;">' ,"\n";
 	//echo __('Player') ,"\n";
 	
-	$audio_url_esc = GS_URL_PATH .'srv/vm-play.php?sudo='. @$_SESSION['sudo_user']['name']
+	$audio_url_base_esc
+		= GS_URL_PATH .'srv/vm-play.php?sudo='. @$_SESSION['sudo_user']['name']
 		.'&amp;fld='.$fld
 		.'&amp;msg='.$file
 		.'&amp;fmt='.$fmt
+		;
+	$audio_url_esc
+		= $audio_url_base_esc
+		.'&amp;disp=inline'
+		.'&amp;msie=.'. $formats[$fmt]['ext']
+		;
+	$audio_url_dl_esc
+		= $audio_url_base_esc
+		.'&amp;disp=attach'
 		.'&amp;msie=.'. $formats[$fmt]['ext']
 		;
 	
@@ -251,6 +261,8 @@ if (@$_REQUEST['action']==='play') {
 	
 <?php
 	}
+	echo '<br />';
+	echo '<div class="r" style="font-size:80%; line-height:100%;"><a href="', $audio_url_dl_esc ,'" style="text-decoration:none;" target="_blank"><img alt="+" title="', htmlEnt(__("In neuem Fenster \xC3\xB6ffnen")) ,'" src="', GS_URL_PATH ,'img/new-window.gif" /></a></div>';
 	echo "\n", '</div>' ,"\n";
 }
 
