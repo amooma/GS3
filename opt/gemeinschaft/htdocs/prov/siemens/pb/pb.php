@@ -114,13 +114,36 @@ $key          = trim(@$_REQUEST['key'        ]);
 $type         = trim(@$_REQUEST['type'       ]);
 $tab          = trim(@$_REQUEST['tab'        ]);
 
+
+if ($user.$phonenumber == '') {
+	$url = explode('?', basename($_SERVER['REQUEST_URI']));
+	$params = explode('&',$url[1]);
+	foreach ($params as $param) {
+		$values = $params = explode('=',$param);
+		switch ($values[0]) {
+			case 'key': $key=$values[1]; break;
+			case 'keys': $keys=$values[1]; break;
+			case 'user': $user=$values[1]; break;
+			case 'phonenumber': $phonenumber=$values[1]; break;
+			case 'tab': $tab=$values[1]; break;
+			case 'type': $type=$values[1]; break;
+		}
+	}
+}
+
 $keys .= $key;
 
-if ($key === '*') $keys = '';
+if ($key === '*') $keys = @substr($keys,0,-2);
+
+
+if ($key === '#') $keys = '';
 
 if ($type === 'none') {
 	$keys = '';
 }
+
+
+
 
 if ($tab) {
 	$tab = @preg_replace('/^internal:/', '', $tab);  // ?
