@@ -102,7 +102,9 @@ echo '<div class="fr" style="clear:right; width:250px; padding:0 3px 4px 3px; ma
 foreach ($formats as $fmt_name => $fmt_info) {
 	echo '<input type="radio" name="fmt" value="',$fmt_name,'" id="ipt-fmt-',$fmt_name,'"';
 	if ($fmt_name === $fmt) echo ' checked="checked"';
-	echo '/><label for="ipt-fmt-',$fmt_name,'"><small>',htmlEnt($fmt_info['title']),'</small></label>' ,"\n";
+	echo '/><label for="ipt-fmt-',$fmt_name,'"';
+	if ($fmt_name === 'wav-pcma') echo ' style="font-weight:bold;"';
+	echo '><small>', htmlEnt($fmt_info['title']) ,'</small></label>' ,"\n";
 }
 echo "\n", '</div>' ,"\n";
 
