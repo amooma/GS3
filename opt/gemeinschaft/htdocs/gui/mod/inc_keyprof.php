@@ -67,7 +67,7 @@ $key_functions_snom = array(
 	'none'  => __('Leer'),              # none
 	'dest'  => __('Nebenstelle'),       # destination (/blf BLF)
 	'speed' => __('externes Ziel'),     # external dest.
-	'line'  => __('Leitung')            # line
+	'line'  => __('Leitung'),           # line
 );
 $key_function_none_snom = 'none';
 
@@ -88,7 +88,8 @@ $key_functions_siemens = array(
 	'f30' => __('Kurzwahl'),              # repertory dial
 	//'f31' => __('Leitung'),               # line
 	'f50' => __('R&uuml;ckfrage'),        # consultation
-	'f58' => __('Fn.-Schalter')           # feature toggle
+	'f58' => __('Fn.-Schalter'),          # feature toggle   .._shifted_ok?
+	'f60' => __('Appl. aufrufen'),        # invoke app       .._shifted_ok?
 );
 $key_function_none_siemens = 'f0';
 $key_functions_siemens_shifted_ok = array('f0', 'f1', 'f3',
@@ -111,7 +112,7 @@ $key_functions_aastra = array(
 	'pickup'    => __('Heranholen'),
 	'xml'       => __('Applikation'),
 	'_callers'  => __('Anrufliste'),   # defined by Gemeinschaft
-	'_dir'      => __('Telefonbuch')   # defined by Gemeinschaft
+	'_dir'      => __('Telefonbuch'),  # defined by Gemeinschaft
 );
 
 $key_function_none_aastra = 'none';
