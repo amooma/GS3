@@ -99,7 +99,7 @@ if (isGsError($callwaiting)) {
 			<label for="ipt-clir-internal-no"><?php echo __('aus'); ?></label>
 	</td>
 	<td rowspan="2" style="width:200px;">
-		<small><?php echo __('Rufnummernunterdr&uuml;ckung. Bei &quot;an&quot; wird die Nummer unterdr&uuml;ckt, bei &quot;aus&quot; wird sie mitgesendet.'); ?></small>
+		<small><?php echo __('Rufnummernunterdr&uuml;ckung. Bei <q>an</q> wird die Nummer unterdr&uuml;ckt<sup>[1]</sup>, bei <q>aus</q> wird sie mitgesendet.'); ?></small>
 	</td>
 </tr>
 <tr>
@@ -137,6 +137,11 @@ if (isGsError($callwaiting)) {
 </tr>
 </tbody>
 </table>
-
 </form>
 
+<br />
+<br />
+<p class="small" style="max-width:48em;">
+	<sup>[1]</sup>
+	<?php echo __('Bei Anrufen nach extern wird u.U. trotz CLIR nur die Nebenstelle unterdr&uuml;ckt aber vom Provider die Hauptnummer (-0) des Anlagenanschlusses &uuml;bertragen.'); ?>
+</p>
