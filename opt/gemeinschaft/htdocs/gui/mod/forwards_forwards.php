@@ -370,7 +370,7 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 <table cellspacing="1">
 <thead>
 <tr>
-	<th colspan="6"><?php echo __('E-Mail-Benachrichtigung bei eingehenden Voicemails'); ?></th>
+	<th colspan="6"><?php echo __('E-Mail-Benachrichtigung bei eingehenden Sprach-Nachrichten'); ?></th>
 </tr>
 </thead>
 <tbody>
