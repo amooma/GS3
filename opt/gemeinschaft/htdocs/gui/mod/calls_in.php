@@ -43,9 +43,17 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 
 $per_page = (int)GS_GUI_NUM_RESULTS;
-
 $page = (int)@$_REQUEST['page'];
+$type = 'in';
 
+
+if (@$_REQUEST['action'] === 'del') {
+	$del_type = @$_REQUEST['type'];
+	if ($del_type === $type) {
+		$del_number = @$_REQUEST['number'];
+		$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. ((int)@$_SESSION['sudo_user']['info']['id']) .' AND `type`=\''. $DB->escape($type) .'\' AND `number`=\''. $DB->escape($del_number) .'\'' );
+	}
+}
 
 
 $rs = $DB->execute(
@@ -57,7 +65,7 @@ FROM
 	`users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
 WHERE
 	`d`.`user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .' AND
-	`d`.`type`=\'in\' AND
+	`d`.`type`=\''. $DB->escape($type) .'\' AND
 	`d`.`timestamp`>'. (time()-GS_PROV_DIAL_LOG_LIFE) .' AND
 	`d`.`number` <> \''. $DB->escape( @$_SESSION['sudo_user']['info']['ext'] ) .'\'
 GROUP BY `d`.`number`
@@ -133,6 +141,11 @@ if (@$rs) {
 		if ($r['number'] != $_SESSION['sudo_user']['info']['ext'])
 			echo '<a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', htmlEnt($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a>';
 		else echo '&nbsp;';
+		
+		echo "\n";
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=del&amp;type='.rawUrlEncode($type) .'&amp;number='.rawUrlEncode($r['number']) .'&amp;page='.$page), '" title="', __('l&ouml;schen'), '" style="margin-left:1.5em;">',
+			'<img alt="', __('l&ouml;schenck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" />',
+			'</a>', "\n";
 		echo '</td>';
 		echo '</tr>', "\n";
 	}
