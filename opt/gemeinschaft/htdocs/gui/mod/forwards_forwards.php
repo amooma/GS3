@@ -58,7 +58,7 @@ $cases = array(
 	'busy'   => __('besetzt'),
 	'unavail'=> __('keine Antw.'),
 	//'offline'=> __('offline/DND'),
-	'offline'=> __('offline')
+	'offline'=> __('abwesend')
 );
 $actives = array(
 	'no'  => '-',
