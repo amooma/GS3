@@ -93,6 +93,30 @@ if (! $GS_INSTALLATION_TYPE_SINGLE) {
 
 
 ?>
+
+<script type="text/javascript">
+/*<![CDATA[*/
+function change_fmt()
+{
+	try {
+		var play = document.location.search.match(/\bplay=([a-zA-Z0-9_\-.]+)/)[1];
+		if (play) {
+			var bts = document.getElementsByName('play');
+			for (var i=0; i<bts.length; i++) {
+				if (bts[i].tagName.toLowerCase() == 'button'
+				&&  bts[i].value == play
+				&&  bts[i].click)
+				{
+					bts[i].click();
+					break;
+				}
+			}
+		}
+	} catch(e) {}
+}
+/*]]>*/
+</script>
+
 <form method="get" action="<?php echo gs_url($SECTION, $MODULE, null, 'action=play'); ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="play" />
@@ -102,7 +126,7 @@ echo '<div class="fr" style="clear:right; width:250px; padding:0 3px 4px 3px; ma
 foreach ($formats as $fmt_name => $fmt_info) {
 	echo '<input type="radio" name="fmt" value="',$fmt_name,'" id="ipt-fmt-',$fmt_name,'"';
 	if ($fmt_name === $fmt) echo ' checked="checked"';
-	echo '/><label for="ipt-fmt-',$fmt_name,'"';
+	echo ' onchange="try{change_fmt();}catch(e){}" /><label for="ipt-fmt-',$fmt_name,'"';
 	if ($fmt_name === 'wav-pcma') echo ' style="font-weight:bold;"';
 	echo '><small>', htmlEnt($fmt_info['title']) ,'</small></label>' ,"\n";
 }
