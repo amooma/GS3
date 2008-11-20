@@ -29,6 +29,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_is_valid_name.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 
@@ -39,18 +40,13 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 
 function gs_user_rename( $username, $new_username )
 {
-	if (! preg_match( '/^[a-z0-9\-_]+$/', $username ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $username ))
 		return new GsError( 'Username must be alphanumeric.' );
-	if (! preg_match( '/^[a-z0-9\-_]+$/', $new_username ))
-		return new GsError( 'New username must be alphanumeric.' );
-	if (in_array($new_username, array(  # see gs_user_add()
-		'sysadmin', 'admin', 'root', 'setup', 'my', 'gemeinschaft',
-		'prov', 'img', 'js', 'mon', 'styles', 'soap', 'srv'
-		), true)
-	||  preg_match('/^nobody-/', $new_username))
-	{
-		return new GsError( sPrintF('"%s" cannot be used as a username.', $new_username) );
-	}
+	
+	$ret = gs_user_is_valid_name( $new_username );
+	if (isGsError($ret)) return $ret;
+	elseif (! $ret) return new GsError( 'Invalid new username.' );
+	
 	if ($new_username === $username) {
 		//return new GsError( 'New username = old username.' );
 		return true;
