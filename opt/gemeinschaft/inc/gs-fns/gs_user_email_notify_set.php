@@ -36,7 +36,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 
 function gs_user_email_notify_set( $user, $notify )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	$notify = (int)$notify;
 	if (! in_array($notify, array(0,1), true))

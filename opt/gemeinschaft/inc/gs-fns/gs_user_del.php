@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
 
 function gs_user_del( $user )
 {
-	if (! preg_match( '/^[a-z0-9\-_]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	
 	# connect to db

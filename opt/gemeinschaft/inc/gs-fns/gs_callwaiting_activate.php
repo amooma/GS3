@@ -37,7 +37,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 
 function gs_callwaiting_activate( $user, $active )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	$active = !! $active;
 	

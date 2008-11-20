@@ -35,7 +35,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 
 function gs_user_pin_get( $user )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	
 	# connect to db

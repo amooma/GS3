@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 function gs_queue_callforward_activate( $queue, $source, $case, $active )
 {
 	if (! preg_match( '/^[\d]+$/', $queue ))
-		return new GsError( 'Queue must be alphanumeric.' );
+		return new GsError( 'Queue must be numeric.' );
 	if (! in_array( $source, array('internal','external'), true ))
 		return new GsError( 'Source must be internal|external.' );
 	if (! in_array( $case, array('always','full','timeout','empty'), true ))

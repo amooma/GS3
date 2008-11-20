@@ -49,7 +49,7 @@ function _counting_err_handler( $type, $msg, $file, $line ) {
 
 function gs_callblocking_set( $user, $regexp, $pin )
 {
-	if (! preg_match( '/^[a-zA-Z\d\-_]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	
 	if ((! preg_match( '/^[\d]+$/', $pin )) and (! empty($pin)))
@@ -101,10 +101,9 @@ function gs_callblocking_set( $user, $regexp, $pin )
 
 function gs_callblocking_delete( $user, $regexp )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	$regexp = trim($regexp);
-	
 	
 	# connect to db
 	#

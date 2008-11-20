@@ -40,7 +40,7 @@ if (GS_EXTERNAL_NUMBERS_BACKEND === 'ldap') {
 
 function gs_user_external_numbers_get( $user )
 {
-	if (! preg_match( '/^[a-zA-Z\d\-]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	
 	# connect to db

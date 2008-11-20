@@ -36,7 +36,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 
 function gs_user_pin_set( $user, $pin='' )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	if (! preg_match( '/^[0-9]+$/', $pin ))
 		return new GsError( 'PIN must be numeric.' );

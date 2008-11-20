@@ -37,7 +37,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 
 function gs_callforward_activate( $user, $source, $case, $active )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	if (! in_array( $source, array('internal','external'), true ))
 		return new GsError( 'Source must be internal|external.' );

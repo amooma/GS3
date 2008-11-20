@@ -39,9 +39,8 @@ include_once( GS_DIR .'inc/ldap.php' );
 
 function gs_ldap_user_search( $user )
 {
-	if (! preg_match('/^[a-z0-9\-_]+$/', $user)) {
-		return new GsError( 'Invalid username "'.$user.'".' );
-	}
+	if (! preg_match('/^[a-z0-9\-_.]+$/', $user))
+		return new GsError( 'User must be alphanumeric.' );
 	
 	$GS_LDAP_HOST = gs_get_conf('GS_LDAP_HOST');
 	if (in_array($GS_LDAP_HOST, array(null, false, '', '0.0.0.0'), true)) {

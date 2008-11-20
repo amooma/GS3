@@ -65,7 +65,7 @@ function _gs_prov_phone_checkcfg_exclude_ip( $ip )
 
 function gs_prov_phone_checkcfg_by_user( $usercode, $reboot=true )
 {
-	if (! preg_match( '/^[a-zA-Z\d\-_]+$/', $usercode ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $usercode ))
 		return new GsError( 'User must be alphanumeric.' );
 	
 	$ip = gs_user_ip_by_user( $usercode );

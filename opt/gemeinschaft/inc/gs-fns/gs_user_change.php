@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
 
 function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false, $email='' )
 {
-	if (! preg_match( '/^[a-z0-9\-_]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	if (! preg_match( '/^[0-9]+$/', $pin ))
 		return new GsError( 'PIN must be numeric.' );
