@@ -61,8 +61,8 @@ function gs_vm_get( $user )
 		return $r;
 	}
 	return array(
-		'internal_active' => 0,
-		'external_active' => 0
+		'internal_active' => false,
+		'external_active' => false
 	);
 }
 
