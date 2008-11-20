@@ -57,7 +57,7 @@ if (! isSet($opts['user'])
 *    set BOI admin permissions
 ***********************************************************/
 
-if (! preg_match( '/^[a-zA-Z\d\-]+$/', $opts['user'] )) {
+if (! preg_match( '/^[a-z0-9\-_.]+$/', $opts['user'] )) {
 	echo "User must be alphanumeric.\n";
 	exit(1);
 }
