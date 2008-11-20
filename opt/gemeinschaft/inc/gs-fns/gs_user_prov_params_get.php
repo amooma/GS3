@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 function gs_user_prov_params_get( $username, $phone_type=null )
 {
 	if ($username !== null) {
-		if (! preg_match( '/^[a-zA-Z\d\-]+$/', $username ))
+		if (! preg_match( '/^[a-z0-9\-_.]+$/', $username ))
 			return new GsError( 'User must be alphanumeric.' );
 	}
 	

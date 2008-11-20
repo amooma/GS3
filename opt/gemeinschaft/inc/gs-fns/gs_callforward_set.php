@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
 
 function gs_callforward_set( $user, $source, $case, $type, $number, $timeout=20 )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	if (! in_array( $source, array('internal','external'), true ))
 		return new GsError( 'Source must be internal|external.' );
@@ -115,7 +115,7 @@ LIMIT 1'
 
 function gs_callforward_number_set( $user, $source, $type, $number )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	if (! in_array( $source, array('internal','external'), true ))
 		return new GsError( 'Source must be internal|external.' );
@@ -158,7 +158,7 @@ function gs_callforward_number_set( $user, $source, $type, $number )
 
 function gs_callforward_timeout_set( $user, $timeout=20 )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	$timeout = (int)$timeout;
 	if ($timeout > 250) $timeout = 250;

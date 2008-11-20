@@ -36,7 +36,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 
 function gs_user_get( $user )
 {
-	if (! preg_match( '/^[a-zA-Z\d\-_]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	
 	# connect to db
