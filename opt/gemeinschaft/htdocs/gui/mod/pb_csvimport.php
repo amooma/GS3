@@ -110,23 +110,49 @@ if ($action === 'preview' || $action === 'import') {
 			echo 'Could not read file.';
 		} else {
 			
-			$sep  = @$_REQUEST['sep' ];
-			$encl = @$_REQUEST['encl'];
-			$enc  = @$_REQUEST['enc' ];
+			if (@array_key_exists('sep' , @$_REQUEST)
+			&&  @array_key_exists('encl', @$_REQUEST)
+			&&  @array_key_exists('enc' , @$_REQUEST)
+			) {
+				$sep  = @$_REQUEST['sep' ];
+				$encl = @$_REQUEST['encl'];
+				$enc  = @$_REQUEST['enc' ];
+			} else {
+				# try to guess separator
+				$line = @fGets($fh);
+				@rewind($fh);
+				
+				$cnt = array();
+				$cnt['s'] = (int)preg_match_all('/;/'  , $line, $m);
+				$cnt['c'] = (int)preg_match_all('/,/'  , $line, $m);
+				$cnt['t'] = (int)preg_match_all('/\\t/', $line, $m);
+				if     ($cnt['t'] > max($cnt['s'],$cnt['c'])) $sep = 't';
+				elseif ($cnt['s'] > max($cnt['c'],$cnt['t'])) $sep = 's';
+				elseif ($cnt['c'] > max($cnt['s'],$cnt['t'])) $sep = 'c';
+				else                                          $sep = 't';
+				
+				unset($line);
+				unset($m);
+				unset($cnt);
+			}
+			if (! in_array($sep, array('s','c','t'), true))
+				$sep = 's';
+			if (! in_array($encl, array('q','s','n'), true))
+				$encl = 'q';
+			if (! in_array($enc, array('utf8', 'iso88591'), true))
+				$enc = 'utf8';
 			switch ($sep) {
 				case 's': $separator = ';' ; break;
 				case 'c': $separator = ',' ; break;
 				case 't': $separator = "\t"; break;
-				default : $separator = ';' ; $sep = 's';
+				default : $separator = ';' ;
 			}
 			switch ($encl) {
 				case 'q': $enclosure = '"' ; break;
 				case 's': $enclosure = '\''; break;
 				case 'n': $enclosure = ''  ; break;
-				default : $enclosure = '"' ; $encl = 'q';
+				default : $enclosure = '"' ;
 			}
-			if (! in_array($enc, array('utf8', 'iso88591'), true))
-				$enc = 'utf8';			
 			
 			$col_ln = (int)@$_REQUEST['col_ln'];
 			$col_fn = (int)@$_REQUEST['col_fn'];
@@ -151,10 +177,11 @@ if ($action === 'preview' || $action === 'import') {
 				$ln = trim(@$csv[$col_ln-1]);
 				$fn = trim(@$csv[$col_fn-1]);
 				$nr = trim(@$csv[$col_nr-1]);
-				if ($enc==='iso88591') $ln = utf8_encode($ln);
-				if ($enc==='iso88591') $fn = utf8_encode($fn);
-				if ($enc==='iso88591') $nr = utf8_encode($nr);
-				
+				if ($enc==='iso88591') {
+					$ln = utf8_encode($ln);
+					$fn = utf8_encode($fn);
+					$nr = utf8_encode($nr);
+				}
 				if ($ln==='' && $fn==='' && $nr==='') continue;
 				
 				$nrimp = preg_replace('/\(0\)/S'    , ' ', $nr);
