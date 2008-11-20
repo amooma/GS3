@@ -336,8 +336,8 @@ foreach ($sources as $src => $srctitle) {
 	
 	echo '<td>';
 	echo '<select name="vm-', $src, '" />', "\n";
-	echo '<option value="1"', $s, ($vm[$src .'_active'] ? ' selected="selected"' : ''), '>', __('An'), '</option>', "\n";
-	echo '<option value="0"', $s, (!$vm[$src .'_active'] ? ' selected="selected"' : ''), '>', __('Aus'), '</option>', "\n";
+	echo '<option value="1"', ( $vm[$src .'_active'] ? ' selected="selected"' : ''), '>', __('An'), '</option>', "\n";
+	echo '<option value="0"', (!$vm[$src .'_active'] ? ' selected="selected"' : ''), '>', __('Aus'), '</option>', "\n";
 	echo '</select>';
 	echo '</td>', "\n";
 	
