@@ -215,11 +215,11 @@ context user-config {
 		Answer();
 		Set(tonumber=${EXTEN:2});
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
-		if("${SYSTEMSTATUS}" != "SUCCESS") {
+		if ("${SYSTEMSTATUS}" != "SUCCESS") {
 			Playback(/opt/gemeinschaft/sounds/de-DE/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
 			Playback(/opt/gemeinschaft/sounds/de-DE/auf-wiedersehen);
 			Hangup();
-			}
+		}
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
 		&user-call-forward-activate-numeric(var,0,0,1);
 		&user-call-forward-activate-numeric(var,1,0,1);
