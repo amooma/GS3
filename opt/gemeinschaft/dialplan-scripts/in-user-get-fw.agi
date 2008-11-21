@@ -69,15 +69,18 @@ $forwards = array(
 	)
 );
 
-$rs = $db->execute( 'SELECT `source`, `case`, `timeout`, `number_std`, `number_var`, `active` FROM `callforwards` WHERE `user_id`='. $uid );
+$rs = $db->execute( 'SELECT `source`, `case`, `timeout`, `number_std`, `number_var`, `number_vml`, `active` FROM `callforwards` WHERE `user_id`='. $uid );
 while ($r = $rs->fetchRow()) {
 	$number_std = trim( $r['number_std'] );
 	$number_var = trim( $r['number_var'] );
+	$number_vml = trim( $r['number_vml'] );
 	$number = '';
 	if     ($r['active']==='std' && $number_std != '')
 		$number = $number_std;
 	elseif ($r['active']==='var' && $number_var != '')
 		$number = $number_var;
+	elseif ($r['active']==='vml' && $number_vml != '')
+		$number = $number_vml;
 	$forwards[$r['source']][$r['case']]['number'] = $number;
 	if ($r['case']==='unavail' && $number != '')
 		$forwards[$r['source']][$r['case']]['timeout'] = $r['timeout'];
