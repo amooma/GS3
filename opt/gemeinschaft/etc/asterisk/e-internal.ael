@@ -172,34 +172,36 @@ context to-internal-users {
 	//	// FIXME!?
 	//}
 	
+	
 	//----------------------------------------------------------
-	// Dialing Voicemailbox, used for Callforwarding to the Box
+	// Dialing voicemail, used in call-forwarding
 	//----------------------------------------------------------
-
-	_VM. => {
-		Verbose(1,###### Forwarded call to Mailbox of ${EXTEN});
+	
+	_vm. => {
+		Set(box=${EXTEN:2});
+		Verbose(1,### Forwarded call to voicemail of ${box});
 		Answer();
 		Wait(0.5);
 		Set(vm_announce_file=${vm_announce_${vm_source}});
 		if ("${vm_announce_file}" = "") {
 			Playback(vm-theperson);
 			//SayDigits(${origext});
-			SayDigits(${EXTEN});
-			if ("${DIALSTATUS}" = "BUSY") {
-				Playback(vm-isonphone);
-			}
-			else {
+			SayDigits(${box});
+			//if ("${DIALSTATUS}" = "BUSY") {
+			//	Playback(vm-isonphone);
+			//}
+			//else {
 				Playback(vm-isunavail);
-			}
+			//}
 			Playback(vm-intro);
 		}
 		else {
 			Playback(${vm_announce_file});
 		}
-		VoiceMail(${EXTEN:2},s);
+		VoiceMail(${box},s);
 		Hangup();
 	}
-
+	
 	
 	//----------------------------------------------------------
 	// Users, Queues, ...
