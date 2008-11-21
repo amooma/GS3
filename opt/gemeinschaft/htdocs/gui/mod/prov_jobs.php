@@ -138,9 +138,21 @@ while ($job = $rs_jobs->fetchRow()) {
 	echo '<td>', htmlEnt(date('Y-m-d H:i:s', $job['inserted'])) ,'</td>' ,"\n";
 	echo '<td>', ($job['running'] ? 'r':'') ,'</td>' ,"\n";
 	echo '<td>', ($job['immediate'] ? 'i':'') ,'</td>' ,"\n";
-	echo '<td>', htmlEnt($job['trigger']) ,'</td>' ,"\n";
+	echo '<td>';
+	switch ($job['trigger']) {
+		case 'client' : echo htmlEnt('Telefon' ); break;
+		case 'server' : echo htmlEnt('Server'  ); break;
+		default       : echo htmlEnt($job['trigger']);
+	}
+	echo '</td>' ,"\n";
 	echo '<td><tt>', htmlEnt(_mac_addr_display($job['mac_addr'])) ,'</tt></td>' ,"\n";
-	echo '<td>', htmlEnt($job['type']) ,'</td>' ,"\n";
+	echo '<td>';
+	switch ($job['type']) {
+		case 'firmware' : echo htmlEnt('Firmware' ); break;
+		case 'settings' : echo htmlEnt('Konfig.'  ); break;
+		default         : echo htmlEnt($job['type']);
+	}
+	echo '</td>' ,"\n";
 	echo '<td>', htmlEnt($job['data']) ,'</td>' ,"\n";
 	
 	echo '<td class="c">', htmlEnt($job['minute']) ,'</td>' ,"\n";
