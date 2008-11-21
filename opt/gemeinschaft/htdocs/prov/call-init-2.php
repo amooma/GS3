@@ -385,7 +385,8 @@ if (! $is_foreign) {
 		:     $from_num_effective_obj->dial;
 	
 	$call
-		= "Channel: Local/". $from_num_dial ."\n"
+		//= "Channel: Local/". $from_num_dial ."\n"
+		= "Channel: Local/urldial-". $from_num_dial ."@to-internal-users-self\n"
 		. "MaxRetries: 0\n"
 		. "WaitTime: 15\n"
 		. "Context: urldial\n"
