@@ -523,3 +523,11 @@ ALTER
 ALTER TABLE `ast_sipfriends`
   CHANGE `name` `name` VARCHAR(16) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL;
 
+
+--
+-- since rev. 5627
+--
+
+ALTER TABLE `asterisk`.`callforwards` ADD COLUMN `number_vml` VARCHAR(50)  NOT NULL AFTER `number_var`;
+ALTER TABLE `asterisk`.`callforwards` MODIFY COLUMN `active` ENUM('no','std','var','vml')  CHARACTER SET ascii
+COLLATE ascii_general_ci NOT NULL DEFAULT 'no';
