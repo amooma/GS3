@@ -62,7 +62,7 @@ function gs_callforward_activate( $user, $source, $case, $active )
 	#
 	$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `callforwards` WHERE `user_id`='. $user_id .' AND `source`=\''. $db->escape($source) .'\' AND `case`=\''. $db->escape($case) .'\'' );
 	if ($num < 1)
-		$ok = $db->execute( 'INSERT INTO `callforwards` (`user_id`, `source`, `case`, `number_std`, `number_var`, `active`) VALUES ('. $user_id .', \''. $db->escape($source) .'\', \''. $db->escape($case) .'\', \'\', \'\', \'no\')' );
+		$ok = $db->execute( 'INSERT INTO `callforwards` (`user_id`, `source`, `case`, `number_std`, `number_var`, `number_vml`, `active`) VALUES ('. $user_id .', \''. $db->escape($source) .'\', \''. $db->escape($case) .'\', \'\', \'\', \'\', \'no\')' );
 	else
 		$ok = true;
 	
