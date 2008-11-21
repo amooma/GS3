@@ -145,7 +145,9 @@ function gs_callforward_number_set( $user, $source, $type, $number )
 	if (isGsError( $cf ))
 		gs_script_error( 'Could not get call forwards ('. $cf->getMsg() .')' );
 	foreach ($cf[$source] as $case => $arr) {
-		@ gs_callforward_set( $user_code, $source, $case, $type, $number );
+		$ret = @ gs_callforward_set( $user_code, $source, $case, $type, $number );
+		if (isGsError($ret))
+			return $ret;
 	}
 	return true;
 }
