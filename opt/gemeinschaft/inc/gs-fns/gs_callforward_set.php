@@ -45,8 +45,8 @@ function gs_callforward_set( $user, $source, $case, $type, $number, $timeout=20 
 	if (! in_array( $case, array('always','busy','unavail','offline'), true ))
 		return new GsError( 'Case must be always|busy|unavail|offline.' );
 	if (! in_array( $type, array('std','var','vml'), true ))
-		return new GsError( 'Type must be std|var.' );
-	$number = preg_replace( '/[^\dVM]/', '', $number );
+		return new GsError( 'Type must be std|var|vml.' );
+	$number = preg_replace( '/[^0-9vm]/', '', $number );
 	$timeout = (int)$timeout;
 	if ($case != 'unavail') $timeout = 0;
 	else {
@@ -70,7 +70,7 @@ function gs_callforward_set( $user, $source, $case, $type, $number, $timeout=20 
 	#
 	$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `callforwards` WHERE `user_id`='. $user_id .' AND `source`=\''. $db->escape($source) .'\' AND `case`=\''. $db->escape($case) .'\'' );
 	if ($num < 1)
-		$ok = $db->execute( 'INSERT INTO `callforwards` (`user_id`, `source`, `case`, `timeout`, `number_std`, `number_var`, `active`) VALUES ('. $user_id .', \''. $db->escape($source) .'\', \''. $db->escape($case) .'\', 0, \'\', \'\', \'no\')' );
+		$ok = $db->execute( 'INSERT INTO `callforwards` (`user_id`, `source`, `case`, `timeout`, `number_std`, `number_var`, `number_vml`, `active`) VALUES ('. $user_id .', \''. $db->escape($source) .'\', \''. $db->escape($case) .'\', 0, \'\', \'\', \'\', \'no\')' );
 	else
 		$ok = true;
 	
@@ -119,9 +119,9 @@ function gs_callforward_number_set( $user, $source, $type, $number )
 		return new GsError( 'User must be alphanumeric.' );
 	if (! in_array( $source, array('internal','external'), true ))
 		return new GsError( 'Source must be internal|external.' );
-	if (! in_array( $type, array('std','var'), true ))
-		return new GsError( 'Type must be std|var.' );
-	$number = preg_replace( '/[^\d]/', '', $number );
+	if (! in_array( $type, array('std','var','vml'), true ))
+		return new GsError( 'Type must be std|var|vml.' );
+	$number = preg_replace( '/[^0-9vm]/', '', $number );
 	
 	# connect to db
 	#
@@ -191,6 +191,7 @@ function gs_callforward_timeout_set( $user, $timeout=20 )
 			if ($case=='unavail') {
 				@ gs_callforward_set( $user_code, $source, $case, 'std', $arr['number_std'], $timeout );
 				@ gs_callforward_set( $user_code, $source, $case, 'var', $arr['number_var'], $timeout );
+				@ gs_callforward_set( $user_code, $source, $case, 'vml', $arr['number_vml'], $timeout );
 			}
 		}
 	}
