@@ -43,7 +43,7 @@ function gs_callforward_activate( $user, $source, $case, $active )
 		return new GsError( 'Source must be internal|external.' );
 	if (! in_array( $case, array('always','busy','unavail','offline'), true ))
 		return new GsError( 'Case must be always|busy|unavail|offline.' );
-	if (! in_array( $active, array('no','std','var'), true ))
+	if (! in_array( $active, array('no','std','var', 'vml'), true ))
 		return new GsError( 'Active must be no|std|var.' );
 	
 	# connect to db
