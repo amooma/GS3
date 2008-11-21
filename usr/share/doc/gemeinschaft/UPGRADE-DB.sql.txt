@@ -525,9 +525,18 @@ ALTER TABLE `ast_sipfriends`
 
 
 --
--- since rev. 5627
+-- since rev. 5626
 --
 
-ALTER TABLE `asterisk`.`callforwards` ADD COLUMN `number_vml` VARCHAR(50)  NOT NULL AFTER `number_var`;
-ALTER TABLE `asterisk`.`callforwards` MODIFY COLUMN `active` ENUM('no','std','var','vml')  CHARACTER SET ascii
-COLLATE ascii_general_ci NOT NULL DEFAULT 'no';
+
+--
+-- Add new column `number_vml` in table `callforwards`,
+-- add new option 'vml' to column `active`:
+--
+
+ALTER TABLE `callforwards`
+  ADD COLUMN `number_vml` VARCHAR(50) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL AFTER `number_var`;
+ALTER TABLE `callforwards`
+  CHANGE `active` `active` ENUM('no','std','var','vml') CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT 'no';
+
+
