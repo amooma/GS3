@@ -429,6 +429,26 @@ context to-internal-users-self {
 	
 	
 	//----------------------------------------------------------
+	// callfile to origin user
+	//----------------------------------------------------------
+	
+	_urldial-Z. => {
+		Set(callfile_from=${EXTEN:8});
+		Set(origext=${callfile_from});
+		Set(CALLERID(dnid)=${callfile_from});
+		Verbose(1,### callfile_from ${callfile_from});
+		// get ringer
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${boss},${is_call_from});
+		if ("${ringer}" != "") {
+			Verbose(1,### Ringer: ${ringer});
+			SIPAddHeader(Alert-Info: ${ringer});
+		}
+		Dial(SIP/${callfile_from},30);
+		&hangup-proper-status();
+	}
+	
+	
+	//----------------------------------------------------------
 	// Dial mailbox directly
 	//----------------------------------------------------------
 	
