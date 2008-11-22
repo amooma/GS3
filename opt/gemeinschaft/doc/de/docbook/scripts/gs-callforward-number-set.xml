@@ -52,7 +52,7 @@
   <refsynopsisdiv>
     <cmdsynopsis>
       <command>Usage: --user=&lt;user&gt; --source=internal|external
-      --type=std|var --number=&lt;number&gt;</command>
+      --type=std|var|vml --number=&lt;number&gt;</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -93,7 +93,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--type</option>=<literal>std</literal>|<literal>var</literal></term>
+        <term><option>--type</option>=<literal>std</literal>|<literal>var</literal>|<literal>vml</literal></term>
 
         <listitem>
           <para>Art</para>

@@ -52,7 +52,7 @@
   <refsynopsisdiv>
     <cmdsynopsis>
       <command>Usage: --user=&lt;user&gt; --source=internal|external
-      --case=always|busy|unavail|offline --active=no|std|var</command>
+      --case=always|busy|unavail|offline --active=no|std|var|vml</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -101,7 +101,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--active</option>=<literal>no</literal>|<literal>std</literal>|<literal>var</literal></term>
+        <term><option>--active</option>=<literal>no</literal>|<literal>std</literal>|<literal>var</literal>|<literal>vml</literal></term>
 
         <listitem>
           <para>aktive Regel</para>
