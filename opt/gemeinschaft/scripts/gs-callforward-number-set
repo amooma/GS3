@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_callforward_set.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --source=internal|external --type=std|var --number=<number>';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --source=internal|external --type=std|var|vml --number=<number>';
 
 $opts = @getOptsNoMultiples( '',
 	array(
