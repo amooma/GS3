@@ -116,6 +116,9 @@ foreach ($users as $u) {
 				if ($fw['number_var'] != '') {
 					echo './gs_callforward_set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --timeout=', qsa($fw['timeout']) ,' --type=var --number=', qsa($fw['number_var']) ,"\n";
 				}
+				if ($fw['number_vml'] != '') {
+					echo './gs_callforward_set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --timeout=', qsa($fw['timeout']) ,' --type=vml --number=', qsa($fw['number_vml']) ,"\n";
+				}
 				if ($fw['active'] != 'no') {
 					echo './gs_callforward_activate --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --active=', qsa($fw['active']) ,"\n";
 				}
