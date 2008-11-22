@@ -64,10 +64,12 @@ $actives = array(
 	'no'  => '-',
 	'std' => __('Std.'),
 	'var' => __('Tmp.'),
-	'vml' => __('AB.')
+	'vml' => __('AB'  )
 );
 
 $show_email_notification = ! @$_SESSION['sudo_user']['info']['host_is_foreign'];
+
+
 
 $warnings = array();
 
@@ -75,7 +77,7 @@ if (@$_REQUEST['action']==='save') {
 	
 	$num_std = preg_replace('/[^\d]/', '', @$_REQUEST['num-std']);
 	$num_var = preg_replace('/[^\d]/', '', @$_REQUEST['num-var']);
-	$num_vml = 'VM'.$_SESSION['sudo_user']['info']['ext'];
+	$num_vml = 'vm'. $_SESSION['sudo_user']['info']['ext'];
 	$timeout = abs((int)@$_REQUEST['timeout']);
 	if ($timeout < 1) $timeout = 1;
 	
@@ -95,13 +97,14 @@ if (@$_REQUEST['action']==='save') {
 			$ret = gs_callforward_set( $_SESSION['sudo_user']['name'],
 				$src, $case, 'vml', $num_vml, $timeout );
 			if (isGsError($ret))
-				$warnings['var'] = __('Fehler beim Setzen der Tempor&auml;ren Umleitungsnummer') .' ('. $ret->getMsg() .')';
+				$warnings['vml'] = __('Fehler beim Setzen der AB-Nummer') .' ('. $ret->getMsg() .')';
 			$ret = gs_callforward_activate( $_SESSION['sudo_user']['name'],
 				$src, $case, @$_REQUEST[$src.'-'.$case] );
 			if (isGsError($ret))
 				$warnings['act'] = __('Fehler beim Aktivieren der Umleitungsnummer') .' ('. $ret->getMsg() .')';
 		}
 	}
+	
 	/*
 	$vm_internal = (bool)@$_REQUEST['vm-internal'];
 	$vm_external = (bool)@$_REQUEST['vm-external'];
@@ -112,6 +115,7 @@ if (@$_REQUEST['action']==='save') {
 	if (isGsError($ret))
 		$warnings['vm_act_e'] = __('Fehler beim (De-)Aktivieren des Anrufbeantworters von extern') .' ('. $ret->getMsg() .')';
 	*/
+	
 	if ($show_email_notification) {
 		$email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 		$email_notify = @$_REQUEST['email_notify'];
@@ -199,6 +203,7 @@ if ( @$callforwards['internal']['unavail']['active'] != 'no'
 }
 
 
+/*
 # get vm states
 #
 $vm = gs_vm_get( $_SESSION['sudo_user']['name'] );
@@ -206,6 +211,7 @@ if (isGsError($vm)) {
 	echo __('Fehler beim Abfragen.'), '<br />', $vm->getMsg();
 	return;  # return to parent file
 }
+*/
 
 
 
@@ -254,9 +260,9 @@ try {
 </thead>
 <tbody>
 <tr class="even">
-	<td style="width:170px;"><?php echo __('Standardnummer'); ?></td>
+	<td style="width:157px;"><?php echo __('Standardnummer'); ?></td>
 	<td style="width:392px;">
-		<input type="text" name="num-std" id="ipt-num-std" value="<?php echo htmlEnt($number_std); ?>" size="30" style="width:220px;" maxlength="25" />
+		<input type="text" name="num-std" id="ipt-num-std" value="<?php echo htmlEnt($number_std); ?>" size="25" style="width:200px;" maxlength="25" />
 		<div id="ext-num-select-std" style="display:none;">
 		&larr;<select name="_ignore-1" id="sel-num-std" onchange="gs_num_sel(this);">
 <?php
@@ -275,7 +281,7 @@ try {
 <tr class="even">
 	<td><?php echo __('Tempor&auml;re Nummer'); ?></td>
 	<td>
-		<input type="text" name="num-var" id="ipt-num-var" value="<?php echo htmlEnt($number_var); ?>" size="30" style="width:220px;" maxlength="25" />
+		<input type="text" name="num-var" id="ipt-num-var" value="<?php echo htmlEnt($number_var); ?>" size="25" style="width:200px;" maxlength="25" />
 		<div id="ext-num-select-var" style="display:none;">
 		&larr;<select name="_ignore-2" id="sel-num-var" onchange="gs_num_sel(this);">
 <?php
@@ -307,16 +313,16 @@ try { document.getElementById('ext-num-select-var').style.display = 'inline'; } 
 <thead>
 <tr>
 	<th colspan="5"><?php echo __('Umleiten in folgenden F&auml;llen'); ?></th>
-	<th>&nbsp;</th>
+<?php /* <th>&nbsp;</th> */ ?>
 </tr>
 </thead>
 <tbody>
 <tr class="even">
-	<td>&nbsp;</td>
+	<td style="width:110px;">&nbsp;</td>
 <?php
 
 foreach ($cases as $case => $ctitle) {
-	echo '<td style="width:90px;">', $ctitle, '</td>', "\n";
+	echo '<td style="width:100px;">', $ctitle, '</td>', "\n";
 }
 //echo '<td style="width:80px;">', __('AB'), '</td>', "\n";
 
@@ -325,7 +331,7 @@ foreach ($cases as $case => $ctitle) {
 <?php
 foreach ($sources as $src => $srctitle) {
 	echo '<tr>';
-	echo '<td style="width:90px;">', __('von'), ' ', $srctitle, '</td>';
+	echo '<td>', __('von'), ' ', $srctitle, '</td>';
 	
 	foreach ($cases as $case => $ctitle) {
 		echo '<td>';
@@ -338,13 +344,15 @@ foreach ($sources as $src => $srctitle) {
 		echo '</td>', "\n";
 	}
 	
-	/*echo '<td>';
+	/*
+	echo '<td>';
 	echo '<select name="vm-', $src, '" />', "\n";
 	echo '<option value="1"', ( $vm[$src .'_active'] ? ' selected="selected"' : ''), '>', __('An'), '</option>', "\n";
 	echo '<option value="0"', (!$vm[$src .'_active'] ? ' selected="selected"' : ''), '>', __('Aus'), '</option>', "\n";
 	echo '</select>';
 	echo '</td>', "\n";
 	*/
+	
 	echo '</tr>', "\n";
 }
 
@@ -359,9 +367,14 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 		<input type="text" name="timeout" value="<?php echo $timeout; ?>" size="3" maxlength="3" class="r" />&nbsp;s
 	</td>
 	<td colspan="1">&nbsp;</td>
-	<td colspan="1">&nbsp;</td>
+<?php /* <td colspan="1">&nbsp;</td> */ ?>
 </tr>
 <tr>
+<?php /*
+	<td colspan="6" class="transp">
+		<small><?php echo __('Achtung: Ihr Anrufbeantworter wird nur dann aktiv, wenn Sie keine Weiterleitung eingestellt haben.'); ?></small>
+	</td>
+*/ ?>
 </tr>
 </tbody>
 </table>
@@ -377,7 +390,7 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 <tbody>
 <tr>
 	<td style="width:140px;"><?php echo __('E-Mail-Adresse'); ?></td>
-	<td style="width:422px;">
+	<td style="width:409px;">
 		<input type="text" name="email_address" value="<?php echo htmlEnt($email_address); ?>" size="40" maxlength="50" disabled="disabled" />
 	</td>
 </tr>
@@ -410,7 +423,7 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 <table cellspacing="1">
 <tbody>
 <tr>
-	<td style="width:575px;" class="transp r">
+	<td style="width:562px;" class="transp r">
 		<button type="submit">
 			<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			<?php echo __('Speichern'); ?>
