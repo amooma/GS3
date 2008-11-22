@@ -5658,7 +5658,7 @@ CREATE TABLE `callforwards` (
   `timeout` tinyint(3) unsigned NOT NULL default '20',
   `number_std` varchar(50) character set ascii NOT NULL default '',
   `number_var` varchar(50) character set ascii NOT NULL default '',
-  `number_vml` varchar(50) character set ascii NOT NULL default '',
+  `number_vml` varchar(20) character set ascii NOT NULL default '',
   `active` enum('no','std','var','vml') character set ascii NOT NULL default 'no',
   PRIMARY KEY  (`user_id`,`source`,`case`),
   CONSTRAINT `callforwards_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
