@@ -52,7 +52,7 @@
     <cmdsynopsis>
       <command>Usage: --user=&lt;user&gt; --source=internal|external
       --case=always|busy|unavail|offline [--timeout=&lt;timeout&gt;]
-      --type=std|var --number=&lt;number&gt;</command>
+      --type=std|var|vml --number=&lt;number&gt;</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -111,7 +111,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--type</option>=<replaceable>std</replaceable></term>
+        <term><option>--type</option>=<literal>std</literal>|<literal>var</literal>|<literal>vml</literal></term>
 
         <listitem>
           <para>Art</para>
