@@ -63,14 +63,14 @@ if (array_key_exists('regen', $opts)) {
 	include_once( GS_DIR .'inc/quote_shell_arg.php' );
 	foreach ($cf as $source => $arr1) {
 		foreach ($arr1 as $case => $arr) {
-			foreach (array('std','var') as $std_var) {
+			foreach (array('std','var','vml') as $std_var) {
 				echo './gs-callforward-set --user=',qsa($opts['user']),' --source=',qsa($source),' --case=',qsa($case), ($case==='timeout' ? ' --timeout='.((int)$arr['timeout']) : '') ,' --type=',qsa($std_var),' --number=',qsa(@$arr['number_'.$std_var]),'' ,"\n";
 			}
 		}
 	}
 	foreach ($cf as $source => $arr1) {
 		foreach ($arr1 as $case => $arr) {
-			foreach (array('std','var') as $std_var) {
+			foreach (array('std','var','vml') as $std_var) {
 				echo './gs-callforward-activate --user=',qsa($opts['user']),' --source=',qsa($source),' --case=',qsa($case),' --active=',qsa($arr['active']),'' ,"\n";
 			}
 		}
@@ -81,6 +81,7 @@ if (array_key_exists('regen', $opts)) {
 
 $nStdLen = strLen('number_std');
 $nVarLen = strLen('number_var');
+$nVmlLen = strLen('number_vml');
 
 foreach ($cf as $source => $arr1) {
 	foreach ($arr1 as $case => $arr) {
@@ -88,10 +89,12 @@ foreach ($cf as $source => $arr1) {
 			$nStdLen = strLen($arr['number_std']);
 		if (strLen($arr['number_var']) > $nVarLen)
 			$nVarLen = strLen($arr['number_var']);
+		if (strLen($arr['number_vml']) > $nVmlLen)
+			$nVmlLen = strLen($arr['number_vml']);
 	}
 }
 
-$header = '| source   | case     | active | number_std | number_var | timeout |';
+$header = '| source   | case     | active | number_std | number_var | number_vml | timeout |';
 $sep = str_pad( '', strLen($header), '-' );
 echo $sep, "\n";
 echo $header, "\n";
@@ -99,7 +102,7 @@ echo $sep, "\n";
 
 foreach ($cf as $source => $arr1) {
 	foreach ($arr1 as $case => $arr) {
-		echo '| ', str_pad( $source, 8, ' ' ), ' | ', str_pad( $case, 8, ' ' ), ' | ', str_pad( $arr['active'], 6, ' ' ), ' | ', str_pad( $arr['number_std'], $nStdLen, ' ' ), ' | ', str_pad( $arr['number_var'], $nVarLen, ' ' ), ' | ', str_pad( $arr['timeout'], 7, ' ', STR_PAD_LEFT ), ' |', "\n";
+		echo '| ', str_pad( $source, 8, ' ' ), ' | ', str_pad( $case, 8, ' ' ), ' | ', str_pad( $arr['active'], 6, ' ' ), ' | ', str_pad( $arr['number_std'], $nStdLen, ' ' ), ' | ', str_pad( $arr['number_var'], $nVarLen, ' ' ), ' | ', str_pad( $arr['number_vml'], $nVmlLen, ' ' ), ' | ', str_pad( $arr['timeout'], 7, ' ', STR_PAD_LEFT ), ' |', "\n";
 	}
 }
 echo $sep, "\n";
