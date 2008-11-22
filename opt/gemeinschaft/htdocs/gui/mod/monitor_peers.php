@@ -181,6 +181,7 @@ while ($user = $rs_users->fetchRow()) {
 			switch (@$cf[1]) {
 				case 'std':  $cfs[@$cf[0]] = @$cf[2]; break;
 				case 'var':  $cfs[@$cf[0]] = @$cf[3]; break;
+				case 'vml':  $cfs[@$cf[0]] =__('AB'); break;
 				case 'no' :
 				default   :  $cfs[@$cf[0]] = null;
 			}
