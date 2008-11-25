@@ -45,6 +45,19 @@ if ($_SESSION['sudo_user']['name'] === 'sysadmin') {
 	return;
 }
 
+
+if ($_SESSION['sudo_user']['boi_host_id'] > 0
+&&  $_SESSION['sudo_user']['boi_role'] !== 'gs') {
+	# foreign user
+	$show_pin          = true;
+	$need_newpinrepeat = false;
+} else {
+	# normal Gemeinschaft user
+	$show_pin          = false;
+	$need_newpinrepeat = true;
+}
+
+
 $msg = '';
 $success = false;
 
@@ -54,7 +67,11 @@ if (@$_REQUEST['action']==='save') {
 	
 	$type_old_pin   = trim(@$_REQUEST['oldpin']);
 	$new_pin        = trim(@$_REQUEST['newpin']);
-	$new_pin_repeat = trim(@$_REQUEST['newpinrepeat']);
+	if ($need_newpinrepeat) {
+		$new_pin_repeat = trim(@$_REQUEST['newpinrepeat']);
+	} else {
+		$new_pin_repeat = $new_pin;
+	}
 		
 	if ($db_pin != $type_old_pin) {
 		$msg = __('Alte PIN falsch!');
@@ -111,8 +128,7 @@ if (@$_REQUEST['action']==='save') {
 			<?php echo __('Alte PIN'); ?>:
 		</td>
 <?php
-if ($_SESSION['sudo_user']['boi_host_id'] > 0
-&&  $_SESSION['sudo_user']['boi_role'] !== 'gs') {
+if ($show_pin) {
 	$oldpin = gs_user_pin_get($_SESSION['sudo_user']['name']);
 	if (isGsError($oldpin) || ! is_string($oldpin)) {
 		$oldpin = '';
@@ -136,9 +152,12 @@ if ($_SESSION['sudo_user']['boi_host_id'] > 0
 			<?php echo __('Neue PIN'); ?>:
 		</td>
 		<td>
-			<input type="password" name="newpin" value="" size="10" maxlength="10" />
+			<input type="<?php echo ($show_pin ? 'text':'password'); ?>" name="newpin" value="" size="10" maxlength="10" />
 		</td>
 	</tr>
+<?php
+if ($need_newpinrepeat) {
+?>
 	<tr class="odd">
 		<td>
 			<?php echo __('Neue PIN wiederholen'); ?>:
@@ -147,6 +166,9 @@ if ($_SESSION['sudo_user']['boi_host_id'] > 0
 			<input type="password" name="newpinrepeat" value="" size="10" maxlength="10" />
 		</td>
 	</tr>
+<?php
+}
+?>
 	<tr>
 		<td colspan="2" class="transp r">
 			<br />
