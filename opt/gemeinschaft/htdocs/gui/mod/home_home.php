@@ -203,7 +203,8 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 					//echo '<td>';
 					echo ' &nbsp; ';
 					echo '&rarr; &nbsp; ';
-					if ($cf['active'] === 'vml') {
+					if ($cf['active'] === 'vml'
+					||  preg_match('/^vm/', $cf['number'], $m)) {
 						echo htmlEnt(__('AB'));
 						if (preg_match('/^(?:(?:vm)?)(.*)/', $cf['number'], $m)) {
 							$vm_number = $m[1];
