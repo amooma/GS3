@@ -962,8 +962,9 @@ context to-internal-users-self {
 					}
 				}
 			}
-			if ("${vm_${vm_source}_active}" != "1")
-				goto user_uncallable_vm_off;
+			//We dont need the user_uncallable_vm_on any more.
+			//if ("${vm_${vm_source}_active}" != "1")
+			goto user_uncallable_vm_off;
 			
 		user_uncallable_vm_on:
 			Verbose(1,### Called user ${EXTEN} unreachable\, record voicemail from ${vm_source});
