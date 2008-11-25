@@ -158,7 +158,8 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 							'src'     =>  $src,
 							'case'    =>  $case,
 							'number'  => @$cf['number_'.$cf['active']],
-							'timeout' =>  $cf['timeout']
+							'timeout' =>  $cf['timeout'],
+							'active'  =>  $cf['active']
 						);
 						if ($case==='always') {
 							if     ($src==='internal') $internal_always = true;
@@ -201,7 +202,18 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 					//echo '</td>' ,"\n";
 					//echo '<td>';
 					echo ' &nbsp; ';
-					echo '&rarr; &nbsp; ', htmlEnt($cf['number']);
+					echo '&rarr; &nbsp; ';
+					if ($cf['active'] === 'vml') {
+						echo htmlEnt(__('AB'));
+						if (preg_match('/^(?:(?:vm)?)(.*)/', $cf['number'], $m)) {
+							$vm_number = $m[1];
+							if ($vm_number != $_SESSION['sudo_user']['info']['ext']) {
+								echo ' ', htmlEnt($vm_number);
+							}
+						}
+					} else {
+						echo htmlEnt($cf['number']);
+					}
 					echo '</td>' ,"\n";
 					echo '</tr>' ,"\n";
 					++$i;
