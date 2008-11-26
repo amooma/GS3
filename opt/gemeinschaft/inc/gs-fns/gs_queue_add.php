@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 function gs_queue_add( $name, $title, $maxlen, $host_id_or_ip )
 {
 	if (! preg_match( '/^[\d]+$/', $name ))
-		return new GsError( 'Queue name must be numeric.' );
+		return new GsError( 'Queue extension must be numeric.' );
 	$title = trim($title);
 	$maxlen = (int)$maxlen;
 	if ($maxlen < 0) $maxlen = 0;
@@ -53,13 +53,13 @@ function gs_queue_add( $name, $title, $maxlen, $host_id_or_ip )
 	#
 	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queues` WHERE `name`=\''. $db->escape($name) .'\'' );
 	if ($num > 0)
-		return new GsError( 'A queue with that name already exists.' );
+		return new GsError( 'A queue with that extension already exists.' );
 	
 	# check if SIP user with same name exists
 	#
 	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($name) .'\'' );
 	if ($num > 0)
-		return new GsError( 'A SIP user with that name already exists.' );
+		return new GsError( 'A SIP user with that extension already exists.' );
 	
 	# check if host exists
 	#
