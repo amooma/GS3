@@ -42,6 +42,8 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 	if (! in_array( $src, array('internal','external'), true ))
 		return new GsError( 'Source must be internal|external.' );
 	
+	if (! preg_match('/^[0-9]+$/', $bellcore))
+		return new GsError( 'Bellcore must be numeric.' );
 	$bellcore = (int)$bellcore;
 	if ($bellcore < 0 || $bellcore > 10)
 		return new GsError( 'Bellcore must be between 1 and 10 or 0 for silent.' );
