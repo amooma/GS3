@@ -41,7 +41,10 @@ function gs_queue_add( $name, $title, $maxlen, $host_id_or_ip )
 		return new GsError( 'Queue extension must be numeric.' );
 	$title = trim($title);
 	$maxlen = (int)$maxlen;
-	if ($maxlen < 0) $maxlen = 0;
+	if ($maxlen < 0)
+		return new GsError( 'Maxlen must be 0 or more.' );
+	if ($maxlen > 255)
+		return new GsError( 'Maxlen must be 255 or less.' );
 	
 	# connect to db
 	#
