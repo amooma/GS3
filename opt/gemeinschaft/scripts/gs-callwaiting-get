@@ -65,7 +65,7 @@ if (array_key_exists('regen', $opts)) {
 	exit(0);
 }
 
-echo 'active : ', (int)$ret, "\n";
+echo 'active: ', ((bool)(int)$ret ? 'yes':'no'), "\n";
 
 
 ?>
