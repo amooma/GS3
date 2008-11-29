@@ -283,10 +283,10 @@ $SNOM_PROV_PB_NUM_RESULTS   = 15;
 $SNOM_PROV_FW_UPDATE        = false;  # allow firmware updates?
 $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 
-#$SNOM_PROV_FW_DEFAULT_300   = '7.1.24';  # not used (yet)
-#$SNOM_PROV_FW_DEFAULT_320   = '7.1.24';  # not used (yet)
-#$SNOM_PROV_FW_DEFAULT_360   = '6.5.1';   # not used (yet)
-#$SNOM_PROV_FW_DEFAULT_370   = '7.1.24';  # not used (yet)
+#$SNOM_PROV_FW_DEFAULT_300   = '7.1.24';
+#$SNOM_PROV_FW_DEFAULT_320   = '7.1.24';
+#$SNOM_PROV_FW_DEFAULT_360   = '6.5.1';
+#$SNOM_PROV_FW_DEFAULT_370   = '7.1.24';
 
 
 //----------------------[  Snom M3  ]---------------------//
