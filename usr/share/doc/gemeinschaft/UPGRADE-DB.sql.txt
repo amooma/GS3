@@ -540,3 +540,14 @@ ALTER TABLE `callforwards`
   CHANGE `active` `active` ENUM('no','std','var','vml') CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT 'no';
 
 
+--
+-- since rev. 5655
+--
+
+--
+-- Add new Column 'fw_manuel_update' in table 'phones'
+--
+
+ALTER TABLE `phones` 
+  ADD COLUMN `fw_manuel_update` BOOLEAN AFTER `firmware_cur`;
+
