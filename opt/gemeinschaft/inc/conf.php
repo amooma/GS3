@@ -240,7 +240,7 @@ _gscnf( 'SNOM_PROV_HTTP_USER'       , ''                 );
 _gscnf( 'SNOM_PROV_HTTP_PASS'       , ''                 );
 _gscnf( 'SNOM_PROV_PB_NUM_RESULTS'  , 15                 );
 _gscnf( 'SNOM_PROV_FW_UPDATE'       , false              );
-_gscnf( 'SNOM_PROV_FW_BETA'         , false              );
+//_gscnf( 'SNOM_PROV_FW_BETA'         , false              );
 _gscnf( 'SNOM_PROV_FW_6TO7'         , false              );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_300'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_320'  , null               );
