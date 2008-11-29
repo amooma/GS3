@@ -550,4 +550,3 @@ ALTER TABLE `callforwards`
 
 ALTER TABLE `phones` 
   ADD COLUMN `fw_manuel_update` BOOLEAN AFTER `firmware_cur`;
-
