@@ -281,9 +281,7 @@ $SNOM_PROV_PB_NUM_RESULTS   = 15;
   # Test the update mechanism with 1 or 2 phones. This is especially
   # important with PoE (Power over Ethernet) switches.
 $SNOM_PROV_FW_UPDATE        = false;  # allow firmware updates?
-$SNOM_PROV_FW_BETA          = false;  # allow beta versions?
 $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
-  # upgrading vom 6 to 7 might require SNOM_PROV_FW_BETA
 
 #$SNOM_PROV_FW_DEFAULT_300   = '7.1.24';  # not used (yet)
 #$SNOM_PROV_FW_DEFAULT_320   = '7.1.24';  # not used (yet)
