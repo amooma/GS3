@@ -135,7 +135,6 @@ $SNOM_PROV_HTTP_USER        = '';
 $SNOM_PROV_HTTP_PASS        = '';
 $SNOM_PROV_PB_NUM_RESULTS   = 15;
 $SNOM_PROV_FW_UPDATE        = false;
-$SNOM_PROV_FW_BETA          = false;
 $SNOM_PROV_FW_6TO7          = false;
 
 //----------------------[  Snom M3  ]---------------------//
