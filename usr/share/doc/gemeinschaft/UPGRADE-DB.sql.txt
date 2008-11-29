@@ -544,9 +544,12 @@ ALTER TABLE `callforwards`
 -- since rev. 5655
 --
 
+
 --
--- Add new Column 'fw_manuel_update' in table 'phones'
+-- Add new column `fw_manual_update` in table `phones`
 --
 
-ALTER TABLE `phones` 
-  ADD COLUMN `fw_manuel_update` BOOLEAN AFTER `firmware_cur`;
+ALTER TABLE `phones`
+  ADD COLUMN `fw_manual_update` TINYINT(1) unsigned NOT NULL default '0' AFTER `firmware_cur`;
+
+
