@@ -258,6 +258,63 @@ if (! $phone_id) {
 	gs_log( GS_LOG_WARNING, "DB error" );
 	exit(0);
 }
+
+# do we have to upgrade to a default version?
+#
+$fw_was_upgraded_manually = (int)$db->executeGetOne(
+	'SELECT `fw_manual_update`'.
+	'FROM `phones` '.
+	'WHERE `id`='. $phone_id
+	);
+if ($fw_was_upgraded_manually) {
+	gs_log( GS_LOG_DEBUG, "Firmware was upgraded \"manually\". Not scheduling an upgrade." );
+} elseif ($a === null) {
+	gs_log( GS_LOG_DEBUG, "Phone did not report its current firmware version." );
+} else {
+	$sw_default_vers = _snom_normalize_version(trim(gs_get_conf('GS_SNOM_PROV_FW_DEFAULT_'.$phone_type)));
+	if (in_array($sw_default_vers, array(null,false,''), true)) {
+		gs_log( GS_LOG_DEBUG, "No default firmware version set in config file" );
+	} else {
+		if ('x'.$a != 'x'.$sw_default_vers) {
+			gs_log( GS_LOG_NOTICE, "The firmware version ($a) differs from the default version ($sw_default_vers), scheduling an upgrade ..." );
+			# simply add a provisioning job to the database. this is done to be clean and we can trace the job.
+			$ok = $db->execute(
+				'INSERT INTO `prov_jobs` ('.
+					'`id`, '.
+					'`inserted`, '.
+					'`running`, '.
+					'`trigger`, '.
+					'`phone_id`, '.
+					'`type`, '.
+					'`immediate`, '.
+					'`minute`, '.
+					'`hour`, '.
+					'`day`, '.
+					'`month`, '.
+					'`dow`, '.
+					'`data` '.
+				') VALUES ('.
+					'NULL, '.
+					((int)time()) .', '.
+					'0, '.
+					'\'client\', '.
+					((int)$phone_id) .', '.
+					'\'firmware\', '.
+					'0, '.
+					'\'*\', '.
+					'\'*\', '.
+					'\'*\', '.
+					'\'*\', '.
+					'\'*\', '.
+					'\'' . $db->escape($sw_default_vers) . '\' '.
+				')'
+			);
+		}
+	}
+}
+
+# check provisioning jobs
+#
 $rs = $db->execute(
 	'SELECT `id`, `running`, `minute`, `hour`, `day`, `month`, `dow`, `data` '.
 	'FROM `prov_jobs` '.
