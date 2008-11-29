@@ -210,8 +210,15 @@ if (count($phones) < 1) {
 
 @$db->execute( 'OPTIMIZE TABLE `prov_jobs`' );
 
+
 $num_ok = 0;
 foreach ($phones as $phone) {
+	$ok = $db->execute( 'UPDATE `phones` SET `fw_manuel_update`=\'1\' WHERE `id`='. (int)$phone['id'] );
+	if(!$ok) {
+		echo "Warning: Can't set Phone-Upgrade-Status to manual\n";
+	}
+
+
 	$ok = $db->execute(
 		'INSERT INTO `prov_jobs` ('.
 			'`id`, '.
