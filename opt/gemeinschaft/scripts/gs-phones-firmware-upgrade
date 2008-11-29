@@ -213,7 +213,7 @@ if (count($phones) < 1) {
 
 $num_ok = 0;
 foreach ($phones as $phone) {
-	$ok = $db->execute( 'UPDATE `phones` SET `fw_manuel_update`=\'1\' WHERE `id`='. (int)$phone['id'] );
+	$ok = $db->execute( 'UPDATE `phones` SET `fw_manual_update`=\'1\' WHERE `id`='. (int)$phone['id'] );
 	if(!$ok) {
 		echo "Warning: Can't set Phone-Upgrade-Status to manual\n";
 	}
