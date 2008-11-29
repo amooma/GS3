@@ -285,11 +285,18 @@ $SNOM_PROV_FW_BETA          = false;  # allow beta versions?
 $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
   # upgrading vom 6 to 7 might require SNOM_PROV_FW_BETA
 
+#$SNOM_PROV_FW_DEFAULT_300   = '7.1.24';  # not used (yet)
+#$SNOM_PROV_FW_DEFAULT_320   = '7.1.24';  # not used (yet)
+#$SNOM_PROV_FW_DEFAULT_360   = '6.5.1';   # not used (yet)
+#$SNOM_PROV_FW_DEFAULT_370   = '7.1.24';  # not used (yet)
+
 
 //----------------------[  Snom M3  ]---------------------//
 
 $SNOM_PROV_M3_ACCOUNTS      = 1;
   # set to 0 to disable Snom M3 provisioning
+
+#$SNOM_PROV_M3_FW_DEFAULT_SNOM_M3 = 'x.x.x';  # not used (yet)
 
 
 //----------------------[  Aastra  ]----------------------//
@@ -300,11 +307,21 @@ $AASTRA_PROV_ENABLED        = false;  # do provisioning for Aastra?
 $AASTRA_PROV_PB_NUM_RESULTS = 10;
   # number of results in phonebook search on Aastra phone
 
+#$AASTRA_PROV_FW_DEFAULT_51I = 'x.x.x';  # not used (yet)
+#$AASTRA_PROV_FW_DEFAULT_53I = 'x.x.x';  # not used (yet)
+#$AASTRA_PROV_FW_DEFAULT_55I = 'x.x.x';  # not used (yet)
+#$AASTRA_PROV_FW_DEFAULT_57I = 'x.x.x';  # not used (yet)
+
 
 //-----------------[  Siemens OpenStage  ]----------------//
 
 $SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
 //...
+
+#$SIEMENS_PROV_FW_DEFAULT_OS20 = '1.3.5.0';
+#$SIEMENS_PROV_FW_DEFAULT_OS40 = '1.3.5.0';
+#$SIEMENS_PROV_FW_DEFAULT_OS60 = '1.3.5.0';
+#$SIEMENS_PROV_FW_DEFAULT_OS80 = '1.3.5.0';
 
 
 
