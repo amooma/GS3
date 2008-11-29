@@ -37,7 +37,7 @@ include_once( GS_DIR .'inc/cron-rule.php' );
 
 
 $allow_update    = gs_get_conf('GS_SNOM_PROV_FW_UPDATE');
-$allow_beta      = gs_get_conf('GS_SNOM_PROV_FW_BETA'  );  # no longer used
+//$allow_beta      = gs_get_conf('GS_SNOM_PROV_FW_BETA'  );  # no longer used
 $allow_v_6_to_7  = gs_get_conf('GS_SNOM_PROV_FW_6TO7'  );
 
 $firmware_path   = '/opt/gemeinschaft/htdocs/prov/snom/sw/';
@@ -84,7 +84,7 @@ function _generate_settings( $model, $appl, $rtfs, $lnux )
 {
 	global
 		$firmware_url, $firmware_path,
-		$allow_beta, $mac, $phone_type, $user;
+		/*$allow_beta,*/ $mac, $phone_type, $user;
 		
 	$file = '';
 	if     (!empty($appl)) $file = $model.'-'.$appl.'.bin'  ;
