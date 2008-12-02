@@ -191,7 +191,7 @@ installation-trunk-single.html: docbook/installation-trunk-single-debian.xml
 		echo '############################################################'; \
 		exit 1; \
 	fi
-	# 'chunker.output.indent' 'yes' break <pre>
+	# 'chunker.output.indent' 'yes' breaks <pre>
 	xsltproc --nonet --novalid --xinclude \
 		--stringparam 'base.dir' './' \
 		--stringparam 'use.id.as.filename' '1' \
