@@ -43,6 +43,14 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
+echo '<script type="text/javascript">
+	//<![CDATA[
+	function ask_user(target) {
+		if(confirm(\'Wirklich loeschen?\'))
+		top.location.href = target;
+	}
+	//]]>
+	</script>';
 
 $host_apis = array(
 	''    => '-',
@@ -468,8 +476,10 @@ if (@$rs) {
 			
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;page='.$page) ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 			
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-			
+			//echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+
+			echo '<a href="#" onclick="ask_user(\''.gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page).'\'); " title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+
 			echo '</td>',"\n";
 		}
 		
