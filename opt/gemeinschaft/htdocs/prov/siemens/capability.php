@@ -107,7 +107,51 @@ class PhoneCapability_siemens extends PhoneCapability
 		}
 		return $outfile;
 		*/
-		return false;
+		return $infile;
+	}
+
+	function copy_ringtone( $ringtonefile )
+	{
+		$file = '/opt/gemeinschaft-siemens/conf.php';
+
+		if (file_exists( $file ) && is_readable( $file )) {
+			include_once( $file );
+		} else {
+			gs_log( GS_LOG_DEBUG, "Siemens provisioning not available" );
+			return 0;	
+		}
+
+		$fileserver['wan'] = gs_get_conf('GS_PROV_SIEMENS_FTP_SERVER_WAN');
+		$fileserver['lan'] = gs_get_conf('GS_PROV_SIEMENS_FTP_SERVER_LAN');
+		$fileserver['local'] = gs_get_conf('GS_PROV_HOST');
+		$ftp_path = '';
+
+		
+		$external_ftp_path = gs_get_conf('GS_PROV_SIEMENS_FTP_RINGTONE_PATH');
+		if ($external_ftp_path === null) {
+			$external_ftp_path = '/';
+		}
+
+		include_once( GS_DIR .'inc/ftp-filesize.php' );
+		$ftp = new GS_FTP_FileSize();
+
+		foreach ($fileserver as $file_server) {
+			if($file_server == '')
+				continue;
+			if (!($ftp->connect($file_server, null,
+				gs_get_conf('GS_PROV_SIEMENS_FTP_USER'),
+				gs_get_conf('GS_PROV_SIEMENS_FTP_PWD')
+			))) {
+			gs_log( GS_LOG_DEBUG, 'Siemens prov.: Can\'t deploy '.$ringtonefile.' file to '.$file_server.' (FTP server failed)' );
+			} else {
+				$ok = $ftp->copyfile( $ringtonefile, $external_ftp_path);
+				$ftp->disconnect();
+				if (!$ok) {
+					gs_log( GS_LOG_DEBUG, 'Failed to copy ringtone to ftp-server');
+				}
+		 	}
+		}
+		return true;
 	}
 }
 
