@@ -28,7 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
-
+include_once( GS_DIR .'inc/get-listen-to-ips.php' );
 
 /***********************************************************
 *    sets a user's ringtone
@@ -42,8 +42,6 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 	if (! in_array( $src, array('internal','external'), true ))
 		return new GsError( 'Source must be internal|external.' );
 	
-	if (! preg_match('/^[0-9]+$/', $bellcore))
-		return new GsError( 'Bellcore must be numeric.' );
 	$bellcore = (int)$bellcore;
 	if ($bellcore < 0 || $bellcore > 10)
 		return new GsError( 'Bellcore must be between 1 and 10 or 0 for silent.' );
@@ -143,7 +141,7 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 		return new GsError( 'Failed to copy file to "'. $infile .'".' );
 	
 	include_once( GS_DIR .'inc/phone-capability.php' );
-	$phone_types = array('snom');  //FIXME
+	$phone_types = array('siemens');
 	$errors = array();
 	$new_ringer_basename = $user .'-'. subStr($src,0,3) .'-'. $rand;
 	foreach ($phone_types as $phone_type) {
@@ -158,32 +156,41 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 		elseif (! $outfile)
 			$errors[] = $phone_type .': '. 'Failed to convert file.';
 		@chmod($outfile, 0666);
-		
+			
 		$pinfo = pathInfo($outfile);
 		$ext = strToLower( @$pinfo['extension'] );
 		$newbase = $new_ringer_basename .'-'. $phone_type .'.'. $ext;
-		if ($we_are_the_webserver) {
-			# local
-			//rename( $outfile, GS_DIR .'htdocs/prov/ringtones/'. $newbase );
-			@exec( 'sudo mv '. qsa($outfile) .' '. qsa( GS_DIR .'htdocs/prov/ringtones/'. $newbase ), $out, $err );
-		} else {
-			# remotely
-			@exec( 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa($outfile) .' '. qsa( 'root@'. GS_PROV_HOST .':/opt/gemeinschaft/htdocs/prov/ringtones/'. $newbase ) .' >>/dev/null 2>>/dev/null', $out, $err );
-			//@exec( 'sudo rm -f '. qsa($outfile) .' >>/dev/null 2>&1' );
-			@unlink( $outfile );
+		@copy( $infile, '/tmp/'.$newbase );
+		if($phone_type=='siemens') { //if this is a Siemens-Phone, push the File on the FTP-Server
+			$ok = $PhoneCapa->copy_ringtone('/tmp/'.$newbase);
+			if(!$ok)
+				return false;
 		}
-		if ($err != 0) {
-			gs_log(GS_LOG_WARNING, 'Failed to mv ringtone.');
+		else {
+			if ($we_are_the_webserver) {
+				# local
+				//rename( $outfile, GS_DIR .'htdocs/prov/ringtones/'. $newbase );
+				$cmd = 'sudo mv '. qsa($outfile) .' '. qsa(GS_DIR . '/htdocs/prov/ringtones/'. $newbase);
+				gs_log(GS_LOG_WARNING, 'Executing: ' . $cmd);
+				@exec( $cmd, $out, $err );
+			} else {
+				# remotely
+				@exec( 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa($outfile) .' '. qsa( 'root@'. GS_PROV_HOST .':/opt/gemeinschaft/htdocs/prov/ringtones/'. $newbase ) .' >>/dev/null 2>>/dev/null', $out, $err );
+				//@exec( 'sudo rm -f '. qsa($outfile) .' >>/dev/null 2>&1' );
+				@unlink( $outfile );
+			}
+			if ($err != 0) {
+				gs_log(GS_LOG_WARNING, 'Failed to mv ringtone.');
+			}
 		}
-		
 	}
+
 	if (is_file($infile)) @unlink( $infile );
 	@exec('rm -rf '. $tmpbase .'-* 1>>/dev/null 2>>/dev/null &');
 	
 	if (count($errors) > 0) {
 		return new GsError( implode("\n", $errors) );
 	}
-	
 	$ok = $db->execute( 'UPDATE `ringtones` SET `file`=\''. $db->escape($new_ringer_basename) .'\' WHERE `user_id`='. $user_id .' AND `src`=\''. $src .'\'' );
 	if (! $ok) return new GsError( 'DB error.' );
 	
