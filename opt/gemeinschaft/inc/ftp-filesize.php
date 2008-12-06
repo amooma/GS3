@@ -159,6 +159,19 @@ class GS_FTP_FileSize
 		}
 		return $file_size;
 	}
+
+	function copyfile($inpfile, $destdir) {
+		if (! $this->_connected) {
+			return -1;
+		}
+		gs_log( GS_LOG_NOTICE, 'Trying to copy '. $inpfile.' to ftp://'.$this->_host.$destdir.baseName($inpfile));
+		$ok = @ftp_put($this->_conn, $destdir.baseName($inpfile) , $inpfile, FTP_BINARY);
+		if(!$ok)
+			return false;
+		else
+			return true;
+	}
+
 }
 
 
