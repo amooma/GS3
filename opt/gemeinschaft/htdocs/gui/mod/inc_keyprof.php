@@ -41,8 +41,11 @@ if (! isSet($is_user_profile)) {
 
 $phone_types = array();
 if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
-	$phone_types['snom-360'    ] = 'Snom 360';
-	$phone_types['snom-370'    ] = 'Snom 370';
+	$parts = explode(',',gs_get_conf('GS_PROV_MODELS_ENABLED_SNOM'));
+	if(in_array("360", $parts))
+		$phone_types['snom-360'    ] = 'Snom 360';
+	if(in_array("370", $parts))
+		$phone_types['snom-370'    ] = 'Snom 370';
 }
 /*
 # Maybe there will be some reason for enabling keys on Snom M3 phones in future.
@@ -51,15 +54,24 @@ if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 }
 */
 if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
-	$phone_types['siemens-os20'] = 'Siemens OpenStage 20';
-	$phone_types['siemens-os40'] = 'Siemens OpenStage 40';
-	$phone_types['siemens-os60'] = 'Siemens OpenStage 60';
-	$phone_types['siemens-os80'] = 'Siemens OpenStage 80';
+	$parts = explode(',',gs_get_conf('GS_PROV_MODELS_ENABLED_SIEMENS'));
+	if(in_array("os20", $parts))
+		$phone_types['siemens-os20'] = 'Siemens OpenStage 20';
+	if(in_array("os40", $parts))
+		$phone_types['siemens-os40'] = 'Siemens OpenStage 40';
+	if(in_array("os60", $parts))
+		$phone_types['siemens-os60'] = 'Siemens OpenStage 60';
+	if(in_array("os80", $parts))
+		$phone_types['siemens-os80'] = 'Siemens OpenStage 80';
 }
 if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
-	$phone_types['aastra-53i'] = 'Aastra 53i';
-	$phone_types['aastra-55i'] = 'Aastra 55i';
-	$phone_types['aastra-57i'] = 'Aastra 57i';
+	$parts = explode(',',gs_get_conf('GS_PROV_MODELS_ENABLED_AASTRA'));
+	if(in_array("53i", $parts))
+		$phone_types['aastra-53i'] = 'Aastra 53i';
+	if(in_array("55i", $parts))
+		$phone_types['aastra-55i'] = 'Aastra 55i';
+	if(in_array("57i", $parts))
+		$phone_types['aastra-57i'] = 'Aastra 57i';
 }
 
 
