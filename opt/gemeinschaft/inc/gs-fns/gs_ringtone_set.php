@@ -30,6 +30,7 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/get-listen-to-ips.php' );
 
+
 /***********************************************************
 *    sets a user's ringtone
 ***********************************************************/
@@ -141,7 +142,7 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 		return new GsError( 'Failed to copy file to "'. $infile .'".' );
 	
 	include_once( GS_DIR .'inc/phone-capability.php' );
-	$phone_types = array('siemens');
+	$phone_types = array('snom', 'siemens');  //FIXME
 	$errors = array();
 	$new_ringer_basename = $user .'-'. subStr($src,0,3) .'-'. $rand;
 	foreach ($phone_types as $phone_type) {
@@ -156,23 +157,22 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 		elseif (! $outfile)
 			$errors[] = $phone_type .': '. 'Failed to convert file.';
 		@chmod($outfile, 0666);
-			
+		
 		$pinfo = pathInfo($outfile);
 		$ext = strToLower( @$pinfo['extension'] );
 		$newbase = $new_ringer_basename .'-'. $phone_type .'.'. $ext;
 		@copy( $infile, '/tmp/'.$newbase );
-		if($phone_type=='siemens') { //if this is a Siemens-Phone, push the File on the FTP-Server
+		if ($phone_type === 'siemens') {
+			# if this is a Siemens phone, push the file on the FTP server
 			$ok = $PhoneCapa->copy_ringtone('/tmp/'.$newbase);
-			if(!$ok)
+			if (! $ok)
 				return false;
 		}
 		else {
 			if ($we_are_the_webserver) {
 				# local
 				//rename( $outfile, GS_DIR .'htdocs/prov/ringtones/'. $newbase );
-				$cmd = 'sudo mv '. qsa($outfile) .' '. qsa(GS_DIR . '/htdocs/prov/ringtones/'. $newbase);
-				gs_log(GS_LOG_WARNING, 'Executing: ' . $cmd);
-				@exec( $cmd, $out, $err );
+				@exec( 'sudo mv '. qsa($outfile) .' '. qsa( GS_DIR .'htdocs/prov/ringtones/'. $newbase ), $out, $err );
 			} else {
 				# remotely
 				@exec( 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa($outfile) .' '. qsa( 'root@'. GS_PROV_HOST .':/opt/gemeinschaft/htdocs/prov/ringtones/'. $newbase ) .' >>/dev/null 2>>/dev/null', $out, $err );
@@ -184,7 +184,6 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 			}
 		}
 	}
-
 	if (is_file($infile)) @unlink( $infile );
 	@exec('rm -rf '. $tmpbase .'-* 1>>/dev/null 2>>/dev/null &');
 	
