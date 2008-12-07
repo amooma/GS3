@@ -6511,6 +6511,29 @@ INSERT INTO `user_groups` VALUES (1,1,2,'root-node','Root node',NULL,NULL,255);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `user_watchlist`
+--
+
+DROP TABLE IF EXISTS `user_watchlist`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `user_watchlist` (
+  `user_id` int(10) unsigned NOT NULL,
+  `buddy_user_id` int(10) unsigned NOT NULL,
+  `status` enum('pnd','ack','nak') character set ascii default NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `user_watchlist`
+--
+
+LOCK TABLES `user_watchlist` WRITE;
+/*!40000 ALTER TABLE `user_watchlist` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_watchlist` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 

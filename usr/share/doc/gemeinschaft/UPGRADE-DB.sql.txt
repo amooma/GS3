@@ -553,3 +553,19 @@ ALTER TABLE `phones`
   ADD COLUMN `fw_manual_update` TINYINT(1) unsigned NOT NULL default '0' AFTER `firmware_cur`;
 
 
+--
+-- since rev 5699
+--
+
+
+--
+-- Add Table for Monitor-Permissions
+--
+
+CREATE TABLE IF NOT EXISTS `user_watchlist` (
+  `user_id` INTEGER UNSIGNED NOT NULL,
+  `buddy_user_id` INT UNSIGNED NOT NULL,
+  `status` ENUM('pnd','ack','nak')  CHARACTER SET ascii
+)
+ENGINE = InnoDB;
+
