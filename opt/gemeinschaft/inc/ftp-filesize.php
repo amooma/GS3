@@ -159,19 +159,18 @@ class GS_FTP_FileSize
 		}
 		return $file_size;
 	}
-
-	function copyfile($inpfile, $destdir) {
-		if (! $this->_connected) {
-			return -1;
-		}
-		gs_log( GS_LOG_NOTICE, 'Trying to copy '. $inpfile.' to ftp://'.$this->_host.$destdir.baseName($inpfile));
-		$ok = @ftp_put($this->_conn, $destdir.baseName($inpfile) , $inpfile, FTP_BINARY);
-		if(!$ok)
-			return false;
-		else
-			return true;
+	
+	# upload a file
+	#
+	function upload_file( $local_file, $destdir )
+	{
+		if (! $this->_connected) return false;
+		if (subStr($destdir,-1) !== '/') $destdir.= '/';
+		gs_log( GS_LOG_DEBUG, 'Trying to upload '. $local_file.' to '. $destdir . baseName($local_file) .' on ftp://'. $this->_host );
+		$ok = @ftp_put( $this->_conn, $destdir.baseName($local_file), $local_file, FTP_BINARY );
+		return $ok;
 	}
-
+	
 }
 
 
