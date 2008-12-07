@@ -9,6 +9,7 @@
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
+* Soeren Sprenger <soeren.sprenger@amooma.de>
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -29,6 +30,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-fns/gs_queue_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queue_del.php' );
+include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -37,7 +39,13 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
-
+echo '<script type="text/javascript">
+//<![CDATA[
+function confirm_delete() {
+	return confirm(', utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) ,');
+}
+//]]>
+</script>' ,"\n";
 
 $action = @$_REQUEST['action'];
 if (! in_array($action, array('','edit','save','del'), true))
@@ -424,7 +432,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 		
 		echo '<td class="">',"\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;qid='.$r['_id'] .'&amp;page='.$page) ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=del&amp;qid='.$r['_id'] .'&amp;qname='.$r['name'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=del&amp;qid='.$r['_id'] .'&amp;qname='.$r['name'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo '</td>',"\n";
 		
 		echo '</tr>',"\n";
