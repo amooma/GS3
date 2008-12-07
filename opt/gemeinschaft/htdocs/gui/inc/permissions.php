@@ -159,8 +159,20 @@ function gui_monitor_which_peers( $sudo_user )
 {
 	if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') === 'lvm')
 		return _gui_monitor_which_peers_lvm( $sudo_user );
-	else
-		return array();
+	else {
+		$db_slave = gs_db_slave_connect();
+		$rs = $db_slave->execute('SELECT `u`.`user` FROM
+		`user_watchlist` `f` LEFT JOIN
+		`users` `u` ON (`u`.`id`=`f`.`user_id`)
+		WHERE `f`.`status`= \'ack\' AND`f`.`buddy_user_id`= '.(int)@$_SESSION['sudo_user']['info']['id']);
+		$ret = array();
+		if(!$rs)
+			return $ret;
+		while ($r = @$rs->fetchRow()) {
+			$ret[] = $r['user']; 
+		}
+		return $ret;
+	}
 }
 
 
