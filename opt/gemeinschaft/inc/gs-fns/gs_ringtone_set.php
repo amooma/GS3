@@ -161,12 +161,14 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 		$pinfo = pathInfo($outfile);
 		$ext = strToLower( @$pinfo['extension'] );
 		$newbase = $new_ringer_basename .'-'. $phone_type .'.'. $ext;
-		@copy( $infile, '/tmp/'.$newbase );
+		
 		if ($phone_type === 'siemens') {
 			# if this is a Siemens phone, push the file on the FTP server
+			@copy( $infile, '/tmp/'.$newbase );  //FIXME - why?
 			$ok = $PhoneCapa->copy_ringtone('/tmp/'.$newbase);
 			if (! $ok)
-				return false;
+				gs_log(GS_LOG_WARNING, 'Failed to upload ringtone to FTP server.');
+			if (is_file('/tmp/'.$newbase)) @unlink( '/tmp/'.$newbase );
 		}
 		else {
 			if ($we_are_the_webserver) {
