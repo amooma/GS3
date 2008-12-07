@@ -27,6 +27,7 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 function microtime_float()
 {
@@ -44,13 +45,12 @@ echo '</h2>', "\n";
 
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
 echo '<script type="text/javascript">
-	//<![CDATA[
-	function ask_user(target) {
-		if(confirm(\'Wirklich loeschen?\'))
-		top.location.href = target;
-	}
-	//]]>
-	</script>';
+//<![CDATA[
+function confirm_delete() {
+	return confirm(', utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) ,');
+}
+//]]>
+</script>' ,"\n";
 
 $host_apis = array(
 	''    => '-',
@@ -476,10 +476,8 @@ if (@$rs) {
 			
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;page='.$page) ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 			
-			//echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-
-			echo '<a href="#" onclick="ask_user(\''.gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page).'\'); " title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			
 			echo '</td>',"\n";
 		}
 		
