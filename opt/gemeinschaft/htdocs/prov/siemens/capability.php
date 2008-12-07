@@ -71,9 +71,11 @@ class PhoneCapability_siemens extends PhoneCapability
 		$outfile = $outbase .'.mp3';
 		
 		if (strToLower(subStr($infile, -4, 4)) === '.mp3') {
-			if (! @copy( $infile, $outfile ))
-				return false;
-			return $outfile;
+			if (fileSize($infile) <= 1000000) {  # 1 MB
+				if (! @copy( $infile, $outfile ))
+					return false;
+				return $outfile;
+			}
 		}
 		
 		/*
