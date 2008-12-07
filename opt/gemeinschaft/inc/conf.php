@@ -254,6 +254,7 @@ _gscnf( 'SNOM_PROV_M3_ACCOUNTS'     , 1                  );
 //_gscnf( 'SNOM_PROV_M3_FW_DEFAULT_SNOM_M3', null          );
 
 _gscnf( 'SIEMENS_PROV_ENABLED'      , false              );
+_gscnf( 'SIEMENS_PROV_PREFER_HTTP'  , true               );
 _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS20', null             );
 _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS40', null             );
 _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS60', null             );
