@@ -77,7 +77,7 @@ class PhoneCapability_aastra extends PhoneCapability
 		else
 			$mpg123 = 'mpg123';
 		
-		if (strToLower(subStr($infile, -4, 4)) == '.mp3') {
+		if (strToLower(subStr($infile, -4, 4)) === '.mp3') {
 			# convert mp3 to wav first
 			$wavfile = $infile .'.wav';
 			$cmd = $mpg123 .' -m -w - -n 1000 -q '. qsa($infile) .' > '. qsa($wavfile) .' 2>>/dev/null';
