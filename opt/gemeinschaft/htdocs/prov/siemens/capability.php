@@ -121,7 +121,7 @@ class PhoneCapability_siemens extends PhoneCapability
 		return false;
 	}
 	
-	function copy_ringtone( $ringtonefile )
+	function _upload_ringtone( $ringtonefile )  # deprecated
 	{
 		$file = '/opt/gemeinschaft-siemens/conf.php';
 		
