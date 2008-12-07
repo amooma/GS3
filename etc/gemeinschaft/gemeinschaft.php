@@ -322,6 +322,10 @@ $AASTRA_PROV_PB_NUM_RESULTS = 10;
 $SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
 //...
 
+#$SIEMENS_PROV_PREFER_HTTP   = true;
+  # prefer HTTP(S) (to FTP) for file deployment (ringtones, ...).
+  # default: true
+
 #$SIEMENS_PROV_FW_DEFAULT_OS20 = '1.3.5.0';
 #$SIEMENS_PROV_FW_DEFAULT_OS40 = '1.3.5.0';
 #$SIEMENS_PROV_FW_DEFAULT_OS60 = '1.3.5.0';
