@@ -144,7 +144,7 @@ class PhoneCapability_siemens extends PhoneCapability
 			))) {
 			gs_log( GS_LOG_DEBUG, 'Siemens prov.: Can\'t deploy '.$ringtonefile.' file to '.$file_server.' (FTP server failed)' );
 			} else {
-				$ok = $ftp->copyfile( $ringtonefile, $external_ftp_path);
+				$ok = $ftp->upload_file( $ringtonefile, $external_ftp_path);
 				$ftp->disconnect();
 				if (!$ok) {
 					gs_log( GS_LOG_DEBUG, 'Failed to copy ringtone to ftp-server');
