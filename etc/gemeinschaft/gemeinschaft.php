@@ -255,10 +255,11 @@ $PROV_ALLOW_NET             = '0.0.0.0/0';
   # point of view)
   # default: '0.0.0.0/0' => all in LAN => no proxy
 
-//Phones shown in the GUI (comma-separated lists)
-$PROV_MODELS_ENABLED_SNOM    = '360,370';             #available models: 360,370
-$PROV_MODELS_ENABLED_SIEMENS = 'os20,os40,os60,os80'; #available models: os20,os40,os60,os80
-$PROV_MODELS_ENABLED_AASTRA  = '53i,55i,57i';         #available models: 53i,55i,57i
+  # Phones shown in the GUI (comma-separated lists)
+$PROV_MODELS_ENABLED_SNOM    = '360,370';             # available models: 360,370
+$PROV_MODELS_ENABLED_SIEMENS = 'os20,os40,os60,os80'; # available models: os20,os40,os60,os80
+$PROV_MODELS_ENABLED_AASTRA  = '51i,53i,55i,57i';     # available models: 51i,53i,55i,57i
+
 
 
 /***********************************************************
