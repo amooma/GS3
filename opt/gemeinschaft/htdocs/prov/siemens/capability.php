@@ -67,7 +67,16 @@ class PhoneCapability_siemens extends PhoneCapability
 	{
 		/*
 		$outfile = $outbase .'.wav';
+		*/
+		$outfile = $outbase .'.mp3';
 		
+		if (strToLower(subStr($infile, -4, 4)) === '.mp3') {
+			if (! @copy( $infile, $outfile ))
+				return false;
+			return $outfile;
+		}
+		
+		/*
 		if     (is_executable( '/usr/local/bin/mpg123' ))
 			$mpg123 = '/usr/local/bin/mpg123';
 		elseif (is_executable( '/usr/bin/mpg123' ))
@@ -77,7 +86,7 @@ class PhoneCapability_siemens extends PhoneCapability
 		else
 			$mpg123 = 'mpg123';
 		
-		if (strToLower(subStr($infile, -4, 4)) == '.mp3') {
+		if (strToLower(subStr($infile, -4, 4)) === '.mp3') {
 			# convert mp3 to wav first
 			$wavfile = $infile .'.wav';
 			$cmd = $mpg123 .' -m -w - -n 1000 -q '. qsa($infile) .' > '. qsa($wavfile) .' 2>>/dev/null';
