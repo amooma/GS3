@@ -31,6 +31,7 @@ require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_groups_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_group_change.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_group_del.php' );
+include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -39,7 +40,13 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
-
+echo '<script type="text/javascript">
+//<![CDATA[
+function confirm_delete() {
+	return confirm(', utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) ,');
+}
+//]]>
+</script>' ,"\n";
 
 $action = @$_REQUEST['action'];
 if (! in_array($action, array('', 'save', 'delete'), true))
@@ -205,7 +212,7 @@ if (isGsError($groups)) {
 		echo '</td>', "\n";
 		
 		echo '<td class="r">', "\n";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=delete&amp;id='.$node['id']) ,'"><img alt="', __('L&ouml;schen') ,'" title="', __('L&ouml;schen') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=delete&amp;id='.$node['id']) ,'"><img alt="', __('L&ouml;schen') ,'" title="', __('L&ouml;schen') ,'" onclick="return confirm_delete();" src="', GS_URL_PATH ,'crystal-svg/16/act/editdelete.png" /></a>';
 		echo '</td>', "\n";
 		
 		echo '</tr>' ,"\n";

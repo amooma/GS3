@@ -37,6 +37,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_del.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callblocking_set.php' );
 require_once( GS_DIR .'inc/boi-soap/boi-api.php' );
+include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -44,7 +45,15 @@ if (@$MODULES[$SECTION]['icon'])
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+
 echo '</h2>', "\n";
+echo '<script type="text/javascript">
+//<![CDATA[
+function confirm_delete() {
+	return confirm(', utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) ,');
+}
+//]]>
+</script>' ,"\n";
 
 
 function count_users_configured( $DB ) {
@@ -462,7 +471,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			
 			echo '<td>';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='. rawUrlEncode($r['usern']) .'&amp;action=view&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('bearbeiten'), '"><img alt="',__('bearbeiten'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='. rawUrlEncode($r['usern']) .'&amp;action=del&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('l&ouml;schen'), '"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='. rawUrlEncode($r['usern']) .'&amp;action=del&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			echo "</td>\n";
 			
 			echo '</tr>', "\n";

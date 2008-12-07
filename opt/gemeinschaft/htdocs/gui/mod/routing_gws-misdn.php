@@ -9,6 +9,7 @@
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
+* Soeren Sprenger <soeren.sprenger@amooma.de>
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -31,6 +32,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 include_once( GS_DIR .'inc/pcre_check.php' );
+include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 
 $action = @$_REQUEST['action'];
@@ -45,6 +47,13 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
+echo '<script type="text/javascript">
+//<![CDATA[
+function confirm_delete() {
+	return confirm(', utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) ,');
+}
+//]]>
+</script>' ,"\n";
 
 echo '<p class="text">', __('Konfiguration von ISDN-Basisanschl&uuml;ssen (Mehrger&auml;te- oder Anlagenanschl&uuml;sse). Siehe auch Einstellungen der ISDN-Karte(n) im System-Men&uuml;.') ,'</p>',"\n";
 
@@ -279,7 +288,7 @@ ORDER BY `g`.`grp_id`, `g`.`title`'
 		
 		echo '<td>',"\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;gw-id='.$gw['id']) ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=del&amp;gw-id='.$gw['id']) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=del&amp;gw-id='.$gw['id']) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" onclick="return confirm_delete();" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo '</td>',"\n";
 		
 		echo '</tr>',"\n";

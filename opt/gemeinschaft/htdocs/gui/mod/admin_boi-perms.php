@@ -9,7 +9,8 @@
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
-* 
+* Soeren Sprenger <soeren.sprenger@amooma.de>
+*
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -28,6 +29,8 @@
 
 defined('GS_VALID') or die('No direct access.');
 
+include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
+
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
@@ -35,6 +38,13 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
+echo '<script type="text/javascript">
+//<![CDATA[
+function confirm_delete() {
+	return confirm(', utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) ,');
+}
+//]]>
+</script>' ,"\n";
 
 $per_page = (int)GS_GUI_NUM_RESULTS;
 $action   =      @$_REQUEST['action'   ] ;
@@ -259,7 +269,7 @@ while ($r = $rs->fetchRow()) {
 	echo '<td>' ,"\n";
 	if ($action !== 'edit') {
 		echo '<button type="submit" name="action" value="edit_'.$r['host_id'].'_'.$r['user_id'].'" class="plain" title="', __('Regel bearbeiten') ,'"><img alt="', __('Bearbeiten') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/edit.png" /></button>&nbsp;';
-		echo '<button type="submit" name="action" value="del_'.$r['host_id'].'_'.$r['user_id'].'" class="plain" title="', __('Regel l&ouml;schen') ,'"><img alt="', __('L&ouml;schen') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/editdelete.png" /></button>';
+		echo '<button type="submit" name="action" value="del_'.$r['host_id'].'_'.$r['user_id'].'" class="plain" title="', __('Regel l&ouml;schen') ,'" onclick="return confirm_delete();"><img alt="', __('L&ouml;schen') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/editdelete.png" /></button>';
 	} else {
 		if ($r['host_id'] == $host_id
 		&&  $r['user_id'] == $user_id) {
