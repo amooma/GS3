@@ -6515,14 +6515,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_watchlist`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `user_watchlist` (
   `user_id` int(10) unsigned NOT NULL,
   `buddy_user_id` int(10) unsigned NOT NULL,
-  `status` enum('pnd','ack','nak') character set ascii default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
+  `status` enum('pnd','ack','nak') character set ascii COLLATE ascii_general_ci NOT NULL default 'pnd',
+  PRIMARY KEY  (`user_id`,`buddy_user_id`),
+  KEY `buddy_user_id` (`buddy_user_id`),
+  CONSTRAINT `user_watchlist_ibfk_2` FOREIGN KEY (`buddy_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `user_watchlist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `user_watchlist`

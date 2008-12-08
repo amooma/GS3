@@ -559,13 +559,26 @@ ALTER TABLE `phones`
 
 
 --
--- Add Table for Monitor-Permissions
+-- Create new table `user_watchlist`:
 --
 
 CREATE TABLE IF NOT EXISTS `user_watchlist` (
-  `user_id` INTEGER UNSIGNED NOT NULL,
-  `buddy_user_id` INT UNSIGNED NOT NULL,
-  `status` ENUM('pnd','ack','nak')  CHARACTER SET ascii
-)
-ENGINE = InnoDB;
+  `user_id` int(10) unsigned NOT NULL,
+  `buddy_user_id` int(10) unsigned NOT NULL,
+  `status` ENUM('pnd','ack','nak') character set ascii COLLATE ascii_general_ci NOT NULL default 'pnd'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `user_watchlist`
+  ADD PRIMARY KEY (`user_id`,`buddy_user_id`);
+ALTER TABLE `user_watchlist`
+  ADD INDEX `buddy_user_id` (`buddy_user_id`);
+ALTER TABLE `user_watchlist`
+  ADD CONSTRAINT `user_watchlist_ibfk_1`
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `user_watchlist`
+  ADD CONSTRAINT `user_watchlist_ibfk_2`
+  FOREIGN KEY (`buddy_user_id`) REFERENCES `users` (`id`)
+  ON DELETE CASCADE ON UPDATE CASCADE;
+
 
