@@ -6520,7 +6520,7 @@ CREATE TABLE `user_watchlist` (
   `buddy_user_id` int(10) unsigned NOT NULL,
   `status` enum('pnd','ack','nak') character set ascii COLLATE ascii_general_ci NOT NULL default 'pnd',
   PRIMARY KEY  (`user_id`,`buddy_user_id`),
-  KEY `buddy_user_id` (`buddy_user_id`),
+  KEY `buddy_user_id_user_id` (`buddy_user_id`,`user_id`),
   CONSTRAINT `user_watchlist_ibfk_2` FOREIGN KEY (`buddy_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_watchlist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

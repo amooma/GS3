@@ -571,7 +571,7 @@ CREATE TABLE IF NOT EXISTS `user_watchlist` (
 ALTER TABLE `user_watchlist`
   ADD PRIMARY KEY (`user_id`,`buddy_user_id`);
 ALTER TABLE `user_watchlist`
-  ADD INDEX `buddy_user_id` (`buddy_user_id`);
+  ADD INDEX `buddy_user_id_user_id` (`buddy_user_id`,`user_id`);
 ALTER TABLE `user_watchlist`
   ADD CONSTRAINT `user_watchlist_ibfk_1`
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
