@@ -45,8 +45,8 @@ if (@$MODULES[$SECTION]['icon'])
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
-
 echo '</h2>', "\n";
+
 echo '<script type="text/javascript">
 //<![CDATA[
 function confirm_delete() {

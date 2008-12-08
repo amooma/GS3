@@ -10,7 +10,7 @@
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
 * Soeren Sprenger <soeren.sprenger@amooma.de>
-*
+* 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -28,7 +28,6 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
-
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 echo '<h2>';
@@ -38,6 +37,7 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
+
 echo '<script type="text/javascript">
 //<![CDATA[
 function confirm_delete() {
