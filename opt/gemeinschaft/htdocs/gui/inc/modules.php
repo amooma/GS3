@@ -131,7 +131,7 @@ $MODULES['monitor'  ]=  array(
 	'boi_ok'=> false,
 	'sub' => array(
 		'queues'       => array('title' => __('Queues')),
-		'pgrps'        => array('title' => __('Gruppen'))
+		'pgrps'        => array('title' => __('Rufannahmegrp.'))
 	)
 );
 if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
