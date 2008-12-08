@@ -160,14 +160,15 @@ function gs_user_del( $user )
 	#
 	$db->execute( 'UPDATE `phones` SET `user_id`=NULL WHERE `user_id`='. $user_id );
 	
-	# delete user_watchlist-entrys
+	# delete watchlist buddies
 	#
-	$db->execute( 'DELETE FROM `user_watchlist` WHERE `user_id`='. $user_id .' OR `buddy_user_id`='. $user_id );
-
-	# delete Instant-Messaging
+	$db->execute( 'DELETE FROM `user_watchlist` WHERE `user_id`='. $user_id );
+	$db->execute( 'DELETE FROM `user_watchlist` WHERE `buddy_user_id`='. $user_id );
+	
+	# delete instant messaging
 	#
 	$db->execute( 'DELETE FROM `instant_messaging` WHERE `user_id`='. $user_id );
-
+	
 	# delete user
 	#
 	$db->execute( 'DELETE FROM `users` WHERE `id`='. $user_id );
