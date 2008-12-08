@@ -156,10 +156,6 @@ function gs_user_del( $user )
 		$db->execute( 'DELETE FROM `prov_param_profiles` WHERE `id`='. $prov_profile_id .' AND `is_group_profile`=0' );
 	}
 	
-	# do a clean logout from the current phone
-	#
-	$db->execute( 'UPDATE `phones` SET `user_id`=NULL WHERE `user_id`='. $user_id );
-	
 	# delete watchlist buddies
 	#
 	$db->execute( 'DELETE FROM `user_watchlist` WHERE `user_id`='. $user_id );
@@ -168,6 +164,10 @@ function gs_user_del( $user )
 	# delete instant messaging
 	#
 	$db->execute( 'DELETE FROM `instant_messaging` WHERE `user_id`='. $user_id );
+	
+	# do a clean logout from the current phone
+	#
+	$db->execute( 'UPDATE `phones` SET `user_id`=NULL WHERE `user_id`='. $user_id );
 	
 	# delete user
 	#
