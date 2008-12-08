@@ -40,15 +40,16 @@ echo '</h2>', "\n";
 $delete_entry = (int)trim(@$_REQUEST['delete' ]);
 $save_all     = (int)trim(@$_REQUEST['save'   ]);
 $save_name    =      trim(@$_REQUEST['name'   ]);
-$user_id      = (int)@$_SESSION['sudo_user']['info']['id'];
 $auth_name    =      trim(@$_REQUEST['auth_name']);
 $auth         = (int)trim(@$_REQUEST['auth']);
+$user_id      = (int)@$_SESSION['sudo_user']['info']['id'];
+
 #delete friend
 #
 if ($delete_entry > 0) {
 	$rs = $DB->execute(
 	'DELETE FROM `user_watchlist`
-	WHERE `buddy_user_id`='. $delete_entry .' AND `user_id`='. (int)@$_SESSION['sudo_user']['info']['id']
+	WHERE `buddy_user_id`='. $delete_entry .' AND `user_id`='. $user_id
 	);
 }
 
@@ -139,7 +140,7 @@ $rs_friends = $DB->execute('SELECT `u`.`id` ,`u`.`user` , `u`.`firstname` , `u`.
 	FROM
 	`user_watchlist` `f` LEFT JOIN
 	`users` `u` ON (`u`.`id`=`f`.`buddy_user_id`)
-	WHERE `f`.`user_id`= '.(int)@$_SESSION['sudo_user']['info']['id']);
+	WHERE `f`.`user_id`= '.$user_id);
 
 echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 echo gs_form_hidden($SECTION, $MODULE), "\n";
