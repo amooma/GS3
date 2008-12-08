@@ -138,7 +138,7 @@ if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
 $MODULES['monitor'  ]['sub'][
 		'peers']       =  array('title' => __('Kollegen'));
 $MODULES['monitor'  ]['sub'][
-		'friends']       =  array('title' => __('Berechtigungen'));
+		'friends']     =  array('title' => __('Berechtigungen'));
 }
 
 #####################################################################
