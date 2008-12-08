@@ -40,6 +40,7 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
+
 echo '<script type="text/javascript">
 //<![CDATA[
 function confirm_delete() {
@@ -212,7 +213,7 @@ if (isGsError($groups)) {
 		echo '</td>', "\n";
 		
 		echo '<td class="r">', "\n";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=delete&amp;id='.$node['id']) ,'"><img alt="', __('L&ouml;schen') ,'" title="', __('L&ouml;schen') ,'" onclick="return confirm_delete();" src="', GS_URL_PATH ,'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=delete&amp;id='.$node['id']) ,'" onclick="return confirm_delete();"><img alt="', __('L&ouml;schen') ,'" title="', __('L&ouml;schen') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/editdelete.png" /></a>';
 		echo '</td>', "\n";
 		
 		echo '</tr>' ,"\n";

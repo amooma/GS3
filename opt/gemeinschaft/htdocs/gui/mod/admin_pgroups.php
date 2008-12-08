@@ -52,7 +52,6 @@ function confirm_delete() {
 //]]>
 </script>' ,"\n";
 
-
 $edit     = (int)trim(@$_REQUEST['edit'    ]);
 $save     = (int)trim(@$_REQUEST['save'    ]);
 $per_page = (int)GS_GUI_NUM_RESULTS;
@@ -207,7 +206,7 @@ if ($edit > 0) {
 				
 				echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;page='.$page) ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 				
-				echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), ' "onclick="return confirm_delete();" ><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+				echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 				
 				echo '</td>',"\n";
 			}
