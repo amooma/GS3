@@ -38,47 +38,57 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 
 $DB = gs_db_master_connect();
 
-$rs = @$DB->execute(
-	'SELECT `id`, `phone_id`, `type`, `minute`, `hour`, `day`, `month`, `dow` '.
-	'FROM `prov_jobs` '.
-	'WHERE '.
-		'`trigger`=\'server\' AND '.
-		'`running`=0'
-	);
-if (! $rs) {
-	gs_log(GS_LOG_FATAL, 'Cound not get prov_jobs!');
-	exit(1);
+foreach (array(1,0) as $immediate) {
+	$rs = @$DB->execute(
+		'SELECT `id`, `phone_id`, `type`, `minute`, `hour`, `day`, `month`, `dow` '.
+		'FROM `prov_jobs` '.
+		'WHERE '.
+			'`trigger`=\'server\' AND '.
+			'`immediate`='. ((int)$immediate) .' AND '.
+			'`running`=0'
+		);
+	if (! $rs) {
+		gs_log(GS_LOG_FATAL, 'Could not get prov_jobs!');
+		exit(1);
+	}
+	
+	while ($r = $rs->fetchRow()) {
+		if ($immediate) {
+			$rule_matches = true;
+		} else {
+			//FIXME - check if the cron rule matches
+			gs_log(GS_LOG_DEBUG, 'Non-immediate prov jobs not implemented here yet');
+			$rule_matches = false;
+		}
+		if ($rule_matches) {
+			if ($r['type'] === 'settings') {
+				gs_log(GS_LOG_DEBUG, 'Triggering phone ID '.$r['phone_id']);
+				$ip = $DB->executeGetOne(
+					'SELECT `u`.`current_ip` '.
+					'FROM '.
+						'`phones` `p` LEFT JOIN '.
+						'`users` `u` ON (`u`.`id`=`p`.`user_id`) '.
+					'WHERE `p`.`id`='. $r['phone_id']
+					);
+				if (! $ip) {
+					gs_log(GS_LOG_NOTICE, 'Need to trigger phone '.$r['phone_id'].' but can\'t get the IP address');
+					continue;
+				}
+				gs_prov_phone_checkcfg_by_ip($ip);
+				# delete job from DB
+				$ok = $DB->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.$r['id'] );
+				if (! $ok)
+					gs_log(GS_LOG_WARNING, 'Failed to delete prov-job ID '.$r['id'] );
+			}
+			/*
+			elseif ($r['type'] === 'firmware') {
+				//TODO: add here a check for firmware jobs
+			}
+			*/
+		}
+	}
 }
 
-while ($r = $rs->fetchRow()) {
-	if ($r['type'] === 'settings') {
-		//FIXME - check if the cron rule matches!
-		gs_log(GS_LOG_DEBUG, 'Triggering phone ID '.$r['phone_id']);
-		$ip = $DB->executeGetOne(
-			'SELECT `u`.`current_ip` '.
-			'FROM '.
-				'`phones` `p` LEFT JOIN '.
-				'`users` `u` ON (`u`.`id`=`p`.`user_id`) '.
-			'WHERE `p`.`id`='. $r['phone_id']
-			);
-		if ($ip) {
-			gs_prov_phone_checkcfg_by_ip($ip);
-			# delete job from db
-			$ok = $DB->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.$r['id'] );
-			if (! $ok)
-				gs_log(GS_LOG_WARNING, 'Failed to delete prov-job ID '.$r['id'] );
-		}
-		else {
-			# i can't get the phone's ip now
-			gs_log(GS_LOG_DEBUG, 'Need to trigger phone '.$r['phone_id'].' but can\'t get the IP address');
-		}
-	}
-	/*
-	elseif ($r['type'] === 'firmware') {
-		//TODO: add here a check for firmware jobs
-	}
-	*/
-}
 exit(0);
 
 ?>
