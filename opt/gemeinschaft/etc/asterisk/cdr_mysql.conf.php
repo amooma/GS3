@@ -38,25 +38,25 @@ require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_quiet');
 
-if (gs_get_conf('GS_DB_CDR_MASTER_HOST') != '') {
-	echo "\n";
-	echo 'hostname = ', gs_get_conf('GS_DB_CDR_MASTER_HOST') ,"\n"; # *MUST* be the master, *NOT* a slave!
-	echo 'port = 3306'                                   ,"\n";  # MySQL default
+
+echo "\n";
+if (gs_get_conf('GS_DB_CDR_MASTER_HOST') != null) {
+	echo 'hostname = ', gs_get_conf('GS_DB_CDR_MASTER_HOST') ,"\n";  # *MUST* be the master, *NOT* a slave!
+	echo 'port = 3306'                                       ,"\n";  # MySQL default
 	echo 'user = '    , gs_get_conf('GS_DB_CDR_MASTER_USER') ,"\n";
 	echo 'password = ', gs_get_conf('GS_DB_CDR_MASTER_PWD' ) ,"\n";
 	echo 'dbname = '  , gs_get_conf('GS_DB_CDR_MASTER_DB'  ) ,"\n";
-	echo 'table = ast_cdr'                               ,"\n";
-	echo "\n";
+	echo 'table = ast_cdr'                                   ,"\n";
 } else {
-	echo "\n";
-	echo 'hostname = ', gs_get_conf('GS_DB_MASTER_HOST') ,"\n"; # *MUST* be the master, *NOT* a slave!
+	echo 'hostname = ', gs_get_conf('GS_DB_MASTER_HOST') ,"\n";  # *MUST* be the master, *NOT* a slave!
 	echo 'port = 3306'                                   ,"\n";  # MySQL default
 	echo 'user = '    , gs_get_conf('GS_DB_MASTER_USER') ,"\n";
 	echo 'password = ', gs_get_conf('GS_DB_MASTER_PWD' ) ,"\n";
 	echo 'dbname = '  , gs_get_conf('GS_DB_MASTER_DB'  ) ,"\n";
 	echo 'table = ast_cdr'                               ,"\n";
-	echo "\n";
 }
+echo "\n";
+
 
 gs_log(GS_LOG_DEBUG, 'etc/asterisk/cdr_mysql.conf has just been loaded');
 
