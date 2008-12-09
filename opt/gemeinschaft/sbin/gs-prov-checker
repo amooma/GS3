@@ -1,0 +1,67 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 4947 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* Soeren Sprenger <soeren.sprenger@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/log.php' );
+require_once( GS_DIR .'inc/db_connect.php' );
+require_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
+
+$DB = gs_db_master_connect();
+
+$rs = @ $DB->execute('SELECT * FROM `prov_jobs` WHERE `trigger`=\'server\' AND `running`=0');
+if (! $rs) {
+	gs_log(GS_LOG_FATAL, 'Cound not get prov_jobs!');
+	exit(1);
+}
+
+while ($r = $rs->fetchRow()) {
+	if($r['type'] == "settings") {
+		gs_log(GS_LOG_DEBUG, 'Triggering Phone '.$r['phone_id']);
+		$ip = $DB->executeGetOne('SELECT `u`.`current_ip` FROM `phones` `p` LEFT JOIN `users` `u` ON (`u`.`id`=`p`.`user_id`) WHERE `p`.`id`='.$r['phone_id']);
+		if($ip) {
+			gs_prov_phone_checkcfg_by_ip($ip);
+			//delete job from db
+			$ok = $DB->execute('DELETE FROM `prov_jobs` WHERE `id`='.$r['id']);
+			if(!$ok)
+				gs_log(GS_LOG_WARN, 'Failed to delete the prov-job:  \''.$r['id'].'\'!');
+		}
+		else  {
+			//i can't get the phone's ip now
+			gs_log(GS_LOG_DEBUG, 'I need to trigger phone: '.$r['phone_id'].'but i can\'t get the ip!');
+		}
+	}
+	
+
+}
+exit(0);
+?>
