@@ -186,11 +186,11 @@ _gscnf( 'DB_SLAVE_USER'             , 'gemeinschaft'     );
 _gscnf( 'DB_SLAVE_PWD'              , ''                 );
 _gscnf( 'DB_SLAVE_DB'               , 'asterisk'         );
 
-//There are no default DB_CDR* values cause if its emtpy the normal Database is used
-_gscnf( 'DB_CDR_MASTER_HOST'            , ''     );
-_gscnf( 'DB_CDR_MASTER_USER'            , ''     );
-_gscnf( 'DB_CDR_MASTER_PWD'             , ''     );
-_gscnf( 'DB_CDR_MASTER_DB'              , ''     );
+# null => normal master DB
+_gscnf( 'DB_CDR_MASTER_HOST'        , null               );
+_gscnf( 'DB_CDR_MASTER_USER'        , null               );
+_gscnf( 'DB_CDR_MASTER_PWD'         , null               );
+_gscnf( 'DB_CDR_MASTER_DB'          , null               );
 
 _gscnf( 'DB_SIP_REG_UPDATE'         , gs_get_conf('GS_INSTALLATION_TYPE_SINGLE') );
 
