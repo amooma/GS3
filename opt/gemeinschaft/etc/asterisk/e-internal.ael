@@ -174,10 +174,29 @@ context to-internal-users {
 	
 	
 	//----------------------------------------------------------
+	// Dialing voicemail but without recording, used in call-forwarding
+	//----------------------------------------------------------
+
+	_vm*. => {
+		Set(box=${EXTEN:2});
+		Verbose(1,### Forwarded call to announce-file);
+		Answer();
+		Wait(0.5);
+		Set(vm_announce_file=${vm_announce_${vm_source}});
+		if ("${vm_announce_file}" = "") {
+			Playback(/opt/gemeinschaft/sounds/de-DE/der-teilnehmer-kann-ihren-anruft-nicht-beantworten);
+		}
+		else {
+			Playback(${vm_announce_file});
+		}
+		Hangup();
+	}
+
+	//----------------------------------------------------------
 	// Dialing voicemail, used in call-forwarding
 	//----------------------------------------------------------
 	
-	_vm. => {
+	_vmX. => {
 		Set(box=${EXTEN:2});
 		if ("${user_id}" != "") {
 			Set(vm_source=internal);
@@ -213,7 +232,6 @@ context to-internal-users {
 		VoiceMail(${box},s);
 		Hangup();
 	}
-	
 	
 	//----------------------------------------------------------
 	// Users, Queues, ...
