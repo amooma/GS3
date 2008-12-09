@@ -373,7 +373,7 @@ function telekom_tarifzone_k_to_v( $k )
 			}
 			break;
 		case 'T':                                     # T
-			if ($k == 'T016') $ret = 'VueDxl';        # T016 (Vï¿½Dxl)
+			if ($k == 'T016') $ret = 'VueDxl';        # T016 (VüDxl)
 			break;
 		case '1':                                     # 1
 			if ($k == '10TD') $ret = 'Dx-P';          # 10TD
