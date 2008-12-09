@@ -39,6 +39,9 @@ echo '</h2>', "\n";
 
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
 
+$CDR_DB = gs_db_cdr_master_connect();
+if (!$CDR_DB)
+	die();
 
 /*function sec_to_hours($sec) {
 	$hours = sprintf('%d:%02d:%02d',
@@ -53,7 +56,7 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 function query_string( $period, $src, $dst, $dur, $stat )
 {
-	global $DB;
+	global $CDR_DB;
 	
 	$query_line = '';
 	
@@ -101,12 +104,12 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	
 	if ($src != '') {
 		if ($query_line != '') $query_line .= ' AND';
-		$query_line .= ' `src` LIKE \''. $DB->escape($src_sql) .'\'';
+		$query_line .= ' `src` LIKE \''. $CDR_DB->escape($src_sql) .'\'';
 	}
 	
 	if ($dst != '') {
 		if ($query_line != '') $query_line .= ' AND';
-		$query_line .= ' `dst` LIKE \''. $DB->escape($dst_sql).'\'';
+		$query_line .= ' `dst` LIKE \''. $CDR_DB->escape($dst_sql).'\'';
 	}
 	$dur = _sanitize_dur( $dur );
 	if ($dur != '') {
@@ -115,7 +118,7 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	}
 	if ($stat != '') {
 		if ($query_line != '') $query_line .= ' AND';
-		$query_line .= ' `disposition`=\''. $DB->escape(strToUpper($stat)) .'\'';
+		$query_line .= ' `disposition`=\''. $CDR_DB->escape(strToUpper($stat)) .'\'';
 	}
 	
 	if ($query_line != '') $query_line .= ' AND';
@@ -178,9 +181,9 @@ FROM `ast_cdr` '. $query_string;
 */
 
 
-$rs = $DB->execute( 'DELETE FROM `ast_cdr` WHERE `dst`=\'h\'' );
+$rs = $CDR_DB->execute( 'DELETE FROM `ast_cdr` WHERE `dst`=\'h\'' );
 
-$rs = $DB->execute(
+$rs = $CDR_DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
 	DATE_FORMAT(`calldate`, \'%d.%m.%Y %H:%i:%s\') `datum`, `clid`, `src`, `dst`, `duration`, `billsec`, `disposition` 
 FROM `ast_cdr` '. $query_string .'
@@ -188,11 +191,11 @@ ORDER BY `calldate` DESC
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 );
 
-$num_total = @$DB->numFoundRows();
+$num_total = @$CDR_DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
-$sum_talktime = (int)@$DB->executeGetOne( 'SELECT SUM(`billsec`) FROM `ast_cdr` '. $query_string);
-$sum_calltime = (int)@$DB->executeGetOne( 'SELECT SUM(`duration`) FROM `ast_cdr` '. $query_string);
+$sum_talktime = (int)@$CDR_DB->executeGetOne( 'SELECT SUM(`billsec`) FROM `ast_cdr` '. $query_string);
+$sum_calltime = (int)@$CDR_DB->executeGetOne( 'SELECT SUM(`duration`) FROM `ast_cdr` '. $query_string);
 // $num_total_not_null = (int) $DB->executeGetOne( 'SELECT COUNT(*) FROM `ast_cdr` WHERE `billsec` > 0');
 
 
@@ -376,7 +379,7 @@ if (@$rs) {
 		else
 			$where = 'WHERE `billsec` > 0';
 		
-		$num_total_with_talktime = $DB->executeGetOne( 'SELECT COUNT(*) FROM `ast_cdr` '. $where );
+		$num_total_with_talktime = $CDR_DB->executeGetOne( 'SELECT COUNT(*) FROM `ast_cdr` '. $where );
 		
 		if ($num_total_with_talktime > 0)
 			echo sec_to_hours( $sum_talktime / $num_total_with_talktime );
