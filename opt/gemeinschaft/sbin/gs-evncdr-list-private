@@ -373,7 +373,7 @@ function telekom_tarifzone_k_to_v( $k )
 			}
 			break;
 		case 'T':                                     # T
-			if ($k == 'T016') $ret = 'VueDxl';        # T016 (VüDxl)
+			if ($k == 'T016') $ret = 'VueDxl';        # T016 (Vï¿½Dxl)
 			break;
 		case '1':                                     # 1
 			if ($k == '10TD') $ret = 'Dx-P';          # 10TD
@@ -552,7 +552,11 @@ $sep_sum = '+---------------------------------------------------------------+---
 $head    = '| Beginn        | Rufnummer         | Tarifz. | Dauer   | Einh. | Kosten  |' ."\n";
 
 # `cdr`.`accountcode` is "prv-XXX"
-$rs = $DB->execute(
+$CDR_DB = gs_db_cdr_master_connect();
+if (!$CDR_DB)
+	die();
+
+$rs = $CDR_DB->execute(
 'SELECT
 	SUBSTR(`cdr`.`accountcode`,5) `ext`, `evn`.`start`, `evn`.`remote`, `evn`.`tariff_zone`, `evn`.`dur`, `evn`.`units`, `evn`.`cur`,
 	ROUND(`evn`.`charge`*(1+`evn`.`vat`/100)*100)/100 `charge_gross`

@@ -108,7 +108,7 @@ function telekom_tarifzone_k_to_v( $k )
 	$k2 = subStr($k,2,1);
 	$k3 = subStr($k,3,1);
 	
-	// zurückgegeben werden Abkürzung der Tarifgruppen bei der Telekom
+	// zurï¿½ckgegeben werden Abkï¿½rzung der Tarifgruppen bei der Telekom
 	
 	$ret = '?-'.$k;
 	switch ($k0) {
@@ -269,9 +269,9 @@ function telekom_tarifzone_k_to_v( $k )
 					if ($k2=='0')                     # S80
 						// Anrufe auf 0180..
 						// (shared cost), z.B.
-						// S801 für Anruf auf 01801..
+						// S801 fï¿½r Anruf auf 01801..
 						$ret = 'Shared';
-						// wie heißt das bei der Telekom?
+						// wie heiï¿½t das bei der Telekom?
 					elseif (subStr($k,2,2) == '91') { # S891
 						// Internet-by-Call?
 						$ret = 'Onl';
@@ -287,9 +287,9 @@ function telekom_tarifzone_k_to_v( $k )
 				case '7':                             # S7
 					if ($k2=='0') {                   # S70
 						// Anrufe auf 0700..
-						// (persönliche Vanity-Nummern)
+						// (persï¿½nliche Vanity-Nummern)
 						$ret = 'PersV';
-						// wie heißt das bei der Telekom?
+						// wie heiï¿½t das bei der Telekom?
 					}
 					break;
 				case '3':                             # S3
@@ -299,7 +299,7 @@ function telekom_tarifzone_k_to_v( $k )
 						// d.h. Televoting, Gewinnspiele
 						// z.B. S379 bei Anrufen auf 01379..
 						$ret = 'TeleVote';
-						// wie heißt das bei der Telekom?
+						// wie heiï¿½t das bei der Telekom?
 					}
 					break;
 			}
@@ -310,13 +310,13 @@ function telekom_tarifzone_k_to_v( $k )
 			break;
 		case 'I':                                     # I
 			// Informationsdienste / Auskunft
-			$ret = 'Info?';  // wie heißt das bei der Telekom?
+			$ret = 'Info?';  // wie heiï¿½t das bei der Telekom?
 			switch (subStr($k,1,3)) {
 				case '033':                           # I033
 				case '034':                           # I034
 					// Anrufe auf Auskunft 11833 / 11834
 					$ret = 'Info';
-					// wie heißt das bei der Telekom?
+					// wie heiï¿½t das bei der Telekom?
 					break;
 			}
 			break;
@@ -331,7 +331,7 @@ function telekom_tarifzone_k_to_v( $k )
 				case '900':                           # X900
 					// "innovative Dienst" auf Vorwahl 012?
 					$ret = 'InnovD';
-					// wie heißt das bei der Telekom?
+					// wie heiï¿½t das bei der Telekom?
 					break;
 			}
 			break;
@@ -339,7 +339,7 @@ function telekom_tarifzone_k_to_v( $k )
 			if ($k == 'V032') {                       # V032
 				// nicht ortsgebundene Vorwahl 032
 				$ret = 'Ortsunab';
-				// wie heißt das bei der Telekom?
+				// wie heiï¿½t das bei der Telekom?
 			}
 			break;
 		case 'K':                                     # K
@@ -367,7 +367,7 @@ function telekom_tarifzone_k_to_v( $k )
 			}
 			break;
 		case 'T':                                     # T
-			if ($k == 'T016') $ret = 'VueDxl';        # T016 (VüDxl)
+			if ($k == 'T016') $ret = 'VueDxl';        # T016 (Vï¿½Dxl)
 			break;
 		case '1':                                     # 1
 			if ($k == '10TD') $ret = 'Dx-P';          # 10TD
@@ -388,14 +388,17 @@ function telekom_tarifzone_k_to_v( $k )
 
 function _gauss( $x, $k )
 {
-	# Gaussian peak, max 1, Krümmungsänderung bei ±$k
+	# Gaussian peak, max 1, Krï¿½mmungsï¿½nderung bei ï¿½$k
 	return exp(-pow($x,2)/pow($k,2));
 }
 
 function process_log( $file )
 {
 	global $DB, $last_timestamp, $currency, $vat, $vat_factor, $count;
-	
+	$CDR_DB = gs_db_cdr_master_connect();
+	if (!$CDR_DB)
+		die();
+
 	$currency = preg_replace('/[^A-Z]/', '', strToUpper($currency));
 	$vat_factor = 1.0 + ($vat/100);
 	$timeframe = 25*60;  /* allow +- 25 minutes */
@@ -421,13 +424,13 @@ function process_log( $file )
 		
 		# find matching calls in our CDRs
 		#
-		$rs = $DB->execute(
+		$rs = $CDR_DB->execute(
 'SELECT `calldate`, `dst`, `dcontext`, `channel`, `dstchannel`, `billsec`, (`disposition`=\'ANSWERED\') `answered` /*, `charge` */
  FROM   `ast_cdr`
  WHERE
         `calldate`>\''. date('Y-m-d H:i:s', $evn_tstart-$timeframe) .'\'
  AND    `calldate`<\''. date('Y-m-d H:i:s', $evn_tstart+$timeframe) .'\'
- AND    `src`=\''. $DB->escape($evn['ext']) .'\'
+ AND    `src`=\''. $CDR_DB->escape($evn['ext']) .'\'
  AND    `dst` LIKE "0%"
  AND    `dstchannel`<>""'
 		);
@@ -543,11 +546,11 @@ function log_line_to_db_entry( $line )
 		'units'  => (int)lTrim(trim($units),'0'),
 		'charge' => round( (float)$charge * $vat_factor * 10000)/10000,
 		'cur'    => strToUpper(trim($cur)),
-		'snum'   => trim($snum),  # gewählte Nummer bei kommenden Verbindungen
+		'snum'   => trim($snum),  # gewï¿½hlte Nummer bei kommenden Verbindungen
 		                          # (z.B. 0800...), sonst leer
 		'fnum'   => trim($fnum),  # unsere Nummer bei kommenden Verbindungen,
 		                          # sonst leer
-		//'rind'   => $rind,        # Richtungskennzeichen für Service-Rufnummern
+		//'rind'   => $rind,        # Richtungskennzeichen fï¿½r Service-Rufnummern
 		//                          # (z.B. 0800...) bei kommenden Verbindungen,
 		//                          # sonst leer
 		'ext'    => preg_replace('/[^0-9*]/S', '', $ext),         
