@@ -3,7 +3,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision: 4947 $
+* $Revision$
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -38,31 +38,38 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 
 $DB = gs_db_master_connect();
 
-$rs = @ $DB->execute('SELECT * FROM `prov_jobs` WHERE `trigger`=\'server\' AND `running`=0');
+$rs = @ $DB->execute( 'SELECT * FROM `prov_jobs` WHERE `trigger`=\'server\' AND `running`=0' );
 if (! $rs) {
 	gs_log(GS_LOG_FATAL, 'Cound not get prov_jobs!');
 	exit(1);
 }
 
 while ($r = $rs->fetchRow()) {
-	if($r['type'] == "settings") {
+	if ($r['type'] === 'settings') {
 		gs_log(GS_LOG_DEBUG, 'Triggering Phone '.$r['phone_id']);
-		$ip = $DB->executeGetOne('SELECT `u`.`current_ip` FROM `phones` `p` LEFT JOIN `users` `u` ON (`u`.`id`=`p`.`user_id`) WHERE `p`.`id`='.$r['phone_id']);
-		if($ip) {
+		$ip = $DB->executeGetOne(
+			'SELECT `u`.`current_ip` '.
+			'FROM '.
+				'`phones` `p` LEFT JOIN '.
+				'`users` `u` ON (`u`.`id`=`p`.`user_id`) '.
+			'WHERE `p`.`id`='. $r['phone_id']
+			);
+		if ($ip) {
 			gs_prov_phone_checkcfg_by_ip($ip);
-			//delete job from db
-			$ok = $DB->execute('DELETE FROM `prov_jobs` WHERE `id`='.$r['id']);
-			if(!$ok)
-				gs_log(GS_LOG_WARN, 'Failed to delete the prov-job:  \''.$r['id'].'\'!');
+			# delete job from db
+			$ok = $DB->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.$r['id'] );
+			if (!$ok)
+				gs_log(GS_LOG_WARNING, 'Failed to delete the prov-job:  \''.$r['id'].'\'!');
 		}
-		else  {
-			//i can't get the phone's ip now
-			gs_log(GS_LOG_DEBUG, 'I need to trigger phone: '.$r['phone_id'].'but i can\'t get the ip!');
+		else {
+			# i can't get the phone's ip now
+			gs_log(GS_LOG_DEBUG, 'Need to trigger phone '.$r['phone_id'].' but can\'t get the IP address');
 		}
-	//TODO: add here a check for Firmware-jobs
+		//TODO: add here a check for Firmware-jobs
 	}
 	
-
+	
 }
 exit(0);
+
 ?>
