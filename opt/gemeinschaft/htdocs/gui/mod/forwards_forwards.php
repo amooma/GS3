@@ -64,7 +64,7 @@ $actives = array(
 	'no'  => '-',
 	'std' => __('Std.'),
 	'var' => __('Tmp.'),
-	'vml' => __('AB'  )
+	'vml' => __('AB'  ) 
 );
 
 $show_email_notification = ! @$_SESSION['sudo_user']['info']['host_is_foreign'];
@@ -77,7 +77,6 @@ if (@$_REQUEST['action']==='save') {
 	
 	$num_std = preg_replace('/[^\d]/', '', @$_REQUEST['num-std']);
 	$num_var = preg_replace('/[^\d]/', '', @$_REQUEST['num-var']);
-	$num_vml = 'vm'. $_SESSION['sudo_user']['info']['ext'];
 	$timeout = abs((int)@$_REQUEST['timeout']);
 	if ($timeout < 1) $timeout = 1;
 	
@@ -94,6 +93,13 @@ if (@$_REQUEST['action']==='save') {
 				$src, $case, 'var', $num_var, $timeout );
 			if (isGsError($ret))
 				$warnings['var'] = __('Fehler beim Setzen der Tempor&auml;ren Umleitungsnummer') .' ('. $ret->getMsg() .')';
+
+			if ($_REQUEST[$src.'-'.$case] == 'vmln') {
+				$num_vml = 'vm*'. $_SESSION['sudo_user']['info']['ext'];
+				$_REQUEST[$src.'-'.$case] = 'vml';
+			} else {
+				$num_vml = 'vm'. $_SESSION['sudo_user']['info']['ext'];
+			}
 			$ret = gs_callforward_set( $_SESSION['sudo_user']['name'],
 				$src, $case, 'vml', $num_vml, $timeout );
 			if (isGsError($ret))
@@ -332,13 +338,28 @@ foreach ($cases as $case => $ctitle) {
 foreach ($sources as $src => $srctitle) {
 	echo '<tr>';
 	echo '<td>', __('von'), ' ', $srctitle, '</td>';
-	
 	foreach ($cases as $case => $ctitle) {
 		echo '<td>';
 		echo '<select name="', $src, '-', $case, '" />', "\n";
 		foreach ($actives as $active => $atitle) {
-			$s = ($callforwards[$src][$case]['active'] == $active) ? ' selected="selected"' : '';
-			echo '<option value="', $active, '"', $s, '>', $atitle, '</option>', "\n";
+			if ($active == 'vml') {
+				if ($callforwards[$src][$case]['active'] == $active) {
+					if(substr($callforwards[$src][$case]['number_vml'],0,3) == 'vm*') {
+						echo '<option value="', $active, '">', $atitle, '</option>', "\n";
+						echo '<option value="vmln" selected="selected"">'.__('nur Ansage').'</option>', "\n";
+					} else {
+						echo '<option value="', $active, '" selected="selected"">', $atitle, '</option>', "\n";
+						echo '<option value="vmln">'.__('nur Ansage').'</option>', "\n";
+					}
+				} else {
+					echo '<option value="', $active, '">', $atitle, '</option>', "\n";
+					echo '<option value="', 'vmln', '">'.__('nur Ansage').'</option>', "\n";
+				}
+				
+			} else {
+				$s = ($callforwards[$src][$case]['active'] == $active) ? ' selected="selected"' : '';
+				echo '<option value="', $active, '"', $s, '>', $atitle, '</option>', "\n";
+			}
 		}
 		echo '</select>';
 		echo '</td>', "\n";
