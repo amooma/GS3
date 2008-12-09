@@ -1,7 +1,7 @@
 # Gemeinschaft
-# $Revision: 3261 $
+# $Revision$
 
-# do open prov jobs
+# execute provisioning jobs
 
-* *  * * *   root   sleep 8; /opt/gemeinschaft/sbin/gs-prov-checker 1>>/dev/null 2>>/dev/null
+* *  * * *   root   sleep 4; /opt/gemeinschaft/sbin/gs-prov-checker 1>>/dev/null 2>>/dev/null
 
