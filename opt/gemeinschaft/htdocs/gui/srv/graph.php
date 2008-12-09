@@ -102,7 +102,10 @@ $xfact = ($cw-1)/$i-1;
 
 if ($dataset != '') {
 	
-	$db = @gs_db_slave_connect();
+	$db = gs_db_cdr_master_connect();
+	if(!$db)
+		die();
+
 	$t = $fr;
 	$i=0;
 	$vals = array();
@@ -136,7 +139,10 @@ WHERE
 	}
 	elseif ($dataset === 'avgdur') {
 		
-		$db = @gs_db_slave_connect();
+		$db = gs_db_cdr_master_connect();
+		if(!$db)
+			die();
+
 		$t = $fr;
 		$i=0;
 		$vals = array();
