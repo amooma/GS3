@@ -40,8 +40,10 @@ echo '</h2>', "\n";
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
 
 $CDR_DB = gs_db_cdr_master_connect();
-if (!$CDR_DB)
-	die();
+if (! $CDR_DB) {
+	echo 'CDR DB error.';
+	return;
+}
 
 /*function sec_to_hours($sec) {
 	$hours = sprintf('%d:%02d:%02d',
