@@ -81,7 +81,7 @@ function _err_handler( $type, $msg, $file, $line )
 
 function _gauss( $x, $k )
 {
-	# Gaussian peak, max 1, Krï¿½mmungsï¿½nderung bei ï¿½$k
+	# Gaussian peak, max 1, Krümmungsänderung bei ±$k
 	return exp(-pow($x,2)/pow($k,2));
 }
 
@@ -114,7 +114,6 @@ if (!$CDR_DB)
 
 # Privategespraeche aus den CDRs (ast_cdr) abfragen
 #
-
 $rs_cdr_prv = $CDR_DB->execute(
 'SELECT
 	`_id`, `calldate`, UNIX_TIMESTAMP(`calldate`) `tstart`, `src`, `dst`, `accountcode`
