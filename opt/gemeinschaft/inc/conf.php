@@ -78,8 +78,8 @@ if ($tmp >= '1' || $tmp === 'on') {
 #
 ini_set('display_errors', true);  # to be changed when our error handler is installed
 error_reporting(E_ALL ^ E_NOTICE);
-ini_set('log_errors', false);
-ini_set('track_errors', false);
+ini_set('log_errors', true);
+ini_set('track_errors', true);
 ini_set('default_socket_timeout', 20);
 ini_set('html_errors', false);  # or else we'd have HTML in our log file for
                                 # PHP errors
@@ -185,6 +185,12 @@ _gscnf( 'DB_SLAVE_HOST'             , '127.0.0.1'        );
 _gscnf( 'DB_SLAVE_USER'             , 'gemeinschaft'     );
 _gscnf( 'DB_SLAVE_PWD'              , ''                 );
 _gscnf( 'DB_SLAVE_DB'               , 'asterisk'         );
+
+//There are no default DB_CDR* values cause if its emtpy the normal Database is used
+_gscnf( 'DB_CDR_MASTER_HOST'            , ''     );
+_gscnf( 'DB_CDR_MASTER_USER'            , ''     );
+_gscnf( 'DB_CDR_MASTER_PWD'             , ''     );
+_gscnf( 'DB_CDR_MASTER_DB'              , ''     );
 
 _gscnf( 'DB_SIP_REG_UPDATE'         , gs_get_conf('GS_INSTALLATION_TYPE_SINGLE') );
 
