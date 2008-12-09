@@ -394,10 +394,7 @@ function _gauss( $x, $k )
 
 function process_log( $file )
 {
-	global $DB, $last_timestamp, $currency, $vat, $vat_factor, $count;
-	$CDR_DB = gs_db_cdr_master_connect();
-	if (! $CDR_DB)
-		die();
+	global $CDR_DB, $last_timestamp, $currency, $vat, $vat_factor, $count;
 	
 	$currency = preg_replace('/[^A-Z]/', '', strToUpper($currency));
 	$vat_factor = 1.0 + ($vat/100);
@@ -508,9 +505,9 @@ function process_log( $file )
 
 function db_quote_or_null( $val )
 {
-	global $DB;
+	global $CDR_DB;
 	
-	return $val ? ('\''. $DB->escape($val) .'\'') : 'NULL';
+	return $val ? ('\''. $CDR_DB->escape($val) .'\'') : 'NULL';
 }
 
 function log_line_to_db_entry( $line )
@@ -602,10 +599,10 @@ echo "    $date2\n";
 echo "\n";
 
 
-$DB = gs_db_master_connect();
+$CDR_DB = gs_db_cdr_master_connect();
 
 
-//$last_timestamp = (int)$DB->executeGetOne( 'SELECT MAX(`timestamp`) FROM `queue_log`' );
+//$last_timestamp = (int)$CDR_DB->executeGetOne( 'SELECT MAX(`timestamp`) FROM `queue_log`' );
 
 process_log( $evn_file );
 
