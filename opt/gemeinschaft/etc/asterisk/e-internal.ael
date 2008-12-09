@@ -179,6 +179,18 @@ context to-internal-users {
 	
 	_vm. => {
 		Set(box=${EXTEN:2});
+		if ("${user_id}" != "") {
+			Set(vm_source=internal);
+		}
+		else {
+			&is_dmz(${CALLERID(num)});
+			if ("${is_dmz}" != "1") {
+				Set(vm_source=external);
+			}
+			else {
+				Set(vm_source=internal);
+			}
+		}
 		Verbose(1,### Forwarded call to voicemail of ${box});
 		Answer();
 		Wait(0.5);
