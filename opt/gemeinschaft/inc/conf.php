@@ -78,8 +78,8 @@ if ($tmp >= '1' || $tmp === 'on') {
 #
 ini_set('display_errors', true);  # to be changed when our error handler is installed
 error_reporting(E_ALL ^ E_NOTICE);
-ini_set('log_errors', true);
-ini_set('track_errors', true);
+ini_set('log_errors', false);
+ini_set('track_errors', false);
 ini_set('default_socket_timeout', 20);
 ini_set('html_errors', false);  # or else we'd have HTML in our log file for
                                 # PHP errors
