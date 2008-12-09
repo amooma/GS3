@@ -46,7 +46,7 @@ function gs_callforward_set( $user, $source, $case, $type, $number, $timeout=20 
 		return new GsError( 'Case must be always|busy|unavail|offline.' );
 	if (! in_array( $type, array('std','var','vml'), true ))
 		return new GsError( 'Type must be std|var|vml.' );
-	$number = preg_replace( '/[^0-9vm]/', '', $number );
+	$number = preg_replace( '/[^0-9vm*]/', '', $number );
 	$timeout = (int)$timeout;
 	if ($case != 'unavail') $timeout = 0;
 	else {
