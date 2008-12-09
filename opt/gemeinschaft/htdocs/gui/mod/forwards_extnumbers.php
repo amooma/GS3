@@ -42,7 +42,29 @@ echo '</h2>', "\n";
 
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_del.php' );
 
+$save_number   =  trim(@$_REQUEST['number']);
+$delete_number =  trim(@$_REQUEST['delete']);
+
+if ($delete_number != '') {
+	$ret = gs_user_external_number_del( $_SESSION['sudo_user']['name'], $delete_number );
+	if (isGsError( $ret )) {
+		echo '<div class="errorbox">';
+		echo $ret->getMsg();
+		echo '</div>',"\n";
+	}
+}
+
+if ($save_number != '') {
+	$ret = gs_user_external_number_add( $_SESSION['sudo_user']['name'], $save_number );
+	if (isGsError( $ret )) {
+		echo '<div class="errorbox">';
+		echo $ret->getMsg();
+		echo '</div>',"\n";
+	}
+}
 
 $enumbers = gs_user_external_numbers_get( $_SESSION['sudo_user']['name'] );
 if (isGsError($enumbers)) {
@@ -58,6 +80,7 @@ if (isGsError($enumbers)) {
 <thead>
 <tr>
 	<th style="width:200px;"><?php echo __('Externe Nummern'); ?></th>
+	<th style="width:20px;" class="nobr"></th>
 </tr>
 </thead>
 <tbody>
@@ -70,16 +93,29 @@ if (count($enumbers) < 1) {
 	foreach ($enumbers as $enumber) {
 		echo '<tr>';
 		echo '<td>', htmlEnt( $enumber ), '</td>';
+		echo '<td>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$enumber), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '</td>';	
 		echo '</tr>', "\n";
 	}
 }
 
+echo '<tr>';
+echo '<td>';
+echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+echo gs_form_hidden($SECTION, $MODULE), "\n";
+echo '<input type="text" name="number" value="" size="15" maxlength="40" style="width:100px;" />';
+echo '<td>';
+echo '<button type="submit" title="'. __('Eintrag speichern').'" class="plain">	<img alt="'.__('Speichern').'" src="'.GS_URL_PATH.'crystal-svg/16/act/filesave.png" /></button>';
 ?>
 
+</form>
+</td>
+</tr>
 </tbody>
 </table>
 <br />
 <br />
 
 
-<p style="max-width:500px;"><?php echo __('Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden sollen.'); ?></p>
+
