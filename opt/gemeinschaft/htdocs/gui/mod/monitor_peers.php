@@ -42,7 +42,11 @@ include_once( GS_DIR .'htdocs/gui/inc/permissions.php' );
 include_once( GS_DIR .'inc/extension-state.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 
-
+# connect to CDR-master
+#
+$CDR_DB = gs_db_cdr_master_connect();
+if (!$CDR_DB)
+	die();
 
 function _extstate2v( $extstate )
 {
@@ -250,15 +254,15 @@ WHERE
 
 function _num_calls_cdr_bysrc_since( $exts_sql, $t_from, $disposition, $external )
 {
-	global $DB;
-	return $DB->executeGetOne(
+	global $CDR_DB;
+	return $CDR_DB->executeGetOne(
 'SELECT COUNT(*)
 FROM `ast_cdr`
 WHERE
 	`src` IN ('. $exts_sql .') AND
 	`dst` '. ($external ? '':'NOT ') .'LIKE \'0%\' AND
 	`calldate`>=\''. date('Y-m-d H:i:s', $t_from) .'\' AND
-	`disposition`=\''. $DB->escape($disposition) .'\' AND
+	`disposition`=\''. $CDR_DB->escape($disposition) .'\' AND
 	`channel` NOT LIKE \'Local/%\' AND
 	`dst`<>\'s\' AND
 	`dst`<>\'h\''
@@ -268,15 +272,15 @@ WHERE
 
 function _num_calls_cdr_bydst_since( $exts_sql, $t_from, $disposition, $external )
 {
-	global $DB;
-	return $DB->executeGetOne(
+	global $CDR_DB;
+	return $CDR_DB->executeGetOne(
 'SELECT COUNT(*)
 FROM `ast_cdr`
 WHERE
 	`dst` IN ('. $exts_sql .') AND
 	`src` '. ($external ? '':'NOT ') .'LIKE \'0%\' AND
 	`calldate`>=\''. date('Y-m-d H:i:s', $t_from) .'\' AND
-	`disposition`=\''. $DB->escape($disposition) .'\' AND
+	`disposition`=\''. $CDR_DB->escape($disposition) .'\' AND
 	`channel` NOT LIKE \'Local/%\' AND
 	`dst`<>\'s\' AND
 	`dst`<>\'h\''
