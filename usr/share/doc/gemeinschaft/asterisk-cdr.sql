@@ -1,8 +1,8 @@
 -- ----------------------------------------------------------------------------
---   Gemeinschaft database
+--   Tables for separate CDR database
 --   This file was created with
---   mysqldump --opt --skip-extended-insert --databases asterisk > asterisk.sql
---   (that's what usr/share/doc/gemeinschaft/get-database-dump.php does)
+--   mysqldump --opt --skip-extended-insert -d --databases asterisk --tables ast_cdr > asterisk-cdr.sql
+--   CREATE DATABASE and USE statements were added manually.
 --   
 --   $Revision$
 -- ----------------------------------------------------------------------------
@@ -64,13 +64,12 @@ CREATE TABLE `ast_cdr` (
   KEY `uniqueid` (`uniqueid`(25))
 ) ENGINE=MyISAM DEFAULT CHARSET=ascii COLLATE=ascii_general_ci;
 
---
--- Dumping data for table `ast_cdr`
---
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
-LOCK TABLES `ast_cdr` WRITE;
-/*!40000 ALTER TABLE `ast_cdr` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ast_cdr` ENABLE KEYS */;
-UNLOCK TABLES;
-
--- Dump completed on 2008-11-10  12:00:00
