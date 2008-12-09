@@ -103,7 +103,6 @@ if ($forwards['internal']['unavail']['number'] != '') {
 	echo 'SET VARIABLE fw_internal_unavail_timeout '.
 		gs_agi_str_esc('') ."\n";
 }
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 if ($forwards['external']['unavail']['number'] != '') {
 	echo 'SET VARIABLE fw_external_unavail_timeout '.
@@ -112,6 +111,20 @@ if ($forwards['external']['unavail']['number'] != '') {
 	echo 'SET VARIABLE fw_external_unavail_timeout '.
 		gs_agi_str_esc('') ."\n";
 }
+
+$msgs = array(
+	'internal' => '',
+	'external' => ''
+);
+foreach ($msgs as $src => $ignore) {
+	$fname = GS_DIR .'vm-rec/'. $uname .'-'. $src;
+	if (file_exists( $fname .'.alaw' ))
+		$msgs[$src] = $fname;
+}
+foreach ($msgs as $src => $file) {
+	echo 'SET VARIABLE vm_announce_'.$src .' '. gs_agi_str_esc($file) ."\n";
+}
+
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
