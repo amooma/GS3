@@ -59,6 +59,7 @@ while ($r = $rs->fetchRow()) {
 			//i can't get the phone's ip now
 			gs_log(GS_LOG_DEBUG, 'I need to trigger phone: '.$r['phone_id'].'but i can\'t get the ip!');
 		}
+	//TODO: add here a check for Firmware-jobs
 	}
 	
 
