@@ -543,7 +543,10 @@ Gemeinschaft auf \"%s\"
 
 set_error_handler('_err_handler');
 
-$DB = gs_db_master_connect();
+$DB     = gs_db_master_connect();
+$CDR_DB = gs_db_cdr_master_connect();
+if (! $CDR_DB)
+	exit(1);
 
 $euro_sign = "\xE2\x82\xAC";
 $sep     = '+'. str_repeat('-',73) .'+' ."\n";
@@ -552,10 +555,6 @@ $sep_sum = '+---------------------------------------------------------------+---
 $head    = '| Beginn        | Rufnummer         | Tarifz. | Dauer   | Einh. | Kosten  |' ."\n";
 
 # `cdr`.`accountcode` is "prv-XXX"
-$CDR_DB = gs_db_cdr_master_connect();
-if (!$CDR_DB)
-	die();
-
 $rs = $CDR_DB->execute(
 'SELECT
 	SUBSTR(`cdr`.`accountcode`,5) `ext`, `evn`.`start`, `evn`.`remote`, `evn`.`tariff_zone`, `evn`.`dur`, `evn`.`units`, `evn`.`cur`,
