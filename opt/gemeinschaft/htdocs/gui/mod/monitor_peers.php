@@ -42,11 +42,7 @@ include_once( GS_DIR .'htdocs/gui/inc/permissions.php' );
 include_once( GS_DIR .'inc/extension-state.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 
-# connect to CDR-master
-#
-$CDR_DB = gs_db_cdr_master_connect();
-if (!$CDR_DB)
-	die();
+
 
 function _extstate2v( $extstate )
 {
@@ -66,6 +62,13 @@ function _extstate2v( $extstate )
 
 
 $GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+
+# connect to CDR master
+$CDR_DB = gs_db_cdr_master_connect();
+if (! $CDR_DB) {
+	echo 'CDR DB error.';
+	return;
+}
 
 
 # get the peer users from ldap
