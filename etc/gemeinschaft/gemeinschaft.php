@@ -69,10 +69,10 @@ $DB_SLAVE_DB            = 'asterisk';
 
 //--------------------[  CDR Master  ]--------------------//
 
-//$DB_CDR_MASTER_HOST   = '192.168.1.130';
-//$DB_CDR_MASTER_USER   = 'cdr';
-//$DB_CDR_MASTER_PWD    = '';
-//$DB_CDR_MASTER_DB     = 'cdr';
+#$DB_CDR_MASTER_HOST     = '192.168.1.130';
+#$DB_CDR_MASTER_USER     = 'cdr';
+#$DB_CDR_MASTER_PWD      = '';
+#$DB_CDR_MASTER_DB       = 'cdr';
 
 //-----------------------[  Misc  ]-----------------------//
 
