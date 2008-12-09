@@ -4,7 +4,7 @@
 --   mysqldump --opt --skip-extended-insert --databases asterisk > asterisk.sql
 --   (that's what usr/share/doc/gemeinschaft/get-database-dump.php does)
 --   
---   $Revision: 5709 $
+--   $Revision$
 -- ----------------------------------------------------------------------------
 
 
