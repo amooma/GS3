@@ -400,10 +400,12 @@ $DP_DIALTIMEOUT_IN          = 45;
   # must not collide with any other extension!
   //FIXME - fix e.ael to honor this setting
 
-$DP_FORWARD_REQ_EXT_NUM     = true;
+#$DP_FORWARD_REQ_EXT_NUM     = false;
   # if true call forwards can be set to numbers in a user's list of
   # external numbers only - apart from numbers not starting in "0"
   # which are always allowed
+  # does not make much sense any more since users can edit their
+  # external numbers
 
 $DP_ALLOW_DIRECT_DIAL       = false;
   # allow direct dialing to an extension (overrides call forwards),
