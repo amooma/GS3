@@ -99,7 +99,7 @@ if ($add_number != '') {
 			echo '</div>',"\n";
 		}
 		else {
-			$ret = gs_user_external_number_add( $_SESSION['sudo_user']['name'], $canonical->intl );
+			$ret = gs_user_external_number_add( $_SESSION['sudo_user']['name'], $canonical->natl );
 			if (isGsError($ret)) {
 				echo '<div class="errorbox">';
 				echo htmlEnt(__("Fehler beim Speichern")) ,'<br />', htmlEnt($ret->getMsg());
