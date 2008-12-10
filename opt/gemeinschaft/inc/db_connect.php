@@ -166,7 +166,6 @@ function & gs_db_master_connect( $_backtrace_level=0, $read_fallback_slave=true 
 	return $gs_db_conn_master;
 }
 
-
 function & gs_db_slave_connect( $_backtrace_level=0 )
 {
 	global $gs_db_conn_slave, $gs_db_conn_master;
@@ -193,10 +192,9 @@ function & gs_db_slave_connect( $_backtrace_level=0 )
 
 function & gs_db_cdr_master_connect( $_backtrace_level=0 )
 {
-	global $gs_db_conn_cdr_master, $gs_db_conn_master;
+	global $gs_db_conn_cdr_master, $gs_db_conn_master, $gs_db_conn_slave;
 	
 	if (gs_get_conf('GS_DB_CDR_MASTER_HOST') != '') {
-		gs_log( GS_LOG_DEBUG, 'Opening new CDR master connection ...' );
 		$ret = gs_db_connect(
 			$gs_db_conn_cdr_master,
 			'cdr-master',
@@ -208,7 +206,7 @@ function & gs_db_cdr_master_connect( $_backtrace_level=0 )
 		);
 	} else {
 		$ret = gs_db_connect(
-			$gs_db_conn_cdr_master,
+			$gs_db_conn_master,
 			'cdr-master',
 			GS_DB_MASTER_HOST,
 			GS_DB_MASTER_USER,
@@ -216,6 +214,12 @@ function & gs_db_cdr_master_connect( $_backtrace_level=0 )
 			GS_DB_MASTER_DB,
 			++$_backtrace_level
 		);
+		if ($ret) {
+			$gs_db_conn_cdr_master =& $gs_db_conn_master;
+			if (gs_db_slave_is_master() && ! gs_db_is_connected($gs_db_conn_slave)) {
+				$gs_db_conn_slave =& $gs_db_conn_master;
+			}
+		}
 	}
 	
 	if (! $ret) {
