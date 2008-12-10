@@ -395,9 +395,9 @@ function _gauss( $x, $k )
 
 function db_quote_or_null( $val )
 {
-	global $DB;
+	global $CDR_DB;
 	
-	return $val ? ('\''. $DB->escape($val) .'\'') : 'NULL';
+	return $val ? ('\''. $CDR_DB->escape($val) .'\'') : 'NULL';
 }
 
 function evn_line_to_db_entry( $line )
@@ -464,7 +464,7 @@ function evn_line_to_db_entry( $line )
 
 function process_evn( $file )
 {
-	global $DB, $last_timestamp, $currency, $vat, $vat_factor, $count;
+	global $CDR_DB, $last_timestamp, $currency, $vat, $vat_factor, $count;
 	
 	$currency = preg_replace('/[^A-Z]/', '', strToUpper($currency));
 	
@@ -496,19 +496,19 @@ function process_evn( $file )
 	`vat`
 ) VALUES (
 	NULL,
-	\''. $DB->escape($evn['dstart']  .' '. $evn['hstart']) .'\',
-	'  .             $evn['dur'   ]  .',
-	'  .        (int)$evn['isout' ]  .',
-	\''. $DB->escape($evn['ext'   ]) .'\',
-	\''. $DB->escape($evn['remote']) .'\',
-	\''. $DB->escape($evn['tarz'  ]) .'\',
-	'  .             $evn['units' ]  .',
-	'  .             $evn['charge']  .',
-	\''. $DB->escape($evn['cur'   ]) .'\',
-	'  .                  $vat       .'
+	\''. $CDR_DB->escape($evn['dstart']  .' '. $evn['hstart']) .'\',
+	'  .                 $evn['dur'   ]  .',
+	'  .            (int)$evn['isout' ]  .',
+	\''. $CDR_DB->escape($evn['ext'   ]) .'\',
+	\''. $CDR_DB->escape($evn['remote']) .'\',
+	\''. $CDR_DB->escape($evn['tarz'  ]) .'\',
+	'  .                 $evn['units' ]  .',
+	'  .                 $evn['charge']  .',
+	\''. $CDR_DB->escape($evn['cur'   ]) .'\',
+	'  .                      $vat       .'
 )'
 		;
-		$DB->execute($query);
+		$CDR_DB->execute($query);
 		
 	}
 	
@@ -524,7 +524,9 @@ $count = array(
 );
 
 
-$DB = gs_db_master_connect();
+$CDR_DB = gs_db_cdr_master_connect();
+if (! $CDR_DB)
+	exit(1);
 
 process_evn( $evn_file );
 
