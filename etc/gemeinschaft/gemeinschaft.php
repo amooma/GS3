@@ -73,6 +73,8 @@ $DB_SLAVE_DB            = 'asterisk';
 #$DB_CDR_MASTER_USER     = 'cdr';
 #$DB_CDR_MASTER_PWD      = '';
 #$DB_CDR_MASTER_DB       = 'cdr';
+  # if DB_CDR_MASTER_HOST is not set the normal master DB will
+  # be used
 
 //-----------------------[  Misc  ]-----------------------//
 
