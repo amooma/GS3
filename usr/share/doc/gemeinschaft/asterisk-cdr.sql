@@ -1,7 +1,7 @@
 -- ----------------------------------------------------------------------------
 --   Tables for separate CDR database
 --   This file was created with
---   mysqldump --opt --skip-extended-insert -d --databases asterisk --tables ast_cdr > asterisk-cdr.sql
+--   mysqldump --opt --skip-extended-insert -d --skip-add-drop-table --databases asterisk --tables itemized_bill ast_cdr > asterisk-cdr.sql
 --   CREATE DATABASE and USE statements were added manually.
 --   
 --   $Revision$
@@ -37,7 +37,6 @@ USE `asterisk`;
 -- Table structure for table `ast_cdr`
 --
 
-DROP TABLE IF EXISTS `ast_cdr`;
 CREATE TABLE `ast_cdr` (
   `_id` int(10) unsigned NOT NULL auto_increment,
   `calldate` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -68,7 +67,6 @@ CREATE TABLE `ast_cdr` (
 -- Table structure for table `itemized_bill`
 --
 
-DROP TABLE IF EXISTS `itemized_bill`;
 CREATE TABLE `itemized_bill` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `start` datetime NOT NULL,
