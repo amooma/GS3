@@ -48,7 +48,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 $db = gs_db_slave_connect();
 
 # get queue info:
-$rs = $db->execute( 'SELECT `_id`, `musicclass` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue_ext) .'\'' );
+$rs = $db->execute( 'SELECT `_id`, `musicclass`, `_title` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue_ext) .'\'' );
 $queue = $rs->getRow();
 if (! $queue) die();
 if ((int)$queue['_id'] < 1) die();
@@ -109,6 +109,14 @@ if ($forwards['external']['timeout']['number'] != '') {
 #
 $ring_instead_of_moh = (trim($queue['musicclass']) == '');
 echo 'SET VARIABLE ring_instead_of_moh '. gs_agi_str_esc( $ring_instead_of_moh ? 'r':'' ) ."\n";
+//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+
+# queue title (for caller ID display)
+#
+$displayname = subStr( preg_replace('/  +/', ' ',
+	preg_replace('/[^a-zA-Z0-9\\-_.,+\\(\\) ]/', '', trim($queue['_title']))),
+	0, 15);
+echo 'SET VARIABLE queue_displayname '. gs_agi_str_esc( $displayname ) ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
