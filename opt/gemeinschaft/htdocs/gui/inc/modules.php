@@ -119,7 +119,7 @@ $MODULES['forwards' ]=  array(
 	'sub' => array(
 		'forwards'     => array('title' => __('Rufumleitung')),
 		'extnumbers'   => array('title' => __('externe Nummern')),
-		'queues'       => array('title' => __('Queues'))
+		'queues'       => array('title' => __('Warteschlangen'))
 	)
 );
 
@@ -130,7 +130,7 @@ $MODULES['monitor'  ]=  array(
 	'icon'  => 'crystal-svg/%s/app/display.png',
 	'boi_ok'=> false,
 	'sub' => array(
-		'queues'       => array('title' => __('Queues')),
+		'queues'       => array('title' => __('Warteschlangen')),
 		'pgrps'        => array('title' => __('Rufannahmegrp.'))
 	)
 );
