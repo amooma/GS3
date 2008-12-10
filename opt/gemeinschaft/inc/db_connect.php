@@ -34,7 +34,7 @@ include_once( GS_DIR .'inc/log.php' );
 
 $gs_db_conn_master = null;
 $gs_db_conn_slave  = null;
-$gs_db_cdr_conn_master = null;
+$gs_db_conn_cdr_master = null;
 
 
 function gs_db_slave_is_master()
@@ -193,12 +193,12 @@ function & gs_db_slave_connect( $_backtrace_level=0 )
 
 function & gs_db_cdr_master_connect( $_backtrace_level=0 )
 {
-	global $gs_db_cdr_conn_master;
+	global $gs_db_conn_cdr_master, $gs_db_conn_master;
 	
-	if (GS_DB_CDR_MASTER_HOST != '') {
+	if (gs_get_conf('GS_DB_CDR_MASTER_HOST') != '') {
 		gs_log( GS_LOG_DEBUG, 'Opening new CDR master connection ...' );
 		$ret = gs_db_connect(
-			$gs_db_cdr_conn_master,
+			$gs_db_conn_cdr_master,
 			'cdr-master',
 			GS_DB_CDR_MASTER_HOST,
 			GS_DB_CDR_MASTER_USER,
@@ -208,7 +208,7 @@ function & gs_db_cdr_master_connect( $_backtrace_level=0 )
 		);
 	} else {
 		$ret = gs_db_connect(
-			$gs_db_cdr_conn_master,
+			$gs_db_conn_cdr_master,
 			'cdr-master',
 			GS_DB_MASTER_HOST,
 			GS_DB_MASTER_USER,
@@ -223,7 +223,7 @@ function & gs_db_cdr_master_connect( $_backtrace_level=0 )
 		$null = null;
 		return $null;
 	}
-	return $gs_db_cdr_conn_master;
+	return $gs_db_conn_cdr_master;
 }
 
 
