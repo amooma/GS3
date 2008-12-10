@@ -50,7 +50,6 @@ $db = gs_db_slave_connect();
 # get queue info:
 $rs = $db->execute( 'SELECT `_id`, `musicclass` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue_ext) .'\'' );
 $queue = $rs->getRow();
-print_r($queue);
 if (! $queue) die();
 if ((int)$queue['_id'] < 1) die();
 
