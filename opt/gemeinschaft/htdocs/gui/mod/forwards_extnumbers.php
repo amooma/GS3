@@ -78,7 +78,6 @@ if ($add_number != '') {
 	else {
 		include_once( GS_DIR .'inc/canonization.php' );
 		$canonical = new CanonicalPhoneNumber( $add_number );
-		print_r($canonical);
 		if ($canonical->errt === 'empty') {
 			echo '<div class="errorbox">';
 			echo htmlEnt(__("Keine Telefonnummer angegeben."));
