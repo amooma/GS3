@@ -113,10 +113,10 @@ echo 'SET VARIABLE ring_instead_of_moh '. gs_agi_str_esc( $ring_instead_of_moh ?
 
 # queue title (for caller ID display)
 #
-$displayname = subStr( preg_replace('/  +/', ' ',
+$displayname = rTrim(subStr( preg_replace('/  +/', ' ',
 	preg_replace('/[^a-zA-Z0-9\\-_.,+\\(\\) ]/', '', trim($queue['_title']))),
-	0, 15);
-echo 'SET VARIABLE queue_displayname '. gs_agi_str_esc( $displayname ) ."\n";
+	0, 15));
+echo 'SET VARIABLE queue_displayname '. gs_agi_str_esc( $displayname != '' ? $displayname : 'Q'.$queue_ext ) ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
