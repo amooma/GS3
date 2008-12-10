@@ -180,7 +180,7 @@ $DP_EMERGENCY_FIRE          = '0112';
 $DP_EMERGENCY_FIRE_MAP      = '112';
 $DP_DIALTIMEOUT_IN          = 90;
 $DP_PRV_CALL_PREFIX         = '*7*';
-$DP_FORWARD_REQ_EXT_NUM     = true;
+$DP_FORWARD_REQ_EXT_NUM     = false;
 $DP_ALLOW_DIRECT_DIAL       = true;
 $DP_CONNID                  = false;
 
