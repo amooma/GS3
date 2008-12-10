@@ -64,6 +64,30 @@ CREATE TABLE `ast_cdr` (
   KEY `uniqueid` (`uniqueid`(25))
 ) ENGINE=MyISAM DEFAULT CHARSET=ascii COLLATE=ascii_general_ci;
 
+--
+-- Table structure for table `itemized_bill`
+--
+
+DROP TABLE IF EXISTS `itemized_bill`;
+CREATE TABLE `itemized_bill` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `start` datetime NOT NULL,
+  `dur` mediumint(8) unsigned NOT NULL default '0',
+  `is_out` tinyint(1) unsigned NOT NULL,
+  `ext` varchar(10) character set ascii NOT NULL,
+  `remote` varchar(25) character set ascii NOT NULL,
+  `tariff_zone` char(4) character set ascii NOT NULL,
+  `units` mediumint(8) unsigned NOT NULL,
+  `charge` float NOT NULL default '0',
+  `cur` char(3) character set ascii NOT NULL,
+  `vat` float NOT NULL,
+  `cdr_id` int(10) unsigned default NULL,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `start_ext_remote_dur` (`start`,`ext`,`remote`,`dur`),
+  KEY `ext` (`ext`),
+  KEY `cdr_id` (`cdr_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
