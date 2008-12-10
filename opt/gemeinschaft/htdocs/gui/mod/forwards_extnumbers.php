@@ -147,7 +147,7 @@ elseif (! is_array($enumbers)) {
 <?php
 
 if (count($enumbers) < 1) {
-	echo '<tr><td><i>- ', __('keine'), ' -</i></td></tr>';
+	echo '<tr><td><i>- ', __('keine'), ' -</i></td><td></td></tr>';
 } else {
 	foreach ($enumbers as $enumber) {
 		echo '<tr>';
