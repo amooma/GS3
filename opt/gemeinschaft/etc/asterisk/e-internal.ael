@@ -798,6 +798,7 @@ context to-internal-users-self {
 			
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-queue-get-fw.agi,${EXTEN});
 			// sets fw_*_* and ring_instead_of_moh
+			// and queue_displayname
 			
 			// forward (case=always) active?
 			if ("${fw_${is_call_from}_always}" != "") {
@@ -820,7 +821,8 @@ context to-internal-users-self {
 			}
 			
 			//Set(CALLERID(name)=Queue ${EXTEN});
-			Set(CALLERID(name)=Q${EXTEN} ${CALLERID(name)});
+			//Set(CALLERID(name)=Q${EXTEN} ${CALLERID(name)});
+			Set(CALLERID(name)=[${queue_displayname}] ${CALLERID(name)});
 			if ("${CALLERID(num)}" = "")
 				Set(CALLERID(num)=${EXTEN});
 			
