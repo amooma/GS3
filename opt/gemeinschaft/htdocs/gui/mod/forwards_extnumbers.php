@@ -64,16 +64,54 @@ if ($delete_number != '') {
 }
 
 if ($add_number != '') {
-	$ret = gs_user_external_number_add( $_SESSION['sudo_user']['name'], $add_number );
-	if (isGsError($ret)) {
+	# nur solche Nummern erlauben die (nach Kanonisierung) *nicht*
+	# innerhalb der eigenen Telefonanlage liegen.
+	# Bei /^[1-9]/ muﬂ noch nicht mal kanonisiert werden; das sind
+	# Nebenstellen, und die sind verboten.
+	
+	$add_number = preg_replace('/\\s+/', '', $add_number);
+	if (! preg_match('/\\+?[0-9]+/', $add_number)) {
 		echo '<div class="errorbox">';
-		echo htmlEnt(__("Fehler beim Speichern")) ,'<br />', htmlEnt($ret->getMsg());
+		echo htmlEnt(__("Ung\xC3\xBCltige Nummer"));
 		echo '</div>',"\n";
 	}
-	elseif (! $ret) {
-		echo '<div class="errorbox">';
-		echo htmlEnt(__("Fehler beim Speichern"));
-		echo '</div>',"\n";
+	else {
+		include_once( GS_DIR .'inc/canonization.php' );
+		$canonical = new CanonicalPhoneNumber( $add_number );
+		print_r($canonical);
+		if ($canonical->errt === 'empty') {
+			echo '<div class="errorbox">';
+			echo htmlEnt(__("Keine Telefonnummer angegeben."));
+			echo '</div>',"\n";
+		}
+		elseif ($canonical->in_prv_branch || $canonical->errt === 'self') {
+			echo '<div class="errorbox">';
+			echo htmlEnt(__("Die Nummer ist in der eigenen Telefonanlage."));
+			echo '</div>',"\n";
+		}
+		elseif ($canonical->is_special) {
+			echo '<div class="errorbox">';
+			echo htmlEnt(__("Die Nummer ist eine Sondernummer."));
+			echo '</div>',"\n";
+		}
+		elseif ($canonical->is_call_by_call || $canonical->errt === 'cbc') {
+			echo '<div class="errorbox">';
+			echo htmlEnt(__("Die Nummer ist eine Call-by-Call-Nummer."));
+			echo '</div>',"\n";
+		}
+		else {
+			$ret = gs_user_external_number_add( $_SESSION['sudo_user']['name'], $canonical->intl );
+			if (isGsError($ret)) {
+				echo '<div class="errorbox">';
+				echo htmlEnt(__("Fehler beim Speichern")) ,'<br />', htmlEnt($ret->getMsg());
+				echo '</div>',"\n";
+			}
+			elseif (! $ret) {
+				echo '<div class="errorbox">';
+				echo htmlEnt(__("Fehler beim Speichern"));
+				echo '</div>',"\n";
+			}
+		}
 	}
 }
 
