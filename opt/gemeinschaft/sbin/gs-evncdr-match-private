@@ -87,9 +87,9 @@ function _gauss( $x, $k )
 
 function db_quote_or_null( $val )
 {
-	global $DB;
+	global $CDR_DB;
 	
-	return $val ? ('\''. $DB->escape($val) .'\'') : 'NULL';
+	return $val ? ('\''. $CDR_DB->escape($val) .'\'') : 'NULL';
 }
 
 
@@ -106,11 +106,9 @@ $area_prefix =
 	gs_get_conf('CANONIZE_NATL_PREFIX' , '0'   ) .
 	gs_get_conf('GS_CANONIZE_AREA_CODE', '9999');
 
-$DB = gs_db_master_connect();
-
 $CDR_DB = gs_db_cdr_master_connect();
-if (!$CDR_DB)
-	die();
+if (! $CDR_DB)
+	exit(1);
 
 # Privategespraeche aus den CDRs (ast_cdr) abfragen
 #
@@ -150,11 +148,11 @@ WHERE
 	`start`>=\''. (date('Y-m-d H:i:s', $cdr['tstart']-$timeframe)) .'\' AND
 	`start`<=\''. (date('Y-m-d H:i:s', $cdr['tstart']+$timeframe)) .'\' AND
 	`is_out`=1 AND
-	( `ext`=\''. $DB->escape($cdr['src']) .'\' OR
+	( `ext`=\''. $CDR_DB->escape($cdr['src']) .'\' OR
 	  `ext`=\'0\' ) AND
 	`cdr_id` IS NULL'
 	;
-	$rs_evns = $DB->execute($query);
+	$rs_evns = $CDR_DB->execute($query);
 	$num = $rs_evns->numRows();
 	//echo ' ', $num;
 	if ($num===0) {
@@ -238,7 +236,7 @@ WHERE
 	
 	# in dem EVN-Eintrag das Feld cdr_id auf die ID des CDR-Eintrags setzen
 	
-	$DB->execute( 'UPDATE `itemized_bill` SET `cdr_id`='. (int)$cdr['_id'] .' WHERE `id`='. (int)$evn['id'] );
+	$CDR_DB->execute( 'UPDATE `itemized_bill` SET `cdr_id`='. (int)$cdr['_id'] .' WHERE `id`='. (int)$evn['id'] );
 	
 }
 
