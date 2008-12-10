@@ -35,9 +35,9 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 
-$queue  = trim(@$argv[1]);
+$queue_ext  = trim(@$argv[1]);
 
-if (! preg_match('/^\d+$/', $queue)) {  // is not just digits
+if (! preg_match('/^\d+$/', $queue_ext)) {  // is not just digits
 	die();
 }
 
@@ -47,9 +47,12 @@ include_once( GS_DIR .'inc/db_connect.php' );
 
 $db = gs_db_slave_connect();
 
-# get queue_id:
-$queue_id = (int)$db->executeGetOne( 'SELECT `_id` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue) .'\'' );
-if ($queue_id < 1) die();
+# get queue info:
+$rs = $db->execute( 'SELECT `_id`, `musicclass` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue_ext) .'\'' );
+$queue = $rs->getRow();
+print_r($queue);
+if (! $queue) die();
+if ((int)$queue['_id'] < 1) die();
 
 
 # get call forwards
@@ -70,7 +73,7 @@ $forwards = array(
 	)
 );
 
-$rs = $db->execute( 'SELECT `source`, `case`, `timeout`, `number_std`, `number_var`, `active` FROM `queue_callforwards` WHERE `queue_id`='. $queue_id );
+$rs = $db->execute( 'SELECT `source`, `case`, `timeout`, `number_std`, `number_var`, `active` FROM `queue_callforwards` WHERE `queue_id`='. (int)$queue['_id'] );
 while ($r = $rs->fetchRow()) {
 	$number_std = trim( $r['number_std'] );
 	$number_var = trim( $r['number_var'] );
@@ -103,16 +106,9 @@ if ($forwards['external']['timeout']['number'] != '') {
 }
 
 
-# get settings
+# ring instead of MOH?
 #
-
-$ring_instead_of_moh = false;
-$rs = $db->execute( 'SELECT `musicclass` FROM `ast_queues` WHERE `_id`='. $queue_id );
-if ($r = $rs->fetchRow()) {
-	if (trim($r['musicclass']) == '') {
-		$ring_instead_of_moh = true;
-	}
-}
+$ring_instead_of_moh = (trim($queue['musicclass']) == '');
 echo 'SET VARIABLE ring_instead_of_moh '. gs_agi_str_esc( $ring_instead_of_moh ? 'r':'' ) ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
