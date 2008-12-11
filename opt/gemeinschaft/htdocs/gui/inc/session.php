@@ -29,6 +29,7 @@
 defined('GS_VALID') or die('No direct access.');
 
 require_once( GS_DIR .'inc/util.php' );
+require_once( GS_DIR .'inc/log.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
 if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') === 'lvm') {
 	require_once( GS_DIR .'inc/ldap.php' );
@@ -293,6 +294,7 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 	$_SESSION['login_user'] = $user;
 	$_SESSION['sudo_user']['boi_session'] = null;
 	$is_login = true;
+	gs_log( GS_LOG_DEBUG, 'User '.$user.' logged in (HTTP)' );
 }
 
 $_SESSION['sudo_user']['name'] = @$_REQUEST['sudo'];
