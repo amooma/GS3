@@ -57,7 +57,7 @@ else {
 	@exec( '/opt/gemeinschaft/sbin/getnetifs/getipaddrs 2>>/dev/null', $out, $err );
 	$addrs = array();
 	if ($err != 0) {
-		gs_log( GS_LOG_DEBUG, "getipaddrs failed (exit code $err)" );
+		gs_log( GS_LOG_NOTICE, "getipaddrs failed (exit code $err)" );
 		# not really a problem as we don't really need the system_ip
 	} else {
 		foreach ($out as $line) {
