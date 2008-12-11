@@ -33,6 +33,7 @@ include_once( GS_DIR .'lib/getopt.php' );
 //require_once( GS_DIR .'inc/remote-exec.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 //require_once( GS_DIR .'inc/find_executable.php' );
+include_once( GS_DIR .'inc/log.php' );
 
 
 $etc_asterisk = GS_DIR .'etc/asterisk/';
@@ -85,16 +86,20 @@ function ael_eval_callback( $m )
 {
 	$directive = strToLower($m[1]);
 	$filename = ael_file_realname( trim( $m[2], '"\'<>`´' ) );
-		
+	gs_log( GS_LOG_DEBUG, "Loading #$directive $filename ..." );
+	
 	if ($directive === 'include') {
 		
 		$filename = ael_file_realname( $filename );
 		//echo "    incl $filename\n";
 		$content = ael_get_file_content( $filename );
-		if (is_string($content))
+		if (is_string($content)) {
 			return $content;
-		else
-			return "// WARNING: Could not find included file \"$filename\"!";
+		} else {
+			echo "WARNING: Could not read included file \"$filename\"!\n";
+			gs_log( GS_LOG_WARNING, "Could not read included file \"$filename\"" );
+			return "// WARNING: Could not read included file \"$filename\"!";
+		}
 		
 	} elseif ($directive === 'exec') {
 		
@@ -102,10 +107,13 @@ function ael_eval_callback( $m )
 		//echo "    exec $filename\n";
 		$err=0; $out=array();
 		@exec( escapeShellCmd($filename) .' 2>>/dev/null', $out, $err );
-		if ($err === 0 && is_array($out))
+		if ($err === 0 && is_array($out)) {
 			return implode("\n", $out);
-		else
+		} else {
+			echo "WARNING: Could not exec included script \"$filename\"!\n";
+			gs_log( GS_LOG_WARNING, "Could not exec included script \"$filename\"" );
 			return "// WARNING: Could not exec included script \"$filename\"!";
+		}
 		
 	}
 }
@@ -125,7 +133,7 @@ $extensions_ael_filename = $etc_asterisk .'extensions.ael';
 
 $f = @fOpen($extensions_ael_filename, 'wb');
 if (! $f) {
-	echo "Could not open $extensions_ael_filename for writing!\n";
+	echo "ERROR: Could not open $extensions_ael_filename for writing!\n";
 	exit(1);
 }
 
