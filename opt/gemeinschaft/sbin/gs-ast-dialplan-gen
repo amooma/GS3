@@ -96,9 +96,16 @@ function ael_eval_callback( $m )
 		if (is_string($content)) {
 			return $content;
 		} else {
-			echo "WARNING: Could not read included file \"$filename\"!\n";
-			gs_log( GS_LOG_WARNING, "Could not read included file \"$filename\"" );
-			return "// WARNING: Could not read included file \"$filename\"!";
+			if (! file_exists($filename))
+				$reason_msg = 'file not found';
+			elseif (! is_readable($filename))
+				$reason_msg = 'file not readable';
+			else
+				$reason_msg = 'unknown error';
+			
+			echo "WARNING: Could not read included file \"$filename\" ($reason_msg)!\n";
+			gs_log( GS_LOG_WARNING, "Could not read included file \"$filename\" ($reason_msg)" );
+			return "// WARNING: Could not read included file \"$filename\" ($reason_msg)!";
 		}
 		
 	} elseif ($directive === 'exec') {
@@ -106,13 +113,22 @@ function ael_eval_callback( $m )
 		$filename = ael_file_realname( $filename );
 		//echo "    exec $filename\n";
 		$err=0; $out=array();
-		@exec( escapeShellCmd($filename) .' 2>>/dev/null', $out, $err );
+		@exec( escapeShellCmd($filename) .' 2>&1', $out, $err );
 		if ($err === 0 && is_array($out)) {
 			return implode("\n", $out);
 		} else {
-			echo "WARNING: Could not exec included script \"$filename\"!\n";
-			gs_log( GS_LOG_WARNING, "Could not exec included script \"$filename\"" );
-			return "// WARNING: Could not exec included script \"$filename\"!";
+			if ($err === 127 || ! file_exists($filename))
+				$reason_msg = 'file not found';
+			elseif (! is_readable($filename))
+				$reason_msg = 'file not readable';
+			elseif (! is_executable($filename))
+				$reason_msg = 'file not executable';
+			else
+				$reason_msg = 'exit '.$err.' - '. implode(' - ',$out);
+			
+			echo "WARNING: Could not exec included script \"$filename\" ($reason_msg)!\n";
+			gs_log( GS_LOG_WARNING, "Could not exec included script \"$filename\" ($reason_msg)" );
+			return "// WARNING: Could not exec included script \"$filename\" ($reason_msg)!";
 		}
 		
 	}
