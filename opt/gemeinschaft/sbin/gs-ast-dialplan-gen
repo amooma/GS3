@@ -84,14 +84,14 @@ function ael_eval_includes()
 
 function ael_eval_callback( $m )
 {
+	static $eval_cache = array();
+	
 	$directive = strToLower($m[1]);
 	$filename = ael_file_realname( trim( $m[2], '"\'<>`´' ) );
-	gs_log( GS_LOG_DEBUG, "Loading #$directive $filename ..." );
 	
 	if ($directive === 'include') {
 		
-		$filename = ael_file_realname( $filename );
-		//echo "    incl $filename\n";
+		gs_log( GS_LOG_DEBUG, "Loading #$directive $filename ..." );
 		$content = ael_get_file_content( $filename );
 		if (is_string($content)) {
 			return $content;
@@ -110,11 +110,23 @@ function ael_eval_callback( $m )
 		
 	} elseif ($directive === 'exec') {
 		
-		$filename = ael_file_realname( $filename );
-		//echo "    exec $filename\n";
+		if (baseName($filename) === 'e-lang.ael.php') {
+			# cache lookup
+			if (array_key_exists('e-lang.ael.php', $eval_cache)) {
+				gs_log( GS_LOG_DEBUG, "Loading #$directive $filename (cached)" );
+				return $eval_cache['e-lang.ael.php'];
+			}
+		}
+		
+		gs_log( GS_LOG_DEBUG, "Loading #$directive $filename ..." );
 		$err=0; $out=array();
 		@exec( escapeShellCmd($filename) .' 2>&1', $out, $err );
 		if ($err === 0 && is_array($out)) {
+			if (baseName($filename) === 'e-lang.ael.php') {
+				# cache e-lang.ael.php because it will be loaded
+				# another 5 times
+				$eval_cache['e-lang.ael.php'] = implode("\n", $out);
+			}
 			return implode("\n", $out);
 		} else {
 			if ($err === 127 || ! file_exists($filename))
