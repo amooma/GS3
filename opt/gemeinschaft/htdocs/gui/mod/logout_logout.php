@@ -27,7 +27,7 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
-
+require_once( GS_DIR .'inc/log.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -38,6 +38,7 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 
+gs_log( GS_LOG_DEBUG, 'User '.$_SESSION['login_user'].' logged out (HTTP)' );
 $_SESSION = array();
 session_destroy();
 
