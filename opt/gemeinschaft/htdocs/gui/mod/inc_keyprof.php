@@ -606,7 +606,8 @@ try {
 	if (kname === undefined || kname === null || kname === '') return;
 	var inh = null;
 	if (typeof(gs_keys_inherited) !== 'undefined') inh = gs_keys_inherited[kname] || null;
-	if (el.name.substr(-9) === '-function') {
+	if (el.name.substr(el.name.length -9) === '-function') {
+		// IE does not understand substr(-X)
 		var inherit = (el.value == '');
 		el = el.form.elements.namedItem('key-'+kname+'-set');
 		if (! el) return;
@@ -665,6 +666,15 @@ try {
 		}
 	}
 } catch(e){}
+}
+
+if (navigator
+&&  navigator.userAgent
+&&  navigator.userAgent.indexOf('MSIE') != -1
+) {
+	// IE calls onchange handler too late for checkboxes.
+	// until a solution is found disable the JavaScript enhancements:
+	gs_key_fn = function(el){ return; };
 }
 
 //]]>
@@ -1051,7 +1061,8 @@ for (var i=0; i<document.forms.length; ++i) {
 		&&  el.type === 'checkbox'
 		&&  el.name
 		&&  el.name.substr(0,4) === 'key-'
-		&&  el.name.substr(-4) === '-set'
+		&&  el.name.substr(el.name.length -4) === '-set'
+		// IE does not understand substr(-X)
 		&&  ! el.checked  // inherited
 		) {
 			gs_key_fn(el);
