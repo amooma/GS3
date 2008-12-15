@@ -56,7 +56,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	if (! defined('GS_EMAIL_PATTERN_VALID'))
 		return new GsError( 'GS_EMAIL_PATTERN_VALID not defined.' );
 	if ($email != '' && ! preg_match( GS_EMAIL_PATTERN_VALID, $email ))
-		return new GsError( 'E-mail address must be numeric.' );
+		return new GsError( 'Invalid e-mail address.' );
 	
 	include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 	
