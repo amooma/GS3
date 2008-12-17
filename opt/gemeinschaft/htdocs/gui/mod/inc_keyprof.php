@@ -9,6 +9,7 @@
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
+* Soeren Sprenger <soeren.sprenger@amooma.de>
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -33,6 +34,9 @@ include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );  # for utf8_json
 if ($is_user_profile) {
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 }
+echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/dialog_box.js"></script>', "\n";
+
+
 
 if (! isSet($is_user_profile)) {
 	echo 'Error.';
@@ -677,12 +681,91 @@ if (navigator
 	gs_key_fn = function(el){ return; };
 }
 
+
+var key = '';
+var val = '';
+function gs_key_fn2( el ) {
+	
+	key = el.name.split('-')[1];
+	val = el.value;
+	gs_key_fn( el );
+	
+	//which key is choosed?
+	if (val == 'f59') {
+		//key f59 'BLF code...'
+		//process an dialog for choosing the attributes for the BLF
+		<?php 
+		$innerhtml = '<table><tr><td>'.__('Nummer').':</td>';
+		$innerhtml .= '<td><input name="number" type="text" size="30" maxlength="30"></td></tr>';
+		$innerhtml .= '<tr><td>'.__('Tonmeldung').':</td><td><input type="checkbox" name="audible"></td></tr>';
+		$innerhtml .= '<tr><td>'.__('Dialogfenster').':</td><td><input type="checkbox" name="popup"></td></tr></table>';
+		$innerhtml .= '<div align="center"><a href="#" title="'. __('Ok'). '" onclick="return gs_dlg_ok();"><img alt="'. __('Ok'). '" src="'. GS_URL_PATH. 'crystal-svg/32/act/button_ok.png" /></a>';
+		$innerhtml .= '   <a href="#" title="'. __('Abbrechen'). '" onclick="return gs_dlg_abort();"><img alt="'. __('Abbrechen'). '" src="'. GS_URL_PATH. 'crystal-svg/32/act/button_cancel.png" /></a></div>';
+	
+		echo 'showDialog(\''.__('Parameter f&uuml;r das Besetztlampenfeld').'\',\''.$innerhtml.'\');';
+	
+		?>
+	} else if (val == 'f60') {
+		//key f60 'Appl...'
+		//process an dialog for choosing the different Applicaions...
+		<?php
+		//TODO: Add This to a Table in Database...
+		/*$SIEMENS_XML_APPS = array (	'Phonebook' => array(	'Server' => '192.168.23.2',
+									'Path'   => '/prov') ,
+						'Anrufliste' => array(	'Server' => $PROV_HOST,
+									'Path'   => '/prov'
+					));
+
+		$innerhtml = '<br>'.__('Bitte waehlen Sie eine Applikation aus').':<br><br>';
+		$innerhtml .= '<select name="apps" size="1"> ';
+		foreach ($SIEMENS_XML_APPS as $app => $appname) {
+			$innerhtml .= '<option>'. $app . '</option>';
+		}
+		$innerhtml .= '</select>';
+		$innerhtml .= '<br><br><div align="center"><a href="#" title="'. __('Ok'). '" onclick="return gs_dlg_ok();"><img alt="'. __('Ok'). '" src="'. GS_URL_PATH. 'crystal-svg/32/act/button_ok.png" /></a>';
+		$innerhtml .= '   <a href="#" title="'. __('Abbrechen'). '" onclick="return gs_dlg_abort();"><img alt="'. __('Abbrechen'). '" src="'. GS_URL_PATH. 'crystal-svg/32/act/button_cancel.png" /></a></div>';
+	
+		echo 'showDialog(\''.__('Applikation auswaehlen').'\',\''.$innerhtml.'\');';*/
+	
+		?>
+	}
+}
+
+function gs_dlg_ok() {
+	var dlg = document.getElementById('dialog');
+	var text = document.getElementsByName('key-'+key+'-data')[0];
+
+	if (val == 'f59') {
+		//get number
+		var outtext = document.getElementsByName('number')[0].value;
+		//get audible
+		var audible = document.getElementsByName('audible')[0];
+		//get popup
+		var popup = document.getElementsByName('popup')[0];
+
+		if ( audible.checked || popup.checked ) {
+			outtext += '|';
+			if(audible.checked)
+				outtext += 'a';
+			if(popup.checked)
+				outtext += 'p';
+		}
+		text.value = outtext;
+	} else if (val == 'f60') {
+		//text.value = document.getElementsByName('apps')[0].value;
+	}
+ 
+	hideDialog();
+}
+
+function gs_dlg_abort() {
+	//do anything here? No? Than the hideDialog-function can be called directly from the onclick-handler
+	hideDialog();
+}
+
 //]]>
 </script>
 <?php
-
-
-
 
 
 #################################################################
@@ -944,7 +1027,7 @@ if ($phone_layout) {
 			echo '<td>' ,"\n";
 			echo '<select name="key-f',$knump,'-function"';
 			if (! $can_write) echo ' disabled="disabled"';
-			echo ' onchange="gs_key_fn(this);">' ,"\n";
+			echo ' onchange="gs_key_fn2(this);">' ,"\n";
 			echo '<option value=""';
 			if ('' == $key['function'])
 				echo ' selected="selected"';
