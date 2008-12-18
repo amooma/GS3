@@ -303,6 +303,10 @@ $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 #$SNOM_PROV_FW_DEFAULT_360   = '6.5.1';
 #$SNOM_PROV_FW_DEFAULT_370   = '7.1.24';
 
+#$SNOM_PROV_KEY_BLACKLIST    = '';
+  # do not show these softkey functions in GUI,
+  # comma separated list
+
 
 //----------------------[  Snom M3  ]---------------------//
 
@@ -325,6 +329,10 @@ $AASTRA_PROV_PB_NUM_RESULTS = 10;
 #$AASTRA_PROV_FW_DEFAULT_55I = 'x.x.x';  # not used (yet)
 #$AASTRA_PROV_FW_DEFAULT_57I = 'x.x.x';  # not used (yet)
 
+#$AASTRA_PROV_KEY_BLACKLIST  = '';
+  # do not show these softkey functions in GUI,
+  # comma separated list
+
 
 //-----------------[  Siemens OpenStage  ]----------------//
 
@@ -340,11 +348,10 @@ $SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
 #$SIEMENS_PROV_FW_DEFAULT_OS60 = '1.3.5.0';
 #$SIEMENS_PROV_FW_DEFAULT_OS80 = '1.3.5.0';
 
-
-#$SIEMENS_KEY_BLACKLIST = '';
-  # not show this keys in gui, so it is not possible to use this key, comma separated list ('f11,f59,f10') default: ''
-  # used for turnng off DND for example
-  # here are the possible Keycodes an there functions:
+#$SIEMENS_PROV_KEY_BLACKLIST = '';
+  # do not show these softkey functions in GUI,
+  # comma separated list (e.g. 'f11,f59,f10'), default: ''
+  # can be used to disable DND for example.
   # 'f1'  selected dialing
   # 'f59' extension
   # 'f9'  ringer off
@@ -360,8 +367,6 @@ $SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
   # 'f30' repertory dial
   # 'f31' line
   # 'f50' consultation
-  # 'f58' feature toggle
-  # 'f60' invoke app
 
 
 

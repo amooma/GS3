@@ -255,9 +255,11 @@ _gscnf( 'SNOM_PROV_FW_DEFAULT_300'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_320'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_360'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_370'  , null               );
+_gscnf( 'SNOM_PROV_KEY_BLACKLIST'   , ''                 );
 
 _gscnf( 'SNOM_PROV_M3_ACCOUNTS'     , 1                  );
 //_gscnf( 'SNOM_PROV_M3_FW_DEFAULT_SNOM_M3', null          );
+//_gscnf( 'SNOM_PROV_M3_KEY_BLACKLIST', ''                 );
 
 _gscnf( 'SIEMENS_PROV_ENABLED'      , false              );
 _gscnf( 'SIEMENS_PROV_PREFER_HTTP'  , true               );
@@ -265,7 +267,7 @@ _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS20', null             );
 _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS40', null             );
 _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS60', null             );
 _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS80', null             );
-_gscnf( 'SIEMENS_KEY_BLACKLIST', null                    );
+_gscnf( 'SIEMENS_PROV_KEY_BLACKLIST', ''                 );
 
 _gscnf( 'AASTRA_PROV_ENABLED'       , false              );
 _gscnf( 'AASTRA_PROV_PB_NUM_RESULTS', 10                 );
@@ -273,6 +275,7 @@ _gscnf( 'AASTRA_PROV_FW_DEFAULT_51I', null               );
 _gscnf( 'AASTRA_PROV_FW_DEFAULT_53I', null               );
 _gscnf( 'AASTRA_PROV_FW_DEFAULT_55I', null               );
 _gscnf( 'AASTRA_PROV_FW_DEFAULT_57I', null               );
+_gscnf( 'AASTRA_PROV_KEY_BLACKLIST' , ''                 );
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
 _gscnf( 'CANONIZE_INTL_PREFIX'      , '00'               );
