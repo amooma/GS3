@@ -265,6 +265,7 @@ _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS20', null             );
 _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS40', null             );
 _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS60', null             );
 _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS80', null             );
+_gscnf( 'SIEMENS_KEY_BLACKLIST', null                    );
 
 _gscnf( 'AASTRA_PROV_ENABLED'       , false              );
 _gscnf( 'AASTRA_PROV_PB_NUM_RESULTS', 10                 );
