@@ -396,14 +396,24 @@ if ($action == '') {
 	echo '<p class="text">', __('Vor dem Import der Datens&auml;tze wird Ihnen zur Kontrolle eine Vorschau angezeigt.'), '</p>', "\n";
 	
 	echo '<br />', "\n";
-	echo '<label for="ipt-pb_csv_file">CSV-Datei:</label><br />', "\n";
+	echo '<label for="ipt-pb_csv_file">', __('CSV-Datei') ,':</label><br />', "\n";
 	echo '<input type="file" name="pb_csv_file" id="ipt-pb_csv_file" size="50" style="font-size:0.96em;" /><br />', "\n";
 	
 	echo '<br />', "\n";
 	echo '<input type="submit" value="', __('Hochladen') ,'" /><br />', "\n";	
 	
 	echo '</form>', "\n";
-
+	
+	
+	echo '<br />' ,"\n";
+	echo '<br />' ,"\n";
+	echo '<br />' ,"\n";
+	echo '<div style="max-width:45em;">', "\n";
+	echo htmlEnt(__("Das Format sollte etwa folgenderma\xC3\x9Fen aussehen.")) ,"\n";
+	echo '<pre style="margin:0.5em 1em; padding:0.06em 0.3em; background-color:#eee; width:60%; border:1px solid #ddd;">', htmlEnt(__("Vorname;Nachname;Telefon\nAlbert;Einstein;+309876543\nRobert;Bosch;00711123456")) ,'</pre>',"\n";
+	echo htmlEnt(__("Ob eine Kopfzeile vorhanden ist oder nicht, die Reihenfolge der Spalten und die Trennzeichen werden automatisch erkannt und k\xC3\xB6nnen ggf. interaktiv in der Vorschau eingestellt werden.")) ,"\n";
+	echo '</div>' ,"\n";
+	
 }
 
 ?>
