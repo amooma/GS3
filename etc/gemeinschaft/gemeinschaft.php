@@ -341,6 +341,29 @@ $SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
 #$SIEMENS_PROV_FW_DEFAULT_OS80 = '1.3.5.0';
 
 
+#$SIEMENS_KEY_BLACKLIST = '';
+  # not show this keys in gui, so it is not possible to use this key, comma separated list ('f11,f59,f10') default: ''
+  # used for turnng off DND for example
+  # here are the possible Keycodes an there functions:
+  # 'f1'  selected dialing
+  # 'f59' extension
+  # 'f9'  ringer off
+  # 'f10' hold
+  # 'f11' alternate
+  # 'f13' attended transfer
+  # 'f12' blind transfer
+  # 'f14' deflect
+  # 'f18' shift
+  # 'f24' headset
+  # 'f25' do not disturb
+  # 'f29' group pickup
+  # 'f30' repertory dial
+  # 'f31' line
+  # 'f50' consultation
+  # 'f58' feature toggle
+  # 'f60' invoke app
+
+
 
 /***********************************************************
 *    CANONICAL PHONE NUMBERS (FQTN)
