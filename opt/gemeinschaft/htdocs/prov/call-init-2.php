@@ -470,7 +470,7 @@ else {
 				include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
 				$ok = gs_boi_call_init( $api, $user['host'], $user_code, $to_num_obj->norm, $from_num_effective_obj->norm, $cidnum, $clir, $prv );
 				if (! $ok) {
-					die_error( 'Failed to initate call on foreign host (SOAP error).' );
+					die_error( 'Failed to initiate call on foreign host (SOAP error).' );
 				}
 				die_ok( "OK. Calling ". $to_num_obj->norm ." from ". $from_num_effective_obj->norm ." (user $user_code) on host ". $user['host'] ."..." );
 			}
