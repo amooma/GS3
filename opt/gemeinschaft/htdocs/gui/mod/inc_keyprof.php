@@ -695,15 +695,15 @@ if (navigator
 }
 
 var gs_phone_layout = '<?php echo $phone_layout; ?>';
-var key = '';
-var val = '';
 function gs_key_fn2( el )
 {
 	gs_key_fn( el );
-	key = el.name.split('-')[1];
-	val = el.value;
 	
-	if (gs_phone_layout == 'siemens' && val == 'f59') {
+	var kname = el.name.split('-')[1];
+	if (kname === undefined || kname === null || kname === '') return;
+	var kfn   = el.value;
+	
+	if (gs_phone_layout == 'siemens' && kfn == 'f59') {
 		// key f59 'BLF code ...'
 		// dialog for choosing the attributes for the BLF
 		<?php 
@@ -715,21 +715,20 @@ function gs_key_fn2( el )
 		$innerhtml.= ' <a href="#" title="'. __('Abbrechen') .'" onclick="return gs_dlg_abort();"><img alt="'. __('Abbrechen') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_cancel.png" /></a></div>';
 		
 		echo 'showDialog(\'', __('Parameter f&uuml;r das Besetztlampenfeld') ,'\',\'', $innerhtml ,'\');';
-		
 		?>
 	}
-	else if (gs_phone_layout == 'siemens' && val == 'f60') {
+	else if (gs_phone_layout == 'siemens' && kfn == 'f60') {
 		// key f60 'Appl...'
 		// dialog for choosing the different applications ...
 		<?php
 		//TODO: Add this to a table in database ...
 		/*$SIEMENS_XML_APPS = array(
-			'Phonebook' => array(
-				'Server' => '192.168.23.2',
-				'Path'   => '/prov' ),
-			'Anrufliste' => array(
-				'Server' => $PROV_HOST,
-				'Path'   => '/prov' )
+			'phonebook' => array(
+				'server' => '192.168.23.2',
+				'path'   => '/prov' ),
+			'dial_log' => array(
+				'server' => $PROV_HOST,
+				'path'   => '/prov' )
 		);
 		
 		$innerhtml = '<br />'. __('Bitte waehlen Sie eine Applikation aus') .':<br /><br />';
