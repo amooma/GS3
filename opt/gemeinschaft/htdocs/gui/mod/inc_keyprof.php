@@ -694,7 +694,7 @@ if (navigator
 	gs_key_fn = function(el){ return; };
 }
 
-
+var gs_phone_layout = '<?php echo $phone_layout; ?>';
 var key = '';
 var val = '';
 function gs_key_fn2( el )
@@ -703,11 +703,11 @@ function gs_key_fn2( el )
 	key = el.name.split('-')[1];
 	val = el.value;
 	
-	if (val == 'f59') {
+	if (gs_phone_layout == 'siemens' && val == 'f59') {
 		// key f59 'BLF code ...'
 		// dialog for choosing the attributes for the BLF
 		<?php 
-		$innerhtml = '<table><tr><td>'. __('Nummer') .':</td>';
+		$innerhtml = '<table cellspacing="1"><tr><td>'. __('Nummer') .':</td>';
 		$innerhtml.= '<td><input name="number" type="text" size="30" maxlength="30" /></td></tr>';
 		$innerhtml.= '<tr><td>'. __('Tonmeldung') .':</td><td><input type="checkbox" name="audible" /></td></tr>';
 		$innerhtml.= '<tr><td>'. __('Dialogfenster') .':</td><td><input type="checkbox" name="popup" /></td></tr></table>';
@@ -718,7 +718,7 @@ function gs_key_fn2( el )
 		
 		?>
 	}
-	else if (val == 'f60') {
+	else if (gs_phone_layout == 'siemens' && val == 'f60') {
 		// key f60 'Appl...'
 		// dialog for choosing the different applications ...
 		<?php
@@ -752,7 +752,7 @@ function gs_dlg_ok()
 	var dlg = document.getElementById('dialog');
 	var text = document.getElementsByName('key-'+key+'-data')[0];
 	
-	if (val == 'f59') {
+	if (gs_phone_layout == 'siemens' && val == 'f59') {
 		// get number
 		var outtext = document.getElementsByName('number')[0].value;
 		// get audible
@@ -767,7 +767,7 @@ function gs_dlg_ok()
 		}
 		text.value = outtext;
 	}
-	else if (val == 'f60') {
+	else if (gs_phone_layout == 'siemens' && val == 'f60') {
 		//text.value = document.getElementsByName('apps')[0].value;
 	}
 	
@@ -776,9 +776,8 @@ function gs_dlg_ok()
 
 function gs_dlg_abort()
 {
-	// do anything here?
-	// if not then the hideDialog-function can be called directly from the onclick-handler
 	hideDialog();
+	return true;
 }
 
 //]]>
