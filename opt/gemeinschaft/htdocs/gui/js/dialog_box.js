@@ -2,7 +2,7 @@
 Gemeinschaft
 (c) Amooma GmbH, Soeren Sprenger
 GNU GPL
-$Revision: 3960 $
+$Revision$
 */
 
 // global vars
