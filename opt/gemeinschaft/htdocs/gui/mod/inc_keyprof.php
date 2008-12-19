@@ -695,63 +695,81 @@ if (navigator
 }
 
 var gs_phone_layout = '<?php echo $phone_layout; ?>';
-function gs_key_fn2( el )
+var gs_dlg_helper_kname = '';
+var gs_dlg_helper_kfunc = '';
+function gs_key_fn_h( el )
 {
 	gs_key_fn( el );
 	
-	var kname = el.name.split('-')[1];
-	if (kname === undefined || kname === null || kname === '') return;
-	var kfn   = el.value;
-	
-	if (gs_phone_layout == 'siemens' && kfn == 'f59') {
-		// key f59 'BLF code ...'
-		// dialog for choosing the attributes for the BLF
-		<?php 
-		$innerhtml = '<table cellspacing="1"><tr><td>'. __('Nummer') .':</td>';
-		$innerhtml.= '<td><input name="helper_number" type="text" size="30" maxlength="30" /></td></tr>';
-		$innerhtml.= '<tr><td>'. __('Tonmeldung') .':</td><td><input type="checkbox" name="helper_audible" /></td></tr>';
-		$innerhtml.= '<tr><td>'. __('Dialogfenster') .':</td><td><input type="checkbox" name="helper_popup" /></td></tr></table>';
-		$innerhtml.= '<div align="center"><a href="#" title="'. __('OK') .'" onclick="return gs_dlg_ok();"><img alt="'. __('OK') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_ok.png" /></a>';
-		$innerhtml.= ' <a href="#" title="'. __('Abbrechen') .'" onclick="return gs_dlg_abort();"><img alt="'. __('Abbrechen') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_cancel.png" /></a></div>';
+	try {
+		var kname = el.name.split('-')[1];
+		if (kname === undefined || kname === null || kname === '') return;
+		var kfn   = el.value;
+		gs_dlg_helper_kname = kname;
+		gs_dlg_helper_kfunc = kfn;
 		
-		echo 'showDialog(\'', __('Parameter f&uuml;r das Besetztlampenfeld') ,'\',\'', $innerhtml ,'\');';
-		?>
-	}
-	else if (gs_phone_layout == 'siemens' && kfn == 'f60') {
-		// key f60 'Appl...'
-		// dialog for choosing the different applications ...
-		<?php
-		//TODO: Add this to a table in database ...
-		/*$SIEMENS_XML_APPS = array(
-			'phonebook' => array(
-				'server' => '192.168.23.2',
-				'path'   => '/prov' ),
-			'dial_log' => array(
-				'server' => $PROV_HOST,
-				'path'   => '/prov' )
-		);
-		
-		$innerhtml = '<br />'. __('Bitte waehlen Sie eine Applikation aus') .':<br /><br />';
-		$innerhtml.= '<select name="helper_apps" size="1">';
-		foreach ($SIEMENS_XML_APPS as $app => $appname) {
-			$innerhtml.= '<option>'. $app .'</option>';
+		if (gs_phone_layout == 'siemens' && kfn == 'f59') {
+			// key f59 'BLF code ...'
+			// dialog for choosing the attributes for the BLF
+			<?php 
+			$innerhtml = '<table cellspacing="1"><tr><td>'. __('Nummer') .':</td>';
+			$innerhtml.= '<td><input name="helper_number" type="text" size="30" maxlength="30" /></td></tr>';
+			$innerhtml.= '<tr><td>'. __('Tonmeldung') .':</td><td><input type="checkbox" name="helper_audible" /></td></tr>';
+			$innerhtml.= '<tr><td>'. __('Dialogfenster') .':</td><td><input type="checkbox" name="helper_popup" /></td></tr></table>';
+			$innerhtml.= '<div align="center"><a href="#" title="'. __('OK') .'" onclick="return gs_dlg_ok();"><img alt="'. __('OK') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_ok.png" /></a>';
+			$innerhtml.= ' <a href="#" title="'. __('Abbrechen') .'" onclick="return gs_dlg_abort();"><img alt="'. __('Abbrechen') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_cancel.png" /></a></div>';
+			?>
+			showDialog('<?php echo __("Parameter f&uuml;r das Besetztlampenfeld"); ?>', '<?php echo $innerhtml; ?>');
+			try {
+				var data = document.getElementsByName('key-'+kname+'-data')[0].value;
+				var flags = (data.indexOf('|') > -1) ? data.split('|')[1] : 'ap';
+				document.getElementsByName('helper_number' )[0].value
+					=  data.split('|')[0];
+				document.getElementsByName('helper_audible')[0].checked
+					= flags.indexOf('a') > -1;
+				document.getElementsByName('helper_popup'  )[0].checked
+					= flags.indexOf('p') > -1;
+			} catch(e){}
 		}
-		$innerhtml.= '</select>';
-		$innerhtml.= '<br /><br /><div align="center"><a href="#" title="'. __('OK') .'" onclick="return gs_dlg_ok();"><img alt="'. __('OK') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_ok.png" /></a>';
-		$innerhtml.= ' <a href="#" title="'. __('Abbrechen') .'" onclick="return gs_dlg_abort();"><img alt="'. __('Abbrechen') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_cancel.png" /></a></div>';
-		
-		echo 'showDialog(\'', __('Applikation auswaehlen') ,'\',\'', $innerhtml ,'\');';
-		*/
-		?>
+		else if (gs_phone_layout == 'siemens' && kfn == 'f60') {
+			// key f60 'Appl...'
+			// dialog for choosing the different applications ...
+			<?php
+			//TODO: Add this to a table in database ...
+			/*
+			$SIEMENS_XML_APPS = array(
+				'phonebook' => array(
+					'server' => '192.168.23.2',
+					'path'   => '/prov' ),
+				'dial_log' => array(
+					'server' => $PROV_HOST,
+					'path'   => '/prov' )
+			);
+			
+			$innerhtml = '<br />'. __('Bitte waehlen Sie eine Applikation aus') .':<br /><br />';
+			$innerhtml.= '<select name="helper_apps" size="1">';
+			foreach ($SIEMENS_XML_APPS as $app => $appname) {
+				$innerhtml.= '<option>'. $app .'</option>';
+			}
+			$innerhtml.= '</select>';
+			$innerhtml.= '<br /><br /><div align="center"><a href="#" title="'. __('OK') .'" onclick="return gs_dlg_ok();"><img alt="'. __('OK') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_ok.png" /></a>';
+			$innerhtml.= ' <a href="#" title="'. __('Abbrechen') .'" onclick="return gs_dlg_abort();"><img alt="'. __('Abbrechen') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_cancel.png" /></a></div>';
+			*/
+			?>
+			<?php /*
+			showDialog('<?php echo __("Applikation ausw&auml;hlen"); ?>', '<?php echo $innerhtml; ?>');
+			*/ ?>
+		}
 	}
+	catch(e){}
 }
 
 function gs_dlg_ok()
 {
 	try {
-		var data_el = document.getElementsByName('key-'+key+'-data')[0];
+		var data_el = document.getElementsByName('key-'+gs_dlg_helper_kname+'-data')[0];
 		
-		if (gs_phone_layout == 'siemens' && val == 'f59') {
+		if (gs_phone_layout == 'siemens' && gs_dlg_helper_kfunc == 'f59') {
 			// get number
 			var data    = document.getElementsByName('helper_number')[0].value;
 			// get audible
@@ -766,7 +784,7 @@ function gs_dlg_ok()
 			//}
 			data_el.value = data;
 		}
-		else if (gs_phone_layout == 'siemens' && val == 'f60') {
+		else if (gs_phone_layout == 'siemens' && gs_dlg_helper_kfunc == 'f60') {
 			//var data = document.getElementsByName('helper_apps')[0].value;
 		}
 	}
@@ -1047,7 +1065,7 @@ if ($phone_layout) {
 			echo '<td>' ,"\n";
 			echo '<select name="key-f',$knump,'-function"';
 			if (! $can_write) echo ' disabled="disabled"';
-			echo ' onchange="gs_key_fn2(this);">' ,"\n";
+			echo ' onchange="gs_key_fn_h(this);">' ,"\n";
 			echo '<option value=""';
 			if ('' == $key['function'])
 				echo ' selected="selected"';
