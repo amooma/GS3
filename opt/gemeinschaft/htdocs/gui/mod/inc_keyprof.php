@@ -708,9 +708,9 @@ function gs_key_fn2( el )
 		// dialog for choosing the attributes for the BLF
 		<?php 
 		$innerhtml = '<table cellspacing="1"><tr><td>'. __('Nummer') .':</td>';
-		$innerhtml.= '<td><input name="number" type="text" size="30" maxlength="30" /></td></tr>';
-		$innerhtml.= '<tr><td>'. __('Tonmeldung') .':</td><td><input type="checkbox" name="audible" /></td></tr>';
-		$innerhtml.= '<tr><td>'. __('Dialogfenster') .':</td><td><input type="checkbox" name="popup" /></td></tr></table>';
+		$innerhtml.= '<td><input name="helper_number" type="text" size="30" maxlength="30" /></td></tr>';
+		$innerhtml.= '<tr><td>'. __('Tonmeldung') .':</td><td><input type="checkbox" name="helper_audible" /></td></tr>';
+		$innerhtml.= '<tr><td>'. __('Dialogfenster') .':</td><td><input type="checkbox" name="helper_popup" /></td></tr></table>';
 		$innerhtml.= '<div align="center"><a href="#" title="'. __('OK') .'" onclick="return gs_dlg_ok();"><img alt="'. __('OK') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_ok.png" /></a>';
 		$innerhtml.= ' <a href="#" title="'. __('Abbrechen') .'" onclick="return gs_dlg_abort();"><img alt="'. __('Abbrechen') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_cancel.png" /></a></div>';
 		
@@ -733,7 +733,7 @@ function gs_key_fn2( el )
 		);
 		
 		$innerhtml = '<br />'. __('Bitte waehlen Sie eine Applikation aus') .':<br /><br />';
-		$innerhtml.= '<select name="apps" size="1">';
+		$innerhtml.= '<select name="helper_apps" size="1">';
 		foreach ($SIEMENS_XML_APPS as $app => $appname) {
 			$innerhtml.= '<option>'. $app .'</option>';
 		}
@@ -749,28 +749,29 @@ function gs_key_fn2( el )
 
 function gs_dlg_ok()
 {
-	var dlg = document.getElementById('dialog');
-	var text = document.getElementsByName('key-'+key+'-data')[0];
-	
-	if (gs_phone_layout == 'siemens' && val == 'f59') {
-		// get number
-		var outtext = document.getElementsByName('number')[0].value;
-		// get audible
-		var audible = document.getElementsByName('audible')[0];
-		// get popup
-		var popup = document.getElementsByName('popup')[0];
+	try {
+		var data_el = document.getElementsByName('key-'+key+'-data')[0];
 		
-		if ( audible.checked || popup.checked ) {
-			outtext += '|';
-			if (audible.checked) outtext += 'a';
-			if (popup.checked  ) outtext += 'p';
+		if (gs_phone_layout == 'siemens' && val == 'f59') {
+			// get number
+			var data    = document.getElementsByName('helper_number')[0].value;
+			// get audible
+			var audible = document.getElementsByName('helper_audible')[0].checked;
+			// get popup
+			var popup   = document.getElementsByName('helper_popup')[0].checked;
+			
+			//if (audible || popup) {
+				data += '|';
+				if (audible) data += 'a';
+				if (popup  ) data += 'p';
+			//}
+			data_el.value = data;
 		}
-		text.value = outtext;
+		else if (gs_phone_layout == 'siemens' && val == 'f60') {
+			//var data = document.getElementsByName('helper_apps')[0].value;
+		}
 	}
-	else if (gs_phone_layout == 'siemens' && val == 'f60') {
-		//text.value = document.getElementsByName('apps')[0].value;
-	}
-	
+	catch(e){}
 	hideDialog();
 }
 
