@@ -642,3 +642,41 @@ tr.odd .transp {
 	color: #500;
 }
 
+
+#dialog {
+	position: absolute; 
+	width: 425px;
+	padding: 10px;
+	z-index: 200;
+	background: #e9e9eb;
+}
+#dialog-header {
+	display: block;
+	position: relative;
+	width: 411px;
+	padding: 3px 6px 7px 3px;
+	height: 14px;
+	font-size: 14px;
+	font-weight: bold;
+}
+#dialog-title {
+	float: left;
+}
+#dialog-content {
+	display: block;
+	height: 160px;
+	padding: 6px;
+	color: #666666;
+	font-size: 13px
+}
+#dialog-mask {
+	position: absolute;
+	top: 0;
+	left: 0;
+	min-height: 100%;
+	width: 100%;
+	background: #fff;
+	opacity: .75;
+	filter: alpha(opacity=75);
+	z-index: 100;
+}
