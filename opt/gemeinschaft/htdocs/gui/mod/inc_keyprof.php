@@ -86,11 +86,13 @@ $key_functions_snom = array(
 	'line'  => __('Leitung'),           # line
 );
 $key_function_none_snom = 'none';
+$key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_SNOM_PROV_KEY_BLACKLIST'));
+foreach ($key_functions_blacklist as $keyfn) {
+	if (array_key_exists($keyfn, $key_functions_snom))
+		unset($key_functions_snom[$keyfn]);
+}
 
-
-$key_siemens_blacklist = explode(',', gs_get_conf('GS_SIEMENS_KEY_BLACKLIST'));
-
-$key_functions_siemens_source = array(
+$key_functions_siemens = array(
 	'f0'  => __('Leer'),                  # clear
 	'f1'  => __('Zielwahl'),              # selected dialing
 	'f59' => __('Nebenstelle/BLF'),       # extension
@@ -110,16 +112,12 @@ $key_functions_siemens_source = array(
 	'f58' => __('Fn.-Schalter'),          # feature toggle   .._shifted_ok?
 	'f60' => __('Appl. aufrufen'),        # invoke app       .._shifted_ok?
 );
-
-$key_functions_siemens = array();
-
-foreach ($key_functions_siemens_source as $k => $v) {
-	if(!in_array($k,$key_siemens_blacklist))
-		$key_functions_siemens[$k] = $v;
-}
-
-
 $key_function_none_siemens = 'f0';
+$key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_SIEMENS_PROV_KEY_BLACKLIST'));
+foreach ($key_functions_blacklist as $keyfn) {
+	if (array_key_exists($keyfn, $key_functions_siemens))
+		unset($key_functions_siemens[$keyfn]);
+}
 $key_functions_siemens_shifted_ok = array('f0', 'f1', 'f3',
 	'f11', 'f12', 'f13', 'f14', 'f16', 'f17', 'f19', 'f22',
 	'f30', 'f45', 'f46', 'f47', 'f48', 'f49', 'f50');
@@ -142,8 +140,12 @@ $key_functions_aastra = array(
 	'_callers'  => __('Anrufliste'),   # defined by Gemeinschaft
 	'_dir'      => __('Telefonbuch'),  # defined by Gemeinschaft
 );
-
 $key_function_none_aastra = 'none';
+$key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_AASTRA_PROV_KEY_BLACKLIST'));
+foreach ($key_functions_blacklist as $keyfn) {
+	if (array_key_exists($keyfn, $key_functions_aastra))
+		unset($key_functions_aastra[$keyfn]);
+}
 
 
 $key_default = array(
