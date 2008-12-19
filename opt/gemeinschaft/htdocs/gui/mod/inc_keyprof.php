@@ -31,17 +31,16 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );  # for utf8_json_quote()
-if ($is_user_profile) {
-include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
-}
-echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/dialog_box.js"></script>', "\n";
-
-
-
 if (! isSet($is_user_profile)) {
 	echo 'Error.';
 	return;
 }
+if ($is_user_profile) {
+include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
+}
+
+echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/dialog_box.js"></script>', "\n";
+
 
 $phone_types = array();
 if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
