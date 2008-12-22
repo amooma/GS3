@@ -369,6 +369,9 @@ $SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
   # 'f50' consultation
 
 
+$SIEMENS_PROV_SHOW_APPS = 'Telefonbuch';
+  # Show these XML-Applications in the GUI 
+  # note: this Applications have to be defined in the conf.php File in /opt/gemeinschaft-siemens
 
 /***********************************************************
 *    CANONICAL PHONE NUMBERS (FQTN)
