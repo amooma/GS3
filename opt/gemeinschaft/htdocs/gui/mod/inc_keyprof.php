@@ -736,29 +736,20 @@ function gs_key_fn_h( el )
 			// dialog for choosing the different applications ...
 			<?php
 			//TODO: Add this to a table in database ...
-			/*
-			$SIEMENS_XML_APPS = array(
-				'phonebook' => array(
-					'server' => '192.168.23.2',
-					'path'   => '/prov' ),
-				'dial_log' => array(
-					'server' => $PROV_HOST,
-					'path'   => '/prov' )
-			);
 			
-			$innerhtml = '<br />'. __('Bitte waehlen Sie eine Applikation aus') .':<br /><br />';
+			$innerhtml = '<br />'. __('Bitte w&auml;hlen Sie eine Applikation aus') .':<br /><br />';
 			$innerhtml.= '<select name="helper_apps" size="1">';
-			foreach ($SIEMENS_XML_APPS as $app => $appname) {
-				$innerhtml.= '<option>'. $app .'</option>';
-			}
+			$SIEMENS_XML_APPS = split(',' , gs_get_conf('GS_SIEMENS_PROV_SHOW_APPS'));
+			if(is_array($SIEMENS_XML_APPS))
+				foreach ($SIEMENS_XML_APPS as $app => $appname) {
+					$innerhtml.= '<option>'. $appname .'</option>';
+				}
 			$innerhtml.= '</select>';
 			$innerhtml.= '<br /><br /><div align="center"><a href="#" title="'. __('OK') .'" onclick="return gs_dlg_ok();"><img alt="'. __('OK') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_ok.png" /></a>';
 			$innerhtml.= ' <a href="#" title="'. __('Abbrechen') .'" onclick="return gs_dlg_abort();"><img alt="'. __('Abbrechen') .'" src="'. GS_URL_PATH .'crystal-svg/32/act/button_cancel.png" /></a></div>';
-			*/
-			?>
-			<?php /*
+			?>			
 			showDialog('<?php echo __("Applikation ausw&auml;hlen"); ?>', '<?php echo $innerhtml; ?>');
-			*/ ?>
+			
 		}
 	}
 	catch(e){}
@@ -785,7 +776,7 @@ function gs_dlg_ok()
 			data_el.value = data;
 		}
 		else if (gs_phone_layout == 'siemens' && gs_dlg_helper_kfunc == 'f60') {
-			//var data = document.getElementsByName('helper_apps')[0].value;
+			data_el.value = document.getElementsByName('helper_apps')[0].value;
 		}
 	}
 	catch(e){}
