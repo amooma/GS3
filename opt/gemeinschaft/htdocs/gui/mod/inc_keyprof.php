@@ -735,12 +735,10 @@ function gs_key_fn_h( el )
 			// key f60 'Appl...'
 			// dialog for choosing the different applications ...
 			<?php
-			//TODO: Add this to a table in database ...
-			
 			$innerhtml = '<br />'. __('Bitte w&auml;hlen Sie eine Applikation aus') .':<br /><br />';
 			$innerhtml.= '<select name="helper_apps" size="1">';
 			$SIEMENS_XML_APPS = split(',' , gs_get_conf('GS_SIEMENS_PROV_SHOW_APPS'));
-			if(is_array($SIEMENS_XML_APPS))
+			if (is_array($SIEMENS_XML_APPS))
 				foreach ($SIEMENS_XML_APPS as $app => $appname) {
 					$innerhtml.= '<option>'. $appname .'</option>';
 				}
