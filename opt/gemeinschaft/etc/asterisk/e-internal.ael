@@ -707,6 +707,21 @@ context to-internal-users-self {
 			if ("${is_callfile_origin}" != "1") {
 				Set(is_dnd=0);
 				if ("${DIALSTATUS}" = "BUSY") {         // busy or deflected
+					//if ("${HANGUPCAUSE}" = "19" || "${HANGUPCAUSE}" = "21") {
+					//	// 19 = AST_CAUSE_NO_ANSWER, 21 = AST_CAUSE_CALL_REJECTED
+					//	// This might happen because of DND.
+					//	Verbose(1,### Local user ${EXTEN} is on DND - rejected);
+					//	Set(is_dnd=1);
+					//}
+					if ("${CHANNEL(channeltype)}" = "SIP") {
+						if ("${SIPPEER(${EXTEN},limit)}" != "" && "${SIPPEER(${EXTEN},limit)}" > "0") {
+							if ("${SIPPEER(${EXTEN},curcalls)}" = "0") {
+								// busy with 0 calls? we don't believe them, must be DND
+								Verbose(1,### Local user ${EXTEN} is on DND - busy with 0 calls);
+								Set(is_dnd=1);
+							}
+						}
+					}
 					goto user_busy;
 				}
 				if ("${DIALSTATUS}" = "NOANSWER") {     // does not answer the phone
@@ -717,7 +732,7 @@ context to-internal-users-self {
 				}
 				if ("${DIALSTATUS}" = "CONGESTION") {   // congestion or DND
 					if ("${CDR(duration)}" = "0" || "${CDR(duration)}" = "1") {
-						Verbose(1,### Local user ${EXTEN} is on DND);
+						Verbose(1,### Local user ${EXTEN} is on DND - 0 duration);
 						Set(is_dnd=1);
 					}
 					goto user_offline;
