@@ -447,8 +447,8 @@ lrwxrwxrwx 1 root root 33 2008-10-27 19:17 de -&gt; /usr/src/asterisk-sounds-de-
 
     <bridgehead>Gemeinschaft</bridgehead>
 
-    <para>Auschecken:<screen><prompt>gemeinschaft:~# </prompt>cd /usr/src/
-<prompt>gemeinschaft:/usr/src# </prompt>svn checkout 'https://svn.amooma.com/gemeinschaft/trunk' gemeinschaft-trunk</screen></para>
+    <para>Auschecken:<screen><prompt>gemeinschaft:~# </prompt><command>cd /usr/src/</command>
+<prompt>gemeinschaft:/usr/src# </prompt><command>svn checkout 'https://svn.amooma.com/gemeinschaft/trunk' gemeinschaft-trunk</command></screen></para>
 
     <para>Einen Symlink anlegen (das hat den Vorteil daﬂ man sp‰ter ggf.
     leichter zwischen verschiedenen Versionen von Gemeinschaft wechseln
