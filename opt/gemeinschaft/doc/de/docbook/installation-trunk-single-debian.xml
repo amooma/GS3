@@ -462,14 +462,14 @@ lrwxrwxrwx 1 root src 18 2008-10-27 19:26 gemeinschaft -&gt; gemeinschaft-trunk<
     einspielen werden) zugreifen darf (bitte statt
     <quote><literal>geheim</literal></quote> ein besseres Paﬂwort
     w‰hlen!):<screen><prompt>gemeinschaft:~# </prompt><command>mysql</command> 
-[...]
-mysql&gt; <command>GRANT ALL ON `asterisk`.* TO 'gemeinschaft'@'localhost' IDENTIFIED BY '<replaceable>geheim</replaceable>';</command>
+<replaceable>[...]</replaceable>
+<prompt>mysql&gt; </prompt><command>GRANT ALL ON `asterisk`.* TO 'gemeinschaft'@'localhost' IDENTIFIED BY '<replaceable>geheim</replaceable>';</command>
 Query OK, 0 rows affected (0.00 sec)
 
-mysql&gt; <command>GRANT ALL ON `asterisk`.* TO 'gemeinschaft'@'%' IDENTIFIED BY '<replaceable>geheim</replaceable>';</command>
+<prompt>mysql&gt; </prompt><command>GRANT ALL ON `asterisk`.* TO 'gemeinschaft'@'%' IDENTIFIED BY '<replaceable>geheim</replaceable>';</command>
 Query OK, 0 rows affected (0.00 sec)
 
-mysql&gt; <command>SHOW GRANTS FOR 'gemeinschaft'@'localhost';</command>
+<prompt>mysql&gt; </prompt><command>SHOW GRANTS FOR 'gemeinschaft'@'localhost';</command>
 +---------------------------------------------------------------------------------------------------------------------+
 | Grants for gemeinschaft@localhost                                                                                   |
 +---------------------------------------------------------------------------------------------------------------------+
@@ -478,7 +478,7 @@ mysql&gt; <command>SHOW GRANTS FOR 'gemeinschaft'@'localhost';</command>
 +---------------------------------------------------------------------------------------------------------------------+
 2 rows in set (0.00 sec)
 
-mysql&gt; <command>SHOW GRANTS FOR 'gemeinschaft'@'%';</command>
+<prompt>mysql&gt; </prompt><command>SHOW GRANTS FOR 'gemeinschaft'@'%';</command>
 +-------------------------------------------------------------------------------------------------------------+
 | Grants for gemeinschaft@%                                                                                   |
 +-------------------------------------------------------------------------------------------------------------+
@@ -487,12 +487,12 @@ mysql&gt; <command>SHOW GRANTS FOR 'gemeinschaft'@'%';</command>
 +-------------------------------------------------------------------------------------------------------------+
 2 rows in set (0.00 sec)
 
-mysql&gt; <command>FLUSH PRIVILEGES;</command>
+<prompt>mysql&gt; </prompt><command>FLUSH PRIVILEGES;</command>
 Query OK, 0 rows affected (0.01 sec)
 
-mysql&gt; exit
+<prompt>mysql&gt; </prompt>exit
 Bye</screen>Testen:<screen><prompt>gemeinschaft:/usr/src# </prompt><command>mysql -u gemeinschaft -p -e 'SELECT "ok"'</command>
-Enter password: 
+<prompt>Enter password: </prompt>
 +----+
 | ok |
 +----+
@@ -504,7 +504,7 @@ Enter password:
 
     <para>Datenbank einspielen:<screen><prompt>gemeinschaft:/usr/src# </prompt><command>cd /usr/src/gemeinschaft/usr/share/doc/gemeinschaft/</command>
 <prompt>gemeinschaft:/usr/src/gemeinschaft/usr/share/doc/gemeinschaft# </prompt><command>mysql -u gemeinschaft -p &lt; asterisk.sql</command> 
-Enter password: </screen></para>
+<prompt>Enter password: </prompt></screen></para>
 
     <para>Gemeinschaft mittels Symlinks <quote>installieren</quote>:</para>
 
@@ -546,11 +546,11 @@ export APACHE_RUN_USER=www-data</screen></para>
 
     <para>IP-Adresse in Datenbank eintragen:<screen><prompt>gemeinschaft:~# </prompt><command>mysql</command>
 <replaceable>[...]</replaceable>
-mysql&gt; <command>USE asterisk;</command>
+<prompt>mysql&gt; </prompt><command>USE asterisk;</command>
 <replaceable>[...]</replaceable>
-mysql&gt; <command>UPDATE hosts SET host='<replaceable>192.168.1.130</replaceable>' WHERE id=1;</command>
+<prompt>mysql&gt; </prompt><command>UPDATE hosts SET host='<replaceable>192.168.1.130</replaceable>' WHERE id=1;</command>
 <replaceable>[...]</replaceable>
-mysql&gt; <command>SELECT * FROM hosts;</command>
+<prompt>mysql&gt; </prompt><command>SELECT * FROM hosts;</command>
 +----+---------------+----------------+------------+----------+
 | id | host          | comment        | is_foreign | group_id |
 +----+---------------+----------------+------------+----------+
