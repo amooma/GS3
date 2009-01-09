@@ -541,6 +541,9 @@ export APACHE_RUN_USER=www-data</screen></para>
     Datenbank-Benutzer und -Paßwort usw. eintragen. Für die Betriebsart als
     Einzel-Server-System stellt man<programlisting>$INSTALLATION_TYPE = 'single';</programlisting>ein.</para>
 
+    <para>Haupt-Verzeichnis von Gemeinschaft:<screen><prompt>gemeinschaft:~# </prompt><command>cd /opt/</command>
+<prompt>gemeinschaft:/opt# </prompt><command>ln -s /usr/src/gemeinschaft/opt/gemeinschaft</command></screen></para>
+
     <para>IP-Adresse des Rechners in
     <filename>/opt/gemeinschaft/etc/listen-to-ip</filename> eintragen.</para>
 
@@ -557,9 +560,6 @@ export APACHE_RUN_USER=www-data</screen></para>
 |  1 | 192.168.1.130 | Gemeinschaft 1 |          0 |        0 | 
 +----+---------------+----------------+------------+----------+
 1 row in set (0.00 sec)</screen></para>
-
-    <para>Haupt-Verzeichnis von Gemeinschaft:<screen><prompt>gemeinschaft:~# </prompt><command>cd /opt/</command>
-<prompt>gemeinschaft:/opt# </prompt><command>ln -s /usr/src/gemeinschaft/opt/gemeinschaft</command></screen></para>
 
     <para>Doku:<screen><prompt>gemeinschaft:~# </prompt><command>cd /usr/share/doc</command>
 <prompt>gemeinschaft:/usr/share/doc# </prompt><command>ln -s /usr/src/gemeinschaft/usr/share/doc/gemeinschaft</command></screen></para>
