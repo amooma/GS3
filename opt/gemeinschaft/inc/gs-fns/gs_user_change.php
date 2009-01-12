@@ -197,7 +197,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 						$hp_route_prefix = (string)$db->executeGetOne(
 							'SELECT `value` FROM `host_params` '.
 							'WHERE `host_id`='. (int)$old_host['id'] .' AND `param`=\'route_prefix\'' );
-						$sub_ext = (subStr($ext,0,strLen($hp_route_prefix)) === $hp_route_prefix)
+						$sub_ext = (strLen($ext) > strLen($hp_route_prefix))
 							? subStr($ext, strLen($hp_route_prefix)) : $ext;
 						gs_log( GS_LOG_DEBUG, "Mapping ext. $ext to $sub_ext for SOAP call" );
 						
@@ -236,7 +236,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 						$hp_route_prefix = (string)$db->executeGetOne(
 							'SELECT `value` FROM `host_params` '.
 							'WHERE `host_id`='. (int)$host['id'] .' AND `param`=\'route_prefix\'' );
-						$sub_ext = (subStr($ext,0,strLen($hp_route_prefix)) === $hp_route_prefix)
+						$sub_ext = (strLen($ext) > strLen($hp_route_prefix))
 							? subStr($ext, strLen($hp_route_prefix)) : $ext;
 						gs_log( GS_LOG_DEBUG, "Mapping ext. $ext to $sub_ext for SOAP call" );
 						
@@ -277,7 +277,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 						$hp_route_prefix = (string)$db->executeGetOne(
 							'SELECT `value` FROM `host_params` '.
 							'WHERE `host_id`='. (int)$host['id'] .' AND `param`=\'route_prefix\'' );
-						$sub_ext = (subStr($ext,0,strLen($hp_route_prefix)) === $hp_route_prefix)
+						$sub_ext = (strLen($ext) > strLen($hp_route_prefix))
 							? subStr($ext, strLen($hp_route_prefix)) : $ext;
 						gs_log( GS_LOG_DEBUG, "Mapping ext. $ext to $sub_ext for SOAP call" );
 						
