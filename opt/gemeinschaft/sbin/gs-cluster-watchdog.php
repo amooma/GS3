@@ -132,7 +132,8 @@ function checkIfNodeAlive( $node_id )
 		. $node[$node_id]['extension'] .'@'. $node[$node_id]['dynamic_ip'] )
 		.' '. (int)SIP_TIMEOUT;
 	
-	$err=0, $out=array();
+	$err=0;
+	$out=array();
 	@exec($cmd .' 1>>/dev/null 2>>/dev/null', $out, $err);
 	return $err;
 }
@@ -146,7 +147,8 @@ function sendArp( $node_id )
 	$cmd = '/sbin/arping -c 3 -I '. qsa( $node[$node_id]['local_interface'] ) .' -s '. qsa( $node[$node_id]['dynamic_ip'] ) .' -A '. qsa( $node[$node_id]['broadcast'] );
 	
 	write_log("Execute $cmd");
-	$err=0, $out=array();
+	$err=0;
+	 $out=array();
 	@exec($cmd .' 1>>/dev/null 2>>/dev/null', $out, $err);
 }
 
@@ -156,7 +158,8 @@ function stonith( $node_id )
 	
 	$cmd = GS_DIR.'sbin/stonith.sh '. qsa( $node[$node_id]['dynamic_ip'] );
 	write_log("Execute $cmd");
-	$err=0, $out=array();
+	$err=0;
+	$out=array();
 	@exec($cmd .' 1>>/dev/null 2>>/dev/null', $out, $err);
 	return $err;
 }
@@ -167,12 +170,14 @@ function takeOverIP( $node_id )
 	
 	$cmd = '/sbin/ifconfig '. qsa( $node[$node_id]['local_interface'] ) .' '. qsa( $node[$node_id]['dynamic_ip'] ) .' netmask '. qsa( $node[$node_id]['netmask'] ) . ' broadcast '. qsa( $node[$node_id]['broadcast'] );
 	write_log("Execute $cmd");
-	$err=0, $out=array();
+	$err=0;
+	$out=array();
 	@exec($cmd .' 1>>/dev/null', $out, $err);
 	
 	$cmd = '/sbin/route add -host '. qsa( $node[$node_id]['dynamic_ip'] ) .' '. qsa( $node[$node_id]['local_interface'] );
 	write_log("Execute $cmd");
-	$err=0, $out=array();
+	$err=0;
+	$out=array();
 	@exec($cmd .' 1>>/dev/null', $out, $err);
 }
 
@@ -188,12 +193,14 @@ function restartLocalAsterisk()
 {  
 	$cmd = '/etc/init.d/asterisk stop';
 	write_log("Execute $cmd");
-	$err=0, $out=array();
+	$err=0;
+	$out=array();
 	@exec($cmd .' 1>>/dev/null 2>>/dev/null', $out, $err);
 	
 	$cmd = GS_DIR.'sbin/start-asterisk';
 	write_log("Execute $cmd");
-	$err=0, $out=array();
+	$err=0;
+	$out=array();
 	@exec($cmd .' 1>>/dev/null 2>>/dev/null', $out, $err);
 	return $err;
 }
