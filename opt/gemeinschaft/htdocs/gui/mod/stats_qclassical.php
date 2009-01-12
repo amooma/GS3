@@ -38,6 +38,12 @@ echo '</h2>', "\n";
 
 echo '<script type="text/javascript" src="', GS_URL_PATH ,'js/tooltips.js"></script>' ,"\n";
 
+$CDR_DB = gs_db_cdr_master_connect();
+if (! $CDR_DB) {
+	echo 'CDR DB error.'; 
+	return;
+}
+
 
 $duration_level  = 90;  # 90 s = 1:30 min
 $waittime_level = 15;  # 15 s
@@ -266,7 +272,7 @@ for ($day=1; $day<=$num_days; ++$day) {
 	
 	# inbound calls
 	#
-	$num_entered = (int)@$DB->executeGetOne(
+	$num_entered = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(DISTINCT(`ast_call_id`)) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_ENTER\'
@@ -278,7 +284,7 @@ AND '. $sql_time
 	
 	# connected to an agent
 	#
-	$num_connected = (int)@$DB->executeGetOne(
+	$num_connected = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_CONNECT\'
@@ -290,7 +296,7 @@ AND '. $sql_time
 	
 	# abandoned
 	#
-	$num_abandoned = (int)@$DB->executeGetOne(
+	$num_abandoned = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_EXIT\'
@@ -303,7 +309,7 @@ AND '. $sql_time
 	
 	# timeout
 	#
-	$num_timeout = (int)@$DB->executeGetOne(
+	$num_timeout = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_EXIT\'
@@ -316,7 +322,7 @@ AND '. $sql_time
 	
 	# no queue members
 	#
-	$num_empty = (int)@$DB->executeGetOne(
+	$num_empty = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(DISTINCT(`ast_call_id`)) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_EXIT\'
@@ -329,7 +335,7 @@ AND '. $sql_time
 	
 	# queue full
 	#
-	$num_full = (int)@$DB->executeGetOne(
+	$num_full = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(DISTINCT(`ast_call_id`)) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND ((
@@ -357,7 +363,7 @@ AND '. $sql_time
 	
 	# duration <= $duration_level
 	#
-	$num_dur_lower = (int)@$DB->executeGetOne(
+	$num_dur_lower = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_COMPLETE\'
@@ -372,7 +378,7 @@ AND '. $sql_time
 	
 	# duration > $duration_level
 	#
-	$num_dur_higher = (int)@$DB->executeGetOne(
+	$num_dur_higher = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_COMPLETE\'
@@ -387,7 +393,7 @@ AND '. $sql_time
 	
 	# average duration
 	#
-	$avg_calldur = (int)@$DB->executeGetOne(
+	$avg_calldur = (int)@$CDR_DB->executeGetOne(
 'SELECT AVG(`calldur`) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_COMPLETE\'
@@ -401,7 +407,7 @@ AND '. $sql_time
 	
 	# waittime <= $waittime_level
 	#
-	$num_wait_ok = (int)@$DB->executeGetOne(
+	$num_wait_ok = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event` IN (\'_COMPLETE\', \'_EXIT\')
@@ -415,7 +421,7 @@ AND '. $sql_time
 	
 	# waittime > $waittime_level
 	#
-	$num_wait_fail = (int)@$DB->executeGetOne(
+	$num_wait_fail = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event` IN (\'_COMPLETE\', \'_EXIT\')
@@ -436,7 +442,7 @@ $month_t_start = (int)mkTime(  0, 0, 0, $m, 1   , $y );
 $month_t_end   = (int)mkTime( 23,59,59, $m, $day, $y );
 $sql_time_month = '(`timestamp`>='.$month_t_start .' AND `timestamp`<='.$month_t_end .')';
 
-$sum_calldur_month = (int)@$DB->executeGetOne(
+$sum_calldur_month = (int)@$CDR_DB->executeGetOne(
 'SELECT SUM(`calldur`) FROM `queue_log` WHERE
     `queue_id`='. $queue_id .'
 AND `event`=\'_COMPLETE\'
