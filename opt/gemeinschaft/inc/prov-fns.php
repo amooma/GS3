@@ -305,6 +305,7 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 		$user_ext = gs_nobody_index_to_extension( $new_nobody_index, false );
 	}
 	$sip_pwd = gs_prov_gen_sip_pwd();
+	$sip_pwd = subStr($sip_pwd,0,15);
 	$ok = $db->execute(
 		'INSERT INTO `ast_sipfriends` '.
 		'(`_user_id`, `name`, `secret`, `context`, `callerid`, `setvar`) '.
@@ -382,20 +383,33 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 		}
 	}
 	
-	# add the phone
+	# add the phone - but if it already exist only update the nobody-user
 	#
-	$ok = $db->execute(
-		'INSERT INTO `phones` '.
-		'(`id`, `type`, `mac_addr`, `user_id`, `nobody_index`, `added`) '.
-		'VALUES '.
-		'(NULL, \''. $db->escape($phone_type) .'\', \''. $db->escape($mac_addr) .'\', '. $user_id .', '. $new_nobody_index .', '. time() .')'
-		);
-	if (! $ok) {
-		gs_log( GS_LOG_WARNING, "Failed to add new phone $mac_addr" );
-		@gs_db_rollback_trans($db);
-		return false;
+	$old_id = $db->executeGetOne('SELECT `id` FROM `phones` WHERE `mac_addr` = \''.$mac_addr.'\'');
+
+	if($old_id) {
+		$ok = $db->execute(
+			'UPDATE `phones` SET `nobody_index` = '.$new_nobody_index.' WHERE `id`= '.$old_id
+			);
+		if (! $ok) {
+			gs_log( GS_LOG_WARNING, "Failed to update nobody_index $new_nobody_index to phone $mac_addr" );
+			@gs_db_rollback_trans($db);
+			return false;
+		}
 	}
-	
+	else {
+		$ok = $db->execute(
+			'INSERT INTO `phones` '.
+			'(`id`, `type`, `mac_addr`, `user_id`, `nobody_index`, `added`) '.
+			'VALUES '.
+			'(NULL, \''. $db->escape($phone_type) .'\', \''. $db->escape($mac_addr) .'\', '. $user_id .', '. $new_nobody_index .', '. time() .')'
+			);
+		if (! $ok) {
+			gs_log( GS_LOG_WARNING, "Failed to add new phone $mac_addr" );
+			@gs_db_rollback_trans($db);
+			return false;
+		}
+	}
 	$ok = @gs_db_commit_trans($db);
 	if (! $ok) {
 		gs_log( GS_LOG_WARNING, 'DB error' );
