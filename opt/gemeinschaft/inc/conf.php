@@ -269,6 +269,7 @@ _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS60', null             );
 _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS80', null             );
 _gscnf( 'SIEMENS_PROV_KEY_BLACKLIST', ''                 );
 _gscnf( 'SIEMENS_PROV_SHOW_APPS', ''                     );
+_gscnf( 'SIEMENS_PROV_SHOW_BOI_APPS', ''                 );
 
 _gscnf( 'AASTRA_PROV_ENABLED'       , false              );
 _gscnf( 'AASTRA_PROV_PB_NUM_RESULTS', 10                 );
