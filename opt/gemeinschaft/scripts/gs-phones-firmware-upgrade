@@ -43,7 +43,7 @@ $usage =
 	baseName(__FILE__) ."\n".
 	"  (--mac=<mac-addr> | --by-user=<user> | --by-exten=<exten> | --by-host=<ip|id>)" ."\n".
 	"  [--min=<ctr>] [--hr=<ctr>] [--day=<ctr>] [--mon=<ctr>] [--dow=<ctr>]" ."\n".
-	"  --vers=<version>" ."\n".
+	"  --vers=<version>|default" ."\n".
 	"\n".
 	"<ctr> = crontab rule, e.g. \"*\" | \"3\" | \"2,5,6\" | \"3-5\" | \"*/5\" | \"Sat-Sun\"". "\n".
 	"Useful examples for firmware upgrades:" ."\n".
@@ -212,42 +212,48 @@ if (count($phones) < 1) {
 
 $num_ok = 0;
 foreach ($phones as $phone) {
-	$ok = $db->execute( 'UPDATE `phones` SET `fw_manual_update`=1 WHERE `id`='. (int)$phone['id'] );
+
+	if ($opts['vers'] == 'default') 
+		$ok = $db->execute( 'UPDATE `phones` SET `fw_manual_update`=0 WHERE `id`='. (int)$phone['id'] );
+	else
+		$ok = $db->execute( 'UPDATE `phones` SET `fw_manual_update`=1 WHERE `id`='. (int)$phone['id'] );
+
 	if (! $ok) {
 		echo "Warning: Can't set firmware upgrade to manual\n";
 	}
 	
-	$ok = $db->execute(
-		'INSERT INTO `prov_jobs` ('.
-			'`id`, '.
-			'`inserted`, '.
-			'`running`, '.
-			'`trigger`, '.
-			'`phone_id`, '.
-			'`type`, '.
-			'`immediate`, '.
-			'`minute`, '.
-			'`hour`, '.
-			'`day`, '.
-			'`month`, '.
-			'`dow`, '.
-			'`data` '.
-		') VALUES ('.
-			'NULL, '.
-			((int)time()) .', '.
-			'0, '.
-			'\'client\', '.
-			((int)$phone['id']) .', '.
-			'\'firmware\', '.
-			'0, '.
-			'\''. $db->escape($opts['min']) .'\', '.
-			'\''. $db->escape($opts['hr' ]) .'\', '.
-			'\''. $db->escape($opts['day']) .'\', '.
-			'\''. $db->escape($opts['mon']) .'\', '.
-			'\''. $db->escape($opts['dow']) .'\', '.
-			'\''. $db->escape($opts['vers']) .'\' '.
-		')'
-		);
+	if($opts['vers'] != 'default')
+		$ok = $db->execute(
+			'INSERT INTO `prov_jobs` ('.
+				'`id`, '.
+				'`inserted`, '.
+				'`running`, '.
+				'`trigger`, '.
+				'`phone_id`, '.
+				'`type`, '.
+				'`immediate`, '.
+				'`minute`, '.
+				'`hour`, '.
+				'`day`, '.
+				'`month`, '.
+				'`dow`, '.
+				'`data` '.
+			') VALUES ('.
+				'NULL, '.
+				((int)time()) .', '.
+				'0, '.
+				'\'client\', '.
+				((int)$phone['id']) .', '.
+				'\'firmware\', '.
+				'0, '.
+				'\''. $db->escape($opts['min']) .'\', '.
+				'\''. $db->escape($opts['hr' ]) .'\', '.
+				'\''. $db->escape($opts['day']) .'\', '.
+				'\''. $db->escape($opts['mon']) .'\', '.
+				'\''. $db->escape($opts['dow']) .'\', '.
+				'\''. $db->escape($opts['vers']) .'\' '.
+				')'
+			);
 	if ($ok) ++$num_ok;
 }
 
