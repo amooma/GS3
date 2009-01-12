@@ -737,7 +737,10 @@ function gs_key_fn_h( el )
 			<?php
 			$innerhtml = '<br />'. __('Bitte w&auml;hlen Sie eine Applikation aus') .':<br /><br />';
 			$innerhtml.= '<select name="helper_apps" size="1">';
-			$SIEMENS_XML_APPS = preg_split('/[,\\s]+/', gs_get_conf('GS_SIEMENS_PROV_SHOW_APPS'), -1, PREG_SPLIT_NO_EMPTY);
+			if($_SESSION['sudo_user']['boi_host_id'] > 0)
+				$SIEMENS_XML_APPS = preg_split('/[,\\s]+/', gs_get_conf('GS_SIEMENS_PROV_SHOW_BOI_APPS'), -1, PREG_SPLIT_NO_EMPTY);
+			else 
+				$SIEMENS_XML_APPS = preg_split('/[,\\s]+/', gs_get_conf('GS_SIEMENS_PROV_SHOW_APPS'), -1, PREG_SPLIT_NO_EMPTY);
 			if (is_array($SIEMENS_XML_APPS)) {
 				foreach ($SIEMENS_XML_APPS as $app => $appname) {
 					$innerhtml.= '<option>'. $appname .'</option>';
