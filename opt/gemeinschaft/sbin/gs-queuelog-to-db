@@ -43,6 +43,13 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 $lockfile = gs_get_conf('GS_LOCK_DIR').'gs-queuelog.lock';
 
+$CDR_DB = gs_db_cdr_master_connect();
+if (! $CDR_DB) {
+	echo 'CDR DB error.'; 
+	return;
+}
+
+
 
 function remove_lockfile()
 {
@@ -81,7 +88,7 @@ function _err_handler( $type, $msg, $file, $line )
 
 function process_log( $file )
 {
-	global $DB, $last_timestamp;
+	global $CDR_DB, $last_timestamp;
 	
 	$fh = fOpen( $file, 'rb' );
 	if (! is_resource( $fh )) return false;
@@ -127,7 +134,7 @@ function process_log( $file )
 )'
 		;
 		//gs_log(GS_LOG_DEBUG, $query);
-		$DB->execute($query);
+		$CDR_DB->execute($query);
 	}
 	
 	# remove the log file
@@ -378,7 +385,7 @@ if (! $DB) {
 	exit(1);
 }
 
-$last_timestamp = (int)$DB->executeGetOne( 'SELECT MAX(`timestamp`) FROM `queue_log`' );
+$last_timestamp = (int)$DB_CDR->executeGetOne( 'SELECT MAX(`timestamp`) FROM `queue_log`' );
 
 # rotate the log file and tell asterisk to reopen the log file
 $err=0; $out=array();
@@ -389,7 +396,7 @@ foreach ($files as $file) {
 	process_log( $file );
 }
 
-@$DB->execute( 'ANALYZE TABLE `queue_log`' );
+@$DB_CDR->execute( 'ANALYZE TABLE `queue_log`' );
 
 remove_lockfile();
 
