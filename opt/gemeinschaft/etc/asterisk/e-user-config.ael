@@ -229,6 +229,23 @@ context user-config {
 		Hangup();
 	}
 	
+	*21 => {
+		Set(CDR(amaflags)=OMIT);
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm${user_name}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm${user_name}');
+		&user-call-forward-activate-numeric(vml,0,0,1);
+		&user-call-forward-activate-numeric(vml,1,0,1);
+		&queue-logout-all-silent();
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
+		Hangup();
+	}
+
+
 	
 	//-------------------------------------------------------------
 	// Comment
@@ -313,7 +330,7 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 		Hangup();
 	
 	//ExecIf($["${mtype}" != "std"],Set,mtype=var);
-	if ("${mtype}" != "std")
+	if (("${mtype}" != "std") && ("${mtype}" != "vml"))
 		Set(mtype=var);
 	
 	Set(msource=internal);
