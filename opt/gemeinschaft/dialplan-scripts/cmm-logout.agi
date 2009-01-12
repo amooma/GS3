@@ -109,4 +109,10 @@ if ($user_ext != '') {
 	ob_end_clean();
 }
 
+$old_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$user_id.'' );
+gs_log( GS_LOG_DEBUG, "IP address found for old phone: $old_ip_addr");
+
+if ($old_ip_addr)  echo 'SET VARIABLE old_phone_ip '.$old_ip_addr."\n";
+
+
 ?>
