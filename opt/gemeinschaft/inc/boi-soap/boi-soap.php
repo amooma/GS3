@@ -36,6 +36,30 @@ include_once( GS_DIR .'inc/log.php' );
 ini_set('soap.wsdl_cache_enabled', false);
 # pointless for local WSDL files
 
+function is_ssl_possible($Server) {
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, 'https://'.$Server.'/soap/updateextension.wsdl');
+	curl_setopt($ch, CURLOPT_CAINFO, '/etc/httpd/conf.d/ssl/LVM_Root_CA.crt');
+	curl_setopt($ch, CURLOPT_SSLCERT, '/etc/httpd/conf.d/ssl/Provisioning_client.pem');
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+	$ok = curl_exec($ch);
+	
+	if( !$ok ) {
+		$info = curl_getinfo($ch);
+		gs_log(GS_LOG_DEBUG, 'Host: '.$Server.' does not support https for SOAP ('.$info['http_code'].'), falling back to http.' );
+		curl_close($ch);
+		return false;
+	} else {
+		gs_log(GS_LOG_DEBUG, 'Host: '.$Server.' does support https.' );
+		curl_close($ch);
+		return true;
+	}
+}
+
 
 function obj2arr_r( $mixed )
 {
@@ -104,8 +128,37 @@ function gs_get_soap_client( $api, $service, $host )
 			default               : return false;
 		}
 		use_soap_error_handler(false);
+		$ssl =  is_ssl_possible($host);
+
 		$SoapClient = null;
-		$SoapClient = new SoapClient(
+		if ($ssl) {
+			$SoapClient = new SoapClient(
+				dirName(__FILE__) .'/wsdl/'.$service.'-'.$api.'.wsdl',
+				array(
+					'location'           => 'https://'.$host.$path,
+					'soap_version'       => SOAP_1_2,
+					'login'              => null,
+					'password'           => null,
+					'proxy_host'         => null,
+					'proxy_port'         => null,
+					'proxy_login'        => null,
+					'proxy_password'     => null,
+					'local_cert'         => null,
+					'passphrase'         => null,
+					'encoding'           => 'UTF-8',
+					'local_cert'         => '/etc/httpd/conf.d/ssl/Provisioning_client.pem',
+					//'compression'        => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_DEFLATE | 5,
+					'compression'        => null,  // makes debugging easier
+					'trace'              => false,
+					'exceptions'         => true,
+					'connection_timeout' => 6,
+					'user_agent'         => 'Gemeinschaft',
+					'features'           => SOAP_SINGLE_ELEMENT_ARRAYS
+				)
+			);
+			gs_log(GS_LOG_DEBUG, 'SOAP call to https://'.$host.$path );
+		} else {
+			$SoapClient = new SoapClient(
 			dirName(__FILE__) .'/wsdl/'.$service.'-'.$api.'.wsdl',
 			array(
 				'location'           => 'http://'.$host.$path,
@@ -126,9 +179,11 @@ function gs_get_soap_client( $api, $service, $host )
 				'connection_timeout' => 6,
 				'user_agent'         => 'Gemeinschaft',
 				'features'           => SOAP_SINGLE_ELEMENT_ARRAYS
-			)
-		);
+				)
+			);
+
 		gs_log(GS_LOG_DEBUG, 'SOAP call to http://'.$host.$path );
+		}
 		return $SoapClient;
 	}
 	catch(SOAPFault $SoapFault) {
