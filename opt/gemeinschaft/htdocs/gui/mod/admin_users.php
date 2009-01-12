@@ -494,7 +494,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			<input type="text" name="ufname" id="ipt-ufname" value="" size="15" maxlength="40" style="width:70px;" title="<?php echo __('Vorname'); ?>" />
 		</td>
 		<td>
-			<input type="text" name="uext" id="ipt-uext" value="" size="8" maxlength="10" />
+			<input type="text" name="uext" id="ipt-uext" value="" size="8" maxlength="11" />
 		</td>
 		<td>
 			<input type="password" name="upin" id="ipt-upin" value="<?php echo mt_rand(100000,999999); ?>" size="5" maxlength="10" />
