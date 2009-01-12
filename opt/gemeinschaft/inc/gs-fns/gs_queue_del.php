@@ -44,6 +44,14 @@ function gs_queue_del( $name )
 	$db = gs_db_master_connect();
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
+
+	$CDR_DB = gs_db_cdr_master_connect();
+	if (! $CDR_DB) {
+		echo 'CDR DB error.'; 
+		return;
+	}
+
+
 	
 	# check if queue exists
 	#
@@ -63,7 +71,7 @@ function gs_queue_del( $name )
 	
 	# delete queue log
 	#
-	$db->execute( 'DELETE FROM `queue_log` WHERE `queue_id`='. $queue_id );
+	$CDR_DB->execute( 'DELETE FROM `queue_log` WHERE `queue_id`='. $queue_id );
 	
 	# delete queue
 	#
