@@ -290,12 +290,12 @@ function _run_topology_tests( $hosts )
 			$bOk = true;
 			echo $host['desc'] ,"... ";
 			
-			if ($CUR_RZ === 'A' && $host['host'] === $DB_MASTER_SERVER1_SERVICE_IP) {
+			if ($CUR_RZ === 'A' && $host['host'] === $DB_MASTER_SERVER1) {
 				echo "Skipping, because it's the same host as DB_MASTER_SERVER1_SERVICE_IP.\n";
 				echo "This host does not need to be a slave to himself.\n";
 				continue;
 			}
-			if ($CUR_RZ === 'B' && $host['host'] === $DB_MASTER_SERVER2_SERVICE_IP) {
+			if ($CUR_RZ === 'B' && $host['host'] === $DB_MASTER_SERVER2) {
 				echo "Skipping, because it's the same host as DB_MASTER_SERVER2_SERVICE_IP.\n";
 				echo "This host does not need to be a slave to himself.\n";
 				continue;
@@ -313,7 +313,7 @@ function _run_topology_tests( $hosts )
 				++$warningcounter;
 			}
 			
- 			if ($CUR_RZ === 'A' && @$slave_status['Master_Host'] != $hosts['DB_MASTER_SERVER1']['host']) {
+ 			if ($CUR_RZ === 'A' && @$slave_status['Master_Host'] !=  $DB_MASTER_SERVER1_SERVICE_IP) {
 				echo "WARNING: Slave on ", $host['host'] ," has the wrong Master!\n";
 				echo "The Master on that host is: ", $slave_status["Master_Host"] ,"\n";
 				echo "but should be ", $hosts['DB_MASTER_SERVER1']['host'] ,"\n";
@@ -327,7 +327,7 @@ function _run_topology_tests( $hosts )
 				$bOk = false;
 				++$warningcounter;
 			}
-			if ($CUR_RZ === 'B' && @$slave_status['Master_Host'] != $hosts['DB_MASTER_SERVER2']['host']) {
+			if ($CUR_RZ === 'B' && @$slave_status['Master_Host'] != $DB_MASTER_SERVER2_SERVICE_IP) {
 				echo "WARNING: Slave on ", $host['host'] ," has the wrong Master!\n";
 				echo "The Master on that host is: ", $slave_status["Master_Host"] ,"\n";
 				echo "but should be ", $hosts['DB_MASTER_SERVER2']['host'] ,"\n";
@@ -583,7 +583,7 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	
 	# dump Master database
 	#
-	$cmd = 'mysqldump --databases asterisk --opt --skip-extended-insert  --single-transaction --lock-tables';
+	$cmd = 'mysqldump --databases asterisk';
 	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$master_host) .' '
 		. qsa($cmd) .' > '. qsa($dump_filename) .' 2>>/dev/null';
 	
