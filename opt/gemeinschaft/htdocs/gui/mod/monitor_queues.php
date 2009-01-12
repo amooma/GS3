@@ -36,6 +36,11 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
+$CDR_DB = gs_db_cdr_master_connect();
+if (! $CDR_DB) {
+	echo 'CDR DB error.'; 
+	return;
+}
 
 include_once( GS_DIR .'inc/queue-status.php' );
 $get_queue_stats_from_db = gs_get_conf('GS_GUI_QUEUE_INFO_FROM_DB');
@@ -120,32 +125,32 @@ ORDER BY `m`.`interface`'
 			$day_t_end   = (int)mkTime( 23,59,59 , $now_m,$now_d,$now_y );
 			$sql_qlog_today = '(`timestamp`>='.$day_t_start .' AND `timestamp`<='.$day_t_end .')';
 			
-			$queue_stats['calls'    ] = (int)@$DB->executeGetOne(
+			$queue_stats['calls'    ] = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
 AND '. $sql_qlog_today .'
 AND `event`=\'_ENTER\''
 			);
-			$queue_stats['completed'] = (int)@$DB->executeGetOne(
+			$queue_stats['completed'] = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
 AND '. $sql_qlog_today .'
 AND `event`=\'_CONNECT\''
 			);
-			$queue_stats['abandoned'] = (int)@$DB->executeGetOne(
+			$queue_stats['abandoned'] = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
 AND '. $sql_qlog_today .'
 AND `event`=\'_EXIT\' AND `reason`=\'ABANDON\''
 			);
-			$queue_stats['_timeout' ] = (int)@$DB->executeGetOne(
+			$queue_stats['_timeout' ] = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
 AND '. $sql_qlog_today .'
 AND `event`=\'_EXIT\' AND `reason`=\'TIMEOUT\''
 			);
-			$queue_stats['_empty'   ] = (int)@$DB->executeGetOne(
+			$queue_stats['_empty'   ] = (int)@$CDR_DB->executeGetOne(
 'SELECT COUNT(*) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
 AND '. $sql_qlog_today .'
 AND `event`=\'_EXIT\' AND `reason`=\'EMPTY\''
 			);
-			$queue_stats['holdtime' ] = (int)@$DB->executeGetOne(
+			$queue_stats['holdtime' ] = (int)@$CDR_DB->executeGetOne(
 'SELECT MAX(`waittime`) FROM `queue_log` WHERE `queue_id`='. $queue['id'] .'
 AND '. $sql_qlog_today .'
 AND `event`=\'_COMPLETE\' AND `waittime` IS NOT NULL'
