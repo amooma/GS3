@@ -201,7 +201,7 @@ function gs_user_del( $user )
 					$hp_route_prefix = (string)$db->executeGetOne(
 						'SELECT `value` FROM `host_params` '.
 						'WHERE `host_id`='. (int)$host['id'] .' AND `param`=\'route_prefix\'' );
-					$sub_ext = (subStr($ext,0,strLen($hp_route_prefix)) === $hp_route_prefix)
+					$sub_ext = (strLen($ext) > strLen($hp_route_prefix))
 						? subStr($ext, strLen($hp_route_prefix)) : $ext;
 					gs_log( GS_LOG_DEBUG, "Mapping ext. $ext to $sub_ext for SOAP call" );
 					
