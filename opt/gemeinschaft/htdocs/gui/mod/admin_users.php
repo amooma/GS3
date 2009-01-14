@@ -636,7 +636,7 @@ new Ajax.Request(
 	<?php if (gs_get_conf('GS_BOI_ENABLED')) { ?>
 	<p>
 		<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/info.png" />
-		<small><?php echo __('Bei Benutern in Filialen mu&szlig; die Nebenstelle inklusive der Route aus Sicht der Zentrale angegeben werden (z.B. 60123410).'); ?></small>
+		<small><?php echo __('Bei Benutzern in Filialen mu&szlig; die Nebenstelle inklusive der Route aus Sicht der Zentrale angegeben werden (z.B. 60123410).'); ?></small>
 	</p>
 	<?php } ?>
 	
