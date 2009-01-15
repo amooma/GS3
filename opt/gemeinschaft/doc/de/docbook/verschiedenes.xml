@@ -265,7 +265,8 @@
           <term>CentOS:</term>
 
           <listitem>
-            <programlisting><command>yum install bind* caching-nameserver</command></programlisting>
+            <programlisting><command>yum install bind bind-chroot bind-devel bind-libbind-devel bind-sdb \
+  caching-nameserver</command></programlisting>
           </listitem>
         </varlistentry>
 
