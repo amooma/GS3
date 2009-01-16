@@ -229,7 +229,7 @@ context user-config {
 		Hangup();
 	}
 	
-	*21 => {
+	*30 => {
 		Set(CDR(amaflags)=OMIT);
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
@@ -330,7 +330,7 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 		Hangup();
 	
 	//ExecIf($["${mtype}" != "std"],Set,mtype=var);
-	if (("${mtype}" != "std") && ("${mtype}" != "vml"))
+	if ("${mtype}" != "std" && "${mtype}" != "vml")
 		Set(mtype=var);
 	
 	Set(msource=internal);
