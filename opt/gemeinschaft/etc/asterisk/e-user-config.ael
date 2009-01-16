@@ -329,21 +329,14 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 	if ("${user_code}" = "")
 		Hangup();
 	
-	//ExecIf($["${mtype}" != "std"],Set,mtype=var);
 	if ("${mtype}" != "std" && "${mtype}" != "vml")
 		Set(mtype=var);
 	
 	Set(msource=internal);
-	//ExecIf($["${msource_num}" = "1"],Set,msource=external);
 	if ("${msource_num}" = "1")
 		Set(msource=external);
 	
 	Set(mcase=always);
-	/*
-	ExecIf($["${mcase_num}" = "1"],Set,mcase=busy);
-	ExecIf($["${mcase_num}" = "2"],Set,mcase=unavail);
-	ExecIf($["${mcase_num}" = "3"],Set,mcase=offline);
-	*/
 	if ("${mcase_num}" = "1")
 		Set(mcase=busy);
 	if ("${mcase_num}" = "2")
