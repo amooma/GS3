@@ -39,23 +39,28 @@ echo '</h2>', "\n";
 
 $phone_types = array();
 if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
+	$phone_types['snom-300'    ] = 'Snom 300';
+	$phone_types['snom-320'    ] = 'Snom 320';
 	$phone_types['snom-360'    ] = 'Snom 360';
 	$phone_types['snom-370'    ] = 'Snom 370';
 }
-if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
-	$phone_types['siemens-os40'] = 'Siemens OpenStage 40';
-	$phone_types['siemens-os60'] = 'Siemens OpenStage 60';
-	$phone_types['siemens-os80'] = 'Siemens OpenStage 80';
-}
+
 if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 	$phone_types['snom-m3'    ] = 'Snom M3';
 }
 
+if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
+	$phone_types['siemens-os20'] = 'Siemens OpenStage 20';
+	$phone_types['siemens-os40'] = 'Siemens OpenStage 40';
+	$phone_types['siemens-os60'] = 'Siemens OpenStage 60';
+	$phone_types['siemens-os80'] = 'Siemens OpenStage 80';
+}
+
 if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
-	$phone_types['aastra-57i'] = 'Aastra 57i';
-	$phone_types['aastra-55i'] = 'Aastra 55i';
-	$phone_types['aastra-53i'] = 'Aastra 53i';
 	$phone_types['aastra-51i'] = 'Aastra 51i';
+	$phone_types['aastra-53i'] = 'Aastra 53i';
+	$phone_types['aastra-55i'] = 'Aastra 55i';
+	$phone_types['aastra-57i'] = 'Aastra 57i';
 }
 
 $action = @$_REQUEST['action'];
@@ -69,15 +74,25 @@ $phone_type = preg_replace('/[^a-z0-9\-]/', '', @$_REQUEST['phone_type']);
 if ($profile_id < 1) $phone_type = '';
 if ($phone_type == '') {
 	if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
-		if     (array_key_exists('snom-360', $phone_types)) $phone_type = 'snom-360';
+		if     (array_key_exists('snom-300', $phone_types)) $phone_type = 'snom-300';
+		elseif (array_key_exists('snom-320', $phone_types)) $phone_type = 'snom-320';
+		elseif (array_key_exists('snom-360', $phone_types)) $phone_type = 'snom-360';
 		elseif (array_key_exists('snom-370', $phone_types)) $phone_type = 'snom-370';
 	} else
+	if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
+		if     (array_key_exists('snom-m3', $phone_types)) $phone_type = 'snom-m3';
+	} else
 	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
-		if     (array_key_exists('siemens-os60', $phone_types)) $phone_type = 'siemens-os60';
+		if     (array_key_exists('siemens-os20', $phone_types)) $phone_type = 'siemens-os20';
+		elseif (array_key_exists('siemens-os40', $phone_types)) $phone_type = 'siemens-os40';
+		elseif (array_key_exists('siemens-os60', $phone_types)) $phone_type = 'siemens-os60';
 		elseif (array_key_exists('siemens-os80', $phone_types)) $phone_type = 'siemens-os80';
 	} else
 	if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
-		if     (array_key_exists('aastra-57i', $phone_types)) $phone_type = 'aastra-57i';
+		if     (array_key_exists('aastra-51i', $phone_types)) $phone_type = 'aastra-51i';
+		elseif (array_key_exists('aastra-53i', $phone_types)) $phone_type = 'aastra-53i';
+		elseif (array_key_exists('aastra-55i', $phone_types)) $phone_type = 'aastra-55i';
+		elseif (array_key_exists('aastra-57i', $phone_types)) $phone_type = 'aastra-57i';
 	}
 }
 
