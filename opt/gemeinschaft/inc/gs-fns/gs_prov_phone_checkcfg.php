@@ -233,30 +233,15 @@ function _gs_prov_phone_checkcfg_by_ip_do_snom( $ip, $reboot=true )
 	// Actually the value after REBOOT= does not matter.
 	// Is there a check-sync URL *without* reboot?
 	
-	// The M3 has to be rebooted to read ist config.
+	// The M3 has to be rebooted to read its config.
 }
 
 // REALLY PRIVATE! CAREFUL WITH PARAMS - NO VALIDATION!
 function _gs_prov_phone_checkcfg_by_ip_do_snom_m3( $ip, $reboot=true )
 {
 	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
-
-	$cmd = 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/reboot.html') . ' >>/dev/null 2>>/dev/null &';
-
-
-	 if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
-
-		$listen_to_ids = gs_get_listen_to_ids();
-
-		if (is_array($listen_to_ids) && count($listen_to_ids)>0) {
-			gs_log(GS_LOG_DEBUG, 'Trying to reboot M3 phone '.$ip.' by '.GS_PROV_HOST);
-			$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa( GS_PROV_HOST ) .' '. qsa($cmd);
-			}
-		unset($listen_to_ids);
-	}
-
-	@ exec ( $cmd , $out, $err );
 	
+	@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/reboot.html') . ' >>/dev/null 2>>/dev/null &', $out, $err );
 }
 
 
