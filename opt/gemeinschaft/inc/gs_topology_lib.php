@@ -583,7 +583,7 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	
 	# dump Master database
 	#
-	$cmd = 'mysqldump --databases asterisk';
+	$cmd = 'mysqldump --opt --lock-tables --databases asterisk';
 	$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa('root@'.$master_host) .' '
 		. qsa($cmd) .' > '. qsa($dump_filename) .' 2>>/dev/null';
 	
