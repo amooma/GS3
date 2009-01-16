@@ -43,13 +43,6 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 $lockfile = gs_get_conf('GS_LOCK_DIR').'gs-queuelog.lock';
 
-$CDR_DB = gs_db_cdr_master_connect();
-if (! $CDR_DB) {
-	echo 'CDR DB error.'; 
-	return;
-}
-
-
 
 function remove_lockfile()
 {
@@ -120,7 +113,7 @@ function process_log( $file )
 ) VALUES (
 	'.   db_int_or_null($r['qid'     ]) .',
 	'.             (int)$r['ts'      ]  .',
-	\''.    $DB->escape($r['evt'     ]) .'\',
+	\''.$CDR_DB->escape($r['evt'     ]) .'\',
 	'. db_quote_or_null($r['reason'  ]) .',
 	'. db_quote_or_null($r['callid'  ]) .',
 	'.   db_int_or_null($r['uid'     ]) .',
@@ -145,14 +138,14 @@ function process_log( $file )
 
 function db_quote_or_null( $val )
 {
-	global $DB;
+	global $CDR_DB;
 	
-	return $val ? ('\''. $DB->escape($val) .'\'') : 'NULL';
+	return $val ? ('\''. $CDR_DB->escape($val) .'\'') : 'NULL';
 }
 
 function db_int_or_null( $val )
 {
-	global $DB;
+	global $CDR_DB;
 	
 	return $val ? (int)$val : 'NULL';
 }
@@ -385,7 +378,13 @@ if (! $DB) {
 	exit(1);
 }
 
-$last_timestamp = (int)$DB_CDR->executeGetOne( 'SELECT MAX(`timestamp`) FROM `queue_log`' );
+$CDR_DB = gs_db_cdr_master_connect();
+if (! $CDR_DB) {
+	gs_log( GS_LOG_WARNING, "Could not connect to CDR master database" );
+	exit(1);
+}
+
+$last_timestamp = (int)$CDR_DB->executeGetOne( 'SELECT MAX(`timestamp`) FROM `queue_log`' );
 
 # rotate the log file and tell asterisk to reopen the log file
 $err=0; $out=array();
@@ -396,7 +395,7 @@ foreach ($files as $file) {
 	process_log( $file );
 }
 
-@$DB_CDR->execute( 'ANALYZE TABLE `queue_log`' );
+@$CDR_DB->execute( 'ANALYZE TABLE `queue_log`' );
 
 remove_lockfile();
 
