@@ -1,7 +1,7 @@
 -- ----------------------------------------------------------------------------
 --   Tables for separate CDR database
 --   This file was created with
---   mysqldump --opt --skip-extended-insert -d --skip-add-drop-table --databases asterisk --tables itemized_bill ast_cdr > asterisk-cdr.sql
+--   mysqldump --opt --skip-extended-insert -d --skip-add-drop-table --databases asterisk --tables queue_log itemized_bill ast_cdr > asterisk-cdr.sql
 --   CREATE DATABASE and USE statements were added manually.
 --   
 --   $Revision$
@@ -85,6 +85,33 @@ CREATE TABLE `itemized_bill` (
   KEY `ext` (`ext`),
   KEY `cdr_id` (`cdr_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+--
+-- Table structure for table `queue_log`
+--
+
+DROP TABLE IF EXISTS `queue_log`;
+CREATE TABLE `queue_log` (
+  `queue_id` int(10) unsigned default NULL,
+  `timestamp` int(10) unsigned NOT NULL default '0',
+  `event` varchar(15) character set ascii NOT NULL default '',
+  `reason` varchar(10) character set ascii default NULL,
+  `ast_call_id` varchar(32) character set ascii collate ascii_bin default NULL,
+  `user_id` int(10) unsigned default NULL,
+  `caller` varchar(50) collate utf8_unicode_ci default NULL,
+  `pos` mediumint(8) unsigned default NULL,
+  `origpos` mediumint(8) unsigned default NULL,
+  `waittime` mediumint(8) unsigned default NULL,
+  `logindur` int(10) unsigned default NULL,
+  `calldur` mediumint(8) unsigned default NULL,
+  `info` varchar(50) character set ascii default NULL,
+  KEY `queue_timestamp` (`queue_id`,`timestamp`),
+  KEY `queue_event_timestamp` (`queue_id`,`event`,`timestamp`),
+  KEY `queue_event_reason_timestamp` (`queue_id`,`event`,`reason`,`timestamp`),
+  KEY `timestamp` (`timestamp`),
+  KEY `ast_call_id` (`ast_call_id`(25)),
+  CONSTRAINT `queue_log_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
