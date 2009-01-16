@@ -132,33 +132,27 @@ macro cmm-login( new_user_name ) {
 	//Playback(agent-loginok);
 	Playback(/opt/gemeinschaft/sounds/de-DE/sie-sind-jetzt-angemeldet);
 	Playback(/opt/gemeinschaft/sounds/de-DE/bitte-warten-sie);
-	
-	 if ("${new_phone_ip}" != "") {
-		Verbose(1, Try to sync new phone IP ${new_phone_ip});
+	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${new_user_name}');
+	if ("${user_name}" != "${new_user_name}") {
+		if ("${user_name}" != "") {
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
+		} else {
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${CALLERID(num)}');
+		}
+	}
+	if ("${new_phone_ip}" != "") {
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${new_phone_ip}');
-	} else {
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${new_user_name}');
 	}
-
-	if ("${old_phone_ip}" != "") {
-		Verbose(1, Try to sync old phone IP ${old_phone_ip});
+	if ("${old_phone_ip}" != "" && "${old_phone_ip}" != "${new_phone_ip}") {
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${old_phone_ip}');
-	} else {
-		if ("${user_name}" != "${new_user_name}") {
-			if ("${user_name}" != "") {
-				TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
-			} else {
-				TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${CALLERID(num)}');
-			}
-		}
-		if ("${CHANNEL(channeltype)}" = "SIP") {
-			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(peerip)}');
-			if ("${SIPCHANINFO(recvip)}" != "${SIPCHANINFO(peerip)}") {
+	}
+	if ("${CHANNEL(channeltype)}" = "SIP") {
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(peerip)}');
+		if ("${SIPCHANINFO(recvip)}" != "${SIPCHANINFO(peerip)}") {
 			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(recvip)}');
-			}
 		}
 	}
-
+	
 	Hangup();
 	
 	unknown:
@@ -187,17 +181,20 @@ macro cmm-logout() {
 	//Playback(agent-loggedoff&vm-goodbye);
 	Playback(/opt/gemeinschaft/sounds/de-DE/sie-sind-abgemeldet);
 	Playback(/opt/gemeinschaft/sounds/de-DE/bitte-warten-sie);
-	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
-	if ("${old_phone_ip}" != "") {
-		Verbose(1, Try to sync phone IP ${old_phone_ip});
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${old_phone_ip}');
-	} else {
+	if ("${user_name}" != "") {
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
-		if ("${CHANNEL(channeltype)}" = "SIP") {
+	} else {
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${CALLERID(num)}');
+	}
+	if ("${old_phone_ip}" != "") {
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${old_phone_ip}');
+	}
+	if ("${CHANNEL(channeltype)}" = "SIP") {
+		if ("${SIPCHANINFO(peerip)}" != "${old_phone_ip}") {
 			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(peerip)}');
-			if ("${SIPCHANINFO(recvip)}" != "${SIPCHANINFO(peerip)}") {
-				TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(recvip)}');
-			}
+		}
+		if ("${SIPCHANINFO(recvip)}" != "${old_phone_ip}" && "${SIPCHANINFO(recvip)}" != "${SIPCHANINFO(peerip)}") {
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(recvip)}');
 		}
 	}
 	
@@ -615,7 +612,9 @@ macro dial-gateway-do( mnumber ) {
 		Set(zone=internal);
 	}
 	if ("${user_id}" != "") {
-		if ("${clir}" = "" ) AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-${zone}.agi,${user_id});
+		if ("${clir}" = "" ) {
+			AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-${zone}.agi,${user_id});
+		}
 		if ("${clir}" = "1") {
 			Set(CALLERID(all)=Anonymous <anonymous>);
 			// RFC 2543
@@ -826,13 +825,13 @@ context from-internal-nobody {
 		to-internal-users;    // internal phones (users)
 		test;                 // test extensions
 	}
-
+	
 	_*31. => {
-		Verbose(1,### Set CLIR for number  ${EXTEN:3});
+		Verbose(1,### Set CLIR for number ${EXTEN:3});
 		Set(__clir=1);
 		jump ${EXTEN:3}@from-internal-nobody;
 	}
-
+	
 }
 
 context from-internal-users {
@@ -853,9 +852,9 @@ context from-internal-users {
 		to-gateway;           // to the gateway
 		test;                 // test extensions
 	}
-
+	
 	_*31. => {
-		Verbose(1,### Set CLIR for number  ${EXTEN:3});
+		Verbose(1,### Set CLIR for number ${EXTEN:3});
 		Set(__clir=1);
 		jump ${EXTEN:3}@from-internal-users;
 	}
