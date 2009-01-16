@@ -170,18 +170,18 @@ if (! $ok) {
 echo 'SET VARIABLE ret '. gs_agi_str_esc('ok') ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
-$old_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$old_uid.'' );
 
-gs_log( GS_LOG_DEBUG, "IP address found for old phone: $old_ip_addr");
+# get old phone's IP addr.
+#
+$old_ip_addr = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='.$old_uid );
+gs_log( GS_LOG_DEBUG, "Mobility: IP address found for old phone: $old_ip_addr" );
+echo 'SET VARIABLE old_phone_ip '. gs_agi_str_esc($old_ip_addr )."\n";
 
-if ($old_ip_addr)  echo 'SET VARIABLE old_phone_ip '.$old_ip_addr."\n";
-
-$new_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$new_uid.'' );
-
-if ($new_ip_addr != $old_ip_addr)  echo 'SET VARIABLE new_phone_ip '.$new_ip_addr."\n";
-
-gs_log( GS_LOG_DEBUG, "IP address found for new phone: $new_ip_addr");
-
+# get new phone's IP addr.
+#
+$new_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$new_uid );
+gs_log( GS_LOG_DEBUG, "Mobility: IP address found for new phone: $new_ip_addr");
+echo 'SET VARIABLE new_phone_ip '. gs_agi_str_esc($new_ip_addr) ."\n";
 
 
 ?>
