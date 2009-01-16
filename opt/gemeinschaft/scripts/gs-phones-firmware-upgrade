@@ -212,17 +212,13 @@ if (count($phones) < 1) {
 
 $num_ok = 0;
 foreach ($phones as $phone) {
-
-	if ($opts['vers'] == 'default') 
-		$ok = $db->execute( 'UPDATE `phones` SET `fw_manual_update`=0 WHERE `id`='. (int)$phone['id'] );
-	else
-		$ok = $db->execute( 'UPDATE `phones` SET `fw_manual_update`=1 WHERE `id`='. (int)$phone['id'] );
-
+	$fw_manual_update = (int)($opts['vers'] !== 'default');
+	$ok = $db->execute( 'UPDATE `phones` SET `fw_manual_update`='. (int)$fw_manual_update .' WHERE `id`='. (int)$phone['id'] );
 	if (! $ok) {
 		echo "Warning: Can't set firmware upgrade to manual\n";
 	}
 	
-	if($opts['vers'] != 'default')
+	if ($fw_manual_update) {
 		$ok = $db->execute(
 			'INSERT INTO `prov_jobs` ('.
 				'`id`, '.
@@ -254,7 +250,8 @@ foreach ($phones as $phone) {
 				'\''. $db->escape($opts['vers']) .'\' '.
 				')'
 			);
-	if ($ok) ++$num_ok;
+		if ($ok) ++$num_ok;
+	}
 }
 
 if ($num_ok === count($phones)) {
