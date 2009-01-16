@@ -40,10 +40,9 @@ echo '<script type="text/javascript" src="', GS_URL_PATH ,'js/tooltips.js"></scr
 
 $CDR_DB = gs_db_cdr_master_connect();
 if (! $CDR_DB) {
-	echo 'CDR DB error.'; 
+	echo 'CDR DB error.';
 	return;
 }
-
 
 $duration_level  = 90;  # 90 s = 1:30 min
 $waittime_level = 15;  # 15 s
