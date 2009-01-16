@@ -138,7 +138,7 @@ if (gs_get_conf('GS_BOI_ENABLED')
 						'`host_id`='. (int)$_SESSION['sudo_user']['boi_host_id'] .' AND '.
 						'`param`=\'route_prefix\''
 					);
-				$sub_ext = (strLen($boi_soap_ext) > strLen($hp_route_prefix))
+				$sub_ext = (subStr($boi_soap_ext,0,strLen($hp_route_prefix)) === $hp_route_prefix)
 					? subStr($boi_soap_ext, strLen($hp_route_prefix)) : $boi_soap_ext;
 				gs_log( GS_LOG_DEBUG, "Mapping ext. $boi_soap_ext to $sub_ext for SOAP call" );
 				$boi_soap_ext = $sub_ext;
@@ -761,11 +761,15 @@ else {
 		echo '<iframe id="boi-content" src="';
 		echo $reverse_proxy;
 		unset($reverse_proxy);
+		
+		/*
 		include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
-		//if(is_ssl_possible($_SESSION['sudo_user']['boi_host']))
-		//	echo 'https' ,'/', $_SESSION['sudo_user']['boi_host'];
-		//else 
-			echo 'http' ,'/', $_SESSION['sudo_user']['boi_host'];
+		if (_gs_boi_ssl_is_possible($_SESSION['sudo_user']['boi_host']))
+			echo 'https';
+		else
+		*/
+			echo 'http';
+		echo '/', $_SESSION['sudo_user']['boi_host'];
 		echo htmlEnt($MODULES[$SECTION]['sub'][$MODULE]['boi_url']);
 		
 		echo (strPos($MODULES[$SECTION]['sub'][$MODULE]['boi_url'], '?') === false)
