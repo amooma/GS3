@@ -52,6 +52,8 @@ function _mac_addr_display( $mac )
 
 $phone_types = array();
 if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
+	$phone_types['snom-300'    ] = 'Snom 300';
+	$phone_types['snom-320'    ] = 'Snom 320';
 	$phone_types['snom-360'    ] = 'Snom 360';
 	$phone_types['snom-370'    ] = 'Snom 370';
 }
