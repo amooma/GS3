@@ -118,7 +118,7 @@ class PhoneCapability_siemens extends PhoneCapability
 		}
 		return $outfile;
 		*/
-		return $infile;
+		return false;
 	}
 	
 	function _upload_ringtone( $ringtonefile )  # deprecated
@@ -134,7 +134,7 @@ class PhoneCapability_siemens extends PhoneCapability
 		
 		$fileserver['wan'  ] = gs_get_conf('GS_PROV_SIEMENS_FTP_SERVER_WAN');
 		$fileserver['lan'  ] = gs_get_conf('GS_PROV_SIEMENS_FTP_SERVER_LAN');
-		//$fileserver['local'] = gs_get_conf('GS_PROV_HOST');
+		$fileserver['local'] = gs_get_conf('GS_PROV_HOST');
 		$ftp_path = '';
 		
 		$external_ftp_path = gs_get_conf('GS_PROV_SIEMENS_FTP_RINGTONE_PATH');
