@@ -1165,7 +1165,8 @@ context program-cc {
 
 macro set-callerid-by-clir() {
 	// get CLIR for a call to internal:
-	if ("${clir}" = "" ) AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-internal.agi,${user_id});
+	//if ("${clir}" = "" ) AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-internal.agi,${user_id});
+	AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-internal.agi,${user_id});
 	if ("${clir}" = "1") {
 		Set(CALLERID(all)=Anonymous <anonymous>);
 		// RFC 2543
