@@ -6262,7 +6262,7 @@ CREATE TABLE `queue_log` (
   KEY `queue_event_reason_timestamp` (`queue_id`,`event`,`reason`,`timestamp`),
   KEY `timestamp` (`timestamp`),
   KEY `ast_call_id` (`ast_call_id`(25)),
-  CONSTRAINT `queue_log_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --

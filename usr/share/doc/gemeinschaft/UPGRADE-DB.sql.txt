@@ -582,3 +582,18 @@ ALTER TABLE `user_watchlist`
   ON DELETE CASCADE ON UPDATE CASCADE;
 
 
+--
+-- since rev 5839
+--
+
+
+--
+-- Drop foreign key which references `ast_queues`(`_id`) in table
+-- `user_watchlist` and add an index for `user_id`:
+--
+
+ALTER TABLE `queue_log` DROP FOREIGN KEY `queue_log_ibfk_1`;
+ALTER TABLE `queue_log` ADD INDEX (`user_id`);
+
+
+
