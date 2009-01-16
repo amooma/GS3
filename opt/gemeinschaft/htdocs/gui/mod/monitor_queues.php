@@ -38,7 +38,7 @@ echo '</h2>', "\n";
 
 $CDR_DB = gs_db_cdr_master_connect();
 if (! $CDR_DB) {
-	echo 'CDR DB error.'; 
+	echo 'CDR DB error.';
 	return;
 }
 
