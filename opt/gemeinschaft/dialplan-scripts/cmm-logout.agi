@@ -30,7 +30,7 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/log.php' );
-//require_once( GS_DIR .'inc/agi-fns.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -109,10 +109,12 @@ if ($user_ext != '') {
 	ob_end_clean();
 }
 
-$old_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$user_id.'' );
-gs_log( GS_LOG_DEBUG, "IP address found for old phone: $old_ip_addr");
 
-if ($old_ip_addr)  echo 'SET VARIABLE old_phone_ip '.$old_ip_addr."\n";
+# get old phone's IP addr.
+#
+$old_ip_addr = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='.$user_id );
+gs_log( GS_LOG_DEBUG, "Mobility: IP address found for old phone: $old_ip_addr" );
+echo 'SET VARIABLE old_phone_ip '. gs_agi_str_esc($old_ip_addr) ."\n";
 
 
 ?>
