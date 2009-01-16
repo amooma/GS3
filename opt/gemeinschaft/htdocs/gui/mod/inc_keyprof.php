@@ -45,6 +45,10 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/dialog_box.js"></s
 $phone_types = array();
 if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	$enabled_models = preg_split('/[,\\s]+/', gs_get_conf('GS_PROV_MODELS_ENABLED_SNOM'));
+	if (in_array('*', $enabled_models) || in_array('300', $enabled_models))
+		$phone_types['snom-300'] = 'Snom 300';
+	if (in_array('*', $enabled_models) || in_array('320', $enabled_models))
+		$phone_types['snom-320'] = 'Snom 320';
 	if (in_array('*', $enabled_models) || in_array('360', $enabled_models))
 		$phone_types['snom-360'] = 'Snom 360';
 	if (in_array('*', $enabled_models) || in_array('370', $enabled_models))
@@ -181,7 +185,9 @@ if ($phone_type != '' && ! array_key_exists($phone_type, $phone_types)) {
 }
 if ($phone_type == '') {
 	if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
-		if     (array_key_exists('snom-360', $phone_types)) $phone_type = 'snom-360';
+		if     (array_key_exists('snom-300', $phone_types)) $phone_type = 'snom-300';
+		elseif (array_key_exists('snom-320', $phone_types)) $phone_type = 'snom-320';
+		elseif (array_key_exists('snom-360', $phone_types)) $phone_type = 'snom-360';
 		elseif (array_key_exists('snom-370', $phone_types)) $phone_type = 'snom-370';
 	} else
 	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
@@ -196,7 +202,7 @@ if ($phone_type == '') {
 		elseif (array_key_exists('aastra-57i', $phone_types)) $phone_type = 'aastra-57i';
 	}
 }
-if (in_array($phone_type, array('snom-360', 'snom-370'), true)) {
+if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370'), true)) {
 	$phone_layout = 'snom';
 	$key_function_none = $key_function_none_snom;
 } elseif (in_array($phone_type, array('siemens-os20', 'siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
@@ -836,6 +842,11 @@ if ($phone_layout) {
 				2 => array('from'=>  33, 'to'=>  53, 'shifted'=>false,
 					'title'=> __('Erweiterungs-Modul') .' 2')
 			);
+		}
+		switch ($phone_type) {
+			case 'snom-300':
+				$key_levels[0]['to'  ] =    5;
+				break;
 		}
 		break;
 	case 'siemens':
