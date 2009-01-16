@@ -84,8 +84,9 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 
 $key_functions_snom = array(
 	'none'  => __('Leer'),              # none
-	'dest'  => __('Nebenstelle'),       # destination (/blf BLF)
 	'speed' => __('externes Ziel'),     # external dest.
+	'dest'  => __('Nebenstelle'),       # destination (//FIXME - auch BLF hiermit machen?)
+	'blf'   => __('BLF'),               # BLF
 	'line'  => __('Leitung'),           # line
 );
 $key_function_none_snom = 'none';
