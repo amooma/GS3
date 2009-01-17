@@ -36,7 +36,6 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
-echo "<br />\n";
 
 
 function _secs_to_days( $secs )
@@ -137,7 +136,7 @@ if (file_exists('/proc/uptime') && file_exists('/proc/loadavg')) {
 #   meminfo
 #####################################################################
 
-echo '<h3>MemInfo</h3>' ,"\n";
+echo '<h3>Memory info</h3>' ,"\n";
 if (file_exists('/proc/meminfo')) {
 	
 	$out = trim(gs_file_get_contents('/proc/meminfo'));
@@ -186,7 +185,7 @@ if (file_exists('/proc/meminfo')) {
 #   df
 #####################################################################
 
-echo '<h3>DiskFree</h3>' ,"\n";
+echo '<h3>Disk free</h3>' ,"\n";
 $err=0; $out=array();
 if (gs_get_conf('GS_INSTALLATION_TYPE') === 'gpbx') {
 	exec( 'LANG=C df -H -x tmpfs | grep -v \' /live\'', $out, $err );
@@ -211,7 +210,7 @@ if ($err===0) {
 #   net dev
 #####################################################################
 
-echo '<h3>NetDev</h3>' ,"\n";
+echo '<h3>Network devices</h3>' ,"\n";
 if (file_exists('/proc/net/dev')) {
 	
 	$out = trim(gs_file_get_contents('/proc/net/dev'));
@@ -223,5 +222,28 @@ if (file_exists('/proc/net/dev')) {
 	echo "<p>?</p>\n";
 }
 
+
+
+#####################################################################
+#   Asterisk version
+#####################################################################
+echo '<h3>Asterisk version</h3>', "\n";
+$err=0; $out=array();
+@exec( 'sudo asterisk -rx \'core show version\' 2>>/dev/null', $out,
+$err );
+if ($err===0) {
+	$out = trim(implode(' ', $out));
+	$out = htmlEnt($out);
+	$out = preg_replace('/(?<=^|\s|-)((branch-)?[1-9]\.[0-9][.0-9]*(?:\-r[0-9]+M?)?)/', '<b>$1</b>', $out);
+	echo "<pre style=\"margin:0:1em 0.5em 1.2em 0.5em;\">";
+	echo $out;
+	echo "\n</pre>\n";
+} else {
+	echo "<p>Error.</p>\n";
+}
+
+
+
+echo "<br />\n";
 
 ?>
