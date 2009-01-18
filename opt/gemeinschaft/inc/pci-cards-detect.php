@@ -168,9 +168,39 @@ function gs_pci_cards_detect()
 			}
 			break;
 		
+		case '1923':  # Sangoma
+			switch ($c['devid']) {
+				case '0040':
+					$c['descr' ] = 'A200/remora (FXO/FXS analog) - unknown';
+					switch ($c['subvendorid']) {
+						case 'a700':
+							$c['descr' ] = 'B700 FlexBRI (0/2/4-port BRI and 0/2-port FXS/FXO)';
+							break;
+					}
+					break;
+				case '0100':
+					$c['descr' ] = 'A104 (4-port PRI) - unknown';
+					switch ($c['subvendorid']) {
+						//...
+					}
+					break;
+				case '0400':
+					$c['descr' ] = 'A104 (4-port PRI) - unknown';
+					switch ($c['subvendorid']) {
+						//...
+					}
+					break;
+				case '0300':
+					$c['descr' ] = 'A101 (1-port PRI) - unknown';
+					switch ($c['subvendorid']) {
+						//...
+					}
+					break;
+			}
+			break;
+		
 		case 'e159':  # Tiger Jet Network
 			$c['vendor'] = 'Tiger Jet';
-			$c['known' ] = true;
 			switch ($c['devid']) {
 				case '0001':
 					if     ($c['subvendorid'] === '0059' && $c['subdevid'] === '0001') {
