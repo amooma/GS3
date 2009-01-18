@@ -164,6 +164,7 @@ function gs_pci_cards_detect()
 					break;
 				case 'b410':
 					$c['descr' ] = 'B410p (4-port BRI)';
+					$c['driver'] = 'misdn';
 					break;
 			}
 			break;
@@ -175,6 +176,7 @@ function gs_pci_cards_detect()
 					switch ($c['subvendorid']) {
 						case 'a700':
 							$c['descr' ] = 'B700 FlexBRI (0/2/4-port BRI and 0/2-port FXS/FXO)';
+							$c['driver'] = 'wanpipe,zaptel';
 							break;
 					}
 					break;
