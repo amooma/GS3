@@ -67,6 +67,10 @@ function gs_queue_del( $name )
 	#
 	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_queue_id`='. $queue_id );
 	
+	# delete queue callforwards
+	#
+	$db->execute( 'DELETE FROM `queue_callforwards` WHERE `queue_id`='. $queue_id );
+	
 	# delete queue log
 	#
 	$CDR_DB->execute( 'DELETE FROM `queue_log` WHERE `queue_id`='. $queue_id );
