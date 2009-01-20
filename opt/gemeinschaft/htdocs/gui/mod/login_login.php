@@ -226,6 +226,23 @@ Gemeinschaft auf \"%s\"
 }
 else {
 	
+	if (gs_get_conf('GS_INSTALLATION_TYPE') !== 'gpbx'
+	&& trim(gs_get_conf('GS_GUI_SUDO_ADMINS')) == '') {
+?>
+<div class="noticebox">
+	<big><b><?php echo htmlEnt(__('Willkommen!')); ?></b></big><br />
+	<?php echo htmlEnt(__('Vermutlich haben Sie Gemeinschaft gerade frisch installiert.')); ?><br />
+	<?php echo htmlEnt(__('Bitte legen Sie auf der Kommandozeile mit folgenden Befehlen einen Benutzer an:')); ?><br />
+	<code class="nobr"><?php echo htmlEnt('cd /opt/gemeinschaft/scripts/'); ?></code><br />
+	<code class="nobr"><?php echo htmlEnt('./gs-user-add'); ?></code> (gibt ohne Parameter eine Hilfe aus)<br />
+	<code class="nobr"><?php echo htmlEnt('./gs-user-add --user lisa ...'); ?></code><br />
+	<?php echo sPrintF(htmlEnt(__('und geben Sie diesem Benutzer dann Admin-Rechte indem Sie in der Datei %s folgende Einstellung vornehmen:')),
+		'<code class="nobr">'.htmlEnt('/etc/gemeinschaft/gemeinschaft.php').'</code>'); ?><br />
+	<code class="nobr"><?php echo htmlEnt('$GUI_SUDO_ADMINS = \'lisa\';'); ?></code>
+</div>
+<?php
+	}
+	
 ?>
 <div style="text-align:center; width:auto; margin:1em 100px 0 0;">
 <span style="color:#e00;"><?php echo (@$login_errmsg != '' && trim(@$_REQUEST['login_user']) != '') ? $login_errmsg : '&nbsp;'; ?></span>
