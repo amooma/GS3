@@ -623,6 +623,7 @@ tr.odd .transp {
 
 
 .successbox,
+.noticebox,
 .errorbox {
 	margin: 0 0px 10px 0px;
 	min-width: 10em;
@@ -635,6 +636,11 @@ tr.odd .transp {
 	border: 2px solid #0c0;
 	background-color: #e9ffe9;
 	color: #050;
+}
+.noticebox {
+	border: 2px solid #cca;
+	background-color: #ffffcc;
+	color: #440;
 }
 .errorbox {
 	border: 2px solid #f30;
