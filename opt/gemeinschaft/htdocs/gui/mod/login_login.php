@@ -225,22 +225,32 @@ Gemeinschaft auf \"%s\"
 	
 }
 else {
+	$focus_login_field = true;
 	
 	if (gs_get_conf('GS_INSTALLATION_TYPE') !== 'gpbx'
 	&& trim(gs_get_conf('GS_GUI_SUDO_ADMINS')) == '') {
 ?>
-<div class="noticebox">
-	<big><b><?php echo htmlEnt(__('Willkommen!')); ?></b></big><br />
-	<?php echo htmlEnt(__('Vermutlich haben Sie Gemeinschaft gerade frisch installiert.')); ?><br />
-	<?php echo htmlEnt(__('Bitte legen Sie auf der Kommandozeile mit folgenden Befehlen einen Benutzer an:')); ?><br />
-	<code class="nobr"><?php echo htmlEnt('cd /opt/gemeinschaft/scripts/'); ?></code><br />
-	<code class="nobr"><?php echo htmlEnt('./gs-user-add'); ?></code> (gibt ohne Parameter eine Hilfe aus)<br />
-	<code class="nobr"><?php echo htmlEnt('./gs-user-add --user lisa ...'); ?></code><br />
-	<?php echo sPrintF(htmlEnt(__('und geben Sie diesem Benutzer dann Admin-Rechte indem Sie in der Datei %s folgende Einstellung vornehmen:')),
-		'<code class="nobr">'.htmlEnt('/etc/gemeinschaft/gemeinschaft.php').'</code>'); ?><br />
-	<code class="nobr"><?php echo htmlEnt('$GUI_SUDO_ADMINS = \'lisa\';'); ?></code>
+<div class="noticebox" style="text-align:left; padding:0.5em 1em; color:#000;">
+	<p style="margin:0; padding:0.4em 0; max-width:45em;"><big><b><?php echo htmlEnt(__("Willkommen!")); ?></b></big></p>
+	<p style="margin:0; padding:0.4em 0; max-width:45em;"><?php echo htmlEnt(__("Vermutlich haben Sie Gemeinschaft gerade frisch installiert und noch keinen Admin-Account angelegt. Dies geschieht in zwei Schritten:")); ?></p>
+	<p style="margin:0; padding:0.4em 0; max-width:45em;"><big><b>1.</b></big> <?php echo sPrintF(htmlEnt(__("Anlegen eines ersten Benutzers (als Beispiel nehmen wir den User %s):")), '&quot;<code>'.'lisa'.'</code>&quot;'); ?><br />
+	<?php echo sPrintF(htmlEnt(__("Als root auf der Kommandozeile folgende Befehle ausf\xC3\xBChren:")), '&quot;'.'lisa'.'&quot;'); ?></p>
+	<p style="margin:0; padding:0.4em 0; margin-left:5em; text-indent:-3em;"><code><?php echo htmlEnt("cd /opt/gemeinschaft/scripts/"); ?></code></p>
+	<p style="margin:0; padding:0.4em 0; margin-left:5em; text-indent:-3em;"><code><?php echo htmlEnt("./gs-user-add --user=lisa --ext=10 --pin=1234 --firstname='Lisa' --lastname='Muster' --email='' --host=1"); ?></code></p>
+	<p style="margin:0; padding:0.4em 0; max-width:45em;"><big><b>2.</b></big> <?php echo sPrintF(htmlEnt(__("Dem User %s Adminrechte geben indem Sie in der Datei %s folgende Einstellung vornehmen:")),
+		'&quot;<code>'.'lisa'.'</code>&quot;',
+		'<code class="nobr">'. htmlEnt('/etc/gemeinschaft/gemeinschaft.php'). '</code>'); ?></p>
+	<p style="margin:0; padding:0.4em 0; margin-left:5em; text-indent:-3em;"><code><?php echo htmlEnt('$GUI_SUDO_ADMINS = \'lisa\';'); ?></code></p>
+	<p style="margin:0; padding:0.4em 0; max-width:45em;"><?php echo sPrintF(htmlEnt(__("Danach k\xC3\xB6nnen Sie sich als User %s in dieser Web-Oberfl\xC3\xA4che einloggen, um dort andere User anzulegen und das System zu konfigurieren.")),
+		'&quot;<code>'.'lisa'.'</code>&quot;'); ?></p>
+	<hr size="1" />
+	<p class="r" style="margin:0; padding:0.4em 0;"><?php echo sPrintF(htmlEnt(__("Mailinglisten und andere Hilfen zu Gemeinschaft finden Sie online unter %s")),
+		'<a class="nobr" target="_blank" href="'.'http://www.amooma.de/gemeinschaft/'.'">'. 'http://www.amooma.de/gemeinschaft/' .'</a>' ); ?></p>
+	<p class="r" style="margin:0; padding:0.4em 0;"><?php echo htmlEnt(__("Danke dass Sie sich f\xC3\xBCr Gemeinschaft entschieden haben.")); ?><br />
+	<?php echo sPrintF(htmlEnt(__("-- Ihr %s-Team")), '<span style="text-transform:uppercase;">'.'Amooma'.'</span>'); ?><br />
 </div>
 <?php
+		$focus_login_field = false;
 	}
 	
 ?>
@@ -271,7 +281,9 @@ foreach ($_GET as $k => $v) {
 
 <label for="ipt-login_user"><?php echo __('Benutzername'); ?>:</label><br />
 <input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="20" value="<?php echo @$_REQUEST['login_user']; ?>" style="width:150px; font-size:1.2em;" /><br />
+<?php if ($focus_login_field) { ?>
 <script type="text/javascript">/*<![CDATA[*/ try{ document.getElementById('ipt-login_user').focus(); }catch(e){} /*]]>*/</script>
+<?php } ?>
 
 <label for="ipt-login_pwd"><?php echo __('Pa&szlig;wort'); ?>:</label><br />
 <input name="login_pwd" id="ipt-login_pwd" type="password" size="15" maxlength="20" value="" style="width:150px; font-size:1.2em;" /><br />
