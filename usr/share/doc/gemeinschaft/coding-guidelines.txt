@@ -34,6 +34,7 @@ Or just leave out the closing tag (no "?>").
 Indentation:
 Use tabs! Tabs are good. Never assume everyone else has set their tab
 width to the same value you have. Do not use spaces for indentation.
+Blank lines must have the same indentation as the code surrounding it.
 
 Maximum line length:
 Try not to write lines longer than 80 chars but sometimes one cannot
