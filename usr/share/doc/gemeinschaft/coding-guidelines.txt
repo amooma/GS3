@@ -28,6 +28,8 @@ Use the full-form PHP tags: "<?php" and "?>". Short tags like "<?"
 are never allowed.
 For files that contain only PHP code do not add a line-break
 after the closing tag ("?>").
+To avoid that, use binary mode in vim (vim -b).
+Or just leave out the closing tag (no "?>").
 
 Indentation:
 Use tabs! Tabs are good. Never assume everyone else has set their tab
