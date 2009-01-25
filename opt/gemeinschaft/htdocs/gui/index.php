@@ -86,7 +86,7 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 		echo '<body>' ,"\n";
 		echo '<br /><p align="center"><a href="setup/">Setup</a></p>' ,"\n";
 		echo '</body>' ,"\n";
-		echo '</html>';		
+		echo '</html>';
 		exit;
 	}
 }
@@ -102,7 +102,7 @@ require_once( GS_HTDOCS_DIR .'inc/modules.php' );
 if (array_key_exists('s', $_REQUEST)) {
 	$SECTION = $_REQUEST['s'];
 	$MODULE  = array_key_exists('m', $_REQUEST) ? $_REQUEST['m'] : '';
-} else {	
+} else {
 	$SECTION = 'home';
 	$MODULE  = '';
 }
