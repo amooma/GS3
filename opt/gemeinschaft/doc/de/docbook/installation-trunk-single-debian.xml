@@ -511,7 +511,9 @@ Bye</screen>Testen:<screen><prompt>gemeinschaft:/usr/src# </prompt><command>mysq
     <para>Apache-Konfiguration für Gemeinschaft:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/apache2/conf.d/</command>
 <prompt>gemeinschaft:/etc/apache2/conf.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/apache2/conf.d/gemeinschaft.conf</command></screen></para>
 
-    <para>Rewriting aktivieren (optional):<screen><prompt>gemeinschaft:~# </prompt><command>a2enmod rewrite</command></screen></para>
+    <para><literal>mod_rewrite</literal> und <literal>mod_alias</literal>
+    aktivieren:<screen><prompt>gemeinschaft:~# </prompt><command>a2enmod rewrite</command>
+gemeinschaft:~# <command>a2enmod alias</command></screen></para>
 
     <para>Apache neu starten:<screen><prompt>gemeinschaft:~# </prompt><command>/etc/init.d/apache2 restart</command></screen></para>
 
