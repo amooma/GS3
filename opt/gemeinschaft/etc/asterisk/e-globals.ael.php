@@ -49,7 +49,7 @@ echo 'allow_direct_dial=', ($allow_direct_dial ? 'yes':'no') ,';',"\n";
 
 require_once( GS_DIR .'inc/get-listen-to-ips.php' );
 $our_ips = gs_get_listen_to_ips(true);
-if (count($our_ips) > 10) {
+if (count($our_ips) >= 1) {
 	$our_ip = $our_ips[0];
 }
 else {
