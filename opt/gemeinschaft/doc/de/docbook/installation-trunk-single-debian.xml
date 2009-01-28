@@ -509,7 +509,10 @@ Bye</screen>Testen:<screen><prompt>gemeinschaft:/usr/src# </prompt><command>mysq
     <para>Gemeinschaft mittels Symlinks <quote>installieren</quote>:</para>
 
     <para>Apache-Konfiguration für Gemeinschaft:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/apache2/conf.d/</command>
-<prompt>gemeinschaft:/etc/apache2/conf.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/apache2/conf.d/gemeinschaft.conf</command></screen></para>
+<prompt>gemeinschaft:/etc/apache2/conf.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/apache2/conf.d/gemeinschaft.conf</command></screen><screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/apache2/sites-available/</command>
+<prompt>gemeinschaft:/etc/apache2/sites-available# </prompt><command>ln -s /usr/src/gemeinschaft/etc/apache2/sites-available/gemeinschaft</command>
+gemeinschaft:/etc/apache2/sites-available# <command>a2dissite default</command>
+gemeinschaft:/etc/apache2/sites-available# <command>a2ensite gemeinschaft</command></screen></para>
 
     <para><literal>mod_rewrite</literal> und <literal>mod_alias</literal>
     aktivieren:<screen><prompt>gemeinschaft:~# </prompt><command>a2enmod rewrite</command>
