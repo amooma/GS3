@@ -490,7 +490,7 @@ Query OK, 0 rows affected (0.00 sec)
 <prompt>mysql&gt; </prompt><command>FLUSH PRIVILEGES;</command>
 Query OK, 0 rows affected (0.01 sec)
 
-<prompt>mysql&gt; </prompt>exit
+<prompt>mysql&gt; </prompt><command>exit</command>
 Bye</screen>Testen:<screen><prompt>gemeinschaft:/usr/src# </prompt><command>mysql -u gemeinschaft -p -e 'SELECT "ok"'</command>
 <prompt>Enter password: </prompt>
 +----+
@@ -610,6 +610,19 @@ extensions.ael written.
     <para><filename>/etc/dhcp3/dhcpd.conf</filename> anpassen, dann</para>
 
     <screen><prompt>gemeinschaft:/etc/dhcp3# </prompt><command>/etc/init.d/dhcp3-server restart</command></screen>
+
+    <bridgehead>Web-GUI</bridgehead>
+
+    <para>Nachdem man wie oben beschrieben in der
+    <filename>/etc/gemeinschaft/gemeinschaft.php</filename> grundlegende
+    Einstellungen wie Datenbank-Benutzer und -Paßwort eingetragen hat kommt
+    man jetzt mit einem Web-Browser unter der URL
+    <uri>http://<replaceable>rechner</replaceable>/gemeinschaft/</uri> auf die
+    grafische Oberfläche, wobei man in der Adresse natürlich
+    <literal><replaceable>rechner</replaceable></literal> durch die IP-Adresse
+    ersetzen muß, also z.B.
+    <uri>http://<replaceable>192.168.1.130</replaceable>/gemeinschaft/</uri>
+    .</para>
   </section>
 
   <section id="update-trunk-single-gemeinschaft">
