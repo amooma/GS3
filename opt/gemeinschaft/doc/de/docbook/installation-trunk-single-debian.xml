@@ -333,8 +333,8 @@ Starting NTP server: ntpd.</screen></para>
 <prompt>gemeinschaft:/usr/src# </prompt><command>cd zaptel-1.4.12.1</command>
 <prompt>gemeinschaft:/usr/src/zaptel-1.4.12.1# </prompt><command>./configure &amp;&amp; make clean &amp;&amp; make &amp;&amp; make install &amp;&amp; make config</command>
 <replaceable>[...]</replaceable>
-<prompt>gemeinschaft:/usr/src/zaptel-1.4.12.1# </prompt>rm -rf firmware/zaptel-fw-*
-<prompt>gemeinschaft:/usr/src/zaptel-1.4.12.1# </prompt>cd
+<prompt>gemeinschaft:/usr/src/zaptel-1.4.12.1# </prompt><command>rm -rf firmware/zaptel-fw-*</command>
+<prompt>gemeinschaft:/usr/src/zaptel-1.4.12.1# </prompt><command>cd</command>
 <prompt>gemeinschaft:~# </prompt></screen>
 
     <para>Ggf. paﬂt man jetzt die <filename>/etc/default/zaptel</filename> an,
