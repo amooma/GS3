@@ -441,7 +441,7 @@ menuselect changes saved!
 <prompt>gemeinschaft:/usr/src# </prompt><command>svn checkout 'https://svn.amooma.com/asterisk-sounds-de/trunk' asterisk-sounds-de-trunk</command>
 <replaceable>[...]</replaceable>
 <prompt>gemeinschaft:/usr/src# </prompt><command>cd /var/lib/asterisk/sounds/</command>
-<prompt>gemeinschaft:/var/lib/asterisk/sounds# </prompt><command>ln -s /usr/src/asterisk-sounds-de-trunk de</command>
+<prompt>gemeinschaft:/var/lib/asterisk/sounds# </prompt><command>ln -snf /usr/src/asterisk-sounds-de-trunk de</command>
 <prompt>gemeinschaft:/var/lib/asterisk/sounds# </prompt><command>ls -ld de</command>
 lrwxrwxrwx 1 root root 33 2008-10-27 19:17 de -&gt; /usr/src/asterisk-sounds-de-trunk</screen></para>
 
@@ -452,7 +452,7 @@ lrwxrwxrwx 1 root root 33 2008-10-27 19:17 de -&gt; /usr/src/asterisk-sounds-de-
 
     <para>Einen Symlink anlegen (das hat den Vorteil daß man später ggf.
     leichter zwischen verschiedenen Versionen von Gemeinschaft wechseln
-    kann):<screen><prompt>gemeinschaft:/usr/src# </prompt><command>ln -s gemeinschaft-trunk gemeinschaft</command>
+    kann):<screen><prompt>gemeinschaft:/usr/src# </prompt><command>ln -snf gemeinschaft-trunk gemeinschaft</command>
 <prompt>gemeinschaft:/usr/src# </prompt><command>ls -ld gemeinschaft</command>
 lrwxrwxrwx 1 root src 18 2008-10-27 19:26 gemeinschaft -&gt; gemeinschaft-trunk</screen></para>
 
@@ -509,8 +509,8 @@ Bye</screen>Testen:<screen><prompt>gemeinschaft:/usr/src# </prompt><command>mysq
     <para>Gemeinschaft mittels Symlinks <quote>installieren</quote>:</para>
 
     <para>Apache-Konfiguration für Gemeinschaft:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/apache2/conf.d/</command>
-<prompt>gemeinschaft:/etc/apache2/conf.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/apache2/conf.d/gemeinschaft.conf</command></screen><screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/apache2/sites-available/</command>
-<prompt>gemeinschaft:/etc/apache2/sites-available# </prompt><command>ln -s /usr/src/gemeinschaft/etc/apache2/sites-available/gemeinschaft</command>
+<prompt>gemeinschaft:/etc/apache2/conf.d# </prompt><command>ln -snf /usr/src/gemeinschaft/etc/apache2/conf.d/gemeinschaft.conf</command></screen><screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/apache2/sites-available/</command>
+<prompt>gemeinschaft:/etc/apache2/sites-available# </prompt><command>ln -snf /usr/src/gemeinschaft/etc/apache2/sites-available/gemeinschaft</command>
 gemeinschaft:/etc/apache2/sites-available# <command>a2dissite default</command>
 gemeinschaft:/etc/apache2/sites-available# <command>a2ensite gemeinschaft</command></screen></para>
 
@@ -536,10 +536,10 @@ export APACHE_RUN_USER=www-data</screen></para>
 
     <para>Asterisk-Konfiguration:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/</command>
 <prompt>gemeinschaft:/etc# </prompt><command>rm -rf asterisk/</command>
-<prompt>gemeinschaft:/etc# </prompt><command>ln -s /usr/src/gemeinschaft/etc/asterisk</command></screen></para>
+<prompt>gemeinschaft:/etc# </prompt><command>ln -snf /usr/src/gemeinschaft/etc/asterisk</command></screen></para>
 
     <para>Gemeinschaft-Konfiguration:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/</command>
-<prompt>gemeinschaft:/etc# </prompt><command>ln -s /usr/src/gemeinschaft/etc/gemeinschaft</command></screen></para>
+<prompt>gemeinschaft:/etc# </prompt><command>ln -snf /usr/src/gemeinschaft/etc/gemeinschaft</command></screen></para>
 
     <para>Jetzt kann man die
     <filename>/etc/gemeinschaft/gemeinschaft.php</filename> editieren, also
@@ -547,7 +547,7 @@ export APACHE_RUN_USER=www-data</screen></para>
     Einzel-Server-System stellt man<programlisting>$INSTALLATION_TYPE = 'single';</programlisting>ein.</para>
 
     <para>Haupt-Verzeichnis von Gemeinschaft:<screen><prompt>gemeinschaft:~# </prompt><command>cd /opt/</command>
-<prompt>gemeinschaft:/opt# </prompt><command>ln -s /usr/src/gemeinschaft/opt/gemeinschaft</command></screen></para>
+<prompt>gemeinschaft:/opt# </prompt><command>ln -snf /usr/src/gemeinschaft/opt/gemeinschaft</command></screen></para>
 
     <para>IP-Adresse des Rechners in
     <filename>/opt/gemeinschaft/etc/listen-to-ip</filename> eintragen.</para>
@@ -567,17 +567,17 @@ export APACHE_RUN_USER=www-data</screen></para>
 1 row in set (0.00 sec)</screen></para>
 
     <para>Doku:<screen><prompt>gemeinschaft:~# </prompt><command>cd /usr/share/doc</command>
-<prompt>gemeinschaft:/usr/share/doc# </prompt><command>ln -s /usr/src/gemeinschaft/usr/share/doc/gemeinschaft</command></screen></para>
+<prompt>gemeinschaft:/usr/share/doc# </prompt><command>ln -snf /usr/src/gemeinschaft/usr/share/doc/gemeinschaft</command></screen></para>
 
     <para>Log-Verzeichnis (ein Symlink wäre hier kontraproduktiv):<screen><prompt>gemeinschaft:~# </prompt><command>mkdir -p /var/log/gemeinschaft</command>
 <prompt>gemeinschaft:~# </prompt><command>chmod a+rwx /var/log/gemeinschaft/</command></screen></para>
 
     <para>Web-Verzeichnis:<screen><prompt>gemeinschaft:~# </prompt><command>cd /var/www/</command>
-<prompt>gemeinschaft:/var/www# </prompt><command>ln -s /usr/src/gemeinschaft/var/www/gemeinschaft</command>
-<prompt>gemeinschaft:/var/www# </prompt><command>ln -s /usr/src/gemeinschaft/var/www/.htaccess</command> </screen></para>
+<prompt>gemeinschaft:/var/www# </prompt><command>ln -snf /usr/src/gemeinschaft/var/www/gemeinschaft</command>
+<prompt>gemeinschaft:/var/www# </prompt><command>ln -snf /usr/src/gemeinschaft/var/www/.htaccess</command> </screen></para>
 
     <para>Weitere Dateien:<screen><prompt>gemeinschaft:~# </prompt><command>cd /var/lib/</command>
-<prompt>gemeinschaft:/var/lib# </prompt><command>ln -s /usr/src/gemeinschaft/var/lib/gemeinschaft</command></screen></para>
+<prompt>gemeinschaft:/var/lib# </prompt><command>ln -snf /usr/src/gemeinschaft/var/lib/gemeinschaft</command></screen></para>
 
     <para>Sprach-Prompts von <literal>.wav</literal> nach
     <literal>.alaw</literal> konvertieren:<screen><prompt>gemeinschaft:~# </prompt><command>cd /var/lib/asterisk/sounds/de</command>
@@ -592,20 +592,20 @@ extensions.ael written.
 <prompt>gemeinschaft:~# </prompt><command>/etc/init.d/asterisk start</command></screen></para>
 
     <para>Logrotate-Regeln:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/logrotate.d/</command>
-<prompt>gemeinschaft:/etc/logrotate.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/logrotate.d/asterisk</command> 
-<prompt>gemeinschaft:/etc/logrotate.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/logrotate.d/gemeinschaft</command> </screen></para>
+<prompt>gemeinschaft:/etc/logrotate.d# </prompt><command>ln -snf /usr/src/gemeinschaft/etc/logrotate.d/asterisk</command> 
+<prompt>gemeinschaft:/etc/logrotate.d# </prompt><command>ln -snf /usr/src/gemeinschaft/etc/logrotate.d/gemeinschaft</command> </screen></para>
 
     <para>Cron-Skripte:<screen><prompt>gemeinschaft:~# </prompt><command>cd /etc/cron.d</command>
-<prompt>gemeinschaft:/etc/cron.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-cc-guardian</command> 
-<prompt>gemeinschaft:/etc/cron.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-queuelog-to-db</command> 
-<prompt>gemeinschaft:/etc/cron.d# </prompt><command>ln -s /usr/src/gemeinschaft/etc/cron.d/gs-queues-refresh</command> </screen></para>
+<prompt>gemeinschaft:/etc/cron.d# </prompt><command>ln -snf /usr/src/gemeinschaft/etc/cron.d/gs-cc-guardian</command> 
+<prompt>gemeinschaft:/etc/cron.d# </prompt><command>ln -snf /usr/src/gemeinschaft/etc/cron.d/gs-queuelog-to-db</command> 
+<prompt>gemeinschaft:/etc/cron.d# </prompt><command>ln -snf /usr/src/gemeinschaft/etc/cron.d/gs-queues-refresh</command> </screen></para>
 
     <bridgehead>DHCP-Server</bridgehead>
 
     <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install dhcp3-server</command>
 <prompt>gemeinschaft:~# </prompt><command>cd /etc/dhcp3/</command>
 <prompt>gemeinschaft:/etc/dhcp3# </prompt><command>rm dhcpd.conf</command> 
-<prompt>gemeinschaft:/etc/dhcp3# </prompt><command>ln -s /usr/src/gemeinschaft/usr/share/doc/gemeinschaft/misc/dhcpd-3-example.conf dhcpd.conf</command></screen>
+<prompt>gemeinschaft:/etc/dhcp3# </prompt><command>ln -snf /usr/src/gemeinschaft/usr/share/doc/gemeinschaft/misc/dhcpd-3-example.conf dhcpd.conf</command></screen>
 
     <para><filename>/etc/dhcp3/dhcpd.conf</filename> anpassen, dann</para>
 
