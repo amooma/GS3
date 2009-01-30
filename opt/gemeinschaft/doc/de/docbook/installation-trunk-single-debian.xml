@@ -322,7 +322,10 @@ Starting NTP server: ntpd.</screen></para>
     Zaptel (<literal>ztdummy</literal> für die
     <code>MeetMe()</code>-Konferenzen) benötigt werden:<screen><prompt>gemeinschaft:~# </prompt><command>aptitude install linux-headers-`uname -r` linux-kernel-headers</command></screen></para>
 
-    <para>Weitere benötigte Entwicklungs-Pakte etc.:<screen><prompt>gemeinschaft:~# </prompt><command>aptitude install bison byacc flex libnewt0.52 libnewt-dev ncurses-base ncurses-bin ncurses-dev ncurses-term libncurses4 libncurses5 libncurses-dev openssl zlib1g zlib1g-dev</command></screen></para>
+    <para>Weitere benötigte Entwicklungs-Pakte etc.:<screen><prompt>gemeinschaft:~# </prompt><command>aptitude install bison byacc flex</command>
+<prompt>gemeinschaft:~# </prompt><command>aptitude install libnewt0.52 libnewt-dev</command>
+<prompt>gemeinschaft:~# </prompt><command>aptitude install ncurses-base ncurses-bin ncurses-dev ncurses-term libncurses4 libncurses5 libncurses-dev</command>
+<prompt>gemeinschaft:~# </prompt><command>aptitude install openssl zlib1g zlib1g-dev</command></screen></para>
 
     <bridgehead>Zaptel</bridgehead>
 
