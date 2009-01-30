@@ -104,7 +104,9 @@ deb-src http://security.debian.org/ lenny/updates main</screen></para>
 
     <bridgehead>Standard-Pakete</bridgehead>
 
-    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install coreutils lsb-base grep findutils sudo wget curl cron expect logrotate hostname net-tools ifupdown iputils-ping netcat openssh-client openssh-server</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install coreutils lsb-base grep findutils sudo wget curl cron</command>
+<prompt>gemeinschaft:~# </prompt><command>aptitude install expect logrotate hostname netcat net-tools</command>
+<prompt>gemeinschaft:~# </prompt><command>aptitude install ifupdown iputils-ping openssh-client openssh-server</command></screen>
 
     <bridgehead>Weitere Pakete</bridgehead>
 
@@ -257,7 +259,9 @@ Starting NTP server: ntpd.</screen></para>
 
     <bridgehead>Perl</bridgehead>
 
-    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install perl perl-modules libnet-daemon-perl libnet-netmask-perl libio-interface-perl libio-socket-multicast-perl</command></screen>
+    <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install perl perl-modules</command>
+<prompt>gemeinschaft:~# </prompt><command>aptitude install libio-interface-perl libio-socket-multicast-perl</command>
+<prompt>gemeinschaft:~# </prompt><command>aptitude install libnet-netmask-perl libnet-daemon-perl</command></screen>
 
     <bridgehead>SipSak<footnote>
         <para>wird momentan nur vom Cluster-Watchdog benötigt, nicht auf einem
