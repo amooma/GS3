@@ -194,8 +194,8 @@ nameserver 192.168.2.1</screen></para>
     <screen><prompt>gemeinschaft:~# </prompt><command>/etc/init.d/bind9 restart</command></screen>
 
     <para>Testen:<screen><prompt>gemeinschaft:~# </prompt><command>nslookup www.amooma.de</command>
-Server:     127.0.0.1
-Address:    127.0.0.1#53
+Server:     <emphasis role="bold">127.0.0.1</emphasis>
+Address:    <emphasis role="bold">127.0.0.1</emphasis>#53
 
 Non-authoritative answer:
 Name:    www.amooma.de
