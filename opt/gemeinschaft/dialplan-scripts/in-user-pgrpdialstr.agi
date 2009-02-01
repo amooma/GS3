@@ -58,7 +58,7 @@ $dialstr = '';
 $rs = $db->execute( 'SELECT DISTINCT(`p`.`id`) `id` FROM `pickupgroups_users` `pu` JOIN `pickupgroups` `p` ON (`p`.`id`=`pu`.`group_id`) WHERE `pu`.`user_id`='. $uid .' ORDER BY `p`.`id`' );
 while ($r = $rs->fetchRow()) {
 	$pext = str_pad( $r['id'], 5, '0', STR_PAD_LEFT );
-	$dialstr = '&Local/*8*'. $pext;
+	$dialstr.= '&Local/*8*'. $pext;
 	if ($pickupmark=='')
 		$pickupmark = $pext;
 }
