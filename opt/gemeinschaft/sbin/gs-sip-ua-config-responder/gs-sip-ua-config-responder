@@ -41,7 +41,7 @@ use File::Spec::Functions ();
 my $script = File::Basename::basename($0);
 my $SELF = File::Spec::Functions::catfile $FindBin::Bin, $script;
 
-my $app_name = 'sip-ua-config-responder';
+my $app_name = 'gs-sip-ua-config-responder';
 $0 = $app_name;
 
 #my $has_tty = (-t STDIN && -t STDOUT);
