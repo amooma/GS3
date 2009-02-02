@@ -399,6 +399,22 @@ psetting('sip outbound proxy port' , '5060');
 
 
 #####################################################################
+#  other settings
+#####################################################################
+
+psetting('admin password' , '22222');
+psetting('user password'  , '');
+psetting('force web recovery mode disabled', '0');
+psetting('tos sip'  , '26');
+psetting('tos rtp'  , '46');
+psetting('tos rtcp' , '');
+psetting('upnp manager' , '0');
+psetting('upnp gateway' , '0.0.0.0');
+psetting('upnp mapping lines' ,'0');
+
+
+
+#####################################################################
 #  Override provisioning parameters (group profile)
 #####################################################################
 
