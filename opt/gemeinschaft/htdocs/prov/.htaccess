@@ -12,7 +12,7 @@
 	# Snom. Not really necessary.
 	RewriteRule ^snom[0-9]{3}-([0-9A-Fa-f]*)\.htm$    snom/settings.php?mac=$1 [L]
 	# Snom. Not really necessary.
-	RewriteRule ^snom[0-9]{3}/snom{3}-firmware\.htm$  snom/sw-update.php?m=000000000000&u= [L]
+	RewriteRule ^snom[0-9]{3}/snom[0-9]{3}-firmware\.htm$  snom/sw-update.php?m=000000000000&u= [L]
 	
 	# Snom M3
 	#RewriteRule ^Config/([0-9A-Fa-f]*)\.(cfg|cry)$       snom/settings-m3.php?mac=$1&fmt=$2 [QSA,L]
