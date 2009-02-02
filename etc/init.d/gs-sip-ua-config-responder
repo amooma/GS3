@@ -1,0 +1,191 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          gs-sip-ua-config-responder
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Should-Start:      $time
+# Should-Stop:       $time
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: gs-sip-ua-config-responder
+# Description:       gs-sip-ua-config-responder responds to multicast requests
+#                    for configuration as defined in the SIP UA-profile event
+#                    package. (Currently implemented by Snom phones.)
+### END INIT INFO
+
+# enable with
+# update-rc.d gs-sip-ua-config-responder defaults 92 08
+
+# Author: Philipp Kempgen <philipp.kempgen@amooma.de>
+
+# Do NOT "set -e"
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+DESC="SIP ua-profile config responder"
+NAME=gs-sip-ua-config-responder
+DAEMON=/opt/gemeinschaft/sbin/$NAME/$NAME
+DAEMON_ARGS="--daemonize"
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+# Read configuration variable file if it is present
+#[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
+. /lib/lsb/init-functions
+
+#
+# Function that starts the daemon/service
+#
+do_start()
+{
+	# Return
+	#   0 if daemon has been started
+	#   1 if daemon was already running
+	#   2 if daemon could not be started
+	
+	PIDS=`pidof $NAME 2>>/dev/null`
+	RETVAL="$?"
+	[ "x$RETVAL" = "x0" ] && return 1  # was already running
+	
+	$DAEMON $DAEMON_ARGS
+	RETVAL="$?"
+	[ "x$RETVAL" != "x0" ] && return 2  # could not be started
+	
+	PIDS=`pidof $NAME 2>>/dev/null`
+	RETVAL="$?"
+	[ "x$RETVAL" = "x0" ] && return 0  # has been started
+	
+	return 2  # could not be started
+}
+
+#
+# Function that stops the daemon/service
+#
+do_stop()
+{
+	# Return
+	#   0 if daemon has been stopped
+	#   1 if daemon was already stopped
+	#   2 if daemon could not be stopped
+	#   other if a failure occurred
+	
+	PIDS=`pidof $NAME 2>>/dev/null`
+	RETVAL="$?"
+	[ "x$RETVAL" = "x1" ] && return 1  # was already stopped
+	for PID in $PIDS; do
+		kill -TERM $PID 2>>/dev/null
+	done
+	
+	PIDS=`pidof $NAME 2>>/dev/null`
+	RETVAL="$?"
+	[ "x$RETVAL" = "x1" ] && return 0  # has been stopped
+	for PID in $PIDS; do
+		kill -KILL $PID 2>>/dev/null
+	done
+	
+	PIDS=`pidof $NAME 2>>/dev/null`
+	RETVAL="$?"
+	[ "x$RETVAL" = "x1" ] && return 0  # has been stopped
+	
+	return 2  # could not be stopped
+}
+
+#
+# Function that sends a SIGHUP to the daemon/service
+#
+do_reload() {
+	#
+	# If the daemon can reload its configuration without
+	# restarting (for example, when it is sent a SIGHUP),
+	# then implement that here.
+	#
+	
+	PIDS=`pidof $NAME 2>>/dev/null`
+	RETVAL="$?"
+	[ "x$RETVAL" != "x0" ] && return 0  # not running
+	
+	for PID in $PIDS; do
+		kill -HUP $PID 2>>/dev/null
+	done
+	PIDS=`pidof $NAME 2>>/dev/null`
+	RETVAL="$?"
+	[ "x$RETVAL" != "x0" ] && return 0  # still running
+	
+	do_start
+	case "$?" in
+		0|1) return 0 ;;
+		*) return 1 ;;
+	esac
+}
+
+case "$1" in
+	
+	status)
+		#start-stop-daemon --start --quiet --exec $DAEMON --name $NAME --test > /dev/null
+		echo -n "$DESC:  "
+		PIDS=`pidof $NAME 2>>/dev/null`
+		case "$?" in
+			0) echo "running:  $PIDS"; exit 0 ;;
+			1) echo "NOT running"; exit 2 ;;
+		esac
+		;;
+	
+	start)
+		[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+		do_start
+		case "$?" in
+			0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+			2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+		esac
+		;;
+	
+	stop)
+		[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+		do_stop
+		case "$?" in
+			0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+			2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+		esac
+		;;
+	
+	reload)
+		log_daemon_msg "Reloading $DESC" "$NAME"
+		do_reload
+		log_end_msg $?
+		;;
+	
+	restart|force-reload)
+		log_daemon_msg "Restarting $DESC" "$NAME"
+		do_stop
+		case "$?" in
+			0|1)
+				do_start
+				case "$?" in
+					0) log_end_msg 0 ;;
+					1) log_end_msg 1 ;; # Old process is still running
+					*) log_end_msg 1 ;; # Failed to start
+				esac
+				;;
+			*)
+	  			# Failed to stop
+				log_end_msg 1
+				;;
+		esac
+		;;
+	
+	*)
+		#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
+		echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+		exit 3
+		;;
+esac
+:
