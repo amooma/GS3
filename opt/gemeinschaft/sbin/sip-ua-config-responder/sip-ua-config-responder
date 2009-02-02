@@ -28,6 +28,8 @@
 #####################################################################
 
 #use warnings;
+use bytes;
+no locale;
 use IO::Socket::Multicast;
 use POSIX ();
 use FindBin ();
@@ -41,6 +43,8 @@ my $SELF = File::Spec::Functions::catfile $FindBin::Bin, $script;
 
 my $app_name = 'sip-ua-config-responder';
 $0 = $app_name;
+
+#my $has_tty = (-t STDIN && -t STDOUT);
 
 
 my $debug_level = 2;
@@ -95,12 +99,17 @@ sub read_config
 	}
 }
 
+sub restart
+{
+	exec($SELF, @ARGV) or die "Couldn't restart: $!\n";
+}
+
 sub sighup_handler
 {
 	if ($debug_level >= 1) {
 		print STDERR "Got SIGHUP.\n";
 	}
-	exec($SELF, @ARGV) or die "Couldn't restart: $!\n";
+	restart();
 }
 
 my $sip_default_port = 5060;
@@ -115,6 +124,32 @@ $SIG{__WARN__} = 'IGNORE';
 my $sigset = POSIX::SigSet->new();
 my $action = POSIX::SigAction->new('sighup_handler', $sigset, &POSIX::SA_NODEFER);
 POSIX::sigaction(&POSIX::SIGHUP, $action);
+
+sub daemonize
+{
+	#chdir '/'                  or die "Can't chdir to \"/\" ($!)";
+		# somehow breaks things
+	close(STDIN);
+	open STDIN , '</dev/null'  or die "Can't read /dev/null ($!)";
+	close(STDOUT);
+	open STDOUT, '>>/dev/null' or die "Can't write to /dev/null ($!)";
+	defined(my $pid = fork())  or die "Can't fork ($!)";
+	if ($pid) {exit 0;}
+	POSIX::setsid()            or die "Can't start a new session ($!)";
+	close(STDERR);
+	open STDERR, '>&STDOUT'    or die "Can't dup stdout ($!)";
+	open STDOUT, '>>/dev/null' or die "Can't write to /dev/null ($!)";
+}
+if ($ARGV[0] && $ARGV[0] eq '--daemonize') {
+	daemonize();
+}
+elsif ($ARGV[0] && $ARGV[0] eq '--nofork') {
+	print STDERR "Not forking.\n";
+}
+else {
+	print STDERR "Use --daemonize or --nofork\n";
+	exit 1;
+}
 
 
 read_config();
@@ -162,6 +197,7 @@ my $buf  = '';
 my $pkt  = '';
 my $resp = '';
 
+while (1) {
 while ($sock->recv($in, 8192)) {
 	$buf .= $in;
 	while ($buf =~ m/^(.*?)\r\n\r\n/so) {
@@ -353,4 +389,5 @@ while ($sock->recv($in, 8192)) {
 		}  # end if ($pkt =~ m/^SUBSCRIBE/sio)
 	}  # end while ($buf =~ m/^(.*?)\r\n\r\n/so)
 }  # end while ($sock->recv($in))
-
+sleep(1);
+}
