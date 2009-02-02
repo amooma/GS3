@@ -27,15 +27,21 @@
 # MA 02110-1301, USA.
 #####################################################################
 
-use IO::Socket::Multicast;
 #use warnings;
+use IO::Socket::Multicast;
+use POSIX ();
+use FindBin ();
+use File::Basename ();
+use File::Spec::Functions ();
 
-$SIG{PIPE}     = 'IGNORE';
-$SIG{HUP}      = 'IGNORE';
-$SIG{__WARN__} = 'IGNORE';
+# make the daemon cross-platform, so exec always calls the script
+# itself with the right path, no matter how the script was invoked.
+my $script = File::Basename::basename($0);
+my $SELF = File::Spec::Functions::catfile $FindBin::Bin, $script;
 
 my $app_name = 'sip-ua-config-responder';
 $0 = $app_name;
+
 
 my $debug_level = 2;
 
@@ -47,38 +53,72 @@ sub get_first_line
 	return $str;
 }
 
-my $prov_scheme = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_SCHEME`);
-my $prov_host   = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_HOST`);
-my $prov_port   = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_PORT`);
-my $prov_path   = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_PATH`);
+my $prov_scheme = '';
+my $prov_host   = '';
+my $prov_port   = '';
+my $prov_path   = '';
+my $prov_url_base = '';
 
-if ($prov_scheme ne 'http' && $prov_scheme ne 'https') {
-	print STDERR "Found unknown scheme \"$prov_scheme\"!\n";
-	exit 1;
+sub read_config
+{
+	if ($debug_level >= 1) {
+		print STDERR "Reading configuration ...\n";
+	}
+	
+	$prov_scheme = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_SCHEME`);
+	$prov_host   = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_HOST`);
+	$prov_port   = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_PORT`);
+	$prov_path   = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_PATH`);
+	
+	if ($prov_scheme ne 'http' && $prov_scheme ne 'https') {
+		print STDERR "Found unknown scheme \"$prov_scheme\"!\n";
+		exit 1;
+	}
+	
+	if (substr($prov_path,0,1) ne '/') { $prov_path = '/'.$prov_path; }
+	if (substr($prov_path,-1 ) ne '/') { $prov_path = $prov_path.'/'; }
+	
+	$prov_url_base = $prov_scheme.'://'.$prov_host;
+	$prov_port = int($prov_port);
+	if ($prov_port != 0) {
+		if ($prov_scheme eq 'http' && $prov_port != 80) {
+			$prov_url_base.= ':'.$prov_port;
+		}
+		elsif ($prov_scheme eq 'https' && $prov_port != 443) {
+			$prov_url_base.= ':'.$prov_port;
+		}
+	}
+	$prov_url_base.= $prov_path;
+	
+	if ($debug_level >= 1) {
+		print STDERR "Using provisioning URL base: $prov_url_base\n";
+	}
 }
 
-if (substr($prov_path,0,1) ne '/') { $prov_path = '/'.$prov_path; }
-if (substr($prov_path,-1 ) ne '/') { $prov_path = $prov_path.'/'; }
-
-my $prov_url_base = $prov_scheme.'://'.$prov_host;
-$prov_port = int($prov_port);
-if ($prov_port != 0) {
-	if ($prov_scheme eq 'http' && $prov_port != 80) {
-		$prov_url_base.= ':'.$prov_port;
+sub sighup_handler
+{
+	if ($debug_level >= 1) {
+		print STDERR "Got SIGHUP.\n";
 	}
-	elsif ($prov_scheme eq 'https' && $prov_port != 443) {
-		$prov_url_base.= ':'.$prov_port;
-	}
-}
-$prov_url_base.= $prov_path;
-
-if ($debug_level >= 1) {
-	print STDERR "Using provisioning URL base: $prov_url_base\n";
+	exec($SELF, @ARGV) or die "Couldn't restart: $!\n";
 }
 
 my $sip_default_port = 5060;
 my $my_sip_ip_addr = '224.0.1.75';  # sip.mcast.net
 my $my_sip_ip_port = $sip_default_port;
+
+$SIG{PIPE}     = 'IGNORE';
+#$SIG{HUP}      = \&sighup_handler;
+$SIG{__WARN__} = 'IGNORE';
+
+# POSIX unmasks the sigprocmask properly
+my $sigset = POSIX::SigSet->new();
+my $action = POSIX::SigAction->new('sighup_handler', $sigset, &POSIX::SA_NODEFER);
+POSIX::sigaction(&POSIX::SIGHUP, $action);
+
+
+read_config();
+
 
 # create multicast socket
 my $sock = IO::Socket::Multicast->new(
