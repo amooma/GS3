@@ -28,30 +28,73 @@
 #####################################################################
 
 use IO::Socket::Multicast;
+#use warnings;
 
 $SIG{PIPE}     = 'IGNORE';
 $SIG{HUP}      = 'IGNORE';
 $SIG{__WARN__} = 'IGNORE';
 
-$0 = 'sip.mcast.net-responder';
+my $app_name = 'sip-ua-config-responder';
+$0 = $app_name;
 
-
-my $prov_url_base = 'http://192.168.1.130/gemeinschaft/prov/';
 my $debug_level = 2;
 
+sub get_first_line
+{
+	my($str) = @_;
+	if (! defined($str)) {return '';}
+	$str =~ s/[\n\r].*//so;
+	return $str;
+}
+
+my $prov_scheme = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_SCHEME`);
+my $prov_host   = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_HOST`);
+my $prov_port   = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_PORT`);
+my $prov_path   = get_first_line(`/opt/gemeinschaft/sbin/gs-get-conf PROV_PATH`);
+
+if ($prov_scheme ne 'http' && $prov_scheme ne 'https') {
+	print STDERR "Found unknown scheme \"$prov_scheme\"!\n";
+	exit 1;
+}
+
+if (substr($prov_path,0,1) ne '/') { $prov_path = '/'.$prov_path; }
+if (substr($prov_path,-1 ) ne '/') { $prov_path = $prov_path.'/'; }
+
+my $prov_url_base = $prov_scheme.'://'.$prov_host;
+$prov_port = int($prov_port);
+if ($prov_port != 0) {
+	if ($prov_scheme eq 'http' && $prov_port != 80) {
+		$prov_url_base.= ':'.$prov_port;
+	}
+	elsif ($prov_scheme eq 'https' && $prov_port != 443) {
+		$prov_url_base.= ':'.$prov_port;
+	}
+}
+$prov_url_base.= $prov_path;
+
+if ($debug_level >= 1) {
+	print STDERR "Using provisioning URL base: $prov_url_base\n";
+}
+
+my $sip_default_port = 5060;
+my $my_sip_ip_addr = '224.0.1.75';  # sip.mcast.net
+my $my_sip_ip_port = $sip_default_port;
 
 # create multicast socket
 my $sock = IO::Socket::Multicast->new(
 	Proto      => 'udp',
-	LocalPort  => 5060,
-	LocalAddr  => '224.0.1.75',  # sip.mcast.net
+	LocalPort  => $my_sip_ip_port,
+	LocalAddr  => $my_sip_ip_addr,
 	Reuse      => 1,
 	ReuseAddr  => 1
 )
 or die "socket: $@\n";  # yes, it uses $@ here
+if ($debug_level >= 1) {
+	print STDOUT "Listening on $my_sip_ip_addr:$my_sip_ip_port ...\n"
+}
 
 # add a multicast group
-$sock->mcast_add( '224.0.1.75' );  # sip.mcast.net
+$sock->mcast_add( $my_sip_ip_addr );
 
 # turn off local mirroring
 $sock->mcast_loopback(0);
@@ -59,6 +102,19 @@ $sock->mcast_loopback(0);
 # set TTL (default 1)
 $sock->mcast_ttl(255);
 
+
+# SIP Event Notification:
+#   http://tools.ietf.org/html/rfc3265
+# SIP UA Profile Event Package:
+#   http://tools.ietf.org/html/draft-ietf-sipping-config-framework-15
+#   http://tools.ietf.org/html/draft-channabasappa-sipping-app-profile-type-03
+#
+# Snom 3xx:
+#   http://wiki.snom.com/SIP_Traces#PnP_Config
+
+# other drafts:
+#   http://tools.ietf.org/html/draft-petrie-sip-config-framework-01
+#   http://www.cs.columbia.edu/sip/drafts/sip/draft-schulzrinne-sip-config-events-00.txt
 
 
 my $in   = '';
@@ -74,85 +130,169 @@ while ($sock->recv($in, 8192)) {
 		$buf = substr($buf, length($&));
 		if (! defined($1)) {next;}
 		$pkt = $1;
-		if ($pkt ne '') {
-			if ($debug_level >= 2) {
-				print STDOUT "IN--------------------------------------------------------{\n";
-				print STDOUT $pkt, "\n";
-				print STDOUT "----------------------------------------------------------}\n";
+		if ($pkt eq '') {next;}
+		
+		if ($debug_level >= 2) {
+			print STDOUT "\n";
+			print STDOUT "IN -------------------------------------------------------{\n";
+			print STDOUT $pkt, "\n";
+			print STDOUT "----------------------------------------------------------}\n";
+		}
+		if ($pkt =~ m/^SUBSCRIBE/sio) {
+			
+			# read headers
+			#
+			
+			#my $remote_addr = '224.0.1.75';
+			my $remote_addr = '';
+			my $remote_port = $sip_default_port;
+			if ($pkt =~ m/^(?:Contact|m):\s*([^\r\n]*)\r\n/mso) {
+				my $tmp = $1;
+				if ($tmp =~ m/([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/so) {
+					$remote_addr = $1;
+				}
+				if ($tmp =~ m/:([0-9]{4,5})/so) {
+					$remote_port = $1;
+				}
 			}
-			if ($pkt =~ m/^SUBSCRIBE/so) {
+			if ($remote_addr eq '') {
+				next;
+			}
+			
+			my $in_header_via     = '';
+			my $in_header_from    = '';
+			my $in_header_to      = '';
+			my $in_header_callid  = '';
+			my $in_header_cseq    = '';
+			my $in_header_event   = '';
+			my $in_header_accept  = '';
+			my $in_header_expires = 0;
+			
+			my $in_event_type    = '';
+			my $in_event_ua_profile_type    = '';
+			my $in_event_ua_profile_vendor  = '';
+			my $in_event_ua_profile_model   = '';
+			my $in_event_ua_profile_version = '';
+			
+			if ($pkt =~ m/^(?:Via|v):\s*([^\r\n]*)\r\n/msio) {
+				# FIXME - Via can occur more than once
+				$in_header_via = $1;
+			}
+			if ($pkt =~ m/^(?:From|f):\s*([^\r\n]*)\r\n/msio) {
+				$in_header_from = $1;
+			}
+			if ($pkt =~ m/^(?:To|t):\s*([^\r\n]*)\r\n/msio) {
+				$in_header_to = $1;
+			}
+			if ($pkt =~ m/^(?:Call-ID|i):\s*([^\r\n]*)\r\n/msio) {
+				$in_header_callid = $1;
+			}
+			if ($pkt =~ m/^(?:CSeq):\s*([^\r\n]*)\r\n/msio) {
+				$in_header_cseq = $1;
+			}
+			if ($pkt =~ m/^(?:Expires):\s*([^\r\n]*)\r\n/msio) {
+				#$resp.= $&;
+				$in_header_expires = int($1);
+				#if    ($in_header_expires > 3600) {$in_header_expires = 3600;}
+				#elsif ($in_header_expires <=   0) {$in_header_expires = 1800;}
+				#elsif ($in_header_expires <   60) {$in_header_expires =   60;}
+			}
+			if ($pkt =~ m/^(?:Accept):\s*([^\r\n]*)\r\n/msio) {
+				$in_header_accept = $1;
+			}
+			
+			if ($pkt =~ m/^(?:Event|o):\s*([^\r\n]*)\r\n/msio) {
+				$in_header_event = $1;
+				if ($in_header_event =~ m/^ua-profile/io) {
+					# Event: ua-profile;profile-type="device";vendor="snom";model="snom370";version="7.1.24"
+					$in_event_type = 'ua-profile';
+					if ($in_header_event =~ m/;\s*profile-type\s*=\s*["']?([^"';]*)/io) {
+						$in_event_ua_profile_type    = $1;
+					}
+					if ($in_header_event =~ m/;\s*vendor\s*=\s*["']?([^"';]*)/io) {
+						$in_event_ua_profile_vendor  = $1;
+					}
+					if ($in_header_event =~ m/;\s*model\s*=\s*["']?([^"';]*)/io) {
+						$in_event_ua_profile_model   = $1;
+					}
+					if ($in_header_event =~ m/;\s*version\s*=\s*["']?([^"';]*)/io) {
+						$in_event_ua_profile_version = $1;
+					}
+				}
+			}
+			
+			
+			# build default OK response
+			#
+			
+			$resp = 'SIP/2.0 200 OK' ."\r\n";
+			if ($in_header_via ne '') {
+				$resp.= 'Via: '. $in_header_via ."\r\n";
+			}
+			if ($in_header_from ne '') {
+				$resp.= 'From: '. $in_header_from ."\r\n";
+			}
+			if ($in_header_to ne '') {
+				$resp.= 'To: '. $in_header_to ."\r\n";
+			}
+			if ($in_header_callid ne '') {
+				$resp.= 'Call-ID: '. $in_header_callid ."\r\n";
+			}
+			if ($in_header_cseq ne '') {
+				$resp.= 'CSeq: '. $in_header_cseq ."\r\n";
+			}
+			if ($in_header_expires != -1) {
+				$resp.= 'Expires: '. $in_header_expires ."\r\n";
+			}
+			$resp.= 'Contact: <sip:'.$my_sip_ip_addr.':'.$my_sip_ip_port.'>' ."\r\n";
+			$resp.= 'User-Agent: '. $app_name ."\r\n";
+			$resp.= 'Content-Length: 0' ."\r\n";
+			
+			
+			if ($in_event_type eq 'ua-profile') {
 				
-				if (($pkt =~ m/MAC%3[aA]000413/so || $pkt =~ m/snom/so) && $pkt =~ m/^(?:Accept): application\/url/mso) {
+				
+				#if (($pkt =~ m/MAC%3[aA](000413[^@]+)@/sio || $pkt =~ m/snom/so) && $pkt =~ m/^(?:Accept):\s*application\/url/msio) {
+				if ($in_event_ua_profile_vendor eq 'snom') {
+					# Snom 3xx
+					# http://wiki.snom.com/SIP_Traces#PnP_Config
 					
-					my $remote_addr = '224.0.1.75';
-					my $remote_port = '5060';
-					if ($pkt =~ m/^(?:Contact|m): ([^\r\n]*)\r\n/mso) {
-						my $tmp = $1;
-						if ($tmp =~ m/([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/so) {
-							$remote_addr = $1;
-						}
-						if ($tmp =~ m/:([0-9]{4,5})/so) {
-							$remote_port = $1;
-						}
+					if ($in_header_accept !~ m/\bapplication\/url\b/io) {
+						next;
 					}
-					
-					my $header_from   = '';
-					my $header_to     = '';
-					my $header_callid = '';
-					my $header_event = '';
-					
-					$resp = 'SIP/2.0 200 OK' ."\r\n";
-					if ($pkt =~ m/^(?:Via|v):[^\r\n]*\r\n/mso) {
-						$resp.= $&;
-					}
-					if ($pkt =~ m/^(?:From|f):[^\r\n]*\r\n/mso) {
-						$header_from = $&;
-						$resp.= $&;
-					}
-					if ($pkt =~ m/^(?:To|t):[^\r\n]*\r\n/mso) {
-						$header_to = $&;
-						$resp.= $&;
-					}
-					if ($pkt =~ m/^(?:Call-ID|i):[^\r\n]*\r\n/mso) {
-						$header_callid = $&;
-						$resp.= $&;
-					}
-					if ($pkt =~ m/^(?:CSeq):[^\r\n]*\r\n/mso) {
-						$resp.= $&;
-					}
-					if ($pkt =~ m/^(?:Expires):[^\r\n]*\r\n/mso) {
-						$resp.= $&;
-					}
-					if ($pkt =~ m/^(?:Event|o):[^\r\n]*\r\n/mso) {
-						$header_event = $&;
-					}
-					$resp.= 'Contact: <sip:224.0.1.75:5060>' ."\r\n";
-					$resp.= 'Content-Length: 0' ."\r\n";
-					$resp.= "\r\n";
 					
 					if ($debug_level >= 2) {
-						print STDOUT "OUT-------------------------------------------------------{\n";
+						print STDOUT "\n";
+						print STDOUT "OUT (-> $remote_addr:$remote_port) -------------------------------{\n";
 						print STDOUT $resp, "\n";
 						print STDOUT "----------------------------------------------------------}\n";
 					}
-					$sock->mcast_send( $resp, $remote_addr.':'.$remote_port );
-					
-					$resp = 'NOTIFY '. $remote_addr.':'.$remote_port .' SIP/2.0' ."\r\n";
-					$resp.= 'Via: SIP/2.0/UDP 224.0.1.75:5060;rport' ."\r\n";
-					$resp.= 'Max-Forwards: 20' ."\r\n";
-					$resp.= 'Contact: <sip:224.0.1.75:5060>' ."\r\n";
-					$resp.= $header_from;
-					$resp.= $header_to;
-					$resp.= $header_callid;
-					$resp.= 'CSeq: 3 NOTIFY' ."\r\n";
-					$resp.= 'Content-Type: application/url' ."\r\n";
-					$resp.= $header_event;
-					$resp.= 'Subscription-State: terminated;reason=timeout' ."\r\n";
-					my $content = $prov_url_base .'snom/settings.php?mac={mac}&pnp=1';
-					$resp.= 'Content-Length: '. length($content) ."\r\n";
 					$resp.= "\r\n";
-					$resp.= $content;
+					$sock->mcast_send( $resp, $remote_addr.':'.$remote_port );
+					select(undef,undef,undef, 0.01);  # sleep 0.01 s = 10 ms
 					
+					my $out_header_to   = $in_header_from;
+					my $out_header_from = $in_header_to;
+					if ($out_header_from !~ m/;\s*tag\s*=\s*/io) {
+						$out_header_from.= ';tag='. sprintf('%x-%x', time(), int(rand(999999999)));
+					}
+					$resp = 'NOTIFY '. $remote_addr.':'.$remote_port .' SIP/2.0' ."\r\n";
+					$resp.= 'Via: SIP/2.0/UDP '.$my_sip_ip_addr.':'.$my_sip_ip_port.';rport' ."\r\n";
+					$resp.= 'Max-Forwards: 25' ."\r\n";
+					$resp.= 'Contact: <sip:'.$my_sip_ip_addr.':'.$my_sip_ip_port.'>' ."\r\n";
+					$resp.= 'To: '. $out_header_to ."\r\n";
+					$resp.= 'From: '. $out_header_from ."\r\n";
+					$resp.= 'Call-ID: '. $in_header_callid ."\r\n";
+					$resp.= 'CSeq: 3 NOTIFY' ."\r\n";
+					$resp.= 'User-Agent: '. $app_name ."\r\n";
+					$resp.= 'Content-Type: application/url' ."\r\n";
+					#$resp.= 'Event: '. $in_header_event ."\r\n";
+					$resp.= 'Event: '. $in_event_type ."\r\n";
+					$resp.= 'Subscription-State: terminated;reason=timeout' ."\r\n";
+					my $body = $prov_url_base .'snom/settings.php?mac={mac}&pnp=1';
+					$resp.= 'Content-Length: '. length($body) ."\r\n";
+					$resp.= "\r\n";
+					$resp.= $body;
 					if ($debug_level >= 2) {
 						print STDOUT "OUT-------------------------------------------------------{\n";
 						print STDOUT $resp, "\n";
@@ -161,13 +301,16 @@ while ($sock->recv($in, 8192)) {
 					$sock->mcast_send( $resp, $remote_addr.':'.$remote_port );
 					
 					if ($debug_level >= 1) {
-						print STDOUT "Responded to Snom at ", $remote_addr ,"\n";
+						print STDOUT "Responded to ", $remote_addr ," (Snom, ", $in_header_event ,")\n";
 					}
 					
-				}
+					
+					
+				}  # end if ($in_event_ua_profile_vendor eq 'snom')
 				
-			}
-		}
-	}
-}
+			}  # end if ($in_event_type eq 'ua-profile')
+			
+		}  # end if ($pkt =~ m/^SUBSCRIBE/sio)
+	}  # end while ($buf =~ m/^(.*?)\r\n\r\n/so)
+}  # end while ($sock->recv($in))
 
