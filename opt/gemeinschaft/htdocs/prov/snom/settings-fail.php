@@ -57,6 +57,7 @@ reboot_after_nr$: 10
 ethernet_detect$: on
 ethernet_replug$: reboot
 dhcp!: on
+pnp_config$: on
 admin_mode$: off
 admin_mode_password$: 0000
 admin_mode_password_confirm$: 0000
