@@ -1045,7 +1045,8 @@ psetting('vip_ring_sound'           , 'Ringer1');
 # manual of your PBX/Proxy. If the PnP configuration fails, the phone
 # will try to get the settings from a setting server)."
 psetting('subscribe_config', 'off');
-if (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx'), true))
+//if (in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx'), true))
+if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
 	psetting('pnp_config'      , 'on');  # make the Snom send a SUBSCRIBE to 224.0.1.75 (sip.mcast.net)
 else
 	psetting('pnp_config'      , 'off');
