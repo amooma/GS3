@@ -466,11 +466,11 @@ h1 {
 	text-align: center;
 	font-size: 0.96em;
 	margin: 0 auto 3px auto;
-	line-height: 80%;
+	line-height: 1.3em;
 }
 #copyright,
 #copyright a {
-	color: #00c;
+	color: #889;
 	text-decoration: none;
 }
 #copyright img {
