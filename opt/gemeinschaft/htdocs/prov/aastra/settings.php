@@ -43,9 +43,22 @@ require_once( GS_DIR .'inc/prov-fns.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 set_error_handler('err_handler_die_on_err');
 
+function _settings_err( $msg='' )
+{
+	@ob_end_clean();
+	@ob_start();
+	echo '<!-- // ', ($msg != '' ? str_replace('--','- -',$msg) : 'Error') ,' // -->',"\n";
+	if (! headers_sent()) {
+		header( 'Content-Type: text/plain; charset=utf-8' );
+		header( 'Content-Length: '. (int)@ob_get_length() );
+	}
+	@ob_end_flush();
+	exit(1);
+}
+
 function setting( $name, $idx, $val, $attrs=null, $writeable=false )
 {
-	echo $name ,': ', str_replace(array("\n", "\r"), array(' ', ' '), $val) ,"\n";
+	echo $name , ($idx>0? ' '.$idx :'') ,': ', str_replace(array("\n", "\r"), array(' ', ' '), $val) ,"\n";
 }
 
 function psetting( $name, $val, $writeable=false )
@@ -164,29 +177,29 @@ function aastra_get_softkeys( $user_id, $phone_type )
 
 if (! gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Aastra provisioning not enabled" );
-	die( 'Not enabled.' );
+	_settings_err( 'Not enabled.' );
 }
 
 $requester = gs_prov_check_trust_requester();
 if (! $requester['allowed']) {
-	die( 'No! See log for details.' );
+	_settings_err( 'No! See log for details.' );
 }
 
 $mac = preg_replace( '/[^0-9A-F]/', '', strToUpper( @$_REQUEST['mac'] ) );
 if (strLen($mac) !== 12) {
 	gs_log( GS_LOG_NOTICE, "Aastra provisioning: Invalid MAC address \"$mac\" (wrong length)" );
 	# don't explain this to the users
-	die( 'No! See log for details.' );
+	_settings_err( 'No! See log for details.' );
 }
 if (hexDec(subStr($mac,0,2)) % 2 == 1) {
 	gs_log( GS_LOG_NOTICE, "Aastra provisioning: Invalid MAC address \"$mac\" (multicast address)" );
 	# don't explain this to the users
-	die( 'No! See log for details.' );
+	_settings_err( 'No! See log for details.' );
 }
 if ($mac === '000000000000') {
 	gs_log( GS_LOG_NOTICE, "Aastra provisioning: Invalid MAC address \"$mac\" (huh?)" );
 	# don't explain this to the users
-	die( 'No! See log for details.' );
+	_settings_err( 'No! See log for details.' );
 }
 
 # make sure the phone is an Aastra:
@@ -194,16 +207,33 @@ if ($mac === '000000000000') {
 if (subStr($mac,0,6) !== '00085D') {
 	gs_log( GS_LOG_NOTICE, "Aastra provisioning: MAC address \"$mac\" is not an Aastra phone" );
 	# don't explain this to the users
-	die( 'No! See log for details.' );
+	_settings_err( 'No! See log for details.' );
 }
 
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
-//FIXME - do some more checks here
+# "Aastra57i MAC:00-08-5D-1A-98-70 V:2.0.1.1055-0035-00-A1"
+# "Aastra57i MAC:00-08-5D-1A-98-70 V:2.1.0.2145-SIP"
+# "Aastra57i MAC:00-08-5D-1A-99-01 V:2.1.2.30-SIP"
+# "Aastra57i MAC:00-08-5D-1A-98-70 V:2.4.1.37-SIP"
+if (! preg_match('/^Aastra/', $ua)
+||  ! preg_match('/MAC:00-08-5D/i', $ua) ) {
+	gs_log( GS_LOG_WARNING, "Phone with MAC \"$mac\" (Aastra) has invalid User-Agent (\"". $ua ."\")" );
+	# don't explain this to the users
+	_settings_err( 'No! See log for details.' );
+}
 
-$ua_arr = explode(' ', $ua);
-$phone_model = str_replace('Aastra', '', $ua_arr[0]);  //FIXME
-if ($phone_model === @$ua_arr[0]) $phone_model = '57i';
-$phone_type = 'aastra-'.$phone_model;
+# find out the type of the phone:
+if (preg_match('/^Aastra([1-9][0-9]{2,4}i?) /', $ua, $m))  # e.g. "Aastra57i"
+	$phone_model = $m[1];  # e.g. "57i"
+else
+	$phone_model = 'unknown';
+
+$phone_type = 'aastra-'.$phone_model;  # e.g. "aastra-57i"
+# to be used when auto-adding the phone
+
+$fw_vers = (preg_match('/ V:(\d+\.\d+\.\d+)/', $ua, $m))
+	? $m[1] : '0.0.0';
+//$fw_vers_nrml = _aastra_normalize_version( $fw_vers );
 
 gs_log( GS_LOG_DEBUG, "Aastra phone \"$mac\" asks for settings (UA: ...\"$ua\") - model $phone_model" );
 
@@ -217,7 +247,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_prov_params_get.php' );
 $db = gs_db_master_connect();
 if (! $db) {
 	gs_log( GS_LOG_WARNING, "Aastra phone asks for settings - Could not connect to DB" );
-	die( 'Could not connect to DB.' );
+	_settings_err( 'Could not connect to DB.' );
 }
 
 
@@ -227,14 +257,14 @@ $user_id = @gs_prov_user_id_by_mac_addr( $db, $mac );
 if ($user_id < 1) {
 	if (! GS_PROV_AUTO_ADD_PHONE) {
 		gs_log( GS_LOG_NOTICE, "New phone $mac not added to DB. Enable PROV_AUTO_ADD_PHONE" );
-		die( 'Unknown phone. (Enable PROV_AUTO_ADD_PHONE in order to auto-add)' );
+		_settings_err( 'Unknown phone. (Enable PROV_AUTO_ADD_PHONE in order to auto-add)' );
 	}
 	gs_log( GS_LOG_NOTICE, "Adding new Aastra phone $mac to DB" );
 	
 	$user_id = @gs_prov_add_phone_get_nobody_user_id( $db, $mac, $phone_type, $requester['phone_ip'] );
 	if ($user_id < 1) {
 		gs_log( GS_LOG_WARNING, "Failed to add nobody user for new phone $mac" );
-		die( 'Failed to add nobody user for new phone.' );
+		_settings_err( 'Failed to add nobody user for new phone.' );
 	}
 }
 
@@ -250,7 +280,7 @@ if ($user_id < 1) {
 	# in at that phone. assign the default nobody user of the phone:
 	$user_id = @gs_prov_assign_default_nobody( $db, $mac, null );
 	if ($user_id < 1) {
-		die( 'Failed to assign nobody account to phone '. $mac );
+		_settings_err( 'Failed to assign nobody account to phone '. $mac );
 	}
 }
 
@@ -259,7 +289,7 @@ if ($user_id < 1) {
 #
 $host = @gs_prov_get_host_for_user_id( $db, $user_id );
 if (! $host) {
-	die( 'Failed to find host.' );
+	_settings_err( 'Failed to find host.' );
 }
 $pbx = $host;  # $host might be changed if SBC configured
 
@@ -268,7 +298,7 @@ $pbx = $host;  # $host might be changed if SBC configured
 #
 $user = @gs_prov_get_user_info( $db, $user_id );
 if (! is_array($user)) {
-	die( 'DB error.' );
+	_settings_err( 'DB error.' );
 }
 
 
@@ -411,6 +441,18 @@ psetting('tos rtcp' , '');
 psetting('upnp manager' , '0');
 psetting('upnp gateway' , '0.0.0.0');
 psetting('upnp mapping lines' ,'0');
+
+/*
+#setting('language', 0, $prov_url_aastra .'lang_en.txt');  # English. Default
+setting('language', 1, $prov_url_aastra .'lang/lang_de.txt');
+setting('language', 2, $prov_url_aastra .'lang/lang_fr.txt');
+setting('language', 3, $prov_url_aastra .'lang/lang_es.txt');
+setting('language', 4, $prov_url_aastra .'lang/lang_it.txt');
+# max. 4 custom languages!
+#setting('language', 4, $prov_url_aastra .'lang/lang_fr_ca.txt');
+#setting('language', 4, $prov_url_aastra .'lang/lang_es_mx.txt');
+psetting('language', '1');
+*/
 
 
 
