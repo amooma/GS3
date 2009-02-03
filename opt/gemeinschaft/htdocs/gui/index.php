@@ -787,6 +787,7 @@ else {
 </div>
 
 <div class="nofloat"></div>
-<div id="copyright"><a target="_blank" href="http://www.amooma.de/"><img alt="&copy; amooma" src="<?php echo GS_URL_PATH; ?>img/amooma-c.gif" /></a></div>
+<div id="copyright"><a target="_blank" href="http://www.amooma.de/gemeinschaft/">www.amooma.de/gemeinschaft</a><br />
+<a target="_blank" href="http://www.amooma.de/"><img alt="&copy; amooma" src="<?php echo GS_URL_PATH; ?>img/amooma-c.gif" /></a></div>
 </body>
 </html>
