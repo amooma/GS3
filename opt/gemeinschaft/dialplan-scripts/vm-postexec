@@ -100,7 +100,7 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 {
 	global $db;
 	
-	$rs = $db->executeGetOne( 'SELECT `firstname`, `lastname` FROM `users` WHERE `id`='. $uid );
+	$rs = $db->execute( 'SELECT `firstname`, `lastname` FROM `users` WHERE `id`='. $uid );
 	if (!($user = $rs->getRow())) return false;
 	$new_msgs = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `vm_msgs` WHERE `mbox`=\''. $db->escape($mailbox) .'\' AND `folder`=\'INBOX\' AND `listened_to`=0' );
 	
