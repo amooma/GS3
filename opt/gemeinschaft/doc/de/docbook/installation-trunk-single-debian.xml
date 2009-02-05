@@ -607,6 +607,11 @@ extensions.ael written.
 <prompt>gemeinschaft:/etc/cron.d# </prompt><command>ln -snf /usr/src/gemeinschaft/etc/cron.d/gs-queuelog-to-db</command> 
 <prompt>gemeinschaft:/etc/cron.d# </prompt><command>ln -snf /usr/src/gemeinschaft/etc/cron.d/gs-queues-refresh</command> </screen></para>
 
+    <para>gs-sip-ua-config-responder für Snom:<screen>gemeinschaft:~# <command>cd /etc/init.d/</command>
+gemeinschaft:/etc/init.d# <command>ln -snf /usr/src/gemeinschaft/etc/init.d/gs-sip-ua-config-responder</command> 
+gemeinschaft:/etc/init.d# <command>update-rc.d gs-sip-ua-config-responder defaults 92 8</command>
+gemeinschaft:/etc/init.d# <command>/etc/init.d/gs-sip-ua-config-responder start</command></screen></para>
+
     <bridgehead>DHCP-Server</bridgehead>
 
     <screen><prompt>gemeinschaft:~# </prompt><command>aptitude install dhcp3-server</command>
