@@ -403,7 +403,7 @@ LIMIT '. $num_results;
 			$number = $r['ext'];
 			echo
 				'<DirectoryEntry>',
-					'<Name>', snomXmlEsc( $name ) ,'</Name>',
+					'<Name>', snomXmlEsc( $name ) ,' (', snomXmlEsc( $number ) ,')</Name>',
 					'<Telephone>', $number ,'</Telephone>',
 				'</DirectoryEntry>', "\n";
 		}
