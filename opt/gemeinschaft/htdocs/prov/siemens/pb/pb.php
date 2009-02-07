@@ -198,7 +198,7 @@ if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
 	$tmp[$pos] = array(
 			'k' => 'imported',
-			'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', __("Importiert"))
+			'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', __("Extern"))
 	);
 }
 kSort($tmp);
