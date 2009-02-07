@@ -282,6 +282,8 @@ $uniqueids = array();
 
 $files = glob( '*/msg*.txt' );
 foreach ($files as $filename) {
+	$info = array();
+	
 	$tmp = explode('/', $filename, 3);
 	
 	$info['fld' ] =          @$tmp[0];
