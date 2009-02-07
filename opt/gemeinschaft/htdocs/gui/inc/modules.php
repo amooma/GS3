@@ -65,7 +65,7 @@ $MODULES['pb'       ]=  array(
 $tmp = array(
 	15=>array(
 		'k' => 'common' ,
-		's' => array('title' => __('Gemeinschaft' ))  ),
+		's' => array('title' => __('Intern' ))  ),
 	25=>array(
 		'k' => 'private',
 		's' => array('title' => __('Pers&ouml;nlich' ))  )
@@ -74,7 +74,7 @@ if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
 	$tmp[$pos] = array(
 		'k' => 'imported',
-		's' => array('title' => __('Importiert'))
+		's' => array('title' => __('Extern'))
 	);
 }
 kSort($tmp);
