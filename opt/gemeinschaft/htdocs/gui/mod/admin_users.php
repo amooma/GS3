@@ -809,7 +809,7 @@ echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 	<tr>
 		<th><?php echo __('PIN'); ?>:</th>
 		<td>
-			<input type="password" name="upin" value="<?php echo htmlEnt($r['pin']); ?>" size="8" maxlength="10" />
+			<input type="text" name="upin" value="<?php echo htmlEnt($r['pin']); ?>" size="8" maxlength="10" />
 		</td>
 	</tr>
 	<tr>
