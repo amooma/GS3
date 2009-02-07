@@ -865,28 +865,6 @@ psetting('vpn_netcatserver', ''  );
 
 
 #####################################################################
-#  Snom-Sondertasten
-#####################################################################
-
-psetting('dkey_help'     , 'keyevent F_HELP'      );
-psetting('dkey_snom'     , 'keyevent F_SNOM'      );
-psetting('dkey_conf'     , 'keyevent F_CONFERENCE');
-psetting('dkey_transfer' , 'keyevent F_TRANSFER'  );
-psetting('dkey_hold'     , 'keyevent F_R'         ); # or F_HOLD
-psetting('dkey_dnd'      , 'keyevent F_DND'       );
-psetting('dkey_record'   , 'keyevent F_REC'       );
-psetting('dkey_directory', 'keyevent F_ADR_BOOK'  ); # or F_DIRECTORY
-psetting('dkey_menu'     , 'keyevent F_MENU'      );
-psetting('dkey_redial'   , 'keyevent F_REDIAL'    );
-
-psetting('dkey_directory', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1');
-psetting('dkey_redial'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1');
-# so geht die Retrieve-Taste auch ohne neue Nachrichten:
-psetting('dkey_retrieve' , 'speed voicemail');
-
-
-
-#####################################################################
 #  Action URLs 
 #####################################################################
 
@@ -915,20 +893,53 @@ psetting('action_log_off_url'        , '');
 
 
 #####################################################################
+#  Snom-Sondertasten
+#####################################################################
+
+psetting('dkey_help'     , 'keyevent F_HELP'      );
+psetting('dkey_snom'     , 'keyevent F_SNOM'      );
+psetting('dkey_conf'     , 'keyevent F_CONFERENCE');
+psetting('dkey_transfer' , 'keyevent F_TRANSFER'  );
+psetting('dkey_hold'     , 'keyevent F_R'         ); # or F_HOLD
+psetting('dkey_dnd'      , 'keyevent F_DND'       );
+psetting('dkey_record'   , 'keyevent F_REC'       );
+psetting('dkey_directory', 'keyevent F_ADR_BOOK'  ); # or F_DIRECTORY
+psetting('dkey_menu'     , 'keyevent F_MENU'      );
+psetting('dkey_redial'   , 'keyevent F_REDIAL'    );
+
+psetting('dkey_directory', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1');
+psetting('dkey_redial'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1');
+# so geht die Retrieve-Taste auch ohne neue Nachrichten:
+psetting('dkey_retrieve' , 'speed voicemail');
+
+
+
+#####################################################################
 #  Keys
 #####################################################################
 
 # reset all keys
 #
 $max_key = 12+(42*3) -1;
-if ($phone_model <= '300') {
+/* //FIXME?
+if ($phone_model == '300') {
 	# the snom 300 has no function keys that should be configured
 	# because it's keys are used for standard functions
 	$max_key = -1;
 }
+*/
 for ($i=0; $i<=$max_key; ++$i) {
 	setting('fkey'        , $i, 'line', array('context'=>'active'));
 	//setting('fkey_context', $i, 'active');
+}
+
+# pre-defined keys for snom 300
+#
+if ($phone_model == '300') {
+	setting('fkey', 2, 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
+	setting('fkey', 3, 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
+	setting('fkey', 4, 'keyevent F_TRANSFER', array('context'=>'active'));
+	setting('fkey', 5, 'keyevent F_MUTE', array('context'=>'active'));
 }
 
 /*  //FIXME
