@@ -616,8 +616,13 @@ macro dial-gateway-do( mnumber ) {
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-${zone}.agi,${user_id});
 		}
 		if ("${clir}" = "1") {
+			// RFC 3325:
+			// gateways are somewhat trusted
+			SIPAddHeader(P-Preferred-Identity: <sip:${CALLERID(num)}>);
+			SIPAddHeader(Privacy: id);
+			
+			// RFC 2543:
 			Set(CALLERID(all)=Anonymous <anonymous>);
-			// RFC 2543
 		}
 	}
 	
