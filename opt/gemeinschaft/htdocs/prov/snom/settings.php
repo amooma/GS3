@@ -921,6 +921,11 @@ psetting('action_log_off_url'        , '');
 # reset all keys
 #
 $max_key = 12+(42*3) -1;
+if ($phone_model <= '300') {
+	# the snom 300 has no function keys that should be configured
+	# because it's keys are used for standard functions
+	$max_key = -1;
+}
 for ($i=0; $i<=$max_key; ++$i) {
 	setting('fkey'        , $i, 'line', array('context'=>'active'));
 	//setting('fkey_context', $i, 'active');
@@ -934,6 +939,7 @@ $keys = gs_keys_snom_get( $user['user'] );
 if (is_array($keys)) {
 	foreach ($keys as $kname => $kinfo) {
 		if (! preg_match('/^f(\d{1,2})$/S', $kname, $m)) continue;
+		if ((int)@$m[1] > $max_key) continue;
 		if (trim(@$kinfo['val']) != '')
 			setting('fkey',@$m[1], 'dest <sip:'. @$kinfo['val'] .'@'. $host .'>|*81*', array('context'=>'active'));
 	}
@@ -944,6 +950,7 @@ if (is_array($keys)) {
 $rs = $db->execute( 'SELECT DISTINCT(`p`.`id`) `id` FROM `pickupgroups_users` `pu` JOIN `pickupgroups` `p` ON (`p`.`id`=`pu`.`group_id`) WHERE `pu`.`user_id`='. $user_id .' ORDER BY `p`.`id` LIMIT 6' );
 $key = 6;
 while ($r = $rs->fetchRow()) {
+	if ($key > $max_key) continue;
 	setting('fkey',$key, 'dest <sip:*8*'. str_pad($r['id'], 5, '0', STR_PAD_LEFT) .'@'. $host .'>|*82', array('context'=>'active'));
 	//psetting('fkey_context'. $key, '1');
 	//psetting('fkey_context'. $key, 'active');
@@ -976,6 +983,7 @@ if (! is_array($softkeys)) {
 			continue;
 		}
 		$key_idx = (int)lTrim(subStr($key_name,1),'0');
+		if ($key_idx > $max_key) continue;
 		setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
 	}
 }
