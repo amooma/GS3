@@ -245,8 +245,7 @@ $PROV_DIAL_LOG_LIFE         = 14*24*3600;  # 14 days
 //$PROV_PROXIES_XFF_HEADER    = 'X-Forwarded-For';
   # 'X-Forwarded-For' is the de-facto standard but depending on the
   # proxy it might be 'X-Real-IP' or 'X-Client-IP'. case-insensitive.
-$PROV_ALLOW_NET             = '0.0.0.0/0';
-//$PROV_ALLOW_NET             = '192.168.0.0/16';
+$PROV_ALLOW_NET             = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # comma (,) separated list of <IP address>/<netmask> pairs (CIDR
   # or dotted decimal notation) of phones which may ask for
   # configuration.
@@ -455,7 +454,7 @@ $LOCK_DIR               = '/tmp/';
   # does not control where apache, mysql, zaptel etc. put their
   # lock files
 
-$CALL_INIT_FROM_NET         = '192.168.1.0/24';
+$CALL_INIT_FROM_NET         = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # a comma (,) separated list of IP addresses or
   # <IP address>/<netmask> pairs from where calls can be inited
   # with HTTP GET
@@ -463,7 +462,7 @@ $CALL_INIT_FROM_NET         = '192.168.1.0/24';
   # e.g.: '127.0.0.1, 192.168.1.130/255.255.255.0, 192.168.1.130/24'
   # allow all: '0.0.0.0/0', allow none: '0.0.0.0/32'
 
-$MONITOR_FROM_NET           = '192.168.1.0/24';
+$MONITOR_FROM_NET           = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # allow access to the extension monitor panel from these network
   # ranges
   # CIDR or dotted decimal notation
