@@ -26,24 +26,28 @@
 //---------------------------------------------------------------------
 
 
-gateway_prefix=;        // if 0... was dialed internally to get
-                        // an outside line, what should the prefix
-                        // be to the gateway?
-                        // if set to 0, matching of the dialled number against
-                        // the routing table for outbound routes is performed
-                        // *including* the 0 to get an outside line
-//gateway_prefix=0;     // set this to 0 if Gemeinschaft is connected to
-                        // another PBX in the same private branch
-                        // EDIT: Don't use gateway_prefix. Enter a prefix
-                        // in the outbound routing rules instead.
+gateway_prefix=;
+	// if 0... was dialed internally to get
+	// an outside line, what should the prefix
+	// be to the gateway?
+	// if set to 0, matching of the dialled number against
+	// the routing table for outbound routes is performed
+	// *including* the 0 to get an outside line
+//gateway_prefix=0;
+	// set this to 0 if Gemeinschaft is connected to
+	// another PBX in the same private branch
+	// EDIT: Don't use gateway_prefix. Enter a prefix
+	// in the outbound routing rules instead.
 
-max_forwards=10;        // max. forwards from user to user to prevent infinite
-                        // loops
+max_forwards=10;
+	// max. forwards from user to user to prevent infinite
+	// loops
 
 allow_direct_dial_mbox=no;
-                        // allow direct dial to mailbox even if mailbox
-                        // not active
-                        // yes|no
+	// allow direct dial to mailbox even if mailbox
+	// not active
+	// yes|no
+	// deprecated!
 
 #exec "/opt/gemeinschaft/etc/asterisk/e-globals.ael.php"
 
