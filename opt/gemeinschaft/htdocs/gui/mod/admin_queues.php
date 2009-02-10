@@ -384,7 +384,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 <table cellspacing="1">
 <thead>
 <tr>
-	<th style="width:75px;"><?php echo __('Queue'); ?> <small>&darr;</small></th>
+	<th style="width:75px;"><?php echo __('Warteschlange'); ?> <small>&darr;</small></th>
 	<th style="width:150px;"><?php echo __('Bezeichnung'); ?></th>
 	<th style="width:50px;"><?php echo __('L&auml;nge'); ?></th>
 	<th style="width:135px;"><?php echo __('Host'); ?></th>
