@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-08 16:10+0100\n"
+"POT-Creation-Date: 2009-02-06 09:14+0100\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: English <>\n"
@@ -71,6 +71,11 @@ msgstr "Overview"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 280
 msgid "&auml;ltesten"
 msgstr "least recent"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 250
+#, php-format
+msgid "-- Ihr %s-Team"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 225
 msgid "15 Minuten"
@@ -269,14 +274,6 @@ msgid ""
 "beeintr&auml;chtigen!"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 362
-msgid ""
-"Achtung: Ihr Anrufbeantworter wird nur dann aktiv, wenn Sie keine "
-"Weiterleitung eingestellt haben."
-msgstr ""
-"Attention: Calls will only go to your mailbox if you don&apos;t set a "
-"forward."
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_boi-perms.php, line: 74
 msgid "Admin-Rechte"
 msgstr ""
@@ -308,6 +305,10 @@ msgstr "Active"
 msgid "Als"
 msgstr "Acting as"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 237
+msgid "Als root auf der Kommandozeile folgende Befehle ausführen:"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 36
 msgid "Alte"
 msgstr "Old"
@@ -319,10 +320,6 @@ msgstr "Old PIN"
 # File: opt/gemeinschaft/htdocs/gui/mod/pin_pin.php, line: 61
 msgid "Alte PIN falsch!"
 msgstr "Old PIN wrong!"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 240
-msgid "An"
-msgstr "On"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 110
 msgid "Anderen Anrufbeantworter abfragen (mit PIN)"
@@ -366,6 +363,11 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 321
 msgid "Anlegen"
 msgstr "Add"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 236
+#, php-format
+msgid "Anlegen eines ersten Benutzers (als Beispiel nehmen wir den User %s):"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/prov/siemens/dial-log/dlog.php, line: 65
 # File: opt/gemeinschaft/htdocs/prov/siemens/pb/pb.php, line: 66
@@ -429,6 +431,10 @@ msgstr "Dial Logs"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 669
 msgid "Anrufsperre"
 msgstr "Call Barring"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 358
+msgid "Ansage"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-misdn.php, line: 248
 msgid "Anschlu&szlig;"
@@ -503,6 +509,10 @@ msgstr "Apache modules"
 msgid "Apostroph"
 msgstr "single quotes"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 117
+msgid "Appl. aufrufen"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 112
 msgid "Applikation"
 msgstr "Application"
@@ -549,10 +559,6 @@ msgstr ""
 msgid "Aufl&ouml;sung"
 msgstr "Resolution"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 241
-msgid "Aus"
-msgstr "Off"
-#
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 231
 msgid "Auschalten / Neustarten ..."
 msgstr "Shutdown / Reboot ..."
@@ -596,6 +602,15 @@ msgstr ""
 msgid "Austritt"
 msgstr "Leave"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_friends.php, line: 251
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_friends.php, line: 252
+msgid "Authorisierung anfordern"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 89
+msgid "BLF"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 223
 msgid "BRI-Gateways"
 msgstr "BRI gateways"
@@ -619,9 +634,9 @@ msgid ""
 "Anlagenanschlusses &uuml;bertragen."
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 465
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 639
 msgid ""
-"Bei Benutern in Filialen mu&szlig; die Nebenstelle inklusive der Route aus "
+"Bei Benutzern in Filialen mu&szlig; die Nebenstelle inklusive der Route aus "
 "Sicht der Zentrale angegeben werden (z.B. 60123410)."
 msgstr ""
 #
@@ -695,6 +710,10 @@ msgstr "Username"
 # File: opt/gemeinschaft/htdocs/gui/setup/index.php, line: 137
 msgid "Benutzername/Pa&szlig;wort falsch."
 msgstr "Invalid user or password"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 141
+msgid "Berechtigungen"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_outbound.php, line: 364
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_outbound.php, line: 436
@@ -821,14 +840,6 @@ msgstr ""
 msgid "Bitte w&auml;hlen Sie eine Warteschleife."
 msgstr "Please choose a queue."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 84
-msgid ""
-"Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die "
-"Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden sollen."
-msgstr ""
-"Please contact the phone system's administrators in case your numbers are "
-"incorrect or if you want more numbers added."
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 236
 msgid "CDRs"
 msgstr "CDRs"
@@ -840,6 +851,10 @@ msgstr "CLIR to external"
 # File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 90
 msgid "CLIR nach intern"
 msgstr "CLIR to internal"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 399
+msgid "CSV-Datei"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 81
 msgid "CSV-Import"
@@ -860,6 +875,10 @@ msgstr "Is dial around?"
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 312
 msgid "Caller-ID"
 msgstr "Caller ID"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 121
+msgid "Cron-Regel"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 255
 msgid "DHCP-Leases"
@@ -883,6 +902,21 @@ msgid ""
 "Dabei ist die Reihenfolge entscheidend; das erste zutreffende Muster gewinnt."
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 244
+#, php-format
+msgid ""
+"Danach können Sie sich als User %s in dieser Web-Oberfläche einloggen, um "
+"dort andere User anzulegen und das System zu konfigurieren."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 249
+msgid "Danke dass Sie sich für Gemeinschaft entschieden haben."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 412
+msgid "Das Format sollte etwa folgendermaßen aussehen."
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/login.php, line: 42
 msgid "Das Pa&szlig;wort darf nicht leer sein!"
 msgstr ""
@@ -903,11 +937,11 @@ msgstr ""
 "function keys. We&apos;ll give you are short introduction here. Please "
 "consult your Snom phone&apos;s manual for detailed instructions."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 169
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 258
 msgid ""
 "Das Siemens OpenStage kann in der derzeitigen Firmware noch nicht zwischen "
-"intern und extern unterscheiden. Die Ruftonmelodie kann nur am Telefon "
-"eingestellt werden!"
+"intern und extern unterscheiden. Es wird immer die Ruftonmelodie für intern "
+"verwendet!"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 173
@@ -950,11 +984,21 @@ msgstr "File for %s is not an audio file"
 msgid "Datei f&uuml;r %s zu gro&szlig;."
 msgstr "File for %s too large."
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 262
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 283
+#, php-format
+msgid "Datei nicht gefunden, Konvertierungsfehler oder fehlendes Plugin für %s"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 74
 # File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 113
 #, php-format
 msgid "Datei-Upload f&uuml;r %s fehlgeschlagen."
 msgstr "File upload for %s failed."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 120
+msgid "Daten"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 312
 #, php-format
@@ -982,6 +1026,13 @@ msgstr "Date"
 msgid "Dauer"
 msgstr "Duration"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 240
+#, php-format
+msgid ""
+"Dem User %s Adminrechte geben indem Sie in der Datei %s folgende Einstellung "
+"vornehmen:"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 44
 msgid "Der DHCP-Server auf diesem System ist nicht aktiviert."
 msgstr ""
@@ -992,6 +1043,10 @@ msgstr "The user must not enter dial around prefixes."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 59
 msgid "Deutsch"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 725
+msgid "Dialogfenster"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_reload.php, line: 58
@@ -1025,6 +1080,18 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 732
 msgid "Die Netzwerkkarte wird dann auf diese Werte eingestellt."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 98
+msgid "Die Nummer ist eine Call-by-Call-Nummer."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 93
+msgid "Die Nummer ist eine Sondernummer."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 88
+msgid "Die Nummer ist in der eigenen Telefonanlage."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 151
@@ -1226,9 +1293,9 @@ msgstr "E-mail"
 msgid "E-Mail-Adresse"
 msgstr "E-mail address"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 373
-msgid "E-Mail-Benachrichtigung bei eingehenden Voicemails"
-msgstr "E-mail notification for new voicemails"
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 411
+msgid "E-Mail-Benachrichtigung bei eingehenden Sprach-Nachrichten"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 228
 msgid "E.164"
@@ -1379,6 +1446,10 @@ msgstr "Exp. mod."
 msgid "Erweiterungs-Modul"
 msgstr "Expansion module"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 114
+msgid "Erzeugt"
+msgstr ""
+#
 # File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 175
 #, php-format
 msgid "Es befinden sich jetzt %d neue Voicemails in Ihrer Mailbox."
@@ -1390,6 +1461,13 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 457
 msgid "Es kann etwa 1 Minute dauern bis &Auml;nderungen aktiv werden."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 125
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 81
+# File: opt/gemeinschaft/htdocs/prov/siemens/pb/pb.php, line: 201
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 77
+msgid "Extern"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 59
@@ -1472,12 +1550,9 @@ msgstr ""
 msgid "Fehler beim (De-)Aktivieren der E-Mail-Benachrichtigung"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 109
-msgid "Fehler beim (De-)Aktivieren des Anrufbeantworters von extern"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 106
-msgid "Fehler beim (De-)Aktivieren des Anrufbeantworters von intern"
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 120
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 126
+msgid "Fehler beim Abfragen"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 68
@@ -1525,6 +1600,11 @@ msgstr ""
 msgid "Fehler beim Lesen der Nodes aus der Watchdog-Konfiguration!"
 msgstr "Failed to read nodes from Watchdog configuration!"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 56
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 61
+msgid "Fehler beim Löschen"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_send.php, line: 165
 msgid "Fehler beim Senden"
 msgstr "Transmission error"
@@ -1535,6 +1615,10 @@ msgstr "Transmission error"
 #, php-format
 msgid "Fehler beim Senden an <tt>%s</tt>"
 msgstr "Transmission to <tt>%s</tt> failed"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 107
+msgid "Fehler beim Setzen der AB-Nummer"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 76
 msgid "Fehler beim Setzen der Std.-Umleitungsnummer"
@@ -1640,10 +1724,6 @@ msgid ""
 "<tt>s/^(?:(?:0049|0)251)?702(.*)/$1/</tt>"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 64
-msgid "Gemeinschaft"
-msgstr "Gemeinschaft"
-#
 # File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 109
 msgid "Gemeinschaft Telefon-Manager Monitor"
 msgstr ""
@@ -1723,10 +1803,6 @@ msgstr "Add group"
 msgid "Gruppe konnte nicht gel&ouml;scht werden."
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 79
-msgid "Gruppen"
-msgstr "Groups"
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 164
 msgid "Gruppen-ID"
 msgstr "Group ID"
@@ -1782,6 +1858,11 @@ msgstr "Host"
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 371
 msgid "Host anlegen"
 msgstr "Add host"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 184
+# File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 382
+msgid "Host konnte nicht gel&ouml;scht werden."
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_boi-perms.php, line: 155
 msgid "Host suchen"
@@ -1858,11 +1939,6 @@ msgstr "ISDN ports"
 msgid "ISDN-Ports (BRI)"
 msgstr "ISDN ports (BRI)"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 105
-#, php-format
-msgid "Ihr Browser kann die %s-Datei nicht abspielen."
-msgstr "Your browser cannot play the %s file."
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 118
 msgid "Ihr Browser kann die SVG-Datei nicht anzeigen."
 msgstr "Your browser is unable to display the SVG file."
@@ -1887,10 +1963,6 @@ msgstr "Your extension"
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 320
 msgid "Import"
 msgstr "Import"
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 72
-msgid "Importiert"
-msgstr "Imported"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_e164.php, line: 139
 msgid ""
@@ -1917,6 +1989,10 @@ msgstr ""
 msgid "In eigener Telefonanlage?"
 msgstr "In your private branch?"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 289
+msgid "In neuem Fenster öffnen"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/prov_provparams.php, line: 393
 msgid "Index"
 msgstr "Index"
@@ -1926,6 +2002,10 @@ msgid ""
 "Index f&uuml;r Parameter die einen Eintrag in einem Array definieren. Bei "
 "Parametern die kein Array sind das Feld leer lassen. Lesen Sie die "
 "technische Dokumentation des Telefon-Herstellers."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 117
+msgid "Initiator"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 102
@@ -1967,6 +2047,10 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_done.php, line: 121
 msgid "Job"
 msgstr "Job"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 261
+msgid "Jobs"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 87
 msgid "Kanonisch"
@@ -2016,6 +2100,10 @@ msgstr "Ringtones"
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 80
 msgid "Kollegen"
 msgstr "Colleagues"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_friends.php, line: 149
+msgid "Kollegen die Ihren Status einsehen wollen:"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 215
 msgid "Komma"
@@ -2148,6 +2236,12 @@ msgstr "MAC addr."
 msgid "MAC-Adresse"
 msgstr "MAC address"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 247
+#, php-format
+msgid ""
+"Mailinglisten und andere Hilfen zu Gemeinschaft finden Sie online unter %s"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 61
 msgid "Makeln"
 msgstr "Alternate"
@@ -2155,6 +2249,10 @@ msgstr "Alternate"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 269
 msgid "Max. Anrufer"
 msgstr "Max. callers"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 124
+msgid "Min."
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/dhcpd.php, line: 76
 msgid "Mitgelieferten DHCP-Server aktivieren.<br />(empfohlen)"
@@ -2167,6 +2265,10 @@ msgstr "Members"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 258
 msgid "Mitglieder der Rufannahme-Gruppe"
 msgstr "Members of pickup group"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 127
+msgid "Mon."
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 96
 msgid "Monat"
@@ -2276,6 +2378,10 @@ msgstr "Extension"
 msgid "Nebenstelle suchen"
 msgstr "Look up extension"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 102
+msgid "Nebenstelle/BLF"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 772
 msgid "Netzmaske"
 msgstr "Netmask"
@@ -2292,6 +2398,10 @@ msgstr "Scan network for IP phones"
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 35
 msgid "Neue"
 msgstr "New"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_friends.php, line: 246
+msgid "Neue Authorisierung bei einem Kollegen anfordern:"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 213
 msgid "Neue Gateway-Gruppe anlegen ..."
@@ -2416,6 +2526,13 @@ msgstr "Number/data"
 msgid "OK"
 msgstr "OK"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 414
+msgid ""
+"Ob eine Kopfzeile vorhanden ist oder nicht, die Reihenfolge der Spalten und "
+"die Trennzeichen werden automatisch erkannt und können ggf. interaktiv in "
+"der Vorschau eingestellt werden."
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 746
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 754
 msgid "Obere Tasten"
@@ -2502,6 +2619,10 @@ msgstr "Password sent to <tt>%s</tt>"
 msgid "Parameter"
 msgstr "Settings"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 729
+msgid "Parameter f&uuml;r das Besetztlampenfeld"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/prov_provparams.php, line: 282
 msgid "Parameter-Profil l&ouml;schen"
 msgstr "Delete settings profile"
@@ -2523,10 +2644,6 @@ msgstr "Private"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 107
 msgid "Ping"
 msgstr "Ping"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 103
-msgid "Player"
-msgstr "Player"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_logging.php, line: 81
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 210
@@ -2626,10 +2743,6 @@ msgstr "Queues"
 msgid "R&uuml;ckfrage"
 msgstr "Consultation"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 271
-msgid "Reg.?"
-msgstr "Reg.?"
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_boi-perms.php, line: 178
 msgid "Regel bearbeiten"
 msgstr "Edit rule"
@@ -2642,6 +2755,10 @@ msgstr "Delete rule"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_boi-perms.php, line: 216
 msgid "Regel speichern"
 msgstr "Save rule"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 364
+msgid "Registrierungs-Status"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_inbound.php, line: 281
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_outbound.php, line: 244
@@ -2700,6 +2817,11 @@ msgstr "Pickup group"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 41
 msgid "Rufannahme-Gruppen"
 msgstr "Pickup groups"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
+msgid "Rufannahmegrp."
+msgstr "Pickup grp."
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
 msgid "Rufannahmegrp.#pl"
@@ -3067,6 +3189,10 @@ msgstr ""
 msgid "Tel.buch"
 msgstr "Phonebook"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 118
+msgid "Telefon"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 321
 msgid "Telefon aktualisieren"
 msgstr "Resync phone"
@@ -3127,6 +3253,10 @@ msgstr "Title"
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 56
 msgid "Tmp."
 msgstr "Tmp."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 724
+msgid "Tonmeldung"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 331
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/phones-scan.php, line: 84
@@ -3192,6 +3322,10 @@ msgstr "Invalid netmask!"
 msgid "Ung&uuml;ltige Router-Adresse!"
 msgstr "Invalid router address!"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 75
+msgid "Ungültige Nummer"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 150
 # File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 165
 #, php-format
@@ -3242,6 +3376,12 @@ msgstr "Duration"
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 193
 msgid ""
 "Verh&auml;ltnis von angenommenen Anrufen zu eingegangenen Anrufen in Prozent"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 235
+msgid ""
+"Vermutlich haben Sie Gemeinschaft gerade frisch installiert und noch keinen "
+"Admin-Account angelegt. Dies geschieht in zwei Schritten:"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 343
@@ -3314,10 +3454,21 @@ msgstr ""
 msgid "Vorname"
 msgstr "First name"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 413
+msgid ""
+"Vorname;Nachname;Telefon\n"
+"Albert;Einstein;+309876543\n"
+"Robert;Bosch;00711123456"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 266
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 404
 msgid "Vorschau"
 msgstr "Preview"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 128
+msgid "WT"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 898
 msgid "Warnungen ignorieren"
@@ -3370,6 +3521,19 @@ msgstr "Welcome"
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 36
 msgid "Willkommen!"
 msgstr "Welcome!"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_boi-perms.php, line: 44
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 45
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-misdn.php, line: 54
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 53
+# File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 50
+# File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 46
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 50
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 47
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 53
+# File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 54
+msgid "Wirklich löschen?"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 180
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_inbound.php, line: 276
@@ -3462,6 +3626,10 @@ msgstr "Matching patterns"
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 299
 msgid "abbrechen"
 msgstr "cancel"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 61
+msgid "abgemeldet"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 220
 msgid "abspielen"
@@ -3763,9 +3931,19 @@ msgstr "ringing"
 msgid "l&ouml;schen"
 msgstr "delete"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/calls_missed.php, line: 147
+# File: opt/gemeinschaft/htdocs/gui/mod/calls_in.php, line: 147
+# File: opt/gemeinschaft/htdocs/gui/mod/calls_out.php, line: 147
+msgid "l&ouml;schenck"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 51
 msgid "leer"
 msgstr "empty"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 364
+msgid "lokaler Asterisk"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 252
 msgid "nach"
@@ -3797,6 +3975,10 @@ msgstr "no"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 439
 msgid "neue Warteschlange anlegen"
 msgstr "add new queue"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_friends.php, line: 218
+msgid "neuer Kollege:"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 295
 msgid "nicht wenn keine Agenten angemeldet"
@@ -3995,6 +4177,14 @@ msgstr "prev. page"
 #~ "the message LED will start blinking. Your display will show the numbers "
 #~ "of new and old messages."
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 362
+#~ msgid ""
+#~ "Achtung: Ihr Anrufbeantworter wird nur dann aktiv, wenn Sie keine "
+#~ "Weiterleitung eingestellt haben."
+#~ msgstr ""
+#~ "Attention: Calls will only go to your mailbox if you don&apos;t set a "
+#~ "forward."
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 259
 #~ msgid ""
 #~ "Achtung: Ihre Mailbox wird nur dann aktiv, wenn Sie keine Weiterleitung "
@@ -4006,6 +4196,10 @@ msgstr "prev. page"
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 548
 #~ msgid "Agentur"
 #~ msgstr "Branch office"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 240
+#~ msgid "An"
+#~ msgstr "On"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 110
 #~ msgid "Andere Mailbox abfragen (mit PIN)"
@@ -4027,10 +4221,27 @@ msgstr "prev. page"
 #~ msgid "Aufgelegt"
 #~ msgstr "Abandoned"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 241
+#~ msgid "Aus"
+#~ msgstr "Off"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 84
+#~ msgid ""
+#~ "Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die "
+#~ "Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden "
+#~ "sollen."
+#~ msgstr ""
+#~ "Please contact the phone system's administrators in case your numbers are "
+#~ "incorrect or if you want more numbers added."
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 72
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_ldap.php, line: 104
 #~ msgid "Could not connect to LDAP server."
 #~ msgstr "Could not connect to LDAP server."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 373
+#~ msgid "E-Mail-Benachrichtigung bei eingehenden Voicemails"
+#~ msgstr "E-mail notification for new voicemails"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 104
 #~ msgid ""
@@ -4063,9 +4274,17 @@ msgstr "prev. page"
 #~ msgid "Fremd-Host"
 #~ msgstr "Foreign host"
 #
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 64
+#~ msgid "Gemeinschaft"
+#~ msgstr "Gemeinschaft"
+#
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 104
 #~ msgid "Gemeinschaft Telefon-Manager"
 #~ msgstr "Gemeinschaft Phone Manager"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 79
+#~ msgid "Gruppen"
+#~ msgstr "Groups"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 196
 #~ msgid "Hersteller"
@@ -4075,6 +4294,14 @@ msgstr "prev. page"
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 38
 #~ msgid "Home"
 #~ msgstr "Home"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 105
+#~ msgid "Ihr Browser kann die %s-Datei nicht abspielen."
+#~ msgstr "Your browser cannot play the %s file."
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 72
+#~ msgid "Importiert"
+#~ msgstr "Imported"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 218
 #~ msgid "Mailbox"
@@ -4112,14 +4339,17 @@ msgstr "prev. page"
 #~ msgid "Pickupgruppe"
 #~ msgstr "Pickup group"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 103
+#~ msgid "Player"
+#~ msgstr "Player"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 271
+#~ msgid "Reg.?"
+#~ msgstr "Reg.?"
+#
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 677
 #~ msgid "Registrar"
 #~ msgstr "Registrar"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 87
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 234
-#~ msgid "Rufannahmegrp."
-#~ msgstr "Pickup grp."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 60
 #~ msgid "Rufgruppe"
