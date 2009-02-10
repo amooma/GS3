@@ -75,8 +75,8 @@ $warnings = array();
 
 if (@$_REQUEST['action']==='save') {
 	
-	$num_std = preg_replace('/[^\d]/', '', @$_REQUEST['num-std']);
-	$num_var = preg_replace('/[^\d]/', '', @$_REQUEST['num-var']);
+	$num_std = preg_replace('/[^0-9vm]/', '', @$_REQUEST['num-std']);
+	$num_var = preg_replace('/[^0-9vm]/', '', @$_REQUEST['num-var']);
 	//$num_vml = 'vm'. $_SESSION['sudo_user']['info']['ext'];
 	$timeout = abs((int)@$_REQUEST['timeout']);
 	if ($timeout < 1) $timeout = 1;
