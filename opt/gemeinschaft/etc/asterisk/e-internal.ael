@@ -1003,7 +1003,8 @@ context to-internal-users-self {
 					}
 				}
 			}
-			//We dont need the user_uncallable_vm_on any more.
+			// If a user didn't forward to their mailbox we assume they
+			// don't want it as an auto-fallthrough default either.
 			//if ("${vm_${vm_source}_active}" != "1")
 			goto user_uncallable_vm_off;
 			
