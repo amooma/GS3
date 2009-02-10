@@ -262,7 +262,7 @@ try {
 <table cellspacing="1">
 <thead>
 <tr>
-	<th colspan="2"><?php echo __('Umleitungsnummern'); ?></th>
+	<th colspan="2"><?php echo __('Zielrufnummern f&uuml;r Anrufumleitung'); ?></th>
 </tr>
 </thead>
 <tbody>

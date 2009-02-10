@@ -65,10 +65,10 @@ $queue_ext = preg_replace('/[^\d]$/', '', @$_REQUEST['queue']);
 
 $queues = @gs_queues_get();
 if (isGsError($queues)) {
-	echo __('Fehler beim Abfragen der Queues.'), ' - ', $queues->getMsg();
+	echo __('Fehler beim Abfragen der Warteschlangen.'), ' - ', $queues->getMsg();
 	return;  # return to parent file
 } elseif (! is_array($queues)) {
-	echo __('Fehler beim Abfragen der Queues.');
+	echo __('Fehler beim Abfragen der Warteschlangen.');
 	return;  # return to parent file
 }
 
@@ -116,7 +116,7 @@ if (@$_REQUEST['action']=='save' && $queue) {
 ?>
 
 <form method="get" action="<?php echo GS_URL_PATH; ?>">
-<?php echo __('Queue'); ?>:
+<?php echo __('Warteschlange'); ?>:
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <?php
 
@@ -147,15 +147,15 @@ if ($queue_ext != '') {
 	/*
 	$queue = @gs_queue_get( $queue_ext );
 	if (isGsError($queue))
-		$warnings[] = __('Fehler beim Abfragen der Queue.') .' - '. $queue->getMsg();
+		$warnings[] = __('Fehler beim Abfragen der Warteschlange.') .' - '. $queue->getMsg();
 	elseif (! is_array($queue))
-		$warnings[] = __('Fehler beim Abfragen der Queue.');
+		$warnings[] = __('Fehler beim Abfragen der Warteschlange.');
 	else {
 		$cf = @gs_queue_callforward_get( $queue_ext );
 		if (isGsError($cf))
-			$warnings[] = __('Fehler beim Abfragen der Rufumleitungen der Queue.') .' - '. $cf->getMsg();
+			$warnings[] = __('Fehler beim Abfragen der Rufumleitungen der Warteschlange.') .' - '. $cf->getMsg();
 		elseif (! is_array($cf))
-			$warnings[] = __('Fehler beim Abfragen der Rufumleitungen der Queue.');
+			$warnings[] = __('Fehler beim Abfragen der Rufumleitungen der Warteschlange.');
 		else
 			$queue_exists = true;
 	}
@@ -165,10 +165,10 @@ if ($queue_ext != '') {
 		#
 		$callforwards = @gs_queue_callforward_get( $queue_ext );
 		if (isGsError($callforwards)) {
-			echo __('Fehler beim Abfragen der Rufumleitungen der Queue.') .' - '. $callforwards->getMsg();
+			echo __('Fehler beim Abfragen der Rufumleitungen der Warteschlange.') .' - '. $callforwards->getMsg();
 			return;  # return to parent file
 		} elseif (! is_array($callforwards)) {
-			echo __('Fehler beim Abfragen der Rufumleitungen der Queue.');
+			echo __('Fehler beim Abfragen der Rufumleitungen der Warteschlange.');
 			return;  # return to parent file
 		} else
 			$queue_exists = true;
