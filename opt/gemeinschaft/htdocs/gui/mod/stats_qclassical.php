@@ -176,29 +176,29 @@ function mytip( evt, key )
 		case 'day':
 			return tip(evt, '<?php echo __('Tag des gew&auml;hlten Monats'); ?>');
 		case 'calls':
-			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue'); ?>');
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Warteschlange'); ?>');
 		case 'answered':
-			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, die von Agenten angenommen wurden'); ?>');
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Warteschlange, die von Agenten angenommen wurden'); ?>');
 		case 'abandoned':
-			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, bei denen der Anrufer aufgelegt hat bevor abgehoben wurde'); ?>');
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Warteschlange, bei denen der Anrufer aufgelegt hat bevor abgehoben wurde'); ?>');
 		case 'timeout':
-			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, die durch eine Zeit&uuml;berschreitung abgebrochen/weitergeleitet wurden. Dies kann auftreten wenn f&uuml;r die Queue eine Weiterleitung nach Zeit eingestellt ist.'); ?>');
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Warteschlange, die durch eine Zeit&uuml;berschreitung abgebrochen/weitergeleitet wurden. Dies kann auftreten wenn f&uuml;r die Warteschlange eine Weiterleitung nach Zeit eingestellt ist.'); ?>');
 		case 'noag':
-			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, die fehlgeschlagen sind weil keine Agenten eingeloggt/frei waren'); ?>');
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Warteschlange, die fehlgeschlagen sind weil keine Agenten eingeloggt/frei waren'); ?>');
 		case 'full':
-			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, die fehlgeschlagen sind weil die maximale Anzahl an Anrufern erreicht war'); ?>');
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Warteschlange, die fehlgeschlagen sind weil die maximale Anzahl an Anrufern erreicht war'); ?>');
 		case 'squota':
 			return tip(evt, '<?php echo __('Verh&auml;ltnis von angenommenen Anrufen zu eingegangenen Anrufen in Prozent'); ?>');
 		case 'durl':
-			return tip(evt, '<?php echo __('Anzahl der angenommenen Anrufe auf diese Queue, deren Gespr&auml;chsdauer k&uuml;rzer als der angeg. Wert war'); ?>');
+			return tip(evt, '<?php echo __('Anzahl der angenommenen Anrufe auf diese Warteschlange, deren Gespr&auml;chsdauer k&uuml;rzer als der angeg. Wert war'); ?>');
 		case 'durg':
-			return tip(evt, '<?php echo __('Anzahl der angenommenen Anrufe auf diese Queue, deren Gespr&auml;chsdauer l&auml;nger als der angeg. Wert war'); ?>');
+			return tip(evt, '<?php echo __('Anzahl der angenommenen Anrufe auf diese Warteschlange, deren Gespr&auml;chsdauer l&auml;nger als der angeg. Wert war'); ?>');
 		case 'duravg':
-			return tip(evt, '<?php echo __('Durchschnittliche Gespr&auml;chsdauer der angenommenen Anrufe auf diese Queue'); ?>');
+			return tip(evt, '<?php echo __('Durchschnittliche Gespr&auml;chsdauer der angenommenen Anrufe auf diese Warteschlange'); ?>');
 		case 'holdlsl':
-			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, bei denen der Anrufer weniger als die angeg. Dauer gewartet hat'); ?>');
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Warteschlange, bei denen der Anrufer weniger als die angeg. Dauer gewartet hat'); ?>');
 		case 'holdgsl':
-			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Queue, bei denen der Anrufer l&auml;nger als die angeg. Dauer gewartet hat'); ?>');
+			return tip(evt, '<?php echo __('Anzahl der Anrufe auf diese Warteschlange, bei denen der Anrufer l&auml;nger als die angeg. Dauer gewartet hat'); ?>');
 	}
 	return undefined;
 }
