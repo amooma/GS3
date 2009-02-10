@@ -28,9 +28,9 @@
 \*******************************************************************/
 
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 5485 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 5486 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2008-11-08 16:10+0100
+POT-Creation-Date: 2009-02-06 09:14+0100
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -68,7 +68,6 @@ Content-Transfer-Encoding: 8bit
   'Aktiv' => 'Aktiv',
   'Als' => 'Als',
   'Alte' => 'Alte',
-  'An' => 'An',
   'Angemeldet' => 'Angemeldet',
   'Anklopfen' => 'Anklopfen',
   'Anlage' => 'Anlage',
@@ -84,7 +83,6 @@ Content-Transfer-Encoding: 8bit
   'Arbeit' => 'Arbeit',
   'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:' => 'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:',
   'Audio-Datei' => 'Audio-Datei',
-  'Aus' => 'Aus',
   'Ausloggen' => 'Ausloggen',
   'Ausloggen aus allen Warteschlangen' => 'Ausloggen aus allen Warteschlangen',
   'Ausloggen aus der Warteschlange mit der angegebenen Durchwahl' => 'Ausloggen aus der Warteschlange mit der angegebenen Durchwahl',
@@ -99,7 +97,6 @@ Content-Transfer-Encoding: 8bit
   'Benutzername' => 'Benutzername',
   'Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.' => 'Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.',
   'Bitte w&auml;hlen Sie eine Warteschleife.' => 'Bitte w&auml;hlen Sie eine Warteschleife.',
-  'Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden sollen.' => 'Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden sollen.',
   'CLIR nach extern' => 'CLIR nach extern',
   'CLIR nach intern' => 'CLIR nach intern',
   'Das SIP-Telefon Snom 360 bietet neben den &uuml;blichen Zifferntasten eine ganze Reihe n&uuml;tzlicher Funktionstasten, die bis zu einem gewissen Grad konfigurierbar sind. Die wichtigsten Tasten und Funktionen werden an dieser Stelle kurz aufgef&uuml;hrt. Eine genaue Beschreibung der Tasten finden Sie in dem &uuml;ber 100 Seiten starken Handbuch zu ihrem Snom-Telefon.' => 'Das SIP-Telefon Snom 360 bietet neben den &uuml;blichen Zifferntasten eine ganze Reihe n&uuml;tzlicher Funktionstasten, die bis zu einem gewissen Grad konfigurierbar sind. Die wichtigsten Tasten und Funktionen werden an dieser Stelle kurz aufgef&uuml;hrt. Eine genaue Beschreibung der Tasten finden Sie in dem &uuml;ber 100 Seiten starken Handbuch zu ihrem Snom-Telefon.',
@@ -159,14 +156,12 @@ Content-Transfer-Encoding: 8bit
   'Funktion' => 'Funktion',
   'Gewählt' => 'Gewählt',
   'Gruppe' => 'Gruppe',
-  'Gruppen' => 'Gruppen',
   'Hersteller / Modell' => 'Hersteller / Modell',
   'Hilfe' => 'Hilfe',
   'Host' => 'Host',
   'ID' => 'ID',
   'IP (dyn.)' => 'IP (dyn.)',
   'IP (stat.)' => 'IP (stat.)',
-  'Ihr Browser kann die %s-Datei nicht abspielen.' => 'Ihr Browser kann die %s-Datei nicht abspielen.',
   'Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)' => 'Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)',
   'Ihr persönliches Telefonbuch enthält keine Einträge.' => 'Ihr persönliches Telefonbuch enthält keine Einträge.',
   'Ihre Durchwahl' => 'Ihre Durchwahl',
@@ -204,7 +199,6 @@ Content-Transfer-Encoding: 8bit
   'Pers&ouml;nlich' => 'Pers&ouml;nlich',
   'Persönlich' => 'Persönlich',
   'Ping' => 'Ping',
-  'Player' => 'Player',
   'Pos.' => 'Pos.',
   'Privatgespr&auml;ch f&uuml;hren' => 'Privatgespr&auml;ch f&uuml;hren',
   'Privatgespr&auml;che' => 'Privatgespr&auml;che',
@@ -212,6 +206,7 @@ Content-Transfer-Encoding: 8bit
   'Reserve' => 'Reserve',
   'Rolle' => 'Rolle',
   'Rufannahme-Gruppe' => 'Rufannahme-Gruppe',
+  'Rufannahmegrp.' => 'Rufannahmegrp.',
   'Rufannahmegrp.#pl' => 'Rufannahmegrp.',
   'Rufgrp.annahme' => 'Rufannahmegrp.',
   'Rufumleitung' => 'Rufumleitung',

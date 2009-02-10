@@ -28,9 +28,9 @@
 \*******************************************************************/
 
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 5485 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 5486 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2008-11-08 16:10+0100
+POT-Creation-Date: 2009-02-06 09:14+0100
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: English <>
@@ -67,7 +67,6 @@ Content-Transfer-Encoding: 8bit
   'Abwesenheitsansage aufzeichnen' => 'Record unavailable message',
   'Abwesenheitsansage f&uuml;r Anrufe von extern aufzeichnen' => 'Record unavailable message for calls from external',
   'Abwesenheitsansage f&uuml;r Anrufe von intern aufzeichnen' => 'Record unavailable message for calls from internal',
-  'Achtung: Ihr Anrufbeantworter wird nur dann aktiv, wenn Sie keine Weiterleitung eingestellt haben.' => 'Attention: Calls will only go to your mailbox if you don&apos;t set a forward.',
   'Administration' => 'Administration',
   'Agentur-Admin' => 'Branch admin',
   'Agentur-Benutzer' => 'Branch user',
@@ -77,7 +76,6 @@ Content-Transfer-Encoding: 8bit
   'Alte' => 'Old',
   'Alte PIN' => 'Old PIN',
   'Alte PIN falsch!' => 'Old PIN wrong!',
-  'An' => 'On',
   'Anderen Anrufbeantworter abfragen (mit PIN)' => 'Check other mailbox (requires PIN)',
   'Anf&uuml;hrungszeichen' => 'double quotes',
   'Angemeldet' => 'Logged in as',
@@ -110,7 +108,6 @@ Content-Transfer-Encoding: 8bit
   'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:' => 'Except for internal numbers you may forward calls to the following external numbers:',
   'Audio-Datei' => 'Audio file',
   'Aufl&ouml;sung' => 'Resolution',
-  'Aus' => 'Off',
   'Auschalten / Neustarten ...' => 'Shutdown / Reboot ...',
   'Ausgang' => 'Sent',
   'Ausloggen' => 'Logout',
@@ -149,7 +146,6 @@ Content-Transfer-Encoding: 8bit
   'Bezeichnung' => 'Title',
   'Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.' => 'Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.',
   'Bitte w&auml;hlen Sie eine Warteschleife.' => 'Please choose a queue.',
-  'Bitte wenden Sie sich an die Administratoren der Telefonanlage, falls die Nummern nicht korrekt sind oder falls weitere hinzugef&uuml;gt werden sollen.' => 'Please contact the phone system\'s administrators in case your numbers are incorrect or if you want more numbers added.',
   'CDRs' => 'CDRs',
   'CLIR nach extern' => 'CLIR to external',
   'CLIR nach intern' => 'CLIR to internal',
@@ -187,7 +183,6 @@ Content-Transfer-Encoding: 8bit
   'Durchwahl' => 'Extension',
   'E-Mail' => 'E-mail',
   'E-Mail-Adresse' => 'E-mail address',
-  'E-Mail-Benachrichtigung bei eingehenden Voicemails' => 'E-mail notification for new voicemails',
   'E.164' => 'E.164',
   'Eigene externe Nummern' => 'Your external numbers',
   'Eigenen Anrufbeantworter abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;Retrieve&quot;-Taste gedr&uuml;ckt werden.)' => 'Check your own mailbox (Snom phone: Press &quot;Retrieve&quot; key.)',
@@ -248,7 +243,6 @@ Content-Transfer-Encoding: 8bit
   'Gateway-Gruppe' => 'Gateway group',
   'Gateway-Gruppen' => 'Gateway groups',
   'Gateways' => 'Gateways',
-  'Gemeinschaft' => 'Gemeinschaft',
   'Gesamt' => 'Total',
   'Gesch&uuml;tzt' => 'Locked',
   'Gesch&uuml;tzt?' => 'Locked?',
@@ -260,7 +254,6 @@ Content-Transfer-Encoding: 8bit
   'Gr&ouml;&szlig;e' => 'Size',
   'Gruppe' => 'Group',
   'Gruppe anlegen' => 'Add group',
-  'Gruppen' => 'Groups',
   'Gruppen-ID' => 'Group ID',
   'H:i' => 'H:i',
   'Hallo %s!' => 'Hello %s!',
@@ -288,14 +281,12 @@ Content-Transfer-Encoding: 8bit
   'IP-Adresse suchen' => 'Find IP address',
   'ISDN-Ports' => 'ISDN ports',
   'ISDN-Ports (BRI)' => 'ISDN ports (BRI)',
-  'Ihr Browser kann die %s-Datei nicht abspielen.' => 'Your browser cannot play the %s file.',
   'Ihr Browser kann die SVG-Datei nicht anzeigen.' => 'Your browser is unable to display the SVG file.',
   'Ihr Browser kann die SVG-Grafik nicht anzeigen.' => 'Your browser is unable to display the SVG image.',
   'Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)' => 'Your comment for colleagues (e.g. &quot;off-time&quot;)',
   'Ihr persönliches Telefonbuch enthält keine Einträge.' => 'Your private phonebook does not contain any entries.',
   'Ihre Durchwahl' => 'Your extension',
   'Import' => 'Import',
-  'Importiert' => 'Imported',
   'In Deutschland: <code>49</code>' => 'In the USA: <code>1</code>',
   'In eigener Telefonanlage?' => 'In your private branch?',
   'Index' => 'Index',
@@ -411,7 +402,6 @@ Content-Transfer-Encoding: 8bit
   'Pers&ouml;nlich' => 'Private',
   'Persönlich' => 'Private',
   'Ping' => 'Ping',
-  'Player' => 'Player',
   'Port' => 'Port',
   'Pos.' => 'Pos.',
   'Pr&auml;fix' => 'Prefix',
@@ -428,7 +418,6 @@ Content-Transfer-Encoding: 8bit
   'Queue' => 'Queue',
   'Queues' => 'Queues',
   'R&uuml;ckfrage' => 'Consultation',
-  'Reg.?' => 'Reg.?',
   'Regel bearbeiten' => 'Edit rule',
   'Regel l&ouml;schen' => 'Delete rule',
   'Regel speichern' => 'Save rule',
@@ -446,6 +435,7 @@ Content-Transfer-Encoding: 8bit
   'Routing-Test' => 'Routing test',
   'Rufannahme-Gruppe' => 'Pickup group',
   'Rufannahme-Gruppen' => 'Pickup groups',
+  'Rufannahmegrp.' => 'Pickup grp.',
   'Rufannahmegrp.#pl' => 'Pickup groups',
   'Rufgrp.annahme' => 'Group pickup',
   'Rufnummer' => 'Phone number',
