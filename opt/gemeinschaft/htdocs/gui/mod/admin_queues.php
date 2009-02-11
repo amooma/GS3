@@ -93,7 +93,7 @@ if ($action === 'save') {
 	$wrapuptime = (int)@$_REQUEST['wrapuptime'];
 	if ($wrapuptime < 1) $wrapuptime = 0;
 	$timeout = (int)@$_REQUEST['timeout'];
-	if ($timeout < 1) $timeout = 10; //here 10 cause' zero makes no sense
+	if ($timeout < 1) $timeout = 10;
 	$strategy = @$_REQUEST['strategy'];
 	if (! in_array($strategy, array('rrmemory', 'leastrecent', 'random', 'fewestcalls', 'ringall'), true))
 		$strategy = 'rrmemory';
@@ -273,14 +273,14 @@ WHERE
 		echo '<input type="text" name="wrapuptime" value="', $queue['wrapuptime'] ,'" size="3" maxlength="3" class="r" /> s', "\n";
 		echo '</td>';
 		echo '</tr>',"\n";
-
+		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Klingelzeit p. Agent') ,'</th>',"\n";
 		echo '<td>';
 		echo '<input type="text" name="timeout" value="', $queue['timeout'] ,'" size="3" maxlength="3" class="r" /> s', "\n";
 		echo '</td>';
 		echo '</tr>',"\n";		
-
+		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Max. Anrufer') ,'</th>',"\n";
 		echo '<td>';
