@@ -245,5 +245,5 @@ $LOG_GMT     = true;
 $LOG_SYSLOG_FACILITY    = 'local5';
 
 
-// NO NEWLINES AFTER THE CLOSING TAG!
-?>
+// no closing tag to allow editing in vim without -b
+//?>

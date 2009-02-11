@@ -603,8 +603,6 @@ if (@$INSTALLATION_TYPE === 'gpbx') {
 	}
 }
 
-/* NO NEWLINES AFTER THE CLOSING TAG!
- * (Yeah, I like vim. But you vim people have to understand
- * that \n is a line-feed - not an end-of-line marker.)
- */
-?>
+
+// no closing tag to allow editing in vim without -b
+//?>
