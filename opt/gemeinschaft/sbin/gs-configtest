@@ -1,0 +1,189 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+# does a syntax check (lint) for all conig files
+# exits 0 on success or != 0 on error
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+$exit_code = 0;
+
+
+# error levels introduced in newer versions of PHP:
+if (! defined('E_STRICT'           )) define('E_STRICT'           , 1<<11); # since PHP 5
+if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 1<<12); # since PHP 5.2
+if (! defined('E_DEPRECATED'       )) define('E_DEPRECATED'       , 1<<13); # since PHP 5.3
+if (! defined('E_USER_DEPRECATED'  )) define('E_USER_DEPRECATED'  , 1<<14); # since PHP 5.3
+
+function err_handler_configtest( $type, $msg, $file, $line )
+{
+	global $exit_code;
+	
+	switch ($type) {
+		case E_NOTICE:
+		case E_USER_NOTICE:
+		case E_DEPRECATED:
+		case E_USER_DEPRECATED:
+			if (error_reporting() != 0) {
+				echo 'Notice: '. $msg .' in '. $file .' on line '. $line ."\n";
+			} else {  # suppressed by @
+				//echo 'Notice: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' ."\n";
+			}
+			break;
+		case E_STRICT:
+			if (error_reporting() != 0) {
+				echo 'Strict notice: '. $msg .' in '. $file .' on line '. $line ."\n";
+			} else {  # suppressed by @
+				//echo 'Strict notice: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' ."\n";
+			}
+			break;
+		case E_ERROR:
+		case E_USER_ERROR:
+			echo 'Fatal error: '. $msg .' in '. $file .' on line '. $line ."\n";
+			$exit_code = 1;
+			@ob_end_flush();
+			exit(1);
+			break;
+		case E_RECOVERABLE_ERROR:
+			echo 'Recoverable error: '. $msg .' in '. $file .' on line '. $line ."\n";
+			break;
+		case E_WARNING:
+		case E_USER_WARNING:
+			if (error_reporting() != 0) {
+				echo 'Warning: '. $msg .' in '. $file .' on line '. $line ."\n";
+				$exit_code = 1;
+				@ob_end_flush();
+				exit(1);
+			} else {  # suppressed by @
+				echo 'Warning: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' ."\n";
+				$exit_code = 1;
+			}
+			break;
+		default:
+			echo 'Error: '. $msg .' in '. $file .' on line '. $line ."\n";
+			$exit_code = 1;
+			@ob_end_flush();
+			exit(1);
+			break;
+	}
+}
+
+function set_err_handler_configtest()
+{
+	error_reporting(E_ALL);
+	restore_error_handler();
+	set_error_handler('err_handler_configtest');
+}
+
+set_err_handler_configtest();
+
+function configtest_shutdown_fn()
+{
+	# log fatal E_ERROR errors which the error handler cannot catch
+	if (function_exists('error_get_last')) {  # PHP >= 5.2
+		$e = error_get_last();
+		if (is_array($e)) {
+			if ($e['type'] === E_ERROR) {  # non-catchable fatal error
+				err_handler_configtest( $e['type'], $e['message'], $e['file'], $e['line'] );
+				$exit_code = 1;
+				@ob_end_flush();
+				exit(1);
+			}
+		}
+	}
+}
+register_shutdown_function('configtest_shutdown_fn');
+
+
+putEnv('PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:'. getEnv('PATH'));
+
+function do_syntax_check( $file )
+{
+	$exit_code = 0;
+	if (! file_exists($file)) {
+		echo "File $file not found!\n";
+		$exit_code = 1;
+	} else {
+		$err=0; $out=array();
+		exec('php -l '. ($file != '' ? escapeShellArg($file) : '\'\'') .' 2>&1', $out, $err);
+		if ($err === 0) {
+			echo "$file : syntax OK\n";
+		} else {
+			echo trim(implode("\n", $out)), "\n";
+			$exit_code = $err;
+		}
+	}
+	return $exit_code;
+}
+
+
+
+# syntax check for main config file
+#
+$file = '/etc/gemeinschaft/gemeinschaft.php';
+$err = do_syntax_check( $file );
+if ($err != 0) $exit_code = $err;
+if ($err != 0) {
+	@ob_end_flush();
+	exit($exit_code);
+}
+
+# try to include main config file
+#
+@ob_start();
+include($file);
+$ob = @ob_get_clean();
+if (strLen($ob) != 0) {
+	echo "$file starts output!\n";
+	echo "Do you have any newlines at the end?\n";
+	$exit_code = 1;
+	@ob_end_flush();
+	exit(1);
+}
+
+# load config
+#
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+
+# do some more config checks
+#
+// ...
+
+
+# ok?
+
+@ob_end_flush();
+echo "\n";
+if ($exit_code == 0) {
+	echo "[OK] No syntax errors detected.\n";
+}
+exit($exit_code);
+
+
+?>
