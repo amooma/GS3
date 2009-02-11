@@ -92,6 +92,8 @@ if ($action === 'save') {
 		$announce_holdtime = 'yes';
 	$wrapuptime = (int)@$_REQUEST['wrapuptime'];
 	if ($wrapuptime < 1) $wrapuptime = 0;
+	$timeout = (int)@$_REQUEST['timeout'];
+	if ($timeout < 1) $timeout = 10; //here 10 cause' zero makes no sense
 	$strategy = @$_REQUEST['strategy'];
 	if (! in_array($strategy, array('rrmemory', 'leastrecent', 'random', 'fewestcalls', 'ringall'), true))
 		$strategy = 'rrmemory';
@@ -129,6 +131,7 @@ if ($action === 'save') {
 	`musicclass`='. $musicclass_db .',
 	`announce_holdtime`=\''. $announce_holdtime .'\',
 	`wrapuptime`='. $wrapuptime .',
+	`timeout`='. $timeout .',
 	`strategy`=\''. $strategy .'\',
 	`joinempty`=\''. $joinempty .'\',
 	`leavewhenempty`=\''. $leavewhenempty .'\'
@@ -168,7 +171,7 @@ ORDER BY `id`';
 	if ($queue_id > 0) {
 		$rs = $DB->execute(
 'SELECT
-	`name`, `_host_id`, `_title`, `musicclass`, `announce_holdtime`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`
+	`name`, `_host_id`, `_title`, `musicclass`, `announce_holdtime`, `timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`
 FROM
 	`ast_queues`
 WHERE
@@ -177,6 +180,7 @@ WHERE
 		$queue = $rs->fetchRow();
 		if ($queue['wrapuptime']===null) $queue['wrapuptime'] = 5;
 		if ($queue['maxlen'    ]===null) $queue['maxlen'    ] = 50;
+		if ($queue['timeout'   ]===null) $queue['timeout'   ] = 10;
 	} else {
 		$queue_id = 0;
 		$queue = array(
@@ -187,6 +191,7 @@ WHERE
 			'announce_holdtime'          => 'yes',
 			'wrapuptime'                 => 5,
 			'maxlen'                     => 255,
+			'timeout'                    => 10,
 			'strategy'                   => 'rrmemory',
 			'joinempty'                  => 'strict',
 			'leavewhenempty'             => 'yes'
@@ -268,7 +273,14 @@ WHERE
 		echo '<input type="text" name="wrapuptime" value="', $queue['wrapuptime'] ,'" size="3" maxlength="3" class="r" /> s', "\n";
 		echo '</td>';
 		echo '</tr>',"\n";
-		
+
+		echo '<tr>',"\n";
+		echo '<th class="r">', __('Klingelzeit p. Agent') ,'</th>',"\n";
+		echo '<td>';
+		echo '<input type="text" name="timeout" value="', $queue['timeout'] ,'" size="3" maxlength="3" class="r" /> s', "\n";
+		echo '</td>';
+		echo '</tr>',"\n";		
+
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Max. Anrufer') ,'</th>',"\n";
 		echo '<td>';
