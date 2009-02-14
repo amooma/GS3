@@ -871,7 +871,8 @@ context to-internal-users-self {
 			
 			if ("${all_busy}" != "1") {
 				if ("${ring_instead_of_moh}" = "r") {
-					Progress();
+					//Progress();
+					Proceeding();
 				}
 				else {
 					Set(ring_instead_of_moh=);
