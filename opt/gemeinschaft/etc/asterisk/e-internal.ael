@@ -871,12 +871,11 @@ context to-internal-users-self {
 			
 			if ("${all_busy}" != "1") {
 				if ("${ring_instead_of_moh}" = "r") {
-					//Progress();
-					Proceeding();
+					Proceeding();  // SIP: "100 Trying"
 				}
 				else {
 					Set(ring_instead_of_moh=);
-					Answer();
+					Progress();  // SIP: "183 Session Progress" with early media
 				}
 				Set(queue_entertime=${EPOCH});
 				Queue(${EXTEN},${ring_instead_of_moh},,,${queuetimeout});
