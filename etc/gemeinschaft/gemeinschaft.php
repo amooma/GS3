@@ -522,22 +522,18 @@ $EMAIL_DELIVERY         = 'sendmail';
 *    FAX
 ***********************************************************/
 
-/*
-$FAX_ENABLED            = false;
-$FAX_PREFIX             = '6';           # not used yet  //FIXME
-$FAX_TSI_PREFIX         = @$CANONIZE_NATL_PREFIX.
-                          @$CANONIZE_AREA_CODE.
-                          @$CANONIZE_LOCAL_BRANCH;
-$FAX_TSI                = @$FAX_TSI_PREFIX.'0,'   .
-                          @$FAX_TSI_PREFIX.'100,' .
-                          @$FAX_TSI_PREFIX.'99'   ;
+//$FAX_ENABLED            = false;
+//$FAX_PREFIX             = '6';           # not used yet  //FIXME
+////$FAX_TSI_PREFIX         = '02501234';
+//$FAX_TSI_PREFIX         = @$CANONIZE_NATL_PREFIX . @$CANONIZE_AREA_CODE . @$CANONIZE_LOCAL_BRANCH;
+////$FAX_TSI                = '025012340,02501234100,0250123499';
+//$FAX_TSI                = @$FAX_TSI_PREFIX.'0,' . @$FAX_TSI_PREFIX.'100,' . @$FAX_TSI_PREFIX.'99';
   # (TSI = Transmitting Subscriber Identification)
-$FAX_HYLAFAX_HOST       = '127.0.0.1';
-$FAX_HYLAFAX_PORT       = 4559;          # HylaFax port (FTP-like protocol)
-$FAX_HYLAFAX_ADMIN      = 'webmgr';      # admin user of your HylaFax
+//$FAX_HYLAFAX_HOST       = '127.0.0.1';
+//$FAX_HYLAFAX_PORT       = 4559;          # HylaFax port (FTP-like protocol)
+//$FAX_HYLAFAX_ADMIN      = 'webmgr';      # admin user of your HylaFax
                                          # (see HylaFax's hosts.hfaxd)
-$FAX_HYLAFAX_PASS       = 'a9bl2ue7';
-*/
+//$FAX_HYLAFAX_PASS       = 'a9bl2ue7';
 
 
 
