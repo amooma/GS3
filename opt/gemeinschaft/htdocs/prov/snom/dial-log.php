@@ -130,7 +130,7 @@ if (! $type) {
 	foreach ($typeToTitle as $t => $title) {
 		
 		$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE `user_id`='. $user_id .' AND `type`=\''. $t .'\'' );
-		if ($num_calls > 0) {
+		//if ($num_calls > 0) {
 			echo
 				"\n",
 				'<MenuItem>', "\n",
@@ -138,7 +138,7 @@ if (! $type) {
 					'<URL>', $url_snom_dl ,'?user=',$user, '&type=',$t, '</URL>', "\n",
 				'</MenuItem>', "\n";
 			# Snom does not understand &amp; !
-		}
+		//}
 	}
 	
 	echo
@@ -154,9 +154,6 @@ if (! $type) {
 else {
 	
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
-	echo
-		'<SnomIPPhoneDirectory>', "\n",
-			'<Title>', snomXmlEsc( $typeToTitle[$type] ) ,'</Title>', "\n";
 	
 	$query =
 'SELECT
@@ -170,6 +167,13 @@ GROUP BY `number`
 ORDER BY `ts` DESC
 LIMIT 20';
 	$rs = $db->execute( $query );
+	
+	echo
+		'<SnomIPPhoneDirectory>', "\n",
+			'<Title>', snomXmlEsc( $typeToTitle[$type] ) ,
+			($rs->numRows() == 0 ? ' ('.snomXmlEsc(__('keine')).')' : '') ,
+			'</Title>', "\n";
+	
 	while ($r = $rs->fetchRow()) {
 		
 		$entry_name = $r['number'];
