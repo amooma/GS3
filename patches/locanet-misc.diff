@@ -1642,14 +1642,6 @@ Index: opt/gemeinschaft/htdocs/gui/index.php
 ===================================================================
 --- opt/gemeinschaft/htdocs/gui/index.php	(revision 5977)
 +++ opt/gemeinschaft/htdocs/gui/index.php	(working copy)
-@@ -428,7 +425,6 @@
- 			break;
- 		default    :
- 			echo '<img alt=" " src="', GS_URL_PATH ,'img/gemeinschaft-32.png" class="fl" />' ,"\n";
--			//echo '<h1>', __('Telefon-Manager') ,'</h1>' ,"\n";
- 			echo '<h1>', 'Gemeinschaft' ,'</h1>' ,"\n";
- 	}
- ?>
 @@ -441,7 +437,7 @@
  		|| (@$_SESSION['sudo_user']['name'] != ''
  		&&  preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
