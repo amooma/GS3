@@ -2924,18 +2924,6 @@ Index: opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi
  ini_set('implicit_flush', 1);
  ob_implicit_flush(1);
  
-@@ -41,11 +44,9 @@
- $out = ob_get_clean();
- fWrite(STDERR,$out);
- */
--
- $user       = trim(@$argv[1]);
- $queue_name = trim(@$argv[2]);
- $action     = trim(@$argv[3]);
--
- if (! preg_match('/^\d+$/', $user))  // is not just digits
- 	die();
- if (! preg_match('/^\d+$/', $queue_name))  // is not just digits
 @@ -53,24 +54,46 @@
  if (! in_array( $action, array('login','logout','logoutall'), true ))
  	die();
