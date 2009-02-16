@@ -4187,15 +4187,6 @@ Index: opt/gemeinschaft/etc/asterisk/e-user-config.ael
  	
  	*30 => {
  		Set(CDR(amaflags)=OMIT);
-@@ -245,8 +312,6 @@
- 		Hangup();
- 	}
- 
--
--	
- 	//-------------------------------------------------------------
- 	// Comment
- 	//-------------------------------------------------------------
 @@ -354,3 +419,13 @@
  	System(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='${msource}' --case='${mcase}' --active='${mactive}');
  }
