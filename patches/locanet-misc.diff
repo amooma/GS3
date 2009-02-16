@@ -2834,51 +2834,6 @@ Index: opt/gemeinschaft/dialplan-scripts/in-get-type.agi
  echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
  //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
  
-Index: opt/gemeinschaft/dialplan-scripts/in-queue-get-fw.agi
-===================================================================
---- opt/gemeinschaft/dialplan-scripts/in-queue-get-fw.agi	(revision 5977)
-+++ opt/gemeinschaft/dialplan-scripts/in-queue-get-fw.agi	(working copy)
-@@ -105,19 +103,30 @@
- }
- 
- 
--# ring instead of MOH?
-+# get settings
- #
--$ring_instead_of_moh = (trim($queue['musicclass']) == '');
-+
-+$ring_instead_of_moh = false;
-+$rs = $db->execute( 'SELECT `musicclass` FROM `ast_queues` WHERE `_id`='. $queue_id );
-+if ($r = $rs->fetchRow()) {
-+	if (trim($r['musicclass']) == '') {
-+		$ring_instead_of_moh = true;
-+	}
-+}
- echo 'SET VARIABLE ring_instead_of_moh '. gs_agi_str_esc( $ring_instead_of_moh ? 'r':'' ) ."\n";
- //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
- 
--# queue title (for caller ID display)
-+# Get the Name of the queue
- #
--$displayname = rTrim(subStr( preg_replace('/  +/', ' ',
--	preg_replace('/[^a-zA-Z0-9\\-_.,+\\(\\) ]/', '', trim($queue['_title']))),
--	0, 15));
--echo 'SET VARIABLE queue_displayname '. gs_agi_str_esc( $displayname != '' ? $displayname : 'Q'.$queue_ext ) ."\n";
--//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-+if(gs_get_conf('GS_QUEUE_SHOW_QUEUENAME')){
- 
-+$queuename = $db->executeGetOne( 'SELECT `_title` FROM `ast_queues` WHERE `_id`=' . $queue_id );
-+	echo 'SET VARIABLE queuename '. gs_agi_str_esc($queuename) ."\n";
-+	echo 'SET VARIABLE showname '. gs_agi_str_esc('true') ."\n";
-+}
-+else{
-+	echo 'SET VARIABLE showname '. gs_agi_str_esc('false') ."\n";
-+}
- 
-+
- ?>
-\ No newline at end of file
-
 Property changes on: opt/gemeinschaft/dialplan-scripts/in-queue-get-fw.agi
 ___________________________________________________________________
 Name: svn:executable
