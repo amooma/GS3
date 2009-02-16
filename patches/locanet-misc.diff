@@ -1728,24 +1728,6 @@ Index: opt/gemeinschaft/htdocs/gui/inc/modules.php
 ===================================================================
 --- opt/gemeinschaft/htdocs/gui/inc/modules.php	(revision 5977)
 +++ opt/gemeinschaft/htdocs/gui/inc/modules.php	(working copy)
-@@ -65,7 +65,7 @@
- $tmp = array(
- 	15=>array(
- 		'k' => 'common' ,
--		's' => array('title' => __('Gemeinschaft' ))  ),
-+		's' => array('title' => __('Intern' ))  ),
- 	25=>array(
- 		'k' => 'private',
- 		's' => array('title' => __('Pers&ouml;nlich' ))  )
-@@ -74,7 +74,7 @@
- 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
- 	$tmp[$pos] = array(
- 		'k' => 'imported',
--		's' => array('title' => __('Importiert'))
-+		's' => array('title' => __('Extern'))
- 	);
- }
- kSort($tmp);
 @@ -95,7 +95,9 @@
  	'sub' => array(
  		'out'          => array('title' => __('gew&auml;hlt')),
