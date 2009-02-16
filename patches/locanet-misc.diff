@@ -4072,15 +4072,6 @@ Index: opt/gemeinschaft/etc/asterisk/sip.conf
  
  ;maxexpiry=300                  ; Maximum allowed time of incoming registrations
                                  ; and subscriptions (seconds)
-Index: opt/gemeinschaft/etc/asterisk/modules.conf
-===================================================================
---- opt/gemeinschaft/etc/asterisk/modules.conf	(revision 5977)
-+++ opt/gemeinschaft/etc/asterisk/modules.conf	(working copy)
-@@ -94,3 +94,4 @@
- noload => app_zapras.so
- noload => app_zapscan.so
- 
-+noload => chan_zap.so
 Index: opt/gemeinschaft/etc/asterisk/e-user-config.ael
 ===================================================================
 --- opt/gemeinschaft/etc/asterisk/e-user-config.ael	(revision 5977)
