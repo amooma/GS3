@@ -693,7 +693,7 @@ psetting('cmc_feature'            , 'off');
 psetting('cancel_on_hold'         , 'on' );
 psetting('cancel_missed'          , 'on' );
 psetting('cancel_desktop'         , 'off');
-psetting('cw_dialtone'            , 'on' );
+psetting('cw_dialtone'            , 'on' , true);
 psetting('auto_connect_indication', 'on' );
 psetting('auto_connect_type'      , 'auto_connect_type_handsfree');
 psetting('privacy_in'             , 'off');  # accept anonymous calls
