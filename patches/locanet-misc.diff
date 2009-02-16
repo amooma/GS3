@@ -737,15 +737,6 @@ Index: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php
  
  echo '<h2>';
  if (@$MODULES[$SECTION]['icon'])
-@@ -41,7 +53,7 @@
- 	echo $MODULES[$SECTION]['title'], ' - ';
- echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
- */
--echo __('Rufumleitung Warteschleifen');
-+echo __('Rufumleitung Warteschlange');
- echo '</h2>', "\n";
- 
- 
 @@ -116,7 +128,7 @@
  ?>
  
