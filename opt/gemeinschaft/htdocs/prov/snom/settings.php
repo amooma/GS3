@@ -617,7 +617,7 @@ psetting('http_pass'       , gs_get_conf('GS_SNOM_PROV_HTTP_PASS', '') );
 psetting('http_port'       , '80' );
 psetting('https_port'      , '443');
 psetting('web_logout_timer', '10' );
-psetting('with_flash'      , 'on' , true);
+psetting('with_flash'      , 'off' , true);
 
 psetting('http_proxy'      , '' );  # IP address or URL
 psetting('http_client_user', '' );
