@@ -191,7 +191,9 @@ function _settings_out()
 
 
 # reset users array
+$users = array();
 for ($i=0; $i < gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS'); ++$i) {
+	$users[$i] = array();
 	$users[$i]['name'        ] = '';
 	$users[$i]['user'        ] = '';
 	$users[$i]['ext'         ] = '';
@@ -200,6 +202,7 @@ for ($i=0; $i < gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS'); ++$i) {
 	$users[$i]['host'        ] = '';
 	$users[$i]['proxy'       ] = '';
 	$users[$i]['port'        ] = 0;
+	$users[$i]['id'          ] = null;
 	$users[$i]['nobody_index'] = null;
 }
 
@@ -212,14 +215,14 @@ if (! $db) {
 
 # do we know the phone?
 #
-$users[0]['id'] = @gs_prov_user_id_by_mac_addr( $db, $mac );
+$users[0]['id'] = (int)@gs_prov_user_id_by_mac_addr( $db, $mac );
 
 # if found the first user try to find the rest
 # if not add as many users as configured
 
 if ($users[0]['id'] > 0) {
 	for ($i=1; $i<8; ++$i) {
-		$users[$i]['id'] = @gs_prov_user_id_by_mac_addr( $db, $mac."-".($i+1) );
+		$users[$i]['id'] = (int)@gs_prov_user_id_by_mac_addr( $db, $mac.'-'.($i+1) );
 	}
 } else {
 	if (! GS_PROV_AUTO_ADD_PHONE) {
@@ -228,7 +231,7 @@ if ($users[0]['id'] > 0) {
 	}
 	gs_log( GS_LOG_NOTICE, "Adding new Snom M3 phone $mac to DB" );
 	
-	$users[0]['id'] = @gs_prov_add_phone_get_nobody_user_id( $db, $mac, $phone_type, $requester['phone_ip'] );
+	$users[0]['id'] = (int)@gs_prov_add_phone_get_nobody_user_id( $db, $mac, $phone_type, $requester['phone_ip'] );
 	if ($users[0]['id'] < 1) {
 		gs_log( GS_LOG_WARNING, "Failed to add main nobody user for new phone $mac" );
 		_settings_err( 'Failed to add main nobody user for new phone.' );
@@ -236,7 +239,7 @@ if ($users[0]['id'] > 0) {
 	else {
 		for ($i=1; $i < gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS'); ++$i) {
 			gs_log( GS_LOG_NOTICE, 'Adding new virtual Snom M3 phone '.$mac.'-'.($i+1).' to DB' );
-			$users[$i]['id'] = @gs_prov_add_phone_get_nobody_user_id( $db, $mac."-".($i+1), $phone_type, $requester['phone_ip'] );
+			$users[$i]['id'] = (int)@gs_prov_add_phone_get_nobody_user_id( $db, $mac.'-'.($i+1), $phone_type, $requester['phone_ip'] );
 			if ($users[$i]['id'] < 1) {
 				gs_log( GS_LOG_WARNING, "Failed to add nobody user for new phone $mac-$i" );
 				_settings_err( 'Failed to add nobody user for new Snom M3 phone' );
@@ -253,9 +256,13 @@ foreach ($users as $i => $user) {
 	
 	# is it a valid user id?
 	#
-	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `id`='. $user['id'] );
+	if ($user['id'] > 0) {
+		$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `id`='. (int)$user['id'] );
+	} else {
+		$num = 0;
+	}
 	if ($num < 1) {
-		$users[$i]['id'] = @gs_prov_assign_default_nobody( $db, $mac_addr, null );
+		$users[$i]['id'] = (int)@gs_prov_assign_default_nobody( $db, $mac_addr, null );
 		if ($users[$i]['id'] < 1) {
 			_settings_err( 'Failed to assign nobody account to phone '. $mac_addr );
 		}
@@ -263,7 +270,8 @@ foreach ($users as $i => $user) {
 	
 	# who is logged in at that phone?
 	#
-	$user= @gs_prov_get_user_info( $db, $user['id'] );
+	$user = @gs_prov_get_user_info( $db, $user['id'] );
+	
 	if (! is_array($users[$i])) {
 		_settings_err( 'DB error.' );
 	}
@@ -296,7 +304,7 @@ foreach ($users as $i => $user) {
 	@$db->execute(
 		'UPDATE `users` SET '.
 			'`current_ip`=\''. $db->escape($requester['phone_ip']) .'\' '.
-		'WHERE `id`=\''.$user['id']  .'\''
+		'WHERE `id`=\''. (int)$user['id'] .'\''
 		);
 	
 	# get SIP proxy to be set as the phone's outbound proxy
