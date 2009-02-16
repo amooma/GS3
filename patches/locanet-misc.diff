@@ -1642,27 +1642,6 @@ Index: opt/gemeinschaft/htdocs/gui/index.php
 ===================================================================
 --- opt/gemeinschaft/htdocs/gui/index.php	(revision 5977)
 +++ opt/gemeinschaft/htdocs/gui/index.php	(working copy)
-@@ -91,12 +91,10 @@
- 	}
- }
- 
--
- include_once( GS_DIR .'inc/gettext.php' );
- require_once( GS_DIR .'htdocs/gui/inc/session.php' );  # defines $DB
- require_once( GS_HTDOCS_DIR .'inc/modules.php' );
- 
--
- # get section & module
- #
- if (array_key_exists('s', $_REQUEST)) {
-@@ -358,7 +356,6 @@
- <title><?php
- 	switch ($GS_INSTALLATION_TYPE) {
- 		case 'gpbx': echo    'GPBX'                         ; break;
--		//default    : echo __('Gemeinschaft Telefon-Manager');
- 		default    : echo    'Gemeinschaft';
- 	}
- ?></title>
 @@ -428,7 +425,6 @@
  			break;
  		default    :
