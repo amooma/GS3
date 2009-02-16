@@ -5348,14 +5348,6 @@ Index: opt/gemeinschaft/etc/asterisk/e.ael
  	Hangup();
  	
  }
-@@ -429,6 +675,7 @@
- 	
- 	*5*   => &queue-logout-all();
- 	_*5.  => &queue-login(${EXTEN:2});
-+
- 	//_*5.* => &queue-logout(${EXTEN:2});  // does not work
- 	_*5X* => &queue-logout(${EXTEN:2:-1});
- 	_*5XX* => &queue-logout(${EXTEN:2:-1});
 @@ -497,6 +744,8 @@
  }
  
