@@ -1546,31 +1546,6 @@ Index: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php
  </tbody>
  </table>
  
-@@ -101,7 +157,7 @@
- <tr>
- 	<td style="width:140px;"><code>80</code></td>
- 	<td style="width:420px;">
--		<?php echo __('Eigenen Anrufbeantworter abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;Retrieve&quot;-Taste gedr&uuml;ckt werden.)'); ?>
-+		<?php echo __('Eigene Mailbox abfragen (an snom-Endger&auml;ten durch Bet&auml;tigen der "Retrieve"-Taste m&ouml;glich)'); ?>
- 	</td>
- </tr>
- <tr>
-@@ -164,13 +220,13 @@
- <tr>
- 	<td style="width:140px;"><code>*5 <i><?php echo __('Durchwahl'); ?></i></code></td>
- 	<td style="width:420px;">
--		<?php echo __('Einloggen in die Warteschlange mit der angegebenen Durchwahl'); ?>
-+		<?php echo __('Einloggen in Warteschlange mit angegebener Durchwahl'); ?>
- 	</td>
- </tr>
- <tr>
- 	<td><code>*5 <i><?php echo __('Durchwahl'); ?></i> *</code></td>
- 	<td>
--		<?php echo __('Ausloggen aus der Warteschlange mit der angegebenen Durchwahl'); ?>
-+		<?php echo __('Ausloggen aus Warteschlange mit angegebener Durchwahl'); ?>
- 	</td>
- </tr>
- <tr>
 @@ -182,7 +238,30 @@
  </tbody>
  </table>
