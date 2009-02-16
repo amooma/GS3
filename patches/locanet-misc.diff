@@ -1938,15 +1938,6 @@ Index: opt/gemeinschaft/htdocs/prov/snom/settings.php
  psetting('show_name_dialog'       , 'off');
  psetting('ringing_time'           , '500');  # wird im Dialplan begrenzt
  psetting('block_url_dialing'      , 'on' );  # nur Ziffern erlauben
-@@ -692,7 +702,7 @@
- psetting('cancel_on_hold'         , 'on' );
- psetting('cancel_missed'          , 'on' );
- psetting('cancel_desktop'         , 'off');
--psetting('cw_dialtone'            , 'on' );
-+psetting('cw_dialtone'            , 'on',true );
- psetting('auto_connect_indication', 'on' );
- psetting('auto_connect_type'      , 'auto_connect_type_handsfree');
- psetting('privacy_in'             , 'off');  # accept anonymous calls
 @@ -712,19 +722,27 @@
  psetting('mailbox_active'         , 'off');  # pay attention to the mailbox of the
                                               # active identity only?
