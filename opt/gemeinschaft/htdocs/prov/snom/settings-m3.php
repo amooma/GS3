@@ -249,7 +249,7 @@ if ($users[0]['id'] > 0) {
 foreach ($users as $i => $user) {
 	
 	# create virtual mac address
-	$mac_addr = ($i > 0) ? ($mac.'-'.$i+1) : $mac;
+	$mac_addr = ($i > 0) ? ($mac.'-'.($i+1)) : $mac;
 	
 	# is it a valid user id?
 	#
