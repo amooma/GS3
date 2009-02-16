@@ -737,15 +737,6 @@ Index: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php
  
  echo '<h2>';
  if (@$MODULES[$SECTION]['icon'])
-@@ -116,7 +128,7 @@
- ?>
- 
- <form method="get" action="<?php echo GS_URL_PATH; ?>">
--<?php echo __('Queue'); ?>:
-+<?php echo __('Warteschlange'); ?>:
- <?php echo gs_form_hidden($SECTION, $MODULE); ?>
- <?php
- 
 @@ -264,28 +276,27 @@
  <table cellspacing="1">
  <thead>
