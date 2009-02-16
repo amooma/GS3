@@ -1864,35 +1864,6 @@ Index: opt/gemeinschaft/htdocs/prov/snom/settings.php
  # who is logged in at that phone?
  #
  $user = @gs_prov_get_user_info( $db, $user_id );
-@@ -515,17 +513,15 @@
- psetting('time_24_format'   , 'on'     , true);
- psetting('message_led_other', 'off'    );
- psetting('use_backlight'    , 'on'     , true);  # always | on | off | dim (370, >= 7.1.33)
--//psetting('headset_device'   , 'headset_rj', true);  # wuerde Default auf Headset am RJ14-Stecker setzen
--psetting('headset_device'   , 'none'   , true);
- psetting('ethernet_detect'  , 'on'     );  # Warnung falls kein Ethernet
--psetting('ethernet_replug'  , 'reboot' );
-+psetting('ethernet_replug'  , 'nothing' );
- psetting('reboot_after_nr'  , '5'      );  # nach 5 Min. ohne Registrierung neu starten
- psetting('admin_mode'       , 'off'    , true);  # wenn die Einstellung nicht writable ist, ist auch kein Admin-Login moeglich
- psetting('admin_mode_password'         , '0000');
- psetting('admin_mode_password_confirm' , '0000');
-+psetting('ignore_security_warning', 'on' );
- 
- 
--
- #####################################################################
- #  Network / Advanced Network / SIP
- #####################################################################
-@@ -616,7 +612,7 @@
- psetting('http_port'       , '80' );
- psetting('https_port'      , '443');
- psetting('web_logout_timer', '10' );
--psetting('with_flash'      , 'on' , true);
-+psetting('with_flash'      , 'off' , true);
- 
- psetting('http_proxy'      , '' );  # IP address or URL
- psetting('http_client_user', '' );
 @@ -629,43 +625,57 @@
  #####################################################################
  
