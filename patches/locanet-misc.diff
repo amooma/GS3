@@ -4503,14 +4503,6 @@ Index: opt/gemeinschaft/etc/asterisk/e-internal.ael
  		&hangup-proper-status();
  	}
  	
-@@ -551,7 +595,6 @@
- 	//----------------------------------------------------------
- 	
- 	_Z. => {
--		
- 		Verbose(1,### Incoming call to ${EXTEN} at this node);
- 		
- 		//if ("${saved_callerid}" != "") {
 @@ -605,8 +648,8 @@
  			}
  			else {
