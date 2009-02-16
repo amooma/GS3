@@ -746,15 +746,6 @@ Index: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php
  echo '</h2>', "\n";
  
  
-@@ -52,7 +64,7 @@
- $cases = array(
- 	'always' => __('immer'),
- 	'full'   => __('voll'),
--	'timeout'=> __('keine Antw.'),
-+	'timeout'=> __('keine Antwort'),
- 	'empty'  => __('leer')
- );
- $actives = array(
 @@ -65,10 +77,10 @@
  
  $queues = @gs_queues_get();
