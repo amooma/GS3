@@ -746,27 +746,6 @@ Index: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php
  <?php echo gs_form_hidden($SECTION, $MODULE); ?>
  <?php
  
-@@ -165,17 +177,17 @@
- 		#
- 		$callforwards = @gs_queue_callforward_get( $queue_ext );
- 		if (isGsError($callforwards)) {
--			echo __('Fehler beim Abfragen der Rufumleitungen der Queue.') .' - '. $callforwards->getMsg();
-+			echo __('Fehler beim Abfragen der Rufumleitungen der Warteschlange.') .' - '. $callforwards->getMsg();
- 			return;  # return to parent file
- 		} elseif (! is_array($callforwards)) {
--			echo __('Fehler beim Abfragen der Rufumleitungen der Queue.');
-+			echo __('Fehler beim Abfragen der Rufumleitungen der Warteschlange.');
- 			return;  # return to parent file
- 		} else
- 			$queue_exists = true;
- 	}
- }
- if (! $queue_exists) {
--	echo __('Bitte w&auml;hlen Sie eine Warteschleife.');
-+	echo __('Bitte w&auml;hlen Sie eine Warteschlange.');
- 	return;  # return to parent file
- }
- 
 @@ -264,28 +276,27 @@
  <table cellspacing="1">
  <thead>
