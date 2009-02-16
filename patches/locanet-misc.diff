@@ -4008,16 +4008,6 @@ Index: opt/gemeinschaft/inc/conf.php
  # to communicate with HylaFax ftp_raw() is required, which is not
  # available in PHP < 5
  if ((float)PHP_VERSION < 5.0)
-Index: opt/gemeinschaft/etc/listen-to-ip
-===================================================================
---- opt/gemeinschaft/etc/listen-to-ip	(revision 5977)
-+++ opt/gemeinschaft/etc/listen-to-ip	(working copy)
-@@ -4,4 +4,4 @@
- # (/opt/gemeinschaft/sbin/start-asterisk)
- # IF YOU CHANGE THESE ADDRESSES!
- 
--192.168.1.130
-+212.28.230.68
 Index: opt/gemeinschaft/etc/asterisk/e-gategroups-in.ael.php
 ===================================================================
 --- opt/gemeinschaft/etc/asterisk/e-gategroups-in.ael.php	(revision 5977)
