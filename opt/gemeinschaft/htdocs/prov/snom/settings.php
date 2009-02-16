@@ -523,6 +523,7 @@ psetting('reboot_after_nr'  , '5'      );  # nach 5 Min. ohne Registrierung neu 
 psetting('admin_mode'       , 'off'    , true);  # wenn die Einstellung nicht writable ist, ist auch kein Admin-Login moeglich
 psetting('admin_mode_password'         , '0000');
 psetting('admin_mode_password_confirm' , '0000');
+psetting('ignore_security_warning', 'on');
 
 
 
