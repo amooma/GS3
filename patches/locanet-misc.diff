@@ -5394,18 +5394,6 @@ Index: opt/gemeinschaft/etc/asterisk/e.ael
  	// get CLIR for a call to external:
  	&is_dmz(${mnumber});
  	if ("${is_dmz}" != "1") {
-@@ -616,8 +870,9 @@
- 			AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-${zone}.agi,${user_id});
- 		}
- 		if ("${clir}" = "1") {
--			Set(CALLERID(all)=Anonymous <anonymous>);
--			// RFC 2543
-+			SIPAddHeader(P-Preferred-Identity: <sip:${CALLERID(num)}\;user=phone>);
-+			SIPAddHeader(Privacy: id);
-+			Set(CALLERID(name)=Anonymous);
- 		}
- 	}
- 	
 @@ -745,6 +1000,143 @@
  }
  
