@@ -1671,21 +1671,6 @@ Index: opt/gemeinschaft/htdocs/gui/index.php
  			echo '><img alt=" " src="', GS_URL_PATH ,'img/tree.gif" />', $modinfo['title'] ,'</a></li>', "\n";
  		}
  		echo '</ul>', "\n";
-@@ -576,14 +572,6 @@
- 			
- 		} else {
- 			
--			/*
--			$db_slave = gs_db_slave_connect();
--			if (! $db_slave) {
--				echo 'Could not connect to DB.';
--				return;
--			}
--			*/
--			
- 			echo '<div class="nobr fr">' ,"\n";
- 			echo ' &nbsp;<button type="submit">&rarr;</button>';
- 			echo '</div>' ,"\n";
 @@ -787,6 +775,6 @@
  </div>
  

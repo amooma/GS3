@@ -576,14 +576,6 @@ if (gs_get_conf('GS_BOI_ENABLED') && $boi_menu_error_msg !== false) {
 			
 		} else {
 			
-			/*
-			$db_slave = gs_db_slave_connect();
-			if (! $db_slave) {
-				echo 'Could not connect to DB.';
-				return;
-			}
-			*/
-			
 			echo '<div class="nobr fr">' ,"\n";
 			echo ' &nbsp;<button type="submit">&rarr;</button>';
 			echo '</div>' ,"\n";
