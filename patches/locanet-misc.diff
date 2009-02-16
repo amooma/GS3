@@ -4457,14 +4457,6 @@ Index: opt/gemeinschaft/etc/asterisk/e-internal.ael
  		}
  	}
  	
-@@ -312,7 +336,6 @@
- 		if ("${PICKUPMARK}" = "") {
- 			Set(pmark=${EXTEN:6});
- 			Verbose(1,### User ${user_name} tries to pickup group ${pmark});
--			//FIXME - add pickup group check
- 			Pickup(${pmark}@PICKUPMARK);
- 			//FIXME - does not work across nodes
- 			
 @@ -448,8 +471,17 @@
  	//}
  }
