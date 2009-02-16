@@ -746,19 +746,6 @@ Index: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php
  echo '</h2>', "\n";
  
  
-@@ -65,10 +77,10 @@
- 
- $queues = @gs_queues_get();
- if (isGsError($queues)) {
--	echo __('Fehler beim Abfragen der Queues.'), ' - ', $queues->getMsg();
-+	echo __('Fehler beim Abfragen der Warteschlangen.'), ' - ', $queues->getMsg();
- 	return;  # return to parent file
- } elseif (! is_array($queues)) {
--	echo __('Fehler beim Abfragen der Queues.');
-+	echo __('Fehler beim Abfragen der Warteschlangen.');
- 	return;  # return to parent file
- }
- 
 @@ -116,7 +128,7 @@
  ?>
  
