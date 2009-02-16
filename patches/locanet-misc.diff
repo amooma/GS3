@@ -3063,15 +3063,6 @@ Index: opt/gemeinschaft/dialplan-scripts/vm-postexec
 ===================================================================
 --- opt/gemeinschaft/dialplan-scripts/vm-postexec	(revision 5977)
 +++ opt/gemeinschaft/dialplan-scripts/vm-postexec	(working copy)
-@@ -1,7 +1,7 @@
- #!/usr/bin/php -q
- <?php
- /*******************************************************************\
--*            Gemeinschaft - asterisk cluster gemeinschaft
-+*			Gemeinschaft - asterisk cluster gemeinschaft
- * 
- * $Revision$
- * 
 @@ -37,10 +37,11 @@
  include_once( GS_DIR .'inc/db_connect.php' );
  include_once( GS_DIR .'inc/log.php' );
