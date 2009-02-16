@@ -4072,12 +4072,6 @@ Index: opt/gemeinschaft/etc/asterisk/sip.conf
  
  ;maxexpiry=300                  ; Maximum allowed time of incoming registrations
                                  ; and subscriptions (seconds)
-@@ -522,5 +522,3 @@
- 
- ; create peers and users for the other Gemeinschaft nodes:
- #exec /opt/gemeinschaft/etc/asterisk/sip-nodes.conf.php
--
--
 Index: opt/gemeinschaft/etc/asterisk/modules.conf
 ===================================================================
 --- opt/gemeinschaft/etc/asterisk/modules.conf	(revision 5977)
