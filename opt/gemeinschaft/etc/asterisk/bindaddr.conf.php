@@ -76,6 +76,13 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	}
 }
 
+if (gs_get_conf('GS_FAX_ENABLED') && $conffile === 'iax') {
+	# we have to bind to all interfaces for IAX, because the IAXmodems
+	# listen on 127.0.0.1
+	# Asterisk does not support multiple bindaddr statements
+	$bindaddr = '0.0.0.0';  # bind to all interfaces which are "UP"
+}
+
 gs_log(GS_LOG_DEBUG, 'Determined '. $bindaddr .' as our bindaddr for '. strToUpper($conffile) );
 
 if ($conffile === 'sip') {
