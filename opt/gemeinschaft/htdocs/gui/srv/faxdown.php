@@ -26,12 +26,6 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-####################################################################
-#
-#  //FIXME. We should check permissions!
-#
-####################################################################
-
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );
@@ -44,36 +38,50 @@ $raw  = trim(@$_REQUEST['raw']);
 
 if (!$file) $file = $raw;
 
-$fnamel_pre = strLen(strRChr($file, '.'));
-$fnamel_all = strLen($file);
-$fname      = subStr($file, 0, $fnamel_all - $fnamel_pre);
-
-if ($raw) $fullfile = '/tmp/'.$file;
-else      $fullfile = '/tmp/'.$fname.'.pdf';
-
-$realdir = realPath(dirName($fullfile));
-if (empty($file) || empty($realdir) || subStr($realdir,0,5) !== '/tmp/') {
+if (!file) {
 	header('HTTP/1.0 403 Forbidden', true, 403);
 	header('Status: 403 Forbidden' , true, 403);
 	header('Content-Type: text/plain');
-	die( 'Bad filename.' );
+	die( 'Unauthorized.' );
+}
+
+$jobs_rec = fax_get_jobs_rec();
+$authorized = FALSE;
+
+if (is_array($jobs_rec)) {
+	
+	foreach ($jobs_rec as $key => $row) {
+		if ($row[11] == $_SESSION['sudo_user']['name']) { 
+			if  ($row[4]==$file)  {
+				$authorized = TRUE;
+			}
+		} else {
+			unset($jobs_rec[$key]);
+		}
+	}
+}
+
+if (!$authorized) {
+	header('HTTP/1.0 403 Forbidden', true, 403);
+	header('Status: 403 Forbidden' , true, 403);
+	header('Content-Type: text/plain');
+	die( 'Unauthorized.' );
 }
 
 if (! fax_download($file)) {
 	header('HTTP/1.0 500 Internal Server Error', true, 500);
 	header('Status: 500 Internal Server Error' , true, 500);
 	header('Content-Type: text/plain');
-	die( 'Error. Failed to retrieve fax.' );
+	die( 'Error. Failed to retrieve fax from server.' );
 }
 
-$realfile = realPath($fullfile);
-if (empty($realfile) || subStr($realfile,0,5) !== '/tmp/') {
+$raw_file = realPath('/tmp/'.$file);
+if (empty($raw_file) || subStr($raw_file,0,5) !== '/tmp/') {
 	header('HTTP/1.0 500 Internal Server Error', true, 500);
 	header('Status: 500 Internal Server Error' , true, 500);
 	header('Content-Type: text/plain');
 	die( 'Error. Failed to retrieve fax.' );
 }
-
 
 if ($raw) {
 	header('Content-Type: image/tiff');
@@ -82,13 +90,25 @@ if ($raw) {
 	@readFile('/tmp/'.$file);
 	@unlink('/tmp/'.$file);
 } else {
-	@system('cd /var/spool/hylafax/ && /var/spool/hylafax/bin/tiff2pdf -o '. qsa('/tmp/'.$fname.'.pdf') .' '. qsa('/tmp/'.$file));
+
+	$pdf_file = basename($file,".tif").'.pdf';
+
+	@system('cd /var/spool/hylafax/ && /var/spool/hylafax/bin/tiff2pdf -o '. qsa('/tmp/'.$pdf_file) .' '. qsa('/tmp/'.$file));
 	unlink('/tmp/'.$file);
+
+	if (!file_exists('/tmp/'.$pdf_file)) {
+		header('HTTP/1.0 500 Internal Server Error', true, 500);
+		header('Status: 500 Internal Server Error' , true, 500);
+		header('Content-Type: text/plain');
+		die( 'Error. Failed to convert fax. Try "raw" instead.' );
+	}
+
+
 	header('Content-Type: application/pdf');
-	header('Content-Disposition: attachment; filename="'.$fname.'.pdf"');
-	header('Content-Length: ' . (int)@fileSize('/tmp/'.$fname.'.pdf'));
-	@readFile('/tmp/'.$fname.'.pdf');
-	@unlink('/tmp/'.$fname.'.pdf');
+	header('Content-Disposition: attachment; filename="'.$pdf_file.'"');
+	header('Content-Length: ' . (int)@fileSize('/tmp/'.$pdf_file));
+	@readFile('/tmp/'.$pdf_file);
+	@unlink('/tmp/'.$pdf_file);
 }
 
 ?>
