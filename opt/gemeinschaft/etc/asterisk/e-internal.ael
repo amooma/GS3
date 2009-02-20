@@ -165,7 +165,7 @@ context to-internal-users {
 	
 	_fa[x]-. => {
 		Set(__fax_to_ext=${EXTEN:4});
-		Verbose(1,### Incoming fax to FAX Server extension for ${fax_to_ext});
+		Verbose(1,### Incoming fax to fax server extension for ${fax_to_ext});
 		Dial(IAX2/iaxmodem00/${fax_to_ext});
 		Dial(IAX2/iaxmodem01/${fax_to_ext});
 		// REPEAT AS MANY TIMES AS YOU HAVE IAXMODEMS CONFIGURED.
