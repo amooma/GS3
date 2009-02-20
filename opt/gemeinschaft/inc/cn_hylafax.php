@@ -51,7 +51,6 @@ function fax_get_jobs_rec()
 		return false;
 	
 	$jobs_r = array();
-	//$rlist = ftp_rawlist($conn_id,'recvq');
 	$rlist = ftp_rawlist($conn_id,"recvq");
 	
 	foreach ($rlist as $rlist_line) {
