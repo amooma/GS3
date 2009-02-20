@@ -323,10 +323,11 @@ _gscnf( 'EMAIL_DELIVERY'            , 'sendmail'         );
 if ((float)PHP_VERSION < 5.0)
 	$FAX_ENABLED = false;
 _gscnf( 'FAX_ENABLED'               , false              );
-_gscnf( 'FAX_TSI_PREFIX',    gs_get_conf('GS_CANONIZE_NATL_PREFIX' , '0'  ).
-                         gs_get_conf('GS_CANONIZE_AREA_CODE'   , '999').
-                         gs_get_conf('GS_CANONIZE_LOCAL_BRANCH', '999'));
-_gscnf( 'FAX_PREFIX'            , ''                 );
+_gscnf( 'FAX_TSI_PREFIX',
+	gs_get_conf('GS_CANONIZE_NATL_PREFIX' , '0'  ).
+	gs_get_conf('GS_CANONIZE_AREA_CODE'   , '999').
+	gs_get_conf('GS_CANONIZE_LOCAL_BRANCH', '999'));
+_gscnf( 'FAX_PREFIX'                , ''                 );
 _gscnf( 'FAX_TSI'                   , ''                 );
 # (TSI = Transmitting Subscriber Identification)
 _gscnf( 'FAX_HYLAFAX_HOST'          , '127.0.0.1'        );
