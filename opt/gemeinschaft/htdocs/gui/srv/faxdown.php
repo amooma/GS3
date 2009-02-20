@@ -45,14 +45,14 @@ if (!$file) {
 }
 
 $jobs_rec = fax_get_jobs_rec();
-$authorized = FALSE;
+$authorized = false;
 
 if (is_array($jobs_rec)) {
 	
 	foreach ($jobs_rec as $key => $row) {
 		if ($row[11] == $_SESSION['sudo_user']['name']) { 
-			if  ($row[4]==$file)  {
-				$authorized = TRUE;
+			if ($row[4] == $file) {
+				$authorized = true;
 			}
 		} else {
 			unset($jobs_rec[$key]);
@@ -60,7 +60,7 @@ if (is_array($jobs_rec)) {
 	}
 }
 
-if (!$authorized) {
+if (! $authorized) {
 	header('HTTP/1.0 403 Forbidden', true, 403);
 	header('Status: 403 Forbidden' , true, 403);
 	header('Content-Type: text/plain');
@@ -79,30 +79,32 @@ if (empty($raw_file) || subStr($raw_file,0,5) !== '/tmp/') {
 	header('HTTP/1.0 500 Internal Server Error', true, 500);
 	header('Status: 500 Internal Server Error' , true, 500);
 	header('Content-Type: text/plain');
-	die( 'Error. Failed to retrieve fax.' );
+	die( 'Error. Bad filename.' );
 }
 
+
 if ($raw) {
+	# TIFF
 	header('Content-Type: image/tiff');
 	header('Content-Disposition: attachment; filename="'.$file.'"');
 	header('Content-Length: ' . (int)@fileSize('/tmp/'.$file));
 	@readFile('/tmp/'.$file);
 	@unlink('/tmp/'.$file);
-} else {
-
-	$pdf_file = basename($file,".tif").'.pdf';
-
+}
+else {
+	#PDF
+	$pdf_file = basename($file,'.tif').'.pdf';
+	
 	@system('cd /var/spool/hylafax/ && /var/spool/hylafax/bin/tiff2pdf -o '. qsa('/tmp/'.$pdf_file) .' '. qsa('/tmp/'.$file));
 	unlink('/tmp/'.$file);
-
-	if (!file_exists('/tmp/'.$pdf_file)) {
+	
+	if (! file_exists('/tmp/'.$pdf_file)) {
 		header('HTTP/1.0 500 Internal Server Error', true, 500);
 		header('Status: 500 Internal Server Error' , true, 500);
 		header('Content-Type: text/plain');
-		die( 'Error. Failed to convert fax. Try "raw" instead.' );
+		die( 'Error. Failed to convert fax to PDF.' );
 	}
-
-
+	
 	header('Content-Type: application/pdf');
 	header('Content-Disposition: attachment; filename="'.$pdf_file.'"');
 	header('Content-Length: ' . (int)@fileSize('/tmp/'.$pdf_file));
