@@ -37,8 +37,7 @@ $file = trim(@$_REQUEST['file']);
 $raw  = trim(@$_REQUEST['raw']);
 
 if (!$file) $file = $raw;
-
-if (!file) {
+if (!$file) {
 	header('HTTP/1.0 403 Forbidden', true, 403);
 	header('Status: 403 Forbidden' , true, 403);
 	header('Content-Type: text/plain');
