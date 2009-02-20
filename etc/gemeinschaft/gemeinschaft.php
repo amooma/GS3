@@ -523,8 +523,11 @@ $EMAIL_DELIVERY         = 'sendmail';
 ***********************************************************/
 
 //$FAX_ENABLED            = false;
-//$FAX_PREFIX             = '*96';  
+//$FAX_PREFIX             = '*96';  # e.g. "*96" or "6"
+  # internally faxes can be sent to <FAX_PREFIX><extension>
+//$FAX_TSI_PREFIX         = '02501234';
 //$FAX_TSI_PREFIX         = @$CANONIZE_NATL_PREFIX . @$CANONIZE_AREA_CODE . @$CANONIZE_LOCAL_BRANCH;
+//$FAX_TSI                = '025012340,02501234100,0250123499';
 //$FAX_TSI                = @$FAX_TSI_PREFIX.'0,' . @$FAX_TSI_PREFIX.'100,' . @$FAX_TSI_PREFIX.'99';
   # (TSI = Transmitting Subscriber Identification)
 
