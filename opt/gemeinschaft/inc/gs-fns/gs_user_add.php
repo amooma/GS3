@@ -31,6 +31,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_is_valid_name.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 
 
 /***********************************************************
@@ -229,6 +230,14 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 			return new GsError( 'Failed to reload dialplan.' );
 	}
 	
+	if (gs_get_conf('GS_FAX_ENABLED')) {
+		$ok = gs_hylafax_authfile_sync( );
+		if (isGsError( $ok ))
+			return new GsError( $ok->getMsg() );
+		if (! $ok)
+			return new GsError( 'Failed to update fax authetification file.' );
+	}
+
 	return true;
 }
 
