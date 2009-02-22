@@ -170,10 +170,10 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	
 	if ($new_msgs == 1) {
 		$body.= str_replace(array('\\\\n','\\n'), array("\n","\n"),
-			__('Es befindet sich jetzt 1 neue Voicemail in Ihrer Mailbox.')) ."\n";
+			sPrintF(__('Es befindet sich jetzt %d neue Voicemail in Ihrer Mailbox.'), 1)) ."\n";
 	} else {
 		$body.= str_replace(array('\\\\n','\\n'), array("\n","\n"),
-			__('Es befinden sich jetzt %d neue Voicemails in Ihrer Mailbox.', $new_msgs)) ."\n";
+			sPrintF(__('Es befinden sich jetzt %d neue Voicemails in Ihrer Mailbox.'), $new_msgs)) ."\n";
 	}
 	
 	$body.= "\n";
