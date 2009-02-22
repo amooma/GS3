@@ -201,7 +201,7 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 		$mail_header  = "From: \"Gemeinschaft\" <root>";
 		$mail_header .= "\r\nReply-To: \"". 'Nicht antworten' ."\" <noreply@noreply.local>";
 		$mail_header .= "\r\nMIME-Version: 1.0";
-		$mail_header .= "\r\nContent-Type: multipart/mixed; boundary=$boundary";
+		$mail_header .= "\r\nContent-Type: multipart/mixed; boundary=\"$boundary\"";
 		
 		$mime_body  = "This is a multi-part message in MIME format";
 		$mime_body .= "\r\n--$boundary"; 
