@@ -215,7 +215,9 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 		$mime_body .= "\r\nContent-Disposition: attachment; filename=\"$file_name\"";
 		$mime_body .= "\r\n\r\n". @chunk_split(@base64_encode(@fRead($fh, @fileSize($outfile))));
 		@fClose($fh);
-		$mail_header .= "\r\n--$boundary--";
+		# chunk_split() adds "\r\n" in some but not all versions of PHP
+		if (subStr($mime_body,-2) !== "\r\n") $mime_body .= "\r\n";
+		$mime_body .= "--$boundary--\r\n";
 		$ok = mail( $email, $subject, $mime_body, $mail_header );
 		unset($mime_body);
 		return $ok;
