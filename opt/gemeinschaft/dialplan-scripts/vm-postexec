@@ -197,7 +197,7 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	
 	if ($GS_EMAIL_DELIVERY === 'sendmail') {
 		
-		$boundary = strToUpper(md5(uniqid(time())));
+		$boundary = '=_'.strToUpper(md5(uniqid(time())));
 		$mail_header  = "From: \"Gemeinschaft\" <root>";
 		$mail_header .= "\r\nReply-To: \"". 'Nicht antworten' ."\" <noreply@noreply.local>";
 		$mail_header .= "\r\nMIME-Version: 1.0";
