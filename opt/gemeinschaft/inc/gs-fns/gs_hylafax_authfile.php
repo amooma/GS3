@@ -58,6 +58,10 @@ ORDER BY `id`'
 
 	# create temporary hylafax host/user athentification file
 	#
+	if (file_exists($authfile) && (!is_writable($authfile))) {
+		@exec( 'sudo rm -f '. qsa($authfile), $out, $res );
+	}
+
 	$fh = @fOpen($authfile,'w');
 	if (!$fh) {
 		return new GsError( 'Error.' );
@@ -149,17 +153,17 @@ function gs_hylafax_authfile_sync( $authfile = '' )
 			$authfile_dst = gs_get_conf('GS_FAX_HYLAFAX_PATH','/var/spool/hylafax/').
 					gs_get_conf('GS_FAX_HYLAFAX_AUTHFILE', '/etc/hosts.hfaxd');
 
-			$res = copy($authfile, $authfile_dst);
-			
-			if ($res !== TRUE) return new GsError( 'Error.' );
+			@exec( 'sudo mv '. qsa($authfile) .' '. qsa( $authfile_dst ), $out, $res );
 
-			$res = chown($authfile_dst, gs_get_conf('GS_FAX_HYLAFAX_USER', 'uucp'));
+			if ($res !== 0) return new GsError( 'Error.' );
 
-			if ($res !== TRUE) return new GsError( 'Error.' );
+			@exec( 'sudo chown '. qsa(gs_get_conf('GS_FAX_HYLAFAX_USER', 'uucp')) .' '. qsa( $authfile_dst ), $out, $res );
 
-			$res = chmod ($authfile_dst, 0600);
+			if ($res != 0) return new GsError( 'Error.' );
 
-			if ($res !== TRUE) return new GsError( 'Error.' );
+			@exec( 'sudo chmod '. '0600' .' '. qsa( $authfile_dst ), $out, $res );		
+	
+			if ($res !== 0) return new GsError( 'Error.' );
 
 		}
 		return $res;
