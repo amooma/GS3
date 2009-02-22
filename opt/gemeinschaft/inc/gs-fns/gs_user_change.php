@@ -31,7 +31,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
-
+include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 
 /***********************************************************
 *    change a user account
@@ -337,6 +337,16 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	//@ shell_exec( 'asterisk -rx \'sip notify snom-reboot '. $ext .'\' >>/dev/null' );
 	@ gs_prov_phone_checkcfg_by_ext( $ext, true );
 	
+	# update fax authentification file if fax enabled
+	#
+	if (gs_get_conf('GS_FAX_ENABLED')) {
+		$ok = gs_hylafax_authfile_sync( );
+		if (isGsError( $ok ))
+			return new GsError( $ok->getMsg() );
+		if (! $ok)
+			return new GsError( 'Failed to update fax authetification file.' );
+	}	
+
 	return true;
 }
 
