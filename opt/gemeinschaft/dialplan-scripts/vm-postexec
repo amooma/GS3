@@ -158,8 +158,9 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 		sPrintF(__('Eine neue Voicemail von %s\\nist für Sie eingegangen.'),
 		($info['cidnum'] .($info['cidname'] != '' ? ' ('.$info['cidname'].')' : '')) )) ."\n\n";
 	
+	$display_exten = (subStr(@$about['exten'],0,2)==='vm' ? subStr(@$about['exten'],2) : @$about['exten']);
 	$body.= str_replace(array('\\\\n','\\n'), array("\n","\n"),
-		sPrintF(__('Die Voicemail erreichte Sie auf Durchwahl %s.'), @$about['exten'])) ."\n";
+		sPrintF(__('Die Voicemail erreichte Sie auf Durchwahl %s.'), $display_exten)) ."\n";
 	
 	$body.= __('Datum') .': '. @$about['origdate'] ."\n";
 	$body.= __('Dauer') .': '. @$about['duration'] .' '. __('Sekunden') ."\n";
