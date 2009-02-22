@@ -155,6 +155,8 @@ function gs_user_pin_set( $user, $pin='' )
 		return new GsError( 'Failed to change PIN.' );
 	}
 
+	# update fax authentification file if fax enabled
+	#
 	if (gs_get_conf('GS_FAX_ENABLED')) {
 		$ok = gs_hylafax_authfile_sync( );
 		if (isGsError( $ok ))
