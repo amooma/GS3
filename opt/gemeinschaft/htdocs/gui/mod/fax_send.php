@@ -181,14 +181,3 @@ echo "</table>\n";
 echo '</form>';
 
 ?>
-
-
-
-<?php
-/*
-echo "<pre>\n";
-var_dump($_SESSION);
-echo $_SESSION['sudo_user']['info']['ext'];
-echo "</pre>\n";
-*/
-?>
