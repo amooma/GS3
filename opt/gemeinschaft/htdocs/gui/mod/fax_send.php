@@ -117,9 +117,11 @@ echo "<tr>\n";
 echo '<th>', __('Senderkennung'), '</th>' ,"\n";
 echo '<td>';
 echo '<select name="tsi">' ,"\n";
-echo '<option value="', GS_FAX_TSI_PREFIX, $_SESSION['sudo_user']['info']['ext'] ,'">', GS_FAX_TSI_PREFIX, $_SESSION['sudo_user']['info']['ext'] ,'</option>' ,"\n";
 
-$fax_tsis_global = explode(',',GS_FAX_TSI);
+if (gs_get_conf('GS_FAX_TSI_PREFIX'))
+	echo '<option value="', gs_get_conf('GS_FAX_TSI_PREFIX'), $_SESSION['sudo_user']['info']['ext'] ,'">', gs_get_conf('GS_FAX_TSI_PREFIX'), $_SESSION['sudo_user']['info']['ext'] ,'</option>' ,"\n";
+
+$fax_tsis_global = explode(',',gs_get_conf('GS_FAX_TSI'));
 foreach ($fax_tsis_global as $fax_tsi_global) {
 	echo '<option value="', trim($fax_tsi_global) ,'">', trim($fax_tsi_global) ,'</option>' ,"\n";
 }
