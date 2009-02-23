@@ -35,16 +35,20 @@
 ######################################################
 
 
-function fax_get_jobs_rec()
+function fax_get_jobs_rec( $user='', $pass='' )
 {
+	if ($user == '') {
+		$user= gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
+		$pass=gs_get_conf('GS_FAX_HYLAFAX_PASS');
+	}
+
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
 	if (! $conn_id) return false;
 	
-	$login_result = ftp_login($conn_id,
-		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
-		gs_get_conf('GS_FAX_HYLAFAX_PASS' ));
+	$login_result = ftp_login($conn_id,$user,$pass);
+	
 	if (! $login_result) return false;
 	
 	if (! ftp_raw($conn_id, 'RCVFMT "%a|%b|%d|%e|%f|%h|%i|%j|%l|%m|%n|%o|%p|%q|%r|%s|%w|%z|%Z"'))
@@ -61,16 +65,20 @@ function fax_get_jobs_rec()
 }
 
 
-function fax_get_jobs_done()
+function fax_get_jobs_done( $user='', $pass='' )
 {
+	if ($user == '') {
+		$user= gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
+		$pass=gs_get_conf('GS_FAX_HYLAFAX_PASS');
+	}
+
+
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
 	if (! $conn_id) return false;
 	
-	$login_result = ftp_login($conn_id,
-		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
-		gs_get_conf('GS_FAX_HYLAFAX_PASS' ));
+	$login_result = ftp_login($conn_id,$user,$pass);
 	if (! $login_result) return false;
 	
 	if (! ftp_raw($conn_id, 'JOBFMT "%a|%b|%c|%d|%e|%f|%g|%h|%i|%j|%l|%n|%o|%p|%q|%r|%s|%t|%u|%v|%w|%x|%y|%z|%I|%K|%M|%R|%S|%V|%W|%X|%Z"'))
@@ -86,16 +94,19 @@ function fax_get_jobs_done()
 }
 
 
-function fax_get_jobs_send()
+function fax_get_jobs_send( $user='', $pass='' )
 {
+	if ($user == '') {
+		$user= gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
+		$pass=gs_get_conf('GS_FAX_HYLAFAX_PASS');
+	}
+	
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
 	if (! $conn_id) return false;
-	
-	$login_result = ftp_login($conn_id,
-		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
-		gs_get_conf('GS_FAX_HYLAFAX_PASS' ));
+
+	$login_result = ftp_login($conn_id,$user,$pass);
 	if (! $login_result) return false;
 	
 	if (! ftp_raw($conn_id, 'JOBFMT "%a|%b|%c|%d|%e|%f|%g|%h|%i|%j|%l|%n|%o|%p|%q|%r|%s|%t|%u|%v|%w|%x|%y|%z|%I|%K|%M|%R|%S|%V|%W|%X|%Z"'))
@@ -110,72 +121,89 @@ function fax_get_jobs_send()
 }
 
 
-function fax_delete_file( $file )
+function fax_delete_file( $file, $user='', $pass='' )
 {
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
 	if (! $conn_id) return false;
 	
-	$hf_pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
-	$login_result = ftp_login($conn_id,
-		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
-		$hf_pass);
+	if ($user == '') {
+		$user = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
+		$pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
+	}
+
+	$login_result = ftp_login($conn_id,$user,$pass);
 	if (! $login_result) return false;
 	
-	if (! ftp_raw($conn_id, 'admin '.$hf_pass)) return false;
+	if ($user == gs_get_conf('GS_FAX_HYLAFAX_ADMIN'))
+		if (! ftp_raw($conn_id, 'admin '.$pass)) return false;
+
 	$ret_val = ftp_delete($conn_id, $file);
 	ftp_close($conn_id);
 	return $ret_val;
 }
 
 
-function fax_delete_job( $job )
+function fax_delete_job( $job, $user='', $pass='' )
 {
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
 	if (! $conn_id) return false;
 	
-	$hf_pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
-	$login_result = ftp_login($conn_id,
-		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
-		$hf_pass);
+	if ($user == '') {
+		$user = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
+		$pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
+	}
+
+	$login_result = ftp_login($conn_id,$user,$pass);
 	if (! $login_result) return false;
 	
-	if (! ftp_raw($conn_id, 'admin '.$hf_pass)) return false;
+	if ($user == gs_get_conf('GS_FAX_HYLAFAX_ADMIN'))
+		if (! ftp_raw($conn_id, 'admin '.$pass)) return false;
+	
 	$ret_val = ftp_raw($conn_id, 'jdele '.$job);
 	ftp_close($conn_id);
 	return $ret_val;
 }
 
 
-function fax_kill_job( $job )
+function fax_kill_job( $job, $user='', $pass='')
 {
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
 	if (! $conn_id) return false;
 	
-	$hf_pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
-	$login_result = ftp_login($conn_id,
-		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
-		$hf_pass);
+	if ($user == '') {
+		$user = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
+		$pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
+	}
+
+	$login_result = ftp_login($conn_id,$user,$pass);
 	if (! $login_result) return false;
 	
-	if (! ftp_raw($conn_id, 'admin '.$hf_pass)) return false;
+	if ($user == gs_get_conf('GS_FAX_HYLAFAX_ADMIN'))
+		if (! ftp_raw($conn_id, 'admin '.$pass)) return false;
+	
 	$ret_val = ftp_raw($conn_id, 'jkill '.$job);
 	ftp_close($conn_id);
 	return $ret_val;
 }
 
 
-function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email, $resolution )
+function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email, $resolution, $pass = '' )
 {
 	if ($file) {
 		$remote_file = dirname($file).'/doc-'.basename ($file);
 	} else return false;
 	
+	if ($user_name == '') {
+		$user_name = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
+		$pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
+	}
+
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
@@ -183,9 +211,7 @@ function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email,
 	
 	if ($resolution < 98) $resolution = 98; 
 	
-	$login_result = ftp_login($conn_id,
-		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
-		gs_get_conf('GS_FAX_HYLAFAX_PASS' ));
+	$login_result = ftp_login($conn_id,$user_name,$pass);
 	if (! $login_result) return false;
 	
 	$ret_val = ftp_raw($conn_id, 'jnew');
@@ -219,21 +245,26 @@ function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email,
 }
 
 
-function fax_download( $file )
+function fax_download( $file, $user='', $pass='' )
 {
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
 	if (! $conn_id) return false;
-	
-	$hf_pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
-	$login_result = ftp_login($conn_id,
-		gs_get_conf('GS_FAX_HYLAFAX_ADMIN'),
-		$hf_pass);
+
+	if ($user == '') {
+		$user = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
+		$pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
+	}
+
+	$login_result = ftp_login($conn_id,$user,$pass);	
 	if (! $login_result) return false;
 	
-	if (! ftp_raw($conn_id, 'admin '.$hf_pass)) return false;
+	if ($user == gs_get_conf('GS_FAX_HYLAFAX_ADMIN'))
+		if (! ftp_raw($conn_id, 'admin '.$pass)) return false;
+
 	$ret_val = @ftp_get($conn_id, '/tmp/'.$file, 'recvq/'.$file, FTP_BINARY);
+
 	ftp_close($conn_id);
 	return $ret_val;
 }
