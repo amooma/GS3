@@ -57,9 +57,11 @@ function fax_get_jobs_rec( $user='', $pass='' )
 	$jobs_r = array();
 	$rlist = ftp_rawlist($conn_id,"recvq");
 	
-	foreach ($rlist as $rlist_line) {
-		$jobs_r[] = explode('|',$rlist_line);
-	}
+	if (is_array($rlist) && count($rlist))
+		foreach ($rlist as $rlist_line) {
+			$jobs_r[] = explode('|',$rlist_line);
+		}
+
 	ftp_close($conn_id);
 	return $jobs_r;
 }
@@ -86,9 +88,10 @@ function fax_get_jobs_done( $user='', $pass='' )
 	$jobs_r = array();
  	$rlist = ftp_rawlist($conn_id,"doneq");
 	
-	foreach ($rlist as $rlist_line) {
-		$jobs_r[] = explode('|',$rlist_line);
-	}
+	if (is_array($rlist) && count($rlist))
+		foreach ($rlist as $rlist_line) {
+			$jobs_r[] = explode('|',$rlist_line);
+		}
 	ftp_close($conn_id);
 	return $jobs_r;
 }
@@ -113,9 +116,11 @@ function fax_get_jobs_send( $user='', $pass='' )
 		return false;
 	$jobs_r = array();
  	$rlist = ftp_rawlist($conn_id,"sendq");
-	foreach ($rlist as $rlist_line) {
-		$jobs_r[] = explode('|',$rlist_line);
-	}
+	
+	if (is_array($rlist) && count($rlist))
+		foreach ($rlist as $rlist_line) {
+			$jobs_r[] = explode('|',$rlist_line);
+		}
 	ftp_close($conn_id);
 	return $jobs_r;
 }
