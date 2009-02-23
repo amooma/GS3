@@ -35,6 +35,7 @@ if ((float)PHP_VERSION < 5.0) {
 }
 require_once( GS_DIR .'inc/cn_hylafax.php' );
 include_once( GS_DIR .'inc/util.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_pin_get.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -63,7 +64,7 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 <?php
 
-$jobs_send = fax_get_jobs_send();
+$jobs_send = fax_get_jobs_send($_SESSION['sudo_user']['name'], gs_user_pin_get($_SESSION['sudo_user']['name']));
 
 $recdate = array();
 $jobid   = array();
@@ -71,17 +72,8 @@ if (is_array($jobs_send)) {
 	$jobs_send_count = count($jobs_send);
 	
 	foreach ($jobs_send as $key => $row) {
-		if ($row[12] === gs_get_conf('GS_FAX_HYLAFAX_ADMIN'))
-				$fax_username = $row[28];
-			else
-				$fax_username = $row[12];		
-		
-		if ($fax_username == $_SESSION['sudo_user']['name']) { 
-			$recdate[$key] = $row[32];
-			$jobid  [$key] = $row[9];
-		} else {
-			unset($jobs_send[$key]);
-		}
+		$recdate[$key] = $row[32];
+		$jobid  [$key] = $row[9];
 	}
 	
 	@array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_send);

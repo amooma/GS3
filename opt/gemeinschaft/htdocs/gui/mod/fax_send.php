@@ -35,6 +35,7 @@ if ((float)PHP_VERSION < 5.0) {
 }
 require_once( GS_DIR .'inc/cn_hylafax.php' );
 include_once( GS_DIR .'inc/util.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_pin_get.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -74,7 +75,8 @@ if (is_array($_FILES)
 		$tsi,
 		$_FILES['file']['tmp_name'],
 		email_by_username($_SESSION['sudo_user']['name']),
-		$resolution
+		$resolution,
+		gs_user_pin_get($_SESSION['sudo_user']['name'])
 	);
 	$file_ok = true;
 } else {
@@ -89,7 +91,8 @@ if (($document) && ($resolution)) {
 		$tsi,
 		'/docq/'.$document,
 		email_by_username($_SESSION['sudo_user']['name']),
-		$resolution
+		$resolution,
+		gs_user_pin_get($_SESSION['sudo_user']['name'])
 	);
 }
 

@@ -31,7 +31,7 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 require_once( GS_DIR .'inc/cn_hylafax.php' );
-
+include_once( GS_DIR .'inc/gs-fns/gs_user_pin_get.php' );
 
 $file = trim(@$_REQUEST['file']);
 $raw  = trim(@$_REQUEST['raw']);
@@ -44,30 +44,7 @@ if (!$file) {
 	die( 'Unauthorized.' );
 }
 
-$jobs_rec = fax_get_jobs_rec();
-$authorized = false;
-
-if (is_array($jobs_rec)) {
-	
-	foreach ($jobs_rec as $key => $row) {
-		if ($row[11] == $_SESSION['sudo_user']['name']) { 
-			if ($row[4] == $file) {
-				$authorized = true;
-			}
-		} else {
-			unset($jobs_rec[$key]);
-		}
-	}
-}
-
-if (! $authorized) {
-	header('HTTP/1.0 403 Forbidden', true, 403);
-	header('Status: 403 Forbidden' , true, 403);
-	header('Content-Type: text/plain');
-	die( 'Unauthorized.' );
-}
-
-if (! fax_download($file)) {
+if (! fax_download($file, $_SESSION['sudo_user']['name'], gs_user_pin_get($_SESSION['sudo_user']['name']))) {
 	header('HTTP/1.0 500 Internal Server Error', true, 500);
 	header('Status: 500 Internal Server Error' , true, 500);
 	header('Content-Type: text/plain');
