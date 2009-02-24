@@ -1,0 +1,9 @@
+device          /dev/ttyIAX1
+owner           uucp:uucp
+mode            660
+port            14571
+refresh         0
+server          127.0.0.1
+peername        iaxmodem01
+secret          myiaxmdpwd
+codec           alaw
