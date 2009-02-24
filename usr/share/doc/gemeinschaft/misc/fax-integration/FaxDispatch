@@ -1,0 +1,38 @@
+## Useful variables:
+##       CIDNUMBER       the CIDNumber value determined from faxgetty
+##       CIDNAME         the CIDName value determined from faxgetty
+##       DEVICE          the device name (i.e. ttyS1) of the receiving modem
+##       FILE            the filename (including path) of the tif fax image
+##       FILENAME        the filename (excluding path) of the tif fax image
+##       SENDER          the TSID of the fax sender
+##       FILETYPE        the type of file attachment to use (ps, tif, pdf)
+##       MIMENCODE       the program for UU-encoding binary mail attachments
+##       SENDTO          the destination e-mail address of the notification
+
+LANG=de_DE
+TEMPLATE=carbon_de
+NOTIFY_FAXMASTER=errors
+
+EXTEN_ID=$CALLID4;
+
+if [ -z "$EXTEN_ID" ] ; then EXTEN_ID=0;
+fi
+
+
+SQL_RESULT=$(mysql --user=root --password= -hlocalhost -Dasterisk --execute="SELECT \`u\`.\`id\`, \`u\`.\`email\` FROM \`users\` \`u\` JOIN \`ast_sipfriends\` \`x\` ON \`x\`.\`_user_id\`
+= \`u\`.\`id\` WHERE \`x\`.\`name\` = '$EXTEN_ID' " );
+
+SENDTO=`echo $SQL_RESULT | awk  '{print $4}'`;
+USER_ID=`echo $SQL_RESULT | awk  '{print $3}'`;
+
+FILETYPE=pdf;
+
+/usr/bin/sudo /bin/chgrp "$USER_ID" "$SPOOL/$FILE"
+
+
+DLOGFILE="/var/spool/hylafax/log/dispatch.log";
+
+DATE=`date +"%Y-%m-%d %H:%M:%S"`;
+
+echo "$DATE | $FILE | $EXTEN_ID | $USER_ID | $CIDNUMBER | $SENDER | $SENDTO" >>$DLOGFILE
+
