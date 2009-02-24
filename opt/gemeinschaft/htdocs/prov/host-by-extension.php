@@ -46,7 +46,20 @@ if ($ext === '') {
 
 define( 'GS_VALID', true );  /// this is a parent file
 @require_once( dirName(__FILE__) .'/../../inc/conf.php' );
+@require_once( GS_DIR .'inc/util.php' );
+@require_once( GS_DIR .'inc/prov-fns.php' );
 @require_once( GS_DIR .'inc/db_connect.php' );
+
+$requester = gs_prov_check_trust_requester();
+if (! $requester['allowed']) {
+	gs_log( GS_LOG_NOTICE, @$_SERVER['REMOTE_ADDR'] .' is not allowed to call '. @$_SERVER['SCRIPT_NAME'] );
+	if (! headers_sent()) {
+		header( 'HTTP/1.0 403 Forbidden', true, 403 );
+		header( 'Status: 403 Forbidden' , true, 403 );
+		echo 'Not allowed.';
+	}
+	exit();
+}
 
 $db = gs_db_slave_connect();
 if (! $db) exit();
