@@ -873,7 +873,12 @@ context to-internal-users-self {
 			
 			if ("${all_busy}" != "1") {
 				if ("${ring_instead_of_moh}" = "r") {
-					Proceeding();  // SIP: "100 Trying"
+					//Proceeding();  // SIP: "100 Trying"
+					TryExec(Proceeding());  // Proceeding() was added in Asterisk 1.6
+					if ("${TRYSTATUS}"="NOAPP") {
+						Verbose(1,Proceeding ...);
+						//Ringing();
+					}
 				}
 				else {
 					Set(ring_instead_of_moh=);
