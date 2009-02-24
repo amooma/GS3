@@ -12,9 +12,9 @@ DeviceMode:             0600
 RingsBeforeAnswer:      1                        
 SpeakerVolume:          off                      
 GettyArgs:              "-h %l dx_%s"            
-LocalIdentifier:        "Gemeinschaft"           
+LocalIdentifier:        "FAX"           
 TagLineFont:            etc/lutRS18.pcf          
-TagLineFormat:          "Von %%l|%c|Seite %%P / %%T" 
+TagLineFormat:          "%%l| %d.%m.%Y %T |Seite %%P / %%T" 
 MaxRecvPages:           51                       
 UseJobTSI:              Yes                      
 ModemType:              Class1                   
