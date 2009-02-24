@@ -31,7 +31,6 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 
-
 $res = gs_hylafax_authfile_sync( );
 
 if ($res !== TRUE) {
