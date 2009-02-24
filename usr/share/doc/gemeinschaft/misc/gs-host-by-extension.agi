@@ -48,9 +48,9 @@ dialplan example (AEL):
 
 # configuration:
 $gemeinschaft_nodes = array(
-	array( 'host' => '192.168.1.130', 'port' => 82 ),
-	array( 'host' => '192.168.1.130', 'port' => 82 ),
-	array( 'host' => '192.168.1.130', 'port' => 82 )
+	array( 'host' => '192.168.1.130', 'port' => 80 ),
+	array( 'host' => '192.168.1.130', 'port' => 80 ),
+	array( 'host' => '192.168.1.130', 'port' => 80 )
 );
 # end of configuration
 
@@ -79,7 +79,7 @@ $sock = @fSockOpen(@$node['host'], @$node['port'], $err, $errmsg, 8);
 if (! $sock) _err();
 
 @stream_set_timeout($sock, 4);
-@fWrite($sock, "GET /host-by-extension.php?ext=$ext HTTP/1.0\r\n\r\n");
+@fWrite($sock, "GET /gemeinschaft/prov/host-by-extension.php?ext=$ext HTTP/1.0\r\n\r\n");
 @fFlush($sock);
 $r = @fread($sock, 8000);
 @fClose($sock);
