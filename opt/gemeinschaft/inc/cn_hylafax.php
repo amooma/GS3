@@ -42,6 +42,8 @@ function fax_get_jobs_rec( $user='', $pass='' )
 		$pass=gs_get_conf('GS_FAX_HYLAFAX_PASS');
 	}
 
+	if ($user == '') return false;
+
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
@@ -74,6 +76,7 @@ function fax_get_jobs_done( $user='', $pass='' )
 		$pass=gs_get_conf('GS_FAX_HYLAFAX_PASS');
 	}
 
+	if ($user == '') return false;
 
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
@@ -104,6 +107,8 @@ function fax_get_jobs_send( $user='', $pass='' )
 		$pass=gs_get_conf('GS_FAX_HYLAFAX_PASS');
 	}
 	
+	if ($user == '') return false;
+
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
@@ -138,6 +143,8 @@ function fax_delete_file( $file, $user='', $pass='' )
 		$pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
 	}
 
+	if ($user == '') return false;
+
 	$login_result = ftp_login($conn_id,$user,$pass);
 	if (! $login_result) return false;
 	
@@ -161,7 +168,9 @@ function fax_delete_job( $job, $user='', $pass='' )
 		$user = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
 		$pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
 	}
-
+	
+	if ($user == '') return false;
+	
 	$login_result = ftp_login($conn_id,$user,$pass);
 	if (! $login_result) return false;
 	
@@ -208,6 +217,8 @@ function fax_send( $user_id, $user_name, $to_num, $from_num, $file, $user_email,
 		$user_name = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
 		$pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
 	}
+
+	if ($user_name == '') return false;
 
 	$conn_id = ftp_connect(
 		gs_get_conf('GS_FAX_HYLAFAX_HOST'),
@@ -261,6 +272,8 @@ function fax_download( $file, $user='', $pass='' )
 		$user = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
 		$pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');
 	}
+
+	if ($user == '') return false;
 
 	$login_result = ftp_login($conn_id,$user,$pass);	
 	if (! $login_result) return false;

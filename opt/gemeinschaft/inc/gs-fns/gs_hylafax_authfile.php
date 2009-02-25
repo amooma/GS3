@@ -153,17 +153,17 @@ function gs_hylafax_authfile_sync( $authfile = '' )
 			$authfile_dst = gs_get_conf('GS_FAX_HYLAFAX_PATH','/var/spool/hylafax/').
 					gs_get_conf('GS_FAX_HYLAFAX_AUTHFILE', '/etc/hosts.hfaxd');
 
-			@exec( 'sudo mv '. qsa($authfile) .' '. qsa( $authfile_dst ), $out, $res );
+			@exec( 'sudo mv '. qsa($authfile) .' '. qsa( $authfile_dst ).' 2>>/dev/null', $out, $res );
 
-			if ($res !== 0) return new GsError( 'Error.' );
+			if ($res !== 0) return new GsError( 'Error updating fax authentification on localhost.' );
 
-			@exec( 'sudo chown '. qsa(gs_get_conf('GS_FAX_HYLAFAX_USER', 'uucp')) .' '. qsa( $authfile_dst ), $out, $res );
+			@exec( 'sudo chown '. qsa(gs_get_conf('GS_FAX_HYLAFAX_USER', 'uucp')) .' '. qsa( $authfile_dst ).' 2>>/dev/null', $out, $res );
 
-			if ($res != 0) return new GsError( 'Error.' );
+			if ($res != 0) return new GsError( 'Error updating fax authentification on localhost.' );
 
-			@exec( 'sudo chmod '. '0600' .' '. qsa( $authfile_dst ), $out, $res );		
+			@exec( 'sudo chmod '. '0600' .' '. qsa( $authfile_dst ).' 2>>/dev/null', $out, $res );		
 	
-			if ($res !== 0) return new GsError( 'Error.' );
+			if ($res !== 0) return new GsError( 'Error updating fax authentification on localhost.' );
 
 		}
 		return $res;
