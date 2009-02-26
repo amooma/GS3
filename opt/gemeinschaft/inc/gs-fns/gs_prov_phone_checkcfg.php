@@ -35,9 +35,6 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_ip_by_ext.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_ip_by_user.php' );
 
-require_once( GS_DIR .'inc/aastra-fns.php' );
-
-
 function _gs_prov_phone_checkcfg_exclude_ip( $ip )
 {
 	$db = gs_db_slave_connect();
@@ -232,8 +229,6 @@ function _gs_prov_phone_checkcfg_by_ip_do_snom( $ip, $reboot=true )
 	@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/confirm.htm?REBOOT=yes') . ' >>/dev/null 2>>/dev/null &', $out, $err );
 	// Actually the value after REBOOT= does not matter.
 	// Is there a check-sync URL *without* reboot?
-	
-	// The M3 has to be rebooted to read its config.
 }
 
 // REALLY PRIVATE! CAREFUL WITH PARAMS - NO VALIDATION!
@@ -260,8 +255,9 @@ function _gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot=true, $pre_sleep
 
 function _gs_prov_phone_checkcfg_by_ip_do_aastra( $ip, $reboot=true )
 {
-	//FIXME
-	aastra_reboot($ip);
+	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
+	
+	@ exec( '/opt/gemeinschaft/sbin/gs-aastra-reboot --ip='. qsa($ip) . ' >>/dev/null 2>>/dev/null &', $out, $err );
 }
 
 
