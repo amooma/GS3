@@ -162,8 +162,19 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	$body.= str_replace(array('\\\\n','\\n'), array("\n","\n"),
 		sPrintF(__('Die Voicemail erreichte Sie auf Durchwahl %s.'), $display_exten)) ."\n";
 	
-	$body.= __('Datum') .': '. @$about['origdate'] ."\n";
-	$body.= __('Dauer') .': '. @$about['duration'] .' '. __('Sekunden') ."\n";
+	$origdate_time = @strToTime(@$about['origdate']);
+	if ($origdate_time > 0) {
+		$origdate_display = date(__('d.m.Y, H:i T'), $origdate_time);  //FIXME
+	} else {
+		$origdate_display = @$about['origdate'];
+	}
+	$body.= __('Datum') .':  '. $origdate_display ."\n";
+	
+	$dur_m = floor(@$about['duration'] / 60) % 60;
+	$dur_s = floor(@$about['duration']     ) % 60;
+	if     ($dur_m > 0) $dur_str = sPrintF(__('%d Min. %d Sek.'), $dur_m, $dur_s);
+	else                $dur_str = sPrintF(__(        '%d Sek.'),         $dur_s);
+	$body.= __('Dauer') .':  '. $dur_str ."\n";
 	$body.= "\n";
 	$body.= str_replace(array('\\\\n','\\n'), array("\n","\n"),
 		__('Sie finden die Voicemail im Anhang dieser Email.')) ."\n\n";
