@@ -108,13 +108,20 @@ Gemeinschaft auf \"%s\"
 						
 						if ($GS_EMAIL_DELIVERY === 'sendmail') {
 							
-							$headers =
-								'From: "Gemeinschaft" <root>' ."\r\n".
-								'Reply-To: "'. 'Nicht antworten' .'" <noreply@noreply.local>' ."\r\n".
-								'MIME-Version: 1.0' ."\r\n".
-								'Content-Type: text/plain; charset=utf-8';
+							$headers = array();
+							$headers[] = 'From: "Gemeinschaft" <root>';
+							$headers[] = 'Reply-To: "'. 'Nicht antworten' .'" <noreply@noreply.local>';
+							$headers[] = 'MIME-Version: 1.0';
+							$headers[] = 'Content-Type: text/plain; charset=utf-8';
 							
-							$ok = @mail( $u['email'], 'Gemeinschaft Passwort', $msg, $headers );
+							# Do not use "\r\n" to separate headers. That's a bug in the
+							# PHP documentation (see http://bugs.php.net/bug.php?id=15841).
+							# On Unix/Linux PHP's mail() function does not speak SMTP
+							# directly but talks to the sendmail command which needs
+							# normal line endings ("\n") - unless you are using Postfix
+							# which understands either format.
+							$ok = @mail( $u['email'], 'Gemeinschaft Passwort', $msg, implode("\n",$headers) );
+							unset($headers);
 							if ($ok) {
 								gs_log( GS_LOG_NOTICE, 'Sent PIN number for user '. $login_user .' to "'. $u['email'] .'" via '. $GS_EMAIL_DELIVERY );
 							} else {
