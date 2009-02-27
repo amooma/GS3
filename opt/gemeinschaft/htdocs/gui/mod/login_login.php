@@ -108,11 +108,14 @@ Gemeinschaft auf \"%s\"
 						
 						if ($GS_EMAIL_DELIVERY === 'sendmail') {
 							
+							include_once( GS_DIR .'inc/email-functions.php' );
+							
 							$headers = array();
 							$headers[] = 'From: "Gemeinschaft" <root>';
 							$headers[] = 'Reply-To: "'. 'Nicht antworten' .'" <noreply@noreply.local>';
 							$headers[] = 'MIME-Version: 1.0';
-							$headers[] = 'Content-Type: text/plain; charset=utf-8';
+							$headers[] = 'Content-Type: text/plain; charset="utf-8"';
+							$headers[] = 'Content-Transfer-Encoding: quoted-printable';
 							
 							# Do not use "\r\n" to separate headers. That's a bug in the
 							# PHP documentation (see http://bugs.php.net/bug.php?id=15841).
@@ -120,7 +123,12 @@ Gemeinschaft auf \"%s\"
 							# directly but talks to the sendmail command which needs
 							# normal line endings ("\n") - unless you are using Postfix
 							# which understands either format.
-							$ok = @mail( $u['email'], 'Gemeinschaft Passwort', $msg, implode("\n",$headers) );
+							$ok = @mail(
+								$u['email'],
+								'Gemeinschaft Passwort',
+								quoted_printable_encode_text( $msg, "\n" ),
+								implode("\n", $headers)
+								);
 							unset($headers);
 							if ($ok) {
 								gs_log( GS_LOG_NOTICE, 'Sent PIN number for user '. $login_user .' to "'. $u['email'] .'" via '. $GS_EMAIL_DELIVERY );
