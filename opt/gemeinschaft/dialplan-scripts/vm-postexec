@@ -233,7 +233,7 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 		# normal line endings ("\n") - unless you are using Postfix
 		# which understands either format.
 		$ok = mail( $email, $subject,
-			implode("r\n", $mime_body),
+			implode("\r\n", $mime_body),
 			implode("\n", $mail_headers)
 			);
 		unset($mime_body);
