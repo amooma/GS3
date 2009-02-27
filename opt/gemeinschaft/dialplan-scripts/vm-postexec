@@ -198,27 +198,44 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	if ($GS_EMAIL_DELIVERY === 'sendmail') {
 		
 		$boundary = '=_'.strToUpper(md5(uniqid(time())));
-		$mail_header  = "From: \"Gemeinschaft\" <root>";
-		$mail_header .= "\r\nReply-To: \"". 'Nicht antworten' ."\" <noreply@noreply.local>";
-		$mail_header .= "\r\nMIME-Version: 1.0";
-		$mail_header .= "\r\nContent-Type: multipart/mixed; boundary=\"$boundary\"";
+		$mail_headers = array();
+		$mail_headers[] = "From: \"Gemeinschaft\" <root>";
+		$mail_headers[] = "Reply-To: \"". 'Nicht antworten' ."\" <noreply@noreply.local>";
+		$mail_headers[] = "MIME-Version: 1.0";
+		$mail_headers[] = "Content-Type: multipart/mixed; boundary=\"$boundary\"";
 		
-		$mime_body  = "This is a multi-part message in MIME format";
-		$mime_body .= "\r\n--$boundary"; 
-		$mime_body .= "\r\nContent-Type: text/plain; charset=\"utf-8\"";
-		$mime_body .= "\r\nContent-Transfer-Encoding: 8bit";
-		$mime_body .= "\r\n\r\n$body";
+		$mime_body = array();
+		$mime_body[] = 'This is a multi-part message in MIME format.';
+		$mime_body[] = 'Dies ist eine mehrteilige Nachricht im MIME-Format.';
+		$mime_body[] = '';
+		$mime_body[] = '--'.$boundary; 
+		$mime_body[] = 'Content-Type: text/plain; charset="utf-8"';
+		$mime_body[] = 'Content-Transfer-Encoding: 8bit';
+		$mime_body[] = '';
+		$mime_body[] = $body;
 		unset($body);
-		$mime_body .= "\r\n--$boundary";
-		$mime_body .= "\r\nContent-Type: audio/x-wav; name=\"$file_name\"";
-		$mime_body .= "\r\nContent-Transfer-Encoding: base64";
-		$mime_body .= "\r\nContent-Disposition: attachment; filename=\"$file_name\"";
-		$mime_body .= "\r\n\r\n". @chunk_split(@base64_encode(@fRead($fh, @fileSize($outfile))));
-		@fClose($fh);
+		$mime_body[] = '--'.$boundary;
+		$mime_body[] = 'Content-Type: audio/x-wav; name="'.$file_name.'"';
+		$mime_body[] = 'Content-Transfer-Encoding: base64';
+		$mime_body[] = 'Content-Disposition: attachment; filename="'.$file_name.'"';
+		$mime_body[] = '';
+		$mime_body[] = rTrim(@chunk_split(@base64_encode(@fRead($fh, @fileSize($outfile)))), "\r\n");
 		# chunk_split() adds "\r\n" in some but not all versions of PHP
-		if (subStr($mime_body,-2) !== "\r\n") $mime_body .= "\r\n";
-		$mime_body .= "--$boundary--\r\n";
-		$ok = mail( $email, $subject, $mime_body, $mail_header );
+		@fClose($fh);
+		$mime_body[] = '';
+		$mime_body[] = '--'.$boundary.'--';
+		$mime_body[] = '';
+		
+		# Do not use "\r\n" to separate headers. That's a bug in the
+		# PHP documentation (see http://bugs.php.net/bug.php?id=15841).
+		# On Unix/Linux PHP's mail() function does not speak SMTP
+		# directly but talks to the sendmail command which needs
+		# normal line endings ("\n") - unless you are using Postfix
+		# which understands either format.
+		$ok = mail( $email, $subject,
+			implode("r\n", $mime_body),
+			implode("\n", $mail_headers)
+			);
 		unset($mime_body);
 		return $ok;
 		
