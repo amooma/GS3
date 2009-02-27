@@ -197,6 +197,8 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	
 	if ($GS_EMAIL_DELIVERY === 'sendmail') {
 		
+		include_once( GS_DIR .'inc/email-functions.php' );
+		
 		$boundary = '=_'.strToUpper(md5(uniqid(time())));
 		$mail_headers = array();
 		$mail_headers[] = "From: \"Gemeinschaft\" <root>";
@@ -210,9 +212,10 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 		$mime_body[] = '';
 		$mime_body[] = '--'.$boundary; 
 		$mime_body[] = 'Content-Type: text/plain; charset="utf-8"';
-		$mime_body[] = 'Content-Transfer-Encoding: 8bit';
+		//$mime_body[] = 'Content-Transfer-Encoding: 8bit';
+		$mime_body[] = 'Content-Transfer-Encoding: quoted-printable';
 		$mime_body[] = '';
-		$mime_body[] = $body;
+		$mime_body[] = quoted_printable_encode_text( $body, "\n" );
 		unset($body);
 		$mime_body[] = '--'.$boundary;
 		$mime_body[] = 'Content-Type: audio/x-wav; name="'.$file_name.'"';
@@ -232,8 +235,10 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 		# directly but talks to the sendmail command which needs
 		# normal line endings ("\n") - unless you are using Postfix
 		# which understands either format.
-		$ok = mail( $email, $subject,
-			implode("\r\n", $mime_body),
+		$ok = mail(
+			$email,
+			$subject,
+			implode("\n", $mime_body),
 			implode("\n", $mail_headers)
 			);
 		unset($mime_body);
