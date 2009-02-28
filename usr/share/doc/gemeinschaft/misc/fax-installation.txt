@@ -41,7 +41,9 @@ Dabei muss der Port bei jedem Modem auch ein anderer sein.
 Rest wie in der iax.conf auf dem Asterisk.
 
 
-2. Hylafax installieren
+2. HylaFax+ installieren
+
+(nicht das normale alte HylaFax!)
 
 wget
 http://surfnet.dl.sourceforge.net/sourceforge/hylafax/hylafax-5.1.8.tar.gz
