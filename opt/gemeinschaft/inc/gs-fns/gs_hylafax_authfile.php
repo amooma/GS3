@@ -1,12 +1,10 @@
 <?php
-
-
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 0 $
 * 
-* Copyright 2009, AMOOMA GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* Copyright 2009, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
@@ -31,13 +29,13 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 
+
 /***********************************************************
-*    creates hylafax user authentification file
+*    creates HylaFax user authentication file
 ***********************************************************/
 
 function gs_hylafax_authfile_create( $authfile )
 {
-
 	# connect to db
 	#
 	$db = gs_db_master_connect();
@@ -51,30 +49,29 @@ function gs_hylafax_authfile_create( $authfile )
 FROM `users`
 WHERE `nobody_index` IS NULL
 ORDER BY `id`'
-);
-
+	);
 	if (! $rs)
 		return new GsError( 'Error.' );
-
-	# create temporary hylafax host/user athentification file
+	
+	# create temporary hylafax host/user authentication file
 	#
-	if (file_exists($authfile) && (!is_writable($authfile))) {
-		@exec( 'sudo rm -f '. qsa($authfile), $out, $res );
+	if (file_exists($authfile) && (! is_writable($authfile))) {
+		@exec( 'sudo rm -f '. qsa($authfile) );
 	}
-
+	
 	$fh = @fOpen($authfile,'w');
-	if (!$fh) {
-		return new GsError( 'Error.' );
+	if (! $fh) {
+		return new GsError( 'Failed to open HylaFax authfile.' );
 	}
-
+	
 	# create admin entry first
 	#
 	if (gs_get_conf('GS_FAX_HYLAFAX_ADMIN') != '') {
 		$crypted = crypt(gs_get_conf('GS_FAX_HYLAFAX_PASS' ), 'pF');
-		$user_entry =gs_get_conf('GS_FAX_HYLAFAX_ADMIN') .'@:'.'0'.':'.$crypted.':'.$crypted ."\n";
+		$user_entry = gs_get_conf('GS_FAX_HYLAFAX_ADMIN') .'@:'.'0'.':'.$crypted.':'.$crypted ."\n";
 		fWrite($fh, $user_entry, strLen($user_entry));
 	}
-
+	
 	# create user entries
 	#
 	while ($user = $rs->fetchRow()) {
@@ -82,93 +79,103 @@ ORDER BY `id`'
 		$user_entry = $user['user'].'@:'.$user['id'].':'.$crypted ."\n";
 		fWrite($fh, $user_entry, strLen($user_entry));
 	}
-
-	#close file
+	
+	# close file
 	#
-	if (fclose($fh)) return TRUE;
+	if (@fclose($fh)) return true;
 	else return new GsError( 'Error.' );
 }
+
+
+/***********************************************************
+*    pushes HylaFax user authentication file to server
+***********************************************************/
 
 function gs_hylafax_authfile_put( $authfile )
 {
 	# connect to fax server
 	#
 	$con_id = @ftp_connect(gs_get_conf('GS_FAX_HYLAFAX_HOST'), gs_get_conf('GS_FAX_HYLAFAX_PORT'), gs_get_conf('GS_FAX_HYLAFAX_TIMEOUT', 20));
-
 	if (! $con_id) {
-		return new GsError( 'Error.' );
+		return new GsError( 'Failed to connect to HylaFax server.' );
 	}
-
-	# log in as admin user.
+	
+	# log in as admin user
 	#
 	if (! @ftp_login($con_id, gs_get_conf('GS_FAX_HYLAFAX_ADMIN'), gs_get_conf('GS_FAX_HYLAFAX_PASS' ))) {
-		return new GsError( 'Error.' );
+		return new GsError( 'Failed to log in at HylaFax server.' );
 	}
-
+	
 	# go into admin mode
 	#
 	if (! @ftp_raw($con_id, 'admin '.gs_get_conf('GS_FAX_HYLAFAX_PASS' ))) {
-		return new GsError( 'Error.' );
+		return new GsError( 'Failed to switch to admin mode at HylaFax server.' );
 	}
-
+	
 	# put the local authfile to fax server
 	#
 	if (! @ftp_put($con_id, gs_get_conf('GS_FAX_HYLAFAX_AUTHFILE', '/etc/hosts.hfaxd'), $authfile, FTP_BINARY)) {
-		return new GsError( 'Error.' );
+		return new GsError( 'Failed to push authfile to HylaFax server.' );
 	}
-
+	
 	# close connection
 	#
-	if (@ftp_close($con_id)) { 
-		return TRUE;
-	} else return new GsError( 'Error.' );
+	if (@ftp_close($con_id)) return true;
+	else return new GsError( 'Error.' );
 }
+
+
+/***********************************************************
+*    creates HylaFax user authentication file and copies it
+*    to the fax server.
+***********************************************************/
 
 function gs_hylafax_authfile_sync( $authfile = '' )
 {
-	# This function creates and copies hylafax authentification file to the fax server.
-	# It will be assumed that the server is accessible, the file exists and the admin account ist present
-	# otherwise the connection will fail. There is a fallback mechanism which copies the file if the fax server
-	# is running on the local machine.
+	# It will be assumed that the server is accessible, that the file
+	# exists and that the admin account exists otherwise the
+	# connection will fail.
+	# There is a fallback mechanism which copies the file instead of
+	# FTP put'ting it if the fax server is running on the local machine.
 	
-	if (!$authfile) $authfile = gs_get_conf('GS_FAX_HYLAFAX_TMPAUTHFILE', '/tmp/gs-hylafax-hosts.hfaxd');
-
+	if (! $authfile) $authfile = gs_get_conf('GS_FAX_HYLAFAX_TMPAUTHFILE', '/tmp/gs-hylafax-hosts.hfaxd');
+	
 	# create authfile locally
 	# 
-	$res = gs_hylafax_authfile_create( $authfile );
-
-	if ($res !== TRUE) {
-		return $res;
+	$result = gs_hylafax_authfile_create( $authfile );
+	if ($result !== true) {
+		return $result;
 	}
-
+	
 	# put authfile to the fax server
 	#
-	$res = gs_hylafax_authfile_put( $authfile );	
-
-	if ($res !== TRUE) {
+	$ret = gs_hylafax_authfile_put( $authfile );
+	if ($ret !== true) {
 		# if ftp put fails, try to copy it locally. 
-		# FIXME: Will fail if the fax host is not "127.0.0.1" or "localhost"
+		//FIXME: Will fail if the fax host is not "127.0.0.1" or "localhost"
 		# 
-		if ((gs_get_conf('GS_FAX_HYLAFAX_HOST') == '127.0.0.1') || (gs_get_conf('GS_FAX_HYLAFAX_HOST') == 'localhost')) {
-			$authfile_dst = gs_get_conf('GS_FAX_HYLAFAX_PATH','/var/spool/hylafax/').
-					gs_get_conf('GS_FAX_HYLAFAX_AUTHFILE', '/etc/hosts.hfaxd');
-
-			@exec( 'sudo mv '. qsa($authfile) .' '. qsa( $authfile_dst ).' 2>>/dev/null', $out, $res );
-
-			if ($res !== 0) return new GsError( 'Error updating fax authentification on localhost.' );
-
-			@exec( 'sudo chown '. qsa(gs_get_conf('GS_FAX_HYLAFAX_USER', 'uucp')) .' '. qsa( $authfile_dst ).' 2>>/dev/null', $out, $res );
-
-			if ($res != 0) return new GsError( 'Error updating fax authentification on localhost.' );
-
-			@exec( 'sudo chmod '. '0600' .' '. qsa( $authfile_dst ).' 2>>/dev/null', $out, $res );		
-	
-			if ($res !== 0) return new GsError( 'Error updating fax authentification on localhost.' );
-
+		if ((gs_get_conf('GS_FAX_HYLAFAX_HOST') == '127.0.0.1')
+		||  (gs_get_conf('GS_FAX_HYLAFAX_HOST') == 'localhost')) {
+			$authfile_dst =
+				gs_get_conf('GS_FAX_HYLAFAX_PATH', '/var/spool/hylafax/').
+				gs_get_conf('GS_FAX_HYLAFAX_AUTHFILE', '/etc/hosts.hfaxd');
+			
+			$err=0; $out=array();
+			@exec( 'sudo mv '. qsa($authfile) .' '. qsa($authfile_dst) .' 2>>/dev/null', $out, $err );
+			if ($err !== 0) return new GsError( 'Error updating fax authentication on localhost.' );
+			
+			$err=0; $out=array();
+			@exec( 'sudo chown '. qsa(gs_get_conf('GS_FAX_HYLAFAX_USER', 'uucp')) .' '. qsa($authfile_dst) .' 2>>/dev/null', $out, $err );
+			if ($err != 0) return new GsError( 'Error updating fax authentication on localhost.' );
+			
+			$err=0; $out=array();
+			@exec( 'sudo chmod '. '0600' .' '. qsa($authfile_dst) .' 2>>/dev/null', $out, $err );
+			if ($err !== 0) return new GsError( 'Error updating fax authentication on localhost.' );
+			
+			$ret = true;
 		}
-		return $res;
 	}
-
-	return TRUE;
+	return $ret;
 }
+
 ?>
