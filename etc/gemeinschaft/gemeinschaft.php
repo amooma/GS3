@@ -72,10 +72,10 @@ $DB_SLAVE_DB            = 'asterisk';
 
 //--------------------[  CDR Master  ]--------------------//
 
-#$DB_CDR_MASTER_HOST     = '192.168.1.130';
-#$DB_CDR_MASTER_USER     = 'cdr';
-#$DB_CDR_MASTER_PWD      = '';
-#$DB_CDR_MASTER_DB       = 'cdr';
+//$DB_CDR_MASTER_HOST     = '192.168.1.130';
+//$DB_CDR_MASTER_USER     = 'cdr';
+//$DB_CDR_MASTER_PWD      = '';
+//$DB_CDR_MASTER_DB       = 'cdr';
   # if DB_CDR_MASTER_HOST is not set the normal master DB will
   # be used
 
@@ -95,30 +95,30 @@ $DB_SIP_REG_UPDATE      = false;
 *    LDAP
 ***********************************************************/
 
-#$LDAP_HOST              = '192.168.1.130';
-#$LDAP_SSL               = false;
-#$LDAP_PORT              = 0;        # 0 for default (389 / 636)
-#$LDAP_BINDDN            = 'cn=root,dc=example,dc=com';  # i.e. the rootdn
-#$LDAP_PWD               = 'secret';
-#$LDAP_PROTOCOL          = 3;        # protocol version. 2|3
+//$LDAP_HOST              = '192.168.1.130';
+//$LDAP_SSL               = false;
+//$LDAP_PORT              = 0;        # 0 for default (389 / 636)
+//$LDAP_BINDDN            = 'cn=root,dc=example,dc=com';  # i.e. the rootdn
+//$LDAP_PWD               = 'secret';
+//$LDAP_PROTOCOL          = 3;        # protocol version. 2|3
 
-#$LDAP_SEARCHBASE = 'ou=People,dc=example,dc=com';
+//$LDAP_SEARCHBASE = 'ou=People,dc=example,dc=com';
   # e.g. "ou=People,dc=example,dc=com" | "ou=users,o=Company,c=de"
 
-#$LDAP_PROP_USER         = 'uid';    # e.g. "uid"
+//$LDAP_PROP_USER         = 'uid';    # e.g. "uid"
   # the user name in the LDAP attribute LDAP_PROP_USER must match
   # the user name/code you use in Gemeinschaft
   # e.g. "uid" | "employeenumber"
 
-#$LDAP_PROP_UID          = 'uid';
+//$LDAP_PROP_UID          = 'uid';
   # LDAP_PROP_UID is the "primary key" in the "dn", normally
   # "uid" for users (or "cn").
 
   # for the phonebook:
-#$LDAP_PROP_FIRSTNAME    = 'givenname';       # e.g. "givenname"
-#$LDAP_PROP_LASTNAME     = 'sn';              # e.g. "sn"
-#$LDAP_PROP_PHONE        = 'telephonenumber'; # e.g. "telephonenumber"
-#$LDAP_PROP_EMAIL        = 'mail';            # e.g. "mail"
+//$LDAP_PROP_FIRSTNAME    = 'givenname';       # e.g. "givenname"
+//$LDAP_PROP_LASTNAME     = 'sn';              # e.g. "sn"
+//$LDAP_PROP_PHONE        = 'telephonenumber'; # e.g. "telephonenumber"
+//$LDAP_PROP_EMAIL        = 'mail';            # e.g. "mail"
 
 
 
@@ -127,9 +127,9 @@ $DB_SIP_REG_UPDATE      = false;
 ***********************************************************/
 
 //$GUI_SESSIONS           = false;    # use sessions?
-// not used. always start session but fallback gracefully
+  # not used. always start session but fallback gracefully
 
-#$GUI_AUTH_METHOD            = 'gemeinschaft';
+//$GUI_AUTH_METHOD            = 'gemeinschaft';
   # "gemeinschaft": Authenticate users against our internal database.
   # "webseal"     : Trust the non-standard "IV-User" HTTP header.
   #                 Make sure every access goes through WebSeal
@@ -141,19 +141,19 @@ $GUI_NUM_RESULTS            = 12;
 $GUI_SUDO_ADMINS            = '';
   # comma separated list of admin users who can manage *all* accounts
 
-#$GUI_SUDO_EXTENDED          = false;
+//$GUI_SUDO_EXTENDED          = false;
   # Whether to include htdocs/gui/inc/permissions.php and consult
   # gui_sudo_allowed() to find out if a user can act as a certain
   # other user. (You may need to adjust this function!). For the
   # method used see GUI_PERMISSIONS_METHOD.
 
-#$GUI_PERMISSIONS_METHOD     = 'gemeinschaft';
+//$GUI_PERMISSIONS_METHOD     = 'gemeinschaft';
   # determines the method used to find out if a user can act as a
   # certain other user. "gemeinschaft" or "lvm". ugly solution.
   # see GUI_SUDO_EXTENDED, GUI_MON_PEERS_ENABLED and
   # htdocs/gui/inc/permissions.php. deprecated.
 
-#$GUI_USER_MAP_METHOD        = '';
+//$GUI_USER_MAP_METHOD        = '';
   # determines the method used to map legacy usernames to usernames
   # in Gemeinschaft. "" or "lvm". something like the "lvm" method
   # (see gs_legacy_user_map() in htdocs/gui/inc/session.php) can
@@ -172,21 +172,21 @@ $GUI_MON_NOQUEUEBLUE        = true;
   # used in Monitor->Peers. if true idle users who are not member
   # of a queue get a blue led instead of a green one
 
-#$GUI_MON_PEERS_ENABLED      = false;
+//$GUI_MON_PEERS_ENABLED      = false;
   # Whether to enable the peers monitor. The visible peers for each
   # user depend on the GUI_PERMISSIONS_METHOD setting.
   # For GUI_PERMISSIONS_METHOD=="lvm" an LDAP with Kostenstelle
   # is required, see gui_monitor_which_peers() in
   # htdocs/gui/inc/permissions.php
 
-#$GUI_SHUTDOWN_ENABLED       = false;
+//$GUI_SHUTDOWN_ENABLED       = false;
   # enable shutdown via web interface?
   # default: true for INSTALLATION_TYPE=='gpbx', false
   # otherwise
 
-#$GUI_LANGS = 'de_DE:de_DE:de-DE:Deutsch, en_US:en_US:en-US:English';
+//$GUI_LANGS = 'de_DE:de_DE:de-DE:Deutsch, en_US:en_US:en-US:English';
 
-#$GUI_ADDITIONAL_STYLESHEET  = 'gemeinschaft.css';
+//$GUI_ADDITIONAL_STYLESHEET  = 'gemeinschaft.css';
 
 
 
@@ -195,7 +195,7 @@ $GUI_MON_NOQUEUEBLUE        = true;
 ***********************************************************/
 
 $EXTERNAL_NUMBERS_BACKEND   = 'db'; # "db"|"ldap"
-#$EXTERNAL_NUMBERS_LDAP_PROP = 'telephoneNumber';
+//$EXTERNAL_NUMBERS_LDAP_PROP = 'telephoneNumber';
   # e.g. "externaltelephone"
 
 
@@ -223,8 +223,8 @@ $NOBODY_CID_NAME        = 'Namenlos-';
 ***********************************************************/
 
 $PROV_HOST                  = '192.168.1.130';
-#$PROV_PORT                  = 0;  # 0 for default port for $PROV_SCHEME
-#$PROV_SCHEME                = 'http';  # without "://"
+//$PROV_PORT                  = 0;  # 0 for default port for $PROV_SCHEME
+//$PROV_SCHEME                = 'http';  # without "://"
 $PROV_PATH                  = '/gemeinschaft/prov/';
   # with starting and trailing "/"
   # URL is build like this:
@@ -268,9 +268,9 @@ $PROV_ALLOW_NET             = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.25
 
   # Phones shown in the GUI (comma-separated lists,
   # '*' for all supported models of a brand);
-#$PROV_MODELS_ENABLED_SNOM    = '*';  # or '360,370'
-#$PROV_MODELS_ENABLED_SIEMENS = '*';  # or 'os20,os40,os60,os80'
-#$PROV_MODELS_ENABLED_AASTRA  = '*';  # or '51i,53i,55i,57i'
+//$PROV_MODELS_ENABLED_SNOM    = '*';  # or '360,370'
+//$PROV_MODELS_ENABLED_SIEMENS = '*';  # or 'os20,os40,os60,os80'
+//$PROV_MODELS_ENABLED_AASTRA  = '*';  # or '51i,53i,55i,57i'
 
 
 
@@ -300,12 +300,12 @@ $SNOM_PROV_PB_NUM_RESULTS   = 15;
 $SNOM_PROV_FW_UPDATE        = false;  # allow firmware updates?
 $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 
-#$SNOM_PROV_FW_DEFAULT_300   = '7.1.24';
-#$SNOM_PROV_FW_DEFAULT_320   = '7.1.24';
-#$SNOM_PROV_FW_DEFAULT_360   = '6.5.1';
-#$SNOM_PROV_FW_DEFAULT_370   = '7.1.24';
+//$SNOM_PROV_FW_DEFAULT_300   = '7.1.24';
+//$SNOM_PROV_FW_DEFAULT_320   = '7.1.24';
+//$SNOM_PROV_FW_DEFAULT_360   = '6.5.1';
+//$SNOM_PROV_FW_DEFAULT_370   = '7.1.24';
 
-#$SNOM_PROV_KEY_BLACKLIST    = '';
+//$SNOM_PROV_KEY_BLACKLIST    = '';
   # do not show these softkey functions in GUI,
   # comma separated list
 
@@ -315,7 +315,7 @@ $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 $SNOM_PROV_M3_ACCOUNTS      = 1;
   # set to 0 to disable Snom M3 provisioning
 
-#$SNOM_PROV_M3_FW_DEFAULT_SNOM_M3 = 'x.x.x';  # not used (yet)
+//$SNOM_PROV_M3_FW_DEFAULT_SNOM_M3 = 'x.x.x';  # not used (yet)
 
 
 //----------------------[  Aastra  ]----------------------//
@@ -326,12 +326,12 @@ $AASTRA_PROV_ENABLED        = false;  # do provisioning for Aastra?
 $AASTRA_PROV_PB_NUM_RESULTS = 10;
   # number of results in phonebook search on Aastra phone
 
-#$AASTRA_PROV_FW_DEFAULT_51I = 'x.x.x';  # not used (yet)
-#$AASTRA_PROV_FW_DEFAULT_53I = 'x.x.x';  # not used (yet)
-#$AASTRA_PROV_FW_DEFAULT_55I = 'x.x.x';  # not used (yet)
-#$AASTRA_PROV_FW_DEFAULT_57I = 'x.x.x';  # not used (yet)
+//$AASTRA_PROV_FW_DEFAULT_51I = 'x.x.x';  # not used (yet)
+//$AASTRA_PROV_FW_DEFAULT_53I = 'x.x.x';  # not used (yet)
+//$AASTRA_PROV_FW_DEFAULT_55I = 'x.x.x';  # not used (yet)
+//$AASTRA_PROV_FW_DEFAULT_57I = 'x.x.x';  # not used (yet)
 
-#$AASTRA_PROV_KEY_BLACKLIST  = '';
+//$AASTRA_PROV_KEY_BLACKLIST  = '';
   # do not show these softkey functions in GUI,
   # comma separated list
 
@@ -341,16 +341,16 @@ $AASTRA_PROV_PB_NUM_RESULTS = 10;
 $SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
 //...
 
-#$SIEMENS_PROV_PREFER_HTTP   = true;
+//$SIEMENS_PROV_PREFER_HTTP   = true;
   # prefer HTTP(S) (to FTP) for file deployment (ringtones, ...).
   # default: true
 
-#$SIEMENS_PROV_FW_DEFAULT_OS20 = '1.3.5.0';
-#$SIEMENS_PROV_FW_DEFAULT_OS40 = '1.3.5.0';
-#$SIEMENS_PROV_FW_DEFAULT_OS60 = '1.3.5.0';
-#$SIEMENS_PROV_FW_DEFAULT_OS80 = '1.3.5.0';
+//$SIEMENS_PROV_FW_DEFAULT_OS20 = '1.3.5.0';
+//$SIEMENS_PROV_FW_DEFAULT_OS40 = '1.3.5.0';
+//$SIEMENS_PROV_FW_DEFAULT_OS60 = '1.3.5.0';
+//$SIEMENS_PROV_FW_DEFAULT_OS80 = '1.3.5.0';
 
-#$SIEMENS_PROV_KEY_BLACKLIST = '';
+//$SIEMENS_PROV_KEY_BLACKLIST = '';
   # do not show these softkey functions in GUI,
   # comma separated list (e.g. 'f11,f59,f10'), default: ''
   # can be used to disable DND for example.
@@ -425,12 +425,12 @@ $DP_EMERGENCY_FIRE_MAP      = '112';
 $DP_DIALTIMEOUT_IN          = 45;
   # default timeout when dialing to internal users
 
-#$DP_PRV_CALL_PREFIX         = '*7*';
+//$DP_PRV_CALL_PREFIX         = '*7*';
   # e.g. "*7*", "96", ...
   # must not collide with any other extension!
   //FIXME - fix e.ael to honor this setting
 
-#$DP_FORWARD_REQ_EXT_NUM     = false;
+//$DP_FORWARD_REQ_EXT_NUM     = false;
   # if true call forwards can be set to numbers in a user's list of
   # external numbers only - apart from numbers not starting in "0"
   # which are always allowed
@@ -474,7 +474,7 @@ $CC_TIMEOUT             =  60;      # timeout of programmed call
                                     # completions in minutes
 
 $INTL_LANG              = 'de_DE';  # "de_DE" or "en_US"
-#$INTL_USE_GETTEXT       = false;
+//$INTL_USE_GETTEXT       = false;
   # whether to use gettext files or php arrays. gettext seems to have
   # problems on some systems
 
@@ -485,7 +485,7 @@ $INTL_ASTERISK_LANG     = 'de';
 
 $USERCOMMENT_OFFTIME    = 'Feierabend';  # e.g. "off-time"
 
-#$EMAIL_PATTERN_VALID    = '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i';
+//$EMAIL_PATTERN_VALID    = '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i';
 
 $EMAIL_DELIVERY         = 'sendmail';
   # how to deliver e-mails to the users ("forgot password" function etc.)
@@ -500,12 +500,12 @@ $EMAIL_DELIVERY         = 'sendmail';
 *    PHONEBOOK
 ***********************************************************/
 
-#$PB_IMPORTED_ENABLED    = false;
-#$PB_IMPORTED_ORDER      = 2;                    # 1|2|3
-#$PB_IMPORTED_TITLE      = "Firma (aus LDAP)";   # short! no HTML entities!
+//$PB_IMPORTED_ENABLED    = false;
+//$PB_IMPORTED_ORDER      = 2;                    # 1|2|3
+//$PB_IMPORTED_TITLE      = "Firma (aus LDAP)";   # short! no HTML entities!
 
-#$PB_INTERNAL_TITLE      = "Intern";             #  "
-#$PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";  #  "
+//$PB_INTERNAL_TITLE      = "Intern";             #  "
+//$PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";  #  "
 
 
 
@@ -535,22 +535,22 @@ $FAX_ENABLED            = false;
 
 $BOI_ENABLED            = false;
 
-$BOI_API_DEFAULT        = '';
+//$BOI_API_DEFAULT        = '';
   # default API (add users, GUI integration, ...) when adding new
   # foreign hosts
   # ""   : no API
   # "m01": SOAP-API 1.0, WSDL definition slightly invalid but works
   #        and thus left as is for backward compatibility
 
-$BOI_BRANCH_NETMASK     = '/24';        # CIDR notation, e.g. "/24"
-$BOI_BRANCH_PBX         = '0.0.0.130';  # e.g. "0.0.0.130"
+//$BOI_BRANCH_NETMASK     = '/24';        # CIDR notation, e.g. "/24"
+//$BOI_BRANCH_PBX         = '0.0.0.130';  # e.g. "0.0.0.130"
   # will be added to the network address. example: new phone
   # requests settings, IP 10.1.2.190 => network addr. is
   # 10.1.2.0 => registrar addr. is 10.1.2.130. if that host
   # exists add the nobody user there, else add the nobody user
   # to a Gemeinschaft host according to PROV_AUTO_ADD_PHONE_HOST
 
-$BOI_NOBODY_EXTEN_PATTERN = '95xxxx';
+//$BOI_NOBODY_EXTEN_PATTERN = '95xxxx';
   # like NOBODY_EXTEN_PATTERN but for foreign hosts
 
 //$BOI_GUI_REVERSE_PROXY    = 'http://'. @$PROV_HOST .':8080/';
@@ -571,11 +571,11 @@ $BOI_NOBODY_EXTEN_PATTERN = '95xxxx';
 $LOG_TO      = 'file';              # 'file'|'syslog'
 $LOG_LEVEL   = 'NOTICE';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
 
-# these settings affect only file logging:
-#$LOG_FILE    = '/var/log/gemeinschaft/gs.log';
+  # these settings affect only file logging:
+//$LOG_FILE    = '/var/log/gemeinschaft/gs.log';
 $LOG_GMT     = true;                # use GMT or local time
 
-# these settings affect only logging to syslog:
+  # these settings affect only logging to syslog:
 $LOG_SYSLOG_FACILITY    = 'local5'; # 'local0'-'local7' | 'user'
 
 
@@ -591,6 +591,3 @@ if (@$INSTALLATION_TYPE === 'gpbx') {
 	}
 }
 
-
-// no closing tag to allow editing in vim without -b
-//?>
