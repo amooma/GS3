@@ -65,6 +65,8 @@ function aastra_push_str( $phone_ip, $xml )
 	
 	//FIXME - call wget or something. this function should not block
 	// for so long!
+	// see _gs_prov_phone_checkcfg_by_ip_do_aastra() in
+	// opt/gemeinschaft/inc/gs-fns/gs_prov_phone_checkcfg.php
 	
 	//$xml = utf8_decode($xml);
 	if (subStr($xml,0,5) !== '<'.'?xml') {
