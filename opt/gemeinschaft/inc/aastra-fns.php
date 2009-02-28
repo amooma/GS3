@@ -118,6 +118,7 @@ function aastra_write( $str )
 }
 */
 
+/*
 function aastra_reboot( $phone_ip )
 {
 	$xml = '<AastraIPPhoneExecute>' ."\n";
@@ -125,7 +126,11 @@ function aastra_reboot( $phone_ip )
 	$xml.= '</AastraIPPhoneExecute>' ."\n";
 	
 	return aastra_push_str( $phone_ip, $xml );
+	
+	// see _gs_prov_phone_checkcfg_by_ip_do_aastra() in
+	// opt/gemeinschaft/inc/gs-fns/gs_prov_phone_checkcfg.php
 }
+*/
 
 function aastra_textscreen( $title, $text )
 {
