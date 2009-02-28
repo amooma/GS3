@@ -258,7 +258,33 @@ function _gs_prov_phone_checkcfg_by_ip_do_aastra( $ip, $reboot=true )
 {
 	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
 	
-	@ exec( '/opt/gemeinschaft/sbin/gs-aastra-reboot --ip='. qsa($ip) . ' >>/dev/null 2>>/dev/null &', $out, $err );
+	$prov_host = gs_get_conf('GS_PROV_HOST');
+	
+	$xmlpi = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>'."\n";
+	$xml = '<AastraIPPhoneExecute>' ."\n";
+	$xml.= '	<ExecuteItem URI="Command: Reset" />' ."\n";
+	$xml.= '</AastraIPPhoneExecute>' ."\n";
+	
+	$cmd = 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q'
+		.' '. qsa('http://'.$ip.$uri)
+		.' --referer='. qsa('http://'.$prov_host.'/')
+		.' -U '. qsa('')
+		.' --no-http-keep-alive'
+		.' --header='. qsa('Connection: Close')
+		.' --header='. qsa('Host: '. $ip)
+		.' --header='. qsa('Content-Type: text/xml; charset=utf-8')
+		# Content-Type: text/xml is wrong because "xml=..." is not XML,
+		# but that's how the Aastra wants it.
+		.' --header='. qsa('Content-Length: '. (strLen('xml=') + strLen($xmlpi) + strLen($xml)))
+		.' --post-data '. qsa('xml='. $xmlpi . $xml)
+		.' >>/dev/null 2>>/dev/null &'
+		;
+	unset($xml);
+	unset($xmlpi);
+	$err=0; $out=array();
+	@ exec( $cmd, $out, $err );
+	unset($cmd);
+	return ($err == 0);
 }
 
 
