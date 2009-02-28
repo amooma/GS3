@@ -1,9 +1,12 @@
-Als Faxsystem wird HylaFAX+ verwendet.
+Als Faxsystem wird HylaFax+ verwendet.
 
-HylaFAX läuft auf einem eigenständigen System und verbindet sich per IAX-Modem mit Asterisk Gemeinschaft.
+HylaFax+ läuft auf einem eigenständigen System und verbindet sich
+per IAX-Modem mit Asterisk Gemeinschaft.
 
 
-1. IAXModem installieren
+====================================================================
+1.  IAXModem installieren
+====================================================================
 
 wget
 http://dfn.dl.sourceforge.net/sourceforge/iaxmodem/iaxmodem-0.3.1.tar.gz
@@ -11,8 +14,7 @@ http://dfn.dl.sourceforge.net/sourceforge/iaxmodem/iaxmodem-0.3.1.tar.gz
 mkdir /etc/iaxmodem/
 
 /etc/iaxmodem/ttyIAX0 usw. ttyIAX1, ttyIAX2 (bis ttyIAX9 ?)
-------------------------------------------------------------------------------------
-
+------------------------------------------------------------
 device          /dev/ttyIAX0
 owner           uucp:uucp
 mode            660
@@ -33,15 +35,17 @@ server          127.0.0.1
 peername        iaxmodem01
 secret          myiaxmdpwd
 codec           alaw
+------------------------------------------------------------
 
-
-------------------------------------------------------------------------------------
 Dabei muss der Port bei jedem Modem auch ein anderer sein.
 "server" ist die IP des Asterisk-Hosts
 Rest wie in der iax.conf auf dem Asterisk.
 
 
-2. HylaFax+ installieren
+
+====================================================================
+2.  HylaFax+ installieren
+====================================================================
 
 (nicht das normale alte HylaFax!)
 
@@ -51,8 +55,7 @@ http://surfnet.dl.sourceforge.net/sourceforge/hylafax/hylafax-5.1.8.tar.gz
 
 
 /var/spool/hylafax/etc/FaxDispatch:
-------------------------------------------------------------------------------------
-
+------------------------------------------------------------
 TEMPLATE=de
 NOTIFY_FAXMASTER=errors
 
@@ -70,25 +73,21 @@ USER_ID=`echo $SQL_RESULT | awk  '{print $4}'`;
 FILETYPE=pdf;
 
 /usr/bin/sudo /bin/chgrp "$USER_ID" "$SPOOL/$FILE"
+------------------------------------------------------------
 
-------------------------------------------------------------------------------------
-Die Zugangsdaten zur MySQL (Host, user etc.) müssen angepasst werden.
-
+Die Zugangsdaten zur MySQL-Datenbank (Host, user etc.) müssen
+angepasst werden.
 
 
 /var/spool/hylafax/etc/FaxNotify:
-------------------------------------------------------------------------------------
-
+------------------------------------------------------------
 TEMPLATE=de
 NOTIFY_FAXMASTER=errors
-
-------------------------------------------------------------------------------------
-
+------------------------------------------------------------
 
 
 /var/spool/hylafax/etc/config.ttyIAX0   usw. config.ttyIAX1
-------------------------------------------------------------------------------------
-
+------------------------------------------------------------
 CountryCode:            49
 AreaCode:               2604
 FAXNumber:              02604978190
@@ -121,40 +120,42 @@ CallIDPattern:          "NMBR="
 CallIDPattern:          "NAME="
 CallIDPattern:          "ANID="
 CallIDPattern:          "NDID="
+------------------------------------------------------------
 
-------------------------------------------------------------------------------------
 
 
-3. Sudo, damit FaxDispatch die Gruppen-ID verändern darf:
+====================================================================
+3.  Sudo, damit FaxDispatch die Gruppen-ID verändern darf:
+====================================================================
 
 /etc/sudoers
-------------------------------------------------------------------------------------
-
+------------------------------------------------------------
+[...]
 uucp ALL = NOPASSWD: /bin/chgrp
-
-------------------------------------------------------------------------------------
-
+------------------------------------------------------------
 
 
-4. Faxgetty für Empfang und iaxmodem für Senden automatsich starten:
+
+====================================================================
+4.  Faxgetty für Empfang und iaxmodem für Senden automatsich starten:
+====================================================================
 
 /etc/inittab
-------------------------------------------------------------------------------------
-
+------------------------------------------------------------
 IA00:23:respawn:/usr/local/bin/iaxmodem ttyIAX0
 IA01:23:respawn:/usr/local/bin/iaxmodem ttyIAX1
 mo00:23:respawn:/usr/local/sbin/faxgetty ttyIAX0
 mo01:23:respawn:/usr/local/sbin/faxgetty ttyIAX1
-
-------------------------------------------------------------------------------------
-
+------------------------------------------------------------
 
 
-5. Asterisk auf dem Gemeinschaft-Node konfigurieren:
+
+====================================================================
+5.  Asterisk auf dem Gemeinschaft-Node konfigurieren:
+====================================================================
 
 /opt/gemeinschaft/etc/asterisk/iax.conf
-------------------------------------------------------------------------------------
-
+------------------------------------------------------------
 [iaxmodem1]
 type=friend
 secret=password
@@ -163,14 +164,16 @@ host=dynamic
 context=from-fax-server
 disallow=all
 allow=alaw
+------------------------------------------------------------
 
-------------------------------------------------------------------------------------
 
-6. Gemeinschaft konfigurieren
+
+====================================================================
+6.  Gemeinschaft konfigurieren
+====================================================================
 
 /etc/gemeinschaft/gemeinschaft.php
-------------------------------------------------------------------------------------
-
+------------------------------------------------------------
 $FAX_ENABLED        = true;
 $FAX_TSI_PFEFIX     = '0251';
 $FAX_TSI            = '02511234, 02515677';
@@ -178,8 +181,9 @@ $FAX_HYLAFAX_HOST   = '127.0.0.1';
 $FAX_HYLAFAX_PORT   = 4559;
 $FAX_HYLAFAX_ADMIN  = 'webmgr';
 $FAX_HYLAFAX_PASS   = 'a9bl2ue7';
+------------------------------------------------------------
 
-------------------------------------------------------------------------------------
+Dabei ist
 $FAX_TSI_PREFIX + User-Extension = Fax-Senderkennung
 $FAX_TSI = Zusätzliche globale Faxnummern, die der Benutzer als Faxkennung setzen darf.
 
