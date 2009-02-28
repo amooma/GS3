@@ -179,7 +179,7 @@ allow=alaw
 /etc/gemeinschaft/gemeinschaft.php
 ------------------------------------------------------------
 $FAX_ENABLED        = true;
-$FAX_TSI_PFEFIX     = '0251';
+$FAX_TSI_PREFIX     = '0251';
 $FAX_TSI            = '02511234, 02515677';
 $FAX_HYLAFAX_HOST   = '127.0.0.1';
 $FAX_HYLAFAX_PORT   = 4559;
