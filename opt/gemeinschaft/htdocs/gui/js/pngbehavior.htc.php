@@ -1,7 +1,8 @@
 <?php
 
-header( 'Content-Type: text/plain' );
-//header( 'Content-Type: text/x-component' );
+header( 'Content-Type: text/x-component' );
+//header( 'Content-Type: text/plain' );
+
 //header( 'Pragma: cache' );
 header( 'Cache-Control: public, max-age=120, must-revalidate' );
 //header( 'Last-Modified: '. gmDate('D, d M Y 00:00:00') .' GMT');
