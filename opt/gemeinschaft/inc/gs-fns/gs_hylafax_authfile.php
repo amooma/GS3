@@ -56,7 +56,7 @@ ORDER BY `id`'
 	# create temporary hylafax host/user authentication file
 	#
 	if (file_exists($authfile) && (! is_writable($authfile))) {
-		@exec( 'sudo rm -f '. qsa($authfile) );
+		@exec( 'sudo rm -f '. qsa($authfile) .' 2>>/dev/null' );
 	}
 	
 	$fh = @fOpen($authfile,'w');
@@ -139,12 +139,16 @@ function gs_hylafax_authfile_sync( $authfile = '' )
 	# There is a fallback mechanism which copies the file instead of
 	# FTP put'ting it if the fax server is running on the local machine.
 	
-	if (! $authfile) $authfile = gs_get_conf('GS_FAX_HYLAFAX_TMPAUTHFILE', '/tmp/gs-hylafax-hosts.hfaxd');
+	if (! $authfile) $authfile = '/tmp/gs-hylafax-hosts.hfaxd-'.rand(100000,999999);
 	
 	# create authfile locally
 	# 
 	$result = gs_hylafax_authfile_create( $authfile );
 	if ($result !== true) {
+		clearStatCache();
+		if (file_exists($authfile)) {
+			@exec( 'sudo rm -f '. qsa($authfile) .' 2>>/dev/null' );
+		}
 		return $result;
 	}
 	
@@ -159,22 +163,40 @@ function gs_hylafax_authfile_sync( $authfile = '' )
 		||  (gs_get_conf('GS_FAX_HYLAFAX_HOST') == 'localhost')) {
 			$authfile_dst =
 				gs_get_conf('GS_FAX_HYLAFAX_PATH', '/var/spool/hylafax/').
-				gs_get_conf('GS_FAX_HYLAFAX_AUTHFILE', '/etc/hosts.hfaxd');
+				'etc/hosts.hfaxd';
 			
 			$err=0; $out=array();
 			@exec( 'sudo mv '. qsa($authfile) .' '. qsa($authfile_dst) .' 2>>/dev/null', $out, $err );
-			if ($err !== 0) return new GsError( 'Error updating fax authentication on localhost.' );
+			if ($err !== 0) {
+				@exec( 'sudo rm -f '. qsa($authfile) .' 2>>/dev/null' );
+				return new GsError( 'Error updating fax authentication on localhost.' );
+			}
 			
 			$err=0; $out=array();
 			@exec( 'sudo chown '. qsa(gs_get_conf('GS_FAX_HYLAFAX_USER', 'uucp')) .' '. qsa($authfile_dst) .' 2>>/dev/null', $out, $err );
-			if ($err != 0) return new GsError( 'Error updating fax authentication on localhost.' );
+			if ($err != 0) {
+				@exec( 'sudo rm -f '. qsa($authfile) .' 2>>/dev/null' );
+				return new GsError( 'Error updating fax authentication on localhost.' );
+			}
 			
 			$err=0; $out=array();
 			@exec( 'sudo chmod '. '0600' .' '. qsa($authfile_dst) .' 2>>/dev/null', $out, $err );
-			if ($err !== 0) return new GsError( 'Error updating fax authentication on localhost.' );
+			if ($err !== 0) {
+				@exec( 'sudo rm -f '. qsa($authfile) .' 2>>/dev/null' );
+				return new GsError( 'Error updating fax authentication on localhost.' );
+			}
 			
 			$ret = true;
+			@exec( 'sudo rm -f '. qsa($authfile) .' 2>>/dev/null' );
+			
+			if (@is_dir('/etc/hylafax')) {  # Debian
+				@exec( 'sudo cp '. qsa($authfile_dst) .' '. qsa('/etc/hylafax/hosts.hfaxd') .' 2>>/dev/null' );
+			}
 		}
+	}
+	clearStatCache();
+	if (file_exists($authfile)) {
+		@exec( 'sudo rm -f '. qsa($authfile) .' 2>>/dev/null' );
 	}
 	return $ret;
 }
