@@ -266,7 +266,7 @@ function _gs_prov_phone_checkcfg_by_ip_do_aastra( $ip, $reboot=true )
 	$xml.= '</AastraIPPhoneExecute>' ."\n";
 	
 	$cmd = 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q'
-		.' '. qsa('http://'.$ip.$uri)
+		.' '. qsa('http://'.$ip.'/')
 		.' --referer='. qsa('http://'.$prov_host.'/')
 		.' -U '. qsa('')
 		.' --no-http-keep-alive'
