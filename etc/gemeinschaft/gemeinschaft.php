@@ -513,7 +513,7 @@ $EMAIL_DELIVERY         = 'sendmail';
 *    FAX
 ***********************************************************/
 
-//$FAX_ENABLED            = false;
+$FAX_ENABLED            = false;
 //$FAX_PREFIX             = '*96';  # e.g. "*96" or "6"
   # internally faxes can be sent to <FAX_PREFIX><extension>
 //$FAX_TSI_PREFIX         = '02501234';
