@@ -14,6 +14,7 @@ http://dfn.dl.sourceforge.net/sourceforge/iaxmodem/iaxmodem-0.3.1.tar.gz
 mkdir /etc/iaxmodem/
 
 /etc/iaxmodem/ttyIAX0 usw. ttyIAX1, ttyIAX2 (bis ttyIAX9 ?)
+(siehe fax-integration/ttyIAX0, ...)
 ------------------------------------------------------------
 device          /dev/ttyIAX0
 owner           uucp:uucp
@@ -55,6 +56,7 @@ http://surfnet.dl.sourceforge.net/sourceforge/hylafax/hylafax-5.1.8.tar.gz
 
 
 /var/spool/hylafax/etc/FaxDispatch:
+(siehe fax-integration/FaxDispatch)
 ------------------------------------------------------------
 TEMPLATE=de
 NOTIFY_FAXMASTER=errors
@@ -86,7 +88,8 @@ NOTIFY_FAXMASTER=errors
 ------------------------------------------------------------
 
 
-/var/spool/hylafax/etc/config.ttyIAX0   usw. config.ttyIAX1
+/var/spool/hylafax/etc/config.ttyIAX0, config.ttyIAX1, ...
+(siehe fax-integration/config.ttyIAX0)
 ------------------------------------------------------------
 CountryCode:            49
 AreaCode:               2604
@@ -137,7 +140,7 @@ uucp ALL = NOPASSWD: /bin/chgrp
 
 
 ====================================================================
-4.  Faxgetty für Empfang und iaxmodem für Senden automatsich starten:
+4.  Faxgetty für Empfang und iaxmodem zum Senden automatsich starten:
 ====================================================================
 
 /etc/inittab
@@ -155,6 +158,7 @@ mo01:23:respawn:/usr/local/sbin/faxgetty ttyIAX1
 ====================================================================
 
 /opt/gemeinschaft/etc/asterisk/iax.conf
+(siehe fax-integration/iax.conf.template)
 ------------------------------------------------------------
 [iaxmodem1]
 type=friend
