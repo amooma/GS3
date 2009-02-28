@@ -524,7 +524,7 @@ $FAX_ENABLED            = false;
 
 //$FAX_HYLAFAX_HOST       = '127.0.0.1';
 //$FAX_HYLAFAX_PORT       = 4559;          # HylaFax port (FTP-like protocol)
-//$FAX_HYLAFAX_ADMIN      = '';            # Adds admin user to your HylaFAX "hosts.hfaxd"
+//$FAX_HYLAFAX_ADMIN      = '';            # Adds admin user to your HylaFax's "hosts.hfaxd"
 //$FAX_HYLAFAX_PASS       = '';
 
 
