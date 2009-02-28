@@ -8,8 +8,7 @@ per IAX-Modem mit Asterisk Gemeinschaft.
 1.  IAXModem installieren
 ====================================================================
 
-wget
-http://dfn.dl.sourceforge.net/sourceforge/iaxmodem/iaxmodem-0.3.1.tar.gz
+wget http://dfn.dl.sourceforge.net/sourceforge/iaxmodem/iaxmodem-0.3.1.tar.gz
 ./configure && make && cp iaxmodem /usr/local/bin/
 mkdir /etc/iaxmodem/
 
@@ -50,8 +49,7 @@ Rest wie in der iax.conf auf dem Asterisk.
 
 (nicht das normale alte HylaFax!)
 
-wget
-http://surfnet.dl.sourceforge.net/sourceforge/hylafax/hylafax-5.1.8.tar.gz
+wget http://surfnet.dl.sourceforge.net/sourceforge/hylafax/hylafax-5.1.8.tar.gz
 ./configure && make && make install
 
 
