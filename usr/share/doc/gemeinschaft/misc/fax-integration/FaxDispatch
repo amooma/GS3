@@ -10,7 +10,6 @@
 ##       SENDTO          the destination e-mail address of the notification
 
 LANG=de_DE
-TEMPLATE=carbon_de
 NOTIFY_FAXMASTER=errors
 
 EXTEN_ID=$CALLID4;
