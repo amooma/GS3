@@ -82,7 +82,6 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 $jobs_done = fax_get_jobs_done($_SESSION['sudo_user']['name'], gs_user_pin_get($_SESSION['sudo_user']['name']));
 $recdate = array();
 $jobid   = array();
-
 if (is_array($jobs_done)) {
 	foreach ($jobs_done as $key => $row) {
 		$recdate[$key] = $row[32];

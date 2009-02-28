@@ -70,10 +70,18 @@ $jobid   = array();
 if (is_array($jobs_rec)) {
 	
 	foreach ($jobs_rec as $key => $row) {
-		$recdate[$key] = $row[18];
-		$jobid  [$key] = $row[4];
+		/*
+		if ($row[11] == $_SESSION['sudo_user']['name']) {
+		*/
+			$recdate[$key] = $row[18];
+			$jobid  [$key] = $row[4];
+		/*
+		} else {
+			unset($jobs_rec[$key]);
+		}
+		*/
 	}
-
+	
 	@array_multisort($recdate, SORT_DESC, $jobid, SORT_ASC, $jobs_rec);
 	
 	unset($recdate);
