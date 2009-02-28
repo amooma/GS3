@@ -27,7 +27,19 @@
 \*******************************************************************/
 defined('GS_VALID') or die('No direct access.');
 
+if (! defined('PHP_EOL')) {  # defined since PHP 4.3.10 and 5.0.2
+	if (strToUpper(subStr(PHP_OS,0,3))==='WIN')
+		define('PHP_EOL', "\r\n");
+	else
+		define('PHP_EOL', "\n");
+}
 
+
+# quoted-printable encoding for MIME messages according to RFC 2045.
+# Use $eol="\r\n" if you speak SMTP directly or $eol="\n" or $eol=PHP_EOL
+# if you use mail() which talks to sendmail which expects native line
+# endings.
+#
 function quoted_printable_encode_text( $text, $eol="\r\n" )
 {
 	/*
@@ -36,14 +48,15 @@ function quoted_printable_encode_text( $text, $eol="\r\n" )
 		//...
 	}
 	*/
-	if (function_exists('imap_8bit')) {
-		$text = preg_replace('/(?:\r\n|\r|\n)/', "\r\n", $text);  # so imap_8bit() works correctly
+	if (function_exists('imap_8bit')) {  # IMAP module
+		# this block is about 12 times faster than the block below
+		$text = preg_replace('/(?:\r\n?|\n)/', "\r\n", $text);  # so imap_8bit() works correctly
 		$text = imap_8bit($text);
 		$text = str_replace(
-			array( '=0D=0A', '=0A', '=0D' ),
-			array( "\n"    , "\n" , "\n"  ),
+			array( '=0D=0A', '=0A'  , '=0D'   ),
+			array( PHP_EOL , PHP_EOL, PHP_EOL ),
 			$text
-		);
+		);  # so $ matches line endings below
 		$text = preg_replace('/ $/mS', '=20', $text);
 		$text = preg_replace('/^\\.$/mS', '=2E', $text);
 		if ($eol !== "\n") {
@@ -53,7 +66,7 @@ function quoted_printable_encode_text( $text, $eol="\r\n" )
 	}
 	else {
 		$hex = array('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');
-		$lines = preg_split('/(?:\r\n|\r|\n)/', $text);
+		$lines = preg_split('/(?:\r\n?|\n)/S', $text);
 		$maxlen = 76;
 		$out = '';
 		foreach ($lines as $line) {
