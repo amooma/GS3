@@ -114,7 +114,8 @@ function gs_hylafax_authfile_put( $authfile )
 	
 	# put the local authfile to fax server
 	#
-	if (! @ftp_put($con_id, gs_get_conf('GS_FAX_HYLAFAX_AUTHFILE', '/etc/hosts.hfaxd'), $authfile, FTP_BINARY)) {
+	# HylaFax convention: absolute path, relative to Hylafax dir (/var/spool/hylafax/)
+	if (! @ftp_put($con_id, '/etc/hosts.hfaxd', $authfile, FTP_BINARY)) {
 		return new GsError( 'Failed to push authfile to HylaFax server.' );
 	}
 	
