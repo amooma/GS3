@@ -470,15 +470,6 @@ $MONITOR_FROM_NET           = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.25
   # ranges
   # CIDR or dotted decimal notation
 
-#$LVM_USER_6_DIGIT_INT       = false;
-  # compare user names as 6 digit integers (padded with zeros (0)
-  # on the left. currently used by htdocs/prov/call-init.php and
-  # inc/gs-fns/gs_user_external_number*. should normally be off
-  # because usernames are alphanumeric strings. deprecated.
-
-#$LVM_CALL_INIT_USERS_500000 = false;
-  # should normally be off. deprecated.
-
 $CC_TIMEOUT             =  60;      # timeout of programmed call
                                     # completions in minutes
 
