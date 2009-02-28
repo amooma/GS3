@@ -337,6 +337,7 @@ $FAX_HYLAFAX_PASS  =
 	preg_replace('/[^a-z0-9\-_.]/i', '',
 	@$FAX_HYLAFAX_PASS  );
 _gscnf( 'FAX_HYLAFAX_PASS'          , ''                 );
+_gscnf( 'FAX_HYLAFAX_PATH'          , '/var/spool/hylafax/' );
 
 _gscnf( 'BOI_ENABLED'               , false              );
 _gscnf( 'BOI_API_DEFAULT'           , 'm01'              );
