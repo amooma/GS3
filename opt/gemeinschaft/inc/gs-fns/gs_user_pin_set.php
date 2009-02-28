@@ -30,6 +30,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 
+
 /***********************************************************
 *    sets a user's PIN
 ***********************************************************/
@@ -155,16 +156,16 @@ function gs_user_pin_set( $user, $pin='' )
 		return new GsError( 'Failed to change PIN.' );
 	}
 
-	# update fax authentification file if fax enabled
+	# update fax authentication file if fax enabled
 	#
 	if (gs_get_conf('GS_FAX_ENABLED')) {
-		$ok = gs_hylafax_authfile_sync( );
+		$ok = gs_hylafax_authfile_sync();
 		if (isGsError( $ok ))
 			return new GsError( $ok->getMsg() );
 		if (! $ok)
-			return new GsError( 'Failed to update fax authetification file.' );
+			return new GsError( 'Failed to update fax authentication file.' );
 	}
-
+	
 	return true;
 }
 
