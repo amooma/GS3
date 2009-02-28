@@ -332,11 +332,11 @@ _gscnf( 'FAX_HYLAFAX_PORT'          , 4559               );
 $FAX_HYLAFAX_ADMIN =
 	preg_replace('/[^a-z0-9\-_.]/i', '',
 	@$FAX_HYLAFAX_ADMIN );
-_gscnf( 'FAX_HYLAFAX_ADMIN'         , ''            );
+_gscnf( 'FAX_HYLAFAX_ADMIN'         , ''                 );
 $FAX_HYLAFAX_PASS  =
 	preg_replace('/[^a-z0-9\-_.]/i', '',
 	@$FAX_HYLAFAX_PASS  );
-_gscnf( 'FAX_HYLAFAX_PASS'          , ''           );
+_gscnf( 'FAX_HYLAFAX_PASS'          , ''                 );
 
 _gscnf( 'BOI_ENABLED'               , false              );
 _gscnf( 'BOI_API_DEFAULT'           , 'm01'              );
