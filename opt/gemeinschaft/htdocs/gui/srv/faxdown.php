@@ -33,6 +33,7 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 require_once( GS_DIR .'inc/cn_hylafax.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_pin_get.php' );
 
+
 $file = trim(@$_REQUEST['file']);
 $raw  = trim(@$_REQUEST['raw']);
 
