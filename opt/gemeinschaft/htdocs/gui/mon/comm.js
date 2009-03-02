@@ -122,6 +122,37 @@ function gs_m( exts )
 	}
 }
 
+var gs_mon_err = 'uninitialized';
+var gs_mon_reconnect_after = 1000;
+
+function gs_e( err )
+{
+	gs_mon_err = err;
+	
+	var status_html = '';
+	
+	switch (gs_mon_err) {
+		case ''           :
+			status_html = '<span class="ok">verbunden</span>';
+			gs_mon_reconnect_after = 250;
+			break;
+		case 'connecting' :
+			status_html = '<span class="ok">verbinden ...</span>';
+			break;
+		case 'daemondown' :
+			status_html = '<b class="err">Keine Verbindung!</b>';
+			gs_mon_reconnect_after = 9000;
+			break;
+		default           :
+			status_html = '<b class="err">unbekannter Fehler!</b>';
+			gs_mon_reconnect_after = 5000;
+	}
+	try {
+		$('mon-status').innerHTML = status_html;
+	}
+	catch(e){}
+}
+
 function req_msg_stream()
 {
 	// the transport is done like "Comet" but with an iframe and
@@ -146,11 +177,23 @@ Event.observe( window, 'load', function(){
 	if (iframe) {
 		Event.observe( iframe, 'load', function(){
 			// our transport iframe is done with loading
-			window.setTimeout('req_msg_stream();', 250);
+			
+			if (iframe.contentWindow
+			&&  iframe.contentWindow.document
+			&&  iframe.contentWindow.document.documentElement
+			&&  iframe.contentWindow.document.documentElement.innerHTML
+			&&  iframe.contentWindow.document.documentElement.innerHTML.length
+			&&  iframe.contentWindow.document.documentElement.innerHTML.length < 250
+			) {
+				gs_e('unknown');
+			}
+			
+			window.setTimeout('req_msg_stream();', gs_mon_reconnect_after);
 		});
 	}
 	
-	window.setTimeout('req_msg_stream();', 2000);
+	gs_e('connecting');
+	window.setTimeout('req_msg_stream();', 1500);
 });
 
 
