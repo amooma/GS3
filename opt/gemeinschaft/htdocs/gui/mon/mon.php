@@ -44,19 +44,17 @@ header( 'Content-Type: text/html; charset=utf-8' );
 
 $remote_ip = @$_SERVER['REMOTE_ADDR'];
 $allowed = false;
-if (defined('GS_MONITOR_FROM_NET')) {
-	$networks = explode(',', GS_MONITOR_FROM_NET);
-	foreach ($networks as $net) {
-		if (ip_addr_in_network( $remote_ip, trim($net) )) {
-			$allowed = true;
-			break;
-		}
+$networks = explode(',', gs_get_conf('GS_MONITOR_FROM_NET'));
+foreach ($networks as $net) {
+	if (ip_addr_in_network( $remote_ip, trim($net) )) {
+		$allowed = true;
+		break;
 	}
 }
 if (! $allowed) {
-	header( 'HTTP/1.0 403 Forbidden', true, 403 );
-	header( 'Status: 403 Forbidden', true, 403 );
-	header( 'Content-Type: text/plain; charset=utf-8' );
+	@header( 'HTTP/1.0 403 Forbidden', true, 403 );
+	@header( 'Status: 403 Forbidden', true, 403 );
+	@header( 'Content-Type: text/plain; charset=utf-8' );
 	echo "Not allowed for $remote_ip.\nSee config.\n";
 	die();
 }
@@ -222,6 +220,9 @@ body {
 	border: 0px none transparent;
 }
 
+#mon-status .err { background:#d00; color:#fed; padding:1px 3px; }
+#mon-status .ok  { background:transparent; color:#0c0; padding:1px 3px; }
+
 </style>
 <script type="text/javascript">
 // <![CDATA[
@@ -386,7 +387,7 @@ if (! $db) {
 
 <br />
 
-<div style="float:left; width:40%; color:#222;"><small>Status: <span id="mon-status">---</span></small></div>
+<div style="float:left; width:40%; color:#ddd;"><small>Status: <span id="mon-status">---</span></small></div>
 
 <div id="copyright" style="float:right; width:40%; text-align:right; color:#222;"><small>&copy; amooma gmbh</small></div>
 

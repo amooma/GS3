@@ -48,32 +48,55 @@ ob_implicit_flush(1);
 
 @ini_set('max_execution_time', $maxtime+10);
 
+
+$html_start =
+	'<html><head><title>-</title>' ."\n".
+	'<script type="text/javascript">' ."\n".
+	'function e(s) {try{ window.parent.gs_e(s); }catch(e){}}' ."\n".
+	'function m(o) {try{ window.parent.gs_m(o); }catch(e){}}' ."\n".
+	'</script>' ."\n".
+	'</head><body>' ."\n\n";
+$html_end =
+	"\n".
+	'</body></html>' ."\n";
+
+$msg_open  = '<script type="text/javascript">' ."\n";
+$msg_close = '</script>' .'.' ."\n";
+// padding for the stupid MSIE:
+$msie_pad = str_repeat(' ', 256-1) ."\n";
+
+
 $sock = @fSockOpen( $host, $port, $err, $errMsg, 5 );
 if (! is_resource($sock)) {
 	header( 'HTTP/1.0 500 Internal Server Error', true, 500 );
 	header( 'Status: 500 Internal Server Error', true, 500 );
+	
+	echo $html_start;
+	
+	echo $msg_open;
+	echo 'e("daemondown");' ,"\n";
+	echo $msie_pad;
+	echo $msg_close;
+	
+	echo $html_end;
+	
+	sleep(1);
 	die();
 }
 
-function _html_end() {
-	echo "\n", '</body></html>', "\n";
-	die();
-}
+
 
 @stream_set_blocking( $sock, false );
 $tStart = time();
 $cnt_no_data = 0;
 $buf = '';
-$msg_open  = '<script type="text/javascript">'."\n";
-$msg_close = '</script>'.".\n";
-// padding for the stupid MSIE:
-$msie_pad = str_repeat(' ', 256-1) ."\n";
 
-echo '<html><head><title>-</title>' ,"\n",
-     '<script type="text/javascript">' ,"\n",
-     'function m(o) {try{ window.parent.gs_m(o); }catch(e){}}', "\n",
-     '</script>' ,"\n",
-     '</head><body>' ,"\n\n";
+echo $html_start;
+
+echo $msg_open;
+echo 'e("");' ,"\n";  # everything is fine
+echo $msie_pad;
+echo $msg_close;
 
 //$db = gs_db_slave_connect();
 
@@ -85,7 +108,8 @@ while (! @fEof( $sock ) && time() < $tStart+$maxtime) {
 	} else {
 		if (++$cnt_no_data > 500) {
 			# we sleep 0.01 secs so this is 5 secs
-			_html_end();
+			echo $html_end;
+			exit(0);
 		}
 	}
 	
@@ -140,6 +164,7 @@ while (! @fEof( $sock ) && time() < $tStart+$maxtime) {
 	uSleep(10000);  # sleep 0.01 secs
 }
 
-_html_end();
+echo $html_end;
+exit(0);
 
 ?>
