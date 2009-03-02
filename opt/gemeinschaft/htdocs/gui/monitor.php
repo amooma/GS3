@@ -30,9 +30,29 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 
 include_once( GS_DIR .'inc/gettext.php' );
-require_once( GS_DIR .'htdocs/gui/inc/session.php' );
+require_once( GS_DIR .'inc/netmask.php' );
+require_once( GS_DIR .'htdocs/gui/inc/session.php' );  //FIXME
 include_once( GS_DIR .'inc/extension-state.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
+
+
+$remote_ip = @$_SERVER['REMOTE_ADDR'];
+$allowed = false;
+$networks = explode(',', gs_get_conf('GS_MONITOR_FROM_NET'));
+foreach ($networks as $net) {
+	if (ip_addr_in_network( $remote_ip, trim($net) )) {
+		$allowed = true;
+		break;
+	}
+}
+if (! $allowed) {
+	@header( 'HTTP/1.0 403 Forbidden', true, 403 );
+	@header( 'Status: 403 Forbidden', true, 403 );
+	@header( 'Content-Type: text/plain; charset=utf-8' );
+	echo "Not allowed for $remote_ip.\nSee config.\n";
+	die();
+}
+
 
 function gs_url( $sect='', $mod='', $sudo_user='' )
 {
@@ -272,27 +292,6 @@ body {
 </style>
 <?php
 
-/*
-$remote_ip = @$_SERVER['REMOTE_ADDR'];
-$allowed = false;
-if (defined('GS_MONITOR_FROM_NET')) {
-	$networks = explode(',', GS_MONITOR_FROM_NET);
-	foreach ($networks as $net) {
-		if (ip_addr_in_network( $remote_ip, trim($net) )) {
-			$allowed = true;
-			break;
-		}
-	}
-}
-if (! $allowed) {
-	header( 'HTTP/1.0 403 Forbidden', true, 403 );
-	header( 'Status: 403 Forbidden', true, 403 );
-	header( 'Content-Type: text/plain; charset=utf-8' );
-	echo "Not allowed for $remote_ip.\nSee config.\n";
-	die();
-}
-*/
-
 $ext_ranges = preg_replace('/\s+/', '', @$_REQUEST['extensions']);
 $ext_ranges = get_ext_ranges( $ext_ranges );
 
@@ -388,7 +387,7 @@ echo "</table>";
 ?>
 
 <script type="text/javascript">/*<![CDATA[*/
-window.setTimeout('document.location.reload();', 15000);
+window.setTimeout('document.location.reload();', 9000);
 /*]]>*/</script>
 <div class="nofloat"></div>
 
