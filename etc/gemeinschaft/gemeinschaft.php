@@ -465,7 +465,8 @@ $CALL_INIT_FROM_NET         = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.25
   # e.g.: '127.0.0.1, 192.168.1.130/255.255.255.0, 192.168.1.130/24'
   # allow all: '0.0.0.0/0', allow none: '0.0.0.0/32'
 
-$MONITOR_FROM_NET           = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
+$MONITOR_FROM_NET           = '0.0.0.0/32';  # deny all
+//$MONITOR_FROM_NET           = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # allow access to the extension monitor panel from these network
   # ranges
   # CIDR or dotted decimal notation
