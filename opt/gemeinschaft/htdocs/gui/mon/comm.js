@@ -21,14 +21,14 @@ var AST_EXTSTATE_RINGINUSE =  9 ;  // busy + ringing
 var AST_EXTSTATE_ONHOLD    = 16 ;  // hold
 
 
-function get_transport_iframe()
+function get_iframe( id )
 {
-	var iframe = $('transport');
+	var iframe = $(id);
 	if (iframe) return iframe;
 	
 	// IE 5 Mac:
-	if (document.frames && document.frames['transport'])
-		return document.frames['transport'];
+	if (document.frames && document.frames[id])
+		return document.frames[id];
 	
 	return null;
 }
@@ -53,7 +53,7 @@ function get_iframe_document_element( iframe )
 
 function get_transport_document_element()
 {
-	var iframe = get_transport_iframe();
+	var iframe = get_iframe('transport');
 	if (iframe) {
 		return get_iframe_document_element( iframe );
 	}
@@ -161,10 +161,16 @@ function req_msg_stream()
 	// disadvantage: a browser will only load one of such streams
 	// at a time, so viewing more than one monitor is not possible.
 	// and the page seems to be loading for about half a minute
-	var iframe = get_transport_iframe();
+	var iframe = get_iframe('transport');
 	if (iframe) {
 		iframe.src = 'proxy.php?rand='+ parseInt(Math.random()*99999999);
-		return true;
+		
+		var dummy_iframe = $('dummy_iframe');
+		if (dummy_iframe) {
+			dummy_iframe.src = 'about:blank';
+			// stops the throbber
+			return true;
+		}
 	}
 	
 	alert('There\'s a problem with your browser.');
@@ -173,7 +179,7 @@ function req_msg_stream()
 
 
 Event.observe( window, 'load', function(){
-	var iframe = get_transport_iframe();
+	var iframe = get_iframe('transport');
 	if (iframe) {
 		Event.observe( iframe, 'load', function(){
 			// our transport iframe is done with loading

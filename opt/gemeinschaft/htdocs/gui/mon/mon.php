@@ -210,7 +210,8 @@ body {
 	color: #eee;
 }
 
-#transport {
+#transport,
+#dummy_iframe {
 	/* some browsers do not load the src of 0x0px or display=none iframes! */
 	width: 10px;
 	height: 2px;
@@ -336,6 +337,7 @@ if ($db) {
 </head>
 <body style="margin:0; padding:0.5em;">
 <iframe id="transport" src="about:blank"></iframe>
+<iframe id="dummy_iframe" src="about:blank"></iframe>
 
 <?php
 
