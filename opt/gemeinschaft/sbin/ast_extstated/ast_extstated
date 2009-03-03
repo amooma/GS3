@@ -100,7 +100,8 @@ our $sel;
 use IO::Socket;
 use IO::Select;
 my $srv_sock = new IO::Socket::INET(
-	LocalAddr  => '0.0.0.0',
+	#LocalAddr  => '0.0.0.0',
+	LocalAddr  => '127.0.0.1',  # bind to 127.0.0.1 only by default
 	LocalPort  => 5039,
 	Reuse      => 1,
 	ReuseAddr  => 1,
@@ -553,7 +554,7 @@ my $configfile = "/etc/ast_extstated.ini";
 #
 my @asterisks = read_conf($configfile);
 if ($has_tty) {
-	print "Connect to:\n";
+	print "Connect to Asterisk nodes:\n";
 	foreach my $asterisk (@asterisks) {
 		print $asterisk->{'host'} . "\n";
 	}
@@ -718,6 +719,7 @@ my %conn_close;
 my $uniqueid;
 my $remote_ext;
 my $remote_ext_out;
+my $first_client_fd = -1;
 
 while (1) {
 	
@@ -787,9 +789,25 @@ while (1) {
 		if ($client == $srv_sock) {
 			# Create a new socket
 			$new_client = $srv_sock->accept();
+			if (! $new_client || ! $new_client->peerhost) {
+				# huh?
+				next;
+			}
+			if ($new_client->peerhost ne '127.0.0.1') {
+				# accept local clients only
+				print "Rejected connection from " . $new_client->peerhost . "\n";
+				$new_client->close();
+				next;
+			}
+			
+			if ($first_client_fd < 0) {
+				$first_client_fd = fileno($new_client);
+			}
+			
 			$sel->add($new_client);
-			#push( @data, fileno($new_client) . " has joined.");
-			#print "Client connected from " . $new_client->peerhost . "\n";
+			#print "Client ". fileno($new_client) . " has joined.\n";
+			print "Client ". (fileno($new_client)-$first_client_fd+1) ." connected from ". $new_client->peerhost ."\n";
+			
 			&usleep(10000);  # 0.01 s
 			$conn_close{fileno($new_client)} = $time + $conn_time;
 			#print $new_client "HTTP/1.0 200 OK\r\n";
@@ -804,11 +822,11 @@ while (1) {
 			if ($input) {chomp $input;}
 			if (!$input || $input eq '') {
 				#push( @data, fileno($client) . " has left.");
-				#if ($new_client && $new_client->peerhost) {
-				#	print "Client " . $new_client->peerhost . " disconnected\n";
-				#} else {
-				#	print "Client disconnected\n";
-				#}
+				if ($new_client && $new_client->peerhost) {
+					print "Client ". (fileno($new_client)-$first_client_fd+1) ." disconnected from ". $new_client->peerhost ."\n";
+				} else {
+					print "Client disconnected\n";
+				}
 				$sel->remove($client);
 				delete $conn_close{fileno($client)};
 				$client->close();
