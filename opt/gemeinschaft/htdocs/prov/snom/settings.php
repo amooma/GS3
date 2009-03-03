@@ -513,7 +513,7 @@ psetting('display_method'   , 'display_name_number');
 psetting('tone_scheme'      , 'GER'    );
 psetting('date_us_format'   , 'off'    , true);
 psetting('time_24_format'   , 'on'     , true);
-psetting('message_led_other', 'off'    );
+psetting('message_led_other', 'on'     );
 psetting('use_backlight'    , 'on'     , true);  # always | on | off | dim (370, >= 7.1.33)
 //psetting('headset_device'   , 'headset_rj', true);  # wuerde Default auf Headset am RJ14-Stecker setzen
 psetting('headset_device'   , 'none'   , true);
@@ -826,7 +826,7 @@ setting('user_pass'          ,$i, $user['secret']);
 //setting('user_hash'          ,$i, md5($user_ext .':'. 'asterisk' .':'. $user['secret']));
 setting('user_realname'      ,$i, $user['callerid']);
 setting('user_idle_text'     ,$i, $user_ext .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
-setting('record_missed_calls'  ,$i, 'off');
+setting('record_missed_calls'  ,$i, 'on' );
 setting('record_dialed_calls'  ,$i, 'off');
 setting('record_received_calls',$i, 'off');
 
