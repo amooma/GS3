@@ -43,8 +43,8 @@ header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Expires: 0' );
 header( 'Vary: *' );
 
-ini_set('implicit_flush', 1);
-ob_implicit_flush(1);
+ini_set('implicit_flush', 0);
+ob_implicit_flush(0);
 
 @ini_set('max_execution_time', $maxtime+10);
 
@@ -80,6 +80,7 @@ if (! is_resource($sock)) {
 	
 	echo $html_end;
 	
+	@ob_flush(); @flush();
 	sleep(1);
 	die();
 }
@@ -97,6 +98,7 @@ echo $msg_open;
 echo 'e("");' ,"\n";  # everything is fine
 echo $msie_pad;
 echo $msg_close;
+@ob_flush(); @flush();
 
 //$db = gs_db_slave_connect();
 
@@ -106,9 +108,10 @@ while (! @fEof( $sock ) && time() < $tStart+$maxtime) {
 		$cnt_no_data = 0;
 		$buf .= $data;
 	} else {
-		if (++$cnt_no_data > 500) {
-			# we sleep 0.01 secs so this is 5 secs
+		if (++$cnt_no_data > 250) {
+			# we sleep 0.02 secs so this is 5 secs
 			echo $html_end;
+			@ob_flush(); @flush();
 			exit(0);
 		}
 	}
@@ -159,12 +162,14 @@ while (! @fEof( $sock ) && time() < $tStart+$maxtime) {
 		echo "});\n";
 		echo $msie_pad;
 		echo $msg_close;
+		@ob_flush(); @flush();
 	}
 	
-	uSleep(10000);  # sleep 0.01 secs
+	uSleep(20000);  # sleep 0.02 secs
 }
 
 echo $html_end;
+@ob_flush(); @flush();
 exit(0);
 
 ?>
