@@ -43,6 +43,7 @@ $clicked_button_val = getButtonValHack();
 <meta http-equiv="cache-control" content="no-cache" />
 <style type="text/css">
 	body {
+		margin: 0 1em;
 		font-family: sans-serif;
 		font-size: 11pt;
 	}
@@ -54,6 +55,7 @@ $clicked_button_val = getButtonValHack();
 		background: #ddd;
 		border: 1px solid #ccc;
 		padding: 0.3em 0.5em;
+		margin: 0;
 	}
 	button {
 		width: 10em;
@@ -175,7 +177,7 @@ $clicked_button_val = getButtonValHack();
 	<?php
 		$buttonval = 'test-4b';
 	?>
-	<button type="submit" name="buttonval4b" value="<?php echo htmlEnt($buttonval); ?>" onclick="this.style.color='transparent'; this.innerHTML='buttonValue'; this.form.submit();">Button <div>4b</div> <!-- val:<?php echo htmlEnt($buttonval); ?> --></button>
+	<button type="submit" name="buttonval4b" value="<?php echo htmlEnt($buttonval); ?>">Button <div>4b</div> <!-- val:<?php echo htmlEnt($buttonval); ?> --></button>
 	&emsp;&emsp;&emsp; Sollwert: &emsp; <tt><?php echo htmlEnt($buttonval); ?></tt>
 	<?php
 		if (@$_REQUEST['whichform'] == 4
@@ -203,7 +205,7 @@ Wert: &emsp; <tt><?php echo htmlEnt($clicked_button_val); ?></tt>
 
 <hr />
 <pre><?php
-htmlEnt(print_r($_REQUEST));
+echo htmlEnt(print_r($_REQUEST, true));
 ?></pre>
 
 </body>
