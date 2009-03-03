@@ -406,6 +406,7 @@ function gs_boi_menu_sc( url )
 <!-- for stupid MSIE: -->
 <!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/msie-fix-6.css" /><![endif]-->
 <!--[if gte IE 7]><link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/msie-fix-7.css" /><![endif]-->
+<!--[if lt IE 8]><style type="text/css">button {behavior: url("<?php echo GS_URL_PATH; ?>js/msie-button-fix.htc.php?msie-sucks=.htc");}</style><![endif]-->
 <!--[if lt IE 7]><style type="text/css">img {behavior: url("<?php echo GS_URL_PATH; ?>js/pngbehavior.htc.php?msie-sucks=.htc");}</style><![endif]-->
 <meta http-equiv="imagetoolbar" content="no" />
 <meta http-equiv="pragma" content="no-cache" />
