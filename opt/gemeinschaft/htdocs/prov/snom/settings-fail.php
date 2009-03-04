@@ -78,7 +78,7 @@ date_us_format!: off
 
 <?php
 if (@ob_get_length() > 0) {
-	@header( 'Content-Length: '. (int)ob_get_length() );
+	@header( 'Content-Length: '. (int)@ob_get_length() );
 	@ob_end_flush();
 	exit(0);
 }
