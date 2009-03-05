@@ -80,6 +80,12 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	if (in_array('*', $enabled_models) || in_array('57i', $enabled_models))
 		$phone_types['aastra-57i'] = 'Aastra 57i';
 }
+/*
+if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
+	$enabled_models = preg_split('/[,\\s]+/', gs_get_conf('GS_PROV_MODELS_ENABLED_GRANDSTREAM'));
+	//FIXME
+}
+*/
 
 
 $key_functions_snom = array(

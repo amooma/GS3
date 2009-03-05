@@ -240,9 +240,10 @@ _gscnf( 'PROV_PROXIES_TRUST'        , ''                 );
 _gscnf( 'PROV_PROXIES_XFF_HEADER'   , 'X-Forwarded-For'  );
 _gscnf( 'PROV_ALLOW_NET'            , '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8' );
 _gscnf( 'PROV_LAN_NETS'             , '0.0.0.0/0'        );
-_gscnf( 'PROV_MODELS_ENABLED_SNOM'    , '*'              );  # / '360,370'
-_gscnf( 'PROV_MODELS_ENABLED_SIEMENS' , '*'              );  # / 'os20,os40,os60,os80'
-_gscnf( 'PROV_MODELS_ENABLED_AASTRA'  , '*'              );  # / '51i,53i,55i,57i'
+_gscnf( 'PROV_MODELS_ENABLED_SNOM'        , '*'          );  # / '360,370'
+_gscnf( 'PROV_MODELS_ENABLED_SIEMENS'     , '*'          );  # / 'os20,os40,os60,os80'
+_gscnf( 'PROV_MODELS_ENABLED_AASTRA'      , '*'          );  # / '51i,53i,55i,57i'
+_gscnf( 'PROV_MODELS_ENABLED_GRANDSTREAM' , '*'          );
 
 _gscnf( 'SNOM_PROV_ENABLED'         , false              );
 _gscnf( 'SNOM_PROV_HTTP_USER'       , ''                 );
@@ -276,6 +277,15 @@ _gscnf( 'AASTRA_PROV_FW_DEFAULT_53I', null               );
 _gscnf( 'AASTRA_PROV_FW_DEFAULT_55I', null               );
 _gscnf( 'AASTRA_PROV_FW_DEFAULT_57I', null               );
 _gscnf( 'AASTRA_PROV_KEY_BLACKLIST' , ''                 );
+
+_gscnf( 'GRANDSTREAM_PROV_ENABLED'  , false              );
+_gscnf( 'GRANDSTREAM_PROV_HTTP_PASS', ''                 );
+_gscnf( 'GRANDSTREAM_PROV_NTP'      , gs_get_conf('GS_PROV_HOST','') );
+//_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_BT110'  , null      );  //FIXME?
+//_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_BT200'  , null      );  // "
+//_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP2000', null      );  // "
+//...
+//_gscnf( 'GRANDSTREAM_PROV_KEY_BLACKLIST', ''             );  //FIXME?
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
 _gscnf( 'CANONIZE_INTL_PREFIX'      , '00'               );
