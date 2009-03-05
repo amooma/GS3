@@ -60,7 +60,7 @@ function _settings_err( $msg='' )
 	@ob_start();
 	echo '# ', ($msg != '' ? $msg : 'Error') ,"\n";
 	if (! headers_sent()) {
-		header( 'Content-Type: text/plain; charset=utf-8' );
+		header( 'Content-Type: application/octet-stream' );
 		header( 'Content-Length: '. (int)@ob_get_length() );
 	}
 	@ob_end_flush();
@@ -596,7 +596,7 @@ $bin = $initstr . $cleartext;
 ob_start();
 echo $bin;
 if (! headers_sent()) {
-	header( 'Content-Type: text/plain; charset=utf-8' );
+	header( 'Content-Type: application/octet-stream' );
 	# avoid chunked transfer-encoding
 	header( 'Content-Length: '. (int)@ob_get_length() );
 }
