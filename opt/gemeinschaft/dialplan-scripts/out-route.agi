@@ -33,32 +33,36 @@ require_once( GS_DIR .'inc/agi-fns.php' );
 require_once( GS_DIR .'inc/pcre_check.php' );
 include_once( GS_DIR .'lib/yadb/yadb.php' );
 include_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
+
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 error_reporting(0);
 
-/***********************************************************
-*    returns an array of the provisioning parameters
-***********************************************************/
 
-function user_groups_get( $user )
+function _user_groups_get( $user_id, $with_0=0 )
 {
 	global $db;
 	
-	$group_id = $db->executeGetOne('SELECT `group_id` 
-		FROM `users` WHERE `id`=\''. $db->escape($user) .'\''
+	if (! $db) return false;
+	$user_id = (int)$user_id;
+	
+	$group_id = (int)$db->executeGetOne( 'SELECT `group_id` 
+		FROM `users` WHERE `id`='. $user_id
 		);
 	
-	# get keys for nested groups
+	# get nested groups
 	#
-	$member_groups = array(0 => 0);
+	$member_groups = array();
+	if ($with_0 !== false) {
+		$member_groups[] = $with_0;
+	}
 	if ($group_id > 0) {
 		$mptt = new YADB_MPTT($db, 'user_groups', 'lft', 'rgt', 'id');
 		$path = @$mptt->get_path_to_node( $group_id, true );
-			
 		if (! is_array($path))
-			return new GsError( 'DB error.' );
+			return false;
+		
 		foreach ($path as $group) {
 			$member_groups[] = $group['id'];
 		}
@@ -94,9 +98,11 @@ if ($user_cid_num == '') {
 	$user_cid_num = '0';  # main number on a PtP interface
 }
 
-$user_id = (int) trim($argv[4]);
+$user_id = (int)trim($argv[4]);
+
 
 include_once( GS_DIR .'inc/db_connect.php' );
+
 
 $qualify_cid = true;
 
@@ -156,7 +162,9 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 $db = gs_db_slave_connect();
 if (! $db) die(1);
 
-$user_groups = user_groups_get( $user_id );
+$user_groups = _user_groups_get( $user_id, 0 );
+if (! is_array($user_groups)) $user_groups = array(0);
+//$user_groups = array_merge(array(0), $user_groups);
 
 $t = time();
 $wd = strToLower(subStr(date('D', $t),0,2));
@@ -165,8 +173,8 @@ $hm = date('H:i', $t);
 $rs = $db->execute(
 'SELECT
 	`pattern` `pat`,
+	`user_grp_id` `ug_id`,
 	`gw_grp_id_1` `gg1`, `gw_grp_id_2` `gg2`, `gw_grp_id_3` `gg3`,
-	`user_grp_id` `ug`,
 	`lcrprfx`
 FROM `routes` USE INDEX(`active_'.$wd.'`)
 WHERE
@@ -180,9 +188,7 @@ $have_match = false;
 $lcr_prefix = '';
 while ($route = $rs->fetchRow()) {
 	if (@preg_match( '/'.$route['pat'].'/', $number_dial )) {
-		if (array_search($route['ug'], $user_groups) === FALSE) {
-			continue;
-		} else {
+		if (in_array((int)$route['ug_id'], $user_groups, true)) {
 			$have_match = true;
 			$lcr_prefix = $route['lcrprfx'];
 			break;
