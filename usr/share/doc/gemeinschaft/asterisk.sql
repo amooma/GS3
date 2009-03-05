@@ -6318,6 +6318,7 @@ CREATE TABLE `routes` (
   `d_su` tinyint(1) unsigned NOT NULL default '1',
   `h_from` time NOT NULL default '00:00:00',
   `h_to` time NOT NULL default '24:00:00',
+  `user_grp_id` mediumint(8) unsigned default NULL,
   `gw_grp_id_1` smallint(5) unsigned NOT NULL default '0',
   `gw_grp_id_2` smallint(5) unsigned NOT NULL default '0',
   `gw_grp_id_3` smallint(5) unsigned NOT NULL default '0',
@@ -6331,8 +6332,10 @@ CREATE TABLE `routes` (
   KEY `active_th` (`active`,`d_th`,`ord`),
   KEY `active_fr` (`active`,`d_fr`,`ord`),
   KEY `active_sa` (`active`,`d_sa`,`ord`),
-  KEY `active_su` (`active`,`d_su`,`ord`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `active_su` (`active`,`d_su`,`ord`),
+  KEY `user_grp_id` (`user_grp_id`),
+  CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`user_grp_id`) REFERENCES `user_groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `routes`
@@ -6340,39 +6343,39 @@ CREATE TABLE `routes` (
 
 LOCK TABLES `routes` WRITE;
 /*!40000 ALTER TABLE `routes` DISABLE KEYS */;
-INSERT INTO `routes` VALUES (5,0,3,'^11[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,7,9,'','Notrufnummern etc.');
-INSERT INTO `routes` VALUES (6,0,4,'^19222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,7,9,'','Notruf Rettungsdienst');
-INSERT INTO `routes` VALUES (7,0,14,'^0900',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','Mehrwertnummern');
-INSERT INTO `routes` VALUES (8,0,8,'^118',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','Auskünfte (u.U. teuer, können vermitteln)');
-INSERT INTO `routes` VALUES (9,0,10,'^09009',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Mehrwertnummern (Dialer)');
-INSERT INTO `routes` VALUES (10,0,12,'^09005',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Mehrwertnummern (Erwachsenenunterhaltung)');
-INSERT INTO `routes` VALUES (11,0,16,'^0902',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Televoting (14 ct/Anruf)');
-INSERT INTO `routes` VALUES (12,0,18,'^019[1-4]',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Internet-Zugänge');
-INSERT INTO `routes` VALUES (13,0,20,'^070[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','private Vanity-Nummern');
-INSERT INTO `routes` VALUES (14,0,22,'^080[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','Mehrwertnummern (kostenlos)');
-INSERT INTO `routes` VALUES (15,0,24,'^01805',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Mehrwertnummern (Hotlines/Erwachsenenunterhaltung)');
-INSERT INTO `routes` VALUES (16,0,26,'^01802001033',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Handvermittlung ins Ausland (teuer)');
-INSERT INTO `routes` VALUES (17,0,28,'^0180',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','Mehrwertnummern');
-INSERT INTO `routes` VALUES (18,0,30,'^0137',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Televoting (25-100 ct/Anruf)');
-INSERT INTO `routes` VALUES (19,0,32,'^012[0-9]',1,1,1,1,1,1,1,'00:00:00','24:00:00',0,0,0,'','Innovative Dienste (teuer)');
-INSERT INTO `routes` VALUES (20,0,34,'^032',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,0,0,'','ortsunabhängig, unklare Tarifierung, GSM vermeiden');
-INSERT INTO `routes` VALUES (21,0,36,'^0151',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'','T-Mobile D1');
-INSERT INTO `routes` VALUES (22,0,38,'^016[01489]',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'','T-Mobile D1');
-INSERT INTO `routes` VALUES (23,0,40,'^017[015]',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'','T-Mobile D1');
-INSERT INTO `routes` VALUES (24,0,42,'^0152',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','Vodafone D2');
-INSERT INTO `routes` VALUES (25,0,44,'^0162',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','Vodafone D2');
-INSERT INTO `routes` VALUES (26,0,46,'^017[234]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','Vodafone D2');
-INSERT INTO `routes` VALUES (27,0,48,'^015[57]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','E-Plus');
-INSERT INTO `routes` VALUES (28,0,50,'^0163',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','E-Plus');
-INSERT INTO `routes` VALUES (29,0,52,'^017[78]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','E-Plus');
-INSERT INTO `routes` VALUES (30,0,54,'^0156',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'','MobilCom');
-INSERT INTO `routes` VALUES (31,0,56,'^0159',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','O2');
-INSERT INTO `routes` VALUES (32,0,58,'^017[69]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','O2');
-INSERT INTO `routes` VALUES (33,0,60,'^0150',1,1,1,1,1,1,1,'00:00:00','24:00:00',7,8,6,'','Group3G');
-INSERT INTO `routes` VALUES (34,0,62,'^01[5-7]',1,1,1,1,1,1,1,'00:00:00','24:00:00',8,7,6,'','andere Handy-Gespräche');
-INSERT INTO `routes` VALUES (35,0,64,'^0[1-9][0-9]{2}',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,10,0,'','Ortsnetze');
-INSERT INTO `routes` VALUES (36,0,66,'^00',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,9,0,'','international');
-INSERT INTO `routes` VALUES (37,1,68,'^',1,1,1,1,1,1,1,'00:00:00','24:00:00',6,9,0,'','alles andere');
+INSERT INTO `routes` VALUES (5,0,3,'^11[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'','Notrufnummern etc.');
+INSERT INTO `routes` VALUES (6,0,4,'^19222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'','Notruf Rettungsdienst');
+INSERT INTO `routes` VALUES (7,0,14,'^0900',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','Mehrwertnummern');
+INSERT INTO `routes` VALUES (8,0,8,'^118',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','Auskünfte (u.U. teuer, können vermitteln)');
+INSERT INTO `routes` VALUES (9,0,10,'^09009',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern (Dialer)');
+INSERT INTO `routes` VALUES (10,0,12,'^09005',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern (Erwachsenenunterhaltung)');
+INSERT INTO `routes` VALUES (11,0,16,'^0902',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Televoting (14 ct/Anruf)');
+INSERT INTO `routes` VALUES (12,0,18,'^019[1-4]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Internet-Zugänge');
+INSERT INTO `routes` VALUES (13,0,20,'^070[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','private Vanity-Nummern');
+INSERT INTO `routes` VALUES (14,0,22,'^080[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','Mehrwertnummern (kostenlos)');
+INSERT INTO `routes` VALUES (15,0,24,'^01805',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern (Hotlines/Erwachsenenunterhaltung)');
+INSERT INTO `routes` VALUES (16,0,26,'^01802001033',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Handvermittlung ins Ausland (teuer)');
+INSERT INTO `routes` VALUES (17,0,28,'^0180',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','Mehrwertnummern');
+INSERT INTO `routes` VALUES (18,0,30,'^0137',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Televoting (25-100 ct/Anruf)');
+INSERT INTO `routes` VALUES (19,0,32,'^012[0-9]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Innovative Dienste (teuer)');
+INSERT INTO `routes` VALUES (20,0,34,'^032',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','ortsunabhängig, unklare Tarifierung, GSM vermeiden');
+INSERT INTO `routes` VALUES (21,0,36,'^0151',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,7,8,6,'','T-Mobile D1');
+INSERT INTO `routes` VALUES (22,0,38,'^016[01489]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,7,8,6,'','T-Mobile D1');
+INSERT INTO `routes` VALUES (23,0,40,'^017[015]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,7,8,6,'','T-Mobile D1');
+INSERT INTO `routes` VALUES (24,0,42,'^0152',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','Vodafone D2');
+INSERT INTO `routes` VALUES (25,0,44,'^0162',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','Vodafone D2');
+INSERT INTO `routes` VALUES (26,0,46,'^017[234]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','Vodafone D2');
+INSERT INTO `routes` VALUES (27,0,48,'^015[57]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','E-Plus');
+INSERT INTO `routes` VALUES (28,0,50,'^0163',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','E-Plus');
+INSERT INTO `routes` VALUES (29,0,52,'^017[78]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','E-Plus');
+INSERT INTO `routes` VALUES (30,0,54,'^0156',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,7,8,6,'','MobilCom');
+INSERT INTO `routes` VALUES (31,0,56,'^0159',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','O2');
+INSERT INTO `routes` VALUES (32,0,58,'^017[69]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','O2');
+INSERT INTO `routes` VALUES (33,0,60,'^0150',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,7,8,6,'','Group3G');
+INSERT INTO `routes` VALUES (34,0,62,'^01[5-7]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','andere Handy-Gespräche');
+INSERT INTO `routes` VALUES (35,0,64,'^0[1-9][0-9]{2}',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,10,0,'','Ortsnetze');
+INSERT INTO `routes` VALUES (36,0,66,'^00',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,9,0,'','international');
+INSERT INTO `routes` VALUES (37,1,68,'^',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,9,0,'','alles andere');
 /*!40000 ALTER TABLE `routes` ENABLE KEYS */;
 UNLOCK TABLES;
 
