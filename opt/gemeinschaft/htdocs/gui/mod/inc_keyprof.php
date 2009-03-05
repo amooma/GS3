@@ -113,6 +113,7 @@ $key_functions_siemens = array(
 	'f12' => __('&Uuml;berg. v. Melden'), # blind transfer
 	'f14' => __('Abweisen'),              # deflect
 	'f18' => __('Shift'),                 # shift
+	//'f22' => __('Konferenz'),             # conference
 	'f24' => __('Kopfh&ouml;rer'),        # headset
 	'f25' => __('Nicht st&ouml;ren'),     # do not disturb
 	'f29' => __('Rufgrp.annahme'),        # group pickup
