@@ -48,7 +48,7 @@ function _gs_prov_phone_checkcfg_exclude_ip( $ip )
 		'LIMIT 1'
 		);
 	if ($is_server) {
-		gs_log(GS_LOG_DEBUG, "IP $ip is a server, not a phone");
+		gs_log(GS_LOG_DEBUG, "IP addr. $ip is a server, not a phone");
 		return true;
 	}
 	return false;
