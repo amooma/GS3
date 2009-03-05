@@ -72,6 +72,14 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	$phone_types['aastra-55i'] = 'Aastra 55i';
 	$phone_types['aastra-57i'] = 'Aastra 57i';
 }
+if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
+	$phone_types['grandstream-bt110'  ] = 'Grandstream BT 110';
+	$phone_types['grandstream-bt200'  ] = 'Grandstream BT 200';
+	$phone_types['grandstream-gxp1200'] = 'Grandstream GXP 1200';
+	$phone_types['grandstream-gxp2000'] = 'Grandstream GXP 2000';
+	$phone_types['grandstream-gxp2010'] = 'Grandstream GXP 2010';
+	$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
+}
 
 
 $per_page = (int)GS_GUI_NUM_RESULTS;

@@ -268,9 +268,10 @@ $PROV_ALLOW_NET             = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.25
 
   # Phones shown in the GUI (comma-separated lists,
   # '*' for all supported models of a brand);
-//$PROV_MODELS_ENABLED_SNOM    = '*';  # or '360,370'
-//$PROV_MODELS_ENABLED_SIEMENS = '*';  # or 'os20,os40,os60,os80'
-//$PROV_MODELS_ENABLED_AASTRA  = '*';  # or '51i,53i,55i,57i'
+//$PROV_MODELS_ENABLED_SNOM        = '*';  # or '360,370'
+//$PROV_MODELS_ENABLED_SIEMENS     = '*';  # or 'os20,os40,os60,os80'
+//$PROV_MODELS_ENABLED_AASTRA      = '*';  # or '51i,53i,55i,57i'
+//$PROV_MODELS_ENABLED_GRANDSTREAM = '*';  # or 'bt110,gxp2000,gxp2020', ...
 
 
 
@@ -369,6 +370,18 @@ $SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
   # 'f30' repertory dial
   # 'f31' line
   # 'f50' consultation
+
+
+//---------------------[ Grandstream ]--------------------//
+
+$GRANDSTREAM_PROV_ENABLED   = false;  # do provisioning for Grandstream?
+
+$GRANDSTREAM_PROV_HTTP_PASS = '';     # e.g. "gEheiM23y89sdo23"
+  # to password protect the phone's web gui.
+
+//$GRANDSTREAM_PROV_NTP       = @$PROV_HOST;
+//$GRANDSTREAM_PROV_NTP       = '192.168.1.130';
+  # NTP Server. the stupid Grandstream needs it
 
 
 
