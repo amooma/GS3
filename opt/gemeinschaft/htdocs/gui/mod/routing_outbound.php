@@ -224,8 +224,7 @@ $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 
 
 
-<form method="post" action="<?php echo GS_URL_PATH; ?>">
-<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
 <input type="hidden" name="action" value="save" />
 
 <table cellspacing="1" class="phonebook">
@@ -291,11 +290,21 @@ while ($route = $rs->fetchRow()) {
 	echo '<input type="text" name="r_',$id,'_pattern" value="', htmlEnt($route['pattern']), '" size="15" maxlength="30" class="pre" style="font-weight:bold;" />';
 	echo '</td>', "\n";
 	
-	echo '<td>';
+	echo '<td style="padding-bottom:0;">',"\n";
+	echo '<table cellspacing="0" class="tinytbl">',"\n";
+	echo '<tbody>', "\n";
+	echo '<tr>', "\n";
 	foreach ($wdaysl as $col => $v) {
-		echo '<span class="nobr"><input type="checkbox" name="r_',$id,'_d_',$col,'" id="ipt-r_',$id,'_d_',$col,'" value="1" ', ($route['d_'.$col] ? 'checked="checked" ' : ''), '/>';
-		echo '<label for="ipt-r_',$id,'_d_',$col,'">', $v, '</label></span>';
+		echo '<td class="c"><input type="checkbox" name="r_',$id,'_d_',$col,'" id="ipt-r_',$id,'_d_',$col,'" value="1" ', ($route['d_'.$col] ? 'checked="checked" ' : ''), '/></td>';
 	}
+	echo '</tr>', "\n";
+	echo '<tr>', "\n";
+	foreach ($wdaysl as $col => $v) {
+		echo '<td class="c"><label for="ipt-r_',$id,'_d_',$col,'">', $v, '</label></td>';
+	}
+	echo '</tr>', "\n";
+	echo '</tbody>', "\n";
+	echo '</table>', "\n";
 	echo '</td>', "\n";
 	
 	echo '<td>';
@@ -417,11 +426,21 @@ echo '<td>';
 echo '<input type="text" name="r_',$id,'_pattern" value="" size="15" maxlength="30" class="pre" style="font-weight:bold;" />';
 echo '</td>', "\n";
 
-echo '<td>';
+echo '<td style="padding-bottom:0;">',"\n";
+echo '<table cellspacing="0" class="tinytbl">',"\n";
+echo '<tbody>', "\n";
+echo '<tr>', "\n";
 foreach ($wdaysl as $col => $v) {
-	echo '<span class="nobr"><input type="checkbox" name="r_',$id,'_d_',$col,'" id="ipt-r_',$id,'_d_',$col,'" value="1" checked="checked" />';
-	echo '<label for="ipt-r_',$id,'_d_',$col,'">', $v, '</label></span>';
+	echo '<td class="c"><input type="checkbox" name="r_',$id,'_d_',$col,'" id="ipt-r_',$id,'_d_',$col,'" value="1" checked="checked" /></td>';
 }
+echo '</tr>', "\n";
+echo '<tr>', "\n";
+foreach ($wdaysl as $col => $v) {
+	echo '<td class="c"><label for="ipt-r_',$id,'_d_',$col,'">', $v, '</label></td>';
+}
+echo '</tr>', "\n";
+echo '</tbody>', "\n";
+echo '</table>', "\n";
 echo '</td>', "\n";
 
 echo '<td>';

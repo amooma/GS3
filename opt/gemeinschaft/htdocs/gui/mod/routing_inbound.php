@@ -226,8 +226,7 @@ setLocale(LC_TIME, array($oldLocale, 'C'));
 
 ?>
 
-<form method="get" action="<?php echo GS_URL_PATH; ?>">
-<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<form method="get" action="<?php echo gs_url($SECTION, $MODULE); ?>">
 <input type="hidden" name="action" value="edit" />
 <?php
 echo __('Gateway-Gruppe'),': ';
@@ -252,8 +251,7 @@ if ($action === 'edit') {
 
 
 
-<form method="post" action="<?php echo GS_URL_PATH; ?>">
-<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
 <input type="hidden" name="ggid" value="<?php echo $ggid; ?>" />
 <input type="hidden" name="action" value="save" />
 
@@ -391,7 +389,7 @@ ORDER BY `ord`'
 	echo '<tbody>', "\n";
 	echo '<tr>', "\n";
 	foreach ($wdaysl as $col => $v) {
-		echo '<td class="c"><input type="checkbox" name="r_',$id,'_d_',$col,'" id="ipt-r_',$id,'_d_',$col,'" value="1" ', ($route['d_'.$col] ? 'checked="checked" ' : ''), '/></td>';
+		echo '<td class="c"><input type="checkbox" name="r_',$id,'_d_',$col,'" id="ipt-r_',$id,'_d_',$col,'" value="1" checked="checked" /></td>';
 	}
 	echo '</tr>', "\n";
 	echo '<tr>', "\n";
