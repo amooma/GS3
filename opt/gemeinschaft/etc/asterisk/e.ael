@@ -626,7 +626,7 @@ macro dial-gateway-do( mnumber ) {
 		}
 	}
 	
-	AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi,${mnumber},${is_sub_system},${CALLERID(num)});
+	AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi,${mnumber},${is_sub_system},${CALLERID(num)},${user_id});
 	Set(no_route=1);
 	Set(r=1);
 	while ("${r_${r}_dial}" != "") {
