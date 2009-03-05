@@ -216,6 +216,9 @@ WHERE
 	if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ip_do_aastra ( $ip, $reboot );
 	}
+	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ip_do_grandstream( $ip, $reboot );
+	}
 	
 	//return $err == 0;
 	return true;
@@ -287,6 +290,12 @@ function _gs_prov_phone_checkcfg_by_ip_do_aastra( $ip, $reboot=true )
 	return ($err == 0);
 }
 
+function _gs_prov_phone_checkcfg_by_ip_do_grandstream( $ip, $reboot=true )
+{
+	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
+	
+	@ exec( '/opt/gemeinschaft/sbin/gs-grandstream-reboot --ip='. qsa($ip) .' >>/dev/null 2>>/dev/null &', $out, $err );
+}
 
 // PRIVATE:
 function _gs_prov_phone_checkcfg_by_ext_do( $ext, $reboot=true )
@@ -340,6 +349,9 @@ WHERE
 	}
 	if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ext_do_aastra ( $ext, $reboot );
+	}
+	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ext_do_grandstream( $ext, $reboot );
 	}
 	
 	//return $err == 0;
@@ -451,6 +463,11 @@ WHERE `s`.`name`=\''. $db->escape($ext) .'\''
 	}
 	
 	_gs_prov_phone_checkcfg_by_ip_do_aastra( $ip, $reboot, 2 );
+}
+
+function _gs_prov_phone_checkcfg_by_ext_do_grandstream( $ext, $reboot=true )
+{
+	//FIXME
 }
 
 ?>
