@@ -31,6 +31,7 @@ include_once( GS_DIR .'inc/pcre_check.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_groups_get.php' );
 
+
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
@@ -44,7 +45,7 @@ $action = @$_REQUEST['action'];
 $id     = (int)@$_REQUEST['id'];
 if ($id < 1) $id = 0;
 
-if ($action == 'move-up' || $action == 'move-down') {
+if ($action === 'move-up' || $action === 'move-down') {
 	
 	if ($id > 0) {
 		gs_db_start_trans($DB);
@@ -63,12 +64,12 @@ if ($action == 'move-up' || $action == 'move-down') {
 		@$DB->execute( 'ANALYZE TABLE `routes`' );
 	}
 	
-} elseif ($action == 'save') {
+} elseif ($action === 'save') {
 	
 	$rs = $DB->execute( 'SELECT `id` FROM `gate_grps`' );
 	$ggs = array();
 	while ($r = $rs->fetchRow()) $ggs[(int)$r['id']] = true;
-
+	
 	$rs = $DB->execute( 'SELECT `id` FROM `user_groups`' );
 	$ugs = array();
 	while ($r = $rs->fetchRow()) $ugs[(int)$r['id']] = true;
@@ -117,9 +118,9 @@ if ($action == 'move-up' || $action == 'move-down') {
 		$gg1 = (int)@$_REQUEST['r_'.$dbid.'_ggrpid1'];
 		$gg2 = (int)@$_REQUEST['r_'.$dbid.'_ggrpid2'];
 		$gg3 = (int)@$_REQUEST['r_'.$dbid.'_ggrpid3'];
-
-		$ug  = (int)@$_REQUEST['r_'.$dbid.'_ugrpid'];		
-
+		
+		$ug_id = (int)@$_REQUEST['r_'.$dbid.'_ugrpid'];
+		
 		if ($dbid<1) {
 			gs_db_start_trans($DB);
 			$ord = (int)$DB->executeGetOne( 'SELECT MAX(`ord`) FROM `routes`' ) + 1;
@@ -144,7 +145,7 @@ if ($action == 'move-up' || $action == 'move-down') {
 	`gw_grp_id_1`='. (array_key_exists($gg1, $ggs) ? $gg1 : '0') .',
 	`gw_grp_id_2`='. (array_key_exists($gg2, $ggs) ? $gg2 : '0') .',
 	`gw_grp_id_3`='. (array_key_exists($gg3, $ggs) ? $gg3 : '0') .',
-	`user_grp_id`='. (array_key_exists($ug,  $ugs) ? $ug : '0') .'
+	`user_grp_id`='. (array_key_exists($ug_id, $ugs) ? $ug_id : 'NULL') .'
 '. ($dbid>0 ? 'WHERE `id`='. (int)$dbid : '')
 		;
 		$ok = $DB->execute($query);
@@ -157,7 +158,7 @@ if ($action == 'move-up' || $action == 'move-down') {
 	@$DB->execute( 'OPTIMIZE TABLE `routes`' );
 	@$DB->execute( 'ANALYZE TABLE `routes`' );
 	
-} elseif ($action == 'del') {
+} elseif ($action === 'del') {
 	
 	if ($id > 0) {
 		$DB->execute( 'DELETE FROM `routes` WHERE `id`='. $id );
@@ -234,7 +235,7 @@ $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 	<th><?php echo __('Muster'); ?><sup>[1]</sup></th>
 	<th><?php echo __('Wochentage'); ?></th>
 	<th><?php echo __('Uhrzeit'); ?></th>
-	<th><?php echo __('Gruppe'); ?></th>
+	<th><?php echo __('Benutzer-Gr.'); ?></th>
 	<th><?php echo __('Gateway / Fallback'); ?></th>
 	<th><?php echo __('Pr&auml;fix'); ?> <sup>[2]</sup></th>
 	<th><?php echo __('Reihenfolge'); ?></th>
@@ -259,14 +260,16 @@ while ($r = $rs->fetchRow()) {
 
 $user_groups = gs_groups_get();
 if (isGsError($user_groups)) {
-	$user_groups = FALSE;
+	$user_groups = false;
 }
+if (! is_array($user_groups)) $user_groups = array();
 
 $rs = $DB->execute(
 'SELECT
 	`id`, `active`, `pattern`,
 	`d_mo`, `d_tu`, `d_we`, `d_th`, `d_fr`, `d_sa`, `d_su`, `h_from`, `h_to`,
-	`gw_grp_id_1` `gg1`, `gw_grp_id_2` `gg2`, `gw_grp_id_3` `gg3`, `user_grp_id` `ug`, `lcrprfx`, `descr`
+	`user_grp_id` `ug_id`,
+	`gw_grp_id_1` `gg1`, `gw_grp_id_2` `gg2`, `gw_grp_id_3` `gg3`, `lcrprfx`, `descr`
 FROM `routes`
 ORDER BY `ord`'
 );
@@ -329,21 +332,18 @@ while ($route = $rs->fetchRow()) {
 	echo '</td>', "\n";
 	
 	echo '<td rowspan="2">';
-
 	echo '<select name="r_',$id,'_ugrpid">', "\n";
 	$is_root = true;
 	$root_level = 0;
-
 	foreach ($user_groups as $node) {
 		if ($is_root) {
 			$root_level = $node['__mptt_level'];
 			$node['id'] = 0;
 		}
-
-		echo '<option value="', $node['id'],'"',($route['ug'] == $node['id'] ? ' selected="selected"' : ''),'>';
+		echo '<option value="', $node['id'],'"',($route['ug_id'] == $node['id'] ? ' selected="selected"' : ''),'>';
 		echo @str_repeat('&nbsp;&nbsp;&nbsp;', $node['__mptt_level']-$root_level);
 		if ($is_root) {
-			echo __('Alle');
+			echo '[', htmlEnt(__('alle')) ,']';
 			$is_root = false;
 		} else {
 			echo htmlEnt($node['name']);
@@ -354,7 +354,6 @@ while ($route = $rs->fetchRow()) {
 	echo '</td>', "\n";
 	
 	echo '<td rowspan="2">';
-
 	$gw_grp_idxs = array(1,2,3);
 	foreach ($gw_grp_idxs as $gw_grp_idx) {
 		echo '<select name="r_',$id,'_ggrpid',$gw_grp_idx,'">', "\n";
@@ -440,17 +439,15 @@ echo '<td rowspan="2">';
 echo '<select name="r_',$id,'_ugrpid">', "\n";
 $is_root = true;
 $root_level = 0;
-
 foreach ($user_groups as $node) {
 	if ($is_root) {
 		$root_level = $node['__mptt_level'];
 		$node['id'] = 0;
 	}
-
-	echo '<option value="', $node['id'],'"',($route['ug'] == $node['id'] ? ' selected="selected"' : ''),'>';
+	echo '<option value="', $node['id'],'"',($route['ug_id'] == $node['id'] ? ' selected="selected"' : ''),'>';
 	echo @str_repeat('&nbsp;&nbsp;&nbsp;', $node['__mptt_level']-$root_level);
 	if ($is_root) {
-		echo __('Alle');
+		echo '[', htmlEnt(__('alle')) ,']';
 		$is_root = false;
 	} else {
 		echo htmlEnt($node['name']);
