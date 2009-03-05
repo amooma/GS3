@@ -361,7 +361,7 @@ psetting('P38', '48');			# Layer 3 QoS
 psetting('P87', '0');			# 802.1p priority value
 psetting('P51', '0');			# 802.1q VLAN Tag
 # DHCP
-psetting('P146', 'grandstream-'. $phone_model);  # DHCP hostname
+psetting('P146', 'grandstream-'.$mac );  # DHCP hostname
 psetting('P147', '');			# DHCP domain
 psetting('P148', '');			# DHCP vendor class ID
 psetting('P82', '');			# PPPoE Account ID
