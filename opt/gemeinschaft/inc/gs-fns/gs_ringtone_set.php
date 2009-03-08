@@ -148,7 +148,7 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 	for ($i=0; $i<count($phone_types); ++$i) {
 		$phone_types[$i] = baseName(dirName($phone_types[$i]));
 	}
-	gs_log(GS_LOG_DEBUG, 'Found phone types: '.implode(', ',$phone_types) );
+	gs_log(GS_LOG_DEBUG, 'Ringtone conversion: Found phone types: '.implode(', ',$phone_types) );
 	
 	$errors = array();
 	$new_ringer_basename = $user .'-'. subStr($src,0,3) .'-'. $rand;
@@ -164,21 +164,22 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 		
 		$outfile = $PhoneCapa->conv_ringtone( $infile, $outbase );
 		if (isGsError($outfile)) {
-			gs_log(GS_LOG_WARNING, $phone_type .': '. $outfile->getMsg() );
+			gs_log(GS_LOG_WARNING, 'Ringtone conversion: '. $phone_type .': '. $outfile->getMsg() );
 			$errors[] = $phone_type .': '. $outfile->getMsg();
 		} elseif ($outfile === null) {
-			gs_log(GS_LOG_DEBUG, $phone_type .': Not implemented.' );
+			gs_log(GS_LOG_DEBUG, 'Ringtone conversion: '. $phone_type .': Not implemented.' );
 			continue;
 		} elseif (! $outfile) {
-			gs_log(GS_LOG_WARNING, $phone_type .': Failed to convert file.' );
+			gs_log(GS_LOG_WARNING, 'Ringtone conversion: '. $phone_type .': Failed to convert file.' );
 			$errors[] = $phone_type .': '. 'Failed to convert file.';
 			continue;
 		}
 		if (! file_exists($outfile)) {
-			gs_log(GS_LOG_WARNING, $phone_type .': Failed to convert file.' );
+			gs_log(GS_LOG_WARNING, 'Ringtone conversion: '. $phone_type .': Failed to convert file.' );
 			$errors[] = $phone_type .': '. 'Failed to convert file.';
 			continue;
 		}
+		gs_log(GS_LOG_DEBUG, 'Ringtone conversion: '. $phone_type .': Converted.' );
 		@chmod($outfile, 0666);
 		
 		$pinfo = pathInfo($outfile);
