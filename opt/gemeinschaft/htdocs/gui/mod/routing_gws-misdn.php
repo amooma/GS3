@@ -142,7 +142,7 @@ if ($action === 'edit') {
 <?php
 	if ($gwid > 0) {
 		# get gateway from DB
-		$rs = $DB->execute( 'SELECT `grp_id`, `type`, `name`, `title`, `allow_out`, `hw_port` FROM `gates` WHERE `id`='.$gwid );
+		$rs = $DB->execute( 'SELECT `grp_id`, `type`, `name`, `title`, `allow_out`, `hw_port`, `dialstr` FROM `gates` WHERE `id`='.$gwid );
 		$gw = $rs->fetchRow();
 		if (! $gw) {
 			echo 'Gateway not found.';
@@ -201,7 +201,14 @@ if ($action === 'edit') {
 	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
-	echo '<th>', __('Gruppe') ,': <sup>[1]</sup></th>',"\n";
+	echo '<th>', __('W&auml;hlbefehl') ,' <sup>[1]</sup>:</th>',"\n";
+	echo '<td><input type="text" name="gw-dialstr" value="', htmlEnt($gw['dialstr']) ,'" size="30" maxlength="50" readonly="readonly" disabled="disabled" style="font-family:monospace; width:97%;" /></th>',"\n";
+	
+	echo '</td>',"\n";
+	echo '</tr>',"\n";
+	
+	echo '<tr>',"\n";
+	echo '<th>', __('Gruppe') ,' <sup>[2]</sup>:</th>',"\n";
 	echo '<td>';
 	echo '<select name="gw-grp_id" style="width:97%;">',"\n";
 	echo '<option value=""', ($gw['grp_id'] < 1 ? ' selected="selected"' : '') ,'>-- ', __('nicht zugeordnet') ,' --</option>' ,"\n";
@@ -232,7 +239,8 @@ ORDER BY `title`'
 <br />
 <br />
 <br />
-<p class="text"><sup>[1]</sup> <?php echo __('Gateways m&uuml;ssen jeweils einer Gateway-Gruppe zugeordnet werden damit sie benutzt werden k&ouml;nnen.'); ?></p>
+<p class="text"><sup>[1]</sup> <?php echo __('String f&uuml;r den Dial()-Befehl. Dabei werden {number} und {gateway} automatisch von Gemeinschaft ersetzt.'); ?></p>
+<p class="text"><sup>[2]</sup> <?php echo __('Gateways m&uuml;ssen jeweils einer Gateway-Gruppe zugeordnet werden damit sie benutzt werden k&ouml;nnen.'); ?></p>
 
 </form>
 
