@@ -239,7 +239,7 @@ ORDER BY `title`'
 <br />
 <br />
 <br />
-<p class="text"><sup>[1]</sup> <?php echo __('String f&uuml;r den Dial()-Befehl. Dabei werden {number} und {gateway} automatisch von Gemeinschaft ersetzt.'); ?></p>
+<p class="text"><sup>[1]</sup> <?php echo htmlEnt(sPrintF(__("String f\xC3\xBCr den Dial()-Befehl. Dabei wird {number} automatisch von Gemeinschaft durch die zu w\xC3\xA4hlende Rufnummer und {gateway} durch die interne Bezeichnung \"%s\" ersetzt."), $gw['name'])); ?></p>
 <p class="text"><sup>[2]</sup> <?php echo __('Gateways m&uuml;ssen jeweils einer Gateway-Gruppe zugeordnet werden damit sie benutzt werden k&ouml;nnen.'); ?></p>
 
 </form>
