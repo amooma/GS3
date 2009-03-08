@@ -47,10 +47,10 @@ class PhoneCapability
 	
 	function conv_ringtone( $file )
 	{
-		// phone specific. sox and mpg123 can be used
-		// must return false on error or the name of the
-		// generated outfile on success
-		return false;
+		// phone specific. sox and mpg123 can be used.
+		// must return null if not implemented, false on error,
+		// or the name of the generated outfile on success.
+		return null;  # not implemented
 	}
 }
 
