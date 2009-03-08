@@ -107,7 +107,8 @@ class PhoneCapability_aastra extends PhoneCapability
 		}
 		return $outfile;
 		*/
-		return false;
+		//return false;
+		return null;  # not implemented
 	}
 }
 
