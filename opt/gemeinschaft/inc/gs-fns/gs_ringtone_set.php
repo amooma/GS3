@@ -142,20 +142,43 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 		return new GsError( 'Failed to copy file to "'. $infile .'".' );
 	
 	include_once( GS_DIR .'inc/phone-capability.php' );
-	$phone_types = array('snom', 'siemens');  //FIXME
+	
+	$phone_types = glob( GS_DIR .'htdocs/prov/*/capability.php' );
+	if (! is_array($phone_types)) $phone_types = array();
+	for ($i=0; $i<count($phone_types); ++$i) {
+		$phone_types[$i] = baseName(dirName($phone_types[$i]));
+	}
+	gs_log(GS_LOG_DEBUG, 'Found phone types: '.implode(', ',$phone_types) );
+	
 	$errors = array();
 	$new_ringer_basename = $user .'-'. subStr($src,0,3) .'-'. $rand;
 	foreach ($phone_types as $phone_type) {
 		include_once( GS_DIR .'htdocs/prov/'. $phone_type .'/capability.php' );
 		$class = 'PhoneCapability_'. $phone_type;
-		if (! class_exists($class)) continue;
+		if (! class_exists($class)) {
+			gs_log(GS_LOG_WARNING, $phone_type .': Class broken.' );
+			$errors[] = $phone_type .': Class broken.';
+			continue;
+		}
 		$PhoneCapa = new $class;
 		
 		$outfile = $PhoneCapa->conv_ringtone( $infile, $outbase );
-		if (isGsError($outfile))
+		if (isGsError($outfile)) {
+			gs_log(GS_LOG_WARNING, $phone_type .': '. $outfile->getMsg() );
 			$errors[] = $phone_type .': '. $outfile->getMsg();
-		elseif (! $outfile)
+		} elseif ($outfile === null) {
+			gs_log(GS_LOG_DEBUG, $phone_type .': Not implemented.' );
+			continue;
+		} elseif (! $outfile) {
+			gs_log(GS_LOG_WARNING, $phone_type .': Failed to convert file.' );
 			$errors[] = $phone_type .': '. 'Failed to convert file.';
+			continue;
+		}
+		if (! file_exists($outfile)) {
+			gs_log(GS_LOG_WARNING, $phone_type .': Failed to convert file.' );
+			$errors[] = $phone_type .': '. 'Failed to convert file.';
+			continue;
+		}
 		@chmod($outfile, 0666);
 		
 		$pinfo = pathInfo($outfile);
@@ -191,7 +214,7 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 	@exec('rm -rf '. $tmpbase .'-* 1>>/dev/null 2>>/dev/null &');
 	
 	if (count($errors) > 0) {
-		return new GsError( implode("\n", $errors) );
+		return new GsError( "Failed to convert ringtone for some or all phone types: ". implode(", ", $errors) );
 	}
 	$ok = $db->execute( 'UPDATE `ringtones` SET `file`=\''. $db->escape($new_ringer_basename) .'\' WHERE `user_id`='. $user_id .' AND `src`=\''. $src .'\'' );
 	if (! $ok) return new GsError( 'DB error.' );
