@@ -162,8 +162,8 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 $db = gs_db_slave_connect();
 if (! $db) die(1);
 
-$user_groups = _user_groups_get( $user_id, null );
-if (! is_array($user_groups)) $user_groups = array(null);
+$user_groups = _user_groups_get( $user_id, 0 );
+if (! is_array($user_groups)) $user_groups = array(0);
 //$user_groups = array_merge(array(0), $user_groups);
 
 $t = time();
