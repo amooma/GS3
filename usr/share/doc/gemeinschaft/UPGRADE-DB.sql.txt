@@ -8,6 +8,8 @@
 -- since rev. 3968
 --
 
+USE `asterisk`;
+
 
 --
 -- Create new table `boi_perms`:
@@ -380,6 +382,8 @@ ALTER TABLE `vm_msgs`
 -- since rev. 4804
 --
 
+USE `asterisk`;
+
 
 --
 -- Add new column `email_notify` in table `vm`:
@@ -392,6 +396,8 @@ ALTER TABLE `vm` ADD
 --
 -- since rev. 4980
 --
+
+USE `asterisk`;
 
 
 --
@@ -412,6 +418,8 @@ ALTER TABLE `users`
 -- since rev. 5048
 --
 
+USE `asterisk`;
+
 
 --
 -- Add new column `firmware_cur` in table `phones`:
@@ -425,6 +433,8 @@ ALTER TABLE `phones` ADD
 -- since rev. 5063
 --
 
+USE `asterisk`;
+
 
 --
 -- Add new column `show_ext_modules` in table `user_groups`:
@@ -437,6 +447,8 @@ ALTER TABLE `user_groups` ADD
 --
 -- since rev. 5082
 --
+
+USE `asterisk`;
 
 
 --
@@ -469,6 +481,8 @@ CREATE TABLE IF NOT EXISTS `prov_jobs` (
 -- since rev. 5387
 --
 
+USE `asterisk`;
+
 
 --
 -- Add index for `remote_user_id` and foreign key constraint in table `dial_log`:
@@ -487,6 +501,8 @@ ALTER TABLE `dial_log`
 --
 -- since rev. 5532
 --
+
+USE `asterisk`;
 
 
 --
@@ -515,6 +531,8 @@ ALTER
 -- since rev. 5559
 --
 
+USE `asterisk`;
+
 
 --
 -- Resize column `name` in table `ast_sipfriends` for storing long dummy-user extensions:
@@ -527,6 +545,8 @@ ALTER TABLE `ast_sipfriends`
 --
 -- since rev. 5626
 --
+
+USE `asterisk`;
 
 
 --
@@ -544,6 +564,8 @@ ALTER TABLE `callforwards`
 -- since rev. 5655
 --
 
+USE `asterisk`;
+
 
 --
 -- Add new column `fw_manual_update` in table `phones`
@@ -556,6 +578,8 @@ ALTER TABLE `phones`
 --
 -- since rev. 5699
 --
+
+USE `asterisk`;
 
 
 --
@@ -586,6 +610,8 @@ ALTER TABLE `user_watchlist`
 -- since rev. 5839
 --
 
+USE `asterisk`;
+
 
 --
 -- Drop foreign key which references `ast_queues`(`_id`) in table
@@ -599,6 +625,8 @@ ALTER TABLE `queue_log` ADD INDEX (`user_id`);
 --
 -- since rev. 6211
 --
+
+USE `asterisk`;
 
 
 --
