@@ -634,7 +634,7 @@ USE `asterisk`;
 --
 
 ALTER TABLE `routes`
-  ADD `user_grp_id` MEDIUMINT UNSIGNED NULL default NULL AFTER `h_to` ;
+  ADD `user_grp_id` MEDIUMINT UNSIGNED NULL default NULL AFTER `h_to`;
 ALTER TABLE `routes`
   ADD INDEX `user_grp_id` (`user_grp_id`);
 ALTER TABLE `routes`
