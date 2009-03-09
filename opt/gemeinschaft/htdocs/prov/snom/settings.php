@@ -771,10 +771,11 @@ setting('user_symmetrical_rtp'    ,$i, 'off');
 setting('user_expiry'             ,$i, '60' );  # default: 3600,
                                                 # valid: 60, 600, 3600, 7200, 28800, 86400
 setting('user_subscription_expiry',$i, '60' );  # default: 3600
-setting('user_server_type'        ,$i, 'default');
+setting('user_server_type'        ,$i, ((_snomAppCmp($fw_vers_nrml, '7.3.2') >0) ? 'asterisk':'default'));
 # default = Standard, broadsoft = Broadsoft, sylantro = Sylantro,
 # pbxnsip = PBXnSIP, telepo = Telepo, metaswitch = MetaSwitch,
-# nortel = Nortel (since firmware 7.3.2)
+# nortel = Nortel (since firmware 7.3.2), asterisk = Asterisk
+# (since firmware 7.3.10)
 setting('ring_after_delay'        ,$i, ''   );
 setting('user_send_local_name'    ,$i, 'on' );  # send display name to caller
 setting('user_dtmf_info'          ,$i, (_snomAppCmp($fw_vers_nrml, '7.1.33') >0) ? 'sip_info_only':'on');
