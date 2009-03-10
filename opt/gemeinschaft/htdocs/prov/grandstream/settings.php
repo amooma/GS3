@@ -296,15 +296,6 @@ psetting('P49', '0');			# G.723 Encoding Frame rate ( 0 = 6.3 kb/s, 1 = 5.3 kb/s
 
 
 #####################################################################
-#  Date and Time
-#####################################################################
-psetting('P30',  gs_get_conf('GS_GRANDSTREAM_PROV_NTP'));  # NTP Server
-psetting('P64',  (720 + (int)(((int)date('Z')) / 60)) );  # Timezone Offset ( Offset from GMT in minutes + 720 )
-psetting('P75',  date('I'));	# Daylight Saving Time ( 0 = no, 1 = yes )
-psetting('P102', '2');			# Date Display Format ( 0 = Y-M-D, 1 = M-D-Y, 2 = D-M-Y )
-
-
-#####################################################################
 #  SIP settings
 #####################################################################
 psetting('P47', $host);			# Account 1: SIP Server
@@ -409,12 +400,21 @@ psetting('P44', '');		# TFTP server IP address (octet 3)
 
 
 #####################################################################
+#  Date and Time
+#####################################################################
+psetting('P30',  gs_get_conf('GS_GRANDSTREAM_PROV_NTP'));  # NTP Server
+psetting('P64',  (720 + (int)(((int)date('Z')) / 60)) );  # Timezone Offset ( Offset from GMT in minutes + 720 )
+psetting('P75',  date('I'));	# Daylight Saving Time ( 0 = no, 1 = yes )
+psetting('P102', '2');			# Date Display Format ( 0 = Y-M-D, 1 = M-D-Y, 2 = D-M-Y )
+
+
+#####################################################################
 #  Ringtone
 #####################################################################
-psetting('P104', '0');			# Default ring tone
-psetting('P105', '');			# 
-psetting('P106', '');			#
-psetting('P107', '');			# 
+//psetting('P104', '0');			# Default ring tone
+psetting('P105', '');		# Custom ringtone 1, used if incoming caller ID is: ""
+psetting('P106', '');		# Custom ringtone 2, used if incoming caller ID is: ""
+psetting('P107', '');		# Custom ringtone 3, used if incoming caller ID is: ""
 
 
 #####################################################################
