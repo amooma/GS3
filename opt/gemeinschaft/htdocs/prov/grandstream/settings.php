@@ -275,6 +275,13 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 
 
 #####################################################################
+#  Passwords
+#####################################################################
+psetting('P2', gs_get_conf('GS_GRANDSTREAM_PROV_HTTP_PASS'));	# Admin Password
+psetting('P196', '');		# End User Password
+
+
+#####################################################################
 #  Codecs
 #####################################################################
 # 0 = pcmu (ulaw), 8 = pcma (alaw), 2 = G.726-32, 4 = G.723.1, 15 = G.728, 18 = G.729a/b
@@ -438,7 +445,6 @@ if (subStr($phone_model,0,3) === 'gxp') {
 #####################################################################
 #  Misc
 #####################################################################
-psetting('P2', gs_get_conf('GS_GRANDSTREAM_PROV_HTTP_PASS'));	# Admin Password
 psetting('P88', '0');			# Lock keypad update ( 0 = no, 1 = yes)
 psetting('P85', '2');			# No Key Entry Timeout (seconds)
 
