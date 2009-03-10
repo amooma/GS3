@@ -390,7 +390,7 @@ if (subStr($phone_model,0,3) === 'gxp') {
 #  Firmware Upgrade and Provisioning
 #####################################################################
 psetting('P212', '1');			# Upgrade via ( 0 = TFTP, 1 = HTTP )
-psetting('P192', '');			# TFTP/HTTP Firmware Update Server ( based on P212 ) //FIXME?
+psetting('P192', rTrim($prov_url_grandstream,'/'));  # TFTP/HTTP Firmware Update Server ( based on P212 ) //FIXME?
 psetting('P237', rTrim($prov_url_grandstream,'/'));  # TFTP/HTTP Config Server ( based on P212 )
 psetting('P232', '');			# Firmware File Prefix
 psetting('P233', '');			# Firmware File Suffix
