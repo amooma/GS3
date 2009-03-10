@@ -490,22 +490,36 @@ psetting('P71', '' );			# Offhook Auto Dial (extension)
 psetting('P76', '' );			# STUN Server
 psetting('P52', '1');			# STUN NAT Traversal ( 0 = no, 1 = yes)
 
-
-#####################################################################
-#  Ports
-#####################################################################
-psetting('P78', '0');			# Use random port ( 0 = no, 1 = yes )
-psetting('P39', '5004');		# Local RTP Port ( 1024-65535, default 5004)
-psetting('P40', '5060');		# Local SIP Port ( default 5060)
+# Ports
+psetting('P78', '0');		# Use random (RTP?) port ( 0 = no, 1 = yes )
+psetting('P39', '5004');	# Local RTP Port ( 1024-65535, default 5004)
+psetting('P40', '5060');	# Local SIP Port ( default 5060)
 
 
 #####################################################################
-#  Special settings for BT1x0
+#  Syslog Server
 #####################################################################
+psetting('P207', '' );		# Syslog server  //FIXME
+psetting('P208', '0');		# Syslog level ( 0 = none, 1 = DEBUG, 2 = INFO, 3 = WARNING, 4 = ERROR )  //FIXME
 if (subStr($phone_model,0,2) === 'bt') {
-	psetting('P207', '' );		# Syslog server
-	psetting('P208', '0');		# Syslog level
 	psetting('P243', '0');		# Allow incoming SIP message from SIP proxy only ( 0 = no, 1 = yes)
+}
+
+
+#####################################################################
+#  LDAP Directory (GXP)
+#####################################################################
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P1304', '');	# LDAP Directory server path ( maxlength 128 )
+}
+
+
+#####################################################################
+#  Display Language (GXP)
+#####################################################################
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P342', '3');	# display language ( 0 = english, 2 = chinese, 3 = P399 )
+	psetting('P399', 'german');	# language file prefix ( e.g. german => gxp_german.lpf, maxlength 32 )
 }
 
 
