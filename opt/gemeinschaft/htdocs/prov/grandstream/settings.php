@@ -396,9 +396,9 @@ psetting('P232', '');			# Firmware File Prefix
 psetting('P233', '');			# Firmware File Suffix
 psetting('P234', '');			# Config File Prefix
 psetting('P235', '');			# Config File Suffix
-psetting('P238', '2');			# Check for new Firmware ( 0 = Every Time, 1 = only when suffix/prefix changes, 2 = Never - 1.0.8.x )
-psetting('P194', '1');			# Auto Update ( 0 = no, 1 = yes )
-psetting('P193', '60');			# Firmware Check Interval (in minutes)
+psetting('P238', '0');			# Check for new Firmware ( 0 = every time, 1 = only when suffix/prefix changes, 2 = never )
+psetting('P194', '1');			# Automatic Update ( 0 = no, 1 = yes )
+psetting('P193', '60');			# Firmware Check Interval (in minutes, default: 7 days)
 //psetting('P242', '');			# Firmware Key (hex) ???
 psetting('P240', '0');			# Authenticate Conf File ( 0 = no, 1 = yes )
 if (subStr($phone_model,0,3) === 'gxp' ) {
@@ -424,33 +424,33 @@ psetting('P98', '8');			# Codec 8 ?
 #####################################################################
 #  Codec settings
 #####################################################################
-psetting('P37', '2');			# Voice Frames per TX ( 10/20/32/64 frames for G711/G726/G723/other codecs respectively)
-psetting('P96', '98');			# iLBC payload type
-psetting('P97', '0');			# iLBC frame size
-psetting('P50', '0');			# Silence Supression ( 0 = no, 1 = yes)
-psetting('P49', '0');			# G.723 Encoding Frame rate ( 0 = 6.3 kb/s, 1 = 5.3 kb/s)
+psetting('P37', '2');			# Voice Frames per TX ( 10/20/32/64 frames for G711/G726/G723/other codecs respectively )
+psetting('P96', '97');			# iLBC payload type ( between 96 and 127, default: 97 )
+psetting('P97', '0');			# iLBC frame size ( 0 = 20ms, 1 = 30ms )
+psetting('P50', '0');			# Silence Suppression ( 0 = no, 1 = yes )
+psetting('P49', '0');			# G.723 Encoding Frame rate ( 0 = 6.3 kb/s, 1 = 5.3 kb/s )
 
 
 #####################################################################
 #  SIP Account 1
 #####################################################################
-psetting('P47', $host);			# Account 1: SIP Server
-psetting('P48', $sip_proxy_and_sbc['sip_proxy_from_wan']);  # Account 1: Outbound Proxy
+psetting('P47', $host);			# SIP Server
+psetting('P48', $sip_proxy_and_sbc['sip_proxy_from_wan']);  # Outbound Proxy
 psetting('P35', $user_ext);		# SIP UserID
 psetting('P36', $user_ext);		# Authentication ID
 psetting('P34', $user['secret']);	# SIP Authentication Password (cleartext)
 psetting('P3',  $user['callerid']);	# Display (CallerID) Name
-psetting('P31', '1');			# Account 1: SIP Registration ( 0 = no register, 1 = register )
+psetting('P31', '1');			# SIP Registration ( 0 = no register, 1 = register )
 psetting('P81', '1');			# Unregister on Reboot ( 0 = no, 1 = yes)
 if (subStr($phone_model,0,3) == 'gxp')
-	psetting('P32', '5');		# Account 1: Register Expiration (in minutes, default: 60)
-if (subStr($phone_model,0,2) == 'bt')
+	psetting('P32', '5');		# Register Expiration (in minutes, default: 60)
+if (subStr($phone_model,0,2) === 'bt')
 	psetting('P239', '300');	# Register Expiration (in seconds, default: 3600)
 psetting('P63', '1');			# UserID is phone number ( 0 = no, 1 = yes)
 psetting('P65', '0');			# Send Anonymous ( 0 = no, 1 = yes)
-psetting('P73', '2');			# Account 1: Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
-//psetting('P272', '1');			# Account 1: Enable 100rel. ( 0 = no, 1 = yes)
-//psetting('P191', '1');			# Account 1: Enable Call Features ( 0 = no, 1 = yes)
+psetting('P73', '2');			# Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
+//psetting('P272', '1');			# Enable 100rel. ( 0 = no, 1 = yes)
+psetting('P191', '0');			# Enable Call Features ( 0 = no, 1 = yes)
 
 
 #####################################################################
@@ -480,10 +480,10 @@ if (subStr($phone_model,0,3) === 'gxp') {
 #####################################################################
 #  SIP settings
 #####################################################################
-psetting('P79', '101');			# DTMF Payload Type ( default 101)
-psetting('P84', '20');			# Keep-Alive Interval ( in seconds, default 20)
+psetting('P79', '101');			# DTMF Payload Type ( default: 101)
+psetting('P84', '20');			# Keep-Alive Interval ( in seconds, default: 20)
 psetting('P71', '' );			# Offhook Auto Dial (extension)
-psetting('P76', '' );			# STUN NAT Traversal Server
+psetting('P76', '' );			# STUN Server
 psetting('P52', '1');			# STUN NAT Traversal ( 0 = no, 1 = yes)
 
 
