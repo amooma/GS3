@@ -339,6 +339,11 @@ psetting('P64',  (720 + (int)(((int)date('Z')) / 60)) );  # Timezone Offset ( Of
 psetting('P75',  date('I'));	# Daylight Saving Time ( 0 = no, 1 = yes )
 psetting('P102', '2');			# Date Display Format ( 0 = Y-M-D, 1 = M-D-Y, 2 = D-M-Y )
 psetting('P30',  gs_get_conf('GS_GRANDSTREAM_PROV_NTP'));  # NTP Server
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P143', '1');		# Allow DHCP Option 2 to override Timezone setting ( 0 = no, 1 = yes )
+	psetting('P144', '1');		# Allow DHCP Option 42 to override NTP server
+	psetting('P246', '3,2,7,2,0;11,1,7,2,0;60');	# Daylight Saving Time Optional Rule ( maxlength 33 ) (//FIXME)
+}
 
 
 #####################################################################
