@@ -294,6 +294,7 @@ psetting('P97', '0');			# iLBC frame size
 psetting('P50', '0');			# Silence Supression ( 0 = no, 1 = yes)
 psetting('P49', '0');			# G.723 Encoding Frame rate ( 0 = 6.3 kb/s, 1 = 5.3 kb/s)
 
+
 #####################################################################
 #  Date and Time
 #####################################################################
@@ -301,6 +302,7 @@ psetting('P30',  gs_get_conf('GS_GRANDSTREAM_PROV_NTP'));  # NTP Server
 psetting('P64',  (720 + (int)(((int)date('Z')) / 60)) );  # Timezone Offset ( Offset from GMT in minutes + 720 )
 psetting('P75',  date('I'));	# Daylight Saving Time ( 0 = no, 1 = yes )
 psetting('P102', '2');			# Date Display Format ( 0 = Y-M-D, 1 = M-D-Y, 2 = D-M-Y )
+
 
 #####################################################################
 #  SIP settings
@@ -325,6 +327,7 @@ psetting('P79', '101');			# DTMF Payload Type ( default 101)
 //psetting('P272', '1');			# Account 1: Enable 100rel. ( 0 = no, 1 = yes)
 //psetting('P191', '1');			# Account 1: Enable Call Features ( 0 = no, 1 = yes)
 
+
 #####################################################################
 #  Ports
 #####################################################################
@@ -332,10 +335,12 @@ psetting('P78', '0');			# Use random port ( 0 = no, 1 = yes )
 psetting('P39', '5004');		# Local RTP Port ( 1024-65535, default 5004)
 psetting('P40', '5060');		# Local SIP Port ( default 5060)
 
+
 #####################################################################
 #  Keys (Buttons)
 #####################################################################
 psetting('P33', 'voicemail');	# VoiceMail Dial String
+
 
 #####################################################################
 #  Firmware Upgrade and Provisioning
@@ -353,48 +358,55 @@ psetting('P193', '60');			# Firmware Check Interval (in minutes)
 psetting('P242', '');			# Firmware Key (hex) ???
 psetting('P240', '0');			# Authenticate Conf File ( 0 = no, 1 = yes )
 
+
 #####################################################################
-#  Network settings
+#  Network
 #####################################################################
-psetting('P8' , '0');			# IP Address Type ( 0 = DHCP, 1 = static)
-psetting('P38', '48');			# Layer 3 QoS
-psetting('P87', '0');			# 802.1p priority value
-psetting('P51', '0');			# 802.1q VLAN Tag
+psetting('P8' , '0');		# IP Address Type ( 0 = DHCP, 1 = static)
+psetting('P38', '48');		# Layer 3 QoS
+psetting('P87', '0');		# 802.1p priority value
+psetting('P51', '0');		# 802.1q VLAN Tag
+
 # DHCP
 psetting('P146', 'grandstream-'.$mac );  # DHCP hostname
-psetting('P147', '');			# DHCP domain
-psetting('P148', '');			# DHCP vendor class ID
-psetting('P82', '');			# PPPoE Account ID
-psetting('P83', '');			# PPPoE Password
-psetting('P92', '');			# Preferred DNS server (octet 0)
-psetting('P93', '');			# Preferred DNS server (octet 1)
-psetting('P94', '');			# Preferred DNS server (octet 2)
-psetting('P95', '');			# Preferred DNS server (octet 3)
+psetting('P147', '');		# DHCP domain
+psetting('P148', '');		# DHCP vendor class ID
+psetting('P82', '');		# PPPoE Account ID
+psetting('P83', '');		# PPPoE Password
+psetting('P92', '');		# Preferred DNS server (octet 0)
+psetting('P93', '');		# Preferred DNS server (octet 1)
+psetting('P94', '');		# Preferred DNS server (octet 2)
+psetting('P95', '');		# Preferred DNS server (octet 3)
+
 # static
-psetting('P9' , '');			# IP Address (octet 0)
-psetting('P10', '');			# IP Address (octet 1)
-psetting('P11', '');			# IP Address (octet 2)
-psetting('P12', '');			# IP Address (octet 3)
-psetting('P13', '');			# Subnet Mask (octet 0)
-psetting('P14', '');			# Subnet Mask (octet 1)
-psetting('P15', '');			# Subnet Mask (octet 2)
-psetting('P16', '');			# Subnet Mask (octet 3)
-psetting('P17', '');			# Default Router (octet 0)
-psetting('P18', '');			# Default Router (octet 1)
-psetting('P19', '');			# Default Router (octet 2)
-psetting('P20', '');			# Default Router (octet 3)
-psetting('P21', '');			# DNS Server 1 (octet 0)
-psetting('P22', '');			# DNS Server 1 (octet 1)
-psetting('P23', '');			# DNS Server 1 (octet 2)
-psetting('P24', '');			# DNS Server 1 (octet 3)
-psetting('P25', '');			# DNS Server 2 (octet 0)
-psetting('P26', '');			# DNS Server 2 (octet 1)
-psetting('P27', '');			# DNS Server 2 (octet 2)
-psetting('P28', '');			# DNS Server 2 (octet 3)
-psetting('P41', '');			# TFTP server IP address (octet 0)
-psetting('P42', '');			# TFTP server IP address (octet 1)
-psetting('P43', '');			# TFTP server IP address (octet 2)
-psetting('P44', '');			# TFTP server IP address (octet 3)
+psetting('P9' , '');		# IP Address (octet 0)
+psetting('P10', '');		# IP Address (octet 1)
+psetting('P11', '');		# IP Address (octet 2)
+psetting('P12', '');		# IP Address (octet 3)
+psetting('P13', '');		# Subnet Mask (octet 0)
+psetting('P14', '');		# Subnet Mask (octet 1)
+psetting('P15', '');		# Subnet Mask (octet 2)
+psetting('P16', '');		# Subnet Mask (octet 3)
+psetting('P17', '');		# Default Router (octet 0)
+psetting('P18', '');		# Default Router (octet 1)
+psetting('P19', '');		# Default Router (octet 2)
+psetting('P20', '');		# Default Router (octet 3)
+psetting('P21', '');		# DNS Server 1 (octet 0)
+psetting('P22', '');		# DNS Server 1 (octet 1)
+psetting('P23', '');		# DNS Server 1 (octet 2)
+psetting('P24', '');		# DNS Server 1 (octet 3)
+psetting('P25', '');		# DNS Server 2 (octet 0)
+psetting('P26', '');		# DNS Server 2 (octet 1)
+psetting('P27', '');		# DNS Server 2 (octet 2)
+psetting('P28', '');		# DNS Server 2 (octet 3)
+
+/*
+psetting('P41', '');		# TFTP server IP address (octet 0)
+psetting('P42', '');		# TFTP server IP address (octet 1)
+psetting('P43', '');		# TFTP server IP address (octet 2)
+psetting('P44', '');		# TFTP server IP address (octet 3)
+*/
+
 
 #####################################################################
 #  Ringtone
@@ -404,12 +416,14 @@ psetting('P105', '');			#
 psetting('P106', '');			#
 psetting('P107', '');			# 
 
+
 #####################################################################
 #  Misc
 #####################################################################
 psetting('P2', gs_get_conf('GS_GRANDSTREAM_PROV_HTTP_PASS'));	# Admin Password
 psetting('P88', '0');			# Lock keypad update ( 0 = no, 1 = yes)
 psetting('P85', '2');			# No Key Entry Timeout (seconds)
+
 
 #####################################################################
 #  Special settings for BT1x0
@@ -419,6 +433,7 @@ if (subStr($phone_model,0,2) === 'bt') {
 	psetting('P208', '0');		# Syslog level
 	psetting('P243', '0');		# Allow incoming SIP message from SIP proxy only ( 0 = no, 1 = yes)
 }
+
 
 #####################################################################
 #  Misc (//FIXME todo)
@@ -437,6 +452,7 @@ psetting('P101', '');			# Use NAT IP ( 0 = no, 1 = yes)
 psetting('P76', '' );			# STUN NAT Traversal Server
 psetting('P52', '1');			# STUN NAT Traversal ( 0 = no, 1 = yes)
 psetting('P103', '0');			# Account 1: Use DNS SRV ( 0 = no, 1 = yes)
+
 
 
 #####################################################################
