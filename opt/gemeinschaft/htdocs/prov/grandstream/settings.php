@@ -347,9 +347,22 @@ if (subStr($phone_model,0,3) === 'gxp') {
 
 
 #####################################################################
+#  LCD Display
+#####################################################################
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P322', '0');		# LCD Backlight Always on (0 = no, 1 = yes)
+	psetting('P1329', '12');	# LCD Contrast
+	psetting('P122', '1');		# Time Display Format (0 = 12h, 1 = 24h)
+	psetting('P123', '0');		# Display Clock instead of Date (0 = yes, 1 = no) ???
+	psetting('P338', '0');		# Disable in-call DTMF display ( 0 = no, 1 = yes )
+	psetting('P351', '0');		# Disable Missed Call Backlight ( 0 = no, 1 = yes)	
+}
+
+
+#####################################################################
 #  Ringtones
 #####################################################################
-//psetting('P104', '0');			# Default ring tone
+psetting('P104', '0');		# Default ring tone
 psetting('P105', '');		# Custom ringtone 1, used if incoming caller ID is: ""
 psetting('P106', '');		# Custom ringtone 2, used if incoming caller ID is: ""
 psetting('P107', '');		# Custom ringtone 3, used if incoming caller ID is: ""
