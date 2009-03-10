@@ -390,17 +390,20 @@ if (subStr($phone_model,0,3) === 'gxp') {
 #  Firmware Upgrade and Provisioning
 #####################################################################
 psetting('P212', '1');			# Upgrade via ( 0 = TFTP, 1 = HTTP )
-psetting('P192', '');			# TFTP/HTTP Firmware Update Server (based on P212, 1.0.8.x) //FIXME?
-psetting('P237', rTrim($prov_url_grandstream,'/'));  # TFTP/HTTP Config Server (based on P212, 1.0.8.x)
-psetting('P232', '');			# Firmware File Prefix (1.0.8.x)
-psetting('P233', '');			# Firmware File Suffix (1.0.8.x)
-psetting('P234', '');			# Config File Prefix (1.0.8.x)
-psetting('P235', '');			# Config File Suffix (1.0.8.x)
+psetting('P192', '');			# TFTP/HTTP Firmware Update Server ( based on P212 ) //FIXME?
+psetting('P237', rTrim($prov_url_grandstream,'/'));  # TFTP/HTTP Config Server ( based on P212 )
+psetting('P232', '');			# Firmware File Prefix
+psetting('P233', '');			# Firmware File Suffix
+psetting('P234', '');			# Config File Prefix
+psetting('P235', '');			# Config File Suffix
 psetting('P238', '2');			# Check for new Firmware ( 0 = Every Time, 1 = only when suffix/prefix changes, 2 = Never - 1.0.8.x )
 psetting('P194', '1');			# Auto Update ( 0 = no, 1 = yes )
 psetting('P193', '60');			# Firmware Check Interval (in minutes)
-psetting('P242', '');			# Firmware Key (hex) ???
+//psetting('P242', '');			# Firmware Key (hex) ???
 psetting('P240', '0');			# Authenticate Conf File ( 0 = no, 1 = yes )
+if (subStr($phone_model,0,3) === 'gxp' ) {
+	psetting('P145', '0');		# Allow DHCP Option 66 to override server ( 0 = no, 1 = yes ) //FIXME?
+}
 
 
 #####################################################################
