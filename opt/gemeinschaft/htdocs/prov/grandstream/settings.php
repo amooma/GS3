@@ -282,6 +282,55 @@ psetting('P196', '');		# End User Password
 
 
 #####################################################################
+#  Network
+#####################################################################
+psetting('P8' , '0');		# IP Address Type ( 0 = DHCP, 1 = static)
+psetting('P38', '48');		# Layer 3 QoS
+psetting('P87', '0');		# 802.1p priority value
+psetting('P51', '0');		# 802.1q VLAN Tag
+
+# DHCP
+psetting('P146', 'grandstream-'.$mac );  # DHCP hostname
+psetting('P147', '');		# DHCP domain
+psetting('P148', '');		# DHCP vendor class ID
+psetting('P82', '');		# PPPoE Account ID
+psetting('P83', '');		# PPPoE Password
+psetting('P92', '');		# Preferred DNS server (octet 0)
+psetting('P93', '');		# Preferred DNS server (octet 1)
+psetting('P94', '');		# Preferred DNS server (octet 2)
+psetting('P95', '');		# Preferred DNS server (octet 3)
+
+# static
+psetting('P9' , '');		# IP Address (octet 0)
+psetting('P10', '');		# IP Address (octet 1)
+psetting('P11', '');		# IP Address (octet 2)
+psetting('P12', '');		# IP Address (octet 3)
+psetting('P13', '');		# Subnet Mask (octet 0)
+psetting('P14', '');		# Subnet Mask (octet 1)
+psetting('P15', '');		# Subnet Mask (octet 2)
+psetting('P16', '');		# Subnet Mask (octet 3)
+psetting('P17', '');		# Default Router (octet 0)
+psetting('P18', '');		# Default Router (octet 1)
+psetting('P19', '');		# Default Router (octet 2)
+psetting('P20', '');		# Default Router (octet 3)
+psetting('P21', '');		# DNS Server 1 (octet 0)
+psetting('P22', '');		# DNS Server 1 (octet 1)
+psetting('P23', '');		# DNS Server 1 (octet 2)
+psetting('P24', '');		# DNS Server 1 (octet 3)
+psetting('P25', '');		# DNS Server 2 (octet 0)
+psetting('P26', '');		# DNS Server 2 (octet 1)
+psetting('P27', '');		# DNS Server 2 (octet 2)
+psetting('P28', '');		# DNS Server 2 (octet 3)
+
+/*
+psetting('P41', '');		# TFTP server IP address (octet 0)
+psetting('P42', '');		# TFTP server IP address (octet 1)
+psetting('P43', '');		# TFTP server IP address (octet 2)
+psetting('P44', '');		# TFTP server IP address (octet 3)
+*/
+
+
+#####################################################################
 #  Codecs
 #####################################################################
 # 0 = pcmu (ulaw), 8 = pcma (alaw), 2 = G.726-32, 4 = G.723.1, 15 = G.728, 18 = G.729a/b
@@ -355,55 +404,6 @@ psetting('P194', '1');			# Auto Update ( 0 = no, 1 = yes )
 psetting('P193', '60');			# Firmware Check Interval (in minutes)
 psetting('P242', '');			# Firmware Key (hex) ???
 psetting('P240', '0');			# Authenticate Conf File ( 0 = no, 1 = yes )
-
-
-#####################################################################
-#  Network
-#####################################################################
-psetting('P8' , '0');		# IP Address Type ( 0 = DHCP, 1 = static)
-psetting('P38', '48');		# Layer 3 QoS
-psetting('P87', '0');		# 802.1p priority value
-psetting('P51', '0');		# 802.1q VLAN Tag
-
-# DHCP
-psetting('P146', 'grandstream-'.$mac );  # DHCP hostname
-psetting('P147', '');		# DHCP domain
-psetting('P148', '');		# DHCP vendor class ID
-psetting('P82', '');		# PPPoE Account ID
-psetting('P83', '');		# PPPoE Password
-psetting('P92', '');		# Preferred DNS server (octet 0)
-psetting('P93', '');		# Preferred DNS server (octet 1)
-psetting('P94', '');		# Preferred DNS server (octet 2)
-psetting('P95', '');		# Preferred DNS server (octet 3)
-
-# static
-psetting('P9' , '');		# IP Address (octet 0)
-psetting('P10', '');		# IP Address (octet 1)
-psetting('P11', '');		# IP Address (octet 2)
-psetting('P12', '');		# IP Address (octet 3)
-psetting('P13', '');		# Subnet Mask (octet 0)
-psetting('P14', '');		# Subnet Mask (octet 1)
-psetting('P15', '');		# Subnet Mask (octet 2)
-psetting('P16', '');		# Subnet Mask (octet 3)
-psetting('P17', '');		# Default Router (octet 0)
-psetting('P18', '');		# Default Router (octet 1)
-psetting('P19', '');		# Default Router (octet 2)
-psetting('P20', '');		# Default Router (octet 3)
-psetting('P21', '');		# DNS Server 1 (octet 0)
-psetting('P22', '');		# DNS Server 1 (octet 1)
-psetting('P23', '');		# DNS Server 1 (octet 2)
-psetting('P24', '');		# DNS Server 1 (octet 3)
-psetting('P25', '');		# DNS Server 2 (octet 0)
-psetting('P26', '');		# DNS Server 2 (octet 1)
-psetting('P27', '');		# DNS Server 2 (octet 2)
-psetting('P28', '');		# DNS Server 2 (octet 3)
-
-/*
-psetting('P41', '');		# TFTP server IP address (octet 0)
-psetting('P42', '');		# TFTP server IP address (octet 1)
-psetting('P43', '');		# TFTP server IP address (octet 2)
-psetting('P44', '');		# TFTP server IP address (octet 3)
-*/
 
 
 #####################################################################
