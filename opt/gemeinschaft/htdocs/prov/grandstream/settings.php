@@ -328,8 +328,8 @@ psetting('P44', '');		# TFTP server IP address (octet 3)
 
 # QoS
 psetting('P38', '48');		# Layer 3 QoS
-psetting('P51', '0');		# 802.1q VLAN Tag
-psetting('P87', '0');		# 802.1p priority value
+psetting('P51', '0');		# Layer 2 QoS: 802.1q VLAN Tag ( maxlength 5 )
+psetting('P87', '0');		# Layer 2 QoS: 802.1p priority value ( maxlength 5 )
 
 
 #####################################################################
