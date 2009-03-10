@@ -424,10 +424,8 @@ if (subStr($phone_model,0,3) == 'gxp')
 if (subStr($phone_model,0,2) == 'bt')
 	psetting('P239', '300');	# Register Expiration (in seconds, default: 3600)
 psetting('P63', '1');			# UserID is phone number ( 0 = no, 1 = yes)
-psetting('P84', '20');			# Keep-Alive Interval ( in seconds, default 20)
 psetting('P65', '0');			# Send Anonymous ( 0 = no, 1 = yes)
 psetting('P73', '2');			# Account 1: Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
-psetting('P79', '101');			# DTMF Payload Type ( default 101)
 //psetting('P272', '1');			# Account 1: Enable 100rel. ( 0 = no, 1 = yes)
 //psetting('P191', '1');			# Account 1: Enable Call Features ( 0 = no, 1 = yes)
 
@@ -454,6 +452,16 @@ if (subStr($phone_model,0,3) === 'gxp') {
 if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P601', '0');		# Account 2: Active ( 0 = no, 1 = yes )
 }
+
+
+#####################################################################
+#  SIP settings
+#####################################################################
+psetting('P79', '101');			# DTMF Payload Type ( default 101)
+psetting('P84', '20');			# Keep-Alive Interval ( in seconds, default 20)
+psetting('P71', '' );			# Offhook Auto Dial (extension)
+psetting('P76', '' );			# STUN NAT Traversal Server
+psetting('P52', '1');			# STUN NAT Traversal ( 0 = no, 1 = yes)
 
 
 #####################################################################
@@ -494,15 +502,12 @@ if (subStr($phone_model,0,2) === 'bt') {
 psetting('P99', '0');			# Subscribe for MWI
 psetting('P74', '0');			# Send Flash DTMF event ( 0 = no, 1 = yes)
 psetting('P91', '1');			# Disable Call Waiting ( 0 = disabled, 1 = enable)
-psetting('P71', '' );			# Offhook Auto Dial (extension)
 psetting('P90', '0');			# Auto Answer ( 0 = no, 1 = yes)
 psetting('P66', '' );			# Dial Plan Prefix
 psetting('P72', '0');			# Use # as Dial Key ( 0 = no, 1 = yes)
 psetting('P29', '0');			# Early Dial ( 0 = no, 1 = yes, use only if proxy supports 484 response)
 
 psetting('P101', '');			# Use NAT IP ( 0 = no, 1 = yes)
-psetting('P76', '' );			# STUN NAT Traversal Server
-psetting('P52', '1');			# STUN NAT Traversal ( 0 = no, 1 = yes)
 psetting('P103', '0');			# Account 1: Use DNS SRV ( 0 = no, 1 = yes)
 
 
