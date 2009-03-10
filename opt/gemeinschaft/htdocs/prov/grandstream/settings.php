@@ -340,6 +340,50 @@ psetting('P30',  gs_get_conf('GS_GRANDSTREAM_PROV_NTP'));  # NTP Server
 
 
 #####################################################################
+#  Ringtones
+#####################################################################
+//psetting('P104', '0');			# Default ring tone
+psetting('P105', '');		# Custom ringtone 1, used if incoming caller ID is: ""
+psetting('P106', '');		# Custom ringtone 2, used if incoming caller ID is: ""
+psetting('P107', '');		# Custom ringtone 3, used if incoming caller ID is: ""
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P345', '3,2,7,2,0;11,1,7,2,0;60');	# System ringtone ( maxlength 64 )
+}
+
+
+#####################################################################
+#  Call Progress Tones (//FIXME todo)
+#####################################################################
+/*
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P343', 'f1=350,f2=440;');				# Dial Tone
+	psetting('P344', 'f1=350,f2=440,c=10/10;');		# Message Waiting
+	psetting('P346', 'f1=440,f2=480,c=200/400;');	# Ring Back Tone
+	psetting('P347', 'f1=440,f2=440,c=25/525;');	# Call-Waiting Tone
+	psetting('P348', 'f1=480,f2=620,c=50/50;');		# Busy Tone
+	psetting('P349', 'f1=480,f2=620,c=25/25;');		# Reorder Tone
+}
+*/
+
+
+#####################################################################
+#  Firmware Upgrade and Provisioning
+#####################################################################
+psetting('P212', '1');			# Upgrade via ( 0 = TFTP, 1 = HTTP )
+psetting('P192', '');			# TFTP/HTTP Firmware Update Server (based on P212, 1.0.8.x) //FIXME?
+psetting('P237', rTrim($prov_url_grandstream,'/'));  # TFTP/HTTP Config Server (based on P212, 1.0.8.x)
+psetting('P232', '');			# Firmware File Prefix (1.0.8.x)
+psetting('P233', '');			# Firmware File Suffix (1.0.8.x)
+psetting('P234', '');			# Config File Prefix (1.0.8.x)
+psetting('P235', '');			# Config File Suffix (1.0.8.x)
+psetting('P238', '2');			# Check for new Firmware ( 0 = Every Time, 1 = only when suffix/prefix changes, 2 = Never - 1.0.8.x )
+psetting('P194', '1');			# Auto Update ( 0 = no, 1 = yes )
+psetting('P193', '60');			# Firmware Check Interval (in minutes)
+psetting('P242', '');			# Firmware Key (hex) ???
+psetting('P240', '0');			# Authenticate Conf File ( 0 = no, 1 = yes )
+
+
+#####################################################################
 #  Codecs
 #####################################################################
 # 0 = pcmu (ulaw), 8 = pcma (alaw), 2 = G.726-32, 4 = G.723.1, 15 = G.728, 18 = G.729a/b
@@ -396,50 +440,6 @@ psetting('P40', '5060');		# Local SIP Port ( default 5060)
 #  Keys (Buttons)
 #####################################################################
 psetting('P33', 'voicemail');	# VoiceMail Dial String
-
-
-#####################################################################
-#  Firmware Upgrade and Provisioning
-#####################################################################
-psetting('P212', '1');			# Upgrade via ( 0 = TFTP, 1 = HTTP )
-psetting('P192', '');			# TFTP/HTTP Firmware Update Server (based on P212, 1.0.8.x) //FIXME?
-psetting('P237', rTrim($prov_url_grandstream,'/'));  # TFTP/HTTP Config Server (based on P212, 1.0.8.x)
-psetting('P232', '');			# Firmware File Prefix (1.0.8.x)
-psetting('P233', '');			# Firmware File Suffix (1.0.8.x)
-psetting('P234', '');			# Config File Prefix (1.0.8.x)
-psetting('P235', '');			# Config File Suffix (1.0.8.x)
-psetting('P238', '2');			# Check for new Firmware ( 0 = Every Time, 1 = only when suffix/prefix changes, 2 = Never - 1.0.8.x )
-psetting('P194', '1');			# Auto Update ( 0 = no, 1 = yes )
-psetting('P193', '60');			# Firmware Check Interval (in minutes)
-psetting('P242', '');			# Firmware Key (hex) ???
-psetting('P240', '0');			# Authenticate Conf File ( 0 = no, 1 = yes )
-
-
-#####################################################################
-#  Ringtones
-#####################################################################
-//psetting('P104', '0');			# Default ring tone
-psetting('P105', '');		# Custom ringtone 1, used if incoming caller ID is: ""
-psetting('P106', '');		# Custom ringtone 2, used if incoming caller ID is: ""
-psetting('P107', '');		# Custom ringtone 3, used if incoming caller ID is: ""
-if (subStr($phone_model,0,3) === 'gxp') {
-	psetting('P345', '3,2,7,2,0;11,1,7,2,0;60');	# System ringtone ( maxlength 64 )
-}
-
-
-#####################################################################
-#  Call Progress Tones (//FIXME todo)
-#####################################################################
-/*
-if (subStr($phone_model,0,3) === 'gxp') {
-	psetting('P343', 'f1=350,f2=440;');				# Dial Tone
-	psetting('P344', 'f1=350,f2=440,c=10/10;');		# Message Waiting
-	psetting('P346', 'f1=440,f2=480,c=200/400;');	# Ring Back Tone
-	psetting('P347', 'f1=440,f2=440,c=25/525;');	# Call-Waiting Tone
-	psetting('P348', 'f1=480,f2=620,c=50/50;');		# Busy Tone
-	psetting('P349', 'f1=480,f2=620,c=25/25;');		# Reorder Tone
-}
-*/
 
 
 #####################################################################
