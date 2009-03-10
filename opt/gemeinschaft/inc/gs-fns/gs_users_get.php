@@ -49,11 +49,13 @@ function gs_users_get()
 	`u`.`id`, `u`.`user`, `u`.`pin`,
 	`u`.`lastname`, `u`.`firstname`, `u`.`honorific`, `u`.`email`,
 	`s`.`name` `ext`, `s`.`callerid`, `s`.`mailbox`,
-	`h`.`host`
+	`h`.`host`,
+	`ug`.`name` `group`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) LEFT JOIN
-	`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
+	`hosts` `h` ON (`h`.`id`=`u`.`host_id`) LEFT JOIN
+	`user_groups` `ug` ON (`ug`.`id`=`u`.`group_id`)
 ORDER BY
 	`u`.`lastname`, `u`.`firstname`, `u`.`honorific`, `u`.`id`'
 	);
