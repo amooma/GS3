@@ -480,6 +480,16 @@ psetting('P40', '5060');		# Local SIP Port ( default 5060)
 
 
 #####################################################################
+#  Special settings for BT1x0
+#####################################################################
+if (subStr($phone_model,0,2) === 'bt') {
+	psetting('P207', '' );		# Syslog server
+	psetting('P208', '0');		# Syslog level
+	psetting('P243', '0');		# Allow incoming SIP message from SIP proxy only ( 0 = no, 1 = yes)
+}
+
+
+#####################################################################
 #  Keys (Buttons)
 #####################################################################
 psetting('P33', 'voicemail');	# VoiceMail Dial String
@@ -490,16 +500,6 @@ psetting('P33', 'voicemail');	# VoiceMail Dial String
 #####################################################################
 psetting('P88', '0');			# Lock keypad update ( 0 = no, 1 = yes)
 psetting('P85', '2');			# No Key Entry Timeout (seconds)
-
-
-#####################################################################
-#  Special settings for BT1x0
-#####################################################################
-if (subStr($phone_model,0,2) === 'bt') {
-	psetting('P207', '' );		# Syslog server
-	psetting('P208', '0');		# Syslog level
-	psetting('P243', '0');		# Allow incoming SIP message from SIP proxy only ( 0 = no, 1 = yes)
-}
 
 
 #####################################################################
