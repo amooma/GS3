@@ -518,6 +518,29 @@ psetting('P101', '');			# Use NAT IP ( 0 = no, 1 = yes)
 psetting('P103', '0');			# Account 1: Use DNS SRV ( 0 = no, 1 = yes)
 
 
+#####################################################################
+#  Misc (BT)
+#####################################################################
+if (subStr($phone_model,0,2) === 'bt') {
+}
+
+
+#####################################################################
+#  Misc (GXP)
+#####################################################################
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P336', '0');		# Mute Speaker Ringer ( 0 = no, 1 = yes )
+	psetting('P186', '0');		# Disable Call-Waiting Tone ( 0 = no, 1 = yes )
+	psetting('P1310', '1');		# Disable Direct IP Calls ( 0 = no, 1 = yes )
+	psetting('P184', '0');		# Use Quick IP-call mode ( 0 = no, 1 = yes )
+	psetting('P1311', '0');		# Disable Conference ( 0 = no, 1 = yes )	
+	psetting('P1339', '0');		# Enable MPK sending DTMF ( 0 = no, 1 = yes )
+	psetting('P1340', '0');		# Disable DND ( 0 = disable, 1 = enable )
+	psetting('P1301', '0');		# Headset TX gain (dB) ( 0 = 0dB, 1 = -6dB, 2 = +6dB )
+	psetting('P1302', '0');		# Headset RX gain (dB) ( 0 = 0dB, 1 = -6dB, 2 = +6dB )
+}
+
+
 
 #####################################################################
 #  Keys
