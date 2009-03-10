@@ -409,12 +409,30 @@ psetting('P102', '2');			# Date Display Format ( 0 = Y-M-D, 1 = M-D-Y, 2 = D-M-Y
 
 
 #####################################################################
-#  Ringtone
+#  Ringtones
 #####################################################################
 //psetting('P104', '0');			# Default ring tone
 psetting('P105', '');		# Custom ringtone 1, used if incoming caller ID is: ""
 psetting('P106', '');		# Custom ringtone 2, used if incoming caller ID is: ""
 psetting('P107', '');		# Custom ringtone 3, used if incoming caller ID is: ""
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P345', '3,2,7,2,0;11,1,7,2,0;60');	# System ringtone ( maxlength 64 )
+}
+
+
+#####################################################################
+#  Call Progress Tones (//FIXME todo)
+#####################################################################
+/*
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P343', 'f1=350,f2=440;');				# Dial Tone
+	psetting('P344', 'f1=350,f2=440,c=10/10;');		# Message Waiting
+	psetting('P346', 'f1=440,f2=480,c=200/400;');	# Ring Back Tone
+	psetting('P347', 'f1=440,f2=440,c=25/525;');	# Call-Waiting Tone
+	psetting('P348', 'f1=480,f2=620,c=50/50;');		# Busy Tone
+	psetting('P349', 'f1=480,f2=620,c=25/25;');		# Reorder Tone
+}
+*/
 
 
 #####################################################################
