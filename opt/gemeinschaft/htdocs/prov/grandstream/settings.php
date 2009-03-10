@@ -434,15 +434,19 @@ psetting('P49', '0');			# G.723 Encoding Frame rate ( 0 = 6.3 kb/s, 1 = 5.3 kb/s
 #####################################################################
 #  SIP Account 1
 #####################################################################
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P271', '1');		# Account 1: Active ( 0 = no, 1 = yes )
+	psetting('P270', 'Gemeinschaft');	# Account Name ( maxlength 96 )
+}
 psetting('P47', $host);			# SIP Server
 psetting('P48', $sip_proxy_and_sbc['sip_proxy_from_wan']);  # Outbound Proxy
-psetting('P35', $user_ext);		# SIP UserID
+psetting('P35', $user_ext);		# SIP User ID
 psetting('P36', $user_ext);		# Authentication ID
 psetting('P34', $user['secret']);	# SIP Authentication Password (cleartext)
 psetting('P3',  $user['callerid']);	# Display (CallerID) Name
 psetting('P31', '1');			# SIP Registration ( 0 = no register, 1 = register )
 psetting('P81', '1');			# Unregister on Reboot ( 0 = no, 1 = yes)
-if (subStr($phone_model,0,3) == 'gxp')
+if (subStr($phone_model,0,3) === 'gxp')
 	psetting('P32', '5');		# Register Expiration (in minutes, default: 60)
 if (subStr($phone_model,0,2) === 'bt')
 	psetting('P239', '300');	# Register Expiration (in seconds, default: 3600)
