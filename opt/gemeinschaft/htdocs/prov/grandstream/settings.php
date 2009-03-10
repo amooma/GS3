@@ -508,7 +508,7 @@ psetting('P85', '2');			# No Key Entry Timeout (seconds)
 
 psetting('P99', '0');			# Subscribe for MWI
 psetting('P74', '0');			# Send Flash DTMF event ( 0 = no, 1 = yes)
-psetting('P91', '1');			# Disable Call Waiting ( 0 = disabled, 1 = enable)
+psetting('P91', '1');			# Disable Call Waiting ( 0 = disabled, 1 = enable)  //FIXME
 psetting('P90', '0');			# Auto Answer ( 0 = no, 1 = yes)
 psetting('P66', '' );			# Dial Plan Prefix
 psetting('P72', '0');			# Use # as Dial Key ( 0 = no, 1 = yes)
