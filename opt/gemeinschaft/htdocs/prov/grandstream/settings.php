@@ -285,9 +285,6 @@ psetting('P196', '');		# End User Password
 #  Network
 #####################################################################
 psetting('P8' , '0');		# IP Address Type ( 0 = DHCP, 1 = static)
-psetting('P38', '48');		# Layer 3 QoS
-psetting('P87', '0');		# 802.1p priority value
-psetting('P51', '0');		# 802.1q VLAN Tag
 
 # DHCP
 psetting('P146', 'grandstream-'.$mac );  # DHCP hostname
@@ -328,6 +325,11 @@ psetting('P42', '');		# TFTP server IP address (octet 1)
 psetting('P43', '');		# TFTP server IP address (octet 2)
 psetting('P44', '');		# TFTP server IP address (octet 3)
 */
+
+# QoS
+psetting('P38', '48');		# Layer 3 QoS
+psetting('P51', '0');		# 802.1q VLAN Tag
+psetting('P87', '0');		# 802.1p priority value
 
 
 #####################################################################
