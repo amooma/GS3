@@ -331,6 +331,15 @@ psetting('P44', '');		# TFTP server IP address (octet 3)
 
 
 #####################################################################
+#  Date and Time
+#####################################################################
+psetting('P64',  (720 + (int)(((int)date('Z')) / 60)) );  # Timezone Offset ( Offset from GMT in minutes + 720 )
+psetting('P75',  date('I'));	# Daylight Saving Time ( 0 = no, 1 = yes )
+psetting('P102', '2');			# Date Display Format ( 0 = Y-M-D, 1 = M-D-Y, 2 = D-M-Y )
+psetting('P30',  gs_get_conf('GS_GRANDSTREAM_PROV_NTP'));  # NTP Server
+
+
+#####################################################################
 #  Codecs
 #####################################################################
 # 0 = pcmu (ulaw), 8 = pcma (alaw), 2 = G.726-32, 4 = G.723.1, 15 = G.728, 18 = G.729a/b
@@ -404,15 +413,6 @@ psetting('P194', '1');			# Auto Update ( 0 = no, 1 = yes )
 psetting('P193', '60');			# Firmware Check Interval (in minutes)
 psetting('P242', '');			# Firmware Key (hex) ???
 psetting('P240', '0');			# Authenticate Conf File ( 0 = no, 1 = yes )
-
-
-#####################################################################
-#  Date and Time
-#####################################################################
-psetting('P30',  gs_get_conf('GS_GRANDSTREAM_PROV_NTP'));  # NTP Server
-psetting('P64',  (720 + (int)(((int)date('Z')) / 60)) );  # Timezone Offset ( Offset from GMT in minutes + 720 )
-psetting('P75',  date('I'));	# Daylight Saving Time ( 0 = no, 1 = yes )
-psetting('P102', '2');			# Date Display Format ( 0 = Y-M-D, 1 = M-D-Y, 2 = D-M-Y )
 
 
 #####################################################################
