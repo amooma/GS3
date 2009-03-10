@@ -384,7 +384,7 @@ psetting('P240', '0');			# Authenticate Conf File ( 0 = no, 1 = yes )
 
 
 #####################################################################
-#  Codecs
+#  Codecs (SIP Account 1?)
 #####################################################################
 # 0 = pcmu (ulaw), 8 = pcma (alaw), 2 = G.726-32, 4 = G.723.1, 15 = G.728, 18 = G.729a/b
 psetting('P57', '8');			# Codec 1
@@ -394,9 +394,13 @@ psetting('P60', '8');			# Codec 4
 psetting('P61', '8');			# Codec 5
 psetting('P62', '8');			# Codec 6
 
-psetting('P46', '8');
-psetting('P98', '8');
+psetting('P46', '8');			# Codec 7 ?
+psetting('P98', '8');			# Codec 8 ?
 
+
+#####################################################################
+#  Codec settings
+#####################################################################
 psetting('P37', '2');			# Voice Frames per TX ( 10/20/32/64 frames for G711/G726/G723/other codecs respectively)
 psetting('P96', '98');			# iLBC payload type
 psetting('P97', '0');			# iLBC frame size
@@ -405,7 +409,7 @@ psetting('P49', '0');			# G.723 Encoding Frame rate ( 0 = 6.3 kb/s, 1 = 5.3 kb/s
 
 
 #####################################################################
-#  SIP settings
+#  SIP Account 1
 #####################################################################
 psetting('P47', $host);			# Account 1: SIP Server
 psetting('P48', $sip_proxy_and_sbc['sip_proxy_from_wan']);  # Account 1: Outbound Proxy
