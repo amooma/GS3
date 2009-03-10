@@ -287,11 +287,11 @@ psetting('P196', '');		# End User Password
 psetting('P8' , '0');		# IP Address Type ( 0 = DHCP, 1 = static)
 
 # DHCP
+psetting('P82', '');		# PPPoE Account ID
+psetting('P83', '');		# PPPoE Password
 psetting('P146', 'grandstream-'.$mac );  # DHCP hostname
 psetting('P147', '');		# DHCP domain
 psetting('P148', '');		# DHCP vendor class ID
-psetting('P82', '');		# PPPoE Account ID
-psetting('P83', '');		# PPPoE Password
 psetting('P92', '');		# Preferred DNS server (octet 0)
 psetting('P93', '');		# Preferred DNS server (octet 1)
 psetting('P94', '');		# Preferred DNS server (octet 2)
