@@ -446,10 +446,12 @@ psetting('P34', $user['secret']);	# SIP Authentication Password (cleartext)
 psetting('P3',  $user['callerid']);	# Display (CallerID) Name
 psetting('P31', '1');			# SIP Registration ( 0 = no register, 1 = register )
 psetting('P81', '1');			# Unregister on Reboot ( 0 = no, 1 = yes)
-if (subStr($phone_model,0,3) === 'gxp')
+if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P32', '5');		# Register Expiration (in minutes, default: 60)
-if (subStr($phone_model,0,2) === 'bt')
+}
+elseif (subStr($phone_model,0,2) === 'bt') {
 	psetting('P239', '300');	# Register Expiration (in seconds, default: 3600)
+}
 psetting('P63', '1');			# UserID is phone number ( 0 = no, 1 = yes)
 psetting('P65', '0');			# Send Anonymous ( 0 = no, 1 = yes)
 psetting('P73', '2');			# Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
@@ -492,8 +494,8 @@ psetting('P52', '1');			# STUN NAT Traversal ( 0 = no, 1 = yes)
 
 # Ports
 psetting('P78', '0');		# Use random (RTP?) port ( 0 = no, 1 = yes )
-psetting('P39', '5004');	# Local RTP Port ( 1024-65535, default 5004)
-psetting('P40', '5060');	# Local SIP Port ( default 5060)
+psetting('P39', '5004');	# Local RTP Port ( 1024-65535, default: 5004 )
+psetting('P40', '5060');	# Local SIP Port ( default: 5060 )
 
 
 #####################################################################
