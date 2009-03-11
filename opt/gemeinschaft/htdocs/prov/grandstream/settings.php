@@ -457,6 +457,9 @@ elseif (subStr($phone_model,0,2) === 'bt') {
 psetting('P65', '0');			# Send Anonymous ( 0 = no, 1 = yes)
 psetting('P73', '1');			# Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
 psetting('P191', '0');			# Enable Call Features ( 0 = no, 1 = yes)
+psetting('P90', '0');			# Auto Answer ( 0 = no, 1 = yes )
+psetting('P66', '' );			# Dial Plan Prefix
+psetting('P29', '0');			# Early Dial ( 0 = no, 1 = yes, use only if proxy supports 484 response)
 if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P272', '1');		# Enable 100rel ( 0 = no, 1 = yes )
 }
@@ -552,14 +555,6 @@ psetting('P33', 'voicemail');	# VoiceMail Dial String
 psetting('P88', '0');			# Lock keypad update ( 0 = no, 1 = yes)
 psetting('P85', '2');			# No Key Entry Timeout (seconds)
 psetting('P72', '0');			# Use # as Dial Key ( 0 = no, 1 = yes)
-
-
-#####################################################################
-#  Misc (//FIXME todo)
-#####################################################################
-psetting('P90', '0');			# Auto Answer ( 0 = no, 1 = yes)
-psetting('P66', '' );			# Dial Plan Prefix
-psetting('P29', '0');			# Early Dial ( 0 = no, 1 = yes, use only if proxy supports 484 response)
 
 
 #####################################################################
