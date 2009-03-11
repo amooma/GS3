@@ -444,15 +444,16 @@ psetting('P35', $user_ext);		# SIP User ID
 psetting('P36', $user_ext);		# Authentication ID
 psetting('P34', $user['secret']);	# SIP Authentication Password (cleartext)
 psetting('P3',  $user['callerid']);	# Display (CallerID) Name
+psetting('P103', '0');			# Use DNS SRV ( 0 = no, 1 = yes )
+psetting('P63', '1');			# UserID is phone number ( 0 = no, 1 = yes )
 psetting('P31', '1');			# SIP Registration ( 0 = no register, 1 = register )
-psetting('P81', '1');			# Unregister on Reboot ( 0 = no, 1 = yes)
+psetting('P81', '1');			# Unregister on Reboot ( 0 = no, 1 = yes )
 if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P32', '5');		# Register Expiration (in minutes, default: 60)
 }
 elseif (subStr($phone_model,0,2) === 'bt') {
 	psetting('P239', '300');	# Register Expiration (in seconds, default: 3600)
 }
-psetting('P63', '1');			# UserID is phone number ( 0 = no, 1 = yes)
 psetting('P65', '0');			# Send Anonymous ( 0 = no, 1 = yes)
 psetting('P73', '2');			# Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
 //psetting('P272', '1');			# Enable 100rel. ( 0 = no, 1 = yes)
@@ -490,7 +491,14 @@ psetting('P79', '101');			# DTMF Payload Type ( default: 101)
 psetting('P84', '20');			# Keep-Alive Interval ( in seconds, default: 20)
 psetting('P71', '' );			# Offhook Auto Dial (extension)
 psetting('P76', '' );			# STUN Server
-psetting('P52', '1');			# STUN NAT Traversal ( 0 = no, 1 = yes)
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P52', '1');		# NAT Traversal (STUN) ( 0 = yes, 1 = no, 2 = no, but send keep-alive )
+}
+elseif (subStr($phone_model,0,3) === 'bt') {
+	psetting('P52', '0');		# STUN NAT Traversal ( 0 = no, 1 = yes )
+}
+psetting('P101', '');			# Use NAT IP ( if specified, this IP address is used for SIP/SDP message )
+psetting('P91', '1');			# Disable Call Waiting ( 0 = no, 1 = yes )  //FIXME
 
 # Ports
 psetting('P78', '0');		# Use random (RTP?) port ( 0 = no, 1 = yes )
@@ -544,14 +552,10 @@ psetting('P85', '2');			# No Key Entry Timeout (seconds)
 
 psetting('P99', '0');			# Subscribe for MWI
 psetting('P74', '0');			# Send Flash DTMF event ( 0 = no, 1 = yes)
-psetting('P91', '1');			# Disable Call Waiting ( 0 = disabled, 1 = enable)  //FIXME
 psetting('P90', '0');			# Auto Answer ( 0 = no, 1 = yes)
 psetting('P66', '' );			# Dial Plan Prefix
 psetting('P72', '0');			# Use # as Dial Key ( 0 = no, 1 = yes)
 psetting('P29', '0');			# Early Dial ( 0 = no, 1 = yes, use only if proxy supports 484 response)
-
-psetting('P101', '');			# Use NAT IP ( 0 = no, 1 = yes)
-psetting('P103', '0');			# Account 1: Use DNS SRV ( 0 = no, 1 = yes)
 
 
 #####################################################################
