@@ -461,13 +461,16 @@ psetting('P197', '');			# Proxy Require  //FIXME
 psetting('P90', '0');			# Auto Answer ( 0 = no, 1 = yes )
 psetting('P66', '' );			# Dial Plan Prefix
 psetting('P29', '0');			# Early Dial ( 0 = no, 1 = yes, use only if proxy supports 484 response)
+psetting('P268', '0');			# Anonymous Method ( 0 = use From header, 1 = use Privacy header )
+psetting('P198', '100');		# Special Feature ( 100 = standard, default: 100)
+psetting('P99', '0');			# Subscribe for MWI ( 0 = no, 1 = yes )  //FIXME
+
 if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P272', '1');		# Enable 100rel ( 0 = no, 1 = yes )
 }
-psetting('P99', '0');			# Subscribe for MWI
-
-if (subStr($phone_model,0,3) === 'bt') {
+elseif (subStr($phone_model,0,3) === 'bt') {
 	psetting('P74', '0');		# Send Flash DTMF event ( 0 = no, 1 = yes)
+	psetting('P243', '0');		# Allow incoming SIP message from SIP proxy only ( 0 = no, 1 = yes)
 }
 
 
@@ -522,9 +525,6 @@ psetting('P40', '5060');	# Local SIP Port ( default: 5060 )
 #####################################################################
 psetting('P207', '');		# Syslog server  //FIXME
 psetting('P208', '0');		# Syslog level ( 0 = none, 1 = DEBUG, 2 = INFO, 3 = WARNING, 4 = ERROR )  //FIXME
-if (subStr($phone_model,0,2) === 'bt') {
-	psetting('P243', '0');		# Allow incoming SIP message from SIP proxy only ( 0 = no, 1 = yes)
-}
 
 
 #####################################################################
