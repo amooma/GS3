@@ -531,6 +531,10 @@ psetting('P208', '0');		# Syslog level ( 0 = none, 1 = DEBUG, 2 = INFO, 3 = WARN
 #  Phonebook (GXP)
 #####################################################################
 if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P330', '0');	# Enable Phonebook XML ( 0 = disable, 1 = http, 2 = tftp )
+	psetting('P331', rTrim($prov_url_grandstream,'/'));	# Phonebook XML server path ( maxlength 128 )
+	psetting('P332', '0');	# Phonebook Download Interval ( in minutes, between 0-720 )
+	psetting('P333', '1');	# Remove manually-edited entries on download ( 0 = no, 1 = yes )
 }
 
 
@@ -546,6 +550,8 @@ if (subStr($phone_model,0,3) === 'gxp') {
 #  Idle Screen (GXP)
 #####################################################################
 if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P340', '0');	# Enable Idle Screen XML ( 0 = disable, 1 = http, 2 = tftp )  //FIXME?
+	//psetting('P341', $prov_url_grandstream.'idle-screen.php?mac='.$mac);  # Idle Screen XML server path ( maxlength 128 )  //FIXME?
 }
 
 
