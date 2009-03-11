@@ -457,6 +457,7 @@ elseif (subStr($phone_model,0,2) === 'bt') {
 psetting('P65', '0');			# Send Anonymous ( 0 = no, 1 = yes)
 psetting('P73', '1');			# Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
 psetting('P191', '0');			# Enable Call Features ( 0 = no, 1 = yes)
+psetting('P197', '');			# Proxy Require  //FIXME
 psetting('P90', '0');			# Auto Answer ( 0 = no, 1 = yes )
 psetting('P66', '' );			# Dial Plan Prefix
 psetting('P29', '0');			# Early Dial ( 0 = no, 1 = yes, use only if proxy supports 484 response)
@@ -519,7 +520,7 @@ psetting('P40', '5060');	# Local SIP Port ( default: 5060 )
 #####################################################################
 #  Syslog Server
 #####################################################################
-psetting('P207', '' );		# Syslog server  //FIXME
+psetting('P207', '');		# Syslog server  //FIXME
 psetting('P208', '0');		# Syslog level ( 0 = none, 1 = DEBUG, 2 = INFO, 3 = WARNING, 4 = ERROR )  //FIXME
 if (subStr($phone_model,0,2) === 'bt') {
 	psetting('P243', '0');		# Allow incoming SIP message from SIP proxy only ( 0 = no, 1 = yes)
