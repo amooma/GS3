@@ -362,7 +362,6 @@ if (subStr($phone_model,0,3) === 'gxp') {
 #####################################################################
 #  Ringtones (global)
 #####################################################################
-psetting('P104', '0');		# Default ring tone
 psetting('P105', '');		# Custom ringtone 1, used if incoming caller ID is: ""
 psetting('P106', '');		# Custom ringtone 2, used if incoming caller ID is: ""
 psetting('P107', '');		# Custom ringtone 3, used if incoming caller ID is: ""
@@ -399,10 +398,12 @@ psetting('P235', '');			# Config File Suffix
 psetting('P238', '0');			# Check for new Firmware ( 0 = every time, 1 = only when suffix/prefix changes, 2 = never )
 psetting('P194', '1');			# Automatic Update ( 0 = no, 1 = yes )
 psetting('P193', '60');			# Firmware Check Interval (in minutes, default: 7 days)
-//psetting('P242', '');			# Firmware Key (hex) ???
 psetting('P240', '0');			# Authenticate Conf File ( 0 = no, 1 = yes )
 if (subStr($phone_model,0,3) === 'gxp' ) {
 	psetting('P145', '0');		# Allow DHCP Option 66 to override server ( 0 = no, 1 = yes ) //FIXME?
+}
+elseif (subStr($phone_model,0,2) === 'bt') {
+	psetting('P242', '');		# Firmware Key (hex) ???
 }
 
 
@@ -416,19 +417,8 @@ psetting('P59', '8');			# Codec 3
 psetting('P60', '8');			# Codec 4
 psetting('P61', '8');			# Codec 5
 psetting('P62', '8');			# Codec 6
-
-psetting('P46', '8');			# Codec 7 ?
-psetting('P98', '8');			# Codec 8 ?
-
-
-#####################################################################
-#  Codec settings
-#####################################################################
-psetting('P37', '2');			# Voice Frames per TX ( 10/20/32/64 frames for G711/G726/G723/other codecs respectively )
-psetting('P96', '97');			# iLBC payload type ( between 96 and 127, default: 97 )
-psetting('P97', '0');			# iLBC frame size ( 0 = 20ms, 1 = 30ms )
-psetting('P50', '0');			# Silence Suppression ( 0 = no, 1 = yes )
-psetting('P49', '0');			# G.723 Encoding Frame rate ( 0 = 6.3 kb/s, 1 = 5.3 kb/s )
+psetting('P46', '8');			# Codec 7
+psetting('P98', '8');			# Codec 8
 
 
 #####################################################################
@@ -454,13 +444,15 @@ if (subStr($phone_model,0,3) === 'gxp') {
 elseif (subStr($phone_model,0,2) === 'bt') {
 	psetting('P239', '300');	# Register Expiration (in seconds, default: 3600)
 }
-psetting('P65', '0');			# Send Anonymous ( 0 = no, 1 = yes)
-psetting('P73', '1');			# Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
-psetting('P191', '0');			# Enable Call Features ( 0 = no, 1 = yes)
+psetting('P40', '5060');		# Local SIP Port ( default: 5060 )
 psetting('P197', '');			# Proxy Require  //FIXME
-psetting('P90', '0');			# Auto Answer ( 0 = no, 1 = yes )
-psetting('P66', '' );			# Dial Plan Prefix
+psetting('P73', '1');			# Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
 psetting('P29', '0');			# Early Dial ( 0 = no, 1 = yes, use only if proxy supports 484 response)
+psetting('P66', '' );			# Dial Plan Prefix
+psetting('P90', '0');			# Auto Answer ( 0 = no, 1 = yes )
+psetting('P191', '0');			# Enable Call Features ( 0 = no, 1 = yes)
+psetting('P104', '0');			# Default ring tone
+psetting('P65', '0');			# Send Anonymous ( 0 = no, 1 = yes)
 psetting('P268', '0');			# Anonymous Method ( 0 = use From header, 1 = use Privacy header )
 psetting('P198', '100');		# Special Feature ( 100 = standard, default: 100)
 psetting('P99', '0');			# Subscribe for MWI ( 0 = no, 1 = yes )  //FIXME
@@ -471,6 +463,7 @@ if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P250', '400');	# SIP T2 Timeout ( 200 = 2 sec, 400 = 4 sec, 800 = 8 sec, default: 400 )
 	psetting('P130', '1');		# SIP Transport ( 1 = udp, 2 = tcp )
 	psetting('P131', '0');		# Use RFC3581 Symmetric Routing ( 0 = no, 1 = yes )
+	psetting('P52', '1');		# STUN NAT Traversal ( 0 = yes, 1 = no, 2 = no, but send keep-alive )
 	psetting('P188', '0');		# PUBLISH for Presence ( 0 = no, 1 = yes )
 	psetting('P139', '20');		# Delayed Call Forward Wait Time ( Alowed range 1-120sec, default: 20 )
 	psetting('P182', '0');		# Call Log ( 0 = Log All Calls, 1 = ???, 2 = Disable Call Log )
@@ -499,6 +492,7 @@ elseif (subStr($phone_model,0,3) === 'bt') {
 	psetting('P241', '0');		# Allow conf SIP account in Basic settings ( 0 = no, 1 = yes )
 	psetting('P244', '0');		# Override MTU Size ( maxlength 4 )
 	psetting('P109', '0');		# Allow outgoing call without Registration ( 0 = no, 1 = yes )
+	psetting('P52', '1');		# STUN NAT Traversal ( 0 = yes, 1 = no )
 }
 
 
@@ -533,19 +527,22 @@ psetting('P79', '101');			# DTMF Payload Type ( default: 101)
 psetting('P84', '20');			# Keep-Alive Interval ( in seconds, default: 20)
 psetting('P71', '' );			# Offhook Auto Dial (extension)
 psetting('P76', '' );			# STUN Server
-if (subStr($phone_model,0,3) === 'gxp') {
-	psetting('P52', '1');		# STUN NAT Traversal ( 0 = yes, 1 = no, 2 = no, but send keep-alive )
-}
-elseif (subStr($phone_model,0,3) === 'bt') {
-	psetting('P52', '0');		# STUN NAT Traversal ( 0 = no, 1 = yes )
-}
 psetting('P101', '');			# Use NAT IP ( if specified, this IP address is used for SIP/SDP message )
 psetting('P91', '1');			# Disable Call Waiting ( 0 = no, 1 = yes )  //FIXME
 
-# Ports
-psetting('P78', '0');		# Use random (RTP?) port ( 0 = no, 1 = yes )
+# RTP global Ports
 psetting('P39', '5004');	# Local RTP Port ( 1024-65535, default: 5004 )
-psetting('P40', '5060');	# Local SIP Port ( default: 5060 )
+psetting('P78', '0');		# Use random RTP port ( 0 = no, 1 = yes )
+
+
+#####################################################################
+#  Codec global settings (global)
+#####################################################################
+psetting('P37', '2');			# Voice Frames per TX ( 10/20/32/64 frames for G711/G726/G723/other codecs respectively )
+psetting('P96', '97');			# iLBC payload type ( between 96 and 127, default: 97 )
+psetting('P97', '0');			# iLBC frame size ( 0 = 20ms, 1 = 30ms )
+psetting('P50', '0');			# Silence Suppression ( 0 = no, 1 = yes )
+psetting('P49', '0');			# G.723 Encoding Frame rate ( 0 = 6.3 kb/s, 1 = 5.3 kb/s )
 
 
 #####################################################################
@@ -579,7 +576,10 @@ if (subStr($phone_model,0,3) === 'gxp') {
 #####################################################################
 if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P340', '0');	# Enable Idle Screen XML ( 0 = disable, 1 = http, 2 = tftp )  //FIXME?
-	//psetting('P341', $prov_url_grandstream.'idle-screen.php?mac='.$mac);  # Idle Screen XML server path ( maxlength 128 )  //FIXME?
+	psetting('P341', $prov_url_grandstream.$mac);  # Idle Screen XML server path ( maxlength 128 )  //FIXME?
+	# grandstream automatically adds "/gs_screen.xml" to the URL
+	# e.g. prov/grandstream/000b82010203/gs_screen.xml
+	# todo: script to change idle_screen for nobody or user
 }
 
 
