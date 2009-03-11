@@ -673,7 +673,7 @@ if (! is_array($softkeys)) {
 #####################################################################
 #  Override provisioning parameters (group profile)
 #####################################################################
-
+/*
 $prov_params = null;
 $GS_ProvParams = gs_get_prov_params_obj( $phone_type );
 if ($GS_ProvParams->set_user( $user['user'] )) {
@@ -708,11 +708,13 @@ if (! is_array($prov_params)) {
 }
 unset($prov_params);
 unset($GS_ProvParams);
+*/
 
 
 #####################################################################
 #  Override provisioning parameters (user profile)
 #####################################################################
+/*
 $prov_params = @gs_user_prov_params_get( $user['user'], $phone_type );
 if (! is_array($prov_params)) {
 	gs_log( GS_LOG_WARNING, 'Failed to get provisioning parameters (user)' );
@@ -733,6 +735,7 @@ if (! is_array($prov_params)) {
 	}
 }
 unset($prov_params);
+*/
 
 
 
