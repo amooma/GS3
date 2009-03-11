@@ -275,14 +275,14 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 
 
 #####################################################################
-#  Passwords
+#  Passwords (global)
 #####################################################################
 psetting('P2', gs_get_conf('GS_GRANDSTREAM_PROV_HTTP_PASS'));	# Admin Password
 psetting('P196', '');		# End User Password
 
 
 #####################################################################
-#  Network
+#  Network (global)
 #####################################################################
 psetting('P8' , '0');		# IP Address Type ( 0 = DHCP, 1 = static)
 
@@ -333,7 +333,7 @@ psetting('P87', '0');		# Layer 2 QoS: 802.1p priority value ( maxlength 5 )
 
 
 #####################################################################
-#  Date and Time
+#  Date and Time (global)
 #####################################################################
 psetting('P64',  (720 + (int)(((int)date('Z')) / 60)) );  # Timezone Offset ( Offset from GMT in minutes + 720 )
 psetting('P75',  date('I'));	# Daylight Saving Time ( 0 = no, 1 = yes )
@@ -347,7 +347,7 @@ if (subStr($phone_model,0,3) === 'gxp') {
 
 
 #####################################################################
-#  LCD Display
+#  LCD Display (global)
 #####################################################################
 if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P322', '0');		# LCD Backlight Always on (0 = no, 1 = yes)
@@ -360,7 +360,7 @@ if (subStr($phone_model,0,3) === 'gxp') {
 
 
 #####################################################################
-#  Ringtones
+#  Ringtones (global)
 #####################################################################
 psetting('P104', '0');		# Default ring tone
 psetting('P105', '');		# Custom ringtone 1, used if incoming caller ID is: ""
@@ -372,7 +372,7 @@ if (subStr($phone_model,0,3) === 'gxp') {
 
 
 #####################################################################
-#  Call Progress Tones (//FIXME todo)
+#  Call Progress Tones (global) (//FIXME todo)
 #####################################################################
 /*
 if (subStr($phone_model,0,3) === 'gxp') {
@@ -387,7 +387,7 @@ if (subStr($phone_model,0,3) === 'gxp') {
 
 
 #####################################################################
-#  Firmware Upgrade and Provisioning
+#  Firmware Upgrade and Provisioning (global)
 #####################################################################
 psetting('P212', '1');			# Upgrade via ( 0 = TFTP, 1 = HTTP )
 psetting('P192', rTrim($prov_url_grandstream,'/'));  # TFTP/HTTP Firmware Update Server ( based on P212 ) //FIXME?
@@ -407,7 +407,7 @@ if (subStr($phone_model,0,3) === 'gxp' ) {
 
 
 #####################################################################
-#  Codecs (SIP Account 1?)
+#  Codecs specific for SIP Account 1 (specific)
 #####################################################################
 # 0 = pcmu (ulaw), 8 = pcma (alaw), 2 = G.726-32, 4 = G.723.1, 15 = G.728, 18 = G.729a/b
 psetting('P57', '8');			# Codec 1
@@ -527,7 +527,7 @@ if (subStr($phone_model,0,3) === 'gxp') {
 
 
 #####################################################################
-#  SIP settings
+#  SIP global settings (global)
 #####################################################################
 psetting('P79', '101');			# DTMF Payload Type ( default: 101)
 psetting('P84', '20');			# Keep-Alive Interval ( in seconds, default: 20)
@@ -549,14 +549,14 @@ psetting('P40', '5060');	# Local SIP Port ( default: 5060 )
 
 
 #####################################################################
-#  Syslog Server
+#  Syslog Server (global)
 #####################################################################
 psetting('P207', '');		# Syslog server  //FIXME
 psetting('P208', '0');		# Syslog level ( 0 = none, 1 = DEBUG, 2 = INFO, 3 = WARNING, 4 = ERROR )  //FIXME
 
 
 #####################################################################
-#  Phonebook (GXP)
+#  Phonebook (GXP) (global)
 #####################################################################
 if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P330', '0');	# Enable Phonebook XML ( 0 = disable, 1 = http, 2 = tftp )
@@ -567,7 +567,7 @@ if (subStr($phone_model,0,3) === 'gxp') {
 
 
 #####################################################################
-#  LDAP Directory (GXP)
+#  LDAP Directory (GXP) (global)
 #####################################################################
 if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P1304', '');	# LDAP Directory server path ( maxlength 128 )
@@ -575,7 +575,7 @@ if (subStr($phone_model,0,3) === 'gxp') {
 
 
 #####################################################################
-#  Idle Screen (GXP)
+#  Idle Screen (GXP) (global)
 #####################################################################
 if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P340', '0');	# Enable Idle Screen XML ( 0 = disable, 1 = http, 2 = tftp )  //FIXME?
@@ -584,7 +584,7 @@ if (subStr($phone_model,0,3) === 'gxp') {
 
 
 #####################################################################
-#  Display Language (GXP)
+#  Display Language (GXP) (global)
 #####################################################################
 if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P342', '3');	# display language ( 0 = english, 2 = chinese, 3 = P399 )
@@ -593,7 +593,7 @@ if (subStr($phone_model,0,3) === 'gxp') {
 
 
 #####################################################################
-#  Misc
+#  Misc (global)
 #####################################################################
 psetting('P88', '0');		# Lock keypad update ( 0 = no, 1 = yes )
 psetting('P85', '2');		# No Key Entry Timeout ( seconds, default: 4 )
@@ -601,14 +601,14 @@ psetting('P72', '0');		# Use # as Dial Key ( 0 = no, 1 = yes )
 
 
 #####################################################################
-#  Misc (BT)
+#  Misc (BT) (global)
 #####################################################################
 if (subStr($phone_model,0,2) === 'bt') {
 }
 
 
 #####################################################################
-#  Misc (GXP)
+#  Misc (GXP) (global)
 #####################################################################
 if (subStr($phone_model,0,3) === 'gxp') {
 	psetting('P336', '0');		# Mute Speaker Ringer ( 0 = no, 1 = yes )
@@ -630,7 +630,7 @@ psetting('P33', 'voicemail');		# VoiceMail Dial String
 
 
 #####################################################################
-#  Keys
+#  Keys (global)
 #####################################################################
 
 # reset all keys
