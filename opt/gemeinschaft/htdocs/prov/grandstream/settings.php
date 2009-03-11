@@ -678,7 +678,6 @@ if (! is_array($softkeys)) {
 #####################################################################
 #  Override provisioning parameters (group profile)
 #####################################################################
-/*
 $prov_params = null;
 $GS_ProvParams = gs_get_prov_params_obj( $phone_type );
 if ($GS_ProvParams->set_user( $user['user'] )) {
@@ -699,6 +698,11 @@ if (! is_array($prov_params)) {
 	foreach ($param_arr as $param_index => $param_value) {
 		if ($param_index == -1) {
 			# not an array
+			if (! array_key_exists($param_name, $settings)) {
+				# don't set unknown parameters because the order is important
+				gs_log( GS_LOG_NOTICE, "Group prov. param \"$param_name\": Unknown parameter" );
+				continue;
+			}
 			gs_log( GS_LOG_DEBUG, "Overriding group prov. param \"$param_name\": \"$param_value\"" );
 			//setting( $param_name, null        , $param_value );
 			psetting($param_name,               $param_value );
@@ -713,13 +717,11 @@ if (! is_array($prov_params)) {
 }
 unset($prov_params);
 unset($GS_ProvParams);
-*/
 
 
 #####################################################################
 #  Override provisioning parameters (user profile)
 #####################################################################
-/*
 $prov_params = @gs_user_prov_params_get( $user['user'], $phone_type );
 if (! is_array($prov_params)) {
 	gs_log( GS_LOG_WARNING, 'Failed to get provisioning parameters (user)' );
@@ -728,6 +730,11 @@ if (! is_array($prov_params)) {
 		if ($p['index'] === null
 		||  $p['index'] ==  -1) {
 			# not an array
+			if (! array_key_exists($param_name, $settings)) {
+				# don't set unknown parameters because the order is important
+				gs_log( GS_LOG_NOTICE, "User prov. param \"$param_name\": Unknown parameter" );
+				continue;
+			}
 			gs_log( GS_LOG_DEBUG, 'Overriding user prov. param "'.$p['param'].'": "'.$p['value'].'"' );
 			//setting( $p['param'], null       , $p['value'] );
 			psetting($p['param'],              $p['value'] );
@@ -740,7 +747,6 @@ if (! is_array($prov_params)) {
 	}
 }
 unset($prov_params);
-*/
 
 
 
