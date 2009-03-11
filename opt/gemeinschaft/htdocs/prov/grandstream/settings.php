@@ -466,11 +466,39 @@ psetting('P198', '100');		# Special Feature ( 100 = standard, default: 100)
 psetting('P99', '0');			# Subscribe for MWI ( 0 = no, 1 = yes )  //FIXME
 
 if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P138', '20');		# SIP Registration Failure Retry Wait Time ( seconds, default: 20 )
+	psetting('P209', '100');	# SIP T1 Timeout ( 50 = 0.5 sec, 100 = 1 sec, 200 = 2 sec, default: 100 )
+	psetting('P250', '400');	# SIP T2 Timeout ( 200 = 2 sec, 400 = 4 sec, 800 = 8 sec, default: 400 )
+	psetting('P130', '1');		# SIP Transport ( 1 = udp, 2 = tcp )
+	psetting('P131', '0');		# Use RFC3581 Symmetric Routing ( 0 = no, 1 = yes )
+	psetting('P188', '0');		# PUBLISH for Presence ( 0 = no, 1 = yes )
+	psetting('P139', '20');		# Delayed Call Forward Wait Time ( Alowed range 1-120sec, default: 20 )
+	psetting('P182', '0');		# Call Log ( 0 = Log All Calls, 1 = ???, 2 = Disable Call Log )
+	psetting('P260', '180');	# Session Expiration ( in seconds, default: 180 )	
+	psetting('P261', '90');		# Min-SE ??? (in seconds, default and minimum: 90 )
+	psetting('P1328', '300');	# Ring Timeout ( in seconds, between 30-3600, default: 60 )
+	psetting('P262', '0');		# Caller Request Timer ( 0 = no, 1 = yes )
+	psetting('P263', '0');		# Callee Request Timer ( 0 = no, 1 = yes )
+	psetting('P264', '0');		# Force Timer ( 0 = no, 1 = yes )
+	psetting('P266', '0');		# UAC Specify Refresher ( 0 = Omit (Recommended), 1 = UAC, 2 = UAS )
+	psetting('P267', '1');		# UAS Specify Refresher ( 1 = UAC, 2 = UAS (when UAC did not specify refresher tag) )
+	psetting('P265', '1');		# Force Invite ( 0 = no, 1 = yes )
 	psetting('P272', '1');		# Enable 100rel ( 0 = no, 1 = yes )
+	psetting('P129', '0');		# Anonymous Call Rejection ( 0 = no, 1 = yes )
+	psetting('P298', '0');		# Allow Auto Answer by Call-Info ( 0 = no, 1 = yes )
+	psetting('P299', '1');		# Turn off speaker on remote disconnect ( 0 = no, 1 = yes )
+	psetting('P258', '0');		# Check SIP User ID for incoming INVITE ( 0 = no, 1 = yes )
+	psetting('P135', '0');		# Refer-To Use Target Contact ( 0 = no, 1 = yes )
+	psetting('P137', '0');		# Disable Media Attribute in SDP ( 0 = no, 1 = yes )
+	psetting('P183', '0');		# SRTP Mode ( 0 = disabled, 1 = enabled but not forced, 2 = enabled and forced, 3 = optional )
+	psetting('P134', '');		# eventlist BLF URI ???
 }
 elseif (subStr($phone_model,0,3) === 'bt') {
 	psetting('P74', '0');		# Send Flash DTMF event ( 0 = no, 1 = yes)
 	psetting('P243', '0');		# Allow incoming SIP message from SIP proxy only ( 0 = no, 1 = yes)
+	psetting('P241', '0');		# Allow conf SIP account in Basic settings ( 0 = no, 1 = yes )
+	psetting('P244', '0');		# Override MTU Size ( maxlength 4 )
+	psetting('P109', '0');		# Allow outgoing call without Registration ( 0 = no, 1 = yes )
 }
 
 
@@ -506,7 +534,7 @@ psetting('P84', '20');			# Keep-Alive Interval ( in seconds, default: 20)
 psetting('P71', '' );			# Offhook Auto Dial (extension)
 psetting('P76', '' );			# STUN Server
 if (subStr($phone_model,0,3) === 'gxp') {
-	psetting('P52', '1');		# NAT Traversal (STUN) ( 0 = yes, 1 = no, 2 = no, but send keep-alive )
+	psetting('P52', '1');		# STUN NAT Traversal ( 0 = yes, 1 = no, 2 = no, but send keep-alive )
 }
 elseif (subStr($phone_model,0,3) === 'bt') {
 	psetting('P52', '0');		# STUN NAT Traversal ( 0 = no, 1 = yes )
