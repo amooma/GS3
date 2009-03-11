@@ -455,9 +455,11 @@ elseif (subStr($phone_model,0,2) === 'bt') {
 	psetting('P239', '300');	# Register Expiration (in seconds, default: 3600)
 }
 psetting('P65', '0');			# Send Anonymous ( 0 = no, 1 = yes)
-psetting('P73', '2');			# Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
-//psetting('P272', '1');			# Enable 100rel. ( 0 = no, 1 = yes)
+psetting('P73', '1');			# Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
 psetting('P191', '0');			# Enable Call Features ( 0 = no, 1 = yes)
+if (subStr($phone_model,0,3) === 'gxp') {
+	psetting('P272', '1');		# Enable 100rel ( 0 = no, 1 = yes )
+}
 
 
 #####################################################################
