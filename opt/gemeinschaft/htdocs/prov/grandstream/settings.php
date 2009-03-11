@@ -139,6 +139,11 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_prov_params_get.php' );
 
 
+#
+# Warning: The order of parameters is important,
+# especially for the BudgeTone (BT) models!
+#
+
 $settings = array();
 
 function psetting( $name, $val='' )
