@@ -730,7 +730,7 @@ if (! is_array($prov_params)) {
 		if ($p['index'] === null
 		||  $p['index'] ==  -1) {
 			# not an array
-			if (! array_key_exists($param_name, $settings)) {
+			if (! array_key_exists($p['param'], $settings)) {
 				# don't set unknown parameters because the order is important
 				gs_log( GS_LOG_NOTICE, "User prov. param \"$param_name\": Unknown parameter" );
 				continue;
