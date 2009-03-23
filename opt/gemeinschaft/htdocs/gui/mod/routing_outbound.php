@@ -2,7 +2,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision:2902 $
+* $Revision$
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -526,4 +526,3 @@ echo __('PCRE-Syntax (&quot;Perl Compatible Regular Expression&quot;) ohne <code
 <p class="text"><small><sup>[2]</sup> <?php
 echo __('Pr&auml;fix f&uuml;r LCR (Least Cost Routing) in der Form 010<i>xx</i>. Gilt nur f&uuml;r ISDN, nicht f&uuml;r SIP.');
 ?></small></p>
-
