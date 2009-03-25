@@ -45,7 +45,24 @@ $per_page = (int)GS_GUI_NUM_RESULTS;
 
 $page = (int)@$_REQUEST['page'];
 
+$delete = (int)@$_REQUEST['delete'];
 $search_url = '';
+
+#####################################################################
+# delete
+#####################################################################
+
+if ($delete) {
+	$ok = $DB->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.$delete.' AND `running`=0 LIMIT 1' );
+	if ($ok) {
+		@$DB->execute( 'OPTIMIZE TABLE `prov_jobs`' );
+	} else {
+		echo '<div class="errorbox">';
+		echo __('Job konnte nicht gel&ouml;scht werden.');
+		echo '</div>',"\n";
+	}
+
+}
 
 
 #####################################################################
@@ -119,6 +136,8 @@ $search_url = '';
 	<th style="min-width: 5em;"  rowspan="2"><?php echo __('Art'        ); ?></th>
 	<th style="min-width: 5em;"  rowspan="2"><?php echo __('Daten'   ); ?></th>
 	<th colspan="5" class="c"><?php echo __('Cron-Regel'); ?></th>
+	<th style="min-width: 5em;"  rowspan="2"> </th>
+
 </tr>
 <tr>
 	<th class="c" style="min-width: 1em;"><?php echo __('Min.'); ?></th>
@@ -160,8 +179,13 @@ while ($job = $rs_jobs->fetchRow()) {
 	echo '<td class="c">', htmlEnt($job['day'   ]) ,'</td>' ,"\n";
 	echo '<td class="c">', htmlEnt($job['month' ]) ,'</td>' ,"\n";
 	echo '<td class="c">', htmlEnt($job['dow'   ]) ,'</td>' ,"\n";
-	
+
+	echo '<td class="c">' ,"\n";
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$job['id'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+	echo '</td>' ,"\n";
+		
 	echo '</tr>' ,"\n";
+
 	++$i;
 }
 
