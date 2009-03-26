@@ -109,8 +109,9 @@ $qualify_cid = true;
 if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 	
 	include_once( GS_DIR .'inc/canonization.php' );
-	$canonical = new CanonicalPhoneNumber( $number );
-	
+	$canonical = new CanonicalPhoneNumber( substr($number,1) );
+	$gateway_prefix = substr($number,0,1);
+
 	if (@$canonical->is_call_by_call) {
 		gs_agi_verbose("### $number has a call-by-call prefix");
 		echo "HANGUP\n";
@@ -145,7 +146,7 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 		}
 	}
 	else {
-		$number_dial = trim( @$canonical->dial );
+		$number_dial = $gateway_prefix.trim( @$canonical->dial );
 	}
 	
 	if ($number_dial == '') {
@@ -252,8 +253,8 @@ LIMIT 9'
 		}
 		$dialstr = str_replace('{peer}', '{gateway}', $gate['dialstr']);
 		$dialstr = str_replace(
-			array( '{number}'   , '{gateway}'   ),
-			array( $number_final, $gate['name'] ),
+			array( '{number}'   , '{gateway}', '{number:1}'   ),
+			array( $number_final, $gate['name'], substr($number_final,1) ),
 			$gate['dialstr']
 		);
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);

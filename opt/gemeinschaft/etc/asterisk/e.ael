@@ -854,7 +854,7 @@ context from-internal-users {
 		to-conferences;       // conferences
 		to-internal-nobody;   // internal phones (nobodies)
 		to-internal-users;    // internal phones (users)
-		to-gateway;           // to the gateway
+		//to-gateway;           // to the gateway
 		test;                 // test extensions
 	}
 	
