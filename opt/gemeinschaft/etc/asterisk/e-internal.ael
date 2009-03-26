@@ -233,7 +233,7 @@ context to-internal-users {
 	// Users, Queues, ...
 	//----------------------------------------------------------
 	
-	_Z. => {
+	_X. => {
 		if ("${is_from_gateway}" = "1") {
 			Verbose(1,### Incoming call from a gateway to ${EXTEN});
 			//Set(__is_from_gateway=1);
