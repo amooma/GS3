@@ -248,7 +248,7 @@ if ($action === 'list') {
 		$rs = $DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
 	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext`, `u`.`email` `email`, `u`.`pin` `pin`,
-	`h`.`is_foreign`,
+	`h`.`is_foreign`, `h`.`comment` `h_comment`,
 	`hp1`.`value` `hp_route_prefix`
 FROM
 	`users` `u` JOIN
