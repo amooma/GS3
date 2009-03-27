@@ -58,13 +58,8 @@ macro check-valid-extension( mext ) {
 			Hangup(2);
 		}
 		
-		if ("${is_sub_system}" = "yes") {
-			Verbose(1,### We are a sub-system. Dial to the gateway.);
-			&dial-gateway(${mext});
-		} else {
-			Verbose(1,### We are not a sub-system. Hang up.);
-		}
-		Hangup();
+		Verbose(1,### Dial to the gateway on unknown extension: ${mext}.);
+		&dial-gateway(${mext});
 	}
 }
 
@@ -964,18 +959,7 @@ context to-internal-users-self {
 		// type is "unknown":
 		//----------------------------------------------------------
 		to_unknown:
-			
-			if ("${is_sub_system}" = "yes") {
-				Verbose(1,### We are a sub-system. Dial to the gateway.);
-				&dial-gateway(${EXTEN});
-			} else {
-				Verbose(1,### We are not a sub-system. Hang up.);
-			}
-			// 1 = AST_CAUSE_UNALLOCATED => SIP 404 Not Found
-			Set(PRI_CAUSE=1);
-			Hangup(1);
-		
-		//}
+			Verbose(1,### Dial to the gateway on unknown extension: ${EXTEN});	
 		
 		user_uncallable:
 			// user uncallable (busy/offline/unavail)
