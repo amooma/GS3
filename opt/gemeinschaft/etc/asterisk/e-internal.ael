@@ -548,7 +548,7 @@ context to-internal-users-self {
 	// Users, Queues, ...
 	//----------------------------------------------------------
 	
-	_Z. => {
+	_X. => {
 		
 		Verbose(1,### Incoming call to ${EXTEN} at this node);
 		
