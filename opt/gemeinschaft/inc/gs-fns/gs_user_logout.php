@@ -36,7 +36,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 *  logs off a user
 ***********************************************************/
 
-function gs_user_logout( $user, $reboot = TRUE )
+function gs_user_logout( $user, $reboot=true )
 {
 	$ret = gs_user_is_valid_name( $user );
 	if (isGsError($ret)) return $ret;
@@ -48,7 +48,7 @@ function gs_user_logout( $user, $reboot = TRUE )
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
 	
-		# get user_id
+	# get user_id
 	#
 	$user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
 	if ($user_id < 1)
@@ -57,8 +57,7 @@ function gs_user_logout( $user, $reboot = TRUE )
 	$ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$user_id );
 	
 	$rs = $db->execute( 'SELECT `id`, `mac_addr`, `nobody_index` FROM `phones` WHERE `user_id`='. $user_id );
-
-
+	
 	while ($phone = $rs->fetchRow()) {
 		# assign the default nobody
 		#
@@ -70,12 +69,12 @@ function gs_user_logout( $user, $reboot = TRUE )
 				'SELECT `id` FROM `users` WHERE `nobody_index`='. $phone['nobody_index']
 				);
 			if ($new_user_id < 1) {
+				//?
 			}
 		}
 		$db->execute( 'UPDATE `phones` SET `user_id`='. ($new_user_id > 0 ? $new_user_id : 'NULL') .' WHERE `id`='. (int)$phone['id'] .' AND `user_id`='. $user_id );
-	
 	}
-
+	
 	# log out of all queues
 	#
 	$user_ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
@@ -85,16 +84,14 @@ function gs_user_logout( $user, $reboot = TRUE )
 		@exec( GS_DIR .'dialplan-scripts/queue-login-logout.agi '. $user_ext .' 0 logoutall 1>>/dev/null 2>>/dev/null' );
 		ob_end_clean();
 	}
-
+	
 	# restart phone
 	#
 	if ($ip_addr != '') $ret = @ gs_prov_phone_checkcfg_by_ip( $ip_addr, $reboot );
 	if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 	
-	return TRUE;
-	
+	return true;
 }
-
 
 
 ?>
