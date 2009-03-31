@@ -45,15 +45,18 @@ $per_page = (int)GS_GUI_NUM_RESULTS;
 
 $page = (int)@$_REQUEST['page'];
 
-$delete = (int)@$_REQUEST['delete'];
+$action =      @$_REQUEST['action'];
+if (! in_array($action, array('view','delete'), true))
+	$action = 'view';
+$job_id = (int)@$_REQUEST['job'];
 $search_url = '';
 
-#####################################################################
-# delete
-#####################################################################
 
-if ($delete) {
-	$ok = $DB->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.$delete.' AND `running`=0 LIMIT 1' );
+#####################################################################
+#  delete {
+#####################################################################
+if ($action === 'delete') {
+	$ok = $DB->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.$job_id.' AND `running`=0 LIMIT 1' );
 	if ($ok) {
 		@$DB->execute( 'OPTIMIZE TABLE `prov_jobs`' );
 	} else {
@@ -61,14 +64,17 @@ if ($delete) {
 		echo __('Job konnte nicht gel&ouml;scht werden.');
 		echo '</div>',"\n";
 	}
-
+	$action = 'view';
 }
+#####################################################################
+#  delete }
+#####################################################################
 
 
 #####################################################################
 #  view {
 #####################################################################
-//if ($action === 'view') {
+if ($action === 'view') {
 	
 	//echo "<pre>"; print_r($_REQUEST); echo "</pre>";
 	$where = array();
@@ -137,7 +143,6 @@ if ($delete) {
 	<th style="min-width: 5em;"  rowspan="2"><?php echo __('Daten'   ); ?></th>
 	<th colspan="5" class="c"><?php echo __('Cron-Regel'); ?></th>
 	<th style="min-width: 5em;"  rowspan="2"> </th>
-
 </tr>
 <tr>
 	<th class="c" style="min-width: 1em;"><?php echo __('Min.'); ?></th>
@@ -179,13 +184,12 @@ while ($job = $rs_jobs->fetchRow()) {
 	echo '<td class="c">', htmlEnt($job['day'   ]) ,'</td>' ,"\n";
 	echo '<td class="c">', htmlEnt($job['month' ]) ,'</td>' ,"\n";
 	echo '<td class="c">', htmlEnt($job['dow'   ]) ,'</td>' ,"\n";
-
+	
 	echo '<td class="c">' ,"\n";
-	echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$job['id'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=delete&amp;job='.$job['id'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 	echo '</td>' ,"\n";
-		
+	
 	echo '</tr>' ,"\n";
-
 	++$i;
 }
 
@@ -195,7 +199,7 @@ while ($job = $rs_jobs->fetchRow()) {
 
 
 <?php
-//}
+}
 #####################################################################
 #  view }
 #####################################################################
