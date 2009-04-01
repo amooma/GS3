@@ -33,6 +33,7 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_del.php' );
 
 function _info( $message )
 {
@@ -44,44 +45,6 @@ function _have_prov_siemens()
 {
 	global $db;
 	return (@$db->executeGetOne( 'SHOW TABLES LIKE \'prov_siemens\'' ) === 'prov_siemens');
-}
-
-function _delete_nobody_user( $nobody_index )
-{
-	global $db;
-
-	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `nobody_index`='. (int)$nobody_index );
-	
-	if (! $user_id) {
-		_info( "Failed to find user for nobody user index $nobody_index." );
-		return false;
-	}
-	
-	//FIXME - see gs_user_del()
-	// there's much more to delete
-	
-	//FIXME - call BOI API for foreign user
-	_info( "FIXME - Not implemented." );
-	return false;
-	
-	
-	# delete sip peer
-	#
-	$db->execute( 'DELETE FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
-	
-	# delete dial log
-	#
-	$ok = $db->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id );
-	
-	# delete user
-	#
-	$ok = $db->execute( 'DELETE FROM `users` WHERE `id`='. $user_id );
-	if (! $ok) {
-		_info( "Failed to delete user $user_id (nobody index $nobody_index)." );
-		return false;
-	}
-	
-	return true;
 }
 
 function _delete_phone( $mac_addr )
@@ -97,7 +60,9 @@ function _delete_phone( $mac_addr )
 			_info( "Failed to rollback transaction!" );
 		return false;
 	}
-	$nobody_index = (int)$db->executeGetOne( 'SELECT `nobody_index` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac_addr) .'\'' );
+	$nobody_user = $db->executeGetOne( 'SELECT `user` FROM `users` JOIN `phones` ON `phones`.`nobody_index` = `users`.`nobody_index` WHERE `mac_addr`=\''. $db->escape($mac_addr) .'\'' );
+
+/*
 	if ($nobody_index < 1) {
 		//FIXME - why does this script only work if a _nobody_ user is logged
 		// in at a phone?
@@ -106,7 +71,7 @@ function _delete_phone( $mac_addr )
 			_info( "Failed to rollback transaction!" );
 		return false;
 	}
-	
+*/	
 	if (_have_prov_siemens()) {
 		$db->execute( 'DELETE FROM `prov_siemens` WHERE `mac_addr`=\''. $db->escape($mac_addr) .'\'' );
 	}
@@ -118,15 +83,10 @@ function _delete_phone( $mac_addr )
 			_info( "Failed to rollback transaction!" );
 		return false;
 	}
-	
-	$ok = _delete_nobody_user( $nobody_index );
-	if (! $ok) {
-		_info( "Failed to delete nobody user index $nobody_index" );
-		if (! gs_db_rollback_trans($db))
-			_info( "Failed to rollback transaction!" );
-		return false;
-	}
-	
+
+	$ret = @ gs_user_del( $nobody_user );
+	if (isGsError( $ret )) _info( $ret->getMsg() );
+
 	if (! gs_db_commit_trans($db)) {
 		_info( "Failed to delete phone $mac_addr." );
 		return false;
