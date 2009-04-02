@@ -39,15 +39,23 @@ function _gs_prov_phone_checkcfg_exclude_ip( $ip )
 {
 	$db = gs_db_slave_connect();
 	if (! $db) return false;
-	$is_server = (int)$db->executeGetOne(
-		'SELECT 1 '.
-		'FROM `host_params`, `gates` '.
-		'WHERE '.
-			'`host_params`.`param` IN (\'sip_proxy_from_wan\', \'sip_server_from_wan\') AND '.
-			'`host_params`.`value`=\''. $db->escape($ip) .'\' '.
-		'OR '.
-			'`gates`.`host`=\''. $db->escape($ip) .'\' '.
-		'LIMIT 1'
+	$is_server = (
+			(bool)(int)$db->executeGetOne(
+			'SELECT 1 '.
+			'FROM `host_params` '.
+			'WHERE '.
+				'`param` IN (\'sip_proxy_from_wan\', \'sip_server_from_wan\') AND '.
+				'`value`=\''. $db->escape($ip) .'\' '.
+			'LIMIT 1'
+			)
+		||
+			(bool)(int)$db->executeGetOne(
+			'SELECT 1 '.
+			'FROM `gates` '.
+			'WHERE '.
+				'`host`=\''. $db->escape($ip) .'\' '.
+			'LIMIT 1'
+			)
 		);
 	if ($is_server) {
 		gs_log(GS_LOG_DEBUG, "IP addr. $ip is a server, not a phone");
