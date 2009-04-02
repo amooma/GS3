@@ -51,14 +51,14 @@ if (! isSet($opts['host'])) {
 	gs_script_invalid_usage( $usage );
 }
 
-if (array_key_exists('force', $opts)) $force = TRUE;
-	else $force = FALSE;
+if (array_key_exists('force', $opts)) $force = true;
+else $force = false;
 
 
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_host_del( $opts['host'] ,  $force );
+$ret = @ gs_host_del( $opts['host'], $force );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 echo "Host deleted.\n";
