@@ -8,8 +8,12 @@
 	
 	# The phone asks for
 	# cfg<MAC-addr>
+	# gs_phonebook.xml
 	
 	# Rewrite requests for cfg<MAC-addr>
 	RewriteRule ^cfg(000b82[0-9a-f]*)$ settings.php?mac=$1 [L]
+	
+	# Rewrite request for gs_phonebook.xml
+	RewriteRule gs_phonebook.xml$ gs_phonebook.php [L]
 	
 </IfModule>
