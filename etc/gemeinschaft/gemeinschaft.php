@@ -375,6 +375,8 @@ $SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
 //---------------------[ Grandstream ]--------------------//
 
 $GRANDSTREAM_PROV_ENABLED   = false;  # do provisioning for Grandstream?
+  # Warning: The phonebook for Grandstream does not currently have
+  # authentication!
 
 $GRANDSTREAM_PROV_HTTP_PASS = '';     # e.g. "gEheiM23y89sdo23"
   # to password protect the phone's web gui.
