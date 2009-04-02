@@ -68,7 +68,7 @@ for ($i=0; $i<10; ++$i) {
 # reboot
 #
 $err=0; $out=array();
-exec( 'wget -O /dev/null -o /dev/null --tries=3 --timeout=8 --retry-connrefused --load-cookies='. qsa($cookiefile) .' --keep-session-cookies -q '. qsa('http://'.$opts['ip'].'/rs.htm') .' >>/dev/null 2>>/dev/null &', $out, $err );
+exec( 'wget -O /dev/null -o /dev/null --tries=3 --timeout=8 --retry-connrefused --load-cookies='. qsa($cookiefile) .' --keep-session-cookies -q '. qsa('http://'.$opts['ip'].'/rs.htm') .' >>/dev/null 2>>/dev/null', $out, $err );
 
 # delete cookiefile
 #
