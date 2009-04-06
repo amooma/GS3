@@ -257,7 +257,7 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 		$login_errmsg = __('Benutzer oder Pa&szlig;wort ung&uuml;ltig');
 		return;
 	}
-	$_SESSION['real_user']['_origname'] = preg_replace( '/[^A-Za-z0-9_\-.]/', '', $user );
+	$_SESSION['real_user']['_origname'] = preg_replace( '/[^a-z0-9_\-.]/', '', $user );
 	
 	//if (! @$_SESSION['real_user']['name']) {
 		$_SESSION['real_user']['name'] = @gs_legacy_user_map( $_SESSION['real_user']['_origname'] );
