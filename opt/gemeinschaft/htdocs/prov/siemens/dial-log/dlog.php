@@ -223,10 +223,11 @@ LIMIT 20';
 		if ($r['remote_name'] != '') {
 			$entry_name .= ' '. $r['remote_name'];
 		}
+		setlocale(LC_TIME,gs_get_conf('GS_INTL_LANG').'.utf8');
 		if (date('dm') == date('dm', (int)$r['ts']))
 			$when = date('H:i', (int)$r['ts']);
 		else
-			$when = date('d.m.', (int)$r['ts']);
+			$when = strftime('%d.%b', (int)$r['ts']);
 		$entry_name = $when .'  '. $entry_name;
 		if ($r['num_calls'] > 1) {
 			$entry_name .= ' ('. $r['num_calls'] .')';
