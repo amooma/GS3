@@ -83,7 +83,7 @@ if ($action === 'save') {
 	\'gw_tmp_'. rand(100000,999999) .'\',
 	\'\',
 	0,
-	\''. $DB->escape( 'mISDN/g:{gateway}/{number}' ) .'\',
+	\''. $DB->escape( 'mISDN/g:{gateway}/{number:1}' ) .'\',
 	0
 )'
 		);
@@ -100,7 +100,7 @@ if ($action === 'save') {
 	`name` = \''. $DB->escape($gw_name) .'\',
 	`title` = \''. $DB->escape(trim(@$_REQUEST['gw-title'])) .'\',
 	`allow_out` = '. (@$_REQUEST['gw-allow_out'] ? 1 : 0) .',
-	`dialstr` = \''. $DB->escape( 'mISDN/g:{gateway}/{number}' ) .'\',
+	`dialstr` = \''. $DB->escape( 'mISDN/g:{gateway}/{number:1}' ) .'\',
 	`hw_port` = '. ((int)@$_REQUEST['gw-hw_port']) .'
 WHERE `id`='. (int)$gwid
 	;
