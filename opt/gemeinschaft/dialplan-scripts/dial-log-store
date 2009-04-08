@@ -33,9 +33,10 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 
-$user_ext = trim(@$argv[1]);
-$type     = trim(@$argv[2]);
-$number   = trim(@$argv[3]);
+$user_ext     = trim(@$argv[1]);
+$type         = trim(@$argv[2]);
+$number       = trim(@$argv[3]);
+$queue_number = trim(@$argv[4]);
 
 if (! preg_match('/^[0-9]+$/', $user_ext))
 	die();
@@ -44,7 +45,6 @@ if (! in_array( $type, array('in','out','missed'), true ))
 if (! $number)
 	die();
 $number = preg_replace( '/[^\d*#]/', '', $number );
-
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
@@ -56,6 +56,13 @@ $db = gs_db_master_connect();
 #
 $uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user_ext) .'\'' );
 if ($uid < 1) die();
+
+# get queue id, if provided
+#
+if ($queue_number > 0)
+	$queue_id = (int)$db->executeGetOne( 'SELECT `_id` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue_number) .'\'' );
+else
+	$queue_id = 'NULL';
 
 # get remote user
 #
@@ -83,7 +90,7 @@ if ($remote_user) {
 
 # log
 #
-$db->execute( 'INSERT INTO `dial_log` (`user_id`, `type`, `timestamp`, `number`, `remote_name`, `remote_user_id`) VALUES ('. $uid .', \''. $type .'\', '. time() .', \''. $db->escape($number) .'\', \''. $db->escape($remote_name) .'\', '. $db_remote_user_id .')' );
+$db->execute( 'INSERT INTO `dial_log` (`user_id`, `type`, `timestamp`, `number`, `remote_name`, `remote_user_id`, `queue_id`) VALUES ('. $uid .', \''. $type .'\', '. time() .', \''. $db->escape($number) .'\', \''. $db->escape($remote_name) .'\', '. $db_remote_user_id . ', ' . $queue_id . ')' );
 
 
 

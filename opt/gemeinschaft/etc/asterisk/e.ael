@@ -452,7 +452,7 @@ context to-conferences {
 		&pass-connid();
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
-			&dial-log-store(${user_name},out,${confprefix}${confnum});
+			&dial-log-store(${user_name},out,${confprefix}${confnum},0);
 		}
 		// try at most 40 times:
 		for (i=0; ${i}<40; i=${i}+1) {
@@ -495,7 +495,7 @@ context to-conferences {
 		&pass-connid();
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
-			&dial-log-store(${user_name},out,${confprefix}${confnum});
+			&dial-log-store(${user_name},out,${confprefix}${confnum},0);
 		}
 		// find where the conference is or claim it:
 		AGI(/opt/gemeinschaft/dialplan-scripts/conf-get-where.agi,${confprefix}${confnum});
@@ -822,7 +822,7 @@ context to-gateway {
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
 			//DumpChan();
-			&dial-log-store(${user_name},out,${EXTEN});
+			&dial-log-store(${user_name},out,${EXTEN},0);
 		}
 		AGI(/opt/gemeinschaft/dialplan-scripts/get_callerid.agi,${user_name},external);
 		&dial-gateway(${gateway_prefix}${EXTEN:1});
@@ -1011,7 +1011,7 @@ context private-call {
 		
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
-			&dial-log-store(${user_name},out,${EXTEN});
+			&dial-log-store(${user_name},out,${EXTEN},0);
 		}
 		
 		// pruefen, ob der User Privatgespraeche machen darf ...
@@ -1138,7 +1138,7 @@ context from-node {
 //  Macro to store dial log
 //---------------------------------------------------------------------
 
-macro dial-log-store( muser, mtype, mnumber ) {
+macro dial-log-store( muser, mtype, mnumber, mqueue ) {
 	
 	if ("${mtype}"="in" || "${mtype}"="out" || "${mtype}"="missed") {
 		if ("${mnumber}" = "") {
@@ -1146,8 +1146,8 @@ macro dial-log-store( muser, mtype, mnumber ) {
 				Set(mnumber=${CALLERID(num)});
 			}
 		}
-		Verbose(1,### Store in dial log of user ${muser}: ${mtype} ${mnumber});
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/dial-log-store '${muser}' '${mtype}' '${mnumber}');
+		Verbose(1,### Store in dial log of user ${muser}: ${mtype} ${mnumber} (queue=${mqueue}));
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/dial-log-store '${muser}' '${mtype}' '${mnumber}' '${mqueue}');
 	}
 }
 

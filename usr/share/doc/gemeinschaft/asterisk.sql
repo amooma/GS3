@@ -5789,13 +5789,16 @@ CREATE TABLE `dial_log` (
   `number` varchar(50) character set ascii NOT NULL default '',
   `remote_name` varchar(50) collate utf8_unicode_ci NOT NULL default '',
   `remote_user_id` int(10) unsigned default NULL,
+  `queue_id` int(10) unsigned default NULL,
   KEY `timestamp` (`timestamp`),
   KEY `user_timestamp` (`user_id`,`timestamp`),
   KEY `user_type_number_timestamp` (`user_id`,`type`,`number`(10),`timestamp`),
   KEY `user_type_timestamp` (`user_id`,`type`,`timestamp`),
   KEY `remote_user_id` (`remote_user_id`),
+  KEY `queue_id` (`queue_id`),
   CONSTRAINT `dial_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `dial_log_ibfk_2` FOREIGN KEY (`remote_user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+  CONSTRAINT `dial_log_ibfk_2` FOREIGN KEY (`remote_user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `dial_log_ibfk_3` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --

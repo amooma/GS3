@@ -157,13 +157,13 @@ else {
 	
 	$query =
 'SELECT
-	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
+	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`, `queue_id`,
 	COUNT(*) `num_calls`
 FROM `dial_log`
 WHERE
 	`user_id`='. $user_id .' AND
 	`type`=\''. $type .'\'
-GROUP BY `number`
+GROUP BY `number`,`queue_id`
 ORDER BY `ts` DESC
 LIMIT 20';
 	$rs = $db->execute( $query );
@@ -176,7 +176,10 @@ LIMIT 20';
 	
 	while ($r = $rs->fetchRow()) {
 		
-		$entry_name = $r['number'];
+		unset($entry_name);
+		if ($r['queue_id'] > 0)
+			$entry_name = 'WS: ';
+		$entry_name .= $r['number'];
 		if ($r['remote_name'] != '') {
 			$entry_name .= ' '. $r['remote_name'];
 		}

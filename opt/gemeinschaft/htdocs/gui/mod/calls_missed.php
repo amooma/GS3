@@ -58,17 +58,18 @@ if (@$_REQUEST['action'] === 'del') {
 
 $rs = $DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
-	MAX(`d`.`timestamp`) `ts`, `d`.`number`, `d`.`remote_name`,
+	MAX(`d`.`timestamp`) `ts`, `d`.`number`, `d`.`remote_name`, `q`.`_title` AS `queue_title`,
 	`u`.`id` `r_uid`, `u`.`lastname` `r_ln`, `u`.`firstname` `r_fn`
 FROM
-	`dial_log` `d` LEFT JOIN
-	`users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
+	`dial_log` `d`
+	LEFT JOIN `users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
+	LEFT JOIN `ast_queues` `q` ON (`q`.`_id`=`d`.`queue_id`)
 WHERE
 	`d`.`user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .' AND
 	`d`.`type`=\''. $DB->escape($type) .'\' AND
 	`d`.`timestamp`>'. (time()-GS_PROV_DIAL_LOG_LIFE) .' AND
 	`d`.`number` <> \''. $DB->escape( @$_SESSION['sudo_user']['info']['ext'] ) .'\'
-GROUP BY `d`.`number`
+GROUP BY `d`.`number`,`queue_title`
 ORDER BY `ts` DESC
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 );
@@ -124,10 +125,13 @@ if (@$rs) {
 		echo '<tr class="'. ((++$i % 2 == 0) ? 'even':'odd') .'">';
 		echo '<td>', htmlEnt($r['number']), '</td>';
 		
+		unset($name);
+		if ($r['queue_title'])
+			$name = '[' . $r['queue_title'] . '] ';
 		if (! $r['r_uid'])
-			$name = $r['remote_name'];
+			$name .= $r['remote_name'];
 		else {
-			$name = '';
+			$name .= '';
 			if ($r['r_fn'] != '') $name .= $r['r_fn'] .', ';
 			$name .= $r['r_ln'];
 		}

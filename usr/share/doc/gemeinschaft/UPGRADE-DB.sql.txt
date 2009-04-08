@@ -643,5 +643,14 @@ ALTER TABLE `routes`
   REFERENCES `user_groups` (`id`)
   ON DELETE CASCADE ON UPDATE CASCADE;
 
+--
+-- Add new column `queue_id` in table `dial_log`
 
-
+ALTER TABLE `dial_log`
+  ADD `queue_id` `queue_id` int(10) unsigned default NULL;
+ALTER TABLE `dial_log`
+  ADD INDEX `queue_id` (`queue_id`);
+ALTER TABLE `dial_log`
+  ADD CONSTRAINT `dial_log_ibfk_3`
+  FOREIGN KEY (`queue_id`)
+  REFERENCES `ast_queues` (`_id`);
