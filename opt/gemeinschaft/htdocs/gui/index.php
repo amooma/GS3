@@ -80,7 +80,7 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' ,"\n";
 		echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">' ,"\n";
 		echo '<head>' ,"\n";
-		echo '<title>Gemeinschaft</title>' ,"\n";
+		echo '<title>LocaPhone</title>' ,"\n";
 		echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' ,"\n";
 		echo '</head>' ,"\n";
 		echo '<body>' ,"\n";
@@ -359,7 +359,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 	switch ($GS_INSTALLATION_TYPE) {
 		case 'gpbx': echo    'GPBX'                         ; break;
 		//default    : echo __('Gemeinschaft Telefon-Manager');
-		default    : echo    'Gemeinschaft';
+		default    : echo    'LocaPhone';
 	}
 ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -428,9 +428,9 @@ function gs_boi_menu_sc( url )
 			echo '</div>' ,"\n";
 			break;
 		default    :
-			echo '<img alt=" " src="', GS_URL_PATH ,'img/gemeinschaft-32.png" class="fl" />' ,"\n";
+			echo '<img alt=" " src="', GS_URL_PATH ,'img/locanet.png" class="fl" />' ,"\n";
 			//echo '<h1>', __('Telefon-Manager') ,'</h1>' ,"\n";
-			echo '<h1>', 'Gemeinschaft' ,'</h1>' ,"\n";
+			echo '<h1>', 'LocaPhone' ,'</h1>' ,"\n";
 	}
 ?>
 </div>
@@ -779,8 +779,5 @@ else {
 
 </div>
 
-<div class="nofloat"></div>
-<div id="copyright"><a target="_blank" href="http://www.amooma.de/gemeinschaft/">www.amooma.de/gemeinschaft</a><br />
-<a target="_blank" href="http://www.amooma.de/"><img alt="&copy; amooma" src="<?php echo GS_URL_PATH; ?>img/amooma-c.gif" /></a></div>
 </body>
 </html>
