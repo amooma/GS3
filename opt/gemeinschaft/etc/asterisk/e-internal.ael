@@ -45,9 +45,9 @@ macro check-valid-extension( mext ) {
 	}
 	
 	// is it to one of *our* extensions?
-	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${mext});
+	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${mext},${is_huntgroup});
 	Verbose(1,### Extension ${mext} is of type ${exttype});
-	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference" && "${exttype}" != "foreign") {
+	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference" && "${exttype}" != "huntgroup" && "${exttype}" != "foreign") {
 		Verbose(1,### Extension ${mext} is unknown);
 		
 		if ("${is_from_gateway}" = "1") {
@@ -452,6 +452,14 @@ context to-internal-users {
 	//}
 }
 
+context to-internal-users-huntgroup {
+
+	_Z. => {
+		Set(is_huntgroup=1);
+		Goto(to-internal-users,${EXTEN},1);
+	}
+
+}
 
 context to-internal-users-self {
 	
@@ -634,10 +642,12 @@ context to-internal-users-self {
 		&set-callerid-by-clir();
 		
 		// check the type of the called extension:
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-type.agi,${EXTEN});
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-type.agi,${EXTEN},${is_huntgroup});
 		Verbose(1,### Incoming call to ${EXTEN}\, type: ${exttype}\, forwards: ${forwards});
 		
 		// is it a user? is it a queue?
+		if ("${exttype}" = "huntgroup")
+			goto to_huntgroup;
 		if ("${exttype}" = "user")
 			goto to_user;
 		if ("${exttype}" = "queue")
@@ -647,7 +657,61 @@ context to-internal-users-self {
 		// the AGI script failed:
 		Verbose(1,### The AGI script returned an empty or bad type ("${exttype}")!);
 		Hangup();
-		
+
+		//----------------------------------------------------------
+		// type is "huntgroup":
+		//----------------------------------------------------------
+		to_huntgroup:
+			Set(is_huntgroup=1);
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-huntgroup-get.agi,${EXTEN},${is_call_from});
+			Set(huntgroup=1);
+			
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-huntgroup-get-fw.agi,${EXTEN});
+			// forward (case=always) active?
+			if ("${fw_${is_call_from}_always}" != "") {
+				Verbose(1,### Called huntgroup: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
+				Set(__forwarded_by=${EXTEN});
+				Set(__is_from_gateway=);
+				Set(__redirect=${fw_${is_call_from}_always});
+				Dial(Local/${fw_${is_call_from}_always}/n,900);
+				&hangup-proper-status();
+			}
+			
+			if ("${huntgroup_strategy}" = "linear") {
+				while ("${huntgroup_${huntgroup}_dial}" != "") {
+					Verbose(1,### huntgroup member: ${huntgroup_${huntgroup}_dial});
+					Dial(Local/${huntgroup_${huntgroup}_dial}@to-internal-users-huntgroup,${huntgroup_${huntgroup}_timeout},o);
+					huntgroup=${huntgroup}+1;
+					}
+			} else {
+				Verbose(1,### Dialling hunt group ${EXTEN} in parallel mode);
+				Dial(${huntgroup_dial},${huntgroup_timeout},o);
+			}
+			Verbose(1,### finished trying huntgroup members. Last dialstatus: ${DIALSTATUS});
+			if("${DIALSTATUS}" = "CHANUNAVAIL"){
+				//"CHANUNAVAIL" may also be the dialstatus if nobody answers
+				Set(DIALSTATUS=NOANSWER);
+				Verbose(1,### Changed DIALSTATUS from CHANUNAVAIL to ${DIALSTATUS});
+			}
+			//write to log if nobody answered
+			if("${DIALSTATUS}" = "NOANSWER"){
+				Set(huntgroup=1);
+				while ("${huntgroup_${huntgroup}_dial}" != "") {
+					Verbose(1,### Writing missing call to DialLog: ${huntgroup_${huntgroup}_dial});
+					&dial-log-store(${huntgroup_${huntgroup}_dial},missed,${CALLERID(num)},0);
+					huntgroup=${huntgroup}+1;
+				}
+			}
+
+			if ("${fw_${is_call_from}_timeout}" != "") {
+			  Verbose(1,### forwarding call to ${fw_${is_call_from}_timeout});
+			  Set(__forwarded_by=${EXTEN});
+			  Set(__is_from_gateway=);
+			  Set(__redirect=${fw_${is_call_from}_timeout});	
+			  Dial(Local/${fw_${is_call_from}_timeout}/n,900);
+			}
+			&hangup-proper-status();
+
 		//----------------------------------------------------------
 		// type is "user":
 		//----------------------------------------------------------
@@ -665,8 +729,14 @@ context to-internal-users-self {
 					Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 					Set(__forwarded_by=${EXTEN});
 					Set(__is_from_gateway=);
-					Dial(Local/${fw_${is_call_from}_always}/n,200);
-					&hangup-proper-status();
+					if ("${is_huntgroup}" != "1") {
+						Dial(Local/${fw_${is_call_from}_always}/n,200);
+						&hangup-proper-status();
+					}
+					else {
+						Verbose(1,### call forward active in hunt group - skipping member);
+						Hangup();
+					}
 				}
 				else {
 					// no forwarding for callfile origin
@@ -676,14 +746,16 @@ context to-internal-users-self {
 			
 			// call the user
 			//
-			#exec "/opt/gemeinschaft/etc/asterisk/e-dialtimeout-in.ael.php"
-			if ("${is_callfile_origin}" != "1") {
-				if ("${fw_${is_call_from}_unavail}" != "") {
-					Set(dialtimeout=${fw_${is_call_from}_unavail_timeout});
+			if ("${is_huntgroup}" != "1") {
+				#exec "/opt/gemeinschaft/etc/asterisk/e-dialtimeout-in.ael.php"
+				if ("${is_callfile_origin}" != "1") {
+					if ("${fw_${is_call_from}_unavail}" != "") {
+						Set(dialtimeout=${fw_${is_call_from}_unavail_timeout});
+					}
 				}
-			}
-			else {
-				Set(dialtimeout=15);
+				else {
+					Set(dialtimeout=15);
+				}
 			}
 			
 			// get ringer
@@ -726,7 +798,13 @@ context to-internal-users-self {
 							}
 						}
 					}
-					goto user_busy;
+					if ("${is_huntgroup}" == "1") {
+						Verbose(1,### DND active in huntgroup - skipping member);
+						Hangup();
+					}
+					else {
+						goto user_busy;
+					}
 				}
 				if ("${DIALSTATUS}" = "NOANSWER") {     // does not answer the phone
 					goto user_unavail;
@@ -743,8 +821,14 @@ context to-internal-users-self {
 				}
 			}
 			else {
-				Verbose(1,### Callfile: Origin user ${callfile_from_user} did not answer);
-				NoCDR();
+				if ("${is_huntgroup}" = "1") {
+					Verbose(1,### Callfile: huntgroup user ${callfile_from_user} did not answer);
+					Hangup();
+				}
+				else {
+					Verbose(1,### Callfile: Origin user ${callfile_from_user} did not answer);
+					NoCDR();
+				}
 			}
 			Hangup();
 			
@@ -1077,6 +1161,10 @@ context to-internal-users-self {
 	h => {
 		ResetCDR(w);
 		NoCDR();
+
+		if ("${is_huntgroup}" = "1" && "${DIALSTATUS}" = "ANSWER" && "${user_extension}" != "")
+			Set(exttype=huntgroup);
+
 		if ("${confnum}" != "") {
 			Verbose(1,### Participant "${CALLERID(all)}" has left conference ${confprefix}${confnum});
 			MeetMeCount(${confnum},cnt);
@@ -1109,6 +1197,21 @@ context to-internal-users-self {
 				//&dial-log-store(${origext},${type},${user_name});
 				&dial-log-store(${CALLERID(dnid)},${type},${CALLERID(num)});
 				//FIXME - does not always work as expected
+			}
+		}
+		else if ("${exttype}" = "huntgroup") {
+			if ("${DIALSTATUS}" != "ANSWER") {
+				Set(huntgroup=1);
+				while ("${huntgroup_${huntgroup}_dial}" != "") {
+					Verbose(1,### Writing missing call to DialLog: ${huntgroup_${huntgroup}_dial});
+					&dial-log-store(${huntgroup_${huntgroup}_dial},missed,${CALLERID(num)},0);
+					huntgroup=${huntgroup}+1;
+				}
+			}
+			else {
+				if("${user_extension}" != ""){
+					&dial-log-store(${user_extension},in,${CALLERID(num)},0);
+				}
 			}
 		}
 	}

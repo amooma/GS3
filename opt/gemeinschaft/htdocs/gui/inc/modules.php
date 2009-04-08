@@ -119,7 +119,9 @@ $MODULES['forwards' ]=  array(
 	'sub' => array(
 		'forwards'     => array('title' => __('Rufumleitung')),
 		'extnumbers'   => array('title' => __('externe Nummern')),
-		'queues'       => array('title' => __('Warteschlangen'))
+		'queues'       => array('title' => __('Warteschlangen')),
+		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse'))
+
 	)
 );
 
@@ -237,6 +239,7 @@ $MODULES['admin'    ]=  array(
 		'groups'       => array('title' => __('Benutzergruppen')),
 		'queues'       => array('title' => __('Warteschlangen')),
 		'pgroups'      => array('title' => __('Rufannahmegrp.#pl')),
+		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse')),
 		//'ivrs'         => array('title' => __('IVRs')),
 		'calls'        => array('title' => __('CDRs')),
 		'reload'       => array('title' => __('Reload'))

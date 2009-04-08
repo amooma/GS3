@@ -5910,6 +5910,34 @@ INSERT INTO `hosts` VALUES (1,'192.168.1.130','Gemeinschaft 1',0,0);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `huntgroups`
+--
+
+CREATE TABLE IF NOT EXISTS `huntgroups` (
+  `number` int(10) unsigned NOT NULL default '0',
+  `strategy` enum('linear','parallel') collate utf8_unicode_ci NOT NULL,
+  `sequence_no` int(10) unsigned NOT NULL default '1',
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `timeout` int(10) unsigned NOT NULL default '0',
+  CONSTRAINT `huntgroups_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Table structure for table `huntgroups_callforwards`
+--
+
+CREATE TABLE IF NOT EXISTS `huntgroups_callforwards` (
+  `huntgroup` int(10) unsigned NOT NULL default '0',
+  `source` enum('internal','external') character set ascii NOT NULL default 'internal',
+  `case` enum('always','full','timeout','empty') character set ascii NOT NULL default 'always',
+  `timeout` tinyint(3) unsigned NOT NULL default '20',
+  `number_std` varchar(50) character set ascii NOT NULL default '',
+  `number_var` varchar(50) character set ascii NOT NULL default '',
+  `active` enum('no','std','var') character set ascii NOT NULL default 'no',
+  PRIMARY KEY  (`huntgroup`,`source`,`case`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
 -- Table structure for table `instant_messaging`
 --
 

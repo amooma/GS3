@@ -36,6 +36,7 @@ ob_implicit_flush(1);
 
 
 $ext  = trim(@$argv[1]);
+$is_huntgroup = trim(@$argv[2]);
 
 if (! $ext) {
 	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('') ."\n";
@@ -54,6 +55,17 @@ include_once( GS_DIR .'inc/db_connect.php' );
 
 $db = gs_db_slave_connect();
 
+# is it a hunt group?
+#
+if ($is_huntgroup != 1) {
+  $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `huntgroups` WHERE `number`=\''. $db->escape($ext) .'\'' );
+  if ($num > 0) {
+	  echo 'SET VARIABLE __exttype '. gs_agi_str_esc('huntgroup') ."\n";
+	  //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	  die();
+  }
+}
+
 # is it a user?
 #
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
@@ -71,12 +83,6 @@ if ($num > 0) {
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
-
-
-//...
-
-
-
 
 echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!

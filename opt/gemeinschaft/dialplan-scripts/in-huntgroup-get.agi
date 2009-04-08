@@ -1,0 +1,93 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Author: Henning Holtschneider <henning@loca.net> - LocaNet oHG
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
+require_once( GS_DIR .'inc/pcre_check.php' );
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+error_reporting(0);
+
+
+function _no_more_routes( $idx=1 )
+{
+	echo 'SET VARIABLE huntgroup_'.$idx.'_dial '. gs_agi_str_esc('') ."\n";
+	die();
+}
+
+$number = trim(@$argv[1]);
+if ($number == '') {
+	gs_agi_verbose("### Empty hunt group");
+	echo "HANGUP\n";
+	_no_more_routes();
+}
+
+include_once( GS_DIR .'inc/db_connect.php' );
+
+$db = gs_db_slave_connect();
+if (! $db) die(1);
+
+$query =
+'SELECT `hg`.`strategy`, `hg`.`timeout`, `s`.`name`
+FROM `huntgroups` `hg`
+JOIN `ast_sipfriends` `s` ON (`hg`.`user_id`=`s`.`_user_id`)
+WHERE
+	`number`='. $number .'
+ORDER BY `hg`.`sequence_no` ASC';
+
+$rs = $db->execute($query);
+
+$idx = 1;
+$dialstring = '';
+while ($hg = $rs->fetchRow()) {
+	echo 'SET VARIABLE huntgroup_strategy ' . gs_agi_str_esc( $hg['strategy'] ) . "\n";
+	if ( $hg['strategy'] == 'parallel' ) {
+		if ( strlen( $dialstring ) > 0 )
+			$dialstring .= '&';
+		$dialstring .= 'Local/' . $hg['name'] . '@to-internal-users-huntgroup';
+		echo 'SET VARIABLE huntgroup_timeout ' . gs_agi_str_esc($hg['timeout']) . "\n";
+
+		echo 'SET VARIABLE huntgroup_'.$idx.'_dial '. gs_agi_str_esc($hg['name']) ."\n";
+	} else {
+		echo 'SET VARIABLE huntgroup_'.$idx.'_dial '. gs_agi_str_esc($hg['name']) ."\n";
+		echo 'SET VARIABLE huntgroup_'.$idx.'_timeout '. gs_agi_str_esc($hg['timeout']) ."\n";
+	}
+	++$idx;
+}
+if ( strlen( $dialstring) > 0 ) {
+	echo 'SET VARIABLE huntgroup_dial ' . gs_agi_str_esc($dialstring) . "\n";
+	_no_more_routes($idx);
+	die();
+} else {
+	_no_more_routes($idx);
+}
+
+?>

@@ -36,6 +36,7 @@ ob_implicit_flush(1);
 
 
 $ext  = trim(@$argv[1]);
+$is_huntgroup  = trim(@$argv[2]);
 
 if (! $ext) {
 	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('') ."\n";
@@ -68,6 +69,16 @@ function get_at_dial( $host_id )
 
 
 $db = gs_db_slave_connect();
+
+# is it a hunt group?
+#
+if ($is_huntgroup != 1) {
+  $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `huntgroups` WHERE `number`=\''. $db->escape($ext) .'\'' );
+  if ($num > 0) {
+	  echo 'SET VARIABLE __exttype '. gs_agi_str_esc('huntgroup') ."\n";
+	  die();
+  }
+}
 
 # is it a user?
 #
