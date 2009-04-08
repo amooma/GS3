@@ -132,6 +132,7 @@ macro dial-internal-nobody-self( mext3 ) {
 	Verbose(1,### Incoming call to ${mext3} at this node);
 	if ("${user_id}" != "") {
 		// from internal user, store dial log (out)
+		AGI(/opt/gemeinschaft/dialplan-scripts/get_callerid.agi,${CALLERID(num)},internal);
 		&dial-log-store(${user_name},out,${mext3});
 	}
 	&set-callerid-by-clir();
@@ -257,6 +258,9 @@ context to-internal-users {
 		&check-valid-extension(${EXTEN});
 		if ("${dial_to_node}" = "") {
 			Verbose(1,### Extension ${EXTEN} is at node: SELF);
+			if ("${user_id}" != "") {
+				AGI(/opt/gemeinschaft/dialplan-scripts/get_callerid.agi,${CALLERID(num)},internal);
+			}
 			goto to-internal-users-self|${EXTEN}|1;
 		}
 		else {
