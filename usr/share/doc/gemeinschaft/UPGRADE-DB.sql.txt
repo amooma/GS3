@@ -645,6 +645,7 @@ ALTER TABLE `routes`
 
 --
 -- Add new column `queue_id` in table `dial_log`
+--
 
 ALTER TABLE `dial_log`
   ADD `queue_id` `queue_id` int(10) unsigned default NULL;
@@ -655,9 +656,61 @@ ALTER TABLE `dial_log`
   FOREIGN KEY (`queue_id`)
   REFERENCES `ast_queues` (`_id`);
 
+
+--
+-- Rename old table `users_outbound_numbers` to `users_callerids`
+--
+
+RENAME `users_outbound_numbers` TO `users_callerids`;
+
+--
+-- Create new table `users_callerids` if it does not exist
+--
+
+CREATE TABLE IF NOT EXISTS `users_callerids` (
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `number` varchar(25) character set ascii NOT NULL,
+  `dest` enum('internal','external') character set ascii NOT NULL default 'external',
+  `selected` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`user_id`,`number`,`dest`),
+  CONSTRAINT `users_callerids_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 --
 -- Add new column `pb_hide` in table `users`:
 --
 
-ALTER TABLE `users` ADD
-  `pb_hide` tinyint(1) unsigned NOT NULL default '0' AFTER `prov_param_profile_id`;
+ALTER TABLE `users` 
+  ADD `pb_hide` tinyint(1) unsigned NOT NULL default '0' AFTER `prov_param_profile_id`;
+
+--
+-- Add new column `read` in table `dial_log`
+--
+
+ALTER TABLE `dial_log`
+  ADD `read` tinyint(1) unsigned NOT NULL default '0';
+
+--
+-- Add new column `dnd` in table `users`
+--
+
+ALTER TABLE `users`
+  ADD `dnd` tinyint(1) unsigned NOT NULL default '0' AFTER `prov_param_profile_id`;
+
+--
+-- Remove table `queue_dial_log`
+--
+
+DROP TABLE IF EXISTS `queue_dial_log`;
+
+--
+-- Remove table `queue_dial_log`
+--
+
+DROP TABLE IF EXISTS `users_outbound_numbers`;
+
+--
+-- Remove table `queue_dial_log`
+--
+
+DROP TABLE IF EXISTS `volumes`;
