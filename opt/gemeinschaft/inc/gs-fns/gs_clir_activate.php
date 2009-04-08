@@ -28,7 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
-
+include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 /***********************************************************
 *    (de)activates CLIR for a user for calls to
@@ -70,6 +70,12 @@ function gs_clir_activate( $user, $dest, $active )
 	$ok = $ok && $db->execute( 'UPDATE `clir` SET `'. $field .'`=\''. $active .'\' WHERE `user_id`='. $user_id );
 	if (! $ok)
 		return new GsError( 'Failed to set CLIR.' );
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+		if (! $user_name)
+			return new GsError( 'Unknown user.' );
+		gs_buttondeamon_clir_update($user_name);
+	}
 	return true;
 }
 

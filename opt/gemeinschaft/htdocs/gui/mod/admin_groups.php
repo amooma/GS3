@@ -32,6 +32,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_groups_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_group_change.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_group_del.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -83,6 +84,10 @@ if ($action === 'save') {
 		}
 	}
 	
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		gs_buttondeamon_usergroups_update();
+	}
+	
 	$action = '';  # view
 }
 #####################################################################
@@ -99,6 +104,10 @@ if ($action === 'delete') {
 		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Gruppe konnte nicht gel&ouml;scht werden.') ,'</div>',"\n";
+	}
+	
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		gs_buttondeamon_usergroup_remove( $group_id );
 	}
 	
 	$action = '';  # view

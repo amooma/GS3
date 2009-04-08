@@ -30,6 +30,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );  # for utf8_json_quote()
 if (! isSet($is_user_profile)) {
 	echo 'Error.';
@@ -87,6 +88,21 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 }
 */
 
+$key_astbuttond = array( 
+	'diversion'  => __('Umleitung'),              		# Umleitung
+	'diversion_intern'	=> __('Umleitung intern'),		# Umleitung itern
+	'diversion_extern'	=> __('Umleitung extern'),		# Umleitung extern
+	'queue'  		=> __('An/Abmelden Warteschlange'),	# Queue an/abmelden 
+	'agent'  		=> __('An/Abmelden Agent'),		# Agent an/abmelden 
+	'agent_paused' 		=> __('Agentenpause'),			# Agentenpause ein/aus
+	'clip_intern' 		=> __('CLIP intern'),			# CLIP intern
+	'clip_extern' 		=> __('CLIP extern'),			# CLIP extern
+	'clir_intern' 		=> __('CLIR intern'),			# CLIR intern
+	'clir_extern' 		=> __('CLIR extern'),			# CLIR extern
+	'url' 			=> __('URL')				# CLIR extern
+
+);
+
 
 $key_functions_snom = array(
 	'none'  => __('Leer'),              # none
@@ -95,12 +111,18 @@ $key_functions_snom = array(
 	'blf'   => __('BLF'),               # BLF
 	'line'  => __('Leitung'),           # line
 );
+
+if ( GS_BUTTONDAEMON_USE == true ) {
+	$key_functions_snom = array_merge( $key_functions_snom, $key_astbuttond);
+}
+
 $key_function_none_snom = 'none';
 $key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_SNOM_PROV_KEY_BLACKLIST'));
 foreach ($key_functions_blacklist as $keyfn) {
 	if (array_key_exists($keyfn, $key_functions_snom))
 		unset($key_functions_snom[$keyfn]);
 }
+
 
 $key_functions_siemens = array(
 	'f0'  => __('Leer'),                  # clear
@@ -340,6 +362,13 @@ if ($action === 'save' || $action === 'save-and-resync') {
 		}
 	}
 	
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		if (  $is_user_profile)
+			gs_buttondeamon_reload_keys($_SESSION['sudo_user']['info']['ext']);
+		else
+			gs_buttondeamon_softkeyprofile_update ( $profile_id );
+	}
+	
 	$action = '';  # view
 }
 #####################################################################
@@ -386,6 +415,9 @@ if ($action === 'delete') {
 						'`is_user_profile`='. (int)$is_user_profile );
 			}
 		}
+	}
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		gs_buttondeamon_softkeyprofile_remove( $profile_id );
 	}
 	
 	$action = '';  # view

@@ -665,8 +665,14 @@ psetting('ringer_headset_device', 'speaker');  # Klingeltonausgabe bei Kopfhoere
 #  Behavior
 #####################################################################
 
-psetting('callpickup_dialoginfo'  , 'on' );
-psetting('show_xml_pickup'        , 'on' );
+if ( GS_BUTTONDAEMON_USE == true ) {
+	psetting('callpickup_dialoginfo'  , 'off' );
+	psetting('show_xml_pickup'        , 'off' );
+} else {
+	psetting('callpickup_dialoginfo'  , 'on' );
+	psetting('show_xml_pickup'        , 'on' );
+}
+                                
 psetting('show_name_dialog'       , 'off');
 psetting('ringing_time'           , '500');  # wird im Dialplan begrenzt
 psetting('block_url_dialing'      , 'on' );  # nur Ziffern erlauben
@@ -713,19 +719,26 @@ psetting('max_boot_delay'         , '0'  );  # ? in seconds, default: 0
 psetting('mailbox_active'         , 'off');  # pay attention to the mailbox of the
                                              # active identity only?
 psetting('speaker_dialer'         , 'on' );
+if ( GS_BUTTONDAEMON_USE == false ) {
 psetting('no_dnd'                 , 'off');
 $dnd_mode = 'off';
-$cf = gs_callforward_get( $user['user'] );
-if (! isGsError($cf) && is_array($cf)) {
-	if ( @$cf['internal']['always']['active'] != 'no'
-	  || @$cf['external']['always']['active'] != 'no' )
-	{
-		$dnd_mode = 'on';  //FIXME - bad hack!
+	$cf = gs_callforward_get( $user['user'] );
+	if (! isGsError($cf) && is_array($cf)) {
+		if ( @$cf['internal']['always']['active'] != 'no'
+	 	 || @$cf['external']['always']['active'] != 'no' )
+	 	{
+			$dnd_mode = 'on';  //FIXME - bad hack!
+		}
 	}
+	psetting('dnd_mode'               , $dnd_mode, true);
+	psetting('dnd_on_code'            , 'dnd-on');
+	psetting('dnd_off_code'           , 'dnd-off');
 }
-psetting('dnd_mode'               , $dnd_mode, true);
-psetting('dnd_on_code'            , 'dnd-on');
-psetting('dnd_off_code'           , 'dnd-off');
+else {
+	psetting('no_dnd'                 , 'on');
+	psetting('dnd_on_code'            , '');
+	psetting('dnd_off_code'           , '');
+}
 psetting('preselection_nr'        , '');
 
 
@@ -827,7 +840,7 @@ setting('user_pass'          ,$i, $user['secret']);
 //setting('user_hash'          ,$i, md5($user_ext .':'. 'asterisk' .':'. $user['secret']));
 setting('user_realname'      ,$i, $user['callerid']);
 setting('user_idle_text'     ,$i, $user_ext .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
-setting('record_missed_calls'  ,$i, 'on' );
+setting('record_missed_calls'  ,$i, 'off' );
 setting('record_dialed_calls'  ,$i, 'off');
 setting('record_received_calls',$i, 'off');
 
@@ -903,7 +916,12 @@ psetting('dkey_snom'     , 'keyevent F_SNOM'      );
 psetting('dkey_conf'     , 'keyevent F_CONFERENCE');
 psetting('dkey_transfer' , 'keyevent F_TRANSFER'  );
 psetting('dkey_hold'     , 'keyevent F_R'         ); # or F_HOLD
-psetting('dkey_dnd'      , 'keyevent F_DND'       );
+if ( GS_BUTTONDAEMON_USE == true ) {
+	psetting('dkey_dnd'      ,  'url '. $prov_url_snom .'dnd.php?t=1&m=$mac&u=$user_name1'    );
+}
+else {
+	psetting('dkey_dnd'      , 'keyevent F_DND'       );
+}
 psetting('dkey_record'   , 'keyevent F_REC'       );
 psetting('dkey_directory', 'keyevent F_ADR_BOOK'  ); # or F_DIRECTORY
 psetting('dkey_menu'     , 'url '. $prov_url_snom .'menu.php?m=$mac&u=$user_name1' );
@@ -931,7 +949,12 @@ if ($phone_model == '300') {
 }
 */
 for ($i=0; $i<=$max_key; ++$i) {
-	setting('fkey'        , $i, 'line', array('context'=>'active'));
+        if ( GS_BUTTONDAEMON_USE == false ) {
+        	setting('fkey'        , $i, 'line', array('context'=>'active'));
+        }
+        else{
+		setting('fkey'        , $i, 'button ' . ($i+1), array('context'=>'active'));
+	}
 	//setting('fkey_context', $i, 'active');
 }
 
@@ -971,6 +994,10 @@ while ($r = $rs->fetchRow()) {
 }
 */
 
+
+//keys not  to rewrite for the astbuttond
+$nativekeys = Array( 'line' );
+
 $softkeys = null;
 $GS_Softkeys = gs_get_key_prov_obj( $phone_type );
 if ($GS_Softkeys->set_user( $user['user'] )) {
@@ -997,7 +1024,17 @@ if (! is_array($softkeys)) {
 		}
 		$key_idx = (int)lTrim(subStr($key_name,1),'0');
 		if ($key_idx > $max_key) continue;
-		setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
+		//if we want to use the AstButtond we have to rewrite some keys
+		if ( GS_BUTTONDAEMON_USE == false ) {
+			setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
+		}
+		else {
+			if ( in_array( $key_def['function'], $nativekeys , true))
+				setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
+			else
+				setting('fkey', $key_idx, 'button  ' . ($key_idx + 1) , array('context'=>'active'));
+		}
+	
 	}
 }
 

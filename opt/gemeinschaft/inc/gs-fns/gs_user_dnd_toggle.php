@@ -2,13 +2,13 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 4088 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-*
-* Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
 * 
+* Author: Andreas Neugebauer <neugebauer@loca.net>
+*
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -26,22 +26,17 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+
+require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
-
 /***********************************************************
-*    set a callerid for a user
+*    sets a user's PIN
 ***********************************************************/
 
-function gs_user_callerid_set( $user, $number = "", $dest )
+function gs_user_dnd_toggle( $user_id )
 {
-	if (! preg_match( '/^[a-zA-Z\d\-]+$/', $user ))
-		return new GsError( 'User must be alphanumeric.' );
-	if (! preg_match( '/^[\d]+$/', $number ) && $number != "")
-		return new GsError( 'Number must be numeric.' );
-	if ($dest != 'internal' && $dest != 'external')
-		return new GsError( 'No destination.' );
 	
 	# connect to db
 	#
@@ -51,30 +46,29 @@ function gs_user_callerid_set( $user, $number = "", $dest )
 	
 	# get user_id
 	#
-	$user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
-	if ($user_id < 1)
+	
+	$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+	if (! $user_name)
 		return new GsError( 'Unknown user.' );
 	
-	# add number
+	$dnd = $db->executeGetOne( 'SELECT `dnd` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
+	        if (! $user_id)
+	                        return new GsError( 'Unknown dnd-set.' );
+	
+	# toggle-dnd
 	#
-	$ok = $db->execute( 'UPDATE `users_callerids` SET `selected` = 0 WHERE `user_id`='. $user_id . ' AND `dest`=\'' . $db->escape($dest) . '\'' );
+	$new_dnd = 0;
+	if($dnd == 0)$new_dnd = 1;
+	
+	$ok = $db->execute( 'UPDATE `users` SET `dnd`='. $db->escape($new_dnd) . ' WHERE `id`='. $user_id );
 	if (! $ok)
-		return new GsError( 'Failed to set callerid unselected.' );
-	
-	if ($number != "") {	
-		$ok = $db->execute( 'UPDATE `users_callerids` SET `selected` = 1 WHERE `user_id`=' . $user_id .' AND `dest`=\'' . $db->escape($dest) . '\' AND  `number` =\'' .  $db->escape($number) . '\'');
-		if (! $ok)
-			return new GsError( 'Failed to set callerid.' );	
-	}	
-	
-        if ( GS_BUTTONDAEMON_USE == true ) {
-        	$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
-        	if (! $user_name)
-        		return new GsError( 'Unknown user.' );
-		gs_buttondeamon_clip_update($user_name);
+		return new GsError( 'Failed to toggle dnd.' );
+	else{
+		if ( GS_BUTTONDAEMON_USE == true ) {
+			gs_buttondeamon_dnd_update($user_name);
+		}
 	}
-
-	return true;
+	return $new_dnd;
 }
 
 

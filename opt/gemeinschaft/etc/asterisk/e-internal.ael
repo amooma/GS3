@@ -138,7 +138,7 @@ macro dial-internal-nobody-self( mext3 ) {
 	}
 	&set-callerid-by-clir();
 	Verbose(1,### Call local nobody ${mext3}\, timeout 30);
-	Dial(SIP/${mext3},30);
+	Dial(SIP/${mext3},30,o);
 	&hangup-proper-status();
 }
 
@@ -302,16 +302,24 @@ context to-internal-users {
 	// Pickup for single users
 	//----------------------------------------------------------
 	
+
 	_*81*. => {
-		Set(pext=${EXTEN:4});
+ 		Set(pext=${EXTEN:4});
 		if ("${pext}" != "") {
-			Verbose(1,### User ${user_name} tries to pickup ext. ${pext});
-			//FIXME - add pickup group check
-			Pickup(${pext}@to-internal-users-self);
-			//FIXME - does not work across nodes
+ 			Verbose(1,### User ${user_name} tries to pickup ext. ${pext});
+ 			&check-valid-extension(${EXTEN:4});
+			if ("${dial_to_node}" = "") {
+				Verbose(1,### Extension ${EXTEN} is at node: SELF);
+				PickupChan(SIP/${pext});
+			}
+			else {
+				&dial-node(${EXTEN}@${dial_to_node});
+				&hangup-proper-status();
+			}
 		}
 	}
-	
+
+
 	//----------------------------------------------------------
 	// Pickup for pickup group extensions
 	//----------------------------------------------------------
@@ -470,7 +478,21 @@ context to-internal-users-self {
 	
 	// in this context it is guaranteed that the called extension is at
 	// the local node
+
+	//----------------------------------------------------------
+	// Pickup
+	//----------------------------------------------------------
 	
+	_*81*. => {
+		Set(pext=${EXTEN:4});
+		if ("${pext}" != "") {
+			Verbose(1,### User ${user_name} tries to pickup ext. ${pext});
+			PickupChan(SIP/${pext});
+                }
+        }
+
+
+
 	//----------------------------------------------------------
 	// Boss/secretary function (override call forwards)
 	//----------------------------------------------------------
@@ -789,7 +811,18 @@ context to-internal-users-self {
 			else {
 				Verbose(1,### Call local user ${EXTEN}\, timeout: none);
 			}
-			Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout});
+
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-dnd.agi,${EXTEN});
+			if ("${dnd_active}" = "1") {
+				Set(DIALSTATUS="BUSY");
+				if ("${is_huntgroup}" = "1") {
+					Verbose(1,### DND active in huntgroup - skipping member);
+					Hangup();
+				}
+			}
+			else {
+				Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},o);
+			}
 			
 			if ("${is_callfile_origin}" != "1") {
 				Set(is_dnd=0);

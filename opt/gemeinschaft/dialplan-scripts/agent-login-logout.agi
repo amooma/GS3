@@ -30,6 +30,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_activate.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -149,7 +150,9 @@ elseif ($action === 'logoutall') {
 	echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('loggedout') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	$db->execute( 'UPDATE `agents` SET `user_id`=0,`paused`=0 WHERE `id`='. $agent_id );
-	
+	if(gs_get_conf('GS_BUTTONDAEMON_USE')){
+		gs_buttondeamon_queue_update( $user, "*" , "off");
+	}
 }
 
 

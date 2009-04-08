@@ -130,6 +130,7 @@ macro cmm-login( new_user_name ) {
 		goto unknown;
 	
 	//Playback(agent-loginok);
+	UserEvent(UserLoginUI|user: ${new_user_name});
 	Playback(/opt/gemeinschaft/sounds/de-DE/sie-sind-jetzt-angemeldet);
 	Playback(/opt/gemeinschaft/sounds/de-DE/bitte-warten-sie);
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${new_user_name}');
@@ -179,6 +180,7 @@ macro cmm-logout() {
 	Wait(0.5);
 	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id},${is_from_gateway},${CALLERID(num)});
 	//Playback(agent-loggedoff&vm-goodbye);
+	UserEvent(UserLogoffUI|user: ${user_name});
 	Playback(/opt/gemeinschaft/sounds/de-DE/sie-sind-abgemeldet);
 	Playback(/opt/gemeinschaft/sounds/de-DE/bitte-warten-sie);
 	if ("${user_name}" != "") {
@@ -233,6 +235,7 @@ macro agent-login( new_user_name ) {
 	//we will first have to log off the agent from the phone he is registered at, if there is any
 	if("${old_user}"  != "") {
         AGI(/opt/gemeinschaft/dialplan-scripts/agent-login-logout.agi,${old_user},${new_user_name},logoutall);
+		UserEvent(QueueLogoffUI|user: ${old_user}|queue: *);
 		for(i=0;${i} < ${oqueue_count}; i=${i} + 1){
 			queueNr=${oqueue${i}};
 			System(echo  "${EPOCH}|${UNIQUEID}|${queueNr}|Local/${new_user_name}@agents|REMOVEMEMBER|-" >> /var/log/asterisk/queue_log );
@@ -243,6 +246,7 @@ macro agent-login( new_user_name ) {
 
 	if("${old_local_agent}" != ""){
 		AGI(/opt/gemeinschaft/dialplan-scripts/agent-login-logout.agi,${user_name},${old_local_agent},logoutall);
+		UserEvent(QueueLogoffUI|user: ${user_name}|queue: *);
 		for(i=0;${i} < ${oqueue_count}; i=${i} + 1){
 			queueNr=${oqueue${i}};
 			System(echo  "${EPOCH}|${UNIQUEID}|${queueNr}|Local/${old_local_agent}@agents|REMOVEMEMBER|-" >> /var/log/asterisk/queue_log );
@@ -268,6 +272,7 @@ macro agent-login( new_user_name ) {
 		UserEvent(AgentLoginUI|agent: ${new_user_name}|user: ${user_name});
 		for(i=0;${i} < ${queue_count}; i=${i} + 1){
 			queueNr=${queue${i}};
+			UserEvent(QueueLoginUI|user: ${user_name}|queue: ${queueNr});
 			System(echo "${EPOCH}|${UNIQUEID}|${queueNr}|Local/${new_user_name}@agents|ADDMEMBER|-" >> /var/log/asterisk/queue_log );
 		} 
 
@@ -311,6 +316,7 @@ macro agent-logout() {
 		
 		UserEvent(AgentLogoffUI|agent: ${agent});
 		AGI(/opt/gemeinschaft/dialplan-scripts/agent-login-logout.agi,${user_name},${old_local_agent},logoutall);
+		UserEvent(QueueLogoffUI|user: ${user_name}|queue: *);
 		for(i=0;${i} < ${oqueue_count}; i=${i} + 1){
 			queueNr=${oqueue${i}};
 			System(echo  "${EPOCH}|${UNIQUEID}|${queueNr}|Local/${agent}@agents|REMOVEMEMBER|-" >> /var/log/asterisk/queue_log );
@@ -602,6 +608,7 @@ macro queue-login( queue ) {
 	Verbose(1,### agent_login_status: ${agent_login_status});
 	Wait(0.5);
 	if ("${agent_login_status}" = "loggedin" || "${agent_login_status}" = "alreadyon") {
+		UserEvent(QueueLoginUI|user: ${user_name}|queue: ${queue});
 		Playback(agent-loginok);
 	} else {
 		Playback(beeperr);
@@ -621,6 +628,7 @@ macro queue-logout( queue ) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},logout);
 	Wait(0.5);
 	if ("${agent_login_status}" = "loggedout") {
+		UserEvent(QueueLogoffUI|user: ${user_name}|queue: ${queue});
 		Playback(agent-loggedoff);
 	} else {
 		Playback(beeperr);
@@ -640,6 +648,7 @@ macro queue-logout-all() {
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},0,logoutall);
 	Wait(0.5);
 	if ("${agent_login_status}" = "loggedout") {
+		UserEvent(QueueLogoffUI|user: ${user_name}|queue: *);
 		Playback(agent-loggedoff);
 	} else {
 		Playback(beeperr);
@@ -656,6 +665,7 @@ macro queue-logout-all-silent() {
 	Set(CDR(amaflags)=OMIT);
 	Verbose(1,### User ${user_name} wants to log out from all queues);
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},0,logoutall);
+	UserEvent(QueueLogoffUI|user: ${user_name}|queue: *);
 }
 context queues-login-logout {
 	

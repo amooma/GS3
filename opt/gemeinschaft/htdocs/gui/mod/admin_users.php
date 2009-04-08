@@ -40,6 +40,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callblocking_set.php' );
 require_once( GS_DIR .'inc/boi-soap/boi-api.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -224,6 +225,10 @@ if ($action === 'save') {
 				if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 			}
 		}
+		if ( GS_BUTTONDAEMON_USE == true ) {
+			$user = gs_user_get($edit_user);
+			gs_buttondeamon_group_update($user['ext']);
+		}
 	}
 	
 	if ($u_grp_ed && $edit_user) {
@@ -232,6 +237,11 @@ if ($action === 'save') {
 				'`group_id`='. ($u_grp_id > 0 ? $u_grp_id : 'NULL') .' '.
 			'WHERE `user`=\''. $DB->escape($edit_user) .'\'';
 		$ok = $DB->execute($query);
+		if ( GS_BUTTONDAEMON_USE == true ) {
+			if (! isset($user['ext']) )
+				$user = gs_user_get($edit_user);
+			gs_buttondeamon_user_usergroupgroup_update($user['ext']);
+		}
 	}
 	
 	if ($bp_add_h > 0 && $edit_user) {
@@ -691,7 +701,7 @@ WHERE
 	
 	$boi_api = ($hid > 0) ? gs_host_get_api($hid) : '__fail_api';
 	
-	
+if ( GS_BUTTONDAEMON_USE == false ) {	
 	$sql_query =
 'SELECT `p`.`id`, `p`.`title`, `u`.`host_id`
 FROM
@@ -702,6 +712,18 @@ WHERE
 	`u`.`host_id` = '.$r['hid'].' OR
 	`u`.`host_id` IS NULL
 GROUP BY `p`.`id`';
+}
+else {
+
+	$sql_query =
+'SELECT `p`.`id`, `p`.`title`, `u`.`host_id`
+FROM
+	`pickupgroups` `p` LEFT JOIN
+	`pickupgroups_users` `pu` ON (`p`.`id`=`pu`.`group_id`) LEFT JOIN
+	`users` `u` ON (`u`.`id`=`pu`.`user_id`)
+GROUP BY `p`.`id`';
+
+}
 	
 	$rs = $DB->execute($sql_query);
 	$pgroups = array();

@@ -2,7 +2,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 1873 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -27,41 +27,16 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
-include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
-require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
 
 /***********************************************************
-*    deletes a user group
+*    sets a user's comment
 ***********************************************************/
 
-function gs_group_del( $id )
+function gs_user_watchedmissed(  $user_id )
 {
-	$id = (int)$id;
-	if ($id < 1)
-		return new GsError( 'Invalid group ID.' );
-	
-	$DB = gs_db_master_connect();
-	if (! $DB)
-		return new GsError( 'Could not connect to database.' );
-	
-	$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
-	if ( GS_BUTTONDAEMON_USE == false ) {
-		return $mptt->delete( $id, true );
-	}
-	else {
-		$ret = $mptt->delete( $id, true );
-		if ( !isGsError($ret) && $ret ) {
-			gs_buttondeamon_usergroup_remove( $id );
-		}
-	}	
-}
-
-function gs_group_del_by_name( $group )
-{
-	if (! preg_match( '/^[a-z0-9\-_]+$/', $group ))
-		return new GsError( 'Group must be alphanumeric.' );
+	//if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	//	return new GsError( 'User must be alphanumeric.' );
 	
 	# connect to db
 	#
@@ -69,11 +44,19 @@ function gs_group_del_by_name( $group )
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
 	
-	$group_id = (int)$db->executeGetOne( 'SELECT `id` FROM `user_groups` WHERE `name`=\''. $db->escape($group) .'\'' );
-	if ($group_id < 1)
-		return new GsError( 'Unknown group.' );
+	# get user_id
+	#
+	//$user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
+	//if (! $user_id)
+	//	return new GsError( 'Unknown user.' );
 	
-	return gs_group_del( $group_id );
+	# set comment
+	#
+	$ok = $db->execute( 'UPDATE `dial_log` SET `read`= 1 WHERE `read`=0 AND `user_id`='. $user_id );
+	if (! $ok)
+		return new GsError( 'Failed to set update missed calles.' );
+	return true;
 }
+
 
 ?>

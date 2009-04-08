@@ -36,6 +36,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_email_notify_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -135,6 +136,10 @@ if (@$_REQUEST['action']==='save') {
 		$ret = gs_user_email_notify_set( $_SESSION['sudo_user']['name'], $email_notify );
 		if (isGsError($ret))
 			$warnings['vm_email_n'] = __('Fehler beim (De-)Aktivieren der E-Mail-Benachrichtigung') .' ('. $ret->getMsg() .')';
+	}
+	
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		gs_buttondeamon_diversion_update( $_SESSION['sudo_user']['info']['ext']);
 	}
 	
 }

@@ -33,6 +33,8 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -203,6 +205,12 @@ LIMIT 20';
 	echo
 		"\n",
 		'</SnomIPPhoneDirectory>';
+	if ( $type == 'missed') {
+	 	gs_user_watchedmissed( $user_id );
+	}
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		gs_buttondeamon_missedcalls( $user);
+	}
 	
 }
 #################################### DIAL LOG }

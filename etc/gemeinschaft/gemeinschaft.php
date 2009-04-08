@@ -517,6 +517,23 @@ $EMAIL_DELIVERY         = 'sendmail';
   #                  via SMTP
 
 
+/***********************************************************
+*    Astbuttond
+*
+*       The username of asterisk manager interface
+*       is always "astbuttond" for the buttondamon
+*
+***********************************************************/
+
+$BUTTONDAEMON_USE       = true;
+# do we want to use the Astbuttond instead of normal subscribtions
+$BUTTONDAEMON_HOST      = '192.168.1.130';
+# the ip, on which the daemon is running
+$BUTTONDAEMON_PORT      = 5041;
+# the Post of the daemons socketserver
+$BUTTONDAEMON_SECRET    ='SecretLocaNetPassword';
+# Needs to be set in the Astbuttonds config, too
+
 
 /***********************************************************
 *    PHONEBOOK

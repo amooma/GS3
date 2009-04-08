@@ -328,6 +328,11 @@ _gscnf( 'USERCOMMENT_OFFTIME'       , 'Feierabend'       );
 _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i'              );
 _gscnf( 'EMAIL_DELIVERY'            , 'sendmail'         );
 _gscnf( 'USER_SELECT_CALLERID'      , false		 );
+#Variables for the Astbuttond
+_gscnf( 'BUTTONDAEMON_USE'            , false           );
+_gscnf( 'BUTTONDAEMON_HOST'            , '127.0.0.1'    );
+_gscnf( 'BUTTONDAEMON_PORT'            , 5041           );
+_gscnf( 'BUTTONDAEMON_SECRET'            , 'SecretLocaNetPassword' );
 
 # to communicate with HylaFax ftp_raw() is required, which is not
 # available in PHP < 5

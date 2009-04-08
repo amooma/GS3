@@ -30,6 +30,7 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -101,6 +102,11 @@ if ($action === 'login') {
 	$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`) VALUES (\''. $db->escape($queue_name) .'\', '. $queue_id .', \''. $db->escape( 'SIP/'. $user ) .'\', '. $user_id .')' );
 	echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('loggedin') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+
+	if(gs_get_conf('GS_BUTTONDAEMON_USE')){
+		gs_buttondeamon_diversion_update($user);
+		gs_buttondeamon_queue_update( $user, $queue_name, "on");
+	}
 	
 }
 elseif ($action === 'logout') {
@@ -108,6 +114,9 @@ elseif ($action === 'logout') {
 	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_queue_id`='. $queue_id .' AND `_user_id`='. $user_id );
 	echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('loggedout') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	if(gs_get_conf('GS_BUTTONDAEMON_USE')){
+		gs_buttondeamon_queue_update( $user, $queue_name, "off");
+	}
 	
 }
 elseif ($action === 'logoutall') {
@@ -115,6 +124,9 @@ elseif ($action === 'logoutall') {
 	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_user_id`='. $user_id );
 	echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('loggedout') ."\n";
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	if(gs_get_conf('GS_BUTTONDAEMON_USE')){
+		gs_buttondeamon_queue_update( $user, "*" , "off");
+	}
 	
 }
 

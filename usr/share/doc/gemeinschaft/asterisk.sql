@@ -5790,6 +5790,7 @@ CREATE TABLE `dial_log` (
   `remote_name` varchar(50) collate utf8_unicode_ci NOT NULL default '',
   `remote_user_id` int(10) unsigned default NULL,
   `queue_id` int(10) unsigned default NULL,
+  `read` tinyint(1) unsigned NOT NULL default '0',
   KEY `timestamp` (`timestamp`),
   KEY `user_timestamp` (`user_id`,`timestamp`),
   KEY `user_type_number_timestamp` (`user_id`,`type`,`number`(10),`timestamp`),
@@ -6635,6 +6636,7 @@ CREATE TABLE `users` (
   `group_id` mediumint(8) unsigned default NULL,
   `softkey_profile_id` int(10) unsigned default NULL,
   `prov_param_profile_id` int(10) unsigned default NULL,
+  `dnd` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `user` (`user`),
   KEY `lastname_firstname` (`lastname`(15),`firstname`(15)),
@@ -6657,23 +6659,23 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (8,'nobody-00004','','','','','',4,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (9,'nobody-00005','','','','','',5,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (10,'nobody-00006','','','','','',6,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (11,'nobody-00007','','','','','',7,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (22,'hans','123','Hans','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (23,'peter','123','Peter','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (24,'anna','123','Anna','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (25,'lisa','123','Lisa','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (29,'nobody-00012','','','','','',12,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,NULL,'',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (8,'nobody-00004','','','','','',4,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (9,'nobody-00005','','','','','',5,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (10,'nobody-00006','','','','','',6,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (11,'nobody-00007','','','','','',7,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (22,'hans','123','Hans','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (23,'peter','123','Peter','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (24,'anna','123','Anna','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (25,'lisa','123','Lisa','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (29,'nobody-00012','','','','','',12,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,NULL,'',NULL,NULL,NULL,0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
