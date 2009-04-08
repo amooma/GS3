@@ -844,7 +844,6 @@ context to-gateway {
 			//DumpChan();
 			&dial-log-store(${user_name},out,${EXTEN},0);
 		}
-		AGI(/opt/gemeinschaft/dialplan-scripts/get_callerid.agi,${user_name},external);
 		&dial-gateway(${gateway_prefix}${EXTEN:1});
 	}
 	//_X. => &dial-gateway(${EXTEN});
@@ -860,6 +859,7 @@ macro dial-gateway-do( mnumber ) {
 		Set(zone=internal);
 	}
 	if ("${user_id}" != "") {
+		AGI(/opt/gemeinschaft/dialplan-scripts/get_callerid.agi,${user_name},${zone});
 		if ("${clir}" = "" ) {
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-${zone}.agi,${user_id});
 		}
@@ -874,7 +874,7 @@ macro dial-gateway-do( mnumber ) {
 		}
 	}
 	
-	AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi,${mnumber},${is_sub_system},${CALLERID(num)},${user_id});
+	AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi,${mnumber},${is_sub_system},${user_name},${user_id});
 	Set(no_route=1);
 	Set(r=1);
 	while ("${r_${r}_dial}" != "") {
