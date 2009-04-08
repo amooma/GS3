@@ -198,11 +198,11 @@ if ($action === 'save') {
 		$ret = gs_user_external_number_add( $edit_user, $extnum );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	}
-	if ($callerid_ext) {
+	if ( strlen($callerid_ext) > 0 ) {
 		$ret = gs_user_callerid_add( $edit_user, $callerid_ext, 'external' );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	}
-	if ($callerid_int) {
+	if ( strlen($callerid_int) > 0 ) {
 		$ret = gs_user_callerid_add( $edit_user, $callerid_int, 'internal' );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	}
