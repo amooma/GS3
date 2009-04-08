@@ -34,6 +34,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_change.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_del.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_del.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_del.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callblocking_set.php' );
 require_once( GS_DIR .'inc/boi-soap/boi-api.php' );
@@ -88,6 +90,12 @@ $cbpin       = trim(@$_REQUEST['cbpin'    ]);
 
 $extnum      = trim(@$_REQUEST['extnum'   ]);
 $extnumdel   = trim(@$_REQUEST['extndel'  ]);
+
+$callerid_ext      = trim(@$_REQUEST['callerid_ext'   ]);
+$calleriddel_ext   = trim(@$_REQUEST['calleriddel_ext']);
+
+$callerid_int      = trim(@$_REQUEST['callerid_int'   ]);
+$calleriddel_int   = trim(@$_REQUEST['calleriddel_int']);
 
 $u_pgrps     =      @$_REQUEST['u_pgrps'  ] ;
 $u_pgrp_ed   =      @$_REQUEST['u_pgrp_ed'] ;
@@ -147,6 +155,14 @@ if ($action === 'edit') {
 		$ret = gs_user_external_number_del( $edit_user, $extnumdel );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	}
+	if ($calleriddel_ext) {
+		$ret = gs_user_callerid_del( $edit_user, $calleriddel_ext, 'external' );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	if ($calleriddel_int) {
+		$ret = gs_user_callerid_del( $edit_user, $calleriddel_int, 'internal' );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
 	if ($bp_del_h > 0) {
 		$uid = (int)$DB->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape($edit_user) .'\'' );
 		if ($uid > 0) {
@@ -181,6 +197,15 @@ if ($action === 'save') {
 		$ret = gs_user_external_number_add( $edit_user, $extnum );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	}
+	if ($callerid_ext) {
+		$ret = gs_user_callerid_add( $edit_user, $callerid_ext, 'external' );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	if ($callerid_int) {
+		$ret = gs_user_callerid_add( $edit_user, $callerid_int, 'internal' );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	
 	
 	if ($u_pgrp_ed && $edit_user) {
 		$sql_query =
@@ -728,7 +753,25 @@ ORDER BY LENGTH(`number`) DESC';
 			$ext_nums[] = $r_en['number'];
 		}
 	}
-	
+
+	$sql_query =
+'SELECT `number`, `dest`
+FROM `users_callerids`
+WHERE `user_id`='. $r['uid'] .'
+ORDER BY LENGTH(`number`) DESC';
+
+	$rs = $DB->execute($sql_query);
+	$callerids_ext = array();
+	$callerids_int = array();
+	if (@$rs) {
+		while ($r_pg = $rs->fetchRow()) {
+			if($r_pg['dest'] == 'external')
+				$callerids_ext[] = $r_pg['number'];
+			else
+				$callerids_int[] = $r_pg['number'];
+		}
+	}
+			
 	if (gs_get_conf('GS_BOI_ENABLED')) {
 	$sql_query =
 		'SELECT '.
@@ -1063,6 +1106,113 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 ?>
 </tbody>
 </table>
+
+<?php
+if (gs_get_conf('GS_USER_SELECT_CALLERID')) {
+?>
+<br />
+<table cellspacing="1">
+<thead>
+	<tr>
+		<th style="width:180px;">
+			<?php echo __('Angezeigte Rufnummern extern'); ?>
+		</th>
+		<th style="width:217px;">
+			<?php echo __('Rufnummer'); ?>
+		</th>
+		<th style="width:50px;">
+			&nbsp;
+		</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+
+foreach ($callerids_ext as $callerid) {
+	echo "<tr>\n";
+	
+	echo "<td>&nbsp;</td>\n";
+	
+	echo "<td>\n";
+	echo htmlEnt($callerid);	
+	echo "</td>\n";
+	
+	echo "<td>\n";
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'calleriddel_ext='. $callerid .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+	echo "</td>\n";		
+	
+	echo "</tr>\n";
+}
+?>
+<tr>
+	<td>&nbsp;</td>
+
+	<td>
+		<input type="text" name="callerid_ext" value="" size="20" maxlength="40" />	
+	</td>
+
+	<td>
+	</td>
+
+	</form>
+</tr>
+</tbody>
+</table>
+
+<br />
+
+<table cellspacing="1">
+<thead>
+	<tr>
+		<th style="width:180px;">
+			<?php echo __('Angezeigte Rufnummern intern'); ?>
+		</th>
+		<th style="width:217px;">
+			<?php echo __('Rufnummer'); ?>
+		</th>
+		<th style="width:50px;">
+			&nbsp;
+		</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+foreach ($callerids_int as $callerid) {
+	echo "<tr>\n";
+	
+	echo "<td>&nbsp;</td>\n";
+	
+	echo "<td>\n";
+	echo htmlEnt($callerid);	
+	echo "</td>\n";
+	
+	echo "<td>\n";
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'calleriddel_int='. $callerid .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+	echo "</td>\n";		
+	
+	echo "</tr>\n";
+}
+?>
+	<tr>
+		<td>&nbsp;</td>
+
+		<td>
+			<input type="text" name="callerid_int" value="" size="20" maxlength="40" />
+		</td>
+
+		<td>
+		</td>
+
+		</form>
+	</tr>
+</tbody>
+</table>
+
+<br />
+
+<?php
+}
+?>
 
 <?php
 if (gs_get_conf('GS_BOI_ENABLED')) {

@@ -31,6 +31,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_clir_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_clir_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_set.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_callerids_get.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -58,8 +60,22 @@ if (@$_REQUEST['action']=='save') {
 		if ($cw != $cw_old)
 			gs_callwaiting_activate( $_SESSION['sudo_user']['name'], $cw );
 	}
+	if(isset($_REQUEST['callerid_ext'])){
+		$callerid_num = $_REQUEST['callerid_ext'];
+		
+		$ok = gs_user_callerid_set( $_SESSION['sudo_user']['name'], $callerid_num , 'external');
+		if (isGsError( $ok )) echo $ok->getMsg();
+	}
+	if(isset($_REQUEST['callerid_int'])){
+		$callerid_num = $_REQUEST['callerid_int'];
+		
+		$ok = gs_user_callerid_set( $_SESSION['sudo_user']['name'], $callerid_num , 'internal');
+		if (isGsError( $ok )) echo $ok->getMsg();
+	}
 	
 }
+
+
 
 
 
@@ -122,8 +138,58 @@ if (isGsError($callwaiting)) {
 	<td>
 		<small><?php echo __('Das Verhalten ist ggf. von Ihrem Endger&auml;t abh&auml;ngig.'); ?></small>
 	</td>
-</tr>
+	</tr>
 
+<?php
+if ( gs_get_conf( 'GS_USER_SELECT_CALLERID' ) ) {
+	echo "<tr>\n";
+	$numbers =  gs_user_callerids_get( $_SESSION['sudo_user']['name'] );
+	if (isGsError( $numbers )) echo $numbers->getMsg();
+	$sel = " selected";
+	foreach ($numbers as $number) {
+		if ($number['dest'] != 'external') continue;
+		
+		if ($number['selected'] == 1) $sel = "";
+	}                                                                                                 
+	
+	echo "<td>", __('Angezeigte Rufnummer extern') ,"</td>\n";
+	echo "<td>\n";
+	echo '<select name="callerid_ext" size="1">', "\n";
+	echo '<option value= ""',$sel,'>' , __('Standardnummer'),"</option>\n";
+	foreach ($numbers as $number) {
+		if ($number['dest'] != 'external') continue;
+		$sel ="";
+		$num = $number['number'];
+		if ($number['selected'] == 1) $sel =" selected";
+		echo '<option value="',$num,'" ',$sel ,">",$num,"</option>\n";
+	}
+	echo "</select>";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	
+	$sel_int = " selected";
+	foreach ($numbers as $number) {
+		if ($number['dest'] != 'internal') continue;
+		if ($number['selected'] == 1) $sel_int = "";
+	}                                                                                                 
+	
+	echo "<td>", __('Angezeigte Rufnummer intern') ,"</td>\n";
+	echo "<td>\n";
+	echo '<select name="callerid_int" size="1">', "\n";
+	echo '<option value= ""',$sel_int,'>' , __('Standardnummer'),"</option>\n";
+	foreach ($numbers as $number) {
+		if ($number['dest'] != 'internal') continue;
+		$sel_int = "";
+		$num = $number['number'];
+		if ($number['selected'] == 1) $sel_int =" selected";
+		echo '<option value="',$num,'" ',$sel_int ,">",$num,"</option>\n";
+	}
+	echo "</select>";
+	echo "</td>\n";
+	echo "</tr>\n";
+}
+?>
 
 <tr>
 	<td colspan="6" class="quickchars r">

@@ -590,6 +590,7 @@ context to-gateway {
 			//DumpChan();
 			&dial-log-store(${user_name},out,${EXTEN});
 		}
+		AGI(/opt/gemeinschaft/dialplan-scripts/get_callerid.agi,${user_name},external);
 		&dial-gateway(${gateway_prefix}${EXTEN:1});
 	}
 	//_X. => &dial-gateway(${EXTEN});

@@ -132,6 +132,10 @@ function gs_user_del( $user, $reload=true )
 	#
 	$db->execute( 'DELETE FROM `callblocking` WHERE `user_id`='. $user_id );
 	
+	# delete callerids
+	#
+	$db->execute( 'DELETE FROM `users_callerids` WHERE `user_id`='. $user_id );
+	
 	# delete sip account
 	#
 	$db->execute( 'DELETE FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
