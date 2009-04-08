@@ -5398,6 +5398,7 @@ CREATE TABLE `ast_queues` (
   `_host_id` mediumint(8) unsigned NOT NULL default '1',
   `_title` varchar(50) character set utf8 collate utf8_unicode_ci NOT NULL default '',
   `musicclass` varchar(50) character set ascii default NULL,
+  `_sysrec_id` int(10) unsigned NOT NULL default '0',
   `announce` varchar(10) character set ascii default NULL,
   `context` varchar(50) character set ascii default NULL,
   `timeout` smallint(5) unsigned default NULL,
@@ -5435,7 +5436,7 @@ CREATE TABLE `ast_queues` (
 
 LOCK TABLES `ast_queues` WRITE;
 /*!40000 ALTER TABLE `ast_queues` DISABLE KEYS */;
-INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',NULL,NULL,10,'no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','yes',NULL,NULL,NULL,'no',NULL,0,NULL);
+INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',0,NULL,NULL,10,'no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','yes',NULL,NULL,NULL,'no',NULL,0,NULL);
 /*!40000 ALTER TABLE `ast_queues` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6504,6 +6505,21 @@ LOCK TABLES `softkeys` WRITE;
 /*!40000 ALTER TABLE `softkeys` DISABLE KEYS */;
 /*!40000 ALTER TABLE `softkeys` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `systemrecordings`
+--
+
+DROP TABLE IF EXISTS `systemrecordings`;
+CREATE TABLE IF NOT EXISTS `systemrecordings` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `md5hashname` char(32) collate utf8_unicode_ci NOT NULL,
+  `description` varchar(150) collate utf8_unicode_ci NOT NULL,
+  `length` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `md5hashname` (`md5hashname`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Table structure for table `user_groups`

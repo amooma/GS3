@@ -241,6 +241,7 @@ $MODULES['admin'    ]=  array(
 		'pgroups'      => array('title' => __('Rufannahmegrp.#pl')),
 		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse')),
 		//'ivrs'         => array('title' => __('IVRs')),
+		'sysrecs'      => array('title' => __('Audiodateien')),
 		'calls'        => array('title' => __('CDRs')),
 		'reload'       => array('title' => __('Reload'))
 	)

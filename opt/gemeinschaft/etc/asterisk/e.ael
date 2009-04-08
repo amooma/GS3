@@ -212,6 +212,57 @@ context cmm {
 	_*0. => &cmm-login(${EXTEN:2});
 }
 
+//---------------------------------------------------------------------
+//  Recordings
+//---------------------------------------------------------------------
+
+macro rec-playback(id) {
+
+	Answer();
+	Wait(1.0);
+	AGI(/opt/gemeinschaft/dialplan-scripts/sys-rec-getfile,${id});
+	Playback(/opt/gemeinschaft/sys-rec/${md5hashname});
+	Hangup();
+
+}
+
+macro rec-record(extension) {
+
+	Set(filename=/tmp/${UNIQUEID});
+	Set(response=0);
+	Answer();
+	Wait(1.0);
+
+	while ("${response}" != "1") {
+		if ("${response}" = "2") {
+			Playback(${filename});
+		} else {
+			Playback(vm-rec-temp);
+			Playback(beep);
+			Set(starttime=${STRFTIME(${EPOCH},,%Y%m%d%H%M%S)});
+			Record(${filename}.sln);
+			Set(endtime=${STRFTIME(${EPOCH},,%Y%m%d%H%M%S)});
+		}
+		Read(response,/opt/gemeinschaft/sounds/de-DE/druecken-sie-1-um-die-aufnahme-zu-speichern,1,,3,);
+	}
+
+	AGI(/opt/gemeinschaft/dialplan-scripts/sys-rec-record,${extension},${filename}.sln,$[${endtime} - ${starttime}]);
+	Playback(/opt/gemeinschaft/sounds/de-DE/vielen-dank);
+	Hangup();
+
+}
+
+context sys-rec-playback {
+
+	s => &rec-playback(${ID});
+
+}
+
+context sys-rec-record {
+
+	s => &rec-record(${DIALEDEXTEN});
+
+}
 
 //---------------------------------------------------------------------
 //  Conferences (MeetMe)

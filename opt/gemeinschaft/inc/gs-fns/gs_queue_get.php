@@ -57,7 +57,7 @@ function gs_queue_get( $name )
 	$rs = $db->execute(
 'SELECT
 	`q`.`_id` `id`, `q`.`name` `ext`, `q`.`_host_id` `host_id`, `h`.`host`,
-	`q`.`_title` `title`, `q`.`maxlen` `maxlen`
+	`q`.`_title` `title`, `q`.`maxlen` `maxlen`, `q`.`_sysrec_id` `sysrec_id`
 FROM
 	`ast_queues` `q` LEFT JOIN
 	`hosts` `h` ON (`h`.`id`=`q`.`_host_id`)
