@@ -139,6 +139,13 @@ while ($gw = $rs->fetchRow()) {
 	$fromdomain     = null;
 	$fromuser       = null;
 	
+	if (strpos($gw['host'], ':')) {
+		$host = substr($gw['host'], 0, strpos($gw['host'], ':'));
+		$port = substr(strstr($gw['host'], ':'), 1);
+	} else {
+		$host = $gw['host'];
+		$port = '5060';
+	}
 	
 	if ($gw['host'] === 'sip.1und1.de') {  # special settings for 1und1.de
 		$canreinvite    = 'no';
@@ -156,7 +163,6 @@ while ($gw = $rs->fetchRow()) {
 		$codecs_allow['gsm'    ] = true;
 		$codecs_allow['g729'   ] = true;
 		$codecs_allow['slinear'] = true;
-	}
 	elseif ($gw['host'] === 'sipgate.de') {  # special settings for SipGate.de
 		$canreinvite    = 'no';
 		$fromdomain     = 'sipgate.de';
@@ -166,8 +172,8 @@ while ($gw = $rs->fetchRow()) {
 	
 	echo '[', $gw['name'] ,']' ,"\n";
 	echo 'type = peer' ,"\n";
-	echo 'host = ' , $gw['host'] ,"\n";
-	echo 'port = 5060' ,"\n";
+	echo 'host = ' , $host ,"\n";
+	echo 'port = ' , $port ,"\n";
 	echo 'username = ', $gw['user'] ,"\n";
 	echo 'secret = ' , $gw['pwd' ] ,"\n";
 	if ($fromdomain != null) {

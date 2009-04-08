@@ -105,7 +105,7 @@ if ($action === 'save') {
 	`title` = \''. $DB->escape(trim(@$_REQUEST['gw-title'])) .'\',
 	`allow_out` = '. (@$_REQUEST['gw-allow_out'] ? 1 : 0) .',
 	`dialstr` = \''. $DB->escape(trim(@$_REQUEST['gw-dialstr']) ) .'\',
-	`host` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.]/', '', @$_REQUEST['gw-host'])) .'\',
+	`host` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.:]/', '', @$_REQUEST['gw-host'])) .'\',
 	`user` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.@]/', '', @$_REQUEST['gw-user'])) .'\',
 	`pwd` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-pwd'])) .'\'
 WHERE `id`='. (int)$gwid
