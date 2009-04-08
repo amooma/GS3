@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 *    change a user account
 ***********************************************************/
 
-function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false, $email='', $reload=true )
+function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false, $email='', $reload=true, $pb_hide=false )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -59,6 +59,8 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 		return new GsError( 'GS_EMAIL_PATTERN_VALID not defined.' );
 	if ($email != '' && ! preg_match( GS_EMAIL_PATTERN_VALID, $email ))
 		return new GsError( 'Invalid e-mail address.' );
+		
+	$pb_hide = (int)$pb_hide;
 	
 	include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 	
@@ -122,7 +124,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	
 	# update user
 	#
-	$ok = $db->execute( 'UPDATE `users` SET `pin`=\''. $db->escape($pin) .'\', `firstname`=\''. $db->escape($firstname) .'\', `lastname`=\''. $db->escape($lastname) .'\', `email`=\''. $db->escape($email) .'\', `host_id`='. $host['id'] .' WHERE `id`='. $user_id );
+	$ok = $db->execute( 'UPDATE `users` SET `pin`=\''. $db->escape($pin) .'\', `firstname`=\''. $db->escape($firstname) .'\', `lastname`=\''. $db->escape($lastname) .'\', `email`=\''. $db->escape($email) .'\', `pb_hide`=' . $pb_hide . ', `host_id`='. $host['id'] .' WHERE `id`='. $user_id );
 	if (! $ok) {
 		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to change user.' );

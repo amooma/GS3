@@ -166,6 +166,7 @@ elseif ($type==='gs') {
 'SELECT SQL_CALC_FOUND_ROWS
 	`u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
 FROM
+	`u`.`pb_hide` = 0 AND
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE

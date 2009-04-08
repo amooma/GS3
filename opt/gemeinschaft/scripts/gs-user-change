@@ -49,7 +49,8 @@ $opts = @getOptsNoMultiples( '',
 		'email=',
 		'host=',
 		'force',
-		'no-reload'
+		'no-reload',
+		'hide-pb'
 	),
 	$usage
 );
@@ -66,10 +67,12 @@ $opts['force'] = array_key_exists('force', $opts);
 
 $reload = !(array_key_exists('no-reload', $opts));
 
+$hide_pb = !(array_key_exists('no-reload', $opts));
+
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_user_change( $opts['user'], $opts['pin'], $opts['firstname'], $opts['lastname'], $opts['host'], $opts['force'], $opts['email'], $reload );
+$ret = @ gs_user_change( $opts['user'], $opts['pin'], $opts['firstname'], $opts['lastname'], $opts['host'], $opts['force'], $opts['email'], $reload, $hide_pb );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 echo "User changed.\n";

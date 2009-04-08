@@ -6637,6 +6637,7 @@ CREATE TABLE `users` (
   `softkey_profile_id` int(10) unsigned default NULL,
   `prov_param_profile_id` int(10) unsigned default NULL,
   `dnd` tinyint(1) unsigned NOT NULL default '0',
+  `pb_hide` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `user` (`user`),
   KEY `lastname_firstname` (`lastname`(15),`firstname`(15)),

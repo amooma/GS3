@@ -654,3 +654,10 @@ ALTER TABLE `dial_log`
   ADD CONSTRAINT `dial_log_ibfk_3`
   FOREIGN KEY (`queue_id`)
   REFERENCES `ast_queues` (`_id`);
+
+--
+-- Add new column `pb_hide` in table `users`:
+--
+
+ALTER TABLE `users` ADD
+  `pb_hide` tinyint(1) unsigned NOT NULL default '0' AFTER `prov_param_profile_id`;

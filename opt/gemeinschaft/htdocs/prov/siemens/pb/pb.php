@@ -278,7 +278,7 @@ if (! $type) {
 		xml('    <Option ID="'.$i.'" Selected="'.($i===1 ?'TRUE':'FALSE').'" Key="type" Value="'.$t.'">');
 		switch ($t) {
 			case 'gs':
-				$c = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `nobody_index` IS NULL' );
+				$c = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `users` WHERE `nobody_index` IS NULL AND `pb_hide` = 0' );
 				$image = $img_url.'contents.png';
 				break;
 			case 'prv':
@@ -345,6 +345,7 @@ FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE
+	`u`.`pb_hide` = 0 AND
 	`u`.`nobody_index` IS NULL AND (
 	`u`.`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
 	) '.$key_sql.'

@@ -150,7 +150,7 @@ if (! $type) {
 	foreach ($typeToTitle as $t => $title) {
 		$cq = 'SELECT COUNT(*) FROM ';
 		switch ($t) {
-		case 'gs'      : $cq .= '`users` WHERE `nobody_index` IS NULL'; break;
+		case 'gs'      : $cq .= '`users` WHERE `nobody_index` IS NULL AND `pb_hide` = 0'; break;
 		case 'imported': $cq .= '`pb_ldap`'                           ; break;
 		case 'prv'     : $cq .= '`pb_prv` WHERE `user_id`='. $user_id ; break;
 		default        : $cq  = false;
@@ -387,6 +387,7 @@ FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE
+	`u`.`pb_hide` = 0 AND
 	`u`.`nobody_index` IS NULL
 	'. ($where ? ('AND ('. $where .')') : '') .'
 ORDER BY `u`.`lastname`, `u`.`firstname`

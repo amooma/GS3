@@ -115,7 +115,7 @@ $user_host   = trim(@$_REQUEST['uhost'    ]);
 $bp_add_h    = (int)@$_REQUEST['bp_add_h' ] ;
 $bp_del_h    = (int)@$_REQUEST['bp_del_h' ] ;
 
-
+$pb_hide     = (bool)@$_REQUEST['pb_hide'  ] ;
 
 if ($action === 'del') {
 	
@@ -178,7 +178,7 @@ if ($action === 'edit') {
 if ($action === 'save') {
 	
 	if ($edit_user) {
-		$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email );
+		$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email, true, $pb_hide );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 		if (! isGsError( $ret )) {
 			$boi_api = gs_host_get_api((int)$user_host);
@@ -681,7 +681,7 @@ else {
 	
 	$rs = $DB->execute(
 'SELECT
-	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`, `u`.`group_id`,
+	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`, `u`.`group_id`, `u`.`pb_hide`,
 	`hp1`.`value` `hp_route_prefix`
 FROM
 	`users` `u` JOIN
@@ -694,6 +694,7 @@ WHERE
 	
 	if ($rs) {
 		$r = $rs->fetchRow();
+		$r['pb_hide'] = (bool)$r['pb_hide'];
 		$hid = $r['hid'];
 	} else {
 		$hid = 0;
@@ -933,6 +934,12 @@ echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 		
 		echo '</select>',"\n";
 ?>
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __('Aus Telefonbuch ausblenden'); ?>:</th>
+		<td>
+			<input type="checkbox" name="pb_hide" <?php if ($r['pb_hide'] == true) echo 'checked'; ?>  />
 		</td>
 	</tr>
 </tbody>
