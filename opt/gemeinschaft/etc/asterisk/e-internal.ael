@@ -320,6 +320,8 @@ context to-internal-users {
  		Set(pext=${EXTEN:4});
 		if ("${pext}" != "") {
  			Verbose(1,### User ${user_name} tries to pickup ext. ${pext});
+			// Override searching for huntgroups when picking calls
+			Set(is_huntgroup=1);
  			&check-valid-extension(${EXTEN:4});
 			if ("${dial_to_node}" = "") {
 				Verbose(1,### Extension ${EXTEN} is at node: SELF);
