@@ -6627,20 +6627,6 @@ INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,NULL,'',NULL,N
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
--- 
--- Table structure for table `users_callerids`
--- 
-
-DROP TABLE IF EXISTS `users_callerids`;
-CREATE TABLE IF NOT EXISTS `users_callerids` (
-  `user_id` int(10) unsigned NOT NULL default '0',
-  `number` varchar(25) character set ascii NOT NULL,
-  `dest` enum('internal','external') character set ascii NOT NULL default 'external',
-  `selected` tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`user_id`,`number`,`dest`),
-  CONSTRAINT `users_callerids_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 --
 -- Table structure for table `users_external_numbers`
 --

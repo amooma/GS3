@@ -460,13 +460,7 @@ $DP_ALLOW_DIRECT_DIAL       = false;
   # pass (/generate) a "connection ID" via the custom X-Org-ConnID
   # SIP header, store in CDR(x_connid)
 
-/***********************************************************
-*    SELECTABLE Callerid
-***********************************************************/
 
-$USER_SELECT_CALLERID = true;
-  # allow the user to select another callerid when
-  # placing calls
 
 /***********************************************************
 *    MISC
