@@ -513,12 +513,12 @@ psetting('display_method'   , 'display_name_number');
 psetting('tone_scheme'      , 'GER'    );
 psetting('date_us_format'   , 'off'    , true);
 psetting('time_24_format'   , 'on'     , true);
-psetting('message_led_other', 'on'     );
+psetting('message_led_other', 'off'    );
 psetting('use_backlight'    , 'on'     , true);  # always | on | off | dim (370, >= 7.1.33)
 //psetting('headset_device'   , 'headset_rj', true);  # wuerde Default auf Headset am RJ14-Stecker setzen
 psetting('headset_device'   , 'none'   , true);
 psetting('ethernet_detect'  , 'on'     );  # Warnung falls kein Ethernet
-psetting('ethernet_replug'  , 'reboot' );
+psetting('ethernet_replug'  , 'nothing');
 psetting('reboot_after_nr'  , '5'      );  # nach 5 Min. ohne Registrierung neu starten
 psetting('admin_mode'       , 'off'    , true);  # wenn die Einstellung nicht writable ist, ist auch kein Admin-Login moeglich
 psetting('admin_mode_password'         , '0000');
@@ -637,23 +637,13 @@ psetting('mute'                 , 'off', true);  # mute mic off
 psetting('disable_speaker'      , 'off', true);  # disable casing speaker off
 psetting('dtmf_speaker_phone'   , 'off', true);
 psetting('release_sound'        , 'off');
-if ($phone_model >= '370') {
-	psetting('vol_handset_mic'      ,  '5' , true);  # 1 - 8, Default: 4
-	psetting('vol_headset_mic'      ,  '6' , true);  # 1 - 8, Default: 4
-	psetting('vol_speaker_mic'      ,  '4' , true);  # 1 - 8, Default: 4
-	psetting('vol_speaker'          ,  '5' , true);  # 0 - 15, Default: 8
-	psetting('vol_handset'          , '10' , true);  # 0 - 15, Default: 8
-	psetting('vol_headset'          , '10' , true);  # 0 - 15, Default: 8
-	psetting('vol_ringer'           ,  '8' , true);  # 1 - 15
-} else {
-	psetting('vol_handset_mic'      ,  '4' , true);  # 1 - 8, Default: 4
-	psetting('vol_headset_mic'      ,  '6' , true);  # 1 - 8, Default: 4
-	psetting('vol_speaker_mic'      ,  '6' , true);  # 1 - 8, Default: 4
-	psetting('vol_speaker'          , '10' , true);  # 0 - 15, Default: 8
-	psetting('vol_handset'          , '11' , true);  # 0 - 15, Default: 8
-	psetting('vol_headset'          , '10' , true);  # 0 - 15, Default: 8
-	psetting('vol_ringer'           ,  '7' , true);  # 1 - 15
-}
+psetting('vol_handset_mic'      ,  '5' , true);  # 1 - 8, Default: 4
+psetting('vol_headset_mic'      ,  '4' , true);  # 1 - 8, Default: 4
+psetting('vol_speaker_mic'      ,  '6' , true);  # 1 - 8, Default: 4
+psetting('vol_speaker'          ,  '8' , true);  # 0 - 15, Default: 8
+psetting('vol_handset'          ,  '8' , true);  # 0 - 15, Default: 8
+psetting('vol_headset'          ,  '8' , true);  # 0 - 15, Default: 8
+psetting('vol_ringer'           ,  '8' , true);  # 1 - 15
 psetting('mwi_notification'     , 'silent');  # keine akustischen Hinweise wenn neue Nachrichten
 psetting('mwi_dialtone'         , 'stutter');  # stotternder Waehlton wenn neue Nachrichten
 psetting('silence_compression'  , 'off');  # kann Asterisk (noch?) nicht
