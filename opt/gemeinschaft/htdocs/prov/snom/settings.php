@@ -1131,7 +1131,6 @@ psetting('show_local_line', 'off');
 
 psetting('logon_wizard', 'off');
 
-psetting('settings_refresh_timer', (3600*2+rand(0,900)));
 
 
 
