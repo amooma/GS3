@@ -91,6 +91,8 @@ $type = trim( @ $_REQUEST['type'] );
 if (! in_array( $type, array('in','out','missed'), true ))
 	$type = false;
 
+if ( isset($_REQUEST['delete']) )
+	$delete = (int)$_REQUEST['delete'];
 
 $db = gs_db_slave_connect();
 
@@ -114,6 +116,32 @@ ob_start();
 
 $url_snom_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/dial-log.php';
 
+if ( (isset($delete)) && $type) {
+
+	$query =
+'SELECT
+	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`, `queue_id`,
+	COUNT(*) `num_calls`
+FROM `dial_log`
+WHERE
+	`user_id`='. $user_id .' AND
+	`type`=\''. $type .'\'
+GROUP BY `number`,`queue_id`
+ORDER BY `ts` DESC
+LIMIT ' . $delete . ',1';
+
+	$rs = $db->execute( $query );
+	$r = $rs->fetchRow();
+	
+	$db->execute(
+'DELETE FROM `dial_log`
+WHERE
+	`user_id`=' . $user_id . ' AND
+	`type`=\'' . $type . '\' AND
+	`number`=\'' . $r['number'] . '\' AND
+	`queue_id`' . (($r['queue_id'] > 0) ? '='.$r['queue_id'] : ' IS NULL')
+	);
+}
 
 #################################### INITIAL SCREEN {
 if (! $type) {
@@ -178,7 +206,22 @@ LIMIT 20';
 	
 	while ($r = $rs->fetchRow()) {
 		
-		unset($entry_name);
+		unset($num_calls);
+		if ($r['num_calls'] > 0) {
+			$num_calls = (int)$db->executeGetOne(
+'SELECT
+	COUNT(*)
+FROM `dial_log`
+WHERE
+		`user_id`=' . $user_id . ' AND
+		`number`=\'' . $r['number'] . '\' AND
+		`type`=\'' . $type . '\' AND
+		`queue_id`' . (($r['queue_id'] > 0) ? '='.$r['queue_id'] : ' IS NULL') . ' AND
+		`read` < 1'
+			);
+		}
+		
+		$entry_name = '';
 		if ($r['queue_id'] > 0)
 			$entry_name = 'WS: ';
 		$entry_name .= $r['number'];
@@ -190,8 +233,8 @@ LIMIT 20';
 		else
 			$when = date('d.m.', (int)$r['ts']);
 		$entry_name = $when .'  '. $entry_name;
-		if ($r['num_calls'] > 1) {
-			$entry_name .= ' ('. $r['num_calls'] .')';
+		if ($num_calls > 1) {
+			$entry_name .= ' ('. $num_calls .')';
 		}
 		echo
 			"\n",
@@ -201,7 +244,13 @@ LIMIT 20';
 			'</DirectoryEntry>', "\n";
 		
 	}
-	
+
+	echo '<SoftKeyItem>',
+		'<Name>F2</Name>',
+		'<Label>' ,snomXmlEsc(__('Löschen')),'</Label>',
+		'<URL>', $url_snom_dl, '?user=', $user, '&type=', $type, '&delete={index}</URL>',
+		'</SoftKeyItem>', "\n";
+
 	echo
 		"\n",
 		'</SnomIPPhoneDirectory>';
