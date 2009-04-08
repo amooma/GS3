@@ -906,7 +906,7 @@ psetting('dkey_hold'     , 'keyevent F_R'         ); # or F_HOLD
 psetting('dkey_dnd'      , 'keyevent F_DND'       );
 psetting('dkey_record'   , 'keyevent F_REC'       );
 psetting('dkey_directory', 'keyevent F_ADR_BOOK'  ); # or F_DIRECTORY
-psetting('dkey_menu'     , 'keyevent F_MENU'      );
+psetting('dkey_menu'     , 'url '. $prov_url_snom .'menu.php?m=$mac&u=$user_name1' );
 psetting('dkey_redial'   , 'keyevent F_REDIAL'    );
 
 psetting('dkey_directory', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1');
