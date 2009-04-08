@@ -34,6 +34,11 @@ globals {
 	#include "/opt/gemeinschaft/etc/asterisk/e-globals.ael"
 };
 
+//---------------------------------------------------------------------
+//  Custom dialplan additions
+//---------------------------------------------------------------------
+
+#include "/opt/gemeinschaft/etc/asterisk/custom/e.ael"
 
 //---------------------------------------------------------------------
 //  Macro to get or generate a "connection ID"
@@ -801,6 +806,7 @@ context vm-ann-rec {
 context from-gateways {
 	
 	includes {
+		from-gateways-custom;
 		cmm;                  // user login/logout (for BOI)
 		//voicemail-any;        // voicemail main (own mailbox)
 		//to-internal-nobody;   // internal phones (nobodies)
@@ -827,6 +833,10 @@ context from-gateways {
 //---------------------------------------------------------------------
 
 context to-gateway {
+
+	includes {
+		to-gateway-custom;
+	}
 	
 	_0. => {
 		if ("${user_id}" != "") {
@@ -1059,6 +1069,7 @@ context private-call {
 context from-internal-nobody {
 	
 	includes {
+		from-internal-nobody-custom;
 		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
@@ -1080,6 +1091,7 @@ context from-internal-nobody {
 context from-internal-users {
 	
 	includes {
+		from-internal-users-custom;
 		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
@@ -1136,6 +1148,7 @@ context from-iax-unauth {
 
 context from-node {
 	includes {
+		from-node-custom;
 		to-conferences-self;       // conferences
 		to-internal-nobody-self;   // internal phones (nobodies)
 		voicemail-any-self;        // vm boxes
