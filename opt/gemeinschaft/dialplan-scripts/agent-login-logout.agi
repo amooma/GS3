@@ -1,0 +1,156 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 4817 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_callforward_activate.php' );
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+$user       = trim(@$argv[1]);
+$agent	    = trim(@$argv[2]);
+$action     = trim(@$argv[3]);
+
+if (! preg_match('/^\d+$/', $user))  // is not just digits
+	die();
+if (! in_array( $action, array('login','logout','logoutall'), true ))
+	die();
+
+
+
+include_once( GS_DIR .'inc/db_connect.php' );
+
+$db = gs_db_master_connect();
+
+
+# get user id
+#
+$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
+if ($user_id < 1) die();
+
+# get user agent
+#
+
+if ($action === 'logoutall' && (strlen($agent) < 1) ) {
+	$agent = $db->executeGetOne( 'SELECT `number` FROM `agents` WHERE `user_id`='. $user_id );
+	if (strlen($agent) < 1) die();
+}
+
+$agent_id = (int)$db->executeGetOne( 'SELECT `id` FROM `agents` WHERE `number`=\''. $db->escape($agent) .'\'' );
+if ($user_id < 1) die();
+echo 'SET VARIABLE agent '. gs_agi_str_esc($agent) ."\n";
+
+# get user's host id
+#
+$user_host_id = (int)$db->executeGetOne( 'SELECT `host_id` FROM `users` WHERE `id`='. $user_id );
+if ($user_host_id < 1) die();
+
+# get user name
+#
+$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`='. $user_id );
+if (strlen($user_name) < 1) die();
+
+if ($action != 'logoutall') {
+	
+	# get queue
+	#
+	$rs = $db->execute( 'SELECT `agent_queues`.`queue_id`, `ast_queues`.`_host_id` `host_id`, `ast_queues`.`name` FROM `agent_queues`, `ast_queues` WHERE `ast_queues`.`_id` = `agent_queues`.`queue_id`  AND `agent_id`=\''. $db->escape($agent_id) .'\'' );
+	if(! @$rs){
+		echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('no queues found') ."\n";
+		die();
+	}
+	$queue_set = array();
+	while($queue = $rs->fetchRow()){
+		$queue_id = (int)$queue['queue_id'];
+		$host_id = (int)$queue['host_id'];
+		$name = $queue['name'];
+		$queue_set[] = array('id'=>$queue_id, 'host'=>$host_id, 'name'=>$name);
+	
+	}
+	if(count($queue_set) < 1){
+		echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('no queues defined') ."\n";
+		die();
+	}
+	
+}
+
+
+if ($action === 'login') {
+
+	gs_callforward_activate($user_name,'internal','always','no');
+	gs_callforward_activate($user_name,'external','always','no');
+	foreach($queue_set as $aqueue){
+		if ($aqueue['host'] != $user_host_id) {
+			echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('failhost') ."\n";
+			die();
+		}
+	}
+	foreach($queue_set as $aqueue){
+		$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queue_members` WHERE `_queue_id`='. $aqueue['id'] .' AND `_user_id`='. $user_id );
+		if ($num > 0) {  // user is already logged in on that queue
+			echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('alreadyon') ."\n";
+			//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+			die();
+		}	
+	}
+	
+	foreach($queue_set as $aqueue){
+		$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`) VALUES (\''. $db->escape($aqueue['name']) .'\', '. $aqueue['id'] .', \''. $db->escape( 'SIP/'. $user ) .'\', '. $user_id .')' );
+		echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('loggedin') ."\n";
+		//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	}
+	 $db->execute( 'UPDATE `agents` SET `user_id`='.$db->escape($user_id) .' WHERE `id`='. $db->escape($agent_id) );
+
+	echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('OK') ."\n";
+	
+}
+
+elseif ($action === 'logoutall') {
+	$rs = $db->execute( 'SELECT `ast_queues`.`name` FROM `ast_queues`, `agent_queues` WHERE `agent_queues`.`queue_id` = `ast_queues`.`_id` AND  `agent_queues`.`agent_id` ='. $agent_id );
+	if(@$rs){
+		$c = 0;
+		while($queues = $rs->fetchRow()){
+			$queue = $queues['name'];
+			echo 'SET VARIABLE oqueue'.  gs_agi_str_esc($c) . ' ' . gs_agi_str_esc($queue) ."\n";
+			$c ++;
+		}
+			echo 'SET VARIABLE oqueue_count '. gs_agi_str_esc($c) ."\n";   
+
+	}	
+
+	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_user_id`='. $user_id );
+	echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('loggedout') ."\n";
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	$db->execute( 'UPDATE `agents` SET `user_id`=0,`paused`=0 WHERE `id`='. $agent_id );
+	
+}
+
+
+?>

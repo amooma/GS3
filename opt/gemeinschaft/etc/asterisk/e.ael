@@ -212,6 +212,174 @@ context cmm {
 	_*0. => &cmm-login(${EXTEN:2});
 }
 
+
+//---------------------------------------------------------------------
+//  Agent Login Macro
+//---------------------------------------------------------------------
+
+macro agent-login( new_user_name ) {
+
+	Answer();
+	NoOp(### Agent ${new_user_name} tries to log in on user: ret = ${user_name});
+	
+	Wait(1);
+	Read(pass,agent-pass);
+	AGI(/opt/gemeinschaft/dialplan-scripts/agent-login.agi,${new_user_name},${pass},${user_name});
+	if ("${ret}" = "error")
+		goto error;
+	if ("${ret}" != "ok")
+		goto unknown;
+	
+	//we will first have to log off the agent from the phone he is registered at, if there is any
+	if("${old_user}"  != "") {
+        AGI(/opt/gemeinschaft/dialplan-scripts/agent-login-logout.agi,${old_user},${new_user_name},logoutall);
+		for(i=0;${i} < ${oqueue_count}; i=${i} + 1){
+			queueNr=${oqueue${i}};
+			System(echo  "${EPOCH}|${UNIQUEID}|${queueNr}|Local/${new_user_name}@agents|REMOVEMEMBER|-" >> /var/log/asterisk/queue_log );
+			UserEvent(AgentLogoffUI|agent: ${new_user_name});
+		}
+	}
+
+
+	if("${old_local_agent}" != ""){
+		AGI(/opt/gemeinschaft/dialplan-scripts/agent-login-logout.agi,${user_name},${old_local_agent},logoutall);
+		for(i=0;${i} < ${oqueue_count}; i=${i} + 1){
+			queueNr=${oqueue${i}};
+			System(echo  "${EPOCH}|${UNIQUEID}|${queueNr}|Local/${old_local_agent}@agents|REMOVEMEMBER|-" >> /var/log/asterisk/queue_log );
+		}
+		UserEvent(AgentLogoffUI|agent: ${old_local_agent});
+	}
+
+	if( ${old_local_user} > 0 ) {
+		&queue-logout-all-silent();
+		//user logoff
+	}
+
+	//Logoff the agent, if he is still registered on another phone
+
+	// Login the agent
+	// NoOp(### Anz. queues: ${queue_count});
+     AGI(/opt/gemeinschaft/dialplan-scripts/agent-login-logout.agi,${user_name},${new_user_name},login);
+	NoOp(### AGI returned: ${agent_login_status});
+	if( "${agent_login_status}" == "OK"){ 
+		Playback(agent-loginok);
+	
+		QueueLog(NONE,${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGIN,fake);
+		UserEvent(AgentLoginUI|agent: ${new_user_name}|user: ${user_name});
+		for(i=0;${i} < ${queue_count}; i=${i} + 1){
+			queueNr=${queue${i}};
+			System(echo "${EPOCH}|${UNIQUEID}|${queueNr}|Local/${new_user_name}@agents|ADDMEMBER|-" >> /var/log/asterisk/queue_log );
+		} 
+
+	}
+	else
+		goto error;
+	Hangup();
+	
+	unknown:
+		Wait(1);
+		Playback(vm-incorrect&vm-goodbye);
+		Wait(0.5);
+		Hangup();
+	
+	error:
+		Playback(tt-somethingwrong);
+		Wait(0.5);
+		Hangup();
+}
+
+macro agent-login-enterid(){
+	
+	Answer();
+	NoOp(### Agent without id tries to log in);
+	Wait(1);
+	Read(new_user_name,gemeinschaft/agent-enterid,10,s,3,5);
+	&agent-login(${new_user_name});
+
+}
+
+macro agent-logout() {
+	
+	Answer();
+	Verbose(1,### Agent on ${user_name} wants to log out from all queues);
+	AGI(/opt/gemeinschaft/dialplan-scripts/agent-login-logout.agi,${user_name},,logoutall);
+	Wait(0.5);
+	if ("${agent_login_status}" = "loggedout") {
+		Playback(agent-loggedoff);
+		
+		UnpauseQueueMember(|SIP/${user_name});
+		
+		UserEvent(AgentLogoffUI|agent: ${agent});
+		AGI(/opt/gemeinschaft/dialplan-scripts/agent-login-logout.agi,${user_name},${old_local_agent},logoutall);
+		for(i=0;${i} < ${oqueue_count}; i=${i} + 1){
+			queueNr=${oqueue${i}};
+			System(echo  "${EPOCH}|${UNIQUEID}|${queueNr}|Local/${agent}@agents|REMOVEMEMBER|-" >> /var/log/asterisk/queue_log );
+		}
+		
+	} else {
+		Playback(beeperr);
+	}
+	Hangup();
+	
+}
+
+macro agent-pause() {
+	
+	Answer();
+	Verbose(1,### Agent on ${user_name} wants to pause);
+	AGI(/opt/gemeinschaft/dialplan-scripts/agent-pause-unpause.agi,${user_name},pause);
+	
+	Wait(0.5);
+	Verbose(1,### Is Agent:${agent} );
+	Verbose(1,### DB-Stat:  ${agent_pause});
+	if ("${agent}" = "true") {
+		Playback(/opt/gemeinschaft/sounds/de-DE/pause);
+		
+		PauseQueueMember(|SIP/${user_name});
+		UserEvent(AgentPausedUI|agent: ${user_name});
+
+	} else {
+		Playback(beeperr);
+	}
+	Hangup();
+	
+}
+
+macro agent-unpause() {
+	
+	Answer();
+	Verbose(1,### Agent on ${user_name} wants to unpause);
+	AGI(/opt/gemeinschaft/dialplan-scripts/agent-pause-unpause.agi,${user_name},unpause);
+	Wait(0.5);
+	
+	if ("${agent}" = "true") {
+		Playback(/opt/gemeinschaft/sounds/de-DE/pause-beendet);
+		
+		UnpauseQueueMember(|SIP/${user_name});
+		UserEvent(AgentUnPausedUI|agent: ${user_name});
+		
+	} else {
+		Playback(beeperr);
+	}
+	Hangup();
+	
+}
+
+
+//---------------------------------------------------------------------
+//  Agent Login/Logout
+//---------------------------------------------------------------------
+
+context agents {
+
+	*6*  => &agent-logout();
+	*6   => &agent-login-enterid();
+	_*6. => &agent-login(${EXTEN:2});		
+	*6#* => &agent-pause();
+	*6## => &agent-unpause();
+
+}
+
 //---------------------------------------------------------------------
 //  Recordings
 //---------------------------------------------------------------------
@@ -428,6 +596,7 @@ macro queue-login( queue ) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},login);
 	if ("${agent_login_status}" = "loggedin") {
 		// fake login for the statistics:
+		//AddQueueMember(${queue},${CHANNEL(channeltype)}/${user_name});
 		QueueLog(NONE,${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGIN,fake);
 	}
 	Verbose(1,### agent_login_status: ${agent_login_status});
@@ -436,6 +605,10 @@ macro queue-login( queue ) {
 		Playback(agent-loginok);
 	} else {
 		Playback(beeperr);
+	}
+	if ("${agent_login_status}" = "agent-exists") {
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/de-DE/an-diesem-telefon-ist-ein-agent-angemeldet);
 	}
 	Hangup();
 	
@@ -452,6 +625,10 @@ macro queue-logout( queue ) {
 	} else {
 		Playback(beeperr);
 	}
+	if ("${agent_login_status}" = "agent-exists") {
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/de-DE/an-diesem-telefon-ist-ein-agent-angemeldet);
+	}
 	Hangup();
 	
 }
@@ -466,6 +643,10 @@ macro queue-logout-all() {
 		Playback(agent-loggedoff);
 	} else {
 		Playback(beeperr);
+	}
+	if ("${agent_login_status}" = "agent-exists") {
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/de-DE/an-diesem-telefon-ist-ein-agent-angemeldet);
 	}
 	Hangup();
 	
@@ -546,6 +727,8 @@ context voicemail-any-self {
 	}
 	
 }
+
+
 
 
 //---------------------------------------------------------------------
@@ -648,13 +831,6 @@ context to-gateway {
 }
 
 macro dial-gateway-do( mnumber ) {
-	/*
-	if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway") {
-		Verbose(1,### Don't allow call from outside to go to the outside again - number: ${mnumber});
-		Congestion(3);
-		Hangup();
-	}
-	*/
 	// get CLIR for a call to external:
 	&is_dmz(${mnumber});
 	if ("${is_dmz}" != "1") {
@@ -908,6 +1084,7 @@ context from-internal-users {
 		to-internal-users;    // internal phones (users)
 		//to-gateway;           // to the gateway
 		test;                 // test extensions
+		agents;
 	}
 	
 	_*31. => {

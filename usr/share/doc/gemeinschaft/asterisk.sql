@@ -33,6 +33,37 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `asterisk` /*!40100 DEFAULT CHARACTER S
 
 USE `asterisk`;
 
+---
+---  Table structure for table `agents`        
+---
+
+DROP TABLE IF EXISTS `agents`;
+CREATE TABLE IF NOT EXISTS `agents` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `firstname` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `number` varchar(25) character set ascii NOT NULL,
+  `pin` varchar(10) character set ascii collate ascii_bin NOT NULL default '',
+  `user_id` int(10) unsigned NOT NULL default 0,
+  `paused` tinyint(1) NOT NULL default 0,
+  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
+
+---
+---  Table structure for table `agent_queues`                        
+---
+
+DROP TABLE IF EXISTS `agent_queues`;
+CREATE TABLE IF NOT EXISTS `agent_queues` (
+  `agent_id` int(10) unsigned NOT NULL,
+  `queue_id` int(10) unsigned NOT NULL,
+  KEY `agent_id` (`agent_id`),
+  KEY `queue_id` (`queue_id`),
+  CONSTRAINT `agent_queues_ibfk_1` FOREIGN KEY (`agent_id`) REFERENCES `agents` (`id`),
+  CONSTRAINT `agent_queues_ibfk_2` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
+
 --
 -- Table structure for table `area_codes`
 --

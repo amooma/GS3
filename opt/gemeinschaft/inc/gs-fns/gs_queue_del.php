@@ -66,6 +66,10 @@ function gs_queue_del( $name )
 	# delete queue members
 	#
 	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_queue_id`='. $queue_id );
+
+	# delete agent relations
+	#
+	$db->execute( 'DELETE FROM `agent_queues` WHERE `_queue_id`='. $queue_id );
 	
 	# delete queue callforwards
 	#

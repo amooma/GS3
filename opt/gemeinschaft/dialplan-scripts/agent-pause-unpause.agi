@@ -1,0 +1,113 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 4817 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
+*
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
+
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+
+/*
+ob_start();
+print_r($_SERVER);
+$out = ob_get_clean();
+fWrite(STDERR,$out);
+*/
+
+$user       = trim(@$argv[1]);
+$action     = trim(@$argv[2]);
+
+if (! preg_match('/^\d+$/', $user))  // is not just digits
+	die();
+if (! in_array( $action, array('pause','unpause'), true ))
+	die();
+
+
+
+include_once( GS_DIR .'inc/db_connect.php' );
+
+$db = gs_db_master_connect();
+
+
+# get user id
+#
+$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
+if ($user_id < 1){
+	 echo 'SET VARIABLE agent_pause '. gs_agi_str_esc('no such user') ."\n";
+	 die();
+}
+
+# get user agent
+#
+
+$agent = $db->executeGetOne( 'SELECT `number` FROM `agents` WHERE `user_id`='. $user_id );
+if (strlen($agent) < 1) {
+	echo 'SET VARIABLE agent '. gs_agi_str_esc('false') ."\n";
+	die();
+}
+else{
+	echo 'SET VARIABLE agent '. gs_agi_str_esc('true') ."\n";
+}
+
+$agent_id = (int)$db->executeGetOne( 'SELECT `id` FROM `agents` WHERE `number`=\''. $db->escape($agent) .'\'' );
+if ($user_id < 1) die();
+
+if ($action == 'pause') {
+	
+	# get queue
+	#
+	$rs = $db->execute( 'UPDATE `agents` SET `paused`=1, `updated`=NULL WHERE `user_id`=\''. $db->escape($user_id) .'\'' );
+	if(! @$rs){
+		echo 'SET VARIABLE agent_pause '. gs_agi_str_esc('could not pause agent in db') ."\n";
+		echo 'SET VARIABLE agent '. gs_agi_str_esc('false') ."\n";
+		die();
+	}
+	
+}
+
+if ($action == 'unpause') {
+	
+	# get queue
+	#
+	$rs = $db->execute( 'UPDATE `agents` SET `paused`=0 WHERE `user_id`=\''. $db->escape($user_id) .'\'' );
+	if(! @$rs){
+		echo 'SET VARIABLE agent_pause '. gs_agi_str_esc('could not pause agent in db') ."\n";
+		echo 'SET VARIABLE agent '. gs_agi_str_esc('false') ."\n";
+		die();
+	}
+	
+}
+
+
+
+
+?>
