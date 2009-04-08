@@ -5498,6 +5498,7 @@ CREATE TABLE `ast_sipfriends` (
   `username` varchar(25) character set ascii default NULL,
   `regserver` varchar(50) character set ascii default NULL,
   `fullcontact` varchar(100) character set ascii default NULL,
+  `canreinvite` varchar(6) character set ascii NOT NULL default 'yes',
   PRIMARY KEY  (`_user_id`),
   UNIQUE KEY `name` (`name`),
   KEY `host` (`host`(25)),
@@ -6801,7 +6802,7 @@ USE `asterisk`;
 /*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
 /*!50001 CREATE ALGORITHM=MERGE */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY INVOKER */
-/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact` from ((`ast_sipfriends` `s` join `users` `u` on((`u`.`id` = `s`.`_user_id`))) join `hosts` `h` on((`h`.`id` = `u`.`host_id`))) where (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
+/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact`,`s`.`canreinvite` AS `canreinvite` from ((`ast_sipfriends` `s` join `users` `u` on((`u`.`id` = `s`.`_user_id`))) join `hosts` `h` on((`h`.`id` = `u`.`host_id`))) where (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
