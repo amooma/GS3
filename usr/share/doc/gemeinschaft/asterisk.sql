@@ -5513,23 +5513,7 @@ CREATE TABLE `ast_sipfriends` (
 
 LOCK TABLES `ast_sipfriends` WRITE;
 /*!40000 ALTER TABLE `ast_sipfriends` DISABLE KEYS */;
-INSERT INTO `ast_sipfriends` VALUES (5,'950001','2602729062','friend','dynamic',NULL,'from-internal-nobody','Namenlos-5 <950001>','','1','1','__user_id=5;__user_name=950001',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (6,'950002','7581463327','friend','dynamic',NULL,'from-internal-nobody','Namenlos-6 <950002>','','1','1','__user_id=6;__user_name=950002',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (7,'950003','2099129726','friend','dynamic',NULL,'from-internal-nobody','Namenlos-7 <950003>','','1','1','__user_id=7;__user_name=950003',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (8,'950004','4751258926','friend','dynamic',NULL,'from-internal-nobody','Namenlos-8 <950004>','','1','1','__user_id=8;__user_name=950004',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (9,'950005','7458905728','friend','dynamic',NULL,'from-internal-nobody','Namenlos-9 <950005>','','1','1','__user_id=9;__user_name=950005',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (10,'950006','4040752142','friend','dynamic',NULL,'from-internal-nobody','Namenlos-10 <950006>','','1','1','__user_id=10;__user_name=950006',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (11,'950007','5827043803','friend','dynamic',NULL,'from-internal-nobody','Namenlos-11 <950007>','','1','1','__user_id=11;__user_name=950007',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (12,'950008','7012962864','friend','dynamic',NULL,'from-internal-nobody','Namenlos-12 <950008>','','1','1','__user_id=12;__user_name=950008',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (13,'950009','7583683190','friend','dynamic',NULL,'from-internal-nobody','Namenlos-13 <950009>','','1','1','__user_id=13;__user_name=950009',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (14,'950010','6879527634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-14 <950010>','','1','1','__user_id=14;__user_name=950010',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (22,'2000','5826899294','friend','dynamic',NULL,'from-internal-users','Hans Muster <2000>','2000','1','1','__user_id=22;__user_name=2000',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (23,'2001','4813474487','friend','dynamic',NULL,'from-internal-users','Peter Muster <2001>','2001','1','1','__user_id=23;__user_name=2001',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (24,'2002','6907087521','friend','dynamic',NULL,'from-internal-users','Anna Muster <2002>','2002','1','1','__user_id=24;__user_name=2002',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (25,'2003','9293349941','friend','dynamic',NULL,'from-internal-users','Lisa Muster <2003>','2003','1','1','__user_id=25;__user_name=2003',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (28,'950011','7364863263482634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-28 <950011>','','1','1','__user_id=28;__user_name=950011',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (29,'950012','7364863263482634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-29 <950012>','','1','1','__user_id=29;__user_name=950012',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (30,'950013','3707760381117896','friend','dynamic',NULL,'from-internal-nobody','Namenlos-13 <950013>','','1','1','__user_id=30;__user_name=950013',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL);
+INSERT INTO `ast_sipfriends` VALUES (1,'999999','5826899294','friend','dynamic',NULL,'from-internal-users','Supervisor <999999>','999999','1','1','__user_id=1;__user_name=999999',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,'yes');
 /*!40000 ALTER TABLE `ast_sipfriends` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5594,10 +5578,7 @@ CREATE TABLE `ast_voicemail` (
 
 LOCK TABLES `ast_voicemail` WRITE;
 /*!40000 ALTER TABLE `ast_voicemail` DISABLE KEYS */;
-INSERT INTO `ast_voicemail` VALUES (9,22,'2000','default','123','','Hans Muster','germany','no','no');
-INSERT INTO `ast_voicemail` VALUES (10,23,'2001','default','123','','Peter Muster','germany','no','no');
-INSERT INTO `ast_voicemail` VALUES (11,24,'2002','default','123','','Anna Muster','germany','no','no');
-INSERT INTO `ast_voicemail` VALUES (12,25,'2003','default','123','','Lisa Muster','germany','no','no');
+INSERT INTO `ast_voicemail` VALUES (1,1,'999999','default','123','','Supervisor','germany','no','no');
 /*!40000 ALTER TABLE `ast_voicemail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5672,11 +5653,6 @@ CREATE TABLE `callblocking` (
 --
 
 LOCK TABLES `callblocking` WRITE;
-/*!40000 ALTER TABLE `callblocking` DISABLE KEYS */;
-INSERT INTO `callblocking` VALUES (1,23,'11.*99','111');
-INSERT INTO `callblocking` VALUES (2,24,'^[0]','222');
-INSERT INTO `callblocking` VALUES (3,24,'^0190','');
-/*!40000 ALTER TABLE `callblocking` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -5747,12 +5723,7 @@ CREATE TABLE `clir` (
 
 LOCK TABLES `clir` WRITE;
 /*!40000 ALTER TABLE `clir` DISABLE KEYS */;
-INSERT INTO `clir` VALUES (5,'no','no');
-INSERT INTO `clir` VALUES (6,'no','no');
-INSERT INTO `clir` VALUES (7,'no','no');
-INSERT INTO `clir` VALUES (8,'no','no');
-INSERT INTO `clir` VALUES (23,'no','no');
-INSERT INTO `clir` VALUES (24,'no','no');
+INSERT INTO `clir` VALUES (1,'no','no');
 /*!40000 ALTER TABLE `clir` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5840,13 +5811,7 @@ CREATE TABLE `gate_grps` (
 
 LOCK TABLES `gate_grps` WRITE;
 /*!40000 ALTER TABLE `gate_grps` DISABLE KEYS */;
-INSERT INTO `gate_grps` VALUES (5,'campus','SIP-ISDN-GWs intern','balance',1,'','','','','','');
-INSERT INTO `gate_grps` VALUES (6,'pstn','ISDN (PRI)','balance',1,'^(?:(?:0049|0)2631)?123(.*)','$1','','','^(.*)','0251702$1');
-INSERT INTO `gate_grps` VALUES (7,'gsm-t-mobile','GSM-GW T-Mobile','balance',0,'','','','','','');
-INSERT INTO `gate_grps` VALUES (8,'gsm-vodafone','GSM-GW Vodafone','balance',0,'','','','','','');
-INSERT INTO `gate_grps` VALUES (9,'sipgate','SIP-GW (sipgate.de)','balance',0,'','','','','','');
-INSERT INTO `gate_grps` VALUES (10,'dusnet','SIP-GW (dus.net)','balance',0,'','','','','','');
-INSERT INTO `gate_grps` VALUES (12,'isdn-bri','ISDN (BRI)','balance',1,'^(?:(?:0049|0)2631)?1234','','','','','');
+INSERT INTO `gate_grps` VALUES (1, 'amt', 'Amt', 'balance', 1, '', '', '', '', '', '');
 /*!40000 ALTER TABLE `gate_grps` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5881,15 +5846,7 @@ CREATE TABLE `gates` (
 
 LOCK TABLES `gates` WRITE;
 /*!40000 ALTER TABLE `gates` DISABLE KEYS */;
-INSERT INTO `gates` VALUES (5,6,'zap','gw_5_prispan1','PRI Span 1',1,'Zap/r1/{number:1}',NULL,NULL,NULL,NULL);
-INSERT INTO `gates` VALUES (6,6,'zap','gw_6_prispan2','PRI Span 2',1,'Zap/r2/{number:1}',NULL,NULL,NULL,NULL);
-INSERT INTO `gates` VALUES (7,5,'sip','gw_7_sipisdninterna','SIP-ISDN intern A',1,'SIP/{number:1}@{gateway}','sip.example.com','','',NULL);
-INSERT INTO `gates` VALUES (8,5,'sip','gw_8_sipisdninternb','SIP-ISDN intern B',1,'SIP/{number:1}@{gateway}','sip.example.com','','',NULL);
-INSERT INTO `gates` VALUES (9,8,'sip','gw_9_sipgsmvodafone','SIP-GSM Vodafone',1,'SIP/{number:1}@{gateway}','sip.example.com','','',NULL);
-INSERT INTO `gates` VALUES (16,12,'misdn','gw_16_briport1','BRI Port 1',1,'mISDN/g:{gateway}/{number:1}',NULL,NULL,NULL,1);
-INSERT INTO `gates` VALUES (17,12,'misdn','gw_17_briport2','BRI Port 2',1,'mISDN/g:{gateway}/{number:1}',NULL,NULL,NULL,2);
-INSERT INTO `gates` VALUES (18,12,'misdn','gw_18_briport3','BRI Port 3',1,'mISDN/g:{gateway}/{number:1}',NULL,NULL,NULL,3);
-INSERT INTO `gates` VALUES (19,12,'misdn','gw_19_briport4','BRI Port 4',1,'mISDN/g:{gateway}/{number:1}',NULL,NULL,NULL,4);
+INSERT INTO `gates` VALUES (1, 1, 'sip', 'gw_20_amt', 'Amt', 1, 'SIP/{number:1}@{gateway}', '192.168.1.131', '', '', NULL);
 /*!40000 ALTER TABLE `gates` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5994,7 +5951,6 @@ CREATE TABLE `instant_messaging` (
 
 LOCK TABLES `instant_messaging` WRITE;
 /*!40000 ALTER TABLE `instant_messaging` DISABLE KEYS */;
-INSERT INTO `instant_messaging` VALUES (22,'jabber','test@example.com');
 /*!40000 ALTER TABLE `instant_messaging` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6055,7 +6011,6 @@ CREATE TABLE `pb_ldap` (
 
 LOCK TABLES `pb_ldap` WRITE;
 /*!40000 ALTER TABLE `pb_ldap` DISABLE KEYS */;
-INSERT INTO `pb_ldap` VALUES ('012345','TEST','HANS','123','2007-05-24 07:28:28');
 /*!40000 ALTER TABLE `pb_ldap` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6137,11 +6092,6 @@ CREATE TABLE `phones` (
 
 LOCK TABLES `phones` WRITE;
 /*!40000 ALTER TABLE `phones` DISABLE KEYS */;
-INSERT INTO `phones` VALUES (1,'snom-360','000413233C9F',NULL,1,1174110000,'',0);
-INSERT INTO `phones` VALUES (2,'snom-360','000413231C76',NULL,2,1174110000,'',0);
-INSERT INTO `phones` VALUES (3,'snom-360','000413233483',NULL,3,1174110000,'',0);
-INSERT INTO `phones` VALUES (8,'snom-360','0004132308A4',NULL,4,1174119746,'',0);
-INSERT INTO `phones` VALUES (9,'snom-360','000413000000',NULL,5,1177010534,'',0);
 /*!40000 ALTER TABLE `phones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6186,9 +6136,7 @@ CREATE TABLE `pickupgroups_users` (
 
 LOCK TABLES `pickupgroups_users` WRITE;
 /*!40000 ALTER TABLE `pickupgroups_users` DISABLE KEYS */;
-INSERT INTO `pickupgroups_users` VALUES (1,24);
-INSERT INTO `pickupgroups_users` VALUES (1,23);
-INSERT INTO `pickupgroups_users` VALUES (1,22);
+INSERT INTO `pickupgroups_users` VALUES (1,1);
 /*!40000 ALTER TABLE `pickupgroups_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6298,8 +6246,6 @@ CREATE TABLE `queue_callforwards` (
 
 LOCK TABLES `queue_callforwards` WRITE;
 /*!40000 ALTER TABLE `queue_callforwards` DISABLE KEYS */;
-INSERT INTO `queue_callforwards` VALUES (1,'external','always',20,'2001','','std');
-INSERT INTO `queue_callforwards` VALUES (1,'external','full',0,'','123','var');
 /*!40000 ALTER TABLE `queue_callforwards` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6359,8 +6305,6 @@ CREATE TABLE `ringtones` (
 
 LOCK TABLES `ringtones` WRITE;
 /*!40000 ALTER TABLE `ringtones` DISABLE KEYS */;
-INSERT INTO `ringtones` VALUES (23,'internal',1,'somefile');
-INSERT INTO `ringtones` VALUES (23,'external',2,NULL);
 /*!40000 ALTER TABLE `ringtones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6408,39 +6352,39 @@ CREATE TABLE `routes` (
 
 LOCK TABLES `routes` WRITE;
 /*!40000 ALTER TABLE `routes` DISABLE KEYS */;
-INSERT INTO `routes` VALUES (5,0,3,'^011[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'','Notrufnummern etc.');
-INSERT INTO `routes` VALUES (6,0,4,'^019222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'','Notruf Rettungsdienst');
-INSERT INTO `routes` VALUES (7,0,14,'^00900',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','Mehrwertnummern');
-INSERT INTO `routes` VALUES (8,0,8,'^0118',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','Auskünfte (u.U. teuer, können vermitteln)');
+INSERT INTO `routes` VALUES (5,0,3,'^011[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Notrufnummern etc.');
+INSERT INTO `routes` VALUES (6,0,4,'^019222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Notruf Rettungsdienst');
+INSERT INTO `routes` VALUES (7,0,14,'^00900',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern');
+INSERT INTO `routes` VALUES (8,0,8,'^0118',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Auskünfte (u.U. teuer, können vermitteln)');
 INSERT INTO `routes` VALUES (9,0,10,'^009009',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern (Dialer)');
 INSERT INTO `routes` VALUES (10,0,12,'^009005',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern (Erwachsenenunterhaltung)');
 INSERT INTO `routes` VALUES (11,0,16,'^00902',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Televoting (14 ct/Anruf)');
 INSERT INTO `routes` VALUES (12,0,18,'^0019[1-4]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Internet-Zugänge');
-INSERT INTO `routes` VALUES (13,0,20,'^0070[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','private Vanity-Nummern');
-INSERT INTO `routes` VALUES (14,0,22,'^0080[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','Mehrwertnummern (kostenlos)');
+INSERT INTO `routes` VALUES (13,0,20,'^0070[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','private Vanity-Nummern');
+INSERT INTO `routes` VALUES (14,0,22,'^0080[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern (kostenlos)');
 INSERT INTO `routes` VALUES (15,0,24,'^001805',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern (Hotlines/Erwachsenenunterhaltung)');
 INSERT INTO `routes` VALUES (16,0,26,'^001802001033',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Handvermittlung ins Ausland (teuer)');
-INSERT INTO `routes` VALUES (17,0,28,'^00180',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','Mehrwertnummern');
+INSERT INTO `routes` VALUES (17,0,28,'^00180',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern');
 INSERT INTO `routes` VALUES (18,0,30,'^00137',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Televoting (25-100 ct/Anruf)');
 INSERT INTO `routes` VALUES (19,0,32,'^0012[0-9]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Innovative Dienste (teuer)');
-INSERT INTO `routes` VALUES (20,0,34,'^0032',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,0,0,'','ortsunabhängig, unklare Tarifierung, GSM vermeiden');
-INSERT INTO `routes` VALUES (21,0,36,'^00151',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,7,8,6,'','T-Mobile D1');
-INSERT INTO `routes` VALUES (22,0,38,'^0016[01489]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,7,8,6,'','T-Mobile D1');
-INSERT INTO `routes` VALUES (23,0,40,'^0017[015]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,7,8,6,'','T-Mobile D1');
-INSERT INTO `routes` VALUES (24,0,42,'^00152',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','Vodafone D2');
-INSERT INTO `routes` VALUES (25,0,44,'^00162',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','Vodafone D2');
-INSERT INTO `routes` VALUES (26,0,46,'^0017[234]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','Vodafone D2');
-INSERT INTO `routes` VALUES (27,0,48,'^0015[57]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','E-Plus');
-INSERT INTO `routes` VALUES (28,0,50,'^00163',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','E-Plus');
-INSERT INTO `routes` VALUES (29,0,52,'^0017[78]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','E-Plus');
-INSERT INTO `routes` VALUES (30,0,54,'^00156',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,7,8,6,'','MobilCom');
-INSERT INTO `routes` VALUES (31,0,56,'^00159',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','O2');
-INSERT INTO `routes` VALUES (32,0,58,'^0017[69]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','O2');
-INSERT INTO `routes` VALUES (33,0,60,'^00150',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,7,8,6,'','Group3G');
-INSERT INTO `routes` VALUES (34,0,62,'^001[5-7]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,8,7,6,'','andere Handy-Gespräche');
-INSERT INTO `routes` VALUES (35,0,64,'^00[1-9][0-9]{2}',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,10,0,'','Ortsnetze');
-INSERT INTO `routes` VALUES (36,0,66,'^000',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,9,0,'','international');
-INSERT INTO `routes` VALUES (37,1,68,'^0',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,9,0,'','alles andere');
+INSERT INTO `routes` VALUES (20,0,34,'^0032',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','ortsunabhängig, unklare Tarifierung, GSM vermeiden');
+INSERT INTO `routes` VALUES (21,0,36,'^00151',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','T-Mobile D1');
+INSERT INTO `routes` VALUES (22,0,38,'^0016[01489]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','T-Mobile D1');
+INSERT INTO `routes` VALUES (23,0,40,'^0017[015]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','T-Mobile D1');
+INSERT INTO `routes` VALUES (24,0,42,'^00152',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Vodafone D2');
+INSERT INTO `routes` VALUES (25,0,44,'^00162',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Vodafone D2');
+INSERT INTO `routes` VALUES (26,0,46,'^0017[234]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Vodafone D2');
+INSERT INTO `routes` VALUES (27,0,48,'^0015[57]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','E-Plus');
+INSERT INTO `routes` VALUES (28,0,50,'^00163',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','E-Plus');
+INSERT INTO `routes` VALUES (29,0,52,'^0017[78]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','E-Plus');
+INSERT INTO `routes` VALUES (30,0,54,'^00156',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','MobilCom');
+INSERT INTO `routes` VALUES (31,0,56,'^00159',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','O2');
+INSERT INTO `routes` VALUES (32,0,58,'^0017[69]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','O2');
+INSERT INTO `routes` VALUES (33,0,60,'^00150',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Group3G');
+INSERT INTO `routes` VALUES (34,0,62,'^001[5-7]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','andere Handy-Gespräche');
+INSERT INTO `routes` VALUES (35,0,64,'^00[1-9][0-9]{2}',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Ortsnetze');
+INSERT INTO `routes` VALUES (36,0,66,'^000',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','international');
+INSERT INTO `routes` VALUES (37,1,68,'^0',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,1,0,0,'','alles andere');
 /*!40000 ALTER TABLE `routes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6484,10 +6428,7 @@ CREATE TABLE `routes_in` (
 
 LOCK TABLES `routes_in` WRITE;
 /*!40000 ALTER TABLE `routes_in` DISABLE KEYS */;
-INSERT INTO `routes_in` VALUES (1,6,1,99999,'^(.*)',1,1,1,1,1,1,1,'00:00:00','24:00:00','$1','1:1 DID -> Extension');
-INSERT INTO `routes_in` VALUES (2,6,0,12,'^5000',1,1,1,1,1,1,1,'00:00:00','24:00:00','123','5000 auf 123');
--- INSERT INTO `routes_in` VALUES (3,6,0,4,'6(.*)',1,1,1,1,1,1,1,'00:00:00','24:00:00','fax-$1','Fax');
-INSERT INTO `routes_in` VALUES (4,6,0,10,'^5000',1,1,1,1,1,0,0,'08:00:00','18:00:00','5000','5000 auf Queue wenn geöffnet');
+INSERT INTO `routes_in` VALUES (1,1,1,99999,'^(.*)',1,1,1,1,1,1,1,'00:00:00','24:00:00','$1','1:1 DID -> Extension');
 /*!40000 ALTER TABLE `routes_in` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6661,23 +6602,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (8,'nobody-00004','','','','','',4,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (9,'nobody-00005','','','','','',5,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (10,'nobody-00006','','','','','',6,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (11,'nobody-00007','','','','','',7,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (22,'hans','123','Hans','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (23,'peter','123','Peter','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (24,'anna','123','Anna','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (25,'lisa','123','Lisa','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (29,'nobody-00012','','','','','',12,1,NULL,'',NULL,NULL,NULL,0);
-INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,NULL,'',NULL,NULL,NULL,0);
+INSERT INTO `users` VALUES (1,'supervisor','123','','Supervisor','','',NULL,1,NULL,'',NULL,NULL,NULL,0,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6714,8 +6639,6 @@ CREATE TABLE `users_external_numbers` (
 
 LOCK TABLES `users_external_numbers` WRITE;
 /*!40000 ALTER TABLE `users_external_numbers` DISABLE KEYS */;
-INSERT INTO `users_external_numbers` VALUES (23,'001701234567');
-INSERT INTO `users_external_numbers` VALUES (23,'950001');
 /*!40000 ALTER TABLE `users_external_numbers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6739,12 +6662,7 @@ CREATE TABLE `vm` (
 
 LOCK TABLES `vm` WRITE;
 /*!40000 ALTER TABLE `vm` DISABLE KEYS */;
-INSERT INTO `vm` VALUES (5,0,0,0);
-INSERT INTO `vm` VALUES (6,0,0,0);
-INSERT INTO `vm` VALUES (22,0,0,0);
-INSERT INTO `vm` VALUES (23,0,1,0);
-INSERT INTO `vm` VALUES (24,0,0,0);
-INSERT INTO `vm` VALUES (25,0,0,0);
+INSERT INTO `vm` VALUES (1,0,0,0);
 /*!40000 ALTER TABLE `vm` ENABLE KEYS */;
 UNLOCK TABLES;
 
