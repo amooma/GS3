@@ -271,11 +271,20 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 	$hp_route_prefix = 0;
 	$soap_user_ext   = 0;
 	if ($boi_host_id > 0) {
-		$new_nobody_num = (int)$db->executeGetOne( 'SELECT COUNT(`user`) FROM `users` WHERE `nobody_index` IS NOT NULL AND `host_id`='.$boi_host_id );
 		$hp_route_prefix = (string)$db->executeGetOne(
 			'SELECT `value` FROM `host_params` '.
 			'WHERE `host_id`='. (int)$boi_host_id .' AND `param`=\'route_prefix\'' );
-		$username = 'nobody-'.$hp_route_prefix.'-'. str_pad($new_nobody_num, 5, '0', STR_PAD_LEFT);
+
+		for ($new_nobody_num = 0; $new_nobody_num < 30; $new_nobody_num++) {
+			$username = 'nobody-'.$hp_route_prefix.'-'. str_pad($new_nobody_num, 5, '0', STR_PAD_LEFT);
+			$nobody_uid = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user` = \''.$username.'\' AND `host_id`='.$boi_host_id );
+			if (!$nobody_uid) {
+				gs_log( GS_LOG_DEBUG, 'Found gap for nobody user "'.$username.'" on host '.$boi_host_id);
+				break;
+			} else {
+				gs_log( GS_LOG_DEBUG, 'Nobody user name "'.$username.'" already used on host '.$boi_host_id);
+			}
+		}
 	}
 	else {
 		$username = 'nobody-'. str_pad($new_nobody_index, 5, '0', STR_PAD_LEFT);
@@ -298,8 +307,9 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 	# add a SIP account:
 	#
 	if ($boi_host_id > 0) {
-		$user_ext = $hp_route_prefix . gs_nobody_index_to_extension( $new_nobody_num, true );
 		$soap_user_ext =               gs_nobody_index_to_extension( $new_nobody_num, true );
+		$user_ext = $hp_route_prefix . $soap_user_ext;
+		
 	}
 	else {
 		$user_ext = gs_nobody_index_to_extension( $new_nobody_index, false );
