@@ -279,6 +279,9 @@ context to-internal-users {
 		}
 		else {
 			if ("${exttype}" != "foreign") {
+				if ("${user_id}" != "") {
+					AGI(/opt/gemeinschaft/dialplan-scripts/get_callerid.agi,${CALLERID(num)},internal);
+				}
 				&dial-node(${EXTEN}@${dial_to_node});
 				&hangup-proper-status();
 			}
