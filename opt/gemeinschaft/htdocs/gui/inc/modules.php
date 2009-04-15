@@ -223,7 +223,7 @@ $MODULES['help'     ]=  array(
 );
 if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 $MODULES['help'     ]['sub'][
-		'snom']        =  array('title' => __('Snom'));
+		'snom']        =  array('title' => __('snom-Telefone'));
 }
 
 #####################################################################

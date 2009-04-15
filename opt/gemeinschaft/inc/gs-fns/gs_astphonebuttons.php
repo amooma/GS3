@@ -27,7 +27,7 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
-
+require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 
 /***********************************************************
 *    returns an array of the users
@@ -35,157 +35,140 @@ defined('GS_VALID') or die('No direct access.');
 
 
 
-function gs_buttondeamon_reload_keys($username)
+function gs_buttondeamon_reload_keys( $username )
 {
- require_once( dirName(__FILE__) .'/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
-  
-  if ($socket) {
-    
-  	$message = "reload Peer " . $username .
-        " All" .
-        "\n";
-                               
-        fwrite($socket, $message);
-        fwrite($socket, "quit\n");
-        fclose($socket);
-  }
-                                            
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	if ( $socket ) {
+
+		$message = "reload Peer " . $username .
+			" All" .
+			"\n";
+
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
 }
 
 
-function gs_buttondeamon_queue_update($username,  $queue, $state)
+function gs_buttondeamon_queue_update( $username,  $queue, $state )
 {
-  require_once( dirName(__FILE__) .'/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
   
-  if ($socket) {
-    
-  	$message = "set Peer " . $username .
-        " Queue " . $queue .
-        " State " . $state .  
-        "\n";
-                               
-        fwrite($socket, $message);
-        fwrite($socket, "quit\n");
-        fclose($socket);
-  }
+	if ( $socket ) {
+
+		$message = "set Peer " . $username .
+			" Queue " . $queue .
+			" State " . $state .  
+			"\n";
+
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
+                                        
+}
+
+function gs_buttondeamon_diversion_update( $username )
+{
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	if ( $socket ) {
+
+ 		$message = "set Peer " . $username .
+			" Diversion update" .
+			"\n";
+
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
                                             
 }
 
-function gs_buttondeamon_diversion_update( $username)
+function gs_buttondeamon_dnd_update( $username )
 {
-  require_once( dirName(__FILE__) .'/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
-  
-  if ($socket) {
-    
-  	$message = "set Peer " . $username .
-        " Diversion update" .
-        "\n";
-                               
-        fwrite($socket, $message);
-        fwrite($socket, "quit\n");
-        fclose($socket);
-  }
-                                            
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	if ( $socket ) {
+
+		$message = "set Peer " . $username .
+			" DND update" .
+			"\n";
+
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
+
 }
 
-function gs_buttondeamon_dnd_update( $username)
+function gs_buttondeamon_clir_update( $username )
 {
-  require_once( dirName(__FILE__) .'/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
-  
-  if ($socket) {
-    
-  	$message = "set Peer " . $username .
-        " DND update" .
-        "\n";
-                               
-        fwrite($socket, $message);
-        fwrite($socket, "quit\n");
-        fclose($socket);
-  }
-                                            
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	if ( $socket ) {
+
+		$message = "set Peer " . $username .
+			" CLIR update" .
+			"\n";
+
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
+
 }
 
-function gs_buttondeamon_clir_update( $username)
+function gs_buttondeamon_clip_update( $username )
 {
-  require_once( dirName(__FILE__) .'/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
   
-  if ($socket) {
+	if ( $socket ) {
 
-	$message = "set Peer " . $username .
-  	" CLIR update" .
- 	"\n";
+		$message = "set Peer " . $username .
+			" CLIP update" .
+	 		"\n";
 
-	fwrite($socket, $message);
-	fwrite($socket, "quit\n");
-	fclose($socket);
-  }
-                                            
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
+
 }
 
-function gs_buttondeamon_clip_update( $username)
+function gs_buttondeamon_user_usergroupgroup_update( $username )
 {
-  require_once( dirName(__FILE__) .'/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
   
-  if ($socket) {
+	if ( $socket ) {
 
-	$message = "set Peer " . $username .
-  	" CLIP update" .
- 	"\n";
+		$message = "set Peer " . $username .
+			" UserGroup update" .
+	 		"\n";
 
-	fwrite($socket, $message);
-	fwrite($socket, "quit\n");
-	fclose($socket);
-  }
-                                            
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
+
 }
 
-function gs_buttondeamon_user_usergroupgroup_update( $username)
+function gs_buttondeamon_group_update( $username )
 {
-  require_once( dirName(__FILE__) .'/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
-  
-  if ($socket) {
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
 
-	$message = "set Peer " . $username .
-  	" UserGroup update" .
- 	"\n";
+	if ( $socket ) {
 
-	fwrite($socket, $message);
-	fwrite($socket, "quit\n");
-	fclose($socket);
-  }
-                                            
-}
+  		$message = "set Peer " . $username .
+        	" PickupGroups update" .
+	        "\n";
 
-function gs_buttondeamon_group_update( $username)
-{
-  require_once( dirName(__FILE__) .'/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
-  
-  if ($socket) {
-    
-  	$message = "set Peer " . $username .
-        " PickupGroups update" .
-        "\n";
-                               
-        fwrite($socket, $message);
-        fwrite($socket, "quit\n");
-        fclose($socket);
-  }
+		fwrite( $socket, $message );
+        fwrite( $socket, "quit\n" );
+        fclose( $socket );
+ 	}
                                             
 }
 
@@ -193,177 +176,157 @@ function gs_buttondeamon_group_update( $username)
 function gs_buttondeamon_group_del( $group )
 {
 
-  require_once( dirName(__FILE__) .'/../../inc/conf.php' );
-  //---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
      
-if ($socket) {
-           
- $message = "remove System PickupGroup " . $group .  "\n";
-                                   
-   fwrite($socket, $message);
-   fwrite($socket, "quit\n");
-   fclose($socket);
- }
-      
+	if ( $socket ) {
+
+		$message = "remove System PickupGroup " . $group .  "\n";
+
+ 		fwrite( $socket, $message );
+ 		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
 }
                                                                                                          
 
                                                                                                          
 
-function gs_buttondeamon_missedcalls($username)
+function gs_buttondeamon_missedcalls( $username )
 {
-  include_once( dirName(__FILE__) . '/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
   
-  if ($socket) {
-    
-  	$message = "set Peer " . $username .
-        " MissedCalls update" .
-        "\n";
-                               
-        fwrite($socket, $message);
-        fwrite($socket, "quit\n");
-        fclose($socket);
-  }
-                                            
+	if ( $socket ) {
+
+		$message = "set Peer " . $username .
+			" MissedCalls update" .
+			"\n";
+
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
+
 }
 
 function gs_buttondeamon_missedqueuecalls($username)
 {
-  include_once( dirName(__FILE__) . '/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
   
-  if ($socket) {
-    
-  	$message = "set Peer " . $username .
- 	" MissedQueueCalls update" .
-	"\n";
+	if ( $socket ) {
 
-	fwrite($socket, $message);
-	fwrite($socket, "quit\n");
-	fclose($socket);
-  }
-                                            
+		$message = "set Peer " . $username .
+			" MissedQueueCalls update" .
+			"\n";
+
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
 }
 
-function gs_buttondeamon_remove_peer($username)
+function gs_buttondeamon_remove_peer( $username )
 {
-  include_once( dirName(__FILE__) . '/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
-  
-  if ($socket) {
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	if ( $socket ) {
     
-  	$message = "remove Peer " . $username .
-	" Entity" .
-	"\n";
+ 		$message = "remove Peer " . $username .
+			" Entity" .
+			"\n";
                                
-	fwrite($socket, $message);
-	fwrite($socket, "quit\n");
-	fclose($socket);
-  }
-                                            
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket ); 
+	}
+
 }
 
 function gs_buttondeamon_reload()
 {
-  require_once( dirName(__FILE__) .'/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
-  
-  if ($socket) {
-    
-  	$message = "reload System\n";
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	if ( $socket ) {
+
+		$message = "reload System\n";
                                
-        fwrite($socket, $message);
-        $ret = array();
-        while (!feof($socket)) {
-          $a = fgets($socket);
-          $ret[] = $a;
-          if(substr_count($a,"OK") > 0 ) break;
-          if(substr_count($a,"Error") > 0 ) break;
-        }
-        fwrite($socket, "quit\n");
-        fclose($socket);
+		fwrite($socket, $message);
+		$ret = array();
+		while ( !feof( $socket ) ) {
+			$a = fgets( $socket );
+			$ret[] = $a;
+			if ( substr_count($a,"OK" ) > 0 ) break;
+			if ( substr_count($a,"Error" ) > 0 ) break;
+		}
+
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
         return $ret;
-  }
-                                            
+	}
+
 }
 
-function gs_buttondeamon_usergroup_remove($usergroup)
+function gs_buttondeamon_usergroup_remove( $usergroup )
 {
-  include_once( dirName(__FILE__) . '/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
-  
-  if ($socket) {
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	if ( $socket ) {
     
-  	$message = "remove System UserGroup " . $usergroup .
-	"\n";
+ 		$message = "remove System UserGroup " . $usergroup .
+			"\n";
                                
-	fwrite($socket, $message);
-	fwrite($socket, "quit\n");
-	fclose($socket);
-  }
-                                            
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
+
 }
 
 function gs_buttondeamon_usergroups_update()
 {
-  include_once( dirName(__FILE__) . '/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
-  
-  if ($socket) {
-    
-  	$message = "set System UserGroups update" . 
-        "\n";
-                               
-        fwrite($socket, $message);
-        fwrite($socket, "quit\n");
-        fclose($socket);
-  }
-                                            
+	$socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
+
+	if ( $socket ) {
+
+		$message = "set System UserGroups update" . 
+			"\n";
+
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
+
 }
 
-function gs_buttondeamon_softkeyprofile_remove($profile)
+function gs_buttondeamon_softkeyprofile_remove( $profile )
 {
-  include_once( dirName(__FILE__) . '/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
-  
-  if ($socket) {
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	if ( $socket ) {
     
-  	$message = "remove System SoftkeyProfile " . $profile .
-	"\n";
-                               
-	fwrite($socket, $message);
-	fwrite($socket, "quit\n");
-	fclose($socket);
-  }
-                                            
+		$message = "remove System SoftkeyProfile " . $profile .
+			"\n";
+
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
+
 }
 
-function gs_buttondeamon_softkeyprofile_update($profile)
+function gs_buttondeamon_softkeyprofile_update( $profile )
 {
-  include_once( dirName(__FILE__) . '/../../inc/conf.php' );
-//---------------------------------------------------------------------------
-  $socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
-  
-  if ($socket) {
+	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
+
+	if ( $socket ) {
     
-  	$message = "set System SoftkeyProfile " . $profile .
-        " update" .
-        "\n";
-                               
-        fwrite($socket, $message);
-        fwrite($socket, "quit\n");
-        fclose($socket);
-  }
-                                            
+		$message = "set System SoftkeyProfile " . $profile .
+			" update" .
+			"\n";
+
+		fwrite( $socket, $message );
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+	}
 }
 
 ?>

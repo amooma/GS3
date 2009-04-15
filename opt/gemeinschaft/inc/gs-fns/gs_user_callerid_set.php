@@ -61,7 +61,13 @@ function gs_user_callerid_set( $user, $number = "", $dest )
 	if (! $ok)
 		return new GsError( 'Failed to set callerid unselected.' );
 	
-	if ($number != "") {	
+	if ($number != "") {
+	
+		$count = $db->executeGetOne( 'SELECT COUNT(*) FROM `users_callerids` WHERE `user_id`=' . $user_id .' AND `dest`=\'' . $db->escape($dest) . '\' AND  `number` =\'' .  $db->escape($number) . '\'');
+		
+		 if($count != 1)
+		 	return new GsError( 'Outbound number ' . $number . ' not allowed.' );		
+		
 		$ok = $db->execute( 'UPDATE `users_callerids` SET `selected` = 1 WHERE `user_id`=' . $user_id .' AND `dest`=\'' . $db->escape($dest) . '\' AND  `number` =\'' .  $db->escape($number) . '\'');
 		if (! $ok)
 			return new GsError( 'Failed to set callerid.' );	

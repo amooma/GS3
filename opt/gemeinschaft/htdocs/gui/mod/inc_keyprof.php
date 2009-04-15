@@ -89,9 +89,9 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 */
 
 $key_astbuttond = array( 
-	'diversion'  => __('Umleitung'),              		# Umleitung
-	'diversion_intern'	=> __('Umleitung intern'),		# Umleitung itern
-	'diversion_extern'	=> __('Umleitung extern'),		# Umleitung extern
+	'diversion'		=> __('Umleitung'),              		# Umleitung
+	'diversion_int'		=> __('Umleitung intern'),		# Umleitung itern
+	'diversion_ext'		=> __('Umleitung extern'),		# Umleitung extern
 	'queue'  		=> __('An/Abmelden Warteschlange'),	# Queue an/abmelden 
 	'agent'  		=> __('An/Abmelden Agent'),		# Agent an/abmelden 
 	'agent_paused' 		=> __('Agentenpause'),			# Agentenpause ein/aus
@@ -99,7 +99,8 @@ $key_astbuttond = array(
 	'clip_extern' 		=> __('CLIP extern'),			# CLIP extern
 	'clir_intern' 		=> __('CLIR intern'),			# CLIR intern
 	'clir_extern' 		=> __('CLIR extern'),			# CLIR extern
-	'url' 			=> __('URL')				# CLIR extern
+	'clir_nextcall' 		=> __('CLIR f&uuml;r n&auml;chsten Anruf'),# CLIR once
+	'url' 			=> __('URL')				# URL
 
 );
 
@@ -114,6 +115,9 @@ $key_functions_snom = array(
 
 if ( GS_BUTTONDAEMON_USE == true ) {
 	$key_functions_snom = array_merge( $key_functions_snom, $key_astbuttond);
+	unset ( $key_functions_snom['blf'] );
+	unset ( $key_functions_snom['speed'] );
+	
 }
 
 $key_function_none_snom = 'none';

@@ -53,19 +53,28 @@ context user-config {
 	//  CLIR (Rufnummernunterdr�ckung)
 	//-------------------------------------------------------------
 	
-	*90 => {
+	*31 => {
+		Set(CDR(amaflags)=OMIT);
+		&user-config-clir(all,2);
+	}
+	*31* => {
+		Set(CDR(amaflags)=OMIT);
+		&user-config-clir(all,0);
+	}
+
+	*32 => {
 		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(internal,1);
 	}
-	*90* => {
+	*32* => {
 		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(internal,0);
 	}
-	*91 => {
+	*33 => {
 		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(external,1);
 	}
-	*91* => {
+	*33* => {
 		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(external,0);
 	}
@@ -183,21 +192,21 @@ context user-config {
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
 	}
-	*31 => {
+	*90 => {
 		//redirect internal std
 		&user-call-forward-activate-numeric(std,0,0,1);
 		&queue-logout-all-silent();
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
-		Playback(gemeinschaft/rufumleitung&gemeinschaft/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
 	}
-	*32 => {
+	*91 => {
 		&user-call-forward-activate-numeric(std,1,0,1);
 		&queue-logout-all-silent();
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
-		Playback(gemeinschaft/rufumleitung&gemeinschaft/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
 	}
 	dnd-on => {
@@ -220,18 +229,18 @@ context user-config {
 		Hangup();
 	}
 
-	*31* => {
+	*90* => {
 		&user-call-forward-activate-numeric(std,0,0,0);
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
-		Playback(gemeinschaft/rufumleitung&gemeinschaft/deaktiviert);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/deaktiviert);
 		Hangup();
 	}
-	*32* => {
+	*91* => {
 		&user-call-forward-activate-numeric(std,1,0,0);
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
-		Playback(gemeinschaft/rufumleitung&gemeinschaft/deaktiviert);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/deaktiviert);
 		Hangup();
 	}
 	dnd-off => {
@@ -243,7 +252,7 @@ context user-config {
 		Hangup();
 	}
 	
-	_*2X. => {
+	_*2. => {
 		Set(CDR(amaflags)=OMIT);
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
@@ -265,34 +274,34 @@ context user-config {
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
 	}
-	_*31X. => {
+	_*90. => {
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
 		Answer();
 		Set(tonumber=${EXTEN:3});
-		System(/opt/gemeinschaft/scripts/gs_callforward_number_set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
-		System(/opt/gemeinschaft/scripts/gs_callforward_number_set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
 		&user-call-forward-activate-numeric(var,0,0,1);
 		&queue-logout-all-silent();
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
-		Playback(gemeinschaft/rufumleitung&gemeinschaft/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
 	}
-	_*32X. => {
+	_*91. => {
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
 		Answer();
 		Set(tonumber=${EXTEN:3});
-		System(/opt/gemeinschaft/scripts/gs_callforward_number_set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
-		System(/opt/gemeinschaft/scripts/gs_callforward_number_set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
 		&user-call-forward-activate-numeric(var,1,0,1);
 		&queue-logout-all-silent();
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
-		Playback(gemeinschaft/rufumleitung&gemeinschaft/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
 	}
 	
@@ -334,7 +343,7 @@ context user-config {
 	//  Ausgehende Rufnummer
 	//-------------------------------------------------------------
 
-	*97 => {
+	*34 => {
 		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},internal);
 		if( "${clipset}" == "OK" ) {
 			Wait(0.5);
@@ -348,7 +357,7 @@ context user-config {
 		}
 	}
 
-	_*97X. => {
+	_*34X. => {
 		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},internal,${EXTEN:3});
 		if( "${clipset}" == "OK" ) {
 			Wait(0.5);
@@ -362,7 +371,7 @@ context user-config {
 		}
 	}
 
-	*98 => {
+	*35 => {
 		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},external);
 		if( "${clipset}" == "OK" ) {
 			Wait(0.5);
@@ -376,7 +385,7 @@ context user-config {
 		}
 	}
 
-	_*98X. => {
+	_*35X. => {
 		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},external,${EXTEN:3});
 		if( "${clipset}" == "OK" ) {
 			Wait(0.5);
@@ -413,12 +422,15 @@ macro user-config-clir( mdest, mactive_num ) {
 	if ("${user_code}" = "")
 		Hangup();
 	
-	if ("${mdest}" != "external")
-		Set(mdest=internal);
+	if( "${mdest}" != "internal" && "${mdest}" != "external" )
+		Set(mdest=all);	
 	
 	Set(mactive=yes);
 	if ("${mactive_num}" = "0")
 		Set(mactive=no);
+	else if ("${mactive_num}" = "2")
+		Set(mactive=once);
+	
 	
 	Verbose(1,### User ${user_name}: set CLIR ${mdest}: ${mactive});
 	Answer();

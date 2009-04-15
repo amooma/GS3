@@ -30,6 +30,7 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -64,7 +65,14 @@ elseif ($restrict=='yes' ) $clir = 1;
 elseif ($restrict=='once') {
 	$clir = 1;
 	$dbm = gs_db_master_connect();
-	$dbm->execute( 'UPDATE `clir` SET `internal_restrict`=\'no\' WHERE `user_id`='. $uid );
+	$dbm->execute( 'UPDATE `clir` SET `internal_restrict`=\'no\', `external_restrict`=\'no\' WHERE `user_id`='. $uid );
+
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $db->escape($uid) );
+		if (! $user_name)
+			return new GsError( 'Unknown user.' );
+		gs_buttondeamon_clir_update($user_name);
+	}
 }
 
 echo 'SET VARIABLE clir '. gs_agi_str_esc($clir) ."\n";

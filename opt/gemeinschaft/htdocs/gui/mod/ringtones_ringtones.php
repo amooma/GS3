@@ -247,7 +247,7 @@ if (@$ringtones[$source]['file']) {
 ?>
 <p class="small" style="max-width:48em;">
 	<sup>[1]</sup>
-	<?php echo __('Das Snom unterst&uuml;tzt Ringer 1-5 und lautlos.<br /> F&uuml;r das Snom kann nur entweder f&uuml;r interne oder f&uuml;r externe Anrufe eine eigene Klingeltondatei eingestellt sein, nicht f&uuml;r beides. Die L&auml;nge wird auf wenige Sekunden begrenzt.'); ?>
+	<?php echo __('Das Snom unterst&uuml;tzt Ringer 1-5 und lautlos.<br />Die L&auml;nge der eigenen Klingelt&ouml;ne wird auf wenige Sekunden begrenzt. F&uuml;r den eigenen Klingelton k&ouml;nnen Sie Audio-Dateien in den Dateiformaten "wav", "mp3" oder "ogg" nutzen.'); ?>
 </p>
 <?php
 //}

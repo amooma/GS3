@@ -47,15 +47,17 @@ echo '</h2>', "\n";
 ?>
 
 <p style="max-width:550px; font-size:0.92em; line-height:1.2em;">
-<?php echo __('Das SIP-Telefon Snom 360 bietet neben den &uuml;blichen Zifferntasten eine ganze Reihe n&uuml;tzlicher Funktionstasten, die bis zu einem gewissen Grad konfigurierbar sind. Die wichtigsten Tasten und Funktionen werden an dieser Stelle kurz aufgef&uuml;hrt. Eine genaue Beschreibung der Tasten finden Sie in dem &uuml;ber 100 Seiten starken Handbuch zu ihrem Snom-Telefon.'), ' '; ?>
-(<a target="_blank" href="http://www.snom.com/wiki/index.php/Snom360"><?php echo __('Snom 360 Doku'); ?></a>)
-</p>
+<?php echo __('snom-Telefone weisen abh&auml;ngig vom Ger&auml;te-Typ konfigurierbare Funktionstasten auf, deren Funktionen unten aufgef&uuml;hrt sind. Bitte entnehmen Sie eine ausf&uuml;hrliche Beschreibung der Tasten und Funktionen dem Handbuch zum snom-Telefon.'), ' '; ?>
 
+<br><a target="_blank" href="http://wiki.snom.com/Snom320/Documentation"><?php echo __('Dokumentation snom 320'); ?></a>
+/ <a target="_blank" href="http://wiki.snom.com/Snom360/Documentation"><?php echo __('Dokumentation snom 360'); ?></a>
+/ <a target="_blank" href="http://wiki.snom.com/Snom370/Documentation"><?php echo __('Dokumentation snom 370'); ?></a>
+</p>
 
 <table cellspacing="1">
 <thead>
 <tr>
-	<th colspan="2"><?php echo __('Snom 360 Tasten'); ?></th>
+	<th colspan="2"><?php echo __('Tastenbelegung snom-Telefon'); ?></th>
 </tr>
 </thead>
 <tbody>
@@ -176,7 +178,7 @@ echo '</h2>', "\n";
 		<small>DND</small>
 	</td>
 	<td>
-		<?php echo __('<b>Nicht st&ouml;ren</b> ein/aus<br /> Wenn dieser Modus aktiviert ist, werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem Display links unten das Symbol und &quot;Inaktiv&quot; angezeigt. Auf Ihre ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&auml;ren Sie gar nicht eingeloggt, also offline.'); ?>
+		<?php echo __('<b>Nicht st&ouml;ren</b> ein/aus<br /> Wenn dieser Modus aktiviert ist, werden keine Anrufe zu Ihrem Telefon durchgestellt. Dabei wird auf dem Display "Ruhe/DND" angezeigt. Auf Ihre ggf. eingestellte Rufweiterleitung wirkt dieser Modus, als w&uuml;rden Sie telefonieren, also besetzt.'); ?>
 	</td>
 </tr>
 

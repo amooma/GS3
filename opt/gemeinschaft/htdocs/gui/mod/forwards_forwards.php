@@ -82,8 +82,6 @@ if (@$_REQUEST['action']==='save') {
 	$timeout = abs((int)@$_REQUEST['timeout']);
 	if ($timeout < 1) $timeout = 1;
 	
-	if ($num_std=='')
-		$warnings['std-empty'] = __('Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-St&ouml;ren-Funktion am Telefon ben&ouml;tigt.');
 	
 	foreach ($sources as $src => $ignore) {
 		foreach ($cases as $case => $gnore2) {
@@ -174,8 +172,6 @@ foreach ($callforwards as $_source => $_cases) {
 		}
 	}
 }
-if ($number_std=='')
-	$warnings['std-empty'] = __('Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-St&ouml;ren-Funktion am Telefon ben&ouml;tigt.');
 
 # find best match for var number
 #

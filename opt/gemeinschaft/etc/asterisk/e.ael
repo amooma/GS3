@@ -1080,7 +1080,7 @@ context from-internal-nobody {
 		test;                 // test extensions
 	}
 	
-	_*31. => {
+	_*31X. => {
 		Verbose(1,### Set CLIR for number ${EXTEN:3});
 		Set(__clir=1);
 		jump ${EXTEN:3}@from-internal-nobody;
@@ -1109,7 +1109,7 @@ context from-internal-users {
 		agents;
 	}
 	
-	_*31. => {
+	_*31X. => {
 		Verbose(1,### Set CLIR for number ${EXTEN:3});
 		Set(__clir=1);
 		jump ${EXTEN:3}@from-internal-users;
