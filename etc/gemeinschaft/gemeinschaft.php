@@ -186,7 +186,7 @@ $GUI_MON_NOQUEUEBLUE        = true;
 
 //$GUI_LANGS = 'de_DE:de_DE:de-DE:Deutsch, en_US:en_US:en-US:English';
 
-$GUI_ADDITIONAL_STYLESHEET  = 'locaphone.css';
+//$GUI_ADDITIONAL_STYLESHEET  = 'gemeinschaft.css';
 
 
 
