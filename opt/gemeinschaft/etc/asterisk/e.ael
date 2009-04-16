@@ -303,7 +303,7 @@ macro agent-login-enterid(){
 	Answer();
 	NoOp(### Agent without id tries to log in);
 	Wait(1);
-	Read(new_user_name,gemeinschaft/agent-enterid,10,s,3,5);
+	Read(new_user_name,/opt/gemeinschaft/sounds/de-DE/agent-enterid,10,s,3,5);
 	&agent-login(${new_user_name});
 
 }
@@ -344,7 +344,7 @@ macro agent-pause() {
 	Verbose(1,### Is Agent:${agent} );
 	Verbose(1,### DB-Stat:  ${agent_pause});
 	if ("${agent}" = "true") {
-		Playback(/opt/gemeinschaft/sounds/de-DE/pause);
+		Playback(beep);
 		
 		PauseQueueMember(|SIP/${user_name});
 		UserEvent(AgentPausedUI|agent: ${user_name});
@@ -364,7 +364,7 @@ macro agent-unpause() {
 	Wait(0.5);
 	
 	if ("${agent}" = "true") {
-		Playback(/opt/gemeinschaft/sounds/de-DE/pause-beendet);
+		Playback(beep);
 		
 		UnpauseQueueMember(|SIP/${user_name});
 		UserEvent(AgentUnPausedUI|agent: ${user_name});
