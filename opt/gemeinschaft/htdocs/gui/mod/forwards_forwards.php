@@ -195,6 +195,7 @@ foreach ($callforwards as $_source => $_cases) {
 
 # find best match for unavail timeout
 #
+/*
 if ( @$callforwards['internal']['unavail']['active'] != 'no'
   && @$callforwards['external']['unavail']['active'] != 'no' )
 {
@@ -209,7 +210,9 @@ if ( @$callforwards['internal']['unavail']['active'] != 'no'
 } else {
 	$timeout = 15;
 }
+*/
 
+$timeout = (int)@$callforwards['internal']['unavail']['timeout'];
 
 /*
 # get vm states

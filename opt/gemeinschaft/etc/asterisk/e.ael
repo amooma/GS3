@@ -228,9 +228,13 @@ macro agent-login( new_user_name ) {
 
 	Answer();
 	NoOp(### Agent ${new_user_name} tries to log in on user: ret = ${user_name});
-	
-	Wait(1);
-	Read(pass,agent-pass);
+	AGI(/opt/gemeinschaft/dialplan-scripts/agent-needpw.agi,${new_user_name});
+
+	if ( "${agent_needpw}" = "1" ) {
+		Wait(1);
+		Read(pass,agent-pass);
+	}
+
 	AGI(/opt/gemeinschaft/dialplan-scripts/agent-login.agi,${new_user_name},${pass},${user_name});
 	if ("${ret}" = "error")
 		goto error;

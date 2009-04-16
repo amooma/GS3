@@ -193,10 +193,7 @@ if ( $type == 'forward') {
 		'<Name>', snomXmlEsc('externe Nummern'), '</Name>', "\n",
 		'<URL>',$url_snom_provdir,'extnumbers.php?m=',$mac, '&u=',$user,'</URL>', "\n",
 		'</MenuItem>', "\n\n";
-	echo '<MenuItem>', "\n",
-		'<Name>', snomXmlEsc('Rufumleitung Queue'), '</Name>', "\n",
-		'<URL>',$url_snom_provdir,'queueforward.php?m=',$mac, '&u=',$user,'</URL>', "\n",
-		'</MenuItem>', "\n\n";
+
 	
 	defineBackKey();
 	echo '</SnomIPPhoneMenu>', "\n";

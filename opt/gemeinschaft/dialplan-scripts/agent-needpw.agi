@@ -1,0 +1,61 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 4817 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+$new_anum = trim(@$argv[1]);
+
+if (! $new_anum) {
+	die();
+}
+
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$db = gs_db_slave_connect();
+
+$new_aid = (int)$db->executeGetOne( 'SELECT `id` FROM `agents` WHERE `number`=\''. $db->escape($new_anum) .'\'' );
+if ($new_aid < 1) {
+	# unknown user
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+$pin = $db->executeGetOne( 'SELECT `pin` FROM `agents` WHERE `id`='. $new_aid );
+if ( strlen ( trim($pin)) > 0 ) {
+	 echo 'SET VARIABLE agent_needpw 1' ."\n";
+}
+
+//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+
+
+?>

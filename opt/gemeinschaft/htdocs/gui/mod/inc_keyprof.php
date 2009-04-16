@@ -116,7 +116,6 @@ $key_functions_snom = array(
 if ( GS_BUTTONDAEMON_USE == true ) {
 	$key_functions_snom = array_merge( $key_functions_snom, $key_astbuttond);
 	unset ( $key_functions_snom['blf'] );
-	unset ( $key_functions_snom['speed'] );
 	
 }
 

@@ -37,7 +37,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_callforward_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
-
+include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -180,7 +180,7 @@ if ( $type != false && isset($_REQUEST['value']) ) {
 	$user_id = getUserID( $user );
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 
-	$timeout = (int) $db->executeGetOne( 'SELECT `active` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\''.$type.'\''); 
+	$timeout = (int) $db->executeGetOne( 'SELECT `timeout` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\'internal\''); 
 
 	
 	$num['std'] = $db->executeGetOne( 'SELECT `number_std` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\'internal\''); 
@@ -252,7 +252,11 @@ if ( $type != false && isset($_REQUEST['value']) ) {
 		}
 		gs_vm_activate( $user_name, 'internal', $vm['internal'] );
 		gs_vm_activate( $user_name, 'external', $vm['external'] );
-		           
+		
+		if ( GS_BUTTONDAEMON_USE == true ) {
+			$ext =  $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+			gs_buttondeamon_diversion_update( $ext);
+		}
 	}
 	
 }
@@ -283,7 +287,7 @@ if ( ($type == 'internal' || $type == 'external') && !isset( $_REQUEST['key']) )
 		_err( 'Not authorized' );
 	
 	
-	$timeout = (int)$db->executeGetOne( 'SELECT `active` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\''.$type.'\''); 
+	$timeout = (int)$db->executeGetOne( 'SELECT `timeout` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\''.$type.'\''); 
 
 	$vm = $db->executeGetOne( 'SELECT `'. $type .'_active` FROM `vm` WHERE `user_id`=\''. $user_id  .'\'');
 	foreach($cases as $case => $v){
@@ -487,6 +491,7 @@ if ( $type == 'timeout' && !isset( $_REQUEST['value']) ) {
 		_err( 'Not authorized' );
 	# find best match for unavail timeout
 	#
+	/* 
 	if ( @$callforwards['internal']['unavail']['active'] != 'no'
 	  && @$callforwards['external']['unavail']['active'] != 'no' )
 	  {
@@ -501,6 +506,8 @@ if ( $type == 'timeout' && !isset( $_REQUEST['value']) ) {
 	} else {
 		$timeout = 15;
 	}
+	*/
+	$timeout = (int)@$callforwards['internal']['unavail']['timeout'];
 	
 	echo '<SnomIPPhoneInput>',"\n";
 	echo '<Title>',snomXmlEsc($Title),'</Title>',"\n";
