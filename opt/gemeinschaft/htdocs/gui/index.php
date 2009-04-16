@@ -428,7 +428,7 @@ function gs_boi_menu_sc( url )
 			echo '</div>' ,"\n";
 			break;
 		default    :
-			echo '<img alt=" " src="', GS_URL_PATH ,'img/gemeinschaft.png" class="fl" />' ,"\n";
+			echo '<img alt=" " src="', GS_URL_PATH ,'img/gemeinschaft-32.png" class="fl" />' ,"\n";
 			//echo '<h1>', __('Telefon-Manager') ,'</h1>' ,"\n";
 			echo '<h1>', 'Gemeinschaft' ,'</h1>' ,"\n";
 	}
