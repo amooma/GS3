@@ -31,6 +31,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_asterisks_prune_peer.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 
 
@@ -38,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 *    delete a user account
 ***********************************************************/
 
-function gs_user_del( $user )
+function gs_user_del( $user, $reload = true )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -174,19 +175,13 @@ function gs_user_del( $user )
 	#
 	$db->execute( 'DELETE FROM `users` WHERE `id`='. $user_id );
 	
-	# reload dialplan (hints!)
+	# prune realtime peer and reload dialplan (to update hints)
 	#
 	if ($host_id > 0) {
 		if (is_array($host) && ! $host['is_foreign']) {
-			//@ exec( GS_DIR .'sbin/start-asterisk --dialplan' );  // <-- not the same host!!!
-			//$ok = @ gs_asterisks_reload( array($host_id), true );
-			$ok = @ gs_asterisks_reload( array($host_id), false );
-			/*
-			if (isGsError( $ok ))
-				return new GsError( $ok->getMsg() );
-			if (! ok)
-				return new GsError( 'Failed to reload dialplan.' );
-			*/
+		
+			$ok = @ gs_asterisks_prune_peer( array($host_id), $ext );
+			if ($reload) $ok = @ gs_asterisks_reload( array($host_id), true );
 		}
 	}
 	

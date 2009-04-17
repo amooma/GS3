@@ -38,11 +38,12 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_del.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user>';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> [--no-reload]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'user='
+		'user=',
+		'no-reload'
 	),
 	$usage
 );
@@ -50,11 +51,16 @@ if (! isSet($opts['user'])) {
 	gs_script_invalid_usage( $usage );
 }
 
+if ( array_key_exists('no-reload', $opts)) {
+	$reload = false;
+} else {
+	$reload = true;
+}
 
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_user_del( $opts['user'] );
+$ret = @ gs_user_del( $opts['user'], $reload );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 echo "User deleted.\n";
