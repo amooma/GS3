@@ -31,6 +31,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_asterisks_prune_peer.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 
 
@@ -38,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 *    change a user account
 ***********************************************************/
 
-function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false, $email='' )
+function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false, $email='',  $reload = true)
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -88,6 +89,10 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 		$old_host = false;
 	}
 	
+	# get user extension
+	#
+	$ext = (int)$db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
+
 	# check if (new) host exists
 	#
 	$host = gs_host_by_id_or_ip( $host_id_or_ip );
@@ -310,27 +315,19 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	if (! gs_db_commit_trans($db)) {
 		return new GsError( 'Failed to modify user.' );
 	}
-	
-	# new host?
+
+	# new host? reload dialplan if needed
 	#
 	if ($host['id'] != $old_host_id) {
-		# reload dialplan (hints!)
-		#
-		//@ exec( GS_DIR .'sbin/start-asterisk --dialplan' );  // <-- not the same host!!!
 		if (is_array($old_host) && ! $old_host['is_foreign']) {
-			//$ok = @ gs_asterisks_reload( array($old_host_id), true );
-			$ok = @ gs_asterisks_reload( array($old_host_id), false );
+			$ok = @ gs_asterisks_prune_peer( array($old_host_id), $ext );
+			if ($reload) $ok = @ gs_asterisks_reload( array($old_host_id), true );
 		}
 		if (! $host['is_foreign']) {
-			//$ok = @ gs_asterisks_reload( array($host['id'] ), true );
-			$ok = @ gs_asterisks_reload( array($host['id'] ), false );
+			if ($reload) $ok = @ gs_asterisks_reload( array($host['id'] ), true );
 		}
-		/*
-		if (isGsError( $ok ))
-			return new GsError( $ok->getMsg() );
-		if (! ok)
-			return new GsError( 'Failed to reload dialplan.' );
-		*/
+	} else {
+		$ok = @ gs_asterisks_prune_peer( array($host['id']), $ext );
 	}
 	
 	# reboot the phone

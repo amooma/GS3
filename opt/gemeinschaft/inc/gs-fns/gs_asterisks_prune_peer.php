@@ -33,15 +33,22 @@ include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
 
 
 /***********************************************************
-*    reloads all active asterisks
+*    prunes sip peer out of asterisk realtime cache
 *    $host_ids=false for all
 ***********************************************************/
 
-function gs_asterisks_reload( $host_ids, $dialplan_only )
+function gs_asterisks_prune_peer( $host_ids, $peer )
 {
-	$dialplan_only = !! $dialplan_only;
+	
 	if (! $host_ids || ! is_array($host_ids)) $host_ids = false;
 	
+	# check peer
+	if ($peer == 'all' || $peer == '') {
+		 $peer = 'all';
+	} else if (! preg_match( '/^[1-9][0-9]{1,9}$/', $peer )) {
+		return new GsError( 'Invalid peer name.' );
+	}
+
 	# connect to db
 	#
 	$db = gs_db_master_connect();
@@ -77,7 +84,7 @@ function gs_asterisks_reload( $host_ids, $dialplan_only )
 	$ok = true;
 	foreach ($hosts as $host) {
 		if (! $host_ids || in_array($host['id'], $host_ids)) {
-			$cmd = '/opt/gemeinschaft/sbin/start-asterisk'. ($dialplan_only ? ' --dialplan' : '');
+			$cmd = 'asterisk -rx \'sip prune realtime '. $peer .'\' ';
 			if (! $GS_INSTALLATION_TYPE_SINGLE
 			&&  ! in_array($host['id'], $our_host_ids)) {
 				# this is not the local node
@@ -88,8 +95,8 @@ function gs_asterisks_reload( $host_ids, $dialplan_only )
 		}
 	}
 	if (! $ok)
-		return new GsError( 'Failed to reload Asterisks.' );
+		return new GsError( 'Failed to prune peer "'.$peer.'".' );
 	return true;
-}
 
+}
 ?>
