@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 *    delete a user account
 ***********************************************************/
 
-function gs_user_del( $user, $reload = true )
+function gs_user_del( $user, $reload=true )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -175,13 +175,12 @@ function gs_user_del( $user, $reload = true )
 	#
 	$db->execute( 'DELETE FROM `users` WHERE `id`='. $user_id );
 	
-	# prune realtime peer and reload dialplan (to update hints)
+	# reload dialplan (to update hints) and prune realtime peer
 	#
 	if ($host_id > 0) {
 		if (is_array($host) && ! $host['is_foreign']) {
-		
-			$ok = @ gs_asterisks_prune_peer( $ext, array($host_id) );
-			if ($reload) $ok = @ gs_asterisks_reload( array($host_id), true );
+			@ gs_asterisks_prune_peer( $ext, array($host_id) );
+			if ($reload) @ gs_asterisks_reload( array($host_id), true );
 		}
 	}
 	
