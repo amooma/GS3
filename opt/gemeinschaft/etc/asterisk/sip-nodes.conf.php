@@ -122,7 +122,7 @@ ORDER BY `g`.`id`'
 while ($gw = $rs->fetchRow()) {
 	if ($gw['name'] == '') continue;
 	if ($gw['host'] == '') continue;
-
+	
 	if ($gw['host'] == 'sip.1und1.de') {
 		echo '[', $gw['name'] ,']' ,"\n";
 		echo 'type = peer' ,"\n";
@@ -167,7 +167,7 @@ while ($gw = $rs->fetchRow()) {
 		echo 'context = from-gg-', $gw['gg_name'] ,"\n";
 		echo "\n";
 	}
-
+	
 }
 
 
