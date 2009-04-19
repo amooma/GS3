@@ -64,11 +64,7 @@ if (! isSet($opts['user'])
 }
 $opts['force'] = array_key_exists('force', $opts);
 
-if ( array_key_exists('no-reload', $opts)) {
-	$reload = false;
-} else {
-	$reload = true;
-}
+$reload = !(array_key_exists('no-reload', $opts));
 
 /***********************************************************
 *    call the function
