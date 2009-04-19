@@ -219,7 +219,7 @@ $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 
 ?>
 
-<p class="text"><small><?php echo __('Diese W&auml;hlregeln f&uuml;r ausgehende Routen werden von oben nach unten abgearbeitet bis eine Regel zutrifft. Dabei wird die gew&auml;hlte Telefonnummer in der (entsprechend Ihren Einstellungen) kanonisierten <b>nationalen</b> Form oder "wie gew&auml;hlt" mit dem Muster verglichen.'); ?></small></p>
+<p class="text"><small><?php echo __('Diese W&auml;hlregeln f&uuml;r ausgehende Routen werden von oben nach unten abgearbeitet bis eine Regel zutrifft. Dabei wird die gew&auml;hlte Telefonnummer in der (entsprechend Ihren Einstellungen) kanonisierten <b>nationalen</b> Form (ohne die 0 zur Amtsholung) oder &quot;wie gew&auml;hlt&quot; mit dem Muster verglichen.'); ?></small></p>
 
 
 
