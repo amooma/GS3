@@ -320,14 +320,14 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	#
 	if ($host['id'] != $old_host_id) {
 		if (is_array($old_host) && ! $old_host['is_foreign']) {
-			$ok = @ gs_asterisks_prune_peer( array($old_host_id), $ext );
+			$ok = @ gs_asterisks_prune_peer( $ext, array($old_host_id) );
 			if ($reload) $ok = @ gs_asterisks_reload( array($old_host_id), true );
 		}
 		if (! $host['is_foreign']) {
 			if ($reload) $ok = @ gs_asterisks_reload( array($host['id'] ), true );
 		}
 	} else {
-		$ok = @ gs_asterisks_prune_peer( array($host['id']), $ext );
+		$ok = @ gs_asterisks_prune_peer( $ext, array($host['id']) );
 	}
 	
 	# reboot the phone
