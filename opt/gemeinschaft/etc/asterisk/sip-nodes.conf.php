@@ -135,13 +135,12 @@ while ($gw = $rs->fetchRow()) {
 	$codecs_allow['alaw'   ] = true;
 	$codecs_allow['ulaw'   ] = false;
 	
+	//$fromdomain     = 'gemeinschaft.localdomain';
 	$fromdomain     = null;
 	$fromuser       = null;
 	
-	# special settings for 1und1
-	#
-	if ($gw['host'] == 'sip.1und1.de') {
-		$nat            = 'no';
+	
+	if ($gw['host'] === 'sip.1und1.de') {  # special settings for 1und1.de
 		$canreinvite    = 'no';
 		
 		$fromdomain     = '1und1.de';
@@ -158,6 +157,12 @@ while ($gw = $rs->fetchRow()) {
 		$codecs_allow['g729'   ] = true;
 		$codecs_allow['slinear'] = true;
 	}
+	elseif ($gw['host'] === 'sipgate.de') {  # special settings for SipGate.de
+		$canreinvite    = 'no';
+		$fromdomain     = 'sipgate.de';
+		$fromuser       = $gw['user'];
+	}
+	
 	
 	echo '[', $gw['name'] ,']' ,"\n";
 	echo 'type = peer' ,"\n";
