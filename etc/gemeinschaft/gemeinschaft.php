@@ -426,7 +426,7 @@ $CANONIZE_CBC_PREFIX    = '010';    # Call-by-Call prefix (Germany: 010)
 
 $DP_SUBSYSTEM               = false;
   # are we a sub-system behind another PBX in the same private
-  # branch? 
+  # branch? if true dial outbound for unknown numbers
 
   # emergency numbers - no checking for permissions etc.:
 $DP_EMERGENCY_POLICE        = '110,0110';  # 110,0110,911,999,767,...
