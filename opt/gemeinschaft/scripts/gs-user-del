@@ -51,11 +51,7 @@ if (! isSet($opts['user'])) {
 	gs_script_invalid_usage( $usage );
 }
 
-if ( array_key_exists('no-reload', $opts)) {
-	$reload = false;
-} else {
-	$reload = true;
-}
+$reload = !(array_key_exists('no-reload', $opts));
 
 /***********************************************************
 *    call the function
