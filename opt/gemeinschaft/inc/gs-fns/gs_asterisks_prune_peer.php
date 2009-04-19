@@ -37,18 +37,17 @@ include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
 *    $host_ids=false for all
 ***********************************************************/
 
-function gs_asterisks_prune_peer( $host_ids, $peer )
+function gs_asterisks_prune_peer( $peer, $host_ids=false )
 {
-	
 	if (! $host_ids || ! is_array($host_ids)) $host_ids = false;
 	
 	# check peer
-	if ($peer == 'all' || $peer == '') {
-		 $peer = 'all';
-	} else if (! preg_match( '/^[1-9][0-9]{1,9}$/', $peer )) {
+	if ($peer === 'all' || $peer == '') {
+		$peer = 'all';
+	} elseif (! preg_match( '/^[1-9][0-9]{1,9}$/', $peer )) {
 		return new GsError( 'Invalid peer name.' );
 	}
-
+	
 	# connect to db
 	#
 	$db = gs_db_master_connect();
@@ -97,6 +96,6 @@ function gs_asterisks_prune_peer( $host_ids, $peer )
 	if (! $ok)
 		return new GsError( 'Failed to prune peer "'.$peer.'".' );
 	return true;
-
 }
+
 ?>

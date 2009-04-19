@@ -180,7 +180,7 @@ function gs_user_del( $user, $reload = true )
 	if ($host_id > 0) {
 		if (is_array($host) && ! $host['is_foreign']) {
 		
-			$ok = @ gs_asterisks_prune_peer( array($host_id), $ext );
+			$ok = @ gs_asterisks_prune_peer( $ext, array($host_id) );
 			if ($reload) $ok = @ gs_asterisks_reload( array($host_id), true );
 		}
 	}
