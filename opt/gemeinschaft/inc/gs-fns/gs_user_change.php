@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 *    change a user account
 ***********************************************************/
 
-function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false, $email='',  $reload = true)
+function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false, $email='', $reload=true )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -89,10 +89,10 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 		$old_host = false;
 	}
 	
-	# get user extension
+	# get user's peer name (extension)
 	#
-	$ext = (int)$db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
-
+	$ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
+	
 	# check if (new) host exists
 	#
 	$host = gs_host_by_id_or_ip( $host_id_or_ip );
@@ -315,16 +315,18 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	if (! gs_db_commit_trans($db)) {
 		return new GsError( 'Failed to modify user.' );
 	}
-
-	# new host? reload dialplan if needed
+	
+	# new host?
 	#
 	if ($host['id'] != $old_host_id) {
+		# reload dialplan (hints!)
+		#
 		if (is_array($old_host) && ! $old_host['is_foreign']) {
 			$ok = @ gs_asterisks_prune_peer( $ext, array($old_host_id) );
-			if ($reload) $ok = @ gs_asterisks_reload( array($old_host_id), true );
+			if ($reload) @ gs_asterisks_reload( array($old_host_id), true );
 		}
 		if (! $host['is_foreign']) {
-			if ($reload) $ok = @ gs_asterisks_reload( array($host['id'] ), true );
+			if ($reload) @ gs_asterisks_reload( array($host['id'] ), true );
 		}
 	} else {
 		$ok = @ gs_asterisks_prune_peer( $ext, array($host['id']) );

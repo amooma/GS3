@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 *    adds a user account
 ***********************************************************/
 
-function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, $email, $group_id=NULL, $reload = true )
+function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, $email, $group_id=NULL, $reload=true )
 {
 	$ret = gs_user_is_valid_name( $user );
 	if (isGsError($ret)) return $ret;
