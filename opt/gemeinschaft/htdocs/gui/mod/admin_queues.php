@@ -32,6 +32,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_queue_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queue_del.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
+$moh_classes = @array_keys(parse_ini_file(GS_DIR.'/etc/asterisk/musiconhold.conf', TRUE));
+
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
@@ -104,8 +106,8 @@ if ($action === 'save') {
 	if (! in_array($leavewhenempty, array('yes', 'no', 'strict'), true))
 		$leavewhenempty = 'yes';
 	$musicclass = @$_REQUEST['musicclass'];
-	if (! in_array($musicclass, array('default', ''), true))
-		$musicclass = 'default';
+	//if (! in_array($musicclass, array('default', ''), true))
+	//	$musicclass = 'default';
 	$musicclass_db = ($musicclass != '' ? '\''. $DB->escape($musicclass) .'\'' : 'NULL');
 	
 	$update_additional = false;
@@ -245,8 +247,13 @@ WHERE
 		echo '<td>';
 		echo '<select name="musicclass">', "\n";
 		echo '<option value="default"', ($queue['musicclass'] ==='default' ? ' selected="selected"' : '') ,'>default</option>', "\n";
+		if ( is_array( $moh_classes) ) 
+			foreach ($moh_classes as $moh_class) {
+				if ($moh_class != 'default')
+					echo '<option value="'.$moh_class.'"', ($queue['musicclass'] == $moh_class ? ' selected="selected"' : ''),'>',$moh_class,'</option>',"\n";	
+			}
 		echo '<option value="" disabled="disabled">-</option>', "\n";
-		echo '<option value=""', ($queue['musicclass'] !=='default' ? ' selected="selected"' : '') ,'>', __('Klingeln statt Musik') ,'</option>', "\n";
+		echo '<option value=""', ($queue['musicclass'] == '' ? ' selected="selected"' : '') ,'>', __('Klingeln statt Musik') ,'</option>', "\n";
 		echo '</select>';
 		echo '</td>';
 		echo '</tr>',"\n";
@@ -471,5 +478,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 
 echo '<br />',"\n";
 echo '<p class="text"><img alt=" " src="', GS_URL_PATH ,'crystal-svg/16/act/info.png" /> ', __('Es kann etwa 1 Minute dauern bis &Auml;nderungen aktiv werden.') ,'</p>',"\n";
+
 
 ?>
