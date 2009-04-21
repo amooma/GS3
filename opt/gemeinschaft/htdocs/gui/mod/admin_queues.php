@@ -33,6 +33,9 @@ include_once( GS_DIR .'inc/gs-fns/gs_queue_del.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 $moh_classes = @array_keys(parse_ini_file(GS_DIR.'/etc/asterisk/musiconhold.conf', TRUE));
+# fails if Asterisk is on a different server
+if (! is_array($moh_classes)) $moh_classes = array();
+$moh_classes = array_merge(array('default'), $moh_classes);
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -105,7 +108,7 @@ if ($action === 'save') {
 	$leavewhenempty = @$_REQUEST['leavewhenempty'];
 	if (! in_array($leavewhenempty, array('yes', 'no', 'strict'), true))
 		$leavewhenempty = 'yes';
-	$musicclass = @$_REQUEST['musicclass'];
+	$musicclass = preg_replace('/[^a-zA-Z0-9\-_]/', '', @$_REQUEST['musicclass']);
 	//if (! in_array($musicclass, array('default', ''), true))
 	//	$musicclass = 'default';
 	$musicclass_db = ($musicclass != '' ? '\''. $DB->escape($musicclass) .'\'' : 'NULL');
@@ -246,12 +249,9 @@ WHERE
 		echo '<th class="r">', __('Wartemusik') ,'</th>',"\n";
 		echo '<td>';
 		echo '<select name="musicclass">', "\n";
-		echo '<option value="default"', ($queue['musicclass'] ==='default' ? ' selected="selected"' : '') ,'>default</option>', "\n";
-		if ( is_array( $moh_classes) ) 
-			foreach ($moh_classes as $moh_class) {
-				if ($moh_class != 'default')
-					echo '<option value="'.$moh_class.'"', ($queue['musicclass'] == $moh_class ? ' selected="selected"' : ''),'>',$moh_class,'</option>',"\n";	
-			}
+		foreach ($moh_classes as $moh_class) {
+			echo '<option value="',$moh_class,'"', ($queue['musicclass'] == $moh_class ? ' selected="selected"' : ''),'>',$moh_class,'</option>',"\n";	
+		}
 		echo '<option value="" disabled="disabled">-</option>', "\n";
 		echo '<option value=""', ($queue['musicclass'] == '' ? ' selected="selected"' : '') ,'>', __('Klingeln statt Musik') ,'</option>', "\n";
 		echo '</select>';
