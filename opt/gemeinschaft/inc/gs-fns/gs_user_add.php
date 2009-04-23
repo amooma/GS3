@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 *    adds a user account
 ***********************************************************/
 
-function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, $email, $group_id=NULL )
+function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, $email, $group_id=NULL, $reload=true )
 {
 	$ret = gs_user_is_valid_name( $user );
 	if (isGsError($ret)) return $ret;
@@ -220,10 +220,8 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 	
 	# reload dialplan (hints!)
 	#
-	if (! $host['is_foreign']) {
-		//@ exec( GS_DIR .'sbin/start-asterisk --dialplan' );  // <-- not the same host!!!
-		//$ok = @ gs_asterisks_reload( array($host['id']), true );
-		$ok = @ gs_asterisks_reload( array($host['id']), false );
+	if (! $host['is_foreign'] && $reload) {
+		$ok = @ gs_asterisks_reload( array($host['id']), true );
 		if (isGsError( $ok ))
 			return new GsError( $ok->getMsg() );
 		if (! $ok)

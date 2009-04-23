@@ -122,52 +122,81 @@ ORDER BY `g`.`id`'
 while ($gw = $rs->fetchRow()) {
 	if ($gw['name'] == '') continue;
 	if ($gw['host'] == '') continue;
-
-	if ($gw['host'] == 'sip.1und1.de') {
-		echo '[', $gw['name'] ,']' ,"\n";
-		echo 'type = peer' ,"\n";
-		echo "host = sip.1und1.de\n";
-		echo 'username = ' . $gw['user']."\n";
-		echo 'secret = ' , $gw['pwd' ] ,"\n";
-		echo 'nat = no' ,"\n";
-		echo 'setvar=__is_from_gateway=1' ,"\n";
-		echo 'context = from-gg-', $gw['gg_name'] ,"\n";
-		echo 'fromuser = ' . $gw['user']."\n";
-		echo "fromdomain=1und1.de\n";
-		echo "insecure=very\n";
-		echo "canreinvite=no\n";
-		echo "maxexpirey=3600\n";
-		echo "defaultexpirey=3600\n";
-		echo "qualify=no\n";
-		echo "language=de\n";
-		echo "disallow=all\n";
-		echo "allow=ulaw\n";
-		echo "allow=ilbc\n";
-		echo "allow=alaw\n";
-		echo "allow=g729\n";
-		echo "allow=gsm\n";
-		echo "allow=slinear\n\n";
+	
+	$nat            = 'yes';
+	//$canreinvite    = 'no';
+	$canreinvite    = 'nonat';
+	
+	$qualify        = 'yes';
+	$maxexpiry      =  185;
+	$defaultexpiry  =  145;
+	
+	$codecs_allow = array();
+	$codecs_allow['alaw'   ] = true;
+	$codecs_allow['ulaw'   ] = false;
+	
+	//$fromdomain     = 'gemeinschaft.localdomain';
+	$fromdomain     = null;
+	$fromuser       = null;
+	
+	
+	if ($gw['host'] === 'sip.1und1.de') {  # special settings for 1und1.de
+		$canreinvite    = 'no';
+		
+		$fromdomain     = '1und1.de';
+		$fromuser       = $gw['user'];
+		
+		$qualify        = 'no';
+		$maxexpiry      = 3600;
+		$defaultexpiry  = 3600;
+		
+		$codecs_allow['alaw'   ] = true;
+		$codecs_allow['ulaw'   ] = true;
+		$codecs_allow['ilbc'   ] = true;
+		$codecs_allow['gsm'    ] = true;
+		$codecs_allow['g729'   ] = true;
+		$codecs_allow['slinear'] = true;
 	}
-	else {
-		echo '[', $gw['name'] ,']' ,"\n";
-		echo 'type = peer' ,"\n";
-		echo 'host = ' , $gw['host'] ,"\n";
-		echo 'port = 5060' ,"\n";
-		echo 'username = ', $gw['user'] ,"\n";
-		echo 'secret = ' , $gw['pwd' ] ,"\n";
-		echo 'nat = yes' ,"\n";
-		echo 'dtmfmode = rfc2833' ,"\n";
-		echo 'insecure = port,invite' ,"\n";
-		//echo 'canreinvite = no' ,"\n";
-		echo 'canreinvite = nonat' ,"\n";
-		echo 'call-limit = 0' ,"\n";
-		echo 'registertimeout = 60' ,"\n";
-		//echo 't38pt_udptl = yes' ,"\n";
-		echo 'setvar=__is_from_gateway=1' ,"\n";
-		echo 'context = from-gg-', $gw['gg_name'] ,"\n";
-		echo "\n";
+	elseif ($gw['host'] === 'sipgate.de') {  # special settings for SipGate.de
+		$canreinvite    = 'no';
+		$fromdomain     = 'sipgate.de';
+		$fromuser       = $gw['user'];
 	}
-
+	
+	
+	echo '[', $gw['name'] ,']' ,"\n";
+	echo 'type = peer' ,"\n";
+	echo 'host = ' , $gw['host'] ,"\n";
+	echo 'port = 5060' ,"\n";
+	echo 'username = ', $gw['user'] ,"\n";
+	echo 'secret = ' , $gw['pwd' ] ,"\n";
+	if ($fromdomain != null) {
+		echo 'fromdomain = ', $fromdomain ,"\n";
+	}
+	if ($fromuser != null) {
+		echo 'fromuser = ', $fromuser ,"\n";
+	}
+	echo 'insecure = port,invite' ,"\n";
+	echo 'nat = ', $nat ,"\n";
+	echo 'canreinvite = ', $canreinvite ,"\n";
+	echo 'dtmfmode = rfc2833' ,"\n";
+	echo 'call-limit = 0' ,"\n";
+	echo 'registertimeout = 60' ,"\n";
+	//echo 't38pt_udptl = yes' ,"\n";
+	echo 'setvar=__is_from_gateway=1' ,"\n";
+	echo 'context = from-gg-', $gw['gg_name'] ,"\n";
+	echo 'qualify = ', $qualify ,"\n";
+	echo 'language = ', 'de' ,"\n";
+	echo 'maxexpiry = ', $maxexpiry ,"\n";
+	echo 'defaultexpiry = ', $defaultexpiry ,"\n";
+	echo 'disallow = all' ,"\n";
+	foreach ($codecs_allow as $codec => $allowed) {
+		if ($allowed) {
+			echo 'allow = ', $codec ,"\n";
+		}
+	}
+	echo "\n";
+	
 }
 
 
