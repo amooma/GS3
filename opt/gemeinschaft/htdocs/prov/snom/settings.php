@@ -946,14 +946,6 @@ for ($i=0; $i<=$max_key; ++$i) {
 	//setting('fkey_context', $i, 'active');
 }
 
-# pre-defined keys for snom 300
-#
-if ($phone_model == '300') {
-	setting('fkey', 2, 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
-	setting('fkey', 3, 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
-	setting('fkey', 4, 'keyevent F_TRANSFER', array('context'=>'active'));
-	setting('fkey', 5, 'keyevent F_MUTE', array('context'=>'active'));
-}
 
 /*  //FIXME
 
@@ -984,7 +976,7 @@ while ($r = $rs->fetchRow()) {
 
 
 //keys not  to rewrite for the astbuttond
-$nativekeys = Array( 'line' );
+$nativekeys = Array( 'line', 'keyevent' );
 
 $softkeys = null;
 $GS_Softkeys = gs_get_key_prov_obj( $phone_type );
@@ -1010,6 +1002,67 @@ if (! is_array($softkeys)) {
 		} else {
 			continue;
 		}
+		
+		$native_anyway = false;
+		switch ($key_def['function']) {
+		
+			case '_dir':
+				$native_anyway = true;
+				$key_def['function'] = 'url';
+				$key_def['data'    ] = $prov_url_snom .'pb.php?m=$mac&u=$user_name1';
+				break;
+			case '_callers':
+				$native_anyway = true;
+				$key_def['function'] = 'url';
+				$key_def['data'    ] = $prov_url_snom .'dial-log.php?user=$user_name1';
+				break;
+			case '_menu':
+				$native_anyway = true;
+				$key_def['function'] = 'url';
+				$key_def['data'    ] = $prov_url_snom .'menu.php?m=$mac&u=$user_name1' ;
+				break;
+			case '_transfer':
+				$key_def['function'] = 'keyevent';
+				$key_def['data'    ] = 'F_TRANSFER';
+				break;
+			case '_mute':
+				$key_def['function'] = 'keyevent';
+				$key_def['data'    ] = 'F_MUTE';
+				break;
+			case '_dnd':
+				if ( GS_BUTTONDAEMON_USE == false ) {
+					$key_def['function'] = 'keyevent';
+					$key_def['data'    ] = 'F_DND';
+				}
+				else {
+					$native_anyway = true;
+					$key_def['function'] = 'url';
+					$key_def['data'    ] = $prov_url_snom .'dnd.php?t=1&m=$mac&u=$user_name1';
+				}
+				break;
+			case '_hold':
+				$key_def['function'] = 'keyevent';
+				$key_def['data'    ] = 'F_R';
+				break;
+			case '_conference':
+				$key_def['function'] = 'keyevent';
+				$key_def['data'    ] = 'F_CONFERENCE';
+				break;
+			case '_record':
+				$key_def['function'] = 'keyevent';
+				$key_def['data'    ] = 'F_REC';
+				break;
+			case '_vm':
+				$native_anyway = true;
+				$key_def['function'] = 'speed';
+				$key_def['data'    ] = 'voicemail' ;
+				break;
+			
+			
+				
+		
+		}
+		
 		$key_idx = (int)lTrim(subStr($key_name,1),'0');
 		if ($key_idx > $max_key) continue;
 		//if we want to use the AstButtond we have to rewrite some keys
@@ -1017,7 +1070,7 @@ if (! is_array($softkeys)) {
 			setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
 		}
 		else {
-			if ( in_array( $key_def['function'], $nativekeys , true))
+			if ($native_anyway ||  in_array( $key_def['function'], $nativekeys , true))
 				setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
 			else
 				setting('fkey', $key_idx, 'button  ' . ($key_idx + 1) , array('context'=>'active'));

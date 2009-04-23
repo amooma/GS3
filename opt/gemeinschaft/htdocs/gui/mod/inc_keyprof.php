@@ -92,6 +92,7 @@ $key_astbuttond = array(
 	'diversion'		=> __('Umleitung'),              		# Umleitung
 	'diversion_int'		=> __('Umleitung intern'),		# Umleitung itern
 	'diversion_ext'		=> __('Umleitung extern'),		# Umleitung extern
+	'diversion_dlg'		=> __('Umleitung Dialog'),		# Umleitung dialog
 	'queue'  		=> __('An/Abmelden Warteschlange'),	# Queue an/abmelden 
 	'agent'  		=> __('An/Abmelden Agent'),		# Agent an/abmelden 
 	'agent_paused' 		=> __('Agentenpause'),			# Agentenpause ein/aus
@@ -111,7 +112,25 @@ $key_functions_snom = array(
 	'dest'  => __('Nebenstelle'),       # destination (//FIXME - auch BLF hiermit machen?)
 	'blf'   => __('BLF'),               # BLF
 	'line'  => __('Leitung'),           # line
+	
+	
 );
+
+// The snom-300 does not have static keys for this functions
+$keys_functions_snom300 = array(
+	'_dir'		=>__('Telefonbuch'),            # Telefonbuch
+	'_callers'	=>__('Anruflisten'),            # Anruflisten
+	'_transfer'	=>__('Transfer-Taste'),         # Transfer-Key
+	'_hold'		=>__('Halten-Taste'),	        # Hold-Key
+	'_menu'		=>__('Men&uuml;-Taste'),	# Menu-Key
+	'_dnd'		=>__('Ruhe/DND-Taste'),		# DND-Key
+	'_conference' 	=>__('Konferenz-Taste'),	# Conference-Key
+	'_record' 	=>__('Aufnahme-Taste'),		# Record-Key
+	'_vm' 		=>__('Anrufbeantworter'),		# Record-Key
+	'_mute'		=>__('Stummschaltung')          # Mute-Key
+	
+);
+
 
 if ( GS_BUTTONDAEMON_USE == true ) {
 	$key_functions_snom = array_merge( $key_functions_snom, $key_astbuttond);
@@ -247,6 +266,11 @@ if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370'),
 } else {
 	$phone_layout = false;
 	$key_function_none = false;
+}
+
+// The snom-300 does not have static keys for this functions
+if ( $phone_type == 'snom-300' ) {
+	$key_functions_snom = array_merge( $key_functions_snom, $keys_functions_snom300);	 
 }
 
 
@@ -889,6 +913,8 @@ if ($phone_layout) {
 		switch ($phone_type) {
 			case 'snom-300':
 				$key_levels[0]['to'  ] =    5;
+				unset($key_levels[1]);
+				unset($key_levels[2]);
 				break;
 		}
 		break;
@@ -1024,7 +1050,10 @@ if ($phone_layout) {
 		for ($i=$key_level_info['from']; $i<=$key_level_info['to']; ++$i) {
 			
 			if ($phone_layout === 'snom') {
-				$knum  = ($i%2===($key_level_idx+1)%2 ? $left : $right);
+				switch ($phone_type) {
+					case 'snom-300' : $knum = $i; break;
+					default: $knum  = ($i%2===($key_level_idx+1)%2 ? $left : $right);
+				}
 				$knump = str_pad($knum, 3, '0', STR_PAD_LEFT);
 			} else {
 				$knum  = $i;
@@ -1101,7 +1130,10 @@ if ($phone_layout) {
 			echo '<td style="font-size:96%;"';
 			switch ($phone_layout) {
 				case 'snom':
-					echo ' class="', ($i%2===($key_level_idx+1)%2 ?'l':'r') ,'"';
+					if ( $phone_type == 'snom-300')
+						echo ' class="l"';
+					else
+						echo ' class="', ($i%2===($key_level_idx+1)%2 ?'l':'r') ,'"';
 					break;
 			}
 			echo '>';
