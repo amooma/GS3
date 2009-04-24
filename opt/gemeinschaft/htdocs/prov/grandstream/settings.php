@@ -353,7 +353,7 @@ psetting('P87', '0');		# Layer 2 QoS: 802.1p priority value ( maxlength 5 )
 #  Date and Time (global)
 #####################################################################
 psetting('P64',  (720 + (int)(((int)date('Z')) / 60)) );  # Timezone Offset ( Offset from GMT in minutes + 720 )
-psetting('P75',  date('I'));	# Daylight Saving Time ( 0 = no, 1 = yes )
+psetting('P75',  /*date('I')*/0);	# Daylight Saving Time ( 0 = no, 1 = yes ) - we already have that in the timezone offset P64
 psetting('P102', '2');			# Date Display Format ( 0 = Y-M-D, 1 = M-D-Y, 2 = D-M-Y )
 psetting('P30',  gs_get_conf('GS_GRANDSTREAM_PROV_NTP'));  # NTP Server
 if ( in_array($phone_model, array('bt200','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
