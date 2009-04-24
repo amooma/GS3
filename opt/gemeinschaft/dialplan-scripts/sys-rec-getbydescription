@@ -8,7 +8,8 @@
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 *
-* Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
+* Author: Henning Holtschneider <henning@loca.net>
+*
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -27,38 +28,26 @@
 \*******************************************************************/
 
 define( 'GS_VALID', true );  /// this is a parent file
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
-require_once( GS_DIR .'inc/agi-fns.php' );
-
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
-$uname  = trim(@$argv[1]);
-if (! gs_get_conf( 'GS_USER_SELECT_CALLERID' ) ) die();
-if (! $uname) die();
-if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
-	die();
-}
-$dest  = trim(@$argv[2]);
-if($dest != 'internal' && $dest != 'external') {
-	die();
-}
+$description = trim(@$argv[1]);
 
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/agi-fns.php' );
+
+if (! $description ) {
+	gs_log( GS_LOG_WARNING, 'no description' );
+	die();
+	
+}
 
 $db = gs_db_slave_connect();
 
-# get user id:
-$uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($uname) .'\'' );
-if ($uid < 1) die();
-$cid = $db->executeGetOne( 'SELECT `number` FROM `users_callerids` WHERE `selected`=1 AND `user_id`='. $db->escape($uid) . ' AND `dest`=\'' . $db->escape($dest) . '\'' );
-
-if($cid != "")
-{
-	echo 'SET VARIABLE CALLERID(num) '. $cid ."\n";
-	if ($dest == 'external')
-		echo 'SET VARIABLE external_callerid_override true' . "\n";
-}
+$filename = $db->executeGetOne( 'SELECT `md5hashname` FROM `systemrecordings` WHERE `description` = \'' . $db->escape( $description ) . '\'' );
+echo 'SET VARIABLE md5hashname ' . gs_agi_str_esc($filename) . "\n";
 
 ?>

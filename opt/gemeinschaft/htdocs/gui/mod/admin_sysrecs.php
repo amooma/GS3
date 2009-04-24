@@ -314,7 +314,9 @@ if($newaction === "upload")
 								else
 								{
 									@chmod($audio_destination, 0666);
-									$audio_newdescr = "Hochgeladene Datei ".@$_FILES["audiofile"]["name"];
+									$audio_newdescr = @$_FILES["audiofile"]["name"];
+									if ( strlen($audio_newdescr) < 1 )
+										$audio_newdescr = "Hochgeladene Datei";
 
 									$sql_query =
 										'INSERT INTO `systemrecordings` (

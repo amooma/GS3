@@ -71,7 +71,11 @@ if ($action == 'report') {
 	$month_d  = 0;  # current month
 }
 
-
+if ( gs_get_conf('GS_DB_QUEUELOG_IMPORT') == false )
+{
+	echo __('Statistiken f&uuml;r Warteschlangen sind auf diesem System abgeschaltet.');
+	exit();
+}
 ?>
 
 

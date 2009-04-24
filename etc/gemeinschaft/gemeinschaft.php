@@ -89,7 +89,12 @@ $DB_SIP_REG_UPDATE      = false;
   # in fact not a slave but a node of a MySQL cluster! It's
   # safe to use this with INSTALLATION_TYPE = "single".
 
-
+$DB_QUEUELOG_IMPORT     = true;
+  # Import /var/log/asterisk/queue_log into the database
+  # periodically? Warning: if this is set to "true", the
+  # logfile will be truncated periodically and thus be unavailable
+  # for external analysis
+  # default value: true
 
 /***********************************************************
 *    LDAP
@@ -473,6 +478,15 @@ $USER_SELECT_CALLERID = true;
   # allow the user to select another callerid when
   # placing calls
 
+/***********************************************************
+*    QUEUE LOGGING
+***********************************************************/
+
+$LOG_MISSED_QUEUE_CALLS = true;
+  # If this is set to "true" all members of a queue will get
+  # the missed call logged in their dial log if a queue call
+  # is missed.
+ 
 /***********************************************************
 *    MISC
 ***********************************************************/

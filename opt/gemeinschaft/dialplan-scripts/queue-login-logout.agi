@@ -66,6 +66,15 @@ $db = gs_db_master_connect();
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1) die();
 
+# test whether there is a agent logged in on this phone
+#
+$agent = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `agents` WHERE `user_id`='. $db->escape($user_id) );
+if ($agent > 0){
+	echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('agent-exists') ."\n";
+	die();
+}
+
+
 # get user's host id
 #
 $user_host_id = (int)$db->executeGetOne( 'SELECT `host_id` FROM `users` WHERE `id`='. $user_id );
@@ -104,7 +113,7 @@ if ($action === 'login') {
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 	if(gs_get_conf('GS_BUTTONDAEMON_USE')){
-		gs_buttondeamon_diversion_update($user);
+		//gs_buttondeamon_diversion_update($user);
 		gs_buttondeamon_queue_update( $user, $queue_name, "on");
 	}
 	

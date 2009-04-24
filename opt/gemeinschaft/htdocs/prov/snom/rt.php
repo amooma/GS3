@@ -234,8 +234,8 @@ if ($type == 'internal' || $type == 'external') {
 		echo '</URL>',"\n";  
 		echo '</MenuItem>',"\n";
 		
-		//Bellcore 1 bis 10
-		for($i = 1 ; $i <= 10; $i++){
+		//Bellcore 1 bis 5 (Bellcore 6-10 unterstuetzt snom nicht)
+		for($i = 1 ; $i <= 5; $i++){
 			echo '<MenuItem';
 			if($bellcore == $i && $file == '')echo ' sel=true';
 			echo '>',"\n";

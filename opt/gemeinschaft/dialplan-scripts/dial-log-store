@@ -50,6 +50,10 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
+if (! GS_LOG_MISSED_QUEUE_CALLS ) {
+	if( $queue_number > 0 && $type == 'missed')
+		die(); 
+}
 
 $db = gs_db_master_connect();
 

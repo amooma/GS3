@@ -29,7 +29,6 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_callforward_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 ini_set('implicit_flush', 1);
@@ -105,8 +104,6 @@ if ($action != 'logoutall') {
 
 if ($action === 'login') {
 
-	gs_callforward_activate($user_name,'internal','always','no');
-	gs_callforward_activate($user_name,'external','always','no');
 	foreach($queue_set as $aqueue){
 		if ($aqueue['host'] != $user_host_id) {
 			echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('failhost') ."\n";

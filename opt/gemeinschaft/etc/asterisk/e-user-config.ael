@@ -186,7 +186,6 @@ context user-config {
 		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,0,0,1);
 		&user-call-forward-activate-numeric(std,1,0,1);
-		&queue-logout-all-silent();
 		Wait(0.5);
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
@@ -195,7 +194,6 @@ context user-config {
 	*90 => {
 		//redirect internal std
 		&user-call-forward-activate-numeric(std,0,0,1);
-		&queue-logout-all-silent();
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
@@ -203,7 +201,6 @@ context user-config {
 	}
 	*91 => {
 		&user-call-forward-activate-numeric(std,1,0,1);
-		&queue-logout-all-silent();
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
@@ -214,7 +211,6 @@ context user-config {
 		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,0,0,1);
 		&user-call-forward-activate-numeric(std,1,0,1);
-		&queue-logout-all-silent();
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Hangup();
 	}
@@ -268,7 +264,28 @@ context user-config {
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
 		&user-call-forward-activate-numeric(var,0,0,1);
 		&user-call-forward-activate-numeric(var,1,0,1);
-		&queue-logout-all-silent();
+		UserEvent(UserDiversionUI|user: ${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
+		Hangup();
+	}
+	_*2# => {
+		Set(CDR(amaflags)=OMIT);
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		Wait(0.5);
+		Read(tonumber,/opt/gemeinschaft/sounds/de-DE/forward_target_enter);
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
+		if ("${SYSTEMSTATUS}" != "SUCCESS") {
+			Playback(/opt/gemeinschaft/sounds/de-DE/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
+			Playback(/opt/gemeinschaft/sounds/de-DE/auf-wiedersehen);
+			Hangup();
+		}
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
+		&user-call-forward-activate-numeric(var,0,0,1);
+		&user-call-forward-activate-numeric(var,1,0,1);
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
@@ -281,9 +298,13 @@ context user-config {
 		Answer();
 		Set(tonumber=${EXTEN:3});
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
+		if ("${SYSTEMSTATUS}" != "SUCCESS") {
+			Playback(/opt/gemeinschaft/sounds/de-DE/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
+			Playback(/opt/gemeinschaft/sounds/de-DE/auf-wiedersehen);
+			Hangup();
+		}
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
 		&user-call-forward-activate-numeric(var,0,0,1);
-		&queue-logout-all-silent();
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
@@ -296,9 +317,13 @@ context user-config {
 		Answer();
 		Set(tonumber=${EXTEN:3});
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
+		if ("${SYSTEMSTATUS}" != "SUCCESS") {
+			Playback(/opt/gemeinschaft/sounds/de-DE/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
+			Playback(/opt/gemeinschaft/sounds/de-DE/auf-wiedersehen);
+			Hangup();
+		}
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
 		&user-call-forward-activate-numeric(var,1,0,1);
-		&queue-logout-all-silent();
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
@@ -315,7 +340,6 @@ context user-config {
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm${user_name}');
 		&user-call-forward-activate-numeric(vml,0,0,1);
 		&user-call-forward-activate-numeric(vml,1,0,1);
-		&queue-logout-all-silent();
 		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);

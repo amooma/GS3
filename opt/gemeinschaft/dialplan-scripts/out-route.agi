@@ -100,6 +100,9 @@ if ($user_cid_num == '') {
 
 $user_id = (int)trim($argv[4]);
 
+$force_cid = (bool)trim($argv[5]);
+if (!in_array( $force_cid, array(true, false), true ))
+	$force_cid = false;
 
 include_once( GS_DIR .'inc/db_connect.php' );
 
@@ -209,24 +212,26 @@ if (count($gate_grps) < 1) _no_more_routes();
 $gates = array();
 $idx = 1;
 foreach ($gate_grps as $ggrp_id) {
-	
+
 	$out_cid_num = $user_cid_num;
-	if ($qualify_cid
-	&&  ! in_array(strToLower($out_cid_num), array('anonymous', 'unknown', ''), true))  # no action for "anonymous"
-	{
-		$rs = $db->execute(
+	if ($force_cid == false) {
+		if ($qualify_cid
+			&&  ! in_array(strToLower($out_cid_num), array('anonymous', 'unknown', ''), true))  # no action for "anonymous"
+		{
+			$rs = $db->execute(
 'SELECT `out_cid_search` `cid_s`, `out_cid_replace` `cid_r`
 FROM `gate_grps`
 WHERE `id`='. $ggrp_id
-		);
-		if (!($ggrp = $rs->fetchRow())) continue;
+			);
+			if (!($ggrp = $rs->fetchRow())) continue;
 		
-		$ggrp['cid_s'] = trim($ggrp['cid_s']);
-		if ($ggrp['cid_s'] != ''
-		&&  is_valid_pcre( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'] ))
-		{
-			$out_cid_num = preg_replace('/[^0-9+a-zA-Z\-_.]/', '',
-				@preg_replace( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'], $out_cid_num ));
+			$ggrp['cid_s'] = trim($ggrp['cid_s']);
+			if ($ggrp['cid_s'] != ''
+				&&  is_valid_pcre( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'] ))
+			{
+				$out_cid_num = preg_replace('/[^0-9+a-zA-Z\-_.]/', '',
+					@preg_replace( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'], $out_cid_num ));
+			}
 		}
 	}
 	

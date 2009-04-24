@@ -232,6 +232,8 @@ WHERE
 			$when = date('H:i', (int)$r['ts']);
 		else
 			$when = date('d.m.', (int)$r['ts']);
+		if ( strlen($entry_name) < 1 )
+			$entry_name = __('anonym');
 		$entry_name = $when .'  '. $entry_name;
 		if ($num_calls > 1) {
 			$entry_name .= ' ('. $num_calls .')';

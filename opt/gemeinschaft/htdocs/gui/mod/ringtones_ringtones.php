@@ -200,6 +200,7 @@ for ($i=1; $i<=11; ++$i) {
 		$dr_v = 'eigene Datei';
 	}*/
 	$sel = ($dr_i == @$ringtones[$source]['bellcore']) ? ' selected="selected"' : '';
+	if ( $i > 5 && $i < 11 ) $sel .= ' disabled ';
 	echo '<option value="', $dr_i, '"', $sel, '>', $dr_v, '</option>', "\n";
 }
 ?>
