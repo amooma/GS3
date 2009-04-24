@@ -44,7 +44,7 @@ set_error_handler("err_handler_die_on_err");
 
 //---------------------------------------------------------------------------
 
-$POLYCOM_BOOTROM_IP300IP500	= "bootrom_323.ld";
+$POLYCOM_BOOTROM_IP300IP500	= "bootrom_ip300ip500.ld";
 $POLYCOM_BOOTROM_DEFAULT	= "bootrom_412.ld";
 
 //---------------------------------------------------------------------------
