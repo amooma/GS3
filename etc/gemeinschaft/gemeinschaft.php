@@ -385,7 +385,12 @@ $GRANDSTREAM_PROV_HTTP_PASS = '';     # e.g. "gEheiM23y89sdo23"
 //$GRANDSTREAM_PROV_NTP       = '192.168.1.130';
   # NTP Server. the stupid Grandstream needs it
 
+//-----------------------[ Polycom ]----------------------//
 
+$POLYCOM_PROV_ENABLED = true;  # do provisioning for Polycom?
+
+$POLYCOM_PROV_PB_NUM_RESULTS   = 150;
+  # number of results in phonebook search on Snom phone
 
 /***********************************************************
 *    CANONICAL PHONE NUMBERS (FQTN)

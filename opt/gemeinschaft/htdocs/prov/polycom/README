@@ -1,0 +1,16 @@
+Gemeinschaft Polycom autoprovisioning - short instructions
+===========================================================
+
+- make sure mod_rewrite is enabled for the webserver
+
+- make sure that in /etc/gemeinschaft/gemeinschaf.php,
+  $POLYCOM_PROV_ENABLED is set to true
+
+- the following example should be used for the DHCP server:
+
+############
+class "polycom" {
+	match if substring (hardware, 1, 3) = 00:04:F2;
+	option tftp-server-name "http://<gemeinschaft-server>/gemeinschaft/prov/polycom/";
+}
+############

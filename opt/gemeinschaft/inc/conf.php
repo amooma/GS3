@@ -287,6 +287,9 @@ _gscnf( 'GRANDSTREAM_PROV_NTP'      , gs_get_conf('GS_PROV_HOST','') );
 //...
 //_gscnf( 'GRANDSTREAM_PROV_KEY_BLACKLIST', ''             );  //FIXME?
 
+_gscnf( 'POLYCOM_PROV_ENABLED'      , false                );
+_gscnf( 'POLYCOM_PROV_PB_NUM_RESULTS'      , false                );
+
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
 _gscnf( 'CANONIZE_INTL_PREFIX'      , '00'               );
 _gscnf( 'CANONIZE_COUNTRY_CODE'     , '49'               );

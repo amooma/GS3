@@ -229,6 +229,9 @@ WHERE
 	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ip_do_grandstream( $ip, $reboot );
 	}
+	if (gs_get_conf('GS_POLYCOM_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ip_do_polycom( $ip, $reboot );
+	}
 	
 	//return $err == 0;
 	return true;
@@ -307,6 +310,51 @@ function _gs_prov_phone_checkcfg_by_ip_do_grandstream( $ip, $reboot=true )
 	@ exec( '/opt/gemeinschaft/sbin/gs-grandstream-reboot --ip='. qsa($ip) .' >>/dev/null 2>>/dev/null &', $out, $err );
 }
 
+// PRIVATE!
+function _gs_prov_phone_checkcfg_by_ip_do_polycom( $ip, $reboot=true )
+{
+	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
+
+	//--- Rebooting by SIP message check-sync event is the only way to
+	//--- force/trigger a reboot of Polycom phones, according to the
+	//--- Polycom support - tested and works for any arbitrary source
+	//--- host... At least this provides a (more or less) reliable
+	//--- way if the phone got lost from it's registrar and a
+	//--- "reboot by ext" is impossible. Note this will most likely
+	//--- force the phone to reboot, $reboot is ignored.
+
+	$srchost = "169.254.254.1";
+	$dsthost = $ip;
+
+	$srcext = "rebooter";
+	$dstext = "polycom";
+
+	$socket = @fsockopen("udp://".$dsthost, 5060, $errno, $errstr, 2);
+
+	$message = "NOTIFY sip:". $dstext ."@". $dsthost .":5060 SIP/2.0\r\n"
+	         . "Method: NOTIFY\r\n"
+	         . "Resent Packet: False\r\n"
+	         . "Via: SIP/2.0/UDP ". $srchost .":5060;branch=1\r\n"
+	         . "Via: SIP/2.0/UDP ". $srchost ."\r\n"
+	         . "From: <sip:". $srcext ."@". $srchost .":5060>\r\n"
+	         . "SIP from address: sip:". $srcext ."@". $srchost .":5060\r\n"
+	         . "To: <sip:". $dstext ."@". $dsthost .":5060>\r\n"
+	         . "SIP to address: sip:". $dstext ."@". $dsthost .":5060\r\n"
+	         . "Event: check-sync\r\n"
+	         . "Date: ". strftime("%c %z") ."\r\n"
+	         . "Call-ID: 1@". $srchost ."\r\n"
+	         . "CSeq: 1300 NOTIFY\r\n"
+	         . "Contact: <sip:". $srcext ."@". $srchost .">\r\n"
+	         . "Contact Binding: <sip:". $srcext ."@". $srchost .">\r\n"
+	         . "URI: <sip:". $srcext ."@". $srchost .">\r\n"
+	         . "SIP contact address: sip:". $srcext ."@". $srchost ."\r\n"
+	         . "Content-Length: 0\r\n"
+	         . "\r\n";
+
+	fwrite($socket, $message);
+	fclose($socket);
+}
+
 // PRIVATE:
 function _gs_prov_phone_checkcfg_by_ext_do( $ext, $reboot=true )
 {
@@ -362,6 +410,9 @@ WHERE
 	}
 	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ext_do_grandstream( $ext, $reboot );
+	}
+	if (gs_get_conf('GS_POLYCOM_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ext_do_polycom( $ext, $reboot );
 	}
 	
 	//return $err == 0;
@@ -478,6 +529,24 @@ WHERE `s`.`name`=\''. $db->escape($ext) .'\''
 function _gs_prov_phone_checkcfg_by_ext_do_grandstream( $ext, $reboot=true )
 {
 	//FIXME
+}
+
+function _gs_prov_phone_checkcfg_by_ext_do_polycom( $ext, $reboot=true )
+{
+	$sip_notify = "polycom-check-cfg";
+	@exec( 'sudo asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
+	
+	$hosts = @gs_hosts_get(false);
+	if (isGsError($hosts)) {
+		gs_log(GS_LOG_WARNING, 'Failed to get hosts - '. $hosts->getMsg());
+	} elseif (! is_array($hosts)) {
+		gs_log(GS_LOG_WARNING, 'Failed to get hosts');
+	} else {
+		$cmd = 'asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\'';
+		foreach ($hosts as $host) {
+			@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd) .' >>/dev/null 2>>/dev/null &' );
+		}
+	}
 }
 
 ?>
