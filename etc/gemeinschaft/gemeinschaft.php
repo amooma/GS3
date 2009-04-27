@@ -392,10 +392,15 @@ $GRANDSTREAM_PROV_HTTP_PASS = '';     # e.g. "gEheiM23y89sdo23"
 
 //-----------------------[ Polycom ]----------------------//
 
-$POLYCOM_PROV_ENABLED = true;  # do provisioning for Polycom?
+$POLYCOM_PROV_ENABLED        = true;  # do provisioning for Polycom?
 
-$POLYCOM_PROV_PB_NUM_RESULTS   = 150;
+$POLYCOM_PROV_PB_NUM_RESULTS = 150;
   # number of results in phonebook search on Snom phone
+
+$POLYCOM_PROV_HTTP_USER      = 'gs';
+$POLYCOM_PROV_HTTP_PASS      = 'gEheiM23y89sdo23';
+  # username and password for HTTP push notifications
+  # note: the notification will not work with empty username/password
 
 /***********************************************************
 *    CANONICAL PHONE NUMBERS (FQTN)
