@@ -42,7 +42,7 @@ class PAMAL_auth_gemeinschaft extends PAMAL_auth
 	# private, returns the user:
 	function _getUser()
 	{
-		$user_entered =   trim( @$_REQUEST['login_user'] );
+		$user_entered = strToLower(trim( @$_REQUEST['login_user'] ));
 		$pwd_entered  = @$_REQUEST['login_pwd' ]  ;
 		
 		if ($user_entered=='' || $pwd_entered=='')
