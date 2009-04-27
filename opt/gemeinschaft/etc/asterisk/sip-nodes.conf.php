@@ -163,6 +163,7 @@ while ($gw = $rs->fetchRow()) {
 		$codecs_allow['gsm'    ] = true;
 		$codecs_allow['g729'   ] = true;
 		$codecs_allow['slinear'] = true;
+	}
 	elseif ($gw['host'] === 'sipgate.de') {  # special settings for SipGate.de
 		$canreinvite    = 'no';
 		$fromdomain     = 'sipgate.de';
