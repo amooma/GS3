@@ -135,7 +135,10 @@ $DB_QUEUELOG_IMPORT     = true;
   # not used. always start session but fallback gracefully
 
 //$GUI_AUTH_METHOD            = 'gemeinschaft';
+  # comma separated list of authentication methods
+  # available methods:
   # "gemeinschaft": Authenticate users against our internal database.
+  # "ldap"        : Authenticate users against LDAP server
   # "webseal"     : Trust the non-standard "IV-User" HTTP header.
   #                 Make sure every access goes through WebSeal
   #                 and nobody can access our GUI directly!

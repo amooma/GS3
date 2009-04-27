@@ -77,6 +77,10 @@ if ($_REQUEST['gemeinschaft'] == '') unset($_REQUEST['gemeinschaft']);
 if ($_COOKIE['gemeinschaft']  == '') unset($_COOKIE['gemeinschaft']);
 session_start();
 
+function trim_value(&$value)
+{
+	$value = trim($value);
+}
 
 function parse_http_accept_header( $data )
 {
@@ -247,10 +251,19 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 	$_SESSION['sudo_user']['boi_session'] = null;
 	
 	require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );
-	
-	$PAM = new PAMAL( GS_GUI_AUTH_METHOD );
-	$user = $PAM->getUser();
-	if (! $user) {
+
+        $methods =  split( ',', GS_GUI_AUTH_METHOD );
+        array_walk( $methods, 'trim_value' );
+
+        foreach ( $methods as &$method ) {
+		$PAM = new PAMAL( $method );
+		$user = $PAM->getUser();
+		if ( $user )
+			break;
+	}
+	unset( $method );
+
+	if (! $user ) {
 		$_SESSION['login_ok'  ] = false;
 		$_SESSION['login_user'] = false;
 		$login_info = sPrintF(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod());
