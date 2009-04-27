@@ -340,7 +340,7 @@ echo "/>\n";
 echo "   <softkey softkey.feature.forward=\"0\"/>\n";
 
 echo "   <applications>\n";
-echo "      <push apps.push.messageType=\"3\" apps.push.serverRootURL=\"/push\" apps.push.username=\"Polycompush\" apps.push.password=\"123456\"/>\n";
+echo "      <push apps.push.messageType=\"3\" apps.push.serverRootURL=\"/push\" apps.push.username=\"" . gs_get_conf("GS_POLYCOM_PROV_HTTP_USER") . "\" apps.push.password=\"" . gs_get_conf("GS_POLYCOM_PROV_HTTP_PASS") . "\"/>\n";
 echo "   </applications>\n";
 
 echo "   <mb>\n";
