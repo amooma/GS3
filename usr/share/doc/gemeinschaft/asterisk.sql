@@ -6565,7 +6565,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `user` varchar(20) character set ascii NOT NULL default '',
+  `user` varchar(50) character set ascii NOT NULL default '',
   `pin` varchar(10) character set ascii collate ascii_bin NOT NULL default '',
   `firstname` varchar(50) collate utf8_unicode_ci NOT NULL default '',
   `lastname` varchar(50) collate utf8_unicode_ci NOT NULL default '',

@@ -711,3 +711,9 @@ DROP TABLE IF EXISTS `users_outbound_numbers`;
 --
 
 DROP TABLE IF EXISTS `volumes`;
+
+--
+-- Increase size of column `user` in table `users`
+--
+
+ALTER TABLE `users` CHANGE `user` `user` VARCHAR( 50 );
