@@ -308,32 +308,36 @@ echo "reg.1.strictLineSeize=\"\" ";
 <?php
 
 //--- efk configuration - provide phone macros for url handling
-echo "<efk>\n";
-echo "   <version efk.version=\"1\"/>\n";
-echo "   <efklist";
-//echo " efk.efklist.1.mname=\"diallog\" efk.efklist.1.status=\"1\" efk.efklist.1.label=\"Dial Log\" efk.efklist.1.action.string=\"". $prov_url_polycom ."diallog.php?mac=". $mac ."\"";
-//echo " efk.efklist.2.mname=\"phonebook\" efk.efklist.2.status=\"1\" efk.efklist.2.label=\"Phonebook\" efk.efklist.2.action.string=\"". $prov_url_polycom ."pb.php?mac=". $mac ."\"";
-echo " efk.efklist.1.mname=\"gsdiallog\" efk.efklist.1.status=\"1\" efk.efklist.1.action.string=\"". $prov_url_polycom ."diallog.php?user=". $user_ext ."\"";
-echo " efk.efklist.2.mname=\"gsphonebook\" efk.efklist.2.status=\"1\" efk.efklist.2.action.string=\"". $prov_url_polycom ."pb.php?m=". $mac ."&amp;u=". $user_ext ."\"";
-echo " efk.efklist.3.mname=\"gsmenu\" efk.efklist.3.status=\"1\" efk.efklist.3.action.string=\"". $prov_url_polycom ."configmenu.php?m=". $mac ."&amp;u=". $user_ext ."\"";
-echo " />\n";
-echo "</efk>\n";
+if ( $phone_model != '500' ) {
+	echo "<efk>\n";
+	echo "   <version efk.version=\"1\"/>\n";
+	echo "   <efklist";
+	//echo " efk.efklist.1.mname=\"diallog\" efk.efklist.1.status=\"1\" efk.efklist.1.label=\"Dial Log\" efk.efklist.1.action.string=\"". $prov_url_polycom ."diallog.php?mac=". $mac ."\"";
+	//echo " efk.efklist.2.mname=\"phonebook\" efk.efklist.2.status=\"1\" efk.efklist.2.label=\"Phonebook\" efk.efklist.2.action.string=\"". $prov_url_polycom ."pb.php?mac=". $mac ."\"";
+	echo " efk.efklist.1.mname=\"gsdiallog\" efk.efklist.1.status=\"1\" efk.efklist.1.action.string=\"". $prov_url_polycom ."diallog.php?user=". $user_ext ."\"";
+	echo " efk.efklist.2.mname=\"gsphonebook\" efk.efklist.2.status=\"1\" efk.efklist.2.action.string=\"". $prov_url_polycom ."pb.php?m=". $mac ."&amp;u=". $user_ext ."\"";
+	echo " efk.efklist.3.mname=\"gsmenu\" efk.efklist.3.status=\"1\" efk.efklist.3.action.string=\"". $prov_url_polycom ."configmenu.php?m=". $mac ."&amp;u=". $user_ext ."\"";
+	echo " />\n";
+	echo "</efk>\n";
+}
 
 echo "<sip>\n";
-echo "   <keys key.scrolling.timeout=\"1\"";
+if ( $phone_model != '500' ) {
+	echo "   <keys key.scrolling.timeout=\"1\"";
 
-//--- key remappings for SoundPoint IP 501
-//--- 30 = 'Call Lists' key, 32 = 'Directories' key
-echo " key.IP_500.30.function.prim=\"SpeedDial\" key.IP_500.30.subPoint.prim=\"1\"";
-echo " key.IP_500.32.function.prim=\"SpeedDial\" key.IP_500.32.subPoint.prim=\"2\"";
+	//--- key remappings for SoundPoint IP 501
+	//--- 30 = 'Call Lists' key, 32 = 'Directories' key
+	echo " key.IP_500.30.function.prim=\"SpeedDial\" key.IP_500.30.subPoint.prim=\"1\"";
+	echo " key.IP_500.32.function.prim=\"SpeedDial\" key.IP_500.32.subPoint.prim=\"2\"";
 
-//--- key remappings for SoundPoint IP 601
-//--- 30 = Directories' key
-echo " key.IP_600.30.function.prim=\"SpeedDial\" key.IP_600.30.subPoint.prim=\"2\"";
+	//--- key remappings for SoundPoint IP 601
+	//--- 30 = Directories' key
+	echo " key.IP_600.30.function.prim=\"SpeedDial\" key.IP_600.30.subPoint.prim=\"2\"";
 
-//--- end of remappings
+	//--- end of remappings
 
-echo "/>\n";
+	echo "/>\n";
+}
 
 //--- softkey remapping
 //echo "   <softkey softkey.1.label="Surf" softkey.4.action="http://212.28.230.152/" softkey.4.enable="1" softkey.4.use.idle="1"/>
