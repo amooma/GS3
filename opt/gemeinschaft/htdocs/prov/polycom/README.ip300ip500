@@ -8,7 +8,7 @@ automated as follows:
 
 - Make sure "gemeinschaft-prov-firmware-polycom" is installed and that the
   files "/opt/gemeinschaft/htdocs/prov/polycom/bootrom_ip300ip500.ld" and
-  "/opt/gemeinschaft/htdocs/prov/polycom/sip_213.ld" exist
+  "/opt/gemeinschaft/htdocs/prov/polycom/sip_212.ld" exist
 
 - Install an ftp server (e.g. proftpd) and create a valid ftp home and
   user, and make sure you can log on with your credentials and access the
@@ -17,7 +17,7 @@ automated as follows:
 - Inside the ftp root, create the subdirectory "gemeinschaft/prov/polycom/"
   and make sure the directory is readable for your ftp user
 
-- Copy "bootrom_ip300ip500.ld", "sip_213.ld" and "defaults.xml" from
+- Copy "bootrom_ip300ip500.ld", "sip_212.ld" and "defaults.xml" from
   "/opt/gemeinschaft/htdocs/prov/polycom/" into the user's ftp root dir
 
 - chdir into "gemeinschaft/prov/polycom/" inside your user's ftp root
@@ -25,7 +25,7 @@ automated as follows:
 - Create the following symlinks:
 
   # ln -s ../../../bootrom_ip300ip500.ld bootrom.ld
-  # ln -s ../../../sip_213.ld sip_213.ld
+  # ln -s ../../../sip_212.ld sip_212.ld
   # ln -s ../../../defaults.xml 000000000000.cfg
 
 - Now change your DHCP server configuration for the Polycom phones:
