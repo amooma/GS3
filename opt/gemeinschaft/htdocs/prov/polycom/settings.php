@@ -190,10 +190,11 @@ if(!is_array($user))
 	_settings_err("DB error.");
 }
 
-//--- store the current firmware version in the database:
+//--- store the current phonetype and firmware version in the database:
 @$db->execute(
 	"UPDATE `phones` SET ".
-		"`firmware_cur`='". $db->escape($fw_vers) ."' ".
+		"`firmware_cur`='". $db->escape($fw_vers) ."', ".
+		"`type`='". $db->escape($phone_type) ."' ".
 	"WHERE `mac_addr`='". $db->escape($mac) ."'");
 
 //--- store the user's current IP address in the database:
