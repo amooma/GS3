@@ -38,7 +38,7 @@ require_once( GS_DIR .'htdocs/gui/inc/session.php' );
 $number = @$_REQUEST['n'];
 $user   = @$_SESSION['sudo_user']['name'];
 
-$url = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'call-init-2.php?user='. rawUrlEncode($user) .'&to='. rawUrlEncode($number) .'&'. @session_name() .'='. @session_id();
+$url = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'call-init.php?user='. rawUrlEncode($user) .'&to='. rawUrlEncode($number) .'&'. @session_name() .'='. @session_id();
 
 ini_set('default_socket_timeout', 4);
 /*$out =*/ @file_get_contents( $url );
