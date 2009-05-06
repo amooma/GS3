@@ -375,7 +375,7 @@ if ($user_is_on_this_host) {
 }
 else {
 	
-	$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $filename ) .' '. qsa( 'root@'. $user['host'] .':'. $filename );
+	$cmd = 'sudo scp -p -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $filename ) .' '. qsa( 'root@'. $user['host'] .':'. $filename );
 	//echo $cmd, "\n";
 	@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
 	@unlink( $filename );
