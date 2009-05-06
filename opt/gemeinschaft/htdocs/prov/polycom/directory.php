@@ -62,8 +62,29 @@ if(!preg_match("/PolycomSoundPointIP/", $ua))
 $phone_model = ((preg_match("/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
 $phone_type = "polycom-spip-". $phone_model;
 
-if($phone_model == "500")
+//--- check if this phone has the XHTML microbrowser and prepare vars
+//--- for directory generator.
+
+switch($phone_model)
 {
+        case "300" :
+        case "500" :
+                $phone_has_microbrowser = FALSE;
+                break;
+        default :
+                $phone_has_microbrowser = TRUE;
+                break;
+}
+
+//--- echo the phone directory
+
+echo "<" . "?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?" . ">\n";
+
+if(!$phone_has_microbrowser)
+{
+	//--- this phone does not have microbrowser capabilities, so create
+	//--- a company directory based on the local users table
+
 	$db = gs_db_slave_connect();
 	
 	$query =
@@ -82,7 +103,6 @@ if($phone_model == "500")
 
 	if($rs->numRows() !== 0)
 	{
-		echo "<" . "?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?" . ">\n";
 		echo "<directory>\n";
 		echo "   <item_list>\n";
 
@@ -101,7 +121,9 @@ if($phone_model == "500")
 }
 else
 {
-	echo "<" . "?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?" . ">\n";
+	//--- this phone model has the microbrowser - create speeddials
+	//--- for the key remappings
+
 	echo "<directory>\n";
 	echo "   <item_list>\n";
 	echo "      <item>\n";
