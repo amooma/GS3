@@ -522,11 +522,11 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		
 	?>
 		<td>
-			<input type="text" name="uuser" id="ipt-uuser" value="" size="8" maxlength="20" />
+			<input type="text" name="uuser" id="ipt-uuser" value="" size="8" maxlength="50" />
 		</td>
 		<td>
-			<input type="text" name="ulname" id="ipt-ulname" value="" size="15" maxlength="40" style="width:80px;" title="<?php echo __('Nachname'); ?>" />,
-			<input type="text" name="ufname" id="ipt-ufname" value="" size="15" maxlength="40" style="width:70px;" title="<?php echo __('Vorname'); ?>" />
+			<input type="text" name="ulname" id="ipt-ulname" value="" size="15" maxlength="50" style="width:80px;" title="<?php echo __('Nachname'); ?>" />,
+			<input type="text" name="ufname" id="ipt-ufname" value="" size="15" maxlength="50" style="width:70px;" title="<?php echo __('Vorname'); ?>" />
 		</td>
 		<td>
 			<input type="text" name="uext" id="ipt-uext" value="" size="8" maxlength="11" />
