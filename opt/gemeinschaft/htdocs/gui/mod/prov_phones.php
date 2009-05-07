@@ -80,6 +80,23 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-gxp2010'] = 'Grandstream GXP 2010';
 	$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
 }
+if (gs_get_conf('GS_POLYCOM_PROV_ENABLED')) {
+	$phone_types['polycom-spip-300'] = 'Polycom SoundPoint IP 300';
+	$phone_types['polycom-spip-500'] = 'Polycom SoundPoint IP 500';
+
+	$phone_types['polycom-spip-320'] = 'Polycom SoundPoint IP 320';
+	$phone_types['polycom-spip-330'] = 'Polycom SoundPoint IP 330';
+	$phone_types['polycom-spip-430'] = 'Polycom SoundPoint IP 430';
+	$phone_types['polycom-spip-450'] = 'Polycom SoundPoint IP 450';
+	$phone_types['polycom-spip-501'] = 'Polycom SoundPoint IP 501';
+	$phone_types['polycom-spip-550'] = 'Polycom SoundPoint IP 550';
+	$phone_types['polycom-spip-601'] = 'Polycom SoundPoint IP 601';
+	$phone_types['polycom-spip-650'] = 'Polycom SoundPoint IP 650';
+	$phone_types['polycom-spip-670'] = 'Polycom SoundPoint IP 670';
+}
+if (gs_get_conf('GS_ELMEG_PROV_ENABLED')) {
+	$phone_types['elmeg-290'  ] = 'ElmegIP 290';
+}
 
 
 $per_page = (int)GS_GUI_NUM_RESULTS;

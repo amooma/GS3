@@ -295,6 +295,11 @@ _gscnf( 'POLYCOM_PROV_PB_NUM_RESULTS', 150               );
 _gscnf( 'POLYCOM_PROV_HTTP_USER'    , ''                 );
 _gscnf( 'POLYCOM_PROV_HTTP_PASS'    , ''                 );
 
+_gscnf( 'ELMEG_PROV_ENABLED'        , false              );
+_gscnf( 'ELMEG_PROV_HTTP_USER'      , ''                 );
+_gscnf( 'ELMEG_PROV_HTTP_PASS'      , ''                 );
+_gscnf( 'ELMEG_PROV_FW_UPDATE'      , false              );
+
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
 _gscnf( 'CANONIZE_INTL_PREFIX'      , '00'               );
 _gscnf( 'CANONIZE_COUNTRY_CODE'     , '49'               );
