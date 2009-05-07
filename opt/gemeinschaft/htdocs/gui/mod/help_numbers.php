@@ -338,7 +338,7 @@ echo '</h2>', "\n";
 <tr>
 	<td style="width:140px;"><code>*32</code></td>
 	<td style="width:420px;">
-		<?php echo __('Permanenten Unterdr&uuml;ckung der eigenen Rufnummer f&uuml;r alle internen Rufziele'); ?>
+		<?php echo __('Permanente Unterdr&uuml;ckung der eigenen Rufnummer f&uuml;r alle internen Rufziele'); ?>
 	</td>
 </tr>
 <tr>
@@ -351,7 +351,7 @@ echo '</h2>', "\n";
 <tr>
 	<td style="width:140px;"><code>*33</code></td>
 	<td style="width:420px;">
-		<?php echo __('Permanenten Unterdr&uuml;ckung der eigenen Rufnummer f&uuml;r alle externen Rufziele'); ?>
+		<?php echo __('Permanente Unterdr&uuml;ckung der eigenen Rufnummer f&uuml;r alle externen Rufziele'); ?>
 	</td>
 </tr>
 <tr>
