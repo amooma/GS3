@@ -30,12 +30,10 @@
 define("GS_VALID", true);  /// this is a parent file
 
 header("Content-Type: text/plain; charset=utf-8");
-/*
 header("Expires: 0");
 header("Pragma: no-cache");
 header("Cache-Control: private, no-cache, must-revalidate");
 header("Vary: *");
-*/
 
 require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 require_once(GS_DIR ."inc/prov-fns.php");
@@ -64,66 +62,93 @@ if(!preg_match("/PolycomSoundPointIP/", $ua))
 $phone_model = ((preg_match("/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
 $phone_type = "polycom-spip-". $phone_model;
 
-if ( $phone_model == '500' ) {
+//--- check if this phone has the XHTML microbrowser and prepare vars
+//--- for directory generator.
+
+switch($phone_model)
+{
+        case "300" :
+        case "500" :
+                $phone_has_microbrowser = FALSE;
+                break;
+        default :
+                $phone_has_microbrowser = TRUE;
+                break;
+}
+
+//--- echo the phone directory
+
+echo "<" . "?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?" . ">\n";
+
+if(!$phone_has_microbrowser)
+{
+	//--- this phone does not have microbrowser capabilities, so create
+	//--- a company directory based on the local users table
+
 	$db = gs_db_slave_connect();
 	
 	$query =
-'SELECT
-	`u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
-FROM
-	`users` `u` JOIN
-	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-WHERE
-	`u`.`pb_hide` = 0 AND
-	`u`.`nobody_index` IS NULL
-ORDER BY `u`.`lastname`, `u`.`firstname`';
+		"SELECT ".
+		"  `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext` ".
+		"FROM ".
+		"  `users` `u` ".
+		"JOIN ".
+		"  `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) ".
+		"WHERE ".
+		"  `u`.`pb_hide` = 0 ".
+		"  AND `u`.`nobody_index` IS NULL ".
+		"ORDER BY `u`.`lastname`, `u`.`firstname` ";
 
 	$rs = $db->execute($query);
-	
+
 	if($rs->numRows() !== 0)
 	{
-		echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', "\n";
-		echo '<directory>', "\n";
-		echo '   <item_list>', "\n";
+		echo "<directory>\n";
+		echo "   <item_list>\n";
 
 		while($r = $rs->fetchRow())
 		{
-			echo '      <item>', "\n";
-			echo '         <fn>', $r['fn'], '</fn>', "\n";
-			echo '         <ln>', $r['ln'], '</ln>', "\n";
-			echo '         <ct>', $r['ext'], '</ct>', "\n";
-			echo '      </item>', "\n";
+			echo "      <item>\n";
+			echo "         <fn>". $r["fn"] ."</fn>\n";
+			echo "         <ln>". $r["ln"] ."</ln>\n";
+			echo "         <ct>". $r["ext"] ."</ct>\n";
+			echo "      </item>\n";
 		}
 
-		echo '   </item_list>', "\n";
-		echo '</directory>', "\n";
+		echo "   </item_list>\n";
+		echo "</directory>\n";
 	}
-} else {
-	echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', "\n";
-	echo '<directory>', "\n";
-	echo '   <item_list>', "\n";
-	echo '      <item>', "\n";
-	echo '         <fn>Ruflisten</fn>', "\n";
-	echo '         <ct>!gsdiallog</ct>', "\n";
-	echo '         <sd>1</sd>', "\n";
-	echo '         <bw>0</bw>', "\n";
-	echo '		 <bb>0</bb>', "\n";
-	echo '      </item>', "\n";
-	echo '      <item>', "\n";
-	echo '         <fn>Telefonbuch</fn>', "\n";
-	echo '         <ct>!gsphonebook</ct>', "\n";
-	echo '         <sd>2</sd>', "\n";
-	echo '         <bw>0</bw>', "\n";
-	echo '         <bb>0</bb>', "\n";
-	echo '      </item>', "\n";
-	echo '      <item>', "\n";
-	echo '         <fn>Einstellungen</fn>', "\n";
-	echo '         <ct>!gsmenu</ct>', "\n";
-	echo '         <sd>3</sd>', "\n";
-	echo '         <bw>0</bw>', "\n";
-	echo '         <bb>0</bb>', "\n";
-	echo '      </item>', "\n";
-	echo '   </item_list>', "\n";
-	echo '</directory>', "\n";
 }
+else
+{
+	//--- this phone model has the microbrowser - create speeddials
+	//--- for the key remappings
+
+	echo "<directory>\n";
+	echo "   <item_list>\n";
+	echo "      <item>\n";
+	echo "         <fn>Ruflisten</fn>\n";
+	echo "         <ct>!gsdiallog</ct>\n";
+	echo "         <sd>1</sd>\n";
+	echo "         <bw>0</bw>\n";
+	echo "         <bb>0</bb>\n";
+	echo "      </item>\n";
+	echo "      <item>\n";
+	echo "         <fn>Telefonbuch</fn>\n";
+	echo "         <ct>!gsphonebook</ct>\n";
+	echo "         <sd>2</sd>\n";
+	echo "         <bw>0</bw>\n";
+	echo "         <bb>0</bb>\n";
+	echo "      </item>\n";
+	echo "      <item>\n";
+	echo "         <fn>Einstellungen</fn>\n";
+	echo "         <ct>!gsmenu</ct>\n";
+	echo "         <sd>3</sd>\n";
+	echo "         <bw>0</bw>\n";
+	echo "         <bb>0</bb>\n";
+	echo "      </item>\n";
+	echo "   </item_list>\n";
+	echo "</directory>\n";
+}
+
 ?>

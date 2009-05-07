@@ -190,10 +190,11 @@ if(!is_array($user))
 	_settings_err("DB error.");
 }
 
-//--- store the current firmware version in the database:
+//--- store the current phonetype and firmware version in the database:
 @$db->execute(
 	"UPDATE `phones` SET ".
-		"`firmware_cur`='". $db->escape($fw_vers) ."' ".
+		"`firmware_cur`='". $db->escape($fw_vers) ."', ".
+		"`type`='". $db->escape($phone_type) ."' ".
 	"WHERE `mac_addr`='". $db->escape($mac) ."'");
 
 //--- store the user's current IP address in the database:
@@ -228,6 +229,23 @@ else
 {
 	$hp_route_prefix = "";
 	$user_ext = $user["name"];
+}
+
+//--- check if this phone has the XHTML microbrowser and prepare vars
+//--- and phone features accordingly. E.g. IP300 and IP500 don't have a
+//--- firmware with microbrowser capabilities.
+
+switch($phone_model)
+{
+	case "300" :
+	case "500" :
+		$phone_has_microbrowser = FALSE;
+		$phone_use_internal_divertion = "1";
+		break;
+	default :
+		$phone_has_microbrowser = TRUE;
+		$phone_use_internal_divertion = "0";
+		break;
 }
 
 //--- print configuration
@@ -307,22 +325,24 @@ echo "reg.1.strictLineSeize=\"\" ";
 </phone1>
 <?php
 
+//--- configuration for xhtml browser and key remappings on phones where
+//--- the feature is supported
+
+if($phone_has_microbrowser)
+{
+
 //--- efk configuration - provide phone macros for url handling
-if ( $phone_model != '500' ) {
+
 	echo "<efk>\n";
 	echo "   <version efk.version=\"1\"/>\n";
 	echo "   <efklist";
-	//echo " efk.efklist.1.mname=\"diallog\" efk.efklist.1.status=\"1\" efk.efklist.1.label=\"Dial Log\" efk.efklist.1.action.string=\"". $prov_url_polycom ."diallog.php?mac=". $mac ."\"";
-	//echo " efk.efklist.2.mname=\"phonebook\" efk.efklist.2.status=\"1\" efk.efklist.2.label=\"Phonebook\" efk.efklist.2.action.string=\"". $prov_url_polycom ."pb.php?mac=". $mac ."\"";
 	echo " efk.efklist.1.mname=\"gsdiallog\" efk.efklist.1.status=\"1\" efk.efklist.1.action.string=\"". $prov_url_polycom ."diallog.php?user=". $user_ext ."\"";
 	echo " efk.efklist.2.mname=\"gsphonebook\" efk.efklist.2.status=\"1\" efk.efklist.2.action.string=\"". $prov_url_polycom ."pb.php?m=". $mac ."&amp;u=". $user_ext ."\"";
 	echo " efk.efklist.3.mname=\"gsmenu\" efk.efklist.3.status=\"1\" efk.efklist.3.action.string=\"". $prov_url_polycom ."configmenu.php?m=". $mac ."&amp;u=". $user_ext ."\"";
 	echo " />\n";
 	echo "</efk>\n";
-}
 
-echo "<sip>\n";
-if ( $phone_model != '500' ) {
+	echo "<sip>\n";
 	echo "   <keys key.scrolling.timeout=\"1\"";
 
 	//--- key remappings for SoundPoint IP 501
@@ -330,26 +350,32 @@ if ( $phone_model != '500' ) {
 	echo " key.IP_500.30.function.prim=\"SpeedDial\" key.IP_500.30.subPoint.prim=\"1\"";
 	echo " key.IP_500.32.function.prim=\"SpeedDial\" key.IP_500.32.subPoint.prim=\"2\"";
 
-	//--- key remappings for SoundPoint IP 601
-	//--- 30 = Directories' key
+	//--- key remappings for SoundPoint IP 600 and 601
+	//--- 30 = 'Directories' key
 	echo " key.IP_600.30.function.prim=\"SpeedDial\" key.IP_600.30.subPoint.prim=\"2\"";
+
+	//--- key remappings for SoundPoint IP 650 and 670
+	//--- 30 = 'Directories' key
+	echo " key.IP_650.30.function.prim=\"SpeedDial\" key.IP_650.30.subPoint.prim=\"2\"";
 
 	//--- end of remappings
 
 	echo "/>\n";
-}
 
-//--- softkey remapping
-//echo "   <softkey softkey.1.label="Surf" softkey.4.action="http://212.28.230.152/" softkey.4.enable="1" softkey.4.use.idle="1"/>
-echo "   <softkey softkey.feature.forward=\"0\"/>\n";
+	//--- softkey remapping
+	echo "   <softkey softkey.feature.forward=\"0\"/>\n";
 
-echo "   <applications>\n";
-echo "      <push apps.push.messageType=\"3\" apps.push.serverRootURL=\"/push\" apps.push.username=\"" . gs_get_conf("GS_POLYCOM_PROV_HTTP_USER") . "\" apps.push.password=\"" . gs_get_conf("GS_POLYCOM_PROV_HTTP_PASS") . "\"/>\n";
-echo "   </applications>\n";
+	//--- XHTML push message preparation
+	echo "   <applications>\n";
+	echo "      <push apps.push.messageType=\"3\" apps.push.serverRootURL=\"/push\" apps.push.username=\"" . gs_get_conf("GS_POLYCOM_PROV_HTTP_USER") . "\" apps.push.password=\"" . gs_get_conf("GS_POLYCOM_PROV_HTTP_PASS") . "\"/>\n";
+	echo "   </applications>\n";
 
-echo "   <mb>\n";
-echo "      <main mb.main.idleTimeout=\"0\" mb.main.statusbar=\"0\" mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
-echo "   </mb>\n";
-echo "</sip>\n";
+	//--- Microbrowser settings
+	echo "   <mb>\n";
+	echo "      <main mb.main.idleTimeout=\"0\" mb.main.statusbar=\"0\" mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
+	echo "   </mb>\n";
+	echo "</sip>\n";
+
+} //--- Microbrowser settings
 
 ?>

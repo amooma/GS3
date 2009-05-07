@@ -405,6 +405,18 @@ $POLYCOM_PROV_HTTP_PASS      = 'gEheiM23y89sdo23';
   # username and password for HTTP push notifications
   # note: the notification will not work with empty username/password
 
+//------------------------[ Elmeg ]-----------------------//
+
+$ELMEG_PROV_ENABLED = true;  # do provisioning for Elmeg?
+
+$ELMEG_PROV_HTTP_USER = "";
+$ELMEG_PROV_HTTP_PASS = "";
+  # to password protect the phone's web gui.
+  # changing these values will likely cause automatic rebooting to fail
+
+$ELMEG_PROV_FW_UPDATE = false; # allow firmware updates?
+  # FIXME: not implemented yet
+
 /***********************************************************
 *    CANONICAL PHONE NUMBERS (FQTN)
 ***********************************************************/
