@@ -362,7 +362,7 @@ echo '</h2>', "\n";
 </tr>
 </tbody>
 </table>
-<?php if( GS_OUTBOUNDNUM_SELECTABLE ){ ?>
+<?php if( GS_USER_SELECT_CALLERID ){ ?>
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
