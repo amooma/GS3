@@ -871,6 +871,8 @@ context to-internal-users-self {
 				}
 			}
 			else {
+				AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${CALLERID(name)});
+				//UserEvent(UserCallUI|user: ${user_name}|calledparty: ${EXTEN});
 				Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},o);
 			}
 			

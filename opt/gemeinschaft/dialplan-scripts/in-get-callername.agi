@@ -1,0 +1,134 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 4529 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Andreas Neugebauer <neugebauer@loca.net>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+//include_once( GS_DIR .'inc/canonization.php' );
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+if( GS_PB_REVERSE_SEARCH == false ) {
+	die();
+}
+
+function find_private( $num , $cid, $db ) {
+
+	
+	$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_prv` WHERE `user_id`=' . $num .' AND `number`= \''. $db->escape($cid) . '\'';	
+	
+	search_number ( $query, $cid, $db);
+	
+
+}
+
+function find_public( $cid, $db ) {
+
+	$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_ldap` WHERE `number`=\''. $db->escape($cid) . '\'';
+
+	search_number ( $query, $cid, $db);
+
+}
+
+function search_number ( $query, $cid , $db) {
+
+	$rs = $db->execute( $query );
+
+	$result = array();
+
+	if( @$rs ) {
+		while ( $caller = $rs->fetchRow()) {
+
+			$firstname	= $caller['firstname'];
+			$lastname	= $caller['lastname'];
+			$number		= $caller['number'];
+			$set = array( 'firstname' => $caller['firstname'], 'lastname' => $caller['lastname'], 'number' => $caller['number']);
+			$result[$number] = $set;
+		}
+	}
+
+	//direct match
+	if ( isset ( $result[$cid] ) ) {
+		$hit = $result[$cid];
+		print_name ( $hit['firstname'], $hit['lastname'] );
+	}
+
+}
+
+
+
+function print_name ( $firstname, $lastname ) {
+
+	$fullname = '';
+	if( strlen( $firstname ) > 0 )
+		$fullname = strtoupper( substr( $firstname, 0, 1 ) ) . ". " . $lastname;
+	else
+		$fullname = $lastname;
+	echo 'SET VARIABLE CALLERID(name) '.  gs_agi_str_esc($fullname) ."\n";
+	die();
+
+}
+
+$ext  = trim( @$argv[1] );
+$cid  = trim( @$argv[2] );
+$cidname  = trim( @$argv[3] );
+
+if ( $cidname ) { 
+	die();
+}
+if ( strlen( $cidname ) > 0 ) {  // is not just digits
+	die();
+}
+if (! $ext) {
+	die();
+}
+if (! preg_match( '/^\d+$/', $ext ) ) {  // is not just digits
+	die();
+}
+if (! $cid ) {
+	die();
+}
+
+
+$db = gs_db_slave_connect();
+
+# is it a user?
+#
+$num = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
+
+# we do not need to lookup in the private phonebook of an unknown user
+if ( $num > 0 ) {
+		find_private( $num, $cid, $db );
+}
+
+# if the public phonebook is disabled we will  not lookup there
+if( GS_PB_IMPORTED_ENABLED == true )
+	find_public( $cid, $db );
+
+?>

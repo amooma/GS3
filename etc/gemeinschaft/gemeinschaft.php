@@ -478,6 +478,10 @@ $DP_ALLOW_DIRECT_DIAL       = false;
   # pass (/generate) a "connection ID" via the custom X-Org-ConnID
   # SIP header, store in CDR(x_connid)
 
+$PB_REVERSE_SEARCH      = false;
+  # reverse search of the callers name in the global and 
+  # personal phonebooks
+
 /***********************************************************
 *    SELECTABLE Callerid
 ***********************************************************/
