@@ -869,20 +869,20 @@ setting('user_custom', 1, '');
 # see http://wiki.snom.com/Settings/custom_melody_url for examples
 
 # default fallback ringtone:
-psetting('ring_sound'               , 'Ringer1');  # Ringer[1-10] / Silent
+psetting('ring_sound'               , 'Ringer3', true);  # Ringer[1-10] / Silent
 # default ringtone for identity 1:
-setting('user_ringer', 1            , 'Ringer1');  # Ringer[1-10] / Silent / Custom
+setting('user_ringer', 1            , 'Ringer3', null, true);  # Ringer[1-10] / Silent / Custom
 
 # Alert-Info-Klingeltoene:
-psetting('alert_internal_ring_sound', 'Ringer2');  # Alert-Info: alert-internal
-psetting('alert_external_ring_sound', 'Ringer3');  # Alert-Info: alert-external
-psetting('alert_group_ring_sound'   , 'Ringer4');  # Alert-Info: alert-group
+psetting('alert_internal_ring_sound', 'Ringer2', true);  # Alert-Info: alert-internal
+psetting('alert_external_ring_sound', 'Ringer3', true);  # Alert-Info: alert-external
+psetting('alert_group_ring_sound'   , 'Ringer4', true);  # Alert-Info: alert-group
 
 # Adressbuchklingeltoene (wir benutzen nicht das Telefon-interne Telefonbuch, diese Einstellungen werden also nicht benutzt):
-psetting('friends_ring_sound'       , 'Ringer1');
-psetting('family_ring_sound'        , 'Ringer1');
-psetting('colleagues_ring_sound'    , 'Ringer1');
-psetting('vip_ring_sound'           , 'Ringer1');
+psetting('friends_ring_sound'       , 'Ringer3', true);
+psetting('family_ring_sound'        , 'Ringer3', true);
+psetting('colleagues_ring_sound'    , 'Ringer3', true);
+psetting('vip_ring_sound'           , 'Ringer3', true);
 
 
 
