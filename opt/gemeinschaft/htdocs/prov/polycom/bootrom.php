@@ -69,15 +69,22 @@ function _settings_err($msg="")
 
 $ua = trim(@$_SERVER["HTTP_USER_AGENT"]);
 
-if(!preg_match("/PolycomSoundPointIP/", $ua))
+if (preg_match("/PolycomSoundPointIP/", $ua))
+{
+	$phone_model = ((preg_match("/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
+	$phone_type = "polycom-spip-". $phone_model;
+}
+else if (preg_match("/PolycomSoundStationIP/", $ua))
+{
+	$phone_model = ((preg_match("/PolycomSoundStationIP\-SSIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
+	$phone_type = "polycom-ssip-". $phone_model;
+}
+else
 {
 	gs_log(GS_LOG_WARNING, "Phone with MAC \"$mac\" (Polycom) has invalid User-Agent (\"". $ua ."\")");
 	//--- don't explain this to the users
 	_settings_err("No! See log for details.");
 }
-
-$phone_model = ((preg_match("/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
-$phone_type = "polycom-spip-". $phone_model;
 
 switch($phone_model)
 {

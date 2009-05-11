@@ -39,6 +39,26 @@ require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 require_once(GS_DIR ."inc/prov-fns.php");
 include_once(GS_DIR ."inc/db_connect.php");
 
+//---------------------------------------------------------------------------
+
+function _settings_err($msg="")                                           
+{
+	@ob_end_clean();
+	@ob_start();
+
+	echo "<!-- // ", ($msg != "" ? str_replace("--","- -",$msg) : "Error") ," // -->\n";
+	if(!headers_sent())
+	{
+		header("Content-Type: text/plain; charset=utf-8");
+		header("Content-Length: ". (int)@ob_get_length());
+	}
+
+	@ob_end_flush();
+	exit(1);
+}
+
+//---------------------------------------------------------------------------
+
 if(!gs_get_conf("GS_POLYCOM_PROV_ENABLED"))
 {
 	gs_log(GS_LOG_DEBUG, "Polycom provisioning not enabled");
@@ -52,15 +72,23 @@ if(!$requester["allowed"])
 }
 
 $ua = trim(@$_SERVER["HTTP_USER_AGENT"]);
-if(!preg_match("/PolycomSoundPointIP/", $ua))
+
+if (preg_match("/PolycomSoundPointIP/", $ua))
+{
+	$phone_model = ((preg_match("/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
+	$phone_type = "polycom-spip-". $phone_model;
+}
+else if (preg_match("/PolycomSoundStationIP/", $ua))
+{
+	$phone_model = ((preg_match("/PolycomSoundStationIP\-SSIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
+	$phone_type = "polycom-ssip-". $phone_model;
+}
+else
 {
 	gs_log(GS_LOG_WARNING, "Phone with MAC \"$mac\" (Polycom) has invalid User-Agent (\"". $ua ."\")");
 	//--- don't explain this to the users
 	_settings_err("No! See log for details.");
 }
-
-$phone_model = ((preg_match("/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
-$phone_type = "polycom-spip-". $phone_model;
 
 //--- check if this phone has the XHTML microbrowser and prepare vars
 //--- for directory generator.
@@ -90,7 +118,7 @@ if(!$phone_has_microbrowser)
 	$query =
 		"SELECT ".
 		"  `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext` ".
-		"FROM ".
+		"FROM ".1
 		"  `users` `u` ".
 		"JOIN ".
 		"  `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) ".

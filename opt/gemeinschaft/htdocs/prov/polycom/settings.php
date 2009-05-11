@@ -40,6 +40,10 @@ require_once(GS_DIR ."inc/util.php");
 require_once(GS_DIR ."inc/gs-lib.php");
 require_once(GS_DIR ."inc/prov-fns.php");
 require_once(GS_DIR ."inc/quote_shell_arg.php");
+require_once(GS_DIR ."inc/db_connect.php");
+require_once(GS_DIR ."inc/nobody-extensions.php");
+include_once(GS_DIR ."inc/gs-fns/gs_prov_params_get.php");
+include_once(GS_DIR ."inc/gs-fns/gs_user_prov_params_get.php");
 set_error_handler("err_handler_die_on_err");
 
 //---------------------------------------------------------------------------
@@ -110,25 +114,27 @@ if(substr($mac, 0, 6) !== "0004F2")
 //$ua = "FileTransport PolycomSoundPointIP-SPIP_501-UA/3.1.2.0392";
 
 $ua = trim(@$_SERVER["HTTP_USER_AGENT"]);
-if(!preg_match("/PolycomSoundPointIP/", $ua))
+if (preg_match("/PolycomSoundPointIP/", $ua))
+{
+	$phone_model = ((preg_match("/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
+	$phone_type = "polycom-spip-". $phone_model;
+	$fw_vers = ((preg_match("/PolycomSoundPointIP\-SPIP_\d+\-UA\/(.*)/", $ua, $m)) ? $m[1] : "0.0.0.000");
+}
+else if (preg_match("/PolycomSoundStationIP/", $ua))
+{
+	$phone_model = ((preg_match("/PolycomSoundStationIP\-SSIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
+	$phone_type = "polycom-ssip-". $phone_model;
+	$fw_vers = ((preg_match("/PolycomSoundStationIP\-SPIP_\d+\-UA\/(.*)/", $ua, $m)) ? $m[1] : "0.0.0.000");
+}
+else
 {
 	gs_log(GS_LOG_WARNING, "Phone with MAC \"$mac\" (Polycom) has invalid User-Agent (\"". $ua ."\")");
 	//--- don't explain this to the users
 	_settings_err("No! See log for details.");
 }
 
-$phone_model = ((preg_match("/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
-$phone_type = "polycom-spip-". $phone_model;
-
-$fw_vers = ((preg_match("/PolycomSoundPointIP\-SPIP_\d+\-UA\/(.*)/", $ua, $m)) ? $m[1] : "0.0.0.000");
-
 gs_log(GS_LOG_DEBUG, "Polycom phone \"". $mac ."\" asks for settings (UA: ...\"". $ua ."\") - model ". $phone_model);
 $prov_url_polycom = GS_PROV_SCHEME ."://". GS_PROV_HOST .(GS_PROV_PORT ? ":". GS_PROV_PORT : ""). GS_PROV_PATH ."polycom/";
-
-require_once(GS_DIR ."inc/db_connect.php");
-require_once(GS_DIR ."inc/nobody-extensions.php");
-include_once(GS_DIR ."inc/gs-fns/gs_prov_params_get.php");
-include_once(GS_DIR ."inc/gs-fns/gs_user_prov_params_get.php");
 
 $db = gs_db_master_connect();
 if(!$db)
