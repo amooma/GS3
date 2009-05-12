@@ -864,7 +864,14 @@ macro dial-gateway-do( mnumber ) {
 	}
 	if ("${external_callerid_override}" = "true") {
 		AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi,${mnumber},${is_sub_system},${CALLERID(num)},${user_id},1);
-	} else {
+	}
+	else if ("${is_forwarded}" = "1") {
+		// Hack to use clip no screening properly
+		if ("${CALLERID(num):0:2}" = "00")
+			Set(CALLERID(num)=${CALLERID(num):2});
+		AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi,${mnumber},${is_sub_system},${CALLERID(num)},${user_id},1);
+	}
+	else {
 		AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi,${mnumber},${is_sub_system},${user_name},${user_id},0);
 	}
 	Set(no_route=1);
