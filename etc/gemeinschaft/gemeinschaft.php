@@ -385,6 +385,10 @@ $GRANDSTREAM_PROV_HTTP_PASS = '';     # e.g. "gEheiM23y89sdo23"
 //$GRANDSTREAM_PROV_NTP       = '192.168.1.130';
   # NTP Server. the stupid Grandstream needs it
 
+//$GRANDSTREAM_PROV_KEY_BLACKLIST = '';
+  # do not show these softkey functions in GUI,
+  # comma separated list, default: ''
+
 
 
 /***********************************************************
