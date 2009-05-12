@@ -243,7 +243,7 @@ _gscnf( 'PROV_LAN_NETS'             , '0.0.0.0/0'        );
 _gscnf( 'PROV_MODELS_ENABLED_SNOM'        , '*'          );  # / '360,370'
 _gscnf( 'PROV_MODELS_ENABLED_SIEMENS'     , '*'          );  # / 'os20,os40,os60,os80'
 _gscnf( 'PROV_MODELS_ENABLED_AASTRA'      , '*'          );  # / '51i,53i,55i,57i'
-_gscnf( 'PROV_MODELS_ENABLED_GRANDSTREAM' , '*'          );
+_gscnf( 'PROV_MODELS_ENABLED_GRANDSTREAM' , '*'          );  # / 'gxp2000,gxp2020'...
 
 _gscnf( 'SNOM_PROV_ENABLED'         , false              );
 _gscnf( 'SNOM_PROV_HTTP_USER'       , ''                 );
@@ -285,7 +285,7 @@ _gscnf( 'GRANDSTREAM_PROV_NTP'      , gs_get_conf('GS_PROV_HOST','') );
 //_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_BT200'  , null      );  // "
 //_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP2000', null      );  // "
 //...
-//_gscnf( 'GRANDSTREAM_PROV_KEY_BLACKLIST', ''             );  //FIXME?
+_gscnf( 'GRANDSTREAM_PROV_KEY_BLACKLIST', ''             );
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
 _gscnf( 'CANONIZE_INTL_PREFIX'      , '00'               );

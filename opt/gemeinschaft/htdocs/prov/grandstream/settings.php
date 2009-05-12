@@ -145,7 +145,7 @@ $prov_url_grandstream = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':
 require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/nobody-extensions.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
-//include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_prov_params_get.php' );
 //include_once( GS_DIR .'inc/ringtones-fns.php' ); //FIXME
@@ -749,12 +749,11 @@ if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 	# ...	
 	# Key 7: P329 P319 P320 P321
 	$max_keys = 7;
-	$key = 301;
 	for ($i=0; $i<$max_keys; ++$i) {
-		psetting('P'.($i+323), '0');
-		psetting('P'.$key++,   '0');
-		psetting('P'.$key++,   '' );
-		psetting('P'.$key++,   '' );		
+		psetting('P'.($i  +323), '0');
+		psetting('P'.($i*3+301), '0');
+		psetting('P'.($i*3+302), '' );
+		psetting('P'.($i*3+303), '' );
 	}
 	if ( in_array($phone_model, array('gxp2010'), true) ) {
 		# key layout (only GXP2010)
@@ -764,12 +763,11 @@ if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 		# ...
 		# Key 18: P393 P394 P395 P396
 		$max_keys = 11;
-		$key = 353;
 		for ($i=0; $i<$max_keys; ++$i) {
-			psetting('P'.$key++, '0');
-			psetting('P'.$key++, '0');
-			psetting('P'.$key++, '' );
-			psetting('P'.$key++, '' );
+			psetting('P'.($i*4+353), '0');
+			psetting('P'.($i*4+354), '0');
+			psetting('P'.($i*4+355), '' );
+			psetting('P'.($i*4+356), '' );
 		}
 	}
 	
@@ -806,9 +804,10 @@ if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 	}
 }
 
+if (in_array($phone_model, array('gxp2000', 'gxp2020'), true)) $max_key =  7;
+if (in_array($phone_model, array('gxp2010'           ), true)) $max_key = 18;
 
-/*
-//FIXME?
+
 $softkeys = null;
 $GS_Softkeys = gs_get_key_prov_obj( $phone_type );
 if ($GS_Softkeys->set_user( $user['user'] )) {
@@ -834,11 +833,23 @@ if (! is_array($softkeys)) {
 			continue;
 		}
 		$key_idx = (int)lTrim(subStr($key_name,1),'0');
-		if ($key_idx > $max_key) continue;
-		setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
+		if ($key_idx > $max_key-1) continue;
+		if ($key_def['function'] === 'empty') continue;
+		//setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
+		
+		if ($key_idx < 7) {  # gxp2000, gxp2010, gxp2020
+			psetting('P'.($key_idx  +323), subStr($key_def['function'],1));
+			//psetting('P'.($key_idx*3+301), '0');
+			//psetting('P'.($key_idx*3+302), '');
+			psetting('P'.($key_idx*3+303), $key_def['data']);
+		} elseif ($key_idx >= 7) {  # gxp2010
+			psetting('P'.(($key_idx-7)*4+353), subStr($key_def['function'],1));
+			//psetting('P'.(($key_idx-7)*4+354), '');
+			//psetting('P'.(($key_idx-7)*4+355), '');
+			psetting('P'.(($key_idx-7)*4+356), $key_def['data']);
+		}
 	}
 }
-*/
 
 
 

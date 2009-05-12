@@ -10,6 +10,7 @@
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
 * Soeren Sprenger <soeren.sprenger@amooma.de>
+* Sebastian Ertz
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -80,12 +81,15 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	if (in_array('*', $enabled_models) || in_array('57i', $enabled_models))
 		$phone_types['aastra-57i'] = 'Aastra 57i';
 }
-/*
 if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$enabled_models = preg_split('/[,\\s]+/', gs_get_conf('GS_PROV_MODELS_ENABLED_GRANDSTREAM'));
-	//FIXME
+	if (in_array('*', $enabled_models) || in_array('gxp2000', $enabled_models))
+		$phone_types['grandstream-gxp2000'] = 'Grandstream GXP 2000';
+	if (in_array('*', $enabled_models) || in_array('gxp2010', $enabled_models))
+		$phone_types['grandstream-gxp2010'] = 'Grandstream GXP 2010';
+	if (in_array('*', $enabled_models) || in_array('gxp2020', $enabled_models))
+		$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
 }
-*/
 
 
 $key_functions_snom = array(
@@ -151,11 +155,25 @@ $key_functions_aastra = array(
 	'_callers'  => __('Anrufliste'),   # defined by Gemeinschaft
 	'_dir'      => __('Telefonbuch'),  # defined by Gemeinschaft
 );
-$key_function_none_aastra = 'none';
+$key_function_none_aastra = 'empty';
 $key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_AASTRA_PROV_KEY_BLACKLIST'));
 foreach ($key_functions_blacklist as $keyfn) {
 	if (array_key_exists($keyfn, $key_functions_aastra))
 		unset($key_functions_aastra[$keyfn]);
+}
+
+$key_functions_grandstream = array(
+	'empty' => __('Leer'),
+	'f0'    => __('Zielwahl'),  # Speed Dial
+	'f1'    => __('BLF'),  //FIXME
+	//'f2'    => __('Presence Watcher'),  //FIXME
+	//'f3'    => __('Eventlist BLF'),  //FIXME
+);
+$key_function_none_grandstream = 'empty';
+$key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_GRANDSTREAM_PROV_KEY_BLACKLIST'));
+foreach ($key_functions_blacklist as $keyfn) {
+	if (array_key_exists($keyfn, $key_functions_grandstream))
+		unset($key_functions_grandstream[$keyfn]);
 }
 
 
@@ -208,6 +226,11 @@ if ($phone_type == '') {
 		if     (array_key_exists('aastra-53i', $phone_types)) $phone_type = 'aastra-53i';
 		elseif (array_key_exists('aastra-55i', $phone_types)) $phone_type = 'aastra-55i';
 		elseif (array_key_exists('aastra-57i', $phone_types)) $phone_type = 'aastra-57i';
+	} else
+	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
+		if     (array_key_exists('grandstream-gxp2000', $phone_types)) $phone_type = 'grandstream-gxp2000';
+		elseif (array_key_exists('grandstream-gxp2010', $phone_types)) $phone_type = 'grandstream-gxp2010';
+		elseif (array_key_exists('grandstream-gxp2020', $phone_types)) $phone_type = 'grandstream-gxp2020';
 	}
 }
 if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370'), true)) {
@@ -219,6 +242,9 @@ if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370'),
 } elseif (in_array($phone_type, array('aastra-53i', 'aastra-55i', 'aastra-57i'), true)) {
 	$phone_layout = 'aastra';
 	$key_function_none = $key_function_none_aastra;
+} elseif (in_array($phone_type, array('grandstream-gxp2000', 'grandstream-gxp2010', 'grandstream-gxp2020'), true)) {
+	$phone_layout = 'grandstream';
+	$key_function_none = $key_function_none_grandstream;
 } else {
 	$phone_layout = false;
 	$key_function_none = false;
@@ -945,10 +971,45 @@ if ($phone_layout) {
 		}
 		*/
 		break;
+	case 'grandstream':
+		//if ($show_ext_modules >= 0) {
+			$key_levels = array(
+				0 => array('from'=>   0, 'to'=>   6, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title))
+			);
+		//}
+		/*if ($show_ext_modules >= 1) {
+			$key_levels += array(
+				1 => array('from'=>  12, 'to'=>  32, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1')
+			);
+		}
+		if ($show_ext_modules >= 2) {
+			$key_levels += array(
+				2 => array('from'=>  33, 'to'=>  53, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2')
+			);
+		}
+		*/
+		switch ($phone_type) {
+			case 'grandstream-gxp2010':
+				$key_levels[0]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Linke Tasten');
+				$key_levels[0]['to'   ] = 8;
+				$key_levels[1]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Rechte Tasten');
+				$key_levels[1]['from' ] = 9;
+				$key_levels[1]['to'   ] = 17;
+			break;
+		}
+		break;
 	}
 	
-	if ($phone_layout === 'snom') $table_cols = 5;
-	else                          $table_cols = 6;
+	if (in_array($phone_layout, array('snom', 'grandstream'), true)) {
+		$have_key_label = false;
+		$table_cols = 5;
+	} else {
+		$have_key_label = true;
+		$table_cols = 6;
+	}
 	
 	echo '<table cellspacing="1">' ,"\n";
 	echo '<tbody>' ,"\n";
@@ -969,7 +1030,7 @@ if ($phone_layout) {
 		echo '	<th class="c">:=</th>' ,"\n";
 		echo '	<th>', __('Funktion') ,'</th>' ,"\n";
 		echo '	<th>', __('Nummer/Daten') ,'</th>' ,"\n";
-		if ($phone_layout !== 'snom') {
+		if ($have_key_label) {
 			echo '	<th>', __('Beschriftung') ,'</th>' ,"\n";
 		}
 		echo '	<th>', __('Gesch&uuml;tzt?') ,'</th>' ,"\n";
@@ -1015,6 +1076,8 @@ if ($phone_layout) {
 			} elseif ($phone_layout === 'aastra') {
 				if ($knum >=   1) $keyv = 'T'. str_replace(' ','&nbsp;', str_pad($knum    , 2, ' ', STR_PAD_LEFT));
 				if ($knum >= 100) $keyv = 'D'. str_replace(' ','&nbsp;', str_pad($knum-100, 2, ' ', STR_PAD_LEFT));
+			} elseif ($phone_layout === 'grandstream') {
+				$keyv = 'T'. str_replace(' ','&nbsp;', str_pad($knum+1    , 2, ' ', STR_PAD_LEFT));
 			} else {
 				$keyv = 'F'.$knump;
 			}
@@ -1113,6 +1176,9 @@ if ($phone_layout) {
 			case 'aastra':
 				$fns =& $key_functions_aastra;
 				break;
+			case 'grandstream':
+				$fns =& $key_functions_grandstream;
+				break;
 			}
 			foreach ($fns as $function => $title) {
 				//if ($can_write || $function === $key['function']) {
@@ -1131,7 +1197,7 @@ if ($phone_layout) {
 			echo ' />' ,"\n";
 			echo '</td>' ,"\n";
 			
-			if ($phone_layout !== 'snom') {
+			if ($have_key_label) {
 				echo '<td>' ,"\n";
 				echo '<input type="text" name="key-f',$knump,'-label" value="', htmlEnt($key['label']) ,'" size="15" maxlength="20" tabindex="', (10+$knum) ,'"';
 				if (! $can_write) echo ' disabled="disabled"';
