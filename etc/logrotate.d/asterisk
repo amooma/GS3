@@ -7,6 +7,7 @@
 /var/log/asterisk/messages
 /var/log/asterisk/debug
 /var/log/asterisk/full
+/var/log/asterisk/mmlog
 /var/log/asterisk/cdr-csv/*.csv
 /var/log/asterisk/cdr-custom/*.csv
 {
