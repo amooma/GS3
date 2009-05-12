@@ -516,7 +516,7 @@ psetting('time_24_format'   , 'on'     , true);
 psetting('message_led_other', 'on'     );
 psetting('use_backlight'    , 'on'     , true);  # always | on | off | dim (370, >= 7.1.33)
 //psetting('headset_device'   , 'headset_rj', true);  # wuerde Default auf Headset am RJ14-Stecker setzen
-psetting('headset_device'   , 'none'   , true);
+//psetting('headset_device'   , 'none'   , true);  # setting this would disable the headset even during a call
 psetting('ethernet_detect'  , 'on'     );  # Warnung falls kein Ethernet
 psetting('ethernet_replug'  , 'reboot' );
 psetting('reboot_after_nr'  , '5'      );  # nach 5 Min. ohne Registrierung neu starten
