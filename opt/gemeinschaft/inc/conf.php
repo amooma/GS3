@@ -231,6 +231,7 @@ _gscnf( 'EXTERNAL_NUMBERS_LDAP_PROP', ''                 );
 
 _gscnf( 'NOBODY_EXTEN_PATTERN'      , '95xxxx'           );
 _gscnf( 'NOBODY_CID_NAME'           , 'Namenlos-'        );
+_gscnf( 'NOBODY_ALLOW_EXTERNAL'     , false              );
 
 _gscnf( 'PROV_HOST'                 , '0.0.0.0'          );
 _gscnf( 'PROV_PORT'                 , 0                  );

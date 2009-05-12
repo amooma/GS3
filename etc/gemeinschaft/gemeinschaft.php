@@ -224,7 +224,8 @@ $NOBODY_CID_NAME        = 'Namenlos-';
   # The CallerID name prefix.
   # Call scripts/gs_nobodies_change if you ever change this!
 
-
+$NOBODY_ALLOW_EXTERNAL  = false;
+  # Allow nobody accounts to dial external destinations
 
 /***********************************************************
 *    PROVISIONING

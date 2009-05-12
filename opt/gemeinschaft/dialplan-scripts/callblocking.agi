@@ -70,6 +70,17 @@ if ($user_id < 1) {
 	die();
 }
 
+$allow_nobody = gs_get_conf('GS_NOBODY_ALLOW_EXTERNAL');
+
+$nobody_index = $db->executeGetOne(
+'SELECT `u`.`nobody_index` FROM `users` `u` JOIN `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) WHERE `s`.`name`=\''. $db->escape($user_name) .'\''
+);
+
+if(($nobody_index > 0) && ($allow_nobody == false)) {
+	echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('no') ."\n";
+	die();
+}
+
 
 $rs = $db->execute( 'SELECT `regexp`,`pin` FROM `callblocking` WHERE `user_id`='. $user_id .' ORDER BY LENGTH(`regexp`) DESC' );
 if ($rs) {
