@@ -118,7 +118,7 @@ if(!$phone_has_microbrowser)
 	$query =
 		"SELECT ".
 		"  `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext` ".
-		"FROM ".1
+		"FROM ".
 		"  `users` `u` ".
 		"JOIN ".
 		"  `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) ".

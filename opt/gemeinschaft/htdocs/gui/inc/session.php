@@ -77,11 +77,6 @@ if ($_REQUEST['gemeinschaft'] == '') unset($_REQUEST['gemeinschaft']);
 if ($_COOKIE['gemeinschaft']  == '') unset($_COOKIE['gemeinschaft']);
 session_start();
 
-function trim_value(&$value)
-{
-	$value = trim($value);
-}
-
 function parse_http_accept_header( $data )
 {
 	$accept = array();
@@ -253,7 +248,7 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 	require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );
 
         $methods =  split( ',', GS_GUI_AUTH_METHOD );
-        array_walk( $methods, 'trim_value' );
+        array_walk( $methods, 'gs_trim_value' );
 
         foreach ( $methods as &$method ) {
 		$PAM = new PAMAL( $method );

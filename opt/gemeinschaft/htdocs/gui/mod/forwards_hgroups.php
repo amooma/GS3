@@ -35,14 +35,9 @@ require_once(GS_DIR . 'inc/gs-fns/gs_huntgroup_user_add.php');
 require_once(GS_DIR . 'inc/gs-fns/gs_huntgroup_user_del.php');
 require_once(GS_DIR . 'inc/gs-fns/gs_huntgroups_get.php');
 
-function trim_value(&$value)
-{
-	$value = trim($value);
-}
-
 $admins =  split(',',GS_GUI_SUDO_ADMINS);
 
-array_walk($admins, 'trim_value');
+array_walk($admins, 'gs_trim_value');
 if(!in_array($_SESSION[sudo_user][name], $admins)){
 	die(__('Nur Administratoren d&uuml;rfen hier &Auml;nderungen vornehmen!'));
 }

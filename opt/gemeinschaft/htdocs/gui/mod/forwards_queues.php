@@ -33,14 +33,9 @@ include_once( GS_DIR .'inc/gs-fns/gs_queue_callforward_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queue_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queues_get.php' );
 
-function trim_value(&$value)
-{
-	$value = trim($value);
-}
-
 $admins =  split(',',GS_GUI_SUDO_ADMINS);
 
-array_walk($admins, 'trim_value');
+array_walk($admins, 'gs_trim_value');
 if(!in_array($_SESSION[sudo_user][name], $admins)){
 	die(__('Nur Administratoren d&uuml;rfen hier &Auml;nderungen vornehmen!'));
 }
