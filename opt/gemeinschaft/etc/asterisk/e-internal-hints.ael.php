@@ -67,7 +67,8 @@ $query =
 FROM
 	`ast_sipfriends` `s` JOIN
 	`users` `u` ON (`u`.`id`=`s`.`_user_id`)
-	WHERE `u`.`nobody_index` IS NULL'
+WHERE
+	`u`.`nobody_index` IS NULL'
 ;
 if (! $GS_INSTALLATION_TYPE_SINGLE) {
 	$query.= "\n". 'AND `u`.`host_id` IN ('. implode(',', $our_ids) .')';
