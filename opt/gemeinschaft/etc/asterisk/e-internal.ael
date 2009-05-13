@@ -1053,6 +1053,8 @@ context to-internal-users-self {
 		
 		user_uncallable_offer_cc:
 			Verbose(1,### Called user ${EXTEN} unreachable (${DIALSTATUS})\, offer call completion);
+			ResetCDR(w);
+			NoCDR();
 			Answer();
 			Wait(0.5);
 			Set(vm_announce_file=${vm_announce_${vm_source}});
