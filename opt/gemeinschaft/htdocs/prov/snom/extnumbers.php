@@ -119,8 +119,7 @@ foreach ($tmp as $arr) {
 
 
 $url_snom_extnumbers = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)). GS_PROV_PATH .'snom/extnumbers.php';
-$url_snom_menu = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)). GS_PROV_PATH .'snom/menu.php';
-
+$url_snom_menu = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/menu.php';
 
 
 #################################### INITIAL SCREEN {
@@ -166,9 +165,19 @@ function defineBackMenu()
 		$args[] = 't=forward';
 	
 	echo '<SoftKeyItem>',
-	       '<Name>#</Name>',
-	       '<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
-	     '</SoftKeyItem>', "\n";
+		'<Name>#</Name>',
+		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
+		'</SoftKeyItem>', "\n";
+	echo '<SoftKeyItem>',
+		'<Name>F1</Name>',
+		'<Label>' ,snomXmlEsc('Zurück'),'</Label>',
+		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
+		'</SoftKeyItem>', "\n";
+	echo '<SoftKeyItem>',
+		'<Name>F4</Name>',
+		'<Label>' ,snomXmlEsc('Zurück'),'</Label>',
+		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
+		'</SoftKeyItem>', "\n";
 	# Snom does not understand &amp; !
 }
 
