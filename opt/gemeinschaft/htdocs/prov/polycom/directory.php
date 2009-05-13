@@ -41,7 +41,7 @@ include_once(GS_DIR ."inc/db_connect.php");
 
 //---------------------------------------------------------------------------
 
-function _settings_err($msg="")                                           
+function _settings_err($msg = "")
 {
 	@ob_end_clean();
 	@ob_start();
@@ -73,12 +73,12 @@ if(!$requester["allowed"])
 
 $ua = trim(@$_SERVER["HTTP_USER_AGENT"]);
 
-if (preg_match("/PolycomSoundPointIP/", $ua))
+if(preg_match("/PolycomSoundPointIP/", $ua))
 {
 	$phone_model = ((preg_match("/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
 	$phone_type = "polycom-spip-". $phone_model;
 }
-else if (preg_match("/PolycomSoundStationIP/", $ua))
+else if(preg_match("/PolycomSoundStationIP/", $ua))
 {
 	$phone_model = ((preg_match("/PolycomSoundStationIP\-SSIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
 	$phone_type = "polycom-ssip-". $phone_model;
@@ -169,9 +169,16 @@ else
 	echo "         <bb>0</bb>\n";
 	echo "      </item>\n";
 	echo "      <item>\n";
+	echo "         <fn>Ruhe/DND</fn>\n";
+	echo "         <ct>!gsdnd</ct>\n";
+	echo "         <sd>3</sd>\n";
+	echo "         <bw>0</bw>\n";
+	echo "         <bb>0</bb>\n";
+	echo "      </item>\n";
+	echo "      <item>\n";
 	echo "         <fn>Einstellungen</fn>\n";
 	echo "         <ct>!gsmenu</ct>\n";
-	echo "         <sd>3</sd>\n";
+	echo "         <sd>4</sd>\n";
 	echo "         <bw>0</bw>\n";
 	echo "         <bb>0</bb>\n";
 	echo "      </item>\n";

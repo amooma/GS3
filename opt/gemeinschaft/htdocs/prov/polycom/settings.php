@@ -44,6 +44,7 @@ require_once(GS_DIR ."inc/db_connect.php");
 require_once(GS_DIR ."inc/nobody-extensions.php");
 include_once(GS_DIR ."inc/gs-fns/gs_prov_params_get.php");
 include_once(GS_DIR ."inc/gs-fns/gs_user_prov_params_get.php");
+
 set_error_handler("err_handler_die_on_err");
 
 //---------------------------------------------------------------------------
@@ -114,13 +115,13 @@ if(substr($mac, 0, 6) !== "0004F2")
 //$ua = "FileTransport PolycomSoundPointIP-SPIP_501-UA/3.1.2.0392";
 
 $ua = trim(@$_SERVER["HTTP_USER_AGENT"]);
-if (preg_match("/PolycomSoundPointIP/", $ua))
+if(preg_match("/PolycomSoundPointIP/", $ua))
 {
 	$phone_model = ((preg_match("/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
 	$phone_type = "polycom-spip-". $phone_model;
 	$fw_vers = ((preg_match("/PolycomSoundPointIP\-SPIP_\d+\-UA\/(.*)/", $ua, $m)) ? $m[1] : "0.0.0.000");
 }
-else if (preg_match("/PolycomSoundStationIP/", $ua))
+else if(preg_match("/PolycomSoundStationIP/", $ua))
 {
 	$phone_model = ((preg_match("/PolycomSoundStationIP\-SSIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
 	$phone_type = "polycom-ssip-". $phone_model;
@@ -344,25 +345,33 @@ if($phone_has_microbrowser)
 	echo "   <efklist";
 	echo " efk.efklist.1.mname=\"gsdiallog\" efk.efklist.1.status=\"1\" efk.efklist.1.action.string=\"". $prov_url_polycom ."diallog.php?user=". $user_ext ."\"";
 	echo " efk.efklist.2.mname=\"gsphonebook\" efk.efklist.2.status=\"1\" efk.efklist.2.action.string=\"". $prov_url_polycom ."pb.php?m=". $mac ."&amp;u=". $user_ext ."\"";
-	echo " efk.efklist.3.mname=\"gsmenu\" efk.efklist.3.status=\"1\" efk.efklist.3.action.string=\"". $prov_url_polycom ."configmenu.php?m=". $mac ."&amp;u=". $user_ext ."\"";
+	echo " efk.efklist.3.mname=\"gsdnd\" efk.efklist.3.status=\"1\" efk.efklist.3.action.string=\"". $prov_url_polycom ."dnd.php?m=". $mac ."&amp;u=". $user_ext ."\"";
+	echo " efk.efklist.4.mname=\"gsmenu\" efk.efklist.4.status=\"1\" efk.efklist.4.action.string=\"". $prov_url_polycom ."configmenu.php?m=". $mac ."&amp;u=". $user_ext ."\"";
 	echo " />\n";
 	echo "</efk>\n";
 
 	echo "<sip>\n";
 	echo "   <keys key.scrolling.timeout=\"1\"";
 
+	//--- key remappings for SoundPoint IP 301
+	//--- 23 = DND key
+	echo " key.IP_300.23.function.prim=\"SpeedDial\" key.IP_300.23.subPoint.prim=\"3\"";
+
 	//--- key remappings for SoundPoint IP 501
-	//--- 30 = 'Call Lists' key, 32 = 'Directories' key
+	//--- 30 = 'Call Lists' key, 32 = 'Directories' key, 9 = DND key
 	echo " key.IP_500.30.function.prim=\"SpeedDial\" key.IP_500.30.subPoint.prim=\"1\"";
 	echo " key.IP_500.32.function.prim=\"SpeedDial\" key.IP_500.32.subPoint.prim=\"2\"";
+	echo " key.IP_500.9.function.prim=\"SpeedDial\" key.IP_500.9.subPoint.prim=\"3\"";
 
 	//--- key remappings for SoundPoint IP 600 and 601
 	//--- 30 = 'Directories' key
 	echo " key.IP_600.30.function.prim=\"SpeedDial\" key.IP_600.30.subPoint.prim=\"2\"";
+	echo " key.IP_600.9.function.prim=\"SpeedDial\" key.IP_600.9.subPoint.prim=\"3\"";
 
 	//--- key remappings for SoundPoint IP 650 and 670
 	//--- 30 = 'Directories' key
 	echo " key.IP_650.30.function.prim=\"SpeedDial\" key.IP_650.30.subPoint.prim=\"2\"";
+	echo " key.IP_650.9.function.prim=\"SpeedDial\" key.IP_650.9.subPoint.prim=\"3\"";
 
 	//--- end of remappings
 
