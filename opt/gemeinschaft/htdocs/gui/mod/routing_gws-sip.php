@@ -34,8 +34,10 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 include_once( GS_DIR .'inc/pcre_check.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
-define('SIP_DEFAULT_DIAL_STR', 'SIP/{number:1}@{gateway}');
-
+$default_dialstrs = array(
+	'sip'     => 'SIP/{number:1}@{gateway}',
+	);
+$gw_type = 'sip';
 
 $action = @$_REQUEST['action'];
 if (! in_array($action, array( '', 'edit', 'save', 'del' ), true))
@@ -85,7 +87,7 @@ if ($action === 'save') {
 	\'gw_tmp_'. rand(100000,999999) .'\',
 	\'\',
 	0,
-	\''. $DB->escape( SIP_DEFAULT_DIAL_STR ) .'\',
+	\''. $DB->escape( $default_dialstrs[$gw_type] ) .'\',
 	\'\',
 	\'\',
 	\'\'
@@ -170,7 +172,7 @@ if ($action === 'edit') {
 			'allow_out'  => 1,
 			'host'       => '',
 			'user'       => '',
-			'dialstr'    => SIP_DEFAULT_DIAL_STR,
+			'dialstr'    => $default_dialstrs[$gw_type],
 			'pwd'        => ''
 		);
 	}
