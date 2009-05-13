@@ -231,7 +231,7 @@ WHERE `id`='. $ggrp_id
 	}
 	
 	$rs = $db->execute(
-'SELECT `type`, `name`, `dialstr`
+'SELECT `type`, `name`, `dialstr`, `hw_port`
 FROM `gates`
 WHERE
 	`grp_id`='. $ggrp_id .' AND
@@ -254,8 +254,8 @@ LIMIT 9'
 		}
 		$dialstr = str_replace('{peer}', '{gateway}', $gate['dialstr']);
 		$dialstr = str_replace(
-			array( '{number}'   , '{number:1}'            , '{gateway}'   ),
-			array( $number_final, substr($number_final,1) , $gate['name'] ),
+			array( '{number}'   , '{number:1}'            , '{gateway}'   , '{port}' ),
+			array( $number_final, substr($number_final,1) , $gate['name'] ,  $gate['hw_port'] ),
 			$gate['dialstr']
 		); //FIXME - do proper parsing instead of "{number:1}"
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
