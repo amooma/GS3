@@ -254,7 +254,7 @@ LIMIT 9'
 		}
 		$dialstr = str_replace('{peer}', '{gateway}', $gate['dialstr']);
 		$dialstr = str_replace(
-			array( '{number}'   , '{number:1}'            , '{gateway}'   , '{port}' ),
+			array( '{number}'   , '{number:1}'            , '{gateway}'   , '{port}'          ),
 			array( $number_final, substr($number_final,1) , $gate['name'] ,  $gate['hw_port'] ),
 			$gate['dialstr']
 		); //FIXME - do proper parsing instead of "{number:1}"
