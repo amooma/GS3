@@ -242,7 +242,7 @@ LIMIT 9'
 	//while ($gate = $rs->fetchRow()) $gates[] = $gate;
 	while ($gate = $rs->fetchRow()) {
 		if ($lcr_prefix != '') {
-			if (in_array($gate['type'], array('zap','misdn'), true)) {
+			if (in_array($gate['type'], array('zap','misdn','woomera','capi'), true)) {
 				gs_agi_verbose("### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
 				$number_final = $lcr_prefix . $number_dial;
 			} else {
