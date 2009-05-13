@@ -61,7 +61,7 @@ my $log_every_num = 100;
 
 my $timezone_offset  = 0 * 3600;  # in seconds
 my $heartbeat_delay  = 15 * 60;   # in seconds
-my $use_subqueue     = 0;         # 0 no; 1 yes
+my $use_subqueue     = 1;         # 0 no; 1 yes
 my $split_subq_name  = 0;         # 0 no; 1 yes - turn a subqueue name from 'xxx/yyy" to "xxx"
 my $rewriteToAgent   = 1;         # 0 no; 1 yes
 my @channelsToAgent  = ( 'Local', 'SIP' );
