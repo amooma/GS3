@@ -135,6 +135,10 @@ FROM
 	while ($cc = $rs_ccw->fetchRow()) {
 		
 		gs_log(GS_LOG_DEBUG, 'Checking CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .' ...', 'cc.log');
+
+		$dnd = $DB->executeGetOne( 'SELECT `dnd` FROM `users` WHERE `id`='. (int)$cc['to_user_id'] );
+		if($dnd > 0)
+			continue;
 		
 		if ( ! isSet( $hosts[$cc['from_host_id']] )
 		  || ! isSet( $hosts[$cc[  'to_host_id']] ) ) continue;
