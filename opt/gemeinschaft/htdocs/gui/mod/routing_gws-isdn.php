@@ -34,17 +34,14 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 include_once( GS_DIR .'inc/pcre_check.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
-$default_dialstr = array(
-			'misdn' => 'mISDN/g:{gateway}/{number:1}',
-			'woomera' => 'Woomera/g{port}/{number:1}',
-			'zap' => 'Zap/g{port}/{number:1}',
-			'capi' => 'Capi/{port}/{number:1}'
-			);
-
-$gw_types = array('misdn', 'woomera', 'zap', 'capi');
+$default_dialstrs = array(
+	'misdn'   => 'mISDN/g:{gateway}/{number:1}',
+	'woomera' => 'Woomera/g{port}/{number:1}',
+	'zap'     => 'Zap/g{port}/{number:1}',
+	'capi'    => 'Capi/{port}/{number:1}',
+	);
 
 $action = @$_REQUEST['action'];
-
 if (! in_array($action, array( '', 'edit', 'save', 'del' ), true))
 	$action = '';
 
@@ -76,7 +73,7 @@ function updateDialstr(fieldID, fieldValue) {
 
 	dialString = '';
 <?php
-foreach ($default_dialstr as $dialstr_key => $dialstr) {
+foreach ($default_dialstrs as $dialstr_key => $dialstr) {
 	echo "\t".'if (fieldValue == \''.$dialstr_key.'\') dialString = \''.$dialstr.'\''."\n";
 }
 ?>	document.getElementById(fieldID).value = dialString;
@@ -89,7 +86,7 @@ foreach ($default_dialstr as $dialstr_key => $dialstr) {
 echo '<p class="text">', __('Konfiguration von ISDN-Basisanschl&uuml;ssen (Mehrger&auml;te- oder Anlagenanschl&uuml;sse). Siehe auch Einstellungen der ISDN-Karte(n) im System-Men&uuml;.') ,'</p>',"\n";
 
 $gw_type = strToLower(@$_REQUEST['gw-type']);
-if (!in_array($gw_type, $gw_types, true))
+if (! array_key_exists($gw_type, $default_dialstrs))
 	$gw_type = 'misdn';
 
 #####################################################################
@@ -115,7 +112,7 @@ if ($action === 'save') {
 	\'gw_tmp_'. rand(100000,999999) .'\',
 	\'\',
 	0,
-	\''. $DB->escape( $default_dialstr[$gw_type] ) .'\',
+	\''. $DB->escape( $default_dialstrs[$gw_type] ) .'\',
 	0
 )'
 		);
@@ -182,7 +179,7 @@ if ($action === 'edit') {
 			return;
 		}
 
-		if (!in_array($gw['type'], $gw_types, true)) {
+		if (! array_key_exists($gw['type'], $default_dialstrs)) {
 			echo 'Gatewy not supported.';
 			return;
 		}
@@ -193,7 +190,7 @@ if ($action === 'edit') {
 			'type'       => $gw_type,
 			'name'       => '',
 			'title'      => '',
-			'dialstr'    => $default_dialstr[$gw_type],
+			'dialstr'    => $default_dialstrs[$gw_type],
 			'allow_out'  => 1,
 			'hw_port'    => 0
 		);
@@ -215,8 +212,8 @@ if ($action === 'edit') {
 	echo '<th>', __('Typ') ,':</th>',"\n";
 	echo '<td>',"\n";
 	echo '<select name="gw-type" onchange="updateDialstr(\'gw-dialstr-input\', this.value)">', "\n";
-	foreach ($gw_types as $gw_types_one) {
-		echo '<option value="',$gw_types_one,'"', ($gw['type'] == $gw_types_one ? ' selected="selected"' : ''),'>',$gw_types_one,'</option>',"\n";	
+	foreach ($default_dialstrs as $gw_type_key => $gw_type_info) {
+		echo '<option value="',$gw_type_key,'"', ($gw['type'] == $gw_type_key ? ' selected="selected"' : ''),'>',$gw_type_key,'</option>',"\n";	
 	}
 	echo '</select>';
 	echo '</td>',"\n";
@@ -307,7 +304,7 @@ if ($action == '') {
 <tbody>
 <?php
 
-	$gw_types_sql = '\''.implode('\',\'',$gw_types).'\'';
+	$gw_types_sql = '\''.implode('\',\'', array_keys($default_dialstrs)).'\'';
 
 	# get gateways from DB
 	#
