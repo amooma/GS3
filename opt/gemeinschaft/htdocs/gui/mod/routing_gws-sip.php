@@ -34,7 +34,7 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 include_once( GS_DIR .'inc/pcre_check.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
-define('SIP_DIAL_STR', 'SIP/{number:1}@{gateway}');
+define('SIP_DEFAULT_DIAL_STR', 'SIP/{number:1}@{gateway}');
 
 
 $action = @$_REQUEST['action'];
@@ -85,7 +85,7 @@ if ($action === 'save') {
 	\'gw_tmp_'. rand(100000,999999) .'\',
 	\'\',
 	0,
-	\''. $DB->escape( SIP_DIAL_STR ) .'\',
+	\''. $DB->escape( SIP_DEFAULT_DIAL_STR ) .'\',
 	\'\',
 	\'\',
 	\'\'
@@ -104,7 +104,7 @@ if ($action === 'save') {
 	`name` = \''. $DB->escape($sip_friend_name) .'\',
 	`title` = \''. $DB->escape(trim(@$_REQUEST['gw-title'])) .'\',
 	`allow_out` = '. (@$_REQUEST['gw-allow_out'] ? 1 : 0) .',
-	`dialstr` = \''. $DB->escape(trim(@$_REQUEST['gw-dialstr']) ) .'\',
+	`dialstr` = \''. $DB->escape(trim(@$_REQUEST['gw-dialstr'])) .'\',
 	`host` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.]/', '', @$_REQUEST['gw-host'])) .'\',
 	`user` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.@]/', '', @$_REQUEST['gw-user'])) .'\',
 	`pwd` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-pwd'])) .'\'
@@ -170,7 +170,7 @@ if ($action === 'edit') {
 			'allow_out'  => 1,
 			'host'       => '',
 			'user'       => '',
-			'dialstr'    => SIP_DIAL_STR,
+			'dialstr'    => SIP_DEFAULT_DIAL_STR,
 			'pwd'        => ''
 		);
 	}
@@ -183,7 +183,7 @@ if ($action === 'edit') {
 <?php
 	echo '<tr>',"\n";
 	echo '<th style="width:120px;">', __('Titel') ,':</th>',"\n";
-	echo '<th style="width:260px;"><input type="text" name="gw-title" value="', htmlEnt($gw['title']) ,'" size="30" maxlength="35" style="font-weight:bold; width:97%;" /></th>',"\n";
+	echo '<th style="width:360px;"><input type="text" name="gw-title" value="', htmlEnt($gw['title']) ,'" size="30" maxlength="35" style="font-weight:bold; width:97%;" /></th>',"\n";
 	echo '</tr>',"\n";
 	
 	/*
