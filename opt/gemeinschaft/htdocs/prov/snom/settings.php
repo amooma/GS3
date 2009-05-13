@@ -910,7 +910,8 @@ if ( GS_BUTTONDAEMON_USE == true ) {
 else {
 	psetting('dkey_dnd'      , 'keyevent F_DND'       );
 }
-psetting('dkey_record'   , 'keyevent F_REC'       );
+// psetting('dkey_record'   , 'keyevent F_REC'       );
+psetting('dkey_record'   , 'dtmf *1'       );
 psetting('dkey_directory', 'keyevent F_ADR_BOOK'  ); # or F_DIRECTORY
 psetting('dkey_menu'     , 'url '. $prov_url_snom .'menu.php?m=$mac&u=$user_name1' );
 psetting('dkey_redial'   , 'keyevent F_REDIAL'    );
@@ -1154,7 +1155,7 @@ else
 #
 //psetting('call_waiting', 'off');  # ""Call Waiting (CW)" can be enabled ("on", "visual only", "ringer") or disabled ("off")."
 $callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
-psetting('call_waiting', ($callwaiting ? 'visual only' : 'off'));
+psetting('call_waiting', ($callwaiting ? 'on' : 'off'));
 
 psetting('call_completion', 'off');
 /*
