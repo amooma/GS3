@@ -135,7 +135,9 @@ $cases = array(
 $actives = array(
 	'no'  => 'Aus',
 	'std' => 'Std.',
-	'var' => 'Tmp.'
+	'var' => 'Tmp.',
+	'vml' => 'AB',
+	'ano' => 'Ansage'
 );
                                                                 
 
@@ -149,6 +151,11 @@ function defineBackKey()
 	       '<Name>#</Name>',
 	       '<URL>' ,$url_snom_callforward, '?m=',$mac, '&u=',$user, '</URL>',
 	     '</SoftKeyItem>', "\n";
+	echo '<SoftKeyItem>',
+                '<Name>F4</Name>',
+                '<Label>' ,snomXmlEsc('Zurück'),'</Label>',
+                '<URL>',$url_snom_callforward, '?m=',$mac, '&u=',$user, $target, '</URL>',
+                '</SoftKeyItem>', "\n";
 }
 
 
@@ -165,6 +172,11 @@ function defineBackMenu()
 	       '<Name>#</Name>',
 	       '<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 	     '</SoftKeyItem>', "\n";
+	echo '<SoftKeyItem>',
+                '<Name>F4</Name>',
+                '<Label>' ,snomXmlEsc('Menü'), '</Label>',
+                '<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
+                '</SoftKeyItem>', "\n";
 }
 
 
@@ -175,28 +187,29 @@ function defineBackMenu()
 if ( $type != false && isset($_REQUEST['value']) ) {
 
 
+
 	$value = trim( @$_REQUEST['value'] );
 	$user = trim( @ $_REQUEST['u'] );
 	$user_id = getUserID( $user );
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 
-	$timeout = (int) $db->executeGetOne( 'SELECT `timeout` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\'internal\''); 
+	$callforwards = gs_callforward_get( $user_name );
+	
+	$timeout = (int) $callforwards['internal']['unavail']['timeout']; 
 
-	
-	$num['std'] = $db->executeGetOne( 'SELECT `number_std` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\'internal\''); 
-	$num['var'] = $db->executeGetOne( 'SELECT `number_var` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\'internal\''); 
-	
-	$vm['internal'] =  (bool)$db->executeGetOne( 'SELECT `internal_active` FROM `vm` WHERE `user_id`=\''. $user_id  .'\'');
-	$vm['external'] =  (bool)$db->executeGetOne( 'SELECT `external_active` FROM `vm` WHERE `user_id`=\''. $user_id  .'\'');
+
+	$num['std'] = $callforwards['internal']['unavail']['number_std']; 
+	$num['var'] = $callforwards['internal']['unavail']['number_var']; 
+
 	
 	foreach($cases as $case => $v) {
 		$internal_val[$case] = 'no';
-		$internal_val[$case]  = $db->executeGetOne( 'SELECT `active` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'' .$case .'\' AND `source`=\'internal\'');
+		$internal_val[$case]  = $callforwards['internal'][$case]['active'];		
 	}
 	
 	foreach($cases as $case => $v) {
 		$external_val[$case] = 'no';
-		$external_val[$case]  = $db->executeGetOne( 'SELECT `active` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'' .$case .'\' AND `source`=\'external\'');
+		$external_val[$case]  = $callforwards['external'][$case]['active'];
 	}
 	
 	$write = 0;
@@ -205,22 +218,31 @@ if ( $type != false && isset($_REQUEST['value']) ) {
 	if ( ($type == 'internal' || $type == 'external') &&  isset($_REQUEST['key']) ) {
 	
 	 	
+	 	
 		$key = trim( @$_REQUEST['key'] );
 		if (isset($cases[$key])) {
+		
+			
+			if ( $value == "vml" ) {
+				$target =  "vm" . $user; 
+			}
+			else if ( $value == "ano" ) {
+				$target =  "vm*" . $user;
+				$value = "vml";
+			}
+		
 			if($type == 'internal') {
 				$internal_val[$key] = $value;
+				if( $value == "vml" )
+					$callforwards['internal'][$key]['number_vml'] = $target;
 			}
 			if($type == 'external') {
 				$external_val[$key] = $value;
+				if( $value == "vml" )
+					$callforwards['external'][$key]['number_vml'] = $target;
 			}
-		unset($_REQUEST['key']);	
-		$write = 1;
-		}
-		if ($key == 'voicemail') {
-		 	$value = (bool)$value;
-		 	$vm[$type] = $value;
-		 	unset($_REQUEST['key']);
-		 	$write = 1;
+			unset($_REQUEST['key']);	
+			$write = 1;
 		}
 	
 	} else if ( $type == 'timeout' ) {
@@ -243,19 +265,18 @@ if ( $type != false && isset($_REQUEST['value']) ) {
 		foreach ($cases as $case => $gnore2) {
 			 $ret = gs_callforward_set( $user_name,'internal', $case, 'std', $num['std'], $timeout );
 			 $ret = gs_callforward_set( $user_name,'internal', $case, 'var', $num['var'], $timeout );
+			 $ret = gs_callforward_set( $user_name,'internal', $case, 'vml', $callforwards['internal'][$case]['number_vml'], $timeout );
 			 $ret = gs_callforward_activate( $user_name,'internal',$case,$internal_val[$case]);
 		}
 		foreach ($cases as $case => $gnore2) {
 			 $ret = gs_callforward_set( $user_name,'external', $case, 'std', $num['std'], $timeout );
 			 $ret = gs_callforward_set( $user_name,'external', $case, 'var', $num['var'], $timeout );
+			 $ret = gs_callforward_set( $user_name,'external', $case, 'vml', $callforwards['external'][$case]['number_vml'], $timeout );
 			 $ret = gs_callforward_activate( $user_name,'external',$case,$external_val[$case]);
 		}
-		gs_vm_activate( $user_name, 'internal', $vm['internal'] );
-		gs_vm_activate( $user_name, 'external', $vm['external'] );
 		
 		if ( GS_BUTTONDAEMON_USE == true ) {
-			$ext =  $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
-			gs_buttondeamon_diversion_update( $ext);
+			gs_buttondeamon_diversion_update ( $user );
 		}
 	}
 	
@@ -272,6 +293,7 @@ if ( ($type == 'internal' || $type == 'external') && !isset( $_REQUEST['key']) )
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
 	$user = trim( @ $_REQUEST['u'] );
 	$user_id = getUserID( $user );
+	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 	
 
 	ob_start();
@@ -286,13 +308,16 @@ if ( ($type == 'internal' || $type == 'external') && !isset( $_REQUEST['key']) )
 	if ($remote_addr != $remote_addr_check)
 		_err( 'Not authorized' );
 	
-	
-	$timeout = (int)$db->executeGetOne( 'SELECT `timeout` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\''.$type.'\''); 
+	$callforwards = gs_callforward_get( $user_name );
 
-	$vm = $db->executeGetOne( 'SELECT `'. $type .'_active` FROM `vm` WHERE `user_id`=\''. $user_id  .'\'');
 	foreach($cases as $case => $v){
 		$val[$case] = 'no';
-		$val[$case]  = $db->executeGetOne( 'SELECT `active` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'' .$case .'\' AND `source`=\''.$type.'\'');
+		$val[$case]  = $callforwards[$type][$case]['active'];
+		if ( $val[$case] == "vml"  ) {
+
+			if ( $callforwards[$type][$case]['number_vml'] == "vm*" . $user )
+				$val[$case] = "ano";
+		}
 	}
 	
 	echo '<SnomIPPhoneMenu>', "\n";
@@ -305,18 +330,6 @@ if ( ($type == 'internal' || $type == 'external') && !isset( $_REQUEST['key']) )
 		echo '</URL>',"\n";  
 		echo '</MenuItem>',"\n";
 	}
-	//voicemail
-	if ($vm == '1')
-		$vmstate = 'Ein';
-	else
-		$vmstate = 'Aus';
-		
-	echo '<MenuItem>',"\n";
-	echo '<Name>',snomXmlEsc('Voicemail: ' . $vmstate),'</Name>',"\n";
-	echo '<URL>';
-	echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key=voicemail';
-	echo '</URL>',"\n";  
-	echo '</MenuItem>',"\n";
 	defineBackKey();
 	echo '</SnomIPPhoneMenu>', "\n",
 	_ob_send();
@@ -331,6 +344,7 @@ if ( $type == 'internal' || $type == 'external' && isset( $_REQUEST['key']) ) {
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
 	$user = trim( @ $_REQUEST['u'] );
 	$user_id = getUserID( $user );
+	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 	$key = trim( @ $_REQUEST['key'] );
 
 	ob_start();
@@ -345,36 +359,16 @@ if ( $type == 'internal' || $type == 'external' && isset( $_REQUEST['key']) ) {
 	if ( $remote_addr != $remote_addr_check )
 		_err( 'Not authorized' );
 	
-	if( $key == 'voicemail' ){
-		
-		$vm = $db->executeGetOne( 'SELECT `'. $type .'_active` FROM `vm` WHERE `user_id`=\''. $user_id  .'\'');
-		echo '<SnomIPPhoneMenu>';
-		echo '<Title>', snomXmlEsc( $typeToTitle[$type] . ':  Voicemail'  ), '</Title>', "\n";
-		
-		echo '<MenuItem';
-		if($vm == '1')echo ' sel=true';
-		echo'>', "\n";
-		echo '<Name>',snomXmlEsc('Ein'),'</Name>',"\n";
-		echo '<URL>';
-		echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key=voicemail&value=1';
-		echo '</URL>',"\n";  
-		echo '</MenuItem>',"\n";
-		
-		echo '<MenuItem',"\n";
-		if($vm == '0')echo ' sel=true';
-		echo'>', "\n";
-		echo '<Name>',snomXmlEsc('Aus'),'</Name>',"\n";
-		echo '<URL>';
-		echo $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key=voicemail&value=0';
-		echo '</URL>',"\n";  
-		echo '</MenuItem>',"\n";
-		defineBackKey();
-		echo '</SnomIPPhoneMenu>', "\n",
-		_ob_send();
-	} else if( isset($cases[$key]) ) {
+
 
 		$val = 'no';
 		$val = $db->executeGetOne( 'SELECT `active` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'' . $key .'\' AND `source`=\''.$type.'\'');
+		
+		if ( $val == "vml"  ) {
+			$vml_target = $db->executeGetOne( 'SELECT `number_vml` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'' . $key .'\' AND `source`=\''.$type.'\'');
+			if ( $vml_target == "vm*" . $user )
+				$val = "ano";
+		} 
 		
 		
 		echo '<SnomIPPhoneMenu>',"\n";
@@ -405,11 +399,29 @@ if ( $type == 'internal' || $type == 'external' && isset( $_REQUEST['key']) ) {
 		echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key='.$key.'&value=var';
 		echo '</URL>',"\n";  
 		echo '</MenuItem>',"\n";
+		
+		echo '<MenuItem';
+		if($val == 'vml')echo ' sel=true';
+		echo'>', "\n";
+		echo '<Name>',snomXmlEsc($actives['vml']),'</Name>',"\n";
+		echo '<URL>';
+		echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key='.$key.'&value=vml';
+		echo '</URL>',"\n";  
+		echo '</MenuItem>',"\n";
+		
+		echo '<MenuItem';
+		if($val == 'ano')echo ' sel=true';
+		echo'>', "\n";
+		echo '<Name>',snomXmlEsc($actives['ano']),'</Name>',"\n";
+		echo '<URL>';
+		echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key='.$key.'&value=ano';
+		echo '</URL>',"\n";  
+		echo '</MenuItem>',"\n";
 		defineBackKey();
-		echo '</SnomIPPhoneMenu>',"\n";		
+		echo '</SnomIPPhoneMenu>',"\n";
 		
 	_ob_send();
-	}
+	
 	
 }
 #################################### SET CF-STATES }
@@ -440,11 +452,6 @@ if ( $type == 'std' || $type == 'var' && !isset( $_REQUEST['value']) ) {
 	
 	
 	$number = $db->executeGetOne( 'SELECT `number_' . $type . '` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\'internal\''); 
-
-	foreach($cases as $case => $v){
-		$val[$case] = 'no';
-		$val[$case]  = $db->executeGetOne( 'SELECT `active` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'' .$case .'\' AND `source`=\''.$type.'\'');
-	}
 		
 	echo '<SnomIPPhoneInput>',"\n";
 	echo '<Title>',snomXmlEsc($Title),'</Title>',"\n";
@@ -489,24 +496,7 @@ if ( $type == 'timeout' && !isset( $_REQUEST['value']) ) {
 	$remote_addr_check = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`=\''. $user_id.'\''   );
 	if ( $remote_addr != $remote_addr_check )
 		_err( 'Not authorized' );
-	# find best match for unavail timeout
-	#
-	/* 
-	if ( @$callforwards['internal']['unavail']['active'] != 'no'
-	  && @$callforwards['external']['unavail']['active'] != 'no' )
-	  {
-		$timeout = ceil((
-			(int)@$callforwards['internal']['unavail']['timeout'] +
-			(int)@$callforwards['external']['unavail']['timeout']
-		)/2);
-	} elseif (@$callforwards['internal']['unavail']['active'] != 'no') {
-		$timeout = (int)@$callforwards['internal']['unavail']['timeout'];
-	} elseif (@$callforwards['external']['unavail']['active'] != 'no') {
-		$timeout = (int)@$callforwards['external']['unavail']['timeout'];
-	} else {
-		$timeout = 15;
-	}
-	*/
+
 	$timeout = (int)@$callforwards['internal']['unavail']['timeout'];
 	
 	echo '<SnomIPPhoneInput>',"\n";

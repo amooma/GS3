@@ -170,6 +170,11 @@ function defineBackKey()
 	       '<Name>#</Name>',
 	       '<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 	     '</SoftKeyItem>', "\n";
+	echo '<SoftKeyItem>',
+		'<Name>F4</Name>',
+		'<Label>' ,snomXmlEsc('Menü'),'</Label>',
+		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
+		'</SoftKeyItem>', "\n";
 }
 
 #################################### FORWARD SCREEN {

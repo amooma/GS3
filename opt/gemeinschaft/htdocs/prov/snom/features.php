@@ -139,6 +139,11 @@ function defineBackMenu()
 	       '<Name>#</Name>',
 	       '<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 	     '</SoftKeyItem>', "\n";
+	echo '<SoftKeyItem>',
+		'<Name>F4</Name>',
+		'<Label>' ,snomXmlEsc('Menü'), '</Label>',
+		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
+		'</SoftKeyItem>', "\n";
 	# Snom does not understand &amp; !
 }
 
@@ -148,10 +153,15 @@ function defineBackKey()
 	
 	
 	echo '<SoftKeyItem>',
-	       '<Name>#</Name>',
-	       '<URL>' ,$url_snom_features, '?m=',$mac, '&u=',$user, '</URL>',
-	     '</SoftKeyItem>', "\n";
-	# Snom does not understand &amp; !
+		'<Name>#</Name>',
+		'<URL>' ,$url_snom_features, '?m=',$mac, '&u=',$user, '</URL>',
+		'</SoftKeyItem>', "\n";
+		# Snom does not understand &amp; !
+	echo '<SoftKeyItem>',
+		'<Name>F4</Name>',
+		'<Label>' ,snomXmlEsc('Zurück'),'</Label>',
+		'<URL>' ,$url_snom_features, '?m=',$mac, '&u=',$user, '</URL>',
+		'</SoftKeyItem>', "\n";
 }
 
 
