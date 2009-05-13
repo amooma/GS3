@@ -95,6 +95,13 @@ if ($action === 'save') {
 	$announce_holdtime = @$_REQUEST['announce_holdtime'];
 	if (! in_array($announce_holdtime, array('yes', 'once', 'no'), true))
 		$announce_holdtime = 'yes';
+	
+	$announce_frequency = 90;
+	if (  $announce_holdtime ==  'no' )
+	        $announce_frequency = 0;
+        else if (  $announce_holdtime ==  'once' )
+              $announce_frequency = 255;
+	
 	$wrapuptime = (int)@$_REQUEST['wrapuptime'];
 	if ($wrapuptime < 1) $wrapuptime = 0;
 	$timeout = (int)@$_REQUEST['timeout'];
@@ -137,6 +144,7 @@ if ($action === 'save') {
 	`musicclass`='. $musicclass_db .',
 	`_sysrec_id`='. $salutation .',
 	`announce_holdtime`=\''. $announce_holdtime .'\',
+	`announce_frequency`=\''. $announce_frequency .'\',
 	`wrapuptime`='. $wrapuptime .',
 	`timeout`='. $timeout .',
 	`strategy`=\''. $strategy .'\',
@@ -151,7 +159,6 @@ WHERE `_id`='.$queue_id
 #####################################################################
 #                               save }
 #####################################################################
-
 
 
 
@@ -194,7 +201,7 @@ FROM
 	if ($queue_id > 0) {
 		$rs = $DB->execute(
 'SELECT
-	`name`, `_host_id`, `_title`, `musicclass`, `_sysrec_id`, `announce_holdtime`, `timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`
+	`name`, `_host_id`, `_title`, `musicclass`, `_sysrec_id`, `announce_holdtime`, `announce_frequency`, `periodic_announce_frequency`,`timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`
 FROM
 	`ast_queues`
 WHERE
@@ -306,6 +313,7 @@ WHERE
 		echo '</td>';
 		echo '</tr>',"\n";
 		
+		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Nachbereitungszeit') ,'</th>',"\n";
 		echo '<td>';
@@ -392,7 +400,7 @@ WHERE
 		echo '</form>',"\n";
 	}
 	
-}
+  }
 #####################################################################
 #                               edit }
 #####################################################################
