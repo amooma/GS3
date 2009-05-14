@@ -177,18 +177,6 @@ $MODULES['ringtones']=  array(
 
 #####################################################################
 
-$MODULES['stats'    ]=  array(
-	'title' => __('Statistik'),
-	'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
-	'boi_ok'=> false,
-	'sub' => array(
-		'qclassical'   => array('title' => __('Q Klassisch')),
-		'callvolume'   => array('title' => __('Gespr.-Volumen'))
-	)
-);
-
-#####################################################################
-
 if (gs_get_conf('GS_FAX_ENABLED')) {
 $MODULES['fax'      ]=  array(
 	'title' => __('Fax'),
@@ -352,6 +340,19 @@ $MODULES['system'   ]['sub'][
 $MODULES['system'   ]['sub'][
 		'config']      =  array('title' => __('Konfiguration'));
 */
+
+#####################################################################
+
+$MODULES['stats'    ]=  array(
+	'title' => __('Statistik'),
+	'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
+	'boi_ok'=> false,
+	'perms' => 'admin',
+	'sub' => array(
+		'qclassical'   => array('title' => __('Q Klassisch')),
+		'callvolume'   => array('title' => __('Gespr.-Volumen'))
+	)
+);
 
 #####################################################################
 
