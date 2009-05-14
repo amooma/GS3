@@ -420,7 +420,7 @@ function gs_boi_menu_sc( url )
 			if ('x'.$m[1] <= 'x'.'6') {
 				echo '<div class="noticebox" style="font-size:94%; padding:1px 1em; margin:0 0 1px 0; border-width:2px; border-style:solid; border-color:#ff0 #660 #660 #ff0;">';
 				echo sPrintF(htmlEnt(
-					__('Sie verwenden einen sehr alten Browser (%s)! Evtl. wird dadurch die Seite nicht richtig angezeigt. Tipp: Benutzen Sie %s oder zumindest den aktuellen %s.')),
+					__('Sie verwenden einen sehr alten Browser (%s), der diese Webseiten fehlerhaft darstellt! Tipp: Benutzen Sie %s oder zumindest den aktuellen %s.')),
 					htmlEnt($m[0]),
 					'<a href="http://www.mozilla-europe.org/firefox/" target="_blank">Firefox</a>',
 					'<a href="http://www.microsoft.com/windows/internet-explorer/" target="_blank">Internet Explorer</a>'
