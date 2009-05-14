@@ -34,7 +34,7 @@ defined('GS_VALID') or die('No direct access.');
 
 function gs_huntgroup_user_add( $hgroup_number, $strategy, $user, $timeout=5 )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	$hgroup_number = (int)$hgroup_number;
 	if ($hgroup_number < 1)

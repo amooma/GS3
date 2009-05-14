@@ -36,7 +36,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 function gs_user_callerid_set( $user, $number = "", $dest )
 {
-	if (! preg_match( '/^[a-zA-Z\d\-]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	if (! preg_match( '/^[\d]+$/', $number ) && $number != "")
 		return new GsError( 'Number must be numeric.' );

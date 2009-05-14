@@ -35,7 +35,7 @@ defined('GS_VALID') or die('No direct access.');
 
 function gs_queue_agent_add( $queue_id, $agent )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $agent ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $agent ))
 		return new GsError( 'User must be alphanumeric.' );
 	$queue_id = (int)$queue_id;
 	if ($queue_id < 1)
