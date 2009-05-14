@@ -34,8 +34,10 @@ include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 $moh_classes = @array_keys(parse_ini_file(GS_DIR.'/etc/asterisk/musiconhold.conf', TRUE));
 # fails if Asterisk is on a different server
-if (! is_array($moh_classes)) $moh_classes = array();
-$moh_classes = array_merge(array('default'), $moh_classes);
+if (! is_array($moh_classes)) {
+	$moh_classes = array();
+	$moh_classes = array_merge(array('default'), $moh_classes);
+}
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
