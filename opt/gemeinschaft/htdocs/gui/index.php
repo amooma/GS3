@@ -414,7 +414,22 @@ function gs_boi_menu_sc( url )
 </head>
 <body>
 
-<div id="topheader"></div>
+<div id="topheader"><?php
+	if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+		if (preg_match('/MSIE\s*([0-9])/', $_SERVER['HTTP_USER_AGENT'], $m)) {
+			if ('x'.$m[1] <= 'x'.'6') {
+				echo '<div class="noticebox" style="font-size:94%; padding:1px 1em; margin:0 0 1px 0; border-width:2px; border-style:solid; border-color:#ff0 #660 #660 #ff0;">';
+				echo sPrintF(htmlEnt(
+					__('Sie verwenden einen sehr alten Browser (%s)! Evtl. wird dadurch die Seite nicht richtig angezeigt. Tipp: Benutzen Sie %s oder zumindest den aktuellen %s.')),
+					htmlEnt($m[0]),
+					'<a href="http://www.mozilla-europe.org/firefox/" target="_blank">Firefox</a>',
+					'<a href="http://www.microsoft.com/windows/internet-explorer/" target="_blank">Internet Explorer</a>'
+					);
+				echo '</div>';
+			}
+		}
+	}
+?></div>
 <div id="headerboxes">
 <div id="boxtitle">
 <?php
