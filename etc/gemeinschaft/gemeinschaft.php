@@ -378,8 +378,9 @@ $GRANDSTREAM_PROV_ENABLED   = false;  # do provisioning for Grandstream?
   # Warning: The phonebook for Grandstream does not currently have
   # authentication!
 
-$GRANDSTREAM_PROV_HTTP_PASS = '';     # e.g. "gEheiM23y89sdo23"
+$GRANDSTREAM_PROV_HTTP_PASS = 'admin';  # e.g. "gEheiM23y89sdo23", default: "admin"
   # to password protect the phone's web gui.
+  # An empty password does not work! (Gives you read-only access.)
 
 //$GRANDSTREAM_PROV_NTP       = @$PROV_HOST;
 //$GRANDSTREAM_PROV_NTP       = '192.168.1.130';

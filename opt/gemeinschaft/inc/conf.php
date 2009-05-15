@@ -279,7 +279,7 @@ _gscnf( 'AASTRA_PROV_FW_DEFAULT_57I', null               );
 _gscnf( 'AASTRA_PROV_KEY_BLACKLIST' , ''                 );
 
 _gscnf( 'GRANDSTREAM_PROV_ENABLED'  , false              );
-_gscnf( 'GRANDSTREAM_PROV_HTTP_PASS', ''                 );
+_gscnf( 'GRANDSTREAM_PROV_HTTP_PASS', 'admin'            );
 _gscnf( 'GRANDSTREAM_PROV_NTP'      , gs_get_conf('GS_PROV_HOST','') );
 //_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_BT110'  , null      );  //FIXME?
 //_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_BT200'  , null      );  // "
