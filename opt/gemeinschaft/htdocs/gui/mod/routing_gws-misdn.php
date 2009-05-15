@@ -202,7 +202,7 @@ if ($action === 'edit') {
 	
 	echo '<tr>',"\n";
 	echo '<th>', __('W&auml;hlbefehl') ,' <sup>[1]</sup>:</th>',"\n";
-	echo '<td><input type="text" name="gw-dialstr" value="', htmlEnt($gw['dialstr']) ,'" size="30" maxlength="50" readonly="readonly" disabled="disabled" style="font-family:monospace; width:97%;" /></th>',"\n";
+	echo '<td><input type="text" name="gw-dialstr" value="', htmlEnt($gw['dialstr']) ,'" size="30" maxlength="50" style="font-family:monospace; width:97%;" /></th>',"\n";
 	
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
