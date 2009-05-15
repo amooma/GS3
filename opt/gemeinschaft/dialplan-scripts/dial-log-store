@@ -36,7 +36,7 @@ ob_implicit_flush(1);
 $user_ext = trim(@$argv[1]);
 $type     = trim(@$argv[2]);
 $number   = trim(@$argv[3]);
-$rname   = trim(@$argv[4]);
+$rname    = trim(@$argv[4]);
 
 if (! preg_match('/^[0-9]+$/', $user_ext))
 	die();
