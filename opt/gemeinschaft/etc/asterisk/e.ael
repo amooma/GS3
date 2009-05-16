@@ -561,6 +561,7 @@ context from-gateways {
 		//voicemail-any;        // voicemail main (own mailbox)
 		//to-internal-nobody;   // internal phones (nobodies)
 		//ivrs;                 //FIXME IVR demo
+		to-internal-custom;
 		to-internal-users;    // internal phones (users)
 	}
 	i => {
@@ -918,7 +919,7 @@ macro dial-log-store( muser, mtype, mnumber ) {
 			}
 		}
 		Set(mname=${CALLERID(name)});
-		Verbose(1,### Store in dial log of user ${muser}: ${mtype} ${mnumber} ${mname]});
+		Verbose(1,### Store in dial log of user ${muser}: ${mtype} ${mnumber} ${mname});
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/dial-log-store '${muser}' '${mtype}' '${mnumber}' '${mname}');
 	}
 }
