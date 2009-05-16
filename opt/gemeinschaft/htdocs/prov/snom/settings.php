@@ -754,6 +754,7 @@ psetting('redirect_time'       , '');
 
 //psetting('ntp_server'       , '192.168.1.11');  # dem DHCP ueberlassen
 psetting('ntp_refresh_timer'  , rand(1780,1795));  # default 3600
+# a little random offset to avoid load spikes on the network and server
 psetting('timezone'           , 'GER+1', true);
 //psetting('utc_offset'         , date('Z'), true);  # no need to set this
 
@@ -1107,6 +1108,7 @@ psetting('show_local_line', 'off');
 psetting('logon_wizard', 'off');
 
 psetting('settings_refresh_timer', (3600*2+rand(0,900)));
+# a little random offset to avoid load spikes on the network and server
 
 
 
