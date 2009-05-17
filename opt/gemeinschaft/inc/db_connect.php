@@ -116,6 +116,7 @@ function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, 
 		return false;
 	}
 	@ $conn->setCharSet( 'utf8', 'utf8_unicode_ci' );
+	@ $conn->setQueryErrCb( 'gs_db_query_err_handler' );
 	
 	return 1;  # opened a new connection
 }
@@ -254,5 +255,29 @@ function gs_db_rollback_trans( &$dbConn )
 	return false;
 }
 
+
+function gs_db_query_err_handler( &$dbConn, &$sql, &$inputArr )
+{
+	trigger_error( sPrintF(
+		'SQL error %s / %s %s "%s" in query: %s -',
+		$dbConn->getLastErrorCode(),
+		$dbConn->_dbType,
+		$dbConn->getLastNativeError(),
+		$dbConn->getLastNativeErrorMsg(),
+		str_replace(array("\n","\t"), array('\n','\t'), $sql)
+		),
+		E_USER_WARNING );
+	/*
+	echo "<pre>\n";
+	if (function_exists('debug_backtrace')) {
+		$bt = debug_backtrace();
+		for ($i=2; $i<count($bt); ++$i) {
+			//if (isSet($bt[$i]['class']) && $bt[$i]['class'] === 'YADB_Connection') continue;
+			print_r($bt[$i]);
+		}
+	}
+	echo "</pre>\n";
+	*/
+}
 
 ?>
