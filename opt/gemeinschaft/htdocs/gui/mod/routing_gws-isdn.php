@@ -34,6 +34,18 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 include_once( GS_DIR .'inc/pcre_check.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
+$default_dialstrs = array(
+	'misdn'   => 'mISDN/g:{gateway}/{number:1}',
+	'woomera' => 'Woomera/g{port}/{number:1}',
+	'zap'     => 'Zap/g{port}/{number:1}',
+	'capi'    => 'Capi/{port}/{number:1}',
+	);
+$gw_types = array(
+	'misdn'   => 'mISDN',
+	'woomera' => 'Woomera',
+	'zap'     => 'Zaptel',
+	'capi'    => 'Capi',
+	);
 
 $action = @$_REQUEST['action'];
 if (! in_array($action, array( '', 'edit', 'save', 'del' ), true))
@@ -47,16 +59,39 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
+?>
 
-echo '<script type="text/javascript">
+<script type="text/javascript">
 //<![CDATA[
+
 function confirm_delete() {
-	return confirm(', utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) ,');
+	return confirm(<?php echo utf8_json_quote(__("Wirklich l\xC3\xB6schen?")); ?>);
 }
+
+function updateElement( fieldID, fieldValue ) {
+	document.getElementById(fieldID).value = fieldValue;
+}
+
+function updateDialstr( fieldID, fieldValue ) {
+	dialString = '';
+<?php
+	foreach ($default_dialstrs as $dialstr_key => $dialstr) {
+		echo "\t", 'if (fieldValue == \'', $dialstr_key ,'\') dialString = \'', $dialstr ,'\'' ,"\n";
+	}
+?>
+	document.getElementById(fieldID).value = dialString;
+}
+
 //]]>
-</script>' ,"\n";
+</script>
+
+<?php
 
 echo '<p class="text">', __('Konfiguration von ISDN-Basisanschl&uuml;ssen (Mehrger&auml;te- oder Anlagenanschl&uuml;sse). Siehe auch Einstellungen der ISDN-Karte(n) im System-Men&uuml;.') ,'</p>',"\n";
+
+$gw_type = strToLower(@$_REQUEST['gw-type']);
+if (! array_key_exists($gw_type, $default_dialstrs))
+	$gw_type = 'misdn';
 
 
 
@@ -79,11 +114,11 @@ if ($action === 'save') {
 ) VALUES (
 	NULL,
 	NULL,
-	\'misdn\',
+	\''.$DB->escape( $gw_type ).'\',
 	\'gw_tmp_'. rand(100000,999999) .'\',
 	\'\',
 	0,
-	\''. $DB->escape( 'mISDN/g:{gateway}/{number:1}' ) .'\',
+	\''. $DB->escape( $default_dialstrs[$gw_type] ) .'\',
 	0
 )'
 		);
@@ -98,9 +133,10 @@ if ($action === 'save') {
 'UPDATE `gates` SET
 	`grp_id` = '. ((int)@$_REQUEST['gw-grp_id'] > 0 ? (int)@$_REQUEST['gw-grp_id'] : 'NULL') .',
 	`name` = \''. $DB->escape($gw_name) .'\',
+	`type` = \''. $DB->escape($gw_type) .'\',
 	`title` = \''. $DB->escape(trim(@$_REQUEST['gw-title'])) .'\',
 	`allow_out` = '. (@$_REQUEST['gw-allow_out'] ? 1 : 0) .',
-	`dialstr` = \''. $DB->escape( 'mISDN/g:{gateway}/{number:1}' ) .'\',
+	`dialstr` = \''. $DB->escape(trim(@$_REQUEST['gw-dialstr'])) .'\',
 	`hw_port` = '. ((int)@$_REQUEST['gw-hw_port']) .'
 WHERE `id`='. (int)$gwid
 	;
@@ -134,7 +170,7 @@ if ($action === 'edit') {
 	$gwid = (int)@$_REQUEST['gw-id'];
 ?>
 
-<form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
+<form id="gw-data" method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="save" />
 <input type="hidden" name="gw-id" value="<?php echo $gwid; ?>" />
@@ -148,17 +184,18 @@ if ($action === 'edit') {
 			echo 'Gateway not found.';
 			return;
 		}
-		if ($gw['type'] !== 'misdn') {
-			echo 'Not an mISDN gateway.';
+		if (! array_key_exists($gw['type'], $default_dialstrs)) {
+			echo 'Gateway not supported.';
 			return;
 		}
 	}
 	else {
 		$gw = array(
 			'grp_id'     => null,
-			'type'       => 'misdn',
+			'type'       => $gw_type,
 			'name'       => '',
 			'title'      => '',
+			'dialstr'    => $default_dialstrs[$gw_type],
 			'allow_out'  => 1,
 			'hw_port'    => 0
 		);
@@ -172,21 +209,32 @@ if ($action === 'edit') {
 <?php
 	echo '<tr>',"\n";
 	echo '<th style="width:100px;">', __('Titel') ,':</th>',"\n";
-	echo '<th style="width:260px;"><input type="text" name="gw-title" value="', htmlEnt($gw['title']) ,'" size="30" maxlength="35" style="font-weight:bold; width:97%;" /></th>',"\n";
+	echo '<th style="width:360px;"><input type="text" name="gw-title" value="', htmlEnt($gw['title']) ,'" size="30" maxlength="35" style="font-weight:bold; width:97%;" /></th>',"\n";
 	echo '</tr>',"\n";
 	
-	/*
 	echo '<tr>',"\n";
 	echo '<th>', __('Name') ,':</th>',"\n";
-	echo '<td style="padding-top:5px;"><tt>', htmlEnt($gw['name']) ,'</tt></td>',"\n";
+	echo '<td style="color:#999; font-size:92%;"><tt>', htmlEnt($gw['name']) ,'</tt></td>',"\n";
 	echo '</tr>',"\n";
-	*/
+	
+	echo '<tr>',"\n";
+	echo '<th>', __('Typ') ,':</th>',"\n";
+	echo '<td>',"\n";
+	echo '<select name="gw-type" onchange="updateDialstr(\'gw-dialstr-ipt\', this.value)">', "\n";
+	foreach ($default_dialstrs as $gw_type_key => $gw_type_default_dialstr) {
+		echo '<option value="',$gw_type_key,'"';
+		if ($gw['type'] == $gw_type_key) echo ' selected="selected"';
+		echo '>', htmlEnt($gw_types[$gw_type_key]) ,'</option>',"\n";	
+	}
+	echo '</select>';
+	echo '</td>',"\n";
+	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
 	echo '<th>', __('Port') ,':</th>',"\n";
 	echo '<td>',"\n";
 	echo '<select name="gw-hw_port" class="r">' ,"\n";
-	for ($i=1; $i<=4; ++$i) {
+	for ($i=1; $i<=8; ++$i) {
 		echo '<option value="', $i ,'"', ($i === $gw['hw_port'] ? ' selected="selected"' : '') ,'>', $i ,' &nbsp;</option>' ,"\n";
 	}
 	echo '</select>' ,"\n";
@@ -202,7 +250,7 @@ if ($action === 'edit') {
 	
 	echo '<tr>',"\n";
 	echo '<th>', __('W&auml;hlbefehl') ,' <sup>[1]</sup>:</th>',"\n";
-	echo '<td><input type="text" name="gw-dialstr" value="', htmlEnt($gw['dialstr']) ,'" size="30" maxlength="50" readonly="readonly" disabled="disabled" style="font-family:monospace; width:97%;" /></th>',"\n";
+	echo '<td><input type="text" name="gw-dialstr" id="gw-dialstr-ipt" value="', htmlEnt($gw['dialstr']) ,'" size="30" maxlength="50" style="font-family:monospace; width:97%;" /></th>',"\n";
 	
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
@@ -239,7 +287,7 @@ ORDER BY `title`'
 <br />
 <br />
 <br />
-<p class="text"><sup>[1]</sup> <?php echo htmlEnt(sPrintF(__("String f\xC3\xBCr den Dial()-Befehl. Dabei wird {number} automatisch von Gemeinschaft durch die zu w\xC3\xA4hlende Rufnummer und {gateway} durch die interne Bezeichnung \"%s\" ersetzt."), $gw['name'])); ?></p>
+<p class="text"><sup>[1]</sup> <?php echo htmlEnt(sPrintF(__("String f\xC3\xBCr den Dial()-Befehl. Dabei wird {number} automatisch von Gemeinschaft durch die zu w\xC3\xA4hlende Rufnummer, {number:1} durch die Rufnummer ohne die erste Ziffer, {port} durch den eingestellten Port und {gateway} durch die interne Bezeichnung \"%s\" ersetzt."), $gw['name'])); ?></p>
 <p class="text"><sup>[2]</sup> <?php echo __('Gateways m&uuml;ssen jeweils einer Gateway-Gruppe zugeordnet werden damit sie benutzt werden k&ouml;nnen.'); ?></p>
 
 </form>
@@ -266,6 +314,8 @@ if ($action == '') {
 <tbody>
 <?php
 	
+	$gw_types_sql = '\''. implode('\',\'', array_keys($default_dialstrs)) .'\'';
+	
 	# get gateways from DB
 	#
 	$rs = $DB->execute(
@@ -276,7 +326,7 @@ FROM
 	`gates` `g` LEFT JOIN
 	`gate_grps` `gg` ON (`gg`.`id`=`g`.`grp_id`)
 WHERE
-	`g`.`type`=\'misdn\'
+	`g`.`type` IN ('. $gw_types_sql .')
 ORDER BY `g`.`grp_id`, `g`.`title`'
 	);
 	$i=0;

@@ -148,11 +148,13 @@ function err_handler_quiet( $type, $msg, $file, $line )
 
 function gs_shutdown_fn()
 {
-	# log fatal E_ERROR errors which the error handler cannot catch
+	# log fatal E_ERROR and E_PARSE errors which the error handler cannot catch
 	if (function_exists('error_get_last')) {  # PHP >= 5.2
 		$e = error_get_last();
 		if (is_array($e)) {
-			if ($e['type'] === E_ERROR) {  # non-catchable fatal error
+			if ($e['type'] === E_ERROR  # non-catchable fatal error
+			||  $e['type'] === E_PARSE  # parse error (e.g. syntax error)
+			) {
 				err_handler_quiet( $e['type'], $e['message'], $e['file'], $e['line'] );
 			}
 		}

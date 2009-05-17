@@ -49,9 +49,11 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 $gw_types = array(
-	'sip'   => 'SIP',
-	'misdn' => 'ISDN',
-	'zap'   => 'ISDN'
+	'sip'     => 'SIP',
+	'misdn'   => 'ISDN (mISDN)',
+	'zap'     => 'ISDN (Zaptel)',
+	'woomera' => 'ISDN (Woomera)',
+	'capi'    => 'ISDN (Capi)',
 );
 
 
@@ -322,7 +324,7 @@ WHERE `id`='.$ggid
 <table cellspacing="1">
 <thead>
 <tr>
-	<th style="width:40px;"><?php echo __('Typ'); ?></th>
+	<th style="width:100px;"><?php echo __('Typ'); ?></th>
 	<th style="width:160px;"><?php echo __('Titel'); ?></th>
 </tr>
 </thead>
