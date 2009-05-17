@@ -44,12 +44,24 @@ require_once( GS_DIR .'inc/db_connect.php' );
 
 function _grandstream_xml_esc( $str )
 {
-	return htmlSpecialChars( $str, ENT_QUOTES, 'UTF-8' ); //?
+	//return htmlSpecialChars( $str, ENT_QUOTES, 'UTF-8' ); //?
+	return str_replace(
+		array('&'    , '"'     , '\''    , '<'   , '>'   ),
+		array('&amp;', '&quot;', '&apos;', '&gt;', '&lt;'),
+		$str);
 }
 
 function _err( $msg='' )
 {
+	@ob_end_clean();
+	@ob_start();
 	echo '<!-- ', _grandstream_xml_esc( __('Fehler') .': '. $msg ) ,' -->',"\n";
+	if (! headers_sent()) {
+		header( 'Content-Type: text/plain; charset=utf-8' );
+		header( 'Content-Length: '. (int)@ob_get_length() );
+	}
+	@ob_end_flush();
+	exit(1);
 }
 
 if (! gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
@@ -58,6 +70,18 @@ if (! gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 }
 
 //FIXME - we need authentication here
+
+# is grandstream -- not really necessary here
+$ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
+$ua_parts = explode(' ', $ua);
+if (strToLower(@$ua_parts[0]) !== 'grandstream') {
+	gs_log( GS_LOG_WARNING, "Phone with IP \"". $_SERVER['REMOTE_ADDR'] ."\" has invalid User-Agent (\"". $ua ."\")" );
+	_err( 'No! See log for details.' );
+}
+if (! preg_match('/(bt|gxp|gxv)[0-9]{1,6}/', strToLower(@$ua_parts[1]), $m)) {
+	gs_log( GS_LOG_WARNING, "Phone with IP \"". $_SERVER['REMOTE_ADDR'] ."\" has invalid phone type (\"". $ua_parts[1] ."\")" );
+	_err( 'No! See log for details.' );
+}
 
 
 # db connect

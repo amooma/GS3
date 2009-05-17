@@ -515,6 +515,8 @@ psetting('date_us_format'   , 'off'    , true);
 psetting('time_24_format'   , 'on'     , true);
 psetting('message_led_other', 'off'    );
 psetting('use_backlight'    , 'on'     , true);  # always | on | off | dim (370, >= 7.1.33)
+//psetting('headset_device'   , 'headset_rj', true);  # wuerde Default auf Headset am RJ14-Stecker setzen
+//psetting('headset_device'   , 'none'   , true);  # setting this would disable the headset even during a call
 psetting('ethernet_detect'  , 'on'     );  # Warnung falls kein Ethernet
 psetting('ethernet_replug'  , 'nothing');
 psetting('reboot_after_nr'  , '5'      );  # nach 5 Min. ohne Registrierung neu starten
@@ -755,6 +757,7 @@ psetting('redirect_time'       , '');
 
 //psetting('ntp_server'       , '192.168.1.11');  # dem DHCP ueberlassen
 psetting('ntp_refresh_timer'  , rand(1780,1795));  # default 3600
+# a little random offset to avoid load spikes on the network and server
 psetting('timezone'           , 'GER+1', true);
 //psetting('utc_offset'         , date('Z'), true);  # no need to set this
 

@@ -37,6 +37,7 @@ $user_ext     = trim(@$argv[1]);
 $type         = trim(@$argv[2]);
 $number       = trim(@$argv[3]);
 $queue_number = trim(@$argv[4]);
+$rname        = trim(@$argv[5]);
 
 if (! preg_match('/^[0-9]+$/', $user_ext))
 	die();
@@ -91,7 +92,7 @@ if ($remote_user) {
 	$remote_name = trim($remote_name);
 } else {
 	$db_remote_user_id = 'NULL';
-	$remote_name = '';
+	$remote_name = trim($rname);
 }
 
 # log

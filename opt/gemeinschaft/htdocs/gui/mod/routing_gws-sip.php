@@ -34,8 +34,10 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 include_once( GS_DIR .'inc/pcre_check.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
-define('SIP_DIAL_STR', 'SIP/{number:1}@{gateway}');
-
+$default_dialstrs = array(
+	'sip'     => 'SIP/{number:1}@{gateway}',
+	);
+$gw_type = 'sip';
 
 $action = @$_REQUEST['action'];
 if (! in_array($action, array( '', 'edit', 'save', 'del' ), true))
@@ -85,7 +87,7 @@ if ($action === 'save') {
 	\'gw_tmp_'. rand(100000,999999) .'\',
 	\'\',
 	0,
-	\''. $DB->escape( SIP_DIAL_STR ) .'\',
+	\''. $DB->escape( $default_dialstrs[$gw_type] ) .'\',
 	\'\',
 	\'\',
 	\'\'
@@ -170,7 +172,7 @@ if ($action === 'edit') {
 			'allow_out'  => 1,
 			'host'       => '',
 			'user'       => '',
-			'dialstr'    => SIP_DIAL_STR,
+			'dialstr'    => $default_dialstrs[$gw_type],
 			'pwd'        => ''
 		);
 	}
@@ -183,7 +185,7 @@ if ($action === 'edit') {
 <?php
 	echo '<tr>',"\n";
 	echo '<th style="width:120px;">', __('Titel') ,':</th>',"\n";
-	echo '<th style="width:260px;"><input type="text" name="gw-title" value="', htmlEnt($gw['title']) ,'" size="30" maxlength="35" style="font-weight:bold; width:97%;" /></th>',"\n";
+	echo '<th style="width:360px;"><input type="text" name="gw-title" value="', htmlEnt($gw['title']) ,'" size="30" maxlength="35" style="font-weight:bold; width:97%;" /></th>',"\n";
 	echo '</tr>',"\n";
 	
 	/*
@@ -224,7 +226,7 @@ if ($action === 'edit') {
 	echo '<tr>',"\n";
 	echo '<th>', __('W&auml;hlbefehl') ,' <sup>[2]</sup>:</th>',"\n";
 	echo '<td>',"\n";
-	echo '<input type="text" name="gw-dialstr" value="', htmlEnt($gw['dialstr']) ,'" size="25" maxlength="50"  style="font-family:monospace; width:97%;" />',"\n";
+	echo '<input type="text" name="gw-dialstr" value="', htmlEnt($gw['dialstr']) ,'" size="25" maxlength="50" style="font-family:monospace; width:97%;" />',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
 	
@@ -245,7 +247,7 @@ ORDER BY `title`'
 	echo '</select>',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
-
+	
 	if ($gw['name'] == '') $gw['name'] = 'gw_...';
 	
 ?>
@@ -262,9 +264,8 @@ ORDER BY `title`'
 <br />
 <br />
 <br />
-
 <p class="text"><sup>[1]</sup> <?php echo __('Abh&auml;ngig vom SIP-Provider kann es erforderlich sein die Form <tt>benutzer@domain</tt> anzugeben. (<tt>domain</tt> wird dann im <tt>From</tt>-Header verwendet, was <tt>fromdomain</tt> in Asterisk entspricht.)'); ?></p>
-<p class="text"><sup>[2]</sup> <?php echo htmlEnt(sPrintF(__("String f\xC3\xBCr den Dial()-Befehl. Dabei wird {number} automatisch von Gemeinschaft durch die zu w\xC3\xA4hlende Rufnummer, {number:1} durch die Rufnummer ohne die erste Ziffer und {gateway} durch die interne Bezeichnung \"%s\" ersetzt."), $gw['name']));  ?></p>
+<p class="text"><sup>[2]</sup> <?php echo htmlEnt(sPrintF(__("String f\xC3\xBCr den Dial()-Befehl. Dabei wird {number} automatisch von Gemeinschaft durch die zu w\xC3\xA4hlende Rufnummer, {number:1} durch die Rufnummer ohne die erste Ziffer und {gateway} durch die interne Bezeichnung \"%s\" ersetzt."), $gw['name'])); ?></p>
 <p class="text"><sup>[3]</sup> <?php echo __('Gateways m&uuml;ssen jeweils einer Gateway-Gruppe zugeordnet werden damit sie benutzt werden k&ouml;nnen.'); ?></p>
 
 </form>

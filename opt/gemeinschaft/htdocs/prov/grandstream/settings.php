@@ -107,12 +107,12 @@ if (subStr($mac,0,6) !== '000B82') {
 #
 # BT100/BT110:	"Grandstream BT110 1.0.8.33"
 # BT200/BT201:	"Grandstream BT200 (bt200e.bin:1.1.6.46/boot55e.bin:1.1.6.6)"
-# GXP280:	""
+# GXP280:	"Grandstream GXP280 (gxp280e.bin:1.1.6.46/boot55e16.bin:1.1.6.6)"
 # GXP1200:	"Grandstream GXP1200 (gxp1200e.bin:1.1.6.46/boot55e.bin:1.1.6.6)"
 # GXP2000:	"Grandstream GXP2000 (gxp2000e.bin:1.1.6.46/boot55e.bin:1.1.6.6)"
 # GXP2010:	"Grandstream GXP2010 (gxp2010e.bin:1.1.6.46/boot55e.bin:1.1.6.6)"
 # GXP2020:	"Grandstream GXP2020 (gxp2020e.bin:1.1.6.46/boot55e.bin:1.1.6.6)"
-# GXV3000:	""
+# GXV3000:	?
 #
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 $ua_parts = explode(' ', $ua);
@@ -145,7 +145,7 @@ $prov_url_grandstream = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':
 require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/nobody-extensions.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
-//include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_prov_params_get.php' );
 //include_once( GS_DIR .'inc/ringtones-fns.php' ); //FIXME
@@ -255,6 +255,48 @@ if (! is_array($user)) {
 	'WHERE `mac_addr`=\''. $db->escape($mac) .'\''
 	);
 
+/* TODO
+# add prov job, to send notify 'grandstream-idle-screen-refresh' (GXP2000, GXP2010, GXP2020)
+if ( in_array($phone_model, array('gxp2000', 'gxp2010', 'gxp2020'), true) ) {
+	$phone_id = (int)$db->executeGetOne(' SELECT `id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
+	$num = (int)$db->executeGetOne(' SELECT COUNT(*) FROM `prov_jobs` WHERE `phone_id`='. $phone_id .' AND `data`=\'grandstream-idle-screen-refresh\'');
+	if ($num < 1) {
+		$ok = $db->execute(
+			'INSERT INTO `prov_jobs` ('.
+				'`id`, '.
+				'`inserted`, '.
+				'`running`, '.
+				'`trigger`, '.
+				'`phone_id`, '.
+				'`type`, '.
+				'`immediate`, '.
+				'`minute`, '.
+				'`hour`, '.
+				'`day`, '.
+				'`month`, '.
+				'`dow`, '.
+				'`data` '.
+			') VALUES ('.
+				'NULL, '.
+				((int)time()) .', '.
+				'0, '.
+				'\'server\', '.
+				((int)$phone_id) .', '.
+				'\'notify\', '.
+				'1, '.
+				'\'*\', '.
+				'\'*\', '.
+				'\'*\', '.
+				'\'*\', '.
+				'\'*\', '.
+				'\'grandstream-idle-screen-refresh\''.
+				')'
+			);
+		if (! $ok)
+			gs_log( GS_LOG_WARNING, 'Failed to add prov-job \'send idle screen\' for Grandstream PhoneID '.$phone_id );
+	}
+}
+*/
 
 # store the user's current IP address in the database:
 #
@@ -353,10 +395,10 @@ psetting('P87', '0');		# Layer 2 QoS: 802.1p priority value ( maxlength 5 )
 #  Date and Time (global)
 #####################################################################
 psetting('P64',  (720 + (int)(((int)date('Z')) / 60)) );  # Timezone Offset ( Offset from GMT in minutes + 720 )
-psetting('P75',  date('I'));	# Daylight Saving Time ( 0 = no, 1 = yes )
+psetting('P75',  /*date('I')*/'0');	# Daylight Saving Time ( 0 = no, 1 = yes ) - we already have that in the timezone offset P64
 psetting('P102', '2');			# Date Display Format ( 0 = Y-M-D, 1 = M-D-Y, 2 = D-M-Y )
 psetting('P30',  gs_get_conf('GS_GRANDSTREAM_PROV_NTP'));  # NTP Server
-if ( in_array($phone_model, array('bt200','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+if ( in_array($phone_model, array('bt200','gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
 	psetting('P143', '1');		# Allow DHCP Option 2 to override Timezone setting ( 0 = no, 1 = yes )
 	psetting('P144', '1');		# Allow DHCP Option 42 to override NTP server
 	psetting('P246', '3,2,7,2,0;11,1,7,2,0;60');	# Daylight Saving Time Optional Rule ( maxlength 33 ) (//FIXME)
@@ -374,9 +416,11 @@ if ( in_array($phone_model, array('bt200'), true) ) {
 #####################################################################
 #  LCD Display (GXP) (global)
 #####################################################################
-if ( in_array($phone_model, array('gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 	psetting('P322', '0');		# LCD Backlight Always on ( 0 = no, 1 = yes )
 	psetting('P1329', '12');	# LCD Contrast
+}
+if ( in_array($phone_model, array('gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
 	psetting('P122', '1');		# Time Display Format ( 0 = 12h, 1 = 24h )
 	psetting('P123', '0');		# Display Clock instead of Date ( 0 = yes, 1 = no ) ???
 	psetting('P338', '0');		# Disable in-call DTMF display ( 0 = no, 1 = yes )
@@ -437,13 +481,13 @@ psetting('P234', '');			# Config File Prefix
 psetting('P235', '');			# Config File Suffix
 psetting('P238', '0');			# Check for new Firmware ( 0 = every time, 1 = only when suffix/prefix changes, 2 = never )
 psetting('P194', '1');			# Automatic Update ( 0 = no, 1 = yes )
-psetting('P193', '1440');		# Firmware Check Interval (in minutes, default: 7 days)
+psetting('P193', '120');		# Firmware Check Interval (in minutes, default: 7 days)
 psetting('P240', '0');			# Authenticate Conf File ( 0 = no, 1 = yes )
-if ( in_array($phone_model, array('bt200','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
-	psetting('P145', '0');		# Allow DHCP Option 66 to override server ( 0 = no, 1 = yes ) //FIXME?
-}
 if ( in_array($phone_model, array('bt110'), true) ) {
 	psetting('P242', '');		# Firmware Key (hex) ???
+}
+if ( in_array($phone_model, array('bt200','gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+	psetting('P145', '0');		# Allow DHCP Option 66 to override server ( 0 = no, 1 = yes ) //FIXME?
 }
 
 
@@ -464,7 +508,7 @@ psetting('P98', '8');			# Codec 8
 #####################################################################
 #  SIP Account 1
 #####################################################################
-if ( in_array($phone_model, array('gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+if ( in_array($phone_model, array('gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
 	psetting('P271', '1');		# Account 1: Active ( 0 = no, 1 = yes )
 	psetting('P270', $user_ext .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);	# Account Name ( maxlength 96 )
 }
@@ -484,7 +528,7 @@ psetting('P81', '1');			# Unregister on Reboot ( 0 = no, 1 = yes )
 if ( in_array($phone_model, array('bt110'), true) ) {
 	psetting('P239', '300');	# Register Expiration (in seconds, default: 3600)
 }
-if ( in_array($phone_model, array('bt200','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+if ( in_array($phone_model, array('bt200','gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
 	psetting('P32', '5');		# Register Expiration (in minutes, default: 60)
 }
 psetting('P40', '5060');		# Local SIP Port ( default: 5060 )
@@ -503,10 +547,10 @@ psetting('P191', '0');			# Enable Call Features ( 0 = no, 1 = yes)
 psetting('P65', '0');			# Send Anonymous ( 0 = no, 1 = yes)
 psetting('P268', '0');			# Anonymous Method ( 0 = use From header, 1 = use Privacy header )
 psetting('P198', '100');		# Special Feature ( 100 = standard, default: 100)
-psetting('P99', '0');			# Subscribe for MWI ( 0 = no, 1 = yes )  //FIXME
+psetting('P99', '1');			# Subscribe for MWI ( 0 = no, 1 = yes )
 psetting('P52', '1');			# STUN NAT Traversal ( 0 = yes, 1 = no )
 
-if ( in_array($phone_model, array('bt200','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+if ( in_array($phone_model, array('bt200','gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
 	psetting('P138', '20');		# SIP Registration Failure Retry Wait Time ( seconds, default: 20 )
 	psetting('P209', '100');	# SIP T1 Timeout ( 50 = 0.5 sec, 100 = 1 sec, 200 = 2 sec, default: 100 )
 	psetting('P250', '400');	# SIP T2 Timeout ( 200 = 2 sec, 400 = 4 sec, 800 = 8 sec, default: 400 )
@@ -541,7 +585,7 @@ if ( in_array($phone_model, array('bt110'), true) ) {
 if ( in_array($phone_model, array('bt200'), true) ) {
 	psetting('P187', '1');		# Disable Call Log ( 0 = no, 1 = yes )
 }
-if ( in_array($phone_model, array('gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+if ( in_array($phone_model, array('gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
 	psetting('P188', '0');		# PUBLISH for Presence ( 0 = no, 1 = yes )
 	psetting('P182', '0');		# Call Log ( 0 = Log All Calls, 1 = ???, 2 = Disable Call Log )
 }
@@ -625,18 +669,20 @@ psetting('P208', '0');		# Syslog level ( 0 = none, 1 = DEBUG, 2 = INFO, 3 = WARN
 #####################################################################
 #  Phonebook (GXP) (global)
 #####################################################################
-if ( in_array($phone_model, array('gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
-	psetting('P330', '1');	# Enable Phonebook XML ( 0 = disable, 1 = http, 2 = tftp )
+if ( in_array($phone_model, array('gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+	psetting('P330', '1');		# Enable Phonebook XML ( 0 = disable, 1 = http, 2 = tftp )
 	psetting('P331', rTrim($prov_url_grandstream,'/'));	# Phonebook XML server path ( maxlength 128 )
-	psetting('P332', '0');	# Phonebook Download Interval ( in minutes, between 0-720 ) //FIXME
-	psetting('P333', '1');	# Remove manually-edited entries on download ( 0 = no, 1 = yes )
+	psetting('P332', '120');	# Phonebook Download Interval ( in minutes, between 0-720 )
+	psetting('P333', '1');		# Remove manually-edited entries on download ( 0 = no, 1 = yes )
+	# grandstream automatically adds "/gs_phonebook.xml" to the URL
+	# e.g. prov/grandstream/gs_phonebook.xml
 }
 
 
 #####################################################################
 #  LDAP Directory (GXP) (global)
 #####################################################################
-if ( in_array($phone_model, array('gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+if ( in_array($phone_model, array('gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
 	psetting('P1304', '');	# LDAP Directory server path ( maxlength 128 )
 }
 
@@ -668,9 +714,14 @@ if ( in_array($phone_model, array('gxp2020'), true) ) {
 #####################################################################
 #  Display Language (GXP) (global)
 #####################################################################
-if ( in_array($phone_model, array('gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
-	psetting('P342', '3');		# display language ( 0 = english, 2 = chinese, 3 = P399 )
-	psetting('P399', 'german');	# language file prefix ( e.g. german => gxp_german.lpf, maxlength 32 )
+if ( in_array($phone_model, array('gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+	if ( is_readable('gxp_German.lpf') ) {
+		psetting('P342', '3');		# display language ( 0 = english, 2 = chinese, 3 = P399 )
+		psetting('P399', 'German');	# language file prefix ( e.g. german => gxp_german.lpf, maxlength 32 )
+	} else {
+		psetting('P342', '0');		# display language ( 0 = english, 2 = chinese, 3 = P399 )
+		psetting('P399', '');		# language file prefix ( e.g. german => gxp_german.lpf, maxlength 32 )
+	}
 }
 
 
@@ -700,7 +751,7 @@ if ( in_array($phone_model, array('gxp1200','gxp2000','gxp2010','gxp2020'), true
 	psetting('P1339', '0');		# Enable MPK sending DTMF ( 0 = no, 1 = yes )
 }
 
-if ( in_array($phone_model, array('gxp1200','gxp2010','gxp2020'), true) ) {
+if ( in_array($phone_model, array('gxp280','gxp1200','gxp2010','gxp2020'), true) ) {
 	psetting('P1312', '0');		# Headset Key Mode ( 0 = default moder, 1 = Toggle Headset/Speaker )
 }
 
@@ -712,7 +763,7 @@ if ( in_array($phone_model, array('gxp2010','gxp2020'), true) ) {
 #####################################################################
 #  Misc (BT2 & GXP) (global)
 #####################################################################
-if ( in_array($phone_model, array('bt200','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+if ( in_array($phone_model, array('bt200','gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
 	psetting('P336', '0');		# Mute Speaker Ringer ( 0 = no, 1 = yes )
 	psetting('P1310', '1');		# Disable Direct IP Calls ( 0 = no, 1 = yes )
 	psetting('P184', '0');		# Use Quick IP-call mode ( 0 = no, 1 = yes )
@@ -722,6 +773,13 @@ if ( in_array($phone_model, array('bt200','gxp1200','gxp2000','gxp2010','gxp2020
 	psetting('P1341', '0');		# Disable Transfer ( 0 = no, 1 = yes )
 }
 
+
+#####################################################################
+#  Misc (GXV) (global)
+#####################################################################
+if ( in_array($phone_model, array('gxv3000'), true) ) {
+	//psetting('P', '');		#
+}
 
 #####################################################################
 #  Keys (Buttons)
@@ -749,12 +807,11 @@ if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 	# ...	
 	# Key 7: P329 P319 P320 P321
 	$max_keys = 7;
-	$key = 301;
 	for ($i=0; $i<$max_keys; ++$i) {
-		psetting('P'.($i+323), '0');
-		psetting('P'.$key++,   '0');
-		psetting('P'.$key++,   '' );
-		psetting('P'.$key++,   '' );		
+		psetting('P'.($i  +323), '0');
+		psetting('P'.($i*3+301), '0');
+		psetting('P'.($i*3+302), '' );
+		psetting('P'.($i*3+303), '' );
 	}
 	if ( in_array($phone_model, array('gxp2010'), true) ) {
 		# key layout (only GXP2010)
@@ -764,12 +821,11 @@ if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 		# ...
 		# Key 18: P393 P394 P395 P396
 		$max_keys = 11;
-		$key = 353;
 		for ($i=0; $i<$max_keys; ++$i) {
-			psetting('P'.$key++, '0');
-			psetting('P'.$key++, '0');
-			psetting('P'.$key++, '' );
-			psetting('P'.$key++, '' );
+			psetting('P'.($i*4+353), '0');
+			psetting('P'.($i*4+354), '0');
+			psetting('P'.($i*4+355), '' );
+			psetting('P'.($i*4+356), '' );
 		}
 	}
 	
@@ -806,9 +862,10 @@ if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 	}
 }
 
+if (in_array($phone_model, array('gxp2000', 'gxp2020'), true)) $max_key =  7;
+if (in_array($phone_model, array('gxp2010'           ), true)) $max_key = 18;
 
-/*
-//FIXME?
+
 $softkeys = null;
 $GS_Softkeys = gs_get_key_prov_obj( $phone_type );
 if ($GS_Softkeys->set_user( $user['user'] )) {
@@ -834,11 +891,23 @@ if (! is_array($softkeys)) {
 			continue;
 		}
 		$key_idx = (int)lTrim(subStr($key_name,1),'0');
-		if ($key_idx > $max_key) continue;
-		setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
+		if ($key_idx > $max_key-1) continue;
+		if ($key_def['function'] === 'empty') continue;
+		//setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
+		
+		if ($key_idx < 7) {  # gxp2000, gxp2010, gxp2020
+			psetting('P'.($key_idx  +323), subStr($key_def['function'],1));
+			//psetting('P'.($key_idx*3+301), '0');
+			//psetting('P'.($key_idx*3+302), '');
+			psetting('P'.($key_idx*3+303), $key_def['data']);
+		} elseif ($key_idx >= 7) {  # gxp2010
+			psetting('P'.(($key_idx-7)*4+353), subStr($key_def['function'],1));
+			//psetting('P'.(($key_idx-7)*4+354), '');
+			//psetting('P'.(($key_idx-7)*4+355), '');
+			psetting('P'.(($key_idx-7)*4+356), $key_def['data']);
+		}
 	}
 }
-*/
 
 
 
