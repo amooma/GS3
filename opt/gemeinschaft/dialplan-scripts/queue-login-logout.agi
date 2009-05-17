@@ -35,13 +35,6 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 
-/*
-ob_start();
-print_r($_SERVER);
-$out = ob_get_clean();
-fWrite(STDERR,$out);
-*/
-
 $user       = trim(@$argv[1]);
 $queue_name = trim(@$argv[2]);
 $action     = trim(@$argv[3]);
@@ -54,9 +47,7 @@ if (! in_array( $action, array('login','logout','logoutall'), true ))
 	die();
 
 
-
 include_once( GS_DIR .'inc/db_connect.php' );
-
 $db = gs_db_master_connect();
 
 
