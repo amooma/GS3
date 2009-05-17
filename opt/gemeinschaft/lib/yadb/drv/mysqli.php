@@ -342,8 +342,9 @@ class YADB_Connection_mysqli extends YADB_Connection
 		// EXPLAIN.
 		// returns true for UPDATE, DELETE, DROP etc.
 		// returns false on error.
-		if (!$rs)
+		if (!$rs) {
 			trigger_error( 'YADB: Query failed: '. str_replace(array("\n","\t"), array('\n','\t'), $sql) .';', E_USER_WARNING );
+		}
 		return $rs;
 	}
 	
