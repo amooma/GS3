@@ -92,7 +92,8 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 		$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
 }
 
-$key_astbuttond = array( 
+$key_astbuttond = array(
+	'gpickup'		=> __('Gruppenpickup'),              		# Gruppenpickup
 	'diversion'		=> __('Umleitung'),              		# Umleitung
 	'diversion_int'		=> __('Umleitung intern'),		# Umleitung itern
 	'diversion_ext'		=> __('Umleitung extern'),		# Umleitung extern
