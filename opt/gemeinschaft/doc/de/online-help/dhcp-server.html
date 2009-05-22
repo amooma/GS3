@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<title>Gemeinschaft - DHCP-Server</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="description" content="Provisioning mit DHCP-Server f&uuml;r Gemeinschaft" />
+	<meta name="keywords" content="gemeinschaft, provisioning, dhcp" />
+	<link rel="home" href="http://www.amooma.de/gemeinschaft/" title="Gemeinschaft - Telefonanlage" />
+	<link rel="up" href="provisioning.html" title="Gemeinschaft - Provisioning" />
+	<meta name="author" content="Philipp Kempgen @ Amooma GmbH" />
+	<!--#include virtual="/global/stylesheet.html" -->
+	<style type="text/css">
+		.breadcrumbs,
+		.breadcrumbs a { color: #666 !important; font-size:0.95em; }
+		.breadcrumbs a { text-decoration: underline; }
+		.breadcrumbs a:hover { color: #00c !important; }
+		h1, h2, h3, h4 { margin-top: 0.7em; margin-bottom: 0.6em; }
+		p { max-width:48em; }
+	</style>
+</head>
+
+<body>
+	<div id="page_margins">
+		<div id="page">
+			<!--#include virtual="/global/seiten-header.html" -->
+			<!-- begin: main navigation #nav -->
+			<?php
+				@include $_SERVER['DOCUMENT_ROOT'].'/global/42.php';
+				@create_navigation();
+			?>
+			<!-- end: main navigation -->
+			<!-- begin: main content area #main -->
+			<div id="main">
+				<!-- begin: #col1 - first float column -->
+				<div id="col1">
+					<div id="col1_content" class="clearfix">
+						<a id="content" name="content"></a>
+						<!-- skiplink anchor: Content -->
+
+
+
+<div class="breadcrumbs">
+	<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a> &rarr;
+	<a href="./">Hilfe</a> &rarr;
+	<a href="provisioning.html">Provisioning</a> &rarr;
+	DHCP-Server
+</div>
+<hr size="1" />
+
+<h2>Konfiguration des DHCP-Servers</h2>
+
+<p>
+	Beispielhafte Konfiguration f&uuml;r voll-automatisches
+	Provisioning in Gemeinschaft wie Sie sie auf einem bereits
+	vorhandenen DHCP-Server vornehmen k&ouml;nnten.
+</p>
+<p>
+	F&uuml;r den Betrieb von SIP-Telefonen mit der
+	<a href="http://www.amooma.de/gemeinschaft/">Installations-CD</a>
+	ist dies <i>keine</i> Voraussetzung. Da man die Konfigurations-URL
+	auch an den Telefonen selbst
+	<a href="provisioning.html">einstellen kann</a>. Der Einsatz
+	dieser DHCP-Server-Konfiguration ist allerdings in gr&ouml;&szlig;eren
+	Unternehmen eine extreme Arbeitserleichterung und erm&ouml;glicht
+	<em>Mass Deployment</em>, d.h. Telefon auspacken und einstecken
+	- fertig.
+</p>
+<p>
+	Wie man einen DHCP-Server konfiguriert k&ouml;nnen wir hier
+	nicht beschreiben. Hier sind lediglich als Beispiel die
+	zus&auml;tzlichen DHCP-Optionen fett hervorgehoben. Statt
+	wie im Beispiel <code>192.168.1.130</code> w&uuml;rde man
+	die IP-Adresse des Gemeinschaft-Servers verwenden.
+</p>
+
+<pre style="background:#eee; border:1px solid #ddd; padding:0.5em 0.6em; font-size:1.12em;"># Sample configuration file for ISC dhcpd 3
+# (/etc/dhcp3/dhcpd.conf on Debian)
+
+option subnet-mask 255.255.255.0;
+option broadcast-address 192.168.1.255;
+option routers 192.168.1.1;
+option domain-name-servers 192.168.1.1;
+option ntp-servers 192.168.1.130;
+
+default-lease-time  259200;  #  3 days
+max-lease-time      777600;  #  9 days
+
+ddns-update-style none;
+
+authoritative;
+
+# define option space for Siemens OpenStage phones
+# (vendor encapsulated options, not needed for other phones):
+<b>option space OptiIpPhone;
+option OptiIpPhone.magic   code 1 = string;
+option OptiIpPhone.vlanid  code 2 = unsigned integer 32;
+option OptiIpPhone.dls     code 3 = string;</b>
+
+#############################################
+#  Snom
+#############################################
+class "Snom" {
+	match if (
+		(substring(hardware, 1, 3) = 00:04:13)
+		and not (substring(pick-first-value(option vendor-class-identifier, ""), 0, 8) = "snom-m3-")
+	);
+	
+	<b># DHCP options 66/67
+	option tftp-server-name "http://192.168.1.130:80";
+	option bootfile-name "gemeinschaft/prov/snom/settings.php?mac={mac}";</b>
+}
+
+#############################################
+#  Snom M3
+#############################################
+class "SnomM3" {
+	match if (
+		(substring(hardware, 1, 3) = 00:04:13)
+		and (substring(pick-first-value(option vendor-class-identifier, ""), 0, 8) = "snom-m3-")
+	);
+	
+	<b># DHCP option 66
+	option tftp-server-name "192.168.1.130";</b>
+	# the Snom M3 will try TFTP and HTTP and fetch /m3/settings/&lt;mac&gt;.cfg
+}
+
+#############################################
+#  Siemens OpenStage
+#############################################
+class "SiemensPhone" {
+	match if (
+		(substring(hardware, 1, 3) = 00:01:E3) or
+		(substring(hardware, 1, 3) = 00:1A:E8)
+	);
+	
+	<b>vendor-option-space        OptiIpPhone;
+	option OptiIpPhone.magic   53:69:65:6D:65:6E:73:00:00:00;
+	#option OptiIpPhone.vlanid  0;
+	option OptiIpPhone.dls     "sdlp://192.168.1.130:18443";</b>
+}
+
+#############################################
+#  Aastra
+#############################################
+class "Aastra" {
+	match if substring(hardware, 1, 3) = 00:08:5D;
+	
+	<b>option tftp-server-name "http://192.168.1.130/gemeinschaft/prov/aastra/";</b>
+	# Aastra does not support any ":port" in the URL, not even ":80"
+	# for firmware app versions < 2.1.2
+}
+
+
+# our subnet
+#
+subnet 192.168.1.0 netmask 255.255.255.0 {
+	default-lease-time  259200;  #  3 days
+	max-lease-time      777600;  #  9 days
+	option subnet-mask 255.255.255.0;
+	
+	range 192.168.1.2 192.168.1.129;
+	range 192.168.1.131 192.168.1.254;
+}
+</pre>
+<br />
+
+<p>
+	Eine &auml;hnliche, etwas ausf&uuml;hrlichere Datei ist auch
+	in Gemeinschaft enthalten. Wenn Sie die Installations-CD
+	verwendet haben finden Sie sie unter<br />
+	<code>/usr/share/doc/gemeinschaft/misc/dhcpd-3-example.conf</code>.
+</p>
+
+<p>
+	Au&szlig;er DHCP sind je nach Endger&auml;ten auch noch andere
+	Rollout-Szenarien m&ouml;glich.
+</p>
+
+
+
+
+
+					</div>
+				</div>
+				<!-- end: #col1 -->
+				<!-- begin: #col3 static column -->
+				<!--#include virtual="/global/static-column-right.html" -->
+				<!-- end: #col3 -->
+			</div>
+			<!-- end: #main -->
+			<!--#include virtual="/global/footer.html" -->
+		</div>
+	</div>
+</body>
+</html>

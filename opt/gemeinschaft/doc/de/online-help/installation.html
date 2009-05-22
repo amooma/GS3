@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<title>Gemeinschaft - Installations-CD</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="description" content="Hinweise zur Installations-CD von Gemeinschaft" />
+	<meta name="keywords" content="gemeinschaft, installation, cd" />
+	<link rel="home" href="http://www.amooma.de/gemeinschaft/" title="Gemeinschaft - Telefonanlage" />
+	<link rel="up" href="./" title="Gemeinschaft - Hilfe" />
+	<meta name="author" content="Philipp Kempgen @ Amooma GmbH" />
+	<!--#include virtual="/global/stylesheet.html" -->
+	<style type="text/css">
+		.breadcrumbs,
+		.breadcrumbs a { color: #666 !important; font-size:0.95em; }
+		.breadcrumbs a { text-decoration: underline; }
+		.breadcrumbs a:hover { color: #00c !important; }
+		h1, h2, h3, h4 { margin-top: 0.7em; margin-bottom: 0.6em; }
+		p { max-width:48em; }
+	</style>
+</head>
+
+<body>
+	<div id="page_margins">
+		<div id="page">
+			<!--#include virtual="/global/seiten-header.html" -->
+			<!-- begin: main navigation #nav -->
+			<?php
+				@include $_SERVER['DOCUMENT_ROOT'].'/global/42.php';
+				@create_navigation();
+			?>
+			<!-- end: main navigation -->
+			<!-- begin: main content area #main -->
+			<div id="main">
+				<!-- begin: #col1 - first float column -->
+				<div id="col1">
+					<div id="col1_content" class="clearfix">
+						<a id="content" name="content"></a>
+						<!-- skiplink anchor: Content -->
+
+
+
+<div class="breadcrumbs">
+	<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a> &rarr;
+	<a href="./">Hilfe</a> &rarr;
+	Installations-CD
+</div>
+<hr size="1" />
+
+<h2>Hinweise zur Installations-CD von Gemeinschaft</h2>
+
+<p>
+	Am einfachsten k&ouml;nnen Sie Gemeinschaft installieren
+	indem Sie das ISO-Image der
+	<a href="http://www.amooma.de/gemeinschaft/">Installations-CD</a>
+	runterladen, auf eine CD brennen und starten.
+	Es handelt sich dabei um eine Netzwerk-Installations-CD, d.h.
+	eine funktionierende Internet-Verbindung wird vorausgesetzt.
+</p>
+
+<h3>DHCP</h3>
+<p>
+	Viele Anwender haben vermutlich einen DHCP-Server in ihrem
+	Router aktiviert. Das Gemeinschaft-System erh&auml;lt dadurch
+	automatisch eine IP-Adresse.
+</p>
+
+<h3>Virtuelle Maschine</h3>
+<p>
+	Selbverst&auml;ndlich kann man die Installations-CD auch
+	auf einer virtuellen Maschine wie VMware o.&auml;. ausprobieren.
+	Bitte achten Sie dann aber darauf die Netzwerkverbindung auf
+<q>bridged</q> einzustellen, nicht auf <q>NAT</q> oder <q>host-only</q>.
+</p>
+
+<h3>Manuelle Installation</h3>
+<p>
+	Sollte Ihr Rechner nicht vom automatischen Installer unterstützt
+	werden (weil er z.B. kein x86 ist) können Sie Gemeinschaft
+	natürlich auch von Hand installieren.
+	Siehe <a href="http://www.amooma.de/gemeinschaft/gemeinschaft-installation-trunk.html">Installation
+	der aktuellsten Entwicklungsversion</a>.
+</p>
+
+
+
+					</div>
+				</div>
+				<!-- end: #col1 -->
+				<!-- begin: #col3 static column -->
+				<!--#include virtual="/global/static-column-right.html" -->
+				<!-- end: #col3 -->
+			</div>
+			<!-- end: #main -->
+			<!--#include virtual="/global/footer.html" -->
+		</div>
+	</div>
+</body>
+</html>

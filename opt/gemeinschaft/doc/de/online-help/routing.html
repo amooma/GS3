@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<title>Gemeinschaft - Routing</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="description" content="Erkl&auml;rung zum Routing und Gateways in Gemeinschaft" />
+	<meta name="keywords" content="gemeinschaft, routing, routen, gateway" />
+	<link rel="home" href="http://www.amooma.de/gemeinschaft/" title="Gemeinschaft - Telefonanlage" />
+	<link rel="up" href="./" title="Gemeinschaft - Hilfe" />
+	<meta name="author" content="Philipp Kempgen @ Amooma GmbH" />
+	<!--#include virtual="/global/stylesheet.html" -->
+	<style type="text/css">
+		.breadcrumbs,
+		.breadcrumbs a { color: #666 !important; font-size:0.95em; }
+		.breadcrumbs a { text-decoration: underline; }
+		.breadcrumbs a:hover { color: #00c !important; }
+		h1, h2, h3, h4 { margin-top: 0.7em; margin-bottom: 0.6em; }
+		p { max-width:48em; }
+	</style>
+</head>
+
+<body>
+	<div id="page_margins">
+		<div id="page">
+			<!--#include virtual="/global/seiten-header.html" -->
+			<!-- begin: main navigation #nav -->
+			<?php
+				@include $_SERVER['DOCUMENT_ROOT'].'/global/42.php';
+				@create_navigation();
+			?>
+			<!-- end: main navigation -->
+			<!-- begin: main content area #main -->
+			<div id="main">
+				<!-- begin: #col1 - first float column -->
+				<div id="col1">
+					<div id="col1_content" class="clearfix">
+						<a id="content" name="content"></a>
+						<!-- skiplink anchor: Content -->
+
+
+
+<div class="breadcrumbs">
+	<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a> &rarr;
+	<a href="./">Hilfe</a> &rarr;
+	Routing
+</div>
+<hr size="1" />
+
+<h2>Routing und Gateways in Gemeinschaft</h2>
+
+<p>Sie werden vermutlich schon gemerkt haben da&szlig; die
+Einstellungen zum Routing in Gemeinschaft recht umfangreich
+sind und viel m&auml;chtiger als in anderen Systemen auf
+Asterisk-Basis. Das alles hat aber seinen Grund. Dieser Artikel
+soll Ihnen helfen das Routing in Gemeinschaft zu verstehen.</p>
+
+<h3>Ortsspezifische Einstellungen (E.164/Kanonisierung)</h3>
+
+<p>Bitte &ouml;ffnen Sie in einem Text-Editor Ihrer Wahl
+(<tt>vim</tt>, <tt>emacs</tt> o.&auml;.) die Konfigurationsdatei
+<tt style="white-space:nowrap;">/etc/gemeinschaft/gemeinschaft.php</tt>.</p>
+
+<p>Suchen Sie den folgenden Abschnitt:</p>
+<pre style="background:#eee; border:1px solid #ddd; padding:0.5em; overflow:scroll;">
+/***********************************************************
+*    CANONICAL PHONE NUMBERS (FQTN)
+***********************************************************/
+
+$CANONIZE_OUTBOUND      = true;     # canonize numbers before matching
+                                    # against routes? also determines
+                                    # whether we dial in national form or
+                                    # as is
+$CANONIZE_INTL_PREFIX   = '00';     # international prefix. Do not use &quot;+&quot;
+                                    # (we know the canonical format is &quot;+&quot;!)
+                                    # in Germany: 00, USA: 011
+$CANONIZE_COUNTRY_CODE  = '49';     # country code (Landesvorwahl) without
+                                    # prefix
+                                    # Germany: 49, USA: 1
+$CANONIZE_NATL_PREFIX   = '0';      # National prefix
+                                    # (Verkehrsausscheidungsziffer)
+                                    # in Germany: 0
+$CANONIZE_NATL_PREFIX_INTL = false; # Whether the area code needs the
+                                    # national prefix even when dialing
+                                    # in international format (in Italy)
+$CANONIZE_AREA_CODE     = '251';    # Area code (Ortsvorwahl) without
+                                    # national prefix
+$CANONIZE_LOCAL_BRANCH  = '702';    # Private branch (private Kopfnummer).
+                                    # If all you have is a single phone
+                                    # number put your local number in here,
+                                    # i.e. the rest after the area code
+$CANONIZE_SPECIAL       = '/^1(?:1[0-9]{1,5}|9222)/';
+                                    # numbers matching this pattern will
+                                    # not be prefixed with anything
+$CANONIZE_CBC_PREFIX    = '010';    # Call-by-Call prefix (Germany: 010)
+
+</pre>
+
+<p>Die Voreinstellungen sind bereits passend f&uuml;r Deutschland. Nur
+zwei Werte m&uuml;ssen editiert werden:</p>
+<dl>
+	<dt><tt>CANONIZE_AREA_CODE</tt></dt>
+	<dd>Ortsvorwahl/Ortsnetzkennziffer ohne f&uuml;hrende
+	&quot;<tt>0</tt>&quot;, also z.B. &quot;<tt>261</tt>&quot;
+	f&uuml;r Koblenz.</dd>
+	
+	<dt><tt>CANONIZE_LOCAL_BRANCH</tt></dt>
+	<dd>Kopfnummer: Bei Anlagenanschlu&szlig;: Kopfnummer des
+	Anschlusses (ohne &quot;<tt>0</tt>&quot; am Ende). Bei
+	Mehrger&auml;teanschlu&szlig;: &quot;<tt>99999999</tt>&quot;</dd>
+</dl>
+
+<div style="margin-left:8em; background:#ffb; border:1px solid #ee6;">
+<p style="margin:0; padding:0.3em 0.5em;">Hinweis f&uuml;r Nutzer
+eines SIP-Providers wie <q>sipgate</q> bei dem man keine Rufnummer
+aus dem eigenen Ortsnetz hat: Hier mu&szlig; u.U. der Wert von
+<tt>CANONIZE_AREA_CODE</tt> leer sein (&quot;<tt></tt>&quot;) und
+<tt>CANONIZE_LOCAL_BRANCH</tt> vermutlich wie f&uuml;r
+Mehrger&auml;teanschl&uuml;sse &quot;<tt>99999999</tt>&quot;.</p>
+</div>
+
+
+<h3>Gateways</h3>
+
+<p>In Gemeinschaft hei&szlig;en alle Verbindungen zu Au&szlig;enwelt
+Gateways, egal ob es sich dabei um SIP-Provider oder um ISDN-Karten
+handelt.</p>
+
+<p>Gateways lassen sich zu Gruppen zusammenfassen. Ein einzelner
+ISDN-Port w&auml;re z.B. ein Gateway, mehrere Ports kann man zu einer
+Gateway-Gruppe zusammenfassen. (Siehe Men&uuml;punkt Routen -&gt;
+Gateway-Gruppen.)</p>
+
+<p>Wozu Gateway-Gruppen? Das dient bei ISDN-Ports (PRI und BRI)
+zum automatischen Failover und/oder zur Last-Verteilung. Man kann
+z.B. 4 (oder mehr) PRI-Ports zu einer Gruppe zusammenfassen. Wenn
+man dann an einem das Kabel aussteckt werden Anrufe ab da sofort
+zu einem der anderen geroutet.</p>
+
+<p>Pro Gateway-Gruppe stellt man ein, ob eingehende Anrufe m&ouml;glich
+sein sollen. Au&szlig;erdem mu&szlig; man je nach Anschlu&szlig; ggf.
+ein Pr&auml;fix wegschneiden, das vom Netzbetreiber bei eingehenden
+Anrufen mitgesendet wird.</p>
+
+<p>Normalerweise empfiehlt sich hier folgendes Suchmuster:
+&quot;<tt style="white-space:nowrap;">^(?:(?:0049|0)2631)?1234</tt>&quot;
+(ohne Anf&uuml;hrungszeichen). Verwenden Sie dieses Suchmuster bitte
+exakt so. Ersetzen Sie aber &quot;<tt>2631</tt>&quot; durch Ihre
+Ortsvorwahl ohne f&uuml;hrende &quot;<tt>0</tt>&quot;. Ersetzen
+Sie &quot;<tt>1234</tt>&quot; bei einem Anlagenanschlu&szlig;
+durch die Kopfnummer (ohne &quot;<tt>0</tt>&quot; am Ende), bei
+einem Mehrger&auml;teanschlu&szlig; durch &quot;<tt></tt>&quot;
+(also nichts mehr nach dem Fragezeichen).</p>
+
+<p>Lassen Sie im Normalfall die 2. Zeile des Suchen-/Ersetzen-Musters
+leer.</p>
+
+<p>Zus&auml;tzlich kann man hier die eigene augehend gesendete
+Anrufer-Kennung (Caller-ID) ver&auml;ndern. Im Normalfall ist
+das aber nicht notwendig.</p>
+
+<div style="margin-left:8em; background:#ffb; border:1px solid #ee6;">
+<p style="margin:0; padding:0.3em 0.5em;">Hinweis f&uuml;r Nutzer
+eines SIP-Providers wie <q>sipgate</q> der keine richtigen
+SIP-Trunks anbietet: Hier mu&szlig; als Caller-ID immer die
+Sipgate-ID gesendet werden. Dazu tr&auml;gt man in der ersten
+Zeile &quot;<tt>^(.*)</tt>&quot; ein und in der zweiten die
+Sipgate-SIP-ID, also z.B. &quot;<tt>1234567e0</tt>&quot;.</p>
+</div>
+
+
+<h3>BRI-Gateways</h3>
+
+<p>Hier sollte f&uuml;r die ISDN-Ports jeweils ein BRI-Gateway
+erstellt werden. F&uuml;r ISDN-Ports die nicht mit einem
+Anschlu&szlig; verbunden sind deaktivieren Sie bitte
+<q>ausgehende Anrufe zulassen</q> und w&auml;hlen Sie als
+Gruppe <q>&ndash; nicht zugeordnet &ndash;</q>.</p>
+
+
+<h3>SIP-Gateways</h3>
+
+<p>Tragen Sie hier ggf. einen Account bei einem SIP-Provider ein.
+I.d.R. ist es nicht sinnvoll, mehrere SIP-Gateways zu einer Gruppe
+zusammenzufassen. Erstellen Sie jeweils eine Gruppe f&uuml;r jedes
+SIP-Gateway.</p>
+
+
+<h3>Benutzer</h3>
+
+<p>Sinnvollerweise sollten Sie zun&auml;chst ein paar Benutzer
+anlegen. Als Benutzername (username) sollte man alphanumerische
+[a-z0-9] Namen (<tt>anna</tt>, <tt>lisa</tt>, ...) vergeben,
+kann aber auch die Durchwahl (extension) benutzen.
+Die Durchwahl mu&szlig; nicht mit der Nummer &uuml;bereinstimmen,
+die von au&szlig;en zum Erreichen dieses Benutzers gew&auml;hlt
+werden soll, allerdings ist das nat&uuml;rlich oft einfacher.
+Bei einem Mehrger&auml;teanschlu&szlig; w&auml;ren das die
+MSN-Nummern, bei einem Anlagenanschlu&szlig; die Durchwahlen des
+Rufnummernblocks.</p>
+
+
+<h3>Eingehende Routen</h3>
+
+<p>F&uuml;r jede Gateway-Gruppe k&ouml;nnen Sie hier festlegen,
+welche eingehend gew&auml;hlten Nummern zu welchen internen
+Durchwahlen durchgestellt werden sollen, auch in Abh&auml;ngigkeit
+von Wochentag und Uhrzeit. Die Regeln werden immer von oben nach
+unten abgearbeitet bis eine Regel zutrifft.</p>
+
+
+<h3>Ausgehende Routen</h3>
+
+<p>Im Men&uuml;punkt Routen -&gt; Routen &amp; LCR legt man die
+Routen f&uuml;r ausgehend gew&auml;hlte Nummern fest. I.d.R.
+k&ouml;nnen Sie einfach die Voreinstellungen belassen. Jede Regel
+k&ouml;nnen Sie aktivieren oder deaktivieren und bestimmen, bei
+welchem Suchmuster &uuml;ber welche Ihrer Gateways rausgew&auml;hlt
+werden soll.</p>
+
+
+<h3>Routing-Test</h3>
+
+<p>Hier k&ouml;nnen Sie &uuml;berpr&uuml;fen wie eine von Ihnen
+gew&auml;hlte Nummer tats&auml;chlich nach au&szlig;en gew&auml;hlt
+werden w&uuml;rde. Geben Sie hier diezu testende Nummer ohne
+f&uuml;hrende &quot;0&quot; zur Amtsholung ein. Am Telefon
+m&uuml;&szlig;ten die Nummern nat&uuml;rlich &ndash; wie bei einer
+Telefonanlage &uuml;blich &ndash; mit der &quot;0&quot; zu
+Amtsholung gew&auml;hlt werden.</p>
+
+
+
+
+					</div>
+				</div>
+				<!-- end: #col1 -->
+				<!-- begin: #col3 static column -->
+				<!--#include virtual="/global/static-column-right.html" -->
+				<!-- end: #col3 -->
+			</div>
+			<!-- end: #main -->
+			<!--#include virtual="/global/footer.html" -->
+		</div>
+	</div>
+</body>
+</html>

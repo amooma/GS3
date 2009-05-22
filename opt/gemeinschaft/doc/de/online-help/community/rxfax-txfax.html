@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<title>Gemeinschaft - Faxen mit RxFax/TxFax</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="description" content="Faxen mit RxFax/TxFax in Gemeinschaft" />
+	<meta name="keywords" content="gemeinschaft, rxfax, txfax" />
+	<link rel="home" href="http://www.amooma.de/gemeinschaft/" title="Gemeinschaft - Telefonanlage" />
+	<link rel="up" href="./" title="Gemeinschaft - Community" />
+	<meta name="author" content="Philipp Kempgen @ Amooma GmbH" />
+	<!--#include virtual="/global/stylesheet.html" -->
+	<style type="text/css">
+		.breadcrumbs,
+		.breadcrumbs a { color: #666 !important; font-size:0.95em; }
+		.breadcrumbs a { text-decoration: underline; }
+		.breadcrumbs a:hover { color: #00c !important; }
+		h1, h2, h3, h4 { margin-top: 0.7em; margin-bottom: 0.6em; }
+		p { max-width:48em; }
+	</style>
+</head>
+
+<body>
+	<div id="page_margins">
+		<div id="page">
+			<!--#include virtual="/global/seiten-header.html" -->
+			<!-- begin: main navigation #nav -->
+			<?php
+				@include $_SERVER['DOCUMENT_ROOT'].'/global/42.php';
+				@create_navigation();
+			?>
+			<!-- end: main navigation -->
+			<!-- begin: main content area #main -->
+			<div id="main">
+				<!-- begin: #col1 - first float column -->
+				<div id="col1">
+					<div id="col1_content" class="clearfix">
+						<a id="content" name="content"></a>
+						<!-- skiplink anchor: Content -->
+
+
+
+<div class="breadcrumbs">
+	<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a> &rarr;
+	<a href="../">Hilfe</a> &rarr;
+	<a href="./">Anleitungen aus der Community</a> &rarr;
+	RxFax/TxFax
+</div>
+<hr size="1" />
+
+<h2>Faxen mit RxFax/TxFax</h2>
+
+<p style="color:#d00; background:#fee; border:1px solid #fdd; padding:0.1em 0.3em;">
+<em>
+Achtung! Diese Seite ist eine inoffizielle Anleitung zu
+<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a>
+die von Mitgliedern der Community erstellt wurde. Wir
+k&ouml;nnen keinesfalls garantieren da&szlig; diese Anleitung
+funktioniert. Sie wird hier bereitgestellt in der Hoffnung
+da&szlig; sie anderen Anwendern hilft.
+</em>
+</p>
+<p style="color:#d00; background:#fee; border:1px solid #fdd; padding:0.1em 0.3em;">
+<em><b>
+Zum Empfangen und Senden von Faxen empfehlen wir
+die Version 2.2 von Gemeinschaft mit HylaFax+.
+</b></em>
+</p>
+
+<h3>Anpassung von Gemeinschaft zum Faxempfang via rxfax</h3>
+<p>
+Dieses Howto beschreibt wie Gemeinschaft f&uuml;r den Faxempang und
+die Zustellung per E-Mail mit Hilfe von app_rxfax konfiguriert
+weren kann. Dabei werden Faxnachrichten via rxfax entgegengenommen,
+mit Hilfe eines Scriptes in das PDF Format umgewandelt und per
+E-Mail zugestellt. Als OS wird Debian angenommen. Vorraussetzung
+ist ein konfigurierter MTA auf dem Gemeinschaft Rechner.
+</p>
+<p>
+In fr&uuml;heren Versionen mu&szlig;ten die beiden Anwendungen app_rxfax.so
+und app_txfax.so mit Hilfe eines Patches in den Asterisk Sourcecode
+eingepflegt werden. Mit dem nun eigenen Addon Paket agx-ast-addons
+wurde die Installation erleichtert und kann nun unabh&auml;ngig nach der
+Asterisk Installation erfolgen. Die aktuelle Version von agx-ast-addons
+1.4.5 verlangt folgende Pakete als Vorraussetzung spandsp-0.0.4pre15.
+</p>
+
+<h3>Notwendige Pakete f&uuml;r spandsp installieren</h3>
+<pre>apt-get install bzip2
+apt-get install libtiff4-dev
+apt-get install libtiff-tools
+apt-get install cmake
+apt-get install libglib2.0-dev</pre>
+
+<h3>Spandsp herunterladen entpacken und installieren</h3>
+<pre>cd /usr/src
+wget http://www.soft-switch.org/downloads/spandsp/spandsp-0.0.4pre15.tgz
+tar -xzvf spandsp-*
+cd /usr/src/spandsp-*
+./configure
+make
+make install</pre>
+<br />
+
+<p>
+Falls das Verzeichnis /usr/local/lib nicht im Pfad der Shared
+Libraries existiert mu&szlig; diese eingebunden und der Cache aktualisiert
+werden.
+</p>
+<pre>echo /usr/local/lib &gt;&gt; /etc/ld.so.conf
+ldconfig </pre>
+
+<h3>agx-ast addons herunterladen und installieren</h3>
+<pre>cd /usr/src
+wget http://downloads.sourceforge.net/agx-ast-addons/agx-ast-addons-1.4.5.tar.bz2
+tar -xjvf agx-ast-addons-1.4.5.tar.bz2
+cd /usr/src/agx-ast-addons
+./build.sh</pre>
+
+<h3>Script zum Umwandeln Zustellen der Faxe per Mail erstellen</h3>
+<p>
+Folgendes Script dient zum Umwandeln der entgegengenommen Faxe in
+das PDF Format und zum Zustellen per E-Mail. Das Script habe ich
+irgendwann mal im ip-phone-forum (http://www.ip-phone-forum.de)
+gefunden und etwas angepasst. Es wird sp&auml;ter im Dialplan &uuml;ber den
+system Befehl aufgerufen und mu&szlig; im Verzeichnis /var/lib/asterisk/bin/
+abgespeichert werden.
+</p>
+
+<pre>#!/bin/sh
+#
+# $1 ${FAXFILE}
+# $2 ${MAILADRESSE}
+# $3 ${CALLERIDNUM}
+#
+
+echo Received paramters $1 $2 $3  &gt;&gt;/var/log/asterisk/faxmail.log
+
+MAILBODY=$1.txt
+DATETIME=`date +"%A %d %b %Y %H:%M"`
+PAGES=$(tiffinfo $1 | tail -21 |grep &quot;Page&quot; | cut -d &quot;-&quot; -f2)
+DT=$(tiffinfo $1 | tail -21 |grep &quot;Date&quot; |cut -d &quot;-&quot; -f2)
+DTFAX=${DT#*:}
+COUNT=${PAGES#*-}
+tiff2pdf $1 -o $1.pdf
+echo &gt;&gt; $MAILBODY
+echo ------------------------------------------------------------- &gt;&gt; $MAILBODY
+echo Sie haben ein neues Fax bekommen. &gt;&gt; $MAILBODY
+echo &gt;&gt; $MAILBODY
+echo Sendenummer: $3 &gt;&gt; $MAILBODY
+echo Empfangszeit: $DTFAX &gt;&gt; $MAILBODY
+echo Anzahl der Seiten: $COUNT &gt;&gt; $MAILBODY
+echo &gt;&gt; $MAILBODY
+echo Das Fax befindet sich im Anhang als PDF Datei. &gt;&gt; $MAILBODY
+echo ------------------------------------------------------------- &gt;&gt; $MAILBODY
+echo &gt;&gt; $MAILBODY
+echo Thank you for using Open Source Software ! &gt;&gt; $MAILBODY
+sleep 2
+cat $1.txt | mail -r &quot;Gemeinschaft&quot; -s &quot;FAX $3&quot; -a &quot;$1.pdf&quot; $2 
+
+#cat $1.txt | /usr/bin/mutt -s &quot;FAX $3&quot; -a &quot;$1.pdf&quot; $2
+#mpack -d $3.txt -s &quot;FAX $1&quot; &quot;$3.pdf&quot; $2
+sleep 2
+rm -f $MAILBODY
+</pre>
+<br />
+<p>
+Mit Hilfe von chmod mu&szlig; dem Script entrechende Rechte vergeben werden damit es ausf&uuml;hrbar ist.
+</p>
+<pre>chmod 755 /var/lib/asterisk/bin/fax2mail.sh </pre>
+
+<h3>Gemeinschaft Dialplan anpassen</h3>
+<p>
+Im n&auml;chsten Schritt wird der Gemeinschaft-Dialplan um einen
+"Custom Kontext" erweitert um Faxe mit rxfax anzunehmen. Dazu
+wird der Kontext <tt>[to-internal-custom]</tt> und <tt>[custom-fax]</tt>
+in der Datei <tt>/opt/gemeinschaft/etc/asterisk/extensions.conf</tt>
+erstellt. Im Kontext <tt>[to-internal-custom]</tt> wird im Beispiel
+die Rufnummer 30 f&uuml;r den Faxempfang definiert. Im Kontext
+<tt>[custom-fax]</tt> mu&szlig; dann noch in der 3. Priorit&auml;t die
+Mailadresse an welche das Fax gesendet werden soll angepasst werden.
+(<tt>exten =&gt; s,n,Set(MAILADDR=fax@mydomain)</tt>)
+</p>
+
+<pre>[to-internal-custom]
+exten => 30,1,Goto(custom-fax,s,1) 
+
+[custom-fax]
+exten => s,1,Set(SCRIPTFILE=/var/lib/asterisk/bin/fax2mail.sh)
+exten => s,n,Set(FAXFILE=/var/spool/asterisk/fax/${UNIQUEID})
+exten => s,n,Set(MAILADDR=fax@mydomain)
+exten => s,n,Wait(3)
+exten => s,n,rxfax(${FAXFILE})
+exten => h,1,System(&quot;${SCRIPTFILE}&quot; &quot;${FAXFILE}&quot; &quot;${MAILADDR}&quot; &quot;${CALLERID(num)}&quot;)
+exten => h,n,Hangup</pre>
+<br />
+
+<p>
+Damit der Kontext <tt>[to-internal-custom]</tt> von Gemeinschaft
+angesprochen weren kann, mu&szlig; noch die Konfigurationsdatei
+<tt>/opt/gemeinschaft/etc/asterisk/e.ael</tt> welche den Dialplan
+generiert angepasst werden. Dort wird im Kontext <tt>from-gateways</tt>
+(ca Zeile 502) der Eintrag <tt>to-internal-custom</tt> hinzugef&uuml;gt:
+</p>
+
+<pre>context from-gateways {
+	
+	includes {
+		//voicemail-any;        // voicemail main (own mailbox)
+		//to-internal-nobody;   // internal phones (nobodies)
+		//ivrs;                 //FIXME IVR demo
+		<b>to-internal-custom;</b>
+		to-internal-users;    // internal phones (users)
+	}</pre>
+<br />
+
+<p>
+Wichtig ist da&szlig; der Eintrag vor to-internal-users plaziert wird.
+</p>
+<p>
+Danach wird der ge&auml;nderte Dialplan neu generiert und geladen:
+</p>
+<pre>/opt/gemeinschaft/sbin/gs-ast-dialplan-gen
+/opt/gemeinschaft/sbin/gs-ast-dialplan-reload</pre>
+<br />
+<p>
+In der Gemeinschaft GUI kann nun &uuml;ber den Men&uuml;punkt <q>Routen
+eingehend</q> eine eingehende Route zugeordnet werden. Im Beispiel
+w&auml;re das die Zielrufnummer die 30.
+</p>
+
+
+
+					</div>
+				</div>
+				<!-- end: #col1 -->
+				<!-- begin: #col3 static column -->
+				<!--#include virtual="/global/static-column-right.html" -->
+				<!-- end: #col3 -->
+			</div>
+			<!-- end: #main -->
+			<!--#include virtual="/global/footer.html" -->
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<title>Gemeinschaft - Provisioning von Telefonen</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="description" content="Provisioning von SIP-Telefonen mit Gemeinschaft" />
+	<meta name="keywords" content="gemeinschaft, provisioning" />
+	<link rel="home" href="http://www.amooma.de/gemeinschaft/" title="Gemeinschaft - Telefonanlage" />
+	<link rel="up" href="./" title="Gemeinschaft - Hilfe" />
+	<meta name="author" content="Philipp Kempgen @ Amooma GmbH" />
+	<!--#include virtual="/global/stylesheet.html" -->
+	<style type="text/css">
+		.breadcrumbs,
+		.breadcrumbs a { color: #666 !important; font-size:0.95em; }
+		.breadcrumbs a { text-decoration: underline; }
+		.breadcrumbs a:hover { color: #00c !important; }
+		h1, h2, h3, h4 { margin-top: 0.7em; margin-bottom: 0.6em; }
+		p { max-width:48em; }
+	</style>
+</head>
+
+<body>
+	<div id="page_margins">
+		<div id="page">
+			<!--#include virtual="/global/seiten-header.html" -->
+			<!-- begin: main navigation #nav -->
+			<?php
+				@include $_SERVER['DOCUMENT_ROOT'].'/global/42.php';
+				@create_navigation();
+			?>
+			<!-- end: main navigation -->
+			<!-- begin: main content area #main -->
+			<div id="main">
+				<!-- begin: #col1 - first float column -->
+				<div id="col1">
+					<div id="col1_content" class="clearfix">
+						<a id="content" name="content"></a>
+						<!-- skiplink anchor: Content -->
+
+
+
+<div class="breadcrumbs">
+	<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a> &rarr;
+	<a href="./">Hilfe</a> &rarr;
+	Provisioning
+</div>
+<hr size="1" />
+
+<h2>Provisioning von SIP-Telefonen</h2>
+
+<p>
+	Unter <em>Provisioning</em> versteht man das automatische
+	Versorgen von Telefonen mit der notwendigen Konfiguration,
+	(SIP-Benutzername, Pa&szlig;wort usw.) so da&szlig; man am
+	Ger&auml;t selber normalerweise gar nichts mehr einstellen
+	mu&szlig;. Dieser voll-automatisierte Ablauf wird von
+	Gemeinschaft f&uuml;r folgende Telefone unterst&uuml;tzt:
+</p>
+<ul>
+	<li>Snom 300, 320, 360, 370</li>
+	<li>Snom M3</li>
+	<li>Aastra 51i, 53i, 55i, 57i</li>
+	<li>Siemens OpenStage 20, 40, 60, 80</li>
+	<li><a href="community/provisioning-grandstream.html">Grandstream</a> BT ..., GXP ...</li>
+</ul>
+<p>
+	Wie das im Detail funktioniert h&auml;ngt nat&uuml;rlich vom
+	eingesetzen Telefon ab. In der Regel findet folgender Ablauf
+	statt, der davon abh&auml;ngt ob und wie der DHCP-Server
+	konfiguriert wurde.
+</p>
+<p>
+	Auf der Gemeinschaft-Installations-CD wird per Default <em>kein</em>
+	DHCP-Server installiert, da in den meisten Netzen bereits einer
+	vorhanden ist.
+</p>
+<table border="0" cellspacing="1">
+	<thead>
+		<tr>
+			<th width="33%" valign="top" align="left">
+				DHCP-Server <u>mit</u> spezieller Konfiguration
+			</th>
+			<th width="33%" valign="top" align="left">
+				DHCP-Server <u>ohne</u> spezielle Konfiguration
+			</th>
+			<th width="33%" valign="top" align="left">
+				gar kein DHCP-Server
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<!-- <![CDATA[
+		<tr>
+			<td valign="top" align="left">
+				<small><i>Hiermit ist nicht irgendein beliebiger
+				DHCP-Server gemeint sondern einer mit zus&auml;tzlicher
+				Konfiguration, die in xxx beschrieben wird.</i></small>
+			</td>
+			<td valign="top" align="left">
+				<small><i>In diese Kategorie fallen sowohl Netzwerke
+				ohne DHCP-Server als auch solche ohne speziell
+				konfigurierten DHCP-Server.</i></small>
+			</td>
+		</tr>
+		]]> -->
+		<tr>
+			<td valign="top" align="left" style="padding-left:1.2em; text-indent:-0.7em;">
+				&bull; Telefon startet und sendet DHCP-Anfrage
+			</td>
+			<td valign="top" align="left" style="padding-left:1.2em; text-indent:-0.7em;">
+				&bull; Telefon startet und sendet DHCP-Anfrage
+			</td>
+			<td valign="top" align="left" style="padding-left:1.2em; text-indent:-0.7em;">
+				&bull; Telefon startet
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" align="left" style="padding-left:1.2em; text-indent:-0.7em;">
+				&bull; DHCP-Server weist IP-Adresse zu und &uuml;bergibt
+				die Konfigurations-URL von Gemeinschaft
+			</td>
+			<td valign="top" align="left" style="padding-left:1.2em; text-indent:-0.7em;">
+				&bull; DHCP-Server weist IP-Adresse zu
+			</td>
+			<td valign="top" align="left" style="padding-left:1.2em; text-indent:-0.7em;">
+				&bull; Telefon verwendet die fest eingestellte
+				IP-Adresse.
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" align="left" style="padding-left:1.2em; text-indent:-0.7em;">
+				&bull; Telefon ruft die Konfiguration ab
+			</td>
+			<td valign="top" align="left" style="padding-left:1.2em; text-indent:-0.7em;">
+				&bull; Telefon ruft die Konfiguration ab
+			</td>
+			<td valign="top" align="left" style="padding-left:1.2em; text-indent:-0.7em;">
+				&bull; Telefon ruft die Konfiguration ab
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br />
+
+<p>
+	Nur in dem Fall mit besonderen
+	<a href="dhcp-server.html">Einstellungen auf dem DHCP-Server</a>
+	wird die Konfigurations-URL von Gemeinschaft automatisch an
+	die Telefone &uuml;bergeben. Ansonsten mu&szlig; sie schon vor
+	dem Neustarten des Ger&auml;ts an diesem eingestellt werden.
+	Der Parameter hei&szlig;t i.d.R. <q>Settings URL</q>,
+	<q>Settings Server</q> o.&auml;.
+</p>
+<br />
+
+
+<h3>Snom mit Plug &amp; Play (PnP)</h3>
+<p>
+	Gemeinschaft enth&auml;lt einen Plug-&amp;-Play-Server
+	speziell f&uuml;r Snom-Telefone der 3<i>xx</i>-Serie, der
+	von der Installations-CD direkt eingerichtet wurde.
+	Normalerweise (wenn sich die Ger&auml;te im gleichen Netz
+	befinden) k&ouml;nnen Sie das Telefon einfach einstecken
+	und m&uuml;ssen nichts weiter tun. Auf der Shell des
+	Gemeinschaft-Servers k&ouml;nnen Sie mit<br />
+	<code>tail -f /var/log/apache2/access.log</code><br />
+	beobachten da&szlig; das Ger&auml;t beim Starten auf den
+	Provisioning-Server von Gemeinschaft zugreift.
+</p>
+<p>
+	Sollte dies in Ihrem Netz nicht m&ouml;glich sein, dann
+	lesen Sie bitte den folgenden Abschnitt.
+</p>
+<br />
+
+
+<h3>Snom 370 (und andere Snom 3<i>xx</i>)</h3>
+<p>
+	Bitte dr&uuml;cken Sie am Snom die <q>?</q>-(<q>Help</q>)-Taste
+	um die IP-Adresse des Telefons zu erfahren. &Ouml;ffnen Sie dann
+	per Browser das integrierte Web-Interface des Ger&auml;ts, und
+	gehen Sie auf das Men&uuml; <q>Erweitert</q>/<q>Advanced</q>.
+	Falls Sie nach einem <q>Adminstratorlogin</q> gefragt werden:
+	Die Werkseinstellung ist <q>0000</q>. Unter dem Reiter <q>Update</q>
+	geben Sie bitte folgende URL bei der Einstellung <q>Setting URL</q>
+	ein:
+</p>
+<p>
+	<tt style="font-size:1.3em;">http://<i>IPADRESSE</i>/gemeinschaft/prov/snom/settings.php?mac={mac}</tt>
+</p>
+<p>
+	Ersetzen Sie bitte <tt><i>IPADRESSE</i></tt> durch die IP-Adresse
+	Ihres Gemeinschaft-Servers, die sich auf der Kommandozeile mit
+	dem Befehl<br />
+	<code>ifconfig eth0</code><br />
+	herausfinden l&auml;&szlig;t.
+	also z.B.:
+</p>
+<p>
+	<tt style="font-size:1.3em;">http://192.168.1.130/gemeinschaft/prov/snom/settings.php?mac={mac}</tt>
+</p>
+<p>
+	Bitte geben Sie den Zusatz <tt>{mac}</tt> am Ende der URL
+	<em>genau so</em> ein. Das Snom ersetzt diesen Platzhalter beim
+	Abrufen der Konfiguration selbst&auml;ndig durch seine MAC-Adresse.
+</p>
+<p>
+	<img alt="Snom Web-Interface" src="snom-setting-url.png" />
+</p>
+<p>
+	Speichern Sie die Einstellungen und starten Sie das Telefon neu
+	(<q>Reboot</q>). Auf der Shell des Gemeinschaft-Servers k&ouml;nnen
+	Sie mit<br />
+	<code>tail -f /var/log/apache2/access.log</code><br />
+	pr&uuml;fen da&szlig; das Ger&auml;t beim Starten auf den
+	Provisioning-Server von Gemeinschaft zugreift.
+</p>
+<br />
+
+
+<h3>Hinzuf&uuml;gen von Endger&auml;ten in das Provisioning</h3>
+<p>
+	Geschieht v&ouml;llig automatisch!
+</p>
+<p>
+	Wenn Sie sich als Administrator am Web-interface von Gemeinschaft
+	anmelden k&ouml;nnen Sie unter dem Men&uuml;punkt Provisioning
+	&rarr; Telefone sehen da&szlig; das neue Ger&auml;t hinzugef&uuml;gt
+	wurde.
+</p>
+
+
+
+					</div>
+				</div>
+				<!-- end: #col1 -->
+				<!-- begin: #col3 static column -->
+				<!--#include virtual="/global/static-column-right.html" -->
+				<!-- end: #col3 -->
+			</div>
+			<!-- end: #main -->
+			<!--#include virtual="/global/footer.html" -->
+		</div>
+	</div>
+</body>
+</html>
