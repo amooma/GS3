@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<title>Gemeinschaft - Manuelles Upgrade (von 2.0.0 auf 2.1.0)</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="description" content="Manuelles Upgrade von Gemeinschaft 2.0.0 auf 2.1.0" />
+	<meta name="keywords" content="gemeinschaft, upgrade" />
+	<link rel="home" href="http://www.amooma.de/gemeinschaft/" title="Gemeinschaft - Telefonanlage" />
+	<link rel="up" href="./" title="Gemeinschaft - Community" />
+	<meta name="author" content="Philipp Kempgen @ Amooma GmbH" />
+	<!--#include virtual="/global/stylesheet.html" -->
+	<style type="text/css">
+		.breadcrumbs,
+		.breadcrumbs a { color: #666 !important; font-size:0.95em; }
+		.breadcrumbs a { text-decoration: underline; }
+		.breadcrumbs a:hover { color: #00c !important; }
+		h1, h2, h3, h4 { margin-top: 0.7em; margin-bottom: 0.6em; }
+		p { max-width:48em; }
+	</style>
+</head>
+
+<body>
+	<div id="page_margins">
+		<div id="page">
+			<!--#include virtual="/global/seiten-header.html" -->
+			<!-- begin: main navigation #nav -->
+			<?php
+				@include $_SERVER['DOCUMENT_ROOT'].'/global/42.php';
+				@create_navigation();
+			?>
+			<!-- end: main navigation -->
+			<!-- begin: main content area #main -->
+			<div id="main">
+				<!-- begin: #col1 - first float column -->
+				<div id="col1">
+					<div id="col1_content" class="clearfix">
+						<a id="content" name="content"></a>
+						<!-- skiplink anchor: Content -->
+
+
+
+<div class="breadcrumbs">
+	<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a> &rarr;
+	<a href="../">Hilfe</a> &rarr;
+	<a href="./">Anleitungen aus der Community</a> &rarr;
+	Manuelles Upgrade
+</div>
+<hr size="1" />
+
+<h2>Manuelles Upgrade (von 2.0.0 auf 2.1.0)</h2>
+
+<p style="color:#d00; background:#fee; border:1px solid #fdd; padding:0.1em 0.3em;">
+<em>
+Achtung! Diese Seite ist eine inoffizielle Anleitung zu
+<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a>
+die von Mitgliedern der Community erstellt wurde. Wir
+k&ouml;nnen keinesfalls garantieren da&szlig; diese Anleitung
+funktioniert. Sie wird hier bereitgestellt in der Hoffnung
+da&szlig; sie anderen Anwendern hilft.
+</em>
+</p>
+
+<p>
+Obwohl ich bei der folgenden Anleitung von einer Debian-basierten
+Installation ausgehe, welche nach der Anleitung
+<a target="_blank" href="http://www.amooma.de/gemeinschaft/gemeinschaft-installation-trunk.html">http://www.amooma.de/gemeinschaft/gemeinschaft-installation-trunk.html</a>
+entstanden ist, sind die Anpasungen eigentlich
+distributionsunabh&auml;ngig und sollten auf jeder halbwegs
+sinnvollen Gemeinschaft-Installation durchzuf&uuml;hren sein.
+&Auml;ngstlichen Zeitgenossen sei - insbesondere bei bereits
+produktiv genutzten Installationen - ein vorheriges Backup von
+<tt>/usr/src/gemeinschaft</tt>, sowie der Datenbank dringend
+empfohlen.
+</p>
+
+<h3>Tarball downloaden und entpacken:</h3>
+<pre>cd /usr/src
+wget http://www.amooma.de/gemeinschaft/download/gemeinschaft-2.1.0.tgz
+tar xvfz gemeinschaft-2.1.0.tgz</pre>
+
+<h3>Alten Link auf Gemeinschaft entfernen und neuen Link setzen:</h3>
+<pre>rm gemeinschaft
+ln -s gemeinschaft-2.1.0 gemeinschaft</pre>
+
+<h3>gemeinschaft.php anpassen bzw. kopieren:</h3>
+<p>
+In <tt>/etc/gemeinschaft/gemeinschaft.php</tt> die Anpassungen
+aus der <q>alten</q> <tt>gemeinschaft.php</tt> (jetzt
+<tt>/usr/src/gemeinschaft-2.0.0/etc/gemeinschaft/gemeinschaft.php</tt>)
+einpflegen. Alternativ kann man die <q>alte</q> Datei auch
+einfach kopieren:
+</p>
+<pre>cp /usr/src/gemeinschaft-2.0.0/etc/gemeinschaft/gemeinschaft.php \
+   /etc/gemeinschaft/gemeinschaft.php</pre>
+<br />
+
+<h3>listen-to-ip anpassen bzw. kopieren:</h3>
+<p>
+(ganz wichtig, ohne diese Anpassung geht gar nix mehr)
+</p>
+<pre>cp /usr/src/gemeinschaft-2.0.0/opt/gemeinschaft/etc/listen-to-ip \
+   /usr/src/gemeinschaft/opt/gemeinschaft/etc/listen-to-ip</pre>
+<br />
+<p>
+oder <tt>/usr/src/gemeinschaft/opt/gemeinschaft/etc/listen-to-ip</tt>
+editieren
+</p>
+
+<h3>Datenbank anpassen:</h3>
+<p>
+Um zu kl&auml;ren, welche &Auml;nderungen einzupflegen sind,
+muss man erst mal herausfinden welche Revision momentan genutzt
+wird. Da bei einer Installation aus einem Tarball in<br />
+<tt>/etc/gemeinschaft/.gemeinschaft-version</tt> nur die
+Versionsnummer (<tt>2.0.0</tt>) steht, beim Datenbank-Update
+jedoch von der SVN Revision ausgegangen wird, kann man mit
+</p>
+<pre>cd /usr/src/gemeinschaft
+find . -type f | grep -v &#39;\.svn&#39; \
+   | xargs grep -Eio &#39;\$Revision: [0-9]+&#39; | cut -d&quot; &quot; -f2 \
+   | sort -nr | head -n 1</pre>
+<br />
+<p>
+herausfinden, welche Revision gerade in Benutzung ist.
+Bei meiner Installation war es rev. 5830.
+</p>
+<p>
+In der Datei
+<tt>/usr/src/gemeinschaft/usr/share/doc/gemeinschaft/UPGRADE-DB.sql.txt</tt>
+kann man die jeweils notwendigen &Auml;nderungen finden.
+</p>
+<p>
+In meinem Fall mussten zwei &Auml;nderungen &uuml;bernomen
+werden (<q><tt>since rev 5839</tt></q>)
+</p>
+<pre>ALTER TABLE `queue_log` DROP FOREIGN KEY `queue_log_ibfk_1`;
+ALTER TABLE `queue_log` ADD INDEX (`user_id`);</pre>
+<br />
+<p>
+Ob die notwendigen &Auml;nderungen auf der Kommandozeile, oder
+mit Tools wie Webmin etc. eigespielt werden, bleibt nat&uuml;rlich
+jedem selbst &uuml;berlassen.
+</p>
+<p>
+Eigentlich sollte jetzt ein Asterisk-Neustart ausreichen, um die
+&Auml;nderungen zu aktivieren. Zur Sicherheit empfehleich aber das
+ganze System neu zu starten.
+</p>
+
+
+
+					</div>
+				</div>
+				<!-- end: #col1 -->
+				<!-- begin: #col3 static column -->
+				<!--#include virtual="/global/static-column-right.html" -->
+				<!-- end: #col3 -->
+			</div>
+			<!-- end: #main -->
+			<!--#include virtual="/global/footer.html" -->
+		</div>
+	</div>
+</body>
+</html>
