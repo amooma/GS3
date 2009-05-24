@@ -151,7 +151,7 @@ diese Datei in das entsprechenden Runlevel:</p>
 <h3>Asterisk-Quellen herunterladen und entpacken</h3>
 <pre>cd /usr/src
 wget http://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-1.4.19.2.tar.gz
-tar -xzf asterisk-1.4.19.2.tar</pre>
+tar -xzf asterisk-1.4.19.2.tar.gz</pre>
 
 <h3>Installation der mISDN-Channel-Treiber f&uuml;r Asterisk</h3>
 <p>Nach der Installation der mISDN-Treiber mu&szlig; Asterisk noch
@@ -162,8 +162,7 @@ ausgew&auml;hlt sind.
 Es wird kein <tt>make install</tt> ausgef&uuml;hrt, da das erstellte Modul
 <tt>chan_misdn.so</tt> manuell in das Asterisk-Module-Verzeichnis kopiert
 wird.</p>
-<pre>cd /usr/src/asterisk-1.4.19.2.tar
-./configure
+<pre>./configure
 make menuselect
 make</pre>
 <br />
