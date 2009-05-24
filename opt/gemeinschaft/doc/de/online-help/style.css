@@ -1,0 +1,10 @@
+/* $Revision$ */
+
+#header-main { border-bottom: 1px solid #679; }
+.breadcrumbs,
+.breadcrumbs a { color: #666 !important; font-size:0.96em; }
+.breadcrumbs a { text-decoration: underline; }
+.breadcrumbs a:hover { color: #00c !important; }
+h1, h2, h3, h4 { margin-top: 0.7em; margin-bottom: 0.6em; }
+p { max-width:48em; }
+tt,pre { font-size: 1.2em; }
