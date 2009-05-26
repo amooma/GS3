@@ -77,7 +77,7 @@ foreach ($users as $u) {
 	}
 	
 	echo '### ', trim(qsa($u['user']),'\'') ,"\n";
-	echo './gs_user_add',
+	echo './gs-user-add',
 		' --user='     , qsa($u['user'     ]) ,
 		' --ext='      , qsa($u['ext'      ]) ,
 		' --pin='      , qsa($u['pin'      ]) ,
@@ -91,8 +91,8 @@ foreach ($users as $u) {
 	if (isGsError($ret)) {
 		echo '# Failed to get settings for CLIR!',"\n";
 	} else {
-		echo './gs_clir_activate --user=', qsa($u['user']) ,' --dest=internal --active=', qsa($ret['internal_restrict']) ,"\n";
-		echo './gs_clir_activate --user=', qsa($u['user']) ,' --dest=external --active=', qsa($ret['external_restrict']) ,"\n";
+		echo './gs-clir-activate --user=', qsa($u['user']) ,' --dest=internal --active=', qsa($ret['internal_restrict']) ,"\n";
+		echo './gs-clir-activate --user=', qsa($u['user']) ,' --dest=external --active=', qsa($ret['external_restrict']) ,"\n";
 	}
 	
 	$ret = @ gs_user_external_numbers_get( $u['user'] );
@@ -100,7 +100,7 @@ foreach ($users as $u) {
 		echo '# Failed to get external numbers!',"\n";
 	} else {
 		foreach ($ret as $number ) {
-			echo './gs_user_external_number_add --user=', qsa($u['user']) ,' --number=', qsa($number) ,"\n";
+			echo './gs-user-external-number-add --user=', qsa($u['user']) ,' --number=', qsa($number) ,"\n";
 		}
 	}
 	
@@ -111,16 +111,16 @@ foreach ($users as $u) {
 		foreach ($ret as $src => $callfw) {
 			foreach ($callfw as $case => $fw) {
 				if ($fw['number_std'] != '') {
-					echo './gs_callforward_set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --timeout=', qsa($fw['timeout']) ,' --type=std --number=', qsa($fw['number_std']) ,"\n";
+					echo './gs-callforward-set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --timeout=', qsa($fw['timeout']) ,' --type=std --number=', qsa($fw['number_std']) ,"\n";
 				}
 				if ($fw['number_var'] != '') {
-					echo './gs_callforward_set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --timeout=', qsa($fw['timeout']) ,' --type=var --number=', qsa($fw['number_var']) ,"\n";
+					echo './gs-callforward-set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --timeout=', qsa($fw['timeout']) ,' --type=var --number=', qsa($fw['number_var']) ,"\n";
 				}
 				if ($fw['number_vml'] != '') {
-					echo './gs_callforward_set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --timeout=', qsa($fw['timeout']) ,' --type=vml --number=', qsa($fw['number_vml']) ,"\n";
+					echo './gs-callforward-set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --timeout=', qsa($fw['timeout']) ,' --type=vml --number=', qsa($fw['number_vml']) ,"\n";
 				}
 				if ($fw['active'] != 'no') {
-					echo './gs_callforward_activate --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --active=', qsa($fw['active']) ,"\n";
+					echo './gs-callforward-activate --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --case=', qsa($case) ,' --active=', qsa($fw['active']) ,"\n";
 				}
 			}
 		}
@@ -130,7 +130,7 @@ foreach ($users as $u) {
 	if (isGsError($ret)) {
 		echo '# Failed to get settings for call waiting!',"\n";
 	} else {
-		echo './gs_callwaiting_activate --user=', qsa($u['user']) ,' --active=', ($ret ?'yes':'no') ,"\n";
+		echo './gs-callwaiting-activate --user=', qsa($u['user']) ,' --active=', ($ret ?'yes':'no') ,"\n";
 	}
 	
 	$ret =  @ gs_ringtones_get( $u['user'] );
@@ -138,7 +138,7 @@ foreach ($users as $u) {
 		echo '# Failed to get settings for ringtones!',"\n";
 	} else {
 		foreach ($ret as $src => $rt) {
-			echo './gs_ringtone_set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --bellcore=', qsa($rt['bellcore']) ,"\n";
+			echo './gs-ringtone-set --user=', qsa($u['user']) ,' --source=', qsa($src) ,' --bellcore=', qsa($rt['bellcore']) ,"\n";
 		}
 	}
 	
@@ -146,8 +146,8 @@ foreach ($users as $u) {
 	if (isGsError($ret)) {
 		echo '# Failed to get settings for voicemail!',"\n";
 	} else {
-		echo './gs_vm_activate --user=', qsa($u['user']) ,' --source=internal --active=', ($ret['internal_active'] ?'yes':'no') ,"\n";
-		echo './gs_vm_activate --user=', qsa($u['user']) ,' --source=external --active=', ($ret['external_active'] ?'yes':'no') ,"\n";
+		echo './gs-vm-activate --user=', qsa($u['user']) ,' --source=internal --active=', ($ret['internal_active'] ?'yes':'no') ,"\n";
+		echo './gs-vm-activate --user=', qsa($u['user']) ,' --source=external --active=', ($ret['external_active'] ?'yes':'no') ,"\n";
 	}
 	
 	echo "\n";
