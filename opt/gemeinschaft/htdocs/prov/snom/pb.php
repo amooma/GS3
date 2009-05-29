@@ -320,7 +320,7 @@ LIMIT '. $num_results;
 				'<Prompt>Prompt</Prompt>', "\n";
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
-			$number = $r['ext'];
+			$number = preg_replace( '/[^\d*#]/', '', $r['ext']);
 			echo
 				'<DirectoryEntry>',
 					'<Name>', snomXmlEsc( $name ) ,'</Name>',
@@ -401,7 +401,7 @@ LIMIT '. $num_results;
 				'<Prompt>Prompt</Prompt>', "\n";
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
-			$number = $r['ext'];
+			$number = preg_replace( '/[^\d*#]/', '', $r['ext']);
 			echo
 				'<DirectoryEntry>',
 					'<Name>', snomXmlEsc( $name ) ,' (', snomXmlEsc( $number ) ,')</Name>',
@@ -491,7 +491,7 @@ LIMIT '. $num_results;
 				'<Prompt>Prompt</Prompt>', "\n";
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
-			$number = $r['number'];
+			$number = preg_replace( '/[^\d*#]/', '', $r['number']);
 			echo
 				'<DirectoryEntry>',
 					'<Name>', snomXmlEsc( $name ) ,'</Name>',

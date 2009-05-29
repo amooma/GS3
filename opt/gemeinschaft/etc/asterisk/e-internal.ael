@@ -323,7 +323,7 @@ context to-internal-users {
 		if ("${PICKUPMARK}" = "") {
 			Set(pmark=${EXTEN:2});
 			Verbose(1,### User ${user_name} tries to pickup ${pmark});
-			Pickup(${pmark}@PICKUPMARK);
+			DPickup(${pmark}@PICKUPMARK);
 		}
 	}
 	*/
@@ -362,7 +362,7 @@ context to-internal-users {
 			Set(pmark=${EXTEN:6});
 			Verbose(1,### User ${user_name} tries to pickup group ${pmark});
 			//FIXME - add pickup group check
-			Pickup(${pmark}@PICKUPMARK);
+			DPickup(${pmark}@PICKUPMARK);
 			//FIXME - does not work across nodes
 			
 			// if we got here, the pickup attempt was not successful
