@@ -5487,7 +5487,7 @@ CREATE TABLE `ast_sipfriends` (
   `callerid` varchar(80) collate latin1_general_ci NOT NULL default '',
   `mailbox` varchar(25) character set ascii NOT NULL default '',
   `callgroup` varchar(20) character set ascii NOT NULL default '1',
-  `pickupgroup` varchar(20) character set ascii NOT NULL default '1',
+  `pickupgroup` varchar(20) character set ascii NOT NULL default '',
   `setvar` varchar(50) character set ascii NOT NULL default '',
   `call-limit` tinyint(3) unsigned NOT NULL default '20',
   `subscribecontext` varchar(50) character set ascii NOT NULL default 'default',
