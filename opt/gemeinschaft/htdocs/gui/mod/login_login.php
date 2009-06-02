@@ -225,7 +225,7 @@ Gemeinschaft auf \"%s\"
 <input type="hidden" name="login_action" value="forgotpwd" />
 
 <label for="ipt-login_user"><?php echo __('Benutzername'); ?>:</label><br />
-<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="20" value="<?php echo @$_REQUEST['login_user']; ?>" style="width:150px; font-size:1.2em;" /><br />
+<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="50" value="<?php echo @$_REQUEST['login_user']; ?>" style="width:150px; font-size:1.2em;" /><br />
 <script type="text/javascript">/*<![CDATA[*/ try{ document.getElementById('ipt-login_user').focus(); }catch(e){} /*]]>*/</script>
 
 <br />
