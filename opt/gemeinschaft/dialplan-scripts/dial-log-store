@@ -60,6 +60,8 @@ if ($uid < 1) die();
 
 # get remote user
 #
+
+//loolup in sipfriends First
 $rs = $db->execute(
 'SELECT
 	`u`.`id`, `u`.`firstname`, `u`.`lastname`
@@ -70,8 +72,21 @@ WHERE
 	`s`.`name`=\''. $db->escape($number) .'\''
 );
 $remote_user = $rs->fetchRow();
+
+$is_from_phonebook = false;
+
+if (!$remote_user) { //if there is nothing in the ast_sipfriends, check the private phonebook
+	$rs = $db->execute('SELECT `firstname`, `lastname` FROM `pb_prv` WHERE `user_id`='.$uid.' AND `number`=\''. $db->escape($number) .'\'');
+	$remote_user = $rs->fetchRow();
+	$is_from_phonebook = true;
+}
+
 if ($remote_user) {
-	$db_remote_user_id = (int)$remote_user['id'];
+	if (!$is_from_phonebook)
+		$db_remote_user_id = (int)$remote_user['id'];
+	else
+		$db_remote_user_id = 'NULL';
+
 	$remote_name = '';
 	if ($remote_user['firstname'] != '')
 		$remote_name .= mb_subStr($remote_user['firstname'], 0, 1) .'. ';
