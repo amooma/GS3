@@ -129,6 +129,18 @@ elseif ($action === 'logout') {
 	
 }
 elseif ($action === 'logoutall') {
+	$rs = $db->execute( 'SELECT `queue_name` FROM `ast_queue_members` WHERE `_user_id`='. $user_id );
+	if( @$rs ) {
+		$c = 0;
+		while( $queues = $rs->fetchRow() ) {
+			$queue = $queues['queue_name'];
+			echo 'SET VARIABLE oqueue'.  gs_agi_str_esc( $c ) . ' ' . gs_agi_str_esc( $queue ) ."\n";
+			$c++;
+		}
+			echo 'SET VARIABLE oqueue_count '. gs_agi_str_esc($c) ."\n";   
+
+	}	
+	
 	
 	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_user_id`='. $user_id );
 	echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('loggedout') ."\n";
