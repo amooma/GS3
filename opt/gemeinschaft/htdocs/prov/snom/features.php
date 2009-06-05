@@ -37,6 +37,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_clir_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_clir_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_callerids_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_set.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -99,7 +101,7 @@ if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 }
 
 $type = trim( @$_REQUEST['t'] );
-if (! in_array( $type, array('internal','external','callwaiting'), true )) {
+if (! in_array( $type, array('internal', 'external', 'callwaiting', 'cidext', 'cidint'), true )) {
 	$type = false;
 }
 
@@ -114,7 +116,11 @@ $tmp = array(
 	25=>array('k' => 'external',
 	          'v' => gs_get_conf('GS_CLIR_EXTERNAL', "CLIR Extern" ) ),
 	35=>array('k' => 'callwaiting',
-	          'v' => gs_get_conf('GS_CALLWAITING', "Anklopfen" ) )
+	          'v' => gs_get_conf('GS_CALLWAITING', "Anklopfen" ) ),
+	45=>array('k' => 'cidext',
+		'v' => gs_get_conf('GS_CALLERID', __("CID extern") ) ),
+	55=>array('k' => 'cidint',
+		'v' => gs_get_conf('GS_CALLERID', __("CID intern") ) )
 );
 
 kSort($tmp);
@@ -197,6 +203,12 @@ if($type != false && isset($_REQUEST['state'])){
 		}
 		
 	}
+	else if($type == 'cidint'){
+		gs_user_callerid_set($user_name, $state, 'internal');
+	}
+	else if($type == 'cidext'){
+		gs_user_callerid_set($user_name, $state, 'external');
+	}
 	
 	
 	
@@ -273,7 +285,67 @@ if (($type == 'internal' || $type == 'external' ||  $type == 'callwaiting') && $
 }
 #################################### SELECT FEATURETYPE }
 
+#################################### SELECT CID{
 
+if ($type == 'cidint' || $type == 'cidext') {
+	
+	if( $type == 'cidext')
+		$target = 'external';
+	else
+		$target = 'internal';
+	
+	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
+	$user = trim( @$_REQUEST['u'] );
+	$user_id = getUserID( $user );
+	
+	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
+	
+	$enumbers = gs_user_callerids_get( $user_name );
+	if (isGsError($enumbers)) {
+		_err('Fehler beim Abfragen.');
+		
+	 }
+	
+	$selected = true; 
+	foreach($enumbers as $number){
+		if($number['selected']===1)
+			$selected = false;
+	
+	}
+	 
+	 
+	 
+	ob_start();
+	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
+		'<SnomIPPhoneMenu>', "\n",
+		'<Title>Cid</Title>', "\n\n";
+		echo '<MenuItem';
+		if($selected == true)echo ' sel=true';
+		echo '>', "\n",
+		'<Name>', snomXmlEsc($user), '</Name>', "\n",
+		'<URL>',$url_snom_features,'?t=',$type,'&m=',$mac ,'&u=', $user,'&state=</URL>', "\n",
+		'</MenuItem>', "\n\n";
+	foreach ($enumbers as $extnumber) {
+	
+		if($extnumber['dest'] != $target) continue;
+
+		echo '<MenuItem';
+		if($extnumber['selected'] === 1)echo ' sel=true'; 
+		echo'>', "\n",
+			'<Name>', snomXmlEsc($extnumber['number']), '</Name>', "\n",
+			'<URL>',$url_snom_features,'?t=',$type,'&m=',$mac ,'&u=', $user,'&state=',$extnumber['number'],'</URL>', "\n",
+			'</MenuItem>', "\n\n";
+		# in XML the & must normally be encoded as &amp; but not for
+		# the stupid Snom!
+	}
+	defineBackKey();
+	echo '</SnomIPPhoneMenu>', "\n";
+	_ob_send();
+	
+}
+
+
+#################################### SELECT CID}
 
 #################################### INITIAL SCREEN {
 if (! $type) {
@@ -293,6 +365,22 @@ if (! $type) {
 		$result = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
 		if($result == 1)$state = ": ein";
 		else($state == ": aus");
+	}
+	else if($t == 'cidext'){
+		unset($result);
+		$result = $db->executeGetOne( 'SELECT `number` FROM `users_callerids` WHERE `selected`=1 AND `dest`=\'external\' AND `user_id`='. $user_id );
+		if($result)
+			$state =  ": " . $result;
+		else
+			$state = ": " .$user;
+	}
+	else if($t == 'cidint'){
+		unset($result);
+		$result = $db->executeGetOne( 'SELECT `number` FROM `users_callerids` WHERE `selected`=1 AND `dest`=\'internal\' AND `user_id`='. $user_id );
+		if($result)
+			$state =  ": " . $result;
+		else
+			$state = ": " .$user;
 	}
 	else{
 		$result = $db->executeGetOne( 'SELECT `'. $t.'_restrict` FROM `clir` WHERE `user_id`='. $user_id );
