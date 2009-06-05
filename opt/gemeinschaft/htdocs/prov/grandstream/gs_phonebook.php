@@ -94,6 +94,7 @@ FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE `u`.`nobody_index` IS NULL
+	AND `u`.`pb_hide` = 0
 ORDER BY `u`.`lastname`, `u`.`firstname`
 LIMIT 100';
 

@@ -65,6 +65,7 @@ FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE
+	`u`.`pb_hide` = 0 AND
 	`u`.`nobody_index` IS NULL AND (
 	`s`.`name` LIKE \''. $DB->escape($number_sql) .'\'
 	)
@@ -93,6 +94,7 @@ FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE
+	`u`.`pb_hide` = 0 AND
 	`u`.`nobody_index` IS NULL AND (
 	`u`.`lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR
 	`u`.`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci
