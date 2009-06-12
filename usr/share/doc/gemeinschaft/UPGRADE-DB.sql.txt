@@ -643,5 +643,165 @@ ALTER TABLE `routes`
   REFERENCES `user_groups` (`id`)
   ON DELETE CASCADE ON UPDATE CASCADE;
 
+--
+-- since rev. 6438
+--
+
+USE `asterisk`;
+
+CREATE TABLE IF NOT EXISTS `config_options` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `ident` varchar(40) character set ascii default NULL,
+  `type` varchar(10) default NULL,
+  `possibilities` varchar(200) default NULL,
+  `value` varchar(100) default NULL,
+  `default` varchar(100) default NULL,
+  `path` varchar(100) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--
+-- Dumping data for table `config_options`
+--
+
+LOCK TABLES `config_options` WRITE;
+/*!40000 ALTER TABLE `config_options` DISABLE KEYS */;
+INSERT INTO `config_options` VALUES (326,'DB_SIP_REG_UPDATE','BOOL',NULL,NULL,'0','/');
+INSERT INTO `config_options` VALUES (327,'LDAP_HOST','IP',NULL,NULL,'0.0.0.0','/ldap');
+INSERT INTO `config_options` VALUES (328,'LDAP_SSL','BOOL','',NULL,'0','/ldap');
+INSERT INTO `config_options` VALUES (329,'LDAP_PORT','INT',NULL,NULL,'0','/ldap');
+INSERT INTO `config_options` VALUES (330,'LDAP_BINDDN','TEXT',NULL,NULL,'','/ldap');
+INSERT INTO `config_options` VALUES (331,'LDAP_PWD','TEXT',NULL,NULL,'','/ldap');
+INSERT INTO `config_options` VALUES (332,'LDAP_PROTOCOL','SELECT','2|3',NULL,'3','/ldap');
+INSERT INTO `config_options` VALUES (333,'LDAP_SEARCHBASE','TEXT',NULL,NULL,'','/ldap');
+INSERT INTO `config_options` VALUES (334,'LDAP_PROP_USER','TEXT',NULL,NULL,'uid','/ldap');
+INSERT INTO `config_options` VALUES (335,'LDAP_PROP_UID','TEXT',NULL,NULL,'uid','/ldap');
+INSERT INTO `config_options` VALUES (336,'LDAP_PROP_FIRSTNAME','TEXT',NULL,NULL,'givenname','/ldap');
+INSERT INTO `config_options` VALUES (337,'LDAP_PROP_LASTNAME','TEXT',NULL,NULL,'sn','/ldap');
+INSERT INTO `config_options` VALUES (338,'LDAP_PROP_PHONE','TEXT',NULL,NULL,'telephonenumber','/ldap');
+INSERT INTO `config_options` VALUES (339,'LDAP_PROP_EMAIL','TEXT',NULL,NULL,'mail','/ldap');
+INSERT INTO `config_options` VALUES (340,'GUI_AUTH_METHOD','SELECT','gemeinschaft|webseal',NULL,'gemeinschaft','/gui');
+INSERT INTO `config_options` VALUES (341,'GUI_NUM_RESULTS','INT','',NULL,'12','/gui');
+INSERT INTO `config_options` VALUES (342,'GUI_SUDO_ADMINS','COMMA_SEP_',NULL,NULL,'','/gui');
+INSERT INTO `config_options` VALUES (343,'GUI_SUDO_EXTENDED','TEXT','',NULL,'','/gui');
+INSERT INTO `config_options` VALUES (344,'GUI_PERMISSIONS_METHOD','TEXT',NULL,NULL,'gemeinschaft','/gui');
+INSERT INTO `config_options` VALUES (345,'GUI_USER_MAP_METHOD','TEXT',NULL,NULL,'','/gui');
+INSERT INTO `config_options` VALUES (346,'GUI_QUEUE_SHOW_NUM_CALLS','BOOL',NULL,NULL,'0','/gui');
+INSERT INTO `config_options` VALUES (347,'GUI_QUEUE_INFO_FROM_DB','BOOL',NULL,NULL,'1','/gui');
+INSERT INTO `config_options` VALUES (348,'GUI_MON_NOQUEUEBLUE','BOOL','',NULL,'1','/gui');
+INSERT INTO `config_options` VALUES (349,'GUI_MON_PEERS_ENABLED','BOOL',NULL,NULL,'1','/gui');
+INSERT INTO `config_options` VALUES (350,'GUI_SHUTDOWN_ENABLED','BOOL',NULL,NULL,'0','/gui');
+INSERT INTO `config_options` VALUES (351,'GUI_LANGS','TEXT',NULL,NULL,'de_DE:de_DE:de-DE:De','/gui');
+INSERT INTO `config_options` VALUES (352,'GUI_ADDITIONAL_STYLESHEET','TEXT','',NULL,'gemeinschaft.css','/gui');
+INSERT INTO `config_options` VALUES (353,'EXTERNAL_NUMBERS_BACKEND','SELECT','db|ldap',NULL,'db','/ldap');
+INSERT INTO `config_options` VALUES (354,'EXTERNAL_NUMBERS_LDAP_PROP','TEXT',NULL,NULL,'','/ldap');
+INSERT INTO `config_options` VALUES (355,'NOBODY_EXTEN_PATTERN','TEXT',NULL,NULL,'95xxxx','/');
+INSERT INTO `config_options` VALUES (356,'NOBODY_CID_NAME','TEXT',NULL,NULL,'Namenlos-','/');
+INSERT INTO `config_options` VALUES (357,'PROV_HOST','IP',NULL,NULL,'192.168.1.130','/prov');
+INSERT INTO `config_options` VALUES (358,'PROV_PORT','INT',NULL,NULL,'0','/prov');
+INSERT INTO `config_options` VALUES (359,'PROV_SCHEME','SELECT','http|https',NULL,'http','/prov');
+INSERT INTO `config_options` VALUES (360,'PROV_PATH','TEXT',NULL,NULL,'/gemeinschaft/prov/','/prov');
+INSERT INTO `config_options` VALUES (361,'PROV_AUTO_ADD_PHONE','BOOL',NULL,NULL,'1','/prov');
+INSERT INTO `config_options` VALUES (362,'PROV_AUTO_ADD_PHONE_HOST','SELECT','first|last|random',NULL,'first','/prov');
+INSERT INTO `config_options` VALUES (363,'PROV_DIAL_LOG_LIFE','INT','',NULL,'1209600','/prov');
+INSERT INTO `config_options` VALUES (364,'PROV_PROXIES_TRUST','TEXT',NULL,NULL,'','/prov');
+INSERT INTO `config_options` VALUES (365,'PROV_PROXIES_XFF_HEADER','TEXT',NULL,NULL,'X-Forwarded-For','/prov');
+INSERT INTO `config_options` VALUES (366,'PROV_ALLOW_NET','COMMA_SEP_',NULL,NULL,'0.0.0.0/0','/prov');
+INSERT INTO `config_options` VALUES (367,'PROV_LAN_NETS','COMMA_SEP_',NULL,NULL,'0.0.0.0/0','/prov');
+INSERT INTO `config_options` VALUES (368,'PROV_MODELS_ENABLED_SNOM','COMMA_SEP_',NULL,NULL,'*','/prov/snom');
+INSERT INTO `config_options` VALUES (369,'PROV_MODELS_ENABLED_SIEMENS','COMMA_SEP_',NULL,NULL,'*','/prov/siemens');
+INSERT INTO `config_options` VALUES (370,'PROV_MODELS_ENABLED_AASTRA','COMMA_SEP_',NULL,NULL,'*','/prov/aastra');
+INSERT INTO `config_options` VALUES (371,'PROV_MODELS_ENABLED_GRANDSTREAM','COMMA_SEP_',NULL,NULL,'*','/prov/grandstream');
+INSERT INTO `config_options` VALUES (372,'SNOM_PROV_ENABLED','BOOL',NULL,NULL,'1','/prov/snom');
+INSERT INTO `config_options` VALUES (373,'SNOM_PROV_HTTP_USER','TEXT',NULL,NULL,'','/prov/snom');
+INSERT INTO `config_options` VALUES (374,'SNOM_PROV_HTTP_PASS','TEXT',NULL,NULL,'','/prov/snom');
+INSERT INTO `config_options` VALUES (375,'SNOM_PROV_PB_NUM_RESULTS','INT',NULL,NULL,'15','/prov/snom');
+INSERT INTO `config_options` VALUES (376,'SNOM_PROV_FW_UPDATE','BOOL',NULL,NULL,'0','/prov/snom');
+INSERT INTO `config_options` VALUES (377,'SNOM_PROV_FW_6TO7','BOOL',NULL,NULL,'0','/prov/snom');
+INSERT INTO `config_options` VALUES (378,'SNOM_PROV_FW_DEFAULT_300','TEXT',NULL,NULL,'','/prov/snom');
+INSERT INTO `config_options` VALUES (379,'SNOM_PROV_FW_DEFAULT_320','TEXT',NULL,NULL,'','/prov/snom');
+INSERT INTO `config_options` VALUES (380,'SNOM_PROV_FW_DEFAULT_360','TEXT',NULL,NULL,'','/prov/snom');
+INSERT INTO `config_options` VALUES (381,'SNOM_PROV_FW_DEFAULT_370','TEXT',NULL,NULL,'','/prov/snom');
+INSERT INTO `config_options` VALUES (382,'SNOM_PROV_KEY_BLACKLIST','COMMA_SEP_',NULL,NULL,'','/prov/snom');
+INSERT INTO `config_options` VALUES (383,'SNOM_PROV_M3_ACCOUNTS','INT',NULL,NULL,'1','/prov/snom');
+INSERT INTO `config_options` VALUES (384,'SIEMENS_PROV_ENABLED','BOOL',NULL,NULL,'1','/prov/siemens');
+INSERT INTO `config_options` VALUES (385,'SIEMENS_PROV_PREFER_HTTP','BOOL',NULL,NULL,'1','/prov/siemens');
+INSERT INTO `config_options` VALUES (386,'SIEMENS_PROV_FW_DEFAULT_OS20','TEXT',NULL,NULL,'','/prov/siemens');
+INSERT INTO `config_options` VALUES (387,'SIEMENS_PROV_FW_DEFAULT_OS40','TEXT',NULL,NULL,'','/prov/siemens');
+INSERT INTO `config_options` VALUES (388,'SIEMENS_PROV_FW_DEFAULT_OS60','TEXT',NULL,NULL,'','/prov/siemens');
+INSERT INTO `config_options` VALUES (389,'SIEMENS_PROV_FW_DEFAULT_OS80','TEXT',NULL,NULL,'','/prov/siemens');
+INSERT INTO `config_options` VALUES (390,'SIEMENS_PROV_KEY_BLACKLIST','COMMA_SEP_',NULL,NULL,'','/prov/siemens');
+INSERT INTO `config_options` VALUES (391,'AASTRA_PROV_ENABLED','BOOL',NULL,NULL,'1','/prov/aastra');
+INSERT INTO `config_options` VALUES (392,'AASTRA_PROV_PB_NUM_RESULTS','INT',NULL,NULL,'10','/prov/aastra');
+INSERT INTO `config_options` VALUES (393,'AASTRA_PROV_FW_DEFAULT_51I','TEXT',NULL,NULL,'','/prov/aastra');
+INSERT INTO `config_options` VALUES (394,'AASTRA_PROV_FW_DEFAULT_53I','TEXT',NULL,NULL,'','/prov/aastra');
+INSERT INTO `config_options` VALUES (395,'AASTRA_PROV_FW_DEFAULT_55I','TEXT',NULL,NULL,'','/prov/aastra');
+INSERT INTO `config_options` VALUES (396,'AASTRA_PROV_FW_DEFAULT_57I','TEXT',NULL,NULL,'','/prov/aastra');
+INSERT INTO `config_options` VALUES (397,'AASTRA_PROV_KEY_BLACKLIST','TEXT',NULL,NULL,'','/prov/aastra');
+INSERT INTO `config_options` VALUES (398,'GRANDSTREAM_PROV_ENABLED','BOOL',NULL,NULL,'','/prov/grandstream');
+INSERT INTO `config_options` VALUES (399,'GRANDSTREAM_PROV_HTTP_PASS','TEXT',NULL,NULL,'admin','/prov/grandstream');
+INSERT INTO `config_options` VALUES (400,'GRANDSTREAM_PROV_NTP','IP',NULL,NULL,'192.168.1.130','/prov/grandstream');
+INSERT INTO `config_options` VALUES (401,'GRANDSTREAM_PROV_KEY_BLACKLIST','COMMA_SEP_',NULL,NULL,'','/prov/grandstream');
+INSERT INTO `config_options` VALUES (402,'CANONIZE_OUTBOUND','BOOL',NULL,NULL,'1','/canonize');
+INSERT INTO `config_options` VALUES (403,'CANONIZE_INTL_PREFIX','TEXT',NULL,NULL,'00','/canonize');
+INSERT INTO `config_options` VALUES (404,'CANONIZE_COUNTRY_CODE','TEXT',NULL,NULL,'49','/canonize');
+INSERT INTO `config_options` VALUES (405,'CANONIZE_NATL_PREFIX','TEXT',NULL,NULL,'0','/canonize');
+INSERT INTO `config_options` VALUES (406,'CANONIZE_NATL_PREFIX_INTL','TEXT',NULL,NULL,'','/canonize');
+INSERT INTO `config_options` VALUES (407,'CANONIZE_AREA_CODE','TEXT',NULL,NULL,'251','/canonize');
+INSERT INTO `config_options` VALUES (408,'CANONIZE_LOCAL_BRANCH','TEXT',NULL,NULL,'702','/canonize');
+INSERT INTO `config_options` VALUES (409,'CANONIZE_SPECIAL','TEXT',NULL,NULL,'/^1(?:1[0-9]{1,5}|92','/canonize');
+INSERT INTO `config_options` VALUES (410,'CANONIZE_CBC_PREFIX','TEXT',NULL,NULL,'010','/canonize');
+INSERT INTO `config_options` VALUES (411,'DP_SUBSYSTEM','BOOL',NULL,NULL,'','/dialplan');
+INSERT INTO `config_options` VALUES (412,'DP_EMERGENCY_POLICE','COMMA_SEP_',NULL,NULL,'110,0110','/dialplan');
+INSERT INTO `config_options` VALUES (413,'DP_EMERGENCY_POLICE_MAP','COMMA_SEP_',NULL,NULL,'110','/dialplan');
+INSERT INTO `config_options` VALUES (414,'DP_EMERGENCY_FIRE','COMMA_SEP_',NULL,NULL,'112,0112','/dialplan');
+INSERT INTO `config_options` VALUES (415,'DP_EMERGENCY_FIRE_MAP','COMMA_SEP_',NULL,NULL,'112','/dialplan');
+INSERT INTO `config_options` VALUES (416,'DP_DIALTIMEOUT_IN','INT',NULL,NULL,'45','/dialplan');
+INSERT INTO `config_options` VALUES (417,'DP_PRV_CALL_PREFIX','TEXT',NULL,NULL,'*7*','/dialplan');
+INSERT INTO `config_options` VALUES (418,'DP_FORWARD_REQ_EXT_NUM','BOOL',NULL,NULL,'1','/dialplan');
+INSERT INTO `config_options` VALUES (419,'DP_ALLOW_DIRECT_DIAL','BOOL',NULL,NULL,'0','/dialplan');
+INSERT INTO `config_options` VALUES (420,'DP_CONNID','BOOL',NULL,NULL,'0','/dialplan');
+INSERT INTO `config_options` VALUES (421,'PB_IMPORTED_ENABLED','BOOL',NULL,NULL,'','/phonebook');
+INSERT INTO `config_options` VALUES (422,'PB_IMPORTED_ORDER','INT',NULL,NULL,'2','/phonebook');
+INSERT INTO `config_options` VALUES (423,'PB_IMPORTED_TITLE','TEXT',NULL,NULL,'Importiert','/phonebook');
+INSERT INTO `config_options` VALUES (424,'PB_INTERNAL_TITLE','TEXT',NULL,NULL,'Intern','/phonebook');
+INSERT INTO `config_options` VALUES (425,'PB_PRIVATE_TITLE','TEXT',NULL,NULL,'Persönlich','/phonebook');
+INSERT INTO `config_options` VALUES (426,'LOCK_DIR','TEXT',NULL,NULL,'/tmp/','/');
+INSERT INTO `config_options` VALUES (427,'CALL_INIT_FROM_NET','TEXT',NULL,NULL,'192.168.1.0/24','/');
+INSERT INTO `config_options` VALUES (428,'MONITOR_FROM_NET','TEXT',NULL,NULL,'192.168.1.0/24','/');
+INSERT INTO `config_options` VALUES (429,'LVM_USER_6_DIGIT_INT','TEXT',NULL,NULL,'','/misc');
+INSERT INTO `config_options` VALUES (430,'LVM_CALL_INIT_USERS_500000','TEXT',NULL,NULL,'','/misc');
+INSERT INTO `config_options` VALUES (431,'CC_TIMEOUT','INT',NULL,NULL,'60','/');
+INSERT INTO `config_options` VALUES (432,'INTL_LANG','TEXT',NULL,NULL,'de_DE','/gui');
+INSERT INTO `config_options` VALUES (433,'INTL_USE_GETTEXT','TEXT',NULL,NULL,'','/gui');
+INSERT INTO `config_options` VALUES (434,'INTL_ASTERISK_LANG','TEXT',NULL,NULL,'de','/dialplan');
+INSERT INTO `config_options` VALUES (435,'USERCOMMENT_OFFTIME','TEXT',NULL,NULL,'Feierabend','/gui');
+INSERT INTO `config_options` VALUES (436,'EMAIL_PATTERN_VALID','TEXT',NULL,NULL,'/^[a-z0-9\\-._]+@[a-z0-9\\-._]{2,80}\\.[a-z]{2,10}$/i','/');
+INSERT INTO `config_options` VALUES (437,'EMAIL_DELIVERY','SELECT','sendmail|direct-snmp',NULL,'sendmail','/');
+INSERT INTO `config_options` VALUES (438,'FAX_ENABLED','BOOL',NULL,NULL,'','/fax');
+INSERT INTO `config_options` VALUES (439,'FAX_TSI_PREFIX','TEXT',NULL,NULL,'0251702','/fax');
+INSERT INTO `config_options` VALUES (440,'FAX_PREFIX','TEXT',NULL,NULL,'','/fax');
+INSERT INTO `config_options` VALUES (441,'FAX_TSI','TEXT',NULL,NULL,'','/fax');
+INSERT INTO `config_options` VALUES (442,'FAX_HYLAFAX_HOST','IP',NULL,NULL,'127.0.0.1','/fax');
+INSERT INTO `config_options` VALUES (443,'FAX_HYLAFAX_PORT','INT',NULL,NULL,'4559','/fax');
+INSERT INTO `config_options` VALUES (444,'FAX_HYLAFAX_ADMIN','TEXT',NULL,NULL,'','/fax');
+INSERT INTO `config_options` VALUES (445,'FAX_HYLAFAX_PASS','TEXT',NULL,NULL,'','/fax');
+INSERT INTO `config_options` VALUES (446,'FAX_HYLAFAX_PATH','TEXT',NULL,NULL,'/var/spool/hylafax/','/fax');
+INSERT INTO `config_options` VALUES (447,'BOI_ENABLED','BOOL',NULL,NULL,'0','/boi');
+INSERT INTO `config_options` VALUES (448,'BOI_API_DEFAULT','TEXT',NULL,NULL,'','/boi');
+INSERT INTO `config_options` VALUES (449,'BOI_BRANCH_NETMASK','TEXT',NULL,NULL,'/16','/boi');
+INSERT INTO `config_options` VALUES (450,'BOI_BRANCH_PBX','IP',NULL,NULL,'192.168.24.130','/boi');
+INSERT INTO `config_options` VALUES (451,'BOI_NOBODY_EXTEN_PATTERN','TEXT',NULL,NULL,'95xxxx','/boi');
+INSERT INTO `config_options` VALUES (452,'BOI_GUI_REVERSE_PROXY','TEXT',NULL,NULL,'http://192.168.1.130','/boi');
+INSERT INTO `config_options` VALUES (453,'BOI_GUI_HOME_USER','TEXT',NULL,NULL,'information/praesenz','/boi');
+INSERT INTO `config_options` VALUES (454,'BOI_GUI_HOME_ADMIN','TEXT',NULL,NULL,'information/status','/boi');
+INSERT INTO `config_options` VALUES (455,'LOG_TO','SELECT','file|syslog',NULL,'file','/log');
+INSERT INTO `config_options` VALUES (456,'LOG_FILE','TEXT',NULL,NULL,'/var/log/gemeinschaft.log','/log');
+INSERT INTO `config_options` VALUES (457,'LOG_GMT','BOOL',NULL,NULL,'1','/log');
+INSERT INTO `config_options` VALUES (458,'LOG_SYSLOG_FACILITY','SELECT','local0|local1|local2|local3|local4|local5|local6|local7|local8|local9|user',NULL,'local5','/log');
+INSERT INTO `config_options` VALUES (459,'LOG_LEVEL','SELECT','FATAL|WARNING|NOTICE|DEBUG',NULL,'NOTICE','/log');
+/*!40000 ALTER TABLE `config_options` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
