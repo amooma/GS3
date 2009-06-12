@@ -1,0 +1,83 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 3442 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+#
+# non-PHP scripts can use this interface to get
+# Gemeinschaft config params
+#
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_gen_globalconf.php' );
+
+$DB = gs_db_master_connect();
+
+$conf = '/etc/gemeinschaft/gemeinschaft.php';
+if (! file_exists( $conf )) {
+	trigger_error( "Config file \"$conf\" not found!\n", E_USER_ERROR );
+	exit(1);
+} else {
+	if ((@include( $conf )) === false) {
+		// () around the include are important!
+		trigger_error( "Could not include config file \"$conf\"!\n", E_USER_ERROR );
+		exit(1);
+	}
+}
+
+
+$constarray = get_defined_vars(true);
+
+echo "Importing your configuration from gemeinschaft.php into the Database...\n";
+
+$config= $DB->execute('SELECT * FROM `config_options`');
+
+if (@$config) {
+	while ($r = @$config->fetchRow()) {
+		if (array_key_exists($r['ident'], $constarray) && $constarray[$r['ident']] != '') {
+			$DB->execute("UPDATE `config_options` SET `value` = '".$DB->escape($constarray[$r['ident']])."' WHERE `ident` = '".$DB->escape($r['ident'])."'");
+			echo "UPDATE `config_options` SET `value` = '".$DB->escape($constarray[$r['ident']])."' WHERE `ident` = '".$DB->escape($r['ident'])."'\n";
+		}
+	}
+	echo "done.\nPlease delete the Content from gemeinschaft.php except the database-configuration and the INSTALLATION_TYPE\nThank you.\n";
+	gs_generate_autoconf_php();
+} else {
+	echo "NOTHING done! Do you have forgotten to update your Database?\n";
+}
+
+
+
+//$val = gs_get_conf($param);
+
+//echo serialize($val), "\n";
+//echo $val, "\n";
+
+
+?>
