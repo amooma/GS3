@@ -330,7 +330,7 @@ $option_long_descr = array (
 /***********************************************************
 *    function to generate inc/gs_autoconf.php from Database
 ***********************************************************/
-
+#warning: need to be root to run this, or we need write options to GS_DIR."inc/gs_autoconf.php
 function gs_generate_autoconf_php() {
 	
 	$filename = GS_DIR ."inc/gs_autoconf.php";
