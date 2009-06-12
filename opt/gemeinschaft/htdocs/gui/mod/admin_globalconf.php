@@ -103,8 +103,8 @@ if (@$config) {
 			echo '<thead>'."\n";
 			echo '<tr>'."\n";
 			echo '<th style="width:400px;" class="nobr">'. __('Option' ).'</th>'."\n";
-			echo '<th style="width:300px;" class="nobr">'. __('Wert' ).'</th>'."\n";
-			echo '<th style="width:300px;" class="nobr">'. __('Beschreibung' ).'</th>'."\n";
+			echo '<th style="width:150px;" class="nobr">'. __('Wert' ).'</th>'."\n";
+			echo '<th style="width:500px;" class="nobr">'. __('Beschreibung' ).'</th>'."\n";
 			echo '</tr>'."\n";
 			echo '</thead>'."\n";
 			echo '<tbody>'."\n";
