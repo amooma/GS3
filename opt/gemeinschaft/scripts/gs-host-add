@@ -37,13 +37,13 @@ include_once( GS_DIR .'inc/gs-fns/gs_host_add.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip> --comment=<comment> [--sip-proxy=<ip>] [--foreign=<true>] [--sip-sbc=<ip>]';
+$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip> --comment=<comment> [--sip-proxy=<ip>] [--sip-sbc=<ip>]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
 		'host=',
 		'comment=',
-		'foreign=',
+//		'foreign=',
 		'sip-proxy=',
 		'sip-sbc='
 	),
