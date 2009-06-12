@@ -71,9 +71,12 @@ if ($save) {
 	}
 
 	//generate the var-dump-file
-	gs_generate_autoconf_php();
-
-	//FIXME: generate the var-dump-file on each host (run /opt/gemeinschaft/scripts/gs-gen-config on each host, if INSTALLATION_TYPE != single
+	$ok = gs_generate_autoconf_php_hosts();
+	if( isGsError($ok)) {
+		echo '<div class="errorbox">';
+		echo $ok->getMsg();
+		echo '</div>',"\n";
+		}
 }
 
 # get current configuration
