@@ -327,6 +327,78 @@ $option_long_descr = array (
 
 
 
+
+require_once( GS_DIR .'inc/get-listen-to-ids.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
+
+
+/***********************************************************
+*    reloads all active asterisks
+*    $host_ids=false for all
+***********************************************************/
+
+function gs_generate_autoconf_php_hosts()
+{
+	
+	# connect to db
+	#
+	$db = gs_db_master_connect();
+	if (! $db)
+		return new GsError( 'Could not connect to database.' );
+	
+	# get hosts
+	#
+	$hosts = @ gs_hosts_get();
+	if (isGsError( $hosts ))
+		return new GsError( $hosts->getMsg() );
+	if (! is_array( $hosts ))
+		return new GsError( 'Failed to get hosts.' );
+	
+	$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+	if (! $GS_INSTALLATION_TYPE_SINGLE) {
+		# get our host IDs
+		#
+		$our_host_ids = @ gs_get_listen_to_ids();
+		if (isGsError( $our_host_ids ))
+			return new GsError( $our_host_ids->getMsg() );
+		if (! is_array( $our_host_ids ))
+			return new GsError( 'Failed to get our host IDs.' );
+	}
+	
+	# are we root? do we have to sudo?
+	#
+	$uid = @ posix_geteuid();
+	$uinfo = @ posix_getPwUid($uid);
+	$uname = @ $uinfo['name'];
+	$sudo = ($uname=='root') ? '' : 'sudo ';
+	
+	$ok = true;
+	$errorhosts = "";
+
+	foreach ($hosts as $host) {
+		$cmd = '/opt/gemeinschaft/scripts/gs-gen-config';
+		if (! $GS_INSTALLATION_TYPE_SINGLE
+		&&  ! in_array($host['id'], $our_host_ids)) {
+			# this is not the local node
+			$cmd = $sudo .'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd);
+		}
+		@ exec( $sudo . $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		$ok = $ok && ($err==0);
+		$errorhosts .= $host['host'].",";
+	}
+	if (! $ok)
+		return new GsError( 'Failed to generate config on Hosts: '.$errorhosts );
+	return true;
+}
+
+
+
+
+
+
+
+
+
 /***********************************************************
 *    function to generate inc/gs_autoconf.php from Database
 ***********************************************************/
