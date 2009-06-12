@@ -3,14 +3,15 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 5162 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
-* 
+* Soeren Sprenger <soeren.sprenger@amooma.de> 
+*
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -30,50 +31,16 @@
 define( 'GS_VALID', true );  /// this is a parent file
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
-include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_host_add.php' );
-
-/***********************************************************
-*    the shell parameters
-***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --host=<ip> --comment=<comment> [--sip-proxy=<ip>] [--foreign=<true>] [--sip-sbc=<ip>]';
-
-$opts = @getOptsNoMultiples( '',
-	array(
-		'host=',
-		'comment=',
-		'foreign=',
-		'sip-proxy=',
-		'sip-sbc='
-	),
-	$usage
-);
-if (! isSet($opts['host'])
- || ! isSet($opts['comment'])
-// || ! isSet($opts['foreign'])
- ) {
-	gs_script_invalid_usage( $usage );
-}
-
-//$opts['foreign'] = ($opts['foreign'] == '1' || $opts['foreign'] != '0' || $opts['foreign'] != '');
-$opts['foreign'  ] = false;
-$opts['group-id' ] = null;
-$opts['prefix'   ] = '';
-
-if (! isSet($opts['sip-proxy']))
-	$opts['sip-proxy'] = null;
-if (! isSet($opts['sip-sbc'  ]))
-	$opts['sip-sbc'  ] = null;
+include_once( GS_DIR .'inc/gs-fns/gs_gen_globalconf.php' );
 
 
 /***********************************************************
 *    call the function
 ***********************************************************/
-
-$ret = @ gs_host_add( $opts['host'], $opts['comment'], $opts['foreign'], $opts['group-id'], $opts['prefix'], $opts['sip-proxy'], $opts['sip-sbc'] );
-if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
-if (! $ret)            gs_script_error();
-echo "Host added.\n";
-
+echo "Generating config-file from database...\n";
+$user = @gs_generate_autoconf_php();
+if (isGsError( $user )) gs_script_error( $user->getMsg() );
+if (! $user)            gs_script_error();
+echo "done.\n";
 ?>
