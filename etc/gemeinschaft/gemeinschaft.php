@@ -53,7 +53,7 @@ $INSTALLATION_TYPE      = 'single';
 
 
 /***********************************************************
-*    DB
+*    DATABASE
 ***********************************************************/
 
 //----------------------[  Master  ]----------------------//
@@ -83,5 +83,13 @@ $DB_SLAVE_DB            = 'asterisk';
 
 $DB_MASTER_TRANSACTIONS = true;     # use transactions?
 
-//Where is the rest of the Config?: It has been moved to the Database! Please use the GUI or the scripts for configuration!
-?>
+
+
+/***********************************************************
+*    ...
+***********************************************************/
+
+# Where is the rest of the config?: It has been moved to the
+# database! Please use the GUI or the scripts for configuration.
+
+
