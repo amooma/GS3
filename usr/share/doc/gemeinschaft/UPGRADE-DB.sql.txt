@@ -643,11 +643,17 @@ ALTER TABLE `routes`
   REFERENCES `user_groups` (`id`)
   ON DELETE CASCADE ON UPDATE CASCADE;
 
+
 --
--- since rev. 6438
+-- since rev. 6440
 --
 
 USE `asterisk`;
+
+
+--
+-- Create new table `config_options`:
+--
 
 CREATE TABLE IF NOT EXISTS `config_options` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -660,10 +666,6 @@ CREATE TABLE IF NOT EXISTS `config_options` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
---
--- Dumping data for table `config_options`
---
 
 LOCK TABLES `config_options` WRITE;
 /*!40000 ALTER TABLE `config_options` DISABLE KEYS */;
@@ -803,5 +805,6 @@ INSERT INTO `config_options` VALUES (458,'LOG_SYSLOG_FACILITY','SELECT','local0|
 INSERT INTO `config_options` VALUES (459,'LOG_LEVEL','SELECT','FATAL|WARNING|NOTICE|DEBUG',NULL,'NOTICE','/log');
 /*!40000 ALTER TABLE `config_options` ENABLE KEYS */;
 UNLOCK TABLES;
+
 
 
