@@ -239,8 +239,7 @@ $MODULES['admin'    ]=  array(
 		'pgroups'      => array('title' => __('Rufannahmegrp.#pl')),
 		//'ivrs'         => array('title' => __('IVRs')),
 		'calls'        => array('title' => __('CDRs')),
-		'reload'       => array('title' => __('Reload')),
-		'globalconf'   => array('title' => __('Konfiguration'))
+		'reload'       => array('title' => __('Reload'))
 	)
 );
 if (gs_get_conf('GS_BOI_ENABLED')) {
