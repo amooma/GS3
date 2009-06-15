@@ -1296,7 +1296,7 @@ context to-internal-users-self {
  		if("${MEMBERINTERFACE}" != "" && "SIP/${CALLERID(ani)}" != "${MEMBERINTERFACE}" ) {
  			Set(exttype=queue);
  		}
- 		/*
+		/*
  		Verbose(1,###### DIALSTATUS     : ${DIALSTATUS});
  		Verbose(1,###### exttype        : ${exttype});
  		Verbose(1,###### CALLERID(all)  : ${CALLERID(all)});
@@ -1308,7 +1308,7 @@ context to-internal-users-self {
  		Verbose(1,###### user_name      : ${user_name});
  		Verbose(1,###### forwarded_to   : ${forwarded_to});
  		Verbose(1,###### CHANNEL        : ${CHANNEL});
- 		*/
+		*/
 
 		if ("${is_huntgroup}" = "1" && "${DIALSTATUS}" = "ANSWER" && "${user_extension}" != "")
 			Set(exttype=huntgroup);
@@ -1345,6 +1345,13 @@ context to-internal-users-self {
 			} else if ("${CHANNEL:0:5}" != "Local") {
 				&dial-log-store(${forwarded_to},${type},${CALLERID(num)},0);
 			}
+			else if ("${forwarded_to:0:3}" == "vm*" ) {
+				&dial-log-store(${forwarded_to:3},${type},${CALLERID(num)},0);
+			}
+			else if ("${forwarded_to:0:2}" == "vm" ) {
+				&dial-log-store(${forwarded_to:2},${type},${CALLERID(num)},0);
+			}
+				
 
 		}
 		else if ("${exttype}" = "queue") {
