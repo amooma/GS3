@@ -741,7 +741,7 @@ context voicemail-any-self {
 //  Macro to Record VM Box Announcements
 //---------------------------------------------------------------------
 
-macro vm-record( msource ) {
+macro vm-record-file ( ) {
 	
 	if ("${msource}" = "internal" || "${msource}" = "external") {
 		Answer();
@@ -758,20 +758,125 @@ macro vm-record( msource ) {
 }
 
 
+
+macro vm-record() {
+	
+	if ("${msource}" = "internal" || "${msource}" = "external") {
+		AGI(/opt/gemeinschaft/dialplan-scripts/vm-rec-exists.agi,${user_name},${msource});
+		if( "${vm_rec_exists}" = "1" ) 
+			goto vm-ann-main-full|s|1;
+		else
+			&vm-record-file();
+
+	}
+	Hangup();
+}
+
+
+
+
+
+macro vm-play-file() {
+	
+	if ("${msource}" = "internal" || "${msource}" = "external") {
+		Playback(/opt/gemeinschaft/vm-rec/${user_name}-${msource});
+		Wait(0.5);
+	}
+}
+
+macro vm-remove-file() {
+	
+	if ("${msource}" = "internal" || "${msource}" = "external") {
+		AGI(/opt/gemeinschaft/dialplan-scripts/vm-rec-remove.agi,${user_name},${msource});
+		if( "${vm_rec_removed}" = "1" ) { 
+			Playback(/opt/gemeinschaft/sounds/de-DE/ansage_geloescht);
+		}
+		else {
+			Playback(/opt/gemeinschaft/sounds/de-DE/loeschen_fehler);
+		}
+		
+		Playback(/opt/gemeinschaft/sounds/de-DE/auf-wiedersehen);
+		Hangup();	
+
+	}
+	Hangup();
+}
+
+
 //---------------------------------------------------------------------
 //  Record VM Box Announcements
 //---------------------------------------------------------------------
+
+
+
+context vm-ann-main-full {
+	 s => {
+		&vm-play-file();
+		Wait(0.5);
+		Background(/opt/gemeinschaft/sounds/de-DE/1_aufnahme_nicht_erreichbar);
+		Wait(0.2);
+		Background(/opt/gemeinschaft/sounds/de-DE/2_ansage_loeschen);
+		Wait(0.2);
+		Background(/opt/gemeinschaft/sounds/de-DE/raute_taste_verlassen);
+		WaitExten(10);
+	}
+
+	h => Hangup();
+
+	i => goto #|1;
+
+	t => goto #|1;
+
+	# => {
+		Playback(/opt/gemeinschaft/sounds/de-DE/auf-wiedersehen);
+		Hangup();
+	}
+
+	1 => &vm-record-file();
+
+	2 => goto vm-ann-del-ok|s|1;
+
+}
+
+context vm-ann-del-ok {
+	
+	s => {
+		Background(/opt/gemeinschaft/sounds/de-DE/loeschen_ok);
+		WaitExten(10);
+	}
+
+	h => Hangup();
+
+	i => goto t|1;
+
+	t => {
+		Playback(/opt/gemeinschaft/sounds/de-DE/auf-wiedersehen);
+		Hangup();
+	}
+
+	# => goto t|1;
+
+	* => &vm-remove-file();
+
+
+}
 
 context vm-ann-rec {
 	
 	vm_rec_internal => {
 		Set(CDR(amaflags)=OMIT);
-		&vm-record(internal);
+		Set(__msource=internal);
+		Answer();
+		Wait(0.5);
+		&vm-record();
 		Hangup();
 	}
 	vm_rec_external => {
 		Set(CDR(amaflags)=OMIT);
-		&vm-record(external);
+		Set(__msource=external);
+		Answer();
+		Wait(0.5);
+		&vm-record();
 		Hangup();
 	}
 	#include "/opt/gemeinschaft/etc/asterisk/e-number-vm-rec-internal.ael"
