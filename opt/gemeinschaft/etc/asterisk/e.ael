@@ -749,9 +749,15 @@ macro vm-record-file ( ) {
 		Playback(vm-extension);
 		SayDigits(${user_name});
 		Playback(vm-rec-unv);
-		Record(/opt/gemeinschaft/vm-rec/${user_name}-${msource}.alaw,5,300);
-		Playback(vm-msgsaved);
-		Playback(/opt/gemeinschaft/vm-rec/${user_name}-${msource});
+		Record(/tmp/${user_name}-${msource}.alaw,5,300);
+		AGI(/opt/gemeinschaft/dialplan-scripts/vm-rec-move.agi,${user_name},${msource});
+		if( "${vm_rec_moved}" = "1" ) {
+			Playback(vm-msgsaved);
+			Playback(/opt/gemeinschaft/vm-rec/${user_name}-${msource});
+		}
+		else {
+			Playback(/opt/gemeinschaft/sounds/de-DE/aufzeichnen_fehler);
+		} 
 		Wait(1);
 	}
 	Hangup();
