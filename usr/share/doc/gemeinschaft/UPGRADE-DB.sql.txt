@@ -644,4 +644,54 @@ ALTER TABLE `routes`
   ON DELETE CASCADE ON UPDATE CASCADE;
 
 
+--
+-- since rev. XXXX   //FIXME - development branch
+--
+
+USE `asterisk`;
+
+
+--
+-- Add new tables for group-based permissions:
+--
+
+CREATE TABLE `groups` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(20) character set ascii NOT NULL,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL default '',
+  `type` varchar(20) character set ascii NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `name` (`name`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `group_members` (
+  `group` mediumint(8) unsigned NOT NULL,
+  `member` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`group`,`member`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `group_includes` (
+  `group` mediumint(8) unsigned NOT NULL,
+  `member` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`group`,`member`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `group_connections` (
+  `type` varchar(20) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,
+  `key` varchar(20) character set ascii NOT NULL default 'id',
+  `connection` varchar(120) collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`type`,`group`,`connection`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `group_permissions` (
+  `type` varchar(20) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,
+  `permit` mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`type`,`group`,`permit`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
 
