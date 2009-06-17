@@ -14,8 +14,8 @@
     </copyright>
 
     <legalnotice id="gpl-legalnotice">
-      <para><address>Free Software Foundation, Inc. 
-<street>51 Franklin Street, Fifth Floor</street>, 
+      <para><address>Free Software Foundation, Inc.
+<street>51 Franklin Street, Fifth Floor</street>,
 <city>Boston</city>, <state>MA</state> <postcode>02110-1301</postcode>
 <country>USA</country></address></para>
 
@@ -24,11 +24,13 @@
     </legalnotice>
 
     <releaseinfo>Version 2, June 1991</releaseinfo>
+
+    <biblioid class="uri">http://www.gnu.org/licenses/gpl.html</biblioid>
   </appendixinfo>
 
-  <title>GNU General Public License</title>
+  <title>GNU General Public License (GPL)</title>
 
-  <section id="gpl-1">
+  <section id="gpl-preamble">
     <title>Preamble</title>
 
     <para>The licenses for most software are designed to take away your
@@ -87,10 +89,12 @@
   </section>
 
   <section id="gpl-2">
-    <title>TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND
-    MODIFICATION</title>
+    <title>Terms and conditions for copying, distribution and
+    modification</title>
 
-    <section id="gpl-2-0">
+    <?dbhtml stop-chunking?>
+
+    <section id="gpl-terms-and-conditions-0">
       <title>Section 0</title>
 
       <para>This License applies to any program or other work which contains a
@@ -112,7 +116,7 @@
       is true depends on what the Program does.</para>
     </section>
 
-    <section id="gpl-2-1">
+    <section id="gpl-terms-and-conditions-1">
       <title>Section 1</title>
 
       <para>You may copy and distribute verbatim copies of the Program's
@@ -128,14 +132,15 @@
       fee.</para>
     </section>
 
-    <section id="gpl-2-2">
+    <section id="gpl-terms-and-conditions-2">
       <title>Section 2</title>
 
       <para>You may modify your copy or copies of the Program or any portion
       of it, thus forming a work based on the Program, and copy and distribute
       such modifications or work under the terms of <link
-      linkend="gpl-2-1">Section 1</link> above, provided that you also meet
-      all of these conditions: <orderedlist numeration="loweralpha">
+      linkend="gpl-terms-and-conditions-1">Section 1</link> above, provided
+      that you also meet all of these conditions: <orderedlist
+          numeration="loweralpha">
           <listitem>
             <para>You must cause the modified files to carry prominent notices
             stating that you changed the files and the date of any
@@ -185,36 +190,43 @@
       under the scope of this License.</para>
     </section>
 
-    <section id="gpl-2-3">
+    <section id="gpl-terms-and-conditions-3">
       <title>Section 3</title>
 
       <para>You may copy and distribute the Program (or a work based on it,
-      under <link linkend="gpl-2-2">Section 2</link> in object code or
-      executable form under the terms of <link linkend="gpl-2-1">Sections
-      1</link> and <link linkend="gpl-2-2">2</link> above provided that you
+      under <link linkend="gpl-terms-and-conditions-2">Section 2</link> in
+      object code or executable form under the terms of <link
+      linkend="gpl-terms-and-conditions-1">Sections 1</link> and <link
+      linkend="gpl-terms-and-conditions-2">2</link> above provided that you
       also do one of the following: <orderedlist numeration="loweralpha">
-          <listitem>
+          <listitem id="gpl-terms-and-conditions-3-a">
             <para>Accompany it with the complete corresponding
             machine-readable source code, which must be distributed under the
-            terms of Sections 1 and 2 above on a medium customarily used for
-            software interchange; or,</para>
+            terms of <link linkend="gpl-terms-and-conditions-1">Sections
+            1</link> and <link linkend="gpl-terms-and-conditions-2">2</link>
+            above on a medium customarily used for software interchange;
+            or,</para>
           </listitem>
 
-          <listitem>
+          <listitem id="gpl-terms-and-conditions-3-b">
             <para>Accompany it with a written offer, valid for at least three
             years, to give any third party, for a charge no more than your
             cost of physically performing source distribution, a complete
             machine-readable copy of the corresponding source code, to be
-            distributed under the terms of Sections 1 and 2 above on a medium
+            distributed under the terms of <link
+            linkend="gpl-terms-and-conditions-1">Sections 1</link> and <link
+            linkend="gpl-terms-and-conditions-2">2</link> above on a medium
             customarily used for software interchange; or,</para>
           </listitem>
 
-          <listitem>
+          <listitem id="gpl-terms-and-conditions-3-c">
             <para>Accompany it with the information you received as to the
             offer to distribute corresponding source code. (This alternative
             is allowed only for noncommercial distribution and only if you
             received the program in object code or executable form with such
-            an offer, in accord with Subsection b above.)</para>
+            an offer, in accord with <link
+            linkend="gpl-terms-and-conditions-3-b">Subsection b</link>
+            above.)</para>
           </listitem>
         </orderedlist></para>
 
@@ -236,7 +248,7 @@
       source along with the object code.</para>
     </section>
 
-    <section id="gpl-2-4">
+    <section id="gpl-terms-and-conditions-4">
       <title>Section 4</title>
 
       <para>You may not copy, modify, sublicense, or distribute the Program
@@ -248,7 +260,7 @@
       full compliance.</para>
     </section>
 
-    <section id="gpl-2-5">
+    <section id="gpl-terms-and-conditions-5">
       <title>Section 5</title>
 
       <para>You are not required to accept this License, since you have not
@@ -261,7 +273,7 @@
       Program or works based on it.</para>
     </section>
 
-    <section id="gpl-2-6">
+    <section id="gpl-terms-and-conditions-6">
       <title>Section 6</title>
 
       <para>Each time you redistribute the Program (or any work based on the
@@ -273,7 +285,7 @@
       License.</para>
     </section>
 
-    <section id="gpl-2-7">
+    <section id="gpl-terms-and-conditions-7">
       <title>Section 7</title>
 
       <para>If, as a consequence of a court judgment or allegation of patent
@@ -309,7 +321,7 @@
       to be a consequence of the rest of this License.</para>
     </section>
 
-    <section id="gpl-2-8">
+    <section id="gpl-terms-and-conditions-8">
       <title>Section 8</title>
 
       <para>If the distribution and/or use of the Program is restricted in
@@ -321,7 +333,7 @@
       limitation as if written in the body of this License.</para>
     </section>
 
-    <section id="gpl-2-9">
+    <section id="gpl-terms-and-conditions-9">
       <title>Section 9</title>
 
       <para>The Free Software Foundation may publish revised and/or new
@@ -338,7 +350,7 @@
       ever published by the Free Software Foundation.</para>
     </section>
 
-    <section id="gpl-2-10">
+    <section id="gpl-terms-and-conditions-10">
       <title>Section 10</title>
 
       <para>If you wish to incorporate parts of the Program into other free
@@ -351,39 +363,41 @@
       generally.</para>
     </section>
 
-    <section id="gpl-2-11">
-      <title>Section 11 - NO WARRANTY</title>
+    <section id="gpl-terms-and-conditions-11">
+      <title>Section 11 &#8211; <emphasis>No warranty</emphasis></title>
 
-      <para>BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO
-      WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.
-      EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR
-      OTHER PARTIES PROVIDE THE PROGRAM <quote>AS IS</quote> WITHOUT WARRANTY
-      OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
-      THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-      PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE
-      PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE
-      COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</para>
+      <para><emphasis role="bold">Because the Program is licensed free of
+      charge, there is no warranty for the Program, to the extent permitted by
+      applicable law. Except when otherwise stated in writing the copyright
+      holders and/or other parties provide the Program <quote>as is</quote>
+      without warranty of any kind, either expressed or implied, including,
+      but not limited to, the implied warranties of merchantability and
+      fitness for a particular purpose. the entire risk as to the quality and
+      performance of the Program is with you. Should the Program prove
+      defective, you assume the cost of all necessary servicing, repair or
+      correction.</emphasis></para>
     </section>
 
-    <section id="gpl-2-12">
+    <section id="gpl-terms-and-conditions-12">
       <title>Section 12</title>
 
-      <para>IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN
-      WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY
-      AND/OR REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR
-      DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL
-      DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM
-      (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED
-      INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF
-      THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR
-      OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</para>
+      <para><emphasis role="bold">In no event unless required by applicable
+      law or agreed to in writing will any copyright holder, or any other
+      party who may modify and/or redistribute the Program as permitted above,
+      be liable to you for damages, including any general, special, incidental
+      or consequential damages arising out of the use or inability to use the
+      Program (including but not limited to loss of data or data being
+      rendered inaccurate or losses sustained by you or third parties or a
+      failure of the Program to operate with any other programs), even if such
+      holder or other party has been advised of the possibility of such
+      damages.</emphasis></para>
 
-      <para>END OF TERMS AND CONDITIONS</para>
+      <para><emphasis>End of terms and conditions</emphasis></para>
     </section>
   </section>
 
-  <section id="gpl-3">
-    <title>How to Apply These Terms to Your New Programs</title>
+  <section id="gpl-how-to-apply-these-terms-to-your-new-programs">
+    <title>How to apply these terms to your new programs</title>
 
     <para>If you develop a new program, and you want it to be of the greatest
     possible use to the public, the best way to achieve this is to make it
@@ -396,22 +410,22 @@
     <quote>copyright</quote> line and a pointer to where the full notice is
     found.</para>
 
-    <para>&lt;one line to give the program's name and a brief idea of what it
-    does.&gt; Copyright (C) &lt;year&gt; &lt;name of author&gt;</para>
+    <literallayout class="monospaced"><replaceable>&lt;one line to give the program's name and a brief idea of what it does.&gt;</replaceable>
+Copyright (C) <replaceable>&lt;year&gt;</replaceable> <replaceable>&lt;name of author&gt;</replaceable>
 
-    <para>This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by the
-    Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.</para>
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
-    <para>This program is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-    or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
-    for more details.</para>
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    <para>You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA</para>
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.</literallayout>
 
     <para>Also add information on how to contact you by electronic and paper
     mail.</para>
@@ -419,28 +433,26 @@
     <para>If the program is interactive, make it output a short notice like
     this when it starts in an interactive mode:</para>
 
-    <para>Gnomovision version 69, Copyright (C) year name of author
-    Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type
-    <quote>show w</quote>. This is free software, and you are welcome to
-    redistribute it under certain conditions; type <quote>show c</quote> for
-    details.</para>
+    <literallayout class="monospaced"><replaceable>Gnomovision</replaceable> <replaceable>version 69</replaceable>, Copyright (C) <replaceable>year</replaceable> <replaceable>name of author</replaceable>
+<replaceable>Gnomovision</replaceable> comes with ABSOLUTELY NO WARRANTY; <replaceable>for details type 'show w'</replaceable>.
+This is free software, and you are welcome to redistribute it
+under certain conditions; <replaceable>type 'show c' for details</replaceable>.</literallayout>
 
     <para>The hypothetical commands <quote>show w</quote> and <quote>show
     c</quote> should show the appropriate parts of the General Public License.
     Of course, the commands you use may be called something other than
     <quote>show w</quote> and <quote>show c</quote>; they could even be
-    mouse-clicks or menu items--whatever suits your program.</para>
+    mouse-clicks or menu items &#8211; whatever suits your program.</para>
 
     <para>You should also get your employer (if you work as a programmer) or
     your school, if any, to sign a <quote>copyright disclaimer</quote> for the
     program, if necessary. Here is a sample; alter the names:</para>
 
-    <para>Yoyodyne, Inc., hereby disclaims all copyright interest in the
-    program <quote>Gnomovision</quote> (which makes passes at compilers)
-    written by James Hacker.</para>
+    <literallayout class="monospaced"><replaceable>Yoyodyne, Inc.,</replaceable> hereby disclaims all copyright interest in the program
+'<replaceable>Gnomovision</replaceable>' <replaceable>(which makes passes at compilers)</replaceable> written by <replaceable>James Hacker</replaceable>.
 
-    <para>&lt;signature of Ty Coon&gt;, 1 April 1989 Ty Coon, President of
-    Vice</para>
+<replaceable>&lt;signature of Ty Coon&gt;</replaceable>, <replaceable>1 April 1989</replaceable>
+<replaceable>Ty Coon</replaceable>, <replaceable>President of Vice</replaceable></literallayout>
 
     <para>This General Public License does not permit incorporating your
     program into proprietary programs. If your program is a subroutine
