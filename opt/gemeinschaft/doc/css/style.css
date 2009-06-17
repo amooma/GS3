@@ -1,0 +1,299 @@
+/*
+$Revision$
+*/
+
+html {
+	border-left: 6px solid #f6d;
+	border-right: 8px solid #ffa;
+	background: #fff;
+}
+
+body {
+	font-family: serif;
+	padding: 0.5em 0.8em;
+	max-width: 60em;
+	margin: 0 auto;
+	font-size: 11.5pt;
+	line-height: 1.3em;
+	background: #fff;
+	color: #000;
+}
+
+img {
+	vertical-align: middle;
+}
+
+p { /* para */
+	max-width: 48em;
+	margin: 1px;
+	padding: 0.2em 0 0.3em 0;
+	font-size: 1.02em;
+}
+dd { /* simpara in list entry */
+	max-width: 50em;
+}
+
+pre {
+	/*max-width: 700px;*/
+	white-space: pre;
+	white-space: pre-wrap;
+}
+
+.programlisting {
+	background: #ddf;
+	border: 1px solid #aad;
+}
+.screen {
+	background: #dfd;
+	border: 1px solid #aca;
+}
+.literallayout {
+	background: #ddd;
+}
+.synopsis {
+	background: #ddd;
+	padding: 0.2em;
+}
+.programlisting,
+.screen {
+	padding: 0.5em;
+	line-height: 1.05em;
+	margin: 1px 0 5px 0;
+	font-size: 0.92em;
+	font-family: Courier, Courier New, Monaco, monospace;
+}
+.literallayout {
+	padding: 0.1em 0.4em;
+	line-height: 1.05em;
+	margin: 0.1em 0 0.3em 0;
+	font-size: 0.92em;
+	font-family: Courier, Courier New, Monaco, monospace;
+}
+code, .code {
+	/*background: #ddf;*/
+	padding: 0 2px;
+	font-family: Courier, Courier New, Monaco, monospace;
+	font-size: 0.96em;
+}
+.command {
+	font-family: Courier, Courier New, Monaco, monospace;
+	color: #038;
+}
+.prompt {
+	color: #903;
+}
+
+.literallayout p {
+	margin: 0; padding 0;
+}
+
+h1, h2, h3, h4, h5, h6, h7, .title {
+	font-family: Trebuchet MS, Arial, Helvetica, sans-serif;
+	color: #009;
+	line-height: 1em;
+	padding: 0.1em;
+	margin: 0.6em 0 0.3em 0;
+}
+h1.title    { font-size: 2.5em; }
+h1.subtitle { font-size: 2.4em; }
+h2.title    { font-size: 2.2em; }
+h2.subtitle { font-size: 2.1em; }
+h3.title    { font-size: 1.9em; }
+h3.subtitle { font-size: 1.8em; }
+h4.title    { font-size: 1.7em; }
+h4.subtitle { font-size: 1.6em; }
+h5.title    { font-size: 1.5em; }
+h5.subtitle { font-size: 1.4em; }
+h6.title    { font-size: 1.3em; }
+h6.subtitle { font-size: 1.2em; }
+h7.title    { font-size: 1.1em; }
+h7.subtitle { font-size: 1.1em; }
+
+h1.author,
+h2.author,
+h3.author,
+h4.author,
+h5.author,
+h6.author,
+h7.author { font-size: 0.9em; }
+
+.indexdiv h3 {
+	font-size: 2.0em;
+}
+.indexdiv > dl {
+	margin-left: 50px;
+}
+
+
+a {
+	color: #00d;
+	text-decoration: none;
+	border-bottom: 1px none #66f;
+}
+a:hover {
+	text-decoration: none;
+	border-bottom: 1px dotted #00f;
+}
+a img {
+	border: 0;
+}
+a:visited {
+	color: #a0d;
+}
+
+
+
+sup {
+	vertical-align: top;
+	padding-left: 1px;
+}
+
+.footnotes .footnote {
+	font-size: 0.94em;
+	line-height: 1.1em;
+}
+
+small {
+	font-size: 0.94em;
+	line-height: 1.1em;
+}
+
+
+.tip,
+.note,
+.important,
+.caution,
+.warning {
+	padding: 0.05em;
+	margin: 0.2em 3em;
+	border-width: 0 1px 1px 0;
+	border-style: none solid solid none;
+}
+
+.tip {
+	background: #efe;
+	border-color: transparent #dcc #dcc transparent;
+}
+.note {
+	background: #dfd;
+	border-color: transparent #dcc #dcc transparent;
+}
+.important {
+	background: #ffc;
+	border-color: transparent #dcc #dcc transparent;
+}
+.warning {
+	background: #fed;
+	border-color: transparent #dcc #dcc transparent;
+}
+.warning {
+	background: #fdd;
+	border-color: transparent #dcc #dcc transparent;
+}
+
+
+.tip td p,
+.note td p,
+.important td p,
+.caution td p,
+.warning td p {
+	margin-top: -4px;
+	padding: 2px 2px 3px 3px;
+}
+.tip td p {
+	color: #350;
+	background: #ffd;
+}
+.note td p {
+	color: #350;
+	background: #efe;
+}
+.important td p {
+	color: #330;
+	background: #ffd;
+}
+.caution td p,
+.warning td p{
+	color: #930;
+	background: #fed;
+}
+
+.itemizedlist li p {
+	margin: 0;
+	padding: 0 0 0.2em 1em;
+}
+.itemizedlist li p:first-child {
+	padding-left: 0;
+}
+
+.variablelist .term {
+	font-weight: bold;
+}
+
+.replaceable {
+	font-weight: normal;
+	font-style: italic;
+	color: #906;
+}
+
+.synopsis {
+	font-weight: bold;
+	margin: 0.2em 0 0.8em 0;
+}
+
+
+.breadcrumbs {
+	/*
+	background: #e0e0e0;
+	border-bottom: 1px solid #999;
+	*/
+	padding: 0.1em 0.2em;
+	font-family: sans-serif;
+}
+
+.navheader,
+.navfooter {
+	background: #ddd;
+	font-size: 0.94em;
+	line-height: 1em;
+	font-family: sans-serif;
+}
+.navheader {
+	border-top: 1px solid #999;
+}
+.navfooter {
+	margin: 1em 0 0 0;
+}
+
+.toc {
+	background: #ffe;
+	border: 1px dotted #aa9;
+	padding: 0.1em 0.5em 0.2em 0.5em;
+	max-width: 30em;
+	font-family: sans-serif;
+	font-size: 0.9em;
+	margin: 0 0 0.7em 0;
+}
+/*
+.toc:before {
+	content: "Inhaltsverzeichnis";
+	font-weight: bold;
+	font-size: 0.9em;
+	margin: 0; padding: 0;
+}
+*/
+.toc p {
+	margin: 0;
+	padding: 0.1em 0;
+	font-size: 0.92em;
+	text-align: center;
+}
+.toc dl {
+	margin: 0.2em 0 0 0;
+	padding: 0;
+	line-height: 1.2em;
+}
+.toc dl dt {
+	margin: 0; padding: 0;
+}
+
