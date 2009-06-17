@@ -1,0 +1,1088 @@
+====================================================================
+= build-log-man-xsl:   make man-xsl
+====================================================================
+make[2]: Entering directory `/usr/src/gemeinschaft-trunk-fresh/opt/gemeinschaft/doc/de'
+mkdir -p tmp
+sleep 1
+date '+%Y-%m-%d %H:%M:00 %z' > tmp/_tmp_dir-stamp
+touch -d "`cat tmp/_tmp_dir-stamp`" tmp
+Checking for xmllint ...
+date > tmp/_have-xmllint-stamp
+touch -d "`cat tmp/_tmp_dir-stamp`" tmp
+Checking for xmlto ...
+date > tmp/_have-xmlto-stamp
+touch -d "`cat tmp/_tmp_dir-stamp`" tmp
+############################################################
+#  Making man pages ...                                    #
+############################################################
+Transforming to man pages ...
+mkdir -p man
+make _man-xsl
+make[3]: Entering directory `/usr/src/gemeinschaft-trunk-fresh/opt/gemeinschaft/doc/de'
+### man/gs-boi-admin-add.man gs-boi-admin-add ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-boi-admin-add.xml.one-file gs-boi-admin-add.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-boi-admin-add.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-boi-admin-add
+Note: meta source : see http://docbook.sf.net/el/productname       gs-boi-admin-add
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-boi-admin-add
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-boi-admin-add
+Note: meta version: no *info/productnumber or alternative          gs-boi-admin-add
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-boi-admin-add
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-boi-admin-add
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-boi-admin-add
+Note: meta manual : no titled ancestor of refentry                 gs-boi-admin-add
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-boi-admin-add
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-boi-admin-add
+Note: Writing gs-boi-admin-add.8
+
+### man/gs-boi-admin-del.man gs-boi-admin-del ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-boi-admin-del.xml.one-file gs-boi-admin-del.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-boi-admin-del.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-boi-admin-del
+Note: meta source : see http://docbook.sf.net/el/productname       gs-boi-admin-del
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-boi-admin-del
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-boi-admin-del
+Note: meta version: no *info/productnumber or alternative          gs-boi-admin-del
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-boi-admin-del
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-boi-admin-del
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-boi-admin-del
+Note: meta manual : no titled ancestor of refentry                 gs-boi-admin-del
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-boi-admin-del
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-boi-admin-del
+Note: Writing gs-boi-admin-del.8
+
+### man/gs-boi-admins-get.man gs-boi-admins-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-boi-admins-get.xml.one-file gs-boi-admins-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-boi-admins-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-boi-admins-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-boi-admins-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-boi-admins-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-boi-admins-get
+Note: meta version: no *info/productnumber or alternative          gs-boi-admins-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-boi-admins-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-boi-admins-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-boi-admins-get
+Note: meta manual : no titled ancestor of refentry                 gs-boi-admins-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-boi-admins-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-boi-admins-get
+Note: Writing gs-boi-admins-get.8
+
+### man/gs-boi-agency-add-simplified.man gs-boi-agency-add-simplified ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-boi-agency-add-simplified.xml.one-file gs-boi-agency-add-simplified.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-boi-agency-add-simplified.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-boi-agency-add-simplified
+Note: meta source : see http://docbook.sf.net/el/productname       gs-boi-agency-add-simplified
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-boi-agency-add-simplified
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-boi-agency-add-simplified
+Note: meta version: no *info/productnumber or alternative          gs-boi-agency-add-simplified
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-boi-agency-add-simplified
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-boi-agency-add-simplified
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-boi-agency-add-simplified
+Note: meta manual : no titled ancestor of refentry                 gs-boi-agency-add-simplified
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-boi-agency-add-simplified
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-boi-agency-add-simplified
+Note: Writing gs-boi-agency-add-simplified.8
+
+### man/gs-callblocking-get.man gs-callblocking-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-callblocking-get.xml.one-file gs-callblocking-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-callblocking-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-callblocking-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-callblocking-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-callblocking-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-callblocking-get
+Note: meta version: no *info/productnumber or alternative          gs-callblocking-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-callblocking-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-callblocking-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-callblocking-get
+Note: meta manual : no titled ancestor of refentry                 gs-callblocking-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-callblocking-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-callblocking-get
+Note: Writing gs-callblocking-get.8
+
+### man/gs-callblocking-set.man gs-callblocking-set ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-callblocking-set.xml.one-file gs-callblocking-set.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-callblocking-set.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-callblocking-set
+Note: meta source : see http://docbook.sf.net/el/productname       gs-callblocking-set
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-callblocking-set
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-callblocking-set
+Note: meta version: no *info/productnumber or alternative          gs-callblocking-set
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-callblocking-set
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-callblocking-set
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-callblocking-set
+Note: meta manual : no titled ancestor of refentry                 gs-callblocking-set
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-callblocking-set
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-callblocking-set
+Note: Writing gs-callblocking-set.8
+
+### man/gs-callforward-activate.man gs-callforward-activate ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-callforward-activate.xml.one-file gs-callforward-activate.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-callforward-activate.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-callforward-activate
+Note: meta source : see http://docbook.sf.net/el/productname       gs-callforward-activate
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-callforward-activate
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-callforward-activate
+Note: meta version: no *info/productnumber or alternative          gs-callforward-activate
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-callforward-activate
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-callforward-activate
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-callforward-activate
+Note: meta manual : no titled ancestor of refentry                 gs-callforward-activate
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-callforward-activate
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-callforward-activate
+Note: Writing gs-callforward-activate.8
+
+### man/gs-callforward-get.man gs-callforward-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-callforward-get.xml.one-file gs-callforward-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-callforward-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-callforward-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-callforward-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-callforward-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-callforward-get
+Note: meta version: no *info/productnumber or alternative          gs-callforward-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-callforward-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-callforward-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-callforward-get
+Note: meta manual : no titled ancestor of refentry                 gs-callforward-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-callforward-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-callforward-get
+Note: Writing gs-callforward-get.8
+
+### man/gs-callforward-number-set.man gs-callforward-number-set ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-callforward-number-set.xml.one-file gs-callforward-number-set.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-callforward-number-set.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-callforward-number-set
+Note: meta source : see http://docbook.sf.net/el/productname       gs-callforward-number-set
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-callforward-number-set
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-callforward-number-set
+Note: meta version: no *info/productnumber or alternative          gs-callforward-number-set
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-callforward-number-set
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-callforward-number-set
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-callforward-number-set
+Note: meta manual : no titled ancestor of refentry                 gs-callforward-number-set
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-callforward-number-set
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-callforward-number-set
+Note: Writing gs-callforward-number-set.8
+
+### man/gs-callforward-set.man gs-callforward-set ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-callforward-set.xml.one-file gs-callforward-set.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-callforward-set.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-callforward-set
+Note: meta source : see http://docbook.sf.net/el/productname       gs-callforward-set
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-callforward-set
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-callforward-set
+Note: meta version: no *info/productnumber or alternative          gs-callforward-set
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-callforward-set
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-callforward-set
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-callforward-set
+Note: meta manual : no titled ancestor of refentry                 gs-callforward-set
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-callforward-set
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-callforward-set
+Note: Writing gs-callforward-set.8
+
+### man/gs-callforward-timeout-set.man gs-callforward-timeout-set ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-callforward-timeout-set.xml.one-file gs-callforward-timeout-set.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-callforward-timeout-set.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-callforward-timeout-set
+Note: meta source : see http://docbook.sf.net/el/productname       gs-callforward-timeout-set
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-callforward-timeout-set
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-callforward-timeout-set
+Note: meta version: no *info/productnumber or alternative          gs-callforward-timeout-set
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-callforward-timeout-set
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-callforward-timeout-set
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-callforward-timeout-set
+Note: meta manual : no titled ancestor of refentry                 gs-callforward-timeout-set
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-callforward-timeout-set
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-callforward-timeout-set
+Note: Writing gs-callforward-timeout-set.8
+
+### man/gs-callwaiting-activate.man gs-callwaiting-activate ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-callwaiting-activate.xml.one-file gs-callwaiting-activate.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-callwaiting-activate.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-callwaiting-activate
+Note: meta source : see http://docbook.sf.net/el/productname       gs-callwaiting-activate
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-callwaiting-activate
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-callwaiting-activate
+Note: meta version: no *info/productnumber or alternative          gs-callwaiting-activate
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-callwaiting-activate
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-callwaiting-activate
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-callwaiting-activate
+Note: meta manual : no titled ancestor of refentry                 gs-callwaiting-activate
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-callwaiting-activate
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-callwaiting-activate
+Note: Writing gs-callwaiting-activate.8
+
+### man/gs-callwaiting-get.man gs-callwaiting-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-callwaiting-get.xml.one-file gs-callwaiting-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-callwaiting-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-callwaiting-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-callwaiting-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-callwaiting-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-callwaiting-get
+Note: meta version: no *info/productnumber or alternative          gs-callwaiting-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-callwaiting-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-callwaiting-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-callwaiting-get
+Note: meta manual : no titled ancestor of refentry                 gs-callwaiting-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-callwaiting-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-callwaiting-get
+Note: Writing gs-callwaiting-get.8
+
+### man/gs-clir-activate.man gs-clir-activate ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-clir-activate.xml.one-file gs-clir-activate.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-clir-activate.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-clir-activate
+Note: meta source : see http://docbook.sf.net/el/productname       gs-clir-activate
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-clir-activate
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-clir-activate
+Note: meta version: no *info/productnumber or alternative          gs-clir-activate
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-clir-activate
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-clir-activate
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-clir-activate
+Note: meta manual : no titled ancestor of refentry                 gs-clir-activate
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-clir-activate
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-clir-activate
+Note: Writing gs-clir-activate.8
+
+### man/gs-clir-get.man gs-clir-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-clir-get.xml.one-file gs-clir-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-clir-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-clir-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-clir-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-clir-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-clir-get
+Note: meta version: no *info/productnumber or alternative          gs-clir-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-clir-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-clir-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-clir-get
+Note: meta manual : no titled ancestor of refentry                 gs-clir-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-clir-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-clir-get
+Note: Writing gs-clir-get.8
+
+### man/gs-group-add.man gs-group-add ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-group-add.xml.one-file gs-group-add.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-group-add.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-group-add
+Note: meta source : see http://docbook.sf.net/el/productname       gs-group-add
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-group-add
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-group-add
+Note: meta version: no *info/productnumber or alternative          gs-group-add
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-group-add
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-group-add
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-group-add
+Note: meta manual : no titled ancestor of refentry                 gs-group-add
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-group-add
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-group-add
+Note: Writing gs-group-add.8
+
+### man/gs-group-del.man gs-group-del ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-group-del.xml.one-file gs-group-del.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-group-del.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-group-del
+Note: meta source : see http://docbook.sf.net/el/productname       gs-group-del
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-group-del
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-group-del
+Note: meta version: no *info/productnumber or alternative          gs-group-del
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-group-del
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-group-del
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-group-del
+Note: meta manual : no titled ancestor of refentry                 gs-group-del
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-group-del
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-group-del
+Note: Writing gs-group-del.8
+
+### man/gs-groups-get.man gs-groups-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-groups-get.xml.one-file gs-groups-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-groups-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-groups-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-groups-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-groups-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-groups-get
+Note: meta version: no *info/productnumber or alternative          gs-groups-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-groups-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-groups-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-groups-get
+Note: meta manual : no titled ancestor of refentry                 gs-groups-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-groups-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-groups-get
+Note: Writing gs-groups-get.8
+
+### man/gs-host-add.man gs-host-add ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-host-add.xml.one-file gs-host-add.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-host-add.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-host-add
+Note: meta source : see http://docbook.sf.net/el/productname       gs-host-add
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-host-add
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-host-add
+Note: meta version: no *info/productnumber or alternative          gs-host-add
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-host-add
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-host-add
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-host-add
+Note: meta manual : no titled ancestor of refentry                 gs-host-add
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-host-add
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-host-add
+Note: Writing gs-host-add.8
+
+### man/gs-host-phones-get.man gs-host-phones-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-host-phones-get.xml.one-file gs-host-phones-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-host-phones-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-host-phones-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-host-phones-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-host-phones-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-host-phones-get
+Note: meta version: no *info/productnumber or alternative          gs-host-phones-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-host-phones-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-host-phones-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-host-phones-get
+Note: meta manual : no titled ancestor of refentry                 gs-host-phones-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-host-phones-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-host-phones-get
+Note: Writing gs-host-phones-get.8
+
+### man/gs-hosts-get.man gs-hosts-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-hosts-get.xml.one-file gs-hosts-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-hosts-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-hosts-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-hosts-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-hosts-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-hosts-get
+Note: meta version: no *info/productnumber or alternative          gs-hosts-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-hosts-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-hosts-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-hosts-get
+Note: meta manual : no titled ancestor of refentry                 gs-hosts-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-hosts-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-hosts-get
+Note: Writing gs-hosts-get.8
+
+### man/gs-hosts-show-our-ids.man gs-hosts-show-our-ids ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-hosts-show-our-ids.xml.one-file gs-hosts-show-our-ids.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-hosts-show-our-ids.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-hosts-show-our-ids
+Note: meta source : see http://docbook.sf.net/el/productname       gs-hosts-show-our-ids
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-hosts-show-our-ids
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-hosts-show-our-ids
+Note: meta version: no *info/productnumber or alternative          gs-hosts-show-our-ids
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-hosts-show-our-ids
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-hosts-show-our-ids
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-hosts-show-our-ids
+Note: meta manual : no titled ancestor of refentry                 gs-hosts-show-our-ids
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-hosts-show-our-ids
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-hosts-show-our-ids
+Note: Writing gs-hosts-show-our-ids.8
+
+### man/gs-hosts-show-our-ips.man gs-hosts-show-our-ips ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-hosts-show-our-ips.xml.one-file gs-hosts-show-our-ips.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-hosts-show-our-ips.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-hosts-show-our-ips
+Note: meta source : see http://docbook.sf.net/el/productname       gs-hosts-show-our-ips
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-hosts-show-our-ips
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-hosts-show-our-ips
+Note: meta version: no *info/productnumber or alternative          gs-hosts-show-our-ips
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-hosts-show-our-ips
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-hosts-show-our-ips
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-hosts-show-our-ips
+Note: meta manual : no titled ancestor of refentry                 gs-hosts-show-our-ips
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-hosts-show-our-ips
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-hosts-show-our-ips
+Note: Writing gs-hosts-show-our-ips.8
+
+### man/gs-keys-get.man gs-keys-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-keys-get.xml.one-file gs-keys-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-keys-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-keys-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-keys-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-keys-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-keys-get
+Note: meta version: no *info/productnumber or alternative          gs-keys-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-keys-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-keys-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-keys-get
+Note: meta manual : no titled ancestor of refentry                 gs-keys-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-keys-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-keys-get
+Note: Writing gs-keys-get.8
+
+### man/gs-nobodies-change.man gs-nobodies-change ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-nobodies-change.xml.one-file gs-nobodies-change.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-nobodies-change.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-nobodies-change
+Note: meta source : see http://docbook.sf.net/el/productname       gs-nobodies-change
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-nobodies-change
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-nobodies-change
+Note: meta version: no *info/productnumber or alternative          gs-nobodies-change
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-nobodies-change
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-nobodies-change
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-nobodies-change
+Note: meta manual : no titled ancestor of refentry                 gs-nobodies-change
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-nobodies-change
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-nobodies-change
+Note: Writing gs-nobodies-change.8
+
+### man/gs-nobodies-move.man gs-nobodies-move ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-nobodies-move.xml.one-file gs-nobodies-move.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-nobodies-move.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-nobodies-move
+Note: meta source : see http://docbook.sf.net/el/productname       gs-nobodies-move
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-nobodies-move
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-nobodies-move
+Note: meta version: no *info/productnumber or alternative          gs-nobodies-move
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-nobodies-move
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-nobodies-move
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-nobodies-move
+Note: meta manual : no titled ancestor of refentry                 gs-nobodies-move
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-nobodies-move
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-nobodies-move
+Note: Writing gs-nobodies-move.8
+
+### man/gs-phones-firmware-upgrade.man gs-phones-firmware-upgrade ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-phones-firmware-upgrade.xml.one-file gs-phones-firmware-upgrade.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-phones-firmware-upgrade.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-phones-firmware-upgrade
+Note: meta source : see http://docbook.sf.net/el/productname       gs-phones-firmware-upgrade
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-phones-firmware-upgrade
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-phones-firmware-upgrade
+Note: meta version: no *info/productnumber or alternative          gs-phones-firmware-upgrade
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-phones-firmware-upgrade
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-phones-firmware-upgrade
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-phones-firmware-upgrade
+Note: meta manual : no titled ancestor of refentry                 gs-phones-firmware-upgrade
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-phones-firmware-upgrade
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-phones-firmware-upgrade
+Note: Writing gs-phones-firmware-upgrade.8
+
+### man/gs-pickupgroup-add.man gs-pickupgroup-add ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-pickupgroup-add.xml.one-file gs-pickupgroup-add.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-pickupgroup-add.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-pickupgroup-add
+Note: meta source : see http://docbook.sf.net/el/productname       gs-pickupgroup-add
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-pickupgroup-add
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-add
+Note: meta version: no *info/productnumber or alternative          gs-pickupgroup-add
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-pickupgroup-add
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-pickupgroup-add
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-add
+Note: meta manual : no titled ancestor of refentry                 gs-pickupgroup-add
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-pickupgroup-add
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-add
+Note: Writing gs-pickupgroup-add.8
+
+### man/gs-pickupgroup-del.man gs-pickupgroup-del ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-pickupgroup-del.xml.one-file gs-pickupgroup-del.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-pickupgroup-del.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-pickupgroup-del
+Note: meta source : see http://docbook.sf.net/el/productname       gs-pickupgroup-del
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-pickupgroup-del
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-del
+Note: meta version: no *info/productnumber or alternative          gs-pickupgroup-del
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-pickupgroup-del
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-pickupgroup-del
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-del
+Note: meta manual : no titled ancestor of refentry                 gs-pickupgroup-del
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-pickupgroup-del
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-del
+Note: Writing gs-pickupgroup-del.8
+
+### man/gs-pickupgroup-get.man gs-pickupgroup-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-pickupgroup-get.xml.one-file gs-pickupgroup-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-pickupgroup-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-pickupgroup-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-pickupgroup-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-pickupgroup-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-get
+Note: meta version: no *info/productnumber or alternative          gs-pickupgroup-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-pickupgroup-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-pickupgroup-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-get
+Note: meta manual : no titled ancestor of refentry                 gs-pickupgroup-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-pickupgroup-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-get
+Note: Writing gs-pickupgroup-get.8
+
+### man/gs-pickupgroup-user-add.man gs-pickupgroup-user-add ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-pickupgroup-user-add.xml.one-file gs-pickupgroup-user-add.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-pickupgroup-user-add.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-pickupgroup-user-add
+Note: meta source : see http://docbook.sf.net/el/productname       gs-pickupgroup-user-add
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-pickupgroup-user-add
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-user-add
+Note: meta version: no *info/productnumber or alternative          gs-pickupgroup-user-add
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-pickupgroup-user-add
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-pickupgroup-user-add
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-user-add
+Note: meta manual : no titled ancestor of refentry                 gs-pickupgroup-user-add
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-pickupgroup-user-add
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-user-add
+Note: Writing gs-pickupgroup-user-add.8
+
+### man/gs-pickupgroup-user-del.man gs-pickupgroup-user-del ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-pickupgroup-user-del.xml.one-file gs-pickupgroup-user-del.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-pickupgroup-user-del.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-pickupgroup-user-del
+Note: meta source : see http://docbook.sf.net/el/productname       gs-pickupgroup-user-del
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-pickupgroup-user-del
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-user-del
+Note: meta version: no *info/productnumber or alternative          gs-pickupgroup-user-del
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-pickupgroup-user-del
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-pickupgroup-user-del
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-user-del
+Note: meta manual : no titled ancestor of refentry                 gs-pickupgroup-user-del
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-pickupgroup-user-del
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroup-user-del
+Note: Writing gs-pickupgroup-user-del.8
+
+### man/gs-pickupgroups-get.man gs-pickupgroups-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-pickupgroups-get.xml.one-file gs-pickupgroups-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-pickupgroups-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-pickupgroups-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-pickupgroups-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-pickupgroups-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroups-get
+Note: meta version: no *info/productnumber or alternative          gs-pickupgroups-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-pickupgroups-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-pickupgroups-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroups-get
+Note: meta manual : no titled ancestor of refentry                 gs-pickupgroups-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-pickupgroups-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-pickupgroups-get
+Note: Writing gs-pickupgroups-get.8
+
+### man/gs-prov-job-del.man gs-prov-job-del ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-prov-job-del.xml.one-file gs-prov-job-del.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-prov-job-del.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-prov-job-del
+Note: meta source : see http://docbook.sf.net/el/productname       gs-prov-job-del
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-prov-job-del
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-prov-job-del
+Note: meta version: no *info/productnumber or alternative          gs-prov-job-del
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-prov-job-del
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-prov-job-del
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-prov-job-del
+Note: meta manual : no titled ancestor of refentry                 gs-prov-job-del
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-prov-job-del
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-prov-job-del
+Note: Writing gs-prov-job-del.8
+
+### man/gs-prov-jobs-get.man gs-prov-jobs-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-prov-jobs-get.xml.one-file gs-prov-jobs-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-prov-jobs-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-prov-jobs-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-prov-jobs-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-prov-jobs-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-prov-jobs-get
+Note: meta version: no *info/productnumber or alternative          gs-prov-jobs-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-prov-jobs-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-prov-jobs-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-prov-jobs-get
+Note: meta manual : no titled ancestor of refentry                 gs-prov-jobs-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-prov-jobs-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-prov-jobs-get
+Note: Writing gs-prov-jobs-get.8
+
+### man/gs-prov-phone-checkcfg.man gs-prov-phone-checkcfg ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-prov-phone-checkcfg.xml.one-file gs-prov-phone-checkcfg.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-prov-phone-checkcfg.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-prov-phone-checkcfg
+Note: meta source : see http://docbook.sf.net/el/productname       gs-prov-phone-checkcfg
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-prov-phone-checkcfg
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-prov-phone-checkcfg
+Note: meta version: no *info/productnumber or alternative          gs-prov-phone-checkcfg
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-prov-phone-checkcfg
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-prov-phone-checkcfg
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-prov-phone-checkcfg
+Note: meta manual : no titled ancestor of refentry                 gs-prov-phone-checkcfg
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-prov-phone-checkcfg
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-prov-phone-checkcfg
+Note: Writing gs-prov-phone-checkcfg.8
+
+### man/gs-queue-add.man gs-queue-add ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-queue-add.xml.one-file gs-queue-add.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-queue-add.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-queue-add
+Note: meta source : see http://docbook.sf.net/el/productname       gs-queue-add
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-queue-add
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-queue-add
+Note: meta version: no *info/productnumber or alternative          gs-queue-add
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-queue-add
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-queue-add
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-queue-add
+Note: meta manual : no titled ancestor of refentry                 gs-queue-add
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-queue-add
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-queue-add
+Note: Writing gs-queue-add.8
+
+### man/gs-queue-callforward-activate.man gs-queue-callforward-activate ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-queue-callforward-activate.xml.one-file gs-queue-callforward-activate.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-queue-callforward-activate.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-queue-callforward-activate
+Note: meta source : see http://docbook.sf.net/el/productname       gs-queue-callforward-activate
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-queue-callforward-activate
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-queue-callforward-activate
+Note: meta version: no *info/productnumber or alternative          gs-queue-callforward-activate
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-queue-callforward-activate
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-queue-callforward-activate
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-queue-callforward-activate
+Note: meta manual : no titled ancestor of refentry                 gs-queue-callforward-activate
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-queue-callforward-activate
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-queue-callforward-activate
+Note: Writing gs-queue-callforward-activate.8
+
+### man/gs-queue-callforward-get.man gs-queue-callforward-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-queue-callforward-get.xml.one-file gs-queue-callforward-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-queue-callforward-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-queue-callforward-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-queue-callforward-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-queue-callforward-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-queue-callforward-get
+Note: meta version: no *info/productnumber or alternative          gs-queue-callforward-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-queue-callforward-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-queue-callforward-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-queue-callforward-get
+Note: meta manual : no titled ancestor of refentry                 gs-queue-callforward-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-queue-callforward-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-queue-callforward-get
+Note: Writing gs-queue-callforward-get.8
+
+### man/gs-queue-callforward-set.man gs-queue-callforward-set ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-queue-callforward-set.xml.one-file gs-queue-callforward-set.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-queue-callforward-set.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-queue-callforward-set
+Note: meta source : see http://docbook.sf.net/el/productname       gs-queue-callforward-set
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-queue-callforward-set
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-queue-callforward-set
+Note: meta version: no *info/productnumber or alternative          gs-queue-callforward-set
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-queue-callforward-set
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-queue-callforward-set
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-queue-callforward-set
+Note: meta manual : no titled ancestor of refentry                 gs-queue-callforward-set
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-queue-callforward-set
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-queue-callforward-set
+Note: Writing gs-queue-callforward-set.8
+
+### man/gs-queue-del.man gs-queue-del ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-queue-del.xml.one-file gs-queue-del.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-queue-del.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-queue-del
+Note: meta source : see http://docbook.sf.net/el/productname       gs-queue-del
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-queue-del
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-queue-del
+Note: meta version: no *info/productnumber or alternative          gs-queue-del
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-queue-del
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-queue-del
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-queue-del
+Note: meta manual : no titled ancestor of refentry                 gs-queue-del
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-queue-del
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-queue-del
+Note: Writing gs-queue-del.8
+
+### man/gs-queue-get.man gs-queue-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-queue-get.xml.one-file gs-queue-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-queue-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-queue-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-queue-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-queue-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-queue-get
+Note: meta version: no *info/productnumber or alternative          gs-queue-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-queue-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-queue-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-queue-get
+Note: meta manual : no titled ancestor of refentry                 gs-queue-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-queue-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-queue-get
+Note: Writing gs-queue-get.8
+
+### man/gs-queues-get.man gs-queues-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-queues-get.xml.one-file gs-queues-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-queues-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-queues-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-queues-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-queues-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-queues-get
+Note: meta version: no *info/productnumber or alternative          gs-queues-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-queues-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-queues-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-queues-get
+Note: meta manual : no titled ancestor of refentry                 gs-queues-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-queues-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-queues-get
+Note: Writing gs-queues-get.8
+
+### man/gs-ringtone-set.man gs-ringtone-set ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-ringtone-set.xml.one-file gs-ringtone-set.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-ringtone-set.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-ringtone-set
+Note: meta source : see http://docbook.sf.net/el/productname       gs-ringtone-set
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-ringtone-set
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-ringtone-set
+Note: meta version: no *info/productnumber or alternative          gs-ringtone-set
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-ringtone-set
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-ringtone-set
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-ringtone-set
+Note: meta manual : no titled ancestor of refentry                 gs-ringtone-set
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-ringtone-set
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-ringtone-set
+Note: Writing gs-ringtone-set.8
+
+### man/gs-ringtones-get.man gs-ringtones-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-ringtones-get.xml.one-file gs-ringtones-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-ringtones-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-ringtones-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-ringtones-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-ringtones-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-ringtones-get
+Note: meta version: no *info/productnumber or alternative          gs-ringtones-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-ringtones-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-ringtones-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-ringtones-get
+Note: meta manual : no titled ancestor of refentry                 gs-ringtones-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-ringtones-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-ringtones-get
+Note: Writing gs-ringtones-get.8
+
+### man/gs-sysadmin-pwd-set.man gs-sysadmin-pwd-set ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-sysadmin-pwd-set.xml.one-file gs-sysadmin-pwd-set.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-sysadmin-pwd-set.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-sysadmin-pwd-set
+Note: meta source : see http://docbook.sf.net/el/productname       gs-sysadmin-pwd-set
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-sysadmin-pwd-set
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-sysadmin-pwd-set
+Note: meta version: no *info/productnumber or alternative          gs-sysadmin-pwd-set
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-sysadmin-pwd-set
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-sysadmin-pwd-set
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-sysadmin-pwd-set
+Note: meta manual : no titled ancestor of refentry                 gs-sysadmin-pwd-set
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-sysadmin-pwd-set
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-sysadmin-pwd-set
+Note: Writing gs-sysadmin-pwd-set.8
+
+### man/gs-user-add.man gs-user-add ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-add.xml.one-file gs-user-add.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-add.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-add
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-add
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-add
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-add
+Note: meta version: no *info/productnumber or alternative          gs-user-add
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-add
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-add
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-add
+Note: meta manual : no titled ancestor of refentry                 gs-user-add
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-add
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-add
+Note: Writing gs-user-add.8
+
+### man/gs-user-by-mac-addr.man gs-user-by-mac-addr ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-by-mac-addr.xml.one-file gs-user-by-mac-addr.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-by-mac-addr.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-by-mac-addr
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-by-mac-addr
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-by-mac-addr
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-by-mac-addr
+Note: meta version: no *info/productnumber or alternative          gs-user-by-mac-addr
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-by-mac-addr
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-by-mac-addr
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-by-mac-addr
+Note: meta manual : no titled ancestor of refentry                 gs-user-by-mac-addr
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-by-mac-addr
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-by-mac-addr
+Note: Writing gs-user-by-mac-addr.8
+
+### man/gs-user-change.man gs-user-change ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-change.xml.one-file gs-user-change.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-change.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-change
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-change
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-change
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-change
+Note: meta version: no *info/productnumber or alternative          gs-user-change
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-change
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-change
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-change
+Note: meta manual : no titled ancestor of refentry                 gs-user-change
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-change
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-change
+Note: Writing gs-user-change.8
+
+### man/gs-user-comment-get.man gs-user-comment-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-comment-get.xml.one-file gs-user-comment-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-comment-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-comment-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-comment-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-comment-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-comment-get
+Note: meta version: no *info/productnumber or alternative          gs-user-comment-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-comment-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-comment-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-comment-get
+Note: meta manual : no titled ancestor of refentry                 gs-user-comment-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-comment-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-comment-get
+Note: Writing gs-user-comment-get.8
+
+### man/gs-user-comment-set.man gs-user-comment-set ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-comment-set.xml.one-file gs-user-comment-set.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-comment-set.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-comment-set
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-comment-set
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-comment-set
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-comment-set
+Note: meta version: no *info/productnumber or alternative          gs-user-comment-set
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-comment-set
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-comment-set
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-comment-set
+Note: meta manual : no titled ancestor of refentry                 gs-user-comment-set
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-comment-set
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-comment-set
+Note: Writing gs-user-comment-set.8
+
+### man/gs-user-del.man gs-user-del ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-del.xml.one-file gs-user-del.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-del.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-del
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-del
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-del
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-del
+Note: meta version: no *info/productnumber or alternative          gs-user-del
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-del
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-del
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-del
+Note: meta manual : no titled ancestor of refentry                 gs-user-del
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-del
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-del
+Note: Writing gs-user-del.8
+
+### man/gs-user-external-number-add.man gs-user-external-number-add ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-external-number-add.xml.one-file gs-user-external-number-add.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-external-number-add.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-external-number-add
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-external-number-add
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-external-number-add
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-external-number-add
+Note: meta version: no *info/productnumber or alternative          gs-user-external-number-add
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-external-number-add
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-external-number-add
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-external-number-add
+Note: meta manual : no titled ancestor of refentry                 gs-user-external-number-add
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-external-number-add
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-external-number-add
+Note: Writing gs-user-external-number-add.8
+
+### man/gs-user-external-number-del.man gs-user-external-number-del ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-external-number-del.xml.one-file gs-user-external-number-del.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-external-number-del.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-external-number-del
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-external-number-del
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-external-number-del
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-external-number-del
+Note: meta version: no *info/productnumber or alternative          gs-user-external-number-del
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-external-number-del
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-external-number-del
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-external-number-del
+Note: meta manual : no titled ancestor of refentry                 gs-user-external-number-del
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-external-number-del
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-external-number-del
+Note: Writing gs-user-external-number-del.8
+
+### man/gs-user-external-numbers-get.man gs-user-external-numbers-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-external-numbers-get.xml.one-file gs-user-external-numbers-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-external-numbers-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-external-numbers-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-external-numbers-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-external-numbers-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-external-numbers-get
+Note: meta version: no *info/productnumber or alternative          gs-user-external-numbers-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-external-numbers-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-external-numbers-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-external-numbers-get
+Note: meta manual : no titled ancestor of refentry                 gs-user-external-numbers-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-external-numbers-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-external-numbers-get
+Note: Writing gs-user-external-numbers-get.8
+
+### man/gs-user-get.man gs-user-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-get.xml.one-file gs-user-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-get
+Note: meta version: no *info/productnumber or alternative          gs-user-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-get
+Note: meta manual : no titled ancestor of refentry                 gs-user-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-get
+Note: Writing gs-user-get.8
+
+### man/gs-user-ip-by-ext.man gs-user-ip-by-ext ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-ip-by-ext.xml.one-file gs-user-ip-by-ext.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-ip-by-ext.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-ip-by-ext
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-ip-by-ext
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-ip-by-ext
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-ip-by-ext
+Note: meta version: no *info/productnumber or alternative          gs-user-ip-by-ext
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-ip-by-ext
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-ip-by-ext
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-ip-by-ext
+Note: meta manual : no titled ancestor of refentry                 gs-user-ip-by-ext
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-ip-by-ext
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-ip-by-ext
+Note: Writing gs-user-ip-by-ext.8
+
+### man/gs-user-ip-by-user.man gs-user-ip-by-user ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-ip-by-user.xml.one-file gs-user-ip-by-user.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-ip-by-user.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-ip-by-user
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-ip-by-user
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-ip-by-user
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-ip-by-user
+Note: meta version: no *info/productnumber or alternative          gs-user-ip-by-user
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-ip-by-user
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-ip-by-user
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-ip-by-user
+Note: meta manual : no titled ancestor of refentry                 gs-user-ip-by-user
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-ip-by-user
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-ip-by-user
+Note: Writing gs-user-ip-by-user.8
+
+### man/gs-user-mac-addr-by-user.man gs-user-mac-addr-by-user ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-mac-addr-by-user.xml.one-file gs-user-mac-addr-by-user.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-mac-addr-by-user.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-mac-addr-by-user
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-mac-addr-by-user
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-mac-addr-by-user
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-mac-addr-by-user
+Note: meta version: no *info/productnumber or alternative          gs-user-mac-addr-by-user
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-mac-addr-by-user
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-mac-addr-by-user
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-mac-addr-by-user
+Note: meta manual : no titled ancestor of refentry                 gs-user-mac-addr-by-user
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-mac-addr-by-user
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-mac-addr-by-user
+Note: Writing gs-user-mac-addr-by-user.8
+
+### man/gs-user-prov-param-set.man gs-user-prov-param-set ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-prov-param-set.xml.one-file gs-user-prov-param-set.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-prov-param-set.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-prov-param-set
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-prov-param-set
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-prov-param-set
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-prov-param-set
+Note: meta version: no *info/productnumber or alternative          gs-user-prov-param-set
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-prov-param-set
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-prov-param-set
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-prov-param-set
+Note: meta manual : no titled ancestor of refentry                 gs-user-prov-param-set
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-prov-param-set
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-prov-param-set
+Note: Writing gs-user-prov-param-set.8
+
+### man/gs-user-prov-params-get.man gs-user-prov-params-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-prov-params-get.xml.one-file gs-user-prov-params-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-prov-params-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-prov-params-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-prov-params-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-prov-params-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-prov-params-get
+Note: meta version: no *info/productnumber or alternative          gs-user-prov-params-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-prov-params-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-prov-params-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-prov-params-get
+Note: meta manual : no titled ancestor of refentry                 gs-user-prov-params-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-prov-params-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-prov-params-get
+Note: Writing gs-user-prov-params-get.8
+
+### man/gs-user-rename.man gs-user-rename ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-user-rename.xml.one-file gs-user-rename.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-user-rename.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-user-rename
+Note: meta source : see http://docbook.sf.net/el/productname       gs-user-rename
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-user-rename
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-user-rename
+Note: meta version: no *info/productnumber or alternative          gs-user-rename
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-user-rename
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-user-rename
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-user-rename
+Note: meta manual : no titled ancestor of refentry                 gs-user-rename
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-user-rename
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-user-rename
+Note: Writing gs-user-rename.8
+
+### man/gs-users-get.man gs-users-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-users-get.xml.one-file gs-users-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-users-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-users-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-users-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-users-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-users-get
+Note: meta version: no *info/productnumber or alternative          gs-users-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-users-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-users-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-users-get
+Note: meta manual : no titled ancestor of refentry                 gs-users-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-users-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-users-get
+Note: Writing gs-users-get.8
+
+### man/gs-users-regen.man gs-users-regen ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-users-regen.xml.one-file gs-users-regen.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-users-regen.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-users-regen
+Note: meta source : see http://docbook.sf.net/el/productname       gs-users-regen
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-users-regen
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-users-regen
+Note: meta version: no *info/productnumber or alternative          gs-users-regen
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-users-regen
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-users-regen
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-users-regen
+Note: meta manual : no titled ancestor of refentry                 gs-users-regen
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-users-regen
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-users-regen
+Note: Writing gs-users-regen.8
+
+### man/gs-vm-activate.man gs-vm-activate ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-vm-activate.xml.one-file gs-vm-activate.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-vm-activate.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-vm-activate
+Note: meta source : see http://docbook.sf.net/el/productname       gs-vm-activate
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-vm-activate
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-vm-activate
+Note: meta version: no *info/productnumber or alternative          gs-vm-activate
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-vm-activate
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-vm-activate
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-vm-activate
+Note: meta manual : no titled ancestor of refentry                 gs-vm-activate
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-vm-activate
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-vm-activate
+Note: Writing gs-vm-activate.8
+
+### man/gs-vm-get.man gs-vm-get ...
+cd "docbook/scripts/" && /usr/bin/xmllint --xinclude --output _gs-vm-get.xml.one-file gs-vm-get.xml
+/usr/bin/xmlto --skip-validation -o man/ man docbook/scripts/_gs-vm-get.xml.one-file
+Note: meta source : no *info/productname or alternative            gs-vm-get
+Note: meta source : see http://docbook.sf.net/el/productname       gs-vm-get
+Note: meta source : no refentry/refmeta/refmiscinfo@class=source   gs-vm-get
+Note: meta source : see http://docbook.sf.net/el/refmiscinfo       gs-vm-get
+Note: meta version: no *info/productnumber or alternative          gs-vm-get
+Note: meta version: see http://docbook.sf.net/el/productnumber     gs-vm-get
+Note: meta version: no refentry/refmeta/refmiscinfo@class=version  gs-vm-get
+Note: meta version: see http://docbook.sf.net/el/refmiscinfo       gs-vm-get
+Note: meta manual : no titled ancestor of refentry                 gs-vm-get
+Note: meta manual : no refentry/refmeta/refmiscinfo@class=manual   gs-vm-get
+Note: meta manual : see http://docbook.sf.net/el/refmiscinfo       gs-vm-get
+Note: Writing gs-vm-get.8
+
+make[3]: Leaving directory `/usr/src/gemeinschaft-trunk-fresh/opt/gemeinschaft/doc/de'
+############################################################
+#  Man pages done.                                         #
+############################################################
+make[2]: Leaving directory `/usr/src/gemeinschaft-trunk-fresh/opt/gemeinschaft/doc/de'
+\ 
+ ==>  OK
+
+====================================================================
+= build-log-man-xsl:   done
+====================================================================

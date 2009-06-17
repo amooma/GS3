@@ -1,0 +1,52 @@
+====================================================================
+= build-log-pdf-jw:   make pdf-jw
+====================================================================
+make[2]: Entering directory `/usr/src/gemeinschaft-trunk-fresh/opt/gemeinschaft/doc/de'
+mkdir -p tmp
+sleep 1
+date '+%Y-%m-%d %H:%M:00 %z' > tmp/_tmp_dir-stamp
+touch -d "`cat tmp/_tmp_dir-stamp`" tmp
+Checking for xmllint ...
+date > tmp/_have-xmllint-stamp
+touch -d "`cat tmp/_tmp_dir-stamp`" tmp
+############################################################
+#  Validating DocBook sources ...                          #
+############################################################
+/usr/bin/xmllint --xinclude --postvalid --noout \
+		docbook/HANDBUCH.xml
+############################################################
+#  DocBook sources are valid.                              #
+############################################################
+date > tmp/_docbook-valid-stamp
+touch -d "`cat tmp/_tmp_dir-stamp`" tmp
+Resolving XIncludes in docbook/HANDBUCH.xml ...
+/usr/bin/xmllint \
+		--xinclude \
+		--output tmp/docbook-HANDBUCH-one-file.xml \
+		docbook/HANDBUCH.xml
+touch -d "`cat tmp/_tmp_dir-stamp`" tmp
+tmp/docbook-HANDBUCH-one-file.xml DONE
+Checking for docbook2pdf ...
+date > tmp/_have-docbook2pdf-stamp
+touch -d "`cat tmp/_tmp_dir-stamp`" tmp
+############################################################
+#  Making PDF ...                                          #
+############################################################
+Transforming to PDF ...
+mkdir -p pdf
+/usr/bin/docbook2pdf -e no-idref -o pdf/ tmp/docbook-HANDBUCH-one-file.xml
+Using catalogs: /etc/sgml/catalog
+Using stylesheet: /usr/share/docbook-utils/docbook-utils.dsl#print
+Working on: /usr/src/gemeinschaft-trunk-fresh/opt/gemeinschaft/doc/de/tmp/docbook-HANDBUCH-one-file.xml
+Done.
+mv pdf/docbook-HANDBUCH-one-file.pdf pdf/Gemeinschaft-Handbuch.pdf
+############################################################
+#  PDF done.                                               #
+############################################################
+make[2]: Leaving directory `/usr/src/gemeinschaft-trunk-fresh/opt/gemeinschaft/doc/de'
+\ 
+ ==>  OK
+
+====================================================================
+= build-log-pdf-jw:   done
+====================================================================
