@@ -9,13 +9,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-06 09:14+0100\n"
+"POT-Creation-Date: 2009-06-15 14:02+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: English <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+#
+# File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 175
+#, php-format
+msgid "%d Min. %d Sek."
+msgstr "%d min. %d sec."
+#
+# File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 176
+#, php-format
+msgid "%d Sek."
+msgstr "%d sec."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 227
 #, php-format
@@ -243,10 +253,6 @@ msgstr ""
 msgid "Absprung"
 msgstr "Abandoned"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 64
-msgid "Abweisen"
-msgstr "Deflect"
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 120
 msgid "Abwesenheitsansage aufzeichnen"
 msgstr "Record unavailable message"
@@ -440,61 +446,62 @@ msgstr ""
 msgid "Anschlu&szlig;"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 181
-msgid "Anzahl der Anrufe auf diese Queue"
+# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 179
+msgid "Anzahl der Anrufe auf diese Warteschlange"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 185
+# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 183
 msgid ""
-"Anzahl der Anrufe auf diese Queue, bei denen der Anrufer aufgelegt hat bevor "
-"abgehoben wurde"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 203
-msgid ""
-"Anzahl der Anrufe auf diese Queue, bei denen der Anrufer l&auml;nger als die "
-"angeg. Dauer gewartet hat"
+"Anzahl der Anrufe auf diese Warteschlange, bei denen der Anrufer aufgelegt "
+"hat bevor abgehoben wurde"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 201
 msgid ""
-"Anzahl der Anrufe auf diese Queue, bei denen der Anrufer weniger als die "
-"angeg. Dauer gewartet hat"
+"Anzahl der Anrufe auf diese Warteschlange, bei denen der Anrufer l&auml;nger "
+"als die angeg. Dauer gewartet hat"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 187
+# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 199
 msgid ""
-"Anzahl der Anrufe auf diese Queue, die durch eine Zeit&uuml;berschreitung "
-"abgebrochen/weitergeleitet wurden. Dies kann auftreten wenn f&uuml;r die "
-"Queue eine Weiterleitung nach Zeit eingestellt ist."
+"Anzahl der Anrufe auf diese Warteschlange, bei denen der Anrufer weniger als "
+"die angeg. Dauer gewartet hat"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 191
+# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 185
 msgid ""
-"Anzahl der Anrufe auf diese Queue, die fehlgeschlagen sind weil die maximale "
-"Anzahl an Anrufern erreicht war"
+"Anzahl der Anrufe auf diese Warteschlange, die durch eine Zeit&uuml;"
+"berschreitung abgebrochen/weitergeleitet wurden. Dies kann auftreten wenn "
+"f&uuml;r die Warteschlange eine Weiterleitung nach Zeit eingestellt ist."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 189
 msgid ""
-"Anzahl der Anrufe auf diese Queue, die fehlgeschlagen sind weil keine "
-"Agenten eingeloggt/frei waren"
+"Anzahl der Anrufe auf diese Warteschlange, die fehlgeschlagen sind weil die "
+"maximale Anzahl an Anrufern erreicht war"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 183
-msgid "Anzahl der Anrufe auf diese Queue, die von Agenten angenommen wurden"
+# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 187
+msgid ""
+"Anzahl der Anrufe auf diese Warteschlange, die fehlgeschlagen sind weil "
+"keine Agenten eingeloggt/frei waren"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 181
+msgid ""
+"Anzahl der Anrufe auf diese Warteschlange, die von Agenten angenommen wurden"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 193
+msgid ""
+"Anzahl der angenommenen Anrufe auf diese Warteschlange, deren Gespr&auml;"
+"chsdauer k&uuml;rzer als der angeg. Wert war"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 195
 msgid ""
-"Anzahl der angenommenen Anrufe auf diese Queue, deren Gespr&auml;chsdauer "
-"k&uuml;rzer als der angeg. Wert war"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 197
-msgid ""
-"Anzahl der angenommenen Anrufe auf diese Queue, deren Gespr&auml;chsdauer "
-"l&auml;nger als der angeg. Wert war"
+"Anzahl der angenommenen Anrufe auf diese Warteschlange, deren Gespr&auml;"
+"chsdauer l&auml;nger als der angeg. Wert war"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 129
@@ -694,6 +701,10 @@ msgstr "Invalid user or password"
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 187
 msgid "Benutzer wechseln"
 msgstr "Change user"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_outbound.php, line: 237
+msgid "Benutzer-Gr."
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 710
 msgid "Benutzergruppe"
@@ -1231,12 +1242,13 @@ msgstr ""
 "These are context-sensitive softkeys. Their function will we shown at the "
 "bottom of the screen as necessary."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/routing_outbound.php, line: 226
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_outbound.php, line: 222
 msgid ""
 "Diese W&auml;hlregeln f&uuml;r ausgehende Routen werden von oben nach unten "
 "abgearbeitet bis eine Regel zutrifft. Dabei wird die gew&auml;hlte "
-"Telefonnummer in der nach Ihren Einstellungen kanonisierten <b>nationalen</"
-"b> Form (ohne die 0 zur Amtsholung) mit dem Muster verglichen."
+"Telefonnummer in der (entsprechend Ihren Einstellungen) kanonisierten "
+"<b>nationalen</b> Form oder &quot;wie gew&auml;hlt&quot; mit dem Muster "
+"verglichen."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_inbound.php, line: 263
@@ -1268,9 +1280,10 @@ msgstr "Documentation of %s"
 msgid "Dokumentation der %s-Parameter"
 msgstr "Documentation of %s settings"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 199
+# File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 197
 msgid ""
-"Durchschnittliche Gespr&auml;chsdauer der angenommenen Anrufe auf diese Queue"
+"Durchschnittliche Gespr&auml;chsdauer der angenommenen Anrufe auf diese "
+"Warteschlange"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/graph.php, line: 361
@@ -1455,8 +1468,9 @@ msgstr ""
 msgid "Es befinden sich jetzt %d neue Voicemails in Ihrer Mailbox."
 msgstr ""
 #
-# File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 172
-msgid "Es befindet sich jetzt 1 neue Voicemail in Ihrer Mailbox."
+# File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 184
+#, php-format
+msgid "Es befindet sich jetzt %d neue Voicemail in Ihrer Mailbox."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 457
@@ -1559,14 +1573,14 @@ msgstr ""
 msgid "Fehler beim Abfragen der Hosts aus der Datenbank!"
 msgstr "Failed to read hosts from database!"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 63
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 66
-msgid "Fehler beim Abfragen der Queues."
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 168
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 171
+msgid "Fehler beim Abfragen der Rufumleitungen der Warteschlange."
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 163
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 166
-msgid "Fehler beim Abfragen der Rufumleitungen der Queue."
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 68
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 71
+msgid "Fehler beim Abfragen der Warteschlangen."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 66
@@ -1939,6 +1953,10 @@ msgstr "ISDN ports"
 msgid "ISDN-Ports (BRI)"
 msgstr "ISDN ports (BRI)"
 #
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 240
+msgid "IVRs"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 118
 msgid "Ihr Browser kann die SVG-Datei nicht anzeigen."
 msgstr "Your browser is unable to display the SVG file."
@@ -2048,6 +2066,10 @@ msgstr ""
 msgid "Job"
 msgstr "Job"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 64
+msgid "Job konnte nicht gel&ouml;scht werden."
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 261
 msgid "Jobs"
 msgstr ""
@@ -2096,6 +2118,10 @@ msgstr "Ring instead of hold music"
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 100
 msgid "Klingelt&ouml;ne"
 msgstr "Ringtones"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 285
+msgid "Klingelzeit p. Agent"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 80
 msgid "Kollegen"
@@ -2195,6 +2221,10 @@ msgstr "Recently missed calls"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 111
 msgid "Letztes Endger&auml;t eingetragen"
 msgstr "Last handset added"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 996
+msgid "Linke Tasten"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_logging.php, line: 47
 msgid "Log-Level"
@@ -2729,11 +2759,6 @@ msgstr ""
 msgid "Q Klassisch"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 383
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 114
-msgid "Queue"
-msgstr "Queue"
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 78
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 83
 msgid "Queues"
@@ -2742,6 +2767,10 @@ msgstr "Queues"
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 71
 msgid "R&uuml;ckfrage"
 msgstr "Consultation"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 998
+msgid "Rechte Tasten"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_boi-perms.php, line: 178
 msgid "Regel bearbeiten"
@@ -2923,10 +2952,6 @@ msgstr "Page"
 msgid "Seiten"
 msgstr "Pages"
 #
-# File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 165
-msgid "Sekunden"
-msgstr "Seconds"
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 213
 msgid "Semikolon"
 msgstr "Semicolon"
@@ -3008,6 +3033,13 @@ msgid ""
 "St&ouml;ren-Funktion am Telefon ben&ouml;tigt."
 msgstr "You should set a default number! It is required for DND."
 #
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 423
+#, php-format
+msgid ""
+"Sie verwenden einen sehr alten Browser (%s), der diese Webseiten fehlerhaft "
+"darstellt! Tipp: Benutzen Sie %s oder zumindest den aktuellen %s."
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 93
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 108
 msgid "Snom"
@@ -3087,6 +3119,24 @@ msgstr "Stonith"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 276
 msgid "Strategie"
 msgstr "Strategy"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 268
+#, php-format
+msgid ""
+"String für den Dial()-Befehl. Dabei wird {number} automatisch von "
+"Gemeinschaft durch die zu wählende Rufnummer, {number:1} durch die Rufnummer "
+"ohne die erste Ziffer und {gateway} durch die interne Bezeichnung \"%s\" "
+"ersetzt."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-isdn.php, line: 290
+#, php-format
+msgid ""
+"String für den Dial()-Befehl. Dabei wird {number} automatisch von "
+"Gemeinschaft durch die zu wählende Rufnummer, {number:1} durch die Rufnummer "
+"ohne die erste Ziffer, {port} durch den eingestellten Port und {gateway} "
+"durch die interne Bezeichnung \"%s\" ersetzt."
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 247
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 248
@@ -3277,10 +3327,6 @@ msgstr "Forward in these cases"
 msgid "Umleitung"
 msgstr "Forward"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 183
-msgid "Umleitungsnummern"
-msgstr "Call forwarding numbers"
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 222
 msgid "Umschlie&szlig;ung"
 msgstr "Enclosure"
@@ -3466,6 +3512,11 @@ msgstr ""
 msgid "Vorschau"
 msgstr "Preview"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-isdn.php, line: 252
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 227
+msgid "W&auml;hlbefehl"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 128
 msgid "WT"
 msgstr ""
@@ -3498,6 +3549,10 @@ msgstr "Hold time"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 246
 msgid "Wartezeit ansagen"
 msgstr "Announce hold time"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 118
+msgid "Weiterleiten"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 529
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 481
@@ -3599,6 +3654,14 @@ msgstr "Headquarter"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 264
 msgid "Ziel"
 msgstr "Target"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 267
+msgid "Zielrufnummern f&uuml; Anrufumleitung"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 265
+msgid "Zielrufnummern f&uuml;r Anrufumleitung"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 58
 msgid "Zielwahl"
@@ -3724,6 +3787,10 @@ msgstr "busy"
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_rec.php, line: 104
 msgid "bps"
 msgstr "bps"
+#
+# File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 167
+msgid "d.m.Y, H:i T"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 221
 msgid "diese Woche"
@@ -4177,6 +4244,10 @@ msgstr "prev. page"
 #~ "the message LED will start blinking. Your display will show the numbers "
 #~ "of new and old messages."
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 64
+#~ msgid "Abweisen"
+#~ msgstr "Deflect"
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 362
 #~ msgid ""
 #~ "Achtung: Ihr Anrufbeantworter wird nur dann aktiv, wenn Sie keine "
@@ -4343,6 +4414,11 @@ msgstr "prev. page"
 #~ msgid "Player"
 #~ msgstr "Player"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 383
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 114
+#~ msgid "Queue"
+#~ msgstr "Queue"
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 271
 #~ msgid "Reg.?"
 #~ msgstr "Reg.?"
@@ -4366,6 +4442,10 @@ msgstr "prev. page"
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 309
 #~ msgid "Rufummer"
 #~ msgstr "Phone number"
+#
+# File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 165
+#~ msgid "Sekunden"
+#~ msgstr "Seconds"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_pgrps.php, line: 81
 #~ msgid "Sie sind Mitglied keiner Pickup-Gruppe."
@@ -4415,6 +4495,10 @@ msgstr "prev. page"
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 118
 #~ msgid "Telefon-Manager"
 #~ msgstr "Phone Manager"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 183
+#~ msgid "Umleitungsnummern"
+#~ msgstr "Call forwarding numbers"
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 118
 #~ msgid "Verbindungen"
