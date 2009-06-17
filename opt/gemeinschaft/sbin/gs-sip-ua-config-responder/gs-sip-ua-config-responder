@@ -158,17 +158,18 @@ read_config();
 # create multicast socket
 my $sock = IO::Socket::Multicast->new(
 	Proto      => 'udp',
-	LocalPort  => $my_sip_ip_port,
+	LocalPort  => $my_sip_ip_port,  # / '0.0.0.0' ?
 	LocalAddr  => $my_sip_ip_addr,
 	Reuse      => 1,
 	ReuseAddr  => 1
 )
 or die "socket: $@\n";  # yes, it uses $@ here
 if ($debug_level >= 1) {
-	print STDOUT "Listening on $my_sip_ip_addr:$my_sip_ip_port ...\n"
+	#print STDOUT "Listening on $my_sip_ip_addr:$my_sip_ip_port ...\n";
+	print STDOUT "Listening on ", $sock->sockhost() ,":", $sock->sockport() ," ...\n";
 }
 
-# add a multicast group
+# join multicast group (on INADDR_ANY = 0.0.0.0 = "any")
 $sock->mcast_add( $my_sip_ip_addr );
 
 # turn off local mirroring
@@ -190,6 +191,41 @@ $sock->mcast_ttl(255);
 # other drafts:
 #   http://tools.ietf.org/html/draft-petrie-sip-config-framework-01
 #   http://www.cs.columbia.edu/sip/drafts/sip/draft-schulzrinne-sip-config-events-00.txt
+
+
+
+
+
+
+
+
+
+
+
+print STDOUT "Interface: ", $sock->mcast_if() ,"\n";
+print STDOUT "Interface: ", $sock->mcast_dest() ,"\n";
+
+
+
+
+my $remote_addr = $my_sip_ip_addr;
+my $remote_port = $sip_default_port;
+$resp = 'NOTIFY '. $remote_addr.':'.$remote_port .' SIP/2.0' ."\n";
+print STDOUT "OUT-------------------------------------------------------{\n";
+print STDOUT $resp;
+print STDOUT "----------------------------------------------------------}\n";
+$sock->mcast_send( $resp, $remote_addr.':'.$remote_port );
+
+
+my @x = unpack_sockaddr_in($sock->mcast_dest());
+print STDOUT "Interface: ", $sock->mcast_if() ,"\n";
+print STDOUT "Interface: ", inet_ntoa($x[1]) ,"\n";
+
+
+
+
+
+
 
 
 my $in   = '';
@@ -374,10 +410,14 @@ while ($sock->recv($in, 8192)) {
 						print STDOUT $resp, "\n";
 						print STDOUT "----------------------------------------------------------}\n";
 					}
-					$sock->mcast_send( $resp, $remote_addr.':'.$remote_port );
+					my $bytes = $sock->mcast_send( $resp, $remote_addr.':'.$remote_port );
 					
 					if ($debug_level >= 1) {
-						print STDOUT "Responded to ", $remote_addr ," (Snom, ", $in_header_event ,")\n";
+						if ($bytes > 0) {
+							print STDOUT "Responded to ", $remote_addr ," (Snom, ", $in_header_event ,")\n";
+						} else {
+							print STDOUT "Failed to respond to ", $remote_addr ," (Snom, ", $in_header_event ,")\n";
+						}
 					}
 					
 					
