@@ -45,6 +45,10 @@
 
       <email>peter.kozak@amooma.de</email>
     </author>
+
+    <legalnotice>
+      <para>Lizenz: GNU GPL (<xref linkend="gpl" />)</para>
+    </legalnotice>
   </bookinfo>
 
   <xi:include href="vorbemerkungen.xml" parse="xml"
