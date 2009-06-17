@@ -478,6 +478,8 @@ build-log-html-chunk-xsl:
 	rm $(build-log-html-chunk-xsl-log) || true
 	touch $(build-log-html-chunk-xsl-log)
 	$(MAKE) clean
+	# make validate before so the log does not contain the output of make validate
+	$(MAKE) validate
 	@ \
 		echo $(build-log-sep)              | tee -ia $(build-log-html-chunk-xsl-log) ;\
 		echo "= $@:   make html-chunk-xsl" | tee -ia $(build-log-html-chunk-xsl-log) ;\
@@ -498,6 +500,8 @@ build-log-pdf-jw:
 	rm $(build-log-pdf-jw-log) || true
 	touch $(build-log-pdf-jw-log)
 	$(MAKE) clean
+	# make validate before so the log does not contain the output of make validate
+	$(MAKE) validate
 	@ \
 		echo $(build-log-sep)              | tee -ia $(build-log-pdf-jw-log) ;\
 		echo "= $@:   make pdf-jw"         | tee -ia $(build-log-pdf-jw-log) ;\
@@ -518,6 +522,8 @@ build-log-man-xsl:
 	rm $(build-log-man-xsl-log) || true
 	touch $(build-log-man-xsl-log)
 	$(MAKE) clean
+	# make validate before so the log does not contain the output of make validate
+	$(MAKE) validate
 	@ \
 		echo $(build-log-sep)              | tee -ia $(build-log-man-xsl-log) ;\
 		echo "= $@:   make man-xsl"        | tee -ia $(build-log-man-xsl-log) ;\

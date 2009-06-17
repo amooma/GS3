@@ -2,13 +2,6 @@
 = build-log-man-xsl:   make man-xsl
 ====================================================================
 make[2]: Entering directory `/usr/src/gemeinschaft-trunk-fresh/opt/gemeinschaft/doc/de'
-mkdir -p tmp
-sleep 1
-date '+%Y-%m-%d %H:%M:00 %z' > tmp/_tmp_dir-stamp
-touch -d "`cat tmp/_tmp_dir-stamp`" tmp
-Checking for xmllint ...
-date > tmp/_have-xmllint-stamp
-touch -d "`cat tmp/_tmp_dir-stamp`" tmp
 Checking for xmlto ...
 date > tmp/_have-xmlto-stamp
 touch -d "`cat tmp/_tmp_dir-stamp`" tmp
