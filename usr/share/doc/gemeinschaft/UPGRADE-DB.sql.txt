@@ -719,3 +719,5 @@ DROP TABLE IF EXISTS `volumes`;
 ALTER TABLE `users` CHANGE `user` `user` VARCHAR( 50 );
 
 ALTER TABLE `ast_sipfriends` CHANGE `pickupgroup` `pickupgroup` VARCHAR( 20 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL;
+
+ALTER TABLE `ast_queue_members` ADD `paused` TINYINT( 3 ) NOT NULL DEFAULT '0' AFTER `penalty` ;

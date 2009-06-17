@@ -319,7 +319,6 @@ macro agent-logout() {
 	Wait(0.5);
 	if ("${agent_login_status}" = "loggedout") {
 		
-		UnpauseQueueMember(|SIP/${user_name});
 		
 		UserEvent(AgentLogoffUI|agent: ${agent});
 		AGI(/opt/gemeinschaft/dialplan-scripts/agent-login-logout.agi,${user_name},${old_local_agent},logoutall);
@@ -348,7 +347,6 @@ macro agent-pause() {
 	Verbose(1,### DB-Stat:  ${agent_pause});
 	if ("${agent}" = "true") {
 		
-		PauseQueueMember(|SIP/${user_name});
 		UserEvent(AgentPausedUI|agent: ${user_name});
 		Playback(beep);
 
@@ -368,7 +366,6 @@ macro agent-unpause() {
 	
 	if ("${agent}" = "true") {
 		
-		UnpauseQueueMember(|SIP/${user_name});
 		UserEvent(AgentUnPausedUI|agent: ${user_name});
 
 		Playback(beep);
