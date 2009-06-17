@@ -53,13 +53,20 @@ by the local XML catalog.
 
 <xsl:param name="admon.graphics" select="1" />
 <xsl:param name="admon.textlabel" select="1" />
+<xsl:param name="admon.graphics.extension" select="'.gif'" />
+<xsl:param name="admon.graphics.path" select="'dbkimg/'" />
+<xsl:param name="admon.style"></xsl:param>
 
-<xsl:param name="navig.graphics" select="0" />
+<xsl:param name="navig.graphics" select="1" />
 <xsl:param name="navig.graphics.extension" select="'.gif'" />
-<xsl:param name="navig.graphics.path" select="'nav-img/'" />
+<xsl:param name="navig.graphics.path" select="'dbkimg/'" />
 <xsl:param name="navig.showtitles" select="1" />
 
 <xsl:param name="callout.graphics" select="0" />
+<xsl:param name="callout.graphics.extension" select="'.gif'" />
+<xsl:param name="callout.graphics.path" select="'dbkimg/'" />
+<xsl:param name="callout.graphics.number.limit" select="15" />
+<xsl:param name="callout.unicode" select="0" />
 
 <xsl:param name="toc.section.depth" select="2" />
 <xsl:param name="toc.max.depth" select="1" />
@@ -81,6 +88,7 @@ by the local XML catalog.
 <xsl:param name="table.footnote.number.format" select="'a'" />
 
 <xsl:param name="autotoc.label.in.hyperlink" select="0" />
+<xsl:param name="autotoc.label.separator" select="'.&#xA0; '" />
 
 <xsl:param name="chunk.first.sections" select="1" />
 <xsl:param name="chunk.section.depth" select="1" />

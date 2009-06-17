@@ -42,6 +42,8 @@ build-log-pdf-jw-log = build-logs/pdf-jw.log
 build-log-man-xsl-log = build-logs/man-xsl.log
 build-log-sep = ====================================================================
 
+docbook-xsl-images = /usr/share/xml/docbook/stylesheet/nwalsh/images
+
 
 help:
 	@ echo ""
@@ -397,6 +399,19 @@ html-chunk-xsl/index.html: docbook/HANDBUCH.xml tmp/_docbook-valid-stamp ../xsl/
 	@ echo '############################################################';
 	@ echo '#  HTML (chunk, tidy) done.                                #';
 	@ echo '############################################################';
+	
+	@ echo "Copying CSS stylesheet ..."
+	cp -rLT --preserve=timestamps --strip-trailing-slashes \
+			"../css" "html-chunk-xsl/css" ;\
+	
+	@ echo "Copying DocBook images ..."
+	@ if [ -e "$(docbook-xsl-images)" ]; then \
+		cp -rLT --preserve=timestamps --strip-trailing-slashes \
+			"$(docbook-xsl-images)" "html-chunk-xsl/dbkimg" ;\
+	else \
+		echo "Did not find DocBook images at" ;\
+		echo "\"$(docbook-xsl-images)\"!" ;\
+	fi
 
 
 html-chunk-xsl: html-chunk-xsl/index.html
