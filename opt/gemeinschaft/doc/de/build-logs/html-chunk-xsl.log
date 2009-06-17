@@ -2,23 +2,6 @@
 = build-log-html-chunk-xsl:   make html-chunk-xsl
 ====================================================================
 make[2]: Entering directory `/usr/src/gemeinschaft-trunk-fresh/opt/gemeinschaft/doc/de'
-mkdir -p tmp
-sleep 1
-date '+%Y-%m-%d %H:%M:00 %z' > tmp/_tmp_dir-stamp
-touch -d "`cat tmp/_tmp_dir-stamp`" tmp
-Checking for xmllint ...
-date > tmp/_have-xmllint-stamp
-touch -d "`cat tmp/_tmp_dir-stamp`" tmp
-############################################################
-#  Validating DocBook sources ...                          #
-############################################################
-/usr/bin/xmllint --xinclude --postvalid --noout \
-		docbook/HANDBUCH.xml
-############################################################
-#  DocBook sources are valid.                              #
-############################################################
-date > tmp/_docbook-valid-stamp
-touch -d "`cat tmp/_tmp_dir-stamp`" tmp
 Checking for xsltproc ...
 date > tmp/_have-xsltproc-stamp
 touch -d "`cat tmp/_tmp_dir-stamp`" tmp
