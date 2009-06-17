@@ -48,7 +48,8 @@
     </author>
 
     <legalnotice id="main-legalnotice">
-      <para>Lizenz: GNU GPL (<xref linkend="gpl" />)</para>
+      <para>Lizenz: GNU FDL (<ulink
+      url="http://www.gnu.org/licenses/fdl.html">http://www.gnu.org/licenses/fdl.html</ulink>)</para>
     </legalnotice>
 
     <copyright>
