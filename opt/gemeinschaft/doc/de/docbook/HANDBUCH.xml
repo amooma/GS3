@@ -46,7 +46,7 @@
       <email>peter.kozak@amooma.de</email>
     </author>
 
-    <legalnotice>
+    <legalnotice id="main-legalnotice">
       <para>Lizenz: GNU GPL (<xref linkend="gpl" />)</para>
     </legalnotice>
   </bookinfo>
