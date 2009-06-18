@@ -30,6 +30,8 @@
 
   <title>GNU General Public License (GPL)</title>
 
+  <titleabbrev>GNU GPL</titleabbrev>
+
   <section id="gpl-preamble">
     <title>Preamble</title>
 
@@ -91,6 +93,8 @@
   <section id="gpl-2">
     <title>Terms and conditions for copying, distribution and
     modification</title>
+
+    <titleabbrev>Terms and conditions</titleabbrev>
 
     <?dbhtml stop-chunking?>
 
@@ -398,6 +402,8 @@
 
   <section id="gpl-how-to-apply-these-terms-to-your-new-programs">
     <title>How to apply these terms to your new programs</title>
+
+    <titleabbrev>New programs</titleabbrev>
 
     <para>If you develop a new program, and you want it to be of the greatest
     possible use to the public, the best way to achieve this is to make it
