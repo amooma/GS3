@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<book id="gemeinschaft-admin-doku" lang="de" revision="$Revision$">
+<book id="gemeinschaft-doku" lang="de" revision="$Revision$">
   <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
 % under the terms of the GNU Free Documentation License, Version 1.2
@@ -11,43 +11,19 @@
 % Free Documentation License".
 % Asterisk training and consulting is offered at http://www.amooma.de-->
 
-  <title>Gemeinschaft Admin-Doku</title>
+  <title>Gemeinschaft Doku</title>
 
-  <titleabbrev>Gemeinschaft Admin-Doku</titleabbrev>
+  <titleabbrev>Gemeinschaft</titleabbrev>
 
   <bookinfo>
-    <corpauthor><ulink
+    <corpauthor>Amooma GmbH &#8211; <ulink
     url="http://www.amooma.de">http://www.amooma.de</ulink></corpauthor>
 
-    <author id="amooma-gmbh">
-      <surname>Amooma GmbH</surname>
-
-      <address>Amooma GmbH &#8211; <street>Bachstr. 126</street> &#8211; <postcode>56566</postcode> <city>Neuwied</city> &#8211; <country>Germany</country></address>
-    </author>
-
-    <author>
-      <firstname>Stefan</firstname>
-
-      <surname>Wintermeyer</surname>
-
-      <email>stefan.wintermeyer@amooma.de</email>
-    </author>
-
-    <author>
-      <firstname>Philipp</firstname>
-
-      <surname>Kempgen</surname>
-
-      <email>philipp.kempgen@amooma.de</email>
-    </author>
-
-    <author>
-      <firstname>Peter</firstname>
-
-      <surname>Kozak</surname>
-
-      <email>peter.kozak@amooma.de</email>
-    </author>
+    <abstract>
+      <para>Dokumentation und -Handbuch der Asterisk-basierten
+      Open-Source-Telefonanlage <quote><ulink
+      url="http://www.amooma.de/gemeinschaft">Gemeinschaft</ulink></quote>.</para>
+    </abstract>
 
     <legalnotice id="main-legalnotice">
       <title>Lizenz dieser Dokumentation</title>
@@ -55,6 +31,19 @@
       <para>Lizenz dieser Dokumentation: GNU FDL (<ulink
       url="http://www.gnu.org/licenses/fdl.html">http://www.gnu.org/licenses/fdl.html</ulink>)</para>
     </legalnotice>
+
+    <authorblurb>
+      <para><address>Amooma GmbH &#8211; <street>Bachstr. 126</street> &#8211; <postcode>56566</postcode> <city>Neuwied</city> &#8211; <country>Germany</country></address>
+      &#8211; <email>info@amooma.de</email></para>
+
+      <para>Stefan Wintermeyer &#8211;
+      <email>stefan.wintermeyer@amooma.de</email></para>
+
+      <para>Philipp Kempgen &#8211;
+      <email>philipp.kempgen@amooma.de</email></para>
+
+      <para>Peter Kozak &#8211; <email>peter.kozak@amooma.de</email></para>
+    </authorblurb>
 
     <copyright>
       <year>2007</year>
@@ -75,62 +64,7 @@
 
       <keyword>Administration</keyword>
     </keywordset>
-
-    <abstract>
-      <para>Administrations-Dokumentation und -Handbuch der Asterisk-basierten
-      Open-Source-Telefonanlage <quote><ulink
-      url="http://www.amooma.de/gemeinschaft">Gemeinschaft</ulink></quote>.</para>
-    </abstract>
   </bookinfo>
 
-  <xi:include href="vorbemerkungen.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="installation.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="installation-zaptel.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="installation-sendmail.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="initial-configuration.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="dhcp-server.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="mysql-replikation.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="verzeichnisstruktur.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="cluster-watchdog.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="admin-scripts.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="service-nummern.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="verschiedenes.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="endgeraete.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="datenbank-tabellen.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="admin-scripts-alt.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="php-sicherheit.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="gnu-gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <index id="stichwortverzeichnis"></index>
+  <xi:include href="part-admin.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>

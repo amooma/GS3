@@ -68,6 +68,9 @@ by the local XML catalog.
 <xsl:param name="callout.graphics.number.limit" select="15" />
 <xsl:param name="callout.unicode" select="0" />
 
+<xsl:param name="use.role.for.mediaobject" select="1" />
+<xsl:param name="preferred.mediaobject.role" select="'html'" />
+
 <xsl:param name="toc.section.depth" select="2" />
 <xsl:param name="toc.max.depth" select="1" />
 <xsl:param name="generate.section.toc.level" select="10" />
@@ -111,7 +114,12 @@ by the local XML catalog.
 <xsl:param name="html.head.legalnotice.link.types" select="'copyright license'" />
 <xsl:param name="html.head.legalnotice.link.multiple" select="0" />
 
-<xsl:param name="inherit.keywords" select="1" />
+<xsl:param name="html.cellspacing" select="'1'" />
+
+<xsl:param name="header.rule" select="1" />
+<xsl:param name="footer.rule" select="1" />
+
+<xsl:param name="inherit.keywords" select="0" />
 
 <xsl:param name="make.valid.html" select="1" />
 <xsl:param name="html.cleanup" select="1" />
@@ -125,6 +133,38 @@ by the local XML catalog.
 <xsl:param name="olink.doctitle" select="'yes'" />
 <xsl:param name="prefer.internal.olink" select="0" />
 
+<xsl:param name="generate.toc">
+appendix  toc,title
+article/appendix  nop
+article   toc,title
+book      toc,title,figure,table,example,equation
+chapter   toc,title
+part      toc,title
+preface   toc,title
+qandadiv  toc
+qandaset  toc
+reference toc,title
+sect1     toc,title
+sect2     toc,title
+sect3     toc,title
+sect4     toc,title
+sect5     toc,title
+section   toc,title
+set       toc,title
+</xsl:param>
+
+
+
+
+
+
+
+<xsl:template match="*" mode="x.titleabbrev.markup.textonly">
+	<xsl:variable name="titleabbrev">
+		<xsl:apply-templates select="." mode="titleabbrev.markup"/>
+	</xsl:variable>
+	<xsl:value-of select="normalize-space($titleabbrev)"/>
+</xsl:template>
 
 <!--<![CDATA[
 ### Template to generate "breadcrumbs":
@@ -141,14 +181,18 @@ by the local XML catalog.
 							<xsl:with-param name="context" select="$this.node" />
 						</xsl:call-template>
 					</xsl:attribute>
-					<xsl:apply-templates select="." mode="title.markup" />
+					<!--<![CDATA[ <xsl:apply-templates select="." mode="title.markup" /> ]]>-->
+					<!--<![CDATA[ <xsl:apply-templates select="." mode="title.markup.textonly" /> ]]>-->
+					<!--<![CDATA[ <xsl:apply-templates select="." mode="titleabbrev.markup" /> ]]>-->
+					<xsl:apply-templates select="." mode="x.titleabbrev.markup.textonly" />
 				</a>
 			</span>
 			<xsl:text> &#x2192; </xsl:text>
 		</xsl:for-each>
 		<!-- And display the current node, but not as a link -->
 		<span class="breadcrumb-self">
-			<xsl:apply-templates select="$this.node" mode="title.markup" />
+			<!--<![CDATA[ <xsl:apply-templates select="$this.node" mode="title.markup" /> ]]>-->
+			<xsl:apply-templates select="." mode="x.titleabbrev.markup.textonly" />
 		</span>
 	</div>
 </xsl:template>
@@ -260,22 +304,99 @@ by the local XML catalog.
 
 
 
+<xsl:param name="x.user.outer.before">
+</xsl:param>
 
+<xsl:param name="x.user.outer.after">
+	<div id="footer">
+		<a target="_blank" href="http://www.amooma.de">Amooma GmbH</a> &#x2013; Bachstr. 126 &#x2013; 56566 Neuwied &#x2013; Germany<br />
+		Tel. +49-2631-337000 &#x2013; E-Mail: <a target="_blank" href="mailto:info@amooma.de">info@amooma.de</a>
+	</div>
+</xsl:param>
 
-
-<xsl:template name="unwrap.p">
-	<xsl:param name="p"/>
-	<xsl:choose>
-		<xsl:when test="function-available('exsl:node-set')											and function-available('set:leading')											and function-available('set:trailing')">
-			<xsl:text></xsl:text>
-			<xsl:apply-templates select="exsl:node-set($p)" mode="unwrap.p"/>
-			<xsl:text></xsl:text>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:copy-of select="$p"/>
-		</xsl:otherwise>
-	</xsl:choose>
+<xsl:template name="x.user.outer.before">
+	<xsl:if test="$x.user.outer.before">
+		<xsl:comment> x.user.outer.before { </xsl:comment>
+		<xsl:copy-of select="$x.user.outer.before" />
+		<xsl:comment> x.user.outer.before } </xsl:comment>
+	</xsl:if>
+	
+	<xsl:comment> docbook content wrapper { </xsl:comment>
 </xsl:template>
+
+<xsl:template name="x.user.outer.after">
+	<xsl:comment> docbook content wrapper } </xsl:comment>
+	
+	<xsl:if test="$x.user.outer.after">
+		<xsl:comment> x.user.outer.after { </xsl:comment>
+		<xsl:copy-of select="$x.user.outer.after" />
+		<xsl:comment> x.user.outer.after } </xsl:comment>
+	</xsl:if>
+</xsl:template>
+
+
+
+
+
+
+
+<xsl:template name="chunk-element-content">
+  <xsl:param name="prev"/>
+  <xsl:param name="next"/>
+  <xsl:param name="nav.context"/>
+  <xsl:param name="content">
+    <xsl:apply-imports/>
+  </xsl:param>
+
+  <xsl:call-template name="user.preroot"/>
+
+  <html>
+    <xsl:call-template name="html.head">
+      <xsl:with-param name="prev" select="$prev"/>
+      <xsl:with-param name="next" select="$next"/>
+    </xsl:call-template>
+
+    <body>
+      <xsl:call-template name="body.attributes"/>
+      <!-- - - - - - - - - - - - - - - - - - - - - NEW { - - - - -->
+      <div id="page-margins">
+      <xsl:call-template name="x.user.outer.before"/>
+      <div id="dbk-wrapper">
+      <!-- - - - - - - - - - - - - - - - - - - - - NEW } - - - - -->
+      <xsl:call-template name="user.header.navigation"/>
+
+      <xsl:call-template name="header.navigation">
+        <xsl:with-param name="prev" select="$prev"/>
+        <xsl:with-param name="next" select="$next"/>
+        <xsl:with-param name="nav.context" select="$nav.context"/>
+      </xsl:call-template>
+
+      <xsl:call-template name="user.header.content"/>
+
+      <xsl:copy-of select="$content"/>
+
+      <xsl:call-template name="user.footer.content"/>
+
+      <xsl:call-template name="footer.navigation">
+        <xsl:with-param name="prev" select="$prev"/>
+        <xsl:with-param name="next" select="$next"/>
+        <xsl:with-param name="nav.context" select="$nav.context"/>
+      </xsl:call-template>
+
+      <xsl:call-template name="user.footer.navigation"/>
+      <!-- - - - - - - - - - - - - - - - - - - - - NEW { - - - - -->
+      </div>
+      <xsl:call-template name="x.user.outer.after"/>
+      </div>
+      <!-- - - - - - - - - - - - - - - - - - - - - NEW } - - - - -->
+    </body>
+  </html>
+  <xsl:value-of select="$chunk.append"/>
+</xsl:template>
+
+
+
+
 
 
 
