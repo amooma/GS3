@@ -158,8 +158,8 @@ read_config();
 # create multicast socket
 my $sock = IO::Socket::Multicast->new(
 	Proto      => 'udp',
-	LocalPort  => $my_sip_ip_port,  # / '0.0.0.0' ?
-	LocalAddr  => $my_sip_ip_addr,
+	LocalPort  => $my_sip_ip_port,
+	LocalAddr  => $my_sip_ip_addr,  # / '0.0.0.0' ?
 	Reuse      => 1,
 	ReuseAddr  => 1
 )
