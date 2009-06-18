@@ -30,7 +30,7 @@ p { /* para */
 	font-size: 1.02em;
 }
 dd { /* simpara in list entry */
-	max-width: 50em;
+	max-width: 48em;
 }
 
 pre {
@@ -78,6 +78,10 @@ code, .code {
 .command {
 	font-family: Courier, Courier New, Monaco, monospace;
 	color: #038;
+	font-size: 0.96em;
+}
+pre .command {
+	font-size: 1em;
 }
 .prompt {
 	color: #903;
@@ -166,29 +170,35 @@ small {
 .warning {
 	padding: 0.05em;
 	margin: 0.2em 3em;
-	border-width: 0 1px 1px 0;
-	border-style: none solid solid none;
+	border-width: 1px 1px 1px 1px;
+	border-style: solid solid solid solid;
+	max-width: 50em;
 }
 
 .tip {
-	background: #efe;
-	border-color: transparent #dcc #dcc transparent;
+	background: #f3f3f3;
+	border-color: #ebebeb #ccc #ccc #ebebeb;
+	color: #000;
 }
 .note {
 	background: #dfd;
-	border-color: transparent #dcc #dcc transparent;
+	border-color: #ebebeb #dcc #dcc #ebebeb;
+	color: #350;
 }
 .important {
 	background: #ffc;
-	border-color: transparent #dcc #dcc transparent;
+	border-color: #eeeecc #dd9 #dd9 #eeeecc;
+	color: #330;
 }
-.warning {
+.caution {
 	background: #fed;
-	border-color: transparent #dcc #dcc transparent;
+	border-color: #ebebeb #dcc #dcc #ebebeb;
+	color: #930;
 }
 .warning {
 	background: #fdd;
-	border-color: transparent #dcc #dcc transparent;
+	border-color: #ebebeb #dcc #dcc #ebebeb;
+	color: #930;
 }
 
 
@@ -197,25 +207,23 @@ small {
 .important td p,
 .caution td p,
 .warning td p {
-	margin-top: -4px;
-	padding: 2px 2px 3px 3px;
+	margin: 0;
+	padding: 0;
 }
 .tip td p {
-	color: #350;
-	background: #ffd;
+	/*background: #f6f6f6;*/
 }
 .note td p {
-	color: #350;
-	background: #efe;
+	/*background: #efe;*/
 }
 .important td p {
-	color: #330;
-	background: #ffd;
+	/*background: #ffd;*/
 }
-.caution td p,
-.warning td p{
-	color: #930;
-	background: #fed;
+.caution td p {
+	/*background: #fed;*/
+}
+.warning td p {
+	/*background: #fed;*/
 }
 
 .itemizedlist li p {
