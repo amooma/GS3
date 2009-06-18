@@ -13,6 +13,8 @@
 
   <title>Gemeinschaft Admin-Doku</title>
 
+  <titleabbrev>Gemeinschaft Admin-Doku</titleabbrev>
+
   <bookinfo>
     <corpauthor><ulink
     url="http://www.amooma.de">http://www.amooma.de</ulink></corpauthor>
@@ -67,8 +69,6 @@
     <keywordset>
       <keyword>Gemeinschaft</keyword>
 
-      <keyword>Doku</keyword>
-
       <keyword>Dokumentation</keyword>
 
       <keyword>Admin</keyword>
@@ -77,7 +77,7 @@
     </keywordset>
 
     <abstract>
-      <para>Administrations-Doku und -Handbuch für die Asterisk-basierte
+      <para>Administrations-Dokumentation und -Handbuch der Asterisk-basierten
       Open-Source-Telefonanlage <quote><ulink
       url="http://www.amooma.de/gemeinschaft">Gemeinschaft</ulink></quote>.</para>
     </abstract>
