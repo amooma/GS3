@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<part id="admin-doku" lang="de" revision="$Revision$">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <partinfo>
+    <keywordset>
+      <keyword>Gemeinschaft</keyword>
+
+      <keyword>Dokumentation</keyword>
+
+      <keyword>Admin</keyword>
+
+      <keyword>Administration</keyword>
+    </keywordset>
+
+    <abstract>
+      <para>Administrator-Dokumentation und -Handbuch der Asterisk-basierten
+      Open-Source-Telefonanlage <quote><ulink
+      url="http://www.amooma.de/gemeinschaft">Gemeinschaft</ulink></quote>.</para>
+    </abstract>
+  </partinfo>
+
+  <title>Admin-Doku</title>
+
+  <titleabbrev>Admin-Doku</titleabbrev>
+
+  <xi:include href="vorbemerkungen.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="installation.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="installation-zaptel.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="installation-sendmail.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="initial-configuration.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="dhcp-server.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="mysql-replikation.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="verzeichnisstruktur.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="cluster-watchdog.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="admin-scripts.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="service-nummern.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="verschiedenes.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="endgeraete.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="datenbank-tabellen.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="admin-scripts-alt.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="php-sicherheit.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="gnu-gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <index id="stichwortverzeichnis"></index>
+</part>
