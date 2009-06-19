@@ -314,6 +314,14 @@ small {
 }
 
 .book .toc {
+	font-size: 1.1em;
+}
+.book .toc dl,
+.book .toc ul {
+	font-size: 1.1em;
+}
+.book .toc .part a {
+	font-weight: bold;
 	font-size: 1.2em;
 }
 
