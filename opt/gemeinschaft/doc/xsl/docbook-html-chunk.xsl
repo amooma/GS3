@@ -71,6 +71,9 @@ by the local XML catalog.
 <xsl:param name="use.role.for.mediaobject" select="1" />
 <xsl:param name="preferred.mediaobject.role" select="'html'" />
 
+<xsl:param name="chunk.first.sections" select="1" />
+<xsl:param name="chunk.section.depth" select="1" />
+
 <xsl:param name="toc.section.depth" select="2" />
 <xsl:param name="toc.max.depth" select="1" />
 <xsl:param name="generate.section.toc.level" select="10" />
@@ -92,9 +95,6 @@ by the local XML catalog.
 
 <xsl:param name="autotoc.label.in.hyperlink" select="0" />
 <xsl:param name="autotoc.label.separator" select="'.&#xA0; '" />
-
-<xsl:param name="chunk.first.sections" select="1" />
-<xsl:param name="chunk.section.depth" select="1" />
 
 <xsl:param name="html.extra.head.links" select="0" />
 <xsl:param name="ulink.target" select="'_blank'" />
