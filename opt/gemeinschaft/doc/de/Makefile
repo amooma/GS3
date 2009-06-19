@@ -486,7 +486,6 @@ build-log-validate:
 		echo "= $@:   done"                | tee -ia $(build-log-validate-log) ;\
 		echo $(build-log-sep)              | tee -ia $(build-log-validate-log) ;\
 		true
-	$(MAKE) clean
 
 build-log-html-chunk-xsl:
 	mkdir -p `dirname $(build-log-html-chunk-xsl-log)`
@@ -508,7 +507,6 @@ build-log-html-chunk-xsl:
 		echo "= $@:   done"                | tee -ia $(build-log-html-chunk-xsl-log) ;\
 		echo $(build-log-sep)              | tee -ia $(build-log-html-chunk-xsl-log) ;\
 		true
-	$(MAKE) clean
 
 build-log-pdf-jw:
 	mkdir -p `dirname $(build-log-pdf-jw-log)`
@@ -530,7 +528,6 @@ build-log-pdf-jw:
 		echo "= $@:   done"                | tee -ia $(build-log-pdf-jw-log) ;\
 		echo $(build-log-sep)              | tee -ia $(build-log-pdf-jw-log) ;\
 		true
-	$(MAKE) clean
 
 build-log-man-xsl:
 	mkdir -p `dirname $(build-log-man-xsl-log)`
@@ -552,7 +549,6 @@ build-log-man-xsl:
 		echo "= $@:   done"                | tee -ia $(build-log-man-xsl-log) ;\
 		echo $(build-log-sep)              | tee -ia $(build-log-man-xsl-log) ;\
 		true
-	$(MAKE) clean
 
 build-log-all:
 	$(MAKE) build-log-validate            || true
