@@ -11,7 +11,7 @@
       <holder>Free Software Foundation, Inc.</holder>
     </copyright>
 
-    <legalnotice id="gpl-legalnotice">
+    <legalnotice id="gnu-gpl-legalnotice">
       <para><address>Free Software Foundation, Inc.
 <street>51 Franklin Street, Fifth Floor</street>,
 <city>Boston</city>, <state>MA</state> <postcode>02110-1301</postcode>
@@ -30,7 +30,7 @@
 
   <titleabbrev>GNU GPL</titleabbrev>
 
-  <section id="gpl-preamble">
+  <section id="gnu-gpl-preamble">
     <title>Preamble</title>
 
     <para>The licenses for most software are designed to take away your
@@ -88,7 +88,7 @@
     modification follow.</para>
   </section>
 
-  <section id="gpl-2">
+  <section id="gnu-gpl-terms-and-conditions">
     <title>Terms and conditions for copying, distribution and
     modification</title>
 
@@ -96,7 +96,7 @@
 
     <?dbhtml stop-chunking?>
 
-    <section id="gpl-terms-and-conditions-0">
+    <section id="gnu-gpl-terms-and-conditions-0">
       <title>Section 0</title>
 
       <para>This License applies to any program or other work which contains a
@@ -118,7 +118,7 @@
       is true depends on what the Program does.</para>
     </section>
 
-    <section id="gpl-terms-and-conditions-1">
+    <section id="gnu-gpl-terms-and-conditions-1">
       <title>Section 1</title>
 
       <para>You may copy and distribute verbatim copies of the Program's
@@ -134,13 +134,13 @@
       fee.</para>
     </section>
 
-    <section id="gpl-terms-and-conditions-2">
+    <section id="gnu-gpl-terms-and-conditions-2">
       <title>Section 2</title>
 
       <para>You may modify your copy or copies of the Program or any portion
       of it, thus forming a work based on the Program, and copy and distribute
       such modifications or work under the terms of <link
-      linkend="gpl-terms-and-conditions-1">Section 1</link> above, provided
+      linkend="gnu-gpl-terms-and-conditions-1">Section 1</link> above, provided
       that you also meet all of these conditions: <orderedlist
           numeration="loweralpha">
           <listitem>
@@ -192,42 +192,42 @@
       under the scope of this License.</para>
     </section>
 
-    <section id="gpl-terms-and-conditions-3">
+    <section id="gnu-gpl-terms-and-conditions-3">
       <title>Section 3</title>
 
       <para>You may copy and distribute the Program (or a work based on it,
-      under <link linkend="gpl-terms-and-conditions-2">Section 2</link> in
+      under <link linkend="gnu-gpl-terms-and-conditions-2">Section 2</link> in
       object code or executable form under the terms of <link
-      linkend="gpl-terms-and-conditions-1">Sections 1</link> and <link
-      linkend="gpl-terms-and-conditions-2">2</link> above provided that you
+      linkend="gnu-gpl-terms-and-conditions-1">Sections 1</link> and <link
+      linkend="gnu-gpl-terms-and-conditions-2">2</link> above provided that you
       also do one of the following: <orderedlist numeration="loweralpha">
-          <listitem id="gpl-terms-and-conditions-3-a">
+          <listitem id="gnu-gpl-terms-and-conditions-3-a">
             <para>Accompany it with the complete corresponding
             machine-readable source code, which must be distributed under the
-            terms of <link linkend="gpl-terms-and-conditions-1">Sections
-            1</link> and <link linkend="gpl-terms-and-conditions-2">2</link>
+            terms of <link linkend="gnu-gpl-terms-and-conditions-1">Sections
+            1</link> and <link linkend="gnu-gpl-terms-and-conditions-2">2</link>
             above on a medium customarily used for software interchange;
             or,</para>
           </listitem>
 
-          <listitem id="gpl-terms-and-conditions-3-b">
+          <listitem id="gnu-gpl-terms-and-conditions-3-b">
             <para>Accompany it with a written offer, valid for at least three
             years, to give any third party, for a charge no more than your
             cost of physically performing source distribution, a complete
             machine-readable copy of the corresponding source code, to be
             distributed under the terms of <link
-            linkend="gpl-terms-and-conditions-1">Sections 1</link> and <link
-            linkend="gpl-terms-and-conditions-2">2</link> above on a medium
+            linkend="gnu-gpl-terms-and-conditions-1">Sections 1</link> and <link
+            linkend="gnu-gpl-terms-and-conditions-2">2</link> above on a medium
             customarily used for software interchange; or,</para>
           </listitem>
 
-          <listitem id="gpl-terms-and-conditions-3-c">
+          <listitem id="gnu-gpl-terms-and-conditions-3-c">
             <para>Accompany it with the information you received as to the
             offer to distribute corresponding source code. (This alternative
             is allowed only for noncommercial distribution and only if you
             received the program in object code or executable form with such
             an offer, in accord with <link
-            linkend="gpl-terms-and-conditions-3-b">Subsection b</link>
+            linkend="gnu-gpl-terms-and-conditions-3-b">Subsection b</link>
             above.)</para>
           </listitem>
         </orderedlist></para>
@@ -250,7 +250,7 @@
       source along with the object code.</para>
     </section>
 
-    <section id="gpl-terms-and-conditions-4">
+    <section id="gnu-gpl-terms-and-conditions-4">
       <title>Section 4</title>
 
       <para>You may not copy, modify, sublicense, or distribute the Program
@@ -262,7 +262,7 @@
       full compliance.</para>
     </section>
 
-    <section id="gpl-terms-and-conditions-5">
+    <section id="gnu-gpl-terms-and-conditions-5">
       <title>Section 5</title>
 
       <para>You are not required to accept this License, since you have not
@@ -275,7 +275,7 @@
       Program or works based on it.</para>
     </section>
 
-    <section id="gpl-terms-and-conditions-6">
+    <section id="gnu-gpl-terms-and-conditions-6">
       <title>Section 6</title>
 
       <para>Each time you redistribute the Program (or any work based on the
@@ -287,7 +287,7 @@
       License.</para>
     </section>
 
-    <section id="gpl-terms-and-conditions-7">
+    <section id="gnu-gpl-terms-and-conditions-7">
       <title>Section 7</title>
 
       <para>If, as a consequence of a court judgment or allegation of patent
@@ -323,7 +323,7 @@
       to be a consequence of the rest of this License.</para>
     </section>
 
-    <section id="gpl-terms-and-conditions-8">
+    <section id="gnu-gpl-terms-and-conditions-8">
       <title>Section 8</title>
 
       <para>If the distribution and/or use of the Program is restricted in
@@ -335,7 +335,7 @@
       limitation as if written in the body of this License.</para>
     </section>
 
-    <section id="gpl-terms-and-conditions-9">
+    <section id="gnu-gpl-terms-and-conditions-9">
       <title>Section 9</title>
 
       <para>The Free Software Foundation may publish revised and/or new
@@ -352,7 +352,7 @@
       ever published by the Free Software Foundation.</para>
     </section>
 
-    <section id="gpl-terms-and-conditions-10">
+    <section id="gnu-gpl-terms-and-conditions-10">
       <title>Section 10</title>
 
       <para>If you wish to incorporate parts of the Program into other free
@@ -365,7 +365,7 @@
       generally.</para>
     </section>
 
-    <section id="gpl-terms-and-conditions-11">
+    <section id="gnu-gpl-terms-and-conditions-11">
       <title>Section 11 &#8211; <emphasis>No warranty</emphasis></title>
 
       <para><emphasis role="bold">Because the Program is licensed free of
@@ -380,7 +380,7 @@
       correction.</emphasis></para>
     </section>
 
-    <section id="gpl-terms-and-conditions-12">
+    <section id="gnu-gpl-terms-and-conditions-12">
       <title>Section 12</title>
 
       <para><emphasis role="bold">In no event unless required by applicable
@@ -398,7 +398,7 @@
     </section>
   </section>
 
-  <section id="gpl-how-to-apply-these-terms-to-your-new-programs">
+  <section id="gnu-gpl-how-to-apply-these-terms-to-your-new-programs">
     <title>How to apply these terms to your new programs</title>
 
     <titleabbrev>New programs</titleabbrev>
