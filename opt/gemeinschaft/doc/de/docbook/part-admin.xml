@@ -33,9 +33,6 @@
 
   <titleabbrev>Admin-Doku</titleabbrev>
 
-  <xi:include href="vorbemerkungen.xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
   <xi:include href="installation.xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
@@ -79,8 +76,6 @@
 
   <xi:include href="php-sicherheit.xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="gnu-gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <index id="stichwortverzeichnis"></index>
 </part>

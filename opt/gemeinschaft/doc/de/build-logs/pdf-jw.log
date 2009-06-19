@@ -21,6 +21,7 @@ mkdir -p pdf
 Using catalogs: /etc/sgml/catalog
 Using stylesheet: /usr/share/docbook-utils/docbook-utils.dsl#print
 Working on: /usr/src/gemeinschaft-trunk-fresh/opt/gemeinschaft/doc/de/tmp/docbook-HANDBUCH-one-file.xml
+openjade:/usr/share/sgml/docbook/stylesheet/dsssl/modular/print/dbblock.dsl:159:3:E: flow objects at the root must be all of class scroll or all of class page-sequence or simple-page-sequence
 Done.
 mv pdf/docbook-HANDBUCH-one-file.pdf pdf/Gemeinschaft-Handbuch.pdf
 ############################################################
