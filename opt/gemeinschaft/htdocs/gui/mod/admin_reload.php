@@ -45,18 +45,29 @@ $shutdown_enabled =
 */
 
 ?>
+<script type="text/javascript">
+
+	function disableKeys( submit ) {
+		document.forms[1].ButtonDpReload.disabled=true;
+		document.forms[2].ButtonAstReload.disabled=true;
+		document.forms[submit].submit();
+		
+	}
+
+</script>
+
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>" class="inline">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="dialplan-reload" />
-<input type="submit" value="<?php echo __('Dialplan neu laden'); ?>" />
+<input type="submit"  value="<?php echo __('Dialplan neu laden'); ?>" name="ButtonDpReload" onClick="disableKeys(1)" />
 </form>
 &nbsp;
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>" class="inline">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
-<input type="hidden" name="action" value="reload" />
-<input type="submit" value="<?php echo __('Asterisk neu laden'); ?>" />
+<input type="hidden" name="action" value="reload"  />
+<input type="submit" value="<?php echo __('Asterisk neu laden'); ?>" name="ButtonAstReload" onClick="disableKeys(2)" />
 </form>
 &nbsp;
 
