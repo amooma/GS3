@@ -309,26 +309,35 @@ set       toc,title
 
 <xsl:param name="x.user.outer.after">
 	<div id="footer">
-		<a target="_blank" href="http://www.amooma.de">Amooma GmbH</a> &#x2013; Bachstr. 126 &#x2013; 56566 Neuwied &#x2013; Germany<br />
-		Tel. +49-2631-337000 &#x2013; E-Mail: <a target="_blank" href="mailto:info@amooma.de">info@amooma.de</a>
+		<a target="_blank" href="http://www.amooma.de">Amooma GmbH</a> &#x2013; Bachstr. 126 &#x2013; 56566 Neuwied &#x2013; <span xml:lang="en">Germany</span><br />
+		Tel. +49-2631-337000 &#x2013; E-Mail: <a target="_blank" href="mailto:info@amooma.de">info@amooma.de</a><br />
+		<a target="_blank" href="http://www.amooma.de/gemeinschaft">www.amooma.de/gemeinschaft</a>
 	</div>
+	
+	<script type="text/javascript" src="http://www.google-analytics.com/urchin.js"></script>
+	<script type="text/javascript">
+		<xsl:text disable-output-escaping="yes"><![CDATA[
+			var _uacct = "UA-2879620-1";
+			try {urchinTracker();} catch(e){}
+		]]></xsl:text>
+	</script>
 </xsl:param>
 
 <xsl:template name="x.user.outer.before">
 	<xsl:if test="$x.user.outer.before">
-		<xsl:comment> x.user.outer.before { </xsl:comment>
+		<xsl:comment> { x.user.outer.before </xsl:comment>
 		<xsl:copy-of select="$x.user.outer.before" />
 		<xsl:comment> x.user.outer.before } </xsl:comment>
 	</xsl:if>
 	
-	<xsl:comment> docbook content wrapper { </xsl:comment>
+	<xsl:comment> { docbook content wrapper </xsl:comment>
 </xsl:template>
 
 <xsl:template name="x.user.outer.after">
 	<xsl:comment> docbook content wrapper } </xsl:comment>
 	
 	<xsl:if test="$x.user.outer.after">
-		<xsl:comment> x.user.outer.after { </xsl:comment>
+		<xsl:comment> { x.user.outer.after </xsl:comment>
 		<xsl:copy-of select="$x.user.outer.after" />
 		<xsl:comment> x.user.outer.after } </xsl:comment>
 	</xsl:if>
@@ -351,6 +360,9 @@ set       toc,title
   <xsl:call-template name="user.preroot"/>
 
   <html>
+    <!-- - - - - - - - - - - - - - - - - - - - - NEW { - - - - -->
+    <xsl:call-template name="language.attribute"/>
+    <!-- - - - - - - - - - - - - - - - - - - - - NEW } - - - - -->
     <xsl:call-template name="html.head">
       <xsl:with-param name="prev" select="$prev"/>
       <xsl:with-param name="next" select="$next"/>
@@ -362,6 +374,7 @@ set       toc,title
       <div id="page-margins">
       <xsl:call-template name="x.user.outer.before"/>
       <div id="dbk-wrapper">
+      <xsl:call-template name="language.attribute"/>
       <!-- - - - - - - - - - - - - - - - - - - - - NEW } - - - - -->
       <xsl:call-template name="user.header.navigation"/>
 

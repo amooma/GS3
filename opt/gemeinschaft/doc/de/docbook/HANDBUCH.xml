@@ -66,5 +66,22 @@
     </keywordset>
   </bookinfo>
 
+  <preface id="gemeinschaft-einleitung">
+    <title>Gemeinschaft</title>
+
+    <para><quote>Gemeinschaft</quote> ist eine Open-Source-Telefonanlage die
+    auf Asterisk basiert. Gemeinschaft wurde und wird für große Installationen
+    (mehr als 1000 Telefone) entwickelt, kann aber natürlich auch für kleine
+    Anlagen eingesetzt werden. Es läßt sich sowohl als ausfallsicherer Cluster
+    als auch auf einem einzelnen Server installieren.</para>
+
+    <para>Lizenz: GNU GPL (<xref linkend="gnu-gpl" />).</para>
+
+    <para>Gemeinschaft installieren/administrieren: <xref
+    linkend="admin-doku" /></para>
+  </preface>
+
   <xi:include href="part-admin.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="gnu-gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>
