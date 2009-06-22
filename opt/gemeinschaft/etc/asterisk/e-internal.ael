@@ -1098,19 +1098,11 @@ context to-internal-users-self {
 			if ("${DIALSTATUS}" = "ANSWER")
 				Set(type=in);
 			
-			/*
-			Verbose(1,###### CALLERID(all)  : ${CALLERID(all)});
-			Verbose(1,###### CALLERID(ani)  : ${CALLERID(ani)});
-			Verbose(1,###### CALLERID(dnid) : ${CALLERID(dnid)});
-			Verbose(1,###### CALLERID(rdnis): ${CALLERID(rdnis)});
-			Verbose(1,###### CALLERID(num)  : ${CALLERID(num)});
-			Verbose(1,###### origext        : ${origext});
-			Verbose(1,###### user_name      : ${user_name});
-			*/
 			if ("${CALLERID(dnid)}" != "" && "${DIALEDPEERNUMBER:0:1}" != "*") {
-				//&dial-log-store(${origext},${type},${user_name});
-				&dial-log-store(${CALLERID(dnid)},${type},${CALLERID(num)});
-				//FIXME - does not always work as expected
+				if ("${did_ext_to}" != "")
+					&dial-log-store(${did_ext_to},${type},${CALLERID(num)});
+				else
+					&dial-log-store(${CALLERID(dnid)},${type},${CALLERID(num)});
 			}
 		}
 	}
