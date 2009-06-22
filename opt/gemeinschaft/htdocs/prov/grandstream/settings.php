@@ -520,7 +520,7 @@ psetting('P48', $sip_proxy_and_sbc['sip_proxy_from_wan']);  # Outbound Proxy
 psetting('P35', $user_ext);		# SIP User ID
 psetting('P36', $user_ext);		# Authentication ID
 psetting('P34', $user['secret']);	# SIP Authentication Password (cleartext)
-psetting('P3',  $user['callerid']);	# Display (CallerID) Name
+psetting('P3',  $user_ext .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);  # Display (CallerID) Name
 psetting('P103', '0');			# Use DNS SRV ( 0 = no, 1 = yes )
 psetting('P63', '1');			# UserID is phone number ( 0 = no, 1 = yes )
 psetting('P31', '1');			# SIP Registration ( 0 = no register, 1 = register )
