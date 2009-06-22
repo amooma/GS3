@@ -78,7 +78,8 @@ if (strToLower(@$ua_parts[0]) !== 'grandstream') {
 	gs_log( GS_LOG_WARNING, "Phone with IP \"". $_SERVER['REMOTE_ADDR'] ."\" has invalid User-Agent (\"". $ua ."\")" );
 	_err( 'No! See log for details.' );
 }
-if (! preg_match('/(bt|gxp|gxv)[0-9]{1,6}/', strToLower(@$ua_parts[1]), $m)) {
+if (! preg_match('/(gxp|gxv)[0-9]{1,6}/', strToLower(@$ua_parts[1]), $m)) {
+	# BT models can't download a phone book
 	gs_log( GS_LOG_WARNING, "Phone with IP \"". $_SERVER['REMOTE_ADDR'] ."\" has invalid phone type (\"". $ua_parts[1] ."\")" );
 	_err( 'No! See log for details.' );
 }
