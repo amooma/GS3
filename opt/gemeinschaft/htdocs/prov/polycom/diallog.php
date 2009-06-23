@@ -134,11 +134,6 @@ if(!$type)
 	}
 
 	echo "</body>\n";
-
-	echo "<softkey index=\"1\" label=\"Beenden\" action=\"Softkey:Exit\" />\n";
-	echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"3\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
 	echo "</html>\n";
 }
 
@@ -186,8 +181,6 @@ else
 		echo "<th width=\"30%\">Datum</th>";
 		echo "<th width=\"70%\">Nummer</th></tr>\n";
 
-//		echo "<tbody>";
-
 		while($r = $rs->fetchRow())
 		{
 			unset($num_calls);
@@ -230,17 +223,13 @@ else
 			echo "</a></td></tr>\n";
 		}
 
-//		echo "</tbody></table>\n";
 		echo "</table>\n";
 	}
 
 	echo "</body>\n";
 
-//	echo "<softkey index=\"1\" label=\"L\xC3\xB6schen\" action=\"Softkey:Fetch;". $url_polycom_dl ."?user=". $user ."&amp;type=". $type ."&amp;delete=1\" />\n";
 	echo "<softkey index=\"1\" label=\"Leeren\" action=\"Softkey:Fetch;". $url_polycom_dl ."?user=". $user ."&amp;type=". $type ."&amp;delete=1\" />\n";
 	echo "<softkey index=\"2\" label=\"Beenden\" action=\"Softkey:Exit\" />\n";
-	echo "<softkey index=\"3\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
 	echo "</html>\n";
 	
 	if($type == "missed")

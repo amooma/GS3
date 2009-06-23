@@ -135,11 +135,6 @@ else
 
 echo "</body>\n";
 
-echo "<softkey index=\"1\" label=\"Beenden\" action=\"Softkey:Exit\" />\n";
-echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-echo "<softkey index=\"3\" label=\"\" action=\"\" />\n";
-echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
-
 echo "</html>\n";
 
 _ob_send();
