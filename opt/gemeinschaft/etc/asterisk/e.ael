@@ -983,6 +983,7 @@ context urldial {
 	
 	_X. => jump u-${EXTEN};
 	_X  => jump u-${EXTEN};
+	_*. => jump u-${EXTEN};
 	
 	_u-. => {
 		Set(callfile_target=${EXTEN:2});
