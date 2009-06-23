@@ -164,10 +164,6 @@ if(!$type)
 
         echo "</body>\n";
 
-        echo "<softkey index=\"1\" label=\"Beenden\" action=\"Softkey:Exit\" />\n";
-        echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-        echo "<softkey index=\"3\" label=\"\" action=\"\" />\n";
-        echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
         echo "</html>\n";
 
 	_ob_send();
@@ -209,11 +205,6 @@ if($searchform === 1)
 	echo "</form>\n";
 
 	echo "</body>\n";
-
-	echo "<softkey index=\"1\" label=\"Zur\xC3\xBCck\" action=\"Softkey:Back\" />\n";
-	echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"3\" label=\"Beenden\" action=\"Softkey:Exit\" />\n";
-	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
 
 	echo "</html>\n";
 

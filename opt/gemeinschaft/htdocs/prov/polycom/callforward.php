@@ -302,11 +302,6 @@ if((($type == "internal") || ($type == "external")) && (!isset($_REQUEST["key"])
 
 	echo "</body>\n";
 
-	echo "<softkey index=\"1\" label=\"Beenden\" action=\"Softkey:Exit\" />\n";
-	echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"3\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
-
 	echo "</html>\n";
 
 	_ob_send();
@@ -356,11 +351,6 @@ if((($type == "internal") || ($type == "external")) && (isset($_REQUEST["key"]))
 
 		echo "</body>\n";
 
-		echo "<softkey index=\"1\" label=\"Beenden\" action=\"Softkey:Exit\" />\n";
-		echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-		echo "<softkey index=\"3\" label=\"\" action=\"\" />\n";
-		echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
-
 		echo "</html>\n";
 
 		_ob_send();
@@ -386,11 +376,6 @@ if((($type == "internal") || ($type == "external")) && (isset($_REQUEST["key"]))
 		echo "</table>\n";
 
 		echo "</body>\n";
-
-		echo "<softkey index=\"1\" label=\"Beenden\" action=\"Softkey:Exit\" />\n";
-		echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-		echo "<softkey index=\"3\" label=\"\" action=\"\" />\n";
-		echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
 
 		echo "</html>\n";
 
@@ -454,11 +439,6 @@ if((($type == "std") || ($type == "var")) && (!isset($_REQUEST["value"])))
 
 	echo "</body>\n";
 
-	echo "<softkey index=\"1\" label=\"Beenden\" action=\"Softkey:Exit\" />\n";
-	echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"3\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
-
 	echo "</html>\n";
 
 	_ob_send();
@@ -515,11 +495,6 @@ if(($type == "timeout") && (!isset($_REQUEST["value"])))
 
 	echo "</body>\n";
 
-	echo "<softkey index=\"1\" label=\"Beenden\" action=\"Softkey:Exit\" />\n";
-	echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"3\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
-
 	echo "</html>\n";
 
 	_ob_send();
@@ -553,11 +528,6 @@ if(!$type)
 	echo "- <a href=\"". $url_polycom_callforward ."?m=". $mac ."&amp;u=". $user ."&amp;t=timeout\">Nicht-Antwort-Timeout</a><br />\n";
 
 	echo "</body>\n";
-
-	echo "<softkey index=\"1\" label=\"Beenden\" action=\"Softkey:Exit\" />\n";
-	echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"3\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
 
 	echo "</html>\n";
 
