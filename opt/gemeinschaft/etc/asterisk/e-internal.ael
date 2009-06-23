@@ -406,39 +406,39 @@ context to-internal-users {
 	// Dial mailbox directly
 	//----------------------------------------------------------
 	
-	_**Z. => {
-		Set(box=${EXTEN:2});
-		if ("${allow_direct_dial_mbox}" != "yes") {
-			Verbose(1,### Direct dialing to mailbox not enabled);
-			Hangup();
-		}
-		Verbose(1,### Incoming call to mailbox ${box}\, direct dial);
-		//if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
-		if ("${is_from_gateway}" = "1") {
-			Verbose(1,### No direct dial from gateway);
-			Hangup();
-		}
-		if ("${user_id}" = "") {
-			Verbose(1,### No direct dial from non-internal user);
-			Hangup();
-		}
-		// is it to one of *our* extensions?
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${box});
-		Verbose(1,### Extension ${box} is of type ${exttype});
-		if ("${exttype}" != "user") {
-			Verbose(1,### Extension ${box} is not a user);
-			Hangup();
-		}
-		
-		if ("${dial_to_node}" = "") {
-			Verbose(1,### Extension ${box} is at node: SELF);
-			goto to-internal-users-self|${EXTEN}|1;
-		}
-		else {
-			&dial-node(${EXTEN}@${dial_to_node});
-			&hangup-proper-status();
-		}
-	}
+	//_**Z. => {
+	//	Set(box=${EXTEN:2});
+	//	if ("${allow_direct_dial_mbox}" != "yes") {
+	//		Verbose(1,### Direct dialing to mailbox not enabled);
+	//		Hangup();
+	//	}
+	//	Verbose(1,### Incoming call to mailbox ${box}\, direct dial);
+	//	//if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
+	//	if ("${is_from_gateway}" = "1") {
+	//		Verbose(1,### No direct dial from gateway);
+	//		Hangup();
+	//	}
+	//	if ("${user_id}" = "") {
+	//		Verbose(1,### No direct dial from non-internal user);
+	//		Hangup();
+	//	}
+	//	// is it to one of *our* extensions?
+	//	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${box});
+	//	Verbose(1,### Extension ${box} is of type ${exttype});
+	//	if ("${exttype}" != "user") {
+	//		Verbose(1,### Extension ${box} is not a user);
+	//		Hangup();
+	//	}
+	//	
+	//	if ("${dial_to_node}" = "") {
+	//		Verbose(1,### Extension ${box} is at node: SELF);
+	//		goto to-internal-users-self|${EXTEN}|1;
+	//	}
+	//	else {
+	//		&dial-node(${EXTEN}@${dial_to_node});
+	//		&hangup-proper-status();
+	//	}
+	//}
 	
 	
 	// hints moved here from context to-internal-users-self
@@ -509,45 +509,44 @@ context to-internal-users-self {
 	// Dial mailbox directly
 	//----------------------------------------------------------
 	
-	_**Z. => {
-		Set(box=${EXTEN:2});
-		Set(origext=${box});
-		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
-		Verbose(1,### Direct dial to mailbox ${box} on this node);
-		Set(__is_call_from=internal);
-		
-		if ("${from_node}" = "yes") {
-			Verbose(1,### Incoming call to ${EXTEN} is from another node);
-			if ("${CHANNEL(channeltype)}" = "SIP") {
-				if ("${SIP_HEADER(X-GS-user_id)}" != "")
-					Set(__user_id=${SIP_HEADER(X-GS-user_id)});
-				if ("${SIP_HEADER(X-GS-user_name)}" != "")
-					Set(__user_name=${SIP_HEADER(X-GS-user_name)});
-				if ("${SIP_HEADER(X-GS-forwards)}" != "")
-					Set(__forwards=${SIP_HEADER(X-GS-forwards)});
-				if ("${SIP_HEADER(X-GS-origext)}" != "")
-					Set(__origext=${SIP_HEADER(X-GS-origext)});
-				if ("${SIP_HEADER(X-GS-clir)}" != "")
-					Set(clir=${SIP_HEADER(X-GS-clir)});  // nicht vererben
-				if ("${SIP_HEADER(X-GS-src)}" != "")
-					Set(__is_call_from=${SIP_HEADER(X-GS-src)});
-				if ("${SIP_HEADER(X-GS-is_callcompletion)}" != "")
-					Set(__is_callcompletion=${SIP_HEADER(X-GS-is_callcompletion)});
-				if ("${SIP_HEADER(X-GS-is_callfile_origin)}" != "")
-					Set(__is_callfile_origin=${SIP_HEADER(X-GS-is_callfile_origin)});
-				if ("${SIP_HEADER(X-GS-callfile_from_user)}" != "")
-					Set(__callfile_from_user=${SIP_HEADER(X-GS-callfile_from_user)});
-			}
-		}
-		
-		Set(cc_possible=0);
-		Set(is_callcompletion=0);
-		Set(vm_real_source=internal);
-		Set(vm_source=internal);
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi,${box});
-		goto ${box}|user_uncallable_vm_on;
-		
-	}
+	//_**Z. => {
+	//	Set(box=${EXTEN:2});
+	//	Set(origext=${box});
+	//	#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
+	//	Verbose(1,### Direct dial to mailbox ${box} on this node);
+	//	Set(__is_call_from=internal);
+	//	
+	//	if ("${from_node}" = "yes") {
+	//		Verbose(1,### Incoming call to ${EXTEN} is from another node);
+	//		if ("${CHANNEL(channeltype)}" = "SIP") {
+	//			if ("${SIP_HEADER(X-GS-user_id)}" != "")
+	//				Set(__user_id=${SIP_HEADER(X-GS-user_id)});
+	//			if ("${SIP_HEADER(X-GS-user_name)}" != "")
+	//				Set(__user_name=${SIP_HEADER(X-GS-user_name)});
+	//			if ("${SIP_HEADER(X-GS-forwards)}" != "")
+	//				Set(__forwards=${SIP_HEADER(X-GS-forwards)});
+	//			if ("${SIP_HEADER(X-GS-origext)}" != "")
+	//				Set(__origext=${SIP_HEADER(X-GS-origext)});
+	//			if ("${SIP_HEADER(X-GS-clir)}" != "")
+	//				Set(clir=${SIP_HEADER(X-GS-clir)});  // nicht vererben
+	//			if ("${SIP_HEADER(X-GS-src)}" != "")
+	//				Set(__is_call_from=${SIP_HEADER(X-GS-src)});
+	//			if ("${SIP_HEADER(X-GS-is_callcompletion)}" != "")
+	//				Set(__is_callcompletion=${SIP_HEADER(X-GS-is_callcompletion)});
+	//			if ("${SIP_HEADER(X-GS-is_callfile_origin)}" != "")
+	//				Set(__is_callfile_origin=${SIP_HEADER(X-GS-is_callfile_origin)});
+	//			if ("${SIP_HEADER(X-GS-callfile_from_user)}" != "")
+	//				Set(__callfile_from_user=${SIP_HEADER(X-GS-callfile_from_user)});
+	//		}
+	//	}
+	//	
+	//	Set(cc_possible=0);
+	//	Set(is_callcompletion=0);
+	//	Set(vm_real_source=internal);
+	//	Set(vm_source=internal);
+	//	AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi,${box});
+	//	goto ${box}|user_uncallable_vm_on;
+	//}
 	
 	
 	//----------------------------------------------------------
