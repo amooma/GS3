@@ -367,13 +367,12 @@ psetting('redial disabled'    , '0');
 //FIXME ...
 
 # reset all visible softkeys
-psetting('topsoftkey1 type', 'empty');
-psetting('topsoftkey2 type', 'empty');
-psetting('topsoftkey3 type', 'empty');
-psetting('topsoftkey4 type', 'empty');
-psetting('topsoftkey5 type', 'empty');
-psetting('softkey4 type'   , 'empty');
-psetting('softkey5 type'   , 'empty');
+for ($i=1; $i<=5; ++$i) {
+	psetting('topsoftkey'.$i.' type', 'empty');
+}
+for ($i=1; $i<=5; ++$i) {
+	psetting('softkey'.$i.' type'   , 'empty');
+}
 
 psetting('softkey1 type'   , 'xml');
 psetting('softkey1 value'  , $prov_url_aastra.'pb.php');
@@ -386,6 +385,7 @@ psetting('softkey2 label'  , __('Anrufliste'));
 psetting('softkey3 type'   , 'speeddial');
 psetting('softkey3 value'  , 'voicemail');
 psetting('softkey3 label'  , __('Voicemail'));
+
 
 # get softkeys
 //aastra_keys_out( $user_id, $phone_type );
