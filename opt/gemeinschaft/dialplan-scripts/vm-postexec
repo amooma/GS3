@@ -347,16 +347,19 @@ foreach ($files as $filename) {
 		[duration] => 7
 	)
 	*/
+	if (strpos(@$about['callerid'], '<')) {
+		if (preg_match('/<([^>]+)/S', @$about['callerid'], $m))
+			$info['cidnum' ] = $m[1];
+		else
+			$info['cidnum' ] = '';
 	
-	if (preg_match('/<([^>]+)/S', @$about['callerid'], $m))
-		$info['cidnum' ] = $m[1];
-	else
-		$info['cidnum' ] = '';
-	
-	if (preg_match('/^([^<]*)/S', @$about['callerid'], $m))
-		$info['cidname'] = trim($m[1], ' "');
-	else
-		$info['cidname'] = '';
+		if (preg_match('/^([^<]*)/S', @$about['callerid'], $m))
+			$info['cidname'] = trim($m[1], ' "');
+		else
+			$info['cidname'] = '';
+	} else {
+		$info['cidnum'] = @$about['callerid'];
+	}
 	
 	$uniqueid = array(
 		'mailbox'    =>              $mailbox     ,
