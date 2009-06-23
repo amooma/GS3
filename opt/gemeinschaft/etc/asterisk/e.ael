@@ -92,6 +92,21 @@ macro hangup-proper-status() {
 	Hangup();
 }
 
+macro hangup-proper-status-urldial() {
+	Verbose(1,### DIALSTATUS: ${DIALSTATUS});
+	if ("${DIALSTATUS}" = "BUSY") {
+		Busy();
+		Hangup();
+	} else if ("${DIALSTATUS}" = "CHANUNAVAIL") {
+		Congestion();
+		Hangup();
+	} else if ("${DIALSTATUS}" = "CONGESTION") {
+		Congestion();
+		Hangup();
+	}
+	Hangup();
+}
+
 
 //---------------------------------------------------------------------
 //  check if a certain number should be treated as internal even
@@ -1356,7 +1371,7 @@ context urldial {
 		Set(__is_callfile_origin=);
 		Set(__is_call_from=internal);
 		Dial(Local/${callfile_target}@from-internal-users/n,200);
-		&hangup-proper-status();
+		&hangup-proper-status-urldial();
 	}
 	
 	failed => {
