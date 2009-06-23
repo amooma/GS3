@@ -224,7 +224,7 @@ if (! preg_match('/^Aastra/', $ua)
 }
 
 # find out the type of the phone:
-if (preg_match('/^Aastra([1-9][0-9]{2,4}i?) /', $ua, $m))  # e.g. "Aastra57i"
+if (preg_match('/^Aastra([1-9][0-9]{1,4}i?) /', $ua, $m))  # e.g. "Aastra57i"
 	$phone_model = $m[1];  # e.g. "57i"
 else
 	$phone_model = 'unknown';
