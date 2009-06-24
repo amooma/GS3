@@ -52,7 +52,7 @@ macro check-valid-extension( mext ) {
 	// is it to one of *our* extensions?
 	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${mext},${is_huntgroup});
 	Verbose(1,### Extension ${mext} is of type ${exttype});
-	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference" && "${exttype}" != "huntgroup" && "${exttype}" != "foreign") {
+	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference" && "${exttype}" != "huntgroup" && "${exttype}" != "ivr" && "${exttype}" != "foreign") {
 		Verbose(1,### Extension ${mext} is unknown);
 		
 		if ("${is_from_gateway}" = "1") {
@@ -733,6 +733,8 @@ context to-internal-users-self {
 			goto to_queue;
 		if ("${exttype}" = "unknown")
 			goto to_unknown;
+		if ("${exttype}" = "ivr")
+			goto to_ivr;
 		// the AGI script failed:
 		Verbose(1,### The AGI script returned an empty or bad type ("${exttype}")!);
 		Hangup();
@@ -1174,6 +1176,15 @@ context to-internal-users-self {
 			// 1 = AST_CAUSE_UNALLOCATED => SIP 404 Not Found
 			Set(PRI_CAUSE=1);
 			Hangup(1);
+		
+		
+		//----------------------------------------------------------
+		// type is "ivr":
+		//----------------------------------------------------------
+		to_ivr:
+			NoOP(Extension is IVR);
+			goto IVR-${EXTEN}|s|1;   
+		
 		
 		user_uncallable:
 			// user uncallable (busy/offline/unavail)

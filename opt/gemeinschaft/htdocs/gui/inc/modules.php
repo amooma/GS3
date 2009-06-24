@@ -229,7 +229,7 @@ $MODULES['admin'    ]=  array(
 		'queues'       => array('title' => __('Warteschlangen')),
 		'pgroups'      => array('title' => __('Rufannahmegrp.#pl')),
 		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse')),
-		//'ivrs'         => array('title' => __('IVRs')),
+		'ivrs'         => array('title' => __('Sprachmen&uuml;')),
 		'sysrecs'      => array('title' => __('Audiodateien')),
 		'calls'        => array('title' => __('CDRs')),
 		'reload'       => array('title' => __('Reload'))

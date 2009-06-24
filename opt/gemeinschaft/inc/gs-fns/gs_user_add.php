@@ -103,6 +103,13 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 		return new GsError( 'A queue with that name already exists.' );
 	}
 	
+	# check if ivr exists
+	#
+	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ivrs` WHERE `name`=\''. $db->escape($ext) .'\'' );
+	if ($num > 0)
+		return new GsError( 'A ivr with that extension already exists.' );
+		
+	
 	# check if host exists
 	#
 	$host = gs_host_by_id_or_ip( $host_id_or_ip );

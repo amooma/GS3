@@ -1430,3 +1430,10 @@ context cluster-watchdog {
 context default {
 }
 */
+
+//---------------------------------------------------------------------
+//  Contexts for IVRs
+//---------------------------------------------------------------------
+
+#exec "/opt/gemeinschaft/etc/asterisk/e-ivr.ael.php"
+

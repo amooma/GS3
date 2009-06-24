@@ -5989,6 +5989,49 @@ LOCK TABLES `itemized_bill` WRITE;
 UNLOCK TABLES;
 
 --
+-- Tabellenstruktur fuer Tabelle `ivrs`
+--
+
+CREATE TABLE `ivrs` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `host_id` mediumint(8) unsigned NOT NULL default '1',
+  `title` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `announcement` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `timeout` tinyint(3) collate utf8_unicode_ci NOT NULL,
+  `retry` tinyint (3) collate utf8_unicode_ci NOT NULL,
+  `key_0_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_0_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_1_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_1_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_2_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_2_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_3_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_3_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_4_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_4_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_5_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_5_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_6_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_6_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_7_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_7_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_8_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_8_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_9_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_9_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_star_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_star_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_pound_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_pound_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `t_action_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `t_action_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `i_action_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `i_action_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
+
+--
 -- Table structure for table `pb_ldap`
 --
 

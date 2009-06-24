@@ -84,6 +84,16 @@ if ($num > 0) {
 	die();
 }
 
+# is it a ivr?
+#
+$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ivrs` WHERE `name`=\''. $db->escape($ext) .'\'' );
+if ($num > 0) {
+ 	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('ivr') ."\n";
+ 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+ 	die();
+}
+
+
 echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 

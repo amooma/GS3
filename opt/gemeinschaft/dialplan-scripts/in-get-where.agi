@@ -145,6 +145,30 @@ if ($num > 0) {
 }
 */
 
+# is it a ivr?
+#
+$rs = $db->execute(
+'SELECT `i`.`host_id` `host_id`, `h`.`is_foreign`, `h`.`host`
+FROM
+	`ivrs` `i` JOIN
+	`hosts` `h` ON (`h`.`id`=`i`.`host_id`)
+WHERE `i`.`name`=\''. $db->escape($ext) .'\''
+);
+if ($r = $rs->fetchRow()) {
+	if (! $r['is_foreign']) {
+		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('ivr') ."\n";
+		if ($r['host_id'] < 1) {  // should never happen
+			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
+		} else {
+			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( get_at_dial( $r['host_id'] ) ) ."\n";
+		}
+	} else {
+		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('foreign') ."\n";
+		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( $r['host'] ) ."\n";
+	}
+	die();
+}
+
 
 echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
 echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
