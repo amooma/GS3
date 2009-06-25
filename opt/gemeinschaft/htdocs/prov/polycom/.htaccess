@@ -17,5 +17,16 @@
 	RewriteRule ^000000000000-directory\.xml$ directory.php [L]
 	RewriteRule ^directory\.xml$ directory.php [L]
 	RewriteRule ^phone-(0004[Ff]2[0-9A-Fa-f]*)\.cfg$ settings.php?mac=$1 [L]
+
+	# PUT stuff
+
+	RewriteBase /gemeinschaft/prov/polycom/
+	RewriteCond %{REQUEST_METHOD} !PUT
+	RewriteRule ^/gemeinschaft/prov/polycom/logput\.php$ - [F]
+	RewriteCond %{REQUEST_METHOD} PUT
+	RewriteCond %{QUERY_STRING} ^$
+	RewriteRule ^/gemeinschaft/prov/polycom/logput\.php$ - [F]
+	RewriteCond %{REQUEST_METHOD} PUT
+	RewriteRule ^(.*)$ logput.php?url=$1 [L]
 	
 </IfModule>

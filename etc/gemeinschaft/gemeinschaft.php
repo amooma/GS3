@@ -411,6 +411,9 @@ $POLYCOM_PROV_HTTP_PASS      = 'gEheiM23y89sdo23';
   # username and password for HTTP push notifications
   # note: the notification will not work with empty username/password
 
+$POLYCOM_PROV_ALLOW_LOG_PUT  = false;
+  # allow Polycom phones to PUT their logs to Apache
+
 //------------------------[ Elmeg ]-----------------------//
 
 $ELMEG_PROV_ENABLED = true;  # do provisioning for Elmeg?

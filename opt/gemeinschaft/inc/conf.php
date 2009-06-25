@@ -295,6 +295,7 @@ _gscnf( 'POLYCOM_PROV_ENABLED'      , false              );
 _gscnf( 'POLYCOM_PROV_PB_NUM_RESULTS', 150               );
 _gscnf( 'POLYCOM_PROV_HTTP_USER'    , ''                 );
 _gscnf( 'POLYCOM_PROV_HTTP_PASS'    , ''                 );
+_gscnf( 'POLYCOM_PROV_ALLOW_LOG_PUT', false              );
 
 _gscnf( 'ELMEG_PROV_ENABLED'        , false              );
 _gscnf( 'ELMEG_PROV_HTTP_USER'      , ''                 );
