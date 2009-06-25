@@ -425,6 +425,35 @@ WHERE `id`='. $save;
 //------------
 //--- get data from db
 
+//--- do a full fetch for playback opts first
+
+unset($playback_opts);
+$playback_opts = Array();
+
+$sql_query_full =
+'SELECT
+	`s`.`id` `id`,
+	`s`.`description` `description`
+FROM
+	`systemrecordings` `s`
+ORDER BY `s`.`id`';
+
+$rs_full = $DB->execute($sql_query_full);
+$num_total = @$DB->numFoundRows();
+
+if(@$rs_full)
+{
+	$i = 0;
+	while($r_full = $rs_full->fetchRow())
+	{
+		$playback_opts[] = "<option value=\"". $r_full["id"] ."\">". $r_full["id"] ." - ". htmlEnt($r_full["description"]) ."</option>";
+	}
+}
+
+unset($r_full); unset($sql_query_full);
+
+//--- select relevant items for list display
+
 $sql_query =
 'SELECT
 	`s`.`id` `id`,
@@ -438,7 +467,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 
 $rs = $DB->execute($sql_query);
 
-$num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
 //------------
@@ -460,9 +488,6 @@ if(is_array($errormsgs) && (count($errormsgs) > 0))
 
 //--- ) display errors if any
 //------------
-
-unset($playback_opts);
-$playback_opts = Array();
 
 echo "<h3>". __('Vorhandene Audiodateien') ."</h3>\n";
 
@@ -536,9 +561,6 @@ if(@$rs)
 	$i = 0;
 	while($r = $rs->fetchRow())
 	{
-		//--- collect playback select options here...
-		$playback_opts[] = "<option value=\"". $r["id"] ."\">". $r["id"] ." - ". htmlEnt($r["description"]) ."</option>";
-
 		unset($r_length); unset($r_created);
 		$r_length = (floor($r['length'] / 60)).":". sprintf("%02d", ($r['length'] % 60));
 
