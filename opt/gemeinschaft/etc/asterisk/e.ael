@@ -1293,7 +1293,13 @@ macro dial-log-store( muser, mtype, mnumber, mqueue ) {
 				Set(mnumber=${CALLERID(num)});
 			}
 		}
-		Set(mname=${CALLERID(name)});
+
+		if ( "${mtype}" = "out" && "${mname}" = "" ) {
+			AGI(/opt/gemeinschaft/dialplan-scripts/out-get-callername.agi,${muser},${mnumber});
+		}
+		else if ( "${mtype}" != "out" && "${mname}" == ""  ) {
+			Set(mname=${CALLERID(name)});
+		}
 		Verbose(1,### Store in dial log of user ${muser}: ${mtype} ${mnumber} ${mname} (queue=${mqueue}));
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/dial-log-store '${muser}' '${mtype}' '${mnumber}' '${mqueue}' '${mname}');
 	}
