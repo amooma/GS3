@@ -211,6 +211,9 @@ if(!@gs_prov_update_user_ip($db, $user_id, $requester["phone_ip"]))
 	gs_log(GS_LOG_WARNING, "Failed to store current IP addr of user ID ". $user_id);
 }
 
+//--- get callwaiting state
+$callwaiting = (int) $db->executeGetOne("SELECT `active` FROM `callwaiting` WHERE `user_id`=". $user_id);
+
 //--- get SIP proxy to be set as the phone's outbound proxy
 
 $sip_proxy_and_sbc = gs_prov_get_wan_outbound_proxy($db, $requester["phone_ip"], $user_id);
@@ -293,7 +296,7 @@ echo "reg.1.acd-agent-available=\"0\" ";
 echo "reg.1.proxyRequire=\"\" ";
 echo "reg.1.ringType=\"2\" ";
 echo "reg.1.lineKeys=\"\" ";
-echo "reg.1.callsPerLineKey=\"\" ";
+echo "reg.1.callsPerLineKey=\"". ($callwaiting ? "8" : "1") ."\" ";
 echo "reg.1.bargeInEnabled=\"\" ";
 echo "reg.1.serverFeatureControl.dnd=\"1\" ";
 echo "reg.1.serverFeatureControl.cf=\"1\" ";
