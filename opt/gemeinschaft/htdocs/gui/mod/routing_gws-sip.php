@@ -78,6 +78,7 @@ if ($action === 'save') {
 	`allow_out`,
 	`dialstr`,
 	`host`,
+	`proxy`,
 	`user`,
 	`pwd`
 ) VALUES (
@@ -89,6 +90,7 @@ if ($action === 'save') {
 	0,
 	\''. $DB->escape( $default_dialstrs[$gw_type] ) .'\',
 	\'\',
+	NULL,
 	\'\',
 	\'\'
 )'
@@ -100,6 +102,11 @@ if ($action === 'save') {
 	$sip_friend_name = preg_replace('/[^a-z0-9]/', '', $sip_friend_name);
 	$sip_friend_name = subStr('gw_'.$gwid.'_'.$sip_friend_name, 0, 20);
 	
+	$host  = preg_replace('/[^a-zA-Z0-9\-_.]/', '', @$_REQUEST['gw-host']);
+	$proxy = preg_replace('/[^a-zA-Z0-9\-_.]/', '', @$_REQUEST['gw-proxy']);
+	if ($proxy == '') $proxy = null;
+	elseif ($proxy === $host) $proxy = null;
+	
 	$query =
 'UPDATE `gates` SET
 	`grp_id` = '. ((int)@$_REQUEST['gw-grp_id'] > 0 ? (int)@$_REQUEST['gw-grp_id'] : 'NULL') .',
@@ -107,7 +114,8 @@ if ($action === 'save') {
 	`title` = \''. $DB->escape(trim(@$_REQUEST['gw-title'])) .'\',
 	`allow_out` = '. (@$_REQUEST['gw-allow_out'] ? 1 : 0) .',
 	`dialstr` = \''. $DB->escape(trim(@$_REQUEST['gw-dialstr'])) .'\',
-	`host` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.]/', '', @$_REQUEST['gw-host'])) .'\',
+	`host` = \''. $DB->escape($host) .'\',
+	`proxy` = '. ($proxy == null ? 'NULL' : ('\''. $DB->escape($proxy) .'\'') ) .',
 	`user` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.@]/', '', @$_REQUEST['gw-user'])) .'\',
 	`pwd` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-pwd'])) .'\'
 WHERE `id`='. (int)$gwid
@@ -152,7 +160,7 @@ if ($action === 'edit') {
 <?php
 	if ($gwid > 0) {
 		# get gateway from DB
-		$rs = $DB->execute( 'SELECT `grp_id`, `type`, `name`, `title`, `allow_out`, `host`, `user`, `pwd`, `dialstr` FROM `gates` WHERE `id`='.$gwid );
+		$rs = $DB->execute( 'SELECT `grp_id`, `type`, `name`, `title`, `allow_out`, `host`, `proxy`, `user`, `pwd`, `dialstr` FROM `gates` WHERE `id`='.$gwid );
 		$gw = $rs->fetchRow();
 		if (! $gw) {
 			echo 'Gateway not found.';
@@ -171,6 +179,7 @@ if ($action === 'edit') {
 			'title'      => '',
 			'allow_out'  => 1,
 			'host'       => '',
+			'proxy'      => '',
 			'user'       => '',
 			'dialstr'    => $default_dialstrs[$gw_type],
 			'pwd'        => ''
@@ -199,6 +208,13 @@ if ($action === 'edit') {
 	echo '<th>', __('Host') ,':</th>',"\n";
 	echo '<td>',"\n";
 	echo '<input type="text" name="gw-host" value="', htmlEnt($gw['host']) ,'" size="30" maxlength="50" style="width:97%;" />',"\n";
+	echo '</td>',"\n";
+	echo '</tr>',"\n";
+	
+	echo '<tr>',"\n";
+	echo '<th>', __('Proxy') ,':</th>',"\n";
+	echo '<td>',"\n";
+	echo '<input type="text" name="gw-proxy" value="', htmlEnt($gw['proxy']) ,'" size="30" maxlength="50" style="width:97%;" />',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
 	

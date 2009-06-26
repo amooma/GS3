@@ -5827,6 +5827,7 @@ CREATE TABLE `gates` (
   `allow_out` tinyint(1) unsigned NOT NULL default '1',
   `dialstr` varchar(50) character set ascii NOT NULL,
   `host` varchar(50) collate utf8_unicode_ci default NULL,
+  `proxy` varchar(50) collate utf8_unicode_ci default NULL,
   `user` varchar(35) collate utf8_unicode_ci default NULL,
   `pwd` varchar(35) collate utf8_unicode_ci default NULL,
   `hw_port` tinyint(3) unsigned default NULL,
