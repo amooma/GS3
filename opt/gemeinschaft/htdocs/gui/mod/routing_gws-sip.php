@@ -212,14 +212,14 @@ if ($action === 'edit') {
 	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
-	echo '<th>', __('Proxy') ,':</th>',"\n";
+	echo '<th>', __('Proxy') ,' <sup>[1]</sup>:</th>',"\n";
 	echo '<td>',"\n";
 	echo '<input type="text" name="gw-proxy" value="', htmlEnt($gw['proxy']) ,'" size="30" maxlength="50" style="width:97%;" />',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
-	echo '<th>', __('Benutzername') ,' <sup>[1]</sup>:</th>',"\n";
+	echo '<th>', __('Benutzername') ,' <sup>[2]</sup>:</th>',"\n";
 	echo '<td>',"\n";
 	echo '<input type="text" name="gw-user" value="', htmlEnt($gw['user']) ,'" size="25" maxlength="35" style="width:97%;" />',"\n";
 	echo '</td>',"\n";
@@ -240,14 +240,14 @@ if ($action === 'edit') {
 	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
-	echo '<th>', __('W&auml;hlbefehl') ,' <sup>[2]</sup>:</th>',"\n";
+	echo '<th>', __('W&auml;hlbefehl') ,' <sup>[3]</sup>:</th>',"\n";
 	echo '<td>',"\n";
 	echo '<input type="text" name="gw-dialstr" value="', htmlEnt($gw['dialstr']) ,'" size="25" maxlength="50" style="font-family:monospace; width:97%;" />',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
-	echo '<th>', __('Gruppe') ,' <sup>[3]</sup>:</th>',"\n";
+	echo '<th>', __('Gruppe') ,' <sup>[4]</sup>:</th>',"\n";
 	echo '<td>';
 	echo '<select name="gw-grp_id" style="width:97%;">',"\n";
 	echo '<option value=""', ($gw['grp_id'] < 1 ? ' selected="selected"' : '') ,'>-- ', __('nicht zugeordnet') ,' --</option>' ,"\n";
@@ -280,9 +280,10 @@ ORDER BY `title`'
 <br />
 <br />
 <br />
-<p class="text"><sup>[1]</sup> <?php echo __('Abh&auml;ngig vom SIP-Provider kann es erforderlich sein die Form <tt>benutzer@domain</tt> anzugeben. (<tt>domain</tt> wird dann im <tt>From</tt>-Header verwendet, was <tt>fromdomain</tt> in Asterisk entspricht.)'); ?></p>
-<p class="text"><sup>[2]</sup> <?php echo htmlEnt(sPrintF(__("String f\xC3\xBCr den Dial()-Befehl. Dabei wird {number} automatisch von Gemeinschaft durch die zu w\xC3\xA4hlende Rufnummer, {number:1} durch die Rufnummer ohne die erste Ziffer und {gateway} durch die interne Bezeichnung \"%s\" ersetzt."), $gw['name'])); ?></p>
-<p class="text"><sup>[3]</sup> <?php echo __('Gateways m&uuml;ssen jeweils einer Gateway-Gruppe zugeordnet werden damit sie benutzt werden k&ouml;nnen.'); ?></p>
+<p class="text"><sup>[1]</sup> <?php echo htmlEnt(__("Leer f\xC3\xBCr keinen Proxy.")); ?></p>
+<p class="text"><sup>[2]</sup> <?php echo __('Abh&auml;ngig vom SIP-Provider kann es erforderlich sein die Form <tt>benutzer@domain</tt> anzugeben. (<tt>domain</tt> wird dann im <tt>From</tt>-Header verwendet, was <tt>fromdomain</tt> in Asterisk entspricht.)'); ?></p>
+<p class="text"><sup>[3]</sup> <?php echo htmlEnt(sPrintF(__("String f\xC3\xBCr den Dial()-Befehl. Dabei wird {number} automatisch von Gemeinschaft durch die zu w\xC3\xA4hlende Rufnummer, {number:1} durch die Rufnummer ohne die erste Ziffer und {gateway} durch die interne Bezeichnung \"%s\" ersetzt."), $gw['name'])); ?></p>
+<p class="text"><sup>[4]</sup> <?php echo __('Gateways m&uuml;ssen jeweils einer Gateway-Gruppe zugeordnet werden damit sie benutzt werden k&ouml;nnen.'); ?></p>
 
 </form>
 
