@@ -139,6 +139,12 @@ foreach ($fields as $field => $length) {
 		$fields[$field] = strLen($fieldsAbbr[$field]);
 	}
 }
+foreach ($phonebook as $ignore => $phonebook_e) {
+	foreach ($fields as $field => $length) {
+		if (mb_strLen($phonebook_e[$field]) > $length)
+			$fields[$field] = mb_strLen($phonebook_e[$field]);
+	}
+}
 
 // print out table
 $header = '| ';
