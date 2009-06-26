@@ -37,12 +37,11 @@ include_once( GS_DIR .'inc/mb_str_pad.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
 //include_once( GS_DIR .'inc/gs-fns/gs_calllog_get.php' );
 
-//
 // additional parameters
-$expandInternal = true;
+//$expandInternal = true;
 
 // TODO: expand internal numbers to public format
-$prefixNumber = $CANONIZE_NATL_PREFIX . $CANONIZE_AREA_CODE . $CANONIZE_LOCAL_BRANCH;
+//$prefixNumber = $CANONIZE_NATL_PREFIX . $CANONIZE_AREA_CODE . $CANONIZE_LOCAL_BRANCH;
 //echo $prefixNumber . "\n";
 
 /***********************************************************
