@@ -47,7 +47,9 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --type=[common|private]';
+$usage = 'Usage: '
+	."\n".'  '. baseName(__FILE__) .' --type=internal'
+	."\n".'  '. baseName(__FILE__) .' --type=private --user=<user>';
 
 // TODO: include parameters max and offset
 
@@ -58,56 +60,55 @@ $opts = @getOptsNoMultiples( '',
 	),
 	$usage
 );
-if (! isSet( $opts['user'] )) {
+if ($opts['type'] === 'private' && ! isSet( $opts['user'] )) {
 	gs_script_invalid_usage( $usage );
 }
 
-$types_valid = array("common", "private");
-if (! in_array($opts['type'], $types_valid )) {
+$types_valid = array('internal', 'private');
+if (! in_array($opts['type'], $types_valid, true)) {
 	gs_script_invalid_usage( $usage );
 }
 
 /***********************************************************
-*    call the function
 ***********************************************************/
 
 $db = gs_db_master_connect();
 if (! $db)
-	return new GsError( 'Could not connect to database.' );
+	gs_script_error( 'Could not connect to database.' );
 
-$user = gs_user_get($opts['user']);
-if (isGsError( $user )) gs_script_error( $user->getMsg() );
-if (! $user)            gs_script_error();
-
-$user_id = $user['id'];
 	
 // get phonebook entries	
-if ($opts['type'] == "common") {
-
-	$sql = "SELECT SQL_CALC_FOUND_ROWS
+if ($opts['type'] === 'internal') {
+	
+	$sql = 'SELECT SQL_CALC_FOUND_ROWS
 		`u`.`firstname` `fn`, `u`.`lastname` `ln`, `s`.`name` `ext`
 	FROM
 		`users` `u` JOIN
 		`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 	WHERE
-			`u`.`nobody_index` IS NULL 
-	ORDER BY `u`.`lastname`, `u`.`firstname`";
-
-} elseif ($opts['type'] == "private") {
-
-	$sql = "SELECT SQL_CALC_FOUND_ROWS
+		`u`.`nobody_index` IS NULL 
+	ORDER BY `u`.`lastname`, `u`.`firstname`';
+}
+elseif ($opts['type'] === 'private') {
+	
+	$user = gs_user_get($opts['user']);
+	if (isGsError( $user )) gs_script_error( $user->getMsg() );
+	if (! $user)            gs_script_error();
+	$user_id = $user['id'];
+	
+	$sql = 'SELECT SQL_CALC_FOUND_ROWS
 		`lastname` `ln`, `firstname` `fn`, `number` `ext`
 	FROM
 		`pb_prv`
 	WHERE
-			`user_id`=" . $db->escape($user_id) . "
-	ORDER BY `lastname`, `firstname`";
+		`user_id`='. $db->escape($user_id) .'
+	ORDER BY `lastname`, `firstname`';
 }
 
 $rs = $db->execute($sql);
 
 if (! $rs)
-	return new GsError( 'DB error.' );
+	gs_script_error( 'DB error.' );
 
 $phonebook = array();
 while ($r = $rs->fetchRow()) {
@@ -115,21 +116,21 @@ while ($r = $rs->fetchRow()) {
 }
 
 $fields = array(
-	'fn' => 20,
-	'ln' => 20,
+	'fn'  => 20,
+	'ln'  => 20,
 	'ext' => 15
 );
 
 $fieldsAbbr = array(
-	'fn' => 'firstname',
-	'ln' => 'lastname',
+	'fn'  => 'firstname',
+	'ln'  => 'lastname',
 	'ext' => 'number'
 );
 
 $fieldsPad = array(
-	'fn'         => STR_PAD_RIGHT,
+	'fn'       => STR_PAD_RIGHT,
 	'ln'       => STR_PAD_RIGHT,
-	'ext'        => STR_PAD_RIGHT
+	'ext'      => STR_PAD_RIGHT
 );
 
 
