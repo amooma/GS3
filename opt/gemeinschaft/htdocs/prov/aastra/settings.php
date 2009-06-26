@@ -438,6 +438,8 @@ psetting('sip registrar port'      , '5060');
 psetting('sip registration period' , '3600');
 psetting('sip outbound proxy'      , ($sip_proxy_and_sbc['sip_proxy_from_wan'] != '' ? $sip_proxy_and_sbc['sip_proxy_from_wan'] : $host) );
 psetting('sip outbound proxy port' , '5060');
+psetting('sip proxy ip'            , $host);
+psetting('sip proxy port'          , '5060');
 
 
 
