@@ -72,21 +72,21 @@ if ($host === '127.0.0.1'
 	*/
 	
 	$err=0; $out=array();
-	@exec( 'sudo sed -e '. qsa('/^\[\(mysqld_safe\|safe_mysqld\)\]/,/^\[/!d') .' /etc/mysql/my.cnf 2>>/dev/null | grep \'^socket\' 2>>/dev/null', $out, $err );
+	@exec( 'sed -e '. qsa('/^\[\(mysqld_safe\|safe_mysqld\)\]/,/^\[/!d') .' /etc/mysql/my.cnf 2>>/dev/null | grep \'^socket\' 2>>/dev/null', $out, $err );
 	// Debian
 	if ($err === 0)
 		$socket = _grep_mysql_socket(implode("\n",$out));
 	
 	if ($socket === null) {
 		$err=0; $out=array();
-		@exec( 'sudo sed -e '. qsa('/^\[\(mysqld_safe\|safe_mysqld\)\]/,/^\[/!d') .' /etc/my.cnf 2>>/dev/null | grep \'^socket\' 2>>/dev/null', $out, $err );
+		@exec( 'sed -e '. qsa('/^\[\(mysqld_safe\|safe_mysqld\)\]/,/^\[/!d') .' /etc/my.cnf 2>>/dev/null | grep \'^socket\' 2>>/dev/null', $out, $err );
 		// CentOS
 		if ($err === 0)
 			$socket = _grep_mysql_socket(implode("\n",$out));
 		
 		if ($socket === null) {
 			$err=0; $out=array();
-			@exec( 'sudo mysqladmin -s variables | grep socket 2>>/dev/null', $out, $err );
+			@exec( 'mysqladmin -s variables | grep socket 2>>/dev/null', $out, $err );
 			// should work everywhere if mysqladmin is available
 			if ($err === 0)
 				$socket = _grep_mysql_socket(implode("\n",$out));
