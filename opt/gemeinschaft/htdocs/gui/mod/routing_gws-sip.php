@@ -193,8 +193,8 @@ if ($action === 'edit') {
 
 <?php
 	echo '<tr>',"\n";
-	echo '<th style="width:120px;">', __('Titel') ,':</th>',"\n";
-	echo '<th style="width:360px;"><input type="text" name="gw-title" value="', htmlEnt($gw['title']) ,'" size="30" maxlength="35" style="font-weight:bold; width:97%;" /></th>',"\n";
+	echo '<th style="width:105pt;">', __('Titel') ,':</th>',"\n";
+	echo '<th style="width:260pt;"><input type="text" name="gw-title" value="', htmlEnt($gw['title']) ,'" size="30" maxlength="35" style="font-weight:bold; width:97%;" /></th>',"\n";
 	echo '</tr>',"\n";
 	
 	/*
@@ -205,7 +205,7 @@ if ($action === 'edit') {
 	*/
 	
 	echo '<tr>',"\n";
-	echo '<th>', __('Host') ,':</th>',"\n";
+	echo '<th>', __('Registrar') ,' / ', __('Server') ,':</th>',"\n";
 	echo '<td>',"\n";
 	echo '<input type="text" name="gw-host" value="', htmlEnt($gw['host']) ,'" size="30" maxlength="50" style="width:97%;" />',"\n";
 	echo '</td>',"\n";
@@ -302,7 +302,7 @@ if ($action == '') {
 <tr>
 	<th style="width:150px;"><?php echo __('Gateway'); ?></th>
 	<th style="width:150px;"><?php echo __('Gruppe'); ?></th>
-	<th style="width:150px;"><?php echo __('Host'); ?></th>
+	<th style="width:150px;"><?php echo __('Registrar'); ?></th>
 	<th style="width:55px;">&nbsp;</th>
 </tr>
 </thead>
