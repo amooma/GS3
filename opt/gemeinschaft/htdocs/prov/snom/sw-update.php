@@ -144,14 +144,8 @@ $linux          = false;
 
 foreach ($sw_info as $k => $v)
 {
-	$tmp = strStr($v, $phone_model.'-SIP ');
-	if (!empty($tmp)) {
-		$app = $tmp;
-		if (@$app[strLen($app)-1] === ')')
-			$app = subStr($app, 12, -1);
-		else
-			$app = subStr($app, 12);
-		$app = preg_replace('/[^0-9.]/', '', $app);
+	if (preg_match('/^ *'.preg_quote($phone_model).'-SIP ([0-9.]+)/', $v, $m)) {
+		$app = $m[1];
 		continue;
 	}
 	
@@ -271,12 +265,23 @@ if ($fw_was_upgraded_manually) {
 } elseif ($a === null) {
 	gs_log( GS_LOG_DEBUG, "Phone did not report its current firmware version." );
 } else {
-	$sw_default_vers = _snom_normalize_version(trim(gs_get_conf('GS_SNOM_PROV_FW_DEFAULT_'.$phone_type)));
+	if(! $ready_for_v6_to_7) {
+		$sw_default_vers = _snom_normalize_version(trim(gs_get_conf('GS_SNOM_PROV_FW_DEFAULT_'.$phone_type)));
+		$sw_default_name = $sw_default_vers;
+	} else {
+		$sw_ver = trim(gs_get_conf('GS_SNOM_PROV_FW_FROM6TO7_'.$phone_type));
+		$sw_default_vers = _snom_normalize_version($sw_ver);
+		$sw_default_name = "from6to7-".$sw_default_vers;
+	}
 	if (in_array($sw_default_vers, array(null,false,''), true)) {
-		gs_log( GS_LOG_DEBUG, "No default firmware version set in config file" );
+		if(! $ready_for_v6_to_7) {
+			gs_log( GS_LOG_DEBUG, "No default firmware version set in config file" );
+		} else {
+			gs_log( GS_LOG_DEBUG, "No from6to7 upgrade firmware version set in config file" );
+		}
 	} else {
 		if ('x'.$a != 'x'.$sw_default_vers) {
-			gs_log( GS_LOG_NOTICE, "The firmware version ($a) differs from the default version ($sw_default_vers), scheduling an upgrade ..." );
+			gs_log( GS_LOG_NOTICE, "The firmware version ($a) differs from the available version ($sw_default_name), scheduling an upgrade ..." );
 			# simply add a provisioning job to the database. this is done to be clean and we can trace the job.
 			$ok = $db->execute(
 				'INSERT INTO `prov_jobs` ('.
@@ -306,7 +311,7 @@ if ($fw_was_upgraded_manually) {
 					'\'*\', '.
 					'\'*\', '.
 					'\'*\', '.
-					'\'' . $db->escape($sw_default_vers) . '\' '.
+					'\'' . $db->escape($sw_default_name) . '\' '.
 				')'
 			);
 		}
@@ -347,9 +352,17 @@ while ($job = $rs->fetchRow()) {
 	unset($c);
 	gs_log( GS_LOG_DEBUG, "Phone $mac: Job ".$job['id'].": Rule matches" );
 	
-	$new_app = _snom_normalize_version( $job['data'] );
-	if (subStr($new_app,0,2)=='00') {
-		gs_log( GS_LOG_NOTICE, "Phone $mac: Bad new app vers. $new_app" );
+	$new_vers = $job['data'];
+	if (subStr($new_vers,0,9)=='from6to7-') {
+		$new_vers = _snom_normalize_version( subStr($new_vers,9) );
+		$new_app = 'from6to7-'.$new_vers;
+	} else {
+		$new_vers = _snom_normalize_version( $new_vers );
+		$new_app = $new_vers;
+	}
+
+	if (subStr($new_vers,0,2)=='00') {
+		gs_log( GS_LOG_NOTICE, "Phone $mac: Bad new app vers. $new_app " . subStr($job['data'],0,8) );
 		$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']).' AND `running`=0' );
 		continue;
 	}
