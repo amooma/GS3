@@ -644,5 +644,19 @@ ALTER TABLE `routes`
   ON DELETE CASCADE ON UPDATE CASCADE;
 
 
+--
+-- since rev. 6589
+--
+
+USE `asterisk`;
+
+
+--
+-- Add new column `proxy` in table `gates`
+--
+
+ALTER TABLE `gates`
+  ADD `proxy` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL AFTER `host`;
+
 
 

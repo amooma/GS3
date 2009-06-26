@@ -109,7 +109,7 @@ if (! $DB) {
 }
 $rs = $DB->execute(
 'SELECT
-	`g`.`name`, `g`.`host`, `g`.`user`, `g`.`pwd`,
+	`g`.`name`, `g`.`host`, `g`.`proxy`, `g`.`user`, `g`.`pwd`,
 	`gg`.`name` `gg_name`
 FROM
 	`gates` `g` JOIN
@@ -138,6 +138,10 @@ while ($gw = $rs->fetchRow()) {
 	//$fromdomain     = 'gemeinschaft.localdomain';
 	$fromdomain     = null;
 	$fromuser       = null;
+	
+	if ($gw['proxy'] == null || $gw['proxy'] === $gw['host']) {
+		$gw['proxy'] = null;
+	}
 	
 	
 	if ($gw['host'] === 'sip.1und1.de') {  # special settings for 1und1.de
@@ -170,6 +174,9 @@ while ($gw = $rs->fetchRow()) {
 	echo 'port = 5060' ,"\n";
 	echo 'username = ', $gw['user'] ,"\n";
 	echo 'secret = ' , $gw['pwd' ] ,"\n";
+	if ($gw['proxy'] != null) {
+		echo 'outboundproxy = ', $gw['proxy'] ,"\n";
+	}
 	if ($fromdomain != null) {
 		echo 'fromdomain = ', $fromdomain ,"\n";
 	}
