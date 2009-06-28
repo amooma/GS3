@@ -106,9 +106,6 @@ if (! $type) {
 	
 } elseif ($type==='out' || $type==='in' || $type==='missed') {
 	
-	$xml = '<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_dl .'">' ."\n";
-	$xml.= '<Title>'. $typeToTitle[$type] .'</Title>' ."\n";
-	
 	$query =
 'SELECT
 	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
@@ -124,7 +121,11 @@ LIMIT '.$num_results;
 	//echo $query;
 	
 	$rs = $db->execute( $query );
-	if ($rs) {
+	if ($rs && $db->numFoundRows()) {
+
+		$xml = '<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_dl .'">' ."\n";
+		$xml.= '<Title>'. $typeToTitle[$type] .'</Title>' ."\n";
+	
 		while ($r = $rs->fetchRow()) {
 			
 			$entry_name = $r['number'];
@@ -146,22 +147,25 @@ LIMIT '.$num_results;
 			$xml.= '</MenuItem>' ."\n";
 			
 		}
+
+		$xml.= '<SoftKey index="1">' ."\n";
+		$xml.= '	<Label>'. __('OK') .'</Label>' ."\n";
+		$xml.= '	<URI>SoftKey:Select</URI>' ."\n";
+		$xml.= '</SoftKey>' ."\n";
+		$xml.= '<SoftKey index="2">' ."\n";
+		$xml.= '	<Label>'. __('Anrufen') .'</Label>' ."\n";
+		$xml.= '	<URI>SoftKey:Dial2</URI>' ."\n";
+		$xml.= '</SoftKey>' ."\n";
+		$xml.= '<SoftKey index="4">' ."\n";
+		$xml.= '	<Label>'. __('Abbrechen') .'</Label>' ."\n";
+		$xml.= '	<URI>SoftKey:Exit</URI>' ."\n";
+		$xml.= '</SoftKey>' ."\n";
+		
+		$xml.= '</AastraIPPhoneTextMenu>' ."\n";
+	} else {
+		aastra_textscreen($typeToTitle[$type], __('Kein Eintrag'));
 	}
 	
-	$xml.= '<SoftKey index="1">' ."\n";
-	$xml.= '	<Label>'. __('OK') .'</Label>' ."\n";
-	$xml.= '	<URI>SoftKey:Select</URI>' ."\n";
-	$xml.= '</SoftKey>' ."\n";
-	$xml.= '<SoftKey index="2">' ."\n";
-	$xml.= '	<Label>'. __('Anrufen') .'</Label>' ."\n";
-	$xml.= '	<URI>SoftKey:Dial2</URI>' ."\n";
-	$xml.= '</SoftKey>' ."\n";
-	$xml.= '<SoftKey index="4">' ."\n";
-	$xml.= '	<Label>'. __('Abbrechen') .'</Label>' ."\n";
-	$xml.= '	<URI>SoftKey:Exit</URI>' ."\n";
-	$xml.= '</SoftKey>' ."\n";
-	
-	$xml.= '</AastraIPPhoneTextMenu>' ."\n";
 	
 	
 } elseif ($type==='outd' || $type==='ind' || $type==='missedd') {
