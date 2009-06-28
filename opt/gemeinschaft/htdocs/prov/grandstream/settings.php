@@ -109,9 +109,9 @@ if (subStr($mac,0,6) !== '000B82') {
 # HT286/HT287:	"Grandstream HT287 1.1.0.31"
 #
 # BT100/BT110:	"Grandstream BT110 1.0.8.33"
-# BT200/BT201:	"Grandstream BT200 (bt200e.bin:1.1.6.46/boot55e.bin:1.1.6.6)"  =>FW 1.1.6.46
-# BT200:	?  =>FW 1.2.1.4  //FIXME
-# BT201:	"Grandstream BT201 (bt200e.bin:1.2.1.4/boot55e.bin:1.1.6.6)"  =>FW 1.2.1.4
+# BT200/BT201:	"Grandstream BT200 (bt200e.bin:1.1.6.46/boot55e.bin:1.1.6.6)"  = FW 1.1.6.46
+# BT200:	?  = FW 1.2.1.4  //FIXME
+# BT201:	"Grandstream BT201 (bt200e.bin:1.2.1.4/boot55e.bin:1.1.6.6)"  = FW 1.2.1.4
 # GXP280:	"Grandstream GXP280 (gxp280e.bin:1.1.6.46/boot55e16.bin:1.1.6.6)"
 # GXP280:	"Grandstream GXP280 (gxp280e.bin:1.2.1.4/boot55e16.bin:1.1.6.6)"
 # GXP1200:	"Grandstream GXP1200 (gxp1200e.bin:1.1.6.46/boot55e.bin:1.1.6.6)"
@@ -1008,7 +1008,7 @@ if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
 	psetting('P904', '15');		# Video frame rate ( values: 5, 6, 8, 10, 12, 15, 20, 24, 30 | default 15)
 	psetting('P905', '128');	# Video bit rate, in kbps ( values: 32, 64, 96, 128, 160, 192, 224, 256, 320, 284, 512, 768, 1024 | default 128)
 	psetting('P927', '1400');	# Video Packet Size ( 300-1400 | default 1400 )
-	psetting('P924', '0');		# Video Rate Control ( 0 = Frame, 1 = TMN8 | default 0 )
+	psetting('P924', '0');		# Video Rate Control ( 0 = Frame, 1 = TMN8, 2 = GOP | default 0 )
 	psetting('P925', '0');		# Video Frame Skipping ( 0 = no, 1 = yes | default 0)
 }
 
