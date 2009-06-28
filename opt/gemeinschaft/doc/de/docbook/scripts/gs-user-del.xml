@@ -50,7 +50,7 @@
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: --user=&lt;user&gt;</command>
+      <command>Usage: --user=&lt;user&gt; [--no-reload]</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -79,6 +79,15 @@
 
         <listitem>
           <para>Benutzername</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--no-reload</option></term>
+
+        <listitem>
+          <para>Keinen <quote>Reload</quote> der Asterisk-Server
+          durchführen.</para>
         </listitem>
       </varlistentry>
 
