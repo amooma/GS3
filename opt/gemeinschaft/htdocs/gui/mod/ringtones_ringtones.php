@@ -161,6 +161,7 @@ if (isGsError($ringtones)) {
 		<?php echo __('Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.'); ?>
 		<sup>[1]</sup>
 		<sup>[2]</sup>
+		<sup>[3]</sup>
 	</p>
 </div>
 
@@ -271,6 +272,14 @@ if (@$ringtones[$source]['file']) {
 <p class="small" style="max-width:48em;">
 	<sup>[2]</sup>
 	<?php echo htmlEnt(__("Das Siemens OpenStage kann in der derzeitigen Firmware noch nicht zwischen intern und extern unterscheiden. Es wird immer die Ruftonmelodie f\xC3\xBCr intern verwendet!")); ?>
+</p>
+<?php
+//}
+//elseif (strToLower(subStr($cur_phone_type,0,11)) === 'grandstream') {
+?>
+<p class="small" style="max-width:48em;">
+	<sup>[3]</sup>
+	<?php echo __('Das Grandstream muss bei &Auml;nderung eines Klingeltons aktualisiert werden.<br />Die BT-Serie kann nicht zwischen intern und extern unterscheiden. Es wird immer die Ruftonmelodie f&uuml;r intern verwendet!'); ?>
 </p>
 <?php
 //}
