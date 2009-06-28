@@ -114,7 +114,7 @@ if ($phone_type == '') {
 		elseif (array_key_exists('grandstream-gxp2010', $phone_types)) $phone_type = 'grandstream-gxp2010';
 		elseif (array_key_exists('grandstream-gxp2020', $phone_types)) $phone_type = 'grandstream-gxp2020';
 		elseif (array_key_exists('grandstream-gxv3000', $phone_types)) $phone_type = 'grandstream-gxv3000';
-		elseif (array_key_exists('grandstream-gxv3000', $phone_types)) $phone_type = 'grandstream-gxv3000';
+		elseif (array_key_exists('grandstream-gxv3005', $phone_types)) $phone_type = 'grandstream-gxv3005';
 	}
 }
 
