@@ -98,7 +98,7 @@ if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
 		$ringtones[$src]['file'] = $r['file'];
 	}
 	//print_r($ringtones);
-		
+	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
 	
@@ -135,7 +135,7 @@ elseif (strToLower(subStr($user['phone_type'],0,7)) === 'siemens') {
 		$ringtones[$src]['file'] = $r['file'];
 	}
 	//print_r($ringtones);
-		
+	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
 	
@@ -169,7 +169,7 @@ elseif (strToLower(subStr($user['phone_type'],0,6)) === 'aastra') {
 		$ringtones[$src]['file'] = $r['file'];
 	}
 	//print_r($ringtones);
-		
+	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
 	
@@ -180,6 +180,35 @@ elseif (strToLower(subStr($user['phone_type'],0,6)) === 'aastra') {
 		} else {
 			echo 'SET VARIABLE ringer '. gs_agi_str_esc( 'info=<Bellcore-dr0>' ) ."\n";
 		}
+	}
+	
+}
+elseif (strToLower(subStr($user['phone_type'],0,11)) === 'grandstream') {
+	
+	$ringtones = array(
+		'internal' => array( 'bellcore' => 1, 'file' => null ),
+		'external' => array( 'bellcore' => 1, 'file' => null )
+	);
+	
+	# get ringers
+	#
+	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
+	if (! $rs) die();
+	while ($r = $rs->fetchRow()) {
+		$src = $r['src'];
+		if (! array_key_exists($src, $ringtones)) continue;
+		$ringtones[$src]['bellcore'] = (int)$r['bellcore'];
+		$ringtones[$src]['file'] = $r['file'];
+	}
+	//print_r($ringtones);
+	
+	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
+		$ringtones['external']['file'] = null;
+	
+	if (@$ringtones[$source]['file']) {
+		echo 'SET VARIABLE ringer '. gs_agi_str_esc( '<http://127.0.0.1>\;info='. $source ) ."\n";
+	} else {
+		echo 'SET VARIABLE ringer '. gs_agi_str_esc( '' ) ."\n";
 	}
 	
 }
