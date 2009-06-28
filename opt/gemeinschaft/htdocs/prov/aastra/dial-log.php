@@ -122,10 +122,10 @@ LIMIT '.$num_results;
 	
 	$rs = $db->execute( $query );
 	if ($rs && $db->numFoundRows()) {
-
+		
 		$xml = '<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_dl .'">' ."\n";
 		$xml.= '<Title>'. $typeToTitle[$type] .'</Title>' ."\n";
-	
+		
 		while ($r = $rs->fetchRow()) {
 			
 			$entry_name = $r['number'];
@@ -147,7 +147,7 @@ LIMIT '.$num_results;
 			$xml.= '</MenuItem>' ."\n";
 			
 		}
-
+		
 		$xml.= '<SoftKey index="1">' ."\n";
 		$xml.= '	<Label>'. __('OK') .'</Label>' ."\n";
 		$xml.= '	<URI>SoftKey:Select</URI>' ."\n";
@@ -162,10 +162,10 @@ LIMIT '.$num_results;
 		$xml.= '</SoftKey>' ."\n";
 		
 		$xml.= '</AastraIPPhoneTextMenu>' ."\n";
-	} else {
+	}
+	else {
 		aastra_textscreen($typeToTitle[$type], __('Kein Eintrag'));
 	}
-	
 	
 	
 } elseif ($type==='outd' || $type==='ind' || $type==='missedd') {
