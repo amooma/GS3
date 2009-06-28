@@ -652,7 +652,7 @@ if ( in_array($phone_model, array('bt200','bt201','gxp1200','gxp2000','gxp2010',
 #  Firmware Upgrade and Provisioning (global)
 #####################################################################
 psetting('P212', '1');			# Upgrade via ( 0 = TFTP, 1 = HTTP )
-psetting('P192', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $prov_url_grandstream),'/'));  # TFTP/HTTP Firmware Update Server ( based on P212 )
+psetting('P192', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $firmware_url_grandstream),'/'));  # TFTP/HTTP Firmware Update Server ( based on P212 )
 psetting('P237', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $prov_url_grandstream),'/'));  # TFTP/HTTP Config Server ( based on P212 )
 psetting('P232', '');			# Firmware File Prefix
 psetting('P233', '');			# Firmware File Suffix
