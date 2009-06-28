@@ -48,27 +48,27 @@ function _get_user_name()
 {
 	$db = gs_db_slave_connect();
 	
-	$remote_addr = @$_SERVER['REMOTE_ADDR'];
+	$remote_addr = @$_SERVER['REMOTE_ADDR']; //FIXME
 	$user_name = (string)$db->executeGetOne( 'SELECT `user` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 	
 	return $user_name;
 }
 
-function _logout_user() {
+function _logout_user()
 {
 	$db = gs_db_master_connect();
-
-	$remote_addr = @$_SERVER['REMOTE_ADDR'];
+	
+	$remote_addr = @$_SERVER['REMOTE_ADDR']; //FIXME
 	
 	# get id of the phone
 	#
-	$remote_addr = @$_SERVER['REMOTE_ADDR'];
+	$remote_addr = @$_SERVER['REMOTE_ADDR']; //FIXME
 	$old_uid = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 	if ($old_uid < 1) {
 		gs_log( GS_LOG_NOTICE, "Mobility: No user with current IP \"$remote_addr\" in database" );
 		return false;
 	}
-
+	
 	$phone_id = (int)$db->executeGetOne( 'SELECT `id` FROM `phones` WHERE `user_id`='. $old_uid .' LIMIT 1' );
 	if ($phone_id < 1) {
 		gs_log( GS_LOG_WARNING, "Mobility: Login attempt for ext. $new_ext - Could not find phone of last user ID $old_uid" );
@@ -84,11 +84,11 @@ function _logout_user() {
 			# reboot phone
 			#
 			gs_prov_phone_checkcfg_by_ip( $remote_addr,true );
-
+			
 			return false;
 		}
 	}
-
+	
 	$rs = $db->execute( 'SELECT `id`, `mac_addr`, `nobody_index` FROM `phones` WHERE `user_id`='. $old_uid );
 	while ($phone = $rs->fetchRow()) {
 		
@@ -109,21 +109,20 @@ function _logout_user() {
 		gs_log( GS_LOG_DEBUG, "Mobility: Assigning nobody user with ID ". ($new_user_id > 0 ? $new_user_id : 'NULL') ." to phone ". $phone['mac_addr'] );
 		$db->execute( 'UPDATE `phones` SET `user_id`='. ($new_user_id > 0 ? $new_user_id : 'NULL') .' WHERE `id`='. (int)$phone['id'] .' AND `user_id`='. $old_uid );
 	}
-
+	
 	# reboot phone
 	#
 	gs_prov_phone_checkcfg_by_ip( $remote_addr,true );
-
+	
 	return true;
 }
-	
-}
+
+
 function _login_user($new_ext, $password) 
 {
-
 	$db = gs_db_master_connect();
-
-	$remote_addr = @$_SERVER['REMOTE_ADDR'];
+	
+	$remote_addr = @$_SERVER['REMOTE_ADDR']; //FIXME
 	$new_uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($new_ext) .'\'' );
 	if ($new_uid < 1) {
 		# unknown user
@@ -140,16 +139,16 @@ function _login_user($new_ext, $password)
 		gs_log( GS_LOG_NOTICE, "Mobility: Login attempt for ext. $new_ext - Wrong PIN number" );
 		return false;
 	}
-
+	
 	# get id of the phone
 	#
-	$remote_addr = @$_SERVER['REMOTE_ADDR'];
+	$remote_addr = @$_SERVER['REMOTE_ADDR']; //FIXME
 	$old_uid = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 	if ($old_uid < 1) {
 		gs_log( GS_LOG_NOTICE, "Mobility: No user with current IP \"$remote_addr\" in database" );
 		return false;
 	}
-
+	
 	$phone_id = (int)$db->executeGetOne( 'SELECT `id` FROM `phones` WHERE `user_id`='. $old_uid .' LIMIT 1' );
 	if ($phone_id < 1) {
 		gs_log( GS_LOG_WARNING, "Mobility: Login attempt for ext. $new_ext - Could not find phone of last user ID $old_uid" );
@@ -164,7 +163,7 @@ function _login_user($new_ext, $password)
 			return false;
 		}
 	}
-
+	
 	# log out the old user, assign the default nobody
 	#
 	$rs = $db->execute( 'SELECT `id`, `mac_addr`, `nobody_index`, `user_id` FROM `phones` WHERE `user_id` IN ('. $old_uid .','. $new_uid .') AND `id`<>'. $phone_id );
@@ -212,19 +211,18 @@ function _login_user($new_ext, $password)
 	# reboot old phone
 	#
 	gs_prov_phone_checkcfg_by_ip( $remote_addr,true );
-
+	
 	# reboot new phone
 	#
 	if ($new_ip_addr) gs_prov_phone_checkcfg_by_ip( $new_ip_addr ,true );
-
+	
 	return true;
-
 }
 
 $user_name = _get_user_name();
 
-if (!$user_name) {
-	aastra_textscreen('Error',__('Fehler bei der Zuordnung der IP:').' '.@$_SERVER['REMOTE_ADDR']);
+if (! $user_name) {
+	aastra_textscreen('Error', __('Fehler bei der Zuordnung der IP:') .' '. @$_SERVER['REMOTE_ADDR']); //FIXME
 	die();
 }
 
@@ -243,12 +241,12 @@ $password =  trim( @$_REQUEST['p'] );
 
 $url_aastra_login = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'aastra/login.php';
 
-if ($action == 'restart') {
-	if (gs_prov_phone_checkcfg_by_ip( @$_SERVER['REMOTE_ADDR'], true ));
+if ($action === 'restart') {
+	if (gs_prov_phone_checkcfg_by_ip( @$_SERVER['REMOTE_ADDR'], true )); //FIXME
 		aastra_textscreen('Info', __('Telefon wird neu gestartet.'));	
 }
 
-if ($action == 'logout' && $type == 'user') {
+if ($action === 'logout' && $type === 'user') {
 	if (! _logout_user()) {
 		aastra_textscreen('Error',__('Abmelden nicht erfolgreich!'));
 	} else {
@@ -256,17 +254,15 @@ if ($action == 'logout' && $type == 'user') {
 	}
 }
 
-if ($action == 'login' && $type == 'user') {
-
+if ($action === 'login' && $type === 'user') {
+	
 	if ($user && $password) {
 		if (! _login_user($user, $password)) {
 			aastra_textscreen('Error',__('Falsche Durchwahl oder PIN!'));
 		} else {
 			aastra_textscreen('Info', __('Benutzer erfolgreich angemeldet.').' '.__('Telefon wird neu gestartet.'));
 		}
-	
 	} else {
-
 		if ($user) 
 			$highlight = 3;
 		else 
@@ -302,9 +298,7 @@ if ($action == 'login' && $type == 'user') {
 		$xml.= '	<URI>SoftKey:BackSpace</URI>' ."\n";
 		$xml.= '</SoftKey>' ."\n";
 		$xml.= '</AastraIPPhoneInputScreen>' ."\n";
-
 	}
-
 }
 
 
@@ -314,22 +308,21 @@ elseif (! $action) {
 	$xml = '<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none">' ."\n";
 	$xml.= '<Title>'. __('Benutzer').': '.$user_name.'</Title>' ."\n";
 	
-	
 	$xml.= '<MenuItem>' ."\n";
 	$xml.= '	<Prompt>'. __('Benutzer wechseln') .'</Prompt>' ."\n";
 	$xml.= '	<URI>'. $url_aastra_login .'?a=login</URI>' ."\n";
 	$xml.= '</MenuItem>' ."\n";
-
+	
 	$xml.= '<MenuItem>' ."\n";
 	$xml.= '	<Prompt>'. __('Benutzer abmelden') .'</Prompt>' ."\n";
 	$xml.= '	<URI>'. $url_aastra_login .'?a=logout</URI>' ."\n";
 	$xml.= '</MenuItem>' ."\n";
-
+	
 	$xml.= '<MenuItem>' ."\n";
 	$xml.= '	<Prompt>'. __('Telefon neu starten') .'</Prompt>' ."\n";
 	$xml.= '	<URI>'. $url_aastra_login .'?a=restart</URI>' ."\n";
 	$xml.= '</MenuItem>' ."\n";
-
+	
 	$xml.= '<SoftKey index="1">' ."\n";
 	$xml.= '	<Label>'. __('OK') .'</Label>' ."\n";
 	$xml.= '	<URI>SoftKey:Select</URI>' ."\n";
@@ -344,7 +337,6 @@ elseif (! $action) {
 	$xml.= '	<URI>SoftKey:Select</URI>' ."\n";
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '</AastraIPPhoneTextMenu>' ."\n";
-
 	
 }
 
