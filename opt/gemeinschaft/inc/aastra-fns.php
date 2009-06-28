@@ -33,8 +33,8 @@ defined('GS_VALID') or die('No direct access.');
 function aastra_transmit_str( $xml )
 {
 	if ($xml == '') return true;
-
-	if (!preg_match('/^<\?xml/', $xml)) {
+	
+	if (! preg_match('/^<'.'\?xml/', $xml)) {
 		$xmlpi = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>'."\n";
 	} else {
 		$xmlpi = '';
