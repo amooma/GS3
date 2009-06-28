@@ -281,10 +281,17 @@ _gscnf( 'AASTRA_PROV_KEY_BLACKLIST' , ''                 );
 _gscnf( 'GRANDSTREAM_PROV_ENABLED'  , false              );
 _gscnf( 'GRANDSTREAM_PROV_HTTP_PASS', 'admin'            );
 _gscnf( 'GRANDSTREAM_PROV_NTP'      , gs_get_conf('GS_PROV_HOST','') );
+_gscnf( 'GRANDSTREAM_PROV_FW_UPDATE', false              );
 //_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_BT110'  , null      );  //FIXME?
-//_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_BT200'  , null      );  // "
-//_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP2000', null      );  // "
-//...
+_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_BT200'  , null      );
+_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_BT201'  , null      );
+_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP280' , null      );
+_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP1200', null      );
+_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP2000', null      );
+_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP2010', null      );
+_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP2020', null      );
+_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXV3000', null      );
+_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXV3005', null      );
 _gscnf( 'GRANDSTREAM_PROV_KEY_BLACKLIST', ''             );
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );

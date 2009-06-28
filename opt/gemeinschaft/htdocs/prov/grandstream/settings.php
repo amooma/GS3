@@ -160,6 +160,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_prov_params_get.php' );
+include_once( GS_DIR .'inc/cron-rule.php' );
 
 
 #
@@ -265,6 +266,130 @@ if (! is_array($user)) {
 		'`firmware_cur`=\''. $db->escape($fw_vers_nrml) .'\' '.
 	'WHERE `mac_addr`=\''. $db->escape($mac) .'\''
 	);
+
+
+# firmware update
+#
+$firmware_url_grandstream = $prov_url_grandstream;
+if (! gs_get_conf('GS_GRANDSTREAM_PROV_FW_UPDATE')) {
+	gs_log( GS_LOG_DEBUG, 'Grandstream firmware update not enabled' );
+}
+elseif (in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005'), true)) {
+	
+	# get phone_id	
+	$phone_id = (int)$db->executeGetOne( 'SELECT `id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
+	
+	# do we have to update to a default version?
+	#
+	$fw_was_upgraded_manually = (int)$db->executeGetOne(
+		'SELECT `fw_manual_update` '.
+		'FROM `phones` '.
+		'WHERE `id`='. $phone_id
+		);
+	if ($fw_was_upgraded_manually) {
+		gs_log( GS_LOG_DEBUG, "Phone $mac: Firmware was upgraded \"manually\". Not scheduling an upgrade." );
+	} else {
+		$fw_default_vers = _grandstream_normalize_version(trim(gs_get_conf('GS_GRANDSTREAM_PROV_FW_DEFAULT_'.strToUpper($phone_model))));
+		if (in_array($fw_default_vers, array(null, false,''), true)) {
+			gs_log( GS_LOG_DEBUG, "Phone $mac: No default firmware set in config file" );
+		} elseif (subStr($fw_default_vers,0,2) === '00') {
+			gs_log( GS_LOG_DEBUG, "Phone $mac: Bad default firmware set in config file" );
+		} else {
+			if ($fw_vers_nrml != $fw_default_vers) {
+				gs_log( GS_LOG_NOTICE, "Phone $mac: The Firmware version ($fw_vers_nrml) differs from the default version ($fw_default_vers), scheduling an upgrade ..." );
+				# simply add a provisioning job to the database. This is done to be clean and we cann trace the job.
+				$ok = $db->execute(
+					'INSERT INTO `prov_jobs` ('.
+						'`id`, '.
+						'`inserted`, '.
+						'`running`, '.
+						'`trigger`, '.
+						'`phone_id`, '.
+						'`type`, '.
+						'`immediate`, '.
+						'`minute`, '.
+						'`hour`, '.
+						'`day`, '.
+						'`month`, '.
+						'`dow`, '.
+						'`data` '.
+					') VALUES ('.
+						'NULL, '.
+						((int)time()) .', '.
+						'0, '.
+						'\'client\', '.
+						((int)$phone_id) .', '.
+						'\'firmware\', '.
+						'0, '.
+						'\'*\', '.
+						'\'*\', '.
+						'\'*\', '.
+						'\'*\', '.
+						'\'*\', '.
+						'\''. $db->escape($fw_default_vers) .'\''.
+					')'
+				);
+			}
+		}
+	}
+	
+	# check provisioning jobs
+	#
+	$rs = $db->execute(
+		'SELECT `id`, `running`, `minute`, `hour`, `day`, `month`, `dow`, `data` '.
+		'FROM `prov_jobs` '.
+		'WHERE `phone_id`='.$phone_id.' AND `type`=\'firmware\' '.
+		'ORDER BY `running` DESC, `inserted`' );
+	/*if (! $rs) {
+		gs_log( GS_LOG_WARNING, "DB error" );
+		return;
+	}*/
+	while ($job = $rs->fetchRow()) {
+		if ($job['running']) {
+			break;
+		}
+		
+		# check cron rule
+		$c = new CronRule();
+		$ok = $c->set_Rule( $job['minute'] .' '. $job['hour'] .' '. $job['day'] .' '. $job['month'] .' '. $job['dow'] );
+		if (! $ok) {
+			gs_log( GS_LOG_WARNING, "Phone $mac: Job ".$job['id']." has a bad cron rule (". $c->errMsg ."). Deleting ..." );
+			$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']).' AND `running`=0' );
+			unset($c);
+			continue;
+		}
+		if (! $c->validate_time()) {
+			gs_log( GS_LOG_DEBUG, "Phone $mac: Job ".$job['id'].": Rule does not match" );
+			unset($c);
+			continue;
+		}
+		unset($c);
+		gs_log( GS_LOG_DEBUG, "Phone $mac: Job ".$job['id'].": Rule match" );
+		
+		$fw_new_vers = _grandstream_normalize_version( $job['data'] );
+		if (subStr($fw_new_vers,0,2)=='00') {
+			gs_log( GS_LOG_NOTICE, "Phone $mac: Bad new fw version $fw_new_vers" );
+			$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']).' AND `running`=0' );
+			continue;
+		}
+		$firmware_path = '/opt/gemeinschaft/htdocs/prov/grandstream/fw/'.$fw_new_vers;
+		if ( ! file_exists($firmware_path) || ! is_readable($firmware_path) ) {
+			gs_log( GS_LOG_NOTICE, "Phone $mac: ".$firmware_path." not exits or not readable" );
+			$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']).' AND `running`=0' );
+			continue;
+		}
+		if ( $fw_new_vers == $fw_vers_nrml ) {
+			gs_log( GS_LOG_NOTICE, "Phone $mac: FW $fw_vers_nrml == $fw_new_vers" );
+			$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']).' AND `running`=0' );
+			continue;
+		}
+		
+		gs_log( GS_LOG_NOTICE, "Phone $mac: Upgrade FW $fw_vers_nrml -> $fw_new_vers" );
+		$firmware_url_grandstream .= 'fw/'.$fw_new_vers.'/';
+		
+		break;
+	}	
+}
 
 /* TODO
 # add prov job, to send notify 'grandstream-idle-screen-refresh' (GXP2000, GXP2010, GXP2020)
@@ -527,7 +652,7 @@ if ( in_array($phone_model, array('bt200','bt201','gxp1200','gxp2000','gxp2010',
 #  Firmware Upgrade and Provisioning (global)
 #####################################################################
 psetting('P212', '1');			# Upgrade via ( 0 = TFTP, 1 = HTTP )
-psetting('P192', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $prov_url_grandstream),'/'));  # TFTP/HTTP Firmware Update Server ( based on P212 ) //FIXME?
+psetting('P192', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $prov_url_grandstream),'/'));  # TFTP/HTTP Firmware Update Server ( based on P212 )
 psetting('P237', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $prov_url_grandstream),'/'));  # TFTP/HTTP Config Server ( based on P212 )
 psetting('P232', '');			# Firmware File Prefix
 psetting('P233', '');			# Firmware File Suffix
