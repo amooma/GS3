@@ -234,13 +234,13 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	else {
 		if ($name_search) {
 			aastra_textscreen(
-			__('Nicht gefunden'),
-			sprintF(__('Eintrag &quot;%s&quot; nicht gefunden.'), $name_search)
-			);
+				__('Nicht gefunden'),
+				sprintF(__('Eintrag &quot;%s&quot; nicht gefunden.'), $name_search)
+				);
 		} else {
 			aastra_textscreen(
-			$page_title,
-			__('Kein Eintrag'));
+				$page_title,
+				__('Kein Eintrag'));
 		}
 	}
 	
@@ -333,13 +333,13 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	else {
 		if ($name_search) {
 			aastra_textscreen(
-			__('Nicht gefunden'),
-			sprintF(__('Eintrag &quot;%s&quot; nicht gefunden.'), $name_search)
-			);
+				__('Nicht gefunden'),
+				sprintF(__('Eintrag &quot;%s&quot; nicht gefunden.'), $name_search)
+				);
 		} else {
 			aastra_textscreen(
-			$page_title,
-			__('Kein Eintrag'));
+				$page_title,
+				__('Kein Eintrag'));
 		}
 	}
 	
@@ -352,7 +352,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 elseif ($type==='prvs') {
 	
 	$user_id = _get_userid();
-	$user_id =  31;	
+	
 	$xml = '<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction="'. $url_aastra_pb .'?t=prv">' ."\n";
 	
 	$query =
