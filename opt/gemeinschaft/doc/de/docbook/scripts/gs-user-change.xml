@@ -52,7 +52,8 @@
     <cmdsynopsis>
       <command>Usage: --user=&lt;user&gt; --pin=&lt;123456&gt;
       --firstname=&lt;firstname&gt; --lastname=&lt;lastname&gt;
-      --email=&lt;email&gt; --host=&lt;id&gt;|&lt;ip&gt; [--force]</command>
+      --email=&lt;email&gt; --host=&lt;id&gt;|&lt;ip&gt; [--force]
+      [--no-reload]</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -129,6 +130,15 @@
 
         <listitem>
           <para>erzwingen</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--no-reload</option></term>
+
+        <listitem>
+          <para>Keinen <quote>Reload</quote> der Asterisk-Server
+          durchführen.</para>
         </listitem>
       </varlistentry>
 
