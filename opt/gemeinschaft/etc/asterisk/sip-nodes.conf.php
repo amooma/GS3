@@ -139,16 +139,32 @@ while ($gw = $rs->fetchRow()) {
 	$fromdomain     = null;
 	$fromuser       = null;
 	
+	if (preg_match('/@([^@]*)$/', $gw['user'], $m)) {
+		# set domain in the From header
+		$fromdomain = $m[1];
+		$gw['user'] = subStr($gw['user'], 0, -strLen($m[0]));
+		
+		# assume that this SIP provider requires the username
+		# instead of the caller ID number in the From header (and
+		# that the caller ID is to be set in a P-Preferred-Identity
+		# header)
+		$fromuser   = $gw['user'];
+		
+		# also assume that this gateway is a SIP provider and
+		# that re-invites will not work
+		$canreinvite    = 'no';
+	}
+	
 	if ($gw['proxy'] == null || $gw['proxy'] === $gw['host']) {
 		$gw['proxy'] = null;
 	}
 	
 	
-	if ($gw['host'] === 'sip.1und1.de') {  # special settings for 1und1.de
-		$canreinvite    = 'no';
+	if (strToLower($gw['host']) === 'sip.1und1.de') {  # special settings for 1und1.de
+		//$canreinvite    = 'no';
 		
-		$fromdomain     = '1und1.de';
-		$fromuser       = $gw['user'];
+		//$fromdomain     = '1und1.de';
+		//$fromuser       = $gw['user'];
 		
 		$qualify        = 'no';
 		$maxexpiry      = 3600;
@@ -161,10 +177,15 @@ while ($gw = $rs->fetchRow()) {
 		$codecs_allow['g729'   ] = true;
 		$codecs_allow['slinear'] = true;
 	}
-	elseif ($gw['host'] === 'sipgate.de') {  # special settings for SipGate.de
-		$canreinvite    = 'no';
-		$fromdomain     = 'sipgate.de';
-		$fromuser       = $gw['user'];
+	elseif (strToLower($gw['host']) === 'sipgate.de') {  # special settings for SipGate.de
+		//$canreinvite    = 'no';
+		//$fromdomain     = 'sipgate.de';
+		//$fromuser       = $gw['user'];
+	}
+	elseif (preg_match('/\\.sipgate\\.de$/i', $gw['host'])) {  # special settings for SipGate.de
+		# sipconnect.sipgate.de, SipGate "Team" trunk
+		//$fromuser       = $gw['user'];
+		//$canreinvite    = 'no';
 	}
 	
 	
