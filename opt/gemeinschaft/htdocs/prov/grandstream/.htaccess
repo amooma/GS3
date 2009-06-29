@@ -9,7 +9,7 @@
 	# The phone asks for
 	# cfg<MAC-addr> (config) (all)
 	# ring[1-3].bin (ringtones) (only BT, GXP, GXV)
-	# gs_phonebook.xml (phonebook) (only GXP)
+	# gs_phonebook.xml (phonebook) (only GXP, GXV)
 	
 	# Rewrite requests for cfg<MAC-addr>
 	RewriteRule ^cfg(000b82[0-9a-f]*)$ settings.php?mac=$1 [L]
