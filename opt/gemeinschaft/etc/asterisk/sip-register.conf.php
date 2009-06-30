@@ -145,7 +145,7 @@ while ($gw = $rs->fetchRow()) {
 			echo $gw['proxy'];             # proxy
 		}
 		if ($gw['user'] != '') {
-			//echo '/', $gw['user'];         # contact
+			echo '/', $gw['user'];         # contact
 		}
 		echo "\n";
 	}
