@@ -1,0 +1,102 @@
+* 
+* Generate self-signed SSL certificate for Apache
+* 
+* $Revision: 113 $
+* 
+* amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+
+
+>     SSLCertificateFile      /etc/httpd/conf/ssl.crt/10_128_131_30.crt
+>     SSLCertificateKeyFile   /etc/httpd/conf/ssl.key/server.key
+>     SSLCertificateChainFile /etc/httpd/conf/ssl.crt/10_128_131_30.ca-bundle
+>     SSLCACertificateFile    /etc/httpd/conf/ssl.crt/10_128_131_30.ca-bundle
+> 
+> Wie erstelle ich diese??
+
+Falls in den o.g. Verzeichnissen schon Dateien liegen, dann
+sind die direkt beim Apache-Paket mitinstalliert worden,
+müßten also dann (wenn sie funktionieren) nicht noch generiert
+werden. Sollten Keys vorinstalliert sein, dann heißen die
+üblicherweise server.key, server.crt, server.ca-bundle o.ä.
+
+Falls da noch keine liegen, geht das in etwa so:
+
+Privaten RSA-Schlüssel erzeugen:
+=======================================================
+$ cd /etc/httpd/conf/
+(Debian: cd /etc/apache2/ && mkdir ssl && cd ssl/)
+$ openssl genrsa -out ssl.key/my-server.key 1024
+(Debian: openssl genrsa -out my-server.key 1024)
+Generating RSA private key, 1024 bit long modulus
+..........++++++
+.....................................++++++
+e is 65537 (0x10001)
+
+CSR (Certificate Signing Request) erzeugen:
+=======================================================
+$ openssl req -new \
+  -key ssl.key/my-server.key \
+  -out ssl.csr/my-server.csr
+(Debian: openssl req -new -key my-server.key -out my-server.csr)
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [GB]:DE
+State or Province Name (full name) [Berkshire]:Nordrhein-Westfalen
+Locality Name (eg, city) [Newbury]:Münster
+Organization Name (eg, company) [My Company Ltd]:LVM Versicherungen
+Organizational Unit Name (eg, section) []:.
+Common Name (eg, your name or your server's hostname) []:192.168.1.130
+Email Address []:.
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:.
+An optional company name []:.
+
+Dabei gibt man als "Common Name" die IP-Adresse des Rechners an.
+
+CSR überprüfen (optional):
+=======================================================
+$ openssl req -noout -text -in ssl.csr/my-server.csr
+Certificate Request:
+    Data:
+        Version: 0 (0x0)
+        Subject: C=DE, ST=Nordrhein-Westfalen, L=M\xC3\xBCnster, O=LVM
+Versicherungen, CN=192.168.1.130
+[...]
+
+Selbst-signiertes Zertifikat erstellen:
+=======================================================
+$ openssl x509 -req -days 3650 \
+  -in ssl.csr/my-server.csr \
+  -signkey ssl.key/my-server.key \
+  -out ssl.crt/my-server.crt
+(Debian:
+openssl x509 -req -days 3650 \
+  -in my-server.csr \
+  -signkey my-server.key \
+  -out my-server.crt
+)
+Signature ok
+subject=/C=DE/ST=Nordrhein-Westfalen/L=M\xC3\xBCnster/O=LVM
+Versicherungen/CN=192.168.1.130
+Getting Private key
+
+Eintragen in der entsprechenden Virtual-Host-Definition im Apache:
+=======================================================
+  SSLCertificateFile      /etc/httpd/conf/ssl.crt/my-server.crt
+  SSLCertificateKeyFile   /etc/httpd/conf/ssl.key/my-server.key
+(Die Parameter SSLCertificateChainFile und SSLCACertificateFile
+braucht man dann nicht.)
+
+
