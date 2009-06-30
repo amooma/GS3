@@ -84,10 +84,6 @@ $agent_number   = trim(@$_REQUEST['anumber'    ]);
 $agent_pin    = trim(@$_REQUEST['apin'     ]);
 
 
-if ($delete_agent) {
-	$ret = gs_agent_del( $delete_agent );
-	if (isGsError( $ret )) echo $ret->getMsg();
-}
 if ($save_agent) {
 	$ret = gs_agent_update( $save_agent, $agent_pin, $agent_lastname, $agent_firstname );
 	if (isGsError( $ret )) echo $ret->getMsg();
@@ -98,12 +94,16 @@ if ($agent_name) {
 }
 
 
-if ($upqueued && $edit_agent) {
+if ( ($upqueued && $edit_agent) || $delete_agent ) {
+	if ($edit_agent)
+		$agent_id = $edit_agent;
+	else
+		$agent_id = $delete_agent;
 	$sql_query = 'DELETE `q`
 FROM `agent_queues` `q` , `agents` `a`
 WHERE
-	`q`.`agent_id` = `a`.`id` AND
-	`a`.`number` = \''.$DB->escape($edit_agent).'\'';
+	`q`.`agent_id` = `a`.`id` AND 
+	`a`.`number` = \''.$DB->escape($agent_id).'\'';
 	
 	$rs = $DB->execute($sql_query);
 	
@@ -114,6 +114,11 @@ WHERE
 			if (isGsError( $ret )) echo $ret->getMsg();
 		}
 	}
+}
+
+if ($delete_agent) {
+	$ret = gs_agent_del( $delete_agent );
+	if (isGsError( $ret )) echo $ret->getMsg();
 }
 
 if (!$edit_agent) {
