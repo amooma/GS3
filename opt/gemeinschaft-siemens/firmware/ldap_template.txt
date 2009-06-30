@@ -1,0 +1,14 @@
+OpenStage LDAP TEMPLATE (v.1)
+SEARCHBASE="OU=People,DC=lvm,DC=de"
+ATTRIB01="sn"
+ATTRIB02="givenName"
+ATTRIB03="telephoneNumber"
+ATTRIB04="pager"
+ATTRIB05="mobile"
+ATTRIB06="homePhone"
+ATTRIB07="ou"
+ATTRIB08="departmentNumber"
+ATTRIB09="l"
+ATTRIB10="title"
+ATTRIB11="email"
+EOF
