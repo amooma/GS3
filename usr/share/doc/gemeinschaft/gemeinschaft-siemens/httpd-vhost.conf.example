@@ -1,0 +1,63 @@
+#
+# Create a virtual host in Apache
+#
+# $Revision: 352 $
+#
+# amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+# Philipp Kempgen <philipp.kempgen@amooma.de>
+# Peter Kozak <peter.kozak@amooma.de>
+#
+
+
+Listen 18443
+
+<VirtualHost *:18443>
+	SSLEngine on
+	
+	SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP
+	#SSLCipherSuite !ADH:!EXPORT56:RC4+RSA:RC4+SHA
+	# without EDH (Ephemeral Diffie-Hellman) because it's a symmetric
+	# cipher and thus cannot be decrypted (e.g. by WireShark) even if
+	# the private key of the server is known, so RSA is better for
+	# debugging
+	
+	# Debian
+	SSLCertificateFile      /etc/apache2/ssl/openstage-crt.pem
+	SSLCertificateKeyFile   /etc/apache2/ssl/openstage-key.pem
+	
+	# RedHat
+	#SSLCertificateFile      /etc/httpd/ssl/openstage-crt.pem
+	#SSLCertificateKeyFile   /etc/httpd/ssl/openstage-key.pem
+	
+	#CustomLog logs/ssl_request_log \
+	#    "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+	
+	DocumentRoot /opt/gemeinschaft/htdocs/prov/siemens
+	
+	# KeepAlive ist absolutely necessary!
+	KeepAlive On
+	MaxKeepAliveRequests 100
+	KeepAliveTimeout 45
+	# KeepAliveTimeout not below 30 (seconds)!
+	
+	<Directory />
+		Options FollowSymLinks MultiViews Indexes
+	</Directory>
+	<IfModule mod_rewrite.c>
+		RewriteEngine on
+		RewriteRule ^/ringtones/  - [L]
+		RewriteRule ^/(.*)$ /settings.php?_url=$1 [L,QSA]
+	</IfModule>
+	<IfModule mod_headers.c>
+		Header unset X-Powered-By
+		Header unset X-Pad
+		Header unset X-Cache
+		#Header unset Connection
+	</IfModule>
+	<IfModule mod_cache.c>
+		CacheDisable /
+	</IfModule>
+</VirtualHost>
+
