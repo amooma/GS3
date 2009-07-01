@@ -66,10 +66,8 @@ while ($r = $rs->fetchRow()) {
 
 
 gs_agi_set_variable( 'pgrpdialstr', $dialstr );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 gs_agi_set_variable( '__PICKUPMARK', $pickupmark );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
 ?>

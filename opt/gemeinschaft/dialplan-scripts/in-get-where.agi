@@ -40,13 +40,11 @@ $ext  = trim(@$argv[1]);
 if (! $ext) {
 	gs_agi_set_variable( '__exttype', '' );
 	gs_agi_set_variable( '__dial_to_node', '' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
 	gs_agi_set_variable( '__exttype', 'unknown' );
 	gs_agi_set_variable( '__dial_to_node', '' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
@@ -137,7 +135,6 @@ if ($num > 0) {
 
 gs_agi_set_variable( '__exttype', 'unknown' );
 gs_agi_set_variable( '__dial_to_node', '' );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 die();
 
 ?>

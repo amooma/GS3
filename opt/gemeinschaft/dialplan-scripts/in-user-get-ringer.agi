@@ -50,13 +50,11 @@ if (! in_array($source, array('internal','external'))) die();
 $files = glob( '/opt/gemeinschaft/htdocs/prov/ringtones/'. $uname .'-*.wav' );
 if (count($files) < 1) {
 	gs_agi_set_variable( 'ringer', '' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
 $ringer = baseName( $files[0] );
 gs_agi_set_variable( 'ringer', $ringer );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 */
 
 include_once( GS_DIR .'inc/db_connect.php' );
