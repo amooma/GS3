@@ -48,7 +48,7 @@ if ($is_from_gateway == '1') {
 $ext  = trim(@$argv[1]);
 if (! $ext) {
 	gs_log( GS_LOG_NOTICE, "Mobility: No extension specified" );
-	echo 'SET VARIABLE ret '. gs_agi_str_esc('0') ."\n";
+	gs_agi_set_variable( 'ret', '0' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -65,7 +65,7 @@ if (! $db) {
 }
 
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
-echo 'SET VARIABLE ret '. gs_agi_str_esc($num > 0 ? '1' : '0') ."\n";
+gs_agi_set_variable( 'ret', ($num > 0 ? '1':'0') );
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 

@@ -38,14 +38,14 @@ ob_implicit_flush(1);
 $ext  = trim(@$argv[1]);
 
 if (! $ext) {
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('') ."\n";
-	echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
+	gs_agi_set_variable( '__exttype', '' );
+	gs_agi_set_variable( '__dial_to_node', '' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
-	echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
+	gs_agi_set_variable( '__exttype', 'unknown' );
+	gs_agi_set_variable( '__dial_to_node', '' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -92,14 +92,14 @@ if ($num < 1) {
 
 if ($host_id < 1) {  // should never happen
 	
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
-	echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
+	gs_agi_set_variable( '__exttype', 'unknown' );
+	gs_agi_set_variable( '__dial_to_node', '' );
 	die();
 	
 }
 
-echo 'SET VARIABLE __exttype '. gs_agi_str_esc('conference') ."\n";
-echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( get_at_dial( $host_id ) ) ."\n";
+gs_agi_set_variable( '__exttype', 'conference' );
+gs_agi_set_variable( '__dial_to_node', get_at_dial( $host_id ) );
 
 
 ?>

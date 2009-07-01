@@ -38,7 +38,7 @@ ob_implicit_flush(1);
 $ext  = trim(@$argv[1]);
 
 if (! $ext || ! preg_match('/^\d+$/', $ext)) {  // is not just digits
-	echo 'SET VARIABLE cc_possible '. gs_agi_str_esc('0') ."\n";
+	gs_agi_set_variable( 'cc_possible', '0' );
 	die();
 }
 
@@ -48,7 +48,7 @@ include_once( GS_DIR .'inc/extension-state.php' );
 
 $state = @ gs_extstate_single( $ext );
 
-echo 'SET VARIABLE cc_possible '. gs_agi_str_esc((int)@gs_ast_extstate_offer_cc( $state )) ."\n";
+gs_agi_set_variable( 'cc_possible', (int)@gs_ast_extstate_offer_cc( $state ) );
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 

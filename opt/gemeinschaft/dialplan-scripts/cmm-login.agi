@@ -52,13 +52,13 @@ if ($is_from_gateway == '1') {
 
 if (! $new_ext) {
 	gs_log( GS_LOG_NOTICE, "Mobility: No extension specified" );
-	echo 'SET VARIABLE ret '. gs_agi_str_esc('unknown') ."\n";
+	gs_agi_set_variable( 'ret', 'unknown' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 if (! $pass) {
 	gs_log( GS_LOG_NOTICE, "Mobility: Empty PIN number" );
-	echo 'SET VARIABLE ret '. gs_agi_str_esc('badpass') ."\n";
+	gs_agi_set_variable( 'ret', 'badpass' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -78,31 +78,31 @@ if ($old_uid < 1) {
 		'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($caller_ext) .'\'' );
 	if ($old_uid < 1) {
 		gs_log( GS_LOG_NOTICE, "Mobility: Neither old user ID nor caller ID specified" );
-		echo 'SET VARIABLE ret '. gs_agi_str_esc('error') ."\n";
+		gs_agi_set_variable( 'ret', 'error' );
 		die();
 	}
-	echo 'SET VARIABLE user_name '. gs_agi_str_esc($caller_ext) ."\n";
+	gs_agi_set_variable( 'user_name', $caller_ext );
 }
 
 $new_uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($new_ext) .'\'' );
 if ($new_uid < 1) {
 	# unknown user
 	gs_log( GS_LOG_NOTICE, "Mobility: Unknown extension $new_ext" );
-	echo 'SET VARIABLE ret '. gs_agi_str_esc('unknown') ."\n";
+	gs_agi_set_variable( 'ret', 'unknown' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 $pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `id`='. $new_uid );
 if (trim($pin)=='') {
 	# db error, unknown user
-	echo 'SET VARIABLE ret '. gs_agi_str_esc('unknown') ."\n";
+	gs_agi_set_variable( 'ret', 'unknown' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 if ((string)$pin != (string)$pass) {
 	# wrong password
 	gs_log( GS_LOG_NOTICE, "Mobility: Login attempt for ext. $new_ext - Wrong PIN number" );
-	echo 'SET VARIABLE ret '. gs_agi_str_esc('badpass') ."\n";
+	gs_agi_set_variable( 'ret', 'badpass' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -121,7 +121,7 @@ if ($phone_id < 1) {
 	}
 	if ($phone_id < 1) {
 		gs_log( GS_LOG_WARNING, "Mobility: Login attempt for ext. $new_ext - Could not find phone of last nobody_index $nobody_index" );
-		echo 'SET VARIABLE ret '. gs_agi_str_esc('error') ."\n";
+		gs_agi_set_variable( 'ret', 'error' );
 		//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 		die();
 	}
@@ -162,12 +162,12 @@ while ($phone = $rs->fetchRow()) {
 $ok = $db->execute( 'UPDATE `phones` SET `user_id`='. $new_uid .' WHERE `id`='. $phone_id );
 if (! $ok) {
 	gs_log( GS_LOG_NOTICE, "Mobility: DB error" );
-	echo 'SET VARIABLE ret '. gs_agi_str_esc('error') ."\n";
+	gs_agi_set_variable( 'ret', 'error' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
-echo 'SET VARIABLE ret '. gs_agi_str_esc('ok') ."\n";
+gs_agi_set_variable( 'ret', 'ok' );
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
@@ -175,13 +175,13 @@ echo 'SET VARIABLE ret '. gs_agi_str_esc('ok') ."\n";
 #
 $old_ip_addr = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='.$old_uid );
 gs_log( GS_LOG_DEBUG, "Mobility: IP address found for old phone: $old_ip_addr" );
-echo 'SET VARIABLE old_phone_ip '. gs_agi_str_esc($old_ip_addr )."\n";
+gs_agi_set_variable( 'old_phone_ip', $old_ip_addr );
 
 # get new phone's IP addr.
 #
 $new_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$new_uid );
 gs_log( GS_LOG_DEBUG, "Mobility: IP address found for new phone: $new_ip_addr");
-echo 'SET VARIABLE new_phone_ip '. gs_agi_str_esc($new_ip_addr) ."\n";
+gs_agi_set_variable( 'new_phone_ip', $new_ip_addr );
 
 
 ?>

@@ -65,10 +65,10 @@ while ($r = $rs->fetchRow()) {
 
 
 
-echo 'SET VARIABLE pgrpdialstr '. gs_agi_str_esc($dialstr) ."\n";
+gs_agi_set_variable( 'pgrpdialstr', $dialstr );
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
-echo 'SET VARIABLE __PICKUPMARK '. gs_agi_str_esc($pickupmark) ."\n";
+gs_agi_set_variable( '__PICKUPMARK', $pickupmark );
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
