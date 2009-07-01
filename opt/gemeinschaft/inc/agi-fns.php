@@ -78,13 +78,28 @@ function gs_agi_do( $cmd )
 	if (! @fWrite(STDOUT, $cmd ."\n")) {
 		return $fail;
 	}
-	fFlush(STDOUT);
+	/*
+	if (! in_array(php_sapi_name(), array('cgi'), true)) {
+		# the correct way
+	*/
+		if (! @fFlush(STDOUT)) {
+			gs_log( GS_LOG_WARNING, 'Failed to flush StdOut in AGI script!' );
+			uSleep(1000);
+		}
+	/*
+	} else {
+		# STDOUT is not defined in the "cgi" version of PHP.
+		# However, the RedHat/Centos way of running shell scripts in
+		# php-cgi instead of php-cli is simply wrong.
+		uSleep(10);
+	}
+	*/
 	
 	stream_set_blocking(STDIN, true);
 	$count = 0;
 	$str = '';
 	do {
-		uSleep(10);
+		uSleep(1000);
 		stream_set_timeout(STDIN,1);
 		$str .= trim(fGetS(STDIN, 4096));
 	} while ($str == '' && $count++ < 5);
