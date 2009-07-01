@@ -61,8 +61,8 @@ define( 'GS_PROV_SIEMENS_LOG_RAW', false );
 # extension, os60 and os80 get png
 #define( 'GS_PROV_SIEMENS_LOGO', 'bg-%s-lvm.%s' );  # "bg-%s.%s"
 
-define( 'GS_PROV_SIEMENS_LOGO', 'locaphone_logoscreen.png' );
-define( 'GS_PROV_SIEMENS_WALLPAPER', 'locaphone_idlescreen.png');
+define( 'GS_PROV_SIEMENS_LOGO', 'logoscreen.%s.%s' );
+define( 'GS_PROV_SIEMENS_WALLPAPER', 'idlescreen.%s.%s');
 
 # SNMP server IP address
 define( 'GS_PROV_SIEMENS_SNMP_TRAP_ADDR', '127.0.0.1' );
