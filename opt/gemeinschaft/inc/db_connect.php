@@ -93,7 +93,7 @@ function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, 
 		// don't flood the log
 		return 2;  # using the existing connection
 	}
-	gs_log( GS_LOG_DEBUG, 'New'. ($tag != '' ? ' "'.$tag.'"':'') .' DB connection' . $caller_info );
+	gs_log( GS_LOG_DEBUG, 'New'. ($tag != '' ? ' '.str_pad($tag,6).'':'') .' DB connection' . $caller_info );
 	
 	if (!( $conn = YADB_newConnection( 'mysql' ) )) {
 		$conn = null;
