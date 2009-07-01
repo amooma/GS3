@@ -3,7 +3,7 @@
 *            Gemeinschaft - asterisk cluster gemeinschaft
 *                    Add-on Siemens provisioning
 * 
-* $Revision: 339 $
+* $Revision: 366 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -202,25 +202,26 @@ function _session_start()
 function _dls_message_open( $nonce )
 {
 	echo '<','?xml version="1.0" encoding="utf-8"?','>',"\n",
-	     '<DLSMessage',"\n",
-	     "\t", 'xmlns="http://www.siemens.com/DLS"',"\n",
-	     "\t", 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',"\n",
-	     "\t", 'xsi:schemaLocation="http://www.siemens.com/DLS">',"\n",
-	     '<Message nonce="', $nonce, '">',"\n";
+		'<DLSMessage',"\n",
+		"\t", 'xmlns="http://www.siemens.com/DLS"',"\n",
+		"\t", 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',"\n",
+		"\t", 'xsi:schemaLocation="http://www.siemens.com/DLS">',"\n",
+		'<Message nonce="', $nonce, '">',"\n";
 }
 function _dls_message_close()
 {
 	echo '</Message>',"\n",
-	     '</DLSMessage>',"\n";
+	'</DLSMessage>',"\n";
 }
-function _dls_response_cleanup( $nonce, $errmsg='' )
+function _dls_response_simple( $nonce, $action='CleanUp', $errmsg='' )
 {
-	gs_log( GS_LOG_DEBUG, "Siemens prov.: Sending cleanup" );
+	$action = preg_replace('/[^a-zA-Z0-9\-_ ]/', '', $action);
+	gs_log( GS_LOG_DEBUG, "Siemens prov.: Sending $action" );
 	
 	@ob_end_clean();
 	ob_start();
 	_dls_message_open( $nonce );
-	echo "\t", '<Action>CleanUp</Action>',"\n";
+	echo "\t", '<Action>', $action ,'</Action>',"\n";
 	if ($errmsg != '')
 		echo '  <!-- ', $errmsg, ' -->', "\n";
 	_dls_message_close();
@@ -230,6 +231,7 @@ function _dls_response_cleanup( $nonce, $errmsg='' )
 		header( 'Content-Type: text/xml' );
 		header( 'Content-Length: '. strLen($ob) );
 		/*
+		if (in_array(strToLower($action), array('cleanup','restart'), true)) {
 		if (is_array($_SERVER) && array_key_exists('HTTP_COOKIE', $_SERVER)) {
 			$cookies = explode(';', $_SERVER['HTTP_COOKIE']);
 			foreach ($cookies as $cookie) {
@@ -245,6 +247,7 @@ function _dls_response_cleanup( $nonce, $errmsg='' )
 				}
 			}
 		}
+		}
 		*/
 	}
 	echo $ob;
@@ -252,9 +255,19 @@ function _dls_response_cleanup( $nonce, $errmsg='' )
 		@_write_raw_log("OUR RESPONSE:\n\n". _get_response_headers_as_string() . $ob);
 	}
 	
-	$_SESSION = array();
-	//@session_destroy();  // could lead to a fatal error ("session_destroy(): Trying to destroy uninitialized session")
+	if (in_array(strToLower($action), array('cleanup','restart'), true)) {
+		$_SESSION = array();
+		//@session_destroy();  // could lead to a fatal error ("session_destroy(): Trying to destroy uninitialized session")
+	}
 	die();
+}
+function _dls_response_cleanup( $nonce, $errmsg='' )
+{
+	_dls_response_simple( $nonce, 'CleanUp', $errmsg );
+}
+function _dls_response_restart( $nonce, $errmsg='' )
+{
+	_dls_response_simple( $nonce, 'Restart', $errmsg );
 }
 
 
@@ -298,7 +311,8 @@ function _set_cfg( $key, $i, $val, $force=false )
 			||   $val != @$cur_cfg[$key]
 			||   $val != @$new_cfg[$key] )
 				$new_cfg[$key] = $val;
-			if (@$new_cfg[$key] == @$cur_cfg[$key] && substr($key,0,3) != 'XML')
+			if (@$new_cfg[$key] == @$cur_cfg[$key]
+			&&  substr($key,0,4) != 'XML-')  # why?
 				unset($new_cfg[$key]);
 		} else {
 			if (! @array_key_exists($key, $new_cfg) || ! is_array($new_cfg[$key]))
@@ -309,7 +323,8 @@ function _set_cfg( $key, $i, $val, $force=false )
 			||   $val != @$cur_cfg[$key][$i]
 			||   $val != @$new_cfg[$key][$i] )
 				$new_cfg[$key][$i] = $val;
-			if (@$new_cfg[$key][$i] == @$cur_cfg[$key][$i] && substr($key,0,3) != 'XML' )
+			if (@$new_cfg[$key][$i] == @$cur_cfg[$key][$i]
+			&&  substr($key,0,4) != 'XML-')  # why?
 				unset($new_cfg[$key][$i]);
 		}
 	}
@@ -339,7 +354,6 @@ if (! gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 
 $requester = gs_prov_check_trust_requester();
 if (! $requester['allowed']) {
-	 gs_log( GS_LOG_NOTICE, "Siemens prov.: Requester not trusted." );	
 	_dls_response_cleanup( '', 'Error. See log for details.' );
 }
 
@@ -510,10 +524,7 @@ function _deploy_file( $type, $ftp_path, $filename, $wan=null )
 			gs_get_conf('GS_PROV_HOST'));
 		
 		if ($ftp_path == '' || $ftp_path === '/') $ftp_path = './';
-		if( $type == 'RINGTONE' )
-			$external_ftp_path = gs_get_conf('GS_PROV_SIEMENS_FTP_RINGTONE_PATH');
-		else 
-			$external_ftp_path = gs_get_conf('GS_PROV_SIEMENS_FTP_PATH');
+		$external_ftp_path = gs_get_conf('GS_PROV_SIEMENS_FTP_PATH');
 		if ($external_ftp_path !== null) {
 			if (subStr($external_ftp_path,-1) !== '/')
 				$external_ftp_path .= '/';
@@ -653,6 +664,7 @@ if (preg_match( '/<ReasonForContact[^>]*>\s*(start-up|solicited|local-changes)/'
 	
 	$reason = $m[1];
 	gs_log( GS_LOG_DEBUG, "Siemens prov.: Phone \"$mac\" contacts us ($reason)" );
+	
 	
 	$DBM = gs_db_master_connect();
 	if (! $DBM) {
@@ -1141,7 +1153,7 @@ elseif (preg_match( '/<ReasonForContact\s+.{0,80}?action\s*=\s*"ReadAllItems"(?:
 		$tmp = $cur_cfg['part-number'];
 		if (is_string($tmp)) {
 			$tmp = strToUpper(trim( $tmp ));
-			if (preg_match('/^S30817-S740([0-9])-[A-Z][0-9]0([0-9])-([0-9]+)/', $tmp, $m)) {
+			if (preg_match('/^S30817-S740([0-9])-[A-Z]10([0-9])-([0-9]+)/', $tmp, $m)) {
 				switch ($m[1]) {
 					case '1':  # OpenStage 20
 					case '2':  # OpenStage 40
@@ -1231,7 +1243,7 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 		$user_id = @gs_prov_add_phone_get_nobody_user_id( $DBM, $mac, $phone_type, $requester['phone_ip'] );
 		if ($user_id < 1) {
 			gs_log( GS_LOG_WARNING, "Failed to add nobody user for new phone $mac" );
-			_dls_response_cleanup( $nonce, 'Failed to add nobody user for new phone.' );
+			_dls_response_restart( $nonce, 'Failed to add nobody user for new phone.' );
 		}
 	}
 	
@@ -1303,7 +1315,7 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 				'`host_id`='. (int)$user['host_id'] .' AND '.
 				'`param`=\'route_prefix\''
 			);
-		$user_ext = (strLen($user['name']) > strLen($hp_route_prefix))
+		$user_ext = (subStr($user['name'],0,strLen($hp_route_prefix)) === $hp_route_prefix)
 			? subStr($user['name'], strLen($hp_route_prefix)) : $user['name'];
 		gs_log( GS_LOG_DEBUG, "Mapping ext. ". $user['name'] ." to $user_ext for provisioning - route_prefix: $hp_route_prefix, host id: ". $user['host_id'] );
 	} else {
@@ -1407,8 +1419,7 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 	//_set_cfg('hot-line-warm-line'    , null, '' );
 	_set_cfg('hot-line-warm-line-digits', null, '' );
 	_set_cfg('initial-digit-timer'   , null, '30' );
-//	_set_cfg('conference-factory-uri', null, 'conf@'.$host );
-	_set_cfg('conference-factory-uri', null, '88'.$user_ext.'@'.$host );
+	_set_cfg('conference-factory-uri', null, 'conf@'.$host );
 	_set_cfg('callback-busy-allow'   , null, 'false' );
 	_set_cfg('callback-busy-code'    , null, '' ); # only HiPath 8000
 	_set_cfg('callback-ring-allow'   , null, 'false' );
@@ -1447,11 +1458,10 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 	$tz_offset = round((int)date('Z')/60);
 	$daylight_save = 'false';
 	if ((int)date('I')==1) {
-		$tz_offset += $daylight_savings_offset;
+		$tz_offset -= $daylight_savings_offset;
 		$daylight_save = 'true';
 	}
-	//_set_cfg('sntp-tz-offset'        , null, $tz_offset ); # -720 - 720
-	_set_cfg('sntp-tz-offset'        , null, 60 ); # -720 - 720
+	_set_cfg('sntp-tz-offset'        , null, $tz_offset ); # -720 - 720
 	_set_cfg('daylight-save'         , null, $daylight_save );
 	_set_cfg('daylight-save-minutes' , null, $daylight_savings_offset );
 	//_set_cfg('time'                  , null, time().'000' );
@@ -1636,7 +1646,7 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 	
 	# misc / unknown
 	#
-	//_set_cfg('dls-contact-interval'  , null, '30' );  # "contact gap", default: 300 [s]
+	//_set_cfg('dls-contact-interval'  , null, '65' );  # "contact gap", default: 300 [s]
 	_set_cfg('dls-mode-secure'       , null, '0' );
 	_set_cfg('dls-chunk-size'        , null, '5492' );  # default: 5492
 	_set_cfg('default-passw-policy'  , null, 'false' );
@@ -1744,14 +1754,90 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 			}
 		}
 		
-		#  Mailbox-Anzeige
 		/*
-		_set_cfg('MWI-new-label'        , NULL, 'Neue Nachrichten', true);
-		_set_cfg('MWI-new-urgent-show'  , NULL, 'false', true);
-		_set_cfg('MWI-old-label'        , NULL, 'Alte Nachrichten', true);
-		_set_cfg('MWI-old-urgent-show'  , NULL, 'false', true);
+		# shift key
+		#
+		_set_cfg('function-key-def'    , 1, '18', true);  # 18 = shift
+		_set_cfg('key-label'           , 1, "Shift" );
+		_set_cfg('key-label-unicode'   , 1, "Shift", true );
+		_set_cfg('locked-function-keys', 1, 'true', true );
+		
+		# DND key
+		#
+		//FIXME - DND-Key should toggle(?)
+		_set_cfg('function-key-def'    , 2, '25', true);  # 25 = do not disturb
+		_set_cfg('key-label'           , 2, "Nicht st\xC3\xB6ren" );
+		_set_cfg('key-label-unicode'   , 2, "Nicht st\xC3\xB6ren", true );
+		_set_cfg('locked-function-keys', 2, 'true', true );
 		*/
-
+		
+		/*
+		# keys for pickup groups
+		#
+		$rs = $DBM->execute( 'SELECT DISTINCT(`p`.`id`) `id` FROM `pickupgroups_users` `pu` JOIN `pickupgroups` `p` ON (`p`.`id`=`pu`.`group_id`) WHERE `pu`.`user_id`='. $user_id .' ORDER BY `p`.`id` LIMIT 1' );
+		$key = 3;
+		$i=0;
+		while ($r = $rs->fetchRow()) {
+			$label = 'ggPickUp';
+			if ($rs->numRows() > 1) $label .= ' '.(++$i);
+			//_set_cfg('function-key-def'    , $key, '1', true);  # 1 = selected dialling
+			_set_cfg('function-key-def'    , $key, '29', true);  # 29 = group pickup
+			_set_cfg('key-label'           , $key, $label );
+			_set_cfg('key-label-unicode'   , $key, $label, true );
+			_set_cfg('locked-function-keys', $key, 'true', true );
+			//_set_cfg('select-dial'         , $key, '*8'. str_pad($r['id'],5,'0', STR_PAD_LEFT), true );
+			++$key;
+		}
+		*/
+		
+		/*
+		_set_cfg('function-key-def'    , 3, '29', true);  # 29 = group pickup
+		_set_cfg('key-label'           , 3, "PickUp" );
+		_set_cfg('key-label-unicode'   , 3, "PickUp", true );
+		_set_cfg('locked-function-keys', 3, 'true', true );
+		# see pickup-group-uri
+		*/
+		
+		/*
+		_set_cfg('function-key-def'    , 4, '31', true);  # 31 = line
+		_set_cfg('key-label'           , 4, "Leitung" );
+		_set_cfg('key-label-unicode'   , 4, "Leitung", true );
+		_set_cfg('locked-function-keys', 4, 'true', true );
+		_set_cfg('line-short-desc'     , 4, "Leitung" );
+		_set_cfg('line-short-desc-unicode', 4, "Leitung", true );
+		_set_cfg('line-primary'        , 4, 'true', true );
+		_set_cfg('line-hunt-sequence'  , 4, '0', true );
+		_set_cfg('line-ring-delay'     , 4, '0', true );
+		_set_cfg('line-hot-line-warm-line', 4, '0', true );
+		_set_cfg('line-hld'            , 4, '' );
+		_set_cfg('line-hld-active'     , 4, 'false', true );
+		_set_cfg('line-sip-uri'        , 4, $user_ext, true );
+		_set_cfg('line-sip-realm'      , 4, 'gemeinschaft.local', true );
+		_set_cfg('line-sip-user-id'    , 4, $user_ext, true );
+		_set_cfg('line-sip-pwd'        , 4, $user['secret'], true );
+		# 0=shared, 1=private, 2=unknown ?:
+		_set_cfg('line-shared-type'    , 4, '1', true );
+		_set_cfg('line-hidden'         , 4, 'true', true );
+		_set_cfg('line-int-allow'      , 4, 'true', true );
+		_set_cfg('line-mlo-pos'        , 4, '0', true );
+		*/
+		
+		/*
+		_set_cfg('function-key-def'    , 7, '1', true);  # 1 = selected dialling
+		_set_cfg('key-label'           , 7, "Pickup 3" );
+		_set_cfg('key-label-unicode'   , 7, "Pickup 3", true );
+		_set_cfg('locked-function-keys', 7, 'true', true );
+		_set_cfg('select-dial'         , 7, '*800003', true );
+		*/
+		
+		/*
+		_set_cfg('function-key-def'    , 8, '1', true);  # 1 = selected dialling
+		_set_cfg('key-label'           , 8, "Dial 555" );
+		_set_cfg('key-label-unicode'   , 8, "Dial 555", true );
+		_set_cfg('locked-function-keys', 8, 'true', true );
+		_set_cfg('select-dial'         , 8, '555', true );
+		*/
+		
 		$softkeys = null;
 		$GS_Softkeys = gs_get_key_prov_obj( $phone_type );
 		if ($GS_Softkeys->set_user( $user['user'] )) {
@@ -1805,7 +1891,7 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 						# Possible flags are a (= audible), p (= popup).
 						# If not specified the default is "|ap" (audible and popup).
 						$parts = explode('|',$key_def['data']);
-						if (count($parts) < 2) $parts[1] = '';
+						if (count($parts) < 2) $parts[1] = 'ap';
 						//_set_cfg('stimulus-led-control-uri', $key_idx, _siemens_xml_esc('sip:'. $parts[0] .'@'.$host), true );
 						_set_cfg('stimulus-led-control-uri', $key_idx, _siemens_xml_esc($parts[0]),  true );
 						_set_cfg('blf-audible'             , $key_idx, (strPos($parts[1],'a')===false ? 'false':'true'), true );
@@ -1884,11 +1970,11 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 		//loop all defined XML Applications
 		foreach ($XMLAPPS as $appname => $app) {
 			++$idx;
-			gs_log(GS_LOG_DEBUG, "Deploying XML-Application: " . $appname );
+			gs_log( GS_LOG_DEBUG, "Deploying XML application: $appname" );
 			_set_cfg('XML-app-transport'       , $idx, (strToLower(GS_PROV_SCHEME)==='https' ? '1' : '0'), true );
 			_set_cfg('XML-app-action'          , $idx, 'update', true );
 			
-			//loop and write all settings in this Application
+			# loop and write all settings in this application
 			foreach ($app as $keyname => $key ) {
 				if ($key == '{GS_PROV_HOST}')
 					$key = GS_PROV_HOST;
@@ -1906,6 +1992,146 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 			}
 		}
 
+
+		/*
+		# Phonebook
+		#
+		$app_name = 'gs-phonebook';
+		$idx++;
+		$action = 'update';
+		if ($action === 'update' || $action === 'delete') {
+			# trick our _set_cfg() function into thinking that the name needs
+			# to be set. that is necessary because for update|delete the name
+			# must be present in the response
+			if ( ! array_key_exists('XML-app-name', $cur_cfg)
+			||   ! is_array($cur_cfg['XML-app-name']) )
+				$cur_cfg['XML-app-name'] = array();
+			$cur_cfg['XML-app-name'][$idx] = $app_name .' ';
+		} else {
+			$action = '';
+		}
+		if ($action != '') {
+			_set_cfg('XML-app-name'            , $idx, $app_name, true );  # max. 20 chars
+			_set_cfg('XML-app-action'          , $idx, $action, true );  # update | delete
+		}
+		if ($action === 'update') {
+			# max. 20 chars:
+			_set_cfg('XML-app-display-name'    , $idx, mb_strCut('Telefonbuch', 0, 20), true );
+			$tmp = GS_PROV_PATH;
+			if (subStr($tmp,0,1)==='/') $tmp = subStr($tmp,1);
+			_set_cfg('XML-app-program-name'    , $idx, $tmp .'siemens/pb/pb.php', true );
+			# 0=normal, 1=Xpressions:
+			_set_cfg('XML-app-special-instance', $idx, '0', true );
+			_set_cfg('XML-app-server-addr'     , $idx, GS_PROV_HOST, true );
+			_set_cfg('XML-app-server-port'     , $idx, GS_PROV_PORT, true );
+			_set_cfg('XML-app-transport'       , $idx, (strToLower(GS_PROV_SCHEME)==='https' ? '1' : '0'), true );
+			_set_cfg('XML-app-proxy-enabled'   , $idx, 'false', true );
+			//_set_cfg('XML-app-remote-debug'    , $idx, 'true', true );
+			//_set_cfg('XML-app-debug-prog-name' , $idx, $tmp .'siemens/app-debug.php', true );
+			_set_cfg('XML-app-remote-debug'    , $idx, 'false', true );
+			_set_cfg('XML-app-debug-prog-name' , $idx, '', true );
+			
+			_set_cfg('XML-app-num-tabs'        , $idx, '0', true );  # 0 or 1-3
+			_set_cfg('XML-app-restart'         , $idx, 'true', true );  # restart when its config is changed?
+			_set_cfg('XML-app-tab1-display-name', $idx, $app_name     , true );  # max. 20 chars
+			//_set_cfg('XML-app-tab2-display-name', $idx, $app_name.'_2', true );  # max. 20 chars
+			//_set_cfg('XML-app-tab3-display-name', $idx, $app_name.'_3', true );  # max. 20 chars
+		}
+		*/
+		
+		/*
+		# Phonebook (integrated on phonebook mode key)
+		#
+		$app_name = 'XMLPhonebook';  # special name. do not change
+		$idx++;
+		$action = 'update';
+		if ($action === 'update' || $action === 'delete') {
+			# trick our _set_cfg() function into thinking that the name needs
+			# to be set. that is necessary because for update|delete the name
+			# must be present in the response
+			if ( ! array_key_exists('XML-app-name', $cur_cfg)
+			||   ! is_array($cur_cfg['XML-app-name']) )
+				$cur_cfg['XML-app-name'] = array();
+			$cur_cfg['XML-app-name'][$idx] = $app_name .' ';
+		} else {
+			$action = '';
+		}
+		if ($action != '') {
+			_set_cfg('XML-app-name'            , $idx, $app_name, true );  # max. 20 chars
+			_set_cfg('XML-app-action'          , $idx, $action, true );  # update | delete
+		}
+		if ($action === 'update') {
+			_set_cfg('XML-app-enabled'         , $idx, 'false', true );  # fixed. do not change
+			# max. 20 chars:
+			_set_cfg('XML-app-display-name'    , $idx, $app_name, true );  # special title. do not change
+			$tmp = GS_PROV_PATH;
+			if (subStr($tmp,0,1)==='/') $tmp = subStr($tmp,1);
+			_set_cfg('XML-app-program-name'    , $idx, $tmp .'siemens/pb/pb.php', true );
+			# 0=normal, 1=Xpressions:
+			_set_cfg('XML-app-special-instance', $idx, '2', true );  # fixed. do not change
+			_set_cfg('XML-app-server-addr'     , $idx, GS_PROV_HOST, true );
+			_set_cfg('XML-app-server-port'     , $idx, GS_PROV_PORT, true );
+			_set_cfg('XML-app-transport'       , $idx, (strToLower(GS_PROV_SCHEME)==='https' ? '1' : '0'), true );
+			_set_cfg('XML-app-proxy-enabled'   , $idx, 'false', true );
+			//_set_cfg('XML-app-remote-debug'    , $idx, 'true', true );
+			//_set_cfg('XML-app-debug-prog-name' , $idx, $tmp .'siemens/app-debug.php', true );
+			_set_cfg('XML-app-remote-debug'    , $idx, 'false', true );
+			_set_cfg('XML-app-debug-prog-name' , $idx, '', true );
+			_set_cfg('XML-app-restart'         , $idx, 'true', true );  # restart when its config is changed
+			
+			_set_cfg('XML-app-num-tabs'         , $idx, '3', true );  # 0 or 1-3
+			_set_cfg('XML-app-tab1-name'        , $idx, $app_name         , true );  # special
+			_set_cfg('XML-app-tab1-display-name', $idx, 'Privat'          , true );  # max. 20 chars
+			_set_cfg('XML-app-tab2-name'        , $idx, $app_name.'_2'    , true );  # special
+			_set_cfg('XML-app-tab2-display-name', $idx, 'Gemeinschaft'    , true );  # max. 20 chars
+			_set_cfg('XML-app-tab3-name'        , $idx, $app_name.'_3'    , true );  # special
+			_set_cfg('XML-app-tab3-display-name', $idx, 'Importiert'      , true );  # max. 20 chars
+		}
+		*/
+		
+		/*
+		# Dial Log
+		#
+		$app_name = 'gs-diallog';
+		$idx++;
+		$action = 'update';
+		if ($action === 'update' || $action === 'delete') {
+			# trick our _set_cfg() function into thinking that the name needs
+			# to be set. that is necessary because for update|delete the name
+			# must be present in the response
+			if ( ! array_key_exists('XML-app-name', $cur_cfg)
+			||   ! is_array($cur_cfg['XML-app-name']) )
+				$cur_cfg['XML-app-name'] = array();
+			$cur_cfg['XML-app-name'][$idx] = $app_name .' ';
+		} else {
+			$action = '';
+		}
+		if ($action != '') {
+			_set_cfg('XML-app-name'            , $idx, $app_name, true );  # max. 20 chars
+			_set_cfg('XML-app-action'          , $idx, $action, true );  # update | delete
+		}
+		if ($action === 'update') {
+			# max. 20 chars:
+			_set_cfg('XML-app-display-name'    , $idx, mb_strCut('Ruflisten', 0, 20), true );
+			$tmp = GS_PROV_PATH;
+			if (subStr($tmp,0,1)==='/') $tmp = subStr($tmp,1);
+			_set_cfg('XML-app-program-name'    , $idx, $tmp .'siemens/dial-log/dlog.php', true );
+			# 0=normal, 1=Xpressions:
+			_set_cfg('XML-app-special-instance', $idx, '0', true );
+			_set_cfg('XML-app-server-addr'     , $idx, GS_PROV_HOST, true );
+			_set_cfg('XML-app-server-port'     , $idx, GS_PROV_PORT, true );
+			_set_cfg('XML-app-transport'       , $idx, (strToLower(GS_PROV_SCHEME)==='https' ? '1' : '0'), true );
+			_set_cfg('XML-app-proxy-enabled'   , $idx, 'false', true );
+			_set_cfg('XML-app-remote-debug'    , $idx, 'false', true );
+			_set_cfg('XML-app-debug-prog-name' , $idx, '', true );
+			
+			_set_cfg('XML-app-num-tabs'        , $idx, '0', true );  # 0 or 1-3
+			_set_cfg('XML-app-restart'         , $idx, 'true', true );  # restart when its config is changed?
+			_set_cfg('XML-app-tab1-display-name', $idx, $app_name     , true );  # max. 20 chars
+			//_set_cfg('XML-app-tab2-display-name', $idx, $app_name.'_2', true );  # max. 20 chars
+			//_set_cfg('XML-app-tab3-display-name', $idx, $app_name.'_3', true );  # max. 20 chars
+		}
+		*/
 	}
 	
 	
@@ -2313,85 +2539,8 @@ elseif (preg_match( '/<ReasonForContact\s+.{0,80}?action\s*=\s*"WriteItems"(?:\s
 	)) {
 		gs_log( GS_LOG_DEBUG, "Siemens prov.: LDAP template available for \"$mac\"" );
 		_deploy_file( 'LDAP', './', $file_base );
-		}
+	}
 		
-	# Background image ("logo")
-	#
-	# OpenStage 20:  -
-	# OpenStage 40:  bmp (1 bit),            144* 32 px
-	# OpenStage 60:  png (preferred) / jpg,  240* 70 px
-	# OpenStage 80:  png (preferred) / jpg,  480*142 px
-
-/*
-	$bLogoDeployed = false; //H4ck fuer die Steurung der Bildschirmhintergründe zusamen mit dem Logo-Timer, dadurch ist keine Datenbankänderung noetig
-
-	if (array_key_exists('phone_model', $_SESSION)
-	&&  ! in_array($_SESSION['phone_model'], array('unknown',''), true)
-	&&  $_SESSION['phone_model'] >= 'os40')
-	{
-		switch ($_SESSION['phone_model']) {
-			case 'os40': $fileext = 'bmp'; break;
-			default    : $fileext = 'png';
-		}
-		$file_base = @sPrintF(gs_get_conf('GS_PROV_SIEMENS_LOGO'), $_SESSION['phone_model'], $fileext);
-		if (!file_exists(dirName(__FILE__).'/firmware/'.$file_base))
-			gs_log( GS_LOG_DEBUG, "Siemens prov.: File Logo \"" . dirName(__FILE__).'/firmware/'.$file_base."\" does not exists \"$mac\"" );
-		if (file_exists(dirName(__FILE__).'/firmware/'.$file_base)
-		&& ($t_deployed['logo'] < time()-7*86400
-		||  $t_deployed['logo'] < @fileMTime( dirName(__FILE__).'/firmware/'.$file_base )
-		)) {
-			gs_log( GS_LOG_DEBUG, "Siemens prov.: Logo \"$file_base\" available for \"$mac\"" );
-			_deploy_file( 'LOGO', '', $file_base );
-			$bLogoDeployed = true;
-		}
-	}
-
-*/
-/*	
-	# Screensaver images
-	#
-	if (array_key_exists('phone_model', $_SESSION)
-	&&  ! in_array($_SESSION['phone_model'], array('unknown',''), true)
-	&&  $_SESSION['phone_model'] >= 'os40')
-	{
-		$file_base = gs_get_conf('GS_PROV_SIEMENS_WALLPAPER');
-		$fExists =  file_exists( dirName(__FILE__).'/firmware/'.$file_base );
-
-		if ( ( $fExists && ($t_deployed['logo'] < time()-7*86400) ) ) {
-			gs_log( GS_LOG_DEBUG, "Siemens prov.: Wallpaper \"$file_base\" available for screensaver on \"$mac\"" );
-			_deploy_file( 'SCREENSAVER', '', $file_base );
-		} else {
-			if(($t_deployed['logo'] < time()-7*86400))
-				gs_log( GS_LOG_DEBUG, "Siemens prov.: Screensaver \"$file_base\" not found for screensaver on \"$mac\"" );
-			else
-				gs_log( GS_LOG_DEBUG, "Siemens prov.: Screensaver \"$file_base\" deployed on \"$mac\" less than 15 min ago." );
-		}	
-	}
-
-*/	
-	/*
-	# Ringtone
-	#
-	if (array_key_exists('phone_model', $_SESSION)
-	&&  ! in_array($_SESSION['phone_model'], array('unknown',''), true)
-	&&  $_SESSION['phone_model'] >= 'os20')
-	{
-		switch ($_SESSION['phone_model']) {
-			case 'os20':
-			case 'os40': $fileext = 'mid'; break;
-			default    : $fileext = 'mp3';
-		}
-		$file_base = gs_get_conf('GS_PROV_SIEMENS_FTP_RINGTONE_PATH');  //FIXME
-		if (file_exists( dirName(__FILE__).'/firmware/'.$file_base )
-		&& ($t_deployed['ringtone'] < time()-7*86400
-		||  $t_deployed['ringtone'] < @fileMTime( dirName(__FILE__).'/firmware/'.$file_base )
-		)) {
-			gs_log( GS_LOG_DEBUG, "Siemens prov.: Ringtone \"$file_base\" available for \"$mac\"" );
-			_deploy_file( 'RINGTONE', './', $file_base );
-		} else gs_log( GS_LOG_DEBUG, "Siemens prov.: Ringtone \"$file_base\" not found for \"$mac\"" );
-	}
-	*/
-	
 	unset($t_deployed);
 	
 	# no files available
@@ -2433,7 +2582,6 @@ elseif (preg_match( '/<ReasonForContact[^>]*>\s*status/', $raw_post_start )
 			default:
 				gs_log( GS_LOG_WARNING, "Siemens prov.: Deployment of $file_deployment_type_v to \"$mac\" failed ($file_deployment_status)" );
 			}
-
 		}
 		if ($file_deployment_status === 'ok') {
 			$db_device = (@$dev_arr['dev'] ? $DBM->escape($dev_arr['dev']) : '');
@@ -2455,13 +2603,12 @@ elseif (preg_match( '/<ReasonForContact[^>]*>\s*status/', $raw_post_start )
 			if ($file_deployment_type === 'RINGTONE') {
 				gs_log( GS_LOG_WARNING, "Siemens prov.: Deployment of ringtone for \"$mac\" failed " );
 				$DBM = gs_db_master_connect();
-                                if (! $DBM) {
-                                        gs_log( GS_LOG_WARNING, "Could not connect to database" );
-                                        _dls_response_cleanup( $nonce, 'Error. See log for details.' );
-                                }
+				if (! $DBM) {
+					gs_log( GS_LOG_WARNING, "Could not connect to database" );
+					_dls_response_cleanup( $nonce, 'Error. See log for details.' );
+				}
 				@$DBM->execute( 'UPDATE `prov_siemens` SET `t_logo_deployed`=1 WHERE `mac_addr`=\''. $mac .'\' AND `device`=\''. $db_device .'\'' );
-	        	}
-
+			}
 		}
 	}
 	
