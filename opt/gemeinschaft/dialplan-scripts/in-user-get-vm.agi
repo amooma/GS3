@@ -66,9 +66,7 @@ if ($r = $rs->fetchRow()) {
 }
 
 gs_agi_set_variable( 'vm_internal_active', $vm['internal_active'] );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 gs_agi_set_variable( 'vm_external_active', $vm['external_active'] );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
 
@@ -84,7 +82,6 @@ foreach ($msgs as $src => $ignore) {
 }
 foreach ($msgs as $src => $file) {
 	gs_agi_set_variable( 'vm_announce_'.$src, $file );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 }
 
 

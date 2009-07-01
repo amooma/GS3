@@ -40,7 +40,6 @@ $to        = trim(@$argv[2]);
 
 if (! preg_match('/^[0-9]*$/', $user_name)) {
 	gs_agi_set_variable( 'dial_allowed', 'no' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
@@ -48,7 +47,6 @@ if (! preg_match('/^[0-9]*$/', $user_name)) {
 if ($user_id < 1) {
 	# originator is external
 	gs_agi_set_variable( 'dial_allowed', 'no' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 */
@@ -66,7 +64,6 @@ $user_id = $db->executeGetOne(
 if ($user_id < 1) {
 	// forwarded by a queue
 	gs_agi_set_variable( 'dial_allowed', 'yes' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
@@ -87,7 +84,6 @@ if ($rs) {
 }
 
 gs_agi_set_variable( 'dial_allowed', 'yes' );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
 ?>

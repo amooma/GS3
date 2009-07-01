@@ -53,13 +53,11 @@ if ($is_from_gateway == '1') {
 if (! $new_ext) {
 	gs_log( GS_LOG_NOTICE, "Mobility: No extension specified" );
 	gs_agi_set_variable( 'ret', 'unknown' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 if (! $pass) {
 	gs_log( GS_LOG_NOTICE, "Mobility: Empty PIN number" );
 	gs_agi_set_variable( 'ret', 'badpass' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
@@ -89,21 +87,18 @@ if ($new_uid < 1) {
 	# unknown user
 	gs_log( GS_LOG_NOTICE, "Mobility: Unknown extension $new_ext" );
 	gs_agi_set_variable( 'ret', 'unknown' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 $pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `id`='. $new_uid );
 if (trim($pin)=='') {
 	# db error, unknown user
 	gs_agi_set_variable( 'ret', 'unknown' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 if ((string)$pin != (string)$pass) {
 	# wrong password
 	gs_log( GS_LOG_NOTICE, "Mobility: Login attempt for ext. $new_ext - Wrong PIN number" );
 	gs_agi_set_variable( 'ret', 'badpass' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
@@ -122,7 +117,6 @@ if ($phone_id < 1) {
 	if ($phone_id < 1) {
 		gs_log( GS_LOG_WARNING, "Mobility: Login attempt for ext. $new_ext - Could not find phone of last nobody_index $nobody_index" );
 		gs_agi_set_variable( 'ret', 'error' );
-		//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 		die();
 	}
 }
@@ -163,12 +157,10 @@ $ok = $db->execute( 'UPDATE `phones` SET `user_id`='. $new_uid .' WHERE `id`='. 
 if (! $ok) {
 	gs_log( GS_LOG_NOTICE, "Mobility: DB error" );
 	gs_agi_set_variable( 'ret', 'error' );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
 gs_agi_set_variable( 'ret', 'ok' );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
 # get old phone's IP addr.

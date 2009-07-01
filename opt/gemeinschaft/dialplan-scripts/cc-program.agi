@@ -117,7 +117,6 @@ if (! $ok) {
 
 gs_agi_set_variable( 'cc_programmed', '1' );
 gs_log( GS_LOG_DEBUG, 'CC programmed from "'. $from_ext .'" to "'. $to_ext .'"' );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
 ?>

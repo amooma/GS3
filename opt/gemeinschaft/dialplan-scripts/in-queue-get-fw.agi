@@ -91,17 +91,14 @@ foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {
 		//if ($fw['number'] != '') {
 			gs_agi_set_variable( 'fw_'.$source.'_'.$case, $fw['number'] );
-			//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 		//}
 	}
 }
 if ($forwards['internal']['timeout']['number'] != '') {
 	gs_agi_set_variable( 'fw_internal_timeout_timeout', $forwards['internal']['timeout']['timeout'] );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 }
 if ($forwards['external']['timeout']['number'] != '') {
 	gs_agi_set_variable( 'fw_external_timeout_timeout', $forwards['external']['timeout']['timeout'] );
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 }
 
 
@@ -109,7 +106,6 @@ if ($forwards['external']['timeout']['number'] != '') {
 #
 $ring_instead_of_moh = (trim($queue['musicclass']) == '');
 gs_agi_set_variable( 'ring_instead_of_moh', ($ring_instead_of_moh ? 'r':'') );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 # queue title (for caller ID display)
 #
@@ -117,7 +113,6 @@ $displayname = rTrim(subStr( preg_replace('/  +/', ' ',
 	preg_replace('/[^a-zA-Z0-9\\-_.,+\\(\\) ]/', '', trim($queue['_title']))),
 	0, 15));
 gs_agi_set_variable( 'queue_displayname', ( $displayname != '' ? $displayname : 'Q'.$queue_ext ) );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
 ?>

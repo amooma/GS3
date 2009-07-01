@@ -49,7 +49,6 @@ include_once( GS_DIR .'inc/extension-state.php' );
 $state = @ gs_extstate_single( $ext );
 
 gs_agi_set_variable( 'cc_possible', (int)@gs_ast_extstate_offer_cc( $state ) );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
 ?>
