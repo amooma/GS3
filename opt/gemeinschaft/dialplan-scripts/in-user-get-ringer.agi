@@ -204,9 +204,9 @@ elseif (strToLower(subStr($user['phone_type'],0,11)) === 'grandstream') {
 		$ringtones['external']['file'] = null;
 	
 	if (@$ringtones[$source]['file']) {
-		echo 'SET VARIABLE ringer '. gs_agi_str_esc( '<http://127.0.0.1>\;info='. $source ) ."\n";
+		gs_agi_set_variable( 'ringer', ('<http://127.0.0.1>\;info='. $source) );
 	} else {
-		echo 'SET VARIABLE ringer '. gs_agi_str_esc( '' ) ."\n";
+		gs_agi_set_variable( 'ringer', '' );
 	}
 	
 }
