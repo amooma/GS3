@@ -3,7 +3,7 @@
 *            Gemeinschaft - asterisk cluster gemeinschaft
 *                    Add-on Siemens provisioning
 * 
-* $Revision: 338 $
+* $Revision: 366 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -51,7 +51,6 @@ define( 'GS_PROV_SIEMENS_SW_UPDATE_PRE', true );
 //define( 'GS_PROV_SIEMENS_FTP_PATH', './' );
 define( 'GS_PROV_SIEMENS_FTP_USER', 'gs-siemens-fw' );
 define( 'GS_PROV_SIEMENS_FTP_PWD' , 'gs-siemens-fw' );
-define( 'GS_PROV_SIEMENS_FTP_RINGTONE_PATH', 'pub/ringtones');
 
 # enable raw logging of the communication to
 # /var/log/gemeinschaft/siemens-access-debug.log ?
@@ -59,13 +58,11 @@ define( 'GS_PROV_SIEMENS_LOG_RAW', false );
 
 # idlescreen background logo. just the filename. os40 gets bmp
 # extension, os60 and os80 get png
-#define( 'GS_PROV_SIEMENS_LOGO', 'bg-%s-lvm.%s' );  # "bg-%s.%s"
-
 define( 'GS_PROV_SIEMENS_LOGO', 'logoscreen.%s.%s' );
 define( 'GS_PROV_SIEMENS_WALLPAPER', 'idlescreen.%s.%s');
 
 # SNMP server IP address
-define( 'GS_PROV_SIEMENS_SNMP_TRAP_ADDR', '127.0.0.1' );
+define( 'GS_PROV_SIEMENS_SNMP_TRAP_ADDR', '' );
 define( 'GS_PROV_SIEMENS_SNMP_TRAP_PORT', 162 );  # default: 162
 
 # XML Applications
@@ -83,8 +80,6 @@ $gs_phonebook = array(
 	'XML-app-remote-debug' => 'false',
 	'XML-app-debug-prog-name' => '',
 	'XML-app-num-tabs' => '0',
-//	'XML-app-restart' => 'true',
-//	'XML-app-tab1-display-name' => 'gs-phonebook'	
 );
 
 # Phonebook (integrated on phonebook mode key)
@@ -99,7 +94,6 @@ $gs_phonebook_pb_key = array(
 	'XML-app-remote-debug' => 'false',
 	'XML-app-debug-prog-name' => '',
 	'XML-app-num-tabs' => '3',
-//	'XML-app-restart' => 'true',
 	'XML-app-tab1-name' => 'XMLPhonebook',
 	'XML-app-tab1-display-name' => 'Privat',
 	'XML-app-tab2-name' => 'XMLPhonebook_2',
@@ -112,7 +106,6 @@ $gs_phonebook_pb_key = array(
 # Gemeinschaft Diallog
 $gs_diallog_dl_key = array(
 	'XML-app-name' => 'gs-diallog',
-//	'XML-app-enabled' => 'false',
 	'XML-app-display-name' => 'Anrufliste',
 	'XML-app-program-name' => 'gemeinschaft/prov/siemens/dial-log/dlog.php',
 	'XML-app-special-instance' => '0',
@@ -122,15 +115,11 @@ $gs_diallog_dl_key = array(
 	'XML-app-remote-debug' => 'false',
 	'XML-app-debug-prog-name' => '',
 	'XML-app-num-tabs' => '0',
-//	'XML-app-restart' => 'true',
 	'XML-app-tab1-display-name' => 'gs-diallog',
 );
 
 
 
 $GS_PROV_SIEMENS_XML_APPS = array('Telefonbuch' => $gs_phonebook_pb_key, 'Anruflisten' => $gs_diallog_dl_key);
-
-$GS_PROV_SIEMENS_BOI_XML_APPS =  array('Telefonbuch' => $gs_phonebook_pb_key, 'Anruflisten' => $gs_diallog_dl_key);
-
 
 ?>
