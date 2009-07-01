@@ -40,7 +40,7 @@ $uid  = (int)trim(@$argv[1]);
 if ($uid < 1) {
 	# originator is external
 	gs_agi_set_variable( 'clir', '0' );
-	die();
+	exit();
 }
 
 

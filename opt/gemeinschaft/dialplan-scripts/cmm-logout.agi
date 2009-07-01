@@ -41,14 +41,14 @@ $is_from_gateway = (bool)trim(@$argv[2]);
 if ($is_from_gateway) {
 	if (! gs_get_conf('GS_BOI_ENABLED')) {
 		gs_log( GS_LOG_NOTICE, "Mobility: User from gateway tries to log out but BOI is not enabled" );
-		echo 'HANGUP' ."\n";
-		die();
+		gs_agi_err( "Mobility: User from gateway tries to log out but BOI is not enabled" );
+		exit();
 	}
 } else {
 	if ($user_id < 1) {
 		gs_log( GS_LOG_NOTICE, "Mobility: User ID not specified" );
-		echo 'HANGUP' ."\n";
-		die();
+		gs_agi_err( "Mobility: User ID not specified" );
+		exit();
 	}
 }
 $caller_id  = preg_replace('/[^0-9]/', '', @$argv[3]);
@@ -59,8 +59,8 @@ include_once( GS_DIR .'inc/db_connect.php' );
 $db = gs_db_master_connect();
 if (! $db) {
 	gs_log( GS_LOG_NOTICE, "Mobility: DB connection failed" );
-	echo 'HANGUP' ."\n";
-	die();
+	gs_agi_err( 'DB error' );
+	exit();
 }
 
 if ($user_id < 1 && $is_from_gateway) { 
@@ -69,8 +69,8 @@ if ($user_id < 1 && $is_from_gateway) {
 		'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($caller_ext) .'\'' );
 	if ($user_id < 1) {
 		gs_log( GS_LOG_NOTICE, "Mobility: User ID not specified and no user found for caller ID $caller_ext" );
-		echo 'HANGUP' ."\n";
-		die();
+		gs_agi_err( "Mobility: User ID not specified and no user found for caller ID $caller_ext" );
+		exit();
 	}
 }
 

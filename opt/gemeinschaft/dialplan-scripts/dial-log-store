@@ -39,11 +39,11 @@ $number   = trim(@$argv[3]);
 $rname    = trim(@$argv[4]);
 
 if (! preg_match('/^[0-9]+$/', $user_ext))
-	die();
+	gs_agi_err();
 if (! in_array( $type, array('in','out','missed'), true ))
-	die();
+	gs_agi_err();
 if (! $number)
-	die();
+	gs_agi_err();
 $number = preg_replace( '/[^\d*#]/', '', $number );
 
 
@@ -56,7 +56,7 @@ $db = gs_db_master_connect();
 # get user id:
 #
 $uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user_ext) .'\'' );
-if ($uid < 1) die();
+if ($uid < 1) gs_agi_err();
 
 # get remote user
 #

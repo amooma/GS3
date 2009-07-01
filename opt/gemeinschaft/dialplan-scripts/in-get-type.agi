@@ -39,11 +39,11 @@ $ext  = trim(@$argv[1]);
 
 if (! $ext) {
 	gs_agi_set_variable( '__exttype', '' );
-	die();
+	exit();
 }
 if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
 	gs_agi_set_variable( '__exttype', 'unknown' );
-	die();
+	exit();
 }
 
 
@@ -57,7 +57,7 @@ $db = gs_db_slave_connect();
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 if ($num > 0) {
 	gs_agi_set_variable( '__exttype', 'user' );
-	die();
+	exit();
 }
 
 # is it a queue?
@@ -65,7 +65,7 @@ if ($num > 0) {
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queues` WHERE `name`=\''. $db->escape($ext) .'\'' );
 if ($num > 0) {
 	gs_agi_set_variable( '__exttype', 'queue' );
-	die();
+	exit();
 }
 
 

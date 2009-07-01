@@ -40,14 +40,14 @@ $to        = trim(@$argv[2]);
 
 if (! preg_match('/^[0-9]*$/', $user_name)) {
 	gs_agi_set_variable( 'dial_allowed', 'no' );
-	die();
+	exit();
 }
 
 /*
 if ($user_id < 1) {
 	# originator is external
 	gs_agi_set_variable( 'dial_allowed', 'no' );
-	die();
+	exit();
 }
 */
 
@@ -64,7 +64,7 @@ $user_id = $db->executeGetOne(
 if ($user_id < 1) {
 	// forwarded by a queue
 	gs_agi_set_variable( 'dial_allowed', 'yes' );
-	die();
+	exit();
 }
 
 
@@ -78,7 +78,7 @@ if ($rs) {
 				gs_agi_set_variable( 'dial_allowed', 'pin' );
 				gs_agi_set_variable( 'dial_pin', $row['pin'] );
 			}
-			die();
+			exit();
 		}
 	}
 }

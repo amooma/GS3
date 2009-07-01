@@ -45,20 +45,20 @@ $caller_ext      =      trim(@$argv[5]);
 if ($is_from_gateway == '1') {
 	if (! gs_get_conf('GS_BOI_ENABLED')) {
 		gs_log( GS_LOG_NOTICE, "Mobility: User from gateway tries to log in but BOI is not enabled" );
-		echo 'HANGUP' ."\n";
-		die();
+		gs_agi_err( "Mobility: User from gateway tries to log in but BOI is not enabled" );
+		exit();
 	}
 }
 
 if (! $new_ext) {
 	gs_log( GS_LOG_NOTICE, "Mobility: No extension specified" );
 	gs_agi_set_variable( 'ret', 'unknown' );
-	die();
+	exit();
 }
 if (! $pass) {
 	gs_log( GS_LOG_NOTICE, "Mobility: Empty PIN number" );
 	gs_agi_set_variable( 'ret', 'badpass' );
-	die();
+	exit();
 }
 
 include_once( GS_DIR .'inc/db_connect.php' );
@@ -67,8 +67,8 @@ include_once( GS_DIR .'inc/db_connect.php' );
 $db = gs_db_master_connect();
 if (! $db) {
 	gs_log( GS_LOG_NOTICE, "Mobility: DB connection failed" );
-	echo 'HANGUP' ."\n";
-	die();
+	gs_agi_err( 'DB error' );
+	exit();
 }
 
 if ($old_uid < 1) {
@@ -77,7 +77,7 @@ if ($old_uid < 1) {
 	if ($old_uid < 1) {
 		gs_log( GS_LOG_NOTICE, "Mobility: Neither old user ID nor caller ID specified" );
 		gs_agi_set_variable( 'ret', 'error' );
-		die();
+		exit();
 	}
 	gs_agi_set_variable( 'user_name', $caller_ext );
 }
@@ -87,19 +87,19 @@ if ($new_uid < 1) {
 	# unknown user
 	gs_log( GS_LOG_NOTICE, "Mobility: Unknown extension $new_ext" );
 	gs_agi_set_variable( 'ret', 'unknown' );
-	die();
+	exit();
 }
 $pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `id`='. $new_uid );
 if (trim($pin)=='') {
 	# db error, unknown user
 	gs_agi_set_variable( 'ret', 'unknown' );
-	die();
+	exit();
 }
 if ((string)$pin != (string)$pass) {
 	# wrong password
 	gs_log( GS_LOG_NOTICE, "Mobility: Login attempt for ext. $new_ext - Wrong PIN number" );
 	gs_agi_set_variable( 'ret', 'badpass' );
-	die();
+	exit();
 }
 
 
@@ -117,7 +117,7 @@ if ($phone_id < 1) {
 	if ($phone_id < 1) {
 		gs_log( GS_LOG_WARNING, "Mobility: Login attempt for ext. $new_ext - Could not find phone of last nobody_index $nobody_index" );
 		gs_agi_set_variable( 'ret', 'error' );
-		die();
+		exit();
 	}
 }
 
@@ -157,7 +157,7 @@ $ok = $db->execute( 'UPDATE `phones` SET `user_id`='. $new_uid .' WHERE `id`='. 
 if (! $ok) {
 	gs_log( GS_LOG_NOTICE, "Mobility: DB error" );
 	gs_agi_set_variable( 'ret', 'error' );
-	die();
+	exit();
 }
 
 gs_agi_set_variable( 'ret', 'ok' );
