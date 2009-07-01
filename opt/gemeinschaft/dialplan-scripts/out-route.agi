@@ -81,7 +81,7 @@ function _no_more_routes( $idx=1 )
 
 $number = ($argc > 1) ? trim($argv[1]) : '';
 if ($number == '') {
-	gs_agi_verbose("Empty number");
+	gs_agi_verbose( "### Empty number" );
 	gs_agi_hangup();
 	_no_more_routes();
 }
@@ -114,7 +114,7 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 	$gateway_prefix = substr($number,0,1);
 	
 	if (@$canonical->is_call_by_call) {
-		gs_agi_verbose("$number has a call-by-call prefix");
+		gs_agi_verbose( "### $number has a call-by-call prefix" );
 		gs_agi_hangup();
 		_no_more_routes();
 	}
@@ -122,10 +122,10 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 		$qualify_cid = false;
 		if ($is_sub_system) {
 			# allow to go to the outside
-			gs_agi_verbose("$number is in private branch but we are a sub-system");
+			gs_agi_verbose( "### $number is in private branch but we are a sub-system" );
 			$number_dial = trim( @$canonical->dial );
 		} else {
-			gs_agi_verbose("$number is in private branch and we are not a sub-system");
+			gs_agi_verbose( "### $number is in private branch and we are not a sub-system" );
 			/*
 			# don't dial to the outside
 			gs_agi_hangup();
@@ -140,7 +140,7 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 				gs_agi_set_variable( 'r_'.$idx.'_cid', $user_cid_num );
 				_no_more_routes(++$idx);
 			} else {
-				gs_agi_verbose("Empty number");
+				gs_agi_verbose( "### Empty number" );
 				gs_agi_hangup();
 				_no_more_routes();
 			}
@@ -151,7 +151,7 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 	}
 	
 	if ($number_dial == '') {
-		gs_agi_verbose("Empty number");
+		gs_agi_verbose( "### Empty number" );
 		gs_agi_hangup();
 		_no_more_routes();
 	}
@@ -193,7 +193,7 @@ while ($route = $rs->fetchRow()) {
 		if (in_array((int)$route['ug_id'], $user_groups, true)) {
 			$have_match = true;
 			$lcr_prefix = $route['lcrprfx'];
-			gs_agi_verbose( 'Matching route for "'. $number_dial .'" is "'. $route['pat'] .'", user group: '. ($route['ug_id'] == null ? 'any' : $route['ug_id']) );
+			gs_agi_verbose( '### Matching route for "'. $number_dial .'" is "'. $route['pat'] .'", user group: '. ($route['ug_id'] == null ? 'any' : $route['ug_id']) );
 			break;
 		}
 	}
@@ -229,7 +229,7 @@ WHERE `id`='. $ggrp_id
 			$out_cid_num_qualified = preg_replace('/[^0-9+a-zA-Z\-_.]/', '',
 				@preg_replace( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'], $out_cid_num ));
 			$out_cid_num = $out_cid_num_qualified;
-			gs_agi_verbose( 'Qualifying caller ID "'.$out_cid_num.'" -> "'.$out_cid_num_qualified.'" ('. ('s/'.$ggrp['cid_s'].'/'.$ggrp['cid_r'].'/') .') for gategroup "'. $ggrp['name'] .'"' );
+			gs_agi_verbose( '### Qualifying caller ID "'.$out_cid_num.'" -> "'.$out_cid_num_qualified.'" ('. ('s/'.$ggrp['cid_s'].'/'.$ggrp['cid_r'].'/') .') for gategroup "'. $ggrp['name'] .'"' );
 			unset($out_cid_num_qualified);
 		}
 	}
@@ -247,10 +247,10 @@ LIMIT 9'
 	while ($gate = $rs->fetchRow()) {
 		if ($lcr_prefix != '') {
 			if (in_array($gate['type'], array('zap','misdn','woomera','capi'), true)) {
-				gs_agi_verbose("LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
+				gs_agi_verbose( "### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
 				$number_final = $lcr_prefix . $number_dial;
 			} else {
-				gs_agi_verbose("LCR prefix $lcr_prefix ignored for non-hardware gateway ". $gate['name'] );
+				gs_agi_verbose( "### LCR prefix $lcr_prefix ignored for non-hardware gateway ". $gate['name'] );
 				$number_final = $number_dial;
 			}
 		} else {

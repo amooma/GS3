@@ -79,7 +79,7 @@ if (! ($from_user = $rs->fetchRow())) {
 
 $state = @ gs_extstate( $from_user['host'], $from_ext );
 if (! gs_ast_extstate_offer_cc( $state )) {
-	//gs_agi_verbose( "State: $state" );
+	//gs_agi_verbose( "### State: $state" );
 	gs_agi_set_variable( 'cc_programmed', '0' );
 	gs_log( GS_LOG_WARNING, 'Failed to program CC - extension "'. $from_ext .'" is in unknown state.' );
 	exit();
