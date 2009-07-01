@@ -38,7 +38,7 @@ ob_implicit_flush(1);
 $queue_name = trim(@$argv[1]);
 
 if (! preg_match('/^\d+$/', $queue_name))  // is not just digits
-	die();
+	gs_agi_err();
 
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/queue-status.php' );
@@ -74,13 +74,13 @@ FROM
 	`hosts` `h` ON (`h`.`id`=`q`.`_host_id`)
 WHERE `q`.`name`=\''. $db->escape($queue_name) .'\'' );
 $queue = $rs->fetchRow();
-if (! $queue) die();
+if (! $queue) gs_agi_err();
 
 # get queue stats from manager interface
 #
 $queue_stats = gs_queue_status( $queue['host'], $queue_name, true, false );
 if (! is_array($queue_stats) || ! is_array($queue_stats['members']))
-	die();
+	gs_agi_err();
 
 $num_members = count( $queue_stats['members'] );
 gs_agi_set_variable( 'queue_num_members', $num_members );

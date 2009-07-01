@@ -40,12 +40,12 @@ $ext  = trim(@$argv[1]);
 if (! $ext) {
 	gs_agi_set_variable( '__exttype', '' );
 	gs_agi_set_variable( '__dial_to_node', '' );
-	die();
+	exit();
 }
 if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
 	gs_agi_set_variable( '__exttype', 'unknown' );
 	gs_agi_set_variable( '__dial_to_node', '' );
-	die();
+	exit();
 }
 
 
@@ -90,7 +90,7 @@ if ($r = $rs->fetchRow()) {
 		gs_agi_set_variable( '__exttype', 'foreign' );
 		gs_agi_set_variable( '__dial_to_node', $r['host'] );
 	}
-	die();
+	exit();
 }
 
 # is it a queue?
@@ -114,7 +114,7 @@ if ($r = $rs->fetchRow()) {
 		gs_agi_set_variable( '__exttype', 'foreign' );
 		gs_agi_set_variable( '__dial_to_node', $r['host'] );
 	}
-	die();
+	exit();
 }
 
 # is it a conference?
@@ -128,13 +128,12 @@ if ($num > 0) {
 		gs_agi_set_variable( '__dial_to_node', '' );
 	else
 		gs_agi_set_variable( '__dial_to_node', get_at_dial( $host_id ) );
-	die();
+	exit();
 }
 */
 
 
 gs_agi_set_variable( '__exttype', 'unknown' );
 gs_agi_set_variable( '__dial_to_node', '' );
-die();
 
 ?>

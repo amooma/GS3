@@ -40,12 +40,12 @@ $ext  = trim(@$argv[1]);
 if (! $ext) {
 	gs_agi_set_variable( '__exttype', '' );
 	gs_agi_set_variable( '__dial_to_node', '' );
-	die();
+	exit();
 }
 if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
 	gs_agi_set_variable( '__exttype', 'unknown' );
 	gs_agi_set_variable( '__dial_to_node', '' );
-	die();
+	exit();
 }
 
 
@@ -92,7 +92,7 @@ if ($host_id < 1) {  // should never happen
 	
 	gs_agi_set_variable( '__exttype', 'unknown' );
 	gs_agi_set_variable( '__dial_to_node', '' );
-	die();
+	exit();
 	
 }
 

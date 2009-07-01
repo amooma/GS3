@@ -40,8 +40,8 @@ $is_from_gateway = trim(@$argv[2]);
 if ($is_from_gateway == '1') {
 	if (! gs_get_conf('GS_BOI_ENABLED')) {
 		gs_log( GS_LOG_NOTICE, "Mobility: User from gateway tries to log in but BOI is not enabled" );
-		echo 'HANGUP' ."\n";
-		die();
+		gs_agi_err( "Mobility: User from gateway tries to log in but BOI is not enabled" );
+		exit();
 	}
 }
 
@@ -49,7 +49,7 @@ $ext  = trim(@$argv[1]);
 if (! $ext) {
 	gs_log( GS_LOG_NOTICE, "Mobility: No extension specified" );
 	gs_agi_set_variable( 'ret', '0' );
-	die();
+	exit();
 }
 
 
@@ -59,8 +59,8 @@ include_once( GS_DIR .'inc/db_connect.php' );
 $db = gs_db_slave_connect();
 if (! $db) {
 	gs_log( GS_LOG_NOTICE, "Mobility: DB connection failed" );
-	echo 'HANGUP' ."\n";
-	die();
+	gs_agi_err( 'DB error' );
+	exit();
 }
 
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );

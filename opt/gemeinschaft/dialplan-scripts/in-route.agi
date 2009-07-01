@@ -40,10 +40,10 @@ error_reporting(0);
 
 function _err( $msg )
 {
-	gs_agi_verbose('### '.$msg);
+	gs_agi_verbose( $msg );
 	gs_agi_set_variable( 'did_ext', '' );
 	gs_agi_set_variable( 'did_ext_to', '' );
-	die();
+	exit();
 }
 
 
@@ -109,9 +109,9 @@ foreach ($routes as $route) {
 	$route['pattern'] = trim($route['pattern']);
 	if (@preg_match('/'.$route['pattern'].'/', $number)) {
 		if ($route['id'] !== 0)
-			gs_agi_verbose( "### Matching route for $number is id ". $route['id'] );
+			gs_agi_verbose( "Matching route for $number is id ". $route['id'] );
 		else
-			gs_agi_verbose( "### Matching route for $number is default 1:1 DID->extension route" );
+			gs_agi_verbose( "Matching route for $number is default 1:1 DID->extension route" );
 		$number = @preg_replace('/'.$route['pattern'].'/', trim($route['to_ext']), $number);
 		break;
 	}

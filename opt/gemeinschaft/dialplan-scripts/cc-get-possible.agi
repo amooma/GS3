@@ -39,7 +39,7 @@ $ext  = trim(@$argv[1]);
 
 if (! $ext || ! preg_match('/^\d+$/', $ext)) {  // is not just digits
 	gs_agi_set_variable( 'cc_possible', '0' );
-	die();
+	exit();
 }
 
 
