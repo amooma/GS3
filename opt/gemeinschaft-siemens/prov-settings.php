@@ -1945,7 +1945,27 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 		
 		gs_log(GS_LOG_DEBUG, 'Checking for screensaver images ...');
 
-		$screensaver_images = @explode(',',gs_get_conf('GS_PROV_SIEMENS_WALLPAPER'));
+		unset($screensaver_images); unset($screensaver_images_temp); unset($thisscreensaver_image);
+
+		if (array_key_exists('phone_model', $_SESSION)
+			&&  ! in_array($_SESSION['phone_model'], array('unknown',''), true)
+			&&  $_SESSION['phone_model'] >= 'os60')
+		{
+			switch ($_SESSION['phone_model']) {
+				case 'os40': $fileext = 'bmp'; break;
+				default    : $fileext = 'png';
+			}
+
+			$screensaver_images_temp = @explode(',',gs_get_conf('GS_PROV_SIEMENS_WALLPAPER'));
+			$screensaver_images = Array();
+
+			foreach($screensaver_images_temp as $thisscreensaver_image)
+			{
+				$screensaver_images[] = @sPrintF($thisscreensaver_image, $_SESSION['phone_model'], $fileext);
+			}
+
+			unset($fileext); unset($thisscreensaver_image); unset($screensaver_images_temp);
+		}
 
 		if (is_array( $screensaver_images ) && (count( $screensaver_images ) > 0) )
 		{ # if a file was found
@@ -1985,7 +2005,19 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 		
 		gs_log(GS_LOG_DEBUG, 'Checking for background logo ...');
 
-		$background_logo = gs_get_conf('GS_PROV_SIEMENS_LOGO');
+		unset($background_logo);
+
+		if (array_key_exists('phone_model', $_SESSION)
+			&&  ! in_array($_SESSION['phone_model'], array('unknown',''), true)
+			&&  $_SESSION['phone_model'] >= 'os40')
+		{
+			switch ($_SESSION['phone_model']) {
+				case 'os40': $fileext = 'bmp'; break;
+				default    : $fileext = 'png';
+			}
+
+			$background_logo = @sPrintF(gs_get_conf('GS_PROV_SIEMENS_LOGO'), $_SESSION['phone_model'], $fileext);
+		}
 
 		if ( $background_logo )
 		{ # if a file was found
