@@ -193,6 +193,7 @@ while ($route = $rs->fetchRow()) {
 		if (in_array((int)$route['ug_id'], $user_groups, true)) {
 			$have_match = true;
 			$lcr_prefix = $route['lcrprfx'];
+			gs_agi_verbose( '### Matching route for "'. $number_dial .'" is "'. $route['pat'] .'", user group: '. ($route['ug_id'] == null ? 'any' : $route['ug_id']) );
 			break;
 		}
 	}
@@ -215,7 +216,7 @@ foreach ($gate_grps as $ggrp_id) {
 	&&  ! in_array(strToLower($out_cid_num), array('anonymous', 'unknown', ''), true))  # no action for "anonymous"
 	{
 		$rs = $db->execute(
-'SELECT `out_cid_search` `cid_s`, `out_cid_replace` `cid_r`
+'SELECT `out_cid_search` `cid_s`, `out_cid_replace` `cid_r`, `name`
 FROM `gate_grps`
 WHERE `id`='. $ggrp_id
 		);
@@ -225,8 +226,11 @@ WHERE `id`='. $ggrp_id
 		if ($ggrp['cid_s'] != ''
 		&&  is_valid_pcre( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'] ))
 		{
-			$out_cid_num = preg_replace('/[^0-9+a-zA-Z\-_.]/', '',
+			$out_cid_num_qualified = preg_replace('/[^0-9+a-zA-Z\-_.]/', '',
 				@preg_replace( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'], $out_cid_num ));
+			$out_cid_num = $out_cid_num_qualified;
+			gs_agi_verbose( '### Qualifying caller ID "'.$out_cid_num.'" -> "'.$out_cid_num_qualified.'" ('. ('s/'.$ggrp['cid_s'].'/'.$ggrp['cid_r'].'/') .') for gategroup "'. $ggrp['name'] .'"' );
+			unset($out_cid_num_qualified);
 		}
 	}
 	
@@ -252,7 +256,7 @@ LIMIT 9'
 		} else {
 			$number_final = $number_dial;
 		}
-		$dialstr = str_replace('{peer}', '{gateway}', $gate['dialstr']);
+		$dialstr = str_replace('{peer}', '{gateway}', $gate['dialstr']);  # backwards compatibility
 		$dialstr = str_replace(
 			array( '{number}'   , '{number:1}'            , '{gateway}'   , '{port}'          ),
 			array( $number_final, substr($number_final,1) , $gate['name'] ,  $gate['hw_port'] ),
