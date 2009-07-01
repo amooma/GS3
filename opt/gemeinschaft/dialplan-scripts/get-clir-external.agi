@@ -39,7 +39,7 @@ $uid  = (int)trim(@$argv[1]);
 
 if ($uid < 1) {
 	# originator is external
-	echo 'SET VARIABLE clir '. gs_agi_str_esc('0') ."\n";
+	gs_agi_set_variable( 'clir', '0' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -67,7 +67,7 @@ elseif ($restrict=='once') {
 	$dbm->execute( 'UPDATE `clir` SET `external_restrict`=\'no\' WHERE `user_id`='. $uid );
 }
 
-echo 'SET VARIABLE clir '. gs_agi_str_esc($clir) ."\n";
+gs_agi_set_variable( 'clir', $clir );
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 

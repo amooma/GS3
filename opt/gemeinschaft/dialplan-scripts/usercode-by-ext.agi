@@ -38,7 +38,7 @@ ob_implicit_flush(1);
 $ext  = trim(@$argv[1]);
 
 if (! $ext || ! preg_match('/^[0-9]+$/', $ext)) {
-	echo 'SET VARIABLE user_code '. gs_agi_str_esc('') ."\n";
+	gs_agi_set_variable( 'user_code', '' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -58,13 +58,13 @@ FROM
 WHERE `s`.`name`=\''. $ext .'\''
 );
 if (! $usercode) {
-	echo 'SET VARIABLE user_code '. gs_agi_str_esc('') ."\n";
+	gs_agi_set_variable( 'user_code', '' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
 
-echo 'SET VARIABLE user_code '. gs_agi_str_esc($usercode) ."\n";
+gs_agi_set_variable( 'user_code', $usercode );
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 

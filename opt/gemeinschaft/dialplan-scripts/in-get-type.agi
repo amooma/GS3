@@ -38,12 +38,12 @@ ob_implicit_flush(1);
 $ext  = trim(@$argv[1]);
 
 if (! $ext) {
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('') ."\n";
+	gs_agi_set_variable( '__exttype', '' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
+	gs_agi_set_variable( '__exttype', 'unknown' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -58,7 +58,7 @@ $db = gs_db_slave_connect();
 #
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 if ($num > 0) {
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('user') ."\n";
+	gs_agi_set_variable( '__exttype', 'user' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -67,7 +67,7 @@ if ($num > 0) {
 #
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queues` WHERE `name`=\''. $db->escape($ext) .'\'' );
 if ($num > 0) {
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('queue') ."\n";
+	gs_agi_set_variable( '__exttype', 'queue' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -78,7 +78,7 @@ if ($num > 0) {
 
 
 
-echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
+gs_agi_set_variable( '__exttype', 'unknown' );
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 

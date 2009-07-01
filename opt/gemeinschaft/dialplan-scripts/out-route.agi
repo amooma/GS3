@@ -74,7 +74,7 @@ function _user_groups_get( $user_id, $with_0=null )
 
 function _no_more_routes( $idx=1 )
 {
-	echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc('') ."\n";
+	gs_agi_set_variable( 'r_'.$idx.'_dial', '' );
 	die();
 }
 
@@ -134,10 +134,10 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 			# dial our extension
 			$exten = trim( @$canonical->extn );
 			if ($exten != '') {
-				echo 'SET VARIABLE __is_from_gateway '. gs_agi_str_esc('1') ."\n";
+				gs_agi_set_variable( '__is_from_gateway', '1' );
 				$idx = 1;
-				echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc( 'Local/'. $exten .'@to-internal-users' ) ."\n";
-				echo 'SET VARIABLE r_'.$idx.'_cid '. gs_agi_str_esc($user_cid_num) ."\n";
+				gs_agi_set_variable( 'r_'.$idx.'_dial', ('Local/'. $exten .'@to-internal-users') );
+				gs_agi_set_variable( 'r_'.$idx.'_cid', $user_cid_num );
 				_no_more_routes(++$idx);
 			} else {
 				gs_agi_verbose("### Empty number");
@@ -264,8 +264,8 @@ LIMIT 9'
 		); //FIXME - do proper parsing instead of "{number:1}"
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
 		if ($dialstr != '') {
-			echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc($dialstr) ."\n";
-			echo 'SET VARIABLE r_'.$idx.'_cid '. gs_agi_str_esc($out_cid_num) ."\n";
+			gs_agi_set_variable( 'r_'.$idx.'_dial', $dialstr );
+			gs_agi_set_variable( 'r_'.$idx.'_cid', $out_cid_num );
 			++$idx;
 		}
 	}

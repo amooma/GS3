@@ -83,14 +83,14 @@ if (! is_array($queue_stats) || ! is_array($queue_stats['members']))
 	die();
 
 $num_members = count( $queue_stats['members'] );
-echo 'SET VARIABLE queue_num_members '. gs_agi_str_esc($num_members) ."\n";
+gs_agi_set_variable( 'queue_num_members', $num_members );
 
 $num_avail = 0;
 foreach ($queue_stats['members'] as $member) {
 	if (_devstate2avail( @$member['devstate'] ))
 		++$num_avail;
 }
-echo 'SET VARIABLE queue_avail_members '. gs_agi_str_esc($num_avail) ."\n";
+gs_agi_set_variable( 'queue_avail_members', $num_avail );
 
 
 ?>

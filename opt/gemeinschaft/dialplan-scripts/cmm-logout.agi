@@ -114,7 +114,7 @@ if ($user_ext != '') {
 #
 $old_ip_addr = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='.$user_id );
 gs_log( GS_LOG_DEBUG, "Mobility: IP address found for old phone: $old_ip_addr" );
-echo 'SET VARIABLE old_phone_ip '. gs_agi_str_esc($old_ip_addr) ."\n";
+gs_agi_set_variable( 'old_phone_ip', $old_ip_addr );
 
 
 ?>
