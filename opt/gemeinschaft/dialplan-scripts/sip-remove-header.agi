@@ -37,7 +37,7 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 $sipremoveheader_arg  = trim(@$argv[1]);
-if (true || ! preg_match('/^[a-zA-Z0-9\-_]*:?$/i', $sipremoveheader_arg)) {
+if (! preg_match('/^[a-zA-Z0-9\-_]*:?$/i', $sipremoveheader_arg)) {
 	gs_agi_err( 'Invalid characters in argument!' );
 }
 $pattern = '/^'.$sipremoveheader_arg.'/iS';
