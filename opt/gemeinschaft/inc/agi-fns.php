@@ -76,6 +76,7 @@ function gs_agi_do( $cmd )
 	$response = array('code' => null, 'result' => null, 'data' => null);
 	
 	if (! @fWrite(STDOUT, $cmd ."\n")) {
+		trigger_error( "AGI command \"$cmd\" failed! Could not write to StdOut.", E_USER_WARNING );
 		return $fail;
 	}
 	/*
@@ -106,12 +107,13 @@ function gs_agi_do( $cmd )
 	//gs_log(GS_LOG_DEBUG, "AGI command response: $str");
 	
 	if ($count >= 5) {
+		trigger_error( "AGI command \"$cmd\" failed! Could not read response.", E_USER_WARNING );
 		return $fail;
 	}
 	
 	$response['code'] = subStr($str,0,3);
 	$str = trim(subStr($str,3));
-	if (subStr($str,0,1) === '-') {  # multiline response
+	if (subStr($str,0,1) === '-') {  # multi-line response
 		$count = 0;
 		$str = subStr($str,1) ."\n";
 		$line = fGetS(STDIN, 4096);
@@ -121,6 +123,7 @@ function gs_agi_do( $cmd )
 			$count = (trim($line) == '') ? $count + 1 : 0;
 		}
 		if ($count >= 5) {
+			trigger_error( "AGI command \"$cmd\" failed! Could not read multi-line response.", E_USER_WARNING );
 			return $fail;
 		}
 	}
@@ -175,12 +178,19 @@ function gs_agi_verbose( $str, $level=1 )
 
 
 
-
+$gs_in_agi_err = false;
 
 function gs_agi_err( $msg='')
 {
-	gs_agi_verbose( '### '.($msg != '' ? $msg : 'An error occurred.'), 1 );
-	$ok = gs_agi_do_bool( 'HANGUP' );
+	global $gs_in_agi_err;
+	
+	if (@$gs_in_agi_err) return;  # prevent recursive calls by gs_err_handler_agi()
+	$gs_in_agi_err = true;
+	
+	@gs_agi_verbose( '### '.($msg != '' ? $msg : 'An error occurred.'), 1 );
+	@gs_agi_hangup();
+	
+	$gs_in_agi_err = false;
 	exit(1);
 }
 
@@ -266,19 +276,34 @@ gs_agi_read_agi_env();
 
 function gs_agi_set_variable( $name, $val )
 {
-	if (! preg_match('/^[a-zA-Z0-9_]+$/', $name)) return false;
+	if (! preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
+		trigger_error( "AGI: Invalid variable name \"$name\"!", E_USER_WARNING );
+		return false;
+	}
 	return gs_agi_do_bool( 'SET VARIABLE '. $name .' '. gs_agi_str_esc($val) );
 }
 
 function gs_agi_get_variable( $name )
 {
-	if (! preg_match('/^[a-zA-Z0-9_]+$/', $name)) return false;
+	if (! preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
+		trigger_error( "AGI: Invalid variable name \"$name\"!", E_USER_WARNING );
+		return false;
+	}
 	$response = gs_agi_do( 'GET VARIABLE '. $name );
 	if (gs_agi_reponse_is_success($response)) {
 		return ($response['result'] == 1) ? $response['data'] : null;
 	} else {
 		return false;
 	}
+}
+
+function gs_agi_hangup( $channel='' )
+{
+	if ($channel != '' && ! preg_match('/^[a-zA-Z0-9_\-\/]+$/', $channel)) {
+		trigger_error( "AGI: Invalid channel name \"$channel\"!", E_USER_WARNING );
+		return false;
+	}
+	return gs_agi_do_bool( 'HANGUP'. ($channel != '' ? ' '.gs_agi_str_esc($channel) : '') );
 }
 
 
