@@ -38,7 +38,7 @@ $default_dialstrs = array(
 	'misdn'   => 'mISDN/g:{gateway}/{number:1}',
 	'woomera' => 'Woomera/g{port}/{number:1}',
 	'zap'     => 'Zap/g{port}/{number:1}',
-	'capi'    => 'Capi/{port}/{number:1}',
+	'capi'    => 'Capi/isdn_{gateway}/{number:1}',
 	);
 $gw_types = array(
 	'misdn'   => 'mISDN',
