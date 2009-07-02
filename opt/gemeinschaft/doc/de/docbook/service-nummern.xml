@@ -309,7 +309,7 @@
         </varlistentry>
 
         <varlistentry>
-          <term><code>*2<replaceable>&lt;Nummer&gt;</replaceable></code></term>
+          <term><code>*2<replaceable>&lt;Nummer&gt; (ausser *2&lt;1&gt; und *2&lt;2&gt;)</replaceable></code></term>
 
           <listitem>
             <para>Shortcut um für Anrufe von intern und extern eine temporäre
@@ -321,6 +321,22 @@
           </listitem>
         </varlistentry>
 
+	<varlistentry>
+          <term><code>*21</code></term>
+
+          <listitem>
+            <para>Shortcut um für Anrufe von intern und extern die Rufumleitung auf den Anrufbeantworter zu leiten.</para>
+          </listitem>
+        </varlistentry>
+	
+	<varlistentry>
+          <term><code>*22</code></term>
+
+          <listitem>
+            <para>Shortcut um für Anrufe von intern und extern die Ansage ohne Anrufbeantworter zu leiten. Wenn keine Ansage aufgezeichnet wurde, dann wird die Standard-Ansage von Gemeinschaft abgespielt</para>
+          </listitem>
+        </varlistentry>	
+	
         <varlistentry>
           <term><code>*2*</code></term>
 
