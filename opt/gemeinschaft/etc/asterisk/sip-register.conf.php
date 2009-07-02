@@ -107,7 +107,8 @@ FROM
 	`gate_grps` `gg` ON (`gg`.`id`=`g`.`grp_id`)
 WHERE
 	`g`.`type`=\'sip\' AND
-	`g`.`host` IS NOT NULL
+	`g`.`host` IS NOT NULL AND
+	`g`.`register`= 1
 ORDER BY `g`.`id`'
 );
 while ($gw = $rs->fetchRow()) {

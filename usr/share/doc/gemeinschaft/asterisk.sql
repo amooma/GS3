@@ -5830,6 +5830,7 @@ CREATE TABLE `gates` (
   `proxy` varchar(50) collate utf8_unicode_ci default NULL,
   `user` varchar(35) collate utf8_unicode_ci default NULL,
   `pwd` varchar(35) collate utf8_unicode_ci default NULL,
+  `register` tinyint(1) unsigned NOT NULL default '1',
   `hw_port` tinyint(3) unsigned default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),

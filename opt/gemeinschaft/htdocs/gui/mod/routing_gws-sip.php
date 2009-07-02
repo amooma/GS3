@@ -80,7 +80,8 @@ if ($action === 'save') {
 	`host`,
 	`proxy`,
 	`user`,
-	`pwd`
+	`pwd`,
+	`register`
 ) VALUES (
 	NULL,
 	NULL,
@@ -91,6 +92,7 @@ if ($action === 'save') {
 	\''. $DB->escape( $default_dialstrs[$gw_type] ) .'\',
 	\'\',
 	NULL,
+	\'\',
 	\'\',
 	\'\'
 )'
@@ -117,7 +119,8 @@ if ($action === 'save') {
 	`host` = \''. $DB->escape($host) .'\',
 	`proxy` = '. ($proxy == null ? 'NULL' : ('\''. $DB->escape($proxy) .'\'') ) .',
 	`user` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.@]/', '', @$_REQUEST['gw-user'])) .'\',
-	`pwd` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-pwd'])) .'\'
+	`pwd` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-pwd'])) .'\',
+	`register` = '. (@$_REQUEST['gw-register'] ? 1 : 0) .'
 WHERE `id`='. (int)$gwid
 	;
 	// allow "@" in SIP username so you can enter user@fromdomain
@@ -129,6 +132,7 @@ WHERE `id`='. (int)$gwid
 	@exec( 'sudo sh -c '. qsa($cmd) .' 1>>/dev/null 2>>/dev/null' );
 	
 	$action = '';
+
 }
 #####################################################################
 
@@ -160,7 +164,7 @@ if ($action === 'edit') {
 <?php
 	if ($gwid > 0) {
 		# get gateway from DB
-		$rs = $DB->execute( 'SELECT `grp_id`, `type`, `name`, `title`, `allow_out`, `host`, `proxy`, `user`, `pwd`, `dialstr` FROM `gates` WHERE `id`='.$gwid );
+		$rs = $DB->execute( 'SELECT `grp_id`, `type`, `name`, `title`, `allow_out`, `host`, `proxy`, `user`, `pwd`, `register`, `dialstr` FROM `gates` WHERE `id`='.$gwid );
 		$gw = $rs->fetchRow();
 		if (! $gw) {
 			echo 'Gateway not found.';
@@ -182,7 +186,8 @@ if ($action === 'edit') {
 			'proxy'      => '',
 			'user'       => '',
 			'dialstr'    => $default_dialstrs[$gw_type],
-			'pwd'        => ''
+			'pwd'        => '',
+			'register'  => 1
 		);
 	}
 ?>
@@ -236,6 +241,8 @@ if ($action === 'edit') {
 	echo '<th>&nbsp;</th>',"\n";
 	echo '<td>';
 	echo '<input type="checkbox" name="gw-allow_out" id="ipt-gw-allow_out" value="1" ', ($gw['allow_out'] ? 'checked="checked" ' : '') ,'/> <label for="ipt-gw-allow_out">', __('ausgehende Anrufe zulassen') ,'</label>',"\n";
+	echo '&nbsp;&nbsp;',"\n";;
+	echo '<input type="checkbox" name="gw-register" id="ipt-gw-register" value="1" ', ($gw['register'] ? 'checked="checked" ' : '') ,'/> <label for="ipt-gw-register">', __('registrieren') ,'</label>',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
 	

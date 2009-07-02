@@ -659,4 +659,17 @@ ALTER TABLE `gates`
   ADD `proxy` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL AFTER `host`;
 
 
+--
+-- since rev. 6642
+--
+
+USE `asterisk`;
+
+
+--
+-- Add new column `register` in table `gates`
+--
+
+ALTER TABLE `gates`   
+  ADD `register` tinyint(1) unsigned NOT NULL default '1' AFTER `pwd`;
 
