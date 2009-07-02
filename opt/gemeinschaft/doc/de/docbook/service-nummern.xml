@@ -358,9 +358,7 @@
 
           <listitem>
             <simpara>Setzt das Kommentarfeld des Benutzers (sichtbar im
-            Kollegen-Monitor) auf den in der <filename>inc/conf.php</filename>
-            mit <code>GS_USERCOMMENT_OFFTIME</code> eingestellten Wert (z.B.
-            "<literal>Feierabend</literal>").</simpara>
+            Kollegen-Monitor). Das Kommentarfeld kann über die GUI gefüllt werden (Startseit).</simpara>
           </listitem>
         </varlistentry>
 
