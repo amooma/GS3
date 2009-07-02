@@ -154,7 +154,10 @@
 
             <listitem>
               <simpara>Zentrale Konfigurationsdatei (Datenbank-Verbindung
-              etc.).</simpara>
+              etc.). Diese wird allerdings nur von Skripten ausgewertet. 
+	      Alle Einstellungen müssen in 
+	      <filename>/etc/gemeinschaft/gemeinschaft.php</filename> durchgeführt
+	      werden.</simpara>
             </listitem>
           </varlistentry>
         </variablelist>
