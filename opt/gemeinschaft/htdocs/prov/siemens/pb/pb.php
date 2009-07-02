@@ -419,7 +419,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		$i++;
 		$selected = ($num_total == 1) ? 'TRUE':'FALSE';  # select first entry if there's only 1
 		xml('    <Option ID="'.$i.'" Selected="'.$selected.'" Key="dial" Value="'.$r['number'].'">');
-		xml('      <OptionText State="NORMAL">'.$r['ln'].', '.$r['fn'].'</OptionText>');
+		xml('      <OptionText State="NORMAL">'.htmlspecialchars($r['ln']).', '.htmlspecialchars($r['fn']).'</OptionText>');
 		xml('      <OptionText>'.@substr($r['number'],0,5).' </OptionText>');
 		xml('      <OptionText>'.@substr($r['number'],5).' </OptionText>');
 		xml('      <Image></Image>');
