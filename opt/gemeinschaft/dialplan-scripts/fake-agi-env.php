@@ -150,10 +150,14 @@ while (true) {
 	
 	# the AGI script expects us to respond
 	#
-	if (preg_match('/^SET VARIABLE/i', $agi_cmd_line)) {
+	if (preg_match('/^SET VARIABLE /i', $agi_cmd_line)) {
+		_fake_agi_send( $pipes[0], '200 result=1' );
+	}
+	elseif (preg_match('/^VERBOSE /i', $agi_cmd_line)) {
 		_fake_agi_send( $pipes[0], '200 result=1' );
 	}
 	else {
+		gs_log( GS_LOG_WARNING, 'AGI script "'.baseName($AGI_SCRIPT).'" sent "'.trim($agi_cmd_line).'" which we cannot handle.' );
 		_fake_agi_send( $pipes[0], '500 result=-1' );
 	}
 }
