@@ -673,3 +673,18 @@ USE `asterisk`;
 ALTER TABLE `gates`   
   ADD `register` tinyint(1) unsigned NOT NULL default '1' AFTER `pwd`;
 
+
+
+--
+-- since rev. 6662
+--
+
+USE `asterisk`;
+
+
+--
+-- Set length of `secret` to 20
+--
+
+ALTER TABLE `ast_sipfriends`
+  CHANGE `secret` `secret` varchar(20) character set ascii NOT NULL default '1234';
