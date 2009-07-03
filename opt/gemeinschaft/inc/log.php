@@ -92,7 +92,7 @@ function gs_log( $level, $msg, $logfile=null )
 					return false;
 				 }
 			}
-			$logfiles[$logfile] = @fOpen($logfile, 'ab');  # probably permission denied
+			$logfiles[$logfile] = @fOpen($logfile, 'ab');  # might fail if permission denied
 			if (! $logfiles[$logfile]) {
 				$gs_is_in_gs_log = false;
 				return false;
