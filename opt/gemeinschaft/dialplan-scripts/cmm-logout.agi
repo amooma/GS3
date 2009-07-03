@@ -31,6 +31,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/log.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -105,7 +106,8 @@ $user_ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_use
 $user_ext = preg_replace('/[^0-9]/', '', $user_ext);
 if ($user_ext != '') {
 	ob_start();
-	@exec( GS_DIR .'dialplan-scripts/queue-login-logout.agi '. $user_ext .' 0 logoutall 1>>/dev/null 2>>/dev/null' );
+	@exec( GS_DIR.'dialplan-scripts/fake-agi-env.php'
+		. ' '. qsa(GS_DIR.'dialplan-scripts/queue-login-logout.agi') .' '. qsa($user_ext) .' 0 logoutall 1>>/dev/null 2>>/dev/null' );
 	ob_end_clean();
 }
 
