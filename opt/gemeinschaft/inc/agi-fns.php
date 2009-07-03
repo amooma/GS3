@@ -29,10 +29,23 @@ defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/log.php' );
 
-# The AGI environment is available in $AGI_ENV.
-# The Asterisk environment is available in $_ENV['AGI_...'].
+# The AGI environment is going to be made available in $AGI_ENV by this library.
+# The Asterisk environment is available in $_ENV['AST_...'].
 
 $AGI_ENV = array();
+
+$agi_basename = baseName($_SERVER['SCRIPT_FILENAME']);
+$agi_log_prefix = $agi_basename.'['.getMyPid().']| ';
+
+function gs_agi_log( $level, $msg )
+{
+	global $agi_log_prefix;
+	return gs_log( $level, $agi_log_prefix.$msg, 'agi.log' );  //FIXME
+	# pretty verbose!
+	return true;
+}
+
+gs_agi_log( GS_LOG_DEBUG, 'Launched ---------------------------' );
 
 function gs_agi_str_esc( $str )
 {
@@ -64,27 +77,38 @@ function _gs_agi_read_response()
 		}
 		
 		++$i;
-		if ($i > 200) break;  # 20000 ms * 200 = 4 s
+		if ($i > 200) break;  # 20000 us * 200 = 4 s
 	}
-	gs_log(GS_LOG_DEBUG, "AGI command response: $buf");
+	gs_log( GS_LOG_DEBUG, "AGI command response: $buf" );
 }
 */
 
 function gs_agi_do( $cmd )
 {
+	global $agi_basename;
+	
 	$fail     = array('code' => 500 , 'result' => -1  , 'data' => ''  );
 	$response = array('code' => null, 'result' => null, 'data' => null);
 	
-	if (! @fWrite(STDOUT, $cmd ."\n")) {
+	$cmd = trim($cmd);
+	if ($cmd === '') {
+		trigger_error( "Empty AGI command.", E_USER_NOTICE );
+		return $fail;
+	}
+	
+	if (@fWrite(STDOUT, $cmd."\n", strLen($cmd)+1) === false) {
 		trigger_error( "AGI command \"$cmd\" failed! Could not write to StdOut.", E_USER_WARNING );
 		return $fail;
 	}
+	gs_agi_log( GS_LOG_DEBUG, 'Tx << '.$cmd );
 	/*
 	if (! in_array(php_sapi_name(), array('cgi'), true)) {
 		# the correct way
 	*/
 		if (! @fFlush(STDOUT)) {
-			gs_log( GS_LOG_WARNING, 'Failed to flush StdOut in AGI script!' );
+			gs_agi_log( GS_LOG_WARNING, 'Failed to flush StdOut!' );
+			gs_log( GS_LOG_WARNING, "Failed to flush StdOut in AGI script $agi_basename!" );
+			@ob_flush(); @flush();
 			uSleep(1000);
 		}
 	/*
@@ -104,7 +128,7 @@ function gs_agi_do( $cmd )
 		stream_set_timeout(STDIN,1);
 		$str .= trim(fGetS(STDIN, 4096));
 	} while ($str == '' && $count++ < 5);
-	//gs_log(GS_LOG_DEBUG, "AGI command response: $str");
+	gs_agi_log( GS_LOG_DEBUG, 'Rx >> '.$str );
 	
 	if ($count >= 5) {
 		trigger_error( "AGI command \"$cmd\" failed! Could not read response.", E_USER_WARNING );
@@ -117,9 +141,11 @@ function gs_agi_do( $cmd )
 		$count = 0;
 		$str = subStr($str,1) ."\n";
 		$line = fGetS(STDIN, 4096);
+		gs_agi_log( GS_LOG_DEBUG, 'Rx >> '.$line );
 		while (subStr($line,0,3) !== $response['code'] && $count < 5) {
 			$str .= $line;
 			$line = fGetS(STDIN, 4096);
+			gs_agi_log( GS_LOG_DEBUG, 'Rx >> '.$line );
 			$count = (trim($line) == '') ? $count + 1 : 0;
 		}
 		if ($count >= 5) {
@@ -239,6 +265,8 @@ set_error_handler('gs_err_handler_agi');
 
 function gs_agi_shutdown_fn()
 {
+	global $agi_basename;
+	
 	# log fatal E_ERROR and E_PARSE errors which the error handler cannot catch
 	if (function_exists('error_get_last')) {  # PHP >= 5.2
 		$e = error_get_last();
@@ -250,24 +278,121 @@ function gs_agi_shutdown_fn()
 			}
 		}
 	}
+	gs_agi_log( GS_LOG_DEBUG, 'Done -------------------------------' );
 }
 register_shutdown_function('gs_agi_shutdown_fn');
 
 
+function gs_agi_read_line()
+{
+	$buf = '';
+	$i=0;
+	$select = array(STDIN);  # needs to be passed by reference
+	$null   = null;          # needs to be passed by reference
+	stream_set_blocking(STDIN, true);
+	stream_set_timeout(STDIN, 1);
+	while (true) {
+		if (stream_select($select, $null, $null, 0, 500000) > 0) {
+			$buf .= fGetS(STDIN, 8192);
+			if (subStr($buf,-1) === "\n") {  # end of line
+				//$buf = subStr($buf,0,-1);
+				$buf = rTrim($buf);
+				break;
+			}
+		}
+		if (++$i > 10) {  # 500000 us * 10 = 5 s
+			gs_agi_log( GS_LOG_WARNING, "Timeout while waiting for input. Buffer is \"$buf\"." );
+			if ($buf === '') return false;
+			break;
+		}
+	}
+	//gs_agi_log( GS_LOG_DEBUG, "LINE: $buf (".strLen($buf).")" );
+	return $buf;
+}
+
+function gs_get_proc_info( $pid )
+{
+	if (! preg_match('/^[0-9]+$/', $pid)) return false;
+	$proc_status_file = '/proc/'.$pid.'/status';
+	if (! file_exists($proc_status_file)) return false;
+	$proc_status = @file_get_contents($proc_status_file);
+	if ($proc_status == '') return false;
+	$info = array('name'=>null, 'ppid'=>null);
+	if (preg_match('/^Name:[\t ]*(.*)/mi', $proc_status, $m))
+		$info['name'] = $m[1];
+	if (preg_match('/^PPid:[\t ]*(.*)/mi', $proc_status, $m))
+		$info['ppid'] = $m[1];
+	return $info;
+}
+
+function gs_get_proc_parents_info()
+{
+	$bt = array();
+	$ppid = posix_getPPid();
+	do {
+		$info = gs_get_proc_info($ppid);
+		if (! is_array($info) || $info['ppid'] === null) break;
+		$bt[] = $info['name'] . ' ('.$ppid.')';
+		$ppid = (int)$info['ppid'];
+	} while (true);
+	return $bt;
+}
+
 function gs_agi_read_agi_env()
 {
-	global $AGI_ENV;
+	global $AGI_ENV, $agi_basename;
+	
+	//kSort($_ENV);
+	//gs_agi_log( GS_LOG_DEBUG, 'ENV: '.var_export($_ENV,true) );
+	if (! @array_key_exists('AST_AGI_DIR', $_ENV)) {
+		gs_agi_log( GS_LOG_FATAL, 'AGI script was invoked without Asterisk environment!' );
+		gs_log( GS_LOG_FATAL, 'AGI script '.$agi_basename.' was invoked without Asterisk environment!' );
+		$bt = gs_get_proc_parents_info();
+		gs_agi_log( GS_LOG_DEBUG, 'Parents: '.implode(' <- ',$bt) );
+		echo 'VERBOSE '. gs_agi_str_esc( 'No Asterisk environment!' ) .' '. 1 ."\n";
+		echo 'HANGUP' ."\n";
+		exit(1);
+	}
+	
+	gs_agi_log( GS_LOG_DEBUG, 'Reading AGI headers ...' );
+	$lines_read = 0;
 	
 	$lines_read = 0;
-	stream_set_blocking(STDIN, true);
-	while (! fEof(STDIN)) {
-		$line = fGetS(STDIN);
-		if (strLen($line) < 3) break;  # end of AGI environment
-		if (! preg_match('/^agi_([^:]+): ?([^\n\r]*)/Sm', $line, $m))
+	$read_some_agi_headers = false;
+	while (true) {
+		$line = gs_agi_read_line();
+		if ($line !== false) {
+			gs_agi_log( GS_LOG_DEBUG, 'Rx >> '.$line );
+		}
+		if (++$lines_read > 100) {
+			gs_agi_log( GS_LOG_WARNING, 'Received more than 100 AGI lines!' );
+			gs_agi_err( 'Received more than 100 AGI headers!' );
+		}
+		if (strLen($line) < 3) {  # end of AGI environment
+			if (! $read_some_agi_headers) {
+				/*
+				gs_agi_log( GS_LOG_NOTICE, 'Unexpected end of AGI headers! Continuing to read ...' );
+				continue;
+				*/
+				gs_agi_log( GS_LOG_FATAL, 'AGI script was invoked without AGI environment!' );
+				gs_log( GS_LOG_FATAL, 'AGI script '.$agi_basename.' was invoked without AGI environment!' );
+				$bt = gs_get_proc_parents_info();
+				gs_agi_log( GS_LOG_DEBUG, 'Parents: '.implode(' <- ',$bt) );
+				echo 'VERBOSE '. gs_agi_str_esc( 'No AGI environment!' ) .' '. 1 ."\n";
+				echo 'HANGUP' ."\n";
+				exit(1);
+			}
 			break;
+		}
+		if (! preg_match('/^agi_([^:]+): ?([^\n\r]*)/Sm', $line, $m)) {
+			gs_agi_log( GS_LOG_WARNING, "Received invalid AGI header \"$line\"!" );
+			continue;
+		}
 		$AGI_ENV[$m[1]] = $m[2];
-		if (++$lines_read > 100) break;
+		$read_some_agi_headers = true;
 	}
+	
+	gs_agi_log( GS_LOG_DEBUG, 'Done reading AGI headers.' );
 }
 
 gs_agi_read_agi_env();
