@@ -27,8 +27,13 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
 
 if ($argc < 2) {
+	gs_log( GS_LOG_WARNING, 'No AGI script specified!' );
 	echo '### No AGI script specified!'."\n";
 	exit(1);
 }
@@ -39,6 +44,7 @@ if (subStr($AGI_SCRIPT,0,1) !== '/') {
 }
 $AGI_SCRIPT = realPath($AGI_SCRIPT);
 if (! file_exists($AGI_SCRIPT)) {
+	gs_log( GS_LOG_WARNING, 'AGI script "'.$argv[1].'" not found!' );
 	echo '### AGI script "'.$argv[1].'" not found!'."\n";
 	exit(1);
 }
@@ -61,6 +67,7 @@ for ($i=2; $i<$argc; ++$i) {
 	$cmd .= ' '. ($argv[$i] != '' ? escapeShellArg($argv[$i]) : '\'\'');
 }
 //echo "### CMD: ".$cmd."\n";
+gs_log( GS_LOG_DEBUG, "Fake AGI invocation: $AGI_SCRIPT ..." );
 
 $pipes = array();
 $proc = proc_open(
@@ -74,6 +81,7 @@ $proc = proc_open(
 	'/tmp'
 	);
 if (! $proc) {
+	gs_log( GS_LOG_WARNING, 'Failed to run AGI script!' );
 	echo '### Failed to run AGI script!'."\n";
 	exit(1);
 }
@@ -125,6 +133,7 @@ while (true) {
 			}
 		}
 		if (++$i > 2) {  # 1 s * 10 = 10 s
+			gs_log( GS_LOG_WARNING, 'Timeout while waiting for AGI command.' );
 			echo "### Timeout while waiting for AGI command. Buffer is \"$agi_cmd_line\".\n";
 			//echo "### ". (int)fEof($pipes[1]) ."\n";
 			if ($agi_cmd_line === '') $agi_cmd_line = false;
@@ -133,6 +142,8 @@ while (true) {
 		}
 	}
 	
+	# echo back the commands sent from the AGI script
+	#
 	echo $agi_cmd_line."\n";
 	@fFlush(STDOUT);
 	@ob_flush(); @flush();
