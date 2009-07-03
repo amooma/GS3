@@ -713,7 +713,7 @@ macro dial-gateway-do( mnumber ) {
 			}
 			else if ("${HANGUPCAUSE}" = "127") {
 				// 127 = interworking, unspecified
-				Verbose(1,### HANGUPCAUSE: 127 = interworking\, unspecified);
+				Verbose(1,### HANGUPCAUSE: 127 = interworking or unspecified);
 				Hangup();
 			}
 			else {
