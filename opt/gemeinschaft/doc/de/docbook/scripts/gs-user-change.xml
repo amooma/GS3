@@ -129,7 +129,9 @@
         <term><option>--force</option></term>
 
         <listitem>
-          <para>erzwingen, der Parameter ist dann Notwendig, wenn der Host geändert wird, da in diesem Fall, die Voicemails und Ansagen verloren gehen.</para>
+          <para>erzwingen. Der Parameter ist dann notwendig, wenn der Host
+          geändert wird, da in diesem Fall die Voicemails und Ansagen des
+          Benutzers verlorengehen.</para>
         </listitem>
       </varlistentry>
 
