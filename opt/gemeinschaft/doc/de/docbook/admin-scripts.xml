@@ -17,6 +17,8 @@
       <secondary>zur Administration</secondary>
     </indexterm></title>
 
+  <titleabbrev>Skripte</titleabbrev>
+
   <bridgehead>Hinweise</bridgehead>
 
   <para>Pfad: <filename>/opt/gemeinschaft/scripts/</filename></para>
