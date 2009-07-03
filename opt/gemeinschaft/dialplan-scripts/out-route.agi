@@ -235,7 +235,7 @@ WHERE `id`='. $ggrp_id
 	}
 	
 	$rs = $db->execute(
-'SELECT `type`, `name`, `dialstr`, `hw_port`
+'SELECT `type`, `name`, `dialstr`, `hw_port`, `host`, `user`
 FROM `gates`
 WHERE
 	`grp_id`='. $ggrp_id .' AND
@@ -266,6 +266,16 @@ LIMIT 9'
 		if ($dialstr != '') {
 			gs_agi_set_variable( 'r_'.$idx.'_dial', $dialstr );
 			gs_agi_set_variable( 'r_'.$idx.'_cid', $out_cid_num );
+			
+			# determine host (domain / IP address) part for
+			# P-Preferred-Identity header:
+			if (preg_match('/@([^@]+)$/', $gate['user'], $m)) {
+				$sip_uri_cid_host = $m[1];
+			} else {
+				$sip_uri_cid_host = $gate['host'];
+			}
+			gs_agi_set_variable( 'r_'.$idx.'_cid_host', $sip_uri_cid_host );
+			
 			++$idx;
 		}
 	}
