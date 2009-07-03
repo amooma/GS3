@@ -94,7 +94,7 @@ if ($action === 'save') {
 	NULL,
 	\'\',
 	\'\',
-	\'\'
+	0
 )'
 		);
 		$gwid = (int)$DB->getLastInsertId();
@@ -132,7 +132,6 @@ WHERE `id`='. (int)$gwid
 	@exec( 'sudo sh -c '. qsa($cmd) .' 1>>/dev/null 2>>/dev/null' );
 	
 	$action = '';
-
 }
 #####################################################################
 
