@@ -659,6 +659,8 @@ context to-internal-users-self {
 					Set(__callfile_from_user=${SIP_HEADER(X-GS-callfile_from_user)});
 				if ("${SIP_HEADER(X-GS-forwarded_to)}" != "")
 					Set(__forwarded_to=${SIP_HEADER(X-GS-forwarded_to)});
+				if ("${SIP_HEADER(X-GS-is_from_gateway)}" != "")
+					Set(__is_from_gateway=${SIP_HEADER(X-GS-is_from_gateway)});
 			}
 			//else {
 				//if ("${CHANNEL(channeltype)}" != "Local") {
