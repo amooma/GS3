@@ -55,21 +55,6 @@ function gs_log( $level, $msg, $logfile=null )
 	$gs_is_in_gs_log = true;
 	
 	if ($log_to === null) $log_to = gs_get_conf('GS_LOG_TO');
-	if ($syslog_facility === null) {
-		$fac_name = strToUpper(gs_get_conf('GS_LOG_SYSLOG_FACILITY'));
-		if (in_array($fac_name, array(
-			'LOCAL0', 'LOCAL1', 'LOCAL2', 'LOCAL3',
-			'LOCAL4', 'LOCAL5', 'LOCAL6', 'LOCAL7',
-			'USER', 'MAIL', 'DAEMON', 'AUTH', 'AUTHPRIV',
-			'SYSLOG', 'LPR', 'NEWS', 'UUCP', 'CRON'
-			), true)
-		&&  defined('LOG_'.$fac_name))
-		{
-			$syslog_facility = constant('LOG_'.$fac_name);
-		} else {
-			$syslog_facility = LOG_USER;
-		}
-	}
 	
 	$level_info = array_key_exists($level, $levels)
 		? $levels[$level] : array('v'=>'???? ', 'sll'=>LOG_WARNING);
@@ -119,6 +104,22 @@ function gs_log( $level, $msg, $logfile=null )
 		
 	}
 	elseif ($log_to === 'syslog') {
+		
+		if ($syslog_facility === null) {
+			$fac_name = strToUpper(gs_get_conf('GS_LOG_SYSLOG_FACILITY'));
+			if (in_array($fac_name, array(
+				'LOCAL0', 'LOCAL1', 'LOCAL2', 'LOCAL3',
+				'LOCAL4', 'LOCAL5', 'LOCAL6', 'LOCAL7',
+				'USER', 'MAIL', 'DAEMON', 'AUTH', 'AUTHPRIV',
+				'SYSLOG', 'LPR', 'NEWS', 'UUCP', 'CRON'
+				), true)
+			&&  defined('LOG_'.$fac_name))
+			{
+				$syslog_facility = constant('LOG_'.$fac_name);
+			} else {
+				$syslog_facility = LOG_USER;
+			}
+		}
 		
 		if (subStr($file,-4)==='.php') $file = subStr($file,0,-4);
 		if (strLen($file) <= 32) {
