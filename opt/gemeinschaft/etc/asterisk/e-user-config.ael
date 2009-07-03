@@ -222,7 +222,7 @@ context user-config {
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
 	}
-
+	
 	*22 => {
 		Set(CDR(amaflags)=OMIT);
 		&usercode-by-ext(${user_name});
@@ -238,7 +238,7 @@ context user-config {
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
 	}
-
+	
 	_*2X. => {
 		Set(CDR(amaflags)=OMIT);
 		&usercode-by-ext(${user_name});
