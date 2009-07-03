@@ -309,9 +309,11 @@
         </varlistentry>
 
         <varlistentry>
-          <term><code>*2<replaceable>&lt;Nummer&gt; (ausser *2&lt;1&gt; und *2&lt;2&gt;)</replaceable></code></term>
+          <term><code>*2</code></term>
 
           <listitem>
+            <para>(außer <code>*21</code> und <code>*22</code>)</para>
+
             <para>Shortcut um für Anrufe von intern und extern eine temporäre
             Rufumleitung zu setzen und zu aktivieren (also wie
             <code>*940<replaceable>&lt;Nummer&gt;</replaceable></code>,
@@ -321,22 +323,25 @@
           </listitem>
         </varlistentry>
 
-	<varlistentry>
+        <varlistentry>
           <term><code>*21</code></term>
 
           <listitem>
-            <para>Shortcut um für Anrufe von intern und extern die Rufumleitung auf den Anrufbeantworter zu leiten.</para>
+            <para>Shortcut um für Anrufe von intern und extern die
+            Rufumleitung auf den Anrufbeantworter zu leiten.</para>
           </listitem>
         </varlistentry>
-	
-	<varlistentry>
+
+        <varlistentry>
           <term><code>*22</code></term>
 
           <listitem>
-            <para>Shortcut um für Anrufe von intern und extern die Ansage ohne Anrufbeantworter zu leiten. Wenn keine Ansage aufgezeichnet wurde, dann wird die Standard-Ansage von Gemeinschaft abgespielt</para>
+            <para>Shortcut um für Anrufe von intern und extern die Ansage ohne
+            Anrufbeantworter zu leiten. Wenn keine Ansage aufgezeichnet wurde,
+            dann wird die Standard-Ansage von Gemeinschaft abgespielt.</para>
           </listitem>
-        </varlistentry>	
-	
+        </varlistentry>
+
         <varlistentry>
           <term><code>*2*</code></term>
 
@@ -358,7 +363,9 @@
 
           <listitem>
             <simpara>Setzt das Kommentarfeld des Benutzers (sichtbar im
-            Kollegen-Monitor). Das Kommentarfeld kann über die GUI gefüllt werden (Startseit).</simpara>
+            Kollegen-Monitor) auf den in der <filename>inc/conf.php</filename>
+            mit <code>GS_USERCOMMENT_OFFTIME</code> eingestellten Wert (z.B.
+            "<literal>Feierabend</literal>").</simpara>
           </listitem>
         </varlistentry>
 
