@@ -40,7 +40,7 @@ $agi_log_prefix = $agi_basename.'['.getMyPid().']| ';
 function gs_agi_log( $level, $msg )
 {
 	global $agi_log_prefix;
-	return gs_log( $level, $agi_log_prefix.$msg, 'agi.log' );  //FIXME
+	//return gs_log( $level, $agi_log_prefix.$msg, 'agi.log' );  //FIXME
 	# pretty verbose!
 	return true;
 }
