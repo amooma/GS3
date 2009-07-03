@@ -100,12 +100,12 @@ function gs_log( $level, $msg, $logfile=null, $fifo=false )
 			}
 						
 			if (! @file_exists($logfile)) {
-				 $err=0; $out=array();
-				 @exec( $sudo.'mkdir -p '. qsa(dirName($logfile)) .' 1>>/dev/null 2>>/dev/null', $out, $err );
-				 if ($err != 0) {  # probably permission denied
+				$err=0; $out=array();
+				@exec( $sudo.'mkdir -p '. qsa(dirName($logfile)) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+				if ($err != 0) {  # probably permission denied
 					$gs_is_in_gs_log = false;
 					return false;
-				 }
+				}
 				if ($fifo) {
 					$err=0; $out=array();
 					@exec( $sudo.'mkfifo '. qsa($logfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
@@ -146,7 +146,7 @@ function gs_log( $level, $msg, $logfile=null, $fifo=false )
 			}
 		}
 		
-		$ok = @fWrite( $logfiles[$logfile], $msg, strLen($msg) );
+		$ok = (@fWrite( $logfiles[$logfile], $msg, strLen($msg) ) !== false);
 		
 	}
 	elseif ($log_to === 'syslog') {
