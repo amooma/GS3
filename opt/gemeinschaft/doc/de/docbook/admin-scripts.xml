@@ -131,6 +131,9 @@ Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
   <xi:include href="scripts/gs-nobodies-move.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
+  <xi:include href="scripts/gs-phonebook-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
   <xi:include href="scripts/gs-phones-firmware-upgrade.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
