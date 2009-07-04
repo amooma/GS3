@@ -197,6 +197,9 @@ Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
   <xi:include href="scripts/gs-user-by-mac-addr.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
+  <xi:include href="scripts/gs-user-calllog-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
   <xi:include href="scripts/gs-user-change.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
