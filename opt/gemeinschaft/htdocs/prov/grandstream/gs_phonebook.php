@@ -71,34 +71,80 @@ if (! gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 
 //FIXME - we need authentication here
 
+$remote_ip = trim( @$_SERVER['REMOTE_ADDR'] );  //FIXME
+if (! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $remote_ip)) {
+	gs_log( GS_LOG_NOTICE, "Invalid IP address \"". $remote_ip ."\"" );
+	# don't explain this to the users
+	_err( 'No! See log for details.' );
+}
+
 # is grandstream -- not really necessary here
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 $ua_parts = explode(' ', $ua);
 if (strToLower(@$ua_parts[0]) !== 'grandstream') {
-	gs_log( GS_LOG_WARNING, "Phone with IP \"". $_SERVER['REMOTE_ADDR'] ."\" has invalid User-Agent (\"". $ua ."\")" );
+	gs_log( GS_LOG_WARNING, "Phone with IP addr. \"$remote_ip\" has invalid User-Agent (\"". $ua ."\")" );
 	_err( 'No! See log for details.' );
 }
 if (! preg_match('/(gxp|gxv)[0-9]{1,6}/', strToLower(@$ua_parts[1]), $m)) {
 	# BT models can't download a phone book
-	gs_log( GS_LOG_WARNING, "Phone with IP \"". $_SERVER['REMOTE_ADDR'] ."\" has invalid phone type (\"". $ua_parts[1] ."\")" );
+	gs_log( GS_LOG_WARNING, "Phone with IP addr. \"$remote_ip\" has invalid phone type (\"". $ua_parts[1] ."\")" );
 	_err( 'No! See log for details.' );
 }
 
 
-# db connect
+# connect to db
 $db = gs_db_slave_connect();
+if (! $db) {
+	gs_log( GS_LOG_WARNING, "Phone with IP addr. \"$remote_ip\" (Grandstream) ask for phonebook - Could not connect to DB" );
+	_err( 'No! See log for details.' );
+}
 
-# ln, fn, ext
-$query =
-'SELECT `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
+
+# get user_id
+$user_id = (int)$db->executeGetOne(
+'SELECT `u`.`id`
+FROM
+	`users` `u`,
+	`phones` `p`
+WHERE
+	`u`.`current_ip`=\''. $db->escape($remote_ip) .'\' AND
+	`p`.`user_id`=`u`.`id` AND
+	`u`.`nobody_index` IS NULL'
+);
+if ($user_id < 1)
+	_err( 'Unknown user' );
+
+
+$pb = array();
+
+# INTERNAL phonebook
+$pb[15] = array(
+	'type'	=> 'gs',
+	'title'	=> gs_get_conf('GS_PB_INTERNAL_TITLE', __("Intern")),
+	'query'	=> 'SELECT `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-WHERE `u`.`nobody_index` IS NULL
+WHERE `u`.`nobody_index` IS NULL AND `u`.`id`!='.$user_id.'
 ORDER BY `u`.`lastname`, `u`.`firstname`
-LIMIT 100';
+LIMIT 100'
+);
 
-$rs = $db->execute($query);
+# PRIVATE phonebook
+$pb[25] = array(
+	'type'	=> 'prv',
+	'title'	=> gs_get_conf('GS_PB_PRIVATE_TITLE', __("Pers\xC3\xB6nlich")),
+	'query'	=> 'SELECT `pb`.`lastname` `ln`, `pb`.`firstname` `fn`, `pb`.`number` `ext`
+FROM
+	`pb_prv` `pb`
+WHERE `pb`.`user_id`='.$user_id.'
+ORDER BY `pb`.`lastname`, `pb`.`firstname`
+LIMIT 100'
+);
+
+//TODO: import phonebook
+
+kSort($pb);
 
 
 ob_start();
@@ -106,20 +152,29 @@ ob_start();
 echo '<?','xml version="1.0" encoding="utf-8"?','>' ,"\n";
 echo '<AddressBook>' ,"\n";
 
-if ($rs->numRows() !== 0 ) {
-	while ($r = $rs->fetchRow()) {
-		$lastname  = $r['ln'];
-		$firstname = $r['fn'];
-		$number    = $r['ext'];
-		
-		echo '<Contact>' ,"\n";
-		echo '<LastName>'. _grandstream_xml_esc($lastname) .'</LastName>' ,"\n";
-		echo '<FirstName>'. _grandstream_xml_esc($firstname) .'</FirstName>' ,"\n";
-		echo '<Phone>' ,"\n";
-		echo '<phonenumber>'. _grandstream_xml_esc($number) .'</phonenumber>' ,"\n";
-		echo '<accountindex>0</accountindex>' ,"\n";
-		echo '</Phone>' ,"\n";
-		echo '</Contact>' ,"\n";
+$pb_entrys = 0;
+foreach ($pb as $arr) {
+	if ($pb_entrys > 100) break;
+	
+	$rs = $db->execute($arr['query']);
+	if ($rs->numRows() !== 0 ) {
+		while ($r = $rs->fetchRow()) {
+			$lastname  = $r['ln'];
+			$firstname = $r['fn'];
+			$number    = $r['ext'];
+			
+			echo '<Contact>' ,"\n";
+			echo '<LastName>'. _grandstream_xml_esc($lastname) .'</LastName>' ,"\n";
+			echo '<FirstName>'. _grandstream_xml_esc($firstname) .'</FirstName>' ,"\n";
+			echo '<Phone>' ,"\n";
+			echo '<phonenumber>'. _grandstream_xml_esc($number) .'</phonenumber>' ,"\n";
+			echo '<accountindex>0</accountindex>' ,"\n";
+			echo '</Phone>' ,"\n";
+			//echo '<Group>0</Group>', "\n";	# only GXV3140  //TODO
+			//echo '<PhotoUrl></PhotoUrl>', "\n";	# only GXV3140  //TODO
+			echo '</Contact>' ,"\n";
+			++$pb_entrys;
+		}
 	}
 }
 echo '</AddressBook>' ,"\n";
