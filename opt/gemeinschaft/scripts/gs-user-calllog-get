@@ -41,7 +41,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --type=[missed|in|out]';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --type=missed|in|out';
 
 $opts = @getOptsNoMultiples( '',
 	array(
