@@ -76,7 +76,7 @@
 
     <variablelist>
       <varlistentry>
-        <term><option>--user</option>=<replaceable>old-username</replaceable></term>
+        <term><option>--user</option>=<replaceable>username</replaceable></term>
 
         <listitem>
           <para>Benutzername</para>
