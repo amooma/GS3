@@ -278,7 +278,13 @@
 
   <section id="siemens-openstage">
     <title>Siemens OpenStage</title>
-    
+    <para>
+      Welche Schritte genau nötig sind, um das Provisioning für das Openstage 
+      zu installieren wird ausführlich in der Datei INSTALL.txt erläutert. 
+      Diese findet man in der jeweiligen Gemeinschafts-Distribution im 
+      /opt/gemeinschaft-siemens/doc Verzeichnis.
+    </para>
+
     <para>Reboot: Per Konfigurations-Taste in den Reiter <quote>Menü</quote>
     schalten und dann gleichzeitig die Tasten <literal>1</literal>,
     <literal>4</literal>, <literal>7</literal> gedrückt halten. Ggf.
