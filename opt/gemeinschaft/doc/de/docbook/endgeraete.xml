@@ -278,11 +278,7 @@
 
   <section id="siemens-openstage">
     <title>Siemens OpenStage</title>
-
-    <note>
-      <para>FIXME</para>
-    </note>
-
+    
     <para>Reboot: Per Konfigurations-Taste in den Reiter <quote>Menü</quote>
     schalten und dann gleichzeitig die Tasten <literal>1</literal>,
     <literal>4</literal>, <literal>7</literal> gedrückt halten. Ggf.
@@ -296,5 +292,6 @@
 
     <para>Das Admin-Paßwort ist per Default <literal>123456</literal> (oder
     <literal>000000</literal>?).</para>
+    <para>Das Factory-Reset-Paßwort ist per Default <literal>124816</literal></para>
   </section>
 </chapter>
