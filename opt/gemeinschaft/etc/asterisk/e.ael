@@ -668,6 +668,8 @@ macro dial-gateway-do( mnumber ) {
 			SIPAddHeader(P-Preferred-Identity: ${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
 			// RFC 3325, RFC 3323:
 			SIPAddHeader(Privacy: none);
+			// Set caller presentation - affects Remote-Party-ID header: ...";privacy:off;screen:yes"
+			SetCallerPres(allowed_passed_screen);
 		}
 		else {
 			// RFC 2543:
@@ -677,6 +679,8 @@ macro dial-gateway-do( mnumber ) {
 			SIPAddHeader(P-Preferred-Identity: ${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
 			// RFC 3325, RFC 3323:
 			SIPAddHeader(Privacy: id;header);
+			// Set caller presentation - affects Remote-Party-ID header: ...";privacy:full;screen:yes"
+			SetCallerPres(prohib_passed_screen);
 		}
 		Verbose(1,### Outbound route: ${r_${r}_dial} - Caller ID: "${CALLERID(name)}" <${CALLERID(num)}@${r_${r}_cid_host}>);
 		Dial(${r_${r}_dial},180);
