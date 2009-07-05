@@ -698,7 +698,12 @@ macro dial-gateway-do( mnumber ) {
 		else if ("${DIALSTATUS}" = "CHANUNAVAIL" || "${DIALSTATUS}" = "CONGESTION") {
 			// see Asterisk's causes.h or
 			// Q.931 Disconnect Cause Codes
-			if ("${HANGUPCAUSE}" = "66") {
+			if ("${HANGUPCAUSE}" = "1") {
+				// 1 = unallocated number
+				Verbose(1,### HANGUPCAUSE: 1 = unallocated number);
+				Hangup();
+			}
+			else if ("${HANGUPCAUSE}" = "66") {
 				// 66 = channel not implemented
 				Verbose(1,### HANGUPCAUSE: 66 = channel not implemented);
 				Verbose(0,### You're trying to dial to channel type "${CUT(r_${r}_dial,/,1)}" which this Asterisk is not configured to handle!);
