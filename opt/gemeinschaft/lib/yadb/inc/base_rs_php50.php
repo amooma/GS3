@@ -52,7 +52,7 @@ class YADB_BaseRS implements IteratorAggregate
 
 //class YADB_RSIterator implements Iterator
 class YADB_RSIterator implements SeekableIterator
-{	
+{
 	private $_rs;
 	
 	// required methods for Iterator:
