@@ -66,7 +66,7 @@ function write_log( $log_string )
 		return 0;
 	}
 	$logentry = date('Y-m-d H:i:s') .' '. $log_string ."\n";
-	if ($active > 1) echo $logentry; 
+	if ($active > 1) echo $logentry;
 	@fWrite($logfilep, $logentry, strLen($logentry));
 	fClose($logfilep);
 }
@@ -102,7 +102,7 @@ function writeDataFile( $data_file )
 	if (!$datafilep) {
 		write_log("Cannot open $data_file for writing! Bad things will happen!");
 		return 1;
-	}  
+	}
 	@fWrite($datafilep, $save_struct, strLen($save_struct));
 	fClose($datafilep);
 	write_log("Data file $data_file written.");
@@ -185,7 +185,7 @@ function sendAlarm( $node_id )
 }
   
 function restartLocalAsterisk()
-{  
+{
 	$cmd = '/etc/init.d/asterisk stop';
 	write_log("Execute $cmd");
 	$err=0; $out=array();

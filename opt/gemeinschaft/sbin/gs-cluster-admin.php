@@ -59,7 +59,7 @@ function WriteDataFile( $data_file )
 	@$datafilep=fopen($data_file,'w');
 	if (!$datafilep) {
 		gs_script_error("Cannot open $data_file for writing!");
-	}  
+	}
 	fwrite($datafilep,$save_struct);
 	fclose($datafilep);
 }
@@ -121,7 +121,7 @@ function WriteIPFile( $ip_file, $ip )
 }
 
 function RestartLocalAsterisk()
-{  
+{
 	$exec_string=GS_DIR.'sbin/start-asterisk';
 	echo "Execute $exec_string";
 	exec($exec_string,$ret_array,$ret_val);
@@ -213,7 +213,7 @@ switch ( (int)$node[$opts['host']]['status'] ) {
 		if (array_key_exists('release', $opts)) {
 			if (ReleaseIP($opts['host'])) gs_script_error("Failed to release IP");
 			if (ExecuteRemoteCommands($opts['host']))
-				gs_script_error("Failed to execute remote commands");			
+				gs_script_error("Failed to execute remote commands");
 			WriteIPFile(IPFILE,$node[$opts['host']]['dynamic_ip']);
 			$node[$opts['host']]['status']='0';
 			$node[$opts['host']]['tries']='0';
