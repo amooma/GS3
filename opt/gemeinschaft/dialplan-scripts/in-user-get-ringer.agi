@@ -34,16 +34,28 @@ require_once( GS_DIR .'inc/agi-fns.php' );
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
+# Do not call gs_agi_err() in this script.
+# Not using your custom ringtone is not really a serious problem.
 
 $uname  = trim(@$argv[1]);
 $source = trim(@$argv[2]);
 
-if (! $uname) gs_agi_err( 'Invalid extension' );
-if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
-	gs_agi_err( 'Invalid extension' );
+if (! $uname) {
+	@gs_agi_verbose( '### Empty extension argument' );
+	exit(1);
 }
-if (! $source) gs_agi_err( 'Invalid source argument' );
-if (! in_array($source, array('internal','external'))) gs_agi_err( 'Invalid source argument' );
+if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
+	@gs_agi_verbose( '### Invalid extension argument' );
+	exit(1);
+}
+if (! $source) {
+	@gs_agi_verbose( '### Empty source argument' );
+	exit(1);
+}
+if (! in_array($source, array('internal','external'))) {
+	@gs_agi_verbose( '### Invalid source argument' );
+	exit(1);
+}
 
 
 /*
@@ -62,7 +74,10 @@ include_once( GS_DIR .'inc/db_connect.php' );
 //include_once( GS_DIR .'inc/gs-fns/gs_ringtones_get.php' );
 
 $db = gs_db_slave_connect();
-if (! $db) gs_agi_err( 'DB error - Failed to connect' );
+if (! $db) {
+	@gs_agi_verbose( '### DB error - Failed to connect' );
+	exit(1);
+}
 
 $rs = $db->execute(
 'SELECT `p`.`user_id` `id`, `p`.`type` `phone_type`
@@ -78,7 +93,12 @@ if (! ($user = $rs->fetchRow())) exit(0);  # not an error
 if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
 		
 	//$ringtones = gs_ringtones_get( $uname );
-	//if (! is_array($ringtones)) gs_agi_err( 'Failed to get ringtones' );
+	/*
+	if (! is_array($ringtones)) {
+		@gs_agi_verbose( '### Failed to get ringtones' );
+		exit(1);
+	}
+	*/
 	
 	$ringtones = array(
 		'internal' => array( 'bellcore' => 1, 'file' => null ),
@@ -88,7 +108,10 @@ if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
 	# get ringers
 	#
 	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
-	if (! $rs) gs_agi_err( 'DB error - Failed to get ringtones' );
+	if (! $rs) {
+		@gs_agi_verbose( '### DB error - Failed to get ringtones' );
+		exit(1);
+	}
 	while ($r = $rs->fetchRow()) {
 		$src = $r['src'];
 		if (! array_key_exists($src, $ringtones)) continue;
@@ -125,7 +148,10 @@ elseif (strToLower(subStr($user['phone_type'],0,7)) === 'siemens') {
 	# get ringers
 	#
 	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
-	if (! $rs) gs_agi_err( 'DB error - Failed to get ringtones' );
+	if (! $rs) {
+		@gs_agi_verbose( '### DB error - Failed to get ringtones' );
+		exit(1);
+	}
 	while ($r = $rs->fetchRow()) {
 		$src = $r['src'];
 		if (! array_key_exists($src, $ringtones)) continue;
@@ -159,7 +185,10 @@ elseif (strToLower(subStr($user['phone_type'],0,6)) === 'aastra') {
 	# get ringers
 	#
 	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
-	if (! $rs) gs_agi_err( 'DB error - Failed to get ringtones' );
+	if (! $rs) {
+		@gs_agi_verbose( '### DB error - Failed to get ringtones' );
+		exit(1);
+	}
 	while ($r = $rs->fetchRow()) {
 		$src = $r['src'];
 		if (! array_key_exists($src, $ringtones)) continue;
@@ -191,7 +220,10 @@ elseif (strToLower(subStr($user['phone_type'],0,11)) === 'grandstream') {
 	# get ringers
 	#
 	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
-	if (! $rs) gs_agi_err( 'DB error - Failed to get ringtones' );
+	if (! $rs) {
+		@gs_agi_verbose( '### DB error - Failed to get ringtones' );
+		exit(1);
+	}
 	while ($r = $rs->fetchRow()) {
 		$src = $r['src'];
 		if (! array_key_exists($src, $ringtones)) continue;
