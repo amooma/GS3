@@ -228,7 +228,7 @@ $rs = $DB->execute($sql_query);
 $num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
-?>	
+?>
 
 <div style="max-width:600px;">
 	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/app/important.png" class="fl" />
