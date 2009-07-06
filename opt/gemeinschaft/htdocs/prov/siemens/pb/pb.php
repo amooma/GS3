@@ -339,7 +339,7 @@ else {
 	switch ($type) {
 	case 'gs' :
 		$query =
-'SELECT SQL_CALC_FOUND_ROWS 
+'SELECT SQL_CALC_FOUND_ROWS
 	`u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `number`
 FROM
 	`users` `u` JOIN
