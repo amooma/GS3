@@ -129,7 +129,7 @@ elseif (! $type) {
 		$xml.= '	<URI>'. $url_aastra_pb .'?t='.$key .'</URI>' ."\n";
 		//$xml.= '	<Selection>0&amp;menu_pos=1</Selection>' ."\n";
 		$xml.= '</MenuItem>' ."\n";
-	} 
+	}
 	
 	$xml.= '<SoftKey index="1">' ."\n";
 	$xml.= '	<Label>'. __('OK') .'</Label>' ."\n";
@@ -170,7 +170,7 @@ FROM
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE
 	`u`.`nobody_index` IS NULL AND (
-	`u`.`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci 
+	`u`.`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
 	)
 ORDER BY `u`.`lastname`, `u`.`firstname`
 LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
@@ -213,7 +213,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		$xml.= '	<SoftKey index="5">' ."\n";
 		$xml.= '	<Label>'. __('Suchen') .'</Label>' ."\n";
 		$xml.= '<URI>'. $url_aastra_pb .'?t=gs&amp;s=1</URI>' ."\n";
-		$xml.= '</SoftKey>' ."\n";	
+		$xml.= '</SoftKey>' ."\n";
 		
 		if ($page > 0) {
 			$xml.= '<SoftKey index="3">' ."\n";
@@ -270,7 +270,7 @@ FROM
 	`pb_prv`
 WHERE
 	`user_id`='. $user_id .' AND (
-	`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci 
+	`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
 	)
 ORDER BY `lastname`, `firstname`
 LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
@@ -312,7 +312,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		$xml.= '<SoftKey index="5">' ."\n";
 		$xml.= '	<Label>'. __('Suchen') .'</Label>' ."\n";
 		$xml.= '	<URI>'. $url_aastra_pb .'?t='.$type.'&amp;s=1</URI>' ."\n";
-		$xml.= '</SoftKey>' ."\n";	
+		$xml.= '</SoftKey>' ."\n";
 		
 		if ($page > 0) {
 			$xml.= '<SoftKey index="3">' ."\n";

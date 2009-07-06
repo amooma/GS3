@@ -92,7 +92,7 @@ if (! $type) {
 		$xml.= '	<URI>'. $url_aastra_dl .'?t='.$key.'</URI>' ."\n";
 		//$xml.= '<Selection>0&amp;menu_pos=1</Selection>' ."\n";
 		$xml.= '</MenuItem>' ."\n";
-	} 
+	}
 	
 	$xml.= '<SoftKey index="1">' ."\n";
 	$xml.= '	<Label>'. __('OK') .'</Label>' ."\n";
@@ -199,13 +199,13 @@ LIMIT 1';
 			if ($r['ln'] != '') $name = $r['ln'];
 			if ($r['ln'] != '') $name.= ', '.$r['fn'];
 			if ($name == '') $name = $r['remote_name'];
-		} 
+		}
 		
 		$when = date('d.m.Y H:i:s', (int)$r['ts']);
 		
 		if ($r['num_calls'] > 1) {
 			$num_calls = ' ('. $r['num_calls'] .')';
-		}		
+		}
 		
 		$xml.= '<Line Align="left">'. $name .'</Line>' ."\n";
 		$xml.= '<Line Align="right" Size="double">'. $r['number'] .'</Line>' ."\n";

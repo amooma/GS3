@@ -118,7 +118,7 @@ function _logout_user()
 }
 
 
-function _login_user($new_ext, $password) 
+function _login_user($new_ext, $password)
 {
 	$db = gs_db_master_connect();
 	
@@ -243,7 +243,7 @@ $url_aastra_login = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS
 
 if ($action === 'restart') {
 	if (gs_prov_phone_checkcfg_by_ip( @$_SERVER['REMOTE_ADDR'], true )); //FIXME
-		aastra_textscreen('Info', __('Telefon wird neu gestartet.'));	
+		aastra_textscreen('Info', __('Telefon wird neu gestartet.'));
 }
 
 if ($action === 'logout' && $type === 'user') {
@@ -263,9 +263,9 @@ if ($action === 'login' && $type === 'user') {
 			aastra_textscreen('Info', __('Benutzer erfolgreich angemeldet.').' '.__('Telefon wird neu gestartet.'));
 		}
 	} else {
-		if ($user) 
+		if ($user)
 			$highlight = 3;
-		else 
+		else
 			$highlight = 2;
 		
 		$xml = '<AastraIPPhoneInputScreen type="string" destroyOnExit="yes" displayMode="condensed" defaultIndex="'.$highlight.'">' ."\n";
