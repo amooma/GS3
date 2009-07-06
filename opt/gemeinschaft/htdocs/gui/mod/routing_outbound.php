@@ -359,7 +359,7 @@ while ($route = $rs->fetchRow()) {
 		}
 		echo '</option>' ,"\n";
 	}
-	echo '</select><br />', "\n";	
+	echo '</select><br />', "\n";
 	echo '</td>', "\n";
 	
 	echo '<td rowspan="2">';
@@ -473,7 +473,7 @@ foreach ($user_groups as $node) {
 	}
 	echo '</option>' ,"\n";
 }
-echo '</select><br />', "\n";	
+echo '</select><br />', "\n";
 echo '</td>', "\n";
 echo '</td>', "\n";
 

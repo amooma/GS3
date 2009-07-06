@@ -224,7 +224,7 @@ if ($action === 'edit') {
 	foreach ($default_dialstrs as $gw_type_key => $gw_type_default_dialstr) {
 		echo '<option value="',$gw_type_key,'"';
 		if ($gw['type'] == $gw_type_key) echo ' selected="selected"';
-		echo '>', htmlEnt($gw_types[$gw_type_key]) ,'</option>',"\n";	
+		echo '>', htmlEnt($gw_types[$gw_type_key]) ,'</option>',"\n";
 	}
 	echo '</select>';
 	echo '</td>',"\n";
