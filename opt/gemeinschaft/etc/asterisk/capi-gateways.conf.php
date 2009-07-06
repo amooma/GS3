@@ -66,7 +66,7 @@ while ($gw = $rs->fetchRow()) {
 	echo '[', 'isdn_', $gw['name'] ,']' ,"\n";
 	echo '; Dial(capi/isdn_', $gw['name'] ,'/...)' ,"\n";
 	echo 'isdnmode=msn',"\n";
-	echo 'incomingmsn=*' ,"\n";	
+	echo 'incomingmsn=*' ,"\n";
 	echo 'controller=', $gw['hw_port'] ,"\n";
 	echo 'group=', $gw['hw_port'] ,"\n";
 	echo 'prefix=0' ,"\n";
