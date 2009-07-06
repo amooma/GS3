@@ -32,7 +32,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_is_valid_name.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );	
+include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 
 
 /***********************************************************

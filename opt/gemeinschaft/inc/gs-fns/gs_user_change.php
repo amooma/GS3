@@ -345,7 +345,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 			return new GsError( $ok->getMsg() );
 		if (! $ok)
 			return new GsError( 'Failed to update fax authentication file.' );
-	}	
+	}
 	
 	return true;
 }
