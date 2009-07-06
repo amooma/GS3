@@ -115,7 +115,7 @@ if (preg_match('/^Mozilla\/\d\.\d\s*\(compatible;\s*/i', $ua, $m)) {
 }
 gs_log( GS_LOG_DEBUG, "Snom model $ua found." );
 
-if (preg_match('/snom-m3/i', $ua, $m))  
+if (preg_match('/snom-m3/i', $ua, $m))
 	$phone_model = 'm3';
 else
 	$phone_model = 'unknown';
@@ -235,7 +235,7 @@ if ($users[0]['id'] > 0) {
 	if ($users[0]['id'] < 1) {
 		gs_log( GS_LOG_WARNING, "Failed to add main nobody user for new phone $mac" );
 		_settings_err( 'Failed to add main nobody user for new phone.' );
-	} 
+	}
 	else {
 		for ($i=1; $i < gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS'); ++$i) {
 			gs_log( GS_LOG_NOTICE, 'Adding new virtual Snom M3 phone '.$mac.'-'.($i+1).' to DB' );
@@ -335,7 +335,7 @@ foreach ($users as $i => $user) {
 
 
 #####################################################################
-# Network settings 
+# Network settings
 #####################################################################
 psetting('SIP_RPORT_ENABLE', 1);
 
@@ -357,11 +357,11 @@ psetting('NETWORK_DHCP_CLIENT_BOOT_SERVER_OPTION_DATATYPE', 1);
 # Network Time
 #####################################################################
 //psetting('NETWORK_SNTP_SERVER'            , '"ptbtime1.ptb.de"');
-//psetting('NETWORK_SNTP_SERVER_UPDATE_TIME', 255);	
+//psetting('NETWORK_SNTP_SERVER_UPDATE_TIME', 255);
 psetting('GMT_TIME_ZONE', 1);
 
 #####################################################################
-# Provisioning Server 
+# Provisioning Server
 #####################################################################
 psetting('MANAGEMENT_TRANSFER_PROTOCOL', 1);  # 0=TFTP, 1=HTTP
 psetting('NETWORK_TFTP_SERVER' , '"'.gs_get_conf('GS_PROV_HOST').'"');
@@ -370,7 +370,7 @@ psetting('FWU_TFTP_SERVER_PATH', '"m3/firmware/"');
 psetting('VOIP_LOG_AUTO_UPLOAD', 0);
 
 #####################################################################
-# Access Settings 
+# Access Settings
 #####################################################################
 psetting('PINCODE_PROTECTED_SETTINGS', 0);
 psetting('VOIP_SETTINGS_PIN_CODE', '"0000"');
@@ -402,7 +402,7 @@ foreach ($users as $i => $user) {
 	psetting('SRV_'.$i.'_DTMF_SIGNALLING'            , 2);
 	
 	#####################################################################
-	# SIP Registration 
+	# SIP Registration
 	#####################################################################
 	psetting('SUBSCR_'.$i.'_SIP_UA_DATA_SIP_NAME'      , '"'.$user['ext'].'"');
 	psetting('SUBSCR_'.$i.'_SIP_UA_DATA_SIP_NAME_ALIAS', '"'.$user['ext'].'"');
@@ -415,14 +415,14 @@ foreach ($users as $i => $user) {
 
 for ($i=1; $i<9; ++$i) {
 	#####################################################################
-	# Handset settings 
+	# Handset settings
 	#####################################################################
 	psetting('HANDSET_'.$i.'_NAME', '"Mobil '.$i.'"');
 	psetting('HANDSET_'.$i.'_CW'  , 0);
 	psetting('HANDSET_'.$i.'_DND' , 0);
 	
 	#####################################################################
-	# Handset to line mapping  
+	# Handset to line mapping
 	#####################################################################
 	psetting('USER_VOIP_LINE_PP'.$i, $i);
 	psetting('CALL_GROUPS'.$i      , pow(2,$i)+1 );
