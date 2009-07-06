@@ -38,7 +38,7 @@ ob_implicit_flush(1);
 $queue_ext  = trim(@$argv[1]);
 
 if (! preg_match('/^\d+$/', $queue_ext)) {  // is not just digits
-	gs_agi_err();
+	gs_agi_err( 'Invalid queue extension' );
 }
 
 
@@ -50,8 +50,8 @@ $db = gs_db_slave_connect();
 # get queue info:
 $rs = $db->execute( 'SELECT `_id`, `musicclass`, `_title` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue_ext) .'\'' );
 $queue = $rs->getRow();
-if (! $queue) gs_agi_err();
-if ((int)$queue['_id'] < 1) gs_agi_err();
+if (! $queue) gs_agi_err( 'Queue not found' );
+if ((int)$queue['_id'] < 1) gs_agi_err( 'Queue not found' );
 
 
 # get call forwards
