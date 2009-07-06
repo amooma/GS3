@@ -183,6 +183,6 @@ if (! headers_sent()) {
 	header( 'Content-Type: application/xml' );
 	header( 'Content-Length: '. (int)@ob_get_length() );
 }
-@ob_end_flush();    
+@ob_end_flush();
 
 ?>

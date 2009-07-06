@@ -276,7 +276,7 @@ if (! gs_get_conf('GS_GRANDSTREAM_PROV_FW_UPDATE')) {
 }
 elseif (in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005'), true)) {
 	
-	# get phone_id	
+	# get phone_id
 	$phone_id = (int)$db->executeGetOne( 'SELECT `id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
 	
 	# do we have to update to a default version?
@@ -388,7 +388,7 @@ elseif (in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000
 		$firmware_url_grandstream .= 'fw/'.$fw_new_vers.'/';
 		
 		break;
-	}	
+	}
 }
 
 /* TODO
@@ -597,7 +597,7 @@ if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
 	psetting('P912', '128');	# LCD Chroma Saturation ( 0-255 | default 128 )
 	
 	/*
-	# LCD Text Color	
+	# LCD Text Color
 	psetting('P930', '255');	# Red ( 0-255 )
 	psetting('P931', '255');	# Green ( 0-255 )
 	psetting('P932', '255');	# Blue ( 0-255 )
@@ -1137,7 +1137,7 @@ if ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','
 	psetting('P336',  '0');		# Mute Speaker Ringer ( 0 = no, 1 = yes )
 	psetting('P1310', '1');		# Disable Direct IP Calls ( 0 = no, 1 = yes )
 	psetting('P184',  '0');		# Use Quick IP-call mode ( 0 = no, 1 = yes )
-	psetting('P1311', '0');		# Disable Conference ( 0 = no, 1 = yes )	
+	psetting('P1311', '0');		# Disable Conference ( 0 = no, 1 = yes )
 	psetting('P1301', '0');		# Headset TX gain (dB) ( 0 = 0dB, 1 = -6dB, 2 = +6dB )
 	psetting('P1302', '0');		# Headset RX gain (dB) ( 0 = 0dB, 1 = -6dB, 2 = +6dB )
 	psetting('P1341', '0');		# Disable Transfer ( 0 = no, 1 = yes )
@@ -1163,7 +1163,7 @@ if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
 	psetting('P929', '554');	# Surveillance RTSP port ( default 554 )
 	psetting('P953', '');		# Streaming RTSP Server
 	psetting('P954', '');		# Streaming RTSP User ID
-	psetting('P955', '');		# Streaming RTSP Password	
+	psetting('P955', '');		# Streaming RTSP Password
 }
 
 
@@ -1190,7 +1190,7 @@ if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 	# Key 1: P323 P301 P302 P303
 	# Key 2: P324 P304 P305 P306
 	# Key 3: P325 P307 P308 P309
-	# ...	
+	# ...
 	# Key 7: P329 P319 P320 P321
 	$max_keys = 7;
 	for ($i=0; $i<$max_keys; ++$i) {
@@ -1388,7 +1388,7 @@ $out_length = $header_length + $body_length;
 
 $header = array();
 
-// 00 01 02 04 - out_length / 2 
+// 00 01 02 04 - out_length / 2
 $header[] = (($out_length / 2) >> 24) & 0xff;
 $header[] = (($out_length / 2) >> 16) & 0xff;
 $header[] = (($out_length / 2) >>  8) & 0xff;
