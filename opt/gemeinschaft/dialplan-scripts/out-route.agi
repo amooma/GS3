@@ -47,7 +47,7 @@ function _user_groups_get( $user_id, $with_0=null )
 	if (! $db) return false;
 	$user_id = (int)$user_id;
 	
-	$group_id = (int)$db->executeGetOne( 'SELECT `group_id` 
+	$group_id = (int)$db->executeGetOne( 'SELECT `group_id`
 		FROM `users` WHERE `id`='. $user_id
 		);
 	
