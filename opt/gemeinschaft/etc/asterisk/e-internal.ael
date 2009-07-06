@@ -504,8 +504,9 @@ context to-internal-users-self {
 		Set(origext=${callfile_from});
 		Set(CALLERID(dnid)=${callfile_from});
 		Verbose(1,### callfile_from ${callfile_from});
+		Set(__is_call_from=internal);
 		// get ringer
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${boss},${is_call_from});
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${callfile_from},${is_call_from});
 		if ("${ringer}" != "") {
 			Verbose(1,### Ringer: ${ringer});
 			SIPAddHeader(Alert-Info: ${ringer});
