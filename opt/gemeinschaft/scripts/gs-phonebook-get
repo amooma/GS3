@@ -77,7 +77,7 @@ if (! $db)
 	gs_script_error( 'Could not connect to database.' );
 
 	
-// get phonebook entries	
+// get phonebook entries
 if ($opts['type'] === 'internal') {
 	
 	$sql = 'SELECT SQL_CALC_FOUND_ROWS
@@ -86,7 +86,7 @@ if ($opts['type'] === 'internal') {
 		`users` `u` JOIN
 		`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 	WHERE
-		`u`.`nobody_index` IS NULL 
+		`u`.`nobody_index` IS NULL
 	ORDER BY `u`.`lastname`, `u`.`firstname`';
 }
 elseif ($opts['type'] === 'private') {
