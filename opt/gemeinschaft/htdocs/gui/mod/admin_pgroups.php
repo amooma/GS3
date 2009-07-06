@@ -98,7 +98,7 @@ if ($group && $user) {
 if (! $group) {
 	
 	$sql_query =
-'SELECT SQL_CALC_FOUND_ROWS 
+'SELECT SQL_CALC_FOUND_ROWS
 	`p`.`id` `id`, `p`.`title` `title`,
 	COUNT(`pu`.`user_id`) `num_members`
 FROM
@@ -171,8 +171,8 @@ if ($edit > 0) {
 				
 				echo '<td class="r">', htmlEnt($r['id']) ,'</td>',"\n";
 				
-				echo '<td>';	
-				echo '<input type="text" name="title" value="', htmlEnt($r['title']) ,'" size="25" maxlength="40" />';	
+				echo '<td>';
+				echo '<input type="text" name="title" value="', htmlEnt($r['title']) ,'" size="25" maxlength="40" />';
 				echo '</td>',"\n";
 				
 				echo '<td class="r">', $r['num_members'] ,'</td>',"\n";
@@ -269,7 +269,7 @@ WHERE `id`='. $group;
 	echo '</h3>' ,"\n";
 		
 	$sql_query =
-'SELECT SQL_CALC_FOUND_ROWS 
+'SELECT SQL_CALC_FOUND_ROWS
 	`u`.`user` `user`, `u`.`lastname` `ln`,
 	`u`.`firstname` `fn`, `u`.`id` `id`
 FROM

@@ -127,7 +127,7 @@ if ($u_rname) {
 		'`u`.`firstname` LIKE \''. $DB->escape($u_rname).'%\' OR '.
 		'`u`.`lastname` LIKE \''. $DB->escape($u_rname).'%\'';
 }
-if ($host) { 
+if ($host) {
 	$where[] = '`h`.`host` LIKE \'%'. $DB->escape($host).'%\'';
 }
 
