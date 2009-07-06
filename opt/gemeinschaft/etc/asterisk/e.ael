@@ -229,7 +229,7 @@ macro cmm-logout() {
 		}
 	}
 	
-	Hangup();	
+	Hangup();
 }
 
 
