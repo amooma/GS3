@@ -575,7 +575,7 @@ class YADB_Connection
 		if (!$ret) {
 			trigger_error( 'YADB: Could not close the connection. Reason unknown.', E_USER_NOTICE );
 			return false;
-		}	
+		}
 		return $ret;
 	}
 	
@@ -1034,7 +1034,7 @@ class YADB_Connection
 			'T'                => 'T',
 			##
 			'BOOL'             => 'L',
-			'BOOLEAN'          => 'L', 
+			'BOOLEAN'          => 'L',
 			'BIT'              => 'L',
 			'L'                => 'L',
 			##
