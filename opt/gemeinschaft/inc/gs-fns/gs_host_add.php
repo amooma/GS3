@@ -68,7 +68,7 @@ function gs_host_add( $host_ip_or_name, $comment, $foreign=false, $group_id=null
 		}
 	} else {
 		if (($boi_prefix != '') && (! preg_match('/^[1-9][0-9]*$/', $boi_prefix))) {
-			return new GsError( 'Route prefix must be numeric.' );	
+			return new GsError( 'Route prefix must be numeric.' );
 		}
 	}
 	

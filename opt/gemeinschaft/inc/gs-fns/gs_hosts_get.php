@@ -63,7 +63,7 @@ ORDER BY `is_foreign`,`host`'
 	
 	$hosts = array();
 	while ($r = $rs->fetchRow())
-		$hosts[] = $r;	
+		$hosts[] = $r;
 	return $hosts;
 }
 
