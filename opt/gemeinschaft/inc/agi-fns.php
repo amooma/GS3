@@ -347,13 +347,17 @@ function gs_agi_read_agi_env()
 {
 	global $AGI_ENV, $agi_basename;
 	
-	//kSort($_ENV);
-	//gs_agi_log( GS_LOG_DEBUG, 'ENV: '.var_export($_ENV,true) );
-	if (! @array_key_exists('AST_AGI_DIR', $_ENV)) {
+	# depending on PHP's variables_order ini setting (default: "EGPCS")
+	# the environment may or may not be available in $_ENV or $_SERVER.
+	if (! @array_key_exists('AST_AGI_DIR', $_ENV)
+	&&  ! @array_key_exists('AST_AGI_DIR', $_SERVER)
+	&&  trim(@getEnv('AST_AGI_DIR') == '')
+	) {
 		gs_agi_log( GS_LOG_FATAL, 'AGI script was invoked without Asterisk environment!' );
 		gs_log( GS_LOG_FATAL, 'AGI script '.$agi_basename.' was invoked without Asterisk environment!' );
 		$bt = gs_get_proc_parents_info();
 		gs_agi_log( GS_LOG_DEBUG, 'Parents: '.implode(' <- ',$bt) );
+		gs_log( GS_LOG_DEBUG, 'Parents: '.implode(' <- ',$bt) );
 		echo 'VERBOSE '. gs_agi_str_esc( 'No Asterisk environment!' ) .' '. 1 ."\n";
 		echo 'HANGUP' ."\n";
 		exit(1);
