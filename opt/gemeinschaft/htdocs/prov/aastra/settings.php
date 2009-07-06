@@ -72,7 +72,7 @@ function aastra_get_expansion_modules()
 	if (@$_SERVER['HTTP_X_AASTRA_EXPMOD1']) {
 		$exp_mod[0] = 'aastra-'. strToLower($_SERVER['HTTP_X_AASTRA_EXPMOD1']);
 		gs_log( GS_LOG_DEBUG, 'Expansion module 1 : '. $exp_mod[0]);
-	}	
+	}
 	if (@$_SERVER['HTTP_X_AASTRA_EXPMOD2']) {
 		$exp_mod[1] = 'aastra-'. strToLower($_SERVER['HTTP_X_AASTRA_EXPMOD2']);
 		gs_log( GS_LOG_DEBUG, 'Expansion module 2 : '. $exp_mod[1]);
@@ -93,7 +93,7 @@ function aastra_keys_out( $user_id, $phone_type, $module=0 )
 	
 	$module_sql = '';
 	if ($module) {
-		$module_sql = 'AND `key` LIKE \'expmod'.((int)$module).'%\'';	
+		$module_sql = 'AND `key` LIKE \'expmod'.((int)$module).'%\'';
 	}
 	
 	$query =
@@ -149,7 +149,7 @@ function aastra_get_softkeys( $user_id, $phone_type )
 				break;
 			case 'aastra-55i':
 				if ($key_num >=  1) $key_name = 'prgkey'    .($key_num);
-				if ($key_num >=100) $key_name = 'softkey'   .($key_num-100);	
+				if ($key_num >=100) $key_name = 'softkey'   .($key_num-100);
 				break;
 			default:
 				$key_name = 'prgkey'.$key_num;
