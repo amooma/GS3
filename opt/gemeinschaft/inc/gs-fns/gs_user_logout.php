@@ -41,7 +41,7 @@ function gs_user_logout( $user, $reboot=true )
 {
 	$ret = gs_user_is_valid_name( $user );
 	if (isGsError($ret)) return $ret;
-	elseif (! $ret) return new GsError( 'Invalid username.' );	
+	elseif (! $ret) return new GsError( 'Invalid username.' );
 	
 	# connect to db
 	#
