@@ -162,7 +162,7 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 
 
 $db = gs_db_slave_connect();
-if (! $db) gs_agi_err();
+if (! $db) gs_agi_err( 'DB error' );
 
 $user_groups = _user_groups_get( $user_id, 0 );
 if (! is_array($user_groups)) $user_groups = array(0);
