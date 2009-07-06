@@ -138,7 +138,7 @@ if ($action === 'save' || $action === 'save-and-resync') {
 		if (isGsError($ret) || ! $ret) {
 			$errMsgs[] = __('Fehler beim Aktualisieren des Telefons');
 		}
-	}	
+	}
 }
 
 

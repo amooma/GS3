@@ -283,7 +283,7 @@ if ($action === 'preview') {
 		echo '</tbody>', "\n";
 		echo '</table>', "\n";
 		
-		echo '<input type="submit" value="', __('Vorschau') ,'" /><br />', "\n";	
+		echo '<input type="submit" value="', __('Vorschau') ,'" /><br />', "\n";
 		echo '</form>', "\n";
 		echo '<br />', "\n";
 		
@@ -337,7 +337,7 @@ if ($action === 'preview') {
 			),
 			'</p>', "\n";
 		
-		echo '<input type="submit" value="', __('Import') ,'" /><br />', "\n";	
+		echo '<input type="submit" value="', __('Import') ,'" /><br />', "\n";
 		echo '</form>', "\n";
 		echo '<br />', "\n";
 		
@@ -400,7 +400,7 @@ if ($action == '') {
 	echo '<input type="file" name="pb_csv_file" id="ipt-pb_csv_file" size="50" style="font-size:0.96em;" /><br />', "\n";
 	
 	echo '<br />', "\n";
-	echo '<input type="submit" value="', __('Hochladen') ,'" /><br />', "\n";	
+	echo '<input type="submit" value="', __('Hochladen') ,'" /><br />', "\n";
 	
 	echo '</form>', "\n";
 	
