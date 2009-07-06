@@ -169,7 +169,7 @@ function gui_monitor_which_peers( $sudo_user )
 		if(!$rs)
 			return $ret;
 		while ($r = @$rs->fetchRow()) {
-			$ret[] = $r['user']; 
+			$ret[] = $r['user'];
 		}
 		return $ret;
 	}
