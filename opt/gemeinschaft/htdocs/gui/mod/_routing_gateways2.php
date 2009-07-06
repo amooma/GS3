@@ -116,7 +116,7 @@ if (@$rs) {
 }
 
 $sql_query =
-'SELECT SQL_CALC_FOUND_ROWS 
+'SELECT SQL_CALC_FOUND_ROWS
 	`g`.`id`, `g`.`type`, `g`.`name`, `g`.`title`, `g`.`allow_out`, `g`.`allow_in`, `g`.`dialstr`,
 	`gg`.`title` `gtitle`, `gg`.`type` `gtype`, `gg`.`id` `gid`
 FROM
