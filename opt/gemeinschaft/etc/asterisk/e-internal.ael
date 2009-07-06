@@ -639,7 +639,7 @@ context to-internal-users-self {
 		Set(__forwards=${MATH(${forwards}+1,int)});
 		//Set(DYNAMIC_FEATURES=);
 		if ("${origext}" = "")
-			Set(__origext=${EXTEN});			
+			Set(__origext=${EXTEN});
 		
 		&set-callerid-by-clir();
 		
@@ -1100,7 +1100,7 @@ context to-internal-users-self {
 				TrySystem(/opt/gemeinschaft/dialplan-scripts/conf-remove ${confprefix}${confnum});
 				Verbose(1,### Conference ${confprefix}${confnum} freed.);
 			}
-		} 
+		}
 		else
 		if ("${exttype}" = "user") {
 			// to internal user, store dial log (in|missed)
