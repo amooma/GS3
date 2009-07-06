@@ -44,6 +44,13 @@ function gs_agi_log( $level, $msg )
 }
 
 gs_agi_log( GS_LOG_DEBUG, 'Launched ---------------------------' );
+$log_cmdline = baseName($argv[0]);
+for ($i=1; $i<=$argc; ++$i) {
+	$log_cmdline.= ' '. ($argv[$i] != '' ? escapeShellArg($argv[$i]) : '\'\'');
+}
+gs_agi_log( GS_LOG_DEBUG, 'Cmdline: '.$log_cmdline );
+unset($log_cmd);
+
 
 function gs_agi_str_esc( $str )
 {
