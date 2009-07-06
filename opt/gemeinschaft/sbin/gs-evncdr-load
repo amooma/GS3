@@ -437,7 +437,7 @@ function evn_line_to_db_entry( $line )
 		//'dind'   => $dind,        # Richtungskennzeichen für Service-Rufnummern
 		//                          # (z.B. 0800...) bei kommenden Verbindungen,
 		//                          # sonst leer
-		'ext'    => preg_replace('/[^0-9*]/S', '', $ext),         
+		'ext'    => preg_replace('/[^0-9*]/S', '', $ext),
 		                          # unsere Nebenstelle bei abgehenden Verbindungen,
 		                          # sonst leer
 		'isout'  => true,
