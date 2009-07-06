@@ -129,7 +129,7 @@ $rs = $DB->execute($sql_query);
 $num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
-?>	
+?>
 
 <table cellspacing="1" class="phonebook">
 <thead>
