@@ -75,7 +75,7 @@ if ($pudelete) {
 if ($title && !$save) {
 	$ret = gs_pickupgroup_add( $title );
 	if (isGsError( $ret )) echo $ret->getMsg();
-}	
+}
 
 if ($save) {
 	$sql_query =
