@@ -90,10 +90,10 @@ WHERE `s`.`name`=\''. $db->escape($uname) .'\''
 if (! ($user = $rs->fetchRow())) exit(0);  # not an error
 
 
-if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
-		
-	//$ringtones = gs_ringtones_get( $uname );
+function _get_ringers()
+{
 	/*
+	$ringtones = gs_ringtones_get( $uname );
 	if (! is_array($ringtones)) {
 		@gs_agi_verbose( '### Failed to get ringtones' );
 		exit(1);
@@ -105,8 +105,6 @@ if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
 		'external' => array( 'bellcore' => 1, 'file' => null )
 	);
 	
-	# get ringers
-	#
 	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
 	if (! $rs) {
 		@gs_agi_verbose( '### DB error - Failed to get ringtones' );
@@ -119,6 +117,13 @@ if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
 		$ringtones[$src]['file'] = $r['file'];
 	}
 	//print_r($ringtones);
+	return $ringtones;
+}
+
+
+if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
+	
+	$ringtones = _get_ringers();
 	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
@@ -140,25 +145,7 @@ elseif (strToLower(subStr($user['phone_type'],0,7)) === 'siemens') {
 	//FIXME
 	// Siemens OpenStage does not support Alert-Info headers (yet)
 	
-	$ringtones = array(
-		'internal' => array( 'bellcore' => 1, 'file' => null ),
-		'external' => array( 'bellcore' => 1, 'file' => null )
-	);
-	
-	# get ringers
-	#
-	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
-	if (! $rs) {
-		@gs_agi_verbose( '### DB error - Failed to get ringtones' );
-		exit(1);
-	}
-	while ($r = $rs->fetchRow()) {
-		$src = $r['src'];
-		if (! array_key_exists($src, $ringtones)) continue;
-		$ringtones[$src]['bellcore'] = (int)$r['bellcore'];
-		$ringtones[$src]['file'] = $r['file'];
-	}
-	//print_r($ringtones);
+	$ringtones = _get_ringers();
 	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
@@ -177,25 +164,7 @@ elseif (strToLower(subStr($user['phone_type'],0,6)) === 'aastra') {
 	
 	//FIXME - untested
 	
-	$ringtones = array(
-		'internal' => array( 'bellcore' => 1, 'file' => null ),
-		'external' => array( 'bellcore' => 1, 'file' => null )
-	);
-	
-	# get ringers
-	#
-	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
-	if (! $rs) {
-		@gs_agi_verbose( '### DB error - Failed to get ringtones' );
-		exit(1);
-	}
-	while ($r = $rs->fetchRow()) {
-		$src = $r['src'];
-		if (! array_key_exists($src, $ringtones)) continue;
-		$ringtones[$src]['bellcore'] = (int)$r['bellcore'];
-		$ringtones[$src]['file'] = $r['file'];
-	}
-	//print_r($ringtones);
+	$ringtones = _get_ringers();
 	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
@@ -212,25 +181,7 @@ elseif (strToLower(subStr($user['phone_type'],0,6)) === 'aastra') {
 }
 elseif (strToLower(subStr($user['phone_type'],0,11)) === 'grandstream') {
 	
-	$ringtones = array(
-		'internal' => array( 'bellcore' => 1, 'file' => null ),
-		'external' => array( 'bellcore' => 1, 'file' => null )
-	);
-	
-	# get ringers
-	#
-	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
-	if (! $rs) {
-		@gs_agi_verbose( '### DB error - Failed to get ringtones' );
-		exit(1);
-	}
-	while ($r = $rs->fetchRow()) {
-		$src = $r['src'];
-		if (! array_key_exists($src, $ringtones)) continue;
-		$ringtones[$src]['bellcore'] = (int)$r['bellcore'];
-		$ringtones[$src]['file'] = $r['file'];
-	}
-	//print_r($ringtones);
+	$ringtones = _get_ringers();
 	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
