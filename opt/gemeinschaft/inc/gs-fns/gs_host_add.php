@@ -67,11 +67,8 @@ function gs_host_add( $host_ip_or_name, $comment, $foreign=false, $group_id=null
 			return new GsError( 'Route prefix not allowed for non-foreign hosts.' );
 		}
 	} else {
-		if ($boi_prefix == '') {
-			return new GsError( 'Foreign hosts must have a route prefix.' );
-		}
-		if (! preg_match('/^[1-9][0-9]*$/', $boi_prefix)) {
-			return new GsError( 'Route prefix must be numeric.' );
+		if (($boi_prefix != '') && (! preg_match('/^[1-9][0-9]*$/', $boi_prefix))) {
+			return new GsError( 'Route prefix must be numeric.' );	
 		}
 	}
 	
