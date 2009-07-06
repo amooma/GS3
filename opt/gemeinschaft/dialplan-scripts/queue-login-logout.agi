@@ -40,11 +40,11 @@ $queue_name = trim(@$argv[2]);
 $action     = trim(@$argv[3]);
 
 if (! preg_match('/^\d+$/', $user))  // is not just digits
-	gs_agi_err();
+	gs_agi_err( 'Invalid user extension' );
 if (! preg_match('/^\d+$/', $queue_name))  // is not just digits
-	gs_agi_err();
+	gs_agi_err( 'Invalid queue extension' );
 if (! in_array( $action, array('login','logout','logoutall'), true ))
-	gs_agi_err();
+	gs_agi_err( 'Invalid action argument' );
 
 
 include_once( GS_DIR .'inc/db_connect.php' );
@@ -54,12 +54,12 @@ $db = gs_db_master_connect();
 # get user id
 #
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
-if ($user_id < 1) gs_agi_err();
+if ($user_id < 1) gs_agi_err( 'User not found' );
 
 # get user's host id
 #
 $user_host_id = (int)$db->executeGetOne( 'SELECT `host_id` FROM `users` WHERE `id`='. $user_id );
-if ($user_host_id < 1) gs_agi_err();
+if ($user_host_id < 1) gs_agi_err( 'Host not found' );
 
 
 if ($action != 'logoutall') {
@@ -68,9 +68,9 @@ if ($action != 'logoutall') {
 	#
 	$rs = $db->execute( 'SELECT `_id` `id`, `_host_id` `host_id` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue_name) .'\'' );
 	$queue = $rs->fetchRow();
-	if (! $queue) gs_agi_err();
+	if (! $queue) gs_agi_err( 'Queue not found' );
 	$queue_id = (int)$queue['id'];
-	if ($queue_id < 1) gs_agi_err();
+	if ($queue_id < 1) gs_agi_err( 'Queue not found' );
 	
 }
 
