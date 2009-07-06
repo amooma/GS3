@@ -221,7 +221,7 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 		$mime_body[] = 'This is a multi-part message in MIME format.';
 		$mime_body[] = 'Dies ist eine mehrteilige Nachricht im MIME-Format.';
 		$mime_body[] = '';
-		$mime_body[] = '--'.$boundary; 
+		$mime_body[] = '--'.$boundary;
 		$mime_body[] = 'Content-Type: text/plain; charset="utf-8"';
 		//$mime_body[] = 'Content-Transfer-Encoding: 8bit';
 		$mime_body[] = 'Content-Transfer-Encoding: quoted-printable';
@@ -267,7 +267,7 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 		$mail->Hostname = $hostname;
 		$mail->From = 'root@'.$hostname;
 		$mail->FromName = 'Gemeinschaft';
-		$mail->AddReplyTo( '', 'Nicht antworten' ); 
+		$mail->AddReplyTo( '', 'Nicht antworten' );
 		$mail->AddAddress($email,'','');
 		$mail->Subject = $subject;
 		$mail->Body = $body;
