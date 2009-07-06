@@ -46,7 +46,7 @@ $FAX_PREFIX = preg_replace('/[^0-9*]/', '', $FAX_PREFIX);
 
 if ($FAX_PREFIX != '') {
 	echo '_', $FAX_PREFIX ,'. => jump fax-${EXTEN:', strlen($FAX_PREFIX) ,'}@to-internal-users;',"\n";
-} 
+}
 
 
 echo "\n";
