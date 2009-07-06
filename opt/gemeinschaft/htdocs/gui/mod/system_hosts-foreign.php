@@ -415,7 +415,7 @@ $rs = $DB->execute($sql_query);
 $num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
-?>	
+?>
 
 <form method="get" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
