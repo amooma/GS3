@@ -89,7 +89,7 @@ if ($opts['host'] != 'RANDOM') {
 		}
 	}
 	*/
-	$h = gs_host_by_id_or_ip( $opts['host'] );	
+	$h = gs_host_by_id_or_ip( $opts['host'] );
 	if (isGsError( $h ) || ! is_array( $h )) {
 		if (isGsError( $h ))
 			echo $h->getMsg(), "\n";
