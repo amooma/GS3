@@ -221,7 +221,7 @@ function fax_send( $user_id, $user, $to_num, $from_num, $file, $user_email, $res
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
 	if (! $conn_id) return false;
 	
-	if ($resolution < 98) $resolution = 98; 
+	if ($resolution < 98) $resolution = 98;
 	
 	$login_result = ftp_login($conn_id, $user, $pass);
 	if (! $login_result) return false;
@@ -270,7 +270,7 @@ function fax_download( $file, $user='', $pass='' )
 		gs_get_conf('GS_FAX_HYLAFAX_PORT'));
 	if (! $conn_id) return false;
 	
-	$login_result = ftp_login($conn_id, $user, $pass);	
+	$login_result = ftp_login($conn_id, $user, $pass);
 	if (! $login_result) return false;
 	
 	if ($user == gs_get_conf('GS_FAX_HYLAFAX_ADMIN'))

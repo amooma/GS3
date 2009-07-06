@@ -64,7 +64,7 @@ function aastra_push_str( $phone_ip, $xml )
 	}
 	
 	$data = "POST / HTTP/1.1\r\n";
-	$data.= "Host: $phone_ip\r\n";	
+	$data.= "Host: $phone_ip\r\n";
 	$data.= "Referer: $prov_host\r\n";
 	$data.= "Connection: Close\r\n";
 	$data.= "Content-Type: text/xml; charset=utf-8\r\n";
