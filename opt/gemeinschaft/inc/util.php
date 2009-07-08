@@ -54,6 +54,17 @@ function normalizeIPs( $str ) {
 }
 
 
+function gs_write_error( $data )
+{
+	if (! defined('STDERR')) define('STDERR', @fOpen('php://stderr', 'wb'));
+	if (php_sapi_name() === 'cli' && STDERR) {
+		@fWrite(STDERR, $data, strLen($data));
+		@fFlush(STDERR);
+	} else {
+		echo $data;
+	}
+}
+
 # error levels introduced in newer versions of PHP:
 if (! defined('E_STRICT'           )) define('E_STRICT'           , 1<<11); # since PHP 5
 if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 1<<12); # since PHP 5.2
@@ -83,8 +94,8 @@ function err_handler_die_on_err( $type, $msg, $file, $line )
 		case E_ERROR:
 		case E_USER_ERROR:
 			gs_log( GS_LOG_FATAL  , 'PHP: '. $msg .' in '. $file .' on line '. $line );
-			echo "A fatal error occurred. See log for details.\n";
-			die(1);
+			gs_write_error( 'A fatal error occurred. See log for details.'."\n" );
+			exit(1);
 			break;
 		case E_RECOVERABLE_ERROR:
 			gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
@@ -93,7 +104,7 @@ function err_handler_die_on_err( $type, $msg, $file, $line )
 		case E_USER_WARNING:
 			if (error_reporting() != 0) {
 				gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
-				echo "A warning occurred. See log for details.\n";
+				gs_write_error( 'A warning occurred. See log for details.'."\n" );
 				exit(1);
 			} else {  # suppressed by @
 				gs_log( GS_LOG_DEBUG, 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
@@ -101,7 +112,7 @@ function err_handler_die_on_err( $type, $msg, $file, $line )
 			break;
 		default:
 			gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
-			echo "A warning occurred. See log for details.\n";
+			gs_write_error( 'A warning occurred. See log for details.'."\n" );
 			exit(1);
 			break;
 	}
