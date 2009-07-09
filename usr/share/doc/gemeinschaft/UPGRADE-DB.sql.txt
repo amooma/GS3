@@ -685,7 +685,7 @@ USE `asterisk`;
 --
 
 
-CREATE TABLE `gate_params` (
+CREATE TABLE IF NOT EXISTS `gate_params` (
  `gate_id` smallint(5) unsigned NOT NULL,
  `param` varchar(50) character set ascii NOT NULL,
  `value` varchar(255) collate utf8_unicode_ci NOT NULL,
