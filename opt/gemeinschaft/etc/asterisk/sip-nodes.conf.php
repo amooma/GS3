@@ -29,6 +29,27 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 
+function printparam( $param, $value, &$userparamarray, $html=false ) {
+	if ($param == '')
+		return;
+	$printbr = true;
+
+	if (array_key_exists($param, $userparamarray)) {
+		if ($userparamarray[$param] != '')
+			echo $param ." = ". $userparamarray[$param];
+		else
+			$printbr = false;
+		unset($userparamarray[$param]);
+	} else {
+		echo $param ." = ". $value;
+	}
+	if ($printbr) {
+		if ($html)
+			echo "<br \>";
+		echo "\n";
+	}
+}
+
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
@@ -109,7 +130,7 @@ if (! $DB) {
 }
 $rs = $DB->execute(
 'SELECT
-	`g`.`name`, `g`.`host`, `g`.`proxy`, `g`.`user`, `g`.`pwd`,
+	`g`.`id`, `g`.`name`, `g`.`host`, `g`.`proxy`, `g`.`user`, `g`.`pwd`,
 	`gg`.`name` `gg_name`
 FROM
 	`gates` `g` JOIN
@@ -189,43 +210,49 @@ while ($gw = $rs->fetchRow()) {
 	}
 	
 	
+	$userparamarray = array();
+	$g_params = $DB->execute('SELECT * FROM `gate_params` WHERE `gate_id` ='.$gw['id']);
+	while ($param = $g_params->fetchRow())
+		$userparamarray[$param['param']] = $param['value'];
+
 	echo '[', $gw['name'] ,']' ,"\n";
-	echo 'type = peer' ,"\n";
-	echo 'host = ' , $gw['host'] ,"\n";
-	echo 'port = 5060' ,"\n";
-	echo 'username = ', $gw['user'] ,"\n";
-	echo 'secret = ' , $gw['pwd' ] ,"\n";
+	printparam( 'type', 'peer', $userparamarray);
+	printparam( 'host', $gw['host'], $userparamarray);
+	printparam( 'port', '5060', $userparamarray);
+	printparam( 'username', $gw['user'], $userparamarray);
+	printparam( 'secret', $gw['pwd'], $userparamarray);
+	
 	if ($gw['proxy'] != null) {
-		echo 'outboundproxy = ', $gw['proxy'] ,"\n";
+		printparam( 'outboundproxy', $gw['proxy'], $userparamarray);
 	}
 	if ($fromdomain != null) {
-		echo 'fromdomain = ', $fromdomain ,"\n";
+		printparam( 'fromdomain', $fromdomain, $userparamarray);
 	}
 	if ($fromuser != null) {
-		echo 'fromuser = ', $fromuser ,"\n";
+		printparam( 'fromuser', $fromuser, $userparamarray);
 	}
-	echo 'insecure = port,invite' ,"\n";
-	echo 'nat = ', $nat ,"\n";
-	echo 'canreinvite = ', $canreinvite ,"\n";
-	echo 'dtmfmode = rfc2833' ,"\n";
-	echo 'call-limit = 0' ,"\n";
-	echo 'registertimeout = 60' ,"\n";
-	//echo 't38pt_udptl = yes' ,"\n";
-	echo 'setvar=__is_from_gateway=1' ,"\n";
-	echo 'context = from-gg-', $gw['gg_name'] ,"\n";
-	echo 'qualify = ', $qualify ,"\n";
-	echo 'language = ', 'de' ,"\n";
-	echo 'maxexpiry = ', $maxexpiry ,"\n";
-	echo 'defaultexpiry = ', $defaultexpiry ,"\n";
-	echo 'disallow = all' ,"\n";
+	printparam( 'insecure', 'port,invite', $userparamarray);
+	printparam( 'nat', $nat, $userparamarray);
+	printparam( 'canreinvite', $canreinvite, $userparamarray);
+	printparam( 'dtmfmode', 'rfc2833', $userparamarray);
+	printparam( 'call-limit', '0', $userparamarray);
+	printparam( 'registertimeout', '60', $userparamarray);
+	printparam( 'setvar=__is_from_gateway', '1', $userparamarray);
+	printparam( 'context', 'from-gg-'.$gw['gg_name'], $userparamarray);
+	printparam( 'qualify', $qualify, $userparamarray);
+	printparam( 'language', 'de', $userparamarray);
+	printparam( 'maxexpiry', $maxexpiry, $userparamarray);
+	printparam( 'defaultexpiry', $defaultexpiry, $userparamarray);
+	printparam( 'disallow', 'all', $userparamarray);
 	foreach ($codecs_allow as $codec => $allowed) {
 		if ($allowed) {
-			echo 'allow = ', $codec ,"\n";
+			printparam( 'allow', $codec, $userparamarray);
 		}
 	}
+	foreach ($userparamarray as $param => $value) {
+		printparam( $param, '', $userparamarray);
+	}
 	echo "\n";
-	
 }
-
 
 ?>
