@@ -673,3 +673,24 @@ USE `asterisk`;
 ALTER TABLE `gates`   
   ADD `register` tinyint(1) unsigned NOT NULL default '1' AFTER `pwd`;
 
+
+--
+-- since rev. 6753
+--
+
+USE `asterisk`;
+
+--
+-- Add new table gate_params
+--
+
+
+CREATE TABLE `gate_params` (
+ `gate_id` smallint(5) unsigned NOT NULL,
+ `param` varchar(50) character set ascii NOT NULL,
+ `value` varchar(255) collate utf8_unicode_ci NOT NULL,
+ KEY `gate_id` (`gate_id`,`param`(20)),
+ CONSTRAINT `gate_params_ibfk_1` FOREIGN KEY (`gate_id`) REFERENCES `gates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
