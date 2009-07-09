@@ -81,8 +81,6 @@ function confirm_delete() {
 //]]>
 </script>' ,"\n";
 
-print_r($_REQUEST);
-
 #####################################################################
 if ($action === 'saveextended') {
 	
