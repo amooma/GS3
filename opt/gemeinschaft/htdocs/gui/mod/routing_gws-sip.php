@@ -89,7 +89,6 @@ if ($action === 'saveextended') {
 	$newvalue = $DB->escape($_REQUEST['extra-new-value']);
 
 	if ($newparam != '') {
-		echo 'INSERT INTO `gate_params` (`gate_id`,`param`, `value`) VALUES('.$gwid.", '".$newparam."', '".$newvalue."')";
 		$DB->execute('INSERT INTO `gate_params` (`gate_id`,`param`, `value`) VALUES('.$gwid.", '".$newparam."', '".$newvalue."')");
 	}
 }
@@ -100,7 +99,6 @@ if ($action === 'delextended') {
 	$delvalue = $DB->escape($_REQUEST['deletevalue']);
 
 	if ($delparam != '') {
-		echo 'DELETE FROM `gate_params` WHERE `param` = \''.$delparam.'\' AND value =\''.$delvalue.'\'';
 		$DB->execute('DELETE FROM `gate_params` WHERE `param` = \''.$delparam.'\' AND value =\''.$delvalue.'\'');
 	}
 }
