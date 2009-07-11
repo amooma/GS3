@@ -68,7 +68,6 @@ while ($gw = $rs->fetchRow()) {
 	echo 'ports=', $gw['hw_port'] ,"\n";
 	echo 'msns=*' ,"\n";
 	echo 'context=from-gg-', $gw['gg_name'] ,"\n";
-	echo 'setvar=__is_from_gateway=1' ,"\n";
 	
 	echo "\n";
 }
