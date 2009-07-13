@@ -589,10 +589,10 @@ context from-gateways {
 	
 	includes {
 		cmm;                  // user login/logout (for BOI)
+		to-internal-custom;
 		//voicemail-any;        // voicemail main (own mailbox)
 		//to-internal-nobody;   // internal phones (nobodies)
 		//ivrs;                 //FIXME IVR demo
-		to-internal-custom;
 		to-internal-users;    // internal phones (users)
 	}
 	i => {
@@ -908,6 +908,7 @@ context from-internal-users {
 		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
+		from-internal-custom;
 		vm-ann-rec;           // record vm-box announcements
 		voicemail-self;       // voicemail main (own mailbox)
 		voicemail-any;        // voicemail main (any mailbox)
@@ -1118,3 +1119,15 @@ context cluster-watchdog {
 context default {
 }
 */
+
+
+
+//---------------------------------------------------------------------
+//  custom contexts
+//---------------------------------------------------------------------
+
+#include "/etc/gemeinschaft/asterisk/extensions-to-internal-custom.ael"
+
+#include "/etc/gemeinschaft/asterisk/extensions-from-internal-custom.ael"
+
+

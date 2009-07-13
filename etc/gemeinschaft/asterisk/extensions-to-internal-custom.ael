@@ -1,0 +1,12 @@
+context to-internal-custom {
+	
+	/*
+	771 => {
+		Verbose(1,### You have reached extension ${EXTEN});
+		Playback(tt-weasels);
+		Hangup();
+	}
+	*/
+	
+}
+
