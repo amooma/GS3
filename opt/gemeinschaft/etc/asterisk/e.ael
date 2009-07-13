@@ -284,7 +284,7 @@ context to-conferences {
 				SayDigits(${confprefix}${confnum});
 				//MeetMe(${confnum},DcoT);
 				//Hangup();
-				goto to-conferences-self|${confprefix}${confnum}|1;
+				jump ${confprefix}${confnum}@to-conferences-self;
 			}
 		}
 		Verbose(1,### Tried $i{i} times but could not find empty conference);
@@ -318,7 +318,7 @@ context to-conferences {
 		}
 		if ("${dial_to_node}" = "") {
 			Verbose(1,### Conference ${confprefix}${confnum} is at node: SELF);
-			goto to-conferences-self|${confprefix}${confnum}|1;
+			jump ${confprefix}${confnum}@to-conferences-self;
 		}
 		else {
 			&dial-node(${confprefix}${confnum}@${dial_to_node});
@@ -502,7 +502,7 @@ context voicemail-any {
 		&check-valid-extension(${vmbox});
 		if ("${dial_to_node}" = "") {
 			Verbose(1,### VM box ${vmbox} is at node: SELF);
-			goto voicemail-any-self|vm-${vmbox}|1;
+			jump vm-${vmbox}@voicemail-any-self;
 		}
 		else {
 			&dial-node(vm-${vmbox}@${dial_to_node});

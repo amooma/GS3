@@ -90,7 +90,7 @@ while ($ggrp = $rs->fetchRow()) {
 		echo "\t\t\t", 'Set(CALLERID(dnid)=${did_ext});' ,"\n";
 		echo "\t\t\t", 'Verbose(1,### Inbound call from gw group "', $name ,'". dnid: ${did_full} => ext: ${did_ext} => ${did_ext_to});' ,"\n";
 		echo "\t\t\t", 'if ("${did_ext_to}" != "") {' ,"\n";
-		echo "\t\t\t\t", 'Goto(from-gateways,${did_ext_to},1);' ,"\n";
+		echo "\t\t\t\t", 'jump ${did_ext_to}@from-gateways;' ,"\n";
 		echo "\t\t\t", '}' ,"\n";
 		echo "\t\t\t", 'else {' ,"\n";
 		echo "\t\t\t\t", '// 1 = AST_CAUSE_UNALLOCATED => SIP 404 Not Found' ,"\n";
