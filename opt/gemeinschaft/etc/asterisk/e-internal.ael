@@ -111,7 +111,7 @@ macro dial-internal-nobody( mext2 ) {
 	&check-valid-extension(${mext2});
 	if ("${dial_to_node}" = "") {
 		Verbose(1,### Extension ${mext2} is at node: SELF);
-		goto to-internal-nobody-self|${mext2}|1;
+		jump ${mext2}@to-internal-nobody-self;
 	}
 	else {
 		&dial-node(${mext2}@${dial_to_node});
@@ -257,7 +257,7 @@ context to-internal-users {
 		&check-valid-extension(${EXTEN});
 		if ("${dial_to_node}" = "") {
 			Verbose(1,### Extension ${EXTEN} is at node: SELF);
-			goto to-internal-users-self|${EXTEN}|1;
+			jump ${EXTEN}@to-internal-users-self;
 		}
 		else {
 			if ("${exttype}" != "foreign") {
@@ -409,7 +409,7 @@ context to-internal-users {
 		// do some checking if user is a secretary of boss
 		// ...
 		
-		goto to-internal-users-self|***-${boss}|1;
+		jump ***-${boss}@to-internal-users-self;
 	}
 	
 	//----------------------------------------------------------
@@ -442,7 +442,7 @@ context to-internal-users {
 	//	
 	//	if ("${dial_to_node}" = "") {
 	//		Verbose(1,### Extension ${box} is at node: SELF);
-	//		goto to-internal-users-self|${EXTEN}|1;
+	//		jump ${EXTEN}@to-internal-users-self;
 	//	}
 	//	else {
 	//		&dial-node(${EXTEN}@${dial_to_node});
