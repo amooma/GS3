@@ -114,7 +114,6 @@ else
 
 unset($rs_name); unset($query_name);
 
-//--- FIXME: statischer pfad
 $displaydatafilename = @realpath(@gs_get_conf("GS_BUTTONDAEMON_DISPLAYDIR") . $user .".display");
 
 $displaydata = "";
