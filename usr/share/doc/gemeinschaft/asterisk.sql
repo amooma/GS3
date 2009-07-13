@@ -5992,6 +5992,7 @@ UNLOCK TABLES;
 -- Tabellenstruktur fuer Tabelle `ivrs`
 --
 
+DROP TABLE IF EXISTS `ivrs`;
 CREATE TABLE `ivrs` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(20) collate utf8_unicode_ci NOT NULL,
