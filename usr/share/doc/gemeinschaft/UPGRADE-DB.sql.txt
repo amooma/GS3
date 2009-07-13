@@ -680,6 +680,7 @@ ALTER TABLE `gates`
 
 USE `asterisk`;
 
+
 --
 -- Add new table gate_params
 --
