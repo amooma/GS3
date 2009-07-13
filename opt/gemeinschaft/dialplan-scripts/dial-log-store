@@ -50,7 +50,6 @@ $number = preg_replace( '/[^\d*#]/', '', $number );
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_pushnotify.php' );
 
 if (! GS_LOG_MISSED_QUEUE_CALLS ) {
 	if( $queue_number > 0 && $type == 'missed')
@@ -100,11 +99,6 @@ if ($remote_user) {
 $db->execute( 'INSERT INTO `dial_log` (`user_id`, `type`, `timestamp`, `number`, `remote_name`, `remote_user_id`, `queue_id`) VALUES ('. $uid .', \''. $type .'\', '. time() .', \''. $db->escape($number) .'\', \''. $db->escape($remote_name) .'\', '. $db_remote_user_id . ', ' . $queue_id . ')' );
 if ( $type =='missed' && gs_get_conf('GS_BUTTONDAEMON_USE') ) {
 	gs_buttondeamon_missedcalls( $user_ext );
-}
-
-if ( $type =='missed' && gs_get_conf('GS_POLYCOM_PROV_ENABLED') ) {
-	$missed_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE user_id = ' . $uid . ' AND `READ` = 0' );
-	gs_prov_phone_pushnotify ( $user_ext, 	'<PolycomIPPhone><Data priority="critical">' . _('Verpasste Anrufe') . ': ' . $missed_calls . '</Data></PolycomIPPhone>' );
 }
 
 ?>

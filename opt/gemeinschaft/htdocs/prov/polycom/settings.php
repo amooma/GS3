@@ -385,13 +385,14 @@ if($phone_has_microbrowser)
 
 	//--- XHTML push message preparation
 	echo "   <applications>\n";
-	echo "      <push apps.push.messageType=\"3\" apps.push.serverRootURL=\"/push\" apps.push.username=\"" . gs_get_conf("GS_POLYCOM_PROV_HTTP_USER") . "\" apps.push.password=\"" . gs_get_conf("GS_POLYCOM_PROV_HTTP_PASS") . "\"/>\n";
+	echo "      <push apps.push.messageType=\"0\" apps.push.serverRootURL=\"/push\" apps.push.username=\"" . gs_get_conf("GS_POLYCOM_PROV_HTTP_USER") . "\" apps.push.password=\"" . gs_get_conf("GS_POLYCOM_PROV_HTTP_PASS") . "\"/>\n";
 	echo "   </applications>\n";
 
 	//--- Microbrowser settings
-	echo "   <mb>\n";
-	echo "      <main mb.main.idleTimeout=\"0\" mb.main.statusbar=\"0\" mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
-	echo "   </mb>\n";
+	echo "   <microbrowser>\n";
+	echo "      <main mb.main.idleTimeout=\"60\" mb.main.statusbar=\"0\" mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
+	echo "      <idleDisplay mb.idleDisplay.home=\"". $prov_url_polycom ."idle.php?user=". $user_ext ."&amp;mac=". $mac ."\" mb.idleDisplay.refresh=\"10\"/>\n";
+	echo "   </microbrowser>\n";
 	echo "</sip>\n";
 
 } //--- Microbrowser settings

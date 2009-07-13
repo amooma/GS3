@@ -591,7 +591,10 @@ $BUTTONDAEMON_PORT      = 5041;
 # the Post of the daemons socketserver
 $BUTTONDAEMON_SECRET    ='SecretLocaNetPassword';
 # Needs to be set in the Astbuttonds config, too
-
+$BUTTONDAEMON_DISPLAYDIR = "/var/run/astbuttond/";
+# Filesystem location where astbuttond stores it's display contents files
+# MUST be identical to the path specified in astbuttond.config to work
+# correctly!
 
 /***********************************************************
 *    PHONEBOOK

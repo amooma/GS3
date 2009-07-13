@@ -352,6 +352,7 @@ _gscnf( 'BUTTONDAEMON_USE'            , false           );
 _gscnf( 'BUTTONDAEMON_HOST'            , '127.0.0.1'    );
 _gscnf( 'BUTTONDAEMON_PORT'            , 5041           );
 _gscnf( 'BUTTONDAEMON_SECRET'            , 'SecretLocaNetPassword' );
+_gscnf( 'BUTTONDAEMON_DISPLAYDIR'      , '/var/run/astbuttond/' );
 
 # to communicate with HylaFax ftp_raw() is required, which is not
 # available in PHP < 5
