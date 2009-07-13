@@ -32,6 +32,7 @@ define("GS_VALID", true);		// this is a parent file
 require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 require_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gs-lib.php");
+include_once(GS_DIR ."inc/gs-fns/gs_astphonebuttons.php");
 
 Header("Content-Type: text/html; charset=utf-8");
 Header("Expires: 0");
@@ -117,6 +118,8 @@ if(($newdndstate == "on") || ($newdndstate == "off"))
 
 	$check = $db->execute("UPDATE `users` SET `dnd`=". $db->escape($dndvalue) ." WHERE `id`=". $user_id);
 	if(!$check) _err("Failed to set new DND state.");
+
+	if(GS_BUTTONDAEMON_USE == true)	gs_buttondeamon_dnd_update($user);
 }
 
 #################################### MAIN MENU {
