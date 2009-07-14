@@ -1,3 +1,15 @@
+/* **************************************************************
+   [de]
+   Um nach Aenderungen eventuelle Syntax-Fehler zu entdecken
+   rufen Sie bitte folgendes Skript auf:
+   /opt/gemeinschaft/sbin/gs-ast-ael-check
+   
+   [en]
+   To detect syntax errors after making changes please call
+   /opt/gemeinschaft/sbin/gs-ast-ael-check
+************************************************************** */
+
+
 context to-internal-custom {
 	
 	/*
