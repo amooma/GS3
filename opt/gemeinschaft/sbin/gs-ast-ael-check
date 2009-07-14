@@ -1,0 +1,151 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/util.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
+
+$etc_asterisk_dir = '/opt/gemeinschaft/etc/asterisk';
+
+putEnv('PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:'. getEnv('PATH'));
+
+echo "=== Generating AEL ...\n";
+$err=0; $out=array();
+@exec( '/opt/gemeinschaft/sbin/gs-ast-dialplan-gen', $out, $err );
+if ($err !== 0) {
+	if (is_array($out)) {
+		foreach ($out as $line) {
+			echo ' ',$line,"\n";
+		}
+	}
+	echo "ERROR.\n";
+	exit(1);
+}
+
+echo "=== Checking AEL ...\n";
+$err=0; $out=array();
+@exec( 'cd '.qsa($etc_asterisk_dir).' && aelparse -d -q', $out, $err );
+if (is_array($out)) {
+	foreach ($out as $line) {
+		$line = preg_replace('/^LOG: *lev:[0-9]+ *file:[a-zA-Z0-9\-_.]+ *line:[0-9]+ *func: *[a-zA-Z0-9_]+ */i', '', $line);
+		echo ' ',$line,"\n";
+	}
+}
+if ($err !== 0) {  # aelparse always returns 0
+	echo "SYNTAX ERROR.\n";
+	exit(1);
+}
+
+$out = implode("\n",$out);
+if (! preg_match('/s(?:yntax|emantic) error/i', $out)
+&&  ! preg_match('/doesn\'t make sense to compile/i', $out)
+) {
+	echo "OK.\n";
+	exit(0);
+}
+
+if (preg_match('/File:? *([a-zA-Z0-9\-_.\\/]+|\(null\)),? *Line:? *([0-9]+),? *Cols:? ([0-9]+)-?([0-9]*):? *(?:Error:? *)?([^\n\r]*)/i', $out, $m)) {
+	$s_err_file     =      $m[1];
+	$s_err_line     = (int)$m[2];
+	$s_err_col_from = (int)$m[3];
+	$s_err_col_to   = (int)$m[4];
+	$s_err_msg      =      $m[5];
+	if ($s_err_col_to == 0) $s_err_col_to = $s_err_col_from;
+	if ($s_err_file === '(null)') $s_err_file = './extensions.ael';
+	
+	echo "\n";
+	echo "ERROR: {$s_err_msg}\n";
+	echo "  in {$s_err_file}, line {$s_err_line}, cols {$s_err_col_from} - {$s_err_col_to}\n";
+	
+	$esc_seq = "\x1B".'[';
+	$s_err_file = $etc_asterisk_dir.'/'.$s_err_file;
+	if (@file_exists($s_err_file) && @is_readable($s_err_file)) {
+		$lines = file($s_err_file);
+		if (is_array($lines)) {
+			$use_color = gs_stdout_is_console() && preg_match('/color/i', getEnv('TERM')); # xterm-color
+			/*
+			if (array_key_exists($s_err_line+1,$lines)
+			&&  trim(subStr($lines[$s_err_line+1], $s_err_col_from, $s_err_col_to-$s_err_col_from)) == '') {
+				# color is not really useful if the part of the code
+				# is whitespace (especially for line breaks)
+				$use_color = false;
+			}
+			*/
+			
+			echo "-----------------------------------------------------------------\n";
+			$output_line_from = $s_err_line - 9;
+			$output_line_to   = $s_err_line + 2;
+			for ($i=$output_line_from; $i<=$output_line_to; ++$i) {
+				if (array_key_exists($i, $lines)) {
+					$line = str_replace("\t", '        ', $lines[$i]);
+					echo str_pad($i+1,strLen($output_line_to+1),' ',STR_PAD_LEFT) ,"| ";
+					if (! $use_color || $i+1 !== $s_err_line) {
+						echo $line;
+					} else {
+						echo subStr($line, 0, $s_err_col_from-1);
+						//echo $esc_seq.(7).'m';  # invert
+						echo $esc_seq.(0+0).';'.(100+3).'m';  # black on bright yellow
+						echo subStr($line, $s_err_col_from-1, $s_err_col_to-$s_err_col_from+1);
+						echo $esc_seq.(0).'m';  # reset
+						echo subStr($line, $s_err_col_to);
+					}
+					if ($i+1 === $s_err_line) {
+						echo str_pad('',strLen($output_line_to+1),' ',STR_PAD_LEFT) ,"| ";
+						echo str_repeat(' ',$s_err_col_from-1);
+						echo str_repeat('^',max($s_err_col_to-$s_err_col_from, 1));
+						echo "\n";
+					}
+					
+				}
+			}
+			echo "-----------------------------------------------------------------\n";
+		}
+	}
+	if (preg_match('/unexpected/i', $s_err_msg)
+	&&  preg_match('/expecting/i', $s_err_msg)) {
+		echo "It's likely that you have an error in a previous line.\n";
+		echo "\n";
+	}
+	elseif (preg_match('/unexpected \'?\\$end\'?/i', $s_err_msg)) {
+		echo "Maybe you didn't properly close the code block / context /\n";
+		echo "extension with \"}\"?\n";
+		echo "\n";
+	}
+	
+	if (preg_match('/extensions\.ael$/', $s_err_file)) {
+		echo "(Please note that extensions.ael is an auto-generated file\n";
+		echo "and that you have to fix the error in the original files.)\n";
+	}
+}
+else {
+	echo "SYNTAX ERROR.\n";
+}
+
+exit(1);
+
+?>
