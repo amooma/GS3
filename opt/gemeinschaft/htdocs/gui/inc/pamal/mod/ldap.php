@@ -10,10 +10,12 @@ class PAMAL_auth_ldap extends PAMAL_auth
 
 	function _getUser()
 	{
-		$ldapproto  = gs_get_conf( 'GS_LDAP_PROTOCOL' );
-		$ldapuser   = trim( @$_REQUEST['login_user'] );
-		$ldapdn     = gs_get_conf( 'GS_LDAP_PROP_USER' ) . '=' . $ldapuser . ',' . gs_get_conf( 'GS_LDAP_SEARCHBASE' );
-		$ldappass   =  @$_REQUEST['login_pwd'];
+		$ldapproto      = gs_get_conf( 'GS_LDAP_PROTOCOL' );
+		$ldapuser       = trim( @$_REQUEST['login_user'] );
+		$ldapdn         = gs_get_conf( 'GS_LDAP_PROP_USER' ) . '=' . $ldapuser . ',' . gs_get_conf( 'GS_LDAP_SEARCHBASE' );
+		$ldappass       =  @$_REQUEST['login_pwd'];
+		$ldapsearchdn   = gs_get_conf( 'GS_LDAP_BINDDN' );
+		$ldapsearchpass = gs_get_conf( 'GS_LDAP_PWD' );
 		
 		$ldapconn = @ ldap_connect( gs_get_conf( 'GS_LDAP_HOST' ) );
 		@ ldap_set_option( $ldapconn, LDAP_OPT_PROTOCOL_VERSION, (int)$ldapproto );
@@ -24,18 +26,36 @@ class PAMAL_auth_ldap extends PAMAL_auth
 
 		if ( $ldapuser== '' || $ldappass== '' )
 			return false;
-
+			
 		if ( $ldapconn ) {
-			$ldapbind = @ ldap_bind( $ldapconn, $ldapdn, $ldappass );
+			$ldapbind = @ ldap_bind( $ldapconn, $ldapsearchuser, $ldapsearchpass );
 			if ( $ldapbind ) {
-				gs_log( GS_LOG_DEBUG, 'User ' . $ldapdn . ' found!' );
-				return $ldapuser;
+				$searchresult = @ ldap_search( $ldapconn, 
+							gs_get_conf( 'GS_LDAP_SEARCHBASE' ),
+							'(' . gs_get_conf( 'GS_LDAP_PROP_UID' ) . '=' . $ldapuser . ')',
+							array()
+							);
+				$ldapinfo = ldap_get_entries( $ldapconn, $searchresult );
+				if ( $ldapinfo['count'] != 1 ) {
+					gs_log( GS_LOG_DEBUG, 'Number of users found in LDAP is not 1 (' . $ldapinfo['count'] . ')' );
+					return false;
+				}
 			}
 			else
 			{
-				gs_log( GS_LOG_DEBUG, 'Unable to bind to LDAP server as ' . $ldapdn . ', ' . ldap_error($ldapconn) );
+				gs_log( GS_LOG_DEBUG, 'Unable to bind to LDAP server as ' . $ldapsearchuser . ', ' . ldap_error($ldapconn) );
 				return false;
 			}
+		}
+		$ldapbind = @ ldap_bind( $ldapconn, $ldapinfo[0]['dn'], $ldappass );
+		if ( $ldapbind ) {
+			gs_log( GS_LOG_DEBUG, 'User ' . $ldapinfo[0]['dn'] . ' found!' );
+			return $ldapuser;
+		}
+		else
+		{
+			gs_log( GS_LOG_DEBUG, 'Unable to bind to LDAP server as ' . $ldapinfo[0]['dn'] . ', ' . ldap_error($ldapconn) );
+			return false;
 		}
 	}
 }
