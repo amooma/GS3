@@ -96,7 +96,7 @@ function __($str)
 }
 }
 
-function email_notify( $mailbox, $uid, $info, $about, $email )
+function email_notify( $mailbox, $uid, $info, $about, $email, $delete=1 )
 {
 	global $db;
 	
@@ -253,6 +253,9 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 			implode("\n", $mail_headers)
 			);
 		unset($mime_body);
+
+		if( $delete == 2)
+			 deletevm( $uid, $mailbox, $info['fld'], $info['file'] );
 		return $ok;
 		
 	}
@@ -301,18 +304,65 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 			}
 		}
 		unset($mail);
+
+		if( $delete == 2)
+			 deletevm( $uid, $mailbox, $info['fld'], $info['file'] );
+
 		return $ok;
 		
 	}
 }
 
+function deletevm( $uid, $extension, $folder, $file ) {
 
-$our_host_id = (int)gs_get_listen_to_primary_id();
-if (! $our_host_id) {
-	gs_log(GS_LOG_WARNING, "Could not get our primary host ID!");
-	echo "Could not get our primary host ID!\n";
-	exit(1);
-}
+	global $db;
+
+	$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+
+	if (! $GS_INSTALLATION_TYPE_SINGLE) {
+		# find host
+		#
+		$rs = $db->execute(
+		'SELECT `u`.`host_id` `id`, `h`.`host`
+		FROM
+			`users` `u` LEFT JOIN
+			`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
+		WHERE
+			`u`.`id`='. (int)$uid
+		);
+		$host = $rs->fetchRow();
+		if (! $host)
+			die( 'Failed to get host.' );
+		
+		$our_host_ids = @gs_get_listen_to_ids();
+		if (! is_array($our_host_ids))
+			die( 'Failed to get our host IDs.' );
+		
+		$user_is_on_this_host = in_array($host['id'], $our_host_ids, true);
+		} else 	{
+			$user_is_on_this_host = true;
+		}
+
+
+		$cmd = GS_DIR .'sbin/vm-local-del '. qsa( $extension ) .' '. qsa($folder) .' '. qsa($file);
+		$err=0; $out=array();
+		if ($user_is_on_this_host) {
+			# user is on this host
+			@exec( 'sudo '. $cmd .' 2>>/dev/null', $out, $err );
+		} else {
+			# user is not on this host
+			@exec( GS_DIR .'sbin/remote-exec-do '. qsa($host['host']) .' '. qsa($cmd) .' 10 2>>/dev/null', $out, $err );
+		}
+
+	}
+
+
+	$our_host_id = (int)gs_get_listen_to_primary_id();
+	if (! $our_host_id) {
+		gs_log(GS_LOG_WARNING, "Could not get our primary host ID!");
+		echo "Could not get our primary host ID!\n";
+		exit(1);
+	}
 
 $uniqueids = array();
 
@@ -497,11 +547,11 @@ WHERE `id`='. (int)$r['id']
 	if (@$send_notification) {
 		if ($uid_curr > 0) {
 			$email_notify = (int)$db->executeGetOne( 'SELECT `email_notify` FROM `vm` WHERE `user_id`='. $uid_curr  );
-			if ($email_notify == 1) {
+			if ($email_notify >= 1) {
 				$email = $db->executeGetOne( 'SELECT `email` FROM `users` WHERE `id`='. $uid_curr );
 				if ($email != '') {
 					gs_log(GS_LOG_DEBUG, "Notify user_id $uid_curr, email \"$email\"" );
-					$ok = email_notify( $mailbox, $uid_curr, $info, $about, $email );
+					$ok = email_notify( $mailbox, $uid_curr, $info, $about,	$email, $email_notify );
 					if (! $ok)
 						gs_log(GS_LOG_WARNING, "Failed to send notification to \"$email\"" );
 				}
