@@ -256,10 +256,9 @@ LIMIT 9'
 		} else {
 			$number_final = $number_dial;
 		}
-		$dialstr = str_replace('{peer}', '{gateway}', $gate['dialstr']);  # backwards compatibility
 		$dialstr = str_replace(
-			array( '{number}'   , '{number:1}'            , '{gateway}'   , '{port}'          ),
-			array( $number_final, substr($number_final,1) , $gate['name'] ,  $gate['hw_port'] ),
+			array( '{number}'   , '{number:1}'            , '{gateway}'   , '{peer}'      , '{port}'         ),
+			array( $number_final, substr($number_final,1) , $gate['name'] , $gate['name'] , $gate['hw_port'] ),
 			$gate['dialstr']
 		); //FIXME - do proper parsing instead of "{number:1}"
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
