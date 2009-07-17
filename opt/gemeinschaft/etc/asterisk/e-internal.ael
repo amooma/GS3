@@ -26,12 +26,6 @@
 //---------------------------------------------------------------------
 
 //---------------------------------------------------------------------
-//  Custom dialplan additions
-//---------------------------------------------------------------------
-
-#include "/opt/gemeinschaft/etc/asterisk/custom/e-internal.ael"
-
-//---------------------------------------------------------------------
 //  Check if extension is valid
 //---------------------------------------------------------------------
 
@@ -110,10 +104,6 @@ macro dial-node( mext_at_node ) {
 
 context to-internal-nobody {
 
-	includes {
-		to-internal-nobody-custom;
-	}
-	
 	#exec "/opt/gemeinschaft/etc/asterisk/e-nobody-exten.php"
 	
 }
@@ -158,10 +148,6 @@ macro dial-internal-nobody-self( mext3 ) {
 
 context to-internal-users {
 
-	includes {
-		to-internal-users-custom;
-	}
-	
 	//----------------------------------------------------------
 	// from ISDN
 	//----------------------------------------------------------

@@ -35,12 +35,6 @@ globals {
 };
 
 //---------------------------------------------------------------------
-//  Custom dialplan additions
-//---------------------------------------------------------------------
-
-#include "/opt/gemeinschaft/etc/asterisk/custom/e.ael"
-
-//---------------------------------------------------------------------
 // Macro to emulate SIPRemoveHeader() if absent
 //---------------------------------------------------------------------
 
@@ -951,7 +945,6 @@ context vm-ann-rec {
 context from-gateways {
 	
 	includes {
-		from-gateways-custom;
 		cmm;                  // user login/logout (for BOI)
 		to-internal-custom;
 		//voicemail-any;        // voicemail main (own mailbox)
@@ -980,10 +973,6 @@ context from-gateways {
 
 context to-gateway {
 
-	includes {
-		to-gateway-custom;
-	}
-	
 	_0. => {
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
@@ -1256,7 +1245,6 @@ context private-call {
 context from-internal-nobody {
 	
 	includes {
-		from-internal-nobody-custom;
 		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
@@ -1278,7 +1266,6 @@ context from-internal-nobody {
 context from-internal-users {
 	
 	includes {
-		from-internal-users-custom;
 		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
@@ -1336,7 +1323,6 @@ context from-iax-unauth {
 
 context from-node {
 	includes {
-		from-node-custom;
 		to-conferences-self;       // conferences
 		to-internal-nobody-self;   // internal phones (nobodies)
 		voicemail-any-self;        // vm boxes
@@ -1504,7 +1490,6 @@ context default {
 
 //---------------------------------------------------------------------
 //  Contexts for IVRs
-//  custom contexts
 //---------------------------------------------------------------------
 
 #exec "/opt/gemeinschaft/etc/asterisk/e-ivr.ael.php"
