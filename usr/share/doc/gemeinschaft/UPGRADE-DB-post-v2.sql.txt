@@ -1,3 +1,5 @@
+USE `asterisk`;
+
 --
 -- Increase size of column `user` in table `users`
 --
