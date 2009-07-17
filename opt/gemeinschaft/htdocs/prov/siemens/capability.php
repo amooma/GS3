@@ -2,7 +2,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 2585 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -29,11 +29,6 @@
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/phone-capability.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
-
-
-//FIXME
-//TODO
-//UNTESTED!
 
 
 class PhoneCapability_siemens extends PhoneCapability
@@ -65,18 +60,11 @@ class PhoneCapability_siemens extends PhoneCapability
 	
 	function conv_ringtone( $infile, $outbase )
 	{
+		if(fileSize($infile) >= 1000000 )
+			return new GsError('Datei zu Gross');
+
 		/*
 		$outfile = $outbase .'.wav';
-		*/
-		$outfile = $outbase .'.mp3';
-		
-		if (strToLower(subStr($infile, -4, 4)) === '.mp3') {
-			if (fileSize($infile) <= 1000000) {  # 1 MB
-				if (! @copy( $infile, $outfile ))
-					return false;
-				return $outfile;
-			}
-		}
 		
 		/*
 		if     (is_executable( '/usr/local/bin/mpg123' ))
@@ -118,8 +106,7 @@ class PhoneCapability_siemens extends PhoneCapability
 		}
 		return $outfile;
 		*/
-		//return false;
-		return null;  # not implemented
+		return $infile;
 	}
 	
 	function _upload_ringtone( $ringtonefile )  # deprecated
@@ -135,7 +122,7 @@ class PhoneCapability_siemens extends PhoneCapability
 		
 		$fileserver['wan'  ] = gs_get_conf('GS_PROV_SIEMENS_FTP_SERVER_WAN');
 		$fileserver['lan'  ] = gs_get_conf('GS_PROV_SIEMENS_FTP_SERVER_LAN');
-		$fileserver['local'] = gs_get_conf('GS_PROV_HOST');
+		//$fileserver['local'] = gs_get_conf('GS_PROV_HOST');
 		$ftp_path = '';
 		
 		$external_ftp_path = gs_get_conf('GS_PROV_SIEMENS_FTP_RINGTONE_PATH');
