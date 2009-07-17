@@ -61,89 +61,130 @@ function ael_file_realname( $file )
 
 function ael_get_file_content( $file )
 {
-	if (! file_exists( $file )
-	||  ! is_readable( $file )) {
+	if (! @file_exists( $file )) {
+		gs_log( GS_LOG_WARNING, "File \"$file\" does not exist!" );
 		return false;
 	}
-	$content = @gs_file_get_contents( $file );
-	return is_string($content) ? $content : false;
+	if (! @is_readable( $file )) {
+		gs_log( GS_LOG_WARNING, "File \"$file\" not readable!" );
+		return false;
+	}
+	$content = @file_get_contents( $file );
+	if (! is_string($content)) {
+		gs_log( GS_LOG_WARNING, "Failed to read file \"$file\"!" );
+		return false;
+	}
+	return $content;
 }
 
-// returns false if needs another pass or true if done
-function ael_eval_includes()
+$ael_include_stack = array();
+
+function ael_get_log_indent( $level_adjust=0 )
 {
-	global $extensions_ael;
+	global $ael_include_stack;
 	
-	$pattern = '/^[ \t]*#([iI]nclude|[eE]xec)[ \t]+([^\n\r]*)/mS';
-	if (preg_match( $pattern, $extensions_ael )) {
-		$extensions_ael = preg_replace_callback( $pattern, 'ael_eval_callback', $extensions_ael );
-		return false;
-	}
-	return true;
+	return str_repeat('| ', max( count($ael_include_stack)-2+$level_adjust, 0 ) ) /*.'+-'*/;
+}
+
+// evaluates and replaces "#include"s and "#exec"s in the
+// content and returns the whole content
+function ael_eval_includes( $content )
+{
+	global $ael_include_stack;
+	
+	$pattern = '/^[ \t]*#(include|exec)[ \t]+([^\n\r]*)/miS';
+	$content = preg_replace_callback( $pattern, 'ael_eval_callback', $content );
+	return $content;
 }
 
 function ael_eval_callback( $m )
 {
+	global $ael_include_stack;
 	static $eval_cache = array();
 	
 	$directive = strToLower($m[1]);
 	$filename = ael_file_realname( trim( $m[2], '"\'<>`´' ) );
 	
+	gs_log( GS_LOG_DEBUG, ael_get_log_indent(1) ./*"In ".*/ /*baseName(@$ael_include_stack[count($ael_include_stack)-1]) .": ".*/ "#$directive ". baseName($filename) ." ..." );
+	
+	$ret = '';
+	
+	$max_include_depth = 10;
+	if (count($ael_include_stack) > $max_include_depth) {
+		$reason_msg = "Not going to eval #$directive $filename. Max. include depth ($max_include_depth) reached!";
+		echo "WARNING: $reason_msg"."\n";
+		gs_log( GS_LOG_WARNING, ael_get_log_indent(1) ."$reason_msg" );
+		$ret = "\n"."// WARNING: $reason_msg"."\n\n";
+	}
+	
+	array_push( $ael_include_stack, $filename );
+	
 	if ($directive === 'include') {
 		
-		gs_log( GS_LOG_DEBUG, "Loading #$directive $filename ..." );
+		//gs_log( GS_LOG_DEBUG, ael_get_log_indent(0) ."Loading ".baseName($filename)." ..." );
+		
 		$content = ael_get_file_content( $filename );
 		if (is_string($content)) {
-			return $content;
+			$ret = ael_eval_includes( $content );
 		} else {
-			if (! file_exists($filename))
+			if (! @file_exists($filename))
 				$reason_msg = 'file not found';
-			elseif (! is_readable($filename))
+			elseif (! @is_readable($filename))
 				$reason_msg = 'file not readable';
 			else
 				$reason_msg = 'unknown error';
 			
-			echo "WARNING: Could not read included file \"$filename\" ($reason_msg)!\n";
-			gs_log( GS_LOG_WARNING, "Could not read included file \"$filename\" ($reason_msg)" );
-			return "// WARNING: Could not read included file \"$filename\" ($reason_msg)!";
+			$reason_msg = "Could not read included file \"$filename\" ($reason_msg)!";
+			echo "WARNING: $reason_msg"."\n";
+			gs_log( GS_LOG_WARNING, ael_get_log_indent(0) ."$reason_msg" );
+			$ret = "\n"."// WARNING: $reason_msg"."\n\n";
 		}
 		
 	} elseif ($directive === 'exec') {
 		
-		if (baseName($filename) === 'e-lang.ael.php') {
-			# cache lookup
-			if (array_key_exists('e-lang.ael.php', $eval_cache)) {
-				gs_log( GS_LOG_DEBUG, "Loading #$directive $filename (cached)" );
-				return $eval_cache['e-lang.ael.php'];
-			}
+		//gs_log( GS_LOG_DEBUG, ael_get_log_indent(0) ."Evaluating ".baseName($filename)." ..." );
+		
+		$cached = false;
+		# cache lookup
+		if (array_key_exists($filename, $eval_cache)) {
+			//gs_log( GS_LOG_DEBUG, ael_get_log_indent(0) ."Loading #$directive ".baseName($filename)." (cached)" );
+			$ret = $eval_cache[$filename];
+			$cached = true;
 		}
 		
-		gs_log( GS_LOG_DEBUG, "Loading #$directive $filename ..." );
-		$err=0; $out=array();
-		@exec( escapeShellCmd($filename) .' 2>&1', $out, $err );
-		if ($err === 0 && is_array($out)) {
-			if (baseName($filename) === 'e-lang.ael.php') {
-				# cache e-lang.ael.php because it will be loaded
-				# another 5 times
-				$eval_cache['e-lang.ael.php'] = implode("\n", $out);
+		if (! $cached) {
+			$err=0; $out=array();
+			@exec( escapeShellCmd($filename) .' 2>&1', $out, $err );
+			if ($err === 0 && is_array($out)) {
+				$ret = implode("\n", $out);
+				$ret = ael_eval_includes( $ret );
+				
+				if (baseName($filename) === 'e-lang.ael.php') {
+					# cache e-lang.ael.php because it will be loaded
+					# another 5 times
+					$eval_cache[$filename] = $ret;
+				}
+			} else {
+				if ($err === 127 || ! file_exists($filename))
+					$reason_msg = 'file not found';
+				elseif (! is_readable($filename))
+					$reason_msg = 'file not readable';
+				elseif (! is_executable($filename))
+					$reason_msg = 'file not executable';
+				else
+					$reason_msg = 'exit '.$err /*.' - '. implode(' - ',$out)*/;
+				
+				$reason_msg = "Could not exec included script \"$filename\" ($reason_msg)!";
+				echo "WARNING: $reason_msg"."\n";
+				gs_log( GS_LOG_WARNING, ael_get_log_indent(0) ."$reason_msg" );
+				$ret = "\n"."// WARNING: $reason_msg"."\n\n";
 			}
-			return implode("\n", $out);
-		} else {
-			if ($err === 127 || ! file_exists($filename))
-				$reason_msg = 'file not found';
-			elseif (! is_readable($filename))
-				$reason_msg = 'file not readable';
-			elseif (! is_executable($filename))
-				$reason_msg = 'file not executable';
-			else
-				$reason_msg = 'exit '.$err.' - '. implode(' - ',$out);
-			
-			echo "WARNING: Could not exec included script \"$filename\" ($reason_msg)!\n";
-			gs_log( GS_LOG_WARNING, "Could not exec included script \"$filename\" ($reason_msg)" );
-			return "// WARNING: Could not exec included script \"$filename\" ($reason_msg)!";
 		}
 		
 	}
+	
+	array_pop( $ael_include_stack );
+	return $ret;
 }
 
 
@@ -151,9 +192,9 @@ function ael_eval_callback( $m )
 echo "Generating extensions.ael ...\n";
 
 $gs_extensions_ael_filename = ael_file_realname( $gs_extensions_ael_filename );
-$extensions_ael = ael_get_file_content( $gs_extensions_ael_filename );
-$pass = 0;
-while (! ael_eval_includes()) { /*echo "  pass ".(++$pass).":\n";*/ }
+array_push( $ael_include_stack, $gs_extensions_ael_filename );
+$content = ael_get_file_content( $gs_extensions_ael_filename );
+$content = ael_eval_includes( $content );
 
 $extensions_ael_filename = $etc_asterisk .'extensions.ael';
 
@@ -165,12 +206,13 @@ if (! $f) {
 	exit(1);
 }
 
-$extensions_ael =
+$content =
 "//------------------------------------------------------------------//\n".
 "// ". str_pad('WRITTEN BY /opt/gemeinschaft/sbin/'. baseName(__FILE__), 64, ' ', STR_PAD_BOTH) ." //\n".
+"// ". str_pad('DO NOT MAKE ANY CHANGES HERE!', 64, ' ', STR_PAD_BOTH) ." //\n".
 "//------------------------------------------------------------------//\n".
-"\n". $extensions_ael;
-@fWrite($f, $extensions_ael, strLen($extensions_ael));
+"\n". $content;
+@fWrite($f, $content, strLen($content));
 @fClose($f);
 echo "extensions.ael written.\n";
 

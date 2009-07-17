@@ -72,7 +72,7 @@ if (defined('YADB_DIR'))
 	die("YADB_DIR must not be defined before inclusion.\n");
 
 define('YADB_DIR', dirName(__FILE__) .'/');
-define('YADB_VERS', 414); // = 0.04.14
+define('YADB_VERS', 415); // = 0.04.15
 
 /***********************************************************
 * Columns flags:
@@ -252,6 +252,7 @@ class YADB_Connection
 	var $_queryErrFn      = null;  /// if set to a method name this function will be called if a query fails. this is used as a monitor for nested transactions
 	
 	var $_customQueryCb   = null; /// if set this function will be called before executing a query. if the function returns false the query will not even be executed but fail
+	var $_customQueryErrCb= null;
 	var $_customAttrs     = array(); /// custom attributes which can be set by the user to identify the connection
 	
 	
@@ -574,7 +575,7 @@ class YADB_Connection
 		if (!$ret) {
 			trigger_error( 'YADB: Could not close the connection. Reason unknown.', E_USER_NOTICE );
 			return false;
-		}	
+		}
 		return $ret;
 	}
 	
@@ -680,6 +681,11 @@ class YADB_Connection
 		$this->_customQueryCb = $fn;
 	}
 	
+	function setQueryErrCb( $fn )
+	{
+		$this->_customQueryErrCb = $fn;
+	}
+	
 	
 	function & execute( $sql, $inputArr=null )
 	{
@@ -716,9 +722,15 @@ class YADB_Connection
 		
 		if (!$rs) {
 			// query failed. error handling:
+			
 			$fn = $this->_queryErrFn;
-			if ($fn) // custom handler for query errors defined
+			if ($fn) // handler for query errors
 				@ $this->$fn();
+			
+			$fn = $this->_customQueryErrCb;
+			if ($fn) // custom handler for query errors
+				@ $fn( /*&*/$this, $sql, $inputArr );
+			
 			$false = false;
 			return $false;
 		}
@@ -756,7 +768,20 @@ class YADB_Connection
 				return false;
 			}
 		}
-		return $this->_query( $sql, $inputArr );
+		return /*$ret =*/ $this->_query( $sql, $inputArr );
+		/*
+		if (! $ret) {
+			trigger_error( sPrintF(
+				'YADB: SQL error %s / %s %s "%s" in query: %s -',
+				$this->getLastErrorCode(),
+				$this->_dbType,
+				$this->getLastNativeError(),
+				$this->getLastNativeErrorMsg(),
+				str_replace(array("\n","\t"), array('\n','\t'), $sql)
+				), E_USER_WARNING );
+		}
+		*/
+		/*return $ret;*/
 	}
 	
 	/***********************************************************
@@ -1009,7 +1034,7 @@ class YADB_Connection
 			'T'                => 'T',
 			##
 			'BOOL'             => 'L',
-			'BOOLEAN'          => 'L', 
+			'BOOLEAN'          => 'L',
 			'BIT'              => 'L',
 			'L'                => 'L',
 			##

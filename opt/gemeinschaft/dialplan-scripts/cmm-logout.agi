@@ -31,6 +31,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/log.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -41,14 +42,14 @@ $is_from_gateway = (bool)trim(@$argv[2]);
 if ($is_from_gateway) {
 	if (! gs_get_conf('GS_BOI_ENABLED')) {
 		gs_log( GS_LOG_NOTICE, "Mobility: User from gateway tries to log out but BOI is not enabled" );
-		echo 'HANGUP' ."\n";
-		die();
+		gs_agi_err( "Mobility: User from gateway tries to log out but BOI is not enabled" );
+		exit();
 	}
 } else {
 	if ($user_id < 1) {
 		gs_log( GS_LOG_NOTICE, "Mobility: User ID not specified" );
-		echo 'HANGUP' ."\n";
-		die();
+		gs_agi_err( "Mobility: User ID not specified" );
+		exit();
 	}
 }
 $caller_id  = preg_replace('/[^0-9]/', '', @$argv[3]);
@@ -59,18 +60,18 @@ include_once( GS_DIR .'inc/db_connect.php' );
 $db = gs_db_master_connect();
 if (! $db) {
 	gs_log( GS_LOG_NOTICE, "Mobility: DB connection failed" );
-	echo 'HANGUP' ."\n";
-	die();
+	gs_agi_err( 'DB error' );
+	exit();
 }
 
-if ($user_id < 1 && $is_from_gateway) { 
+if ($user_id < 1 && $is_from_gateway) {
 	# fall back to caller ID
 	$user_id = (int)$db->executeGetOne(
 		'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($caller_ext) .'\'' );
 	if ($user_id < 1) {
 		gs_log( GS_LOG_NOTICE, "Mobility: User ID not specified and no user found for caller ID $caller_ext" );
-		echo 'HANGUP' ."\n";
-		die();
+		gs_agi_err( "Mobility: User ID not specified and no user found for caller ID $caller_ext" );
+		exit();
 	}
 }
 
@@ -105,7 +106,8 @@ $user_ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_use
 $user_ext = preg_replace('/[^0-9]/', '', $user_ext);
 if ($user_ext != '') {
 	ob_start();
-	@exec( GS_DIR .'dialplan-scripts/queue-login-logout.agi '. $user_ext .' 0 logoutall 1>>/dev/null 2>>/dev/null' );
+	@exec( GS_DIR.'dialplan-scripts/fake-agi-env.php'
+		. ' '. qsa(GS_DIR.'dialplan-scripts/queue-login-logout.agi') .' '. qsa($user_ext) .' 0 logoutall 1>>/dev/null 2>>/dev/null' );
 	ob_end_clean();
 }
 
@@ -114,7 +116,7 @@ if ($user_ext != '') {
 #
 $old_ip_addr = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='.$user_id );
 gs_log( GS_LOG_DEBUG, "Mobility: IP address found for old phone: $old_ip_addr" );
-echo 'SET VARIABLE old_phone_ip '. gs_agi_str_esc($old_ip_addr) ."\n";
+gs_agi_set_variable( 'old_phone_ip', $old_ip_addr );
 
 
 ?>

@@ -1,0 +1,79 @@
+--
+-- Increase size of column `user` in table `users`
+--
+
+ALTER TABLE `users` CHANGE `user` `user` VARCHAR( 50 );
+
+ALTER TABLE `ast_sipfriends` CHANGE `pickupgroup` `pickupgroup` VARCHAR( 20 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL;
+
+ALTER TABLE `ast_queue_members` ADD `paused` TINYINT( 3 ) NOT NULL DEFAULT '0' AFTER `penalty` ;
+
+
+--
+-- Tabellenstruktur fuer Tabelle `ivrs`
+--
+
+CREATE TABLE IF NOT EXISTS `ivrs` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `host_id` mediumint(8) unsigned NOT NULL default '1',
+  `title` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `announcement` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `timeout` tinyint(3) collate utf8_unicode_ci NOT NULL,
+  `retry` tinyint (3) collate utf8_unicode_ci NOT NULL,
+  `key_0_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_0_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_1_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_1_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_2_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_2_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_3_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_3_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_4_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_4_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_5_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_5_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_6_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_6_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_7_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_7_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_8_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_8_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_9_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_9_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_star_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_star_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_pound_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_pound_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `t_action_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `t_action_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `i_action_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `i_action_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
+
+--
+-- Add new column `proxy` in table `gates`
+--
+
+ALTER TABLE `gates`
+  ADD `proxy` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL AFTER `host`;
+
+--
+-- Add new column `register` in table `gates`
+--
+
+ALTER TABLE `gates`   
+  ADD `register` tinyint(1) unsigned NOT NULL default '1' AFTER `pwd`;
+
+--
+-- Add new table gate_params
+--
+
+CREATE TABLE IF NOT EXISTS `gate_params` (
+ `gate_id` smallint(5) unsigned NOT NULL,
+ `param` varchar(50) character set ascii NOT NULL,
+ `value` varchar(255) collate utf8_unicode_ci NOT NULL,
+ KEY `gate_id` (`gate_id`,`param`(20)),
+ CONSTRAINT `gate_params_ibfk_1` FOREIGN KEY (`gate_id`) REFERENCES `gates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

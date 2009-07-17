@@ -28,9 +28,9 @@
 \*******************************************************************/
 
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 5486 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 6041 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2009-02-06 09:14+0100
+POT-Creation-Date: 2009-06-15 14:02+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: English <>
@@ -38,6 +38,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 ',
+  '%d Min. %d Sek.' => '%d min. %d sec.',
+  '%d Sek.' => '%d sec.',
   '%s auf "%s"' => '%s on "%s"',
   '%s-Dokumentation' => '%s documentation',
   '&Uuml;berg. v. Melden' => 'Blind transfer',
@@ -63,7 +65,6 @@ Content-Transfer-Encoding: 8bit
   'API' => 'API',
   'Abbrechen' => 'Cancel',
   'Absprung' => 'Abandoned',
-  'Abweisen' => 'Deflect',
   'Abwesenheitsansage aufzeichnen' => 'Record unavailable message',
   'Abwesenheitsansage f&uuml;r Anrufe von extern aufzeichnen' => 'Record unavailable message for calls from external',
   'Abwesenheitsansage f&uuml;r Anrufe von intern aufzeichnen' => 'Record unavailable message for calls from internal',
@@ -415,7 +416,6 @@ Content-Transfer-Encoding: 8bit
   'Prov.-Param.-Profil' => 'Prov. profile',
   'Provisioning' => 'Provisioning',
   'Provisioning-Parameter-Profil' => 'Provisioning settings profile',
-  'Queue' => 'Queue',
   'Queues' => 'Queues',
   'R&uuml;ckfrage' => 'Consultation',
   'Regel bearbeiten' => 'Edit rule',
@@ -453,7 +453,6 @@ Content-Transfer-Encoding: 8bit
   'Sehr hohe Aufl&ouml;sung' => 'Highest resolution',
   'Seite' => 'Page',
   'Seiten' => 'Pages',
-  'Sekunden' => 'Seconds',
   'Semikolon' => 'Semicolon',
   'Senden' => 'Send',
   'Sender' => 'Sender',
@@ -511,7 +510,6 @@ Content-Transfer-Encoding: 8bit
   'Uhrzeit' => 'Time',
   'Umleiten in folgenden F&auml;llen' => 'Forward in these cases',
   'Umleitung' => 'Forward',
-  'Umleitungsnummern' => 'Call forwarding numbers',
   'Umschlie&szlig;ung' => 'Enclosure',
   'Ung&uuml;ltige DNS-Server-Adresse!' => 'Invalid DNS server address!',
   'Ung&uuml;ltige IP-Adresse &quot;%s&quot;!' => 'Invalid IP address &quot;%s&quot;!',

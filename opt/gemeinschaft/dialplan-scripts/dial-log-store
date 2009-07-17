@@ -40,11 +40,11 @@ $queue_number = trim(@$argv[4]);
 $rname        = trim(@$argv[5]);
 
 if (! preg_match('/^[0-9]+$/', $user_ext))
-	die();
+	exit(1);
 if (! in_array( $type, array('in','out','missed'), true ))
-	die();
+	exit(1);
 if (! $number)
-	die();
+	exit(1);
 $number = preg_replace( '/[^\d*#]/', '', $number );
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
@@ -61,7 +61,7 @@ $db = gs_db_master_connect();
 # get user id:
 #
 $uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user_ext) .'\'' );
-if ($uid < 1) die();
+if ($uid < 1) exit(1);
 
 # get queue id, if provided
 #
@@ -72,6 +72,8 @@ else
 
 # get remote user
 #
+
+# lookup in SIP users table first
 $rs = $db->execute(
 'SELECT
 	`u`.`id`, `u`.`firstname`, `u`.`lastname`
@@ -82,8 +84,21 @@ WHERE
 	`s`.`name`=\''. $db->escape($number) .'\''
 );
 $remote_user = $rs->fetchRow();
+
+$is_from_phonebook = false;
+if (! $remote_user) {
+	# if there is nothing in the ast_sipfriends, check the private phonebook
+	$rs = $db->execute('SELECT `firstname`, `lastname` FROM `pb_prv` WHERE `user_id`='.$uid.' AND `number`=\''. $db->escape($number) .'\'');
+	//FIXME - probably doesn't make much sense with uncanonized phone numbers
+	$remote_user = $rs->fetchRow();
+	$is_from_phonebook = true;
+}
+
 if ($remote_user) {
-	$db_remote_user_id = (int)$remote_user['id'];
+	if (! $is_from_phonebook)
+		$db_remote_user_id = (int)$remote_user['id'];
+	else
+		$db_remote_user_id = 'NULL';
 	$remote_name = '';
 	if ($remote_user['firstname'] != '')
 		$remote_name .= mb_subStr($remote_user['firstname'], 0, 1) .'. ';

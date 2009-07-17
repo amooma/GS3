@@ -9,6 +9,7 @@
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
+* Sebastian Ertz
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -29,11 +30,6 @@
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/phone-capability.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
-
-
-//FIXME
-//TODO
-//UNTESTED!
 
 
 class PhoneCapability_grandstream extends PhoneCapability
@@ -65,8 +61,7 @@ class PhoneCapability_grandstream extends PhoneCapability
 	
 	function conv_ringtone( $infile, $outbase )
 	{
-		/*
-		$outfile = $outbase .'.wav';
+		$outfile = $outbase .'.ul';
 		
 		if     (is_executable( '/usr/local/bin/mpg123' ))
 			$mpg123 = '/usr/local/bin/mpg123';
@@ -93,11 +88,9 @@ class PhoneCapability_grandstream extends PhoneCapability
 		} else
 			$rm_tmp = false;
 		
-		$cmd = 'sox '. qsa($infile) .' -r 8000 -c 1 -w '. qsa($outfile) .' trim 0 125000s 2>>/dev/null';
-		# WAV, PCM, 8 kHz, 16 bit, mono
-		# "The time for loading the file should not be longer then 3 seconds.
-		# Size < 250 KByte."
-		# cuts file after 125000 samples (around 245 kB, 15 secs)
+		$cmd = 'sox '. qsa($infile) .' -r 8000 -c 1 '. qsa($outfile) .' rate trim 0 65000s 2>>/dev/null';
+		# WAV, PCM, 16 kHz, 8 bit, mono
+		# cuts file after 65000 samples (around 65 kB)
 		@exec($cmd, $out, $err);
 		if ($err != 0) {
 			# $err == 2 would be unknown format
@@ -106,9 +99,9 @@ class PhoneCapability_grandstream extends PhoneCapability
 			return false;
 		}
 		return $outfile;
-		*/
+		
 		//return false;
-		return null;  # not implemented
+		//return null;  # not implemented
 	}
 }
 

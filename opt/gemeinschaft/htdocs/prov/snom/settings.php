@@ -244,7 +244,7 @@ function _settings_out()
 				}
 			}
 			/*
-				! means writeable by the user, but will not overwrite existing 
+				! means writeable by the user, but will not overwrite existing
 				$ means writeable by the user, but will overwrite existing (available since version 4.2)
 				& (or no flag) means read only, but will overwrite existing
 			*/
@@ -871,7 +871,7 @@ psetting('vpn_netcatserver', ''  );
 
 
 #####################################################################
-#  Action URLs 
+#  Action URLs
 #####################################################################
 
 /*

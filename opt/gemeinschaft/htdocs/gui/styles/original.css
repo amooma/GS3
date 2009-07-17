@@ -650,7 +650,7 @@ tr.odd .transp {
 
 
 #dialog {
-	position: absolute; 
+	position: absolute;
 	width: 425px;
 	padding: 10px;
 	z-index: 200;

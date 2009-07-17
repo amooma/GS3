@@ -278,7 +278,7 @@ WHERE
 		echo '<td>';
 		echo '<select name="musicclass">', "\n";
 		foreach ($moh_classes as $moh_class) {
-			echo '<option value="',$moh_class,'"', ($queue['musicclass'] == $moh_class ? ' selected="selected"' : ''),'>',$moh_class,'</option>',"\n";	
+			echo '<option value="',$moh_class,'"', ($queue['musicclass'] == $moh_class ? ' selected="selected"' : ''),'>',$moh_class,'</option>',"\n";
 		}
 		echo '<option value="" disabled="disabled">-</option>', "\n";
 		echo '<option value=""', ($queue['musicclass'] == '' ? ' selected="selected"' : '') ,'>', __('Klingeln statt Musik') ,'</option>', "\n";
@@ -328,7 +328,7 @@ WHERE
 		echo '<td>';
 		echo '<input type="text" name="timeout" value="', $queue['timeout'] ,'" size="3" maxlength="3" class="r" /> s', "\n";
 		echo '</td>';
-		echo '</tr>',"\n";		
+		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Max. Anrufer') ,'</th>',"\n";

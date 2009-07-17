@@ -30,13 +30,11 @@ defined('GS_VALID') or die('No direct access.');
 
 //define( 'GS_AASTRA_PUSH_MAXLEN', 10000 );  //FIXME - not used
 
-//$aastra_xml_buffer = '';
-
-
 function aastra_transmit_str( $xml )
 {
-	//$xml = utf8_decode($xml);
-	if (subStr($xml,0,5) !== '<'.'?xml') {
+	if ($xml == '') return true;
+	
+	if (! preg_match('/^<'.'\?xml/', $xml)) {
 		$xmlpi = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>'."\n";
 	} else {
 		$xmlpi = '';
@@ -48,16 +46,6 @@ function aastra_transmit_str( $xml )
 	echo $xmlpi, $xml;
 	return true;
 }
-
-/*
-function aastra_transmit()
-{
-	global $aastra_xml_buffer;
-	$ret = aastra_transmit_str( $aastra_xml_buffer );
-	$aastra_xml_buffer = '';
-	return $ret;
-}
-*/
 
 function aastra_push_str( $phone_ip, $xml )
 {
@@ -76,7 +64,7 @@ function aastra_push_str( $phone_ip, $xml )
 	}
 	
 	$data = "POST / HTTP/1.1\r\n";
-	$data.= "Host: $phone_ip\r\n";	
+	$data.= "Host: $phone_ip\r\n";
 	$data.= "Referer: $prov_host\r\n";
 	$data.= "Connection: Close\r\n";
 	$data.= "Content-Type: text/xml; charset=utf-8\r\n";
@@ -101,24 +89,6 @@ function aastra_push_str( $phone_ip, $xml )
 	gs_log(GS_LOG_DEBUG, "Aastra: Pushed $bytes_written bytes to phone $phone_ip");
 	return $bytes_written;
 }
-
-/*
-function aastra_push( $phone_ip )
-{
-	global $aastra_xml_buffer;
-	$bytes_written = aastra_push_str( $phone_ip, $aastra_xml_buffer );
-	$aastra_xml_buffer = '';
-	return $bytes_written;
-}
-*/
-
-/*
-function aastra_write( $str )
-{
-	global $aastra_xml_buffer;
-	$aastra_xml_buffer .= $str."\n";
-}
-*/
 
 /*
 function aastra_reboot( $phone_ip )

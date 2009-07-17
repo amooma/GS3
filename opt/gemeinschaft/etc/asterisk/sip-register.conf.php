@@ -100,18 +100,23 @@ if (! $DB) {
 }
 $rs = $DB->execute(
 'SELECT
-	`g`.`name`, `g`.`host`, `g`.`user`, `g`.`pwd`,
+	`g`.`name`, `g`.`host`, `g`.`proxy`, `g`.`user`, `g`.`pwd`,
 	`gg`.`name` `gg_name`
 FROM
 	`gates` `g` JOIN
 	`gate_grps` `gg` ON (`gg`.`id`=`g`.`grp_id`)
 WHERE
 	`g`.`type`=\'sip\' AND
-	`g`.`host` IS NOT NULL
+	`g`.`host` IS NOT NULL AND
+	`g`.`register`= 1
 ORDER BY `g`.`id`'
 );
 while ($gw = $rs->fetchRow()) {
 	if ($gw['host'] != '' && $gw['user'] != '') {
+		
+		if ($gw['proxy'] == null || $gw['proxy'] === $gw['host']) {
+			$gw['proxy'] = null;
+		}
 		
 		// Format for registration is user[:secret[:authuser]]@host[:port][/contact]
 		
@@ -133,8 +138,13 @@ while ($gw = $rs->fetchRow()) {
 				echo ':', $gw['user'];     # authuser
 			}
 		}
-		//echo '@', $gw['name'];             # peer definition
-		echo '@', $gw['host'];             # host
+		echo '@';
+		//echo $gw['name'];             # peer definition
+		if ($gw['proxy'] == null) {
+			echo $gw['host'];             # host
+		} else {
+			echo $gw['proxy'];             # proxy
+		}
 		if ($gw['user'] != '') {
 			echo '/', $gw['user'];         # contact
 		}

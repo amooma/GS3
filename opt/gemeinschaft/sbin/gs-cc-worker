@@ -179,7 +179,7 @@ FROM
 			//gs_log(GS_LOG_DEBUG, 'Don\'t try CC to "'. $cc['to_ext'] .'" because of unconditional forward');
 			gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': '. $cc['to_ext'] .' has unconditional forward. => no CC', 'cc.log');
 			continue;
-		}		
+		}
 		
 		gs_log(GS_LOG_DEBUG, 'Trying call completion from '. $cc['from_ext'] .' to '. $cc['to_ext'] .' ...');
 		$ok = @ $DB->execute( 'DELETE FROM `call_completion_waiting` WHERE `from_ext`=\''. $DB->escape($cc['from_ext']) .'\' AND `to_ext`=\''. $DB->escape($cc['to_ext']) .'\'' );

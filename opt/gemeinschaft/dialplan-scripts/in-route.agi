@@ -40,10 +40,10 @@ error_reporting(0);
 
 function _err( $msg )
 {
-	gs_agi_verbose('### '.$msg);
-	echo 'SET VARIABLE did_ext '. gs_agi_str_esc('') ."\n";
-	echo 'SET VARIABLE did_ext_to '. gs_agi_str_esc('') ."\n";
-	die();
+	gs_agi_verbose( '### '.$msg );
+	gs_agi_set_variable( 'did_ext', '' );
+	gs_agi_set_variable( 'did_ext_to', '' );
+	exit();
 }
 
 
@@ -73,7 +73,7 @@ if ($ggrp['in_dest_search'] != '') {
 	$ggrp['in_dest_replace'] = trim($ggrp['in_dest_replace']);
 	$number = @preg_replace('/'.$ggrp['in_dest_search'].'/', $ggrp['in_dest_replace'], $number);
 }
-echo 'SET VARIABLE did_ext '. gs_agi_str_esc($number) ."\n";
+gs_agi_set_variable( 'did_ext', $number );
 
 //FIXME - do the same thing for the callerid number
 
@@ -116,7 +116,7 @@ foreach ($routes as $route) {
 		break;
 	}
 }
-echo 'SET VARIABLE did_ext_to '. gs_agi_str_esc($number) ."\n";
+gs_agi_set_variable( 'did_ext_to', $number );
 
 
 

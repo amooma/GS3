@@ -31,6 +31,7 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_is_valid_name.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 /***********************************************************
 *  logs off a user
@@ -40,7 +41,7 @@ function gs_user_logout( $user, $reboot=true )
 {
 	$ret = gs_user_is_valid_name( $user );
 	if (isGsError($ret)) return $ret;
-	elseif (! $ret) return new GsError( 'Invalid username.' );	
+	elseif (! $ret) return new GsError( 'Invalid username.' );
 	
 	# connect to db
 	#
@@ -81,7 +82,8 @@ function gs_user_logout( $user, $reboot=true )
 	$user_ext = preg_replace('/[^0-9]/', '', $user_ext);
 	if ($user_ext != '') {
 		ob_start();
-		@exec( GS_DIR .'dialplan-scripts/queue-login-logout.agi '. $user_ext .' 0 logoutall 1>>/dev/null 2>>/dev/null' );
+		@exec( GS_DIR.'dialplan-scripts/fake-agi-env.php'
+		. ' '. qsa(GS_DIR.'dialplan-scripts/queue-login-logout.agi') .' '. qsa($user_ext) .' 0 logoutall 1>>/dev/null 2>>/dev/null' );
 		ob_end_clean();
 	}
 	

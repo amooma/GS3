@@ -840,7 +840,7 @@ echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 			<?php echo __('Benutzer'); ?>
 		</th>
 		<td style="width:280px;">
-			<?php echo htmlEnt($edit_user); ?>	
+			<?php echo htmlEnt($edit_user); ?>
 		</td>
 	</tr>
 </thead>
@@ -984,7 +984,7 @@ echo '<input type="hidden" name="u_grp_ed" value="yes" />', "\n";
 			}
 		}
 		echo '</select>',"\n";
-?>		
+?>
 		</td>
 	</tr>
 </tbody>
@@ -1011,7 +1011,7 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 		}
 		echo '<option value=""></option>',"\n";
 		echo '</select>',"\n";
-?>		
+?>
 		</td>
 	</tr>
 </tbody>
@@ -1040,17 +1040,17 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 		echo '<tr class="',($i%2===0 ?'odd':'even'),'">' ,"\n";
 		
 		echo "<td>\n";
-		echo htmlEnt($cb_entry['regexp']);	
+		echo htmlEnt($cb_entry['regexp']);
 		echo "</td>\n";
 		
 		echo "<td>\n";
-		echo htmlEnt($cb_entry['pin']);	
+		echo htmlEnt($cb_entry['pin']);
 		echo "</td>\n";
 		
 		echo "<td>\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'cbdelete='. rawUrlEncode($cb_entry['regexp']) .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '">';
 		echo '<img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-		echo "</td>\n";		
+		echo "</td>\n";
 		
 		echo "</tr>\n";
 		++$i;
@@ -1059,11 +1059,11 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 	echo '<tr class="',($i%2===0 ?'odd':'even'),'">' ,"\n";
 	
 	echo "<td>\n";
-	echo '<input type="text" name="cbregexp" value="" size="20" maxlength="40" />';	
+	echo '<input type="text" name="cbregexp" value="" size="20" maxlength="40" />';
 	echo "</td>\n";
 	
 	echo "<td>\n";
-	echo '<input type="text" name="cbpin" value="" size="20" maxlength="40" />';	
+	echo '<input type="text" name="cbpin" value="" size="20" maxlength="40" />';
 	echo "</td>\n";
 	
 	echo "<td>\n";
@@ -1104,12 +1104,12 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 		echo "<td>&nbsp;</td>\n";
 		
 		echo "<td>\n";
-		echo htmlEnt($ext_num);	
+		echo htmlEnt($ext_num);
 		echo "</td>\n";
 		
 		echo "<td>\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'extndel='.$ext_num .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-		echo "</td>\n";		
+		echo "</td>\n";
 		
 		echo "</tr>\n";
 		++$i;
@@ -1120,7 +1120,7 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 	echo "<td>&nbsp;</td>\n";
 	
 	echo "<td>\n";
-	echo '<input type="text" name="extnum" value="" size="20" maxlength="40" />';	
+	echo '<input type="text" name="extnum" value="" size="20" maxlength="40" />';
 	echo "</td>\n";
 	
 	echo "<td>\n";

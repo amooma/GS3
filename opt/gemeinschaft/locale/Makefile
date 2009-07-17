@@ -28,11 +28,16 @@ _check-cwd:
 
 _pot: _check-cwd
 	@echo "### Generating the .pot (.po template) ..."
+	@if [ "x`svn status -v ${DIR}/pot/${GETTEXT_DOMAIN}.pot | head -c 1`" != "x " ]; then \
+		echo "### pot/${GETTEXT_DOMAIN}.pot has local modifications." ;\
+		exit 1 ;\
+	fi
 	cd ${GEMEINSCHAFT_TAG_ROOT} \
 	&& find . -type f \
 		! -path '*/.svn/*' \
 		! -path '*/_*' \
 		! -path '* *' \
+		! -path './patches/*' \
 		-print0 \
 	| xargs -0 grep -I -l '__(' \
 	| xgettext -f - -L 'PHP' -d '${GETTEXT_DOMAIN}' -o '${DIR}/pot/${GETTEXT_DOMAIN}.pot' --copyright-holder='${COPYRIGHT_HOLDER}' --keyword='__' --from-code='UTF-8' -n -s --strict

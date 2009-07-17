@@ -37,9 +37,9 @@ ob_implicit_flush(1);
 
 $uname  = trim(@$argv[1]);
 
-if (! $uname) die();
+if (! $uname) gs_agi_err( 'Invalid extension' );
 if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
-	die();
+	gs_agi_err( 'Invalid extension' );
 }
 
 
@@ -50,7 +50,7 @@ $db = gs_db_slave_connect();
 
 # get user id:
 $uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($uname) .'\'' );
-if ($uid < 1) die();
+if ($uid < 1) gs_agi_err( 'User not found' );
 
 
 
@@ -90,26 +90,21 @@ while ($r = $rs->fetchRow()) {
 foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {
 		//if ($fw['number'] != '') {
-			echo 'SET VARIABLE fw_'.$source.'_'.$case .' '. gs_agi_str_esc($fw['number']) ."\n";
-			//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+			gs_agi_set_variable( 'fw_'.$source.'_'.$case, $fw['number'] );
 		//}
 	}
 }
 
 if ($forwards['internal']['unavail']['number'] != '') {
-	echo 'SET VARIABLE fw_internal_unavail_timeout '.
-		gs_agi_str_esc( $forwards['internal']['unavail']['timeout'] ) ."\n";
+	gs_agi_set_variable( 'fw_internal_unavail_timeout', $forwards['internal']['unavail']['timeout'] );
 } else {
-	echo 'SET VARIABLE fw_internal_unavail_timeout '.
-		gs_agi_str_esc('') ."\n";
+	gs_agi_set_variable( 'fw_internal_unavail_timeout', '' );
 }
 
 if ($forwards['external']['unavail']['number'] != '') {
-	echo 'SET VARIABLE fw_external_unavail_timeout '.
-		gs_agi_str_esc( $forwards['external']['unavail']['timeout'] ) ."\n";
+	gs_agi_set_variable( 'fw_external_unavail_timeout', $forwards['external']['unavail']['timeout'] );
 } else {
-	echo 'SET VARIABLE fw_external_unavail_timeout '.
-		gs_agi_str_esc('') ."\n";
+	gs_agi_set_variable( 'fw_external_unavail_timeout', '' );
 }
 
 $msgs = array(
@@ -122,10 +117,9 @@ foreach ($msgs as $src => $ignore) {
 		$msgs[$src] = $fname;
 }
 foreach ($msgs as $src => $file) {
-	echo 'SET VARIABLE vm_announce_'.$src .' '. gs_agi_str_esc($file) ."\n";
+	gs_agi_set_variable( 'vm_announce_'.$src, $file );
 }
 
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
 ?>

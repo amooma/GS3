@@ -47,7 +47,10 @@
       <literal>cdr_addon_mysql</literal> (MySQL-CDR-Backend) geschrieben. Die
       Konfigurationen dazu werden auf den Asterisk-Servern in der
       <filename>/opt/gemeinschaft/etc/asterisk/cdr_mysql.conf</filename>
-      vorgenommen.</para>
+      vorgenommen. Im Gegensatz zur Tabelle <literal>dial_log</literal> wird
+      diese Tabelle zur Auswertung von Gespächsdaten verwendet (z.B.
+      Statistik). Die Tabelle <literal>dial_log</literal> dient hingegen nur
+      der Anzeige für den Benutzer und wird von AGI-Skripten erstellt.</para>
 
       <variablelist>
         <varlistentry>
@@ -1387,7 +1390,9 @@
     <section>
       <title><literal>dial_log</literal></title>
 
-      <para>Liste getätigter, erhaltener oder verpasster Anrufe</para>
+      <para>Liste getätigter, erhaltener oder verpasster Anrufe. Diese Tabelle
+      wird durch AGI-Skripte im Dialplan gefüllt, und die einzelnen Einträge
+      können auch vom Benutzer gelöscht werden.</para>
 
       <variablelist>
         <varlistentry>

@@ -116,7 +116,7 @@ if (@$rs) {
 }
 
 $sql_query =
-'SELECT SQL_CALC_FOUND_ROWS 
+'SELECT SQL_CALC_FOUND_ROWS
 	`g`.`id`, `g`.`type`, `g`.`name`, `g`.`title`, `g`.`allow_out`, `g`.`allow_in`, `g`.`dialstr`,
 	`gg`.`title` `gtitle`, `gg`.`type` `gtype`, `gg`.`id` `gid`
 FROM
@@ -129,7 +129,7 @@ $rs = $DB->execute($sql_query);
 $num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
-?>	
+?>
 
 <table cellspacing="1" class="phonebook">
 <thead>

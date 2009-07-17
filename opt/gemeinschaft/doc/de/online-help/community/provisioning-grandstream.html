@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<title>Grandstream-Provisioning in Gemeinschaft</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="description" content="Provisioning f&uuml;r Grandstream-Telefone (BT und GXP) in Gemeinschaft" />
+	<meta name="keywords" content="gemeinschaft, provisioning, grandstream" />
+	<link rel="home" href="http://www.amooma.de/gemeinschaft/" title="Gemeinschaft - Telefonanlage" />
+	<link rel="up" href="./" title="Gemeinschaft - Community" />
+	<meta name="author" content="Philipp Kempgen @ Amooma GmbH" />
+	
+	<link rel="stylesheet" type="text/css" href="http://www.amooma.de/css/layout_2col_right_13.css" />
+	<!-- conditional comment for MS IE: -->
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="http://www.amooma.de/css/patches/patch_2col_right_13.css" />
+	<![endif]-->
+	
+	<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+	<div id="page_margins">
+		<div id="page">
+			<!-- seiten-header { -->
+			<div id="header" style="background:#00e url(http://www.amooma.de/img/header/palm3.png) 195px top no-repeat;">
+				<div id="header-main">
+					<h1><a href="http://www.amooma.de/"><img src="http://www.amooma.de/amooma-3.png" alt="AMOOMA GmbH" /></a></h1>
+				</div>
+			</div>
+			<!-- seiten-header } -->
+			
+			<!-- begin: main navigation #nav -->
+			<!-- end: main navigation -->
+			
+			<!-- begin: main content area #main -->
+			<div id="main">
+				<!-- begin: #col1 - first float column -->
+				<div id="col1">
+					<div id="col1_content" class="clearfix">
+						<a id="content" name="content"></a>
+						<!-- skiplink anchor: Content -->
+
+
+
+<div class="breadcrumbs">
+	<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a> &rarr;
+	<a href="../index.html">Hilfe</a> &rarr;
+	<a href="./index.html">Anleitungen aus der Community</a> &rarr;
+	Grandstream-Provisioning
+</div>
+<hr size="1" />
+
+<h2>Grandstream-Provisioning (BT- und GXP-Serie)</h2>
+
+<!--
+<p style="color:#d00; background:#fee; border:1px solid #fdd; padding:0.1em 0.3em;">
+<em>
+Achtung! Diese Seite ist eine inoffizielle Anleitung zu
+<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a>
+die von Mitgliedern der Community erstellt wurde. Wir
+k&ouml;nnen keinesfalls garantieren da&szlig; diese Anleitung
+funktioniert. Sie wird hier bereitgestellt in der Hoffnung
+da&szlig; sie anderen Anwendern hilft.
+</em>
+</p>
+-->
+<p align="right">
+<i>&mdash; Danke an Sebastian Ertz!</i>
+</p>
+
+<p>Anleitung zum erstmaligen <a href="../provisioning.html">Provisionieren</a> der Grandstream BT- und GXP-Serien in Gemeinschaft</p>
+
+<h3>Konfiguration in Gemeinschaft</h3>
+Einstellung in der Konfig-Datei <tt style="font-size:1.25em;">/etc/gemeinschaft/gemeinschaft.php</tt>:<br />
+<pre style="margin:0.3em 0 1.9em 0; background:#eee; border:1px solid #ddd; padding:0.5em 0.6em; font-size:1.12em;">$GRANDSTREAM_PROV_ENABLED   = <b>true</b>;</pre>
+
+<h3>Anmeldemaske</h3>
+<p>
+	<img src="provisioning-grandstream-anmelden.png" alt="Grandstream Login" /><br />
+	Mit dem Passwort <q>admin</q> einloggen.
+</p>
+
+<h3>Advanced Settings</h3>
+<p>
+	<img src="provisioning-grandstream-server.png" alt="Grandstream Config Server" /><br />
+	<q>Upgrade Via</q> = <q>HTTP</q><br />
+	<q>Config Server Path</q> = <q><i>{IP-Gemeinschaft}</i>/gemeinschaft/prov/grandstream</q><br />
+	<q>Allow DHCP Option 66 to override server</q> = <q>No</q> (BT-Serie hat diese Option nicht)
+</p>
+
+<p>
+	Ganz unten:<br />
+	<img src="provisioning-grandstream-update.png" alt="Grandstream Update" /><br />
+	auf <q>Update</q> klicken.
+</p>
+
+<h3>Reboot</h3>
+<p>
+	<img src="provisioning-grandstream-reboot.png" alt="Grandstream Reboot" /><br />
+	auf <q>Reboot</q> klicken.
+</p>
+
+<p>
+	Nun holt sich das Grandstream die Einstellungen vom Gemeinschafts-Server.
+	Beim Booten des Grandstream erkennt man dass die Message-LED leuchtet.
+</p>
+
+
+
+					</div>
+				</div>
+				<!-- end: #col1 -->
+				<!-- begin: #col3 static column -->
+				<!--#include virtual="/global/static-column-right.html" -->
+				<!-- end: #col3 -->
+			</div>
+			<!-- end: #main -->
+			
+			<!-- begin: #footer -->
+			<div id="footer">
+				AMOOMA GmbH - Bachstr. 126 - 56566 Neuwied - Germany<br />
+				Tel. +49 2631 337000 - E-Mail: <a href="mailto:info@amooma.de">info@amooma.de</a><br />
+				<a href="http://www.amooma.de/about-us/impressum.html">Impressum</a>
+				<br />
+				<div id="footer-yaml">
+					Layout based on <a href="http://www.yaml.de/" rel="nofollow" target="_blank">YAML</a>
+				</div>
+			</div>
+			<script type="text/javascript">
+				try {
+				var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+				document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+				} catch(e){}
+			</script>
+			<script type="text/javascript">
+				try {
+				var pageTracker = _gat._getTracker("UA-774512-1");
+				pageTracker._initData();
+				pageTracker._trackPageview();
+				} catch(e){}
+			</script>
+			<!-- end: #footer -->
+		</div>
+	</div>
+</body>
+</html>

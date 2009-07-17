@@ -39,17 +39,15 @@ $user_name = trim(@$argv[1]);
 $to        = trim(@$argv[2]);
 
 if (! preg_match('/^[0-9]*$/', $user_name)) {
-	echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('no') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
+	gs_agi_set_variable( 'dial_allowed', 'no' );
+	exit();
 }
 
 /*
 if ($user_id < 1) {
 	# originator is external
-	echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('no') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
+	gs_agi_set_variable( 'dial_allowed', 'no' );
+	exit();
 }
 */
 
@@ -65,9 +63,8 @@ $user_id = $db->executeGetOne(
 );
 if ($user_id < 1) {
 	// forwarded by a queue
-	echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('yes') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
+	gs_agi_set_variable( 'dial_allowed', 'yes' );
+	exit();
 }
 
 $allow_nobody = gs_get_conf('GS_NOBODY_ALLOW_EXTERNAL');
@@ -87,18 +84,17 @@ if ($rs) {
 	while ($row = $rs->fetchRow()) {
 		if (preg_match( '°'. $row['regexp'] .'°', $to )) {
 			if ($row['pin']=='') {
-				echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('no') ."\n";
+				gs_agi_set_variable( 'dial_allowed', 'no' );
 			} else {
-				echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('pin') ."\n";
-				echo 'SET VARIABLE dial_pin '. gs_agi_str_esc($row['pin']) ."\n";
+				gs_agi_set_variable( 'dial_allowed', 'pin' );
+				gs_agi_set_variable( 'dial_pin', $row['pin'] );
 			}
-			die();
+			exit();
 		}
 	}
 }
 
-echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('yes') ."\n";
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+gs_agi_set_variable( 'dial_allowed', 'yes' );
 
 
 ?>

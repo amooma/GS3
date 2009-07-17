@@ -302,7 +302,7 @@ if (@count($keys_snom) > 0) {
 		echo '</tr>', "\n";
 		if ($i_even) ++$left;
 		else ++$right;
-	}	
+	}
 }
 
 ?>

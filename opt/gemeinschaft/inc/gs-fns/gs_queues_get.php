@@ -59,7 +59,7 @@ ORDER BY `q`.`name`'
 	
 	$queues = array();
 	while ($r = $rs->fetchRow())
-		$queues[] = $r;	
+		$queues[] = $r;
 	return $queues;
 }
 

@@ -36,9 +36,9 @@ ob_implicit_flush(1);
 $user_ext  = trim(@$argv[1]);
 $active    = (bool)trim(@$argv[2]);
 
-if (! $user_ext) die();
+if (! $user_ext) gs_agi_err( 'Invalid extension' );
 if (! preg_match('/^\d+$/', $user_ext)) {  // is not just digits
-	die();
+	gs_agi_err( 'Invalid extension' );
 }
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
@@ -50,7 +50,7 @@ $db = gs_db_master_connect();
 # get user id:
 #
 $uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user_ext) .'\'' );
-if ($uid < 1) die();
+if ($uid < 1) gs_agi_err( 'User not found' );
 
 $db_comment = $active
 	? $db->escape(@GS_USERCOMMENT_OFFTIME)

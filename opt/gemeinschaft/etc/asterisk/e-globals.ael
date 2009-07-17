@@ -43,11 +43,12 @@ max_forwards=10;
 	// max. forwards from user to user to prevent infinite
 	// loops
 
-allow_direct_dial_mbox=no;
+//allow_direct_dial_mbox=no;
 	// allow direct dial to mailbox even if mailbox
 	// not active
 	// yes|no
 	// deprecated!
+	// commented out in the dialplan (e-internal.ael)!
 
 #exec "/opt/gemeinschaft/etc/asterisk/e-globals.ael.php"
 

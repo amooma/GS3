@@ -1,0 +1,160 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* Soeren Sprenger <soeren.sprenger@amooma.de>
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/mb_str_pad.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
+
+//include_once( GS_DIR .'inc/gs-fns/gs_calllog_get.php' );
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --type=missed|in|out';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'user=',
+		'type='
+	),
+	$usage
+);
+if (! isSet( $opts['user'] )) {
+	gs_script_invalid_usage( $usage );
+}
+
+$types_valid = array('missed', 'in', 'out');
+if (! in_array($opts['type'], $types_valid, true)) {
+	gs_script_invalid_usage( $usage );
+}
+
+/***********************************************************
+*    call the function
+***********************************************************/
+
+$db = gs_db_master_connect();
+if (! $db)
+	gs_script_error( 'Could not connect to database.' );
+
+$user = gs_user_get($opts['user']);
+if (isGsError( $user )) gs_script_error( $user->getMsg() );
+if (! $user)            gs_script_error();
+
+// get calllog	
+$sql =
+'SELECT '.
+	'SQL_CALC_FOUND_ROWS MAX(`d`.`timestamp`) `ts` , `d`.`number` , `d`.`type` , `d`.`remote_name` , `u`.`id` `r_uid` , `u`.`lastname` `r_ln` , `u`.`firstname` `r_fn` '.
+'FROM '.
+	'`dial_log` `d` LEFT JOIN '.
+	'`users` `u` ON (`u`.`id` = `d`.`remote_user_id`) '.
+'WHERE '.
+	'`d`.`user_id`='. $user['id'] .' AND '.
+	'`d`.`type`=\''. $db->escape($opts['type']) .'\' '.
+'GROUP BY `d`.`number` '.
+'ORDER BY `ts` '.
+'LIMIT 0,20';
+
+$rs = $db->execute($sql);
+if (! $rs)
+	gs_script_error( 'DB error.' );
+$calllog = array();
+while($r = $rs->fetchRow()) {
+	array_push($calllog, $r);
+}
+
+
+$fields = array(
+	'number'      =>  1,
+	'ts'          => 10,
+	'type'        =>  6,
+	'remote_name' => 10,
+	'r_uid'       =>  1,
+	'r_ln'        =>  1,
+	'r_fn'        =>  1
+);
+
+$fieldsAbbr = array(
+	'number'      => 'number',
+	'ts'          => 'timestamp',
+	'type'        => 'type',
+	'remote_name' => 'r_name',
+	'r_uid'       => 'r_gs_uid',
+	'r_ln'        => 'r_lastname',
+	'r_fn'        => 'r_firstname'
+);
+
+$fieldsPad = array(
+	'number'      => STR_PAD_RIGHT,
+	'ts'          => STR_PAD_LEFT,
+	'type'        => STR_PAD_RIGHT,
+	'remote_name' => STR_PAD_RIGHT,
+	'r_uid'       => STR_PAD_RIGHT,
+	'r_ln'        => STR_PAD_RIGHT,
+	'r_fn'        => STR_PAD_RIGHT
+);
+
+
+foreach ($fields as $field => $length) {
+	if (strLen($fieldsAbbr[$field]) > $length) {
+		$fields[$field] = strLen($fieldsAbbr[$field]);
+	}
+}
+foreach ($calllog as $ignore => $calllog_e) {
+	foreach ($fields as $field => $length) {
+		if (mb_strLen($calllog_e[$field]) > $length)
+			$fields[$field] = mb_strLen($calllog_e[$field]);
+	}
+}
+
+// print out table
+$header = '| ';
+foreach ($fields as $field => $length) {
+	$header.= str_pad( $fieldsAbbr[$field], $length, ' ' ) .' | ';
+}
+$sep = str_repeat( '-', strLen($header)-1 );
+
+echo $sep, "\n";
+echo $header, "\n";
+echo $sep, "\n";
+
+foreach ($calllog as $ignore => $calllog_e) {
+	echo '| ';
+	foreach ($fields as $field => $length) {
+		echo mb_str_pad( $calllog_e[$field], $length, ' ', $fieldsPad[$field] ), ' | ';
+	}
+	echo "\n";
+}
+echo $sep, "\n";
+
+?>

@@ -38,7 +38,7 @@ $default_dialstrs = array(
 	'misdn'   => 'mISDN/g:{gateway}/{number:1}',
 	'woomera' => 'Woomera/g{port}/{number:1}',
 	'zap'     => 'Zap/g{port}/{number:1}',
-	'capi'    => 'Capi/{port}/{number:1}',
+	'capi'    => 'Capi/isdn_{gateway}/{number:1}',
 	);
 $gw_types = array(
 	'misdn'   => 'mISDN',
@@ -224,7 +224,7 @@ if ($action === 'edit') {
 	foreach ($default_dialstrs as $gw_type_key => $gw_type_default_dialstr) {
 		echo '<option value="',$gw_type_key,'"';
 		if ($gw['type'] == $gw_type_key) echo ' selected="selected"';
-		echo '>', htmlEnt($gw_types[$gw_type_key]) ,'</option>',"\n";	
+		echo '>', htmlEnt($gw_types[$gw_type_key]) ,'</option>',"\n";
 	}
 	echo '</select>';
 	echo '</td>',"\n";

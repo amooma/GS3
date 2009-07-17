@@ -40,9 +40,8 @@ $uid  = (int)trim(@$argv[1]);
 
 if ($uid < 1) {
 	# originator is external
-	echo 'SET VARIABLE clir '. gs_agi_str_esc('0') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
+	gs_agi_set_variable( 'clir', '0' );
+	exit();
 }
 
 
@@ -77,8 +76,7 @@ elseif ($restrict=='once') {
 
 }
 
-echo 'SET VARIABLE clir '. gs_agi_str_esc($clir) ."\n";
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+gs_agi_set_variable( 'clir', $clir );
 
 
 ?>

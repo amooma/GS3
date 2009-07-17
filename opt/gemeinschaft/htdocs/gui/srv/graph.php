@@ -55,7 +55,7 @@ if ($height < 50) $height = 180;
 
 $padt = 12;
 $padb = 22;
-$padl = 35;
+$padl = 40;
 $padr = 14;
 
 $cw = $width  - $padl - $padr;
@@ -295,7 +295,7 @@ echo '<desc>', 'Gemeinschaft statistics' ,'</desc>
 .yAxisLabel {
 	text-anchor: end;
 	fill: #000000;
-	font-size: 12px;
+	font-size: 11px;
 	font-family: 'Helvetica', sans-serif;
 	font-weight: normal;
 	font-style: normal;

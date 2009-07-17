@@ -75,6 +75,11 @@ if (count($opts) > 2) {
 }
 $reboot = (strToLower($opts['reboot']) != 'no');
 
+if (isSet($opts['all']) && $opts['all'] !== 'yes') {
+	echo "Use --all=yes\n";
+	gs_script_invalid_usage( $usage );
+}
+
 
 /***********************************************************
 *    call the function
@@ -85,8 +90,10 @@ elseif (isSet( $opts['ext'] ))
 	$ret = @ gs_prov_phone_checkcfg_by_ext( $opts['ext'], $reboot );
 elseif (isSet( $opts['ip'] ))
 	$ret = @ gs_prov_phone_checkcfg_by_ip( $opts['ip'], $reboot );
-else
+elseif (isSet( $opts['all'] ))
 	$ret = @ gs_prov_phone_checkcfg_all( $reboot );
+else
+	gs_script_invalid_usage( $usage );
 
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)

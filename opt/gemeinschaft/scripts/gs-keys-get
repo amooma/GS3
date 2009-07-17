@@ -76,6 +76,8 @@ $fieldsAbbr = array(
 	'user_writeable' => 'w'
 );
 
+$num_defined_keys = 0;
+
 if (gs_stdout_is_console()) {
 	
 	$fieldsPad = array(
@@ -127,6 +129,7 @@ if (gs_stdout_is_console()) {
 			echo str_pad( $key[$field], $length, ' ', $fieldsPad[$field] ), ' | ';
 		}
 		echo "\n";
+		++$num_defined_keys;
 	}
 	echo $sep, "\n";
 
@@ -151,8 +154,51 @@ else {
 			echo gs_add_c_slashes( $key[$field] ) ,"\t";
 		}
 		echo "\n";
+		++$num_defined_keys;
 	}
 	
+}
+
+
+if ($num_defined_keys < 1) {
+	# Maybe the user asked for an unknown phone type.
+	# Try to be helpful.
+	if (gs_stdout_is_console()) {
+		include_once( GS_DIR .'inc/db_connect.php' );
+		$db = gs_db_slave_connect();
+		if ($db) {
+			$exists = $db->executeGetOne(
+				'SELECT 1 `e` '.
+				'FROM `softkeys` '.
+				'WHERE `phone_type`=\''. $db->escape($opts['phone']) .'\' '.
+				'LIMIT 1'
+				);
+			if (! $exists) {
+				echo '#' ,"\n";
+				echo sPrintF('# Found no softkey profiles for phone type "%s" in the database.', $opts['phone']) ,"\n";
+				echo '# Known phone types are:' ,"\n";
+				/*
+				$rs = $db->execute(
+					'SELECT DISTINCT(`phone_type`) `phone_type` '.
+					'FROM `softkeys` '.
+					'ORDER BY `phone_type`'
+					);
+				*/
+				$rs = $db->execute(
+					'SELECT `phone_type`, COUNT(*) `c` '.
+					'FROM `softkeys` '.
+					'GROUP BY `phone_type` '.
+					'ORDER BY `phone_type`'
+					);
+				if ($rs) {
+					while ($r = $rs->fetchRow()) {
+						echo '#   ', $r['phone_type'] ,'  (used ', $r['c'] ,' times)' ,"\n";
+					}
+				}
+				echo '#' ,"\n";
+			}
+		}
+	}
 }
 
 

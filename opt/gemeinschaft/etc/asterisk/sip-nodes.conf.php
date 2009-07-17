@@ -29,6 +29,27 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 
+function printparam( $param, $value, &$userparamarray, $html=false ) {
+	if ($param == '')
+		return;
+	$printbr = true;
+
+	if (array_key_exists($param, $userparamarray)) {
+		if ($userparamarray[$param] != '')
+			echo $param ." = ". $userparamarray[$param];
+		else
+			$printbr = false;
+		unset($userparamarray[$param]);
+	} else {
+		echo $param ." = ". $value;
+	}
+	if ($printbr) {
+		if ($html)
+			echo "<br \>";
+		echo "\n";
+	}
+}
+
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
@@ -109,7 +130,7 @@ if (! $DB) {
 }
 $rs = $DB->execute(
 'SELECT
-	`g`.`name`, `g`.`host`, `g`.`user`, `g`.`pwd`,
+	`g`.`id`, `g`.`name`, `g`.`host`, `g`.`proxy`, `g`.`user`, `g`.`pwd`,
 	`gg`.`name` `gg_name`
 FROM
 	`gates` `g` JOIN
@@ -147,11 +168,32 @@ while ($gw = $rs->fetchRow()) {
 		$port = '5060';
 	}
 	
-	if ($gw['host'] === 'sip.1und1.de') {  # special settings for 1und1.de
-		$canreinvite    = 'no';
+	if (preg_match('/@([^@]*)$/', $gw['user'], $m)) {
+		# set domain in the From header
+		$fromdomain = $m[1];
+		$gw['user'] = subStr($gw['user'], 0, -strLen($m[0]));
 		
-		$fromdomain     = '1und1.de';
-		$fromuser       = $gw['user'];
+		# assume that this SIP provider requires the username
+		# instead of the caller ID number in the From header (and
+		# that the caller ID is to be set in a P-Preferred-Identity
+		# header)
+		$fromuser   = $gw['user'];
+		
+		# also assume that this gateway is a SIP provider and
+		# that re-invites will not work
+		$canreinvite    = 'no';
+	}
+	
+	if ($gw['proxy'] == null || $gw['proxy'] === $gw['host']) {
+		$gw['proxy'] = null;
+	}
+	
+	
+	if (strToLower($gw['host']) === 'sip.1und1.de') {  # special settings for 1und1.de
+		//$canreinvite    = 'no';
+		
+		//$fromdomain     = '1und1.de';
+		//$fromuser       = $gw['user'];
 		
 		$qualify        = 'no';
 		$maxexpiry      = 3600;
@@ -164,47 +206,61 @@ while ($gw = $rs->fetchRow()) {
 		$codecs_allow['g729'   ] = true;
 		$codecs_allow['slinear'] = true;
 	}
-	elseif (substr($gw['host'], 0, 7) === 'sipgate') {  # special settings for SipGate.de
-		$canreinvite    = 'no';
-		$fromdomain     = $gw['host'];
-		$fromuser       = $gw['user'];
+	elseif (strToLower($gw['host']) === 'sipgate.de') {  # special settings for SipGate.de
+		//$canreinvite    = 'no';
+		//$fromdomain     = 'sipgate.de';
+		//$fromuser       = $gw['user'];
+	}
+	elseif (preg_match('/\\.sipgate\\.de$/i', $gw['host'])) {  # special settings for SipGate.de
+		# sipconnect.sipgate.de, SipGate "Team" trunk
+		//$fromuser       = $gw['user'];
+		//$canreinvite    = 'no';
 	}
 	
 	
+	$userparamarray = array();
+	$g_params = $DB->execute('SELECT * FROM `gate_params` WHERE `gate_id` ='.$gw['id']);
+	while ($param = $g_params->fetchRow())
+		$userparamarray[$param['param']] = $param['value'];
+
 	echo '[', $gw['name'] ,']' ,"\n";
-	echo 'type = peer' ,"\n";
-	echo 'host = ' , $host ,"\n";
-	echo 'port = ' , $port ,"\n";
-	echo 'username = ', $gw['user'] ,"\n";
-	echo 'secret = ' , $gw['pwd' ] ,"\n";
+	printparam( 'type', 'peer', $userparamarray);
+	printparam( 'host', $host, $userparamarray);
+	printparam( 'port', $port, $userparamarray);
+	printparam( 'username', $gw['user'], $userparamarray);
+	printparam( 'secret', $gw['pwd'], $userparamarray);
+	
+	if ($gw['proxy'] != null) {
+		printparam( 'outboundproxy', $gw['proxy'], $userparamarray);
+	}
 	if ($fromdomain != null) {
-		echo 'fromdomain = ', $fromdomain ,"\n";
+		printparam( 'fromdomain', $fromdomain, $userparamarray);
 	}
 	if ($fromuser != null) {
-		echo 'fromuser = ', $fromuser ,"\n";
+		printparam( 'fromuser', $fromuser, $userparamarray);
 	}
-	echo 'insecure = port,invite' ,"\n";
-	echo 'nat = ', $nat ,"\n";
-	echo 'canreinvite = ', $canreinvite ,"\n";
-	echo 'dtmfmode = rfc2833' ,"\n";
-	echo 'call-limit = 0' ,"\n";
-	echo 'registertimeout = 60' ,"\n";
-	//echo 't38pt_udptl = yes' ,"\n";
-	echo 'setvar=__is_from_gateway=1' ,"\n";
-	echo 'context = from-gg-', $gw['gg_name'] ,"\n";
-	echo 'qualify = ', $qualify ,"\n";
-	echo 'language = ', 'de' ,"\n";
-	echo 'maxexpiry = ', $maxexpiry ,"\n";
-	echo 'defaultexpiry = ', $defaultexpiry ,"\n";
-	echo 'disallow = all' ,"\n";
+	printparam( 'insecure', 'port,invite', $userparamarray);
+	printparam( 'nat', $nat, $userparamarray);
+	printparam( 'canreinvite', $canreinvite, $userparamarray);
+	printparam( 'dtmfmode', 'rfc2833', $userparamarray);
+	printparam( 'call-limit', '0', $userparamarray);
+	printparam( 'registertimeout', '60', $userparamarray);
+	printparam( 'setvar=__is_from_gateway', '1', $userparamarray);
+	printparam( 'context', 'from-gg-'.$gw['gg_name'], $userparamarray);
+	printparam( 'qualify', $qualify, $userparamarray);
+	printparam( 'language', 'de', $userparamarray);
+	printparam( 'maxexpiry', $maxexpiry, $userparamarray);
+	printparam( 'defaultexpiry', $defaultexpiry, $userparamarray);
+	printparam( 'disallow', 'all', $userparamarray);
 	foreach ($codecs_allow as $codec => $allowed) {
 		if ($allowed) {
-			echo 'allow = ', $codec ,"\n";
+			printparam( 'allow', $codec, $userparamarray);
 		}
 	}
+	foreach ($userparamarray as $param => $value) {
+		printparam( $param, '', $userparamarray);
+	}
 	echo "\n";
-	
 }
-
 
 ?>

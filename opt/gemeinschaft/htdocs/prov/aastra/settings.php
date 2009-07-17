@@ -72,7 +72,7 @@ function aastra_get_expansion_modules()
 	if (@$_SERVER['HTTP_X_AASTRA_EXPMOD1']) {
 		$exp_mod[0] = 'aastra-'. strToLower($_SERVER['HTTP_X_AASTRA_EXPMOD1']);
 		gs_log( GS_LOG_DEBUG, 'Expansion module 1 : '. $exp_mod[0]);
-	}	
+	}
 	if (@$_SERVER['HTTP_X_AASTRA_EXPMOD2']) {
 		$exp_mod[1] = 'aastra-'. strToLower($_SERVER['HTTP_X_AASTRA_EXPMOD2']);
 		gs_log( GS_LOG_DEBUG, 'Expansion module 2 : '. $exp_mod[1]);
@@ -93,7 +93,7 @@ function aastra_keys_out( $user_id, $phone_type, $module=0 )
 	
 	$module_sql = '';
 	if ($module) {
-		$module_sql = 'AND `key` LIKE \'expmod'.((int)$module).'%\'';	
+		$module_sql = 'AND `key` LIKE \'expmod'.((int)$module).'%\'';
 	}
 	
 	$query =
@@ -149,7 +149,7 @@ function aastra_get_softkeys( $user_id, $phone_type )
 				break;
 			case 'aastra-55i':
 				if ($key_num >=  1) $key_name = 'prgkey'    .($key_num);
-				if ($key_num >=100) $key_name = 'softkey'   .($key_num-100);	
+				if ($key_num >=100) $key_name = 'softkey'   .($key_num-100);
 				break;
 			default:
 				$key_name = 'prgkey'.$key_num;
@@ -224,7 +224,7 @@ if (! preg_match('/^Aastra/', $ua)
 }
 
 # find out the type of the phone:
-if (preg_match('/^Aastra([1-9][0-9]{2,4}i?) /', $ua, $m))  # e.g. "Aastra57i"
+if (preg_match('/^Aastra([1-9][0-9]{1,4}i?) /', $ua, $m))  # e.g. "Aastra57i"
 	$phone_model = $m[1];  # e.g. "57i"
 else
 	$phone_model = 'unknown';
@@ -366,6 +366,14 @@ psetting('redial disabled'    , '0');
 # to "rcs.aastra.com". We have to overwrite it on the first occasion.
 //FIXME ...
 
+# reset all visible softkeys
+for ($i=1; $i<=5; ++$i) {
+	psetting('topsoftkey'.$i.' type', 'empty');
+}
+for ($i=1; $i<=5; ++$i) {
+	psetting('softkey'.$i.' type'   , 'empty');
+}
+
 psetting('softkey1 type'   , 'xml');
 psetting('softkey1 value'  , $prov_url_aastra.'pb.php');
 psetting('softkey1 label'  , __('Tel.buch'));
@@ -373,6 +381,10 @@ psetting('softkey1 label'  , __('Tel.buch'));
 psetting('softkey2 type'   , 'xml');
 psetting('softkey2 value'  , $prov_url_aastra.'dial-log.php');
 psetting('softkey2 label'  , __('Anrufliste'));
+
+psetting('softkey3 type'   , 'speeddial');
+psetting('softkey3 value'  , 'voicemail');
+psetting('softkey3 label'  , __('Voicemail'));
 
 
 # get softkeys
@@ -426,6 +438,8 @@ psetting('sip registrar port'      , '5060');
 psetting('sip registration period' , '3600');
 psetting('sip outbound proxy'      , ($sip_proxy_and_sbc['sip_proxy_from_wan'] != '' ? $sip_proxy_and_sbc['sip_proxy_from_wan'] : $host) );
 psetting('sip outbound proxy port' , '5060');
+psetting('sip proxy ip'            , $host);
+psetting('sip proxy port'          , '5060');
 
 
 

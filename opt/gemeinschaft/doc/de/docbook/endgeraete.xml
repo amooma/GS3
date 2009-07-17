@@ -278,10 +278,12 @@
 
   <section id="siemens-openstage">
     <title>Siemens OpenStage</title>
-
-    <note>
-      <para>FIXME</para>
-    </note>
+    <para>
+      Welche Schritte genau nötig sind, um das Provisioning für das Openstage 
+      zu installieren wird ausführlich in der Datei INSTALL.txt erläutert. 
+      Diese findet man in der jeweiligen Gemeinschafts-Distribution im 
+      /opt/gemeinschaft-siemens/doc Verzeichnis.
+    </para>
 
     <para>Reboot: Per Konfigurations-Taste in den Reiter <quote>Menü</quote>
     schalten und dann gleichzeitig die Tasten <literal>1</literal>,
@@ -296,5 +298,6 @@
 
     <para>Das Admin-Paßwort ist per Default <literal>123456</literal> (oder
     <literal>000000</literal>?).</para>
+    <para>Das Factory-Reset-Paßwort ist per Default <literal>124816</literal></para>
   </section>
 </chapter>

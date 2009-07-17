@@ -39,14 +39,12 @@ $ext  = trim(@$argv[1]);
 $is_huntgroup = trim(@$argv[2]);
 
 if (! $ext) {
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
+	gs_agi_set_variable( '__exttype', '' );
+	exit();
 }
 if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
+	gs_agi_set_variable( '__exttype', 'unknown' );
+	exit();
 }
 
 
@@ -70,18 +68,16 @@ if ($is_huntgroup != 1) {
 #
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 if ($num > 0) {
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('user') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
+	gs_agi_set_variable( '__exttype', 'user' );
+	exit();
 }
 
 # is it a queue?
 #
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queues` WHERE `name`=\''. $db->escape($ext) .'\'' );
 if ($num > 0) {
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('queue') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
+	gs_agi_set_variable( '__exttype', 'queue' );
+	exit();
 }
 
 # is it a ivr?
@@ -94,8 +90,7 @@ if ($num > 0) {
 }
 
 
-echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+gs_agi_set_variable( '__exttype', 'unknown' );
 
 
 ?>

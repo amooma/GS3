@@ -38,7 +38,7 @@ ob_implicit_flush(1);
 $queue_name = trim(@$argv[1]);
 
 if (! preg_match('/^\d+$/', $queue_name))  // is not just digits
-	die();
+	gs_agi_err( 'Invalid queue extension' );
 
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/queue-status.php' );
@@ -74,23 +74,23 @@ FROM
 	`hosts` `h` ON (`h`.`id`=`q`.`_host_id`)
 WHERE `q`.`name`=\''. $db->escape($queue_name) .'\'' );
 $queue = $rs->fetchRow();
-if (! $queue) die();
+if (! $queue) gs_agi_err( 'Queue not found' );
 
 # get queue stats from manager interface
 #
 $queue_stats = gs_queue_status( $queue['host'], $queue_name, true, false );
 if (! is_array($queue_stats) || ! is_array($queue_stats['members']))
-	die();
+	gs_agi_err( 'Failed to get queue stats' );
 
 $num_members = count( $queue_stats['members'] );
-echo 'SET VARIABLE queue_num_members '. gs_agi_str_esc($num_members) ."\n";
+gs_agi_set_variable( 'queue_num_members', $num_members );
 
 $num_avail = 0;
 foreach ($queue_stats['members'] as $member) {
 	if (_devstate2avail( @$member['devstate'] ))
 		++$num_avail;
 }
-echo 'SET VARIABLE queue_avail_members '. gs_agi_str_esc($num_avail) ."\n";
+gs_agi_set_variable( 'queue_avail_members', $num_avail );
 
 
 ?>

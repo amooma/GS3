@@ -38,7 +38,7 @@ ob_implicit_flush(1);
 $queue_ext  = trim(@$argv[1]);
 
 if (! preg_match('/^\d+$/', $queue_ext)) {  // is not just digits
-	die();
+	gs_agi_err( 'Invalid queue extension' );
 }
 
 
@@ -50,8 +50,8 @@ $db = gs_db_slave_connect();
 # get queue info:
 $rs = $db->execute( 'SELECT `_id`, `musicclass`, `_title` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue_ext) .'\'' );
 $queue = $rs->getRow();
-if (! $queue) die();
-if ((int)$queue['_id'] < 1) die();
+if (! $queue) gs_agi_err( 'Queue not found' );
+if ((int)$queue['_id'] < 1) gs_agi_err( 'Queue not found' );
 
 
 # get call forwards
@@ -90,34 +90,29 @@ while ($r = $rs->fetchRow()) {
 foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {
 		//if ($fw['number'] != '') {
-			echo 'SET VARIABLE fw_'.$source.'_'.$case .' '. gs_agi_str_esc($fw['number']) ."\n";
-			//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+			gs_agi_set_variable( 'fw_'.$source.'_'.$case, $fw['number'] );
 		//}
 	}
 }
 if ($forwards['internal']['timeout']['number'] != '') {
-	echo 'SET VARIABLE fw_internal_timeout_timeout '. gs_agi_str_esc( $forwards['internal']['timeout']['timeout'] ) ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	gs_agi_set_variable( 'fw_internal_timeout_timeout', $forwards['internal']['timeout']['timeout'] );
 }
 if ($forwards['external']['timeout']['number'] != '') {
-	echo 'SET VARIABLE fw_external_timeout_timeout '. gs_agi_str_esc( $forwards['external']['timeout']['timeout'] ) ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	gs_agi_set_variable( 'fw_external_timeout_timeout', $forwards['external']['timeout']['timeout'] );
 }
 
 
 # ring instead of MOH?
 #
 $ring_instead_of_moh = (trim($queue['musicclass']) == '');
-echo 'SET VARIABLE ring_instead_of_moh '. gs_agi_str_esc( $ring_instead_of_moh ? 'r':'' ) ."\n";
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+gs_agi_set_variable( 'ring_instead_of_moh', ($ring_instead_of_moh ? 'r':'') );
 
 # queue title (for caller ID display)
 #
 $displayname = rTrim(subStr( preg_replace('/  +/', ' ',
 	preg_replace('/[^a-zA-Z0-9\\-_.,+\\(\\) ]/', '', trim($queue['_title']))),
 	0, 15));
-echo 'SET VARIABLE queue_displayname '. gs_agi_str_esc( $displayname != '' ? $displayname : 'Q'.$queue_ext ) ."\n";
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+gs_agi_set_variable( 'queue_displayname', ( $displayname != '' ? $displayname : 'Q'.$queue_ext ) );
 
 
 ?>

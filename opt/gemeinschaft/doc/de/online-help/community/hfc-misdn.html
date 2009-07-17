@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<title>Gemeinschaft - HFC-Karten mit mISDN</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="description" content="HFC-Karten mit mISDN an Gemeinschaft betreiben" />
+	<meta name="keywords" content="gemeinschaft, hfc, misdn" />
+	<link rel="home" href="http://www.amooma.de/gemeinschaft/" title="Gemeinschaft - Telefonanlage" />
+	<link rel="up" href="./" title="Gemeinschaft - Community" />
+	<meta name="author" content="Philipp Kempgen @ Amooma GmbH" />
+	
+	<link rel="stylesheet" type="text/css" href="http://www.amooma.de/css/layout_2col_right_13.css" />
+	<!-- conditional comment for MS IE: -->
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="http://www.amooma.de/css/patches/patch_2col_right_13.css" />
+	<![endif]-->
+	
+	<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+	<div id="page_margins">
+		<div id="page">
+			<!-- seiten-header { -->
+			<div id="header" style="background:#00e url(http://www.amooma.de/img/header/palm3.png) 195px top no-repeat;">
+				<div id="header-main">
+					<h1><a href="http://www.amooma.de/"><img src="http://www.amooma.de/amooma-3.png" alt="AMOOMA GmbH" /></a></h1>
+				</div>
+			</div>
+			<!-- seiten-header } -->
+			
+			<!-- begin: main navigation #nav -->
+			<!-- end: main navigation -->
+			
+			<!-- begin: main content area #main -->
+			<div id="main">
+				<!-- begin: #col1 - first float column -->
+				<div id="col1">
+					<div id="col1_content" class="clearfix">
+						<a id="content" name="content"></a>
+						<!-- skiplink anchor: Content -->
+
+
+
+<div class="breadcrumbs">
+	<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a> &rarr;
+	<a href="../index.html">Hilfe</a> &rarr;
+	<a href="./index.html">Anleitungen aus der Community</a> &rarr;
+	HFC-Karten mit mISDN
+</div>
+<hr size="1" />
+
+<h2>Howto f&uuml;r HFC-Karten mit mISDN</h2>
+
+<p style="color:#d00; background:#fee; border:1px solid #fdd; padding:0.1em 0.3em;">
+<em>
+Achtung! Diese Seite ist eine inoffizielle Anleitung zu
+<a href="http://www.amooma.de/gemeinschaft/">Gemeinschaft</a>
+die von Mitgliedern der Community erstellt wurde. Wir
+k&ouml;nnen keinesfalls garantieren da&szlig; diese Anleitung
+funktioniert. Sie wird hier bereitgestellt in der Hoffnung
+da&szlig; sie anderen Anwendern hilft.
+</em>
+</p>
+
+<p>Diese Howto beschreibt kurz und knapp wie man HFC-Karten mit Hilfe
+von mISDN in Gemeinschaft Version 2.2.1 einbinden und einen internen
+S0-Bus konfigurieren kann.</p>
+
+<h3>Linux-Header und notwendige Pakete installieren</h3>
+<pre>apt-get install linux-headers-`uname -r`
+apt-get install flex
+apt-get install bc</pre>
+
+
+<h3>Hisax und andere ISDN-Module blacklisten</h3>
+<p>Dadurch wird verhindert, da&szlig; diese ISDN Module vom Kernel
+automaisch beim Systemstart geladen werden, da diese in Konflikt mit
+mISDN stehen k&ouml;nnten.</p>
+<pre>echo blacklist hisax          >> /etc/modprobe.d/blacklist
+echo blacklist hisax_fcpcipnp >> /etc/modprobe.d/blacklist
+echo blacklist crc_ccitt      >> /etc/modprobe.d/blacklist
+echo blacklist capi           >> /etc/modprobe.d/blacklist
+echo blacklist kernelcapi     >> /etc/modprobe.d/blacklist
+echo blacklist kernel_capi    >> /etc/modprobe.d/blacklist
+echo blacklist capifs         >> /etc/modprobe.d/blacklist
+echo blacklist zaptel         >> /etc/modprobe.d/blacklist
+echo blacklist netjetpci      >> /etc/modprobe.d/blacklist
+echo blacklist avmfitz        >> /etc/modprobe.d/blacklist</pre>
+
+
+<h3>mISDN herunterladen, entpacken und installieren</h3>
+<pre>
+cd /usr/src
+wget http://www.misdn.org/downloads/mISDN.tar.gz
+tar xvzf mISDN.tar.gz
+cd /usr/src/mISDN-1_1_9.1
+make install
+
+cd /usr/src
+wget http://www.misdn.org/downloads/mISDNuser.tar.gz
+tar xvzf mISDNuser.tar.gz
+cd /usr/src/mISDNuser-1_1_9.1
+make install
+</pre>
+
+
+<h3>mISDN konfigurieren</h3>
+<p>Nach der Installation kann mISDN pr&uuml;fen welche ISDN-Karten
+im System eingebaut sind:</p>
+<pre>/etc/init.d/misdn-init scan
+
+[OK] found the following devices:
+card=1,hfcpci
+card=2,hfcpci</pre>
+<br />
+
+<p>Im obigen Beispiel wurden zwei HFC-Karten gefunden.</p>
+<p>Danach kann die Konfigurationsdatei <tt>/etc/misdn-init.conf</tt> auf
+Grundlage der gefundenen ISDN-Karten mit folgenden Befehl erstellt
+werden:</p>
+
+<pre>/etc/init.d/misdn-init config</pre>
+<br />
+<p>Diese kann dann noch manuell angepasst werden. Im folgenden Beispiel
+wird die erste Karte im TE-Modus zum Anschlu&szlig; an &ouml;ffentliche
+Telefonnetz &uuml;ber einen Mehrger&auml;teanschlu&szlig; konfiguriert.
+(<tt>te_ptmp=1</tt>)</p>
+<p>Die zweite Karte wird in den NT-Modus geschaltet und stellt
+einen internen S0-Bus zur Verf&uuml;gung (<tt>nt_ptmp=2</tt>).</p>
+<p>/etc/misdn-init.conf:</p>
+<pre>card=1,hfcpci
+card=2,hfcpci
+
+te_ptmp=1
+nt_ptmp=2
+
+option=1,master_clock
+poll=64
+debug=0</pre>
+<br />
+
+<p>Gestartet wird mISDN mit folgendem Befehl:</p>
+<pre>/etc/init.d/misdn-init start</pre>
+<br />
+<p>Damit mISDN automatisch beim Systemstart geladen wird verlinkt man
+diese Datei in das entsprechenden Runlevel:</p>
+<pre>update-rc.d -n misdn-init defaults</pre>
+
+
+<h3>Asterisk-Quellen herunterladen und entpacken</h3>
+<pre>cd /usr/src
+wget http://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-1.4.19.2.tar.gz
+tar -xzf asterisk-1.4.19.2.tar.gz</pre>
+
+<h3>Installation der mISDN-Channel-Treiber f&uuml;r Asterisk</h3>
+<p>Nach der Installation der mISDN-Treiber mu&szlig; Asterisk noch
+einmal kompiliert werden um das Modul chan_misdn.so zu erstellen.
+Nach Eingabe von <tt>make menuselect</tt> sollte man darauf achten
+da&szlig; die mISDN-Channel-Treiber in der Sektion <tt>Channel Driver</tt>
+ausgew&auml;hlt sind.
+Es wird kein <tt>make install</tt> ausgef&uuml;hrt, da das erstellte Modul
+<tt>chan_misdn.so</tt> manuell in das Asterisk-Module-Verzeichnis kopiert
+wird.</p>
+<pre>./configure
+make menuselect
+make</pre>
+<br />
+<p>Anschlie&szlig;end wird das mISDN-Channel-Modul in das
+Asterisk-Module-Verzeichnis kopiert:</p>
+<pre>cp /usr/src/asterisk-1.4.19.2/channels/chan_misdn.so /usr/lib/asterisk/modules</pre>
+
+
+<h3>Anpassung von Gemeinschaft f&uuml;r die Nutzung eines internen S0-Bus</h3>
+
+<p>Ist die zweite ISDN-Karte in NT-Modus geschaltet, kann Gemeinschaft
+angepasst werden um Ger&auml;te am internen S0 anzuprechen. Dazu erstellt
+als erstes einen entsprechenden Kontext in der Datei<br />
+<tt>/opt/gemeinschaft/etc/asterisk/misdn.conf:</tt></p>
+<pre>[ISDN-NT]
+ports=2
+context=to-internal-custom
+msns=25
+hold_allowed=yes
+callgroup=1
+pickupgroup=1</pre>
+<br />
+
+<p>Im obigen Beispiel stellt die zweite ISDN-Karte (ports=2) den internen
+S0 zur Verf&uuml;gung. Angeschlossen ist ein ISDN-Enger&auml;t mit der
+Rufnummer 25 (msns=25).</p>
+
+<p>Als n&auml;chstes wird der Kontext <tt>[to-internal-custom]</tt> im Dialplan
+erstellt. Dazu kann die Datei <tt>/opt/gemeinschaft/etc/asterisk/extensions.conf</tt>
+angepasst werden.</p>
+<pre>[to-internal-custom]
+exten => 25,1,NoOp(Custom Extension)
+exten => 25,n,Dial(misdn/2/${EXTEN})
+exten => 25,n,Hangup
+
+include => to-gateway
+include => to-internal-users</pre>
+<br />
+
+<p>
+Nun mu&szlig; noch die Konfigurationsdatei
+<tt>/opt/gemeinschaft/etc/asterisk/e.ael</tt>, welche den Dialplan generiert,
+angepasst werden.
+Dort wird im Kontext <tt>from-gateways</tt> (ca. Zeile 564) der Eintrag
+<tt>to-internal-custom</tt> hinzugef&uuml;gt:</p>
+<pre>context from-gateways {
+    
+    includes {
+        cmm;                    // user login/logout (for BOI)
+        //voicemail-any;        // voicemail main (own mailbox)
+        //to-internal-nobody;   // internal phones (nobodies)
+        //ivrs;                 // FIXME IVR demo
+        <b>to-internal-custom;     // custom context</b>
+        to-internal-users;      // internal phones (users)
+    }</pre>
+<br />
+<p>Wichtig ist da&szlig; der Eintrag vor <tt>to-internal-users</tt>
+plaziert wird.</p>
+<p>Damit die Ger&auml;te am ISDN-Bus auch von den internen Nebenstellen
+angerufen werden k&ouml;nnen mu&szlig; der Kontext <tt>to-internal-custom</tt>
+in den Kontexten <tt>from-internal-users</tt> und <tt>from-internal-nobody</tt>
+per <tt>include</tt>-Anweisung vor <tt>to-internal-nobody</tt> eingef&uuml;gt
+werden (ca. Zeile 830 und 857).</p>
+<pre>
+context from-internal-nobody {
+    
+    includes {
+        //ivrs;               // FIXME IVR demo
+        to-emergency;         // emergency numbers
+        cmm;                  // user login/logout
+        voicemail-any;        // voicemail main (any mailbox)
+        to-conferences;       // conferences
+        <b>to-internal-custom;   // custom context</b>
+        to-internal-nobody;   // internal phones (nobodies)
+        to-internal-users;    // internal phones (users)
+        test;                 // test extensions
+    }
+}
+
+context from-internal-users {
+    
+    includes {
+        //ivrs;               // FIXME IVR demo
+        to-emergency;         // emergency numbers
+        cmm;                  // user login/logout
+        vm-ann-rec;           // record vm-box announcements
+        voicemail-self;       // voicemail main (own mailbox)
+        voicemail-any;        // voicemail main (any mailbox)
+        private-call;         // private calls
+        user-config;          // user's configuration
+        queues-login-logout;  // queue login/logout
+        to-conferences;       // conferences
+        <b>to-internal-custom;   // custom kontext</b>
+        to-internal-nobody;   // internal phones (nobodies)
+        to-internal-users;    // internal phones (users)
+        //to-gateway;         // to the gateway
+        test;                 // test extensions
+    }
+}
+</pre>
+<br />
+
+<p>Nun mu&szlig; der ge&auml;nderte Dialplan neu generiert und geladen werden:</p>
+<pre>/opt/gemeinschaft/sbin/gs-ast-dialplan-gen
+/opt/gemeinschaft/sbin/gs-ast-dialplan-reload</pre>
+<br />
+
+<p>In der Gemeinschaft-GUI kann nun &uuml;ber den Men&uuml;punkt
+<q>Routen eingehend</q> dem ISDN-Ger&auml;t eine eingehende Route
+zugeordnet werden. Im Beispiel w&auml;re das die Zielrufnummer die 25.</p>
+
+
+
+
+					</div>
+				</div>
+				<!-- end: #col1 -->
+				<!-- begin: #col3 static column -->
+				<!--#include virtual="/global/static-column-right.html" -->
+				<!-- end: #col3 -->
+			</div>
+			<!-- end: #main -->
+			
+			<!-- begin: #footer -->
+			<div id="footer">
+				AMOOMA GmbH - Bachstr. 126 - 56566 Neuwied - Germany<br />
+				Tel. +49 2631 337000 - E-Mail: <a href="mailto:info@amooma.de">info@amooma.de</a><br />
+				<a href="http://www.amooma.de/about-us/impressum.html">Impressum</a>
+				<br />
+				<div id="footer-yaml">
+					Layout based on <a href="http://www.yaml.de/" rel="nofollow" target="_blank">YAML</a>
+				</div>
+			</div>
+			<script type="text/javascript">
+				try {
+				var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+				document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+				} catch(e){}
+			</script>
+			<script type="text/javascript">
+				try {
+				var pageTracker = _gat._getTracker("UA-774512-1");
+				pageTracker._initData();
+				pageTracker._trackPageview();
+				} catch(e){}
+			</script>
+			<!-- end: #footer -->
+		</div>
+	</div>
+</body>
+</html>

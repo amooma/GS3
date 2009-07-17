@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<book id="gemeinschaft" lang="de" revision="$Revision$">
+<book id="gemeinschaft-doku" lang="de" revision="$Revision$">
   <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
 % under the terms of the GNU Free Documentation License, Version 1.2
@@ -11,92 +11,77 @@
 % Free Documentation License".
 % Asterisk training and consulting is offered at http://www.amooma.de-->
 
-  <title>Gemeinschaft</title>
+  <title>Gemeinschaft Doku</title>
 
-  <subtitle>Asterisk-Cluster-Gemeinschaft</subtitle>
+  <titleabbrev>Gemeinschaft</titleabbrev>
 
   <bookinfo>
-    <author id="amooma-gmbh">
-      <surname>amooma GmbH</surname>
+    <corpauthor>Amooma GmbH &#8211; <ulink
+    url="http://www.amooma.de">http://www.amooma.de</ulink></corpauthor>
 
-      <address>amooma GmbH - <street>Bachstr. 126</street> - <postcode>56566</postcode> <city>Neuwied</city> - <country>Germany</country></address>
-    </author>
+    <abstract>
+      <para>Dokumentation und -Handbuch der Asterisk-basierten
+      Open-Source-Telefonanlage <quote><ulink
+      url="http://www.amooma.de/gemeinschaft">Gemeinschaft</ulink></quote>.</para>
+    </abstract>
 
-    <author>
-      <firstname>Stefan</firstname>
+    <legalnotice id="main-legalnotice">
+      <title>Lizenz dieser Dokumentation</title>
 
-      <surname>Wintermeyer</surname>
+      <para>Lizenz dieser Dokumentation: GNU FDL (<ulink
+      url="http://www.gnu.org/licenses/fdl.html">http://www.gnu.org/licenses/fdl.html</ulink>)</para>
+    </legalnotice>
 
-      <email>stefan.wintermeyer@amooma.de</email>
-    </author>
+    <authorblurb>
+      <para><address>Amooma GmbH &#8211; <street>Bachstr. 126</street> &#8211; <postcode>56566</postcode> <city>Neuwied</city> &#8211; <country>Germany</country></address>
+      &#8211; <email>info@amooma.de</email></para>
 
-    <author>
-      <firstname>Philipp</firstname>
+      <para>Stefan Wintermeyer &#8211;
+      <email>stefan.wintermeyer@amooma.de</email></para>
 
-      <surname>Kempgen</surname>
+      <para>Philipp Kempgen &#8211;
+      <email>philipp.kempgen@amooma.de</email></para>
 
-      <email>philipp.kempgen@amooma.de</email>
-    </author>
+      <para>Peter Kozak &#8211; <email>peter.kozak@amooma.de</email></para>
+    </authorblurb>
 
-    <author>
-      <firstname>Peter</firstname>
+    <copyright>
+      <year>2007</year>
 
-      <surname>Kozak</surname>
+      <year>2008</year>
 
-      <email>peter.kozak@amooma.de</email>
-    </author>
+      <year>2009</year>
+
+      <holder>Amooma GmbH</holder>
+    </copyright>
+
+    <keywordset>
+      <keyword>Gemeinschaft</keyword>
+
+      <keyword>Dokumentation</keyword>
+
+      <keyword>Admin</keyword>
+
+      <keyword>Administration</keyword>
+    </keywordset>
   </bookinfo>
 
-  <xi:include href="vorbemerkungen.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <preface id="gemeinschaft-einleitung">
+    <title>Gemeinschaft</title>
 
-  <xi:include href="installation.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <para><quote>Gemeinschaft</quote> ist eine Open-Source-Telefonanlage die
+    auf Asterisk basiert. Gemeinschaft wurde und wird für große Installationen
+    (mehr als 1000 Telefone) entwickelt, kann aber natürlich auch für kleine
+    Anlagen eingesetzt werden. Es läßt sich sowohl als ausfallsicherer Cluster
+    als auch auf einem einzelnen Server installieren.</para>
 
-  <xi:include href="installation-zaptel.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <para>Lizenz: GNU GPL (<xref linkend="gnu-gpl" />).</para>
 
-  <xi:include href="installation-sendmail.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <para>Gemeinschaft installieren/administrieren: <xref
+    linkend="admin-doku" /></para>
+  </preface>
 
-  <xi:include href="initial-configuration.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="part-admin.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-  <xi:include href="dhcp-server.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="mysql-replikation.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="verzeichnisstruktur.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="cluster-watchdog.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="admin-scripts.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="service-nummern.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="verschiedenes.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="endgeraete.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="datenbank-tabellen.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="admin-scripts-alt.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="php-sicherheit.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <xi:include href="gnu-gpl.xml" parse="xml"
-              xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-  <index id="stichwortverzeichnis"></index>
+  <xi:include href="gnu-gpl.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>
