@@ -69,7 +69,8 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Setzt für einen Benutzer eine Rufumleitung.</para>
+    <para>Setzt für einen Benutzer eine Rufumleitung. Um nur auf die Ansage des Users 
+    weiterzuleiten kann man in gs-callforward-number-set das Ziel auf vm*&lt;extension&gt; setzen.</para>
   </refsection>
 
   <refsection>
