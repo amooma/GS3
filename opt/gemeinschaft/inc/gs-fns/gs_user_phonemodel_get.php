@@ -34,9 +34,8 @@ defined('GS_VALID') or die('No direct access.');
 
 function gs_user_phonemodel_get( $user )
 {
-	if (! preg_match( '/^\d+$/', $user ))
-		return new GsError( 'User must be numeric.' );
-	
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
+		return new GsError( 'User must be alphanumeric.' );
 	# connect to db
 	#
 	$db = gs_db_master_connect();
@@ -45,7 +44,7 @@ function gs_user_phonemodel_get( $user )
 	
 	# get user_id
 	#
-	$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
+	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
 	if ($user_id < 1)
 		return new GsError( 'Unknown user.' );
 	

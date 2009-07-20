@@ -256,7 +256,7 @@ if (! $is_user_profile) {
 }
 
 if( $is_user_profile && $phone_type == '' ) {
-	 $phone_type  = gs_user_phonemodel_get( @$_SESSION['sudo_user']['info']['ext'] );
+	 $phone_type  = gs_user_phonemodel_get( @$_SESSION['sudo_user']['name'] );
 	
 }
 
