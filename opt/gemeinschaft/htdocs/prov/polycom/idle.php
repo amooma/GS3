@@ -140,7 +140,7 @@ ob_start();
 
 #################################### IDLE SCREEN {
 
-echo $mainmenu_doctype ."\n";
+echo $mainpage_doctype ."\n";
 
 echo "<html>\n";
 echo "<head><title>". $user ." ". $user_name ."</title></head>\n";

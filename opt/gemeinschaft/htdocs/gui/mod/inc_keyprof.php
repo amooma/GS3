@@ -32,6 +32,7 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_phonemodel_get.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );  # for utf8_json_quote()
 if (! isSet($is_user_profile)) {
 	echo 'Error.';
@@ -248,9 +249,17 @@ if (! $is_user_profile) {
 if ($profile_id < 1) $profile_id = 0;
 
 $phone_type = preg_replace('/[^a-z0-9\-]/', '', @$_REQUEST['phone_type']);
+
+
 if (! $is_user_profile) {
 	if ($profile_id < 1) $phone_type = '';
 }
+
+if( $is_user_profile && $phone_type == '' ) {
+	 $phone_type  = gs_user_phonemodel_get( @$_SESSION['sudo_user']['name'] );
+	
+}
+
 if ($phone_type != '' && ! array_key_exists($phone_type, $phone_types)) {
 	$phone_type = '';
 }
