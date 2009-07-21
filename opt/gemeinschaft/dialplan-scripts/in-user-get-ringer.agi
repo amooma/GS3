@@ -90,7 +90,7 @@ WHERE `s`.`name`=\''. $db->escape($uname) .'\''
 if (! ($user = $rs->fetchRow())) exit(0);  # not an error
 
 
-function _get_ringers()
+function _get_ringers( $user_id )
 {
 	/*
 	$ringtones = gs_ringtones_get( $uname );
@@ -105,7 +105,13 @@ function _get_ringers()
 		'external' => array( 'bellcore' => 1, 'file' => null )
 	);
 	
-	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
+	$db = gs_db_slave_connect();
+	if (! $db) {
+		@gs_agi_verbose( '### DB error - Failed to connect' );
+		exit(1);
+	}
+	
+	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user_id );
 	if (! $rs) {
 		@gs_agi_verbose( '### DB error - Failed to get ringtones' );
 		exit(1);
@@ -123,7 +129,7 @@ function _get_ringers()
 
 if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
 	
-	$ringtones = _get_ringers();
+	$ringtones = _get_ringers( $user['id'] );
 	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
@@ -145,7 +151,7 @@ elseif (strToLower(subStr($user['phone_type'],0,7)) === 'siemens') {
 	//FIXME
 	// Siemens OpenStage does not support Alert-Info headers (yet)
 	
-	$ringtones = _get_ringers();
+	$ringtones = _get_ringers( $user['id'] );
 	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
@@ -164,7 +170,7 @@ elseif (strToLower(subStr($user['phone_type'],0,6)) === 'aastra') {
 	
 	//FIXME - untested
 	
-	$ringtones = _get_ringers();
+	$ringtones = _get_ringers( $user['id'] );
 	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
@@ -181,7 +187,7 @@ elseif (strToLower(subStr($user['phone_type'],0,6)) === 'aastra') {
 }
 elseif (strToLower(subStr($user['phone_type'],0,11)) === 'grandstream') {
 	
-	$ringtones = _get_ringers();
+	$ringtones = _get_ringers( $user['id'] );
 	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
