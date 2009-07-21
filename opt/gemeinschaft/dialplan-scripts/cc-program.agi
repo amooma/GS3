@@ -39,16 +39,16 @@ $from_ext = trim(@$argv[1]);
 $to_ext   = trim(@$argv[2]);
 
 if (! $from_ext || ! preg_match('/^\d+$/', $from_ext)) {  // is not just digits
-	echo 'SET VARIABLE cc_programmed '. gs_agi_str_esc('0') ."\n";
-	die();
+	gs_agi_set_variable( 'cc_programmed', '0' );
+	exit();
 }
 if (! $to_ext || ! preg_match('/^\d+$/', $to_ext)) {  // is not just digits
-	echo 'SET VARIABLE cc_programmed '. gs_agi_str_esc('0') ."\n";
-	die();
+	gs_agi_set_variable( 'cc_programmed', '0' );
+	exit();
 }
 if ($from_ext == $to_ext) {
-	echo 'SET VARIABLE cc_programmed '. gs_agi_str_esc('0') ."\n";
-	die();
+	gs_agi_set_variable( 'cc_programmed', '0' );
+	exit();
 }
 
 
@@ -59,8 +59,8 @@ include_once( GS_DIR .'inc/log.php' );
 
 $db = gs_db_master_connect();
 if (! $db) {
-	echo 'SET VARIABLE cc_programmed '. gs_agi_str_esc('0') ."\n";
-	die();
+	gs_agi_set_variable( 'cc_programmed', '0' );
+	exit();
 }
 
 $rs = $db->execute(
@@ -72,17 +72,17 @@ FROM
 WHERE `s`.`name`=\''. $db->escape($from_ext) .'\''
 );
 if (! ($from_user = $rs->fetchRow())) {
-	echo 'SET VARIABLE cc_programmed '. gs_agi_str_esc('0') ."\n";
+	gs_agi_set_variable( 'cc_programmed', '0' );
 	gs_log( GS_LOG_WARNING, 'Failed to program CC - extension "'. $from_ext .'" unknown.' );
-	die();
+	exit();
 }
 
 $state = @ gs_extstate( $from_user['host'], $from_ext );
 if (! gs_ast_extstate_offer_cc( $state )) {
-	//echo "STATE: $state\n";
-	echo 'SET VARIABLE cc_programmed '. gs_agi_str_esc('0') ."\n";
+	//gs_agi_verbose( "### State: $state" );
+	gs_agi_set_variable( 'cc_programmed', '0' );
 	gs_log( GS_LOG_WARNING, 'Failed to program CC - extension "'. $from_ext .'" is in unknown state.' );
-	die();
+	exit();
 }
 
 
@@ -95,29 +95,28 @@ FROM
 WHERE `s`.`name`=\''. $db->escape($to_ext) .'\''
 );
 if (! ($to_user = $rs->fetchRow())) {
-	echo 'SET VARIABLE cc_programmed '. gs_agi_str_esc('0') ."\n";
+	gs_agi_set_variable( 'cc_programmed', '0' );
 	gs_log( GS_LOG_WARNING, 'Failed to program CC - extension "'. $to_ext .'" unknown.' );
-	die();
+	exit();
 }
 
 $state = @ gs_extstate( $to_user['host'], $to_ext );
 if (! @gs_ast_extstate_offer_cc( $state )) {
-	echo 'SET VARIABLE cc_programmed '. gs_agi_str_esc('0') ."\n";
+	gs_agi_set_variable( 'cc_programmed', '0' );
 	gs_log( GS_LOG_WARNING, 'Failed to program CC - extension "'. $to_ext .'" is in unknown state.' );
-	die();
+	exit();
 }
 
 
 $ok = @ $db->execute( 'REPLACE INTO `call_completion_waiting` (`from_ext`, `from_host_id`, `from_user_id`, `to_ext`, `to_host_id`, `to_user_id`, `t_init`) VALUES (\''. $db->escape($from_ext) .'\', '. (int)$from_user['host_id'] .', '. (int)$from_user['id'] .', \''. $db->escape($to_ext) .'\', '. (int)$to_user['host_id'] .', '. (int)$to_user['id'] .', '. time() .')' );
 if (! $ok) {
-	echo 'SET VARIABLE cc_programmed '. gs_agi_str_esc('0') ."\n";
+	gs_agi_set_variable( 'cc_programmed', '0' );
 	gs_log( GS_LOG_WARNING, 'Failed to program CC - DB error.' );
-	die();
+	exit();
 }
 
-echo 'SET VARIABLE cc_programmed '. gs_agi_str_esc('1') ."\n";
+gs_agi_set_variable( 'cc_programmed', '1' );
 gs_log( GS_LOG_DEBUG, 'CC programmed from "'. $from_ext .'" to "'. $to_ext .'"' );
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 
 
 ?>

@@ -355,7 +355,7 @@ foreach ($exts_display as $extension => $ext_info) {
 		case  1: $img.= 'crystal-svg/16/act/redled.png'   ; break;
 		default: $img.= 'crystal-svg/16/act/free_icon.png'; break;
 	}
-	$img.= '" /> ';	
+	$img.= '" /> ';
 	$new_first_digit = subStr($extension,0,1);
 	if ($new_first_digit != $first_digit) {
 		if ($first_digit !== null) {

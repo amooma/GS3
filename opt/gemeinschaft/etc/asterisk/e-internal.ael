@@ -26,12 +26,6 @@
 //---------------------------------------------------------------------
 
 //---------------------------------------------------------------------
-//  Custom dialplan additions
-//---------------------------------------------------------------------
-
-#include "/opt/gemeinschaft/etc/asterisk/custom/e-internal.ael"
-
-//---------------------------------------------------------------------
 //  Check if extension is valid
 //---------------------------------------------------------------------
 
@@ -110,10 +104,6 @@ macro dial-node( mext_at_node ) {
 
 context to-internal-nobody {
 
-	includes {
-		to-internal-nobody-custom;
-	}
-	
 	#exec "/opt/gemeinschaft/etc/asterisk/e-nobody-exten.php"
 	
 }
@@ -122,7 +112,7 @@ macro dial-internal-nobody( mext2 ) {
 	&check-valid-extension(${mext2});
 	if ("${dial_to_node}" = "") {
 		Verbose(1,### Extension ${mext2} is at node: SELF);
-		goto to-internal-nobody-self|${mext2}|1;
+		jump ${mext2}@to-internal-nobody-self;
 	}
 	else {
 		&dial-node(${mext2}@${dial_to_node});
@@ -158,10 +148,6 @@ macro dial-internal-nobody-self( mext3 ) {
 
 context to-internal-users {
 
-	includes {
-		to-internal-users-custom;
-	}
-	
 	//----------------------------------------------------------
 	// from ISDN
 	//----------------------------------------------------------
@@ -289,7 +275,7 @@ context to-internal-users {
 			if ("${user_id}" != "") {
 				AGI(/opt/gemeinschaft/dialplan-scripts/get_callerid.agi,${CALLERID(num)},internal);
 			}
-			goto to-internal-users-self|${EXTEN}|1;
+			jump ${EXTEN}@to-internal-users-self;
 		}
 		else {
 			if ("${exttype}" != "foreign") {
@@ -352,6 +338,16 @@ context to-internal-users {
 	}
 
 
+	//----------------------------------------------------------
+	// Pickup on Grandstream phones
+	//----------------------------------------------------------
+	
+	_**. => {
+		// the pickup prefix (**) is not configurable on Grandstream phones
+		Set(pext=${EXTEN:2});
+		jump *81*${pext};
+	}
+	
 	//----------------------------------------------------------
 	// Pickup for pickup group extensions
 	//----------------------------------------------------------
@@ -444,7 +440,7 @@ context to-internal-users {
 		// do some checking if user is a secretary of boss
 		// ...
 		
-		goto to-internal-users-self|***-${boss}|1;
+		jump ***-${boss}@to-internal-users-self;
 	}
 	
 	//----------------------------------------------------------
@@ -561,8 +557,9 @@ context to-internal-users-self {
 		Set(origext=${callfile_from});
 		Set(CALLERID(dnid)=${callfile_from});
 		Verbose(1,### callfile_from ${callfile_from});
+		Set(__is_call_from=internal);
 		// get ringer
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${boss},${is_call_from});
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${callfile_from},${is_call_from});
 		if ("${ringer}" != "") {
 			Verbose(1,### Ringer: ${ringer});
 			SIPAddHeader(Alert-Info: ${ringer});
@@ -718,7 +715,7 @@ context to-internal-users-self {
 		Set(__forwards=${MATH(${forwards}+1,int)});
 		//Set(DYNAMIC_FEATURES=);
 		if ("${origext}" = "")
-			Set(__origext=${EXTEN});			
+			Set(__origext=${EXTEN});
 		
 		&set-callerid-by-clir();
 		
@@ -1276,7 +1273,8 @@ context to-internal-users-self {
 		user_uncallable_vm_off:
 			//Verbose(1,### Called user ${origext} unreachable\, mailbox not active);
 			Verbose(1,### Called user ${EXTEN} unreachable\, mailbox not active);
-			Hangup();
+			Hangup(19);
+			// 19 = no answer from the user => 480 Temporarily unavailable
 		
 		user_uncallable_offer_cc:
 			Verbose(1,### Called user ${EXTEN} unreachable (${DIALSTATUS})\, offer call completion);
@@ -1336,7 +1334,7 @@ context to-internal-users-self {
 				TrySystem(/opt/gemeinschaft/dialplan-scripts/conf-remove ${confprefix}${confnum});
 				Verbose(1,### Conference ${confprefix}${confnum} freed.);
 			}
-		} 
+		}
 		else
 		if ("${exttype}" = "user") {
 			// to internal user, store dial log (in|missed)

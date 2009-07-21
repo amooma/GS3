@@ -61,6 +61,7 @@ if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 	$phone_types['snom-m3'    ] = 'Snom M3';
 }
 if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
+	$phone_types['siemens-os15'] = 'Siemens OpenStage 15';
 	$phone_types['siemens-os20'] = 'Siemens OpenStage 20';
 	$phone_types['siemens-os40'] = 'Siemens OpenStage 40';
 	$phone_types['siemens-os60'] = 'Siemens OpenStage 60';
@@ -73,6 +74,7 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	$phone_types['aastra-57i'] = 'Aastra 57i';
 }
 if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
+	$phone_types['grandstream-ht287'  ] = 'Grandstream HT 287';
 	$phone_types['grandstream-bt110'  ] = 'Grandstream BT 110';
 	$phone_types['grandstream-bt200'  ] = 'Grandstream BT 200';
 	$phone_types['grandstream-gxp280' ] = 'Grandstream GXP 280';
@@ -80,6 +82,8 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-gxp2000'] = 'Grandstream GXP 2000';
 	$phone_types['grandstream-gxp2010'] = 'Grandstream GXP 2010';
 	$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
+	$phone_types['grandstream-gxv3000'] = 'Grandstream GXV 3000';
+	$phone_types['grandstream-gxv3005'] = 'Grandstream GXV 3005';
 }
 if (gs_get_conf('GS_POLYCOM_PROV_ENABLED')) {
 	$phone_types['polycom-spip-300'] = 'Polycom SoundPoint IP 300';

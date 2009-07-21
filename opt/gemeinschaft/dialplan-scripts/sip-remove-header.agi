@@ -1,0 +1,61 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+# emulates SIPRemoveHeader()
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+$sipremoveheader_arg  = trim(@$argv[1]);
+if (! preg_match('/^[a-zA-Z0-9\-_]*:?$/i', $sipremoveheader_arg)) {
+	gs_agi_err( 'Invalid characters in argument!' );
+}
+$pattern = '/^'.$sipremoveheader_arg.'/iS';
+
+
+for ($i=1; $i<=99; ++$i) {
+	$sipaddheader_varname = 'SIPADDHEADER'.sPrintF('%02d',$i);
+	$val = gs_agi_get_variable( $sipaddheader_varname );
+	if (! empty($val)) {
+		//gs_log(GS_LOG_DEBUG, "$sipaddheader_varname = \"$val\"" );
+		if (preg_match($pattern, $val)) {
+			//gs_log(GS_LOG_DEBUG, "pattern \"$pattern\" matches header \"$val\"" );
+			gs_agi_set_variable( $sipaddheader_varname, '' );
+			$val = gs_agi_get_variable( $sipaddheader_varname );
+			//gs_log(GS_LOG_DEBUG, "$sipaddheader_varname = \"$val\"" );
+		}
+	}
+}
+
+
+?>

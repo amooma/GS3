@@ -39,16 +39,14 @@ $ext  = trim(@$argv[1]);
 $is_huntgroup  = trim(@$argv[2]);
 
 if (! $ext) {
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('') ."\n";
-	echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
+	gs_agi_set_variable( '__exttype', '' );
+	gs_agi_set_variable( '__dial_to_node', '' );
+	exit();
 }
 if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
-	echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
+	gs_agi_set_variable( '__exttype', 'unknown' );
+	gs_agi_set_variable( '__dial_to_node', '' );
+	exit();
 }
 
 
@@ -93,17 +91,17 @@ WHERE `s`.`name`=\''. $db->escape($ext) .'\''
 );
 if ($r = $rs->fetchRow()) {
 	if (! $r['is_foreign']) {
-		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('user') ."\n";
+		gs_agi_set_variable( '__exttype', 'user' );
 		if ($r['host_id'] < 1) {
-			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
+			gs_agi_set_variable( '__dial_to_node', '' );
 		} else {
-			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( get_at_dial( $r['host_id'] ) ) ."\n";
+			gs_agi_set_variable( '__dial_to_node', get_at_dial( $r['host_id'] ) );
 		}
 	} else {
-		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('foreign') ."\n";
-		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( $r['host'] ) ."\n";
+		gs_agi_set_variable( '__exttype', 'foreign' );
+		gs_agi_set_variable( '__dial_to_node', $r['host'] );
 	}
-	die();
+	exit();
 }
 
 # is it a queue?
@@ -117,17 +115,17 @@ WHERE `q`.`name`=\''. $db->escape($ext) .'\''
 );
 if ($r = $rs->fetchRow()) {
 	if (! $r['is_foreign']) {
-		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('queue') ."\n";
+		gs_agi_set_variable( '__exttype', 'queue' );
 		if ($r['host_id'] < 1) {  // should never happen
-			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
+			gs_agi_set_variable( '__dial_to_node', '' );
 		} else {
-			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( get_at_dial( $r['host_id'] ) ) ."\n";
+			gs_agi_set_variable( '__dial_to_node', get_at_dial( $r['host_id'] ) );
 		}
 	} else {
-		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('foreign') ."\n";
-		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( $r['host'] ) ."\n";
+		gs_agi_set_variable( '__exttype', 'foreign' );
+		gs_agi_set_variable( '__dial_to_node', $r['host'] );
 	}
-	die();
+	exit();
 }
 
 # is it a conference?
@@ -135,13 +133,13 @@ if ($r = $rs->fetchRow()) {
 /*
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `conferences` WHERE `ext`=\''. $db->escape($ext) .'\'' );
 if ($num > 0) {
-	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('conference') ."\n";
+	gs_agi_set_variable( '__exttype', 'conference' );
 	$host_id = $db->executeGetOne( 'SELECT `host_id` FROM `conferences` WHERE `ext`=\''. $db->escape($ext) .'\'' );
 	if ($host_id < 1)  // should never happen
-		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
+		gs_agi_set_variable( '__dial_to_node', '' );
 	else
-		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( get_at_dial( $host_id ) ) ."\n";
-	die();
+		gs_agi_set_variable( '__dial_to_node', get_at_dial( $host_id ) );
+	exit();
 }
 */
 
@@ -170,9 +168,7 @@ if ($r = $rs->fetchRow()) {
 }
 
 
-echo 'SET VARIABLE __exttype '. gs_agi_str_esc('unknown') ."\n";
-echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-die();
+gs_agi_set_variable( '__exttype', 'unknown' );
+gs_agi_set_variable( '__dial_to_node', '' );
 
 ?>

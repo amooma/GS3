@@ -90,7 +90,7 @@ if ($host) {
 			if (strlen($addresses[0]) == 0) {
 				echo '<div class="errorbox">';
 				echo sPrintF(__('Hostname &quot;%s&quot; konnte nicht aufgel&ouml;st werden.'), htmlEnt($host));
-				echo '</div>',"\n";		
+				echo '</div>',"\n";
 				$bInvalHostName = true;
 			}
 			$host = $addresses[0];
@@ -172,7 +172,7 @@ if ($delete_host) {
 	@$DB->execute( 'DELETE FROM `host_params` WHERE `host_id`='. $delete_host );
 	
 	$sql_query =
-'DELETE FROM `hosts` 
+'DELETE FROM `hosts`
 WHERE
 	`id`='. $delete_host .' AND
 	`is_foreign`=0'
@@ -228,7 +228,7 @@ $rs = $DB->execute($sql_query);
 $num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
-?>	
+?>
 
 <div style="max-width:600px;">
 	<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/app/important.png" class="fl" />
@@ -249,7 +249,7 @@ $num_pages = ceil($num_total / $per_page);
 	<th style="width:60px;"><?php echo __('Rolle'); ?></th>
 	<th style="width:45px;"><?php echo __('Stonith'); ?></th>
 	<th style="width:50px;"><?php echo __('Ping'); ?></th>
-	<th style="width:60px;"><?php echo __('SIP Ping'); ?></th>	
+	<th style="width:60px;"><?php echo __('SIP Ping'); ?></th>
 	<th style="width:80px;">
 <?php
 echo ($page+1), ' / ', $num_pages, '&nbsp; ',"\n";

@@ -88,21 +88,24 @@ write = call                            ;  "</programlisting></para>
       </varlistentry>
 
       <varlistentry>
-        <term><filename>/opt/gemeinschaft/inc/conf.php</filename></term>
+        <term><filename>/etc/gemeinschaft/gemeinschaft.php</filename></term>
 
         <listitem>
           <para>MySQL-Hosts, -User und -Passwörter
-          (<code>AST_DB_MASTER_<replaceable>*</replaceable></code> und
-          <code>AST_DB_SLAVE_<replaceable>*</replaceable></code>) anpassen
+          (<code>DB_MASTER_<replaceable>*</replaceable></code> und
+          <code>DB_SLAVE_<replaceable>*</replaceable></code>) anpassen
           (solange keine Replikation eingerichtet ist, müssen sowohl Master
-          als auch Slave auf <code>127.0.0.1</code> eingestellt sein).</para>
+          als auch Slave auf <code>127.0.0.1</code> eingestellt sein). Falls
+          ein anderer MySQL-Server für die CDR-Datenbank verwendet werden
+          soll, kann man diesen mit DB_CDR_MASTER* festlegen. Wenn dies nicht
+          gewünscht ist, sollte man DB_CDR_MASTER_HOST auskommentieren.</para>
 
           <para>Die Einstellungen zu Provisioning-Host und -URL
-          (<code>AST_PROV_<replaceable>*</replaceable></code>) anpassen
-          (<code>AST_PROV_HOST</code> muß von den Telefonen erreichbar
+          (<code>PROV_<replaceable>*</replaceable></code>) anpassen
+          (<code>PROV_HOST</code> muß von den Telefonen erreichbar
           sein).</para>
 
-          <para><code>AST_PROV_AUTO_ADD_PHONE</code> bestimmt, ob bisher
+          <para><code>PROV_AUTO_ADD_PHONE</code> bestimmt, ob bisher
           unbekannte Telefone, die eine Konfiguration beziehen wollen,
           automatisch in die Datenbank aufgenommen oder abgewiesen
           werden.</para>

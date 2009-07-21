@@ -35,10 +35,35 @@ globals {
 };
 
 //---------------------------------------------------------------------
-//  Custom dialplan additions
+// Macro to emulate SIPRemoveHeader() if absent
 //---------------------------------------------------------------------
 
-#include "/opt/gemeinschaft/etc/asterisk/custom/e.ael"
+macro sip-remove-header( sipremoveheader_arg ) {
+	// SIPRemoveHeader() was added in Asterisk trunk rev. 168638, branch 1.6.2, tag 1.6.2.0-beta1 (https://issues.asterisk.org/view.php?id=14246)
+	// http://lists.digium.com/pipermail/asterisk-dev/2009-January/036102.html
+	// https://issues.asterisk.org/view.php?id=14246
+	TryExec(SIPRemoveHeader(${sipremoveheader_arg}));
+	if ("${TRYSTATUS}" = "NOAPP") {
+		Verbose(2,### Emulating SIPRemoveHeader ...);
+		if ("${sipremoveheader_arg}" = "") {
+			// Remove all custom headers (
+			for (i=1; ${i}<=99; i=${i}+1) {
+				Set(sipaddheader_varname=SIPADDHEADER${SPRINTF(%02d,${i})});
+				if (${LEN(${${sipaddheader_varname}})} > 0) {
+					//Verbose(2,### ${sipaddheader_varname} = ${${sipaddheader_varname}});
+					Set(${sipaddheader_varname}=);
+				}
+			}
+		}
+		else {
+			//Verbose(1,### Emulation of SIPRemoveHeader with arguments not implemented!);
+			// Remove some headers
+			Verbose(2,### Emulating SIPRemoveHeader: removing "${sipremoveheader_arg}" ...);
+			AGI(/opt/gemeinschaft/dialplan-scripts/sip-remove-header.agi,${sipremoveheader_arg});
+		}
+	}
+}
+
 
 //---------------------------------------------------------------------
 //  Macro to get or generate a "connection ID"
@@ -220,7 +245,7 @@ macro cmm-logout() {
 		}
 	}
 	
-	Hangup();	
+	Hangup();
 }
 
 
@@ -499,7 +524,7 @@ context to-conferences {
 				SayDigits(${confprefix}${confnum});
 				//MeetMe(${confnum},DcoT);
 				//Hangup();
-				goto to-conferences-self|${confprefix}${confnum}|1;
+				jump ${confprefix}${confnum}@to-conferences-self;
 			}
 		}
 		Verbose(1,### Tried $i{i} times but could not find empty conference);
@@ -533,7 +558,7 @@ context to-conferences {
 		}
 		if ("${dial_to_node}" = "") {
 			Verbose(1,### Conference ${confprefix}${confnum} is at node: SELF);
-			goto to-conferences-self|${confprefix}${confnum}|1;
+			jump ${confprefix}${confnum}@to-conferences-self;
 		}
 		else {
 			&dial-node(${confprefix}${confnum}@${dial_to_node});
@@ -721,7 +746,7 @@ context voicemail-any {
 		&check-valid-extension(${vmbox});
 		if ("${dial_to_node}" = "") {
 			Verbose(1,### VM box ${vmbox} is at node: SELF);
-			goto voicemail-any-self|vm-${vmbox}|1;
+			jump vm-${vmbox}@voicemail-any-self;
 		}
 		else {
 			&dial-node(vm-${vmbox}@${dial_to_node});
@@ -920,8 +945,8 @@ context vm-ann-rec {
 context from-gateways {
 	
 	includes {
-		from-gateways-custom;
 		cmm;                  // user login/logout (for BOI)
+		to-internal-custom;
 		//voicemail-any;        // voicemail main (own mailbox)
 		//to-internal-nobody;   // internal phones (nobodies)
 		//ivrs;                 //FIXME IVR demo
@@ -948,10 +973,6 @@ context from-gateways {
 
 context to-gateway {
 
-	includes {
-		to-gateway-custom;
-	}
-	
 	_0. => {
 		if ("${user_id}" != "") {
 			// from internal user, store dial log (out)
@@ -977,15 +998,6 @@ macro dial-gateway-do( mnumber ) {
 		if ("${clir}" = "" ) {
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-clir-${zone}.agi,${user_id});
 		}
-		if ("${clir}" = "1") {
-			// RFC 3325:
-			// gateways are somewhat trusted
-			SIPAddHeader(P-Preferred-Identity: <sip:${CALLERID(num)}>);
-			SIPAddHeader(Privacy: id);
-			
-			// RFC 2543:
-			Set(CALLERID(all)=Anonymous <anonymous>);
-		}
 	}
 	if ("${external_callerid_override}" = "true") {
 		AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi,${mnumber},${is_sub_system},${CALLERID(num)},${user_id},1);
@@ -1001,11 +1013,37 @@ macro dial-gateway-do( mnumber ) {
 	}
 	Set(no_route=1);
 	Set(r=1);
+	Set(r_x_cid_name=${CALLERID(name)});
 	while ("${r_${r}_dial}" != "") {
 		//Verbose(1,### route: r_${r});
 		Set(no_route=);
-		Set(CALLERID(num)=${r_${r}_cid});
-		Verbose(1,### Outbound route: ${r_${r}_dial} - Caller ID: ${CALLERID(num)});
+		if ("${clir}" != "1") {
+			// RFC 2543:
+			Set(CALLERID(num)=${r_${r}_cid});
+			Set(CALLERID(name)=${r_x_cid_name});
+			if (${LEN(${CALLERID(name)})} < 1) {
+				Set(CALLERID(name)=${CALLERID(num)});
+			}
+			// RFC 3325:
+			SIPAddHeader(P-Asserted-Identity: ${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
+			SIPAddHeader(P-Preferred-Identity: ${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
+			// RFC 3325, RFC 3323:
+			SIPAddHeader(Privacy: none);
+			// Set caller presentation - affects Remote-Party-ID header: ...";privacy:off;screen:yes"
+			SetCallerPres(allowed_passed_screen);
+		}
+		else {
+			// RFC 2543:
+			Set(CALLERID(num)=anonymous);
+			Set(CALLERID(name)=Anonymous);
+			// RFC 3325:
+			SIPAddHeader(P-Preferred-Identity: ${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
+			// RFC 3325, RFC 3323:
+			SIPAddHeader(Privacy: id;header);
+			// Set caller presentation - affects Remote-Party-ID header: ...";privacy:full;screen:yes"
+			SetCallerPres(prohib_passed_screen);
+		}
+		Verbose(1,### Outbound route: ${r_${r}_dial} - Caller ID: "${CALLERID(name)}" <${CALLERID(num)}@${r_${r}_cid_host}>);
 		Dial(${r_${r}_dial},180);
 		Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
 		if ("${DIALSTATUS}" = "ANSWER" || "${DIALSTATUS}" = "CANCEL") {
@@ -1019,26 +1057,37 @@ macro dial-gateway-do( mnumber ) {
 			Hangup();
 		}
 		else if ("${DIALSTATUS}" = "CHANUNAVAIL" || "${DIALSTATUS}" = "CONGESTION") {
-			//Verbose(1,### DIALEDTIME  : ${DIALEDTIME});
-			//Verbose(1,### ANSWEREDTIME: ${ANSWEREDTIME});
-			Verbose(1,### HANGUPCAUSE : ${HANGUPCAUSE});
 			// see Asterisk's causes.h or
 			// Q.931 Disconnect Cause Codes
-			if ("${HANGUPCAUSE}" = "66") {
+			if ("${HANGUPCAUSE}" = "1") {
+				// 1 = unallocated number
+				Verbose(1,### HANGUPCAUSE: 1 = unallocated number);
+				Hangup();
+			}
+			else if ("${HANGUPCAUSE}" = "66") {
 				// 66 = channel not implemented
+				Verbose(1,### HANGUPCAUSE: 66 = channel not implemented);
 				Verbose(0,### You're trying to dial to channel type "${CUT(r_${r}_dial,/,1)}" which this Asterisk is not configured to handle!);
 			}
 			else if ("${HANGUPCAUSE}" = "17") {
 				// 17 = user busy
-				Verbose(1,### HANGUPCAUSE 17 = user busy);
+				Verbose(1,### HANGUPCAUSE: 17 = user busy);
 				Busy(5);
 				Hangup();
 			}
 			else if ("${HANGUPCAUSE}" = "18") {
 				// 18 = no user responding
-				Verbose(1,### HANGUPCAUSE 18 = no user responding);
+				Verbose(1,### HANGUPCAUSE: 18 = no user responding);
 				Congestion(5);
 				Hangup();
+			}
+			else if ("${HANGUPCAUSE}" = "127") {
+				// 127 = interworking, unspecified
+				Verbose(1,### HANGUPCAUSE: 127 = interworking or unspecified);
+				Hangup();
+			}
+			else {
+				Verbose(1,### HANGUPCAUSE: ${HANGUPCAUSE});
 			}
 			
 			// else don't hangup and try the next gateway
@@ -1054,6 +1103,9 @@ macro dial-gateway-do( mnumber ) {
 			Hangup();
 		}
 		r=${r}+1;
+		
+		// Remove all custom headers (P-Preferred-Identity, Privacy, ... - see above):
+		&sip-remove-header(${});
 	}
 	if ("${no_route}" != "") {
 		Verbose(1,### We don't have a route for ${mnumber});
@@ -1193,7 +1245,6 @@ context private-call {
 context from-internal-nobody {
 	
 	includes {
-		from-internal-nobody-custom;
 		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
@@ -1215,10 +1266,10 @@ context from-internal-nobody {
 context from-internal-users {
 	
 	includes {
-		from-internal-users-custom;
 		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
+		from-internal-custom;
 		vm-ann-rec;           // record vm-box announcements
 		voicemail-self;       // voicemail main (own mailbox)
 		voicemail-any;        // voicemail main (any mailbox)
@@ -1272,7 +1323,6 @@ context from-iax-unauth {
 
 context from-node {
 	includes {
-		from-node-custom;
 		to-conferences-self;       // conferences
 		to-internal-nobody-self;   // internal phones (nobodies)
 		voicemail-any-self;        // vm boxes
@@ -1364,6 +1414,7 @@ context urldial {
 	
 	_X. => jump u-${EXTEN};
 	_X  => jump u-${EXTEN};
+	_*. => jump u-${EXTEN};
 	
 	_u-. => {
 		Set(callfile_target=${EXTEN:2});
@@ -1443,3 +1494,11 @@ context default {
 
 #exec "/opt/gemeinschaft/etc/asterisk/e-ivr.ael.php"
 
+
+//---------------------------------------------------------------------
+//  custom contexts
+//---------------------------------------------------------------------
+
+#include "/etc/gemeinschaft/asterisk/extensions-to-internal-custom.ael"
+
+#include "/etc/gemeinschaft/asterisk/extensions-from-internal-custom.ael"

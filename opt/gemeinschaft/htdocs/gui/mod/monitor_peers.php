@@ -98,7 +98,7 @@ if (count($users) < 1) {
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:60px;"><?php echo __('Nummer'); ?></th>
+	<th style="width:60px;"><?php echo __('Nst.'); ?></th>
 	<th style="width:190px;"><?php echo __('Name'); ?></th>
 	<th style="width:80px;"><?php echo __('Status'); ?></th>
 	<th style="width:100px;"><?php echo __('Umleitung'); ?></th>

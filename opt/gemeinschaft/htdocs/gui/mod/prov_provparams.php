@@ -60,6 +60,7 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	$phone_types['aastra-57i'] = 'Aastra 57i';
 }
 if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
+	$phone_types['grandstream-ht287'  ] = 'Grandstream HT 287';
 	$phone_types['grandstream-bt110'  ] = 'Grandstream BT 110';
 	$phone_types['grandstream-bt200'  ] = 'Grandstream BT 200';
 	$phone_types['grandstream-gxp280' ] = 'Grandstream GXP 280';
@@ -67,6 +68,8 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-gxp2000'] = 'Grandstream GXP 2000';
 	$phone_types['grandstream-gxp2010'] = 'Grandstream GXP 2010';
 	$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
+	$phone_types['grandstream-gxv3000'] = 'Grandstream GXV 3000';
+	$phone_types['grandstream-gxv3005'] = 'Grandstream GXV 3005';
 }
 
 
@@ -100,6 +103,18 @@ if ($phone_type == '') {
 		elseif (array_key_exists('aastra-53i', $phone_types)) $phone_type = 'aastra-53i';
 		elseif (array_key_exists('aastra-55i', $phone_types)) $phone_type = 'aastra-55i';
 		elseif (array_key_exists('aastra-57i', $phone_types)) $phone_type = 'aastra-57i';
+	} else
+	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
+		if     (array_key_exists('grandstream-ht287'  , $phone_types)) $phone_type = 'grandstream-ht287';
+		elseif (array_key_exists('grandstream-bt110'  , $phone_types)) $phone_type = 'grandstream-bt110';
+		elseif (array_key_exists('grandstream-bt200'  , $phone_types)) $phone_type = 'grandstream-bt200';
+		elseif (array_key_exists('grandstream-gxp280' , $phone_types)) $phone_type = 'grandstream-gxp280';
+		elseif (array_key_exists('grandstream-gxp1200', $phone_types)) $phone_type = 'grandstream-gxp1200';
+		elseif (array_key_exists('grandstream-gxp2000', $phone_types)) $phone_type = 'grandstream-gxp2000';
+		elseif (array_key_exists('grandstream-gxp2010', $phone_types)) $phone_type = 'grandstream-gxp2010';
+		elseif (array_key_exists('grandstream-gxp2020', $phone_types)) $phone_type = 'grandstream-gxp2020';
+		elseif (array_key_exists('grandstream-gxv3000', $phone_types)) $phone_type = 'grandstream-gxv3000';
+		elseif (array_key_exists('grandstream-gxv3005', $phone_types)) $phone_type = 'grandstream-gxv3005';
 	}
 }
 

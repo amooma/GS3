@@ -44,7 +44,7 @@ function gs_hylafax_authfile_create( $authfile )
 	
 	# get user list
 	#
-	$rs = $db->execute( 
+	$rs = $db->execute(
 'SELECT `id`, `user`, `pin`
 FROM `users`
 WHERE `nobody_index` IS NULL
@@ -142,7 +142,7 @@ function gs_hylafax_authfile_sync( $authfile = '' )
 	if (! $authfile) $authfile = '/tmp/gs-hylafax-hosts.hfaxd-'.rand(100000,999999);
 	
 	# create authfile locally
-	# 
+	#
 	$result = gs_hylafax_authfile_create( $authfile );
 	if ($result !== true) {
 		clearStatCache();
@@ -156,11 +156,11 @@ function gs_hylafax_authfile_sync( $authfile = '' )
 	#
 	$ret = gs_hylafax_authfile_put( $authfile );
 	if ($ret !== true) {
-		# if ftp put fails, try to copy it locally. 
+		# if ftp put fails, try to copy it locally.
 		//FIXME: Will fail if the fax host is not "127.0.0.1" or "localhost"
-		# 
-		if ((gs_get_conf('GS_FAX_HYLAFAX_HOST') == '127.0.0.1')
-		||  (gs_get_conf('GS_FAX_HYLAFAX_HOST') == 'localhost')) {
+		#
+		if ((gs_get_conf('GS_FAX_HYLAFAX_HOST') === '127.0.0.1')
+		||  (gs_get_conf('GS_FAX_HYLAFAX_HOST') === 'localhost')) {
 			$authfile_dst =
 				gs_get_conf('GS_FAX_HYLAFAX_PATH', '/var/spool/hylafax/').
 				'etc/hosts.hfaxd';

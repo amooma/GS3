@@ -2,7 +2,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 5500 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -88,7 +88,6 @@ function write_alert( $message, $alert_type='ERROR' )
 	xml('</IppDisplay>');
 	xml_output();
 }
-
 
 $user         = trim(@$_REQUEST['user'       ]);
 $phonenumber  = trim(@$_REQUEST['phonenumber']);
@@ -189,13 +188,13 @@ else {
 	
 	$query =
 'SELECT SQL_CALC_FOUND_ROWS
-	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`, `queue_id,`
+	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
 COUNT(*) `num_calls`
 FROM `dial_log`
 WHERE
 	`user_id`='. $user_id .' AND
 	`type`=\''. $type .'\'
-GROUP BY `number`,`queue_id`
+GROUP BY `number`
 ORDER BY `ts` DESC
 LIMIT 20';
 	$rs = $db->execute($query);
@@ -219,17 +218,15 @@ LIMIT 20';
 	
 	while ($r = $rs->fetchRow()) {
 		$i++;
-		unset($entry_name);
-		if ($r['queue_id'] > 0)
-			$entry_name = 'WS: ';
-		$entry_name .= $r['number'];
+		$entry_name = $r['number'];
 		if ($r['remote_name'] != '') {
 			$entry_name .= ' '. $r['remote_name'];
 		}
+		setlocale(LC_TIME,gs_get_conf('GS_INTL_LANG').'.utf8');
 		if (date('dm') == date('dm', (int)$r['ts']))
 			$when = date('H:i', (int)$r['ts']);
 		else
-			$when = date('d.m.', (int)$r['ts']);
+			$when = strftime('%d.%b', (int)$r['ts']);
 		$entry_name = $when .'  '. $entry_name;
 		if ($r['num_calls'] > 1) {
 			$entry_name .= ' ('. $r['num_calls'] .')';

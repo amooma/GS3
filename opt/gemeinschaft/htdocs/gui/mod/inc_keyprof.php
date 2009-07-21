@@ -820,7 +820,7 @@ function gs_key_fn_h( el )
 		if (gs_phone_layout == 'siemens' && kfn == 'f59') {
 			// key f59 'BLF code ...'
 			// dialog for choosing the attributes for the BLF
-			<?php 
+			<?php
 			$innerhtml = '<table cellspacing="1"><tr><td>'. __('Nummer') .':</td>';
 			$innerhtml.= '<td><input name="helper_number" type="text" size="30" maxlength="30" /></td></tr>';
 			$innerhtml.= '<tr><td>'. __('Tonmeldung') .':</td><td><input type="checkbox" name="helper_audible" /></td></tr>';
@@ -1105,7 +1105,7 @@ if ($phone_layout) {
 			echo '	<th>', __('Beschriftung') ,'</th>' ,"\n";
 		}
 		echo '	<th>', __('Gesch&uuml;tzt?') ,'</th>' ,"\n";
-		echo '</tr>' ,"\n";		
+		echo '</tr>' ,"\n";
 		
 		switch ($phone_layout) {
 			case 'snom':

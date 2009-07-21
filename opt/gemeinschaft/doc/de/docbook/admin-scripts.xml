@@ -17,6 +17,8 @@
       <secondary>zur Administration</secondary>
     </indexterm></title>
 
+  <titleabbrev>Skripte</titleabbrev>
+
   <bridgehead>Hinweise</bridgehead>
 
   <para>Pfad: <filename>/opt/gemeinschaft/scripts/</filename></para>
@@ -114,6 +116,9 @@ Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
   <xi:include href="scripts/gs-hosts-get.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
+  <xi:include href="scripts/gs-host-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+  
   <xi:include href="scripts/gs-hosts-show-our-ids.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
@@ -127,6 +132,9 @@ Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <xi:include href="scripts/gs-nobodies-move.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="scripts/gs-phonebook-get.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <xi:include href="scripts/gs-phones-firmware-upgrade.xml" parse="xml"
@@ -195,6 +203,9 @@ Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
   <xi:include href="scripts/gs-user-by-mac-addr.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
+  <xi:include href="scripts/gs-user-calllog-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
   <xi:include href="scripts/gs-user-change.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
@@ -223,6 +234,9 @@ Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <xi:include href="scripts/gs-user-ip-by-user.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="scripts/gs-user-logout.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <xi:include href="scripts/gs-user-mac-addr-by-user.xml" parse="xml"

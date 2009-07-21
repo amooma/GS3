@@ -223,7 +223,7 @@ if ($host) {
 			if (strlen($addresses[0]) == 0) {
 				echo '<div class="errorbox">';
 				echo sPrintF(__('Hostname &quot;%s&quot; konnte nicht aufgel&ouml;st werden.'), htmlEnt($host));
-				echo '</div>',"\n";		
+				echo '</div>',"\n";
 				$bInvalHostName = true;
 			}
 			$host = $addresses[0];
@@ -370,10 +370,10 @@ if ($delete_host) {
 		@$DB->execute( 'DELETE FROM `host_params` WHERE `host_id`='. $delete_host );
 		
 		$sql_query =
-	'DELETE FROM `hosts` 
-	WHERE
-		`id`='. $delete_host .' AND
-		`is_foreign`=1'
+'DELETE FROM `hosts`
+WHERE
+	`id`='. $delete_host .' AND
+	`is_foreign`=1'
 		;
 		$DB->execute($sql_query);
 		
@@ -415,7 +415,7 @@ $rs = $DB->execute($sql_query);
 $num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
-?>	
+?>
 
 <form method="get" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>

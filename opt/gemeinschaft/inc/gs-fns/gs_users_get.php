@@ -64,7 +64,7 @@ ORDER BY
 	
 	$users = array();
 	while ($r = $rs->fetchRow())
-		$users[] = $r;	
+		$users[] = $r;
 	return $users;
 }
 

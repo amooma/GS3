@@ -137,10 +137,10 @@ for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 		echo "<td>", $jobs_send[$i][16] ,"</td>\n";
 		echo "<td>\n";
 		echo '<a href="',$mod_url, '&amp;delete=',$jobs_send[$i][9], '&amp;page=',$page, '" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-		echo "</td>\n";	
+		echo "</td>\n";
 		
 		echo "</tr>\n";
-	} 
+	}
 }
 
 ?>

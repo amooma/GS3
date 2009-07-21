@@ -36,10 +36,10 @@ ob_implicit_flush(1);
 $ext  = trim(@$argv[1]);
 
 if (! $ext) {
-	die();
+	exit();
 }
 if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
-	die();
+	exit();
 }
 
 

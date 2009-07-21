@@ -46,7 +46,7 @@ function gs_host_del( $host,  $force=FALSE )
 	$host = gs_host_by_id_or_ip( $host );
 	
 	if (isGsError($host))   return new GsError(  $host->getMsg() );
-	if (! is_array($host))  return new GsError( 'Cannot retrieve host ID.' ); 
+	if (! is_array($host))  return new GsError( 'Cannot retrieve host ID.' );
 	
 	# connect to db
 	#

@@ -1,0 +1,169 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* Soeren Sprenger <soeren.sprenger@amooma.de>
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/mb_str_pad.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
+//include_once( GS_DIR .'inc/gs-fns/gs_calllog_get.php' );
+
+// additional parameters
+//$expandInternal = true;
+
+// TODO: expand internal numbers to public format
+//$prefixNumber = $CANONIZE_NATL_PREFIX . $CANONIZE_AREA_CODE . $CANONIZE_LOCAL_BRANCH;
+//echo $prefixNumber . "\n";
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '
+	."\n".'  '. baseName(__FILE__) .' --type=internal'
+	."\n".'  '. baseName(__FILE__) .' --type=private --user=<user>';
+
+// TODO: include parameters max and offset
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'user=',
+		'type='
+	),
+	$usage
+);
+if ($opts['type'] === 'private' && ! isSet( $opts['user'] )) {
+	gs_script_invalid_usage( $usage );
+}
+
+$types_valid = array('internal', 'private');
+if (! in_array($opts['type'], $types_valid, true)) {
+	gs_script_invalid_usage( $usage );
+}
+
+/***********************************************************
+***********************************************************/
+
+$db = gs_db_master_connect();
+if (! $db)
+	gs_script_error( 'Could not connect to database.' );
+
+	
+// get phonebook entries
+if ($opts['type'] === 'internal') {
+	
+	$sql = 'SELECT SQL_CALC_FOUND_ROWS
+		`u`.`firstname` `fn`, `u`.`lastname` `ln`, `s`.`name` `ext`
+	FROM
+		`users` `u` JOIN
+		`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
+	WHERE
+		`u`.`nobody_index` IS NULL
+	ORDER BY `u`.`lastname`, `u`.`firstname`';
+}
+elseif ($opts['type'] === 'private') {
+	
+	$user = gs_user_get($opts['user']);
+	if (isGsError( $user )) gs_script_error( $user->getMsg() );
+	if (! $user)            gs_script_error();
+	$user_id = $user['id'];
+	
+	$sql = 'SELECT SQL_CALC_FOUND_ROWS
+		`lastname` `ln`, `firstname` `fn`, `number` `ext`
+	FROM
+		`pb_prv`
+	WHERE
+		`user_id`='. $db->escape($user_id) .'
+	ORDER BY `lastname`, `firstname`';
+}
+
+$rs = $db->execute($sql);
+
+if (! $rs)
+	gs_script_error( 'DB error.' );
+
+$phonebook = array();
+while ($r = $rs->fetchRow()) {
+	array_push($phonebook, $r);
+}
+
+$fields = array(
+	'fn'  => 20,
+	'ln'  => 20,
+	'ext' => 15
+);
+
+$fieldsAbbr = array(
+	'fn'  => 'firstname',
+	'ln'  => 'lastname',
+	'ext' => 'number'
+);
+
+$fieldsPad = array(
+	'fn'       => STR_PAD_RIGHT,
+	'ln'       => STR_PAD_RIGHT,
+	'ext'      => STR_PAD_RIGHT
+);
+
+
+foreach ($fields as $field => $length) {
+	if (strLen($fieldsAbbr[$field]) > $length) {
+		$fields[$field] = strLen($fieldsAbbr[$field]);
+	}
+}
+foreach ($phonebook as $ignore => $phonebook_e) {
+	foreach ($fields as $field => $length) {
+		if (mb_strLen($phonebook_e[$field]) > $length)
+			$fields[$field] = mb_strLen($phonebook_e[$field]);
+	}
+}
+
+// print out table
+$header = '| ';
+foreach ($fields as $field => $length) {
+	$header.= str_pad( $fieldsAbbr[$field], $length, ' ' ) .' | ';
+}
+$sep = str_repeat( '-', strLen($header)-1 );
+
+echo $sep, "\n";
+echo $header, "\n";
+echo $sep, "\n";
+
+foreach ($phonebook as $ignore => $phonebook_e) {
+	echo '| ';
+	foreach ($fields as $field => $length) {
+		echo mb_str_pad( $phonebook_e[$field], $length, ' ', $fieldsPad[$field] ), ' | ';
+	}
+	echo "\n";
+}
+echo $sep, "\n";
+
+?>

@@ -47,7 +47,7 @@ function _user_groups_get( $user_id, $with_0=null )
 	if (! $db) return false;
 	$user_id = (int)$user_id;
 	
-	$group_id = (int)$db->executeGetOne( 'SELECT `group_id` 
+	$group_id = (int)$db->executeGetOne( 'SELECT `group_id`
 		FROM `users` WHERE `id`='. $user_id
 		);
 	
@@ -74,15 +74,15 @@ function _user_groups_get( $user_id, $with_0=null )
 
 function _no_more_routes( $idx=1 )
 {
-	echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc('') ."\n";
-	die();
+	gs_agi_set_variable( 'r_'.$idx.'_dial', '' );
+	exit();
 }
 
 
 $number = ($argc > 1) ? trim($argv[1]) : '';
 if ($number == '') {
-	gs_agi_verbose("### Empty number");
-	echo "HANGUP\n";
+	gs_agi_verbose( "### Empty number" );
+	gs_agi_hangup();
 	_no_more_routes();
 }
 
@@ -117,34 +117,34 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 	$gateway_prefix = substr($number,0,1);
 	
 	if (@$canonical->is_call_by_call) {
-		gs_agi_verbose("### $number has a call-by-call prefix");
-		echo "HANGUP\n";
+		gs_agi_verbose( "### $number has a call-by-call prefix" );
+		gs_agi_hangup();
 		_no_more_routes();
 	}
 	elseif (@$canonical->in_prv_branch) {
 		$qualify_cid = false;
 		if ($is_sub_system) {
 			# allow to go to the outside
-			gs_agi_verbose("### $number is in private branch but we are a sub-system");
+			gs_agi_verbose( "### $number is in private branch but we are a sub-system" );
 			$number_dial = trim( @$canonical->dial );
 		} else {
-			gs_agi_verbose("### $number is in private branch and we are not a sub-system");
+			gs_agi_verbose( "### $number is in private branch and we are not a sub-system" );
 			/*
 			# don't dial to the outside
-			echo "HANGUP\n";
+			gs_agi_hangup();
 			_no_more_routes();
 			*/
 			# dial our extension
 			$exten = trim( @$canonical->extn );
 			if ($exten != '') {
-				echo 'SET VARIABLE __is_from_gateway '. gs_agi_str_esc('1') ."\n";
+				gs_agi_set_variable( '__is_from_gateway', '1' );
 				$idx = 1;
-				echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc( 'Local/'. $exten .'@to-internal-users' ) ."\n";
-				echo 'SET VARIABLE r_'.$idx.'_cid '. gs_agi_str_esc($user_cid_num) ."\n";
+				gs_agi_set_variable( 'r_'.$idx.'_dial', ('Local/'. $exten .'@to-internal-users') );
+				gs_agi_set_variable( 'r_'.$idx.'_cid', $user_cid_num );
 				_no_more_routes(++$idx);
 			} else {
-				gs_agi_verbose("### Empty number");
-				echo "HANGUP\n";
+				gs_agi_verbose( "### Empty number" );
+				gs_agi_hangup();
 				_no_more_routes();
 			}
 		}
@@ -154,8 +154,8 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 	}
 	
 	if ($number_dial == '') {
-		gs_agi_verbose("### Empty number");
-		echo "HANGUP\n";
+		gs_agi_verbose( "### Empty number" );
+		gs_agi_hangup();
 		_no_more_routes();
 	}
 	
@@ -165,7 +165,7 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 
 
 $db = gs_db_slave_connect();
-if (! $db) die(1);
+if (! $db) gs_agi_err( 'DB error' );
 
 $user_groups = _user_groups_get( $user_id, 0 );
 if (! is_array($user_groups)) $user_groups = array(0);
@@ -196,6 +196,7 @@ while ($route = $rs->fetchRow()) {
 		if (in_array((int)$route['ug_id'], $user_groups, true)) {
 			$have_match = true;
 			$lcr_prefix = $route['lcrprfx'];
+			gs_agi_verbose( '### Matching route for "'. $number_dial .'" is "'. $route['pat'] .'", user group: '. ($route['ug_id'] == null ? 'any' : $route['ug_id']) );
 			break;
 		}
 	}
@@ -214,29 +215,31 @@ $idx = 1;
 foreach ($gate_grps as $ggrp_id) {
 
 	$out_cid_num = $user_cid_num;
-	if ($force_cid == false) {
-		if ($qualify_cid
-			&&  ! in_array(strToLower($out_cid_num), array('anonymous', 'unknown', ''), true))  # no action for "anonymous"
-		{
-			$rs = $db->execute(
-'SELECT `out_cid_search` `cid_s`, `out_cid_replace` `cid_r`
+	if (($force_cid == false)
+	&& $qualify_cid
+	&&  ! in_array(strToLower($out_cid_num), array('anonymous', 'unknown', ''), true))  # no action for "anonymous"
+	{
+		$rs = $db->execute(
+'SELECT `out_cid_search` `cid_s`, `out_cid_replace` `cid_r`, `name`
 FROM `gate_grps`
 WHERE `id`='. $ggrp_id
 			);
 			if (!($ggrp = $rs->fetchRow())) continue;
 		
-			$ggrp['cid_s'] = trim($ggrp['cid_s']);
-			if ($ggrp['cid_s'] != ''
-				&&  is_valid_pcre( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'] ))
-			{
-				$out_cid_num = preg_replace('/[^0-9+a-zA-Z\-_.]/', '',
-					@preg_replace( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'], $out_cid_num ));
-			}
+		$ggrp['cid_s'] = trim($ggrp['cid_s']);
+		if ($ggrp['cid_s'] != ''
+		&&  is_valid_pcre( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'] ))
+		{
+			$out_cid_num_qualified = preg_replace('/[^0-9+a-zA-Z\-_.]/', '',
+				@preg_replace( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'], $out_cid_num ));
+			$out_cid_num = $out_cid_num_qualified;
+			gs_agi_verbose( '### Qualifying caller ID "'.$out_cid_num.'" -> "'.$out_cid_num_qualified.'" ('. ('s/'.$ggrp['cid_s'].'/'.$ggrp['cid_r'].'/') .') for gategroup "'. $ggrp['name'] .'"' );
+			unset($out_cid_num_qualified);
 		}
 	}
 	
 	$rs = $db->execute(
-'SELECT `type`, `name`, `dialstr`, `hw_port`
+'SELECT `type`, `name`, `dialstr`, `hw_port`, `host`, `user`
 FROM `gates`
 WHERE
 	`grp_id`='. $ggrp_id .' AND
@@ -248,25 +251,34 @@ LIMIT 9'
 	while ($gate = $rs->fetchRow()) {
 		if ($lcr_prefix != '') {
 			if (in_array($gate['type'], array('zap','misdn','woomera','capi'), true)) {
-				gs_agi_verbose("### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
+				gs_agi_verbose( "### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
 				$number_final = $lcr_prefix . $number_dial;
 			} else {
-				gs_agi_verbose("### LCR prefix $lcr_prefix ignored for non-hardware gateway ". $gate['name'] );
+				gs_agi_verbose( "### LCR prefix $lcr_prefix ignored for non-hardware gateway ". $gate['name'] );
 				$number_final = $number_dial;
 			}
 		} else {
 			$number_final = $number_dial;
 		}
-		$dialstr = str_replace('{peer}', '{gateway}', $gate['dialstr']);
 		$dialstr = str_replace(
-			array( '{number}'   , '{number:1}'            , '{gateway}'   , '{port}'          ),
-			array( $number_final, substr($number_final,1) , $gate['name'] ,  $gate['hw_port'] ),
+			array( '{number}'   , '{number:1}'            , '{gateway}'   , '{peer}'      , '{port}'         ),
+			array( $number_final, substr($number_final,1) , $gate['name'] , $gate['name'] , $gate['hw_port'] ),
 			$gate['dialstr']
 		); //FIXME - do proper parsing instead of "{number:1}"
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
 		if ($dialstr != '') {
-			echo 'SET VARIABLE r_'.$idx.'_dial '. gs_agi_str_esc($dialstr) ."\n";
-			echo 'SET VARIABLE r_'.$idx.'_cid '. gs_agi_str_esc($out_cid_num) ."\n";
+			gs_agi_set_variable( 'r_'.$idx.'_dial', $dialstr );
+			gs_agi_set_variable( 'r_'.$idx.'_cid', $out_cid_num );
+			
+			# determine host (domain / IP address) part for
+			# P-Preferred-Identity header:
+			if (preg_match('/@([^@]+)$/', $gate['user'], $m)) {
+				$sip_uri_cid_host = $m[1];
+			} else {
+				$sip_uri_cid_host = $gate['host'];
+			}
+			gs_agi_set_variable( 'r_'.$idx.'_cid_host', $sip_uri_cid_host );
+			
 			++$idx;
 		}
 	}

@@ -18,8 +18,8 @@
 
     <para>Über eine URL können Gespräche per HTTP GET initiiert werden. Die
     URL ist abhängig von den Einstellungen in
-    <filename>/opt/gemeinschaft/inc/conf.php</filename> und setzt sich wie
-    folgt zusammen:<literallayout><replaceable>&lt;GS_PROV_SCHEME&gt;</replaceable>://<replaceable>&lt;GS_PROV_HOST&gt;</replaceable>:<replaceable>&lt;GS_PROV_PORT&gt;</replaceable><replaceable>&lt;GS_PROV_PATH&gt;</replaceable>call-init.php</literallayout>also
+    <filename>/etc/gemeinschaft/gemeinschaft.php</filename> und setzt sich wie
+    folgt zusammen:<literallayout><replaceable>&lt;PROV_SCHEME&gt;</replaceable>://<replaceable>&lt;PROV_HOST&gt;</replaceable>:<replaceable>&lt;PROV_PORT&gt;</replaceable><replaceable>&lt;PROV_PATH&gt;</replaceable>call-init.php</literallayout>also
     z.B.:<literallayout>http://192.168.1.130:82/call-init.php</literallayout></para>
 
     <para>Dem Skript müssen mehrere Parameter übergeben werden:<variablelist>
@@ -50,8 +50,8 @@
             etc.) in der Datenbank bzw. im LDAP<footnote>
                 <para>Ob die MySQL-Datenbank oder LDAP als Backend verwendet
                 wird, hängt von der Einstellung
-                <code>GS_EXTERNAL_NUMBERS_BACKEND</code> in der Datei
-                <filename>/opt/gemeinschaft/inc/conf.php</filename> ab.</para>
+                <code>EXTERNAL_NUMBERS_BACKEND</code> in der Datei
+                <filename>/etc/gemeinschaft/gemeinschaft.php</filename> ab.</para>
               </footnote> eingetragen und damit erlaubt sein.</para>
           </listitem>
         </varlistentry>
@@ -88,7 +88,7 @@
       </variablelist>Beispiele:<literallayout>http://192.168.1.130:82/call-init.php?user=471102&amp;to=950001</literallayout><literallayout>http://192.168.1.130:82/call-init.php?user=471102&amp;from=001701234567&amp;to=00261012345</literallayout></para>
 
     <para>Von welchen IP-Adressen oder Teilnetzen der Aufruf dieser URL
-    erlaubt ist, wird in der <filename>inc/conf.php</filename> (s.o.) mit der
+    erlaubt ist, wird in der <filename>/etc/gemeinschaft/gemeinschaft.php</filename> (s.o.) mit der
     Option <code>GS_CALL_INIT_FROM_NET</code> eingestellt. Es kann eine
     komma-separierte Liste von IP-Adressen oder Paaren in der Form
     <code><replaceable>&lt;IP-Adresse&gt;</replaceable>/<replaceable>&lt;Netzmaske&gt;</replaceable></code>

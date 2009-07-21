@@ -37,70 +37,13 @@ error_reporting(0);
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_quiet');
-require_once( GS_DIR .'inc/quote_shell_arg.php' );
+require_once( GS_DIR .'inc/mysql-find-socket.php' );
 
 
-function _grep_mysql_socket( $str )
-{
-	if (preg_match('/(\/(?:var|tmp)\/[a-z\.\-_\/]+)/', $str, $m)) {
-		$filename = $m[1];
-		if (@file_exists($filename)) {
-			if (@fileType($filename) === 'socket') {
-				return $m[1];
-			}
-		}
-	}
-	return null;
-}
-
-
-$socket = null;
-
-$host = gs_get_conf('GS_DB_SLAVE_HOST');
-if ($host === '127.0.0.1'
-||  $host === 'localhost'
-||  $host ==  '')
-{
-	
-	/*
-	wo der Socket liegt findet man so heraus:
-	mysqladmin variables | grep sock
-	oder es steht auch in der MySQL-Konfiguration:
-	cat /etc/my.cnf | grep sock
-	bzw.
-	cat /etc/mysql/my.cnf | grep sock
-	*/
-	
-	$err=0; $out=array();
-	@exec( 'sudo sed -e '. qsa('/^\[\(mysqld_safe\|safe_mysqld\)\]/,/^\[/!d') .' /etc/mysql/my.cnf 2>>/dev/null | grep \'^socket\' 2>>/dev/null', $out, $err );
-	// Debian
-	if ($err === 0)
-		$socket = _grep_mysql_socket(implode("\n",$out));
-	
-	if ($socket === null) {
-		$err=0; $out=array();
-		@exec( 'sudo sed -e '. qsa('/^\[\(mysqld_safe\|safe_mysqld\)\]/,/^\[/!d') .' /etc/my.cnf 2>>/dev/null | grep \'^socket\' 2>>/dev/null', $out, $err );
-		// CentOS
-		if ($err === 0)
-			$socket = _grep_mysql_socket(implode("\n",$out));
-		
-		if ($socket === null) {
-			$err=0; $out=array();
-			@exec( 'sudo mysqladmin -s variables | grep socket 2>>/dev/null', $out, $err );
-			// should work everywhere if mysqladmin is available
-			if ($err === 0)
-				$socket = _grep_mysql_socket(implode("\n",$out));
-			
-			if ($socket === null) {
-				gs_log(GS_LOG_WARNING, 'Could not find MySQL socket');
-			}
-		}
-	}
-}
-
+$socket = gs_mysql_find_socket( gs_get_conf('GS_DB_SLAVE_HOST') );
 
 echo "\n";
-if ($socket === null) {
+if (! $socket) {
 	echo 'dbhost = ', gs_get_conf('GS_DB_SLAVE_HOST') ,"\n";
 	echo 'dbport = 3306'                              ,"\n";  # MySQL default
 } else {

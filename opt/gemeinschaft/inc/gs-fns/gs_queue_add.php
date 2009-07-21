@@ -72,7 +72,7 @@ function gs_queue_add( $name, $title, $maxlen, $host_id_or_ip )
 	
 	# check if host exists
 	#
-	$host = gs_host_by_id_or_ip( $host_id_or_ip );	
+	$host = gs_host_by_id_or_ip( $host_id_or_ip );
 	if (isGsError( $host ))
 		return new GsError( $host->getMsg() );
 	if (! is_array( $host ))

@@ -373,7 +373,7 @@ Listen *:82
     <para>Das gleiche kann man analog f¸r das Web-Interface machen.</para>
 
     <para>Den Provisioning-Host, -Port etc. muﬂ man noch in der
-    <filename>/opt/gemeinschaft/inc/conf.php</filename> eintragen, siehe <xref
+    <filename>/etc/gemeinschaft/gemeinschaft.php</filename> eintragen, siehe <xref
     linkend="initial-config-files" />.</para>
 
     <para>Der Web-Server muﬂ mit <command>sudo</command> ohne Paﬂwort als

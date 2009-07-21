@@ -28,6 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 
+include_once( GS_DIR .'inc/util.php' );
 include_once( GS_DIR .'inc/log.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
@@ -35,13 +36,13 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 function gs_script_invalid_usage( $usage=null )
 {
-	echo ( $usage ? $usage : 'Error' ), "\n\n";
+	gs_write_error( ($usage ? $usage : 'Error') ."\n\n" );
 	die(1);
 }
 
 function gs_script_error( $msg='' )
 {
-	echo 'Error. ', $msg, "\n\n";
+	gs_write_error( 'Error. '. $msg ."\n\n" );
 	die(1);
 }
 

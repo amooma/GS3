@@ -34,29 +34,39 @@ require_once( GS_DIR .'inc/agi-fns.php' );
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
+# Do not call gs_agi_err() in this script.
+# Not using your custom ringtone is not really a serious problem.
 
 $uname  = trim(@$argv[1]);
 $source = trim(@$argv[2]);
 
-if (! $uname) die();
-if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
-	die();
+if (! $uname) {
+	@gs_agi_verbose( '### Empty extension argument' );
+	exit(1);
 }
-if (! $source) die();
-if (! in_array($source, array('internal','external'))) die();
+if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
+	@gs_agi_verbose( '### Invalid extension argument' );
+	exit(1);
+}
+if (! $source) {
+	@gs_agi_verbose( '### Empty source argument' );
+	exit(1);
+}
+if (! in_array($source, array('internal','external'))) {
+	@gs_agi_verbose( '### Invalid source argument' );
+	exit(1);
+}
 
 
 /*
 $files = glob( '/opt/gemeinschaft/htdocs/prov/ringtones/'. $uname .'-*.wav' );
 if (count($files) < 1) {
-	echo 'SET VARIABLE ringer '. gs_agi_str_esc('') ."\n";
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	die();
+	gs_agi_set_variable( 'ringer', '' );
+	exit();
 }
 
 $ringer = baseName( $files[0] );
-echo 'SET VARIABLE ringer '. gs_agi_str_esc($ringer) ."\n";
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+gs_agi_set_variable( 'ringer', $ringer );
 */
 
 include_once( GS_DIR .'inc/db_connect.php' );
@@ -64,7 +74,10 @@ include_once( GS_DIR .'inc/db_connect.php' );
 //include_once( GS_DIR .'inc/gs-fns/gs_ringtones_get.php' );
 
 $db = gs_db_slave_connect();
-if (! $db) die();
+if (! $db) {
+	@gs_agi_verbose( '### DB error - Failed to connect' );
+	exit(1);
+}
 
 $rs = $db->execute(
 'SELECT `p`.`user_id` `id`, `p`.`type` `phone_type`
@@ -74,23 +87,29 @@ FROM
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE `s`.`name`=\''. $db->escape($uname) .'\''
 );
-if (! ($user = $rs->fetchRow())) die();
+if (! ($user = $rs->fetchRow())) exit(0);  # not an error
 
 
-if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
-		
-	//$ringtones = gs_ringtones_get( $uname );
-	//if (! is_array($ringtones)) die();
+function _get_ringers()
+{
+	/*
+	$ringtones = gs_ringtones_get( $uname );
+	if (! is_array($ringtones)) {
+		@gs_agi_verbose( '### Failed to get ringtones' );
+		exit(1);
+	}
+	*/
 	
 	$ringtones = array(
 		'internal' => array( 'bellcore' => 1, 'file' => null ),
 		'external' => array( 'bellcore' => 1, 'file' => null )
 	);
 	
-	# get ringers
-	#
 	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
-	if (! $rs) die();
+	if (! $rs) {
+		@gs_agi_verbose( '### DB error - Failed to get ringtones' );
+		exit(1);
+	}
 	while ($r = $rs->fetchRow()) {
 		$src = $r['src'];
 		if (! array_key_exists($src, $ringtones)) continue;
@@ -98,15 +117,25 @@ if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
 		$ringtones[$src]['file'] = $r['file'];
 	}
 	//print_r($ringtones);
-		
+	return $ringtones;
+}
+
+
+if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
+	
+	$ringtones = _get_ringers();
+	
+	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
+		$ringtones['external']['file'] = null;
+	
 	if (@$ringtones[$source]['file']) {
-		echo 'SET VARIABLE ringer '. gs_agi_str_esc( '<'. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'ringtones/'. $ringtones[$source]['file'] .'-snom.wav>' ) ."\n";
+		gs_agi_set_variable( 'ringer', ('<'. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'ringtones/'. $ringtones[$source]['file'] .'-snom.wav>') );
 	} elseif (array_key_exists('bellcore', $ringtones[$source])) {
-		if (@$ringtones[$source]['bellcore'] == 1) die();
+		if (@$ringtones[$source]['bellcore'] == 1) exit();
 		if (@$ringtones[$source]['bellcore'] != 0) {
-			echo 'SET VARIABLE ringer '. gs_agi_str_esc( '<http://127.0.0.1/Bellcore-dr'. $ringtones[$source]['bellcore']. '>' ) ."\n";
+			gs_agi_set_variable( 'ringer', ('<http://127.0.0.1/Bellcore-dr'. $ringtones[$source]['bellcore']. '>') );
 		} else {
-			echo 'SET VARIABLE ringer '. gs_agi_str_esc( '<http://127.0.0.1/Bellcore-dr0>' ) ."\n";
+			gs_agi_set_variable( 'ringer', ('<http://127.0.0.1/Bellcore-dr0>') );
 		}
 	}
 	
@@ -116,32 +145,17 @@ elseif (strToLower(subStr($user['phone_type'],0,7)) === 'siemens') {
 	//FIXME
 	// Siemens OpenStage does not support Alert-Info headers (yet)
 	
-	$ringtones = array(
-		'internal' => array( 'bellcore' => 1, 'file' => null ),
-		'external' => array( 'bellcore' => 1, 'file' => null )
-	);
+	$ringtones = _get_ringers();
 	
-	# get ringers
-	#
-	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
-	if (! $rs) die();
-	while ($r = $rs->fetchRow()) {
-		$src = $r['src'];
-		if (! array_key_exists($src, $ringtones)) continue;
-		$ringtones[$src]['bellcore'] = (int)$r['bellcore'];
-		$ringtones[$src]['file'] = $r['file'];
-	}
-	//print_r($ringtones);
-		
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
 	
 	if (array_key_exists('bellcore', $ringtones[$source])) {
-		if (@$ringtones[$source]['bellcore'] == 1) die();
+		if (@$ringtones[$source]['bellcore'] == 1) exit();
 		if (@$ringtones[$source]['bellcore'] != 0) {
-			echo 'SET VARIABLE ringer '. gs_agi_str_esc( '<http://127.0.0.1/Bellcore-dr'. $ringtones[$source]['bellcore'] .'>' ) ."\n";
+			gs_agi_set_variable( 'ringer', ('<http://127.0.0.1/Bellcore-dr'. $ringtones[$source]['bellcore'] .'>') );
 		} else {
-			echo 'SET VARIABLE ringer '. gs_agi_str_esc( '<http://127.0.0.1/Bellcore-dr0>' ) ."\n";
+			gs_agi_set_variable( 'ringer', ('<http://127.0.0.1/Bellcore-dr0>') );
 		}
 	}
 	
@@ -150,39 +164,38 @@ elseif (strToLower(subStr($user['phone_type'],0,6)) === 'aastra') {
 	
 	//FIXME - untested
 	
-	$ringtones = array(
-		'internal' => array( 'bellcore' => 1, 'file' => null ),
-		'external' => array( 'bellcore' => 1, 'file' => null )
-	);
+	$ringtones = _get_ringers();
 	
-	# get ringers
-	#
-	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
-	if (! $rs) die();
-	while ($r = $rs->fetchRow()) {
-		$src = $r['src'];
-		if (! array_key_exists($src, $ringtones)) continue;
-		$ringtones[$src]['bellcore'] = (int)$r['bellcore'];
-		$ringtones[$src]['file'] = $r['file'];
-	}
-	//print_r($ringtones);
-		
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
 	
 	if (array_key_exists('bellcore', $ringtones[$source])) {
-		if (@$ringtones[$source]['bellcore'] == 1) die();
+		if (@$ringtones[$source]['bellcore'] == 1) exit();
 		if (@$ringtones[$source]['bellcore'] != 0) {
-			echo 'SET VARIABLE ringer '. gs_agi_str_esc( 'info=<Bellcore-dr'. $ringtones[$source]['bellcore'] .'>' ) ."\n";
+			gs_agi_set_variable( 'ringer', ('info=<Bellcore-dr'. $ringtones[$source]['bellcore'] .'>') );
 		} else {
-			echo 'SET VARIABLE ringer '. gs_agi_str_esc( 'info=<Bellcore-dr0>' ) ."\n";
+			gs_agi_set_variable( 'ringer', ('info=<Bellcore-dr0>') );
 		}
+	}
+	
+}
+elseif (strToLower(subStr($user['phone_type'],0,11)) === 'grandstream') {
+	
+	$ringtones = _get_ringers();
+	
+	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
+		$ringtones['external']['file'] = null;
+	
+	if (@$ringtones[$source]['file']) {
+		gs_agi_set_variable( 'ringer', ('<http://127.0.0.1>\;info='. $source) );
+	} else {
+		gs_agi_set_variable( 'ringer', '' );
 	}
 	
 }
 else {
 	
-	echo 'SET VARIABLE ringer '. gs_agi_str_esc( '' ) ."\n";
+	gs_agi_set_variable( 'ringer', '' );
 	
 }
 

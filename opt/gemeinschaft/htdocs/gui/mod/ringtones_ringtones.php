@@ -29,6 +29,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-fns/gs_ringtones_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ringtone_set.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 
 
 echo '<h2>';
@@ -50,7 +51,11 @@ $audio_exts = array( 'aif', 'aiff', 'wav', 'au', 'al', 'alaw', 'la',
 
 $errMsgs = array();
 
-if (@$_REQUEST['action']=='save') {
+$action = @$_REQUEST['action'];
+if (! in_array($action, array('', 'save', 'save-and-resync'), true))
+	$action = '';
+
+if ($action === 'save' || $action === 'save-and-resync') {
 	
 	/*
 	echo "<pre>";
@@ -128,6 +133,12 @@ if (@$_REQUEST['action']=='save') {
 		
 	}
 	
+	if ($action === 'save-and-resync') {
+		$ret = gs_prov_phone_checkcfg_by_user( @$_SESSION['sudo_user']['name'], false );
+		if (isGsError($ret) || ! $ret) {
+			$errMsgs[] = __('Fehler beim Aktualisieren des Telefons');
+		}
+	}
 }
 
 
@@ -150,6 +161,7 @@ if (isGsError($ringtones)) {
 		<?php echo __('Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.'); ?>
 		<sup>[1]</sup>
 		<sup>[2]</sup>
+		<sup>[3]</sup>
 	</p>
 </div>
 
@@ -229,9 +241,13 @@ if (@$ringtones[$source]['file']) {
 	<td colspan="3" class="quickchars r">
 		<br />
 		<br />
-		<button type="submit">
+		<button type="submit" title="<?php echo __('Speichern'); ?>" name="action" value="save">
 			<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			<?php echo __('Speichern'); ?>
+		</button>
+		<button type="submit" title="<?php echo __('Speichern und Telefon aktualisieren'); ?>" name="action" value="save-and-resync">
+			<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+			<?php echo __('Speichern und Telefon aktualisieren'); ?>
 		</button>
 	</td>
 </tr>
@@ -257,6 +273,14 @@ if (@$ringtones[$source]['file']) {
 <p class="small" style="max-width:48em;">
 	<sup>[2]</sup>
 	<?php echo htmlEnt(__("Das Siemens OpenStage kann in der derzeitigen Firmware noch nicht zwischen intern und extern unterscheiden. Es wird immer die Ruftonmelodie f\xC3\xBCr intern verwendet!")); ?>
+</p>
+<?php
+//}
+//elseif (strToLower(subStr($cur_phone_type,0,11)) === 'grandstream') {
+?>
+<p class="small" style="max-width:48em;">
+	<sup>[3]</sup>
+	<?php echo __('Das Grandstream muss bei &Auml;nderung eines Klingeltons aktualisiert werden.<br />Die BT-Serie kann nicht zwischen intern und extern unterscheiden. Es wird immer die Ruftonmelodie f&uuml;r intern verwendet!'); ?>
 </p>
 <?php
 //}

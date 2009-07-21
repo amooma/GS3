@@ -5817,6 +5817,28 @@ INSERT INTO `gate_grps` VALUES (1, 'amt', 'Amt', 'balance', 1, '', '', '', '', '
 UNLOCK TABLES;
 
 --
+-- Table structure for table `gate_params`
+--
+
+DROP TABLE IF EXISTS `gate_params`;
+CREATE TABLE `gate_params` (
+  `gate_id` smallint(5) unsigned NOT NULL,
+  `param` varchar(50) character set ascii NOT NULL,
+  `value` varchar(255) collate utf8_unicode_ci NOT NULL,
+  KEY `gate_id_param` (`gate_id`,`param`(20)),
+  CONSTRAINT `gate_params_ibfk_1` FOREIGN KEY (`gate_id`) REFERENCES `gates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `gate_params`
+--
+
+LOCK TABLES `gate_params` WRITE;
+/*!40000 ALTER TABLE `gate_params` DISABLE KEYS */;
+/*!40000 ALTER TABLE `gate_params` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `gates`
 --
 
@@ -5830,8 +5852,10 @@ CREATE TABLE `gates` (
   `allow_out` tinyint(1) unsigned NOT NULL default '1',
   `dialstr` varchar(50) character set ascii NOT NULL,
   `host` varchar(50) collate utf8_unicode_ci default NULL,
+  `proxy` varchar(50) collate utf8_unicode_ci default NULL,
   `user` varchar(35) collate utf8_unicode_ci default NULL,
   `pwd` varchar(35) collate utf8_unicode_ci default NULL,
+  `register` tinyint(1) unsigned NOT NULL default '1',
   `hw_port` tinyint(3) unsigned default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),

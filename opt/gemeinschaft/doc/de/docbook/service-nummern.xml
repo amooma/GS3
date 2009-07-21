@@ -309,15 +309,36 @@
         </varlistentry>
 
         <varlistentry>
-          <term><code>*2<replaceable>&lt;Nummer&gt;</replaceable></code></term>
+          <term><code>*2</code></term>
 
           <listitem>
+            <para>(außer <code>*21</code> und <code>*22</code>)</para>
+
             <para>Shortcut um für Anrufe von intern und extern eine temporäre
             Rufumleitung zu setzen und zu aktivieren (also wie
             <code>*940<replaceable>&lt;Nummer&gt;</replaceable></code>,
             <code>*941<replaceable>&lt;Nummer&gt;</replaceable></code>,
             <code>*9**00</code> und <code>*9**10</code>). Loggt den Benutzer
             außerdem aus allen Queues aus.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*21</code></term>
+
+          <listitem>
+            <para>Shortcut um für Anrufe von intern und extern die
+            Rufumleitung auf den Anrufbeantworter zu leiten.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><code>*22</code></term>
+
+          <listitem>
+            <para>Shortcut um für Anrufe von intern und extern die Ansage ohne
+            Anrufbeantworter zu leiten. Wenn keine Ansage aufgezeichnet wurde,
+            dann wird die Standard-Ansage von Gemeinschaft abgespielt.</para>
           </listitem>
         </varlistentry>
 
@@ -342,8 +363,8 @@
 
           <listitem>
             <simpara>Setzt das Kommentarfeld des Benutzers (sichtbar im
-            Kollegen-Monitor) auf den in der <filename>inc/conf.php</filename>
-            mit <code>GS_USERCOMMENT_OFFTIME</code> eingestellten Wert (z.B.
+            Kollegen-Monitor) auf den vom Benutzer auf der Startseite
+            eingestellten Wert (z.B.
             "<literal>Feierabend</literal>").</simpara>
           </listitem>
         </varlistentry>
@@ -390,7 +411,7 @@
       </variablelist></para>
   </section>
 
-  <section>
+  <section id="nummern-konferenzen">
     <title>Konferenzen</title>
 
     <para><variablelist>

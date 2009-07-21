@@ -36,9 +36,9 @@ ob_implicit_flush(1);
 
 $uname  = trim(@$argv[1]);
 
-if (! $uname) die();
+if (! $uname) gs_agi_err( 'Invalid extension' );
 if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
-	die();
+	gs_agi_err( 'Invalid extension' );
 }
 
 
@@ -49,7 +49,7 @@ $db = gs_db_slave_connect();
 
 # get user id:
 $uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($uname) .'\'' );
-if ($uid < 1) die();
+if ($uid < 1) gs_agi_err( 'User not found' );
 
 
 $pickupmark = '';
@@ -65,11 +65,9 @@ while ($r = $rs->fetchRow()) {
 
 
 
-echo 'SET VARIABLE pgrpdialstr '. gs_agi_str_esc($dialstr) ."\n";
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+gs_agi_set_variable( 'pgrpdialstr', $dialstr );
 
-echo 'SET VARIABLE __PICKUPMARK '. gs_agi_str_esc($pickupmark) ."\n";
-//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+gs_agi_set_variable( '__PICKUPMARK', $pickupmark );
 
 
 ?>

@@ -401,6 +401,24 @@ $GRANDSTREAM_PROV_HTTP_PASS = 'admin';  # e.g. "gEheiM23y89sdo23", default: "adm
 //$GRANDSTREAM_PROV_NTP       = '192.168.1.130';
   # NTP Server. the stupid Grandstream needs it
 
+  # Set $LOG_LEVEL to "NOTICE" or even "DEBUG" and
+  # tail -f /var/log/gemeinschaft/gs.log
+  # Test the update mechanism with 1 or 2 phones. This is especially
+  # important with PoE (Power over Ethernet) switches.
+$GRANDSTREAM_PROV_FW_UPDATE = false;  # allow firmware updates?
+
+//$GRANDSTREAM_PROV_FW_DEFAULT_BT200   = '1.2.1.4';
+//$GRANDSTREAM_PROV_FW_DEFAULT_BT201   = '1.2.1.4';
+
+//$GRANDSTREAM_PROV_FW_DEFAULT_GXP280  = '1.2.1.4';
+//$GRANDSTREAM_PROV_FW_DEFAULT_GXP1200 = '1.2.1.4';
+//$GRANDSTREAM_PROV_FW_DEFAULT_GXP2000 = '1.2.1.4';
+//$GRANDSTREAM_PROV_FW_DEFAULT_GXP2010 = '1.2.1.4';
+//$GRANDSTREAM_PROV_FW_DEFAULT_GXP2020 = '1.2.1.4';
+
+//$GRANDSTREAM_PROV_FW_DEFAULT_GXV3000 = '1.1.3.50';
+//$GRANDSTREAM_PROV_FW_DEFAULT_GXV3005 = '1.1.3.50';
+
 //$GRANDSTREAM_PROV_KEY_BLACKLIST = '';
   # do not show these softkey functions in GUI,
   # comma separated list, default: ''
@@ -591,7 +609,7 @@ $BUTTONDAEMON_PORT      = 5041;
 # the Post of the daemons socketserver
 $BUTTONDAEMON_SECRET    ='SecretLocaNetPassword';
 # Needs to be set in the Astbuttonds config, too
-$BUTTONDAEMON_DISPLAYDIR = "/var/run/astbuttond/";
+$BUTTONDAEMON_DISPLAYDIR = "/var/spool/astbuttond/";
 # Filesystem location where astbuttond stores it's display contents files
 # MUST be identical to the path specified in astbuttond.config to work
 # correctly!

@@ -80,7 +80,7 @@ function query_string( $period, $src, $dst, $dur, $stat )
 		break;
 	case 'tweek':
 		$dow = (int)date('w');
-		if ($dow == 0) $dow = 7; 
+		if ($dow == 0) $dow = 7;
 		$query_line = '`calldate` > (CURRENT_DATE()-INTERVAL '.$dow.' DAY)';
 		break;
 	case 'today':
@@ -115,8 +115,8 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	}
 	$dur = _sanitize_dur( $dur );
 	if ($dur != '') {
-		if ($query_line != '') $query_line .= ' AND';		
-		$query_line .= ' `billsec` '. $dur .'';		
+		if ($query_line != '') $query_line .= ' AND';
+		$query_line .= ' `billsec` '. $dur .'';
 	}
 	if ($stat != '') {
 		if ($query_line != '') $query_line .= ' AND';
@@ -178,7 +178,7 @@ $query_string = query_string( $period, $src, $dst, $dur, $stat );
 
 /*
 echo 'SELECT SQL_CALC_FOUND_ROWS
-DATE_FORMAT(calldate,\'%d.%m.%Y %H:%i:%s\') as datum,clid,src,dst,duration,billsec,disposition 
+DATE_FORMAT(calldate,\'%d.%m.%Y %H:%i:%s\') as datum,clid,src,dst,duration,billsec,disposition
 FROM `ast_cdr` '. $query_string;
 */
 
@@ -187,7 +187,7 @@ $rs = $CDR_DB->execute( 'DELETE FROM `ast_cdr` WHERE `dst`=\'h\'' );
 
 $rs = $CDR_DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
-	DATE_FORMAT(`calldate`, \'%d.%m.%Y %H:%i:%s\') `datum`, `clid`, `src`, `dst`, `duration`, `billsec`, `disposition` 
+	DATE_FORMAT(`calldate`, \'%d.%m.%Y %H:%i:%s\') `datum`, `clid`, `src`, `dst`, `duration`, `billsec`, `disposition`
 FROM `ast_cdr` '. $query_string .'
 ORDER BY `calldate` DESC
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
@@ -212,7 +212,7 @@ $mod_url = gs_url($SECTION, $MODULE, null,
 
 ?>
 
-<form method="get" action="<?php echo GS_URL_PATH; ?>">	
+<form method="get" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <table cellspacing="1" class="phonebook">
 <thead>
@@ -254,7 +254,7 @@ if ($page < $num_pages-1) {
 <tbody>
 <tr>
 	<td>
-		<select name="period" onchange="this.form.submit();"> 
+		<select name="period" onchange="this.form.submit();">
 		<option value ="all"   <?php if ($period==='all'   ) echo ' selected="selected"'; ?>><?php echo __('alle'        ); ?></option>
 		<option value ="month" <?php if ($period==='month' ) echo ' selected="selected"'; ?>><?php echo __('ein Monat'   ); ?></option>
 		<option value ="tmonth"<?php if ($period==='tmonth') echo ' selected="selected"'; ?>><?php echo __('diesen Monat'); ?></option>
@@ -267,7 +267,7 @@ if ($page < $num_pages-1) {
 		</select>
 	</td>
 	<td>
-		<input type="text" name="src" value="<?php echo htmlEnt($src); ?>" size="25" style="width:130px;" />	
+		<input type="text" name="src" value="<?php echo htmlEnt($src); ?>" size="25" style="width:130px;" />
 	</td>
 	<td>
 		<input type="text" name="dst" value="<?php echo htmlEnt($dst); ?>" size="15" style="width:130px;" />
@@ -319,7 +319,7 @@ if (@$rs) {
 	while ($r = $rs->fetchRow()) {
 		echo '<tr class="', ((++$i % 2 == 0) ? 'even':'odd'), '">';
 		echo '<td>', htmlEnt($r['datum']),'</td>';
-		echo '<td>', htmlEnt($r['src']),'</td>';		
+		echo '<td>', htmlEnt($r['src']),'</td>';
 		echo '<td>', htmlEnt($r['dst']), '</td>';
 		echo '<td>', sec_to_hours($r['billsec']), '</td>';
 		
@@ -327,20 +327,20 @@ if (@$rs) {
 		
 		switch ($r['disposition']) {
 		case 'ANSWERED':
-			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/greenled.png" /> ', __('angenommen');			
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/greenled.png" /> ', __('angenommen');
 			break;
 		case 'NO ANSWER':
-			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/free_icon.png" /> ', __('keine Antwort');			
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/free_icon.png" /> ', __('keine Antwort');
 			break;
 		case 'FAILED':
-			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" /> ', __('fehlgeschlagen');			
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/redled.png" /> ', __('fehlgeschlagen');
 			break;
 		case 'BUSY':
-			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/yellowled.png" /> ', __('besetzt');			
+			echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/yellowled.png" /> ', __('besetzt');
 			break;
 		default:
 			echo __('unbekannt');
-		}		
+		}
 		
 		echo '</td>';
 		echo '</tr>', "\n";

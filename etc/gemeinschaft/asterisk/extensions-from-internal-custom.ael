@@ -1,0 +1,24 @@
+/* **************************************************************
+   [de]
+   Um nach Aenderungen eventuelle Syntax-Fehler zu entdecken
+   rufen Sie bitte folgendes Skript auf:
+   /opt/gemeinschaft/sbin/gs-ast-ael-check
+   
+   [en]
+   To detect syntax errors after making changes please call
+   /opt/gemeinschaft/sbin/gs-ast-ael-check
+************************************************************** */
+
+
+context from-internal-custom {
+	
+	/*
+	772 => {
+		Verbose(1,### You have reached extension ${EXTEN});
+		Playback(tt-weasels);
+		Hangup();
+	}
+	*/
+	
+}
+
