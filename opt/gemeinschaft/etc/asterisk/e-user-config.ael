@@ -258,7 +258,7 @@ context user-config {
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm${user_name}');
 		&user-call-forward-activate-numeric(vml,0,0,1);
 		&user-call-forward-activate-numeric(vml,1,0,1);
-		&queue-logout-all-silent();
+		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
@@ -274,7 +274,7 @@ context user-config {
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm*${user_name}');
 		&user-call-forward-activate-numeric(vml,0,0,1);
 		&user-call-forward-activate-numeric(vml,1,0,1);
-		&queue-logout-all-silent();
+		UserEvent(UserDiversionUI|user: ${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();

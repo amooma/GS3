@@ -106,12 +106,6 @@ echo '</h2>', "\n";
 	</td>
 </tr>
 
-<tr>
-	<td style="width:140px;"><code>*30</code></td>
-	<td style="width:420px;">
-		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf den Anrufbeantworter aktivieren.'); ?>
-	</td>
-</tr>
 
 <tr>
 	<td style="width:140px;"><code>*90</code></td>
