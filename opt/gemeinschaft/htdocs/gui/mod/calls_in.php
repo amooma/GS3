@@ -132,7 +132,7 @@ if (@$rs) {
 			$name .= $r['remote_name'];
 		else {
 			$name .= '';
-			if ($r['r_fn'] != '') $name .= $r['r_fn'] .', ';
+			if ($r['r_fn'] != '') $name .= $r['r_fn'] .' ';
 			$name .= $r['r_ln'];
 		}
 		echo '<td>', htmlEnt($name), '</td>';
