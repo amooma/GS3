@@ -160,14 +160,6 @@ while ($gw = $rs->fetchRow()) {
 	$fromdomain     = null;
 	$fromuser       = null;
 	
-	if (strpos($gw['host'], ':')) {
-		$host = substr($gw['host'], 0, strpos($gw['host'], ':'));
-		$port = substr(strstr($gw['host'], ':'), 1);
-	} else {
-		$host = $gw['host'];
-		$port = '5060';
-	}
-	
 	if (preg_match('/@([^@]*)$/', $gw['user'], $m)) {
 		# set domain in the From header
 		$fromdomain = $m[1];
@@ -225,8 +217,8 @@ while ($gw = $rs->fetchRow()) {
 
 	echo '[', $gw['name'] ,']' ,"\n";
 	printparam( 'type', 'peer', $userparamarray);
-	printparam( 'host', $host, $userparamarray);
-	printparam( 'port', $port, $userparamarray);
+	printparam( 'host', $gw['host'], $userparamarray);
+	printparam( 'port', '5060', $userparamarray);
 	printparam( 'username', $gw['user'], $userparamarray);
 	printparam( 'secret', $gw['pwd'], $userparamarray);
 	
