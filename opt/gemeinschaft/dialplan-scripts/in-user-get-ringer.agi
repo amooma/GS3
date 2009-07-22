@@ -131,9 +131,6 @@ if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
 	
 	$ringtones = _get_ringers( $user['id'] );
 	
-	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
-		$ringtones['external']['file'] = null;
-	
 	if (@$ringtones[$source]['file']) {
 		gs_agi_set_variable( 'ringer', ('<'. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'ringtones/'. $ringtones[$source]['file'] .'-snom.wav>') );
 	} elseif (array_key_exists('bellcore', $ringtones[$source])) {
