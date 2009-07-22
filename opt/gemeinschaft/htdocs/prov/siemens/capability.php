@@ -106,7 +106,7 @@ class PhoneCapability_siemens extends PhoneCapability
 		}
 		return $outfile;
 		*/
-		return $infile;
+		return null ;
 	}
 	
 	function _upload_ringtone( $ringtonefile )  # deprecated

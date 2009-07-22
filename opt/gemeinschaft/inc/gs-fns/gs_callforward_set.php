@@ -141,7 +141,7 @@ function gs_callforward_number_set( $user, $source, $type, $number )
 		return new GsError( 'Source must be internal|external.' );
 	if (! in_array( $type, array('std','var','vml'), true ))
 		return new GsError( 'Type must be std|var|vml.' );
-	$number = preg_replace( '/[^0-9vm]/', '', $number );
+	$number = preg_replace( '/[^0-9vm*]/', '', $number );
 	
 	# connect to db
 	#
