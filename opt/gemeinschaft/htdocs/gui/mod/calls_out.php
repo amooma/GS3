@@ -127,9 +127,8 @@ if (@$rs) {
 		if (! $r['r_uid'])
 			$name = $r['remote_name'];
 		else {
-			$name = '';
-			if ($r['r_fn'] != '') $name .= $r['r_fn'] .' ';
-			$name .= $r['r_ln'];
+			$name = $r['r_ln'];
+			if ($r['r_fn'] != '') $name .= ', ' . $r['r_fn'];
 		}
 		echo '<td>', htmlEnt($name), '</td>';
 		
