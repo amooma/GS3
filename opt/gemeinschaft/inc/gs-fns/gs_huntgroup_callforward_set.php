@@ -42,7 +42,7 @@ function gs_huntgroup_callforward_set( $huntgroup, $source, $case, $type, $numbe
 		return new GsError( 'Case must be always|full|timeout|empty.' );
 	if (! in_array( $type, array('std','var'), true ))
 		return new GsError( 'Type must be std|var.' );
-	$number = preg_replace( '/[^\d]/', '', $number );
+	$number = preg_replace( '/[^0-9vm*]/', '', $number );
 	$timeout = (int)$timeout;
 	if ($case != 'timeout') $timeout = 0;
 	else {
