@@ -148,6 +148,18 @@ function email_notify( $mailbox, $uid, $info, $about, $email, $delete=1 )
 	} else {
 		$hostname = 'localhost';
 	}
+
+	$mailname = $hostname;
+
+	if ( file_exists  ( '/etc/mailname'  ) ) {
+		
+		$handle = fopen("/etc/mailname", "r");
+		$mn = fgets  ( $handle );
+		if( $mn ) {
+			$mailname = trim( $mn  );
+		}
+		fclose ( $handle );
+	}
 	
 	$subject = sPrintF(__('Neue Voicemail von %s'),
 		($info['cidnum'] .($info['cidname'] != '' ? ' ('.$info['cidname'].')' : '')) );
@@ -212,8 +224,8 @@ function email_notify( $mailbox, $uid, $info, $about, $email, $delete=1 )
 		
 		$boundary = '=_'.strToUpper(md5(uniqid(time())));
 		$mail_headers = array();
-		$mail_headers[] = "From: \"Gemeinschaft\" <root>";
-		$mail_headers[] = "Reply-To: \"". 'Nicht antworten' ."\" <noreply@noreply.local>";
+		$mail_headers[] = "From:" .  gs_get_conf('GS_EMAIL_NAME') . "<". gs_get_conf('GS_EMAIL_ADDRESS') .">";
+		$mail_headers[] = "Reply-To: \"". __( 'Nicht antworten' ) ."\"<noreply@". $mailname . ">";
 		$mail_headers[] = "MIME-Version: 1.0";
 		$mail_headers[] = "Content-Type: multipart/mixed; boundary=\"$boundary\"";
 		
@@ -268,9 +280,9 @@ function email_notify( $mailbox, $uid, $info, $about, $email, $delete=1 )
 			strToLower(subStr( gs_get_conf('GS_INTL_LANG'),0,2)),
 			GS_DIR .'lib/phpmailer/language/' );
 		$mail->Hostname = $hostname;
-		$mail->From = 'root@'.$hostname;
-		$mail->FromName = 'Gemeinschaft';
-		$mail->AddReplyTo( '', 'Nicht antworten' );
+		$mail->From = gs_get_conf('GS_EMAIL_ADDRESS');
+		$mail->FromName =  gs_get_conf('GS_EMAIL_NAME');
+		$mail->AddReplyTo( '', __( 'Nicht antworten' ) );
 		$mail->AddAddress($email,'','');
 		$mail->Subject = $subject;
 		$mail->Body = $body;

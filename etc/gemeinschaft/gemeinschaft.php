@@ -591,6 +591,10 @@ $EMAIL_DELIVERY         = 'sendmail';
   #                  sendmail / postfix / exim)
   # "direct-smtp" :  connect to the MX servers of the recipient directly
   #                  via SMTP
+$EMAIL_ADDRESS          = 'noreply@gemeinschaft.net';
+  # the email-Address the voicemail-notifications appear to come from
+$EMAIL_NAME             = 'Gemeinschaft';
+  # the realname of a User, the voicemail-notifications appera to come from
 
 
 /***********************************************************

@@ -353,6 +353,8 @@ _gscnf( 'INTL_ASTERISK_LANG'        , 'de'               );
 _gscnf( 'USERCOMMENT_OFFTIME'       , 'Feierabend'       );
 _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i'              );
 _gscnf( 'EMAIL_DELIVERY'            , 'sendmail'         );
+_gscnf( 'EMAIL_ADDRESS'            , 'noreply@localhost'         );
+_gscnf( 'EMAIL_NAME'            , 'Gemeinschaft'         );
 _gscnf( 'USER_SELECT_CALLERID'      , false		 );
 #Variables for the Astbuttond
 _gscnf( 'BUTTONDAEMON_USE'            , false           );
