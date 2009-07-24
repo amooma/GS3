@@ -432,6 +432,11 @@ context to-internal-users {
 			Verbose(1,### Extension ${boss} is not a user);
 			Hangup();
 		}
+		AGI(/opt/gemeinschaft/dialplan-scripts/check_secretary_permission.agi,${user_id},${boss});
+		if ("${issecretary}" != "true") {
+			Verbose(1,### ${user_name} is not secretary of ${boss});
+			Hangup();
+		}
 		if ("${dial_to_node}" != "") {
 			Verbose(1,### Extension ${boss} is not on this node - You did not set up boss/secretary properly!);
 			Hangup();
