@@ -279,7 +279,6 @@
   <section id="siemens-openstage">
     <title>Siemens OpenStage</title>
     <para>
-    FIXME
       Welche Schritte genau nötig sind, um das Provisioning für das Openstage 
       zu installieren wird ausführlich in der Datei INSTALL.txt erläutert. 
       Diese findet man in der jeweiligen Gemeinschafts-Distribution im 
@@ -301,7 +300,8 @@
     <literal>000000</literal>?).</para>
     <para>Das Factory-Reset-Paßwort ist per Default <literal>124816</literal></para>
   </section>
-  
+
+<!--<![CDATA[
 <section id="siemens-openstage-prov-installation">
    <title>Siemens OpenStage Provisioning Installieren</title>
     <para>Voraussetzungen:</para>
@@ -384,7 +384,7 @@ What you are about to enter is what is called a Distinguished Name or a DN.
 There are quite a few fields but you can leave some blank                  
 For some fields there will be a default value,                             
 If you enter '.', the field will be left blank.                            
------
+-]]>--><!--<![CDATA[-]]>--><!--<![CDATA[-]]>--><!--<![CDATA[-]]>--><!--<![CDATA[-
 Country Name (2 letter code) [GB]:DE
 State or Province Name (full name) [Berkshire]:Nordrhein-Westfalen
 Locality Name (eg, city) [Newbury]:Münster
@@ -560,7 +560,7 @@ braucht man dann nicht.):
       Dann muss der user(gs-siemens-fw) noch in <filename>/etc/vsftpd.user_list</filename> eingetragen werden.
       Wenn alles Konfiguriert ist, kann man den FTP-Server beim Systemstart mitstarten lassen:
       <screen>
-      <command>chkconfig --levels 235 vsftpd on</command>
+      <command>chkconfig -]]>--><!--<![CDATA[-levels 235 vsftpd on</command>
       <command>(Debian: update-rc.d vsftpd defaults)</command>
       </screen>
       Und zum schluss den FTP-Server noch per Hand starten:
@@ -568,5 +568,5 @@ braucht man dann nicht.):
 
     </para>
   </section>
-  
+]]>-->
 </chapter>
