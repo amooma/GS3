@@ -179,6 +179,16 @@ $MODULES['ringtones']=  array(
 
 #####################################################################
 
+$MODULES['volume']=  array(
+	'title' => __('Lautst&auml;rken'),
+	'icon'  => 'crystal-svg/%s/app/kmix.png',
+	'sub' => array(
+		'phone'    => array('title' => __('Lautst&auml;rken'))
+	)
+);
+
+#####################################################################
+
 if (gs_get_conf('GS_FAX_ENABLED')) {
 $MODULES['fax'      ]=  array(
 	'title' => __('Fax'),
