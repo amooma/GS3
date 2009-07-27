@@ -69,10 +69,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Setzt eine Rufumleitungsnummer für einen Benutzer. Für den
-    Anrufbeantworter (--type=vml) kann man mit vm&lt;extension&gt; die Nummer
-    des Users setzen dessen Voicemailbox genutzt werden soll. Man kann auch
-    mit vm*&lt;extension&gt; nur die Ansage sprechen lassen.</para>
+    <para>Setzt eine Rufumleitungsnummer für einen Benutzer.</para>
   </refsection>
 
   <refsection>
@@ -99,7 +96,13 @@
         <term><option>--type</option>=<literal>std</literal>|<literal>var</literal>|<literal>vml</literal></term>
 
         <listitem>
-          <para>Art</para>
+          <para>Art. <code>std</code>: <quote>Standard-Rufumleitung</quote>.
+          <code>var</code>: <quote>temporäre Rufumleitung</quote>.
+          <code>vml</code>: Anrufbeantworter. Bei <code>vml</code> ist mit
+          <code>--number</code> die Voicemailbox
+          (<code>vm<replaceable>Nebenstelle</replaceable></code>) bzw. die
+          Ansage (<code>vm*<replaceable>Nebenstelle</replaceable></code>)
+          anzugeben.</para>
         </listitem>
       </varlistentry>
 
