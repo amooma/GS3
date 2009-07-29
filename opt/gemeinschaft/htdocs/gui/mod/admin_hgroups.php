@@ -231,7 +231,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 	$rs = $DB->execute($query);
 	
 	echo '<h3>', __('Mitglieder von Sammelanschluss');
-	echo ' <q>', $group;
+	echo ' <q>', $group, '</q>';
 	echo '</h3>' ,"\n";
 		
 	$num_total = @$DB->numFoundRows();
