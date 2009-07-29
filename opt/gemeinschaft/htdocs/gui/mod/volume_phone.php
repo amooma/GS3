@@ -29,6 +29,7 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-fns/gs_user_prov_params_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_prov_param_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_phonemodel_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -79,11 +80,22 @@ if (gs_get_conf('GS_ELMEG_PROV_ENABLED')) {
 		
 }
 
-/*
-if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
-	$phone_types['snom-m3'    ] = 'Snom M3';
+if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
+	$phone_types['aastra-51i'] =  array( 'name' =>'Aastra 51i', 'conf' => 'aastra5xi');
+	$phone_types['aastra-53i'] =  array( 'name' =>'Aastra 53i', 'conf' => 'aastra5xi');
+	$phone_types['aastra-55i'] =  array( 'name' =>'Aastra 55i', 'conf' => 'aastra5xi');
+	$phone_types['aastra-57i'] =  array( 'name' =>'Aastra 57i', 'conf' => 'aastra5xi');
+	
+	$aastra = array();
+	$aastra['handset tx gain' ] = array( 'desc' => __('H&ouml;rer Mikrofon'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
+	$aastra['handset sidetone gain' ] = array( 'desc' => __('Eigenecho H&ouml;rer'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
+	$aastra['headset tx gain' ] = array( 'desc' => __('Sprechgarnitur Mikrofon'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
+	$aastra['headset sidetone gain' ] = array( 'desc' => __('Eigenecho Sprechgarnitur'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
+	$aastra['handsfree tx gain' ] = array( 'desc' => __('Geh&auml;use Mikrofon'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
+	
+	$volume_configs['aastra5xi'] = $aastra;
 }
-*/
+
 if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 	$phone_types['siemens-os20'] =  array( 'name' => 'Siemens OpenStage 20', 'conf' => 'siemens');
 	$phone_types['siemens-os40'] =  array( 'name' => 'Siemens OpenStage 40', 'conf' => 'siemens');
@@ -123,6 +135,12 @@ if ($phone_type == '') {
 	}
 	else if (gs_get_conf('GS_ELMEG_PROV_ENABLED')) {
 		if (array_key_exists('elmeg-290', $phone_types)) $phone_type = 'elmeg-290';
+	}
+	else if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
+		if     (array_key_exists('aastra-51i', $phone_types)) $phone_type = 'aastra-51i';
+		elseif (array_key_exists('aastra-53i', $phone_types)) $phone_type = 'aastra-53i';
+		elseif (array_key_exists('aastra-55i', $phone_types)) $phone_type = 'aastra-55i';
+		elseif (array_key_exists('aastra-57i', $phone_types)) $phone_type = 'aastra-57i';
 	} 
 	else if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 		if     (array_key_exists('siemens-os20', $phone_types)) $phone_type = 'siemens-os20';
@@ -133,10 +151,29 @@ if ($phone_type == '') {
 
 }
 
-$parms = gs_user_prov_params_get( $_SESSION['sudo_user']['name'], $phone_type );
+
 
 if ( isset( $volume_configs[ $phone_types[$phone_type]['conf']] ) ) {
-	$volume_config =  $volume_configs[ $phone_types[$phone_type]['conf']];
+        $volume_config =  $volume_configs[ $phone_types[$phone_type]['conf']];
+
+        $prov_params = gs_prov_params_get(  $_SESSION['sudo_user']['name'], $phone_type );
+
+        foreach ( $prov_params as $prov_parm_key => $prov_parm_value  ) {
+        
+        	if ( array_key_exists( $prov_parm_key, $volume_config )  && isset ( $prov_parm_value[-1])) {
+        		
+        		$value =  (int)$prov_parm_value[-1];
+        		if( $value < $volume_config[$prov_parm_key]['min'] || $value > $volume_config[$prov_parm_key]['max'] ) {
+        			continue;
+        		}
+        		$volume_config[$prov_parm_key]['value'] = $value;
+        	}
+        
+        }
+
+
+        $parms = gs_user_prov_params_get( $_SESSION['sudo_user']['name'], $phone_type );
+
 
 
 	foreach ( $parms as $parm ) {
@@ -160,10 +197,10 @@ if ($action === 'save' || $action === 'save-and-resync') {
 	if ( is_array ( $volume_config ) && $phone_type != '' ) {
 	
 		foreach ($volume_config as $param => $data) {
+			$encparam = preg_replace( '/\s/', '%', $param);
+			if ( isset (  $_REQUEST[$encparam]) ) {
 			
-			if ( isset (  $_REQUEST[$param]) ) {
-			
-				$akt_value = @$_REQUEST[$param];
+				$akt_value = @$_REQUEST[$encparam];
 				if ( $akt_value >= $data['min'] && $akt_value <= $data['max'] ) {
 				
 					$volume_config[$param]['value'] = $akt_value;
@@ -264,11 +301,14 @@ echo '<h3 style="margin:0; padding:1px 0; font-size:100%;">', htmlEnt($phone_typ
 <tbody>
 <?php
 foreach ($volume_config as $param => $data) {
+
+$id = preg_replace( '/\s/', '%', $param);
+//$id=$param;
 ?>
 <tr>
 	<td style="width:180px;"><?php echo $data['desc']; ?></td>
 	<td style="width:115px;">
-		<select name="<?php echo $param; ?>" class="r">
+		<select name="<?php echo $id; ?>" class="r">
 <?php
 
 $akt_value= $data['default'];
