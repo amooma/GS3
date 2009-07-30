@@ -79,6 +79,10 @@ function gs_queue_del( $name )
 	#
 	$CDR_DB->execute( 'DELETE FROM `queue_log` WHERE `queue_id`='. $queue_id );
 	
+	# delte queue from dial_log
+	#
+	$db->execute( 'DELETE FROM `dial_log` WHERE `queue_id`='. $queue_id );
+	
 	# delete queue
 	#
 	$ok = $db->execute( 'DELETE FROM `ast_queues` WHERE `_id`='. $queue_id .' LIMIT 1' );
