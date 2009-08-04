@@ -926,6 +926,8 @@ context to-internal-users-self {
 				else if ("${QUEUESTATUS}"="FULL") {
 					QueueLog(${EXTEN},${UNIQUEID},NONE,_EXITFULL,,,,fake);
 					// custom event
+				} else { //There is no QUEUESTATUS, but the call is counted, so it must have EXITEMPTY for the statistics 
+					QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,,,0,fake);
 				}
 				// QUEUESTATUS "TIMEOUT" cannot happen here because we did not enter
 				// the queue
