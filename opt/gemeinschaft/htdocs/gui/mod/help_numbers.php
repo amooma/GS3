@@ -120,6 +120,18 @@ echo '</h2>', "\n";
 	</td>
 </tr>
 <tr>
+	<td><code>*901</code></td>
+	<td>
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; auf den Anrufbeantworter aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td><code>*902</code></td>
+	<td>
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; auf die Ansage ohne Anrufbeantworter aktivieren'); ?>
+	</td>
+</tr>
+<tr>
 	<td style="width:140px;"><code>*90*</code></td>
 	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; deaktivieren'); ?>
@@ -136,6 +148,18 @@ echo '</h2>', "\n";
 	<td style="width:140px;"><code>*91 <i><?php echo __('Nummer'); ?></i></code></td>
 	<td style="width:420px;">
 		<?php echo __('Tempor&auml;re Rufumleitung f&uuml;r Anrufe von extern im Fall "immer" auf die angegebene Nummer aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td><code>*911</code></td>
+	<td>
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf den Anrufbeantworter aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td><code>*912</code></td>
+	<td>
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf die Ansage ohne Anrufbeantworter aktivieren'); ?>
 	</td>
 </tr>
 <tr>

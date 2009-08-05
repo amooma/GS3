@@ -94,10 +94,16 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 }
 
 $key_astbuttond = array(
-	'gpickup'		=> __('Gruppenpickup'),              		# Gruppenpickup
-	'diversion'		=> __('Umleitung'),              		# Umleitung
+	'gpickup'		=> __('Gruppenpickup'),              	# Gruppenpickup
+	'diversion'		=> __('Umleitung'),              	# Umleitung
+	'div_vm'		=> __('Umleitung AB'),              	# Umleitung VM
+	'div_anno'		=> __('Umleitung Ansage'),              # Umleitung Ansage
 	'diversion_int'		=> __('Umleitung intern'),		# Umleitung itern
+	'div_int_vm'		=> __('Umleitung intern  AB'),          # Umleitung intern VM
+	'div_int_anno'		=> __('Umleitung intern Ansage'),       # Umleitung intern Ansage
 	'diversion_ext'		=> __('Umleitung extern'),		# Umleitung extern
+	'div_ext_vm'		=> __('Umleitung extern  AB'),          # Umleitung VM
+	'div_ext_anno'		=> __('Umleitung extern Ansage'),       # Umleitung extern Ansage
 	'diversion_dlg'		=> __('Umleitung Dialog'),		# Umleitung dialog
 	'queue'  		=> __('An/Abmelden Warteschlange'),	# Queue an/abmelden 
 	'agent'  		=> __('An/Abmelden Agent'),		# Agent an/abmelden 

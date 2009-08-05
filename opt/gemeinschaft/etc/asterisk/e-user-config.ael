@@ -361,6 +361,62 @@ context user-config {
 		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
 		Hangup();
 	}
+
+	*901 => {
+		Set(CDR(amaflags)=OMIT);
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm${user_name}');
+		&user-call-forward-activate-numeric(vml,0,0,1);
+		UserEvent(UserDiversionUI|user: ${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
+		Hangup();
+	}
+
+	*911 => {
+		Set(CDR(amaflags)=OMIT);
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm${user_name}');
+		&user-call-forward-activate-numeric(vml,1,0,1);
+		UserEvent(UserDiversionUI|user: ${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
+		Hangup();
+	}
+
+	*902 => {
+		Set(CDR(amaflags)=OMIT);
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm*${user_name}');
+		&user-call-forward-activate-numeric(vml,0,0,1);
+		UserEvent(UserDiversionUI|user: ${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
+		Hangup();
+	}
+
+	*912 => {
+		Set(CDR(amaflags)=OMIT);
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm*${user_name}');
+		&user-call-forward-activate-numeric(vml,1,0,1);
+		UserEvent(UserDiversionUI|user: ${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
+		Hangup();
+	}
 	
 	*30 => {
 		Set(CDR(amaflags)=OMIT);
