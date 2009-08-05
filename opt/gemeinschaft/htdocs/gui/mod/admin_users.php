@@ -72,7 +72,6 @@ function count_users_logged_in( $DB ) {
 
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
 
-
 $per_page = (int)GS_GUI_NUM_RESULTS;
 
 $name        = trim(@$_REQUEST['name'     ]);
@@ -341,14 +340,14 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<table cellspacing="1" class="phonebook">
 	<thead>
 	<tr>
-		<th style="width:253px;"><?php echo __('Name suchen'); ?></th>
-		<th style="width:234px;"><?php echo __('Nebenstelle suchen'); ?></th>
-		<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
+		<th colspan="2" ><?php echo __('Name suchen'); ?></th>
+		<th colspan="3"><?php echo __('Nebenstelle suchen'); ?></th>
+		<th colspan="3"><div align="right"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></div></th>
 	</tr>
 	</thead>
 	<tbody>
 	<tr>
-		<td>
+		<td colspan="2">
 			<form method="get" action="<?php echo GS_URL_PATH; ?>">
 			<?php echo gs_form_hidden($SECTION, $MODULE); ?>
 			<input type="text" name="name" id="ipt-name" value="<?php echo htmlEnt($name); ?>" size="25" style="width:200px;" />
@@ -358,42 +357,42 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			</button>
 			</form>
 		</td>
-		<td>
+		<td colspan="3">
 			<form method="get" action="<?php echo GS_URL_PATH; ?>">
 			<?php echo gs_form_hidden($SECTION, $MODULE); ?>
-			<input type="text" name="number" value="<?php echo htmlEnt($number); ?>" size="15" style="width:130px;" />
+			<input type="text" name="number" value="<?php echo htmlEnt($number); ?>" size="15" style="width:200px;" />
 			<button type="submit" title="<?php echo __('Nummer suchen'); ?>" class="plain">
 				<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
 			</button>
 			</form>
 		</td>
-		<td rowspan="2">
+		<td colspan="3"><div align="right">
 	<?php
 	
 	if ($page > 0) {
 		echo
 		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
-		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
+		'<img  alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust.png" />',
 		'</a>', "\n";
 	} else {
 		echo
-		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust-dis.png" />', "\n";
+		'<img  alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust-dis.png" />', "\n";
 	}
+	echo "&nbsp;";
 	if ($page < $num_pages-1) {
 		echo
 		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
-		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
+		'<img  alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust.png" />',
 		'</a>', "\n";
 	} else {
 		echo
-		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust-dis.png" />', "\n";
+		'<img  alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust-dis.png" />', "\n";
 	}
-	
 	?>
-		</td>
+		</div></td>
 	</tr>
 	<tr>
-		<td colspan="2" class="quickchars">
+		<td colspan="8" class="quickchars">
 <?php
 	
 	$chars = array();
@@ -407,7 +406,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		</td>
 	</tr>
 	</tbody>
-	</table>
 	
 <?php
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
@@ -417,7 +415,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
 	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 ?>
-	<table cellspacing="1" class="phonebook">
 	<thead>
 	<tr>
 		<th style="width: 70px;"><?php echo __('User'     ); ?></th>
@@ -504,11 +501,11 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			}
 			echo '</td>';
 			
-			echo '<td>';
+			echo '<td><div align="right">';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='. rawUrlEncode($r['usern']) .'&amp;action=view&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('bearbeiten'), '"><img alt="',__('bearbeiten'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='. rawUrlEncode($r['usern']) .'&amp;action=del&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-			echo "</td>\n";
 			
+			echo "</div></td>\n";
 			echo '</tr>', "\n";
 			@ob_flush(); @flush();
 		}
@@ -580,14 +577,15 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		<td>
 			&nbsp;
 		</td>
-		<td>
+		<td><div align="right">
 			<button type="submit" title="<?php echo __('Benutzer anlegen'); ?>" class="plain" name="action" value="add">
 				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			</button>
+			<?php if (strstr($_SERVER['HTTP_USER_AGENT'],'MSIE')) echo "&nbsp;"; ?> 
 			<button type="submit" title="<?php echo __('Benutzer anlegen und bearbeiten'); ?>" class="plain" name="action" value="add-and-view">
 				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			</button>
-		</td>
+		</div></td>
 		
 	<?php
 	//}
