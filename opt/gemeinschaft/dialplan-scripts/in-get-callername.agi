@@ -34,9 +34,6 @@ include_once( GS_DIR .'inc/db_connect.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
-if( GS_PB_REVERSE_SEARCH == false ) {
-	die();
-}
 
 function find_private( $num , $cid, $db ) {
 
@@ -55,6 +52,7 @@ function find_public( $cid, $db ) {
 	search_number ( $query, $cid, $db);
 
 }
+
 
 function search_number ( $query, $cid , $db) {
 
@@ -97,7 +95,8 @@ function print_name ( $firstname, $lastname ) {
 
 $ext  = trim( @$argv[1] );
 $cid  = trim( @$argv[2] );
-$cidname  = trim( @$argv[3] );
+$source = trim( @$argv[3] );
+$cidname  = trim( @$argv[4] );
 
 if ( $cidname ) { 
 	die();
@@ -108,6 +107,11 @@ if ( strlen( $cidname ) > 0 ) {  // is not just digits
 if (! $ext) {
 	die();
 }
+
+$sources = array ( 'internal', 'external' );
+if ( ! in_array ( $source, $sources, true ))
+	die();
+
 if (! preg_match( '/^\d+$/', $ext ) ) {  // is not just digits
 	die();
 }
@@ -120,15 +124,41 @@ $db = gs_db_slave_connect();
 
 # is it a user?
 #
-$num = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 
-# we do not need to lookup in the private phonebook of an unknown user
-if ( $num > 0 ) {
-		find_private( $num, $cid, $db );
+
+if ( $source == 'internal' ) {
+
+	$query = 'SELECT `u`.`firstname`, `u`.`lastname` FROM `users` `u`, `ast_sipfriends` `a`
+ WHERE `a`.`_user_id`=`u`.`id` AND `a`.`name`=\'' . $db->escape( $cid ) .'\'';
+
+			
+	$rs = $db->execute( $query );
+
+	$result = array();
+
+	if( @$rs ) {
+		$caller = $rs->fetchRow();
+		
+		if( $caller ) {
+			$firstname	= $caller['firstname'];
+			$lastname	= $caller['lastname'];
+			print_name ( $caller['firstname'], $caller['lastname'] );
+		}
+
+	}
+	
 }
+else if ( GS_PB_REVERSE_SEARCH == true ) {
 
-# if the public phonebook is disabled we will  not lookup there
-if( GS_PB_IMPORTED_ENABLED == true )
-	find_public( $cid, $db );
+	$num = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 
+	# we do not need to lookup in the private phonebook of an unknown user
+	if ( $num > 0 ) {
+			find_private( $num, $cid, $db );
+	}
+
+	# if the public phonebook is disabled we will  not lookup there
+	if( GS_PB_IMPORTED_ENABLED == true )
+		find_public( $cid, $db );
+}
 ?>

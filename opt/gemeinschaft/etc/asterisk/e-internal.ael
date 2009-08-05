@@ -877,7 +877,16 @@ context to-internal-users-self {
 				}
 			}
 			else {
-				AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${CALLERID(name)});
+				if( "${forwarded_by}" != "" ) {
+					Set(CALLERID(name)=);
+				} 
+				AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${is_call_from},${CALLERID(name)});
+				if( "${forwarded_by}" != "" ) {
+                                        if( "${CALLERID(name)}" = "" ) {
+						Set(CALLERID(name)=${CALLERID(num)});
+					}
+					Set(CALLERID(name)=${CALLERID(name)} >> ${forwarded_by});
+                                }
 				//UserEvent(UserCallUI|user: ${user_name}|calledparty: ${EXTEN});
 				Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},o);
 			}
