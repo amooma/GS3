@@ -39,7 +39,6 @@ ob_implicit_flush(1);
 
 error_reporting(0);
 
-
 function _user_groups_get( $user_id, $with_0=null )
 {
 	global $db;
@@ -245,22 +244,70 @@ LIMIT 9'
 	);
 	//while ($gate = $rs->fetchRow()) $gates[] = $gate;
 	while ($gate = $rs->fetchRow()) {
-		if ($lcr_prefix != '') {
-			if (in_array($gate['type'], array('zap','misdn','woomera','capi'), true)) {
-				gs_agi_verbose( "### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
-				$number_final = $lcr_prefix . $number_dial;
-			} else {
-				gs_agi_verbose( "### LCR prefix $lcr_prefix ignored for non-hardware gateway ". $gate['name'] );
-				$number_final = $number_dial;
+		$pos = 0;
+		$dial_arr = array();
+		while ($pos < strlen($gate['dialstr'])) {
+	
+			$dial_vara = array();
+			$dial_vara['b'] = strpos($gate['dialstr'], '{', $pos);
+			if ($dial_vara['b'] === false) break;
+			else {
+				$pos = $dial_vara['b']+1;
 			}
-		} else {
-			$number_final = $number_dial;
+			$dial_vara['e'] = strpos($gate['dialstr'], '}', $pos);
+			if ($dial_vara['e'] === false) break;
+			else {
+				$pos = $dial_vara['e']+1;
+			}
+	
+			if (array_key_exists('e', $dial_vara)  && array_key_exists('b', $dial_vara)) {
+				$dial_vara['s'] = substr($gate['dialstr'], $dial_vara['b']+1, $dial_vara['e']-$dial_vara['b']-1);
+				
+				$dial_arr[] = $dial_vara;
+			}
 		}
-		$dialstr = str_replace(
-			array( '{number}'   , '{number:1}'            , '{gateway}'   , '{peer}'      , '{port}'         ),
-			array( $number_final, substr($number_final,1) , $gate['name'] , $gate['name'] , $gate['hw_port'] ),
-			$gate['dialstr']
-		); //FIXME - do proper parsing instead of "{number:1}"
+
+		$dialstr = '';
+		$pos = 0;
+
+		foreach ($dial_arr as $dial_vara) {
+			$dialstr .= substr($gate['dialstr'], $pos, $dial_vara['b']-$pos);
+			$pos = $dial_vara['e']+1;
+
+			$var_arr = explode(':', $dial_vara['s']);
+			$value = '';
+			switch ($var_arr[0]) {
+				case 'number':
+					if ((strpos($gate['dialstr'], '{prefix') === false) && (in_array($gate['type'], array('zap','misdn','woomera','capi'), true))) {
+						gs_agi_verbose( "### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
+						$dialstr .= $lcr_prefix;
+					}
+					$value = $number_dial;
+					break;
+				case 'gateway':
+					$value = $gate['name'];
+					break;
+				case 'peer':
+					$value = $gate['name'];
+					break;
+				case 'port':
+					$value = $gate['hw_port'];
+					break;
+				case 'prefix':
+					$value = $lcr_prefix;
+					break;
+			}
+			
+			if ($value) {
+				if (count($var_arr) == 1) $dialstr .= $value;
+				else
+					if (count($var_arr) == 2) $dialstr .= substr($value, $var_arr[1]);
+				else
+					$dialstr .= substr($value, $var_arr[1], $var_arr[2]);
+			}
+
+		}
+
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
 		if ($dialstr != '') {
 			gs_agi_set_variable( 'r_'.$idx.'_dial', $dialstr );
