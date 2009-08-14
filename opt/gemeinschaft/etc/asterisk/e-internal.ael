@@ -1350,7 +1350,7 @@ context to-internal-users-self {
 			}
 		}
 		else
-		if ("${exttype}" = "user") {
+		if ("${exttype}" = "user" && "${is_callfile_origin}" = "") {
 			// to internal user, store dial log (in|missed)
 			
 			Set(type=missed);
