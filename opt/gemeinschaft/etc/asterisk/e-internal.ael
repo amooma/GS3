@@ -892,6 +892,10 @@ context to-internal-users-self {
 			}
 			
 			if ("${is_callfile_origin}" != "1") {
+				if ("${is_huntgroup}" == "1") {
+					Verbose(1,### No callforwarding in huntgroups);
+					Hangup();
+				}
 				Set(is_dnd=0);
 				if ("${DIALSTATUS}" = "BUSY") {         // busy or deflected
 					//if ("${HANGUPCAUSE}" = "19" || "${HANGUPCAUSE}" = "21") {
@@ -909,13 +913,8 @@ context to-internal-users-self {
 							}
 						}
 					}
-					if ("${is_huntgroup}" == "1") {
-						Verbose(1,### DND active in huntgroup - skipping member);
-						Hangup();
-					}
-					else {
-						goto user_busy;
-					}
+					goto user_busy;
+					
 				}
 				if ("${DIALSTATUS}" = "NOANSWER") {     // does not answer the phone
 					goto user_unavail;
