@@ -251,9 +251,9 @@ LIMIT 9'
 			$dial_vara = array();
 			$dial_vara['b'] = strpos($gate['dialstr'], '{', $pos);
 			if ($dial_vara['b'] === false) break;
-			else {
+			else
 				$pos = $dial_vara['b']+1;
-			}
+			
 			$dial_vara['e'] = strpos($gate['dialstr'], '}', $pos);
 			if ($dial_vara['e'] === false) break;
 			else {
@@ -307,6 +307,8 @@ LIMIT 9'
 			}
 
 		}
+
+		if ($pos < strlen($gate['dialstr'])) $dialstr .= substr($gate['dialstr'], $pos);
 
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
 		if ($dialstr != '') {
