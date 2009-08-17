@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
+<chapter id="verschiedenes" revision="$Revision: 6639 $">
+<!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->  <title>Update von Gemeinschaft</title>
+  <section id="caching-nameserver">
+    <title>Datenbank Updaten</title>
+    <para><warning>
+        <para>Wenn Sie Gemeinschaft in einem Cluster verwenden, führen Sie das Datenbank-Update bitte nur auf dem Datenbank-Master aus! Die Update-Befehle werden dann durch die Replikation auf allen anderen nodes Verteillt.</para>
+      </warning></para>
+    <para>Mit der immer fortlaufenden Entwicklung von Gemeinschaft ändert sich die Datenbankstruktur geringfügig. Damit neue Funktionen Problemlos genutzt werden können, muss man die Datenbank anpassen. Dafür gibt es die Datei <filename>UPGRADE-DB.sql </filename>in dieser sind alle SQL-Kommandos enthalten, die für ein Update benötigt werden. Es wird empfohlen vor dem Ausführen des Updates ein Backup der Datenbank durchzuführen. Dies kann man mit folgendem Kommando erledigen:</para>
+    <para><command>mysqldump asterisk,astcdr &gt; /root/Backup.sql</command></para>
+    <para> Wenn das Backup erfolgreich erstellt wurde, kann man das Datenbank-Update Script wie folgt ausführen:</para>
+    <para><command>mysql &lt; /usr/share/doc/gemeinschaft/UPGRADE-DB.sql</command></para>
+    <para>Dannach sollte die Datenbankstruktur aktuell sein.</para>
+  </section>
+  <section id="caching-nameserver_1">
+    <title>Gemeinschaft Updaten</title>
+    <para>Gemeinschaft updzudaten ist ein relativ einfacher Schritt. Sie legen einfach das tar.gz das Sie von Ihrem Supportdienstleister zur Verfügung gestellt bekommen haben, in das root-verzeichnis des Systemes &quot;/&quot; und entpacken es mit dem Kommando <command>tar xvfz gemeinschaft.tar.gz</command>. Dannach sollten Sie die neue Version nutzen können. Falls Sie ein Gemeinschaft-Cluster-System betreiben sollten, dann führen Sie diesen Schritt bitte auf allen nodes aus. </para>
+  </section>
+</chapter>
