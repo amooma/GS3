@@ -522,6 +522,10 @@ $INTL_ASTERISK_LANG     = 'de';
   # sound files installed - especially the prompts in the "gemeinschaft"
   # subdirectory which are available in German only for now
 
+$INTL_LANG_SOUNDS       = 'de-DE';
+  # language to be used for Gemeinschaft sounds prompts.
+  # see /opt/gemeinschaft/sounds/ directory.
+
 $USERCOMMENT_OFFTIME    = 'Feierabend';  # e.g. "off-time"
 
 //$EMAIL_PATTERN_VALID    = '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i';

@@ -161,8 +161,8 @@ macro cmm-login( new_user_name ) {
 		goto unknown;
 	
 	//Playback(agent-loginok);
-	Playback(/opt/gemeinschaft/sounds/de-DE/sie-sind-jetzt-angemeldet);
-	Playback(/opt/gemeinschaft/sounds/de-DE/bitte-warten-sie);
+	Playback(/opt/gemeinschaft/sounds/${gs_lang}/sie-sind-jetzt-angemeldet);
+	Playback(/opt/gemeinschaft/sounds/${gs_lang}/bitte-warten-sie);
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${new_user_name}');
 	if ("${user_name}" != "${new_user_name}") {
 		if ("${user_name}" != "") {
@@ -210,8 +210,8 @@ macro cmm-logout() {
 	Wait(0.5);
 	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id},${is_from_gateway},${CALLERID(num)});
 	//Playback(agent-loggedoff&vm-goodbye);
-	Playback(/opt/gemeinschaft/sounds/de-DE/sie-sind-abgemeldet);
-	Playback(/opt/gemeinschaft/sounds/de-DE/bitte-warten-sie);
+	Playback(/opt/gemeinschaft/sounds/${gs_lang}/sie-sind-abgemeldet);
+	Playback(/opt/gemeinschaft/sounds/${gs_lang}/bitte-warten-sie);
 	if ("${user_name}" != "") {
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
 	} else {
@@ -1027,7 +1027,7 @@ context call-completion {
 		Answer();
 		Wait(0.5);
 		//SayDigits(${callee});
-		//Playback(/opt/gemeinschaft/sounds/de-DE/ist-jetzt-wieder-erreichbar);
+		//Playback(/opt/gemeinschaft/sounds/${gs_lang}/ist-jetzt-wieder-erreichbar);
 		Set(CALLERID(all)=${orig_callerid});
 		//DumpChan();
 		Set(__is_callcompletion=1); // no forwards and no mailbox

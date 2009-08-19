@@ -330,6 +330,7 @@ _gscnf( 'CC_TIMEOUT'                , 60                 );
 _gscnf( 'INTL_LANG'                 , 'de_DE'            );
 _gscnf( 'INTL_USE_GETTEXT'          , false              );
 _gscnf( 'INTL_ASTERISK_LANG'        , 'de'               );
+_gscnf( 'INTL_LANG_SOUNDS'          , 'de-DE'            );
 
 _gscnf( 'USERCOMMENT_OFFTIME'       , 'Feierabend'       );
 _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i'              );
