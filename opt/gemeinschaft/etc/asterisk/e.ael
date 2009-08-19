@@ -747,7 +747,7 @@ macro dial-gateway-do( mnumber ) {
 		&sip-remove-header(${});
 	}
 	if ("${no_route}" != "") {
-		Verbose(1,### We don't have a route for ${mnumber});
+		Verbose(1,### No matching route for ${mnumber} configured);
 		Set(DIALSTATUS=CONGESTION);
 		Congestion(5);
 		Hangup();
