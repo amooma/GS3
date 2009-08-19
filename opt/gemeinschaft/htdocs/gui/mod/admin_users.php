@@ -251,7 +251,7 @@ if ($action === 'list') {
 	`h`.`is_foreign`, `h`.`comment` `h_comment`,
 	`hp1`.`value` `hp_route_prefix`
 FROM
-	`users` `u` JOIN
+	`users` `u` LEFT JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) LEFT JOIN
 	`hosts` `h` ON (`h`.`id`=`u`.`host_id`) LEFT JOIN
 	`host_params` `hp1` ON (`hp1`.`host_id`=`h`.`id` AND `hp1`.`param`=\'route_prefix\')
@@ -283,7 +283,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	`h`.`is_foreign`, `h`.`comment` `h_comment`,
 	`hp1`.`value` `hp_route_prefix`
 FROM
-	`users` `u` JOIN
+	`users` `u` LEFT JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) LEFT JOIN
 	`hosts` `h` ON (`h`.`id`=`u`.`host_id`) LEFT JOIN
 	`host_params` `hp1` ON (`hp1`.`host_id`=`h`.`id` AND `hp1`.`param`=\'route_prefix\')
@@ -420,9 +420,13 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			&&  subStr($r['ext'],0,strLen($r['hp_route_prefix'])) === $r['hp_route_prefix'])
 			{
 				echo '<span style="color:#888;">', subStr($r['ext'],0,strLen($r['hp_route_prefix'])) ,'</span>';
-				echo subStr($r['ext'],strLen($r['hp_route_prefix']));
+				echo ($r['ext'] !== null)
+					? subStr($r['ext'],strLen($r['hp_route_prefix']))
+					: '&ndash;?&ndash;';
 			} else {
-				echo $r['ext'];
+				echo ($r['ext'] !== null)
+					? $r['ext']
+					: '&ndash;?&ndash;';
 			}
 			echo '</td>' ,"\n";
 			echo '<td>', str_repeat('&bull;', strLen($r['pin'])) ,'</td>' ,"\n";
@@ -433,7 +437,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 				$email_display = htmlEnt(mb_substr($email_display, 0, 18)) .'&#8230;';
 			}
 			echo '<td>', $email_display ,'</td>' ,"\n";
-			echo '<td>', htmlEnt($r['h_comment']) ,'</td>' ,"\n";
+			echo '<td>', ($r['h_comment'] !== null ? htmlEnt($r['h_comment']) : '&ndash;?&ndash;') ,'</td>' ,"\n";
 			
 			echo '<td class="nobr">';
 			if (! $r['is_foreign']) {
