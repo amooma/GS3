@@ -102,7 +102,12 @@ require_once( GS_HTDOCS_DIR .'inc/modules.php' );
 #
 if (array_key_exists('s', $_REQUEST)) {
 	$SECTION = $_REQUEST['s'];
-	$MODULE  = array_key_exists('m', $_REQUEST) ? $_REQUEST['m'] : '';
+	if ($SECTION != '') {
+		$MODULE  = array_key_exists('m', $_REQUEST) ? $_REQUEST['m'] : '';
+	} else {
+		$SECTION = 'home';
+		$MODULE  = '';
+	}
 } else {
 	$SECTION = 'home';
 	$MODULE  = '';
