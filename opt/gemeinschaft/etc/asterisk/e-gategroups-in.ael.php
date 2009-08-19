@@ -68,7 +68,7 @@ while ($ggrp = $rs->fetchRow()) {
 		echo "\t\t\t", 'if ("${EXTEN}" == "s") {' ,"\n";
 		echo "\t\t\t\t", 'Waitexten(1);', "\n";
 		echo "\t\t\t", '}' ,"\n";
-
+		
 		echo "\t\t\t", 'Set(did_full=${EXTEN});' ,"\n";
 		
 		/*
