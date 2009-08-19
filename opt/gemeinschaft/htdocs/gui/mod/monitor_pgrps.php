@@ -88,7 +88,7 @@ ORDER BY `p`.`id`'
 
 
 if ($rs_groups->numRows()==0) {
-	echo __('Sie sind nicht Mitglied einer Pickup-Gruppe.') ,'<br />',"\n";
+	echo htmlEnt(__('Sie sind nicht Mitglied einer Pickup-Gruppe.')) ,'<br />',"\n";
 	return;
 } else {
 	while ($pgrp = $rs_groups->fetchRow()) {
@@ -113,13 +113,13 @@ ORDER BY `u`.`lastname`, `u`.`firstname`'
 <h3><?php
 $group_title = (trim(@$pgrp['title']) != '' ? trim(@$pgrp['title']) : '');
 
-echo 'Gruppe ', @$pgrp['id'], ($group_title != '' ? (' ('. htmlEnt($group_title) .') ') : ''); ?></h3>
+echo htmlEnt(__('Gruppe')), ' ', @$pgrp['id'], ($group_title != '' ? (' ('. htmlEnt($group_title) .') ') : ''); ?></h3>
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:60px;"><?php echo __('Nummer'); ?></th>
-	<th style="width:200px;"><?php echo __('Name'); ?></th>
-	<th style="width:90px;"><?php echo __('Status'); ?></th>
+	<th style="width:60px;"><?php echo htmlEnt(__('Nebenstelle')); ?></th>
+	<th style="width:200px;"><?php echo htmlEnt(__('Name')); ?></th>
+	<th style="width:90px;"><?php echo htmlEnt(__('Status')); ?></th>
 </tr>
 </thead>
 <tbody>
@@ -129,7 +129,7 @@ echo 'Gruppe ', @$pgrp['id'], ($group_title != '' ? (' ('. htmlEnt($group_title)
 $extinfos = array();
 if (@$rs_members) {
 	if ($rs_members->numRows() === 0) {
-		echo '<tr><td colspan="3"><i>- ', __('keine'), ' -</i></td></tr>';
+		echo '<tr><td colspan="3"><i>- ', htmlEnt(__('keine')), ' -</i></td></tr>';
 	} else {
 		$i = 0;
 		while ($r = $rs_members->fetchRow()) {
@@ -161,7 +161,7 @@ if (@$rs_members) {
 				$img.= '" /> ';
 			} else
 				$img = '<img alt=" " src="'. GS_URL_PATH .'crystal-svg/16/act/free_icon.png" /> ';
-			echo '<td>', $img, (@$extstatev['v'] ? $extstatev['v'] : '?'), '</td>';
+			echo '<td>', $img, htmlEnt(@$extstatev['v'] ? $extstatev['v'] : '?'), '</td>';
 			
 			echo '</tr>', "\n";
 		}
@@ -207,7 +207,7 @@ echo "</pre>";
 <tr>
 	<th style="width:25px;" class="transp">&nbsp;</th>
 	<th style="width:25px;" class="transp">&nbsp;</th>
-	<th style="width:140px;"><?php echo __('Snom-Tasten'); ?></th>
+	<th style="width:140px;"><?php echo htmlEnt(__('Snom-Tasten')); ?></th>
 	<th style="width:25px;" class="transp">&nbsp;</th>
 	<th style="width:25px;" class="transp">&nbsp;</th>
 </tr>
