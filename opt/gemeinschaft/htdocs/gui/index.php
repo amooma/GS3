@@ -584,7 +584,7 @@ if (gs_get_conf('GS_BOI_ENABLED') && $boi_menu_error_msg !== false) {
 
 <div id="content-container">
 <div id="sudo-bar">
-<div id="sudo-info">
+<div id="sudo-info"<?php if (gs_get_conf('GS_BOI_ENABLED')) echo ' class="with-boi"'; ?>>
 <?php
 	
 	if (@$_SESSION['login_ok']) {
@@ -609,7 +609,9 @@ if (gs_get_conf('GS_BOI_ENABLED') && $boi_menu_error_msg !== false) {
 ?></div>
 <?php
 	if (@$_SESSION['login_ok']) {
-		echo '<form id="sudo-form" method="get" action="', GS_URL_PATH ,'" enctype="application/x-www-form-urlencoded">' ,"\n";
+		echo '<form id="sudo-form" method="get" action="', GS_URL_PATH ,'" enctype="application/x-www-form-urlencoded"';
+		if (gs_get_conf('GS_BOI_ENABLED')) echo ' class="with-boi"';
+		echo '>' ,"\n";
 		echo '<input type="hidden" name="s" value="', $SECTION ,'" />' ,"\n";
 		echo '<input type="hidden" name="m" value="', $MODULE ,'" />' ,"\n";
 		if (! gs_get_conf('GS_BOI_ENABLED')) {
