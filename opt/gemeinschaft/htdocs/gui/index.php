@@ -48,6 +48,86 @@ function _not_allowed( $msg='Not Allowed.' )
 	exit(1);
 }
 
+function http_get_request_url( $with_path='request' )
+{
+	global $_SERVER;
+	
+	$is_https =
+		   (array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] != '')
+		|| (array_key_exists('SERVER_PORT', $_SERVER) && (int)$_SERVER['SERVER_PORT'] === 443);
+	
+	# protocol scheme
+	$url = ($is_https ? 'https' : 'http') .'://';
+	
+	# host
+	if (array_key_exists('HTTP_HOST', $_SERVER)) {
+		$url.= $_SERVER['HTTP_HOST'];
+	} elseif (array_key_exists('SERVER_NAME', $_SERVER)) {
+		$url.= $_SERVER['SERVER_NAME'];
+	} elseif (array_key_exists('SERVER_ADDR', $_SERVER)) {
+		$url.= $_SERVER['SERVER_ADDR'];
+	} else {
+		return false;
+	}
+	
+	# port
+	if (array_key_exists('SERVER_PORT', $_SERVER)) {
+		if ((int)$_SERVER['SERVER_PORT'] !== ($is_https ? 443 : 80)) {
+			$url.= ':'. $_SERVER['SERVER_PORT'];
+		}
+	}
+	
+	# path
+	if ($with_path === 'request') {
+		if (array_key_exists('REQUEST_URI', $_SERVER)) {
+			$url.= $_SERVER['REQUEST_URI'];
+		}
+	}
+	
+	return $url;
+}
+
+function http_redirect_temporarily( $location, $keep_request_method=false, $with_fallback=false )
+{
+	global $_SERVER;
+	
+	# HTTP status codes for temporary redirection:
+	# 302 Moved Temporarily (HTTP 1.0) / 302 Found (HTTP 1.1)
+	#     GET|HEAD -> GET|HEAD   (automatically)
+	#     POST     -> POST       (after confirmation, standard)
+	#     POST     -> GET        (this is what most UAs do)
+	# 303 See Other (HTTP 1.1)
+	#     *        -> GET
+	# 307 Temporary Redirect (HTTP 1.1)
+	#     GET|HEAD -> GET|HEAD   (automatically)
+	#     POST     -> POST       (after confirmation)
+	
+	if (headers_sent()) return false;
+	
+	if (! array_key_exists('SERVER_PROTOCOL', $_SERVER)
+	||  subStr($_SERVER['SERVER_PROTOCOL'],5) >= '1.1') {   # HTTP 1.1
+		if ($keep_request_method) {  # POST -> POST
+			@header( 'HTTP/1.1 307 Temporary Redirect', true, 307 );
+			@header( 'Status: 307 Temporary Redirect' , true, 307 );
+		} else {  # POST -> GET
+			@header( 'HTTP/1.1 303 See Other', true, 303 );
+			@header( 'Status: 303 See Other' , true, 303 );
+		}
+	} else {                                                # HTTP 1.0
+		if ((array_key_exists('REQUEST_METHOD', $_SERVER)
+		&&   in_array(strToUpper($_SERVER['REQUEST_METHOD']), array('GET','HEAD'), true))  # request method was GET|HEAD
+		||  $with_fallback) {
+			@header( 'HTTP/1.0 302 Moved Temporarily', true, 302 );
+			@header( 'Status: 302 Moved Temporarily' , true, 302 );
+		} else {
+			return false;
+		}
+	}
+	@header( 'Location: '. ($location) );
+	
+	return true;
+}
+
 define('GS_WEB_REWRITE',
 	   array_key_exists('REDIRECT_URL'             , $_SERVER)
 	|| array_key_exists('_GS_HAVE_REWRITE'         , $_SERVER)
@@ -60,35 +140,23 @@ $GS_INSTALLATION_TYPE = gs_get_conf('GS_INSTALLATION_TYPE');
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	require_once( GS_DIR .'htdocs/gui/setup/inc/aux-fns.php' );
 	if (gs_setup_autoshow()) {
-		if (subStr($_SERVER['SERVER_PROTOCOL'],5) >= '1.1') {
-			@header( 'HTTP/1.1 303 See Other', true, 303 );
-			@header( 'Status: 303 See Other' , true, 303 );
-		} else {
-			@header( 'HTTP/1.0 302 Moved Temporarily', true, 302 );
-			@header( 'Status: 302 Moved Temporarily' , true, 302 );
+		$url = http_get_request_url( false );
+		if ($url != false) {
+			$url .= dirName($_SERVER['SCRIPT_NAME']).'/setup/';
+			if (http_redirect_temporarily( $url, false, true )) {
+				echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' ,"\n";
+				echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">' ,"\n";
+				echo '<head>' ,"\n";
+				echo '<title>Gemeinschaft</title>' ,"\n";
+				echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' ,"\n";
+				echo '</head>' ,"\n";
+				echo '<body>' ,"\n";
+				echo '<br /><p align="center"><a href="setup/">Setup</a></p>' ,"\n";
+				echo '</body>' ,"\n";
+				echo '</html>';
+				exit;
+			}
 		}
-		$url = (array_key_exists('HTTPS', $_SERVER) ? 'https' : 'http') .'://';
-		if (array_key_exists('HTTP_HOST', $_SERVER))
-			$url .= $_SERVER['HTTP_HOST'];
-		elseif (array_key_exists('SERVER_NAME', $_SERVER))
-			$url .= $_SERVER['SERVER_NAME'];
-		else
-			$url .= @$_SERVER['SERVER_ADDR'];
-		if (array_key_exists('SERVER_PORT', $_SERVER) && @$_SERVER['SERVER_PORT'] != 80)
-			$url .= ':'.$_SERVER['SERVER_PORT'];
-		$url .= dirName($_SERVER['SCRIPT_NAME']).'/setup/';
-		@header( 'Location: '. $url );
-		echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' ,"\n";
-		echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">' ,"\n";
-		echo '<head>' ,"\n";
-		echo '<title>Gemeinschaft</title>' ,"\n";
-		echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' ,"\n";
-		echo '</head>' ,"\n";
-		echo '<body>' ,"\n";
-		echo '<br /><p align="center"><a href="setup/">Setup</a></p>' ,"\n";
-		echo '</body>' ,"\n";
-		echo '</html>';
-		exit;
 	}
 }
 
@@ -121,6 +189,25 @@ if (preg_match('/[^a-z0-9\\-_]/', $SECTION.$MODULE)) {
 	}
 	$SECTION = 'home';
 	$MODULE  = '';
+}
+if ($is_login) {  # set in inc/session.php
+	if (array_key_exists('login_request_uri', $_REQUEST)  # set in mod/login_login.php
+	&&  $_REQUEST['login_request_uri'] != '') {
+		if (http_redirect_temporarily( $_REQUEST['login_request_uri'], false, true )) {
+			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' ,"\n";
+			echo '<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de">' ,"\n";
+			echo '<head>' ,"\n";
+			echo '<title>Gemeinschaft</title>' ,"\n";
+			echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' ,"\n";
+			echo '</head>' ,"\n";
+			echo '<body>' ,"\n";
+			echo '<br /><p align="center">', htmlEnt(__("Die angeforderte Seite ist:")) ,'<br />',"\n";
+			echo '<a href="', htmlEnt($_REQUEST['login_request_uri']) ,'">', htmlEnt($_REQUEST['login_request_uri']) ,'</a></p>' ,"\n";
+			echo '</body>' ,"\n";
+			echo '</html>';
+			exit;
+		}
+	}
 }
 
 
@@ -298,17 +385,30 @@ if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub'])) {
 }
 
 if (array_key_exists('perms', $MODULES[$SECTION])
-&&  $MODULES[$SECTION]['perms'] === 'admin'
-&&  (! gs_user_is_admin(@$_SESSION['sudo_user']['name'])) )
-{
-	//_not_allowed( 'You are not an admin.' );
-	$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Sie (%s) haben keine Admin-Rechte.")), @$_SESSION['sudo_user']['name']);
-	if (! headers_sent()) {
-		@header( 'HTTP/1.0 403 Forbidden', true, 403 );
-		@header( 'Status: 403 Forbidden' , true, 403 );
+&&  $MODULES[$SECTION]['perms'] === 'admin') {
+	# module/section requires admin permissions
+	if (@$_SESSION['login_ok']) {
+		# user is logged in
+		if (! gs_user_is_admin(@$_SESSION['sudo_user']['name'])) {
+			//_not_allowed( 'You are not an admin.' );
+			$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Sie (%s) haben keine Admin-Rechte.")), @$_SESSION['sudo_user']['name']);
+			if (! headers_sent()) {
+				@header( 'HTTP/1.0 403 Forbidden', true, 403 );
+				@header( 'Status: 403 Forbidden' , true, 403 );
+			}
+			$SECTION = 'home';
+			$MODULE  = 'home';
+		}
 	}
-	$SECTION = 'home';
-	$MODULE  = 'home';
+	else {
+		# user is not logged in
+		if (! headers_sent()) {
+			@header( 'HTTP/1.0 403 Forbidden', true, 403 );
+			@header( 'Status: 403 Forbidden' , true, 403 );
+		}
+		$SECTION = 'home';
+		$MODULE  = 'home';
+	}
 }
 if ($_SESSION['sudo_user']['boi_host_id'] > 0
 &&  $_SESSION['sudo_user']['boi_role'] !== 'gs'
