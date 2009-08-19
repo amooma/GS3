@@ -476,6 +476,17 @@ h1 {
 	padding: 1em 1.5em;
 	margin-left: 170px;
 }
+#boi-content {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border-width: 1px 0 0 0;
+	border-style: solid none none none;
+	border-color: #99f transparent transparent #eef;
+	background: transparent;
+	min-height: 370px;
+	height: 100em;
+}
 
 #copyright {
 	text-align: center;

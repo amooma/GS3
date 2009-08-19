@@ -53,6 +53,7 @@ define('GS_WEB_REWRITE',
 	|| array_key_exists('_GS_HAVE_REWRITE'         , $_SERVER)
 	|| array_key_exists('REDIRECT__GS_HAVE_REWRITE', $_SERVER) );
 
+$dispatcher_errors_html = array();
 
 
 $GS_INSTALLATION_TYPE = gs_get_conf('GS_INSTALLATION_TYPE');
@@ -107,7 +108,14 @@ if (array_key_exists('s', $_REQUEST)) {
 	$MODULE  = '';
 }
 if (preg_match('/[^a-z0-9\\-_]/', $SECTION.$MODULE)) {
-	_not_found();
+	//_not_found();
+	$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Ung\xC3\xBCltiges Modul %s")), '<q><tt>'.$SECTION.'/'.$MODULE.'</tt></q>');
+	if (! headers_sent()) {
+		@header( 'HTTP/1.0 404 Not Found', true, 404 );
+		@header( 'Status: 404 Not Found' , true, 404 );
+	}
+	$SECTION = 'home';
+	$MODULE  = '';
 }
 
 
@@ -260,6 +268,11 @@ if (! array_key_exists($SECTION, $MODULES)
 ||  ! array_key_exists('sub', $MODULES[$SECTION]))
 {
 	//_not_found();
+	$dispatcher_errors_html[] = htmlEnt('Module error');
+	if (! headers_sent()) {
+		@header( 'HTTP/1.0 404 Not Found', true, 404 );
+		@header( 'Status: 404 Not Found' , true, 404 );
+	}
 	$SECTION = 'home';
 	$MODULE  = '';
 }
@@ -270,8 +283,13 @@ if (count( $MODULES[$SECTION]['sub'] ) < 2 || ! $MODULE) {
 }
 if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub'])) {
 	//_not_found();
+	$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Modul %s nicht vorhanden")), '<q><tt>'.$SECTION.'/'.$MODULE.'</tt></q>');
+	if (! headers_sent()) {
+		@header( 'HTTP/1.0 404 Not Found', true, 404 );
+		@header( 'Status: 404 Not Found' , true, 404 );
+	}
 	$SECTION = 'home';
-	$MODULE  = '';
+	$MODULE  = 'home';
 }
 
 if (array_key_exists('perms', $MODULES[$SECTION])
@@ -279,6 +297,11 @@ if (array_key_exists('perms', $MODULES[$SECTION])
 &&  !(preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
 {
 	//_not_allowed( 'You are not an admin.' );
+	$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Sie (%s) haben keine Admin-Rechte.")), @$_SESSION['sudo_user']['name']);
+	if (! headers_sent()) {
+		@header( 'HTTP/1.0 403 Forbidden', true, 403 );
+		@header( 'Status: 403 Forbidden' , true, 403 );
+	}
 	$SECTION = 'home';
 	$MODULE  = 'home';
 }
@@ -350,7 +373,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php echo @$_SESSION['isolang']; ?>" xml:lang="<?php echo @$_SESSION['isolang']; ?>">
 <head><!--<![CDATA[
                 Gemeinschaft
-  @(_)=====(_)  (c) 2007-2008, amooma GmbH - http://www.amooma.de
+  @(_)=====(_)  (c) 2007-2009, amooma GmbH - http://www.amooma.de
  @   / ### \    Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
@@ -414,13 +437,13 @@ function gs_boi_menu_sc( url )
 </head>
 <body>
 
-<div id="topheader"><?php
+<?php
 	if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
 		if (preg_match('/MSIE\s*([0-9])/', $_SERVER['HTTP_USER_AGENT'], $m)) {
 			if ('x'.$m[1] <= 'x'.'6') {
-				echo '<div class="noticebox" style="font-size:94%; padding:1px 1em; margin:0 0 1px 0; border-width:2px; border-style:solid; border-color:#ff0 #660 #660 #ff0;">';
+				echo '<div class="noticebox" style="font-size:94%; padding:1px 1em; margin:0; border-width:1px; border-style:solid; border-color:#ff0 #660 #660 #ff0;">';
 				echo sPrintF(htmlEnt(
-					__('Sie verwenden einen sehr alten Browser (%s), der diese Webseiten fehlerhaft darstellt! Tipp: Benutzen Sie %s oder zumindest den aktuellen %s.')),
+					__('Sie verwenden einen alten Browser (%s), der diese Webseiten fehlerhaft darstellt! Tipp: Benutzen Sie %s oder zumindest den aktuellen %s.')),
 					htmlEnt($m[0]),
 					'<a href="http://www.mozilla-europe.org/firefox/" target="_blank">Firefox</a>',
 					'<a href="http://www.microsoft.com/windows/internet-explorer/" target="_blank">Internet Explorer</a>'
@@ -429,7 +452,8 @@ function gs_boi_menu_sc( url )
 			}
 		}
 	}
-?></div>
+?>
+<div id="topheader"></div>
 <div id="headerboxes">
 <div id="boxtitle">
 <?php
@@ -753,6 +777,15 @@ if ((! array_key_exists('is_boi', $MODULES[$SECTION])
 &&   ! $boi_home_override)
 {
 	echo '<div id="content">' ,"\n";
+	
+	if (count($dispatcher_errors_html) > 0) {
+		foreach ($dispatcher_errors_html as $dispatcher_error_html) {
+			echo '<div class="errorbox">', $dispatcher_error_html ,'</div>' ,"\n";
+		}
+		unset($dispatcher_error_html);
+	}
+	unset($dispatcher_errors_html);
+	
 	$file = GS_HTDOCS_DIR .'mod/'. $SECTION .'_'. $MODULE .'.php';
 	if (file_exists( $file )) {
 		include $file;
@@ -762,7 +795,16 @@ if ((! array_key_exists('is_boi', $MODULES[$SECTION])
 	echo '</div>' ,"\n";
 }
 else {
-	echo '<div style="width:auto; margin-left:170px; padding:0; position:relative; top:0; left:0;">' ,"\n";
+	echo '<div id="content" style="width:auto; padding:0;">' ,"\n";
+	
+	if (count($dispatcher_errors_html) > 0) {
+		foreach ($dispatcher_errors_html as $dispatcher_error_html) {
+			echo '<div class="errorbox">', $dispatcher_error_html ,'</div>' ,"\n";
+		}
+		unset($dispatcher_error_html);
+	}
+	unset($dispatcher_errors_html);
+	
 	if (! @array_key_exists('boi_url', @$MODULES[$SECTION]['sub'][$MODULE])) {
 		echo 'Error.';
 	} else {
@@ -772,11 +814,9 @@ else {
 		
 		/*
 		include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
-		if (_gs_boi_ssl_is_possible($_SESSION['sudo_user']['boi_host']))
-			echo 'https';
-		else
+		echo _gs_boi_ssl_is_possible($_SESSION['sudo_user']['boi_host']) ? 'https':'http';
 		*/
-			echo 'http';
+		echo 'http';
 		echo '/', $_SESSION['sudo_user']['boi_host'];
 		echo htmlEnt($MODULES[$SECTION]['sub'][$MODULE]['boi_url']);
 		
@@ -784,7 +824,7 @@ else {
 			? '?':'&amp;';
 		echo 'SESSID=', htmlEnt(@$_SESSION['sudo_user']['boi_session']);
 		
-		echo '" style="width:100%; position:absolute; left:0; top:0; margin:0; padding:0; border-width:1px 0 0 0; border-style:solid none none none; border-color:#99f transparent transparent #eef; background:transparent; min-height:370px; height:100em;"></iframe>' ,"\n";
+		echo '"></iframe>' ,"\n";
 	}
 	echo '</div>' ,"\n";
 	echo '<script type="text/javascript">try {gs_sandbox_iframe("boi-content");} catch(e){}</script>' ,"\n";
