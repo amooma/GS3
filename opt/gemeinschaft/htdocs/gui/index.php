@@ -476,7 +476,10 @@ function gs_boi_menu_sc( url )
 <div class="tty"><a href="#a-content"><?php echo __('Navigation &uuml;berspringen'); ?></a></div>
 
 <?php
-	if (@$_SESSION['login_ok'] && gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+	if (@$_SESSION['login_ok']
+	&&  gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')
+	&&  gs_get_conf('GS_GUI_SHUTDOWN_ENABLED')
+	) {
 		if (@$_SESSION['sudo_user']['name'] === 'sysadmin'
 		|| (@$_SESSION['sudo_user']['name'] != ''
 		&&  preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
