@@ -35,9 +35,12 @@ include_once( GS_DIR .'inc/gs-fns/gs_groups_get.php' );
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+/*
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+*/
+echo htmlEnt(__('Ausgehende Routen und Least-Cost-Routing'));
 echo '</h2>', "\n";
 
 
