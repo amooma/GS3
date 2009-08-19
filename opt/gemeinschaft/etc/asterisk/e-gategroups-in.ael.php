@@ -66,7 +66,7 @@ while ($ggrp = $rs->fetchRow()) {
 	echo "\t\t\t", 'Set(__is_from_gateway=1);' ,"\n";
 	if ((int)$ggrp['allow_in']) {
 		echo "\t\t\t", 'if ("${EXTEN}" == "s") {' ,"\n";
-		echo "\t\t\t\t", 'Waitexten(1);', "\n";
+		echo "\t\t\t\t", 'WaitExten(1);' ,"\n";
 		echo "\t\t\t", '}' ,"\n";
 		
 		echo "\t\t\t", 'Set(did_full=${EXTEN});' ,"\n";
