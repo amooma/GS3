@@ -248,7 +248,7 @@ $PROV_DIAL_LOG_LIFE         = 14*24*3600;  # 14 days
 //$PROV_PROXIES_XFF_HEADER    = 'X-Forwarded-For';
   # 'X-Forwarded-For' is the de-facto standard but depending on the
   # proxy it might be 'X-Real-IP' or 'X-Client-IP'. case-insensitive.
-$PROV_ALLOW_NET             = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
+$PROV_ALLOW_NET             = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # comma (,) separated list of <IP address>/<netmask> pairs (CIDR
   # or dotted decimal notation) of phones which may ask for
   # configuration.
