@@ -78,14 +78,14 @@ if ($_SESSION['sudo_user']['name'] === 'sysadmin') {
 	return;
 }
 
-echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info']['ext'] ), '</b></p><br />', "\n";
+echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info']['ext'] ), '</b></p>', "\n";
 
 
 
 if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 ?>
 
-<div class="fl" style="clear:right; width:99%;">
+<div class="fl" style="clear:right; width:99%; margin:0.2em 0;">
 	
 	<div class="fl" style="width:49%; min-width:20em; max-width:35em; margin:1px;">
 		<?php
@@ -235,10 +235,9 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 
 </div>
 
-<br style="clear:right" />
-<div class="fl" style="clear:right; width:100%; height:5px;"></div>
+<div class="ie_clearing"></div>
 
-<div class="fl" style="clear:right; width:99%;">
+<div class="fl" style="clear:right; width:99%; margin:0.2em 0;">
 	
 	<div class="fl" style="width:49%; min-width:20em; max-width:35em; margin:1px;">
 		<?php
@@ -311,8 +310,8 @@ LIMIT 5'
 	
 </div>
 
-<br style="clear:right" />
-<div class="fl" style="clear:right; width:99%; height:20px;"></div>
+<div class="ie_clearing"></div>
+<div class="fl" style="width:99%; height:10px; font-size:0;"></div>
 
 <form method="post" action="<?php echo GS_URL_PATH, 'srv/pb-dial.php'; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
