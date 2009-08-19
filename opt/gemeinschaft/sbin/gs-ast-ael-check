@@ -109,7 +109,7 @@ if (preg_match('/File:? *([a-zA-Z0-9\-_.\\/]+|\(null\)),? *Line:? *([0-9]+),? *C
 					} else {
 						echo subStr($line, 0, $s_err_col_from-1);
 						//echo $esc_seq.(7).'m';  # invert
-						echo $esc_seq.(0+0).';'.(100+3).'m';  # black on bright yellow
+						echo $esc_seq.(30+0).';'.(100+3).'m';  # black on bright yellow
 						echo subStr($line, $s_err_col_from-1, $s_err_col_to-$s_err_col_from+1);
 						echo $esc_seq.(0).'m';  # reset
 						echo subStr($line, $s_err_col_to);
