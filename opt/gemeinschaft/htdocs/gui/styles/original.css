@@ -303,15 +303,25 @@ select {
 }
 #sudo-info {
 	float: left;
-	width: 30%;
+	width: 50%;
+	width: auto;
 	text-align: left;
 	padding: 0; margin: 0 0 0 2px;
 }
 #sudo-form {
 	float: right;
-	width: 67%;
+	width: 47%;
+	width: auto;
 	text-align: right;
 	padding: 0; margin: 0 5px 1px 0;
+}
+#sudo-info.with-boi {
+	width: 50%;
+	width: auto;
+}
+#sudo-form.with-boi {
+	width: 67%;
+	width: auto;
 }
 #sudo-user {
 	border: 1px inset #fff;
