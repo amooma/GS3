@@ -177,7 +177,9 @@ WHERE `id`='.$ggid
 
 #####################################################################
 if ($action === 'ggdel') {
-		
+	
+	$DB->execute( 'UPDATE `gates` SET `grp_id`=NULL WHERE `grp_id`='.$ggid );
+	
 	$DB->execute( 'DELETE FROM `gate_grps` WHERE `id`='.$ggid );
 	
 	$action = '';
