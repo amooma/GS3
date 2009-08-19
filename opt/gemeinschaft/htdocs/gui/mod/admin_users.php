@@ -387,7 +387,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<tr>
 		<th style="width: 70px;"><?php echo __('User'     ); ?></th>
 		<th style="width:180px;"<?php if ($number=='') echo ' class="sort-col"'; ?>><?php echo __('Nachname') ,', ', __('Vorname'); ?></th>
-		<th style="width: 60px;"<?php if ($number!='') echo ' class="sort-col"'; ?>><?php echo __('Nebenst.' ); ?></th>
+		<th style="width: 60px;"<?php if ($number!='') echo ' class="sort-col"'; ?>><?php echo __('Nst.' ); ?></th>
 		<th style="width: 55px;"><?php echo __('PIN'      ); ?></th>
 		<th style="width:165px;"><?php echo __('E-Mail'   ); ?></th>
 		<th style="width: 42px;"><?php echo __('Host'     ); ?></th>
@@ -435,7 +435,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			echo '<td>', $email_display ,'</td>' ,"\n";
 			echo '<td>', htmlEnt($r['h_comment']) ,'</td>' ,"\n";
 			
-			echo '<td>';
+			echo '<td class="nobr">';
 			if (! $r['is_foreign']) {
 				$state = gs_extstate_single( $r['ext'] );
 				switch ($state) {
@@ -469,7 +469,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			}
 			echo '</td>';
 			
-			echo '<td>';
+			echo '<td class="nobr">';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='. rawUrlEncode($r['usern']) .'&amp;action=view&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('bearbeiten'), '"><img alt="',__('bearbeiten'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='. rawUrlEncode($r['usern']) .'&amp;action=del&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			echo "</td>\n";
@@ -494,7 +494,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			<input type="text" name="ufname" id="ipt-ufname" value="" size="15" maxlength="40" style="width:70px;" title="<?php echo __('Vorname'); ?>" />
 		</td>
 		<td>
-			<input type="text" name="uext" id="ipt-uext" value="" size="8" maxlength="11" />
+			<input type="text" name="uext" id="ipt-uext" value="" size="5" maxlength="11" />
 		</td>
 		<td>
 			<input type="password" name="upin" id="ipt-upin" value="<?php echo mt_rand(100000,999999); ?>" size="5" maxlength="10" />
@@ -542,10 +542,10 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			echo '</select>',"\n";
 	?>
 		</td>
-		<td>
+		<td class="nobr">
 			&nbsp;
 		</td>
-		<td>
+		<td class="nobr">
 			<button type="submit" title="<?php echo __('Benutzer anlegen'); ?>" class="plain" name="action" value="add">
 				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			</button>
