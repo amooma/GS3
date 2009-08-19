@@ -31,6 +31,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
 require_once( GS_DIR .'inc/pcre_check.php' );
+require_once( GS_DIR .'inc/log.php' );
 include_once( GS_DIR .'lib/yadb/yadb.php' );
 include_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
@@ -38,6 +39,7 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 error_reporting(0);
+
 
 function _user_groups_get( $user_id, $with_0=null )
 {
@@ -246,48 +248,48 @@ LIMIT 9'
 	while ($gate = $rs->fetchRow()) {
 		$pos = 0;
 		$dial_arr = array();
-		while ($pos < strlen($gate['dialstr'])) {
-	
-			$dial_vara = array();
-			$dial_vara['b'] = strpos($gate['dialstr'], '{', $pos);
-			if ($dial_vara['b'] === false) break;
-			else
-				$pos = $dial_vara['b']+1;
+		while ($pos < strLen($gate['dialstr'])) {
 			
-			$dial_vara['e'] = strpos($gate['dialstr'], '}', $pos);
+			$dial_vara = array();
+			
+			$dial_vara['b'] = strPos($gate['dialstr'], '{', $pos);
+			if ($dial_vara['b'] === false) break;
+			else $pos = $dial_vara['b'] + 1;
+			
+			$dial_vara['e'] = strPos($gate['dialstr'], '}', $pos);
 			if ($dial_vara['e'] === false) break;
-			else {
-				$pos = $dial_vara['e']+1;
-			}
-	
-			if (array_key_exists('e', $dial_vara)  && array_key_exists('b', $dial_vara)) {
-				$dial_vara['s'] = substr($gate['dialstr'], $dial_vara['b']+1, $dial_vara['e']-$dial_vara['b']-1);
-				
+			else $pos = $dial_vara['e'] + 1;
+			
+			if (array_key_exists('e', $dial_vara)
+			&&  array_key_exists('b', $dial_vara)) {
+				$dial_vara['s'] = subStr($gate['dialstr'], $dial_vara['b']+1, $dial_vara['e']-$dial_vara['b']-1);
 				$dial_arr[] = $dial_vara;
 			}
 		}
-
+		
 		$dialstr = '';
 		$pos = 0;
-
+		
 		foreach ($dial_arr as $dial_vara) {
-			$dialstr .= substr($gate['dialstr'], $pos, $dial_vara['b']-$pos);
-			$pos = $dial_vara['e']+1;
-
+			$dialstr .= subStr($gate['dialstr'], $pos, $dial_vara['b']-$pos);
+			$pos = $dial_vara['e'] + 1;
+			
 			$var_arr = explode(':', $dial_vara['s']);
 			$value = '';
 			switch ($var_arr[0]) {
 				case 'number':
-					if ((strpos($gate['dialstr'], '{prefix') === false) && (in_array($gate['type'], array('zap','misdn','woomera','capi'), true))) {
+					if ((strPos($gate['dialstr'], '{prefix') === false)
+					&&  (in_array($gate['type'], array('zap','misdn','woomera','capi'), true))) {
+						# automatically insert the LCR prefix before the number
+						# for ISDN/analog gateway if the dial string does not
+						# explicitly contain "{prefix}" (or "{prefix:0:0}")
 						gs_agi_verbose( "### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
 						$dialstr .= $lcr_prefix;
 					}
 					$value = $number_dial;
 					break;
 				case 'gateway':
-					$value = $gate['name'];
-					break;
-				case 'peer':
+				case 'peer':  # backwards compatibility
 					$value = $gate['name'];
 					break;
 				case 'port':
@@ -296,20 +298,25 @@ LIMIT 9'
 				case 'prefix':
 					$value = $lcr_prefix;
 					break;
+				default:  # unknown expression
+					gs_agi_verbose( '### Unknown variable "'. $var_arr[0] .'" in dial string expression for gateway '. $gate['name'] );
+					gs_log( GS_LOG_WARNING, 'Unknown variable "'. $var_arr[0] .'" in dial string expression for gateway '. $gate['name'] );
+					$value = '';
 			}
 			
-			if ($value) {
-				if (count($var_arr) == 1) $dialstr .= $value;
+			if ($value != '') {
+				if (count($var_arr) === 1)
+					$dialstr .= $value;
+				elseif (count($var_arr) === 2)
+					$dialstr .= subStr($value, $var_arr[1]);
 				else
-					if (count($var_arr) == 2) $dialstr .= substr($value, $var_arr[1]);
-				else
-					$dialstr .= substr($value, $var_arr[1], $var_arr[2]);
+					$dialstr .= subStr($value, $var_arr[1], $var_arr[2]);
 			}
-
 		}
-
-		if ($pos < strlen($gate['dialstr'])) $dialstr .= substr($gate['dialstr'], $pos);
-
+		
+		if ($pos < strLen($gate['dialstr']))
+			$dialstr .= subStr($gate['dialstr'], $pos);
+		
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
 		if ($dialstr != '') {
 			gs_agi_set_variable( 'r_'.$idx.'_dial', $dialstr );
