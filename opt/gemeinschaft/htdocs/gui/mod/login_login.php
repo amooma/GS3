@@ -218,7 +218,7 @@ Gemeinschaft auf \"%s\"
 		}
 	}
 ?>
-<div style="text-align:center; width:auto; margin:1em 100px 0 0;" />
+<div style="text-align:center; width:auto; margin:0 140px 0 0;" />
 <span style="color:#e00;"><?php echo (@$action_info != '') ? $action_info : '&nbsp;'; ?></span>
 <div style="border:1px solid #ddd; text-align:left; width:200px; margin:0 auto; background:#eee; padding:20px 25px;" />
 <form method="get" action="<?php echo GS_URL_PATH; ?>">
@@ -271,8 +271,29 @@ else {
 	}
 	
 ?>
-<div style="text-align:center; width:auto; margin:1em 160px 0 0;">
-<span style="color:#e00;"><?php echo (@$login_errmsg != '' && trim(@$_REQUEST['login_user']) != '') ? $login_errmsg : '&nbsp;'; ?></span>
+<div style="text-align:center; width:auto; margin:0 140px 0 0;">
+<span style="line-height:1.4em; color:#999;"><?php
+	
+	if (extension_loaded('apc')) {
+		$vers = apc_fetch( 'gemeinschaft_version', $was_stored );
+	} else {
+		$was_stored = false;
+	}
+	if (! $was_stored) {  # determine version anyway on the login page
+		$vers = trim(@gs_file_get_contents( '/etc/gemeinschaft/.gemeinschaft-version' ));
+		apc_store( 'gemeinschaft_version', $vers, 20 );  # store for 20 seconds
+	}
+	if ($vers != '') {
+		echo '<b>Gemeinschaft</b> <span xstyle="color:#555;">', $vers ,'</span>';
+	} else {
+		echo '&nbsp;';
+	}
+	unset($was_stored, $vers);
+	
+?></span><br />
+<span style="line-height:1.4em; color:#e00;"><?php
+	echo (@$login_errmsg != '' && trim(@$_REQUEST['login_user']) != '') ? $login_errmsg : '&nbsp;';
+?></span>
 <div style="border:1px solid #ddd; text-align:left; width:200px; margin:0 auto; background:#eee; padding:20px 25px;">
 <?php
 if (isSet( $_REQUEST['s'] )
