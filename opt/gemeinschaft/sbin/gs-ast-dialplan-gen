@@ -38,6 +38,7 @@ include_once( GS_DIR .'inc/log.php' );
 
 $etc_asterisk = GS_DIR .'etc/asterisk/';
 $gs_extensions_ael_filename = 'gs-extensions.ael';
+$extensions_ael_filename = $etc_asterisk .'extensions.ael';
 
 
 
@@ -45,9 +46,25 @@ $usage = 'Usage: '. baseName(__FILE__) .'';
 
 $opts = @getOptsNoMultiples( '',
 	array(
+		'ignore-subsequent-call'
 	),
 	$usage
 );
+
+if (array_key_exists('ignore-subsequent-call', $opts)) {
+	# This script is called from ${astetcdir}/modules.conf. Asterisk
+	# reads modules.conf in 2 passes (for preload and load directives)
+	# but we want extensions.ael to be generated only once, so don't
+	# do anything if extensions.ael was modified less than 5 seconds
+	# ago.
+	clearStatCache();
+	if (file_exists($extensions_ael_filename)) {
+		if ((time() - @fileMTime($extensions_ael_filename)) < 5) {
+			gs_log( GS_LOG_NOTICE, 'extensions.ael was generated less than 5 seconds ago. Avoiding regeneration.' );
+			exit(0);
+		}
+	}
+}
 
 
 
@@ -194,13 +211,12 @@ array_push( $ael_include_stack, $gs_extensions_ael_filename );
 $content = ael_get_file_content( $gs_extensions_ael_filename );
 $content = ael_eval_includes( $content );
 
-$extensions_ael_filename = $etc_asterisk .'extensions.ael';
-
 
 
 $f = @fOpen($extensions_ael_filename, 'wb');
 if (! $f) {
 	echo "ERROR: Could not open $extensions_ael_filename for writing!\n";
+	gs_log( GS_LOG_WARNING, "Could not open extensions.ael for writing" );
 	exit(1);
 }
 
@@ -210,9 +226,15 @@ $content =
 "// ". str_pad('DO NOT MAKE ANY CHANGES HERE!', 64, ' ', STR_PAD_BOTH) ." //\n".
 "//------------------------------------------------------------------//\n".
 "\n". $content;
-@fWrite($f, $content, strLen($content));
+$b = @fWrite($f, $content, strLen($content));
+if ($b < 1) {
+	echo "ERROR: Failed to write to $extensions_ael_filename!\n";
+	gs_log( GS_LOG_WARNING, "Failed to write to extensions.ael" );
+	exit(1);
+} else {
+	echo "extensions.ael written.\n";
+}
 @fClose($f);
-echo "extensions.ael written.\n";
 
 
 ?>
