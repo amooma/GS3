@@ -118,7 +118,21 @@ function ael_eval_callback( $m )
 	static $eval_cache = array();
 	
 	$directive = strToLower($m[1]);
-	$filename = ael_file_realname( trim( $m[2], '"\'<>`´' ) );
+	$arg = trim($m[2]);
+	if (subStr($arg,0,1) === '<') {
+		if (subStr($arg,-1) === '>') {
+			$arg = subStr($arg,1,-1);
+		}
+	} elseif (subStr($arg,0,1) === '"') {
+		if (subStr($arg,-1) === '"') {
+			//gs_log( GS_LOG_WARNING, ael_get_log_indent(1) ."Do not use '\"' to delimit the arg. of #exec/#include. Use angle brackets <...>" );
+			# The behavior is not consistent across different versions
+			# of Asterisk. https://issues.asterisk.org/view.php?id=15583
+			# Use angle brackets <...>
+			$arg = subStr($arg,1,-1);
+		}
+	}
+	$filename = ael_file_realname( $arg );  //FIXME - for #exec arg is a command not necessarily just a filename
 	
 	gs_log( GS_LOG_DEBUG, ael_get_log_indent(1) ./*"In ".*/ /*baseName(@$ael_include_stack[count($ael_include_stack)-1]) .": ".*/ "#$directive ". baseName($filename) ." ..." );
 	
