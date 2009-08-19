@@ -242,6 +242,29 @@ $totals = array(
 	'num_wait_fail' => 0
 );
 
+$lang_2 = subStr($_SESSION['isolang'],0,2);
+
+function ordinal( $cdnl, $lang, $html=false ) //FIXME
+{
+	$lang_2 = strToLower(subStr($lang,0,2));
+	
+	switch ($lang_2) { //FIXME
+		case 'de':
+			return $cdnl . '.';
+			break;
+		case 'en':
+			$mod_10 = abs($cdnl) % 10;
+			$ext = ((abs($cdnl) %100 < 21 && abs($cdnl) %100 > 4) ? 'th'
+				: (($mod_10 < 4) ? ($mod_10 < 3) ? ($mod_10 < 2) ? ($mod_10 < 1)
+				? 'th' : 'st' : 'nd' : 'rd' : 'th'));
+			return $cdnl . ($html ? '<sup>'.$ext.'</sup>' : $ext);
+			break;
+		default:
+			return $cdnl . '.';
+			break;
+	}
+}
+
 for ($day=1; $day<=$num_days; ++$day) {
 	
 	if ($month_d >= 0 && $day > $today_day) break;
@@ -266,7 +289,9 @@ for ($day=1; $day<=$num_days; ++$day) {
 	
 	# day
 	#
-	echo '<td class="r"',$style_wd,'>', $day ,'.</td>', "\n";
+	echo '<td class="r"',$style_wd,'>';
+	echo ordinal( $day, $lang_2, true );
+	echo '</td>', "\n";
 	
 	
 	# inbound calls
