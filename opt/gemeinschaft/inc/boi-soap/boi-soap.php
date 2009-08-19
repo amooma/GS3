@@ -146,7 +146,7 @@ function gs_get_soap_client( $api, $service, $host )
 				'proxy_port'         => null,
 				'proxy_login'        => null,
 				'proxy_password'     => null,
-				'local_cert'         => ($use_ssl ? '/etc/apache2/conf.d/ssl/gemeinschaft_provisioning_client.pem' : null),
+				'local_cert'         => ($use_ssl ? '/etc/apache2/conf.d/ssl/gemeinschaft_provisioning_client.pem' : null),  //FIXME - do not hard-code this filename
 				'passphrase'         => null,
 				'encoding'           => 'UTF-8',
 				//'compression'        => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_DEFLATE | 5,
