@@ -94,6 +94,11 @@ DefaultType text/html
 	ExpiresByType application/x-javascript "now plus 6 hours"
 </IfModule>
 
+<IfModule mod_headers.c>
+	# remove X-Powered-By: PHP ...
+	Header unset X-Powered-By
+</IfModule>
+
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	#RewriteCond %{REQUEST_FILENAME} !-f
