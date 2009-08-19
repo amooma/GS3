@@ -226,6 +226,12 @@ $content = ael_get_file_content( $gs_extensions_ael_filename );
 $content = ael_eval_includes( $content );
 
 
+# Verbose(1,### message)  ->  Verbose(1,### -GS- message)
+$content = preg_replace(
+	'/Verbose\\(([0-9]+),#* *([^\\)\\n\\r]*)\\)\\s*;/i',
+	'Verbose($1,### -GS- $2);',
+	$content);
+
 
 $f = @fOpen($extensions_ael_filename, 'wb');
 if (! $f) {
