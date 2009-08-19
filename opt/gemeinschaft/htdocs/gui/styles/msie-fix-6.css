@@ -4,6 +4,9 @@
 	Fix display in the broken Microsoft Internet Explorer
 */
 
+#topheader {
+	font-size: 0; line-height: 0; height: 0px;
+}
 #content-container {
 	position: absolute;
 	width: auto;
