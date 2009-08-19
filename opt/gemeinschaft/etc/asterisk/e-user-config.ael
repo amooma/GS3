@@ -111,17 +111,17 @@ context user-config {
 		Wait(0.5);
 		//Playback(beep);
 		if ("${type}" = "std") {
-			Playback(/opt/gemeinschaft/sounds/de-DE/standard);
+			Playback(/opt/gemeinschaft/sounds/${gs_lang}/standard);
 		} else {
-			Playback(/opt/gemeinschaft/sounds/de-DE/variable);
+			Playback(/opt/gemeinschaft/sounds/${gs_lang}/variable);
 		}
-		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitungsnummer&/opt/gemeinschaft/sounds/de-DE/fuer-anrufe&/opt/gemeinschaft/sounds/de-DE/von);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitungsnummer&/opt/gemeinschaft/sounds/${gs_lang}/fuer-anrufe&/opt/gemeinschaft/sounds/${gs_lang}/von);
 		if ("${source}" = "internal") {
-			Playback(/opt/gemeinschaft/sounds/de-DE/intern);
+			Playback(/opt/gemeinschaft/sounds/${gs_lang}/intern);
 		} else {
-			Playback(/opt/gemeinschaft/sounds/de-DE/extern);
+			Playback(/opt/gemeinschaft/sounds/${gs_lang}/extern);
 		}
-		Playback(/opt/gemeinschaft/sounds/de-DE/eingestellt);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/eingestellt);
 		Wait(0.5);
 		SayDigits(${number});
 		Hangup();
@@ -179,7 +179,7 @@ context user-config {
 		&user-call-forward-activate-numeric(std,1,0,1);
 		&queue-logout-all-silent();
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
 		Hangup();
 	}
 	dnd-on => {
@@ -196,7 +196,7 @@ context user-config {
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/deaktiviert);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/deaktiviert);
 		Hangup();
 	}
 	dnd-off => {
@@ -219,7 +219,7 @@ context user-config {
 		&user-call-forward-activate-numeric(vml,1,0,1);
 		&queue-logout-all-silent();
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
 		Hangup();
 	}
 	
@@ -235,7 +235,7 @@ context user-config {
 		&user-call-forward-activate-numeric(vml,1,0,1);
 		&queue-logout-all-silent();
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
 		Hangup();
 	}
 	
@@ -248,8 +248,8 @@ context user-config {
 		Set(tonumber=${EXTEN:2});
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
 		if ("${SYSTEMSTATUS}" != "SUCCESS") {
-			Playback(/opt/gemeinschaft/sounds/de-DE/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
-			Playback(/opt/gemeinschaft/sounds/de-DE/auf-wiedersehen);
+			Playback(/opt/gemeinschaft/sounds/${gs_lang}/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
+			Playback(/opt/gemeinschaft/sounds/${gs_lang}/auf-wiedersehen);
 			Hangup();
 		}
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
@@ -257,7 +257,7 @@ context user-config {
 		&user-call-forward-activate-numeric(var,1,0,1);
 		&queue-logout-all-silent();
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
 		Hangup();
 	}
 	
@@ -273,7 +273,7 @@ context user-config {
 		&user-call-forward-activate-numeric(vml,1,0,1);
 		&queue-logout-all-silent();
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/de-DE/rufumleitung&/opt/gemeinschaft/sounds/de-DE/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
 		Hangup();
 	}
 
@@ -345,11 +345,11 @@ macro user-config-call-waiting( mactive_num ) {
 	TrySystem(/opt/gemeinschaft/scripts/gs-callwaiting-activate --user='${user_code}' --active='${mactive}');
 	Wait(0.5);
 	//Playback(beep);
-	Playback(/opt/gemeinschaft/sounds/de-DE/anklopfen);
+	Playback(/opt/gemeinschaft/sounds/${gs_lang}/anklopfen);
 	if ("${mactive}" = "yes") {
-		Playback(/opt/gemeinschaft/sounds/de-DE/eingeschaltet);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/eingeschaltet);
 	} else {
-		Playback(/opt/gemeinschaft/sounds/de-DE/ausgeschaltet);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/ausgeschaltet);
 	}
 	Hangup();
 }
