@@ -78,6 +78,14 @@ if ($_COOKIE['gemeinschaft']  == '') unset($_COOKIE['gemeinschaft']);
 session_start();
 
 
+function gs_user_is_admin( $username )
+{
+	static $admins = null;
+	if ($admins === null)
+		$admins = gs_get_conf('GS_GUI_SUDO_ADMINS');
+	return ($username != '' && preg_match('/\\b'. preg_quote($username, '/') .'\\b/', $admins) > 0);
+}
+
 function parse_http_accept_header( $data )
 {
 	$accept = array();
@@ -333,7 +341,7 @@ if ($_SESSION['sudo_user']['name'] == $_SESSION['real_user']['name']) {
 		# allow sysadmin to edit any account
 		//echo "YOU ARE A SYSADMIN";
 		$sudo_allowed = true;
-	} elseif (preg_match('/\\b'.($_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) {
+	} elseif (gs_user_is_admin(@$_SESSION['real_user']['name'])) {
 		# allow admins to edit any account
 		//echo "YOU ARE AN ADMIN";
 		$sudo_allowed = true;
