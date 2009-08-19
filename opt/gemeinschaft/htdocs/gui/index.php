@@ -592,7 +592,7 @@ if (gs_get_conf('GS_BOI_ENABLED') && $boi_menu_error_msg !== false) {
 			echo __('Angemeldet'), ': <span class="user-name nobr"><b>', htmlEnt(
 				@$_SESSION['real_user']['info']['firstname'] .' '.
 				@$_SESSION['real_user']['info']['lastname']
-		), '</b></span>';
+			), '</b></span>';
 		} else {
 			echo __('Angemeldet'), ': <span class="user-name nobr">', htmlEnt(
 				$_SESSION['real_user']['info']['firstname'] .' '.
@@ -600,7 +600,7 @@ if (gs_get_conf('GS_BOI_ENABLED') && $boi_menu_error_msg !== false) {
 			), '</span> &nbsp;&nbsp; ', __('Als'), ': <span class="user-name"><b>', htmlEnt(
 				$_SESSION['sudo_user']['info']['firstname'] .' '.
 				$_SESSION['sudo_user']['info']['lastname']
-		), '</b></span>';
+			), '</b></span>';
 		}
 	} else {
 		echo __('Nicht angemeldet');
