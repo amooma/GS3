@@ -61,7 +61,7 @@ if (! $db) _err('DB error');
 $rs = $db->execute( 'SELECT `in_dest_search`, `in_dest_replace`, `in_cid_search`, `in_cid_replace` FROM `gate_grps` WHERE `id`='. $ggrp_id );
 if (! $rs) _err('DB error');
 $ggrp = $rs->fetchRow();
-if (! $ggrp) _err('DB error');
+if (! $ggrp) _err('DB error - gw grp. #'.$ggrp_id.' not found');
 
 
 
