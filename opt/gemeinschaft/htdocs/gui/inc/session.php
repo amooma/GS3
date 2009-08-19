@@ -145,6 +145,8 @@ gs_settextdomain( 'gemeinschaft-gui' );
 // /etc/gemeinschaft/custom-functions.examples.php
 function _gs_legacy_user_map_lvm( $user )
 {
+	global $dispatcher_errors_html;
+	
 	if (! $user) return false;
 	
 	if (GS_LDAP_PROP_UID === GS_LDAP_PROP_USER) return $user;
@@ -155,11 +157,11 @@ function _gs_legacy_user_map_lvm( $user )
 		array(GS_LDAP_PROP_USER) );
 	if (isGsError($u)) {
 		//echo $u->$msg;
-		echo sPrintF(__('Failed to get user "%s" from LDAP server.'), $user), "\n";
+		$dispatcher_errors_html[] = sPrintF(htmlEnt(__('Failed to get user "%s" from LDAP server.')), $user);
 		return false;
 	}
 	if (! is_array($u)) {
-		echo sPrintF(__('User "%s" not found in LDAP database.'), $user), "\n";
+		$dispatcher_errors_html[] = sPrintF(htmlEnt(__('User "%s" not found in LDAP database.')), $user);
 		return false;
 	}
 	$lc_GS_LDAP_PROP_USER = strToLower(GS_LDAP_PROP_USER);
@@ -286,8 +288,8 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 		}
 	}
 	if (! @$_SESSION['real_user']['info']) {
-		echo sPrintF(__('Unknown user "%s".'), @$_SESSION['real_user']['name']), "\n";
-		exit(1);
+		$dispatcher_errors_html[] = sPrintF(htmlEnt(__('Unknown user "%s".')), @$_SESSION['real_user']['name']);
+		return;
 	}
 	
 	$_SESSION['login_ok'  ] = true;
@@ -310,7 +312,7 @@ if ($_SESSION['sudo_user']['name'] == $_SESSION['real_user']['name']) {
 		// info not present (no session support) or sudo user has changed
 		$_SESSION['sudo_user']['info'] = get_user( $_SESSION['sudo_user']['name'] );
 		if (! @$_SESSION['sudo_user']['info']) {
-			echo sPrintF(__('Unknown user "%s".'), @$_SESSION['sudo_user']['name']), "\n";
+			$dispatcher_errors_html[] = sPrintF(htmlEnt(__('Unknown user "%s".')), @$_SESSION['sudo_user']['name']);
 			$_SESSION['sudo_user']['name'] = $_SESSION['real_user']['name'];
 			$_SESSION['sudo_user']['info'] = $_SESSION['real_user']['info'];
 		}
@@ -349,7 +351,8 @@ if ($_SESSION['sudo_user']['name'] == $_SESSION['real_user']['name']) {
 	}
 }
 if (! $sudo_allowed) {
-	echo sPrintF(__('You are not allowed to act as "%s".'), @$_SESSION['sudo_user']['name']);
+	//$dispatcher_errors_html[] = sPrintF(htmlEnt(__('You are not allowed to act as "%s".')), @$_SESSION['sudo_user']['name']);
+	$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Sie d\xC3\xBCrfen nicht als %s agieren.")), '<q>'.@$_SESSION['sudo_user']['name'].'</q>');
 	$_SESSION['sudo_user']['name'] = $_SESSION['real_user']['name'];
 	$_SESSION['sudo_user']['info'] = $_SESSION['real_user']['info'];
 	$_SESSION['sudo_user']['boi_session'] = null;
