@@ -51,6 +51,8 @@ echo '</h2>', "\n";
 
 
 
+$focus_field = false;
+
 
 if (@$_REQUEST['login_action'] === 'forgotpwd') {
 	
@@ -240,7 +242,7 @@ Gemeinschaft auf \"%s\"
 	
 }
 else {
-	$focus_login_field = true;
+	$focus_field = 'ipt-login_user';
 	
 	if (gs_get_conf('GS_INSTALLATION_TYPE') !== 'gpbx'
 	&& trim(gs_get_conf('GS_GUI_SUDO_ADMINS')) == '') {
@@ -265,7 +267,7 @@ else {
 	<?php echo sPrintF(htmlEnt(__("-- Ihr %s-Team")), '<span style="text-transform:uppercase;">'.'Amooma'.'</span>'); ?><br />
 </div>
 <?php
-		$focus_login_field = false;
+		$focus_field = false;
 	}
 	
 ?>
@@ -295,13 +297,26 @@ foreach ($_GET as $k => $v) {
 <input type="hidden" name="m" value="<?php echo htmlEnt($requested_module); ?>" />
 
 <label for="ipt-login_user"><?php echo __('Benutzername'); ?>:</label><br />
-<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="20" value="<?php echo @$_REQUEST['login_user']; ?>" style="width:150px; font-size:1.2em;" /><br />
-<?php if ($focus_login_field) { ?>
-<script type="text/javascript">/*<![CDATA[*/ try{ document.getElementById('ipt-login_user').focus(); }catch(e){} /*]]>*/</script>
-<?php } ?>
+<?php
+if (@$_REQUEST['login_user'] != '') {
+	$login_user_prefill = $_REQUEST['login_user'];
+} elseif (@$_REQUEST['sudo'] != '') {
+	$login_user_prefill = $_REQUEST['sudo'];
+	$focus_field = 'ipt-login_pwd';
+} else {
+	$login_user_prefill = '';
+}
+?>
+<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="20" value="<?php echo htmlEnt($login_user_prefill); ?>" style="width:150px; font-size:1.2em;" /><br />
 
 <label for="ipt-login_pwd"><?php echo __('Pa&szlig;wort'); ?>:</label><br />
 <input name="login_pwd" id="ipt-login_pwd" type="password" size="15" maxlength="20" value="" style="width:150px; font-size:1.2em;" /><br />
+
+<?php if ($focus_field) { ?>
+<script type="text/javascript">/*<![CDATA[*/
+	try{ document.getElementById('<?php echo htmlEnt($focus_field); ?>').focus(); }catch(e){}
+/*]]>*/</script>
+<?php } ?>
 
 <br />
 <div style="text-align:right;">
