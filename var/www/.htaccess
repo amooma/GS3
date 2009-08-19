@@ -27,4 +27,7 @@
 	RewriteRule ^m3/settings/([0-9A-Fa-f]*)\.(cfg)$      gemeinschaft/prov/snom/settings-m3.php?mac=$1&fmt=$2 [QSA,L]
 	RewriteRule ^m3/firmware/(.*)$                    gemeinschaft/prov/snom/sw-m3/$1 [QSA,L]
 	
+	# just make sure that /var/www/.asterisk_history is not accessible
+	RewriteRule ^\.asterisk - [F,L]
+	
 </IfModule>
