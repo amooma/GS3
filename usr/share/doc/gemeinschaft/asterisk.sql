@@ -5871,7 +5871,7 @@ CREATE TABLE `gates` (
 
 LOCK TABLES `gates` WRITE;
 /*!40000 ALTER TABLE `gates` DISABLE KEYS */;
-INSERT INTO `gates` VALUES (1, 1, 'sip', 'gw_20_amt', 'Amt', 1, 'SIP/{number:1}@{gateway}', '192.168.1.131', '', '', NULL);
+INSERT INTO `gates` VALUES (1, 1, 'sip', 'gw_20_amt', 'Amt', 1, 'SIP/{number:1}@{gateway}', '192.168.1.131', NULL, '', '', 0, NULL);
 /*!40000 ALTER TABLE `gates` ENABLE KEYS */;
 UNLOCK TABLES;
 

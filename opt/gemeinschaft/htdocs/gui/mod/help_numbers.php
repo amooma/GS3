@@ -77,7 +77,7 @@ echo '</h2>', "\n";
 </tr>
 <tr>
 	<td><code>*2 <i><?php echo __('Nummer'); ?></i></code></td>
-	<td>
+	<td style="width:420px;">
 		<?php echo __('Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die angegebene Nummer aktivieren'); ?>
 	</td>
 </tr>
@@ -89,19 +89,19 @@ echo '</h2>', "\n";
 </tr>
 <tr>
 	<td><code>*21</code></td>
-	<td>
+	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf den Anrufbeantworter aktivieren'); ?>
 	</td>
 </tr>
 <tr>
 	<td><code>*22</code></td>
-	<td>
+	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Ansage ohne Anrufbeantworter aktivieren'); ?>
 	</td>
 </tr>
 <tr>
 	<td><code>*2*</code></td>
-	<td>
+	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; deaktivieren'); ?>
 	</td>
 </tr>
@@ -120,14 +120,14 @@ echo '</h2>', "\n";
 	</td>
 </tr>
 <tr>
-	<td><code>*901</code></td>
-	<td>
+	<td style="width:140px;"><code>*901</code></td>
+	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; auf den Anrufbeantworter aktivieren'); ?>
 	</td>
 </tr>
 <tr>
-	<td><code>*902</code></td>
-	<td>
+	<td style="width:140px;"><code>*902</code></td>
+	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; auf die Ansage ohne Anrufbeantworter aktivieren'); ?>
 	</td>
 </tr>
@@ -151,14 +151,14 @@ echo '</h2>', "\n";
 	</td>
 </tr>
 <tr>
-	<td><code>*911</code></td>
-	<td>
+	<td style="width:140px;"><code>*911</code></td>
+	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf den Anrufbeantworter aktivieren'); ?>
 	</td>
 </tr>
 <tr>
-	<td><code>*912</code></td>
-	<td>
+	<td style="width:140px;"><code>*912</code></td>
+	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf die Ansage ohne Anrufbeantworter aktivieren'); ?>
 	</td>
 </tr>
@@ -265,14 +265,14 @@ echo '</h2>', "\n";
 	</td>
 </tr>
 <tr>
-	<td><code>*5 <i><?php echo __('Durchwahl'); ?></i> *</code></td>
-	<td>
+	<td style="width:140px;"><code>*5 <i><?php echo __('Durchwahl'); ?></i> *</code></td>
+	<td style="width:420px;">
 		<?php echo __('Ausloggen aus der Warteschlange mit angegebenen Durchwahl'); ?>
 	</td>
 </tr>
 <tr>
-	<td><code>*5*</code></td>
-	<td>
+	<td style="width:140px;"><code>*5*</code></td>
+	<td style="width:420px;">
 		<?php echo __('Ausloggen aus allen Warteschlangen'); ?>
 	</td>
 </tr>
@@ -293,26 +293,26 @@ echo '</h2>', "\n";
 	</td>
 </tr>
 <tr>
-	<td><code>*6 </code></td>
-	<td>
+	<td style="width:140px;"><code>*6 </code></td>
+	<td style="width:420px;">
 		<?php echo __('Einloggen eines Agenten. Hierzu wird die Eingabe der Agentennummer und der PIN-Nummer abgefragt und mit der "#"-Taste best&auml;tigt.'); ?>
 	</td>
 </tr>
 <tr>
-	<td><code>*6*</code></td>
-	<td>
+	<td style="width:140px;"><code>*6*</code></td>
+	<td style="width:420px;">
 		<?php echo __('Agenten ausloggen'); ?>
 	</td>
 </tr>
 <tr>
-	<td><code>*6#*</code></td>
-	<td>
+	<td style="width:140px;"><code>*6#*</code></td>
+	<td style="width:420px;">
 		<?php echo __('Status Pause f&uuml;r Agent aktivieren'); ?>
 	</td>
 </tr>
 <tr>
-	<td><code>*6##</code></td>
-	<td>
+	<td style="width:140px;"><code>*6##</code></td>
+	<td style="width:420px;">
 		<?php echo __('Status Pause f&uuml;r Agent deaktivieren'); ?>
 	</td>
 </tr>
@@ -334,8 +334,8 @@ echo '</h2>', "\n";
 	</td>
 </tr>
 <tr>
-	<td><code>88000</code> <?php echo __('oder'); ?> <code>880000</code></td>
-	<td>
+	<td style="width:140px;"><code>88000</code> <?php echo __('oder'); ?> <code>880000</code></td>
+	<td style="width:420px;">
 		<?php echo __('Einen freien Konferenzraum finden. Die Nummer der Konferenz wird beim Betreten angesagt. (Die anderen Teilnehmer w&auml;hlen dann <code>88 <i>Konferenznr.</i></code>, s.o.)'); ?>
 	</td>
 </tr>

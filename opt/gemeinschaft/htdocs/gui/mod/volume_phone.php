@@ -53,8 +53,8 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	$snom3x = array();
 	$snom3x['vol_handset' ] = array( 'desc' => __('H&ouml;rer'), 'min' => 0, 'max' => 15, 'default' => 8 ) ;
 	$snom3x['vol_handset_mic' ] = array( 'desc' => __('H&ouml;rer Mikrofon'), 'min' => 1, 'max' => 8, 'default' => 5 ) ;
-	$snom3x['vol_headset' ] = array( 'desc' => __('Sprechgarnitur'), 'min' => 0, 'max' => 15, 'default' => 8 ) ;
-	$snom3x['vol_headset_mic' ] = array( 'desc' => __('Sprechgarnitur Mikrofon'), 'min' => 1, 'max' => 8, 'default' => 4 ) ;
+	$snom3x['vol_headset' ] = array( 'desc' => __('Headset'), 'min' => 0, 'max' => 15, 'default' => 8 ) ;
+	$snom3x['vol_headset_mic' ] = array( 'desc' => __('Headset Mikrofon'), 'min' => 1, 'max' => 8, 'default' => 4 ) ;
 	$snom3x['vol_speaker' ] = array( 'desc' => __('Geh&auml;uselautspr&auml;cher'), 'min' => 0, 'max' => 15, 'default' => 8 ) ;
 	$snom3x['vol_speaker_mic' ] = array( 'desc' => __('Geh&auml;use Mikrofon'), 'min' => 1, 'max' => 8, 'default' => 6 ) ;
 	$snom3x['vol_ringer' ] = array( 'desc' => __('Klingelton'), 'min' => 1, 'max' => 15, 'default' => 8 ) ;
@@ -70,8 +70,8 @@ if (gs_get_conf('GS_ELMEG_PROV_ENABLED')) {
 	$elmeg = array();
 	$elmeg['vol_handset' ] = array( 'desc' => __('H&ouml;rer'), 'min' => 0, 'max' => 15, 'default' => 8 ) ;
 	$elmeg['vol_handset_mic' ] = array( 'desc' => __('H&ouml;rer Mikrofon'), 'min' => 1, 'max' => 8, 'default' => 5 ) ;
-	$elmeg['vol_headset' ] = array( 'desc' => __('Sprechgarnitur'), 'min' => 0, 'max' => 15, 'default' => 8 ) ;
-	$elmeg['vol_headset_mic' ] = array( 'desc' => __('Sprechgarnitur Mikrofon'), 'min' => 1, 'max' => 8, 'default' => 4 ) ;
+	$elmeg['vol_headset' ] = array( 'desc' => __('Headset'), 'min' => 0, 'max' => 15, 'default' => 8 ) ;
+	$elmeg['vol_headset_mic' ] = array( 'desc' => __('Headset Mikrofon'), 'min' => 1, 'max' => 8, 'default' => 4 ) ;
 	$elmeg['vol_speaker' ] = array( 'desc' => __('Geh&auml;uselautspr&auml;cher'), 'min' => 0, 'max' => 15, 'default' => 8 ) ;
 	$elmeg['vol_speaker_mic' ] = array( 'desc' => __('Geh&auml;use Mikrofon'), 'min' => 1, 'max' => 8, 'default' => 6 ) ;
 	$elmeg['vol_ringer' ] = array( 'desc' => __('Klingelton'), 'min' => 1, 'max' => 15, 'default' => 8 ) ;
@@ -89,8 +89,8 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	$aastra = array();
 	$aastra['handset tx gain' ] = array( 'desc' => __('H&ouml;rer Mikrofon'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
 	$aastra['handset sidetone gain' ] = array( 'desc' => __('Eigenecho H&ouml;rer'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
-	$aastra['headset tx gain' ] = array( 'desc' => __('Sprechgarnitur Mikrofon'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
-	$aastra['headset sidetone gain' ] = array( 'desc' => __('Eigenecho Sprechgarnitur'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
+	$aastra['headset tx gain' ] = array( 'desc' => __('Headset Mikrofon'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
+	$aastra['headset sidetone gain' ] = array( 'desc' => __('Eigenecho Headset'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
 	$aastra['handsfree tx gain' ] = array( 'desc' => __('Geh&auml;use Mikrofon'), 'min' => -10, 'max' => 10, 'default' => 0 ) ;
 	
 	$volume_configs['aastra5xi'] = $aastra;

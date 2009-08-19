@@ -686,7 +686,7 @@ psetting('deny_all_feature'       , 'off');  # keine Telefon-interne Blacklist
 psetting('audio_device_indicator' , 'on' );
 psetting('intercom_enabled'       , 'off');  # brauchen wir (noch?) nicht
 psetting('cmc_feature'            , 'off');
-psetting('cancel_on_hold'         , 'on' );
+psetting('cancel_on_hold'         , 'off');
 psetting('cancel_missed'          , 'on' );
 psetting('cancel_desktop'         , 'off');
 psetting('cw_dialtone'            , 'on' , true);
