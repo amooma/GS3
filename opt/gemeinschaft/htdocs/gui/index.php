@@ -384,8 +384,11 @@ if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub'])) {
 	$MODULE  = 'home';
 }
 
-if (array_key_exists('perms', $MODULES[$SECTION])
-&&  $MODULES[$SECTION]['perms'] === 'admin') {
+if ((array_key_exists('perms', $MODULES[$SECTION])
+&&   $MODULES[$SECTION]['perms'] === 'admin')
+||  (array_key_exists('perms', $MODULES[$SECTION]['sub'][$MODULE])
+&&   $MODULES[$SECTION]['sub'][$MODULE]['perms'] === 'admin')
+) {
 	# module/section requires admin permissions
 	if (@$_SESSION['login_ok']) {
 		# user is logged in
@@ -664,6 +667,13 @@ foreach ($MODULES as $sectname => $sectinfo) {
 		echo '<ul class="menu">', "\n";
 		foreach ($sectinfo['sub'] as $modname => $modinfo) {
 			if (array_key_exists('inmenu', $modinfo) && ! $modinfo['inmenu']) {
+				continue;
+			}
+			if (array_key_exists('perms', $modinfo)
+			&&  $modinfo['perms'] === 'admin'
+			&&  (@$_SESSION['sudo_user']['name'] == ''
+			||  (! gs_user_is_admin(@$_SESSION['sudo_user']['name']))
+			)) {
 				continue;
 			}
 			echo '<li class="leaf"><a href="', gs_url($sectname, $modname) ,'" class="';
