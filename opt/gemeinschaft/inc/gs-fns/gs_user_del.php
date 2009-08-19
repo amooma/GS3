@@ -116,6 +116,10 @@ function gs_user_del( $user, $reload=true )
 	#
 	$db->execute( 'DELETE FROM `users_external_numbers` WHERE `user_id`='. $user_id );
 	
+	# delete info about voicemail messages //FIXME - delete files?
+	#
+	$db->execute( 'DELETE FROM `vm_msgs` WHERE `user_id`='. $user_id );
+	
 	# delete mailbox settings
 	#
 	$db->execute( 'DELETE FROM `vm` WHERE `user_id`='. $user_id );
