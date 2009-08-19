@@ -49,8 +49,6 @@ $opts = @getOptsNoMultiples( '',
 	$usage
 );
 
-$only_dialplan = true;
-
 
 
 function ael_file_realname( $file )
