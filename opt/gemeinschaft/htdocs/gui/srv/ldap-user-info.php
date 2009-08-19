@@ -75,7 +75,7 @@ if (! is_array($_SESSION)
 }
 
 if ($_SESSION['real_user']['name'] !== 'sysadmin'
-&&  ! preg_match('/\\b'.($_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
+&&  (! gs_user_is_admin(@$_SESSION['real_user']['name']))
 ) {
 	_not_allowed();
 }

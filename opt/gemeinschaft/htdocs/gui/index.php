@@ -294,7 +294,7 @@ if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub'])) {
 
 if (array_key_exists('perms', $MODULES[$SECTION])
 &&  $MODULES[$SECTION]['perms'] === 'admin'
-&&  !(preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) )
+&&  (! gs_user_is_admin(@$_SESSION['sudo_user']['name'])) )
 {
 	//_not_allowed( 'You are not an admin.' );
 	$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Sie (%s) haben keine Admin-Rechte.")), @$_SESSION['sudo_user']['name']);
@@ -482,7 +482,7 @@ function gs_boi_menu_sc( url )
 	) {
 		if (@$_SESSION['sudo_user']['name'] === 'sysadmin'
 		|| (@$_SESSION['sudo_user']['name'] != ''
-		&&  preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
+		&&  gs_user_is_admin(@$_SESSION['sudo_user']['name'])
 		)) {
 			if (! in_array($SECTION, array('logout'), true)) {
 				echo '<a href="', gs_url('system', 'shutdown') ,'" title="', __('Auschalten / Neustarten ...') ,'" class="fr" style="display:block; margin:1px 6px;"><img alt="', __('Ausschalten ...') ,'" src="', GS_URL_PATH ,'img/power.png" /></a>' ,"\n";
@@ -533,7 +533,7 @@ foreach ($MODULES as $sectname => $sectinfo) {
 		if (array_key_exists('perms', $sectinfo)
 		&&  $sectinfo['perms'] === 'admin'
 		&&  (@$_SESSION['sudo_user']['name'] == ''
-		|| ! preg_match('/\\b'.(@$_SESSION['sudo_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)
+		||  (! gs_user_is_admin(@$_SESSION['sudo_user']['name']))
 		)) {
 			continue;
 		}
@@ -632,7 +632,7 @@ if (gs_get_conf('GS_BOI_ENABLED') && $boi_menu_error_msg !== false) {
 			
 			$roles = array();
 			if ($_SESSION['real_user']['name'] === 'sysadmin'
-			||  preg_match('/\\b'.($_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) {
+			||  gs_user_is_admin(@$_SESSION['real_user']['name'])) {
 				$roles = array(
 					'gs'             => __('Zentrale'),
 					'boi-user'       => __('Agentur-Benutzer'),
@@ -664,7 +664,7 @@ if (gs_get_conf('GS_BOI_ENABLED') && $boi_menu_error_msg !== false) {
 			
 			echo '<div class="nobr fr">' ,"\n";
 			if ($_SESSION['real_user']['name'] === 'sysadmin'
-			||  preg_match('/\\b'.($_SESSION['real_user']['name']).'\\b/', GS_GUI_SUDO_ADMINS)) {
+			||  gs_user_is_admin(@$_SESSION['real_user']['name'])) {
 				$query =
 '(SELECT 0 `id`, \''. $DB->escape(__('Zentrale')) .'\' `comment`, 0 `ord`
 )
