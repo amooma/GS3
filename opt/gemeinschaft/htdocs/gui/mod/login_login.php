@@ -279,22 +279,33 @@ if (isSet( $_REQUEST['s'] )
 && ! in_array($_REQUEST['s'], array('','login','logout'), true)) {
 	$requested_section = @$_REQUEST['s'];
 	$requested_module  = @$_REQUEST['m'];
+	$interesting_module = true;
 } else {
 	$requested_section = 'home';
 	$requested_module  = '';
+	$interesting_module = false;
 }
 //echo " $requested_section $requested_module ";
 ?>
-<form method="post" action="<?php echo GS_URL_PATH ,'?s=',urlEncode($requested_section);
-if ($requested_module) echo '&amp;m=',urlEncode($requested_module);
+<form method="post" action="<?php
+$url_argp_arts = array();
 foreach ($_GET as $k => $v) {
 	if (! in_array($k, array('s','m','login_pwd'), true)) {
-		echo '&amp;', urlEncode($k) ,'=', urlEncode($v);
+		$url_arg_parts[] = urlEncode($k) .'='. urlEncode($v);
 	}
 }
+echo htmlEnt( gs_url( $requested_section, $requested_module, (array_key_exists('sudo', $_REQUEST) ? $_REQUEST['sudo'] : null), implode('&', $url_argp_arts) ) );
 ?>">
-<input type="hidden" name="s" value="<?php echo htmlEnt($requested_section); ?>" />
-<input type="hidden" name="m" value="<?php echo htmlEnt($requested_module); ?>" />
+<?php
+if ($interesting_module) {
+	echo gs_form_hidden( $requested_section, $requested_module, (array_key_exists('sudo', $_REQUEST) ? $_REQUEST['sudo'] : null) ) ,"\n";
+	
+	$orig_request_uri = http_get_request_url();
+	if ($orig_request_uri != false) {
+		echo '<input type="hidden" name="login_request_uri" value="', htmlEnt($orig_request_uri) ,'" />' ,"\n";
+	}
+}
+?>
 
 <label for="ipt-login_user"><?php echo __('Benutzername'); ?>:</label><br />
 <?php
