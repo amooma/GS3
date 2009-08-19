@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<refentry id="man-gs-phones-get" lang="de" revision="$Revision$">
+  <!--
+% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de
+-->
+
+  <indexterm>
+    <primary>Skripte</primary>
+
+    <secondary>gs-phones-get</secondary>
+  </indexterm>
+
+  <refentryinfo>
+    <date>$Revision$</date>
+
+    <copyright>
+      <year>2007</year>
+
+      <holder>Amooma GmbH</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>License: GNU FDL</para>
+    </legalnotice>
+  </refentryinfo>
+
+  <refmeta>
+    <refentrytitle>gs-phones-get</refentrytitle>
+
+    <manvolnum>8</manvolnum>
+
+    <refmiscinfo>Gemeinschaft</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>gs-phones-get</refname>
+
+    <refpurpose><application>Gemeinschaft</application>: Telefone
+    anzeigen</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>Usage: [( --mac=&lt;mac-addr&gt; | --ip=&lt;ip-addr&gt; |
+      --user=&lt;username&gt; | --ext=&lt;extension&gt; |
+      --type=&lt;phone-type&gt; )]</command>
+    </cmdsynopsis>
+
+    <cmdsynopsis>
+      <command>gs-phones-get</command>
+
+      <group choice="req" rep="norepeat">
+        <arg choice="plain"><option>--help</option></arg>
+
+        <arg choice="plain"><option>-?</option></arg>
+      </group>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsection>
+    <title>Beschreibung</title>
+
+    <para>Zeigt die eingerichteten Telefone an, mit MAC-Adresse, Telefon-Typ,
+    Anlege-Datum, Firmware-Version, momentaner IP-Adresse, eingeloggtem
+    Benutzer und Nebenstelle.</para>
+
+    <para>Ohne Parameter oder beim Filtern mit <code>--type</code> werden die
+    Telefone horizontal angezeigt. Beim Filtern mit <code>--mac</code>,
+    <code>--ip</code>, <code>--user</code> oder <code>--ext</code> ist in der
+    Ausgabe nur ein Telefon zu erwarten und die Felder werden vertikal
+    ausgegeben.</para>
+  </refsection>
+
+  <refsection>
+    <title>Parameter</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><option>--mac</option>=<replaceable>mac-address</replaceable></term>
+
+        <listitem>
+          <para>Filtert nach MAC-Adresse des Telefons</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--ip</option>=<replaceable>ip-address</replaceable></term>
+
+        <listitem>
+          <para>Filtert nach momentaner IP-Adresse des Telefons</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--user</option>=<replaceable>username</replaceable></term>
+
+        <listitem>
+          <para>Filtert nach momentan eingeloggtem Benutzer</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--ext</option>=<replaceable>extension</replaceable></term>
+
+        <listitem>
+          <para>Filtert nach Nebenstelle des momentan eingeloggten
+          Benutzers</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--type</option>=<replaceable>phone-type</replaceable></term>
+
+        <listitem>
+          <para>Filtert nach Telefon-Typ</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--help</option></term>
+
+        <term><option>-?</option></term>
+
+        <listitem>
+          <para>Zeigt die eingebaute Hilfe an.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsection>
+
+  <refsection>
+    <title>Diagnostik</title>
+
+    <para>Der Exit-Code ist 0 bei Erfolg oder &gt; 0 bei einem Fehler.</para>
+  </refsection>
+
+  <refsection>
+    <title>Siehe auch</title>
+
+    <para>-</para>
+  </refsection>
+</refentry>
