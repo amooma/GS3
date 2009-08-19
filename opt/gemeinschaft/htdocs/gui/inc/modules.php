@@ -119,7 +119,7 @@ $MODULES['forwards' ]=  array(
 	'sub' => array(
 		'forwards'     => array('title' => __('Rufumleitung')),
 		'extnumbers'   => array('title' => __('externe Nummern')),
-		'queues'       => array('title' => __('Warteschlangen'))
+		'queues'       => array('title' => __('Warteschlangen'), 'perms' => 'admin')
 	)
 );
 
