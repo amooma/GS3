@@ -47,8 +47,8 @@ function _gs_boi_ssl_is_possible( $server )
 	$ch = curl_init();
 	
 	curl_setopt($ch, CURLOPT_URL, 'https://'.$server.'/soap/updateextension.wsdl' );
-	curl_setopt($ch, CURLOPT_CAINFO, '/etc/apache2/conf.d/ssl/company_root_ca.crt' );
-	curl_setopt($ch, CURLOPT_SSLCERT, '/etc/apache2/conf.d/ssl/gemeinschaft_provisioning_client.pem' );
+	curl_setopt($ch, CURLOPT_CAINFO, '/etc/apache2/conf.d/ssl/company_root_ca.crt' );  //FIXME
+	curl_setopt($ch, CURLOPT_SSLCERT, '/etc/apache2/conf.d/ssl/gemeinschaft_provisioning_client.pem' );  //FIXME
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
