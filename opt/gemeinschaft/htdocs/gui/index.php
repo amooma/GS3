@@ -569,7 +569,17 @@ function gs_boi_menu_sc( url )
 		default    :
 			echo '<img alt=" " src="', GS_URL_PATH ,'img/gemeinschaft-32.png" class="fl" />' ,"\n";
 			//echo '<h1>', __('Telefon-Manager') ,'</h1>' ,"\n";
-			echo '<h1>', 'Gemeinschaft' ,'</h1>' ,"\n";
+			echo '<h1>', 'Gemeinschaft';
+			if (extension_loaded('apc')) {  # determine version if APC storage is available only
+				$vers = apc_fetch( 'gemeinschaft_version', /*&*/$was_stored );
+				if (! $was_stored) {
+					$vers = trim(@gs_file_get_contents( '/etc/gemeinschaft/.gemeinschaft-version' ));
+					apc_store( 'gemeinschaft_version', $vers, 20 );  # store for 20 seconds
+				}
+				echo ' <span class="version">', htmlEnt($vers) ,'</span>';
+				unset($was_stored, $vers);
+			}
+			echo '</h1>' ,"\n";
 	}
 ?>
 </div>

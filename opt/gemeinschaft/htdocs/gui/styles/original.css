@@ -277,6 +277,14 @@ select {
 	margin: 0;
 	padding: 0 0 0 5px;
 }
+#boxtitle h1 .version {
+	font-family: Helvetica, Arial, Geneva, Verdana, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	vertical-align: baseline;
+	opacity: 0.7;
+	margin: 0 1px;
+}
 
 /*
 #boxbanner {
