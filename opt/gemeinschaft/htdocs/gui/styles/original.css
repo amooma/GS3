@@ -15,6 +15,11 @@ Note: Do not override border and background on UI controls or
 Firefox 3 will not use the native controls of the operating system.
 */
 
+form {
+	margin: 0;
+	padding: 0;
+}
+
 input[type="text"],
 input[type="password"],
 input[type="file"],
@@ -82,9 +87,15 @@ table {
 }
 
 small,
-.small
+.small,
+.s
 {
 	font-size: 0.93em;
+	line-height: 1.2em;
+}
+.xs
+{
+	font-size: 0.87em;
 	line-height: 1.2em;
 }
 
@@ -145,6 +156,10 @@ tr.t th {
 tr.b td,
 tr.b th {
 	vertical-align: bottom;
+}
+
+.gray {
+	color: #888;
 }
 
 .debug {

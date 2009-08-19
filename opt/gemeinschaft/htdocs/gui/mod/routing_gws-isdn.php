@@ -157,6 +157,7 @@ if ($action === 'del') {
 	
 	$gwid = (int)@$_REQUEST['gw-id'];
 	
+	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid );
 	$DB->execute( 'DELETE FROM `gates` WHERE `id`='.$gwid );
 	
 	$action = '';
