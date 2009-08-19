@@ -38,17 +38,19 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 //require_once( GS_DIR .'inc/util.php' );
 //require_once( GS_DIR .'inc/gs-lib.php' );
 set_error_handler('err_handler_die_on_err');
-
+require_once( GS_DIR .'inc/string.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 
 
 function _grandstream_xml_esc( $str )
 {
-	//return htmlSpecialChars( $str, ENT_QUOTES, 'UTF-8' ); //?
+	/*
 	return str_replace(
 		array('&'    , '"'     , '\''    , '<'   , '>'   ),
 		array('&amp;', '&quot;', '&apos;', '&gt;', '&lt;'),
-		$str);
+		utf8_strip_invalid( $str ));
+	*/
+	return htmlEnt( $str );
 }
 
 function _err( $msg='' )

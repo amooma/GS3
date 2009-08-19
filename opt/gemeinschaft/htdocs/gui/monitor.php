@@ -34,6 +34,7 @@ require_once( GS_DIR .'inc/netmask.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );  //FIXME
 include_once( GS_DIR .'inc/extension-state.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
+require_once( GS_DIR .'inc/string.php' );
 
 
 $remote_ip = @$_SERVER['REMOTE_ADDR'];
@@ -372,7 +373,7 @@ foreach ($exts_display as $extension => $ext_info) {
 		$abbr = mb_subStr($ext_info['fn'],0,1) .'. '. $abbr;
 	if (mb_strLen($ext_info['ln']) > mb_strLen($abbr))
 		$abbr = mb_strCut($abbr,0,-1) .'.';
-	echo '<span class="nam">', htmlSpecialChars($abbr, ENT_QUOTES, 'UTF-8') ,'</span>';
+	echo '<span class="nam">', htmlEnt($abbr) ,'</span>';
 	echo '<span class="link" id="e',$extension,'l"></span>';
 	echo '</div>' ,"\n";
 	//echo "<tr><td> $img $extension: ".$ext_info['abbr']."</td></tr>\n";

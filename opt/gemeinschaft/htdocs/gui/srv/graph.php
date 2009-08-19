@@ -30,6 +30,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
+require_once( GS_DIR .'inc/string.php' );
 
 
 @header('Content-Type: image/svg+xml; charset=utf-8');
@@ -188,11 +189,6 @@ WHERE
 
 if (! function_exists('__')) {
 	function __($str) {return $str;}
-}
-
-function xmlEnt( $str )
-{
-	return htmlSpecialChars($str, ENT_QUOTES, 'UTF-8');
 }
 
 function round01( $float )
@@ -429,7 +425,7 @@ if ($dataset != '') {
 			$i=0;
 			$t = $fr;
 			while ($t <= $to) {
-				echo "\t\t", '<text class="xAxisLabel" y="0" x="', round01($i*$xfact) ,'">', xmlEnt(date($xdfmt,$t)) ,'</text>' ,"\n";
+				echo "\t\t", '<text class="xAxisLabel" y="0" x="', round01($i*$xfact) ,'">', htmlEnt(date($xdfmt,$t)) ,'</text>' ,"\n";
 				$t = strToTime($xtstr, $t);
 				++$i;
 			}
@@ -439,8 +435,8 @@ if ($dataset != '') {
 </g>
 
 <!-- header -->
-<text class="mainTitleB" x="<?php echo round01($width/2); ?>" y="16"><?php echo xmlEnt($header) ?></text>
-<text class="mainTitleF" x="<?php echo round01($width/2); ?>" y="16"><?php echo xmlEnt($header); ?></text>
+<text class="mainTitleB" x="<?php echo round01($width/2); ?>" y="16"><?php echo htmlEnt($header) ?></text>
+<text class="mainTitleF" x="<?php echo round01($width/2); ?>" y="16"><?php echo htmlEnt($header); ?></text>
 
 <?php
 }

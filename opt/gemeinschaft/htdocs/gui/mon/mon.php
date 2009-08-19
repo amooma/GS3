@@ -33,6 +33,7 @@ include_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'inc/netmask.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 //set_error_handler('err_handler_die_on_err');
+require_once( GS_DIR .'inc/string.php' );
 
 
 header( 'Pragma: no-cache' );
@@ -373,7 +374,7 @@ if (! $db) {
 			$abbr = mb_subStr($ext_info['fn'],0,1) .'. '. $abbr;
 		if (mb_strLen($ext_info['ln']) > mb_strLen($abbr))
 			$abbr = mb_strCut($abbr,0,-1) .'.';
-		echo '<span class="nam">', htmlSpecialChars($abbr, ENT_QUOTES, 'UTF-8') ,'</span>';
+		echo '<span class="nam">', htmlEnt($abbr) ,'</span>';
 		echo '<span class="link" id="e',$ext,'l"></span>';
 		echo '</div>' ,"\n";
 	}
