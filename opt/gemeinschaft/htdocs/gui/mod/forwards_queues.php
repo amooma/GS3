@@ -264,7 +264,7 @@ if (is_array($warnings) && count($warnings) > 0) {
 <table cellspacing="1">
 <thead>
 <tr>
-	<th colspan="2"><?php echo __('Zielrufnummern f&uuml; Anrufumleitung'); ?></th>
+	<th colspan="2"><?php echo __('Zielrufnummern f&uuml;r Anrufumleitung'); ?></th>
 </tr>
 </thead>
 <tbody>
