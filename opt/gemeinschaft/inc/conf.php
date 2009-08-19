@@ -238,7 +238,7 @@ _gscnf( 'PROV_AUTO_ADD_PHONE_HOST'  , 'first'            );
 _gscnf( 'PROV_DIAL_LOG_LIFE'        , 14*24*3600         );
 _gscnf( 'PROV_PROXIES_TRUST'        , ''                 );
 _gscnf( 'PROV_PROXIES_XFF_HEADER'   , 'X-Forwarded-For'  );
-_gscnf( 'PROV_ALLOW_NET'            , '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8' );
+_gscnf( 'PROV_ALLOW_NET'            , '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8' );
 _gscnf( 'PROV_LAN_NETS'             , '0.0.0.0/0'        );
 _gscnf( 'PROV_MODELS_ENABLED_SNOM'        , '*'          );  # / '360,370'
 _gscnf( 'PROV_MODELS_ENABLED_SIEMENS'     , '*'          );  # / 'os20,os40,os60,os80'
