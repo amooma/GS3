@@ -403,6 +403,7 @@ $GRANDSTREAM_PROV_FW_UPDATE = false;  # allow firmware updates?
 
 //$GRANDSTREAM_PROV_FW_DEFAULT_GXV3000 = '1.1.3.50';
 //$GRANDSTREAM_PROV_FW_DEFAULT_GXV3005 = '1.1.3.50';
+//$GRANDSTREAM_PROV_FW_DEFAULT_GXV3140 = '1.0.1.6';
 
 //$GRANDSTREAM_PROV_KEY_BLACKLIST = '';
   # do not show these softkey functions in GUI,
