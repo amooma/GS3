@@ -6715,6 +6715,19 @@ LOCK TABLES `vm_msgs` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `gate_cids`
+--
+
+CREATE TABLE `gate_cids` (
+  `grp_id` smallint(5) unsigned NOT NULL,
+  `cid_int` varchar(30) character set ascii NOT NULL,
+  `cid_ext` varchar(30) character set ascii NOT NULL,
+  PRIMARY KEY  (`grp_id`,`cid_int`),
+  CONSTRAINT `gate_cids_ibfk_1` FOREIGN KEY (`grp_id`) REFERENCES `gate_grps` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
 -- Current Database: `asterisk`
 --
 
