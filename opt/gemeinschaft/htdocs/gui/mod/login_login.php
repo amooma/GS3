@@ -332,7 +332,7 @@ if ($interesting_module) {
 <?php
 if (@$_REQUEST['login_user'] != '') {
 	$login_user_prefill = $_REQUEST['login_user'];
-} elseif (@$_REQUEST['sudo'] != '') {
+} elseif (@$_REQUEST['sudo'] != '' && ! in_array($_REQUEST['sudo'], array('my'), true)) {
 	$login_user_prefill = $_REQUEST['sudo'];
 	if ($focus_field) $focus_field = 'ipt-login_pwd';
 } else {
