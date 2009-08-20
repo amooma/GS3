@@ -126,9 +126,9 @@ macro hangup-proper-status() {
 
 macro is_dmz( is_dmz_num ) {
 	// callerid(num) for incoming calls or dialed number for outgoing
-	//if ("${is_dmz_num:0:1}" = "0" || "${is_dmz_num:0:2}" = "60") {
+	//if ("${is_dmz_num:0:1}" = "0" || "${is_dmz_num:0:1}" = "" || "${is_dmz_num:0:2}" = "60") {
 	//	// from PSTN or branch office => external
-	if ("${is_dmz_num:0:1}" = "0") {
+	if ("${is_dmz_num:0:1}" = "0" || "${is_dmz_num:0:1}" = "") {
 		Set(is_dmz=);
 	}
 	else {
@@ -909,6 +909,7 @@ context from-internal-users {
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
 		from-internal-custom;
+		to-internal-custom;
 		vm-ann-rec;           // record vm-box announcements
 		voicemail-self;       // voicemail main (own mailbox)
 		voicemail-any;        // voicemail main (any mailbox)
