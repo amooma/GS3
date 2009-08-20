@@ -1,44 +1,44 @@
 Version 2.2 zu 2.3
 
-- Provisioning für Grandstream Telefone hinzugefügt.
-- Routing Inbound und Outbound: GUI und Formulare verbessert
+- Provisioning für Grandstream-Telefone hinzugefügt.
+- Routing eingehend und ausgehend: GUI und Formulare verbessert
 - ISDN- und SIP-Gateways: Dialstring editierbar
 - ISDN-Gateways: Gateway-Typ wählbar. Typ: "woomera" und "capi" hinzugefügt.
-- Variablenverarbeitung im Dialstring erweitert: "{number}, {number:1:4}";
+- Variablenverarbeitung im Dialstring erweitert: "{number}, {number:1:4}"
 - Fehler im Dialstring bei Verwendeung von Präfixen behoben, Variable "{prefix}" im Dialstring verwendbar.
 - Dialstring Variable "{port}" verwendbar.
-- Bug beim Speichern der Anrifliste für eingehende Anrufe gefixt.
-- Automatisches Anlegen von "hints" for nobody-User deaktiviert um Speicherplatz zu sparen. 
+- Bug beim Speichern der Anrufliste für eingehende Anrufe gefixt.
+- Automatisches Anlegen von "hints" for Dummy-User deaktiviert um Speicherplatz zu sparen. 
 - Hilfetexte in Online-Hilfe und GUI angepasst.
 - Gesprächsaufkommen-Graph: Anzeige für große Zahlen verbessert.
 - Farben und Style verbessert.
 - "Speichern und Telefon aktualisieren" beim Setzen von Klingeltönen eingebaut
-- Beim abspielen der Call-Completion-Ansage "busy" in CDRs speichern.
+- Beim Abspielen der Call-Completion-Ansage "busy" in CDRs speichern.
 - Behandlung von alten Browsern (MSIE <= 6) verbessert.
-- Patch für "Verpasste anrufe ohne Namen" hinzugefügt.
-- Einige, unnötige Debug-Ausgabe entfernt
+- Patch für "verpasste Anrufe ohne Namen" hinzugefügt.
+- Einige unnötige Debug-Ausgabe entfernt
 - logrotate für "/var/log/asterisk/mmlog"
 - Log-Ausgabe erweitert und optisch verbessert.
 - Bau der Dokumentation überarbeitet.
-- Aastra provisioning: Einige Verbesserungen der Aastra-lirary.
-- Aastra provisioning: Zeitzone Berlin vorgeben
-- Aastra provisioning: Einige Softkeys vordefiniert
-- Aastra provisioning: "sip proxy ip" und "sip proxy port" werden gesetzt.
+- Aastra-Provisioning: Einige Verbesserungen der Aastra-Library.
+- Aastra-Provisioning: Zeitzone Berlin vorgeben
+- Aastra-Provisioning: Einige Softkeys vordefiniert
+- Aastra-Provisioning: "sip proxy ip" und "sip proxy port" werden gesetzt.
 - Aastra: XML-Anwendung für Login/Logout/Restart hinzugefügt.
 - Direktes Anwählen von Mailboxen per **<Nst.> deaktiviert um den Feature-Code für das Grandstream-Pickup freizumachen 
 - Nummern mit "*" in "urldial" erlaubt.
-- Skripte zum Auslesen von Telefonbüchern und Anriflisten hinzugefügt.
-- SIP outboundproxy eingebaut
+- Skripte zum Auslesen von Telefonbüchern und Anruflisten hinzugefügt.
+- SIP-Outbound-Proxy eingebaut
 - "fromdomain" und "fromuser" setzen, wenn SIP-Gateway in der Form "benutzer@domain" angegeben ist.
 - Registrieren gegenüber einem SIP-Gateway optional.
 - Parameter für SIP-Gateways einstellbar.
-- P-Preferred-Identity header hinzugefügt.
+- Header P-Preferred-Identity hinzugefügt.
 - Erweiterung der AGI-Library: sauberes Lesen des AGI-Environments etc.
-- Featurecodes für Rufumleitung auf Mailbox (*21 ) and Ansage (*22) hinzugefügt.
+- Feature-Codes für Rufumleitung auf Mailbox (*21) and Ansage (*22) hinzugefügt.
 - Umlaute im Telefonbuch korrekt escapen.
-- Helper für "chan_capi" Konfiguration (AVM Fritz, Eicon Diva, etc) hinzugefügt.
-- Länge des automatisch generierten SIP-Paßworts: 16 Stellen beschränkt.
-- Skript zum löschen von Hosts hinzugefügt.
+- Helper für chan_capi-Konfiguration (AVM Fritz, Eicon Diva, etc) hinzugefügt.
+- Länge des automatisch generierten SIP-Passworts auf 16 Stellen beschränkt.
+- Skript zum Löschen von Hosts hinzugefügt.
 - "honorific" auskommentiert, da es nicht verwendet wurde.
 - Hangup mit "480 Temporarily unavailable" anstatt "603 Declined" bei unerreichbar senden.
 - Setzen des Klingeltons bei Call-Init gefixt
@@ -46,7 +46,7 @@ Version 2.2 zu 2.3
 - channels in zapata.conf auskommentiert um Warnungen beim Starten von Asterisk loszuwerden
 - Zwei benutzerdefinierte Klingeltöne gleichzeitig für Snom-Telefone
 - bei gs-users-get auch die Benutzergruppe ausgeben
-- Nobody-User nach löschen des zugehörugen Telefons löschen.
-- Skript zum ausloggen von Benutzern hinzugefügt.
-- Option "--no-reload" zu einigen Skripten hinzugefügt, um den Dialplan nur bei Bedarf neu zu landen.
+- Nobody-User nach Löschen des zugehörigen Telefons löschen.
+- Skript zum Ausloggen von Benutzern hinzugefügt.
+- Option "--no-reload" zu einigen Skripten hinzugefügt, um den Dialplan nur bei Bedarf neu zu laden.
 - Kleinere Verbesserungen an der GUI
