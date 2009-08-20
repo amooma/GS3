@@ -88,11 +88,13 @@ while ($ggrp = $rs->fetchRow()) {
 		
 		# strip prefix off DID number (sets sets did_ext) and apply
 		# redirection rules for inbound calls (sets did_ext_to):
-		echo "\t\t\t", 'AGI(/opt/gemeinschaft/dialplan-scripts/in-route.agi,', (int)$ggrp['id'] ,',${did_full});' ,"\n";
+		echo "\t\t\t", 'AGI(/opt/gemeinschaft/dialplan-scripts/in-route.agi,', (int)$ggrp['id'] ,',${did_full},${CALLERID(num)});' ,"\n";
 		# make it appear as if the caller had dialed the extension without
 		# our trunk prefix etc.:
 		echo "\t\t\t", 'Set(CALLERID(dnid)=${did_ext});' ,"\n";
 		echo "\t\t\t", 'Verbose(1,### Inbound call from gw group "', $name ,'". dnid: ${did_full} => ext: ${did_ext} => ${did_ext_to});' ,"\n";
+		echo "\t\t\t", 'Verbose(1,### from cid orig: ${CALLERID(num)} => from cid: ${cid_fixed});' ,"\n";
+		echo "\t\t\t", 'Set(CALLERID(num)=${cid_fixed});' ,"\n";
 		echo "\t\t\t", 'if ("${did_ext_to}" != "") {' ,"\n";
 		echo "\t\t\t\t", 'jump ${did_ext_to}@from-gateways;' ,"\n";
 		echo "\t\t\t", '}' ,"\n";
