@@ -549,7 +549,7 @@ th, td, .td {
 }
 td, .td {
 	background: #eee;
-	vertical-align: top;
+	vertical-align: baseline;
 }
 tr.even td {
 	background: #e6e6e6;
@@ -563,12 +563,16 @@ th, td.th, .th {
 	padding-top: 4px;
 	padding-bottom: 4px;
 	font-weight: bold;
-	vertical-align: middle;
+	/*vertical-align: middle;*/
+	vertical-align: baseline;
 }
 tbody th {
 	padding: 2px 6px;
 	text-align: left;
-	vertical-align: top;
+	/*vertical-align: baseline;*/
+}
+thead th, td.th, .th {
+	vertical-align: middle;
 }
 /*
 tbody tr.even th {
