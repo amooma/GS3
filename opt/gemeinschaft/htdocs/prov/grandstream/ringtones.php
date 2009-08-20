@@ -36,6 +36,7 @@ header( 'Vary: *' );
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 //require_once( GS_DIR .'inc/gs-lib.php' );
 //include_once( GS_DIR .'inc/prov-fns.php' );
+include_once( GS_DIR .'htdocs/prov/grandstream/grandstream-fns.php' );
 set_error_handler('err_handler_die_on_err');
 
 function _send404( $msg='' )
@@ -89,18 +90,6 @@ if (! preg_match('/(bt|gxp|gxv)[0-9]{1,6}/', strToLower(@$ua_parts[1]), $m)) {
 	_send404();
 }
 
-
-
-function checksum($str) {
-	$sum = 0;
-	for ($i=0; $i <= ((strlen($str) - 1) / 2); $i++) {
-		$sum += ord(substr($str,  2 * $i      , 1)) << 8;
-		$sum += ord(substr($str, (2 * $i) + 1 , 1));
-		$sum &= 0xffff;
-	}
-	$sum = 0x10000 - $sum;
-	return array(($sum >> 8) & 0xff, $sum & 0xff);
-}
 
 
 if ($ring === '1') {
@@ -183,15 +172,12 @@ if ($ringtone_filehandle) {
 #  create BODY
 #####################################################################
 $body = $audio;
-if ( (strLen($body)%2) == 1 ) $body .= chr(0);
-$body_length = strLen($body);
 
 
 #####################################################################
 #  create HEADER
 #####################################################################
 $header_length = 512;
-$out_length = $header_length + $body_length;
 
 $year  = date('Y');
 $month = date('n');
@@ -201,11 +187,11 @@ $min   = date('i');
 
 $header = array();
 
-// 00 01 02 03 - out_length / 2
-$header[] = (($out_length / 2) >> 24) & 0xff;
-$header[] = (($out_length / 2) >> 16) & 0xff;
-$header[] = (($out_length / 2) >>  8) & 0xff;
-$header[] = (($out_length / 2)      ) & 0xff;
+// 00 01 02 03 - put out_length / 2 in later
+$header[] = 0x00;
+$header[] = 0x00;
+$header[] = 0x00;
+$header[] = 0x00;
 
 // 04 05 - put checksum in later
 $header[] = 0x00;
@@ -241,26 +227,10 @@ while( count($header) < $header_length ) {
 
 
 #####################################################################
-#  Assemble output
-#####################################################################
-$arr = $header;
-array_unshift($arr, 'C'.$header_length);
-$initstr = call_user_func_array('pack', $arr);
-$checktext = $initstr . $body;
-
-array_splice($header, 4, 2, checksum($checktext));
-
-$arr = $header;
-array_unshift($arr, 'C'.$header_length);
-$initstr = call_user_func_array('pack', $arr);
-$out = $initstr . $body;
-
-
-#####################################################################
 #  output
 #####################################################################
 ob_start();
-echo $out;
+echo grandstream_binary_output($header, $body);
 if (! headers_sent() ) {
 	header( 'Content-Type: application/octet-stream' );
 	header( 'Content-Length: '. (int)@ob_get_length() );
