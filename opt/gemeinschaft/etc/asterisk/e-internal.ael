@@ -848,6 +848,12 @@ context to-internal-users-self {
 			}
 			
 			// get ringer
+			if ( "${forwards}" != "0" ) {
+				
+				//we will remove the Alert-Info header here
+				&sip-remove-header(Alert-Info);
+
+			}
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${EXTEN},${is_call_from});
 			if ("${ringer}" != "") {
 				Verbose(1,### Ringer: ${ringer});
