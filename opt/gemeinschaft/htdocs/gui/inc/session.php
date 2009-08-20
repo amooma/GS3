@@ -320,7 +320,9 @@ if ($_SESSION['sudo_user']['name'] == $_SESSION['real_user']['name']) {
 		// info not present (no session support) or sudo user has changed
 		$_SESSION['sudo_user']['info'] = get_user( $_SESSION['sudo_user']['name'] );
 		if (! @$_SESSION['sudo_user']['info']) {
-			$dispatcher_errors_html[] = sPrintF(htmlEnt(__('Unknown user "%s".')), @$_SESSION['sudo_user']['name']);
+			if (! in_array(@$_SESSION['sudo_user']['name'], array('my'), true)) {
+				$dispatcher_errors_html[] = sPrintF(htmlEnt(__('Unknown user "%s".')), @$_SESSION['sudo_user']['name']);
+			}
 			$_SESSION['sudo_user']['name'] = $_SESSION['real_user']['name'];
 			$_SESSION['sudo_user']['info'] = $_SESSION['real_user']['info'];
 		}
