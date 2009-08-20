@@ -71,6 +71,8 @@ if ($action === 'gsave') {
 	`allow_in`,
 	`in_dest_search`,
 	`in_dest_replace`,
+	`in_cid_search`,
+	`in_cid_replace`,
 	`out_cid_search`,
 	`out_cid_replace`
 FROM
@@ -87,6 +89,8 @@ WHERE `id`='.$ggid
 			'allow_in'        => 0,
 			'in_dest_search'  => '',
 			'in_dest_replace' => '',
+			'in_cid_search'   => '',
+			'in_cid_replace'  => '',
 			'out_cid_search'  => '',
 			'out_cid_replace' => ''
 		);
@@ -101,17 +105,36 @@ WHERE `id`='.$ggid
 	$name = preg_replace('/[^a-z0-9\-]/', '', $name);
 	$type = 'balance';
 	$allow_in = (@$_REQUEST['gg-allow_in'] ? 1 : 0);
+	
 	$in_dest_search  = trim(@$_REQUEST['gg-in_dest_search' ]);
 	$in_dest_replace = preg_replace('/[^0-9+a-zA-Z\-_.$]/', '', trim(@$_REQUEST['gg-in_dest_replace']));
 	if (! is_valid_pcre( '/'.$in_dest_search.'/', $in_dest_replace )) {
-		echo 'Invalid pattern!<br />',"\n";
+		echo '<div class="errorbox">',
+			sPrintF(htmlEnt(__("Ung\xC3\xBCltiges Suchen/Ersetzen-Muster %s f\xC3\xBCr die eingehende Durchwahl wurde nicht gespeichert!")),
+				'<tt>'.htmlEnt( 's/'.$in_dest_search.'/'.$in_dest_replace.'/' ).'</tt>'),
+			'</div>',"\n";
 		$in_dest_search  = $oldgg['in_dest_search' ];
 		$in_dest_replace = $oldgg['in_dest_replace'];
 	}
+	
+	$in_cid_search  = trim(@$_REQUEST['gg-in_cid_search' ]);
+	$in_cid_replace = preg_replace('/[^0-9+a-zA-Z\-_.$]/', '', trim(@$_REQUEST['gg-in_cid_replace']));
+	if (! is_valid_pcre( '/'.$in_cid_search.'/', $in_cid_replace )) {
+		echo '<div class="errorbox">',
+			sPrintF(htmlEnt(__("Ung\xC3\xBCltiges Suchen/Ersetzen-Muster %s f\xC3\xBCr die eingehende Caller-ID wurde nicht gespeichert!")),
+				'<tt>'.htmlEnt( 's/'.$in_cid_search.'/'.$in_cid_replace.'/' ).'</tt>'),
+			'</div>',"\n";
+		$in_cid_search  = $oldgg['in_cid_search' ];
+		$in_cid_replace = $oldgg['in_cid_replace'];
+	}
+	
 	$out_cid_search  = trim(@$_REQUEST['gg-out_cid_search' ]);
 	$out_cid_replace = preg_replace('/[^0-9+a-zA-Z\-_.$]/', '', trim(@$_REQUEST['gg-out_cid_replace']));
 	if (! is_valid_pcre( '/'.$out_cid_search.'/', $out_cid_replace )) {
-		echo 'Invalid pattern!<br />',"\n";
+		echo '<div class="errorbox">',
+			sPrintF(htmlEnt(__("Ung\xC3\xBCltiges Suchen/Ersetzen-Muster %s f\xC3\xBCr die ausgehende Caller-ID wurde nicht gespeichert!")),
+				'<tt>'.htmlEnt( 's/'.$out_cid_search.'/'.$out_cid_replace.'/' ).'</tt>'),
+			'</div>',"\n";
 		$out_cid_search  = $oldgg['out_cid_search' ];
 		$out_cid_replace = $oldgg['out_cid_replace'];
 	}
@@ -124,6 +147,8 @@ WHERE `id`='.$ggid
 	`allow_in`='.                      $allow_in         .',
 	`in_dest_search`=\'' . $DB->escape($in_dest_search ) .'\',
 	`in_dest_replace`=\''. $DB->escape($in_dest_replace) .'\',
+	`in_cid_search`=\''  . $DB->escape($in_cid_search  ) .'\',
+	`in_cid_replace`=\'' . $DB->escape($in_cid_replace ) .'\',
 	`out_cid_search`=\'' . $DB->escape($out_cid_search ) .'\',
 	`out_cid_replace`=\''. $DB->escape($out_cid_replace) .'\'
 WHERE `id`='.$ggid
@@ -146,6 +171,8 @@ WHERE `id`='.$ggid
 	`allow_in`,
 	`in_dest_search`,
 	`in_dest_replace`,
+	`in_cid_search`,
+	`in_cid_replace`,
 	`out_cid_search`,
 	`out_cid_replace`
 ) VALUES (
@@ -156,6 +183,8 @@ WHERE `id`='.$ggid
 	'.               $allow_in         .',
 	\''. $DB->escape($in_dest_search ) .'\',
 	\''. $DB->escape($in_dest_replace) .'\',
+	\''. $DB->escape($in_cid_search  ) .'\',
+	\''. $DB->escape($in_cid_replace ) .'\',
 	\''. $DB->escape($out_cid_search ) .'\',
 	\''. $DB->escape($out_cid_replace) .'\'
 )'
@@ -244,6 +273,8 @@ if ($action === 'gedit') {
 	`allow_in`,
 	`in_dest_search`,
 	`in_dest_replace`,
+	`in_cid_search`,
+	`in_cid_replace`,
 	`out_cid_search`,
 	`out_cid_replace`
 FROM
@@ -261,6 +292,8 @@ WHERE `id`='.$ggid
 			'allow_in'       => '',
 			'in_dest_search' => '',
 			'in_dest_replace'=> '',
+			'in_cid_search'  => '',
+			'in_cid_replace' => '',
 			'out_cid_search' => '^(.*)',
 			'out_cid_replace'=> '$1'
 		);
@@ -275,7 +308,7 @@ WHERE `id`='.$ggid
 
 <?php
 	echo '<tr>',"\n";
-	echo '<th style="width:80px;">', __('Titel') ,':</th>',"\n";
+	echo '<th style="width:90px;">', __('Titel') ,':</th>',"\n";
 	echo '<th style="width:340px;"><input type="text" name="gg-title" value="', htmlEnt($gg['title']) ,'" size="30" maxlength="35" style="font-weight:bold; width:97%;" /></th>',"\n";
 	echo '</tr>',"\n";
 	
@@ -296,9 +329,20 @@ WHERE `id`='.$ggid
 	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
-	echo '<th>', __('Durchwahl') ,':</th>',"\n";
+	echo '<th>', __('Ausgehende Caller-ID') ,':</th>',"\n";
 	echo '<td>',"\n";
-	echo __('Suchen/Ersetzen-Muster (um Pr&auml;fix wegzuschneiden)') ,' <sup>[1]</sup>:',"\n";
+	echo __('Suchen/Ersetzen-Muster f&uuml;r ausgehende Caller-ID') ,' <sup><a href="#ftn-1" title="', htmlEnt(__("Fu\xC3\x9Fnote")) ,'">[1]</a></sup>:',"\n";
+	echo '<div class="nobr" style="font-family:monospace;">',"\n";
+	echo 's/<input type="text" name="gg-out_cid_search" value="', htmlEnt($gg['out_cid_search']) ,'" size="35" maxlength="50" style="font-family:monospace;" /><br />',"\n";
+	echo '&nbsp;/<input type="text" name="gg-out_cid_replace" value="', htmlEnt($gg['out_cid_replace']) ,'" size="35" maxlength="20" style="font-family:monospace;" />/',"\n";
+	echo '</div>',"\n";
+	echo '</td>',"\n";
+	echo '</tr>',"\n";
+	
+	echo '<tr>',"\n";
+	echo '<th>', __('Eingehende Durchwahl') ,':</th>',"\n";
+	echo '<td>',"\n";
+	echo __('Suchen/Ersetzen-Muster (um Pr&auml;fix wegzuschneiden)') ,' <sup><a href="#ftn-2" title="', htmlEnt(__("Fu\xC3\x9Fnote")) ,'">[2]</a></sup>:',"\n";
 	echo '<div class="nobr" style="font-family:monospace;">',"\n";
 	echo 's/<input type="text" name="gg-in_dest_search" value="', htmlEnt($gg['in_dest_search']) ,'" size="35" maxlength="50" style="font-family:monospace;" /><br />',"\n";
 	echo '&nbsp;/<input type="text" name="gg-in_dest_replace" value="', htmlEnt($gg['in_dest_replace']) ,'" size="35" maxlength="20" style="font-family:monospace;" />/',"\n";
@@ -307,12 +351,12 @@ WHERE `id`='.$ggid
 	echo '</tr>',"\n";
 	
 	echo '<tr>',"\n";
-	echo '<th>', __('Caller-ID') ,':</th>',"\n";
+	echo '<th>', __('Eingehende Caller-ID') ,':</th>',"\n";
 	echo '<td>',"\n";
-	echo __('Suchen/Ersetzen-Muster f&uuml;r ausgehende Caller-ID') ,' <sup>[2]</sup>:',"\n";
+	echo __('Suchen/Ersetzen-Muster') ,' <sup><a href="#ftn-3" title="', htmlEnt(__("Fu\xC3\x9Fnote")) ,'">[3]</a></sup>:',"\n";
 	echo '<div class="nobr" style="font-family:monospace;">',"\n";
-	echo 's/<input type="text" name="gg-out_cid_search" value="', htmlEnt($gg['out_cid_search']) ,'" size="35" maxlength="50" style="font-family:monospace;" /><br />',"\n";
-	echo '&nbsp;/<input type="text" name="gg-out_cid_replace" value="', htmlEnt($gg['out_cid_replace']) ,'" size="35" maxlength="20" style="font-family:monospace;" />/',"\n";
+	echo 's/<input type="text" name="gg-in_cid_search" value="', htmlEnt($gg['in_cid_search']) ,'" size="35" maxlength="50" style="font-family:monospace;" /><br />',"\n";
+	echo '&nbsp;/<input type="text" name="gg-in_cid_replace" value="', htmlEnt($gg['in_cid_replace']) ,'" size="35" maxlength="20" style="font-family:monospace;" />/',"\n";
 	echo '</div>',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
@@ -360,15 +404,26 @@ WHERE `id`='.$ggid
 <br />
 
 <?php
-		echo '<p class="text"><sup>[1]</sup> ', sPrintF(
-			__('Geben Sie hier falls erforderlich ein <a href="%s" target="_blank">PCRE</a>-Muster an, das eventuelle Pr&auml;fixe von eingehend gew&auml;hlten Nummern wegschneidet, soda&szlig; nur noch die interne Durchwahl &uuml;brig bleibt! Beispiele:<br /> &nbsp;&nbsp;&nbsp; <tt>s/^0251702//</tt><br /> &nbsp;&nbsp;&nbsp; <tt>s/^(((0049|0)251))702//</tt><br /> &nbsp;&nbsp;&nbsp; <tt>s/^(?:(?:0049|0)251)?702(.*)/$1/</tt>'),
+		echo '<a name="ftn-1"></a>',"\n";
+		echo '<p id="ftn-1" class="text"><sup>[1]</sup> ', sPrintF(
+			__('Suchen/Ersetzen-Muster (<a href="%s" target="_blank">PCRE</a>) f&uuml;r die Rufnummern&uuml;bermittlung bei abgehenden Anrufen. Beispiele:<br /> Nur die Durchwahl &uuml;bermitteln: <tt>s/^(.*)/$1/</tt><br /> Nationales Format: <tt>s/^(.*)/030123456$1/</tt><br /> Internationales Format: <tt>s/^(.*)/004930123456$1/</tt> oder <tt>s/^(.*)/+4930123456$1/</tt><br /> F&uuml;r alle Benutzer die gleiche Nummer &uuml;bertragen: <tt>s/^(.*)/00493012345612/</tt><br /> Normalerweise sollten Sie das nationale oder internationale Format verwenden.'),
 			__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
 		) ,'</p>',"\n";
 		
-		echo '<p class="text"><sup>[2]</sup> ', sPrintF(
-			__('Suchen/Ersetzen-Muster (<a href="%s" target="_blank">PCRE</a>) f&uuml;r die Absenderrufnummer bei abgehenden Anrufen. Beispiele:<br /> Nur die Durchwahl &uuml;bermitteln: <tt>s/^(.*)/$1/</tt><br /> Nationales Format: <tt>s/^(.*)/030123456$1/</tt><br /> Internationales Format: <tt>s/^(.*)/004930123456$1/</tt> oder <tt>s/^(.*)/+4930123456$1/</tt><br /> F&uuml;r alle Benutzer die gleiche Nummer &uuml;bertragen: <tt>s/^(.*)/00493012345612/</tt><br /> Normalerweise sollten Sie das nationale oder internationale Format verwenden.'),
+		echo '<a name="ftn-2"></a>',"\n";
+		echo '<p id="ftn-2" class="text"><sup>[2]</sup> ', sPrintF(
+			__('Geben Sie hier falls erforderlich ein <a href="%s" target="_blank">PCRE</a>-Muster an, das eventuelle Pr&auml;fixe von eingehend gew&auml;hlten Nummern wegschneidet, soda&szlig; nur noch die interne Durchwahl &uuml;brig bleibt! Beispiele:<br /> &nbsp;&nbsp;&nbsp; <tt>s/^026313370//</tt><br /> &nbsp;&nbsp;&nbsp; <tt>s/^(((0049|0)2631))3370//</tt><br /> &nbsp;&nbsp;&nbsp; <tt>s/^(?:(?:0049|0)2631)?3370(.*)/$1/</tt>'),
 			__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
 		) ,'</p>',"\n";
+		
+		echo '<a name="ftn-3"></a>',"\n";
+		echo '<p id="ftn-3" class="text"><sup>[3]</sup> ', sPrintF(
+			__('Suchen/Ersetzen-Muster (<a href="%s" target="_blank">PCRE</a>) f&uuml;r die Rufnummern&uuml;bermittlung bei eingehenden Anrufen. Hiermit lassen sich Anrufernummern die vom Provider falsch &uuml;bermittelt werden korrigieren. Beispiel: <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> um eine 0 an den Anfang zu setzen. Leer f&uuml;r keine Ersetzung.'),
+			__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
+		),
+		'<br />', __('Experimentell'), ': ',
+		__('Sie k&ouml;nnen diese Feld auch verwenden um f&uuml;r die Anruflisten mit <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang wegzuschneiden.')
+		,'</p>',"\n";
 		
 		//echo '<p class="text"><sup>[5]</sup> ', __('Dieses Ziel wird mit Dial() angew&auml;hlt. Dabei werden die Platzhalter <tt>{number}</tt> und {peer} ersetzt. Beispiele: <tt>SIP/{number}@{peer}</tt>, <tt>Zap/r1/{number}</tt>, <tt>Zap/r2/{number}</tt>') ,'</p>',"\n";
 	}
