@@ -159,7 +159,7 @@ tr.b th {
 }
 
 .gray {
-	color: #888;
+	color: #979797;
 }
 
 .debug {
@@ -197,7 +197,7 @@ tr.b th {
 
 .pre {
 	white-space: pre !important;
-	font-family: Courier, Monaco, monospace !important;
+	font-family: "Lucida Sans Typewriter", "Andale Mono", Courier, Monaco, "Courier New", monospace !important;
 	font-size: 1.15em !important;
 }
 
@@ -206,13 +206,17 @@ tr.b th {
 
 
 code, tt, samp, kbd {
-	font-family: Courier, Monaco, monospace;
+	font-family: "Lucida Sans Typewriter", "Andale Mono", Courier, Monaco, "Courier New", monospace;
 	font-size: 1.05em;
+}
+.s > code, .s > tt, .s > samp, .s > kbd,
+.xs > code, .xs > tt, .xs > samp, .xs > kbd {
+	font-size: 0.99em;
 }
 
 input._admincfg {
 	/* used by mod/admin_config.php only */
-	font-family: Courier, Monaco, monospace;
+	font-family: "Lucida Sans Typewriter", "Andale Mono", Courier, Monaco, "Courier New", monospace;
 	font-size: 1.3em;
 	margin: -1px 0;
 	padding: 2px 5px;
@@ -674,7 +678,7 @@ tr.odd .transp {
 	line-height: 1.1em;
 }
 .ivr_editor * {
-	font-family: monospace !important;
+	font-family: "Lucida Sans Typewriter", "Andale Mono", Courier, Monaco, "Courier New", monospace !important;
 	font-size: 11px !important;
 	line-height: 1.1em !important;
 }
