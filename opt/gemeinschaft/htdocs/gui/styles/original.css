@@ -748,3 +748,29 @@ tr.odd .transp {
 	opacity: .75;
 	z-index: 100;
 }
+
+
+.radio_and_label_blocks {
+	display: block;
+	display: table;
+	margin: 0 -1px;
+	padding: 0;
+}
+.radio_and_label_block {
+	display: block;
+	display: table-row;
+}
+.radio_and_label_block > input[type="radio"],
+.radio_and_label_block > input[type="checkbox"] {
+	display: inline;
+	display: table-cell;
+	vertical-align: baseline;
+	/*margin: 2px 2px 2px 2px;*/
+}
+.radio_and_label_block > label {
+	display: inline;
+	display: table-cell;
+	padding-left: 0.2em;
+	vertical-align: baseline;
+}
+
