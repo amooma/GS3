@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-18 04:57+0200\n"
+"POT-Creation-Date: 2009-08-18 05:36+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: English <>\n"
@@ -4141,12 +4141,6 @@ msgstr "dialed"
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 915
 msgid "ggf. Route zum Fremd-Host"
 msgstr "Route to the foreign host if applicable"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_webapps.php, line: 44
-msgid ""
-"good Gemeinschaft kann mittels Mozilla Prism (zuvor bekannt als WebRunner) "
-"als eigenständige Applikation betrieben werden, unabhängig vom Web-Browser."
-msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queues.php, line: 55
 msgid "halten"

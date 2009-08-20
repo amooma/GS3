@@ -28,9 +28,9 @@
 \*******************************************************************/
 
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 6490 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 6857 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2009-08-18 04:57+0200
+POT-Creation-Date: 2009-08-18 05:36+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
