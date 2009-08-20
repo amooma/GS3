@@ -274,7 +274,7 @@ $MODULES['routing'  ]=  array(
 	'sub' => array(
 		'gwgrps'       => array('title' => __('Gateway-Gruppen')),
 		'gws-sip'      => array('title' => __('SIP-Gateways')),
-		'gws-isdn'     => array('title' => __('BRI-Gateways'))
+		'gws-isdn'     => array('title' => __('ISDN-Gateways'))
 	)
 );
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
