@@ -28,9 +28,9 @@
 \*******************************************************************/
 
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 6041 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 6490 $
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2009-06-15 14:02+0200
+POT-Creation-Date: 2009-08-18 04:57+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -251,13 +251,13 @@ Content-Transfer-Encoding: 8bit
   'Verzeichnis 7' => 'Verzeichnis 7',
   'Verzeichnis 8' => 'Verzeichnis 8',
   'Verzeichnis 9' => 'Verzeichnis 9',
+  'Voicemail' => 'Voicemail',
   'Von' => 'Von',
   'Vorname' => 'Vorname',
   'Warteschlangen' => 'Warteschlangen',
   'Wartezeit' => 'Wartezeit',
   'Willkommen' => 'Willkommen',
   'Wurzel-Gruppe' => 'Wurzel-Gruppe',
-  'You are not allowed to act as "%s".' => 'Sie d&uuml;rfen nicht als "%s" agieren.',
   'You are not logged in (authentication method: "%s").' => 'Sie sind nicht eingeloggt (Authentisierungsmethode: "%s").',
   'Zeit' => 'Zeit',
   'Zeitraum' => 'Zeitraum',
