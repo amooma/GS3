@@ -63,6 +63,7 @@ macro sip-remove-header( sipremoveheader_arg ) {
 			AGI(/opt/gemeinschaft/dialplan-scripts/sip-remove-header.agi,${sipremoveheader_arg});
 		}
 	}
+	return;
 }
 
 
@@ -90,6 +91,7 @@ macro pass-connid() {
 		Set(CDR(x_connid)=${connid});
 		Set(__SIPADDHEADER_connid=X-Org-ConnID: ${connid});
 	}
+	return;
 }
 
 
@@ -116,6 +118,7 @@ macro hangup-proper-status() {
 		Hangup(34);
 	}
 	Hangup();
+	return;
 }
 
 
@@ -135,6 +138,7 @@ macro is_dmz( is_dmz_num ) {
 		// everything else (even from the gateway) => internal
 		Set(is_dmz=1);
 	}
+	return;
 }
 
 
@@ -185,17 +189,20 @@ macro cmm-login( new_user_name ) {
 	}
 	
 	Hangup();
+	return;
 	
 	unknown:
 		Wait(1);
 		Playback(vm-incorrect&vm-goodbye);
 		Wait(0.5);
 		Hangup();
+		return;
 	
 	error:
 		Playback(tt-somethingwrong);
 		Wait(0.5);
 		Hangup();
+		return;
 }
 
 
@@ -230,6 +237,7 @@ macro cmm-logout() {
 	}
 	
 	Hangup();
+	return;
 }
 
 
@@ -418,6 +426,7 @@ macro queue-login( queue ) {
 		Playback(beeperr);
 	}
 	Hangup();
+	return;
 	
 }
 macro queue-logout( queue ) {
@@ -433,6 +442,7 @@ macro queue-logout( queue ) {
 		Playback(beeperr);
 	}
 	Hangup();
+	return;
 	
 }
 macro queue-logout-all() {
@@ -448,6 +458,7 @@ macro queue-logout-all() {
 		Playback(beeperr);
 	}
 	Hangup();
+	return;
 	
 }
 macro queue-logout-all-silent() {
@@ -455,6 +466,7 @@ macro queue-logout-all-silent() {
 	Set(CDR(amaflags)=OMIT);
 	Verbose(1,### User ${user_name} wants to log out from all queues);
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},0,logoutall);
+	return;
 }
 context queues-login-logout {
 	
@@ -546,6 +558,7 @@ macro vm-record( msource ) {
 		Wait(1);
 	}
 	Hangup();
+	return;
 }
 
 
@@ -758,6 +771,7 @@ macro dial-gateway-do( mnumber ) {
 		Hangup();
 	}
 	Hangup();
+	return;
 }
 
 macro dial-gateway( mnumber ) {
@@ -804,12 +818,14 @@ macro dial-gateway( mnumber ) {
 		if ("${CHANNEL(state)}" = "Up")
 			Playback(beeperr);
 		Hangup();
+		return;
 	
 	allowed:
 		Verbose(1,### User ${forwarded_by} is allowed to dial ${mnumber} via gateway);
 		//&dial-gateway-do(${gateway_prefix}${mnumber});
 		&dial-gateway-do(${mnumber});
 		Hangup();
+		return;
 }
 
 
@@ -832,6 +848,7 @@ macro emergency-call( mnumber ) {
 	}
 	Verbose(1,### Call to ${MACRO_EXTEN} mapped to emergency ${mnumber} ${tmp});
 	&dial-gateway-do(${mnumber});
+	return;
 }
 
 
@@ -986,6 +1003,7 @@ macro dial-log-store( muser, mtype, mnumber ) {
 		Verbose(1,### Store in dial log of user ${muser}: ${mtype} ${mnumber} ${mname});
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/dial-log-store '${muser}' '${mtype}' '${mnumber}' '${mname}');
 	}
+	return;
 }
 
 
