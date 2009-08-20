@@ -34,7 +34,7 @@ include_once( GS_DIR .'inc/pcre_check.php' );
 
 
 $action = @$_REQUEST['action'];
-if (! in_array($action, array( '', 'gedit', 'gsave', 'ggdel' ), true))
+if (! in_array($action, array( '', 'gedit', 'gsave', 'ggdel', 'gaddcid', 'gdelcid' ), true))
 	$action = '';
 $ggid = (int)@$_REQUEST['ggid'];
 
@@ -216,6 +216,49 @@ if ($action === 'ggdel') {
 #####################################################################
 
 
+#####################################################################
+if ($action === 'gaddcid') {
+	
+	$cid_int = preg_replace( '/[^0-9]/', '', @$_REQUEST['cid-int']);
+	$cid_ext = preg_replace( '/[^0-9]/', '', @$_REQUEST['cid-ext']);
+	$del_cid = preg_replace( '/[^0-9]/', '', @$_REQUEST['del-cid']);
+	$ggid = (int)@$_REQUEST['gg-id'];
+	
+
+	if (($ggid > 0) && ($cid_int != '') && ($cid_ext != '')) {
+		
+		$DB->execute(
+		'INSERT INTO `gate_cids` 
+		(`grp_id`, `cid_int`, `cid_ext`) VALUES
+		('.$ggid.', \''.$DB->escape($cid_int).'\', \''.$DB->escape($cid_ext).'\')');
+
+
+	}
+
+	$action = 'gedit';
+}
+#####################################################################
+
+
+#####################################################################
+if ($action === 'gdelcid') {
+	
+	$cid_int = preg_replace( '/[^0-9]/', '', @$_REQUEST['cid-int']);
+	$cid_ext = preg_replace( '/[^0-9]/', '', @$_REQUEST['cid-ext']);
+	$ggid = (int)@$_REQUEST['gg-id'];
+	
+	if (($ggid > 0) && ($cid_int != '')) {
+
+		$DB->execute(
+		'DELETE FROM `gate_cids` 
+		WHERE
+		`grp_id` = '.$ggid.' AND `cid_int` = \''.$DB->escape($cid_int).'\'');
+
+	}
+
+	$action = 'gedit';
+}
+#####################################################################
 
 
 # get gateway groups from DB
@@ -397,6 +440,57 @@ WHERE `id`='.$ggid
 	<?php echo __('Speichern'); ?>
 </button>
 
+</form>
+<p>
+<p><?php echo __('Umsetzung der internen Durchwahlen zu MSNs bei ausgehenden Anrufen'); ?></p>
+
+<form method="post" action="<?php echo GS_URL_PATH; ?>">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<input type="hidden" name="action" value="gaddcid" />
+<input type="hidden" name="gg-id" value="<?php echo $ggid; ?>" />
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th style="width:200px;"><?php echo __('Durchwahl'); ?></th>
+	<th style="width:200px;"><?php echo __('MSN'); ?></th>
+	<th style="width:20px;"></th>
+</tr>
+</thead>
+<tbody>
+
+<?php
+$rs = $DB->execute( 'SELECT `cid_int`, `cid_ext` FROM `gate_cids` WHERE `grp_id`='.$ggid );
+
+if ((@$DB->numFoundRows()) < 1) {
+	echo '<tr><td><i>- ', __('keine'), ' -</i></td><td></td><td></td></tr>';
+} else {
+	while ($cid_map = $rs->fetchRow()) {
+		echo '<tr>';
+		echo '<td>', htmlEnt( $cid_map['cid_int'] ), '</td>';
+		echo '<td>', htmlEnt( $cid_map['cid_ext'] ), '</td>';
+		echo '<td>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=gdelcid&amp;gg-id='.$ggid.'&amp;cid-int='.urlEncode($cid_map['cid_int'])), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '</td>';
+		echo '</tr>', "\n";
+	}
+}
+
+echo '<tr>';
+echo '<td>';
+echo '<input type="text" name="cid-int" value="" size="20" maxlength="30" />';
+echo '</td>';
+echo '<td>';
+echo '<input type="text" name="cid-ext" value="" size="20" maxlength="30" />';
+echo '</td>';
+echo '<td>';
+echo '<button type="submit" title="', __('Eintrag speichern') ,'" class="plain"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>';
+echo '</td>';
+echo '</tr>';
+?>
+
+</tbody>
+</table>
+</form>
 
 
 <br />
@@ -404,6 +498,7 @@ WHERE `id`='.$ggid
 <br />
 
 <?php
+
 		echo '<a name="ftn-1"></a>',"\n";
 		echo '<p id="ftn-1" class="text"><sup>[1]</sup> ', sPrintF(
 			__('Suchen/Ersetzen-Muster (<a href="%s" target="_blank">PCRE</a>) f&uuml;r die Rufnummern&uuml;bermittlung bei abgehenden Anrufen. Beispiele:<br /> Nur die Durchwahl &uuml;bermitteln: <tt>s/^(.*)/$1/</tt><br /> Nationales Format: <tt>s/^(.*)/030123456$1/</tt><br /> Internationales Format: <tt>s/^(.*)/004930123456$1/</tt> oder <tt>s/^(.*)/+4930123456$1/</tt><br /> F&uuml;r alle Benutzer die gleiche Nummer &uuml;bertragen: <tt>s/^(.*)/00493012345612/</tt><br /> Normalerweise sollten Sie das nationale oder internationale Format verwenden.'),
@@ -424,16 +519,7 @@ WHERE `id`='.$ggid
 		'<br />', __('Experimentell'), ': ',
 		__('Sie k&ouml;nnen diese Feld auch verwenden um f&uuml;r die Anruflisten mit <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang wegzuschneiden.')
 		,'</p>',"\n";
-		
-		//echo '<p class="text"><sup>[5]</sup> ', __('Dieses Ziel wird mit Dial() angew&auml;hlt. Dabei werden die Platzhalter <tt>{number}</tt> und {peer} ersetzt. Beispiele: <tt>SIP/{number}@{peer}</tt>, <tt>Zap/r1/{number}</tt>, <tt>Zap/r2/{number}</tt>') ,'</p>',"\n";
+
 	}
-?>
-
-</form>
-
-<?php
-
-#####################################################################
-
 
 ?>
