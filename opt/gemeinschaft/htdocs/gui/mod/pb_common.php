@@ -59,18 +59,18 @@ if ($number != '') {
 		$number
 	) .'%';
 	$rs = $DB->execute(
-'SELECT SQL_CALC_FOUND_ROWS
-	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `s`.`name` `ext`
-FROM
-	`users` `u` JOIN
-	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-WHERE
-	`u`.`nobody_index` IS NULL AND (
-	`s`.`name` LIKE \''. $DB->escape($number_sql) .'\'
-	)
-ORDER BY `s`.`name`
-LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
-	);
+		'SELECT SQL_CALC_FOUND_ROWS '.
+			'`u`.`firstname` `fn`, `u`.`lastname` `ln`, `s`.`name` `ext` '.
+		'FROM '.
+			'`users` `u` JOIN '.
+			'`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) '.
+		'WHERE '.
+			'`u`.`nobody_index` IS NULL AND ( '.
+			'`s`.`name` LIKE \''. $DB->escape($number_sql) .'\' '.
+			') '.
+		'ORDER BY `s`.`name` '.
+		'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
+		);
 	$num_total = @$DB->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);
 	
@@ -87,19 +87,19 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		$name
 	) .'%';
 	$rs = $DB->execute(
-'SELECT SQL_CALC_FOUND_ROWS
-	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `s`.`name` `ext`
-FROM
-	`users` `u` JOIN
-	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-WHERE
-	`u`.`nobody_index` IS NULL AND (
-	`u`.`lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR
-	`u`.`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci
-	)
-ORDER BY `u`.`lastname`, `u`.`firstname`
-LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
-	);
+		'SELECT SQL_CALC_FOUND_ROWS '.
+			'`u`.`firstname` `fn`, `u`.`lastname` `ln`, `s`.`name` `ext` '.
+		'FROM '.
+			'`users` `u` JOIN '.
+			'`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) '.
+		'WHERE '.
+			'`u`.`nobody_index` IS NULL AND ( '.
+			'`u`.`lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR '.
+			'`u`.`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci '.
+			') '.
+		'ORDER BY `u`.`lastname`, `u`.`firstname` '.
+		'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
+		);
 	$num_total = @$DB->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);
 	
