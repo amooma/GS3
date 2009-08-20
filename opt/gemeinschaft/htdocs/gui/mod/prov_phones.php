@@ -84,6 +84,7 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
 	$phone_types['grandstream-gxv3000'] = 'Grandstream GXV 3000';
 	$phone_types['grandstream-gxv3005'] = 'Grandstream GXV 3005';
+	$phone_types['grandstream-gxv3140'] = 'Grandstream GXV 3140';
 }
 
 

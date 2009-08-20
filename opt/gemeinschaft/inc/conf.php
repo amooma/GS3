@@ -292,6 +292,7 @@ _gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP2010', null      );
 _gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP2020', null      );
 _gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXV3000', null      );
 _gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXV3005', null      );
+_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXV3140', null      );
 _gscnf( 'GRANDSTREAM_PROV_KEY_BLACKLIST', ''             );
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
