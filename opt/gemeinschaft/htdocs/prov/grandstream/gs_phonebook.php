@@ -37,6 +37,7 @@ header( 'Vary: *' );
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 //require_once( GS_DIR .'inc/util.php' );
 //require_once( GS_DIR .'inc/gs-lib.php' );
+require_once( GS_DIR .'inc/prov-fns.php' );
 set_error_handler('err_handler_die_on_err');
 require_once( GS_DIR .'inc/string.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
@@ -73,9 +74,32 @@ if (! gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 
 //FIXME - we need authentication here
 
-$remote_ip = trim( @$_SERVER['REMOTE_ADDR'] );  //FIXME
-if (! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $remote_ip)) {
-	gs_log( GS_LOG_NOTICE, "Invalid IP address \"". $remote_ip ."\"" );
+$requester = gs_prov_check_trust_requester();
+if (! $requester['allowed']) {
+	_err( 'No! See log for details.' );
+}
+
+$mac = preg_replace( '/[^0-9A-F]/', '', strToUpper( @$_REQUEST['mac'] ) );
+if (strLen($mac) !== 12) {
+	gs_log( GS_LOG_NOTICE, "Grandstream phonebook: Invalid MAC address \"$mac\" (wrong length)" );
+	# don't explain this to the users
+	_err( 'No! See log for details.' );
+	}
+if (hexDec(subStr($mac,0,2)) % 2 == 1) {
+	gs_log( GS_LOG_NOTICE, "Grandstream phonebook: Invalid MAC address \"$mac\" (multicast address)" );
+	# don't explain this to the users
+	_err( 'No! See log for details.' );
+}
+if ($mac === '000000000000') {
+	gs_log( GS_LOG_NOTICE, "Grandstream phonebook: Invalid MAC address \"$mac\" (huh?)" );
+	# don't explain this to the users
+	_err( 'No! See log for details.' );
+}
+
+# make sure the phone is a Grandstream:
+#
+if (subStr($mac,0,6) !== '000B82') {
+	gs_log( GS_LOG_NOTICE, "Grandstream phonebook: MAC address \"$mac\" is not a Grandstream phone" );
 	# don't explain this to the users
 	_err( 'No! See log for details.' );
 }
@@ -84,12 +108,12 @@ if (! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $remote_i
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 $ua_parts = explode(' ', $ua);
 if (strToLower(@$ua_parts[0]) !== 'grandstream') {
-	gs_log( GS_LOG_WARNING, "Phone with IP addr. \"$remote_ip\" has invalid User-Agent (\"". $ua ."\")" );
+	gs_log( GS_LOG_WARNING, "Phone with MAC \"$mac\" has invalid User-Agent (\"". $ua ."\")" );
 	_err( 'No! See log for details.' );
 }
 if (! preg_match('/(gxp|gxv)[0-9]{1,6}/', strToLower(@$ua_parts[1]), $m)) {
 	# BT models can't download a phone book
-	gs_log( GS_LOG_WARNING, "Phone with IP addr. \"$remote_ip\" has invalid phone type (\"". $ua_parts[1] ."\")" );
+	gs_log( GS_LOG_WARNING, "Phone with MAC \"$mac\" has invalid phone type (\"". $ua_parts[1] ."\")" );
 	_err( 'No! See log for details.' );
 }
 
@@ -97,7 +121,7 @@ if (! preg_match('/(gxp|gxv)[0-9]{1,6}/', strToLower(@$ua_parts[1]), $m)) {
 # connect to db
 $db = gs_db_slave_connect();
 if (! $db) {
-	gs_log( GS_LOG_WARNING, "Phone with IP addr. \"$remote_ip\" (Grandstream) ask for phonebook - Could not connect to DB" );
+	gs_log( GS_LOG_WARNING, "Phone with MAC \"$mac\" (Grandstream) ask for phonebook - Could not connect to DB" );
 	_err( 'No! See log for details.' );
 }
 
@@ -105,8 +129,12 @@ if (! $db) {
 # get user_id
 $user_id = (int)$db->executeGetOne(
 'SELECT `u`.`id`
-FROM `users` `u`
-WHERE `u`.`current_ip`=\''. $db->escape($remote_ip) .'\''
+FROM
+	`users` `u` JOIN
+	`phones` `p` ON (`p`.`user_id`=`u`.`id`)
+WHERE
+	`u`.`current_ip`=\''. $db->escape($requester['phone_ip']) .'\' AND
+	`p`.`mac_addr`=\''. $db->escape($mac) .'\''
 );
 if ($user_id < 1)
 	_err( 'Unknown user' );

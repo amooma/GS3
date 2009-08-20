@@ -18,6 +18,6 @@
 	RewriteRule ^ring([1-3]).bin$ ringtones.php?ring=$1 [L]
 	
 	# Rewrite request for gs_phonebook.xml
-	RewriteRule gs_phonebook.xml$ gs_phonebook.php [L]
+	RewriteRule ^(000b82[0-9a-f]*)/gs_phonebook.xml$ gs_phonebook.php?mac=$1 [L]
 	
 </IfModule>

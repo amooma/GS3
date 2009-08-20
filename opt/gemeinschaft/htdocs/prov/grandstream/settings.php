@@ -896,7 +896,7 @@ psetting('P208', '0');		# Syslog level ( 0 = none, 1 = DEBUG, 2 = INFO, 3 = WARN
 #####################################################################
 if ( in_array($phone_model, array('gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005'), true) ) {
 	psetting('P330', '1');		# Enable Phonebook XML ( 0 = disable, 1 = http, 2 = tftp )
-	psetting('P331', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $prov_url_grandstream),'/'));	# Phonebook XML server path ( maxlength 128 )
+	psetting('P331', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $prov_url_grandstream.strToLower($mac).'/'),'/'));	# Phonebook XML server path ( maxlength 128 )
 	psetting('P332', '120');	# Phonebook Download Interval ( in minutes, between 0-720 )
 	psetting('P333', '1');		# Remove manually-edited entries on download ( 0 = no, 1 = yes )
 	# grandstream automatically adds "/gs_phonebook.xml" to the URL
