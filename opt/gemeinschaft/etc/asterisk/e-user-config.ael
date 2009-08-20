@@ -40,6 +40,7 @@
 macro usercode-by-ext( mext ) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/usercode-by-ext.agi,${mext});
 	NoOp(### AGI returned: user_code = ${user_code});
+	return;
 }
 
 
@@ -307,6 +308,7 @@ macro user-config-comment( mactive ) {
 	Wait(0.5);
 	Playback(beep);
 	Hangup();
+	return;
 }
 
 
@@ -328,6 +330,7 @@ macro user-config-clir( mdest, mactive_num ) {
 	Wait(0.5);
 	Playback(beep);
 	Hangup();
+	return;
 }
 
 
@@ -352,6 +355,7 @@ macro user-config-call-waiting( mactive_num ) {
 		Playback(/opt/gemeinschaft/sounds/${gs_lang}/ausgeschaltet);
 	}
 	Hangup();
+	return;
 }
 
 
@@ -384,5 +388,6 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 	
 	Answer();
 	System(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='${msource}' --case='${mcase}' --active='${mactive}');
+	return;
 }
 

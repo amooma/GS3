@@ -67,6 +67,7 @@ macro check-valid-extension( mext ) {
 		//}
 		Hangup();
 	}
+	return;
 }
 
 
@@ -94,6 +95,7 @@ macro dial-node( mext_at_node ) {
 	Dial(SIP/${mext_at_node},500);
 	Verbose(1,### Tried to call ${mext_at_node} but: ${DIALSTATUS});
 	&hangup-proper-status();
+	return;
 }
 
 
@@ -117,6 +119,7 @@ macro dial-internal-nobody( mext2 ) {
 		&dial-node(${mext2}@${dial_to_node});
 		&hangup-proper-status();
 	}
+	return;
 }
 
 context to-internal-nobody-self {
@@ -138,6 +141,7 @@ macro dial-internal-nobody-self( mext3 ) {
 	Verbose(1,### Call local nobody ${mext3}\, timeout 30);
 	Dial(SIP/${mext3},30);
 	&hangup-proper-status();
+	return;
 }
 
 //---------------------------------------------------------------------
@@ -1187,5 +1191,6 @@ macro set-callerid-by-clir() {
 		Set(CALLERID(all)=Anonymous <anonymous>);
 		// RFC 2543
 	}
+	return;
 }
 
