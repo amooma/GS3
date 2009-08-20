@@ -549,6 +549,7 @@ if ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','
 if ( in_array($phone_model, array('gxv3140'), true) ) {
 	psetting('P64','CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00');	# Timezone
 	psetting('P144', '1');		# Allow DHCP Option 42 to override NTP server
+	//psetting('P246', '');		# Self-Defined Time Zone
 }
 
 
@@ -680,21 +681,20 @@ if ( in_array($phone_model, array('gxv3140'), true) ) {
 #  Audio Codecs specific for SIP Account 1 (specific)
 #####################################################################
 # 0 = pcmu (ulaw), 8 = pcma (alaw), 2 = G.726-32, 4 = G.723.1, 15 = G.728, 18 = G.729a/b
-psetting('P57', '8');			# Codec 1
-if ( in_array($phone_model, array('ht287','bt110','bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005'), true) ) {
-	psetting('P58', '8');		# Codec 2
-	psetting('P59', '8');		# Codec 3
-	psetting('P60', '8');		# Codec 4
-	psetting('P61', '8');		# Codec 5
-	psetting('P62', '8');		# Codec 6
-	psetting('P46', '8');		# Codec 7
-	psetting('P98', '8');		# Codec 8
-}
+psetting('P57', '8');		# Codec 1
+psetting('P58', '8');		# Codec 2
+psetting('P59', '8');		# Codec 3
+psetting('P60', '8');		# Codec 4
+psetting('P61', '8');		# Codec 5
+psetting('P62', '8');		# Codec 6
+psetting('P46', '8');		# Codec 7
+psetting('P98', '8');		# Codec 8
+
 
 #####################################################################
 #  Video Codecs specific for SIP Account 1 (only GXV) (specific)
 #####################################################################
-if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
+if ( in_array($phone_model, array('gxv3000','gxv3005','gxv3140'), true) ) {
 	psetting('P295',  '99');	# Codec 1 ( 34 = H.263, 99 = H.264, 103 = H.263+ )
 	psetting('P296',  '99');	# Codec 2 ( 34 = H.263, 99 = H.264, 103 = H.263+ )
 	psetting('P1307', '99');	# Codec 3 ( 34 = H.263, 99 = H.264, 103 = H.263+ )
@@ -704,7 +704,7 @@ if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
 #####################################################################
 #  Video Settings specific for SIP Account 1 (only GXV) (specific)
 #####################################################################
-if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
+if ( in_array($phone_model, array('gxv3000','gxv3005','gxv3140'), true) ) {
 	psetting('P1308', '0');		# Choose video codec by local preference ( 0 = no, 1 = yes )
 	psetting('P300', '0');		# Jitter Delay ( 0 = medium, 1 = low, 2 = high )
 	psetting('P292', '0');		# Enable Video ( 0 = no, 1 = yes, 2 = no but allow in-call enabling )
@@ -738,7 +738,7 @@ psetting('P81', '1');			# Unregister on Reboot ( 0 = no, 1 = yes )
 if ( in_array($phone_model, array('ht287','bt110'), true) ) {
 	psetting('P239', '300');	# Register Expiration (in seconds | default 3600)
 }
-if ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005'), true) ) {
+if ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005','gxv3140'), true) ) {
 	psetting('P32', '5');		# Register Expiration (in minutes | default: 60)
 }
 psetting('P40', '5060');		# Local SIP Port ( default 5060 )
@@ -778,7 +778,7 @@ psetting('P198', '100');		# Special Feature ( 100 = standard | default 100 )
 psetting('P99', '1');			# Subscribe for MWI ( 0 = no, 1 = yes )
 psetting('P52', '1');			# STUN NAT Traversal ( 0 = yes, 1 = no )
 
-if ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005'), true) ) {
+if ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005','gxv3140'), true) ) {
 	psetting('P138', '20');		# SIP Registration Failure Retry Wait Time ( seconds | default 20 )
 	psetting('P209', '100');	# SIP T1 Timeout ( 50 = 0.5 sec, 100 = 1 sec, 200 = 2 sec | default 100 )
 	psetting('P250', '400');	# SIP T2 Timeout ( 200 = 2 sec, 400 = 4 sec, 800 = 8 sec | default 400 )
@@ -823,6 +823,19 @@ if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
 	psetting('P1309', '0');		# Keep-Alive using SIP OPTIONS ( 0 = no, 1 = yes )
 	psetting('P289', '0');		# SIP Compact Header ( 0 = no, 1 = yes )
+}
+if ( in_array($phone_model, array('gxv3140'), true) ) {
+	psetting('P130', '0');		# SIP Transport ( 0 = udp, 1 = tcp, 2 = tls | default 0 )
+	psetting('P291', '0');		# Symmetric RTP ( 0 = no, 1 = yes | default 0 )
+	psetting('P288', '1');		# Support SIP Instance ID ( 0 = no, 1 = yes | default 1 )
+	psetting('P4340', '0');		# Validate Incoming Messages ( 0 = no, 1 = yes | default 0 )
+	psetting('P4562', '0');		# Remove OBP from Route ( 0 = no, 1 = yes | default 0 )
+	psetting('P850', '0');		# DTMF in audio ( 0 = no, 1 = yes | default 0 )
+	psetting('P851', '1');		# DTMF via RFC2833 ( 0 = no, 1 = yes | default 1 )
+	psetting('P852', '0');		# DTMF via SIP INFO ( 0 = no, 1 = yes | default 0 )
+	psetting('P6023','2');		# No Key Timeout ( seconds | default 4)
+	psetting('P4560','0');		# Transfer on Conference Hangup ( 0 = no, 1 = yes | default 0 )
+	psetting('P185','60');		# Ring Timeout ( in seconds, between 30-3600 | default 60 )
 }
 
 
@@ -886,13 +899,11 @@ psetting('P78', '0');		# Use random RTP port ( 0 = no, 1 = yes )
 #####################################################################
 #  Codec global settings (global)
 #####################################################################
-if ( in_array($phone_model, array('ht287','bt110','bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005'), true) ) {
-	psetting('P37', '2');		# Voice Frames per TX ( 10/20/32/64 frames for G711/G726/G723/other codecs respectively )
-	psetting('P96', '97');		# iLBC payload type ( between 96 and 127 | default 97 )
-	psetting('P97', '0');		# iLBC frame size ( 0 = 20ms, 1 = 30ms )
-	psetting('P50', '0');		# Silence Suppression ( 0 = no, 1 = yes )
-	psetting('P49', '0');		# G.723 Encoding Frame rate ( 0 = 6.3 kb/s, 1 = 5.3 kb/s )
-}
+psetting('P37', '2');		# Voice Frames per TX ( 10/20/32/64 frames for G711/G726/G723/other codecs respectively )
+psetting('P96', '97');		# iLBC payload type ( between 96 and 127 | default 97 )
+psetting('P97', '0');		# iLBC frame size ( 0 = 20ms, 1 = 30ms )
+psetting('P50', '0');		# Silence Suppression ( 0 = no, 1 = yes )
+psetting('P49', '0');		# G.723 Encoding Frame rate ( 0 = 6.3 kb/s, 1 = 5.3 kb/s )
 
 
 #####################################################################
@@ -1005,7 +1016,7 @@ if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
 ####################################################################
 #  Browser (GXV) (global)
 ####################################################################
-if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
+if ( in_array($phone_model, array('gxv3000','gxv3005','gxv3140'), true) ) {
 	psetting('P950', '0');	# Start Browser On Boot ( 0 = no, 1 = yes )
 	psetting('P951', '1');	# Enable Browser Toolbar ( 0 = no, 1 = yes )
 	psetting('P952', 'about:/start.htm');	# Browser Home page ( default "about:/start.htm" )
@@ -1015,7 +1026,7 @@ if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
 #####################################################################
 #  Video Settings (GXV) (global)
 #####################################################################
-if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
+if ( in_array($phone_model, array('gxv3000','gxv3005','gxv3140'), true) ) {
 	psetting('P904', '15');		# Video frame rate ( values: 5, 6, 8, 10, 12, 15, 20, 24, 30 | default 15)
 	psetting('P905', '128');	# Video bit rate, in kbps ( values: 32, 64, 96, 128, 160, 192, 224, 256, 320, 284, 512, 768, 1024 | default 128)
 	psetting('P927', '1400');	# Video Packet Size ( 300-1400 | default 1400 )
@@ -1032,12 +1043,15 @@ if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
 	psetting('P936', '0');		# PIP Position ( 0 = top left, 1 = top right, 2 = bottom left, 3 = bottom right )
 	psetting('P1332', '1');		# Starting Video OSD/PIP Mode ( 1 = OSD On / PIP On, 2 = OSD On / PIP Reversed, 3 = OSD On / PIP Off, 4 = OSD Off / PIP Off, 5 = OSD Off / PIP On, 6 = OSD Off / PIP Reversed )
 }
-if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
+if ( in_array($phone_model, array('gxv3000','gxv3005','gxv3140'), true) ) {
 	psetting('P914', '0');		# Camera Zoom Mode ( ??? )
 	psetting('P915', '1');		# Camera Exposure ( 0 = auto, 1 = normal )
 	psetting('P919', '0');		# Camera Color Mode ( 0 = color, 1 = monochrome )
 	psetting('P920', '0');		# Camera White Balance ( 0 = auto, 1 = fixed )
 	psetting('P926', '1');		# Camera Lens Correction ( 0 = no, 1 = yes )
+}
+if ( in_array($phone_model, array('gxv3140'), true) ) {
+	psetting('P7042', '0');		# Flickr Control ( 0 = auto, 1 = 60Hz, 2 = 50Hz | default 0)
 }
 
 
@@ -1175,6 +1189,18 @@ if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
 	psetting('P953', '');		# Streaming RTSP Server
 	psetting('P954', '');		# Streaming RTSP User ID
 	psetting('P955', '');		# Streaming RTSP Password
+}
+
+
+#####################################################################
+#  Misc (GXV3140) (global)
+#####################################################################
+if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
+	psetting('P186', '0');		# Disable Call-Waiting Tone ( 0 = no, 1 = yes | default 0 )
+	psetting('P277', '1');		# Disable Direct IP Call ( 0 = no, 1 = yes | default 0 )
+
+	psetting('P1301', '0');		# Headset TX gain (dB) ( 0 = 0dB, 1 = -6dB, 2 = +6dB )
+	psetting('P1302', '0');		# Headset RX gain (dB) ( 0 = 0dB, 1 = -6dB, 2 = +6dB )
 }
 
 
