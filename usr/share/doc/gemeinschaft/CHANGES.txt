@@ -1,6 +1,6 @@
 Version 2.2 zu 2.3
 
-- Provisioning für Grandstream-Telefone hinzugefügt.
+- Provisioning für Grandstream-Telefone erweitert und verbessert.
 - Routing eingehend und ausgehend: GUI und Formulare verbessert
 - ISDN- und SIP-Gateways: Dialstring editierbar
 - ISDN-Gateways: Gateway-Typ wählbar. Typ: "woomera" und "capi" hinzugefügt.
