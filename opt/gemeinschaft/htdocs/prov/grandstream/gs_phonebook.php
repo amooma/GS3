@@ -105,13 +105,8 @@ if (! $db) {
 # get user_id
 $user_id = (int)$db->executeGetOne(
 'SELECT `u`.`id`
-FROM
-	`users` `u`,
-	`phones` `p`
-WHERE
-	`u`.`current_ip`=\''. $db->escape($remote_ip) .'\' AND
-	`p`.`user_id`=`u`.`id` AND
-	`u`.`nobody_index` IS NULL'
+FROM `users` `u`
+WHERE `u`.`current_ip`=\''. $db->escape($remote_ip) .'\''
 );
 if ($user_id < 1)
 	_err( 'Unknown user' );
