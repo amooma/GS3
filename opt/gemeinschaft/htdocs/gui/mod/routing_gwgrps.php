@@ -442,7 +442,10 @@ WHERE `id`='.$ggid
 
 </form>
 <p>
-<p><?php echo __('Umsetzung der internen Durchwahlen zu MSNs bei ausgehenden Anrufen'); ?></p>
+<br>
+<br>
+<h3><?php echo __('Ausgehende Caller-ID'); ?></h3>
+<p><?php echo __('Umsetzung interner Durchwahlen zu ausgehender Caller-IDs für diese Gateway-Gruppe'), '<sup><a href="#ftn-2" title="', htmlEnt(__("Fu\xC3\x9Fnote")) ,'">[4]</a></sup>:',"\n"; ?></p>
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
@@ -452,7 +455,7 @@ WHERE `id`='.$ggid
 <thead>
 <tr>
 	<th style="width:200px;"><?php echo __('Durchwahl'); ?></th>
-	<th style="width:200px;"><?php echo __('MSN'); ?></th>
+	<th style="width:200px;"><?php echo __('Caller-ID'); ?></th>
 	<th style="width:20px;"></th>
 </tr>
 </thead>
@@ -519,6 +522,11 @@ echo '</tr>';
 		'<br />', __('Experimentell'), ': ',
 		__('Sie k&ouml;nnen diese Feld auch verwenden um f&uuml;r die Anruflisten mit <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang wegzuschneiden.')
 		,'</p>',"\n";
+		
+		echo '<a name="ftn-4"></a>',"\n";
+		echo '<p id="ftn-4" class="text"><sup>[4]</sup> ', sPrintF(
+			__('Tragen Sie pro Zeile eine interne Caller-ID ein, die Sie beim W&auml;hlen &uuml;ber diese Gateway-Gruppe zur externen Caller-ID umsetzen m&ouml;chten, z.B. um pro Benutzer eine abgehende MSN festzulegen.')
+		) ,'</p>',"\n";
 
 	}
 
