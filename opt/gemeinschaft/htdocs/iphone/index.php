@@ -106,11 +106,16 @@ function setForward( $userinfo, $source, $destination, $plist)
 			$timeout   = $plist['timeout'];
 			break;
 		case 3:
+			$gs_source = 'internal';
+			$gs_case   = 'offline';
+			$timeout   = 0;
+			break;
+		case 4:
 			$gs_source = 'external';
 			$gs_case   = 'always';
 			$timeout   = 0;
 			break;
-		case 4:
+		case 5:
 			$gs_source = 'external';
 			$gs_case   = 'busy';
 			$timeout   = 0;
@@ -119,6 +124,11 @@ function setForward( $userinfo, $source, $destination, $plist)
 			$gs_source = 'external';
 			$gs_case   = 'unavail';
 			$timeout   = $plist['timeout'];
+			break;
+		case 7:
+			$gs_source = 'external';
+			$gs_case   = 'offline';
+			$timeout   = 0;
 			break;
 		default:
 			$gs_source = '';
@@ -145,9 +155,10 @@ function setForward( $userinfo, $source, $destination, $plist)
 			$number  = 'vm*' . $userinfo['ext'];
 		default:
 			$gs_type = '';
-			$number  = '';
+			$number  = $plist['standardNumber'];
 	}
 
+	gs_log( GS_LOG_NOTICE, 'setting call forward from ' . $gs_source . ' in case of ' . $gs_case . ' to ' .$gs_type . ' (number=' . $number . ', timeout=' . $timeout . ')' );
 	gs_callforward_set( $userinfo['user'], $gs_source, $gs_case, $gs_type, $number, $timeout );
 	
 	if ($gs_type == '')
@@ -260,6 +271,12 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' )
 			setForward( $userinfo, 3, $assoc['sourceAction'][3], $assoc);
 			setForward( $userinfo, 4, $assoc['sourceAction'][4], $assoc);
 			setForward( $userinfo, 5, $assoc['sourceAction'][5], $assoc);
+			setForward( $userinfo, 6, $assoc['sourceAction'][6], $assoc);
+			setForward( $userinfo, 7, $assoc['sourceAction'][7], $assoc);
+			
+			if ( GS_BUTTONDAEMON_USE == true ) {
+				gs_buttondeamon_diversion_update( $userinfo['ext'] );
+			}
 			
 			break;
 
@@ -366,7 +383,7 @@ ORDER BY `ts` DESC'
 			if ($_GET['action'] == 'calls_missed') {
 				gs_user_watchedmissed( $userinfo['id'] );
 				if ( GS_BUTTONDAEMON_USE == true ) {
-					gs_buttondeamon_missedcalls( $user );
+					gs_buttondeamon_missedcalls( $userinfo['ext'] );
 				}
 				
 			}
@@ -396,9 +413,11 @@ ORDER BY `ts` DESC'
 			echo '		<integer>', returnCFNumber( $forwards['internal']['always']['active']  ), '</integer>',"\n";
 			echo '		<integer>', returnCFNumber( $forwards['internal']['busy']['active']    ), '</integer>',"\n";
 			echo '		<integer>', returnCFNumber( $forwards['internal']['unavail']['active'] ), '</integer>',"\n";
+			echo '		<integer>', returnCFNumber( $forwards['internal']['offline']['active'] ), '</integer>',"\n";
 			echo '		<integer>', returnCFNumber( $forwards['external']['always']['active']  ), '</integer>',"\n";
 			echo '		<integer>', returnCFNumber( $forwards['external']['busy']['active']    ), '</integer>',"\n";
 			echo '		<integer>', returnCFNumber( $forwards['external']['unavail']['active'] ), '</integer>',"\n";
+			echo '		<integer>', returnCFNumber( $forwards['external']['offline']['active'] ), '</integer>',"\n";
 			echo '	</array>',"\n";
 			echo '</dict>',"\n";
 			echo '</plist>',"\n";
