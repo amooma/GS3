@@ -5776,6 +5776,27 @@ LOCK TABLES `dial_log` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `gate_cids`
+--
+
+CREATE TABLE `gate_cids` (
+  `grp_id` smallint(5) unsigned NOT NULL,
+  `cid_int` varchar(16) character set ascii NOT NULL,
+  `cid_ext` varchar(30) character set ascii NOT NULL,
+  PRIMARY KEY  (`grp_id`,`cid_int`),
+  CONSTRAINT `gate_cids_ibfk_1` FOREIGN KEY (`grp_id`) REFERENCES `gate_grps` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `gate_cids`
+--
+
+LOCK TABLES `gate_cids` WRITE;
+/*!40000 ALTER TABLE `gate_cids` DISABLE KEYS */;
+/*!40000 ALTER TABLE `gate_cids` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `gate_grps`
 --
 
@@ -6713,19 +6734,6 @@ LOCK TABLES `vm_msgs` WRITE;
 /*!40000 ALTER TABLE `vm_msgs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vm_msgs` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `gate_cids`
---
-
-CREATE TABLE `gate_cids` (
-  `grp_id` smallint(5) unsigned NOT NULL,
-  `cid_int` varchar(30) character set ascii NOT NULL,
-  `cid_ext` varchar(30) character set ascii NOT NULL,
-  PRIMARY KEY  (`grp_id`,`cid_int`),
-  CONSTRAINT `gate_cids_ibfk_1` FOREIGN KEY (`grp_id`) REFERENCES `gate_grps` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 
 --
 -- Current Database: `asterisk`

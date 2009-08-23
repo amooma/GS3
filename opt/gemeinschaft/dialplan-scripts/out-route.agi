@@ -216,6 +216,16 @@ foreach ($gate_grps as $ggrp_id) {
 	if ($qualify_cid
 	&&  ! in_array(strToLower($out_cid_num), array('anonymous', 'unknown', ''), true))  # no action for "anonymous"
 	{
+		$user_cid_override = $db->executeGetOne(
+			'SELECT `cid_ext` '.
+			'FROM `gate_cids` '.
+			'WHERE `grp_id` = '.$ggrp_id.' AND `cid_int` = \''.$db->escape($out_cid_num).'\'' );
+		if ($user_cid_override != '') {
+			gs_agi_verbose( '### Overriding caller ID "'.$out_cid_num.'" -> "'.$user_cid_override.'"' );
+			$out_cid_num = preg_replace('/[^0-9+a-zA-Z\-_.]/', '', $user_cid_override);
+		}
+		unset($user_cid_override);
+		
 		$rs = $db->execute(
 'SELECT `out_cid_search` `cid_s`, `out_cid_replace` `cid_r`, `name`
 FROM `gate_grps`
@@ -319,11 +329,6 @@ LIMIT 9'
 		
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
 		if ($dialstr != '') {
-			$user_cid = $db->executeGetOne('SELECT `cid_ext` FROM `gate_cids` WHERE `grp_id` = '.$ggrp_id.' AND `cid_int` = \''.$db->escape($out_cid_num).'\'');
-			if ($user_cid != '') {
-				$out_cid_num = $user_cid;
-				gs_agi_verbose( '### Set caller ID to "'.$out_cid_num.'"');
-			}
 			gs_agi_set_variable( 'r_'.$idx.'_dial', $dialstr );
 			gs_agi_set_variable( 'r_'.$idx.'_cid', $out_cid_num );
 			

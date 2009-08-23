@@ -203,11 +203,12 @@ WHERE `id`='.$ggid
 
 
 
-
 #####################################################################
 if ($action === 'ggdel') {
 	
 	$DB->execute( 'UPDATE `gates` SET `grp_id`=NULL WHERE `grp_id`='.$ggid );
+	
+	$DB->execute( 'DELETE FROM `gate_cids` WHERE `grp_id`='.$ggid );
 	
 	$DB->execute( 'DELETE FROM `gate_grps` WHERE `id`='.$ggid );
 	
@@ -216,49 +217,50 @@ if ($action === 'ggdel') {
 #####################################################################
 
 
+
 #####################################################################
 if ($action === 'gaddcid') {
 	
+	$ggid = (int)@$_REQUEST['gg-id'];
 	$cid_int = preg_replace( '/[^0-9]/', '', @$_REQUEST['cid-int']);
 	$cid_ext = preg_replace( '/[^0-9]/', '', @$_REQUEST['cid-ext']);
-	$del_cid = preg_replace( '/[^0-9]/', '', @$_REQUEST['del-cid']);
-	$ggid = (int)@$_REQUEST['gg-id'];
 	
-
 	if (($ggid > 0) && ($cid_int != '') && ($cid_ext != '')) {
 		
 		$DB->execute(
-		'INSERT INTO `gate_cids` 
-		(`grp_id`, `cid_int`, `cid_ext`) VALUES
-		('.$ggid.', \''.$DB->escape($cid_int).'\', \''.$DB->escape($cid_ext).'\')');
-
-
+			'INSERT INTO `gate_cids` '.
+				'(`grp_id`, `cid_int`, `cid_ext`) '.
+			'VALUES '.
+				'('.$ggid.', \''.$DB->escape($cid_int).'\', \''.$DB->escape($cid_ext).'\')'
+			);
 	}
-
+	
 	$action = 'gedit';
 }
 #####################################################################
+
 
 
 #####################################################################
 if ($action === 'gdelcid') {
 	
-	$cid_int = preg_replace( '/[^0-9]/', '', @$_REQUEST['cid-int']);
-	$cid_ext = preg_replace( '/[^0-9]/', '', @$_REQUEST['cid-ext']);
 	$ggid = (int)@$_REQUEST['gg-id'];
+	$cid_int = preg_replace( '/[^0-9]/', '', @$_REQUEST['cid-int']);
 	
 	if (($ggid > 0) && ($cid_int != '')) {
-
+		
 		$DB->execute(
-		'DELETE FROM `gate_cids` 
-		WHERE
-		`grp_id` = '.$ggid.' AND `cid_int` = \''.$DB->escape($cid_int).'\'');
-
+			'DELETE FROM `gate_cids` '.
+			'WHERE '.
+				'`grp_id` = '.$ggid.' AND '.
+				'`cid_int` = \''.$DB->escape($cid_int).'\''
+			);
 	}
-
+	
 	$action = 'gedit';
 }
 #####################################################################
+
 
 
 # get gateway groups from DB
@@ -441,11 +443,13 @@ WHERE `id`='.$ggid
 </button>
 
 </form>
-<p>
-<br>
-<br>
-<h3><?php echo __('Ausgehende Caller-ID'); ?></h3>
-<p><?php echo __('Umsetzung interner Durchwahlen zu ausgehender Caller-IDs für diese Gateway-Gruppe'), '<sup><a href="#ftn-2" title="', htmlEnt(__("Fu\xC3\x9Fnote")) ,'">[4]</a></sup>:',"\n"; ?></p>
+
+<br />
+<br />
+<br />
+
+<h3><?php echo __('Ausgehende Caller-IDs'); ?></h3>
+<p><?php echo htmlEnt(__("Umsetzung interner Nebenstellen zu ausgehenden Caller-IDs f\xC3\xBCr diese Gateway-Gruppe")), ' <sup><a href="#ftn-2" title="', htmlEnt(__("Fu\xC3\x9Fnote")) ,'">[4]</a></sup>:'; ?></p>
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
@@ -454,8 +458,8 @@ WHERE `id`='.$ggid
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:200px;"><?php echo __('Durchwahl'); ?></th>
-	<th style="width:200px;"><?php echo __('Caller-ID'); ?></th>
+	<th style="width:200px;"><?php echo __('Nebenstelle'); ?></th>
+	<th style="width:200px;"><?php echo __('Caller-ID (Durchwahl)'); ?></th>
 	<th style="width:20px;"></th>
 </tr>
 </thead>
@@ -465,7 +469,7 @@ WHERE `id`='.$ggid
 $rs = $DB->execute( 'SELECT `cid_int`, `cid_ext` FROM `gate_cids` WHERE `grp_id`='.$ggid );
 
 if ((@$DB->numFoundRows()) < 1) {
-	echo '<tr><td><i>- ', __('keine'), ' -</i></td><td></td><td></td></tr>';
+	//echo '<tr><td><i>- ', __('keine'), ' -</i></td><td></td><td></td></tr>';
 } else {
 	while ($cid_map = $rs->fetchRow()) {
 		echo '<tr>';
@@ -501,33 +505,35 @@ echo '</tr>';
 <br />
 
 <?php
+	echo '<a name="ftn-1"></a>',"\n";
+	echo '<p id="ftn-1" class="text"><sup>[1]</sup> ', sPrintF(
+		__('Suchen/Ersetzen-Muster (<a href="%s" target="_blank">PCRE</a>) f&uuml;r die Rufnummern&uuml;bermittlung bei abgehenden Anrufen. Beispiele:<br /> Nur die Durchwahl &uuml;bermitteln: <tt>s/^(.*)/$1/</tt><br /> Nationales Format: <tt>s/^(.*)/030123456$1/</tt><br /> Internationales Format: <tt>s/^(.*)/004930123456$1/</tt> oder <tt>s/^(.*)/+4930123456$1/</tt><br /> F&uuml;r alle Benutzer die gleiche Nummer &uuml;bertragen: <tt>s/^(.*)/00493012345612/</tt><br /> Normalerweise sollten Sie das nationale oder internationale Format verwenden.'),
+		__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
+	) ,'</p>',"\n";
+	
+	echo '<a name="ftn-2"></a>',"\n";
+	echo '<p id="ftn-2" class="text"><sup>[2]</sup> ', sPrintF(
+		__('Geben Sie hier falls erforderlich ein <a href="%s" target="_blank">PCRE</a>-Muster an, das eventuelle Pr&auml;fixe von eingehend gew&auml;hlten Nummern wegschneidet, soda&szlig; nur noch die interne Durchwahl &uuml;brig bleibt! Beispiele:<br /> &nbsp;&nbsp;&nbsp; <tt>s/^026313370//</tt><br /> &nbsp;&nbsp;&nbsp; <tt>s/^(((0049|0)2631))3370//</tt><br /> &nbsp;&nbsp;&nbsp; <tt>s/^(?:(?:0049|0)2631)?3370(.*)/$1/</tt>'),
+		__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
+	) ,'</p>',"\n";
+	
+	echo '<a name="ftn-3"></a>',"\n";
+	echo '<p id="ftn-3" class="text"><sup>[3]</sup> ', sPrintF(
+		__('Suchen/Ersetzen-Muster (<a href="%s" target="_blank">PCRE</a>) f&uuml;r die Rufnummern&uuml;bermittlung bei eingehenden Anrufen. Hiermit lassen sich Anrufernummern die vom Provider falsch &uuml;bermittelt werden korrigieren. Beispiel: <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> um eine 0 an den Anfang zu setzen. Leer f&uuml;r keine Ersetzung.'),
+		__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
+	),
+	'<br />', __('Experimentell'), ': ',
+	__('Sie k&ouml;nnen diese Feld auch verwenden um f&uuml;r die Anruflisten mit <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang wegzuschneiden.')
+	,'</p>',"\n";
+	
+	echo '<a name="ftn-4"></a>',"\n";
+	echo '<p id="ftn-4" class="text"><sup>[4]</sup> ', sPrintF(
+		__('Tragen Sie pro Zeile eine interne Caller-ID (Nebenstellennummer) ein, die Sie beim W&auml;hlen &uuml;ber diese Gateway-Gruppe zu einer externen Caller-ID (Durchwahlnummer) umsetzen m&ouml;chten, z.B. um pro Benutzer eine abgehende <a href="%s" target="_blank">MSN</a> festzulegen.'),
+		__('http://de.wikipedia.org/wiki/Vermittlungstechnische_Leistungsmerkmale_%28%C3%B6ffentliche_Netze%29#Mehrfachrufnummern_.28MSN.29_bei_Mehrger.C3.A4teanschluss')
+	) ,'</p>',"\n";
+	
+}
 
-		echo '<a name="ftn-1"></a>',"\n";
-		echo '<p id="ftn-1" class="text"><sup>[1]</sup> ', sPrintF(
-			__('Suchen/Ersetzen-Muster (<a href="%s" target="_blank">PCRE</a>) f&uuml;r die Rufnummern&uuml;bermittlung bei abgehenden Anrufen. Beispiele:<br /> Nur die Durchwahl &uuml;bermitteln: <tt>s/^(.*)/$1/</tt><br /> Nationales Format: <tt>s/^(.*)/030123456$1/</tt><br /> Internationales Format: <tt>s/^(.*)/004930123456$1/</tt> oder <tt>s/^(.*)/+4930123456$1/</tt><br /> F&uuml;r alle Benutzer die gleiche Nummer &uuml;bertragen: <tt>s/^(.*)/00493012345612/</tt><br /> Normalerweise sollten Sie das nationale oder internationale Format verwenden.'),
-			__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
-		) ,'</p>',"\n";
-		
-		echo '<a name="ftn-2"></a>',"\n";
-		echo '<p id="ftn-2" class="text"><sup>[2]</sup> ', sPrintF(
-			__('Geben Sie hier falls erforderlich ein <a href="%s" target="_blank">PCRE</a>-Muster an, das eventuelle Pr&auml;fixe von eingehend gew&auml;hlten Nummern wegschneidet, soda&szlig; nur noch die interne Durchwahl &uuml;brig bleibt! Beispiele:<br /> &nbsp;&nbsp;&nbsp; <tt>s/^026313370//</tt><br /> &nbsp;&nbsp;&nbsp; <tt>s/^(((0049|0)2631))3370//</tt><br /> &nbsp;&nbsp;&nbsp; <tt>s/^(?:(?:0049|0)2631)?3370(.*)/$1/</tt>'),
-			__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
-		) ,'</p>',"\n";
-		
-		echo '<a name="ftn-3"></a>',"\n";
-		echo '<p id="ftn-3" class="text"><sup>[3]</sup> ', sPrintF(
-			__('Suchen/Ersetzen-Muster (<a href="%s" target="_blank">PCRE</a>) f&uuml;r die Rufnummern&uuml;bermittlung bei eingehenden Anrufen. Hiermit lassen sich Anrufernummern die vom Provider falsch &uuml;bermittelt werden korrigieren. Beispiel: <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> um eine 0 an den Anfang zu setzen. Leer f&uuml;r keine Ersetzung.'),
-			__('http://de.wikipedia.org/wiki/Regul%C3%A4rer_Ausdruck')
-		),
-		'<br />', __('Experimentell'), ': ',
-		__('Sie k&ouml;nnen diese Feld auch verwenden um f&uuml;r die Anruflisten mit <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang wegzuschneiden.')
-		,'</p>',"\n";
-		
-		echo '<a name="ftn-4"></a>',"\n";
-		echo '<p id="ftn-4" class="text"><sup>[4]</sup> ', sPrintF(
-			__('Tragen Sie pro Zeile eine interne Caller-ID ein, die Sie beim W&auml;hlen &uuml;ber diese Gateway-Gruppe zur externen Caller-ID umsetzen m&ouml;chten, z.B. um pro Benutzer eine abgehende MSN festzulegen.')
-		) ,'</p>',"\n";
-
-	}
+#####################################################################
 
 ?>
