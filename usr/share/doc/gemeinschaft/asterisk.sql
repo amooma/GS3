@@ -5779,6 +5779,7 @@ UNLOCK TABLES;
 -- Table structure for table `gate_cids`
 --
 
+DROP TABLE IF EXISTS `gate_cids`;
 CREATE TABLE `gate_cids` (
   `grp_id` smallint(5) unsigned NOT NULL,
   `cid_int` varchar(16) character set ascii NOT NULL,

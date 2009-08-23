@@ -705,7 +705,7 @@ USE `asterisk`;
 -- Add new table `gate_cids`
 --
 
-CREATE TABLE `gate_cids` (
+CREATE TABLE IF NOT EXISTS `gate_cids` (
   `grp_id` smallint(5) unsigned NOT NULL,
   `cid_int` varchar(16) character set ascii NOT NULL,
   `cid_ext` varchar(30) character set ascii NOT NULL,
