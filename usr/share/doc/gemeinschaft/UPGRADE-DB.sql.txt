@@ -682,9 +682,8 @@ USE `asterisk`;
 
 
 --
--- Add new table gate_params
+-- Add new table `gate_params`
 --
-
 
 CREATE TABLE IF NOT EXISTS `gate_params` (
  `gate_id` smallint(5) unsigned NOT NULL,
@@ -700,6 +699,7 @@ CREATE TABLE IF NOT EXISTS `gate_params` (
 --
 
 USE `asterisk`;
+
 
 --
 -- Add new table `gate_cids`
