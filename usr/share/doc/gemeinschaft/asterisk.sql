@@ -5509,7 +5509,7 @@ DROP TABLE IF EXISTS `ast_sipfriends_gs`;
 /*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
 /*!50001 CREATE TABLE `ast_sipfriends_gs` (
   `_user_id` int(10) unsigned,
-  `name` varchar(10),
+  `name` varchar(16),
   `secret` varchar(16),
   `type` enum('friend','user','peer'),
   `host` varchar(50),
