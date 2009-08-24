@@ -35,7 +35,8 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 
-$uname  = trim(@$argv[1]);
+$uname     = trim(@$argv[1]);
+$callerid  = trim(@$argv[2]);
 
 if (! $uname) gs_agi_err( 'Invalid extension' );
 if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
@@ -89,9 +90,8 @@ while ($r = $rs->fetchRow()) {
 
 foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {
-		//if ($fw['number'] != '') {
-			gs_agi_set_variable( 'fw_'.$source.'_'.$case, $fw['number'] );
-		//}
+		if ($fw['number'] === $callerid) $fw['number'] = '';
+		gs_agi_set_variable( 'fw_'.$source.'_'.$case, $fw['number'] );
 	}
 }
 
