@@ -3,14 +3,5 @@ Options FollowSymLinks
 RewriteEngine on
 RewriteBase /gemeinschaft/iphone
 
-#RewriteCond %{REQUEST_METHOD} !PUT
-#RewriteRule ^/index\.php$ - [F]
-#RewriteCond %{REQUEST_METHOD} PUT
-#RewriteCond %{QUERY_STRING} ^$
-#RewriteRule ^/index\.php$ - [F]
-#RewriteCond %{REQUEST_METHOD} PUT
-#RewriteRule ^(.*)$ index.php?url=$1 [L]
-
 RewriteRule ^index\.php$ - [L]
-# RewriteRule ^(.*)$ index.php?action=$1 [L]
 RewriteRule ^([^/]+)(?:/([^/]+))? index.php?action=$1&id=$2 [QSA,L]
