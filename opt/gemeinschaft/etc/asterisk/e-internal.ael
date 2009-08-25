@@ -667,7 +667,7 @@ context to-internal-users-self {
 		//----------------------------------------------------------
 		to_user:
 			
-			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${EXTEN},{CALLERID(num)});
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${EXTEN},${CALLERID(num)});
 			// forward (case=always) active?
 			if ("${fw_${is_call_from}_always}" != "") {
 				if ("${is_callcompletion}" = "1") {
