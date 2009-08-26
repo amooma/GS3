@@ -85,7 +85,7 @@ if ($ggrp['in_cid_search'] != '') {
 	$ggrp['in_cid_replace'] = trim($ggrp['in_cid_replace']);
 	$cid = @preg_replace('/'.$ggrp['in_cid_search'].'/', $ggrp['in_cid_replace'], $cid);
 }
-gs_agi_set_variable( 'cid_fixed', $number );
+gs_agi_set_variable( 'cid_fixed', $cid );
 
 
 # get route from DID number to extension
