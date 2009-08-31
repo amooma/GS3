@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="installation-siemens-prov" revision="$Revision: 6199 $">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+
+  <title>Installation des Siemens-Openstage Provisioning</title>
+  <para>In diesem Kapitel wird Beschrieben, wie man das Provisioning für die Siemens Openstage-Serie (os15 bis os80) installiert.</para>
+  
+  <section id="siemens-openstage-prov-installation">
+    <title>Siemens OpenStage Provisioning Installieren</title>
+    <para>Voraussetzungen:</para>
+    <para>- Gemeinschaft installiert</para>
+    <para>- DHCP-Server Mass-Deployment für Siemens-Telefone konfiguriert</para>
+    <para>Installation:</para>
+    <para>Verzeichnis /opt/gemeinschaft-siemens/ installieren (sollte dann
+      z.B. die Dateien prov-settings.php und prov-checkcfg.php enthalten)
+    </para>
+    <para>Entwickler:
+      <screen>
+cd /opt/
+ln -s gemeinschaft-siemens-svn/opt/gemeinschaft-siemens gemeinschaft-siemens
+      </screen>
+    </para>
+    <para>
+      In der <filename>/etc/php.ini</filename> (bzw. <filename>/etc/php5/apache2/php.ini</filename>) sollte der Paramter
+      <command>always_populate_raw_post_data = On</command> gesetzt werden.
+
+      Dann sollte SSL für den Apache installiert werden:
+      <command>yum install openssl mod_ssl</command>
+      Bzw. auf Debian:
+      <command>apt-get install openssl</command>
+
+      Damit der Apache-Server auch SSL benutzt, müssen die Module noch aktiviert werden:
+      Bei CentOS in <filename>/etc/httpd/conf.d/ssl.conf</filename>
+      <command>LoadModule ssl_module modules/mod_ssl.so</command>
+      
+      Unter Debian:
+      <screen>
+cd /etc/apache2/mods-enabled/                           
+ln -s ../mods-available/ssl.load ssl.load               
+ln -s ../mods-available/ssl.conf ssl.conf               
+ln -s ../mods-available/rewrite.load rewrite.load       
+      </screen>
+
+      Als nächstes muss man die selbst-signierten SSL-Schlüssel generieren und die Dateien ggf. in
+      die Apache-Konfig-Verzeichnisse (z.B. <filename>/etc/httpd/conf/ssl.*/</filename>) legen.
+      (Möglicherweise sind mit mod_ssl bereits Keys installiert.)         
+</para>
+    <para>
+<screen>
+&gt;     SSLCertificateFile      /etc/httpd/conf/ssl.crt/10_128_131_30.crt
+&gt;     SSLCertificateKeyFile   /etc/httpd/conf/ssl.key/server.key       
+&gt;     SSLCertificateChainFile /etc/httpd/conf/ssl.crt/10_128_131_30.ca-bundle
+&gt;     SSLCACertificateFile    /etc/httpd/conf/ssl.crt/10_128_131_30.ca-bundle
+</screen>
+
+Falls in den o.g. Verzeichnissen schon Dateien liegen, dann
+sind die direkt beim Apache-Paket mitinstalliert worden,   
+müßten also dann (wenn sie funktionieren) nicht noch generiert
+werden. Sollten Keys vorinstalliert sein, dann heißen die     
+üblicherweise server.key, server.crt, server.ca-bundle o.ä.   
+
+Falls die Dateien dort nicht liegen, muss man die Schlüssel also von Hand erstellen:
+
+Privaten RSA-Schlüssel erzeugen:
+<screen>
+$<command> cd /etc/httpd/conf/</command>
+(Debian: <command>cd /etc/apache2/ &amp;&amp; mkdir ssl &amp;&amp; cd ssl/</command>)     
+$ <command>openssl genrsa -out ssl.key/my-server.key 1024</command>
+(Debian: <command>openssl genrsa -out my-server.key 1024</command>)
+Generating RSA private key, 1024 bit long modulus      
+..........++++++                                       
+.....................................++++++            
+e is 65537 (0x10001)                                   
+</screen>
+CSR (Certificate Signing Request) erzeugen:
+<screen>
+$<command>openssl req -new \ -key ssl.key/my-server.key \ -out ssl.csr/my-server.csr</command>
+(Debian: <command>openssl req -new -key my-server.key -out my-server.csr</command>)
+You are about to be asked to enter information that will be incorporated
+into your certificate request.                                          
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank                  
+For some fields there will be a default value,                             
+If you enter &apos;.&apos;, the field will be left blank.                            
+
+Country Name (2 letter code) [GB]:DE
+State or Province Name (full name) [Berkshire]:Nordrhein-Westfalen
+Locality Name (eg, city) [Newbury]:Münster
+Organization Name (eg, company) [My Company Ltd]:LVM Versicherungen
+Organizational Unit Name (eg, section) []:.
+Common Name (eg, your name or your server&apos;s hostname) []:192.168.1.130
+Email Address []:.
+
+Please enter the following &apos;extra&apos; attributes
+to be sent with your certificate request
+A challenge password []:.
+An optional company name []:.
+</screen>
+Wichtig: Dabei gibt man als &quot;Common Name&quot; die IP-Adresse des Rechners an!
+
+</para>
+    <para>CSR Überprüfen (optional):
+<screen>
+$<command>openssl req -noout -text -in ssl.csr/my-server.csr</command>
+Certificate Request:
+    Data:
+        Version: 0 (0x0)
+        Subject: C=DE, ST=Nordrhein-Westfalen, L=Münster, O=LVM
+Versicherungen, CN=192.168.1.130
+[...]
+</screen>
+Selbst-signiertes Zertifikat erstellen:
+<screen>
+$ <command>openssl x509 -req -days 3650 \ -in ssl.csr/my-server.csr \ -signkey ssl.key/my-server.key \ -out ssl.crt/my-server.crt</command>
+(Debian:
+<command>openssl x509 -req -days 3650 \ -in my-server.csr \ -signkey my-server.key \ -out my-server.crt</command>
+)
+Signature ok
+subject=/C=DE/ST=Nordrhein-Westfalen/L=Münster/O=LVM
+Versicherungen/CN=192.168.1.130
+Getting Private key
+</screen>
+Eintragen in der entsprechenden Virtual-Host-Definition im Apache (Die Parameter SSLCertificateChainFile und SSLCACertificateFile
+braucht man dann nicht.):
+<screen>
+SSLCertificateFile /etc/httpd/conf/ssl.crt/my-server.crt
+SSLCertificateKeyFile /etc/httpd/conf/ssl.key/my-server.key
+</screen>  
+
+</para>
+    <para>   
+      Virtuellen Host in Apache anlegen:
+      <screen>
+<command>vim /etc/httpd/sites-available/siemens </command>
+Debian: <command>vim /etc/apache2/sites-available/siemens </command>
+      </screen>
+      <screen>Listen 18443
+&lt;VirtualHost *:18443&gt;
+ SSLEngine on
+
+ SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP
+ #SSLCipherSuite !ADH:!EXPORT56:RC4+RSA:RC4+SHA
+ # without EDH (Ephemeral Diffie-Hellman) because it&apos;s a symmetric
+ # cipher and thus cannot be decrypted (e.g. by WireShark) even if
+ # the private key of the server is known, so RSA is better for
+ # debugging
+ # Debian
+        SSLCertificateFile      /etc/apache2/ssl/openstage-crt.pem
+        SSLCertificateKeyFile   /etc/apache2/ssl/openstage-key.pem
+
+        # RedHat
+        #SSLCertificateFile      /etc/httpd/ssl/openstage-crt.pem
+        #SSLCertificateKeyFile   /etc/httpd/ssl/openstage-key.pem
+
+        #CustomLog logs/ssl_request_log \
+        #    &quot;%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \&quot;%r\&quot; %b&quot;
+
+        DocumentRoot /opt/gemeinschaft/htdocs/prov/siemens
+
+        # KeepAlive ist absolutely necessary!
+        KeepAlive On
+        MaxKeepAliveRequests 100
+        KeepAliveTimeout 45
+        # KeepAliveTimeout not below 30 (seconds)!
+
+        &lt;Directory /&gt;
+                Options FollowSymLinks MultiViews Indexes
+        &lt;/Directory&gt;
+        &lt;IfModule mod_rewrite.c&gt;
+                RewriteEngine on
+                RewriteRule ^/ringtones/  - [L]
+                RewriteRule ^/(.*)$ /settings.php?_url=$1 [L,QSA]
+        &lt;/IfModule&gt;
+        &lt;IfModule mod_headers.c&gt;
+                Header unset X-Powered-By
+                Header unset X-Pad
+                Header unset X-Cache
+                #Header unset Connection
+        &lt;/IfModule&gt;
+        &lt;IfModule mod_cache.c&gt;
+                CacheDisable /
+        &lt;/IfModule&gt;
+    &lt;/VirtualHost&gt;
+      </screen>
+      
+      Dannach muss die Seite noch aktiviert werden:
+      <command>a2ensite siemens</command>
+
+      Nachdem apache nun neu gestartet wird, sollte die Seite verfügbar sein:
+      <screen>
+<command>/etc/init.d/httpd restart</command>
+<command>(Debian: /etc/init.d/apache2 restart)</command>
+    </screen>
+      Man kann mit einem Browser überprüfen, ob die Seite verfügbar ist (https://ip-des-servers:18443)
+    
+      Zum Debuggen kann man außerdem das <filename>siemens-access-debug.log</filename> aktivieren:
+      <screen>
+<command>cd /var/log/gemeinschaft/</command>
+<command>touch siemens-access-debug.log</command>
+<command>chown apache:apache siemens-access-debug.log</command>
+(Debian: <command>chown www-data:www-data siemens-access-debug.log</command>)
+      </screen>
+      In der <filename>/opt/gemeinschaft-siemens/prov-settings.php</filename>zum Debuggen
+      des Protokolls $raw_debug auf true setzen (Achtung, die Datei siemens-access-debug.log
+      wird schnell recht groß!), ansonsten immer auf false.
+      </para>
+    <para>
+      Nun sollte das Provisioning laufen, wenn man Firmware-Updates, Klingeltöne, Logos oder 
+      Bildschirmhintergründe für das OpenStage Provisionieren möchte, dann muss man noch einen 
+      FTP-Server einrichten:
+      <screen>
+ <command>yum install vsftpd</command>
+ (Debian: <command>apt-get install vsftpd</command>
+      </screen>
+      <footnote>
+        <para>
+      Für Debian gibt es auch eine Vielzahl anderer FTP-Server als Pakete:
+      ftpd, inetutils-ftpd, muddleftpd, proftpd, pure-ftpd, twoftpd,
+      twoftpd-run, vsftpd, wu-ftpd, wzdftpd, ...) </para>
+      </footnote>
+       
+      Wenn der FTP-Server installiert wurde, muss man noch einen User für die Dateien hinzufügen:
+      <screen>
+<command>useradd -M -d /opt/gemeinschaft-siemens/firmware/ -g nobody -n -s /sbin/nologin gs-siemens-fw</command>
+<command>(Debian: useradd -d /opt/gemeinschaft-siemens/firmware/ -g nogroup -s /bin/sh gs-siemens-fw)</command>
+      </screen>
+      
+      Dannach muss man noch für den gerade angelegten Benutzer das Passwort setzen:
+      <screen>
+<command>passwd gs-siemens-fw</command>
+(interaktive Eingabe - in /opt/gemeinschaft-siemens/conf.php
+(GS_PROV_SIEMENS_FTP_PWD) eintragen!)
+      </screen>
+
+      Jetzt muss noch der vsftpd ansich Konfiguriert werden dies geschieht in der 
+      <filename>/etc/vsftpd/vsftpd.conf</filename> (Debian: <filename>/etc/vsftpd.conf</filename>):
+      <screen>
+ascii_upload_enable=NO
+ascii_download_enable=NO
+anonymous_enable=NO
+anon_upload_enable=NO
+anon_mkdir_write_enable=NO
+local_enable=YES
+write_enable=NO
+userlist_enable=YES
+userlist_file=/etc/vsftpd.user_list
+userlist_deny=NO
+chroot_local_user=YES
+chroot_list_enable=NO
+      </screen>
+      Dann muss der user(gs-siemens-fw) noch in <filename>/etc/vsftpd.user_list</filename> eingetragen werden.
+      Wenn alles Konfiguriert ist, kann man den FTP-Server beim Systemstart mitstarten lassen:
+      <screen>
+<command>chkconfig levels 235 vsftpd on</command>
+<command>(Debian: update-rc.d vsftpd defaults)</command>
+      </screen>
+      Und zum schluss den FTP-Server noch per Hand starten:
+      <command>/etc/init.d/vsftpd restart</command>
+
+    </para>
+  </section>
+  <section>
+    <title>Siemens Openstage XML-Applikationen</title>
+    <para>Das Openstage bietet die Möglichkeit XML-Appliktionen auszuführen, damit kann man z.b. das Telefonbuch, Anruflisten oder einen Präsenzmonitpr auf dem Endgerät zur Verfügung stellen. </para>
+    <para>Die einzelnen XML-Applikaitonen kann man Zentral in der Datei <filename>/opt/gemeinschaft-siemens/conf.php</filename> Konfigurieren. Hier ein Beispiel der Definition:</para>
+    <para><screen># XML Applications
+
+# Phonebook
+#
+$gs_phonebook = array(
+        &apos;XML-app-name&apos; =&gt; &apos;gs-phonebook&apos;,
+        &apos;XML-app-display-name&apos; =&gt; &apos;Telefonbuch&apos;,
+        &apos;XML-app-program-name&apos; =&gt; &apos;gemeinschaft/prov/siemens/pb/pb.php&apos;,
+        &apos;XML-app-special-instance&apos; =&gt; &apos;0&apos;,
+        &apos;XML-app-server-addr&apos; =&gt; &apos;{GS_PROV_HOST}&apos;,
+        &apos;XML-app-server-port&apos; =&gt; &apos;80&apos;,
+        &apos;XML-app-num-tabs&apos; =&gt; &apos;0&apos;,
+);</screen></para>
+    <para>In der nachfolgenden Liste werden die einzelnen Parameter erläutert:</para>
+    <para><variablelist>
+        <varlistentry>
+          <term>XML-app-name</term>
+          <listitem>
+            <para>legt den Namen der XML-Applikation fest. Der Name darf frei vergeben werden sollte aber eindeutig sein. Es gibt die Möglichkeit, interne Openstage Applikationen auf den Tasten für das Telefonbuch und für die Anrufliste zu überschreiben. Für das Telefonbuch müsste die Taste dann XMLPhonebook heißen und XMLCalllist für die Anrufliste.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>XML-app-display-name</term>
+          <listitem>
+            <para>Dieser Name dient der Anzeige auf dem Display. Der name wird oben in der Statuszeile im Openstage angezeigt.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>XML-app-programm-name</term>
+          <listitem>
+            <para>Dieser Parameter beschreibt den Pfad der URL auf dem Server wo die Applikaiton zu finden ist.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>XML-app-special-instance</term>
+          <listitem>
+            <para>Es konnte noch nicht abschließend geklärt werden, wozu dieser Parameter gut ist. ER muss auf 0 Stehen damit die Applikation vom Telefon angenommen wird.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>XML-app-server-addr</term>
+          <listitem>
+            <para>Hier wird die IP-Addresse vom Webserver definiert, auf der die XML-Applikation liegt. Wenn die Applikation auf der Provisioning-Server liegt (definiert in gemeinschaft.php -&gt; PROV_HOST) kann die Variable {GS_PROV_HOST} benutzt werden. Diese wird während des Provisioning-Vorganges mit dem in der gemeinschaft.php konfigurierten Wert getauscht.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>XML-app-server-port</term>
+          <listitem>
+            <para>Der Port auf dem der Webserver lauscht auf dem XML-Applikation liegt.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>XML-app-num-tabs</term>
+          <listitem>
+            <para>Die Anzahl der Reiterkarten, die für diese Appliaktion angezeigt werden können.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist></para>
+    <para>
+  
+  Wenn man eine XML-Applikation definiert hat, muss man in der conf.php diese noch in das Array $GS_PROV_SIEMENS_XML_APPS eingefügt werden:<screen>$GS_PROV_SIEMENS_XML_APPS = array(
+&apos;Telefonbuch&apos; =&gt; $gs_phonebook_pb,
+&apos;Anrufliste&apos; =&gt; $gs_diallog_dl_key
+);
+</screen></para>
+    <para>Wie man im Beispiel sieht, kann man meherer Appliaktionen mit Komma separiert dort eintragen. Wenn diese Applikationen dort eingetragen wurden, dann werden diese für jedes Openstage Telefon, das sich beim Provisionig meldet, Provisioniert.</para>
+  </section>
+<section id="siemens-openstage-prov-troubleshooting">
+  <title>Siemens OpenStage Provisioning Troubleshooting</title>
+  <para>
+  Sollte das Siemens-Provisioning einmal Probleme machen, so kann man sich die Kommunikation zwischen dem Endgerät und Gemeinschaft in eine Datei schreiben lassen, die man dann auswerten kann. Dazu muss der Schalter 
+<screen>
+define( 'GS_PROV_SIEMENS_LOG_RAW', false );
+</screen>
+  auf:
+  <screen>
+define( 'GS_PROV_SIEMENS_LOG_RAW', true );
+</screen>
+gesetzt werden. Dies geschieht in der Datei: <filename>/opt/gemeinschaft-siemens/conf.php</filename>. Dannach kann man mit <command>tail -f /var/log/gemeinschaft/siemens-access-debug.log</command> die Ausgabe mitlesen:
+<screen>
+2009-08-31 10:49:38  -  PHONE 192.168.23.17 SAYS:
+
+POST /DeploymentService/LoginService HTTP/1.1
+Host: 192.168.23.2:18443
+Cookie: JSESSIONID=30de997c8608a0fb287dc279d1c518e0; path=/DeploymentService/; secure
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;WorkpointMessage
+  xmlns="http://www.siemens.com/DLS"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.siemens.com/DLS"&gt;
+  &lt;Message nonce="0347AB5C9A7DB7D43B0FC87683B2663C" maxItems="-1" fragment="final"&gt;
+    &lt;ReasonForContact action="WriteItems" status="accepted">reply-to&lt;/ReasonForContact&gt;
+    &lt;ItemList&gt;
+ &lt;Item name="dial-plan-enabled" status="missing item content"&gt;&lt;/Item&gt;
+ &lt;Item name="hot-keypad-dialing" status="missing item content"&gt;&lt;/Item&gt;
+    &lt;/ItemList&gt;
+  &lt;/Message&gt;
+&lt;/WorkpointMessage&gt;
+
+</screen>
+
+In der Beispielausgabe sieht man eine Fehlermeldung des Openstage "&lt;Item name="dial-plan-enabled" status="missing item content"&gt;&lt;/Item&gt;". Dies kommt z.B. wenn man einen leeren Provisioning-Parameter setzt. 
+Was bei solchen Fehlermeldungen zu tun ist, entnehmen Sie bitte aus der Dokumentation des Engerätes. Meist sind die Fehlermeldungen jedoch eindeutig und man kann mit diesem Debug-Mechanismus Fehler in der Konfigration 
+feststellen und beheben.
+  </para>
+
+</section>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</chapter>
