@@ -218,7 +218,8 @@ $MODULES['help'     ]=  array(
 	'icon'  => 'crystal-svg/%s/act/help.png',
 	'boi_ok'=> false,
 	'sub' => array(
-		'numbers'      => array('title' => __('Service-Nummern'))
+		'numbers'      => array('title' => __('Service-Nummern')),
+		'keys'      => array('title' => __('Tastenbelegung'))
 	)
 );
 if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
