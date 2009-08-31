@@ -10,6 +10,15 @@
 % Texts. A copy of the license is included in the section entitled "GNU
 % Free Documentation License".
 % Asterisk training and consulting is offered at http://www.amooma.de-->  <title>Update von Gemeinschaft</title>
+<para>
+Wenn Gemeinschaft upgedatet werden soll, sind 2 Dinge zu tun, zu einem muss die Datenbankstruktur angepasst werden (<xref linkend="datenbank-update" />)
+zum anderem müssen die Gemeinschaft-Dateien geupdated werden (<xref linkend="gemeinschaft-update" />). Asterisk (<xref linkend="asterisk-update" />) hingegen
+muss nur dann geupdatet werden, wenn es mit der alten Version Probleme gibt, Features hinzugekommen sind, die man benötigt, oder ausdrücklich darauf
+hingewiesen wird, das die neue Version von Gemeinschaft zwingend ein Asterisk-Update erfordert.
+Die einzeln auszuführenden Schritte sind in den nachfolgenden Unterkapiteln erläutert.
+</para>
+
+
   <section id="datenbank-update">
     <title>Datenbank Updaten</title>
     <para><warning>
@@ -24,5 +33,17 @@
   <section id="gemeinschaft-update">
     <title>Gemeinschaft Updaten</title>
     <para>Gemeinschaft updzudaten ist ein relativ einfacher Schritt. Sie legen einfach das tar.gz das Sie von Ihrem Supportdienstleister zur Verfügung gestellt bekommen haben, in das root-verzeichnis des Systemes &quot;/&quot; und entpacken es mit dem Kommando <command>tar xvfz gemeinschaft.tar.gz</command>. Dannach sollten Sie die neue Version nutzen können. Falls Sie ein Gemeinschaft-Cluster-System betreiben sollten, dann führen Sie diesen Schritt bitte auf allen nodes aus. </para>
+  </section>
+  <section id="asterisk-update">
+    <title>Asterisk Updaten</title>
+    <para><warning> Sie sollten vor dem Asterisk-Update die Binärmodule von Asterisk entfernen:
+    <screen>
+    Gemeinschaft:~# rm /usr/lib/asterisk/modules/* [ENTER]
+    </screen></warning>
+    </para>
+    
+    <para>Falls Sie Asterisk Updaten müssen, wenn z.b.: Features die Sie benötigen in einer neuen Asterisk-Version verfügbar sind, dann gehen Sie bitte nach der Installationsanleitung aus dem Installationskapitel <xref linkend="installation" />. vor.</para>
+    
+    
   </section>
 </chapter>
