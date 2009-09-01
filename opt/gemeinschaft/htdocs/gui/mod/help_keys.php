@@ -37,9 +37,8 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
-echo __("Gemeinschaft bietet die M&ouml;glichkeit, Tasten an unterst&uuml;tzen Engeräten &uuml;ber diese Benutzeroberfl&auml;e zu Konfigurieren.")."<br>";
-echo __("Um Tasten f&uuml; Ihr Endger&auml;t zu Konfigurieren, folgen Sie einfach den folgenden Schritten, nachdem Sie Rechts im Men&uuml; auf Tastenbelegung geklickt haben:")."<br><br>";
-
+echo __("Gemeinschaft bietet die M&ouml;glichkeit, Tasten an unterst&uuml;tzen Engeräten &uuml;ber diese Benutzeroberfl&auml;che zu Konfigurieren.")."<br>";
+echo __("Um Tasten f&uuml;r Ihr Endger&auml;t zu Konfigurieren, folgen Sie einfach den folgenden Schritten, nachdem Sie Links im Men&uuml; auf Tastenbelegung geklickt haben:")."<br><br>";
 echo '<h3>' .__("Schritt 1:") .'</h3>';
 echo __("W&auml;hlen Sie ihr Telefonmodell aus (1) und dr&uuml;cken Sie auf 'Zeigen' (2)")."<br>";
 echo '<img alt="Step1" src="'.GS_URL_PATH.'img/help_keys/step1.jpg"/>';
