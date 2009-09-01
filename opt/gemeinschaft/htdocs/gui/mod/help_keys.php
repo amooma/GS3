@@ -72,7 +72,7 @@ echo '<img alt="Step2" src="'.GS_URL_PATH.'img/help_keys/step2.jpg"/>';
 <tr>
 	<td><?php echo __('Nummer/Daten'); ?></td>
 	<td>
-		<?php echo __('In dieses Feld werden Funktionsspezifische Daten eingetragen, z.B.: die Zielnummer bei einer Ziehlwahl. Mehr dazu erfahren Sie im n&auml;chsten Schritt.'); ?>
+		<?php echo __('In dieses Feld werden Funktionsspezifische Daten eingetragen, z.B.: die Zielnummer bei einer Zielwahl. Mehr dazu erfahren Sie im n&auml;chsten Schritt.'); ?>
 	</td>
 </tr>
 <tr>
@@ -96,7 +96,7 @@ echo __("Aktivieren Sie die Taste durch anklicken des Hakens in der 2. Spalte (1
 echo __("W&auml;hlen Sie aus der Liste (2) die gew&uuml;nschte Tastenfunktion (3) aus:")."<br>";
 echo '<img alt="Step3" src="'.GS_URL_PATH.'img/help_keys/step3.jpg"/>';
 echo '<br>';
-echo __("Die Tastenfunktionen sind stark vom Benutzten Endger&auml;t ab. Hier eine Liste f&uuml;r das Openstage 60, welches die Tastenfunktionen der meisten Telefone abdecken sollte:")."<br>";
+echo __("Die Tastenfunktionen sind stark vom benutzten Endger&auml;t ab. Hier eine Liste f&uuml;r das Openstage 60, welches die Tastenfunktionen der meisten Telefone abdecken sollte:")."<br>";
 ?>
 <br><br>
 <table cellspacing="1" class="phonebook">
@@ -121,7 +121,7 @@ echo __("Die Tastenfunktionen sind stark vom Benutzten Endger&auml;t ab. Hier ei
 <tr>
 	<td><?php echo __('Nebenstelle/BLF'); ?></td>
 	<td>
-		<?php echo __('Aktiviert die Besetztlampenfeldfunktion f&uuml;r eine Bestimmte Nebenstelle. Mit der Besetztlampenfeldfunktion k&ouml;nnen Sie den Status der Nebenstelle sehen (Besetzt=Leuchten, Klingeln=Blinken). Desweiteren k&ouml;nnen Sie die Nebenstelle durch einen druck auf diese Taste Anrufen oder eine Ruf&uuml;bernahme durchf&uuml;hren, wenn Sie die Taste dr&uuml;cken w&auml;hrend die Besetztlampe blinkt.'); ?>
+		<?php echo __('Aktiviert die Besetztlampenfeldfunktion f&uuml;r eine bestimmte Nebenstelle. Mit der Besetztlampenfeldfunktion k&ouml;nnen Sie den Status der Nebenstelle sehen (Besetzt=Leuchten, Klingeln=Blinken). Desweiteren k&ouml;nnen Sie die Nebenstelle durch einen druck auf diese Taste Anrufen oder eine Ruf&uuml;bernahme durchf&uuml;hren, wenn Sie die Taste dr&uuml;cken w&auml;hrend die Besetztlampe blinkt.'); ?>
 	</td>
 </tr>
 <tr>
@@ -157,7 +157,7 @@ echo __("Die Tastenfunktionen sind stark vom Benutzten Endger&auml;t ab. Hier ei
 <tr>
 	<td><?php echo __('Weiterleiten'); ?></td>
 	<td>
-		<?php echo __('Mit dieser Funktion k&ouml;nnen sie den Anrufer zu einem Bestimmten Ziel weiterleiten.'); ?>
+		<?php echo __('Mit dieser Funktion k&ouml;nnen sie den Anrufer zu einem bestimmten Ziel weiterleiten.'); ?>
 	</td>
 </tr>
 <tr>
@@ -175,7 +175,7 @@ echo __("Die Tastenfunktionen sind stark vom Benutzten Endger&auml;t ab. Hier ei
 <tr>
 	<td><?php echo __('Nicht st&ouml;ren'); ?></td>
 	<td>
-		<?php echo __('Sie k&ouml;nnen diese Funktion aktvieren, falls Sie z.B.: im Kundengespr&auml;ch sind und nicht gest&ouml;rt werden wollen. Das Telefon wird dann nicht Klingeln und auch nicht Anzeigen wenn es angerufen wird.'); ?>
+		<?php echo __('Sie k&ouml;nnen diese Funktion aktvieren, falls Sie z.B.: im Kundengespr&auml;ch sind und nicht gest&ouml;rt werden wollen. Das Telefon wird dann nicht klingeln und auch nicht Anzeigen wenn es angerufen wird.'); ?>
 	</td>
 </tr>
 <tr>
