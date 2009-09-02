@@ -281,10 +281,12 @@ else {
 	}
 	if (! $was_stored) {  # determine version anyway on the login page
 		$vers = trim(@gs_file_get_contents( '/etc/gemeinschaft/.gemeinschaft-version' ));
-		apc_store( 'gemeinschaft_version', $vers, 20 );  # store for 20 seconds
+		if (extension_loaded('apc')) {
+			apc_store( 'gemeinschaft_version', $vers, 20 );  # store for 20 seconds
+		}
 	}
 	if ($vers != '') {
-		echo '<b>Gemeinschaft</b> <span xstyle="color:#555;">', $vers ,'</span>';
+		echo '<b>Gemeinschaft</b> <span>', htmlEnt($vers) ,'</span>';
 	} else {
 		echo '&nbsp;';
 	}
