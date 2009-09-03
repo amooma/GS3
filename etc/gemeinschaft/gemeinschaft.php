@@ -496,7 +496,7 @@ $LOCK_DIR               = '/tmp/';
   # does not control where apache, mysql, zaptel etc. put their
   # lock files
 
-$CALL_INIT_FROM_NET         = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
+$CALL_INIT_FROM_NET         = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # a comma (,) separated list of IP addresses or
   # <IP address>/<netmask> pairs from where calls can be inited
   # with HTTP GET
@@ -505,7 +505,7 @@ $CALL_INIT_FROM_NET         = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.25
   # allow all: '0.0.0.0/0', allow none: '0.0.0.0/32'
 
 $MONITOR_FROM_NET           = '0.0.0.0/32';  # deny all
-//$MONITOR_FROM_NET           = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
+//$MONITOR_FROM_NET           = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # allow access to the extension monitor panel from these network
   # ranges
   # CIDR or dotted decimal notation
