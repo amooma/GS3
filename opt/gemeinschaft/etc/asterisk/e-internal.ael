@@ -1089,6 +1089,8 @@ context to-internal-users-self {
 			if ("${all_busy}" != "1") {
 				AGI(/opt/gemeinschaft/dialplan-scripts/queue-get-sysrec,${EXTEN});
 				if ("${sysrec_filename}" != "") {
+					Answer();
+					Wait(0.5);
 					Playback(/opt/gemeinschaft/sys-rec/${sysrec_filename});
 				}
 				if ("${ring_instead_of_moh}" = "r") {
@@ -1096,12 +1098,14 @@ context to-internal-users-self {
 					TryExec(Proceeding());  // Proceeding() was added in Asterisk 1.6
 					if ("${TRYSTATUS}"="NOAPP") {
 						Verbose(1,Proceeding ...);
-						//Ringing();
+						Ringing();
 					}
 				}
 				else {
 					Set(ring_instead_of_moh=);
-					Progress();  // SIP: "183 Session Progress" with early media
+					//Progress();  // SIP: "183 Session Progress" with early media
+					Answer();
+					Wait(0.5);
 				}
 				Set(queue_entertime=${EPOCH});
 				Queue(${EXTEN},${ring_instead_of_moh},${subqueue},,${queuetimeout});
