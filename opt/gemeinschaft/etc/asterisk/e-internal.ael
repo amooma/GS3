@@ -891,7 +891,7 @@ context to-internal-users-self {
 				if( "${forwarded_by}" != "" ) {
 					Set(CALLERID(name)=);
 				} 
-				AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${is_call_from},${CALLERID(name)});
+				AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${is_call_from});
 				if( "${forwarded_by}" != "" ) {
                                         if( "${CALLERID(name)}" = "" ) {
 						Set(CALLERID(name)=${CALLERID(num)});
