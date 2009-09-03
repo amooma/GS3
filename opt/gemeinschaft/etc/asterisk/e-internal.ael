@@ -91,6 +91,7 @@ macro dial-node( mext_at_node ) {
 	SIPAddHeader(X-GS-is_callfile_origin: ${is_callfile_origin});
 	SIPAddHeader(X-GS-callfile_from_user: ${callfile_from_user});
 	SIPAddHeader(X-GS-forwarded_to: ${forwarded_to});
+	SIPAddHeader(X-GS-forwarded_by: ${forwarded_by});
 	SIPAddHeader(X-GS-is_from_gateway: ${is_from_gateway});
 	Dial(SIP/${mext_at_node},500);
 	Verbose(1,### Tried to call ${mext_at_node} but: ${DIALSTATUS});
@@ -609,6 +610,8 @@ context to-internal-users-self {
 					Set(__callfile_from_user=${SIP_HEADER(X-GS-callfile_from_user)});
 				if ("${SIP_HEADER(X-GS-forwarded_to)}" != "")
 					Set(__forwarded_to=${SIP_HEADER(X-GS-forwarded_to)});
+				if ("${SIP_HEADER(X-GS-forwarded_by)}" != "")
+					Set(__forwarded_by=${SIP_HEADER(X-GS-forwarded_by)});
 				if ("${SIP_HEADER(X-GS-is_from_gateway)}" != "")
 					Set(__is_from_gateway=${SIP_HEADER(X-GS-is_from_gateway)});
 			}
@@ -661,6 +664,8 @@ context to-internal-users-self {
 					Set(__callfile_from_user=${SIP_HEADER(X-GS-callfile_from_user)});
 				if ("${SIP_HEADER(X-GS-forwarded_to)}" != "")
 					Set(__forwarded_to=${SIP_HEADER(X-GS-forwarded_to)});
+				if ("${SIP_HEADER(X-GS-forwarded_by)}" != "")
+					Set(__forwarded_by=${SIP_HEADER(X-GS-forwarded_by)});
 				if ("${SIP_HEADER(X-GS-is_from_gateway)}" != "")
 					Set(__is_from_gateway=${SIP_HEADER(X-GS-is_from_gateway)});
 			}
