@@ -36,7 +36,7 @@ Die einzeln auszuführenden Schritte sind in den nachfolgenden Unterkapiteln erlä
   </section>
   <section id="asterisk-update">
     <title>Asterisk Updaten</title>
-    <para><warning> Sie sollten vor dem Asterisk-Update die Binärmodule von Asterisk entfernen:
+    <para><warning><para>Sie sollten vor dem Asterisk-Update die Binärmodule von Asterisk entfernen:</para>
     <screen>
     Gemeinschaft:~# rm /usr/lib/asterisk/modules/* [ENTER]
     </screen></warning>
