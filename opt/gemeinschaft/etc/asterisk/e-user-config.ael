@@ -175,13 +175,26 @@ context user-config {
 	}
 	
 	*2 => {
-		Set(CDR(amaflags)=OMIT);
-		&user-call-forward-activate-numeric(std,0,0,1);
-		&user-call-forward-activate-numeric(std,1,0,1);
-		&queue-logout-all-silent();
-		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
-		Hangup();
+		//toggle callforwarding 
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${user_name});
+		if ("${fw_std_active}" = "1") {
+			Set(CDR(amaflags)=OMIT);
+			&user-call-forward-activate-numeric(std,0,0,0);
+			&user-call-forward-activate-numeric(std,1,0,0);
+			TryExec(Set(DEVSTATE(Custom:${user_name}901)=NOT_INUSE));
+			Wait(0.5);
+			Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/deaktiviert);
+			Hangup();
+		} else {
+			Set(CDR(amaflags)=OMIT);
+			&user-call-forward-activate-numeric(std,0,0,1);
+			&user-call-forward-activate-numeric(std,1,0,1);
+			&queue-logout-all-silent();
+			Wait(0.5);
+			TryExec(Set(DEVSTATE(Custom:${user_name}901)=BUSY));
+			Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
+			Hangup();
+		}
 	}
 	dnd-on => {
 		// like *2 but silent
@@ -196,6 +209,7 @@ context user-config {
 		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
+		TryExec(Set(DEVSTATE(Custom:${user_name}901)=NOT_INUSE));
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/deaktiviert);
 		Hangup();

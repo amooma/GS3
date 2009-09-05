@@ -1091,6 +1091,28 @@ context urldial {
 }
 
 
+//--------------------------------------------------------------------
+//  Set the Custom-Hints if there is set an callforward from the GUI
+//--------------------------------------------------------------------
+
+context toggle-cfwd-hint {
+	toggle => {
+		//toggle callforwarding
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${user_name});
+		if ("${fw_std_active}" = "1") {
+			Set(CDR(amaflags)=OMIT);
+			TryExec(Set(DEVSTATE(Custom:${user_name}901)=BUSY));
+			Hangup();
+		} else {
+			Set(CDR(amaflags)=OMIT);
+			TryExec(Set(DEVSTATE(Custom:${user_name}901)=NOT_INUSE));
+			Hangup();
+		}
+	}
+}
+
+
+
 //---------------------------------------------------------------------
 //  Test-Extensions
 //---------------------------------------------------------------------

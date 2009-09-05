@@ -76,8 +76,11 @@ while ($r = $rs->fetchRow()) {
 	$number_var = trim( $r['number_var'] );
 	$number_vml = trim( $r['number_vml'] );
 	$number = '';
-	if     ($r['active']==='std' && $number_std != '')
+	if     ($r['active']==='std' && $number_std != '') {
 		$number = $number_std;
+		if ($r['case'] == 'always')
+			gs_agi_set_variable( 'fw_std_active', '1');  //used for Featuretoggling cfwd
+	}
 	elseif ($r['active']==='var' && $number_var != '')
 		$number = $number_var;
 	elseif ($r['active']==='vml' && $number_vml != '')
