@@ -84,7 +84,7 @@ $MODULES['pb'       ]['sub'][
 }
 
 $MODULES['pb'       ]['sub'][
-		'csvimport']   =  array('title' => __('CSV-Import'));
+		'csvimport']   =  array('title' => __('CSV-Import/Export'));
 
 #####################################################################
 
