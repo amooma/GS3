@@ -95,6 +95,20 @@ if (count($users) < 1) {
 
 ?>
 
+<div id="chart">
+
+<?php
+if($_REQUEST['action'] == 'fullscreenon') {
+	echo '<a id="chart-fullscreen-toggle" class="fr" style="cursor:pointer; margin:0 1px 1px 0;" href="', gs_url($SECTION, $MODULE, null, 'action=fullscreenoff').'" title="', __('Vollbild'), '"><img alt="', __('Vollbild'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/window_fullscreen.png" /></a>';
+} else {
+	echo '<a id="chart-fullscreen-toggle" class="fr" style="cursor:pointer; margin:0 1px 1px 0;" href="', gs_url($SECTION, $MODULE, null, 'action=fullscreenon').'" title="', __('Vollbild'), '"><img alt="', __('Vollbild'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/window_fullscreen.png" /></a>';
+}
+
+
+?>
+<br style="clear:right;" />
+
+
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
@@ -448,5 +462,24 @@ WHERE
 
 
 <script type="text/javascript">/*<![CDATA[*/
+<?php
+if ($_REQUEST['action'] == 'fullscreenon') {
+?>
+var chart = document.getElementById('chart');
+var toggle = document.getElementById('chart-fullscreen-toggle');
+if (chart && toggle) {
+	chart.style.position = 'absolute';
+	chart.style.top        = '0';
+	chart.style.left       = '0';
+	chart.style.right      = '0';
+	chart.style.bottom     = '0';
+	chart.style.background = '#fff';
+	chart.style.padding    = '0.4em 0.8em 0.7em 0.8em';
+	toggle.src = '<?php echo GS_URL_PATH; ?>crystal-svg/16/act/window_nofullscreen.png';
+	}
+<?php
+	}
+?>
+
 window.setTimeout('document.location.reload();', 12000);
 /*]]>*/</script>
