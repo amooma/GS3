@@ -96,14 +96,7 @@ function print_name ( $firstname, $lastname ) {
 $ext  = trim( @$argv[1] );
 $cid  = trim( @$argv[2] );
 $source = trim( @$argv[3] );
-$cidname  = trim( @$argv[4] );
 
-if ( $cidname ) { 
-	die();
-}
-if ( strlen( $cidname ) > 0 ) {  // is not just digits
-	die();
-}
 if (! $ext) {
 	die();
 }
