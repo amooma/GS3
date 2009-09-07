@@ -596,6 +596,14 @@ $EMAIL_ADDRESS          = 'noreply@gemeinschaft.net';
 $EMAIL_NAME             = 'Gemeinschaft';
   # the realname of a user the voicemail notifications appears to come from
 
+$TRANSFER_FAILED_CALLBACK       = true;
+  # a blind transfered call will return to its origin
+  # if the target is busy, unavailable or offline
+
+$CALLBACK_FAILED_EXTENSION      = '';
+  # if the origin of a blind transfer that failed is also busy, unavailable or 
+  # offline the call will be transfered to this extension. 
+  # If empty, the channel will be busy.
 
 /***********************************************************
 *    Astbuttond

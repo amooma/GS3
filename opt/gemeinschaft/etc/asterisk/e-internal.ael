@@ -93,6 +93,9 @@ macro dial-node( mext_at_node ) {
 	SIPAddHeader(X-GS-forwarded_to: ${forwarded_to});
 	SIPAddHeader(X-GS-forwarded_by: ${forwarded_by});
 	SIPAddHeader(X-GS-is_from_gateway: ${is_from_gateway});
+	SIPAddHeader(X-GS-is_huntgroup: ${is_huntgroup});
+	SIPAddHeader(X-GS-SIPTRANSFER: ${SIPTRANSFER});
+	SIPAddHeader(X-GS-BLINDTRANSFER: ${BLINDTRANSFER});
 	Dial(SIP/${mext_at_node},500);
 	Verbose(1,### Tried to call ${mext_at_node} but: ${DIALSTATUS});
 	&hangup-proper-status();
@@ -614,6 +617,12 @@ context to-internal-users-self {
 					Set(__forwarded_by=${SIP_HEADER(X-GS-forwarded_by)});
 				if ("${SIP_HEADER(X-GS-is_from_gateway)}" != "")
 					Set(__is_from_gateway=${SIP_HEADER(X-GS-is_from_gateway)});
+				if ("${SIP_HEADER(X-GS-is_huntgroup)}" != "")
+					Set(__is_huntgroup=${SIP_HEADER(X-GS-is_huntgroup)});
+				if ("${SIP_HEADER(X-GS-SIPTRANSFER)}" != "")
+					Set(__SIPTRANSFER=${SIP_HEADER(X-GS-SIPTRANSFER)});
+				if ("${SIP_HEADER(X-GS-BLINDTRANSFER)}" != "")
+					Set(__BLINDTRANSFER=${SIP_HEADER(X-GS-BLINDTRANSFER)});
 			}
 		}
 		
@@ -668,6 +677,12 @@ context to-internal-users-self {
 					Set(__forwarded_by=${SIP_HEADER(X-GS-forwarded_by)});
 				if ("${SIP_HEADER(X-GS-is_from_gateway)}" != "")
 					Set(__is_from_gateway=${SIP_HEADER(X-GS-is_from_gateway)});
+				if ("${SIP_HEADER(X-GS-is_huntgroup)}" != "")
+					Set(__is_huntgroup=${SIP_HEADER(is_huntgroup)});
+				if ("${SIP_HEADER(X-GS-SIPTRANSFER)}" != "")
+					Set(__SIPTRANSFER=${SIP_HEADER(X-GS-SIPTRANSFER)});
+				if ("${SIP_HEADER(X-GS-BLINDTRANSFER)}" != "")
+					Set(__BLINDTRANSFER=${SIP_HEADER(X-GS-BLINDTRANSFER)});
 			}
 			//else {
 				//if ("${CHANNEL(channeltype)}" != "Local") {
@@ -957,6 +972,9 @@ context to-internal-users-self {
 			//
 			user_busy:
 				Verbose(1,### Called user ${EXTEN} is busy);
+				
+				#exec "/opt/gemeinschaft/etc/asterisk/e-transfer-failed-callback.php"
+				
 				// forward on busy?
 				if ("${fw_${is_call_from}_busy}" != "") {
 					if ("${is_callcompletion}" = "1") {
@@ -978,6 +996,9 @@ context to-internal-users-self {
 			//
 			user_unavail:
 				Verbose(1,### Called user ${EXTEN} does not answer);
+				
+				#exec "/opt/gemeinschaft/etc/asterisk/e-transfer-failed-callback.php"
+				
 				// forward on unavail?
 				if ("${fw_${is_call_from}_unavail}" != "") {
 					if ("${is_callcompletion}" = "1") {
@@ -999,6 +1020,9 @@ context to-internal-users-self {
 			//
 			user_offline:
 				Verbose(1,### Called user ${EXTEN} is offline);
+
+				#exec "/opt/gemeinschaft/etc/asterisk/e-transfer-failed-callback.php"
+
 				// forward on offline?
 				if ("${fw_${is_call_from}_offline}" != "") {
 					if ("${is_callcompletion}" = "1") {

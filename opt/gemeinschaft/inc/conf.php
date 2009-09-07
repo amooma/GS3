@@ -356,6 +356,8 @@ _gscnf( 'EMAIL_DELIVERY'            , 'sendmail'         );
 _gscnf( 'EMAIL_ADDRESS'            , 'noreply@localhost'         );
 _gscnf( 'EMAIL_NAME'            , 'Gemeinschaft'         );
 _gscnf( 'USER_SELECT_CALLERID'      , false		 );
+_gscnf( 'TRANSFER_FAILED_CALLBACK'      , false		 );
+_gscnf( 'CALLBACK_FAILED_EXTENSION'      , ''		 );
 #Variables for the Astbuttond
 _gscnf( 'BUTTONDAEMON_USE'            , false           );
 _gscnf( 'BUTTONDAEMON_HOST'            , '127.0.0.1'    );
