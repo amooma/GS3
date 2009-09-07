@@ -913,6 +913,13 @@ context to-internal-users-self {
 					}
 					Set(CALLERID(name)=${CALLERID(name)} >> ${forwarded_by});
                                 }
+				if ("${SIPTRANSFER}" = "yes") {
+
+				Set(callback_user=$["${BLINDTRANSFER}" : "^SIP/([0-9]+)"]);
+					if ("${callback_user}" == "${EXTEN}") {
+						Set(CALLERID(name)="[RR] ${CALLERID(name)}");
+					}
+				}
 				//UserEvent(UserCallUI|user: ${user_name}|calledparty: ${EXTEN});
 				Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},o);
 			}

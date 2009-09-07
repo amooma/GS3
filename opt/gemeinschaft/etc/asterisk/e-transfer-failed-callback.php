@@ -46,7 +46,6 @@ if ( gs_get_conf('GS_TRANSFER_FAILED_CALLBACK') ) {
 	echo  "\t\t\t\t", 'if ("${SIPTRANSFER}" = "yes") {', "\n";
 	echo  "\t\t\t\t\t", 'Set(callback_user=$["${BLINDTRANSFER}" : "^SIP/([0-9]+)"]);', "\n";
 	echo  "\t\t\t\t\t", 'if ("${callback_user}" != "${EXTEN}") {', "\n";
-	echo  "\t\t\t\t\t\t", 'Set(CALLERID(name)="[RR] ${CALLERID(name)}");', "\n";
 	echo  "\t\t\t\t\t\t", 'Wait(1);', "\n";
 	echo  "\t\t\t\t\t\t", 'jump ${callback_user}@from-internal-users;',"\n";
 	echo  "\t\t\t\t\t", '}', "\n";
