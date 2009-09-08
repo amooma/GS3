@@ -181,7 +181,7 @@ context user-config {
 			Set(CDR(amaflags)=OMIT);
 			&user-call-forward-activate-numeric(std,0,0,0);
 			&user-call-forward-activate-numeric(std,1,0,0);
-			TryExec(Set(DEVSTATE(Custom:${user_name}901)=NOT_INUSE));
+			TryExec(Set(DEVSTATE(Custom:${user_name}fwd)=NOT_INUSE));
 			Wait(0.5);
 			Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/deaktiviert);
 			Hangup();
@@ -191,7 +191,7 @@ context user-config {
 			&user-call-forward-activate-numeric(std,1,0,1);
 			&queue-logout-all-silent();
 			Wait(0.5);
-			TryExec(Set(DEVSTATE(Custom:${user_name}901)=BUSY));
+			TryExec(Set(DEVSTATE(Custom:${user_name}fwd)=BUSY));
 			Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
 			Hangup();
 		}
@@ -209,7 +209,7 @@ context user-config {
 		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
-		TryExec(Set(DEVSTATE(Custom:${user_name}901)=NOT_INUSE));
+		TryExec(Set(DEVSTATE(Custom:${user_name}fwd)=NOT_INUSE));
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/deaktiviert);
 		Hangup();

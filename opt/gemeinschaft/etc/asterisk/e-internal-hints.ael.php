@@ -78,7 +78,7 @@ if ($rs) {
 	while ($r = $rs->fetchRow()) {
 		echo 'hint(SIP/', $r['name'] ,') ', $r['name'] ,' => {}', "\n";
 		echo 'hint(SIP/', $r['name'] ,') ***', $r['name'] ,' => {}', "\n";
-		echo 'hint(Custom:',$r['name'] ,'901) ', $r['name'] ,'901 => {}', "\n";
+		echo 'hint(Custom:',$r['name'] ,'fwd) ', $r['name'] ,'fwd => {}', "\n";
 	}
 } else {
 	echo "//ERROR\n";
