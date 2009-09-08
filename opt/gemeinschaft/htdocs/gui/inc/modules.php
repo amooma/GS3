@@ -132,8 +132,8 @@ $MODULES['monitor'  ]=  array(
 	'icon'  => 'crystal-svg/%s/app/display.png',
 	'boi_ok'=> false,
 	'sub' => array(
-		'queues'       => array('title' => __('Warteschlangen')),
-		'pgrps'        => array('title' => __('Rufannahmegrp.'))
+		'pgrps'        => array('title' => __('Rufannahmegrp.')),
+		'queues'       => array('title' => __('Warteschlangen'))
 	)
 );
 if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
