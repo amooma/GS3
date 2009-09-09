@@ -45,8 +45,14 @@ macro check-valid-extension( mext ) {
 	}
 	
 	// is it to one of *our* extensions?
-	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${mext});
+	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${mext},${user_id},${CALLERID(num)});
 	Verbose(1,### Extension ${mext} is of type ${exttype});
+	
+	if ( "${record_call}" != "" ){
+		Verbose(1,### Record call to file ${record_call} );
+		MixMonitor(${record_call},ab);
+	}
+
 	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference" && "${exttype}" != "foreign") {
 		Verbose(1,### Extension ${mext} is unknown);
 		

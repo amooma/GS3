@@ -143,7 +143,6 @@ FROM
 	`callforwards` `cf` ON (`cf`.`user_id`=`u`.`id`) LEFT JOIN
 	`ast_queue_members` `qm` ON (`qm`.`_user_id`=`u`.`id`)
 WHERE
-	`u`.`nobody_index` IS NULL AND
 	`u`.`user` IN ('. $users_sql .') AND
 	(`cf`.`case` IS NULL OR `cf`.`case`=\'always\')
 GROUP BY `u`.`id`

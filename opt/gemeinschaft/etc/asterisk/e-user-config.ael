@@ -195,6 +195,7 @@ context user-config {
 			Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
 			Hangup();
 		}
+
 	}
 	dnd-on => {
 		// like *2 but silent

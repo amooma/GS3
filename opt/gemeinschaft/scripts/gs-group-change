@@ -37,32 +37,36 @@ include_once( GS_DIR .'inc/group-fns.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --name=<name> --title=<title> --type=<type>';
+$usage = 'Usage: '. baseName(__FILE__) .' --group=<old name> --name=<new name> --title=<title>';
 
 $opts = @getOptsNoMultiples( '',
 	array(
 		'name=',
 		'title=',
-		'type=',
+		'group=',
 	),
 	$usage
 );
-if (! isSet($opts['name'])
- || ! isSet($opts['title'])
- || ! isSet($opts['type'])
- ) {
+
+if ((! isSet($opts['group'])) || (! isSet($opts['name'])) || (! isSet($opts['title'])))
+{
 	gs_script_invalid_usage( $usage );
 }
 
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_group_add( $opts['name'], $opts['title'], $opts['type'] );
+$group = gs_group_id_get($opts['group']);
+
+if (isGsError( $group )) gs_script_error( $group->getMsg() );
+if (! $group)            gs_script_error();
+
+$ret = @ gs_group_change( $group,  $opts['name'], $opts['title']);
 
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 
-echo "Group added.\n";
+echo "Group changed.\n";
 
 
 ?>

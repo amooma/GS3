@@ -36,6 +36,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_del.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callblocking_set.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 require_once( GS_DIR .'inc/boi-soap/boi-api.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
@@ -65,8 +66,6 @@ function count_users_logged_in( $DB ) {
 	return $num;
 }
 
-
-
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
 
 
@@ -79,9 +78,9 @@ $page        = (int)@$_REQUEST['page'     ] ;
 $edit_user   = trim(@$_REQUEST['edit'     ]);
 $delete_user = trim(@$_REQUEST['delete'   ]);
 $action      = trim(@$_REQUEST['action'   ]);
-if (! in_array($action, array('list','del','add','add-and-view','view','edit','save'), true))
-	$action = 'list';
 
+if (! in_array($action, array('list','del','add','add-and-view','view','edit','save','insert-group','remove-group'), true))
+	$action = 'list';
 $cbdelete    = trim(@$_REQUEST['cbdelete' ]);
 $cbregexp    = trim(@$_REQUEST['cbregexp' ]);
 $cbpin       = trim(@$_REQUEST['cbpin'    ]);
@@ -92,8 +91,11 @@ $extnumdel   = trim(@$_REQUEST['extndel'  ]);
 $u_pgrps     =      @$_REQUEST['u_pgrps'  ] ;
 $u_pgrp_ed   =      @$_REQUEST['u_pgrp_ed'] ;
 
-$u_grp_ed    =      @$_REQUEST['u_grp_ed' ] ;
-$u_grp_id    = (int)@$_REQUEST['u_grp_id' ] ;
+$u_prv_grp_ed    =      @$_REQUEST['u_prv_grp_ed' ] ;
+$u_prv_grp_id    = (int)@$_REQUEST['u_prv_grp_id' ] ;
+
+$u_groups_ed  =      @$_REQUEST['u_groups_ed' ] ;
+$u_groups     =      @$_REQUEST['u_groups' ] ;
 
 $user_fname  = trim(@$_REQUEST['ufname'   ]);
 $user_lname  = trim(@$_REQUEST['ulname'   ]);
@@ -106,6 +108,35 @@ $user_host   = trim(@$_REQUEST['uhost'    ]);
 $bp_add_h    = (int)@$_REQUEST['bp_add_h' ] ;
 $bp_del_h    = (int)@$_REQUEST['bp_del_h' ] ;
 
+$group       = (int)@$_REQUEST['group'    ] ;
+
+
+if ($edit_user) {
+
+	if ($action === 'insert-group') {
+		$ret = gs_group_member_add( $group,  $edit_user);
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		sleep(1); //FIXME
+		$action = 'view';
+	}
+	if ($action === 'remove-group') {
+		$ret = gs_group_member_del( $group,  $edit_user);
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		sleep(1); //FIXME
+		$action = 'view';
+	}
+
+
+	$uid = (int)$DB->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape($edit_user) .'\'' );
+	
+	if ($uid == 0)
+		echo '<div class="errorbox">', "Error. User not Found." ,'</div>',"\n";	
+
+	$groups     = gs_group_info_get(false, 'user');
+
+	$groups_my  = gs_group_members_groups_get(Array($uid), 'user', false);
+
+}
 
 
 if ($action === 'del') {
@@ -127,6 +158,15 @@ if ($action === 'add' || $action === 'add-and-view') {
 		if ($action === 'add-and-view') {
 			$action = 'view';
 			$edit_user = $user_name;
+
+			$uid = (int)$DB->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape($edit_user) .'\'' );
+	
+			if ($uid == 0)
+				echo '<div class="errorbox">', "Error. User not Found." ,'</div>',"\n";	
+		
+			$groups     = gs_group_info_get(false, 'user');
+			$groups_my  = gs_group_members_groups_get(Array($uid), 'user');
+
 		} else {
 			$action = 'list';
 		}
@@ -137,7 +177,7 @@ if ($action === 'add' || $action === 'add-and-view') {
 	
 }
 
-if ($action === 'edit') {
+if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 	
 	if ($cbdelete) {
 		$ret = gs_callblocking_delete( $edit_user, $cbdelete );
@@ -148,31 +188,22 @@ if ($action === 'edit') {
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	}
 	if ($bp_del_h > 0) {
-		$uid = (int)$DB->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape($edit_user) .'\'' );
-		if ($uid > 0) {
-			$query = 'DELETE FROM `boi_perms` WHERE `user_id`='.$uid.' AND `host_id`='.$bp_del_h;
-			$ok = $DB->execute($query);
-		}
+		$ok = $DB->execute('DELETE FROM `boi_perms` WHERE `user_id`='.$uid.' AND `host_id`='.$bp_del_h);
+		
 	}
-	
-	$action = 'edit';
 }
 
-if ($action === 'save') {
+if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 	
-	if ($edit_user) {
-		$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email );
-		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
-		if (! isGsError( $ret )) {
-			$boi_api = gs_host_get_api((int)$user_host);
-			if ($boi_api == '') {
-				$uid = (int)$DB->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape($edit_user) .'\'' );
-				if ($uid > 0) {
-					$DB->execute( 'UPDATE `ast_sipfriends` SET `secret`=\''. $DB->escape(preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['usecret'])) .'\' WHERE `_user_id`='. $uid );
-				}
-			}
+	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email );
+	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	if (! isGsError( $ret )) {
+		$boi_api = gs_host_get_api((int)$user_host);
+		if ($boi_api == '') {
+			$DB->execute( 'UPDATE `ast_sipfriends` SET `secret`=\''. $DB->escape(preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['usecret'])) .'\' WHERE `_user_id`='. $uid );
 		}
 	}
+	
 	if ($cbregexp) {
 		$ret = gs_callblocking_set( $edit_user, $cbregexp, $cbpin );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
@@ -182,7 +213,7 @@ if ($action === 'save') {
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	}
 	
-	if ($u_pgrp_ed && $edit_user) {
+	if ($u_pgrp_ed) {
 		$sql_query =
 			'DELETE `p` '.
 			'FROM `pickupgroups_users` `p` , `users` `u` '.
@@ -200,16 +231,16 @@ if ($action === 'save') {
 			}
 		}
 	}
-	
-	if ($u_grp_ed && $edit_user) {
+
+	if ($u_prv_grp_ed) {
 		$query =
 			'UPDATE `users` SET '.
-				'`group_id`='. ($u_grp_id > 0 ? $u_grp_id : 'NULL') .' '.
+				'`group_id`='. ($u_prv_grp_id > 0 ? $u_prv_grp_id : 'NULL') .' '.
 			'WHERE `user`=\''. $DB->escape($edit_user) .'\'';
 		$ok = $DB->execute($query);
 	}
 	
-	if ($bp_add_h > 0 && $edit_user) {
+	if ($bp_add_h > 0) {
 		$user_id = (int)$DB->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape($edit_user) .'\'' );
 		if ($user_id > 0) {
 			$host_exists = $DB->executeGetOne( 'SELECT 1 FROM `hosts` WHERE `id`='. $bp_add_h );
@@ -817,7 +848,7 @@ echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 		</td>
 	</tr>
 	<tr>
-		<th><?php echo __('SIP-Pa&szlig;wort'); ?>:</th>
+		<th><?php echo __('SIP-Passwort'); ?>:</th>
 		<td>
 			<?php
 				if ($boi_api == '') {
@@ -880,38 +911,42 @@ echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 <br />
 
 <?php
-echo '<input type="hidden" name="u_grp_ed" value="yes" />', "\n";
+echo '<input type="hidden" name="u_prv_grp_ed" value="yes" />', "\n";
 ?>
 <table cellspacing="1">
 <tbody>
 	<tr>
 		<th style="width:180px;">
-			<?php echo __('Benutzergruppe'); ?>
+			<?php echo __('Provisioning Gruppe'); ?>
 		</th>
 		<td style="width:280px;">
 <?php
+
 		$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
-		$u_groups = $mptt->get_tree_as_list( null );
-		echo '<select name="u_grp_id">',"\n";
+		$u_prv_groups = $mptt->get_tree_as_list( null );
+		echo '<select name="u_prv_grp_id">',"\n";
 		echo '<option value=""';
 		if ($r['group_id'] == '')
 			echo ' selected="selected"';
 		echo '>- ', __('keine') ,' -</option>',"\n";
-		if (is_array($u_groups)) {
+		if (is_array($u_prv_groups)) {
 			$is_root_node = true;
 			$root_level = 0;
-			foreach ($u_groups as $u_group) {
+			foreach ($u_prv_groups as $u_prv_group) {
 				if ($is_root_node) {  # skip root node
-					$root_level = $u_group['__mptt_level'];
+					$root_level = $u_prv_group['__mptt_level'];
 					$is_root_node = false;
 					continue;
 				}
-				echo '<option value="', $u_group['id'] ,'"';
-				if ($r['group_id'] == $u_group['id'])
+				echo '<option value="', $u_prv_group['id'] ,'"';
+				if ($r['group_id'] == $u_prv_group['id'])
 					echo ' selected="selected"';
 				echo '>';
-				echo @str_repeat('&nbsp;&nbsp;&nbsp;', $u_group['__mptt_level']-$root_level-1);
-				echo htmlEnt($u_group['title']);
+				echo @str_repeat('&nbsp;&nbsp;&nbsp;', $u_prv_group['__mptt_level']-$root_level-1);
+				if ($u_prv_group['title'])
+					echo htmlEnt($u_prv_group['title']);
+				else
+					echo htmlEnt($u_prv_group['name']);
 				echo '</option>' ,"\n";
 			}
 		}
@@ -1155,6 +1190,76 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 </button>
 
 </form>
+
+<br>
+<table cellspacing="1">
+<thead>
+<tr>
+	<th style="min-width:21em;" colspan="5"><?php echo __('Benutzergruppen '); ?></th>
+</tr>
+
+<tr>
+	<th style="min-width:12em;"><?php echo __('Gruppe'); ?></th>
+	<th style="min-width:12em;width:18em;"><?php echo __('Titel'); ?></th>
+	<th style="min-width:5em;"><?php echo __('Typ'); ?></th>
+	<th style="min-width:3em;"><?php echo __('Mitglieder'); ?></th>
+	<th style="min-width:1em;"></th>
+</tr>
+</thead>
+<tbody>
+<?php
+
+	$groups_my_info     = gs_group_info_get($groups_my, 'user');
+	
+	$i = 0;
+
+	if ((count($groups_my_info) - count($groups) - 1) ) {
+		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+		echo '<form method="post" action="'.GS_URL_PATH.'">';
+		echo gs_form_hidden($SECTION, $MODULE);
+		echo '<input type="hidden" name="action" value="insert-group" />' ,"\n";
+		echo '<input type="hidden" name="page" value="'.$page.'" />' ,"\n";
+		echo '<input type="hidden" name="number" value="'.rawUrlEncode($number).'" />' ,"\n";
+		echo '<input type="hidden" name="name" value="'.rawUrlEncode($name).'" />' ,"\n";
+		echo '<input type="hidden" name="edit" value="'.rawUrlEncode($edit_user).'" />' ,"\n";
+		echo '<td class="l nobr" colspan="2">';
+		echo '<select name="group">', "\n";
+		foreach ($groups as $group) {
+			if (!in_array($group['id'], $groups_my) && !gs_group_connections_get($group['id']))
+				echo '<option value="',$group['id'] ,'">',$group['name'], ' -- ',$group['title'] ,'</option>' ,"\n";
+		}
+		echo '</select>', "\n";
+		echo '</td>', "\n";
+		echo '<td>',$group['type']  ,'</td>', "\n";
+		echo '<td class="r" colspan="2">', "\n";
+		echo  '<button type="submit" name="id" value="'.$group['id'].'" title="', __('Gruppe Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
+		echo '</td>', "\n";
+		echo '</tr>' ,"\n";
+		echo '</form>',"\n";
+	}
+
+	foreach ($groups_my_info as $group) {
+		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+		echo '<td class="l nobr">';
+		echo $group['name']  ,'</td>', "\n";
+		echo '<td>',$group['title']  ,'</td>', "\n";	
+		echo '<td>',$group['type']  ,'</td>', "\n";
+		echo '<td class="r">',count(gs_group_members_get(Array($group['id']))), '</td>', "\n";
+		echo '<td class="r">', "\n";
+		
+		if (!gs_group_connections_get($group['id']))
+			echo '<a href="', gs_url($SECTION, $MODULE, null,'&amp;edit='. rawUrlEncode($edit_user) .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page. '&amp;action=remove-group&amp;group='.$group['id']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+		echo '</td>', "\n";
+		echo '</tr>' ,"\n";
+		$i++;
+	}
+
+?>
+
+</tbody>
+</table>
+
+
 
 <?php
 }
