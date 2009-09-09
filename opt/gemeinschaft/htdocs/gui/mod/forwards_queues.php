@@ -32,6 +32,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_queue_callforward_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queue_callforward_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queue_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queues_get.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -64,6 +65,16 @@ $actives = array(
 $queue_ext = preg_replace('/[^\d]$/', '', @$_REQUEST['queue']);
 
 $queues = @gs_queues_get();
+
+$user_groups  = gs_group_members_groups_get(Array(@$_SESSION['sudo_user']['info']['id']), 'user');
+$queue_groups = gs_group_members_get(gs_group_permissions_get($user_groups, 'forward_queues', 'queue'));
+
+/*
+echo "<pre>";
+var_dump($queues);
+echo "</pre>";
+*/
+
 if (isGsError($queues)) {
 	echo __('Fehler beim Abfragen der Warteschlangen.'), ' - ', $queues->getMsg();
 	return;  # return to parent file
@@ -75,10 +86,11 @@ if (isGsError($queues)) {
 $queue = null;
 if ($queue_ext != '') {
 	foreach ($queues as $q) {
-		if ($q['name'] == $queue_ext) {
+		if (($q['name'] == $queue_ext) &&  (array_search($q['id'], $queue_groups) !== FALSE)) {
 			$queue = $q;
 			break;
 		}
+		
 	}
 }
 
@@ -123,7 +135,8 @@ if (@$_REQUEST['action']=='save' && $queue) {
 if (count($queues) <= 25) {
 	echo '<select name="queue" onchange="this.form.submit();">', "\n";
 	foreach ($queues as $q) {
-		echo '<option value="', $q['name'], '"', ($q['name']==$queue_ext ? ' selected="selected"' :''), '>', $q['name'], ' (', htmlEnt($q['title']), ')</option>', "\n";
+		if (array_search($q['id'], $queue_groups) !== FALSE)
+			echo '<option value="', $q['name'], '"', ($q['name']==$queue_ext ? ' selected="selected"' :''), '>', $q['name'], ' (', htmlEnt($q['title']), ')</option>', "\n";
 	}
 	echo '</select>', "\n";
 } else {

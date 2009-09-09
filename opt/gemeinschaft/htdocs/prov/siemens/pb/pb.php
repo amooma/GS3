@@ -199,7 +199,7 @@ if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
 	$tmp[$pos] = array(
 			'k' => 'imported',
-			'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', __("Extern"))
+			'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', __("Importiert"))
 	);
 }
 kSort($tmp);
@@ -316,7 +316,6 @@ if (! $type) {
 #########################################################
 
 else {
-	
 	$page = 0;
 	$per_page = 15; # Number of phonebook entries sent to the phone.
 	
@@ -339,6 +338,11 @@ else {
 	
 	switch ($type) {
 	case 'gs' :
+		include_once( GS_DIR .'inc/group-fns.php' );
+		$user_groups       = gs_group_members_groups_get(Array($user_id), 'user');
+		$permission_groups = gs_group_permissions_get($user_groups, 'phonebook_user');
+		$group_members     = gs_group_members_get($permission_groups);
+
 		$query =
 'SELECT SQL_CALC_FOUND_ROWS
 	`u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `number`
@@ -346,7 +350,7 @@ FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE
-	`u`.`nobody_index` IS NULL AND (
+	`u`.`id` IN ('.implode(',', $group_members).') AND (
 	`u`.`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
 	) '.$key_sql.'
 ORDER BY `u`.`lastname`, `u`.`firstname`

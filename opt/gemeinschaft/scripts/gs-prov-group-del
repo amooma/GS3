@@ -32,37 +32,32 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/group-fns.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_group_del.php' );
+
 
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --name=<name> --title=<title> --type=<type>';
+$usage = 'Usage: '. baseName(__FILE__) .' --group=<name>';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'name=',
-		'title=',
-		'type=',
+		'group='
 	),
 	$usage
 );
-if (! isSet($opts['name'])
- || ! isSet($opts['title'])
- || ! isSet($opts['type'])
- ) {
+if (! isSet($opts['group'])) {
 	gs_script_invalid_usage( $usage );
 }
+
 
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_group_add( $opts['name'], $opts['title'], $opts['type'] );
-
+$ret = @ gs_group_del_by_name( $opts['group'] );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
-
-echo "Group added.\n";
+echo "Group deleted.\n";
 
 
 ?>

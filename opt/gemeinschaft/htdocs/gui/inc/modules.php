@@ -137,10 +137,15 @@ $MODULES['monitor'  ]=  array(
 if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
 $MODULES['monitor'  ]['sub'][
 		'peers']       =  array('title' => __('Kollegen'));
+
 /*
-$MODULES['monitor'  ]['sub'][
-		'friends']     =  array('title' => __('Berechtigungen'));
+	if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') == 'gemeinschaft') {
+		$MODULES['monitor'  ]['sub'][
+			'friends']     =  array('title' => __('Berechtigungen'));
+	}
+
 */
+
 }
 
 #####################################################################
@@ -186,6 +191,13 @@ $MODULES['stats'    ]=  array(
 		'callvolume'   => array('title' => __('Gespr.-Volumen'))
 	)
 );
+
+if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') == 'group') {
+	$MODULES['stats']['sub']['groupc'] = array('title' => __('Kollegenstatistik'));
+	$MODULES['stats']['sub']['groupout'] = array('title' => __('Kollegen-ausgehend'));
+	$MODULES['stats']['sub']['combined'] = array('title' => __('Tagesauswertung'));
+}
+
 
 #####################################################################
 
@@ -237,10 +249,10 @@ $MODULES['admin'    ]=  array(
 	'sub' => array(
 		'overview'     => array('title' => __('&Uuml;bersicht')),
 		'users'        => array('title' => __('Benutzer')),
-		'groups'       => array('title' => __('Benutzergruppen')),
+		'groups'       => array('title' => __('Gruppen')),
 		'queues'       => array('title' => __('Warteschlangen')),
 		'pgroups'      => array('title' => __('Rufannahmegrp.#pl')),
-		//'ivrs'         => array('title' => __('IVRs')),
+//		'ivrs'         => array('title' => __('IVRs')),
 		'calls'        => array('title' => __('CDRs')),
 		'reload'       => array('title' => __('Reload'))
 	)
@@ -259,6 +271,7 @@ $MODULES['prov'     ]=  array(
 	'boi_ok'=> false,
 	'sub' => array(
 		'phones'       => array('title' => __('Telefone')),
+		'groups'       => array('title' => __('Provisioninggrp.')),
 		'keyprof'      => array('title' => __('Tasten-Profile')),
 		'provparams'   => array('title' => __('Parameter')),
 		'jobs'         => array('title' => __('Jobs'))
@@ -288,6 +301,8 @@ $MODULES['routing'  ]['sub'][
 		'outbound']    =  array('title' => __('Routen &amp; LCR'));
 $MODULES['routing'  ]['sub'][
 		'test']        =  array('title' => __('Routing-Test'));
+$MODULES['routing'  ]['sub'][
+		'blacklist']   =  array('title' => __('Blacklist'));
 
 #####################################################################
 

@@ -31,47 +31,13 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
 require_once( GS_DIR .'inc/pcre_check.php' );
-require_once( GS_DIR .'inc/log.php' );
-include_once( GS_DIR .'lib/yadb/yadb.php' );
-include_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
+include_once( GS_DIR .'inc/get-listen-to-ids.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 error_reporting(0);
-
-
-function _user_groups_get( $user_id, $with_0=null )
-{
-	global $db;
-	
-	if (! $db) return false;
-	$user_id = (int)$user_id;
-	
-	$group_id = (int)$db->executeGetOne( 'SELECT `group_id`
-		FROM `users` WHERE `id`='. $user_id
-		);
-	
-	# get nested groups
-	#
-	$member_groups = array();
-	if ($with_0 !== false) {
-		$member_groups[] = $with_0;
-	}
-	if ($group_id > 0) {
-		$mptt = new YADB_MPTT($db, 'user_groups', 'lft', 'rgt', 'id');
-		$path = @$mptt->get_path_to_node( $group_id, true );
-		if (! is_array($path))
-			return false;
-		
-		foreach ($path as $group) {
-			$member_groups[] = $group['id'];
-		}
-	}
-	
-	return $member_groups;
-}
-
 
 function _no_more_routes( $idx=1 )
 {
@@ -165,9 +131,11 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 $db = gs_db_slave_connect();
 if (! $db) gs_agi_err( 'DB error' );
 
-$user_groups = _user_groups_get( $user_id, 0 );
+$user_groups = gs_group_members_groups_get(array($user_id), 'user');
 if (! is_array($user_groups)) $user_groups = array(0);
-//$user_groups = array_merge(array(0), $user_groups);
+
+$host_groups = gs_group_members_groups_get(gs_get_listen_to_ids(), 'host');
+if (! is_array($host_groups)) $host_groups = array(0);
 
 $t = time();
 $wd = strToLower(subStr(date('D', $t),0,2));
@@ -191,14 +159,25 @@ $have_match = false;
 $lcr_prefix = '';
 while ($route = $rs->fetchRow()) {
 	if (@preg_match( '/'.$route['pat'].'/', $number_dial )) {
-		if (in_array((int)$route['ug_id'], $user_groups, true)) {
+		if ((int)$route['ug_id'] == NULL ) {
 			$have_match = true;
 			$lcr_prefix = $route['lcrprfx'];
 			gs_agi_verbose( '### Matching route for "'. $number_dial .'" is "'. $route['pat'] .'", user group: '. ($route['ug_id'] == null ? 'any' : $route['ug_id']) );
 			break;
 		}
+		if (in_array((int)$route['ug_id'], $user_groups, true) ) {
+			$have_match = true;
+			$lcr_prefix = $route['lcrprfx'];
+			break;
+		}
+		if (in_array((int)$route['ug_id'], $host_groups, true) ) {
+			$have_match = true;
+			$lcr_prefix = $route['lcrprfx'];
+			break;
+		}
 	}
 }
+
 if (! $have_match) _no_more_routes();
 
 $gate_grps = array();
@@ -346,6 +325,5 @@ LIMIT 9'
 	}
 }
 _no_more_routes($idx);
-
 
 ?>

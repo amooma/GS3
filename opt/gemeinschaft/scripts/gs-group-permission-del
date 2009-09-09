@@ -37,18 +37,18 @@ include_once( GS_DIR .'inc/group-fns.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --name=<name> --title=<title> --type=<type>';
+$usage = 'Usage: '. baseName(__FILE__) .' --group=<group> --permission=<group> --type=<type>';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'name=',
-		'title=',
-		'type=',
+		'group=',
+		'permission=',
+		'type='
 	),
 	$usage
 );
-if (! isSet($opts['name'])
- || ! isSet($opts['title'])
+if (! isSet($opts['group'])
+ || ! isSet($opts['permission'])
  || ! isSet($opts['type'])
  ) {
 	gs_script_invalid_usage( $usage );
@@ -57,12 +57,21 @@ if (! isSet($opts['name'])
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_group_add( $opts['name'], $opts['title'], $opts['type'] );
+
+$group_id = gs_group_id_get($opts['group']);
+if (isGsError( $group_id )) gs_script_error( $group_id->getMsg() );
+if (! $group_id)            gs_script_error();
+
+$permission_id = gs_group_id_get($opts['permission']);
+if (isGsError( $permission_id )) gs_script_error( $permission_id->getMsg() );
+if (! $permission_id)            gs_script_error();
+
+$ret = @ gs_group_permission_del($group_id, $permission_id, $opts['type']);
 
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 
-echo "Group added.\n";
+echo "Group permission deleted.\n";
 
 
 ?>
