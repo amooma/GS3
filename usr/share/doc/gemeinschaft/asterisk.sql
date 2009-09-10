@@ -5569,6 +5569,35 @@ INSERT INTO `ast_voicemail` VALUES (12,25,'2003','default','123','','Lisa Muster
 UNLOCK TABLES;
 
 --
+-- Table structure for table `blacklist`
+--
+
+DROP TABLE IF EXISTS `blacklist`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `blacklist` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `group_id` mediumint(8) unsigned default NULL,
+  `type` enum('in','out','both') character set ascii NOT NULL default 'out',
+  `comment` varchar(40) collate utf8_unicode_ci NOT NULL default '',
+  `name` varchar(40) collate utf8_unicode_ci NOT NULL default '',
+  `number` varchar(30) character set ascii NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `number_group` (`group_id`,`number`),
+  CONSTRAINT `blacklist_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `blacklist`
+--
+
+LOCK TABLES `blacklist` WRITE;
+/*!40000 ALTER TABLE `blacklist` DISABLE KEYS */;
+/*!40000 ALTER TABLE `blacklist` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `boi_perms`
 --
 
@@ -5900,6 +5929,132 @@ INSERT INTO `gates` VALUES (17,12,'misdn','gw_17_briport2','BRI Port 2',1,'mISDN
 INSERT INTO `gates` VALUES (18,12,'misdn','gw_18_briport3','BRI Port 3',1,'mISDN/g:{gateway}/{number:1}',NULL,NULL,NULL,NULL,0,3);
 INSERT INTO `gates` VALUES (19,12,'misdn','gw_19_briport4','BRI Port 4',1,'mISDN/g:{gateway}/{number:1}',NULL,NULL,NULL,NULL,0,4);
 /*!40000 ALTER TABLE `gates` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `group_connections`
+--
+
+DROP TABLE IF EXISTS `group_connections`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `group_connections` (
+  `type` varchar(20) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,
+  `key` varchar(20) character set ascii NOT NULL default 'id',
+  `connection` varchar(120) collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`type`,`group`,`connection`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `group_connections`
+--
+
+LOCK TABLES `group_connections` WRITE;
+/*!40000 ALTER TABLE `group_connections` DISABLE KEYS */;
+INSERT INTO `group_connections` VALUES ('mysql',2,'id','SELECT `id` FROM `users` WHERE `nobody_index` IS NULL'),('mysql',3,'id','SELECT `id` FROM `hosts` WHERE `host` != \'\''),('mysql',4,'id','SELECT `_id` AS `id` FROM `ast_queues`');
+/*!40000 ALTER TABLE `group_connections` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `group_includes`
+--
+
+DROP TABLE IF EXISTS `group_includes`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `group_includes` (
+  `group` mediumint(8) unsigned NOT NULL,
+  `member` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`group`,`member`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `group_includes`
+--
+
+LOCK TABLES `group_includes` WRITE;
+/*!40000 ALTER TABLE `group_includes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `group_includes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `group_members`
+--
+
+DROP TABLE IF EXISTS `group_members`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `group_members` (
+  `group` mediumint(8) unsigned NOT NULL,
+  `member` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`group`,`member`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `group_members`
+--
+
+LOCK TABLES `group_members` WRITE;
+/*!40000 ALTER TABLE `group_members` DISABLE KEYS */;
+INSERT INTO `group_members` VALUES (1,23);
+/*!40000 ALTER TABLE `group_members` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `group_permissions`
+--
+
+DROP TABLE IF EXISTS `group_permissions`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `group_permissions` (
+  `type` varchar(20) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,
+  `permit` mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`type`,`group`,`permit`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `group_permissions`
+--
+
+LOCK TABLES `group_permissions` WRITE;
+/*!40000 ALTER TABLE `group_permissions` DISABLE KEYS */;
+INSERT INTO `group_permissions` VALUES ('call_stats',2,2),('call_stats',2,4),('forward_queues',2,4),('phonebook_user',2,2),('sudo_user',1,2);
+/*!40000 ALTER TABLE `group_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `groups`
+--
+
+DROP TABLE IF EXISTS `groups`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `groups` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(20) character set ascii NOT NULL,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL default '',
+  `type` varchar(20) character set ascii NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `name` (`name`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `groups`
+--
+
+LOCK TABLES `groups` WRITE;
+/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+INSERT INTO `groups` VALUES (1,'admins','Admins','user'),(2,'users','All Users','user'),(3,'hosts','All Hosts','host'),(4,'queues','All Queues','queue');
+/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6380,7 +6535,7 @@ CREATE TABLE `routes` (
   KEY `active_sa` (`active`,`d_sa`,`ord`),
   KEY `active_su` (`active`,`d_su`,`ord`),
   KEY `user_grp_id` (`user_grp_id`),
-  CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`user_grp_id`) REFERENCES `user_groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`user_grp_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
