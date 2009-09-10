@@ -361,11 +361,11 @@ if (@$_REQUEST['login_user'] != '') {
 </div>
 <a href="<?php echo gs_url($SECTION, $MODULE, null, 'login_action=forgotpwd'); ?>" style="font-size:0.95em;"><?php echo __('Pa&szlig;wort vergessen'); ?></a>
 
-<?php /*//FIXME - REMOVEME { */ ?>
+<?php /*//FIXME - REMOVEME {  ?>
 <br /><br /><br />
 <a target="_blank" href="http://www.amoocon.de/">
 	<img src="<?php echo GS_URL_PATH; ?>img/banner-amoocon.png" alt="AmooCon" style="outline:1px dashed #ccc; outline-offset:8px;" /></a>
-<?php /*//FIXME - REMOVEME } */ ?>
+<?php //FIXME - REMOVEME } */ ?>
 </div>
 <?php
 	
