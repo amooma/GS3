@@ -389,7 +389,7 @@ if ($action == 'edit') {
 <tbody>
 <?php
 	$group_externals = gs_group_connections_get($group['id']);
-
+/*
 	echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
 	echo '<form method="post" action="'.GS_URL_PATH.'">';
 	echo gs_form_hidden($SECTION, $MODULE);
@@ -408,22 +408,24 @@ if ($action == 'edit') {
 	echo '<td>';
 	echo '<input type="text" name="connection" value="" size="20" maxlength="255" style="width:96%;" />';
 	echo '</td>', "\n";
-	
 	echo '<td class="r" colspan="2">', "\n";
 	echo  '<button type="submit" name="action" value="insert-perm" title="', __('Berechtigung Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
 	echo '</td>', "\n";
 	echo '</tr>' ,"\n";
 	echo '</form>',"\n";
-	
+*/	
 	$i=0;
 	foreach ($group_externals as $group_external) {
 		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
 		echo '<td>',$group_external['type']  ,'</td>', "\n";
 		echo '<td>',$group_external['key']  ,'</td>', "\n";
 		echo '<td>',$group_external['connection']  ,'</td>', "\n";
+		/*
 		echo '<td class="r">', "\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-perm&amp;id='.$group['id'].'&amp;page='.$page.'&amp;type='.$group_external['type'].'&amp;permission='.$group_external['key']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
 		echo '</td>', "\n";
+		*/
+		echo '<td></td>', "\n";
 		echo '</tr>' ,"\n";
 		$i++;
 	}
