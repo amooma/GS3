@@ -154,7 +154,7 @@ if ($action === 'save') {
 
 			$value ['key_' . $v . '_type'] = @$_REQUEST['key_' . $v . '_type'];
 			if ( $value ['key_' . $v . '_type'] == 'extension' ) {
-				$value ['key_' . $v . '_value']=  preg_replace('/[^0-9]/', '', @$_REQUEST['key_' . $v . '_value']);
+				$value ['key_' . $v . '_value']=  preg_replace('/[^vm0-9]/', '', @$_REQUEST['key_' . $v . '_value']);
 				if ( $value ['key_' . $v . '_value'] == '0' || strlen( $value ['key_' . $v . '_value'] ) <= 0 ) {
 					$value ['key_' . $v . '_value'] = '';
 
