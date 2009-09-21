@@ -5572,9 +5572,8 @@ UNLOCK TABLES;
 -- Table structure for table `blacklist`
 --
 
+/*
 DROP TABLE IF EXISTS `blacklist`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `blacklist` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `group_id` mediumint(8) unsigned default NULL,
@@ -5583,19 +5582,19 @@ CREATE TABLE `blacklist` (
   `name` varchar(40) collate utf8_unicode_ci NOT NULL default '',
   `number` varchar(30) character set ascii NOT NULL default '',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `number_group` (`group_id`,`number`),
+  UNIQUE KEY `group_number` (`group_id`,`number`),
   CONSTRAINT `blacklist_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-SET character_set_client = @saved_cs_client;
+*/
 
 --
 -- Dumping data for table `blacklist`
 --
 
-LOCK TABLES `blacklist` WRITE;
-/*!40000 ALTER TABLE `blacklist` DISABLE KEYS */;
-/*!40000 ALTER TABLE `blacklist` ENABLE KEYS */;
-UNLOCK TABLES;
+-- LOCK TABLES `blacklist` WRITE;
+-- /*!40000 ALTER TABLE `blacklist` DISABLE KEYS */;
+-- /*!40000 ALTER TABLE `blacklist` ENABLE KEYS */;
+-- UNLOCK TABLES;
 
 --
 -- Table structure for table `boi_perms`
@@ -5936,16 +5935,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_connections`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `group_connections` (
   `type` varchar(20) character set ascii NOT NULL default '',
-  `group` mediumint(8) unsigned NOT NULL,
+  `group` mediumint(8) unsigned NOT NULL,                      /* FIXME: should be group_id */
   `key` varchar(20) character set ascii NOT NULL default 'id',
-  `connection` varchar(120) collate utf8_unicode_ci NOT NULL default '',
-  PRIMARY KEY  (`type`,`group`,`connection`)
+  `connection` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`type`,`group`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `group_connections`
@@ -5953,7 +5949,9 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `group_connections` WRITE;
 /*!40000 ALTER TABLE `group_connections` DISABLE KEYS */;
-INSERT INTO `group_connections` VALUES ('mysql',2,'id','SELECT `id` FROM `users` WHERE `nobody_index` IS NULL'),('mysql',3,'id','SELECT `id` FROM `hosts` WHERE `host` != \'\''),('mysql',4,'id','SELECT `_id` AS `id` FROM `ast_queues`');
+INSERT INTO `group_connections` VALUES ('mysql',2,'id','SELECT `id` FROM `users` WHERE `nobody_index` IS NULL');
+INSERT INTO `group_connections` VALUES ('mysql',3,'id','SELECT `id` FROM `hosts` WHERE `host` != \'\'');
+INSERT INTO `group_connections` VALUES ('mysql',4,'id','SELECT `_id` AS `id` FROM `ast_queues`');
 /*!40000 ALTER TABLE `group_connections` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5962,14 +5960,11 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_includes`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `group_includes` (
-  `group` mediumint(8) unsigned NOT NULL,
-  `member` mediumint(8) unsigned NOT NULL,
+  `group` mediumint(8) unsigned NOT NULL,            /* FIXME: should be group_id */
+  `member` mediumint(8) unsigned NOT NULL,           /* FIXME: should be member_id/member_group_id */
   PRIMARY KEY  (`group`,`member`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `group_includes`
@@ -5985,14 +5980,11 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_members`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `group_members` (
-  `group` mediumint(8) unsigned NOT NULL,
-  `member` mediumint(8) unsigned NOT NULL,
+  `group` mediumint(8) unsigned NOT NULL,            /* FIXME: should be group_id */
+  `member` mediumint(8) unsigned NOT NULL,           /* FIXME: should be member_id/member_group_id */
   PRIMARY KEY  (`group`,`member`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `group_members`
@@ -6000,7 +5992,6 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `group_members` WRITE;
 /*!40000 ALTER TABLE `group_members` DISABLE KEYS */;
-INSERT INTO `group_members` VALUES (1,23);
 /*!40000 ALTER TABLE `group_members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6009,15 +6000,12 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_permissions`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `group_permissions` (
   `type` varchar(20) character set ascii NOT NULL default '',
-  `group` mediumint(8) unsigned NOT NULL,
+  `group` mediumint(8) unsigned NOT NULL,                     /* FIXME: should be group_id */
   `permit` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`type`,`group`,`permit`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `group_permissions`
@@ -6025,7 +6013,11 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `group_permissions` WRITE;
 /*!40000 ALTER TABLE `group_permissions` DISABLE KEYS */;
-INSERT INTO `group_permissions` VALUES ('call_stats',2,2),('call_stats',2,4),('forward_queues',2,4),('phonebook_user',2,2),('sudo_user',1,2);
+INSERT INTO `group_permissions` VALUES ('call_stats',2,2);
+INSERT INTO `group_permissions` VALUES ('call_stats',2,4);
+INSERT INTO `group_permissions` VALUES ('forward_queues',2,4);
+INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
+INSERT INTO `group_permissions` VALUES ('sudo_user',1,2);
 /*!40000 ALTER TABLE `group_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6034,8 +6026,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `groups`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `groups` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(20) character set ascii NOT NULL,
@@ -6043,9 +6033,9 @@ CREATE TABLE `groups` (
   `type` varchar(20) character set ascii NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
+  KEY `title` (`title`(25)),
   KEY `type` (`type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `groups`
@@ -6053,7 +6043,10 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `groups` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
-INSERT INTO `groups` VALUES (1,'admins','Admins','user'),(2,'users','All Users','user'),(3,'hosts','All Hosts','host'),(4,'queues','All Queues','queue');
+INSERT INTO `groups` VALUES (1,'admins','Admins','user');
+INSERT INTO `groups` VALUES (2,'users','All Users','user');
+INSERT INTO `groups` VALUES (3,'hosts','All Hosts','host');
+INSERT INTO `groups` VALUES (4,'queues','All Queues','queue');
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6535,7 +6528,7 @@ CREATE TABLE `routes` (
   KEY `active_sa` (`active`,`d_sa`,`ord`),
   KEY `active_su` (`active`,`d_su`,`ord`),
   KEY `user_grp_id` (`user_grp_id`),
-  CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`user_grp_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --

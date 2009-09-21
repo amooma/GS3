@@ -712,8 +712,9 @@ CREATE TABLE IF NOT EXISTS `gate_cids` (
   CONSTRAINT `gate_cids_ibfk_1` FOREIGN KEY (`grp_id`) REFERENCES `gate_grps` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
 --
--- since rev. 6589
+-- since rev. 6979
 --
 
 USE `asterisk`;
@@ -730,6 +731,7 @@ CREATE TABLE `groups` (
   `type` varchar(20) character set ascii NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
+  KEY `title` (`title`(25)),
   KEY `type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -749,8 +751,8 @@ CREATE TABLE `group_connections` (
   `type` varchar(20) character set ascii NOT NULL default '',
   `group` mediumint(8) unsigned NOT NULL,
   `key` varchar(20) character set ascii NOT NULL default 'id',
-  `connection` varchar(120) collate utf8_unicode_ci NOT NULL default '',
-  PRIMARY KEY  (`type`,`group`,`connection`)
+  `connection` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`type`,`group`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `group_permissions` (
@@ -759,6 +761,7 @@ CREATE TABLE `group_permissions` (
   `permit` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`type`,`group`,`permit`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 
 --
 -- Use universal groups in routes instead of provisioning groups:
@@ -769,19 +772,27 @@ ALTER TABLE `routes`
 
 ALTER TABLE `routes`
   ADD CONSTRAINT `routes_ibfk_1`
-  FOREIGN KEY (`user_grp_id`)
+  FOREIGN KEY (`group_id`)
   REFERENCES `groups` (`id`)
   ON DELETE CASCADE ON UPDATE CASCADE;
 
-DROP TABLE IF EXISTS `blacklist`;
+
+--
+-- ? (unused table):
+--
+
+/*
 CREATE TABLE `blacklist` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `group_id` mediumint(8) unsigned default NULL,
-  `type` enum('in','out', 'both') character set ascii NOT NULL default 'out',
+  `type` enum('in','out','both') character set ascii NOT NULL default 'out',
   `comment` varchar(40) collate utf8_unicode_ci NOT NULL default '',
   `name` varchar(40) collate utf8_unicode_ci NOT NULL default '',
   `number` varchar(30) character set ascii NOT NULL default '',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `number_group` (`group_id`, `number`),
+  UNIQUE KEY `group_number` (`group_id`, `number`),
   CONSTRAINT `blacklist_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+*/
+
+
