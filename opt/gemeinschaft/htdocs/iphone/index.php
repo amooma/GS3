@@ -35,6 +35,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_set.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php' );
@@ -168,7 +169,7 @@ function setForward( $userinfo, $source, $destination, $plist)
 	
 }
 
-function returnCFNumber ( $input )
+function returnCFNumber ( $input, $vmtarget )
 {
 	switch ( $input )
 	{
@@ -182,7 +183,10 @@ function returnCFNumber ( $input )
 			return 2;
 			break;
 		case 'vml':
-			return 3;
+			if ( substr($vmtarget, 0, 3 ) == "vm*" )
+				return 4;
+			else
+				return 3;
 			break;
 		default:
 			return 0;
@@ -393,6 +397,7 @@ ORDER BY `ts` DESC'
 		case 'redirect':
 
 			$forwards = gs_callforward_get( $userinfo['user'] );
+			$numbers = gs_user_external_numbers_get( $userinfo['user'] );
 
 			echo '<?xml version="1.0" encoding="UTF-8"?>',"\n";
 			echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">',"\n";
@@ -406,18 +411,20 @@ ORDER BY `ts` DESC'
 			echo '	<string>', $forwards['internal']['always']['number_var'], '</string>',"\n";
 			echo '	<key>externalNumbers</key>',"\n";
 			echo '	<array>',"\n";
-			echo '		<string>002319159666</string>',"\n";
+				foreach($numbers as $number ) {
+			echo '		<string>', $number, '</string>',"\n";
+				}
 			echo '	</array>',"\n";
 			echo '	<key>sourceAction</key>',"\n";
 			echo '	<array>',"\n";
-			echo '		<integer>', returnCFNumber( $forwards['internal']['always']['active']  ), '</integer>',"\n";
-			echo '		<integer>', returnCFNumber( $forwards['internal']['busy']['active']    ), '</integer>',"\n";
-			echo '		<integer>', returnCFNumber( $forwards['internal']['unavail']['active'] ), '</integer>',"\n";
-			echo '		<integer>', returnCFNumber( $forwards['internal']['offline']['active'] ), '</integer>',"\n";
-			echo '		<integer>', returnCFNumber( $forwards['external']['always']['active']  ), '</integer>',"\n";
-			echo '		<integer>', returnCFNumber( $forwards['external']['busy']['active']    ), '</integer>',"\n";
-			echo '		<integer>', returnCFNumber( $forwards['external']['unavail']['active'] ), '</integer>',"\n";
-			echo '		<integer>', returnCFNumber( $forwards['external']['offline']['active'] ), '</integer>',"\n";
+			echo '		<integer>', returnCFNumber( $forwards['internal']['always']['active'], $forwards['internal']['always']['number_vml']  ), '</integer>',"\n";
+			echo '		<integer>', returnCFNumber( $forwards['internal']['busy']['active'], $forwards['internal']['busy']['number_vml']    ), '</integer>',"\n";
+			echo '		<integer>', returnCFNumber( $forwards['internal']['unavail']['active'], $forwards['internal']['unavail']['number_vml'] ), '</integer>',"\n";
+			echo '		<integer>', returnCFNumber( $forwards['internal']['offline']['active'], $forwards['internal']['offline']['number_vml'] ), '</integer>',"\n";
+			echo '		<integer>', returnCFNumber( $forwards['external']['always']['active'], $forwards['external']['always']['number_vml']  ), '</integer>',"\n";
+			echo '		<integer>', returnCFNumber( $forwards['external']['busy']['active'], $forwards['external']['busy']['number_vml']    ), '</integer>',"\n";
+			echo '		<integer>', returnCFNumber( $forwards['external']['unavail']['active'], $forwards['external']['unavail']['number_vml'] ), '</integer>',"\n";
+			echo '		<integer>', returnCFNumber( $forwards['external']['offline']['active'], $forwards['external']['offline']['number_vml'] ), '</integer>',"\n";
 			echo '	</array>',"\n";
 			echo '</dict>',"\n";
 			echo '</plist>',"\n";
