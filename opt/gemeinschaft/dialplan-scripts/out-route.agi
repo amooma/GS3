@@ -159,7 +159,7 @@ $have_match = false;
 $lcr_prefix = '';
 while ($route = $rs->fetchRow()) {
 	if (@preg_match( '/'.$route['pat'].'/', $number_dial )) {
-		if ((int)$route['ug_id'] == NULL ) {
+		if ($route['ug_id'] == NULL) {
 			$have_match = true;
 			$lcr_prefix = $route['lcrprfx'];
 			gs_agi_verbose( '### Matching route for "'. $number_dial .'" is "'. $route['pat'] .'", user group: '. ($route['ug_id'] == null ? 'any' : $route['ug_id']) );
@@ -177,7 +177,6 @@ while ($route = $rs->fetchRow()) {
 		}
 	}
 }
-
 if (! $have_match) _no_more_routes();
 
 $gate_grps = array();
@@ -325,5 +324,6 @@ LIMIT 9'
 	}
 }
 _no_more_routes($idx);
+
 
 ?>

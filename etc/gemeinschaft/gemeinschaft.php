@@ -538,8 +538,10 @@ $EMAIL_DELIVERY         = 'sendmail';
   # "direct-smtp" :  connect to the MX servers of the recipient directly
   #                  via SMTP
 
-$CALL_RECORDING	= false;
+$CALL_RECORDING	        = false;
   # allow recording phone calls as WAV files
+
+
 
 /***********************************************************
 *    PHONEBOOK
