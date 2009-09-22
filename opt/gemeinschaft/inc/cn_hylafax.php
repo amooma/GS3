@@ -51,7 +51,7 @@ function fax_get_jobs_rec( $user='', $pass='' )
 	$login_result = ftp_login($conn_id, $user, $pass);
 	if (! $login_result) return false;
 	
-	if (! ftp_raw($conn_id, 'RCVFMT "%a|%b|%d|%e|%f|%h|%i|%j|%l|%m|%n|%o|%p|%q|%r|%s|%w|%z|%Z"'))
+	if (! ftp_raw($conn_id, 'RCVFMT "%a|%b|%d|%e|%f|%h|%i|%j|%l|%m|%n|%o|%p|%p|%r|%s|%w|%z|%Z"'))
 		return false;
 	
 	$jobs_r = array();
