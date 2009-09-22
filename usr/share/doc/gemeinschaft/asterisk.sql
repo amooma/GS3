@@ -5942,6 +5942,7 @@ CREATE TABLE `group_connections` (
   `connection` varchar(255) collate utf8_unicode_ci NOT NULL default '',
   PRIMARY KEY  (`type`,`group`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/* FIXME: group should have a foreign key constraint */
 
 --
 -- Dumping data for table `group_connections`
@@ -5965,6 +5966,7 @@ CREATE TABLE `group_includes` (
   `member` mediumint(8) unsigned NOT NULL,           /* FIXME: should be member_id/member_group_id */
   PRIMARY KEY  (`group`,`member`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/* FIXME: group should have a foreign key constraint */
 
 --
 -- Dumping data for table `group_includes`
@@ -5985,6 +5987,7 @@ CREATE TABLE `group_members` (
   `member` mediumint(8) unsigned NOT NULL,           /* FIXME: should be member_id/member_group_id */
   PRIMARY KEY  (`group`,`member`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/* FIXME: group should have a foreign key constraint */
 
 --
 -- Dumping data for table `group_members`
@@ -6006,6 +6009,7 @@ CREATE TABLE `group_permissions` (
   `permit` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`type`,`group`,`permit`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/* FIXME: group should have a foreign key constraint */
 
 --
 -- Dumping data for table `group_permissions`
