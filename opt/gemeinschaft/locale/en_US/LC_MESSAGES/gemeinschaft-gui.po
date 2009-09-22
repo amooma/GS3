@@ -728,7 +728,7 @@ msgstr "Invalid user or password"
 #
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 187
 msgid "Benutzer wechseln"
-msgstr "Change user"
+msgstr "Impersonate"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_outbound.php, line: 237
 msgid "Benutzer-Gr."
