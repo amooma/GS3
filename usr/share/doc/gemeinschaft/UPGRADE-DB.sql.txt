@@ -772,7 +772,7 @@ ALTER TABLE `routes`
 
 ALTER TABLE `routes`
   ADD CONSTRAINT `routes_ibfk_1`
-  FOREIGN KEY (`group_id`)
+  FOREIGN KEY (`user_grp_id`)
   REFERENCES `groups` (`id`)
   ON DELETE CASCADE ON UPDATE CASCADE;
 

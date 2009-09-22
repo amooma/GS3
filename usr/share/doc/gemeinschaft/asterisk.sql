@@ -6532,7 +6532,7 @@ CREATE TABLE `routes` (
   KEY `active_sa` (`active`,`d_sa`,`ord`),
   KEY `active_su` (`active`,`d_su`,`ord`),
   KEY `user_grp_id` (`user_grp_id`),
-  CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`user_grp_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE  /* FIXME: foreign key user_grp_id should be named group_id */
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
