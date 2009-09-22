@@ -68,7 +68,7 @@ ORDER BY `id`'
 	#
 	if (gs_get_conf('GS_FAX_HYLAFAX_ADMIN') != '') {
 		$crypted = crypt(gs_get_conf('GS_FAX_HYLAFAX_PASS' ), 'pF');
-		$user_entry = '^'.gs_get_conf('GS_FAX_HYLAFAX_ADMIN') .'@:'.'0'.':'.$crypted.':'.$crypted ."\n";
+		$user_entry = '^'. preg_quote(gs_get_conf('GS_FAX_HYLAFAX_ADMIN')) .'@:'.'0'.':'.$crypted.':'.$crypted ."\n";
 		fWrite($fh, $user_entry, strLen($user_entry));
 	}
 	
@@ -76,7 +76,7 @@ ORDER BY `id`'
 	#
 	while ($user = $rs->fetchRow()) {
 		$crypted = crypt($user['pin'], 'ml');
-		$user_entry = '^'.$user['user'].'@:'.$user['id'].':'.$crypted ."\n";
+		$user_entry = '^'. preg_quote($user['user']) .'@:'.$user['id'].':'.$crypted ."\n";
 		fWrite($fh, $user_entry, strLen($user_entry));
 	}
 	
