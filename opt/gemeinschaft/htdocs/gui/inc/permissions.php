@@ -207,7 +207,7 @@ function gui_monitor_which_peers( $sudo_user )
 	case 'lvm':
 		return _gui_monitor_which_peers_lvm( $sudo_user );
 		break;
-	case 'group':
+	case 'gemeinschaft':
 		return _gui_monitor_which_peers_group( $sudo_user );
 		break;
 	default:
