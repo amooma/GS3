@@ -189,14 +189,12 @@ $MODULES['stats'    ]=  array(
 	)
 );
 
-if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') === 'group') {
 $MODULES['stats'    ]['sub'][
 		'groupc']      =  array('title' => __('Kollegenstatistik'));
 $MODULES['stats'    ]['sub'][
 		'groupout']    =  array('title' => __('Kollegen ausgehend'));
 $MODULES['stats'    ]['sub'][
 		'combined']    =  array('title' => __('Tagesauswertung'));
-}
 
 #####################################################################
 
