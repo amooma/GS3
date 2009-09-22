@@ -30,7 +30,7 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/group-fns.php' );
 
 $user_id           = (int)@$_SESSION['sudo_user']['info']['id'];
-$user_groups       = gs_group_members_groups_get(Array($user_id), 'user');
+$user_groups       = gs_group_members_groups_get(array($user_id), 'user');
 $permission_groups = gs_group_permissions_get($user_groups, 'phonebook_user');
 $group_members     = gs_group_members_get($permission_groups);
 
@@ -64,18 +64,18 @@ if ($number != '') {
 		$number
 	) .'%';
 	$rs = $DB->execute(
-	'SELECT SQL_CALC_FOUND_ROWS
-		`u`.`firstname` `fn`, `u`.`lastname` `ln`, `s`.`name` `ext`
-	FROM
-		`users` `u` JOIN
-		`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-	WHERE
-		`u`.`id` IN ('.implode(',', $group_members).') AND (
-		`s`.`name` LIKE \''. $DB->escape($number_sql) .'\'
-		)
-	ORDER BY `s`.`name`
-	LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
-	);
+		'SELECT SQL_CALC_FOUND_ROWS '.
+			'`u`.`firstname` `fn`, `u`.`lastname` `ln`, `s`.`name` `ext` '.
+		'FROM '.
+			'`users` `u` JOIN '.
+			'`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) '.
+		'WHERE '.
+			'`u`.`id` IN ('.implode(',', $group_members).') AND ( '.
+			'`s`.`name` LIKE \''. $DB->escape($number_sql) .'\' '.
+			') '.
+		'ORDER BY `s`.`name` '.
+		'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
+		);
 	$num_total = @$DB->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);
 	
@@ -92,18 +92,18 @@ if ($number != '') {
 		$name
 	) .'%';
 	$rs = $DB->execute(
-	'SELECT SQL_CALC_FOUND_ROWS
-		`u`.`firstname` `fn`, `u`.`lastname` `ln`, `s`.`name` `ext`
-	FROM
-		`users` `u` JOIN
-		`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-	WHERE
-		`u`.`id` IN ('.implode(',', $group_members).') AND (
-		`u`.`lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR
-		`u`.`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci
-		)
-	ORDER BY `u`.`lastname`, `u`.`firstname`
-	LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
+		'SELECT SQL_CALC_FOUND_ROWS '.
+			'`u`.`firstname` `fn`, `u`.`lastname` `ln`, `s`.`name` `ext` '.
+		'FROM '.
+			'`users` `u` JOIN '.
+			'`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) '.
+		'WHERE '.
+			'`u`.`id` IN ('.implode(',', $group_members).') AND ( '.
+			'`u`.`lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR '.
+			'`u`.`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci '.
+			') '.
+		'ORDER BY `u`.`lastname`, `u`.`firstname` '.
+		'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		);
 	$num_total = @$DB->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);

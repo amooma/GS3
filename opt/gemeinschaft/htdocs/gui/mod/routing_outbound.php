@@ -50,7 +50,7 @@ if ($id < 1) $id = 0;
 
 $gw_grp_idxs = array(1,2,3);
 
-$groups = array_merge(gs_group_info_get(false, 'user'), gs_group_info_get(false, 'host'));
+$groups = array_merge( gs_group_info_get(false, 'user'), gs_group_info_get(false, 'host'));
 
 if (isGsError($groups)) {
 	$groups = false;
@@ -85,7 +85,7 @@ if ($action === 'move-up' || $action === 'move-down') {
 	
 	$ugs = array();
 	foreach ($groups as $group) $ugs[(int)$group['id']] = true;
-
+	
 	$rs = $DB->execute( 'SELECT `id` FROM `routes`' );
 	$db_ids = array();
 	while ($r = $rs->fetchRow())
@@ -348,7 +348,7 @@ while ($route = $rs->fetchRow()) {
 	
 	echo '<td rowspan="2">';
 	echo '<select name="r_',$id,'_ugrpid">', "\n";
-
+	
 	echo '<option value="0">', '[', htmlEnt(__('alle')) ,']', '</option>' ,"\n";
 	foreach ($groups as $node) {
 		echo '<option value="', $node['id'],'"',($route['ug_id'] == $node['id'] ? ' selected="selected"' : ''),'>';
@@ -466,8 +466,6 @@ echo '</td>', "\n";
 echo '</td>', "\n";
 
 echo '<td rowspan="2">';
-
-
 foreach ($gw_grp_idxs as $gw_grp_idx) {
 	echo '<select name="r_',$id,'_ggrpid',$gw_grp_idx,'">', "\n";
 	$route_ggrp_id = $route['gg'.$gw_grp_idx];
