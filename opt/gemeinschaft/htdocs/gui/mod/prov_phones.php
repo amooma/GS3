@@ -77,6 +77,7 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-ht287'  ] = 'Grandstream HT 287';
 	$phone_types['grandstream-bt110'  ] = 'Grandstream BT 110';
 	$phone_types['grandstream-bt200'  ] = 'Grandstream BT 200';
+	$phone_types['grandstream-bt201'  ] = 'Grandstream BT 201';
 	$phone_types['grandstream-gxp280' ] = 'Grandstream GXP 280';
 	$phone_types['grandstream-gxp1200'] = 'Grandstream GXP 1200';
 	$phone_types['grandstream-gxp2000'] = 'Grandstream GXP 2000';
