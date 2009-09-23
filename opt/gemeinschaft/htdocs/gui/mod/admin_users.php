@@ -813,6 +813,9 @@ echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 		<td style="width:280px;">
 			<?php echo htmlEnt($edit_user); ?>
 		</td>
+		<td class="transp xs gray">
+			&nbsp;
+		</td>
 	</tr>
 </thead>
 <tbody>
@@ -830,11 +833,17 @@ echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 				}
 			?>
 		</td>
+		<td class="transp xs gray">
+			&larr; <?php echo htmlEnt(__("der SIP-Benutzername")); ?>
+		</td>
 	</tr>
 	<tr>
 		<th><?php echo __('Nachname'); ?>:</th>
 		<td>
 			<input type="text" name="ulname" value="<?php echo htmlEnt($r['ln']); ?>" size="30" maxlength="50" />
+		</td>
+		<td class="transp xs gray">
+			&nbsp;
 		</td>
 	</tr>
 	<tr>
@@ -842,11 +851,17 @@ echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 		<td>
 			<input type="text" name="ufname" value="<?php echo htmlEnt($r['fn']); ?>" size="30" maxlength="50" />
 		</td>
+		<td class="transp xs gray">
+			&nbsp;
+		</td>
 	</tr>
 	<tr>
 		<th><?php echo __('PIN'); ?>:</th>
 		<td>
 			<input type="text" name="upin" value="<?php echo htmlEnt($r['pin']); ?>" size="8" maxlength="10" />
+		</td>
+		<td class="transp xs gray">
+			&nbsp;
 		</td>
 	</tr>
 	<tr>
@@ -860,11 +875,17 @@ echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 				}
 			?>
 		</td>
+		<td class="transp xs gray">
+			&larr; <?php echo htmlEnt(__("das SIP-Passwort")); ?>
+		</td>
 	</tr>
 	<tr>
 		<th><?php echo __('E-Mail'); ?>:</th>
 		<td>
 			<input type="text" name="uemail" value="<?php echo htmlEnt($r['email']); ?>" size="38" maxlength="60" style="width:97%;" />
+		</td>
+		<td class="transp xs gray">
+			&nbsp;
 		</td>
 	</tr>
 	<tr>
@@ -905,6 +926,9 @@ echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 		
 		echo '</select>',"\n";
 ?>
+		</td>
+		<td class="transp xs gray">
+			&larr; <?php echo htmlEnt(__("der SIP-Registrar/-Server")); ?>
 		</td>
 	</tr>
 </tbody>
