@@ -53,9 +53,15 @@ function gs_user_is_valid_name( $username )
 		return new GsError( 'Invalid username.' );
 	
 	if (in_array($username, array(
-		'sysadmin', 'admin', 'root', 'setup', 'my', 'gemeinschaft',
-		'prov', 'img', 'js', 'mon', 'styles', 'soap', 'srv'
+		# special username:
+		'sysadmin',
+		# reserved usernames:
+		'root',
+		'gemeinschaft',
+		# used in URL paths, would conflict with URL rewriting:
+		'setup', 'my', 'prov', 'img', 'js', 'mon', 'styles', 'soap', 'srv'
 		), true)
+		# "dummy" users:
 	||  preg_match('/^nobody-/', $username))
 	{
 		return new GsError( sPrintF('"%s" cannot be used as a username.', $username) );
