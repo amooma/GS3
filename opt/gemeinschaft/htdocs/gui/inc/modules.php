@@ -259,6 +259,10 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 $MODULES['admin'    ]['sub'][
 		'boi-perms']   =  array('title' => __('Lokale Admins'));
 }
+if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+$MODULES['admin'    ]['sub'][
+		'ami']         =  array('title' => __('Asterisk-Manager'));
+}
 
 #####################################################################
 
