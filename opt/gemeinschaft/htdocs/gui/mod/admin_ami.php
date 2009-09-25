@@ -270,3 +270,6 @@ foreach ($conf_files as $file => $conf_file) {
 </div>
 </form>
 
+<br />
+<p class="text s"><?php echo sPrintF(htmlEnt("Die Dateien liegen im Verzeichnis %s und k\xC3\xB6nnen da bei Bedarf mit einem Text-Editor bearbeitet werden."), '<tt>'.htmlEnt('/etc/gemeinschaft/asterisk/manager.conf.d-available/').'</tt>' ); ?></p>
+
