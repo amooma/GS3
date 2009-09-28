@@ -212,29 +212,6 @@ ALTER TABLE `user_groups` ADD
   INDEX `prov_param_profile_id` (`prov_param_profile_id`);
 
 
---
--- Create new view `ast_sipfriends_gs`:
---
-
-/*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
-/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
-/*!50001 CREATE ALGORITHM=MERGE */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `ast_sipfriends_gs` AS (
-  SELECT
-    `s`.`_user_id`, `s`.`name`, `s`.`secret`, `s`.`type`, `s`.`host`,
-    `s`.`defaultip`, `s`.`context`, `s`.`callerid`, `s`.`mailbox`,
-    `s`.`callgroup`, `s`.`pickupgroup`, `s`.`setvar`, `s`.`call-limit`,
-    `s`.`subscribecontext`, `s`.`regcontext`, `s`.`ipaddr`, `s`.`port`,
-    `s`.`regseconds`, `s`.`username`, `s`.`regserver`, `s`.`fullcontact`,
-    `s`.`canreinvite`
-  FROM
-    `ast_sipfriends` `s` JOIN
-    `users` `u` ON (`u`.`id` = `s`.`_user_id`) JOIN
-    `hosts` `h` ON (`h`.`id` = `u`.`host_id`)
-  WHERE `h`.`is_foreign`=0
-) WITH CASCADED CHECK OPTION */;
-
 
 --
 -- Add foreign key constraints (optional):
@@ -494,9 +471,47 @@ ALTER TABLE `dial_log`
   ON DELETE SET NULL ON UPDATE SET NULL;
 
 
+
 --
--- since rev. 5532
+-- since rev. 5559
 --
+
+USE `asterisk`;
+
+
+--
+-- Resize column `name` in table `ast_sipfriends` for storing long dummy-user extensions:
+--
+
+ALTER TABLE `ast_sipfriends`
+  CHANGE `name` `name` VARCHAR(16) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL;
+ALTER TABLE `ast_sipfriends`
+  ADD COLUMN `canreinvite` VARCHAR(6) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT 'yes' AFTER `host`;
+
+
+--
+-- Create new view `ast_sipfriends_gs`:
+--
+
+/*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 CREATE ALGORITHM=MERGE */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `ast_sipfriends_gs` AS (
+  SELECT
+    `s`.`_user_id`, `s`.`name`, `s`.`secret`, `s`.`type`, `s`.`host`,
+    `s`.`defaultip`, `s`.`context`, `s`.`callerid`, `s`.`mailbox`,
+    `s`.`callgroup`, `s`.`pickupgroup`, `s`.`setvar`, `s`.`call-limit`,
+    `s`.`subscribecontext`, `s`.`regcontext`, `s`.`ipaddr`, `s`.`port`,
+    `s`.`regseconds`, `s`.`username`, `s`.`regserver`, `s`.`fullcontact`,
+    `s`.`canreinvite`
+  FROM
+    `ast_sipfriends` `s` JOIN
+    `users` `u` ON (`u`.`id` = `s`.`_user_id`) JOIN
+    `hosts` `h` ON (`h`.`id` = `u`.`host_id`)
+  WHERE `h`.`is_foreign`=0
+) WITH CASCADED CHECK OPTION */;
+
 
 USE `asterisk`;
 
@@ -521,24 +536,6 @@ ALTER
   )
   /*!50002 WITH CASCADED CHECK OPTION */
   ;
-
-
---
--- since rev. 5559
---
-
-USE `asterisk`;
-
-
---
--- Resize column `name` in table `ast_sipfriends` for storing long dummy-user extensions:
---
-
-ALTER TABLE `ast_sipfriends`
-  CHANGE `name` `name` VARCHAR(16) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL;
-ALTER TABLE `ast_sipfriends`
-  ADD COLUMN `canreinvite` VARCHAR(6) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT 'yes' AFTER `host`;
-
 
 --
 -- since rev. 5626
@@ -711,3 +708,24 @@ DROP TABLE IF EXISTS `users_outbound_numbers`;
 --
 
 DROP TABLE IF EXISTS `volumes`;
+
+--
+-- Remove table `blacklists`
+--
+
+DROP TABLE IF EXISTS `blacklists`;
+
+
+--
+-- Table structure for table `systemrecordings`
+--
+
+CREATE TABLE IF NOT EXISTS `systemrecordings` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `md5hashname` char(32) collate utf8_unicode_ci NOT NULL,
+  `description` varchar(150) collate utf8_unicode_ci NOT NULL,
+  `length` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `md5hashname` (`md5hashname`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
