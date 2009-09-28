@@ -28,7 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
-
+include_once( GS_DIR .'inc/group-fns.php' );
 
 /***********************************************************
 *    deletes a queue
@@ -63,6 +63,10 @@ function gs_queue_del( $name )
 	if ($queue_id < 1)
 		return new GsError( 'Unknown queue.' );
 	
+	#delete queue from all groups
+	#
+	gs_group_members_purge_by_type('queue', Array($queue_id));
+
 	# delete queue members
 	#
 	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_queue_id`='. $queue_id );
