@@ -28,6 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 //include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 //include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
@@ -59,6 +60,10 @@ function gs_host_del( $host,  $force=FALSE )
 	if ($count_users > 0)
 		 return new GsError( 'Cannot delete host. Delete '.$count_users.' user(s) on this host first.' );
 	
+	#delete host from all groups
+	#
+	gs_group_members_purge_by_type('host', Array($host['id']));
+
 	# delete host
 	#
 	$rs = $db->execute( 'DELETE from `hosts` WHERE `id`=\''. $db->escape($host['id']) .'\'' );
