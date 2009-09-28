@@ -28,6 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
@@ -86,6 +87,9 @@ function gs_user_del( $user, $reload=true )
 	//@ shell_exec( 'asterisk -rx \'sip notify snom-reboot '. $user_name .'\' >>/dev/null' );
 	@ gs_prov_phone_checkcfg_by_user( $user, true );
 	
+	#delete user from all groups
+	#
+	gs_group_members_purge_by_type('user', Array($user_id));
 	
 	# delete clir settings
 	#

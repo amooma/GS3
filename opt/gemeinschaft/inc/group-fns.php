@@ -480,6 +480,42 @@ function gs_group_member_del($group_id, $member, $include = false)
 	return $ret;
 }
 
+function gs_group_members_purge($group_ids, $member_ids)
+{
+	$db_master = gs_db_master_connect();
+	if (! $db_master)
+		return new GsError( 'Could not connect to database.' );
+	
+	$ret = $db_master->execute('DELETE FROM `group_members` WHERE `group` IN ('. implode(',',$group_ids) .') AND `member` = '. implode(',',$member_ids));
+	
+	return $ret;
+}
+
+function gs_group_members_purge_by_type($type, $member_ids)
+{
+	$db_slave = gs_db_slave_connect();
+	
+	if (! $db_slave)
+		return new GsError( 'Could not connect to database.' );
+	
+	if (!in_array($type, gs_group_types_get())) return new GsError( 'Invalid group type.');
+	
+	$sql_query = 'SELECT `id` FROM `groups` WHERE `type` = \''. $db_slave->escape($type).'\'' ;
+	
+	$rs = $db_slave->execute( $sql_query );
+	
+	$group_ids = Array();
+	if ($rs)
+		while ($r = $rs->fetchRow()) {
+			$group_ids[] = $r['id'];
+		}
+	
+	if ($group_ids) $ret = gs_group_members_purge($group_ids, $member_ids);
+	
+	return $ret;
+}
+
+
 function gs_group_permission_add($group_id, $permission_id, $type)
 {
 	$type = preg_replace('/[^a-z0-9\-_]/', '', strToLower($type));
