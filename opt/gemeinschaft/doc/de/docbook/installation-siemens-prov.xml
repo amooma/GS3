@@ -12,13 +12,13 @@
 % Asterisk training and consulting is offered at http://www.amooma.de-->
 
   <title>Installation des Siemens-Openstage Provisioning</title>
-  <para>In diesem Kapitel wird Beschrieben, wie man das Provisioning für die Siemens Openstage-Serie (os15 bis os80) installiert.</para>
+  <para>In diesem Kapitel wird beschrieben, wie man das Provisioning für die Siemens Openstage-Serie (os15 bis os80) installiert.</para>
   
   <section id="siemens-openstage-prov-installation">
     <title>Siemens OpenStage Provisioning Installieren</title>
     <para>Voraussetzungen:</para>
     <para>- Gemeinschaft installiert</para>
-    <para>- DHCP-Server Mass-Deployment für Siemens-Telefone konfiguriert</para>
+    <para>- DHCP-Server Mass-Deployment für Siemens-Telefone konfiguriert (siehe Kapitel 5 DHCP-Server)</para>
     <para>Installation:</para>
     <para>Verzeichnis /opt/gemeinschaft-siemens/ installieren (sollte dann
       z.B. die Dateien prov-settings.php und prov-checkcfg.php enthalten)
@@ -266,6 +266,104 @@ chroot_list_enable=NO
       Und zum schluss den FTP-Server noch per Hand starten:
       <command>/etc/init.d/vsftpd restart</command>
 
+    </para>
+  </section>
+  <section>
+    <title>Siemens OpenStage Provisioning Konfigurieren</title>
+    <para>Das Siemens Openstage Provisioning wird komplett über die Datei <filename>/opt/gemeinschaft-siemens/conf.php</filename> Konfiguriert. 
+    Für Bespiele sehen Sie bitte in die Konfigurationsdatei, alle Parameter sind sinnvoll vorkonfiguriert.</para>
+    <para>Es folgt eine Liste der Parameter:</para>
+    <para>
+      <variablelist>
+        <varlistentry>
+          <term>GS_PROV_SIEMENS_SW_UPDATE</term>
+          <listitem>
+            <para>Schaltet den Softwareupdate-Automatismus ein oder aus. Wenn dieser Wert auf false gesetzt ist, dann können keine Softwareupdates durchgeführt werden.</para>
+          </listitem>
+        </varlistentry>
+	
+        <varlistentry>
+          <term>GS_PROV_SIEMENS_SW_UPDATE_PRE</term>
+          <listitem>
+            <para>Mit diesem Parameter kann man das Installieren von möglicherweise Fehlerhaften Pre-Release Firmware-Versionen ein und ausschalten.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>GS_PROV_SIEMENS_FTP_USER</term>
+          <listitem>
+            <para>Der FTP-Benutzername, der vom Openstage genutzt werden soll um Dateien vom FTP-Server herunter zu laden.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>GS_PROV_SIEMENS_FTP_PWD</term>
+          <listitem>
+            <para>Das Passwort des FTP-Benutzers, der vom Openstage genutzt werden soll um Dateien vom FTP-Server herunter zu laden.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>GS_PROV_SIEMENS_LOG_RAW</term>
+          <listitem>
+            <para>Schaltet die DLS-Protokoll-Protokollierung an oder aus. Wenn der Parameter auf "true" gesetzt ist, kann man in der Datei 
+	    <filename>/var/log/gemeinschaft/siemens-access-debug.log</filename> 
+	    die Nachrichten, die zwischen Provisioning-Server und Telefon ausgetauscht werden, mitlesen.
+	    </para>
+          </listitem>
+        </varlistentry>
+
+       <varlistentry>
+          <term>GS_PROV_SIEMENS_SNMP_TRAP_ADDR</term>
+          <listitem>
+            <para>Die IP-Addresse an die das Telefon SNMP-Traps senden soll. Diese können zum Debuggen hilfreich sein.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>GS_PROV_SIEMENS_SNMP_TRAP_PORT</term>
+          <listitem>
+            <para>Der Port an die das Telefon SNMP-Traps senden soll.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>GS_PROV_SIEMENS_FTP_SERVER_LAN</term>
+          <listitem>
+            <para>Hier kann die IP-Addresse des FTP-Servers Konfiguriert werden, die genutzt wird wenn sich das Telefon im LAN befindet.</para>
+          </listitem>
+        </varlistentry>
+	
+	<varlistentry>
+          <term>GS_PROV_SIEMENS_FTP_SERVER_WAN</term>
+          <listitem>
+            <para>Hier kann die IP-Addresse des FTP-Servers Konfiguriert werden, die genutzt wird wenn sich das Telefon im WAN (Agenturnetz) befindet.</para>
+          </listitem>
+        </varlistentry>
+	
+	<varlistentry>
+          <term>GS_PROV_SIEMENS_FTP_PATH</term>
+          <listitem>
+            <para>Der Pfad auf dem FTP-Server auf dem alle Dateien zu finden sind.</para>
+          </listitem>
+        </varlistentry>
+	
+	<varlistentry>
+          <term>GS_PROV_SIEMENS_LOGO</term>
+          <listitem>
+            <para>Das global eingestellte Logo (Dateiname auf dem FTP-Server), das vom Telefon verwendet werden soll.</para>
+          </listitem>
+        </varlistentry>
+	
+	<varlistentry>
+          <term>GS_PROV_SIEMENS_WALLPAPER</term>
+          <listitem>
+            <para>Das global eingestellte Bild (Dateiname auf dem FTP-Server), das vom Telefon für den Bildschirmschoner verwendet werden soll (idlescreen).</para>
+          </listitem>
+        </varlistentry>
+
+	
+      </variablelist>
     </para>
   </section>
   <section>

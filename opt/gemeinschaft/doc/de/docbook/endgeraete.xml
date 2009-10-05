@@ -213,20 +213,4 @@
       </varlistentry>
     </variablelist>
   </section>
-  <section id="siemens-openstage">
-    <title>Siemens OpenStage</title>
-    <para>Reboot: Per Konfigurations-Taste in den Reiter <quote>Menü</quote>
-    schalten und dann gleichzeitig die Tasten <literal>1</literal>,
-    <literal>4</literal>, <literal>7</literal> gedrückt halten. Ggf.
-    Reboot-Paßwort (= Admin-Paßwort?) eingeben. Bildschirm wird kurz grün,
-    dann rebootet<footnote>
-        <para>Der Bootloader ist übrigens U-Boot. <ulink url="http://sourceforge.net/projects/u-boot">http://sourceforge.net/projects/u-boot</ulink>,
-        <ulink url="http://wiki.tuxbox.org/Bootloader#U-Boot.2FPPCBoot">http://wiki.tuxbox.org/Bootloader#U-Boot.2FPPCBoot</ulink></para>
-      </footnote> das Telefon.</para>
-    <para>Das Admin-Paßwort ist per Default <literal>123456</literal> (oder
-    <literal>000000</literal>?).</para>
-    <para>Das Factory-Reset-Paßwort ist per Default <literal>124816</literal></para>
-  </section>
-  
-  
 </chapter>
