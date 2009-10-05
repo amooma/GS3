@@ -1,0 +1,525 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
+<chapter id="gs-config" revision="$Revision: 6639 $">
+<!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de--> 
+<title>Konfiguration von Gemeinschaft</title>
+<para>
+Die initiale Konfiguration von Gemeinschaft findet in der zentralen Konfigurationsdatei <filename>/etc/gemeinschaft/gemeinschaft.php</filename> statt.
+Nachfolgend eine Liste der Parameter und dessen Bedeutung.
+</para>
+ <para>
+ <variablelist>
+ 
+   <varlistentry>
+     <term>$INSTALLATION_TYPE</term>
+       <listitem>
+         <para>Der Typ der Installation, Mögliche Werte sind "single" oder "cluster".</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_MASTER_HOST</term>
+       <listitem>
+         <para>Die IP-Addresse des Datenbank-Master Servers.</para>
+       </listitem>
+    </varlistentry>
+ 
+   <varlistentry>
+     <term>$DB_MASTER_USER</term>
+       <listitem>
+         <para>Der Datenbank-Master-Benutzer.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_MASTER_PWD</term>
+       <listitem>
+         <para>Das Datenbank-Master-Passwort.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_MASTER_DB</term>
+       <listitem>
+         <para>Die MySQL-Master-Datenbank, die von Gemeinschaft benutzt werden soll.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_SLAVE_HOST</term>
+       <listitem>
+         <para>Die IP-Addresse des Datenbank-Slave Servers.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_SLAVE_USER</term>
+       <listitem>
+         <para>Der Datenbank-Slave-Benutzer.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_SLAVE_PWD</term>
+       <listitem>
+         <para>Das Datenbank-Slave-Passwort.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_SLAVE_DB</term>
+       <listitem>
+         <para>Die MySQL-Slave-Datanbank, die von Gemeinschaft benutzt werden soll.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_CDR_MASTER_HOST</term>
+       <listitem>
+         <para>Die IP-Addresse des Datenbank-Master Servers, der die CDR-Daten speichern soll. Wenn dieser Wert leer ist, dann wird die normale MySQL-Master Datenbank</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_CDR_MASTER_USER</term>
+       <listitem>
+         <para>Benutzer für CDR-Datenbank.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_CDR_MASTER_PWD</term>
+       <listitem>
+         <para>Passwort für CDR-Datenbank</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_CDR_MASTER_DB</term>
+       <listitem>
+         <para>Datenbankname auf dem Datenbankserver, der für CDR-Daten verwendet werden soll.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_SIP_REG_UPDATE</term>
+       <listitem>
+         <para>Schaltet das Speichern der SIP-Registrierungswerte in der Slave-Datenbank an oder aus. Achtung! Hierdurch kann die Replikation zerstört werden.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_HOST</term>
+       <listitem>
+         <para>IP-Addresse des LDAP-Servers.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_SSL</term>
+       <listitem>
+         <para>Schaltet die Benutzung von SSL für LDAP an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PORT</term>
+       <listitem>
+         <para>Der Port des LDAP-Servers.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_BINDDN</term>
+       <listitem>
+         <para>Die Bind-Domain des LDAP-Servers z.b. 'cn=root,dc=example,dc=com'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PWD</term>
+       <listitem>
+         <para>Das Passwort für den LDAP-Server.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROTOCOL</term>
+       <listitem>
+         <para>Legt die LDAP-Protokollversion fest, die Benutzt werden soll (2 oder 3)</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_SEARCHBASE</term>
+       <listitem>
+         <para>Legt die LDAP-Suchbasis fest z.B.: 'ou=People,dc=example,dc=com'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_USER</term>
+       <listitem>
+         <para>Der Benutzername im LDAP-Attribut LDAP_PROP_USER, dieser muss gleich mit dem Namen sein, der als Benutzernamen in Gemeinschaft verwendet wird. z.B: "uid" | "employeenumber".
+	 </para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_UID</term>
+       <listitem>
+         <para>Konfiguriert den Primären Schlüssel, der in der Suchdomäne verwendet wird, fest. z.B: "uid"</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_FIRSTNAME</term>
+       <listitem>
+         <para>Wird für das LDAP-Telefonbuch verwendet, LDAP-Attribut für den Vornamen.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_LASTNAME</term>
+       <listitem>
+         <para>Wird für das LDAP-Telefonbuch verwendet, LDAP-Attribut für den Nachnamen.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_PHONE</term>
+       <listitem>
+         <para>Wird für das LDAP-Telefonbuch verwendet, LDAP-Attribut für die Telefonnummer.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_EMAIL</term>
+       <listitem>
+         <para>Wird für das LDAP-Telefonbuch verwendet, LDAP-Attribut für die E-Mail Addresse.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_AUTH_METHOD</term>
+       <listitem>
+         <para>Legt fest welche Authentifizierungs-Methode verwendet wird. Mögliche Werte: "Gemeinschaft" oder "Webseal".</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_NUM_RESULTS</term>
+       <listitem>
+         <para>Legt fest wie viele Einträge pro Seite in Listen (wie z.B. dem Telefonbuch) angezeigt werden.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_SUDO_ADMINS</term>
+       <listitem>
+         <para>Komma Separierte Liste von Nutzern, die Administratoren sind. Achtung, diese Nutzer können bei Mißbrauch ihrer Macht großen Schaden am System anrichten!</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_SUDO_EXTENDED</term>
+       <listitem>
+         <para>Schaltet an oder aus, ob Administratoren als andere Nutzer agieren können.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_QUEUE_SHOW_NUM_CALLS</term>
+       <listitem>
+         <para>Schaltet ein oder aus, ob die Anzahl der erfolgreichen Anrufe für jeden Teilnehmer in einer Warteschlange angezeigt werden soll.
+         </para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_QUEUE_INFO_FROM_DB</term>
+       <listitem>
+         <para>Legt fest, ob die Queue-Statistiken aus der Datenbank gelesen werden sollen, wenn der Wert auf "false" steht werden die Daten vom Asterisk-Manager Interface gelesen.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_MON_NOQUEUEBLUE</term>
+       <listitem>
+         <para>Legt fest ob nichts tuende Mitglieder der Warteschleife eine Blaue oder Grüne LED haben.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_MON_PEERS_ENABLED</term>
+       <listitem>
+         <para>Schalten den Kollegenmonitor an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_SHUTDOWN_ENABLED</term>
+       <listitem>
+         <para>Schaltet den Ausschaltknopf für das System für Administratoren an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_LANGS</term>
+       <listitem>
+         <para>Legt fest, welche Sprachen in der GUI zur Auswahl stehen. Default ist hier Deutsch und English</para>
+       </listitem>
+    </varlistentry>
+ 
+    <varlistentry>
+     <term>$GUI_ADDITIONAL_STYLESHEET</term>
+       <listitem>
+         <para>Mit diesem Parameter kann man eine eigene CSS-Datei angeben, um das aussehen von Gemeinschaft zu ändern. Dies hat den Vorteil, das der Stylesheet nach einem Update erhalten bleibt.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$EXTERNAL_NUMBERS_BACKEND</term>
+       <listitem>
+         <para>Legt fest, woher Gemeinschaft externe Nummern zieht. Entweder 'db' für die lokale MySQL-Datenbank, oder 'ldap' um die Werte aus LDAP zu lesen.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$EXTERNAL_NUMBERS_LDAP_PROP</term>
+       <listitem>
+         <para>Das LDAP-Attribur für die Externe Nummer z.B.: 'telephoneNumber'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$NOBODY_EXTEN_PATTERN</term>
+       <listitem>
+         <para>Legt das Muster fest nachdem die Nobody-User für die Telefonprovisionierung angelegt werden z.B.: 95xxxx
+	 </para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$NOBODY_CID_NAME</term>
+       <listitem>
+         <para>Das Präfix was als Callerid-Name vor die Nummer des Nobody-Users geschrieben wird.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_HOST</term>
+       <listitem>
+         <para>Konfiguriert die IP-Addresse des Provisioning Host.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_PATH</term>
+       <listitem>
+         <para>Der Pfad auf dem Provisioning Host, in dem die Dateien liegen.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_AUTO_ADD_PHONE</term>
+       <listitem>
+         <para>Legt fest ob ein Telefon automagisch hinzugefügt werden soll.</para>
+       </listitem>
+    </varlistentry>
+        
+    <varlistentry>
+     <term>$PROV_AUTO_ADD_PHONE_HOST</term>
+       <listitem>
+         <para>Damit kann in einem Cluster-System festgelegt werden auf welchem Telefonie-Knoten die nobody-accounts hinzugefügt werden. Mögliche Werte: 'first', 'last' oder 'random'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_DIAL_LOG_LIFE</term>
+       <listitem>
+         <para>Legt fest, wie weit die Anruflisten am Telefon zurückgehen sollen. Wert in Sekunden.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_PROXIES_TRUST</term>
+       <listitem>
+         <para>Vertraue dem $PROV_PROXIES_XFF_HEADER der Anfragen von diesen Proxy-Servern.
+	 Der Proxy muss dabei dem Telefon sein User-Agent-Header unberührt lassen. z.b. '192.168.1.2, 192.168.1.3'
+	 </para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_PROXIES_XFF_HEADER</term>
+       <listitem>
+         <para>z.B: 'X-Forwarded-For', dies ist der Standartwert und sollte so belassen werden.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_ALLOW_NET</term>
+       <listitem>
+         <para>Komma-Separierte Liste von Subnetzen aus denen ein Provisioning-Vorgang erlaubt ist z.B.: '192.168.1.0/255.255.255.0, 192.168.0.0/16'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_LAN_NETS</term>
+       <listitem>
+         <para>Komma-Separierte Liste von Subnetzen. Jedem Telefon, welches nicht Teil dieses Subsetzes ist, wird der sip_proxy_from_wan als Registrar und Outbound Proxy zugewiesen.
+  	</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_MODELS_ENABLED_SNOM</term>
+       <listitem>
+         <para>Liste mit SNOM-Telefonen die im Unternehmen zur Verfügung stehen z.B.: '360,370'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_MODELS_ENABLED_SIEMENS</term>
+       <listitem>
+         <para>Liste mit Siemens-Telefonen die im Unternehmen zur Verfügung stehen z.B.: 'os20,os40,os60'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_MODELS_ENABLED_AASTRA</term>
+       <listitem>
+         <para>Liste mit AAstra-DeTeWe-Telefonen die im Unternehmen zur Verfügung stehen z.B.: '51i,53i,55i,57i'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_MODELS_ENABLED_GRANDSTREAM</term>
+       <listitem>
+         <para>Liste mit Grandstream-Telefonen die im Unternehmen zur Verfügung stehen z.B.: 'bt110,gxp2000,gxp2020'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SNOM_PROV_ENABLED</term>
+       <listitem>
+         <para>Schaltet das Provisoning für SNOM-Telefone generell ein oder aus.</para>
+       </listitem>
+    </varlistentry>
+ 
+     <varlistentry>
+     <term>$SNOM_PROV_HTTP_USER</term>
+       <listitem>
+         <para>Der HTTP-Nutzer für das SNOM Telefon. Dieser wird zum rebooten des Telefones genutzt.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SNOM_PROV_HTTP_PASS</term>
+       <listitem>
+         <para>Das Passwort des HTTP-Nutzers am Telefon.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SNOM_PROV_PB_NUM_RESULTS</term>
+       <listitem>
+         <para>Die Anzahl der Ergebnisse, die auf einer Seite im Telefonbuch des SNOM-Telefones angezeigt werden soll.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$SNOM_PROV_FW_UPDATE</term>
+       <listitem>
+         <para>Schaltet das Firmware-Update für SNOM an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SNOM_PROV_FW_6TO7</term>
+       <listitem>
+         <para>Schaltet das Automatische aktualisieren der Firmware für Snom Telefone von Version 6 auf 7 an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term></term>
+       <listitem>
+         <para></para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term></term>
+       <listitem>
+         <para></para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term></term>
+       <listitem>
+         <para></para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term></term>
+       <listitem>
+         <para></para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term></term>
+       <listitem>
+         <para></para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term></term>
+       <listitem>
+         <para></para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term></term>
+       <listitem>
+         <para></para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term></term>
+       <listitem>
+         <para></para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term></term>
+       <listitem>
+         <para></para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term></term>
+       <listitem>
+         <para></para>
+       </listitem>
+    </varlistentry>
+  </variablelist>
+</para>
+</chapter>
