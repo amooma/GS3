@@ -66,7 +66,7 @@ echo '<img alt="Step2" src="'.GS_URL_PATH.'img/help_keys/step2.jpg"/>';
 <tr>
 	<td>:=</td>
 	<td>
-		<?php echo __('Zeigt an, ob die Taste aktiviert ist oder nicht, Sie k&ouml;nnen die Taste nur definieren, wenn Sie diese vorher mit dem Haken in dieser Box aktivieren.'); ?>
+i		<?php echo __('Zeigt an, ob die Taste aktiviert ist oder nicht, Sie k&ouml;nnen die Taste nur definieren, wenn Sie diese vorher mit dem Haken in dieser Box aktivieren. Wenn die Taste vom Administrator vorgegeben ist, wird die Box f&uuml;r den Haken ausgegraut angezeigt. Sie können die Taste nicht bearbeiten.'); ?>
 	</td>
 </tr>
 <tr>
