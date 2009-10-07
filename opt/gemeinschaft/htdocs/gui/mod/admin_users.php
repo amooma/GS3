@@ -423,13 +423,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		<th style="width: 60px;"<?php if ($number!='') echo ' class="sort-col"'; ?>><?php echo __('Nst.' ); ?></th>
 		<th style="width: 55px;"><?php echo __('PIN'      ); ?></th>
 		<th style="width:165px;"><?php echo __('E-Mail'   ); ?></th>
-<?php
-if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
-?>
 		<th style="width: 42px;"><?php echo __('Host'     ); ?></th>
-<?php
-}
-?>
 		<th style="width: 85px;"><?php echo __('Status'   ); ?></th>
 		<th style="width: 55px;">&nbsp;</th>
 	</tr>
@@ -476,9 +470,8 @@ if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 				$email_display = htmlEnt(mb_substr($email_display, 0, 18)) .'&#8230;';
 			}
 			echo '<td>', $email_display ,'</td>' ,"\n";
-			if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
-				echo '<td>', ($r['h_comment'] !== null ? htmlEnt($r['h_comment']) : '&ndash;?&ndash;') ,'</td>' ,"\n";
-			}
+			echo '<td>', ($r['h_comment'] !== null ? htmlEnt($r['h_comment']) : '&ndash;?&ndash;') ,'</td>' ,"\n";
+			
 			echo '<td class="nobr">';
 			if (! $r['is_foreign']) {
 				$state = gs_extstate_single( $r['ext'] );
@@ -546,9 +539,6 @@ if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 		<td>
 			<input type="text" name="uemail" id="ipt-uemail" value="" size="20" maxlength="50" />
 		</td>
-<?php
-if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
-?>
 		<td class="r">
 <?php
 			echo '<select name="uhost" id="ipt-uhost" style="min-width:42px;">',"\n";
@@ -589,9 +579,6 @@ if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 			echo '</select>',"\n";
 ?>
 		</td>
-<?php
-}
-?>
 		<td class="nobr">
 			&nbsp;
 		</td>
