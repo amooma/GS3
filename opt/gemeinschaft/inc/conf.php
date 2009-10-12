@@ -324,6 +324,7 @@ _gscnf( 'PB_PRIVATE_TITLE'          , "Pers\xC3\xB6nlich");
 
 _gscnf( 'LOCK_DIR'                  , '/var/lock/'       );
 _gscnf( 'CALL_INIT_FROM_NET'        , '0.0.0.0/32'       ); # deny all
+_gscnf( 'FAX_INIT_FROM_NET'         , '0.0.0.0/32'       ); # deny all
 _gscnf( 'MONITOR_FROM_NET'          , '0.0.0.0/32'       ); # deny all
 _gscnf( 'LVM_USER_6_DIGIT_INT'      , false              );
 _gscnf( 'LVM_CALL_INIT_USERS_500000', false              );
@@ -362,6 +363,8 @@ $FAX_HYLAFAX_PASS  =
 	@$FAX_HYLAFAX_PASS  );
 _gscnf( 'FAX_HYLAFAX_PASS'          , ''                 );
 _gscnf( 'FAX_HYLAFAX_PATH'          , '/var/spool/hylafax/' );
+_gscnf( 'FAX_INIT_DOCDIR'           , '/tmp/' );
+
 
 _gscnf( 'BOI_ENABLED'               , false              );
 _gscnf( 'BOI_API_DEFAULT'           , 'm01'              );

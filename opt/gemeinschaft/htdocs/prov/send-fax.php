@@ -107,7 +107,7 @@ function get_user_id( $user )
 # check if client's IP is allowed to send faxes
 #
 $remote_ip = @$_SERVER['REMOTE_ADDR'];
-$networks = explode(',', GS_CALL_INIT_FROM_NET);
+$networks = explode(',', gs_get_conf('GS_FAX_INIT_FROM_NET'));
 $allowed = false;
 foreach ($networks as $net) {
 	if (ip_addr_in_network( $remote_ip, trim($net) )) {
@@ -169,19 +169,23 @@ if ( ($local_file == '') &&
 	$local_file = $_FILES['file']['tmp_name'];
 }
 
+
 # invoke function from the fax library
 #
-if (($local_file != '') && file_exists($local_file)) {
-	$fax_job_id = fax_send(
-		$user_id,
-		$user,
-		$to,
-		$tsi,
-		$local_file,
-		$email,
-		$resolution,
-		$pin
-	);
+if ($local_file != '') {
+	$local_file = gs_get_conf('GS_FAX_INIT_DOCDIR', '') . '/'. preg_replace('/\.\./', '', $local_file);
+
+	if (file_exists($local_file))
+		$fax_job_id = fax_send(
+			$user_id,
+			$user,
+			$to,
+			$tsi,
+			$local_file,
+			$email,
+			$resolution,
+			$pin
+		);
 }
 
 # result

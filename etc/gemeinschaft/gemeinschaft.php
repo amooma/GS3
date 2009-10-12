@@ -574,7 +574,16 @@ $FAX_ENABLED            = false;
 //$FAX_HYLAFAX_ADMIN      = '';            # Adds admin user to your HylaFax's "hosts.hfaxd"
 //$FAX_HYLAFAX_PASS       = '';
 
+//$FAX_INIT_FROM_NET         = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
+  # a comma (,) separated list of IP addresses or
+  # <IP address>/<netmask> pairs from where fax calls can be inited
+  # with HTTP GET
+  # CIDR or dotted decimal notation
+  # e.g.: '127.0.0.1, 192.168.1.130/255.255.255.0, 192.168.1.130/24'
+  # allow all: '0.0.0.0/0', allow none: '0.0.0.0/32'
 
+//$FAX_INIT_DOCDIR         = '/tmp/';
+  # directory containing fax documents to be used by "send-fax.php"
 
 /***********************************************************
 *    BRANCH OFFICE INTEGRATION (BOI)
