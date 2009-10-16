@@ -56,6 +56,8 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 		$phone_types['snom-360'] = 'Snom 360';
 	if (in_array('*', $enabled_models) || in_array('370', $enabled_models))
 		$phone_types['snom-370'] = 'Snom 370';
+	if (in_array('*', $enabled_models) || in_array('820', $enabled_models))
+		$phone_types['snom-820'] = 'Snom 820';
 }
 /*
 # Maybe there will be some reason for enabling keys on Snom M3 phones in future.
@@ -124,7 +126,7 @@ $key_functions_snom = array(
 	'dest'  => __('Nebenstelle'),       # destination (//FIXME - auch BLF hiermit machen?)
 	'blf'   => __('BLF'),               # BLF
 	'line'  => __('Leitung'),           # line
-	
+	//'f_transfer'  => __('Weiterleiten')   # F_TRANSFER	
 	
 );
 
@@ -275,6 +277,7 @@ if ($phone_type == '') {
 		elseif (array_key_exists('snom-320', $phone_types)) $phone_type = 'snom-320';
 		elseif (array_key_exists('snom-360', $phone_types)) $phone_type = 'snom-360';
 		elseif (array_key_exists('snom-370', $phone_types)) $phone_type = 'snom-370';
+		elseif (array_key_exists('snom-820', $phone_types)) $phone_type = 'snom-820';
 	} else
 	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 		if     (array_key_exists('siemens-os20', $phone_types)) $phone_type = 'siemens-os20';
@@ -293,7 +296,7 @@ if ($phone_type == '') {
 		elseif (array_key_exists('grandstream-gxp2020', $phone_types)) $phone_type = 'grandstream-gxp2020';
 	}
 }
-if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370'), true)) {
+if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 'snom-820'), true)) {
 	$phone_layout = 'snom';
 	$key_function_none = $key_function_none_snom;
 } elseif (in_array($phone_type, array('siemens-os20', 'siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
@@ -958,6 +961,11 @@ if ($phone_layout) {
 				unset($key_levels[1]);
 				unset($key_levels[2]);
 				break;
+			case 'snom-820':
+				$key_levels[0]['to'  ] =    3;
+				unset($key_levels[1]);
+				unset($key_levels[2]);
+				break;
 		}
 		break;
 	case 'siemens':
@@ -1081,8 +1089,16 @@ if ($phone_layout) {
 	}
 	
 	if (in_array($phone_layout, array('snom', 'grandstream'), true)) {
-		$have_key_label = false;
-		$table_cols = 5;
+		
+		if ( $phone_type == 'snom-820' ) {
+			//not supportet atm
+			//$have_key_label = true;
+			//$table_cols = 6;
+		}
+		else {
+			$have_key_label = false;
+			$table_cols = 5;
+		}
 	} else {
 		$have_key_label = true;
 		$table_cols = 6;
@@ -1129,6 +1145,8 @@ if ($phone_layout) {
 			if ($phone_layout === 'snom') {
 				switch ($phone_type) {
 					case 'snom-300' : $knum = $i; break;
+					default: $knum  = ($i%2===($key_level_idx+1)%2 ? $left : $right);
+					case 'snom-820' : $knum = $i; break;
 					default: $knum  = ($i%2===($key_level_idx+1)%2 ? $left : $right);
 				}
 				$knump = str_pad($knum, 3, '0', STR_PAD_LEFT);
@@ -1210,6 +1228,8 @@ if ($phone_layout) {
 			switch ($phone_layout) {
 				case 'snom':
 					if ( $phone_type == 'snom-300')
+						echo ' class="l"';
+					else if ( $phone_type == 'snom-820')
 						echo ' class="l"';
 					else
 						echo ' class="', ($i%2===($key_level_idx+1)%2 ?'l':'r') ,'"';

@@ -314,6 +314,7 @@ $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 //$SNOM_PROV_FW_DEFAULT_320   = '7.1.24';
 //$SNOM_PROV_FW_DEFAULT_360   = '6.5.1';
 //$SNOM_PROV_FW_DEFAULT_370   = '7.1.24';
+//$SNOM_PROV_FW_DEFAULT_820   = '8.2.11';
 
   # Intermediate firmware to enable 6->7 upgrade.
   # Images should be named like e.g. snom300-from6to7-07.03.14.bin
