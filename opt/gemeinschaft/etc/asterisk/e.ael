@@ -727,8 +727,8 @@ context voicemail-self {
 		Set(CDR(amaflags)=OMIT);
 		Answer();
 		Wait(0.5);
-		VoiceMailMain(${user_name},s);
-	}
+		#exec "/opt/gemeinschaft/etc/asterisk/e-vm-ask-pin.php"
+			}
 	asterisk  => jump voicemail;
 	mailbox   => jump voicemail;
 	#include "/opt/gemeinschaft/etc/asterisk/e-number-vmm-self.ael"

@@ -606,6 +606,11 @@ $CALLBACK_FAILED_EXTENSION      = '';
   # offline the call will be transfered to this extension. 
   # If empty, the channel will be busy.
 
+
+$VMBOX_ALWAYS_ASK_PIN 	= false;
+  # asks for the pin before the user can enter the voicemail menu if
+  # set to true.
+  
 /***********************************************************
 *    Astbuttond
 *
