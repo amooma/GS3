@@ -755,7 +755,7 @@ echo "<tbody>\n";
 
 echo "<tr class=\"odd\">\n";
 echo "<td style=\"width:320px;\">". __('Datei:') ."&nbsp;";
-echo "<input type=\"file\" name=\"audiofile\" size=\"45\" style=\"font-size:10px; width:230px;\" accept=\"audio/*\" />\n";
+echo "<input type=\"file\" name=\"audiofile\" size=\"20\" style=\"font-size:10px; width:230px;\" accept=\"audio/*\" />\n";
 
 echo "</td>\n";
 echo "<td>";
