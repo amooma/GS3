@@ -314,6 +314,7 @@ $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 //$SNOM_PROV_FW_DEFAULT_320   = '7.1.24';
 //$SNOM_PROV_FW_DEFAULT_360   = '6.5.1';
 //$SNOM_PROV_FW_DEFAULT_370   = '7.1.24';
+//$SNOM_PROV_FW_DEFAULT_820   = '8.2.11';
 
   # Intermediate firmware to enable 6->7 upgrade.
   # Images should be named like e.g. snom300-from6to7-07.03.14.bin
@@ -605,6 +606,11 @@ $CALLBACK_FAILED_EXTENSION      = '';
   # offline the call will be transfered to this extension. 
   # If empty, the channel will be busy.
 
+
+$VMBOX_ALWAYS_ASK_PIN 	= false;
+  # asks for the pin before the user can enter the voicemail menu if
+  # set to true.
+  
 /***********************************************************
 *    Astbuttond
 *

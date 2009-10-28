@@ -25,11 +25,12 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-defined('GS_VALID') or die('No direct access.');
-include_once( GS_DIR .'inc/get-listen-to-ids.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
+defined("GS_VALID") or die("No direct access.");
+include_once(GS_DIR ."inc/get-listen-to-ids.php");
+include_once(GS_DIR ."inc/gs-fns/gs_hosts_get.php");
+include_once(GS_DIR ."lib/utf8-normalize/gs_utf_normal.php");
 
-define('AUDIOUPLOAD_DESTDIR', '/opt/gemeinschaft/sys-rec');
+define("AUDIOUPLOAD_DESTDIR", "/opt/gemeinschaft/sys-rec");
 
 //--- output title
 echo "<h2>";
@@ -42,6 +43,14 @@ echo "</h2>\n";
 
 //--- include some javascript stuff
 echo "<script type=\"text/javascript\" src=\"". GS_URL_PATH ."js/arrnav.js\"></script>\n";
+
+echo "<script type=\"text/javascript\">\n";
+echo "//<![CDATA[\n";
+echo "function confirm_delete() {\n";
+echo "\treturn confirm(". utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) .");\n";
+echo "}\n";
+echo "//]]>\n";
+echo "</script>\n";
 
 //--- get browser get/post stuff
 $per_page    = (int)GS_GUI_NUM_RESULTS;
@@ -604,7 +613,7 @@ if(@$rs)
 			echo "<td>\n";
 			echo "<a href=\"". gs_url($SECTION, $MODULE, null, "playback=". $r['id'] ."&amp;page=". $page ."&amp;phonenum=". $_SESSION["real_user"]["info"]["ext"]) ."\" title=\"". __('abspielen') ."\"><img alt=\"". __('abspielen') ."\" src=\"". GS_URL_PATH ."crystal-svg/16/app/kmix.png\" /></a> &nbsp; ";
 			echo "<a href=\"". gs_url($SECTION, $MODULE, null, "edit=". $r['id'] ."&amp;page=".$page) ."\" title=\"". __('bearbeiten') ."\"><img alt=\"". __('bearbeiten') ."\" src=\"". GS_URL_PATH ."crystal-svg/16/act/edit.png\" /></a> &nbsp; ";
-			echo "<a href=\"". gs_url($SECTION, $MODULE, null, "delete=". $r['id'] ."&amp;page=".$page) ."\" title=\"". __('l&ouml;schen') ."\"><img alt=\"". __('entfernen') ."\" src=\"". GS_URL_PATH ."crystal-svg/16/act/editdelete.png\" /></a>";
+			echo "<a href=\"". gs_url($SECTION, $MODULE, null, "delete=". $r['id'] ."&amp;page=".$page) ."\" title=\"". __('l&ouml;schen') ."\" onClick=\"return confirm_delete();\"><img alt=\"". __('entfernen') ."\" src=\"". GS_URL_PATH ."crystal-svg/16/act/editdelete.png\" /></a>";
 			echo "</td>\n";
 		}
 
@@ -746,7 +755,7 @@ echo "<tbody>\n";
 
 echo "<tr class=\"odd\">\n";
 echo "<td style=\"width:320px;\">". __('Datei:') ."&nbsp;";
-echo "<input type=\"file\" name=\"audiofile\" size=\"45\" style=\"font-size:10px; width:230px;\" accept=\"audio/*\" />\n";
+echo "<input type=\"file\" name=\"audiofile\" size=\"20\" style=\"font-size:10px; width:230px;\" accept=\"audio/*\" />\n";
 
 echo "</td>\n";
 echo "<td>";

@@ -260,6 +260,7 @@ _gscnf( 'SNOM_PROV_FW_DEFAULT_300'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_320'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_360'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_370'  , null               );
+_gscnf( 'SNOM_PROV_FW_DEFAULT_820'  , null               );
 _gscnf( 'SNOM_PROV_FW_FROM6TO7_300' , null               );
 _gscnf( 'SNOM_PROV_FW_FROM6TO7_320' , null               );
 _gscnf( 'SNOM_PROV_FW_FROM6TO7_360' , null               );
@@ -358,6 +359,7 @@ _gscnf( 'EMAIL_NAME'            , 'Gemeinschaft'         );
 _gscnf( 'USER_SELECT_CALLERID'      , false		 );
 _gscnf( 'TRANSFER_FAILED_CALLBACK'      , false		 );
 _gscnf( 'CALLBACK_FAILED_EXTENSION'      , ''		 );
+_gscnf( 'VMBOX_ALWAYS_ASK_PIN'      , false		 );
 #Variables for the Astbuttond
 _gscnf( 'BUTTONDAEMON_USE'            , false           );
 _gscnf( 'BUTTONDAEMON_HOST'            , '127.0.0.1'    );
