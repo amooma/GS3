@@ -36,7 +36,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
 *    set a call forward for a user
 ***********************************************************/
 
-function gs_callforward_set( $user, $source, $case, $type, $number, $timeout=20 )
+function gs_callforward_set( $user, $source, $case, $type, $number, $timeout=20, $vmail_rec_num=0 )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -44,8 +44,8 @@ function gs_callforward_set( $user, $source, $case, $type, $number, $timeout=20 
 		return new GsError( 'Source must be internal|external.' );
 	if (! in_array( $case, array('always','busy','unavail','offline'), true ))
 		return new GsError( 'Case must be always|busy|unavail|offline.' );
-	if (! in_array( $type, array('std','var','vml'), true ))
-		return new GsError( 'Type must be std|var|vml.' );
+	if (! in_array( $type, array('std','var','vml','trl','par'), true ))
+		return new GsError( 'Type must be std|var|vml|trl|par.' );
 	$number = preg_replace( '/[^0-9vm*]/', '', $number );
 	$timeout = (int)$timeout;
 	if ($case != 'unavail') $timeout = 0;
@@ -95,11 +95,12 @@ function gs_callforward_set( $user, $source, $case, $type, $number, $timeout=20 
 	$ok = $ok && $db->execute(
 'UPDATE `callforwards` SET
 	`'. $field .'`=\''. $db->escape($number) .'\',
-	`timeout`='. $timeout .'
+	`timeout`='. $timeout .',
+	`vm_rec_id`='. $db->escape($vmail_rec_num).' 
 WHERE
 	`user_id`='. $user_id .' AND
 	`source`=\''. $db->escape($source) .'\' AND
-	`case`=\''. $db->escape($case) .'\'
+	`case`=\''. $db->escape($case) .'\' 
 LIMIT 1'
 	);
 	if (! $ok)

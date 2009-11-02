@@ -582,6 +582,28 @@ context vm-ann-rec {
 	#include "/opt/gemeinschaft/etc/asterisk/e-number-vm-rec-external.ael"
 }
 
+//---------------------------------------------------------------------
+//  Record VM Box -> New multiple ones
+//---------------------------------------------------------------------
+
+context vm-rec-multiple {
+	
+	webdialrecord => {
+		Set(CDR(amaflags)=OMIT);
+		Answer();
+		Wait(0.5);
+		//Playback(vm-extension);
+		//SayDigits(${user_name});
+		Playback(vm-rec-unv);
+		Record(/opt/gemeinschaft/vm-rec/${record_file}.alaw,5,300);
+		Playback(vm-msgsaved);
+		Playback(/opt/gemeinschaft/vm-rec/${record_file});
+		Wait(1);
+		Hangup();
+	}
+}
+
+
 
 //---------------------------------------------------------------------
 //  To Internal Users/Nobodies

@@ -724,7 +724,7 @@ USE `asterisk`;
 -- Add new tables for group-based permissions:
 --
 
-CREATE TABLE `groups` (
+CREATE TABLE IF NOT EXISTS `groups` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `name` varchar(20) character set ascii NOT NULL,
   `title` varchar(50) collate utf8_unicode_ci NOT NULL default '',
@@ -735,19 +735,19 @@ CREATE TABLE `groups` (
   KEY `type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `group_members` (
+CREATE TABLE IF NOT EXISTS `group_members` (
   `group` mediumint(8) unsigned NOT NULL,
   `member` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`group`,`member`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `group_includes` (
+CREATE TABLE IF NOT EXISTS `group_includes` (
   `group` mediumint(8) unsigned NOT NULL,
   `member` mediumint(8) unsigned NOT NULL,
   PRIMARY KEY  (`group`,`member`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `group_connections` (
+CREATE TABLE IF NOT EXISTS `group_connections` (
   `type` varchar(20) character set ascii NOT NULL default '',
   `group` mediumint(8) unsigned NOT NULL,
   `key` varchar(20) character set ascii NOT NULL default 'id',
@@ -755,7 +755,7 @@ CREATE TABLE `group_connections` (
   PRIMARY KEY  (`type`,`group`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `group_permissions` (
+CREATE TABLE IF NOT EXISTS `group_permissions` (
   `type` varchar(20) character set ascii NOT NULL default '',
   `group` mediumint(8) unsigned NOT NULL,
   `permit` mediumint(8) unsigned NOT NULL default '0',
@@ -782,7 +782,7 @@ ALTER TABLE `routes`
 --
 
 /*
-CREATE TABLE `blacklist` (
+CREATE TABLE IF NOT EXISTS `blacklist` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `group_id` mediumint(8) unsigned default NULL,
   `type` enum('in','out','both') character set ascii NOT NULL default 'out',
@@ -794,5 +794,127 @@ CREATE TABLE `blacklist` (
   CONSTRAINT `blacklist_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 */
+
+
+--
+-- since rev. 7059
+--
+
+USE `asterisk`;
+
+
+--
+-- Table structure for table `cf_timerules`
+--
+
+CREATE TABLE IF NOT EXISTS `cf_timerules` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `ord` int(10) unsigned NOT NULL,
+  `_user_id` int(10) unsigned NOT NULL,
+  `d_mo` tinyint(1) unsigned NOT NULL default '1',
+  `d_tu` tinyint(1) unsigned NOT NULL default '1',
+  `d_we` tinyint(1) unsigned NOT NULL default '1',
+  `d_th` tinyint(1) unsigned NOT NULL default '1',
+  `d_fr` tinyint(1) unsigned NOT NULL default '1',
+  `d_sa` tinyint(1) unsigned NOT NULL default '1',
+  `d_su` tinyint(1) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `target` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Table structure for table `vm_rec_messages`
+--
+
+CREATE TABLE IF NOT EXISTS `vm_rec_messages` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_user_id` int(10) unsigned NOT NULL default '0',
+  `vm_rec_file` varchar(80) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `vm_comment` varchar(180) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--
+-- add new option 'trl' to column `active`:
+--
+
+ALTER TABLE `callforwards`
+  CHANGE `active` `active` ENUM('no','std','var','vml','trl','par') CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT 'no';
+ALTER TABLE `callforwards`
+  ADD COLUMN `vm_rec_id` int(10) unsigned default NULL AFTER `number_vml`;
+
+
+--
+-- Table structure for table `queue_cf_timerules`
+--
+
+CREATE TABLE IF NOT EXISTS `queue_cf_timerules` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_queue_id` int(10) unsigned NOT NULL,
+  `ord` int(10) unsigned NOT NULL,
+  `d_mo` tinyint(1) unsigned NOT NULL default '1',
+  `d_tu` tinyint(1) unsigned NOT NULL default '1',
+  `d_we` tinyint(1) unsigned NOT NULL default '1',
+  `d_th` tinyint(1) unsigned NOT NULL default '1',
+  `d_fr` tinyint(1) unsigned NOT NULL default '1',
+  `d_sa` tinyint(1) unsigned NOT NULL default '1',
+  `d_su` tinyint(1) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `target` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Table structure for table `queue_vm_rec_messages`
+--
+
+CREATE TABLE IF NOT EXISTS `queue_vm_rec_messages` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_queue_id` int(10) unsigned NOT NULL default '0',
+  `vm_rec_file` varchar(80) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `vm_comment` varchar(180) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- add new option 'trl' and 'vml' to column `active`:
+--
+
+ALTER TABLE `queue_callforwards`
+  CHANGE `active` `active` ENUM('no','std','var','vml','trl','par') CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT 'no';
+ALTER TABLE `queue_callforwards`
+  ADD COLUMN `vm_rec_id` int(10) unsigned default NULL AFTER `number_var`;
+ALTER TABLE `queue_callforwards`
+  ADD COLUMN `number_vml` VARCHAR(20) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL AFTER `number_var`;
+
+
+--
+-- Table structure for table `cf_parallelcall`
+--
+
+CREATE TABLE IF NOT EXISTS `cf_parallelcall` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_user_id` int(10) unsigned NOT NULL default '0',
+  `number` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--
+-- Table structure for table `queue_cf_parallelcall`
+--
+
+CREATE TABLE IF NOT EXISTS `queue_cf_parallelcall` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_queue_id` int(10) unsigned NOT NULL default '0',
+  `number` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

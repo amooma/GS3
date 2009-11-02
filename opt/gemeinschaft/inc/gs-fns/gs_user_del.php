@@ -108,6 +108,18 @@ function gs_user_del( $user, $reload=true )
 	#
 	$db->execute( 'DELETE FROM `callforwards` WHERE `user_id`='. $user_id );
 	
+	# delete anounce files
+	#
+	$db->execute( 'DELETE FROM `vm_rec_messages` WHERE `_user_id`='. $user_id );
+	
+	# delete parallel-call definition
+	#
+	$db->execute( 'DELETE FROM `cf_parallelcall` WHERE `_user_id`='. $user_id );
+	
+	# delete timerules definition
+	#
+	$db->execute( 'DELETE FROM `cf_timerules` WHERE `_user_id`='. $user_id );
+	
 	# delete from pickup groups
 	#
 	$db->execute( 'DELETE FROM `pickupgroups_users` WHERE `user_id`='. $user_id );
