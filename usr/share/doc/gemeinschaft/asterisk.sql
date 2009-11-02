@@ -5687,7 +5687,8 @@ CREATE TABLE `callforwards` (
   `number_std` varchar(50) character set ascii NOT NULL default '',
   `number_var` varchar(50) character set ascii NOT NULL default '',
   `number_vml` varchar(20) character set ascii NOT NULL default '',
-  `active` enum('no','std','var','vml') character set ascii NOT NULL default 'no',
+  `vm_rec_id` int(10) unsigned default NULL,
+  `active` enum('no','std','var','vml','trl','par') character set ascii NOT NULL default 'no',
   PRIMARY KEY  (`user_id`,`source`,`case`),
   CONSTRAINT `callforwards_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -5721,6 +5722,55 @@ LOCK TABLES `callwaiting` WRITE;
 /*!40000 ALTER TABLE `callwaiting` DISABLE KEYS */;
 INSERT INTO `callwaiting` VALUES (24,0);
 /*!40000 ALTER TABLE `callwaiting` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cf_parallelcall`
+--
+
+DROP TABLE IF EXISTS `cf_parallelcall`;
+CREATE TABLE `cf_parallelcall` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_user_id` int(10) unsigned NOT NULL default '0',
+  `number` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `cf_parallelcall`
+--
+
+LOCK TABLES `cf_parallelcall` WRITE;
+/*!40000 ALTER TABLE `cf_parallelcall` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cf_parallelcall` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cf_timerules`
+--
+
+DROP TABLE IF EXISTS `cf_timerules`;
+CREATE TABLE `cf_timerules` (
+  `_user_id` int(10) unsigned NOT NULL,
+  `d_mo` tinyint(1) unsigned NOT NULL default '1',
+  `d_tu` tinyint(1) unsigned NOT NULL default '1',
+  `d_we` tinyint(1) unsigned NOT NULL default '1',
+  `d_th` tinyint(1) unsigned NOT NULL default '1',
+  `d_fr` tinyint(1) unsigned NOT NULL default '1',
+  `d_sa` tinyint(1) unsigned NOT NULL default '1',
+  `d_su` tinyint(1) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `target` varchar(20) character set ascii NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `cf_timerules`
+--
+
+LOCK TABLES `cf_timerules` WRITE;
+/*!40000 ALTER TABLE `cf_timerules` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cf_timerules` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6420,7 +6470,7 @@ CREATE TABLE `queue_callforwards` (
   `timeout` tinyint(3) unsigned NOT NULL default '20',
   `number_std` varchar(50) character set ascii NOT NULL default '',
   `number_var` varchar(50) character set ascii NOT NULL default '',
-  `active` enum('no','std','var') character set ascii NOT NULL default 'no',
+  `active` enum('no','std','var','vml','trl','par') character set ascii NOT NULL default 'no',
   PRIMARY KEY  (`queue_id`,`source`,`case`),
   CONSTRAINT `queue_callforwards_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -6434,6 +6484,55 @@ LOCK TABLES `queue_callforwards` WRITE;
 INSERT INTO `queue_callforwards` VALUES (1,'external','always',20,'2001','','std');
 INSERT INTO `queue_callforwards` VALUES (1,'external','full',0,'','123','var');
 /*!40000 ALTER TABLE `queue_callforwards` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `queue_cf_parallelcall`
+--
+
+DROP TABLE IF EXISTS `queue_cf_parallelcall`;
+CREATE TABLE `queue_cf_parallelcall` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_queue_id` int(10) unsigned NOT NULL default '0',
+  `number` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `queue_cf_parallelcall`
+--
+
+LOCK TABLES `queue_cf_parallelcall` WRITE;
+/*!40000 ALTER TABLE `queue_cf_parallelcall` DISABLE KEYS */;
+/*!40000 ALTER TABLE `queue_cf_parallelcall` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `queue_cf_timerules`
+--
+
+DROP TABLE IF EXISTS `queue_cf_timerules`;
+CREATE TABLE `cf_timerules` (
+  `_queue_id` int(10) unsigned NOT NULL,
+  `d_mo` tinyint(1) unsigned NOT NULL default '1',
+  `d_tu` tinyint(1) unsigned NOT NULL default '1',
+  `d_we` tinyint(1) unsigned NOT NULL default '1',
+  `d_th` tinyint(1) unsigned NOT NULL default '1',
+  `d_fr` tinyint(1) unsigned NOT NULL default '1',
+  `d_sa` tinyint(1) unsigned NOT NULL default '1',
+  `d_su` tinyint(1) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `target` varchar(20) character set ascii NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `queue_cf_timerules`
+--
+
+LOCK TABLES `queue_cf_timerules` WRITE;
+/*!40000 ALTER TABLE `queue_cf_timerules` DISABLE KEYS */;
+/*!40000 ALTER TABLE `queue_cf_timerules` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6470,6 +6569,28 @@ CREATE TABLE `queue_log` (
 LOCK TABLES `queue_log` WRITE;
 /*!40000 ALTER TABLE `queue_log` DISABLE KEYS */;
 /*!40000 ALTER TABLE `queue_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `queue_vm_rec_messages`
+--
+
+DROP TABLE IF EXISTS `queue_vm_rec_messages`;
+CREATE TABLE `queue_vm_rec_messages` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_queue_id` int(10) unsigned NOT NULL default '0',
+  `vm_rec_file` varchar(80) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `vm_comment` varchar(180) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `queue_vm_rec_messages`
+--
+
+LOCK TABLES `queue_vm_rec_messages` WRITE;
+/*!40000 ALTER TABLE `queue_vm_rec_messages` DISABLE KEYS */;
+/*!40000 ALTER TABLE `queue_vm_rec_messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6886,6 +7007,28 @@ CREATE TABLE `vm_msgs` (
 LOCK TABLES `vm_msgs` WRITE;
 /*!40000 ALTER TABLE `vm_msgs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vm_msgs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vm_rec_messages`
+--
+
+DROP TABLE IF EXISTS `vm_rec_messages`;
+CREATE TABLE `vm_rec_messages` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_user_id` int(10) unsigned NOT NULL default '0',
+  `vm_rec_file` varchar(80) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `vm_comment` varchar(180) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `vm_rec_messages`
+--
+
+LOCK TABLES `vm_rec_messages` WRITE;
+/*!40000 ALTER TABLE `vm_rec_messages` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vm_rec_messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

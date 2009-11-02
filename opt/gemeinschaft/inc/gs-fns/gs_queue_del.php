@@ -75,6 +75,18 @@ function gs_queue_del( $name )
 	#
 	$db->execute( 'DELETE FROM `queue_callforwards` WHERE `queue_id`='. $queue_id );
 	
+	# delete queue_vm_rec_messages
+	#
+	$db->execute( 'DELETE FROM `queue_vm_rec_messages` WHERE `queue_id`='. $queue_id );
+	
+	# delete queue cf timerules
+	#
+	$db->execute( 'DELETE FROM `queue_cf_timerules` WHERE `queue_id`='. $queue_id );
+	
+	# delete queue cf timerules
+	#
+	$db->execute( 'DELETE FROM `queue_cf_parallelcall` WHERE `queue_id`='. $queue_id );
+	
 	# delete queue log
 	#
 	$CDR_DB->execute( 'DELETE FROM `queue_log` WHERE `queue_id`='. $queue_id );

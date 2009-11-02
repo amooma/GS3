@@ -118,6 +118,7 @@ $MODULES['forwards' ]=  array(
 	'boi_ok'=> false,
 	'sub' => array(
 		'forwards'     => array('title' => __('Rufumleitung')),
+		'vmconfig'     => array('title' => __('AB-Konfiguration')),
 		'extnumbers'   => array('title' => __('externe Nummern')),
 		'queues'       => array('title' => __('Warteschlangen'), 'perms' => 'admin')
 	)

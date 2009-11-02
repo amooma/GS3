@@ -36,7 +36,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_callforward_set.php' );
 *    set a call forward for a queue
 ***********************************************************/
 
-function gs_queue_callforward_set( $queue, $source, $case, $type, $number, $timeout=20 )
+function gs_queue_callforward_set( $queue, $source, $case, $type, $number, $timeout=20,$vmail_rec_num=0)
 {
 	if (! preg_match( '/^[\d]+$/', $queue ))
 		return new GsError( 'Queue must be numeric.' );
@@ -44,9 +44,10 @@ function gs_queue_callforward_set( $queue, $source, $case, $type, $number, $time
 		return new GsError( 'Source must be internal|external.' );
 	if (! in_array( $case, array('always','full','timeout','empty'), true ))
 		return new GsError( 'Case must be always|full|timeout|empty.' );
-	if (! in_array( $type, array('std','var'), true ))
-		return new GsError( 'Type must be std|var.' );
-	$number = preg_replace( '/[^\d]/', '', $number );
+	if (! in_array( $type, array('std','var','vml','trl','par'), true ))
+		return new GsError( 'Type must be std|var|vml|trl|par.' );
+	//$number = preg_replace( '/[^\d]/', '', $number );
+	$number = preg_replace( '/[^0-9vm*]/', '', $number );
 	$timeout = (int)$timeout;
 	if ($case != 'timeout') $timeout = 0;
 	else {
@@ -70,25 +71,28 @@ function gs_queue_callforward_set( $queue, $source, $case, $type, $number, $time
 	#
 	$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `queue_callforwards` WHERE `queue_id`='. $queue_id .' AND `source`=\''. $db->escape($source) .'\' AND `case`=\''. $db->escape($case) .'\'' );
 	if ($num < 1)
-		$ok = $db->execute( 'INSERT INTO `queue_callforwards` (`queue_id`, `source`, `case`, `timeout`, `number_std`, `number_var`, `active`) VALUES ('. $queue_id .', \''. $db->escape($source) .'\', \''. $db->escape($case) .'\', 0, \'\', \'\', \'no\')' );
+		$ok = $db->execute( 'INSERT INTO `queue_callforwards` (`queue_id`, `source`, `case`, `timeout`, `number_std`, `number_var`, `number_vml`, `active`) VALUES ('. $queue_id .', \''. $db->escape($source) .'\', \''. $db->escape($case) .'\', 0, \'\', \'\', \'\', \'no\')' );
 	else
 		$ok = true;
 	
 	# set call forward
 	#
-	$field = 'number_'. $type;
-	$ok = $ok && $db->execute(
-'UPDATE `queue_callforwards` SET
-	`'. $field .'`=\''. $db->escape($number) .'\',
-	`timeout`='. $timeout .'
-WHERE
-	`queue_id`='. $queue_id .' AND
-	`source`=\''. $db->escape($source) .'\' AND
-	`case`=\''. $db->escape($case) .'\'
-LIMIT 1'
-	);
-	if (! $ok)
-		return new GsError( 'Failed to set call forwarding number.' );
+	if ($type != 'trl' && $type != 'par') {
+			$field = 'number_'. $type;
+			$ok = $ok && $db->execute(
+		'UPDATE `queue_callforwards` SET
+			`'. $field .'`=\''. $db->escape($number) .'\',
+			`timeout`='. $timeout .',
+			`vm_rec_id`='. $db->escape($vmail_rec_num).' 
+		WHERE
+			`queue_id`='. $queue_id .' AND
+			`source`=\''. $db->escape($source) .'\' AND
+			`case`=\''. $db->escape($case) .'\'
+		LIMIT 1'
+			);
+			if (! $ok)
+				return new GsError( 'Failed to set call forwarding number.' );
+	}
 	return true;
 }
 

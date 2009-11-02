@@ -43,8 +43,8 @@ function gs_queue_callforward_activate( $queue, $source, $case, $active )
 		return new GsError( 'Source must be internal|external.' );
 	if (! in_array( $case, array('always','full','timeout','empty'), true ))
 		return new GsError( 'Case must be always|full|timeout|empty.' );
-	if (! in_array( $active, array('no','std','var'), true ))
-		return new GsError( 'Active must be no|std|var.' );
+	if (! in_array( $active, array('no','std','var','vml','trl','par'), true ))
+		return new GsError( 'Active must be no|std|var|vml|trl|par.' );
 	
 	# connect to db
 	#
@@ -62,7 +62,7 @@ function gs_queue_callforward_activate( $queue, $source, $case, $active )
 	#
 	$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `queue_callforwards` WHERE `queue_id`='. $queue_id .' AND `source`=\''. $db->escape($source) .'\' AND `case`=\''. $db->escape($case) .'\'' );
 	if ($num < 1)
-		$ok = $db->execute( 'INSERT INTO `queue_callforwards` (`queue_id`, `source`, `case`, `number_std`, `number_var`, `active`) VALUES ('. $queue_id .', \''. $db->escape($source) .'\', \''. $db->escape($case) .'\', \'\', \'\', \'no\')' );
+		$ok = $db->execute( 'INSERT INTO `queue_callforwards` (`queue_id`, `source`, `case`, `number_std`, `number_var`, `number_vml`, `active`) VALUES ('. $queue_id .', \''. $db->escape($source) .'\', \''. $db->escape($case) .'\', \'\', \'\', \'no\')' );
 	else
 		$ok = true;
 	
@@ -82,7 +82,7 @@ LIMIT 1'
 	
 	# do not allow an empty number to be active
 	#
-	if ($active != 'no') {
+	if ($active != 'no' && $active != 'trl' && $active != 'par') {
 		$field = 'number_'. $active;
 		$number = $db->executeGetOne( 'SELECT `'. $field .'` FROM `queue_callforwards` WHERE `queue_id`='. $queue_id .' AND `source`=\''. $db->escape($source) .'\' AND `case`=\''. $db->escape($case) .'\'' );
 		if (trim($number)=='') {
