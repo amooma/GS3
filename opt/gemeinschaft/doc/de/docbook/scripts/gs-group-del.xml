@@ -44,7 +44,7 @@
   <refnamediv>
     <refname>gs-group-del</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: Benutzergruppe
+    <refpurpose><application>Gemeinschaft</application>: Gruppe
     löschen</refpurpose>
   </refnamediv>
 
@@ -67,7 +67,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Löscht eine Benutzergruppe.</para>
+    <para>Löscht eine Gruppe.</para>
   </refsection>
 
   <refsection>
@@ -78,7 +78,7 @@
         <term><option>--group</option>=<replaceable>name</replaceable></term>
 
         <listitem>
-          <para>Gruppe</para>
+          <para>Der name der Gruppe</para>
         </listitem>
       </varlistentry>
 

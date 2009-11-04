@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<refentry id="man-gs-group-add" lang="de" revision="$Revision$">
+<refentry id="man-gs-prov-groups-get" lang="de" revision="$Revision: 5282 $">
   <!--
 % Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
@@ -16,11 +16,11 @@
   <indexterm>
     <primary>Skripte</primary>
 
-    <secondary>gs-group-add</secondary>
+    <secondary>gs-prov-groups-get</secondary>
   </indexterm>
 
   <refentryinfo>
-    <date>$Revision$</date>
+    <date>$Revision: 5282 $</date>
 
     <copyright>
       <year>2007</year>
@@ -34,7 +34,7 @@
   </refentryinfo>
 
   <refmeta>
-    <refentrytitle>gs-group-add</refentrytitle>
+    <refentrytitle>gs-prov-groups-get</refentrytitle>
 
     <manvolnum>8</manvolnum>
 
@@ -42,19 +42,19 @@
   </refmeta>
 
   <refnamediv>
-    <refname>gs-group-add</refname>
+    <refname>gs-prov-groups-get</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: Gruppe
-    hinzufügen</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Provisioninggruppen
+    anzeigen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: gs-group-add --name=&lt;name&gt; --title=&lt;title>&gt; --type=&lt;type>&gt;</command>
+      <command>Usage:</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
-      <command>gs-group-add</command>
+      <command>gs-prov-groups-get</command>
 
       <group choice="req" rep="norepeat">
         <arg choice="plain"><option>--help</option></arg>
@@ -67,37 +67,13 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Legt eine Gruppe an. Gruppiert werden können Benutzer, Hosts und Queues.</para>
+    <para>Zeigt die eingerichteten Provisioninggruppen an.</para>
   </refsection>
 
   <refsection>
     <title>Parameter</title>
 
     <variablelist>
-      <varlistentry>
-        <term><option>--name</option>=<replaceable>name</replaceable></term>
-
-        <listitem>
-          <para>name</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>--title</option>=<replaceable>title</replaceable></term>
-
-        <listitem>
-          <para>Bezeichnung</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>--type</option>=<replaceable>id</replaceable></term>
-
-        <listitem>
-          <para>Der Typ der Gruppe, im Moment gibt es 'user','queue' und 'host'</para>
-        </listitem>
-      </varlistentry>
-     
       <varlistentry>
         <term><option>--help</option></term>
 
