@@ -44,7 +44,7 @@
   <refnamediv>
     <refname>gs-groups-get</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: Benutzergruppen
+    <refpurpose><application>Gemeinschaft</application>: Gruppen
     anzeigen</refpurpose>
   </refnamediv>
 
@@ -67,7 +67,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Zeigt die eingerichteten Benutzergruppen an.</para>
+    <para>Zeigt die eingerichteten Gruppen an.</para>
   </refsection>
 
   <refsection>

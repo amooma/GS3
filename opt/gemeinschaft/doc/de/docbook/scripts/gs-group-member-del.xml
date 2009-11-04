@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<refentry id="man-gs-group-add" lang="de" revision="$Revision$">
+<refentry id="man-gs-group-member-del" lang="de" revision="$Revision: 5282 $">
   <!--
 % Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
@@ -16,11 +16,11 @@
   <indexterm>
     <primary>Skripte</primary>
 
-    <secondary>gs-group-add</secondary>
+    <secondary>gs-group-member-del</secondary>
   </indexterm>
 
   <refentryinfo>
-    <date>$Revision$</date>
+    <date>$Revision: 5282 $</date>
 
     <copyright>
       <year>2007</year>
@@ -34,7 +34,7 @@
   </refentryinfo>
 
   <refmeta>
-    <refentrytitle>gs-group-add</refentrytitle>
+    <refentrytitle>gs-group-member-del</refentrytitle>
 
     <manvolnum>8</manvolnum>
 
@@ -42,19 +42,18 @@
   </refmeta>
 
   <refnamediv>
-    <refname>gs-group-add</refname>
+    <refname>gs-group-member-del</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: Gruppe
-    hinzufügen</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: Einen Teilnehmer aus einer Gruppe entfernen.</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: gs-group-add --name=&lt;name&gt; --title=&lt;title>&gt; --type=&lt;type>&gt;</command>
+      <command>Usage: gs-group-member-del --group=&lt;group&gt; --member=&lt;member&gt;</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
-      <command>gs-group-add</command>
+      <command>gs-group-member-del</command>
 
       <group choice="req" rep="norepeat">
         <arg choice="plain"><option>--help</option></arg>
@@ -64,10 +63,10 @@
     </cmdsynopsis>
   </refsynopsisdiv>
 
-  <refsection>
+<refsection>
     <title>Beschreibung</title>
 
-    <para>Legt eine Gruppe an. Gruppiert werden können Benutzer, Hosts und Queues.</para>
+    <para>Löscht einen Teilnehmer aus einer Gruppe.</para>
   </refsection>
 
   <refsection>
@@ -75,26 +74,18 @@
 
     <variablelist>
       <varlistentry>
-        <term><option>--name</option>=<replaceable>name</replaceable></term>
+        <term><option>--group</option>=<replaceable>group</replaceable></term>
 
         <listitem>
-          <para>name</para>
+          <para>Der Name der Gruppe aus der der Teilnehmer gelöscht werden soll.</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--title</option>=<replaceable>title</replaceable></term>
+        <term><option>--member</option>=<replaceable>member</replaceable></term>
 
         <listitem>
-          <para>Bezeichnung</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>--type</option>=<replaceable>id</replaceable></term>
-
-        <listitem>
-          <para>Der Typ der Gruppe, im Moment gibt es 'user','queue' und 'host'</para>
+          <para>Der Name des Teilnehmers der aus der Gruppe gelöscht werden soll.</para>
         </listitem>
       </varlistentry>
      
