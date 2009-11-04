@@ -955,16 +955,32 @@ if ($phone_layout) {
 					'title'=> __('Erweiterungs-Modul') .' 2')
 			);
 		}
+		if ($show_ext_modules >= 3) {
+			$key_levels += array(
+				3 => array('from'=>  54, 'to'=>  74, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 3')
+			);
+		}
+		if ($show_ext_modules >= 4) {
+			$key_levels += array(
+				4 => array('from'=>  75, 'to'=>  95, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 4')
+			);
+		}
 		switch ($phone_type) {
 			case 'snom-300':
 				$key_levels[0]['to'  ] =    5;
 				unset($key_levels[1]);
 				unset($key_levels[2]);
+				unset($key_levels[3]);
+				unset($key_levels[4]);
 				break;
 			case 'snom-820':
 				$key_levels[0]['to'  ] =    3;
 				unset($key_levels[1]);
 				unset($key_levels[2]);
+				unset($key_levels[3]);
+				unset($key_levels[4]);
 				break;
 		}
 		break;
@@ -1135,6 +1151,8 @@ if ($phone_layout) {
 					case 0: $left =  0; $right =  6; break;
 					case 1: $left = 12; $right = 23; break;
 					case 2: $left = 33; $right = 44; break;
+					case 3: $left = 54; $right = 65; break;
+					case 4: $left = 75; $right = 86; break;
 				}
 				break;
 		}
