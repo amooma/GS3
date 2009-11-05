@@ -88,14 +88,6 @@ subnet 192.168.0.0 netmask 255.255.0.0 {
           worden.</para>
         </footnote></title>
 
-      <section id="dhcp-server-siemens-old">
-        <title>Alte Doku ohne Provisioning-Server</title>
-
-        <note>
-          <para>Nicht löschen, neue Doku noch nicht vollständig. Ggf.
-          einarbeiten.</para>
-        </note>
-
         <formalpara>
           <title>VLAN-ID</title>
 
@@ -176,42 +168,8 @@ subnet 192.168.0.0 netmask 255.255.0.0 {
         00:00:00:00:00:FF;</emphasis>
 }</programlisting></para>
 
-        <para>oder leichter zu lesen so (ungetestet):<programlisting># Define option space for Siemens OpenStage phones:
-<emphasis role="bold">option space optSiemensOpenStage;
-option optSiemensOpenStage.magic   code 1 = string;
-option optSiemensOpenStage.vlanid  code 2 = unsigned integer 32;</emphasis>
 
-<emphasis role="bold">class "SiemensOpenStage" {
-    match if substring(hardware, 1, 3) = 00:01:E3;
-}</emphasis>
-
-subnet 192.168.0.0 netmask 255.255.0.0 {
-    default-lease-time 18396000;  # 7 months
-    max-lease-time     21024000;  # 8 months
-    option subnet-mask 255.255.255.0;
-    
-    pool {
-        <emphasis role="bold">allow members of "SiemensOpenStage";</emphasis>
-        range 192.168.1.200 192.168.1.249;
-        
-        <emphasis role="bold">vendor-option-space                optSiemensOpenStage;</emphasis>
-        <emphasis role="bold">option optSiemensOpenStage.magic   53:69:65:6D:65:6E:73:00:00:00;</emphasis>
-        # u.U. ist es möglich, den Wert auch so anzugeben:
-        # "Siemens\0\0\0" (mit den Anführungszeichen). das hat im Test
-        # jedoch nicht funktioniert
-        <emphasis role="bold">option optSiemensOpenStage.vlanid  20;</emphasis>
-    }
-}</programlisting></para>
-      </section>
-
-      <section id="dhcp-server-siemens-new">
-        <title>Neue Doku mit VLAN-ID und Provisioning-Server</title>
-
-        <note>
-          <para>... aber bisher nur kurz auf die Schnelle. :-)</para>
-        </note>
-
-        <para>Getestet:<programlisting># Define option space for Siemens OptiPoint / OpenStage phones:
+        <para>Kompletter Abschnitt (Getestet):<programlisting># Define option space for Siemens OptiPoint / OpenStage phones:
 <emphasis role="bold">option space OptiIpPhone;
 option OptiIpPhone.magic   code 1 = string;
 option OptiIpPhone.vlanid  code 2 = unsigned integer 32;
@@ -247,7 +205,7 @@ subnet 192.168.0.0 netmask 255.255.0.0 {
         Slash (<literal>/</literal>) oder eine andere Pfadangabe folgen.
         Passen Sie also lediglich die IP-Adresse an.</para>
       </section>
-    </section>
+    
   </section>
 
   <section id="dhcp-server-ntp">

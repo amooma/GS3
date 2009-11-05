@@ -433,6 +433,10 @@ User www-data</screen></para>
     beteiligten Rechnern installiert und wie unter <xref
     linkend="initial-configuration" /> beschrieben konfiguriert werden!</para>
 
+    <para>Sie können das aktuelle Tar-Archiv vom Amooma-Server unter diese URL herunter laden: 
+	http://www.amooma.de/download/gemeinschaft-current.tar.gz
+    </para>
+
     <para>Beispiel-Konfig.-Dateien von Asterisk löschen:<programlisting><command>rm -rf /etc/asterisk/*</command></programlisting></para>
 
     <para>Dann das TAR-Archiv von Amooma ins Dateisystem-Root

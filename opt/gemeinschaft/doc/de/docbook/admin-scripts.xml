@@ -97,7 +97,7 @@ Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
 
   <xi:include href="scripts/gs-clir-get.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
-
+  
   <xi:include href="scripts/gs-group-add.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
@@ -105,6 +105,24 @@ Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <xi:include href="scripts/gs-groups-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="scripts/gs-group-member-add.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="scripts/gs-group-member-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="scripts/gs-group-members-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="scripts/gs-group-permission-add.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="scripts/gs-group-permission-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="scripts/gs-group-permission-get.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <xi:include href="scripts/gs-host-add.xml" parse="xml"
@@ -169,6 +187,16 @@ Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
 
   <xi:include href="scripts/gs-prov-phone-checkcfg.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="scripts/gs-prov-group-add.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="scripts/gs-prov-group-del.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="scripts/gs-prov-groups-get.xml" parse="xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
 
   <xi:include href="scripts/gs-queue-add.xml" parse="xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
