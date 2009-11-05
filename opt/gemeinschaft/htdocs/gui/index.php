@@ -31,7 +31,7 @@ require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_die_on_err');
 require_once( GS_DIR .'inc/string.php' );
-
+require_once( GS_DIR .'inc/group-fns.php' );
 
 function _not_found( $msg='Not Found.' )
 {
@@ -165,6 +165,14 @@ include_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );  # defines $DB
 require_once( GS_HTDOCS_DIR .'inc/modules.php' );
 
+if (! @$_SESSION['login_ok'] )
+	$display_modules = array();
+else 
+	$display_modules  = gs_group_members_get(
+		gs_group_permissions_get(
+			gs_group_members_groups_get(Array(@$_SESSION['sudo_user']['info']['id']), 'user')
+		, 'display_module_gui','module_gui')
+	);
 
 # get section & module
 #
@@ -209,7 +217,6 @@ if ($is_login) {  # set in inc/session.php
 		}
 	}
 }
-
 
 # BOI menu
 #
@@ -354,6 +361,8 @@ if (gs_get_conf('GS_BOI_ENABLED')
 }
 
 
+
+
 # get section & module
 #
 if (! array_key_exists($SECTION, $MODULES)
@@ -369,10 +378,21 @@ if (! array_key_exists($SECTION, $MODULES)
 	$MODULE  = '';
 }
 
-if (count( $MODULES[$SECTION]['sub'] ) < 2 || ! $MODULE) {
+if (count( $MODULES[$SECTION]['sub'] ) < 2) {
 	list($k,$v) = each( $MODULES[$SECTION]['sub'] );
 	$MODULE = $k;
 }
+
+if (! $MODULE) {
+	foreach ($MODULES[$SECTION]['sub'] as $module_name => $module_info) {
+		if ((array_key_exists('id', $module_info))
+			&& in_array($module_info['id'], $display_modules)) {
+			$MODULE = $module_name;
+			break;
+		}
+	}
+}
+
 if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub'])) {
 	//_not_found();
 	$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Modul %s nicht vorhanden")), '<q><tt>'.$SECTION.'/'.$MODULE.'</tt></q>');
@@ -384,26 +404,21 @@ if (! array_key_exists($MODULE, $MODULES[$SECTION]['sub'])) {
 	$MODULE  = 'home';
 }
 
-if ((array_key_exists('perms', $MODULES[$SECTION])
-&&   $MODULES[$SECTION]['perms'] === 'admin')
-||  (array_key_exists('perms', $MODULES[$SECTION]['sub'][$MODULE])
-&&   $MODULES[$SECTION]['sub'][$MODULE]['perms'] === 'admin')
-) {
+if  ((( array_key_exists('id', $MODULES[$SECTION]))
+&& ! in_array($MODULES[$SECTION]['id'], $display_modules))
+||  (( array_key_exists('id', $MODULES[$SECTION]['sub'][$MODULE])) && !in_array($MODULES[$SECTION]['sub'][$MODULE]['id'], $display_modules))) {
+	
 	# module/section requires admin permissions
 	if (@$_SESSION['login_ok']) {
-		# user is logged in
-		if (! gs_user_is_admin(@$_SESSION['sudo_user']['name'])) {
-			//_not_allowed( 'You are not an admin.' );
-			$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Sie (%s) haben keine Admin-Rechte.")), @$_SESSION['sudo_user']['name']);
-			if (! headers_sent()) {
-				@header( 'HTTP/1.0 403 Forbidden', true, 403 );
-				@header( 'Status: 403 Forbidden' , true, 403 );
-			}
-			$SECTION = 'home';
-			$MODULE  = 'home';
+		//_not_allowed( 'You are not an admin.' );
+		$dispatcher_errors_html[] = sPrintF(htmlEnt(__("Sie (%s) haben keine Admin-Rechte.")), @$_SESSION['sudo_user']['name']);
+		if (! headers_sent()) {
+			@header( 'HTTP/1.0 403 Forbidden', true, 403 );
+			@header( 'Status: 403 Forbidden' , true, 403 );
 		}
-	}
-	else {
+		$SECTION = 'home';
+		$MODULE  = 'home';	
+	} else {
 		# user is not logged in
 		if (! headers_sent()) {
 			@header( 'HTTP/1.0 403 Forbidden', true, 403 );
@@ -411,8 +426,11 @@ if ((array_key_exists('perms', $MODULES[$SECTION])
 		}
 		$SECTION = 'home';
 		$MODULE  = 'home';
-	}
+	}	
+	
 }
+
+
 if ($_SESSION['sudo_user']['boi_host_id'] > 0
 &&  $_SESSION['sudo_user']['boi_role'] !== 'gs'
 &&  array_key_exists('boi_ok', $MODULES[$SECTION])
@@ -626,15 +644,19 @@ function gs_boi_menu_sc( url )
 
 foreach ($MODULES as $sectname => $sectinfo) {
 	$sect_active = ($sectname === $SECTION);
-	
+
+
+	if ( array_key_exists('id', $sectinfo)
+		&& ! in_array($sectinfo['id'], $display_modules)
+		&& ! in_array($sectname, array('home','login','logout'), true)) {
+		unset($MODULES[$sectname]);
+	} 
+
 	if (array_key_exists('inmenu', $sectinfo) && ! $sectinfo['inmenu'])
 		continue;
 	if (count($sectinfo['sub']) < 1)
 		continue;
-	if (! @$_SESSION['login_ok']
-	&&  ! in_array($sectname, array('home','login'), true)) {
-		continue;
-	}
+	
 	if ($_SESSION['sudo_user']['boi_host_id'] > 0
 	&&  $_SESSION['sudo_user']['boi_role'] !== 'gs'
 	&&  array_key_exists('boi_ok', $sectinfo)
@@ -642,20 +664,13 @@ foreach ($MODULES as $sectname => $sectinfo) {
 		continue;
 	}
 	
-	if (@$_SESSION['sudo_user']['name'] !== 'sysadmin') {
-		if (array_key_exists('perms', $sectinfo)
-		&&  $sectinfo['perms'] === 'admin'
-		&&  (@$_SESSION['sudo_user']['name'] == ''
-		||  (! gs_user_is_admin(@$_SESSION['sudo_user']['name']))
-		)) {
-			continue;
-		}
-	} else {
-		if (@$sectinfo['perms'] !== 'admin'
+	
+	if (( !array_key_exists('id', $sectinfo) || 
+		!in_array($sectinfo['id'], $display_modules))
 		&&  ! in_array($sectname, array('home','login','logout'), true)) {
-			continue;
-		}
+		continue;
 	}
+	
 	
 	echo '<li class="'. ($sect_active ? 'expanded' : 'collapsed') .'">', "\n";
 	//echo '<a href="'. GS_URL_PATH .'?s='. $sectname .'" class="'. (($sect_active) ? 'active' : '') .'">'. $sectinfo['title'] .'</a>', "\n";
@@ -669,13 +684,11 @@ foreach ($MODULES as $sectname => $sectinfo) {
 			if (array_key_exists('inmenu', $modinfo) && ! $modinfo['inmenu']) {
 				continue;
 			}
-			if (array_key_exists('perms', $modinfo)
-			&&  $modinfo['perms'] === 'admin'
-			&&  (@$_SESSION['sudo_user']['name'] == ''
-			||  (! gs_user_is_admin(@$_SESSION['sudo_user']['name']))
-			)) {
+			if ((array_key_exists('id', $modinfo))
+			&& (! in_array($modinfo['id'], $display_modules)
+			&& (! in_array($sectname, array('home','login','logout'), true)))) {
 				continue;
-			}
+			} else 
 			echo '<li class="leaf"><a href="', gs_url($sectname, $modname) ,'" class="';
 			if ($modname == $MODULE) echo 'active';
 			echo '"';
