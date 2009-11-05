@@ -12,7 +12,12 @@
 % Asterisk training and consulting is offered at http://www.amooma.de-->  
 <title>Gemeinschaft Gruppensystem</title>
 <para>
-In diesem Kapitel wird speziell auf das flexible Gruppensystem von Gemeinschaft eingegangen. 
+In diesem Kapitel wird speziell auf das flexible Gruppensystem von Gemeinschaft eingegangen.
+In Gemeinschaft wird im Moment zwischen Provisioning-Gruppen und normalen Gruppen unterscheiden.
+Provisioning-Gruppen sind Gruppen von Benutzern, die bestimmte Konfigurationen auf Ihren Endgeräten erhalten.
+Das Gruppensystem mit dem sich dieses Kapitel befasst ist ein flexibles Gruppensystem, das zur Rechtevergabe 
+in Gemeinschaft dient.
+
 </para>
 	<section id="gsgroupsystem-elements">
     		<title>Gruppierbare Elemente</title>
