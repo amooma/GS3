@@ -68,7 +68,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Schaltet Anklopfen für einen Benutzer an oder aus.</para>
+    <para>Schaltet Anklopfen für einen Benutzer an oder aus. Ob die Anklopf-Funktion funktioniert, hängt stark von Endgerät ab.</para>
   </refsection>
 
   <refsection>
@@ -79,7 +79,7 @@
         <term><option>--user</option>=<replaceable>user</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Benutzername des Benutzers von dem das Anklopfen aktiviert bzw. deaktiviert werden soll.</para>
         </listitem>
       </varlistentry>
 
@@ -111,7 +111,7 @@
 
   <refsection>
     <title>Siehe auch</title>
+	<para>gs-callwaiting-get (<xref  linkend="man-gs-callwaiting-get" /></para>
 
-    <para>-</para>
   </refsection>
 </refentry>

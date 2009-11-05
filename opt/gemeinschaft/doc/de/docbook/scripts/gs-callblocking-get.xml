@@ -69,6 +69,32 @@
 
     <para>Zeigt die für einen Benutzer definierten Rufnummernsperren
     an.</para>
+    <para>Beispielausgabe:
+<screen>    
+----------------------------------------------------------
+| regexp                                   | pin         |
+----------------------------------------------------------
+| ^0900                                    | 1234        |
+----------------------------------------------------------
+</screen>
+ </para>
+ <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>regexp</term>
+        <listitem>
+          <para>Der Reguläre Ausdruck der Rufblockierungsregel, wenn eine gewählte Nummer in diesen Ausdruck passt, dann wird diese geblockt, bzw die PIN abgefragt.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>pin</term>
+        <listitem>
+          <para>Die PIN-Nummer, welche abgefragt wird, wenn diese Nummer gewählt wurde.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+   </para>
   </refsection>
 
   <refsection>
@@ -103,7 +129,6 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>gs-callblocking-set (<xref  linkend="man-gs-callblocking-set" /></para>
   </refsection>
 </refentry>

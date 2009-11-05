@@ -134,7 +134,9 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+	<para>gs-callforward-set (<xref  linkend="man-gs-callforward-set" /></para>
+	<para>gs-callforward-get (<xref  linkend="man-gs-callforward-get" /></para>
+	<para>gs-callforward-active (<xref  linkend="man-gs-callforward-activate" /></para>
+	<para>gs-callforward-timeout-set (<xref  linkend="man-gs-callforward-timeout-set" /></para>
   </refsection>
 </refentry>

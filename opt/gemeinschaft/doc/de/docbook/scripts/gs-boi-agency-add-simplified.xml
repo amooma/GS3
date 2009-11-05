@@ -72,7 +72,12 @@
 
     <para>Legt eine Zweigstelle (Fremd-Host) an, sucht Informationen über den
     angegeben Benutzer aus dem LDAP, legt diesen Benutzer an und gibt ihm
-    optional lokale Admin-Rechte.</para>
+    optional lokale Admin-Rechte. Dieses Skript dient als Vereinfachung für Massenhaftes anlegen von Fremden Hosts und deren Benutzern.
+    Man kann alle Schritte die das Skript durchführt auch einzeln mit den Skripten:</para>
+    <para>gs-host-add Siehe (<xref  linkend="man-gs-host-add" /></para>
+    <para>gs-user-add Siehe (<xref  linkend="man-gs-user-add" /></para>
+    <para>gs-boi-admin-add Siehe (<xref  linkend="man-gs-boi-admin-add" /></para>
+    <para>erledigen.</para>
   </refsection>
 
   <refsection>
@@ -156,7 +161,8 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>gs-host-add (<xref  linkend="man-gs-host-add" /></para>
+    <para>gs-user-add (<xref  linkend="man-gs-user-add" /></para>
+    <para>gs-boi-admin-add (<xref  linkend="man-gs-boi-admin-add" /></para>
   </refsection>
 </refentry>

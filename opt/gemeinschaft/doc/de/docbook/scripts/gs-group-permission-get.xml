@@ -67,6 +67,60 @@
     <title>Beschreibung</title>
 
     <para>Zeigt Berechtigungen einer Gruppe auf eine andere Gruppe an</para>
+    <para>Beispielausgabe:
+<screen>
+-------------------------------------------------------------------------
+| permission     | group-id | name     | title             | group-type |
+-------------------------------------------------------------------------
+| call_stats     |        1 | home     | Alle User @Home   | user       |
+| monitor_peers  |        1 | home     | Alle User @Home   | user       |
+| phonebook_user |        1 | home     | Alle User @Home   | user       |
+| sudo_user      |        1 | home     | Alle User @Home   | user       |
+| call_stats     |        2 | a_queues | Alle Queues @Home | queue      |
+| forward_queues |        2 | a_queues | Alle Queues @Home | queue      |
+| monitor_queues |        2 | a_queues | Alle Queues @Home | queue      |
+-------------------------------------------------------------------------
+</screen>
+    
+    </para>
+    
+      <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>permission</term>
+        <listitem>
+          <para></para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>group-id</term>
+        <listitem>
+          <para>Die interne ID der Gruppe</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>name</term>
+        <listitem>
+          <para>Der Name der Gruppe, über diesen werden die Gruppen immer eindeutig identifiziert</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>title</term>
+        <listitem>
+          <para>Der Titel der Gruppe, dieser wird in der GUI angezeigt und dient als "Merkhilfe"</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>group-type</term>
+        <listitem>
+          <para>Der Typ der Gruppe</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+   </para>
+    
+    
   </refsection>
 
   <refsection>
@@ -102,6 +156,14 @@
   <refsection>
     <title>Siehe auch</title>
 
-    <para>-</para>
+    <para><xref  linkend="man-gs-group-add" />
+    <xref  linkend="man-gs-group-del" />
+    <xref  linkend="man-gs-group-change" />
+    <xref  linkend="man-gs-groups-get" />
+    <xref  linkend="man-gs-group-members-get" />
+    <xref  linkend="man-gs-group-member-add" />
+    <xref  linkend="man-gs-group-member-del" />
+    <xref  linkend="man-gs-group-permission-add" />
+    <xref  linkend="man-gs-group-permission-del" /></para>
   </refsection>
 </refentry>

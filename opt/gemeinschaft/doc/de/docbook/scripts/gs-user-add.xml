@@ -71,7 +71,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Legt einen Benutzer an.</para>
+    <para>Legt einen Benutzer auf dem Telefon Framework "Gemeinschaft" an. </para>
   </refsection>
 
   <refsection>
@@ -82,7 +82,7 @@
         <term><option>--user</option>=<replaceable>user</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Benutzername des Teilnehmers. Dieser ist die eindeutige ID für die LDAP Benutzerauflösung und auch in Gemeinschaft einzigartig.</para>
         </listitem>
       </varlistentry>
 
@@ -90,7 +90,7 @@
         <term><option>--ext</option>=<replaceable>1234</replaceable></term>
 
         <listitem>
-          <para>Nebenstelle</para>
+          <para>Nebenstelle des Teilnehmers in der Gemeinschaft. Sie wird als interne Durchwahl und SIP-Kennung verwendet.</para>
         </listitem>
       </varlistentry>
 
@@ -98,7 +98,9 @@
         <term><option>--pin</option>=<replaceable>123456</replaceable></term>
 
         <listitem>
-          <para>PIN-Nummer</para>
+          <para>PIN-Nummer des Teilnehmers für die Anmeldung am Telefon über *0 (siehe 14.1. Ein-/Ausloggen eines Benutzers)
+          Die Pin des Benutzers darf 6 aufeinanderfolgende Zahlen beinhalten.
+	  </para>
         </listitem>
       </varlistentry>
 
@@ -106,7 +108,7 @@
         <term><option>--firstname</option>=<replaceable>firstname</replaceable></term>
 
         <listitem>
-          <para>Vorname</para>
+          <para>Der Vorname des anzulegenden Teilnehmers.</para>
         </listitem>
       </varlistentry>
 
@@ -114,7 +116,7 @@
         <term><option>--lastname</option>=<replaceable>lastname</replaceable></term>
 
         <listitem>
-          <para>Nachname</para>
+          <para>Der Nachname des anzulegenden Teilnehmers.</para>
         </listitem>
       </varlistentry>
 
@@ -122,7 +124,7 @@
         <term><option>--email</option>=<replaceable>email</replaceable></term>
 
         <listitem>
-          <para>E-Mail-Adresse</para>
+          <para>Die E-Mail Adresse des Teilnehmers, diese wird für den Versand von Sprachnachrichten genutzt.</para>
         </listitem>
       </varlistentry>
 
@@ -130,7 +132,7 @@
         <term><option>--host</option>=<replaceable>id</replaceable></term>
 
         <listitem>
-          <para>Host</para>
+          <para>Server auf dem der Benutzer angelegt werden soll (Siehe gs-hosts-get).</para>
         </listitem>
       </varlistentry>
 
@@ -138,7 +140,8 @@
         <term><option>--group</option>=<replaceable>id</replaceable></term>
 
         <listitem>
-          <para>Gruppe</para>
+          <para>Teilnehmer Provisioninggruppe, welche dem Teilnehmer zugeordnet werden soll (siehe gs-prov-groups-get).
+	  </para>
         </listitem>
       </varlistentry>
 
@@ -147,7 +150,10 @@
 
         <listitem>
           <para>Keinen <quote>Reload</quote> der Asterisk-Server
-          durchführen.</para>
+          durchführen.
+	  Dieser Parameter wird verwendet wenn mehrere Teilnehmer über einen Stapel/Shellscrips hinzugefügt werden.
+	  Dadurch werden mehrfache <quote>Reloads</quote> von Asterisk vermieden, die die Stabilität des Systemes beeinflussen können.
+	  </para>
         </listitem>
       </varlistentry>
 

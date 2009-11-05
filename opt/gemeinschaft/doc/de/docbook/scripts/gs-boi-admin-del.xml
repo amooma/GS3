@@ -79,7 +79,7 @@
         <term><option>--user</option>=<replaceable>Benutzer</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Der Benutzername des Nutzers dem die Rechte entzogen werden sollen</para>
         </listitem>
       </varlistentry>
 
@@ -87,7 +87,7 @@
         <term><option>--host</option>=<replaceable>IP-Adresse</replaceable>|<replaceable>ID</replaceable></term>
 
         <listitem>
-          <para>Host</para>
+          <para>Der Host (IP-Adresse oder interne ID siehe <xref  linkend="man-gs-hosts-get" />) auf dem der Benutzer die Admin-Rechte die Admin rechte entzogen bekommen soll.</para>
         </listitem>
       </varlistentry>
 
@@ -111,7 +111,7 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para><xref  linkend="man-gs-boi-admin-add" />
+	<xref  linkend="man-gs-boi-admins-get" /></para>
   </refsection>
 </refentry>
