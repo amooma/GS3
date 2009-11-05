@@ -67,6 +67,9 @@
 
   <xi:include href="gs-config.xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
+  
+  <xi:include href="groupsystem.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 	      
   <xi:include href="update.xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
