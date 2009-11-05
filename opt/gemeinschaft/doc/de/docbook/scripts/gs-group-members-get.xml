@@ -45,6 +45,7 @@
     <refname>gs-group-members-get</refname>
 
     <refpurpose><application>Gemeinschaft</application>: Anzeigen der Teilnehmer einer Gruppe</refpurpose>
+    
   </refnamediv>
 
   <refsynopsisdiv>
@@ -67,6 +68,39 @@
     <title>Beschreibung</title>
 
     <para>Gibt alle Teilnehmer zu einer Gruppe aus.</para>
+    <para>
+	  Beispielausgabe:
+	  </para>
+	  <para>
+	  <screen>
+------------------
+| member  | type |
+------------------
+| soeren  | user |
+| franzi  | user |
+| franzi2 | user |
+| soeren2 | user |
+------------------
+	  </screen>
+	  </para>
+	  	    <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>member</term>
+        <listitem>
+          <para>Der Name des Teilnehmers der Gruppe</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>type</term>
+        <listitem>
+          <para>Der Typ des Teilnehmers</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    </para>
+    
   </refsection>
 
   <refsection>
@@ -78,9 +112,8 @@
 
         <listitem>
           <para>Den Namen der Gruppe, zu der die Teilnehmer ausgegeben werden sollen</para>
-        </listitem>
+	      </listitem>
       </varlistentry>
-
     </variablelist>
   </refsection>
 
@@ -93,6 +126,15 @@
   <refsection>
     <title>Siehe auch</title>
 
-    <para>-</para>
+    <para><xref  linkend="man-gs-group-add" />
+    <xref  linkend="man-gs-group-del" />
+    <xref  linkend="man-gs-group-change" />
+    <xref  linkend="man-gs-groups-get" />
+
+    <xref  linkend="man-gs-group-member-add" />
+    <xref  linkend="man-gs-group-member-del" />
+    <xref  linkend="man-gs-group-permissions-get" />
+    <xref  linkend="man-gs-group-permission-add" />
+    <xref  linkend="man-gs-group-permission-del" /></para>
   </refsection>
 </refentry>

@@ -44,8 +44,8 @@
   <refnamediv>
     <refname>gs-group-del</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: Gruppe
-    löschen</refpurpose>
+    <refpurpose><application>Gemeinschaft</application>: 
+    Gruppe löschen.</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -67,7 +67,8 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Löscht eine Gruppe.</para>
+    <para>Löscht eine Gruppe.  Diese Gruppen wurden entsprechend mit dem Skript gs-group-add hinzugefügt. 
+    Für mehr Informationen über Gruppen siehe <xref  linkend="gsgroupsystem" /></para>
   </refsection>
 
   <refsection>
@@ -78,7 +79,7 @@
         <term><option>--group</option>=<replaceable>name</replaceable></term>
 
         <listitem>
-          <para>Der name der Gruppe</para>
+          <para>Der Name der Gruppe</para>
         </listitem>
       </varlistentry>
 
@@ -102,7 +103,16 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-group-add" />
+    <xref  linkend="man-gs-group-change" />
+    <xref  linkend="man-gs-groups-get" />
+    <xref  linkend="man-gs-group-members-get" />
+    <xref  linkend="man-gs-group-member-add" />
+    <xref  linkend="man-gs-group-member-del" />
+    <xref  linkend="man-gs-group-permissions-get" />
+    <xref  linkend="man-gs-group-permission-add" />
+    <xref  linkend="man-gs-group-permission-del" />
+    </para>
   </refsection>
 </refentry>

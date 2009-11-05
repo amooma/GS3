@@ -110,6 +110,14 @@
   <refsection>
     <title>Siehe auch</title>
 
-    <para>-</para>
+    <para><xref  linkend="man-gs-group-add" />
+    <xref  linkend="man-gs-group-del" />
+    <xref  linkend="man-gs-group-change" />
+    <xref  linkend="man-gs-groups-get" />
+    <xref  linkend="man-gs-group-members-get" />
+    <xref  linkend="man-gs-group-member-add" />
+    <xref  linkend="man-gs-group-permissions-get" />
+    <xref  linkend="man-gs-group-permission-add" />
+    <xref  linkend="man-gs-group-permission-del" /></para>
   </refsection>
 </refentry>

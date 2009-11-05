@@ -68,6 +68,23 @@
     <title>Beschreibung</title>
 
     <para>Zeigt die eingerichteten Provisioninggruppen an.</para>
+    <para>
+    Beispielausgabe:
+    </para>
+	<para>
+	<screen>
+-----------------------------------------------------------------------------------
+| level | id | name      | title     | softkey_profile_id | prov_param_profile_id |
+-----------------------------------------------------------------------------------
+| .     |  2 | home      | Zuhause   | 3                  |                       |
+| ..    |  3 | test      | Zh-Unterg | 3                  |                    1  |
+-----------------------------------------------------------------------------------
+	</screen>
+	</para>
+    <para>
+      Anmerkung: die Spalte "level" gibt an, in welchem Bezug die jeweilige Gruppe unter der überstehenden steht.
+      Es kann dort entnommen werden, das die Gruppe mit id 3 eine Untergruppe von Gruppe mit id 2 ist.
+    </para>
   </refsection>
 
   <refsection>

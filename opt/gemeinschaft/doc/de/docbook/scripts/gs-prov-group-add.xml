@@ -81,7 +81,7 @@
         <term><option>--parent</option>=<replaceable>name</replaceable></term>
 
         <listitem>
-          <para>name</para>
+          <para>Die Gruppe die der neu anzulegenden Gruppe übergeordnet wird.</para>
         </listitem>
       </varlistentry>
 
@@ -89,7 +89,7 @@
         <term><option>--name</option>=<replaceable>name</replaceable></term>
 
         <listitem>
-          <para>name</para>
+          <para>Der Eindeutige Name der Provisioninggruppe</para>
         </listitem>
       </varlistentry>
 
@@ -97,7 +97,7 @@
         <term><option>--title</option>=<replaceable>title</replaceable></term>
 
         <listitem>
-          <para>Bezeichnung</para>
+          <para>Die Bezeichnung der Gruppe, diese wird z.B. in der GUI angezeigt</para>
         </listitem>
       </varlistentry>
 
@@ -105,7 +105,7 @@
         <term><option>--softkey-profile-id</option>=<replaceable>id</replaceable></term>
 
         <listitem>
-          <para>id</para>
+          <para>Die ID des Softkey-Profiles, welches der Gruppe zugewiesen werden soll</para>
         </listitem>
       </varlistentry>
 
@@ -113,7 +113,7 @@
         <term><option>--prov-param-profile-id</option>=<replaceable>id</replaceable></term>
 
         <listitem>
-          <para>id</para>
+          <para>Die ID des Provisioning-Parameter-Profiles, welches der Gruppe zugewiesen werden soll</para>
         </listitem>
       </varlistentry>
 
@@ -121,7 +121,7 @@
         <term><option>--show-ext-modules</option>=<replaceable>num</replaceable></term>
 
         <listitem>
-          <para>num</para>
+          <para>Die Anzahl der Erweiterungsmodule die für diesen Nutzer angezeigt werden sollen.</para>
         </listitem>
       </varlistentry>
 

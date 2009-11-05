@@ -68,8 +68,14 @@
     <title>Beschreibung</title>
 
     <para>Zeigt an ob ein Benutzer Anklopfen aktiviert hat.</para>
+ 
+    <para>
+    Beispielausgabe:
+<screen>
+active: no
+</screen>
+    </para>
   </refsection>
-
   <refsection>
     <title>Parameter</title>
 
@@ -111,7 +117,6 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+	<para>gs-callwaiting-activate (<xref  linkend="man-gs-callwaiting-activate" /></para>
   </refsection>
 </refentry>

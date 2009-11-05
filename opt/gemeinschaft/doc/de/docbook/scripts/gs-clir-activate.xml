@@ -81,7 +81,7 @@
         <term><option>--user</option>=<replaceable>user</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Benutzername des Benutzers für den die Rufunternummernunterdrückung aktiviert oder deaktiviert werden soll.</para>
         </listitem>
       </varlistentry>
 
@@ -122,7 +122,6 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+   <para>gs-clir-get (<xref  linkend="man-gs-clir-get" /></para>
   </refsection>
 </refentry>
