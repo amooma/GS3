@@ -11,14 +11,14 @@
 % Free Documentation License".
 % Asterisk training and consulting is offered at http://www.amooma.de-->
 
-  <title>Installation des Siemens-Openstage Provisioning</title>
-  <para>In diesem Kapitel wird beschrieben, wie man das Provisioning für die Siemens Openstage-Serie (os15 bis os80) installiert.</para>
+  <title>Installation des Siemens-OpenStage Provisioning</title>
+  <para>In diesem Kapitel wird beschrieben, wie man das Provisioning für die Siemens OpenStage-Serie (os15 bis os80) installiert.</para>
   
   <section id="siemens-openstage-prov-installation">
     <title>Siemens OpenStage Provisioning Installieren</title>
     <para>Voraussetzungen:</para>
     <para>- Gemeinschaft installiert</para>
-    <para>- DHCP-Server Mass-Deployment für Siemens-Telefone konfiguriert (siehe Kapitel 5 DHCP-Server)</para>
+    <para>- DHCP-Server Mass-Deployment für Siemens-Telefone konfiguriert siehe <xref  linkend="dhcp-server-siemens" /></para>
     <para>Installation:</para>
     <para>Verzeichnis /opt/gemeinschaft-siemens/ installieren (sollte dann
       z.B. die Dateien prov-settings.php und prov-checkcfg.php enthalten)
@@ -270,7 +270,7 @@ chroot_list_enable=NO
   </section>
   <section>
     <title>Siemens OpenStage Provisioning Konfigurieren</title>
-    <para>Das Siemens Openstage Provisioning wird komplett über die Datei <filename>/opt/gemeinschaft-siemens/conf.php</filename> Konfiguriert. 
+    <para>Das Siemens OpenStage Provisioning wird komplett über die Datei <filename>/opt/gemeinschaft-siemens/conf.php</filename> Konfiguriert. 
     Für Bespiele sehen Sie bitte in die Konfigurationsdatei, alle Parameter sind sinnvoll vorkonfiguriert.</para>
     <para>Es folgt eine Liste der Parameter:</para>
     <para>
@@ -292,14 +292,14 @@ chroot_list_enable=NO
         <varlistentry>
           <term>GS_PROV_SIEMENS_FTP_USER</term>
           <listitem>
-            <para>Der FTP-Benutzername, der vom Openstage genutzt werden soll um Dateien vom FTP-Server herunter zu laden.</para>
+            <para>Der FTP-Benutzername, der vom OpenStage genutzt werden soll um Dateien vom FTP-Server herunter zu laden.</para>
           </listitem>
         </varlistentry>
 
         <varlistentry>
           <term>GS_PROV_SIEMENS_FTP_PWD</term>
           <listitem>
-            <para>Das Passwort des FTP-Benutzers, der vom Openstage genutzt werden soll um Dateien vom FTP-Server herunter zu laden.</para>
+            <para>Das Passwort des FTP-Benutzers, der vom OpenStage genutzt werden soll um Dateien vom FTP-Server herunter zu laden.</para>
           </listitem>
         </varlistentry>
 
@@ -367,8 +367,8 @@ chroot_list_enable=NO
     </para>
   </section>
   <section>
-    <title>Siemens Openstage XML-Applikationen</title>
-    <para>Das Openstage bietet die Möglichkeit XML-Appliktionen auszuführen, damit kann man z.b. das Telefonbuch, Anruflisten oder einen Präsenzmonitpr auf dem Endgerät zur Verfügung stellen. </para>
+    <title>Siemens OpenStage XML-Applikationen</title>
+    <para>Das OpenStage bietet die Möglichkeit XML-Appliktionen auszuführen, damit kann man z.b. das Telefonbuch, Anruflisten oder einen Präsenzmonitpr auf dem Endgerät zur Verfügung stellen. </para>
     <para>Die einzelnen XML-Applikaitonen kann man Zentral in der Datei <filename>/opt/gemeinschaft-siemens/conf.php</filename> Konfigurieren. Hier ein Beispiel der Definition:</para>
     <para><screen># XML Applications
 
@@ -388,13 +388,13 @@ $gs_phonebook = array(
         <varlistentry>
           <term>XML-app-name</term>
           <listitem>
-            <para>legt den Namen der XML-Applikation fest. Der Name darf frei vergeben werden sollte aber eindeutig sein. Es gibt die Möglichkeit, interne Openstage Applikationen auf den Tasten für das Telefonbuch und für die Anrufliste zu überschreiben. Für das Telefonbuch müsste die Taste dann XMLPhonebook heißen und XMLCalllist für die Anrufliste.</para>
+            <para>legt den Namen der XML-Applikation fest. Der Name darf frei vergeben werden sollte aber eindeutig sein. Es gibt die Möglichkeit, interne OpenStage Applikationen auf den Tasten für das Telefonbuch und für die Anrufliste zu überschreiben. Für das Telefonbuch müsste die Taste dann XMLPhonebook heißen und XMLCalllist für die Anrufliste.</para>
           </listitem>
         </varlistentry>
         <varlistentry>
           <term>XML-app-display-name</term>
           <listitem>
-            <para>Dieser Name dient der Anzeige auf dem Display. Der name wird oben in der Statuszeile im Openstage angezeigt.</para>
+            <para>Dieser Name dient der Anzeige auf dem Display. Der name wird oben in der Statuszeile im OpenStage angezeigt.</para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -435,8 +435,186 @@ $gs_phonebook = array(
 &apos;Anrufliste&apos; =&gt; $gs_diallog_dl_key
 );
 </screen></para>
-    <para>Wie man im Beispiel sieht, kann man meherer Appliaktionen mit Komma separiert dort eintragen. Wenn diese Applikationen dort eingetragen wurden, dann werden diese für jedes Openstage Telefon, das sich beim Provisionig meldet, Provisioniert.</para>
+    <para>Wie man im Beispiel sieht, kann man meherer Appliaktionen mit Komma separiert dort eintragen. Wenn diese Applikationen dort eingetragen wurden, dann werden diese für jedes OpenStage Telefon, das sich beim Provisionig meldet, Provisioniert.</para>
   </section>
+  
+  
+  <section id="siemens-openstage-prov-functionality">
+    <title>Siemens OpenStage Provisioning Ablauf</title>
+    <para>Diese Sektion beschreibt den Ablauf des Provisioning-Vorganges des Siemens OpenStage.</para>
+    <para>Nachfolgende Liste erklärt Schritt für Schritt den Ablauf des Vorganges:</para>
+    <para>
+      <variablelist>
+        <varlistentry>
+          <term>1. Das Telefon startet</term>
+          <listitem>
+            <para>Wenn das Telefon startet wird es sich zuerst beim DHCP-Server melden und eine IP-Addresse
+	    sowie Informationen zum Provisioning-Server bekommen.</para>
+          </listitem>
+        </varlistentry>
+	<varlistentry>
+          <term>2. Das Meldet sich beim Provisioning-Server</term>
+          <listitem>
+            <para>Nachdem das Telefon gestartet ist, meldet es sich beim Provisioning-Server den es vom DHCP-Server 
+	    zugewiesen bekommen hat. Das Telefon meldet sich auch, wenn z.B. Lokale Änderungen am Telefon vorgenommen wurden 
+	    (z.B. Rufton an/aus) oder wenn das Telefon angewiesen wurde, sich zu melden.
+	    Wenn sich das Telefon meldet, kann man im "gs.log" sehen, warum sich das Telefon gemeldet hat. z.B.:
+<screen>	    
+[debug] /opt/gemeinschaft-siemens/prov-settings.php:  
+85: Request URL is /DeploymentService/LoginService
+[debug] /opt/gemeinschaft-siemens/prov-settings.php: 
+653: Siemens prov.: Phone "001AE80316B8" contacts us (local-changes)
+</screen>
+            In diesem Schritt teilt das Telefon dem Provisioning-Server die MAC-Addresse mit, anhand derer das Telefon identifiziert wird.
+	    Außerdem enthalten ist das Modell des Telefons, die Farbe und der Softwarestand.
+          </para>
+          </listitem>
+        </varlistentry>
+	<varlistentry>
+          <term>3. Der Provisioning-Server prüft ob Telfon bekannt</term>
+          <listitem>
+	  <para>
+	    In diesem Schritt prüft der Provisioning-Server, ob das Telefon bereits in der Datenbank enthalten ist. Wenn nicht, dann wird
+	    das Gerät mit der MAC-Addresse in der Datenbank-Tabelle "phones" eingetragen:
+<screen>
++----+---------------------+--------------+---------+--------------+------------+
+| id | type                | mac_addr     | user_id | nobody_index | added      |
++----+---------------------+--------------+---------+--------------+------------+
+| 18 | siemens-os60        | 001AE8239883 |    NULL |           22 | 1256035030 |
++----+---------------------+--------------+---------+--------------+------------+
+ --------------+------------------+
+  firmware_cur | fw_manual_update |
+ --------------+------------------+
+  02.01.00.144 |                0 |
+ --------------+------------------+
+</screen>
+           und für das Telefon ein Dummy-User in der "users" Tabelle angelegt. 
+	   Wenn Das Telefon bereits in der Datenbank eingetragen ist, geht es mit dem nächsten Schritt weiter.
+	  </para>
+	  </listitem>
+        </varlistentry>
+        <varlistentry>
+	  <term>3. Der Provisioning-Server prüft Firmware-Updates</term>
+          <listitem>
+	    <para>Dieser Schritt wird nur ausgeführt, wenn GS_PROV_SIEMENS_SW_UPDATE auf true gesetzt ist.</para>
+	    <para>
+	      Wenn das Telefon in der Tabelle gefunden oder angelegt wurde, dann wird der Provisioning-Server als nächstes prüfen, ob auf dem 
+	      Telefon ein Software-Update durchgeführt werden soll. Dabei exisitieren 2 varianten von Softwareupdates, zum einem Manuelle und 
+	      Automatisch angewiesene. Automatisch angewiesene Softwareupdates werden wohl die Standartvariante sein, dabei wird geprüft, ob das 
+	      Telefon manuell geupated wurde (Datenbankfeld fw_manual_update 1 oder 0?). Wenn fw_manual_update auf 1 gesetzt ist, passiert an 
+	      dieser stelle nichts, wenn kein Firmware-Update Job in der tabelle "prov_jobs" für dieses Telefon mehr verfügbar ist. Wenn das Feld
+	      "fw_manual_update" auf 0 gesetzt ist, wird geprüft, ob sich die Firmware-Version von der in der Gemeinschaft.php ($SIEMENS_PROV_FW_DEFAULT_*)
+	      eingestellten Default-Version unterscheidet, wenn ja, dann wird die Firmware auf die Default-Version aktualisiert.
+	      Das Datenbank-Flag des "fw_manual_update" wird übrigens vom Skript gs-phones-firmware-upgrade (<xref  linkend="man-gs-phones-firmware-upgrade" />
+	      gesetzt. Wenn das Flag gesetzt ist, wird also ein manueller Firmware-Upgrade Job ausgeführt, insofern dieser gefunden wurde.
+	    </para>
+	    <para>
+	      Falls ein Firmware-Upgrade durchgeführt werden soll, wird dies dem Telefon sofort übermittelt ohne das andere Daten an das Telefon
+	      übertragen werden. Das Telefon wird das Upgrade durchführen und sich nach dem Neustart wieder beim Provisioning-Server melden.
+	    </para>
+          </listitem>
+        </varlistentry>
+	<varlistentry>
+	  <term>4. Der Provisioning-Server sucht den Benutzer für das Telefon</term>
+          <listitem>
+	    <para>
+	      In diesem Schritt sucht der Provisioning-Server nach dem Nutzer für den das Telefon provisioniert werden soll. Dafür wertet das 
+	      Skript die Spalten "user_id" und "nobody_index" in der Phones-Tabelle aus. Wenn das Feld "user_id" nicht NULL ist, werden die Daten
+	      normalen Gemeinschaft-Benutzers auf das Telefon übertragen, ansonsten werden die Daten des Nobody-Users hinter "nobody_index" übertragen.
+	      Das Feld "user_id" wird durch ein AGI-Skript im Dialplan gesetzt, das aufgerufen wird, wenn sich der Nutzer am Telefon einloggt (*0nebenstelle).
+	      Das AGI-Skript schreibt diesen Wert direkt in die Master-Datenbank, sodass die Werte sofort auf allen Gemeinschaft-Knoten verteilt werden.
+	      Zusätzlich ruft der Asterisk-Server noch ein Skript auf, das sich zum Telefon per HTTPS verbindet um diesem die Information zu geben, sich beim
+	      Provisioning-Server zu melden.
+	    </para>
+	    <para>
+	      Konkret läuft die Informationssamlung wie folgt ab:
+	    </para>
+	    <para>
+	      Anhand der MAC-addresse des Telefones wird in der spalte "phones" die passende Userid gesucht (nobody, oder normaler user s.O.).
+	      Als SIP-Benutzername wird der Wert der Spalte "name" in der Tabelle "ast_sipfriends" verwendet. Die Tabelle ist über "_user_id" mit der "users"-
+	      Tabelle ("id") verknüpft. Das SIP-Passwort kommt auch aus der Tabelle "ast_sipfriends", Spalte "secret". Der Registrar-Server wird allerdings aus der 
+	      Tablle "users" gelesen, dort gibt es die Spalte "host_id". Über die ID aus dieser Spalte wird die IP-Addresse aus der "hosts"-Tabelle gelesen.
+	    </para>
+          </listitem>
+        </varlistentry>
+	<varlistentry>
+	  <term>5. Der Provisioning-Server sammelt alle übrigen Informationen</term>
+          <listitem>
+	    <para>
+	      Die SIP-Daten sind nun vollständig gelesen und es werden nun alle zusätzlichen Parameter für das Telefon aus der Datenbank gelesen.
+	      Über die "users"-Tabelle werden nun noch die "group_id" und "softkey_profile_id" sowie die "prov_param_profile_id" gelesen.
+	      Anhand der "group_id" wird die Benutzergruppe für den Benutzer identifiziert, diese hat ein eigenes "prov_param_profile" und "softkey_profile_id".
+	      Anhand der ID aus der Spalte "prov_param_profile" werden die Provisioning-Parameter für die Gruppe aus der Tabelle "prov_params" gelesen.
+	      Wichtig dabei ist die Spalte "phone_typ" denn es werden nur diejenigen Parameter genommen, die zum Telefon passen 
+	      (welches anhand der MAC identifiziert werden kann).
+	      Das Provisioning-Parameter-Profil, das dem Nutzer direkt zugewiesen werden kann, kann Parameter aus dem Gruppenprofil überschreiben oder neue Werte ergänzen.
+	    </para>
+	    <para>
+	      Genau wie mit dem Provisioning-Paramter Profil verhält es sich auch mit den Softkey-Profilen. Zuerst wird das zu der Gruppe gehörige Profil geladen und dannach
+	      das zum Benutzer gehörende.
+	      Für eine BLF-Taste für ein OpenStage sieht der eintrag in der "softkeys"-Tabelle z.B. so aus:
+<screen>
++------------+--------------+-------+----------+-------+--------+----------------+
+| profile_id | phone_type   | key   | function | data  | label  | user_writeable |
++------------+--------------+-------+----------+-------+--------+----------------+
+|          2 | siemens-os60 | f0001 | f59      | 203   | Sören  |              1 |
++------------+--------------+-------+----------+-------+------- +----------------+
+</screen>	      
+	      Anhand der Spalte "key" wird dem Telefon Mitgeteilt um was für eine Taste es sich handelt. "function" gibt an, welche Tastenfunktion dies ist im Beispiel
+	      ist dies also eine BLF-Taste mit den Daten "data"->"203" und der Beschriftung "label"->"Sören". Bei der Tastenfunktion f59 baut der Provisionig-Server
+	      die SIP-URL, die als subscriber-Extension genutzt wird, anhand vom feld "data" und des Registrars auf, an dem sich das Telefon registriert.
+	      Also hier z.B.: 'sip:203@192.168.1.130'. Im Moment kann das Telefon nur BLF-Tasten benutzen, deren Nebenstellen am gleichen Asterisk-Server registriert sind.
+	      Ab Asterisk 1.6. wird es aber die Möglichkeit geben, hint-status Informationen zwischen Asterisk-Server auszutauschen, womit diese Einschränkung verschwinden wird.
+
+	    </para>
+          </listitem>
+        </varlistentry>
+	<varlistentry>
+	  <term>6. Der Provisioning-Server überträgt die Informationen an das Telefon</term>
+          <listitem>
+	    <para>
+	      Wenn alle Informationen zusammen gesammelt sind, werden diese an das Telefon übertragen. So auch die Information ob sich das 
+	      Telefon Klingeltöne usw. herunter laden muss.
+	    </para>
+          </listitem>
+        </varlistentry>
+	<varlistentry>
+	  <term>7. Telefon antwortet</term>
+          <listitem>
+	    <para>
+	      Im Normalfall wird das Telefon mit einem 
+<screen>	      
+Phone 001AE80316B8 reports status for ReadAllItems: accepted
+</screen>
+	      Antworten. Damit ist der Provisioning-Vorgang abgeschlossen.
+	      Falls das Telefon während des Vorganges einen Anruf bekommt, dann wird dies im Log so notiert:
+<screen>
+gs.log:
+Siemens prov.: Phone 001AE80316B8 is too busy to store settings
+</screen>
+	      Dannach wird ein neuer Provisoning-Job in die Datenbank eingefügt:
+<screen>
+gs.log:
+Siemens prov.: Inserting a prov-job to make sure phone 001AE80316B8 is triggered again
+</screen>
+              Der CRON-Job gs-prov-checker, wird demnächst den Job bearbeiten und das Telefon antriggern, dies geschieht so lange, bis das Telefon 
+	      konfiguriert ist.
+	    </para>
+          </listitem>
+        </varlistentry>
+	
+     </variablelist>
+    </para>
+    
+    
+  </section>
+  
+  
+  
+  
+  
+  
+  
 <section id="siemens-openstage-prov-troubleshooting">
   <title>Siemens OpenStage Provisioning Troubleshooting</title>
   <para>
@@ -472,7 +650,7 @@ Cookie: JSESSIONID=30de997c8608a0fb287dc279d1c518e0; path=/DeploymentService/; s
 
 </screen>
 
-In der Beispielausgabe sieht man eine Fehlermeldung des Openstage "&lt;Item name="dial-plan-enabled" status="missing item content"&gt;&lt;/Item&gt;". Dies kommt z.B. wenn man einen leeren Provisioning-Parameter setzt. 
+In der Beispielausgabe sieht man eine Fehlermeldung des OpenStage "&lt;Item name="dial-plan-enabled" status="missing item content"&gt;&lt;/Item&gt;". Dies kommt z.B. wenn man einen leeren Provisioning-Parameter setzt. 
 Was bei solchen Fehlermeldungen zu tun ist, entnehmen Sie bitte aus der Dokumentation des Engerätes. Meist sind die Fehlermeldungen jedoch eindeutig und man kann mit diesem Debug-Mechanismus Fehler in der Konfigration 
 feststellen und beheben.
   </para>

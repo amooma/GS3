@@ -233,6 +233,30 @@
       Inhalt:<programlisting># Gemeinschaft - refresh queue information from Realtime:
 */2 *  * * *  root /opt/gemeinschaft/sbin/gs-queues-refresh</programlisting></para>
     </section>
+    <section id="cron-job-prov-checker">
+      <title>Telefon-Provisioning-Jobs Zeitgesteuert ausführen</title>
+
+      <para>Um Sicherzustellen, dass die Telefone wieder angetriggert werden, wenn diese 
+      z.B. bei Zeigesteurerten Firmware-Upgrades angetriggert werden müssen, sollte der "gs-prov-checker" minütlich ausgeführt werden.
+      <filename>/etc/cron.d/</filename> eine Datei
+      <filename>gs-prov-checker</filename> anlegen mit folgendem
+      Inhalt:<programlisting># Gemeinschaft - trigger Phones 
+*/2 *  * * *  root /opt/gemeinschaft/sbin/gs-prov-checker</programlisting></para>
+    </section>
+     <section id="cron-gs-sync-audiofiles">
+      <title>Audiodaten (Voicemails, Ansagen) zum Hot-Backup Knoten übertragen.</title>
+
+      <para>Wenn Sie einen Hot-Backup Knoten haben, der beim Ausfall eines Knotens dessen Aufgabe übernimmt, 
+      und dabei kein SAN oder eine vergleichbare Technonlogie zur übertragung der Sprachdateien von Asterisk zur Verfügung haben, 
+      können Sie das gs-sync-audiofiles Skript dafür nutzen. Das Skript überträgt automatisch die Dateien aus <filename>/var/spool/asterisk/voicemail</filename> und 
+      <filename>/opt/gemeinschaft/vm-rec</filename> auf den Backup-Knoten. 
+      </para>
+      <para>
+      In <filename>/etc/cron.d/</filename> eine Datei
+      <filename>gs-sync-audiofiles</filename> anlegen mit folgendem
+      Inhalt:<programlisting># Gemeinschaft - Sync audiofiles
+*/5 *  * * *  root /opt/gemeinschaft/sbin/gs-sync-audiofiles</programlisting></para>
+    </section>
   </section>
 
   <section id="caching-nameserver">

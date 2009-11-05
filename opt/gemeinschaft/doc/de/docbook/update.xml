@@ -32,7 +32,14 @@ Die einzeln auszuführenden Schritte sind in den nachfolgenden Unterkapiteln erlä
   </section>
   <section id="gemeinschaft-update">
     <title>Gemeinschaft Updaten</title>
-    <para>Gemeinschaft updzudaten ist ein relativ einfacher Schritt. Sie legen einfach das tar.gz das Sie von Ihrem Supportdienstleister zur Verfügung gestellt bekommen haben, in das root-verzeichnis des Systemes &quot;/&quot; und entpacken es mit dem Kommando <command>tar xvfz gemeinschaft.tar.gz</command>. Dannach sollten Sie die neue Version nutzen können. Falls Sie ein Gemeinschaft-Cluster-System betreiben sollten, dann führen Sie diesen Schritt bitte auf allen nodes aus. </para>
+    <para>Sie können das aktuelle Tar-Archiv vom Amooma-Server unter diese URL herunter laden:
+        http://www.amooma.de/download/gemeinschaft-current.tar.gz
+    </para>
+    <para>Falls Sie noch eigene Anpassungen am Code von Gemeinschaft gemacht haben, die Sie in die neue Version übernehmen müssen, dann ist jetzt ein guter Zeitpunkt diese in den neuen Code einzupflegen. 
+    Es wird empfohlen das tar.gz hierfür in ein temporäres Verzeichniss zu entpacken, dann kann man in Ruhe alle Änderungen vornehmen, bevor man es wieder zusammen packt und im root-Verzeichnis auf jedem 
+    Gemeinschaft-Knoten entpackt.
+    </para>
+    <para>Gemeinschaft updzudaten ist ein relativ einfacher Schritt. Sie legen einfach das tar.gz das Sie herunter geladen oder von Ihrem Supportdienstleister zur Verfügung gestellt bekommen haben, in das root-verzeichnis des Systemes &quot;/&quot; und entpacken es mit dem Kommando <command>tar xvfz gemeinschaft.tar.gz</command>. Dannach sollten Sie die neue Version nutzen können. Falls Sie ein Gemeinschaft-Cluster-System betreiben sollten, dann führen Sie diesen Schritt bitte auf allen nodes aus. </para>
   </section>
   <section id="asterisk-update">
     <title>Asterisk Updaten</title>
