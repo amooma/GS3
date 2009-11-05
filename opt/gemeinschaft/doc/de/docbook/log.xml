@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
+<chapter id="log" revision="$Revision: 6639 $">
+<!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->  
+<title>Logdateien in Gemeinschaft</title>
+<para>
+In diesem Kapitel wird speziell auf das Logverhalten von Gemeinschaft eingegangen. 
+</para>
+  <section id="gslog">
+    <title>Standart-Logdatei</title>
+    <para>Die Standart-Logdatei ist die <filename>/var/log/gemeinschaft/gs.log</filename>. 
+    Man kann festlegen, ob Gemeinschaft direkt in diese Logdatei schreiben soll oder Syslog zum loggen nutzen soll,
+    dies kann man mit dem Parameter "$LOG_TO" in der /etc/gemeinschaft/gemeinschaft.php festlegen (siehe: <xref  linkend="gs-config" />).
+    In der gemeinschaft.php sind außerdem noch die Logdatei ($LOG_FILE) und das Log-Level ($LOG_LEVEL) festlegen.</para>
+    <para>
+    Der Loglevel ist als Filter anzusehen, der, je höher das Loglevel aufgedreht wird, grober wird (wobei "FATAL" das feinste Sieb ist und "DEBUG" kein Sieb hat).
+    Wenn man also "Debug" auswählt, dann bekommt man alle Systemmeldungen, wenn man NOTICE auswählt, bekommt man alle Systemmeldungen außer denen der Kategorie "DEBUG.
+    Zum Loglevel ist anzumerken, das es keine Standartantwort auf die Frage "Welches Loglevel soll ich nehmen?" gibt. 
+    Dies kommt immer auf die Situation an, in der sich das System befindet. Mögliche Werte sind: "FATAL","WARNING","NOTICE" oder "DEBUG".
+    Wenn z.B. ein Fehler auftritt, kann es sinnvoll sein "DEBUG" auszuwählen, da man so an Wertvolle Informationen kommen kann um den 
+    Fehler einzugrenzen und zu beheben. Im Normalbetrieb, wenn das System frisch aufgesetzt wurde, ist "NOTICE" ein Sinnvoller Wert, 
+    damit kann man noch genau sehen, was das System wann macht und wenn Fehler auftreten kann man den Zustand des Systemes zum Zeitpunkt 
+    des Fehlers leicht überblicken. Wenn man mehrere Jahre mit dem System ohne Probleme gearbeitet hat, kann es auch sinnvoll sein, das
+    Loglevel auf "WARNING" oder sogar "FATAL" hochzudrehen, dies verringert natürlich auch die Größe der Logdatei.</para>
+    <para>
+    Wirkliche Aufmerksamkeit sollte Logmeldungen mit der Stufe "WARNING" oder "FATAL" gewidmet werden, denn die Fehler die diese 
+    Logmeldungen verursachten, können den Betrieb des Systemes Ernsthaft beeinträchtigen oder sogar zum erliegen bringen. 
+    Falls SQL-Fehler geloggt werden sollten, deutet dies meist auf einen Programmfehler in Gemeinschaft hin. In solche einem Fall ist
+    es Sinnvoll sich an den Hersteller von Gemeinschaft zu wenden und diesen auf der Programmfehler hinzuweisen. 
+    </para>
+    <para>
+    Beispielausgabe eines SQL-Fehlers in der gemeinschaft.log:
+    </para>
+    <para>
+      <screen>
+Oct 12 15:42:12 voipnode1 gemeinschaft: inc/util#99: (debug) PHP: SQL error 
+HY000 / mysql 1114 "The table 'cdr_tmp_060097' is full" in query: CREATE 
+TABLE `cdr_tmp_060097` TYPE=heap SELECT * FROM `ast_cdr` WHERE\\n\\t\\t( 
+`calldate`&gt;='2009-10-01 00:00:00' AND \\n\\t`calldate`&gt;='2009-10-31
+23:59:59' ) AND\\n\\t`src` IN   
+      </screen>
+    </para>
+    <para>
+    Hier eine Übersicht der zu erwartenden Meldungen in den einzelnen Loglevels:
+      <variablelist>
+        <varlistentry>
+          <term>FATAL</term>
+          <listitem>
+            <para>Nur Wirklich gravierende Systemfehler werden gemeldet, dies sind Fehler die den Betrieb des Systemes bereits beeiträchtigt haben.</para>
+	    <para>z.B.: Datenbanken nicht erreichbar, SSH zugriffe Fehlgeschlagen</para>
+          </listitem>
+        </varlistentry>
+	<varlistentry>
+          <term>WARNING</term>
+          <listitem>
+            <para>Kritische Systemwarnungen werden gemeldet, diese Meldungen treten auf, wenn der Betrieb des Systemes noch Funktioniert, aber durch die Fehlerursache 
+	    beeinträchtig werden kann.</para>
+	    <para>z.B.: Datenbanken nicht erreichbar und es kann auf Slave-Datenbank zurückgegriffen werden (bei unkritischen Prozessen), Dateien konnten nicht kopiert werden</para>
+          </listitem>
+        </varlistentry>
+	<varlistentry>
+          <term>NOTICE</term>
+          <listitem>
+            <para>Meldungen von dem was auf dem System gerade läuft, keine Fehler, sozusagen nur Statusinformationen</para>
+	    <para>z.B.: Benutzer angelegt oder gelöscht, Telefon meldet sich beim Provisioning</para>
+          </listitem>
+        </varlistentry>
+	<varlistentry>
+          <term>DEBUG</term>
+          <listitem>
+            <para>Sehr viele für den Normalbetrien irrellevante Informationen, die aber zur Fehlersuche interessant sein können.</para>
+	    <para>z.B.: Variable X hat zustand Y, Datenbank Zugriff auf...</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+    
+  </section>
+  <section id="siemens-access-debug-log">
+    <title>Siemens OpenStage Logdateien</title>
+    <para>Das logging des Datenverkehrs zwischen Provisioning-Server und Openstage Telefon kann man in der logdatei 
+    <filename>/var/log/gemeinschaft/siemens-access-debug.log mitlesen.</filename>
+    Dafür muss man allerdings das Logging in der Datei <filename>/opt/gemeinschaft-siemens/conf.php</filename> anschalten.
+    Die geschieht indem man in der Datei die folgende Zeile:
+    <screen>
+define( 'GS_PROV_SIEMENS_LOG_RAW', false );
+</screen>
+  i:
+  <screen>
+define( 'GS_PROV_SIEMENS_LOG_RAW', true );
+</screen>
+    ändert. In der Textdatei wird dann der gesamte Datenverkehr mitgeschreiben. Man sollte das debug-log aber nicht auf 
+    Dauer an lassen, da die Datei schnell sehr groß wird.
+    </para>
+  </section>
+</chapter>
