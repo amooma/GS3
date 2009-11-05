@@ -69,6 +69,40 @@
 
     <para>Zeigt die momentan auf einem Node bzw. Fremd-Host registrierten
     Telefon-Endgeräte an.</para>
+    <para>
+    Beispielausgabe:
+<screen>
+------------------------------------------------------
+| mac_addr          | current_ip      | current_user |
+------------------------------------------------------
+| 00:08:5D:1A:99:01 | 192.168.23.14   | franzi       |
+| 00:1A:E8:23:98:83 | 192.168.23.15   | soeren       |
+------------------------------------------------------
+</screen>
+    </para>
+     <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>mac_addr</term>
+        <listitem>
+          <para>Die Hardware oder MAC-Adresse des Telefons</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>current_ip</term>
+        <listitem>
+          <para>Die IP-Adresse des Telefones mit der es im Moment angemeldet ist</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>current_user</term>
+        <listitem>
+          <para>Der Benutzer der im Moment auf diesem Telefon angemeldet ist</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    </para>
   </refsection>
 
   <refsection>

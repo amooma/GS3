@@ -69,6 +69,63 @@
 
     <para>Zeigt die Tastenbelegung für einen Benutzer für einen bestimmten
     Telefon-Typ an.</para>
+    <para>Beispielausgabe:
+<screen>
+./gs-keys-get --user=soeren2 --phone=siemens-os60
+----------------------------------------------------------------
+| key   | function | data                | label           | w |
+----------------------------------------------------------------
+| f0007 | f58      | *2|{GS_P_EXTEN}fwd| | Rufumleitung    | 0 |
+| f0008 | f18      |                     | Ebene           | 0 |
+| f0001 | f59      | 204|                | AAstra57i Büro  | 1 |
+| f0002 | f59      | 206|                | SNOM Büro       | 1 |
+| f0003 | f59      | 205|                | AAstra55i Büro  | 1 |
+| f0004 | f11      |                     | Makeln          | 1 |
+| f0005 | f10      |                     | Halten          | 1 |
+| f0006 | f60      | Telefonbuch         | Telefonbuch     | 1 |
+| f1001 | f1       | 001515375XXXXX      | Sören Handy     | 1 |
+| f1002 | f1       | 001515375XXXX       | Franzi Handy    | 1 |
+| f1003 | f1       | 003673XXXXX6        | Wolle           | 1 |
+| f1004 | f1       | 0XXXXX02XXX2        | Oma U.          | 1 |
+| f1005 | f1       | 001XXXXXXXXX        | Mutter Handy    | 1 |
+----------------------------------------------------------------
+</screen>
+    </para>
+     <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>key</term>
+        <listitem>
+          <para>Der Tastenname am Telefon</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>function</term>
+        <listitem>
+          <para>Der Code der Tastenfunktion, welche dies sind ist vom Endgerät anhängig und steht in der Endgeräte Dokumenation des Herstellers.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>data</term>
+        <listitem>
+          <para>Die Daten zu der Taste, z.b. bei einer Schnellwahltaste die Rufnummer die bei Tastendruck gewählt werden soll.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>label</term>
+        <listitem>
+          <para>Das ist der Text der am Endgerät zu der Taste angezeigt wird, insofern das Endgerät diese Funktion aufweist, vorhanden z.B.: bei Siemens OpenStage 60</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>w</term>
+        <listitem>
+          <para>Diese Spalte zeigt an, ob die Taste vom Benutzer beschreibbar ist (=1) oder vom Administrator gegen Bearbeitung durch den Benutzer gesperrt wurde (=0) </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    </para>
   </refsection>
 
   <refsection>
@@ -79,7 +136,7 @@
         <term><option>--user</option>=<replaceable>user</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Benutzername des Benutzers dessen Tasten angezeigt werden sollen.</para>
         </listitem>
       </varlistentry>
 
@@ -87,7 +144,7 @@
         <term><option>--phone</option>=<replaceable>phone-type</replaceable></term>
 
         <listitem>
-          <para>Telefon-Typ</para>
+          <para>Telefon-Typ, dies können sein: siemens-os60,siemens-os80,snom360,snom370,aastra55 oder aastra57</para>
         </listitem>
       </varlistentry>
 

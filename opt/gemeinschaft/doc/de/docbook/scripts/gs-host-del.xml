@@ -69,7 +69,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Löscht einen Host.</para>
+    <para>Löscht einen Host aus dem Gemeinschafts-Cluster. Der Host kann nur gelöscht werden, wenn vorher alle User von Ihm entfernt worden sind.</para>
   </refsection>
 
   <refsection>
@@ -80,7 +80,7 @@
         <term><option>--host</option>=<replaceable>ip|id</replaceable></term>
 
         <listitem>
-          <para>IP-Adresse oder Datenbank-ID</para>
+          <para>IP-Adresse oder Datenbank-ID, siehe <xref  linkend="man-gs-hosts-get" /></para>
         </listitem>
       </varlistentry>
 
@@ -105,6 +105,9 @@
   <refsection>
     <title>Siehe auch</title>
 
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-host-add" />
+    <xref  linkend="man-gs-hosts-get" />
+    </para>
   </refsection>
 </refentry>

@@ -69,6 +69,51 @@
 
     <para>Zeigt die eingerichteten Gemeinschaft-Nodes bzw. die Fremd-Hosts
     an.</para>
+    <para>Beispielausgabe:
+<screen>
+-------------------------------------------------------------
+| id | host            | comment        | foreign? | grp_id |
+-------------------------------------------------------------
+|  1 | 192.168.23.2    | Gemeinschaft 1 |        0 |      0 |
+-------------------------------------------------------------
+</screen>
+    </para>
+     <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>id</term>
+        <listitem>
+          <para>Die Interne ID des Hosts</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>host</term>
+        <listitem>
+          <para>Die IP Addresse des Hosts</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>comment</term>
+        <listitem>
+          <para>Der Kommentar zum Host</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>foreign?</term>
+        <listitem>
+          <para>Zeigt an, ob es ein fremder Host ist oder nicht 0=nicht fremd, 1=fremd </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>grp_id</term>
+        <listitem>
+          <para>Die Gruppenid des Hosts, diese wird im Moment nicht verwendet.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    </para>
+    
   </refsection>
 
   <refsection>
@@ -115,7 +160,8 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para><xref  linkend="man-gs-host-add" />
+    <xref  linkend="man-gs-host-del" />
+    </para>
   </refsection>
 </refentry>

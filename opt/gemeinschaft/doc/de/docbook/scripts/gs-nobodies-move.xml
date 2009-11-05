@@ -68,7 +68,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Verschiebt die Dummy-User auf einen anderen Node.</para>
+    <para>Verschiebt die Dummy-User auf einen anderen Node. Diese Verteilung wird nur auf nicht fremden Hosts durchgeführt.</para>
   </refsection>
 
   <refsection>
