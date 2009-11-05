@@ -73,6 +73,44 @@
 
     <para>Gibt das interne Telefonbuch oder das persönliche Telefonbuch eines
     Benutzers aus.</para>
+    <para>
+    Beispielausgabe:
+<screen>
+-----------------------------------------------------------------
+| firstname            | lastname             | number          |
+-----------------------------------------------------------------
+| Franziska            | Sprenger             | 206             |
+| Soeren               | Sprenger             | 204             |
+| Server               | Yate                 | 400             |
+-----------------------------------------------------------------
+</screen>
+    </para>
+    
+       <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>firstname</term>
+        <listitem>
+          <para>Der Vorname der Person im Telefonbuch</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>lastname</term>
+        <listitem>
+          <para>Der Nachname der Person im Telefonbuch</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>number</term>
+        <listitem>
+          <para>Die Nummer der Person im Telefonbuch</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    </para>
+        
+    
   </refsection>
 
   <refsection>
@@ -93,7 +131,7 @@
         <term><option>--user</option>=<replaceable>username</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Benutzername des Benutzers, dessen Telefonbuch ausgegeben werden soll</para>
         </listitem>
       </varlistentry>
 
