@@ -32,12 +32,12 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 
 function gs_group_types_get()
 {
-	return array('user','queue', 'host');
+	return array('user','queue', 'host', 'module_gui');
 }
 
 function gs_group_permission_types_get()
 {
-	return array('monitor_peers','monitor_queues', 'forward_queues', 'sudo_user', 'call_stats', 'phonebook_user');
+	return array('monitor_peers','monitor_queues', 'forward_queues', 'sudo_user', 'call_stats', 'phonebook_user', 'display_module_gui');
 }
 
 function gs_group_external_types_get()
@@ -413,7 +413,7 @@ function gs_group_member_add($group_id, $member, $include = false)
 				$sql_query = 'SELECT `id` FROM `hosts` WHERE `host` = \''. $db_master->escape($member) .'\'';
 				break;
 			default:
-				return new GsError( 'Invalid group type.');
+				$sql_query = false;
 				break;
 		}
 	} else {
@@ -421,7 +421,10 @@ function gs_group_member_add($group_id, $member, $include = false)
 		$table = 'group_includes';
 	}
 
-	$member_id = (int)$db_master->executeGetOne( $sql_query );
+	if ($sql_query === false)
+		$member_id = (int)$member;
+	else 
+		$member_id = (int)$db_master->executeGetOne( $sql_query );
 	
 	if (!$member_id)
 		return new GsError( 'Cannot add member. Member "'.$member.'" of type "'.$type.'" not found.' );
@@ -460,7 +463,7 @@ function gs_group_member_del($group_id, $member, $include = false)
 				$table = 'group_includes';
 				break;
 			default:
-				return new GsError( 'Invalid group type.');
+				$sql_query = false;
 				break;
 		}
 
@@ -468,8 +471,10 @@ function gs_group_member_del($group_id, $member, $include = false)
 		$sql_query = 'SELECT `id` FROM `groups` WHERE `name` = \''. $db_master->escape($member) .'\'';
 		$table = 'group_includes';
 	}
-
-	$member_id = (int)$db_master->executeGetOne( $sql_query );
+	if ($sql_query === false)
+		$member_id = (int)$member;
+	else 
+		$member_id = (int)$db_master->executeGetOne( $sql_query );
 	
 	if (!$member_id)
 		return new GsError( 'Cannot delete member. Member "'.$member.'" of type "'.$type.'" not found.' );
@@ -575,19 +580,28 @@ function gs_group_members_get_names($group, $includes = true)
 			$sql_query = 'SELECT `host` AS `member` FROM `hosts` WHERE `id` IN ('.implode(',',$members).')';
 			break;
 		default:
-			return new GsError( 'Invalid group type.');
+			$sql_query = false;
 			break;
 	}
-
-	$rs = $db_slave->execute( $sql_query );
-	$members = Array();
-	if ($rs)
-		while ($r = $rs->fetchRow()) {
+	
+	$members_a = Array();
+	if ($sql_query === false) {
+		foreach ($members as $member) {
+			$r = array();
 			$r['type'] = $type;
-			$members[] = $r;
+			$r['member'] = $member;
+			$members_a[] = $r;
 		}
-
-	return $members;
+	} else {
+		$rs = $db_slave->execute( $sql_query );
+		
+		if ($rs)
+			while ($r = $rs->fetchRow()) {
+				$r['type'] = $type;
+				$members_a[] = $r;
+			}
+	}
+	return $members_a;
 }
 
 function gs_group_permissions_get_names($group)
