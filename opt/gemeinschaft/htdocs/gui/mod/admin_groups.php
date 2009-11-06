@@ -212,6 +212,14 @@ if ($action == 'edit') {
 <tbody>
 	<tr>
 		<th style="min-width:12em;">
+			<?php echo __('ID'); ?>
+		</th>
+		<td style="min-width:12em;">
+			<?php echo $group['id']; ?>	
+		</td>
+	</tr>
+	<tr>
+		<th style="min-width:12em;">
 			<?php echo __('Name'); ?>
 		</th>
 		<td style="min-width:12em;">
