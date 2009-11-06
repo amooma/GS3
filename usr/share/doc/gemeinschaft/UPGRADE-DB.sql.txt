@@ -919,7 +919,14 @@ CREATE TABLE IF NOT EXISTS `queue_cf_parallelcall` (
 
 
 --
--- since rev. 7070
+-- since rev. 7064
+--
+
+USE `asterisk`;
+
+
+--
+-- Sample config for group system:
 --
 
 INSERT INTO `groups` VALUES (NULL,'admins','Admins','user');
@@ -1033,3 +1040,4 @@ INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'a
 INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'admin_qui' LIMIT 1),18013);
 INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'admin_qui' LIMIT 1),18014);
 INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'admin_qui' LIMIT 1),18015);
+
