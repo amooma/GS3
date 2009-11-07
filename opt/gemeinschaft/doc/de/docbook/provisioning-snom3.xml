@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="installation-siemens-prov" revision="$Rev$">
+  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->
+  <title>Provisioning der Endgeräte Snom M3</title>
+  <para>Anders als die übrigen Telefone von Snom, z.B. die Modelle der 3xx Reihe, verwendet das Snom
+    M3 zum Abrufen der Konfigurationsdatei ein festes URL Schema. Dabei wird die MAC-Adresse des
+    Telefons als Dateiname mit der Endung ".cfg" abgerufen. Dies erzwingt die verwendung des Apache
+    Moduls "mod_rewrite" um die URL auf eine von Skripten verwendbare Form umzuschreiben. Die
+    verwendeten Konfigurationsparameter unterscheiden sich zusätzlich sehr deutlich von den anderen
+    Endgeräten dieses Herstellers, so dass auch ein anderes Provisioning-Skript vewendet werden
+    muss. Weiterhin unterstützt eine M3 Basisstation bis zu acht Handgeräte, besitzt allerdings nur
+    eine einzige MAC Adresse. </para>
+  <para>
+  </para>
+  <section>
+    <title>Snom M3 Provisioning aktivieren</title>
+    <para>Das Snom M3 Provisioning muss in der gemeinsamen Konfiguratinsdatei  <filename
+        >/etc/gemeinschaft/gemeinschaft.php</filename> aktiviert werden. </para>
+    <para>Dabei sind folgende Parameter für das M3 vorgesehen:</para>
+    <para>
+      <variablelist>
+        <varlistentry>
+          <term>$SNOM_PROV_M3_ACCOUNT=&lt;0-1>;</term>
+          <listitem>
+            <para>Die Zahl 1 schaltet das M3 Provisioning ein, 0 dektiviert das M3 Provisioning. Um
+              experimentell mehrere Accounts auf einer Basisstation anzulegen, können auch Zahlen
+              bis 8 eingetragen werden.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>$SNOM_PROV_M3_FW_DEFAULT_SNOM_M3 = '&lt;version>';</term>
+          <listitem>
+            <para>Die Sofwareversion, die auf alle M3 Telefone automatisch übetragen werden soll.
+              Wird im Moment nicht von Gemeinschaft verwendet. </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+  </section>
+  <section>
+    <title>Snom M3 Provisioning Aufruf</title>
+    <para>Das Snom M3 versucht seine Konfigurationsdatei über eine URL der folgenden Form
+      aufzurufen: <filename>http://&lt;SERVER>/m3/settings/&lt;MAC>.cfg</filename>
+    </para>
+    <para>Dieser Aufruf wird dabei vom Apache modul "mod_rewrite" als Aufruf des Skriptes "
+        <filename>/opt/gemeinschaft/prov/snom/settings-m3.php?mac=&lt;MAC></filename>
+      umgeschrieben.</para>
+    <para>Die Konfiguration des Rewrite-Moduls wird von Gemeinschaft in der Datei <filename
+        >/var/www/.htaccess</filename> vorgenommen und könnte z.B. so aussehen:</para>
+    <para>
+      <screen>&lt;IfModule mod_rewrite.c>
+        RewriteEngine On
+
+        # Snom M3
+        RewriteRule ^Config/([0-9A-Fa-f]*)\.(cfg)$           gemeinschaft/prov/snom/settings-m3.php?mac=$1&amp;fmt=$2 [QSA,L]
+        RewriteRule ^m3/settings/([0-9A-Fa-f]*)\.(cfg)$      gemeinschaft/prov/snom/settings-m3.php?mac=$1&amp;fmt=$2 [QSA,L]
+        RewriteRule ^m3/firmware/(.*)$                       gemeinschaft/prov/snom/sw-m3/$1 [QSA,L]
+
+&lt;/IfModule></screen>
+    </para>
+    <para>Das aufgerufene Skript wird also mit der MAC-Adresse des Telefons aufgerufen und besitzt
+      deshalb die nötige Information um das M3 identifizieren zu können. Ist das Telefon noch nicht
+      in der Datenbank vorhanden, wird es in der entsprechenden Tabelle "phones" angelegt und ein
+      Nobody-User erzeugt. und und die eingestellte Anzahl der Nobody-User angelegt. Sollen
+      experimentell meherere Accounts auf einer Basisstation angelegt werden, werden Dummy-Einträge
+      in der Telefontabelle erzeugt, die als MAC-Addresse die MAC des Telefons gefolgt von "-" und
+      der Nummer des Eintrages aufweisen. Hierbei muss das Datenbankfeld die Möglichkeit aufweisen
+      Zeichenketten entsprechender Länge speichern zu können und sollte ggf. angepasst
+      werden.</para>
+  </section>
+  <section id="siemens-openstage-prov-functionality">
+    <title>Snom M3 Provisioningablauf</title>
+    <para>Das M3 bekommt seine Konfiguration über einen Http-GET an den Provisioningserver.</para>
+    <para>
+      <variablelist>
+        <varlistentry>
+          <term>1. Das Telefon startet</term>
+          <listitem>
+            <para>Wenn das Telefon startet, meldet es sich beim DHCP-Server und bekommt eine
+              IP-Addresse sowie Informationen zum Provisionig-Server.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>2. Das Meldet sich beim Provisioning-Server</term>
+          <listitem>
+            <para>Nachdem das Telefon gestartet ist, meldet es sich beim Provisioning-Server, den es
+              vom DHCP-Server zugewiesen bekommen hat und übergibt ihm seine MAC-Addresse als
+              Parameter.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>3. Der Provisioning-Server prüft ob das Telfon in seiner Datenbank bereits vorhanden
+            ist</term>
+          <listitem>
+            <para> In diesem Schritt prüft der Provisioning-Server, ob das Telefon bereits in der
+              Datenbank enthalten ist. Wenn nicht, dann wird das Gerät mit der MAC-Addresse (und
+              ggf. auch den Dummy-Addressen) in der Tabelle "phones" eingetragen:
+              <screen>
++----+---------------------+--------------+---------+--------------+------------+
+| id | type                | mac_addr     | user_id | nobody_index | added      |
++----+---------------------+--------------+---------+--------------+------------+
+| 11 | snom-m3             | 001ABC012345 |    NULL |           10 | 1456131050 |
++----+---------------------+--------------+---------+--------------+------------+
+ --------------+------------------+
+  firmware_cur | fw_manual_update |
+ --------------+------------------+
+  00.01        |                0 |
+ --------------+------------------+
+ </screen></para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>4. Der Provisioning-Server sucht den/die Benutzer für das Telefon</term>
+          <listitem>
+            <para> In diesem Schritt sucht der Provisioning-Server nach dem Nutzer für den das
+              Telefon provisioniert werden soll. Dafür wertet das Skript die Spalten "user_id" und
+              "nobody_index" in der Phones-Tabelle aus. Wenn das Feld "user_id" nicht NULL ist,
+              werden die Daten normalen Gemeinschaft-Benutzers auf das Telefon übertragen, ansonsten
+              werden die Daten des Nobody-Users hinter "nobody_index" übertragen. Das Feld "user_id"
+              wird durch ein AGI-Skript im Dialplan gesetzt, das aufgerufen wird, wenn sich der
+              Nutzer am Telefon einloggt (*0nebenstelle). Das AGI-Skript schreibt diesen Wert direkt
+              in die Master-Datenbank, sodass die Werte sofort auf allen Gemeinschaft-Knoten
+              verteilt werden. Zusätzlich ruft der Asterisk-Server noch ein Skript auf, das sich zum
+              Telefon per HTTPS verbindet um diesem die Information zu geben, sich beim
+              Provisioning-Server zu melden. </para>
+            <para> Konkret läuft die Informationssamlung wie folgt ab: </para>
+            <para> Anhand der MAC-addresse des Telefons wird in der spalte "phones" die passende
+              Userid gesucht (nobody, oder normaler user s.O.). Als SIP-Benutzername wird der Wert
+              der Spalte "name" in der Tabelle "ast_sipfriends" verwendet. Die Tabelle ist über
+              "_user_id" mit der "users"- Tabelle ("id") verknüpft. Das SIP-Passwort kommt auch aus
+              der Tabelle "ast_sipfriends", Spalte "secret". Der Registrar-Server wird allerdings
+              aus der Tablle "users" gelesen, dort gibt es die Spalte "host_id". Über die ID aus
+              dieser Spalte wird die IP-Addresse aus der "hosts"-Tabelle gelesen. Werden mehrere
+              Accounts auf einer Basisstation verwendet, so läuft der Vorgang für jede der
+              Dummy-MAC-Adressen der betreffenden M3 Basisstation ab.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>5. Der Provisioning-Server überträgt die Informationen an das Telefon</term>
+          <listitem>
+            <para> Das Provisiningskript hat nach der Identifikation des Telefons und der User alle
+              nötigen Daten um eine Konfigurationsdatei für das Snom M3 zu erzeugen und übeträgt
+              diese als Antwort auf den Http-GET an das Telefon.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term>6. Telefon meldet sich mit den übertragenen Accountdaten am Telefonieserver
+            an.</term>
+          <listitem>
+            <para> Hat das Snom M3 die Konfiguratiinsdatei korrekt empfanken, hat es nun alle
+              nötigen Daten um sich mit den übertragenen Benutzeraccounts und/oder Nobody-Acconts an
+              einem oder mehreren Telefonieservern anzumelden.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+  </section>
+</chapter>
