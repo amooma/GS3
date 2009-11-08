@@ -104,7 +104,6 @@ function _gui_sudo_allowed_group( $real_user, $sudo_user )
 	
 	$group_members = gui_get_grouped_peers($real_user_id, 'sudo_user');
 
-	return true;	
 	return in_array($sudo_user_id, $group_members);
 }
 
