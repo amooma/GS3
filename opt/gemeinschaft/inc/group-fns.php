@@ -2,7 +2,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Rev$
 * 
 * Copyright 2009, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -37,7 +37,7 @@ function gs_group_types_get()
 
 function gs_group_permission_types_get()
 {
-	return array('monitor_peers','monitor_queues', 'forward_queues', 'sudo_user', 'call_stats', 'phonebook_user', 'display_module_gui');
+	return array('monitor_peers','monitor_queues', 'forward_queues', 'sudo_user', 'call_stats', 'phonebook_user', 'display_module_gui', 'group_pickup', 'pickup');
 }
 
 function gs_group_external_types_get()

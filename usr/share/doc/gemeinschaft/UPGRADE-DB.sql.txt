@@ -942,7 +942,7 @@ INSERT INTO `group_connections` VALUES ('mysql',(SELECT `id` FROM `groups` WHERE
 
 INSERT INTO `group_permissions` VALUES ('call_stats',(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1));
 INSERT INTO `group_permissions` VALUES ('call_stats',(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'queues' LIMIT 1));
-INSERT INTO `group_permissions` VALUES ('forward_queues',(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1),4);
+INSERT INTO `group_permissions` VALUES ('forward_queues',(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'queues' LIMIT 1));
 INSERT INTO `group_permissions` VALUES ('phonebook_user',(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1));
 INSERT INTO `group_permissions` VALUES ('sudo_user',(SELECT `id` FROM `groups` WHERE `name` = 'admins' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1));
 INSERT INTO `group_permissions` VALUES ('display_module_gui',(SELECT `id` FROM `groups` WHERE `name` = 'admins' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1));

@@ -107,7 +107,7 @@ WHERE `id`='.$ggid
 	$allow_in = (@$_REQUEST['gg-allow_in'] ? 1 : 0);
 	
 	$in_dest_search  = trim(@$_REQUEST['gg-in_dest_search' ]);
-	$in_dest_replace = preg_replace('/[^0-9+a-zA-Z\-_.$]/', '', trim(@$_REQUEST['gg-in_dest_replace']));
+	$in_dest_replace = preg_replace('/[^0-9+a-zA-Z\-_.,$]/', '', trim(@$_REQUEST['gg-in_dest_replace']));
 	if (! is_valid_pcre( '/'.$in_dest_search.'/', $in_dest_replace )) {
 		echo '<div class="errorbox">',
 			sPrintF(htmlEnt(__("Ung\xC3\xBCltiges Suchen/Ersetzen-Muster %s f\xC3\xBCr die eingehende Durchwahl wurde nicht gespeichert!")),
@@ -118,7 +118,7 @@ WHERE `id`='.$ggid
 	}
 	
 	$in_cid_search  = trim(@$_REQUEST['gg-in_cid_search' ]);
-	$in_cid_replace = preg_replace('/[^0-9+a-zA-Z\-_.$]/', '', trim(@$_REQUEST['gg-in_cid_replace']));
+	$in_cid_replace = preg_replace('/[^0-9+a-zA-Z\-_.,$]/', '', trim(@$_REQUEST['gg-in_cid_replace']));
 	if (! is_valid_pcre( '/'.$in_cid_search.'/', $in_cid_replace )) {
 		echo '<div class="errorbox">',
 			sPrintF(htmlEnt(__("Ung\xC3\xBCltiges Suchen/Ersetzen-Muster %s f\xC3\xBCr die eingehende Caller-ID wurde nicht gespeichert!")),
@@ -129,7 +129,7 @@ WHERE `id`='.$ggid
 	}
 	
 	$out_cid_search  = trim(@$_REQUEST['gg-out_cid_search' ]);
-	$out_cid_replace = preg_replace('/[^0-9+a-zA-Z\-_.$]/', '', trim(@$_REQUEST['gg-out_cid_replace']));
+	$out_cid_replace = preg_replace('/[^0-9+a-zA-Z\-_.,$]/', '', trim(@$_REQUEST['gg-out_cid_replace']));
 	if (! is_valid_pcre( '/'.$out_cid_search.'/', $out_cid_replace )) {
 		echo '<div class="errorbox">',
 			sPrintF(htmlEnt(__("Ung\xC3\xBCltiges Suchen/Ersetzen-Muster %s f\xC3\xBCr die ausgehende Caller-ID wurde nicht gespeichert!")),
@@ -378,8 +378,8 @@ WHERE `id`='.$ggid
 	echo '<td>',"\n";
 	echo __('Suchen/Ersetzen-Muster f&uuml;r ausgehende Caller-ID') ,' <sup><a href="#ftn-1" title="', htmlEnt(__("Fu\xC3\x9Fnote")) ,'">[1]</a></sup>:',"\n";
 	echo '<div class="nobr" style="font-family:monospace;">',"\n";
-	echo 's/<input type="text" name="gg-out_cid_search" value="', htmlEnt($gg['out_cid_search']) ,'" size="35" maxlength="50" style="font-family:monospace;" /><br />',"\n";
-	echo '&nbsp;/<input type="text" name="gg-out_cid_replace" value="', htmlEnt($gg['out_cid_replace']) ,'" size="35" maxlength="20" style="font-family:monospace;" />/',"\n";
+	echo 's/<input type="text" name="gg-out_cid_search" value="', htmlEnt($gg['out_cid_search']) ,'" size="35" maxlength="255" style="font-family:monospace;" /><br />',"\n";
+	echo '&nbsp;/<input type="text" name="gg-out_cid_replace" value="', htmlEnt($gg['out_cid_replace']) ,'" size="35" maxlength="255" style="font-family:monospace;" />/',"\n";
 	echo '</div>',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
@@ -389,8 +389,8 @@ WHERE `id`='.$ggid
 	echo '<td>',"\n";
 	echo __('Suchen/Ersetzen-Muster (um Pr&auml;fix wegzuschneiden)') ,' <sup><a href="#ftn-2" title="', htmlEnt(__("Fu\xC3\x9Fnote")) ,'">[2]</a></sup>:',"\n";
 	echo '<div class="nobr" style="font-family:monospace;">',"\n";
-	echo 's/<input type="text" name="gg-in_dest_search" value="', htmlEnt($gg['in_dest_search']) ,'" size="35" maxlength="50" style="font-family:monospace;" /><br />',"\n";
-	echo '&nbsp;/<input type="text" name="gg-in_dest_replace" value="', htmlEnt($gg['in_dest_replace']) ,'" size="35" maxlength="20" style="font-family:monospace;" />/',"\n";
+	echo 's/<input type="text" name="gg-in_dest_search" value="', htmlEnt($gg['in_dest_search']) ,'" size="35" maxlength="255" style="font-family:monospace;" /><br />',"\n";
+	echo '&nbsp;/<input type="text" name="gg-in_dest_replace" value="', htmlEnt($gg['in_dest_replace']) ,'" size="35" maxlength="255" style="font-family:monospace;" />/',"\n";
 	echo '</div>',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
@@ -400,8 +400,8 @@ WHERE `id`='.$ggid
 	echo '<td>',"\n";
 	echo __('Suchen/Ersetzen-Muster') ,' <sup><a href="#ftn-3" title="', htmlEnt(__("Fu\xC3\x9Fnote")) ,'">[3]</a></sup>:',"\n";
 	echo '<div class="nobr" style="font-family:monospace;">',"\n";
-	echo 's/<input type="text" name="gg-in_cid_search" value="', htmlEnt($gg['in_cid_search']) ,'" size="35" maxlength="50" style="font-family:monospace;" /><br />',"\n";
-	echo '&nbsp;/<input type="text" name="gg-in_cid_replace" value="', htmlEnt($gg['in_cid_replace']) ,'" size="35" maxlength="20" style="font-family:monospace;" />/',"\n";
+	echo 's/<input type="text" name="gg-in_cid_search" value="', htmlEnt($gg['in_cid_search']) ,'" size="35" maxlength="255" style="font-family:monospace;" /><br />',"\n";
+	echo '&nbsp;/<input type="text" name="gg-in_cid_replace" value="', htmlEnt($gg['in_cid_replace']) ,'" size="35" maxlength="255" style="font-family:monospace;" />/',"\n";
 	echo '</div>',"\n";
 	echo '</td>',"\n";
 	echo '</tr>',"\n";

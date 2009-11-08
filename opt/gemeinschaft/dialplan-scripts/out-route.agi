@@ -199,7 +199,7 @@ foreach ($gate_grps as $ggrp_id) {
 			'FROM `gate_cids` '.
 			'WHERE `grp_id` = '.$ggrp_id.' AND `cid_int` = \''.$db->escape($out_cid_num).'\'' );
 		if ($user_cid_override != '') {
-			gs_agi_verbose( '### Overriding caller ID "'.$out_cid_num.'" -> "'.$user_cid_override.'"' );
+			gs_agi_verbose( '### Overriding caller ID "'.$out_cid_num.'" -> "'.$user_cid_override.'" for gategroup ID: '. $ggrp_id );
 			$out_cid_num = preg_replace('/[^0-9+a-zA-Z\-_.]/', '', $user_cid_override);
 		}
 		unset($user_cid_override);
@@ -212,14 +212,19 @@ WHERE `id`='. $ggrp_id
 		if (!($ggrp = $rs->fetchRow())) continue;
 		
 		$ggrp['cid_s'] = trim($ggrp['cid_s']);
-		if ($ggrp['cid_s'] != ''
-		&&  is_valid_pcre( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'] ))
-		{
+		if ($ggrp['cid_s'] != '' &&
+		($ggrp_cid_s_a = explode(',',$ggrp['cid_s'])) &&
+		($ggrp_cid_r_a = explode(',',$ggrp['cid_r']))
+		)
+		foreach ($ggrp_cid_s_a as $search_key => $search) {
+			gs_agi_verbose( '### Processing CID RegExp: '. $search);
+			if (!preg_match( '/'.$search.'/', $out_cid_num ))  continue;
 			$out_cid_num_qualified = preg_replace('/[^0-9+a-zA-Z\-_.]/', '',
-				@preg_replace( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'], $out_cid_num ));
+				@preg_replace( '/'.$search.'/', @$ggrp_cid_r_a[$search_key], $out_cid_num ));
+			gs_agi_verbose( '### Qualifying caller ID "'.$out_cid_num.'" -> "'.$out_cid_num_qualified.'" ('. ('s/'.$search.'/'.@$ggrp_cid_r_a[$search_key].'/') .') for gategroup "'. $ggrp['name'] .'"' );
 			$out_cid_num = $out_cid_num_qualified;
-			gs_agi_verbose( '### Qualifying caller ID "'.$out_cid_num.'" -> "'.$out_cid_num_qualified.'" ('. ('s/'.$ggrp['cid_s'].'/'.$ggrp['cid_r'].'/') .') for gategroup "'. $ggrp['name'] .'"' );
 			unset($out_cid_num_qualified);
+			break;
 		}
 	}
 	
