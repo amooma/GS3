@@ -68,7 +68,7 @@
     <title>Beschreibung</title>
 
     <para>Kann vom Administrator eingesetzt werden um einen Benutzer am
-    Telefon abzumelden.</para>
+    Telefon abzumelden. Dies ist die gleiche Funktionalität wie wenn der Benutzer *0* am Telefon eingibt.</para>
   </refsection>
 
   <refsection>

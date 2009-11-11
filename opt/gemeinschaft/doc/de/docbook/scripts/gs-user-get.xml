@@ -192,7 +192,11 @@ Soeren Sprenger &lt;204&gt; |     1 | 192.168.23.2 |
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-user-del" />
+    <xref  linkend="man-gs-user-add" />
+    <xref  linkend="man-gs-user-change" />
+    <xref  linkend="man-gs-users-get" />
+    </para>
   </refsection>
 </refentry>

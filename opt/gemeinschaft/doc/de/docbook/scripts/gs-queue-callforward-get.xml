@@ -69,6 +69,70 @@
 
     <para>Zeigt die für eine Warteschleife eingerichteten Rufumleitungen
     an.</para>
+    
+    
+      <para>Beispielausgabe:
+	<screen>
+--------------------------------------------------------------------
+| source   | case     | active | number_std | number_var | timeout |
+--------------------------------------------------------------------
+| internal | always   | no     | 203        | 204        |         |
+| internal | full     | no     | 203        |            |         |
+| internal | timeout  | no     | 203        |            |      15 |
+| internal | empty    | std    | 203        |            |         |
+| external | always   | no     | 203        |            |         |
+| external | full     | no     | 203        |            |         |
+| external | timeout  | no     | 203        |            |      15 |
+| external | empty    | no     | 203        |            |         |
+--------------------------------------------------------------------
+	</screen>
+    </para>
+    
+   <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>source</term>
+        <listitem>
+          <para>Die Quelle(Herkunft) des Anrufes bei dem die Rufumleitung greift.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>case</term>
+        <listitem>
+          <para>der Fall oder Status des Endgerätes bei dem die Rufumleitung greift.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>active</term>
+        <listitem>
+          <para>Diese Spalte zeigt an, welche der 2 nachfolgenden Rufumleitungsziele aktiviert ist.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>number_std</term>
+        <listitem>
+          <para>Die Standart-Nummer</para>
+        </listitem>
+      </varlistentry>
+       <varlistentry>
+        <term>number_var</term>
+        <listitem>
+          <para>Die Temporäre Nummer</para>
+        </listitem>
+      </varlistentry>
+       <varlistentry>
+        <term>timeout</term>
+        <listitem>
+          <para>Zeit in Sekunden, die bei dem Fall "timeout" geklingelt wird, bevor weiter geleitet wird.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+   </para>
+    
+    
+    
+    
   </refsection>
 
   <refsection>

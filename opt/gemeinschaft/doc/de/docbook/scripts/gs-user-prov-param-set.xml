@@ -69,7 +69,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Überschreibt Provisioning-Parameter.</para>
+    <para>Überschreibt Provisioning-Parameter die ggf aus der Gruppe geerbt wurden.</para>
   </refsection>
 
   <refsection>
@@ -88,7 +88,7 @@
         <term><option>--phone-type</option>=<replaceable>phone-type</replaceable></term>
 
         <listitem>
-          <para>Telefon-Typ</para>
+          <para>Telefon-Typ, z.b. siemens-os60</para>
         </listitem>
       </varlistentry>
 
@@ -96,7 +96,7 @@
         <term><option>--param</option>=<replaceable>param</replaceable></term>
 
         <listitem>
-          <para>param</para>
+          <para>Der Parameter der gesetzt werden soll, dieser ist Telefon-Abhängig, bitte sehen Sie dazu in der Dokumentation vom Telefon nach.</para>
         </listitem>
       </varlistentry>
 
@@ -104,7 +104,7 @@
         <term><option>--index</option>=<replaceable>index</replaceable></term>
 
         <listitem>
-          <para>index</para>
+          <para>Der Index des Parameters, dieser wird z.b. genutzt wenn meherere Parameter mit den gleichem Namen gesetzt werden, also wenn z.b. mehrere Klingeltöne genutzt werden.</para>
         </listitem>
       </varlistentry>
 
@@ -112,7 +112,7 @@
         <term><option>--value</option>=<replaceable>value</replaceable></term>
 
         <listitem>
-          <para>value</para>
+          <para>Dies ist der Wert des Parameters der ans Telefon übertragen werden wird.</para>
         </listitem>
       </varlistentry>
 
@@ -120,7 +120,7 @@
         <term><option>--delete</option></term>
 
         <listitem>
-          <para>loeschen</para>
+          <para>Wenn statt --value --delete angegeben wird, dann wird der Wert gelöscht.</para>
         </listitem>
       </varlistentry>
 
@@ -144,7 +144,8 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-user-prov-params-get" />
+    </para>
   </refsection>
 </refentry>

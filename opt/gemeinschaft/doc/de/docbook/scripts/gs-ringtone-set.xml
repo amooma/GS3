@@ -79,7 +79,7 @@
         <term><option>--user</option>=<replaceable>user</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Benutzername des Benutzers für den der Klingelton einstellt werden soll.</para>
         </listitem>
       </varlistentry>
 
@@ -87,7 +87,7 @@
         <term><option>--source</option>=<replaceable>internal</replaceable></term>
 
         <listitem>
-          <para>Quelle des Anrufs</para>
+          <para>Quelle des Anrufs, also ob dieser von Intern oder extern kommt.</para>
         </listitem>
       </varlistentry>
 
@@ -95,7 +95,7 @@
         <term><option>--bellcore</option>=<replaceable>number</replaceable></term>
 
         <listitem>
-          <para>number</para>
+          <para>Die Nummer des internen Klingeltones auf dem Endgerät, z.b 1 bis 6 bei OpenStage.</para>
         </listitem>
       </varlistentry>
 
@@ -103,7 +103,7 @@
         <term><option>--file</option></term>
 
         <listitem>
-          <para></para>
+          <para>der Dateiname einer MP3-Datei für den Klingelton.</para>
         </listitem>
       </varlistentry>
 
@@ -127,7 +127,8 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-ringtones-get" />
+    </para>
   </refsection>
 </refentry>

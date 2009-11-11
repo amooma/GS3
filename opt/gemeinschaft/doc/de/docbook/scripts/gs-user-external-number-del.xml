@@ -110,7 +110,9 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+      <xref  linkend="man-gs-user-external-number-add" />
+      <xref  linkend="man-gs-user-external-numbers-get" />
+    </para>
   </refsection>
 </refentry>

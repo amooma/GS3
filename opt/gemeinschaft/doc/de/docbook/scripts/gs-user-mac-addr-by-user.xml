@@ -69,6 +69,16 @@
 
     <para>Zeigt an auf welchem Telefon-Endgerät (MAC-Adresse) ein Benutzer
     momentan angemeldet ist.</para>
+    <para>Beispielausgabe:
+<screen>
+       user: soeren
+        ext: 204
+  logged in: yes
+   mac addr: 001AE8239883
+    ip addr: 192.168.23.203
+</screen>
+
+    </para>
   </refsection>
 
   <refsection>

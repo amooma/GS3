@@ -68,6 +68,18 @@
     <title>Beschreibung</title>
 
     <para>Zeigt die für einen Benutzer eingestellten Klingeltöne an.</para>
+    <para>
+    Beispielausgabe:
+    <screen>
+---------------------------------------------------------
+| source    | bellcore | custom                         |
+---------------------------------------------------------
+| internal  | dr1      | hans-int-gjg                   |
+| external  | dr1      |                                |
+---------------------------------------------------------
+    </screen>
+    
+    </para>
   </refsection>
 
   <refsection>
@@ -112,6 +124,8 @@
   <refsection>
     <title>Siehe auch</title>
 
-    <para>-</para>
+        <para>
+    <xref  linkend="man-gs-ringtone-set" />
+    </para>
   </refsection>
 </refentry>
