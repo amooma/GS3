@@ -6608,7 +6608,7 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `queue_cf_timerules`;
-CREATE TABLE `cf_timerules` (
+CREATE TABLE `queue_cf_timerules` (
   `_queue_id` int(10) unsigned NOT NULL,
   `d_mo` tinyint(1) unsigned NOT NULL default '1',
   `d_tu` tinyint(1) unsigned NOT NULL default '1',
