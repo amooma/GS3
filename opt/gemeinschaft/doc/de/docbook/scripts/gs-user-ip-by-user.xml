@@ -69,6 +69,11 @@
 
     <para>Zeigt die IP-Adresse des Telefon-Endgeräts an auf dem ein Benutzer
     momentan angemeldet ist.</para>
+     <para>Beispielausgabe:
+<screen>
+192.168.23.17
+</screen>
+    </para>
   </refsection>
 
   <refsection>

@@ -177,7 +177,11 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+<para>
+    <xref  linkend="man-gs-user-del" />
+    <xref  linkend="man-gs-user-get" />
+    <xref  linkend="man-gs-user-change" />
+    <xref  linkend="man-gs-users-get" />
+    </para>
   </refsection>
 </refentry>

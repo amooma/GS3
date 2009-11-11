@@ -69,6 +69,18 @@
 
     <para>Zeigt an welcher Benutzer momentan auf einem bestimmten Endgerät
     (MAC-Adresse) angemeldet ist.</para>
+    <para>
+    Beispielausgabe:
+<screen>
+   mac addr: 001AE8239883
+       user: soeren
+        ext: 204
+  firstname: Soeren
+   lastname: Sprenger
+    ip addr: 192.168.23.203
+</screen>
+    
+    </para>
   </refsection>
 
   <refsection>

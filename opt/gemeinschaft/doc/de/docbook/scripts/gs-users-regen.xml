@@ -69,6 +69,21 @@
 
     <para>Gibt die Aufrufe der entsprechenden Skripte zum Anlegen aller
     Benutzer und der jeweiligen Einstellungen aus.</para>
+    <para>Beispielausgabe:
+<screen>
+### test3
+./gs-user-add --user='test3' --ext='682' --pin='123' --firstname='test3' --lastname='test3' --email='' --host='192.168.23.2'
+./gs-clir-activate --user='test3' --dest=internal --active='no'
+./gs-clir-activate --user='test3' --dest=external --active='no'
+./gs-callwaiting-activate --user='test3' --active=no
+./gs-ringtone-set --user='test3' --source='internal' --bellcore='1'
+./gs-ringtone-set --user='test3' --source='external' --bellcore='1'
+./gs-vm-activate --user='test3' --source=internal --active=no
+./gs-vm-activate --user='test3' --source=external --active=no
+</screen>
+    
+    </para>
+    
   </refsection>
 
   <refsection>
