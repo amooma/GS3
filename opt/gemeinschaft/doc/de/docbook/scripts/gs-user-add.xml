@@ -50,9 +50,9 @@
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: --user=&lt;user&gt; --ext=&lt;1234&gt;
-      --pin=&lt;123456&gt; --firstname=&lt;firstname&gt;
-      --lastname=&lt;lastname&gt; --email=&lt;email&gt;
+      <command>Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt;
+      --pin=&lt;123456&gt; --firstname=&lt;firstname&gt; </command>
+       <command>--lastname=&lt;lastname&gt; --email=&lt;email&gt;
       --host=&lt;id&gt;|&lt;ip&gt; [--group=&lt;id&gt;]
       [--no-reload]</command>
     </cmdsynopsis>
