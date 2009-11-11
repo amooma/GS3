@@ -102,7 +102,9 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-prov-group-add" />
+    <xref  linkend="man-gs-prov-groups-get" />
+    </para>
   </refsection>
 </refentry>

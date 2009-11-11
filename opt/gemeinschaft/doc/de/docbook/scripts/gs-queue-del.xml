@@ -67,7 +67,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Löscht eine Warteschleife.</para>
+    <para>Löscht eine Warteschleife von einem Gemeinschaft-Knoten.</para>
   </refsection>
 
   <refsection>
@@ -78,7 +78,7 @@
         <term><option>--queue</option>=<replaceable>extension</replaceable></term>
 
         <listitem>
-          <para>Queue-Nebenstelle</para>
+          <para>Die Nebenstelle der Queue die gelöscht werden soll.</para>
         </listitem>
       </varlistentry>
 
@@ -102,7 +102,10 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+	<para>	
+     	<xref  linkend="man-gs-queue-add" />
+	<xref  linkend="man-gs-queue-get" />
+	<xref  linkend="man-gs-queues-get" />
+	</para>
   </refsection>
 </refentry>

@@ -67,7 +67,103 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Zeigt die eingerichteten Provisioning-Jobs.</para>
+    <para>Zeigt die eingerichteten Provisioning-Jobs an. Dei Proviisoning-Jobs 
+    werden vom CRON-Job "gs-prov-checker" ausgewertet und die ensprechenden Telefone angetriggert.
+    Provisoning-Jobs werden z.b. durch das Skript gs-phones-firmware-upgrade eingetragen.
+    </para>
+    <para>Beipielausgabe
+-----------------------------------------------------------------------------------------------------------------
+| id | inserted            | r | i | trigger | mac_addr     | type     | mi  | hr  | day | mon | dow | data     |
+-----------------------------------------------------------------------------------------------------------------
+|  1 | 2009-11-10 15:04:05 |   |   | client  | 000413290F4D | firmware | *   | *   | *   | *   | *   | 01.01.01 |
+-----------------------------------------------------------------------------------------------------------------
+    </para>
+    
+     <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>id</term>
+        <listitem>
+          <para>Die interne id des Datensatzes in der Datenbank</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>inserted</term>
+        <listitem>
+          <para>Der Zeitpunkt wann der Job zur Datenbank hinzugefügt wurde im Format YYYY-MM-TT HH-MM-SS.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>r</term>
+        <listitem>
+          <para>r steht für "running" und zeigt an, ob dieser Job gerade durchgeführt wird. Werte leer=nein 1=ja</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>i</term>
+        <listitem>
+          <para>i steht für "immediate" und wird im Moment für nichts verwendet.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>trigger</term>
+        <listitem>
+          <para>Zeigt an, wer das Telefon antriggert (server=es wird angetriggert, phone=es passiert erst dann etwas, wenn sich das telefon selbst meldet).</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>mac_addr</term>
+        <listitem>
+          <para>Die Mac-Addresse des Telefones welches für den Provisonig-Job bestimmt ist.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>type</term>
+        <listitem>
+          <para>Der Typ des Jobs, im Moment gibt es nur "firmware"</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>mi</term>
+        <listitem>
+          <para>Die Minute in der der Provisioning-Job ausgeführt wird.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>hr</term>
+        <listitem>
+          <para>Die Stunde in der der Provisioning-Job ausgeführt wird.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>day</term>
+        <listitem>
+          <para>Der Tag am dem der Provisioning-Job ausgeführt wird.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>mon</term>
+        <listitem>
+          <para>Der Monat am dem der Provisioning-Job ausgeführt wird.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>dow</term>
+        <listitem>
+          <para>Der Tag am der Woche an dem Provisioning-Job ausgeführt wird.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>data</term>
+        <listitem>
+          <para>Daten für den Job, bei der Firmware, die Firmware-Version.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    </para>
+    
+    
   </refsection>
 
   <refsection>
@@ -94,7 +190,8 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-prov-job-del" />
+    </para>
   </refsection>
 </refentry>

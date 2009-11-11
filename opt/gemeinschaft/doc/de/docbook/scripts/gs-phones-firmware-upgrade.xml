@@ -47,10 +47,18 @@
     <refpurpose><application>Gemeinschaft</application>: Firmware-Upgrade auf
     Telefonen durchführen</refpurpose>
   </refnamediv>
-
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage:</command>
+      <command>Usage:
+  gs-phones-firmware-upgrade
+  (--mac=&lt;mac-addr&gt; | --by-user=&lt;user&gt; | --by-exten=&lt;exten&gt; | --by-host=&lt;ip|id&gt;)
+  [--min=&lt;ctr&gt;] [--hr=&lt;ctr&gt;] [--day=&lt;ctr&gt;] [--mon=&lt;ctr&gt;] [--dow=&lt;ctr&gt;]
+  --vers=&lt;version&gt;|default
+&lt;ctr&gt; = crontab rule, e.g. "*" | "3" | "2,5,6" | "3-5" | "*/5" | "Sat-Sun"
+Useful examples for firmware upgrades:
+  --dow='Sat,Sun' --hr='1-5'   (Saturday and Sunday, 1-5 h)
+  --day=18 --mon=5             (on the 18th of May)
+     </command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -75,6 +83,74 @@
     <title>Parameter</title>
 
     <variablelist>
+       <varlistentry>
+        <term><option>--mac</option>=<replaceable>mac-addr</replaceable></term>
+
+        <listitem>
+          <para>MAC-Addresse des Telefones</para>
+        </listitem>
+      </varlistentry>
+    
+       <varlistentry>
+        <term><option>--by-user</option>=<replaceable>usercode</replaceable></term>
+
+        <listitem>
+          <para>Benutzername des Benutzers der gerade am Telefon angemeldet ist.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--by-exten</option>=<replaceable>extension</replaceable></term>
+
+        <listitem>
+          <para>Nebenstelle des Telefones</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--by-host</option>=<replaceable>ip|id</replaceable></term>
+
+        <listitem>
+          <para>Wenn dieser Parameter ausgewählt wurde, werden alle Telefone an einem Host geupdatet. Als Host kann die ID oder die IP-Adresse eingetragen werden.</para>
+        </listitem>
+      </varlistentry>
+    
+<varlistentry>
+        <term><option>--min</option>=<replaceable>crt</replaceable></term>
+
+        <listitem>
+          <para>Die Minute in der der Job ausgeführt werden soll.</para>
+        </listitem>
+      </varlistentry>
+
+<varlistentry>
+        <term><option>--day</option>=<replaceable>crt</replaceable></term>
+
+        <listitem>
+          <para>der Tag an dem der Job ausgefüht werden soll</para>
+        </listitem>
+      </varlistentry>
+
+<varlistentry>
+        <term><option>--mon</option>=<replaceable></replaceable></term>
+
+        <listitem>
+          <para>Der Monat in dem der Job ausgeführt werden soll.</para>
+        </listitem>
+      </varlistentry>
+
+<varlistentry>
+        <term><option>--vers</option>=<replaceable>version|default</replaceable></term>
+
+        <listitem>
+          <para>Die Version der Firmware z.b. 02.01.06.00 (Openstage)</para>
+        </listitem>
+      </varlistentry>
+
+
+
+
+    
       <varlistentry>
         <term><option>--help</option></term>
 
