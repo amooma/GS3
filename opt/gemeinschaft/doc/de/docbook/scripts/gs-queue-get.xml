@@ -68,6 +68,77 @@
     <title>Beschreibung</title>
 
     <para>Zeigt eine Warteschleife an.</para>
+    <para>Beispielausgabe:
+<screen>
+      id: 1
+     ext: 5000
+   title: Home-Alle
+  maxlen: 0
+ host_id: 1
+    host: 192.168.23.2
+ members:
+---------------------------------------------------------------------------------
+| interface | user_id | user    | firstname | lastname | host_id | host         |
+---------------------------------------------------------------------------------
+| SIP/206   |      34 | franzi2 | Franziska | Sprenger |       1 | 192.168.23.2 |
+| SIP/207   |      41 | nokia   | E61       | Nokia    |       1 | 192.168.23.2 |
+---------------------------------------------------------------------------------
+</screen>
+</para>
+     <para>
+   Die Informationen über der Tabelle zeigen zusätzlich noch die Einstellungen zu der Queue an. Diese können Sie auch mit <xref linkend="man-gs-queues-get" /> abrufen.
+   Für Informationen über die Ausgabe sehen Sie bitte in der Dokumentation des Skriptes <xref linkend="man-gs-queues-get" /> nach.
+     
+   Übersicht über die Ausgabe-Spalten der Tabelle, in der Tabelle werden Informationen zu den angemeldetet Agenten angezeigt:
+    <variablelist>
+      <varlistentry>
+        <term>interface</term>
+        <listitem>
+          <para>Die Kanaltechnologie des angemeldetet Agenten</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>user_id</term>
+        <listitem>
+          <para>Die Datenbank-Interne ID des Nutzers, siehe auch <xref  linkend="man-gs-users-get" />.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>user</term>
+        <listitem>
+          <para>Der Benutzername des Agenten</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>firstname</term>
+        <listitem>
+          <para>Der Vorname des Agenten</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>lastname</term>
+        <listitem>
+          <para>Der Nachname des Agenten</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term>host_id</term>
+        <listitem>
+          <para>Die ID des Hostes auf dem der Agent angemeldet ist.</para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term>host</term>
+        <listitem>
+          <para>Die IP-Adresse des Hostes auf dem der Agent angemeldet ist.</para>
+        </listitem>
+      </varlistentry>
+      
+    </variablelist>
+   </para>
+    
   </refsection>
 
   <refsection>
@@ -111,7 +182,10 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+        <para>	
+	<xref  linkend="man-gs-queue-add" />
+     	<xref  linkend="man-gs-queue-del" />
+	<xref  linkend="man-gs-queues-get" />
+	</para>
   </refsection>
 </refentry>

@@ -67,7 +67,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Löscht eine Rufübernahme-Gruppe.</para>
+    <para>!ACHTUNG! Diese Gruppen werden durch das neue Gruppensystem ersetzt! Löscht eine Rufübernahme-Gruppe aus Gemeinschaft, dabei werden alle Benutzer aus der Gruppe genommen und deren Telefone neu gestartet.</para>
   </refsection>
 
   <refsection>
@@ -102,7 +102,12 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-pickupgroup-add" />
+    <xref  linkend="man-gs-pickupgroup-get" />
+    <xref  linkend="man-gs-pickupgroups-get" />
+    <xref  linkend="man-gs-pickupgroup-user-add" />
+    <xref  linkend="man-gs-pickupgroup-user-del" />
+    </para>
   </refsection>
 </refentry>

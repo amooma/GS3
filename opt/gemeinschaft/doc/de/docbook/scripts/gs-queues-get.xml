@@ -68,6 +68,52 @@
     <title>Beschreibung</title>
 
     <para>Zeigt die eingerichteten Warteschleifen an.</para>
+    <para>Beispielausgabe:
+<screen>
+------------------------------------------------------
+| id | ext  | title              | maxlen | #members |
+------------------------------------------------------
+|  1 | 5000 | Home-Alle          |      0 |        2 |
+|  2 | 5002 | Neue Warteschlange |    255 |        0 |
+------------------------------------------------------
+</screen>
+    </para>
+  <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>id</term>
+        <listitem>
+          <para>Die interne id des Datensatzes in der Datenbank</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>ext</term>
+        <listitem>
+          <para>Die Nebenstelle oder Nummer der Queue</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>title</term>
+        <listitem>
+          <para>Der Title der Queue, wie er auch in der GUI angezeigt wird</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>maxlen</term>
+        <listitem>
+          <para>Zeigt die Maximalen Anrufer der Queue an (0-255), wenn 0 ist die Beschränkung nicht aktiv.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>#members</term>
+        <listitem>
+          <para>Zeigt die Anzahl der gerade eingeloggten Agenten. Agenten können sich mit *5&lt;Queue-Extension&gt; anmelden.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+   </para>
+      
   </refsection>
 
   <refsection>
@@ -94,7 +140,10 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+        <para>	
+	<xref  linkend="man-gs-queue-add" />
+     	<xref  linkend="man-gs-queue-del" />
+	<xref  linkend="man-gs-queue-get" />
+	</para>
   </refsection>
 </refentry>

@@ -68,7 +68,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Legt eine Warteschleife an.</para>
+    <para>Legt eine Warteschleife auf einem Gemeinschaft-Knoten an. Nach dem anlegen ist ein Asterisk-reload erforderlich.</para>
   </refsection>
 
   <refsection>
@@ -79,7 +79,7 @@
         <term><option>--queue</option>=<replaceable>extension</replaceable></term>
 
         <listitem>
-          <para>Queue-Nebenstelle</para>
+          <para>Queue-Nebenstelle, diese muss einzigartig sein.</para>
         </listitem>
       </varlistentry>
 
@@ -87,7 +87,7 @@
         <term><option>--title</option></term>
 
         <listitem>
-          <para>Bezeichnung</para>
+          <para>Bezeichnung der Queue für die GUI</para>
         </listitem>
       </varlistentry>
 
@@ -95,7 +95,7 @@
         <term><option>--maxlen</option>=<replaceable>0</replaceable></term>
 
         <listitem>
-          <para>0</para>
+          <para>Die Maximale anzahl der Anrufer, Bereich 0-255. Wenn 0 Eingestellt ist, dann ist die Beschränkung deaktiviert.</para>
         </listitem>
       </varlistentry>
 
@@ -103,7 +103,7 @@
         <term><option>--host</option>=<replaceable>id</replaceable></term>
 
         <listitem>
-          <para>Host</para>
+          <para>Der Gemeinschaft-Knoten auf dem die Queue angelegt werden soll.</para>
         </listitem>
       </varlistentry>
 
@@ -127,7 +127,10 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+<para>	
+     	<xref  linkend="man-gs-queue-del" />
+	<xref  linkend="man-gs-queue-get" />
+	<xref  linkend="man-gs-queues-get" />
+	</para>
   </refsection>
 </refentry>

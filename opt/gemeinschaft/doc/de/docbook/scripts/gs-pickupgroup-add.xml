@@ -67,7 +67,8 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Legt eine Rufübernahme-Gruppe an.</para>
+    <para>!ACHTUNG! Diese Gruppen werden durch das neue Gruppensystem ersetzt! Legt eine Rufübernahme-Gruppe in Gemeinschaft an. Zu dieser können Benutzer hinzugefügt werden (über die GUI), 
+    Benutzer die in einer Gruppe sind, bekommen an einer Taste am Telefon signalisiert, wenn ein anderes Telefon der Gruppe angerufen wird.</para>
   </refsection>
 
   <refsection>
@@ -78,7 +79,7 @@
         <term><option>--title</option></term>
 
         <listitem>
-          <para>Bezeichnung</para>
+          <para>Bezeichnung der Gruppe, diese wird in der GUI angezeigt.</para>
         </listitem>
       </varlistentry>
 
@@ -102,7 +103,12 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-pickupgroup-del" />
+    <xref  linkend="man-gs-pickupgroup-get" />
+    <xref  linkend="man-gs-pickupgroups-get" />
+    <xref  linkend="man-gs-pickupgroup-user-add" />
+    <xref  linkend="man-gs-pickupgroup-user-del" />
+    </para>
   </refsection>
 </refentry>
