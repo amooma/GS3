@@ -108,7 +108,7 @@
       <varlistentry>
         <term>grp_id</term>
         <listitem>
-          <para>Die Gruppenid des Hosts, diese wird im Moment nicht verwendet.</para>
+          <para>Die Gruppen-ID des Hosts (hat keine weitere Bedeutung).</para>
         </listitem>
       </varlistentry>
     </variablelist>

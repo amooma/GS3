@@ -50,9 +50,9 @@
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: gs-user-add --user=&lt;user&gt; --ext=&lt;1234&gt;
-      --pin=&lt;123456&gt; --firstname=&lt;firstname&gt; </command>
-       <command>--lastname=&lt;lastname&gt; --email=&lt;email&gt;
+      <command>Usage: --user=&lt;user&gt; --ext=&lt;1234&gt;
+      --pin=&lt;123456&gt; --firstname=&lt;firstname&gt;
+      --lastname=&lt;lastname&gt; --email=&lt;email&gt;
       --host=&lt;id&gt;|&lt;ip&gt; [--group=&lt;id&gt;]
       [--no-reload]</command>
     </cmdsynopsis>
@@ -71,7 +71,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Legt einen Benutzer auf dem Telefon Framework "Gemeinschaft" an. </para>
+    <para>Legt einen Benutzer in Gemeinschaft an. </para>
   </refsection>
 
   <refsection>
@@ -82,7 +82,7 @@
         <term><option>--user</option>=<replaceable>user</replaceable></term>
 
         <listitem>
-          <para>Benutzername des Teilnehmers. Dieser ist die eindeutige ID für die LDAP Benutzerauflösung und auch in Gemeinschaft einzigartig.</para>
+          <para>Benutzername des Teilnehmers.</para>
         </listitem>
       </varlistentry>
 
@@ -98,8 +98,8 @@
         <term><option>--pin</option>=<replaceable>123456</replaceable></term>
 
         <listitem>
-          <para>PIN-Nummer des Teilnehmers für die Anmeldung am Telefon über *0 (siehe 14.1. Ein-/Ausloggen eines Benutzers)
-          Die Pin des Benutzers darf 6 aufeinanderfolgende Zahlen beinhalten.
+          <para>PIN-Nummer des Teilnehmers für die Anmeldung am Telefon über *0 (siehe Ein-/Ausloggen eines Benutzers) und am Web-Interface.
+          Die PIN des Benutzers darf 6 aufeinanderfolgende Zahlen beinhalten.
 	  </para>
         </listitem>
       </varlistentry>
@@ -124,7 +124,7 @@
         <term><option>--email</option>=<replaceable>email</replaceable></term>
 
         <listitem>
-          <para>Die E-Mail Adresse des Teilnehmers, diese wird für den Versand von Sprachnachrichten genutzt.</para>
+          <para>Die E-Mail-Adresse des Teilnehmers, diese wird für den Versand von Sprachnachrichten genutzt.</para>
         </listitem>
       </varlistentry>
 

@@ -112,13 +112,13 @@
       <varlistentry>
         <term>number_std</term>
         <listitem>
-          <para>Die Standart-Nummer</para>
+          <para>Die Standard-Nummer</para>
         </listitem>
       </varlistentry>
        <varlistentry>
         <term>number_var</term>
         <listitem>
-          <para>Die Temporäre Nummer</para>
+          <para>Die temporäre Nummer</para>
         </listitem>
       </varlistentry>
        <varlistentry>
