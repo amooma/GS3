@@ -114,7 +114,7 @@
         <term><option>--type</option>=<literal>std</literal>|<literal>var</literal>|<literal>vml</literal></term>
 
         <listitem>
-          <para>Art des Rufumleitungszieles std=Standart-Nummer, var=Temporäre Nummer, vml=Voicemail/Anrufbeantworter</para>
+          <para>Art des Rufumleitungszieles: std=Standard-Nummer, var=temporäre Nummer, vml=Voicemail/Anrufbeantworter</para>
         </listitem>
       </varlistentry>
 

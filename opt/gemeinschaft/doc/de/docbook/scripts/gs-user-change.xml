@@ -71,7 +71,7 @@
     <title>Beschreibung</title>
 
     <para>Ändert ein Benutzer-Konto. Alle Werte die an das Skript übergeben werden können (außer dem Benutzernamen selbst und der Nebenstelle), können geändert werden.
-    Für --host wird zusätzlich noch --force benötigt, da mit dieser Opereation Sprachdateien verloren gehen.
+    Für --host wird zusätzlich noch --force benötigt, da mit dieser Operation Sprachdateien verloren gehen.
     </para>
   </refsection>
 

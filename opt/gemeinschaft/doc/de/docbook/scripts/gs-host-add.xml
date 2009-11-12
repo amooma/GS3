@@ -80,7 +80,7 @@
 
         <listitem>
           <para>Die IP-Adresse des Knotens, diese wird verwendet um den Knoten per SIP anzusprechen.
-	  Diese Adresse wird allerdings auch für SSH-Verbindungen genutzt, um z.b. den Asterisk-Server zu Reloaden</para>
+	  Diese Adresse wird allerdings auch für SSH-Verbindungen genutzt, um z.B. den Asterisk-Server zu reloaden</para>
         </listitem>
       </varlistentry>
 

@@ -70,30 +70,18 @@
     <para>Zeigt die Rufumleitungen eines Benutzers an.</para>
     <para>Beispielausgabe:
 	<screen>
----------------------------------------------
-| source   | case     | active | number_std |
----------------------------------------------
-| internal | always   | no     | 203        |
-| internal | busy     | no     | 203        |
-| internal | unavail  | no     | 203        |
-| internal | offline  | vml    | 203        |
-| external | always   | no     | 203        |
-| external | busy     | no     | 203        |
-| external | unavail  | no     | 203        |
-| external | offline  | no     | 203        |
----------------------------------------------
-------------------------------------
- number_var | number_vml | timeout |
-------------------------------------
- 204        | vm204      |         |
-            | vm204      |         |
-            | vm204      |      15 |
-            | vm*204     |         | 
-            | vm204      |         |
-            | vm204      |         |
-            | vm204      |      15 |
-            | vm204      |         |
-------------------------------------     
+---------------------------------------------------------------------------------
+| source   | case     | active | number_std | number_var | number_vml | timeout |
+---------------------------------------------------------------------------------
+| internal | always   | no     | 203        | 204        | vm204      |         |
+| internal | busy     | no     | 203        |            | vm204      |         |
+| internal | unavail  | no     | 203        |            | vm204      |      15 |
+| internal | offline  | vml    | 203        |            | vm*204     |         |
+| external | always   | no     | 203        |            | vm204      |         |
+| external | busy     | no     | 203        |            | vm204      |         |
+| external | unavail  | no     | 203        |            | vm204      |      15 |
+| external | offline  | no     | 203        |            | vm204      |         |
+---------------------------------------------------------------------------------
 </screen>
 </para>
 

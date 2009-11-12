@@ -87,7 +87,7 @@
         <term><option>--source</option>=<replaceable>internal</replaceable></term>
 
         <listitem>
-          <para>Quelle des Anrufs, also ob dieser von Intern oder extern kommt.</para>
+          <para>Quelle des Anrufs, also ob dieser von intern oder extern kommt.</para>
         </listitem>
       </varlistentry>
 
@@ -95,7 +95,7 @@
         <term><option>--bellcore</option>=<replaceable>number</replaceable></term>
 
         <listitem>
-          <para>Die Nummer des internen Klingeltones auf dem Endgerät, z.b 1 bis 6 bei OpenStage.</para>
+          <para>Die Nummer des internen Klingeltones auf dem Endgerät, z.B. 1 bis 6 bei OpenStage.</para>
         </listitem>
       </varlistentry>
 
@@ -103,7 +103,7 @@
         <term><option>--file</option></term>
 
         <listitem>
-          <para>der Dateiname einer MP3-Datei für den Klingelton.</para>
+          <para>der Dateiname einer Audio-Datei für den Klingelton.</para>
         </listitem>
       </varlistentry>
 

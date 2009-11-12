@@ -103,7 +103,7 @@
         <term><option>--active</option>=<literal>no</literal>|<literal>std</literal>|<literal>var</literal>|<literal>vml</literal></term>
 
         <listitem>
-          <para>aktive Regel no=Aus, std=Standart-Nummer, var=Temporäre Nummer, vml=Voicemail/Anrufbeantworter</para>
+          <para>aktive Regel no=Aus, std=Standard-Nummer, var=temporäre Nummer, vml=Voicemail/Anrufbeantworter</para>
         </listitem>
       </varlistentry>
 
