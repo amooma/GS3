@@ -640,9 +640,9 @@ wurschtknoten:/opt/gemeinschaft/scripts# ./gs-phones-firmware-upgrade --by-user=
 	Setzen einer Lampe bei Rufumleitung. Für die Realisierung des Features wird in Asterisk die Funktion DEVSTATE() benutzt. Damit DEVSTATE() 
 	funktioniert, werden im Dialplan so genannte Hints generiert. Diese Hints sind quasi Virtuelle Nebenstellen die alle einen Status haben können.
 	Die Hints werden beim Dialplan generieren von dem Skript e-internal-hints.ael.php erstellt.
-	So wird für die Rufumleitung ein solcher Hint erstellt:
+	So wird für die Rufumleitung ein solcher Hint erstellt (//FIXME):
 <screen>
-hint(Custom:400fwd) 400fwd => {}
+hint(Custom:400fwd) 400fwd => {}      //FIXME
 </screen>
 	Der Hint ist also "&lt;Extension&gt;fwd". Dieser muss auch beim Belegen der Taste angegeben werden.
 	Leider hat diese Technologie zur Folge, das man Asterisk beim anlegen eines Benutzers oder beim Ändern
