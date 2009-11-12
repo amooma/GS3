@@ -233,12 +233,45 @@
       Inhalt:<programlisting># Gemeinschaft - refresh queue information from Realtime:
 */2 *  * * *  root /opt/gemeinschaft/sbin/gs-queues-refresh</programlisting></para>
     </section>
+    
+     <section id="cron-queuelog-to-db">
+      <title>Asterisk Queuelog in die Datenbank schreiben</title>
+
+      <para>Asterisk kann in Version 1.4 den Queuelog nur in Dateien schreiben, 
+      damit man den Queuelog auch in der Datenbank verarbeiten kann, sollte man den Cronjob "queuelog-to-db" anlegen.
+      Das Skript, welches auf allen für Telefonie zuständigen Knoten ausgeführt werden sollte, liest die queue.log
+      Datei von Asterisk ein und schriebt die Werte eine Datenbank, dannach wird die queue.log Datei wieder gelöscht.
+      Zum installieren müssen Sie um Verzeichnis
+      <filename>/etc/cron.d/</filename> eine Datei
+      <filename>gs-queuelog-to-db</filename> anlegen mit folgendem
+      Inhalt:<programlisting># Gemeinschaft - Write queuelog to database:
+*/2 *  * * *  root /opt/gemeinschaft/sbin/gs-queuelog-to-db</programlisting>
+füllen.</para>
+    </section>
+
+     <section id="cron-gs-diallog-cleanup">
+      <title>Gemeinschaft Diallog aufräumen</title>
+
+      <para>Gemeinschaft benutzt für die Benutzeranzeige auf dem Bildschirm und am Telefon nicht die CDR-Daten von Asterisk um dem Nutzer 
+      die Anrufliste zur Verfügung zu stellen, sondern eine eigen geschriebene Tabelle in der Datenbank. Die Tabelle wird von einem AGI-Skript im 
+      Dialplan gefüllt. Damit die Tabelle nicht zu groß wird, kann man einen Cron-job anlegen, der die Daten eines Nachts löscht.
+      Zum installieren müssen Sie um Verzeichnis
+      <filename>/etc/cron.d/</filename> eine Datei
+      <filename>gs-queuelog-to-db</filename> anlegen mit folgendem
+      Inhalt:<programlisting># Gemeinschaft Clean up Diallog:
+* *  * * *  root /opt/gemeinschaft/sbin/gs-diallog-cleanup</programlisting>
+füllen.</para>
+    </section>
+
     <section id="cron-job-prov-checker">
       <title>Telefon-Provisioning-Jobs Zeitgesteuert ausführen</title>
 
       <para>Um Sicherzustellen, dass die Telefone wieder angetriggert werden, wenn diese 
-      z.B. bei Zeigesteurerten Firmware-Upgrades angetriggert werden müssen, sollte der "gs-prov-checker" minütlich ausgeführt werden.
-      <filename>/etc/cron.d/</filename> eine Datei
+      z.B. bei Zeigesteurerten Firmware-Upgrades angetriggert werden müssen, 
+      sollte der "gs-prov-checker" minütlich ausgeführt werden. Dieser CRON-Job ist besonders für das Antriggern der Telefone wichtig wenn deise
+      während eines Provisioning-Vorganges im Gespräch waren und "Busy" meldeten. So kann sichergestellt werden, dass immer alle Änderungen an
+      das Telefon übertragen werden (z.b. beim Benutzerwechsel enorm wichtig).
+      Zum Installieren muss man in <filename>/etc/cron.d/</filename> eine Datei
       <filename>gs-prov-checker</filename> anlegen mit folgendem
       Inhalt:<programlisting># Gemeinschaft - trigger Phones 
 */2 *  * * *  root /opt/gemeinschaft/sbin/gs-prov-checker</programlisting></para>
