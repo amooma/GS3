@@ -609,9 +609,58 @@ Siemens prov.: Inserting a prov-job to make sure phone 001AE80316B8 is triggered
     
   </section>
   
-  
-  
-  
+  <section id="siemens-openstage-prov-firmwareupdates-config">
+  	<title>Siemens OpenStage Firmwareupdtes</title>
+  	<para>
+	Firmwareupdates werden mit dem Skript gs-phones-firmware-upgrade durchgeführt. 
+	Dazu müssen die Firmwareimages auf die in der conf.php (siehe <xref  linkend="siemens-openstage-prov-installation" />) angegebenen FTP-Server kopiert werden.
+	Wichtig ist, das die Verzeichnisse nach dem Schema 02.01.02.13 bennant sind. In dem Verzeichnis selbst muss die Datei, die die Firmware enthält den Namen 
+	<filename>opera_bind.img</filename> haben. Wenn das Image dort eingespielt ist, so kann die Firmware-Default Version für alle Telefone in der <filename>
+	/etc/gemeinschaft/gemeinschaft.php</filename> auf die neue Version gesetzt werden und alle Telefone mit dem Skript gs-prov-phones-checkcfg angetriggert werden.
+	</para>
+	<para>
+	Wenn Sie nur auf einigen Endgeräte ein update durchführen wollen, dann können Sie die Version in der gemeinschaft.php so belassen, wie diese vorher war. 
+	Einzelne Telefone werden dann mit den gs-phones-firmware-upgrade skript geupdatet, so z.B.:
+	<command>
+	 ./gs-phones-firmware-upgrade --by-user=soeren --vers=02.01.02.13
+	</command>
+	Beispielausgabe:
+<screen>
+wurschtknoten:/opt/gemeinschaft/scripts# ./gs-phones-firmware-upgrade --by-user=soeren --vers=02.01.02.13
+1 job(s) inserted.
+</screen>
+	Man sieht dass das Skript einen Provisioning-Job hinzugefügt hat, das Telefon wird nun automatisch vom gs-prov-checker angestoßen und upgedatet.
+	</para>
+  </section>
+  <section id="siemens-openstage-prov-blf-config">
+	
+	<title>Siemens OpenStage Informationen zu BLF und sonstigen Lampen</title>
+	<para>
+	Speziell für das OpenStage wurden in Gemeinschaft einzelne Features für das Besetztlampenfeld entwickelt. Darunter sind auch Funktionen zum 
+	Setzen einer Lampe bei Rufumleitung. Für die Realisierung des Features wird in Asterisk die Funktion DEVSTATE() benutzt. Damit DEVSTATE() 
+	funktioniert, werden im Dialplan so genannte Hints generiert. Diese Hints sind quasi Virtuelle Nebenstellen die alle einen Status haben können.
+	Die Hints werden beim Dialplan generieren von dem Skript e-internal-hints.ael.php erstellt.
+	So wird für die Rufumleitung ein solcher Hint erstellt:
+<screen>
+hint(Custom:400fwd) 400fwd => {}
+</screen>
+	Der Hint ist also "&lt;Extension&gt;fwd". Dieser muss auch beim Belegen der Taste angegeben werden.
+	Leider hat diese Technologie zur Folge, das man Asterisk beim anlegen eines Benutzers oder beim Ändern
+	der Gruppe zum Benutzer (queue_login) einen Asterisk-Reload druchführen muss.
+	</para>
+  </section>
+  <section id="siemens-openstage-prov-logo-config">
+	
+	<title>Siemens OpenStage Informationen zum Bildschirmschoner und Logo</title>
+	<para>
+	Die Bildschirmschoner und Logo-Dateinamen sind in der <filename>conf.php</filename> eingetragen (siehe <xref  linkend="siemens-openstage-prov-installation" />).
+	Wenn Sie den Bildschirmschoner und/oder das Logo ändern wollen, so müssen Sie eine neue Datei auf die in der conf.php eingestellten FTP-Server hochladen und 
+	diese neue Datei in der conf.php eintragen. Es ist wichtig, dass die Datei umbenannt wird, also nicht einfach die Alte Datei auf dem FTP-Server überschreiben.
+	Denn die neue Datei wird nur zum Telefon übertragen, wenn auf dem Telefon keine Datei mit diesem Namem existiert. Das gilt beim OpenStage übrigens für alle 
+	Dateien, also auch Klingeltöne. Bei den Klingeltönen, die der Benutzer ja selbst vergeben kann, existiert eine entsprechender Mechanismus um den Dateinamen bei jeder
+	Klingeltonänderung umzubennenen. Die alten Dateien werden dann vom Telefonspeicher gelöscht.
+	</para>
+  </section>
   
   
   
