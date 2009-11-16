@@ -124,7 +124,7 @@ if ($edit > 0) {
 	<th style="width:30px;"><?php echo __('Rufnummer'); ?></th>
 	<th style="width:60px;"><?php echo __('Rufschema'); ?></th>
 	<th style="width:30px;"><?php echo __('Mitglieder'); ?></th>
-	<th style="width:30px;"><?php echo __('Besetzt bei Besetzt'); ?></th>
+	<th style="width:30px;"><?php echo __('Sammelbesetzt'); ?></th>
 	<th style="width:80px;">
 <?php
 	
