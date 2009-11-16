@@ -79,3 +79,12 @@ CREATE TABLE IF NOT EXISTS `gate_params` (
  KEY `gate_id` (`gate_id`,`param`(20)),
  CONSTRAINT `gate_params_ibfk_1` FOREIGN KEY (`gate_id`) REFERENCES `gates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Add new table huntgroups_busy
+--
+CREATE TABLE IF NOT EXISTS `huntgroups_busy` (
+  `huntgroup` int(10) unsigned NOT NULL default '0',
+  `busy` tinyint(1) unsigned default NULL,
+  PRIMARY KEY  (`huntgroup`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
