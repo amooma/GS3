@@ -58,7 +58,7 @@ if (! $db) die(1);
 $query =
 'SELECT `hg`.`strategy`, `hg`.`timeout`, `b`.`busy`, `s`.`name`
 FROM `huntgroups` `hg`
-JOIN `huntgroups_busy` `b` ON (`hg`.`number`=`b`.`huntgroup`)
+LEFT JOIN `huntgroups_busy` `b` ON (`hg`.`number`=`b`.`huntgroup`)
 JOIN `ast_sipfriends` `s` ON (`hg`.`user_id`=`s`.`_user_id`)
 WHERE
 	`hg`.`number`='. $number .'

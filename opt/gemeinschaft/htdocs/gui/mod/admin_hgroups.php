@@ -80,11 +80,14 @@ if ( $save ) {
 	`strategy`=\''. $strategy .'\'
 WHERE `number`='. $save;
 	$rs = $DB->execute($sql_query);
-	$sql_query =
-
-'UPDATE `huntgroups_busy` SET
-	`busy`=\''. $busy .'\'
-WHERE `huntgroup`='. $save;
+	
+	$num = (int)$DB->executeGetOne( 'SELECT COUNT(*) FROM `huntgroups_busy` WHERE `huntgroup` =' . $save);
+	
+	if ($num == 0)
+		$sql_query = 'INSERT INTO `huntgroups_busy` (`huntgroup`, `busy`) VALUES (' . $save . ', 1)';
+	else
+		$sql_query = 'UPDATE `huntgroups_busy` SET `busy`=\''. $busy .'\' WHERE `huntgroup`='. $save;
+	
 	$rs = $DB->execute($sql_query);
 }
 
@@ -96,7 +99,7 @@ if (! $group) {
 	$sql_query =
 'SELECT `h`.`number`, `h`.`strategy`, `b`.`busy`, COUNT(*) as `count`
 FROM
-	`huntgroups` `h` JOIN
+	`huntgroups` `h` LEFT JOIN
 	`huntgroups_busy` `b` ON (`h`.`number` = `b`.`huntgroup`)
 GROUP BY `number`
 ORDER BY `number`
