@@ -1382,8 +1382,9 @@ context to-internal-users-self {
  		Verbose(1,###### user_name      : ${user_name});
  		Verbose(1,###### forwarded_to   : ${forwarded_to});
  		Verbose(1,###### CHANNEL        : ${CHANNEL});
-		*/
-
+		Verbose(1,###### DIALEDPEERNUMBER      : ${DIALEDPEERNUMBER});
+		*/		
+	
 		if ("${is_huntgroup}" = "1" && "${DIALSTATUS}" = "ANSWER" && "${user_extension}" != "")
 			Set(exttype=huntgroup);
 
@@ -1402,31 +1403,35 @@ context to-internal-users-self {
 		if ("${exttype}" = "user" && "${is_callfile_origin}" = "") {
 			// to internal user, store dial log (in|missed)
 			
-			Set(type=missed);
-			if ("${DIALSTATUS}" = "ANSWER")
-				Set(type=in);
+			if ("${DIALEDPEERNUMBER}" = "" || "${DIALSTATUS}" = "ANSWER" ) {
+				Set(type=missed);
+				if ("${DIALSTATUS}" = "ANSWER")
+					Set(type=in);
 
-			if ("${forwarded_to}" == "" ) {
-				// normal call
-				if ("${CALLERID(dnid)}" == "${origext}" && "${DIALSTATUS}" != "") {
-					&dial-log-store(${CALLERID(dnid)},${type},${CALLERID(num)},0);
-				}
-				// attended transfer
-				else if ("${DIALSTATUS}" != "") {
-					&dial-log-store(${origext},${type},${CALLERID(num)},0);
-				}
+				if ("${forwarded_to}" == "" ) {
+					// normal call
+					if ("${CALLERID(dnid)}" == "${origext}" && "${DIALSTATUS}" != "") {
+						&dial-log-store(${CALLERID(dnid)},${type},${CALLERID(num)},0);
+					}
+					// attended transfer
+					else if ("${DIALSTATUS}" != "") {
+						if ("${DIALSTATUS}" = "ANSWER")
+							&dial-log-store(${DIALEDPEERNUMBER},${type},${CALLERID(num)},0);
+						else
+							&dial-log-store(${origext},${type},${CALLERID(num)},0);
+					}
 				
-			} else if ("${CHANNEL:0:5}" != "Local") {
-				&dial-log-store(${forwarded_to},${type},${CALLERID(num)},0);
-			}
-			else if ("${forwarded_to:0:3}" == "vm*" ) {
-				&dial-log-store(${forwarded_to:3},${type},${CALLERID(num)},0);
-			}
-			else if ("${forwarded_to:0:2}" == "vm" ) {
-				&dial-log-store(${forwarded_to:2},${type},${CALLERID(num)},0);
+				} else if ("${CHANNEL:0:5}" != "Local") {
+					&dial-log-store(${forwarded_to},${type},${CALLERID(num)},0);
+				}
+				else if ("${forwarded_to:0:3}" == "vm*" ) {
+					&dial-log-store(${forwarded_to:3},${type},${CALLERID(num)},0);
+				}
+				else if ("${forwarded_to:0:2}" == "vm" ) {
+					&dial-log-store(${forwarded_to:2},${type},${CALLERID(num)},0);
+				}
 			}
 				
-
 		}
 		else if ("${exttype}" = "queue") {
 			if("${MEMBERINTERFACE}" = "") {
