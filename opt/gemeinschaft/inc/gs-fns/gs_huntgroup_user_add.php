@@ -88,6 +88,15 @@ function gs_huntgroup_user_add( $hgroup_number, $strategy, $user, $timeout=5 )
 			return new GsError( 'Failed to set huntgroup timeout.' );
 	}
 	
+	# set busy on busy for the group
+	#
+	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `huntgroups_busy` WHERE `huntgroup` =' . $hgroup_number);
+	if ($num == 0) {
+		$ok = $db->execute( 'INSERT INTO `huntgroups_busy` (`huntgroup`) VALUES (' . $hgroup_number . ')' );
+		if (! $ok)
+			return new GsError( 'Failed to set busy-on-busy for the hunt group.' );
+	}
+	
 	return true;
 }
 

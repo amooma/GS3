@@ -56,11 +56,12 @@ $db = gs_db_slave_connect();
 if (! $db) die(1);
 
 $query =
-'SELECT `hg`.`strategy`, `hg`.`timeout`, `s`.`name`
+'SELECT `hg`.`strategy`, `hg`.`timeout`, `b`.`busy`, `s`.`name`
 FROM `huntgroups` `hg`
+LEFT JOIN `huntgroups_busy` `b` ON (`hg`.`number`=`b`.`huntgroup`)
 JOIN `ast_sipfriends` `s` ON (`hg`.`user_id`=`s`.`_user_id`)
 WHERE
-	`number`='. $number .'
+	`hg`.`number`='. $number .'
 ORDER BY `hg`.`sequence_no` ASC';
 
 $rs = $db->execute($query);
@@ -68,22 +69,29 @@ $rs = $db->execute($query);
 $idx = 1;
 $dialstring = '';
 while ($hg = $rs->fetchRow()) {
-	echo 'SET VARIABLE huntgroup_strategy ' . gs_agi_str_esc( $hg['strategy'] ) . "\n";
+	if ($idx == 1) {
+		if ((int)$hg['busy'] == 1)
+			gs_agi_set_variable('huntgroup_busy', 1);
+		else
+			gs_agi_set_variable('huntgroup_busy', 0);
+	}
+
+	gs_agi_set_variable('huntgroup_strategy', $hg['strategy']);
 	if ( $hg['strategy'] == 'parallel' ) {
 		if ( strlen( $dialstring ) > 0 )
 			$dialstring .= '&';
 		$dialstring .= 'Local/' . $hg['name'] . '@to-internal-users-huntgroup';
-		echo 'SET VARIABLE huntgroup_timeout ' . gs_agi_str_esc($hg['timeout']) . "\n";
+		gs_agi_set_variable('huntgroup_timeout', $hg['timeout']);
 
-		echo 'SET VARIABLE huntgroup_'.$idx.'_dial '. gs_agi_str_esc($hg['name']) ."\n";
+		gs_agi_set_variable('huntgroup_'.$idx.'_dial', $hg['name']);
 	} else {
-		echo 'SET VARIABLE huntgroup_'.$idx.'_dial '. gs_agi_str_esc($hg['name']) ."\n";
-		echo 'SET VARIABLE huntgroup_'.$idx.'_timeout '. gs_agi_str_esc($hg['timeout']) ."\n";
+		gs_agi_set_variable('huntgroup_'.$idx.'_dial', $hg['name']);
+		gs_agi_set_variable('huntgroup_'.$idx.'_timeout', $hg['timeout']);
 	}
 	++$idx;
 }
 if ( strlen( $dialstring) > 0 ) {
-	echo 'SET VARIABLE huntgroup_dial ' . gs_agi_str_esc($dialstring) . "\n";
+	gs_agi_set_variable('huntgroup_dial', $dialstring);
 	_no_more_routes($idx);
 	die();
 } else {

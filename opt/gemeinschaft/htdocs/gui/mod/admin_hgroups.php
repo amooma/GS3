@@ -53,6 +53,7 @@ $hudelete =      trim(@$_REQUEST['hudelete']);
 $user     =      trim(@$_REQUEST['user'    ]);
 $timeout  = (int)trim(@$_REQUEST['timeout' ]);
 $strategy =      trim(@$_REQUEST['strategy']);
+$busy     =      trim(@$_REQUEST['busy'    ]);
 $edit     =      trim(@$_REQUEST['edit'    ]);
 
 if ( $delete ) {
@@ -79,6 +80,15 @@ if ( $save ) {
 	`strategy`=\''. $strategy .'\'
 WHERE `number`='. $save;
 	$rs = $DB->execute($sql_query);
+	
+	$num = (int)$DB->executeGetOne( 'SELECT COUNT(*) FROM `huntgroups_busy` WHERE `huntgroup` =' . $save);
+	
+	if ($num == 0)
+		$sql_query = 'INSERT INTO `huntgroups_busy` (`huntgroup`, `busy`) VALUES (' . $save . ', 1)';
+	else
+		$sql_query = 'UPDATE `huntgroups_busy` SET `busy`=\''. $busy .'\' WHERE `huntgroup`='. $save;
+	
+	$rs = $DB->execute($sql_query);
 }
 
 #####################################################################
@@ -87,8 +97,10 @@ WHERE `number`='. $save;
 if (! $group) {
 	
 	$sql_query =
-'SELECT `number`, `strategy`, COUNT(*) as `count`
-FROM `huntgroups`
+'SELECT `h`.`number`, `h`.`strategy`, `b`.`busy`, COUNT(*) as `count`
+FROM
+	`huntgroups` `h` LEFT JOIN
+	`huntgroups_busy` `b` ON (`h`.`number` = `b`.`huntgroup`)
 GROUP BY `number`
 ORDER BY `number`
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
@@ -115,6 +127,7 @@ if ($edit > 0) {
 	<th style="width:30px;"><?php echo __('Rufnummer'); ?></th>
 	<th style="width:60px;"><?php echo __('Rufschema'); ?></th>
 	<th style="width:30px;"><?php echo __('Mitglieder'); ?></th>
+	<th style="width:30px;"><?php echo __('Sammelbesetzt'); ?></th>
 	<th style="width:80px;">
 <?php
 	
@@ -158,8 +171,14 @@ if ($edit > 0) {
 				echo '<option value="parallel" ', ($r['strategy'] == 'parallel' ? ' selected="selected"' : ''), '>parallel</option>';
 				echo '</select></td>', "\n";
 				echo '<td>', htmlEnt($r['count']) ,'</a></td>',"\n";
+				echo '<td><select name="busy">';
+				echo '<option value="0" ', ($r['busy'] != 1 ? ' selected="selected"' : ''), '>nein</option>';
+				echo '<option value="1" ', ($r['busy'] == 1 ? ' selected="selected"' : ''), '>ja</option>';
+				echo '</select></td>', "\n";
+
+
 				echo '<td>',"\n";
-				
+
 				echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
 				echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" />';
 				echo '</button>' ,"\n";
@@ -174,6 +193,7 @@ if ($edit > 0) {
 			} else {
 				echo '<td>', htmlEnt($r['strategy']) ,'</td>',"\n";
 				echo '<td><a href="', gs_url( $SECTION, $MODULE, null, 'group='.$r['number'] .'&amp;strategy=' .$r['strategy'] ), '">', htmlEnt($r['count']) ,'</a></td>',"\n";
+				echo '<td>', ($r['busy'] == 1 ? 'ja' : 'nein') , '</td>',"\n";
 				echo '<td>',"\n";
 				echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['number'] .'&amp;page='.$page) ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 				echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['number'] .'&amp;page='.$page) ,'" title="', __('l&ouml;schen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';

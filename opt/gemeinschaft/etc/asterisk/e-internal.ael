@@ -782,6 +782,24 @@ context to-internal-users-self {
 				Dial(Local/${fw_${is_call_from}_always}/n,900);
 				&hangup-proper-status();
 			}
+
+			if ("${huntgroup_busy}" = "1") {
+				while ("${huntgroup_${huntgroup}_dial}" != "") {
+					if ("${DEVSTATE(SIP/${huntgroup_${huntgroup}_dial})}" = "INUSE") {
+						Verbose(1,### Extension ${huntgroup_${huntgroup}_dial} in the huntgroup is busy);
+						Set(huntgroup=1);
+						while ("${huntgroup_${huntgroup}_dial}" != "") {
+							&dial-log-store(${huntgroup_${huntgroup}_dial},missed,${CALLERID(num)},0);
+							huntgroup=${huntgroup}+1;
+						}
+
+						Set(DIALSTATUS=BUSY);
+						&hangup-proper-status();
+					}
+					huntgroup=${huntgroup}+1;
+				}
+				Set(huntgroup=1);
+			}
 			
 			if ("${huntgroup_strategy}" = "linear") {
 				while ("${huntgroup_${huntgroup}_dial}" != "") {
@@ -803,7 +821,6 @@ context to-internal-users-self {
 			if("${DIALSTATUS}" = "NOANSWER"){
 				Set(huntgroup=1);
 				while ("${huntgroup_${huntgroup}_dial}" != "") {
-					Verbose(1,### Writing missing call to DialLog: ${huntgroup_${huntgroup}_dial});
 					&dial-log-store(${huntgroup_${huntgroup}_dial},missed,${CALLERID(num)},0);
 					huntgroup=${huntgroup}+1;
 				}
