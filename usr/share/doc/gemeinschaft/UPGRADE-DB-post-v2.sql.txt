@@ -88,3 +88,12 @@ CREATE TABLE IF NOT EXISTS `huntgroups_busy` (
   `busy` tinyint(1) unsigned default NULL,
   PRIMARY KEY  (`huntgroup`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Add uniqueid-field to queue_members table
+--
+
+ALTER TABLE `ast_queue_members`    
+  ADD `uniqueid` int(10) unsigned NOT NULL auto_increment first,
+  ADD INDEX `uniqueid` (`uniqueid`);
+

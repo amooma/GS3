@@ -729,3 +729,11 @@ CREATE TABLE IF NOT EXISTS `systemrecordings` (
   PRIMARY KEY  (`id`),
   KEY `md5hashname` (`md5hashname`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Add uniqueid-field to queue_members table
+--
+
+ALTER TABLE `ast_queue_members`
+  ADD `uniqueid` int(10) unsigned NOT NULL auto_increment first,
+  ADD INDEX `uniqueid` (`uniqueid`);

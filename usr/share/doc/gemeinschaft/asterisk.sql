@@ -5396,6 +5396,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ast_queue_members`;
 CREATE TABLE `ast_queue_members` (
+  `uniqueid` int(10) unsigned NOT NULL auto_increment,
   `queue_name` varchar(20) character set ascii NOT NULL default '',
   `_queue_id` int(10) unsigned NOT NULL default '0',
   `interface` varchar(25) character set ascii NOT NULL default '',
@@ -5404,6 +5405,7 @@ CREATE TABLE `ast_queue_members` (
   `paused` tinyint(3) NOT NULL default '0',
   PRIMARY KEY  (`queue_name`,`interface`),
   UNIQUE KEY `queue_id_user_id` (`_queue_id`,`_user_id`),
+  KEY `uniqueid` (`uniqueid`),
   KEY `_user_id` (`_user_id`),
   KEY `interface` (`interface`(15)),
   CONSTRAINT `ast_queue_members_ibfk_1` FOREIGN KEY (`_queue_id`) REFERENCES `ast_queues` (`_id`),
