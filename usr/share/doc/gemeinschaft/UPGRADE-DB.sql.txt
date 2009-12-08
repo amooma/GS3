@@ -736,4 +736,4 @@ CREATE TABLE IF NOT EXISTS `systemrecordings` (
 
 ALTER TABLE `ast_queue_members`
   ADD `uniqueid` int(10) unsigned NOT NULL auto_increment first,
-  ADD INDEX `uniqueid` (`uniqueid`);
+  ADD KEY `uniqueid` (`uniqueid`);
