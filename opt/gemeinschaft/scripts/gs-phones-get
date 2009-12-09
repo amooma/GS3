@@ -190,7 +190,7 @@ if ($vertical_cols) {
 		echo ' Cur. Firmware: ', $r['fw'] ,"\n";
 		echo '  Cur. IP Addr: ', $r['ip'] ,"\n";
 		echo '     Cur. User: ', $r['user'] ,"\n";
-		echo '     Cur. Ext.: ', $r['ext'] ,"\n";
+		echo '      Cur. Ext: ', $r['ext'] ,"\n";
 		echo '     Logged in: ', (trim($r['mac']) != '' && $r['ip'] != '' ? 'yes':'no') ,"\n";
 		echo "\n";
 	}
