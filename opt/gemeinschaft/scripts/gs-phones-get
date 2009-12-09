@@ -169,7 +169,7 @@ $fieldsAbbr = array(
 	'fw'         => 'Cur. FW',
 	'ip'         => 'Cur. IP Addr.',
 	'user'       => 'Cur. User',
-	'ext'        => 'Ext.',
+	'ext'        => 'Cur. Ext.',
 );
 $fieldsPad = array(
 	'mac'        => STR_PAD_RIGHT,
@@ -190,6 +190,7 @@ if ($vertical_cols) {
 		echo ' Cur. Firmware: ', $r['fw'] ,"\n";
 		echo '  Cur. IP Addr: ', $r['ip'] ,"\n";
 		echo '     Cur. User: ', $r['user'] ,"\n";
+		echo '     Cur. Ext.: ', $r['ext'] ,"\n";
 		echo '     Logged in: ', (trim($r['mac']) != '' && $r['ip'] != '' ? 'yes':'no') ,"\n";
 		echo "\n";
 	}
