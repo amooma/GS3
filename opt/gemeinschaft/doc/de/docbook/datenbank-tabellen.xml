@@ -795,7 +795,9 @@
       <title><literal>ast_sipfriends</literal></title>
 
       <para>Die SIP Endgeräte - Datenbankversion der
-      <filename>sip.conf</filename></para>
+      <filename>sip.conf</filename>. Für diese Tabelle existiert der View ast_sipfriends_gs,
+      dieser wird von Asterisk ausgewertet, der view beschränkt die Tabelle um peers die für 
+      Asterisk nicht relevant sind, so zb. User auf externen Hosts (Angenturen)</para>
 
       <variablelist>
         <varlistentry>
