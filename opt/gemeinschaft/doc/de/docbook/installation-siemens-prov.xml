@@ -565,7 +565,7 @@ $gs_phonebook = array(
 	      die SIP-URL, die als subscriber-Extension genutzt wird, anhand vom feld "data" und des Registrars auf, an dem sich das Telefon registriert.
 	      Also hier z.B.: 'sip:203@192.168.1.130'. Im Moment kann das Telefon nur BLF-Tasten benutzen, deren Nebenstellen am gleichen Asterisk-Server registriert sind.
 	      Ab Asterisk 1.6. wird es aber die Möglichkeit geben, hint-status Informationen zwischen Asterisk-Server auszutauschen, womit diese Einschränkung verschwinden wird.
-
+	      Die Tastenprofile werden vor den Provisioning-Parameter Profilen gelesen, deswegen könnten die Provisoning-Parameter einzelne Tasten überschreiben, wenn dies gewünscht ist.
 	    </para>
           </listitem>
         </varlistentry>
@@ -640,13 +640,41 @@ wurschtknoten:/opt/gemeinschaft/scripts# ./gs-phones-firmware-upgrade --by-user=
 	Setzen einer Lampe bei Rufumleitung. Für die Realisierung des Features wird in Asterisk die Funktion DEVSTATE() benutzt. Damit DEVSTATE() 
 	funktioniert, werden im Dialplan so genannte Hints generiert. Diese Hints sind quasi Virtuelle Nebenstellen die alle einen Status haben können.
 	Die Hints werden beim Dialplan generieren von dem Skript e-internal-hints.ael.php erstellt.
-	So wird für die Rufumleitung ein solcher Hint erstellt (//FIXME):
+	So wird für die Rufumleitung ein solcher Hint erstellt:
 <screen>
-hint(Custom:400fwd) 400fwd => {}      //FIXME
+hint(Custom:400901) 400901 => {}
 </screen>
-	Der Hint ist also "&lt;Extension&gt;fwd". Dieser muss auch beim Belegen der Taste angegeben werden.
+	Der Hint ist also "&lt;Extension&gt;901". Dieser muss auch beim Belegen der Taste angegeben werden.
+	Desweiteren werden auch Hints für den Warteschleifen-Login Status erstellt:
+<screen>
+hint(Custom:4009025000) 4009025000 => {}
+</screen>
+	Hier ist der Hint nach folgendem Schema aufgebaut: "&lt;Extension&gt;902&lt;Warteschleifenextension&gt;"
 	Leider hat diese Technologie zur Folge, das man Asterisk beim anlegen eines Benutzers oder beim Ändern
 	der Gruppe zum Benutzer (queue_login) einen Asterisk-Reload druchführen muss.
+	</para>
+	<para>
+	Man kann den Status der Hints auf der Asterisk-CLI abfragen, dazu dient der Befehl <command>"core show hints"</command>:
+<screen>
+asterisk*CLI> core show hints
+testnode*CLI>
+    -= Registered Asterisk Dial Plan Hints =-
+             4009025000@to-internal-users   : Custom:4009025000     State:Busy
+             4009025000@to-internal-users   : Custom:4009025000     State:Idle
+                 400901@to-internal-users   : Custom:400901         State:Idle
+                 ***400@to-internal-users   : SIP/400               State:InUse
+                    400@to-internal-users   : SIP/400               State:InUse
+----------------
+</screen>
+	Natürlich kann man auch abfragen, welches Gerät sich an welchem Hint subscribed:
+<screen>
+aerea51*CLI> sip show subscriptions
+Peer             User        Call ID      Extension        Last state
+192.168.23.91    400         f209050ea56  4009025000@defa  Idle      
+192.168.23.91    400         1f8172fb047  400901@default   Idle      
+192.168.23.91    400         78d305d63b3  204@default      Idle      
+192.168.23.91    400         67b8e19e504  *8*00002@defaul  Idle      
+</screen>
 	</para>
   </section>
   <section id="siemens-openstage-prov-logo-config">
