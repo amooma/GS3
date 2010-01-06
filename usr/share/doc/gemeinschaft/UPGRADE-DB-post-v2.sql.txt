@@ -89,11 +89,16 @@ CREATE TABLE IF NOT EXISTS `huntgroups_busy` (
   PRIMARY KEY  (`huntgroup`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Add uniqueid-field to queue_members table
+--
+ALTER TABLE `ast_queue_members`    
+  ADD `uniqueid` int(10) unsigned NOT NULL auto_increment first,
+  ADD KEY `uniqueid` (`uniqueid`);
 
 -- 
 --  Add new table `user_calldrop`
 -- 
-
 CREATE TABLE IF NOT EXISTS `user_calldrop` (
   `user_id` int(10) unsigned NOT NULL,
   `number` varchar(50) character set ascii NOT NULL,
