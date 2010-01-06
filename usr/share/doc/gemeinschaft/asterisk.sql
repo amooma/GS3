@@ -6577,6 +6577,20 @@ CREATE TABLE IF NOT EXISTS `systemrecordings` (
   KEY `md5hashname` (`md5hashname`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
+
+-- 
+-- Tabellenstruktur für Tabelle `user_calldrop`
+-- 
+
+DROP TABLE IF EXISTS `user_calldrop`;
+CREATE TABLE IF NOT EXISTS `user_calldrop` (
+  `user_id` int(10) unsigned NOT NULL,
+  `number` varchar(50) character set ascii NOT NULL,
+  `drop_call` tinyint(1) unsigned NOT NULL default '1',
+  PRIMARY KEY  (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 --
 -- Table structure for table `user_groups`
 --

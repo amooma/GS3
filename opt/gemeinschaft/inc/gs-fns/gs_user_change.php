@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 *    change a user account
 ***********************************************************/
 
-function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false, $email='', $reload=true, $pb_hide=false )
+function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false, $email='', $reload=true, $pb_hide=false, $drop_call=false, $drop_target='' )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -61,6 +61,14 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 		return new GsError( 'Invalid e-mail address.' );
 		
 	$pb_hide = (int)$pb_hide;
+	
+	$drop_call = (int)$drop_call;
+	
+	$drop_target = trim( $drop_target );
+	
+	if ( $drop_target != '' &&  ! preg_match( '/^(vm|vm\*)?[0-9]+$/', $drop_target ))
+		return new GsError( 'Drop target must be numeric.' );
+	
 	
 	include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 	
@@ -138,6 +146,19 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to change SIP account.' );
 	}
+	
+	# update dropping the call
+	#
+	
+	$drop_exists = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `user_calldrop` WHERE `user_id`='. $user_id );
+	if ( $drop_exists <= 0 ) {
+		$db->execute( 'INSERT INTO `user_calldrop` ( `user_id`, `number`, `drop_call` ) 
+			VALUES ( ' . $user_id . ', \'' . $drop_target  . '\', ' . $drop_call . ' )'   );
+	}
+	else {
+		$db->execute( 'UPDATE `user_calldrop` SET `drop_call`=' . $drop_call . ', `number`=\'' . $drop_target  .  '\'  WHERE `user_id`=' . $user_id );
+	}
+	
 	
 	# delete stuff not used for users on foreign hosts
 	#

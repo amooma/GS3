@@ -359,6 +359,8 @@ _gscnf( 'EMAIL_NAME'            , 'Gemeinschaft'         );
 _gscnf( 'USER_SELECT_CALLERID'      , false		 );
 _gscnf( 'TRANSFER_FAILED_CALLBACK'      , false		 );
 _gscnf( 'CALLBACK_FAILED_EXTENSION'      , ''		 );
+_gscnf( 'SWITCHBOARD_DROP_TARGET'      , ''		 );
+_gscnf( 'SWITCHBOARD_DROP_TIMEOUT'      , 0   		 );
 _gscnf( 'VMBOX_ALWAYS_ASK_PIN'      , false		 );
 #Variables for the Astbuttond
 _gscnf( 'BUTTONDAEMON_USE'            , false           );

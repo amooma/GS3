@@ -53,7 +53,6 @@ $uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `
 if ($uid < 1) gs_agi_err( 'User not found' );
 
 
-
 $forwards = array(
 	'internal' => array(
 		'always'  => array( 'number'=>'' ),
@@ -82,10 +81,35 @@ while ($r = $rs->fetchRow()) {
 	elseif ($r['active']==='vml' && $number_vml != '')
 		$number = $number_vml;
 	$forwards[$r['source']][$r['case']]['number'] = $number;
-	if ($r['case']==='unavail' && $number != '')
+//	if ($r['case']==='unavail' && $number != '')
+	if ($r['case']==='unavail' )
 		$forwards[$r['source']][$r['case']]['timeout'] = $r['timeout'];
 }
 
+$drop_target = '';
+
+$rs = $db->execute( 'SELECT `number`  FROM `user_calldrop` WHERE `drop_call`=1 AND `user_id`=' . $uid );
+if( $r = $rs->fetchRow() ) {
+	$drop_target = $r['number'];
+}
+else if ( GS_SWITCHBOARD_DROP_TARGET != '' ) {
+	
+	$drop_target = GS_SWITCHBOARD_DROP_TARGET;
+
+}
+
+if ( $drop_target !=  '' ) {
+	foreach ($forwards as $source => $arr) {
+		foreach ($arr as $case => $fw) {
+			if ( $case != 'always' && $fw['number'] == '') {
+				$forwards [$source][$case]['number'] = $drop_target;
+				if ( $case === 'unavail' && GS_SWITCHBOARD_DROP_TIMEOUT > 0) {
+					$forwards [$source][$case]['timeout'] = GS_SWITCHBOARD_DROP_TIMEOUT;
+				}				
+			}
+		}
+	}		
+}
 
 foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {

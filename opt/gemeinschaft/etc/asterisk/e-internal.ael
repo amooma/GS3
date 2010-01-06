@@ -776,6 +776,7 @@ context to-internal-users-self {
 			if ("${fw_${is_call_from}_always}" != "") {
 				Verbose(1,### Called huntgroup: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 				Set(__forwarded_by=${EXTEN});
+				Set(__forwarded_by_name=);
 				if ( "${is_from_gateway}" = "1" )
 					Set(__is_from_gateway=2);
 				Set(__redirect=${fw_${is_call_from}_always});
@@ -829,6 +830,7 @@ context to-internal-users-self {
 			if ("${fw_${is_call_from}_timeout}" != "") {
 			  Verbose(1,### forwarding call to ${fw_${is_call_from}_timeout});
 			  Set(__forwarded_by=${EXTEN});
+			  Set(__forwarded_by_name=);
 			  if ( "${is_from_gateway}" = "1" )
 				  Set(__is_from_gateway=2);
 			  Set(__redirect=${fw_${is_call_from}_timeout});	
@@ -840,7 +842,6 @@ context to-internal-users-self {
 		// type is "user":
 		//----------------------------------------------------------
 		to_user:
-			
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${EXTEN});
 			// forward (case=always) active?
 			if ("${fw_${is_call_from}_always}" != "") {
@@ -852,6 +853,7 @@ context to-internal-users-self {
 				if ("${is_callfile_origin}" != "1") {
 					Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 					Set(__forwarded_by=${EXTEN});
+					Set(__forwarded_by_name=${mname});
 					Set(__forwarded_to=${fw_${is_call_from}_always});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
@@ -928,7 +930,7 @@ context to-internal-users-self {
                                         if( "${CALLERID(name)}" = "" ) {
 						Set(CALLERID(name)=${CALLERID(num)});
 					}
-					Set(CALLERID(name)=${CALLERID(name)} >> ${forwarded_by});
+					Set(CALLERID(name)=${CALLERID(name)} >> ${forwarded_by} ${forwarded_by_name});
                                 }
 				if ("${SIPTRANSFER}" = "yes") {
 
@@ -1008,6 +1010,7 @@ context to-internal-users-self {
 					}
 					Verbose(1,### Called user: ${EXTEN}\, forward on busy to: ${fw_${is_call_from}_busy});
 					Set(__forwarded_by=${EXTEN});
+					Set(__forwarded_by_name=${mname});
 					Set(__forwarded_to=${fw_${is_call_from}_busy});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
@@ -1032,6 +1035,7 @@ context to-internal-users-self {
 					}
 					Verbose(1,### Called user ${EXTEN} - forward on unavail to: ${fw_${is_call_from}_unavail});
 					Set(__forwarded_by=${EXTEN});
+					Set(__forwarded_by_name=${mname});
 					Set(__forwarded_to=${fw_${is_call_from}_unavail});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
@@ -1056,6 +1060,7 @@ context to-internal-users-self {
 					}
 					Verbose(1,### Called user: ${EXTEN} - forward on offline to: ${fw_${is_call_from}_offline});
 					Set(__forwarded_by=${EXTEN});
+					Set(__forwarded_by_name=${mname});
 					Set(__forwarded_to=${fw_${is_call_from}_offline});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
@@ -1082,6 +1087,7 @@ context to-internal-users-self {
 			if ("${fw_${is_call_from}_always}" != "") {
 				Verbose(1,### Called queue: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 				Set(__forwarded_by=${EXTEN});
+				Set(__forwarded_by_name=);
 				Set(__forwarded_to=${fw_${is_call_from}_always});
 				if ( "${is_from_gateway}" = "1" )
 					Set(__is_from_gateway=2);
@@ -1196,6 +1202,7 @@ context to-internal-users-self {
 				if ("${fw_${is_call_from}_timeout}" != "") {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on timeout to: ${fw_${is_call_from}_timeout});
 					Set(__forwarded_by=${EXTEN});
+					Set(__forwarded_by_name=);
 					Set(__forwarded_to=${fw_${is_call_from}_timeout});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
@@ -1211,6 +1218,7 @@ context to-internal-users-self {
 				if ("${fw_${is_call_from}_full}" != "") {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on full to: ${fw_${is_call_from}_full});
 					Set(__forwarded_by=${EXTEN});
+					Set(__forwarded_by_name=);
 					Set(__forwarded_to=${fw_${is_call_from}_full});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
@@ -1226,6 +1234,7 @@ context to-internal-users-self {
 				if ("${fw_${is_call_from}_empty}" != "") {
 					Verbose(1,### Called queue: ${EXTEN}\, forward on empty to: ${fw_${is_call_from}_empty});
 					Set(__forwarded_by=${EXTEN});
+					Set(__forwarded_by_name=);
 					Set(__forwarded_to=${fw_${is_call_from}_empty});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);

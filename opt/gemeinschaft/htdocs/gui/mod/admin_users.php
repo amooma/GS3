@@ -36,6 +36,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_del.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_del.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_logout.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_phonemodel_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callblocking_set.php' );
 require_once( GS_DIR .'inc/boi-soap/boi-api.php' );
@@ -116,6 +118,10 @@ $bp_del_h    = (int)@$_REQUEST['bp_del_h' ] ;
 
 $pb_hide     = (bool)@$_REQUEST['pb_hide'  ] ;
 
+$drop_call   = (bool)@$_REQUEST['drop_call'  ] ;
+
+$drop_number = trim(@$_REQUEST['drop_number'    ]);
+
 if ($action === 'del') {
 	
 	if ($delete_user) {
@@ -129,7 +135,7 @@ if ($action === 'del') {
 if ($action === 'add' || $action === 'add-and-view') {
 	
 	if ($user_name) {
-		$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_host, $user_email );
+		$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_host, $user_email);
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 		
 		if ($action === 'add-and-view') {
@@ -177,7 +183,7 @@ if ($action === 'edit') {
 if ($action === 'save') {
 	
 	if ($edit_user) {
-		$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email, true, $pb_hide );
+		$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email, true, $pb_hide, $drop_call, $drop_number );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 		if (! isGsError( $ret )) {
 			$boi_api = gs_host_get_api((int)$user_host);
@@ -680,11 +686,12 @@ else {
 	$rs = $DB->execute(
 'SELECT
 	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`, `u`.`group_id`, `u`.`pb_hide`,
-	`hp1`.`value` `hp_route_prefix`
+	`hp1`.`value` `hp_route_prefix`, `d`.`drop_call`, `d`.`number`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) LEFT JOIN
 	`hosts` `h` ON (`h`.`id`=`u`.`host_id`) LEFT JOIN
+	`user_calldrop` `d` ON (`u`.`id`=`d`.`user_id`) LEFT JOIN
 	`host_params` `hp1` ON (`hp1`.`host_id`=`h`.`id` AND `hp1`.`param`=\'route_prefix\')
 WHERE
 	`u`.`user` = \''. $DB->escape($edit_user) .'\''
@@ -693,6 +700,7 @@ WHERE
 	if ($rs) {
 		$r = $rs->fetchRow();
 		$r['pb_hide'] = (bool)$r['pb_hide'];
+		$r['drop_call'] = (bool)$r['drop_call'];
 		$hid = $r['hid'];
 	} else {
 		$hid = 0;
@@ -938,6 +946,18 @@ echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 		<th><?php echo __('Aus Telefonbuch ausblenden'); ?>:</th>
 		<td>
 			<input type="checkbox" name="pb_hide" <?php if ($r['pb_hide'] == true) echo 'checked'; ?>  />
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __('Auf Zentrale abwerfen'); ?>:</th>
+		<td>
+			<input type="checkbox" name="drop_call" <?php if ($r['drop_call'] == true) echo 'checked'; ?>  />
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __('Nummer der Zentrale'); ?>:</th>
+		<td>
+			<input type="text" name="drop_number" value="<?php echo htmlEnt($r['number']); ?>" size="38" maxlength="60" style="width:97%;" />
 		</td>
 	</tr>
 </tbody>

@@ -175,6 +175,11 @@ function gs_user_del( $user, $reload=true )
 	#
 	$db->execute( 'UPDATE `phones` SET `user_id`=NULL WHERE `user_id`='. $user_id );
 	
+	# delete drop targets
+	#
+	$db->execute( 'DELETE FROM `user_calldrop` WHERE `user_id`='. $user_id );
+	
+	
 	# delete user
 	#
 	$db->execute( 'DELETE FROM `users` WHERE `id`='. $user_id );

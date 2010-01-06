@@ -64,6 +64,18 @@ function get_at_dial( $host_id )
 		return '';
 }
 
+function print_name ( $firstname, $lastname ) {
+
+        $fullname = '';
+        if( strlen( $firstname ) > 0 )
+                $fullname = strtoupper( substr( $firstname, 0, 1 ) ) . ". " . $lastname;
+        else
+                $fullname = $lastname;
+        gs_agi_set_variable( 'mname',  gs_agi_str_esc($fullname));
+        die();
+
+}
+
 
 
 $db = gs_db_slave_connect();
@@ -82,7 +94,7 @@ if ($is_huntgroup != 1) {
 #
 //$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 $rs = $db->execute(
-'SELECT `u`.`host_id`, `h`.`is_foreign`, `h`.`host`
+'SELECT `u`.`host_id`, `h`.`is_foreign`, `h`.`host`, `u`.`firstname`, `u`.`lastname`
 FROM
 	`ast_sipfriends` `s` JOIN
 	`users` `u` ON (`u`.`id`=`s`.`_user_id`) JOIN
@@ -92,6 +104,9 @@ WHERE `s`.`name`=\''. $db->escape($ext) .'\''
 if ($r = $rs->fetchRow()) {
 	if (! $r['is_foreign']) {
 		gs_agi_set_variable( '__exttype', 'user' );
+		
+		print_name( $r['firstname'], $r['lastname'] );
+		
 		if ($r['host_id'] < 1) {
 			gs_agi_set_variable( '__dial_to_node', '' );
 		} else {
@@ -170,5 +185,4 @@ if ($r = $rs->fetchRow()) {
 
 gs_agi_set_variable( '__exttype', 'unknown' );
 gs_agi_set_variable( '__dial_to_node', '' );
-
 ?>

@@ -607,6 +607,14 @@ $CALLBACK_FAILED_EXTENSION      = '';
   # If empty, the channel will be busy.
 
 
+$SWITCHBOARD_DROP_TARGET = '';
+  # global target for droping the call no answer/busy/offline
+
+$SWITCHBOARD_DROP_TIMEOUT = 0;
+  # global timeout for droping to call no answer/busy/offline
+  # if the feature is enabled.
+  # if you want the user to define this himself set 0.
+
 $VMBOX_ALWAYS_ASK_PIN 	= false;
   # asks for the pin before the user can enter the voicemail menu if
   # set to true.
