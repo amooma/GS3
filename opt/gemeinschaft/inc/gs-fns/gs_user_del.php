@@ -174,6 +174,11 @@ function gs_user_del( $user, $reload=true )
 	# do a clean logout from the current phone
 	#
 	$db->execute( 'UPDATE `phones` SET `user_id`=NULL WHERE `user_id`='. $user_id );
+
+	# delete huntgroup memberships
+	#
+	$db->execute( 'DELETE FROM `huntgroups` WHERE `user_id`='. $user_id );
+	
 	
 	# delete drop targets
 	#
