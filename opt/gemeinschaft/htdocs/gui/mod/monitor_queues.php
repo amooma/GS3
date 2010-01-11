@@ -43,6 +43,8 @@ if (! $CDR_DB) {
 }
 
 include_once( GS_DIR .'inc/queue-status.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
+
 $get_queue_stats_from_db = gs_get_conf('GS_GUI_QUEUE_INFO_FROM_DB');
 
 function _devstate2v( $devstate )
@@ -65,19 +67,35 @@ function _devstate2v( $devstate )
 
 $GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
 
+$user_groups  = gs_group_members_groups_get(Array(@$_SESSION['sudo_user']['info']['id']), 'user');
+$queue_groups = gs_group_members_get(gs_group_permissions_get($user_groups, 'monitor_queues', 'queue'));
+
+if (!is_array($queue_groups) || (count($queue_groups) == 0))  $queue_groups = Array(0);
 
 # get the queues for the current user
 #
-$rs_queues = $DB->execute(
+
+/*
+$sql_query = 
 'SELECT `q`.`_id` `id`, `q`.`name` `ext`, `q`.`_title` `title`, `h`.`host`
 FROM
 	`ast_queue_members` `m` JOIN
 	`ast_queues` `q` ON (`q`.`_id`=`m`.`_queue_id`) JOIN
 	`hosts` `h` ON (`h`.`id`=`q`.`_host_id`)
-WHERE `m`.`_user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .'
-ORDER BY `q`.`name`'
-);
+WHERE `m`.`_user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .' OR `q`.`_id` IN ('.implode(',',$queue_groups).')
+ORDER BY `q`.`name`';
+*/
 
+$sql_query = 
+'SELECT `q`.`_id` `id`, `q`.`name` `ext`, `q`.`_title` `title`, `h`.`host` 
+FROM 
+	`ast_queues` `q` JOIN
+	`hosts` `h` ON (`h`.`id`=`q`.`_host_id`)
+WHERE `q`.`_id` IN ('.implode(',',$queue_groups).') OR `q`.`_id` IN 
+	( SELECT `id` FROM`ast_queue_members` `m` WHERE `m`.`_user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .') 
+ORDER BY `q`.`name`';
+
+$rs_queues = $DB->execute( $sql_query );
 
 if ($rs_queues->numRows()==0) {
 	echo __('Sie sind nicht Mitglied einer Warteschlange.') ,'<br />', "\n";

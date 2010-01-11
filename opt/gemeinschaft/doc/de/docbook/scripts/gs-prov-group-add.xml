@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<refentry id="man-gs-prov-group-add" lang="de" revision="$Revision: 5282 $">
+  <!--
+% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de
+-->
+
+  <indexterm>
+    <primary>Skripte</primary>
+
+    <secondary>gs-prov-group-add</secondary>
+  </indexterm>
+
+  <refentryinfo>
+    <date>$Revision: 5282 $</date>
+
+    <copyright>
+      <year>2007</year>
+
+      <holder>Amooma GmbH</holder>
+    </copyright>
+
+    <legalnotice>
+      <para>License: GNU FDL</para>
+    </legalnotice>
+  </refentryinfo>
+
+  <refmeta>
+    <refentrytitle>gs-prov-group-add</refentrytitle>
+
+    <manvolnum>8</manvolnum>
+
+    <refmiscinfo>Gemeinschaft</refmiscinfo>
+  </refmeta>
+
+  <refnamediv>
+    <refname>gs-prov-group-add</refname>
+
+    <refpurpose><application>Gemeinschaft</application>: Provisioninggruppe
+    hinzufügen</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>Usage: [--parent=&lt;name&gt;] --name=&lt;name&gt;
+      --title=&lt;title&gt; [--softkey-profile-id=&lt;id&gt;]
+      [--prov-param-profile-id=&lt;id&gt;]
+      [--show-ext-modules=&lt;num&gt;]</command>
+    </cmdsynopsis>
+
+    <cmdsynopsis>
+      <command>gs-prov-group-add</command>
+
+      <group choice="req" rep="norepeat">
+        <arg choice="plain"><option>--help</option></arg>
+
+        <arg choice="plain"><option>-?</option></arg>
+      </group>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsection>
+    <title>Beschreibung</title>
+
+    <para>Legt eine Provisioninggruppe an.</para>
+  </refsection>
+
+  <refsection>
+    <title>Parameter</title>
+
+    <variablelist>
+      <varlistentry>
+        <term><option>--parent</option>=<replaceable>name</replaceable></term>
+
+        <listitem>
+          <para>Die Gruppe die der neu anzulegenden Gruppe übergeordnet wird.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--name</option>=<replaceable>name</replaceable></term>
+
+        <listitem>
+          <para>Der Eindeutige Name der Provisioninggruppe</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--title</option>=<replaceable>title</replaceable></term>
+
+        <listitem>
+          <para>Die Bezeichnung der Gruppe, diese wird z.B. in der GUI angezeigt</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--softkey-profile-id</option>=<replaceable>id</replaceable></term>
+
+        <listitem>
+          <para>Die ID des Softkey-Profiles, welches der Gruppe zugewiesen werden soll</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--prov-param-profile-id</option>=<replaceable>id</replaceable></term>
+
+        <listitem>
+          <para>Die ID des Provisioning-Parameter-Profiles, welches der Gruppe zugewiesen werden soll</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--show-ext-modules</option>=<replaceable>num</replaceable></term>
+
+        <listitem>
+          <para>Die Anzahl der Erweiterungsmodule die für diesen Nutzer angezeigt werden sollen.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--help</option></term>
+
+        <term><option>-?</option></term>
+
+        <listitem>
+          <para>Zeigt die eingebaute Hilfe an.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsection>
+
+  <refsection>
+    <title>Diagnostik</title>
+
+    <para>Der Exit-Code ist 0 bei Erfolg oder &gt; 0 bei einem Fehler.</para>
+  </refsection>
+
+  <refsection>
+    <title>Siehe auch</title>
+    <para>
+    <xref  linkend="man-gs-prov-group-del" />
+    <xref  linkend="man-gs-prov-groups-get" />
+    </para>
+  </refsection>
+</refentry>

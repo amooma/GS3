@@ -222,7 +222,8 @@ $users[0]['id'] = (int)@gs_prov_user_id_by_mac_addr( $db, $mac );
 
 if ($users[0]['id'] > 0) {
 	for ($i=1; $i<8; ++$i) {
-		$users[$i]['id'] = (int)@gs_prov_user_id_by_mac_addr( $db, $mac.'-'.($i+1) );
+		$user_id = (int)@gs_prov_user_id_by_mac_addr( $db, $mac.'-'.($i+1) );
+		if ($user_id > 0 ) $users[$i]['id'] = $user_id;
 	}
 } else {
 	if (! GS_PROV_AUTO_ADD_PHONE) {

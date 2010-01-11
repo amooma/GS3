@@ -68,6 +68,11 @@
     <title>Beschreibung</title>
 
     <para>Zeigt den Text eines Benutzer-Freitextfeldes.</para>
+    <para>Beispielausgabe:
+<screen>
+Comment: Hier steht was ich gerade mache
+</screen>
+    </para>
   </refsection>
 
   <refsection>
@@ -111,7 +116,8 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-user-comment-set" />
+    </para>
   </refsection>
 </refentry>

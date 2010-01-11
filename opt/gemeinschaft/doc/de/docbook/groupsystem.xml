@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
+<chapter id="gsgroupsystem" revision="$Revision: 6639 $">
+<!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->  
+<title>Gemeinschaft Gruppensystem</title>
+<para>
+In diesem Kapitel wird speziell auf das flexible Gruppensystem von Gemeinschaft eingegangen.
+In Gemeinschaft wird im Moment zwischen Provisioning-Gruppen und normalen Gruppen unterscheiden.
+Provisioning-Gruppen sind Gruppen von Benutzern, die bestimmte Konfigurationen auf Ihren Endgeräten erhalten.
+Das Gruppensystem mit dem sich dieses Kapitel befasst ist ein flexibles Gruppensystem, das zur Rechtevergabe 
+in Gemeinschaft dient.
+
+</para>
+	<section id="gsgroupsystem-elements">
+    		<title>Gruppierbare Elemente</title>
+		<para>
+			Das Gruppensystem ist in der Lage beliebige Elemente zu gruppieren, die
+			über eine eindeutige, numerische ID verfügen.
+		</para>
+		<para>
+			Im Moment werden nur bestimmte Typen von Elementen unterstützt. Eine
+			Erweiterung des Gruppensystems um neue Typen von Elementen ist jedoch
+			recht einfach und benötigt keine Änderung an der Grundstruktur des Systems.
+		</para>
+	</section>
+	<section id="gsgroupsystem-permissions">
+    		<title>Berechtigungssystem</title>
+		<para>
+			Eine Berechtigung erlaubt immer eine Handlung, die eine Gruppe vornehmen
+			darf und die sich auf eine andere Gruppe bezieht.
+		</para>
+		<para>
+			Im moment werden nur bestimmte Typen von Berechtigungen unterstützt.
+			Eine Erweiterung des Gruppensystems um neue Typen von Berechtigungen ist
+			jedoch recht einfach möglich.
+		</para>
+		<para>
+			Der Typ einer Berechtigung muss nur von dem Skript/Modul ausgewertet
+			werden, welches diese Berechtigungsart benötigt. Das Hinzufügen von
+			neuen Berechtigungsarten zum System hat deshalb keinen Einfluss auf die
+			bisher bestehenden Berechtigungsarten und Skripte/Module die diese
+			auswerten.
+		</para>
+	</section>
+	<section id="gsgroupsystem-subgroups">
+    		<title>Untergruppen</title>
+		<para>
+			Eine Gruppe darf eine beliebige Zahl an anderen Gruppen gleichen Typs enthalten.
+			Dies hat zur Folge, dass diese Gruppe dann um die Elemente der enthaltenen Gruppen anwächst.
+		</para>
+		<para>
+			Die Untergruppe selbst kann dabei wiederrum mehrere eigene Untergruppen enthalten.
+		</para>
+		<para>
+			Die zur Auswertung verfügbaren Elemente einer Gruppe sind also immer die
+			Gesamtmenge aller eigenen Elemente und der Elemente der Untergruppen.
+		</para>
+		<para>
+			Im Moment werden nur bestimmte Typen von Elementen unterstützt. Eine
+			Erweiterung des Gruppensystems um neue Typen von Elementen ist jedoch
+			recht einfach und benötigt keine Änderung an der Grundstruktur des Systems.
+		</para>
+	</section>
+
+	<section id="gsgroupsystem-group-types">
+    		<title>Verfügbare Typen von gruppierbaren Elementen</title>
+		<para>
+			Der Typ der Gruppe besagt, welche Art von Elementen, also .z.B. Benutzer oder Hosts, mit der Gruppe gruppiert sind.
+			Nachfolgend eine Übersicht über die Momentan gruppierbaren Elemente:
+		</para>
+		<para>
+			<variablelist>
+        			<varlistentry>
+          				<term>user</term>
+          				<listitem>
+            					<para>Im System eingerichtete Benutzer.</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>queue</term>
+          				<listitem>
+            					<para>Im System eingerichtete Warteschlangen</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>host</term>
+          				<listitem>
+            					<para>Im System eingerichtete interne und externe Hosts.</para>
+          				</listitem>
+        			</varlistentry>
+      			</variablelist>
+		</para>	
+	</section>
+
+	<section id="gsgroupsystem-permission-types">
+    		<title>Verfügbare Typen von Berechtigungen</title>
+		<para>
+			Der Typ der Gruppe besagt, welche Art von Elementen, also .z.B. Benutzer oder Hosts, mit der Gruppe gruppiert sind.
+			Nachfolgend eine Übersicht über die Momentan gruppierbaren Elemente:
+		</para>
+		<para>
+			<variablelist>
+        			<varlistentry>
+          				<term>monitor_peers</term>
+          				<listitem>
+            					<para>Anzeigen von Benutzern in "Monitor-Kollegen".</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>monitor_queues</term>
+          				<listitem>
+            					<para>Anzeigen von Warteschlangen in "Monitor-Warteschlangen"</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>forward_queues</term>
+          				<listitem>
+            					<para>Setzen von Weiterleitungen für Warteschlangen</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>sudo_user</term>
+          				<listitem>
+            					<para>Wechseln des Benutzers über das GUI</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>call_stats</term>
+          				<listitem>
+            					<para>Anzeigen der Anrufstatistik</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>phonebook_user</term>
+          				<listitem>
+            					<para>Anzeigen eines Eintrages im Telefonbuch</para>
+          				</listitem>
+        			</varlistentry>
+      			</variablelist>
+		</para>	
+	</section>
+
+	<section id="gsgroupsystem-permission-examples">
+    		<title>Beispiele zum Setzen von Berechtigungen</title>
+		<para>
+			Eine Handlung einer Gruppe auf eine andere Gruppe wird vom Gruppensystem
+			je nach den gesetzten Berechtigungen erlaubt oder verhindert.
+			Das Setzen einer Rufumleitung für eine Warteschlange wäre z.B. so eine
+			Handlung. In diesem Beispiel wären also betroffen:
+		
+		</para>
+		<para>
+			A. Die Gruppe zu der der Benutzer gehört, der die Handlung vornehmen will
+		</para>
+		<para>
+			B. Die Gruppe der Warteschlangen, auf die sich die Handlung auswirkt
+		</para>
+		<para>
+			C. Die Art der Berechtigung, hier "forward_queues"
+		</para>	
+		<para>
+			Der dazugehörige Befehl, der diese Berechtigung aktiviert, würde also folgendermaßen aussehen:
+			<screen>
+gs-group-permission-add --group=A --permit=B --type=forward_queues
+			</screen>
+			Ab diesem Zeitpunkt können Mitglieder der Gruppe A unter Verwendung des
+			GUI eine Rufumleitung für eine Warteschlange setzen, die Mitglied der
+			Gruppe B ist.
+		</para>
+		<para>
+			Weitere Beispiele:
+		</para>
+		<para>
+			Anzeige von Benutzern der Gruppe B im Telefonbuch der Benutzer aus Gruppe A erlauben:
+			<screen>
+gs-group-permission-add --group=A --permit=B --type=phonebook_user
+			</screen>
+			Benutzer der Gruppe A dürfen als Benutzer aus Gruppe B agieren:
+			<screen>
+gs-group-permission-add --group=A --permit=B --type=sudo_user
+			</screen>
+		</para>
+	</section>  
+</chapter>

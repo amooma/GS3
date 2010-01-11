@@ -1,0 +1,939 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
+<chapter id="gs-config" revision="$Revision: 6639 $">
+<!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de--> 
+<title>Konfiguration von Gemeinschaft</title>
+<para>
+Die initiale Konfiguration von Gemeinschaft findet in der zentralen Konfigurationsdatei <filename>/etc/gemeinschaft/gemeinschaft.php</filename> statt.
+Nachfolgend eine Liste der Parameter und dessen Bedeutung.
+</para>
+ <para>
+ <variablelist>
+ 
+   <varlistentry>
+     <term>$INSTALLATION_TYPE</term>
+       <listitem>
+         <para>Der Typ der Installation, Mögliche Werte sind "single" oder "cluster".</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_MASTER_HOST</term>
+       <listitem>
+         <para>Die IP-Addresse des Datenbank-Master Servers.</para>
+       </listitem>
+    </varlistentry>
+ 
+   <varlistentry>
+     <term>$DB_MASTER_USER</term>
+       <listitem>
+         <para>Der Datenbank-Master-Benutzer.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_MASTER_PWD</term>
+       <listitem>
+         <para>Das Datenbank-Master-Passwort.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_MASTER_DB</term>
+       <listitem>
+         <para>Die MySQL-Master-Datenbank, die von Gemeinschaft benutzt werden soll.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_SLAVE_HOST</term>
+       <listitem>
+         <para>Die IP-Addresse des Datenbank-Slave Servers.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_SLAVE_USER</term>
+       <listitem>
+         <para>Der Datenbank-Slave-Benutzer.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_SLAVE_PWD</term>
+       <listitem>
+         <para>Das Datenbank-Slave-Passwort.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_SLAVE_DB</term>
+       <listitem>
+         <para>Die MySQL-Slave-Datanbank, die von Gemeinschaft benutzt werden soll.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_CDR_MASTER_HOST</term>
+       <listitem>
+         <para>Die IP-Addresse des Datenbank-Master Servers, der die CDR-Daten speichern soll. Wenn dieser Wert leer ist, dann wird die normale MySQL-Master Datenbank</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_CDR_MASTER_USER</term>
+       <listitem>
+         <para>Benutzer für CDR-Datenbank.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_CDR_MASTER_PWD</term>
+       <listitem>
+         <para>Passwort für CDR-Datenbank</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_CDR_MASTER_DB</term>
+       <listitem>
+         <para>Datenbankname auf dem Datenbankserver, der für CDR-Daten verwendet werden soll.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DB_SIP_REG_UPDATE</term>
+       <listitem>
+         <para>Schaltet das Speichern der SIP-Registrierungsdaten in der Slave-Datenbank an oder aus.
+	 Wenn die SIP-Registrierungsdaten (welcher SIP-Account hat welche IP?) in der Datenbank gehalten werden, sind diese
+	 nach dem Neustart von Asterisk sofort wieder verfügbar, und die Engeräte können auch ohne erneute SIP-Registrierung 
+	 (Kommt c.a. alle 2 min, je nach Konfiguration des Endgerätes) angerufen werden.
+	 Achtung! Hierdurch kann die Replikation zerstört werden, es muss sichergestellt sein, das die Tabelle nicht repliziert wird.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_HOST</term>
+       <listitem>
+         <para>IP-Addresse des LDAP-Servers.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_SSL</term>
+       <listitem>
+         <para>Schaltet die Benutzung von SSL für LDAP an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PORT</term>
+       <listitem>
+         <para>Der Port des LDAP-Servers.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_BINDDN</term>
+       <listitem>
+         <para>Die Bind-Domain des LDAP-Servers z.b. 'cn=root,dc=example,dc=com'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PWD</term>
+       <listitem>
+         <para>Das Passwort für den LDAP-Server.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROTOCOL</term>
+       <listitem>
+         <para>Legt die LDAP-Protokollversion fest, die Benutzt werden soll (2 oder 3)</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_SEARCHBASE</term>
+       <listitem>
+         <para>Legt die LDAP-Suchbasis fest z.B.: 'ou=People,dc=example,dc=com'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_USER</term>
+       <listitem>
+         <para>Der Benutzername im LDAP-Attribut LDAP_PROP_USER, dieser muss gleich mit dem Namen sein, der als Benutzernamen in Gemeinschaft verwendet wird. z.B: "uid" | "employeenumber".
+	 </para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_UID</term>
+       <listitem>
+         <para>Konfiguriert den Primären Schlüssel, der in der Suchdomäne verwendet wird, fest. z.B: "uid"</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_FIRSTNAME</term>
+       <listitem>
+         <para>Wird für das LDAP-Telefonbuch verwendet, LDAP-Attribut für den Vornamen.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_LASTNAME</term>
+       <listitem>
+         <para>Wird für das LDAP-Telefonbuch verwendet, LDAP-Attribut für den Nachnamen.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_PHONE</term>
+       <listitem>
+         <para>Wird für das LDAP-Telefonbuch verwendet, LDAP-Attribut für die Telefonnummer.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LDAP_PROP_EMAIL</term>
+       <listitem>
+         <para>Wird für das LDAP-Telefonbuch verwendet, LDAP-Attribut für die E-Mail Addresse.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_AUTH_METHOD</term>
+       <listitem>
+         <para>Legt fest welche Authentifizierungs-Methode verwendet wird. Mögliche Werte: "Gemeinschaft" oder "Webseal".</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_NUM_RESULTS</term>
+       <listitem>
+         <para>Legt fest wie viele Einträge pro Seite in Listen (wie z.B. dem Telefonbuch) angezeigt werden.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_SUDO_ADMINS</term>
+       <listitem>
+         <para>Komma Separierte Liste von Nutzern, die Administratoren sind. Achtung, diese Nutzer können bei Mißbrauch ihrer Macht großen Schaden am System anrichten!</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_SUDO_EXTENDED</term>
+       <listitem>
+         <para>Schaltet an oder aus, ob Administratoren als andere Nutzer agieren können.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_QUEUE_SHOW_NUM_CALLS</term>
+       <listitem>
+         <para>Schaltet ein oder aus, ob die Anzahl der erfolgreichen Anrufe für jeden Teilnehmer in einer Warteschlange angezeigt werden soll.
+         </para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_QUEUE_INFO_FROM_DB</term>
+       <listitem>
+         <para>Legt fest, ob die Queue-Statistiken aus der Datenbank gelesen werden sollen, wenn der Wert auf "false" steht werden die Daten vom Asterisk-Manager Interface gelesen.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_MON_NOQUEUEBLUE</term>
+       <listitem>
+         <para>Legt fest ob nichts tuende Mitglieder der Warteschleife eine Blaue oder Grüne LED haben.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_MON_PEERS_ENABLED</term>
+       <listitem>
+         <para>Schalten den Kollegenmonitor an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_SHUTDOWN_ENABLED</term>
+       <listitem>
+         <para>Schaltet den Ausschaltknopf für das System für Administratoren an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GUI_LANGS</term>
+       <listitem>
+         <para>Legt fest, welche Sprachen in der GUI zur Auswahl stehen. Default ist hier Deutsch und English</para>
+       </listitem>
+    </varlistentry>
+ 
+    <varlistentry>
+     <term>$GUI_ADDITIONAL_STYLESHEET</term>
+       <listitem>
+         <para>Mit diesem Parameter kann man eine eigene CSS-Datei angeben, um das aussehen von Gemeinschaft zu ändern. 
+	 Dies hat den Vorteil, das der Stylesheet nach einem Update erhalten bleibt.
+	 </para>
+      </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$EXTERNAL_NUMBERS_BACKEND</term>
+       <listitem>
+         <para>Legt fest, woher Gemeinschaft externe Nummern zieht. Entweder 'db' für die lokale MySQL-Datenbank, oder 'ldap' um die Werte aus LDAP zu lesen.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$EXTERNAL_NUMBERS_LDAP_PROP</term>
+       <listitem>
+         <para>Das LDAP-Attribur für die Externe Nummer z.B.: 'telephoneNumber'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$NOBODY_EXTEN_PATTERN</term>
+       <listitem>
+         <para>Legt das Muster fest nachdem die Nobody-User für die Telefonprovisionierung angelegt werden z.B.: 95xxxx
+	 </para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$NOBODY_CID_NAME</term>
+       <listitem>
+         <para>Das Präfix was als Callerid-Name vor die Nummer des Nobody-Users geschrieben wird.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_HOST</term>
+       <listitem>
+         <para>Konfiguriert die IP-Addresse des Provisioning Host.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_PATH</term>
+       <listitem>
+         <para>Der Pfad auf dem Provisioning Host, in dem die Dateien liegen.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_AUTO_ADD_PHONE</term>
+       <listitem>
+         <para>Legt fest ob ein Telefon automagisch hinzugefügt werden soll.</para>
+       </listitem>
+    </varlistentry>
+        
+    <varlistentry>
+     <term>$PROV_AUTO_ADD_PHONE_HOST</term>
+       <listitem>
+         <para>Damit kann in einem Cluster-System festgelegt werden auf welchem Telefonie-Knoten die nobody-accounts hinzugefügt werden. Mögliche Werte: 'first', 'last' oder 'random'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_DIAL_LOG_LIFE</term>
+       <listitem>
+         <para>Legt fest, wie weit die Anruflisten am Telefon zurückgehen sollen. Wert in Sekunden.
+	 Der Wert legt nur fest wie viele Daten auf dem Telefon angezeigt werden (XML-Applikation). 
+	 Veraltete Daten werden aus der Tabelle nicht gelöscht.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_PROXIES_TRUST</term>
+       <listitem>
+         <para>Der Wert gibt an, welchen Proxy's (IP-Addressen) der Provisioning-Server Vertraut.
+	 Der Proxy muss dabei dem Telefon sein User-Agent-Header unberührt lassen. z.b. '192.168.1.2, 192.168.1.3'
+	 </para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_PROXIES_XFF_HEADER</term>
+       <listitem>
+         <para>z.B: 'X-Forwarded-For', dies ist der Standartwert und sollte so belassen werden.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_ALLOW_NET</term>
+       <listitem>
+         <para>Komma-Separierte Liste von Subnetzen aus denen ein Provisioning-Vorgang erlaubt ist z.B.: '192.168.1.0/255.255.255.0, 192.168.0.0/16'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_LAN_NETS</term>
+       <listitem>
+         <para>Komma-Separierte Liste von Subnetzen. Jedem Telefon, welches nicht Teil dieses Subsetzes ist, wird der sip_proxy_from_wan als Registrar und Outbound Proxy zugewiesen.
+  	</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_MODELS_ENABLED_SNOM</term>
+       <listitem>
+         <para>Liste mit SNOM-Telefonen die im Unternehmen zur Verfügung stehen z.B.: '360,370'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_MODELS_ENABLED_SIEMENS</term>
+       <listitem>
+         <para>Liste mit Siemens-Telefonen die im Unternehmen zur Verfügung stehen z.B.: 'os20,os40,os60'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_MODELS_ENABLED_AASTRA</term>
+       <listitem>
+         <para>Liste mit AAstra-DeTeWe-Telefonen die im Unternehmen zur Verfügung stehen z.B.: '51i,53i,55i,57i'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PROV_MODELS_ENABLED_GRANDSTREAM</term>
+       <listitem>
+         <para>Liste mit Grandstream-Telefonen die im Unternehmen zur Verfügung stehen z.B.: 'bt110,gxp2000,gxp2020'</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SNOM_PROV_ENABLED</term>
+       <listitem>
+         <para>Schaltet das Provisoning für SNOM-Telefone generell ein oder aus.</para>
+       </listitem>
+    </varlistentry>
+ 
+     <varlistentry>
+     <term>$SNOM_PROV_HTTP_USER</term>
+       <listitem>
+         <para>Der HTTP-Nutzer für das SNOM Telefon. Dieser wird zum rebooten des Telefones genutzt.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SNOM_PROV_HTTP_PASS</term>
+       <listitem>
+         <para>Das Passwort des HTTP-Nutzers am Telefon.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SNOM_PROV_PB_NUM_RESULTS</term>
+       <listitem>
+         <para>Die Anzahl der Ergebnisse, die auf einer Seite im Telefonbuch des SNOM-Telefones angezeigt werden soll.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$SNOM_PROV_FW_UPDATE</term>
+       <listitem>
+         <para>Schaltet das Firmware-Update für SNOM an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SNOM_PROV_FW_6TO7</term>
+       <listitem>
+         <para>Schaltet das Automatische aktualisieren der Firmware für Snom Telefone von Version 6 auf 7 an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SNOM_PROV_FW_DEFAULT_$MODEL</term>
+       <listitem>
+         <para>Gibt die Firmware-Version die Standartmäßig auf dem Telefon installiert werden soll an z.B.: '7.1.24'. Dieser Wert muss für jedes einzelner SNOM-Modell angepasst werden ($MODEL)</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$SNOM_PROV_M3_ACCOUNTS</term>
+       <listitem>
+         <para>Legt die Anzahl der SNOM-M3 Accounts fest, die pro Basisstation angelegt werden. Wenn der Wert 0 ist, ist das Provisioning für das Snom M3 deaktiviert.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$AASTRA_PROV_ENABLED</term>
+       <listitem>
+         <para>Schaltet das Provisioning für Astraa DeTeWe-Telefone an oder aus.
+	 </para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$AASTRA_PROV_PB_NUM_RESULTS</term>
+       <listitem>
+         <para>Analog zu $SNOM_PROV_PB_NUM_RESULTS, aber für AAstra-Telefone.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$AASTRA_PROV_FW_DEFAULT_$MODEL</term>
+       <listitem>
+         <para>Analog zu $SNOM_PROV_FW_DEFAULT_$MODEL, aber für AAstra-Telefone.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SIEMENS_PROV_ENABLED</term>
+       <listitem>
+         <para>Schaltet das Provisioning für Siemens OpenStage-Telefone an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SIEMENS_PROV_PREFER_HTTP</term>
+       <listitem>
+         <para>Wenn der Wert auf true gesetzt wird, wird das OpenStage nicht per FTP, sondern per HTTP mit Dateien versorgt. Dies funktioniert nicht bei alten Firmware-Versionen</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$SIEMENS_PROV_FW_DEFAULT_$MODEL</term>
+       <listitem>
+         <para>Analog zu $SNOM_PROV_FW_DEFAULT_$MODEL, aber für Siemens OpenStage-Telefone.
+	 z.B.: $SIEMENS_PROV_FW_DEFAULT_OS60 = '1.3.5.0';
+         </para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$SIEMENS_PROV_KEY_BLACKLIST</term>
+       <listitem>
+         <para>Deaktiviert einzelne Tasten für das OpenStage-Provisioning z.B.: 'f25' für DND. Eine Liste der Parameter finden Sie in der gemeinschaft.php</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GRANDSTREAM_PROV_ENABLED</term>
+       <listitem>
+         <para>Schaltet das Provisioning für Grandstream-Telefone an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$GRANDSTREAM_PROV_HTTP_PASS</term>
+       <listitem>
+         <para>Das Passwort des Admin-Benutzers, welches zum rebooten und zum speichern der Initialen Konfiguration genutzt wird.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GRANDSTREAM_PROV_NTP</term>
+       <listitem>
+         <para>Der NTP-Server der für das Grandstream genutzt wird. Hier kann "@$PROV_HOST" genutzt werden.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$GRANDSTREAM_PROV_FW_UPDATE</term>
+       <listitem>
+         <para>Schaltet Automatische Firmwareupdates für das Grandstream an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$GRANDSTREAM_PROV_FW_DEFAULT_$MODEL</term>
+       <listitem>
+         <para>Analog zu $SNOM_PROV_FW_DEFAULT_$MODEL, aber für Grandstream Telefone.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$CANONIZE_OUTBOUND</term>
+       <listitem>
+         <para>Schaletet das Kanonisieren der Nummer beim ausgehenden Routen an oder aus. (Wert true oder false)</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$CANONIZE_INTL_PREFIX</term>
+       <listitem>
+         <para>Der Internationale Präfix, nicht "+". Für Deutschland "00"</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$CANONIZE_COUNTRY_CODE</term>
+       <listitem>
+         <para>Legt die Landesvorwahl fest, in der sich die Gemeinschaft-Installation befindet. In Deutschland "49".</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$CANONIZE_NATL_PREFIX</term>
+       <listitem>
+         <para>Nationaler Präfix, in Deutschland "0".</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$CANONIZE_NATL_PREFIX_INTL</term>
+       <listitem>
+         <para>Wenn auf "true" gesetzt wird im Internationalen Format gewählt, auch wenn sich die Nummer im gleichen Land befindet.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$CANONIZE_AREA_CODE</term>
+       <listitem>
+         <para>Ortsvorwahl des Standortes der Gemeinschaft-Installation, ohne anführende 0 z.B.: "251"</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$CANONIZE_LOCAL_BRANCH</term>
+       <listitem>
+         <para>Private Kopfnummer des Anschlusses z.B.: "709".</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$CANONIZE_SPECIAL</term>
+       <listitem>
+         <para>Nummern, die in diesen Regulären Ausdruck passen, werden nicht mit einem Präfix versehen z.B.: "/^1(?:1[0-9]{1,5}|9222)/"</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$CANONIZE_CBC_PREFIX</term>
+       <listitem>
+         <para>Call-by-Call Prefix z.B.: "010" für Deutschland.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DP_SUBSYSTEM</term>
+       <listitem>
+         <para>Legt fest ob sich die Gemeinschaft-installation hinter einer anderen Telefonanlage als Sub-System befindet, 
+	 denn dann werden alle nicht in Gemeinschaft bekannten nummern zum Gateway (das ja normalerweise die andere Telefonanlage ist) gewählt.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$DP_EMERGENCY_POLICE</term>
+       <listitem>
+         <para>Notrufnummern für Polizei, Komma-Separiert, z.b. "110,0110". 
+	 Für diese Nummern werden keine Berechtigungen der Nutzer überprüft, d.h. dass auch z.b. Dummy-User diese Nummern wählen können.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DP_EMERGENCY_POLICE_MAP</term>
+       <listitem>
+         <para>Nummern die in $DP_EMERGENCY_POLICE stehen, werden nach diesem Wert gemappt und gewählt. Damit kann sicher gestellt werden, das Notrufnummern intuitiv gewählt werden Können.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$DP_EMERGENCY_FIRE</term>
+       <listitem>
+         <para>Wie $DP_EMERGENCY_POLICE nur für Feuerwehr und Krankenwagen.
+	 Für diese Nummern werden keine Berechtigungen der Nutzer überprüft, d.h. dass auch z.b. Dummy-User diese Nummern wählen können.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DP_EMERGENCY_FIRE_MAP</term>
+       <listitem>
+         <para>Wie $DP_EMERGENCY_POLICE_MAP nur für Feuerwehr und Krankenwagen.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$DP_DIALTIMEOUT_IN</term>
+       <listitem>
+         <para>Generelles Timeout für die Dial-Applikation im Asterisk-Dialplan.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DP_FORWARD_REQ_EXT_NUM</term>
+       <listitem>
+         <para>Wenn dieser Wert auf "true" steht, darf der Nutzer nur auf eine externe Nummer weiter leiten, die Ihm der Admin freigeschalten hat. Damit kann Mißbrauch vermieden werden.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$DP_ALLOW_DIRECT_DIAL</term>
+       <listitem>
+         <para>Schaltet die Che-Se Schaltung an oder aus. Genauer: Damit kann man die Rufumleitung durchbrechen. Werte (true oder false)</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$DP_CONNID</term>
+       <listitem>
+         <para>Wenn dieser Wert auf "true" gesetzt ist, wird eine einzigartige Connection-ID für jedes Gespräch erstellt und in den CDR-Daten gespeichert.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$LOCK_DIR</term>
+       <listitem>
+         <para>Das Verzeichniss, in dem Gemeinschaft, lock-Dateien ablegt.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$CALL_INIT_FROM_NET</term>
+       <listitem>
+         <para>Komma-Separierte Liste von Subnetzen, aus denen ein Anruf über die call-init.php initialisiert werden kann.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$MONITOR_FROM_NET</term>
+       <listitem>
+         <para>Alle Subnetze die hier angegeben sind haben zugriff auf den Nebenstellenmonitor.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$CC_TIMEOUT</term>
+       <listitem>
+         <para>Timeout für Call-Completions, angabe in Minuten.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$INTL_LANG</term>
+       <listitem>
+         <para>Legt die Standart-Sprache fest.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$INTL_ASTERISK_LANG</term>
+       <listitem>
+         <para>Standart-Sprache die von Asterisk verwendet werden soll.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$INTL_LANG_SOUNDS</term>
+       <listitem>
+         <para>Standart-Sprache die von Asterisk für Sprachpromts genutzt werden soll.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$USERCOMMENT_OFFTIME</term>
+       <listitem>
+         <para>Standart-Kommentar, wenn ein Nutzer offline (nicht am Telefon angemeldet) ist.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$EMAIL_DELIVERY</term>
+       <listitem>
+         <para>Legt die Technologie fest, über die E-Mails verschickt werden. Mögliche Werte sind: "sendmail" oder "direct-smtp".</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$CALL_RECORDING</term>
+       <listitem>
+         <para>Schaltet die Anruf-Aufnahme Möglichkeit am Telefon an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$PB_IMPORTED_ENABLED</term>
+       <listitem>
+         <para>Schaltet ein Importiertes Telefonbuch an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PB_IMPORTED_ORDER</term>
+       <listitem>
+         <para>Legt fest in welcher Reihenfolge das Importierte Telefonbuch gegenüber dem Internen und Privaten stehen soll.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$PB_IMPORTED_TITLE</term>
+       <listitem>
+         <para>Der Titel des Importieren Telefonbuches.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$PB_INTERNAL_TITLE</term>
+       <listitem>
+         <para>Der Titel des Internenen Telefonbuchs.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$PB_PRIVATE_TITLE</term>
+       <listitem>
+         <para>Titel des Privaten Telefonbuches</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$FAX_ENABLED</term>
+       <listitem>
+         <para>Schaltet die Fax-Funktionalität an oder aus.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$FAX_PREFIX</term>
+       <listitem>
+         <para>Der Fax-Präfix z.B.: "fax-" Damit kann man dem Nutzer mit der Nummer 9993 ein Fax schicken, indem man dies an die fax-9993 schickt.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$FAX_TSI_PREFIX</term>
+       <listitem>
+         <para>Kopfnummer des Unternehmens, die zum Faxemfang genutzt wird.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$FAX_HYLAFAX_HOST</term>
+       <listitem>
+         <para>IP-Addresse des Rechners auf dem der Hylafax-Deamon läuft.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$FAX_HYLAFAX_PORT</term>
+       <listitem>
+         <para>Port-Nummer des Hylafax-Daemons.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$FAX_HYLAFAX_ADMIN</term>
+       <listitem>
+         <para>Administrator-Benutzer Name für den Hylafax Admin.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$FAX_HYLAFAX_PASS</term>
+       <listitem>
+         <para>Passwort des Hylafax-Admin Nutzers.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$BOI_ENABLED</term>
+       <listitem>
+         <para>Schaltet die Branch-Office-Integration an oder aus (Agentur-Verwaltungs-Funktionalität).</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$BOI_API_DEFAULT</term>
+       <listitem>
+         <para>Legt die Standart-API fest, die für SOAP-Calls zur Agentur genutzt wird.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$BOI_BRANCH_NETMASK</term>
+       <listitem>
+         <para>Netzmaske für Agentur-Netze.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$BOI_BRANCH_PBX</term>
+       <listitem>
+         <para>Legt die IP-Adresse der Agentur-PBX in ihrem Subnetz fest z.B.: '0.0.0.130'.</para>
+       </listitem>
+    </varlistentry>
+    
+     <varlistentry>
+     <term>$BOI_NOBODY_EXTEN_PATTERN</term>
+       <listitem>
+         <para>Das Muster mit dem die Nobody-Benutzer-Nummern für die Agentur erzeugt werden. Wie NOBODY_EXTEN_PATTERN nur für Agenturen.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$BOI_GUI_REVERSE_PROXY</term>
+       <listitem>
+         <para>Legt den Proxy fest über den die Agentur erreicht werden soll z.B.: "http://'. @$PROV_HOST .':8080/".</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$BOI_GUI_HOME_USER</term>
+       <listitem>
+         <para>Überschreibt die Start-Seite für Agentur-Benutzer.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$BOI_GUI_HOME_ADMIN</term>
+       <listitem>
+         <para>Überschreibt die Start-Seite für Agentur-Admins.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LOG_TO</term>
+       <listitem>
+         <para>Legt fest, wie Gemeinschaft log-dateien schreibt. Mögliche Werte sind: "file" oder "syslog".</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LOG_LEVEL</term>
+       <listitem>
+         <para>Legt das Log-Level von Gemeinschaft fest z.B.: 'NOTICE'. Mögliche Werte: "FATAL","WARNING","NOTICE" oder "DEBUG".</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LOG_FILE</term>
+       <listitem>
+         <para>Legt die Log-Datei fest z.B.: '/var/log/gemeinschaft/gs.log'.</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LOG_GMT</term>
+       <listitem>
+         <para>Stellt die Zeit für das Logging entweder auf GMT oder Lokalzeit (true oder false).</para>
+       </listitem>
+    </varlistentry>
+    
+    <varlistentry>
+     <term>$LOG_SYSLOG_FACILITY</term>
+       <listitem>
+         <para>Gibt die Syslog-Facility an z.B.: "local5".</para>
+       </listitem>
+    </varlistentry>
+    
+  </variablelist>
+</para>
+</chapter>

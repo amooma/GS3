@@ -1,0 +1,265 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 6838 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' [( --mac=<mac-addr> | --ip=<ip-addr> | --user=<username> | --ext=<extension> | --type=<phone-type> )]';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'mac=',
+		'ip=',
+		'user=',
+		'ext=',
+		'type=',
+	),
+	$usage
+);
+
+$select_by = null;
+foreach (array( 'mac', 'ip', 'user', 'ext', 'type' ) as $by) {
+	if (array_key_exists($by, $opts)) {
+		if ($select_by) {
+			gs_write_error( 'More than one of the exclusive criteria!'."\n" );
+			gs_script_invalid_usage( $usage );
+			break;
+		}
+		$select_by = $by;
+	}
+}
+unset($by);
+
+switch ($select_by) {
+	case 'mac':
+		$opts['mac'] = preg_replace('/[^0-9A-Z\-_]/', '', strToUpper($opts['mac']));
+		break;
+	case 'ip':
+		$opts['ip'] = preg_replace('/[^0-9.]/', '', $opts['ip']);
+		break;
+	case 'user':
+		if (! preg_match('/^[a-z0-9\-_.]+$/', $opts['user'])) {
+			gs_script_error( 'Invalid username.' );
+		}
+		break;
+	case 'ext':
+		if (! preg_match('/^[0-9]+$/', $opts['ext'])) {
+			gs_script_error( 'Invalid extension.' );
+		}
+		break;
+	case 'type':
+		if (! preg_match('/^[a-z0-9\-_]+$/', $opts['type'])) {
+			gs_script_error( 'Invalid phone type.' );
+		}
+		break;
+}
+
+
+/***********************************************************
+***********************************************************/
+$db = gs_db_master_connect();
+if (! $db) {
+	gs_script_error( 'DB error' );
+}
+
+
+$where = array();
+switch ($select_by) {
+	case 'mac':
+		$where[] = '`p`.`mac_addr`=\''. $db->escape($opts['mac']) .'\'';
+		$vertical_cols = true;
+		break;
+	case 'ip':
+		$where[] = '`u`.`current_ip`=\''. $db->escape($opts['ip']) .'\'';
+		$vertical_cols = true;
+		break;
+	case 'user':
+		$where[] = '`u`.`user`=\''. $db->escape($opts['user']) .'\'';
+		$vertical_cols = true;
+		break;
+	case 'ext':
+		$where[] = '`s`.`name`=\''. $db->escape($opts['ext']) .'\'';
+		$vertical_cols = true;
+		break;
+	case 'type':
+		$where[] = '`p`.`type`=\''. $db->escape($opts['type']) .'\'';
+		$vertical_cols = false;
+		break;
+}
+
+# MySQL does not support FULL OUTER JOIN so emulate that using UNION
+$select_fields =
+	'`p`.`mac_addr` `mac`, `p`.`type` `p_type`, `p`.`added` `p_added`, `p`.`firmware_cur` `fw`, '.
+	'`u`.`user`, `u`.`current_ip` `ip`, '.
+	'`s`.`name` `ext`';
+$query =
+	' ( '.
+		'SELECT '. $select_fields .' '.
+		'FROM '.
+			'`phones`         `p`                                     LEFT JOIN '.
+			'`users`          `u` ON (`p`.`user_id` = `u`.`id`      ) LEFT JOIN '.
+			'`ast_sipfriends` `s` ON (`p`.`user_id` = `s`.`_user_id`) '.
+			(count($where) > 0 ? ' WHERE ('.implode(') AND (', $where).') ' : '').
+	' ) UNION DISTINCT ( '.
+		'SELECT '. $select_fields .' '.
+		'FROM '.
+			'`users`          `u`                                LEFT JOIN '.
+			'`phones`         `p` ON (`u`.`id` = `p`.`user_id` ) LEFT JOIN '.
+			'`ast_sipfriends` `s` ON (`u`.`id` = `s`.`_user_id`) '.
+			(count($where) > 0 ? ' WHERE ('.implode(') AND (', $where).') ' : '').
+	' ) UNION DISTINCT ( '.
+		'SELECT '. $select_fields .' '.
+		'FROM '.
+			'`ast_sipfriends` `s`                                     LEFT JOIN '.
+			'`users`          `u` ON (`s`.`_user_id` = `u`.`id`     ) LEFT JOIN '.
+			'`phones`         `p` ON (`s`.`_user_id` = `p`.`user_id`) '.
+			(count($where) > 0 ? ' WHERE ('.implode(') AND (', $where).') ' : '').
+	' ) ';
+
+$rs = $db->execute($query);
+
+
+$fields = array(
+	'mac'        =>  2,
+	'p_added'    =>  1,
+	'p_type'     =>  5,
+	'fw'         =>  1,
+	'ip'         =>  7,
+	'user'       =>  2,
+	'ext'        =>  2,
+);
+$fieldsAbbr = array(
+	'mac'        => 'MAC Addr.',
+	'p_added'    => 'Phone Added',
+	'p_type'     => 'Phone Type',
+	'fw'         => 'Cur. FW',
+	'ip'         => 'Cur. IP Addr.',
+	'user'       => 'Cur. User',
+	'ext'        => 'Cur. Ext.',
+);
+$fieldsPad = array(
+	'mac'        => STR_PAD_RIGHT,
+	'p_added'    => STR_PAD_RIGHT,
+	'p_type'     => STR_PAD_RIGHT,
+	'fw'         => STR_PAD_RIGHT,
+	'ip'         => STR_PAD_RIGHT,
+	'user'       => STR_PAD_RIGHT,
+	'ext'        => STR_PAD_RIGHT,
+);
+
+if ($vertical_cols) {
+	
+	while ($r = $rs->fetchRow()) {
+		echo '      MAC Addr: ', rTrim(preg_replace('/.{2}/', '$0:', $r['mac']),':') ,"\n";
+		echo '   Phone Added: ', ($r['p_added'] !== null ? date('Y-m-d H:i O (T)', $r['p_added']) : '') ,"\n";
+		echo '    Phone Type: ', $r['p_type'] ,"\n";
+		echo ' Cur. Firmware: ', $r['fw'] ,"\n";
+		echo '  Cur. IP Addr: ', $r['ip'] ,"\n";
+		echo '     Cur. User: ', $r['user'] ,"\n";
+		echo '      Cur. Ext: ', $r['ext'] ,"\n";
+		echo '     Logged in: ', (trim($r['mac']) != '' && $r['ip'] != '' ? 'yes':'no') ,"\n";
+		echo "\n";
+	}
+	
+}
+else {
+	
+	if (gs_stdout_is_console()) {
+		
+		$rows = array();
+		while ($r = $rs->fetchRow()) { $rows[] = $r; }
+		
+		foreach ($fields as $field => $length) {
+			if (strLen($fieldsAbbr[$field]) > $length)
+				$fields[$field] = strLen($fieldsAbbr[$field]);
+		}
+		foreach ($rows as $i => $r) {
+			foreach ($fields as $field => $length) {
+				switch ($field) {
+					case 'mac':
+						$rows[$i][$field] = $r[$field] = rTrim(preg_replace('/.{2}/', '$0:', $r[$field]),':');
+						break;
+					case 'p_added':
+						$rows[$i][$field] = $r[$field] = ($r[$field] !== null ? gmDate('Y-m-d H:i', $r[$field]).' UTC' : '');
+						break;
+				}
+				if (strLen($r[$field]) > $length)
+					$fields[$field] = strLen($r[$field]);
+			}
+		}
+		
+		$sep = '+';
+		$header = '|';
+		foreach ($fields as $field => $length) {
+			$sep.= str_repeat( '-', $length ) .'--+';
+			$header.= ' '. str_pad( $fieldsAbbr[$field], $length, ' ' ) .' |';
+		}
+		
+		echo $sep, "\n";
+		echo $header, "\n";
+		echo $sep, "\n";
+		foreach ($rows as $ignore => $r) {
+			echo '|';
+			foreach ($fields as $field => $length) {
+				echo ' ', str_pad( $r[$field], $length, ' ', $fieldsPad[$field] ), ' |';
+			}
+			echo "\n";
+		}
+		echo $sep, "\n";
+		
+	}
+	else {
+		
+		echo '# ';
+		foreach ($fields as $field => $length) {
+			echo gs_add_c_slashes( $fieldsAbbr[$field] ) ,"\t";
+		}
+		echo "\n";
+		
+		while ($r = $rs->fetchRow()) {
+			foreach ($fields as $field => $length) {
+				echo gs_add_c_slashes( $r[$field] ) ,"\t";
+			}
+			echo "\n";
+		}
+		
+	}
+	
+}
+
+
+?>

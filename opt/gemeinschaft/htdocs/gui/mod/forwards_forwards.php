@@ -35,8 +35,13 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_email_notify_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_email_notify_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+
+require_once( GS_DIR .'inc/get-listen-to-ids.php' );
+require_once( GS_DIR .'inc/remote-exec.php' );
+
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -48,6 +53,87 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 */
 echo __('Rufumleitung');
 echo '</h2>', "\n";
+
+function _pack_int( $int ) {
+	$str = base64_encode(pack('N', $int ));
+	return preg_replace('/[^a-z0-9]/i', '', $str);
+}
+
+
+
+function InitHinttoggleCall() {  //FIXME
+	$user=gs_user_get( $_SESSION['sudo_user']['name'] );
+
+	$call   //= "Channel: Local/". $from_num_dial ."\n"
+		= "Channel: local/toggle@toggle-cfwd-hint\n"
+		. "MaxRetries: 0\n"
+		. "WaitTime: 15\n"
+		. "Context: toggle-cfwd-hint\n"
+		. "Extension: toggle\n"
+		. "Callerid: $user <Toggle>\n"
+		. "Setvar: __user_id=".  $_SESSION['sudo_user']['info']['id'] ."\n"
+		. "Setvar: __user_name=".  $_SESSION['sudo_user']['info']['ext'] ."\n"
+		. "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
+		. "Setvar: __is_callfile_origin=1\n"  # no forwards and no mailbox on origin side
+		. "Setvar: __callfile_from_user=".  $_SESSION['sudo_user']['info']['ext'] ."\n"
+		. "Setvar: __record_file=".  $filename ."\n"
+		;
+
+	$filename = '/tmp/gs-'. $_SESSION['sudo_user']['info']['id'] .'-'. _pack_int(time()) . rand(100,999) .'.call';
+
+	$cf = @fOpen( $filename, 'wb' );
+	if (! $cf) {
+		gs_log( GS_LOG_WARNING, 'Failed to write call file "'. $filename .'"' );
+		echo 'Failed to write call file.';
+		die();
+	}
+	@fWrite( $cf, $call, strLen($call) );
+	@fClose( $cf );
+	@chmod( $filename, 00666 );
+
+	$spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
+
+
+	if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+		$our_host_ids = @gs_get_listen_to_ids();
+		if (! is_array($our_host_ids)) $our_host_ids = array();
+		$user_is_on_this_host = in_array( $_SESSION['sudo_user']['info']['host_id'], $our_host_ids );
+	} else {
+		$user_is_on_this_host = true;
+	}
+
+	if ($user_is_on_this_host) {
+		# the Asterisk of this user and the web server both run on this host
+		$err=0; $out=array();
+		@exec( 'sudo mv '. qsa($filename) .' '. qsa($spoolfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		if ($err != 0) {
+			@unlink( $filename );
+			gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"' );
+			echo 'Failed to move call file.';
+			die();
+		}
+	} else {
+		$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $filename ) .' '. qsa( 'root@'. $user['host'] .':'. $filename );
+		//echo $cmd, "\n";
+		@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		@unlink( $filename );
+		if ($err != 0) {
+			gs_log( GS_LOG_WARNING, 'Failed to scp call file "'. $filename .'" to '. $user['host'] );
+			echo 'Failed to scp call file.';
+			die();
+		}
+		//remote_exec( $user['host'], $cmd, 10, $out, $err ); // <-- does not use sudo!
+		$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa( $user['host'] ) .' '. qsa( 'mv '. qsa( $filename ) .' '. qsa( $spoolfile ) );
+		//echo $cmd, "\n";
+		@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		if ($err != 0) {
+			gs_log( GS_LOG_WARNING, 'Failed to mv call file "'. $filename .'" on '. $user['host'] .' to "'. $spoolfile .'"' );
+		echo 'Failed to mv call file on remote host.';
+		die();
+		}
+	}
+}
+
 
 
 $sources = array(
@@ -61,15 +147,44 @@ $cases = array(
 	//'offline'=> __('offline/DND'),
 	'offline'=> __('abgemeldet')
 );
+
 $actives = array(
 	'no'  => '-',
 	'std' => __('Std.'),
 	'var' => __('Tmp.'),
-	'vml' => __('AB'  )
+	//'vml' => __('AB'  )
 );
 
-$show_email_notification = ! @$_SESSION['sudo_user']['info']['host_is_foreign'];
+$vm_rec_num_idx_table=array();
 
+
+//loop Voicemail-Announce-Files
+$rs = $DB->execute('SELECT * from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
+$ncnt=0;
+while ($r = $rs->fetchRow()) {
+	$actives['vml-'.++$ncnt] = __('AB mit Ansage ').$ncnt;
+	$vm_rec_num_idx_table[$ncnt] = $r['id'];
+}
+if ($ncnt==0)
+  $actives['vml'] = __('AB');
+
+$rs = $DB->execute('SELECT * from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
+$ncnt=0;
+while ($r = $rs->fetchRow()) {
+	$actives['vmln-'.++$ncnt] = __('Ansage ').$ncnt;
+}
+
+$id = (int)$DB->executeGetOne('SELECT `_user_id` from `cf_timerules` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
+if ($id) {
+	$actives['trl'] = __('Zeitsteuerung');
+}
+
+$id = (int)$DB->executeGetOne('SELECT `_user_id` from `cf_parallelcall` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
+if ($id) {
+	$actives['par'] = __('Parallelruf');
+}
+
+$show_email_notification = ! @$_SESSION['sudo_user']['info']['host_is_foreign'];
 
 
 $warnings = array();
@@ -93,15 +208,29 @@ if (@$_REQUEST['action']==='save') {
 				$src, $case, 'var', $num_var, $timeout );
 			if (isGsError($ret))
 				$warnings['var'] = __('Fehler beim Setzen der Tempor&auml;ren Umleitungsnummer') .' ('. $ret->getMsg() .')';
-			
-			if (@$_REQUEST[$src.'-'.$case] === 'vmln') {
+		
+			$vmail_rec_num = 0;
+			//Voicemail or just Announce-File
+			if (substr(@$_REQUEST[$src.'-'.$case],0,5) === 'vmln-') {
+				//Play only Announce-File with Number n
+				$idx =(int)substr(@$_REQUEST[$src.'-'.$case],5);
+				$vmail_rec_num = $vm_rec_num_idx_table[$idx];
+				$num_vml = 'vm*'. $_SESSION['sudo_user']['info']['ext'];
+				$_REQUEST[$src.'-'.$case] = 'vml';
+			} else if (substr(@$_REQUEST[$src.'-'.$case],0,4) === 'vml-') {
+				//Voicemail with Anncounce-File Number n
+				$idx =(int)substr(@$_REQUEST[$src.'-'.$case],4);
+				$vmail_rec_num = $vm_rec_num_idx_table[$idx];
+				$num_vml = 'vm'. $_SESSION['sudo_user']['info']['ext'];
+				$_REQUEST[$src.'-'.$case] = 'vml';
+			} else if (@$_REQUEST[$src.'-'.$case] === 'vmln') {
 				$num_vml = 'vm*'. $_SESSION['sudo_user']['info']['ext'];
 				$_REQUEST[$src.'-'.$case] = 'vml';
 			} else {
 				$num_vml = 'vm' . $_SESSION['sudo_user']['info']['ext'];
 			}
 			$ret = gs_callforward_set( $_SESSION['sudo_user']['name'],
-				$src, $case, 'vml', $num_vml, $timeout );
+				$src, $case, 'vml', $num_vml, $timeout, $vmail_rec_num );
 			if (isGsError($ret))
 				$warnings['vml'] = __('Fehler beim Setzen der AB-Nummer') .' ('. $ret->getMsg() .')';
 			$ret = gs_callforward_activate( $_SESSION['sudo_user']['name'],
@@ -141,6 +270,8 @@ if (@$_REQUEST['action']==='save') {
 		gs_buttondeamon_diversion_update( $_SESSION['sudo_user']['info']['ext']);
 	}
 	
+	//Set Devstate for Customhint
+	InitHinttoggleCall();
 }
 
 
@@ -281,6 +412,7 @@ try {
 	if (! isGsError($e_numbers) && is_array($e_numbers)) {
 		echo '<option value="">', __('einf&uuml;gen &hellip;') ,'</option>' ,"\n";
 		foreach ($e_numbers as $e_number) {
+			//echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
 			echo '<option value="0', htmlEnt($e_number) ,'">0', htmlEnt($e_number) ,'</option>' ,"\n";
 		}
 	}
@@ -300,6 +432,7 @@ try {
 	if (! isGsError($e_numbers) && is_array($e_numbers)) {
 		echo '<option value="">', __('einf&uuml;gen &hellip;') ,'</option>' ,"\n";
 		foreach ($e_numbers as $e_number) {
+			//echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
 			echo '<option value="0', htmlEnt($e_number) ,'">0', htmlEnt($e_number) ,'</option>' ,"\n";
 		}
 	}
@@ -361,6 +494,26 @@ foreach ($sources as $src => $srctitle) {
 				&&  substr($callforwards[$src][$case]['number_vml'],0,3) === 'vm*')
 					echo ' selected="selected"';
 				echo '>', __('Ansage') ,'</option>', "\n";
+			}
+			elseif (substr($active,0,4) === 'vml-')  {
+				//multiple ansagen mit AB
+				$idx= $vm_rec_num_idx_table[(int) substr($active,4)];
+				echo '<option value="', $active, '"';
+				if ($callforwards[$src][$case]['active'] === 'vml'
+				&& $idx==$callforwards[$src][$case]['vm_rec_id']
+				&& substr($callforwards[$src][$case]['number_vml'],0,3) !== 'vm*' )
+				echo ' selected="selected"';
+				echo '>', $atitle, '</option>', "\n";
+			}
+			elseif (substr($active,0,5) === 'vmln-') {
+				//multiple ansagen ohne AB
+				$idx= $vm_rec_num_idx_table[(int) substr($active,5)];
+				echo '<option value="', $active, '"';
+				if ($callforwards[$src][$case]['active'] === 'vml' 
+				&& $idx==$callforwards[$src][$case]['vm_rec_id'] 
+				&& substr($callforwards[$src][$case]['number_vml'],0,3) === 'vm*')
+					echo ' selected="selected"';
+				echo '>', $atitle, '</option>', "\n";
 			}
 			else {
 				echo '<option value="', $active, '"';

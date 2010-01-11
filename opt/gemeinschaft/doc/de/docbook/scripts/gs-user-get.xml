@@ -68,6 +68,87 @@
     <title>Beschreibung</title>
 
     <para>Zeigt ein Benutzer-Konto an.</para>
+    <para>Beispielausgabe:</para>
+    <para>
+    <screen>
+------------------------------------------------------------------------------
+| id | user   | ext | pin   | ln       | fn     | email                     |
+------------------------------------------------------------------------------
+| 31 | soeren | 204 | 1234  | Sprenger | Soeren | soeren.sprenger@amooma.de |
+------------------------------------------------------------------------------
+----------------------------------------------
+cid                   | host# | host         |
+----------------------------------------------
+Soeren Sprenger &lt;204&gt; |     1 | 192.168.23.2 |
+----------------------------------------------
+    </screen>
+    </para>
+    <para>
+    Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>id</term>
+        <listitem>
+          <para>Die Interne Benutzer-ID in Gemeinschaft</para>
+        </listitem>
+      </varlistentry>
+       <varlistentry>
+        <term>user</term>
+        <listitem>
+          <para>Der eindeutige Benutzername des Nutzers</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>ext</term>
+        <listitem>
+          <para>Der Nebenstelle des Nutzers</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>pin</term>
+        <listitem>
+          <para>Die PIN des Nutzers, welche zum Anmelden am Telefon und zum Einloggen in der Webgui verwendet wird</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>ln</term>
+        <listitem>
+          <para>Der reale Nachname des Benutzers</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>fn</term>
+        <listitem>
+          <para>Der reale Vorname des Benutzers</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>email</term>
+        <listitem>
+          <para>Die E-Mail Addresse des Benutzers, diese wird verwendet, um dem Nutzer Voicemailansagen und Faxe zu schicken.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>cid</term>
+        <listitem>
+          <para>Dies ist die CallerID des Nutzers. Diese wird bei internen Nebenstellen als Name auf dem Display angezeigt.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>host#</term>
+        <listitem>
+          <para>Dies ist die Gemeinschaft-Interne ID des Hosts auf den der Benutzer angelegt ist.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>host</term>
+        <listitem>
+          <para>Dies ist die IP-Adresse des Hosts auf dem der Benutzer angelegt ist.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+   </para>
+    
   </refsection>
 
   <refsection>
@@ -111,7 +192,11 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-user-del" />
+    <xref  linkend="man-gs-user-add" />
+    <xref  linkend="man-gs-user-change" />
+    <xref  linkend="man-gs-users-get" />
+    </para>
   </refsection>
 </refentry>

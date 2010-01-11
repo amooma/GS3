@@ -44,8 +44,14 @@ macro check-valid-extension( mext ) {
 	}
 	
 	// is it to one of *our* extensions?
-	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${mext},${is_huntgroup});
+	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${mext},${user_id},${CALLERID(num)},${is_huntgroup});
 	Verbose(1,### Extension ${mext} is of type ${exttype});
+	
+	if ("${record_call}" != "") {
+		Verbose(1,### Record call to file ${record_call});
+		MixMonitor(${record_call},ab);
+	}
+	
 	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference" && "${exttype}" != "huntgroup" && "${exttype}" != "ivr" && "${exttype}" != "foreign") {
 		Verbose(1,### Extension ${mext} is unknown);
 		
@@ -66,6 +72,7 @@ macro check-valid-extension( mext ) {
 		//}
 		Hangup();
 	}
+	return;
 }
 
 
@@ -99,6 +106,7 @@ macro dial-node( mext_at_node ) {
 	Dial(SIP/${mext_at_node},500);
 	Verbose(1,### Tried to call ${mext_at_node} but: ${DIALSTATUS});
 	&hangup-proper-status();
+	return;
 }
 
 
@@ -122,6 +130,7 @@ macro dial-internal-nobody( mext2 ) {
 		&dial-node(${mext2}@${dial_to_node});
 		&hangup-proper-status();
 	}
+	return;
 }
 
 context to-internal-nobody-self {
@@ -144,6 +153,7 @@ macro dial-internal-nobody-self( mext3 ) {
 	Verbose(1,### Call local nobody ${mext3}\, timeout 30);
 	Dial(SIP/${mext3},30,o);
 	&hangup-proper-status();
+	return;
 }
 
 //---------------------------------------------------------------------
@@ -224,7 +234,14 @@ context to-internal-users {
 		Verbose(1,### Forwarded call to voicemail of ${box});
 		Answer();
 		Wait(0.5);
-		Set(vm_announce_file=${vm_announce_${vm_source}});
+		//set the multiple announce-File, if any
+		Set(vm_announce_file_multi=${fw_file_${vm_source}_${forward_case}});
+		Verbose(1,### The File is: ${vm_announce_file_multi} );
+		if ("${vm_announce_file_multi}" != "") {
+			Set(vm_announce_file=${vm_announce_file_multi});
+		} else {
+			Set(vm_announce_file=${vm_announce_${vm_source}});
+		}
 		if ("${vm_announce_file}" != "") {
 			Playback(${vm_announce_file});
 		}
@@ -353,6 +370,16 @@ context to-internal-users {
 	}
 	
 	//----------------------------------------------------------
+	// Pickup on Grandstream phones
+	//----------------------------------------------------------
+	
+	_**. => {
+		// the pickup prefix (**) is not configurable on Grandstream phones
+		Set(pext=${EXTEN:2});
+		jump *81*${pext};
+	}
+	
+	//----------------------------------------------------------
 	// Pickup for pickup group extensions
 	//----------------------------------------------------------
 	
@@ -452,45 +479,6 @@ context to-internal-users {
 		jump ***-${boss}@to-internal-users-self;
 	}
 	
-	//----------------------------------------------------------
-	// Dial mailbox directly
-	//----------------------------------------------------------
-	
-	_**Z. => {
-		Set(box=${EXTEN:2});
-		if ("${allow_direct_dial_mbox}" != "yes") {
-			Verbose(1,### Direct dialing to mailbox not enabled);
-			Hangup();
-		}
-		Verbose(1,### Incoming call to mailbox ${box}\, direct dial);
-		//if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
-		if ( "${is_from_gateway}"  = "1" ) {
-			Verbose(1,### No direct dial from gateway);
-			Hangup();
-		}
-		if ("${user_id}" = "") {
-			Verbose(1,### No direct dial from non-internal user);
-			Hangup();
-		}
-		// is it to one of *our* extensions?
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${box});
-		Verbose(1,### Extension ${box} is of type ${exttype});
-		if ("${exttype}" != "user") {
-			Verbose(1,### Extension ${box} is not a user);
-			Hangup();
-		}
-		
-		if ("${dial_to_node}" = "") {
-			Verbose(1,### Extension ${box} is at node: SELF);
-			goto to-internal-users-self|${EXTEN}|1;
-		}
-		else {
-			&dial-node(${EXTEN}@${dial_to_node});
-			&hangup-proper-status();
-		}
-	}
-	
-	
 	// hints moved here from context to-internal-users-self
 	#exec "/opt/gemeinschaft/etc/asterisk/e-internal-hints.ael.php"
 	
@@ -576,65 +564,6 @@ context to-internal-users-self {
 		Dial(SIP/${callfile_from},30);
 		&hangup-proper-status();
 	}
-	
-	
-	//----------------------------------------------------------
-	// Dial mailbox directly
-	//----------------------------------------------------------
-	
-	_**Z. => {
-		Set(box=${EXTEN:2});
-		Set(origext=${box});
-		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
-		Verbose(1,### Direct dial to mailbox ${box} on this node);
-		Set(__is_call_from=internal);
-		
-		if ("${from_node}" = "yes") {
-			Verbose(1,### Incoming call to ${EXTEN} is from another node);
-			if ("${CHANNEL(channeltype)}" = "SIP") {
-				Verbose(1,# Evaluation SIP headers);
-				if ("${SIP_HEADER(X-GS-user_id)}" != "")
-					Set(__user_id=${SIP_HEADER(X-GS-user_id)});
-				if ("${SIP_HEADER(X-GS-user_name)}" != "")
-					Set(__user_name=${SIP_HEADER(X-GS-user_name)});
-				if ("${SIP_HEADER(X-GS-forwards)}" != "")
-					Set(__forwards=${SIP_HEADER(X-GS-forwards)});
-				if ("${SIP_HEADER(X-GS-origext)}" != "")
-					Set(__origext=${SIP_HEADER(X-GS-origext)});
-				if ("${SIP_HEADER(X-GS-clir)}" != "")
-					Set(clir=${SIP_HEADER(X-GS-clir)});  // nicht vererben
-				if ("${SIP_HEADER(X-GS-src)}" != "")
-					Set(__is_call_from=${SIP_HEADER(X-GS-src)});
-				if ("${SIP_HEADER(X-GS-is_callcompletion)}" != "")
-					Set(__is_callcompletion=${SIP_HEADER(X-GS-is_callcompletion)});
-				if ("${SIP_HEADER(X-GS-is_callfile_origin)}" != "")
-					Set(__is_callfile_origin=${SIP_HEADER(X-GS-is_callfile_origin)});
-				if ("${SIP_HEADER(X-GS-callfile_from_user)}" != "")
-					Set(__callfile_from_user=${SIP_HEADER(X-GS-callfile_from_user)});
-				if ("${SIP_HEADER(X-GS-forwarded_to)}" != "")
-					Set(__forwarded_to=${SIP_HEADER(X-GS-forwarded_to)});
-				if ("${SIP_HEADER(X-GS-forwarded_by)}" != "")
-					Set(__forwarded_by=${SIP_HEADER(X-GS-forwarded_by)});
-				if ("${SIP_HEADER(X-GS-is_from_gateway)}" != "")
-					Set(__is_from_gateway=${SIP_HEADER(X-GS-is_from_gateway)});
-				if ("${SIP_HEADER(X-GS-is_huntgroup)}" != "")
-					Set(__is_huntgroup=${SIP_HEADER(X-GS-is_huntgroup)});
-				if ("${SIP_HEADER(X-GS-SIPTRANSFER)}" != "")
-					Set(__SIPTRANSFER=${SIP_HEADER(X-GS-SIPTRANSFER)});
-				if ("${SIP_HEADER(X-GS-BLINDTRANSFER)}" != "")
-					Set(__BLINDTRANSFER=${SIP_HEADER(X-GS-BLINDTRANSFER)});
-			}
-		}
-		
-		Set(cc_possible=0);
-		Set(is_callcompletion=0);
-		Set(vm_real_source=internal);
-		Set(vm_source=internal);
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi,${box});
-		goto ${box}|user_uncallable_vm_on;
-		
-	}
-	
 	
 	//----------------------------------------------------------
 	// Users, Queues, ...
@@ -842,28 +771,30 @@ context to-internal-users-self {
 		// type is "user":
 		//----------------------------------------------------------
 		to_user:
-			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${EXTEN});
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${EXTEN},${fw_parcall_extens});
 			// forward (case=always) active?
-			if ("${fw_${is_call_from}_always}" != "") {
-				if ("${is_callcompletion}" = "1") {
-					// no forwarding for call completion
-					Verbose(1,### Call completion to ${EXTEN} - don't forward);
-					Hangup();
-				}
-				if ("${is_callfile_origin}" != "1") {
-					Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
-					Set(__forwarded_by=${EXTEN});
-					Set(__forwarded_by_name=${mname});
-					Set(__forwarded_to=${fw_${is_call_from}_always});
-					if ( "${is_from_gateway}" = "1" )
-						Set(__is_from_gateway=2);
-					if ("${is_huntgroup}" != "1") {
+			// XXX TODO check for is_huntgroup!!!
+			if ("${fw_${is_call_from}_always_${EXTEN}_done}" == "" ) {
+				if ("${fw_${is_call_from}_always}" != "") {
+					Set(__forward_case=always);
+					Set(__fw_parcall_extens=${fw_parcallextens_${is_call_from}_always});
+					if ("${fw_${is_call_from}_always_${EXTEN}}" == "")
+						Set(__fw_${is_call_from}_always_${EXTEN}_done=1);
+					if ("${is_callcompletion}" = "1") {
+						// no forwarding for call completion
+						Verbose(1,### Call completion to ${EXTEN} - don't forward);
+						Hangup();
+					}
+					if ("${is_callfile_origin}" != "1") {
+						Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
+						Set(__forwarded_by=${EXTEN});
+						Set(__is_from_gateway=);
 						Dial(Local/${fw_${is_call_from}_always}/n,200);
 						&hangup-proper-status();
 					}
 					else {
-						Verbose(1,### call forward active in hunt group - skipping member);
-						Hangup();
+						// no forwarding for callfile origin
+						Verbose(1,### Callfile: Don't forward for origin side);
 					}
 				}
 				else {
@@ -871,7 +802,6 @@ context to-internal-users-self {
 					Verbose(1,### Callfile: Don't forward for origin side);
 				}
 			}
-			
 			// call the user
 			//
 			if ("${is_huntgroup}" != "1") {
@@ -1003,6 +933,7 @@ context to-internal-users-self {
 				
 				// forward on busy?
 				if ("${fw_${is_call_from}_busy}" != "") {
+					Set(__forward_case=busy);
 					if ("${is_callcompletion}" = "1") {
 						// no forwarding for call completion
 						Verbose(1,### Call completion to ${EXTEN} (busy) - don't forward);
@@ -1028,6 +959,7 @@ context to-internal-users-self {
 				
 				// forward on unavail?
 				if ("${fw_${is_call_from}_unavail}" != "") {
+					Set(__forward_case=unavail);
 					if ("${is_callcompletion}" = "1") {
 						// no forwarding for call completion
 						Verbose(1,### Call completion to ${EXTEN} (unavail) - don't forward);
@@ -1053,6 +985,7 @@ context to-internal-users-self {
 
 				// forward on offline?
 				if ("${fw_${is_call_from}_offline}" != "") {
+					Set(__forward_case=offline);
 					if ("${is_callcompletion}" = "1") {
 						// no forwarding for call completion
 						Verbose(1,### Call completion to ${EXTEN} (offline) - don't forward);
@@ -1085,6 +1018,7 @@ context to-internal-users-self {
 			
 			// forward (case=always) active?
 			if ("${fw_${is_call_from}_always}" != "") {
+				Set(__forward_case=always);
 				Verbose(1,### Called queue: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 				Set(__forwarded_by=${EXTEN});
 				Set(__forwarded_by_name=);
@@ -1163,8 +1097,29 @@ context to-internal-users-self {
 				}
 				Queue(${EXTEN},${ring_instead_of_moh},${subqueue},,${queuetimeout});
 			}
-			
-			
+			else {
+				Verbose(1,### Don't even try to enter queue ${EXTEN} because: ${QUEUESTATUS});
+				// fake ENTERQUEUE in log:
+				QueueLog(${EXTEN},${UNIQUEID},NONE,ENTERQUEUE,,${CALLERID(num)},fake);
+				Set(queue_waittime=0);
+				if ("${QUEUESTATUS}"="JOINEMPTY" || "${QUEUESTATUS}"="JOINUNAVAIL") {
+					//QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,pos,origpos,waittime,fake);
+					QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,,,0,fake);
+				}
+				else if ("${QUEUESTATUS}"="LEAVEEMPTY" || "${QUEUESTATUS}"="LEAVEUNAVAIL") {
+					QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,,,${queue_waittime},fake);
+				}
+				else if ("${QUEUESTATUS}"="FULL") {
+					QueueLog(${EXTEN},${UNIQUEID},NONE,_EXITFULL,,,,fake);
+					// custom event
+				} else {
+					// There is no QUEUESTATUS, but the call is counted, so it must have EXITEMPTY for the statistics 
+					QueueLog(${EXTEN},${UNIQUEID},NONE,EXITEMPTY,,,0,fake);
+				}
+				// QUEUESTATUS "TIMEOUT" cannot happen here because we did not enter
+				// the queue
+			}
+			//XXX TODO XXX Soll das so sein?
 			if ("${QUEUESTATUS}"="TIMEOUT") {
 				Verbose(1,### Queue ${EXTEN} is unavailable (no answer after timeout));
 				if ("${fw_${is_call_from}_timeout}" != "") {
@@ -1174,10 +1129,12 @@ context to-internal-users-self {
 					Set(__forwarded_to=${fw_${is_call_from}_timeout});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
+					Set(__forward_case=timeout);
+					Set(__is_from_gateway=);
 					Dial(Local/${fw_${is_call_from}_timeout}/n,900);
 					&hangup-proper-status();
 				}
-				Playback(/opt/gemeinschaft/sounds/de-DE/queue-all-busy);
+				Playback(/opt/gemeinschaft/sounds/${gs_lang}/queue-all-busy);
 				Busy(5);
 				Hangup();
 			}
@@ -1190,10 +1147,12 @@ context to-internal-users-self {
 					Set(__forwarded_to=${fw_${is_call_from}_full});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
+					Set(__forward_case=full);
+					Set(__is_from_gateway=);
 					Dial(Local/${fw_${is_call_from}_full}/n,900);
 					&hangup-proper-status();
 				}
-				Playback(/opt/gemeinschaft/sounds/de-DE/queue-all-busy);
+				Playback(/opt/gemeinschaft/sounds/${gs_lang}/queue-all-busy);
 				Busy(5);
 				Hangup();
 			}
@@ -1206,6 +1165,8 @@ context to-internal-users-self {
 					Set(__forwarded_to=${fw_${is_call_from}_empty});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
+					Set(__forward_case=empty);
+					Set(__is_from_gateway=);
 					Dial(Local/${fw_${is_call_from}_empty}/n,900);
 					&hangup-proper-status();
 				}
@@ -1476,11 +1437,11 @@ context program-cc {
 		Set(TIMEOUT(response)=10);
 		
 		for (i=0; ${i}<3; i=${i}+1) {
-			//Playback(/opt/gemeinschaft/sounds/de-DE/druecken-sie-die-1-um-einen-automatischen-rueckruf-zu-programmieren);
+			//Playback(/opt/gemeinschaft/sounds/${gs_lang}/druecken-sie-die-1-um-einen-automatischen-rueckruf-zu-programmieren);
 			if ("${vm_${vm_source}_active}" = "1") {
-				Background(/opt/gemeinschaft/sounds/de-DE/um-eine-nachricht-zu-hinterlassen-druecken-sie-die&digits/1,m);
+				Background(/opt/gemeinschaft/sounds/${gs_lang}/um-eine-nachricht-zu-hinterlassen-druecken-sie-die&digits/1,m);
 			}
-			Background(/opt/gemeinschaft/sounds/de-DE/fuer-einen-automatischen-rueckruf-druecken-sie-die&/opt/gemeinschaft/sounds/de-DE/stern-taste,m);
+			Background(/opt/gemeinschaft/sounds/${gs_lang}/fuer-einen-automatischen-rueckruf-druecken-sie-die&/opt/gemeinschaft/sounds/${gs_lang}/stern-taste,m);
 			WaitExten();
 		}
 		
@@ -1505,7 +1466,7 @@ context program-cc {
 		AGI(/opt/gemeinschaft/dialplan-scripts/cc-program.agi,${user_name},${cc_to_ext});
 		Verbose(1,### Call completion programmed?: ${cc_programmed});
 		if ("${cc_programmed}" = "1") {
-			Playback(/opt/gemeinschaft/sounds/de-DE/rueckruf-programmiert);
+			Playback(/opt/gemeinschaft/sounds/${gs_lang}/rueckruf-programmiert);
 			Verbose(1,### Call completion programmed from ${user_name} to ${cc_to_ext});
 		}
 		else {
@@ -1531,5 +1492,6 @@ macro set-callerid-by-clir() {
 		Set(CALLERID(all)=Anonymous <anonymous>);
 		// RFC 2543
 	}
+	return;
 }
 

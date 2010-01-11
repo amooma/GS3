@@ -68,7 +68,9 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Schaltet den Anrufbeantworter eines Benutzers an oder aus.</para>
+    <para>Schaltet den Anrufbeantworter eines Benutzers an oder aus.
+    ACHTUNG, das Skript ist alt und hat keinerlei Wirkung mehr. Auf den Anrufbeantworter wird mit dem gs-callforward-set skript weitergeleitet. Ob der AB an oder aus ist, spielt keine Rolle mehr!
+    </para>
   </refsection>
 
   <refsection>

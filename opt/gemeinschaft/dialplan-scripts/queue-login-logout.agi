@@ -64,7 +64,6 @@ if ($agent > 0){
 	die();
 }
 
-
 # get user's host id
 #
 $user_host_id = (int)$db->executeGetOne( 'SELECT `host_id` FROM `users` WHERE `id`='. $user_id );
@@ -98,9 +97,7 @@ if ($action === 'login') {
 	}
 	
 	$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`) VALUES (\''. $db->escape($queue_name) .'\', '. $queue_id .', \''. $db->escape( 'SIP/'. $user ) .'\', '. $user_id .')' );
-
 	gs_agi_set_variable( 'agent_login_status', 'loggedin' );
-
 	
 }
 elseif ($action === 'logout') {

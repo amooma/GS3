@@ -69,6 +69,13 @@
 
     <para>Zeigt an ob ein Benutzer Rufnummernunterdrückung aktiviert
     hat.</para>
+    <para>
+    <screen>
+internal_restrict   : yes
+external_restrict   : no
+    </screen>
+    </para>
+    
   </refsection>
 
   <refsection>
@@ -79,7 +86,7 @@
         <term><option>--user</option>=<replaceable>user</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Benutzername der Benutzers für die die Einstellungen angezeigt werden sollen.</para>
         </listitem>
       </varlistentry>
 
@@ -112,7 +119,6 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>gs-clir-activate (<xref  linkend="man-gs-clir-activate" /></para>
   </refsection>
 </refentry>

@@ -95,12 +95,24 @@ function _gui_sudo_allowed_lvm( $real_user, $sudo_user )
 	return false;
 }
 
+function _gui_sudo_allowed_group( $real_user, $sudo_user )
+{
+	$db_slave = gs_db_slave_connect();
+	
+	$real_user_id =  $db_slave->executeGetOne('SELECT `id` FROM `users` WHERE `user` = \''.$db_slave->escape($real_user).'\'');
+	$sudo_user_id =  $db_slave->executeGetOne('SELECT `id` FROM `users` WHERE `user` = \''.$db_slave->escape($sudo_user).'\'');
+	
+	$group_members = gui_get_grouped_peers($real_user_id, 'sudo_user');
+
+	return in_array($sudo_user_id, $group_members);
+}
+
 function gui_sudo_allowed( $real_user, $sudo_user )
 {
 	if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') === 'lvm')
 		return _gui_sudo_allowed_lvm( $real_user, $sudo_user );
 	else
-		return false;
+		return _gui_sudo_allowed_group( $real_user, $sudo_user );
 }
 
 
@@ -155,23 +167,66 @@ function _gui_monitor_which_peers_lvm( $sudo_user )
 	return $peers;
 }
 
+function gui_get_grouped_peers( $user_id, $type )
+{
+	require_once( GS_DIR .'inc/group-fns.php' );
+
+	$user_groups    = gs_group_members_groups_get(Array($user_id), 'user');
+	$permission_groups = gs_group_permissions_get($user_groups, $type);
+	$group_members  = gs_group_members_get($permission_groups);
+
+	return $group_members;
+}
+
+
+function _gui_monitor_which_peers_group( $sudo_user )
+{
+	$db_slave = gs_db_slave_connect();
+	$sudo_user_id =  $db_slave->executeGetOne( 'SELECT `id` FROM `users` WHERE `user` = \''.$db_slave->escape($sudo_user).'\'');
+	
+	$group_members = gui_get_grouped_peers($sudo_user_id, 'monitor_peers');
+	
+	$peers = array();
+	if (is_array($group_members)) {
+		$rs = $db_slave->execute('SELECT `user` FROM
+			`users`	WHERE `id` IN ('.implode(',',$group_members).') ');
+			$peers = array();
+			if (! $rs)
+				return $peers;
+			while ($r = @$rs->fetchRow()) {
+				$peers[] = $r['user']; 
+			}
+	}
+	return $peers;
+}
+
+
 function gui_monitor_which_peers( $sudo_user )
 {
-	if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') === 'lvm')
+	switch (gs_get_conf('GS_GUI_PERMISSIONS_METHOD')) {
+	case 'lvm':
 		return _gui_monitor_which_peers_lvm( $sudo_user );
-	else {
+		break;
+	case 'gemeinschaft':
+		return _gui_monitor_which_peers_group( $sudo_user );
+		break;
+	default:
+		/* //FIXME?
 		$db_slave = gs_db_slave_connect();
 		$rs = $db_slave->execute('SELECT `u`.`user` FROM
 		`user_watchlist` `f` LEFT JOIN
 		`users` `u` ON (`u`.`id`=`f`.`user_id`)
 		WHERE `f`.`status`= \'ack\' AND`f`.`buddy_user_id`= '.(int)@$_SESSION['sudo_user']['info']['id']);
-		$ret = array();
-		if(!$rs)
-			return $ret;
+		$peers = array();
+		if (! $rs)
+			return $peers;
 		while ($r = @$rs->fetchRow()) {
-			$ret[] = $r['user'];
+			$peers[] = $r['user'];
 		}
-		return $ret;
+		return $peers;
+		*/
+		return array();
+		break;
 	}
 }
 

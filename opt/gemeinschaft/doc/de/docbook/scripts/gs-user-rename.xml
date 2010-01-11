@@ -79,7 +79,7 @@
         <term><option>--user</option>=<replaceable>old-username</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Der alte Benutzername</para>
         </listitem>
       </varlistentry>
 
@@ -87,7 +87,7 @@
         <term><option>--new-user</option>=<replaceable>new-username</replaceable></term>
 
         <listitem>
-          <para>new-username</para>
+          <para>Der neue Benutzername</para>
         </listitem>
       </varlistentry>
 

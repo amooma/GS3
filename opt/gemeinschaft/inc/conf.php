@@ -242,7 +242,7 @@ _gscnf( 'PROV_AUTO_ADD_PHONE_HOST'  , 'first'            );
 _gscnf( 'PROV_DIAL_LOG_LIFE'        , 14*24*3600         );
 _gscnf( 'PROV_PROXIES_TRUST'        , ''                 );
 _gscnf( 'PROV_PROXIES_XFF_HEADER'   , 'X-Forwarded-For'  );
-_gscnf( 'PROV_ALLOW_NET'            , '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8' );
+_gscnf( 'PROV_ALLOW_NET'            , '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8' );
 _gscnf( 'PROV_LAN_NETS'             , '0.0.0.0/0'        );
 _gscnf( 'PROV_MODELS_ENABLED_SNOM'        , '*'          );  # / '360,370'
 _gscnf( 'PROV_MODELS_ENABLED_SIEMENS'     , '*'          );  # / 'os20,os40,os60,os80'
@@ -300,6 +300,7 @@ _gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP2010', null      );
 _gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXP2020', null      );
 _gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXV3000', null      );
 _gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXV3005', null      );
+_gscnf( 'GRANDSTREAM_PROV_FW_DEFAULT_GXV3140', null      );
 _gscnf( 'GRANDSTREAM_PROV_KEY_BLACKLIST', ''             );
 
 _gscnf( 'POLYCOM_PROV_ENABLED'      , false              );
@@ -343,6 +344,7 @@ _gscnf( 'PB_REVERSE_SEARCH'         , false              );
 
 _gscnf( 'LOCK_DIR'                  , '/var/lock/'       );
 _gscnf( 'CALL_INIT_FROM_NET'        , '0.0.0.0/32'       ); # deny all
+_gscnf( 'FAX_INIT_FROM_NET'         , '0.0.0.0/32'       ); # deny all
 _gscnf( 'MONITOR_FROM_NET'          , '0.0.0.0/32'       ); # deny all
 _gscnf( 'LVM_USER_6_DIGIT_INT'      , false              );
 _gscnf( 'LVM_CALL_INIT_USERS_500000', false              );
@@ -350,6 +352,7 @@ _gscnf( 'CC_TIMEOUT'                , 60                 );
 _gscnf( 'INTL_LANG'                 , 'de_DE'            );
 _gscnf( 'INTL_USE_GETTEXT'          , false              );
 _gscnf( 'INTL_ASTERISK_LANG'        , 'de'               );
+_gscnf( 'INTL_LANG_SOUNDS'          , 'de-DE'            );
 
 _gscnf( 'USERCOMMENT_OFFTIME'       , 'Feierabend'       );
 _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i'              );
@@ -368,6 +371,8 @@ _gscnf( 'BUTTONDAEMON_HOST'            , '127.0.0.1'    );
 _gscnf( 'BUTTONDAEMON_PORT'            , 5041           );
 _gscnf( 'BUTTONDAEMON_SECRET'            , 'SecretLocaNetPassword' );
 _gscnf( 'BUTTONDAEMON_DISPLAYDIR'      , '/var/spool/astbuttond/' );
+
+_gscnf( 'CALL_RECORDING'            , false              );
 
 # to communicate with HylaFax ftp_raw() is required, which is not
 # available in PHP < 5
@@ -392,6 +397,8 @@ $FAX_HYLAFAX_PASS  =
 	@$FAX_HYLAFAX_PASS  );
 _gscnf( 'FAX_HYLAFAX_PASS'          , ''                 );
 _gscnf( 'FAX_HYLAFAX_PATH'          , '/var/spool/hylafax/' );
+_gscnf( 'FAX_INIT_DOCDIR'           , '/tmp/' );
+
 
 _gscnf( 'BOI_ENABLED'               , false              );
 _gscnf( 'BOI_API_DEFAULT'           , 'm01'              );

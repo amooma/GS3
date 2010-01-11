@@ -127,8 +127,10 @@ if ($allowed) {
 # user
 #####################################################################
 
-if (! isSet( $_REQUEST['user'] ))
+if (! isSet( $_REQUEST['user'] )) {
+	gs_log( GS_LOG_NOTICE, 'No user code specified. Use user=' );
 	die_invalid( 'No user code specified. Use user=' );
+}
 $user_code = trim( $_REQUEST['user'] );
 
 if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
@@ -140,14 +142,20 @@ if (gs_get_conf('GS_LVM_USER_6_DIGIT_INT')) {
 }
 
 $user = @gs_user_get( $user_code );
-if (isGsError( $user ))
+if (isGsError( $user )) {
+	gs_log( GS_LOG_NOTICE, $user->getMsg() );
 	die_invalid( $user->getMsg() );
-if ($user['nobody_index'] > 0)
+}
+if ($user['nobody_index'] > 0) {
+	gs_log( GS_LOG_NOTICE, 'Nobody user. Not allowed to init a call.' );
 	die_not_allowed( 'Nobody user. Not allowed to init a call.' );
+}
 
 $db = gs_db_master_connect();
-if (! $db)
+if (! $db) {
+	gs_log( GS_LOG_NOTICE, 'Could not connect to database.' );
 	die_error( 'Could not connect to database.' );
+}
 
 $is_foreign = (bool)(int)$db->executeGetOne( 'SELECT `is_foreign` FROM `hosts` WHERE `id`='. $user['host_id'] );
 
@@ -308,6 +316,7 @@ if (! $is_foreign) {
 #####################################################################
 
 if (! isSet( $_REQUEST['to'] )) {
+	gs_log( GS_LOG_NOTICE, 'No phone number specified. Use to=' );
 	die_invalid( 'No phone number specified. Use to=' );
 }
 $to_num = _normalize_number( $_REQUEST['to'] );
@@ -465,13 +474,16 @@ else {
 		case 'm01':
 		case 'm02':
 			if (! extension_loaded('soap')) {
+				gs_log( GS_LOG_NOTICE, 'Failed to initiate call on foreign host (SoapClient not available).' );
 				die_error( 'Failed to initiate call on foreign host (SoapClient not available).' );
 			} else {
 				include_once( GS_DIR .'inc/boi-soap/boi-soap.php' );
 				$ok = gs_boi_call_init( $api, $user['host'], $user_code, $to_num_obj->norm, $from_num_effective_obj->norm, $cidnum, $clir, $prv );
 				if (! $ok) {
+					gs_log( GS_LOG_NOTICE, 'Failed to initiate call on foreign host (SOAP error).' );
 					die_error( 'Failed to initiate call on foreign host (SOAP error).' );
 				}
+				gs_log( GS_LOG_DEBUG, "OK. Calling ". $to_num_obj->norm ." from ". $from_num_effective_obj->norm ." (user $user_code) on host ". $user['host'] ."..." );
 				die_ok( "OK. Calling ". $to_num_obj->norm ." from ". $from_num_effective_obj->norm ." (user $user_code) on host ". $user['host'] ."..." );
 			}
 			break;
@@ -490,6 +502,7 @@ else {
 }
 
 
+gs_log( GS_LOG_DEBUG, "OK. Calling $to_num from ". $from_num_effective_obj->dial ." ..." );
 die_ok( "OK. Calling $to_num from ". $from_num_effective_obj->dial ." ..." );
 
 

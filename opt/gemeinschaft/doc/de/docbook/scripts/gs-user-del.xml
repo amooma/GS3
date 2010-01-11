@@ -78,7 +78,16 @@
         <term><option>--user</option>=<replaceable>user</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Benutzername des Benutzers der gelöscht werden soll.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--no-reload</option></term>
+
+        <listitem>
+          <para>Keinen <quote>Reload</quote> der Asterisk-Server
+          durchführen.</para>
         </listitem>
       </varlistentry>
 
@@ -111,7 +120,11 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+<para>
+    <xref  linkend="man-gs-user-get" />
+    <xref  linkend="man-gs-user-add" />
+    <xref  linkend="man-gs-user-change" />
+    <xref  linkend="man-gs-users-get" />
+    </para>
   </refsection>
 </refentry>

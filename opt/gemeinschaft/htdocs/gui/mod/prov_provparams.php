@@ -64,6 +64,7 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-ht287'  ] = 'Grandstream HT 287';
 	$phone_types['grandstream-bt110'  ] = 'Grandstream BT 110';
 	$phone_types['grandstream-bt200'  ] = 'Grandstream BT 200';
+	$phone_types['grandstream-bt201'  ] = 'Grandstream BT 201';
 	$phone_types['grandstream-gxp280' ] = 'Grandstream GXP 280';
 	$phone_types['grandstream-gxp1200'] = 'Grandstream GXP 1200';
 	$phone_types['grandstream-gxp2000'] = 'Grandstream GXP 2000';
@@ -71,6 +72,7 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
 	$phone_types['grandstream-gxv3000'] = 'Grandstream GXV 3000';
 	$phone_types['grandstream-gxv3005'] = 'Grandstream GXV 3005';
+	$phone_types['grandstream-gxv3140'] = 'Grandstream GXV 3140';
 }
 
 
@@ -110,6 +112,7 @@ if ($phone_type == '') {
 		if     (array_key_exists('grandstream-ht287'  , $phone_types)) $phone_type = 'grandstream-ht287';
 		elseif (array_key_exists('grandstream-bt110'  , $phone_types)) $phone_type = 'grandstream-bt110';
 		elseif (array_key_exists('grandstream-bt200'  , $phone_types)) $phone_type = 'grandstream-bt200';
+		elseif (array_key_exists('grandstream-bt201'  , $phone_types)) $phone_type = 'grandstream-bt201';
 		elseif (array_key_exists('grandstream-gxp280' , $phone_types)) $phone_type = 'grandstream-gxp280';
 		elseif (array_key_exists('grandstream-gxp1200', $phone_types)) $phone_type = 'grandstream-gxp1200';
 		elseif (array_key_exists('grandstream-gxp2000', $phone_types)) $phone_type = 'grandstream-gxp2000';

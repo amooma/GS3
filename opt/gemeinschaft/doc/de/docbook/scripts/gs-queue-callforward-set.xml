@@ -80,12 +80,12 @@
         <term><option>--queue</option>=<replaceable>ext</replaceable></term>
 
         <listitem>
-          <para>Queue-Nebenstelle</para>
+          <para>Die Extension der Queue für die die Rufumleitung gesetzt werden soll.</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--source</option>=<replaceable>internal</replaceable></term>
+        <term><option>--source</option>=<literal>internal</literal>|<literal>external</literal></term>
 
         <listitem>
           <para>Quelle des Anrufs</para>
@@ -93,7 +93,7 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--case</option>=<replaceable>always</replaceable></term>
+        <term><option>--case</option>=<literal>always</literal>|<literal>busy</literal>|<literal>unavail</literal>|<literal>offline</literal></term>
 
         <listitem>
           <para>Fall</para>
@@ -104,15 +104,17 @@
         <term><option>--timeout</option>=<replaceable>timeout</replaceable></term>
 
         <listitem>
-          <para>Zeitdauer</para>
+          <para>Zeitdauer in Sekunden, nach deren Verstreichen die
+          Weiterleitung aktiv wird. Nur sinnvoll bei
+          <literal>--case=unavail</literal></para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--type</option>=<replaceable>std</replaceable></term>
+        <term><option>--type</option>=<literal>std</literal>|<literal>var</literal>|<literal>vml</literal></term>
 
         <listitem>
-          <para>Art</para>
+          <para>Art des Rufumleitungszieles: std=Standard-Nummer, var=temporäre Nummer, vml=Voicemail/Anrufbeantworter</para>
         </listitem>
       </varlistentry>
 
@@ -120,7 +122,9 @@
         <term><option>--number</option>=<replaceable>number</replaceable></term>
 
         <listitem>
-          <para>Ziel-Rufnummer</para>
+          <para>Ziel-Rufnummer. Anrufbeantworter:
+          <code>vm<replaceable>Nebenstelle</replaceable></code>, Ansage:
+          <code>vm<replaceable>*Nebenstelle</replaceable></code>.</para>
         </listitem>
       </varlistentry>
 

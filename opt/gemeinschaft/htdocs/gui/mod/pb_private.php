@@ -111,16 +111,17 @@ if ($number != '') {
 	) .'%';
 	
 	$rs = $DB->execute(
-'SELECT SQL_CALC_FOUND_ROWS
-	`id`, `lastname`, `firstname`, `number`
-FROM
-	`pb_prv`
-WHERE
-	`number` LIKE \''. $DB->escape($number_sql) .'\'
-AND `user_id`='. $user_id .'
-ORDER BY `lastname`, `firstname`
-LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
-	);
+		'SELECT SQL_CALC_FOUND_ROWS '.
+			'`id`, `lastname`, `firstname`, `number` '.
+		'FROM '.
+			'`pb_prv` '.
+		'WHERE '.
+			'`number` LIKE \''. $DB->escape($number_sql) .'\' '.
+			'AND '.
+			'`user_id`='. $user_id .' '.
+		'ORDER BY `lastname`, `firstname` '.
+		'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
+		);
 	$num_total = @$DB->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);
 	
@@ -138,17 +139,18 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	) .'%';
 	
 	$rs = $DB->execute(
-'SELECT SQL_CALC_FOUND_ROWS
-	`id`, `lastname`, `firstname`, `number`
-FROM
-	`pb_prv`
-WHERE
-	( `lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR
-	`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci )
-AND `user_id`='. $DB->escape($user_id).'
-ORDER BY `lastname`, `firstname`
-LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
-	);
+		'SELECT SQL_CALC_FOUND_ROWS '.
+			'`id`, `lastname`, `firstname`, `number` '.
+		'FROM '.
+			'`pb_prv` '.
+		'WHERE '.
+			'( `lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR '.
+			'  `firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci ) '.
+			'AND '.
+			'`user_id`='. $DB->escape($user_id).' '.
+		'ORDER BY `lastname`, `firstname` '.
+		'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
+		);
 	$num_total = @$DB->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);
 	

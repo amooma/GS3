@@ -68,6 +68,88 @@
     <title>Beschreibung</title>
 
     <para>Zeigt die eingerichteten Benutzer an.</para>
+    <para>
+Beispielausgabe:
+<screen>
+--------------------------------------------------------------
+| id | user         | ext    | pin    | ln       | fn        |
+--------------------------------------------------------------
+|  1 | nobody-00001 | 950001 |        |          |           |
+|  2 | soeren       | 204    | 1234   | Sprenger | Soeren    |
+--------------------------------------------------------------
+------------------------------------------------------------------------------
+ email                     | cid                      | host         | group |
+------------------------------------------------------------------------------
+                           | Namenlos-5 &lt;950001&gt;      | 192.168.23.2 |       |
+ soeren.sprenger@amooma.de | Soeren Sprenger &lt;204&gt;    | 192.168.23.2 | home  |
+------------------------------------------------------------------------------
+</screen>
+    </para>
+    <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>id</term>
+        <listitem>
+          <para>Die interne id des Datensatzes in der Datenbank</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>user</term>
+        <listitem>
+          <para>Der eindeutige Benutzername in Gemeinschaft.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>ext</term>
+        <listitem>
+          <para>"ext" steht für Extension = Die Nebenstelle des Nutzers</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>ping</term>
+        <listitem>
+          <para>Die 3 bis 10 stellige, numerische, Pin des Benutzers</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>ln</term>
+        <listitem>
+          <para>Der Nachname des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>fn</term>
+        <listitem>
+          <para>Der der Vorname des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>email</term>
+        <listitem>
+          <para>Die in Gemeinschaft eingetragene E-Mail Addresse des Benutzers.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>cid</term>
+        <listitem>
+          <para>Die Callerid des Benutzers diese wird Anlagenintern bei Anrufen auf der Angerufenen Nebenstelle angezeigt.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>host</term>
+        <listitem>
+          <para>Die IP-Adresse des Hosts auf dem der Nutzer konfiguriert ist.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>group</term>
+        <listitem>
+          <para>Die ist die Provisioning-Gruppe des Benutzers</para>
+        </listitem>
+      </varlistentry>
+      </variablelist>
+    </para>
   </refsection>
 
   <refsection>
@@ -95,6 +177,11 @@
   <refsection>
     <title>Siehe auch</title>
 
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-user-del" />
+    <xref  linkend="man-gs-user-add" />
+    <xref  linkend="man-gs-user-get" />
+    <xref  linkend="man-gs-user-change" />
+    </para>
   </refsection>
 </refentry>

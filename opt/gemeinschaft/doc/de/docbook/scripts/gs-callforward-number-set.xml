@@ -96,7 +96,13 @@
         <term><option>--type</option>=<literal>std</literal>|<literal>var</literal>|<literal>vml</literal></term>
 
         <listitem>
-          <para>Art</para>
+          <para>Art. <code>std</code>: <quote>Standard-Rufumleitung</quote>.
+          <code>var</code>: <quote>temporäre Rufumleitung</quote>.
+          <code>vml</code>: Anrufbeantworter. Bei <code>vml</code> ist mit
+          <code>--number</code> die Voicemailbox
+          (<code>vm<replaceable>Nebenstelle</replaceable></code>) bzw. die
+          Ansage (<code>vm*<replaceable>Nebenstelle</replaceable></code>)
+          anzugeben.</para>
         </listitem>
       </varlistentry>
 
@@ -128,7 +134,9 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+	<para>gs-callforward-set (<xref  linkend="man-gs-callforward-set" /></para>
+	<para>gs-callforward-get (<xref  linkend="man-gs-callforward-get" /></para>
+	<para>gs-callforward-active (<xref  linkend="man-gs-callforward-activate" /></para>
+	<para>gs-callforward-timeout-set (<xref  linkend="man-gs-callforward-timeout-set" /></para>
   </refsection>
 </refentry>

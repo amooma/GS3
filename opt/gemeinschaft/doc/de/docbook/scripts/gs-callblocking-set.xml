@@ -68,7 +68,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Setzt eine Rufnummernsperre für einen Benutzer.</para>
+    <para>Setzt eine Rufnummernsperre für einen Benutzer oder löscht diese.</para>
   </refsection>
 
   <refsection>
@@ -123,7 +123,7 @@
         <term><option>--pin</option>=<replaceable>PIN</replaceable></term>
 
         <listitem>
-          <para>PIN-Nummer (Paßwort) zur Umgehung der Rufnummersperre</para>
+          <para>PIN-Nummer (Paßwort) zur Umgehung der Rufnummersperre, die PIN wird ensprechend in einem Sprachmenü abgefragt, wenn diese nummer gewählt werden soll.</para>
         </listitem>
       </varlistentry>
 
@@ -156,6 +156,6 @@
   <refsection>
     <title>Siehe auch</title>
 
-    <para>-</para>
+    <para>gs-callblocking-get (<xref  linkend="man-gs-callblocking-get" /></para>
   </refsection>
 </refentry>

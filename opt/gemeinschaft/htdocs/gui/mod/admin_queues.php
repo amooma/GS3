@@ -34,10 +34,9 @@ include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 $moh_classes = @array_keys(parse_ini_file(GS_DIR.'/etc/asterisk/musiconhold.conf', TRUE));
 # fails if Asterisk is on a different server
-if (! is_array($moh_classes)) {
-	$moh_classes = array();
-	$moh_classes = array_merge(array('default'), $moh_classes);
-}
+if (! is_array($moh_classes)) $moh_classes = array();
+$moh_classes = array_merge(array('default'), $moh_classes);
+$moh_classes = array_values(array_unique($moh_classes));
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -248,29 +247,38 @@ WHERE
 		echo '<tbody>',"\n";
 		
 		echo '<tr>',"\n";
-		echo '<th style="width:140px;" class="r">', __('Durchwahl') ,'</th>',"\n";
+		echo '<th class="r" style="width:140px;">', __('Bezeichnung') ,'</th>',"\n";
 		echo '<td style="width:350px;">';
-		//echo '<input type="text" name="name" value="', htmlEnt($queue['name']) ,'" size="8" maxlength="6" />', "\n";
-		echo '<input type="text" name="name" value="', htmlEnt($queue['name']) ,'" size="8" maxlength="6" ', ($queue_id > 0 ? 'disabled="disabled" ' : '') ,'/>', "\n";
+		echo '<input type="text" name="_title" value="', htmlEnt($queue['_title']) ,'" size="30" maxlength="30" />', "\n";
 		echo '</td>';
+		echo '<td class="transp xs gray"><code>queues.conf<code>:</td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
-		echo '<th class="r">', __('Bezeichnung') ,'</th>',"\n";
+		echo '<th class="r">', __('Durchwahl') ,'</th>',"\n";
 		echo '<td>';
-		echo '<input type="text" name="_title" value="', htmlEnt($queue['_title']) ,'" size="30" maxlength="30" />', "\n";
+		//echo '<input type="text" name="name" value="', htmlEnt($queue['name']) ,'" size="8" maxlength="6" />', "\n";
+		echo '<input type="text" name="name" value="', htmlEnt($queue['name']) ,'" size="8" maxlength="6" ';
+		if ($queue_id > 0) echo 'disabled="disabled" ';
+		echo '/>', "\n";
 		echo '</td>';
+		echo '<td class="transp xs gray"><code>[', htmlEnt($queue['name']) ,']</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Host') ,'</th>',"\n";
 		echo '<td>';
-		echo '<select name="_host_id"', ($queue_id > 0 ? ' disabled="disabled"' : '') ,'>', "\n";
+		echo '<select name="_host_id"';
+		if ($queue_id > 0) echo ' disabled="disabled"';
+		echo '>', "\n";
 		foreach ($hosts as $host_id => $host_ip) {
-			echo '<option value="', $host_id ,'"', ($host_id == $queue['_host_id'] ? ' selected="selected"' : '') ,'>', $host_id ,' (', htmlEnt($host_ip) ,')</option>', "\n";
+			echo '<option value="', $host_id ,'"';
+			if ($host_id == $queue['_host_id']) echo ' selected="selected"';
+			echo '>', $host_id ,' (', htmlEnt($host_ip) ,')</option>', "\n";
 		}
 		echo '</select>';
 		echo '</td>';
+		echo '<td class="transp xs gray"></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
@@ -278,12 +286,17 @@ WHERE
 		echo '<td>';
 		echo '<select name="musicclass">', "\n";
 		foreach ($moh_classes as $moh_class) {
-			echo '<option value="',$moh_class,'"', ($queue['musicclass'] == $moh_class ? ' selected="selected"' : ''),'>',$moh_class,'</option>',"\n";
+			echo '<option value="',$moh_class,'"';
+			if ($queue['musicclass'] == $moh_class) echo ' selected="selected"';
+			echo '>',$moh_class,'</option>',"\n";
 		}
 		echo '<option value="" disabled="disabled">-</option>', "\n";
-		echo '<option value=""', ($queue['musicclass'] == '' ? ' selected="selected"' : '') ,'>', __('Klingeln statt Musik') ,'</option>', "\n";
+		echo '<option value=""';
+		if ($queue['musicclass'] == '') echo ' selected="selected"';
+		echo '>', __('Klingeln statt Musik') ,'</option>', "\n";
 		echo '</select>';
 		echo '</td>';
+		echo '<td class="transp xs gray"><code>musicclass</code> / <code>Queue(,r)</code></td>',"\n";
 		echo '</tr>',"\n";
 
 		echo '<tr>',"\n";
@@ -303,16 +316,23 @@ WHERE
 		echo '<th class="r">', __('Wartezeit ansagen') ,'</th>',"\n";
 		echo '<td>',"\n";
 		
-		echo '<input type="radio" name="announce_holdtime" id="ipt-announce_holdtime-yes" value="yes" ', ($queue['announce_holdtime']==='yes' ? 'checked="checked" ' : '') ,'/>', "\n";
+		echo '<input type="radio" name="announce_holdtime" id="ipt-announce_holdtime-yes" value="yes" ';
+		if ($queue['announce_holdtime']==='yes') echo 'checked="checked" ';
+		echo '/>', "\n";
 		echo '<label for="ipt-announce_holdtime-yes">', __('ja') ,'</label> &nbsp;', "\n";
 		
-		echo '<input type="radio" name="announce_holdtime" id="ipt-announce_holdtime-once" value="once" ', ($queue['announce_holdtime']==='once' ? 'checked="checked" ' : '') ,'/>', "\n";
+		echo '<input type="radio" name="announce_holdtime" id="ipt-announce_holdtime-once" value="once" ';
+		if ($queue['announce_holdtime']==='once') echo 'checked="checked" ';
+		echo '/>', "\n";
 		echo '<label for="ipt-announce_holdtime-once">', __('einmal') ,'</label> &nbsp;', "\n";
 		
-		echo '<input type="radio" name="announce_holdtime" id="ipt-announce_holdtime-no" value="no" ', ($queue['announce_holdtime']==='no' ? 'checked="checked" ' : '') ,'/>', "\n";
+		echo '<input type="radio" name="announce_holdtime" id="ipt-announce_holdtime-no" value="no" ';
+		if ($queue['announce_holdtime']==='no') echo 'checked="checked" ';
+		echo '/>', "\n";
 		echo '<label for="ipt-announce_holdtime-no">', __('nein') ,'</label>', "\n";
 		
 		echo '</td>';
+		echo '<td class="transp xs gray"><code>announce_holdtime = </code><code>yes</code> | <code>once</code> | <code>no</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		
@@ -321,6 +341,7 @@ WHERE
 		echo '<td>';
 		echo '<input type="text" name="wrapuptime" value="', $queue['wrapuptime'] ,'" size="3" maxlength="3" class="r" /> s', "\n";
 		echo '</td>';
+		echo '<td class="transp xs gray"><code>wrapuptime</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
@@ -328,6 +349,7 @@ WHERE
 		echo '<td>';
 		echo '<input type="text" name="timeout" value="', $queue['timeout'] ,'" size="3" maxlength="3" class="r" /> s', "\n";
 		echo '</td>';
+		echo '<td class="transp xs gray"><code>timeout</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
@@ -335,51 +357,97 @@ WHERE
 		echo '<td>';
 		echo '<input type="text" name="maxlen" value="', $queue['maxlen'] ,'" size="3" maxlength="3" class="r" />', "\n";
 		echo '</td>';
+		echo '<td class="transp xs gray"><code>maxlen</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Strategie') ,'</th>',"\n";
 		echo '<td>',"\n";
 		echo '<select name="strategy">', "\n";
-		echo '<option value="rrmemory"', ($queue['strategy']==='rrmemory' ? ' selected="selected"' : '') ,'>', __('Round-Robin') ,'</option>', "\n";
-		echo '<option value="leastrecent"', ($queue['strategy']==='leastrecent' ? ' selected="selected"' : '') ,'>', __('&auml;ltesten') ,'</option>', "\n";
-		echo '<option value="random"', ($queue['strategy']==='random' ? ' selected="selected"' : '') ,'>', __('zuf&auml;llig') ,'</option>', "\n";
-		echo '<option value="fewestcalls"', ($queue['strategy']==='fewestcalls' ? ' selected="selected"' : '') ,'>', __('am wenigsten Anrufe') ,'</option>', "\n";
-		echo '<option value="ringall"', ($queue['strategy']==='ringall' ? ' selected="selected"' : '') ,'>', __('alle anklingeln') ,'</option>', "\n";
+		echo '<option value="rrmemory" title="rrmemory"';
+		if ($queue['strategy']==='rrmemory') echo ' selected="selected"';
+		echo '>', __('Round-Robin') ,'</option>', "\n";
+		echo '<option value="leastrecent" title="leastrecent"';
+		if ($queue['strategy']==='leastrecent') echo ' selected="selected"';
+		echo '>', __('&auml;ltesten') ,'</option>', "\n";
+		echo '<option value="random" title="random"';
+		if ($queue['strategy']==='random') echo ' selected="selected"';
+		echo '>', __('zuf&auml;llig') ,'</option>', "\n";
+		echo '<option value="fewestcalls" title="fewestcalls"';
+		if ($queue['strategy']==='fewestcalls') echo ' selected="selected"';
+		echo '>', __('am wenigsten Anrufe') ,'</option>', "\n";
+		echo '<option value="ringall" title="ringall"';
+		if ($queue['strategy']==='ringall') echo ' selected="selected"';
+		echo '>', __('alle anklingeln') ,'</option>', "\n";
 		echo '</select>';
 		echo '</td>';
+		echo '<td class="transp xs gray"><code>announce_holdtime</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Eintritt') ,'</th>',"\n";
 		echo '<td>',"\n";
-		echo '<input type="radio" name="joinempty" id="ipt-joinempty-yes" value="yes" ', ($queue['joinempty']==='yes' ? 'checked="checked" ' : '') ,'/>', "\n";
-		echo '<label for="ipt-joinempty-yes">', __('auch wenn keine Agenten angemeldet') ,'</label>', "\n";
-		echo '<br />',"\n";
-		echo '<input type="radio" name="joinempty" id="ipt-joinempty-no" value="no" ', ($queue['joinempty']==='no' ? 'checked="checked" ' : '') ,'/>', "\n";
-		echo '<label for="ipt-joinempty-no">', __('nicht wenn keine Agenten angemeldet') ,'</label>', "\n";
-		echo '<br />',"\n";
-		echo '<input type="radio" name="joinempty" id="ipt-joinempty-strict" value="strict" ', ($queue['joinempty']==='strict' ? 'checked="checked" ' : '') ,'/>', "\n";
-		echo '<label for="ipt-joinempty-strict">', __('nicht wenn keine Agenten angemeldet und frei') ,'</label>', "\n";
+		
+		echo '<div class="radio_and_label_blocks">', "\n";
+		
+		echo '<div class="radio_and_label_block">', "\n";
+		echo '<input type="radio" name="joinempty" id="ipt-joinempty-yes" value="yes" ';
+		if ($queue['joinempty']==='yes') echo 'checked="checked" ';
+		echo '/>', "\n";
+		echo '<label for="ipt-joinempty-yes">', __('auch wenn keine Agenten angemeldet sind') ,'</label>', "\n";
+		echo '</div>', "\n";
+		
+		echo '<div class="radio_and_label_block">', "\n";
+		echo '<input type="radio" name="joinempty" id="ipt-joinempty-no" value="no" ';
+		if ($queue['joinempty']==='no') echo 'checked="checked" ';
+		echo '/>', "\n";
+		echo '<label for="ipt-joinempty-no">', __('nicht wenn keine Agenten angemeldet sind') ,'</label>', "\n";
+		echo '</div>', "\n";
+		
+		echo '<div class="radio_and_label_block">', "\n";
+		echo '<input type="radio" name="joinempty" id="ipt-joinempty-strict" value="strict" ';
+		if ($queue['joinempty']==='strict') echo 'checked="checked" ';
+		echo '/>', "\n";
+		echo '<label for="ipt-joinempty-strict">', __('nicht wenn keine Agenten angemeldet sind oder keine Agenten frei sind') ,'</label>', "\n";
+		echo '</div>', "\n";
+		
+		echo '</div>', "\n";
+		
 		echo '</td>';
+		echo '<td class="transp xs gray"><code>joinempty = </code><code>yes</code> | <code>no</code> | <code>strict</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Austritt') ,'</th>',"\n";
 		echo '<td>',"\n";
 		
-		echo '<input type="radio" name="leavewhenempty" id="ipt-leavewhenempty-no" value="no" ', ($queue['leavewhenempty']==='no' ? 'checked="checked" ' : '') ,'/>', "\n";
+		echo '<div class="radio_and_label_blocks">', "\n";
+		
+		echo '<div class="radio_and_label_block">', "\n";
+		echo '<input type="radio" name="leavewhenempty" id="ipt-leavewhenempty-no" value="no" ';
+		if ($queue['leavewhenempty']==='no') echo 'checked="checked" ';
+		echo '/>', "\n";
 		echo '<label for="ipt-leavewhenempty-no">', __('nie') ,'</label>', "\n";
-		echo '<br />',"\n";
+		echo '</div>', "\n";
 		
-		echo '<input type="radio" name="leavewhenempty" id="ipt-leavewhenempty-yes" value="yes" ', ($queue['leavewhenempty']==='yes' ? 'checked="checked" ' : '') ,'/>', "\n";
-		echo '<label for="ipt-leavewhenempty-yes">', __('wenn keine Agenten mehr angemeldet') ,'</label>', "\n";
-		echo '<br />',"\n";
+		echo '<div class="radio_and_label_block">', "\n";
+		echo '<input type="radio" name="leavewhenempty" id="ipt-leavewhenempty-yes" value="yes" ';
+		if ($queue['leavewhenempty']==='yes') echo 'checked="checked" ';
+		echo '/>', "\n";
+		echo '<label for="ipt-leavewhenempty-yes">', __('wenn keine Agenten mehr angemeldet sind') ,'</label>', "\n";
+		echo '</div>', "\n";
 		
-		echo '<input type="radio" name="leavewhenempty" id="ipt-leavewhenempty-strict" value="strict" ', ($queue['leavewhenempty']==='strict' ? 'checked="checked" ' : '') ,'/>', "\n";
-		echo '<label for="ipt-leavewhenempty-strict">', __('wenn keine Agenten mehr angemeldet und frei') ,'</label>', "\n";
+		echo '<div class="radio_and_label_block">', "\n";
+		echo '<input type="radio" name="leavewhenempty" id="ipt-leavewhenempty-strict" value="strict" ';
+		if ($queue['leavewhenempty']==='strict') echo 'checked="checked" ';
+		echo '/>', "\n";
+		echo '<label for="ipt-leavewhenempty-strict">', __('wenn keine Agenten mehr angemeldet sind oder keine Agenten mehr frei sind') ,'</label>', "\n";
+		echo '</div>', "\n";
+		
+		echo '</div>', "\n";
 		
 		echo '</td>';
+		echo '<td class="transp xs gray"><code>leavewhenempty = </code><code>no</code> | <code>yes</code> | <code>strict</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";

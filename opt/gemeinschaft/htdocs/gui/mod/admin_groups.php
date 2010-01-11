@@ -27,10 +27,7 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
-require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_groups_get.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_group_change.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_group_del.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
@@ -51,182 +48,506 @@ function confirm_delete() {
 </script>' ,"\n";
 
 $action = @$_REQUEST['action'];
-if (! in_array($action, array('', 'save', 'delete'), true))
+if (! in_array($action, array('', 'save', 'delete', 'edit', 'insert', 'remove', 'add', 'remove-perm', 'insert-perm'), true))
 	$action = '';
 
+$group_id    = (int)@$_REQUEST['id'];
+$group_name  = trim(@$_REQUEST['name']);
+$group_title = trim(@$_REQUEST['title']);
+$page        = (int)@$_REQUEST['page'];
 
 #####################################################################
-# save {
+# save group
 #####################################################################
 if ($action === 'save') {
-	foreach ($_REQUEST as $k => $v) {
-		if (! preg_match('/^group-([0-9]+)-name$/', $k, $m))
-			continue;
-		$group_id       = (int)$m[1];
-		$name           = trim(@$_REQUEST['group-'.$group_id.'-name']);
-		if ($group_id == 0 && $name == '')
-			continue;
-		$name = preg_replace('/[^a-z0-9\-_]/', '', strToLower($name));
-		$title          = trim(@$_REQUEST['group-'.$group_id.'-title']);
-		$key_profile_id = (int)@$_REQUEST['group-'.$group_id.'-softkey_profile_id'];
-		if ($key_profile_id < 1) $key_profile_id = null;
-		$prov_param_profile_id = (int)@$_REQUEST['group-'.$group_id.'-prov_param_profile_id'];
-		if ($prov_param_profile_id < 1) $prov_param_profile_id = null;
-		$parent_id      = (int)@$_REQUEST['group-'.$group_id.'-parent_id'];
-		if ($parent_id < 1) $parent_id = null;
-		$show_ext_modules = (int)@$_REQUEST['group-'.$group_id.'-show_ext_modules'];
-		
-		$ret = gs_group_change( $group_id, $parent_id, $name, $title, $key_profile_id, $prov_param_profile_id, $show_ext_modules );
-		if (isGsError($ret)) {
-			echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
-		} elseif (! $ret) {
-			echo '<div class="errorbox">', sPrintF(__('Gruppe &quot;%s&quot; konnte nicht gespeichert werden.'), htmlEnt($name)) ,'</div>',"\n";
-		}
-	}
+
+	$ret = gs_group_change( $group_id, $group_name, $group_title );	
 	
-	if ( GS_BUTTONDAEMON_USE == true ) {
+	 if (isGsError($ret)) {
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	} elseif (! $ret) {
+		echo '<div class="errorbox">', __('Gruppe konnte nicht gespeichert werden.') ,'</div>',"\n";
+	}
+
+	if ( GS_BUTTONDAEMON_USE == true )
 		gs_buttondeamon_usergroups_update();
-	}
-	
+
+	sleep(1); // FIXME
 	$action = '';  # view
 }
-#####################################################################
-# save }
-#####################################################################
 
 #####################################################################
-# delete {
+# add group
+#####################################################################
+if ($action === 'add') {
+
+
+	$group_type = @$_REQUEST['type'];
+
+	$ret = gs_group_add( $group_name, $group_title, $group_type );
+
+	if (isGsError($ret)) {
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	} elseif (! $ret) {
+		echo '<div class="errorbox">', __('Gruppe konnte nicht angelegt werden.') ,'</div>',"\n";
+	}	
+
+	if ( GS_BUTTONDAEMON_USE == true )
+		gs_buttondeamon_usergroups_update();
+
+	sleep(1); // FIXME
+	$action = '';  # view
+}
+
+#####################################################################
+# delete group
 #####################################################################
 if ($action === 'delete') {
-	$group_id = (int)@$_REQUEST['id'];
-	$ret = gs_group_del( $group_id );
+	$ret = gs_group_del( $group_name );
+
 	if (isGsError($ret)) {
 		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Gruppe konnte nicht gel&ouml;scht werden.') ,'</div>',"\n";
 	}
 	
-	if ( GS_BUTTONDAEMON_USE == true ) {
+	if ( GS_BUTTONDAEMON_USE == true )
 		gs_buttondeamon_usergroup_remove( $group_id );
-	}
 	
+	sleep(1); // FIXME
 	$action = '';  # view
 }
-#####################################################################
-# delete }
-#####################################################################
 
 #####################################################################
-# view {
+# include group into an other group
 #####################################################################
-if ($action == '') {
+if ($action === 'insert') {
+	$insert = @$_REQUEST['insert'];
+
+	$ret = gs_group_member_add( $group_id, $insert, true );
+	
+	if (isGsError($ret)) {
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	} elseif (! $ret) {
+		echo '<div class="errorbox">', __('Gruppe konnte nicht hinzugef&uuml;gt werden.') ,'</div>',"\n";
+	}
+	sleep(1); // FIXME
+	$action = 'edit';  # view
+}
+
+#####################################################################
+# remove inclusion of a group
+#####################################################################
+if ($action === 'remove') {
+	$remove = @$_REQUEST['remove'];
+	
+	$ret = gs_group_member_del( $group_id, $remove, true );
+	
+	if (isGsError($ret)) {
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	} elseif (! $ret) {
+		echo '<div class="errorbox">', __('Gruppe konnte nicht entfernt werden.') ,'</div>',"\n";
+	}
+	sleep(1); // FIXME
+	$action = 'edit';  # view
+}
+
+#####################################################################
+# add permission to a group
+#####################################################################
+if ($action === 'insert-perm') {
+	$pg_group = (int)@$_REQUEST['group'];
+	$pg_permission = trim(@$_REQUEST['permission']);
+
+	$ret = 	gs_group_permission_add($group_id, $pg_group, $pg_permission);
+
+	if (isGsError($ret)) {
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	} elseif (! $ret) {
+		echo '<div class="errorbox">', __('Berechtigung konnte nicht hinzugef&uuml;gt werden.') ,'</div>',"\n";
+	}
+	sleep(1); // FIXME
+	$action = 'edit';  # view
+}
+
+#####################################################################
+# remove permission from a group
+#####################################################################
+if ($action === 'remove-perm') {
+	$pg_group = (int)@$_REQUEST['group'];
+	$pg_permission = trim(@$_REQUEST['permission']);
+
+	$ret = 	gs_group_permission_del($group_id, $pg_group, $pg_permission);
+
+	if (isGsError($ret)) {
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	} elseif (! $ret) {
+		echo '<div class="errorbox">', __('Berechtigung konnte nicht entfernt werden.') ,'</div>',"\n";
+	}
+	sleep(1); // FIXME
+	$action = 'edit';  # view
+}
+
+
+#####################################################################
+# edit
+#####################################################################
+if ($action == 'edit') {
+
+	$group            = gs_group_info_get(Array($group_id));
+	$group		  = $group[0];
+
+	$groups_same_type = gs_group_info_get(false, $group['type']);
+	$group_includes_ids = gs_group_includes_get(Array($group_id), true, true);
+	$group_includes   = gs_group_info_get(array_diff($group_includes_ids , Array($group_id)));
+
+	$members_c_dir = count(gs_group_members_get(Array($group['id']), false));
+	$members_c_all = count(gs_group_members_get(Array($group['id']), true));
+
+
+	echo '<form method="post" action="'.GS_URL_PATH.'">';
+	echo gs_form_hidden($SECTION, $MODULE);
+	//echo '<input type="hidden" name="action" value="save" />' ,"\n";
+	echo '<input type="hidden" name="page" value="', $page ,'" />' ,"\n";
+	echo '<input type="hidden" name="id" value="', $group['id'] ,'" />' ,"\n";
+
 ?>
 
-<form method="post" action="<?php echo GS_URL_PATH; ?>">
-<?php echo gs_form_hidden($SECTION, $MODULE); ?>
-<input type="hidden" name="action" value="save" />
+<table cellspacing="1">
+<thead>
+	<tr>
+		<th style="min-width:24em;" colspan="2">
+			<?php echo __('Gew&auml;hlte Gruppe'); ?>
+		</th>
+	</tr>
+</thead>
+<tbody>
+	<tr>
+		<th style="min-width:12em;">
+			<?php echo __('ID'); ?>
+		</th>
+		<td style="min-width:12em;">
+			<?php echo $group['id']; ?>	
+		</td>
+	</tr>
+	<tr>
+		<th style="min-width:12em;">
+			<?php echo __('Name'); ?>
+		</th>
+		<td style="min-width:12em;">
+			<?php echo '<input type="text" name="name" value="', htmlEnt($group['name']) ,'" size="25" maxlength="50" style="width:96%;" />'; ?>	
+		</td>
+	</tr>
+
+	<tr>
+		<th><?php echo __('Titel'); ?>:</th>
+		<td><?php echo '<input type="text" name="title" value="', htmlEnt($group['title']) ,'" size="25" maxlength="50" style="width:96%;" />'; ?></td>
+	</tr>
+	<tr>
+		<th><?php echo __('Typ'); ?>:</th>
+		<td><?php echo htmlEnt($group['type']); ?></td>
+	</tr>
+	<tr>
+		<th><?php echo __('Mitglieder direkt'); ?>:</th>
+		<td><?php echo htmlEnt($members_c_dir); ?></td>
+	</tr>
+	<tr>
+		<th><?php echo __('Mitglieder gesamt'); ?>:</th>
+		<td><?php echo htmlEnt($members_c_all); ?></td>
+	</tr>
+
+	<tr>
+		<th></th>
+		<td>
+<?php
+		echo  '<button type="submit" name="action" value="save" title="', __('Speichern') ,'" class="plain"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>';
+		echo '&nbsp;&nbsp;';
+		echo  '<button type="cancel" title="', __('Abbrechen') ,'" class="plain"><img alt="', __('Abbrechen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/cancel.png" /></button>';
+?>
+		</td>
+	</tr>
+</tbody>
+</table>
+</form>
+<br>
+<table cellspacing="1">
+<thead>
+<tr>
+	<th style="min-width:21em;" colspan="5"><?php echo __('Untergruppen der Gruppe '), ' "',htmlEnt($group['name']),'"'; ?></th>
+</tr>
+
+<tr>
+	<th style="min-width:12em;"><?php echo __('Gruppe'); ?></th>
+	<th style="min-width:12em;width:18em;"><?php echo __('Titel'); ?></th>
+	<th style="min-width:5em;"><?php echo __('Typ'); ?></th>
+	<th style="min-width:3em;"><?php echo __('Mitglieder'); ?></th>
+	<th style="min-width:1em;"></th>
+</tr>
+</thead>
+<tbody>
+<?php
+	
+	$i = 0;
+	if ((count($groups_same_type) - count($group_includes) - 1) ) {
+		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+		echo '<form method="post" action="'.GS_URL_PATH.'">';
+		echo gs_form_hidden($SECTION, $MODULE);
+		echo '<input type="hidden" name="action" value="insert" />' ,"\n";
+		echo '<td class="l nobr" colspan="2">';
+		echo '<select name="insert">', "\n";
+		foreach ($groups_same_type as $group_same_type) {
+			if (($group_same_type['id'] == $group['id']) || (in_array($group_same_type['id'], $group_includes_ids))) {
+
+			} else
+			echo '<option value="',$group_same_type['name'] ,'">',$group_same_type['name'], ' -- ', $group_same_type['title'],'</option>' ,"\n";
+		}
+		echo '</select>', "\n";
+		echo '</td>', "\n";
+		echo '<td>',$group['type']  ,'</td>', "\n";
+		echo '<td class="r" colspan="2">', "\n";
+		echo  '<button type="submit" name="id" value="'.$group['id'].'" title="', __('Gruppe Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
+		echo '</td>', "\n";
+		echo '</tr>' ,"\n";
+		echo '</form>',"\n";
+	}
+
+	foreach ($group_includes as $group_include) {
+		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+		echo '<td class="l nobr">';
+		echo $group_include['name']  ,'</td>', "\n";
+		echo '<td>',$group_include['title']  ,'</td>', "\n";	
+		echo '<td>',$group_include['type']  ,'</td>', "\n";
+		echo '<td class="r">',count(gs_group_members_get(Array($group_include['id']))), '</td>', "\n";
+		echo '<td class="r">', "\n";
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove&amp;id='.$group['id'].'&amp;remove='.$group_include['name']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+		echo '</td>', "\n";
+		echo '</tr>' ,"\n";
+		$i++;
+	}
+
+?>
+
+</tbody>
+</table>
+
+<br>
+<table cellspacing="1">
+<thead>
+<tr>
+	<th style="min-width:21em;" colspan="3"><?php echo __('Berechtigungen der Gruppe'), ' "',htmlEnt($group['name']),'"'; ?></th>
+</tr>
+
+<tr>
+	
+	<th style="min-width:10em;"><?php echo __('Berechtigung'); ?></th>
+	<th style="min-width:10em;"><?php echo __('auf Gruppe'); ?></th>
+	<th style="min-width:1em;"></th>
+</tr>
+</thead>
+<tbody>
+<?php
+	$group_permissions = gs_group_permissions_get_names($group['id']);
+
+	echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+	echo '<form method="post" action="'.GS_URL_PATH.'">';
+	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="page" value="'.$page.'" />' ,"\n";
+	echo '<input type="hidden" name="id" value="'.$group_id.'" />' ,"\n";
+	echo '<td>';
+	echo '<select name="permission">', "\n";
+	foreach (gs_group_permission_types_get() as $perm_type) {
+		echo '<option value="',$perm_type,'">',$perm_type ,'</option>' ,"\n";
+	}
+	echo '</select>', "\n";
+	echo '</td>', "\n";
+	echo '<td>';
+	echo '<select name="group">', "\n";
+	foreach (gs_group_info_get() as $group_info) {
+		echo '<option value="',$group_info['id'],'">',$group_info['name'],' -- ', $group_info['title'],'</option>' ,"\n";
+	}
+	echo '</select>', "\n";
+	echo '</td>', "\n";
+	echo '<td class="r" colspan="2">', "\n";
+	echo  '<button type="submit" name="action" value="insert-perm" title="', __('Berechtigung Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
+	echo '</td>', "\n";
+	echo '</tr>' ,"\n";
+	echo '</form>',"\n";
+	
+	
+	
+	$i=0;
+	foreach ($group_permissions as $group_permission) {
+		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+		echo '<td>',$group_permission['permission']  ,'</td>', "\n";
+		echo '<td>',$group_permission['name']  ,'</td>', "\n";
+		echo '<td class="r">', "\n";
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-perm&amp;id='.$group['id'].'&amp;page='.$page.'&amp;group='.$group_permission['id'].'&amp;permission='.$group_permission['permission']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+		echo '</td>', "\n";
+		echo '</tr>' ,"\n";
+		$i++;
+	}
+
+?>
+
+</tbody>
+</table>
+
+<br>
+<table cellspacing="1">
+<thead>
+<tr>
+	<th style="min-width:21em;" colspan="4"><?php echo __('Verbindungen der Gruppe'), ' "',htmlEnt($group['name']),'"'; ?></th>
+</tr>
+
+<tr>
+	<th style="min-width:10em;"><?php echo __('Typ'); ?></th>
+	<th style="min-width:10em;"><?php echo __('Key'); ?></th>
+	<th style="min-width:10em;"><?php echo __('Verbindung'); ?></th>
+	<th style="min-width:1em;"></th>
+</tr>
+</thead>
+<tbody>
+<?php
+	$group_externals = gs_group_connections_get($group['id']);
+/*
+	echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+	echo '<form method="post" action="'.GS_URL_PATH.'">';
+	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="page" value="'.$page.'" />' ,"\n";
+	echo '<input type="hidden" name="id" value="'.$group_id.'" />' ,"\n";
+	echo '<td>';
+	echo '<select name="external">', "\n";
+	foreach (gs_group_external_types_get() as $ext_type) {
+		echo '<option value="',$ext_type,'">',$ext_type ,'</option>' ,"\n";
+	}
+	echo '</select>', "\n";
+	echo '</td>', "\n";
+	echo '<td>';
+	echo '<input type="text" name="key" value="id" size="20" maxlength="20" style="width:96%;" />';
+	echo '</td>', "\n";
+	echo '<td>';
+	echo '<input type="text" name="connection" value="" size="20" maxlength="255" style="width:96%;" />';
+	echo '</td>', "\n";
+	echo '<td class="r" colspan="2">', "\n";
+	echo  '<button type="submit" name="action" value="insert-perm" title="', __('Berechtigung Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
+	echo '</td>', "\n";
+	echo '</tr>' ,"\n";
+	echo '</form>',"\n";
+*/	
+	$i=0;
+	foreach ($group_externals as $group_external) {
+		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+		echo '<td>',$group_external['type']  ,'</td>', "\n";
+		echo '<td>',$group_external['key']  ,'</td>', "\n";
+		echo '<td>',$group_external['connection']  ,'</td>', "\n";
+		/*
+		echo '<td class="r">', "\n";
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-perm&amp;id='.$group['id'].'&amp;page='.$page.'&amp;type='.$group_external['type'].'&amp;permission='.$group_external['key']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+		echo '</td>', "\n";
+		*/
+		echo '<td></td>', "\n";
+		echo '</tr>' ,"\n";
+		$i++;
+	}
+
+	echo '</tbody>'."\n";
+	echo '</table>'."\n";
+
+}
+
+
+if ($action == '') {
+
+$groups = gs_group_info_get();
+$sort_key = array();
+$per_page  = (int)gs_get_conf('GS_GUI_NUM_RESULTS', '15');
+$num_total = count($groups);
+$num_pages = ceil($num_total / $per_page);
+
+?>
+
 <table cellspacing="1">
 <thead>
 <tr>
 	<th style="min-width:12em;"><?php echo __('Gruppe'); ?></th>
 	<th style="min-width:12em;width:18em;"><?php echo __('Titel'); ?></th>
-	<th style="min-width:5em;"><?php echo __('Tastenprofil'); ?></th>
-	<th style="min-width:5em;"><?php echo __('Prov.-Param.-Profil'); ?></th>
-	<th style="min-width:5em;"><?php echo __('Erw.-Mod.'); ?><sup>[1]</sup></th>
-	<th style="min-width:3em;">&nbsp;</th>
+	<th style="min-width:5em;"><?php echo __('Typ'); ?></th>
+	<th style="min-width:3em;"><?php echo __('U.Gr.'); ?></th>
+	<th style="min-width:3em;"><?php echo __('Mitglieder'); ?></th>
+	<th style="min-width:3em;">
+<?php
+echo ($page+1), ' / ', $num_pages, '&nbsp; ',"\n";
+
+if ($page > 0) {
+	echo
+	'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous.png" />',
+	'</a>', "\n";
+} else {
+	echo
+	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/previous_notavail.png" />', "\n";
+}
+
+if ($page < $num_pages-1) {
+	echo
+	'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next.png" />',
+	'</a>', "\n";
+} else {
+	echo
+	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/next_notavail.png" />', "\n";
+}
+
+?>
+	</th>
 </tr>
 </thead>
 <tbody>
+
 <?php
 
-$groups = gs_groups_get();
+foreach($groups as $key => $group) {
+	$sort_key[$key] = $group['name'];
+}
+
+array_multisort($sort_key, SORT_ASC, SORT_STRING, $groups);
+
 if (isGsError($groups)) {
 	echo '<tr><td colspan="5">', $groups->getMsg() ,'</td></tr>';
 } else {
-	$softkey_profiles = array();
-	$rs = $DB->execute('SELECT `id`, `title` FROM `softkey_profiles` WHERE `is_user_profile`=0 ORDER BY `title`');
-	while ($r = $rs->fetchRow()) {
-		$softkey_profiles[$r['id']] = array('title'=>$r['title']);
-	}
-	
-	$prov_param_profiles = array();
-	$rs = $DB->execute('SELECT `id`, `title` FROM `prov_param_profiles` WHERE `is_group_profile`=1 ORDER BY `title`');
-	while ($r = $rs->fetchRow()) {
-		$prov_param_profiles[$r['id']] = array('title'=>$r['title']);
-	}
-	
-	$i=0;
-	$is_root = true;
-	$root_level = 0;
-	foreach ($groups as $node) {
-		if ($is_root) {  # skip root node
-			$root_level = $node['__mptt_level'];
-			$is_root = false;
+	$i = 1;
+	foreach ($groups as $group) {
+
+		if (($i > ($per_page * ($page+1))) || ($i < ($per_page *  $page + 1)))  {
+			$i++;
 			continue;
 		}
+
+		$groups_same_type = gs_group_info_get(false, $group['type']);
+		$group_includes_ids = gs_group_includes_get(Array($group['id']), true, true);
+		$group_includes   = gs_group_info_get(array_diff($group_includes_ids , Array($group['id'])));
+
 		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
-		
+			
 		echo '<td class="l nobr">';
-		echo @str_repeat('&nbsp;&nbsp;&nbsp;', $node['__mptt_level']-$root_level-1);
-		echo '<img alt="&bull;" src="', GS_URL_PATH ,'img/tree.gif' ,'" />';
-		echo '<input type="text" name="group-',$node['id'],'-name" value="', htmlEnt($node['name']) ,'" size="12" maxlength="20" />';
-		echo '</td>' ,"\n";
-		
-		echo '<td>', '<input type="text" name="group-',$node['id'],'-title" value="', htmlEnt($node['title']) ,'" size="25" maxlength="50" style="width:96%;" />' ,'</td>' ,"\n";
-		
-		echo '<td>', "\n";
-		echo '<select name="group-',$node['id'],'-softkey_profile_id">', "\n";
-		echo '<option value=""';
-		if ($node['softkey_profile_id'] < 1)
-			echo ' selected="selected"';
-		echo '>--</option>' ,"\n";
-		foreach ($softkey_profiles as $profile_id => $profile) {
-			echo '<option value="',$profile_id ,'"';
-			if ($node['softkey_profile_id'] == $profile_id)
-				echo ' selected="selected"';
-			echo '>', htmlEnt($profile['title']) ,'</option>' ,"\n";
-		}
-		echo '</select>', "\n";
-		echo '</td>', "\n";
-		
-		echo '<td>', "\n";
-		echo '<select name="group-',$node['id'],'-prov_param_profile_id">', "\n";
-		echo '<option value=""';
-		if ($node['prov_param_profile_id'] < 1)
-			echo ' selected="selected"';
-		echo '>--</option>' ,"\n";
-		foreach ($prov_param_profiles as $profile_id => $profile) {
-			echo '<option value="',$profile_id ,'"';
-			if ($node['prov_param_profile_id'] == $profile_id)
-				echo ' selected="selected"';
-			echo '>', htmlEnt($profile['title']) ,'</option>' ,"\n";
-		}
-		echo '</select>', "\n";
-		echo '</td>', "\n";
-		
-		echo '<td>', "\n";
-		echo '<select name="group-',$node['id'],'-show_ext_modules">', "\n";
-		for ($num_e_m=0; $num_e_m<=3; ++$num_e_m) {
-			echo '<option value="',$num_e_m ,'"';
-			if ($node['show_ext_modules'] == $num_e_m)
-				echo ' selected="selected"';
-			echo '>', $num_e_m ,'</option>' ,"\n";
-		}
-		if ($node['show_ext_modules'] > 3 && $node['show_ext_modules'] < 255)
-			echo '<option value="', $node['show_ext_modules'] ,'" selected="selected">', $node['show_ext_modules'] ,'</option>' ,"\n";
-		echo '<option value="255"';
-		if ($node['show_ext_modules'] == 255)
-			echo ' selected="selected"';
-		echo '>', __('alle') ,'</option>' ,"\n";
-		echo '</select>', "\n";
-		echo '</td>', "\n";
-		
+		echo $group['name']  ,'</td>', "\n";
+		echo '<td>',$group['title']  ,'</td>', "\n";
+		echo '<td>',$group['type']  ,'</td>', "\n";
+		echo '<td>', count($group_includes_ids) ,'</td>', "\n";
+		echo '<td class="r">',count(gs_group_members_get(Array($group['id']), false)),' / ',count(gs_group_members_get(Array($group['id']))), '</td>', "\n";
 		echo '<td class="r">', "\n";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=delete&amp;id='.$node['id']) ,'" onclick="return confirm_delete();"><img alt="', __('L&ouml;schen') ,'" title="', __('L&ouml;schen') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/editdelete.png" /></a>';
+
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;id='.$group['id'].'&amp;page='.$page) ,'"><img alt="', __('Bearbeiten') ,'" title="', __('Bearbeiten') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/edit.png" /></a>';
+
+		echo '&nbsp;&nbsp;';
+
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=delete&amp;name='.$group['name'].'&amp;page='.$page) ,'" onclick="return confirm_delete();"><img alt="', __('L&ouml;schen') ,'" title="', __('L&ouml;schen') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/editdelete.png" /></a>';
+
 		echo '</td>', "\n";
-		
+
 		echo '</tr>' ,"\n";
-		++$i;
+		
+		$i++;
 	}
 	
 	echo '<tr>' ,"\n";
@@ -234,93 +555,50 @@ if (isGsError($groups)) {
 	echo '<td colspan="5" class="transp">&nbsp;</td>', "\n";
 	
 	echo '<td class="transp r">', "\n";
-	echo '<button type="submit" class="plain" title="', __('Speichern') ,'"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/filesave.png" /></button>';
+//	echo '<button type="submit" class="plain" title="', __('Speichern') ,'"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/filesave.png" /></button>';
 	echo '</td>' ,"\n";
 	
 	echo '</tr>' ,"\n";
 	
 	$i=0;
+	echo '<form method="post" action="'.GS_URL_PATH.'">', "\n";
+	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="action" value="add" />' ,"\n";
+
 	echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
 	
-	echo '<td class="l nobr">';
-	echo __('Neue Gruppe') ,'<br />';
-	echo '<input type="text" name="group-0-name" value="" size="12" maxlength="20" /><br />';
-	echo __('als Kind von') ,'<br />',"\n";
-	echo '<select name="group-0-parent_id">' ,"\n";
-	$is_root = true;
-	$root_level = 0;
-	foreach ($groups as $node) {
-		if ($is_root) {
-			$root_level = $node['__mptt_level'];
-		}
-		echo '<option value="', $node['id'] ,'">';
-		echo @str_repeat('&nbsp;&nbsp;&nbsp;', $node['__mptt_level']-$root_level);
-		if ($is_root) {
-			echo __('Wurzel-Gruppe');
-			$is_root = false;
-		} else {
-			echo htmlEnt($node['name']);
-		}
-		echo '</option>' ,"\n";
-	}
-	echo '</select>' ,"\n";
+	echo '<td class="l nobr">', "\n";
+	echo '<input type="text" name="name" value="" size="20" maxlength="20" />', "\n";
 	echo '</td>' ,"\n";
 	
-	echo '<td>&nbsp;<br /><input type="text" name="group-0-title" value="" size="25" maxlength="50" style="width:96%;" /></td>' ,"\n";
-	
-	echo '<td>&nbsp;<br />', "\n";
-	echo '<select name="group-0-softkey_profile_id">', "\n";
-	echo '<option value="" selected="selected">--</option>' ,"\n";
-	foreach ($softkey_profiles as $profile_id => $profile) {
-		echo '<option value="',$profile_id ,'"';
-		echo '>', htmlEnt($profile['title']) ,'</option>' ,"\n";
+	echo '<td class="l nobr">', "\n";
+	echo '<input type="text" name="title" value="" size="25" maxlength="50" style="width:96%;" />',"\n";
+	echo '</td>' ,"\n";
+	echo '<td>' ,"\n";
+	echo '<select name="type">', "\n";
+	foreach (gs_group_types_get() as $group_type) {
+		echo '<option value="',$group_type,'">',$group_type ,'</option>' ,"\n";
 	}
 	echo '</select>', "\n";
-	echo '</td>', "\n";
-	
-	echo '<td>&nbsp;<br />', "\n";
-	echo '<select name="group-0-prov_param_profile_id">', "\n";
-	echo '<option value="" selected="selected">--</option>' ,"\n";
-	foreach ($prov_param_profiles as $profile_id => $profile) {
-		echo '<option value="',$profile_id ,'"';
-		echo '>', htmlEnt($profile['title']) ,'</option>' ,"\n";
-	}
-	echo '</select>', "\n";
-	echo '</td>', "\n";
-	
-	echo '<td>&nbsp;<br />', "\n";
-	echo '<select name="group-0-show_ext_modules">', "\n";
-	for ($num_e_m=0; $num_e_m<=3; ++$num_e_m) {
-		echo '<option value="',$num_e_m ,'"';
-		echo '>', $num_e_m ,'</option>' ,"\n";
-	}
-	echo '<option value="255" selected="selected">', __('alle') ,'</option>',"\n";
-	echo '</select>', "\n";
-	echo '</td>', "\n";
-	
-	echo '<td class="r">&nbsp;<br />', "\n";
+	echo '</td>' ,"\n";
+	echo '<td class="r" colspan="3">&nbsp;<br />', "\n";
 	echo '<button type="submit" class="plain" title="', __('Speichern') ,'"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH ,'crystal-svg/16/act/filesave.png" /></button>';
 	echo '</td>', "\n";
 	
 	echo '</tr>' ,"\n";
+	echo '</form>' ,"\n";
+
 	++$i;
+
 }
 ?>
 </tbody>
 </table>
-</form>
 
 <?php
-	echo '<br /><br />',"\n";
-	echo '<small>DB-Analyse' ,':',"\n";
-	$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
-	echo 'MPTT-Struktur ist ', ($mptt->quick_sanity_check() ? 'in Ordnung' : 'FEHLERHAFT') ,'</small><br />',"\n";
-	echo '<br />',"\n";
-	echo '<p class="text small"><sup>[1]</sup> ', __('Bestimmt wieviele Telefon-Erweiterungsmodule/-Beistellmodule in der Benutzer-Tastenbelegungsmaske angezeigt werden.') ,'</p>' ,"\n";
 }
 #####################################################################
 # view }
 #####################################################################
-
 
 ?>

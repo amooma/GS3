@@ -68,7 +68,7 @@
     <title>Beschreibung</title>
 
     <para>Zeigt an ob für einen Benutzer dessen Anrufbeantworter aktiviert
-    ist.</para>
+    ist. ACHTUNG, das Skript ist alt und hat keinerlei Wirkung mehr. Auf den Anrufbeantworter wird mit dem gs-callforward-set skript weitergeleitet. Ob der AB an oder aus ist, spielt keine Rolle mehr!</para>
   </refsection>
 
   <refsection>

@@ -69,8 +69,53 @@
     <title>Beschreibung</title>
 
     <para>Zeigt vom Admin überschriebene Provisioning-Parameter an.</para>
+    <para>Beispielausgabe:
+<screen>
+-----------------------------------------------------
+| user   | phone-type   | param     | idx | value   |
+-----------------------------------------------------
+| soeren | siemens-os60 | admin-pwd |     | 3123213 |
+-----------------------------------------------------
+</screen>
+   </para>
+   <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>user</term>
+        <listitem>
+          <para>Der Benutzername des Nutzers zu dem die Taste zugewiesen ist.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>phone-type</term>
+        <listitem>
+          <para>Der Telefon-Typ zu dem der Provisioning-Paramter gehört</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>param</term>
+        <listitem>
+          <para>Der Name des Parameters, dieser ist Telefonabhängig</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>idx</term>
+        <listitem>
+          <para>Der Index des Parameters, dieser wird z.b. genutzt wenn meherere Parameter mit den gleichem Namen gesetzt werden, also wenn z.b. mehrere Klingeltöne genutzt werden.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>value</term>
+        <listitem>
+          <para>Dies ist der Wert des Parameters der ans Telefon übertragen werden wird.</para>
+        </listitem>
+      </varlistentry>
+      
+    </variablelist>
+  </para>  
   </refsection>
-
+  
   <refsection>
     <title>Parameter</title>
 
@@ -87,7 +132,7 @@
         <term><option>--phone-type</option>=<replaceable>phone-type</replaceable></term>
 
         <listitem>
-          <para>Telefon-Typ</para>
+          <para>Telefon-Typ, zb. siemens-os60</para>
         </listitem>
       </varlistentry>
 
@@ -111,7 +156,8 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-user-prov-param-set" />
+    </para>
   </refsection>
 </refentry>

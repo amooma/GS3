@@ -51,6 +51,7 @@ $ggrp_id = ($argc > 1) ? (int)trim($argv[1]) : '';
 if ($ggrp_id < 1) _err('Bad ggrp id');
 $number  = ($argc > 2) ?      trim($argv[2]) : '';
 if ($number == '') _err('Empty number');
+$cid     = ($argc > 3) ?      trim($argv[3]) : '';
 
 
 include_once( GS_DIR .'inc/db_connect.php' );
@@ -61,7 +62,7 @@ if (! $db) _err('DB error');
 $rs = $db->execute( 'SELECT `in_dest_search`, `in_dest_replace`, `in_cid_search`, `in_cid_replace` FROM `gate_grps` WHERE `id`='. $ggrp_id );
 if (! $rs) _err('DB error');
 $ggrp = $rs->fetchRow();
-if (! $ggrp) _err('DB error');
+if (! $ggrp) _err('DB error - gw grp. #'.$ggrp_id.' not found');
 
 
 
@@ -75,8 +76,16 @@ if ($ggrp['in_dest_search'] != '') {
 }
 gs_agi_set_variable( 'did_ext', $number );
 
-//FIXME - do the same thing for the callerid number
 
+# callerid number fixup
+#
+
+$ggrp['in_cid_search'] = trim($ggrp['in_cid_search']);
+if ($ggrp['in_cid_search'] != '') {
+	$ggrp['in_cid_replace'] = trim($ggrp['in_cid_replace']);
+	$cid = @preg_replace('/'.$ggrp['in_cid_search'].'/', $ggrp['in_cid_replace'], $cid);
+}
+gs_agi_set_variable( 'cid_fixed', $cid );
 
 
 # get route from DID number to extension

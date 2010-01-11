@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_queue_callforward_set.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --queue=<ext> --source=internal|external --case=always|full|timeout|empty [--timeout=<timeout>] --type=std|var --number=<number>';
+$usage = 'Usage: '. baseName(__FILE__) .' --queue=<ext> --source=internal|external --case=always|full|timeout|empty [--timeout=<timeout>] --type=std|var|vml --number=<number>';
 
 $opts = @getOptsNoMultiples( '',
 	array(

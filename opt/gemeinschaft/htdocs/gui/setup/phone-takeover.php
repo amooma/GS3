@@ -95,13 +95,6 @@ if (! @$_SESSION['login_ok']) {
 }
 
 
-if (! function_exists('htmlEnt')) {
-function htmlEnt( $str )
-{
-	return htmlSpecialChars($str, ENT_QUOTES, 'UTF-8');
-}
-}
-
 if (! function_exists('qsa')) {
 function qsa( $str )
 {

@@ -32,48 +32,36 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_group_change.php' );
-
+include_once( GS_DIR .'inc/group-fns.php' );
 
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' [--parent=<name>] --name=<name> --title=<title> [--softkey-profile-id=<id>] [--prov-param-profile-id=<id>] [--show-ext-modules=<num>]';
+$usage = 'Usage: '. baseName(__FILE__) .' --name=<name> --title=<title> --type=<type>';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'parent=',
 		'name=',
 		'title=',
-		'softkey-profile-id=',
-		'prov-param-profile-id=',
-		'show-ext-modules='
+		'type=',
 	),
 	$usage
 );
 if (! isSet($opts['name'])
  || ! isSet($opts['title'])
+ || ! isSet($opts['type'])
  ) {
 	gs_script_invalid_usage( $usage );
 }
 
-if (! array_key_exists('show-ext-modules', $opts)) {
-	$opts['show-ext-modules'] === null;
-} else {
-	$opts['show-ext-modules'] = (int)$opts['show-ext-modules'];
-}
-
-if (! array_key_exists('parent', $opts))
-	$opts['parent'] === null;
-
-
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_group_add_by_name( $opts['parent'], $opts['name'], $opts['title'], $opts['softkey-profile-id'], $opts['prov-param-profile-id'], $opts['show-ext-modules'] );
+$ret = @ gs_group_add( $opts['name'], $opts['title'], $opts['type'] );
 
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
+
 echo "Group added.\n";
 
 

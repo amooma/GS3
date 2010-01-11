@@ -32,7 +32,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_groups_get.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 include_once( GS_DIR .'inc/mb_str_pad.php' );
 
 
@@ -47,57 +47,50 @@ $opts = @getOptsNoMultiples( '',
 	$usage
 );
 
-
-
 /***********************************************************
 *    call the function
 ***********************************************************/
-$groups = @ gs_groups_get();
+$groups = @gs_group_info_get();
 if (isGsError( $groups )) gs_script_error( $groups->getMsg() );
-if (! $groups)            gs_script_error();
 
 $fields = array(
-	//'__mptt_level'          => 0,
-	'level'                 => 0,
 	'id'                    => 1,
 	'name'                  => 1,
 	'title'                 => 1,
-	'softkey_profile_id'    => 1,
-	'prov_param_profile_id' => 1
+	'type'    		=> 1,
+	'includes'		=> 1
 );
+
 $fieldsAbbr = array(
-	//'__mptt_level'          => 'level',
-	'level'                 => 'level',
 	'id'                    => 'id',
 	'name'                  => 'name',
 	'title'                 => 'title',
-	'softkey_profile_id'    => 'softkey_profile_id',
-	'prov_param_profile_id' => 'prov_param_profile_id'
+	'type'    		=> 'type',
+	'includes'		=> 'includes'
 );
+
+foreach ($groups as $key => $group) {
+	$groups[$key]['includes'] = @implode(' ', array_diff(gs_group_includes_get(Array($group['id'])), Array($group['id'])));
+}
 
 
 if (gs_stdout_is_console()) {
 	
 	$fieldsPad = array(
-		//'__mptt_level'          => STR_PAD_RIGHT,
-		'level'                 => STR_PAD_RIGHT,
 		'id'                    => STR_PAD_LEFT,
 		'name'                  => STR_PAD_RIGHT,
 		'title'                 => STR_PAD_RIGHT,
-		'softkey_profile_id'    => STR_PAD_RIGHT,
-		'prov_param_profile_id' => STR_PAD_RIGHT,
+		'type'    		=> STR_PAD_RIGHT,
+		'includes'    		=> STR_PAD_RIGHT
 	);
 	
 	foreach ($fields as $field => $length) {
 		if (strLen($fieldsAbbr[$field]) > $length)
 			$fields[$field] = strLen($fieldsAbbr[$field]);
 	}
-	foreach ($groups as $i => $group) {
-		$groups[$i]['level'] = str_repeat('.', (int)$group['__mptt_level']);
-	}
+
 	foreach ($groups as $ignore => $group) {
 		foreach ($fields as $field => $length) {
-			//$user[$field] = str_replace( '"', '\\"', $user[$field] );
 			if (mb_strLen($group[$field]) > $length)
 				$fields[$field] = mb_strLen($group[$field]);
 		}
@@ -113,7 +106,6 @@ if (gs_stdout_is_console()) {
 	echo $header, "\n";
 	echo $sep, "\n";
 	foreach ($groups as $ignore => $group) {
-		if ($group['__mptt_level'] === 0) continue;  # skip root node
 		echo '| ';
 		foreach ($fields as $field => $length) {
 			echo mb_str_pad( $group[$field], $length, ' ', $fieldsPad[$field] ), ' | ';
@@ -132,9 +124,6 @@ else {
 	echo "\n";
 	
 	foreach ($groups as $ignore => $group) {
-		if ($group['__mptt_level'] === 0) continue;  # skip root node
-		unset($fields['level']);
-		$fields = array_merge(array('__mptt_level'=>2), $fields);
 		foreach ($fields as $field => $length) {
 			echo gs_add_c_slashes( $group[$field] ) ,"\t";
 		}

@@ -29,21 +29,34 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/pcre_check.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_groups_get.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+/*
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+*/
+echo htmlEnt(__('Ausgehende Routen und Least-Cost-Routing'));
 echo '</h2>', "\n";
 
 
 $action = @$_REQUEST['action'];
 $id     = (int)@$_REQUEST['id'];
 if ($id < 1) $id = 0;
+
+$gw_grp_idxs = array(1,2,3);
+
+$groups = array_merge( gs_group_info_get(false, 'user'), gs_group_info_get(false, 'host'));
+
+if (isGsError($groups)) {
+	$groups = false;
+}
+if (! is_array($groups)) $groups = array();
+
 
 if ($action === 'move-up' || $action === 'move-down') {
 	
@@ -70,9 +83,8 @@ if ($action === 'move-up' || $action === 'move-down') {
 	$ggs = array();
 	while ($r = $rs->fetchRow()) $ggs[(int)$r['id']] = true;
 	
-	$rs = $DB->execute( 'SELECT `id` FROM `user_groups`' );
 	$ugs = array();
-	while ($r = $rs->fetchRow()) $ugs[(int)$r['id']] = true;
+	foreach ($groups as $group) $ugs[(int)$group['id']] = true;
 	
 	$rs = $DB->execute( 'SELECT `id` FROM `routes`' );
 	$db_ids = array();
@@ -234,7 +246,7 @@ $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 	<th><?php echo __('Muster'); ?><sup>[1]</sup></th>
 	<th><?php echo __('Wochentage'); ?></th>
 	<th><?php echo __('Uhrzeit'); ?></th>
-	<th><?php echo __('Benutzer-Gr.'); ?></th>
+	<th><?php echo __('Gruppe'); ?></th>
 	<th><?php echo __('Gateway / Fallback'); ?></th>
 	<th><?php echo __('Pr&auml;fix'); ?> <sup>[2]</sup></th>
 	<th><?php echo __('Reihenfolge'); ?></th>
@@ -256,12 +268,6 @@ while ($r = $rs->fetchRow()) {
 		'type'       => $r['type']
 	);
 }
-
-$user_groups = gs_groups_get();
-if (isGsError($user_groups)) {
-	$user_groups = false;
-}
-if (! is_array($user_groups)) $user_groups = array();
 
 $rs = $DB->execute(
 'SELECT
@@ -342,28 +348,18 @@ while ($route = $rs->fetchRow()) {
 	
 	echo '<td rowspan="2">';
 	echo '<select name="r_',$id,'_ugrpid">', "\n";
-	$is_root = true;
-	$root_level = 0;
-	foreach ($user_groups as $node) {
-		if ($is_root) {
-			$root_level = $node['__mptt_level'];
-			$node['id'] = 0;
-		}
+	
+	echo '<option value="0">', '[', htmlEnt(__('alle')) ,']', '</option>' ,"\n";
+	foreach ($groups as $node) {
 		echo '<option value="', $node['id'],'"',($route['ug_id'] == $node['id'] ? ' selected="selected"' : ''),'>';
-		echo @str_repeat('&nbsp;&nbsp;&nbsp;', $node['__mptt_level']-$root_level);
-		if ($is_root) {
-			echo '[', htmlEnt(__('alle')) ,']';
-			$is_root = false;
-		} else {
-			echo htmlEnt($node['name']);
-		}
+		echo htmlEnt($node['name']);
 		echo '</option>' ,"\n";
 	}
+	
 	echo '</select><br />', "\n";
 	echo '</td>', "\n";
 	
 	echo '<td rowspan="2">';
-	$gw_grp_idxs = array(1,2,3);
 	foreach ($gw_grp_idxs as $gw_grp_idx) {
 		echo '<select name="r_',$id,'_ggrpid',$gw_grp_idx,'">', "\n";
 		$route_ggrp_id = $route['gg'.$gw_grp_idx];
@@ -458,19 +454,11 @@ echo '<td rowspan="2">';
 echo '<select name="r_',$id,'_ugrpid">', "\n";
 $is_root = true;
 $root_level = 0;
-foreach ($user_groups as $node) {
-	if ($is_root) {
-		$root_level = $node['__mptt_level'];
-		$node['id'] = 0;
-	}
+
+echo '<option value="0">', '[', htmlEnt(__('alle')) ,']', '</option>' ,"\n";
+foreach ($groups as $node) {
 	echo '<option value="', $node['id'],'"',($route['ug_id'] == $node['id'] ? ' selected="selected"' : ''),'>';
-	echo @str_repeat('&nbsp;&nbsp;&nbsp;', $node['__mptt_level']-$root_level);
-	if ($is_root) {
-		echo '[', htmlEnt(__('alle')) ,']';
-		$is_root = false;
-	} else {
-		echo htmlEnt($node['name']);
-	}
+	echo htmlEnt($node['name']);
 	echo '</option>' ,"\n";
 }
 echo '</select><br />', "\n";

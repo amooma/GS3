@@ -204,6 +204,7 @@ function gs_agi_do_bool( $cmd )
 
 function gs_agi_verbose( $str, $level=1 )
 {
+	$str = preg_replace('/^(#*)(?: *)/', '$1 -GS- ', $str);  //FIXME?
 	return gs_agi_do_bool( 'VERBOSE '. gs_agi_str_esc($str) .' '. (int)$level );
 }
 

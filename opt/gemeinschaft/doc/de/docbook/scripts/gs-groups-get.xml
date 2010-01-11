@@ -44,7 +44,7 @@
   <refnamediv>
     <refname>gs-groups-get</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: Benutzergruppen
+    <refpurpose><application>Gemeinschaft</application>: Gruppen
     anzeigen</refpurpose>
   </refnamediv>
 
@@ -67,7 +67,51 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Zeigt die eingerichteten Benutzergruppen an.</para>
+    <para>Zeigt die eingerichteten Gruppen an.</para>
+    
+    <para>Beispielausgabe:</para>
+	  <para>
+	  <screen>
+----------------------------------------------
+| id | name      | title             | type  |
+----------------------------------------------
+|  2 | a_queues  | Alle Queues @Home | queue |
+|  4 | blaagents | Bla bla Agenten   | user  |
+|  3 | blaqueues | Bla bla bla       | queue |
+|  1 | home      | Alle User @Home   | user  |
+----------------------------------------------
+	  </screen>
+	  </para>
+      <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>id</term>
+        <listitem>
+          <para>Die interne ID der Gruppe</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term></term>
+        <listitem>
+          <para>Der Name der Gruppe, über diesen werden die Gruppen immer eindeutig identifiziert</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>titel</term>
+        <listitem>
+          <para>Der Titel der Gruppe, dieser wird in der GUI angezeigt und dient als "Merkhilfe"</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>type</term>
+        <listitem>
+          <para>Der Typ der Gruppe</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+   </para>
+    
   </refsection>
 
   <refsection>
@@ -81,6 +125,9 @@
 
         <listitem>
           <para>Zeigt die eingebaute Hilfe an.</para>
+	  
+	  
+	  
         </listitem>
       </varlistentry>
     </variablelist>
@@ -95,6 +142,14 @@
   <refsection>
     <title>Siehe auch</title>
 
-    <para>-</para>
+    <para><xref  linkend="man-gs-group-add" />
+    <xref  linkend="man-gs-group-del" />
+    <xref  linkend="man-gs-group-change" />
+    <xref  linkend="man-gs-group-members-get" />
+    <xref  linkend="man-gs-group-member-add" />
+    <xref  linkend="man-gs-group-member-del" />
+    <xref  linkend="man-gs-group-permissions-get" />
+    <xref  linkend="man-gs-group-permission-add" />
+    <xref  linkend="man-gs-group-permission-del" /></para>
   </refsection>
 </refentry>

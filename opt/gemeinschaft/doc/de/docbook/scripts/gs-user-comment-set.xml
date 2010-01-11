@@ -111,7 +111,8 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-user-comment-get" />
+    </para>
   </refsection>
 </refentry>

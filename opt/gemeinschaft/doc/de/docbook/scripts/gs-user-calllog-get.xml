@@ -68,6 +68,67 @@
     <title>Beschreibung</title>
 
     <para>Gibt die Anrufliste eines Benutzers aus.</para>
+    <para>Beispielausgabe:
+<screen>
+------------------------------------------------------------------------------------
+| number | timestamp  | type   | r_name      | r_gs_uid | r_lastname | r_firstname |
+------------------------------------------------------------------------------------
+| 207    | 1252174638 | missed | E. Nokia    | 41       | Nokia      | E61         |
+| 204    | 1253559178 | missed | S. Sprenger | 31       | Sprenger   | Soeren      |
+| 203    | 1256302983 | missed | S. Sprenger | 35       | Sprenger   | Soeren      |
+------------------------------------------------------------------------------------
+</screen>
+    </para>
+     
+   <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>number</term>
+        <listitem>
+          <para>Die Nummer die Angerufen hat</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>timestamp</term>
+        <listitem>
+          <para>UNIX-Zeitstempel des Zeitpunktes, zu welchem das Gespräch ankam (Sekunden seit 01.01.1970 00:00:00 == Greenwitch Zeit)</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>type</term>
+        <listitem>
+          <para>der Typ des Anrufes, missed, in oder out</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>r_name</term>
+        <listitem>
+          <para>Der Benutzername des Anrufers, funktioniert nur, wenn dieser als Nebenstelle im System ist.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>r_gs_uid</term>
+        <listitem>
+          <para>Die Interne ID des Nutzer der angerufen hat/wurde, funktioniert nur, wenn dieser als Nebenstelle im System ist.</para>
+        </listitem>
+      </varlistentry>
+       <varlistentry>
+        <term>r_lastname</term>
+        <listitem>
+          <para>Der Nachname des Anrufers, funktioniert nur, wenn dieser als Nebenstelle im System ist.</para>
+        </listitem>
+      </varlistentry>
+       <varlistentry>
+        <term>r_firstname</term>
+        <listitem>
+          <para>Der Vorname des Anrufers, funktioniert nur, wenn dieser als Nebenstelle im System ist.</para>
+        </listitem>
+      </varlistentry>
+      
+    </variablelist>
+  </para>
+    
   </refsection>
 
   <refsection>

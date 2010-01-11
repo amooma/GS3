@@ -69,6 +69,16 @@
 
     <para>Zeigt die für einen Benutzer eingetragenen externen Rufnummern
     an.</para>
+    <para>Beispielausgabe:
+<screen>
+-----------------------------
+| number                    |
+-----------------------------
+| 001233423212              |
+-----------------------------
+</screen>
+    </para>
+    
   </refsection>
 
   <refsection>
@@ -103,7 +113,9 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+      <xref  linkend="man-gs-user-external-number-add" />
+      <xref  linkend="man-gs-user-external-number-del" />
+    </para>
   </refsection>
 </refentry>

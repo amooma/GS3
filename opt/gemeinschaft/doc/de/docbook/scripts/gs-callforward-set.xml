@@ -69,7 +69,9 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Setzt für einen Benutzer eine Rufumleitung.</para>
+    <para>Setzt für einen Benutzer eine Rufumleitung. Dabei kann zwischen verschiedenen Quellen des Anrufes (Sources) 
+    d.h. Intern oder Extern unterschieden werden. Desweitern kann man eine Rufumleitung je nach Fall d.h. Status der Nebenstelle setzen (Immer,Besetzt...).
+    Die Rufumleitung wird erst aktiv, wenn mit dem Skript gs-callforward-active (<xref  linkend="man-gs-callforward-activate" /> ein Rufumleitungsziel aktiviert wurde.</para>
   </refsection>
 
   <refsection>
@@ -114,7 +116,7 @@
         <term><option>--type</option>=<literal>std</literal>|<literal>var</literal>|<literal>vml</literal></term>
 
         <listitem>
-          <para>Art</para>
+          <para>Art des Rufumleitungszieles std=Standart-Nummer, var=Temporäre Nummer, vml=Voicemail/Anrufbeantworter</para>
         </listitem>
       </varlistentry>
 
@@ -122,7 +124,9 @@
         <term><option>--number</option>=<replaceable>number</replaceable></term>
 
         <listitem>
-          <para>Ziel-Rufnummer</para>
+          <para>Ziel-Rufnummer. Anrufbeantworter:
+          <code>vm<replaceable>Nebenstelle</replaceable></code>, Ansage:
+          <code>vm<replaceable>*Nebenstelle</replaceable></code>.</para>
         </listitem>
       </varlistentry>
 
@@ -146,7 +150,9 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+   	<para>gs-callforward-active (<xref  linkend="man-gs-callforward-activate" /></para>
+	<para>gs-callforward-get (<xref  linkend="man-gs-callforward-get" /></para>
+	<para>gs-callforward-number-set (<xref  linkend="man-gs-callforward-number-set" /></para>
+	<para>gs-callforward-timeout-set (<xref  linkend="man-gs-callforward-timeout-set" /></para>
   </refsection>
 </refentry>

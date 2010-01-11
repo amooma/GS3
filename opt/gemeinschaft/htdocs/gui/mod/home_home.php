@@ -78,14 +78,14 @@ if ($_SESSION['sudo_user']['name'] === 'sysadmin') {
 	return;
 }
 
-echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info']['ext'] ), '</b></p><br />', "\n";
+echo '<p>', __('Ihre Durchwahl'), ': <b>', htmlEnt( $_SESSION['sudo_user']['info']['ext'] ), '</b></p>', "\n";
 
 
 
 if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 ?>
 
-<div class="fl" style="clear:right; width:99%;">
+<div class="fl" style="clear:right; width:99%; margin:0.2em 0;">
 	
 	<div class="fl" style="width:49%; min-width:20em; max-width:35em; margin:1px;">
 		<?php
@@ -94,8 +94,12 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 		$num = @$DB->numFoundRows();
 		
 		?>
-		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
-			<?php echo __('Neue Voicemail-Nachrichten') ,' (',$num,')'; ?>
+		<div class="th" style="padding:0.35em 0.5em; margin-bottom:2px;">
+			<img alt=" " src="<?php echo GS_URL_PATH, 'crystal-svg/16/act/inbox.png'; ?>" />&nbsp;
+			<a href="<?php echo gs_url('voicemail','messages'); ?>"><?php
+				echo __('Neue Voicemail-Nachrichten');
+			?></a>
+			<?php echo ' (',$num,')'; ?>
 		</div>
 		<div class="td" style="padding:0.0em;">
 			<?php
@@ -130,8 +134,11 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 	</div>
 	
 	<div class="fl" style="width:49%; min-width:20em; max-width:30em; margin:1px;">
-		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
-			<?php echo __('Rufumleitung'); ?>
+		<div class="th" style="padding:0.35em 0.5em; margin-bottom:2px;">
+			<img alt=" " src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/yast_route.png'; ?>" />&nbsp;
+			<a href="<?php echo gs_url('forwards','forwards'); ?>"><?php
+				echo __('Rufumleitung');
+			?></a>
 		</div>
 		<div class="td" style="padding:0.0em;">
 			<?php
@@ -235,10 +242,9 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 
 </div>
 
-<br style="clear:right" />
-<div class="fl" style="clear:right; width:100%; height:5px;"></div>
+<div class="ie_clearing"></div>
 
-<div class="fl" style="clear:right; width:99%;">
+<div class="fl" style="clear:right; width:99%; margin:0.2em 0;">
 	
 	<div class="fl" style="width:49%; min-width:20em; max-width:35em; margin:1px;">
 		<?php
@@ -260,8 +266,11 @@ LIMIT 5'
 		//$num = @$DB->numFoundRows();
 		
 		?>
-		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
-			<?php echo __('Letzte entgangene Anrufe'); ?>
+		<div class="th" style="padding:0.35em 0.5em; margin-bottom:2px;">
+			<img alt=" " src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/karm.png'; ?>" />&nbsp;
+			<a href="<?php echo gs_url('calls','missed'); ?>"><?php
+				echo __('Letzte entgangene Anrufe');
+			?></a>
 		</div>
 		<div class="td" style="padding:0.0em;">
 			<?php
@@ -291,8 +300,14 @@ LIMIT 5'
 	</div>
 	
 	<div class="fl" style="width:49%; min-width:20em; max-width:30em; margin:1px;">
-		<div class="th" style="padding:0.35em 0.6em; margin-bottom:2px;">
-			<?php echo __('Pr&auml;senz'); ?>
+<?php
+	if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
+?>
+		<div class="th" style="padding:0.35em 0.5em; margin-bottom:2px;">
+			<img alt=" " src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/display.png'; ?>" />&nbsp;
+			<a href="<?php echo gs_url('monitor','peers'); ?>"><?php
+				echo __('Pr&auml;senz');
+			?></a>
 		</div>
 		<div class="td" style="padding:0.6em;">
 			<form method="get" action="<?php echo GS_URL_PATH; ?>">
@@ -307,19 +322,54 @@ LIMIT 5'
 			<input type="submit" value="<?php echo __('Speichern'); ?>" />
 			</form>
 		</div>
+<?php
+	} else {
+?>
+		<div class="th" style="padding:0.35em 0.5em; margin-bottom:2px;">
+			<img alt=" " src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png'; ?>" />&nbsp;
+			<?php
+				echo __('Call-Box');
+			?>
+		</div>
+		<div class="td" style="padding:0.6em;">
+			<form method="post" action="<?php echo GS_URL_PATH, 'srv/pb-dial.php'; ?>">
+			<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+			<?php echo __('Rufnummer'); ?>: &nbsp;
+			<input type="text" name="n" value="" size="20" maxlength="30" class="m" />
+			<button class="m" title="<?php echo htmlEnt(__("w\xC3\xA4hlen")); ?>" style="height:22px; padding:0;">
+			<img alt="<?php echo htmlEnt(__("w\xC3\xA4hlen")); ?>" src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png'; ?>" style="margin:0 5px;" />
+			</button>
+			</form>
+		</div>
+<?php
+	}
+?>
 	</div>
 	
 </div>
 
-<br style="clear:right" />
-<div class="fl" style="clear:right; width:99%; height:20px;"></div>
+<div class="ie_clearing"></div>
+<div class="fl" style="width:99%; height:10px; font-size:0;"></div>
 
+<?php
+	if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
+?>
 <form method="post" action="<?php echo GS_URL_PATH, 'srv/pb-dial.php'; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <?php echo __('Call-Box'); ?>: &nbsp;
-<input type="text" name="n" value="" size="20" maxlength="30" />
-<input type="submit" value="<?php echo __('w&auml;hlen'); ?>" />
+<input type="text" name="n" value="" size="20" maxlength="30" class="m" />
+<button class="m" title="<?php echo htmlEnt(__("w\xC3\xA4hlen")); ?>" style="height:22px; padding:0;">
+<img alt="<?php echo htmlEnt(__("w\xC3\xA4hlen")); ?>" src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png'; ?>" style="margin:0 5px;" />
+</button>
 </form>
+<?php
+	} else {
+?>
+<div class="ie_clearing"></div>
+<div class="fl" style="width:99%; height:10px; font-size:0;"></div>
+<?php
+	}
+?>
 
 <?php
 }

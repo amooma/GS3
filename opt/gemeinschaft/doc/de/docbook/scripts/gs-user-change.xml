@@ -70,7 +70,9 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Ändert ein Benutzer-Konto.</para>
+    <para>Ändert ein Benutzer-Konto. Alle Werte die an das Skript übergeben werden können (außer dem Benutzernamen selbst und der Nebenstelle), können geändert werden.
+    Für --host wird zusätzlich noch --force benötigt, da mit dieser Operation Sprachdateien verloren gehen.
+    </para>
   </refsection>
 
   <refsection>
@@ -164,7 +166,11 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-user-del" />
+    <xref  linkend="man-gs-user-add" />
+    <xref  linkend="man-gs-user-get" />
+    <xref  linkend="man-gs-users-get" />
+    </para>
   </refsection>
 </refentry>

@@ -67,7 +67,11 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Fügt für einen Benutzer eine externe Rufnummer hinzu.</para>
+    <para>Fügt für einen Benutzer eine externe Rufnummer hinzu. 
+    Die externe Nummer dient dazu, dem Nutzer die Berechtigung zu erteilen auf diese Externe Nummer weiter zu leiten.
+    Wenn GS_EXTERNAL_NUMBERS_BACKEND (Siehe <xref  linkend="gs-config" />) auf LDAP gesetzt wurde,
+    wird mit diesem Skript die Nummer auch im LDAP eingetragen.
+    </para>
   </refsection>
 
   <refsection>
@@ -78,7 +82,7 @@
         <term><option>--user</option>=<replaceable>user</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Benutzername des Nutzers, zu dem eine Externe Nummer hinzugefügt wird.</para>
         </listitem>
       </varlistentry>
 
@@ -111,6 +115,9 @@
   <refsection>
     <title>Siehe auch</title>
 
-    <para>-</para>
+    <para>
+      <xref  linkend="man-gs-user-external-numbers-get" />
+      <xref  linkend="man-gs-user-external-number-del" />
+    </para>
   </refsection>
 </refentry>

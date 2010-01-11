@@ -68,7 +68,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Verschiebt die Dummy-User auf einen anderen Node.</para>
+    <para>Verschiebt die Dummy-User auf einen anderen Node. Diese Verteilung wird nur auf nicht fremden Hosts durchgeführt.</para>
   </refsection>
 
   <refsection>
@@ -80,7 +80,7 @@
 
         <listitem>
           <para>Die ID oder IP-Adresse des neuen Nodes wie mit
-          <literal><command>gs_hosts_get</command></literal> angezeigt oder
+          <literal><command>gs-hosts-get</command></literal> angezeigt oder
           <literal>RANDOM</literal> um die Accounts zufällig zu
           verteilen.</para>
         </listitem>

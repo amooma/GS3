@@ -28,6 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
@@ -86,6 +87,9 @@ function gs_user_del( $user, $reload=true )
 	//@ shell_exec( 'asterisk -rx \'sip notify snom-reboot '. $user_name .'\' >>/dev/null' );
 	@ gs_prov_phone_checkcfg_by_user( $user, true );
 	
+	#delete user from all groups
+	#
+	gs_group_members_purge_by_type('user', Array($user_id));
 	
 	# delete clir settings
 	#
@@ -104,6 +108,18 @@ function gs_user_del( $user, $reload=true )
 	#
 	$db->execute( 'DELETE FROM `callforwards` WHERE `user_id`='. $user_id );
 	
+	# delete anounce files
+	#
+	$db->execute( 'DELETE FROM `vm_rec_messages` WHERE `_user_id`='. $user_id );
+	
+	# delete parallel-call definition
+	#
+	$db->execute( 'DELETE FROM `cf_parallelcall` WHERE `_user_id`='. $user_id );
+	
+	# delete timerules definition
+	#
+	$db->execute( 'DELETE FROM `cf_timerules` WHERE `_user_id`='. $user_id );
+	
 	# delete from pickup groups
 	#
 	$db->execute( 'DELETE FROM `pickupgroups_users` WHERE `user_id`='. $user_id );
@@ -115,6 +131,10 @@ function gs_user_del( $user, $reload=true )
 	# delete external numbers
 	#
 	$db->execute( 'DELETE FROM `users_external_numbers` WHERE `user_id`='. $user_id );
+	
+	# delete info about voicemail messages //FIXME - delete files?
+	#
+	$db->execute( 'DELETE FROM `vm_msgs` WHERE `user_id`='. $user_id );
 	
 	# delete mailbox settings
 	#

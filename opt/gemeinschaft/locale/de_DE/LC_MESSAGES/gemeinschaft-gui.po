@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-15 14:02+0200\n"
+"POT-Creation-Date: 2009-08-18 05:36+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: German <>\n"
@@ -85,6 +85,14 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 250
 #, php-format
 msgid "-- Ihr %s-Team"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 389
+msgid "0"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 389
+msgid "0 für unbegrenzt"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 225
@@ -245,6 +253,10 @@ msgid ""
 "Abh&auml;ngig vom SIP-Provider kann es erforderlich sein die Form "
 "<tt>benutzer@domain</tt> anzugeben. (<tt>domain</tt> wird dann im <tt>From</"
 "tt>-Header verwendet, was <tt>fromdomain</tt> in Asterisk entspricht.)"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 251
+msgid "Abmelden nicht erfolgreich!"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 216
@@ -577,6 +589,14 @@ msgstr ""
 msgid "Ausgang"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 332
+msgid "Ausgehende Caller-ID"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_outbound.php, line: 43
+msgid "Ausgehende Routen und Least-Cost-Routing"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 58
 msgid "Ausloggen"
 msgstr "Ausloggen"
@@ -615,10 +635,6 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 89
 msgid "BLF"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 223
-msgid "BRI-Gateways"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 52
@@ -669,12 +685,24 @@ msgstr "Benutzer"
 msgid "Benutzer &quot;%s&quot; unbekannt."
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 317
+msgid "Benutzer abmelden"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 409
 msgid "Benutzer anlegen"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 543
 msgid "Benutzer anlegen und bearbeiten"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 253
+msgid "Benutzer erfolgreich abgemeldet."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 263
+msgid "Benutzer erfolgreich angemeldet."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 60
@@ -719,10 +747,6 @@ msgstr "Benutzername"
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/index.php, line: 137
 msgid "Benutzername/Pa&szlig;wort falsch."
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 141
-msgid "Berechtigungen"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_outbound.php, line: 364
@@ -854,6 +878,11 @@ msgstr "Bitte w&auml;hlen Sie eine Warteschleife."
 msgid "CDRs"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 512
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 522
+msgid "CIDR"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 102
 msgid "CLIR nach extern"
 msgstr "CLIR nach extern"
@@ -882,8 +911,8 @@ msgstr ""
 msgid "Call-by-Call?"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 312
-msgid "Caller-ID"
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 413
+msgid "Codecs"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 121
@@ -907,6 +936,10 @@ msgstr ""
 msgid "DNS-Server"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 394
+msgid "DTMF-Modus"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 271
 msgid ""
 "Dabei ist die Reihenfolge entscheidend; das erste zutreffende Muster gewinnt."
@@ -925,6 +958,13 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 412
 msgid "Das Format sollte etwa folgendermaßen aussehen."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 282
+msgid ""
+"Das Grandstream muss bei &Auml;nderung eines Klingeltons aktualisiert werden."
+"<br />Die BT-Serie kann nicht zwischen intern und extern unterscheiden. Es "
+"wird immer die Ruftonmelodie f&uuml;r intern verwendet!"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/login.php, line: 42
@@ -1141,6 +1181,10 @@ msgstr ""
 #, php-format
 msgid "Die Voicemail erreichte Sie auf Durchwahl %s."
 msgstr "Die Nachricht erreichte Sie auf Durchwahl %s."
+#
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 204
+msgid "Die angeforderte Seite ist:"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pin_pin.php, line: 63
 msgid "Die beiden neuen PINs stimmen nicht &uuml;berein!"
@@ -1362,6 +1406,14 @@ msgstr ""
 "Betreten angesagt. (Die anderen Teilnehmer w&auml;hlen dann <code>88 "
 "<i>Konferenznr.</i></code>, s.o.)"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 354
+msgid "Eingehende Caller-ID"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 343
+msgid "Eingehende Durchwahl"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 84
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 274
 msgid "Eingeloggte Benutzer"
@@ -1400,6 +1452,12 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 929
 msgid "Einstellungen nochmal ver&auml;ndern"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 238
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 337
+#, php-format
+msgid "Eintrag &quot;%s&quot; nicht gefunden."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 293
@@ -1448,6 +1506,10 @@ msgstr "Ergebnis"
 msgid "Erlaubte Formate"
 msgstr "Erlaubte Formate"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 473
+msgid "Erlaubtes IP-Subnetz"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/phones-scan.php, line: 41
 msgid "Erneut suchen"
 msgstr "Erneut suchen"
@@ -1480,6 +1542,10 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 457
 msgid "Es kann etwa 1 Minute dauern bis &Auml;nderungen aktiv werden."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 424
+msgid "Experimentell"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 125
@@ -1534,6 +1600,10 @@ msgstr "Fehler beim Abfragen des Benutzers."
 msgid "Fallback"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 261
+msgid "Falsche Durchwahl oder PIN!"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 38
 msgid "Familie"
 msgstr "Familie"
@@ -1553,6 +1623,10 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_out.php, line: 109
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_done.php, line: 126
 msgid "Fehler"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 225
+msgid "Fehler bei der Zuordnung der IP:"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 85
@@ -1695,6 +1769,12 @@ msgstr "Freunde"
 msgid "Funktion"
 msgstr "Funktion"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 334
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 345
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 356
+msgid "Fußnote"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 194
 msgid "G&uuml;ltig bis"
 msgstr ""
@@ -1732,15 +1812,15 @@ msgid ""
 "sie benutzt werden k&ouml;nnen."
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 366
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 415
 #, php-format
 msgid ""
 "Geben Sie hier falls erforderlich ein <a href=\"%s\" target=\"_blank\">PCRE</"
 "a>-Muster an, das eventuelle Pr&auml;fixe von eingehend gew&auml;hlten "
 "Nummern wegschneidet, soda&szlig; nur noch die interne Durchwahl &uuml;brig "
-"bleibt! Beispiele:<br /> &nbsp;&nbsp;&nbsp; <tt>s/^0251702//</tt><br /> "
-"&nbsp;&nbsp;&nbsp; <tt>s/^(((0049|0)251))702//</tt><br /> &nbsp;&nbsp;&nbsp; "
-"<tt>s/^(?:(?:0049|0)251)?702(.*)/$1/</tt>"
+"bleibt! Beispiele:<br /> &nbsp;&nbsp;&nbsp; <tt>s/^026313370//</tt><br /> "
+"&nbsp;&nbsp;&nbsp; <tt>s/^(((0049|0)2631))3370//</tt><br /> &nbsp;&nbsp;"
+"&nbsp; <tt>s/^(?:(?:0049|0)2631)?3370(.*)/$1/</tt>"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 109
@@ -1800,6 +1880,10 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/prov/snom/dial-log.php, line: 103
 msgid "Gewählt"
 msgstr "Gewählt"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 386
+msgid "Gleichzeitige Anrufe"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_rec.php, line: 101
 msgid "Gr&ouml;&szlig;e"
@@ -1950,16 +2034,16 @@ msgstr ""
 msgid "IP-Adresse suchen"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 280
+msgid "ISDN-Gateways"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 272
 msgid "ISDN-Ports"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 275
 msgid "ISDN-Ports (BRI)"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 240
-msgid "IVRs"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 118
@@ -2053,6 +2137,10 @@ msgstr ""
 msgid "International"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 376
+msgid "Ist hinter NAT"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/system_shutdown.php, line: 84
 msgid "Ja, ausschalten"
 msgstr ""
@@ -2097,6 +2185,12 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 163
 msgid "Kanonisierung ist nicht aktiviert!"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 243
+# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 342
+# File: opt/gemeinschaft/htdocs/prov/aastra/dial-log.php, line: 167
+msgid "Kein Eintrag"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 418
@@ -2202,6 +2296,10 @@ msgstr "Lautlos"
 msgid "Leer"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 447
+msgid "Leer für keinen Proxy."
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 225
 msgid "Leere DNS-Server-Adresse!"
 msgstr ""
@@ -2289,6 +2387,14 @@ msgstr ""
 msgid "Min."
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 508
+#, php-format
+msgid ""
+"Mit Angabe des Ports (Standard-SIP-Port: %s) wird direkt dieser Port "
+"verwendet. Ohne Angabe wird beim Rauswählen ein DNS-Lookup des Srv-Records %"
+"s der Domain (/des Servers) gemacht."
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/dhcpd.php, line: 76
 msgid "Mitgelieferten DHCP-Server aktivieren.<br />(empfohlen)"
 msgstr ""
@@ -2300,6 +2406,11 @@ msgstr "Mitglieder"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 258
 msgid "Mitglieder der Rufannahme-Gruppe"
 msgstr "Mitglieder der Rufannahme-Gruppe"
+#
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 378
+#, php-format
+msgid "Modul %s nicht vorhanden"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 127
 msgid "Mon."
@@ -2524,6 +2635,10 @@ msgstr "Nodes-Status"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_send.php, line: 144
 msgid "Normale Aufl&ouml;sung"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 101
+msgid "Nst."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 197
@@ -2754,6 +2869,10 @@ msgstr ""
 msgid "Provisioning-Parameter-Profil"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 278
+msgid "Proxy"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 285
 msgid ""
 "PtP (Point-to-Point) bei einem Anlagenanschlu&szlig;, PtMP (Point-to-"
@@ -2773,6 +2892,18 @@ msgstr "Queues"
 msgid "R&uuml;ckfrage"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 398
+msgid "RTP-Audio"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 399
+msgid "RTP-Meta-Daten"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 392
+msgid "RTP-Strom umlenken"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 998
 msgid "Rechte Tasten"
 msgstr ""
@@ -2788,6 +2919,11 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_boi-perms.php, line: 185
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_boi-perms.php, line: 216
 msgid "Regel speichern"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 271
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 469
+msgid "Registrar"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 364
@@ -2895,6 +3031,18 @@ msgstr "Rufumleitung"
 msgid "Rufumleitung Warteschleifen"
 msgstr "Rufumleitung Warteschleifen"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 87
+msgid ""
+"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
+"auf den Anrufbeantworter aktivieren"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 93
+msgid ""
+"Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
+"auf die Ansage ohne Anrufbeantworter aktivieren"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/help_numbers.php, line: 75
 msgid ""
 "Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
@@ -2912,6 +3060,10 @@ msgid ""
 msgstr ""
 "Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; "
 "deaktivieren"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 400
+msgid "SIP INFO"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 108
 msgid "SIP Ping"
@@ -2972,6 +3124,10 @@ msgstr ""
 msgid "Senderkennung"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 271
+msgid "Server"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 107
 msgid "Service-Nummern"
 msgstr "Service-Nummern"
@@ -2985,6 +3141,16 @@ msgstr "Shift"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 577
 msgid "Shift-Ebene"
 msgstr "Shift-Ebene"
+#
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 397
+#, php-format
+msgid "Sie (%s) haben keine Admin-Rechte."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 365
+#, php-format
+msgid "Sie dürfen nicht als %s agieren."
+msgstr ""
 #
 # File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 168
 msgid "Sie finden die Voicemail im Anhang dieser Email."
@@ -3005,6 +3171,14 @@ msgstr ""
 msgid ""
 "Sie haben noch nicht alle \\u00C4nderungen gespeichert! Sie sollten zuerst "
 "speichern oder die \\u00C4nderungen verwerfen."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 425
+msgid ""
+"Sie k&ouml;nnen diese Feld auch verwenden um f&uuml;r die Anruflisten mit "
+"<tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;"
+"gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang "
+"wegzuschneiden."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 47
@@ -3038,11 +3212,20 @@ msgstr ""
 "Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-"
 "St&ouml;ren-Funktion am Telefon ben&ouml;tigt."
 #
-# File: opt/gemeinschaft/htdocs/gui/index.php, line: 423
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 553
 #, php-format
 msgid ""
-"Sie verwenden einen sehr alten Browser (%s), der diese Webseiten fehlerhaft "
+"Sie verwenden einen alten Browser (%s), der diese Webseiten fehlerhaft "
 "darstellt! Tipp: Benutzen Sie %s oder zumindest den aktuellen %s."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 518
+#, php-format
+msgid ""
+"Sinnvolle Einstellungen wären z.B. %s um Anrufe von allen IP-Adressen zu "
+"erlauben, %s um nur Anrufe aus dem Netz %s zu erlauben, %s um nur Anrufe aus "
+"dem Netz %s zu erlauben, %s um nur Anrufe von der IP-Adresse %s zu erlauben "
+"usw."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 93
@@ -3088,6 +3271,21 @@ msgstr ""
 msgid "Sprache"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 510
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 511
+msgid "Srv Resource Record"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 336
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 351
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 366
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 381
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 389
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 408
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 427
+msgid "Standard"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 188
 msgid "Standardnummer"
 msgstr "Standardnummer"
@@ -3125,13 +3323,12 @@ msgstr "Stonith"
 msgid "Strategie"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 268
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 506
 #, php-format
 msgid ""
-"String für den Dial()-Befehl. Dabei wird {number} automatisch von "
-"Gemeinschaft durch die zu wählende Rufnummer, {number:1} durch die Rufnummer "
-"ohne die erste Ziffer und {gateway} durch die interne Bezeichnung \"%s\" "
-"ersetzt."
+"String für den %s-Befehl. Dabei wird %s automatisch von Gemeinschaft durch "
+"die zu wählende Rufnummer, %s durch die Rufnummer ohne die erste Ziffer und %"
+"s durch die interne Bezeichnung %s ersetzt."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-isdn.php, line: 290
@@ -3141,6 +3338,10 @@ msgid ""
 "Gemeinschaft durch die zu wählende Rufnummer, {number:1} durch die Rufnummer "
 "ohne die erste Ziffer, {port} durch den eingestellten Port und {gateway} "
 "durch die interne Bezeichnung \"%s\" ersetzt."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 521
+msgid "Subnetz"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 247
@@ -3156,17 +3357,31 @@ msgstr ""
 msgid "Suchen"
 msgstr "Suchen"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 371
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 356
+msgid "Suchen/Ersetzen-Muster"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 409
 #, php-format
 msgid ""
 "Suchen/Ersetzen-Muster (<a href=\"%s\" target=\"_blank\">PCRE</a>) f&uuml;r "
-"die Absenderrufnummer bei abgehenden Anrufen. Beispiele:<br /> Nur die "
-"Durchwahl &uuml;bermitteln: <tt>s/^(.*)/$1/</tt><br /> Nationales Format: "
-"<tt>s/^(.*)/030123456$1/</tt><br /> Internationales Format: <tt>s/^(."
+"die Rufnummern&uuml;bermittlung bei abgehenden Anrufen. Beispiele:<br /> Nur "
+"die Durchwahl &uuml;bermitteln: <tt>s/^(.*)/$1/</tt><br /> Nationales "
+"Format: <tt>s/^(.*)/030123456$1/</tt><br /> Internationales Format: <tt>s/^(."
 "*)/004930123456$1/</tt> oder <tt>s/^(.*)/+4930123456$1/</tt><br /> F&uuml;r "
 "alle Benutzer die gleiche Nummer &uuml;bertragen: <tt>s/^(.*)/00493012345612/"
 "</tt><br /> Normalerweise sollten Sie das nationale oder internationale "
 "Format verwenden."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 421
+#, php-format
+msgid ""
+"Suchen/Ersetzen-Muster (<a href=\"%s\" target=\"_blank\">PCRE</a>) f&uuml;r "
+"die Rufnummern&uuml;bermittlung bei eingehenden Anrufen. Hiermit lassen sich "
+"Anrufernummern die vom Provider falsch &uuml;bermittelt werden korrigieren. "
+"Beispiel: <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> um eine 0 an den Anfang "
+"zu setzen. Leer f&uuml;r keine Ersetzung."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 303
@@ -3225,12 +3440,6 @@ msgstr ""
 msgid "Tastenprofil"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 222
-# File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 307
-#, php-format
-msgid "Teilnehmer &quot;%s&quot; nicht gefunden."
-msgstr ""
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 279
 msgid "Tel.Nr."
 msgstr ""
@@ -3250,6 +3459,16 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 321
 msgid "Telefon aktualisieren"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 322
+msgid "Telefon neu starten"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 246
+# File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 253
+# File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 263
+msgid "Telefon wird neu gestartet."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 203
@@ -3377,6 +3596,32 @@ msgstr ""
 msgid "Ungültige Nummer"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/index.php, line: 185
+#, php-format
+msgid "Ungültiges Modul %s"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 135
+#, php-format
+msgid ""
+"Ungültiges Suchen/Ersetzen-Muster %s für die ausgehende Caller-ID wurde "
+"nicht gespeichert!"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 124
+#, php-format
+msgid ""
+"Ungültiges Suchen/Ersetzen-Muster %s für die eingehende Caller-ID wurde "
+"nicht gespeichert!"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 113
+#, php-format
+msgid ""
+"Ungültiges Suchen/Ersetzen-Muster %s für die eingehende Durchwahl wurde "
+"nicht gespeichert!"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 150
 # File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 165
 #, php-format
@@ -3426,6 +3671,10 @@ msgstr "Verbindungsstatistik"
 msgid "Verbindungszeit"
 msgstr "Verbindungszeit"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 371
+msgid "Verfügbarkeit prüfen"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 193
 msgid ""
 "Verh&auml;ltnis von angenommenen Anrufen zu eingegangenen Anrufen in Prozent"
@@ -3470,6 +3719,10 @@ msgstr "Verzeichnis 8"
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 44
 msgid "Verzeichnis 9"
 msgstr "Verzeichnis 9"
+#
+# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 60
+msgid "Voicemail"
+msgstr "Voicemail"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-diskusage.php, line: 157
 msgid "Voicemail-Ansagen"
@@ -3557,6 +3810,11 @@ msgstr "Wartezeit"
 msgid "Wartezeit ansagen"
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 509
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 519
+msgid "Weitere Informationen:"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 118
 msgid "Weiterleiten"
 msgstr ""
@@ -3615,11 +3873,6 @@ msgstr ""
 msgid "Wurzel-Gruppe"
 msgstr "Wurzel-Gruppe"
 #
-# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 199
-#, php-format
-msgid "You are not allowed to act as \"%s\"."
-msgstr "Sie d&uuml;rfen nicht als \"%s\" agieren."
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 144
 #, php-format
 msgid "You are not logged in (authentication method: \"%s\")."
@@ -3661,10 +3914,6 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 264
 msgid "Ziel"
 msgstr "Ziel"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 267
-msgid "Zielrufnummern f&uuml; Anrufumleitung"
-msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 265
 msgid "Zielrufnummern f&uuml;r Anrufumleitung"
@@ -3749,8 +3998,8 @@ msgstr ""
 msgid "anzeigen"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 292
-msgid "auch wenn keine Agenten angemeldet"
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 357
+msgid "auch wenn keine Agenten angemeldet sind"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 95
@@ -3916,6 +4165,11 @@ msgstr ""
 msgid "hinzuf&uuml;gen ..."
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 512
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 522
+msgid "http://de.wikipedia.org/wiki/Classless_Inter-Domain_Routing"
+msgstr ""
+#
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 767
 msgid "http://de.wikipedia.org/wiki/IP-Adresse"
 msgstr ""
@@ -3931,6 +4185,18 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 806
 msgid "http://de.wikipedia.org/wiki/Router"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 510
+msgid "http://de.wikipedia.org/wiki/SRV_Resource_Record"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 521
+msgid "http://de.wikipedia.org/wiki/Subnetz"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 514
+msgid "http://mit.edu/sip/sip.edu/dns.shtml"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/prov_provparams.php, line: 365
@@ -3952,6 +4218,18 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/prov_provparams.php, line: 373
 # File: opt/gemeinschaft/htdocs/gui/mod/prov_provparams.php, line: 376
 msgid "http://www.aastra-detewe.de/cps/rde/xchg/aastra-detewe/hs.xsl/21552.htm"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 523
+msgid "http://www.das-asterisk-buch.de/2.1/sip.html"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 513
+msgid "http://www.hznet.de/dns/sip.html"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 515
+msgid "http://www.voip-info.org/wiki/view/DNS+SRV"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 48
@@ -4054,12 +4332,12 @@ msgstr ""
 msgid "neuer Kollege:"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 295
-msgid "nicht wenn keine Agenten angemeldet"
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 364
+msgid "nicht wenn keine Agenten angemeldet sind"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 298
-msgid "nicht wenn keine Agenten angemeldet und frei"
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 371
+msgid "nicht wenn keine Agenten angemeldet sind oder keine Agenten frei sind"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-misdn.php, line: 203
@@ -4099,6 +4377,10 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_private.php, line: 297
 msgid "r&uuml;ckg&auml;ngig"
 msgstr "r&uuml;ckg&auml;ngig"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 303
+msgid "registrieren"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 281
 msgid "setzbar?"
@@ -4182,16 +4464,24 @@ msgstr "weiter"
 msgid "weiterbl&auml;ttern"
 msgstr "weiterbl&auml;ttern"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 311
-msgid "wenn keine Agenten mehr angemeldet"
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 397
+msgid "wenn keine Agenten mehr angemeldet sind"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 315
-msgid "wenn keine Agenten mehr angemeldet und frei"
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 404
+msgid ""
+"wenn keine Agenten mehr angemeldet sind oder keine Agenten mehr frei sind"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/fax_send.php, line: 164
 msgid "wird gesendet."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 339
+# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 340
+# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 361
+# File: opt/gemeinschaft/htdocs/gui/mod/home_home.php, line: 362
+msgid "wählen"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_e164.php, line: 200
@@ -4428,9 +4718,9 @@ msgstr "zur&uuml;ckbl&auml;ttern"
 #~ msgid "Verwendete Endger&auml;te"
 #~ msgstr "Aktive Endger&auml;te"
 #
-# File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 60
-#~ msgid "Voicemail"
-#~ msgstr "Voicemail"
+# File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 199
+#~ msgid "You are not allowed to act as \"%s\"."
+#~ msgstr "Sie d&uuml;rfen nicht als \"%s\" agieren."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 240
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 289

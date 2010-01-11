@@ -90,7 +90,7 @@ WHERE `s`.`name`=\''. $db->escape($uname) .'\''
 if (! ($user = $rs->fetchRow())) exit(0);  # not an error
 
 
-function _get_ringers( $user )
+function _get_ringers( $user_id )
 {
 	/*
 	$ringtones = gs_ringtones_get( $uname );
@@ -110,7 +110,8 @@ function _get_ringers( $user )
 		@gs_agi_verbose( '### DB error - Failed to connect' );
 		exit(1);
 	}
-	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user['id'] );
+
+	$rs = $db->execute( 'SELECT `src`, `bellcore`, `file` FROM `ringtones` WHERE `user_id`='. $user_id );
 	if (! $rs) {
 		@gs_agi_verbose( '### DB error - Failed to get ringtones' );
 		exit(1);
@@ -128,7 +129,7 @@ function _get_ringers( $user )
 
 if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
 	
-	$ringtones = _get_ringers( $user );
+	$ringtones = _get_ringers( $user['id'] );
 	
 	if (@$ringtones[$source]['file']) {
 		gs_agi_set_variable( 'ringer', ('<'. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'ringtones/'. $ringtones[$source]['file'] .'-snom.wav>') );
@@ -147,7 +148,7 @@ elseif (strToLower(subStr($user['phone_type'],0,7)) === 'siemens') {
 	//FIXME
 	// Siemens OpenStage does not support Alert-Info headers (yet)
 	
-	$ringtones = _get_ringers( $user );
+	$ringtones = _get_ringers( $user['id'] );
 	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
@@ -166,7 +167,7 @@ elseif (strToLower(subStr($user['phone_type'],0,6)) === 'aastra') {
 	
 	//FIXME - untested
 	
-	$ringtones = _get_ringers( $user );
+	$ringtones = _get_ringers( $user['id'] );
 	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;
@@ -183,7 +184,7 @@ elseif (strToLower(subStr($user['phone_type'],0,6)) === 'aastra') {
 }
 elseif (strToLower(subStr($user['phone_type'],0,11)) === 'grandstream') {
 	
-	$ringtones = _get_ringers( $user );
+	$ringtones = _get_ringers( $user['id'] );
 	
 	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
 		$ringtones['external']['file'] = null;

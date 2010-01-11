@@ -68,6 +68,70 @@
     <title>Beschreibung</title>
 
     <para>Zeigt die Rufumleitungen eines Benutzers an.</para>
+    <para>Beispielausgabe:
+	<screen>
+---------------------------------------------------------------------------------
+| source   | case     | active | number_std | number_var | number_vml | timeout |
+---------------------------------------------------------------------------------
+| internal | always   | no     | 203        | 204        | vm204      |         |
+| internal | busy     | no     | 203        |            | vm204      |         |
+| internal | unavail  | no     | 203        |            | vm204      |      15 |
+| internal | offline  | vml    | 203        |            | vm*204     |         |
+| external | always   | no     | 203        |            | vm204      |         |
+| external | busy     | no     | 203        |            | vm204      |         |
+| external | unavail  | no     | 203        |            | vm204      |      15 |
+| external | offline  | no     | 203        |            | vm204      |         |
+---------------------------------------------------------------------------------
+</screen>
+</para>
+
+   <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>source</term>
+        <listitem>
+          <para>Die Quelle(Herkunft) des Anrufes bei dem die Rufumleitung greift.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>case</term>
+        <listitem>
+          <para>der Fall oder Status des Endgerätes bei dem die Rufumleitung greift.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>active</term>
+        <listitem>
+          <para>Diese Spalte zeigt an, welche der 3 nachfolgenden Rufumleitungsziele aktiviert ist.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>number_std</term>
+        <listitem>
+          <para>Die Standart-Nummer</para>
+        </listitem>
+      </varlistentry>
+       <varlistentry>
+        <term>number_var</term>
+        <listitem>
+          <para>Die Temporäre Nummer</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>number_vml</term>
+        <listitem>
+          <para>Die Nummer der Voicemailbox, wenn hinter vm ein * steht, dann heist es, das nur die Ansage abgespielt wird, aber nicht aufgenommen wird.</para>
+        </listitem>
+      </varlistentry>
+       <varlistentry>
+        <term>timeout</term>
+        <listitem>
+          <para>Zeit in Sekunden, die bei dem Fall "unavail" geklingelt wird, bevor weiter geleitet wird.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+   </para>
   </refsection>
 
   <refsection>
@@ -111,7 +175,9 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+	<para>gs-callforward-set (<xref  linkend="man-gs-callforward-set" /></para>
+	<para>gs-callforward-active (<xref  linkend="man-gs-callforward-activate" /></para>
+	<para>gs-callforward-number-set (<xref  linkend="man-gs-callforward-number-set" /></para>
+	<para>gs-callforward-timeout-set (<xref  linkend="man-gs-callforward-timeout-set" /></para>
   </refsection>
 </refentry>

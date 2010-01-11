@@ -35,12 +35,22 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 
-$uname  = trim(@$argv[1]);
+$uname         = trim(@$argv[1]);
+$callerid      = trim(@$argv[2]);
+$parcallextens = trim(@$argv[2]);  //FIXME?
 
 if (! $uname) gs_agi_err( 'Invalid extension' );
 if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
 	gs_agi_err( 'Invalid extension' );
 }
+
+/*if (! preg_match('/^\{0-9,}+$/', $parcallextens)) {  // is not just digits and comma
+	die();
+}*/
+if ($parcallextens == '')  # very important variable to reduce the possibility of massive recursions during parallel callforwarding, cause all extensions are just called once :-)
+	$parcallextens = array();
+else 
+	$parcallextens = explode(',', $parcallextens);
 
 
 include_once( GS_DIR .'inc/db_connect.php' );
@@ -53,36 +63,80 @@ $uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `
 if ($uid < 1) gs_agi_err( 'User not found' );
 
 
+
 $forwards = array(
 	'internal' => array(
-		'always'  => array( 'number'=>'' ),
-		'busy'    => array( 'number'=>'' ),
-		'offline' => array( 'number'=>'' ),
-		'unavail' => array( 'number'=>'', 'timeout'=>15 )
+		'always'  => array( 'number'=>'', 'file'=>'', 'parcallextens' => '' ),
+		'busy'    => array( 'number'=>'', 'file'=>'', 'parcallextens' => '' ),
+		'offline' => array( 'number'=>'', 'file'=>'', 'parcallextens' => '' ),
+		'unavail' => array( 'number'=>'', 'file'=>'', 'parcallextens' => '', 'timeout'=>15 )
 	),
 	'external' => array(
-		'always'  => array( 'number'=>'' ),
-		'busy'    => array( 'number'=>'' ),
-		'offline' => array( 'number'=>'' ),
-		'unavail' => array( 'number'=>'', 'timeout'=>15 )
+		'always'  => array( 'number'=>'', 'file'=>'', 'parcallextens' => '' ),
+		'busy'    => array( 'number'=>'', 'file'=>'', 'parcallextens' => '' ),
+		'offline' => array( 'number'=>'', 'file'=>'', 'parcallextens' => '' ),
+		'unavail' => array( 'number'=>'', 'file'=>'', 'parcallextens' => '', 'timeout'=>15 )
 	)
 );
 
-$rs = $db->execute( 'SELECT `source`, `case`, `timeout`, `number_std`, `number_var`, `number_vml`, `active` FROM `callforwards` WHERE `user_id`='. $uid );
+$rs = $db->execute( 'SELECT `source`, `case`, `timeout`, `number_std`, `number_var`, `number_vml`, `vm_rec_id`, `active` FROM `callforwards` WHERE `user_id`='. $uid );
 while ($r = $rs->fetchRow()) {
 	$number_std = trim( $r['number_std'] );
 	$number_var = trim( $r['number_var'] );
 	$number_vml = trim( $r['number_vml'] );
+	
+	if ($r['active']==='trl') { //make the timerule-magic before anything else, to manipulate data...
+		$t = time();
+		$wd = strToLower(subStr(date('D', $t),0,2));
+		$hm = date('H:i', $t);
+		$query = 'SELECT `target` FROM `cf_timerules` WHERE `d_'.$wd.'`=1 AND `h_from`<=\''.$hm.'\' AND `h_to`>\''.$hm.'\' AND  `_user_id`='.$uid." ORDER BY `ord`";
+		$target = $db->executeGetOne($query );
+		if (substr($target,0,4) == 'vmln') {
+			//define number (get number_vml and say that only the message is played, this is be done with the vm*<exten>)
+			$tmpnumber= preg_replace('/[^0-9]/S', '', $number_vml );
+			$number_vml = "vm*".$tmpnumber;
+			//define vm_rec_id (is lige vmln-<id>)
+			$r['vm_rec_id'] = preg_replace('/[^0-9]/S', '', $target );
+			$r['active'] = 'vml';
+		} else if (substr($target,0,3) == 'vml') {
+			//define number (get number_vml and say that the message is played) 
+			$tmpnumber= preg_replace('/[^0-9]/S', '', $number_vml );
+			$number_vml = "vm".$tmpnumber;
+			//define vm_rec_id (is lige vmln-<id>)
+			$r['vm_rec_id'] = preg_replace('/[^0-9]/S', '', $target );
+			$r['active'] = 'vml';
+		} else {
+			$r['active'] = $target;
+		}
+	}
+
 	$number = '';
-	if     ($r['active']==='std' && $number_std != '')
+	$audiofile = '';
+	if     ($r['active']==='std' && $number_std != '') {
 		$number = $number_std;
-	elseif ($r['active']==='var' && $number_var != '')
+		if ($r['case'] == 'always')
+			gs_agi_set_variable( 'fw_std_active', '1');  //used for Featuretoggling cfwd
+	}
+	elseif ($r['active']==='var' && $number_var != '') {
 		$number = $number_var;
-	elseif ($r['active']==='vml' && $number_vml != '')
+	}
+	elseif ($r['active']==='vml' && $number_vml != '') {
 		$number = $number_vml;
+		$audiofile = $db->executeGetOne( 'SELECT `vm_rec_file` FROM `vm_rec_messages` WHERE `id`='. (int)$r['vm_rec_id'] );
+	}
+	elseif ($r['active']==='par') {
+		$parcall = '1';
+		$numbers = $db->execute( 'SELECT `number` FROM `cf_parallelcall` WHERE `_user_id`='. $uid );
+		$cnt = 0;
+		while ($num = $numbers->fetchRow()) {
+			if($num['number'] != '') {
+				$number[] = $num['number'];
+			}
+		}
+	}
 	$forwards[$r['source']][$r['case']]['number'] = $number;
-//	if ($r['case']==='unavail' && $number != '')
-	if ($r['case']==='unavail' )
+	$forwards[$r['source']][$r['case']]['file'  ] = $audiofile;
+	if ($r['case']==='unavail' && $number != '')
 		$forwards[$r['source']][$r['case']]['timeout'] = $r['timeout'];
 }
 
@@ -113,9 +167,30 @@ if ( $drop_target !=  '' ) {
 
 foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {
-		//if ($fw['number'] != '') {
+		if ($fw['number'] === $callerid) $fw['number'] = '';
+		
+		gs_agi_set_variable( 'fw_'.$source.'_'.$case, $fw['number'] );
+		
+		gs_agi_set_variable( 'fw_file_'.$source.'_'.$case, '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
+		
+		if (is_array($fw['number'])) {  # this is an array if we are forwarding to parallel-call
+			$cnt=0;
+			$newparcallextens = $parcallextens;
+			$numbers = array();
+			//filter out already forwarded Parallel-call extension to dont ring them twice
+			foreach ($fw['number'] as $target) {
+				if (!in_array($target, $parcallextens)) {
+					$newparcallextens[] = $target;
+					if ($target == $uname) //set this, if the user wants to ring his extension too
+						gs_agi_set_variable( 'fw_to_self_'.$source.'_'.$case .'_'.$uname, 1 );
+					$numbers[] = $target;	
+				}
+			}
+			gs_agi_set_variable( 'fw_'.$source.'_'.$case, implode('/n&Local/',$numbers) );
+			gs_agi_set_variable( 'fw_parcallextens_'.$source.'_'.$case, implode(',',$newparcallextens) );
+		} else {
 			gs_agi_set_variable( 'fw_'.$source.'_'.$case, $fw['number'] );
-		//}
+		}
 	}
 }
 

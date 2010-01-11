@@ -83,27 +83,27 @@
         </listitem>
       </varlistentry>
 
-      <varlistentry>
-        <term><option>--source</option>=<replaceable>internal</replaceable></term>
+     <varlistentry>
+        <term><option>--source</option>=<literal>internal</literal>|<literal>external</literal></term>
 
         <listitem>
-          <para>Quelle des Anrufs</para>
+          <para>Quelle des Anrufs (intern / extern)</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--case</option>=<replaceable>always</replaceable></term>
+        <term><option>--case</option>=<literal>always</literal>|<literal>busy</literal>|<literal>unavail</literal>|<literal>offline</literal></term>
 
         <listitem>
-          <para>Fall</para>
+          <para>Der Fall bzw. Status der Nebenstelle</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--active</option>=<replaceable>no</replaceable></term>
+        <term><option>--active</option>=<literal>no</literal>|<literal>std</literal>|<literal>var</literal>|<literal>vml</literal></term>
 
         <listitem>
-          <para>aktive Regel</para>
+          <para>aktive Regel no=Aus, std=Standard-Nummer, var=temporäre Nummer, vml=Voicemail/Anrufbeantworter</para>
         </listitem>
       </varlistentry>
 

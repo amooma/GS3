@@ -11,7 +11,7 @@
 % Free Documentation License".
 % Asterisk training and consulting is offered at http://www.amooma.de-->
 
-  <partinfo>
+<!--  <partinfo>
     <keywordset>
       <keyword>Gemeinschaft</keyword>
 
@@ -28,6 +28,8 @@
       url="http://www.amooma.de/gemeinschaft">Gemeinschaft</ulink></quote>.</para>
     </abstract>
   </partinfo>
+-->
+
 
   <title>Admin-Doku</title>
 
@@ -51,6 +53,13 @@
   <xi:include href="mysql-replikation.xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
+  <xi:include href="installation-siemens-prov.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="provisioning-snom3.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+
   <xi:include href="verzeichnisstruktur.xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
@@ -58,6 +67,18 @@
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <xi:include href="admin-scripts.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="gs-config.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+  
+  <xi:include href="groupsystem.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+	      
+  <xi:include href="update.xml"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+  <xi:include href="log.xml"
               xmlns:xi="http://www.w3.org/2001/XInclude" />
 
   <xi:include href="service-nummern.xml"

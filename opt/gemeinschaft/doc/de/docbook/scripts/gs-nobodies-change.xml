@@ -67,7 +67,10 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Aktualisiert die Dummy-User in der Datenbank.</para>
+    <para>Aktualisiert die Dummy-User in der Datenbank. Das Skript kann z.B. nach einer Änderung der Werte 
+    GS_NOBODY_EXTEN_PATTERN oder GS_NOBODY_CID_NAME in der /etc/gemeinschaft/gemeinschaft.php aufgerufen werden, um diese Änderungen in die Datenbank und
+    damit in die Telefonie-Server und Telefone einzupflegen. ACHTUNG: Das Skript stößt das Provisioning der Telefone an, die durch die
+    Änderung betroffen sind, dies sind mit hoher Wahrscheinlichkeit alle angemeldeten Dummy-User.</para>
   </refsection>
 
   <refsection>

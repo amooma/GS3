@@ -104,6 +104,7 @@ if ($action === 'preview' || $action === 'import') {
 	{
 		$action = '';
 	} else {
+		$rem_old_entries = (bool)@$_REQUEST['rem_old_entries'];
 		$file = @$_SESSION['sudo_user']['pb-csv-file'];
 		$fh = @fOpen($file, 'rb');
 		if (! $fh) {
@@ -327,6 +328,7 @@ if ($action === 'preview') {
 		echo '<input type="hidden" name="col_fn"   value="', $col_fn ,'" />', "\n";
 		echo '<input type="hidden" name="col_nr"   value="', $col_nr ,'" />', "\n";
 		echo '<input type="hidden" name="skip_1st" value="', (int)$skip_1st ,'" />', "\n";
+		echo '<input type="hidden" name="rem_old_entries" value="', (int)$rem_old_entries ,'" />', "\n";
 		
 		echo '<p class="text">',
 			@sPrintF(__('Daten in Ihr pers&ouml;nliches Telefonbuch (Benutzer <code>%s</code>, %s %s, Durchwahl <code>%s</code>) importieren?'),
@@ -336,6 +338,11 @@ if ($action === 'preview') {
 				@$_SESSION['sudo_user']['info']['ext']
 			),
 			'</p>', "\n";
+		
+		echo '<p class="text">';
+		echo '<input type="checkbox" name="rem_old_entries" id="ipt-rem_old_entries" value="1"', ($rem_old_entries ? ' checked="checked" ' : '') ,' />', "\n",
+			 '<label for="ipt-rem_old_entries">', __('Alte Daten entfernen und Telefonbuch ersetzen') ,'</label>', "\n";
+		echo '</p>', "\n";
 		
 		echo '<input type="submit" value="', __('Import') ,'" /><br />', "\n";
 		echo '</form>', "\n";
@@ -356,6 +363,9 @@ if ($action === 'import') {
 		$query_start = 'INSERT INTO `pb_prv` (`user_id`, `firstname`, `lastname`, `number`) VALUES '."\n";
 		$sql_values = array();
 		gs_db_start_trans($DB);
+		if ($rem_old_entries) {
+			$DB->execute( 'DELETE FROM `pb_prv` WHERE `user_id`='. $user_id );
+		}
 		foreach ($records as $r) {
 			$sql_values[] = '('. $user_id .', \''. $DB->escape($r['fn']) .'\', \''. $DB->escape($r['ln']) .'\', \''. $DB->escape($r['nrimp']) .'\')';
 			if (count($sql_values) == 10) {
@@ -402,6 +412,7 @@ if ($action == '') {
 	
 	echo '<p class="text">', __('Sie haben hier die M&ouml;glichkeit, eine Datei im CSV-Format hochzuladen, um die Eintr&auml;ge in Ihr pers&ouml;nliches Telefonbuch zu &uuml;bernehmen.'), '</p>', "\n";
 	echo '<p class="text">', __('Vor dem Import der Datens&auml;tze wird Ihnen zur Kontrolle eine Vorschau angezeigt.'), '</p>', "\n";
+	echo '<p class="text">', htmlEnt(__("In der Vorschau kann eingestellt werden, ob das bestehende Telefonbuch erweitert oder ersetzt werden soll.")) ,'</p>', "\n";
 	
 	echo '<br />', "\n";
 	echo '<label for="ipt-pb_csv_file">', __('CSV-Datei') ,':</label><br />', "\n";

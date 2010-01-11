@@ -5529,7 +5529,7 @@ DROP TABLE IF EXISTS `ast_sipfriends_gs`;
 /*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
 /*!50001 CREATE TABLE `ast_sipfriends_gs` (
   `_user_id` int(10) unsigned,
-  `name` varchar(10),
+  `name` varchar(16),
   `secret` varchar(16),
   `type` enum('friend','user','peer'),
   `host` varchar(50),
@@ -5584,6 +5584,34 @@ LOCK TABLES `ast_voicemail` WRITE;
 INSERT INTO `ast_voicemail` VALUES (1,1,'999999','default','123','','Supervisor','germany','no','no');
 /*!40000 ALTER TABLE `ast_voicemail` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `blacklist`
+--
+
+/*
+DROP TABLE IF EXISTS `blacklist`;
+CREATE TABLE `blacklist` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `group_id` mediumint(8) unsigned default NULL,
+  `type` enum('in','out','both') character set ascii NOT NULL default 'out',
+  `comment` varchar(40) collate utf8_unicode_ci NOT NULL default '',
+  `name` varchar(40) collate utf8_unicode_ci NOT NULL default '',
+  `number` varchar(30) character set ascii NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `group_number` (`group_id`,`number`),
+  CONSTRAINT `blacklist_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+*/
+
+--
+-- Dumping data for table `blacklist`
+--
+
+-- LOCK TABLES `blacklist` WRITE;
+-- /*!40000 ALTER TABLE `blacklist` DISABLE KEYS */;
+-- /*!40000 ALTER TABLE `blacklist` ENABLE KEYS */;
+-- UNLOCK TABLES;
 
 --
 -- Table structure for table `boi_perms`
@@ -5671,7 +5699,8 @@ CREATE TABLE `callforwards` (
   `number_std` varchar(50) character set ascii NOT NULL default '',
   `number_var` varchar(50) character set ascii NOT NULL default '',
   `number_vml` varchar(20) character set ascii NOT NULL default '',
-  `active` enum('no','std','var','vml') character set ascii NOT NULL default 'no',
+  `vm_rec_id` int(10) unsigned default NULL,
+  `active` enum('no','std','var','vml','trl','par') character set ascii NOT NULL default 'no',
   PRIMARY KEY  (`user_id`,`source`,`case`),
   CONSTRAINT `callforwards_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -5705,6 +5734,55 @@ LOCK TABLES `callwaiting` WRITE;
 /*!40000 ALTER TABLE `callwaiting` DISABLE KEYS */;
 INSERT INTO `callwaiting` VALUES (24,0);
 /*!40000 ALTER TABLE `callwaiting` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cf_parallelcall`
+--
+
+DROP TABLE IF EXISTS `cf_parallelcall`;
+CREATE TABLE `cf_parallelcall` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_user_id` int(10) unsigned NOT NULL default '0',
+  `number` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `cf_parallelcall`
+--
+
+LOCK TABLES `cf_parallelcall` WRITE;
+/*!40000 ALTER TABLE `cf_parallelcall` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cf_parallelcall` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cf_timerules`
+--
+
+DROP TABLE IF EXISTS `cf_timerules`;
+CREATE TABLE `cf_timerules` (
+  `_user_id` int(10) unsigned NOT NULL,
+  `d_mo` tinyint(1) unsigned NOT NULL default '1',
+  `d_tu` tinyint(1) unsigned NOT NULL default '1',
+  `d_we` tinyint(1) unsigned NOT NULL default '1',
+  `d_th` tinyint(1) unsigned NOT NULL default '1',
+  `d_fr` tinyint(1) unsigned NOT NULL default '1',
+  `d_sa` tinyint(1) unsigned NOT NULL default '1',
+  `d_su` tinyint(1) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `target` varchar(20) character set ascii NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `cf_timerules`
+--
+
+LOCK TABLES `cf_timerules` WRITE;
+/*!40000 ALTER TABLE `cf_timerules` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cf_timerules` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -5784,6 +5862,28 @@ CREATE TABLE `dial_log` (
 LOCK TABLES `dial_log` WRITE;
 /*!40000 ALTER TABLE `dial_log` DISABLE KEYS */;
 /*!40000 ALTER TABLE `dial_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `gate_cids`
+--
+
+DROP TABLE IF EXISTS `gate_cids`;
+CREATE TABLE `gate_cids` (
+  `grp_id` smallint(5) unsigned NOT NULL,
+  `cid_int` varchar(16) character set ascii NOT NULL,
+  `cid_ext` varchar(30) character set ascii NOT NULL,
+  PRIMARY KEY  (`grp_id`,`cid_int`),
+  CONSTRAINT `gate_cids_ibfk_1` FOREIGN KEY (`grp_id`) REFERENCES `gate_grps` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `gate_cids`
+--
+
+LOCK TABLES `gate_cids` WRITE;
+/*!40000 ALTER TABLE `gate_cids` DISABLE KEYS */;
+/*!40000 ALTER TABLE `gate_cids` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -5875,6 +5975,226 @@ LOCK TABLES `gates` WRITE;
 /*!40000 ALTER TABLE `gates` DISABLE KEYS */;
 INSERT INTO `gates` VALUES (1, 1, 'sip', 'gw_20_amt', 'Amt', 1, 'SIP/{number:1}@{gateway}', '192.168.1.131', NULL, '', '', 0, NULL);
 /*!40000 ALTER TABLE `gates` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `group_connections`
+--
+
+DROP TABLE IF EXISTS `group_connections`;
+CREATE TABLE `group_connections` (
+  `type` varchar(20) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,                      /* FIXME: should be group_id */
+  `key` varchar(20) character set ascii NOT NULL default 'id',
+  `connection` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`type`,`group`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/* FIXME: group should have a foreign key constraint */
+
+--
+-- Dumping data for table `group_connections`
+--
+
+LOCK TABLES `group_connections` WRITE;
+/*!40000 ALTER TABLE `group_connections` DISABLE KEYS */;
+INSERT INTO `group_connections` VALUES ('mysql',2,'id','SELECT `id` FROM `users` WHERE `nobody_index` IS NULL');
+INSERT INTO `group_connections` VALUES ('mysql',3,'id','SELECT `id` FROM `hosts` WHERE `host` != \'\'');
+INSERT INTO `group_connections` VALUES ('mysql',4,'id','SELECT `_id` AS `id` FROM `ast_queues`');
+/*!40000 ALTER TABLE `group_connections` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `group_includes`
+--
+
+DROP TABLE IF EXISTS `group_includes`;
+CREATE TABLE `group_includes` (
+  `group` mediumint(8) unsigned NOT NULL,            /* FIXME: should be group_id */
+  `member` mediumint(8) unsigned NOT NULL,           /* FIXME: should be member_id/member_group_id */
+  PRIMARY KEY  (`group`,`member`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/* FIXME: group should have a foreign key constraint */
+
+--
+-- Dumping data for table `group_includes`
+--
+
+LOCK TABLES `group_includes` WRITE;
+/*!40000 ALTER TABLE `group_includes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `group_includes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `group_members`
+--
+
+DROP TABLE IF EXISTS `group_members`;
+CREATE TABLE `group_members` (
+  `group` mediumint(8) unsigned NOT NULL,            /* FIXME: should be group_id */
+  `member` mediumint(8) unsigned NOT NULL,           /* FIXME: should be member_id/member_group_id */
+  PRIMARY KEY  (`group`,`member`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/* FIXME: group should have a foreign key constraint */
+
+--
+-- Dumping data for table `group_members`
+--
+
+LOCK TABLES `group_members` WRITE;
+/*!40000 ALTER TABLE `group_members` DISABLE KEYS */;
+INSERT INTO `group_members` VALUES (5,1000);         
+INSERT INTO `group_members` VALUES (5,1001);         
+INSERT INTO `group_members` VALUES (5,2000);         
+INSERT INTO `group_members` VALUES (5,2001);         
+INSERT INTO `group_members` VALUES (5,3000);         
+INSERT INTO `group_members` VALUES (5,3001);         
+INSERT INTO `group_members` VALUES (5,3002);         
+INSERT INTO `group_members` VALUES (5,3003);         
+INSERT INTO `group_members` VALUES (5,3004);         
+INSERT INTO `group_members` VALUES (5,4000);         
+INSERT INTO `group_members` VALUES (5,4001);         
+INSERT INTO `group_members` VALUES (5,4002);         
+INSERT INTO `group_members` VALUES (5,4003);         
+INSERT INTO `group_members` VALUES (5,5000);         
+INSERT INTO `group_members` VALUES (5,5001);         
+INSERT INTO `group_members` VALUES (5,6000);         
+INSERT INTO `group_members` VALUES (5,6001);         
+INSERT INTO `group_members` VALUES (5,6002);         
+INSERT INTO `group_members` VALUES (5,7000);         
+INSERT INTO `group_members` VALUES (5,7001);         
+INSERT INTO `group_members` VALUES (5,7002);         
+INSERT INTO `group_members` VALUES (5,7003);         
+INSERT INTO `group_members` VALUES (5,8000);         
+INSERT INTO `group_members` VALUES (5,8001);         
+INSERT INTO `group_members` VALUES (5,9000);         
+INSERT INTO `group_members` VALUES (5,9001);         
+INSERT INTO `group_members` VALUES (5,10000);        
+INSERT INTO `group_members` VALUES (5,10001);        
+INSERT INTO `group_members` VALUES (5,11000);        
+INSERT INTO `group_members` VALUES (5,11001);        
+INSERT INTO `group_members` VALUES (5,11002);        
+INSERT INTO `group_members` VALUES (5,11003);        
+INSERT INTO `group_members` VALUES (5,11004);        
+INSERT INTO `group_members` VALUES (5,11005);        
+INSERT INTO `group_members` VALUES (5,12000);        
+INSERT INTO `group_members` VALUES (5,12001);        
+INSERT INTO `group_members` VALUES (5,12002);        
+INSERT INTO `group_members` VALUES (5,12003);        
+INSERT INTO `group_members` VALUES (5,12004);        
+INSERT INTO `group_members` VALUES (5,13000);        
+INSERT INTO `group_members` VALUES (5,13001);        
+INSERT INTO `group_members` VALUES (5,14000);        
+INSERT INTO `group_members` VALUES (5,14001);        
+INSERT INTO `group_members` VALUES (5,14002);        
+INSERT INTO `group_members` VALUES (5,14003);        
+INSERT INTO `group_members` VALUES (5,19000);        
+INSERT INTO `group_members` VALUES (5,19001);        
+INSERT INTO `group_members` VALUES (6,6003);         
+INSERT INTO `group_members` VALUES (6,15000);        
+INSERT INTO `group_members` VALUES (6,15001);        
+INSERT INTO `group_members` VALUES (6,15002);        
+INSERT INTO `group_members` VALUES (6,15003);        
+INSERT INTO `group_members` VALUES (6,15004);        
+INSERT INTO `group_members` VALUES (6,15005);        
+INSERT INTO `group_members` VALUES (6,15006);        
+INSERT INTO `group_members` VALUES (6,15007);        
+INSERT INTO `group_members` VALUES (6,15008);        
+INSERT INTO `group_members` VALUES (6,15009);        
+INSERT INTO `group_members` VALUES (6,15010);
+INSERT INTO `group_members` VALUES (6,15011);
+INSERT INTO `group_members` VALUES (6,15012);
+INSERT INTO `group_members` VALUES (6,16000);
+INSERT INTO `group_members` VALUES (6,16001);
+INSERT INTO `group_members` VALUES (6,16002);
+INSERT INTO `group_members` VALUES (6,16003);
+INSERT INTO `group_members` VALUES (6,16004);
+INSERT INTO `group_members` VALUES (6,16005);
+INSERT INTO `group_members` VALUES (6,17000);
+INSERT INTO `group_members` VALUES (6,17001);
+INSERT INTO `group_members` VALUES (6,17002);
+INSERT INTO `group_members` VALUES (6,17003);
+INSERT INTO `group_members` VALUES (6,17004);
+INSERT INTO `group_members` VALUES (6,17005);
+INSERT INTO `group_members` VALUES (6,17006);
+INSERT INTO `group_members` VALUES (6,17007);
+INSERT INTO `group_members` VALUES (6,17008);
+INSERT INTO `group_members` VALUES (6,18000);
+INSERT INTO `group_members` VALUES (6,18001);
+INSERT INTO `group_members` VALUES (6,18002);
+INSERT INTO `group_members` VALUES (6,18003);
+INSERT INTO `group_members` VALUES (6,18004);
+INSERT INTO `group_members` VALUES (6,18005);
+INSERT INTO `group_members` VALUES (6,18006);
+INSERT INTO `group_members` VALUES (6,18007);
+INSERT INTO `group_members` VALUES (6,18008);
+INSERT INTO `group_members` VALUES (6,18009);
+INSERT INTO `group_members` VALUES (6,18010);
+INSERT INTO `group_members` VALUES (6,18011);
+INSERT INTO `group_members` VALUES (6,18012);
+INSERT INTO `group_members` VALUES (6,18013);
+INSERT INTO `group_members` VALUES (6,18014);
+INSERT INTO `group_members` VALUES (6,18015);
+/*!40000 ALTER TABLE `group_members` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `group_permissions`
+--
+
+DROP TABLE IF EXISTS `group_permissions`;
+CREATE TABLE `group_permissions` (
+  `type` varchar(20) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,                     /* FIXME: should be group_id */
+  `permit` mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`type`,`group`,`permit`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/* FIXME: group should have a foreign key constraint */
+
+--
+-- Dumping data for table `group_permissions`
+--
+
+LOCK TABLES `group_permissions` WRITE;
+/*!40000 ALTER TABLE `group_permissions` DISABLE KEYS */;
+INSERT INTO `group_permissions` VALUES ('call_stats',2,2);
+INSERT INTO `group_permissions` VALUES ('call_stats',2,4);
+INSERT INTO `group_permissions` VALUES ('forward_queues',2,4);
+INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
+INSERT INTO `group_permissions` VALUES ('sudo_user',1,2);
+INSERT INTO `group_permissions` VALUES ('display_module_gui',1,6);
+INSERT INTO `group_permissions` VALUES ('display_module_gui',2,5);
+/*!40000 ALTER TABLE `group_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `groups`
+--
+
+DROP TABLE IF EXISTS `groups`;
+CREATE TABLE `groups` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(20) character set ascii NOT NULL,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL default '',
+  `type` varchar(20) character set ascii NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `name` (`name`),
+  KEY `title` (`title`(25)),
+  KEY `type` (`type`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `groups`
+--
+
+LOCK TABLES `groups` WRITE;
+/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+INSERT INTO `groups` VALUES (1,'admins','Admins','user');
+INSERT INTO `groups` VALUES (2,'users','All Users','user');
+INSERT INTO `groups` VALUES (3,'hosts','All Hosts','host');
+INSERT INTO `groups` VALUES (4,'queues','All Queues','queue');
+INSERT INTO `groups` VALUES (5,'user_gui','User GUI','module_gui');
+INSERT INTO `groups` VALUES (6,'admin_gui','Admin GUI','module_gui');
+/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6316,7 +6636,7 @@ CREATE TABLE `queue_callforwards` (
   `timeout` tinyint(3) unsigned NOT NULL default '20',
   `number_std` varchar(50) character set ascii NOT NULL default '',
   `number_var` varchar(50) character set ascii NOT NULL default '',
-  `active` enum('no','std','var') character set ascii NOT NULL default 'no',
+  `active` enum('no','std','var','vml','trl','par') character set ascii NOT NULL default 'no',
   PRIMARY KEY  (`queue_id`,`source`,`case`),
   CONSTRAINT `queue_callforwards_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -6328,6 +6648,55 @@ CREATE TABLE `queue_callforwards` (
 LOCK TABLES `queue_callforwards` WRITE;
 /*!40000 ALTER TABLE `queue_callforwards` DISABLE KEYS */;
 /*!40000 ALTER TABLE `queue_callforwards` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `queue_cf_parallelcall`
+--
+
+DROP TABLE IF EXISTS `queue_cf_parallelcall`;
+CREATE TABLE `queue_cf_parallelcall` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_queue_id` int(10) unsigned NOT NULL default '0',
+  `number` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `queue_cf_parallelcall`
+--
+
+LOCK TABLES `queue_cf_parallelcall` WRITE;
+/*!40000 ALTER TABLE `queue_cf_parallelcall` DISABLE KEYS */;
+/*!40000 ALTER TABLE `queue_cf_parallelcall` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `queue_cf_timerules`
+--
+
+DROP TABLE IF EXISTS `queue_cf_timerules`;
+CREATE TABLE `queue_cf_timerules` (
+  `_queue_id` int(10) unsigned NOT NULL,
+  `d_mo` tinyint(1) unsigned NOT NULL default '1',
+  `d_tu` tinyint(1) unsigned NOT NULL default '1',
+  `d_we` tinyint(1) unsigned NOT NULL default '1',
+  `d_th` tinyint(1) unsigned NOT NULL default '1',
+  `d_fr` tinyint(1) unsigned NOT NULL default '1',
+  `d_sa` tinyint(1) unsigned NOT NULL default '1',
+  `d_su` tinyint(1) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `target` varchar(20) character set ascii NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `queue_cf_timerules`
+--
+
+LOCK TABLES `queue_cf_timerules` WRITE;
+/*!40000 ALTER TABLE `queue_cf_timerules` DISABLE KEYS */;
+/*!40000 ALTER TABLE `queue_cf_timerules` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6364,6 +6733,28 @@ CREATE TABLE `queue_log` (
 LOCK TABLES `queue_log` WRITE;
 /*!40000 ALTER TABLE `queue_log` DISABLE KEYS */;
 /*!40000 ALTER TABLE `queue_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `queue_vm_rec_messages`
+--
+
+DROP TABLE IF EXISTS `queue_vm_rec_messages`;
+CREATE TABLE `queue_vm_rec_messages` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_queue_id` int(10) unsigned NOT NULL default '0',
+  `vm_rec_file` varchar(80) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `vm_comment` varchar(180) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `queue_vm_rec_messages`
+--
+
+LOCK TABLES `queue_vm_rec_messages` WRITE;
+/*!40000 ALTER TABLE `queue_vm_rec_messages` DISABLE KEYS */;
+/*!40000 ALTER TABLE `queue_vm_rec_messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6424,7 +6815,7 @@ CREATE TABLE `routes` (
   KEY `active_sa` (`active`,`d_sa`,`ord`),
   KEY `active_su` (`active`,`d_su`,`ord`),
   KEY `user_grp_id` (`user_grp_id`),
-  CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`user_grp_id`) REFERENCES `user_groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`user_grp_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE  /* FIXME: foreign key user_grp_id should be named group_id */
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6797,6 +7188,28 @@ CREATE TABLE `vm_msgs` (
 LOCK TABLES `vm_msgs` WRITE;
 /*!40000 ALTER TABLE `vm_msgs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vm_msgs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vm_rec_messages`
+--
+
+DROP TABLE IF EXISTS `vm_rec_messages`;
+CREATE TABLE `vm_rec_messages` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_user_id` int(10) unsigned NOT NULL default '0',
+  `vm_rec_file` varchar(80) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `vm_comment` varchar(180) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `vm_rec_messages`
+--
+
+LOCK TABLES `vm_rec_messages` WRITE;
+/*!40000 ALTER TABLE `vm_rec_messages` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vm_rec_messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

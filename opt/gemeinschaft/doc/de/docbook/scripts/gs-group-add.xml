@@ -44,16 +44,13 @@
   <refnamediv>
     <refname>gs-group-add</refname>
 
-    <refpurpose><application>Gemeinschaft</application>: Benutzergruppe
+    <refpurpose><application>Gemeinschaft</application>: Gruppe
     hinzufügen</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
-      <command>Usage: [--parent=&lt;name&gt;] --name=&lt;name&gt;
-      --title=&lt;title&gt; [--softkey-profile-id=&lt;id&gt;]
-      [--prov-param-profile-id=&lt;id&gt;]
-      [--show-ext-modules=&lt;num&gt;]</command>
+      <command>Usage: gs-group-add --name=&lt;name&gt; --title=&lt;title>&gt; --type=&lt;type>&gt;</command>
     </cmdsynopsis>
 
     <cmdsynopsis>
@@ -70,7 +67,8 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Legt eine Benutzergruppe an.</para>
+    <para>Legt eine Gruppe an. Gruppiert werden können Benutzer, Hosts und Queues.. 
+    Für mehr Informationen über Gruppen siehe <xref  linkend="gsgroupsystem" /></para>
   </refsection>
 
   <refsection>
@@ -78,18 +76,10 @@
 
     <variablelist>
       <varlistentry>
-        <term><option>--parent</option>=<replaceable>name</replaceable></term>
-
-        <listitem>
-          <para>name</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
         <term><option>--name</option>=<replaceable>name</replaceable></term>
 
         <listitem>
-          <para>name</para>
+          <para>Name der Gruppe (darf keine Sonderzeichen/Leerzeichen enthalten)</para>
         </listitem>
       </varlistentry>
 
@@ -97,34 +87,18 @@
         <term><option>--title</option>=<replaceable>title</replaceable></term>
 
         <listitem>
-          <para>Bezeichnung</para>
+          <para>Bezeichnung der Gruppe, wie sie in dem GUI angezeigt wird.</para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term><option>--softkey-profile-id</option>=<replaceable>id</replaceable></term>
+        <term><option>--type</option>=<replaceable>id</replaceable></term>
 
         <listitem>
-          <para>id</para>
+          <para>Der Typ der Gruppe, im Moment gibt es 'user','queue' und 'host'</para>
         </listitem>
       </varlistentry>
-
-      <varlistentry>
-        <term><option>--prov-param-profile-id</option>=<replaceable>id</replaceable></term>
-
-        <listitem>
-          <para>id</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term><option>--show-ext-modules</option>=<replaceable>num</replaceable></term>
-
-        <listitem>
-          <para>num</para>
-        </listitem>
-      </varlistentry>
-
+     
       <varlistentry>
         <term><option>--help</option></term>
 
@@ -145,7 +119,16 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para> 
+    <xref  linkend="man-gs-group-del" />
+    <xref  linkend="man-gs-group-change" />
+    <xref  linkend="man-gs-groups-get" />
+    <xref  linkend="man-gs-group-members-get" />
+    <xref  linkend="man-gs-group-member-add" />
+    <xref  linkend="man-gs-group-member-del" />
+    <xref  linkend="man-gs-group-permissions-get" />
+    <xref  linkend="man-gs-group-permission-add" />
+    <xref  linkend="man-gs-group-permission-del" />
+    </para>
   </refsection>
 </refentry>

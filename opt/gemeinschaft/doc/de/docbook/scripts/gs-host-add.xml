@@ -68,7 +68,7 @@
   <refsection>
     <title>Beschreibung</title>
 
-    <para>Legt einen Gemeinschaft-Node an.</para>
+    <para>Legt einen Gemeinschaft-Knoten an. Auf diesem können dann Benutzer hinzugefügt werden.</para>
   </refsection>
 
   <refsection>
@@ -79,7 +79,8 @@
         <term><option>--host</option>=<replaceable>ip</replaceable></term>
 
         <listitem>
-          <para>Host</para>
+          <para>Die IP-Adresse des Knotens, diese wird verwendet um den Knoten per SIP anzusprechen.
+	  Diese Adresse wird allerdings auch für SSH-Verbindungen genutzt, um z.B. den Asterisk-Server zu reloaden</para>
         </listitem>
       </varlistentry>
 
@@ -87,7 +88,7 @@
         <term><option>--comment</option>=<replaceable>comment</replaceable></term>
 
         <listitem>
-          <para>Kommentar</para>
+          <para>Kommentar, dieser wird im Web-Interface angezeigt und dient nur der leichteren Wiedererkennung/Unterscheidung der Hosts.</para>
         </listitem>
       </varlistentry>
 
@@ -95,7 +96,7 @@
         <term><option>--sip-proxy</option>=<replaceable>ip</replaceable></term>
 
         <listitem>
-          <para>ip</para>
+          <para>Die IP des SIP-Proxys hinter dem der Knoten hängt. Alle SIP-Verbindungen werden über diesen SIP-Proxy gehandelt.</para>
         </listitem>
       </varlistentry>
 
@@ -103,7 +104,7 @@
         <term><option>--sip-sbc</option>=<replaceable>ip</replaceable></term>
 
         <listitem>
-          <para>ip</para>
+          <para>Die IP des SIP-SBC's hinter dem der Knoten hängt. Alle SIP-Verbindungen werden über diesen SIP-SBC gehandelt.</para>
         </listitem>
       </varlistentry>
 
@@ -127,7 +128,9 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-host-del" />
+    <xref  linkend="man-gs-hosts-get" />
+    </para>
   </refsection>
 </refentry>

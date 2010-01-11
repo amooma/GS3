@@ -35,8 +35,11 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 
-$ext  = trim(@$argv[1]);
-$is_huntgroup  = trim(@$argv[2]);
+$ext             =      trim(@$argv[1]);
+$user_id         = (int)trim(@$argv[2]);
+$caller          =      trim(@$argv[3]);
+$is_huntgroup    = (int)trim(@$argv[4]);
+$allow_recording = gs_get_conf('GS_CALL_RECORDING');
 
 if (! $ext) {
 	gs_agi_set_variable( '__exttype', '' );
@@ -49,10 +52,10 @@ if (! preg_match('/^\d+$/', $ext)) {  // is not just digits
 	exit();
 }
 
-
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/get-listen-to-ids.php' );
 
+$db = gs_db_slave_connect();
 
 
 function get_at_dial( $host_id )
@@ -66,35 +69,75 @@ function get_at_dial( $host_id )
 
 function print_name ( $firstname, $lastname ) {
 
-        $fullname = '';
-        if( strlen( $firstname ) > 0 )
-                $fullname = strtoupper( substr( $firstname, 0, 1 ) ) . ". " . $lastname;
-        else
-                $fullname = $lastname;
-        gs_agi_set_variable( 'mname',  gs_agi_str_esc($fullname));
-        die();
+	$fullname = '';
+	if( strlen( $firstname ) > 0 )
+		$fullname = strtoupper( substr( $firstname, 0, 1 ) ) . ". " . $lastname;
+	else
+		$fullname = $lastname;
+	gs_agi_set_variable( 'mname',  $fullname );
+	//XXX TODO// die();
 
 }
 
-
-
-$db = gs_db_slave_connect();
+function record_file( $type, $to, $from=null, $to_id=null, $from_id=null )
+{
+	global $db;
+	
+	include_once( GS_DIR .'inc/group-fns.php' );
+	include_once( GS_DIR .'inc/get-listen-to-ids.php' );
+	
+	$host_groups = gs_group_members_groups_get( gs_get_listen_to_ids(), 'host');
+	
+	if (! $host_groups) return;	
+	
+	if (! $from) $from = 'anonymous';
+	
+	$rec_users = array();
+	
+	if ($from_id || $to_id) {
+		$rec_user_groups = gs_group_permissions_get( $host_groups, 'record_call', 'user');
+		
+		if ($rec_user_groups) {
+			$rec_users  = gs_group_members_get( $rec_user_groups);
+		}
+		
+		if ($rec_users) {
+			if ($from_id && in_array($from_id, $rec_users)) {	
+				gs_agi_set_variable( '__record_call', 'rec_'.date('ymdHis').'_'.$from.'-'.$to.'.wav' );
+				return;
+			}
+			if ($to_id && in_array($to_id, $rec_users)) {	
+				gs_agi_set_variable( '__record_call', 'rec_'.date('ymdHis').'_'.$from.'-'.$to.'.wav' );
+				return;
+			}
+		}
+	}
+	
+	if ($rec_host_groups = gs_group_permissions_get($host_groups, 'record_call', 'host')) {
+		foreach ($rec_host_groups as $rec_host_group) {
+			if (in_array($rec_host_group, $host_groups)) {
+				gs_agi_set_variable( '__record_call', 'rec_'.date('ymdHis').'_'.$from.'-'.$to.'.wav' );
+				return;
+			}
+		}
+	}
+}
 
 # is it a hunt group?
 #
 if ($is_huntgroup != 1) {
-  $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `huntgroups` WHERE `number`=\''. $db->escape($ext) .'\'' );
-  if ($num > 0) {
-	  echo 'SET VARIABLE __exttype '. gs_agi_str_esc('huntgroup') ."\n";
-	  die();
-  }
+	$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `huntgroups` WHERE `number`=\''. $db->escape($ext) .'\'' );
+	if ($num > 0) {
+		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('huntgroup') ."\n";
+		die();
+	}
 }
 
 # is it a user?
 #
 //$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 $rs = $db->execute(
-'SELECT `u`.`host_id`, `h`.`is_foreign`, `h`.`host`, `u`.`firstname`, `u`.`lastname`
+'SELECT `u`.`host_id`, `h`.`is_foreign`, `h`.`host`, `u`.`id` `id`, `u`.`firstname`, `u`.`lastname`
 FROM
 	`ast_sipfriends` `s` JOIN
 	`users` `u` ON (`u`.`id`=`s`.`_user_id`) JOIN
@@ -104,14 +147,13 @@ WHERE `s`.`name`=\''. $db->escape($ext) .'\''
 if ($r = $rs->fetchRow()) {
 	if (! $r['is_foreign']) {
 		gs_agi_set_variable( '__exttype', 'user' );
-		
-		print_name( $r['firstname'], $r['lastname'] );
-		
+		if ($allow_recording) record_file( 'user', $ext, $caller, $r['id'], $user_id );
 		if ($r['host_id'] < 1) {
 			gs_agi_set_variable( '__dial_to_node', '' );
 		} else {
 			gs_agi_set_variable( '__dial_to_node', get_at_dial( $r['host_id'] ) );
 		}
+		print_name( $r['firstname'], $r['lastname'] );
 	} else {
 		gs_agi_set_variable( '__exttype', 'foreign' );
 		gs_agi_set_variable( '__dial_to_node', $r['host'] );
@@ -122,7 +164,7 @@ if ($r = $rs->fetchRow()) {
 # is it a queue?
 #
 $rs = $db->execute(
-'SELECT `q`.`_host_id` `host_id`, `h`.`is_foreign`, `h`.`host`
+'SELECT `q`.`_host_id` `host_id`, `h`.`is_foreign`, `h`.`host`, `q`.`_id` `id`
 FROM
 	`ast_queues` `q` JOIN
 	`hosts` `h` ON (`h`.`id`=`q`.`_host_id`)
@@ -131,6 +173,7 @@ WHERE `q`.`name`=\''. $db->escape($ext) .'\''
 if ($r = $rs->fetchRow()) {
 	if (! $r['is_foreign']) {
 		gs_agi_set_variable( '__exttype', 'queue' );
+		if ($allow_recording) record_file( 'queue', $ext, $caller, $r['id'] /*//FIXME?*/, $user_id );
 		if ($r['host_id'] < 1) {  // should never happen
 			gs_agi_set_variable( '__dial_to_node', '' );
 		} else {
@@ -182,7 +225,7 @@ if ($r = $rs->fetchRow()) {
 	die();
 }
 
-
+if ($allow_recording) record_file( 'queue', $ext, $caller, $r['id'] /*//FIXME?*/, $user_id );
 gs_agi_set_variable( '__exttype', 'unknown' );
 gs_agi_set_variable( '__dial_to_node', '' );
 ?>

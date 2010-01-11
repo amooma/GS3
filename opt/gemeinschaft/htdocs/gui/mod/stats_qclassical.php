@@ -27,6 +27,7 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'inc/group-fns.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -71,11 +72,15 @@ if ($action == 'report') {
 	$month_d  = 0;  # current month
 }
 
+$user_groups    = gs_group_members_groups_get(Array(@$_SESSION['sudo_user']['info']['id']), 'user');
+$queue_groups   = gs_group_members_get(gs_group_permissions_get($user_groups, 'call_stats', 'queue'));
+
 if ( gs_get_conf('GS_DB_QUEUELOG_IMPORT') == false )
 {
 	echo __('Statistiken f&uuml;r Warteschlangen sind auf diesem System abgeschaltet.');
 	exit();
 }
+
 ?>
 
 
@@ -86,9 +91,11 @@ if ( gs_get_conf('GS_DB_QUEUELOG_IMPORT') == false )
 <label for="ipt-queue_id"><?php echo __('Warteschlange'); ?>:</label>
 <select name="queue_id" id="ipt-queue_id">
 <?php
-$rs = $DB->execute( 'SELECT `_id`, `name`, `_title` FROM `ast_queues` ORDER BY `name`' );
-while ($r = $rs->fetchrow()) {
-	echo '<option value="',$r['_id'],'"', ($r['_id']==$queue_id ? ' selected="selected"' : ''),'>', $r['name'] ,' (', htmlEnt($r['_title']) ,')' ,'</option>' ,"\n";
+$rs = $DB->execute( 'SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_id` IN ('.implode(',',$queue_groups).') ORDER BY `name`' );
+
+if ($rs)
+	while ($r = $rs->fetchrow()) {
+		echo '<option value="',$r['_id'],'"', ($r['_id']==$queue_id ? ' selected="selected"' : ''),'>', $r['name'] ,' (', htmlEnt($r['_title']) ,')' ,'</option>' ,"\n";
 }
 ?>
 </select>
@@ -117,9 +124,6 @@ for ($i=-3; $i<=0; ++$i) {
 if ($action == '') return;
 
 #####################################################################
-
-
-
 
 
 $t         = (int)strToTime("$month_d months", $t);
@@ -246,6 +250,29 @@ $totals = array(
 	'num_wait_fail' => 0
 );
 
+$lang_2 = subStr($_SESSION['isolang'],0,2);
+
+function ordinal( $cdnl, $lang, $html=false ) //FIXME
+{
+	$lang_2 = strToLower(subStr($lang,0,2));
+	
+	switch ($lang_2) { //FIXME
+		case 'de':
+			return $cdnl . '.';
+			break;
+		case 'en':
+			$mod_10 = abs($cdnl) % 10;
+			$ext = ((abs($cdnl) %100 < 21 && abs($cdnl) %100 > 4) ? 'th'
+				: (($mod_10 < 4) ? ($mod_10 < 3) ? ($mod_10 < 2) ? ($mod_10 < 1)
+				? 'th' : 'st' : 'nd' : 'rd' : 'th'));
+			return $cdnl . ($html ? '<sup>'.$ext.'</sup>' : $ext);
+			break;
+		default:
+			return $cdnl . '.';
+			break;
+	}
+}
+
 for ($day=1; $day<=$num_days; ++$day) {
 	
 	if ($month_d >= 0 && $day > $today_day) break;
@@ -270,7 +297,9 @@ for ($day=1; $day<=$num_days; ++$day) {
 	
 	# day
 	#
-	echo '<td class="r"',$style_wd,'>', $day ,'.</td>', "\n";
+	echo '<td class="r"',$style_wd,'>';
+	echo ordinal( $day, $lang_2, true );
+	echo '</td>', "\n";
 	
 	
 	# inbound calls

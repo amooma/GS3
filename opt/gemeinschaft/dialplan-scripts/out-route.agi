@@ -31,46 +31,13 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
 require_once( GS_DIR .'inc/pcre_check.php' );
-include_once( GS_DIR .'lib/yadb/yadb.php' );
-include_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
+include_once( GS_DIR .'inc/get-listen-to-ids.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 error_reporting(0);
-
-
-function _user_groups_get( $user_id, $with_0=null )
-{
-	global $db;
-	
-	if (! $db) return false;
-	$user_id = (int)$user_id;
-	
-	$group_id = (int)$db->executeGetOne( 'SELECT `group_id`
-		FROM `users` WHERE `id`='. $user_id
-		);
-	
-	# get nested groups
-	#
-	$member_groups = array();
-	if ($with_0 !== false) {
-		$member_groups[] = $with_0;
-	}
-	if ($group_id > 0) {
-		$mptt = new YADB_MPTT($db, 'user_groups', 'lft', 'rgt', 'id');
-		$path = @$mptt->get_path_to_node( $group_id, true );
-		if (! is_array($path))
-			return false;
-		
-		foreach ($path as $group) {
-			$member_groups[] = $group['id'];
-		}
-	}
-	
-	return $member_groups;
-}
-
 
 function _no_more_routes( $idx=1 )
 {
@@ -100,9 +67,6 @@ if ($user_cid_num == '') {
 
 $user_id = (int)trim($argv[4]);
 
-$force_cid = (bool)trim($argv[5]);
-if (!in_array( $force_cid, array(true, false), true ))
-	$force_cid = false;
 
 include_once( GS_DIR .'inc/db_connect.php' );
 
@@ -167,9 +131,11 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 $db = gs_db_slave_connect();
 if (! $db) gs_agi_err( 'DB error' );
 
-$user_groups = _user_groups_get( $user_id, 0 );
+$user_groups = gs_group_members_groups_get(array($user_id), 'user');
 if (! is_array($user_groups)) $user_groups = array(0);
-//$user_groups = array_merge(array(0), $user_groups);
+
+$host_groups = gs_group_members_groups_get(gs_get_listen_to_ids(), 'host');
+if (! is_array($host_groups)) $host_groups = array(0);
 
 $t = time();
 $wd = strToLower(subStr(date('D', $t),0,2));
@@ -193,10 +159,20 @@ $have_match = false;
 $lcr_prefix = '';
 while ($route = $rs->fetchRow()) {
 	if (@preg_match( '/'.$route['pat'].'/', $number_dial )) {
-		if (in_array((int)$route['ug_id'], $user_groups, true)) {
+		if ($route['ug_id'] == NULL) {
 			$have_match = true;
 			$lcr_prefix = $route['lcrprfx'];
 			gs_agi_verbose( '### Matching route for "'. $number_dial .'" is "'. $route['pat'] .'", user group: '. ($route['ug_id'] == null ? 'any' : $route['ug_id']) );
+			break;
+		}
+		if (in_array((int)$route['ug_id'], $user_groups, true) ) {
+			$have_match = true;
+			$lcr_prefix = $route['lcrprfx'];
+			break;
+		}
+		if (in_array((int)$route['ug_id'], $host_groups, true) ) {
+			$have_match = true;
+			$lcr_prefix = $route['lcrprfx'];
 			break;
 		}
 	}
@@ -213,28 +189,42 @@ if (count($gate_grps) < 1) _no_more_routes();
 $gates = array();
 $idx = 1;
 foreach ($gate_grps as $ggrp_id) {
-
+	
 	$out_cid_num = $user_cid_num;
-	if (($force_cid == false)
-	&& $qualify_cid
+	if ($qualify_cid
 	&&  ! in_array(strToLower($out_cid_num), array('anonymous', 'unknown', ''), true))  # no action for "anonymous"
 	{
+		$user_cid_override = $db->executeGetOne(
+			'SELECT `cid_ext` '.
+			'FROM `gate_cids` '.
+			'WHERE `grp_id` = '.$ggrp_id.' AND `cid_int` = \''.$db->escape($out_cid_num).'\'' );
+		if ($user_cid_override != '') {
+			gs_agi_verbose( '### Overriding caller ID "'.$out_cid_num.'" -> "'.$user_cid_override.'" for gategroup ID: '. $ggrp_id );
+			$out_cid_num = preg_replace('/[^0-9+a-zA-Z\-_.]/', '', $user_cid_override);
+		}
+		unset($user_cid_override);
+		
 		$rs = $db->execute(
 'SELECT `out_cid_search` `cid_s`, `out_cid_replace` `cid_r`, `name`
 FROM `gate_grps`
 WHERE `id`='. $ggrp_id
-			);
-			if (!($ggrp = $rs->fetchRow())) continue;
+		);
+		if (!($ggrp = $rs->fetchRow())) continue;
 		
 		$ggrp['cid_s'] = trim($ggrp['cid_s']);
-		if ($ggrp['cid_s'] != ''
-		&&  is_valid_pcre( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'] ))
-		{
+		if ($ggrp['cid_s'] != '' &&
+		($ggrp_cid_s_a = explode(',',$ggrp['cid_s'])) &&
+		($ggrp_cid_r_a = explode(',',$ggrp['cid_r']))
+		)
+		foreach ($ggrp_cid_s_a as $search_key => $search) {
+			gs_agi_verbose( '### Processing CID RegExp: '. $search);
+			if (!preg_match( '/'.$search.'/', $out_cid_num ))  continue;
 			$out_cid_num_qualified = preg_replace('/[^0-9+a-zA-Z\-_.]/', '',
-				@preg_replace( '/'.$ggrp['cid_s'].'/', $ggrp['cid_r'], $out_cid_num ));
+				@preg_replace( '/'.$search.'/', @$ggrp_cid_r_a[$search_key], $out_cid_num ));
+			gs_agi_verbose( '### Qualifying caller ID "'.$out_cid_num.'" -> "'.$out_cid_num_qualified.'" ('. ('s/'.$search.'/'.@$ggrp_cid_r_a[$search_key].'/') .') for gategroup "'. $ggrp['name'] .'"' );
 			$out_cid_num = $out_cid_num_qualified;
-			gs_agi_verbose( '### Qualifying caller ID "'.$out_cid_num.'" -> "'.$out_cid_num_qualified.'" ('. ('s/'.$ggrp['cid_s'].'/'.$ggrp['cid_r'].'/') .') for gategroup "'. $ggrp['name'] .'"' );
 			unset($out_cid_num_qualified);
+			break;
 		}
 	}
 	
@@ -249,40 +239,77 @@ LIMIT 9'
 	);
 	//while ($gate = $rs->fetchRow()) $gates[] = $gate;
 	while ($gate = $rs->fetchRow()) {
-		if ($lcr_prefix != '') {
-			if (in_array($gate['type'], array('zap','misdn','woomera','capi'), true)) {
-				gs_agi_verbose( "### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
-				$number_final = $lcr_prefix . $number_dial;
-			} else {
-				gs_agi_verbose( "### LCR prefix $lcr_prefix ignored for non-hardware gateway ". $gate['name'] );
-				$number_final = $number_dial;
-			}
-		} else {
-			$number_final = $number_dial;
-		}
-
-		$dialstr = $gate['dialstr'];
-		$pat_number = "/{number:(\d+)}/";
-		 
-		preg_match_all( $pat_number, $dialstr, $matches, PREG_PATTERN_ORDER );
-		if ( isset ( $matches[1] ) ){
-			foreach ( $matches[1] as $cutoff ) {
-				$replace = "";
-				if ( (int) $cutoff < $number_final )
-					$replace = substr ( $number_final, (int) $cutoff );
-
-				$target = "{number:" .  $cutoff  . "}";
-				$dialstr = str_replace( $target, $replace, $dialstr );
+		$pos = 0;
+		$dial_arr = array();
+		while ($pos < strLen($gate['dialstr'])) {
 			
+			$dial_vara = array();
+			
+			$dial_vara['b'] = strPos($gate['dialstr'], '{', $pos);
+			if ($dial_vara['b'] === false) break;
+			else $pos = $dial_vara['b'] + 1;
+			
+			$dial_vara['e'] = strPos($gate['dialstr'], '}', $pos);
+			if ($dial_vara['e'] === false) break;
+			else $pos = $dial_vara['e'] + 1;
+			
+			if (array_key_exists('e', $dial_vara)
+			&&  array_key_exists('b', $dial_vara)) {
+				$dial_vara['s'] = subStr($gate['dialstr'], $dial_vara['b']+1, $dial_vara['e']-$dial_vara['b']-1);
+				$dial_arr[] = $dial_vara;
 			}
-		
 		}
-
-		$dialstr = str_replace(
-			array( '{number}'   , '{gateway}'   , '{peer}'      , '{port}'         ),
-			array( $number_final, $gate['name'] , $gate['name'] , $gate['hw_port'] ),
-			$dialstr
-		); //FIXME - do proper parsing instead of "{number:1}"
+		
+		$dialstr = '';
+		$pos = 0;
+		
+		foreach ($dial_arr as $dial_vara) {
+			$dialstr .= subStr($gate['dialstr'], $pos, $dial_vara['b']-$pos);
+			$pos = $dial_vara['e'] + 1;
+			
+			$var_arr = explode(':', $dial_vara['s']);
+			$value = '';
+			switch ($var_arr[0]) {
+				case 'number':
+					if ((strPos($gate['dialstr'], '{prefix') === false)
+					&&  (in_array($gate['type'], array('zap','misdn','woomera','capi'), true))) {
+						# automatically insert the LCR prefix before the number
+						# for ISDN/analog gateway if the dial string does not
+						# explicitly contain "{prefix}" (or "{prefix:0:0}")
+						gs_agi_verbose( "### LCR prefix: $lcr_prefix for gateway ". $gate['name'] );
+						$dialstr .= $lcr_prefix;
+					}
+					$value = $number_dial;
+					break;
+				case 'gateway':
+				case 'peer':  # backwards compatibility
+					$value = $gate['name'];
+					break;
+				case 'port':
+					$value = $gate['hw_port'];
+					break;
+				case 'prefix':
+					$value = $lcr_prefix;
+					break;
+				default:  # unknown expression
+					gs_agi_verbose( '### Unknown variable "'. $var_arr[0] .'" in dial string expression for gateway '. $gate['name'] );
+					gs_log( GS_LOG_WARNING, 'Unknown variable "'. $var_arr[0] .'" in dial string expression for gateway '. $gate['name'] );
+					$value = '';
+			}
+			
+			if ($value != '') {
+				if (count($var_arr) === 1)
+					$dialstr .= $value;
+				elseif (count($var_arr) === 2)
+					$dialstr .= subStr($value, $var_arr[1]);
+				else
+					$dialstr .= subStr($value, $var_arr[1], $var_arr[2]);
+			}
+		}
+		
+		if ($pos < strLen($gate['dialstr']))
+			$dialstr .= subStr($gate['dialstr'], $pos);
+		
 		$dialstr = preg_replace('/[^\x21-\x7E]/', '', $dialstr);
 		if ($dialstr != '') {
 			gs_agi_set_variable( 'r_'.$idx.'_dial', $dialstr );

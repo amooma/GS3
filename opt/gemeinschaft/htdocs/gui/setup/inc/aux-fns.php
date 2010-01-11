@@ -27,6 +27,7 @@
 \*******************************************************************/
 defined('GS_VALID') or die('No direct access.');
 
+require_once( GS_DIR .'inc/string.php' );
 
 /*
     setup_pwd set?
@@ -94,12 +95,5 @@ function gs_setup_have_vlan_support()
 	return @file_exists( '/proc/net/vlan' );
 }
 
-if (! function_exists('htmlEnt')) {
-# might have been defined in htdocs/gui/index.php
-function htmlEnt( $str )
-{
-	return htmlSpecialChars( $str, ENT_QUOTES, 'UTF-8' );
-}
-}
 
 ?>

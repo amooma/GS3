@@ -39,10 +39,16 @@ body {
 	border-width: 1px;
 	border-style: solid;
 	border-color: #99f #004 #004 #66f;
+	text-shadow: /*#336*/rgba(0,0,0,0.5) 3px 3px 5px;
 }
 
 #langs > a {
 	color: #000;  /* or else alt texts would be invisible */
+}
+#langs > a > img {
+	box-shadow: 2px 2px 5px /*#336*/rgba(0,0,0,0.4);
+	-moz-box-shadow: 2px 2px 5px /*#336*/rgba(0,0,0,0.4);
+	-webkit-box-shadow: 2px 2px 5px /*#336*/rgba(0,0,0,0.4);
 }
 
 .sidebar, #sudo-bar {
@@ -73,15 +79,36 @@ body {
 
 #menu a {
 	border-color: #eef #cce #cce #eef;
+	text-shadow: /*#bbc*/rgba(0,0,0,0.2) 2px 2px 4px;
 }
 #menu ul li a:hover {
 	background: #ccf;
 	border-color: #eef #ccc #bebebe #eef;
+	text-shadow: /*#aab*/rgba(0,0,0,0.22) 2.5px 2.5px 4px;
 }
-#menu a.active, #menu a.active:hover {
+#menu a.active,
+#menu a.active:hover {
 	background-color: #fafafa;
 	border-color: #eee #fff #fff #eee;
+	text-shadow: /*#cdc*/rgba(0,0,0,0.2) 2.5px 2.5px 5px;
 }
+#menu ul li a:focus,
+#menu ul li a:hover:focus {
+	/*text-shadow: transparent 0 0 0;*/
+}
+a:focus {outline: 0 none transparent;}
+/*
+#menu a:hover > img {
+	-moz-transform: scale(1.15);
+}
+*/
+/*
+#menu a:hover > img {
+	xtransform: scale(1.8) rotate(-4deg);
+	x-moz-transform: scale(1.8) rotate(-4deg);
+	x-webkit-transform: scale(1.8) rotate(-4deg);
+}
+*/
 
 
 td, .td {

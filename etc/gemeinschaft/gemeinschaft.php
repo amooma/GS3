@@ -257,7 +257,7 @@ $PROV_DIAL_LOG_LIFE         = 14*24*3600;  # 14 days
 //$PROV_PROXIES_XFF_HEADER    = 'X-Forwarded-For';
   # 'X-Forwarded-For' is the de-facto standard but depending on the
   # proxy it might be 'X-Real-IP' or 'X-Client-IP'. case-insensitive.
-$PROV_ALLOW_NET             = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
+$PROV_ALLOW_NET             = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # comma (,) separated list of <IP address>/<netmask> pairs (CIDR
   # or dotted decimal notation) of phones which may ask for
   # configuration.
@@ -555,7 +555,7 @@ $LOCK_DIR               = '/tmp/';
   # does not control where apache, mysql, zaptel etc. put their
   # lock files
 
-$CALL_INIT_FROM_NET         = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
+$CALL_INIT_FROM_NET         = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # a comma (,) separated list of IP addresses or
   # <IP address>/<netmask> pairs from where calls can be inited
   # with HTTP GET
@@ -564,7 +564,7 @@ $CALL_INIT_FROM_NET         = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.25
   # allow all: '0.0.0.0/0', allow none: '0.0.0.0/32'
 
 $MONITOR_FROM_NET           = '0.0.0.0/32';  # deny all
-//$MONITOR_FROM_NET           = '192.168.1.0/24, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
+//$MONITOR_FROM_NET           = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # allow access to the extension monitor panel from these network
   # ranges
   # CIDR or dotted decimal notation
@@ -581,6 +581,10 @@ $INTL_ASTERISK_LANG     = 'de';
   # "de". if you use anything else make sure to have the appropriate
   # sound files installed - especially the prompts in the "gemeinschaft"
   # subdirectory which are available in German only for now
+
+$INTL_LANG_SOUNDS       = 'de-DE';
+  # language to be used for Gemeinschaft sounds prompts.
+  # see /opt/gemeinschaft/sounds/ directory.
 
 $USERCOMMENT_OFFTIME    = 'Feierabend';  # e.g. "off-time"
 
@@ -606,7 +610,6 @@ $CALLBACK_FAILED_EXTENSION      = '';
   # offline the call will be transfered to this extension. 
   # If empty, the channel will be busy.
 
-
 $SWITCHBOARD_DROP_TARGET = '';
   # global target for droping the call no answer/busy/offline
 
@@ -614,6 +617,9 @@ $SWITCHBOARD_DROP_TIMEOUT = 0;
   # global timeout for droping to call no answer/busy/offline
   # if the feature is enabled.
   # if you want the user to define this himself set 0.
+
+$CALL_RECORDING	        = false;
+  # allow recording phone calls as WAV files
 
 $VMBOX_ALWAYS_ASK_PIN 	= false;
   # asks for the pin before the user can enter the voicemail menu if
@@ -626,6 +632,8 @@ $VMBOX_ALWAYS_ASK_PIN 	= false;
 *       is always "astbuttond" for the buttondamon
 *
 ***********************************************************/
+=======
+>>>>>>> origin/amooma:etc/gemeinschaft/gemeinschaft.php
 
 $BUTTONDAEMON_USE       = true;
 # do we want to use the Astbuttond instead of normal subscribtions
@@ -671,7 +679,16 @@ $FAX_ENABLED            = false;
 //$FAX_HYLAFAX_ADMIN      = '';            # Adds admin user to your HylaFax's "hosts.hfaxd"
 //$FAX_HYLAFAX_PASS       = '';
 
+//$FAX_INIT_FROM_NET         = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
+  # a comma (,) separated list of IP addresses or
+  # <IP address>/<netmask> pairs from where fax calls can be inited
+  # with HTTP GET
+  # CIDR or dotted decimal notation
+  # e.g.: '127.0.0.1, 192.168.1.130/255.255.255.0, 192.168.1.130/24'
+  # allow all: '0.0.0.0/0', allow none: '0.0.0.0/32'
 
+//$FAX_INIT_DOCDIR         = '/tmp/';
+  # directory containing fax documents to be used by "send-fax.php"
 
 /***********************************************************
 *    BRANCH OFFICE INTEGRATION (BOI)

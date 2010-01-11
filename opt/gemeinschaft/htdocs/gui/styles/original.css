@@ -15,6 +15,11 @@ Note: Do not override border and background on UI controls or
 Firefox 3 will not use the native controls of the operating system.
 */
 
+form {
+	margin: 0;
+	padding: 0;
+}
+
 input[type="text"],
 input[type="password"],
 input[type="file"],
@@ -82,9 +87,15 @@ table {
 }
 
 small,
-.small
+.small,
+.s
 {
 	font-size: 0.93em;
+	line-height: 1.2em;
+}
+.xs
+{
+	font-size: 0.87em;
 	line-height: 1.2em;
 }
 
@@ -147,11 +158,25 @@ tr.b th {
 	vertical-align: bottom;
 }
 
+.gray {
+	color: #979797;
+}
+
 .debug {
 	border: 2px dashed red !important;
 }
 
 .inline {display: inline;}
+
+.ie_clearing {
+	display: block;
+	width: 100%;
+	height: 0;
+	font-size: 0; line-height: 0;
+	padding: 0  1px 0  5px;
+	margin:  0 -1px 0 -5px;
+	visibility: hidden;
+}
 
 .tty {
 	display: none; visibility: hidden;
@@ -172,7 +197,7 @@ tr.b th {
 
 .pre {
 	white-space: pre !important;
-	font-family: Courier, Monaco, monospace !important;
+	font-family: "Lucida Sans Typewriter", "Andale Mono", Courier, Monaco, "Courier New", monospace !important;
 	font-size: 1.15em !important;
 }
 
@@ -181,13 +206,17 @@ tr.b th {
 
 
 code, tt, samp, kbd {
-	font-family: Courier, Monaco, monospace;
+	font-family: "Lucida Sans Typewriter", "Andale Mono", Courier, Monaco, "Courier New", monospace;
 	font-size: 1.05em;
+}
+.s > code, .s > tt, .s > samp, .s > kbd,
+.xs > code, .xs > tt, .xs > samp, .xs > kbd {
+	font-size: 0.99em;
 }
 
 input._admincfg {
 	/* used by mod/admin_config.php only */
-	font-family: Courier, Monaco, monospace;
+	font-family: "Lucida Sans Typewriter", "Andale Mono", Courier, Monaco, "Courier New", monospace;
 	font-size: 1.3em;
 	margin: -1px 0;
 	padding: 2px 5px;
@@ -252,6 +281,14 @@ select {
 	margin: 0;
 	padding: 0 0 0 5px;
 }
+#boxtitle h1 .version {
+	font-family: Helvetica, Arial, Geneva, Verdana, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	vertical-align: baseline;
+	opacity: 0.7;
+	margin: 0 1px;
+}
 
 /*
 #boxbanner {
@@ -288,15 +325,25 @@ select {
 }
 #sudo-info {
 	float: left;
-	width: 30%;
+	width: 50%;
+	width: auto;
 	text-align: left;
 	padding: 0; margin: 0 0 0 2px;
 }
 #sudo-form {
 	float: right;
-	width: 67%;
+	width: 47%;
+	width: auto;
 	text-align: right;
 	padding: 0; margin: 0 5px 1px 0;
+}
+#sudo-info.with-boi {
+	width: 50%;
+	width: auto;
+}
+#sudo-form.with-boi {
+	width: 67%;
+	width: auto;
 }
 #sudo-user {
 	border: 1px inset #fff;
@@ -461,6 +508,17 @@ h1 {
 	padding: 1em 1.5em;
 	margin-left: 170px;
 }
+#boi-content {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border-width: 1px 0 0 0;
+	border-style: solid none none none;
+	border-color: #99f transparent transparent #eef;
+	background: transparent;
+	min-height: 370px;
+	height: 100em;
+}
 
 #copyright {
 	text-align: center;
@@ -495,7 +553,7 @@ th, td, .td {
 }
 td, .td {
 	background: #eee;
-	vertical-align: top;
+	vertical-align: baseline;
 }
 tr.even td {
 	background: #e6e6e6;
@@ -509,12 +567,16 @@ th, td.th, .th {
 	padding-top: 4px;
 	padding-bottom: 4px;
 	font-weight: bold;
-	vertical-align: middle;
+	/*vertical-align: middle;*/
+	vertical-align: baseline;
 }
 tbody th {
 	padding: 2px 6px;
 	text-align: left;
-	vertical-align: top;
+	/*vertical-align: baseline;*/
+}
+thead th, td.th, .th {
+	vertical-align: middle;
 }
 /*
 tbody tr.even th {
@@ -616,7 +678,7 @@ tr.odd .transp {
 	line-height: 1.1em;
 }
 .ivr_editor * {
-	font-family: monospace !important;
+	font-family: "Lucida Sans Typewriter", "Andale Mono", Courier, Monaco, "Courier New", monospace !important;
 	font-size: 11px !important;
 	line-height: 1.1em !important;
 }
@@ -686,3 +748,29 @@ tr.odd .transp {
 	opacity: .75;
 	z-index: 100;
 }
+
+
+.radio_and_label_blocks {
+	display: block;
+	display: table;
+	margin: 0 -1px;
+	padding: 0;
+}
+.radio_and_label_block {
+	display: block;
+	display: table-row;
+}
+.radio_and_label_block > input[type="radio"],
+.radio_and_label_block > input[type="checkbox"] {
+	display: inline;
+	display: table-cell;
+	vertical-align: baseline;
+	/*margin: 2px 2px 2px 2px;*/
+}
+.radio_and_label_block > label {
+	display: inline;
+	display: table-cell;
+	padding-left: 0.2em;
+	vertical-align: baseline;
+}
+

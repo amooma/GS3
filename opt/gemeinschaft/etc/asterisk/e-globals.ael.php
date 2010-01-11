@@ -46,6 +46,19 @@ echo 'is_sub_system=', ($is_sub_system ? 'yes':'no') ,';',"\n";
 $allow_direct_dial = gs_get_conf('GS_DP_ALLOW_DIRECT_DIAL');
 echo 'allow_direct_dial=', ($allow_direct_dial ? 'yes':'no') ,';',"\n";
 
+$intl_lang_sounds = false;
+foreach(array( gs_get_conf('GS_INTL_LANG_SOUNDS'), 'de-DE', 'de-de', 'en-US', 'en-us', subStr(gs_get_conf('GS_INTL_LANG_SOUNDS'),0,2) ) as $lang) {
+	if (! preg_match('/^[a-zA-Z0-9\-_]+$/', $lang)) continue;
+	if (@is_dir( '/opt/gemeinschaft/sounds/'.$lang )) {
+		$intl_lang_sounds = $lang;
+		break;
+	}
+}
+if (! $intl_lang_sounds) {
+	gs_log( GS_LOG_WARNING, 'Sounds not found for INTL_LANG_SOUNDS "'.gs_get_conf('GS_INTL_LANG_SOUNDS').'"' );
+	$intl_lang_sounds = 'xx-XX';
+}
+echo 'gs_lang=', $intl_lang_sounds ,';',"\n";
 
 require_once( GS_DIR .'inc/get-listen-to-ips.php' );
 $our_ips = gs_get_listen_to_ips(true);

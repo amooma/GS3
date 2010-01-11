@@ -69,6 +69,46 @@
 
     <para>Zeigt an welche Benutzer lokale Admin-Rechte für Zweigstellen
     (Fremd-Hosts) haben.</para>
+    <para>Beispielausgabe:</para>
+    <para>
+   <screen>
+------------------------------------------------------------------------------
+| user                 | host title                | host            | roles |
+------------------------------------------------------------------------------
+| soeren               | Gemeinschaft 1            | 192.168.23.2    | l     |
+------------------------------------------------------------------------------
+   </screen>
+   </para>
+   <para>
+   Übersicht über die Ausgabe-Spalten:
+    <variablelist>
+      <varlistentry>
+        <term>user</term>
+        <listitem>
+          <para>Der Benutzername des Nutzers der die Berechtigung hat</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>host title</term>
+        <listitem>
+          <para>Der Titel des Hosts auf dem der Benutzer aus Spalte "users" eine Admin-Berechtigung hat.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>host</term>
+        <listitem>
+          <para>Der IP des Hosts auf dem der Benutzer aus Spalte "users" eine Admin-Berechtigung hat.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>roles</term>
+        <listitem>
+          <para>Die Berechtigungen die der Benutzer auf dem Host hat, im Moment gibt es nur "l" das für Lokaler Admin steht.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+   </para>
+    
   </refsection>
 
   <refsection>
@@ -103,7 +143,7 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para><xref  linkend="man-gs-boi-admin-add" />
+	<xref  linkend="man-gs-boi-admin-del" /></para>
   </refsection>
 </refentry>

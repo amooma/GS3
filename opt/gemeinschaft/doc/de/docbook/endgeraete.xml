@@ -1,139 +1,105 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
-"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- This document was created with Syntext Serna Free. --><!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
 <chapter id="endgeraete" revision="$Revision$">
-  <!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+<!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
 % Permission is granted to copy, distribute and/or modify this document
 % under the terms of the GNU Free Documentation License, Version 1.2
 % or any later version published by the Free Software Foundation;
 % with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
 % Texts. A copy of the license is included in the section entitled "GNU
 % Free Documentation License".
-% Asterisk training and consulting is offered at http://www.amooma.de-->
-
-  <title>Endgeräte</title>
-
+% Asterisk training and consulting is offered at http://www.amooma.de-->  <title>Endgeräte</title>
   <section id="snom-360">
     <title>Snom 360</title>
-
-    <para><ulink
-    url="http://www.snom.com/wiki/index.php/Snom360">http://www.snom.com/wiki/index.php/Snom360</ulink></para>
-
+    <para><ulink url="http://www.snom.com/wiki/index.php/Snom360">http://www.snom.com/wiki/index.php/Snom360</ulink></para>
     <para>Das SIP-Telefon Snom 360 bietet neben den üblichen Zifferntasten,
     die auch bei analogen Geräten vorkommen, eine ganze Reihe nützlicher
     Funktionstasten, die bis zu einem gewissen Grad konfigurierbar sind. Die
     wichtigsten Funktionstasten werden an dieser Stelle kurz aufgeführt; eine
     genaue Beschreibung der Tasten finden Sie in dem über 100 Seiten starken
     Handbuch zu ihrem Snom-Telefon.</para>
-
     <variablelist>
       <varlistentry>
         <term>4 Soft-Tasten unter dem Bildschirm</term>
-
         <listitem>
           <para>Diese Tasten werden mit kontextabhängigen Funktionen belegt,
           diese werden in der untersten Zeile des Displays angezeigt.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>- Volume +</term>
-
         <listitem>
           <para>Verändert die Lautstärke des Lautsprechers oder Hörers</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>Mute</term>
-
         <listitem>
           <para>Schaltet das Mikrofon aus oder ein.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>Speaker</term>
-
         <listitem>
           <para>Schaltet Lauthören aus oder ein.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>Headset</term>
-
         <listitem>
           <para>Schaltet den Kopfhörer aus oder ein.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>x</term>
-
         <listitem>
           <para>Abbrechen - Gespräch beenden.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>Richtungstasten</term>
-
         <listitem>
           <para>Werden zur Navigation im Menü verwendet</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>&#8730;</term>
-
         <listitem>
           <para>Bestätigen - Wählen - Gespräch annehmen.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>Retrieve</term>
-
         <listitem>
           <para>Abfragen der Mailbox.</para>
-
           <para>Hat die Mailbox ein Gespräch für Sie aufgezeichnet, wird dies
           durch Blinken der Message-LED signalisiert. Die Anzahl alter und
           neuer Nachrichten wird zusätzlich auch auf dem Display
           angezeigt.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>Redial</term>
-
         <listitem>
           <para>Wahlwiederholung</para>
-
           <para>Durch Drücken dieser Taste können Sie die letzten angerufenen
           Nummern erneut anrufen und sehen angenommene und verpaßte Anrufe.
           Wählen Sie zunächst mit den Pfeiltasten die Nummer aus und drücken
           danach die <emphasis role="bold">&#8730;</emphasis> Taste.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>Settings</term>
-
         <listitem>
           <para>Öffnet das Konfigurationsmenü.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>Directory</term>
-
         <listitem>
           <para>Öffnet das Telefonbuch.</para>
-
           <para>Belegt mit dem Firmen-Telefonbuch. Such-Modus ähnlich dem
-          bekannten "T9", also z.B. <literal>63437</literal> für
+          bekannten &quot;T9&quot;, also z.B. <literal>63437</literal> für
           <literal>MEIER</literal> eintippen. (Technisch hat die Suche nichts
           mit T9 gemeinsam. Während bei T9 Wörterlisten zum Einsatz kommen
           wird hier bei Eingabe von z.B. <literal>63437</literal> nach
@@ -141,31 +107,23 @@
           <literal>[MNO][DEF][GHI][DEF][PQRS]</literal> gesucht.)</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>Menu</term>
-
         <listitem>
           <para>Öffnet das Hauptmenü des Telefons.</para>
-
           <para>Das Hauptmenü enthält Untermenüs zur Einstellung der
           Klingeltöne, Displaykontrast etc.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>Transfer</term>
-
         <listitem>
           <para>Verbindet den Anrufer mit einer anderen Nummer.</para>
-
           <para>Es gibt mehrere Wege, wie Sie Ihren Gesprächspartner mit einer
           anderen Nummer verbinden können:</para>
-
           <variablelist>
             <varlistentry>
               <term>direktes Verbinden</term>
-
               <listitem>
                 <para>Wenn Sie diese Taste während eines Gesprächs drücken,
                 wird Ihr Gesprächspartner auf Halten gesetzt. Geben Sie danach
@@ -174,10 +132,8 @@
                 der gewählten Nummer verbunden.</para>
               </listitem>
             </varlistentry>
-
             <varlistentry>
               <term>Verbinden mit Rückfrage</term>
-
               <listitem>
                 <para>Drücken Sie hierzu während eines Gesprächs die Taste
                 <emphasis role="bold">Hold</emphasis> um Ihren
@@ -192,79 +148,61 @@
           </variablelist>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>Hold</term>
-
         <listitem>
           <para>Gespräch halten.</para>
-
           <para>Wenn Sie diese Taste während eines Gesprächs drücken, wird Ihr
           Gesprächspartner auf Halten gesetzt. Danach können Sie eine weitere
           Verbindung zu einem anderen Teilnehmer herstellen.</para>
-
           <para>Sie können das Gespräch durch Drücken der Soft-Taste unter der
           Bezeichnung <emphasis role="bold">R</emphasis> (auf dem Display)
           wieder heranholen. Sie können auch mehrere Gespräche so halten, um
           ein bestimmtes Gespräch heranzuholen wählen Sie es zunächst mit den
-          Pfeiltasten aus und drücken danach die Taste <emphasis
-          role="bold">R</emphasis>.</para>
+          Pfeiltasten aus und drücken danach die Taste <emphasis role="bold">R</emphasis>.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>DND</term>
-
         <listitem>
           <para>Schaltet den <quote>Nicht-Stören</quote>-Modus ein/aus.</para>
-
           <para>Wenn dieser Modus aktiviert ist, werden keine Anrufe zu dem
-          Telefon durchgestellt. Dabei wird auf dem Display "Inaktiv"
+          Telefon durchgestellt. Dabei wird auf dem Display &quot;Inaktiv&quot;
           angezeigt.</para>
         </listitem>
       </varlistentry>
-
       <varlistentry>
         <term>12 Programmierbare Funktionstasten</term>
-
         <listitem>
           <para>Das Telefon besitzt 12 Funktionstasten, die für
           unterschiedliche Funktionen programmierbar sind, z.B.:</para>
-
           <variablelist>
             <varlistentry>
               <term>Leitung</term>
-
               <listitem>
                 <para>Eine SIP-Leitung kann auf diese Funktionstaste gelegt
                 werden. Bei einem eingehenden Gespräch auf dieser Leitung
                 leuchtet die entsprechende LED neben der Taste auf. Durch
                 Drücken dieser Taste kann das Gespräch angenommen
                 werden.</para>
-
                 <para>Während eines bestehenden Gesprächs leuchtet die LED
                 konstant. Durch Drücken der Taste kann das Gespräch auf Halten
                 gesetzt werden.</para>
-
                 <para>Man kann auch z.B. während eines Gespräches auf eine
                 andere freie Leitungstaste drücken um ein gleichzeitiges
                 zweites Gespräch auf einer 2. Leitung zu beginnen. Auch Hin-
                 und Her-Schalten (Makeln) ist möglich.</para>
               </listitem>
             </varlistentry>
-
             <varlistentry>
               <term>Ziel</term>
-
               <listitem>
                 <para>Eine Nummer kann hinterlegt werden, die bei Drücken
                 dieser Taste angerufen wird.</para>
               </listitem>
             </varlistentry>
-
             <varlistentry>
               <term>DTMF</term>
-
               <listitem>
                 <para>Eine beliebige DTMF-Sequenz kann hinterlegt werden, die
                 bei Drücken auf die Taste gesendet wird.</para>
@@ -274,30 +212,5 @@
         </listitem>
       </varlistentry>
     </variablelist>
-  </section>
-
-  <section id="siemens-openstage">
-    <title>Siemens OpenStage</title>
-    <para>
-      Welche Schritte genau nötig sind, um das Provisioning für das Openstage 
-      zu installieren wird ausführlich in der Datei INSTALL.txt erläutert. 
-      Diese findet man in der jeweiligen Gemeinschafts-Distribution im 
-      /opt/gemeinschaft-siemens/doc Verzeichnis.
-    </para>
-
-    <para>Reboot: Per Konfigurations-Taste in den Reiter <quote>Menü</quote>
-    schalten und dann gleichzeitig die Tasten <literal>1</literal>,
-    <literal>4</literal>, <literal>7</literal> gedrückt halten. Ggf.
-    Reboot-Paßwort (= Admin-Paßwort?) eingeben. Bildschirm wird kurz grün,
-    dann rebootet<footnote>
-        <para>Der Bootloader ist übrigens U-Boot. <ulink
-        url="http://sourceforge.net/projects/u-boot">http://sourceforge.net/projects/u-boot</ulink>,
-        <ulink
-        url="http://wiki.tuxbox.org/Bootloader#U-Boot.2FPPCBoot">http://wiki.tuxbox.org/Bootloader#U-Boot.2FPPCBoot</ulink></para>
-      </footnote> das Telefon.</para>
-
-    <para>Das Admin-Paßwort ist per Default <literal>123456</literal> (oder
-    <literal>000000</literal>?).</para>
-    <para>Das Factory-Reset-Paßwort ist per Default <literal>124816</literal></para>
   </section>
 </chapter>

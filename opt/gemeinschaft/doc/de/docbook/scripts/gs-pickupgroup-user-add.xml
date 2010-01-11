@@ -110,7 +110,12 @@
 
   <refsection>
     <title>Siehe auch</title>
-
-    <para>-</para>
+    <para>
+    <xref  linkend="man-gs-pickupgroup-del" />
+    <xref  linkend="man-gs-pickupgroup-add" />
+    <xref  linkend="man-gs-pickupgroups-get" />
+    <xref  linkend="man-gs-pickupgroup-get" />
+    <xref  linkend="man-gs-pickupgroup-user-del" />
+    </para>
   </refsection>
 </refentry>

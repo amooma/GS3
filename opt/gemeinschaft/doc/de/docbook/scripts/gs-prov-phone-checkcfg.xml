@@ -81,7 +81,7 @@
         <term><option>--user</option>=<replaceable>usercode</replaceable></term>
 
         <listitem>
-          <para>Benutzername</para>
+          <para>Benutzername des Benutzers der gerade am Telefon angemeldet ist.</para>
         </listitem>
       </varlistentry>
 
@@ -89,7 +89,7 @@
         <term><option>--ext</option>=<replaceable>extension</replaceable></term>
 
         <listitem>
-          <para>Nebenstelle</para>
+          <para>Nebenstelle des Telefones</para>
         </listitem>
       </varlistentry>
 
@@ -97,7 +97,7 @@
         <term><option>--ip</option>=<replaceable>ip_addr</replaceable></term>
 
         <listitem>
-          <para>ip_addr</para>
+          <para>Die IP-Addresse des Telefones</para>
         </listitem>
       </varlistentry>
 
@@ -105,7 +105,9 @@
         <term><option>--all</option>=<replaceable>yes</replaceable></term>
 
         <listitem>
-          <para>yes</para>
+          <para>Wenn der Wert auf "yes" gesetzt wird, dann werden alle Telefone im System angetriggert.
+	  Achtung!, Sie können damit eine DoS-Attacke auf Ihren Provisioning-Server und/oder ihr Netzwerk
+	  starten, wenn Sie sehr viele Telefone im System haben! Dieser Parameter ist also mit Vorsicht zu genießen.</para>
         </listitem>
       </varlistentry>
 
@@ -113,7 +115,7 @@
         <term><option>--reboot</option>=<replaceable>yes</replaceable></term>
 
         <listitem>
-          <para>yes</para>
+          <para>Wenn der Wert auf "yes" steht, wird das Telefon neu gestartet.</para>
         </listitem>
       </varlistentry>
 

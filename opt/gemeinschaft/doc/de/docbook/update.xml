@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!-- This document was created with Syntext Serna Free. -->
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd" []>
+<chapter id="update" revision="$Revision: 6639 $">
+<!--% Copyright (c) 2007 - amooma GmbH - http://www.amooma.de
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU Free Documentation License, Version 1.2
+% or any later version published by the Free Software Foundation;
+% with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+% Texts. A copy of the license is included in the section entitled "GNU
+% Free Documentation License".
+% Asterisk training and consulting is offered at http://www.amooma.de-->  <title>Update von Gemeinschaft</title>
+<para>
+Wenn Gemeinschaft upgedatet werden soll, sind 2 Dinge zu tun, zu einem muss die Datenbankstruktur angepasst werden (<xref linkend="datenbank-update" />)
+zum anderem müssen die Gemeinschaft-Dateien geupdated werden (<xref linkend="gemeinschaft-update" />). Asterisk (<xref linkend="asterisk-update" />) hingegen
+muss nur dann geupdatet werden, wenn es mit der alten Version Probleme gibt, Features hinzugekommen sind, die man benötigt, oder ausdrücklich darauf
+hingewiesen wird, das die neue Version von Gemeinschaft zwingend ein Asterisk-Update erfordert.
+Die einzeln auszuführenden Schritte sind in den nachfolgenden Unterkapiteln erläutert.
+</para>
+
+
+  <section id="datenbank-update">
+    <title>Datenbank Updaten</title>
+    <para><warning>
+        <para>Wenn Sie Gemeinschaft in einem Cluster verwenden, führen Sie das Datenbank-Update bitte nur auf dem Datenbank-Master aus! Die Update-Befehle werden dann durch die Replikation auf allen anderen nodes Verteillt.</para>
+      </warning></para>
+    <para>Mit der immer fortlaufenden Entwicklung von Gemeinschaft ändert sich die Datenbankstruktur geringfügig. Damit neue Funktionen Problemlos genutzt werden können, muss man die Datenbank anpassen. Dafür gibt es die Datei <filename>UPGRADE-DB.sql </filename>in dieser sind alle SQL-Kommandos enthalten, die für ein Update benötigt werden. Es wird empfohlen vor dem Ausführen des Updates ein Backup der Datenbank durchzuführen. Dies kann man mit folgendem Kommando erledigen:</para>
+    <para><command>mysqldump asterisk,astcdr &gt; /root/Backup.sql</command></para>
+    <para> Wenn das Backup erfolgreich erstellt wurde, kann man das Datenbank-Update Script wie folgt ausführen:</para>
+    <para><command>mysql &lt; /usr/share/doc/gemeinschaft/UPGRADE-DB.sql</command></para>
+    <para>Dannach sollte die Datenbankstruktur aktuell sein.</para>
+  </section>
+  <section id="gemeinschaft-update">
+    <title>Gemeinschaft Updaten</title>
+    <para>Sie können das aktuelle Tar-Archiv vom Amooma-Server unter diese URL herunter laden:
+        http://www.amooma.de/download/gemeinschaft-current.tar.gz
+    </para>
+    <para>Falls Sie noch eigene Anpassungen am Code von Gemeinschaft gemacht haben, die Sie in die neue Version übernehmen müssen, dann ist jetzt ein guter Zeitpunkt diese in den neuen Code einzupflegen. 
+    Es wird empfohlen das tar.gz hierfür in ein temporäres Verzeichniss zu entpacken, dann kann man in Ruhe alle Änderungen vornehmen, bevor man es wieder zusammen packt und im root-Verzeichnis auf jedem 
+    Gemeinschaft-Knoten entpackt.
+    </para>
+    <para>Gemeinschaft updzudaten ist ein relativ einfacher Schritt. Sie legen einfach das tar.gz das Sie herunter geladen oder von Ihrem Supportdienstleister zur Verfügung gestellt bekommen haben, in das root-verzeichnis des Systemes &quot;/&quot; und entpacken es mit dem Kommando <command>tar xvfz gemeinschaft.tar.gz</command>. Dannach sollten Sie die neue Version nutzen können. Falls Sie ein Gemeinschaft-Cluster-System betreiben sollten, dann führen Sie diesen Schritt bitte auf allen nodes aus. </para>
+  </section>
+  <section id="asterisk-update">
+    <title>Asterisk Updaten</title>
+    <para><warning><para>Sie sollten vor dem Asterisk-Update die Binärmodule von Asterisk entfernen:</para>
+    <screen>
+    Gemeinschaft:~# rm /usr/lib/asterisk/modules/* [ENTER]
+    </screen></warning>
+    </para>
+    
+    <para>Falls Sie Asterisk Updaten müssen, wenn z.b.: Features die Sie benötigen in einer neuen Asterisk-Version verfügbar sind, dann gehen Sie bitte nach der Installationsanleitung aus dem Installationskapitel <xref linkend="installation" />. vor.</para>
+    
+    
+  </section>
+</chapter>

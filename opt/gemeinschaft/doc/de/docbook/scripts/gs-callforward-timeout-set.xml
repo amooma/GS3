@@ -68,7 +68,7 @@
     <title>Beschreibung</title>
 
     <para>Setzt für einen Benutzer die Zeitdauer nach der eine Rufumleitung
-    nach Zeit greift.</para>
+    nach Zeit greift dies ist der Fall "unavial".</para>
   </refsection>
 
   <refsection>
@@ -87,7 +87,7 @@
         <term><option>--timeout</option>=<replaceable>timeout</replaceable></term>
 
         <listitem>
-          <para>Zeitdauer</para>
+          <para>Zeitdauer in Sekunden, mindestens 1 und Maximal 90</para>
         </listitem>
       </varlistentry>
 
@@ -111,7 +111,9 @@
 
   <refsection>
     <title>Siehe auch</title>
-
+	<para>gs-callforward-active (<xref  linkend="man-gs-callforward-activate" /></para>
+	<para>gs-callforward-get (<xref  linkend="man-gs-callforward-get" /></para>
+	<para>gs-callforward-number-set (<xref  linkend="man-gs-callforward-number-set" /></para>
     <para>-</para>
   </refsection>
 </refentry>
