@@ -426,7 +426,7 @@ $GRANDSTREAM_PROV_FW_UPDATE = false;  # allow firmware updates?
 
 //-----------------------[ Polycom ]----------------------//
 
-$POLYCOM_PROV_ENABLED        = true;  # do provisioning for Polycom?
+$POLYCOM_PROV_ENABLED        = false;  # do provisioning for Polycom?
 
 $POLYCOM_PROV_PB_NUM_RESULTS = 150;
   # number of results in phonebook search on Snom phone
@@ -441,7 +441,7 @@ $POLYCOM_PROV_ALLOW_LOG_PUT  = false;
 
 //------------------------[ Elmeg ]-----------------------//
 
-$ELMEG_PROV_ENABLED = true;  # do provisioning for Elmeg?
+$ELMEG_PROV_ENABLED = false;  # do provisioning for Elmeg?
 
 $ELMEG_PROV_HTTP_USER = "";
 $ELMEG_PROV_HTTP_PASS = "";
