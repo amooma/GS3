@@ -148,20 +148,6 @@ function ael_eval_callback( $m )
 	
 	array_push( $ael_include_stack, $filename );
 	
-	gs_log( GS_LOG_DEBUG, ael_get_log_indent(1) ./*"In ".*/ /*baseName(@$ael_include_stack[count($ael_include_stack)-1]) .": ".*/ "#$directive ". baseName($filename) ." ..." );
-	
-	$ret = '';
-	
-	$max_include_depth = 10;
-	if (count($ael_include_stack) > $max_include_depth) {
-		$reason_msg = "Not going to eval #$directive $filename. Max. include depth ($max_include_depth) reached!";
-		echo "WARNING: $reason_msg"."\n";
-		gs_log( GS_LOG_WARNING, ael_get_log_indent(1) ."$reason_msg" );
-		$ret = "\n"."// WARNING: $reason_msg"."\n\n";
-	}
-	
-	array_push( $ael_include_stack, $filename );
-	
 	if ($directive === 'include') {
 		
 		//gs_log( GS_LOG_DEBUG, ael_get_log_indent(0) ."Loading ".baseName($filename)." ..." );
