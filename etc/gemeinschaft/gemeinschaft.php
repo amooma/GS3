@@ -632,8 +632,6 @@ $VMBOX_ALWAYS_ASK_PIN 	= false;
 *       is always "astbuttond" for the buttondamon
 *
 ***********************************************************/
-=======
->>>>>>> origin/amooma:etc/gemeinschaft/gemeinschaft.php
 
 $BUTTONDAEMON_USE       = true;
 # do we want to use the Astbuttond instead of normal subscribtions

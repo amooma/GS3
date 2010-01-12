@@ -150,7 +150,6 @@ if ($edit_user) {
 	$groups_my  = gs_group_members_groups_get(Array($uid), 'user', false);
 	
 }
->>>>>>> origin/amooma:opt/gemeinschaft/htdocs/gui/mod/admin_users.php
 
 $drop_call   = (bool)@$_REQUEST['drop_call'  ] ;
 
