@@ -869,7 +869,7 @@ context to-internal-users-self {
 						Set(CALLERID(name)="[RR] ${CALLERID(name)}");
 					}
 				}
-				//UserEvent(UserCallUI|user: ${user_name}|calledparty: ${EXTEN});
+				//UserEvent(UserCallUI,user: ${user_name},calledparty: ${EXTEN});
 				Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},o);
 			}
 			
