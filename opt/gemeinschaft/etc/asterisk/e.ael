@@ -1096,7 +1096,7 @@ macro dial-gateway-do( mnumber ) {
 			// RFC 3325, RFC 3323:
 			SIPAddHeader(Privacy: none);
 			// Set caller presentation - affects Remote-Party-ID header: ...";privacy:off;screen:yes"
-			SetCallerPres(allowed_passed_screen);
+			Set(CALLERPRES()=allowed_passed_screen);
 		}
 		else {
 			// RFC 2543:
