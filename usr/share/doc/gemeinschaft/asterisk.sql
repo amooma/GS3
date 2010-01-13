@@ -5762,7 +5762,9 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cf_timerules`;
-CREATE TABLE `cf_timerules` (
+CREATE TABLE IF NOT EXISTS `cf_timerules` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `ord` int(10) unsigned NOT NULL,
   `_user_id` int(10) unsigned NOT NULL,
   `d_mo` tinyint(1) unsigned NOT NULL default '1',
   `d_tu` tinyint(1) unsigned NOT NULL default '1',
@@ -5773,7 +5775,8 @@ CREATE TABLE `cf_timerules` (
   `d_su` tinyint(1) unsigned NOT NULL default '1',
   `h_from` time NOT NULL default '00:00:00',
   `h_to` time NOT NULL default '24:00:00',
-  `target` varchar(20) character set ascii NOT NULL
+  `target` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
