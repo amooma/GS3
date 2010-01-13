@@ -36,7 +36,7 @@ require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 *    deletes a user group
 ***********************************************************/
 
-function gs_group_del( $id )
+function gs_prov_group_del( $id )
 {
 	$id = (int)$id;
 	if ($id < 1)
@@ -58,7 +58,7 @@ function gs_group_del( $id )
 	}	
 }
 
-function gs_group_del_by_name( $group )
+function gs_prov_group_del_by_name( $group )
 {
 	if (! preg_match( '/^[a-z0-9\-_]+$/', $group ))
 		return new GsError( 'Group must be alphanumeric.' );
@@ -73,7 +73,7 @@ function gs_group_del_by_name( $group )
 	if ($group_id < 1)
 		return new GsError( 'Unknown group.' );
 	
-	return gs_group_del( $group_id );
+	return gs_prov_group_del( $group_id );
 }
 
 ?>

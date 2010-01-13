@@ -28,9 +28,9 @@
 
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_groups_get.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_group_change.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_group_del.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_prov_groups_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_prov_group_change.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_prov_group_del.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 echo '<h2>';
@@ -75,7 +75,7 @@ if ($action === 'save') {
 		if ($parent_id < 1) $parent_id = null;
 		$show_ext_modules = (int)@$_REQUEST['group-'.$group_id.'-show_ext_modules'];
 		
-		$ret = gs_group_change( $group_id, $parent_id, $name, $title, $key_profile_id, $prov_param_profile_id, $show_ext_modules );
+		$ret = gs_prov_group_change( $group_id, $parent_id, $name, $title, $key_profile_id, $prov_param_profile_id, $show_ext_modules );
 		if (isGsError($ret)) {
 			echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 		} elseif (! $ret) {
@@ -94,7 +94,7 @@ if ($action === 'save') {
 #####################################################################
 if ($action === 'delete') {
 	$group_id = (int)@$_REQUEST['id'];
-	$ret = gs_group_del( $group_id );
+	$ret = gs_prov_group_del( $group_id );
 	if (isGsError($ret)) {
 		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	} elseif (! $ret) {
@@ -130,7 +130,7 @@ if ($action == '') {
 <tbody>
 <?php
 
-$groups = gs_groups_get();
+$groups = gs_prov_groups_get();
 if (isGsError($groups)) {
 	echo '<tr><td colspan="5">', $groups->getMsg() ,'</td></tr>';
 } else {

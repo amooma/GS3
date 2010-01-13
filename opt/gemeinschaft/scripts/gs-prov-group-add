@@ -32,7 +32,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_group_change.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_prov_group_change.php' );
 
 
 /***********************************************************
@@ -70,7 +70,7 @@ if (! array_key_exists('parent', $opts))
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_group_add_by_name( $opts['parent'], $opts['name'], $opts['title'], $opts['softkey-profile-id'], $opts['prov-param-profile-id'], $opts['show-ext-modules'] );
+$ret = @ gs_prov_group_add_by_name( $opts['parent'], $opts['name'], $opts['title'], $opts['softkey-profile-id'], $opts['prov-param-profile-id'], $opts['show-ext-modules'] );
 
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
