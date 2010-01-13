@@ -150,7 +150,7 @@ macro dial-internal-nobody-self( mext3 ) {
 		&dial-log-store(${user_name},out,${mext3},0);
 	}
 	&set-callerid-by-clir();
-	Verbose(1,### Call local nobody ${mext3}\, timeout 30);
+	Verbose(1,### Call local nobody ${mext3}, timeout 30);
 	Dial(SIP/${mext3},30,o);
 	&hangup-proper-status();
 	return;
@@ -444,7 +444,7 @@ context to-internal-users {
 			Verbose(1,### Direct dialing not enabled);
 			Hangup();
 		}
-		Verbose(1,### Incoming call to ${boss}\, direct dial);
+		Verbose(1,### Incoming call to ${boss}, direct dial);
 		&pass-connid();
 		
 		//if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
@@ -675,7 +675,7 @@ context to-internal-users-self {
 		
 		// check the type of the called extension:
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-type.agi,${EXTEN},${is_huntgroup});
-		Verbose(1,### Incoming call to ${EXTEN}\, type: ${exttype}\, forwards: ${forwards});
+		Verbose(1,### Incoming call to ${EXTEN}, type: ${exttype}, forwards: ${forwards});
 		
 		// is it a user? is it a queue?
 		if ("${exttype}" = "huntgroup")
@@ -837,10 +837,10 @@ context to-internal-users-self {
 				Set(pgrpdialstr=);
 			}
 			if ("${dialtimeout}" != "") {
-				Verbose(1,### Call local user ${EXTEN}\, timeout: ${dialtimeout} s);
+				Verbose(1,### Call local user ${EXTEN}, timeout: ${dialtimeout} s);
 			}
 			else {
-				Verbose(1,### Call local user ${EXTEN}\, timeout: none);
+				Verbose(1,### Call local user ${EXTEN}, timeout: none);
 			}
 
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-dnd.agi,${EXTEN});
@@ -939,7 +939,7 @@ context to-internal-users-self {
 						Verbose(1,### Call completion to ${EXTEN} (busy) - don't forward);
 						&hangup-proper-status();
 					}
-					Verbose(1,### Called user: ${EXTEN}\, forward on busy to: ${fw_${is_call_from}_busy});
+					Verbose(1,### Called user: ${EXTEN}, forward on busy to: ${fw_${is_call_from}_busy});
 					Set(__forwarded_by=${EXTEN});
 					Set(__forwarded_by_name=${mname});
 					Set(__forwarded_to=${fw_${is_call_from}_busy});
@@ -1035,10 +1035,10 @@ context to-internal-users-self {
 				Set(queuetimeout=${fw_${is_call_from}_timeout_timeout});
 			
 			if ("${queuetimeout}" != "") {
-				Verbose(1,### Enter local queue ${EXTEN}\, timeout: ${queuetimeout} s);
+				Verbose(1,### Enter local queue ${EXTEN}, timeout: ${queuetimeout} s);
 			}
 			else {
-				Verbose(1,### Enter local queue ${EXTEN}\, timeout: none);
+				Verbose(1,### Enter local queue ${EXTEN}, timeout: none);
 			}
 			
 			//Set(CALLERID(name)=Queue ${EXTEN});
@@ -1055,20 +1055,20 @@ context to-internal-users-self {
 			//	Wait(0.5);
 			//	Set(ring_instead_of_moh=r);
 			//	Set(queuetimeout=30);
-			//	Verbose(1,### Sonderfall fuer Queue ${EXTEN} - klingeln statt MOH\, timeout: ${queuetimeout});
+			//	Verbose(1,### Sonderfall fuer Queue ${EXTEN} - klingeln statt MOH, timeout: ${queuetimeout});
 			//	AGI(/opt/gemeinschaft/dialplan-scripts/queue-num-avail-members.agi,${EXTEN});
-			//	Verbose(1,### Sonderfall fuer Queue ${EXTEN} - Agenten: ${queue_num_members}\, frei: ${queue_avail_members});
+			//	Verbose(1,### Sonderfall fuer Queue ${EXTEN} - Agenten: ${queue_num_members}, frei: ${queue_avail_members});
 			//	if ("${queue_avail_members}" = "0") {
 			//		Set(all_busy=1);
 			//		if ("${queue_num_members}" = "0") {
 			//			// empty:
 			//			Set(QUEUESTATUS=JOINEMPTY);
-			//			Verbose(1,### Sonderfall fuer Queue ${EXTEN} - keine Agenten\, behandeln wie ${QUEUESTATUS});
+			//			Verbose(1,### Sonderfall fuer Queue ${EXTEN} - keine Agenten, behandeln wie ${QUEUESTATUS});
 			//		}
 			//		else {
 			//			// treat like full:
 			//			Set(QUEUESTATUS=FULL);
-			//			Verbose(1,### Sonderfall fuer Queue ${EXTEN} - alle besetzt\, behandeln wie ${QUEUESTATUS});
+			//			Verbose(1,### Sonderfall fuer Queue ${EXTEN} - alle besetzt, behandeln wie ${QUEUESTATUS});
 			//		}
 			//	}
 			//}
@@ -1123,7 +1123,7 @@ context to-internal-users-self {
 			if ("${QUEUESTATUS}"="TIMEOUT") {
 				Verbose(1,### Queue ${EXTEN} is unavailable (no answer after timeout));
 				if ("${fw_${is_call_from}_timeout}" != "") {
-					Verbose(1,### Called queue: ${EXTEN}\, forward on timeout to: ${fw_${is_call_from}_timeout});
+					Verbose(1,### Called queue: ${EXTEN}, forward on timeout to: ${fw_${is_call_from}_timeout});
 					Set(__forwarded_by=${EXTEN});
 					Set(__forwarded_by_name=);
 					Set(__forwarded_to=${fw_${is_call_from}_timeout});
@@ -1141,7 +1141,7 @@ context to-internal-users-self {
 			else if ("${QUEUESTATUS}"="FULL") {
 				Verbose(1,### Queue ${EXTEN} is full);
 				if ("${fw_${is_call_from}_full}" != "") {
-					Verbose(1,### Called queue: ${EXTEN}\, forward on full to: ${fw_${is_call_from}_full});
+					Verbose(1,### Called queue: ${EXTEN}, forward on full to: ${fw_${is_call_from}_full});
 					Set(__forwarded_by=${EXTEN});
 					Set(__forwarded_by_name=);
 					Set(__forwarded_to=${fw_${is_call_from}_full});
@@ -1159,7 +1159,7 @@ context to-internal-users-self {
 			else if ("${QUEUESTATUS}"="JOINEMPTY" || "${QUEUESTATUS}"="LEAVEEMPTY" || "${QUEUESTATUS}"="JOINUNAVAIL" || "${QUEUESTATUS}"="LEAVEUNAVAIL") {
 				Verbose(1,### Queue ${EXTEN} is empty);
 				if ("${fw_${is_call_from}_empty}" != "") {
-					Verbose(1,### Called queue: ${EXTEN}\, forward on empty to: ${fw_${is_call_from}_empty});
+					Verbose(1,### Called queue: ${EXTEN}, forward on empty to: ${fw_${is_call_from}_empty});
 					Set(__forwarded_by=${EXTEN});
 					Set(__forwarded_by_name=);
 					Set(__forwarded_to=${fw_${is_call_from}_empty});
@@ -1253,7 +1253,7 @@ context to-internal-users-self {
 			goto user_uncallable_vm_off;
 			
 		user_uncallable_vm_on:
-			Verbose(1,### Called user ${EXTEN} unreachable\, record voicemail from ${vm_source});
+			Verbose(1,### Called user ${EXTEN} unreachable, record voicemail from ${vm_source});
 			if ("${is_callcompletion}" = "1") {
 				// no voicemail for call completion
 				Verbose(1,### Called user ${EXTEN} unreachable but don't record voicemail for call completion);
@@ -1285,8 +1285,8 @@ context to-internal-users-self {
 			Hangup();
 		
 		user_uncallable_vm_off:
-			//Verbose(1,### Called user ${origext} unreachable\, mailbox not active);
-			Verbose(1,### Called user ${EXTEN} unreachable\, mailbox not active);
+			//Verbose(1,### Called user ${origext} unreachable, mailbox not active);
+			Verbose(1,### Called user ${EXTEN} unreachable, mailbox not active);
 			if ("${DIALSTATUS}" = "BUSY") {
 				Hangup(17);
 			} else {
@@ -1295,7 +1295,7 @@ context to-internal-users-self {
 			}
 		
 		user_uncallable_offer_cc:
-			Verbose(1,### Called user ${EXTEN} unreachable (${DIALSTATUS})\, offer call completion);
+			Verbose(1,### Called user ${EXTEN} unreachable (${DIALSTATUS}), offer call completion);
 			ResetCDR(w);
 			NoCDR();
 			Answer();

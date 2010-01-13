@@ -1372,7 +1372,7 @@ context from-fax-server {
 		Set(__user_id=${CALLERID(name)});
 		Set(__user_name=${CALLERID(num)});
 		//Set(CALLERID(name)=${CALLERID(num)});
-		Verbose(1,### Sending fax from user ${CALLERID(num)}\, ${user_id} to ${EXTEN});
+		Verbose(1,### Sending fax from user ${CALLERID(num)}, ${user_id} to ${EXTEN});
 		jump ${EXTEN}@from-internal-users;
 	}
 }
