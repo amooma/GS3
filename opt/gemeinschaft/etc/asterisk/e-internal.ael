@@ -358,17 +358,6 @@ context to-internal-users {
 		}
 	}
 
-
-	//----------------------------------------------------------
-	// Pickup on Grandstream phones
-	//----------------------------------------------------------
-	
-	_**. => {
-		// the pickup prefix (**) is not configurable on Grandstream phones
-		Set(pext=${EXTEN:2});
-		jump *81*${pext};
-	}
-	
 	//----------------------------------------------------------
 	// Pickup on Grandstream phones
 	//----------------------------------------------------------
