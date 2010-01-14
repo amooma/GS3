@@ -64,39 +64,6 @@ macro sip-remove-header( sipremoveheader_arg ) {
 	}
 }
 
-
-//---------------------------------------------------------------------
-// Macro to emulate SIPRemoveHeader() if absent
-//---------------------------------------------------------------------
-
-macro sip-remove-header( sipremoveheader_arg ) {
-	// SIPRemoveHeader() was added in Asterisk trunk rev. 168638, branch 1.6.2, tag 1.6.2.0-beta1 (https://issues.asterisk.org/view.php?id=14246)
-	// http://lists.digium.com/pipermail/asterisk-dev/2009-January/036102.html
-	// https://issues.asterisk.org/view.php?id=14246
-	TryExec(SIPRemoveHeader(${sipremoveheader_arg}));
-	if ("${TRYSTATUS}" = "NOAPP") {
-		Verbose(2,### Emulating SIPRemoveHeader ...);
-		if ("${sipremoveheader_arg}" = "") {
-			// Remove all custom headers (
-			for (i=1; ${i}<=99; i=${i}+1) {
-				Set(sipaddheader_varname=SIPADDHEADER${SPRINTF(%02d,${i})});
-				if (${LEN(${${sipaddheader_varname}})} > 0) {
-					//Verbose(2,### ${sipaddheader_varname} = ${${sipaddheader_varname}});
-					Set(${sipaddheader_varname}=);
-				}
-			}
-		}
-		else {
-			//Verbose(1,### Emulation of SIPRemoveHeader with arguments not implemented!);
-			// Remove some headers
-			Verbose(2,### Emulating SIPRemoveHeader: removing "${sipremoveheader_arg}" ...);
-			AGI(/opt/gemeinschaft/dialplan-scripts/sip-remove-header.agi,${sipremoveheader_arg});
-		}
-	}
-	return;
-}
-
-
 //---------------------------------------------------------------------
 //  Macro to get or generate a "connection ID"
 //---------------------------------------------------------------------
