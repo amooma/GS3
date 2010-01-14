@@ -62,6 +62,7 @@ macro sip-remove-header( sipremoveheader_arg ) {
 			AGI(/opt/gemeinschaft/dialplan-scripts/sip-remove-header.agi,${sipremoveheader_arg});
 		}
 	}
+	return;
 }
 
 //---------------------------------------------------------------------
@@ -131,6 +132,7 @@ macro hangup-proper-status-urldial() {
 		Hangup();
 	}
 	Hangup();
+	return;
 }
 
 
@@ -216,6 +218,8 @@ macro cmm-login( new_user_name ) {
 		Wait(0.5);
 		Hangup();
 		return;
+
+	return;
 }
 
 
@@ -318,7 +322,7 @@ macro agent-login( new_user_name ) {
 
 	// Login the agent
 	// NoOp(### Anz. queues: ${queue_count});
-     AGI(/opt/gemeinschaft/dialplan-scripts/agent-login-logout.agi,${user_name},${new_user_name},login);
+	AGI(/opt/gemeinschaft/dialplan-scripts/agent-login-logout.agi,${user_name},${new_user_name},login);
 	NoOp(### AGI returned: ${agent_login_status});
 	if( "${agent_login_status}" == "OK"){ 
 	
@@ -345,15 +349,18 @@ macro agent-login( new_user_name ) {
 		Playback(tt-somethingwrong);
 		Wait(0.5);
 		Hangup();
+
+	return;
 }
 
-macro agent-login-enterid(){
+macro agent-login-enterid() {
 	
 	Answer();
 	NoOp(### Agent without id tries to log in);
 	Wait(1);
 	Read(new_user_name,/opt/gemeinschaft/sounds/${gs_lang}/agent-enterid,10,s,3,5);
 	&agent-login(${new_user_name});
+	return;
 
 }
 
@@ -379,6 +386,7 @@ macro agent-logout() {
 		Playback(beeperr);
 	}
 	Hangup();
+	return;
 	
 }
 
@@ -400,6 +408,7 @@ macro agent-pause() {
 		Playback(beeperr);
 	}
 	Hangup();
+	return;
 	
 }
 
@@ -420,6 +429,7 @@ macro agent-unpause() {
 		Playback(beeperr);
 	}
 	Hangup();
+	return;
 	
 }
 
@@ -449,6 +459,7 @@ macro rec-playback(id) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/sys-rec-getfile,${id});
 	Playback(/opt/gemeinschaft/sys-rec/${md5hashname});
 	Hangup();
+	return;
 
 }
 
@@ -475,6 +486,7 @@ macro rec-record(extension) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/sys-rec-record,${extension},${filename}.sln,$[${endtime} - ${starttime}]);
 	Playback(/opt/gemeinschaft/sounds/${gs_lang}/vielen-dank);
 	Hangup();
+	return;
 
 }
 
@@ -655,6 +667,7 @@ macro queue-login( queue ) {
 	return;
 	
 }
+
 macro queue-logout( queue ) {
 	
 	Set(CDR(amaflags)=OMIT);
@@ -677,6 +690,7 @@ macro queue-logout( queue ) {
 	return;
 	
 }
+
 macro queue-logout-all() {
 	
 	Set(CDR(amaflags)=OMIT);
@@ -702,6 +716,7 @@ macro queue-logout-all() {
 	return;
 	
 }
+
 macro queue-logout-all-silent() {
 	// like &queue-logout-all() but silent
 	Set(CDR(amaflags)=OMIT);
@@ -710,6 +725,7 @@ macro queue-logout-all-silent() {
 	UserEvent(QueueLogoffUI,user: ${user_name},queue: *);
 	return;
 }
+
 context queues-login-logout {
 	
 	*5*   => &queue-logout-all();
@@ -818,12 +834,13 @@ macro vm-record() {
 	if ("${msource}" = "internal" || "${msource}" = "external") {
 		AGI(/opt/gemeinschaft/dialplan-scripts/vm-rec-exists.agi,${user_name},${msource});
 		if( "${vm_rec_exists}" = "1" ) 
-			goto vm-ann-main-full|s|1;
+			jump s@vm-ann-main-full;
 		else
 			&vm-record-file();
 
 	}
 	Hangup();
+	return;
 }
 
 
@@ -836,6 +853,8 @@ macro vm-play-file() {
 		Playback(/opt/gemeinschaft/vm-rec/${user_name}-${msource});
 		Wait(0.5);
 	}
+	return;
+
 }
 
 macro vm-remove-file() {
@@ -854,6 +873,8 @@ macro vm-remove-file() {
 
 	}
 	Hangup();
+	return;
+
 }
 
 
@@ -1207,6 +1228,8 @@ macro dial-gateway( mnumber ) {
 		&dial-gateway-do(${mnumber});
 		Hangup();
 		return;
+
+	return;
 }
 
 
