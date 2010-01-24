@@ -126,7 +126,7 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 */
-echo __('Anrufbeantworterkonfiguration');
+echo __('Konfiguration');
 echo '</h2>', "\n";
 
 $timeruleactives = array(
@@ -410,15 +410,12 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 <table cellspacing="1">
 <thead>
 <tr>
-	<th colspan="6"><?php echo __('Ansagen'); ?></th>
+	<th style="width:45px;"><?php echo __('Ansage'); ?></th>
+	<th style="width:410px;"><?php echo __('Kommentar'); ?></th>
+	<th style="width:41px;"></th>
 </tr>
 </thead>
 <tbody>
-<tr>
-	<td style="width:45px;"><?php echo __('Ansage'); ?></td>
-	<td style="width:410px;"><?php echo __('Kommentar'); ?></td>
-	<td style="width:41px;"></td>
-</tr>
 <?php
 //loop all files
 $rs = $DB->execute('SELECT * from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
