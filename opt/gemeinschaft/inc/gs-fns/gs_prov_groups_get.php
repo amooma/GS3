@@ -35,7 +35,7 @@ require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 *    returns an array of the user groups
 ***********************************************************/
 
-function gs_groups_get()
+function gs_prov_groups_get()
 {
 	$DB = gs_db_master_connect();
 	if (! $DB)

@@ -30,12 +30,11 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
-
 /***********************************************************
 *    changes (/adds) a user group
 ***********************************************************/
 
-function gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_id=null, $prov_param_profile_id=null, $show_ext_modules=255 )
+function gs_prov_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_id=null, $prov_param_profile_id=null, $show_ext_modules=255 )
 {
 	$id = (int)$id;
 	if ($id < 1) $id = 0;  # add
@@ -107,7 +106,7 @@ function gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_i
 	return false;
 }
 
-function gs_group_change_by_name( $name, $parent_name, $name_new, $title, $softkey_profile_id=null, $prov_param_profile_id=null, $show_ext_modules=255 )
+function gs_prov_group_change_by_name( $name, $parent_name, $name_new, $title, $softkey_profile_id=null, $prov_param_profile_id=null, $show_ext_modules=255 )
 {
 	if ($name !== null && $name !== '') {
 		if (! preg_match( '/^[a-z0-9\-_]+$/', $name ))
@@ -144,17 +143,17 @@ function gs_group_change_by_name( $name, $parent_name, $name_new, $title, $softk
 			return new GsError( 'Parent group not found.' );
 	}
 	
-	return gs_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_id, $prov_param_profile_id, $show_ext_modules );
+	return gs_prov_group_change( $id, $parent_id, $name_new, $title, $softkey_profile_id, $prov_param_profile_id, $show_ext_modules );
 }
 
-function gs_group_add( $parent_id, $name, $title, $softkey_profile_id=null, $prov_param_profile_id=null, $show_ext_modules=255 )
+function gs_prov_group_add( $parent_id, $name, $title, $softkey_profile_id=null, $prov_param_profile_id=null, $show_ext_modules=255 )
 {
-	return gs_group_change( null, $parent_id, $name, $title, $softkey_profile_id, $prov_param_profile_id, $show_ext_modules );
+	return gs_prov_group_change( null, $parent_id, $name, $title, $softkey_profile_id, $prov_param_profile_id, $show_ext_modules );
 }
 
-function gs_group_add_by_name( $parent_name, $name, $title, $softkey_profile_id=null, $prov_param_profile_id=null, $show_ext_modules=255 )
+function gs_prov_group_add_by_name( $parent_name, $name, $title, $softkey_profile_id=null, $prov_param_profile_id=null, $show_ext_modules=255 )
 {
-	return gs_group_change_by_name( null, $parent_name, $name, $title, $softkey_profile_id, $prov_param_profile_id, $show_ext_modules );
+	return gs_prov_group_change_by_name( null, $parent_name, $name, $title, $softkey_profile_id, $prov_param_profile_id, $show_ext_modules );
 }
 
 ?>
