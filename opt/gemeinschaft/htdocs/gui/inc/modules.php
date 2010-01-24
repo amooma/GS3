@@ -124,7 +124,7 @@ $MODULES['forwards' ]=  array(
 	'id' => 6000,
 	'sub' => array(
 		'forwards'     => array('title' => __('Rufumleitung'), 'id' => 6001),
-		'vmconfig'     => array('title' => __('AB-Konfiguration'), 'id' => 6002),
+		'vmconfig'     => array('title' => __('Konfiguration'), 'id' => 6002),
 		'extnumbers'   => array('title' => __('externe Nummern'), 'id' => 6003),
 		'queues'       => array('title' => __('Warteschlangen'), 'perms' => 'admin', 'id' => 6004),
 		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse'), 'perms' => 'admin', 'id' => 6005)
