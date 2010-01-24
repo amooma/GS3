@@ -5751,6 +5751,8 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `cf_timerules`;
 CREATE TABLE `cf_timerules` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `ord` int(10) unsigned NOT NULL,
   `_user_id` int(10) unsigned NOT NULL,
   `d_mo` tinyint(1) unsigned NOT NULL default '1',
   `d_tu` tinyint(1) unsigned NOT NULL default '1',
@@ -5761,7 +5763,8 @@ CREATE TABLE `cf_timerules` (
   `d_su` tinyint(1) unsigned NOT NULL default '1',
   `h_from` time NOT NULL default '00:00:00',
   `h_to` time NOT NULL default '24:00:00',
-  `target` varchar(20) character set ascii NOT NULL
+  `target` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -6566,6 +6569,8 @@ CREATE TABLE `queue_callforwards` (
   `timeout` tinyint(3) unsigned NOT NULL default '20',
   `number_std` varchar(50) character set ascii NOT NULL default '',
   `number_var` varchar(50) character set ascii NOT NULL default '',
+  `number_vml` varchar(20) character set ascii NOT NULL,
+  `vm_rec_id` int(10) unsigned default NULL,
   `active` enum('no','std','var','vml','trl','par') character set ascii NOT NULL default 'no',
   PRIMARY KEY  (`queue_id`,`source`,`case`),
   CONSTRAINT `queue_callforwards_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
@@ -6603,13 +6608,16 @@ LOCK TABLES `queue_cf_parallelcall` WRITE;
 /*!40000 ALTER TABLE `queue_cf_parallelcall` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
 --
 -- Table structure for table `queue_cf_timerules`
 --
 
 DROP TABLE IF EXISTS `queue_cf_timerules`;
 CREATE TABLE `queue_cf_timerules` (
+  `id` int(10) unsigned NOT NULL auto_increment,
   `_queue_id` int(10) unsigned NOT NULL,
+  `ord` int(10) unsigned NOT NULL,
   `d_mo` tinyint(1) unsigned NOT NULL default '1',
   `d_tu` tinyint(1) unsigned NOT NULL default '1',
   `d_we` tinyint(1) unsigned NOT NULL default '1',
@@ -6619,7 +6627,8 @@ CREATE TABLE `queue_cf_timerules` (
   `d_su` tinyint(1) unsigned NOT NULL default '1',
   `h_from` time NOT NULL default '00:00:00',
   `h_to` time NOT NULL default '24:00:00',
-  `target` varchar(20) character set ascii NOT NULL
+  `target` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
