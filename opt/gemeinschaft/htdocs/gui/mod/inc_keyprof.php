@@ -148,9 +148,10 @@ $keys_functions_snom300 = array(
 
 if ( GS_BUTTONDAEMON_USE == true ) {
 	$key_functions_snom = array_merge( $key_functions_snom, $key_astbuttond);
-	unset ( $key_functions_snom['blf'] );
+	//unset ( $key_functions_snom['blf'] );
 	
 }
+
 
 $key_function_none_snom = 'none';
 $key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_SNOM_PROV_KEY_BLACKLIST'));

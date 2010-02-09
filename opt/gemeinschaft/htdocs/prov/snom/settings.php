@@ -710,8 +710,8 @@ psetting('mailbox_active'         , 'off');  # pay attention to the mailbox of t
                                              # active identity only?
 psetting('speaker_dialer'         , 'on' );
 if ( GS_BUTTONDAEMON_USE == false ) {
-psetting('no_dnd'                 , 'off');
-$dnd_mode = 'off';
+	psetting('no_dnd', 'off');
+	$dnd_mode = 'off';
 	$cf = gs_callforward_get( $user['user'] );
 	if (! isGsError($cf) && is_array($cf)) {
 		if ( @$cf['internal']['always']['active'] != 'no'
@@ -987,7 +987,7 @@ while ($r = $rs->fetchRow()) {
 
 
 //keys not  to rewrite for the astbuttond
-$nativekeys = Array( 'line', 'keyevent' );
+$nativekeys = Array( 'line', 'keyevent', 'blf' );
 
 $softkeys = null;
 $GS_Softkeys = gs_get_key_prov_obj( $phone_type );
@@ -999,6 +999,7 @@ if ($GS_Softkeys->set_user( $user['user'] )) {
 		'{GS_P_ROUTE_PREFIX}' => $hp_route_prefix,
 		'{GS_P_USER}'         => $user['user']
 	) )) {
+		gs_log( GS_LOG_DEBUG, "getting keys for $phone_type" );
 		$softkeys = $GS_Softkeys->get_keys();
 	}
 }
