@@ -406,19 +406,6 @@ $MODULES['system'   ]['sub'][
 
 #####################################################################
 
-$MODULES['stats'    ]=  array(
-	'title' => __('Statistik'),
-	'icon'  => 'crystal-svg/%s/app/yast_partitioner.png',
-	'boi_ok'=> false,
-	'perms' => 'admin',
-	'sub' => array(
-		'qclassical'   => array('title' => __('Q Klassisch')),
-		'callvolume'   => array('title' => __('Gespr.-Volumen'))
-	)
-);
-
-#####################################################################
-
 if (gs_get_conf('GS_GUI_AUTH_METHOD') !== 'webseal') {
 $MODULES['logout'   ]=  array(
 	'title' => __('Logout'),
