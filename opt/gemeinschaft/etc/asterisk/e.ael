@@ -1021,7 +1021,9 @@ macro dial-log-store( muser, mtype, mnumber ) {
 				Set(mnumber=${CALLERID(num)});
 			}
 		}
-		Set(mname=${CALLERID(name)});
+		if ("${mtype}"="in" || "${mtype}"="missed") {
+			Set(mname=${CALLERID(name)});
+		}
 		Verbose(1,### Store in dial log of user ${muser}: ${mtype} ${mnumber} ${mname});
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/dial-log-store '${muser}' '${mtype}' '${mnumber}' '${mname}');
 	}
