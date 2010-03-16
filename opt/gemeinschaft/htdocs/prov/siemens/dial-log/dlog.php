@@ -104,7 +104,7 @@ if (! preg_match('/^\d+$/', $user)) {
 }
 
 $type = trim(@$_REQUEST['type']);
-if (! in_array( $type, array('in','out','missed'), true )) {
+if (! in_array( $type, array('in','out','missed', 'queue'), true )) {
 	$type = false;
 }
 
@@ -125,7 +125,8 @@ if ($user_id < 1)
 $typeToTitle = array(
 	'out'    => __("Gew\xC3\xA4hlt"),
 	'missed' => __("Verpasst"),
-	'in'     => __("Angenommen")
+	'in'     => __("Angenommen"),
+	'queue'  => __("Warteschlangen")
 );
 
 
@@ -186,18 +187,29 @@ if (! $type) {
 #########################################################
 
 else {
-	
-	$query =
-'SELECT SQL_CALC_FOUND_ROWS
-	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
-COUNT(*) `num_calls`
-FROM `dial_log`
-WHERE
-	`user_id`='. $user_id .' AND
-	`type`=\''. $type .'\'
-GROUP BY `number`
-ORDER BY `ts` DESC
-LIMIT 20';
+	if ( $type == queue ){	
+			$query =
+		'SELECT SQL_CALC_FOUND_ROWS
+			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
+		FROM `dial_log`
+		WHERE
+			`user_id`='. $user_id .' AND
+			`type`=\''. $type .'\'
+		ORDER BY `ts` DESC
+		LIMIT 20';
+	}else{
+			 $query =	
+		'SELECT SQL_CALC_FOUND_ROWS
+			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`,
+		COUNT(*) `num_calls`
+		FROM `dial_log`
+		WHERE
+			`user_id`='. $user_id .' AND
+			`type`=\''. $type .'\'
+		GROUP BY `number`	
+		ORDER BY `ts` DESC
+		LIMIT 20';
+	}
 	$rs = $db->execute($query);
 	$per_page = 15;
 	$num_total = @$db->numFoundRows();

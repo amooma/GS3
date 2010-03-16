@@ -923,7 +923,7 @@ context to-internal-users-self {
 					Progress();  // SIP: "183 Session Progress" with early media
 				}
 				Set(queue_entertime=${EPOCH});
-				Queue(${EXTEN},${ring_instead_of_moh},,,${queuetimeout});
+				Queue(${EXTEN},${ring_instead_of_moh},,,${queuetimeout},/opt/gemeinschaft/dialplan-scripts/dial-log-store-queue);
 				Set(queue_waittime=$[${EPOCH}-${queue_entertime}]);
 				Verbose(1,### Tried to enter queue ${EXTEN}\, result: ${QUEUESTATUS}\, waittime: ${queue_waittime});
 				

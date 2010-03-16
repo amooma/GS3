@@ -5833,7 +5833,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `dial_log`;
 CREATE TABLE `dial_log` (
   `user_id` int(10) unsigned NOT NULL default '0',
-  `type` enum('in','out','missed') character set ascii NOT NULL default 'out',
+  `type` enum('in','out','missed','queue') character set ascii NOT NULL default 'out',
   `timestamp` int(10) unsigned NOT NULL default '0',
   `number` varchar(50) character set ascii NOT NULL default '',
   `remote_name` varchar(50) collate utf8_unicode_ci NOT NULL default '',

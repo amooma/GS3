@@ -86,7 +86,7 @@ $user = trim( @ $_REQUEST['user'] );
 if (! preg_match('/^\d+$/', $user))
 	_err( 'Not a valid SIP user.' );
 $type = trim( @ $_REQUEST['type'] );
-if (! in_array( $type, array('in','out','missed'), true ))
+if (! in_array( $type, array('in','out','missed','queue'), true ))
 	$type = false;
 
 
@@ -102,7 +102,8 @@ if ($user_id < 1)
 $typeToTitle = array(
 	'out'    => __("Gew\xC3\xA4hlt"),
 	'missed' => __("Verpasst"),
-	'in'     => __("Angenommen")
+	'in'     => __("Angenommen"),
+	'queue'  => __("Warteschlangen")
 );
 
 
@@ -154,18 +155,29 @@ if (! $type) {
 else {
 	
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
-	
-	$query =
-'SELECT
-	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
-	COUNT(*) `num_calls`
-FROM `dial_log`
-WHERE
-	`user_id`='. $user_id .' AND
-	`type`=\''. $type .'\'
-GROUP BY `number`
-ORDER BY `ts` DESC
-LIMIT 20';
+	if ( $type == queue ){	
+			$query =
+		'SELECT
+			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
+		FROM `dial_log`
+		WHERE
+			`user_id`='. $user_id .' AND
+			`type`=\''. $type .'\'
+		ORDER BY `ts` DESC
+		LIMIT 20';
+	} else {
+			$query =
+		'SELECT
+			MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
+		COUNT(*) `num_calls`
+		FROM `dial_log`
+		WHERE
+			`user_id`='. $user_id .' AND
+			`type`=\''. $type .'\'
+		GROUP BY `number`
+		ORDER BY `ts` DESC
+		LIMIT 20';
+	}
 	$rs = $db->execute( $query );
 	
 	echo

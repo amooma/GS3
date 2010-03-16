@@ -52,9 +52,8 @@ function _get_userid()
 	if ($user_id < 1) _err( 'Unknown user.' );
 	return $user_id;
 }
-
 $type = trim( @$_REQUEST['t'] );
-if (! in_array( $type, array('in','out','missed', 'ind','outd','missedd'), true )) {
+if (! in_array( $type, array('in','out','missed', 'queue', 'queued', 'ind','outd','missedd'), true )) {
 	$type = false;
 }
 
@@ -67,7 +66,8 @@ $db = gs_db_slave_connect();
 $typeToTitle = array(
 	'out'    => __("Gew\xC3\xA4hlt"),
 	'missed' => __("Verpasst"),
-	'in'     => __("Angenommen")
+	'in'     => __("Angenommen"),
+	'queue'  => __("Warteschlangen")
 );
 
 $user_id = _get_userid();
@@ -104,20 +104,30 @@ if (! $type) {
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '</AastraIPPhoneTextMenu>' ."\n";
 	
-} elseif ($type==='out' || $type==='in' || $type==='missed') {
-	
-	$query =
-'SELECT
-	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
-	COUNT(*) `num_calls`
-FROM `dial_log`
-WHERE
-	`user_id`='. $user_id .' AND
-	`type`=\''. $type .'\'
-GROUP BY `number`
-ORDER BY `ts` DESC
-LIMIT '.$num_results;
-	
+} elseif ($type==='out' || $type==='in' || $type==='missed' || $type=='queue' ) {
+	if ( $type == queue ){	
+		$query =
+		'SELECT
+			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
+		FROM `dial_log`
+		WHERE
+			`user_id`='. $user_id .' AND
+			`type`=\''. $type .'\'
+		ORDER BY `ts` DESC
+		LIMIT '.$num_results;
+	} else {
+		$query =
+		'SELECT
+			MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
+			COUNT(*) `num_calls`
+		FROM `dial_log`
+		WHERE
+			`user_id`='. $user_id .' AND
+			`type`=\''. $type .'\'
+		GROUP BY `remote_name`
+		ORDER BY `ts` DESC
+		LIMIT '.$num_results;
+	}
 	//echo $query;
 	
 	$rs = $db->execute( $query );
@@ -168,7 +178,7 @@ LIMIT '.$num_results;
 	}
 	
 	
-} elseif ($type==='outd' || $type==='ind' || $type==='missedd') {
+} elseif ($type==='outd' || $type==='ind' || $type==='missedd' || $type=='queued') {
 	
 	$type = substr($type,0,strlen($type)-1);
 	$xml = '<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction="'. $url_aastra_dl .'?t='.$type.'">' ."\n";

@@ -1,0 +1,54 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
+require_once( GS_DIR .'inc/pcre_check.php' );
+require_once( GS_DIR .'inc/log.php' );
+include_once( GS_DIR .'lib/yadb/yadb.php' );
+include_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+error_reporting(0);
+$agent_full = gs_agi_get_variable('MEMBERINTERFACE');
+$agent = explode('/',$agent_full);
+$user_ext = $agent[1];
+$rname = gs_agi_get_variable('CALLERID(name)');
+$rnum = gs_agi_get_variable('CALLERID(num)');
+include_once( GS_DIR .'inc/db_connect.php' );
+$type = "queue";
+
+$db = gs_db_master_connect();
+
+$uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user_ext) .'\'' );
+if ($uid < 1) exit(1);
+
+gs_log( GS_LOG_WARNING, "$uid $type $rnum $rname");
+$db->execute( 'INSERT INTO `dial_log` (`user_id`, `type`, `timestamp`, `number`, `remote_name`) VALUES ('. $uid .', \''. $type .'\', '. time() .', \''. $db->escape($rnum) .'\', \''. $db->escape($rname) .'\')' );
+
+?>
