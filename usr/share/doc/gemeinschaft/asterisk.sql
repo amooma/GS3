@@ -6582,8 +6582,8 @@ CREATE TABLE `queue_callforwards` (
 
 LOCK TABLES `queue_callforwards` WRITE;
 /*!40000 ALTER TABLE `queue_callforwards` DISABLE KEYS */;
-INSERT INTO `queue_callforwards` VALUES (1,'external','always',20,'2001','','std');
-INSERT INTO `queue_callforwards` VALUES (1,'external','full',0,'','123','var');
+INSERT INTO `queue_callforwards` VALUES (1,'external','always',20,'2001','','std','','');
+INSERT INTO `queue_callforwards` VALUES (1,'external','full',0,'','123','var','','');
 /*!40000 ALTER TABLE `queue_callforwards` ENABLE KEYS */;
 UNLOCK TABLES;
 
