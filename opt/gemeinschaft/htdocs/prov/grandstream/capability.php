@@ -88,7 +88,7 @@ class PhoneCapability_grandstream extends PhoneCapability
 		} else
 			$rm_tmp = false;
 		
-		$cmd = 'sox '. qsa($infile) .' -r 8000 -c 1 '. qsa($outfile) .' rate trim 0 65000s 2>>/dev/null';
+		$cmd = 'sox '. qsa($infile) .' -r 8000 -c 1 '. qsa($outfile) .' trim 0 65000s 2>>/dev/null';
 		# WAV, PCM, 16 kHz, 8 bit, mono
 		# cuts file after 65000 samples (around 65 kB)
 		@exec($cmd, $out, $err);
