@@ -1041,3 +1041,23 @@ INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'a
 INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1),18014);
 INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1),18015);
 
+
+--
+-- Since: 7107
+--
+
+use `asterisk`;
+
+--
+-- Neues Module queues
+--
+
+INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'user_gui' LIMIT 1),4004);
+
+
+--
+-- Tabelle dial_log für type=queue umbauen
+--
+
+ALTER TABLE `dial_log` CHANGE `type` `type` ENUM( 'in', 'out', 'missed', 'queue' ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT 'out';
+

@@ -6061,6 +6061,7 @@ INSERT INTO `group_members` VALUES (5,4000);
 INSERT INTO `group_members` VALUES (5,4001);         
 INSERT INTO `group_members` VALUES (5,4002);         
 INSERT INTO `group_members` VALUES (5,4003);         
+INSERT INTO `group_members` VALUES (5,4004);         
 INSERT INTO `group_members` VALUES (5,5000);         
 INSERT INTO `group_members` VALUES (5,5001);         
 INSERT INTO `group_members` VALUES (5,6000);         
