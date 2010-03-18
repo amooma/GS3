@@ -42,15 +42,21 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/agi-fns.php' );
 
 if (! is_numeric($exten) ) {
+
 	gs_log( GS_LOG_WARNING, 'not an extension' );
-	echo 'SET VARIABLE vm_rec_moved 0' . "\n" ;
+
+	gs_agi_set_variable ( 'vm_rec_moved' , '0' );
+
 	die();
 	
 }
 
 if (!in_array ( $target,  $tg ) ) {
+
 	gs_log( GS_LOG_WARNING, 'no such target ' . $target );
-	echo 'SET VARIABLE vm_rec_moved 0' . "\n" ;
+	
+	gs_agi_set_variable ( 'vm_rec_moved' , '0' );
+
 	die();
 	
 }
@@ -61,17 +67,23 @@ $filename = '/tmp/' . $exten . '-' . $target . '.alaw';
 $new_filename = '/opt/gemeinschaft/vm-rec/' . $exten . '-' . $target . '.alaw';
 if (  is_file ( $filename ) ) {
 	if ( rename ( $filename, $new_filename ) ) {
-		echo 'SET VARIABLE vm_rec_moved 1' . "\n";
+
+		gs_agi_set_variable ( 'vm_rec_moved' , '1' );
+
 	}
 	else {
-		echo 'SET VARIABLE vm_rec_removed 0' . "\n";
+
+		gs_agi_set_variable ( 'vm_rec_moved' , '0' );
 		gs_log( GS_LOG_WARNING, 'could not move file ' . $filename );
 	}
 
 }
 else {
+
 	gs_log( GS_LOG_WARNING, 'file ' . $filename . 'does not exist' );
-	echo 'SET VARIABLE vm_rec_moved 0' . "\n";
+
+	gs_agi_set_variable ( 'vm_rec_moved' , '0' );
+
 }
 
 

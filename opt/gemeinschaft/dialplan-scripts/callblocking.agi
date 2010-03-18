@@ -74,7 +74,7 @@ $nobody_index = $db->executeGetOne(
 );
 
 if(($nobody_index > 0) && ($allow_nobody == false)) {
-	echo 'SET VARIABLE dial_allowed '. gs_agi_str_esc('no') ."\n";
+	gs_agi_set_variable( 'dial_allowed', 'no' );
 	die();
 }
 

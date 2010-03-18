@@ -52,7 +52,7 @@ if ($new_aid < 1) {
 }
 $pin = $db->executeGetOne( 'SELECT `pin` FROM `agents` WHERE `id`='. $new_aid );
 if ( strlen ( trim($pin)) > 0 ) {
-	 echo 'SET VARIABLE agent_needpw 1' ."\n";
+	 gs_agi_set_variable( 'agent_needpw',  '1' );
 }
 
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!

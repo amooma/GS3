@@ -40,24 +40,28 @@ ob_implicit_flush(1);
 
 $ext   = trim(@$argv[1]);
 if (! $ext || ! preg_match('/^[0-9]+$/', $ext)) {
-	echo 'SET VARIABLE clipset error' ."\n";
+
+	gs_agi_set_variable ( 'clipset' , 'error' );
 	die();
 }
 
 $dest   = trim(@$argv[2]);
 if (! $dest ) {
-	echo 'SET VARIABLE clipset error' ."\n";
+	
+	gs_agi_set_variable ( 'clipset' , 'error' );
 	die();
 }
 if( $dest != 'internal' && $dest != 'external' ){
+
 	//no valid destination
-	echo 'SET VARIABLE clipset error' ."\n";
+	gs_agi_set_variable ( 'clipset' , 'error' );
 	die();
 }
 
 $number   = trim(@$argv[3]);
 if ( $number && ! preg_match('/^[0-9]+$/', $number)) {
-	echo 'SET VARIABLE clipset error' ."\n";
+
+	gs_agi_set_variable ( 'clipset' , 'error' );
 	die();
 }
 
@@ -77,17 +81,16 @@ WHERE `s`.`name`=\''. $ext .'\''
 );
 
 if (! $user) {
-	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-	echo 'SET VARIABLE clipset error' ."\n";
+
+	gs_agi_set_variable ( 'clipset' , 'error' );
 	die();
 }
 $result = gs_user_callerid_set( $user, $number , $dest );
 
 if(isGsError( $result ))
-	echo 'SET VARIABLE clipset error' ."\n";
-
+	gs_agi_set_variable ( 'clipset' , 'error' );
 else
-	echo 'SET VARIABLE clipset OK' ."\n";
+	gs_agi_set_variable ( 'clipset' , 'OK' );
 
 
 ?>

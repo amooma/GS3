@@ -87,7 +87,7 @@ function print_name ( $firstname, $lastname ) {
 		$fullname = strtoupper( substr( $firstname, 0, 1 ) ) . ". " . $lastname;
 	else
 		$fullname = $lastname;
-	echo 'SET VARIABLE mname '.  gs_agi_str_esc($fullname) ."\n";
+		gs_agi_set_variable(  'mname' , $fullname );
 	die();
 
 }

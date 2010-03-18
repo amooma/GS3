@@ -58,7 +58,7 @@ $db = gs_db_slave_connect();
 if ($is_huntgroup != 1) {
   $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `huntgroups` WHERE `number`=\''. $db->escape($ext) .'\'' );
   if ($num > 0) {
-	  echo 'SET VARIABLE __exttype '. gs_agi_str_esc('huntgroup') ."\n";
+	  gs_agi_set_variable( '__exttype' , 'huntgroup');
 	  //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	  die();
   }
@@ -84,7 +84,7 @@ if ($num > 0) {
 #
 $num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ivrs` WHERE `name`=\''. $db->escape($ext) .'\'' );
 if ($num > 0) {
- 	echo 'SET VARIABLE __exttype '. gs_agi_str_esc('ivr') ."\n";
+ 	gs_agi_set_variable( '__exttype', 'ivr' );
  	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
  	die();
 }

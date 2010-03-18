@@ -39,7 +39,7 @@ error_reporting(0);
 
 function _no_more_routes( $idx=1 )
 {
-	echo 'SET VARIABLE huntgroup_'.$idx.'_dial '. gs_agi_str_esc('') ."\n";
+	gs_agi_set_variable( 'huntgroup_' . $idx . '_dial ' , '' );
 	die();
 }
 

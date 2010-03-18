@@ -128,7 +128,7 @@ function record_file( $type, $to, $from=null, $to_id=null, $from_id=null )
 if ($is_huntgroup != 1) {
 	$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `huntgroups` WHERE `number`=\''. $db->escape($ext) .'\'' );
 	if ($num > 0) {
-		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('huntgroup') ."\n";
+		gs_agi_set_variable( '__exttype', 'huntgroup' );
 		die();
 	}
 }
@@ -212,15 +212,15 @@ WHERE `i`.`name`=\''. $db->escape($ext) .'\''
 );
 if ($r = $rs->fetchRow()) {
 	if (! $r['is_foreign']) {
-		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('ivr') ."\n";
+		gs_agi_set_variable( '__exttype', 'ivr' );
 		if ($r['host_id'] < 1) {  // should never happen
-			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc('') ."\n";
+			gs_agi_set_variable( '__dial_to_node', '' );
 		} else {
-			echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( get_at_dial( $r['host_id'] ) ) ."\n";
+			gs_agi_set_variable( '__dial_to_node', get_at_dial( $r['host_id'] ) );
 		}
 	} else {
-		echo 'SET VARIABLE __exttype '. gs_agi_str_esc('foreign') ."\n";
-		echo 'SET VARIABLE __dial_to_node '. gs_agi_str_esc( $r['host'] ) ."\n";
+		gs_agi_set_variable( '__exttype', 'foreign' );
+		gs_agi_set_variable( '__dial_to_node', $r['host_id'] );
 	}
 	die();
 }

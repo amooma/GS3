@@ -56,7 +56,7 @@ if ($uid < 1) die();
 
 
 
-echo 'SET VARIABLE dnd_active '. $dnd ."\n";
+gs_agi_set_variable ( 'dnd_active' , $dnd );
 
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 

@@ -56,9 +56,11 @@ $cid = $db->executeGetOne( 'SELECT `number` FROM `users_callerids` WHERE `select
 
 if($cid != "")
 {
-	echo 'SET VARIABLE CALLERID(num) '. $cid ."\n";
+
+	gs_agi_set_variable ( 'CALLERID(num)' , $cid );
+
 	if ($dest == 'external')
-		echo 'SET VARIABLE external_callerid_override true' . "\n";
+		gs_agi_set_variable ( 'external_callerid_override' , 'true' );
 }
 
 ?>

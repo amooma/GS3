@@ -169,9 +169,9 @@ foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {
 		if ($fw['number'] === $callerid) $fw['number'] = '';
 		
-		gs_agi_set_variable( 'fw_'.$source.'_'.$case, $fw['number'] );
+		gs_agi_set_variable( 'fw_' . $source . '_' . $case , $fw['number'] );
 		
-		gs_agi_set_variable( 'fw_file_'.$source.'_'.$case, '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
+		gs_agi_set_variable( '__fw_file_' . $source . '_' . $case , '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
 		
 		if (is_array($fw['number'])) {  # this is an array if we are forwarding to parallel-call
 			$cnt=0;

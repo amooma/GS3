@@ -38,7 +38,7 @@ $pass     = trim(@$argv[2]);
 $user	  = trim(@$argv[3]);
 
 if (! $new_anum) {
-	echo 'SET VARIABLE ret '. gs_agi_str_esc('unknown') ."\n";
+	gs_agi_set_variable(  'ret' , 'unknown' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
@@ -51,37 +51,36 @@ $db = gs_db_master_connect();
 $new_aid = (int)$db->executeGetOne( 'SELECT `id` FROM `agents` WHERE `number`=\''. $db->escape($new_anum) .'\'' );
 if ($new_aid < 1) {
 	# unknown user
-	echo 'SET VARIABLE ret '. gs_agi_str_esc('unknown ' . $new_anum) ."\n";
+	gs_agi_set_variable(  'ret' , 'unknown' . $new_anum );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 $pin = $db->executeGetOne( 'SELECT `pin` FROM `agents` WHERE `id`='. $new_aid );
 if ($pin != $pass) {
 	# wrong password
-	echo 'SET VARIABLE ret '. gs_agi_str_esc('badpass') ."\n";
+	gs_agi_set_variable(  'ret' , 'badpass' );
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
 $old_user = $db->executeGetOne( 'SELECT `ast_sipfriends`.`name` FROM `ast_sipfriends`, `agents` WHERE `agents`.`user_id` = `ast_sipfriends`.`_user_id` AND  `agents`.`id` ='. $new_aid );
 if (trim($old_user) != '') {
-        # The Agent is already logged in somewhere else
+	# The Agent is already logged in somewhere else
 	# so we need to logoff him first.
- 	echo 'SET VARIABLE old_user '. gs_agi_str_esc($old_user) ."\n";
+	gs_agi_set_variable(  'old_user' , $old_user );
 }
 
 #we also need to loggoff all agents/users that are logged in on this phone
 # first we  have to see, if there is another agent logged in on this phone
 $old_local_agent = $db->executeGetOne( 'SELECT `agents`.`number` FROM `ast_sipfriends`, `agents` WHERE `agents`.`user_id` = `ast_sipfriends`.`_user_id` AND  `ast_sipfriends`.`name` =\''. $user . '\'' );
 if (trim($old_local_agent) != '') {
-	 echo 'SET VARIABLE old_local_agent '. gs_agi_str_esc($old_local_agent) ."\n";
-         echo 'SET VARIABLE old_local_user '. gs_agi_str_esc('0') ."\n";
+	 gs_agi_set_variable(  'old_local_agent' , $old_local_agent );
+	 gs_agi_set_variable(  'old_local_user' , '0' );
 }
 else{
 	$old_local_user = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends`, `ast_queue_members` WHERE `ast_queue_members`.`_user_id` = `ast_sipfriends`.`_user_id` AND  `ast_sipfriends`.`name` =\''. $user . '\'' );
-        //if (trim($old_local_user) > 0) {
-	echo 'SET VARIABLE old_local_user '. gs_agi_str_esc($old_local_user) ."\n";
-	//}
+
+	gs_agi_set_variable(  'old_local_user' , $old_local_user );
 }
 
 ## Find queues we need to log in
@@ -92,18 +91,17 @@ if(@$rs){
 	$c = 0;
 	while($queues = $rs->fetchRow()){
 		$queue = $queues['name'];
-		echo 'SET VARIABLE queue'.  gs_agi_str_esc($c) . ' ' . gs_agi_str_esc($queue) ."\n";
+		gs_agi_set_variable( 'queue' . $c , $queue );
 		$c ++;
 	}
-	echo 'SET VARIABLE queue_count '. gs_agi_str_esc($c) ."\n";   
+	gs_agi_set_variable(  'queue_count' , $c );
 
 }
 else{
-	echo 'SET VARIABLE queue_count '. gs_agi_str_esc('balbal') ."\n";	
+	gs_agi_set_variable(  'queue_count' , 'balbal' );
 }
 
-echo 'SET VARIABLE ret '. gs_agi_str_esc('ok') ."\n";
+gs_agi_set_variable( 'ret', 'ok' );
 //fFlush(STDOUT); // <- do not use. not defined in php-cgi!
-
 
 ?>

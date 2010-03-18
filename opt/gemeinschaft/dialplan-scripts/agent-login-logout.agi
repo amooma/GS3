@@ -64,7 +64,8 @@ if ($action === 'logoutall' && (strlen($agent) < 1) ) {
 
 $agent_id = (int)$db->executeGetOne( 'SELECT `id` FROM `agents` WHERE `number`=\''. $db->escape($agent) .'\'' );
 if ($user_id < 1) die();
-echo 'SET VARIABLE agent '. gs_agi_str_esc($agent) ."\n";
+
+gs_agi_set_variable(  'agent' , $agent );
 
 # get user's host id
 #
@@ -82,7 +83,7 @@ if ($action != 'logoutall') {
 	#
 	$rs = $db->execute( 'SELECT `agent_queues`.`queue_id`, `ast_queues`.`_host_id` `host_id`, `ast_queues`.`name` FROM `agent_queues`, `ast_queues` WHERE `ast_queues`.`_id` = `agent_queues`.`queue_id`  AND `agent_id`=\''. $db->escape($agent_id) .'\'' );
 	if(! @$rs){
-		echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('no queues found') ."\n";
+		gs_agi_set_variable(  'agent_login_status' , 'no queues found' );
 		die();
 	}
 	$queue_set = array();
@@ -94,7 +95,7 @@ if ($action != 'logoutall') {
 	
 	}
 	if(count($queue_set) < 1){
-		echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('no queues defined') ."\n";
+		gs_agi_set_variable(  'agent_login_status' , 'no queues defined' );
 		die();
 	}
 	
@@ -105,14 +106,15 @@ if ($action === 'login') {
 
 	foreach($queue_set as $aqueue){
 		if ($aqueue['host'] != $user_host_id) {
-			echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('failhost') ."\n";
+			gs_agi_set_variable(  'agent_login_status' , 'failhost' );
 			die();
 		}
 	}
 	foreach($queue_set as $aqueue){
 		$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queue_members` WHERE `_queue_id`='. $aqueue['id'] .' AND `_user_id`='. $user_id );
 		if ($num > 0) {  // user is already logged in on that queue
-			echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('alreadyon') ."\n";
+
+			gs_agi_set_variable(  'agent_login_status' , 'alreadyon' );
 			//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 			die();
 		}	
@@ -120,12 +122,13 @@ if ($action === 'login') {
 	
 	foreach($queue_set as $aqueue){
 		$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`) VALUES (\''. $db->escape($aqueue['name']) .'\', '. $aqueue['id'] .', \''. $db->escape( 'SIP/'. $user ) .'\', '. $user_id .')' );
-		echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('loggedin') ."\n";
+		gs_agi_set_variable(  'agent_login_status' , 'loggedin' );
 		//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	}
-	 $db->execute( 'UPDATE `agents` SET `user_id`='.$db->escape($user_id) .' WHERE `id`='. $db->escape($agent_id) );
 
-	echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('OK') ."\n";
+	$db->execute( 'UPDATE `agents` SET `user_id`='.$db->escape($user_id) .' WHERE `id`='. $db->escape($agent_id) );
+
+	gs_agi_set_variable(  'agent_login_status' , 'OK' );
 	
 }
 
@@ -135,16 +138,20 @@ elseif ($action === 'logoutall') {
 		$c = 0;
 		while($queues = $rs->fetchRow()){
 			$queue = $queues['name'];
-			echo 'SET VARIABLE oqueue'.  gs_agi_str_esc($c) . ' ' . gs_agi_str_esc($queue) ."\n";
+			gs_agi_set_variable(  'oqueue' . $c , $queue );
 			$c ++;
 		}
-			echo 'SET VARIABLE oqueue_count '. gs_agi_str_esc($c) ."\n";   
+			
+			gs_agi_set_variable(  'oqueue_count' , $c );
 
 	}	
 
 	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_user_id`='. $user_id );
-	echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('loggedout') ."\n";
+
+	gs_agi_set_variable(  'agent_login_status' , 'loggedout' );
+
 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+
 	$db->execute( 'UPDATE `agents` SET `user_id`=0,`paused`=0 WHERE `id`='. $agent_id );
 }
 

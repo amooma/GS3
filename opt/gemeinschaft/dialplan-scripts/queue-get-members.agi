@@ -47,7 +47,9 @@ $db = gs_db_slave_connect();
 #
 $queue_id = (int)$db->executeGetOne( 'SELECT `_id` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue) .'\'' );
 if ($queue_id < 1) {
-	echo 'SET VARIABLE qm_get_state nosuchqueue' . "\n";
+
+	gs_agi_set_variable ( 'qm_get_state' , 'nosuchqueue' );
+
 	die();
 }
 
@@ -59,8 +61,11 @@ WHERE `qm`.`_queue_id`='. $queue_id  . ' AND `sf`.`_user_id`=`qm`.`_user_id`'
 
 $counter = 1;
 while ($r = $rs->fetchRow()) {
+	
 	$member = trim( $r['name'] );
-	echo 'SET VARIABLE qm_'. $counter .' '. $member ."\n";
+	
+	gs_agi_set_variable ( 'qm_' . $counter , $member );
+	
 	$counter++;
 }
 

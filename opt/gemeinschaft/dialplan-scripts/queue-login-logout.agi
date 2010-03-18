@@ -60,7 +60,7 @@ if ($user_id < 1) gs_agi_err( 'User not found' );
 #
 $agent = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `agents` WHERE `user_id`='. $db->escape($user_id) );
 if ($agent > 0){
-	echo 'SET VARIABLE agent_login_status '. gs_agi_str_esc('agent-exists') ."\n";
+	gs_agi_set_variable ( 'agent_login_status' , 'agent-exists' );
 	die();
 }
 
@@ -112,10 +112,10 @@ elseif ($action === 'logoutall') {
 		$c = 0;
 		while( $queues = $rs->fetchRow() ) {
 			$queue = $queues['queue_name'];
-			echo 'SET VARIABLE oqueue'.  gs_agi_str_esc( $c ) . ' ' . gs_agi_str_esc( $queue ) ."\n";
+			gs_agi_set_variable ( 'oqueue' . $c  , $queue );
 			$c++;
 		}
-			echo 'SET VARIABLE oqueue_count '. gs_agi_str_esc($c) ."\n";   
+			gs_agi_set_variable ( 'oqueue_count' , $c );
 
 	}	
 	

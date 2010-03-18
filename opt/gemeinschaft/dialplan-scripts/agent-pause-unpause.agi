@@ -62,8 +62,10 @@ $db = gs_db_master_connect();
 #
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1){
-	 echo 'SET VARIABLE agent_pause '. gs_agi_str_esc('no such user') ."\n";
-	 die();
+	
+	gs_agi_set_variable ( 'agent_pause' , 'no such user' );
+	die();
+
 }
 
 # get user agent
@@ -71,11 +73,15 @@ if ($user_id < 1){
 
 $agent = $db->executeGetOne( 'SELECT `number` FROM `agents` WHERE `user_id`='. $user_id );
 if (strlen($agent) < 1) {
-	echo 'SET VARIABLE agent '. gs_agi_str_esc('false') ."\n";
+	
+	gs_agi_set_variable ( 'agent' , 'false' );
 	die();
+
 }
 else{
-	echo 'SET VARIABLE agent '. gs_agi_str_esc('true') ."\n";
+
+	gs_agi_set_variable ( 'agent' , 'true' );
+
 }
 
 $agent_id = (int)$db->executeGetOne( 'SELECT `id` FROM `agents` WHERE `number`=\''. $db->escape($agent) .'\'' );
@@ -87,14 +93,17 @@ if ($action == 'pause') {
 	#
 	$rs = $db->execute( 'UPDATE `agents` SET `paused`=1, `updated`=NULL WHERE `user_id`=\''. $db->escape($user_id) .'\'' );
 	if(! @$rs){
-		echo 'SET VARIABLE agent_pause '. gs_agi_str_esc('could not pause agent in db') ."\n";
-		echo 'SET VARIABLE agent '. gs_agi_str_esc('false') ."\n";
+
+		gs_agi_set_variable ( 'agent_pause' , 'could not pause agent in db' );
+		gs_agi_set_variable ( 'agent' , 'false' );
 		die();
+
 	}
 	$rs = $db->execute( 'UPDATE `ast_queue_members` SET `paused`=1 WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
 	if(! @$rs){
-		echo 'SET VARIABLE agent_pause '. gs_agi_str_esc('could not pause agent in db') ."\n";
-		echo 'SET VARIABLE agent '. gs_agi_str_esc('false') ."\n";
+		
+		gs_agi_set_variable ( 'agent_pause' , 'could not pause agent in db' );
+		gs_agi_set_variable ( 'agent' , 'false' );
 		die();
 	}
 	
@@ -106,15 +115,19 @@ if ($action == 'unpause') {
 	#
 	$rs = $db->execute( 'UPDATE `agents` SET `paused`=0 WHERE `user_id`=\''. $db->escape($user_id) .'\'' );
 	if(! @$rs){
-		echo 'SET VARIABLE agent_pause '. gs_agi_str_esc('could not pause agent in db') ."\n";
-		echo 'SET VARIABLE agent '. gs_agi_str_esc('false') ."\n";
+
+		gs_agi_set_variable ( 'agent_pause' , 'could not pause agent in db' );
+		gs_agi_set_variable ( 'agent' , 'false' );
 		die();
+
 	}
 	$rs = $db->execute( 'UPDATE `ast_queue_members` SET `paused`=0 WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
 	if(! @$rs){
-		echo 'SET VARIABLE agent_pause '. gs_agi_str_esc('could not pause agent in db') ."\n";
-		echo 'SET VARIABLE agent '. gs_agi_str_esc('false') ."\n";
+
+		gs_agi_set_variable ( 'agent_pause' , 'could not pause agent in db' );
+		gs_agi_set_variable ( 'agent' , 'false' );
 		die();
+
 	}
 	
 }

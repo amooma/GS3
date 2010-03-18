@@ -77,7 +77,7 @@ while ($r = $rs->fetchRow()) {
 
 foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {
-		echo 'SET VARIABLE fw_'.$source.'_'.$case .' '. gs_agi_str_esc($fw['number']) ."\n";
+		gs_agi_set_variable( 'fw_' . $source . '_' . $case , $fw['number'] );
 	}
 }
 

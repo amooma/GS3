@@ -57,6 +57,6 @@ if (!in_array ( $target,  $tg ) ) {
 
 $filename = '/opt/gemeinschaft/vm-rec/' . $exten . '-' . $target . '.alaw';
 if ( is_file( $filename ) )
-	echo 'SET VARIABLE vm_rec_exists 1' . "\n";
+	gs_agi_set_variable(  'vm_rec_exists' , '1' );
 
 ?>
