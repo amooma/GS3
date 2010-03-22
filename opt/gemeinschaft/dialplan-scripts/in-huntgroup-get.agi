@@ -46,7 +46,7 @@ function _no_more_routes( $idx=1 )
 $number = trim(@$argv[1]);
 if ($number == '') {
 	gs_agi_verbose("### Empty hunt group");
-	echo "HANGUP\n";
+	gs_agi_hangup();
 	_no_more_routes();
 }
 
