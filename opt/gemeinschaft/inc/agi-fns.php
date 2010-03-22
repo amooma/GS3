@@ -411,7 +411,7 @@ gs_agi_read_agi_env();
 
 function gs_agi_set_variable( $name, $val )
 {
-	if (! preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
+	if (! preg_match('/^[a-zA-Z0-9_()]+$/', $name)) {
 		trigger_error( "AGI: Invalid variable name \"$name\"!", E_USER_WARNING );
 		return false;
 	}
