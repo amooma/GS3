@@ -266,32 +266,49 @@ context user-config {
 		Hangup();
 	}
 	
-	*21 => {
+
+	_*2[1-4] => {
 		Set(CDR(amaflags)=OMIT);
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
+
+		switch (${EXTEN:2}) {
+			case 1:
+				Set(type=vml);
+				Set(number=vm${user_name});
+				break;
+			case 2:
+				Set(type=vml);
+				Set(number=vm*${user_name});
+				break;
+			case 3:
+				Set(type=trl);
+				Set(number=);
+				break;
+			case 4:
+				Set(type=par);
+				Set(number=);
+				break;
+			default:
+				Hangup();
+		};
+
 		Answer();
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm${user_name}');
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm${user_name}');
-		&user-call-forward-activate-numeric(vml,0,0,1);
-		&user-call-forward-activate-numeric(vml,1,0,1);
-		UserEvent(UserDiversionUI,user: ${user_name});
-		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
-		Hangup();
-	}
-	
-	*22 => {
-		Set(CDR(amaflags)=OMIT);
-		&usercode-by-ext(${user_name});
-		if ("${user_code}" = "")
-			Hangup();
-		Answer();
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm*${user_name}');
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm*${user_name}');
-		&user-call-forward-activate-numeric(vml,0,0,1);
-		&user-call-forward-activate-numeric(vml,1,0,1);
+		if ( "${number}" != "" ) {
+			System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='${type}' --number='${number}');
+				if ( "${SYSTEMSTATUS}" != "SUCCESS" ) {
+					Playback(beeperr);
+					Hangup();	
+				}
+			System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='${type}' --number='${number}');
+				if ( "${SYSTEMSTATUS}" != "SUCCESS" ) {
+					Playback(beeperr);
+					Hangup();	
+				}
+		}
+		&user-call-forward-activate-numeric(${type},0,0,1);
+		&user-call-forward-activate-numeric(${type},1,0,1);
 		UserEvent(UserDiversionUI,user: ${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
@@ -342,7 +359,68 @@ context user-config {
 		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
 		Hangup();
 	}
-	_*90. => {
+
+	_*9[01][1234] => {
+
+
+		Set(CDR(amaflags)=OMIT);
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+
+		switch (${EXTEN:2:-1}) {
+			case 0:
+				Set(source=internal);
+				Set(srcode=0);
+				break;
+			case 1:
+				Set(source=external);
+				Set(srcode=1);
+				break;
+			default:
+				Hangup();
+		};
+
+		switch (${EXTEN:3}) {
+			case 1:
+				Set(type=vml);
+				Set(number=vm${user_name});
+				break;
+			case 2:
+				Set(type=vml);
+				Set(number=vm*${user_name});
+				break;
+			case 3:
+				Set(type=trl);
+				Set(number=);
+				break;
+			case 4:
+				Set(type=par);
+				Set(number=);
+				break;
+			default:
+				Hangup();
+		};
+
+
+		Answer();
+
+
+		if ( "${number}" != "" ) {
+			System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='${source}' --type='${type}' --number='${number}');
+				if ( "${SYSTEMSTATUS}" != "SUCCESS" ) {
+					Playback(beeperr);
+					Hangup();	
+				}
+		}
+		&user-call-forward-activate-numeric(${type},${srcode},0,1);
+		UserEvent(UserDiversionUI,user: ${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
+		Hangup();
+	}
+
+	_*90X. => {
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -361,7 +439,7 @@ context user-config {
 		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
 		Hangup();
 	}
-	_*91. => {
+	_*91X. => {
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -381,61 +459,7 @@ context user-config {
 		Hangup();
 	}
 
-	*901 => {
-		Set(CDR(amaflags)=OMIT);
-		&usercode-by-ext(${user_name});
-		if ("${user_code}" = "")
-			Hangup();
-		Answer();
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm${user_name}');
-		&user-call-forward-activate-numeric(vml,0,0,1);
-		UserEvent(UserDiversionUI,user: ${user_name});
-		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
-		Hangup();
-	}
 
-	*911 => {
-		Set(CDR(amaflags)=OMIT);
-		&usercode-by-ext(${user_name});
-		if ("${user_code}" = "")
-			Hangup();
-		Answer();
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm${user_name}');
-		&user-call-forward-activate-numeric(vml,1,0,1);
-		UserEvent(UserDiversionUI,user: ${user_name});
-		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
-		Hangup();
-	}
-
-	*902 => {
-		Set(CDR(amaflags)=OMIT);
-		&usercode-by-ext(${user_name});
-		if ("${user_code}" = "")
-			Hangup();
-		Answer();
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm*${user_name}');
-		&user-call-forward-activate-numeric(vml,0,0,1);
-		UserEvent(UserDiversionUI,user: ${user_name});
-		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
-		Hangup();
-	}
-
-	*912 => {
-		Set(CDR(amaflags)=OMIT);
-		&usercode-by-ext(${user_name});
-		if ("${user_code}" = "")
-			Hangup();
-		Answer();
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm*${user_name}');
-		&user-call-forward-activate-numeric(vml,1,0,1);
-		UserEvent(UserDiversionUI,user: ${user_name});
-		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
-		Hangup();
-	}
 	
 	*30 => {
 		Set(CDR(amaflags)=OMIT);
@@ -605,7 +629,7 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 	if ("${user_code}" = "")
 		Hangup();
 	
-	if ("${mtype}" != "std" && "${mtype}" != "vml")
+	if ("${mtype}" != "std" && "${mtype}" != "vml" && "${mtype}" != "trl" && "${mtype}" != "par" )
 		Set(mtype=var);
 	
 	Set(msource=internal);
@@ -628,6 +652,11 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 	
 	Answer();
 	System(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='${msource}' --case='${mcase}' --active='${mactive}');
+	if ( "${SYSTEMSTATUS}" != "SUCCESS" ) {
+		Playback(beeperr);
+		Hangup();	
+	}	
+
 	return;
 }
 
