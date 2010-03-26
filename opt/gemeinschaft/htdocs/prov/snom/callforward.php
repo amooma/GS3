@@ -107,7 +107,6 @@ if (! in_array( $type, array('internal','external','std','var','timeout'), true 
 
 $db = gs_db_slave_connect();
 
-
 $tmp = array(
 	15=>array('k' => 'internal' ,
 	          'v' => gs_get_conf('GS_CLIR_INTERNAL', "von intern") ),
@@ -154,7 +153,7 @@ function defineBackKey()
 	echo '<SoftKeyItem>',
                 '<Name>F4</Name>',
                 '<Label>' ,snomXmlEsc('Zurück'),'</Label>',
-                '<URL>',$url_snom_callforward, '?m=',$mac, '&u=',$user, $target, '</URL>',
+                '<URL>',$url_snom_callforward, '?m=',$mac, '&u=',$user, '</URL>',
                 '</SoftKeyItem>', "\n";
 }
 
@@ -340,6 +339,40 @@ if ( ($type == 'internal' || $type == 'external') && !isset( $_REQUEST['key']) )
 
 #################################### SET CF-STATES {
 if ( $type == 'internal' || $type == 'external' && isset( $_REQUEST['key']) ) {
+
+
+	$user = trim( @ $_REQUEST['u'] );
+	$user_id = getUserID( $user );
+	# Test std-number exists
+	
+
+
+
+	$number = $db->executeGetOne( 'SELECT `number_std` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\'internal\''); 
+	
+	if ( ! $number || strlen ( trim ( $number ) ) <= 0 )
+		unset ( $actives['std'] );
+	
+	$number = $db->executeGetOne( 'SELECT `number_var` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\'internal\''); 
+		
+	if ( ! $number || strlen ( trim ( $number ) ) <= 0 )
+		unset ( $actives['var'] );
+
+
+
+	# Test for timerules
+	$id = (int)$db->executeGetOne('SELECT `_user_id` from `cf_timerules` WHERE `_user_id`=' . $user_id );                                                                                        
+
+	if ( $id ) {
+		$actives['trl'] = 'Zeit';
+	}
+
+	# Test parallel call
+	$id = (int)$db->executeGetOne('SELECT `_user_id` from `cf_parallelcall` WHERE `_user_id`=' . $user_id  );
+	if( $id ) {
+		$actives['par'] = 'Parallel';
+	}
+
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
 	$user = trim( @ $_REQUEST['u'] );
@@ -371,52 +404,25 @@ if ( $type == 'internal' || $type == 'external' && isset( $_REQUEST['key']) ) {
 		} 
 		
 		
+		
+		
 		echo '<SnomIPPhoneMenu>',"\n";
 		echo '<Title>', snomXmlEsc($typeToTitle[$type] . ':  ' . $cases[$key] ), '</Title>', "\n";
-		echo '<MenuItem';
-		if($val == 'no')echo ' sel=true';
-		echo'>', "\n";
-		echo '<Name>',snomXmlEsc($actives['no']),'</Name>',"\n";
-		echo '<URL>';
-		echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key='.$key.'&value=no';
-		echo '</URL>',"\n";  
-		echo '</MenuItem>',"\n";
 		
-		echo '<MenuItem';
-		if($val == 'std')echo ' sel=true';
-		echo'>', "\n";
-		echo '<Name>',snomXmlEsc($actives['std']),'</Name>',"\n";
-		echo '<URL>';
-		echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key='.$key.'&value=std';
-		echo '</URL>',"\n";  
-		echo '</MenuItem>',"\n";
 		
-		echo '<MenuItem';
-		if($val == 'var')echo ' sel=true';
-		echo'>', "\n";
-		echo '<Name>',snomXmlEsc($actives['var']),'</Name>',"\n";
-		echo '<URL>';
-		echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key='.$key.'&value=var';
-		echo '</URL>',"\n";  
-		echo '</MenuItem>',"\n";
+		foreach( $actives as $mod => $desc ) {
 		
-		echo '<MenuItem';
-		if($val == 'vml')echo ' sel=true';
-		echo'>', "\n";
-		echo '<Name>',snomXmlEsc($actives['vml']),'</Name>',"\n";
-		echo '<URL>';
-		echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key='.$key.'&value=vml';
-		echo '</URL>',"\n";  
-		echo '</MenuItem>',"\n";
+			echo '<MenuItem';
+			if($val == $mod)echo ' sel=true';
+			echo'>', "\n";
+			echo '<Name>',snomXmlEsc($desc),'</Name>',"\n";
+			echo '<URL>';
+			echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key='.$key.'&value=' . $mod;
+			echo '</URL>',"\n";  
+			echo '</MenuItem>',"\n";
 		
-		echo '<MenuItem';
-		if($val == 'ano')echo ' sel=true';
-		echo'>', "\n";
-		echo '<Name>',snomXmlEsc($actives['ano']),'</Name>',"\n";
-		echo '<URL>';
-		echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=',$type,'&key='.$key.'&value=ano';
-		echo '</URL>',"\n";  
-		echo '</MenuItem>',"\n";
+		}
+		
 		defineBackKey();
 		echo '</SnomIPPhoneMenu>',"\n";
 		
