@@ -913,8 +913,8 @@ if ( GS_BUTTONDAEMON_USE == true ) {
 else {
 	psetting('dkey_dnd'      , 'keyevent F_DND'       );
 }
-// psetting('dkey_record'   , 'keyevent F_REC'       );
-psetting('dkey_record'   , 'dtmf *1'       );
+psetting('dkey_record'   , 'keyevent F_REC'       );
+//psetting('dkey_record'   , 'dtmf *1'       );
 psetting('dkey_directory', 'keyevent F_ADR_BOOK'  ); # or F_DIRECTORY
 psetting('dkey_menu'     , 'url '. $prov_url_snom .'menu.php?m=$mac&u=$user_name1' );
 psetting('dkey_redial'   , 'keyevent F_REDIAL'    );
@@ -1069,7 +1069,11 @@ if (! is_array($softkeys)) {
 				$key_def['function'] = 'speed';
 				$key_def['data'    ] = 'voicemail' ;
 				break;
-			
+			case 'blf':
+				$native_anyway = true;
+				$key_def['function'] = 'blf';
+				$key_def['data'    ] =  "<sip:" . $key_def['data'    ]. "@" . $pbx  . ";user=phone>|*81*";
+				break;
 			
 				
 		
