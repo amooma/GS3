@@ -197,6 +197,7 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 	_vm. => {
+		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		Set(box=${EXTEN:2});
 		if ("${box:0:1}" = "*") {
 			Set(box=${box:1});
