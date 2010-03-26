@@ -152,13 +152,15 @@ $actives = array(
 	'no'  => '-',
 	'std' => __('Std.'),
 	'var' => __('Tmp.'),
-	//'vml' => __('AB'  )
+	'vml' => __('AB'  )
 );
 
 $vm_rec_num_idx_table=array();
 
 
 //loop Voicemail-Announce-Files
+
+/*
 $rs = $DB->execute('SELECT * from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
 $ncnt=0;
 while ($r = $rs->fetchRow()) {
@@ -174,6 +176,7 @@ while ($r = $rs->fetchRow()) {
 	$actives['vmln-'.++$ncnt] = __('Ansage ').$ncnt;
 }
 
+*/
 $id = (int)$DB->executeGetOne('SELECT `_user_id` from `cf_timerules` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
 if ($id) {
 	$actives['trl'] = __('Zeitsteuerung');
