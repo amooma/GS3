@@ -59,7 +59,7 @@ function gs_queue_callforward_get( $queue )
 	foreach ($sources as $source) {
 		foreach ($cases as $case) {
 			$rs = $db->execute( 'SELECT `active`, `number_std`, `number_var`, `number_vml`, `vm_rec_id`, `timeout` FROM `queue_callforwards` WHERE `queue_id`='. $queue_id .' AND `source`=\''. $source .'\' AND `case`=\''. $case .'\'' );
-			if ($r = $rs->fetchRow()) {
+			if ( $rs && $r = $rs->fetchRow()) {
 				if (! in_array( $r['active'], array('no','std','var','vml','trl','par'), true ))
 					$r['active'] = 'no';
 				$forwards[$source][$case] = $r;
