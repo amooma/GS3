@@ -66,6 +66,30 @@ function gs_callforward_activate( $user, $source, $case, $active )
 	else
 		$ok = true;
 	
+	
+	# do not allow time rules if no time rules  are defined
+	#
+	
+	if ( $active == 'trl'  ) {
+		
+		$id = (int)$db->executeGetOne('SELECT `_user_id` from `cf_timerules` WHERE `_user_id`=' . $user_id );
+
+		if ( ! $id ) {
+			return new GsError( 'No time rules defined. Cannot activate call forward.' );
+		}
+	}
+	# do not allow parallel calls if no parallel targets  are defined
+	#
+	else if ( $active == 'par'  ) {
+		
+		$id = (int)$db->executeGetOne('SELECT `_user_id` from `cf_parallelcall` WHERE `_user_id`=' . $user_id  );
+
+		if ( ! $id ) {
+			return new GsError( 'No parsllel call tragets. Cannot activate call forward.' );
+		}
+	}
+	
+	
 	# set state
 	#
 	$ok = $ok && $db->execute(
