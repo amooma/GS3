@@ -6092,7 +6092,9 @@ INSERT INTO `group_members` VALUES (5,14002);
 INSERT INTO `group_members` VALUES (5,14003);        
 INSERT INTO `group_members` VALUES (5,19000);        
 INSERT INTO `group_members` VALUES (5,19001);        
-INSERT INTO `group_members` VALUES (6,6003);         
+INSERT INTO `group_members` VALUES (6,6003);
+INSERT INTO `group_members` VALUES (6,6004);
+INSERT INTO `group_members` VALUES (6,6005);         
 INSERT INTO `group_members` VALUES (6,15000);        
 INSERT INTO `group_members` VALUES (6,15001);        
 INSERT INTO `group_members` VALUES (6,15002);        
@@ -6106,6 +6108,8 @@ INSERT INTO `group_members` VALUES (6,15009);
 INSERT INTO `group_members` VALUES (6,15010);
 INSERT INTO `group_members` VALUES (6,15011);
 INSERT INTO `group_members` VALUES (6,15012);
+INSERT INTO `group_members` VALUES (6,15013);
+INSERT INTO `group_members` VALUES (6,15014);
 INSERT INTO `group_members` VALUES (6,16000);
 INSERT INTO `group_members` VALUES (6,16001);
 INSERT INTO `group_members` VALUES (6,16002);
@@ -6639,6 +6643,7 @@ CREATE TABLE `queue_callforwards` (
   `timeout` tinyint(3) unsigned NOT NULL default '20',
   `number_std` varchar(50) character set ascii NOT NULL default '',
   `number_var` varchar(50) character set ascii NOT NULL default '',
+  `number_vml` varchar(50) character set ascii NOT NULL default '',
   `active` enum('no','std','var','vml','trl','par') character set ascii NOT NULL default 'no',
   PRIMARY KEY  (`queue_id`,`source`,`case`),
   CONSTRAINT `queue_callforwards_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
@@ -6681,6 +6686,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `queue_cf_timerules`;
 CREATE TABLE `queue_cf_timerules` (
   `_queue_id` int(10) unsigned NOT NULL,
+  `ord` int(10) unsigned NOT NULL,
   `d_mo` tinyint(1) unsigned NOT NULL default '1',
   `d_tu` tinyint(1) unsigned NOT NULL default '1',
   `d_we` tinyint(1) unsigned NOT NULL default '1',
