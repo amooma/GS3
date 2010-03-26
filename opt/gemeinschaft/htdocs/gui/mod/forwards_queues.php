@@ -120,13 +120,6 @@ function InitRecordCall($filename, $index, $comment) {  //FIXME
 }
 
 
-$admins =  split(',',GS_GUI_SUDO_ADMINS);
-
-array_walk($admins, 'gs_trim_value');
-if(!in_array($_SESSION[sudo_user][name], $admins)){
-	die(__('Nur Administratoren d&uuml;rfen hier &Auml;nderungen vornehmen!'));
-}
-
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
@@ -896,7 +889,7 @@ while ($r = $rs->fetchRow()) {
 
 	$i=0;
 	$rs = $DB->execute('SELECT * from `queue_cf_timerules` WHERE `_queue_id`='. $queue_id.' ORDER BY `ord`');
-	while (	$route = $rs->fetchRow() ) {
+	while (	$rs && $route = $rs->fetchRow() ) {
 		echo '<input type="hidden" name="tr_'.$route['id'].'" value="'.$route['id'].'" />';
 		echo '<tr><td>';
 		echo $route['ord'];
