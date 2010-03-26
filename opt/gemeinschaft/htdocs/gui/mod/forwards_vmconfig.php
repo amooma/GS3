@@ -745,17 +745,29 @@ try {
 	$disabled = ($email_address == '');
 	if ($disabled) $email_notify = false;
 	
-	echo '<input type="radio" name="email_notify" value="on" id="ipt-email_notify-on"';
-	if ($email_notify) echo ' checked="checked"';
+	echo '<select name="email_notify" id="ipt-email_notify-on" ';
 	if ($disabled) echo ' disabled="disabled"';
-	echo ' />';
-	echo '<label for="ipt-email_notify-on">', __('an') ,'</label>' ,"\n";
+	echo '>', "\n";
 	
-	echo '<input type="radio" name="email_notify" value="off" id="ipt-email_notify-off"';
-	if (! $email_notify) echo ' checked="checked"';
-	if ($disabled) echo ' disabled="disabled"';
-	echo ' />';
-	echo '<label for="ipt-email_notify-off">', __('aus') ,'</label>' ,"\n";
+		echo '<option value="off"';
+		if ( $email_notify  === 0 )
+			echo ' selected="selected"';
+			
+		echo '>',  __('aus') , '</option>', "\n";
+		
+		echo '<option value="on"';
+		if ( $email_notify  === 1 )
+			echo ' selected="selected"';
+			
+		echo '>',  __('ein') , '</option>', "\n";
+		
+		echo '<option value="delete"';
+		if ( $email_notify  === 2 )
+			echo ' selected="selected"';
+			
+		echo '>',  __('Nachricht nach Versand l&ouml;schen') , '</option>', "\n";
+			
+	echo '</select>';
 ?>
 	</td>
 </tr>
