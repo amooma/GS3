@@ -167,7 +167,17 @@ ORDER BY `pb`.`lastname`, `pb`.`firstname`
 LIMIT 100'
 );
 
-//TODO: import phonebook
+# IMPORTED phonebook
+if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
+	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
+	$pb[$pos] = array(
+		'type'  => 'imported',
+		'title' => gs_get_conf('GS_PB_IMPORTED_TITLE', __("Extern")),
+		'query' => 'SELECT `lastname` `ln`, `firstname` `fn`, `number` `ext`
+		FROM `pb_ldap`
+		ORDER BY `lastname`, `firstname`'
+	);
+}
 
 kSort($pb);
 
