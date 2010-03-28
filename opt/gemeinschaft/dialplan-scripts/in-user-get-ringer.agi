@@ -186,9 +186,6 @@ elseif (strToLower(subStr($user['phone_type'],0,11)) === 'grandstream') {
 	
 	$ringtones = _get_ringers( $user['id'] );
 	
-	if (@$ringtones['internal']['file'] && @$ringtones['external']['file'])
-		$ringtones['external']['file'] = null;
-	
 	if (@$ringtones[$source]['file']) {
 		gs_agi_set_variable( 'ringer', ('<http://127.0.0.1>\;info='. $source) );
 	} else {
