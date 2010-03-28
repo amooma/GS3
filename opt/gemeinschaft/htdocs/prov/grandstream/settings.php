@@ -789,6 +789,9 @@ psetting('P197', '');			# Proxy Require  //FIXME
 psetting('P73', '1');			# Send DTMF Type ( 0 = audio, 1 = RFC2833, 2 = SIP INFO )
 psetting('P29', '0');			# Early Dial ( 0 = no, 1 = yes, use only if proxy supports 484 response)
 psetting('P66', '' );			# Dial Plan Prefix
+if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
+	psetting('P1347', '*81*');	# BLF Call-pickup Prefix ( maxlength: 8 )
+}
 if ( in_array($phone_model, array('gxv3000','gxv3005','gxv3140'), true) ) {
 	psetting('P290', '{*xx*|*x*|*x+|x+}');       # Dial Plan
 	/*
