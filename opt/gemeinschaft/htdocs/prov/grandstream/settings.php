@@ -45,14 +45,21 @@ require_once( GS_DIR .'inc/prov-fns.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 set_error_handler('err_handler_die_on_err');
 
-function _grandstream_normalize_version( $appvers )
+function _grandstream_normalize_version( $fwvers )
 {
-	$tmp = explode('.', $appvers);
+	$tmp = explode('.', $fwvers);
 	$v0  = str_pad((int)@$tmp[0], 2, '0', STR_PAD_LEFT);
 	$v1  = str_pad((int)@$tmp[1], 2, '0', STR_PAD_LEFT);
 	$v2  = str_pad((int)@$tmp[2], 2, '0', STR_PAD_LEFT);
 	$v3  = str_pad((int)@$tmp[3], 2, '0', STR_PAD_LEFT);
 	return $v0.'.'.$v1.'.'.$v2.'.'.$v3;
+}
+
+function _grandstream_fwcmp( $fwvers1, $fwvers2 )
+{
+	//$fwvers1 = _grandstream_normalize_version( $fwvers1 );  # we trust it has been normalized!
+	$fwvers2 = _grandstream_normalize_version( $fwvers2 );
+	return strCmp($fwvers1, $fwvers2);
 }
 
 function _settings_err( $msg='' )
@@ -266,7 +273,7 @@ if (! is_array($user)) {
 
 # firmware update
 #
-$firmware_url_grandstream = $prov_url_grandstream;
+$fw_prefix = '';
 if (! gs_get_conf('GS_GRANDSTREAM_PROV_FW_UPDATE')) {
 	gs_log( GS_LOG_DEBUG, 'Grandstream firmware update not enabled' );
 }
@@ -381,7 +388,7 @@ elseif (in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000
 		}
 		
 		gs_log( GS_LOG_NOTICE, "Phone $mac: Upgrade FW $fw_vers_nrml -> $fw_new_vers" );
-		$firmware_url_grandstream .= 'fw/'.$fw_new_vers.'/';
+		$fw_prefix = 'fw/'.$fw_new_vers.'/';
 		
 		break;
 	}
@@ -655,21 +662,33 @@ if ( in_array($phone_model, array('bt200','bt201','gxp1200','gxp2000','gxp2010',
 #  Firmware Upgrade and Provisioning (global)
 #####################################################################
 psetting('P212', '1');			# Upgrade via ( 0 = TFTP, 1 = HTTP )
-psetting('P192', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $firmware_url_grandstream),'/'));  # TFTP/HTTP Firmware Update Server ( based on P212 )
+psetting('P192', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $prov_url_grandstream),'/'));  # TFTP/HTTP Firmware Update Server ( based on P212 )
 psetting('P237', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $prov_url_grandstream),'/'));  # TFTP/HTTP Config Server ( based on P212 )
-psetting('P232', '');			# Firmware File Prefix
-psetting('P233', '');			# Firmware File Suffix
+psetting('P232', $fw_prefix);		# Firmware File Prefix
+psetting('P233', '');			# Firmware File Postfix
 psetting('P234', '');			# Config File Prefix
-psetting('P235', '');			# Config File Suffix
-psetting('P238', '0');			# Check for new Firmware ( 0 = every time, 1 = only when suffix/prefix changes, 2 = never )
+psetting('P235', '');			# Config File Postfix
+psetting('P238', '0');			# Check for new Firmware ( 0 = every time, 1 = only when prefix/postfix changes, 2 = never )
 psetting('P194', '1');			# Automatic Update ( 0 = no, 1 = yes )
 psetting('P193', '120');		# Firmware Check Interval (in minutes | default 7 days)
 psetting('P240', '0');			# Authenticate Conf File ( 0 = no, 1 = yes )
 if ( in_array($phone_model, array('ht287','bt110'), true) ) {
 	psetting('P242', '');		# Firmware Key (hex) ???
 }
-if ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005','gxv3140'), true) ) {
-	psetting('P145', '0');		# Allow DHCP Option 66 to override server ( 0 = no, 1 = yes ) //FIXME?
+if ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true)
+	&& _grandstream_fwcmp($fw_vers_nrml, '1.2.2.14') >= 0 
+	&& !$fw_prefix ) {
+	psetting('P145', '1');		# Allow DHCP Option 43 and Option 66 to override server ( 0 = no, 1 = yes )
+} elseif ( in_array($phone_model, array('gxv3000','gxv3005'), true)
+	&& _grandstream_fwcmp($fw_vers_nrml, '1.2.2.3') >= 0
+	&& !$fw_prefix ) {
+	psetting('P145', '1');		# Allow DHCP Option 43 and Option 66 to override server ( 0 = no, 1 = yes )
+/*} elseif ( in_array($phone_model, array('gxv3140'), true) // FIXME, if new firmware support dhcp option 66 with http provisioning
+	&& _grandstream_fwcmp($fw_vers_nrml, '0.0.0.0') >= 0
+	&& !$fw_prefix ) {
+	psetting('P145', '1');		# Allow DHCP Option 43 and Option 66 to override server ( 0 = no, 1 = yes )
+*/} elseif ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005','gxv3140'), true) ) {
+	psetting('P145', '0');		# Allow DHCP Option 43 and Option 66 to override server ( 0 = no, 1 = yes )
 }
 if ( in_array($phone_model, array('gxv3140'), true) ) {
 	psetting('P285', '1');		# Hour of the day ( 0-23 | default 1 )
