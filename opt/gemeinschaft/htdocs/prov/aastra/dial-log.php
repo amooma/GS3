@@ -124,7 +124,7 @@ if (! $type) {
 		WHERE
 			`user_id`='. $user_id .' AND
 			`type`=\''. $type .'\'
-		GROUP BY `remote_name`
+		GROUP BY `number`
 		ORDER BY `ts` DESC
 		LIMIT '.$num_results;
 	}
