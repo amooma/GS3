@@ -394,48 +394,6 @@ elseif (in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000
 	}
 }
 
-/* TODO
-# add prov job, to send notify 'grandstream-idle-screen-refresh' (GXP2000, GXP2010, GXP2020)
-if ( in_array($phone_model, array('gxp2000', 'gxp2010', 'gxp2020'), true) ) {
-	$phone_id = (int)$db->executeGetOne(' SELECT `id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
-	$num = (int)$db->executeGetOne(' SELECT COUNT(*) FROM `prov_jobs` WHERE `phone_id`='. $phone_id .' AND `data`=\'grandstream-idle-screen-refresh\'');
-	if ($num < 1) {
-		$ok = $db->execute(
-			'INSERT INTO `prov_jobs` ('.
-				'`id`, '.
-				'`inserted`, '.
-				'`running`, '.
-				'`trigger`, '.
-				'`phone_id`, '.
-				'`type`, '.
-				'`immediate`, '.
-				'`minute`, '.
-				'`hour`, '.
-				'`day`, '.
-				'`month`, '.
-				'`dow`, '.
-				'`data` '.
-			') VALUES ('.
-				'NULL, '.
-				((int)time()) .', '.
-				'0, '.
-				'\'server\', '.
-				((int)$phone_id) .', '.
-				'\'notify\', '.
-				'1, '.
-				'\'*\', '.
-				'\'*\', '.
-				'\'*\', '.
-				'\'*\', '.
-				'\'*\', '.
-				'\'grandstream-idle-screen-refresh\''.
-				')'
-			);
-		if (! $ok)
-			gs_log( GS_LOG_WARNING, 'Failed to add prov-job \'send idle screen\' for Grandstream PhoneID '.$phone_id );
-	}
-}
-*/
 
 # store the user's current IP address in the database:
 #
@@ -998,9 +956,7 @@ if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 	psetting('P341', rTrim(str_replace(GS_PROV_SCHEME.'://', '', $prov_url_grandstream),'/'));  # Idle Screen XML server path ( maxlength 128 )  //FIXME?
 	# grandstream automatically adds "/gs_screen.xml" to the URL
 	# e.g. prov/grandstream/gs_screen.xml
-	# todo: script to change idle_screen for nobody or user
-}
-if ( in_array($phone_model, array('gxp2020'), true) ) {
+	psetting('P1349', '1'); # Download Idle Screen XML at Boot-up ( 0 = no, 1 = yes )
 	psetting('P1343', '0');	# use custom filename ( 0 = no, 1 = yes )
 }
 
