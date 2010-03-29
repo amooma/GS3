@@ -1337,8 +1337,8 @@ if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 	}
 }
 
-if (in_array($phone_model, array('gxp2000', 'gxp2020'), true)) $max_key =  7;
-if (in_array($phone_model, array('gxp2010'           ), true)) $max_key = 18;
+//if (in_array($phone_model, array('gxp2000', 'gxp2020'), true)) $max_key =  7;	//FIXME
+//if (in_array($phone_model, array('gxp2010'           ), true)) $max_key = 18; //FIXME
 
 
 $softkeys = null;
@@ -1366,7 +1366,7 @@ if (! is_array($softkeys)) {
 			continue;
 		}
 		$key_idx = (int)lTrim(subStr($key_name,1),'0');
-		if ($key_idx > $max_key-1) continue;
+		//if ($key_idx > $max_key-1) continue;	//FIXME
 		if ($key_def['function'] === 'empty') continue;
 		//setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
 		
@@ -1375,11 +1375,16 @@ if (! is_array($softkeys)) {
 			//psetting('P'.($key_idx*3+301), '0');
 			//psetting('P'.($key_idx*3+302), '');
 			psetting('P'.($key_idx*3+303), $key_def['data']);
-		} elseif ($key_idx >= 7) {  # gxp2010
+		} elseif ( $key_idx >= 7 && $key_idx <= 17 ) {  # gxp2010
 			psetting('P'.(($key_idx-7)*4+353), subStr($key_def['function'],1));
 			//psetting('P'.(($key_idx-7)*4+354), '');
 			//psetting('P'.(($key_idx-7)*4+355), '');
 			psetting('P'.(($key_idx-7)*4+356), $key_def['data']);
+		} elseif ($key_idx >= 100) { # extension 1 and 2
+			psetting('P'.($key_idx-100+6001), subStr($key_def['function'],1));
+			//psetting('P'.($key_idx-100+6201), '');
+			//psetting('P'.($key_idx-100+6401), '');
+			psetting('P'.($key_idx-100+6601), $key_def['data']);
 		}
 	}
 }
