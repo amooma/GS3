@@ -977,28 +977,51 @@ if ($phone_layout) {
 				0 => array('from'=>   0, 'to'=>   6, 'shifted'=>false,
 					'title'=> htmlEnt($phone_type_title))
 			);
+			switch ($phone_type) {
+				case 'grandstream-gxp2010':
+					$key_levels[0]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Linke Tasten');
+					$key_levels[0]['to'   ] = 8;
+					$key_levels[1]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Rechte Tasten');
+					$key_levels[1]['from' ] = 9;
+					$key_levels[1]['to'   ] = 17;
+				break;
+			}
 		//}
-		/*if ($show_ext_modules >= 1) {
+		if ($show_ext_modules >= 1) {
 			$key_levels += array(
-				1 => array('from'=>  12, 'to'=>  32, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 1')
+				2 => array('from'=>  100, 'to'=>  113, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Spalte') .' 1')
+			);
+			$key_levels += array(
+				3 => array('from'=>  114, 'to'=>  127, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Spalte') .' 2')
+			);
+			$key_levels += array(
+				4 => array('from'=>  128, 'to'=>  141, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Spalte') .' 3')
+			);
+			$key_levels += array(
+				5 => array('from'=>  142, 'to'=>  155, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Spalte') .' 4')
 			);
 		}
 		if ($show_ext_modules >= 2) {
 			$key_levels += array(
-				2 => array('from'=>  33, 'to'=>  53, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 2')
+				6 => array('from'=>  156, 'to'=>  169, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Spalte') .' 1')
 			);
-		}
-		*/
-		switch ($phone_type) {
-			case 'grandstream-gxp2010':
-				$key_levels[0]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Linke Tasten');
-				$key_levels[0]['to'   ] = 8;
-				$key_levels[1]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Rechte Tasten');
-				$key_levels[1]['from' ] = 9;
-				$key_levels[1]['to'   ] = 17;
-			break;
+			$key_levels += array(
+				7 => array('from'=>  170, 'to'=>  183, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Spalte') .' 2')
+			);
+			$key_levels += array(
+				8 => array('from'=>  184, 'to'=>  197, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Spalte') .' 3')
+			);
+			$key_levels += array(
+				9 => array('from'=>  198, 'to'=>  211, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Spalte') .' 4')
+			);
 		}
 		break;
 	}
@@ -1078,6 +1101,7 @@ if ($phone_layout) {
 				if ($knum >= 100) $keyv = 'D'. str_replace(' ','&nbsp;', str_pad($knum-100, 2, ' ', STR_PAD_LEFT));
 			} elseif ($phone_layout === 'grandstream') {
 				$keyv = 'T'. str_replace(' ','&nbsp;', str_pad($knum+1    , 2, ' ', STR_PAD_LEFT));
+				if ($knum >= 100) $keyv = 'T'. str_replace(' ','&nbsp;', str_pad($knum-99 , 3, ' ', STR_PAD_LEFT));
 			} else {
 				$keyv = 'F'.$knump;
 			}
