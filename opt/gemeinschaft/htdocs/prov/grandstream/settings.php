@@ -7,7 +7,7 @@
 * Copyright 2009, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 * 
-* Sebastian Ertz
+* Sebastian Ertz <gemeinschaft@swastel.eisfair.net>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * 
 * This program is free software; you can redistribute it and/or
@@ -528,6 +528,13 @@ psetting('P44', '');		# TFTP server IP address (octet 3)
 psetting('P38', '48');		# Layer 3 QoS
 psetting('P51', '0');		# Layer 2 QoS: 802.1q VLAN Tag ( maxlength 5 )
 psetting('P87', '0');		# Layer 2 QoS: 802.1p priority value ( maxlength 5 )
+
+# VLAN
+if ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+	psetting('P1351', '0');	# Data VLAN Tag 1 ( maxlength 5 )
+	psetting('P1352', '0');	# Data VLAN Tag 2 ( maxlength 5 )
+	psetting('P1353', '0');	# Data VLAN Tag 3 ( maxlength 5 )
+}
 
 
 #####################################################################
@@ -1215,6 +1222,9 @@ if ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','
 	psetting('P1301', '0');		# Headset TX gain (dB) ( 0 = 0dB, 1 = -6dB, 2 = +6dB )
 	psetting('P1302', '0');		# Headset RX gain (dB) ( 0 = 0dB, 1 = -6dB, 2 = +6dB )
 	psetting('P1341', '0');		# Disable Transfer ( 0 = no, 1 = yes )
+}
+if ( in_array($phone_model, array('gxp280','gxp1200','gxp2000','gxp2010','gxp2020'), true) ) {
+	psetting('P1357', '1');		# Enable Constraint Mode ( 0 = no, 1 = yes )
 }
 
 
