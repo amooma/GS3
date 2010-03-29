@@ -940,7 +940,7 @@ if ( in_array($phone_model, array('gxp2000','gxp2010','gxp2020'), true) ) {
 #####################################################################
 #  XML-Application (GXP) (global) //FIXME|TODO
 #####################################################################
-if ( in_array($phone_model, array('gxp2020'), true) ) {
+if ( in_array($phone_model, array('gxp2010','gxp2020'), true) ) {
 	psetting('P337', '');	# server path ( maxlength 128 )
 	psetting('P352', '');	# softkey label ( maxlength 128 )
 }
