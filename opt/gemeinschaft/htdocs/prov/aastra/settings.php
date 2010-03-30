@@ -456,7 +456,9 @@ psetting('tos rtcp' , '');
 psetting('upnp manager' , '0');
 psetting('upnp gateway' , '0.0.0.0');
 psetting('upnp mapping lines' ,'0');
-
+//Get callwaiting settings
+$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
+psetting('call waiting', $callwaiting );
 /*
 #setting('language', 0, $prov_url_aastra .'lang_en.txt');  # English. Default
 setting('language', 1, $prov_url_aastra .'lang/lang_de.txt');
