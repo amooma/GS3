@@ -131,6 +131,8 @@ $DB_SIP_REG_UPDATE      = false;
 
 //$GUI_AUTH_METHOD            = 'gemeinschaft';
   # "gemeinschaft": Authenticate users against our internal database.
+  # "ldap" : Checks if user can be found in LDAP. If yes, bind against
+  #          LDAP is performed. If not, "gemeinschaft" is used.
   # "webseal"     : Trust the non-standard "IV-User" HTTP header.
   #                 Make sure every access goes through WebSeal
   #                 and nobody can access our GUI directly!
@@ -646,4 +648,3 @@ if (@$INSTALLATION_TYPE === 'gpbx') {
 		include_once($inc_file);
 	}
 }
-
