@@ -110,11 +110,14 @@ function _searchUser_ldap()
 	else {
 		$ldaphost = 'ldap://'. $ldaphost;
 	}
-	$ldapconn = @ ldap_connect( $ldaphost );
-	if ( !$ldapconn ) {
+	$ldapconn =  @ ldap_connect( $ldaphost );
+	gs_log( GS_LOG_WARNING, "$ldapconn $ldaphost");
+	@ ldap_set_option( $ldapconn, LDAP_OPT_PROTOCOL_VERSION, (int)$ldapproto );
+	$ldaptestconn  = @ ldap_bind($ldapconn);
+	if ( !$ldaptestconn ) {
 		gs_log( GS_LOG_WARNING, 'Unable to connect to LDAP server' );
 		return false;
-	}
+	} 
 	$ldap_find_user=ldap_search($ldapconn, $ldapbasedn, $ldapfilter );
 	$ldap_result = ldap_get_entries($ldapconn, $ldap_find_user);
 	if ( $ldap_result["count"] == 0 )
