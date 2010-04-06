@@ -110,6 +110,24 @@ then
 		fi
 		exit 0
 	fi
+elif [ -d .git ]
+then
+	# //FIXME!
+	BRANCH=`git branch --no-color | grep '^ *[*] ' | grep -o -Ee '[a-zA-Z0-9\\-_]+' | head -n 1`
+	if [ -z ${BRANCH} ]; then
+		BRANCH=unknown
+	fi
+	if [ "${BRANCH}" != "master" ]; then
+		BRANCH="branch-${BRANCH}"
+	fi
+	SHA=`git branch --no-color -v | grep '^ *[*] ' | awk '{print $3;}'`
+	if [ -z ${SHA} ]; then
+		SHA=unknown
+	fi
+	DATE=`date -u '+%Y%m%d'`
+	RESULT="${BRANCH}-${DATE}-${SHA}"
+	echo "${RESULT}"
+	exit 0
 fi
 
 echo "unknown"
