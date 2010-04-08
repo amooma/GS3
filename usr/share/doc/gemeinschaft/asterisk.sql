@@ -5370,6 +5370,7 @@ CREATE TABLE `ast_queue_members` (
   `interface` varchar(25) character set ascii NOT NULL default '',
   `_user_id` int(10) unsigned NOT NULL default '0',
   `penalty` tinyint(3) unsigned NOT NULL default '0',
+  `static` tinyint(1) default '0',
   PRIMARY KEY  (`queue_name`,`interface`),
   UNIQUE KEY `queue_id_user_id` (`_queue_id`,`_user_id`),
   KEY `_user_id` (`_user_id`),

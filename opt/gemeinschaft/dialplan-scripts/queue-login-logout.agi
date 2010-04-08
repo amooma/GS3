@@ -10,7 +10,8 @@
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
-* 
+* Sascha Daniels <sd@alternative-solution.de>
+*
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -93,17 +94,30 @@ if ($action === 'login') {
 	
 }
 elseif ($action === 'logout') {
-	
+		// Tell user that he can NOT log out, because he is a static agent
+		// FIXME: Voicepromt needed?
+		if (queue_static_agent( $queue_id, $user_id)) exit();
 	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_queue_id`='. $queue_id .' AND `_user_id`='. $user_id );
 	gs_agi_set_variable( 'agent_login_status', 'loggedout' );
 	
 }
 elseif ($action === 'logoutall') {
-	
-	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_user_id`='. $user_id );
+	// Only logout from queue, when we are NOT a static agent
+	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_user_id`='. $user_id . ' AND static = 0');
 	gs_agi_set_variable( 'agent_login_status', 'loggedout' );
 	
 }
+function queue_static_agent( $q, $u)
+{
+	include_once( GS_DIR .'inc/db_connect.php' );
+	$db = gs_db_master_connect();
 
+	$agent_static = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queue_members` WHERE `_queue_id`='. $q .' AND `_user_id`='. $u .' AND `static` = 1' );
+	if ($agent_static > 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
 
 ?>

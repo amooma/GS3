@@ -1061,3 +1061,12 @@ INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'u
 
 ALTER TABLE `dial_log` CHANGE `type` `type` ENUM( 'in', 'out', 'missed', 'queue' ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT 'out';
 
+-- 
+-- Since: master-20100408-6cf8831
+--
+
+--
+-- ast_queue_members für statische Agenten erweitern
+--
+ALTER TABLE `ast_queue_members` ADD column `static` boolean default '0' after `penalty`;
+
