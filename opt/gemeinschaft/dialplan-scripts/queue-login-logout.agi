@@ -56,6 +56,23 @@ $db = gs_db_master_connect();
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1) gs_agi_err( 'User not found' );
 
+
+# check permissions
+#
+
+include_once( GS_DIR .'inc/group-fns.php' );
+
+$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'queue_member' );
+
+if ( count ( $members ) <= 0 ) {
+	
+	gs_agi_set_variable(  'agent_login_status' , 'notallowed' );
+	die();
+}
+
+
+
 # test whether there is a agent logged in on this phone
 #
 $agent = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `agents` WHERE `user_id`='. $db->escape($user_id) );

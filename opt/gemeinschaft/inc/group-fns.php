@@ -37,7 +37,10 @@ function gs_group_types_get()
 
 function gs_group_permission_types_get()
 {
-	return array('monitor_peers','monitor_queues', 'forward_queues', 'sudo_user', 'call_stats', 'phonebook_user', 'display_module_gui', 'group_pickup', 'pickup');
+	return array('monitor_peers','monitor_queues', 'forward_queues', 'sudo_user', 'call_stats', 
+		'phonebook_user', 'display_module_gui', 'group_pickup', 'pickup', 'roaming', 'agent',
+		'queue_member', 'forward', 'clip_set', 'clir_set', 'callwaiting_set', 'ringtone_set',
+		'dnd_set' );
 }
 
 function gs_group_external_types_get()
@@ -208,7 +211,7 @@ function gs_group_members_groups_get($member_ids, $type, $subgroups = true)
 			$groups[] = $r['id'];		
 		}
 
-	if (($groups) && ($subgroups)) $groups = gs_group_includes_get($groups, false);
+	if (($groups) && ($subgroups)) $groups = gs_group_includes_get($groups, true);
 
 	return $groups;
 	

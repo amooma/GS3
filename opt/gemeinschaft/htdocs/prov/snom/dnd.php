@@ -34,6 +34,7 @@ require_once( '../../../inc/conf.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_dnd_toggle.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 function snomXmlEsc( $str )
 {
@@ -74,8 +75,19 @@ $type = trim( @$_REQUEST['t'] );
 
 $db = gs_db_slave_connect();
 
+$user = trim( @$_REQUEST['u'] );
+$user_id = getUserID( $user );
 
 
+## Check permissions
+#
+
+$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'dnd_set' );
+
+if ( count ( $members ) <= 0 )
+	exit(1);
+	
 $url_snom_dnd = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : (':'. GS_PROV_PORT)). GS_PROV_PATH .'snom/dnd.php';
 
 
@@ -84,10 +96,7 @@ $url_snom_dnd = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT==80 ? '' : ('
 if ($type == 1) {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @$_REQUEST['u'] );
-	$user_id = getUserID( $user );
 	echo $user_id;
-	//$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
 
 	$user_id_check = $db->executeGetOne( 'SELECT `user_id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
 	if ($user_id != $user_id_check)

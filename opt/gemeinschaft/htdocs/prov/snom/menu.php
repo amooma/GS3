@@ -119,13 +119,31 @@ foreach ($tmp as $arr) {
 $url_snom_provdir = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/';
 $url_snom_menu = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/menu.php';
 
+$user = trim( @$_REQUEST['u'] );
+$user_id = getUserID( $user );
+
+include_once( GS_DIR .'inc/group-fns.php' );
+
+$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
+$members_fwd = gs_group_permissions_get ( $user_groups, 'forward' );
+
+if ( count ( $members_fwd ) <= 0 )
+	$show_forward = false;
+else
+	$show_forward = true;
+
+$members_rt = gs_group_permissions_get ( $user_groups, 'ringtone_set' );
+
+if ( count ( $members_rt ) <= 0 )
+	$show_rt = false;
+else
+	$show_rt = true;
 
 
 #################################### INITIAL SCREEN {
 if (! $type) {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @$_REQUEST['u'] );
 	
 		
 	ob_start();
@@ -133,21 +151,24 @@ if (! $type) {
 	     '<SnomIPPhoneMenu>', "\n",
 	       '<Title>Konfigurationsmenue</Title>', "\n\n";
 	
-	echo '<MenuItem>', "\n",
-		'<Name>', snomXmlEsc('Rufumleitung'), '</Name>', "\n",
-		'<URL>',$url_snom_menu,'?m=',$mac, '&u=',$user, '&t=forward</URL>', "\n",
-		'</MenuItem>', "\n\n";
+	if( $show_forward )	
+		echo '<MenuItem>', "\n",
+			'<Name>', snomXmlEsc('Rufumleitung'), '</Name>', "\n",
+			'<URL>',$url_snom_menu,'?m=',$mac, '&u=',$user, '&t=forward</URL>', "\n",
+			'</MenuItem>', "\n\n";
 	echo '<MenuItem>', "\n",
 		'<Name>', snomXmlEsc('Dienstmerkmale'), '</Name>', "\n",
 		'<URL>',$url_snom_provdir,'features.php?m=',$mac, '&u=',$user,'</URL>', "\n",
 		'</MenuItem>', "\n\n";
-	echo '<MenuItem>', "\n",
-		'<Name>', snomXmlEsc('Klingeltoene'), '</Name>', "\n",
-		'<URL>',$url_snom_provdir,'rt.php?m=',$mac, '&u=',$user,'</URL>', "\n",
-		'</MenuItem>', "\n\n";
-		# in XML the & must normally be encoded as &amp; but not for
-		# the stupid Snom!
 	
+	if( $show_rt ) {
+		echo '<MenuItem>', "\n",
+			'<Name>', snomXmlEsc('Klingeltoene'), '</Name>', "\n",
+			'<URL>',$url_snom_provdir,'rt.php?m=',$mac, '&u=',$user,'</URL>', "\n",
+			'</MenuItem>', "\n\n";
+			# in XML the & must normally be encoded as &amp; but not for
+			# the stupid Snom!
+	}
 	defineBackKey();
 	echo '</SnomIPPhoneMenu>', "\n";
 	_ob_send();
@@ -179,11 +200,12 @@ function defineBackKey()
 
 #################################### FORWARD SCREEN {
 if ( $type == 'forward') {
+
+	if ( ! $show_forward )
+		_err( "forbidden");
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @$_REQUEST['u'] );
-	
-		
+			
 	
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",

@@ -48,6 +48,30 @@ include_once( GS_DIR .'inc/db_connect.php' );
 
 $db = gs_db_master_connect();
 
+
+# get user id
+#
+$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape( $user) .'\'' );
+if ($user_id < 1) {
+	gs_agi_set_variable(  'ret' , 'error' );
+	die();
+}
+
+
+include_once( GS_DIR .'inc/group-fns.php' );
+
+$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'agent' );
+
+if ( count ( $members ) <= 0 ) {
+	
+	gs_agi_set_variable(  'ret' , 'error' );
+	die();
+}
+
+
+
+
 $new_aid = (int)$db->executeGetOne( 'SELECT `id` FROM `agents` WHERE `number`=\''. $db->escape($new_anum) .'\'' );
 if ($new_aid < 1) {
 	# unknown user
@@ -72,7 +96,7 @@ if (trim($old_user) != '') {
 
 #we also need to loggoff all agents/users that are logged in on this phone
 # first we  have to see, if there is another agent logged in on this phone
-$old_local_agent = $db->executeGetOne( 'SELECT `agents`.`number` FROM `ast_sipfriends`, `agents` WHERE `agents`.`user_id` = `ast_sipfriends`.`_user_id` AND  `ast_sipfriends`.`name` =\''. $user . '\'' );
+$old_local_agent = $db->executeGetOne( 'SELECT `agents`.`number` FROM  `agents` WHERE `agents`.`user_id` =' . $user_id  );
 if (trim($old_local_agent) != '') {
 	 gs_agi_set_variable(  'old_local_agent' , $old_local_agent );
 	 gs_agi_set_variable(  'old_local_user' , '0' );

@@ -143,8 +143,8 @@ function gs_callforward_number_set( $user, $source, $type, $number  )
 		return new GsError( 'User must be alphanumeric.' );
 	if (! in_array( $source, array('internal','external'), true ))
 		return new GsError( 'Source must be internal|external.' );
-	if (! in_array( $type, array('std','var','vml'), true ))
-		return new GsError( 'Type must be std|var|vml.' );
+	if (! in_array( $type, array('std','var',), true ))
+		return new GsError( 'Type must be std|var.' );
 	$number = preg_replace( '/[^0-9vm*]/', '', $number );
 	
 	# connect to db
@@ -215,7 +215,6 @@ function gs_callforward_timeout_set( $user, $timeout=20 )
 			if ($case=='unavail') {
 				@ gs_callforward_set( $user_code, $source, $case, 'std', $arr['number_std'], $timeout );
 				@ gs_callforward_set( $user_code, $source, $case, 'var', $arr['number_var'], $timeout );
-				@ gs_callforward_set( $user_code, $source, $case, 'vml', $arr['number_vml'], $timeout );
 			}
 		}
 	}

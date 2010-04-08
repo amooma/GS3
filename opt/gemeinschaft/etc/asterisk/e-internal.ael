@@ -349,6 +349,13 @@ context to-internal-users {
 			Set(is_huntgroup=1);
  			&check-valid-extension(${EXTEN:4});
 			if ("${dial_to_node}" = "") {
+				
+				AGI(/opt/gemeinschaft/dialplan-scripts/check_pickup_permission.agi,${user_id},${EXTEN:4});
+				if ("${pickup}" != "true") {
+					Verbose(1,### ${user_name} is not allowed to pickup extension ${EXTEN:4});
+					Hangup();
+				}
+		
 				Verbose(1,### Extension ${EXTEN} is at node: SELF);
 				PickupChan(SIP/${pext});
 			}
@@ -705,7 +712,7 @@ context to-internal-users-self {
 
 			if ("${huntgroup_busy}" = "1") {
 				while ("${huntgroup_${huntgroup}_dial}" != "") {
-					if ("${DEVSTATE(SIP/${huntgroup_${huntgroup}_dial})}" = "INUSE") {
+					if ("${DEVICE_STATE(SIP/${huntgroup_${huntgroup}_dial})}" = "INUSE") {
 						Verbose(1,### Extension ${huntgroup_${huntgroup}_dial} in the huntgroup is busy);
 						Set(huntgroup=1);
 						while ("${huntgroup_${huntgroup}_dial}" != "") {

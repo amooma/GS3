@@ -127,7 +127,7 @@ $MODULES['forwards' ]=  array(
 		'vmconfig'     => array('title' => __('AB-Konfiguration'), 'id' => 6002),
 		'extnumbers'   => array('title' => __('externe Nummern'), 'id' => 6003),
 		'queues'       => array('title' => __('Warteschlangen'), 'perms' => 'admin', 'id' => 6004),
-		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse'), 'id' => 6005)
+		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse'), 'perms' => 'admin', 'id' => 6005)
 	)
 );
 
@@ -276,12 +276,13 @@ $MODULES['admin'    ]=  array(
 		'users'        => array('title' => __('Benutzer'), 'id' => 15002),
 		//'groups'       => array('title' => __('Benutzergruppen'), 'id' => 15003),
 		'groups'       => array('title' => __('Gruppen'), 'id' => 15004),
+		'agents'       => array('title' => __('Agenten'), 'id' => 15015),
 		'queues'       => array('title' => __('Warteschlangen'), 'id' => 15005),
 		'pgroups'      => array('title' => __('Rufannahmegrp.#pl'), 'id' => 15006),
-		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse'), 'id' => 15011),
+		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse'), 'id' => 15014),
 		'ivrs'         => array('title' => __('Sprachmen&uuml;'), 'id' => 15008),
 		'sysrecs'      => array('title' => __('Audiodateien'), 'id' => 15013),
-		'conferences'  => array('title' => __('Konferenzen'), 'id' => 15007),
+//		'conferences'  => array('title' => __('Konferenzen'), 'id' => 15007),
 		'calls'        => array('title' => __('CDRs'), 'id' => 15009),
 		'reload'       => array('title' => __('Reload'), 'id' => 15010)
 	)

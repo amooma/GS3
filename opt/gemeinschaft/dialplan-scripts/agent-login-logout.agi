@@ -54,6 +54,22 @@ $db = gs_db_master_connect();
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1) die();
 
+
+# check permissions
+#
+
+include_once( GS_DIR .'inc/group-fns.php' );
+
+$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'agent' );
+
+if ( count ( $members ) <= 0 ) {
+	
+	gs_agi_set_variable(  'agent_login_status' , 'notallowed' );
+	die();
+}
+
+
 # get user agent
 #
 

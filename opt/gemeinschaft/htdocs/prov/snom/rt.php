@@ -35,6 +35,7 @@ require_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ringtones_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ringtone_set.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -103,6 +104,15 @@ if (! in_array( $type, array('internal','external'), true )) {
 
 
 $db = gs_db_slave_connect();
+
+$user = trim( @$_REQUEST['u'] );
+$user_id = getUserID( $user );
+
+$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
+$members_rt = gs_group_permissions_get ( $user_groups, 'ringtone_set' );
+
+if ( count ( $members_rt ) <= 0 )
+	_err( 'Forbidden' );
 
 
 /*
@@ -175,8 +185,8 @@ function defineBackMenu()
 if($type != false && isset($_REQUEST['bc'])){
 
 	$bc = trim( @$_REQUEST['bc'] );
-	$user = trim( @ $_REQUEST['u'] );
-	$user_id = getUserID( $user );
+	//$user = trim( @ $_REQUEST['u'] );
+	//$user_id = getUserID( $user );
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`='. $db->escape($user_id),';'  );
 	$ok = gs_ringtone_set( $user_name, $type, $bc, true, null) ;
 	unset($_REQUEST['bc']);
@@ -194,8 +204,8 @@ if($type != false && isset($_REQUEST['bc'])){
 if ($type == 'internal' || $type == 'external') {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @ $_REQUEST['u'] );
-	$user_id = getUserID( $user );
+	//$user = trim( @ $_REQUEST['u'] );
+	//$user_id = getUserID( $user );
 	
 
 	ob_start();
@@ -276,9 +286,6 @@ if ($type == 'internal' || $type == 'external') {
 if (! $type) {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @$_REQUEST['u'] );
-	$user_id = getUserID( $user );
-	
 	
 	$user_id_check = $db->executeGetOne( 'SELECT `user_id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
 	if ($user_id != $user_id_check)

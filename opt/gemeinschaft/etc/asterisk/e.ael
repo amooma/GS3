@@ -233,6 +233,8 @@ macro cmm-logout() {
 	Answer();
 	Wait(0.5);
 	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id},${is_from_gateway},${CALLERID(num)});
+	if ("${ret}" = "error")
+		goto error;
 	//Playback(agent-loggedoff&vm-goodbye);
 	UserEvent(UserLogoffUI,user: ${user_name});
 	Playback(/opt/gemeinschaft/sounds/${gs_lang}/sie-sind-abgemeldet);
@@ -255,6 +257,14 @@ macro cmm-logout() {
 	}
 	
 	Hangup();
+	return;
+
+	error:
+		Playback(tt-somethingwrong);
+		Wait(0.5);
+		Hangup();
+		return;
+
 	return;
 }
 
@@ -1513,11 +1523,11 @@ context toggle-cfwd-hint {
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${user_name});
 		if ("${fw_std_active}" = "1") {
 			Set(CDR(amaflags)=OMIT);
-			TryExec(Set(DEVSTATE(Custom:${user_name}fwd)=BUSY));
+			TryExec(Set(DEVICE_STATE(Custom:${user_name}fwd)=BUSY));
 			Hangup();
 		} else {
 			Set(CDR(amaflags)=OMIT);
-			TryExec(Set(DEVSTATE(Custom:${user_name}fwd)=NOT_INUSE));
+			TryExec(Set(DEVICE_STATE(Custom:${user_name}fwd)=NOT_INUSE));
 			Hangup();
 		}
 	}

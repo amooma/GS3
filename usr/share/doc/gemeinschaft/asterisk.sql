@@ -6164,6 +6164,15 @@ CREATE TABLE `group_permissions` (
 LOCK TABLES `group_permissions` WRITE;
 /*!40000 ALTER TABLE `group_permissions` DISABLE KEYS */;
 INSERT INTO `group_permissions` VALUES ('call_stats',2,2);
+INSERT INTO `group_permissions` VALUES ('roaming',2,2);
+INSERT INTO `group_permissions` VALUES ('forward',2,2);
+INSERT INTO `group_permissions` VALUES ('clir_set',2,2);
+INSERT INTO `group_permissions` VALUES ('clip_set',2,2);
+INSERT INTO `group_permissions` VALUES ('callwaiting_set',2,2);
+INSERT INTO `group_permissions` VALUES ('queue_member',2,2);
+INSERT INTO `group_permissions` VALUES ('agent',2,2);
+INSERT INTO `group_permissions` VALUES ('ringtone_set',2,2);
+INSERT INTO `group_permissions` VALUES ('dnd_set',2,2);
 INSERT INTO `group_permissions` VALUES ('call_stats',2,4);
 INSERT INTO `group_permissions` VALUES ('forward_queues',2,4);
 INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
@@ -6644,6 +6653,7 @@ CREATE TABLE `queue_callforwards` (
   `number_std` varchar(50) character set ascii NOT NULL default '',
   `number_var` varchar(50) character set ascii NOT NULL default '',
   `number_vml` varchar(50) character set ascii NOT NULL default '',
+  `vm_rec_id` int(10) unsigned default NULL,
   `active` enum('no','std','var','vml','trl','par') character set ascii NOT NULL default 'no',
   PRIMARY KEY  (`queue_id`,`source`,`case`),
   CONSTRAINT `queue_callforwards_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)

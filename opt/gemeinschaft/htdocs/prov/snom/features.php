@@ -39,6 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_callerids_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_set.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -108,8 +109,54 @@ if (! in_array( $type, array('internal', 'external', 'callwaiting', 'cidext', 'c
 
 $db = gs_db_slave_connect();
 
+$user = trim( @$_REQUEST['u'] );
+$user_id = getUserID( $user );
 
+$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
+$members_clip = gs_group_permissions_get ( $user_groups, 'clip_set' );
 
+if ( count ( $members_clip ) <= 0 )
+	$show_clip = false;
+else
+	$show_clip = true;
+
+$members_clir = gs_group_permissions_get ( $user_groups, 'clir_set' );
+
+if ( count ( $members_clir ) <= 0 )
+	$show_clir = false;
+else
+	$show_clir = true;
+
+$members_callwaiting = gs_group_permissions_get ( $user_groups, 'callwaiting_set' );
+
+if ( count ( $members_callwaiting ) <= 0 )
+	$show_cw = false;
+else
+	$show_cw = true;
+
+$tmp = array();
+
+if ( $show_clir ) {
+
+	$tmp[15] = array( 'k' => 'internal' , 'v' => gs_get_conf('GS_CLIR_INTERNAL', "CLIR Intern") );
+	$tmp[25] = array( 'k' => 'external', 'v' => gs_get_conf('GS_CLIR_EXTERNAL', "CLIR Extern" ) );
+
+}
+
+if ( $show_cw ) {
+
+	$tmp[35] = array( 'k' => 'callwaiting','v' => gs_get_conf('GS_CALLWAITING', "Anklopfen" ) );
+
+}
+
+if ( $show_clip ) {
+	
+	$tmp[45] = array('k' => 'cidext','v' => gs_get_conf('GS_CALLERID', __("CID extern") ) );
+	$tmp[55] = array('k' => 'cidint', 'v' => gs_get_conf('GS_CALLERID', __("CID intern") ) );
+	
+}
+
+/*
 $tmp = array(
 	15=>array('k' => 'internal' ,
 	          'v' => gs_get_conf('GS_CLIR_INTERNAL', "CLIR Intern") ),
@@ -122,6 +169,7 @@ $tmp = array(
 	55=>array('k' => 'cidint',
 		'v' => gs_get_conf('GS_CALLERID', __("CID intern") ) )
 );
+*/
 
 kSort($tmp);
 foreach ($tmp as $arr) {
@@ -180,13 +228,13 @@ function defineBackKey()
 if($type != false && isset($_REQUEST['state'])){
 
 	$state = trim( @$_REQUEST['state'] );
-	$user = trim( @ $_REQUEST['u'] );
-	$user_id = getUserID( $user );
+	//$user = trim( @ $_REQUEST['u'] );
+	//$user_id = getUserID( $user );
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 
 
 
-	if($type == 'callwaiting'){
+	if($type == 'callwaiting' && $show_cw ){
 		$oldresult = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
 		if($state == 'yes' || $state == 'no'){
 			if($oldresult == 1 && $state == 'no'){
@@ -197,17 +245,20 @@ if($type != false && isset($_REQUEST['state'])){
 			}
 		}
 	}
-	else if($type == 'internal' || $type == 'external'){
+	else if( $show_clir && ( $type == 'internal' || $type == 'external') ){
 		if($state == 'no' || $state == 'yes'){
 			gs_clir_activate( $user_name, $type, $state );
 		}
 		
 	}
-	else if($type == 'cidint'){
+	else if($type == 'cidint' && $show_clip ){
 		gs_user_callerid_set($user_name, $state, 'internal');
 	}
-	else if($type == 'cidext'){
+	else if($type == 'cidext' && $show_clip ){
 		gs_user_callerid_set($user_name, $state, 'external');
+	}
+	else {
+		_err( 'Forbidden');
 	}
 	
 	
@@ -226,8 +277,8 @@ if($type != false && isset($_REQUEST['state'])){
 if (($type == 'internal' || $type == 'external' ||  $type == 'callwaiting') && $type != false) {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @ $_REQUEST['u'] );
-	$user_id = getUserID( $user );
+	//$user = trim( @ $_REQUEST['u'] );
+	//$user_id = getUserID( $user );
 	
 
 	ob_start();
@@ -244,11 +295,16 @@ if (($type == 'internal' || $type == 'external' ||  $type == 'callwaiting') && $
 	
 	$state = "aus";
 	if($type == 'callwaiting'){
+	
+		if ( ! $show_cw )
+			_err( "Forbidden" );
 		$result = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
 		if($result == 1)$state = "ein";
 		else($state == "aus");
 	}
 	else{
+		if ( ! $show_clir )
+			_err( "Forbidden" );
 		$result = $db->executeGetOne( 'SELECT `'. $type.'_restrict` FROM `clir` WHERE `user_id`='. $user_id );
 		if($result == "yes")$state = "ein";
                 else($state == "aus");
@@ -289,14 +345,17 @@ if (($type == 'internal' || $type == 'external' ||  $type == 'callwaiting') && $
 
 if ($type == 'cidint' || $type == 'cidext') {
 	
+	if ( ! $show_clip )
+		_err( "Forbidden" );
+	
 	if( $type == 'cidext')
 		$target = 'external';
 	else
 		$target = 'internal';
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @$_REQUEST['u'] );
-	$user_id = getUserID( $user );
+	//$user = trim( @$_REQUEST['u'] );
+	//$user_id = getUserID( $user );
 	
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 	

@@ -75,6 +75,21 @@ if ($user_id < 1 && $is_from_gateway) {
 	}
 }
 
+# check login as new user allow
+
+include_once( GS_DIR .'inc/group-fns.php' );
+$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'roaming' );
+
+
+if ( count ( $members ) <= 0 ) {
+	
+	gs_agi_set_variable(  'ret' , 'error' );
+	die();
+}
+
+
+
 $rs = $db->execute( 'SELECT `id`, `mac_addr`, `nobody_index` FROM `phones` WHERE `user_id`='. $user_id );
 while ($phone = $rs->fetchRow()) {
 	

@@ -38,6 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -99,13 +100,28 @@ if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	_err( 'Not enabled' );
 }
 
+$db = gs_db_slave_connect();
+
+$user = trim( @$_REQUEST['u'] );
+$user_id = getUserID( $user );
+
+
+## Check permissions
+#
+
+
+$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'forward' );
+
+if ( count ( $members ) <= 0 )
+	_err('Forbidden');
+
+
 $type = trim( @$_REQUEST['t'] );
 if (! in_array( $type, array('internal','external','std','var','timeout'), true )) {
 	$type = false;
 }
 
-
-$db = gs_db_slave_connect();
 
 $tmp = array(
 	15=>array('k' => 'internal' ,
@@ -188,8 +204,6 @@ if ( $type != false && isset($_REQUEST['value']) ) {
 
 
 	$value = trim( @$_REQUEST['value'] );
-	$user = trim( @ $_REQUEST['u'] );
-	$user_id = getUserID( $user );
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 
 	$callforwards = gs_callforward_get( $user_name );
@@ -222,14 +236,6 @@ if ( $type != false && isset($_REQUEST['value']) ) {
 		if (isset($cases[$key])) {
 		
 			
-			if ( $value == "vml" ) {
-				$target =  "vm" . $user; 
-			}
-			else if ( $value == "ano" ) {
-				$target =  "vm*" . $user;
-				$value = "vml";
-			}
-		
 			if($type == 'internal') {
 				$internal_val[$key] = $value;
 				if( $value == "vml" )
@@ -290,8 +296,6 @@ if ( $type != false && isset($_REQUEST['value']) ) {
 if ( ($type == 'internal' || $type == 'external') && !isset( $_REQUEST['key']) ) {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @ $_REQUEST['u'] );
-	$user_id = getUserID( $user );
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 	
 
@@ -341,12 +345,6 @@ if ( ($type == 'internal' || $type == 'external') && !isset( $_REQUEST['key']) )
 if ( $type == 'internal' || $type == 'external' && isset( $_REQUEST['key']) ) {
 
 
-	$user = trim( @ $_REQUEST['u'] );
-	$user_id = getUserID( $user );
-	# Test std-number exists
-	
-
-
 
 	$number = $db->executeGetOne( 'SELECT `number_std` FROM `callforwards` WHERE `user_id`=\''. $user_id  .'\' AND `case`=\'unavail\' AND `source`=\'internal\''); 
 	
@@ -375,8 +373,6 @@ if ( $type == 'internal' || $type == 'external' && isset( $_REQUEST['key']) ) {
 
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @ $_REQUEST['u'] );
-	$user_id = getUserID( $user );
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 	$key = trim( @ $_REQUEST['key'] );
 
@@ -438,8 +434,6 @@ if ( $type == 'internal' || $type == 'external' && isset( $_REQUEST['key']) ) {
 if ( $type == 'std' || $type == 'var' && !isset( $_REQUEST['value']) ) {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @ $_REQUEST['u'] );
-	$user_id = getUserID( $user );
 	
 	if( $type == 'varnumber')$Title = 'temp. Nummer';
 	else $Title = 'Standardnummer';
@@ -483,8 +477,6 @@ if ( $type == 'std' || $type == 'var' && !isset( $_REQUEST['value']) ) {
 if ( $type == 'timeout' && !isset( $_REQUEST['value']) ) {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @ $_REQUEST['u'] );
-	$user_id = getUserID( $user );
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 	
 	$callforwards = gs_callforward_get( $user_name );
@@ -530,8 +522,6 @@ if ( $type == 'timeout' && !isset( $_REQUEST['value']) ) {
 if (! $type) {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @$_REQUEST['u'] );
-	$user_id = getUserID( $user );
 	
 	
 	ob_start();

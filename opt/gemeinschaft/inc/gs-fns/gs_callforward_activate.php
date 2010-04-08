@@ -43,8 +43,8 @@ function gs_callforward_activate( $user, $source, $case, $active )
 		return new GsError( 'Source must be internal|external.' );
 	if (! in_array( $case, array('always','busy','unavail','offline'), true ))
 		return new GsError( 'Case must be always|busy|unavail|offline.' );
-	if (! in_array( $active, array('no','std','var','vml','trl','par'), true ))
-		return new GsError( 'Active must be no|std|var|vml|trl|par.' );
+	if (! in_array( $active, array('no','std','var','vml','ano','trl','par'), true ))
+		return new GsError( 'Active must be no|std|var|vml|ano|trl|par.' );
 	
 	# connect to db
 	#
@@ -106,7 +106,7 @@ LIMIT 1'
 	
 	# do not allow an empty number to be active
 	#
-	if ($active != 'no' && $active != 'trl' && $active != 'par') {
+	if ($active == 'std' || $active == 'var' ) {
 		$field = 'number_'. $active;
 		$number = $db->executeGetOne( 'SELECT `'. $field .'` FROM `callforwards` WHERE `user_id`='. $user_id .' AND `source`=\''. $db->escape($source) .'\' AND `case`=\''. $db->escape($case) .'\'' );
 		if (trim($number)=='') {

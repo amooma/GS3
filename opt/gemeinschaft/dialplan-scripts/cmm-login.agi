@@ -82,6 +82,8 @@ if ($old_uid < 1) {
 	gs_agi_set_variable( 'user_name', $caller_ext );
 }
 
+
+
 $new_uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($new_ext) .'\'' );
 if ($new_uid < 1) {
 	# unknown user
@@ -89,6 +91,20 @@ if ($new_uid < 1) {
 	gs_agi_set_variable( 'ret', 'unknown' );
 	exit();
 }
+
+# check login as new user allow
+
+include_once( GS_DIR .'inc/group-fns.php' );
+$user_groups  = gs_group_members_groups_get( array( $new_uid ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'roaming' );
+
+
+if (  count ( $members ) <= 0  ) {
+	
+	gs_agi_set_variable(  'ret' , 'error' );
+	die();
+}
+
 $pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `id`='. $new_uid );
 if (trim($pin)=='') {
 	# db error, unknown user

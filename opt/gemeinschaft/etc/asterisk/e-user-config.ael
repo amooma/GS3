@@ -56,27 +56,33 @@ context user-config {
 	
 	*31 => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
 		&user-config-clir(all,2);
 	}
 	*31* => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
 		&user-config-clir(all,0);
 	}
 
 	*32 => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
 		&user-config-clir(internal,1);
 	}
 	*32* => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
 		&user-config-clir(internal,0);
 	}
 	*33 => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
 		&user-config-clir(external,1);
 	}
 	*33* => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
 		&user-config-clir(external,0);
 	}
 	
@@ -87,10 +93,12 @@ context user-config {
 	
 	*92 => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,callwaiting_set);
 		&user-config-call-waiting(1);
 	}
 	*92* => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,callwaiting_set);
 		&user-config-call-waiting(0);
 	}
 	
@@ -101,6 +109,7 @@ context user-config {
 	
 	_*9[34][01]. => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		Set(number=${EXTEN:4});
 		if ("${EXTEN:2:1}" = "3") {
 			Set(type=std);
@@ -139,6 +148,7 @@ context user-config {
 	
 	_*95XX => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		Set(timeout=${EXTEN:3});
 		Verbose(1,### User ${user_name}: set Unavail Timeout to ${timeout});
 		&usercode-by-ext(${user_name});
@@ -156,6 +166,7 @@ context user-config {
 	
 	_*9*[01][0-3] => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,${EXTEN:3:1},${EXTEN:4:1},1);
 		Wait(0.5);
 		Playback(beep);
@@ -163,6 +174,7 @@ context user-config {
 	}
 	_*9*[01][0-3]* => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,${EXTEN:3:1},${EXTEN:4:1},0);
 		Wait(0.5);
 		Playback(beep);
@@ -170,6 +182,7 @@ context user-config {
 	}
 	_*9**[01][0-3] => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(var,${EXTEN:4:1},${EXTEN:5:1},1);
 		Wait(0.5);
 		Playback(beep);
@@ -177,6 +190,7 @@ context user-config {
 	}
 	_*9**[01][0-3]* => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(var,${EXTEN:4:1},${EXTEN:5:1},0);
 		Wait(0.5);
 		Playback(beep);
@@ -184,25 +198,25 @@ context user-config {
 	}
 	
 	*2 => {
-		//toggle callforwarding 
+		//toggle callforwarding
+		Set(CDR(amaflags)=OMIT); 
+		&check-group-permission(${user_id},user,forward);
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${user_name});
 		if ("${fw_std_active}" = "1") {
-			Set(CDR(amaflags)=OMIT);
 			&user-call-forward-activate-numeric(std,0,0,0);
 			&user-call-forward-activate-numeric(std,1,0,0);
-			TryExec(Set(DEVSTATE(Custom:${user_name}fwd)=NOT_INUSE));
+			TryExec(Set(DEVICE_STATE(Custom:${user_name}fwd)=NOT_INUSE));
 			UserEvent(UserDiversionUI,user: ${user_name});
 			Wait(0.5);
 			Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/deaktiviert);
 			Hangup();
 		} else {
-			Set(CDR(amaflags)=OMIT);
 			&user-call-forward-activate-numeric(std,0,0,1);
 			&user-call-forward-activate-numeric(std,1,0,1);
 			&queue-logout-all-silent();
 			UserEvent(UserDiversionUI,user: ${user_name});
 			Wait(0.5);
-			TryExec(Set(DEVSTATE(Custom:${user_name}fwd)=BUSY));
+			TryExec(Set(DEVICE_STATE(Custom:${user_name}fwd)=BUSY));
 			Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
 			Hangup();
 		}
@@ -210,6 +224,8 @@ context user-config {
 
 	*90 => {
 		//redirect internal std
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,0,0,1);
 		UserEvent(UserDiversionUI,user: ${user_name});
 		Wait(0.5);
@@ -217,6 +233,8 @@ context user-config {
 		Hangup();
 	}
 	*91 => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,1,0,1);
 		UserEvent(UserDiversionUI,user: ${user_name});
 		Wait(0.5);
@@ -226,6 +244,7 @@ context user-config {
 	dnd-on => {
 		// like *2 but silent
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,0,0,1);
 		&user-call-forward-activate-numeric(std,1,0,1);
 		UserEvent(UserDiversionUI,user: ${user_name});
@@ -234,9 +253,10 @@ context user-config {
 	
 	*2* => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
-		TryExec(Set(DEVSTATE(Custom:${user_name}fwd)=NOT_INUSE));
+		TryExec(Set(DEVICE_STATE(Custom:${user_name}fwd)=NOT_INUSE));
 		UserEvent(UserDiversionUI,user: ${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/deaktiviert);
@@ -244,6 +264,8 @@ context user-config {
 	}
 
 	*90* => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,0,0,0);
 		UserEvent(UserDiversionUI,user: ${user_name});
 		Wait(0.5);
@@ -251,6 +273,8 @@ context user-config {
 		Hangup();
 	}
 	*91* => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,1,0,0);
 		UserEvent(UserDiversionUI,user: ${user_name});
 		Wait(0.5);
@@ -260,6 +284,7 @@ context user-config {
 	dnd-off => {
 		// like *2* but silent
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
 		UserEvent(UserDiversionUI,user: ${user_name});
@@ -269,6 +294,7 @@ context user-config {
 
 	_*2[1-4] => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -276,37 +302,22 @@ context user-config {
 		switch (${EXTEN:2}) {
 			case 1:
 				Set(type=vml);
-				Set(number=vm${user_name});
 				break;
 			case 2:
-				Set(type=vml);
-				Set(number=vm*${user_name});
+				Set(type=ano);
 				break;
 			case 3:
 				Set(type=trl);
-				Set(number=);
 				break;
 			case 4:
 				Set(type=par);
-				Set(number=);
 				break;
 			default:
 				Hangup();
 		};
 
 		Answer();
-		if ( "${number}" != "" ) {
-			System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='${type}' --number='${number}');
-				if ( "${SYSTEMSTATUS}" != "SUCCESS" ) {
-					Playback(beeperr);
-					Hangup();	
-				}
-			System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='${type}' --number='${number}');
-				if ( "${SYSTEMSTATUS}" != "SUCCESS" ) {
-					Playback(beeperr);
-					Hangup();	
-				}
-		}
+
 		&user-call-forward-activate-numeric(${type},0,0,1);
 		&user-call-forward-activate-numeric(${type},1,0,1);
 		UserEvent(UserDiversionUI,user: ${user_name});
@@ -318,6 +329,7 @@ context user-config {
 	
 	_*2X. => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -339,6 +351,7 @@ context user-config {
 	}
 	_*2# => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -364,6 +377,7 @@ context user-config {
 
 
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -384,19 +398,15 @@ context user-config {
 		switch (${EXTEN:3}) {
 			case 1:
 				Set(type=vml);
-				Set(number=vm${user_name});
 				break;
 			case 2:
 				Set(type=vml);
-				Set(number=vm*${user_name});
 				break;
 			case 3:
 				Set(type=trl);
-				Set(number=);
 				break;
 			case 4:
 				Set(type=par);
-				Set(number=);
 				break;
 			default:
 				Hangup();
@@ -406,13 +416,6 @@ context user-config {
 		Answer();
 
 
-		if ( "${number}" != "" ) {
-			System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='${source}' --type='${type}' --number='${number}');
-				if ( "${SYSTEMSTATUS}" != "SUCCESS" ) {
-					Playback(beeperr);
-					Hangup();	
-				}
-		}
 		&user-call-forward-activate-numeric(${type},${srcode},0,1);
 		UserEvent(UserDiversionUI,user: ${user_name});
 		Wait(0.5);
@@ -421,6 +424,8 @@ context user-config {
 	}
 
 	_*90X. => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -440,6 +445,8 @@ context user-config {
 		Hangup();
 	}
 	_*91X. => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -463,6 +470,7 @@ context user-config {
 	
 	*30 => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -499,6 +507,7 @@ context user-config {
 	//-------------------------------------------------------------
 
 	*34 => {
+		&check-group-permission(${user_id},user,clip_set);
 		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},internal);
 		if( "${clipset}" == "OK" ) {
 			Wait(0.5);
@@ -513,6 +522,7 @@ context user-config {
 	}
 
 	_*34X. => {
+		&check-group-permission(${user_id},user,clip_set);
 		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},internal,${EXTEN:3});
 		if( "${clipset}" == "OK" ) {
 			Wait(0.5);
@@ -527,6 +537,7 @@ context user-config {
 	}
 
 	*35 => {
+		&check-group-permission(${user_id},user,clip_set);
 		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},external);
 		if( "${clipset}" == "OK" ) {
 			Wait(0.5);
@@ -541,6 +552,7 @@ context user-config {
 	}
 
 	_*35X. => {
+		&check-group-permission(${user_id},user,clip_set);
 		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},external,${EXTEN:3});
 		if( "${clipset}" == "OK" ) {
 			Wait(0.5);
@@ -629,7 +641,7 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 	if ("${user_code}" = "")
 		Hangup();
 	
-	if ("${mtype}" != "std" && "${mtype}" != "vml" && "${mtype}" != "trl" && "${mtype}" != "par" )
+	if ("${mtype}" != "std" && "${mtype}" != "vml" && "${mtype}" != "trl" && "${mtype}" != "par" && "${mtype}" != "ano" )
 		Set(mtype=var);
 	
 	Set(msource=internal);
@@ -658,5 +670,20 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 	}	
 
 	return;
+}
+
+macro check-group-permission ( userid, group, type ) {
+
+	AGI(/opt/gemeinschaft/dialplan-scripts/check_group_permission.agi,${userid},${group},${type});
+
+	if ( "${ret}" == "error" ) {
+		Playback(beeperr);
+		Wait(0.5);
+		Hangup();
+		return;
+	}
+
+	return;
+
 }
 

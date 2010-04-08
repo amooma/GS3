@@ -60,7 +60,7 @@ function gs_callforward_get( $user )
 		foreach ($cases as $case) {
 			$rs = $db->execute( 'SELECT `active`, `number_std`, `number_var`, `number_vml`, `timeout`, `vm_rec_id` FROM `callforwards` WHERE `user_id`='. $user_id .' AND `source`=\''. $source .'\' AND `case`=\''. $case .'\'' );
 			if ($r = $rs->fetchRow()) {
-				if (! in_array( $r['active'], array('no','std','var','vml','trl','par'), true ))
+				if (! in_array( $r['active'], array('no','std','var','vml','ano','trl','par'), true ))
 					$r['active'] = 'no';
 				$forwards[$source][$case] = $r;
 			} else {

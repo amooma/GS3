@@ -83,7 +83,7 @@ $rs = $db->execute( 'SELECT `source`, `case`, `timeout`, `number_std`, `number_v
 while ($r = $rs->fetchRow()) {
 	$number_std = trim( $r['number_std'] );
 	$number_var = trim( $r['number_var'] );
-	$number_vml = trim( $r['number_vml'] );
+	//$number_vml = trim( $r['number_vml'] );
 	
 	if ($r['active']==='trl') { //make the timerule-magic before anything else, to manipulate data...
 		$t = time();
@@ -93,14 +93,16 @@ while ($r = $rs->fetchRow()) {
 		$target = $db->executeGetOne($query );
 		if (substr($target,0,4) == 'vmln') {
 			//define number (get number_vml and say that only the message is played, this is be done with the vm*<exten>)
-			$tmpnumber= preg_replace('/[^0-9]/S', '', $number_vml );
+			//$tmpnumber= preg_replace('/[^0-9]/S', '', $number_vml );
+			$tmpnumber = $uname;
 			$number_vml = "vm*".$tmpnumber;
 			//define vm_rec_id (is lige vmln-<id>)
 			$r['vm_rec_id'] = preg_replace('/[^0-9]/S', '', $target );
-			$r['active'] = 'vml';
+			$r['active'] = 'ano';
 		} else if (substr($target,0,3) == 'vml') {
 			//define number (get number_vml and say that the message is played) 
-			$tmpnumber= preg_replace('/[^0-9]/S', '', $number_vml );
+			//$tmpnumber= preg_replace('/[^0-9]/S', '', $number_vml );
+			$tmpnumber = $uname;
 			$number_vml = "vm".$tmpnumber;
 			//define vm_rec_id (is lige vmln-<id>)
 			$r['vm_rec_id'] = preg_replace('/[^0-9]/S', '', $target );
@@ -120,9 +122,20 @@ while ($r = $rs->fetchRow()) {
 	elseif ($r['active']==='var' && $number_var != '') {
 		$number = $number_var;
 	}
-	elseif ($r['active']==='vml' && $number_vml != '') {
-		$number = $number_vml;
-		$audiofile = $db->executeGetOne( 'SELECT `vm_rec_file` FROM `vm_rec_messages` WHERE `id`='. (int)$r['vm_rec_id'] );
+	elseif ($r['active']==='vml' || $r['active']==='ano' ) {
+		if ( $r['active']==='vml' ) {
+			$number = "vm" . $uname;
+		}
+		else {
+			$number = "vm*" . $uname;
+		}
+
+		if ( isset ( $r['vm_rec_id'] ) && $r['vm_rec_id'] != '' ) { 
+			$audiofile = $db->executeGetOne( 'SELECT `vm_rec_file` FROM `vm_rec_messages` WHERE `id`='. (int)$r['vm_rec_id'] );
+		}
+		else {
+			$audiofile = null;
+		}
 	}
 	elseif ($r['active']==='par') {
 		$parcall = '1';
@@ -171,7 +184,8 @@ foreach ($forwards as $source => $arr) {
 		
 		gs_agi_set_variable( 'fw_' . $source . '_' . $case , $fw['number'] );
 		
-		gs_agi_set_variable( '__fw_file_' . $source . '_' . $case , '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
+		if ( ! is_null ( $fw['file'] ) && $fw['file'] != '' )
+			gs_agi_set_variable( '__fw_file_' . $source . '_' . $case , '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
 		
 		if (is_array($fw['number'])) {  # this is an array if we are forwarding to parallel-call
 			$cnt=0;

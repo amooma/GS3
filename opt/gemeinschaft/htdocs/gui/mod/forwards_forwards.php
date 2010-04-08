@@ -38,6 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_vm_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 require_once( GS_DIR .'inc/remote-exec.php' );
@@ -135,6 +136,18 @@ function InitHinttoggleCall() {  //FIXME
 }
 
 
+$user_groups  = gs_group_members_groups_get( array( $_SESSION['real_user']['info']['id'] ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'forward' );
+$members_adm = gs_group_permissions_get ( $user_groups , 'sudo_user' );
+
+if ( count ( $members_adm ) > 0 || count ( $members ) > 0 ) 
+	$disabled = '';
+else
+	$disabled = ' disabled';
+
+
+
+
 
 $sources = array(
 	'internal' => __('intern'),
@@ -152,7 +165,8 @@ $actives = array(
 	'no'  => '-',
 	'std' => __('Std.'),
 	'var' => __('Tmp.'),
-	'vml' => __('AB'  )
+	'vml' => __('AB'  ),
+	'ano' => __('Ansage')
 );
 
 $vm_rec_num_idx_table=array();
@@ -192,10 +206,10 @@ $show_email_notification = ! @$_SESSION['sudo_user']['info']['host_is_foreign'];
 
 $warnings = array();
 
-if (@$_REQUEST['action']==='save') {
+if (@$_REQUEST['action']==='save' && $disabled == '' ) {
 	
-	$num_std = preg_replace('/[^0-9vm]/', '', @$_REQUEST['num-std']);
-	$num_var = preg_replace('/[^0-9vm]/', '', @$_REQUEST['num-var']);
+	$num_std = preg_replace('/[^0-9vm*]/', '', @$_REQUEST['num-std']);
+	$num_var = preg_replace('/[^0-9vm*]/', '', @$_REQUEST['num-var']);
 	//$num_vml = 'vm'. $_SESSION['sudo_user']['info']['ext'];
 	$timeout = abs((int)@$_REQUEST['timeout']);
 	if ($timeout < 1) $timeout = 1;
@@ -212,6 +226,7 @@ if (@$_REQUEST['action']==='save') {
 			if (isGsError($ret))
 				$warnings['var'] = __('Fehler beim Setzen der Tempor&auml;ren Umleitungsnummer') .' ('. $ret->getMsg() .')';
 		
+		/*
 			$vmail_rec_num = 0;
 			//Voicemail or just Announce-File
 			if (substr(@$_REQUEST[$src.'-'.$case],0,5) === 'vmln-') {
@@ -236,6 +251,7 @@ if (@$_REQUEST['action']==='save') {
 				$src, $case, 'vml', $num_vml, $timeout, $vmail_rec_num );
 			if (isGsError($ret))
 				$warnings['vml'] = __('Fehler beim Setzen der AB-Nummer') .' ('. $ret->getMsg() .')';
+		*/
 			$ret = gs_callforward_activate( $_SESSION['sudo_user']['name'],
 				$src, $case, @$_REQUEST[$src.'-'.$case] );
 			if (isGsError($ret))
@@ -408,9 +424,9 @@ try {
 <tr class="even">
 	<td style="width:157px;"><?php echo __('Standardnummer'); ?></td>
 	<td style="width:392px;">
-		<input type="text" name="num-std" id="ipt-num-std" value="<?php echo htmlEnt($number_std); ?>" size="25" style="width:200px;" maxlength="25" />
+		<input type="text" name="num-std" id="ipt-num-std"<?php echo $disabled; ?> value="<?php echo htmlEnt($number_std); ?>" size="25" style="width:200px;" maxlength="25" />
 		<div id="ext-num-select-std" style="display:none;">
-		&larr;<select name="_ignore-1" id="sel-num-std" onchange="gs_num_sel(this);">
+		&larr;<select name="_ignore-1" id="sel-num-std" onchange="gs_num_sel(this);"<?php echo $disabled; ?>>
 <?php
 	if (! isGsError($e_numbers) && is_array($e_numbers)) {
 		echo '<option value="">', __('einf&uuml;gen &hellip;') ,'</option>' ,"\n";
@@ -428,9 +444,9 @@ try {
 <tr class="even">
 	<td><?php echo __('Tempor&auml;re Nummer'); ?></td>
 	<td>
-		<input type="text" name="num-var" id="ipt-num-var" value="<?php echo htmlEnt($number_var); ?>" size="25" style="width:200px;" maxlength="25" />
+		<input type="text" name="num-var" id="ipt-num-var"<?php echo $disabled; ?> value="<?php echo htmlEnt($number_var); ?>" size="25" style="width:200px;" maxlength="25" />
 		<div id="ext-num-select-var" style="display:none;">
-		&larr;<select name="_ignore-2" id="sel-num-var" onchange="gs_num_sel(this);">
+		&larr;<select name="_ignore-2" id="sel-num-var" onchange="gs_num_sel(this);"<?php echo $disabled; ?>>
 <?php
 	if (! isGsError($e_numbers) && is_array($e_numbers)) {
 		echo '<option value="">', __('einf&uuml;gen &hellip;') ,'</option>' ,"\n";
@@ -483,8 +499,9 @@ foreach ($sources as $src => $srctitle) {
 	
 	foreach ($cases as $case => $ctitle) {
 		echo '<td>';
-		echo '<select name="', $src, '-', $case, '" />', "\n";
+		echo '<select name="', $src, '-', $case, '" ', $disabled  ,'/>', "\n";
 		foreach ($actives as $active => $atitle) {
+			/*
 			if ($active === 'vml') {
 				echo '<option value="', $active, '"';
 				if ($callforwards[$src][$case]['active'] === $active
@@ -519,11 +536,12 @@ foreach ($sources as $src => $srctitle) {
 				echo '>', $atitle, '</option>', "\n";
 			}
 			else {
+			*/
 				echo '<option value="', $active, '"';
 				if ($callforwards[$src][$case]['active'] === $active)
 					echo ' selected="selected"';
 				echo '>', $atitle, '</option>', "\n";
-			}
+			//}
 		}
 		echo '</select>';
 		echo '</td>', "\n";
@@ -549,7 +567,7 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 	<td colspan="3">&nbsp;</td>
 	<td>
 		<?php echo __('nach'); ?>
-		<input type="text" name="timeout" value="<?php echo $timeout; ?>" size="3" maxlength="3" class="r" />&nbsp;s
+		<input type="text" name="timeout" value="<?php echo $timeout; ?>" size="3" maxlength="3" class="r" <?php echo $disabled; ?>/>&nbsp;s
 	</td>
 	<td colspan="1">&nbsp;</td>
 <?php /* <td colspan="1">&nbsp;</td> */ ?>
@@ -583,8 +601,8 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 	<td><?php echo __('Benachrichtigung'); ?></td>
 	<td>
 <?php
-	$disabled = ($email_address == '');
-	if ($disabled) $email_notify = false;
+	$dis = ($email_address == '');
+	if ($dis) $email_notify = false;
 /*	
 	echo '<input type="radio" name="email_notify" value="on" id="ipt-email_notify-on"';
 	if ($email_notify) echo ' checked="checked"';
@@ -599,7 +617,7 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 	echo '<label for="ipt-email_notify-off">', __('aus') ,'</label>' ,"\n";
 */
 	echo '<select name="email_notify" id="ipt-email_notify-on" ';
-	if ($disabled) echo ' disabled="disabled"';
+	if ($dis || $disabled !='' ) echo ' disabled="disabled"';
 	echo '>', "\n";
 	
 		echo '<option value="off"';
@@ -633,10 +651,15 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 <tbody>
 <tr>
 	<td style="width:562px;" class="transp r">
-		<button type="submit">
-			<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
-			<?php echo __('Speichern'); ?>
-		</button>
+		<?php
+		
+		if ( $disabled == '' ) {
+			echo '<button type="submit">', "\n";
+				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/filesave.png" />', "\n";
+				echo __('Speichern'), "\n";
+			echo '</button>', "\n";
+		}
+		?>
 	</td>
 </tr>
 </tbody>
