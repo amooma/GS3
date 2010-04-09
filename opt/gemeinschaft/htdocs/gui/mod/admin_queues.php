@@ -519,7 +519,7 @@ WHERE
 		echo gs_form_hidden($SECTION, $MODULE), "\n";
 		echo '<input type="hidden" name="action" value="addstatic" />', "\n";
 		echo '<input type="hidden" name="qid" value="', $queue_id , '" />', "\n";
-		$host_id = (int)$DB->execute('SELECT `_host_id` from `ast_queues` WHERE `_id`='.$queue_id);
+		$host_id = (int)$DB->executeGetOne('SELECT `_host_id` from `ast_queues` WHERE `_id`='.$queue_id);
 		$rs = $DB->execute('SELECT `user`, `name`, `id`, `firstname`, `lastname` from users, ast_sipfriends_gs WHERE `nobody_index` IS NULL AND `id`=`_user_id` AND `host_id`='.$host_id);
 		echo '<select name="aid" size="10">', "\n";
 		while ($user_map = $rs->fetchRow()) {
