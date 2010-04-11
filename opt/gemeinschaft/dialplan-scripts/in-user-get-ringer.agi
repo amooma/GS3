@@ -193,6 +193,22 @@ elseif (strToLower(subStr($user['phone_type'],0,11)) === 'grandstream') {
 	}
 	
 }
+elseif (strToLower(subStr($user['phone_type'],0,6)) === 'tiptel') {
+	
+	$ringtones = _get_ringers( $user['id'] );
+	
+	if (@$ringtones[$source]['file']) {
+		gs_agi_set_variable( 'ringer', ('<'. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'ringtones/'. $ringtones[$source]['file'] .'-tiptel.wav>') );
+	} elseif (array_key_exists('bellcore', $ringtones[$source])) {
+		if (@$ringtones[$source]['bellcore'] == 1) exit();
+		if (@$ringtones[$source]['bellcore'] != 0) {
+			gs_agi_set_variable( 'ringer', ('ringtone-'. $ringtones[$source]['bellcore']) );
+		} else {
+			gs_agi_set_variable( 'ringer', '' );
+		}
+	}
+	
+}
 else {
 	
 	gs_agi_set_variable( 'ringer', '' );

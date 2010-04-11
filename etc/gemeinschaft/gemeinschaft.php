@@ -274,6 +274,7 @@ $PROV_ALLOW_NET             = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.25
 //$PROV_MODELS_ENABLED_SIEMENS     = '*';  # or 'os20,os40,os60,os80'
 //$PROV_MODELS_ENABLED_AASTRA      = '*';  # or '51i,53i,55i,57i'
 //$PROV_MODELS_ENABLED_GRANDSTREAM = '*';  # or 'bt110,gxp2000,gxp2020', ...
+//$PROV_MODELS_ENABLED_TIPTEL      = '*';  # or 'ip280,ip284,ip286'
 
 
 
@@ -410,6 +411,53 @@ $GRANDSTREAM_PROV_FW_UPDATE = false;  # allow firmware updates?
 //$GRANDSTREAM_PROV_KEY_BLACKLIST = '';
   # do not show these softkey functions in GUI,
   # comma separated list, default: ''
+
+
+//-----------------------[ Tiptel ]-----------------------//
+
+$TIPTEL_PROV_ENABLED   = false;  # do provisioning for Tiptel?
+
+$TIPTEL_PROV_HTTP_PASS = 'admin';  # e.g. "gEheiM23y89sdo23", default: 'admin'
+  # to password protect the phone's web gui.
+  # changing these values will likely cause automatic rebooting to fail
+
+//$TIPTEL_PROV_NTP       = @$PROV_HOST;
+//$TIPTEL_PROV_NTP       = '192.168.1.130';
+  # NTP Server. the stupid Tiptel needs it
+
+  # Set $LOG_LEVEL to "NOTICE" or even "DEBUG" and
+  # tail -f /var/log/gemeinschaft/gs.log
+  # Test the update mechanism with 1 or 2 phones. This is especially
+  # important with PoE (Power over Ethernet) switches.
+$TIPTEL_PROV_FW_UPDATE = false;  # allow firmware updates?
+
+//$TIPTEL_PROV_FW_DEFAULT_IP280 = '9.41.13.9';
+//$TIPTEL_PROV_FW_DEFAULT_IP284 = '6.41.13.7';
+//$TIPTEL_PROV_FW_DEFAULT_IP286 = '2.41.13.12';
+
+//$TIPTEL_PROV_KEY_BLACKLIST = '';
+  # do not show these softkey functions in GUI,
+  # comma separated list (e.g. 'f5,f12,f17'), default: ''
+  # 'f13' SpeedDial
+  # 'f16' BLF
+  # 'f1'  Conference
+  # 'f2'  Forward
+  # 'f3'  Transfer
+  # 'f4'  Hold
+  # 'f5'  DND
+  # 'f6'  Redial
+  # 'f7'  Call Return
+  # 'f8'  SMS
+  # 'f9'  Call Pickup
+  # 'f10' Call Park
+  # 'f11' Custom
+  # 'f12' Voicemail
+  # 'f14' Intercom
+  # 'f15' Line
+  # 'f17' URL
+  # 'f18' Group Listening
+  # 'f19' Public Hold
+  # 'f20' Private Hold
 
 
 
