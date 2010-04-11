@@ -154,6 +154,10 @@ if ($action === 'save') {
 	if ($proxy == '') $proxy = null;
 	elseif ($proxy === $host) $proxy = null;
 	
+	# For allowed characters in the username see
+	# https://bugs.launchpad.net/bugs/485413
+	# http://tools.ietf.org/html/rfc3261#section-25.1
+	# http://tools.ietf.org/html/rfc2234#section-6.1
 	$query =
 'UPDATE `gates` SET
 	`grp_id` = '. ((int)@$_REQUEST['gw-grp_id'] > 0 ? (int)@$_REQUEST['gw-grp_id'] : 'NULL') .',
@@ -163,7 +167,7 @@ if ($action === 'save') {
 	`dialstr` = \''. $DB->escape(trim(@$_REQUEST['gw-dialstr'])) .'\',
 	`host` = \''. $DB->escape($host) .'\',
 	`proxy` = '. ($proxy == null ? 'NULL' : ('\''. $DB->escape($proxy) .'\'') ) .',
-	`user` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.@]/', '', @$_REQUEST['gw-user'])) .'\',
+	`user` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\\-_.!*\\/&=+$,;?%~\'()@]/', '', @$_REQUEST['gw-user'])) .'\',
 	`pwd` = \''. $DB->escape(preg_replace('/[^a-zA-Z0-9\-_.#*]/', '', @$_REQUEST['gw-pwd'])) .'\',
 	`register` = '. (@$_REQUEST['gw-register'] ? 1 : 0) .'
 WHERE `id`='. (int)$gwid
