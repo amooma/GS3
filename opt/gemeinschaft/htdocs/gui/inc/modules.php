@@ -325,6 +325,7 @@ $MODULES['routing'  ]=  array(
 	'sub' => array(
 		'gwgrps'       => array('title' => __('Gateway-Gruppen'), 'id' => 17001),
 		'gws-sip'      => array('title' => __('SIP-Gateways'), 'id' => 17002),
+		'gws-iax'      => array('title' => __('IAX-Gateways'), 'id' => 17009),
 		'gws-isdn'     => array('title' => __('ISDN-Gateways'), 'id' => 17003)
 	)
 );

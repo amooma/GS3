@@ -50,6 +50,7 @@ echo '</h2>', "\n";
 
 $gw_types = array(
 	'sip'     => 'SIP',
+	'iax'     => 'IAX',
 	'misdn'   => 'ISDN (mISDN)',
 	'zap'     => 'ISDN (Zaptel)',
 	'woomera' => 'ISDN (Woomera)',
