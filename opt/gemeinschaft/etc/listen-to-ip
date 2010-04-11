@@ -4,4 +4,4 @@
 # (/opt/gemeinschaft/sbin/start-asterisk)
 # IF YOU CHANGE THESE ADDRESSES!
 
-192.168.1.130
+0.0.0.0
