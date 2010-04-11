@@ -442,7 +442,7 @@ WHERE
 		echo '>', __('alle anklingeln') ,'</option>', "\n";
 		echo '</select>';
 		echo '</td>';
-		echo '<td class="transp xs gray"><code>announce_holdtime</code></td>',"\n";
+		echo '<td class="transp xs gray"><code>strategy</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
