@@ -248,6 +248,7 @@ _gscnf( 'PROV_MODELS_ENABLED_SNOM'        , '*'          );  # / '360,370'
 _gscnf( 'PROV_MODELS_ENABLED_SIEMENS'     , '*'          );  # / 'os20,os40,os60,os80'
 _gscnf( 'PROV_MODELS_ENABLED_AASTRA'      , '*'          );  # / '51i,53i,55i,57i'
 _gscnf( 'PROV_MODELS_ENABLED_GRANDSTREAM' , '*'          );  # / 'gxp2000,gxp2020'...
+_gscnf( 'PROV_MODELS_ENABLED_TIPTEL'      , '*'          );  # / 'ip280,ip284,ip286'
 
 _gscnf( 'SNOM_PROV_ENABLED'         , false              );
 _gscnf( 'SNOM_PROV_HTTP_USER'       , ''                 );
@@ -314,6 +315,15 @@ _gscnf( 'ELMEG_PROV_ENABLED'        , false              );
 _gscnf( 'ELMEG_PROV_HTTP_USER'      , ''                 );
 _gscnf( 'ELMEG_PROV_HTTP_PASS'      , ''                 );
 _gscnf( 'ELMEG_PROV_FW_UPDATE'      , false              );
+
+_gscnf( 'TIPTEL_PROV_ENABLED'       , false              );
+_gscnf( 'TIPTEL_PROV_HTTP_PASS'     , ''                 );
+_gscnf( 'TIPTEL_PROV_NTP'           , gs_get_conf('GS_PROV_HOST','') );
+_gscnf( 'TIPTEL_PROV_FW_UPDATE'     , false              );
+_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP280', null             );
+_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP284', null             );
+_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP286', null             );
+_gscnf( 'TIPTEL_PROV_KEY_BLACKLIST' , ''                 );
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
 _gscnf( 'CANONIZE_INTL_PREFIX'      , '00'               );
