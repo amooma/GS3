@@ -432,6 +432,48 @@ context to-internal-users {
 	
 	
 	//----------------------------------------------------------
+	// Intercom
+	//----------------------------------------------------------
+	
+	_*85*. => {
+		Set(iext=${EXTEN:4});
+		Verbose(1,### Intercom call to ${iext});
+		&pass-connid();
+
+		if ("${is_from_gateway}" = "1") {
+			Verbose(1,### No intercom from gateway);
+			Hangup();
+		}
+		if ("${user_id}" = "") {
+			Verbose(1,### No intercom from non-internal user);
+			Hangup();
+		}
+		// is it to one of *our* extensions?
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${iext});
+		Verbose(1,### Extension ${iext} is of type ${exttype});
+		if ("${exttype}" != "user") {
+		Verbose(1,### Extension ${iext} is not a user);
+			Hangup();
+		}
+		if ("${dial_to_node}" != "") {
+			Verbose(1,### Extension ${iext} is not on this node);
+			Hangup();
+		}
+		
+		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${iext},intercom);
+		if ("${permission}" != "true") {
+			Verbose(1,### ${user_name} have no intercom permission to ${iext});
+			Hangup();
+		}
+		
+		//Set(CALLERID(name)=ICOM ${CALLERID(name)});		
+		SIPAddHeader(Call-Info: \;answer-after=0);
+		Dial(SIP/${iext},30);
+		&hangup-proper-status();
+	}	
+
+	
+	//----------------------------------------------------------
 	// Boss/secretary function (override call forwards)
 	//----------------------------------------------------------
 	

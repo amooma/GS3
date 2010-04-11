@@ -1,0 +1,100 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Sebastian Ertz <gemeinschaft@swastel.eisfair.net>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
+require_once( GS_DIR .'inc/group-fns.php' );
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+error_reporting(0);
+
+$from_id = trim(@$argv[1]);
+$to_ext  = trim(@$argv[2]);
+$perm    = trim(@$argv[3]);
+
+if (! in_array($perm, gs_group_permission_types_get(), true) ) {
+	@gs_agi_verbose( '### Wrong permission argument' );
+	exit(1);
+}
+
+if (! $to_ext || ! $from_id) {
+	gs_agi_set_variable( 'permission', 'false' );
+	exit();
+}
+if (! preg_match('/^\d+$/', $to_ext)) {  // is not just digits
+	gs_agi_set_variable( 'permission', 'false' );
+	exit();
+}
+if (! preg_match('/^\d+$/', $from_id)) {  // is not just digits
+	gs_agi_set_variable( 'permission', 'false' );
+	exit();
+}
+
+include_once( GS_DIR .'inc/db_connect.php' );
+
+$db = gs_db_slave_connect();
+
+# is it a user, queue?
+$num_user  = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($to_ext) .'\'' );
+$num_queue = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queues` WHERE `name`=\''. $db->escape($to_ext) .'\'' );
+
+if ($num_user > 0) {  # is it a user
+	$type = 'user';
+	$to_id = $db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($to_ext) .'\'' );
+	if (! $to_id || $to_id <= 0) {
+		gs_agi_set_variable( 'permission', 'false' );
+		exit();
+	}
+} else
+if ($num_queue > 0 ) { # is it a queue
+	$type = 'queue';
+	$to_id = $db->executeGetOne( 'SELECT `_id` FROM `ast_queues` WHERE `name`=\''. $db->escape($to_ext) .'\'' );
+	if (! $to_id || $to_id <= 0) {
+		gs_agi_set_variable( 'permission', 'false' );
+		exit();
+	}
+} else {
+	gs_agi_set_variable( 'permission', 'false' );
+	exit();
+}
+
+# check permission $perm for $from_id to $to_id
+#
+$user_groups       = gs_group_members_groups_get(array($from_id), 'user');
+$permission_groups = gs_group_permissions_get($user_groups, $perm, $type);
+$group_members     = gs_group_members_get($permission_groups);
+
+if ( in_array( $to_id, $group_members ) ) {
+	gs_agi_set_variable( 'permission', 'true' );
+} else {
+	gs_agi_set_variable( 'permission', 'false' );
+}
+
+?>

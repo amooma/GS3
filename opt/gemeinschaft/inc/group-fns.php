@@ -63,7 +63,9 @@ function gs_group_permission_types_get()
 		'dnd_set',
 		'forward_vmconfig',
 		'wakeup_call',
-		'room_state' );
+		'room_state',
+		'intercom'
+	);
 }
 
 function gs_group_external_types_get()
