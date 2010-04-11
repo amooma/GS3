@@ -51,7 +51,8 @@ function gs_group_permission_types_get()
 		'phonebook_user',
 		'display_module_gui',
 		'group_pickup',
-		'pickup'
+		'pickup',
+		'secretary'
 	);
 }
 

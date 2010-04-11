@@ -423,8 +423,11 @@ context to-internal-users {
 			Hangup();
 		}
 		
-		// do some checking if user is a secretary of boss
-		// ...
+		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${boss},secretary);
+		if ("${permission}" != "true") {
+			Verbose(1,### ${user_name} is not secretary of ${boss});
+			Hangup();
+		}
 		
 		jump ***-${boss}@to-internal-users-self;
 	}
