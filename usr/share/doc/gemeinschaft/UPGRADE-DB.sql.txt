@@ -1070,3 +1070,14 @@ ALTER TABLE `dial_log` CHANGE `type` `type` ENUM( 'in', 'out', 'missed', 'queue'
 --
 ALTER TABLE `ast_queue_members` ADD column `static` boolean default '0' after `penalty`;
 
+
+--
+-- Since: ?
+--
+
+--
+-- "PCI-Karten" und "ISDN-Ports" aus GUI entfernt. 
+--
+DELETE FROM `group_members` WHERE `group` = (SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1) AND `member` = 18009;
+DELETE FROM `group_members` WHERE `group` = (SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1) AND `member` = 18010;
+DELETE FROM `group_members` WHERE `group` = (SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1) AND `member` = 18011;
