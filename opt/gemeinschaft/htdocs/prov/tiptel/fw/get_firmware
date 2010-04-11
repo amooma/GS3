@@ -1,0 +1,73 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 1 $
+* 
+* Copyright 2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Sebastian Ertz <gemeinschaft@swastel.eisfair.net>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+
+function _tiptel_normalize_version( $fwvers )
+{
+	$tmp = explode('.', $fwvers);
+	$v0  = str_pad((int)@$tmp[0], 2, '0', STR_PAD_LEFT);
+	$v1  = str_pad((int)@$tmp[1], 2, '0', STR_PAD_LEFT);
+	$v2  = str_pad((int)@$tmp[2], 2, '0', STR_PAD_LEFT);
+	$v3  = str_pad((int)@$tmp[3], 2, '0', STR_PAD_LEFT);
+	return $v0.'.'.$v1.'.'.$v2.'.'.$v3;
+}
+
+$urls = array('http://update.tiptel.nl/tiptel/','http://update.tiptel.nl/tiptel/beta/');
+$modelscfg = array(
+	'ip280' => 'y000000000007.cfg',
+	'ip284' => 'y000000000004.cfg',
+	'ip286' => 'y000000000000.cfg'
+);
+
+foreach ($urls as $url ) {
+	foreach ($modelscfg as $model => $cfg) {
+		$err=0; $out=array();
+		exec( 'wget -q -O - '.$url.$cfg, $out, $err );
+		foreach ($out as $line) {
+			if (preg_match('/firmware_name/',$line) ) {
+				$fw_vers = (preg_match('/(\d+\.\d+\.\d+\.\d+)/', @$line, $m) ? $m[1] : '0.0.0.0');
+				$fw_vers_nrml = _tiptel_normalize_version( $fw_vers );
+				if (! file_exists($fw_vers_nrml.'.rom') ) {
+					echo 'Fetching firmware '. $fw_vers_nrml .' for '. $model .' ... ';
+					$err=0; $out=array();
+					exec( 'wget -q -O '.$fw_vers_nrml.'.rom '.$url.$fw_vers.'.rom', $out, $err );
+					if ( $err === 0 ) {
+						echo 'Done' ,"\n";
+					} else {
+						echo 'Failed' ,"\n";
+					}
+				} else {
+					echo 'Firmware File '. $fw_vers_nrml .'.rom exits' ,"\n";
+				}
+			}
+		}
+	}
+}
+
+?>

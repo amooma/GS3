@@ -1,0 +1,15 @@
+# Gemeinschaft
+# $Revision: 1 $
+
+# Provisioning for Tiptel *requires* mod_rewrite in order to work!
+
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	
+	# The phone asks for
+	# <MAC-addr>.cfg
+	
+	# Rewrite requests for <MAC-addr>.txt
+	RewriteRule ^(001565[0-9a-f]*).cfg$ settings.php?mac=$1 [L]
+
+</IfModule>

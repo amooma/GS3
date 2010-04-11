@@ -783,7 +783,7 @@ if ( in_array($phone_model, array('bt200','bt201','gxp280','gxp1200','gxp2000','
 	psetting('P265', '1');		# Force Invite ( 0 = no, 1 = yes )
 	psetting('P272', '1');		# Enable 100rel ( 0 = no, 1 = yes )
 	psetting('P129', '0');		# Anonymous Call Rejection ( 0 = no, 1 = yes )
-	psetting('P298', '0');		# Allow Auto Answer by Call-Info ( 0 = no, 1 = yes )
+	psetting('P298', '1');		# Allow Auto Answer by Call-Info ( 0 = no, 1 = yes )
 	psetting('P299', '1');		# Turn off speaker on remote disconnect ( 0 = no, 1 = yes )
 	psetting('P258', '0');		# Check SIP User ID for incoming INVITE ( 0 = no, 1 = yes )
 	psetting('P135', '0');		# Refer-To Use Target Contact ( 0 = no, 1 = yes )

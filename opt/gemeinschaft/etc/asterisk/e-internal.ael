@@ -318,7 +318,13 @@ context to-internal-users {
 		Set(pext=${EXTEN:4});
 		if ("${pext}" != "") {
 			Verbose(1,### User ${user_name} tries to pickup ext. ${pext});
-			//FIXME - add pickup group check
+
+			AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${pext},pickup);
+			if ("${permission}" != "true") {
+				Verbose(1,### ${user_name} have no pickup permission to ${pext});
+				Hangup();
+			}
+		
 			Pickup(${pext}@to-internal-users-self);
 			//FIXME - does not work across nodes
 		}
@@ -390,6 +396,48 @@ context to-internal-users {
 	
 	
 	//----------------------------------------------------------
+	// Intercom
+	//----------------------------------------------------------
+	
+	_*85*. => {
+		Set(iext=${EXTEN:4});
+		Verbose(1,### Intercom call to ${iext});
+		&pass-connid();
+
+		if ("${is_from_gateway}" = "1") {
+			Verbose(1,### No intercom from gateway);
+			Hangup();
+		}
+		if ("${user_id}" = "") {
+			Verbose(1,### No intercom from non-internal user);
+			Hangup();
+		}
+		// is it to one of *our* extensions?
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${iext});
+		Verbose(1,### Extension ${iext} is of type ${exttype});
+		if ("${exttype}" != "user") {
+		Verbose(1,### Extension ${iext} is not a user);
+			Hangup();
+		}
+		if ("${dial_to_node}" != "") {
+			Verbose(1,### Extension ${iext} is not on this node);
+			Hangup();
+		}
+		
+		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${iext},intercom);
+		if ("${permission}" != "true") {
+			Verbose(1,### ${user_name} have no intercom permission to ${iext});
+			Hangup();
+		}
+		
+		//Set(CALLERID(name)=ICOM ${CALLERID(name)});		
+		SIPAddHeader(Call-Info: \;answer-after=0);
+		Dial(SIP/${iext},30);
+		&hangup-proper-status();
+	}	
+
+	
+	//----------------------------------------------------------
 	// Boss/secretary function (override call forwards)
 	//----------------------------------------------------------
 	
@@ -423,8 +471,11 @@ context to-internal-users {
 			Hangup();
 		}
 		
-		// do some checking if user is a secretary of boss
-		// ...
+		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${boss},secretary);
+		if ("${permission}" != "true") {
+			Verbose(1,### ${user_name} is not secretary of ${boss});
+			Hangup();
+		}
 		
 		jump ***-${boss}@to-internal-users-self;
 	}
@@ -910,6 +961,10 @@ context to-internal-users-self {
 			// ENDE SONDERFALL HACK
 			
 			if ("${all_busy}" != "1") {
+				AGI(/opt/gemeinschaft/dialplan-scripts/queue-get-sysrec,${EXTEN});
+				if ("${sysrec_filename}" != ""  &&  "${forwards}"= "0") {
+					Playback(/opt/gemeinschaft/sys-rec/${sysrec_filename});
+				}
 				if ("${ring_instead_of_moh}" = "r") {
 					//Proceeding();  // SIP: "100 Trying"
 					TryExec(Proceeding());  // Proceeding() was added in Asterisk 1.6

@@ -114,6 +114,7 @@ if ($action === 'save') {
 	//if (! in_array($musicclass, array('default', ''), true))
 	//	$musicclass = 'default';
 	$musicclass_db = ($musicclass != '' ? '\''. $DB->escape($musicclass) .'\'' : 'NULL');
+	$salutation = (int)@$_REQUEST['salutation'];
 	
 	$update_additional = false;
 	if ($queue_id < 1) {
@@ -136,6 +137,7 @@ if ($action === 'save') {
 	`_title`=\''. $DB->escape($title) .'\',
 	`maxlen`='. $maxlen .',
 	`musicclass`='. $musicclass_db .',
+	`_sysrec_id`='. $salutation .',
 	`announce_holdtime`=\''. $announce_holdtime .'\',
 	`wrapuptime`='. $wrapuptime .',
 	`timeout`='. $timeout .',
@@ -240,13 +242,29 @@ ORDER BY `id`';
 	while ($r = $rs->fetchRow()) {
 		$hosts[$r['id']] = $r['host'];
 	}
-	
+
+	# get system recordings
+	#
+	$sql_query =
+'SELECT
+	`s`.`id` `id`,
+	`s`.`description` `description`,
+	`s`.`length` `length`
+FROM
+	`systemrecordings` `s`';
+
+	$rs = $DB->execute($sql_query);
+	$recordings = array();
+	while ($r = $rs->fetchRow()) {
+		$recordings[$r['id']] = $r['description'];
+	}	
+
 	# get queue
 	#
 	if ($queue_id > 0) {
 		$rs = $DB->execute(
 'SELECT
-	`name`, `_host_id`, `_title`, `musicclass`, `announce_holdtime`, `timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`
+	`name`, `_host_id`, `_title`, `musicclass`, `_sysrec_id`, `announce_holdtime`, `timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`
 FROM
 	`ast_queues`
 WHERE
@@ -263,6 +281,7 @@ WHERE
 			'_host_id'                   => 0,
 			'_title'                     => __('Neue Warteschlange'),
 			'musicclass'                 => 'default',
+			'_sysrec_id'                 => 0,
 			'announce_holdtime'          => 'yes',
 			'wrapuptime'                 => 5,
 			'maxlen'                     => 255,
@@ -323,7 +342,20 @@ WHERE
 		echo '</td>';
 		echo '<td class="transp xs gray"></td>',"\n";
 		echo '</tr>',"\n";
-		
+
+		echo '<tr>',"\n";
+		echo '<th class="r">', __('Begr&uuml;&szlig;ung') ,'</th>',"\n";
+		echo '<td>';
+		echo '<select name="salutation">', "\n";
+		echo '<option value="0"', ($queue['_sysrec_id'] ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
+		echo '<option value="" disabled="disabled">-</option>', "\n";
+		foreach( $recordings as $rec_id => $desc ) {
+			echo '<option value="' . $rec_id .'"', ($queue['_sysrec_id'] ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+		}
+		echo '</select>';
+		echo '</td>';
+		echo '</tr>',"\n";		
+
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Wartemusik') ,'</th>',"\n";
 		echo '<td>';
@@ -410,7 +442,7 @@ WHERE
 		echo '>', __('alle anklingeln') ,'</option>', "\n";
 		echo '</select>';
 		echo '</td>';
-		echo '<td class="transp xs gray"><code>announce_holdtime</code></td>',"\n";
+		echo '<td class="transp xs gray"><code>strategy</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";

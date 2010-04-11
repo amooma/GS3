@@ -229,6 +229,9 @@ WHERE
 	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ip_do_grandstream( $ip, $reboot );
 	}
+	if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ip_do_tiptel( $ip, $reboot );
+	}
 	
 	//return $err == 0;
 	return true;
@@ -307,6 +310,13 @@ function _gs_prov_phone_checkcfg_by_ip_do_grandstream( $ip, $reboot=true )
 	@ exec( '/opt/gemeinschaft/sbin/gs-grandstream-reboot --ip='. qsa($ip) .' >>/dev/null 2>>/dev/null &', $out, $err );
 }
 
+function _gs_prov_phone_checkcfg_by_ip_do_tiptel( $ip, $reboot=true )
+{
+	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
+	
+	@ exec( '/opt/gemeinschaft/sbin/gs-tiptel-reboot --ip='. qsa($ip) .' >>/dev/null 2>>/dev/null &', $out, $err );
+}
+
 // PRIVATE:
 function _gs_prov_phone_checkcfg_by_ext_do( $ext, $reboot=true )
 {
@@ -362,6 +372,9 @@ WHERE
 	}
 	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ext_do_grandstream( $ext, $reboot );
+	}
+	if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ext_do_tiptel( $ext, $reboot );
 	}
 	
 	//return $err == 0;
@@ -476,6 +489,11 @@ WHERE `s`.`name`=\''. $db->escape($ext) .'\''
 }
 
 function _gs_prov_phone_checkcfg_by_ext_do_grandstream( $ext, $reboot=true )
+{
+	//FIXME
+}
+
+function _gs_prov_phone_checkcfg_by_ext_do_tiptel( $ext, $reboot=true )
 {
 	//FIXME
 }

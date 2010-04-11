@@ -45,6 +45,7 @@ MAC address ranges of common phones (first 3 octets):
 00:16:B6  Cisco-Linksys (Linksys WIP330)
 00:05:90  Swissvoice
 00:0E:50  Thomson
+00:15:65  Tiptel (Yealink)
 00:07:BA  UTStarcom
 00:A0:C5  ZyXEL
 

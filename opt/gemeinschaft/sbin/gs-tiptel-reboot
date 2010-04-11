@@ -1,0 +1,73 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Sebastian Ertz <gemeinschaft@swastel.eisfair.net>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/quote_shell_arg.php' );
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --ip=<ip>';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'ip='
+	),
+	$usage
+);
+if (! array_key_exists('ip' , $opts)) {
+	gs_script_invalid_usage( $usage );
+}
+if (! preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $opts['ip'])) {
+	echo "Invalid IP address.\n";
+	exit(1);
+}
+
+//$prov_host = gs_get_conf('GS_PROV_HOST');
+
+# AUTOPROVISIONG NOW	// does not always work
+#
+/*for ($i=0; $i<10; ++$i) {
+	$err=0; $out=array();
+	exec( 'wget -O /dev/null -o /dev/null --tries=1 --timeout=8 --retry-connrefused --user=admin --password='. qsa(gs_get_conf('GS_TIPTEL_PROV_HTTP_PASS')) .' --post-data="PAGEID=16&CONFIG_DATA=AUTOPROVISION+NOW" -q '. qsa('http://'.$opts['ip'].'/cgi-bin/ConfigManApp.com') .' >>/dev/null 2>>/dev/null', $out, $err );
+	if ($err != 1) break;
+	sleep(6);
+}*/
+
+# REBOOT
+#
+for ($i=0; $i<10; ++$i) {
+	$err=0; $out=array();
+	exec( 'wget -O /dev/null -o /dev/null --tries=1 --timeout=8 --retry-connrefused --user=admin --password='. qsa(gs_get_conf('GS_TIPTEL_PROV_HTTP_PASS')) .' --post-data="PAGEID=7&CONFIG_DATA=REBOOT" -q '. qsa('http://'.$opts['ip'].'/cgi-bin/ConfigManApp.com') .' >>/dev/null 2>>/dev/null', $out, $err );
+	if ($err != 0) break;
+	sleep(6);
+}
+
+?>
