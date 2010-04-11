@@ -407,8 +407,8 @@ if (! is_array(@$msgs[$folder]) || count($msgs[$folder]) < 1) {
 		echo '</td>', "\n";
 		
 		echo '<td>';
-		if (@$msg['cidnum'] != '') {
-			echo htmlEnt( $msg['cidnum'] );
+		if (@$msg['cidnum'] != '' || @$msg['cidname'] != '') {
+			echo htmlEnt( @$msg['cidnum'] );
 			if (@$msg['cidname'] != '')
 				echo ' &nbsp; (', htmlEnt( $msg['cidname'] ), ')';
 		} else {
