@@ -90,6 +90,13 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	if (in_array('*', $enabled_models) || in_array('gxp2020', $enabled_models))
 		$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
 }
+if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
+	$enabled_models = preg_split('/[,\\s]+/', gs_get_conf('GS_PROV_MODELS_ENABLED_TIPTEL'));
+	if (in_array('*', $enabled_models) || in_array('ip284', $enabled_models))
+		$phone_types['tiptel-ip284'] = 'Tiptel IP 284';
+	if (in_array('*', $enabled_models) || in_array('ip286', $enabled_models))
+		$phone_types['tiptel-ip286'] = 'Tiptel IP 286';
+}
 
 
 $key_functions_snom = array(
@@ -176,6 +183,37 @@ foreach ($key_functions_blacklist as $keyfn) {
 		unset($key_functions_grandstream[$keyfn]);
 }
 
+$key_functions_tiptel = array(
+	'f0'  => __('Leer'),
+	'f13' => __('Zielwahl'),	# SpeedDial
+	'f16' => __('BLF'),		# BLF
+	//'f1'  => __('Konferenz'),	# Conference
+	//'f2'  => __('Forward'),	# Forward
+	'f3'  => __('&Uuml;bergabe'),	# Transfer
+	'f4'  => __('Halten'),		# Hold
+	'f5'  => __('Nicht st&ouml;ren'),	# DND
+	//'f6'  => __('Redial'),	# Redial
+	//'f7'  => __('CallReturn'),	# Call Return
+	//'f8'  => __('SMS'),		# SMS
+	//'f9'  => __('CallPickup'),	# Call Pickup
+	//'f10' => __('CallPark'),	# Call Park
+	//'f11' => __('Custom'),	# Custom
+	//'f12' => __('Voicemail'),	# Voicemail
+	//'f14' => __('Intercom'),	# Intercom
+	//'f15' => __('Leitung'),	# Line (for line key only)
+	//'f17' => __('URL'),	# URL
+	//'f18' => __('GroupListening'),	# Group Listening
+	//'f19' => __('PublicHold'),	# Public Hold
+	//'f20' => __('PrivateHold'),	# Private Hold
+);
+$key_function_none_tiptel = 'f0';
+$key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_TIPTEL_PROV_KEY_BLACKLIST'));
+foreach ($key_functions_blacklist as $keyfn) {
+	if (array_key_exists($keyfn, $key_functions_tiptel))
+		unset($key_functions_tiptel[$keyfn]);
+}
+
+
 
 $key_default = array(
 	'function'       => '',
@@ -231,6 +269,10 @@ if ($phone_type == '') {
 		if     (array_key_exists('grandstream-gxp2000', $phone_types)) $phone_type = 'grandstream-gxp2000';
 		elseif (array_key_exists('grandstream-gxp2010', $phone_types)) $phone_type = 'grandstream-gxp2010';
 		elseif (array_key_exists('grandstream-gxp2020', $phone_types)) $phone_type = 'grandstream-gxp2020';
+	} else
+	if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
+		if     (array_key_exists('tiptel-ip284', $phone_types)) $phone_type = 'tiptel-ip284';
+		elseif (array_key_exists('tiptel-ip286', $phone_types)) $phone_type = 'tiptel-ip286';
 	}
 }
 if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370'), true)) {
@@ -245,6 +287,9 @@ if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370'),
 } elseif (in_array($phone_type, array('grandstream-gxp2000', 'grandstream-gxp2010', 'grandstream-gxp2020'), true)) {
 	$phone_layout = 'grandstream';
 	$key_function_none = $key_function_none_grandstream;
+} elseif (in_array($phone_type, array('tiptel-ip284', 'tiptel-ip286'), true)) {
+	$phone_layout = 'tiptel';
+	$key_function_none = $key_function_none_tiptel;
 } else {
 	$phone_layout = false;
 	$key_function_none = false;
@@ -1024,9 +1069,47 @@ if ($phone_layout) {
 			);
 		}
 		break;
+	case 'tiptel':
+		//if ($show_ext_modules >= 0) {
+			$key_levels = array(
+				0 => array('from'=>   1, 'to'=>   10, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title))
+			);
+		//}
+		if ($show_ext_modules >= 1) {
+			$key_levels += array(
+				1 => array('from'=> 100, 'to'=> 118, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Spalte') .' 1')
+			);
+			$key_levels += array(
+				2 => array('from'=> 119, 'to'=> 137, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Spalte') .' 2')
+			);
+		}
+		if ($show_ext_modules >= 2) {
+			$key_levels += array(
+				3 => array('from'=> 200, 'to'=> 218, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Spalte') .' 1')
+			);
+			$key_levels += array(
+				4 => array('from'=> 219, 'to'=> 237, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Spalte') .' 2')
+			);
+		}
+		if ($show_ext_modules >= 3) {
+			$key_levels += array(
+				5 => array('from'=> 300, 'to'=> 318, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 3 '. __('Spalte') .' 1')
+			);
+			$key_levels += array(
+				6 => array('from'=> 319, 'to'=> 337, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 3 '. __('Spalte') .' 2')
+			);
+		}
+		break;
 	}
 	
-	if (in_array($phone_layout, array('snom', 'grandstream'), true)) {
+	if (in_array($phone_layout, array('snom', 'grandstream', 'tiptel'), true)) {
 		$have_key_label = false;
 		$table_cols = 5;
 	} else {
@@ -1102,6 +1185,11 @@ if ($phone_layout) {
 			} elseif ($phone_layout === 'grandstream') {
 				$keyv = 'T'. str_replace(' ','&nbsp;', str_pad($knum+1    , 2, ' ', STR_PAD_LEFT));
 				if ($knum >= 100) $keyv = 'T'. str_replace(' ','&nbsp;', str_pad($knum-99 , 3, ' ', STR_PAD_LEFT));
+			} elseif ($phone_layout === 'tiptel') {
+				if ($knum >=   1) $keyv = 'T'. str_replace(' ','&nbsp;', str_pad($knum     , 2, ' ', STR_PAD_LEFT));
+				if ($knum >= 100) $keyv = 'T'. str_replace(' ','&nbsp;', str_pad($knum-99  , 3, ' ', STR_PAD_LEFT));
+				if ($knum >= 200) $keyv = 'T'. str_replace(' ','&nbsp;', str_pad($knum-199 , 3, ' ', STR_PAD_LEFT));
+				if ($knum >= 300) $keyv = 'T'. str_replace(' ','&nbsp;', str_pad($knum-299 , 3, ' ', STR_PAD_LEFT));
 			} else {
 				$keyv = 'F'.$knump;
 			}
@@ -1155,6 +1243,10 @@ if ($phone_layout) {
 				case 'snom':
 					echo ' class="', ($i%2===($key_level_idx+1)%2 ?'l':'r') ,'"';
 					break;
+				case 'tiptel':
+					if ($key_level_idx > 0)
+						echo ' class="', ($i%2===($key_level_idx+1)%2 ? 'l':'r') ,'"';
+					break;
 			}
 			echo '>';
 			echo $keyv;
@@ -1202,6 +1294,9 @@ if ($phone_layout) {
 				break;
 			case 'grandstream':
 				$fns =& $key_functions_grandstream;
+				break;
+			case 'tiptel':
+				$fns =& $key_functions_tiptel;
 				break;
 			}
 			foreach ($fns as $function => $title) {
