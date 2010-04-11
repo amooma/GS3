@@ -1,0 +1,53 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Author: Henning Holtschneider <henning@loca.net>
+*
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+$id = trim(@$argv[1]);
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/agi-fns.php' );
+
+if (! is_numeric($id) ) {
+	gs_log( GS_LOG_WARNING, 'no id' );
+	die();
+	
+}
+
+$db = gs_db_slave_connect();
+
+$filename = $db->executeGetOne( 'SELECT `md5hashname` FROM `systemrecordings` WHERE `id` = ' . $id );
+echo 'SET VARIABLE md5hashname ' . gs_agi_str_esc($filename) . "\n";
+
+?>

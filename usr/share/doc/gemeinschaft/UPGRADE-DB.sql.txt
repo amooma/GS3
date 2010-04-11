@@ -1081,3 +1081,34 @@ ALTER TABLE `ast_queue_members` ADD column `static` boolean default '0' after `p
 DELETE FROM `group_members` WHERE `group` = (SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1) AND `member` = 18009;
 DELETE FROM `group_members` WHERE `group` = (SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1) AND `member` = 18010;
 DELETE FROM `group_members` WHERE `group` = (SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1) AND `member` = 18011;
+
+
+--
+-- since rev. ?
+--
+
+USE `asterisk`;
+
+
+--
+-- Add new column `_sysrec_id` in table `ast_queues`:
+--
+
+ALTER TABLE `ast_queues` ADD column `_sysrec_id` int(10) unsigned NOT NULL default '0' AFTER `musicclass`;
+
+--
+-- Create new table `systemrecordings`:
+--
+
+CREATE TABLE IF NOT EXISTS `systemrecordings` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `md5hashname` char(32) collate utf8_unicode_ci NOT NULL,
+  `description` varchar(150) collate utf8_unicode_ci NOT NULL,
+  `length` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `md5hashname` (`md5hashname`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
