@@ -318,7 +318,13 @@ context to-internal-users {
 		Set(pext=${EXTEN:4});
 		if ("${pext}" != "") {
 			Verbose(1,### User ${user_name} tries to pickup ext. ${pext});
-			//FIXME - add pickup group check
+
+			AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${pext},pickup);
+			if ("${permission}" != "true") {
+				Verbose(1,### ${user_name} have no pickup permission to ${pext});
+				Hangup();
+			}
+		
 			Pickup(${pext}@to-internal-users-self);
 			//FIXME - does not work across nodes
 		}
