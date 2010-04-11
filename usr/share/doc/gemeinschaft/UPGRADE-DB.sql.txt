@@ -1124,4 +1124,18 @@ USE `asterisk`;
 INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1),17009);
 
 
+--
+-- since rev. ?
+--
+
+USE `asterisk`;
+
+--
+-- Add permission 'pickup' and 'secretary' for group users on group users:
+--
+
+INSERT INTO `group_permissions` VALUES ('pickup',(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1));
+INSERT INTO `group_permissions` VALUES ('secretary',(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1));
+
+
 
