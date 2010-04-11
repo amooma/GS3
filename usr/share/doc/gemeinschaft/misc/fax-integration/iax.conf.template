@@ -7,6 +7,7 @@ context=from-fax-server
 disallow=all
 allow=alaw
 port=14570
+requirecalltoken=no
 
 [iaxmodem01]
 type=friend
@@ -16,4 +17,5 @@ context=from-fax-server
 disallow=all
 allow=alaw
 port=14571
+requirecalltoken=no
 
