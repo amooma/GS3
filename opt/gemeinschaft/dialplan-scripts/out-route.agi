@@ -272,7 +272,7 @@ LIMIT 9'
 			switch ($var_arr[0]) {
 				case 'number':
 					if ((strPos($gate['dialstr'], '{prefix') === false)
-					&&  (in_array($gate['type'], array('zap','misdn','woomera','capi'), true))) {
+					&&  (in_array($gate['type'], array('zap','misdn','woomera','capi','dahdi'), true))) {
 						# automatically insert the LCR prefix before the number
 						# for ISDN/analog gateway if the dial string does not
 						# explicitly contain "{prefix}" (or "{prefix:0:0}")
