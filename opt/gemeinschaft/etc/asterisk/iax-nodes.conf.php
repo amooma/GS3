@@ -202,6 +202,7 @@ while ($gw = $rs->fetchRow()) {
 	echo 'qualify = '         , $params['qualify'       ] ,"\n";
 	echo 'language = '        , 'de' ,"\n";
 	echo 'disallow = '        , 'all' ,"\n";
+	echo 'requirecalltoken = ' , 'no' ,"\n";
 	foreach ($codecs_allow as $codec => $allowed) {
 		if ($allowed) {
 			echo 'allow = ', $codec ,"\n";
