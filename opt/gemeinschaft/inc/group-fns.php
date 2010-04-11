@@ -32,20 +32,48 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 
 function gs_group_types_get()
 {
-	return array('user','queue', 'host', 'module_gui');
+	return array(
+		'user',
+		'queue',
+		'host',
+		'module_gui'
+	);
 }
 
 function gs_group_permission_types_get()
 {
-	return array('monitor_peers','monitor_queues', 'forward_queues', 'sudo_user', 'call_stats', 
-		'phonebook_user', 'display_module_gui', 'group_pickup', 'pickup', 'roaming', 'agent',
-		'queue_member', 'forward', 'clip_set', 'clir_set', 'callwaiting_set', 'ringtone_set',
-		'dnd_set', 'forward_vmconfig', 'wakeup_call', 'room_state' );
+	return array(
+		'monitor_peers',
+		'monitor_queues',
+		'forward_queues',
+		'sudo_user',
+		'call_stats', 
+		'phonebook_user',
+		'display_module_gui',
+		'group_pickup',
+		'pickup',
+		'roaming',
+		'agent',
+		'queue_member',
+		'forward',
+		'clip_set',
+		'clir_set',
+		'callwaiting_set',
+		'ringtone_set',
+		'dnd_set',
+		'forward_vmconfig',
+		'wakeup_call',
+		'room_state' );
 }
 
 function gs_group_external_types_get()
 {
-	return array('user','queue', 'host', 'mysql');
+	return array(
+		'user',
+		'queue',
+		'host',
+		'mysql'
+	);
 }
 
 function gs_group_includes_get($group_ids, $climb_down = true, $flat = false, $processed = Array()) 
