@@ -28,6 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/canonization.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -173,6 +174,7 @@ if ($dial != '') {
 <tr>
 	<th><?php echo __('Wochentage'); ?></th>
 	<th><?php echo __('Uhrzeit'); ?></th>
+	<th><?php echo __('Gruppe'); ?></th>
 	<th><?php echo __('Muster'); ?></th>
 	<?php /* ?>
 	<th><?php echo sPrintF(__('Route Prio. %d'), 1); ?></th>
@@ -196,14 +198,20 @@ if ($dial != '') {
 	`d_mo`, `d_tu`, `d_we`, `d_th`, `d_fr`, `d_sa`, `d_su`,
 	SUBSTR(`h_from`,1,5) `hf`, SUBSTR(`h_to`,1,5) `ht`,
 	`gw_grp_id_1` `gg1`, `gw_grp_id_2` `gg2`, `gw_grp_id_3` `gg3`,
-	`lcrprfx`
+	`lcrprfx`, `user_grp_id`
 FROM `routes` USE INDEX(`ord`)
 WHERE `active`=1
 ORDER BY `ord`'
 	);
 	$i=0;
 	while ($route = $rsR->fetchRow()) {
+		
 		if (! @preg_match( '/'.$route['pat'].'/', $dial )) continue;
+
+		if ($route['user_grp_id']) {
+			$group_info = gs_group_info_get(Array($route['user_grp_id']));
+			$group_name = $group_info[0]['title'];
+		}
 		
 		echo '<tr class="', ($i%2 ? 'even':'odd') ,'">', "\n";
 		
@@ -231,7 +239,7 @@ ORDER BY `ord`'
 		echo '&thinsp;-&thinsp;';
 		echo subStr($route['ht'],0,2) .'<sup>'. subStr($route['ht'],3,2) .'</sup>';
 		echo ' </td>', "\n";
-		
+		echo '<td>', htmlEnt($group_name) ,' </td>', "\n";
 		echo '<td class="pre">', htmlEnt($route['pat']) ,' </td>', "\n";
 		
 		$gate_grps = array();
