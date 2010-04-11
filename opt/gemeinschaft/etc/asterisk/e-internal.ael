@@ -910,6 +910,10 @@ context to-internal-users-self {
 			// ENDE SONDERFALL HACK
 			
 			if ("${all_busy}" != "1") {
+				AGI(/opt/gemeinschaft/dialplan-scripts/queue-get-sysrec,${EXTEN});
+				if ("${sysrec_filename}" != ""  &&  "${forwards}"= "0") {
+					Playback(/opt/gemeinschaft/sys-rec/${sysrec_filename});
+				}
 				if ("${ring_instead_of_moh}" = "r") {
 					//Proceeding();  // SIP: "100 Trying"
 					TryExec(Proceeding());  // Proceeding() was added in Asterisk 1.6

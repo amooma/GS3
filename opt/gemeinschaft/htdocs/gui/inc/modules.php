@@ -270,7 +270,8 @@ $MODULES['admin'    ]=  array(
 		'conferences'  => array('title' => __('Konferenzen'), 'id' => 15007),
 		//'ivrs'         => array('title' => __('IVRs'), 'id' => 15008),
 		'calls'        => array('title' => __('CDRs'), 'id' => 15009),
-		'reload'       => array('title' => __('Reload'), 'id' => 15010)
+		'reload'       => array('title' => __('Reload'), 'id' => 15010),
+		'sysrecs'      => array('title' => __('Audiodateien'), 'id' => 15011)
 	)
 );
 if (gs_get_conf('GS_BOI_ENABLED')) {

@@ -1,0 +1,122 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Author: Henning Holtschneider <henning@loca.net>
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/get-listen-to-ids.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
+
+function distribute_file($localfile)
+{
+	$hostlist = gs_hosts_get();
+	$thishost = @gs_get_listen_to_ids();
+
+	foreach($hostlist as $currenthost)
+	{
+		unset($islocalhost);
+		$islocalhost = FALSE;
+
+		foreach($thishost as $hostid)
+		{
+			if($currenthost["id"] == $hostid) $islocalhost = TRUE;
+		}
+
+		if($islocalhost == FALSE)
+		{
+			unset($cmd);
+			$cmd = "sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes ". qsa($localfile ) ." ". qsa("root@". $currenthost["host"] .":". $localfile);
+			@exec($cmd ." 1>>/dev/null 2>>/dev/null", $out, $err);
+			if($err != 0)
+			{
+				gs_log(GS_LOG_WARNING, "Failed to scp system recording '". $localfile ."' to ". $currenthost["host"]);
+			}
+			else
+			{
+				unset($cmd);
+				$cmd = "sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root ". qsa($currenthost["host"]) ." ". qsa("chmod a+rw ". qsa($localfile));
+				@exec($cmd ." 1>>/dev/null 2>>/dev/null", $out, $err);
+				if($err != 0)
+				{
+					gs_log(GS_LOG_WARNING, "Failed to chmod system recording '". $localfile ."' on ". $currenthost["host"]);
+				}
+			}
+		}
+	}
+}
+
+$user_ext = trim(@$argv[1]);
+$filename = trim(@$argv[2]);
+$length   = trim(@$argv[3]);
+
+if (! preg_match('/^[0-9]+$/', $user_ext)) {
+	gs_log( GS_LOG_WARNING, 'invalid user' );
+	die();
+	
+}
+
+if (! file_exists( $filename ) ) {
+	gs_log( GS_LOG_WARNING, 'file ' . $filename . ' not found');
+	die();
+}
+
+if (! is_numeric ($length) )
+	$length = 0;
+
+$db = gs_db_master_connect();
+
+$md5sum = md5_file( $filename );
+
+if (! $md5sum ) {
+	gs_log( GS_LOG_WARNING, 'unable to calculate MD5 sum for ' . $filename );
+	die();
+}
+
+if (! copy( $filename, '/opt/gemeinschaft/sys-rec/' . $md5sum . '.sln' ) ) {
+	gs_log( GS_LOG_WARNING, 'unable to copy ' . $filename . ' to /opt/gemeinschaft/sys-rec/' . $md5sum . '.sln' );
+	die();
+} else {
+	$db->execute( '
+INSERT INTO
+	`systemrecordings` 
+	(`md5hashname`, `description`, `length`)
+VALUES 
+	(\'' . $md5sum . '\', \'Aufnahme von Benutzer ' . $user_ext . '\', ' . $length . ')
+				' );
+
+	unlink( $filename );
+	@distribute_file( '/opt/gemeinschaft/sys-rec/' . $md5sum . '.sln' );
+
+}
+
+?>
