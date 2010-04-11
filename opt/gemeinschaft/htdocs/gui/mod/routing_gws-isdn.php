@@ -37,14 +37,16 @@ include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 $default_dialstrs = array(
 	'misdn'   => 'mISDN/g:{gateway}/{number:1}',
 	'woomera' => 'Woomera/g{port}/{number:1}',
-	'zap'     => 'Zap/g{port}/{number:1}',
+	'dahdi'   => 'DAHDI/g{port}/{number:1}',
 	'capi'    => 'Capi/isdn_{gateway}/{number:1}',
+	'zap'     => 'Zap/g{port}/{number:1}'
 	);
 $gw_types = array(
 	'misdn'   => 'mISDN',
 	'woomera' => 'Woomera',
-	'zap'     => 'Zaptel',
+	'dahdi'   => 'DAHDI',
 	'capi'    => 'Capi',
+	'zap'     => 'Zaptel'
 	);
 
 $action = @$_REQUEST['action'];
