@@ -512,5 +512,5 @@ echo __('PCRE-Syntax (&quot;Perl Compatible Regular Expression&quot;) ohne <code
 ?></small></p>
 
 <p class="text"><small><sup>[2]</sup> <?php
-echo __('Pr&auml;fix f&uuml;r LCR (Least Cost Routing) in der Form 010<i>xx</i>. Gilt nur f&uuml;r ISDN, nicht f&uuml;r SIP.');
+echo __('Pr&auml;fix f&uuml;r LCR (Least Cost Routing) in der Form 010<i>xx</i>. Wird bei ISDN automatisch vor die Rufnummer gesetzt, bei SIP nur an Stelle von <code>{prefix}</code> im Dialstring.');
 ?></small></p>
