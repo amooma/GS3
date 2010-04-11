@@ -1111,4 +1111,17 @@ CREATE TABLE IF NOT EXISTS `systemrecordings` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+--
+-- since rev. ?
+--
+
+USE `asterisk`;
+
+--
+-- Add member 'IAX-Gateways' to group 'admin_gui':
+--
+
+INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1),17009);
+
+
 
