@@ -341,11 +341,11 @@ ORDER BY `ord`'
 		echo '</td>', "\n";
 		
 		echo '<td>';
-		echo '<input type="text" name="r_',$id,'_pattern" value="', htmlEnt($route['pattern']), '" size="10" maxlength="30" class="pre" style="font-weight:bold;" />';
+		echo '<input type="text" name="r_',$id,'_pattern" value="', htmlEnt($route['pattern']), '" size="20" maxlength="30" class="pre" style="font-weight:bold;" />';
 		echo '</td>', "\n";
 		
 		echo '<td>';
-		echo '<input type="text" name="r_',$id,'_to_ext" value="', htmlEnt($route['to_ext']), '" size="8" maxlength="10" class="pre" style="font-weight:bold;" />';
+		echo '<input type="text" name="r_',$id,'_to_ext" value="', htmlEnt($route['to_ext']), '" size="10" maxlength="10" class="pre" style="font-weight:bold;" />';
 		echo '</td>', "\n";
 		
 		echo '<td>';
@@ -413,11 +413,11 @@ ORDER BY `ord`'
 	echo '</td>', "\n";
 	
 	echo '<td>';
-	echo '<input type="text" name="r_',$id,'_pattern" value="" size="10" maxlength="30" class="pre" style="font-weight:bold;" />';
+	echo '<input type="text" name="r_',$id,'_pattern" value="" size="20" maxlength="30" class="pre" style="font-weight:bold;" />';
 	echo '</td>', "\n";
 	
 	echo '<td>';
-	echo '<input type="text" name="r_',$id,'_to_ext" value="', htmlEnt($route['to_ext']), '" size="8" maxlength="10" class="pre" style="font-weight:bold;" />';
+	echo '<input type="text" name="r_',$id,'_to_ext" value="', htmlEnt($route['to_ext']), '" size="10" maxlength="10" class="pre" style="font-weight:bold;" />';
 	echo '</td>', "\n";
 	
 	echo '<td>';
@@ -473,11 +473,11 @@ ORDER BY `ord`'
 	echo '</td>', "\n";
 	
 	echo '<td class="transp">';
-	echo '<input type="text" value="^(.*)" size="10" maxlength="30" class="pre" disabled="disabled" />';
+	echo '<input type="text" value="^(.*)" size="20" maxlength="30" class="pre" disabled="disabled" />';
 	echo '</td>', "\n";
 	
 	echo '<td class="transp">';
-	echo '<input type="text" value="$1" size="8" maxlength="10" class="pre" disabled="disabled" />';
+	echo '<input type="text" value="$1" size="10" maxlength="10" class="pre" disabled="disabled" />';
 	echo '</td>', "\n";
 	
 	echo '<td class="transp">';
