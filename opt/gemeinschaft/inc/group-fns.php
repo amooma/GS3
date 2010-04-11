@@ -52,7 +52,8 @@ function gs_group_permission_types_get()
 		'display_module_gui',
 		'group_pickup',
 		'pickup',
-		'secretary'
+		'secretary',
+		'intercom'
 	);
 }
 
