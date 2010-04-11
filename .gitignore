@@ -1,5 +1,4 @@
 .DS_Store
 *.DS_Store
 *~
-opt/gemeinschaft/etc/listen-to-ip
 opt/gemeinschaft/etc/asterisk/extensions.ael
