@@ -111,8 +111,8 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 				echo '<tr class="', ($i%2?'even':'odd') ,'">' ,"\n";
 				echo '<td style="width:30%;"><nobr>', htmlEnt(date_human($r['orig_time'])) ,'</nobr></td>' ,"\n";
 				echo '<td style="width:70%;">';
-				if (@$r['cidnum'] != '') {
-					echo htmlEnt($r['cidnum']);
+				if (@$r['cidnum'] != '' || @$r['cidname'] != '') {
+					echo htmlEnt(@$r['cidnum']);
 					if ($r['cidname'] != '') echo ' (', htmlEnt($r['cidname']) ,')';
 				} else {
 					echo '<i>', __('anonym'), '</i>';
