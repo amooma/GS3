@@ -1147,8 +1147,12 @@ context to-internal-users-self {
 		user_uncallable_vm_off:
 			//Verbose(1,### Called user ${origext} unreachable\, mailbox not active);
 			Verbose(1,### Called user ${EXTEN} unreachable\, mailbox not active);
-			Hangup(19);
-			// 19 = no answer from the user => 480 Temporarily unavailable
+			if ("${DIALSTATUS}" = "BUSY") {
+				Hangup();
+			} else {
+				Hangup(19);
+				// 19 = no answer from the user => 480 Temporarily unavailable
+			}
 		
 		user_uncallable_offer_cc:
 			Verbose(1,### Called user ${EXTEN} unreachable (${DIALSTATUS})\, offer call completion);
