@@ -324,7 +324,7 @@ $SNOM_PROV_M3_ACCOUNTS      = 1;
 
 //----------------------[  Aastra  ]----------------------//
 
-$AASTRA_PROV_ENABLED        = false;  # do provisioning for Aastra?
+$AASTRA_PROV_ENABLED        = true;   # do provisioning for Aastra?
                                       # experimental!
                                       # show keyset for Aastra in the GUI?
 $AASTRA_PROV_PB_NUM_RESULTS = 10;
@@ -342,7 +342,7 @@ $AASTRA_PROV_PB_NUM_RESULTS = 10;
 
 //-----------------[  Siemens OpenStage  ]----------------//
 
-$SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
+$SIEMENS_PROV_ENABLED       = true;   # do provisioning for Siemens?
 //...
 
 //$SIEMENS_PROV_PREFER_HTTP   = true;
@@ -377,7 +377,7 @@ $SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
 
 //---------------------[ Grandstream ]--------------------//
 
-$GRANDSTREAM_PROV_ENABLED   = false;  # do provisioning for Grandstream?
+$GRANDSTREAM_PROV_ENABLED   = true;   # do provisioning for Grandstream?
   # Warning: The phonebook for Grandstream does not currently have
   # authentication!
 
@@ -415,7 +415,7 @@ $GRANDSTREAM_PROV_FW_UPDATE = false;  # allow firmware updates?
 
 //-----------------------[ Tiptel ]-----------------------//
 
-$TIPTEL_PROV_ENABLED   = false;  # do provisioning for Tiptel?
+$TIPTEL_PROV_ENABLED   = true;   # do provisioning for Tiptel?
 
 $TIPTEL_PROV_HTTP_PASS = 'admin';  # e.g. "gEheiM23y89sdo23", default: 'admin'
   # to password protect the phone's web gui.
