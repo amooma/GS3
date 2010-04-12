@@ -170,7 +170,7 @@ if (! @$_SESSION['login_ok'] )
 else 
 	$display_modules  = gs_group_members_get(
 		gs_group_permissions_get(
-			gs_group_members_groups_get(Array(@$_SESSION['sudo_user']['info']['id']), 'user')
+			gs_group_members_groups_get(Array(@$_SESSION['real_user']['info']['id']), 'user')
 		, 'display_module_gui','module_gui')
 	);
 
