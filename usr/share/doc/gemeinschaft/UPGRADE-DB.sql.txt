@@ -1151,7 +1151,7 @@ alter table `ast_sipfriends`, add column `autoframing` varchar(10) NULL default 
 alter table `ast_sipfriends`, add column `callingpres` varchar(20) NULL default NULL;
 alter table `ast_sipfriends`, add column `cid_number` varchar(40) NULL default NULL;
 alter table `ast_sipfriends`, add column `defaultuser` varchar(40) NULL default NULL;
-alter table `ast_sipfriends`, add column `disallow` varchar(20) NULL default 'all';
+alter table `ast_sipfriends`, add column `disallow` varchar(20) NULL default NULL;
 alter table `ast_sipfriends`, add column `fromdomain` varchar(40) NULL default NULL;
 alter table `ast_sipfriends`, add column `fromuser` varchar(40) NULL default NULL;
 alter table `ast_sipfriends`, add column `incominglimit` varchar(10) NULL default NULL;
