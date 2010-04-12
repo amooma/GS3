@@ -6166,6 +6166,7 @@ LOCK TABLES `group_permissions` WRITE;
 INSERT INTO `group_permissions` VALUES ('call_stats',2,2);
 INSERT INTO `group_permissions` VALUES ('roaming',2,2);
 INSERT INTO `group_permissions` VALUES ('forward',2,2);
+INSERT INTO `group_permissions` VALUES ('forward_vmconfig',2,2);
 INSERT INTO `group_permissions` VALUES ('clir_set',2,2);
 INSERT INTO `group_permissions` VALUES ('clip_set',2,2);
 INSERT INTO `group_permissions` VALUES ('callwaiting_set',2,2);
