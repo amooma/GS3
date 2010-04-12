@@ -174,13 +174,13 @@ if ($action === 'delstatic') {
 }
 
 if ($action === 'addstatic') {
-	$q_hid = (int)$DB->execute(
+	$q_hid = (int)$DB->executeGetOne(
 	'SELECT `_host_id` FROM `ast_queues` '.
 	'WHERE `_id`='.$queue_id
 	);
-	$a_hid = (int)$DB->execute(
+	$a_hid = (int)$DB->executeGetOne(
 	'SELECT `host_id` from `users` '.
-	'WHERE `host_id`='.$agent_id
+	'WHERE `id`='.$agent_id
 	);
 	if ($a_hid != $q_hid) {
 		echo '<div class="errorbox">';
@@ -526,43 +526,47 @@ WHERE
 		echo '</tr>',"\n";
 		echo '</tbody>',"\n";
 		echo '</table>',"\n";
-		echo '<h3>', __('Statische Agenten'), '</h3>';
-		echo  __('Diese Agenten sind immer angemeldet.'), '<p>';
+		echo '</form>';
+		echo '<h3>', __('Statische'), ' ', __('Agenten'), '</h3><p>';
+		echo __('Statische'), ' ', __('Agenten'), ' ', __('sind immer an der Warteschlange angemeldet.');
 		echo '<table>';
 		echo '<tr>';
-		echo '<th>', __('Login'), '</th>';
-		echo '<th>', __('Durchwahl'), '</th>';
-		echo '</tr>';
-		$rs = $DB->execute('SELECT `user`, `name`, q.`_user_id` FROM `users` u , `ast_sipfriends` s, `ast_queue_members` q  where s.`_user_id`=q.`_user_id` AND u.`id`=q.`_user_id` and q.`static`=1 AND q.`_queue_id`='. $queue_id);
-		if ((@$DB->numFoundRows()) < 1) {
-		} else {
-			while ($static_map = $rs->fetchRow()) {
-				echo '<tr>';
-				echo '<td>', htmlEnt( $static_map['user'] ), '</td>';
-				echo '<td>', $static_map['name'] , '</td>';
-				echo '<td>';
-				echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=delstatic&amp;qid='.$queue_id.'&amp;aid='.urlEncode($static_map['_user_id'])), '" title="', __('Entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-				echo '</td>';
-				echo '</tr>', "\n";
-			}
-		}
-		echo '</table><p>';
-		echo '<h3>', __('Statische Agenten hinzuf&uuml;gen.'), '</h3><br />';
+		echo '<th>', __('Verf&uuml;gbare'), ' ', __('Agenten'), '</th>';
+		echo '<th>', __('Angemeldete'), ' ', __('Agenten'), '</th>';
+		echo '</tr><tr><td>';
+		echo '<div align="right">';
+		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 		echo gs_form_hidden($SECTION, $MODULE), "\n";
 		echo '<input type="hidden" name="action" value="addstatic" />', "\n";
 		echo '<input type="hidden" name="qid" value="', $queue_id , '" />', "\n";
 		$host_id = (int)$DB->executeGetOne('SELECT `_host_id` from `ast_queues` WHERE `_id`='.$queue_id);
-		$rs = $DB->execute('SELECT `user`, `name`, `id`, `firstname`, `lastname` from users, ast_sipfriends_gs WHERE `nobody_index` IS NULL AND `id`=`_user_id` AND `host_id`='.$host_id);
+		$rs = $DB->execute('SELECT `user`, `name`, `id`, `firstname`, `lastname` from users, ast_sipfriends_gs WHERE `nobody_index` IS NULL AND `id`=`_user_id` AND `host_id`='.$host_id. '  AND `id` NOT IN (select `_user_id` from `ast_queue_members` where `static`=1 and `_queue_id`='. $queue_id .')');
 		echo '<select name="aid" size="10">', "\n";
 		while ($user_map = $rs->fetchRow()) {
-		echo '<option value="', $user_map['id'], '"', 'title="', htmlEnt( $user_map['lastname']), ', ', htmlEnt( $user_map['firstname']), '"';
+		echo '<option value="', (int)$user_map['id'], '"', 'title="', htmlEnt( $user_map['lastname']), ', ', htmlEnt( $user_map['firstname']), '"';
 		echo '>',  $user_map['name'], ' ', htmlEnt( $user_map['user'] ), '</option>', "\n";
 		}
 		echo '</select>';
 		echo '<button type="submit" title="', __('Hinzuf&uuml;gen'), '" class="plain">';
-		echo '<img alt="', __('Hinzuf&uuml;gen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>' ,"\n";
-
-	echo '</form>',"\n";
+		echo '<img alt="', __('Hinzuf&uuml;gen') ,'" src="', GS_URL_PATH,'crystal-svg/32/act/forward-cust.png" /></button>' ,"\n";
+		echo '</form></div>';
+		echo '</td><td>';
+		echo '<div align="left">';
+		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+		echo gs_form_hidden($SECTION, $MODULE), "\n";
+		echo '<button type="submit" title="', __('Entfernen'), '" class="plain">';
+		echo '<img alt="', __('Entfernen') ,'" src="', GS_URL_PATH,'crystal-svg/32/act/back-cust.png" /></button>' ,"\n";	echo '<input type="hidden" name="action" value="delstatic" />', "\n";
+		echo '<input type="hidden" name="qid" value="', $queue_id , '" />', "\n";
+		$host_id = (int)$DB->executeGetOne('SELECT `_host_id` from `ast_queues` WHERE `_id`='.$queue_id);
+		$rs = $DB->execute('SELECT `user`, `name`, q.`_user_id`, `firstname`, `lastname`  FROM `users` u , `ast_sipfriends` s, `ast_queue_members` q  where s.`_user_id`=q.`_user_id` AND u.`id`=q.`_user_id` and q.`static`=1 AND q.`_queue_id`='. $queue_id);
+		echo '<select name="aid" size="10">', "\n";
+		while ($user_map = $rs->fetchRow()) {
+		echo '<option value="', (int)$user_map['_user_id'], '"', 'title="', htmlEnt( $user_map['lastname']), ', ', htmlEnt( $user_map['firstname']), '"';
+		echo '>',  $user_map['name'], ' ', htmlEnt( $user_map['user'] ), '</option>', "\n";
+		}
+		echo '</select>';
+		echo '</form>',"\n";
+		echo '</div></td></tr></table>';
 	}
 	
 }
