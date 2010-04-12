@@ -100,15 +100,15 @@ echo '</h2>', "\n";
 	</td>
 </tr>
 <tr>
-	<td><code>*21</code></td>
+	<td><code>*23</code></td>
 	<td>
-		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf den Anrufbeantworter aktivieren'); ?>
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Zeitsteuerung aktivieren'); ?>
 	</td>
 </tr>
 <tr>
-	<td><code>*22</code></td>
+	<td><code>*24</code></td>
 	<td>
-		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Ansage ohne Anrufbeantworter aktivieren'); ?>
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf den Parallelruf aktivieren'); ?>
 	</td>
 </tr>
 <tr>
@@ -144,6 +144,18 @@ echo '</h2>', "\n";
 	</td>
 </tr>
 <tr>
+	<td style="width:140px;"><code>*903</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; auf die Zeitsteuerung aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*904</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; auf den Parallelruf aktivieren'); ?>
+	</td>
+</tr>
+<tr>
 	<td style="width:140px;"><code>*90*</code></td>
 	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; deaktivieren'); ?>
@@ -172,6 +184,18 @@ echo '</h2>', "\n";
 	<td style="width:140px;"><code>*912</code></td>
 	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf die Ansage ohne Anrufbeantworter aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*913</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf die Zeitsteuerung aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*914</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf den Parallelruf aktivieren'); ?>
 	</td>
 </tr>
 <tr>
