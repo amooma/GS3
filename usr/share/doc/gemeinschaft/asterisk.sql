@@ -5483,7 +5483,7 @@ CREATE TABLE `ast_sipfriends` (
   `callingpres` varchar(20) collate latin1_general_ci default NULL,
   `cid_number` varchar(40) collate latin1_general_ci default NULL,
   `defaultuser` varchar(40) collate latin1_general_ci default NULL,
-  `disallow` varchar(20) collate latin1_general_ci default 'all',
+  `disallow` varchar(20) collate latin1_general_ci default NULL,
   `fromdomain` varchar(40) collate latin1_general_ci default NULL,
   `fromuser` varchar(40) collate latin1_general_ci default NULL,
   `incominglimit` varchar(10) collate latin1_general_ci default NULL,
