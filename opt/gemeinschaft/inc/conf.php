@@ -95,7 +95,7 @@ ini_set('output_handler', '');
 	//ini_set('zlib.output_compression_level', 5);
 	//ini_set('zlib.output_handler', '');
 //}
-set_magic_quotes_runtime(0);
+if (get_magic_quotes_runtime()) set_magic_quotes_runtime(0);
 //set_include_path('.');
 set_time_limit(65);
 
