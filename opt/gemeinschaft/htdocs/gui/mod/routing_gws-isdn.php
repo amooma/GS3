@@ -37,17 +37,19 @@ include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 $default_dialstrs = array(
 	'misdn'   => 'mISDN/g:{gateway}/{number:1}',
 	'woomera' => 'Woomera/g{port}/{number:1}',
+	//'zap'     => 'Zap/g{port}/{number:1}',
 	'dahdi'   => 'DAHDI/g{port}/{number:1}',
 	'capi'    => 'Capi/isdn_{gateway}/{number:1}',
-	'zap'     => 'Zap/g{port}/{number:1}'
-	);
+	'vpb'     => 'vpb/g{port}/{number:1}',
+);
 $gw_types = array(
 	'misdn'   => 'mISDN',
-	'woomera' => 'Woomera',
-	'dahdi'   => 'DAHDI',
-	'capi'    => 'Capi',
-	'zap'     => 'Zaptel'
-	);
+	'woomera' => 'Woomera (Sangoma)',
+	//'zap'     => 'Zaptel',
+	'dahdi'   => 'Dahdi (fka. Zaptel)',
+	'capi'    => 'CAPI',
+	'vpb'     => 'VPB (Voicetronix)',
+);
 
 $action = @$_REQUEST['action'];
 if (! in_array($action, array( '', 'edit', 'save', 'del' ), true))

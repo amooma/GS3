@@ -52,9 +52,11 @@ $gw_types = array(
 	'sip'     => 'SIP',
 	'iax'     => 'IAX',
 	'misdn'   => 'ISDN (mISDN)',
-	'zap'     => 'ISDN (Zaptel)',
 	'woomera' => 'ISDN (Woomera)',
-	'capi'    => 'ISDN (Capi)',
+	//'zap'     => 'ISDN (Zaptel)',
+	'dahdi'   => 'ISDN (Dahdi)',
+	'capi'    => 'ISDN (CAPI)',
+	'vpb'     => 'ISDN (VPB)',
 );
 
 
@@ -428,7 +430,7 @@ WHERE `id`='.$ggid
 	$i=0;
 	while ($gw = $rs->fetchRow()) {
 		echo '<tr class="', ($i%2?'even':'odd') ,'">',"\n";
-		echo '<td>', @$gw_types[$gw['type']] ,'</td>',"\n";
+		echo '<td>', (array_key_exists($gw['type'], $gw_types) ? @$gw_types[$gw['type']] : $gw['type']) ,'</td>',"\n";
 		echo '<td>', htmlEnt($gw['title']) ,'</td>',"\n";
 		echo '</tr>',"\n";
 		++$i;
