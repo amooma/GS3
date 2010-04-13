@@ -998,7 +998,15 @@ if (! is_array($softkeys)) {
 		}
 		$key_idx = (int)lTrim(subStr($key_name,1),'0');
 		if ($key_idx > $max_key) continue;
-		setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
+		if ($key_def['function'] == "blf"){
+			if (substr($key_def['data'], 0,1)  == '*' ) { 
+				setting('fkey', $key_idx, $key_def['function'] .' <sip:'. $key_def['data'].'@'.$host.'>', array('context'=>'active'));
+			} else {
+				setting('fkey', $key_idx, $key_def['function'] .' <sip:'. $key_def['data'].'@'.$host.'>|*81*', array('context'=>'active'));
+			}
+		} else {
+			setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
+		}
 	}
 }
 
