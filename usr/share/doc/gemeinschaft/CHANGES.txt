@@ -1,3 +1,7 @@
+Version 2.3 zu 2.4
+
+- Lauter, härter, schneller!
+
 Version 2.2 zu 2.3
 
 - Provisioning für Grandstream-Telefone erweitert und verbessert.
