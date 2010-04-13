@@ -239,7 +239,7 @@ class Getopt_Error {
 }
 
 function Getopt_isError( $err ) {
-	return (strToLower(@ get_class($err))=='getopt_error' && $err->isErr);
+	return (is_object($err) && strToLower(get_class($err))=='getopt_error' && $err->isErr);
 }
 
 
