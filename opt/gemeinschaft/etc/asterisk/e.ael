@@ -182,9 +182,9 @@ macro cmm-login( new_user_name ) {
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${old_phone_ip}');
 	}
 	if ("${CHANNEL(channeltype)}" = "SIP") {
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(peerip)}');
-		if ("${SIPCHANINFO(recvip)}" != "${SIPCHANINFO(peerip)}") {
-			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(recvip)}');
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${CHANNEL(peerip)}');
+		if ("${CHANNEL(recvip)}" != "${CHANNEL(peerip)}") {
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${CHANNEL(recvip)}');
 		}
 	}
 	
@@ -228,11 +228,11 @@ macro cmm-logout() {
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${old_phone_ip}');
 	}
 	if ("${CHANNEL(channeltype)}" = "SIP") {
-		if ("${SIPCHANINFO(peerip)}" != "${old_phone_ip}") {
-			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(peerip)}');
+		if ("${CHANNEL(peerip)}" != "${old_phone_ip}") {
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${CHANNEL(peerip)}');
 		}
-		if ("${SIPCHANINFO(recvip)}" != "${old_phone_ip}" && "${SIPCHANINFO(recvip)}" != "${SIPCHANINFO(peerip)}") {
-			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${SIPCHANINFO(recvip)}');
+		if ("${CHANNEL(recvip)}" != "${old_phone_ip}" && "${CHANNEL(recvip)}" != "${CHANNEL(peerip)}") {
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${CHANNEL(recvip)}');
 		}
 	}
 	
@@ -717,7 +717,7 @@ context to-gateway {
 
 macro dial-gateway-do( mnumber ) {
 	/*
-	if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway") {
+	if ("${is_from_gateway}" = "1" || "${CHANNEL(peername)}" = "gateway") {
 		Verbose(1,### Don't allow call from outside to go to the outside again - number: ${mnumber});
 		Congestion(3);
 		Hangup();
