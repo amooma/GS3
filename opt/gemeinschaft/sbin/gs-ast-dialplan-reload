@@ -52,27 +52,27 @@ if ($generate_dialplan) {
 	$err=0;
 	@passThru( '/opt/gemeinschaft/sbin/gs-ast-dialplan-gen', $err );
 	if ($err !== 0)
-		echo "Failed to generate dialplan.\n";
+		echo "; Failed to generate dialplan.\n";
 	else
-		echo "Dialplan generated.\n";
+		echo "; Dialplan generated.\n";
 }
 
 
 $asterisk = find_executable('asterisk',
 	array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/'));
 if (! $asterisk) {
-	echo "asterisk not found.\n";
+	echo "; asterisk not found.\n";
 	exit(0);
 	# do not consider that an error
 }
 
-echo "Reloading the dialplan ...\n";
+echo "; Reloading the dialplan ...\n";
 $err=0; $out=array();
 @exec( $asterisk .' -rx \'extensions reload\' 1>>/dev/null', $out, $err );
 $err=0; $out=array();
 @exec( $asterisk .' -rx \'ael reload\' 1>>/dev/null', $out, $err );
 
-echo "Dialplan reloaded.\n"
+echo "; Dialplan reloaded.\n"
 
 
 ?>
