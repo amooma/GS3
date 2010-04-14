@@ -211,7 +211,7 @@ function gs_group_members_groups_get($member_ids, $type, $subgroups = true)
 			$groups[] = $r['id'];		
 		}
 
-	if (($groups) && ($subgroups)) $groups = gs_group_includes_get($groups, true);
+	if (($groups) && ($subgroups)) $groups = gs_group_includes_get($groups, false);
 
 	return $groups;
 	
