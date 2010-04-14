@@ -1,3 +1,13 @@
+Version 2.3 zu 2.4
+
+- Lauter, härter, schneller!
+- Provisioning fuer Tiptel IP280, IP284 und IP286.
+- IAX-Gateways hinzugefuegt.
+- Intercom (*85*) im Dialplan hinzugefuegt.
+- Ueberpruefung Berechtigung 'intercom', 'secretary', 'pickup'
+- Statische Agenten in Queues
+- Rufliste Angenommene Queue Anrufe
+
 Version 2.2 zu 2.3
 
 - Provisioning für Grandstream-Telefone erweitert und verbessert.
