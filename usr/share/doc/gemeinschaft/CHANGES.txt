@@ -5,6 +5,8 @@ Version 2.3 zu 2.4
 - IAX-Gateways hinzugefuegt.
 - Intercom (*85*) im Dialplan hinzugefuegt.
 - Ueberpruefung Berechtigung 'intercom', 'secretary', 'pickup'
+- Statische Agenten in Queues
+- Rufliste Angenommene Queue Anrufe
 
 Version 2.2 zu 2.3
 
