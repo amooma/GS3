@@ -262,6 +262,7 @@ macro rec-playback(id) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/sys-rec-getfile,${id});
 	Playback(/opt/gemeinschaft/sys-rec/${md5hashname});
 	Hangup();
+	return;
 
 }
 
@@ -288,6 +289,7 @@ macro rec-record(extension) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/sys-rec-record,${extension},${filename}.sln,$[${endtime} - ${starttime}]);
 	Playback(/opt/gemeinschaft/sounds/de-DE/vielen-dank);
 	Hangup();
+	return;
 
 }
 
