@@ -331,6 +331,7 @@ _gscnf( 'PB_IMPORTED_ORDER'         , 2                  );
 _gscnf( 'PB_IMPORTED_TITLE'         , "Importiert"       );
 _gscnf( 'PB_INTERNAL_TITLE'         , "Intern"           );
 _gscnf( 'PB_PRIVATE_TITLE'          , "Pers\xC3\xB6nlich");
+_gscnf( 'PB_REVERSE_SEARCH'         , false              );
 
 _gscnf( 'LOCK_DIR'                  , '/var/lock/'       );
 _gscnf( 'CALL_INIT_FROM_NET'        , '0.0.0.0/32'       ); # deny all
