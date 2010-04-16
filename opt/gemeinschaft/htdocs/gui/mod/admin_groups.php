@@ -47,7 +47,7 @@ function confirm_delete() {
 </script>' ,"\n";
 
 $action = @$_REQUEST['action'];
-if (! in_array($action, array('', 'save', 'delete', 'edit', 'insert', 'remove', 'add', 'remove-perm', 'insert-perm'), true))
+if (! in_array($action, array('', 'save', 'delete', 'edit', 'insert', 'remove', 'add', 'remove-perm', 'insert-perm', 'remove-member', 'insert-member'), true))
 	$action = '';
 
 $group_id    = (int)@$_REQUEST['id'];
@@ -171,6 +171,40 @@ if ($action === 'remove-perm') {
 		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Berechtigung konnte nicht entfernt werden.') ,'</div>',"\n";
+	}
+	sleep(1); // FIXME
+	$action = 'edit';  # view
+}
+
+#####################################################################
+# add member to a group
+#####################################################################
+if ($action === 'insert-member') {
+	$pg_member = trim(@$_REQUEST['member']);
+
+	$ret = 	gs_group_member_add($group_id, $pg_member);
+
+	if (isGsError($ret)) {
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	} elseif (! $ret) {
+		echo '<div class="errorbox">', __('Mitglied konnte nicht hinzugef&uuml;gt werden.') ,'</div>',"\n";
+	}
+	sleep(1); // FIXME
+	$action = 'edit';  # view
+}
+
+#####################################################################
+# remove member from a group
+#####################################################################
+if ($action === 'remove-member') {
+	$pg_member = trim(@$_REQUEST['member']);
+
+	$ret = 	gs_group_member_del($group_id, $pg_member);
+
+	if (isGsError($ret)) {
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	} elseif (! $ret) {
+		echo '<div class="errorbox">', __('Mitglied konnte nicht entfernt werden.') ,'</div>',"\n";
 	}
 	sleep(1); // FIXME
 	$action = 'edit';  # view
@@ -434,6 +468,59 @@ if ($action == 'edit') {
 		echo '</td>', "\n";
 		*/
 		echo '<td></td>', "\n";
+		echo '</tr>' ,"\n";
+		$i++;
+	}
+
+?>
+
+</tbody>
+</table>
+
+<br>
+<table cellspacing="1">
+<thead>
+<tr>
+	<th style="min-width:21em;" colspan="4"><?php echo __('Mitglieder der Gruppe'), ' "',htmlEnt($group['name']),'"'; ?></th>
+</tr>
+
+<tr>
+	<th style="min-width:10em;"><?php echo __('Typ'); ?></th>
+	<th style="min-width:10em;"><?php echo __('Mitglied'); ?></th>
+	<th style="min-width:1em;"></th>
+</tr>
+</thead>
+<tbody>
+<?php
+	$group_members = gs_group_members_get_names($group['id']);
+
+	if (!gs_group_connections_get($group['id'])) {
+		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+		echo '<form method="post" action="'.GS_URL_PATH.'">';
+		echo gs_form_hidden($SECTION, $MODULE);
+		echo '<input type="hidden" name="page" value="'.$page.'" />' ,"\n";
+		echo '<input type="hidden" name="id" value="'.$group_id.'" />' ,"\n";
+		echo '<td>';
+		echo '</td>', "\n";
+		echo '<td>';
+		echo '<input type="text" name="member" value="Member" size="20" maxlength="20" style="width:96%;" />';
+		echo '</td>', "\n";
+		echo '<td class="r" colspan="2">', "\n";
+		echo  '<button type="submit" name="action" value="insert-member" title="', __('Mitglied Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
+		echo '</td>', "\n";
+		echo '</tr>' ,"\n";
+		echo '</form>',"\n";
+	}
+
+	$i=0;
+	foreach ($group_members as $group_member) {
+		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+		echo '<td>',$group_member['type']  ,'</td>', "\n";
+		echo '<td>',$group_member['member']  ,'</td>', "\n";
+		echo '<td class="r">', "\n";
+		if (!gs_group_connections_get($group['id']))
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-member&amp;id='.$group['id'].'&amp;page='.$page.'&amp;type='.$group_member['type'].'&amp;member='.$group_member['member']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+		echo '</td>', "\n";
 		echo '</tr>' ,"\n";
 		$i++;
 	}

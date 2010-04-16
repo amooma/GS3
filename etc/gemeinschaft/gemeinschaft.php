@@ -604,6 +604,9 @@ $CALL_RECORDING	        = false;
 //$PB_INTERNAL_TITLE      = "Intern";             #  "
 //$PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";  #  "
 
+$PB_REVERSE_SEARCH      = false;
+  # reverse search of the caller name in the global and 
+  # personal phonebooks
 
 
 /***********************************************************
