@@ -268,7 +268,7 @@ $MODULES['admin'    ]=  array(
 		'gui'          => array('title' => __('GUI'), 'id' => 15013),
 		'queues'       => array('title' => __('Warteschlangen'), 'id' => 15005),
 		'pgroups'      => array('title' => __('Rufannahmegrp.#pl'), 'id' => 15006),
-		'conferences'  => array('title' => __('Konferenzen'), 'id' => 15007),
+		//'conferences'  => array('title' => __('Konferenzen'), 'id' => 15007),
 		//'ivrs'         => array('title' => __('IVRs'), 'id' => 15008),
 		'calls'        => array('title' => __('CDRs'), 'id' => 15009),
 		'reload'       => array('title' => __('Reload'), 'id' => 15010),
