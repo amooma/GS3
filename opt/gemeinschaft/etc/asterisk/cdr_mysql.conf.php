@@ -43,7 +43,11 @@ require_once( GS_DIR .'inc/mysql-find-socket.php' );
 echo "\n";
 if (gs_get_conf('GS_DB_CDR_MASTER_HOST') != null) {
 	$socket = gs_mysql_find_socket( gs_get_conf('GS_DB_CDR_MASTER_HOST') );
-	echo 'hostname = ', gs_get_conf('GS_DB_CDR_MASTER_HOST') ,"\n";  # *MUST* be the master, *NOT* a slave!
+	if ($socket) {
+		echo 'hostname = localhost' ,"\n";  # "localhost" is special
+	} else {
+		echo 'hostname = ', gs_get_conf('GS_DB_CDR_MASTER_HOST') ,"\n";  # *MUST* be the master, *NOT* a slave!
+	}
 	echo 'port = 3306'                                       ,"\n";  # MySQL default
 	echo 'user = '    , gs_get_conf('GS_DB_CDR_MASTER_USER') ,"\n";
 	echo 'password = ', gs_get_conf('GS_DB_CDR_MASTER_PWD' ) ,"\n";
@@ -51,7 +55,11 @@ if (gs_get_conf('GS_DB_CDR_MASTER_HOST') != null) {
 	echo 'table = ast_cdr'                                   ,"\n";
 } else {
 	$socket = gs_mysql_find_socket( gs_get_conf('GS_DB_MASTER_HOST') );
-	echo 'hostname = ', gs_get_conf('GS_DB_MASTER_HOST') ,"\n";  # *MUST* be the master, *NOT* a slave!
+	if ($socket) {
+		echo 'hostname = localhost' ,"\n";  # "localhost" is special
+	} else {
+		echo 'hostname = ', gs_get_conf('GS_DB_MASTER_HOST') ,"\n";  # *MUST* be the master, *NOT* a slave!
+	}
 	echo 'port = 3306'                                   ,"\n";  # MySQL default
 	echo 'user = '    , gs_get_conf('GS_DB_MASTER_USER') ,"\n";
 	echo 'password = ', gs_get_conf('GS_DB_MASTER_PWD' ) ,"\n";
