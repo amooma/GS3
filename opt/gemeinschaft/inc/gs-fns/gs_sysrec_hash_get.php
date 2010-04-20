@@ -1,4 +1,3 @@
-#!/usr/bin/php -q
 <?php
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
@@ -7,10 +6,9 @@
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-*
-* Author: Henning Holtschneider <henning@loca.net>
-*
 * 
+* Author: Andreas Neugebauer <neugebauer@loca.net>
+*
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -27,27 +25,32 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-define( 'GS_VALID', true );  /// this is a parent file
-
-ini_set('implicit_flush', 1);
-ob_implicit_flush(1);
-
-$id = trim(@$argv[1]);
-
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
-include_once( GS_DIR .'inc/db_connect.php' );
+defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/agi-fns.php' );
 
-if (! is_numeric($id) ) {
-	gs_log( GS_LOG_WARNING, 'no id' );
-	die();
+/***********************************************************
+*    returns whether the user has CLIR turned on
+*    for calls to internal/external
+***********************************************************/
+
+function gs_sysrec_hash_get( $sysrec_id )
+{
+	if (! preg_match( '/^[0-9]+$/', $sysrec_id ))
+		return new GsError( 'Sysrecid must be numeric.' );
 	
+	# connect to db
+	#
+	$db = gs_db_slave_connect();
+	if (! $db)
+		return new GsError( 'Could not connect to database.' );
+	
+	$filename = $db->executeGetOne( 'SELECT `md5hashname` FROM `systemrecordings` WHERE id =' . $sysrec_id );
+	
+	if ( strlen($filename) > 0 )
+		return $filename;
+	else
+		return new GsError( 'No such sysrec.' );
 }
 
-$db = gs_db_slave_connect();
-
-$filename = $db->executeGetOne( 'SELECT `md5hashname` FROM `systemrecordings` WHERE `id` = ' . $id );
-echo 'SET VARIABLE md5hashname ' . gs_agi_str_esc($filename) . "\n";
 
 ?>
