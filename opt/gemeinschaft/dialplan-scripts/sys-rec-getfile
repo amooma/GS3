@@ -48,6 +48,6 @@ if (! is_numeric($id) ) {
 $db = gs_db_slave_connect();
 
 $filename = $db->executeGetOne( 'SELECT `md5hashname` FROM `systemrecordings` WHERE `id` = ' . $id );
-echo 'SET VARIABLE md5hashname ' . gs_agi_str_esc($filename) . "\n";
+gs_agi_set_variable( 'md5hashname', $filename );
 
 ?>
