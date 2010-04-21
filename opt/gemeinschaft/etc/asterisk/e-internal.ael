@@ -53,7 +53,7 @@ macro check-valid-extension( mext ) {
 		MixMonitor(${record_call},ab);
 	}
 	
-	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference" && "${exttype}" != "foreign") {
+	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference" && "${exttype}" != "ivr" && "${exttype}" != "foreign") {
 		Verbose(1,### Extension ${mext} is unknown);
 		
 		if ("${is_from_gateway}" = "1") {
@@ -720,6 +720,8 @@ context to-internal-users-self {
 			goto to_user;
 		if ("${exttype}" = "queue")
 			goto to_queue;
+		if ("${exttype}" = "ivr")
+			goto to_ivr;
 		if ("${exttype}" = "unknown")
 			goto to_unknown;
 		// the AGI script failed:
@@ -1060,6 +1062,13 @@ context to-internal-users-self {
 			}
 			Hangup();
 		
+		//----------------------------------------------------------
+		// type is "ivr":
+		//----------------------------------------------------------
+		to_ivr:
+			NoOP(Extension is IVR);
+			goto IVR-${EXTEN}|s|1;
+
 		//----------------------------------------------------------
 		// type is "unknown":
 		//----------------------------------------------------------

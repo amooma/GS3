@@ -680,7 +680,6 @@ context from-gateways {
 		to-internal-custom;
 		//voicemail-any;        // voicemail main (own mailbox)
 		//to-internal-nobody;   // internal phones (nobodies)
-		//ivrs;                 //FIXME IVR demo
 		to-internal-users;    // internal phones (users)
 	}
 	i => {
@@ -976,7 +975,6 @@ context private-call {
 context from-internal-nobody {
 	
 	includes {
-		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
 		voicemail-any;        // voicemail main (any mailbox)
@@ -997,7 +995,6 @@ context from-internal-nobody {
 context from-internal-users {
 	
 	includes {
-		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
 		from-internal-custom;
@@ -1187,6 +1184,13 @@ context toggle-cfwd-hint {
 		}
 	}
 }
+
+//---------------------------------------------------------------------
+//  Contexts for IVRs
+//---------------------------------------------------------------------
+
+#exec "/opt/gemeinschaft/etc/asterisk/e-ivr.ael.php"
+
 
 //---------------------------------------------------------------------
 //  Test-Extensions

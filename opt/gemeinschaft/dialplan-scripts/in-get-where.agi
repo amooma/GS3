@@ -182,6 +182,30 @@ if ($num > 0) {
 }
 */
 
+# is it a ivr?
+#
+$rs = $db->execute(
+'SELECT `i`.`host_id` `host_id`, `h`.`is_foreign`, `h`.`host`
+FROM
+	`ivrs` `i` JOIN
+	`hosts` `h` ON (`h`.`id`=`i`.`host_id`)
+WHERE `i`.`name`=\''. $db->escape($ext) .'\''
+);
+if ($r = $rs->fetchRow()) {
+	if (! $r['is_foreign']) {
+		gs_agi_set_variable( '__exttype', 'ivr' );
+		if ($r['host_id'] < 1) {  // should never happen
+			gs_agi_set_variable( '__dial_to_node', '' );
+		} else {
+			gs_agi_set_variable( '__dial_to_node', get_at_dial( $r['host_id'] ) );
+		}
+	} else {
+		gs_agi_set_variable( '__exttype', 'foreign' );
+		gs_agi_set_variable( '__dial_to_node', $r['host_id'] );
+	}
+	die();
+}
+
 if ($allow_recording) record_file( 'queue', $ext, $caller, $r['id'] /*//FIXME?*/, $user_id );
 gs_agi_set_variable( '__exttype', 'unknown' );
 gs_agi_set_variable( '__dial_to_node', '' );

@@ -68,6 +68,14 @@ if ($num > 0) {
 	exit();
 }
 
+# is it a ivr?
+#
+$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `ivrs` WHERE `name`=\''. $db->escape($ext) .'\'' );
+if ($num > 0) {
+ 	gs_agi_set_variable( '__exttype', 'ivr' );
+ 	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+ 	die();
+}
 
 //...
 
