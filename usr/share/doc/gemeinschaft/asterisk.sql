@@ -5367,7 +5367,7 @@ CREATE TABLE `ast_queue_members` (
   `_queue_id` int(10) unsigned NOT NULL default '0',
   `interface` varchar(25) character set ascii NOT NULL default '',
   `_user_id` int(10) unsigned NOT NULL default '0',
-  `penalty` tinyint(3) unsigned NOT NULL default '0',
+  `penalty` tinyint(3) unsigned NOT NULL default '5',
   `static` tinyint(1) default '0',
   `uniqueid` int(100) unsigned NOT NULL auto_increment,
   `paused` int(1) default NULL,
@@ -7360,6 +7360,37 @@ LOCK TABLES `vm_rec_messages` WRITE;
 /*!40000 ALTER TABLE `vm_rec_messages` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vm_rec_messages` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `penalties`
+--
+
+DROP TABLE IF EXISTS `penalties`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+ CREATE TABLE `penalties` (
+ `_queue_id` int(10) unsigned NOT NULL,
+ `_user_id` int(10) unsigned NOT NULL,
+ `_host_id` mediumint(8) unsigned NOT NULL,
+ `penalty` int(1) NOT NULL,
+ PRIMARY KEY  (`_queue_id`,`_user_id`,`_host_id`),
+ KEY `penaltys_ibfk_2` (`_user_id`),
+ KEY `penaltys_ibfk_3` (`_host_id`),
+ CONSTRAINT `penalties_ibfk_1` FOREIGN KEY (`_queue_id`) REFERENCES `ast_queues` (`_id`) ON DELETE CASCADE,
+ CONSTRAINT `penalties_ibfk_2` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+ CONSTRAINT `penalties_ibfk_3` FOREIGN KEY (`_host_id`) REFERENCES `hosts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `penalties`
+--
+
+LOCK TABLES `penalties` WRITE;
+/*!40000 ALTER TABLE `penalties` DISABLE KEYS */;
+/*!40000 ALTER TABLE `penalties` ENABLE KEYS */;
+UNLOCK TABLES;
+
 
 --
 -- Current Database: `asterisk`
