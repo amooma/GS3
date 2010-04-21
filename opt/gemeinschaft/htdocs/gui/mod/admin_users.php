@@ -1351,7 +1351,8 @@ echo '<a href="', gs_url($SECTION, $MODULE, null, 'queue_id='.$pen_map['_queue_i
 	echo '<th>', __('Skill'), '</th>';
 	echo '<th></th>';
 	echo '</thead><tbody>';
-	$rs = $DB->execute('SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_id` NOT IN (SELECT `_queue_id` FROM `penalties` WHERE `_user_id`='.$uid.')');
+	$uhid = $DB->executeGetOne('SELECT `host_id` FROM `users` WHERE `id`='.$uid);
+	$rs = $DB->execute('SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_host_id`='.$uhid.' AND `_id` NOT IN (SELECT `_queue_id` FROM `penalties` WHERE `_user_id`='.$uid.')');
 	echo '<tr><td>';
 	echo '<select name="queue_id" size="5">';
 	while ($queue_map = $rs->fetchRow()) {
