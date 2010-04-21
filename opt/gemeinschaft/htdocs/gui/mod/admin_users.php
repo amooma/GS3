@@ -80,8 +80,9 @@ $page        = (int)@$_REQUEST['page'     ] ;
 $edit_user   = trim(@$_REQUEST['edit'     ]);
 $delete_user = trim(@$_REQUEST['delete'   ]);
 $action      = trim(@$_REQUEST['action'   ]);
-
-if (! in_array($action, array('list','del','add','add-and-view','view','edit','save','insert-group','remove-group'), true))
+$penalty     = (int)trim(@$_REQUEST['penalty'   ]);
+$queue_id     = (int)trim(@$_REQUEST['queue_id'   ]);
+if (! in_array($action, array('list','del','add','add-and-view','view','edit','save','insert-group','remove-group','setpenalty','delpenalty'), true))
 	$action = 'list';
 
 $cbdelete    = trim(@$_REQUEST['cbdelete' ]);
@@ -113,7 +114,7 @@ $bp_del_h    = (int)@$_REQUEST['bp_del_h' ] ;
 
 $group       = (int)@$_REQUEST['group'    ] ;
 
-
+$pen_avail = range( 0, 9);
 if ($edit_user) {
 	
 	if ($action === 'insert-group') {
@@ -178,7 +179,21 @@ if ($action === 'add' || $action === 'add-and-view') {
 	}
 	
 }
+if (($action === 'delpenalty') && ($edit_user) && ($uid > 0) && ($queue_id > 0 )) {
+	$DB->execute('DELETE from `penalties` WHERE `_user_id`='.$uid.' AND `_queue_id`='.$queue_id);
+	$DB->execute('UPDATE `ast_queue_members` SET `penalty`=DEFAULT WHERE `_queue_id`='.$queue_id.' AND `_user_id`='.$uid);
+	$action = 'view';
+}
+if (($action === 'setpenalty') && ($edit_user) && ($uid > 0) && ($queue_id > 0 )) {
+	$qhid = (int)$DB->executeGetOne('SELECT `_host_id` FROM `ast_queues` WHERE `_id`='.$queue_id);
+	$uhid = (int)$DB->executeGetOne('Select `host_id` FROM `users` WHERE `id`='.$uid);
+	if (in_array($penalty, $pen_avail) && ( $hid == $qid )){
+		$DB->execute('REPLACE INTO `penalties` VALUES ('.$queue_id.','.$uid.','.$qhid.','.$penalty.')');
+		$DB->execute('UPDATE `ast_queue_members` SET `penalty`='.$penalty.' WHERE `_queue_id`='.$queue_id.' AND `_user_id`='.$uid);
+		$action = 'view';
+	}
 
+}
 if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 	
 	if ($cbdelete) {
@@ -1219,7 +1234,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 <?php
 //FIXME - invalid XHTML! {
 ?>
-<br />
+<br />	
 <table cellspacing="1">
 <thead>
 <tr>
@@ -1289,7 +1304,79 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 <?php
 //FIXME - invalid XHTML! }
 ?>
+<?php
+	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+	echo gs_form_hidden($SECTION, $MODULE);
 
+	echo '<table><thead><tr>';
+	echo '<th colspan="3">', __('Vorhandene Skills'), '</th></tr>';
+	echo '<tr>';
+	echo '<th>', __('Warteschlange'), '</th>';
+	echo '<th>', __('Skill'), '</th>';
+	echo '<th></th>';
+	echo '</thead><tbody>';
+	$rs = $DB->execute('SELECT `q`.`name`, `penalty`, `_title`, `u`.`host_id`, `p`.`_queue_id` from `users` u,  `penalties` p, `ast_queues` q WHERE `p`.`_user_id`='.$uid.' AND `p`.`_user_id`=`u`.`id` AND `q`.`_id`=`p`.`_queue_id`');
+	while ($pen_map = $rs->fetchRow()) {
+		echo '<tr><td>', $pen_map['name'], ' ', $pen_map['_title'], '</td>';
+		echo '<td>';
+		echo '<select name="penalty">';
+		foreach ($pen_avail as $pen) {
+			if ($pen_map['penalty'] == $pen) {
+				echo '<option value="', $pen, '" selected="selected">';
+				echo $pen, '</option>';
+			} else {
+				echo '<option value="', $pen,  '">', $pen, ' </option>';
+			}
+					}
+		echo '</select>';
+		echo '</td>';
+		echo '<td>';
+			echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
+			echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>' ,"\n";
+			echo '<input type="hidden" name="action" value="setpenalty" />', "\n";
+			echo '<input type="hidden" name="queue_id" value="', $pen_map['_queue_id'], '" />', "\n";
+			echo '<input type="hidden" name="edit" value="', rawUrlEncode($edit_user), '">', "\n";
+			echo '</form>';
+echo '<a href="', gs_url($SECTION, $MODULE, null, 'queue_id='.$pen_map['_queue_id'] .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=delpenalty' .'&amp;name='. rawUrlEncode($name) ), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '</td>';
+		echo '</tr>';
+	}
+	echo '</tbody></table>';
+	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<table><thead><tr>';
+	echo '<th colspan="3">', __('Verf&uuml;gbare Skills'), '</th></tr>';
+	echo '<tr>';
+	echo '<th>', __('Warteschlange'), '</th>';
+	echo '<th>', __('Skill'), '</th>';
+	echo '<th></th>';
+	echo '</thead><tbody>';
+	$rs = $DB->execute('SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_id` NOT IN (SELECT `_queue_id` FROM `penalties` WHERE `_user_id`='.$uid.')');
+	echo '<tr><td>';
+	echo '<select name="queue_id" size="5">';
+	while ($queue_map = $rs->fetchRow()) {
+		echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
+		echo '>',  $queue_map['name'], ' ', $queue_map['_title'], '</option>', "\n";
+	}
+	echo '</select>';
+	echo '</td>';
+	echo '<td>';
+	echo '<select name="penalty">';
+	foreach ($pen_avail as $pen) {
+		echo '<option value="', $pen,  '">', $pen, ' </option>';
+	}
+	echo '</select>';
+	echo '</td>';
+	echo '<td>';
+	echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
+	echo '<img alt="', __('Hinzuf&uuml;gen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>' ,"\n";
+	echo '<input type="hidden" name="action" value="setpenalty" />', "\n";
+	echo '<input type="hidden" name="edit" value="', rawUrlEncode($edit_user), '">', "\n";
+	echo '</td>';
+	echo '</tr>';
+	echo '</form>';
+	echo '</tbody></table>';
+?>
 <?php
 }
 ?>

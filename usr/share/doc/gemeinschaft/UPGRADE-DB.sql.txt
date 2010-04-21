@@ -1222,3 +1222,22 @@ CREATE TABLE IF NOT EXISTS `ivrs` (
   `i_action_value` varchar(20) collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
+
+--
+-- Since: Penalties 
+--
+alter table `ast_queue_members`, change `penalty` `penalty` tinyint(3) unsigned NOT NULL default '5';
+
+ CREATE TABLE `penalties` (
+  `_queue_id` int(10) unsigned NOT NULL,
+  `_user_id` int(10) unsigned NOT NULL,
+  `_host_id` mediumint(8) unsigned NOT NULL,
+  `penalty` int(1) NOT NULL,
+  PRIMARY KEY  (`_queue_id`,`_user_id`,`_host_id`),
+  KEY `penaltys_ibfk_2` (`_user_id`),
+  KEY `penaltys_ibfk_3` (`_host_id`),
+  CONSTRAINT `penalties_ibfk_1` FOREIGN KEY (`_queue_id`) REFERENCES `ast_queues` (`_id`) ON DELETE CASCADE,
+  CONSTRAINT `penalties_ibfk_2` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `penalties_ibfk_3` FOREIGN KEY (`_host_id`) REFERENCES `hosts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
+
