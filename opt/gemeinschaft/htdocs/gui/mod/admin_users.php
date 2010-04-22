@@ -187,7 +187,7 @@ if (($action === 'delpenalty') && ($edit_user) && ($uid > 0) && ($queue_id > 0 )
 if (($action === 'setpenalty') && ($edit_user) && ($uid > 0) && ($queue_id > 0 )) {
 	$qhid = (int)$DB->executeGetOne('SELECT `_host_id` FROM `ast_queues` WHERE `_id`='.$queue_id);
 	$uhid = (int)$DB->executeGetOne('Select `host_id` FROM `users` WHERE `id`='.$uid);
-	if (in_array($penalty, $pen_avail) && ( $hid == $qid )){
+	if (in_array($penalty, $pen_avail) && ( $qhid == $uhid )){
 		$DB->execute('REPLACE INTO `penalties` VALUES ('.$queue_id.','.$uid.','.$qhid.','.$penalty.')');
 		$DB->execute('UPDATE `ast_queue_members` SET `penalty`='.$penalty.' WHERE `_queue_id`='.$queue_id.' AND `_user_id`='.$uid);
 		$action = 'view';
