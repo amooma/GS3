@@ -194,7 +194,7 @@ if ($action === 'addstatic') {
 			'`_id`='.$queue_id
 			);
 			$user_name = $DB->executeGetOne(
-			'SELECT `name` FROM `ast_sipfriends_gs` '.
+			'SELECT `name` FROM `ast_sipfriends` '.
 			'WHERE `_user_id`='.$agent_id
 			);
 			if (($user_name != '') && ($queue_name != '')) {
