@@ -748,7 +748,7 @@ psetting('account|EnableUserEqualPhone', '1');	# 0 = disable, 1 = enable
 psetting('account|srtp_encryption', '0');	# 0 = disable, 1 = enable
 psetting('account|ptime', '0');			# 0 = disable, 10,20,30,40,50 or 60ms
 psetting('account|ShareLine', '0');		# 0 = disable, 1 = enable
-psetting('account|dialoginfo_callpickup', '1');	# 0 = disable, 1 = enable
+psetting('account|dialoginfo_callpickup', '0');	# 0 = disable, 1 = enable
 psetting('account|AutoAnswer', '0');		# 0 = disable, 1 = enable
 psetting('account|MissedCallLog', '0');		# 0 = disable, 1 = enable
 psetting('account|AnonymousCall_OnCode', '');
