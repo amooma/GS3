@@ -275,6 +275,7 @@ $PROV_ALLOW_NET             = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.25
 //$PROV_MODELS_ENABLED_AASTRA      = '*';  # or '51i,53i,55i,57i'
 //$PROV_MODELS_ENABLED_GRANDSTREAM = '*';  # or 'bt110,gxp2000,gxp2020', ...
 //$PROV_MODELS_ENABLED_TIPTEL      = '*';  # or 'ip280,ip284,ip286'
+//$PROV_MODELS_ENABLED_POLYCOM     = '*';  # or 'spip-550,spip-670', ...
 
 
 
@@ -412,6 +413,20 @@ $GRANDSTREAM_PROV_FW_UPDATE = false;  # allow firmware updates?
   # do not show these softkey functions in GUI,
   # comma separated list, default: ''
 
+//-----------------------[ Polycom ]----------------------//
+
+$POLYCOM_PROV_ENABLED        = false;  # do provisioning for Polycom?
+
+$POLYCOM_PROV_PB_NUM_RESULTS = 150;
+  # number of results in phonebook search on Snom phone
+
+$POLYCOM_PROV_HTTP_USER      = 'gs';
+$POLYCOM_PROV_HTTP_PASS      = 'gEheiM23y89sdo23';
+  # username and password for HTTP push notifications
+  # note: the notification will not work with empty username/password
+
+$POLYCOM_PROV_ALLOW_LOG_PUT  = false;
+  # allow Polycom phones to PUT their logs to Apache
 
 //-----------------------[ Tiptel ]-----------------------//
 

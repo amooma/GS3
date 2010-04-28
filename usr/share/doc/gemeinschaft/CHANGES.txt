@@ -10,6 +10,7 @@ Version 2.3 zu 2.4
 - Ueberpruefung Berechtigung 'intercom', 'secretary', 'pickup'
 - Statische Agenten in Queues
 - Rufliste Angenommene Queue Anrufe
+- BETA: Provisioning fuer Polycom SoundPoint IP und SoundStation IP
 - ...
 
 Version 2.2 zu 2.3

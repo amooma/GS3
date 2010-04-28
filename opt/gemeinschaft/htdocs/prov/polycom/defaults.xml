@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone="yes"?>
+<!-- Default Master SIP Configuration File-->
+<!-- For information on configuring Polycom VoIP phones please refer to the -->
+<!-- Configuration File Management white paper available from: -->
+<!-- http://www.polycom.com/common/documents/whitepapers/configuration_file_management_on_soundpoint_ip_phones.pdf -->
+<!-- $RCSfile: 000000000000.cfg,v $  $Revision: 1.19.2.1 $ -->
+<APPLICATION APP_FILE_PATH="sip.ld" CONFIG_FILES="phone-[PHONE_MAC_ADDRESS].cfg, sip.cfg" MISC_FILES="" LOG_FILE_DIRECTORY="" OVERRIDES_DIRECTORY="" CONTACTS_DIRECTORY="" LICENSE_DIRECTORY="">
+<APPLICATION_SPIP300 APP_FILE_PATH_SPIP300="sip_212.ld" CONFIG_FILES_SPIP300="phone-[PHONE_MAC_ADDRESS].cfg, sip_212.cfg"/>
+<APPLICATION_SPIP500 APP_FILE_PATH_SPIP500="sip_212.ld" CONFIG_FILES_SPIP500="phone-[PHONE_MAC_ADDRESS].cfg, sip_212.cfg"/>
+</APPLICATION>
