@@ -89,7 +89,6 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-gxv3005'] = 'Grandstream GXV 3005';
 	$phone_types['grandstream-gxv3140'] = 'Grandstream GXV 3140';
 }
-
 if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 	$phone_types['tiptel-ip280'] = 'Tiptel IP 280';
 	$phone_types['tiptel-ip284'] = 'Tiptel IP 284';
@@ -112,10 +111,10 @@ if (gs_get_conf('GS_POLYCOM_PROV_ENABLED')) {
 	$phone_types['polycom-spip-650'] = 'Polycom SoundPoint IP 650';
 	$phone_types['polycom-spip-670'] = 'Polycom SoundPoint IP 670';
 }
+
 if (gs_get_conf('GS_ELMEG_PROV_ENABLED')) {
 	$phone_types['elmeg-290'  ] = 'ElmegIP 290';
 }
-
 
 $per_page = (int)GS_GUI_NUM_RESULTS;
 

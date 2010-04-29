@@ -426,20 +426,6 @@ $GRANDSTREAM_PROV_FW_UPDATE = false;  # allow firmware updates?
   # do not show these softkey functions in GUI,
   # comma separated list, default: ''
 
-//-----------------------[ Polycom ]----------------------//
-
-$POLYCOM_PROV_ENABLED        = false;  # do provisioning for Polycom?
-
-$POLYCOM_PROV_PB_NUM_RESULTS = 150;
-  # number of results in phonebook search on Snom phone
-
-$POLYCOM_PROV_HTTP_USER      = 'gs';
-$POLYCOM_PROV_HTTP_PASS      = 'gEheiM23y89sdo23';
-  # username and password for HTTP push notifications
-  # note: the notification will not work with empty username/password
-
-$POLYCOM_PROV_ALLOW_LOG_PUT  = false;
-  # allow Polycom phones to PUT their logs to Apache
 
 //------------------------[ Elmeg ]-----------------------//
 
@@ -498,6 +484,22 @@ $TIPTEL_PROV_FW_UPDATE = false;  # allow firmware updates?
   # 'f18' Group Listening
   # 'f19' Public Hold
   # 'f20' Private Hold
+
+
+//-----------------------[ Polycom ]----------------------//
+
+$POLYCOM_PROV_ENABLED        = false;  # do provisioning for Polycom?
+
+$POLYCOM_PROV_PB_NUM_RESULTS = 150;
+  # number of results in phonebook search on Snom phone
+
+$POLYCOM_PROV_HTTP_USER      = 'gs';
+$POLYCOM_PROV_HTTP_PASS      = 'gEheiM23y89sdo23';
+  # username and password for HTTP push notifications
+  # note: the notification will not work with empty username/password
+
+$POLYCOM_PROV_ALLOW_LOG_PUT  = false;
+  # allow Polycom phones to PUT their logs to Apache
 
 
 /***********************************************************
