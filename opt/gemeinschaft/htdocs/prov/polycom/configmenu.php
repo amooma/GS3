@@ -28,16 +28,16 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-define("GS_VALID", true); // this is a parent file
+define( 'GS_VALID', true );  // this is a parent file
 
-require_once("../../../inc/conf.php");
-require_once(GS_DIR ."inc/db_connect.php");
+require_once( dirname(__FILE__) .'/../../../inc/conf.php' );
+require_once( GS_DIR .'inc/db_connect.php' );
 
-header("Content-Type: text/html; charset=utf-8");
-header("Expires: 0");
-header("Pragma: no-cache");
-header("Cache-Control: private, no-cache, must-revalidate");
-header("Vary: *");
+header( 'Content-Type: text/html; charset=utf-8' );
+header( 'Expires: 0' );
+header( 'Pragma: no-cache' );
+header( 'Cache-Control: private, no-cache, must-revalidate' );
+header( 'Vary: *' );
 
 $phonemenu_doctype = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 
@@ -45,24 +45,24 @@ $phonemenu_doctype = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional
 
 function _ob_send()
 {
-        if (!headers_sent()) {
-                Header("Content-Type: text/html; charset=utf-8");
-                Header("Content-Length: ". (int) @ob_get_length());
+        if (! headers_sent()) {
+                header( 'Content-Type: text/html; charset=utf-8' );
+                header( 'Content-Length: '. (int)@ob_get_length() );
         }
 
         @ob_end_flush();
         die();
 }
 
-function _err($msg = "")
+function _err( $msg='' )
 {
         @ob_end_clean();
         ob_start();
 
-        echo "<html>\n";
-        echo "<head><title>". __("Fehler") ."</title></head>\n";
-        echo "<body><b>". __("Fehler") ."</b>: ". $msg ."</body>\n";
-        echo "</html>\n";
+        echo '<html>',"\n";
+        echo '<head><title>'. __('Fehler') .'</title></head>',"\n";
+        echo '<body><b>'. __('Fehler') .'</b>: '. $msg .'</body>',"\n";
+        echo '</html>',"\n";
 
         _ob_send();
 }
@@ -71,10 +71,10 @@ function getUserID($ext)
 {
 	global $db;
 	
-	if (!preg_match("/^\d+$/", $ext)) _err('Invalid username');
+	if (!preg_match('/^\d+$/', $ext)) _err('Invalid username');
 	
-	$user_id = (int) $db->executeGetOne("SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`='". $db->escape($ext) ."'");
-	if ($user_id < 1) _err("Unknown user");
+	$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
+	if ($user_id < 1) _err('Unknown user');
 	return $user_id;
 }
 
@@ -93,28 +93,28 @@ if (!in_array($type, array('forward'), true)) {
 
 $db = gs_db_slave_connect();
 
-$url_polycom_provdir = GS_PROV_SCHEME ."://". GS_PROV_HOST . (GS_PROV_PORT ? ":". GS_PROV_PORT : "") . GS_PROV_PATH ."polycom/";
+$url_polycom_provdir = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'. GS_PROV_PORT : '') . GS_PROV_PATH .'polycom/';
 $url_polycom_menu = $url_polycom_provdir .'configmenu.php';
 
 #################################### INITIAL SCREEN {
 
 if(!$type) {
-	$mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST["m"])));
+	$mac = preg_replace('/[^\dA-Z]/', '', strtoupper(trim(@$_REQUEST['m'])));
 	$user = trim(@$_REQUEST['u']);
 		
 	ob_start();
 
 	echo $phonemenu_doctype ."\n";
-	echo "<html>\n";
-	echo "<head><title>Konfigurationsmen\xC3\xBC</title></head>\n";
-	echo "<body><br />\n";
+	echo '<html>',"\n";
+	echo '<head><title>Konfigurationsmen\xC3\xBC</title></head>',"\n";
+	echo '<body><br />',"\n";
 
-	echo "- <a href=\"". $url_polycom_menu ."?m=". $mac ."&amp;u=". $user ."&amp;t=forward\">Rufumleitung</a><br />\n";
-	echo "- <a href=\"". $url_polycom_provdir ."features.php?m=". $mac ."&amp;u=". $user ."&amp;t=forward\">Dienstmerkmale</a><br />\n";
-//	echo "- <a href=\"". $url_polycom_provdir ."rt.php?m=". $mac ."&amp;u=". $user ."&amp;t=forward\">Klingelt\xC3\xB6ne</a><br />\n";
-	echo "- <a href=\"Key:Setup\">Lokale Telefoneinstellungen</a><br />\n";
+	echo '- <a href="'. $url_polycom_menu .'?m='. $mac .'&amp;u='. $user .'&amp;t=forward">Rufumleitung</a><br />',"\n";
+	echo '- <a href="'. $url_polycom_provdir .'features.php?m='. $mac .'&amp;u='. $user .'&amp;t=forward">Dienstmerkmale</a><br />',"\n";
+//	echo '- <a href="'. $url_polycom_provdir .'rt.php?m='. $mac .'&amp;u='. $user .'&amp;t=forward">Klingelt\xC3\xB6ne</a><br />',"\n";
+	echo '- <a href="Key:Setup">Lokale Telefoneinstellungen</a><br />',"\n";
 
-	echo "</body>\n";
+	echo '</body>',"\n";
 
 	echo "</html>\n";
 
@@ -127,23 +127,23 @@ if(!$type) {
 #################################### FORWARD SCREEN {
 
 if ($type == 'forward') {
-	$mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST['m'])));
+	$mac = preg_replace('/[^\dA-Z]/', '', strtoupper(trim(@$_REQUEST['m'])));
 	$user = trim(@$_REQUEST['u']);
 	
 	ob_start();
 
 	echo $phonemenu_doctype ."\n";
-	echo "<html>\n";
-	echo "<head><title>Rufumleitung</title></head>\n";
-	echo "<body><br />\n";
+	echo '<html>',"\n";
+	echo '<head><title>Rufumleitung</title></head>',"\n";
+	echo '<body><br />',"\n";
 
 
-	echo "- <a href=\"". $url_polycom_provdir ."callforward.php?m=". $mac ."&amp;u=". $user ."\">Rufumleitung</a><br />\n";
-	echo "- <a href=\"". $url_polycom_provdir ."extnumbers.php?m=". $mac ."&amp;u=". $user ."\">Externe Nummern</a><br />\n";
+	echo '- <a href="'. $url_polycom_provdir .'callforward.php?m='. $mac .'&amp;u='. $user .'">Rufumleitung</a><br />',"\n";
+	echo '- <a href="'. $url_polycom_provdir .'extnumbers.php?m='. $mac .'&amp;u='. $user .'">Externe Nummern</a><br />',"\n";
 
-	echo "</body>\n";
+	echo '</body>',"\n";
 
-	echo "</html>\n";
+	echo '</html>',"\n";
 
 	_ob_send();
 }
