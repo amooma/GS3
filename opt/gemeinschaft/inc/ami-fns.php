@@ -34,20 +34,20 @@ require_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/log.php' );
 
 class AMI {
-
+        
 	private $_socket;
 	
 	private function _check_socket() {
-	
+	        
 		if (is_resource($this->_socket))
 			return true;
 		else
 			return false;
-	
+                
 	}
 	
 	public function ami_send_command( $command ) {
-	
+	        
 		@fWrite( $this->_socket, $command, strLen($command) );
 		@fFlush( $this->_socket );
 		
@@ -64,7 +64,7 @@ class AMI {
 		return $data;
 		
 	}
-
+	
 	// zum ausgeben des arrays
 	public function ausgeben($data) {
 		foreach($data as $name => $val) {
@@ -74,11 +74,14 @@ class AMI {
 	
 	
 	public function ami_login($username, $password, $host, $port) {
-
+		
 		$this->_socket = fSockOpen($host, $port, $err, $errmsg, 2);
 		
-		if (! $this->_check_socket()) return false;		
-
+		if (! $this->_check_socket()) {
+			gs_log( GS_LOG_WARNING, 'Connection to AMI on '. $host .' failed' );
+			return false;
+		}
+		
 		# check: is AMI?
 		$tStart = time();
 		$data = '';
@@ -87,29 +90,29 @@ class AMI {
 			if (@ preg_match('/[\\r\\n]/', $data)) break;
 			usleep(1000);  # sleep 0.001 secs
 		}
-
+		
 		if (! preg_match('/^Asterisk [^\/]+\/(\d(?:\.\d)?)/mis', $data, $m)) {
-			echo 'Incompatible' ,"\n"; # TODO
+			gs_log ( GS_LOG_WARNING, 'Incompatible Asterisk Manager Interface on '. $host );
 			$m = array( 1 => '0.0' );
 		} else {
 			if ($m[1] > '1.1') {
 				# Asterisk 1.4: manager 1.0
 				# Asterisk 1.6: manager 1.1
-				echo 'Asterisk manager interface on host speaks a new protocol version m[1]',"\n"; #TODO
+				gs_log( GS_LOG_WARNING, 'Asterisk manager interface on '. $host .' speaks a new protocol version ('. $m[1] .')' );
 				# let's try anyway and hope to understand it			
 			}
-		
-			$req = "Action: Login\r\n"
-			     . "Username: ". $username ."\r\n"
-			     . "Secret: ". $password ."\r\n"
-			     . "Events: off\r\n"
-			     . "\r\n";
+			
+			$req = 'Action: Login' ."\r\n"
+			        . 'Username: '. $username ."\r\n"
+			        . 'Secret: '. $password ."\r\n"
+			        . 'Events: off' ."\r\n"
+			        . "\r\n";
 			$data = $this->ami_send_command($req);
 			if (! strToLower($data['Message']) === 'authentication accepted') {
-				echo 'Authentication to AMI on failed';
+				gs_log( GS_LOG_WARNING, 'Authentication to AMI on '. $host .' failed' );
 				return false;
 			}
-				
+                        
 		}
 		
 		return true;
@@ -119,25 +122,25 @@ class AMI {
 		
 		if (! $this->_check_socket()) return false;
 		
-		$data = $this->ami_send_command("Action: Logoff\r\n\r\n");
+		$data = $this->ami_send_command('Action: Logoff'."\r\n\r\n");
 		
 		if (strToLower($data['Response']) === 'goodbye') {
 			return true;
 		} else {
 			return false;
 		}
-
+		
 	}
-
+	
 }
 
 /*$ami = new AMI;
 $ami->ami_login('admin', 'password', '127.0.0.1', 5038);
 
-$data = $ami->ami_send_command("Action: Ping\r\n\r\n");
+$data = $ami->ami_send_command('Action: Ping'."\r\n\r\n");
 $ami->ausgeben($data);
 
-$data = $ami->ami_send_command("Action: Queues\r\n\r\n");
+$data = $ami->ami_send_command('Action: Queues'."\r\n\r\n");
 $ami->ausgeben($data);
 
 $ami->ami_logout();
