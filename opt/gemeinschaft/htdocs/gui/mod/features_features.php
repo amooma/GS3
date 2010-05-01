@@ -31,7 +31,11 @@ include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_clir_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_clir_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
+include_once( GS_DIR .'inc/ami-fns.php' );
 
+require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
@@ -61,8 +65,73 @@ if (@$_REQUEST['action']=='save') {
 	
 }
 
+$user_groups  = gs_group_members_groups_get(
+	array(@$_SESSION['sudo_user']['info']['id']), 'user');
+$queues_allowed = gs_group_members_get( gs_group_permissions_get(
+	$user_groups, 'login_queues', 'queue'));
+$user = gs_user_get( $_SESSION['sudo_user']['name'] );
+$queue_ids = @$_REQUEST['queue_id'];
 
+if (@$_REQUEST['action']=='loginqueue' && (! empty($queue_ids))) {
+	$ami = new AMI;
+	$ami->ami_login('gscc', 'gspass', '127.0.0.1', 5038);
+	$agent = $DB->executeGetOne('SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='.$user['id']);
+	// Ich vertraue  gs_group_members_get
+	// in dem array sind NUR int()
+	$queue_ids = array_intersect($queue_ids, $queues_allowed);
+	$rs = $DB->execute(
+		'SELECT `_id`, `name` FROM `ast_queues`  WHERE `_host_id`='.$user['host_id'].' 
+		AND `_id` IN ('.implode(",", $queue_ids).') 
+		AND `_id` NOT IN 
+		(SELECT `_queue_id` FROM `ast_queue_members` WHERE `_user_id`='.$user['id']. ')'
+	); 
+	while ($queue_map = $rs->fetchRow()) {
+		$penalty = $DB->executeGetOne('SELECT `penalty` FROM `penalties` WHERE `_user_id`='.$user['id'].' AND `_queue_id`='.$queue_map['_id']);
+		if (! $penalty) $penalty='DEFAULT';
+		$interface = 'SIP/'.$agent;
+		$DB->execute(
+			'INSERT INTO `ast_queue_members` SET 
+			`_user_id` ='.(int)$user['id'].', '. 
+			'`_queue_id` ='.(int)$queue_map['_id'].', '.
+			'`queue_name`= \''.$queue_map['name'].'\',
+			`interface` = \''.$interface.'\',
+			`penalty`='.$penalty
+		);
+		$ami->ami_send_command(
+			'Action: Queuelog'."\n".
+			'Queue: '.$queue_map['name']."\n".
+			'Interface: '.$agent."\n".
+			'Event: AGENTLOGIN'."\r\n\r\n"
+		);
+	}
+$ami->ami_logout();
+}
 
+if (@$_REQUEST['action']=='logoutqueue'  && (! empty($queue_ids))) {
+	$ami = new AMI;
+	$ami->ami_login('gscc', 'gspass', '127.0.0.1', 5038);
+	$agent = $DB->executeGetOne('SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='.$user['id']);
+	$interface = 'SIP/'.$agent;
+	$queue_ids = array_intersect($queue_ids, $queues_allowed);
+	$rs = $DB->execute(
+		'SELECT `queue_name` FROM `ast_queue_members` WHERE 
+		`_user_id`='.$user['id'].'
+		AND `static`= 0
+		AND `_queue_id` IN ('.implode(",", $queue_ids).')'
+	);
+	while ($queue_map = $rs->fetchRow()) {
+			$ami->ami_send_command(
+				'Action: Queuelog'."\n".
+				'Queue: '.$queue_map['queue_name']."\n".
+				'Interface: '.$agent."\n".
+				'Event: AGENTLOGOFF'."\r\n\r\n"
+			);
+	}
+	$DB->execute('DELETE from `ast_queue_members` WHERE
+		`_user_id`='.$user['id'].'
+		AND `static`= 0 
+		AND `_queue_id` IN ('.implode(",", $queue_ids).')'
+	);}
 
 
 $clir = gs_clir_get( $_SESSION['sudo_user']['name'] );
@@ -138,7 +207,73 @@ if (isGsError($callwaiting)) {
 </tbody>
 </table>
 </form>
+<?php
+$rs = $DB->execute('SELECT `_queue_id` FROM `ast_queue_members` WHERE  `static`=0 AND `_user_id` ='.$user['id']); 
+while ( $queues = $rs->fetchrow()) {
+	$queues_in =  explode(',', $queues['_queue_id']);
+}
+if (empty($queues_in)) {
+	$queues_avail = $queues_allowed;
+} else {
+	$queues_avail = array_diff( $queues_allowed, $queues_in); 
+}
+?>
+<table>
+<tr><th colspan="2">
+<?php echo __('Warteschlangen');?>
+</th></tr>
+<tr><th>
+<?php echo __('Verf&uuml;gbare');?>
+</th><th>
+<?php echo __('Angemeldet');?>
+</th></tr>
+<tr><td colspan="2"><small>
+<?php echo __('Mehrfachauswahl mit gedr&uuml;ckter <q>STRG</q> oder <q>SHIFT</q> Taste m&ouml;glich.');?>
+</small></td></tr>
+<tr><td>
+<form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
+<input type="hidden" name="action" value="loginqueue" />
+<select name="queue_id[]" size="5" multiple="multiple">
+<?php
+$rs = $DB->execute(
+	'SELECT `_id`, `name`, `_title` FROM `ast_queues`  
+	WHERE `_host_id`='.$user['host_id'].' 
+	AND `_id` IN ('.implode(",", $queues_avail).') 
+	AND `_id` NOT IN 
+	(SELECT `_queue_id` FROM `ast_queue_members` WHERE `_user_id`='.$user['id']. ')'
+);
+while ( $queue_map = $rs->fetchrow()) {
+	echo $queue_map['name'], $queue_map['_title'], "\n";
+	echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
+	echo '>',  $queue_map['name'], ' ', $queue_map['_title'], '</option>', "\n";
+}
+?>
+</select>
+<?php
+echo '<button type="submit" title="', __('Anmelden'), '" class="plain">';
+echo '<img alt="', __('Anmelden') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/next.png" /></button>', "\n";
+?></form>
+</td><td>
+<form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
+<input type="hidden" name="action" value="logoutqueue" />
+<?php
+echo '<button type="submit" title="', __('Abmelden'), '" class="plain">';
+echo '<img alt="', __('Abmelden') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/previous.png" /></button>', "\n";
+?>
+<select name="queue_id[]" size="5" multiple="multiple">
+<?php
+$rs = $DB->execute('SELECT `queue_name`, `_title`, `_queue_id`, `static` FROM `ast_queue_members`, `ast_queues` WHERE `_user_id`='.$user['id'].'  AND `_queue_id`=`_id`');
+while ( $queue_map = $rs->fetchrow()) {
+	echo '<option value="', (int)$queue_map['_queue_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
+	if ($queue_map['static'] == '1') echo 'disabled="disabled"'; 
+	echo '>',  $queue_map['queue_name'], ' ', $queue_map['_title'], '</option>', "\n";
+}
+?>
+</select>
+</form>
+</td>
 
+</tr></table>
 <br />
 <br />
 <p class="small" style="max-width:48em;">

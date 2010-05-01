@@ -53,7 +53,8 @@ function gs_group_permission_types_get()
 		'group_pickup',
 		'pickup',
 		'secretary',
-		'intercom'
+		'intercom',
+		'login_queues'
 	);
 }
 

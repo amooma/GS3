@@ -1241,3 +1241,11 @@ alter table `ast_queue_members`, change `penalty` `penalty` tinyint(3) unsigned 
   CONSTRAINT `penalties_ibfk_3` FOREIGN KEY (`_host_id`) REFERENCES `hosts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci
 
+
+--
+-- After: 0027f06a5f07c37b4cf4
+-- 
+
+INSERT INTO `group_permissions` VALUES ('login_queues',2,4);
+INSERT INTO `group_members` VALUES (6,6004);
+

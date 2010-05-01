@@ -6192,6 +6192,7 @@ INSERT INTO `group_members` VALUES (5,14003);
 INSERT INTO `group_members` VALUES (5,19000);
 INSERT INTO `group_members` VALUES (5,19001);
 INSERT INTO `group_members` VALUES (6,6003);
+INSERT INTO `group_members` VALUES (6,6004);
 INSERT INTO `group_members` VALUES (6,15000);
 INSERT INTO `group_members` VALUES (6,15001);
 INSERT INTO `group_members` VALUES (6,15002);
@@ -6267,6 +6268,7 @@ INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
 INSERT INTO `group_permissions` VALUES ('pickup',2,2);
 INSERT INTO `group_permissions` VALUES ('secretary',2,2);
 INSERT INTO `group_permissions` VALUES ('sudo_user',1,2);
+INSERT INTO `group_permissions` VALUES ('login_queues',2,4);
 /*!40000 ALTER TABLE `group_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
