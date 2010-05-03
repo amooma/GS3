@@ -469,6 +469,7 @@ macro queue-login( queue ) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${queue},login_queues);
 	if ("${permission}" != "true") {
 		Verbose(1,### ${user_name} have no login_queues permission to ${queue});
+		Playback(beeperr);
 		Hangup();
 	}
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},login);
