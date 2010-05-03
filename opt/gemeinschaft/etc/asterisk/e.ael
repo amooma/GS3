@@ -495,6 +495,7 @@ macro queue-logout( queue ) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},logout);
 	Wait(0.5);
 	if ("${agent_login_status}" = "loggedout") {
+		QueueLog(NONE,${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGOFF,fake);
 		Playback(agent-loggedoff);
 	} else {
 		Playback(beeperr);
@@ -518,8 +519,22 @@ macro queue-logout-all() {
 	Hangup();
 	return;
 	
-}
-macro queue-logout-all-silent() {
+}macro queue-login-all() {
+	
+	Set(CDR(amaflags)=OMIT);
+	Answer();
+	Verbose(1,### User ${user_name} wants to log in into all allowed  queues);
+	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},0,loginall);
+	Wait(0.5);
+	if ("${agent_login_status}" = "loggedin") {
+		Playback(agent-loginok);
+	} else {
+		Playback(beeperr);
+	}
+	Hangup();
+	return;
+	
+}macro queue-logout-all-silent() {
 	// like &queue-logout-all() but silent
 	Set(CDR(amaflags)=OMIT);
 	Verbose(1,### User ${user_name} wants to log out from all queues);
@@ -527,7 +542,7 @@ macro queue-logout-all-silent() {
 	return;
 }
 context queues-login-logout {
-	
+	*5    => &queue-login-all();
 	*5*   => &queue-logout-all();
 	_*5.  => &queue-login(${EXTEN:2});
 	//_*5.* => &queue-logout(${EXTEN:2});  // does not work
