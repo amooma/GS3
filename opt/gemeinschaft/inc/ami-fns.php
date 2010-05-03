@@ -24,11 +24,6 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-
-// ACHTUNG: Das ist die erste Alpha!!!
-// Bitte noch nicht benutzen
-
-
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/log.php' );
@@ -108,7 +103,7 @@ class AMI {
 			        . 'Events: off' ."\r\n"
 			        . "\r\n";
 			$data = $this->ami_send_command($req);
-			if (! strToLower($data['Message']) === 'authentication accepted') {
+			if (strToLower($data['Message']) !== 'authentication accepted') {
 				gs_log( GS_LOG_WARNING, 'Authentication to AMI on '. $host .' failed' );
 				return false;
 			}
@@ -125,6 +120,7 @@ class AMI {
 		$data = $this->ami_send_command('Action: Logoff'."\r\n\r\n");
 		
 		if (strToLower($data['Response']) === 'goodbye') {
+		        fClose($this->_socket);
 			return true;
 		} else {
 			return false;
