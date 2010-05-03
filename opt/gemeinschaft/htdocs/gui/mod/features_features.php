@@ -235,17 +235,19 @@ if (empty($queues_in)) {
 <input type="hidden" name="action" value="loginqueue" />
 <select name="queue_id[]" size="5" multiple="multiple">
 <?php
-$rs = $DB->execute(
-	'SELECT `_id`, `name`, `_title` FROM `ast_queues`  
-	WHERE `_host_id`='.$user['host_id'].' 
-	AND `_id` IN ('.implode(",", $queues_avail).') 
-	AND `_id` NOT IN 
-	(SELECT `_queue_id` FROM `ast_queue_members` WHERE `_user_id`='.$user['id']. ')'
-);
-while ( $queue_map = $rs->fetchrow()) {
-	echo $queue_map['name'], $queue_map['_title'], "\n";
-	echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
-	echo '>',  $queue_map['name'], ' ', $queue_map['_title'], '</option>', "\n";
+if (! empty($queues_avail)) {
+		$rs = $DB->execute(
+		'SELECT `_id`, `name`, `_title` FROM `ast_queues`  
+		WHERE `_host_id`='.$user['host_id'].' 
+		AND `_id` IN ('.implode(",", $queues_avail).') 
+		AND `_id` NOT IN 
+		(SELECT `_queue_id` FROM `ast_queue_members` WHERE `_user_id`='.$user['id']. ')'
+	);
+	while ( $queue_map = $rs->fetchrow()) {
+		echo $queue_map['name'], $queue_map['_title'], "\n";
+		echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
+		echo '>',  $queue_map['name'], ' ', $queue_map['_title'], '</option>', "\n";
+	}
 }
 ?>
 </select>
