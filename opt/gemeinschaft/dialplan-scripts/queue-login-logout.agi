@@ -84,16 +84,11 @@ if ($action === 'login') {
 		gs_agi_set_variable( 'agent_login_status', 'failhost' );
 		exit();
 	}
-$user_groups  = gs_group_members_groups_get( array($user_id), 'user');
-$queues_allowed = gs_group_members_get( gs_group_permissions_get($user_groups, 'login_queues', 'queue'));
-
-
 	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queue_members` WHERE `_queue_id`='. $queue_id .' AND `_user_id`='. $user_id );
 	if ($num > 0) {  // user is already logged in on that queue
 		gs_agi_set_variable( 'agent_login_status', 'alreadyon' );
 		exit();
 	}
-	if (! in_array( $queue_id, $queues_allowed)) exit();
 	$penalty = (int)$db->executeGetOne('SELECT `penalty` FROM `penalties` WHERE `_user_id`='.$user_id.' AND `_queue_id`='.$queue_id);
 	if ($penalty) {
 		$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`, `penalty`) VALUES (\''. $db->escape($queue_name) .'\', '. $queue_id .', \''. $db->escape( 'SIP/'. $user ) .'\', '. $user_id .', '. $penalty .')' );
