@@ -61,17 +61,34 @@ include_once( GS_DIR .'inc/db_connect.php' );
 
 $db = gs_db_slave_connect();
 
-# get to userid
-#
-$to_id = $db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($to_ext) .'\'' );
-if (! $to_id || $to_id <= 0) {
+# is it a user, queue?
+$num_user  = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($to_ext) .'\'' );
+$num_queue = $db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queues` WHERE `name`=\''. $db->escape($to_ext) .'\'' );
+
+if ($num_user > 0) {  # is it a user
+	$type = 'user';
+	$to_id = $db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($to_ext) .'\'' );
+	if (! $to_id || $to_id <= 0) {
+		gs_agi_set_variable( 'permission', 'false' );
+		exit();
+	}
+} else
+if ($num_queue > 0 ) { # is it a queue
+	$type = 'queue';
+	$to_id = $db->executeGetOne( 'SELECT `_id` FROM `ast_queues` WHERE `name`=\''. $db->escape($to_ext) .'\'' );
+	if (! $to_id || $to_id <= 0) {
+		gs_agi_set_variable( 'permission', 'false' );
+		exit();
+	}
+} else {
 	gs_agi_set_variable( 'permission', 'false' );
+	exit();
 }
 
 # check permission $perm for $from_id to $to_id
 #
 $user_groups       = gs_group_members_groups_get(array($from_id), 'user');
-$permission_groups = gs_group_permissions_get($user_groups, $perm);
+$permission_groups = gs_group_permissions_get($user_groups, $perm, $type);
 $group_members     = gs_group_members_get($permission_groups);
 
 if ( in_array( $to_id, $group_members ) ) {
