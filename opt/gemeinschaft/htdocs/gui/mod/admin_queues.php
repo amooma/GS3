@@ -651,14 +651,14 @@ WHERE
 		}
 		echo '</select>';
 		echo '<button type="submit" title="', __('Hinzuf&uuml;gen'), '" class="plain">';
-		echo '<img alt="', __('Hinzuf&uuml;gen') ,'" src="', GS_URL_PATH,'crystal-svg/32/act/forward-cust.png" /></button>' ,"\n";
+		echo '<img alt="', __('Hinzuf&uuml;gen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/next.png" /></button>' ,"\n";
 		echo '</form></div>';
 		echo '</td><td>';
 		echo '<div align="left">';
 		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 		echo gs_form_hidden($SECTION, $MODULE), "\n";
 		echo '<button type="submit" title="', __('Entfernen'), '" class="plain">';
-		echo '<img alt="', __('Entfernen') ,'" src="', GS_URL_PATH,'crystal-svg/32/act/back-cust.png" /></button>' ,"\n";
+		echo '<img alt="', __('Entfernen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/previous.png" /></button>' ,"\n";
 		echo '<input type="hidden" name="action" value="delstatic" />', "\n";
 		echo '<input type="hidden" name="qid" value="', $queue_id , '" />', "\n";
 		$host_id = (int)$DB->executeGetOne('SELECT `_host_id` from `ast_queues` WHERE `_id`='.$queue_id);
