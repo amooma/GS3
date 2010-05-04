@@ -31,6 +31,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-fns/gs_queue_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queue_del.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 $moh_classes = @array_keys(parse_ini_file(GS_DIR.'/etc/asterisk/musiconhold.conf', TRUE));
@@ -55,11 +56,12 @@ function confirm_delete() {
 </script>' ,"\n";
 
 $action = @$_REQUEST['action'];
-if (! in_array($action, array('','edit','save','del', 'delstatic', 'addstatic'), true))
+if (! in_array($action, array('','edit','save','del', 'insert-group', 'remove-group', 'delstatic', 'addstatic'), true))
 	$action = '';
 
 $queue_id = (int)@$_REQUEST['qid'];
 $agent_id = (int)@$_REQUEST['aid'];
+$group    = (int)@$_REQUEST['group'];
 $per_page = (int)gs_get_conf('GS_GUI_NUM_RESULTS');
 if ($per_page < 1) $per_page = 1;
 $page     = (int)@$_REQUEST['page'];
@@ -153,6 +155,36 @@ WHERE `_id`='.$queue_id
 #####################################################################
 #                               save }
 #####################################################################
+
+####################################################################
+#                              groups {
+###################################################################
+
+if ($action === 'insert-group') {
+	$queue_name = $DB->executeGetOne(
+		'SELECT `name` FROM `ast_queues` WHERE '.
+		'`_id`='.$queue_id
+	);
+	$ret = gs_group_member_add( $group,  $queue_name);
+	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	sleep(1); //FIXME
+	$action = 'edit';
+}
+
+if ($action === 'remove-group') {
+	$queue_name = $DB->executeGetOne(
+		'SELECT `name` FROM `ast_queues` WHERE '.
+		'`_id`='.$queue_id
+	);
+	$ret = gs_group_member_del( $group,  $queue_name);
+	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	sleep(1); //FIXME
+	$action = 'edit';
+}
+
+####################################################################
+#                              groups }
+###################################################################
 
 ####################################################################
 #                              static_agents {
@@ -297,6 +329,9 @@ WHERE
 	if (! is_array($queue)) {
 		$action = '';
 	} else {
+
+		$groups    = gs_group_info_get(false, 'queue');
+		$groups_my = gs_group_members_groups_get(Array($queue_id), 'queue', false);
 		
 		echo '<h3>', htmlEnt($queue['name']) ,' (', htmlEnt($queue['_title']) ,')</h3>' ,"\n";
 		
@@ -529,6 +564,72 @@ WHERE
 		echo '</tbody>',"\n";
 		echo '</table>',"\n";
 		echo '</form>';
+		
+		echo '<table cellspacing="1">',"\n";
+		echo '<thead>',"\n";
+		echo '<tr>',"\n";
+		echo '<th style="min-width:21em;" colspan="5">', __('Warteschlangengruppen'), '</th>',"\n";
+		echo '</tr>',"\n";
+        	echo '<tr>',"\n";
+		echo '<th style="min-width:12em;">', __('Gruppe'), '</th>',"\n";
+		echo '<th style="min-width:12em;width:18em;">', __('Titel'), '</th>',"\n";
+		echo '<th style="min-width:5em;">', __('Typ'), '</th>',"\n";
+		echo '<th style="min-width:3em;">', __('Mitglieder'), '</th>',"\n";
+		echo '<th style="min-width:1em;"></th>',"\n";
+		echo '</tr>', "\n";
+		echo '</thead>',"\n";
+		echo '<tbody>',"\n";
+
+		echo '<br />',"\n";
+		
+		$groups_my_info = gs_group_info_get($groups_my, 'queue');
+		
+		$i = 0;
+		
+		if ((count($groups_my_info) - count($groups) - 1) ) {
+			echo '<tr class="',($i%2===0 ? 'odd':'even'),'">' ,"\n";
+			echo '<form method="post" action="'.GS_URL_PATH.'">';
+			echo gs_form_hidden($SECTION, $MODULE);
+			echo '<input type="hidden" name="action" value="insert-group" />' ,"\n";
+			echo '<input type="hidden" name="qid" value="'.rawUrlEncode($queue_id).'" />' ,"\n";
+			echo '<input type="hidden" name="page" value="'.rawUrlEncode($page).'" />' ,"\n";
+			echo '<td class="l nobr" colspan="2">';
+			echo '<select name="group">', "\n";
+			foreach ($groups as $group) {
+				if (!in_array($group['id'], $groups_my) && !gs_group_connections_get($group['id']))
+					echo '<option value="',$group['id'] ,'">',$group['name'], ' -- ',$group['title'] ,'</option>' ,"\n";
+			}
+			echo '</select>', "\n";
+			echo '</td>', "\n";
+			echo '<td>',$group['type']  ,'</td>', "\n";
+			echo '<td class="r" colspan="2">', "\n";
+			echo  '<button type="submit" name="id" value="'.$group['id'].'" title="', __('Gruppe Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
+			echo '</td>', "\n";
+			echo '</tr>' ,"\n";
+			echo '</form>',"\n";
+		}
+		
+		foreach ($groups_my_info as $group) {
+			echo '<tr class="',($i%2===0 ? 'odd':'even'),'">' ,"\n";
+			echo '<td class="l nobr">';
+			echo $group['name']  ,'</td>', "\n";
+			echo '<td>',$group['title']  ,'</td>', "\n";
+			echo '<td>',$group['type']  ,'</td>', "\n";
+			echo '<td class="r">',count(gs_group_members_get(Array($group['id']))), '</td>', "\n";
+			echo '<td class="r">', "\n";
+			
+			if (!gs_group_connections_get($group['id']))
+				echo '<a href="', gs_url($SECTION, $MODULE, null,'&amp;qid='. rawUrlEncode($queue_id) .'&amp;page='.$page. '&amp;action=remove-group&amp;group='.$group['id']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+			
+			echo '</td>',"\n";
+			echo '</tr>',"\n";
+			$i++;
+		}
+		echo '</tbody>',"\n";
+		echo '</table>',"\n";
+		
+		echo '<br />',"\n";
+		
 		echo '<h3>', __('Statische'), ' ', __('Agenten'), '</h3><p>';
 		echo __('Statische'), ' ', __('Agenten'), ' ', __('sind immer an der Warteschlange angemeldet.');
 		echo '<table>';
