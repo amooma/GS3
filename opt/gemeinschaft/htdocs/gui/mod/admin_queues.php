@@ -565,6 +565,8 @@ WHERE
 		echo '</table>',"\n";
 		echo '</form>';
 		
+		echo '<br />',"\n";
+		
 		echo '<table cellspacing="1">',"\n";
 		echo '<thead>',"\n";
 		echo '<tr>',"\n";
@@ -580,8 +582,6 @@ WHERE
 		echo '</thead>',"\n";
 		echo '<tbody>',"\n";
 
-		echo '<br />',"\n";
-		
 		$groups_my_info = gs_group_info_get($groups_my, 'queue');
 		
 		$i = 0;
