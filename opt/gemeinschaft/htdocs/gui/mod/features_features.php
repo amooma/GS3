@@ -33,6 +33,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_clir_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_clir_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_callerids_get.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
+
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -44,40 +46,65 @@ echo '</h2>', "\n";
 
 
 
+$user_groups  = gs_group_members_groups_get( array( $_SESSION['real_user']['info']['id'] ), 'user' );
+$members_clip = gs_group_permissions_get ( $user_groups, 'clip_set' );
+$members_clir = gs_group_permissions_get ( $user_groups, 'clir_set' );
+$members_cw = gs_group_permissions_get ( $user_groups, 'callwaiting_set' );
+
+$members_adm = gs_group_permissions_get ( $user_groups , 'sudo_user' );
+
+
+$disable = array ( 'clip' => '' , 'clir' => '', 'cw' => '' );
+if (  count ( $members_adm ) <= 0 ) {
+	
+	if (  count ( $members_clip ) <= 0 )
+		$disabled[ 'clip' ] = ' disabled';
+	if (  count ( $members_clir ) <= 0 )
+		$disabled[ 'clir' ] = ' disabled';	
+	if (  count ( $members_cw ) <= 0 )
+		$disabled[ 'cw' ] = ' disabled';
+}
 
 
 if (@$_REQUEST['action']=='save') {
 	
 	$clir_internal = (@$_REQUEST['clir-internal']=='yes' ? 'yes':'no');
 	$clir_external = (@$_REQUEST['clir-external']=='yes' ? 'yes':'no');
-	gs_clir_activate( $_SESSION['sudo_user']['name'], 'internal', $clir_internal );
-	gs_clir_activate( $_SESSION['sudo_user']['name'], 'external', $clir_external );
 	
-	$cw = !! @$_REQUEST['callwaiting'];
-	# setting this reboots phone, so check if it has really changed
-	$cw_old = gs_callwaiting_get( $_SESSION['sudo_user']['name'] );
-	if (! isGsError($cw_old)) {
-		if ($cw != $cw_old)
-			gs_callwaiting_activate( $_SESSION['sudo_user']['name'], $cw );
+	if (  $disabled[ 'clir' ] == '' ) {
+	
+		gs_clir_activate( $_SESSION['sudo_user']['name'], 'internal', $clir_internal );
+		gs_clir_activate( $_SESSION['sudo_user']['name'], 'external', $clir_external );
+	
 	}
-	if(isset($_REQUEST['callerid_ext'])){
-		$callerid_num = $_REQUEST['callerid_ext'];
-		
-		$ok = gs_user_callerid_set( $_SESSION['sudo_user']['name'], $callerid_num , 'external');
-		if (isGsError( $ok )) echo $ok->getMsg();
+	
+	if (  $disabled[ 'cw' ] == '' ) {
+		$cw = !! @$_REQUEST['callwaiting'];
+		# setting this reboots phone, so check if it has really changed
+		$cw_old = gs_callwaiting_get( $_SESSION['sudo_user']['name'] );
+		if (! isGsError($cw_old)) {
+			if ($cw != $cw_old)
+				gs_callwaiting_activate( $_SESSION['sudo_user']['name'], $cw );
+		}
 	}
-	if(isset($_REQUEST['callerid_int'])){
-		$callerid_num = $_REQUEST['callerid_int'];
+	
+	if (  $disabled[ 'clip' ] == '' ) {
+	
+		if(isset($_REQUEST['callerid_ext'])){
+			$callerid_num = $_REQUEST['callerid_ext'];
 		
-		$ok = gs_user_callerid_set( $_SESSION['sudo_user']['name'], $callerid_num , 'internal');
-		if (isGsError( $ok )) echo $ok->getMsg();
+			$ok = gs_user_callerid_set( $_SESSION['sudo_user']['name'], $callerid_num , 'external');
+			if (isGsError( $ok )) echo $ok->getMsg();
+		}
+		if(isset($_REQUEST['callerid_int'])){
+			$callerid_num = $_REQUEST['callerid_int'];
+		
+			$ok = gs_user_callerid_set( $_SESSION['sudo_user']['name'], $callerid_num , 'internal');
+			if (isGsError( $ok )) echo $ok->getMsg();
+		}
 	}
 	
 }
-
-
-
-
 
 
 
@@ -109,9 +136,9 @@ if (isGsError($callwaiting)) {
 <tr>
 	<td style="width:170px;"><?php echo __('CLIR nach intern'); ?></td>
 	<td style="width:130px;">
-		<input type="radio" name="clir-internal" value="yes" id="ipt-clir-internal-yes" <?php if ($clir['internal_restrict']=='yes') echo 'checked="checked" '; ?>/>
+		<input type="radio" name="clir-internal" value="yes" id="ipt-clir-internal-yes" <?php if ($clir['internal_restrict']=='yes') echo 'checked="checked" '; echo  $disabled[ 'clir' ]; ?>/>
 			<label for="ipt-clir-internal-yes"><?php echo __('an'); ?></label>
-		<input type="radio" name="clir-internal" value="no" id="ipt-clir-internal-no" <?php if ($clir['internal_restrict'] != 'yes') echo 'checked="checked" '; ?>/>
+		<input type="radio" name="clir-internal" value="no" id="ipt-clir-internal-no" <?php if ($clir['internal_restrict'] != 'yes') echo 'checked="checked" '; echo  $disabled[ 'clir' ]; ?>/>
 			<label for="ipt-clir-internal-no"><?php echo __('aus'); ?></label>
 	</td>
 	<td rowspan="2" style="width:200px;">
@@ -121,18 +148,18 @@ if (isGsError($callwaiting)) {
 <tr>
 	<td><?php echo __('CLIR nach extern'); ?></td>
 	<td>
-		<input type="radio" name="clir-external" value="yes" id="ipt-clir-external-yes" <?php if ($clir['external_restrict']=='yes') echo 'checked="checked" '; ?>/>
+		<input type="radio" name="clir-external" value="yes" id="ipt-clir-external-yes" <?php if ($clir['external_restrict']=='yes') echo 'checked="checked" '; echo  $disabled[ 'clir' ]; ?> />
 			<label for="ipt-clir-external-yes"><?php echo __('an'); ?></label>
-		<input type="radio" name="clir-external" value="no" id="ipt-clir-external-no" <?php if ($clir['external_restrict'] != 'yes') echo 'checked="checked" '; ?>/>
+		<input type="radio" name="clir-external" value="no" id="ipt-clir-external-no" <?php if ($clir['external_restrict'] != 'yes') echo 'checked="checked" '; echo  $disabled[ 'clir' ]; ?> />
 			<label for="ipt-clir-external-no"><?php echo __('aus'); ?></label>
 	</td>
 </tr>
 <tr>
 	<td><?php echo __('Anklopfen'); ?></td>
 	<td>
-		<input type="radio" name="callwaiting" value="1" id="ipt-callwaiting-1" <?php if ($callwaiting) echo 'checked="checked" '; ?>/>
+		<input type="radio" name="callwaiting" value="1" id="ipt-callwaiting-1" <?php if ($callwaiting) echo 'checked="checked" '; echo  $disabled[ 'cw' ]; ?> />
 			<label for="ipt-callwaiting-1"><?php echo __('an'); ?></label>
-		<input type="radio" name="callwaiting" value="0" id="ipt-callwaiting-0" <?php if (! $callwaiting) echo 'checked="checked" '; ?>/>
+		<input type="radio" name="callwaiting" value="0" id="ipt-callwaiting-0" <?php if (! $callwaiting) echo 'checked="checked" '; echo  $disabled[ 'cw' ]; ?> />
 			<label for="ipt-callwaiting-0"><?php echo __('aus'); ?></label>
 	</td>
 	<td>
@@ -154,7 +181,7 @@ if ( gs_get_conf( 'GS_USER_SELECT_CALLERID' ) ) {
 	
 	echo "<td>", __('Angezeigte Rufnummer extern') ,"</td>\n";
 	echo "<td>\n";
-	echo '<select name="callerid_ext" size="1">', "\n";
+	echo '<select name="callerid_ext" size="1"' , $disabled['clip']  , '>', "\n";
 	echo '<option value= ""',$sel,'>' , __('Standardnummer'),"</option>\n";
 	foreach ($numbers as $number) {
 		if ($number['dest'] != 'external') continue;
@@ -176,7 +203,7 @@ if ( gs_get_conf( 'GS_USER_SELECT_CALLERID' ) ) {
 	
 	echo "<td>", __('Angezeigte Rufnummer intern') ,"</td>\n";
 	echo "<td>\n";
-	echo '<select name="callerid_int" size="1">', "\n";
+	echo '<select name="callerid_int" size="1"' , $disabled['clip']  , '>', "\n";
 	echo '<option value= ""',$sel_int,'>' , __('Standardnummer'),"</option>\n";
 	foreach ($numbers as $number) {
 		if ($number['dest'] != 'internal') continue;
