@@ -1,0 +1,155 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_wake_up_call_fns.php' );
+
+
+/***********************************************************
+*    function to create callfiles
+***********************************************************/
+
+function _pack_int( $int ) {
+	$str = base64_encode(pack('N', $int ));
+	return preg_replace('/[^a-z0-9]/i', '', $str);
+}
+
+
+function callfile_make( $extension )
+{
+
+	if ( ! $extension || strlen ( $extension )  < 2 )
+		return false;
+	
+	$call
+		= "Channel: Local/". $extension ."@to-internal-users\n"
+		. "MaxRetries: 3\n"
+		. "RetryTime: 60\n"
+		. "WaitTime: 20\n"
+		. "Context: wakeup-job\n"
+		. "Extension: s\n"
+		. "Callerid: Weckruf <*4>\n"
+		. "Setvar: __is_callfile_origin=1\n"  # no forwards and nomailbox on origin side
+		;
+
+	$filename = '/tmp/gs-'. $extension .'-'. _pack_int(time()) . rand(100,999) .'.call';
+
+	$cf = @fOpen( $filename, 'wb' );
+	if (! $cf) {
+		gs_log( GS_LOG_WARNING, 'Failed to write call file "'. $filename .'"' );
+		die_error( 'Failed to write call file.' );
+	}
+	@fWrite( $cf, $call, strLen($call) );
+	@fClose( $cf );
+	@chmod( $filename, 00666 );
+	
+	$spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
+
+	$err=0; $out=array();
+	@exec( 'sudo mv '. qsa($filename) .' '. qsa($spoolfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+	if ($err != 0) {
+		@unlink( $filename );
+		gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"' );
+		die_error( 'Failed to move call file.' );
+	}
+
+}
+
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' [--hour=notify_hour] [--minute=notify_minute]';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'hour=',
+		'minute='
+	),
+	$usage
+);
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+
+if (! isSet($opts['hour'])
+ || ! isSet($opts['minute'])
+ ) {
+        gs_script_invalid_usage( $usage );
+}
+
+
+$hour =  $opts['hour'] ;
+$minute = $opts['minute'] ;
+
+
+
+if(! ctype_digit( $hour ) ) 
+	 gs_script_invalid_usage( 'No valid input for argumet "hour". Not a number.' ); 
+
+$hour = (int)$hour;
+
+if ( $hour < 0 || $hour >= 24 )
+	gs_script_invalid_usage( 'No valid input for argumet "hour". Out of bounds.' );
+
+if ( !ctype_digit( $minute ) ) 
+	 gs_script_invalid_usage( 'No valid input for argumet "minute". Not a number.' ); 
+
+$minute = (int)$minute;
+
+if ( $minute < 0 || $minute >= 60 )
+	gs_script_invalid_usage( 'No valid input for argumet "minute". Out of bounds.' );
+
+
+$exts = get_alert_tagets_by_time( $hour, $minute );
+
+if ( isGsError( $exts ) ) {
+	gs_script_error( $exts->getMsg() );
+}
+
+if ( ! is_array ( $exts ) )
+	 gs_script_error();
+
+foreach ( $exts as $ext ) {
+
+	callfile_make( $ext );
+
+	delete_alert_by_target( $ext );
+
+}
+
+
+
+?>

@@ -1,0 +1,96 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision: 4817 $
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+$exten = trim(@$argv[1]);
+
+if (! $exten) {
+	gs_agi_set_variable(  'ret' , 'unknown' );
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+	die();
+}
+
+include_once( GS_DIR .'inc/db_connect.php' );
+
+
+$db = gs_db_master_connect();
+
+# get user id
+#
+
+$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape( $exten ) .'\'' );
+if ($user_id < 1) {
+	gs_agi_set_variable(  'ret' , 'error' );
+	die();
+}
+
+
+include_once( GS_DIR .'inc/group-fns.php' );
+
+$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'wakeup_call' );
+
+if ( count ( $members ) <= 0 ) {
+	
+	gs_agi_set_variable(  'ret' , 'error' );
+	die();
+}
+
+require_once( GS_DIR .'inc/gs-fns/gs_wake_up_call_fns.php' );
+
+$real_target = get_alert_target ( $exten );
+
+if ( isGsError ( $real_target ) ) {
+
+	gs_agi_set_variable(  'ret' , 'error' );
+	die();
+}
+
+$del_ok = delete_alert_by_target( $real_target );
+
+if ( ! $del_ok ) {
+	gs_agi_set_variable(  'ret' , 'error' );
+	die();
+}
+
+if ( isGsError( $del_ok ) ) {
+
+	gs_agi_set_variable(  'ret' , 'error' );
+	die();
+
+}
+
+gs_agi_set_variable(  'ret' , 'ok' );
+
+?>

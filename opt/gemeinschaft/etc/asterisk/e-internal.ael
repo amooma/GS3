@@ -1405,7 +1405,7 @@ context to-internal-users-self {
 				}
 			}
 		}
-		else if ("${exttype}" = "huntgroup") {
+		else if ("${exttype}" = "huntgroup" && "${is_callfile_origin}" = "" ) {
 			if ("${DIALSTATUS}" != "ANSWER") {
 				Set(huntgroup=1);
 				while ("${huntgroup_${huntgroup}_dial}" != "") {

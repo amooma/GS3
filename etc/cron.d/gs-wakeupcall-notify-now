@@ -1,0 +1,7 @@
+# Gemeinschaft
+# $Revision$
+
+# execute gs-wakeupcall-notify-now
+
+* *  * * *   root   sleep 1; /opt/gemeinschaft/sbin/gs-wakeupcall-notify-now 1>>/dev/null 2>>/dev/null
+
