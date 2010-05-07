@@ -1081,11 +1081,12 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
 else
 	psetting('pnp_config'      , 'off');
 
-# call waiting (Anklopfen) aktiviert?
+# call waiting (Anklopfen) aktiviert? //FIXME
 #
 //psetting('call_waiting', 'off');  # ""Call Waiting (CW)" can be enabled ("on", "visual only", "ringer") or disabled ("off")."
-$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
-psetting('call_waiting', ($callwaiting ? 'visual only' : 'off'));
+//$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
+//psetting('call_waiting', ($callwaiting ? 'visual only' : 'off'));
+psetting('call_waiting', 'visual only');
 
 psetting('call_completion', 'off');
 /*

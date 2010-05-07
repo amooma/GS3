@@ -876,9 +876,10 @@ if ( in_array($phone_model, array('ht287','bt110','bt200','bt201','gxp280','gxp1
 	psetting('P76', '' );		# STUN Server
 	psetting('P101', '');		# Use NAT IP ( if specified, this IP address is used for SIP/SDP message )
 
-	# call waiting (Anklopfen) aktiviert ?
-	$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
-	psetting('P91', ($callwaiting ? '0' : '1') );	# Disable Call Waiting ( 0 = no, 1 = yes )
+	# call waiting (Anklopfen) aktiviert ? //FIXME
+	//$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
+	//psetting('P91', ($callwaiting ? '0' : '1') );	# Disable Call Waiting ( 0 = no, 1 = yes )
+	psetting('P91', '0');		# Disable Call Waiting ( 0 = no, 1 = yes )
 }
 
 # RTP global Ports

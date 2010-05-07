@@ -650,9 +650,10 @@ if (! isGsError($cf) && is_array($cf)) {
 	}                                                  
 }*/
 psetting('Features|DND', $dnd);			# 0 = disable, 1 = enable  //don't function FIXME
-# call waiting (Anklopfen) activate ?
-$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
-psetting('Features|Call_Waiting', ($callwaiting ? '1' : '0') );	# 0 = disable, 1 = enable
+# call waiting (Anklopfen) activate ? //FIXME
+//$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
+//psetting('Features|Call_Waiting', ($callwaiting ? '1' : '0') );	# 0 = disable, 1 = enable
+psetting('Features|Call_Waiting', '1');		# 0 = disable, 1 = enable
 psetting('Features|EnableHotline', '0');	# 0 = disable, 1 = enable
 psetting('Features|Hotlinenumber', '');		# Hotline Number ???
 psetting('Features|BusyToneDelay', '0');	# 0, 3 or 5 sec
