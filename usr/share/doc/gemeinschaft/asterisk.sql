@@ -5429,6 +5429,7 @@ CREATE TABLE `ast_queues` (
   `memberdelay` tinyint(3) unsigned default NULL,
   `weight` tinyint(3) unsigned NOT NULL default '0',
   `timeoutrestart` tinyint(1) unsigned default NULL,
+  `_min_agents` int(10) unsigned default '0',
   PRIMARY KEY  (`_id`),
   UNIQUE KEY `name` (`name`),
   KEY `host_name` (`_host_id`,`name`),
@@ -5442,7 +5443,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `ast_queues` WRITE;
 /*!40000 ALTER TABLE `ast_queues` DISABLE KEYS */;
-INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',0,NULL,NULL,10,'no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','yes',NULL,NULL,NULL,'no',NULL,0,NULL);
+INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',0,NULL,NULL,10,'no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','yes',NULL,NULL,NULL,'no',NULL,0,NULL,0);
 /*!40000 ALTER TABLE `ast_queues` ENABLE KEYS */;
 UNLOCK TABLES;
 
