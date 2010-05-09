@@ -114,24 +114,29 @@ if (@$_REQUEST['action']=='logoutqueue'  && (! empty($queue_ids))) {
 	$interface = 'SIP/'.$agent;
 	$queue_ids = array_intersect($queue_ids, $queues_allowed);
 	$rs = $DB->execute(
-		'SELECT `queue_name` FROM `ast_queue_members` WHERE 
+		'SELECT `queue_name`, `_queue_id`  FROM `ast_queue_members` WHERE 
 		`_user_id`='.$user['id'].'
 		AND `static`= 0
 		AND `_queue_id` IN ('.implode(",", $queue_ids).')'
 	);
 	while ($queue_map = $rs->fetchRow()) {
+		$agent_on = $DB->executeGetOne('SELECT count(`_queue_id`) FROM `ast_queue_members` WHERE `_queue_id` ='. (int)$queue_map['_queue_id']);
+		$min_agent = $DB->executeGetOne('SELECT `_min_agents` FROM `ast_queues` WHERE `_id`='.(int)$queue_map['_queue_id']);
+		if ($agent_on > $min_agent) {
+			$DB->execute('DELETE from `ast_queue_members` WHERE
+				`_user_id`='.$user['id'].'
+				AND `static`= 0 
+				AND `_queue_id`='.(int)$queue_map['_queue_id'] 
+				);
 			$ami->ami_send_command(
 				'Action: Queuelog'."\n".
 				'Queue: '.$queue_map['queue_name']."\n".
 				'Interface: '.$agent."\n".
 				'Event: AGENTLOGOFF'."\r\n\r\n"
 			);
+		}
 	}
-	$DB->execute('DELETE from `ast_queue_members` WHERE
-		`_user_id`='.$user['id'].'
-		AND `static`= 0 
-		AND `_queue_id` IN ('.implode(",", $queue_ids).')'
-	);}
+}
 
 
 $clir = gs_clir_get( $_SESSION['sudo_user']['name'] );
@@ -264,10 +269,11 @@ echo '<img alt="', __('Abmelden') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/pr
 ?>
 <select name="queue_id[]" size="5" multiple="multiple">
 <?php
-$rs = $DB->execute('SELECT `queue_name`, `_title`, `_queue_id`, `static` FROM `ast_queue_members`, `ast_queues` WHERE `_user_id`='.$user['id'].'  AND `_queue_id`=`_id`');
+$rs = $DB->execute('SELECT `queue_name`, `_title`, `_queue_id`, `static`, `_min_agents`  FROM `ast_queue_members`, `ast_queues` WHERE `_user_id`='.$user['id'].'  AND `_queue_id`=`_id`');
 while ( $queue_map = $rs->fetchrow()) {
+	$agent_on = $DB->executeGetOne('SELECT count(`_queue_id`) FROM `ast_queue_members` WHERE `_queue_id` ='.  (int)$queue_map['_queue_id']);
 	echo '<option value="', (int)$queue_map['_queue_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
-	if ($queue_map['static'] == '1') echo 'disabled="disabled"'; 
+	if ($queue_map['static'] == '1' || $queue_map['_min_agents'] >= $agent_on) echo 'disabled="disabled"'; 
 	echo '>',  $queue_map['queue_name'], ' ', $queue_map['_title'], '</option>', "\n";
 }
 ?>

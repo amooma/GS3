@@ -117,7 +117,7 @@ if ($action === 'save') {
 	//	$musicclass = 'default';
 	$musicclass_db = ($musicclass != '' ? '\''. $DB->escape($musicclass) .'\'' : 'NULL');
 	$salutation = (int)@$_REQUEST['salutation'];
-	
+	$min_agents = (int)@$_REQUEST['_min_agents'];
 	$update_additional = false;
 	if ($queue_id < 1) {
 		$ret = gs_queue_add( $name, $title, $maxlen, (int)@$_REQUEST['_host_id'] );
@@ -145,7 +145,8 @@ if ($action === 'save') {
 	`timeout`='. $timeout .',
 	`strategy`=\''. $strategy .'\',
 	`joinempty`=\''. $joinempty .'\',
-	`leavewhenempty`=\''. $leavewhenempty .'\'
+	`leavewhenempty`=\''. $leavewhenempty .'\',
+	`_min_agents`=\''. $min_agents .'\'
 WHERE `_id`='.$queue_id
 		);
 	}
@@ -298,7 +299,7 @@ FROM
 	if ($queue_id > 0) {
 		$rs = $DB->execute(
 'SELECT
-	`name`, `_host_id`, `_title`, `musicclass`, `_sysrec_id`, `announce_holdtime`, `timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`
+	`name`, `_host_id`, `_title`, `musicclass`, `_sysrec_id`, `announce_holdtime`, `timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`, `_min_agents`
 FROM
 	`ast_queues`
 WHERE
@@ -456,6 +457,14 @@ WHERE
 		echo '<input type="text" name="maxlen" value="', $queue['maxlen'] ,'" size="3" maxlength="3" class="r" />', "\n";
 		echo '</td>';
 		echo '<td class="transp xs gray"><code>maxlen</code></td>',"\n";
+		echo '</tr>',"\n";
+
+		echo '<tr>',"\n";
+		echo '<th class="r">', __('Min. Agentenzahl') ,'</th>',"\n";
+		echo '<td>';
+		echo '<input type="text" name="_min_agents" value="', $queue['_min_agents'] ,'" size="3" maxlength="3" class="r" />', "\n";
+		echo '</td>';
+		echo '<td class="transp xs gray"><code>_min_agents</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";

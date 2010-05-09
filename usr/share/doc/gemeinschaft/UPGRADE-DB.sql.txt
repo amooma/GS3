@@ -1249,3 +1249,9 @@ alter table `ast_queue_members`, change `penalty` `penalty` tinyint(3) unsigned 
 INSERT INTO `group_permissions` VALUES ('login_queues',2,4);
 INSERT INTO `group_members` VALUES (6,6004);
 
+
+--
+-- Minimum Anzahl Agents/Queue 2d47e80..d2716d5
+--
+
+alter table ast_queues add `_min_agents` int(10) NOT NULL default 0;
