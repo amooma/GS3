@@ -196,11 +196,11 @@ context wakeup-call-notset {
 context wakeup-job {
 
 	s => {
-		Playback(/opt/gemeinschaft/sounds/de-DE/wakeup_call_announced);
+		Playback(/opt/gemeinschaft/sounds/de-DE/wakeup_call_announcement);
 		SayUnixTime(,,"kM");
 		Wait(0.5);
 		Set(CHANNEL(language)=en);
-		Playback(/opt/gemeinschaft/sounds/en-US/wakeup_call_announced);
+		Playback(/opt/gemeinschaft/sounds/en-US/wakeup_call_announcement);
 		SayUnixTime(,,"kM");
 		MusicOnHold();
 	}
