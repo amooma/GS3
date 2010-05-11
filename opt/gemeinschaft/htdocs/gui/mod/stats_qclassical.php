@@ -498,7 +498,7 @@ echo '<td class="r" ',$style,'>', $totals['num_abandoned' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_timeout'   ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_empty'     ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_full'      ] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $pct_connected_month ,' <small>%</small></td>', "\n";
+echo '<td class="r" ',$style,'><div class="bargraph" style="width: '.$pct_connected_month.'%;">'.$pct_connected_month.'&nbsp;<small>%</small></div></td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_dur_lower' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_dur_higher'] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', _secs_to_minsecs($avg_calldur_month) ,'</td>', "\n";
