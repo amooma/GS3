@@ -389,7 +389,7 @@ AND '. $sql_time
 		? ($num_connected / $num_entered)
 		: 0.0;
 	$pct_connected = round($pct_connected*100);
-	echo '<td class="r"',$style_wd,'>', $pct_connected ,' <small>%</small></td>', "\n";
+	echo '<td class="r"',$style_wd,'><div class="bargraph" style="width: '.$pct_connected.'%;">'.$pct_connected.'&nbsp;<small>%</small></div></td>', "\n";
 	//$totals['pct_connected'] += $pct_connected;
 	
 	
