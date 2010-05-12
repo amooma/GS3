@@ -140,19 +140,19 @@ $MODULES['monitor'  ]=  array(
 	'id' => 7000,
 	'sub' => array(
 		'queues'       => array('title' => __('Warteschlangen'), 'id' => 7001),
-		'pgrps'        => array('title' => __('Rufannahmegrp.'), 'id' => 7002)
+		'pgrps'        => array('title' => __('Rufannahmegrp.'), 'id' => 7002),
+		'peers'        => array('title' => __('Kollegen'),       'id' => 7003),
+		'queuemon'     => array('title' => __('QueueMon'),       'id' => 7005)
 	)
 );
-if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
-$MODULES['monitor'  ]['sub'][
-		'peers']       =  array('title' => __('Kollegen'), 'id' => 7003);
+
 /*
 if (gs_get_conf('GS_GUI_PERMISSIONS_METHOD') === 'gemeinschaft') {
 $MODULES['monitor'  ]['sub'][
 		'friends']     =  array('title' => __('Berechtigungen'), 'id' => 7004);
 }
 */
-}
+
 
 #####################################################################
 
