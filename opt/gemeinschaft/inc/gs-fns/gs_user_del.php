@@ -190,6 +190,12 @@ function gs_user_del( $user, $reload=true )
 	# delete instant messaging
 	#
 	$db->execute( 'DELETE FROM `instant_messaging` WHERE `user_id`='. $user_id );
+
+	# delete monitor data
+	#
+	$db->execute( 'DELETE FROM `monitor` WHERE `user_id`='. $user_id );
+	$db->execute( 'DELETE FROM `monitor_queues` WHERE `user_id`='. $user_id );
+	$db->execute( 'DELETE FROM `monitor_colors` WHERE `user_id`='. $user_id );
 	
 	# do a clean logout from the current phone
 	#

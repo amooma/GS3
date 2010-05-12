@@ -6548,6 +6548,82 @@ CREATE TABLE `ivrs` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
 
+
+--
+-- Table structure for table `monitor`
+--
+DROP TABLE IF EXISTS `monitor`;
+SET character_set_client = utf8;
+CREATE TABLE `monitor` (
+  `user_id` int(10) unsigned NOT NULL,
+  `type` tinyint(2) unsigned NOT NULL default '1',
+  `display_x` smallint(4) unsigned NOT NULL default '0',
+  `display_y` smallint(4) unsigned NOT NULL default '0',
+  `columns` tinyint(2) unsigned NOT NULL default '2',
+  `update` smallint(4) unsigned NOT NULL default '2',
+  `reload` smallint(4) unsigned NOT NULL default '120',
+  PRIMARY KEY  (`user_id`, `type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+
+--
+-- Table structure for table `monitor_colors`
+--
+DROP TABLE IF EXISTS `monitor_colors`;
+SET character_set_client = utf8;
+CREATE TABLE `monitor_colors` (
+  `user_id` int(10) unsigned NOT NULL,
+  `type` tinyint(2) unsigned NOT NULL default '1',
+  `status` tinyint(3) unsigned NOT NULL default '2',
+  `color` varchar(20) collate utf8_unicode_ci NOT NULL default '#fff',
+  PRIMARY KEY  (`user_id`, `type`, `status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+
+--
+-- Table structure for table `monitor_queues`
+--
+DROP TABLE IF EXISTS `monitor_queues`;
+SET character_set_client = utf8;
+CREATE TABLE `monitor_queues` (
+  `user_id` int(10) unsigned NOT NULL,
+  `queue_id` int(10) unsigned NOT NULL,
+  `active` tinyint(1) unsigned NOT NULL default '1',
+  `display_columns` tinyint(2) unsigned NOT NULL default '2',
+  `display_width` smallint(4) unsigned NOT NULL default '500',
+  `display_height` smallint(4) unsigned NOT NULL default '150',
+  `display_calls` smallint(5) unsigned NOT NULL default '15',
+  `display_answered` smallint(5) unsigned NOT NULL default '15',
+  `display_abandoned` smallint(5) unsigned NOT NULL default '15',
+  `display_timeout` smallint(5) unsigned NOT NULL default '15',
+  `display_wait_max` smallint(5) unsigned NOT NULL default '15',
+  `display_wait_min` smallint(5) unsigned NOT NULL default '15',
+  `display_wait_avg` smallint(5) unsigned NOT NULL default '15',
+  `display_call_max` smallint(5) unsigned NOT NULL default '15',
+  `display_call_min` smallint(5) unsigned NOT NULL default '15',
+  `display_call_avg` smallint(5) unsigned NOT NULL default '15',
+  `display_name` smallint(5) unsigned NOT NULL default '4',
+  `display_extension` smallint(5) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`user_id`, `queue_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+
+--
+-- Table structure for table `monitor_groups`
+--
+DROP TABLE IF EXISTS `monitor_groups`;
+CREATE TABLE `monitor_groups` (
+	  `user_id` int(10) unsigned NOT NULL,
+	  `group_id` int(10) unsigned NOT NULL,
+	  `active` tinyint(1) unsigned NOT NULL default '1',
+	  `display_columns` tinyint(2) unsigned NOT NULL default '2',
+	  `display_width` smallint(4) unsigned NOT NULL default '500',
+	  `display_height` smallint(4) unsigned NOT NULL default '150',
+	  `display_extension` smallint(5) unsigned NOT NULL default '2',
+	  `display_name` smallint(5) unsigned NOT NULL default '4',
+	  `display_forw` smallint(5) unsigned NOT NULL default '3',
+	  `display_comment` smallint(5) unsigned NOT NULL default '0',
+	  PRIMARY KEY  (`user_id`, `group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+
+
 --
 -- Table structure for table `pb_ldap`
 --
