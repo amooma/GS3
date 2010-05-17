@@ -165,6 +165,22 @@ echo '</h2>', "\n";
 </tbody>
 </table>
 
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th colspan="2"><?php echo __('Weckruf'); ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td style="width:140px;"><code>*4</code></td>
+	<td style="width:420px;">
+		<?php echo __('Einrichten eines Weckrufes'); ?>
+	</td>
+</tr>
+</tbody>
+</table>
+
 
 <table cellspacing="1" class="phonebook">
 <thead>

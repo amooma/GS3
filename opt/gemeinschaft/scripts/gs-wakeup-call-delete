@@ -1,0 +1,63 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_wake_up_call_fns.php' );
+
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' [--extension=notify_extension]';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'extension=',
+	),
+	$usage
+);
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+
+if ( ! isSet($opts['extension']) ) {
+        gs_script_invalid_usage( $usage );
+}
+
+$extension =  $opts['extension'] ;
+
+delete_alert_by_target( $extension );
+
+?>

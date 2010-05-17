@@ -6236,6 +6236,8 @@ INSERT INTO `group_members` VALUES (6,18012);
 INSERT INTO `group_members` VALUES (6,18013);
 INSERT INTO `group_members` VALUES (6,18014);
 INSERT INTO `group_members` VALUES (6,18015);
+INSERT INTO `group_members` VALUES (7,20000);
+INSERT INTO `group_members` VALUES (7,20001);
 /*!40000 ALTER TABLE `group_members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6263,6 +6265,7 @@ LOCK TABLES `group_permissions` WRITE;
 INSERT INTO `group_permissions` VALUES ('call_stats',2,2);
 INSERT INTO `group_permissions` VALUES ('call_stats',2,4);
 INSERT INTO `group_permissions` VALUES ('display_module_gui',1,6);
+INSERT INTO `group_permissions` VALUES ('display_module_gui',1,7);
 INSERT INTO `group_permissions` VALUES ('display_module_gui',2,5);
 INSERT INTO `group_permissions` VALUES ('forward_queues',2,4);
 INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
@@ -6304,6 +6307,7 @@ INSERT INTO `groups` VALUES (3,'hosts','All Hosts','host');
 INSERT INTO `groups` VALUES (4,'queues','All Queues','queue');
 INSERT INTO `groups` VALUES (5,'user_gui','User GUI','module_gui');
 INSERT INTO `groups` VALUES (6,'admin_gui','Admin GUI','module_gui');
+INSERT INTO `groups` VALUES (7,'wakeup_call_gui','Wakeup call extension','module_gui');
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7493,6 +7497,9 @@ CREATE TABLE `monitor_queues` (
   PRIMARY KEY  (`user_id`, `queue_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
+
+
+
 --
 -- Current Database: `asterisk`
 --
@@ -7519,3 +7526,13 @@ USE `asterisk`;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2010-04-12 23:22:57
+
+
+DROP TABLE IF EXISTS `wakeup_calls`;
+ CREATE TABLE `asterisk`.`wakeup_calls` (
+ `target` VARCHAR( 16 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+ `hour` TINYINT( 2 ) UNSIGNED NOT NULL ,
+ `minute` TINYINT( 2 ) UNSIGNED NOT NULL ,
+ PRIMARY KEY ( `target` )
+ ) ENGINE = MYISAM
+

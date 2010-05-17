@@ -1251,6 +1251,12 @@ context cluster-watchdog {
 }
 
 
+//---------------------------------------------------------------------
+//  Contexts for Wakeup-calls
+//---------------------------------------------------------------------
+
+#include "/opt/gemeinschaft/etc/asterisk/e-wakeup-call.ael"
+
 
 //---------------------------------------------------------------------
 //  Default Context (do not use here. it's in extensions.conf)
