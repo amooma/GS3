@@ -36,7 +36,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 
 function gs_callforward_get_by_uid( $user_id )
 {
-	if (! preg_match( '/^[0-9]+$/', $user ))
+	if (! preg_match( '/^[0-9]+$/', $user_id ))
 		return new GsError( 'User ID must be numeric.' );
 	
 	# connect to db
