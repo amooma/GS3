@@ -362,12 +362,12 @@ if ($phone_has_microbrowser)
 	//--- key remappings for SoundPoint IP 600 and 601
 	//--- 30 = 'Directories' key
 	echo " key.IP_600.30.function.prim=\"SpeedDial\" key.IP_600.30.subPoint.prim=\"2\"";
-	//echo " key.IP_600.9.function.prim=\"SpeedDial\" key.IP_600.9.subPoint.prim=\"3\"";
+	// echo " key.IP_600.9.function.prim=\"SpeedDial\" key.IP_600.9.subPoint.prim=\"3\"";
 
 	//--- key remappings for SoundPoint IP 650 and 670
 	//--- 30 = 'Directories' key
 	echo " key.IP_650.30.function.prim=\"SpeedDial\" key.IP_650.30.subPoint.prim=\"2\"";
-	//echo " key.IP_650.9.function.prim=\"SpeedDial\" key.IP_650.9.subPoint.prim=\"3\"";
+	// echo " key.IP_650.9.function.prim=\"SpeedDial\" key.IP_650.9.subPoint.prim=\"3\"";
 
 	//--- end of remappings
 
