@@ -5,32 +5,33 @@
 
 macro wakeuptime-announce (hour,minute) {
 
-			Wait(1);
-			if( "${CHANNEL(language)}" == "en" ) {
-				Playback(/opt/gemeinschaft/sounds/en-US/wakeup_call_confirmed);
-				//Playback(digits/at);
-				SayNumber(${hour});
-				if( "${minute}" == "0" ) {
-					Playback(digits/oclock);
-				}
-				else {
-					SayNumber(${minute});
-				}
-			}
-			else {
-				Playback(/opt/gemeinschaft/sounds/de-DE/wakeup_call_confirmed);
-				SayNumber(${hour});
-				Playback(digits/oclock);
-				if( "${minute}" != "0" ) {
-					SayNumber(${minute});
-				}
-			}
+	Wait(1);
+	if( "${CHANNEL(language)}" == "en" ) {
+		Playback(/opt/gemeinschaft/sounds/en-US/wakeup_call_confirmed);
+		//Playback(digits/at);
+		SayNumber(${hour});
+		if( "${minute}" == "0" ) {
+			Playback(digits/oclock);
+		}
+		else {
+			SayNumber(${minute});
+		}
+	}
+	else {
+		Playback(/opt/gemeinschaft/sounds/de-DE/wakeup_call_confirmed);
+		SayNumber(${hour});
+		Playback(digits/oclock);
+		if( "${minute}" != "0" ) {
+			SayNumber(${minute});
+		}
+	}
+
+	return;
 
 };
 
 macro wakeuptime-remove(user) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/wakeup-call-delete.agi,${user});
-	Noop( Ret: ${ret});
 	if ( "${ret}" == "" || "${ret}" == "error" ) {
 		Playback(/opt/gemeinschaft/sounds/${lang}/error_wakeup_call_cancelled);
 		Wait(0.5);
@@ -42,6 +43,8 @@ macro wakeuptime-remove(user) {
 	Wait(0.5);
 	Playback(vm-goodbye);
 	Hangup();
+
+	return;
 	
 };
 
@@ -86,7 +89,6 @@ context wakeup-call-select-lang {
 context wakeup-call {
 
 	s => {
-		Noop( Wakeup-Call-Menu called from user ${user_name}); 
 		AGI(/opt/gemeinschaft/dialplan-scripts/wakeup-call-check.agi,${user_name});
 		
 		if ( "${ret}" == "" || "${ret}" == "error" )
@@ -146,13 +148,10 @@ context wakeup-call-notset {
 
 	s => {
 		Read(wtime,/opt/gemeinschaft/sounds/${lang}/wakeup_call_request,4,,,5);
-		Noop( READSTATUS: ${READSTATUS} );
-		Noop( Return: ${wtime} );
 
 		if ( "${READSTATUS}" == "OK" ) {
 
 			AGI(/opt/gemeinschaft/dialplan-scripts/wakeup-call-set.agi,${user_name},${wtime});
-			Noop( Isset: ${isset} );
 			if ( "${isset}" == "error" ) {
 				Playback(/opt/gemeinschaft/sounds/${lang}/error_entry);
 				goto wakeup-call-notset|s|1;
@@ -169,9 +168,6 @@ context wakeup-call-notset {
 		
 
 		AGI(/opt/gemeinschaft/dialplan-scripts/wakeup-call-check.agi,${user_name});
-		Noop( Ret: ${ret});
-		Noop( Hour: ${hour});
-		Noop( Minute: ${minute});
 		if ( "${ret}" == "" || "${ret}" == "error" ) {
 			Hangup();
 		}
@@ -196,12 +192,13 @@ context wakeup-call-notset {
 context wakeup-job {
 
 	s => {
+		Wait(1);
 		Playback(/opt/gemeinschaft/sounds/de-DE/wakeup_call_announcement);
-		SayUnixTime(,,"kM");
+		SayUnixTime(,,R);
 		Wait(0.5);
 		Set(CHANNEL(language)=en);
 		Playback(/opt/gemeinschaft/sounds/en-US/wakeup_call_announcement);
-		SayUnixTime(,,"kM");
+		SayUnixTime(,,R);
 		MusicOnHold();
 	}
 

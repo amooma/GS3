@@ -34,7 +34,7 @@ require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 include_once( GS_DIR .'inc/find_executable.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
-
+$now = getdate();
 		
 $cmd = '/opt/gemeinschaft/scripts/gs-wakeup-call-notify --hour='. $now['hours'] . ' --minute=' .  $now['minutes']  . '  2>&1';
 $out = array();
