@@ -503,7 +503,30 @@ if ($action == 'edit') {
 		echo '<td>';
 		echo '</td>', "\n";
 		echo '<td>';
-		echo '<input type="text" name="member" value="Member" size="20" maxlength="20" style="width:96%;" />';
+		
+		if ($group['type'] === 'module_gui') {
+			echo '<select name="member">', "\n";
+			foreach($MODULES as $section) {
+				if (! in_array($section['id'], gs_group_members_get(array($group['id']))) ) {
+					echo '<option value="', $section['id'], '"', 'title="', htmlEnt($section['title']) ,'">';
+					echo $section['title'];
+					echo '</option>', "\n";
+				}
+				if (array_key_exists('sub', $section)) {
+					foreach($section['sub'] as $module) {
+						if (! in_array($module['id'], gs_group_members_get(array($group['id']))) ) {
+							echo '<option value="', $module['id'], '"', 'title="', htmlEnt($section['title']), ' - ', htmlEnt($module['title']) ,'">';
+							echo $section['title'], ' - ', $module['title'];
+							echo '</option>', "\n";
+						}
+					}
+				}
+			}
+			echo '</select>', "\n";
+		} else {
+			echo '<input type="text" name="member" value="Member" size="20" maxlength="20" style="width:96%;" />';
+		}
+		
 		echo '</td>', "\n";
 		echo '<td class="r" colspan="2">', "\n";
 		echo  '<button type="submit" name="action" value="insert-member" title="', __('Mitglied Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
@@ -513,16 +536,47 @@ if ($action == 'edit') {
 	}
 
 	$i=0;
-	foreach ($group_members as $group_member) {
-		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
-		echo '<td>',$group_member['type']  ,'</td>', "\n";
-		echo '<td>',$group_member['member']  ,'</td>', "\n";
-		echo '<td class="r">', "\n";
-		if (!gs_group_connections_get($group['id']))
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-member&amp;id='.$group['id'].'&amp;page='.$page.'&amp;type='.$group_member['type'].'&amp;member='.$group_member['member']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
-		echo '</td>', "\n";
-		echo '</tr>' ,"\n";
-		$i++;
+	if ($group['type'] === 'module_gui') {
+		foreach ($MODULES as $section) {
+			if (in_array($section['id'], gs_group_members_get(array($group['id']))) ) {
+				$i++;
+				echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+				echo '<td>',$group['type'] ,'</td>', "\n";
+				echo '<td>',$section['title'] ,'</td>', "\n";
+				echo '<td class="r">', "\n";
+				if (!gs_group_connections_get($group['id']))
+					echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-member&amp;id='.$group['id'].'&amp;page='.$page.'&amp;type=module_gui&amp;member='.$section['id']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+				echo '</td>', "\n";
+				echo '</tr>' ,"\n";
+			}
+			if (array_key_exists('sub', $section)) {
+				foreach($section['sub'] as $module) {
+					if (in_array($module['id'], gs_group_members_get(array($group['id']))) ) {
+						echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+						echo '<td>',$group['type'] ,'</td>', "\n";
+						echo '<td>',$section['title'], ' - ', $module['title'] ,'</td>', "\n";
+						echo '<td class="r">', "\n";
+						if (!gs_group_connections_get($group['id']))
+							echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-member&amp;id='.$group['id'].'&amp;page='.$page.'&amp;type=module_gui&amp;member='.$module['id']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+						echo '</td>', "\n";
+						echo '</tr>' ,"\n";
+						//$i++;
+					}
+				}
+			}
+		}
+	} else {
+		foreach ($group_members as $group_member) {
+			echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+			echo '<td>',$group_member['type']  ,'</td>', "\n";
+			echo '<td>',$group_member['member']  ,'</td>', "\n";
+			echo '<td class="r">', "\n";
+			if (!gs_group_connections_get($group['id']))
+				echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-member&amp;id='.$group['id'].'&amp;page='.$page.'&amp;type='.$group_member['type'].'&amp;member='.$group_member['member']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+			echo '</td>', "\n";
+			echo '</tr>' ,"\n";
+			$i++;
+		}
 	}
 
 	echo '</tbody>'."\n";
