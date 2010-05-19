@@ -1,0 +1,85 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_room_state_fns.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' [--room=ext] [--state=room_state]';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'room=',
+		'state='
+	),
+	$usage
+);
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+
+if (! isSet($opts['room'])
+ || ! isSet($opts['state'])
+ ) {
+        gs_script_invalid_usage( $usage );
+}
+
+
+$room =  $opts['room'] ;
+$state = $opts['state'] ;
+
+
+
+if(! ctype_digit( $room ) ) 
+	 gs_script_invalid_usage( 'No valid input for argumet "room". Only digits are allowed.' ); 
+
+if(! ctype_digit( $state ) ) 
+	 gs_script_invalid_usage( 'No valid input for argumet "state". Not a number.' ); 
+
+$state = (int)$state;
+
+if ( $state < 0 || $state >= 4 )
+	gs_script_invalid_usage( 'No valid input for argumet "state". Out of bounds.' );
+
+$ret = set_room_state( $room , $state);
+
+if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
+if (! $ret)            gs_script_error();
+
+echo "room state set.\n";
+
+?>

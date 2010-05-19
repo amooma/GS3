@@ -419,6 +419,18 @@ $MODULES['wakeupcall' ]=  array(
 
 #####################################################################
 
+$MODULES['room' ]=  array(
+	'title' => __('Zimmer'),
+	'icon'  => 'crystal-svg/%s/app/assistant.png',
+	'boi_ok'=> false,
+	'id' => 21000,
+	'sub' => array(
+		'state'     => array('title' => __('Status'), 'id' => 21001)
+	)
+);
+
+#####################################################################
+
 if (gs_get_conf('GS_GUI_AUTH_METHOD') !== 'webseal') {
 $MODULES['logout'   ]=  array(
 	'title' => __('Logout'),

@@ -1192,6 +1192,80 @@ Usage: gs_user_add --user=&lt;user&gt; --ext=&lt;1234&gt; --pin=&lt;123456&gt; -
     </variablelist>
   </section>
 
+  <section id="gs_room_state_del">
+    <title><command>gs_room_state_del</command><indexterm>
+        <primary><command>gs_room_state_del</command></primary>
+      </indexterm><indexterm>
+        <primary>Raum aus der Statusliste entfernen</primary>
+      </indexterm></title>
+
+    <para>Entfernt einen Raum aus der Status-Liste.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--room=<replaceable>Raumnummer</replaceable></code></term>
+
+        <listitem>
+          <simpara>Als Raumnummer kann eine beliebig Zahlenfolge gewählt werden.</simpara>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_room_state_get">
+    <title><command>gs_room_state_get</command><indexterm>
+        <primary><command>gs_room_state_get</command></primary>
+      </indexterm><indexterm>
+        <primary>Den Status von Räume anzeigen</primary>
+      </indexterm></title>
+
+    <para>Listet den Status eines oder aller Räume auf.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--room=<replaceable>Raumnummer</replaceable></code></term>
+
+        <listitem>
+          <simpara>Als Raumnummer kann eine beliebig Zahlenfolge gewählt werden.</simpara>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><code>--all</code></term>
+        <listitem>
+          <simpara>Alle Räume auflisten.</simpara>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+
+  <section id="gs_room_state_set">
+    <title><command>gs_room_state_set</command><indexterm>
+        <primary><command>gs_room_state_set</command></primary>
+      </indexterm><indexterm>
+        <primary>Status eines Raumes setzen</primary>
+      </indexterm></title>
+
+    <para>Setzt den Status eines Raumes. Existiert der Raum noch nicht, so wird
+    er neu hinzugefügt.</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>--room=<replaceable>Raumnummer</replaceable></code></term>
+
+        <listitem>
+          <simpara>Als Raumnummer kann eine beliebig Zahlenfolge gewählt werden.</simpara>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><code>--state=<replaceable>Status</replaceable></code></term>
+        <listitem>
+          <simpara>Zimmerstatus. `1` für `nicht gereinigt`, `2` für `gereinigt`
+          , `3` für `gereingt &amp; geprüft`.</simpara>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+  
   <section id="gs_user_add">
     <title><command>gs_user_add</command><indexterm>
         <primary><command>gs_user_add</command></primary>

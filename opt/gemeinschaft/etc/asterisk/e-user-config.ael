@@ -555,6 +555,35 @@ context user-config {
 		}
 	}
 
+	//-------------------------------------------------------------
+	// Room state
+	//-------------------------------------------------------------
+
+	_##9[123] => {
+		&check-group-permission(${user_id},user,room_state);
+		AGI(/opt/gemeinschaft/dialplan-scripts/room-state-set.agi,${user_name},${EXTEN:3});
+		Answer();
+		Wait(0.5);
+		if( "${isset}" == "ok" ) {
+			if ( "${EXTEN:3}" == "1" ) {
+				Playback(/opt/gemeinschaft/sounds/${gs_lang}/room_not_cleaned);
+			}
+			else if ( "${EXTEN:3}" == "2" ) {
+				Playback(/opt/gemeinschaft/sounds/${gs_lang}/room_cleaned);
+			}
+			else {
+				Playback(/opt/gemeinschaft/sounds/${gs_lang}/room_cleaned_proofed);
+			}
+		}
+		else {
+			Playback(beeperr);
+		}
+		Hangup();
+	}
+
+	//-------------------------------------------------------------
+	
+
 	_*35X. => {
 		&check-group-permission(${user_id},user,clip_set);
 		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},external,${EXTEN:3});

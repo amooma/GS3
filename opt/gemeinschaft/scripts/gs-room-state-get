@@ -1,0 +1,173 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Andreas Neugebauer <neugebauer@loca.net> LocaNet oHG
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_room_state_fns.php' );
+include_once( GS_DIR .'inc/mb_str_pad.php' );
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --room=<room> | [--all]' ;
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'room=',
+		'all'	
+	),
+	$usage
+);
+
+if (! isSet($opts['room']) && ! array_key_exists('all', $opts) ) {
+	gs_script_invalid_usage( $usage );
+}
+else if ( isSet($opts['room']) &&  array_key_exists('all', $opts) ) {
+	gs_script_invalid_usage( $usage );
+}
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+
+$states = array ( 'unknown', 'not_cleaned', 'cleaned', 'cleaned_&_checked' );
+
+if ( $opts['room'] ) {
+
+	$result = get_room_state( trim ( $opts['room'] ) );
+	
+	if ( isGsError( $result ) ) {
+		gs_script_invalid_usage( $result->getMsg());	
+	}
+
+	$rooms = array();
+
+	$rooms[] = array( 
+		'extension'	=> trim( $opts['room'] ),
+		'state'		=> $result, 
+		'desc'		=> $states[$result]
+	); 
+
+}
+else {
+
+	$results = get_all_room_states( trim ( $room ) );
+	
+	if ( isGsError( $result ) ) {
+		gs_script_invalid_usage( $result->getMsg());	
+	}
+
+	$rooms = array();
+
+	foreach( $results as $res ) {
+	
+		$rooms[] = array (
+			'extension'	=> $res['extension'],
+			'state' 	=> $res['state'],
+			'desc' 		=> $states[$res['state']]
+		);
+
+	}
+
+}
+
+$fields = array(
+	'extension'             => 1,
+	'state'                  => 1,
+	'desc'			=> 1
+);
+
+$fieldsAbbr = array(
+	'extension'    		=> 'room',
+	'state'			=> 'state',
+	'desc'			=> 'description'
+);
+
+if (gs_stdout_is_console()) {
+	
+	$fieldsPad = array(
+		'extension'             => STR_PAD_RIGHT,
+		'state'    		=> STR_PAD_RIGHT,
+		'desc'                  => STR_PAD_RIGHT
+	);
+	
+	foreach ($fields as $field => $length) {
+		if (strLen($fieldsAbbr[$field]) > $length)
+			$fields[$field] = strLen($fieldsAbbr[$field]);
+	}
+
+	if (count($rooms))
+		foreach ($rooms as $ignore => $room) {
+			foreach ($fields as $field => $length) {
+				if (mb_strLen($room[$field]) > $length)
+					$fields[$field] = mb_strLen($room[$field]);
+			}
+		}
+	
+	$header = '| ';
+	foreach ($fields as $field => $length) {
+		$header.= str_pad( $fieldsAbbr[$field], $length, ' ' ) .' | ';
+	}
+	$sep = str_repeat( '-', strLen($header)-1 );
+	
+	echo $sep, "\n";
+	echo $header, "\n";
+	echo $sep, "\n";
+	if (count($rooms))
+		foreach ($rooms as $ignore => $room) {
+			echo '| ';
+			foreach ($fields as $field => $length) {
+				echo mb_str_pad( $room[$field], $length, ' ', $fieldsPad[$field] ), ' | ';
+			}
+			echo "\n";
+		}
+	echo $sep, "\n";
+
+}
+else {
+	
+	echo '# ';
+	foreach ($fields as $field => $length) {
+		echo gs_add_c_slashes( $fieldsAbbr[$field] ) ,"\t";
+	}
+	echo "\n";
+	if (count($rooms))
+		foreach ($rooms as $ignore => $room) {
+			foreach ($fields as $field => $length) {
+				echo gs_add_c_slashes( $room[$field] ) ,"\t";
+			}
+			echo "\n";
+		}
+	
+}
+
+?>

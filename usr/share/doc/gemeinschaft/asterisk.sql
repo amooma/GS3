@@ -6143,6 +6143,8 @@ INSERT INTO `group_members` VALUES (6,18014);
 INSERT INTO `group_members` VALUES (6,18015);
 INSERT INTO `group_members` VALUES (7,20000);
 INSERT INTO `group_members` VALUES (7,20001);
+INSERT INTO `group_members` VALUES (8,21000);
+INSERT INTO `group_members` VALUES (7,21001);
 /*!40000 ALTER TABLE `group_members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6180,9 +6182,11 @@ INSERT INTO `group_permissions` VALUES ('call_stats',2,4);
 INSERT INTO `group_permissions` VALUES ('forward_queues',2,4);
 INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
 INSERT INTO `group_permissions` VALUES ('wakeup_call',2,2);
+INSERT INTO `group_permissions` VALUES ('room_state',2,2);
 INSERT INTO `group_permissions` VALUES ('sudo_user',1,2);
 INSERT INTO `group_permissions` VALUES ('display_module_gui',1,6);
 INSERT INTO `group_permissions` VALUES ('display_module_gui',1,7);
+INSERT INTO `group_permissions` VALUES ('display_module_gui',1,8);
 INSERT INTO `group_permissions` VALUES ('display_module_gui',2,5);
 /*!40000 ALTER TABLE `group_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -6216,6 +6220,7 @@ INSERT INTO `groups` VALUES (4,'queues','All Queues','queue');
 INSERT INTO `groups` VALUES (5,'user_gui','User GUI','module_gui');
 INSERT INTO `groups` VALUES (6,'admin_gui','Admin GUI','module_gui');
 INSERT INTO `groups` VALUES (7,'wakeup_call_gui','Wakeup call extension','module_gui');
+INSERT INTO `groups` VALUES (8,'room state gui','Room state extension','module_gui');
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7279,5 +7284,14 @@ DROP TABLE IF EXISTS `wakeup_calls`;
  `hour` TINYINT( 2 ) UNSIGNED NOT NULL ,
  `minute` TINYINT( 2 ) UNSIGNED NOT NULL ,
  PRIMARY KEY ( `target` )
- ) ENGINE = MYISAM 
+ ) ENGINE = MYISAM;
+ 
+DROP TABLE IF EXISTS `room_state`;
+ CREATE TABLE `asterisk`.`room_state` (
+ `extension` VARCHAR( 16 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+ `state` TINYINT( 1 ) UNSIGNED NOT NULL ,
+ PRIMARY KEY ( `extension` )
+ ) ENGINE = MYISAM;
+
+
  
