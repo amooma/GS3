@@ -41,7 +41,7 @@ CREATE TABLE `monitor` (
   `update` smallint(4) unsigned NOT NULL default '2',
   `reload` smallint(4) unsigned NOT NULL default '120',
   PRIMARY KEY  (`user_id`, `type`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
 SET character_set_client = utf8;
 CREATE TABLE `monitor_colors` (
@@ -50,7 +50,7 @@ CREATE TABLE `monitor_colors` (
   `status` tinyint(3) unsigned NOT NULL default '2',
   `color` varchar(20) collate utf8_unicode_ci NOT NULL default '#fff',
   PRIMARY KEY  (`user_id`, `type`, `status`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
 SET character_set_client = utf8;
 CREATE TABLE `monitor_queues` (
@@ -70,5 +70,23 @@ CREATE TABLE `monitor_queues` (
   `display_call_max` smallint(5) unsigned NOT NULL default '15',
   `display_call_min` smallint(5) unsigned NOT NULL default '15',
   `display_call_avg` smallint(5) unsigned NOT NULL default '15',
+  `display_extension` smallint(5) unsigned NOT NULL default '0',
+  `display_name` smallint(5) unsigned NOT NULL default '4',			       
   PRIMARY KEY  (`user_id`, `queue_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `monitor_groups` (
+  `user_id` int(10) unsigned NOT NULL,
+  `group_id` int(10) unsigned NOT NULL,
+  `active` tinyint(1) unsigned NOT NULL default '1',
+  `display_columns` tinyint(2) unsigned NOT NULL default '2',
+  `display_width` smallint(4) unsigned NOT NULL default '500',
+  `display_height` smallint(4) unsigned NOT NULL default '150',
+  `display_extension` smallint(5) unsigned NOT NULL default '2',
+  `display_name` smallint(5) unsigned NOT NULL default '4',
+  `display_forw` smallint(5) unsigned NOT NULL default '3',
+  `display_comment` smallint(5) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`user_id`, `group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+
+
