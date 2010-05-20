@@ -300,31 +300,7 @@ LIMIT 5'
 	</div>
 	
 	<div class="fl" style="width:49%; min-width:20em; max-width:30em; margin:1px;">
-<?php
-	if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
-?>
-		<div class="th" style="padding:0.35em 0.5em; margin-bottom:2px;">
-			<img alt=" " src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/display.png'; ?>" />&nbsp;
-			<a href="<?php echo gs_url('monitor','peers'); ?>"><?php
-				echo __('Pr&auml;senz');
-			?></a>
-		</div>
-		<div class="td" style="padding:0.6em;">
-			<form method="get" action="<?php echo GS_URL_PATH; ?>">
-			<?php echo gs_form_hidden($SECTION, $MODULE); ?>
-			<input type="hidden" name="action" value="setcomment" />
-			<?php echo __('Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)'); ?>:<br />
-			<?php
-			$comment = gs_user_comment_get( $_SESSION['sudo_user']['name'] );
-			?>
-			<input type="text" name="comment" size="40" maxlength="80" value="<?php echo htmlEnt($comment); ?>" style="max-width:99%;" />
-			<br />
-			<input type="submit" value="<?php echo __('Speichern'); ?>" />
-			</form>
-		</div>
-<?php
-	} else {
-?>
+
 		<div class="th" style="padding:0.35em 0.5em; margin-bottom:2px;">
 			<img alt=" " src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png'; ?>" />&nbsp;
 			<?php
@@ -341,9 +317,28 @@ LIMIT 5'
 			</button>
 			</form>
 		</div>
-<?php
-	}
-?>
+
+		<div class="th" style="padding:0.35em 0.5em; margin-bottom:2px;">
+			<img alt=" " src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/display.png'; ?>" />&nbsp;
+			<a href="<?php echo gs_url('monitor','peers'); ?>"><?php
+				echo __('Pr&auml;senz');
+			?></a>
+		</div>
+		<div class="td" style="padding:0.6em;">
+			<form method="get" action="<?php echo GS_URL_PATH; ?>">
+			<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+			<input type="hidden" name="action" value="setcomment" />
+			<?php echo __('Ihr Kommentar f&uuml;r Kollegen (z.B. &quot;Feierabend&quot;)'); ?>:<br />
+			<?php
+			$comment = gs_user_comment_get( $_SESSION['sudo_user']['name'] );
+			?>
+			<input type="text" name="comment" size="40" maxlength="80" value="<?php echo htmlEnt($comment); ?>" style="max-width:99%;" />
+			<button class="m" title="<?php echo htmlEnt(__("Speichern")); ?>" style="height:22px; padding:0;">
+			<img alt="<?php echo htmlEnt(__("Speichern")); ?>" src="<?php echo GS_URL_PATH, 'crystal-svg/16/act/filesave.png'; ?>" style="margin:0 5px;" />
+			</button>
+			</form>
+		</div>
+
 	</div>
 	
 </div>
