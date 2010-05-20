@@ -61,17 +61,15 @@ function queue_window($px, $py, $width, $height, $id, $title='', $members, $cols
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
 	echo '</table>',"\n";
+
+	$member_count = count($members);
+	if ($rows == 0) $rows = ceil( $member_count / $cols);
 	$a_width = (int) floor(($width - 1 - $cols) / $cols);
 	$a_height = (int) floor(($height - $offset_py - $rows) / $rows);
-
 	$i = 0;
-	$member_count = count($members);
-	
 	$tablewidth = 100;
-
 	if ($member_count < $cols) {
-		$tablewidth = floor(100 * ($member_count / $cols));
-		
+		$tablewidth = floor(100 * ($member_count / $cols));		
 	}
 	
 	echo '<table class="extmon" style="width: ',$tablewidth,'%">',"\n";
@@ -97,7 +95,7 @@ function queue_window($px, $py, $width, $height, $id, $title='', $members, $cols
 
 }
 
-function group_window($px, $py, $width, $height, $id, $title='', $members, $cols=3, $rows=3, $bgcolor=gray, $fgcolor=white, $stats=False)
+function group_window($px, $py, $width, $height, $id, $title='', $members, $cols=3, $rows=0, $bgcolor=gray, $fgcolor=white, $stats=False)
 {
 	global $bg_color, $fg_color;
 
@@ -119,17 +117,14 @@ function group_window($px, $py, $width, $height, $id, $title='', $members, $cols
 	echo '</td>',"\n";
 	echo '</tr>',"\n";
 	echo '</table>',"\n";
+	$member_count = count($members);
+	if ($rows == 0) $rows = ceil( $member_count / $cols);
 	$a_width = (int) floor(($width - 1 - $cols) / $cols);
 	$a_height = (int) floor(($height - $offset_py - $rows) / $rows);
-
 	$i = 0;
-	$member_count = count($members);
-
 	$tablewidth = 100;
-
 	if ($member_count < $cols) {
 		$tablewidth = floor(100 * ($member_count / $cols));
-
 	}
 
 	echo '<table class="extmon" style="width: ',$tablewidth,'%">',"\n";
