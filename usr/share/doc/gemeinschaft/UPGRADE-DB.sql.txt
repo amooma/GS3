@@ -1304,3 +1304,20 @@ CREATE TABLE `monitor_queues` (
   `display_call_avg` smallint(5) unsigned NOT NULL default '15',
   PRIMARY KEY  (`user_id`, `queue_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+
+
+ CREATE TABLE IF NOT EXISTS `wakeup_calls` (
+ `target` VARCHAR( 16 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+ `hour` TINYINT( 2 ) UNSIGNED NOT NULL ,
+ `minute` TINYINT( 2 ) UNSIGNED NOT NULL ,
+ PRIMARY KEY ( `target` )
+ ) ENGINE = MYISAM
+
+
+--
+-- After: 0819b3d3ce9e37e3f026
+--
+
+UPDATE `group_permissions` SET `type`='secretary_call' WHERE `type`='secretary';
+UPDATE `group_permissions` SET `type`='intercom_call' WHERE `type`='intercom';
+

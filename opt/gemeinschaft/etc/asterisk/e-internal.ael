@@ -424,7 +424,7 @@ context to-internal-users {
 			Hangup();
 		}
 		
-		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${iext},intercom);
+		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${iext},intercom_call);
 		if ("${permission}" != "true") {
 			Verbose(1,### ${user_name} have no intercom permission to ${iext});
 			Hangup();
@@ -471,7 +471,7 @@ context to-internal-users {
 			Hangup();
 		}
 		
-		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${boss},secretary);
+		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${boss},secretary_call);
 		if ("${permission}" != "true") {
 			Verbose(1,### ${user_name} is not secretary of ${boss});
 			Hangup();

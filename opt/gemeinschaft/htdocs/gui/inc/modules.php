@@ -396,6 +396,18 @@ $MODULES['system'   ]['sub'][
 
 #####################################################################
 
+$MODULES['wakeupcall' ]=  array(
+	'title' => __('Weckruf'),
+	'icon'  => 'crystal-svg/%s/app/kalarm.png',
+	'boi_ok'=> false,
+	'id' => 20000,
+	'sub' => array(
+		'wakeupcall'     => array('title' => __('Weckruf'), 'id' => 20001)
+	)
+);
+
+#####################################################################
+
 if (gs_get_conf('GS_GUI_AUTH_METHOD') !== 'webseal') {
 $MODULES['logout'   ]=  array(
 	'title' => __('Logout'),

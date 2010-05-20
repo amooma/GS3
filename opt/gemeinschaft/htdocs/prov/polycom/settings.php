@@ -289,7 +289,7 @@ echo "reg.1.acd-agent-available=\"0\" ";
 echo "reg.1.proxyRequire=\"\" ";
 echo "reg.1.ringType=\"2\" ";
 echo "reg.1.lineKeys=\"\" ";
-echo "reg.1.callsPerLineKey=\"". ($callwaiting ? "8" : "1") ."\" ";
+echo "reg.1.callsPerLineKey=\"8\" ";
 echo "reg.1.bargeInEnabled=\"\" ";
 echo "reg.1.serverFeatureControl.dnd=\"0\" ";
 echo "reg.1.serverFeatureControl.cf=\"1\" ";
@@ -301,7 +301,7 @@ echo "reg.1.strictLineSeize=\"\" ";
       <autoOffHook call.autoOffHook.1.enabled="0" call.autoOffHook.1.contact="" call.autoOffHook.2.enabled="0" call.autoOffHook.2.contact="" call.autoOffHook.3.enabled="0" call.autoOffHook.3.contact="" call.autoOffHook.4.enabled="0" call.autoOffHook.4.contact="" call.autoOffHook.5.enabled="0" call.autoOffHook.5.contact="" call.autoOffHook.6.enabled="0" call.autoOffHook.6.contact=""/>
       <missedCallTracking call.missedCallTracking.1.enabled="1" call.missedCallTracking.2.enabled="1" call.missedCallTracking.3.enabled="1" call.missedCallTracking.4.enabled="1" call.missedCallTracking.5.enabled="1" call.missedCallTracking.6.enabled="1"/>
       <serverMissedCall call.serverMissedCall.1.enabled="0" call.serverMissedCall.2.enabled="0" call.serverMissedCall.3.enabled="0" call.serverMissedCall.4.enabled="0" call.serverMissedCall.5.enabled="0" call.serverMissedCall.6.enabled="0"/>
-      <callWaiting call.callWaiting.enabled="0" call.callWaiting.ring="beep"/>
+      <callWaiting call.callWaiting.enabled="1" call.callWaiting.ring="beep"/>
    </call>
    <divert divert.1.contact="" divert.1.autoOnSpecificCaller="1" divert.1.sharedDisabled="1" divert.2.contact="" divert.2.autoOnSpecificCaller="1" divert.2.sharedDisabled="1" divert.3.contact="" divert.3.autoOnSpecificCaller="1" divert.3.sharedDisabled="1" divert.4.contact="" divert.4.autoOnSpecificCaller="1" divert.4.sharedDisabled="1" divert.5.contact="" divert.5.autoOnSpecificCaller="1" divert.5.sharedDisabled="1" divert.6.contact="" divert.6.autoOnSpecificCaller="1" divert.6.sharedDisabled="1">
       <fwd divert.fwd.1.enabled="0" divert.fwd.2.enabled="0" divert.fwd.3.enabled="0" divert.fwd.4.enabled="0" divert.fwd.5.enabled="0" divert.fwd.6.enabled="0"/>
@@ -362,12 +362,12 @@ if ($phone_has_microbrowser)
 	//--- key remappings for SoundPoint IP 600 and 601
 	//--- 30 = 'Directories' key
 	echo " key.IP_600.30.function.prim=\"SpeedDial\" key.IP_600.30.subPoint.prim=\"2\"";
-	echo " key.IP_600.9.function.prim=\"SpeedDial\" key.IP_600.9.subPoint.prim=\"3\"";
+	// echo " key.IP_600.9.function.prim=\"SpeedDial\" key.IP_600.9.subPoint.prim=\"3\"";
 
 	//--- key remappings for SoundPoint IP 650 and 670
 	//--- 30 = 'Directories' key
 	echo " key.IP_650.30.function.prim=\"SpeedDial\" key.IP_650.30.subPoint.prim=\"2\"";
-	echo " key.IP_650.9.function.prim=\"SpeedDial\" key.IP_650.9.subPoint.prim=\"3\"";
+	// echo " key.IP_650.9.function.prim=\"SpeedDial\" key.IP_650.9.subPoint.prim=\"3\"";
 
 	//--- end of remappings
 
