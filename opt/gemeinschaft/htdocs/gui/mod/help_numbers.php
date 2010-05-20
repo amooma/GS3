@@ -27,6 +27,7 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
+require_once( GS_DIR .'inc/group-fns.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -35,6 +36,9 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
+
+$user_id     = (int)@$_SESSION['sudo_user']['info']['id'];
+$user_groups = gs_group_members_groups_get(array($user_id), 'user');
 
 ?>
 
@@ -209,6 +213,8 @@ echo '</h2>', "\n";
 
 </table>
 
+<?php if ( count(gs_group_permissions_get($user_groups, 'wakeup_call')) > 0 ) { ?>
+
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
@@ -226,6 +232,8 @@ echo '</h2>', "\n";
 </table>
 
 </table>
+
+<?php } ?>
 
 <table cellspacing="1" class="phonebook">
 <thead>
@@ -305,7 +313,6 @@ echo '</h2>', "\n";
 </tbody>
 </table>
 
-
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
@@ -333,6 +340,7 @@ echo '</h2>', "\n";
 </tr>
 </tbody>
 </table>
+
 
 <table cellspacing="1" class="phonebook">
 <thead>
