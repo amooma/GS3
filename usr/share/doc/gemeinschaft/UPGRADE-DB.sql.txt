@@ -1257,9 +1257,26 @@ INSERT INTO `group_members` VALUES (6,6004);
 alter table ast_queues add `_min_agents` int(10) NOT NULL default 0;
 
 --
--- Since: QueueMon
+-- After: Wakeup Calls 
+--
+ CREATE TABLE IF NOT EXISTS `wakeup_calls` (
+ `target` VARCHAR( 16 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+ `hour` TINYINT( 2 ) UNSIGNED NOT NULL ,
+ `minute` TINYINT( 2 ) UNSIGNED NOT NULL ,
+ PRIMARY KEY ( `target` )
+ ) ENGINE = MYISAM
+
+
+--
+-- After: 0819b3d3ce9e37e3f026
 --
 
+UPDATE `group_permissions` SET `type`='secretary_call' WHERE `type`='secretary';
+UPDATE `group_permissions` SET `type`='intercom_call' WHERE `type`='intercom';
+
+--
+-- After: Realtime Monitor 
+--
 DROP TABLE IF EXISTS `monitor`;
 SET character_set_client = utf8;
 CREATE TABLE `monitor` (
@@ -1269,9 +1286,9 @@ CREATE TABLE `monitor` (
   `display_y` smallint(4) unsigned NOT NULL default '0',
   `columns` tinyint(2) unsigned NOT NULL default '2',
   `update` smallint(4) unsigned NOT NULL default '2',
-  `reload` smallint(4) unsigned NOT NULL default '120',
+  `reload` smallint(4) unsigned NOT NULL default '2',
   PRIMARY KEY  (`user_id`, `type`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `monitor_colors`;
 SET character_set_client = utf8;
@@ -1281,7 +1298,7 @@ CREATE TABLE `monitor_colors` (
   `status` tinyint(3) unsigned NOT NULL default '2',
   `color` varchar(20) collate utf8_unicode_ci NOT NULL default '#fff',
   PRIMARY KEY  (`user_id`, `type`, `status`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `monitor_queues`;
 SET character_set_client = utf8;
@@ -1302,22 +1319,23 @@ CREATE TABLE `monitor_queues` (
   `display_call_max` smallint(5) unsigned NOT NULL default '15',
   `display_call_min` smallint(5) unsigned NOT NULL default '15',
   `display_call_avg` smallint(5) unsigned NOT NULL default '15',
+  `display_extension` smallint(5) unsigned NOT NULL default '0',
+  `display_name` smallint(5) unsigned NOT NULL default '4',			       
   PRIMARY KEY  (`user_id`, `queue_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
-
- CREATE TABLE IF NOT EXISTS `wakeup_calls` (
- `target` VARCHAR( 16 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
- `hour` TINYINT( 2 ) UNSIGNED NOT NULL ,
- `minute` TINYINT( 2 ) UNSIGNED NOT NULL ,
- PRIMARY KEY ( `target` )
- ) ENGINE = MYISAM
-
-
---
--- After: 0819b3d3ce9e37e3f026
---
-
-UPDATE `group_permissions` SET `type`='secretary_call' WHERE `type`='secretary';
-UPDATE `group_permissions` SET `type`='intercom_call' WHERE `type`='intercom';
+DROP TABLE IF EXISTS `monitor_groups`;
+CREATE TABLE `monitor_groups` (
+  `user_id` int(10) unsigned NOT NULL,
+  `group_id` int(10) unsigned NOT NULL,
+  `active` tinyint(1) unsigned NOT NULL default '1',
+  `display_columns` tinyint(2) unsigned NOT NULL default '2',
+  `display_width` smallint(4) unsigned NOT NULL default '500',
+  `display_height` smallint(4) unsigned NOT NULL default '150',
+  `display_extension` smallint(5) unsigned NOT NULL default '2',
+  `display_name` smallint(5) unsigned NOT NULL default '4',
+  `display_forw` smallint(5) unsigned NOT NULL default '3',
+  `display_comment` smallint(5) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`user_id`, `group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
