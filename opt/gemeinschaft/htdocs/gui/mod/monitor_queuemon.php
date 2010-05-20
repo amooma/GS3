@@ -1098,7 +1098,7 @@ window.onload=data_reload
 		$st_y = $qy;
 		
 		if ($queue_data['active']) {
-				queue_window($st_x,$st_y,$queue_data['display_width'],$queue_data['display_height'],"q".$queue,$queue_data['title'], $queue_data['members'], $queue_data['display_columns'], 7, CQ_WINDOW_BG, CQ_WINDOW_FG, $stats);
+				queue_window($st_x,$st_y,$queue_data['display_width'],$queue_data['display_height'],"q".$queue,$queue_data['title'], $queue_data['members'], $queue_data['display_columns'], 0, CQ_WINDOW_BG, CQ_WINDOW_FG, $stats);
 				if ($qmaxh < $queue_data['display_height']) $qmaxh = $queue_data['display_height'];
 				if ($qh < $queuemon_data['columns']) {
 					$qx = $qx + $queue_data['display_width'] + 1 ;

@@ -659,20 +659,20 @@ if ($action == "") {
 				if (array_key_exists('display_comment',$groups[$group])) {
 					if ($r['user_comment']) {
 						if ($groups[$group]['display_comment'] == 1) {
-							$display_right = $r['user_comment'];
+							$display_right = htmlentities($r['user_comment']);
 						}
 						else if ($groups[$group]['display_comment'] == 2) {
-							$display_right = '<i>'.$r['user_comment'].'</i>';
+							$display_right = '<i>'.htmlentities($r['user_comment']).'</i>';
 						}
 						else if ($groups[$group]['display_comment'] == 3) {
-							$display_right = '<b>'.$r['user_comment'].'</b>';
+							$display_right = '<b>'.htmlentities($r['user_comment']).'</b>';
 						}
 						else if ($groups[$group]['display_comment'] == 4) {
-							$display_right = '<i><b>'.$r['user_comment'].'</b></i>';
+							$display_right = '<i><b>'.htmlentities($r['user_comment']).'</b></i>';
 						}
 						else if ($groups[$group]['display_comment'] == 5) {
 							$max_chars = ($groups[$group]['display_width'] / $groups[$group]['display_columns']) / 10;
-							$display_right = '<i>'.substr($r['user_comment'],0,$max_chars).'</i>';
+							$display_right = '<i>'.htmlentities(substr($r['user_comment'],0,$max_chars)).'</i>';
 						}
 					}
 				}
@@ -866,13 +866,6 @@ window.onload=data_reload
 		echo '<div id="chart" style="position:absolute; left:189px; right:12px; top:12em; bottom:10px; overflow:scroll; border:0px solid #ccc; background:#fff;">'."\n";
 	}
 
-/*
-	echo "<pre>";
-
-	var_dump($peers);
-	echo "</pre>";
-	exit(1);
-*/	
 	$bg_color = CQ_DESKTOP_BG;
 	$fg_color = CQ_WINDOW_FG;
 
@@ -890,7 +883,7 @@ window.onload=data_reload
 		$st_y = $qy;
 		
 		if ($group_data['active']) {
-				group_window($st_x,$st_y,$group_data['display_width'],$group_data['display_height'],"q".$group,$group_data['title'], $group_data['members'], $group_data['display_columns'], 7, CQ_WINDOW_BG, CQ_WINDOW_FG, $stats);
+				group_window($st_x,$st_y,$group_data['display_width'],$group_data['display_height'],"q".$group,$group_data['title'], $group_data['members'], $group_data['display_columns'], 0, CQ_WINDOW_BG, CQ_WINDOW_FG, $stats);
 				if ($qmaxh < $group_data['display_height']) $qmaxh = $group_data['display_height'];
 				if ($qh < $extmon_data['columns']) {
 					$qx = $qx + $group_data['display_width'] + 1 ;
