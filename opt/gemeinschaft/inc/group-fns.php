@@ -52,8 +52,8 @@ function gs_group_permission_types_get()
 		'display_module_gui',
 		'group_pickup',
 		'pickup',
-		'secretary',
-		'intercom',
+		'secretary_call',
+		'intercom_call',
 		'login_queues',
 		'record_call',
 		'wakeup_call'
