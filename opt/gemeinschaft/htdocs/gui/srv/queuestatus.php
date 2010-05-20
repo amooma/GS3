@@ -92,9 +92,6 @@ function getdata($servers, $queues)
 		}
 	}
 
-	$gsserverhost = $servers[0]['host'];
-	$gsserverport = $servers[0]['port'];
-
 	if (!$extbyhost) return return_error(3, 'no extension states');
 
 	if (!$line) return return_error(101, 'NO DATA');

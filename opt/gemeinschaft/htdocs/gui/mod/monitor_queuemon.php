@@ -35,9 +35,6 @@ define( 'CQ_DESKTOP_BG',	'#ffffff');
 define( 'CQ_WINDOW_BG',		'#d4d0c7');
 define( 'CQ_WINDOW_FG',		'#000000');
 
-$member_reload_time = 2000;
-$page_reload_count = 30;
-
 $colors = array(
 	GS_EXT_UNKNOWN		=> ST_UNKNOWN,
 	GS_EXT_IDLE		=> ST_FREE,
@@ -271,6 +268,8 @@ function queue_defaults(&$queue, $fill = False) {
        $queue['display_call_min']	= 0;
        $queue['display_call_avg']	= 0;
        $queue['display_all']		= 0;
+       $queue['display_extension']	= 0;
+       $queue['display_name']		= 4;
 
        if ($fill) {
 		foreach ($fill as $key => $value) {
@@ -344,6 +343,10 @@ if ($action == 'save') {
 			$queue['display_call_min'] = (int)$_REQUEST['qtn'.$queue_id];
 		if (array_key_exists('qta'.$queue_id, $_REQUEST))
 			$queue['display_call_avg'] = (int)$_REQUEST['qta'.$queue_id];
+		if (array_key_exists('qax'.$queue_id, $_REQUEST))
+			$queue['display_extension'] = (int)$_REQUEST['qax'.$queue_id];
+		if (array_key_exists('qan'.$queue_id, $_REQUEST))
+			$queue['display_name'] = (int)$_REQUEST['qan'.$queue_id];
 		$queues[$queue_id] = $queue;
 	}
 
@@ -409,7 +412,9 @@ $sql_query =
 `m`.`display_wait_avg`,
 `m`.`display_call_max`,
 `m`.`display_call_min`,
-`m`.`display_call_avg`
+`m`.`display_call_avg`,
+`m`.`display_extension`,
+`m`.`display_name`
 FROM
 `ast_queues` `q` JOIN
 `hosts` `h` ON (`h`.`id`=`q`.`_host_id`)
@@ -696,8 +701,9 @@ window.onload=page_init
 		<th style="min-width:2em;" colspan="3">
 			&#9742; <?php echo __('Sprachzeit'); ?>
 		</th>
-		<th style="min-width:2em;" colspan="1">
-			<?php echo __('Alle'); ?>
+		<th/>
+		<th style="min-width:2em;" colspan="2">
+			<?php echo __('Agentenanzeige'); ?>
 		</th>
 	</tr>
 </thead>
@@ -748,6 +754,12 @@ window.onload=page_init
 		</th>
 		<th style="width:2em;" colspan="1">
 			&#9745;
+		</th>
+		<th style="width:2em;" colspan="1">
+			&#9742; <?php echo __('Nebenstelle'); ?>
+		</th>
+		<th style="width:2em;" colspan="1">
+			&#8943; <?php echo __('Namensanzeige'); ?>
 		</th>
 	</tr>
 <?php
@@ -803,6 +815,28 @@ window.onload=page_init
 		echo '<td>';
 		echo select_timebase('qat'.$data['id'], $data['display_all']);
 		echo '</td>',"\n";
+		echo '<td>';
+		$items = array(
+			'--' => 0,
+			_('normal') => 1,
+			_('fett') => 2
+		);
+		echo html_select('qax'.$data['id'], $items, $data['display_extension']);
+		echo '</td>',"\n";
+		echo '<td>';
+		$items = array(
+			'--' => 0,
+			_('Name') => 1,
+			_('Vorname') => 2,
+			_('Vorname Name') => 3,
+			_('Name, Vorname') => 4,
+			_('Name, V.') => 5,
+			_('V. Name') => 6,
+			_('V.N.') => 7,
+
+		);
+		echo html_select('qan'.$data['id'], $items, $data['display_name']);
+		echo '</td>',"\n";
 		echo '</tr>',"\n";
 	}
 ?>
@@ -851,7 +885,31 @@ ORDER BY `q`.`queue_name`';
 	if ($rs) {
 		while ($r = $rs->fetchRow()) {
 			$member = array();
-			$member['name'] = $r['lastname'].', '.$r['firstname'];
+			$member['name'] = '';
+			if (array_key_exists('display_extension',$queues[$r['queue']])) {
+					if ($queues[$r['queue']]['display_extension'] == 1)
+						$member['name'] .= htmlentities($r['ext']).' ';
+					if ($queues[$r['queue']]['display_extension'] == 2)
+						$member['name'] .= '<b>'.htmlentities($r['ext']).'</b> ';
+				}
+			if (array_key_exists('display_name',$queues[$r['queue']])) {
+				if ($queues[$r['queue']]['display_name'] == 1)
+					$member['name'] .= htmlentities($r['lastname']);
+				if ($queues[$r['queue']]['display_name'] == 2)
+					$member['name'] .= htmlentities($r['firstname']);
+				if ($queues[$r['queue']]['display_name'] == 3)
+					$member['name'] .= htmlentities($r['firstname']).' '.htmlentities($r['lastname']);
+				if ($queues[$r['queue']]['display_name'] == 4)
+					$member['name'] .= htmlentities($r['lastname']).', '.htmlentities($r['firstname']);
+				if ($queues[$r['queue']]['display_name'] == 5)
+					$member['name'] .= htmlentities($r['lastname']).', '.htmlentities(substr($r['firstname'],0,1)).'.';
+				if ($queues[$r['queue']]['display_name'] == 6)
+					$member['name'] .= htmlentities(substr($r['firstname'],0,1)).'. '.htmlentities($r['lastname']);
+				if ($queues[$r['queue']]['display_name'] == 7)
+					$member['name'] .= htmlentities(substr($r['firstname'],0,1)).'.'.htmlentities(substr($r['lastname'],0,1)).'.';
+			}
+
+			
 			$member['ext'] = $r['ext'];
 			if (!array_key_exists($r['queue'], $members))
 				$members[$r['queue']] = array();
