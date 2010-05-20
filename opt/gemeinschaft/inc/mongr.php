@@ -80,11 +80,10 @@ function queue_window($px, $py, $width, $height, $id, $title='', $members, $cols
 		echo '<tr>',"\n";
 		for ($col = 0; $col < $cols; $col++) {
 			if ($i < $member_count) {
-				$agent_name = $members[$i]['name'];
 				$agent_id = $id.'_a'.$members[$i]['ext'];
 				$cellwidth = floor(100 * (1 / $cols));
 				echo '<td id="'.$agent_id.'" class="extmon" style="width: ',$cellwidth,'%">',"\n";
-				echo htmlentities($agent_name),"\n";
+				echo $members[$i]['name'],"\n";
 				echo '</td>',"\n";
 
 			}else break;
@@ -97,5 +96,64 @@ function queue_window($px, $py, $width, $height, $id, $title='', $members, $cols
 	show();
 
 }
+
+function group_window($px, $py, $width, $height, $id, $title='', $members, $cols=3, $rows=3, $bgcolor=gray, $fgcolor=white, $stats=False)
+{
+	global $bg_color, $fg_color;
+
+	$bg_color = $bgcolor;
+	$fg_color = $fgcolor;
+	$offset_py = 22;
+	window_create($px,$py, $width, $height, $id);
+	echo '<table class="extmonhd">',"\n";
+	echo '<tr>',"\n";
+	echo '<th class="extmonhd">',"\n";
+	echo '<span id="'.$id.'_title">',htmlentities($title),'</span>',"\n";
+	echo '</th>',"\n";
+	if ($stats)
+		foreach ($stats as $stat) {
+		echo '<td class="extmonhd">',"\n";
+		echo $stat;
+		echo '</td>',"\n";
+		}
+	echo '</td>',"\n";
+	echo '</tr>',"\n";
+	echo '</table>',"\n";
+	$a_width = (int) floor(($width - 1 - $cols) / $cols);
+	$a_height = (int) floor(($height - $offset_py - $rows) / $rows);
+
+	$i = 0;
+	$member_count = count($members);
+
+	$tablewidth = 100;
+
+	if ($member_count < $cols) {
+		$tablewidth = floor(100 * ($member_count / $cols));
+
+	}
+
+	echo '<table class="extmon" style="width: ',$tablewidth,'%">',"\n";
+
+	for ($row = 0; $row < $rows; $row++) {
+		echo '<tr>',"\n";
+		for ($col = 0; $col < $cols; $col++) {
+			if ($i < $member_count) {
+				$agent_id = $id.'_a'.$members[$i]['ext'];
+				$cellwidth = floor(100 * (1 / $cols));
+				echo '<td id="'.$agent_id.'" class="extmon" style="width: ',$cellwidth,'%">',"\n";
+				echo $members[$i]['name'];
+				echo '</td>',"\n";
+
+			}else break;
+			$i++;
+		}
+		echo '</tr>',"\n";
+	}
+	echo '</table>',"\n";
+
+	show();
+
+}
+
 
 ?>
