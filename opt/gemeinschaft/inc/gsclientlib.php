@@ -73,9 +73,9 @@ class GSClient {
 		return $this->sendmsg($this->M_PING, chr(0x00));
 	}
 
-	function sendmsg_extgroupset($group_id, $extensions)
+	function sendmsg_extgroupset($group_id, $extensions, $sequence = 0)
 	{
-		$data = pack('C', $group_id);
+		$data = pack('CC', $group_id, $sequence);
 		$data .= implode(chr(0x00), $extensions);
 
 		return $this->sendmsg($this->M_EXTGROUPSET, $data);
@@ -86,19 +86,21 @@ class GSClient {
 		$ext_states = array();
 		$ext_group = array();
 		$group_id = ord($data[0]);
-		for ($i = 1; $i < strlen($data); ++$i) {
+		$sequence = ord($data[1]);
+		for ($i = 2; $i < strlen($data); ++$i) {
 			$ext_states[] = ord($data[$i]);
 		}
 
 		$ext_group['group'] = $group_id;
+		$ext_group['sequence'] = $sequence;
 		$ext_group['states'] = $ext_states;
 		
 		return $ext_group;
 	}
 
-	function sendmsg_queuegroupset($group_id, $queues)
+	function sendmsg_queuegroupset($group_id, $queues, $sequence = 0)
 	{
-		$data = pack('C', $group_id);
+		$data = pack('CC', $group_id, $sequence);
 		$data .= implode(chr(0x00), $queues);
 
 		return $this->sendmsg($this->M_QUEUEGROUPSET, $data);
@@ -109,12 +111,14 @@ class GSClient {
 		$queue_states = array();
 		$queue_group = array();
 		$group_id = ord($data[0]);
-		for ($i = 1; $i < strlen($data); $i=$i+2) {
+		$sequence = ord($data[1]);
+		for ($i = 2; $i < strlen($data); $i=$i+2) {
 			$upacked = unpack('Ss', substr($data, $i, 2)); 
 			$queue_states[] = $upacked['s'];
 		}
 
 		$queue_group['group'] = $group_id;
+		$queue_group['sequence'] = $sequence;
 		$queue_group['states'] = $queue_states;
 
 		return $queue_group;
