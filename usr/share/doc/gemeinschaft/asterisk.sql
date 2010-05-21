@@ -6236,8 +6236,8 @@ INSERT INTO `group_members` VALUES (6,18012);
 INSERT INTO `group_members` VALUES (6,18013);
 INSERT INTO `group_members` VALUES (6,18014);
 INSERT INTO `group_members` VALUES (6,18015);
-INSERT INTO `group_members` VALUES (7,20000);
-INSERT INTO `group_members` VALUES (7,20001);
+INSERT INTO `group_members` VALUES (7,15000);
+INSERT INTO `group_members` VALUES (7,15014);
 /*!40000 ALTER TABLE `group_members` ENABLE KEYS */;
 UNLOCK TABLES;
 
