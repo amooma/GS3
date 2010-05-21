@@ -89,4 +89,13 @@ CREATE TABLE `monitor_groups` (
   PRIMARY KEY  (`user_id`, `group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
+--
+-- Menu `wakeupcalls`moved to `admin`
+
+
+UPDATE `group_members` SET `member`=15000 WHERE `member`=22000 AND `group`=7;
+
+UPDATE `group_members` SET `member`=15017 WHERE `member`=22001 AND `group`=7;
+
+DELETE FROM `group_members` WHERE `member`=22000 OR `member`=22001;
 

@@ -282,6 +282,7 @@ $MODULES['admin'    ]=  array(
 		'pgroups'      => array('title' => __('Rufannahmegrp.#pl'), 'id' => 15006),
 		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse'), 'id' => 15014),
 		'ivrs'         => array('title' => __('Sprachmen&uuml;'), 'id' => 15008),
+		'wakeupcall'   => array('title' => __('Weckruf'), 'id' => 15017),
 		'sysrecs'      => array('title' => __('Audiodateien'), 'id' => 15013),
 //		'conferences'  => array('title' => __('Konferenzen'), 'id' => 15007),
 		'calls'        => array('title' => __('CDRs'), 'id' => 15009),
@@ -406,18 +407,6 @@ $MODULES['system'   ]['sub'][
 $MODULES['system'   ]['sub'][
 		'config']      =  array('title' => __('Konfiguration'), 'id' => 18015);
 */
-
-#####################################################################
-
-$MODULES['wakeupcall' ]=  array(
-	'title' => __('Weckruf'),
-	'icon'  => 'crystal-svg/%s/app/kalarm.png',
-	'boi_ok'=> false,
-	'id' => 22000,
-	'sub' => array(
-		'wakeupcall'     => array('title' => __('Weckruf'), 'id' => 22001)
-	)
-);
 
 #####################################################################
 
