@@ -114,6 +114,13 @@ $bp_del_h    = (int)@$_REQUEST['bp_del_h' ] ;
 
 $group       = (int)@$_REQUEST['group'    ] ;
 
+$sort        = @$_REQUEST['sort'];
+if (! in_array($sort, array('user', 'name', 'ext', 'email', 'host')) )
+	$sort = 'name';
+$sortorder   = @$_REQUEST['sortorder'];
+if (! in_array($sortorder, array('ASC', 'DESC')) )
+	$sortorder = 'ASC';
+
 $pen_avail = range( 0, 9);
 if ($edit_user) {
 	
@@ -276,6 +283,32 @@ if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 
 if ($action === 'list') {
 	
+	$sortarray['user'] = 'ASC';
+	$sortarray['name'] = 'ASC';
+	$sortarray['ext'] = 'ASC';
+	$sortarray['email'] = 'ASC';
+	$sortarray['host'] = 'ASC';
+
+	if ($sortorder === 'ASC')
+		$sortarray[$sort] = 'DESC';
+	else
+		$sortarray[$sort] = 'ASC';
+
+	switch ($sort) {
+	case 'user':
+		$order = '`u`.`user` ' . $sortorder;
+		break;
+	case 'ext':
+		$order = '`s`.`name` ' . $sortorder;
+		break;
+	case 'host':
+		$order = '`h`.`comment` ' . $sortorder;
+		break;
+	default: // name
+		$order = '`u`.`lastname` ' . $sortorder . ', `u`.`firstname` ' . $sortorder;
+		break;
+	}
+	
 	$use_ldap = false;
 	if (! in_array(gs_get_conf('GS_LDAP_HOST'), array(null, false, '', '0.0.0.0'), true)) {
 		$use_ldap = true;
@@ -307,7 +340,7 @@ WHERE
 	`u`.`nobody_index` IS NULL AND (
 	`s`.`name` LIKE \''. $DB->escape($number_sql) .'\'
 	)
-ORDER BY `s`.`name`
+ORDER BY ' . $order . '
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		);
 		$num_total = @$DB->numFoundRows();
@@ -340,7 +373,7 @@ WHERE
 	`u`.`lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR
 	`u`.`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci
 	)
-ORDER BY `u`.`lastname`, `u`.`firstname`
+ORDER BY ' . $order . '
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		);
 		$num_total = @$DB->numFoundRows();
@@ -429,16 +462,18 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
 	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
 	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
+	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
+	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 ?>
 	<table cellspacing="1" class="phonebook">
 	<thead>
 	<tr>
-		<th style="width: 70px;"><?php echo __('User'     ); ?></th>
-		<th style="width:180px;"<?php if ($number=='') echo ' class="sort-col"'; ?>><?php echo __('Nachname') ,', ', __('Vorname'); ?></th>
-		<th style="width: 60px;"<?php if ($number!='') echo ' class="sort-col"'; ?>><?php echo __('Nst.' ); ?></th>
+		<th style="width: 70px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=user&amp;sortorder=' .$sortarray['user']), '">', __('User'), '</a>'; ?></th>
+		<th style="width:180px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=name&amp;sortorder=' .$sortarray['name']), '">',__('Nachname') ,', ', __('Vorname'); ?></th>
+		<th style="width: 60px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=ext&amp;sortorder=' .$sortarray['ext']), '">',__('Nst.' ); ?></th>
 		<th style="width: 55px;"><?php echo __('PIN'      ); ?></th>
-		<th style="width:165px;"><?php echo __('E-Mail'   ); ?></th>
-		<th style="width: 42px;"><?php echo __('Host'     ); ?></th>
+		<th style="width:165px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=email&amp;sortorder=' .$sortarray['email']), '">',__('E-Mail'   ); ?></th>
+		<th style="width: 42px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=host&amp;sortorder=' .$sortarray['host']), '">',__('Host'     ); ?></th>
 		<th style="width: 85px;"><?php echo __('Status'   ); ?></th>
 		<th style="width: 55px;">&nbsp;</th>
 	</tr>
@@ -522,8 +557,8 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			echo '</td>';
 			
 			echo '<td class="nobr">';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='. rawUrlEncode($r['usern']) .'&amp;action=view&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('bearbeiten'), '"><img alt="',__('bearbeiten'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='. rawUrlEncode($r['usern']) .'&amp;action=del&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='. rawUrlEncode($r['usern']) .'&amp;action=view&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page .'&amp;sort='.$sort .'&amp;sortorder='.$sortorder), '" title="',__('bearbeiten'), '"><img alt="',__('bearbeiten'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='. rawUrlEncode($r['usern']) .'&amp;action=del&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page .'&amp;sort='.$sort .'&amp;sortorder='.$sortorder), '" title="',__('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			echo "</td>\n";
 			
 			echo '</tr>', "\n";
@@ -813,6 +848,8 @@ echo '<input type="hidden" name="action" value="save" />', "\n";
 echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
 echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
 echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
+echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
+echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 ?>
 
 <button type="submit" title="<?php echo __('Speichern'); ?>" class="plain" style="margin:3px 1px 3px 450px;">
@@ -1055,7 +1092,7 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 		echo "</td>\n";
 		
 		echo "<td>\n";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'cbdelete='. rawUrlEncode($cb_entry['regexp']) .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '">';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'cbdelete='. rawUrlEncode($cb_entry['regexp']) .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page .'&amp;sort='.$sort .'&amp;sortorder='.$sortorder), '" title="', __('entfernen'), '">';
 		echo '<img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo "</td>\n";
 		
@@ -1115,7 +1152,7 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 		echo "</td>\n";
 		
 		echo "<td>\n";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'extndel='.$ext_num .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'extndel='.$ext_num .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page .'&amp;sort='.$sort .'&amp;sortorder='.$sortorder), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo "</td>\n";
 		
 		echo "</tr>\n";
@@ -1175,7 +1212,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 		echo '<td>', htmlEnt($p['host']) ,'</td>' ,"\n";
 		
 		echo "<td>\n";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'bp_del_h='.$p['host_id'] .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'bp_del_h='.$p['host_id'] .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page .'&amp;sort='.$sort .'&amp;sortorder='.$sortorder), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo "</td>\n";
 		
 		echo "</tr>\n";
@@ -1262,6 +1299,8 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 		echo gs_form_hidden($SECTION, $MODULE);
 		echo '<input type="hidden" name="action" value="insert-group" />' ,"\n";
 		echo '<input type="hidden" name="page" value="'.$page.'" />' ,"\n";
+		echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
+		echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 		echo '<input type="hidden" name="number" value="'.rawUrlEncode($number).'" />' ,"\n";
 		echo '<input type="hidden" name="name" value="'.rawUrlEncode($name).'" />' ,"\n";
 		echo '<input type="hidden" name="edit" value="'.rawUrlEncode($edit_user).'" />' ,"\n";
@@ -1291,7 +1330,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 		echo '<td class="r">', "\n";
 		
 		if (!gs_group_connections_get($group['id']))
-			echo '<a href="', gs_url($SECTION, $MODULE, null,'&amp;edit='. rawUrlEncode($edit_user) .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page. '&amp;action=remove-group&amp;group='.$group['id']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null,'&amp;edit='. rawUrlEncode($edit_user) .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page  .'&amp;sort='.$sort .'&amp;sortorder='.$sortorder . '&amp;action=remove-group&amp;group='.$group['id']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
 		echo '</td>', "\n";
 		echo '</tr>' ,"\n";
 		$i++;
@@ -1307,6 +1346,11 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 <?php
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
+	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
+	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
+	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
+	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 
 	echo '<table><thead><tr>';
 	echo '<th colspan="3">', __('Vorhandene Skills'), '</th></tr>';
@@ -1336,6 +1380,11 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 			echo '<input type="hidden" name="action" value="setpenalty" />', "\n";
 			echo '<input type="hidden" name="queue_id" value="', $pen_map['_queue_id'], '" />', "\n";
 			echo '<input type="hidden" name="edit" value="', rawUrlEncode($edit_user), '">', "\n";
+			echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
+			echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
+			echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
+			echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
+			echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 			echo '</form>';
 echo '<a href="', gs_url($SECTION, $MODULE, null, 'queue_id='.$pen_map['_queue_id'] .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=delpenalty' .'&amp;name='. rawUrlEncode($name) ), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo '</td>';
@@ -1344,6 +1393,11 @@ echo '<a href="', gs_url($SECTION, $MODULE, null, 'queue_id='.$pen_map['_queue_i
 	echo '</tbody></table>';
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
+	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
+	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
+	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
+	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 	echo '<table><thead><tr>';
 	echo '<th colspan="3">', __('Verf&uuml;gbare Skills'), '</th></tr>';
 	echo '<tr>';
