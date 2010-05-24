@@ -1339,3 +1339,10 @@ CREATE TABLE `monitor_groups` (
   PRIMARY KEY  (`user_id`, `group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
+
+--
+-- After: 0abbe0e728149d5d8343c761f15be21d66b2ef42 (private_call)
+--
+
+INSERT INTO `group_permissions` VALUES ('private_call',2,2);
+
