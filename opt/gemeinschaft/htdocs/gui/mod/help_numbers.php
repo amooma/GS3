@@ -296,7 +296,7 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 </tbody>
 </table>
 
-
+<?php if ( count(gs_group_permissions_get($user_groups, 'private_call')) > 0 ) { ?>
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
@@ -312,6 +312,7 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 </tr>
 </tbody>
 </table>
+<?php } ?>
 
 <table cellspacing="1" class="phonebook">
 <thead>

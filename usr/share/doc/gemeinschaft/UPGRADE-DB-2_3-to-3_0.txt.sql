@@ -99,3 +99,8 @@ UPDATE `group_members` SET `member`=15017 WHERE `member`=22001 AND `group`=7;
 
 DELETE FROM `group_members` WHERE `member`=22000 OR `member`=22001;
 
+--
+-- After: 0abbe0e728149d5d8343c761f15be21d66b2ef42 (private_call)
+--
+
+INSERT INTO `group_permissions` VALUES ('private_call',2,2);

@@ -66,7 +66,8 @@ function gs_group_permission_types_get()
 		'room_state',
 		'intercom',
 		'login_queues',
-		'record_call'
+		'record_call',
+		'private_call'
 	);
 }
 

@@ -6316,6 +6316,7 @@ INSERT INTO `group_permissions` VALUES ('forward_queues',1,4);
 INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
 INSERT INTO `group_permissions` VALUES ('wakeup_call',2,2);
 INSERT INTO `group_permissions` VALUES ('room_state',2,2);
+INSERT INTO `group_permissions` VALUES ('private_call',2,2);
 INSERT INTO `group_permissions` VALUES ('sudo_user',1,2);
 INSERT INTO `group_permissions` VALUES ('display_module_gui',1,6);
 INSERT INTO `group_permissions` VALUES ('display_module_gui',1,7);
