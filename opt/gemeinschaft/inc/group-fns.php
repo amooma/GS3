@@ -56,7 +56,8 @@ function gs_group_permission_types_get()
 		'intercom_call',
 		'login_queues',
 		'record_call',
-		'wakeup_call'
+		'wakeup_call',
+		'private_call'
 	);
 }
 
