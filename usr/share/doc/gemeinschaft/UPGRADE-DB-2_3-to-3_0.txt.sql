@@ -93,9 +93,7 @@ CREATE TABLE `monitor_groups` (
 -- Menu `wakeupcalls`moved to `admin`
 
 
-UPDATE `group_members` SET `member`=15000 WHERE `member`=22000 AND `group`=7;
-
-UPDATE `group_members` SET `member`=15017 WHERE `member`=22001 AND `group`=7;
+INSERT INTO `group_members` VALUES (6,15014);
 
 DELETE FROM `group_members` WHERE `member`=22000 OR `member`=22001;
 
