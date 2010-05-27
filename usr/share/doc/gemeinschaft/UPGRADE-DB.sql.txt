@@ -1246,8 +1246,8 @@ alter table `ast_queue_members`, change `penalty` `penalty` tinyint(3) unsigned 
 -- After: 0027f06a5f07c37b4cf4
 -- 
 
-INSERT INTO `group_permissions` VALUES ('login_queues',2,4);
-INSERT INTO `group_members` VALUES (6,6004);
+INSERT INTO `group_permissions` VALUES ('login_queues',(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'queues' LIMIT 1));
+INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'admin_gui' LIMIT 1),6004);
 
 
 --
@@ -1344,5 +1344,5 @@ CREATE TABLE `monitor_groups` (
 -- After: 0abbe0e728149d5d8343c761f15be21d66b2ef42 (private_call)
 --
 
-INSERT INTO `group_permissions` VALUES ('private_call',2,2);
+INSERT INTO `group_permissions` VALUES ('private_call',(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1));
 
