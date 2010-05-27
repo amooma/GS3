@@ -93,12 +93,18 @@ CREATE TABLE `monitor_groups` (
 -- Menu `wakeupcalls`moved to `admin`
 
 
-INSERT INTO `group_members` VALUES (6,15014);
+INSERT INTO `group_members` VALUES ((SELECT `id` FROM `groups` WHERE `name` = 'admins' LIMIT 1),15014);
 
 DELETE FROM `group_members` WHERE `member`=22000 OR `member`=22001;
 
 --
 -- After: 0abbe0e728149d5d8343c761f15be21d66b2ef42 (private_call)
 --
+INSERT INTO `group_permissions` VALUES ('private_call',(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1));
+--
+-- After: b80bd254fd443778893dc725120db981252298a8 (new group nobody_users)
+--
 
-INSERT INTO `group_permissions` VALUES ('private_call',2,2);
+INSERT INTO `groups` VALUES (NULL,'nobody_users','All Nobody Users','user');
+INSERT INTO `group_connections` VALUES ('mysql',(SELECT `id` FROM `groups` WHERE `name` = 'nobody_users' LIMIT 1),'id','SELECT `id` FROM `users` WHERE `nobody_index` IS NOT NULL');
+INSERT INTO `group_permissions` VALUES ('phonebook_user',(SELECT `id` FROM `groups` WHERE `name` = 'nobody_users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1));
