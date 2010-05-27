@@ -6207,6 +6207,7 @@ INSERT INTO `group_members` VALUES (6,15009);
 INSERT INTO `group_members` VALUES (6,15010);
 INSERT INTO `group_members` VALUES (6,15011);
 INSERT INTO `group_members` VALUES (6,15012);
+INSERT INTO `group_members` VALUES (6,15014);
 INSERT INTO `group_members` VALUES (6,16000);
 INSERT INTO `group_members` VALUES (6,16001);
 INSERT INTO `group_members` VALUES (6,16002);
@@ -6236,8 +6237,6 @@ INSERT INTO `group_members` VALUES (6,18012);
 INSERT INTO `group_members` VALUES (6,18013);
 INSERT INTO `group_members` VALUES (6,18014);
 INSERT INTO `group_members` VALUES (6,18015);
-INSERT INTO `group_members` VALUES (7,15000);
-INSERT INTO `group_members` VALUES (7,15014);
 /*!40000 ALTER TABLE `group_members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6309,7 +6308,6 @@ INSERT INTO `groups` VALUES (3,'hosts','All Hosts','host');
 INSERT INTO `groups` VALUES (4,'queues','All Queues','queue');
 INSERT INTO `groups` VALUES (5,'user_gui','User GUI','module_gui');
 INSERT INTO `groups` VALUES (6,'admin_gui','Admin GUI','module_gui');
-INSERT INTO `groups` VALUES (7,'wakeup_call_gui','Wakeup call extension','module_gui');
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
