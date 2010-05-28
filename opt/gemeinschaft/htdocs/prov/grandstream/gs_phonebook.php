@@ -41,6 +41,7 @@ require_once( GS_DIR .'inc/prov-fns.php' );
 set_error_handler('err_handler_die_on_err');
 require_once( GS_DIR .'inc/string.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 
 function _grandstream_xml_esc( $str )
@@ -139,6 +140,10 @@ WHERE
 if ($user_id < 1)
 	_err( 'Unknown user' );
 
+$user_groups       = gs_group_members_groups_get(array($user_id), 'user');
+$permission_groups = gs_group_permissions_get($user_groups, 'phonebook_user');
+$group_members     = gs_group_members_get($permission_groups);
+
 
 $pb = array();
 
@@ -150,7 +155,9 @@ $pb[15] = array(
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-WHERE `u`.`nobody_index` IS NULL AND `u`.`id`!='.$user_id.'
+WHERE
+	`u`.`id` IN ('.implode(',', $group_members).') AND
+	`u`.`id`!='.$user_id.'
 ORDER BY `u`.`lastname`, `u`.`firstname`
 LIMIT 100'
 );
@@ -192,7 +199,7 @@ foreach ($pb as $arr) {
 	if ($pb_entrys > 100) break;
 	
 	$rs = $db->execute($arr['query']);
-	if ($rs->numRows() !== 0 ) {
+	if ( $rs && $rs->numRows() !== 0 ) {
 		while ($r = $rs->fetchRow()) {
 			$lastname  = $r['ln'];
 			$firstname = $r['fn'];
