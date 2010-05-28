@@ -164,7 +164,7 @@ if ( $rs && $rs->numRows() !== 0 ) {
 		$number    = $r['ext'];
 
 		echo '<DirectoryEntry>' ,"\n";
-		echo '<Name>'. $lastname .', '. $firstname .'</Name>', "\n";
+		echo '<Name>'. $lastname .', '. $firstname .' ('. $number .')</Name>', "\n";
 		echo '<Telephone>'. $number .'</Telephone>', "\n";
 		echo '</DirectoryEntry>' ,"\n";
 	}
