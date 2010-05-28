@@ -236,7 +236,7 @@ function defineKey( $keyDef )
 	$args = array();
 	$args[] = 't='. $type;
 	$args[] = 'k='. $keys . $keyDef['name'];
-	if ($type === 'prv') {
+	if ($type === 'gs' || $type === 'prv') {
 		$args[] = 'm='. $mac;
 		$args[] = 'u='. $user;
 	}
@@ -263,7 +263,7 @@ function defineBackKey()
 	$args = array();
 	$args[] = 't='. $type;
 	$args[] = 'k='. subStr($keys,0,-1);
-	if ($type === 'prv') {
+	if ($type === 'gs' || $type === 'prv') {
 		$args[] = 'm='. $mac;
 		$args[] = 'u='. $user;
 	}
