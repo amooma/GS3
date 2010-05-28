@@ -366,7 +366,7 @@ if( (($type == 'std') || ($type == 'var')) && (!isset($_REQUEST['value'])) ) {
 	$user = trim(@$_REQUEST['u']);
 	$user_id = getUserID($user);
 
-	if($type == 'var') $pagetitle = 'Tempor\xC3\xA4re Nummer';
+	if($type == 'var') $pagetitle = "Tempor\xC3\xA4re Nummer";
 	else $pagetitle = 'Standardnummer';
 
 	ob_start();
@@ -489,7 +489,7 @@ if (!$type) {
 	echo '<body><br />',"\n";
 
 	echo '- <a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t=std">Standardnummer</a><br />',"\n";
-	echo '- <a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t=var">Tempor\xC3\xA4re Nummer</a><br />',"\n";
+	echo "- <a href=\"". $url_polycom_callforward ."?m=". $mac ."&amp;u=". $user ."&amp;t=var\">Tempor\xC3\xA4re Nummer</a><br />\n";
 
 	foreach($typeToTitle as $t => $title) {
 		echo '- <a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t='. $t .'">'. $title .'</a><br />',"\n";
