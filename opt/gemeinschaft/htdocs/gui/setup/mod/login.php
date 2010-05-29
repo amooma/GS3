@@ -164,16 +164,17 @@ if (@$change_pwd_msg != '') {
 echo '<div class="fr">';
 if (gs_keyval_get('setup_pwd') == '')
 	$can_continue = false;
-if ($can_continue) {
+/*if ($can_continue) {
 	switch ($GS_INSTALLATION_TYPE) {
 		# "system-check" unnecessary for the GPBX
 		case 'gpbx': $next_step = 'network'     ; break;
 		default    : $next_step = 'system-check'; break;
-	}
+	}*/
+	$next_step = 'user';
 	echo '<a href="', GS_URL_PATH ,'setup/?step=',$next_step ,'"><big>', __('weiter') ,'</big></a>';
-} else {
+/*} else {
 	echo '<span style="color:#999;">', __('weiter') ,'</span>';
-}
+}*/
 echo '</div>' ,"\n";
 echo '<br class="nofloat" />' ,"\n";
 
