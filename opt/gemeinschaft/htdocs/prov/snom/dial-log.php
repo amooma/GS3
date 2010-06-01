@@ -155,7 +155,7 @@ if (! $type) {
 else {
 	
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
-	if ( $type == queue ){	
+	if ($type === 'queue'){	
 			$query =
 		'SELECT
 			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
