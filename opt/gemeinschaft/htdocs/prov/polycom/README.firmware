@@ -1,0 +1,53 @@
+Firmware deployment guide for Polycom SoundPoint/SoundStation IP phones
+============================================================================
+
+This short document describes the steps which are neccessary to provide
+automatic firmware deployment for (current, non-deprecated) SoundPoint and
+SoundStation IP phones.
+
+* Go to www.polycom.eu, use the navigation bar at the top of the website to
+  navigate to "Support - Voice", and choose "SoundPoint IP" from the menu on
+  the left.
+
+* Choose e.g. "SoundPoint IP 650" (or any other non-EOL phone type) from the
+  list.
+
+* Download "SIP 3.2.3 (Split)" and "BootROM 4.2.2" and save both ZIP files
+  on the server. Alternatively, use these direct download links:
+
+  SIP Application:
+  http://downloads.polycom.com/voice/voip/sp_ss_sip/spip_ssip_vvx_3_2_3_release_sig_split.zip
+
+  BootROM:
+  http://downloads.polycom.com/voice/voip/sp_ss_bootrom/spip_ssip_BootROM_4_2_2_release_sig.zip
+
+* If not already installed, install the "unzip" package (or equivalent package
+  providing the CLI unzip utility) using your distribution's package manager.
+  On Debian or Ubuntu, this can be accomplished by running
+
+  # sudo apt-get install unzip
+
+* Unzip both archives to separate directories outside of /opt/gemeinschaft
+
+* Copy the following files and directories to /opt/gemeinschaft/htdocs/prov/polycom/ :
+
+  - From the SIP application archive:
+    *.ld (files)
+    *.jpg (files)
+    *.wav (files)
+    SoundPointIPLocalization/ (directory)
+
+  - From the BootROM archive:
+    *.ld (files - should be everything inside the ZIP archive)
+
+  ATTENTION! Do NOT copy any of the supplied default configuration files to
+  the destination directory! The configuration is entirely supplied by the
+  installation of Gemeinschaft! Overwriting the supplied files can (WILL!)
+  lead to problems!
+
+* If neccessary and not already done, configure your DHCP service to handle
+  requests from Polycom phones (documented in README).
+
+* Reboot connected phones. The BootROM code and firmware code should be
+  automatically requested and installed on the phone during startup. After
+  startup, the phone should be usable and fully functional.
