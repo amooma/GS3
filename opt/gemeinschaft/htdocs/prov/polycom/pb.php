@@ -32,6 +32,7 @@ define("GS_VALID", true); // this is a parent file
 require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 include_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gettext.php");
+include_once(GS_DIR ."inc/group-fns.php");
 
 header("Content-Type: text/html; charset=utf-8");
 header("Expires: 0");
@@ -130,9 +131,12 @@ if (!$type)
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim(@$_REQUEST['m'])));
 	$user = trim(@$_REQUEST['u']);
 	$user_id = getUserID($user);
-	
-	ob_start();
 
+	$user_groups = gs_group_members_groups_get(array($user_id), "user");
+	$permission_groups = gs_group_permissions_get($user_groups, "phonebook_user");
+	$group_members = gs_group_members_get($permission_groups);
+
+	ob_start();
 
         echo $phonebook_doctype ."\n";
         echo "<html>\n";
@@ -145,7 +149,7 @@ if (!$type)
 		switch ($t)
 		{
 			case 'gs' :
-				$cq .= "`users` WHERE `nobody_index` IS NULL";
+				$cq .= "`users` WHERE `id` IN (". implode(",", $group_members) .") AND `id` != ". $user_id;
 				break;
 			case 'imported' :
 				$cq .= "`pb_ldap`";
@@ -294,8 +298,14 @@ if( $type === "imported" )
 
 if ($type === "gs")
 {
-	// we don't need $user for this
-	
+	$mac = preg_replace("/[^\dA-Z]/", "", strToUpper(trim(@$_REQUEST["m"])));
+	$user = trim(@$_REQUEST["u"]);
+	$user_id = getUserID($user);
+
+	$user_groups = gs_group_members_groups_get(array($user_id), "user");
+	$permission_groups = gs_group_permissions_get($user_groups, "phonebook_user");
+	$group_members = gs_group_members_get($permission_groups);
+
 	ob_start();
 
 	echo $phonebook_doctype ."\n";
@@ -322,13 +332,14 @@ if ($type === "gs")
 		"  `users` `u` JOIN ".
 		"  `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) ".
 		"WHERE ".
-		"  `u`.`nobody_index` IS NULL AND ".
+		"  `u`.`id` IN (". implode(",", $group_members) .") AND (".
+		"  `u`.`id` != ". $user_id ." ) AND ".
 		$searchsql ." ".
 		"ORDER BY `u`.`lastname`, `u`.`firstname` ".
 		"LIMIT ". $num_results;
 
 	$rs = $db->execute($query);
-	if ( $rs->numRows() !== 0 )
+	if($rs && $rs->numRows() !== 0)
 	{
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 
