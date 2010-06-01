@@ -62,7 +62,7 @@ if ( $action === 'useradd' ) {
 } 
 if ( $action === 'list' ) {
 echo '<h1>',__('Administratoren'),'</h1>';
-echo __('Sie m&uuml;ssen mindestens einen Benutzer mit Adminrechten anlegen. Mit diesem Benutzer k&ouml;nnem Sie sich am normalen Web-Interface anmelden.');
+echo __('Sie m&uuml;ssen mindestens einen Benutzer mit Adminrechten anlegen. Mit diesem Benutzer k&ouml;nnem Sie sich am normalen Web-Interface anmelden. Pflichtfelder sind: Benutzername, Durchwahl und PIN.');
 echo '<p>';
 echo '<form method="post" action="', GS_URL_PATH, 'setup/?step=user">';
 echo '<input type="hidden" name="action" value="useradd" />';
@@ -73,7 +73,6 @@ echo '<th>',__('Vorname'),'</th>';
 echo '<th>',__('Nachname'),'</th>';
 echo '<th>',__('Durchwahl'),'</th>';
 echo '<th>',__('PIN'),'</th></thead><tbody>';
-
 
 $admin_ids = gs_group_members_get(array(gs_group_id_get('admins')));
 if (! empty($admin_ids)) {
@@ -122,5 +121,4 @@ echo '</div>' ,"\n";
 echo '<br class="nofloat" />' ,"\n";
 
 echo '</div>';
-
 ?>
