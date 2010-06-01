@@ -74,7 +74,6 @@ echo '<th>',__('Nachname'),'</th>';
 echo '<th>',__('Durchwahl'),'</th>';
 echo '<th>',__('PIN'),'</th></thead><tbody>';
 
-
 $admin_ids = gs_group_members_get(array(gs_group_id_get('admins')));
 if (! empty($admin_ids)) {
 $rs = $db->execute('SELECT `user`, `name`, `pin`, `firstname`, `lastname` FROM `users`, `ast_sipfriends_gs` WHERE `id` IN ('.implode(',', $admin_ids).') AND `id`=`_user_id`');
