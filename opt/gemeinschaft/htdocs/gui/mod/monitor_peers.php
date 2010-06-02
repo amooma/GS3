@@ -92,13 +92,16 @@ if (count($users) < 1) {
 	return;
 }
 
+$action = @$_REQUEST['action'];
+if (! in_array($action, array('fullscreenoff','fullscreenon'), true))
+	$action = 'fullscreenoff';
 
 ?>
 
 <div id="chart">
 
 <?php
-if($_REQUEST['action'] == 'fullscreenon') {
+if ($action === 'fullscreenon') {
 	echo '<a id="chart-fullscreen-toggle" class="fr" style="cursor:pointer; margin:0 1px 1px 0;" href="', gs_url($SECTION, $MODULE, null, 'action=fullscreenoff').'" title="', __('Vollbild'), '"><img alt="', __('Vollbild'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/window_fullscreen.png" /></a>';
 } else {
 	echo '<a id="chart-fullscreen-toggle" class="fr" style="cursor:pointer; margin:0 1px 1px 0;" href="', gs_url($SECTION, $MODULE, null, 'action=fullscreenon').'" title="', __('Vollbild'), '"><img alt="', __('Vollbild'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/window_fullscreen.png" /></a>';
@@ -462,7 +465,7 @@ WHERE
 
 <script type="text/javascript">/*<![CDATA[*/
 <?php
-if ($_REQUEST['action'] == 'fullscreenon') {
+if ($action === 'fullscreenon') {
 ?>
 var chart = document.getElementById('chart');
 var toggle = document.getElementById('chart-fullscreen-toggle');
