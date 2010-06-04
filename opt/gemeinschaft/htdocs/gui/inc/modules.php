@@ -276,6 +276,7 @@ $MODULES['admin'    ]=  array(
 		'users'        => array('title' => __('Benutzer'), 'id' => 15002),
 		//'groups'       => array('title' => __('Benutzergruppen'), 'id' => 15003),
 		'groups'       => array('title' => __('Gruppen'), 'id' => 15004),
+		'gui'          => array('title' => __('GUI'), 'id' => 15016),
 		'agents'       => array('title' => __('Agenten'), 'id' => 15015),
 		'queues'       => array('title' => __('Warteschlangen'), 'id' => 15005),
 		'pgroups'      => array('title' => __('Rufannahmegrp.#pl'), 'id' => 15006),

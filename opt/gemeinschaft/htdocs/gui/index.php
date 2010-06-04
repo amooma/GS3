@@ -647,13 +647,6 @@ function gs_boi_menu_sc( url )
 foreach ($MODULES as $sectname => $sectinfo) {
 	$sect_active = ($sectname === $SECTION);
 
-
-	if ( array_key_exists('id', $sectinfo)
-		&& ! in_array($sectinfo['id'], $display_modules)
-		&& ! in_array($sectname, array('home','login','logout'), true)) {
-		unset($MODULES[$sectname]);
-	} 
-
 	if (array_key_exists('inmenu', $sectinfo) && ! $sectinfo['inmenu'])
 		continue;
 	if (count($sectinfo['sub']) < 1)
