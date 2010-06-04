@@ -50,6 +50,11 @@ function gs_agent_del( $agent )
 	if (! $agent_id)
 		return new GsError( 'Unknown agent.' );
 	
+	# delete agent_queues
+	#
+	
+	$ok = $db->execute( 'DELETE FROM `agent_queues` WHERE `agent_id`='. $agent_id );
+	
 	# delete user
 	#
 	$ok = $db->execute( 'DELETE FROM `agents` WHERE `id`='. $agent_id );

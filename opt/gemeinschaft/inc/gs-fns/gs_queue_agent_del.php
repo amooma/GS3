@@ -30,18 +30,16 @@ defined('GS_VALID') or die('No direct access.');
 
 
 /***********************************************************
-*    adds a agent to a queue
+*    delete an agent from a queue
 ***********************************************************/
 
-function gs_queue_agent_add( $queue_id, $agent, $penalty=0 )
+function gs_queue_agent_del( $queue_id, $agent )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $agent ))
 		return new GsError( 'User must be alphanumeric.' );
 	$queue_id = (int)$queue_id;
 	if ($queue_id < 1)
 		return new GsError( 'Bad queue ID.' );
-		
-	$penalty= (int)$penalty;
 	
 	# connect to db
 	#
@@ -49,7 +47,7 @@ function gs_queue_agent_add( $queue_id, $agent, $penalty=0 )
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
 	
-	# check agent id
+	# check queue id
 	#
 	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queues` WHERE `_id`='. $queue_id );
 	if ($num < 1)
@@ -61,18 +59,11 @@ function gs_queue_agent_add( $queue_id, $agent, $penalty=0 )
 	if (! $agent_id)
 		return new GsError( 'Unknown agent.' );
 	
-	
-	# agent already in the queue?
+	# delete agent to the queue
 	#
-	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `agent_queues` WHERE `agent_id`='. $agent_id .' AND `queue_id`='. $queue_id );
-	if ($num > 0)
-		return new GsError( 'Agent already in the queue.' );
-	
-	# add agent to the queue
-	#
-	$ok = $db->execute( 'INSERT INTO `agent_queues` (`agent_id`, `queue_id`, `penalty` ) VALUES ('. $agent_id .', '. $queue_id .' ,' . $penalty .')' );
+	$ok = $db->execute( 'DELETE FROM `agent_queues` WHERE `agent_id`='. $agent_id .' AND `queue_id`= '. $queue_id  );
 	if (! $ok)
-		return new GsError( 'Failed to add agent to the queue.' );
+		return new GsError( 'Failed to delete agent from queue.' );
 	
 	
 	return true;

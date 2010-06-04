@@ -41,6 +41,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_agent_del.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_agents_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_agent_update.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_queue_agent_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_queue_agent_del.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_queue_agent_change.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -71,17 +73,25 @@ $name        = trim(@$_REQUEST['name'     ]);
 $number      = trim(@$_REQUEST['number'   ]);
 $page        = (int)@$_REQUEST['page'     ] ;
 $edit_agent   = trim(@$_REQUEST['edit'     ]);
-$save_agent   = trim(@$_REQUEST['save'     ]);
-$delete_agent = trim(@$_REQUEST['delete'   ]);
 
-$upqueues    =      @$_REQUEST['upqueues'  ] ;
-$upqueued   =      @$_REQUEST['upqueued'] ;
+$edit_agent_queue   = trim(@$_REQUEST['qedit'     ]);
+$edit_queue_penalty   = trim(@$_REQUEST['qeditpenatly'     ]);
+$eqs   = trim(@$_REQUEST['qeditsave'     ]);
+
+$save_agent   = trim(@$_REQUEST['save'     ]);
+
+$delete_agent = trim(@$_REQUEST['agentdelete'   ]);
+$delete_agent_queue = trim(@$_REQUEST['qdelete'   ]);
 
 $agent_name   = trim(@$_REQUEST['aname'    ]);
 $agent_lastname   = trim(@$_REQUEST['alastname'    ]);
 $agent_firstname   = trim(@$_REQUEST['afirstname'    ]);
 $agent_number   = trim(@$_REQUEST['anumber'    ]);
 $agent_pin    = trim(@$_REQUEST['apin'     ]);
+
+$queue_add    = (int)trim(@$_REQUEST['queue_add'     ]);
+$queue_add_penalty    = (int)trim(@$_REQUEST['queue_add_penalty'     ]);
+
 
 
 if ($save_agent) {
@@ -93,30 +103,28 @@ if ($agent_name) {
 	if (isGsError( $ret )) echo $ret->getMsg();
 }
 
+if ( $delete_agent_queue ) {
+	$ret = gs_queue_agent_del( $delete_agent_queue, $edit_agent );
+	if (isGsError( $ret )) echo $ret->getMsg();
+}
 
-if ( ($upqueued && $edit_agent) || $delete_agent ) {
-	if ($edit_agent)
-		$agent_id = $edit_agent;
-	else
-		$agent_id = $delete_agent;
-	$sql_query = 'DELETE `q`
-FROM `agent_queues` `q` , `agents` `a`
-WHERE
-	`q`.`agent_id` = `a`.`id` AND 
-	`a`.`number` = \''.$DB->escape($agent_id).'\'';
+if ( $edit_agent_queue && $eqs  && $edit_agent ) {
+
+	$ret = gs_queue_agent_change( $edit_agent_queue, $edit_agent,  $edit_queue_penalty );
+	if (isGsError( $ret )) echo $ret->getMsg();
+	unset ( $edit_queue_penalty );
+	unset ( $edit_agent_queue );
+	unset ( $eqs );
 	
-	$rs = $DB->execute($sql_query);
-	
-	if (is_array($upqueued)) {
-		foreach ($upqueued as $upqueue) {
-			if ($upqueue < 1) continue;
-			$ret = gs_queue_agent_add( $upqueue, $edit_agent );
-			if (isGsError( $ret )) echo $ret->getMsg();
-		}
-	}
+}
+
+if ( $queue_add && $edit_agent ) {
+	$ret = gs_queue_agent_add( $queue_add, $edit_agent, $queue_add_penalty );
+	if (isGsError( $ret )) echo $ret->getMsg();
 }
 
 if ($delete_agent) {
+
 	$ret = gs_agent_del( $delete_agent );
 	if (isGsError( $ret )) echo $ret->getMsg();
 }
@@ -294,7 +302,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			
 			echo '<td>';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='. rawUrlEncode($r['number']) .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('bearbeiten'), '"><img alt="',__('bearbeiten'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='. rawUrlEncode($r['number']) .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('l&ouml;schen'), '"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'agentdelete='. rawUrlEncode($r['number']) .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="',__('l&ouml;schen'), '"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			echo "</td>\n";
 			
 			echo '</tr>', "\n";
@@ -367,18 +375,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	</table>
 <?php
 } else {
-	/*
-	$sql_query = 'SELECT `id`, `title`
-	FROM `pickupgroups`';
-	$rs = $DB->execute($sql_query);
-	
-	$pgroups = array();
-	if (@$rs) {
-		while ($r = $rs->fetchRow()) {
-			$pgroups[$r['id']] = $r['title'];
-		}
-	}
-	*/
 
 	$rs = $DB->execute(
 'SELECT
@@ -393,22 +389,24 @@ WHERE
 	
 
 	$sql_query =
-'SELECT `_id`, `name`, `_title`
+'SELECT `_id`, `name`, `_title`, `_host_id`
 FROM
 	`ast_queues`
-GROUP BY `_id`';
+ORDER BY `name`';
 
 
 	$rs = $DB->execute($sql_query);
 	$pqueues = array();
+	$queue_hosts = array();
 	if (@$rs) {
 		while ($r_pg = $rs->fetchRow()) {
-			$pqueues[$r_pg['_id']] =  $r_pg['name'] . " " . $r_pg['_title'];
+			$pqueues[$r_pg['_id']] =  $r_pg['name'] . ' - ' . $r_pg['_title'];
+			$queue_hosts[$r_pg['_id']] =  $r_pg['_host_id'];
 		}
 	}
 	
 	$sql_query =
-'SELECT `agent_queues`.`queue_id`
+'SELECT `agent_queues`.`queue_id`, `agent_queues`.`penalty`
 FROM
 	`agent_queues`, `agents`
 WHERE 
@@ -416,11 +414,30 @@ WHERE
 	AND `agents`.`number` = \''.$DB->escape($edit_agent).'\'';
 
 	$rs = $DB->execute($sql_query);
+
+	$host_id = 0;
+
 	$pqueues_my = array();
 	if (@$rs) {
 		while ($r_pg = $rs->fetchRow()) {
-			$pqueues_my[$r_pg['queue_id']] = $r_pg['queue_id'];
+			
+			if ( $host_id == 0 ) {
+				$host_id = $queue_hosts[$r_pg['queue_id']];
+			}
+			$pqueues_my[$r_pg['queue_id']] = $r_pg['penalty'];
 		}
+	}
+	
+	if ( $host_id != 0 ) {
+	
+		foreach ( $queue_hosts AS $qid => $hid ) {
+		
+			if ( $hid != $host_id ) {
+				unset( $pqueues[$qid] );
+			}
+		
+		}
+	
 	}
 	
 
@@ -440,7 +457,7 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_agent), '" />', "
 		<th style="width:180px;">
 			<?php echo __('Name'); ?>
 		</th>
-		<td>
+		<td style="width:200px;">
 			<input type="text" name="alastname" value="<?php echo htmlEnt($r['name']); ?>" size="30" maxlength="50" />
 		</td>
 	</tr>
@@ -482,45 +499,123 @@ echo '<input type="hidden" name="save" value="', htmlEnt($edit_agent), '" />', "
 <br />
 
 <form method="post" action="<?php echo GS_URL_PATH; ?>">
+
 <?php
 echo gs_form_hidden($SECTION, $MODULE), "\n";
 echo '<input type="hidden" name="edit" value="', htmlEnt($edit_agent), '" />', "\n";
-echo '<input type="hidden" name="upqueued" value="yes" />', "\n";
 ?>
 <table cellspacing="1">
 <thead>
 	<tr>
-		<th style="width:180px;">
-			<?php echo __('Queues'); ?>
-		</th>
-		<td style="width:280px;">
+	<th style="width:240px;"><?php echo __('Warteschlange'); ?></th>
+	<th style="width:55px;"><?php echo __('Penalty'); ?></th>
+	<th style="width:80px;"></th>
+	<tr>
+		
 <?php
-		echo '<select multiple="multiple" name="upqueued[]" size="8">',"\n";
-		foreach ($pqueues as $key => $pqueue) {
-			echo '<option value="',$key,'"';
-			if (@$pqueues_my[$key]) echo ' selected="selected"';
-			echo '>', $key ,' (', htmlEnt($pqueue) ,')</option>',"\n";
+
+		$i = 0;
+		
+		foreach ( $pqueues_my AS $queue_id => $penalty ) {
+		
+			$queue_name = $pqueues[$queue_id];
+			
+			unset ( $pqueues[$queue_id] );
+			
+			echo '<tr class="', ((++$i % 2) ? 'odd':'even'), '">', "\n";
+			
+			if ($edit_agent_queue == $queue_id) {
+				
+				echo '<input type="hidden" name="qedit" value="',   htmlEnt($queue_id) ,'" />', "\n";
+				echo '<input type="hidden" name="qeditsave" value="yes" />', "\n";
+				
+				echo '<td class="l">', htmlEnt($queue_name) , '</td>',"\n";
+				
+				
+				echo '<td  class="c"><select name="qeditpenatly">', "\n";
+
+				for ( $i = 0 ; $i <= 9 ; $i++ ) {
+					echo '<option value="' . $i . '"';
+					
+					if ( $i == $penalty )
+						echo ' selected';
+					
+					echo '>' . $i  . '</option>';
+				} 		
+				echo '</select></td>', "\n";
+				
+				echo '</td>',"\n";
+				
+				echo '<td>',"\n";
+				
+				echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
+				echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" />';
+				echo '</button>' ,"\n";
+				
+				echo '&nbsp;',"\n";
+				
+				echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit=' . $edit_agent ) ,'"><button type="button" title="', __('Abbrechen'), '" class="plain">';
+				echo '<img alt="', __('Abbrechen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/cancel.png" />';
+				echo '</button></a>' ,"\n";
+				
+				echo '</td>',"\n";
+							
+			} else {
+				
+				echo '<td class="l">', htmlEnt($queue_name) , '</td>',"\n";
+				
+				echo '<td class="c">', htmlEnt($penalty) ,'</td>',"\n";
+				
+				echo '<td>',"\n";
+				
+				echo '<a href="', gs_url($SECTION, $MODULE, null, 'qedit='. rawUrlEncode($queue_id) . '&amp;edit='. rawUrlEncode($edit_agent) )  ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; '; 
+				
+				echo '<a href="', gs_url($SECTION, $MODULE, null, 'qdelete='. rawUrlEncode($queue_id) . '&amp;edit=' . rawUrlEncode($edit_agent) ) ,'" title="', __('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+				
+				echo '</td>',"\n";
+			}
+			
+			echo '</tr>',"\n";
 		}
-		echo '<option value=""></option>',"\n";
-		echo '</select>',"\n";
+
 ?>		
 		</td>
 	</tr>
 </thead>
-<tbody>
-	<tr>
-		<th>&nbsp;</th>
-		<th>
-			<button type="submit" title="<?php echo __('Speichern'); ?>" class="plain">
-				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
-			</button>
-		</th>
-	</tr>
-</tbody>
+<?php
+	if ( !$edit_agent_queue && count( $pqueues ) > 0 ) {
+		echo '<tbody>' ,"\n";
+		echo '<tr>' ,"\n";
+			echo '<td><select name="queue_add">',"\n";
+
+			if (count ( $pqueues ) > 0 ) {
+		
+				foreach ( $pqueues AS $queue_id => $queue_name ) {
+					echo '<option value="' . $queue_id . '">' . $queue_name  . '</option>';
+				}
+			}		
+		
+			echo '</select></td>',"\n";
+			echo '<td  class="c"><select name="queue_add_penalty">',"\n";
+
+			for ( $i = 0 ; $i <= 9 ; $i++ ) {
+				echo '<option value="' . $i . '">' . $i  . '</option>';
+			} 
+
+			echo '</select></td>',"\n";
+			echo '<td>',"\n";
+				echo '<button type="submit" title="' , __('Speichern'), '" class="plain">' ,"\n";
+					echo '<img alt="', __('Speichern'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/filesave.png" />',"\n";
+				echo '</button>',"\n";
+			echo '</td>',"\n";
+		echo '</tr>',"\n";
+		echo '</tbody>',"\n";
+	}
+	echo '</table>', "\n";
+	echo '</form>', "\n";
+	echo '<br />',"\n";
+	echo '<p class="text"><img alt=" " src="', GS_URL_PATH ,'crystal-svg/16/act/info.png" /> ', __('&Auml;nderungen werden erst nach dem erneuten Anmelden des Agenten aktiv.') ,'</p>',"\n";
+}
+?>
 </table>
 </form>
-
-
-<?php
-} 
-?>

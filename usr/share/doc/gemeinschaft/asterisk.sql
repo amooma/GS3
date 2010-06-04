@@ -58,6 +58,7 @@ DROP TABLE IF EXISTS `agent_queues`;
 CREATE TABLE IF NOT EXISTS `agent_queues` (
   `agent_id` int(10) unsigned NOT NULL,
   `queue_id` int(10) unsigned NOT NULL,
+  `penalty` TINYINT( 3 ) unsigned NOT NULL DEFAULT '0',
   KEY `agent_id` (`agent_id`),
   KEY `queue_id` (`queue_id`),
   CONSTRAINT `agent_queues_ibfk_1` FOREIGN KEY (`agent_id`) REFERENCES `agents` (`id`),

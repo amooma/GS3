@@ -30,10 +30,10 @@ defined('GS_VALID') or die('No direct access.');
 
 
 /***********************************************************
-*    adds a agent to a queue
+*    changes a agents penalty
 ***********************************************************/
 
-function gs_queue_agent_add( $queue_id, $agent, $penalty=0 )
+function gs_queue_agent_change( $queue_id, $agent, $penalty=0 )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $agent ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -65,12 +65,12 @@ function gs_queue_agent_add( $queue_id, $agent, $penalty=0 )
 	# agent already in the queue?
 	#
 	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `agent_queues` WHERE `agent_id`='. $agent_id .' AND `queue_id`='. $queue_id );
-	if ($num > 0)
-		return new GsError( 'Agent already in the queue.' );
+	if ($num != 1)
+		return new GsError( 'Agent does not exist in the queue.' );
 	
 	# add agent to the queue
 	#
-	$ok = $db->execute( 'INSERT INTO `agent_queues` (`agent_id`, `queue_id`, `penalty` ) VALUES ('. $agent_id .', '. $queue_id .' ,' . $penalty .')' );
+	$ok = $db->execute( 'UPDATE `agent_queues` SET `penalty`=' . $penalty . ' WHERE `agent_id`='. $agent_id . ' AND `queue_id`=' . $queue_id  );
 	if (! $ok)
 		return new GsError( 'Failed to add agent to the queue.' );
 	
