@@ -411,9 +411,9 @@ $MODULES['wakeupcall' ]=  array(
 	'title' => __('Weckruf'),
 	'icon'  => 'crystal-svg/%s/app/kalarm.png',
 	'boi_ok'=> false,
-	'id' => 20000,
+	'id' => 22000,
 	'sub' => array(
-		'wakeupcall'     => array('title' => __('Weckruf'), 'id' => 20001)
+		'wakeupcall'     => array('title' => __('Weckruf'), 'id' => 22001)
 	)
 );
 
