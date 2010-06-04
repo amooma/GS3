@@ -519,7 +519,7 @@ if ($action == 'edit') {
 		
 		if ($group['type'] === 'module_gui') {
 			echo '<select name="member">', "\n";
-			foreach($MOD_AVAILABLE as $section) {
+			foreach($MODULES as $section) {
 				if (! in_array($section['id'], gs_group_members_get(array($group['id']))) ) {
 					echo '<option value="', $section['id'], '"', 'title="', htmlEnt($section['title']) ,'">';
 					echo $section['title'];
@@ -550,7 +550,7 @@ if ($action == 'edit') {
 
 	$i=0;
 	if ($group['type'] === 'module_gui') {
-		foreach ($MOD_AVAILABLE as $section) {
+		foreach ($MODULES as $section) {
 			if (in_array($section['id'], gs_group_members_get(array($group['id']))) ) {
 				$i++;
 				echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";

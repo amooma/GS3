@@ -165,8 +165,6 @@ include_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );  # defines $DB
 require_once( GS_HTDOCS_DIR .'inc/modules.php' );
 
-$MOD_AVAILABLE = $MODULES;
-
 if (! @$_SESSION['login_ok'] )
 	$display_modules = array();
 else 
