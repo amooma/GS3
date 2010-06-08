@@ -215,7 +215,7 @@ else {
 			'</SoftKey>', "\n",
 			"\n",
 			'<SoftKey index="4">', "\n",
-				'<Label>', tiptelXmlEsc(__('W\xC3\xA4hlen')), '</Label>', "\n",
+				'<Label>', tiptelXmlEsc(__("W\xC3\xA4hlen")), '</Label>', "\n",
 				'<URI>SoftKey:Dial</URI>', "\n",
 			'</SoftKey>', "\n";
 		
