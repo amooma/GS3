@@ -1023,7 +1023,7 @@ if ( in_array($phone_model, array('ip284','ip286'), true) ) {
 	psetting('memory13|path', '/yealink/config/vpPhone/vpPhone.ini');
 	psetting('memory13|Value', $prov_url_tiptel.'dial-log.php?u='.$user_ext);
 	psetting('memory13|DKtype', '27');
-	psetting('memory13|PickupValue', __('Dial-Log'));
+	psetting('memory13|PickupValue', __('Anruf Listen'));
 
 }
 
