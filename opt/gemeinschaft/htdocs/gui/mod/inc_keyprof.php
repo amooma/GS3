@@ -206,6 +206,7 @@ $key_functions_tiptel = array(
 	//'f18' => __('GroupListening'),	# Group Listening
 	//'f19' => __('PublicHold'),	# Public Hold
 	//'f20' => __('PrivateHold'),	# Private Hold
+	//'f27' => __('XML Browser'),	# XML Browser
 );
 $key_function_none_tiptel = 'f0';
 $key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_TIPTEL_PROV_KEY_BLACKLIST'));

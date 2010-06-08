@@ -520,18 +520,18 @@ psetting('SignalTonVol|Handfree', '8');	# 0 to 15, default 8
 
 # RemotePhoneBook0
 psetting('RemotePhoneBook0|path', '/yealink/config/Setting/Setting.cfg');
-psetting('RemotePhoneBook0|URL', $prov_url_tiptel.'pb.php?m='.$mac.'&t=gs');
+psetting('RemotePhoneBook0|URL', $prov_url_tiptel.'pb_on_phone.php?m='.$mac.'&t=gs');
 psetting('RemotePhoneBook0|Name', gs_get_conf('GS_PB_INTERNAL_TITLE', __("Intern")) );
 
 # RemotePhoneBook1
 psetting('RemotePhoneBook1|path', '/yealink/config/Setting/Setting.cfg');
-psetting('RemotePhoneBook1|URL', $prov_url_tiptel.'pb.php?m='.$mac.'&t=prv');
+psetting('RemotePhoneBook1|URL', $prov_url_tiptel.'pb_on_phone.php?m='.$mac.'&t=prv');
 psetting('RemotePhoneBook1|Name', gs_get_conf('GS_PB_PRIVATE_TITLE' , __("Pers\xC3\xB6nlich")) );
 
 # RemotePhoneBook2
 psetting('RemotePhoneBook2|path', '/yealink/config/Setting/Setting.cfg');
 if ( gs_get_conf('GS_PB_IMPORTED_ENABLED') ) {
-	psetting('RemotePhoneBook2|URL', $prov_url_tiptel.'pb.php?m='.$mac.'&t=imported');
+	psetting('RemotePhoneBook2|URL', $prov_url_tiptel.'pb_on_phone.php?m='.$mac.'&t=imported');
 	psetting('RemotePhoneBook2|Name', gs_get_conf('GS_PB_IMPORTED_TITLE', __("Extern")) );
 } else {
 	psetting('RemotePhoneBook2|URL', '');
@@ -604,7 +604,7 @@ psetting('SYSLOG|SyslogdIP', '');	# IP Address
 
 # telnet
 psetting('telnet|path', '/yealink/config/Network/Network.cfg');
-psetting('telnet|telnet_enable', '0');	# 0 = disable, 1 = enable
+psetting('telnet|telnet_enable', '1');	# 0 = disable, 1 = enable
 
 
 #####################################################################
@@ -914,10 +914,11 @@ for ($i=1; $i<$max_sip_accounts; ++$i) {
 # 18 = Group Listening
 # 19 = Public Hold
 # 20 = Private Hold
+# 27 = XML Browser
 
 if ( in_array($phone_model, array('ip284','ip286'), true) ) {
 
-	# reset Keys
+	# reset Keys on Phone
 	$max_keys = 10;
 	for ($i=1; $i <= $max_keys; $i++) {
 		psetting('memory'.$i.'|path', '/yealink/config/vpPhone/vpPhone.ini');
@@ -927,6 +928,19 @@ if ( in_array($phone_model, array('ip284','ip286'), true) ) {
 		psetting('memory'.$i.'|DKtype', '0');
 		psetting('memory'.$i.'|PickupValue', '');
 	}
+
+	# reset Line Keys on Phone
+	for ($i=11; $i <= 16; $i++) {
+		psetting('memory'.$i.'|path', '/yealink/config/vpPhone/vpPhone.ini');
+		psetting('memory'.$i.'|Line', $i-10);
+		psetting('memory'.$i.'|type', '');
+		psetting('memory'.$i.'|Value', '');
+		psetting('memory'.$i.'|DKtype', '15');
+		psetting('memory'.$i.'|PickupValue', '');
+	}
+
+	# reset programmable Keys on Phone
+	//FIXME
 	
 	# reset Keys on Expansions Modul ( the correct order 3 2 1)
 	for ($j=3; $j >= 1; $j--) {
@@ -999,6 +1013,19 @@ if ( in_array($phone_model, array('ip284','ip286'), true) ) {
 			}
 		}
 	}
+
+	# XML Browser for Phonebook on Line Key 2
+	psetting('memory12|path', '/yealink/config/vpPhone/vpPhone.ini');
+	psetting('memory12|Value', $prov_url_tiptel.'pb.php?u='.$user_ext);
+	psetting('memory12|DKtype', '27');
+	psetting('memory12|PickupValue', __('Tel.buch'));
+
+	# XML Browser for Dial-Log on Line Key 3
+	psetting('memory13|path', '/yealink/config/vpPhone/vpPhone.ini');
+	psetting('memory13|Value', $prov_url_tiptel.'dial-log.php?u='.$user_ext);
+	psetting('memory13|DKtype', '27');
+	psetting('memory13|PickupValue', __('Dial-Log'));
+
 }
 
 

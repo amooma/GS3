@@ -459,6 +459,7 @@ $TIPTEL_PROV_FW_UPDATE = false;  # allow firmware updates?
   # 'f18' Group Listening
   # 'f19' Public Hold
   # 'f20' Private Hold
+  # 'f27' XML Browser
 
 
 //-----------------------[ Polycom ]----------------------//
