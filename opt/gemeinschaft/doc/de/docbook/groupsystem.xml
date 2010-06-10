@@ -96,6 +96,12 @@ in Gemeinschaft dient.
             					<para>Im System eingerichtete interne und externe Hosts.</para>
           				</listitem>
         			</varlistentry>
+				<varlistentry>
+          				<term>module_gui</term>
+          				<listitem>
+            					<para>Anzeige der GUI Module.</para>
+          				</listitem>
+        			</varlistentry>
       			</variablelist>
 		</para>	
 	</section>
@@ -142,6 +148,60 @@ in Gemeinschaft dient.
           				<term>phonebook_user</term>
           				<listitem>
             					<para>Anzeigen eines Eintrages im Telefonbuch</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>display_module_gui</term>
+          				<listitem>
+            					<para>Anzeigen der Web-GUI</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>group_pickup</term>
+          				<listitem>
+            					<para>Erlaubt Gruppen-Pickup</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>pickup</term>
+          				<listitem>
+            					<para>Erlaubt pickup</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>secretary_call</term>
+          				<listitem>
+            					<para>Erlaubt durchbrechen der Rufumleitung (Chef-Sekretär-Funktion)</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>intercom_call</term>
+          				<listitem>
+            					<para>Erlaubt direktes Anrufen (Anrufendes Telefon nimmt Gespräch sofort an)</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>login_queues</term>
+          				<listitem>
+            					<para>Einloggen in eine Warteschlange</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>record_call</term>
+          				<listitem>
+            					<para>Aufnahme des Gespräches</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>wakeup_call</term>
+          				<listitem>
+            					<para>Erlaubt Weckruf setzen</para>
+          				</listitem>
+        			</varlistentry>
+				<varlistentry>
+          				<term>private_call</term>
+          				<listitem>
+            					<para>Erlaubt Private Anrufe</para>
           				</listitem>
         			</varlistentry>
       			</variablelist>
