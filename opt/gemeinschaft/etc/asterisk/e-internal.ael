@@ -431,7 +431,7 @@ context to-internal-users {
 		}
 		
 		//Set(CALLERID(name)=ICOM ${CALLERID(name)});		
-		SIPAddHeader(Call-Info: \;answer-after=0);
+		SIPAddHeader(Call-Info: <http://127.0.0.1>\;answer-after=0);
 		Dial(SIP/${iext},30);
 		&hangup-proper-status();
 	}	
