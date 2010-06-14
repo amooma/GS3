@@ -660,6 +660,10 @@ psetting('Features|Refuse_Code', '486');	# 404 = Not found, 480 = Temporarliy no
 psetting('Features|DND_Code', '480');		# 404 = Not found, 480 = Temporarliy not available, 486 = Busy here
 psetting('Features|DND_On_Code', 'dnd-on');	# SIP dial when press dnd-button
 psetting('Features|DND_Off_Code', 'dnd-off');	# SIP dial when press dnd-button
+psetting('Features|AllowIntercom', '1');	# 0 = disable, 1 = enable
+psetting('Features|IntercomMute', '0');		# 0 = disable, 1 = enable
+psetting('Features|IntercomTone', '1');		# 0 = disable, 1 = enable
+psetting('Features|IntercomBarge', '1');	# 0 = disable, 1 = enable
 psetting('Features|ButtonSoundOn', '1');	# 0 = disable, 1 = enable
 
 # AutoRedial
