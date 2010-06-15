@@ -1114,7 +1114,8 @@ if ($phone_layout) {
 		break;
 	}
 	
-	if (in_array($phone_layout, array('snom', 'grandstream', 'tiptel'), true)) {
+	//if (in_array($phone_layout, array('snom', 'grandstream', 'tiptel'), true)) {
+	if (in_array($phone_layout, array('tiptel'), true)) {
 		$have_key_label = false;
 		$table_cols = 5;
 	} else {
@@ -1357,6 +1358,7 @@ if ($phone_layout) {
 	echo '</tbody>' ,"\n";
 	echo '</table>' ,"\n";
 	echo '<br />' ,"\n";
+	echo '<a href="',GS_URL_PATH ,'srv/key-layout.php?phone_type=',$phone_type,'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n"; 
 	echo $save_bt;
 }
 #################################################################
