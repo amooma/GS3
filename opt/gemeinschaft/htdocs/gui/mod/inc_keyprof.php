@@ -1358,7 +1358,10 @@ if ($phone_layout) {
 	echo '</tbody>' ,"\n";
 	echo '</table>' ,"\n";
 	echo '<br />' ,"\n";
-	echo '<a href="',GS_URL_PATH ,'srv/key-layout.php?phone_type=',$phone_type,'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n"; 
+
+	if (in_array($phone_type, array('snom-300','snom-320','snom-360','snom-370','grandstream-gxp2000','grandstream-gxp2010','grandstream-gxp2020'), true))
+		echo '<a href="',GS_URL_PATH ,'srv/key-layout.php?phone_type=',$phone_type,'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n"; 
+
 	echo $save_bt;
 }
 #################################################################
