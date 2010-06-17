@@ -80,7 +80,10 @@ if (! $type) {
 	
 	# delete outdated entries
 	#
-	@$db->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `timestamp`<'. (time()-(int)GS_PROV_DIAL_LOG_LIFE) );
+	
+	$DB = gs_db_master_connect();
+	
+	@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `timestamp`<'. (time()-(int)GS_PROV_DIAL_LOG_LIFE) );
 	
 	
 	$xml = '<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none">' ."\n";

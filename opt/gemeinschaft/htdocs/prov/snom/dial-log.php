@@ -132,8 +132,10 @@ LIMIT ' . $delete . ',1';
 
 	$rs = $db->execute( $query );
 	$r = $rs->fetchRow();
+
+$DB = gs_db_master_connect();
 	
-	$db->execute(
+	$DB->execute(
 'DELETE FROM `dial_log`
 WHERE
 	`user_id`=' . $user_id . ' AND
@@ -148,7 +150,9 @@ if (! $type) {
 	
 	# delete outdated entries
 	#
-	$db->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `timestamp`<'. (time()-(int)GS_PROV_DIAL_LOG_LIFE) );
+	$DB = gs_db_master_connect();
+	
+	$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `timestamp`<'. (time()-(int)GS_PROV_DIAL_LOG_LIFE) );
 	
 	
 	

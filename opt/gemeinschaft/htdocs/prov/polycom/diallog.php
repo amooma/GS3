@@ -105,7 +105,10 @@ $url_polycom_dl = GS_PROV_SCHEME ."://". GS_PROV_HOST . (GS_PROV_PORT ? ":". GS_
 if((isset($delete)) && $type)
 {
 //--- clear list (
-	$db->execute(
+	
+	$DB = gs_db_master_connect();
+
+	$DB->execute(
 		"DELETE FROM `dial_log` ".
 		"WHERE ".
 		"  `user_id`=". $user_id ." AND ".
@@ -119,7 +122,10 @@ if((isset($delete)) && $type)
 if(!$type)
 {
 	//--- delete outdated entries
-	$db->execute("DELETE FROM `dial_log` WHERE `user_id`=". $user_id ." AND `timestamp`<". (time()-(int)GS_PROV_DIAL_LOG_LIFE));
+	
+	$DB = gs_db_master_connect();
+	
+	$DB->execute("DELETE FROM `dial_log` WHERE `user_id`=". $user_id ." AND `timestamp`<". (time()-(int)GS_PROV_DIAL_LOG_LIFE));
 
 	echo $diallog_doctype ."\n";
 	echo "<html>\n";
