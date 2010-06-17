@@ -28,16 +28,29 @@
 
 defined('GS_VALID') or die('No direct access.');
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
+include_once( GS_DIR .'inc/get-listen-to-ips.php' );
 
 /***********************************************************
 *    returns an array of the users
 ***********************************************************/
 
 
+function get_abd_socket( )
+{
+
+	$ips = gs_get_listen_to_ips ( true );
+	$opts = array('socket' => array('bindto' => $ips[0].':0'));
+	$context = stream_context_create($opts);
+	$socket = stream_socket_client("tcp://" . GS_BUTTONDAEMON_HOST .":" .  GS_BUTTONDAEMON_PORT, $errno, $errstr, 3, STREAM_CLIENT_ASYNC_CONNECT, $context);
+	
+	return $socket;
+}
+
 
 function gs_buttondeamon_reload_keys( $username )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+	
+	$socket = get_abd_socket();
 
 	if ( $socket ) {
 
@@ -54,7 +67,8 @@ function gs_buttondeamon_reload_keys( $username )
 
 function gs_buttondeamon_queue_update( $username,  $queue, $state )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+	
+	$socket = get_abd_socket();
   
 	if ( $socket ) {
 
@@ -72,8 +86,9 @@ function gs_buttondeamon_queue_update( $username,  $queue, $state )
 
 function gs_buttondeamon_diversion_update( $username )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
-
+	
+	$socket = get_abd_socket();
+	
 	if ( $socket ) {
 
  		$message = "set Peer " . $username .
@@ -89,7 +104,8 @@ function gs_buttondeamon_diversion_update( $username )
 
 function gs_buttondeamon_dnd_update( $username )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+	
+	$socket = get_abd_socket();
 
 	if ( $socket ) {
 
@@ -106,7 +122,8 @@ function gs_buttondeamon_dnd_update( $username )
 
 function gs_buttondeamon_clir_update( $username )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+	
+	$socket = get_abd_socket();
 
 	if ( $socket ) {
 
@@ -123,7 +140,8 @@ function gs_buttondeamon_clir_update( $username )
 
 function gs_buttondeamon_clip_update( $username )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	$socket = get_abd_socket();	
   
 	if ( $socket ) {
 
@@ -140,7 +158,8 @@ function gs_buttondeamon_clip_update( $username )
 
 function gs_buttondeamon_user_usergroupgroup_update( $username )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	$socket = get_abd_socket();	
   
 	if ( $socket ) {
 
@@ -157,7 +176,8 @@ function gs_buttondeamon_user_usergroupgroup_update( $username )
 
 function gs_buttondeamon_group_update( $username )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	$socket = get_abd_socket();	
 
 	if ( $socket ) {
 
@@ -176,7 +196,7 @@ function gs_buttondeamon_group_update( $username )
 function gs_buttondeamon_group_del( $group )
 {
 
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+	$socket = get_abd_socket();	
      
 	if ( $socket ) {
 
@@ -193,7 +213,8 @@ function gs_buttondeamon_group_del( $group )
 
 function gs_buttondeamon_missedcalls( $username )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+	
+	$socket = get_abd_socket();	$ips = gs_get_listen_to_ips ( true );
   
 	if ( $socket ) {
 
@@ -210,7 +231,8 @@ function gs_buttondeamon_missedcalls( $username )
 
 function gs_buttondeamon_missedqueuecalls($username)
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+	
+	$socket = get_abd_socket();
   
 	if ( $socket ) {
 
@@ -226,7 +248,8 @@ function gs_buttondeamon_missedqueuecalls($username)
 
 function gs_buttondeamon_remove_peer( $username )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	$socket = get_abd_socket();
 
 	if ( $socket ) {
     
@@ -243,7 +266,8 @@ function gs_buttondeamon_remove_peer( $username )
 
 function gs_buttondeamon_reload()
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	$socket = get_abd_socket();
 
 	if ( $socket ) {
 
@@ -267,7 +291,8 @@ function gs_buttondeamon_reload()
 
 function gs_buttondeamon_usergroup_remove( $usergroup )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
+
+	$socket = get_abd_socket();
 
 	if ( $socket ) {
     
@@ -283,7 +308,8 @@ function gs_buttondeamon_usergroup_remove( $usergroup )
 
 function gs_buttondeamon_usergroups_update()
 {
-	$socket = fsockopen("tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
+
+	$socket = get_abd_socket();
 
 	if ( $socket ) {
 
@@ -299,8 +325,9 @@ function gs_buttondeamon_usergroups_update()
 
 function gs_buttondeamon_softkeyprofile_remove( $profile )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1 );
 
+	$socket = get_abd_socket();
+	
 	if ( $socket ) {
     
 		$message = "remove System SoftkeyProfile " . $profile .
@@ -315,7 +342,8 @@ function gs_buttondeamon_softkeyprofile_remove( $profile )
 
 function gs_buttondeamon_softkeyprofile_update( $profile )
 {
-	$socket = fsockopen( "tcp://" . GS_BUTTONDAEMON_HOST, GS_BUTTONDAEMON_PORT, $errno, $errstr, 1);
+
+	$socket = get_abd_socket();
 
 	if ( $socket ) {
     
@@ -328,5 +356,27 @@ function gs_buttondeamon_softkeyprofile_update( $profile )
 		fclose( $socket );
 	}
 }
+
+function gs_buttondeamon_version( )
+{
+
+	$socket = get_abd_socket();
+
+	if ( $socket ) {
+
+		$message = "show System version" . "\n";
+
+		fwrite( $socket, $message );
+		for ( $i = 0; $i < 4; $i++ ) {
+			$version = fgets  ( $socket );
+		}
+		fwrite( $socket, "quit\n" );
+		fclose( $socket );
+
+		return $version ;
+	}
+	return;
+}
+
 
 ?>
