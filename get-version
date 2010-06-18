@@ -113,7 +113,16 @@ then
 elif [ -d .git ]
 then
 	# //FIXME!
-	BRANCH=`git branch --no-color | grep '^ *[*] ' | grep -o -Ee '[a-zA-Z0-9\\-_]+' | head -n 1`
+	
+	if git branch --no-color | grep -i 'no branch' 1>>/dev/null 2>>/dev/null
+	then
+		# might be a tag
+		GIT_DESCR=`git describe --all --always`
+		echo "${GIT_DESCR}"
+		exit 0
+	fi
+	
+	BRANCH=`git branch --no-color | grep '^ *[*] ' | grep -o -Ee '[a-zA-Z0-9\\-_.]+' | head -n 1`
 	if [ -z ${BRANCH} ]; then
 		BRANCH=unknown
 	fi
