@@ -1049,6 +1049,8 @@ context to-gateway {
 }
 
 macro dial-gateway-do( mnumber ) {
+
+	Set(CDR(userfield)=${mnumber});
 	// get CLIR for a call to external:
 	&is_dmz(${mnumber});
 	if ("${is_dmz}" != "1") {
