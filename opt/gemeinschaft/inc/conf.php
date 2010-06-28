@@ -307,9 +307,10 @@ _gscnf( 'TIPTEL_PROV_ENABLED'       , false              );
 _gscnf( 'TIPTEL_PROV_HTTP_PASS'     , ''                 );
 _gscnf( 'TIPTEL_PROV_NTP'           , gs_get_conf('GS_PROV_HOST','') );
 _gscnf( 'TIPTEL_PROV_FW_UPDATE'     , false              );
-_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP280', null             );
-_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP284', null             );
-_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP286', null             );
+_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP28XS', null            );
+_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP280' , null            );
+_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP284' , null            );
+_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP286' , null            );
 _gscnf( 'TIPTEL_PROV_KEY_BLACKLIST' , ''                 );
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
