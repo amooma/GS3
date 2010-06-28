@@ -107,9 +107,10 @@ if (subStr($mac,0,6) !== '001565') {
 
 # HTTP_USER_AGENTs
 #
-# tiptel IP 280: "Tiptel IP 280 9.43.13.6 00:15:65:13:f0:7f"
-# tiptel IP 284: "Tiptel IP 284 6.43.13.8 00:15:65:13:ec:1d"
-# tiptel IP 286: "Tiptel IP 286 2.43.13.6 00:15:65:13:eb:6f"
+# tiptel IP 28xs: "Tiptel IP 28xs 18.0.13.3 00:15:65:17:0a:3a"
+# tiptel IP 280:  "Tiptel IP 280 9.43.13.6 00:15:65:13:f0:7f"
+# tiptel IP 284:  "Tiptel IP 284 6.43.13.8 00:15:65:13:ec:1d"
+# tiptel IP 286:  "Tiptel IP 286 2.43.13.6 00:15:65:13:eb:6f"
 #
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 $ua_parts = explode(' ', $ua);
@@ -122,7 +123,7 @@ gs_log( GS_LOG_DEBUG, "Tiptel model $ua found." );
 
 # find out the type of the phone:
 if (strToLower(@$ua_parts[1]) === 'ip' &&
-    preg_match('/(280|284|286)/', strToLower(@$ua_parts[2]), $m))  # e.g. "280", "284" or "286"
+    preg_match('/(28xs|280|284|286)/', strToLower(@$ua_parts[2]), $m))  # e.g. "280", "284" or "286"
 	$phone_model = 'ip'.$m[0];
 else
 	$phone_model = 'unknown';
@@ -349,7 +350,8 @@ if (! gs_get_conf('GS_TIPTEL_PROV_FW_UPDATE')) {
 			$db->execute( 'DELETE FROM `prov_jobs` WHERE `id`='.((int)$job['id']).' AND `running`=0' );
 			continue;
 		}
-		if ( (subStr($fw_new_vers,0,2) != '09' && $phone_model === 'ip280')
+		if ( (subStr($fw_new_vers,0,2) != '18' && $phone_model === 'ip28xs')
+		  || (subStr($fw_new_vers,0,2) != '09' && $phone_model === 'ip280')
 		  || (subStr($fw_new_vers,0,2) != '06' && $phone_model === 'ip284')
 		  || (subStr($fw_new_vers,0,2) != '02' && $phone_model === 'ip286') ) {
 			gs_log( GS_LOG_NOTICE, "Phone $mac: Bad new fw version $fw_new_vers for $phone_model" );
