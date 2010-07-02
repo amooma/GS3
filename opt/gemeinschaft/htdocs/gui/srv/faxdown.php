@@ -73,7 +73,7 @@ else {
 	#PDF
 	$pdf_file = basename($file,'.tif').'.pdf';
 	
-	@system('cd /var/spool/hylafax/ && /var/spool/hylafax/bin/tiff2pdf -o '. qsa('/tmp/'.$pdf_file) .' '. qsa('/tmp/'.$file));
+	@system('cd /var/spool/hylafax/ && sudo /var/spool/hylafax/bin/tiff2pdf -o '. qsa('/tmp/'.$pdf_file) .' '. qsa('/tmp/'.$file));
 	unlink('/tmp/'.$file);
 	
 	if (! file_exists('/tmp/'.$pdf_file)) {
@@ -87,7 +87,7 @@ else {
 	header('Content-Disposition: attachment; filename="'.$pdf_file.'"');
 	header('Content-Length: ' . (int)@fileSize('/tmp/'.$pdf_file));
 	@readFile('/tmp/'.$pdf_file);
-	@unlink('/tmp/'.$pdf_file);
+	@system('sudo rm /tmp/'.$pdf_file);
 }
 
 ?>
