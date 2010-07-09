@@ -33,9 +33,9 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `asterisk` /*!40100 DEFAULT CHARACTER S
 
 USE `asterisk`;
 
----
----  Table structure for table `agents`        
----
+--
+--  Table structure for table `agents`        
+--
 
 DROP TABLE IF EXISTS `agents`;
 CREATE TABLE IF NOT EXISTS `agents` (
@@ -50,9 +50,9 @@ CREATE TABLE IF NOT EXISTS `agents` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
 
----
----  Table structure for table `agent_queues`                        
----
+--
+--  Table structure for table `agent_queues`                        
+--
 
 DROP TABLE IF EXISTS `agent_queues`;
 CREATE TABLE IF NOT EXISTS `agent_queues` (
@@ -6518,7 +6518,6 @@ CREATE TABLE `phones` (
   KEY `nobody_index` (`nobody_index`),
   CONSTRAINT `phones_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 --
 -- Dumping data for table `phones`
 --
