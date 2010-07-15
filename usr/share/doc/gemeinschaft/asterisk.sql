@@ -5701,7 +5701,7 @@ CREATE TABLE `callforwards` (
   `number_var` varchar(50) character set ascii NOT NULL default '',
   `number_vml` varchar(20) character set ascii NOT NULL default '',
   `vm_rec_id` int(10) unsigned default NULL,
-  `active` enum('no','std','var','vml','trl','par') character set ascii NOT NULL default 'no',
+  `active` enum('no','std','var','vml','ano','trl','par') character set ascii NOT NULL default 'no',
   PRIMARY KEY  (`user_id`,`source`,`case`),
   CONSTRAINT `callforwards_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
