@@ -6150,6 +6150,7 @@ INSERT INTO `group_members` VALUES (7,22000);
 INSERT INTO `group_members` VALUES (7,22001);
 INSERT INTO `group_members` VALUES (8,21000);
 INSERT INTO `group_members` VALUES (8,21001);
+INSERT INTO `group_members` VALUES (1,1);
 /*!40000 ALTER TABLE `group_members` ENABLE KEYS */;
 UNLOCK TABLES;
 
