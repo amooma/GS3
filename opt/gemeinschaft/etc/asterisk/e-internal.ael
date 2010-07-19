@@ -785,7 +785,8 @@ context to-internal-users-self {
 					if ("${is_callfile_origin}" != "1") {
 						Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 						Set(__forwarded_by=${EXTEN});
-						Set(__is_from_gateway=);
+						if ( "${is_from_gateway}" = "1" )
+							Set(__is_from_gateway=2);
 						Dial(Local/${fw_${is_call_from}_always}/n,200);
 						&hangup-proper-status();
 					}
