@@ -192,12 +192,15 @@ foreach ($forwards as $source => $arr) {
 			$newparcallextens = $parcallextens;
 			$numbers = array();
 			//filter out already forwarded Parallel-call extension to dont ring them twice
+			$i = 1;
 			foreach ($fw['number'] as $target) {
 				if (!in_array($target, $parcallextens)) {
 					$newparcallextens[] = $target;
 					if ($target == $uname) //set this, if the user wants to ring his extension too
 						gs_agi_set_variable( 'fw_to_self_'.$source.'_'.$case .'_'.$uname, 1 );
-					$numbers[] = $target;	
+					$numbers[] = $target;
+					gs_agi_set_variable( 'fw_parcallexten_' . $i, $target );
+					$i++;
 				}
 			}
 			gs_agi_set_variable( 'fw_'.$source.'_'.$case, implode('/n&Local/',$numbers) );

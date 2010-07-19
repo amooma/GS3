@@ -775,6 +775,15 @@ context to-internal-users-self {
 				if ("${fw_${is_call_from}_always}" != "") {
 					Set(__forward_case=always);
 					Set(__fw_parcall_extens=${fw_parcallextens_${is_call_from}_always});
+					Set(parcall_item=1);
+					while ("${fw_parcallexten_${parcall_item}}" != "") {
+						if (${GROUP_COUNT(callcount${fw_parcallexten_${parcall_item}})} > 0) {
+							Verbose(1,### User ${fw_parcallexten_${parcall_item}} of parallel call is BUSY);
+							Set(DIALSTATUS="BUSY");
+							goto user_busy;
+						}
+						parcall_item=${parcall_item}+1;
+					}
 					if ("${fw_${is_call_from}_always_${EXTEN}}" == "")
 						Set(__fw_${is_call_from}_always_${EXTEN}_done=1);
 					if ("${is_callcompletion}" = "1") {
@@ -868,6 +877,7 @@ context to-internal-users-self {
 					}
 				}
 				//UserEvent(UserCallUI,user: ${user_name},calledparty: ${EXTEN});
+				Set(GROUP()=callcount${EXTEN});
 				Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},o);
 			}
 			
