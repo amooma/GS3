@@ -62,8 +62,12 @@ function queue_window($px, $py, $width, $height, $id, $title='', $members, $cols
 	echo '</tr>',"\n";
 	echo '</table>',"\n";
 
-	$member_count = count($members);
-	if ($rows == 0) $rows = ceil( $member_count / $cols);
+	if ($rows == 0) {
+		$member_count = count($members);
+		$rows = ceil( $member_count / $cols);
+		if ($rows == 0) $rows = 1;
+	}
+
 	$a_width = (int) floor(($width - 1 - $cols) / $cols);
 	$a_height = (int) floor(($height - $offset_py - $rows) / $rows);
 	$i = 0;
