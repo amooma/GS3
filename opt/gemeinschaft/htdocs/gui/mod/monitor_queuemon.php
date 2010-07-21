@@ -937,7 +937,10 @@ ORDER BY `q`.`queue_name`';
 
 	$member_extensions = array();
 	foreach ($queues as $queue => $queue_data) {
-		if (!array_key_exists('members', $queue_data)) continue;
+		if (!array_key_exists('members', $queue_data)) {
+			 $queues[$queue]['members'] = array();
+			 continue;
+		}
 
 		foreach ($queue_data['members'] as $member) {
 			if (array_key_exists($member['ext'], $member_extensions)) {
