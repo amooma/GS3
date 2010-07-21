@@ -7497,6 +7497,7 @@ CREATE TABLE `monitor_queues` (
   `display_call_min` smallint(5) unsigned NOT NULL default '15',
   `display_call_avg` smallint(5) unsigned NOT NULL default '15',
   `display_name` smallint(5) unsigned NOT NULL default '4',
+  `display_extension` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`user_id`, `queue_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
