@@ -6185,7 +6185,7 @@ INSERT INTO `group_permissions` VALUES ('agent',2,2);
 INSERT INTO `group_permissions` VALUES ('ringtone_set',2,2);
 INSERT INTO `group_permissions` VALUES ('dnd_set',2,2);
 INSERT INTO `group_permissions` VALUES ('call_stats',2,4);
-INSERT INTO `group_permissions` VALUES ('forward_queues',2,4);
+INSERT INTO `group_permissions` VALUES ('forward_queues',1,4);
 INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
 INSERT INTO `group_permissions` VALUES ('wakeup_call',2,2);
 INSERT INTO `group_permissions` VALUES ('room_state',2,2);
