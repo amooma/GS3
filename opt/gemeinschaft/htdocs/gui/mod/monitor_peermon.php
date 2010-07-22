@@ -762,6 +762,7 @@ var progress = new Array('&#9676;', '&#9684;', '&#9681;', '&#9685;', '&#9673;');
 		
 		echo "callfw['$peer'] = ".$callfw.";\n";
 	}
+	echo 'var status_url = \'', GS_URL_PATH, 'srv/extensionstatus.php?t=\';';
 ?>
 
 
@@ -832,7 +833,7 @@ function get_data(request_type)
 	}
 	http.abort();
 	timestamp = now;
-	http.open("GET", "/srv/extensionstatus.php?t="+request_type, true);
+	http.open("GET", status_url+request_type, true);
 	http.onreadystatechange=read_data
 	http.send(null);
 	timestamp = 0;
