@@ -1,12 +1,12 @@
 <?php
 /*
-* GS Server - Retrieve Queues Status
+* Retrieve Queues Status
 * Copyright 2010, AMOOMA GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 */
 define( 'GS_VALID', true );
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
-require_once( GS_DIR .'inc/gsclientlib.php' );
+require_once( GS_DIR .'inc/sbclient.php' );
 
 function return_error($errcode, $errstr)
 {
@@ -16,7 +16,7 @@ function return_error($errcode, $errstr)
 function get_data_from_server($host, $port, $extensions, $queues)
 {
 
-	$client =new GSClient($host, $port);
+	$client =new SBClient($host, $port);
 
 	$client->sendmsg_extgroupset(127, $extensions);
 	$client->sendmsg_queuegroupset(128, $queues);
@@ -116,7 +116,7 @@ if (@$_REQUEST['t'] == 'm' || @$_REQUEST['t'] == 's') {
 		$servers = $_SESSION['queuemon']['servers'];
 	} else {
 		$servers = array();
-		$server_lines = explode(',', GS_GSSERVER_HOSTS);
+		$server_lines = explode(',', GS_SBSERVER_HOSTS);
 		foreach ($server_lines as $server_line) {
 			$server = array();
 			$server_array = explode(':', $server_line);
@@ -126,7 +126,7 @@ if (@$_REQUEST['t'] == 'm' || @$_REQUEST['t'] == 's') {
 			} else
 			if (count($server_array) == 1) {
 				$server['host'] = trim($server_array[0]);
-				$server['port'] = 21319;
+				$server['port'] = GS_SBSERVER_PORT;
 			}
 			if ($server) $servers[]=$server;
 		}
