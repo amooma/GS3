@@ -645,7 +645,7 @@ WHERE
 				_server_error( 'Failed to convert file.' );
 			}
 
-			$cmd = $sox.' -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav - 2>>/dev/null | '.$lame.' --preset fast standard -m m -a -b 32 -B 96 --quiet --ignore-tag-errors --tt '. qsa($id3_title) .' --ta '. qsa($id3_artist) .' --tl '. qsa($id3_album) .' --tc '. qsa($id3_comment) .' --tg 101 - '. qsa($outfile) .' 2>&1 1>>/dev/null';
+			$cmd = $sox.' -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -b 16 -t wav - 2>>/dev/null | '.$lame.' --preset fast standard -m m -a -b 32 -B 96 --quiet --ignore-tag-errors --tt '. qsa($id3_title) .' --ta '. qsa($id3_artist) .' --tl '. qsa($id3_album) .' --tc '. qsa($id3_comment) .' --tg 101 - '. qsa($outfile) .' 2>&1 1>>/dev/null';
 			# (ID3 tag genre 101 = "Speech")
 			$err=0; $out=array();
 			@exec( $cmd, $out, $err );

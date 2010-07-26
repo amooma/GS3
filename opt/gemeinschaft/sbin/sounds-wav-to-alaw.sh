@@ -51,7 +51,7 @@ for i in `find . -name '*.wav' -print | sort`
 do
 	base=$(dirname $i)/$(basename $i .wav)
 	echo "${base}"
-	sox -t wav ${i} -r 8000 -c 1 -w  -t al ${base}.al
+	sox -t wav ${i} -r 8000 -c 1 -b 16  -t al ${base}.al
 	#sox ${i} -t raw -r 6000 -w -c 1 - | sox -t raw -r 8000 -sw -c 1 - ${base}.al pitch -200
 	#sox ${i} -r 8000 -c 1 -w ${base}.al echo 1 0.6 150 0.6
 	#sox ${i} -r 8000 -c 1 -w ${base}.al phaser 0.6 0.6 4 0.6 2

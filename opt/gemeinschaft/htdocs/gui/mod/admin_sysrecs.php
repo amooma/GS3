@@ -288,7 +288,7 @@ if($newaction === "upload")
 					{
 						@chmod($tmpfile_ext, 0666);
 
-						$soxcmd = "sox -q ". qsa($tmpfile_ext) ." -r 8000 -c 1 -s -w -t raw - 2>>/dev/null";
+						$soxcmd = "sox -q ". qsa($tmpfile_ext) ." -r 8000 -c 1 -s -b 16 -t raw - 2>>/dev/null";
 						$audiodata = `$soxcmd`;
 
 						@unlink($tmpfile_ext);
