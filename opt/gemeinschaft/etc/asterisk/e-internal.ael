@@ -794,6 +794,8 @@ context to-internal-users-self {
 					if ("${is_callfile_origin}" != "1") {
 						Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 						Set(__forwarded_by=${EXTEN});
+						Set(__forwarded_by_name=${mname});
+						Set(__forwarded_to=${fw_${is_call_from}_always});
 						if ( "${is_from_gateway}" = "1" )
 							Set(__is_from_gateway=2);
 						Dial(Local/${fw_${is_call_from}_always}/n,200);
@@ -1365,8 +1367,34 @@ context to-internal-users-self {
 		else
 		if ("${exttype}" = "user" && "${is_callfile_origin}" = "") {
 			// to internal user, store dial log (in|missed)
-			
-			if ("${DIALEDPEERNUMBER}" = "" || "${DIALSTATUS}" = "ANSWER" ) {
+
+			if ( "${DIALEDPEERNUMBER}" != ""  ) {
+				Set(type=missed);
+				if ("${DIALSTATUS}" = "ANSWER")
+					Set(type=in);
+
+				if ( "${forwarded_to}" == "${DIALEDPEERNUMBER}"  && "${DIALSTATUS}" = "ANSWER" ) {
+					&dial-log-store(${forwarded_to},${type},${CALLERID(num)},0);
+				}
+				else if ( "${forwarded_to}/n" == "${DIALEDPEERNUMBER}" && "${DIALSTATUS}" != "ANSWER" ) {
+
+					if ("${forwarded_to:0:3}" == "vm*" ) {
+						&dial-log-store(${forwarded_to:3},${type},${CALLERID(num)},0);
+					}
+					else if ("${forwarded_to:0:2}" == "vm" ) {
+						&dial-log-store(${forwarded_to:2},${type},${CALLERID(num)},0);
+					}
+				else {
+						&dial-log-store(${forwarded_to},${type},${CALLERID(num)},0);
+					}
+				}
+				else if ( "${forwarded_to}" == ""  && "${DIALSTATUS}" = "ANSWER" ) {
+					&dial-log-store(${DIALEDPEERNUMBER},${type},${CALLERID(num)},0);
+				}
+
+
+			}
+			else if ("${DIALEDPEERNUMBER}" = "" ) {
 				Set(type=missed);
 				if ("${DIALSTATUS}" = "ANSWER")
 					Set(type=in);
