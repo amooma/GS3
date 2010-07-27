@@ -10,11 +10,11 @@ qloader=/usr/local/sbin/qloader.pl
 partition=P001
 queuelog=/var/log/asterisk/queue_log
 logfile=/var/log/asterisk/qloader.log
-
+args="-h 127.0.0.1 -d queuemetrics -u root -p secret"
 
 start() {
         echo -n $"Starting $prog: "
-        nice $qloader $queuelog $partition $logfile > /dev/null 2>&1 &
+        nice $qloader $args $queuelog $partition $logfile > /dev/null 2>&1 &
         RETVAL=$?
         echo
         [ $RETVAL = 0 ] && touch /var/lock/qloader
@@ -50,4 +50,3 @@ case "$1" in
 esac
 
 exit 0
-
