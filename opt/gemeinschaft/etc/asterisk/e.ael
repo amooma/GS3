@@ -307,7 +307,7 @@ macro agent-login( new_user_name ) {
 		UserEvent(QueueLogoffUI,user: ${old_user},queue: *);
 		for(i=0;${i} < ${oqueue_count}; i=${i} + 1){
 			queueNr=${oqueue${i}};
-			QueueLog(${queueNr},${UNIQUEID},Local/${new_user_name}@agents,REMOVEMEMBER,SIP/${user_name});
+			QueueLog(${queueNr},${UNIQUEID},Agent/${new_user_name},REMOVEMEMBER,SIP/${user_name});
 			UserEvent(AgentLogoffUI,agent: ${new_user_name});
 		}
 	}
@@ -318,7 +318,7 @@ macro agent-login( new_user_name ) {
 		UserEvent(QueueLogoffUI,user: ${user_name},queue: *);
 		for(i=0;${i} < ${oqueue_count}; i=${i} + 1){
 			queueNr=${oqueue${i}};
-			QueueLog(${queueNr},${UNIQUEID},Local/${old_local_agent}@agents,REMOVEMEMBER,SIP/${user_name});
+			QueueLog(${queueNr},${UNIQUEID},Agent/${old_local_agent},REMOVEMEMBER,SIP/${user_name});
 		}
 		UserEvent(AgentLogoffUI,agent: ${old_local_agent});
 	}
@@ -340,7 +340,8 @@ macro agent-login( new_user_name ) {
 		for(i=0;${i} < ${queue_count}; i=${i} + 1){
 			queueNr=${queue${i}};
 			UserEvent(QueueLoginUI,user: ${user_name},queue: ${queueNr});
-			QueueLog(${queueNr},${UNIQUEID},Local/${new_user_name}@agents,ADDMEMBER,SIP/${user_name});
+			QueueLog(${queueNr},${UNIQUEID},Agent/${new_user_name},ADDMEMBER,SIP/${user_name});
+			QueueLog(NONE,${UNIQUEID},Agent/${new_user_name},HOTDESK,SIP/${user_name});
 		} 
 		Playback(agent-loginok);
 
@@ -388,7 +389,7 @@ macro agent-logout() {
 		UserEvent(QueueLogoffUI,user: ${user_name},queue: *);
 		for(i=0;${i} < ${oqueue_count}; i=${i} + 1){
 			queueNr=${oqueue${i}};
-			QueueLog(${queueNr},${UNIQUEID},Local/${agent}@agents,REMOVEMEMBER,SIP/${user_name});
+			QueueLog(${queueNr},${UNIQUEID},Agent/${agent},REMOVEMEMBER,SIP/${user_name});
 		}
 		Playback(agent-loggedoff);
 		
@@ -660,6 +661,7 @@ macro queue-login( queue ) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},login);
 	if ("${agent_login_status}" = "loggedin") {
 		QueueLog(${queue},${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGIN,fake);
+		QueueLog(NONE,${UNIQUEID},Agent/${user_name},HOTDESK,${CHANNEL(channeltype)}/${user_name});
 	}
 	Verbose(1,### agent_login_status: ${agent_login_status});
 	Wait(0.5);
