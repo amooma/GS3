@@ -1091,7 +1091,7 @@ if (! is_array($softkeys)) {
 			else
 				setting('fkey', $key_idx, 'button  ' . ($key_idx + 1) , array('context'=>'active'));
 		}
-		if ( $phone_type  == 'snom-820' ) {
+		if ( $phone_type  == 'snom-820' || $phone_type  == 'snom-821' ) {
 			if ( isset(  $key_def['label'] ) &&  strlen (  $key_def['label'] ) > 0 ) {
 
 				setting ( 'fkey_label', $key_idx, $key_def['label'] );

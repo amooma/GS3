@@ -261,6 +261,7 @@ _gscnf( 'SNOM_PROV_FW_DEFAULT_320'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_360'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_370'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_820'  , null               );
+_gscnf( 'SNOM_PROV_FW_DEFAULT_821'  , null               );
 _gscnf( 'SNOM_PROV_FW_FROM6TO7_300' , null               );
 _gscnf( 'SNOM_PROV_FW_FROM6TO7_320' , null               );
 _gscnf( 'SNOM_PROV_FW_FROM6TO7_360' , null               );

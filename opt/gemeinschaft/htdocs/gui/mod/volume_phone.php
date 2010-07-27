@@ -49,6 +49,8 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	$phone_types['snom-320'    ] = array( 'name' => 'Snom 320', 'conf' => 'snom-3x');
 	$phone_types['snom-360'    ] = array( 'name' => 'Snom 360', 'conf' => 'snom-3x');
 	$phone_types['snom-370'    ] = array( 'name' => 'Snom 370', 'conf' => 'snom-3x');
+	$phone_types['snom-820'    ] = array( 'name' => 'Snom 820', 'conf' => 'snom-3x');
+	$phone_types['snom-821'    ] = array( 'name' => 'Snom 821', 'conf' => 'snom-3x');
 	
 	$snom3x = array();
 	$snom3x['vol_handset' ] = array( 'desc' => __('H&ouml;rer'), 'min' => 0, 'max' => 15, 'default' => 8 ) ;
@@ -132,6 +134,8 @@ if ($phone_type == '') {
 		elseif (array_key_exists('snom-320', $phone_types)) $phone_type = 'snom-320';
 		elseif (array_key_exists('snom-360', $phone_types)) $phone_type = 'snom-360';
 		elseif (array_key_exists('snom-370', $phone_types)) $phone_type = 'snom-370';
+		elseif (array_key_exists('snom-820', $phone_types)) $phone_type = 'snom-820';
+		elseif (array_key_exists('snom-821', $phone_types)) $phone_type = 'snom-821';
 	}
 	else if (gs_get_conf('GS_ELMEG_PROV_ENABLED')) {
 		if (array_key_exists('elmeg-290', $phone_types)) $phone_type = 'elmeg-290';
