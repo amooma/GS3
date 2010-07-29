@@ -39,17 +39,17 @@ include_once( GS_DIR .'inc/mb_str_pad.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --name=<name> [--regen]';
+$usage = 'Usage: '. baseName(__FILE__) .' --group=<group> [--regen]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'name=',
+		'group=',
 		'regen'
 	),
 	$usage
 );
 
-if (! isset($opts['name']))
+if (! isset($opts['group']))
 {
 	gs_script_invalid_usage( $usage );	
 }
@@ -57,7 +57,7 @@ if (! isset($opts['name']))
 /***********************************************************
 *    call the function
 ***********************************************************/
-$group_id = gs_group_id_get($opts['name']);
+$group_id = gs_group_id_get($opts['group']);
 if (isGsError( $group_id )) gs_script_error( $group_id->getMsg() );
 if (! $group_id)            gs_script_error();
 
