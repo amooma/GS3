@@ -356,6 +356,22 @@ function gs_group_id_get( $group )
 	
 }
 
+function gs_group_name_get( $id )
+{
+	
+	$db_slave = gs_db_slave_connect();
+	if (! $db_slave) {
+		return new GsError( 'Could not connect to database.' );
+	}
+	
+	$group_name = $db_slave->executeGetOne( 'SELECT `name` FROM `groups` WHERE `id` = '. $id .' LIMIT 1' );
+	
+	if (! $group_name) return new GsError( 'Group not found.' );
+	
+	return $group_name;
+	
+}
+
 function gs_group_change($id, $name, $title)
 {
 	$db_master = gs_db_master_connect();

@@ -38,12 +38,13 @@ include_once( GS_DIR .'inc/mb_str_pad.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --group=<group> [--includes]' ;
+$usage = 'Usage: '. baseName(__FILE__) .' --group=<group> [--includes] [--regen]' ;
 
 $opts = @getOptsNoMultiples( '',
 	array(
 		'group=',
-		'includes'	
+		'includes',
+		'regen'
 	),
 	$usage
 );
@@ -65,6 +66,18 @@ if (! $group)            gs_script_error();
 $includes = array_key_exists('includes', $opts);
 
 $members = gs_group_members_get_names($group, $includes);
+
+if (array_key_exists('regen', $opts)) {
+	if (! gs_group_connections_get($group)) {
+		$group_name = gs_group_name_get($group);
+		include_once( GS_DIR .'inc/quote_shell_arg.php' );
+		foreach($members as $ignore => $member)
+			echo './gs-group-member-add --group=',qsa($group_name),' --member=',qsa($member['member']),'' ,"\n";
+	} else {
+		gs_script_error( 'This Group have a group connection.' );
+	}
+        exit(0);
+}
 
 $fields = array(
 	'member'                => 1,
