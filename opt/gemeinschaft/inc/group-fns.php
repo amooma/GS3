@@ -677,6 +677,28 @@ function gs_group_permissions_get_names($group)
 	return $members;
 }
 
+function gs_group_connection_add($group_id, $key, $connection, $type)
+{
+	$db_master = gs_db_master_connect();
+	if (! $db_master)
+		return new GsError( 'Could not connect to database.' );
+	
+	$ret = $db_master->execute('INSERT INTO `group_connections` (`group`, `key`, `connection`, `type`) VALUES ('.$group_id.', \''.$db_master->escape($key).'\', \''.$db_master->escape($connection).'\', \''.$db_master->escape($type).'\')');
+	
+	return $ret;
+}
+
+function gs_group_connection_del($group_id, $key, $connection, $type)
+{
+	$db_master = gs_db_master_connect();
+	if (! $db_master)
+		return new GsError( 'Could not connect to database.' );
+	
+	$ret = $db_master->execute('DELETE FROM `group_connections` WHERE `group` = '.$group_id.' AND `key` = \''.$db_master->escape($key).'\' AND `connection` = \''.$db_master->escape($connection).'\' AND `type` = \''.$db_master->escape($type).'\'');
+	
+	return $ret;
+}
+
 function gs_group_connections_get($group_id, $type = false)
 {
 	$db_slave = gs_db_slave_connect();
