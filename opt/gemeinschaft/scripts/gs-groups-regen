@@ -1,0 +1,145 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* Sebastian Ertz <gemeinschaft@swastel.eisfair.net>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
+include_once( GS_DIR .'inc/quote_shell_arg.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__);
+
+$opts = @getOptsNoMultiples( '',
+	array(
+	),
+	$usage
+);
+
+
+/***********************************************************
+*    call the function
+***********************************************************/
+$groups = @ gs_group_info_get();
+if (isGsError( $groups )) gs_script_error( $groups->getMsg() );
+if (! $groups)            gs_script_error();
+
+echo 'cd ', qsa(dirName(__FILE__).'/'), "\n\n";
+
+echo '###' ,"\n";
+echo '### Add Groups' ,"\n";
+echo '###' ,"\n";
+echo "\n";
+foreach ($groups as $group) {
+	
+	echo '### ', trim(qsa($group['name']),'\'') ,"\n";
+	echo './gs-group-add',
+		' --name=' , qsa($group['name' ]) ,
+		' --title=', qsa($group['title']) ,
+		' --type=' , qsa($group['type' ]) ,
+		"\n";
+	
+	echo "\n";
+}
+echo "\n";
+
+
+echo '###' ,"\n";
+echo '### Add Group Connections' ,"\n";
+echo '###' ,"\n";
+echo "\n";
+foreach ($groups as $group) {
+	
+	echo '### ', trim(qsa($group['name']),'\'') ,"\n";
+	
+	$ret = @ gs_group_connections_get( $group['id'] );
+	if (isGsError($ret)) {
+		echo '# Failed to get settings for Group Connections!',"\n";
+	} else {
+		foreach($ret as $ignore => $group_connection) {
+			echo './gs-group-connection-add --group=', qsa($group['name']), ' --key=', qsa($group_connection['key']), ' --connection=', qsa($group_connection['connection']), ' --type=', qsa($group_connection['type']) ,"\n";
+		}
+	}
+
+	echo "\n";
+}
+echo "\n";
+	
+
+echo '###' ,"\n";
+echo '### Add Group Permissions' ,"\n";
+echo '###' ,"\n";
+echo "\n";
+foreach ($groups as $group) {
+	
+	echo '### ', trim(qsa($group['name']),'\'') ,"\n";
+	
+	$ret = @ gs_group_permissions_get_names( $group['id'] );
+	if (isGsError($ret)) {
+		echo '# Failed to get settings for Group Permissions!',"\n";
+	} else {
+		foreach($ret as $ignore => $group_permission) {
+			echo './gs-group-permission-add --group=', qsa($group['name']), ' --permit=', qsa($group_permission['name']), ' --type=', qsa($group_permission['permission']) ,"\n";
+		}
+	}
+	
+	echo "\n";
+}
+echo "\n";
+
+echo '###' ,"\n";
+echo '### Add Group Members' ,"\n";
+echo '###' ,"\n";
+echo "\n";
+foreach ($groups as $group) {
+	
+	echo '### ', trim(qsa($group['name']),'\'') ,"\n";
+	
+	if (! gs_group_connections_get($group['id'])) {
+		$ret = @ gs_group_members_get_names( $group['id'] );
+		if (isGsError($ret)) {
+			echo '# Failed to get settings for Group Permissions!',"\n";
+		} else {
+			foreach($ret as $ignore => $group_member) {
+				echo './gs-group-member-add --group=', qsa($group['name']), ' --member=', qsa($group_member['member']) ,"\n";
+			}
+		}
+	}	
+	
+	echo "\n";
+}
+
+
+?>
