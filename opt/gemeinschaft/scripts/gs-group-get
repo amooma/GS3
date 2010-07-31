@@ -1,0 +1,153 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
+include_once( GS_DIR .'inc/mb_str_pad.php' );
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --group=<group> [--regen]';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'group=',
+		'regen'
+	),
+	$usage
+);
+
+if (! isset($opts['group']))
+{
+	gs_script_invalid_usage( $usage );	
+}
+
+/***********************************************************
+*    call the function
+***********************************************************/
+$group_id = gs_group_id_get($opts['group']);
+if (isGsError( $group_id )) gs_script_error( $group_id->getMsg() );
+if (! $group_id)            gs_script_error();
+
+$groups = @gs_group_info_get(array($group_id));
+if (isGsError( $groups )) gs_script_error( $groups->getMsg() );
+
+if (array_key_exists('regen', $opts)) {
+	include_once( GS_DIR .'inc/quote_shell_arg.php' );
+	foreach($groups as $ignore => $group)
+		echo './gs-group-add --name='. qsa($group['name']) .' --title='. qsa($group['title']) .' --type='. qsa($group['type']), "\n";
+	exit(0);
+}
+
+$fields = array(
+	'id'                    => 1,
+	'name'                  => 1,
+	'title'                 => 1,
+	'type'    		=> 1,
+	'includes'		=> 1
+);
+
+$fieldsAbbr = array(
+	'id'                    => 'id',
+	'name'                  => 'name',
+	'title'                 => 'title',
+	'type'    		=> 'type',
+	'includes'		=> 'includes'
+);
+
+foreach ($groups as $key => $group) {
+	$groups[$key]['includes'] = @implode(' ', array_diff(gs_group_includes_get(Array($group['id'])), Array($group['id'])));
+}
+
+
+if (gs_stdout_is_console()) {
+	
+	$fieldsPad = array(
+		'id'                    => STR_PAD_LEFT,
+		'name'                  => STR_PAD_RIGHT,
+		'title'                 => STR_PAD_RIGHT,
+		'type'    		=> STR_PAD_RIGHT,
+		'includes'    		=> STR_PAD_RIGHT
+	);
+	
+	foreach ($fields as $field => $length) {
+		if (strLen($fieldsAbbr[$field]) > $length)
+			$fields[$field] = strLen($fieldsAbbr[$field]);
+	}
+
+	foreach ($groups as $ignore => $group) {
+		foreach ($fields as $field => $length) {
+			if (mb_strLen($group[$field]) > $length)
+				$fields[$field] = mb_strLen($group[$field]);
+		}
+	}
+	
+	$header = '| ';
+	foreach ($fields as $field => $length) {
+		$header.= str_pad( $fieldsAbbr[$field], $length, ' ' ) .' | ';
+	}
+	$sep = str_repeat( '-', strLen($header)-1 );
+	
+	echo $sep, "\n";
+	echo $header, "\n";
+	echo $sep, "\n";
+	foreach ($groups as $ignore => $group) {
+		echo '| ';
+		foreach ($fields as $field => $length) {
+			echo mb_str_pad( $group[$field], $length, ' ', $fieldsPad[$field] ), ' | ';
+		}
+		echo "\n";
+	}
+	echo $sep, "\n";
+
+}
+else {
+	
+	echo '# ';
+	foreach ($fields as $field => $length) {
+		echo gs_add_c_slashes( $fieldsAbbr[$field] ) ,"\t";
+	}
+	echo "\n";
+	
+	foreach ($groups as $ignore => $group) {
+		foreach ($fields as $field => $length) {
+			echo gs_add_c_slashes( $group[$field] ) ,"\t";
+		}
+		echo "\n";
+	}
+	
+}
+
+?>

@@ -307,9 +307,10 @@ _gscnf( 'TIPTEL_PROV_ENABLED'       , false              );
 _gscnf( 'TIPTEL_PROV_HTTP_PASS'     , ''                 );
 _gscnf( 'TIPTEL_PROV_NTP'           , gs_get_conf('GS_PROV_HOST','') );
 _gscnf( 'TIPTEL_PROV_FW_UPDATE'     , false              );
-_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP280', null             );
-_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP284', null             );
-_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP286', null             );
+_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP28XS', null            );
+_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP280' , null            );
+_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP284' , null            );
+_gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP286' , null            );
 _gscnf( 'TIPTEL_PROV_KEY_BLACKLIST' , ''                 );
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
@@ -392,6 +393,9 @@ _gscnf( 'BOI_NOBODY_EXTEN_PATTERN'  , '95xxxx'           );
 _gscnf( 'BOI_GUI_REVERSE_PROXY'     , 'http://'. gs_get_conf('GS_PROV_HOST') .':8080/' );
 _gscnf( 'BOI_GUI_HOME_USER'         , 'information/praesenzmonitor' );
 _gscnf( 'BOI_GUI_HOME_ADMIN'        , 'information/status' );
+
+_gscnf( 'SBSERVER_HOSTS'            , '127.0.0.1' );
+_gscnf( 'SBSERVER_PORT'             , '18771' );
 
 _gscnf( 'LOG_TO'                    , 'file'             );
 _gscnf( 'LOG_FILE'                  , '/var/log/gemeinschaft/gs.log' );

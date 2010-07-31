@@ -432,9 +432,10 @@ $TIPTEL_PROV_HTTP_PASS = 'admin';  # e.g. "gEheiM23y89sdo23", default: 'admin'
   # important with PoE (Power over Ethernet) switches.
 $TIPTEL_PROV_FW_UPDATE = false;  # allow firmware updates?
 
-//$TIPTEL_PROV_FW_DEFAULT_IP280 = '9.41.13.9';
-//$TIPTEL_PROV_FW_DEFAULT_IP284 = '6.41.13.7';
-//$TIPTEL_PROV_FW_DEFAULT_IP286 = '2.41.13.12';
+//$TIPTEL_PROV_FW_DEFAULT_IP28XS = '18.00.13.03';
+//$TIPTEL_PROV_FW_DEFAULT_IP280  = '9.41.13.9';
+//$TIPTEL_PROV_FW_DEFAULT_IP284  = '6.41.13.7';
+//$TIPTEL_PROV_FW_DEFAULT_IP286  = '2.41.13.12';
 
 //$TIPTEL_PROV_KEY_BLACKLIST = '';
   # do not show these softkey functions in GUI,
@@ -459,6 +460,7 @@ $TIPTEL_PROV_FW_UPDATE = false;  # allow firmware updates?
   # 'f18' Group Listening
   # 'f19' Public Hold
   # 'f20' Private Hold
+  # 'f27' XML Browser
 
 
 //-----------------------[ Polycom ]----------------------//

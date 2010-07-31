@@ -937,7 +937,10 @@ ORDER BY `q`.`queue_name`';
 
 	$member_extensions = array();
 	foreach ($queues as $queue => $queue_data) {
-		if (!array_key_exists('members', $queue_data)) continue;
+		if (!array_key_exists('members', $queue_data)) {
+			 $queues[$queue]['members'] = array();
+			 continue;
+		}
 
 		foreach ($queue_data['members'] as $member) {
 			if (array_key_exists($member['ext'], $member_extensions)) {
@@ -969,6 +972,8 @@ var progress = new Array('&#9676;', '&#9684;', '&#9681;', '&#9685;', '&#9673;');
 		$queues_str = '\''.implode('\',\'', $exteinsion_data).'\'';
 		echo "members['$extension'] = new Array($queues_str);\n";
 	}
+
+	echo 'var status_url = \'', GS_URL_PATH, 'srv/queuestatus.php?t=\';';
 ?>
 
 
@@ -1034,7 +1039,7 @@ function get_data(request_type)
 	}
 	http.abort();
 	timestamp = now;
-	http.open("GET", "/srv/queuestatus.php?t="+request_type, true);
+	http.open("GET", status_url+request_type, true);
 	http.onreadystatechange=read_data
 	http.send(null);
 	timestamp = 0;

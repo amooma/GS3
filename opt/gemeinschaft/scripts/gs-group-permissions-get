@@ -39,11 +39,12 @@ include_once( GS_DIR .'inc/mb_str_pad.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --group=<group>' ;
+$usage = 'Usage: '. baseName(__FILE__) .' --group=<group> [--regen]' ;
 
 $opts = @getOptsNoMultiples( '',
 	array(
-		'group='	
+		'group=',
+		'regen'
 	),
 	$usage
 );
@@ -62,6 +63,14 @@ if (! $group_id)            gs_script_error();
 $groups = @gs_group_permissions_get_names($group_id);
 
 if (isGsError( $groups )) gs_script_error( $groups->getMsg() );
+
+if (array_key_exists('regen', $opts)) {
+	$group_name = gs_group_name_get($group_id);
+	include_once( GS_DIR .'inc/quote_shell_arg.php' );
+	foreach($groups as $ignore => $group)
+		echo './gs-group-permission-add --group=',qsa($group_name),' --permit=',qsa($group['name']),' --type=',qsa($group['permission']),'' ,"\n";
+	exit(0);
+}
 
 $fields = array(
 	'permission'		=> 1,

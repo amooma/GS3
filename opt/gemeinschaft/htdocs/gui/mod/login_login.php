@@ -50,7 +50,6 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 
-
 $focus_field = false;
 
 

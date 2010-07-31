@@ -170,7 +170,7 @@ else
 
 	if ($rs->numRows() == 0)
 	{
-		echo '<br />Keine Eintr\xC3\xA4ge vom Typ \'<b>'. $typeToTitle[$type] .'</b>\'<br />',"\n";
+		echo "<br />Keine Eintr\xC3\xA4ge vom Typ '<b>". $typeToTitle[$type] ."</b>'<br />\n";
 	}
 	else
 	{

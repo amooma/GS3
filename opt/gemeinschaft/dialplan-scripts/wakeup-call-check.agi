@@ -36,7 +36,7 @@ ob_implicit_flush(1);
 $exten = trim(@$argv[1]);
 
 if (! $exten) {
-	gs_agi_set_variable(  'ret' , 'unknown' );
+	gs_agi_set_variable( 'ret' , 'unknown' );
 	die();
 }
 
@@ -50,40 +50,29 @@ $db = gs_db_slave_connect();
 
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape( $exten ) .'\'' );
 if ($user_id < 1) {
-	gs_agi_set_variable(  'ret' , 'error' );
+	gs_agi_set_variable( 'ret' , 'error' );
 	die();
 }
 
-
-include_once( GS_DIR .'inc/group-fns.php' );
-
-$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
-$members = gs_group_permissions_get ( $user_groups, 'wakeup_call' );
-
-if ( count ( $members ) <= 0 ) {
-	
-	gs_agi_set_variable(  'ret' , 'error' );
-	die();
-}
 
 require_once( GS_DIR .'inc/gs-fns/gs_wake_up_call_fns.php' );
 
 $wakeup_time = get_alert_time_by_target( $exten );
 
 if ( ! $wakeup_time ) {
-	gs_agi_set_variable(  'ret' , 'notset' );
+	gs_agi_set_variable( 'ret' , 'notset' );
 	die();
 }
 
 if ( isGsError( $wakeup_time ) ) {
 
-	gs_agi_set_variable(  'ret' , 'error' );
+	gs_agi_set_variable( 'ret' , 'error' );
 	die();
 
 }
 
-gs_agi_set_variable(  'ret' , 'set' );
-gs_agi_set_variable(  'hour' , $wakeup_time['hour'] );
-gs_agi_set_variable(  'minute' , $wakeup_time['minute'] );
+gs_agi_set_variable( 'ret' , 'set' );
+gs_agi_set_variable( 'hour' , $wakeup_time['hour'] );
+gs_agi_set_variable( 'minute' , $wakeup_time['minute'] );
 
 ?>

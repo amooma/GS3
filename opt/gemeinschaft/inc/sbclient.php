@@ -1,13 +1,13 @@
 <?php
 /*
-* GS Server Client Library
+* SilverBullet Client Library
 * Copyright 2010, AMOOMA GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 */
 
-class GSClient {
+class SBClient {
 
-	private $PREAMBLE		= 0x5347;
+	private $PREAMBLE		= 0x4953;
 	
 	private $M_CLOSE		= 0x00;
 	private $M_PING			= 0x02;
@@ -25,7 +25,7 @@ class GSClient {
 	
 	var $gsserversocket;
 	
-	function GSClient($server_ip, $server_port, $timeout = 1)
+	function SBClient($server_ip, $server_port, $timeout = 1)
 	{
 		$this->connect($server_ip, $server_port, $timeout);
 

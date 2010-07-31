@@ -343,6 +343,8 @@ if ($phone_has_microbrowser)
 	echo " efk.efklist.2.mname=\"gsphonebook\" efk.efklist.2.status=\"1\" efk.efklist.2.action.string=\"". $prov_url_polycom ."pb.php?m=". $mac ."&amp;u=". $user_ext ."\"";
 	// echo " efk.efklist.3.mname=\"gsdnd\" efk.efklist.3.status=\"1\" efk.efklist.3.action.string=\"". $prov_url_polycom ."dnd.php?m=". $mac ."&amp;u=". $user_ext ."\"";
 	echo " efk.efklist.4.mname=\"gsmenu\" efk.efklist.4.status=\"1\" efk.efklist.4.action.string=\"". $prov_url_polycom ."configmenu.php?m=". $mac ."&amp;u=". $user_ext ."\"";
+	echo " efk.efklist.5.mname=\"gsmainmenu\" efk.efklist.5.status=\"1\" efk.efklist.5.action.string=\"". $prov_url_polycom ."main.php?mac=". $mac ."&amp;user=". $user_ext ."\"";
+
 	echo " />\n";
 	echo "</efk>\n";
 
@@ -374,7 +376,19 @@ if ($phone_has_microbrowser)
 	echo "/>\n";
 
 	//--- softkey remapping
-	echo "   <softkey softkey.feature.forward=\"0\"/>\n";
+	echo "   <softkey ";
+	echo "softkey.feature.forward=\"0\" ";
+	if(($phone_model == "320") || ($phone_model == "321") || ($phone_model == "330") || ($phone_model == "331"))
+	{
+		echo "softkey.feature.directories=\"0\" ";
+		echo "softkey.feature.callers=\"0\" ";
+
+		echo "softkey.2.label=\"Menü\" ";
+		echo "softkey.2.action=\"!gsmainmenu\" ";
+		echo "softkey.2.enable=\"1\" ";
+		echo "softkey.2.use.idle=\"1\" ";
+	}
+	echo "/>\n";
 
 	//--- XHTML push message preparation
 	echo "   <applications>\n";

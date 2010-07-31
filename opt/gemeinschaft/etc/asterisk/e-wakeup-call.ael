@@ -2,7 +2,6 @@
 //  Wakeup-Call Macros
 //---------------------------------------------------------------------
 
-
 macro wakeuptime-announce (hour,minute) {
 
 	Wait(1);
@@ -52,14 +51,18 @@ macro wakeuptime-remove(user) {
 //  Wakeup-Call
 //---------------------------------------------------------------------
 
-
-
-
 context wakeup-call {
 
 	s => {
 		Set(__lang=de-DE);
 		Set(CHANNEL(language)=de);
+
+		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${user_name},wakeup_call);
+		if ("${permission}" != "true") {
+			Verbose(1,### ${user_name} have no wakeup_call permission);
+			Hangup();
+		}
+
 		AGI(/opt/gemeinschaft/dialplan-scripts/wakeup-call-check.agi,${user_name});
 		
 		if ( "${ret}" == "" || "${ret}" == "error" )
@@ -84,8 +87,6 @@ context wakeup-call {
 			Wait(0.5);
 			Playback(vm-goodbye);
 			Hangup();
-	
-
 	};
 
 };

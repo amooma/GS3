@@ -33,6 +33,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -142,6 +143,10 @@ if (! $type) {
 	$user = trim( @$_REQUEST['u'] );
 	$user_id = getUserID( $user );
 	
+	$user_groups       = gs_group_members_groups_get(array($user_id), 'user');
+	$permission_groups = gs_group_permissions_get($user_groups, 'phonebook_user');
+	$group_members     = gs_group_members_get($permission_groups);
+	
 	ob_start();
 	echo
 		'<?','xml version="1.0" encoding="utf-8"?','>', "\n",
@@ -150,7 +155,7 @@ if (! $type) {
 	foreach ($typeToTitle as $t => $title) {
 		$cq = 'SELECT COUNT(*) FROM ';
 		switch ($t) {
-		case 'gs'      : $cq .= '`users` WHERE `nobody_index` IS NULL'; break;
+		case 'gs'      : $cq .= '`users` WHERE `id` IN ('.implode(',',$group_members).') AND `id`!='.$user_id; break;
 		case 'imported': $cq .= '`pb_ldap`'                           ; break;
 		case 'prv'     : $cq .= '`pb_prv` WHERE `user_id`='. $user_id ; break;
 		default        : $cq  = false;
@@ -231,7 +236,7 @@ function defineKey( $keyDef )
 	$args = array();
 	$args[] = 't='. $type;
 	$args[] = 'k='. $keys . $keyDef['name'];
-	if ($type === 'prv') {
+	if ($type === 'gs' || $type === 'prv') {
 		$args[] = 'm='. $mac;
 		$args[] = 'u='. $user;
 	}
@@ -258,7 +263,7 @@ function defineBackKey()
 	$args = array();
 	$args[] = 't='. $type;
 	$args[] = 'k='. subStr($keys,0,-1);
-	if ($type === 'prv') {
+	if ($type === 'gs' || $type === 'prv') {
 		$args[] = 'm='. $mac;
 		$args[] = 'u='. $user;
 	}
@@ -354,7 +359,13 @@ LIMIT '. $num_results;
 #################################### INTERNAL PHONEBOOK {
 if ($type === 'gs') {
 	
-	// we don't need $user for this
+	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
+	$user = trim( @ $_REQUEST['u'] );
+	$user_id = getUserID( $user );
+	
+	$user_groups       = gs_group_members_groups_get(array($user_id), 'user');
+	$permission_groups = gs_group_permissions_get($user_groups, 'phonebook_user');
+	$group_members     = gs_group_members_get($permission_groups);
 	
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>',"\n";
@@ -387,12 +398,14 @@ FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE
-	`u`.`nobody_index` IS NULL
+	`u`.`id` IN ('.implode(',',$group_members).') AND (
+	`u`.`id`!='.$user_id.'
 	'. ($where ? ('AND ('. $where .')') : '') .'
+	)
 ORDER BY `u`.`lastname`, `u`.`firstname`
 LIMIT '. $num_results;
 	$rs = $db->execute($query);
-	if ($rs->numRows() !== 0) {
+	if ( $rs && $rs->numRows() !== 0 ) {
 		
 		echo
 			'<SnomIPPhoneDirectory>', "\n",

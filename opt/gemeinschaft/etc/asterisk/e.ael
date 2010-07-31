@@ -962,6 +962,12 @@ context private-call {
 		}
 		
 		// pruefen, ob der User Privatgespraeche machen darf ...
+		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${user_name},private_call);
+		if ("${permission}" != "true") {
+			Verbose(1,### ${user_name} have no private_call permission);
+			Playback(beeperr);
+			Hangup();
+		}
 		
 		// accountcode setzen ...
 		AGI(/opt/gemeinschaft/dialplan-scripts/usercode-by-ext.agi,${user_name});

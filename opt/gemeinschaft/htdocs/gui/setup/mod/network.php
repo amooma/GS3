@@ -39,7 +39,6 @@ if ($action === 'save2') {
 	if ($save2_action === '') $action = '';
 }
 
-
 /*
 $ifconfig = find_executable('ifconfig', array(
 	'/sbin/', '/bin/', '/usr/sbin/', '/usr/bin/'
@@ -955,7 +954,7 @@ if ($action !== 'save2') {
 	
 	switch ($GS_INSTALLATION_TYPE) {
 		# "system-check" unnecessary for the GPBX
-		case 'gpbx': $prev_step = 'login'       ; break;
+		case 'gpbx': $prev_step = 'user'       ; break;
 		default    : $prev_step = 'system-check'; break;
 	}
 	echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=',$prev_step ,'">', __('zur&uuml;ck') ,'</a></div>' ,"\n";

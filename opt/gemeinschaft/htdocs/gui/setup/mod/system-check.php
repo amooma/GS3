@@ -29,7 +29,6 @@ defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/find_executable.php' );
 $can_continue = true;
 
-
 ?>
 
 <div style="width:550px; border:1px solid #ccc; margin: 2em auto; padding:0 1em 1em 1em; background-color:#eee;">
@@ -505,7 +504,7 @@ function _test_result( $str, $status )
 
 
 
-echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=login">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
+echo '<div class="fl"><a href="', GS_URL_PATH ,'setup/?step=user">', __('zur&uuml;ck') ,'</a></div>' ,"\n";
 echo '<div class="fr">';
 if ($can_continue)
 	echo '<a href="', GS_URL_PATH ,'setup/?step=network"><big>', __('weiter') ,'</big></a>';

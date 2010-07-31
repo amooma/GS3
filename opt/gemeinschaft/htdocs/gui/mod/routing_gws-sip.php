@@ -459,7 +459,10 @@ ORDER BY `title`'
 	$codecs = array(
 		'alaw'   => 'G.711a',
 		'ulaw'   => 'G.711u',
-		'gsm'    => 'GSM'
+		'gsm'    => 'GSM',
+		'h261'   => 'H.261',
+                'h263'   => 'H.263',
+                'h263p'   => 'H.263+'
 	);
 	$gw_params_codecs = preg_split('/\s*,\s*/', trim(@$gw_params['allow']));
 	foreach ($codecs as $k => $v) {

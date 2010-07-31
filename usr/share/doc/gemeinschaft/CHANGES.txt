@@ -1,6 +1,5 @@
 Version 2.3 zu 2.4
 
-- Lauter, härter, schneller!
 - neues Gruppen- und Berechtigungssystem
 - Erweiterung der Rufumleitungen
 - Umstellung auf Asterisk 1.6

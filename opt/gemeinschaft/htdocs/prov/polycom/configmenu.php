@@ -106,7 +106,7 @@ if(!$type) {
 
 	echo $phonemenu_doctype ."\n";
 	echo '<html>',"\n";
-	echo '<head><title>Konfigurationsmen\xC3\xBC</title></head>',"\n";
+	echo "<head><title>Konfigurationsmen\xC3\xBC</title></head>\n";
 	echo '<body><br />',"\n";
 
 	echo '- <a href="'. $url_polycom_menu .'?m='. $mac .'&amp;u='. $user .'&amp;t=forward">Rufumleitung</a><br />',"\n";

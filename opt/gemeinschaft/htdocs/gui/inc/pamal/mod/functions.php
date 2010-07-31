@@ -61,13 +61,22 @@ function _getUser_ldap()
 	$ldapdn     = gs_get_conf( 'GS_LDAP_PROP_USER' ) . '=' . $ldapuser . ',' . gs_get_conf( 'GS_LDAP_SEARCHBASE' );
 	$ldappass   =  @$_REQUEST['login_pwd'];
 	$ldaphost = gs_get_conf( 'GS_LDAP_HOST' );
+	$ldapport = gs_get_conf( 'GS_LDAP_PORT');
+	if ( $ldapport < 1) {
+		if ( $ldaps == true) {
+			$ldapport = 636;
+		} else {
+			$ldapport = 389;
+		}
+	}
+		
 	if ( $ldaps == true ) {
-		$ldaphost = 'ldaps://'. $ldaphost;
+		$ldaphost = 'ldaps://'. $ldaphost .':'.$ldapport ;
 	} else {
-		$ldaphost = 'ldap://'. $ldaphost;
+		$ldaphost = 'ldap://'. $ldaphost . ':'. $ldapport;
 	}
 	$ldapconn = @ ldap_connect( $ldaphost );
-	@ ldap_set_option( $ldapconn, LDAP_OPT_PROTOCOL_VERSION, (int)$ldapproto );
+	@ ldap_set_option( $ldapconn, LDAP_OPT_PROTOCOL_VERSION, $ldapproto );
 	if ( !$ldapconn ) {
 		gs_log( GS_LOG_WARNING, 'Unable to connect to LDAP server' );
 		return false;
@@ -104,11 +113,20 @@ function _searchUser_ldap()
 	$ldapbasedn     =  gs_get_conf( 'GS_LDAP_SEARCHBASE' );
 	$ldaphost = gs_get_conf( 'GS_LDAP_HOST' );
 	$ldapfilter = gs_get_conf( 'GS_LDAP_PROP_USER' ) . '=' . $ldapuser;
+	$ldapport = gs_get_conf( 'GS_LDAP_PORT');
+	if ( $ldapport < 1) {
+		if ( $ldaps == true) {
+			$ldapport = 636;
+		} else {
+			$ldapport = 389;
+		}
+	}
+
 	if ( $ldaps == true ) {
-		$ldaphost = 'ldaps://'. $ldaphost;
+		$ldaphost = 'ldaps://'. $ldaphost .':'.$ldapport ;
 	} 
 	else {
-		$ldaphost = 'ldap://'. $ldaphost;
+		$ldaphost = 'ldap://'. $ldaphost .':'.$ldapport ;
 	}
 	$ldapconn =  @ ldap_connect( $ldaphost );
 	gs_log( GS_LOG_WARNING, "$ldapconn $ldaphost");

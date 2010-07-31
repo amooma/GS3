@@ -27,7 +27,6 @@
 \*******************************************************************/
 defined('PAMAL_DIR') or die('No direct access.');
 
-
 #####################################################################
 #	authenticates user by Gemeinschaft's internal database
 #####################################################################
@@ -51,9 +50,9 @@ class PAMAL_auth_gemeinschaft extends PAMAL_auth
 		if ($user_entered === 'sysadmin'
 		&&  in_array(gs_get_conf('GS_INSTALLATION_TYPE'), array('gpbx', 'single'), true)
 		) {
-			require_once( GS_DIR .'inc/keyval.php' );
-			$pin = trim(gs_keyval_get('setup_pwd'));
-			if ($pin == '') $pin = false;
+			//FIXME
+			//Quickhack: sysadmin only valid for /gemeinschaft/setup
+			$pin = false;
 		}
 		else {
 			$db = gs_db_slave_connect();

@@ -160,7 +160,6 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	}
 }
 
-
 include_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );  # defines $DB
 require_once( GS_HTDOCS_DIR .'inc/modules.php' );
