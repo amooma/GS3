@@ -859,6 +859,11 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 <table cellspacing="1">
 <thead>
 	<tr>
+		<th colspan="2">
+			Allgemeine Einstellungen
+		</th>
+	</tr>
+	<tr>
 		<th style="width:180px;">
 			<?php echo __('Benutzer'); ?>
 		</th>
@@ -1042,7 +1047,7 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 <table cellspacing="1">
 <tbody>
 	<tr>
-		<th style="width:180px;">
+		<th style="width:180px;" class="l t">
 			<?php echo __('Rufannahme-Gruppe'); ?>
 		</th>
 		<td style="width:280px;">
@@ -1271,19 +1276,20 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 <?php
 //FIXME - invalid XHTML! {
 ?>
-<br />	
+<br />
+
 <table cellspacing="1">
 <thead>
 <tr>
-	<th style="min-width:21em;" colspan="5"><?php echo __('Benutzergruppen '); ?></th>
+	<th colspan="5"><?php echo __('Benutzergruppen '); ?></th>
 </tr>
 
 <tr>
-	<th style="min-width:12em;"><?php echo __('Gruppe'); ?></th>
-	<th style="min-width:12em;width:18em;"><?php echo __('Titel'); ?></th>
-	<th style="min-width:5em;"><?php echo __('Typ'); ?></th>
-	<th style="min-width:3em;"><?php echo __('Mitglieder'); ?></th>
-	<th style="min-width:1em;"></th>
+	<th style="width:130px;"><?php echo __('Gruppe'); ?></th>
+	<th style="width:180px;"><?php echo __('Titel'); ?></th>
+	<th style="width:30px;"><?php echo __('Typ'); ?></th>
+	<th style="width:50px;"><?php echo __('Mitglieder'); ?></th>
+	<th style="width:24px;"></th>
 </tr>
 </thead>
 <tbody>
@@ -1293,7 +1299,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 	
 	$i = 0;
 	
-	if ((count($groups_my_info) - count($groups) - 1) ) {
+	if ( (count($groups_my_info) - count($groups) - 1) ) {
 		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
 		echo '<form method="post" action="'.GS_URL_PATH.'">';
 		echo gs_form_hidden($SECTION, $MODULE);
@@ -1340,10 +1346,22 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 
 </tbody>
 </table>
+
 <?php
 //FIXME - invalid XHTML! }
 ?>
+<br />
+
 <?php
+
+	echo '<table><thead><tr>';
+	echo '<th colspan="3">', __('Vorhandene Skills'), '</th></tr>';
+	echo '<tr>';
+	echo '<th style="width:348px;">', __('Warteschlange'), '</th>';
+	echo '<th style="width:58px;">', __('Skill'), '</th>';
+	echo '<th style="width:38px;"></th>';
+	echo '</thead><tbody>';
+
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE);
 	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
@@ -1352,13 +1370,43 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
 	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 
-	echo '<table><thead><tr>';
-	echo '<th colspan="3">', __('Vorhandene Skills'), '</th></tr>';
-	echo '<tr>';
-	echo '<th>', __('Warteschlange'), '</th>';
-	echo '<th>', __('Skill'), '</th>';
-	echo '<th></th>';
-	echo '</thead><tbody>';
+	$uhid = $DB->executeGetOne('SELECT `host_id` FROM `users` WHERE `id`='.$uid);
+	$rs = $DB->execute('SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_host_id`='.$uhid.' AND `_id` NOT IN (SELECT `_queue_id` FROM `penalties` WHERE `_user_id`='.$uid.')');
+
+	if ($DB->numFoundRows() > 0) {
+		echo '<tr><td>';
+		echo '<select name="queue_id">';
+		while ($queue_map = $rs->fetchRow()) {
+			echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
+			echo '>',  $queue_map['name'], ' ', $queue_map['_title'], '</option>', "\n";
+		}
+		echo '</select>';
+		echo '</td>';
+		echo '<td>';
+		echo '<select name="penalty">';
+		foreach ($pen_avail as $pen) {
+			echo '<option value="', $pen,  '">', $pen, ' </option>';
+		}
+		echo '</select>';
+		echo '</td>';
+		echo '<td>';
+		echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
+		echo '<img alt="', __('Hinzuf&uuml;gen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>' ,"\n";
+		echo '<input type="hidden" name="action" value="setpenalty" />', "\n";
+		echo '<input type="hidden" name="edit" value="', rawUrlEncode($edit_user), '">', "\n";
+		echo '</td>';
+		echo '</tr>';
+	}
+	echo '</form>';
+
+	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
+	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
+	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
+	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
+	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
+
 	$rs = $DB->execute('SELECT `q`.`name`, `penalty`, `_title`, `u`.`host_id`, `p`.`_queue_id` from `users` u,  `penalties` p, `ast_queues` q WHERE `p`.`_user_id`='.$uid.' AND `p`.`_user_id`=`u`.`id` AND `q`.`_id`=`p`.`_queue_id`');
 	while ($pen_map = $rs->fetchRow()) {
 		echo '<tr><td>', $pen_map['name'], ' ', $pen_map['_title'], '</td>';
@@ -1374,7 +1422,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 					}
 		echo '</select>';
 		echo '</td>';
-		echo '<td>';
+		echo '<td class="l">';
 			echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
 			echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>' ,"\n";
 			echo '<input type="hidden" name="action" value="setpenalty" />', "\n";
@@ -1386,51 +1434,12 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 			echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
 			echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 			echo '</form>';
-echo '<a href="', gs_url($SECTION, $MODULE, null, 'queue_id='.$pen_map['_queue_id'] .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=delpenalty' .'&amp;name='. rawUrlEncode($name) ), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'queue_id='.$pen_map['_queue_id'] .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=delpenalty' .'&amp;name='. rawUrlEncode($name) ), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo '</td>';
 		echo '</tr>';
 	}
 	echo '</tbody></table>';
-	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
-	echo gs_form_hidden($SECTION, $MODULE);
-	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
-	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
-	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
-	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
-	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
-	echo '<table><thead><tr>';
-	echo '<th colspan="3">', __('Verf&uuml;gbare Skills'), '</th></tr>';
-	echo '<tr>';
-	echo '<th>', __('Warteschlange'), '</th>';
-	echo '<th>', __('Skill'), '</th>';
-	echo '<th></th>';
-	echo '</thead><tbody>';
-	$uhid = $DB->executeGetOne('SELECT `host_id` FROM `users` WHERE `id`='.$uid);
-	$rs = $DB->execute('SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_host_id`='.$uhid.' AND `_id` NOT IN (SELECT `_queue_id` FROM `penalties` WHERE `_user_id`='.$uid.')');
-	echo '<tr><td>';
-	echo '<select name="queue_id" size="5">';
-	while ($queue_map = $rs->fetchRow()) {
-		echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
-		echo '>',  $queue_map['name'], ' ', $queue_map['_title'], '</option>', "\n";
-	}
-	echo '</select>';
-	echo '</td>';
-	echo '<td>';
-	echo '<select name="penalty">';
-	foreach ($pen_avail as $pen) {
-		echo '<option value="', $pen,  '">', $pen, ' </option>';
-	}
-	echo '</select>';
-	echo '</td>';
-	echo '<td>';
-	echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
-	echo '<img alt="', __('Hinzuf&uuml;gen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>' ,"\n";
-	echo '<input type="hidden" name="action" value="setpenalty" />', "\n";
-	echo '<input type="hidden" name="edit" value="', rawUrlEncode($edit_user), '">', "\n";
-	echo '</td>';
-	echo '</tr>';
-	echo '</form>';
-	echo '</tbody></table>';
+
 ?>
 <?php
 }

@@ -142,6 +142,10 @@ q:after  { content: close-quote; }
 .r {text-align: right;}
 .c {text-align: center;}
 
+.t {text-align: top;}
+.m {text-align: middle;}
+.b {text-align: bottom;}
+
 .m,
 tr.m td,
 tr.m th {
