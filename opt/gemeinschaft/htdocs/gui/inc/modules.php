@@ -298,7 +298,8 @@ $MODULES['prov'     ]=  array(
 		'groups'       => array('title' => __('Provisioning-Grp.'), 'id' => 16002),
 		'keyprof'      => array('title' => __('Tasten-Profile'), 'id' => 16003),
 		'provparams'   => array('title' => __('Parameter'), 'id' => 16004),
-		'jobs'         => array('title' => __('Jobs'), 'id' => 16005)
+		'jobs'         => array('title' => __('Jobs'), 'id' => 16005),
+		'firmware'     => array('title' => __('Firmware'), 'id' => 16006)
 	)
 );
 

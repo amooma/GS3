@@ -52,6 +52,11 @@ class PhoneCapability
 		// or the name of the generated outfile on success.
 		return null;  # not implemented
 	}
+
+	function get_firmware_files()
+	{
+		return null;  # not implemented
+	}
 }
 
 
