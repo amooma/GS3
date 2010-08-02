@@ -101,6 +101,18 @@ class PhoneCapability_snom extends PhoneCapability
 		}
 		return $outfile;
 	}
+
+	function get_firmware_files()
+	{
+		$firmware_files = glob( GS_DIR .'htdocs/prov/snom/sw/*.bin' );
+		if (! is_array($firmware_files)) return null;
+		
+		for($i=0; $i<count($firmware_files); ++$i) {
+			$firmware_files[$i] = baseName($firmware_files[$i]);
+		}
+		
+		return $firmware_files;
+	}
 }
 
 
