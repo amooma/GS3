@@ -404,18 +404,16 @@ macro agent-logout() {
 macro agent-pause() {
 	
 	Answer();
-	Verbose(1,### Agent on ${user_name} wants to pause);
 	AGI(/opt/gemeinschaft/dialplan-scripts/agent-pause-unpause.agi,${user_name},pause);
 	
 	Wait(0.5);
-	Verbose(1,### Is Agent:${agent} );
-	Verbose(1,### DB-Stat:  ${agent_pause});
-	if ("${agent}" = "true") {
-		
+	if ("${agent}" != "") {
+		QueueLog(NONE,NONE,SIP/${user_name},PAUSEALL,);
 		UserEvent(AgentPausedUI,agent: ${user_name});
+		Verbose(1,### Agent ${agent} on ${user_name} paused);
 		Playback(beep);
-
 	} else {
+		Verbose(1,### Failed to pause agent on ${user_name});
 		Playback(beeperr);
 	}
 	Hangup();
@@ -426,17 +424,16 @@ macro agent-pause() {
 macro agent-unpause() {
 	
 	Answer();
-	Verbose(1,### Agent on ${user_name} wants to unpause);
 	AGI(/opt/gemeinschaft/dialplan-scripts/agent-pause-unpause.agi,${user_name},unpause);
 	Wait(0.5);
 	
-	if ("${agent}" = "true") {
-		
+	if ("${agent}" != "") {
+		QueueLog(NONE,NONE,SIP/${user_name},UNPAUSEALL,);
 		UserEvent(AgentUnPausedUI,agent: ${user_name});
-
+		Verbose(1,### Agent ${agent} on ${user_name} unpaused);
 		Playback(beep);
-		
 	} else {
+		Verbose(1,### Failed to unpause agent on ${user_name});
 		Playback(beeperr);
 	}
 	Hangup();
