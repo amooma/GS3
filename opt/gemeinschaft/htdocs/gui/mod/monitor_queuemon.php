@@ -771,7 +771,7 @@ window.onload=page_init
 		echo '<input type="checkbox" name="qa'.$data['id'].'".'.$active.' />';
 		echo '</td>',"\n";
 		echo '<th style="min-width:12em;">';
-		echo $queue," ",htmlentities($data['title']);
+		echo $queue," ",htmlEnt($data['title']);
 		echo '</th>',"\n";
 		echo '<td>';
 		echo '<input type="text" onChange="checkval(this)" name="qw'.$data['id'].'" value="'.$data['display_width'].'" size="4" maxlength="4" />';
@@ -888,25 +888,25 @@ ORDER BY `q`.`queue_name`';
 			$member['name'] = '';
 			if (array_key_exists('display_extension',$queues[$r['queue']])) {
 					if ($queues[$r['queue']]['display_extension'] == 1)
-						$member['name'] .= htmlentities($r['ext']).' ';
+						$member['name'] .= htmlEnt($r['ext']).' ';
 					if ($queues[$r['queue']]['display_extension'] == 2)
-						$member['name'] .= '<b>'.htmlentities($r['ext']).'</b> ';
+						$member['name'] .= '<b>'.htmlEnt($r['ext']).'</b> ';
 				}
 			if (array_key_exists('display_name',$queues[$r['queue']])) {
 				if ($queues[$r['queue']]['display_name'] == 1)
-					$member['name'] .= htmlentities($r['lastname']);
+					$member['name'] .= htmlEnt($r['lastname']);
 				if ($queues[$r['queue']]['display_name'] == 2)
-					$member['name'] .= htmlentities($r['firstname']);
+					$member['name'] .= htmlEnt($r['firstname']);
 				if ($queues[$r['queue']]['display_name'] == 3)
-					$member['name'] .= htmlentities($r['firstname']).' '.htmlentities($r['lastname']);
+					$member['name'] .= htmlEnt($r['firstname']).' '.htmlEnt($r['lastname']);
 				if ($queues[$r['queue']]['display_name'] == 4)
-					$member['name'] .= htmlentities($r['lastname']).', '.htmlentities($r['firstname']);
+					$member['name'] .= htmlEnt($r['lastname']).', '.htmlEnt($r['firstname']);
 				if ($queues[$r['queue']]['display_name'] == 5)
-					$member['name'] .= htmlentities($r['lastname']).', '.htmlentities(substr($r['firstname'],0,1)).'.';
+					$member['name'] .= htmlEnt($r['lastname']).', '.htmlEnt(substr($r['firstname'],0,1)).'.';
 				if ($queues[$r['queue']]['display_name'] == 6)
-					$member['name'] .= htmlentities(substr($r['firstname'],0,1)).'. '.htmlentities($r['lastname']);
+					$member['name'] .= htmlEnt(substr($r['firstname'],0,1)).'. '.htmlEnt($r['lastname']);
 				if ($queues[$r['queue']]['display_name'] == 7)
-					$member['name'] .= htmlentities(substr($r['firstname'],0,1)).'.'.htmlentities(substr($r['lastname'],0,1)).'.';
+					$member['name'] .= htmlEnt(substr($r['firstname'],0,1)).'.'.htmlEnt(substr($r['lastname'],0,1)).'.';
 			}
 
 			

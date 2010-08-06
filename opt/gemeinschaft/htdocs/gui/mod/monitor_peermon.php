@@ -508,7 +508,7 @@ window.onload=page_init
 		echo '<input type="checkbox" name="qa'.$data['id'].'".'.$active.' />';
 		echo '</td>',"\n";
 		echo '<th style="min-width:12em;">';
-		echo htmlentities($data['title']);
+		echo htmlEnt($data['title']);
 		echo '</th>',"\n";
 		echo '<td>';
 		echo '<input type="text" onChange="checkval(this)" name="qw'.$data['id'].'" value="'.$data['display_width'].'" size="4" maxlength="4" />';
@@ -634,45 +634,45 @@ if ($action == "") {
 				$member['name'] = '';
 				if (array_key_exists('display_extension',$groups[$group])) {
 					if ($groups[$group]['display_extension'] == 1)
-						$member['name'] .= htmlentities($r['ext']).' ';
+						$member['name'] .= htmlEnt($r['ext']).' ';
 					if ($groups[$group]['display_extension'] == 2)
-						$member['name'] .= '<big><b>'.htmlentities($r['ext']).'</b></big> ';
+						$member['name'] .= '<big><b>'.htmlEnt($r['ext']).'</b></big> ';
 				}
 				if (array_key_exists('display_name',$groups[$group])) {
 					if ($groups[$group]['display_name'] == 1)
-						$member['name'] .= htmlentities($r['lastname']);
+						$member['name'] .= htmlEnt($r['lastname']);
 					if ($groups[$group]['display_name'] == 2)
-						$member['name'] .= htmlentities($r['firstname']);
+						$member['name'] .= htmlEnt($r['firstname']);
 					if ($groups[$group]['display_name'] == 3)
-						$member['name'] .= htmlentities($r['firstname']).' '.htmlentities($r['lastname']);
+						$member['name'] .= htmlEnt($r['firstname']).' '.htmlEnt($r['lastname']);
 					if ($groups[$group]['display_name'] == 4)
-						$member['name'] .= htmlentities($r['lastname']).', '.htmlentities($r['firstname']);
+						$member['name'] .= htmlEnt($r['lastname']).', '.htmlEnt($r['firstname']);
 					if ($groups[$group]['display_name'] == 5)
-						$member['name'] .= htmlentities($r['lastname']).', '.htmlentities(substr($r['firstname'],0,1)).'.';
+						$member['name'] .= htmlEnt($r['lastname']).', '.htmlEnt(substr($r['firstname'],0,1)).'.';
 					if ($groups[$group]['display_name'] == 6)
-						$member['name'] .= htmlentities(substr($r['firstname'],0,1)).'. '.htmlentities($r['lastname']);
+						$member['name'] .= htmlEnt(substr($r['firstname'],0,1)).'. '.htmlEnt($r['lastname']);
 					if ($groups[$group]['display_name'] == 7)
-						$member['name'] .= htmlentities(substr($r['firstname'],0,1)).'.'.htmlentities(substr($r['lastname'],0,1)).'.';
+						$member['name'] .= htmlEnt(substr($r['firstname'],0,1)).'.'.htmlEnt(substr($r['lastname'],0,1)).'.';
 				}
 				$display_right = '';
 
 				if (array_key_exists('display_comment',$groups[$group])) {
 					if ($r['user_comment']) {
 						if ($groups[$group]['display_comment'] == 1) {
-							$display_right = htmlentities($r['user_comment']);
+							$display_right = htmlEnt($r['user_comment']);
 						}
 						else if ($groups[$group]['display_comment'] == 2) {
-							$display_right = '<i>'.htmlentities($r['user_comment']).'</i>';
+							$display_right = '<i>'.htmlEnt($r['user_comment']).'</i>';
 						}
 						else if ($groups[$group]['display_comment'] == 3) {
-							$display_right = '<b>'.htmlentities($r['user_comment']).'</b>';
+							$display_right = '<b>'.htmlEnt($r['user_comment']).'</b>';
 						}
 						else if ($groups[$group]['display_comment'] == 4) {
-							$display_right = '<i><b>'.htmlentities($r['user_comment']).'</b></i>';
+							$display_right = '<i><b>'.htmlEnt($r['user_comment']).'</b></i>';
 						}
 						else if ($groups[$group]['display_comment'] == 5) {
 							$max_chars = ($groups[$group]['display_width'] / $groups[$group]['display_columns']) / 10;
-							$display_right = '<i>'.htmlentities(substr($r['user_comment'],0,$max_chars)).'</i>';
+							$display_right = '<i>'.htmlEnt(substr($r['user_comment'],0,$max_chars)).'</i>';
 						}
 					}
 				}
