@@ -1334,6 +1334,8 @@ context to-internal-users-self {
 		NoCDR();
  		if("${MEMBERINTERFACE}" != "" && "SIP/${CALLERID(ani)}" != "${MEMBERINTERFACE}" ) {
  			Set(exttype=queue);
+			// to be able to record QueueMetrics call outcome later
+			Set(GLOBAL(queue_last_call_${MEMBERINTERFACE:4})=${UNIQUEID});
  		}
 		/*
  		Verbose(1,###### DIALSTATUS     : ${DIALSTATUS});
