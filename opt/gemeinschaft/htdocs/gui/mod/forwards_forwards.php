@@ -37,7 +37,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
 
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
@@ -286,7 +286,7 @@ if (@$_REQUEST['action']==='save' && $disabled == '' ) {
 	}
 	
 	if ( GS_BUTTONDAEMON_USE == true ) {
-		gs_buttondeamon_diversion_update( $_SESSION['sudo_user']['info']['ext']);
+		gs_diversion_changed_ui( $_SESSION['sudo_user']['info']['ext']);
 	}
 	
 	//Set Devstate for Customhint

@@ -27,7 +27,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 
 /***********************************************************
@@ -77,7 +77,7 @@ function gs_user_callerid_set( $user, $number = "", $dest )
         	$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
         	if (! $user_name)
         		return new GsError( 'Unknown user.' );
-		gs_buttondeamon_clip_update($user_name);
+		gs_clip_changed_ui($user_name);
 	}
 
 	return true;

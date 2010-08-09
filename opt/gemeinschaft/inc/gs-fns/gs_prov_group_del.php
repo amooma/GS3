@@ -28,7 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
 
@@ -53,8 +53,9 @@ function gs_prov_group_del( $id )
 	else {
 		$ret = $mptt->delete( $id, true );
 		if ( !isGsError($ret) && $ret ) {
-			gs_buttondeamon_usergroup_remove( $id );
+			gs_usergroup_remove_ui( $id );
 		}
+		return $ret;
 	}	
 }
 

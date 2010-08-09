@@ -32,7 +32,6 @@ require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 include_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gettext.php");
 require_once(GS_DIR ."inc/gs-fns/gs_user_watchedmissed.php");
-require_once(GS_DIR ."inc/gs-fns/gs_astphonebuttons.php");
 
 Header("Content-Type: text/html; charset=utf-8");
 Header("Expires: 0");

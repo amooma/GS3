@@ -28,7 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/util.php' );
-require_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php' );
 
 echo '<h2>';
@@ -155,7 +155,7 @@ if (@$rs) {
 	}
 	gs_user_watchedmissed( $_SESSION['sudo_user']['info']['id'] );
 	if ( GS_BUTTONDAEMON_USE == true ) {
-		gs_buttondeamon_missedcalls( @$_SESSION['sudo_user']['info']['ext'] );
+		gs_user_missedcalls_ui( @$_SESSION['sudo_user']['info']['ext'] );
 	}
 }
 

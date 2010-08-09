@@ -2,13 +2,13 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision: 4088 $
+* $Revision: 5319 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-* 
-* Author: Andreas Neugebauer <neugebauer@loca.net>
 *
+* Andreas Neugebauer <neugebauer@loca.net>
+* 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -27,56 +27,33 @@
 
 defined('GS_VALID') or die('No direct access.');
 
-require_once( dirName(__FILE__) .'/../../inc/conf.php' );
-include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 /***********************************************************
-*    sets a user's DND status
+*    returns a user's missed calls
 ***********************************************************/
 
-function gs_user_dnd_toggle( $user_id )
+function gs_user_missedcalls_get( $user )
 {
-	
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
+		return new GsError( 'User must be alphanumeric.' );
 	# connect to db
 	#
-	$db = gs_db_master_connect();
+	$db = gs_db_slave_connect();
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
 	
 	# get user_id
 	#
-	
-	$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
-	if (! $user_name)
+	$user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
+	if ($user_id < 1)
 		return new GsError( 'Unknown user.' );
 	
-	$dnd = $db->executeGetOne( 'SELECT `dnd` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
-	        if (! $user_id)
-	                        return new GsError( 'Unknown dnd-set.' );
-	
-	# toggle-dnd
+	# get count
 	#
-	$new_dnd = 0;
-	if($dnd == 0)$new_dnd = 1;
+	$count = $db->executeGetOne( 'SELECT Count(*) FROM `dial_log` WHERE `read`=0 AND `type`=\'missed\' AND `user_id`='. $user_id  );
+	if (! $count) return 0;
 	
-	$ok = $db->execute( 'UPDATE `users` SET `dnd`='. $db->escape($new_dnd) . ' WHERE `id`='. $user_id );
-	if (! $ok)
-		return new GsError( 'Failed to toggle dnd.' );
-	else{
-		if ( GS_BUTTONDAEMON_USE == true ) 
-		{
-			
-			if( $new_dnd == 1 )
-				$state = 'on';
-			else
-				$state = 'off';
-			
-			gs_dnd_changed_ui( $user_name, $state );
-		}
-	}
-	return $new_dnd;
+	return $count;
 }
-
 
 ?>

@@ -34,7 +34,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_prune_peer.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 /***********************************************************
 *    delete a user account
@@ -212,7 +212,7 @@ function gs_user_del( $user, $reload=true )
 	# astbuttond
 	
 	if ( GS_BUTTONDAEMON_USE == true ) {
-	        gs_buttondeamon_remove_peer( $ext );
+	        gs_user_remove_ui( $ext );
 	}
 	
 	# reload dialplan (to update hints) and prune realtime peer

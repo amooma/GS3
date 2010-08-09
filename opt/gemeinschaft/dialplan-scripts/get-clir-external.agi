@@ -30,7 +30,7 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -71,7 +71,7 @@ elseif ($restrict=='once') {
 		$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $db->escape($uid) );
 		if (! $user_name)
 			return new GsError( 'Unknown user.' );
-		gs_buttondeamon_clir_update($user_name);
+		gs_clir_changed_ui($user_name);
 	}
 
 }

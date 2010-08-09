@@ -34,7 +34,7 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php' );
-require_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -264,7 +264,7 @@ WHERE
 	 	gs_user_watchedmissed( $user_id );
 	}
 	if ( GS_BUTTONDAEMON_USE == true ) {
-		gs_buttondeamon_missedcalls( $user);
+		gs_user_missedcalls_ui( $user);
 	}
 	
 }

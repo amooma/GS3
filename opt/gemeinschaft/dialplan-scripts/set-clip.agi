@@ -30,9 +30,9 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( dirName(__FILE__) .'/../inc/gs-lib.php' );
-require_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_callerids_get.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);

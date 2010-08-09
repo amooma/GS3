@@ -31,7 +31,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_phonemodel_get.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );  # for utf8_json_quote()
 if (! isSet($is_user_profile)) {
@@ -446,9 +446,9 @@ if ($action === 'save' || $action === 'save-and-resync') {
 	
 	if ( GS_BUTTONDAEMON_USE == true ) {
 		if (  $is_user_profile)
-			gs_buttondeamon_reload_keys($_SESSION['sudo_user']['info']['ext']);
+			gs_user_keyset_update($_SESSION['sudo_user']['info']['ext']);
 		else
-			gs_buttondeamon_softkeyprofile_update ( $profile_id );
+			gs_softkeyprofile_update_ui ( $profile_id );
 	}
 	
 	$action = '';  # view
@@ -499,7 +499,7 @@ if ($action === 'delete') {
 		}
 	}
 	if ( GS_BUTTONDAEMON_USE == true ) {
-		gs_buttondeamon_softkeyprofile_remove( $profile_id );
+		gs_softkeyprofile_remove_ui( $profile_id );
 	}
 	
 	$action = '';  # view

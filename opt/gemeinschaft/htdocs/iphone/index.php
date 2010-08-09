@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php' );
-require_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 require_once( GS_DIR .'inc/find_executable.php' );
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
@@ -279,7 +279,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' )
 			setForward( $userinfo, 7, $assoc['sourceAction'][7], $assoc);
 			
 			if ( GS_BUTTONDAEMON_USE == true ) {
-				gs_buttondeamon_diversion_update( $userinfo['ext'] );
+				gs_diversion_changed_ui( $userinfo['ext'] );
 			}
 			
 			break;

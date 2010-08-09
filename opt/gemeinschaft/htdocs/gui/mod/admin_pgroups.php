@@ -33,7 +33,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_del.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_del.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -66,7 +66,7 @@ $user     =      trim(@$_REQUEST['user'    ]);
 if ($delete) {
 	$ret = gs_pickupgroup_del( $delete );
 	if ( GS_BUTTONDAEMON_USE == true ) {
-		gs_buttondeamon_group_del( $delete );
+		gs_pickupgroup_remove_ui($delete);
 	}
 	if (isGsError( $ret )) echo $ret->getMsg();
 }
@@ -76,7 +76,7 @@ if ($pudelete) {
 	if (isGsError( $ret )) echo $ret->getMsg();
 	if ( GS_BUTTONDAEMON_USE == true ) {
 		$userinfo = gs_user_get($pudelete);
-		gs_buttondeamon_group_update($userinfo['ext']);
+		gs_pickupgroup_update_ui($userinfo['ext']);
 	}
 }
 
@@ -98,7 +98,7 @@ if ($group && $user) {
 	if (isGsError( $ret )) echo $ret->getMsg();
 	if ( GS_BUTTONDAEMON_USE == true ) {
 		$userinfo = gs_user_get($user);
-		gs_buttondeamon_group_update($userinfo['ext']);
+		gs_pickupgroup_update_ui($userinfo['ext']);
 	}
 }
 

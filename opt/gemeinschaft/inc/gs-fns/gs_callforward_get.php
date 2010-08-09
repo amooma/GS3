@@ -41,7 +41,7 @@ function gs_callforward_get( $user )
 	
 	# connect to db
 	#
-	$db = gs_db_master_connect();
+	$db = gs_db_slave_connect();
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
 	

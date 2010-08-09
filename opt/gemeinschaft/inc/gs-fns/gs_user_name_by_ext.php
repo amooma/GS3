@@ -2,13 +2,13 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision: 4088 $
+* $Revision$
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-* 
-* Author: Andreas Neugebauer <neugebauer@loca.net>
 *
+* Andreas Neugebauer <neugebauer@loca.net> Locanet oHG
+* 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -26,56 +26,31 @@
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
-
-require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
+
 
 /***********************************************************
-*    sets a user's DND status
+*    returns the users username
 ***********************************************************/
 
-function gs_user_dnd_toggle( $user_id )
+function gs_user_name_by_ext( $ext )
 {
+	if (! preg_match( '/^[\d]+$/', $ext ))
+		return new GsError( 'Extension must be numeric.' );
 	
 	# connect to db
 	#
-	$db = gs_db_master_connect();
+	$db = gs_db_slave_connect();
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
 	
 	# get user_id
 	#
-	
-	$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+	$user_name = (int)$db->executeGetOne( 'SELECT `user` FROM `users` `u`, `ast_sipfriends` `a` WHERE `a`.`name`=\''. $db->escape( $ext ) .'\' AND `a`.`_user_id` = `u`.`id`' );
 	if (! $user_name)
-		return new GsError( 'Unknown user.' );
+		return new GsError( 'Unknown user for extension ' . $ext . '.' );
 	
-	$dnd = $db->executeGetOne( 'SELECT `dnd` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
-	        if (! $user_id)
-	                        return new GsError( 'Unknown dnd-set.' );
-	
-	# toggle-dnd
-	#
-	$new_dnd = 0;
-	if($dnd == 0)$new_dnd = 1;
-	
-	$ok = $db->execute( 'UPDATE `users` SET `dnd`='. $db->escape($new_dnd) . ' WHERE `id`='. $user_id );
-	if (! $ok)
-		return new GsError( 'Failed to toggle dnd.' );
-	else{
-		if ( GS_BUTTONDAEMON_USE == true ) 
-		{
-			
-			if( $new_dnd == 1 )
-				$state = 'on';
-			else
-				$state = 'off';
-			
-			gs_dnd_changed_ui( $user_name, $state );
-		}
-	}
-	return $new_dnd;
+	return $user_name;
 }
 
 

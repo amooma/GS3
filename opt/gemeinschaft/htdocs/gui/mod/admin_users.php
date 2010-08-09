@@ -43,7 +43,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_callblocking_set.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
 require_once( GS_DIR .'inc/boi-soap/boi-api.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -265,7 +265,7 @@ if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 		}
 		if ( GS_BUTTONDAEMON_USE == true ) {
 			$user = gs_user_get($edit_user);
-			gs_buttondeamon_group_update($user['ext']);
+			gs_pickupgroup_update_ui($user['ext']);
 		}
 	}
 	
@@ -278,7 +278,7 @@ if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 		if ( GS_BUTTONDAEMON_USE == true ) {
 			if (! isset($user['ext']) )
 				$user = gs_user_get($edit_user);
-			gs_buttondeamon_user_usergroupgroup_update($user['ext']);
+			gs_usergroup_update_ui($user['ext']);
 		}
 	}
 	

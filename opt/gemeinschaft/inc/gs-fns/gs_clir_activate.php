@@ -28,7 +28,8 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 /***********************************************************
 *    (de)activates CLIR for a user for calls to
@@ -82,7 +83,7 @@ function gs_clir_activate( $user, $dest, $active )
 		$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
 		if (! $user_name)
 			return new GsError( 'Unknown user.' );
-		gs_buttondeamon_clir_update($user_name);
+		gs_clir_changed_ui($user_name);
 	}
 	return true;
 }

@@ -37,7 +37,7 @@ include_once(GS_DIR ."inc/gs-fns/gs_callforward_activate.php");
 include_once(GS_DIR ."inc/gs-fns/gs_callforward_get.php");
 include_once(GS_DIR ."inc/gs-fns/gs_callforward_set.php");
 include_once(GS_DIR ."inc/gs-fns/gs_vm_activate.php");
-include_once(GS_DIR ."inc/gs-fns/gs_astphonebuttons.php");
+include_once(GS_DIR ."inc/gs-fns/gs_ami_events.php");
 
 header("Content-Type: text/html; charset=utf-8");
 header("Expires: 0");
@@ -229,7 +229,7 @@ if(($type != false) && (isset($_REQUEST["value"])))
 		if(GS_BUTTONDAEMON_USE == true)
 		{
 			$ext = $db->executeGetOne("SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='". $db->escape($user_id) ."'");
-			gs_buttondeamon_diversion_update($ext);
+			gs_diversion_changed_ui ($ext);
 		}
 	}
 }
