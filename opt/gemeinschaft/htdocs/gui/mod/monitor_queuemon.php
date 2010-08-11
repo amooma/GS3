@@ -958,6 +958,7 @@ ORDER BY `q`.`queue_name`';
 
 var http = false;
 var counter = 0;
+var counter_fail = 0;
 var timestamp = 0;
 var colors = new Array();
 var members = new Array();
@@ -1005,6 +1006,7 @@ function read_data()
 			if (key == "ERROR_TEXT") {
 				document.getElementById('server_info').innerHTML = ret_arr[key];
 			} else {
+				counter_fail = 0;
 				if (key.charAt(0) == "a") {
 					var exten = key.substring(1)
 					if (exten in members) {
@@ -1024,6 +1026,19 @@ function read_data()
 		}
 		if (!ret_arr)
 			document.getElementById('server_info').innerHTML = "NO DATA";
+	} else {
+		++counter_fail;
+		if (counter_fail >= 10) {
+			document.getElementById('server_info').innerHTML = "NOT CONNECTED";
+			for ( var exten in members) {
+				for ( var queue in members[exten]) {
+					var el_obj = document.getElementById('q'+members[exten][queue]+'_a'+exten);
+					if (el_obj != null) el_obj.style.background = colors[255];
+				}
+			}
+			counter_fail = 11;
+			
+		}
 	}
 }
 

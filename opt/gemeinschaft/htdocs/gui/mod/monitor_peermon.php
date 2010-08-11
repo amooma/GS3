@@ -735,6 +735,7 @@ if ($action == "") {
 
 var http = false;
 var counter = 0;
+var counter_fail = 0;
 var timestamp = 0;
 var colors = new Array();
 var members = new Array();
@@ -794,6 +795,7 @@ function read_data()
 			if (key == "ERROR_TEXT") {
 				document.getElementById('server_info').innerHTML = ret_arr[key];
 			} else {
+				counter_fail = 0;
 				if (key.charAt(0) == "a") {
 					var exten = key.substring(1)
 					if (exten in members) {
@@ -818,21 +820,27 @@ function read_data()
 		}
 		if (!ret_arr)
 			document.getElementById('server_info').innerHTML = "NO DATA";
+	} else {
+		++counter_fail;
+		if (counter_fail >= 10) {
+			document.getElementById('server_info').innerHTML = "NOT CONNECTED";
+			for ( var exten in members) {
+				for ( var queue in members[exten]) {
+					var el_obj = document.getElementById('q'+members[exten][queue]+'_a'+exten);
+					if (el_obj != null) el_obj.style.background = colors[255];
+				}
+			}
+			counter_fail = 11;
+			
+		}
 	}
 }
 
 function get_data(request_type)
 {
 	document.getElementById('server_info').innerHTML = "&#10026; " + progress[(counter % 5)];
-	var nowtime = new Date;
-	var now = nowtime.getTime();
 	
-	if ((now - timestamp) < (<?php echo $extmon_data['update'] * 2000;  ?>)) {
-		document.getElementById('server_info').innerHTML = "Delayed..."+counter;
-		return 0;
-	}
 	http.abort();
-	timestamp = now;
 	http.open("GET", status_url+request_type, true);
 	http.onreadystatechange=read_data
 	http.send(null);
