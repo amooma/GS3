@@ -429,28 +429,6 @@ unset DEBIAN_PRIORITY
 #aptitude clean
 
 
-# install German voice prompts for Asterisk
-#
-echo ""
-echo "***"
-echo "***  Installing German voice prompts for Asterisk ..."
-echo "***"
-
-cd /usr/share/asterisk/sounds/
-[ -e de ] && rm -rf de || true
-
-# Get normal tarball {
-#${DOWNLOAD} "${ASTERISK_SOUNDS_DE_ALAW_TGZ_URL_DIR}/asterisk-core-sounds-de-alaw.tar.gz"
-# Get normal tarball }
-
-# Get tarball from within Gemeinschaft {
-cp "/opt/gemeinschaft-source/${ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR}/asterisk-core-sounds-de-alaw.tar.gz" ./
-# Get tarball from within Gemeinschaft }
-
-tar -xzf asterisk-core-sounds-de-alaw.tar.gz
-rm -f asterisk-core-sounds-de-alaw.tar.gz
-
-
 # install music on hold (MOH) for Asterisk
 #
 echo ""
@@ -497,9 +475,33 @@ cd /opt/
 rm -rf gemeinschaft 2>>/dev/null || true
 ln -snf gemeinschaft-source/opt/gemeinschaft gemeinschaft
 
+
 # fix MOH location for Debian:
 #
 sed -i -r -e 's#^( *;? *directory *= *)/var/lib/asterisk(/moh)#\1/usr/share/asterisk\2#g' /opt/gemeinschaft/etc/asterisk/musiconhold.conf
+
+
+# install German voice prompts for Asterisk
+#
+echo ""
+echo "***"
+echo "***  Installing German voice prompts for Asterisk ..."
+echo "***"
+
+cd /usr/share/asterisk/sounds/
+[ -e de ] && rm -rf de || true
+
+# Get normal tarball {
+#${DOWNLOAD} "${ASTERISK_SOUNDS_DE_ALAW_TGZ_URL_DIR}/asterisk-core-sounds-de-alaw.tar.gz"
+# Get normal tarball }
+
+# Get tarball from within Gemeinschaft {
+cp "/opt/gemeinschaft-source/${ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR}/asterisk-core-sounds-de-alaw.tar.gz" ./
+# Get tarball from within Gemeinschaft }
+
+tar -xzf asterisk-core-sounds-de-alaw.tar.gz
+rm -f asterisk-core-sounds-de-alaw.tar.gz
+
 
 
 # voice prompts for Gemeinschaft
@@ -1154,5 +1156,4 @@ fi
 
 cd
 exit 0
-
 
