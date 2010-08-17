@@ -477,28 +477,6 @@ echo "***  Installing Gemeinschaft ..."
 echo "***"
 cd /opt/
 
-# Get normal tarball {
-#
-#${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/gemeinschaft-${GEMEINSCHAFT_VERS}.tgz"
-## check if the tarball conforms to the expected format:
-#
-#NUM_DIRS_IN_TARBALL=`tar --list -f gemeinschaft-${GEMEINSCHAFT_VERS}.tgz | cut -d '/' -f 1 | uniq | wc -l`
-#if [ "x${NUM_DIRS_IN_TARBALL}" != "x1" ]; then
-#	err "  Gemeinschaft tarball contains more than one directory!"
-#fi
-#echo "Gemeinschaft tarball contains exactly one top-level entry. Good."
-#TARBALL_TOP_LEVEL_DIR=`tar --list -f gemeinschaft-${GEMEINSCHAFT_VERS}.tgz | head -n 1 | cut -d '/' -f 1`
-#if [ "${TARBALL_TOP_LEVEL_DIR}x" != "gemeinschaft-${GEMEINSCHAFT_VERS}x" ]; then
-#	err "  Top-level directory in Gemeinschaft tarball has to be \"gemeinschaft-${GEMEINSCHAFT_VERS}\" but is \"${TARBALL_TOP_LEVEL_DIR}\"!"
-#fi
-#echo "Gemeinschaft tarball contains ${TARBALL_TOP_LEVEL_DIR}. Good."
-#tar -xvzf gemeinschaft-${GEMEINSCHAFT_VERS}.tgz
-#rm -f gemeinschaft-${GEMEINSCHAFT_VERS}.tgz
-#mv gemeinschaft-${GEMEINSCHAFT_VERS} gemeinschaft-source-${GEMEINSCHAFT_VERS}
-#ln -snf gemeinschaft-source-${GEMEINSCHAFT_VERS} gemeinschaft-source
-#
-# Get normal tarball }
-
 # Get tarball from GitHub {
 #
 ${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}"
@@ -512,8 +490,6 @@ mv "gemeinschaft-${GEMEINSCHAFT_VERS}" \
 ln -snf gemeinschaft-source-${GEMEINSCHAFT_VERS} gemeinschaft-source
 #
 # Get tarball from GitHub }
-
-
 
 # main Gemeinschaft dir link
 #
@@ -740,7 +716,7 @@ cd /opt/
 # Get normal tarball }
 
 # Get tarball from within Gemeinschaft {
-cp "/opt/gemeinschaft-source/{GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR}/gemeinschaft-siemens-${GEMEINSCHAFT_SIEMENS_VERS}.tgz" ./
+cp "/opt/gemeinschaft-source/${GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR}/gemeinschaft-siemens-${GEMEINSCHAFT_SIEMENS_VERS}.tgz" ./
 # Get tarball from within Gemeinschaft }
 
 tar -xzf gemeinschaft-siemens-${GEMEINSCHAFT_SIEMENS_VERS}.tgz
