@@ -5,27 +5,9 @@
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
 
-#GEMEINSCHAFT_VERS="2.4.0"
-#GEMEINSCHAFT_VERS="master-20100414-c9e268b"
 GEMEINSCHAFT_VERS="3.0.0"
 
-#GEMEINSCHAFT_TGZ_URL_DIR="http://www.amooma.de/gemeinschaft/download"
-## URL: ${GEMEINSCHAFT_TGZ_URL_DIR}/gemeinschaft-${GEMEINSCHAFT_VERS}.tgz
-
 GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
-# URL: ${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}
-
-#GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
-#GEMEINSCHAFT_SIEMENS_TGZ_URL_DIR="http://www.amooma.de/gemeinschaft/download"
-## URL: ${GEMEINSCHAFT_SIEMENS_TGZ_URL_DIR}/gemeinschaft-siemens-${GEMEINSCHAFT_SIEMENS_VERS}.tgz
-#
-#GEMEINSCHAFT_SOUNDS_DE_WAV_VERS="current"
-#GEMEINSCHAFT_SOUNDS_DE_WAV_TGZ_URL_DIR="http://www.amooma.de/gemeinschaft/download"
-## URL: ${GEMEINSCHAFT_SOUNDS_DE_WAV_TGZ_URL_DIR}/gemeinschaft-sounds-de-wav-${GEMEINSCHAFT_SOUNDS_DE_WAV_VERS}.tar.gz
-#
-##ASTERISK_SOUNDS_DE_ALAW_VERS="current"
-#ASTERISK_SOUNDS_DE_ALAW_TGZ_URL_DIR="http://www.amooma.de/asterisk/sprachbausteine"
-## URL: ${ASTERISK_SOUNDS_DE_ALAW_TGZ_URL_DIR}/asterisk-core-sounds-de-alaw.tar.gz
 
 GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
 GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR="misc/provisioning/siemens"
@@ -38,8 +20,6 @@ GEMEINSCHAFT_SOUNDS_DE_WAV_TGZ_IN_TGZ_DIR="misc/voiceprompts"
 #ASTERISK_SOUNDS_DE_ALAW_VERS="current"
 ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR="misc/voiceprompts"
 # File: ${ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR}/asterisk-core-sounds-de-alaw.tar.gz
-
-
 
 # language
 L2=`echo $LANG | head -c 2 | tr 'A-Z' 'a-z'`
@@ -117,27 +97,6 @@ if ( which asterisk 1>>/dev/null 2>>/dev/null ); then
 	fi
 	fi
 fi
-
-
-
-# list of SourceForge mirrors:
-#SOURCEFORGE_MIRRORS=""
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://downloads.sourceforge.net/sourceforge"       #
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://mesh.dl.sourceforge.net/sourceforge"         # de
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://dfn.dl.sourceforge.net/sourceforge"          # de
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://switch.dl.sourceforge.net/sourceforge"       # ch
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://puzzle.dl.sourceforge.net/sourceforge"       # ch
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://surfnet.dl.sourceforge.net/sourceforge"      # nl
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://kent.dl.sourceforge.net/sourceforge"         # uk
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://internap.dl.sourceforge.net/sourceforge"     # us
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://superb-west.dl.sourceforge.net/sourceforge"  # us
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://superb-east.dl.sourceforge.net/sourceforge"  # us
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://garr.dl.sourceforge.net/sourceforge"         # it
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://heanet.dl.sourceforge.net/sourceforge"       # ie
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://optusnet.dl.sourceforge.net/sourceforge"     # au
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://ufpr.dl.sourceforge.net/sourceforge"         # br
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://jaist.dl.sourceforge.net/sourceforge"        # jp
-#SOURCEFORGE_MIRRORS="${SOURCEFORGE_MIRRORS} http://nchc.dl.sourceforge.net/sourceforge"         # tw
 
 
 # setup basic stuff
@@ -1203,7 +1162,7 @@ echo "***     SIP Password :    $(printf "% -20s" $ADMIN_SIPPW)    $(printf "% -
 echo "***     SIP Server   :    $(printf "% -15s" $MY_IP_ADDR)         $(printf "% -15s" $MY_IP_ADDR)"
 echo "***"
 echo "***   Find mailinglists and more info at"
-echo "***     http://www.amooma.de/gemeinschaft/"
+echo "***     http://www.gemeinschaft.de"
 echo "**************************************************************************"
 ) > /tmp/gemeinschaft-beispiel-user.txt
 
