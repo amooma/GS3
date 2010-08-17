@@ -519,7 +519,7 @@ fi
 # Get normal tarball }
 
 # Get tarball from within Gemeinschaft {
-cp "/opt/gemeinschaft-source/{GEMEINSCHAFT_SOUNDS_DE_WAV_TGZ_IN_TGZ_DIR}/gemeinschaft-sounds-de-wav-${GEMEINSCHAFT_SOUNDS_DE_WAV_VERS}.tar.gz" ./
+cp "/opt/gemeinschaft-source/${GEMEINSCHAFT_SOUNDS_DE_WAV_TGZ_IN_TGZ_DIR}/gemeinschaft-sounds-de-wav-${GEMEINSCHAFT_SOUNDS_DE_WAV_VERS}.tar.gz" ./
 # Get tarball from within Gemeinschaft }
 
 tar -xzf gemeinschaft-sounds-de-wav-${GEMEINSCHAFT_SOUNDS_DE_WAV_VERS}.tar.gz
