@@ -31,4 +31,4 @@ Fertig.
 
 h1. Sonstiges
 
-* Am wichtigsten ist wohl die FAQ Seite. Dort werden alle häufig gestellten Fragen beantwortet.
+* Am wichtigsten ist wohl die [[FAQ Seite|http://github.com/amooma/GemeinschaftPBX/wiki/Faq]]. Dort werden alle häufig gestellten Fragen beantwortet.
