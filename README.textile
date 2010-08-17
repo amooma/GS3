@@ -28,3 +28,7 @@ und ausführen:
 Warten.
 
 Fertig.
+
+h1. Sonstiges
+
+* Am wichtigsten ist wohl die FAQ Seite. Dort werden alle häufig gestellten Fragen beantwortet.
