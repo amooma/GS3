@@ -1,0 +1,3 @@
+h1. The misc directory
+
+Please be aware that the files in this directory are not GPL licensed. We keep this directory for stuff like Firmware-Images for phones. Do not resell or distribute the files without the permission of the copyright holder.
