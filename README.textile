@@ -23,8 +23,11 @@ h2. Gemeinschaft
 Bitte als root einloggen und folgende Befehle eingeben:
 
 cd /root/
+
 wget http://github.com/amooma/GemeinschaftPBX/blob/master/install.sh
+
 chmod a+x install.sh
+
 ./install.sh
 
 Warten.
