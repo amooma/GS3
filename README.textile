@@ -18,12 +18,10 @@ Minimales System installieren ohne grafische Oberfläche. "Minimales" heisst wir
 
 Installations-Skript runterladen:
 
- cd /root/
- wget 'http://url/zu/install-gemeinschaft.sh'
-
-und ausführen:
-
- ./install-gemeinschaft.sh
+cd /root/
+wget http://github.com/amooma/GemeinschaftPBX/blob/master/install.sh
+chmod a+x install.sh
+./install.sh
 
 Warten.
 
