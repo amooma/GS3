@@ -444,7 +444,7 @@ cd /usr/share/asterisk/sounds/
 # Get normal tarball }
 
 # Get tarball from within Gemeinschaft {
-cp "/opt/gemeinschaft-source/{ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR}/asterisk-core-sounds-de-alaw.tar.gz" ./
+cp "/opt/gemeinschaft-source/${ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR}/asterisk-core-sounds-de-alaw.tar.gz" ./
 # Get tarball from within Gemeinschaft }
 
 tar -xzf asterisk-core-sounds-de-alaw.tar.gz
