@@ -5,7 +5,7 @@
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
 
-GEMEINSCHAFT_VERS="3.0.0"
+GEMEINSCHAFT_VERS="3.0"
 
 GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
 
@@ -462,8 +462,8 @@ cd /opt/
 # Get tarball from GitHub {
 #
 ${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}"
-tar -xvzf amooma-GemeinschaftPBX-${GEMEINSCHAFT_VERS}-*.tar.gz
-rm -f amooma-GemeinschaftPBX-${GEMEINSCHAFT_VERS}-*.tar.gz
+tar -xvzf amooma-GemeinschaftPBX-${GEMEINSCHAFT_VERS}*.tar.gz
+rm -f amooma-GemeinschaftPBX-${GEMEINSCHAFT_VERS}*.tar.gz
 mv amooma-GemeinschaftPBX-* \
    gemeinschaft-${GEMEINSCHAFT_VERS}
 echo -n ${GEMEINSCHAFT_VERS} > gemeinschaft-${GEMEINSCHAFT_VERS}/etc/gemeinschaft/.gemeinschaft-version
