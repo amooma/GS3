@@ -440,6 +440,7 @@ echo "***  Installing music on hold (MOH) for Asterisk ..."
 echo "***"
 
 #cd /var/lib/asterisk/moh/
+mkdir -p /usr/share/asterisk/moh
 cd /usr/share/asterisk/moh/
 for fmt in alaw; do
 	#F=asterisk-moh-freeplay-${fmt}
