@@ -1,12 +1,3 @@
-h1. Gemeinschaft 3.0
-
-We are currently in the process of updating everything. Please wait till you see a different message on this page which will tell you how you can install Gemeinschaft.
-
-h1. Wo bekomme ich Hilfe?
-
-Auf folgender Mailingliste:
-"http://groups.google.com/group/gemeinschaft-users":http://groups.google.com/group/gemeinschaft-users
-
 h1. Installationsanleitung
 
 h2. Das Basissystem
@@ -22,17 +13,24 @@ h2. Gemeinschaft
 
 Bitte als root einloggen und folgende Befehle eingeben:
 
-cd /root/
+cd /tmp
 
 wget http://github.com/amooma/GemeinschaftPBX/raw/master/install.sh
 
-chmod a+x install.sh
+chmod u+x install.sh
 
 ./install.sh
 
 Warten.
 
 Fertig.
+
+h1. Wo bekomme ich Hilfe?
+
+Kostenlos auf der Mailingliste:
+"http://groups.google.com/group/gemeinschaft-users":http://groups.google.com/group/gemeinschaft-users
+
+Kostenpflichtig bei der "AMOOMA GmbH":http://www.amooma.de
 
 h1. Sonstiges
 
