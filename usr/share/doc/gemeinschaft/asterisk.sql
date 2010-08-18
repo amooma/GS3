@@ -6249,7 +6249,7 @@ DROP TABLE IF EXISTS `group_permissions`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `group_permissions` (
-  `type` varchar(20) character set ascii NOT NULL default '',
+  `type` varchar(25) character set ascii NOT NULL default '',
   `group` mediumint(8) unsigned NOT NULL,
   `permit` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`type`,`group`,`permit`)
