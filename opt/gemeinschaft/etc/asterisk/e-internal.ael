@@ -472,9 +472,9 @@ context to-internal-users {
 			Hangup();
 		}
 		
-		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${boss},secretary_call);
+		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${boss},override_callforward_call);
 		if ("${permission}" != "true") {
-			Verbose(1,### ${user_name} is not secretary of ${boss});
+			Verbose(1,### ${user_name} is not allow override callforward of ${boss});
 			Hangup();
 		}
 		

@@ -6271,7 +6271,7 @@ INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
 INSERT INTO `group_permissions` VALUES ('phonebook_user',3,2);
 INSERT INTO `group_permissions` VALUES ('pickup',2,2);
 INSERT INTO `group_permissions` VALUES ('private_call',2,2);
-INSERT INTO `group_permissions` VALUES ('secretary_call',2,2);
+INSERT INTO `group_permissions` VALUES ('override_callforward_call',2,2);
 INSERT INTO `group_permissions` VALUES ('wakeup_call',2,2);
 INSERT INTO `group_permissions` VALUES ('sudo_user',1,2);
 INSERT INTO `group_permissions` VALUES ('login_queues',2,5);
