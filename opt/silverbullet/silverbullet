@@ -1,0 +1,13 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+# AMOOMA Silver Bullet
+# Copyright 2010, AMOOMA GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# This software is provided under an open source (but NO GPL) license - use at your own risk.
+from sbserver import sbserver
+from sys import exit
+
+if (__name__ == "__main__"):
+	ret = sbserver()
+	exit(ret)
+
