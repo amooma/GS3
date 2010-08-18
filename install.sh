@@ -495,10 +495,6 @@ echo "***"
 cd /usr/share/asterisk/sounds/
 [ -e de ] && rm -rf de || true
 
-# Get normal tarball {
-#${DOWNLOAD} "${ASTERISK_SOUNDS_DE_ALAW_TGZ_URL_DIR}/asterisk-core-sounds-de-alaw.tar.gz"
-# Get normal tarball }
-
 # Get tarball from within Gemeinschaft {
 cp "/opt/gemeinschaft-source/${ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR}/asterisk-core-sounds-de-alaw.tar.gz" ./
 # Get tarball from within Gemeinschaft }
@@ -519,10 +515,6 @@ fi
 if [ -e de-DE-tts ]; then
 	rm -rf de-DE-tts || true
 fi
-
-# Get normal tarball {
-#${DOWNLOAD} "${GEMEINSCHAFT_SOUNDS_DE_WAV_TGZ_URL_DIR}/gemeinschaft-sounds-de-wav-${GEMEINSCHAFT_SOUNDS_DE_WAV_VERS}.tar.gz"
-# Get normal tarball }
 
 # Get tarball from within Gemeinschaft {
 cp "/opt/gemeinschaft-source/${GEMEINSCHAFT_SOUNDS_DE_WAV_TGZ_IN_TGZ_DIR}/gemeinschaft-sounds-de-wav-${GEMEINSCHAFT_SOUNDS_DE_WAV_VERS}.tar.gz" ./
@@ -717,10 +709,6 @@ mysql --batch --user=gemeinschaft --password="${GEMEINSCHAFT_DB_PASS}" -e "USE \
 echo "Installing Siemens addon for Gemeinschaft (Openstage provisoning) ..."
 cd /opt/
 
-# Get normal tarball {
-#${DOWNLOAD} "${GEMEINSCHAFT_SIEMENS_TGZ_URL_DIR}/gemeinschaft-siemens-${GEMEINSCHAFT_SIEMENS_VERS}.tgz"
-# Get normal tarball }
-
 # Get tarball from within Gemeinschaft {
 cp "/opt/gemeinschaft-source/${GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR}/gemeinschaft-siemens-${GEMEINSCHAFT_SIEMENS_VERS}.tgz" ./
 # Get tarball from within Gemeinschaft }
@@ -834,7 +822,7 @@ echo "***    -----                                              -----" >> /etc/m
 echo "***" >> /etc/motd.static
 echo "***   Need help with Gemeinschaft? We have an excellent free mailinglist" >> /etc/motd.static
 echo "***   and offer the best support and consulting money can buy. Have a" >> /etc/motd.static
-echo "***   look at http://www.amooma.de/gemeinschaft/ for more information." >> /etc/motd.static
+echo "***   look at http://www.gemeinschaft.de for more information." >> /etc/motd.static
 echo "***" >> /etc/motd.static
 [ -e /etc/motd ] && rm -rf /etc/motd || true
 ln -s /etc/motd.static /etc/motd
