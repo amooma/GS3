@@ -1355,3 +1355,8 @@ INSERT INTO `groups` VALUES (NULL,'nobody_users','All Nobody Users','user');
 INSERT INTO `group_connections` VALUES ('mysql',(SELECT `id` FROM `groups` WHERE `name` = 'nobody_users' LIMIT 1),'id','SELECT `id` FROM `users` WHERE `nobody_index` IS NOT NULL');
 INSERT INTO `group_permissions` VALUES ('phonebook_user',(SELECT `id` FROM `groups` WHERE `name` = 'nobody_users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1));
 
+--
+-- After: 1a47844d99b09ad5f9c2c4bf65deb3caddac98af
+--
+
+UPDATE `group_permissions` SET `type`='override_callforward_call' WHERE `type`='secretary_call';
