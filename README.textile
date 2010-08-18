@@ -15,7 +15,7 @@ Bitte als root einloggen und folgende Befehle eingeben:
 
 cd /tmp
 
-wget http://github.com/amooma/GemeinschaftPBX/raw/master/install.sh
+wget http://github.com/amooma/GemeinschaftPBX/raw/3.0/install.sh
 
 chmod u+x install.sh
 
