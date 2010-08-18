@@ -1359,4 +1359,5 @@ INSERT INTO `group_permissions` VALUES ('phonebook_user',(SELECT `id` FROM `grou
 -- After: 1a47844d99b09ad5f9c2c4bf65deb3caddac98af
 --
 
+ALTER TABLE `group_permissions` CHANGE `type` `type` VARCHAR( 25 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL 
 UPDATE `group_permissions` SET `type`='override_callforward_call' WHERE `type`='secretary_call';
