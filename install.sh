@@ -461,8 +461,8 @@ cd /opt/
 # Get tarball from GitHub {
 #
 ${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}"
-tar -xvzf "amooma-GemeinschaftPBX-${GEMEINSCHAFT_VERS}-*.tar.gz"
-rm -f "amooma-GemeinschaftPBX-${GEMEINSCHAFT_VERS}-*.tar.gz"
+tar -xvzf amooma-GemeinschaftPBX-${GEMEINSCHAFT_VERS}-*.tar.gz
+rm -f amooma-GemeinschaftPBX-${GEMEINSCHAFT_VERS}-*.tar.gz
 mv "amooma-GemeinschaftPBX-701f605d285b3484c7da44c232f595e5dfc0d4d8" \
    "gemeinschaft-${GEMEINSCHAFT_VERS}"
 echo -n ${GEMEINSCHAFT_VERS} > gemeinschaft-${GEMEINSCHAFT_VERS}/etc/gemeinschaft/.gemeinschaft-version
