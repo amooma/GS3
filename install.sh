@@ -202,6 +202,9 @@ for server in \
   "www.amooma.de" \
   "www.amooma.com" \
   "www.gemeinschaft.de" \
+  "github.com" \
+  "download.github.com" \
+  "nodeload.github.com" \
   "downloads.digium.com" \
   "downloads.asterisk.org" \
   "downloads.sourceforge.net" \
