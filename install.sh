@@ -738,6 +738,7 @@ chmod 640 openstage-*.pem
 cd /etc/apache2/sites-available/
 ln -snf /opt/gemeinschaft-siemens-source/doc/httpd-vhost.conf.example gemeinschaft-siemens
 a2ensite gemeinschaft-siemens
+invoke-rc.d apache2 restart
 cd
 
 
