@@ -5,7 +5,7 @@
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
 
-GEMEINSCHAFT_VERS="3.0"
+GEMEINSCHAFT_VERS="v3.0.0rc1"
 
 GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
 
