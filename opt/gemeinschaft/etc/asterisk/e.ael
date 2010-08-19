@@ -617,12 +617,12 @@ context to-conferences-self {
 		Answer();
 		for (i=100; ${i}<999; i=${i}+1) {
 			Verbose(1,### Trying to find empty conference - ${i});
-			MeetMeCount(${i},cnt);
+			MeetMeCount(${i},cntM);
 			if (${cnt} < 1) {
 				Verbose(1,### Found empty conference: ${i});
 				Playback(conf-enteringno);
 				SayDigits(${confprefix}${i});
-				MeetMe(${i},DcoT);
+				MeetMe(${i},DcoTM);
 				Hangup();
 			}
 		}
@@ -638,7 +638,7 @@ context to-conferences-self {
 		&pass-connid();
 		Answer();
 		Wait(0.5);
-		MeetMe(${confnum},DcoT);
+		MeetMe(${confnum},DcoTM);
 		Hangup();
 	}
 	
