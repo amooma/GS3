@@ -142,7 +142,8 @@ $MODULES['monitor'  ]=  array(
 		'queues'       => array('title' => __('Warteschlangen'), 'id' => 7001),
 		'pgrps'        => array('title' => __('Rufannahmegrp.'), 'id' => 7002),
 		'peers'        => array('title' => __('Kollegen'),       'id' => 7003),
-		'queuemon'     => array('title' => __('QueueMon'),       'id' => 7005)
+		'queuemon'     => array('title' => __('QueueMon'),       'id' => 7005),
+		'peermon'      => array('title' => __('PeerMon'),        'id' => 7006)
 	)
 );
 
