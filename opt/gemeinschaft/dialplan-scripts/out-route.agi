@@ -198,7 +198,7 @@ foreach ($gate_grps as $ggrp_id) {
 			'SELECT `cid_ext` '.
 			'FROM `gate_cids` '.
 			'WHERE `grp_id` = '.$ggrp_id.' AND `cid_int` = \''.$db->escape($out_cid_num).'\'' );
-		if ($user_cid_override != '') {
+		if ($user_cid_override !== false) {
 			gs_agi_verbose( '### Overriding caller ID "'.$out_cid_num.'" -> "'.$user_cid_override.'" for gategroup ID: '. $ggrp_id );
 			$out_cid_num = preg_replace('/[^0-9+a-zA-Z\-_.]/', '', $user_cid_override);
 		}
