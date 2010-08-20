@@ -31,6 +31,8 @@ def logsetup(logfile, loglevel=0, logformat = False):
 	global logger
 
 	logfileh = logging.FileHandler(logfile)
+
+	loglevel = int(loglevel)
 	
 	if (loglevel == 0):
 		logfileh.setLevel(logging.NOTSET)
