@@ -426,7 +426,7 @@ ${APTITUDE_INSTALL} \
 	mysql-client mysql-server \
 	apache2 \
 	php5-cli libapache2-mod-php5 php5-mysql php5-ldap \
-	sox mpg123
+	sox libsox-fmt-all mpg123
 unset DEBIAN_FRONTEND
 unset DEBIAN_PRIORITY
 #aptitude clean
