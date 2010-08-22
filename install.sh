@@ -426,6 +426,7 @@ ${APTITUDE_INSTALL} \
 	mysql-client mysql-server \
 	apache2 \
 	php5-cli libapache2-mod-php5 php5-mysql php5-ldap \
+    python2.6 \
 	sox libsox-fmt-all mpg123
 unset DEBIAN_FRONTEND
 unset DEBIAN_PRIORITY
@@ -1003,6 +1004,27 @@ ${APTITUDE_INSTALL} harden-servers harden-clients
 # portsentry (detect port scans)
 ${APTITUDE_INSTALL} portsentry
 
+# Silver-Bullet 
+cd /opt/
+rm -rf silverbullet 2>>/dev/null || true
+ln -snf gemeinschaft-source/opt/silverbullet silverbullet
+
+mkdir -p /etc/silverbullet
+cd /etc/silverbullet
+if [ ! -e silverbullet.conf ]; then
+	cp /opt/gemeinschaft-source/etc/silverbullet/silverbullet.conf ./
+fi
+
+
+if [ -e /opt/gemeinschaft-source/etc/init.d/silverbullet ]; then
+        cd /etc/init.d/
+        ln -snf /opt/gemeinschaft-source/etc/init.d/silverbullet
+        update-rc.d silverbullet defaults 92 8
+        invoke-rc.d silverbullet start
+fi
+
+# Add GUI Editor to Admin GUI
+/opt/gemeinschaft/scripts/gs-group-member-add --group=admin_gui --member=15013
 
 
 echo ""
