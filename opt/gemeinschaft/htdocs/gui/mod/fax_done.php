@@ -59,8 +59,7 @@ function username_prep( $user_name )
 	));
 }
 
-
-$per_page = 10;
+$per_page = (int)gs_get_conf('GS_GUI_NUM_RESULTS');
 $page     = (int)@$_REQUEST['page'];
 $delete   = trim(@$_REQUEST['delete']);
 
