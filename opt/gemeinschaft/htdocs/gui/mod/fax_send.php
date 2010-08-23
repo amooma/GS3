@@ -58,7 +58,7 @@ function email_by_username( $user_name )
 
 $user_id    = @$_SESSION['sudo_user']['id'];
 $fax_job_id = 0;
-$per_page   = 10;
+$per_page = (int)gs_get_conf('GS_GUI_NUM_RESULTS');
 $tsi        = trim(@$_REQUEST['tsi']);
 $faxnumber  = trim(@$_REQUEST['faxnumber']);
 $resolution = (int) trim(@$_REQUEST['res']);

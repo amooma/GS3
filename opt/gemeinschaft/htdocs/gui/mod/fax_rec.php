@@ -45,8 +45,7 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
-
-$per_page = 10;
+$per_page = (int)gs_get_conf('GS_GUI_NUM_RESULTS');
 $page     = (int)@$_REQUEST['page'];
 $delete   = trim(@$_REQUEST['delete']);
 
