@@ -341,12 +341,12 @@ class AsteriskHandler(Thread):
 				self.queuestats[queue]['members'].append(queue_member)
 
 			elif (event["Event"] == "Join" or event["Event"] == "Leave"):
-				queue = array_value(event, 'Queue', False, str)
-				count = array_value(event, 'Count', False, int)
+				queue = array_value(event, 'Queue', None, str)
+				count = array_value(event, 'Count', None, int)
 
-				if (not queue):
+				if (queue == None):
 					continue
-				if (not count):
+				if (count == None):
 					continue
 			
 				if (self.queuestats.has_key(queue)):
