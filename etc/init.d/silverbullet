@@ -11,6 +11,17 @@
 # 
 #####################################################################
 
+### BEGIN INIT INFO
+# Provides:          silverbullet 
+# Required-Start:    $asterisk 
+# Required-Stop:     $asterisk
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Silver Bullet daemon
+# Description:
+#
+### END INIT INFO
+
 DAEMON=/opt/silverbullet/silverbullet
 EXECUTABLE=`basename 'silverbullet'`
 DESC="Gemeinschaft Silver Bullet Daemon"
