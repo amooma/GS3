@@ -143,7 +143,7 @@ $GUI_NUM_RESULTS            = 12;
 $GUI_SUDO_ADMINS            = '';
   # comma separated list of admin users who can manage *all* accounts
 
-//$GUI_SUDO_EXTENDED          = false;
+$GUI_SUDO_EXTENDED          = true;
   # Whether to include htdocs/gui/inc/permissions.php and consult
   # gui_sudo_allowed() to find out if a user can act as a certain
   # other user. (You may need to adjust this function!). For the
