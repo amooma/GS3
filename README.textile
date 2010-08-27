@@ -14,7 +14,7 @@ Für eine möglichst einfache Installation gibt es hier ein Installations-Skript
 
 oder für 64-Bit-Systeme die Architektur "amd64" statt "i386".
 
-Minimales System installieren ohne grafische Oberfläche. "Minimales" heisst wirklich Minimal und nicht noch sonst was dazu!
+Minimales System installieren ohne grafische Oberfläche. "Minimal" heißt wirklich minimal und nicht noch sonst was dazu!
 
 Installations-Skript runterladen:
 
