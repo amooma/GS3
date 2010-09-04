@@ -468,6 +468,7 @@ psetting('softkey3 label'  , __('Voicemail'), true, $dynamic);
 
 psetting('softkey4 type'   , 'xml', true, $dynamic);
 psetting('softkey4 value'  , $prov_url_aastra.'dnd.php', true, $dynamic);
+
 $current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
 if ($current_dndstate == 'yes')
 	psetting('softkey4 label'  , __('Ruhe aus'), true, $dynamic);
