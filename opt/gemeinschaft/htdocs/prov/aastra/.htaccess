@@ -11,8 +11,10 @@
 	# aastra.tuz
 	# security.tuz
 	# <MAC-addr>.cfg
+	# <model>.st firmware if firmware update has been enabled
 	
-	# Rewrite requests for <MAC-addr>.cfg
+	RewriteRule ^aastra\.cfg$ settings.php [L]
 	RewriteRule ^(00085D[0-9A-F]*)\.cfg$ settings.php?mac=$1 [L]
+	RewriteRule ^([0-9A-Za-z]*\.st)$ sw/$1 [QSA,L]	
 	
 </IfModule>

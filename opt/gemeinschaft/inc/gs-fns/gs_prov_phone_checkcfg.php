@@ -273,12 +273,12 @@ function _gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot=true, $pre_sleep
 function _gs_prov_phone_checkcfg_by_ip_do_aastra( $ip, $reboot=true )
 {
 	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
-	
-	$prov_host = gs_get_conf('GS_PROV_HOST');
+
+	$prov_url_aastra = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'aastra/';
 	
 	$xmlpi = '<'.'?xml version="1.0" encoding="UTF-8"?'.'>'."\n";
 	$xml = '<AastraIPPhoneExecute>' ."\n";
-	$xml.= '	<ExecuteItem URI="Command: Reset" />' ."\n";
+	$xml.= '	<ExecuteItem URI="' . $prov_url_aastra . 'settings.php?dynamic=1" />' ."\n";
 	$xml.= '</AastraIPPhoneExecute>' ."\n";
 	
 	$cmd = 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q'
