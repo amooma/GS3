@@ -42,7 +42,7 @@ function gs_user_ip_by_ext( $ext )
 	
 	# connect to db
 	#
-	$db = gs_db_master_connect();
+	$db = gs_db_slave_connect();
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
 	
