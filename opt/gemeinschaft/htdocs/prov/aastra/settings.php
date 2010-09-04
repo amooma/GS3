@@ -28,27 +28,43 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 
+# pull dynamic configuration update from server?
+if ( @$_REQUEST['dynamic'] == 1 )
+	$dynamic = true;
+else
+	$dynamic = false;
 
-header( 'Content-Type: text/plain; charset=utf-8' );
-header( 'Expires: 0' );
-header( 'Pragma: no-cache' );
-header( 'Cache-Control: private, no-cache, must-revalidate' );
-header( 'Vary: *' );
-
+if ($dynamic == true) {
+	header( 'Content-Type: text/xml; charset=utf-8' );
+	header( 'Expires: 0' );
+	header( 'Pragma: no-cache' );
+	header( 'Cache-Control: private, no-cache, must-revalidate' );
+	header( 'Vary: *' );
+} else {
+	header( 'Content-Type: text/plain; charset=utf-8' );
+	header( 'Expires: 0' );
+	header( 'Pragma: no-cache' );
+	header( 'Cache-Control: private, no-cache, must-revalidate' );
+	header( 'Vary: *' );
+}
 
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'inc/prov-fns.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
+include_once( GS_DIR .'inc/aastra-fns.php' );
 set_error_handler('err_handler_die_on_err');
 
 function _settings_err( $msg='' )
 {
+	global $dynamic;
 	@ob_end_clean();
 	@ob_start();
 	echo '<!-- // ', ($msg != '' ? str_replace('--','- -',$msg) : 'Error') ,' // -->',"\n";
-	if (! headers_sent()) {
+	if ($dynamic == true) {
+		aastra_textscreen( 'Fehler', $msg );
+	} else if (! headers_sent()) {
 		header( 'Content-Type: text/plain; charset=utf-8' );
 		header( 'Content-Length: '. (int)@ob_get_length() );
 	}
@@ -56,14 +72,17 @@ function _settings_err( $msg='' )
 	exit(1);
 }
 
-function setting( $name, $idx, $val, $attrs=null, $writeable=false )
+function setting( $name, $idx, $val, $attrs=null, $writeable=false, $xml=false )
 {
-	echo $name , ($idx>0? ' '.$idx :'') ,': ', str_replace(array("\n", "\r"), array(' ', ' '), $val) ,"\n";
+	if ($xml === true)
+		echo '  <ConfigurationItem><Parameter>', $name , ($idx>0? ' '.$idx :'') ,'</Parameter><Value>', str_replace(array("\n", "\r"), array(' ', ' '), $val) , '</Value></ConfigurationItem>', "\n";
+	else
+		echo ($writeable == false ? '!' : ''), $name , ($idx>0? ' '.$idx :'') ,': ', str_replace(array("\n", "\r"), array(' ', ' '), $val) ,"\n";
 }
 
-function psetting( $name, $val, $writeable=false )
+function psetting( $name, $val, $writeable=false, $xml=false )
 {
-	setting( $name, null, $val, null, $writeable );
+	setting( $name, null, $val, null, $writeable, $xml );
 }
 
 function aastra_get_expansion_modules()
@@ -84,46 +103,6 @@ function aastra_get_expansion_modules()
 	
 	return $exp_mod;
 }
-
-
-/*
-function aastra_keys_out( $user_id, $phone_type, $module=0 )
-{
-	global $db;
-	
-	$module_sql = '';
-	if ($module) {
-		$module_sql = 'AND `key` LIKE \'expmod'.((int)$module).'%\'';
-	}
-	
-	$query =
-'SELECT
-	`key`, `function`, `number`, `title`, `flags`
-FROM `softkeys`
-WHERE
-	`user_id`='. (int)$user_id. ' AND
-	`phone_type`=\''. $db->escape($phone_type). '\''.
-$module_sql;
-	
-	$rs = $db->execute( $query );
-	if (! $rs) return false;
-	
-	while ($r = @$rs->fetchRow()) {
-		$key_function = 'speeddial';
-		if ($r['function'] === 'Dial') $key_function = 'blf';
-		
-		if (preg_match('/^expmod\d{1}page\d{1}/', $r['key'])) {
-			psetting($r['key'], $r['title']);
-		} else {
-			psetting($r['key'].' type' , $key_function);
-			psetting($r['key'].' label', $r['title']);
-			psetting($r['key'].' value', $r['number']);
-		}
-	}
-	
-	return true;
-}
-*/
 
 function aastra_get_softkeys( $user_id, $phone_type )
 {
@@ -185,29 +164,32 @@ if (! $requester['allowed']) {
 	_settings_err( 'No! See log for details.' );
 }
 
-$mac = preg_replace( '/[^0-9A-F]/', '', strToUpper( @$_REQUEST['mac'] ) );
-if (strLen($mac) !== 12) {
-	gs_log( GS_LOG_NOTICE, "Aastra provisioning: Invalid MAC address \"$mac\" (wrong length)" );
-	# don't explain this to the users
-	_settings_err( 'No! See log for details.' );
-}
-if (hexDec(subStr($mac,0,2)) % 2 == 1) {
-	gs_log( GS_LOG_NOTICE, "Aastra provisioning: Invalid MAC address \"$mac\" (multicast address)" );
-	# don't explain this to the users
-	_settings_err( 'No! See log for details.' );
-}
-if ($mac === '000000000000') {
-	gs_log( GS_LOG_NOTICE, "Aastra provisioning: Invalid MAC address \"$mac\" (huh?)" );
-	# don't explain this to the users
-	_settings_err( 'No! See log for details.' );
-}
 
-# make sure the phone is an Aastra:
-#
-if (subStr($mac,0,6) !== '00085D') {
-	gs_log( GS_LOG_NOTICE, "Aastra provisioning: MAC address \"$mac\" is not an Aastra phone" );
-	# don't explain this to the users
-	_settings_err( 'No! See log for details.' );
+if ( isset($_REQUEST['mac']) ) {
+	$mac = preg_replace( '/[^0-9A-F]/', '', strToUpper( $_REQUEST['mac'] ) );
+	if (strLen($mac) !== 12) {
+		gs_log( GS_LOG_NOTICE, "Aastra provisioning: Invalid MAC address \"$mac\" (wrong length)" );
+		# don't explain this to the users
+		_settings_err( 'No! See log for details.' );
+	}
+	if (hexDec(subStr($mac,0,2)) % 2 == 1) {
+		gs_log( GS_LOG_NOTICE, "Aastra provisioning: Invalid MAC address \"$mac\" (multicast address)" );
+		# don't explain this to the users
+		_settings_err( 'No! See log for details.' );
+	}
+	if ($mac === '000000000000') {
+		gs_log( GS_LOG_NOTICE, "Aastra provisioning: Invalid MAC address \"$mac\" (huh?)" );
+		# don't explain this to the users
+		_settings_err( 'No! See log for details.' );
+	}
+
+	# make sure the phone is an Aastra:
+	#
+	if (subStr($mac,0,6) !== '00085D') {
+		gs_log( GS_LOG_NOTICE, "Aastra provisioning: MAC address \"$mac\" is not an Aastra phone" );
+		# don't explain this to the users
+		_settings_err( 'No! See log for details.' );
+	}
 }
 
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
@@ -236,7 +218,10 @@ $fw_vers = (preg_match('/ V:(\d+\.\d+\.\d+)/', $ua, $m))
 	? $m[1] : '0.0.0';
 //$fw_vers_nrml = _aastra_normalize_version( $fw_vers );
 
-gs_log( GS_LOG_DEBUG, "Aastra phone \"$mac\" asks for settings (UA: ...\"$ua\") - model $phone_model" );
+if (! isset($_REQUEST['mac']) ) {
+	if ( preg_match('/\sMAC:(00-08-5D-\w{2}-\w{2}-\w{2})\s/', $ua, $m) )
+		$mac = preg_replace( '/[^0-9A-F]/', '', strToUpper($m[1]) );
+}
 
 $prov_url_aastra = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'aastra/';
 
@@ -245,12 +230,92 @@ require_once( GS_DIR .'inc/nobody-extensions.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_prov_params_get.php' );
 
+# phone requests global settings
+if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
+
+	gs_log( GS_LOG_DEBUG, "Aastra phone \"$mac\" asks for global settings (UA: ...\"$ua\") - model $phone_model" );
+
+	ob_start();
+
+	psetting('options simple menu'                 , 1, false, false);
+	psetting('dhcp'                                , 1, false, false);
+	psetting('backlight mode'                      , 1, false, false);
+	psetting('bl on time'                          , 16, false, false);
+	psetting('tone set'                            , 'Germany', false, false);
+	psetting('language 1'                          , 'lang_de.txt', false, false);
+	psetting('language'                            , 1, false, false);
+	psetting('time format'                         , 1, false, false);
+	psetting('date format'                         , 11, false, false);
+	psetting('time zone name'                      , 'DE-Berlin', false, false);
+	psetting('xml beep notification'               , 1, false, false);
+	psetting('xml status scroll delay'             , 3, false, false);
+	psetting('sip update callerid'                 , 1, false, false);
+	psetting('admin password'                      , gs_get_conf('GS_AASTRA_PROV_ADMIN_PASS'), false, false);
+	psetting('user password'                       , gs_get_conf('GS_AASTRA_PROV_USER_PASS'), false, false);
+	psetting('options password enabled'            , 1, false, false);
+	psetting('web interface enabled'               , 1, false, false);
+	psetting('directed call pickup'                , 1, false, false);
+	psetting('directed call pickup prefix'         , '*81*', false, false);
+	psetting('sip xml notify event'                , 1, false, false);
+	psetting('sip whitelist'                       , 0, false, false);
+	psetting('auto resync mode'                    , 3, false, false);
+	psetting('auto resync time'                    , '04:00', false, false);
+	psetting('auto resync days'                    , 1, false, false);
+	psetting('dynamic sip'                         , 1, false, false);
+	psetting('call forward disabled'               , 1, false, false);
+	psetting('call waiting'                        , 1, false, false);
+	psetting('missed calls indicator disabled'     , 1, false, false);
+	psetting('sip explicit mwi subscription'       , 1, false, false);
+	psetting('sip explicit mwi subscription period', 120, false, false);
+	psetting('sip registration retry timer'        , 60, false, false);
+	psetting('sip registration timeout retry timer', 30, false, false);
+	psetting('sip blf subscription period'         , 120, false, false);
+	psetting('sip customized codec'                , 'payload=8;payload=0;payload=115;payload=9;payload=18;silsupp=off', false, false);
+	psetting('sip silence suppression'             , 0, false, false);
+	psetting('lldp'                                , 0, false, false);
+	psetting('call hold reminder'                  , 1, false, false);
+	psetting('sip diversion display'               , 1, false, false);
+	psetting('show call destination name'          , 1, false, false);
+	if (gs_get_conf('GS_AASTRA_PROV_FW_UPDATE'))
+		psetting('firmware server'                     , $prov_url_aastra.'sw', false, false);
+	else
+		psetting('firmware server'                     , '', false, false);
+
+	# allow to push config from this host
+	psetting('xml application post list', GS_PROV_HOST, false, false);
+
+	# set some default keys
+	psetting('services script'    , $prov_url_aastra.'pb.php', false, false);
+	psetting('callers list script', $prov_url_aastra.'dial-log.php', false, false);
+	psetting('redial script'      , $prov_url_aastra.'dial-log.php?t=out', false, false);
+	psetting('redial disabled'    , '0', false, false);
+
+	psetting('sip mode'                , '0', false, false);  # Generic SIP server
+	psetting('sip vmail'               , 'voicemail', false, false);
+	psetting('sip registrar port'      , '5060', false, false);
+	psetting('sip registration period' , '120', false, false);
+	psetting('sip outbound proxy port' , '5060', false, false);
+	psetting('sip proxy port'          , '5060', false, false);
+
+	psetting('tos sip'  , '26', false, false);
+	psetting('tos rtp'  , '46', false, false);
+	psetting('tos rtcp' , '', false, false);
+
+	if (! headers_sent()) {
+		# avoid chunked transfer-encoding
+		header( 'Content-Length: '. @ob_get_length() );
+	}
+	@ob_flush();
+	return;
+}
+
 $db = gs_db_master_connect();
 if (! $db) {
 	gs_log( GS_LOG_WARNING, "Aastra phone asks for settings - Could not connect to DB" );
 	_settings_err( 'Could not connect to DB.' );
 }
 
+gs_log( GS_LOG_DEBUG, "Aastra phone \"$mac\" asks for local settings (UA: ...\"$ua\") - model $phone_model" );
 
 # do we know the phone?
 #
@@ -350,45 +415,38 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 
 ob_start();
 
-
-# allow to push config from this host
-psetting('xml application post list', GS_PROV_HOST);
-
-
-# set some default keys
-psetting('services script'    , $prov_url_aastra.'pb.php');
-psetting('callers list script', $prov_url_aastra.'dial-log.php');
-psetting('redial script'      , $prov_url_aastra.'dial-log.php?t=out');
-psetting('redial disabled'    , '0');
-
-# From firmware version 2.3 on there is a default softkey "Webapps"
-# which causes an extremely long boot process by trying to connect
-# to "rcs.aastra.com". We have to overwrite it on the first occasion.
-//FIXME ...
+if ($dynamic == true) {
+	echo '<'.'?xml version="1.0" encoding="UTF-8"?'.'>'."\n";
+	echo '<AastraIPPhoneConfiguration setType="override">',"\n";
+}
 
 # reset all visible softkeys
 for ($i=1; $i<=5; ++$i) {
-	psetting('topsoftkey'.$i.' type', 'empty');
+	psetting('topsoftkey'.$i.' type', 'empty', true, $dynamic);
 }
 for ($i=1; $i<=5; ++$i) {
-	psetting('softkey'.$i.' type'   , 'empty');
+	psetting('softkey'.$i.' type'   , 'empty', true, $dynamic);
 }
 
-psetting('softkey1 type'   , 'xml');
-psetting('softkey1 value'  , $prov_url_aastra.'pb.php');
-psetting('softkey1 label'  , __('Tel.buch'));
+psetting('softkey1 type'   , 'xml', true, $dynamic);
+psetting('softkey1 value'  , $prov_url_aastra.'pb.php', true, $dynamic);
+psetting('softkey1 label'  , __('Tel.buch'), true, $dynamic);
 
-psetting('softkey2 type'   , 'xml');
-psetting('softkey2 value'  , $prov_url_aastra.'dial-log.php');
-psetting('softkey2 label'  , __('Anrufliste'));
+psetting('softkey2 type'   , 'xml', true, $dynamic);
+psetting('softkey2 value'  , $prov_url_aastra.'dial-log.php', true, $dynamic);
+psetting('softkey2 label'  , __('Anrufliste'), true, $dynamic);
 
-psetting('softkey3 type'   , 'speeddial');
-psetting('softkey3 value'  , 'voicemail');
-psetting('softkey3 label'  , __('Voicemail'));
+psetting('softkey3 type'   , 'speeddial', true, $dynamic);
+psetting('softkey3 value'  , 'voicemail', true, $dynamic);
+psetting('softkey3 label'  , __('Voicemail'), true, $dynamic);
 
-
-# get softkeys
-//aastra_keys_out( $user_id, $phone_type );
+psetting('softkey4 type'   , 'xml', true, $dynamic);
+psetting('softkey4 value'  , $prov_url_aastra.'dnd.php', true, $dynamic);
+$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `user_id`=". $user_id);
+if ($current_dndstate == 'yes')
+	psetting('softkey4 label'  , __('Ruhe aus'), true, $dynamic);
+else
+	psetting('softkey4 label'  , __('Ruhe'), true, $dynamic);
 
 $softkeys = aastra_get_softkeys( $user_id, $phone_type );
 if (is_array($softkeys)) {
@@ -405,12 +463,11 @@ if (is_array($softkeys)) {
 			$softkey['label'   ] = __('Anrufliste');
 			break;
 		}
-		psetting($key_name.' type' , $softkey['function']);
-		psetting($key_name.' value', $softkey['data'    ]);
-		psetting($key_name.' label', $softkey['label'   ]);
+		psetting($key_name.' type' , $softkey['function'], true, $dynamic);
+		psetting($key_name.' value', $softkey['data'    ], true, $dynamic);
+		psetting($key_name.' label', $softkey['label'   ], true, $dynamic);
 	}
 }
-
 
 # get softkeys on expansion modules
 /*  //FIXME
@@ -426,39 +483,19 @@ foreach ($exp_mods as $key => $exp_mod) {
 #  SIP
 #####################################################################
 
-psetting('sip mode'                , '0');  # ?
-psetting('sip screen name'         , $user_ext .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
-psetting('sip display name'        , $user['firstname'].' '.$user['lastname']);
-psetting('sip user name'           , $user_ext);
-psetting('sip vmail'               , 'voicemail');
-psetting('sip auth name'           , $user_ext);
-psetting('sip password'            , $user['secret']);
-psetting('sip registrar ip'        , $host);
-psetting('sip registrar port'      , '5060');
-psetting('sip registration period' , '3600');
-psetting('sip outbound proxy'      , ($sip_proxy_and_sbc['sip_proxy_from_wan'] != '' ? $sip_proxy_and_sbc['sip_proxy_from_wan'] : $host) );
-psetting('sip outbound proxy port' , '5060');
-psetting('sip proxy ip'            , $host);
-psetting('sip proxy port'          , '5060');
-
-
+psetting('sip screen name'         , $user_ext .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname'], true, $dynamic);
+psetting('sip display name'        , $user['firstname'].' '.$user['lastname'], true, $dynamic);
+psetting('sip user name'           , $user_ext, true, $dynamic);
+psetting('sip auth name'           , $user_ext, true, $dynamic);
+psetting('sip password'            , $user['secret'], true, $dynamic);
+psetting('sip registrar ip'        , $host, true, $dynamic);
+psetting('sip outbound proxy'      , ($sip_proxy_and_sbc['sip_proxy_from_wan'] != '' ? $sip_proxy_and_sbc['sip_proxy_from_wan'] : $host), true, $dynamic );
+psetting('sip proxy ip'            , $host, true, $dynamic);
 
 #####################################################################
 #  other settings
 #####################################################################
 
-psetting('admin password' , '22222');
-psetting('user password'  , '');
-psetting('force web recovery mode disabled', '0');
-psetting('tos sip'  , '26');
-psetting('tos rtp'  , '46');
-psetting('tos rtcp' , '');
-psetting('upnp manager' , '0');
-psetting('upnp gateway' , '0.0.0.0');
-psetting('upnp mapping lines' ,'0');
-//Get callwaiting settings
-$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
-psetting('call waiting', ($callwaiting ? '1' : '0') );
 /*
 #setting('language', 0, $prov_url_aastra .'lang_en.txt');  # English. Default
 setting('language', 1, $prov_url_aastra .'lang/lang_de.txt');
@@ -498,11 +535,11 @@ if (! is_array($prov_params)) {
 		if ($param_index == -1) {
 			# not an array
 			gs_log( GS_LOG_DEBUG, "Overriding group prov. param \"$param_name\": \"$param_value\"" );
-			setting( $param_name, null        , $param_value );
+			setting( $param_name, null        , $param_value, null, true, $dynamic );
 		} else {
 			# array
 			gs_log( GS_LOG_DEBUG, "Overriding group prov. param \"$param_name\"[$param_index]: \"$param_value\"" );
-			setting( $param_name, $param_index, $param_value );
+			setting( $param_name, $param_index, $param_value, null, true, $dynamic );
 		}
 	}
 	}
@@ -523,17 +560,18 @@ if (! is_array($prov_params)) {
 		||  $p['index'] ==  -1) {
 			# not an array
 			gs_log( GS_LOG_DEBUG, 'Overriding user prov. param "'.$p['param'].'": "'.$p['value'].'"' );
-			setting( $p['param'], null       , $p['value'] );
+			setting( $p['param'], null       , $p['value'], null, true, $dynamic );
 		} else {
 			# array
 			gs_log( GS_LOG_DEBUG, 'Overriding user prov. param "'.$p['param'].'"['.$p['index'].']: "'.$p['value'].'"' );
-			setting( $p['param'], $p['index'], $p['value'] );
+			setting( $p['param'], $p['index'], $p['value'], null, true, $dynamic );
 		}
 	}
 }
 unset($prov_params);
 
-
+if ($dynamic == true)
+	echo '</AastraIPPhoneConfiguration>',"\n";
 
 #####################################################################
 #  output
