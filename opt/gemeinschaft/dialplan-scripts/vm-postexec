@@ -129,7 +129,7 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	}
 	
 	$outfile = $tmpfile_base.'.wav';
-	$cmd = 'sox -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav '. qsa($outfile) .' 2>>/dev/null';
+	$cmd = 'sox -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -2 -t wav '. qsa($outfile) .' 2>>/dev/null';
 	$err=0; $out=array();
 	@exec( $cmd, $out, $err );
 	if ($err != 0) {
