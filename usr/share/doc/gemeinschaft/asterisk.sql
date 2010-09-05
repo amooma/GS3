@@ -7554,5 +7554,11 @@ DROP TABLE IF EXISTS `wakeup_calls`;
  `hour` TINYINT( 2 ) UNSIGNED NOT NULL ,
  `minute` TINYINT( 2 ) UNSIGNED NOT NULL ,
  PRIMARY KEY ( `target` )
- ) ENGINE = MYISAM
+ ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `dnd`;
+CREATE TABLE IF NOT EXISTS `dnd` (
+  `_user_id` int(10) NOT NULL DEFAULT '0',
+  `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
+  PRIMARY KEY (`_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
