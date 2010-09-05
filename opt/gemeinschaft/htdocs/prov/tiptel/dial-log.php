@@ -147,7 +147,8 @@ else {
 	if ( $type === 'queue' ){	
 			$query =
 		'SELECT
-			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
+			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`,
+		 1 `num_calls`
 		FROM `dial_log`
 		WHERE
 			`user_id`='. $user_id .' AND
