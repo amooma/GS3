@@ -112,19 +112,16 @@ if ( ($newdndstate == 'on') || ($newdndstate == 'off') ) {
 	$masterdb = gs_db_master_connect();
 	if (!$masterdb) _err('Could not connect to database.');
 
-	if ($newdndstate == 'on') $dndvalue = 1;
-	if ($newdndstate == 'off') $dndvalue = 0;
-
 	$check = $db->execute("INSERT INTO `dnd`
-		(`user_id`, `active`) VALUES
-		(" . $user_id . ", " . (int)$dndvalue . ") 
-		ON DUPLICATE KEY UPDATE `active` = " . (int)$dndvalue);
+		(`_user_id`, `active`) VALUES
+		(" . $user_id . ", \"" . $newdndstate . "\") 
+		ON DUPLICATE KEY UPDATE `active` = \"" . $newdndstate . "\"");
 	if (!$check) _err('Failed to set new DND state.');
 }
 
 #################################### MAIN MENU {
 
-$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `user_id`=". $user_id);
+$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
 
 echo "<html>\n";
 echo "<head><title>". __("Ruhe/DND") ."</title></head>\n";
@@ -135,8 +132,8 @@ echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n"
 echo "<tr>";
 echo "<th width=\"100%\" align=\"center\">Ruhe/DND-Status setzen:</th></tr>\n";
 
-echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=on\">". (($current_dndstate == 1) ? "*" : "") ."Ein</a></td></tr>\n";
-echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=off\">". (($current_dndstate == 0) ? "*" : "") ."Aus</a></td></tr>\n";
+echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=on\">". (($current_dndstate == "on") ? "*" : "") ."Ein</a></td></tr>\n";
+echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=off\">". (($current_dndstate == "off") ? "*" : "") ."Aus</a></td></tr>\n";
 
 echo "</table>\n";
 

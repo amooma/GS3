@@ -807,8 +807,14 @@ context to-internal-users-self {
 			else {
 				Verbose(1,### Call local user ${EXTEN}\, timeout: none);
 			}
-			AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${is_call_from});
-			Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout});
+			
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-dnd.agi,${EXTEN});
+			if ("${dnd_active}" = "yes") {
+				Set(DIALSTATUS="BUSY");
+			} else {
+				AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${is_call_from});
+				Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout});
+			}
 			
 			if ("${is_callfile_origin}" != "1") {
 				Set(is_dnd=0);
