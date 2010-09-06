@@ -154,7 +154,7 @@ else {
 			`user_id`='. $user_id .' AND
 			`type`=\''. $type .'\'
 		ORDER BY `ts` DESC
-		LIMIT 20';
+		LIMIT 15';
 	} else {
 			$query =
 		'SELECT
@@ -166,7 +166,7 @@ else {
 			`type`=\''. $type .'\'
 		GROUP BY `number`
 		ORDER BY `ts` DESC
-		LIMIT 20';
+		LIMIT 15';
 	}
 	$rs = $db->execute( $query );
 	
