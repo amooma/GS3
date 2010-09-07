@@ -287,8 +287,8 @@ if (in_array( $type, array('gs','prv','imported'), true )) {
 			echo '<Label>', tiptelXmlEsc('<< '.$page), '</Label>', "\n";
 			echo '<URI>', tiptelXmlEsc($url_snom_pb.'?u='.$user.'&t='.$type.'&p='.($page-1)), '</URI>', "\n";
 		} else {
-			echo '<Label></Label>', "\n";
-			echo '<URI></URI>', "\n";
+			echo '<Label>', tiptelXmlEsc(__('Suchen')), '</Label>', "\n";
+			echo '<URI>', tiptelXmlEsc($url_snom_pb.'?u='.$user.'&t='.$type.'&s=1'), '</URI>', "\n";
 		}
 		echo '</SoftKey>', "\n";
 		
