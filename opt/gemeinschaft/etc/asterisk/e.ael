@@ -475,7 +475,7 @@ macro queue-login( queue ) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},login);
 	if ("${agent_login_status}" = "loggedin") {
 		// fake login for the statistics:
-		QueueLog(NONE,${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGIN,fake);
+		QueueLog(${queue},${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGIN,fake);
 	}
 	Verbose(1,### agent_login_status: ${agent_login_status});
 	Wait(0.5);
@@ -496,7 +496,7 @@ macro queue-logout( queue ) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},logout);
 	Wait(0.5);
 	if ("${agent_login_status}" = "loggedout") {
-		QueueLog(NONE,${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGOFF,fake);
+		QueueLog(${queue},${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGOFF,fake);
 		Playback(agent-loggedoff);
 	} else {
 		Playback(beeperr);
