@@ -291,7 +291,7 @@ echo "reg.1.ringType=\"2\" ";
 echo "reg.1.lineKeys=\"\" ";
 echo "reg.1.callsPerLineKey=\"8\" ";
 echo "reg.1.bargeInEnabled=\"\" ";
-echo "reg.1.serverFeatureControl.dnd=\"0\" ";
+echo "reg.1.serverFeatureControl.dnd=\"1\" ";
 echo "reg.1.serverFeatureControl.cf=\"1\" ";
 echo "reg.1.strictLineSeize=\"\" ";
 
@@ -341,7 +341,7 @@ if ($phone_has_microbrowser)
 	echo "   <efklist";
 	echo " efk.efklist.1.mname=\"gsdiallog\" efk.efklist.1.status=\"1\" efk.efklist.1.action.string=\"". $prov_url_polycom ."diallog.php?user=". $user_ext ."\"";
 	echo " efk.efklist.2.mname=\"gsphonebook\" efk.efklist.2.status=\"1\" efk.efklist.2.action.string=\"". $prov_url_polycom ."pb.php?m=". $mac ."&amp;u=". $user_ext ."\"";
-	// echo " efk.efklist.3.mname=\"gsdnd\" efk.efklist.3.status=\"1\" efk.efklist.3.action.string=\"". $prov_url_polycom ."dnd.php?m=". $mac ."&amp;u=". $user_ext ."\"";
+	echo " efk.efklist.3.mname=\"gsdnd\" efk.efklist.3.status=\"1\" efk.efklist.3.action.string=\"". $prov_url_polycom ."dnd.php?m=". $mac ."&amp;u=". $user_ext ."\"";
 	echo " efk.efklist.4.mname=\"gsmenu\" efk.efklist.4.status=\"1\" efk.efklist.4.action.string=\"". $prov_url_polycom ."configmenu.php?m=". $mac ."&amp;u=". $user_ext ."\"";
 	echo " efk.efklist.5.mname=\"gsmainmenu\" efk.efklist.5.status=\"1\" efk.efklist.5.action.string=\"". $prov_url_polycom ."main.php?mac=". $mac ."&amp;user=". $user_ext ."\"";
 
@@ -353,23 +353,23 @@ if ($phone_has_microbrowser)
 
 	//--- key remappings for SoundPoint IP 301
 	//--- 23 = DND key
-	// echo " key.IP_300.23.function.prim=\"SpeedDial\" key.IP_300.23.subPoint.prim=\"3\"";
+	echo " key.IP_300.23.function.prim=\"SpeedDial\" key.IP_300.23.subPoint.prim=\"3\"";
 
 	//--- key remappings for SoundPoint IP 501
 	//--- 30 = 'Call Lists' key, 32 = 'Directories' key, 9 = DND key
 	echo " key.IP_500.30.function.prim=\"SpeedDial\" key.IP_500.30.subPoint.prim=\"1\"";
 	echo " key.IP_500.32.function.prim=\"SpeedDial\" key.IP_500.32.subPoint.prim=\"2\"";
-	// echo " key.IP_500.9.function.prim=\"SpeedDial\" key.IP_500.9.subPoint.prim=\"3\"";
+	echo " key.IP_500.9.function.prim=\"SpeedDial\" key.IP_500.9.subPoint.prim=\"3\"";
 
 	//--- key remappings for SoundPoint IP 600 and 601
 	//--- 30 = 'Directories' key
 	echo " key.IP_600.30.function.prim=\"SpeedDial\" key.IP_600.30.subPoint.prim=\"2\"";
-	// echo " key.IP_600.9.function.prim=\"SpeedDial\" key.IP_600.9.subPoint.prim=\"3\"";
+	echo " key.IP_600.9.function.prim=\"SpeedDial\" key.IP_600.9.subPoint.prim=\"3\"";
 
 	//--- key remappings for SoundPoint IP 650 and 670
 	//--- 30 = 'Directories' key
 	echo " key.IP_650.30.function.prim=\"SpeedDial\" key.IP_650.30.subPoint.prim=\"2\"";
-	// echo " key.IP_650.9.function.prim=\"SpeedDial\" key.IP_650.9.subPoint.prim=\"3\"";
+	echo " key.IP_650.9.function.prim=\"SpeedDial\" key.IP_650.9.subPoint.prim=\"3\"";
 
 	//--- end of remappings
 

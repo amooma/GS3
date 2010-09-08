@@ -139,10 +139,11 @@ $MODULES['monitor'  ]=  array(
 	'boi_ok'=> false,
 	'id' => 7000,
 	'sub' => array(
-		'queues'       => array('title' => __('Warteschlangen'), 'id' => 7001),
-		'pgrps'        => array('title' => __('Rufannahmegrp.'), 'id' => 7002),
-		'peers'        => array('title' => __('Kollegen'),       'id' => 7003),
-		'queuemon'     => array('title' => __('QueueMon'),       'id' => 7005)
+		/*'queues'       => array('title' => __('Warteschlangen'), 'id' => 7001),
+		'peers'        => array('title' => __('Kollegen'),       'id' => 7003),*/
+		'queuemon'     => array('title' => __('QueueMon'),       'id' => 7001),
+		'peermon'      => array('title' => __('PeerMon'),        'id' => 7003),
+		'pgrps'        => array('title' => __('Rufannahmegrp.'), 'id' => 7002)
 	)
 );
 

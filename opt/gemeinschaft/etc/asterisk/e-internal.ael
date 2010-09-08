@@ -472,9 +472,9 @@ context to-internal-users {
 			Hangup();
 		}
 		
-		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${boss},secretary_call);
+		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${boss},override_callforward_call);
 		if ("${permission}" != "true") {
-			Verbose(1,### ${user_name} is not secretary of ${boss});
+			Verbose(1,### ${user_name} is not allow override callforward of ${boss});
 			Hangup();
 		}
 		
@@ -805,8 +805,14 @@ context to-internal-users-self {
 			else {
 				Verbose(1,### Call local user ${EXTEN}\, timeout: none);
 			}
-			AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${is_call_from});
-			Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout});
+			
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-dnd.agi,${EXTEN});
+			if ("${dnd_active}" = "yes") {
+				Set(DIALSTATUS="BUSY");
+			} else {
+				AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${is_call_from});
+				Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout});
+			}
 			
 			if ("${is_callfile_origin}" != "1") {
 				Set(is_dnd=0);
@@ -1224,7 +1230,7 @@ context to-internal-users-self {
 			if ("${DIALSTATUS}" = "ANSWER")
 				Set(type=in);
 			
-			if ("${CALLERID(dnid)}" != "" && "${DIALEDPEERNUMBER:0:1}" != "*") {
+			if (("${CALLERID(dnid)}" != "" || "${did_ext_to}" != "") && "${DIALEDPEERNUMBER:0:1}" != "*") {
 				if ("${did_ext_to}" != "")
 					&dial-log-store(${did_ext_to},${type},${CALLERID(num)});
 				else

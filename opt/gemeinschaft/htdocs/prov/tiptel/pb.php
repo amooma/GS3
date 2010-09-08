@@ -88,11 +88,12 @@ $type = trim( @$_REQUEST['t'] );
 if (! in_array( $type, array('gs','prv','imported'), true )) {
 	$type = false;
 }
-
+$page = (int)trim( @$_REQUEST['p'] );
 $search = (int)trim( @$_REQUEST['s'] );
 $query  = trim( @$_REQUEST['q'] );
 
 
+$per_page = 10;
 $db = gs_db_slave_connect();
 
 
@@ -124,7 +125,7 @@ foreach ($tmp as $arr) {
 }
 
 
-$url_snom_pb = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'tiptel/pb.php';
+$url_tiptel_pb = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'tiptel/pb.php';
 
 
 
@@ -140,7 +141,7 @@ if ($search === 1) {
 	echo 
 		'<TiptelIPPhoneInputScreen>', "\n",
 		'<Title>Suchen</Title>', "\n",
-		'<URL>', tiptelXmlEsc($url_snom_pb.'?u='.$user.'&t='.$type) ,'</URL>', "\n",
+		'<URL>', tiptelXmlEsc($url_tiptel_pb.'?u='.$user.'&t='.$type) ,'</URL>', "\n",
 		'<InputField type="string" password="no" editable="yes">', "\n",
 			'<Prompt>Suche nach</Prompt>', "\n",
 			'<Parameter>q</Parameter>',"\n",
@@ -180,7 +181,7 @@ if (! $type) {
 		echo
 			'<MenuItem>', "\n",
 				'<Prompt>', tiptelXmlEsc($title), $c, '</Prompt>', "\n",
-				'<URI>', tiptelXmlEsc($url_snom_pb), '</URI>', "\n",
+				'<URI>', tiptelXmlEsc($url_tiptel_pb), '</URI>', "\n",
 				'<Selection>', tiptelXmlEsc('0&u='.$user.'&t='.$t),'</Selection>', "\n",
 			'</MenuItem>', "\n\n";
 	}
@@ -207,7 +208,7 @@ if ($type === 'gs') {
 		$where = 'AND (`u`.`lastname` LIKE \'%'. $query .'%\' OR `u`.`firstname` LIKE \'%'. $query .'%\')';
 	
 	$query =
-'SELECT `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
+'SELECT SQL_CALC_FOUND_ROWS `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
@@ -215,8 +216,8 @@ WHERE
 	`u`.`id` IN ('.implode(',',$group_members).') AND
 	`u`.`id`!='.$user_id.'
 	'. ($where ? $where : '') .'
-ORDER BY `u`.`lastname`, `u`.`firstname`';
-//LIMIT '. $num_results;
+ORDER BY `u`.`lastname`, `u`.`firstname`
+LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	
 }
 elseif ($type === 'prv') {
@@ -229,20 +230,22 @@ elseif ($type === 'prv') {
 		$where = 'AND (`pb`.`lastname` LIKE \'%'. $query .'%\' OR `pb`.`firstname` LIKE \'%'. $query .'%\')';
 	
 	$query =
-'SELECT `pb`.`lastname` `ln`, `pb`.`firstname` `fn`, `pb`.`number` `ext`
+'SELECT SQL_CALC_FOUND_ROWS `pb`.`lastname` `ln`, `pb`.`firstname` `fn`, `pb`.`number` `ext`
 FROM `pb_prv` `pb`
 WHERE
 	`pb`.`user_id`='.$user_id.'
 	'. ($where ? $where : '') .'
-ORDER BY `pb`.`lastname`, `pb`.`firstname`';
+ORDER BY `pb`.`lastname`, `pb`.`firstname`
+LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	
 }
 elseif ($type === 'imported') {
 	
 	$query =
-'SELECT `lastname` `ln`, `firstname` `fn`, `number` `ext`
+'SELECT SQL_CALC_FOUND_ROWS `lastname` `ln`, `firstname` `fn`, `number` `ext`
 FROM `pb_ldap`
-ORDER BY `lastname`, `firstname`';
+ORDER BY `lastname`, `firstname`
+LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	
 }
 	
@@ -251,11 +254,17 @@ if (in_array( $type, array('gs','prv','imported'), true )) {
 	echo '<?','xml version="1.0" encoding="utf-8"?','>',"\n";
 	
 	$rs = $db->execute($query);
+	$num_total = @$db->numFoundRows();
+	$num_pages = ceil($num_total / $per_page);
+	
+	$page_title = $typeToTitle[$type];
+	if ($num_pages > 1) $page_title.= ' '.($page+1).'/'.$num_pages;
+	
 	if ( $rs && $rs->numRows() !== 0 ) {
 		
 		echo
 			'<TiptelIPPhoneDirectory>', "\n",
-				'<Title>', tiptelXmlEsc( $typeToTitle[$type] ), '</Title>', "\n";
+				'<Title>', tiptelXmlEsc( $page_title ), '</Title>', "\n";
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$number = $r['ext'];
@@ -265,23 +274,35 @@ if (in_array( $type, array('gs','prv','imported'), true )) {
 					'<URI>', $number ,'</URI>',
 				'</MenuItem>', "\n";
 		}
+		echo "\n";
+		
 		echo
-			"\n",
 			'<SoftKey index="1">', "\n",
 				'<Label>', tiptelXmlEsc(__("Zur\xC3\xBCck")), '</Label>', "\n",
 				'<URI>SoftKey:Exit</URI>', "\n",
-			'</SoftKey>', "\n",
-			"\n",
-			'<SoftKey index="2">', "\n",
-				'<Label>', tiptelXmlEsc(__('Suchen')), '</Label>', "\n",
-				'<URI>', tiptelXmlEsc($url_snom_pb.'?u='.$user.'&t='.$type.'&s=1'), '</URI>', "\n",
-			'</SoftKey>', "\n",
-			"\n",
-			'<SoftKey index="3">', "\n",
-				'<Label></Label>', "\n",
-				'<URI></URI>', "\n",
-			'</SoftKey>', "\n",
-			"\n",
+			'</SoftKey>', "\n";
+		
+		echo '<SoftKey index="2">', "\n";
+		if($page > 0) {
+			echo '<Label>', tiptelXmlEsc('<< '.$page), '</Label>', "\n";
+			echo '<URI>', tiptelXmlEsc($url_tiptel_pb.'?u='.$user.'&t='.$type.'&p='.($page-1)), '</URI>', "\n";
+		} else {
+			echo '<Label>', tiptelXmlEsc(__('Suchen')), '</Label>', "\n";
+			echo '<URI>', tiptelXmlEsc($url_tiptel_pb.'?u='.$user.'&t='.$type.'&s=1'), '</URI>', "\n";
+		}
+		echo '</SoftKey>', "\n";
+		
+		echo '<SoftKey index="3">', "\n";
+		if($page < $num_pages-1 ) {
+			echo '<Label>', tiptelXmlEsc(($page+2).' >>'), '</Label>', "\n";
+			echo '<URI>', tiptelXmlEsc($url_tiptel_pb.'?u='.$user.'&t='.$type.'&p='.($page+1)), '</URI>', "\n";
+		} else {
+			echo '<Label></Label>', "\n";
+			echo '<URI></URI>', "\n";
+		}
+		echo '</SoftKey>', "\n";
+		
+		echo
 			'<SoftKey index="4">', "\n",
 				'<Label>', tiptelXmlEsc(__("W\xC3\xA4hlen")), '</Label>', "\n",
 				'<URI>SoftKey:Dial</URI>', "\n",

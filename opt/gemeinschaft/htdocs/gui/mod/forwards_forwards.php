@@ -266,7 +266,7 @@ if (@$_REQUEST['action']==='save') {
 			$warnings['vm_email_n'] = __('Fehler beim (De-)Aktivieren der E-Mail-Benachrichtigung') .' ('. $ret->getMsg() .')';
 	}
 	//Set Devstate for Customhint
-	InitHinttoggleCall();
+	//InitHinttoggleCall();
 }
 
 

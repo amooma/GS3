@@ -1202,11 +1202,11 @@ context toggle-cfwd-hint {
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${user_name});
 		if ("${fw_std_active}" = "1") {
 			Set(CDR(amaflags)=OMIT);
-			TryExec(Set(DEVICE_STATE(Custom:${user_name}fwd)=BUSY));
+			TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=BUSY));
 			Hangup();
 		} else {
 			Set(CDR(amaflags)=OMIT);
-			TryExec(Set(DEVICE_STATE(Custom:${user_name}fwd)=NOT_INUSE));
+			TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=NOT_INUSE));
 			Hangup();
 		}
 	}

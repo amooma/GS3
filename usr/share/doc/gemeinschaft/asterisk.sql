@@ -6208,6 +6208,7 @@ INSERT INTO `group_members` VALUES (7,15009);
 INSERT INTO `group_members` VALUES (7,15010);
 INSERT INTO `group_members` VALUES (7,15011);
 INSERT INTO `group_members` VALUES (7,15012);
+INSERT INTO `group_members` VALUES (7,15013);
 INSERT INTO `group_members` VALUES (7,15014);
 INSERT INTO `group_members` VALUES (7,16000);
 INSERT INTO `group_members` VALUES (7,16001);
@@ -6249,7 +6250,7 @@ DROP TABLE IF EXISTS `group_permissions`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `group_permissions` (
-  `type` varchar(20) character set ascii NOT NULL default '',
+  `type` varchar(25) character set ascii NOT NULL default '',
   `group` mediumint(8) unsigned NOT NULL,
   `permit` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`type`,`group`,`permit`)
@@ -6271,7 +6272,7 @@ INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
 INSERT INTO `group_permissions` VALUES ('phonebook_user',3,2);
 INSERT INTO `group_permissions` VALUES ('pickup',2,2);
 INSERT INTO `group_permissions` VALUES ('private_call',2,2);
-INSERT INTO `group_permissions` VALUES ('secretary_call',2,2);
+INSERT INTO `group_permissions` VALUES ('override_callforward_call',2,2);
 INSERT INTO `group_permissions` VALUES ('wakeup_call',2,2);
 INSERT INTO `group_permissions` VALUES ('sudo_user',1,2);
 INSERT INTO `group_permissions` VALUES ('login_queues',2,5);
@@ -7554,5 +7555,11 @@ DROP TABLE IF EXISTS `wakeup_calls`;
  `hour` TINYINT( 2 ) UNSIGNED NOT NULL ,
  `minute` TINYINT( 2 ) UNSIGNED NOT NULL ,
  PRIMARY KEY ( `target` )
- ) ENGINE = MYISAM
+ ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `dnd`;
+CREATE TABLE IF NOT EXISTS `dnd` (
+  `_user_id` int(10) NOT NULL DEFAULT '0',
+  `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
+  PRIMARY KEY (`_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

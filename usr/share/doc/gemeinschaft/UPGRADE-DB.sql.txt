@@ -1355,3 +1355,19 @@ INSERT INTO `groups` VALUES (NULL,'nobody_users','All Nobody Users','user');
 INSERT INTO `group_connections` VALUES ('mysql',(SELECT `id` FROM `groups` WHERE `name` = 'nobody_users' LIMIT 1),'id','SELECT `id` FROM `users` WHERE `nobody_index` IS NOT NULL');
 INSERT INTO `group_permissions` VALUES ('phonebook_user',(SELECT `id` FROM `groups` WHERE `name` = 'nobody_users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1));
 
+--
+-- After: 1a47844d99b09ad5f9c2c4bf65deb3caddac98af
+--
+
+ALTER TABLE `group_permissions` CHANGE `type` `type` VARCHAR( 25 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL 
+UPDATE `group_permissions` SET `type`='override_callforward_call' WHERE `type`='secretary_call';
+
+--
+-- After: e73b1042653bf36babe31e16863ecfec9662bf94
+--
+
+CREATE TABLE IF NOT EXISTS `dnd` (
+  `_user_id` int(10) NOT NULL DEFAULT '0',
+  `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
+  PRIMARY KEY (`_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

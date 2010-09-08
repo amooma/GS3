@@ -147,13 +147,14 @@ else {
 	if ( $type === 'queue' ){	
 			$query =
 		'SELECT
-			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
+			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`,
+		 1 `num_calls`
 		FROM `dial_log`
 		WHERE
 			`user_id`='. $user_id .' AND
 			`type`=\''. $type .'\'
 		ORDER BY `ts` DESC
-		LIMIT 20';
+		LIMIT 15';
 	} else {
 			$query =
 		'SELECT
@@ -165,7 +166,7 @@ else {
 			`type`=\''. $type .'\'
 		GROUP BY `number`
 		ORDER BY `ts` DESC
-		LIMIT 20';
+		LIMIT 15';
 	}
 	$rs = $db->execute( $query );
 	
