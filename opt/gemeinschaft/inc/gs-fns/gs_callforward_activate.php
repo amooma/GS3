@@ -145,7 +145,7 @@ LIMIT 1'
 			@exec( 'sudo mv '. qsa($filename) .' '. qsa($spoolfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
 			if ($err != 0) {
 				@unlink( $filename );
-				gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"' );
+				gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. $spoolfile .'"' );
 				return new GsError( 'Failed to move call file.' );
 			}
 		} else {
