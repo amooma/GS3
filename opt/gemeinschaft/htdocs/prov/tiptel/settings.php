@@ -716,6 +716,21 @@ psetting('Country|Country', 'Germany');
 psetting('Webserver Type|path', '/yealink/config/Advanced/Advanced.cfg');
 psetting('Webserver Type|WebType', '1');	# 0 = disabled, 1 = HTTP&HTTPS, 2 = HTTP, 3 = HTTPS
 
+psetting('Advanced|path', '/yealink/config/Advanced/Advanced.cfg');
+psetting('Advanced|var_enabled', '1');
+
+
+#####################################################################
+#  /yealink/config/WebItemsLevel.cfg
+#####################################################################
+# 0 = item is visible in all access level (user, var, admin)
+# 1 = item is visible in admin and var level
+# 2 = item is only visible in admin level
+
+psetting('Phone|path', '/yealink/config/WebItemsLevel.cfg');
+psetting('Phone|features', '2');
+psetting('Phone|SMS', '2');
+
 
 #####################################################################
 # /yealink/config/voip/sipAccount0.cfg
