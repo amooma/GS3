@@ -40,10 +40,10 @@ fi
 
 
 #####################################################################
-#  7.1.8
+#  8.4.18
 #####################################################################
 
-LANGVERS='7.1.8'
+LANGVERS='8.4.18'
 echo "Fetching language files for firmware version \"${LANGVERS}\""
 cd "${SNOM_SW_DIR}" || exit 1
 if [ ! -d "lang-${LANGVERS}" ]; then
@@ -60,10 +60,13 @@ else
 	
 	echo -n "Fetching ${LANGVERS} gui DE ...  "
 	${DOWNLOAD} ${BASE_URL}DE.xml && echo 'Done' || echo 'Failed'
+	touch gui_lang_DE.xml.done
 	echo -n "Fetching ${LANGVERS} gui EN ...  "
 	${DOWNLOAD} ${BASE_URL}EN.xml && echo 'Done' || echo 'Failed'
+	touch gui_lang_EN.xml.done
 	echo -n "Fetching ${LANGVERS} gui UK ...  "
 	${DOWNLOAD} ${BASE_URL}UK.xml && echo 'Done' || echo 'Failed'
+	touch gui_lang_UK.xml.done
 	
 	# Web
 	#
@@ -71,8 +74,11 @@ else
 	
 	echo -n "Fetching ${LANGVERS} web DE ...  "
 	${DOWNLOAD} ${BASE_URL}DE.xml && echo 'Done' || echo 'Failed'
+	touch web_lang_DE.xml.done
+
 	echo -n "Fetching ${LANGVERS} web EN ...  "
 	${DOWNLOAD} ${BASE_URL}EN.xml && echo 'Done' || echo 'Failed'
+	touch web_lang_EN.xml.done
 	
 	
 fi
