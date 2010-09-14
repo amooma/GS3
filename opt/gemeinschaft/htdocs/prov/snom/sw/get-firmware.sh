@@ -31,7 +31,7 @@ SNOM_SW_DIR="/opt/gemeinschaft/htdocs/prov/snom/sw/"
 WGET="/usr/bin/wget"
 WGET_ARGS="-q -a /dev/null -t 1 -T 300 -nc -c"
 DOWNLOAD="${WGET} ${WGET_ARGS}"
-SNOM_BASE_URL="http://provisioning.snom.com/download/"
+SNOM_BASE_URL="http://provisioning.snom.com/download/fw/"
 SNOM_BASE_URL_6TO7="http://provisioning.snom.com/from6to7/"
 
 if [ ! -x ${WGET} ]; then
@@ -94,6 +94,37 @@ ${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
 MODEL='snom360'
 echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
 ${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
+
+
+echo ""
+
+#####################################################################
+#  8.4.18
+#####################################################################
+
+VERS='8.4.18-SIP-f'
+VERSFILE='08.04.18'
+
+MODEL='snom370'
+echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
+${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
+ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
+
+
+MODEL='snom360'
+echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
+${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
+ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
+
+MODEL='snom300'
+echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
+${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
+ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
+
+MODEL='snom320'
+echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
+${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
+ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
 
 
 echo ""
