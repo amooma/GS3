@@ -125,7 +125,7 @@ foreach ($tmp as $arr) {
 }
 
 
-$url_snom_pb = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'tiptel/pb.php';
+$url_tiptel_pb = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'tiptel/pb.php';
 
 
 
@@ -141,7 +141,7 @@ if ($search === 1) {
 	echo 
 		'<TiptelIPPhoneInputScreen>', "\n",
 		'<Title>Suchen</Title>', "\n",
-		'<URL>', tiptelXmlEsc($url_snom_pb.'?u='.$user.'&t='.$type) ,'</URL>', "\n",
+		'<URL>', tiptelXmlEsc($url_tiptel_pb.'?u='.$user.'&t='.$type) ,'</URL>', "\n",
 		'<InputField type="string" password="no" editable="yes">', "\n",
 			'<Prompt>Suche nach</Prompt>', "\n",
 			'<Parameter>q</Parameter>',"\n",
@@ -181,7 +181,7 @@ if (! $type) {
 		echo
 			'<MenuItem>', "\n",
 				'<Prompt>', tiptelXmlEsc($title), $c, '</Prompt>', "\n",
-				'<URI>', tiptelXmlEsc($url_snom_pb), '</URI>', "\n",
+				'<URI>', tiptelXmlEsc($url_tiptel_pb), '</URI>', "\n",
 				'<Selection>', tiptelXmlEsc('0&u='.$user.'&t='.$t),'</Selection>', "\n",
 			'</MenuItem>', "\n\n";
 	}
@@ -285,17 +285,17 @@ if (in_array( $type, array('gs','prv','imported'), true )) {
 		echo '<SoftKey index="2">', "\n";
 		if($page > 0) {
 			echo '<Label>', tiptelXmlEsc('<< '.$page), '</Label>', "\n";
-			echo '<URI>', tiptelXmlEsc($url_snom_pb.'?u='.$user.'&t='.$type.'&p='.($page-1)), '</URI>', "\n";
+			echo '<URI>', tiptelXmlEsc($url_tiptel_pb.'?u='.$user.'&t='.$type.'&p='.($page-1)), '</URI>', "\n";
 		} else {
-			echo '<Label></Label>', "\n";
-			echo '<URI></URI>', "\n";
+			echo '<Label>', tiptelXmlEsc(__('Suchen')), '</Label>', "\n";
+			echo '<URI>', tiptelXmlEsc($url_tiptel_pb.'?u='.$user.'&t='.$type.'&s=1'), '</URI>', "\n";
 		}
 		echo '</SoftKey>', "\n";
 		
 		echo '<SoftKey index="3">', "\n";
 		if($page < $num_pages-1 ) {
 			echo '<Label>', tiptelXmlEsc(($page+2).' >>'), '</Label>', "\n";
-			echo '<URI>', tiptelXmlEsc($url_snom_pb.'?u='.$user.'&t='.$type.'&p='.($page+1)), '</URI>', "\n";
+			echo '<URI>', tiptelXmlEsc($url_tiptel_pb.'?u='.$user.'&t='.$type.'&p='.($page+1)), '</URI>', "\n";
 		} else {
 			echo '<Label></Label>', "\n";
 			echo '<URI></URI>', "\n";
