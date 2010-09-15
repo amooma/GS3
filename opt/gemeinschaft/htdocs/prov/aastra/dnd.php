@@ -76,11 +76,11 @@ $remote_addr = @$_SERVER["REMOTE_ADDR"];
 $remote_addr_check = $db->executeGetOne("SELECT `current_ip` FROM `users` WHERE `id`='". $user_id ."'");
 if($remote_addr != $remote_addr_check) _err("Not authorized");
 
-$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `user_id`=". $user_id);
+$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
 gs_log(GS_LOG_NOTICE, "current_dndstate: " . $current_dndstate . " " . $user_id);
 if ($current_dndstate == 'yes') {
 	$check = $db->execute("INSERT INTO `dnd`
-		(`user_id`, `active`) VALUES
+		(`_user_id`, `active`) VALUES
 		(" . $user_id . ", 'no') 
 		ON DUPLICATE KEY UPDATE `active` = 'no'");
 	if (!$check) _err('Failed to set new DND state.');
@@ -90,7 +90,7 @@ if ($current_dndstate == 'yes') {
 		"</AastraIPPhoneExecute>\n";
 } else {
 	$check = $db->execute("INSERT INTO `dnd`
-		(`user_id`, `active`) VALUES
+		(`_user_id`, `active`) VALUES
 		(" . $user_id . ", 'yes') 
 		ON DUPLICATE KEY UPDATE `active` = 'yes'");
 	if (!$check) _err('Failed to set new DND state.');
