@@ -6583,6 +6583,7 @@ CREATE TABLE `phones` (
   `added` int(10) unsigned NOT NULL default '0',
   `firmware_cur` varchar(25) character set ascii NOT NULL default '',
   `fw_manual_update` tinyint(1) unsigned NOT NULL default '0',
+  `expansion_modules` varchar(50) character set ascii default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `mac_addr` (`mac_addr`),
   KEY `user_id` (`user_id`),
