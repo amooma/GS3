@@ -46,7 +46,7 @@ function _gs_send_event( $data )
 	
 	}
 	
-	$command = $command . "\r\n\r\n";
+	$command = $command . "\r\n";
 	
 	
 	$ami = new AMI;
