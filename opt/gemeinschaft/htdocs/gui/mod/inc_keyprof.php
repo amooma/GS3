@@ -1373,10 +1373,10 @@ if ($phone_layout) {
 	echo '</table>' ,"\n";
 	echo '<br />' ,"\n";
 	
-	if (in_array($phone_layout, array('snom', 'grandstream'), true)) {
-	
+	if ( $is_user_profile && in_array($phone_layout, array('snom', 'grandstream'), true) ) {
+		
 		if ( $phone_type != 'snom-300' && $phone_type != 'snom-820' && $phone_type != 'snom-821' ) {
-			echo '<a href="',GS_URL_PATH ,'srv/key-layout.php?phone_type=',$phone_type,'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n"; 
+			echo '<a href="',GS_URL_PATH ,'srv/key-layout.php?phone_type=',$phone_type,'&user_id=',$user_id,'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n"; 
 		}
 	}
 	echo $save_bt;

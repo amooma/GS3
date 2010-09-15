@@ -75,10 +75,8 @@ function _get_key_label($knump)
 	$key_defs = @$softkeys['f'.$knump];
 	if ( is_array($key_defs) ) {
 		if (array_key_exists('slf', $key_defs)) {
-			gs_log(GS_LOG_WARNING, $key_defs['slf']['label']);
 			return $key_defs['slf']['label'];
 		} elseif (array_key_exists('inh', $key_defs)) {
-			gs_log(GS_LOG_WARNING, $key_defs['inh']['label']);
 			return $key_defs['inh']['label'];
 		}
 	}
@@ -137,33 +135,28 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 }
 
 
-
-
-if (! is_array($_SESSION)
-||  ! @array_key_exists('sudo_user', @$_SESSION)
-||  ! @array_key_exists('info'     , @$_SESSION['sudo_user'])
-||  ! @array_key_exists('id'       , @$_SESSION['sudo_user']['info']) )
-{
-	_not_allowed();
-}
-
-
 # get phone_type
 $phone_type = preg_replace('/[^a-z0-9\-]/', '', @$_REQUEST['phone_type']);
+
+$user_id = preg_replace('/[^0-9]/', '', @$_REQUEST['user_id']);
 
 if ( $phone_type == '' || ! array_key_exists($phone_type, $phone_types) ) { // TODO ? FIXME
 	_not_allowed();
 }
 
+if ( $user_id == ''  ) { // TODO ? FIXME
+	_not_allowed();
+}
+
 # get DB infos
-$user_id = (int)@$_SESSION['sudo_user']['info']['id'];
-$rs = $DB->execute( 'SELECT `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
+$rs = $DB->execute( 'SELECT `u`.`user`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE `u`.`id`='. $user_id );
 $user = $rs->fetchRow();
 
+$user_name = $user['user'];
 
 # PDF erzeugen
 $pdf=new PDF('P', 'mm', 'A4');
@@ -181,7 +174,7 @@ foreach ($phone_types as $phone_type_name => $phone_type_title) {
 	
 		$softkeys = null;
 		$GS_Softkeys = gs_get_key_prov_obj( $phone_type_name );
-		$GS_Softkeys->set_user( @$_SESSION['sudo_user']['name'] );
+		$GS_Softkeys->set_user( $user_name );
 		$GS_Softkeys->retrieve_keys( $phone_type_name );
 		$softkeys = $GS_Softkeys->get_keys();
 				
@@ -365,6 +358,6 @@ foreach ($phone_types as $phone_type_name => $phone_type_title) {
 
 $pdf->SetCreator('Gemeinschaft');
 $pdf->SetAuthor('Gemeinschaft');	
-$pdf->Output( __('Tastenbeschriftung').'_'.$phone_type.'_'.$_SESSION['sudo_user']['info']['user'].'.pdf', 'D');
+$pdf->Output( __('Tastenbeschriftung').'_'.$phone_type.'_'.$user_name.'.pdf', 'D');
 
 ?>
