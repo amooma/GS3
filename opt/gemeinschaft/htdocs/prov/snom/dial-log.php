@@ -35,6 +35,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
+include_once( GS_DIR .'inc/langhelper.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -102,6 +103,10 @@ $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHE
 if ($user_id < 1)
 	_err( 'Unknown user.' );
 
+// setup i18n stuff
+gs_setlang( gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS) );
+gs_loadtextdomain( 'gemeinschaft-gui' );
+gs_settextdomain( 'gemeinschaft-gui' );
 
 $typeToTitle = array(
 	'out'    => __("Gew\xC3\xA4hlt"),

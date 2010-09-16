@@ -5356,35 +5356,31 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ast_cdr`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `ast_cdr` (
   `_id` int(10) unsigned NOT NULL auto_increment,
   `calldate` datetime NOT NULL default '0000-00-00 00:00:00',
   `uniqueid` varchar(32) character set ascii collate ascii_bin NOT NULL,
-  `clid` varchar(80) character set utf8 collate utf8_unicode_ci NOT NULL default '',
-  `src` varchar(30) NOT NULL default '',
-  `dst` varchar(30) NOT NULL default '',
-  `dcontext` varchar(50) NOT NULL default '',
-  `channel` varchar(60) NOT NULL default '',
-  `dstchannel` varchar(60) NOT NULL default '',
-  `lastapp` varchar(30) NOT NULL default '',
-  `lastdata` varchar(80) NOT NULL default '',
+  `clid` varchar(80) collate utf8_unicode_ci NOT NULL default '',
+  `src` varchar(30) collate ascii_general_ci NOT NULL default '',
+  `dst` varchar(30) collate ascii_general_ci NOT NULL default '',
+  `dcontext` varchar(50) collate ascii_general_ci NOT NULL default '',
+  `channel` varchar(60) collate ascii_general_ci NOT NULL default '',
+  `dstchannel` varchar(60) collate ascii_general_ci NOT NULL default '',
+  `lastapp` varchar(30) collate ascii_general_ci NOT NULL default '',
+  `lastdata` varchar(80) collate ascii_general_ci NOT NULL default '',
   `duration` mediumint(8) unsigned NOT NULL default '0',
   `billsec` mediumint(8) unsigned NOT NULL default '0',
-  `disposition` varchar(15) NOT NULL default '',
+  `disposition` varchar(15) collate ascii_general_ci NOT NULL default '',
   `amaflags` tinyint(3) unsigned NOT NULL default '0',
-  `accountcode` varchar(25) NOT NULL default '',
-  `userfield` varchar(255) NOT NULL default '',
+  `accountcode` varchar(25) collate ascii_general_ci NOT NULL default '',
+  `userfield` varchar(255) collate ascii_general_ci NOT NULL default '',
   PRIMARY KEY  (`_id`),
   KEY `calldate` (`calldate`),
   KEY `accountcode` (`accountcode`),
   KEY `src_disposition` (`src`(25),`disposition`(4)),
   KEY `dst_disposition` (`dst`(25),`disposition`(4)),
   KEY `uniqueid` (`uniqueid`(25))
-) ENGINE=MyISAM DEFAULT CHARSET=ascii;
-SET character_set_client = @saved_cs_client;
-
+) ENGINE=MyISAM DEFAULT CHARSET=ascii COLLATE=ascii_general_ci;
 
 --
 -- Dumping data for table `ast_cdr`
@@ -5483,10 +5479,7 @@ UNLOCK TABLES;
 -- Table structure for table `ast_sipfriends`
 --
 
-
 DROP TABLE IF EXISTS `ast_sipfriends`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
 CREATE TABLE `ast_sipfriends` (
   `_user_id` int(10) unsigned NOT NULL default '0',
   `name` varchar(16) character set ascii NOT NULL default '',
@@ -5498,47 +5491,18 @@ CREATE TABLE `ast_sipfriends` (
   `callerid` varchar(80) collate latin1_general_ci NOT NULL default '',
   `mailbox` varchar(25) character set ascii NOT NULL default '',
   `callgroup` varchar(20) character set ascii NOT NULL default '1',
-  `pickupgroup` varchar(20) character set ascii NOT NULL default '1',
+  `pickupgroup` varchar(20) character set ascii NOT NULL default '',
   `setvar` varchar(50) character set ascii NOT NULL default '',
   `call-limit` tinyint(3) unsigned NOT NULL default '20',
   `subscribecontext` varchar(50) character set ascii NOT NULL default 'default',
   `regcontext` varchar(50) character set ascii default NULL,
   `ipaddr` varchar(15) character set ascii default NULL,
   `port` varchar(5) character set ascii default NULL,
-  `regseconds` bigint(20) NOT NULL,
+  `regseconds` int(10) unsigned NOT NULL default '0',
   `username` varchar(25) character set ascii default NULL,
   `regserver` varchar(50) character set ascii default NULL,
   `fullcontact` varchar(100) character set ascii default NULL,
-  `accountcode` varchar(20) collate latin1_general_ci default NULL,
-  `allowtransfer` varchar(20) collate latin1_general_ci default NULL,
-  `allow` varchar(20) collate latin1_general_ci default NULL,
-  `amaflags` varchar(20) collate latin1_general_ci default NULL,
-  `auth` varchar(10) collate latin1_general_ci default NULL,
-  `autoframing` varchar(10) collate latin1_general_ci default NULL,
-  `callingpres` varchar(20) collate latin1_general_ci default NULL,
-  `cid_number` varchar(40) collate latin1_general_ci default NULL,
-  `defaultuser` varchar(40) collate latin1_general_ci default NULL,
-  `disallow` varchar(20) collate latin1_general_ci default NULL,
-  `fromdomain` varchar(40) collate latin1_general_ci default NULL,
-  `fromuser` varchar(40) collate latin1_general_ci default NULL,
-  `incominglimit` varchar(10) collate latin1_general_ci default NULL,
-  `insecure` varchar(20) collate latin1_general_ci default NULL,
-  `language` varchar(10) collate latin1_general_ci default NULL,
-  `lastms` int(11) NOT NULL default '-1',
-  `maxcallbitrate` varchar(15) collate latin1_general_ci default NULL,
-  `md5secret` varchar(40) collate latin1_general_ci default NULL,
-  `mohsuggest` varchar(20) collate latin1_general_ci default NULL,
-  `musicclass` varchar(20) collate latin1_general_ci default NULL,
-  `outboundproxy` varchar(40) collate latin1_general_ci default NULL,
-  `qualify` varchar(15) collate latin1_general_ci default NULL,
-  `regexten` varchar(20) collate latin1_general_ci default NULL,
-  `rtpholdtimeout` varchar(15) collate latin1_general_ci default NULL,
-  `rtpkeepalive` varchar(15) collate latin1_general_ci default NULL,
-  `rtptimeout` varchar(15) collate latin1_general_ci default NULL,
-  `subscribemwi` varchar(10) collate latin1_general_ci default NULL,
-  `usereqphone` varchar(10) collate latin1_general_ci default NULL,
-  `vmexten` varchar(20) collate latin1_general_ci default NULL,
-  `useragent` varchar(20) collate latin1_general_ci default NULL,
+  `canreinvite` varchar(6) character set ascii NOT NULL default 'yes',
   PRIMARY KEY  (`_user_id`),
   UNIQUE KEY `name` (`name`),
   KEY `host` (`host`(25)),
@@ -5546,9 +5510,6 @@ CREATE TABLE `ast_sipfriends` (
   KEY `context` (`context`(25)),
   CONSTRAINT `ast_sipfriends_ibfk_1` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-SET character_set_client = @saved_cs_client;
-
-
 
 --
 -- Dumping data for table `ast_sipfriends`
@@ -5556,101 +5517,14 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `ast_sipfriends` WRITE;
 /*!40000 ALTER TABLE `ast_sipfriends` DISABLE KEYS */;
-INSERT INTO `ast_sipfriends` VALUES (1,'999999','5826899294','friend','dynamic',NULL,'from-internal-users','Supervisor <999999>','999999','1','1','__user_id=1;__user_name=999999',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `ast_sipfriends` VALUES (1,'999999','5826899294','friend','dynamic',NULL,'from-internal-users','Supervisor <999999>','999999','1','1','__user_id=1;__user_name=999999',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,'yes');
 /*!40000 ALTER TABLE `ast_sipfriends` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Temporary table structure for view `ast_sipfriends_gs`
---
-
-DROP TABLE IF EXISTS `ast_sipfriends_gs`;
-/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
-/*!50001 CREATE TABLE `ast_sipfriends_gs` (
-  `_user_id` int(10) unsigned,
-  `name` varchar(16),
-  `secret` varchar(16),
-  `type` enum('friend','user','peer'),
-  `host` varchar(50),
-  `defaultip` varchar(15),
-  `context` varchar(50),
-  `callerid` varchar(80),
-  `mailbox` varchar(25),
-  `callgroup` varchar(20),
-  `pickupgroup` varchar(20),
-  `setvar` varchar(50),
-  `call-limit` tinyint(3) unsigned,
-  `subscribecontext` varchar(50),
-  `regcontext` varchar(50),
-  `ipaddr` varchar(15),
-  `port` varchar(5),
-  `regseconds` bigint(20),
-  `username` varchar(25),
-  `regserver` varchar(50),
-  `fullcontact` varchar(100),
-  `accountcode` varchar(20),
-  `allowtransfer` varchar(20),
-  `allow` varchar(20),
-  `amaflags` varchar(20),
-  `auth` varchar(10),
-  `autoframing` varchar(10),
-  `callingpres` varchar(20),
-  `cid_number` varchar(40),
-  `defaultuser` varchar(40),
-  `fromdomain` varchar(40),
-  `fromuser` varchar(40),
-  `incominglimit` varchar(10),
-  `insecure` varchar(20),
-  `language` varchar(10),
-  `lastms` int(11),
-  `maxcallbitrate` varchar(15),
-  `md5secret` varchar(40),
-  `mohsuggest` varchar(20),
-  `musicclass` varchar(20),
-  `outboundproxy` varchar(40),
-  `qualify` varchar(15),
-  `regexten` varchar(20),
-  `rtpholdtimeout` varchar(15),
-  `rtpkeepalive` varchar(15),
-  `rtptimeout` varchar(15),
-  `subscribemwi` varchar(10),
-  `usereqphone` varchar(10),
-  `vmexten` varchar(20),
-  `disallow` varchar(20),
-  `useragent` varchar(20)
-) */;
-
 
 --
 -- Table structure for table `ast_sipfriends_gs`
 --
 
-DROP TABLE IF EXISTS `ast_sipfriends_gs`;
-/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
-/*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
-/*!50001 CREATE TABLE `ast_sipfriends_gs` (
-  `_user_id` int(10) unsigned,
-  `name` varchar(16),
-  `secret` varchar(16),
-  `type` enum('friend','user','peer'),
-  `host` varchar(50),
-  `defaultip` varchar(15),
-  `context` varchar(50),
-  `callerid` varchar(80),
-  `mailbox` varchar(25),
-  `callgroup` varchar(20),
-  `pickupgroup` varchar(20),
-  `setvar` varchar(50),
-  `call-limit` tinyint(3) unsigned,
-  `subscribecontext` varchar(50),
-  `regcontext` varchar(50),
-  `ipaddr` varchar(15),
-  `port` varchar(5),
-  `regseconds` int(10) unsigned,
-  `username` varchar(25),
-  `regserver` varchar(50),
-  `fullcontact` varchar(100)
-) */;
 DROP TABLE IF EXISTS `ast_sipfriends_gs`;
 /*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
 /*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
@@ -5889,7 +5763,7 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cf_timerules`;
-CREATE TABLE `cf_timerules` (
+CREATE TABLE IF NOT EXISTS `cf_timerules` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `ord` int(10) unsigned NOT NULL,
   `_user_id` int(10) unsigned NOT NULL,
@@ -6172,108 +6046,108 @@ CREATE TABLE `group_members` (
 
 LOCK TABLES `group_members` WRITE;
 /*!40000 ALTER TABLE `group_members` DISABLE KEYS */;
-INSERT INTO `group_members` VALUES (6,1000);         
-INSERT INTO `group_members` VALUES (6,1001);         
-INSERT INTO `group_members` VALUES (6,2000);         
-INSERT INTO `group_members` VALUES (6,2001);         
-INSERT INTO `group_members` VALUES (6,3000);         
-INSERT INTO `group_members` VALUES (6,3001);         
-INSERT INTO `group_members` VALUES (6,3002);         
-INSERT INTO `group_members` VALUES (6,3003);         
-INSERT INTO `group_members` VALUES (6,3004);         
-INSERT INTO `group_members` VALUES (6,4000);         
-INSERT INTO `group_members` VALUES (6,4001);         
-INSERT INTO `group_members` VALUES (6,4002);         
-INSERT INTO `group_members` VALUES (6,4003);         
-INSERT INTO `group_members` VALUES (6,5000);         
-INSERT INTO `group_members` VALUES (6,5001);         
-INSERT INTO `group_members` VALUES (6,6000);         
-INSERT INTO `group_members` VALUES (6,6001);         
-INSERT INTO `group_members` VALUES (6,6002);         
-INSERT INTO `group_members` VALUES (6,7000);         
-INSERT INTO `group_members` VALUES (6,7001);         
-INSERT INTO `group_members` VALUES (6,7002);         
-INSERT INTO `group_members` VALUES (6,7003);         
-INSERT INTO `group_members` VALUES (6,8000);         
-INSERT INTO `group_members` VALUES (6,8001);         
-INSERT INTO `group_members` VALUES (6,9000);         
-INSERT INTO `group_members` VALUES (6,9001);         
-INSERT INTO `group_members` VALUES (6,10000);        
-INSERT INTO `group_members` VALUES (6,10001);        
-INSERT INTO `group_members` VALUES (6,11000);        
-INSERT INTO `group_members` VALUES (6,11001);        
-INSERT INTO `group_members` VALUES (6,11002);        
-INSERT INTO `group_members` VALUES (6,11003);        
-INSERT INTO `group_members` VALUES (6,11004);        
-INSERT INTO `group_members` VALUES (6,11005);        
-INSERT INTO `group_members` VALUES (6,12000);        
-INSERT INTO `group_members` VALUES (6,12001);        
-INSERT INTO `group_members` VALUES (6,12002);        
-INSERT INTO `group_members` VALUES (6,12003);        
-INSERT INTO `group_members` VALUES (6,12004);        
-INSERT INTO `group_members` VALUES (6,13000);        
-INSERT INTO `group_members` VALUES (6,13001);        
-INSERT INTO `group_members` VALUES (6,14000);        
-INSERT INTO `group_members` VALUES (6,14001);        
-INSERT INTO `group_members` VALUES (6,14002);        
-INSERT INTO `group_members` VALUES (6,14003);        
-INSERT INTO `group_members` VALUES (6,19000);        
-INSERT INTO `group_members` VALUES (6,19001);
-INSERT INTO `group_members` VALUES (6,20000);        
-INSERT INTO `group_members` VALUES (6,20001);        
-INSERT INTO `group_members` VALUES (7,6003);
-INSERT INTO `group_members` VALUES (7,6004);
-INSERT INTO `group_members` VALUES (7,6005);         
-INSERT INTO `group_members` VALUES (7,15000);        
-INSERT INTO `group_members` VALUES (7,15001);        
-INSERT INTO `group_members` VALUES (7,15002);        
-INSERT INTO `group_members` VALUES (7,15003);        
-INSERT INTO `group_members` VALUES (7,15004);        
-INSERT INTO `group_members` VALUES (7,15005);        
-INSERT INTO `group_members` VALUES (7,15006);        
-INSERT INTO `group_members` VALUES (7,15007);        
-INSERT INTO `group_members` VALUES (7,15008);        
-INSERT INTO `group_members` VALUES (7,15009);        
-INSERT INTO `group_members` VALUES (7,15010);
-INSERT INTO `group_members` VALUES (7,15011);
-INSERT INTO `group_members` VALUES (7,15012);
-INSERT INTO `group_members` VALUES (7,15013);
-INSERT INTO `group_members` VALUES (7,15014);
-INSERT INTO `group_members` VALUES (7,15015);
-INSERT INTO `group_members` VALUES (7,15016);
-INSERT INTO `group_members` VALUES (7,15017);
-INSERT INTO `group_members` VALUES (7,16000);
-INSERT INTO `group_members` VALUES (7,16001);
-INSERT INTO `group_members` VALUES (7,16002);
-INSERT INTO `group_members` VALUES (7,16003);
-INSERT INTO `group_members` VALUES (7,16004);
-INSERT INTO `group_members` VALUES (7,16005);
-INSERT INTO `group_members` VALUES (7,17000);
-INSERT INTO `group_members` VALUES (7,17001);
-INSERT INTO `group_members` VALUES (7,17002);
-INSERT INTO `group_members` VALUES (7,17003);
-INSERT INTO `group_members` VALUES (7,17004);
-INSERT INTO `group_members` VALUES (7,17005);
-INSERT INTO `group_members` VALUES (7,17006);
-INSERT INTO `group_members` VALUES (7,17007);
-INSERT INTO `group_members` VALUES (7,17008);
-INSERT INTO `group_members` VALUES (7,17009);
-INSERT INTO `group_members` VALUES (7,18000);
-INSERT INTO `group_members` VALUES (7,18001);
-INSERT INTO `group_members` VALUES (7,18002);
-INSERT INTO `group_members` VALUES (7,18003);
-INSERT INTO `group_members` VALUES (7,18004);
-INSERT INTO `group_members` VALUES (7,18005);
-INSERT INTO `group_members` VALUES (7,18006);
-INSERT INTO `group_members` VALUES (7,18007);
-INSERT INTO `group_members` VALUES (7,18008);
-INSERT INTO `group_members` VALUES (7,18009);
-INSERT INTO `group_members` VALUES (7,18010);
-INSERT INTO `group_members` VALUES (7,18011);
-INSERT INTO `group_members` VALUES (7,18012);
-INSERT INTO `group_members` VALUES (7,18013);
-INSERT INTO `group_members` VALUES (7,18014);
-INSERT INTO `group_members` VALUES (7,18015);
+INSERT INTO `group_members` VALUES (5,1000);         
+INSERT INTO `group_members` VALUES (5,1001);         
+INSERT INTO `group_members` VALUES (5,2000);         
+INSERT INTO `group_members` VALUES (5,2001);         
+INSERT INTO `group_members` VALUES (5,3000);         
+INSERT INTO `group_members` VALUES (5,3001);         
+INSERT INTO `group_members` VALUES (5,3002);         
+INSERT INTO `group_members` VALUES (5,3003);         
+INSERT INTO `group_members` VALUES (5,3004);         
+INSERT INTO `group_members` VALUES (5,4000);         
+INSERT INTO `group_members` VALUES (5,4001);         
+INSERT INTO `group_members` VALUES (5,4002);         
+INSERT INTO `group_members` VALUES (5,4003);         
+INSERT INTO `group_members` VALUES (5,5000);         
+INSERT INTO `group_members` VALUES (5,5001);         
+INSERT INTO `group_members` VALUES (5,6000);         
+INSERT INTO `group_members` VALUES (5,6001);         
+INSERT INTO `group_members` VALUES (5,6002);         
+INSERT INTO `group_members` VALUES (5,7000);         
+INSERT INTO `group_members` VALUES (5,7001);         
+INSERT INTO `group_members` VALUES (5,7002);         
+INSERT INTO `group_members` VALUES (5,7003);         
+INSERT INTO `group_members` VALUES (5,8000);         
+INSERT INTO `group_members` VALUES (5,8001);         
+INSERT INTO `group_members` VALUES (5,9000);         
+INSERT INTO `group_members` VALUES (5,9001);         
+INSERT INTO `group_members` VALUES (5,10000);        
+INSERT INTO `group_members` VALUES (5,10001);        
+INSERT INTO `group_members` VALUES (5,11000);        
+INSERT INTO `group_members` VALUES (5,11001);        
+INSERT INTO `group_members` VALUES (5,11002);        
+INSERT INTO `group_members` VALUES (5,11003);        
+INSERT INTO `group_members` VALUES (5,11004);        
+INSERT INTO `group_members` VALUES (5,11005);        
+INSERT INTO `group_members` VALUES (5,12000);        
+INSERT INTO `group_members` VALUES (5,12001);        
+INSERT INTO `group_members` VALUES (5,12002);        
+INSERT INTO `group_members` VALUES (5,12003);        
+INSERT INTO `group_members` VALUES (5,12004);        
+INSERT INTO `group_members` VALUES (5,13000);        
+INSERT INTO `group_members` VALUES (5,13001);        
+INSERT INTO `group_members` VALUES (5,14000);        
+INSERT INTO `group_members` VALUES (5,14001);        
+INSERT INTO `group_members` VALUES (5,14002);        
+INSERT INTO `group_members` VALUES (5,14003);        
+INSERT INTO `group_members` VALUES (5,19000);        
+INSERT INTO `group_members` VALUES (5,19001);
+INSERT INTO `group_members` VALUES (5,20000);        
+INSERT INTO `group_members` VALUES (5,20001);        
+INSERT INTO `group_members` VALUES (6,6003);
+INSERT INTO `group_members` VALUES (6,6004);
+INSERT INTO `group_members` VALUES (6,6005);         
+INSERT INTO `group_members` VALUES (6,15000);        
+INSERT INTO `group_members` VALUES (6,15001);        
+INSERT INTO `group_members` VALUES (6,15002);        
+INSERT INTO `group_members` VALUES (6,15003);        
+INSERT INTO `group_members` VALUES (6,15004);        
+INSERT INTO `group_members` VALUES (6,15005);        
+INSERT INTO `group_members` VALUES (6,15006);        
+INSERT INTO `group_members` VALUES (6,15007);        
+INSERT INTO `group_members` VALUES (6,15008);        
+INSERT INTO `group_members` VALUES (6,15009);        
+INSERT INTO `group_members` VALUES (6,15010);
+INSERT INTO `group_members` VALUES (6,15011);
+INSERT INTO `group_members` VALUES (6,15012);
+INSERT INTO `group_members` VALUES (6,15013);
+INSERT INTO `group_members` VALUES (6,15014);
+INSERT INTO `group_members` VALUES (6,15015);
+INSERT INTO `group_members` VALUES (6,15016);
+INSERT INTO `group_members` VALUES (6,16000);
+INSERT INTO `group_members` VALUES (6,16001);
+INSERT INTO `group_members` VALUES (6,16002);
+INSERT INTO `group_members` VALUES (6,16003);
+INSERT INTO `group_members` VALUES (6,16004);
+INSERT INTO `group_members` VALUES (6,16005);
+INSERT INTO `group_members` VALUES (6,17000);
+INSERT INTO `group_members` VALUES (6,17001);
+INSERT INTO `group_members` VALUES (6,17002);
+INSERT INTO `group_members` VALUES (6,17003);
+INSERT INTO `group_members` VALUES (6,17004);
+INSERT INTO `group_members` VALUES (6,17005);
+INSERT INTO `group_members` VALUES (6,17006);
+INSERT INTO `group_members` VALUES (6,17007);
+INSERT INTO `group_members` VALUES (6,17008);
+INSERT INTO `group_members` VALUES (6,18000);
+INSERT INTO `group_members` VALUES (6,18001);
+INSERT INTO `group_members` VALUES (6,18002);
+INSERT INTO `group_members` VALUES (6,18003);
+INSERT INTO `group_members` VALUES (6,18004);
+INSERT INTO `group_members` VALUES (6,18005);
+INSERT INTO `group_members` VALUES (6,18006);
+INSERT INTO `group_members` VALUES (6,18007);
+INSERT INTO `group_members` VALUES (6,18008);
+INSERT INTO `group_members` VALUES (6,18009);
+INSERT INTO `group_members` VALUES (6,18010);
+INSERT INTO `group_members` VALUES (6,18011);
+INSERT INTO `group_members` VALUES (6,18012);
+INSERT INTO `group_members` VALUES (6,18013);
+INSERT INTO `group_members` VALUES (6,18014);
+INSERT INTO `group_members` VALUES (6,18015);
+INSERT INTO `group_members` VALUES (7,22000);
+INSERT INTO `group_members` VALUES (7,22001);
 INSERT INTO `group_members` VALUES (8,21000);
 INSERT INTO `group_members` VALUES (8,21001);
 INSERT INTO `group_members` VALUES (1,1);
@@ -6310,16 +6184,16 @@ INSERT INTO `group_permissions` VALUES ('queue_member',2,2);
 INSERT INTO `group_permissions` VALUES ('agent',2,2);
 INSERT INTO `group_permissions` VALUES ('ringtone_set',2,2);
 INSERT INTO `group_permissions` VALUES ('dnd_set',2,2);
-INSERT INTO `group_permissions` VALUES ('call_stats',2,5);
-INSERT INTO `group_permissions` VALUES ('forward_queues',1,5);
+INSERT INTO `group_permissions` VALUES ('call_stats',2,4);
+INSERT INTO `group_permissions` VALUES ('forward_queues',1,4);
 INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
 INSERT INTO `group_permissions` VALUES ('wakeup_call',2,2);
 INSERT INTO `group_permissions` VALUES ('room_state',2,2);
-INSERT INTO `group_permissions` VALUES ('private_call',2,2);
 INSERT INTO `group_permissions` VALUES ('sudo_user',1,2);
+INSERT INTO `group_permissions` VALUES ('display_module_gui',1,6);
 INSERT INTO `group_permissions` VALUES ('display_module_gui',1,7);
 INSERT INTO `group_permissions` VALUES ('display_module_gui',1,8);
-INSERT INTO `group_permissions` VALUES ('display_module_gui',2,6);
+INSERT INTO `group_permissions` VALUES ('display_module_gui',2,5);
 /*!40000 ALTER TABLE `group_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6347,11 +6221,11 @@ LOCK TABLES `groups` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
 INSERT INTO `groups` VALUES (1,'admins','Admins','user');
 INSERT INTO `groups` VALUES (2,'users','All Users','user');
-INSERT INTO `groups` VALUES (3,'nobody_users','All Nobody Users','user');
-INSERT INTO `groups` VALUES (4,'hosts','All Hosts','host');
-INSERT INTO `groups` VALUES (5,'queues','All Queues','queue');
-INSERT INTO `groups` VALUES (6,'user_gui','User GUI','module_gui');
-INSERT INTO `groups` VALUES (7,'admin_gui','Admin GUI','module_gui');
+INSERT INTO `groups` VALUES (3,'hosts','All Hosts','host');
+INSERT INTO `groups` VALUES (4,'queues','All Queues','queue');
+INSERT INTO `groups` VALUES (5,'user_gui','User GUI','module_gui');
+INSERT INTO `groups` VALUES (6,'admin_gui','Admin GUI','module_gui');
+INSERT INTO `groups` VALUES (7,'wakeup_call_gui','Wakeup call extension','module_gui');
 INSERT INTO `groups` VALUES (8,'room state gui','Room state extension','module_gui');
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -6547,82 +6421,6 @@ CREATE TABLE `ivrs` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
 
-
---
--- Table structure for table `monitor`
---
-DROP TABLE IF EXISTS `monitor`;
-SET character_set_client = utf8;
-CREATE TABLE `monitor` (
-  `user_id` int(10) unsigned NOT NULL,
-  `type` tinyint(2) unsigned NOT NULL default '1',
-  `display_x` smallint(4) unsigned NOT NULL default '0',
-  `display_y` smallint(4) unsigned NOT NULL default '0',
-  `columns` tinyint(2) unsigned NOT NULL default '2',
-  `update` smallint(4) unsigned NOT NULL default '2',
-  `reload` smallint(4) unsigned NOT NULL default '120',
-  PRIMARY KEY  (`user_id`, `type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
-
---
--- Table structure for table `monitor_colors`
---
-DROP TABLE IF EXISTS `monitor_colors`;
-SET character_set_client = utf8;
-CREATE TABLE `monitor_colors` (
-  `user_id` int(10) unsigned NOT NULL,
-  `type` tinyint(2) unsigned NOT NULL default '1',
-  `status` tinyint(3) unsigned NOT NULL default '2',
-  `color` varchar(20) collate utf8_unicode_ci NOT NULL default '#fff',
-  PRIMARY KEY  (`user_id`, `type`, `status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
-
---
--- Table structure for table `monitor_queues`
---
-DROP TABLE IF EXISTS `monitor_queues`;
-SET character_set_client = utf8;
-CREATE TABLE `monitor_queues` (
-  `user_id` int(10) unsigned NOT NULL,
-  `queue_id` int(10) unsigned NOT NULL,
-  `active` tinyint(1) unsigned NOT NULL default '1',
-  `display_columns` tinyint(2) unsigned NOT NULL default '2',
-  `display_width` smallint(4) unsigned NOT NULL default '500',
-  `display_height` smallint(4) unsigned NOT NULL default '150',
-  `display_calls` smallint(5) unsigned NOT NULL default '15',
-  `display_answered` smallint(5) unsigned NOT NULL default '15',
-  `display_abandoned` smallint(5) unsigned NOT NULL default '15',
-  `display_timeout` smallint(5) unsigned NOT NULL default '15',
-  `display_wait_max` smallint(5) unsigned NOT NULL default '15',
-  `display_wait_min` smallint(5) unsigned NOT NULL default '15',
-  `display_wait_avg` smallint(5) unsigned NOT NULL default '15',
-  `display_call_max` smallint(5) unsigned NOT NULL default '15',
-  `display_call_min` smallint(5) unsigned NOT NULL default '15',
-  `display_call_avg` smallint(5) unsigned NOT NULL default '15',
-  `display_name` smallint(5) unsigned NOT NULL default '4',
-  `display_extension` smallint(5) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`user_id`, `queue_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
-
---
--- Table structure for table `monitor_groups`
---
-DROP TABLE IF EXISTS `monitor_groups`;
-CREATE TABLE `monitor_groups` (
-	  `user_id` int(10) unsigned NOT NULL,
-	  `group_id` int(10) unsigned NOT NULL,
-	  `active` tinyint(1) unsigned NOT NULL default '1',
-	  `display_columns` tinyint(2) unsigned NOT NULL default '2',
-	  `display_width` smallint(4) unsigned NOT NULL default '500',
-	  `display_height` smallint(4) unsigned NOT NULL default '150',
-	  `display_extension` smallint(5) unsigned NOT NULL default '2',
-	  `display_name` smallint(5) unsigned NOT NULL default '4',
-	  `display_forw` smallint(5) unsigned NOT NULL default '3',
-	  `display_comment` smallint(5) unsigned NOT NULL default '0',
-	  PRIMARY KEY  (`user_id`, `group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
-
-
 --
 -- Table structure for table `pb_ldap`
 --
@@ -6713,7 +6511,6 @@ CREATE TABLE `phones` (
   `added` int(10) unsigned NOT NULL default '0',
   `firmware_cur` varchar(25) collate ascii_general_ci NOT NULL default '',
   `fw_manual_update` tinyint(1) unsigned NOT NULL default '0',
-  `expansion_modules` varchar(50) character set ascii default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `mac_addr` (`mac_addr`),
   KEY `user_id` (`user_id`),
@@ -6908,14 +6705,12 @@ LOCK TABLES `queue_cf_parallelcall` WRITE;
 /*!40000 ALTER TABLE `queue_cf_parallelcall` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
 --
 -- Table structure for table `queue_cf_timerules`
 --
 
 DROP TABLE IF EXISTS `queue_cf_timerules`;
 CREATE TABLE `queue_cf_timerules` (
-  `id` int(10) unsigned NOT NULL auto_increment,
   `_queue_id` int(10) unsigned NOT NULL,
   `ord` int(10) unsigned NOT NULL,
   `d_mo` tinyint(1) unsigned NOT NULL default '1',
@@ -6927,8 +6722,7 @@ CREATE TABLE `queue_cf_timerules` (
   `d_su` tinyint(1) unsigned NOT NULL default '1',
   `h_from` time NOT NULL default '00:00:00',
   `h_to` time NOT NULL default '24:00:00',
-  `target` varchar(20) character set ascii NOT NULL,
-  PRIMARY KEY  (`id`)
+  `target` varchar(20) character set ascii NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -7305,6 +7099,7 @@ CREATE TABLE `users` (
   `group_id` mediumint(8) unsigned default NULL,
   `softkey_profile_id` int(10) unsigned default NULL,
   `prov_param_profile_id` int(10) unsigned default NULL,
+  `dnd` tinyint(1) unsigned NOT NULL default '0',
   `pb_hide` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `user` (`user`),
@@ -7328,7 +7123,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'supervisor','123','','Supervisor','','',NULL,1,NULL,'',NULL,NULL,NULL,1);
+INSERT INTO `users` VALUES (1,'supervisor','123','','Supervisor','','',NULL,1,NULL,'',NULL,NULL,NULL,0,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7468,7 +7263,7 @@ USE `asterisk`;
 /*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
 /*!50001 CREATE ALGORITHM=MERGE */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY INVOKER */
-/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact`,`s`.`accountcode` AS `accountcode`,`s`.`allowtransfer` AS `allowtransfer`,`s`.`allow` AS `allow`,`s`.`amaflags` AS `amaflags`,`s`.`auth` AS `auth`,`s`.`autoframing` AS `autoframing`,`s`.`callingpres` AS `callingpres`,`s`.`cid_number` AS `cid_number`,`s`.`defaultuser` AS `defaultuser`,`s`.`fromdomain` AS `fromdomain`,`s`.`fromuser` AS `fromuser`,`s`.`incominglimit` AS `incominglimit`,`s`.`insecure` AS `insecure`,`s`.`language` AS `language`,`s`.`lastms` AS `lastms`,`s`.`maxcallbitrate` AS `maxcallbitrate`,`s`.`md5secret` AS `md5secret`,`s`.`mohsuggest` AS `mohsuggest`,`s`.`musicclass` AS `musicclass`,`s`.`outboundproxy` AS `outboundproxy`,`s`.`qualify` AS `qualify`,`s`.`regexten` AS `regexten`,`s`.`rtpholdtimeout` AS `rtpholdtimeout`,`s`.`rtpkeepalive` AS `rtpkeepalive`,`s`.`rtptimeout` AS `rtptimeout`,`s`.`subscribemwi` AS `subscribemwi`,`s`.`usereqphone` AS `usereqphone`,`s`.`vmexten` AS `vmexten`,`s`.`disallow` AS `disallow`,`s`.`useragent` AS `useragent` from ((`ast_sipfriends` `s` join `users` `u` on((`u`.`id` = `s`.`_user_id`))) join `hosts` `h` on((`h`.`id` = `u`.`host_id`))) where (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
+/*!50002 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact` from ((`ast_sipfriends` `s` join `users` `u` on((`u`.`id` = `s`.`_user_id`))) join `hosts` `h` on((`h`.`id` = `u`.`host_id`))) where (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
 -- see https://bugs.launchpad.net/gemeinschaft/+bug/351693
 -- and http://bugs.mysql.com/bug.php?id=32575
 
@@ -7505,9 +7300,3 @@ DROP TABLE IF EXISTS `room_state`;
 
 
  
-DROP TABLE IF EXISTS `dnd`;
-CREATE TABLE IF NOT EXISTS `dnd` (
-  `_user_id` int(10) NOT NULL DEFAULT '0',
-  `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
-  PRIMARY KEY (`_user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

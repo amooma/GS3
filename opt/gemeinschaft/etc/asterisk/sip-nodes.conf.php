@@ -59,6 +59,7 @@ require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_quiet');
 require_once( GS_DIR .'inc/log.php' );
+require_once( GS_DIR .'inc/langhelper.php' );
 
 if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	
@@ -294,10 +295,13 @@ while ($gw = $rs->fetchRow()) {
 	echo 'setvar=__is_from_gateway=1' ,"\n";
 	echo 'context = '         , 'from-gg-'.$gw['gg_name'] ,"\n";
 	echo 'qualify = '         , $params['qualify'       ] ,"\n";
-	echo 'language = '        , 'de' ,"\n";
 	echo 'maxexpiry = '       , $params['maxexpiry'     ] ,"\n";
 	echo 'defaultexpiry = '   , $params['defaultexpiry' ] ,"\n";
 	echo 'disallow = '        , 'all' ,"\n";
+
+	if (strlen(trim(gs_get_conf('GS_INTL_ASTERISK_LANG'))) > 0)
+		echo 'language = ', gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST) ,"\n";
+
 	foreach ($codecs_allow as $codec => $allowed) {
 		if ($allowed) {
 			printparam( 'allow', $codec, $userparamarray);
