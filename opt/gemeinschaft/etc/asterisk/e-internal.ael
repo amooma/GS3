@@ -1337,7 +1337,7 @@ context to-internal-users-self {
 			// to be able to record QueueMetrics call outcome later
 			Set(GLOBAL(queue_last_call_${MEMBERINTERFACE:4})=${UNIQUEID});
  		}
-		/*
+		/*		
  		Verbose(1,###### DIALSTATUS     : ${DIALSTATUS});
  		Verbose(1,###### exttype        : ${exttype});
  		Verbose(1,###### CALLERID(all)  : ${CALLERID(all)});
@@ -1350,7 +1350,7 @@ context to-internal-users-self {
  		Verbose(1,###### forwarded_to   : ${forwarded_to});
  		Verbose(1,###### CHANNEL        : ${CHANNEL});
 		Verbose(1,###### DIALEDPEERNUMBER      : ${DIALEDPEERNUMBER});
-		*/		
+		*/
 	
 		if ("${is_huntgroup}" = "1" && "${DIALSTATUS}" = "ANSWER" && "${user_extension}" != "")
 			Set(exttype=huntgroup);
@@ -1386,12 +1386,21 @@ context to-internal-users-self {
 					else if ("${forwarded_to:0:2}" == "vm" ) {
 						&dial-log-store(${forwarded_to:2},${type},${CALLERID(num)},0);
 					}
-				else {
+					else {
 						&dial-log-store(${forwarded_to},${type},${CALLERID(num)},0);
 					}
 				}
 				else if ( "${forwarded_to}" == ""  && "${DIALSTATUS}" = "ANSWER" ) {
 					&dial-log-store(${DIALEDPEERNUMBER},${type},${CALLERID(num)},0);
+				}
+				else if (  "${fw_parcallexten_1}" != "" ) {
+					Set(parcall_item=1);
+					while ("${fw_parcallexten_${parcall_item}}" != "") {
+						if ( "${fw_parcallexten_${parcall_item}}/n" == "${DIALEDPEERNUMBER}" ) {
+							&dial-log-store(${fw_parcallexten_${parcall_item}},${type},${CALLERID(num)},0);	
+						}
+						parcall_item=${parcall_item}+1;
+					}
 				}
 
 
@@ -1415,7 +1424,19 @@ context to-internal-users-self {
 					}
 				
 				} else if ("${CHANNEL:0:5}" != "Local") {
-					&dial-log-store(${forwarded_to},${type},${CALLERID(num)},0);
+					if ( "${type}" == "missed" && "${fw_parcallexten_1}" != "" ) {
+
+
+						Set(parcall_item=1);
+						while ("${fw_parcallexten_${parcall_item}}" != "") {
+							&dial-log-store(${fw_parcallexten_${parcall_item}},${type},${CALLERID(num)},0);	
+							parcall_item=${parcall_item}+1;
+						}
+
+					}
+					else {
+						&dial-log-store(${forwarded_to},${type},${CALLERID(num)},0);
+					}
 				}
 				else if ("${forwarded_to:0:3}" == "vm*" ) {
 					&dial-log-store(${forwarded_to:3},${type},${CALLERID(num)},0);
