@@ -34,6 +34,7 @@ require_once( GS_DIR .'inc/ipaddr-fns.php' );
 require_once( GS_DIR .'inc/log.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/nobody-extensions.php' );
+require_once( GS_DIR .'inc/langhelper.php' );
 
 
 function gs_prov_check_trust_requester()
@@ -308,9 +309,9 @@ function gs_prov_add_phone_get_nobody_user_id( $db, $mac_addr, $phone_type, $pho
 	$sip_pwd = gs_prov_gen_sip_pwd();
 	$ok = $db->execute(
 		'INSERT INTO `ast_sipfriends` '.
-		'(`_user_id`, `name`, `secret`, `context`, `callerid`, `setvar`) '.
+		'(`_user_id`, `name`, `secret`, `context`, `callerid`, `setvar`, `language`) '.
 		'VALUES '.
-		'('. $user_id .', \''. $db->escape($user_ext) .'\', \''. $db->escape($sip_pwd) .'\', \'from-internal-nobody\', _utf8\''. $db->escape(GS_NOBODY_CID_NAME . $new_nobody_index .' <'.$user_ext.'>') .'\', \''. $db->escape('__user_id='.$user_id .';__user_name='.$user_ext) .'\')'
+		'('. $user_id .', \''. $db->escape($user_ext) .'\', \''. $db->escape($sip_pwd) .'\', \'from-internal-nobody\', _utf8\''. $db->escape(GS_NOBODY_CID_NAME . $new_nobody_index .' <'.$user_ext.'>') .'\', \''. $db->escape('__user_id='.$user_id .';__user_name='.$user_ext) .'\', \''. gs_get_lang_global(GS_LANG_OPT_GS, GS_LANG_FORMAT_AST) .'\')'
 		);
 	if (! $ok) {
 		gs_log( GS_LOG_WARNING, 'Failed to add a nobody user' );
@@ -504,7 +505,7 @@ function gs_prov_get_user_info( $db, $user_id )
 	$rs = $db->execute(
 		'SELECT '.
 			'`u`.`user`, `u`.`firstname`, `u`.`lastname`, `u`.`honorific`, `u`.`nobody_index`, `u`.`host_id`, '.
-			'`s`.`name`, `s`.`secret`, `s`.`callerid`, `s`.`mailbox` '.
+			'`s`.`name`, `s`.`secret`, `s`.`callerid`, `s`.`mailbox`, `s`.`language` '.
 		'FROM '.
 			'`users` `u` JOIN '.
 			'`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) '.
