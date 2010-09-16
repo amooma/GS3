@@ -184,8 +184,12 @@ foreach ($forwards as $source => $arr) {
 		
 		gs_agi_set_variable( 'fw_' . $source . '_' . $case , $fw['number'] );
 		
-		if ( ! is_null ( $fw['file'] ) && $fw['file'] != '' )
+		if ( ! is_null ( $fw['file'] ) && $fw['file'] != '' ) {
 			gs_agi_set_variable( '__fw_file_' . $source . '_' . $case , '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
+		}
+		else {
+			gs_agi_set_variable( '__fw_file_' . $source . '_' . $case , '' );
+		}
 		
 		if (is_array($fw['number'])) {  # this is an array if we are forwarding to parallel-call
 			$cnt=0;
