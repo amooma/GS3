@@ -219,6 +219,7 @@ if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 
 if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 	
+	$DB->execute( 'UPDATE `ast_sipfriends` SET `language`=\''. $DB->escape(preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['ulang'])) .'\' WHERE `_user_id`='. $uid );
 	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email );
 	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	if (! isGsError( $ret )) {
@@ -733,7 +734,7 @@ else {
 	
 	$rs = $DB->execute(
 'SELECT
-	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`, `u`.`group_id`,
+	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`, `s`.`language`, `u`.`group_id`,
 	`hp1`.`value` `hp_route_prefix`
 FROM
 	`users` `u` JOIN
@@ -940,6 +941,18 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 		<th><?php echo __('E-Mail'); ?>:</th>
 		<td>
 			<input type="text" name="uemail" value="<?php echo htmlEnt($r['email']); ?>" size="38" maxlength="60" style="width:97%;" />
+		</td>
+		<td class="transp xs gray">
+			&nbsp;
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __('Sprache'); ?>:</th>
+		<td>
+			<select name="ulang">
+				<option value="de"<?php echo (($r['language'] == 'de') ? " selected" : ""); ?>>Deutsch (de-DE)</option>
+				<option value="en"<?php echo (($r['language'] == 'en') ? " selected" : ""); ?>>Englisch (en-US)</option>
+			</select>
 		</td>
 		<td class="transp xs gray">
 			&nbsp;
