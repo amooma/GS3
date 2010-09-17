@@ -763,12 +763,13 @@ context to-internal-users-self {
 			}
 
 			// set call count
-			Set(GROUP()=callcount${EXTEN});
+			Set(GROUP(${EXTEN})=callcount);
+			Set(GROUP(${CALLERID(num)})=callcount);
 			
 			// check callwaiting
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${EXTEN});
-			if ("${GROUP_COUNT(callcount${EXTEN})}" > "1" && "${callwaiting}" == "0") {
-				//Verbose(1,### Callwaiting: deactivate, callcount: ${GROUP_COUNT(callcount${EXTEN})});  //FIXME ### -> ### -GS- dont't function
+			if ("${GROUP_COUNT(callcount@${EXTEN})}" > "1" && "${callwaiting}" = "0") {
+				//Verbose(1,### Callwaiting: deactivate, callcount: ${GROUP_COUNT(callcount@${EXTEN})});  //FIXME ### -> ### -GS- dont't function
 				Verbose(1,### Callwaiting: deactivate);
 				goto user_busy;
 			}
