@@ -771,6 +771,7 @@ context to-internal-users-self {
 			if ("${GROUP_COUNT(callcount@${EXTEN})}" > "1" && "${callwaiting}" = "0") {
 				//Verbose(1,### Callwaiting: deactivate, callcount: ${GROUP_COUNT(callcount@${EXTEN})});  //FIXME ### -> ### -GS- dont't function
 				Verbose(1,### Callwaiting: deactivate);
+				Set(DIALSTATUS=BUSY);
 				goto user_busy;
 			}
 			
