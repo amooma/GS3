@@ -26,5 +26,11 @@
 
 	CustomLog /var/log/apache2/access.log combined
 
+	# Increase max. number of POST variables from default 1000 to
+	# 2000 (for GUI modules routing_inbound and routing_outbound, see
+	# <http://groups.google.de/group/gemeinschaft-users/browse_thread/thread/ef0c194394dfbb2c>):
+	php_value suhosin.post.max_vars    2000
+	php_value suhosin.request.max_vars 2000
+
 </VirtualHost>
 
