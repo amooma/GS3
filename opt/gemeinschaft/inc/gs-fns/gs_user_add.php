@@ -28,6 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/langhelper.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_is_valid_name.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_by_id_or_ip.php' );
@@ -152,7 +153,8 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 	#
 	$callerid = trim( gs_utf8_decompose_to_ascii( $firstname .' '. $lastname )) .' <'. $ext .'>';
 	$sip_pwd = rand(10000,99999).rand(10000,99999);
-	$ok = $db->execute( 'INSERT INTO `ast_sipfriends` (`_user_id`, `name`, `secret`, `callerid`, `mailbox`, `setvar`) VALUES ('. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($sip_pwd) .'\', _utf8\''. $db->escape($callerid) .'\', \''. $db->escape($ext) .'\', \''. $db->escape('__user_id='. $user_id .';__user_name='. $ext) .'\')' );
+	$sip_language = gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST);
+	$ok = $db->execute( 'INSERT INTO `ast_sipfriends` (`_user_id`, `name`, `secret`, `callerid`, `mailbox`, `setvar`, `language`) VALUES ('. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($sip_pwd) .'\', _utf8\''. $db->escape($callerid) .'\', \''. $db->escape($ext) .'\', \''. $db->escape('__user_id='. $user_id .';__user_name='. $ext) .'\', \''. $sip_language .'\')' );
 	if (! $ok) {
 		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to add user (table ast_sipfriends).' );
