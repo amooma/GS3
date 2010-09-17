@@ -47,37 +47,24 @@ include_once(GS_DIR ."inc/langhelper.php");
 // get vars from commandline
 
 $userid = trim(@$argv[1]);
-$langformat = trim(@$argv[2]);
 
 // make sure userid is valid (numeric)
 if(!$userid) die();
 if(!preg_match('/^\d+$/', $userid)) die();
 
-// convert cli arg to internal define, bail out if unknown format is requested
-switch($langformat)
-{
-	case "ast":
-		$langformat_real = GS_LANG_FORMAT_AST;
-		$langopt_real = GS_LANG_OPT_AST;
-		break;
-	case "gs":
-		$langformat_real = GS_LANG_FORMAT_GS;
-		$langopt_real = GS_LANG_OPT_GS;
-		break;
-	default:
-		die();
-		break;
-}
-
 // do stuff
 $db = gs_db_slave_connect();
 
-$userlang = gs_get_lang_user($db, $userid, $langformat_real);
-if(!$userlang)
+$userlang_ast = gs_get_lang_user($db, $userid, GS_LANG_FORMAT_AST);
+$userlang_gs = gs_get_lang_user($db, $userid, GS_LANG_FORMAT_GS);
+
+if(!$userlang_ast || !$userlang_gs)
 {
-	$userlang = str_replace("_", "-", gs_get_lang_global($langopt_real, $langformat_real));
+	$userlang_ast = str_replace("_", "-", gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST));
+	$userlang_gs = str_replace("_", "-", gs_get_lang_global(GS_LANG_OPT_GS, GS_LANG_FORMAT_GS));
 }
 
-gs_agi_set_variable("gs_userlang", $userlang);
+gs_agi_set_variable("gs_userlang_gs", $userlang_gs);
+gs_agi_set_variable("gs_userlang_ast", $userlang_ast);
 
 ?>
