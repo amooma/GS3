@@ -816,16 +816,18 @@ echo "" >> /root/.bashrc || true
 
 # motd
 #
-echo "***" > /etc/motd.static
-echo "***    _____                                              _____" >> /etc/motd.static
-echo "***   (.---.)       G E M E I N S C H A F T  ${GEMEINSCHAFT_VERS}       (.---.)" >> /etc/motd.static
-echo "***    /:::\\ _.-----------------------------------------._/:::\\" >> /etc/motd.static
-echo "***    -----                                              -----" >> /etc/motd.static
-echo "***" >> /etc/motd.static
-echo "***   Need help with Gemeinschaft? We have an excellent free mailinglist" >> /etc/motd.static
-echo "***   and offer the best support and consulting money can buy. Have a" >> /etc/motd.static
-echo "***   look at http://www.gemeinschaft.de for more information." >> /etc/motd.static
-echo "***" >> /etc/motd.static
+(
+echo "***"
+echo "***    _____                                              _____"
+echo "***   (.---.)             GEMEINSCHAFT $(printf "% -7s" $GEMEINSCHAFT_VERS)           (.---.)"
+echo "***    /:::\\ _.-----------------------------------------._/:::\\"
+echo "***    -----                                              -----"
+echo "***"
+echo "***   Need help with Gemeinschaft? We have an excellent free mailinglist"
+echo "***   and offer the best support and consulting money can buy. Have a"
+echo "***   look at http://www.gemeinschaft.de for more information."
+echo "***"
+) > /etc/motd.static
 [ -e /etc/motd ] && rm -rf /etc/motd || true
 ln -s /etc/motd.static /etc/motd
 
