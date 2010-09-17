@@ -642,7 +642,12 @@ context to-internal-users-self {
 		//	Set(CALLERID(all)=${saved_callerid});
 		//}
 		
-		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
+		if ("${CHANNEL(language)}" = "") {
+			#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
+		}
+
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-gs-language-by-ast-code,${CHANNEL(language)});
+
 		if ("${from_node}" = "yes") {
 			Verbose(1,### Incoming call to ${EXTEN} is from another node);
 			if ("${CHANNEL(channeltype)}" = "SIP") {
@@ -763,13 +768,15 @@ context to-internal-users-self {
 			}
 
 			// set call count
-			Set(GROUP()=callcount${EXTEN});
-			
+			Set(GROUP(${EXTEN})=callcount);
+			Set(GROUP(${CALLERID(num)})=callcount);
+
 			// check callwaiting
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${EXTEN});
-			if ("${GROUP_COUNT(callcount${EXTEN})}" > "1" && "${callwaiting}" == "0") {
-				//Verbose(1,### Callwaiting: deactivate, callcount: ${GROUP_COUNT(callcount${EXTEN})});  //FIXME ### -> ### -GS- dont't function
+			if ("${GROUP_COUNT(callcount@${EXTEN})}" > "1" && "${callwaiting}" = "0") {
+				//Verbose(1,### Callwaiting: deactivate, callcount: ${GROUP_COUNT(callcount@${EXTEN})});
 				Verbose(1,### Callwaiting: deactivate);
+				Set(DIALSTATUS=BUSY);
 				goto user_busy;
 			}
 			
@@ -1048,7 +1055,7 @@ context to-internal-users-self {
 					Dial(Local/${fw_${is_call_from}_timeout}/n,900);
 					&hangup-proper-status();
 				}
-				Playback(/opt/gemeinschaft/sounds/${gs_lang}/queue-all-busy);
+				Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/queue-all-busy);
 				Busy(5);
 				Hangup();
 			}
@@ -1062,7 +1069,7 @@ context to-internal-users-self {
 					Dial(Local/${fw_${is_call_from}_full}/n,900);
 					&hangup-proper-status();
 				}
-				Playback(/opt/gemeinschaft/sounds/${gs_lang}/queue-all-busy);
+				Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/queue-all-busy);
 				Busy(5);
 				Hangup();
 			}
@@ -1245,24 +1252,34 @@ context program-cc {
 	
 	offer => {
 		Answer();
-		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
+
+		if ("${CHANNEL(language)}" = "") {
+			#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
+		}
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-gs-language-by-ast-code,${CHANNEL(language)});
+
 		Wait(0.5);
 		Set(TIMEOUT(digit)=5);
 		Set(TIMEOUT(response)=10);
 		
 		for (i=0; ${i}<3; i=${i}+1) {
-			//Playback(/opt/gemeinschaft/sounds/${gs_lang}/druecken-sie-die-1-um-einen-automatischen-rueckruf-zu-programmieren);
+			//Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/druecken-sie-die-1-um-einen-automatischen-rueckruf-zu-programmieren);
 			if ("${vm_${vm_source}_active}" = "1") {
-				Background(/opt/gemeinschaft/sounds/${gs_lang}/um-eine-nachricht-zu-hinterlassen-druecken-sie-die&digits/1,m);
+				Background(/opt/gemeinschaft/sounds/${gs_userlang_gs}/um-eine-nachricht-zu-hinterlassen-druecken-sie-die&digits/1,m);
 			}
-			Background(/opt/gemeinschaft/sounds/${gs_lang}/fuer-einen-automatischen-rueckruf-druecken-sie-die&/opt/gemeinschaft/sounds/${gs_lang}/stern-taste,m);
+			Background(/opt/gemeinschaft/sounds/${gs_userlang_gs}/fuer-einen-automatischen-rueckruf-druecken-sie-die&/opt/gemeinschaft/sounds/${gs_userlang_gs}/stern-taste,m);
 			WaitExten();
 		}
 		
 	}
 	1 => {
 		Verbose(1,### Caller wants to leave voicemail for user ${cc_to_ext});
-		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
+
+		if ("${CHANNEL(language)}" = "") {
+			#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
+		}
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-gs-language-by-ast-code,${CHANNEL(language)});
+
 		//Playback(beep);
 		if ("${vm_${vm_source}_active}" = "1") {
 			if ("${is_callcompletion}" = "1") {
@@ -1276,11 +1293,15 @@ context program-cc {
 	}
 	* => {
 		Verbose(1,### Caller wants call completion to user ${cc_to_ext});
-		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
+		if ("${CHANNEL(language)}" = "") {
+			#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
+		}
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-gs-language-by-ast-code,${CHANNEL(language)});
+
 		AGI(/opt/gemeinschaft/dialplan-scripts/cc-program.agi,${user_name},${cc_to_ext});
 		Verbose(1,### Call completion programmed?: ${cc_programmed});
 		if ("${cc_programmed}" = "1") {
-			Playback(/opt/gemeinschaft/sounds/${gs_lang}/rueckruf-programmiert);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rueckruf-programmiert);
 			Verbose(1,### Call completion programmed from ${user_name} to ${cc_to_ext});
 		}
 		else {
