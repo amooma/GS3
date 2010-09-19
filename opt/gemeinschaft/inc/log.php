@@ -115,7 +115,9 @@ function gs_log( $level, $msg, $logfile=null, $fifo=false )
 					}
 				}
 			}
-						
+			//@chmod($logfile, 0666);  # in octal mode!
+                        @exec( $sudo.'chmod 0666 '. qsa($logfile) .' 1>>/dev/null 2>>/dev/null');
+
 			if (! $fifo) {
 				$logfiles[$logfile] = @fOpen($logfile, 'ab');  # might fail if permission denied
 			} else {
@@ -129,8 +131,6 @@ function gs_log( $level, $msg, $logfile=null, $fifo=false )
 				$gs_is_in_gs_log = false;
 				return false;
 			}
-			//@chmod($logfile, 0666);  # in octal mode!
-			@exec( $sudo.'chmod 0666 '. qsa($logfile) .' 1>>/dev/null 2>>/dev/null');
 		}
 				
 		if ($fifo) {
