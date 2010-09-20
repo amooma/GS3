@@ -96,8 +96,6 @@ echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
 ${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
 
 
-echo ""
-
 #####################################################################
 #  8.4.18
 #####################################################################
@@ -110,18 +108,17 @@ echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
 ${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
 ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
 
-
 MODEL='snom360'
 echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
 ${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
 ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
 
-MODEL='snom300'
+MODEL='snom320'
 echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
 ${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
 ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
 
-MODEL='snom320'
+MODEL='snom300'
 echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
 ${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
 ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
