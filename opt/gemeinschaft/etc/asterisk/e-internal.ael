@@ -387,7 +387,7 @@ context to-internal-users {
 			Set(pmark=${EXTEN:6});
 			Verbose(1,### User ${user_name} tries to pickup group ${pmark});
 			//FIXME - add pickup group check
-			DPickup(${pmark}@PICKUPMARK);
+			Pickup(${pmark}@PICKUPMARK);
 			//FIXME - does not work across nodes
 			
 			// if we got here, the pickup attempt was not successful

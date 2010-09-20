@@ -56,16 +56,6 @@ if ($uid < 1) gs_agi_err( 'User not found' );
 $pickupmark = '';
 $dialstr = '';
 
-$pickup_groups  = gs_group_permissions_get(gs_group_members_groups_get(Array($uid), 'user'), 'group_pickup', 'user');
-
-foreach($pickup_groups as $pickup_group) {
-	$pext = str_pad( $pickup_group, 5, '0', STR_PAD_LEFT );
-	$dialstr.= '&Local/*8*'. $pext;
-	if ($pickupmark=='')
-		$pickupmark = $pext;
-}
-
-/*
 $rs = $db->execute( 'SELECT DISTINCT(`p`.`id`) `id` FROM `pickupgroups_users` `pu` JOIN `pickupgroups` `p` ON (`p`.`id`=`pu`.`group_id`) WHERE `pu`.`user_id`='. $uid .' ORDER BY `p`.`id`' );
 while ($r = $rs->fetchRow()) {
 	$pext = str_pad( $r['id'], 5, '0', STR_PAD_LEFT );
@@ -73,7 +63,6 @@ while ($r = $rs->fetchRow()) {
 	if ($pickupmark=='')
 		$pickupmark = $pext;
 }
-*/
 
 
 gs_agi_set_variable( 'pgrpdialstr', $dialstr );
