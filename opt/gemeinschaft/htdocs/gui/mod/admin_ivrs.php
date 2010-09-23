@@ -138,44 +138,43 @@ if ($action === 'save') {
 	$values = array ();
 	
 	$options = $keys;
-	$options ['t'] = 't' ;
-	$options ['i'] = 'i' ;
+	$options['t'] = 't';
+	$options['i'] = 'i';
 	
-	foreach ( $options as $key => $v ) {
-		//is the action a valid action
-		if ( !array_key_exists( @$_REQUEST['key_' . $v . '_type'] , $action_type ) ) {
-			$value ['key_' . $v . '_type'] = "";
-			$value ['key_' . $v . '_value']= "";
+	foreach ($options as $key => $v) {
+		# is the action a valid action
+		if (! array_key_exists( @$_REQUEST['key_'.$v.'_type'] , $action_type )) {
+			$value['key_'.$v.'_type'] = "";
+			$value['key_'.$v.'_value']= "";
 		}
 		else {
-			
-			$value ['key_' . $v . '_type'] = @$_REQUEST['key_' . $v . '_type'];
-			if ($value ['key_'.$v.'_type'] == 'extension') {
-				$value ['key_'.$v.'_value'] = preg_replace('/[^vm0-9]/', '', @$_REQUEST['key_' . $v . '_value']);
-				if ( $value ['key_' . $v . '_value'] == '0' || strlen( $value ['key_' . $v . '_value'] ) <= 0 ) {
-					$value ['key_' . $v . '_value'] = '';
-
-					if ( $v == 't' || $v == 'i' )
-						$value ['key_' . $v . '_type'] = 'hangup';
+			$value['key_'.$v.'_type'] = @$_REQUEST['key_'.$v.'_type'];
+			if ($value['key_'.$v.'_type'] === 'extension') {
+				$value['key_'.$v.'_value'] = preg_replace('/[^vm0-9]/', '', @$_REQUEST['key_'.$v.'_value']);
+				if ($value['key_'.$v.'_value'] == '0' || strlen( $value['key_'.$v.'_value'] ) <= 0) {
+					$value['key_'.$v.'_value'] = '';
+					
+					if ($v === 't' || $v === 'i')
+						$value['key_'.$v.'_type'] = 'hangup';
 					else {
-						$value ['key_' . $v . '_type'] = '';
+						$value['key_'.$v.'_type'] = '';
 					}
 				}
 			}
-			else if ( $value ['key_' . $v . '_type'] == 'announce' ) {
-				$value ['key_' . $v . '_value'] = preg_replace('/[^0-9]/', '', @$_REQUEST['key_' . $v . '_select']);
-				if ( $value ['key_' . $v . '_value'] == '0' || strlen( $value ['key_' . $v . '_value'] ) <= 0 ) {
-				//there is no soundfile selected, so we have to select the default value
-					$value ['key_' . $v . '_value'] = '';
-
-					if ( $v == 't' || $v == 'i' )
-						$value ['key_' . $v . '_type'] = 'hangup';
+			elseif ($value['key_'.$v.'_type'] === 'announce') {
+				$value['key_'.$v.'_value'] = preg_replace('/[^0-9]/', '', @$_REQUEST['key_'.$v.'_select']);
+				if ($value['key_'.$v.'_value'] == '0' || strlen( $value['key_'.$v.'_value'] ) <= 0) {
+					# there is no soundfile selected, so we have to select the default value
+					$value['key_'.$v.'_value'] = '';
+					
+					if ($v === 't' || $v === 'i')
+						$value['key_'.$v.'_type'] = 'hangup';
 					else
-						$value ['key_' . $v . '_type'] = '';
+						$value['key_'.$v.'_type'] = '';
 					}
 			}
 			else {
-				$value ['key_' . $v . '_value'] = "";
+				$value['key_'.$v.'_value'] = "";
 			}
 		}
 	}
@@ -192,7 +191,6 @@ if ($action === 'save') {
 			}
 		}
 	} else {
-		
 			$update_additional = true;
 			$ret = gs_ivr_update($announcement);
 			if (isGsError( $ret )) {
@@ -200,9 +198,7 @@ if ($action === 'save') {
 				$update_additional = false;
 			}
 			if ($timeout < 3) $timeout = 3;
-		
 	}
-	
 	
 	
 	if ($update_additional) {
@@ -213,34 +209,34 @@ if ($action === 'save') {
 	`announcement`    = \''. $announcement .'\',
 	`timeout`         = \''. $timeout .'\',
 	`retry`           = \''. $retry .'\',
-	`key_0_type`      = \''. $value ['key_0_type'] .'\',
-	`key_0_value`     = \''. $value ['key_0_value'] .'\',
-	`key_1_type`      = \''. $value ['key_1_type'] .'\',
-	`key_1_value`     = \''. $value ['key_1_value'] .'\',
-	`key_2_type`      = \''. $value ['key_2_type'] .'\',
-	`key_2_value`     = \''. $value ['key_2_value'] .'\',
-	`key_3_type`      = \''. $value ['key_3_type'] .'\',
-	`key_3_value`     = \''. $value ['key_3_value'] .'\',
-	`key_4_type`      = \''. $value ['key_4_type'] .'\',
-	`key_4_value`     = \''. $value ['key_4_value'] .'\',
-	`key_5_type`      = \''. $value ['key_5_type'] .'\',
-	`key_5_value`     = \''. $value ['key_5_value'] .'\',
-	`key_6_type`      = \''. $value ['key_6_type'] .'\',
-	`key_6_value`     = \''. $value ['key_6_value'] .'\',
-	`key_7_type`      = \''. $value ['key_7_type'] .'\',
-	`key_7_value`     = \''. $value ['key_7_value'] .'\',
-	`key_8_type`      = \''. $value ['key_8_type'] .'\',
-	`key_8_value`     = \''. $value ['key_8_value'] .'\',
-	`key_9_type`      = \''. $value ['key_9_type'] .'\',
-	`key_9_value`     = \''. $value ['key_9_value'] .'\',
-	`key_pound_type`  = \''. $value ['key_pound_type'] .'\',
-	`key_pound_value` = \''. $value ['key_pound_value'] .'\',
-	`key_star_type`   = \''. $value ['key_star_type'] .'\',
-	`key_star_value`  = \''. $value ['key_star_value'] .'\',
-	`t_action_type`   = \''. $value ['key_t_type'] .'\',
-	`t_action_value`  = \''. $value ['key_t_value'] .'\',
-	`i_action_type`   = \''. $value ['key_i_type'] .'\',
-	`i_action_value`  = \''. $value ['key_i_value'] .'\'
+	`key_0_type`      = \''. $value['key_0_type'] .'\',
+	`key_0_value`     = \''. $value['key_0_value'] .'\',
+	`key_1_type`      = \''. $value['key_1_type'] .'\',
+	`key_1_value`     = \''. $value['key_1_value'] .'\',
+	`key_2_type`      = \''. $value['key_2_type'] .'\',
+	`key_2_value`     = \''. $value['key_2_value'] .'\',
+	`key_3_type`      = \''. $value['key_3_type'] .'\',
+	`key_3_value`     = \''. $value['key_3_value'] .'\',
+	`key_4_type`      = \''. $value['key_4_type'] .'\',
+	`key_4_value`     = \''. $value['key_4_value'] .'\',
+	`key_5_type`      = \''. $value['key_5_type'] .'\',
+	`key_5_value`     = \''. $value['key_5_value'] .'\',
+	`key_6_type`      = \''. $value['key_6_type'] .'\',
+	`key_6_value`     = \''. $value['key_6_value'] .'\',
+	`key_7_type`      = \''. $value['key_7_type'] .'\',
+	`key_7_value`     = \''. $value['key_7_value'] .'\',
+	`key_8_type`      = \''. $value['key_8_type'] .'\',
+	`key_8_value`     = \''. $value['key_8_value'] .'\',
+	`key_9_type`      = \''. $value['key_9_type'] .'\',
+	`key_9_value`     = \''. $value['key_9_value'] .'\',
+	`key_pound_type`  = \''. $value['key_pound_type'] .'\',
+	`key_pound_value` = \''. $value['key_pound_value'] .'\',
+	`key_star_type`   = \''. $value['key_star_type'] .'\',
+	`key_star_value`  = \''. $value['key_star_value'] .'\',
+	`t_action_type`   = \''. $value['key_t_type'] .'\',
+	`t_action_value`  = \''. $value['key_t_value'] .'\',
+	`i_action_type`   = \''. $value['key_i_type'] .'\',
+	`i_action_value`  = \''. $value['key_i_value'] .'\'
 WHERE `id`='.$ivr_id
 		);
 	}
@@ -419,10 +415,10 @@ ORDER BY `id`';
 		echo '<th class="r">', __('Ansagedatei') ,'</th>',"\n";
 		echo '<td>';
 		echo '<select name="announcement">', "\n";
-		echo '<option value="0"', ($queue['_sysrec_id'] ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
+		echo '<option value="0"', ($queue['_sysrec_id'] == 0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
 		echo '<option value="" disabled="disabled">-</option>', "\n";
 		foreach ($recordings as $rec_id => $desc) {
-			echo '<option value="' . $rec_id .'"', ( htmlEnt($ivr['announcement']) ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+			echo '<option value="' . $rec_id .'"', ( htmlEnt($ivr['announcement']) == $rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
 		}
 		echo '</select>';
 		echo '</td>';
@@ -448,31 +444,31 @@ ORDER BY `id`';
 			echo '<tr>',"\n";
 			echo '<th class="r">', __('Taste '. $key .'') ,'</th>',"\n";
 			echo '<td>',"\n";
-			echo '<select name="key_'. $v .'_type" id="key_'. $v .'" "style="width:150px; margin:2px 5px 1px 0px;" onChange="enableInput(\'key_'. $v .'\');">', "\n";
-			echo '<option value=""'.($ivr['key_'. $v .'_type'] == '' ? ' selected="selected"' : '').'>---</option>\n';
-				foreach ( $action_type as $action => $description ) {
-				echo '<option value="'. $action .'"'. ($action == $ivr['key_'. $v .'_type'] ? ' selected="selected"' : ''). '>'. $description . '</option>', "\n";
+			echo '<select name="key_'.$v.'_type" id="key_'.$v.'" "style="width:150px; margin:2px 5px 1px 0px;" onChange="enableInput(\'key_'.$v.'\');">', "\n";
+			echo '<option value=""'.($ivr['key_'.$v.'_type'] == '' ? ' selected="selected"' : '').'>---</option>\n';
+				foreach ($action_type as $action => $description) {
+				echo '<option value="'. $action .'"'. ($action == $ivr['key_'.$v.'_type'] ? ' selected="selected"' : ''). '>'. $description . '</option>', "\n";
 			}
 			
-			if ($ivr['key_'. $v .'_type'] === 'extension') {
-				$ivr["key_". $v ."_value_select"] = 0;
+			if ($ivr['key_'.$v.'_type'] === 'extension') {
+				$ivr['key_'.$v.'_value_select'] = 0;
 			}
-			elseif ($ivr['key_'. $v .'_type'] === 'announce') {
-				$ivr["key_". $v ."_value_select"] = $ivr["key_". $v ."_value"] ;
-				$ivr["key_". $v ."_value"] = '';
+			elseif ($ivr['key_'.$v.'_type'] === 'announce') {
+				$ivr['key_'.$v.'_value_select'] = $ivr['key_'.$v.'_value'];
+				$ivr['key_'.$v.'_value'] = '';
 			}
 			else {
-				$ivr["key_". $v ."_value_select"] = '';
+				$ivr['key_'.$v.'_value_select'] = '';
 			}
 			
 			echo '</select>', "\n";
-			echo '<input type="text" name="key_'. $v .'_value" id="key_'. $v .'_value" value="', $ivr["key_". $v ."_value"] ,'" size="10" maxlength="20" class="r" ', ($ivr['key_'. $v .'_type'] == 'extension' ? '' : ' style="display:none"' ), '/>', "\n";
+			echo '<input type="text" name="key_'.$v.'_value" id="key_'.$v.'_value" value="', $ivr['key_'.$v.'_value'] ,'" size="10" maxlength="20" class="r" ', ($ivr['key_'.$v.'_type'] === 'extension' ? '' : ' style="display:none"' ), '/>', "\n";
 			
-			echo '<select name="key_'. $v .'_select" id="key_'. $v .'_select" ', ($ivr['key_'. $v .'_type'] == 'announce' ? '' : ' style="display:none"' ) ,'" >', "\n";
-			echo '<option value="0"', ( htmlEnt( $ivr["key_". $v ."_value_select"]) ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
+			echo '<select name="key_'.$v.'_select" id="key_'.$v.'_select" ', ($ivr['key_'.$v.'_type'] === 'announce' ? '' : ' style="display:none"' ) ,'" >', "\n";
+			echo '<option value="0"', ( htmlEnt( $ivr['key_'.$v.'_value_select']) == 0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
 			echo '<option value="" disabled="disabled">-</option>', "\n";
 			foreach ($recordings as $rec_id => $desc) {
-				echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr["key_". $v ."_value_select"]) ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+				echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr['key_'.$v.'_value_select']) == $rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
 			}
 			echo '</select>';
 			
@@ -482,12 +478,12 @@ ORDER BY `id`';
 		
 		
 		echo '<tr><td class="transp" colspan="2">&nbsp;</td></tr>',"\n";
-			
+		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Ziel bei keiner Eingabe') ,'</th>',"\n";
 		echo '<td>',"\n";
 		echo '<select name="key_t_type" id="t_action" "style="width:150px; margin:2px 5px 1px 0px;" onChange="enableInput(\'t_action\');">', "\n";
-		foreach ( $action_type as $action => $description ) {
+		foreach ($action_type as $action => $description) {
 			echo '<option value="', $action, '"', ($action == $ivr['t_action_type'] ? ' selected="selected"' : ''), '>', $description, '</option>', "\n";
 		}
 		echo '</select>', "\n";
@@ -496,7 +492,7 @@ ORDER BY `id`';
 			$ivr['t_action_value_select'] = '0';
 		}
 		elseif ($ivr['t_action_type'] === 'announce') {
-			$ivr['t_action_value_select'] = $ivr['t_action_value'] ;
+			$ivr['t_action_value_select'] = $ivr['t_action_value'];
 			$ivr['t_action_value'] = '0';
 		}
 		else {
@@ -504,9 +500,9 @@ ORDER BY `id`';
 		}
 		
 		echo '<input type="text" name="key_t_value" id="t_action_value" value="', $ivr['t_action_value'] ,'" size="10" maxlength="20" class="r" ', ($ivr['t_action_type'] == "extension" ? '' : ' style="display:none"'), '/>', "\n";
-
-		echo '<select name="key_t_select" id="t_action_select" ', ($ivr['t_action_type'] == 'announce' ? '' : ' style="display:none"' ) ,'" >', "\n";
-		echo '<option value="0"', ( htmlEnt( $ivr["t_action_value_select"]) ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
+		
+		echo '<select name="key_t_select" id="t_action_select" ', ($ivr['t_action_type'] === 'announce' ? '' : ' style="display:none"' ) ,'" >', "\n";
+		echo '<option value="0"', ( htmlEnt( $ivr["t_action_value_select"]) == 0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
 		echo '<option value="" disabled="disabled">-</option>', "\n";
 		foreach ($recordings as $rec_id => $desc) {
 			echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr["t_action_value_select"]) == $rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
@@ -530,26 +526,25 @@ ORDER BY `id`';
 			$ivr['i_action_value_select'] = '0';
 		}
 		elseif ($ivr['i_action_type'] === 'announce') {
-			$ivr['i_action_value_select'] = $ivr['i_action_value'] ;
+			$ivr['i_action_value_select'] = $ivr['i_action_value'];
 			$ivr['i_action_value'] = '0';
 		}
 		else {
 			$ivr['i_action_value_select'] = '';
 		}
-
-
-		echo '<input type="text" name="key_i_value" id="i_action_value" value="', $ivr['i_action_value'] ,'" size="10" maxlength="20" class="r" ', ($ivr['i_action_type'] == 'extension' ? '' : ' style="display:none"' ), '/>', "\n";
-
-		echo '<select name="key_i_select" id="i_action_select" ', ($ivr['i_action_type'] == 'announce' ? '' : ' style="display:none"' ) ,'" >', "\n";
-		echo '<option value="0"', ( htmlEnt( $ivr['i_action_value_select']) ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
+		
+		
+		echo '<input type="text" name="key_i_value" id="i_action_value" value="', $ivr['i_action_value'] ,'" size="10" maxlength="20" class="r" ', ($ivr['i_action_type'] === 'extension' ? '' : ' style="display:none"' ), '/>', "\n";
+		
+		echo '<select name="key_i_select" id="i_action_select" ', ($ivr['i_action_type'] === 'announce' ? '' : ' style="display:none"' ) ,'" >', "\n";
+		echo '<option value="0"', ( htmlEnt( $ivr['i_action_value_select']) == 0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
 		echo '<option value="" disabled="disabled">-</option>', "\n";
 		foreach ($recordings as $rec_id => $desc) {
-			echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr['i_action_value_select']) ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+			echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr['i_action_value_select']) == $rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
 		}
 		echo '</select>';
 		echo '</td>';
 		echo '</tr>',"\n";
-			
 		
 		
 		echo '<tr>',"\n";
