@@ -36,7 +36,10 @@ header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
 
 require_once( dirname(__FILE__) .'/../../../inc/conf.php' );
+require_once(GS_DIR ."inc/util.php");
+require_once(GS_DIR ."inc/gs-lib.php");
 require_once( GS_DIR .'inc/prov-fns.php' );
+require_once(GS_DIR ."inc/langhelper.php");
 include_once( GS_DIR .'inc/db_connect.php' );
 
 //---------------------------------------------------------------------------
@@ -71,7 +74,41 @@ if(!$requester["allowed"])
 	_settings_err("No! See log for details.");
 }
 
-$ua = trim(@$_SERVER["HTTP_USER_AGENT"]);
+//--- identify polycom phone
+
+$mac = preg_replace('/[^0-9A-F]/', '', strtoupper(@$_REQUEST['mac']));
+if ( strlen($mac) !== 12 )
+{
+        gs_log(GS_LOG_NOTICE, 'Polycom provisioning: Invalid MAC address \"$mac\" (wrong length)');
+        //--- don't explain this to the users
+        _settings_err('No! See log for details.');
+}
+if ( hexdec(substr($mac, 0, 2)) % 2 == 1 )
+{
+        gs_log(GS_LOG_NOTICE, 'Polycom provisioning: Invalid MAC address \"$mac\" (multicast address)');
+        //--- don't explain this to the users
+        _settings_err('No! See log for details.');
+}
+if ( $mac === '000000000000' )
+{
+        gs_log(GS_LOG_NOTICE, 'Polycom provisioning: Invalid MAC address \"$mac\" (huh?)');
+        //--- don't explain this to the users
+        _settings_err('No! See log for details.');
+}
+
+//--- make sure the phone is a Polycom
+
+if ( substr($mac, 0, 6) !== '0004F2' )
+{
+        gs_log(GS_LOG_NOTICE, 'Polycom provisioning: MAC address \"$mac\" is not a Polycom phone');
+        //--- don't explain this to the users
+        _settings_err('No! See log for details.');
+}
+
+//--- useragent identification
+
+$ua = trim(@$_SERVER['HTTP_USER_AGENT']);
+$ua = "PolycomSoundPointIP";
 
 if ( preg_match('/PolycomSoundPointIP/', $ua) )
 {
@@ -104,6 +141,19 @@ switch($phone_model)
                 break;
 }
 
+$db = gs_db_slave_connect();
+
+//---debug
+$user_id = @gs_prov_user_id_by_mac_addr($db, $mac);
+if(!$user_id) die();
+
+$userinfo = @gs_prov_get_user_info($db, $user_id);
+
+// setup i18n stuff
+gs_setlang(gs_lang_ast2gs($userinfo["language"]));
+gs_loadtextdomain( 'gemeinschaft-gui' );
+gs_settextdomain( 'gemeinschaft-gui' );
+
 //--- echo the phone directory
 
 echo '<' . '?xml version="1.0" encoding="UTF-8" standalone="yes"?' . '>' ."\n";
@@ -113,8 +163,6 @@ if(!$phone_has_microbrowser)
 	//--- this phone does not have microbrowser capabilities, so create
 	//--- a company directory based on the local users table
 
-	$db = gs_db_slave_connect();
-	
 	$query =
 		'SELECT '.
 		'  `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext` '.
@@ -156,14 +204,14 @@ else
 	echo '<directory>',"\n";
 	echo '   <item_list>',"\n";
 	echo '      <item>',"\n";
-	echo '         <fn>Ruflisten</fn>',"\n";
+	echo '         <fn>', __("Ruflisten"), '</fn>',"\n";
 	echo '         <ct>!gsdiallog</ct>',"\n";
 	echo '         <sd>1</sd>',"\n";
 	echo '         <bw>0</bw>',"\n";
 	echo '         <bb>0</bb>',"\n";
 	echo '      </item>',"\n";
 	echo '      <item>',"\n";
-	echo '         <fn>Telefonbuch</fn>',"\n";
+	echo '         <fn>', __("Telefonbuch"), '</fn>',"\n";
 	echo '         <ct>!gsphonebook</ct>',"\n";
 	echo '         <sd>2</sd>',"\n";
 	echo '         <bw>0</bw>',"\n";
@@ -179,7 +227,7 @@ else
 	echo '      </item>',"\n";
 	 */
 	echo '      <item>',"\n";
-	echo '         <fn>Einstellungen</fn>',"\n";
+	echo '         <fn>', __("Einstellungen"), '</fn>',"\n";
 	echo '         <ct>!gsmenu</ct>',"\n";
 	echo '         <sd>4</sd>',"\n";
 	echo '         <bw>0</bw>',"\n";

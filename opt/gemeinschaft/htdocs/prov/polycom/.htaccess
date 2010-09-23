@@ -14,7 +14,8 @@
 	# Rewrite requests for <MAC-addr>.cfg
 	RewriteRule ^bootrom\.ld$ bootrom.php [L]
 	RewriteRule ^000000000000\.cfg$ defaults.xml [L]
-	RewriteRule ^000000000000-directory\.xml$ directory.php [L]
+	#RewriteRule ^000000000000-directory\.xml$ directory.php [L]
+	RewriteRule ^(0004[Ff]2[0-9A-Fa-f]*)-directory\.xml$ directory.php?mac=$1 [L]
 	RewriteRule ^directory\.xml$ directory.php [L]
 	RewriteRule ^phone-(0004[Ff]2[0-9A-Fa-f]*)\.cfg$ settings.php?mac=$1 [L]
 

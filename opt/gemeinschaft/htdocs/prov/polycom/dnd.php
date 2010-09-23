@@ -32,7 +32,9 @@ define("GS_VALID", true);		// this is a parent file
 require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 require_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gs-lib.php");
+include_once( GS_DIR .'inc/gettext.php' );
 include_once(GS_DIR ."inc/gs-fns/gs_ami_events.php");
+require_once(GS_DIR ."inc/langhelper.php");
 
 Header("Content-Type: text/html; charset=utf-8");
 Header("Expires: 0");
@@ -95,6 +97,11 @@ $mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST["m"])));
 $user = trim(@$_REQUEST["u"]);
 $user_id = getUserID($user);
 
+// setup i18n stuff
+gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
+gs_loadtextdomain( 'gemeinschaft-gui' );
+gs_settextdomain( 'gemeinschaft-gui' );
+
 $user_id_check = $db->executeGetOne("SELECT `user_id` FROM `phones` WHERE `mac_addr`='". $db->escape($mac) ."'");
 if($user_id != $user_id_check) _err("Not authorized");
 
@@ -135,10 +142,10 @@ echo "<body><br />\n";
 echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 
 echo "<tr>";
-echo "<th width=\"100%\" align=\"center\">Ruhe/DND-Status setzen:</th></tr>\n";
+echo "<th width=\"100%\" align=\"center\">". __("Ruhe/DND-Status setzen") .":</th></tr>\n";
 
-echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=on\">". (($current_dndstate == 1) ? "*" : "") ."Ein</a></td></tr>\n";
-echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=off\">". (($current_dndstate == 0) ? "*" : "") ."Aus</a></td></tr>\n";
+echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=on\">". (($current_dndstate == "on") ? "*" : "") . __("Ein") ."</a></td></tr>\n";
+echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=off\">". (($current_dndstate == "off") ? "*" : "") . __("Aus") ."</a></td></tr>\n";
 
 echo "</table>\n";
 
