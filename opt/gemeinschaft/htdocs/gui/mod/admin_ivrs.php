@@ -332,7 +332,7 @@ ORDER BY `id`';
 	else {
 		$ivr_id = 0;
 		$ivr = array(
-			'name'             => $name,
+			'name'             => '',
 			'host_id'          => 0,
 			'title'            => __('Neues Sprachmenü'),
 			'announcement'     => '',
@@ -415,7 +415,8 @@ ORDER BY `id`';
 		echo '<th class="r">', __('Ansagedatei') ,'</th>',"\n";
 		echo '<td>';
 		echo '<select name="announcement">', "\n";
-		echo '<option value="0"', ($queue['_sysrec_id'] == 0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
+		//echo '<option value="0"', ($queue['_sysrec_id'] == 0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
+		echo '<option value="0">', __('keine') ,'</option>', "\n";
 		echo '<option value="" disabled="disabled">-</option>', "\n";
 		foreach ($recordings as $rec_id => $desc) {
 			echo '<option value="' . $rec_id .'"', ( htmlEnt($ivr['announcement']) == $rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
