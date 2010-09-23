@@ -119,6 +119,10 @@ for ($i=-3; $i<=0; ++$i) {
 <?php
 
 if ($action == '') return;
+if ($queue_id < 1) {
+	echo '<div class="noticebox">', __("Bitte wählen Sie eine Warteschlange aus.") ,'</div>' ,"\n";
+	return;
+}
 
 #####################################################################
 
