@@ -33,6 +33,7 @@ define( 'GS_VALID', true ); // this is a parent file
 require_once( dirname(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
+require_once(GS_DIR ."inc/langhelper.php");
 
 header( 'Content-Type: text/html; charset=utf-8' );
 header( 'Expires: 0 ');
@@ -87,6 +88,11 @@ if (! in_array($type, array('in', 'out', 'missed', 'queue'), true)) $type = fals
 if (isset($_REQUEST['delete'])) $delete = (int) $_REQUEST['delete'];
 
 $db = gs_db_slave_connect();
+
+// setup i18n stuff
+gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
+gs_loadtextdomain( 'gemeinschaft-gui' );
+gs_settextdomain( 'gemeinschaft-gui' );
 
 //--- get user_id
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
@@ -170,7 +176,7 @@ else
 
 	if ($rs->numRows() == 0)
 	{
-		echo "<br />Keine Eintr\xC3\xA4ge vom Typ '<b>". $typeToTitle[$type] ."</b>'<br />\n";
+		echo "<br />". __("Keine Eintr\xC3\xA4ge vom Typ") ."'<b>". $typeToTitle[$type] ."</b>'<br />\n";
 	}
 	else
 	{
@@ -178,8 +184,8 @@ else
 
 		echo '<tr>';
 
-		echo '<th width="30%">Datum</th>';
-		echo '<th width="70%">Nummer</th></tr>',"\n";
+		echo '<th width="30%">', __("Datum"), '</th>';
+		echo '<th width="70%">', __("Nummer"), '</th></tr>',"\n";
 
 		while ( $r = $rs->fetchRow() )
 		{
@@ -224,10 +230,9 @@ else
 
 	echo '</body>',"\n";
 
-	echo '<softkey index="1" label="Leeren" action="Softkey:Fetch;'. $url_polycom_dl .'?user='. $user .'&amp;type='. $type .'&amp;delete=1" />',"\n";
-	echo '<softkey index="2" label="Beenden" action="Softkey:Exit" />',"\n";
+	echo '<softkey index="1" label="', __("Leeren"), '" action="Softkey:Fetch;'. $url_polycom_dl .'?user='. $user .'&amp;type='. $type .'&amp;delete=1" />',"\n";
+	echo '<softkey index="2" label="', __("Beenden"), '" action="Softkey:Exit" />',"\n";
 	echo '</html>',"\n";
-	
 }
 
 #################################### DIAL LOG }

@@ -41,6 +41,7 @@ require_once(GS_DIR ."inc/util.php");
 require_once(GS_DIR ."inc/gs-lib.php");
 require_once(GS_DIR ."inc/prov-fns.php");
 require_once(GS_DIR ."inc/quote_shell_arg.php");
+require_once(GS_DIR ."inc/langhelper.php");
 require_once(GS_DIR ."inc/db_connect.php");
 require_once(GS_DIR ."inc/nobody-extensions.php");
 include_once(GS_DIR ."inc/gs-fns/gs_prov_params_get.php");
@@ -50,7 +51,26 @@ set_error_handler("err_handler_die_on_err");
 
 //---------------------------------------------------------------------------
 
-function _settings_err($msg="")                                           
+function _polycom_astlang_to_polycomlang($langcode)
+{
+	$lang_default = "German_Germany";
+
+	$lang_transtable = Array(
+		"de" => "German_Germany",
+		"en" => "English_United_Kingdom",
+		"us" => "English_United_States",
+	);
+
+	$lang_ret = $lang_transtable[$langcode];
+	if(strlen($lang_ret) == 0)
+		return $lang_default;
+
+	return $lang_ret;
+}
+
+//---------------------------------------------------------------------------
+
+function _settings_err($msg="")
 {
 	@ob_end_clean();
 	@ob_start();
@@ -194,6 +214,9 @@ $user = @gs_prov_get_user_info($db, $user_id);
 if (! is_array($user) )
 	_settings_err('DB error.');
 
+//--- get polycom'ized language string from user lang pref
+$user_polycomlang = @_polycom_astlang_to_polycomlang($user['language']);
+
 //--- store the current phonetype and firmware version in the database:
 @$db->execute(
 	"UPDATE `phones` SET ".
@@ -328,6 +351,15 @@ echo "reg.1.strictLineSeize=\"\" ";
 </phone1>
 <?php
 
+//--- generate language preference
+$sipapp_langsettings = "";
+
+$sipapp_langsettings .= "  <localization>\n";
+$sipapp_langsettings .= "    <multilingual>\n";
+$sipapp_langsettings .= "      <language lcl.ml.lang=\"". $user_polycomlang ."\"/>\n";
+$sipapp_langsettings .= "    </multilingual>\n";
+$sipapp_langsettings .= "  </localization>\n";
+
 //--- configuration for xhtml browser and key remappings on phones where
 //--- the feature is supported
 
@@ -396,14 +428,24 @@ if ($phone_has_microbrowser)
 	echo "   </applications>\n";
 
 	//--- Microbrowser settings
-	/*
 	echo "   <microbrowser>\n";
-	echo "      <main mb.main.idleTimeout=\"60\" mb.main.statusbar=\"0\" mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
-	echo "      <idleDisplay mb.idleDisplay.home=\"". $prov_url_polycom ."idle.php?user=". $user_ext ."&amp;mac=". $mac ."\" mb.idleDisplay.refresh=\"10\"/>\n";
+	echo "      <main mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
+	//echo "      <main mb.main.idleTimeout=\"60\" mb.main.statusbar=\"0\" mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
+	//echo "      <idleDisplay mb.idleDisplay.home=\"". $prov_url_polycom ."idle.php?user=". $user_ext ."&amp;mac=". $mac ."\" mb.idleDisplay.refresh=\"10\"/>\n";
 	echo "   </microbrowser>\n";
+
+	//--- add language settings
+	echo $sipapp_langsettings;
+
+	//--- close sip application settings
 	echo "</sip>\n";
-	*/
 
 } //--- Microbrowser settings
+else
+{ //--- non-microbrowser phones need at least the user's langpref
+	echo "<sip>\n";
+	echo $sipapp_langsettings;
+	echo "</sip>\n";
+}
 
 ?>
