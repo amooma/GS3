@@ -297,19 +297,22 @@ $user_name = @$_SESSION['sudo_user']['name'];
 
 $table = 'cdr_tmp_'.$user_name;
 
-$ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`');
+$ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`' );
 
-$rs = $CDR_DB->execute(
-	'CREATE TABLE `'.$table.'` TYPE=heap '.
-		' SELECT * FROM `ast_cdr` WHERE '.
+$sql_query =
+	'CREATE TEMPORARY TABLE `'.$table.'` TYPE=HEAP '.
+		'SELECT * FROM `ast_cdr` WHERE '.
 			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_m_start) .'\' AND '.
 			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_m_end) .'\' ) AND '.
 			'  `dst` IN ('. $exts_sql .') AND '.
 			'  `channel` NOT LIKE \'Local/%\' AND '.
 			'  `dstchannel` NOT LIKE \'SIP/gs-0%\' AND '.
 			'  `dst` <> \'s\' AND '.
-			'  `dst` <> \'h\''
-);
+			'  `dst` <> \'h\' '
+	;
+if (! $CDR_DB->execute( $sql_query )) {
+	echo '<div class="errorbox">', "Fehler beim Anlegen einer temporären Tabelle!" ,'</div>',"\n";
+}
 
 for ($day=1; $day<=$num_days; ++$day) {
 	
@@ -508,7 +511,7 @@ if ($totals['n_calls_answer'] > 0) {
 	$calls_dur_month = $CDR_DB->executeGetOne( $sql_query );
 }
 
-$rs = $CDR_DB->execute( 'DROP TABLE `'.$table.'`');
+$ok = $CDR_DB->execute( 'DROP TABLE `'.$table.'`' );
 
 
 $style = 'style="border-top:3px solid #b90; background:#feb; line-height:2.5em;"';
