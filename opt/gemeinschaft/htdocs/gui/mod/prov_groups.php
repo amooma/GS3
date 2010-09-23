@@ -37,7 +37,8 @@ if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
-echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+//echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+echo __("Provisioning-Gruppen");
 echo '</h2>', "\n";
 
 echo '<script type="text/javascript">
