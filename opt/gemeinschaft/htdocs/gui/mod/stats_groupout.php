@@ -76,19 +76,18 @@ function userids_to_exts( $users )
 	$users_sql = implode(',',$users);
 	
 	$rs = $DB->execute(
-'SELECT `name` AS `ext`
-FROM
-	`ast_sipfriends`
-WHERE
-	`_user_id` IN ('. $users_sql .')'
+		'SELECT `name` AS `ext` '.
+		'FROM `ast_sipfriends` '.
+		'WHERE `_user_id` IN ('. $users_sql .')'
 	);
-
+	
 	$exts = array();
 	
-	if ($rs)
+	if ($rs) {
 		while ($r = $rs->fetchRow()) {
 			$exts[] = '\''.$DB->escape($r['ext']).'\'';
 		}
+	}
 	return implode(',', $exts);
 }
 
