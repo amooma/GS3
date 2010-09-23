@@ -353,7 +353,7 @@ for ($day=1; $day<=$num_days; ++$day) {
 			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
 			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
 			'( `disposition` = \''. $DB->escape('BUSY') .'\' OR '.
-			'  OR  `dcontext` = \'program-cc\')';
+			'  `dcontext` = \'program-cc\')';
 		
 		$n_calls_busy = (int) $CDR_DB->executeGetOne( $sql_query );
 		
