@@ -344,18 +344,22 @@ $user_name = @$_SESSION['sudo_user']['name'];
 
 $table = 'cdr_tmp_'.$user_name;
 
-$ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`');
+$ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`' );
 
-$sql_query = 'CREATE TABLE `'.$table.'` TYPE=heap SELECT * FROM `ast_cdr` WHERE
-		( `calldate`>=\''. date('Y-m-d H:i:s', $day_w_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $day_w_end) .'\' ) AND
-	`dst` IN ('. $exts_sql .') AND
-	`channel` NOT LIKE \'Local/%\' AND
-	`dstchannel` NOT LIKE \'SIP/gs-0%\' AND
-	`dst`<>\'s\' AND
-	`dst`<>\'h\'';
-
-$rs = $CDR_DB->execute( $sql_query );
+$sql_query =
+	'CREATE TEMPORARY TABLE `'.$table.'` TYPE=HEAP '.
+		'SELECT * FROM `ast_cdr` WHERE '.
+			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_w_start) .'\' AND '.
+			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_w_end) .'\' ) AND '.
+			'  `dst` IN ('. $exts_sql .') AND '.
+			'  `channel` NOT LIKE \'Local/%\' AND '.
+			'  `dstchannel` NOT LIKE \'SIP/gs-0%\' AND '.
+			'  `dst` <> \'s\' AND '.
+			'  `dst` <> \'h\' '
+	;
+if (! $CDR_DB->execute( $sql_query )) {
+	echo '<div class="errorbox">', "Fehler beim Anlegen einer temporären Tabelle!" ,'</div>',"\n";
+}
 
 //echo "START date : $t_day.$t_month.$t_year<br>\n";
 
@@ -483,7 +487,7 @@ for ($day=0 ; $day < 5; $day++) {
 }
 echo '</tr>', "\n";
 
-$rs = $CDR_DB->execute( 'DROP TABLE `'.$table.'`');
+$ok = $CDR_DB->execute( 'DROP TABLE `'.$table.'`' );
 
 
 ?>
