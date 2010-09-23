@@ -75,7 +75,7 @@ function InitHinttoggleCall() {  //FIXME  --- fix what?
 		. "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
 		. "Setvar: __is_callfile_origin=1\n"  # no forwards and no mailbox on origin side
 		. "Setvar: __callfile_from_user=".  $_SESSION['sudo_user']['info']['ext'] ."\n"
-		. "Setvar: __record_file=".  $filename ."\n"
+		//. "Setvar: __record_file=".  $filename ."\n"
 		;
 
 	$filename = '/tmp/gs-'. $_SESSION['sudo_user']['info']['id'] .'-'. _pack_int(time()) . rand(100,999) .'.call';
