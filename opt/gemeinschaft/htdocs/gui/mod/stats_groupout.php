@@ -270,7 +270,7 @@ function mytip( evt, key )
 	<th style="font-weight:normal;" onmouseover="mytip(event,'durl');"><?php echo __('Dauer'), ' &le;', _secs_to_minsecs($duration_level); ?></th>
 	<th style="font-weight:normal;" onmouseover="mytip(event,'durg');"><?php echo __('Dauer'), ' &gt;', _secs_to_minsecs($duration_level); ?></th>
 	<th style="font-weight:normal;" onmouseover="mytip(event,'duravg');"><?php echo '&empty; ', __('Dauer'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'holdlsl');"><?php echo __('Wartez.') ,'  0:5-', _secs_to_minsecs($waittime_level); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'holdlsl');"><?php echo __('Wartez.') ,' 0:05-', _secs_to_minsecs($waittime_level); ?></th>
 	<th style="font-weight:normal;" onmouseover="mytip(event,'holdgsl');"><?php echo __('Wartez.') ,' &gt;', _secs_to_minsecs($waittime_level); ?></th>
 </tr>
 </thead>
