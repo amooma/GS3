@@ -1,27 +1,27 @@
 <?php
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
-* 
+*
 * $Revision$
-* 
+*
 * Copyright 2007-2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
-* 
+*
 * Author: Daniel Scheller <scheller@loca.net>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
 * of the License, or (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
@@ -32,7 +32,8 @@ define("GS_VALID", true);		// this is a parent file
 require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 include_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gettext.php");
-require_once(GS_DIR ."inc/gs-fns/gs_user_watchedmissed.php");
+include_once(GS_DIR ."inc/langhelper.php");
+//require_once(GS_DIR ."inc/gs-fns/gs_user_watchedmissed.php");
 
 Header("Content-Type: text/html; charset=utf-8");
 Header("Expires: 0");
@@ -84,17 +85,22 @@ if (!preg_match("/^\d+$/", $user)) _err('Not a valid SIP user.');
 
 $db = gs_db_slave_connect();
 
+// setup i18n stuff
+gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
+gs_loadtextdomain( 'gemeinschaft-gui' );
+gs_settextdomain( 'gemeinschaft-gui' );
+
 //--- get user_id
 $user_id = (int) $db->executeGetOne("SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`='". $db->escape($user) ."'");
 if ($user_id < 1) _err('Unknown user.');
 
 $menuitems = Array(
 	Array(	'file'	=> 'diallog.php?user='. $user,
-		'title'	=> 'Ruflisten'),
+		'title'	=> __("Ruflisten")),
 	Array(	'file'	=> 'pb.php?u='. $user .'&amp;m='. $mac,
-		'title'	=> 'Telefonbuch'),
+		'title'	=> __("Telefonbuch")),
 	Array(	'file'	=> 'configmenu.php?u='. $user .'&amp;m='. $mac,
-		'title'	=> 'Konfiguration')
+		'title'	=> __("Konfiguration"))
 );
 
 ob_start();

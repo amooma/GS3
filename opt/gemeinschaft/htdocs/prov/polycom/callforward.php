@@ -32,6 +32,8 @@ define( 'GS_VALID', true );  // this is a parent file
 
 require_once( dirname(__FILE__) .'/../../../inc/conf.php' );
 require_once(GS_DIR .'inc/db_connect.php' );
+require_once(GS_DIR ."inc/gettext.php");
+require_once(GS_DIR ."inc/langhelper.php");
 
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_activate.php' );
@@ -99,11 +101,19 @@ if (! in_array($type, array('internal', 'external', 'std', 'var', 'timeout'), tr
 
 $db = gs_db_slave_connect();
 
+$user = trim(@$_REQUEST['u']);
+$user_id = getUserID($user);
+
+// setup i18n stuff
+gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
+gs_loadtextdomain( 'gemeinschaft-gui' );
+gs_settextdomain( 'gemeinschaft-gui' );
+
 $tmp = array(
 	15 => array('k' => 'internal',
-	            'v' => gs_get_conf('GS_CLIR_INTERNAL', 'von intern')),
+	            'v' => gs_get_conf('GS_CLIR_INTERNAL', __('von intern'))),
 	25 => array('k' => 'external',
-	            'v' => gs_get_conf('GS_CLIR_EXTERNAL', 'von extern')),
+	            'v' => gs_get_conf('GS_CLIR_EXTERNAL', __('von extern'))),
 );
 
 ksort($tmp);
@@ -117,16 +127,16 @@ $url_polycom_callforward = $url_polycom_provdir .'callforward.php';
 $url_polycom_menu = $url_polycom_provdir .'configmenu.php';
 
 $cases = array(
-	'always'  => 'immer',
-	'busy'    => 'besetzt',
-	'unavail' => 'keine Antw.',
-	'offline' => 'offline'
+	'always'  => __('immer'),
+	'busy'    => __('besetzt'),
+	'unavail' => __('keine Antw.'),
+	'offline' => __('offline')
 );
 
 $actives = array(
-	'no'  => 'Aus',
-	'std' => 'Std.',
-	'var' => 'Tmp.'
+	'no'  => __('Aus'),
+	'std' => __('Std.'),
+	'var' => __('Tmp.')
 );
 
 ################################## SET FEATURE {
@@ -134,8 +144,6 @@ $actives = array(
 if ( ($type != false) && (isset($_REQUEST['value'])) )
 {
 	$value = trim(@$_REQUEST['value']);
-	$user = trim(@ $_REQUEST['u']);
-	$user_id = getUserID($user);
 
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'');
 
@@ -221,8 +229,6 @@ if ( ($type != false) && (isset($_REQUEST['value'])) )
 
 if ( (($type == 'internal') || ($type == 'external')) && (!isset($_REQUEST['key'])) ) {
 	$mac = preg_replace('/[^\dA-Z]/', '', strtoupper(trim(@$_REQUEST['m'])));
-	$user = trim(@$_REQUEST['u']);
-	$user_id = getUserID($user);
 
 	ob_start();
 
@@ -246,14 +252,14 @@ if ( (($type == 'internal') || ($type == 'external')) && (!isset($_REQUEST['key'
 	}
 
 	echo '<html>',"\n";
-	echo '<head><title>Rufumleitung - '. $typeToTitle[$type] .'</title></head>',"\n";
+	echo '<head><title>'. __("Rufumleitung") .' - '. $typeToTitle[$type] .'</title></head>',"\n";
 	echo '<body><br />',"\n";
 
 	echo '<table border="0" cellspacing="0" cellpadding="1" width="100%">',"\n";
 
 	echo '<tr>';
 
-	echo '<th colspan="2" width="100%" align="center">Einstellungen \''. $typeToTitle[$type] .'\'</th></tr>',"\n";
+	echo '<th colspan="2" width="100%" align="center">'. __("Einstellungen") .' \''. $typeToTitle[$type] .'\'</th></tr>',"\n";
 
 	foreach ($cases as $case => $v)	{
 		echo '<tr>';
@@ -266,13 +272,13 @@ if ( (($type == 'internal') || ($type == 'external')) && (!isset($_REQUEST['key'
 
 	//voicemail
 	if ($vm == '1')
-		$vmstate = 'Ein';
+		$vmstate = __('Ein');
 	else
-		$vmstate = 'Aus';
+		$vmstate = __('Aus');
 
 	echo '<tr>';
 
-	echo '<td width="50%" align="right"><a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t='. $type .'&amp;key=voicemail">Voicemail:</a></td>';
+	echo '<td width="50%" align="right"><a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t='. $type .'&amp;key=voicemail">'. __("Voicemail") .':</a></td>';
 	echo '<td width="50%" align="left">'. $vmstate .'</td>';
 
 	echo '</tr>',"\n";
@@ -291,8 +297,6 @@ if ( (($type == 'internal') || ($type == 'external')) && (!isset($_REQUEST['key'
 
 if ( (($type == 'internal') || ($type == 'external')) && (isset($_REQUEST['key'])) ) {
 	$mac = preg_replace('/[^\dA-Z]/', '', strtoupper(trim(@$_REQUEST['m'])));
-	$user = trim(@$_REQUEST['u']);
-	$user_id = getUserID($user);
 	$key = trim(@$_REQUEST['key']);
 
 	ob_start();
@@ -312,16 +316,16 @@ if ( (($type == 'internal') || ($type == 'external')) && (isset($_REQUEST['key']
 		$vm = $db->executeGetOne( 'SELECT `'. $type .'_active` FROM `vm` WHERE `user_id`=\''. $user_id  .'\'' );
 
 		echo '<html>',"\n";
-		echo '<head><title>Rufumleitung - '. $typeToTitle[$type] .'</title></head>',"\n";
+		echo '<head><title>'. __("Rufumleitung") .' - '. $typeToTitle[$type] .'</title></head>',"\n";
 		echo '<body><br />',"\n";
 
 		echo '<table border="0" cellspacing="0" cellpadding="1" width="100%">',"\n";
 
 		echo '<tr>';
-		echo '<th width="100%" align="center">'. $typeToTitle[$type] .': Voicemail</th></tr>',"\n";
+		echo '<th width="100%" align="center">'. $typeToTitle[$type] .': '. __("Voicemail") .'</th></tr>',"\n";
 
-		echo '<tr><td width="100%" align="center"><a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t='. $type .'&amp;key=voicemail&amp;value=1">'. (($vm == 1) ? '*' : '') .'Ein</a></td></tr>',"\n";
-		echo '<tr><td width="100%" align="center"><a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t='. $type .'&amp;key=voicemail&amp;value=0">'. (($vm == 0) ? '*' : '') .'Aus</a></td></tr>',"\n";
+		echo '<tr><td width="100%" align="center"><a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t='. $type .'&amp;key=voicemail&amp;value=1">'. (($vm == 1) ? '*' : '') . __("Ein") .'</a></td></tr>',"\n";
+		echo '<tr><td width="100%" align="center"><a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t='. $type .'&amp;key=voicemail&amp;value=0">'. (($vm == 0) ? '*' : '') . __("Aus") .'</a></td></tr>',"\n";
 
 		echo '</table>',"\n";
 
@@ -335,7 +339,7 @@ if ( (($type == 'internal') || ($type == 'external')) && (isset($_REQUEST['key']
 		$val = $db->executeGetOne( 'SELECT `active` FROM `callforwards` WHERE `user_id`=\''. $user_id .'\' AND `case`=\''. $key .'\' AND `source`=\''. $type .'\'' );
 
 		echo '<html>',"\n";
-		echo '<head><title>Rufumleitung - '. $typeToTitle[$type] .'</title></head>',"\n";
+		echo '<head><title>'. __("Rufumleitung") .' - '. $typeToTitle[$type] .'</title></head>',"\n";
 		echo '<body><br />',"\n";
 
 		echo '<table border="0" cellspacing="0" cellpadding="1" width="100%">',"\n";
@@ -363,11 +367,9 @@ if ( (($type == 'internal') || ($type == 'external')) && (isset($_REQUEST['key']
 
 if( (($type == 'std') || ($type == 'var')) && (!isset($_REQUEST['value'])) ) {
 	$mac = preg_replace('/[^\dA-Z]/', '', strtoupper(trim(@$_REQUEST['m'])));
-	$user = trim(@$_REQUEST['u']);
-	$user_id = getUserID($user);
 
-	if($type == 'var') $pagetitle = "Tempor\xC3\xA4re Nummer";
-	else $pagetitle = 'Standardnummer';
+	if($type == 'var') $pagetitle = __("Tempor\xC3\xA4re Nummer");
+	else $pagetitle = __("Standardnummer");
 
 	ob_start();
 
@@ -390,7 +392,7 @@ if( (($type == 'std') || ($type == 'var')) && (!isset($_REQUEST['value'])) ) {
 	}
 
 	echo '<html>',"\n";
-	echo '<head><title>Rufumleitung - '. $pagetitle .'</title></head>',"\n";
+	echo '<head><title>'. __("Rufumleitung") .' - '. $pagetitle .'</title></head>',"\n";
 	echo '<body><br />',"\n";
 
 	echo '<form name="cfdest" method="GET" action="'. $url_polycom_callforward .'">',"\n";
@@ -400,11 +402,11 @@ if( (($type == 'std') || ($type == 'var')) && (!isset($_REQUEST['value'])) ) {
 
 	echo '<table border="0" cellspacing="0" cellpadding="1" width="100%">',"\n";
 	echo '<tr>';
-	echo '<th align="center" width="100%">Rufumleitungsziel: '. $pagetitle .'</th>';
+	echo '<th align="center" width="100%">'. __("Rufumleitungsziel") .': '. $pagetitle .'</th>';
 	echo '</tr>';
 
 	echo '<tr><td align="center" width="100%"><input type="text" name="value" value="'. $number .'" /></td></tr>',"\n";
-	echo '<tr><td align="center" width="100%"><input type="submit" value=" Speichern " /></td></tr>',"\n";
+	echo '<tr><td align="center" width="100%"><input type="submit" value=" '. __("Speichern") .' " /></td></tr>',"\n";
 	echo '</table>',"\n";
 
 	echo '</form>',"\n";
@@ -423,12 +425,10 @@ if( (($type == 'std') || ($type == 'var')) && (!isset($_REQUEST['value'])) ) {
 if ( ($type == 'timeout') && (!isset($_REQUEST['value'])) )
 {
 	$mac = preg_replace('/[^\dA-Z]/', '', strtoupper(trim(@$_REQUEST['m'])));
-	$user = trim(@$_REQUEST['u']);
-	$user_id = getUserID($user);
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 
 	$callforwards = gs_callforward_get($user_name);
-	$pagetitle = 'Timeout bei keine Antwort';
+	$pagetitle = __("Timeout bei keine Antwort");
 
 	ob_start();
 
@@ -446,7 +446,7 @@ if ( ($type == 'timeout') && (!isset($_REQUEST['value'])) )
 	$timeout = (int)@$callforwards['internal']['unavail']['timeout'];
 
 	echo '<html>',"\n";
-	echo '<head><title>Rufumleitung - Timeout</title></head>',"\n";
+	echo '<head><title>'. __("Rufumleitung") .' - '. __("Timeout") .'</title></head>',"\n";
 	echo '<body><br />',"\n";
 
 	echo '<form name="cfdest" method="GET" action="'. $url_polycom_callforward .'">',"\n";
@@ -460,7 +460,7 @@ if ( ($type == 'timeout') && (!isset($_REQUEST['value'])) )
 	echo '</tr>';
 
 	echo '<tr><td align="center" width="100%"><input type="text" name="value" value="'. $timeout .'" /></td></tr>',"\n";
-	echo '<tr><td align="center" width="100%"><input type="submit" value=" Speichern " /></td></tr>',"\n";
+	echo '<tr><td align="center" width="100%"><input type="submit" value=" '. __("Speichern") .' " /></td></tr>',"\n";
 	echo '</table>',"\n";
 
 	echo '</form>',"\n";
@@ -478,24 +478,22 @@ if ( ($type == 'timeout') && (!isset($_REQUEST['value'])) )
 
 if (!$type) {
 	$mac = preg_replace('/[^\dA-Z]/', '', strtoupper(trim(@$_REQUEST['m'])));
-	$user = trim(@$_REQUEST['u']);
-	$user_id = getUserID($user);
 
 	ob_start();
 
 	echo $callforward_doctype ."\n";
 	echo '<html>',"\n";
-	echo '<head><title>Rufumleitung</title></head>',"\n";
+	echo '<head><title>'. __("Rufumleitung") .'</title></head>',"\n";
 	echo '<body><br />',"\n";
 
-	echo '- <a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t=std">Standardnummer</a><br />',"\n";
-	echo "- <a href=\"". $url_polycom_callforward ."?m=". $mac ."&amp;u=". $user ."&amp;t=var\">Tempor\xC3\xA4re Nummer</a><br />\n";
+	echo '- <a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t=std">'. __("Standardnummer") .'</a><br />',"\n";
+	echo "- <a href=\"". $url_polycom_callforward ."?m=". $mac ."&amp;u=". $user ."&amp;t=var\">". __("Tempor\xC3\xA4re Nummer") ."</a><br />\n";
 
 	foreach($typeToTitle as $t => $title) {
 		echo '- <a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t='. $t .'">'. $title .'</a><br />',"\n";
 	}
 
-	echo '- <a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t=timeout">Nicht-Antwort-Timeout</a><br />',"\n";
+	echo '- <a href="'. $url_polycom_callforward .'?m='. $mac .'&amp;u='. $user .'&amp;t=timeout">'. __("Nicht-Antwort-Timeout") .'</a><br />',"\n";
 
 	echo '</body>',"\n";
 
