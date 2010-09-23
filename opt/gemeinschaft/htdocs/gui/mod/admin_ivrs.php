@@ -31,7 +31,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-fns/gs_ivr_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ivr_del.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_ivr_update.php' );   
+include_once( GS_DIR .'inc/gs-fns/gs_ivr_update.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 echo '<h2>';
@@ -45,29 +45,25 @@ echo '</h2>', "\n";
 echo '<script type="text/javascript">
 //<![CDATA[
 function confirm_delete() {
-   	return confirm(', utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) ,');
+	return confirm(', utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) ,');
 }
-function enableInput(K_type){
-    var K_VALUE = K_type +"_value";  
-    var K_SELECT =  K_type +"_select";
-    if (document.getElementById(K_type).value == "repeat"  || document.getElementById(K_type).value == "hangup" || document.getElementById(K_type).value == "" ) 
-    { 
-       	document.getElementById(K_VALUE).style.display = "none";
-       	document.getElementById(K_SELECT).style.display = "none";
-   		
-    }
-    else if (document.getElementById(K_type).value == "extension" )
-    {
-    		document.getElementById(K_VALUE).style.display = "inline";
-    		document.getElementById(K_SELECT).style.display = "none"; 
-    }
-    else {
-                document.getElementById(K_VALUE).style.display = "none";
-    		document.getElementById(K_SELECT).style.display = "inline"; 
-    }
-   //document.getElementById(K_VALUE).defaultValue = "";   
-   //document.getElementById(K_VALUE).value = document.getElementById(K_VALUE).defaultValue;   
-    		
+function enableInput( K_type ) {
+	var K_VALUE  = K_type +"_value";
+	var K_SELECT = K_type +"_select";
+	if (document.getElementById(K_type).value == "repeat" || document.getElementById(K_type).value == "hangup" || document.getElementById(K_type).value == "") {
+		document.getElementById(K_VALUE).style.display = "none";
+		document.getElementById(K_SELECT).style.display = "none";
+	}
+	else if (document.getElementById(K_type).value == "extension") {
+		document.getElementById(K_VALUE).style.display = "inline";
+		document.getElementById(K_SELECT).style.display = "none";
+	}
+	else {
+		document.getElementById(K_VALUE).style.display = "none";
+		document.getElementById(K_SELECT).style.display = "inline";
+	}
+	//document.getElementById(K_VALUE).defaultValue = "";
+	//document.getElementById(K_VALUE).value = document.getElementById(K_VALUE).defaultValue;
 }
 //]]>
 </script>' ,"\n";
@@ -90,7 +86,7 @@ $action_type = array(
 	'announce'	=> __('Sprachnachricht'),
 	'repeat'	=> __('Ansage wiederholen')
 );
-$keys = array(	
+$keys = array(
 	'0'	=> '0',
 	'1'	=> '1',
 	'2'	=> '2',
@@ -103,7 +99,7 @@ $keys = array(
 	'9'	=> '9',
 	'#'	=> 'pound',
 	'*'	=> 'star'
-);  
+);
 
 
 #####################################################################
@@ -131,16 +127,16 @@ if ($action === 'save') {
 #	print_r($_REQUEST);
 #	echo "</pre>\n";
 	
-
-	$name 				= preg_replace('/[^0-9]/', '', @$_REQUEST['name']);
-	$title 				= trim(@$_REQUEST['title']);
-	$announcement 			= @$_REQUEST['announcement'];  
-	$timeout 			= preg_replace('/[^0-9]/', '', @$_REQUEST['timeout']);     
-	$retry 				= preg_replace('/[^0-9]/', '', @$_REQUEST['retry']); 
+	
+	$name          = preg_replace('/[^0-9]/', '', @$_REQUEST['name']);
+	$title         = trim(@$_REQUEST['title']);
+	$announcement  = @$_REQUEST['announcement'];
+	$timeout       = preg_replace('/[^0-9]/', '', @$_REQUEST['timeout']);
+	$retry         = preg_replace('/[^0-9]/', '', @$_REQUEST['retry']);
 	
 	
 	$values = array ();
-
+	
 	$options = $keys;
 	$options ['t'] = 't' ;
 	$options ['i'] = 'i' ;
@@ -152,10 +148,10 @@ if ($action === 'save') {
 			$value ['key_' . $v . '_value']= "";
 		}
 		else {
-
+			
 			$value ['key_' . $v . '_type'] = @$_REQUEST['key_' . $v . '_type'];
-			if ( $value ['key_' . $v . '_type'] == 'extension' ) {
-				$value ['key_' . $v . '_value']=  preg_replace('/[^vm0-9]/', '', @$_REQUEST['key_' . $v . '_value']);
+			if ($value ['key_'.$v.'_type'] == 'extension') {
+				$value ['key_'.$v.'_value'] = preg_replace('/[^vm0-9]/', '', @$_REQUEST['key_' . $v . '_value']);
 				if ( $value ['key_' . $v . '_value'] == '0' || strlen( $value ['key_' . $v . '_value'] ) <= 0 ) {
 					$value ['key_' . $v . '_value'] = '';
 
@@ -167,7 +163,7 @@ if ($action === 'save') {
 				}
 			}
 			else if ( $value ['key_' . $v . '_type'] == 'announce' ) {
-				$value ['key_' . $v . '_value']=  preg_replace('/[^0-9]/', '', @$_REQUEST['key_' . $v . '_select']);
+				$value ['key_' . $v . '_value'] = preg_replace('/[^0-9]/', '', @$_REQUEST['key_' . $v . '_select']);
 				if ( $value ['key_' . $v . '_value'] == '0' || strlen( $value ['key_' . $v . '_value'] ) <= 0 ) {
 				//there is no soundfile selected, so we have to select the default value
 					$value ['key_' . $v . '_value'] = '';
@@ -179,14 +175,11 @@ if ($action === 'save') {
 					}
 			}
 			else {
-				$value ['key_' . $v . '_value']=  "";
+				$value ['key_' . $v . '_value'] = "";
 			}
 		}
-                	                          
 	}
 	
-	
-	        	
 	$update_additional = false;
 	if ($ivr_id < 1) {
 		$ret = gs_ivr_add( $name, $title, $timeout, (int)@$_REQUEST['host_id'], $announcement );
@@ -200,66 +193,61 @@ if ($action === 'save') {
 		}
 	} else {
 		
-			$update_additional = true; 
+			$update_additional = true;
 			$ret = gs_ivr_update($announcement);
 			if (isGsError( $ret )) {
-				echo $ret->getMsg(); 
-				$update_additional = false; 
+				echo $ret->getMsg();
+				$update_additional = false;
 			}
-			if ($timeout < 3) $timeout = 3;      
+			if ($timeout < 3) $timeout = 3;
 		
 	}
 	
 	
 	
 	if ($update_additional) {
-
-	
-  		
+		
 		$DB->execute(
 'UPDATE `ivrs` SET
-	`title`				= \''. $DB->escape($title) .'\',   
-	`announcement`		= \''. $announcement .'\',       
-	`timeout`			= \''. $timeout .'\',
-	`retry`				= \''. $retry .'\', 
-	`key_0_type`		= \''. $value ['key_0_type'] .'\',  
-	`key_0_value`		= \''. $value ['key_0_value'] .'\',      
-	`key_1_type`		= \''. $value ['key_1_type'] .'\',  
-	`key_1_value`		= \''. $value ['key_1_value'] .'\',    
-	`key_2_type`		= \''. $value ['key_2_type'] .'\',   
-	`key_2_value`		= \''. $value ['key_2_value'] .'\',   
-	`key_3_type`		= \''. $value ['key_3_type'] .'\', 
-	`key_3_value`		= \''. $value ['key_3_value'] .'\',     
-	`key_4_type`		= \''. $value ['key_4_type'] .'\',  
-	`key_4_value`		= \''. $value ['key_4_value'] .'\',  
-	`key_5_type`		= \''. $value ['key_5_type'] .'\',
-	`key_5_value`		= \''. $value ['key_5_value'] .'\',
-	`key_6_type`		= \''. $value ['key_6_type'] .'\',  
-	`key_6_value`		= \''. $value ['key_6_value'] .'\',  
-	`key_7_type`		= \''. $value ['key_7_type'] .'\',   
-	`key_7_value`		= \''. $value ['key_7_value'] .'\',    
-	`key_8_type`		= \''. $value ['key_8_type'] .'\',
-	`key_8_value`		= \''. $value ['key_8_value'] .'\',       
-	`key_9_type`		= \''. $value ['key_9_type'] .'\',
-	`key_9_value`		= \''. $value ['key_9_value'] .'\',          
-	`key_pound_type`	= \''. $value ['key_pound_type'] .'\',
-   	`key_pound_value`	= \''. $value ['key_pound_value'] .'\',          
-    `key_star_type`		= \''. $value ['key_star_type'] .'\',
-    `key_star_value`		= \''. $value ['key_star_value'] .'\',          
-    `t_action_type`		= \''. $value ['key_t_type'] .'\',
-    `t_action_value`		= \''. $value ['key_t_value'] .'\', 
-    `i_action_type`		= \''. $value ['key_i_type'] .'\', 
-    `i_action_value`		= \''. $value ['key_i_value'] .'\'     
-  
-	
-    
+	`title`           = \''. $DB->escape($title) .'\',
+	`announcement`    = \''. $announcement .'\',
+	`timeout`         = \''. $timeout .'\',
+	`retry`           = \''. $retry .'\',
+	`key_0_type`      = \''. $value ['key_0_type'] .'\',
+	`key_0_value`     = \''. $value ['key_0_value'] .'\',
+	`key_1_type`      = \''. $value ['key_1_type'] .'\',
+	`key_1_value`     = \''. $value ['key_1_value'] .'\',
+	`key_2_type`      = \''. $value ['key_2_type'] .'\',
+	`key_2_value`     = \''. $value ['key_2_value'] .'\',
+	`key_3_type`      = \''. $value ['key_3_type'] .'\',
+	`key_3_value`     = \''. $value ['key_3_value'] .'\',
+	`key_4_type`      = \''. $value ['key_4_type'] .'\',
+	`key_4_value`     = \''. $value ['key_4_value'] .'\',
+	`key_5_type`      = \''. $value ['key_5_type'] .'\',
+	`key_5_value`     = \''. $value ['key_5_value'] .'\',
+	`key_6_type`      = \''. $value ['key_6_type'] .'\',
+	`key_6_value`     = \''. $value ['key_6_value'] .'\',
+	`key_7_type`      = \''. $value ['key_7_type'] .'\',
+	`key_7_value`     = \''. $value ['key_7_value'] .'\',
+	`key_8_type`      = \''. $value ['key_8_type'] .'\',
+	`key_8_value`     = \''. $value ['key_8_value'] .'\',
+	`key_9_type`      = \''. $value ['key_9_type'] .'\',
+	`key_9_value`     = \''. $value ['key_9_value'] .'\',
+	`key_pound_type`  = \''. $value ['key_pound_type'] .'\',
+	`key_pound_value` = \''. $value ['key_pound_value'] .'\',
+	`key_star_type`   = \''. $value ['key_star_type'] .'\',
+	`key_star_value`  = \''. $value ['key_star_value'] .'\',
+	`t_action_type`   = \''. $value ['key_t_type'] .'\',
+	`t_action_value`  = \''. $value ['key_t_value'] .'\',
+	`i_action_type`   = \''. $value ['key_i_type'] .'\',
+	`i_action_value`  = \''. $value ['key_i_value'] .'\'
 WHERE `id`='.$ivr_id
 		);
 	}
 	
-    @exec('sudo '. qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan' .' 1>>/dev/null 2>>/dev/null &' );	
-
-    $action = 'edit';
+	@exec('sudo '. qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan' .' 1>>/dev/null 2>>/dev/null &' );
+	
+	$action = 'edit';
 }
 #####################################################################
 #                               save }
@@ -274,7 +262,7 @@ WHERE `id`='.$ivr_id
 
 
 if ($action === 'edit') {
-
+	
 	/*	
 	
 	// its also possible to make a target selection for the keys for queue, user, ivr 
@@ -282,35 +270,33 @@ if ($action === 'edit') {
 	
 	
 	
-	$rs = $DB->execute( 'SELECT `name` FROM  `ast_queues`');
+	$rs = $DB->execute( 'SELECT `name` FROM `ast_queues`');
 	$queues_ext = array();
 	while ($r = $rs->fetchRow()) {
 		$queues_ext[] = $r['name'];
 	}
 	
-	$rs = $DB->execute( 'SELECT `name` FROM  `ast_sipfriends`');
+	$rs = $DB->execute( 'SELECT `name` FROM `ast_sipfriends`');
 	$sipfriends_ext = array();
 	while ($r = $rs->fetchRow()) {
 		$sipfriends_ext[] = $r['name'];
 	}
 	
-	$rs = $DB->execute( 'SELECT `name` FROM  `ivrs`');
+	$rs = $DB->execute( 'SELECT `name` FROM `ivrs`');
 	$ivrs_ext = array();
 	while ($r = $rs->fetchRow()) {
 		$ivrs_ext[] = $r['name'];
 	}
 	
-    
 	
 	echo "<pre>\n";
 	print_r($queues_ext);
-	print_r($sipfriends_ext);     
-	print_r($ivrs_ext);     
-	echo "</pre>\n";    
+	print_r($sipfriends_ext);
+	print_r($ivrs_ext);
+	echo "</pre>\n";
 	
-
 */
-
+	
 	# get system recordings
 	#
 	$sql_query =
@@ -320,7 +306,7 @@ if ($action === 'edit') {
 	`s`.`length` `length`
 FROM
 	`systemrecordings` `s`';
-
+	
 	$rs = $DB->execute($sql_query);
 	$recordings = array();
 	while ($r = $rs->fetchRow()) {
@@ -344,54 +330,50 @@ ORDER BY `id`';
 	#
 	if ($ivr_id > 0) {
 		$rs = $DB->execute(
-	
-	'SELECT * FROM `ivrs` WHERE	`id`='. $ivr_id	); 
-	
-	 $ivr = $rs->fetchRow();
-	
-			
-	} else {
+			'SELECT * FROM `ivrs` WHERE	`id`='. $ivr_id	);
+	 	$ivr = $rs->fetchRow();
+	}
+	else {
 		$ivr_id = 0;
 		$ivr = array(
-			'name'				=> $name,
-			'host_id'			=> 0,
-			'title'				=> __('Neues Sprachmenü'),
-			'announcement'		=> '',
-			'timeout'			=> 5, 
-			'retry'				=> 3,
-			'key_0_type'		=> '',   
-			'key_0_value'		=> '',  
-			'key_1_type'		=> '',   
-			'key_1_value'		=> '',  
-			'key_2_type'		=> '',   
-			'key_2_value'		=> '',   
-			'key_3_type'		=> '',   
-			'key_3_value'		=> '',   
-			'key_4_type'		=> '',   
-			'key_4_value'		=> '',   
-			'key_5_type'		=> '',   
-			'key_5_value'		=> '',   
-			'key_6_type'		=> '',   
-			'key_6_value'		=> '',   
-			'key_7_type'		=> '',   
-			'key_7_value'		=> '',   
-			'key_8_type'		=> '',   
-			'key_8_value'		=> '',   
-    		'key_9_type'		=> '',   
-    		'key_9_value'		=> '',   
-    		'key_pound_type'	=> '',   
-    		'key_pound_value'	=> '',   
-    		'key_star_type'		=> '',   
-    		'key_star_value'	=> '',   
-    		't_action_type'		=> '',   
-    		't_action_value'	=> '',   
-    		'i_action_type'		=> '',   
-    		'i_action_value'  	=> ''   
-			
+			'name'             => $name,
+			'host_id'          => 0,
+			'title'            => __('Neues Sprachmenü'),
+			'announcement'     => '',
+			'timeout'          => 5,
+			'retry'            => 3,
+			'key_0_type'       => '',
+			'key_0_value'      => '',
+			'key_1_type'       => '',
+			'key_1_value'      => '',
+			'key_2_type'       => '',
+			'key_2_value'      => '',
+			'key_3_type'       => '',
+			'key_3_value'      => '',
+			'key_4_type'       => '',
+			'key_4_value'      => '',
+			'key_5_type'       => '',
+			'key_5_value'      => '',
+			'key_6_type'       => '',
+			'key_6_value'      => '',
+			'key_7_type'       => '',
+			'key_7_value'      => '',
+			'key_8_type'       => '',
+			'key_8_value'      => '',
+			'key_9_type'       => '',
+			'key_9_value'      => '',
+			'key_pound_type'   => '',
+			'key_pound_value'  => '',
+			'key_star_type'    => '',
+			'key_star_value'   => '',
+			't_action_type'    => '',
+			't_action_value'   => '',
+			'i_action_type'    => '',
+			'i_action_value'   => ''
 		);
 	}
-		
-		
+	
+	
 	if (! is_array($ivr)) {
 		$action = '';
 	} else {
@@ -439,120 +421,115 @@ ORDER BY `id`';
 		echo '<select name="announcement">', "\n";
 		echo '<option value="0"', ($queue['_sysrec_id'] ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
 		echo '<option value="" disabled="disabled">-</option>', "\n";
-		foreach( $recordings as $rec_id => $desc ) {
+		foreach ($recordings as $rec_id => $desc) {
 			echo '<option value="' . $rec_id .'"', ( htmlEnt($ivr['announcement']) ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
 		}
 		echo '</select>';
 		echo '</td>';
-		echo '</tr>',"\n";		
-
+		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Antwortzeit') ,'</th>',"\n";
 		echo '<td>',"\n";
-		echo '<input type="text" name="timeout" value="', $ivr['timeout'] ,'" size="3" maxlength="3" class="r" />',"\n"; 
+		echo '<input type="text" name="timeout" value="', $ivr['timeout'] ,'" size="3" maxlength="3" class="r" />',"\n";
 		echo '</td>';
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Wiederholungen') ,'</th>',"\n";
 		echo '<td>',"\n";
-		echo '<input type="text" name="retry" value="', $ivr['retry'] ,'" size="3" maxlength="3" class="r" />', "\n"; 
+		echo '<input type="text" name="retry" value="', $ivr['retry'] ,'" size="3" maxlength="3" class="r" />', "\n";
 		echo '</td>';
 		echo '</tr>',"\n";
 		
-		echo '<tr><td class="transp" colspan="2">&nbsp;</td></tr>',"\n"; 
+		echo '<tr><td class="transp" colspan="2">&nbsp;</td></tr>',"\n";
 		
-		
-		foreach($keys as $key => $v) {
+		foreach ($keys as $key => $v) {
 			echo '<tr>',"\n";
 			echo '<th class="r">', __('Taste '. $key .'') ,'</th>',"\n";
 			echo '<td>',"\n";
-			echo '<select name="key_'. $v .'_type" id="key_'. $v .'" "style="width:150px; margin:2px 5px 1px 0px;" onChange="enableInput(\'key_'. $v .'\');">', "\n";   
-			echo '<option value=""'.($ivr['key_'. $v .'_type']  == ''  ? ' selected="selected"' : '').'>---</option>\n'; 
+			echo '<select name="key_'. $v .'_type" id="key_'. $v .'" "style="width:150px; margin:2px 5px 1px 0px;" onChange="enableInput(\'key_'. $v .'\');">', "\n";
+			echo '<option value=""'.($ivr['key_'. $v .'_type'] == '' ? ' selected="selected"' : '').'>---</option>\n';
 				foreach ( $action_type as $action => $description ) {
-				echo '<option value="'. $action .'"'. ($action == $ivr['key_'. $v .'_type'] ? ' selected="selected"' : ''). '>'. $description . '</option>', "\n"; 
+				echo '<option value="'. $action .'"'. ($action == $ivr['key_'. $v .'_type'] ? ' selected="selected"' : ''). '>'. $description . '</option>', "\n";
 			}
 			
-			if( $ivr['key_'. $v .'_type'] == 'extension' )
-                          $ivr["key_". $v ."_value_select"] = 0;
-                        else if ( $ivr['key_'. $v .'_type'] == 'announce' ) {
-                          $ivr["key_". $v ."_value_select"] = $ivr["key_". $v ."_value"] ;
-                          $ivr["key_". $v ."_value"] = '';
-                        }
-                        else {
-                           $ivr["key_". $v ."_value_select"] = '';
-                        }
-  
+			if ($ivr['key_'. $v .'_type'] === 'extension') {
+				$ivr["key_". $v ."_value_select"] = 0;
+			}
+			elseif ($ivr['key_'. $v .'_type'] === 'announce') {
+				$ivr["key_". $v ."_value_select"] = $ivr["key_". $v ."_value"] ;
+				$ivr["key_". $v ."_value"] = '';
+			}
+			else {
+				$ivr["key_". $v ."_value_select"] = '';
+			}
 			
-    		echo '</select>', "\n";
-   		echo '<input type="text" name="key_'. $v .'_value" id="key_'. $v .'_value" value="', $ivr["key_". $v ."_value"] ,'" size="10" maxlength="20" class="r" ', ($ivr['key_'. $v .'_type'] == 'extension' ? '' : ' style="display:none"' ), '/>', "\n"; 
-    		
-    		echo '<select name="key_'. $v .'_select" id="key_'. $v .'_select" ', ($ivr['key_'. $v .'_type'] == 'announce' ? '' : ' style="display:none"' ) ,'" >', "\n";
-		echo '<option value="0"', ( htmlEnt( $ivr["key_". $v ."_value_select"]) ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
-		echo '<option value="" disabled="disabled">-</option>', "\n";
-		foreach( $recordings as $rec_id => $desc ) {
-			echo '<option value="' . $rec_id .'"', (  htmlEnt( $ivr["key_". $v ."_value_select"]) ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
-		}
-		echo '</select>';
-    		
+			echo '</select>', "\n";
+			echo '<input type="text" name="key_'. $v .'_value" id="key_'. $v .'_value" value="', $ivr["key_". $v ."_value"] ,'" size="10" maxlength="20" class="r" ', ($ivr['key_'. $v .'_type'] == 'extension' ? '' : ' style="display:none"' ), '/>', "\n";
+			
+			echo '<select name="key_'. $v .'_select" id="key_'. $v .'_select" ', ($ivr['key_'. $v .'_type'] == 'announce' ? '' : ' style="display:none"' ) ,'" >', "\n";
+			echo '<option value="0"', ( htmlEnt( $ivr["key_". $v ."_value_select"]) ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
+			echo '<option value="" disabled="disabled">-</option>', "\n";
+			foreach ($recordings as $rec_id => $desc) {
+				echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr["key_". $v ."_value_select"]) ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+			}
+			echo '</select>';
+			
 			echo '</td>';
 			echo '</tr>',"\n";
 		}
-
-
-
-       
 		
-
-		echo '<tr><td class="transp" colspan="2">&nbsp;</td></tr>',"\n";   
+		
+		echo '<tr><td class="transp" colspan="2">&nbsp;</td></tr>',"\n";
 			
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Ziel bei keiner Eingabe') ,'</th>',"\n";
 		echo '<td>',"\n";
-		echo '<select name="key_t_type" id="t_action" "style="width:150px; margin:2px 5px 1px 0px;" onChange="enableInput(\'t_action\');">', "\n";   
+		echo '<select name="key_t_type" id="t_action" "style="width:150px; margin:2px 5px 1px 0px;" onChange="enableInput(\'t_action\');">', "\n";
 		foreach ( $action_type as $action => $description ) {
-			echo '<option value="', $action, '"', ($action == $ivr['t_action_type'] ? ' selected="selected"' : ''), '>', $description, '</option>', "\n"; 
+			echo '<option value="', $action, '"', ($action == $ivr['t_action_type'] ? ' selected="selected"' : ''), '>', $description, '</option>', "\n";
 		}
-    		echo '</select>', "\n";
-    	         
-		if( $ivr['t_action_type'] == 'extension' )
-                	$ivr['t_action_value_select'] = '0';
-		else if ( $ivr['t_action_type'] == 'announce' ) {
+		echo '</select>', "\n";
+		
+		if ($ivr['t_action_type'] === 'extension') {
+			$ivr['t_action_value_select'] = '0';
+		}
+		elseif ($ivr['t_action_type'] === 'announce') {
 			$ivr['t_action_value_select'] = $ivr['t_action_value'] ;
 			$ivr['t_action_value'] = '0';
 		}
 		else {
 			$ivr['t_action_value_select'] = '';
 		}
-
-    		echo '<input type="text" name="key_t_value" id="t_action_value" value="', $ivr['t_action_value'] ,'" size="10" maxlength="20" class="r" ', ($ivr['t_action_type'] == "extension" ? '' : ' style="display:none"'), '/>', "\n"; 
+		
+		echo '<input type="text" name="key_t_value" id="t_action_value" value="', $ivr['t_action_value'] ,'" size="10" maxlength="20" class="r" ', ($ivr['t_action_type'] == "extension" ? '' : ' style="display:none"'), '/>', "\n";
 
 		echo '<select name="key_t_select" id="t_action_select" ', ($ivr['t_action_type'] == 'announce' ? '' : ' style="display:none"' ) ,'" >', "\n";
 		echo '<option value="0"', ( htmlEnt( $ivr["t_action_value_select"]) ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
 		echo '<option value="" disabled="disabled">-</option>', "\n";
-		foreach( $recordings as $rec_id => $desc ) {
-			echo '<option value="' . $rec_id .'"', (  htmlEnt( $ivr["t_action_value_select"]) ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+		foreach ($recordings as $rec_id => $desc) {
+			echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr["t_action_value_select"]) == $rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
 		}
 		echo '</select>';
 
 		echo '</td>';
 		echo '</tr>',"\n";
-
-
+		
 		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Ziel bei falscher Eingabe') ,'</th>',"\n";
 		echo '<td>',"\n";
-		echo '<select name="key_i_type" id="i_action" "style="width:150px; margin:2px 5px 1px 0px;" onChange="enableInput(\'i_action\');">', "\n";   
-		foreach ( $action_type as $action => $description ) {
-			echo '<option value="', $action, '"', ($action == $ivr['i_action_type'] ? ' selected="selected"' : ''), '>', $description, '</option>', "\n"; 
+		echo '<select name="key_i_type" id="i_action" "style="width:150px; margin:2px 5px 1px 0px;" onChange="enableInput(\'i_action\');">', "\n";
+		foreach ($action_type as $action => $description) {
+			echo '<option value="', $action, '"', ($action == $ivr['i_action_type'] ? ' selected="selected"' : ''), '>', $description, '</option>', "\n";
 		}
-    		echo '</select>', "\n";
-    		
-		if( $ivr['i_action_type'] == 'extension' )
-                	$ivr['i_action_value_select'] = '0';
-		else if ( $ivr['i_action_type'] == 'announce' ) {
+		echo '</select>', "\n";
+		
+		if ($ivr['i_action_type'] === 'extension') {
+			$ivr['i_action_value_select'] = '0';
+		}
+		elseif ($ivr['i_action_type'] === 'announce') {
 			$ivr['i_action_value_select'] = $ivr['i_action_value'] ;
 			$ivr['i_action_value'] = '0';
 		}
@@ -561,13 +538,13 @@ ORDER BY `id`';
 		}
 
 
-		echo '<input type="text" name="key_i_value" id="i_action_value" value="', $ivr['i_action_value'] ,'" size="10" maxlength="20" class="r" ', ($ivr['i_action_type'] == 'extension' ? '' : ' style="display:none"' ), '/>', "\n"; 
+		echo '<input type="text" name="key_i_value" id="i_action_value" value="', $ivr['i_action_value'] ,'" size="10" maxlength="20" class="r" ', ($ivr['i_action_type'] == 'extension' ? '' : ' style="display:none"' ), '/>', "\n";
 
-    		echo '<select name="key_i_select" id="i_action_select" ', ($ivr['i_action_type'] == 'announce' ? '' : ' style="display:none"' ) ,'" >', "\n";
+		echo '<select name="key_i_select" id="i_action_select" ', ($ivr['i_action_type'] == 'announce' ? '' : ' style="display:none"' ) ,'" >', "\n";
 		echo '<option value="0"', ( htmlEnt( $ivr['i_action_value_select']) ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
 		echo '<option value="" disabled="disabled">-</option>', "\n";
-		foreach( $recordings as $rec_id => $desc ) {
-			echo '<option value="' . $rec_id .'"', (  htmlEnt( $ivr['i_action_value_select']) ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+		foreach ($recordings as $rec_id => $desc) {
+			echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr['i_action_value_select']) ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
 		}
 		echo '</select>';
 		echo '</td>';
@@ -637,7 +614,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 	
 	$num_total = @$DB->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);
-
 	
 ?>
 
@@ -712,6 +688,5 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 #####################################################################
 
 
- 
 
 ?>
