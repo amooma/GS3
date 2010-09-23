@@ -485,8 +485,8 @@ $avg_calldur_month = ($totals['num_connected'] > 0)
 	: 0;
 
 $pct_connected_month = ($totals['num_connected'] > 0)
-		? ($totals['num_connected'] / $totals['num_entered'])
-		: 0.0;
+	? ($totals['num_connected'] / $totals['num_entered'])
+	: 0.0;
 $pct_connected_month = round($pct_connected_month*100);
 
 
