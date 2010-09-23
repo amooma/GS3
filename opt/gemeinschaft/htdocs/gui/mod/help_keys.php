@@ -102,7 +102,7 @@ echo __("Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ng
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th colspan="2"><?php echo __('Liste der einzelnen Tastenfunktionen:'); ?></th>
+	<th colspan="2"><?php echo __('Liste der einzelnen Tastenfunktionen'); ?> <?php echo __('(Beispiel OpenStage)'); ?>:</th>
 </tr>
 </thead>
 <tbody>
