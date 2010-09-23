@@ -188,14 +188,14 @@ function _gui_monitor_which_peers_group( $sudo_user )
 	
 	$peers = array();
 	if (is_array($group_members)) {
-		$rs = $db_slave->execute('SELECT `user` FROM
-			`users`	WHERE `id` IN ('.implode(',',$group_members).') ');
-			$peers = array();
-			if (! $rs)
-				return $peers;
-			while ($r = @$rs->fetchRow()) {
-				$peers[] = $r['user']; 
-			}
+		$rs = $db_slave->execute(
+			'SELECT `user` FROM `users` WHERE `id` IN ('.implode(',',$group_members).') ');
+		$peers = array();
+		if (! $rs)
+			return $peers;
+		while ($r = @$rs->fetchRow()) {
+			$peers[] = $r['user']; 
+		}
 	}
 	return $peers;
 }
