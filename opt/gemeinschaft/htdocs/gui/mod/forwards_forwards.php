@@ -60,7 +60,7 @@ function _pack_int( $int ) {
 
 
 
-function InitHinttoggleCall() {  //FIXME
+function InitHinttoggleCall() {  //FIXME  --- fix what?
 	$user=gs_user_get( $_SESSION['sudo_user']['name'] );
 
 	$call   //= "Channel: Local/". $from_num_dial ."\n"
