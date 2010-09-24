@@ -182,7 +182,7 @@ $t = time();
 $month_d = 0;
 for ($i=-12; $i<=0; ++$i) {
 	$t         = time() + $day_d;
-	$dow        = (int)date('w',$t);
+	$dow       = (int)date('w',$t);
 	$t         = (int)strToTime("$i week", $t);
 	$t         = (int)strToTime(($dow-1)." days ago", $t);
 	$num_days  = (int)date('t', $t);
