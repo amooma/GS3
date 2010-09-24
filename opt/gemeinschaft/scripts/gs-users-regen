@@ -83,6 +83,7 @@ foreach ($users as $u) {
 		' --pin='      , qsa($u['pin'      ]) ,
 		' --firstname=', qsa($u['firstname']) ,
 		' --lastname=' , qsa($u['lastname' ]) ,
+		' --language=' , qsa($u['language' ]) ,
 		' --email='    , qsa($u['email'    ]) ,
 		' --host='     , qsa($u['host'     ]) ,
 		"\n";
