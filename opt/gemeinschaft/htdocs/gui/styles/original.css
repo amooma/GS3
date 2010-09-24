@@ -104,7 +104,7 @@ input[type="button"],
 input[type="submit"],
 input[type="reset"] {
 	/*cursor: pointer;*/  /* to make <button>s indistinguishable from <a>s from
-	                     from the users' perspective */
+				   from the users' perspective */
 }
 
 option {margin: 0; padding: 0 2px;}
@@ -780,52 +780,52 @@ tr.odd .transp {
 
 
 .bargraph {
-       display: block;
-       position: relative;
-       background: #5c60ff;
-       text-align: center;
-       color: #000000;
+	display: block;
+	position: relative;
+	background: #5c60ff;
+	text-align: center;
+	color: #000000;
 }
 
 
 table.extmonhd {
-        width: 100%;
-        color: #000;
-        background-color: #f0f0f3;
-        border: none;
-        border-spacing: 2px;
+	width: 100%;
+	color: #000;
+	background-color: #f0f0f3;
+	border: none;
+	border-spacing: 2px;
 }
 
 table.extmon {
-        color: #000000;
-        background-color: #f0f0f3;
-        border: none;
-        border-spacing: 1px;
+	color: #000000;
+	background-color: #f0f0f3;
+	border: none;
+	border-spacing: 1px;
 }
 
 th.extmonhd {
-        white-space: nowrap;
-        width:10%;
-        text-align: left;
-        background: #d0d3ff;
-        color: #04a;
+	white-space: nowrap;
+	width:10%;
+	text-align: left;
+	background: #d0d3ff;
+	color: #04a;
 }
 
 td.extmonhd {
-        text-align: right;
-        font-family: Verdana;
+	text-align: right;
+	font-family: Verdana;
 }
 
 td.extmonhdcalls {
-        width: 2%;
-        text-align: right;
-        font-family: Verdana;
-        font-weight: bold;
-        font-size: 16px;
+	width: 2%;
+	text-align: right;
+	font-family: Verdana;
+	font-weight: bold;
+	font-size: 16px;
 }
 
 td.extmon {
-        text-align: left;
-        border: 1px solid #6699CC;
+	text-align: left;
+	border: 1px solid #6699CC;
 }
 
