@@ -48,7 +48,7 @@ function gs_users_get()
 'SELECT
 	`u`.`id`, `u`.`user`, `u`.`pin`,
 	`u`.`lastname`, `u`.`firstname`, `u`.`honorific`, `u`.`email`,
-	`s`.`name` `ext`, `s`.`callerid`, `s`.`mailbox`,
+	`s`.`name` `ext`, `s`.`callerid`, `s`.`mailbox`, `s`.`language`,
 	`h`.`host`,
 	`ug`.`name` `group`
 FROM
