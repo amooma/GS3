@@ -161,15 +161,15 @@ foreach ($group_info AS $group_select) {
 <label for="ipt-queue_id"><?php echo __('Warteschlange'); ?>:</label>
 <select name="queue_id" id="ipt-queue_id">
 <?php
-$rs = $DB->execute( 'SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_id` IN ('.implode(',',$queue_groups).') ORDER BY `name`' );
-
 echo '<option value="0"> - </option>' ,"\n";
-if ($rs) {
-	while ($r = $rs->fetchrow()) {
-		echo '<option value="',$r['_id'],'"', ($r['_id']==$queue_id ? ' selected="selected"' : ''),'>', $r['name'] ,' (', htmlEnt($r['_title']) ,')' ,'</option>' ,"\n";
+if (count($queue_groups) > 0) {
+	$rs = $DB->execute( 'SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_id` IN ('.implode(',',$queue_groups).') ORDER BY `name`' );
+	if ($rs) {
+		while ($r = $rs->fetchrow()) {
+			echo '<option value="',$r['_id'],'"', ($r['_id']==$queue_id ? ' selected="selected"' : ''),'>', $r['name'] ,' (', htmlEnt($r['_title']) ,')' ,'</option>' ,"\n";
+		}
 	}
 }
-
 ?>
 </select>
 
