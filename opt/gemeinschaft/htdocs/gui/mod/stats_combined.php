@@ -334,7 +334,7 @@ $t_month  = (int)date('n', $t);
 $t_day    = (int)date('j', $t);
 
 $day_w_start = (int)mkTime(  0, 0, 0 , $t_month,$t_day,$t_year );
-$day_w_end  = $day_w_start + (60 * 60 * 24 * ($days_in_a_week-1)); 
+$day_w_end  = $day_w_start + (60 * 60 * 24 * ($days_in_a_week)) - 1; 
 
 $user_name = @$_SESSION['sudo_user']['name'];
 
