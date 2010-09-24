@@ -347,7 +347,10 @@ $sql_query =
 		'SELECT * FROM `ast_cdr` WHERE '.
 			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_w_start) .'\' AND '.
 			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_w_end) .'\' ) AND '.
-			'  `dst` IN ('. $exts_sql .') AND '.
+			( $exts_sql != ''
+				? '  `dst` IN ('. $exts_sql .') '
+				: '  FALSE '
+			) .' AND '.
 			'  `channel` NOT LIKE \'Local/%\' AND '.
 			'  `dstchannel` NOT LIKE \'SIP/gs-0%\' AND '.
 			'  `dst` <> \'s\' AND '.
