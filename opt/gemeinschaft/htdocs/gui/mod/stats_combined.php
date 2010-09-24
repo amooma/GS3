@@ -164,9 +164,10 @@ foreach ($group_info AS $group_select) {
 $rs = $DB->execute( 'SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_id` IN ('.implode(',',$queue_groups).') ORDER BY `name`' );
 
 echo '<option value="0"> - </option>' ,"\n";
-if ($rs)
+if ($rs) {
 	while ($r = $rs->fetchrow()) {
 		echo '<option value="',$r['_id'],'"', ($r['_id']==$queue_id ? ' selected="selected"' : ''),'>', $r['name'] ,' (', htmlEnt($r['_title']) ,')' ,'</option>' ,"\n";
+	}
 }
 
 ?>
@@ -190,7 +191,6 @@ for ($i=-12; $i<=0; ++$i) {
 	$today_day = (int)date('j', $t);
 	
 	echo '<option value="',$i,'"', (($i==$day_d) ? ' selected="selected"' : ''),'>',date('d.m.Y',$t)."-".date('d.m.Y',$t+345600)," ",'</option>' ,"\n";
-
 }
 
 echo "</select>\n";
