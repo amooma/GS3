@@ -465,7 +465,7 @@ WHERE
 		echo '<td>';
 		echo '<input type="text" name="_min_agents" value="', $queue['_min_agents'] ,'" size="3" maxlength="3" class="r" />', "\n";
 		echo '</td>';
-		echo '<td class="transp xs gray"><code>_min_agents</code></td>',"\n";
+		echo '<td class="transp xs gray"></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
