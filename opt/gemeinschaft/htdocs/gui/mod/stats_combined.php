@@ -190,7 +190,7 @@ for ($i=-12; $i<=0; ++$i) {
 	$m         = (int)date('n', $t);
 	$today_day = (int)date('j', $t);
 	
-	echo '<option value="',$i,'"', (($i==$day_d) ? ' selected="selected"' : ''),'>',date('d.m.Y',$t)."-".date('d.m.Y',$t+345600)," ",'</option>' ,"\n";
+	echo '<option value="',$i,'"', (($i==$day_d) ? ' selected="selected"' : ''),'>', __("KW") ,' ', str_pad(date('W', $t),2,'0',STR_PAD_LEFT) ,' | ', date('d.m.Y', $t) ,' - ', date('d.m.Y', $t+345600) ,'</option>' ,"\n";
 }
 
 echo "</select>\n";
