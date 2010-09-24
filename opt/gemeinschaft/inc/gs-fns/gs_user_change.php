@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 *    change a user account
 ***********************************************************/
 
-function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $force=false, $email='', $reload=true, $pb_hide=false, $drop_call=false, $drop_target='' )
+function gs_user_change( $user, $pin, $firstname, $lastname, $language, $host_id_or_ip, $force=false, $email='', $reload=true, $pb_hide=false, $drop_call=false, $drop_target='' )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -55,6 +55,12 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 	//if (! preg_match( '/^[a-zA-Z\d.\-\_ ]+$/', $lastname ))
 	//	return new GsError( 'Invalid characters in last name.' );
 	$lastname = preg_replace('/\s+/', ' ', trim($lastname));
+
+	// prepare language code
+	$language = substr(trim($language), 0, 2);
+	if (strlen($language) != 2)
+		return new GsError( 'Invalid language code.' );
+
 	if (! defined('GS_EMAIL_PATTERN_VALID'))
 		return new GsError( 'GS_EMAIL_PATTERN_VALID not defined.' );
 	if ($email != '' && ! preg_match( GS_EMAIL_PATTERN_VALID, $email ))
@@ -138,13 +144,18 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $host_id_or_ip, $fo
 		return new GsError( 'Failed to change user.' );
 	}
 	
-	# update sip account
+	# update sip account (including language code)
 	#
 	$calleridname = trim( gs_utf8_decompose_to_ascii( $firstname .' '. $lastname ));
-	$ok = $db->execute( 'UPDATE `ast_sipfriends` SET `callerid`=CONCAT(_utf8\''. $db->escape($calleridname) .'\', \' <\', `name`, \'>\') WHERE `_user_id`='. $user_id );
+	$ok = $db->execute( 'UPDATE `ast_sipfriends` SET `callerid`=CONCAT(_utf8\''. $db->escape($calleridname) .'\', \' <\', `name`, \'>\'), `language`=\''. $db->escape($language) .'\' WHERE `_user_id`='. $user_id );
 	if (! $ok) {
 		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to change SIP account.' );
+	}
+	else {
+		if ( GS_BUTTONDAEMON_USE == true ) {
+			gs_user_language_changed_ui ( $user , preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['ulang']) ) ;
+		}
 	}
 	
 	# update dropping the call

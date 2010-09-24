@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
 *    adds a user account
 ***********************************************************/
 
-function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, $email, $group_id=NULL, $reload=true )
+function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $language, $host_id_or_ip, $email, $group_id=NULL, $reload=true )
 {
 	$ret = gs_user_is_valid_name( $user );
 	if (isGsError($ret)) return $ret;
@@ -59,6 +59,12 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 	//if (! preg_match( '/^[a-zA-Z\d.\-\_ ]+$/', $lastname ))
 	//	return new GsError( 'Invalid characters in last name.' );
 	$lastname = preg_replace('/\s+/', ' ', trim($lastname));
+
+	// prepare language code
+	$language = substr(trim($language), 0, 2);
+	if (strlen($language) != 2)
+		return new GsError( 'Invalid language code.' ); 
+
 	if (! defined('GS_EMAIL_PATTERN_VALID'))
 		return new GsError( 'GS_EMAIL_PATTERN_VALID not defined.' );
 	if ($email != '' && ! preg_match( GS_EMAIL_PATTERN_VALID, $email ))
@@ -153,8 +159,7 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $host_id_or_ip, 
 	#
 	$callerid = trim( gs_utf8_decompose_to_ascii( $firstname .' '. $lastname )) .' <'. $ext .'>';
 	$sip_pwd = rand(10000,99999).rand(10000,99999);
-	$sip_language = gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST);
-	$ok = $db->execute( 'INSERT INTO `ast_sipfriends` (`_user_id`, `name`, `secret`, `callerid`, `mailbox`, `setvar`, `language`) VALUES ('. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($sip_pwd) .'\', _utf8\''. $db->escape($callerid) .'\', \''. $db->escape($ext) .'\', \''. $db->escape('__user_id='. $user_id .';__user_name='. $ext) .'\', \''. $sip_language .'\')' );
+	$ok = $db->execute( 'INSERT INTO `ast_sipfriends` (`_user_id`, `name`, `secret`, `callerid`, `mailbox`, `setvar`, `language`) VALUES ('. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($sip_pwd) .'\', _utf8\''. $db->escape($callerid) .'\', \''. $db->escape($ext) .'\', \''. $db->escape('__user_id='. $user_id .';__user_name='. $ext) .'\', \''. $db->escape($language) .'\')' );
 	if (! $ok) {
 		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to add user (table ast_sipfriends).' );

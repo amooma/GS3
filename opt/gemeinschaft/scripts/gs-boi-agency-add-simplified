@@ -33,6 +33,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'lib/getopt.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/langhelper.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_host_foreign_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ldap_user_search.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_add.php' );
@@ -176,7 +177,8 @@ $pin = mt_rand(100000,999999);
 *    add the user
 ***********************************************************/
 
-$ret = @ gs_user_add( $opts['user'], $opts['exten'], $pin, $user_info['fn'], $user_info['ln'], $opts['host'], $user_info['email'], $opts['group'] );
+$user_lang = gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST);
+$ret = @ gs_user_add( $opts['user'], $opts['exten'], $pin, $user_info['fn'], $user_info['ln'], $user_lang, $opts['host'], $user_info['email'], $opts['group'] );
 if (isGsError($ret)) gs_script_error( $ret->getMsg() );
 if (! $ret)          gs_script_error();
 echo "User added.\n";

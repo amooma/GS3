@@ -44,6 +44,7 @@ include_once( GS_DIR .'inc/group-fns.php' );
 require_once( GS_DIR .'inc/boi-soap/boi-api.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
+include_once( GS_DIR .'inc/langhelper.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -176,7 +177,8 @@ if ($action === 'del') {
 if ($action === 'add' || $action === 'add-and-view') {
 	
 	if ($user_name) {
-		$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_host, $user_email);
+		$user_lang = gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST);
+		$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_lang, $user_host, $user_email);
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 		
 		if ($action === 'add-and-view') {
@@ -227,12 +229,13 @@ if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 
 if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 	
-	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email, true, $pb_hide, $drop_call, $drop_number );
-	
+	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, @$_REQUEST['ulang'], $user_host, false, $user_email, true, $pb_hide, $drop_call, $drop_number );
+	/*
 	$DB->execute( 'UPDATE `ast_sipfriends` SET `language`=\''. $DB->escape(preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['ulang'])) .'\' WHERE `_user_id`='. $uid );
 	if ( GS_BUTTONDAEMON_USE == true ) {
 		gs_user_language_changed_ui ( $edit_user , preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['ulang']) ) ;
 	}
+	*/
 	
 	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	if (! isGsError( $ret )) {
