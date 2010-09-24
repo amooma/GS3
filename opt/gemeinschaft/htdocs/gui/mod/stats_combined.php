@@ -359,9 +359,11 @@ if (! $CDR_DB->execute( $sql_query )) {
 
 //echo "START date : $t_day.$t_month.$t_year<br>\n";
 
+$half_an_hour_minus_one_second = (60*30)-1;  # 1799
+
 for ($hour=$h_start; $hour<=$h_end; ($hour=$hour+0.5)) {
 	$hour_t_start = (int)mkTime( 0 , 0, 0 , $t_month,$t_day,$t_year ) + (3600 * $hour);
-	$hour_t_end = $hour_t_start + 1799;
+	$hour_t_end = $hour_t_start + $half_an_hour_minus_one_second;
 	$time_str = date('H:i',$hour_t_start );
 	$sql_time    = '(`timestamp`>='.$hour_t_start .' AND `timestamp`<='.$hour_t_end .')';
 	$style_wd = '';
@@ -372,7 +374,7 @@ for ($hour=$h_start; $hour<=$h_end; ($hour=$hour+0.5)) {
 	for ($day=0 ; $day < $days_in_a_week; $day++) {
 	
 		$hour_t_start = (int)mkTime( 0 , 0, 0 , $t_month ,$t_day+$day ,$t_year ) + (3600 * $hour);
-		$hour_t_end = $hour_t_start + 1799;
+		$hour_t_end = $hour_t_start + $half_an_hour_minus_one_second;
 		$time_str = date('H:i',$hour_t_start );
 		$sql_time    = '(`a`.`timestamp`>='.$hour_t_start .' AND `a`.`timestamp`<='.$hour_t_end .') AND (`b`.`timestamp`>='.$hour_t_start.' AND `b`.`timestamp`<='.($hour_t_end + 86400).')';
 	
