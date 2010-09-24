@@ -323,7 +323,8 @@ WHERE
 			'timeout'                    => 10,
 			'strategy'                   => 'rrmemory',
 			'joinempty'                  => 'strict',
-			'leavewhenempty'             => 'yes'
+			'leavewhenempty'             => 'yes',
+			'_min_agents'                => 0,
 		);
 	}
 	
