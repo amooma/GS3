@@ -56,7 +56,7 @@ if (! $CDR_DB) {
 }
 
 $duration_level  = 90;  # 90 s = 1:30 min
-$waittime_level = 15;  # 15 s
+$waittime_level  = 15;  # 15 s
 
 # connect to CDR master
 $CDR_DB = gs_db_cdr_master_connect();
@@ -180,7 +180,7 @@ if (count($queue_groups) > 0) {
 <?php
 $t = time();
 $month_d = 0;
-$seconds_in_a_week = (60*60*24*4);  # == 345600
+$days_in_a_week = 7;
 for ($i=-12; $i<=0; ++$i) {
 	$t         = time() + $day_d;
 	$dow       = (int)date('w',$t);
@@ -191,7 +191,7 @@ for ($i=-12; $i<=0; ++$i) {
 	$m         = (int)date('n', $t);
 	$today_day = (int)date('j', $t);
 	
-	echo '<option value="',$i,'"', (($i==$day_d) ? ' selected="selected"' : ''),'>', __("KW") ,' ', str_pad(date('W', $t),2,'0',STR_PAD_LEFT) ,' | ', date('d.m.Y', $t) ,' - ', date('d.m.Y', $t+$seconds_in_a_week) ,'</option>' ,"\n";
+	echo '<option value="',$i,'"', (($i==$day_d) ? ' selected="selected"' : ''),'>', __("KW") ,' ', str_pad(date('W', $t),2,'0',STR_PAD_LEFT) ,' | ', date('d.m.Y', $t) ,' - ', date('d.m.Y', $t + (60 * 60 * 24 * ($days_in_a_week-1))) ,'</option>' ,"\n";
 }
 
 echo "</select>\n";
@@ -294,51 +294,47 @@ function mytip( evt, key )
 <table cellspacing="1" class="phonebook" style="border:1px solid #ccc; background:#fff;">
 <thead>
 <tr>
-	<th></th>
-	<th colspan="3" style="font-weight:normal;" onmouseover="mytip(event,'day');"><?php echo __('Montag'); ?></th>
-	<th colspan="3" style="font-weight:normal;" onmouseover="mytip(event,'day');"><?php echo __('Dienstag'); ?></th>
-	<th colspan="3" style="font-weight:normal;" onmouseover="mytip(event,'day');"><?php echo __('Mittwoch'); ?></th>
-	<th colspan="3" style="font-weight:normal;" onmouseover="mytip(event,'day');"><?php echo __('Donnerstag'); ?></th>
-	<th colspan="3" style="font-weight:normal;" onmouseover="mytip(event,'day');"><?php echo __('Freitag'); ?></th>
+	<th>&nbsp;</th>
+<?php foreach (array_slice( array(
+	__('Montag'     ),
+	__('Dienstag'   ),
+	__('Mittwoch'   ),
+	__('Donnerstag' ),
+	__('Freitag'    ),
+	__('Samstag'    ),
+	__('Sonntag'    ),
+	), 0, $days_in_a_week, false) as $dwl) { ?>
+	<th colspan="3" style="font-weight:normal;" onmouseover="mytip(event,'day');"><?php echo htmlEnt($dwl); ?></th>
+<?php } ?>
 </tr>
 
 <tr>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'time');"><?php echo __('Zeit'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'rate');"><?php echo __('Erfolgsquote'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'answer');"><?php echo __('ang.'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'missed');"><?php echo __('verp.'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'rate');"><?php echo __('Erfolgsquote'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'answer');"><?php echo __('ang.'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'missed');"><?php echo __('verp.'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'rate');"><?php echo __('Erfolgsquote'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'answer');"><?php echo __('ang.'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'missed');"><?php echo __('verp.'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'rate');"><?php echo __('Erfolgsquote'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'answer');"><?php echo __('ang.'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'missed');"><?php echo __('verp.'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'rate');"><?php echo __('Erfolgsquote'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'answer');"><?php echo __('ang.'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'missed');"><?php echo __('verp.'); ?></th>
-	
+	<th style="font-weight:normal;" onmouseover="mytip(event,'time'   );"><?php echo __('Zeit'   ); ?></th>
+<?php for ($i=0; $i<$days_in_a_week; ++$i) { ?>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'rate'   );"><?php echo __('Erfolg' ); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'answer' );"><?php echo __('ang.'   ); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'missed' );"><?php echo __('verp.'  ); ?></th>
+<?php } ?>
+
 </tr>
 </thead>
 <tbody>
 
 <?php
 
-//$t = time()  + (3600 * 24 * 7 * $day_d );;
+//$t = time()  + (60 * 60 * 24 * 7 * $day_d );
 
 $t         = time() + $day_d;
-$dow        = (int)date('w',$t);
+$dow       = (int)date('w',$t);
 $t         = (int)strToTime("$day_d week", $t);
 $t         = (int)strToTime(($dow-1)." days ago", $t);
 
 $t_year   = (int)date('Y', $t);
 $t_month  = (int)date('n', $t);
-$t_day    = (int)date('j', $t );
+$t_day    = (int)date('j', $t);
 
 $day_w_start = (int)mkTime(  0, 0, 0 , $t_month,$t_day,$t_year );
-$day_w_end  = $day_w_start + (3600 * 24 * 5 - 1); 
+$day_w_end  = $day_w_start + (60 * 60 * 24 * ($days_in_a_week-1)); 
 
 $user_name = @$_SESSION['sudo_user']['name'];
 
@@ -373,7 +369,7 @@ for ($hour=$h_start; $hour<=$h_end; ($hour=$hour+0.5)) {
 	echo '<tr>', "\n";      
 	echo '<td class="r"',$style_wd,'>', $time_str ,'</td>', "\n";
 
-	for ($day=0 ; $day < 5; $day++) {
+	for ($day=0 ; $day < $days_in_a_week; $day++) {
 	
 		$hour_t_start = (int)mkTime( 0 , 0, 0 , $t_month ,$t_day+$day ,$t_year ) + (3600 * $hour);
 		$hour_t_end = $hour_t_start + 1799;
@@ -472,7 +468,7 @@ for ($hour=$h_start; $hour<=$h_end; ($hour=$hour+0.5)) {
 $style = 'style="border-top:3px solid #b90; background:#feb; line-height:2.5em;"';
 echo '<tr>', "\n";
 echo '<td class="r"',$style,'><b>&sum;</b></td>', "\n";
-for ($day=0 ; $day < 5; $day++) {
+for ($day=0 ; $day < $days_in_a_week; $day++) {
 
 	$pct_connected = ($num_connected_day[$day] > 0)
 		? ($num_connected_day[$day] / $calls_in_stat_day[$day]  )
