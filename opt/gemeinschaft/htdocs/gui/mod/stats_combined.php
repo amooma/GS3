@@ -180,6 +180,7 @@ if (count($queue_groups) > 0) {
 <?php
 $t = time();
 $month_d = 0;
+$seconds_in_a_week = (60*60*24*4);  # == 345600
 for ($i=-12; $i<=0; ++$i) {
 	$t         = time() + $day_d;
 	$dow       = (int)date('w',$t);
@@ -190,7 +191,7 @@ for ($i=-12; $i<=0; ++$i) {
 	$m         = (int)date('n', $t);
 	$today_day = (int)date('j', $t);
 	
-	echo '<option value="',$i,'"', (($i==$day_d) ? ' selected="selected"' : ''),'>', __("KW") ,' ', str_pad(date('W', $t),2,'0',STR_PAD_LEFT) ,' | ', date('d.m.Y', $t) ,' - ', date('d.m.Y', $t+345600) ,'</option>' ,"\n";
+	echo '<option value="',$i,'"', (($i==$day_d) ? ' selected="selected"' : ''),'>', __("KW") ,' ', str_pad(date('W', $t),2,'0',STR_PAD_LEFT) ,' | ', date('d.m.Y', $t) ,' - ', date('d.m.Y', $t+$seconds_in_a_week) ,'</option>' ,"\n";
 }
 
 echo "</select>\n";
