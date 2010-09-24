@@ -108,6 +108,7 @@ if ($action == 'report') {
 	$day_d  = @$_REQUEST['day'   ];
 	$h_start = (int) @$_REQUEST['hstart'];
 	$h_end = (int) @$_REQUEST['hend'];
+	if ($h_end < $h_start) $h_end = $h_start;
 } else {
 	$action   = '';
 	$group =   @$_SESSION['sudo_user']['name'];
