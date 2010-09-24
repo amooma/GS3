@@ -435,8 +435,12 @@ FROM
 `ast_queues` `q` JOIN
 `hosts` `h` ON (`h`.`id`=`q`.`_host_id`)
 LEFT JOIN `monitor_queues` `m` ON (`q`.`_id` = `m`.`queue_id` AND `m`.`user_id` = '.$user_id.')
-WHERE `q`.`_id` IN ('.implode(',',$queue_ids).')
-ORDER BY `q`.`name`';
+WHERE '.
+	( count($queue_ids) > 0
+	? ' `q`.`_id` IN ('.implode(',',$queue_ids).') '
+	: ' FALSE '
+	).' '.
+'ORDER BY `q`.`name`';
 
 $rs = $DB->execute( $sql_query );
 
@@ -892,8 +896,12 @@ JOIN `ast_sipfriends` `s`
 ON (`s`.`_user_id` = `q`.`_user_id`)
 JOIN `users` `u`
 ON (`u`.`id` = `q`.`_user_id`)
-WHERE `q`.`_queue_id` IN ('.implode(',',$queue_ids_active).')
-ORDER BY `q`.`queue_name`';
+WHERE '.
+	( count($queue_ids_active) > 0
+	? ' `q`.`_queue_id` IN ('.implode(',',$queue_ids_active).') '
+	: ' FALSE '
+	).' '.
+'ORDER BY `q`.`queue_name`';
 
 	$members = array();
 	$rs = $DB->execute( $sql_query );
