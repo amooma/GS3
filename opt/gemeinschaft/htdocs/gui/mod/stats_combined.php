@@ -175,8 +175,8 @@ if (count($queue_groups) > 0) {
 
 &nbsp;&nbsp;&nbsp;
 
-<label for="ipt-month"><?php echo __('Woche'); ?>:</label>
-<select name="day" id="ipt-month">
+<label for="ipt-week"><?php echo __('Woche'); ?>:</label>
+<select name="day" id="ipt-week">
 <?php
 $t = time();
 $month_d = 0;
@@ -195,7 +195,7 @@ for ($i=-12; $i<=0; ++$i) {
 
 echo "</select>\n";
 echo "&nbsp;&nbsp;&nbsp;";
-echo '<select name="hstart" id="ipt-month">'."\n";
+echo '<select name="hstart" id="ipt-hstart">'."\n";
 
 for ($i=0; $i<=24; ++$i) {
 	echo '<option value="',$i,'"', (($i==$h_start) ? ' selected="selected"' : ''),'>',$i,'</option>' ,"\n";
@@ -204,7 +204,7 @@ for ($i=0; $i<=24; ++$i) {
 echo "</select>\n";
 echo "-\n";
 echo "</select>\n";
-echo '<select name="hend" id="ipt-month">'."\n";
+echo '<select name="hend" id="ipt-hend">'."\n";
 
 for ($i=0; $i<=24; ++$i) {
 	echo '<option value="',$i,'"', (($i==$h_end) ? ' selected="selected"' : ''),'>',$i,'</option>' ,"\n";
@@ -213,7 +213,7 @@ for ($i=0; $i<=24; ++$i) {
 echo "</select>\n";
 
 ?>
-<label for="ipt-group"><?php echo __('Uhr'); ?></label>
+<label><?php echo __('Uhr'); ?></label>
 &nbsp;&nbsp;&nbsp;
 
 <input type="submit" value="<?php echo __('Report'); ?>" />
