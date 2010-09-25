@@ -88,7 +88,7 @@ print_r($users);
 echo "</pre>";
 */
 if (count($users) < 1) {
-	echo '<i>- ', htmlEnt( 'keine Kollegen' ) ,' -</i><br />',"\n";
+	echo '<i>- ', htmlEnt( __('keine Kollegen') ) ,' -</i><br />',"\n";
 	return;
 }
 
