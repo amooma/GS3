@@ -785,6 +785,15 @@ if [ -e /opt/gemeinschaft-source/etc/init.d/gs-sip-ua-config-responder ]; then
 fi
 
 
+# Gemeinschaft/Asterisk extension state daemon
+#
+if [ -e /opt/gemeinschaft-source/etc/init.d/gs-extstated ]; then
+	ln -snf /opt/gemeinschaft-source/etc/init.d/gs-extstated /etc/init.d/gs-extstated
+	update-rc.d gs-extstated defaults 92 08
+	invoke-rc.d gs-extstated start
+fi
+
+
 # cron jobs
 #
 cd /etc/cron.d/
