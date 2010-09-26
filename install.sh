@@ -628,6 +628,10 @@ sed -i -r -e 's#^(astrundir\s*).*#\1=> /var/run/asterisk#' /etc/asterisk/asteris
 # change owner of /opt/gemeinschaft/etc/asterisk/* to asterisk
 chown -h -R asterisk:asterisk /opt/gemeinschaft/etc/asterisk
 
+# add Apache user (www-data) to the Asterisk group (asterisk) so
+# voicemails can be played via the web GUI:
+adduser www-data asterisk
+
 
 # configure Gemeinschaft
 #
