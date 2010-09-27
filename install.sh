@@ -631,6 +631,7 @@ chown -h -R asterisk:asterisk /opt/gemeinschaft/etc/asterisk
 # add Apache user (www-data) to the Asterisk group (asterisk) so
 # voicemails can be played via the web GUI:
 adduser www-data asterisk
+invoke-rc.d apache2 restart
 
 
 # configure Gemeinschaft
