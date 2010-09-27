@@ -217,15 +217,15 @@ else
 	echo '         <bw>0</bw>',"\n";
 	echo '         <bb>0</bb>',"\n";
 	echo '      </item>',"\n";
-	/*
+	
 	echo '      <item>',"\n";
-	echo '         <fn>Ruhe/DND</fn>',"\n";
+	echo '         <fn>', __('Ruhe/DND'), '</fn>',"\n";
 	echo '         <ct>!gsdnd</ct>',"\n";
 	echo '         <sd>3</sd>',"\n";
 	echo '         <bw>0</bw>',"\n";
 	echo '         <bb>0</bb>',"\n";
 	echo '      </item>',"\n";
-	 */
+	
 	echo '      <item>',"\n";
 	echo '         <fn>', __("Einstellungen"), '</fn>',"\n";
 	echo '         <ct>!gsmenu</ct>',"\n";
