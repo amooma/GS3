@@ -399,4 +399,25 @@ function gs_softkeyprofile_update_ui( $profile )
 
 }
 
+
+function gs_user_language_changed_ui( $username, $lang )
+{
+	
+	include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
+
+	$user = gs_user_get ( $username );
+	if (isGsError( $username )) {
+		gs_log ( GS_LOG_WARNING,  $user_name->getMsg() );
+		return;
+	}
+	
+	$data = _get_ui_head( 'UserLanguageChangedUI' );	
+	
+	$data[] = array( 'parm' => 'user', 'value' => $user['ext'] );
+	$data[] = array( 'parm' => 'language', 'value' => $lang );
+
+	_gs_send_event ( $data );
+
+}
+
 ?>

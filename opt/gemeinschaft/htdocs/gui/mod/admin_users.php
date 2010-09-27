@@ -228,7 +228,12 @@ if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 	
 	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email, true, $pb_hide, $drop_call, $drop_number );
+	
 	$DB->execute( 'UPDATE `ast_sipfriends` SET `language`=\''. $DB->escape(preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['ulang'])) .'\' WHERE `_user_id`='. $uid );
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		gs_user_language_changed_ui ( $edit_user , preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['ulang']) ) ;
+	}
+	
 	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	if (! isGsError( $ret )) {
 		$boi_api = gs_host_get_api((int)$user_host);
