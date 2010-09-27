@@ -303,7 +303,6 @@ if($type === "imported")
 
 if($type === "gs")
 {
-	
 	$mac = preg_replace("/[^\dA-Z]/", "", strToUpper(trim(@$_REQUEST["m"])));
 
 	$user_groups = gs_group_members_groups_get(array($user_id), "user");

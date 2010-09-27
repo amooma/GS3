@@ -436,9 +436,9 @@ if($phone_has_microbrowser)
 
 	//--- Microbrowser settings
 	echo "   <microbrowser>\n";
-	echo "      <main mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
-	//echo "      <main mb.main.idleTimeout=\"60\" mb.main.statusbar=\"0\" mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
-	//echo "      <idleDisplay mb.idleDisplay.home=\"". $prov_url_polycom ."idle.php?user=". $user_ext ."&amp;mac=". $mac ."\" mb.idleDisplay.refresh=\"10\"/>\n";
+	//echo "      <main mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
+	echo "      <main mb.main.idleTimeout=\"60\" mb.main.statusbar=\"0\" mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
+	echo "      <idleDisplay mb.idleDisplay.home=\"". $prov_url_polycom ."idle.php?user=". $user_ext ."&amp;mac=". $mac ."\" mb.idleDisplay.refresh=\"10\"/>\n";
 	echo "   </microbrowser>\n";
 
 	//--- add language settings
