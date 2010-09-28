@@ -7,7 +7,7 @@
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 *
-* Andreas Neugebauer <neugebauer@loca.net> Locanet oHG
+* Author: Andreas Neugebauer <neugebauer@loca.net> LocaNet oHG
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -31,10 +31,8 @@ require_once( GS_DIR .'inc/log.php' );
 include_once( GS_DIR .'inc/ami-fns.php' );
 
 
-
 function _gs_send_event( $data )
 {
-
 	$command = '';
 	
 	foreach ( $data as $line ) {
@@ -48,24 +46,16 @@ function _gs_send_event( $data )
 	
 	$command = $command . "\r\n";
 	
-	
 	$ami = new AMI;
 	$ami->ami_login('uevg', 'eSd58', '127.0.0.1', 5038);
 	
-	
 	$res = $ami->ami_send_command($command);
 	
-	
 	$ami->ami_logout();
-		
-	
-
 }
 
 function _get_ui_head( $type ) 
 {
-
-		
 	$data = array();
 	
 	$data[] = array( 'parm' => 'Action', 'value' => 'UserEvent' );
@@ -79,20 +69,16 @@ function _get_ui_head( $type )
 
 function gs_user_keyset_update( $username )
 {
-	
-	
 	$data = _get_ui_head( 'UserKeysetUpdateUI' );	
 	
 	$data[] = array( 'parm' => 'user', 'value' => $username );
 	$data[] = array( 'parm' => 'dbsource', 'value' => GS_DB_MASTER_HOST );
 	
 	_gs_send_event ( $data );
-
 }
 
 function gs_diversion_changed_ui( $username )
 {
-
 	//get the username
 
 	include_once( GS_DIR .'inc/gs-fns/gs_user_name_by_ext.php' );
@@ -149,7 +135,6 @@ function gs_diversion_changed_ui( $username )
 	
 	$timeout = $cf['external']['unavail']['timeout'];
 	
-
 	$data = _get_ui_head( 'UserDiversionUI' );	
 	
 	$data[] = array( 'parm' => 'user', 'value' => $username );
@@ -161,27 +146,20 @@ function gs_diversion_changed_ui( $username )
 	$data[] = array( 'parm' => 'timeout', 'value' => $timeout );
 	
 	_gs_send_event ( $data );
-
-	
-                                            
 }
 
 function gs_dnd_changed_ui( $username, $state="off" )
 {
-	
-	
 	$data = _get_ui_head( 'UserDNDUI' );	
 	
 	$data[] = array( 'parm' => 'user', 'value' => $username );
 	$data[] = array( 'parm' => 'state', 'value' => $state );	
 	
 	_gs_send_event ( $data );
-
 }
 
 function gs_clir_changed_ui ( $username  )
 {
-
 	//get the username
 
 	include_once( GS_DIR .'inc/gs-fns/gs_user_name_by_ext.php' );
@@ -215,7 +193,6 @@ function gs_clir_changed_ui ( $username  )
 
 function gs_clip_changed_ui ( $username  )
 {
-
 	//get the username
 
 	include_once( GS_DIR .'inc/gs-fns/gs_user_name_by_ext.php' );
@@ -241,11 +218,8 @@ function gs_clip_changed_ui ( $username  )
 	
 	foreach ( $clip as $setting ) {
 	
-		if ( $setting['selected'] === 1 ) {
-		
+		if ( $setting['selected'] === 1 )
 			$clip_act[$setting['dest']] = $setting['number'];
-		
-		}
 	
 	}
 	
@@ -260,72 +234,56 @@ function gs_clip_changed_ui ( $username  )
 
 function gs_usergroup_update_ui( $username )
 {
-	
-	
 	$data = _get_ui_head( 'UsergroupUpdateUI' );	
 	
 	$data[] = array( 'parm' => 'user', 'value' => $username );
 	$data[] = array( 'parm' => 'dbsource', 'value' => GS_DB_MASTER_HOST );
 
 	_gs_send_event ( $data );
-
 }
 
 function gs_usergroup_update_all_ui( )
 {
-	
-	
 	$data = _get_ui_head( 'UsergroupsUpdateAllUI' );	
 	
 	$data[] = array( 'parm' => 'dbsource', 'value' => GS_DB_MASTER_HOST );
 
 	_gs_send_event ( $data );
-
 }
 
 function gs_usergroup_remove_ui( $group )
 {
-	
-	
 	$data = _get_ui_head( 'UsergroupRemoveUI' );	
 	
 	$data[] = array( 'parm' => 'group', 'value' => $group );
 	$data[] = array( 'parm' => 'dbsource', 'value' => GS_DB_MASTER_HOST );
 
 	_gs_send_event ( $data );
-
 }
 
 
 function gs_pickupgroup_update_ui( $username )
 {
-	
-	
 	$data = _get_ui_head( 'PickupgroupUpdateUI' );	
 	
 	$data[] = array( 'parm' => 'user', 'value' => $username );
 	$data[] = array( 'parm' => 'dbsource', 'value' => GS_DB_MASTER_HOST );
 
 	_gs_send_event ( $data );
-
 }
 
 
 function gs_pickupgroup_remove_ui( $group )
 {
-	
-	
 	$data = _get_ui_head( 'PickupgroupRemoveUI' );	
 	
 	$data[] = array( 'parm' => 'group', 'value' => $group );
 
 	_gs_send_event ( $data );
-
 }
 
 function gs_user_missedcalls_ui( $username  )
 {
-	
 	//get the username
 
 	include_once( GS_DIR .'inc/gs-fns/gs_user_name_by_ext.php' );
@@ -348,61 +306,47 @@ function gs_user_missedcalls_ui( $username  )
 	$data[] = array( 'parm' => 'count', 'value' => $count );	
 	
 	_gs_send_event ( $data );
-
 }
 
 function gs_user_remove_ui( $username )
 {
-	
-	
-	$data = _get_ui_head( 'UserRemoveUI' );	
+	$data = _get_ui_head( 'UserRemoveUI' );
 	
 	$data[] = array( 'parm' => 'user', 'value' => $username );
 
 	_gs_send_event ( $data );
-
 }
 
 function gs_diallog_purge_ui()
 {
-	
-	
-	$data = _get_ui_head( 'DiallogPurgeUI' );	
+	$data = _get_ui_head( 'DiallogPurgeUI' );
 	
 	_gs_send_event ( $data );
-
 }
 
 function gs_softkeyprofile_remove_ui( $profile )
 {
-	
-	
-	$data = _get_ui_head( 'SoftkeyProfileRemoveUI' );	
+	$data = _get_ui_head( 'SoftkeyProfileRemoveUI' );
 	
 	$data[] = array( 'parm' => 'profile', 'value' => $profile );
 	$data[] = array( 'parm' => 'dbsource', 'value' => GS_DB_MASTER_HOST );
 
 	_gs_send_event ( $data );
-
 }
 
 function gs_softkeyprofile_update_ui( $profile )
 {
-	
-	
-	$data = _get_ui_head( 'SoftkeyProfileUpdateUI' );	
+	$data = _get_ui_head( 'SoftkeyProfileUpdateUI' );
 	
 	$data[] = array( 'parm' => 'profile', 'value' => $profile );
 	$data[] = array( 'parm' => 'dbsource', 'value' => GS_DB_MASTER_HOST );
 
 	_gs_send_event ( $data );
-
 }
 
 
 function gs_user_language_changed_ui( $username, $lang )
 {
-	
 	include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
 
 	$user = gs_user_get ( $username );
@@ -417,7 +361,24 @@ function gs_user_language_changed_ui( $username, $lang )
 	$data[] = array( 'parm' => 'language', 'value' => $lang );
 
 	_gs_send_event ( $data );
-
 }
 
+function gs_queue_logoff_ui( $username, $queue )
+{
+	$data = _get_ui_head( 'QueueLogoffUI' );
+	
+	$data[] = array( 'parm' => 'user', 'value' => $username );
+	$data[] = array( 'parm' => 'queue', 'value' => $queue );
+
+	_gs_send_event ( $data );
+}
+
+function gs_agent_logoff_ui( $agent )
+{
+	$data = _get_ui_head( 'AgentLogoffUI' );
+	
+	$data[] = array( 'parm' => 'agent', 'value' => $agent );
+
+	_gs_send_event ( $data );
+}
 ?>
