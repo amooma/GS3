@@ -35,6 +35,7 @@ _pot: _check-cwd
 	cd ${GEMEINSCHAFT_TAG_ROOT} \
 	&& find . -type f \
 		! -path '*/.svn/*' \
+		! -path '*/.git/*' \
 		! -path '*/_*' \
 		! -path '* *' \
 		! -path './patches/*' \
