@@ -5483,7 +5483,10 @@ UNLOCK TABLES;
 -- Table structure for table `ast_sipfriends`
 --
 
+
 DROP TABLE IF EXISTS `ast_sipfriends`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
 CREATE TABLE `ast_sipfriends` (
   `_user_id` int(10) unsigned NOT NULL default '0',
   `name` varchar(16) character set ascii NOT NULL default '',
@@ -5495,18 +5498,47 @@ CREATE TABLE `ast_sipfriends` (
   `callerid` varchar(80) collate latin1_general_ci NOT NULL default '',
   `mailbox` varchar(25) character set ascii NOT NULL default '',
   `callgroup` varchar(20) character set ascii NOT NULL default '1',
-  `pickupgroup` varchar(20) character set ascii NOT NULL default '',
+  `pickupgroup` varchar(20) character set ascii NOT NULL default '1',
   `setvar` varchar(50) character set ascii NOT NULL default '',
   `call-limit` tinyint(3) unsigned NOT NULL default '20',
   `subscribecontext` varchar(50) character set ascii NOT NULL default 'default',
   `regcontext` varchar(50) character set ascii default NULL,
   `ipaddr` varchar(15) character set ascii default NULL,
   `port` varchar(5) character set ascii default NULL,
-  `regseconds` int(10) unsigned NOT NULL default '0',
+  `regseconds` bigint(20) NOT NULL,
   `username` varchar(25) character set ascii default NULL,
   `regserver` varchar(50) character set ascii default NULL,
   `fullcontact` varchar(100) character set ascii default NULL,
-  `canreinvite` varchar(6) character set ascii NOT NULL default 'yes',
+  `accountcode` varchar(20) collate latin1_general_ci default NULL,
+  `allowtransfer` varchar(20) collate latin1_general_ci default NULL,
+  `allow` varchar(20) collate latin1_general_ci default NULL,
+  `amaflags` varchar(20) collate latin1_general_ci default NULL,
+  `auth` varchar(10) collate latin1_general_ci default NULL,
+  `autoframing` varchar(10) collate latin1_general_ci default NULL,
+  `callingpres` varchar(20) collate latin1_general_ci default NULL,
+  `cid_number` varchar(40) collate latin1_general_ci default NULL,
+  `defaultuser` varchar(40) collate latin1_general_ci default NULL,
+  `disallow` varchar(20) collate latin1_general_ci default NULL,
+  `fromdomain` varchar(40) collate latin1_general_ci default NULL,
+  `fromuser` varchar(40) collate latin1_general_ci default NULL,
+  `incominglimit` varchar(10) collate latin1_general_ci default NULL,
+  `insecure` varchar(20) collate latin1_general_ci default NULL,
+  `language` varchar(10) collate latin1_general_ci default NULL,
+  `lastms` int(11) NOT NULL default '-1',
+  `maxcallbitrate` varchar(15) collate latin1_general_ci default NULL,
+  `md5secret` varchar(40) collate latin1_general_ci default NULL,
+  `mohsuggest` varchar(20) collate latin1_general_ci default NULL,
+  `musicclass` varchar(20) collate latin1_general_ci default NULL,
+  `outboundproxy` varchar(40) collate latin1_general_ci default NULL,
+  `qualify` varchar(15) collate latin1_general_ci default NULL,
+  `regexten` varchar(20) collate latin1_general_ci default NULL,
+  `rtpholdtimeout` varchar(15) collate latin1_general_ci default NULL,
+  `rtpkeepalive` varchar(15) collate latin1_general_ci default NULL,
+  `rtptimeout` varchar(15) collate latin1_general_ci default NULL,
+  `subscribemwi` varchar(10) collate latin1_general_ci default NULL,
+  `usereqphone` varchar(10) collate latin1_general_ci default NULL,
+  `vmexten` varchar(20) collate latin1_general_ci default NULL,
+  `useragent` varchar(20) collate latin1_general_ci default NULL,
   PRIMARY KEY  (`_user_id`),
   UNIQUE KEY `name` (`name`),
   KEY `host` (`host`(25)),
@@ -5514,6 +5546,9 @@ CREATE TABLE `ast_sipfriends` (
   KEY `context` (`context`(25)),
   CONSTRAINT `ast_sipfriends_ibfk_1` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+SET character_set_client = @saved_cs_client;
+
+
 
 --
 -- Dumping data for table `ast_sipfriends`
@@ -5521,14 +5556,101 @@ CREATE TABLE `ast_sipfriends` (
 
 LOCK TABLES `ast_sipfriends` WRITE;
 /*!40000 ALTER TABLE `ast_sipfriends` DISABLE KEYS */;
-INSERT INTO `ast_sipfriends` VALUES (1,'999999','5826899294','friend','dynamic',NULL,'from-internal-users','Supervisor <999999>','999999','1','1','__user_id=1;__user_name=999999',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,'yes');
+INSERT INTO `ast_sipfriends` VALUES (1,'999999','5826899294','friend','dynamic',NULL,'from-internal-users','Supervisor <999999>','999999','1','1','__user_id=1;__user_name=999999',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `ast_sipfriends` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `ast_sipfriends_gs`
+--
+
+DROP TABLE IF EXISTS `ast_sipfriends_gs`;
+/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 CREATE TABLE `ast_sipfriends_gs` (
+  `_user_id` int(10) unsigned,
+  `name` varchar(16),
+  `secret` varchar(16),
+  `type` enum('friend','user','peer'),
+  `host` varchar(50),
+  `defaultip` varchar(15),
+  `context` varchar(50),
+  `callerid` varchar(80),
+  `mailbox` varchar(25),
+  `callgroup` varchar(20),
+  `pickupgroup` varchar(20),
+  `setvar` varchar(50),
+  `call-limit` tinyint(3) unsigned,
+  `subscribecontext` varchar(50),
+  `regcontext` varchar(50),
+  `ipaddr` varchar(15),
+  `port` varchar(5),
+  `regseconds` bigint(20),
+  `username` varchar(25),
+  `regserver` varchar(50),
+  `fullcontact` varchar(100),
+  `accountcode` varchar(20),
+  `allowtransfer` varchar(20),
+  `allow` varchar(20),
+  `amaflags` varchar(20),
+  `auth` varchar(10),
+  `autoframing` varchar(10),
+  `callingpres` varchar(20),
+  `cid_number` varchar(40),
+  `defaultuser` varchar(40),
+  `fromdomain` varchar(40),
+  `fromuser` varchar(40),
+  `incominglimit` varchar(10),
+  `insecure` varchar(20),
+  `language` varchar(10),
+  `lastms` int(11),
+  `maxcallbitrate` varchar(15),
+  `md5secret` varchar(40),
+  `mohsuggest` varchar(20),
+  `musicclass` varchar(20),
+  `outboundproxy` varchar(40),
+  `qualify` varchar(15),
+  `regexten` varchar(20),
+  `rtpholdtimeout` varchar(15),
+  `rtpkeepalive` varchar(15),
+  `rtptimeout` varchar(15),
+  `subscribemwi` varchar(10),
+  `usereqphone` varchar(10),
+  `vmexten` varchar(20),
+  `disallow` varchar(20),
+  `useragent` varchar(20)
+) */;
+
 
 --
 -- Table structure for table `ast_sipfriends_gs`
 --
 
+DROP TABLE IF EXISTS `ast_sipfriends_gs`;
+/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 CREATE TABLE `ast_sipfriends_gs` (
+  `_user_id` int(10) unsigned,
+  `name` varchar(16),
+  `secret` varchar(16),
+  `type` enum('friend','user','peer'),
+  `host` varchar(50),
+  `defaultip` varchar(15),
+  `context` varchar(50),
+  `callerid` varchar(80),
+  `mailbox` varchar(25),
+  `callgroup` varchar(20),
+  `pickupgroup` varchar(20),
+  `setvar` varchar(50),
+  `call-limit` tinyint(3) unsigned,
+  `subscribecontext` varchar(50),
+  `regcontext` varchar(50),
+  `ipaddr` varchar(15),
+  `port` varchar(5),
+  `regseconds` int(10) unsigned,
+  `username` varchar(25),
+  `regserver` varchar(50),
+  `fullcontact` varchar(100)
+) */;
 DROP TABLE IF EXISTS `ast_sipfriends_gs`;
 /*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
 /*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
@@ -7272,7 +7394,7 @@ USE `asterisk`;
 /*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
 /*!50001 CREATE ALGORITHM=MERGE */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY INVOKER */
-/*!50002 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact` from ((`ast_sipfriends` `s` join `users` `u` on((`u`.`id` = `s`.`_user_id`))) join `hosts` `h` on((`h`.`id` = `u`.`host_id`))) where (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
+/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact`,`s`.`accountcode` AS `accountcode`,`s`.`allowtransfer` AS `allowtransfer`,`s`.`allow` AS `allow`,`s`.`amaflags` AS `amaflags`,`s`.`auth` AS `auth`,`s`.`autoframing` AS `autoframing`,`s`.`callingpres` AS `callingpres`,`s`.`cid_number` AS `cid_number`,`s`.`defaultuser` AS `defaultuser`,`s`.`fromdomain` AS `fromdomain`,`s`.`fromuser` AS `fromuser`,`s`.`incominglimit` AS `incominglimit`,`s`.`insecure` AS `insecure`,`s`.`language` AS `language`,`s`.`lastms` AS `lastms`,`s`.`maxcallbitrate` AS `maxcallbitrate`,`s`.`md5secret` AS `md5secret`,`s`.`mohsuggest` AS `mohsuggest`,`s`.`musicclass` AS `musicclass`,`s`.`outboundproxy` AS `outboundproxy`,`s`.`qualify` AS `qualify`,`s`.`regexten` AS `regexten`,`s`.`rtpholdtimeout` AS `rtpholdtimeout`,`s`.`rtpkeepalive` AS `rtpkeepalive`,`s`.`rtptimeout` AS `rtptimeout`,`s`.`subscribemwi` AS `subscribemwi`,`s`.`usereqphone` AS `usereqphone`,`s`.`vmexten` AS `vmexten`,`s`.`disallow` AS `disallow`,`s`.`useragent` AS `useragent` from ((`ast_sipfriends` `s` join `users` `u` on((`u`.`id` = `s`.`_user_id`))) join `hosts` `h` on((`h`.`id` = `u`.`host_id`))) where (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
 -- see https://bugs.launchpad.net/gemeinschaft/+bug/351693
 -- and http://bugs.mysql.com/bug.php?id=32575
 
