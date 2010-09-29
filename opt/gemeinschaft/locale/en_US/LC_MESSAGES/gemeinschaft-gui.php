@@ -28,9 +28,9 @@
 \*******************************************************************/
 
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 6857 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision$
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2009-08-18 05:36+0200
+POT-Creation-Date: 2010-09-29 18:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: English <>
@@ -113,6 +113,7 @@ Content-Transfer-Encoding: 8bit
   'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:' => 'Except for internal numbers you may forward calls to the following external numbers:',
   'Audio-Datei' => 'Custom audio file',
   'Aufl&ouml;sung' => 'Resolution',
+  'Aus' => 'Off',
   'Auschalten / Neustarten ...' => 'Shutdown / Reboot ...',
   'Ausf&uuml;hrungsrechte' => 'Execute permissions',
   'Ausgang' => 'Outbox queue',
@@ -142,9 +143,7 @@ Content-Transfer-Encoding: 8bit
   'Benutzer hinzuf&uuml;gen' => 'Add user',
   'Benutzer nicht vorhanden' => 'No such user',
   'Benutzer oder Pa&szlig;wort ung&uuml;ltig' => 'Invalid user or password',
-  'Benutzer wechseln' => 'Change user',
-  'Benutzer-Gr.' => 'User grp.',
-  'Benutzergruppe' => 'User group',
+  'Benutzer wechseln' => 'Impersonate',
   'Benutzergruppen' => 'User groups',
   'Benutzername' => 'Username',
   'Benutzername/Pa&szlig;wort falsch.' => 'Invalid user or password',
@@ -302,6 +301,7 @@ ist für Sie eingegangen.' => 'You have received a new voicemail message from\\
   'Gr&ouml;&szlig;e' => 'Size',
   'Gruppe' => 'Group',
   'Gruppe anlegen' => 'Add group',
+  'Gruppen' => 'Groups',
   'Gruppen-ID' => 'Group ID',
   'H:i' => 'H:i',
   'Hallo %s!' => 'Hello %s!',
@@ -336,6 +336,7 @@ ist für Sie eingegangen.' => 'You have received a new voicemail message from\\
   'Ihr persönliches Telefonbuch enthält keine Einträge.' => 'Your private phonebook does not contain any entries.',
   'Ihre Durchwahl' => 'Your extension',
   'Import' => 'Import',
+  'Importiert' => 'Imported',
   'In Deutschland: <code>49</code>' => 'In the USA: <code>1</code>',
   'In eigener Telefonanlage?' => 'In your private branch?',
   'In neuem Fenster öffnen' => 'Open in new window',
@@ -360,7 +361,6 @@ ist für Sie eingegangen.' => 'You have received a new voicemail message from\\
   'Klingeln statt Musik' => 'Ring instead of hold music',
   'Klingelt&ouml;ne' => 'Ringtones',
   'Klingelzeit p. Agent' => 'Timeout per member',
-  'Kollegen' => 'Colleagues',
   'Kollegen die Ihren Status einsehen wollen:' => 'The colleagues in following have requested to see your presence state:',
   'Komma' => 'Comma',
   'Kommentar' => 'Comment',
@@ -470,7 +470,6 @@ ist für Sie eingegangen.' => 'You have received a new voicemail message from\\
   'Port' => 'Port',
   'Pos.' => 'Pos.',
   'Pr&auml;fix' => 'Prefix',
-  'Pr&auml;fix f&uuml;r LCR (Least Cost Routing) in der Form 010<i>xx</i>. Gilt nur f&uuml;r ISDN, nicht f&uuml;r SIP.' => 'Prefix for LCR (Least Cost Routing) / provider selection. Will be used for ISDN, not for SIP.',
   'Pr&auml;fix f&uuml;r LCR (Least Cost Routing). Gilt nur f&uuml;r ISDN-Verbindungen, nicht f&uuml;r SIP.' => 'Prefix for LCR (Least Cost Routing) / provider selection. Will be used for ISDN, not for SIP.',
   'Pr&auml;fix international' => 'International prefix',
   'Pr&auml;fix suchen' => 'Find prefix',
