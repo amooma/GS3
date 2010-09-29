@@ -103,7 +103,7 @@ if ($mac === '000000000000') {
 
 # make sure the phone is a Snom-M3:
 #
-if (subStr($mac,0,6) !== '000413') {
+if ( (subStr($mac,0,6) !== '000413') && (subStr($mac,0,6) !== '00087B') ) {
 	gs_log( GS_LOG_NOTICE, "Snom M3 provisioning: MAC address \"$mac\" is not a Snom M3 phone" );
 	# don't explain this to the users
 	_settings_err( 'No! See log for details.' );
@@ -357,9 +357,10 @@ psetting('NETWORK_DHCP_CLIENT_BOOT_SERVER_OPTION_DATATYPE', 1);
 #####################################################################
 # Network Time
 #####################################################################
-//psetting('NETWORK_SNTP_SERVER'            , '"ptbtime1.ptb.de"');
-//psetting('NETWORK_SNTP_SERVER_UPDATE_TIME', 255);
-psetting('GMT_TIME_ZONE', 1);
+psetting('NETWORK_SNTP_SERVER'            , '"ptbtime1.ptb.de"');
+psetting('NETWORK_SNTP_SERVER_UPDATE_TIME', 255);
+psetting('DAY_LIGHT_SAVING'               , 1);
+psetting('GMT_TIME_ZONE'                  , 16);
 
 #####################################################################
 # Provisioning Server
