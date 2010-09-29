@@ -285,10 +285,13 @@ _gscnf( 'SIEMENS_PROV_KEY_BLACKLIST', ''                 );
 
 _gscnf( 'AASTRA_PROV_ENABLED'       , false              );
 _gscnf( 'AASTRA_PROV_PB_NUM_RESULTS', 10                 );
+_gscnf( 'AASTRA_PROV_FW_UPDATE'     , false              );
 _gscnf( 'AASTRA_PROV_FW_DEFAULT_51I', null               );
 _gscnf( 'AASTRA_PROV_FW_DEFAULT_53I', null               );
 _gscnf( 'AASTRA_PROV_FW_DEFAULT_55I', null               );
 _gscnf( 'AASTRA_PROV_FW_DEFAULT_57I', null               );
+_gscnf( 'AASTRA_PROV_USER_PASS'     , ''                 );
+_gscnf( 'AASTRA_PROV_ADMIN_PASS'    , ''                 );
 _gscnf( 'AASTRA_PROV_KEY_BLACKLIST' , ''                 );
 
 _gscnf( 'GRANDSTREAM_PROV_ENABLED'  , false              );

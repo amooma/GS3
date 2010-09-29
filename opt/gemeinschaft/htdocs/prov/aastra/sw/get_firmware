@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# 53i
+wget -c http://www.aastratelecom.com/cps/rde/xbcr/SID-3D8CCB6A-4E695C18/03/6753i_FC-001086-10-REV02_sr_2.6.0.1008_1008.zip
+unzip -o -u 6753i_FC-001086-10-REV02_sr_2.6.0.1008_1008.zip 53i.st
+
+# 55i
+wget -c http://www.aastratelecom.com/cps/rde/xbcr/SID-3D8CCB6A-4E695C18/03/6755i_FC-001087-11-REV02_sr_2.6.0.1008_1008.zip
+unzip -o -u 6755i_FC-001087-11-REV02_sr_2.6.0.1008_1008.zip 55i.st
+
+# 57i
+wget -c http://www.aastratelecom.com/cps/rde/xbcr/SID-3D8CCB6A-4E695C18/03/6757i_FC-001088-10-REV02_sr_2.6.0.1008_1008.zip
+unzip -o -u 6757i_FC-001088-10-REV02_sr_2.6.0.1008_1008.zip 57i.st
+
+# 6739i
+wget -c http://www.aastratelecom.com/cps/rde/xbcr/SID-3D8CCB6A-4E695C18/03/6739i_FC-001274-00_REV03_3_0_1_2024_1008.zip
+unzip -o -u 6739i_FC-001274-00_REV03_3_0_1_2024_1008.zip 6739i.st
