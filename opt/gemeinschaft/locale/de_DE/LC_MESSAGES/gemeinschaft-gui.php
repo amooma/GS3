@@ -28,9 +28,9 @@
 \*******************************************************************/
 
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
-  '' => 'Project-Id-Version: Gemeinschaft, file $Revision: 6857 $
+  '' => 'Project-Id-Version: Gemeinschaft, file $Revision$
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2009-08-18 05:36+0200
+POT-Creation-Date: 2010-09-29 18:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -85,6 +85,7 @@ Content-Transfer-Encoding: 8bit
   'Arbeit' => 'Arbeit',
   'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:' => 'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:',
   'Audio-Datei' => 'Audio-Datei',
+  'Aus' => 'Aus',
   'Ausloggen' => 'Ausloggen',
   'Ausloggen aus allen Warteschlangen' => 'Ausloggen aus allen Warteschlangen',
   'Ausloggen aus der Warteschlange mit der angegebenen Durchwahl' => 'Ausloggen aus der Warteschlange mit der angegebenen Durchwahl',
@@ -158,6 +159,7 @@ Content-Transfer-Encoding: 8bit
   'Funktion' => 'Funktion',
   'Gewählt' => 'Gewählt',
   'Gruppe' => 'Gruppe',
+  'Gruppen' => 'Gruppen',
   'Hersteller / Modell' => 'Hersteller / Modell',
   'Hilfe' => 'Hilfe',
   'Host' => 'Host',
@@ -169,7 +171,6 @@ Content-Transfer-Encoding: 8bit
   'Ihre Durchwahl' => 'Ihre Durchwahl',
   'Intern' => 'Intern',
   'Klingelt&ouml;ne' => 'Klingelt&ouml;ne',
-  'Kollegen' => 'Kollegen',
   'Kommentar' => 'Kommentar',
   'Konf.nr.' => 'Konf.nr.',
   'Konferenzen' => 'Konferenzen',
