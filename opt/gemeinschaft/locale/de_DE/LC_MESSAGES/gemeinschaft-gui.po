@@ -1324,7 +1324,7 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 53
 msgid "Dannach sehen Sie die folgende &Uuml;bersicht (oder &auml;hnlich):"
-msgstr ""
+msgstr "Danach sehen Sie die folgende &Uuml;bersicht (oder &auml;hnlich):"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 412
 msgid "Das Format sollte etwa folgendermaßen aussehen."
