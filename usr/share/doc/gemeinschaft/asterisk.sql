@@ -5356,31 +5356,35 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ast_cdr`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
 CREATE TABLE `ast_cdr` (
   `_id` int(10) unsigned NOT NULL auto_increment,
   `calldate` datetime NOT NULL default '0000-00-00 00:00:00',
   `uniqueid` varchar(32) character set ascii collate ascii_bin NOT NULL,
-  `clid` varchar(80) collate utf8_unicode_ci NOT NULL default '',
-  `src` varchar(30) collate ascii_general_ci NOT NULL default '',
-  `dst` varchar(30) collate ascii_general_ci NOT NULL default '',
-  `dcontext` varchar(50) collate ascii_general_ci NOT NULL default '',
-  `channel` varchar(60) collate ascii_general_ci NOT NULL default '',
-  `dstchannel` varchar(60) collate ascii_general_ci NOT NULL default '',
-  `lastapp` varchar(30) collate ascii_general_ci NOT NULL default '',
-  `lastdata` varchar(80) collate ascii_general_ci NOT NULL default '',
+  `clid` varchar(80) character set utf8 collate utf8_unicode_ci NOT NULL default '',
+  `src` varchar(30) NOT NULL default '',
+  `dst` varchar(30) NOT NULL default '',
+  `dcontext` varchar(50) NOT NULL default '',
+  `channel` varchar(60) NOT NULL default '',
+  `dstchannel` varchar(60) NOT NULL default '',
+  `lastapp` varchar(30) NOT NULL default '',
+  `lastdata` varchar(80) NOT NULL default '',
   `duration` mediumint(8) unsigned NOT NULL default '0',
   `billsec` mediumint(8) unsigned NOT NULL default '0',
-  `disposition` varchar(15) collate ascii_general_ci NOT NULL default '',
+  `disposition` varchar(15) NOT NULL default '',
   `amaflags` tinyint(3) unsigned NOT NULL default '0',
-  `accountcode` varchar(25) collate ascii_general_ci NOT NULL default '',
-  `userfield` varchar(255) collate ascii_general_ci NOT NULL default '',
+  `accountcode` varchar(25) NOT NULL default '',
+  `userfield` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`_id`),
   KEY `calldate` (`calldate`),
   KEY `accountcode` (`accountcode`),
   KEY `src_disposition` (`src`(25),`disposition`(4)),
   KEY `dst_disposition` (`dst`(25),`disposition`(4)),
   KEY `uniqueid` (`uniqueid`(25))
-) ENGINE=MyISAM DEFAULT CHARSET=ascii COLLATE=ascii_general_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=ascii;
+SET character_set_client = @saved_cs_client;
+
 
 --
 -- Dumping data for table `ast_cdr`
