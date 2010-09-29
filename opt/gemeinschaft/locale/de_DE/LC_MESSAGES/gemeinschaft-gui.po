@@ -1050,7 +1050,7 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 393
 msgid "Berechtigung Einf&uuml;gen"
-msgstr ""
+msgstr "Berechtigung einf&uuml;gen"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 173
 msgid "Berechtigung konnte nicht entfernt werden."
