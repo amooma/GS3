@@ -907,7 +907,7 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_friends.php, line: 251
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_friends.php, line: 252
 msgid "Authorisierung anfordern"
-msgstr ""
+msgstr "Autorisierung anfordern"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 89
 msgid "BLF"
@@ -3432,7 +3432,7 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_friends.php, line: 246
 msgid "Neue Authorisierung bei einem Kollegen anfordern:"
-msgstr ""
+msgstr "Neue Autorisierung bei einem Kollegen anfordern:"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 213
 msgid "Neue Gateway-Gruppe anlegen ..."
