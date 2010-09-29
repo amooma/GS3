@@ -279,7 +279,7 @@ context to-internal-users {
 		//else if ("${CHANNEL(channeltype)}" = "SIP") {
 		//	// this needs to be nested because Asterisk would otherwise complain
 		//	// ("function_sipchaninfo_read: This function can only be used on SIP channels")
-		//	if ("${SIPCHANINFO(peername)}" = "gateway") {
+		//	if ("${CHANNEL(peername)}" = "gateway") {
 		//		Verbose(1,### Incoming call from a gateway to ${EXTEN});
 		//		Set(__is_from_gateway=1);
 		//	}
@@ -486,8 +486,8 @@ context to-internal-users {
 		Verbose(1,### Incoming call to ${boss}, direct dial);
 		&pass-connid();
 		
-		//if ("${is_from_gateway}" = "1" || "${SIPCHANINFO(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
-		if ( "${is_from_gateway}"  =  "1" ) {
+		//if ("${is_from_gateway}" = "1" || "${CHANNEL(peername)}" = "gateway" || "${CONTEXT}" = "from-gateway" || "${CHANNEL(channeltype)}" = "Zap") {
+		if ("${is_from_gateway}" = "1") {
 			Verbose(1,### No direct dial from gateway);
 			Hangup();
 		}

@@ -47,11 +47,14 @@ if (! $socket) {
 	echo 'dbhost = ', gs_get_conf('GS_DB_SLAVE_HOST') ,"\n";
 	echo 'dbport = 3306'                              ,"\n";  # MySQL default
 } else {
+	echo 'dbhost = localhost' ,"\n";  # "localhost" is special
+	echo 'dbport = 3306'      ,"\n";  # not used
 	echo 'dbsock = ', $socket ,"\n";
 }
 echo 'dbuser = ', gs_get_conf('GS_DB_SLAVE_USER') ,"\n";
 echo 'dbpass = ', gs_get_conf('GS_DB_SLAVE_PWD' ) ,"\n";
 echo 'dbname = ', gs_get_conf('GS_DB_SLAVE_DB'  ) ,"\n";
+echo 'requirements = warn' ,"\n";
 echo "\n";
 
 
