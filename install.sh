@@ -966,6 +966,7 @@ USER_PIN=`printf "%04d\n" "$PIN"`
 	--pin="$ADMIN_PIN" \
 	--firstname="$ADMIN_FNAME" \
 	--lastname="$ADMIN_LNAME" \
+	--language="de" \
 	--email="" \
 	--host=1 || true
 
@@ -976,6 +977,7 @@ USER_PIN=`printf "%04d\n" "$PIN"`
 	--pin="$USER_PIN" \
 	--firstname="$USER_FNAME" \
 	--lastname="$USER_LNAME" \
+	--language="de" \
 	--email="" \
 	--host=1 || true
 
