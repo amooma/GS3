@@ -206,7 +206,7 @@ if ($searchform === 1)
 
 	echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 	echo "<tr>";
-	echo "<th align=\"center\" width=\"100%\">". __("Telefonbuch") ." '". $typeToTitle[$type] ."' ". __("durchsuchen") .":</th>";
+	echo "<th align=\"center\" width=\"100%\">". sprintf(__("Telefonbuch %s durchsuchen"), " '". $typeToTitle[$type] ."' ") .":</th>";
 	echo "</tr>";
 
 	echo "<tr><td align=\"center\" width=\"100%\"><input type=\"text\" name=\"q\" /></td></tr>\n";
