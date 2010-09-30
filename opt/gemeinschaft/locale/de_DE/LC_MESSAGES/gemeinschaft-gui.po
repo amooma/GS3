@@ -3936,7 +3936,7 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 187
 msgid "Rufanahmegrp."
-msgstr ""
+msgstr "Rufannahmegrp."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 921
 msgid "Rufannahme-Gruppe"
