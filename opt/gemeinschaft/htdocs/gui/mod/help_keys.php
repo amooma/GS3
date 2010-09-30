@@ -184,7 +184,7 @@ echo __("Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ng
 	</td>
 </tr>
 <tr>
-	<td><?php echo __('Rufanahmegrp.'); ?></td>
+	<td><?php echo __('Rufannahmegrp.'); ?></td>
 	<td>
 		<?php echo __('Wenn Sie in einer Rufannahmegruppe sind, k&ouml;nnen Sie ein ankommendes Gespr&auml;ch mit dieser Taste aufnehmen.'); ?>
 	</td>
@@ -202,7 +202,7 @@ echo __("Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ng
 	</td>
 </tr>
 <tr>
-	<td><?php echo __('Fn.Schalter'); ?></td>
+	<td><?php echo __('Fn.-Schalter'); ?></td>
 	<td>
 		<?php echo __('Mit dem Funktionsschalter kann man bestimmte Telefoniefunktionen aktivieren oder deaktivieren (z.B. die Rufumleitung). W&auml;hlen Sie einfach die gew&uuml;nschte Funktion aus dem Hilfe-Dialog aus. '); ?>
 	</td>
