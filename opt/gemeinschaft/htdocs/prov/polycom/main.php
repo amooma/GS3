@@ -1,26 +1,14 @@
 <?php
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
-<<<<<<< HEAD:opt/gemeinschaft/htdocs/prov/polycom/main.php
 * 
-* $Revision: 6053 $
-* 
-* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
-=======
-*
 * $Revision$
 *
 * Copyright 2007-2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
->>>>>>> 549c1bf... I18N enhancements for Polycom provisioning:opt/gemeinschaft/htdocs/prov/polycom/main.php
 * http://www.amooma.de/
-<<<<<<< HEAD:opt/gemeinschaft/htdocs/prov/polycom/main.php
-=======
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
-*
-* Author: Daniel Scheller <scheller@loca.net>
->>>>>>> 549c1bf... I18N enhancements for Polycom provisioning:opt/gemeinschaft/htdocs/prov/polycom/main.php
 *
 * APS for Polycom SoundPoint IP phones
 * (c) 2009 Daniel Scheller / LocaNet oHG
@@ -109,21 +97,12 @@ $user_id = (int) $db->executeGetOne("SELECT `_user_id` FROM `ast_sipfriends` WHE
 if($user_id < 1) _err("Unknown user.");
 
 $menuitems = Array(
-<<<<<<< HEAD:opt/gemeinschaft/htdocs/prov/polycom/main.php
 	Array(	"file"	=> "diallog.php?user=". $user,
-		"title"	=> "Ruflisten"),
+		"title"	=> __("Ruflisten")),
 	Array(	"file"	=> "pb.php?u=". $user ."&amp;m=". $mac,
-		"title"	=> "Telefonbuch"),
+		"title"	=> __("Telefonbuch")),
 	Array(	"file"	=> "configmenu.php?u=". $user ."&amp;m=". $mac,
-		"title"	=> "Konfiguration")
-=======
-	Array(	'file'	=> 'diallog.php?user='. $user,
-		'title'	=> __("Ruflisten")),
-	Array(	'file'	=> 'pb.php?u='. $user .'&amp;m='. $mac,
-		'title'	=> __("Telefonbuch")),
-	Array(	'file'	=> 'configmenu.php?u='. $user .'&amp;m='. $mac,
-		'title'	=> __("Konfiguration"))
->>>>>>> 549c1bf... I18N enhancements for Polycom provisioning:opt/gemeinschaft/htdocs/prov/polycom/main.php
+		"title"	=> __("Konfiguration"))
 );
 
 ob_start();

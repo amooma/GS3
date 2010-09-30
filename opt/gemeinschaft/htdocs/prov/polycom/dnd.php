@@ -27,13 +27,14 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-define("GS_VALID", true);		// this is a parent file
+define("GS_VALID", true); // this is a parent file
 
 require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 require_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gs-lib.php");
-include_once( GS_DIR .'inc/gettext.php' );
+include_once(GS_DIR ."inc/gettext.php");
 include_once(GS_DIR ."inc/gs-fns/gs_ami_events.php");
+require_once(GS_DIR ."inc/group-fns.php");
 require_once(GS_DIR ."inc/langhelper.php");
 
 Header("Content-Type: text/html; charset=utf-8");
@@ -97,10 +98,17 @@ $mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST["m"])));
 $user = trim(@$_REQUEST["u"]);
 $user_id = getUserID($user);
 
+// Check permissions
+$user_groups = gs_group_members_groups_get(Array($user_id), "user");
+$members = gs_group_permissions_get($user_groups, "dnd_set");
+
+// exit if access is not granted
+if(count($members) <= 0) exit(1);
+
 // setup i18n stuff
 gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
-gs_loadtextdomain( 'gemeinschaft-gui' );
-gs_settextdomain( 'gemeinschaft-gui' );
+gs_loadtextdomain("gemeinschaft-gui");
+gs_settextdomain("gemeinschaft-gui");
 
 $user_id_check = $db->executeGetOne("SELECT `user_id` FROM `phones` WHERE `mac_addr`='". $db->escape($mac) ."'");
 if($user_id != $user_id_check) _err("Not authorized");

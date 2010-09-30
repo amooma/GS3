@@ -152,7 +152,9 @@ $actives = array(
 	'std' => 'Std.',
 	'var' => 'Tmp.',
 	'vml' => 'AB',
-	'ano' => 'Ansage'
+	'ano' => 'Ansage',
+	'par' => 'Parallel',
+	'trl' => 'Zeitsteuerung'
 );
                                                                 
 
