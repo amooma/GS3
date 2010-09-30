@@ -465,7 +465,7 @@ ORDER BY `id`';
 		
 		foreach($keys as $key => $v) {
 			echo '<tr>',"\n";
-			echo '<th class="r">', __('Taste '. $key .'') ,'</th>',"\n";
+			echo '<th class="r">', __('Taste'), ' ', $key ,'</th>',"\n";
 			echo '<td>',"\n";
 			echo '<select name="key_'. $v .'_type" id="key_'. $v .'" "style="width:150px; margin:2px 5px 1px 0px;" onChange="enableInput(\'key_'. $v .'\');">', "\n";   
 			echo '<option value=""'.($ivr['key_'. $v .'_type']  == ''  ? ' selected="selected"' : '').'>---</option>\n'; 
