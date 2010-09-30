@@ -3358,7 +3358,7 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 552
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 852
 msgid "Name, Vorname"
-msgstr ""
+msgstr "Familienname, Vorname"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_blacklist.php, line: 178
 msgid "Name/Kommentar suchen"
