@@ -3891,7 +3891,7 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 444
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 674
 msgid "Reload Interval"
-msgstr ""
+msgstr "Neu-laden-Intervall"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_callvolume.php, line: 121
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 108
@@ -4798,7 +4798,7 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 434
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 664
 msgid "Update Interval"
-msgstr ""
+msgstr "Aktualisierungsintervall"
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 283
 msgid "Upgrade"
