@@ -2469,7 +2469,7 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 616
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 1337
 msgid "Gruppe Einf&uuml;gen"
-msgstr ""
+msgstr "Gruppe einf&uuml;gen"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 221
 msgid "Gruppe anlegen"
