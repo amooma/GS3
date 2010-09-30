@@ -32,6 +32,8 @@ define( 'GS_VALID', true );  /// this is a parent file
 
 require_once( '../../../inc/conf.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
+require_once( GS_DIR .'inc/gettext.php' );
+require_once( GS_DIR .'inc/langhelper.php' );
 
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
@@ -107,7 +109,7 @@ if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
 	$tmp[$pos] = array(
 	          'k' => 'imported',
-	          'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', "Importiert")
+	          'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', __("Importiert"))
 	);
 }
 kSort($tmp);
@@ -121,6 +123,11 @@ $url_snom_menu = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PR
 
 $user = trim( @$_REQUEST['u'] );
 $user_id = getUserID( $user );
+
+// setup i18n stuff
+gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
+gs_loadtextdomain("gemeinschaft-gui");
+gs_settextdomain("gemeinschaft-gui");
 
 include_once( GS_DIR .'inc/group-fns.php' );
 
@@ -149,21 +156,21 @@ if (! $type) {
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
 	     '<SnomIPPhoneMenu>', "\n",
-	       '<Title>Konfigurationsmenue</Title>', "\n\n";
+	       '<Title>'. __("Konfigurationsmen\xC3\xBC") .'</Title>', "\n\n";
 	
 	if( $show_forward )	
 		echo '<MenuItem>', "\n",
-			'<Name>', snomXmlEsc('Rufumleitung'), '</Name>', "\n",
+			'<Name>', snomXmlEsc(__('Rufumleitung')), '</Name>', "\n",
 			'<URL>',$url_snom_menu,'?m=',$mac, '&u=',$user, '&t=forward</URL>', "\n",
 			'</MenuItem>', "\n\n";
 	echo '<MenuItem>', "\n",
-		'<Name>', snomXmlEsc('Dienstmerkmale'), '</Name>', "\n",
+		'<Name>', snomXmlEsc(__('Dienstmerkmale')), '</Name>', "\n",
 		'<URL>',$url_snom_provdir,'features.php?m=',$mac, '&u=',$user,'</URL>', "\n",
 		'</MenuItem>', "\n\n";
 	
 	if( $show_rt ) {
 		echo '<MenuItem>', "\n",
-			'<Name>', snomXmlEsc('Klingeltoene'), '</Name>', "\n",
+			'<Name>', snomXmlEsc(__('Klingeltöne')), '</Name>', "\n",
 			'<URL>',$url_snom_provdir,'rt.php?m=',$mac, '&u=',$user,'</URL>', "\n",
 			'</MenuItem>', "\n\n";
 			# in XML the & must normally be encoded as &amp; but not for
@@ -193,7 +200,7 @@ function defineBackKey()
 	     '</SoftKeyItem>', "\n";
 	echo '<SoftKeyItem>',
 		'<Name>F4</Name>',
-		'<Label>' ,snomXmlEsc('Menü'),'</Label>',
+		'<Label>' ,snomXmlEsc(__('Menü')),'</Label>',
 		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 		'</SoftKeyItem>', "\n";
 }
@@ -210,14 +217,14 @@ if ( $type == 'forward') {
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
 	     '<SnomIPPhoneMenu>', "\n",
-	       '<Title>Rufumleitung</Title>', "\n\n";
+	       '<Title>'. __("Rufumleitung") .'</Title>', "\n\n";
 	
 	echo '<MenuItem>', "\n",
-		'<Name>', snomXmlEsc('Rufumleitung'), '</Name>', "\n",
+		'<Name>', snomXmlEsc(__('Rufumleitung')), '</Name>', "\n",
 		'<URL>',$url_snom_provdir,'callforward.php?m=',$mac, '&u=',$user, '</URL>', "\n",
 		'</MenuItem>', "\n\n";
 	echo '<MenuItem>', "\n",
-		'<Name>', snomXmlEsc('externe Nummern'), '</Name>', "\n",
+		'<Name>', snomXmlEsc(__('externe Nummern')), '</Name>', "\n",
 		'<URL>',$url_snom_provdir,'extnumbers.php?m=',$mac, '&u=',$user,'</URL>', "\n",
 		'</MenuItem>', "\n\n";
 

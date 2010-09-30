@@ -36,6 +36,8 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ringtones_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ringtone_set.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
+include_once( GS_DIR .'inc/gettext.php' );
+require_once( GS_DIR .'inc/langhelper.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -114,6 +116,10 @@ $members_rt = gs_group_permissions_get ( $user_groups, 'ringtone_set' );
 if ( count ( $members_rt ) <= 0 )
 	_err( 'Forbidden' );
 
+// setup i18n stuff
+gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
+gs_loadtextdomain("gemeinschaft-gui");
+gs_settextdomain("gemeinschaft-gui");
 
 /*
 $typeToTitle = array(
@@ -124,9 +130,9 @@ $typeToTitle = array(
 */
 $tmp = array(
 	15=>array('k' => 'internal' ,
-	          'v' => gs_get_conf('GS_BELLCORE_INTERNAL_TITLE', "Intern") ),
+	          'v' => gs_get_conf('GS_BELLCORE_INTERNAL_TITLE', __("Intern")) ),
 	25=>array('k' => 'external',
-	          'v' => gs_get_conf('GS_PB_BELLCORE_EXTERNAL', "Extern" ) )
+	          'v' => gs_get_conf('GS_PB_BELLCORE_EXTERNAL', __("Extern")) )
 );
 
 kSort($tmp);
@@ -151,7 +157,7 @@ function defineBackKey()
 	# Snom does not understand &amp; !
 	echo '<SoftKeyItem>',
 		'<Name>F4</Name>',
-		'<Label>' ,snomXmlEsc('Zurück'), '</Label>',
+		'<Label>' ,snomXmlEsc(__('Zurück')), '</Label>',
 		'<URL>' ,$url_snom_bellcore, '?m=',$mac, '&u=',$user, '</URL>',
 		'</SoftKeyItem>', "\n";
 }
@@ -171,7 +177,7 @@ function defineBackMenu()
 	# Snom does not understand &amp; !
 	echo '<SoftKeyItem>',
 		'<Name>F4</Name>',
-		'<Label>' ,snomXmlEsc('Menü'),'</Label>',
+		'<Label>' ,snomXmlEsc(__('Menü')),'</Label>',
 		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 		'</SoftKeyItem>', "\n";
 }
@@ -248,7 +254,7 @@ if ($type == 'internal' || $type == 'external') {
 		echo '<MenuItem';
 		if($bellcore == 0 && $file == 'NULL')echo ' sel=true';
 		echo '>',"\n";
-		echo '<Name>',snomXmlEsc('Lautlos'),'</Name>',"\n";
+		echo '<Name>',snomXmlEsc(__('Lautlos')),'</Name>',"\n";
 		echo '<URL>';
 		echo  $url_snom_bellcore, '?m=',$mac, '&u=',$user, '&t=',$type,'&bc=0';
 		echo '</URL>',"\n";  
@@ -302,7 +308,7 @@ if (! $type) {
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
 	     '<SnomIPPhoneMenu>', "\n",
-	       '<Title>Tonsignale</Title>', "\n\n";
+	       '<Title>'. __("Tonsignale") .'</Title>', "\n\n";
 	foreach ($typeToTitle as $t => $title) {
 		
 	$query = 'SELECT bellcore, file FROM ringtones WHERE user_id=\''. $user_id .'\' AND src=\'' . $t . '\'';
@@ -316,7 +322,7 @@ if (! $type) {
 			$file = $r['file'];
 		
 			if($file != null)$display = ': '. $file;
-			else if($bellcore == 0)$display = ': Lautlos';
+			else if($bellcore == 0)$display = ': '. __("Lautlos");
 			else if($bellcore >= 1 && $bellcore <= 10)$display = ': Bellcore '.$bellcore;  
 		}
 		

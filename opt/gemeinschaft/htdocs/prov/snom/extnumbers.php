@@ -34,6 +34,8 @@ require_once( '../../../inc/conf.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php');
+require_once( GS_DIR .'inc/gettext.php' );
+require_once( GS_DIR .'inc/langhelper.php' );
 
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
@@ -104,12 +106,20 @@ if (! in_array( $type, array(), true )) {
 
 $db = gs_db_slave_connect();
 
+$user = trim( @$_REQUEST['u'] );
+$user_id = getUserID( $user );
+
+// setup i18n stuff
+gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
+gs_loadtextdomain("gemeinschaft-gui");
+gs_settextdomain("gemeinschaft-gui");
+
 $tmp = array();
 if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
 	$tmp[$pos] = array(
 	          'k' => 'imported',
-	          'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', "Importiert")
+	          'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', __("Importiert"))
 	);
 }
 kSort($tmp);
@@ -126,8 +136,6 @@ $url_snom_menu = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PR
 if (! $type) {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
-	$user = trim( @$_REQUEST['u'] );
-	$user_id = getUserID( $user );
 	$user_name = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
 	
 	$enumbers = gs_user_external_numbers_get( $user_name );
@@ -138,7 +146,7 @@ if (! $type) {
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
 	     '<SnomIPPhoneMenu>', "\n",
-	       '<Title>externe Nummern</Title>', "\n\n";
+	       '<Title>'. __("externe Nummern") .'</Title>', "\n\n";
 	foreach ($enumbers as $extnumber) {
 		echo '<MenuItem>', "\n",
 		       '<Name>', snomXmlEsc($extnumber), '</Name>', "\n",
@@ -170,12 +178,12 @@ function defineBackMenu()
 		'</SoftKeyItem>', "\n";
 	echo '<SoftKeyItem>',
 		'<Name>F1</Name>',
-		'<Label>' ,snomXmlEsc('Zurück'),'</Label>',
+		'<Label>' ,snomXmlEsc(__('Zurück')),'</Label>',
 		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 		'</SoftKeyItem>', "\n";
 	echo '<SoftKeyItem>',
 		'<Name>F4</Name>',
-		'<Label>' ,snomXmlEsc('Zurück'),'</Label>',
+		'<Label>' ,snomXmlEsc(__('Zurück')),'</Label>',
 		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 		'</SoftKeyItem>', "\n";
 	# Snom does not understand &amp; !

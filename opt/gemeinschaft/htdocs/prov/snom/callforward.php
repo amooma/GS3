@@ -39,6 +39,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_callforward_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_vm_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
+require_once( GS_DIR .'inc/langhelper.php' );
+require_once( GS_DIR .'inc/group-fns.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -116,6 +118,10 @@ $members = gs_group_permissions_get ( $user_groups, 'forward' );
 if ( count ( $members ) <= 0 )
 	_err('Forbidden');
 
+// setup i18n stuff
+gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
+gs_loadtextdomain("gemeinschaft-gui");
+gs_settextdomain("gemeinschaft-gui");
 
 $type = trim( @$_REQUEST['t'] );
 if (! in_array( $type, array('internal','external','std','var','timeout'), true )) {
@@ -125,9 +131,9 @@ if (! in_array( $type, array('internal','external','std','var','timeout'), true 
 
 $tmp = array(
 	15=>array('k' => 'internal' ,
-	          'v' => gs_get_conf('GS_CLIR_INTERNAL', "von intern") ),
+	          'v' => gs_get_conf('GS_CLIR_INTERNAL', __("von intern")) ),
 	25=>array('k' => 'external',
-	          'v' => gs_get_conf('GS_CLIR_EXTERNAL', "von extern" ) ),
+	          'v' => gs_get_conf('GS_CLIR_EXTERNAL', __("von extern")) ),
 
 );
 
@@ -142,19 +148,19 @@ $url_snom_menu = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PR
 
 
 $cases = array(
-	'always' => 'immer',  
-	'busy'   => 'besetzt',
-	'unavail'=> 'keine Antw.',  
-	'offline'=> 'offline'
+	'always' => __('immer'),  
+	'busy'   => __('besetzt'),
+	'unavail'=> __('keine Antw.'),  
+	'offline'=> __('offline')
 );
 $actives = array(
-	'no'  => 'Aus',
-	'std' => 'Std.',
-	'var' => 'Tmp.',
-	'vml' => 'AB',
-	'ano' => 'Ansage',
-	'par' => 'Parallel',
-	'trl' => 'Zeitsteuerung'
+	'no'  => __('Aus'),
+	'std' => __('Std.'),
+	'var' => __('Tmp.'),
+	'vml' => __('AB'),
+	'ano' => __('Ansage'),
+	'par' => __('Parallel'),
+	'trl' => __('Zeitsteuerung')
 );
                                                                 
 
@@ -364,13 +370,13 @@ if ( $type == 'internal' || $type == 'external' && isset( $_REQUEST['key']) ) {
 	$id = (int)$db->executeGetOne('SELECT `_user_id` from `cf_timerules` WHERE `_user_id`=' . $user_id );                                                                                        
 
 	if ( $id ) {
-		$actives['trl'] = 'Zeit';
+		$actives['trl'] = __('Zeit');
 	}
 
 	# Test parallel call
 	$id = (int)$db->executeGetOne('SELECT `_user_id` from `cf_parallelcall` WHERE `_user_id`=' . $user_id  );
 	if( $id ) {
-		$actives['par'] = 'Parallel';
+		$actives['par'] = __('Parallel');
 	}
 
 	
@@ -437,8 +443,8 @@ if ( $type == 'std' || $type == 'var' && !isset( $_REQUEST['value']) ) {
 	
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['m'] )));
 	
-	if( $type == 'varnumber')$Title = 'temp. Nummer';
-	else $Title = 'Standardnummer';
+	if( $type == 'varnumber')$Title = __('temp. Nummer');
+	else $Title = __('Standardnummer');
 
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>',"\n";
@@ -457,12 +463,12 @@ if ( $type == 'std' || $type == 'var' && !isset( $_REQUEST['value']) ) {
 		
 	echo '<SnomIPPhoneInput>',"\n";
 	echo '<Title>',snomXmlEsc($Title),'</Title>',"\n";
-	echo '<Prompt>Prompt</Prompt>',"\n";
+	echo '<Prompt>'. __("Prompt") .'</Prompt>',"\n";
 	echo '<URL>';
 	echo  $url_snom_callforward;
 	echo '</URL>',"\n";
 	echo '<InputItem>',"\n";
-	echo '<DisplayName>neue Nummer</DisplayName>',"\n";
+	echo '<DisplayName>'. __("neue Nummer") .'</DisplayName>',"\n";
 	echo '<QueryStringParam>','m=',$mac, '&u=',$user, '&t=',$type,'&value' ,'</QueryStringParam>',"\n";
 	echo '<DefaultValue>',$number,'</DefaultValue>',"\n";
 	echo '<InputFlags>t</InputFlags>',"\n";
@@ -483,7 +489,7 @@ if ( $type == 'timeout' && !isset( $_REQUEST['value']) ) {
 	
 	$callforwards = gs_callforward_get( $user_name );
 	
-	$Title = 'Timeout bei keine Antwort';
+	$Title = __('Timeout bei keine Antwort');
 
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>',"\n";
@@ -501,12 +507,12 @@ if ( $type == 'timeout' && !isset( $_REQUEST['value']) ) {
 	
 	echo '<SnomIPPhoneInput>',"\n";
 	echo '<Title>',snomXmlEsc($Title),'</Title>',"\n";
-	echo '<Prompt>Prompt</Prompt>',"\n";
+	echo '<Prompt>'. __("Prompt") .'</Prompt>',"\n";
 	echo '<URL>';
 	echo  $url_snom_callforward;
 	echo '</URL>',"\n";
 	echo '<InputItem>',"\n";
-	echo '<DisplayName>neue Timeout</DisplayName>',"\n";
+	echo '<DisplayName>'. __("neue Timeout") .'</DisplayName>',"\n";
 	echo '<QueryStringParam>','m=',$mac, '&u=',$user, '&t=timeout&value' ,'</QueryStringParam>',"\n";
 	echo '<DefaultValue>',$timeout,'</DefaultValue>',"\n";
 	echo '<InputFlags>n</InputFlags>',"\n";
@@ -529,14 +535,14 @@ if (! $type) {
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
 	     '<SnomIPPhoneMenu>', "\n",
-	       '<Title>Rufumleitung</Title>', "\n\n";
+	       '<Title>'. __("Rufumleitung") .'</Title>', "\n\n";
 	
 	echo '<MenuItem>', "\n",
-	        '<Name>', snomXmlEsc('Standardnummer'), '</Name>', "\n",
+	        '<Name>', snomXmlEsc(__('Standardnummer')), '</Name>', "\n",
 	        '<URL>', $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=std', '</URL>', "\n",
 	        '</MenuItem>', "\n\n";
 	echo '<MenuItem>', "\n",
-	        '<Name>', snomXmlEsc('temp. Nummer'), '</Name>', "\n",
+	        '<Name>', snomXmlEsc(__('temp. Nummer')), '</Name>', "\n",
 	        '<URL>', $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=var', '</URL>', "\n",
 	        '</MenuItem>', "\n\n";
 	                                                                   
@@ -553,7 +559,7 @@ if (! $type) {
 	}
 	
 	echo '<MenuItem>',"\n";
-	echo '<Name>',snomXmlEsc('Timeout keine Antw. '),'</Name>',"\n";
+	echo '<Name>',snomXmlEsc(__('Timeout keine Antw. ')),'</Name>',"\n";
 	echo '<URL>';
 	echo  $url_snom_callforward, '?m=',$mac, '&u=',$user, '&t=timeout';
 	echo '</URL>',"\n";  

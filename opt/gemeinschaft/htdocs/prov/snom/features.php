@@ -40,6 +40,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_callerids_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_set.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
+require_once( GS_DIR .'inc/gettext.php' );
+require_once( GS_DIR .'inc/langhelper.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -134,18 +136,23 @@ if ( count ( $members_callwaiting ) <= 0 )
 else
 	$show_cw = true;
 
+// setup i18n stuff
+gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
+gs_loadtextdomain("gemeinschaft-gui");
+gs_settextdomain("gemeinschaft-gui");
+
 $tmp = array();
 
 if ( $show_clir ) {
 
-	$tmp[15] = array( 'k' => 'internal' , 'v' => gs_get_conf('GS_CLIR_INTERNAL', "CLIR Intern") );
-	$tmp[25] = array( 'k' => 'external', 'v' => gs_get_conf('GS_CLIR_EXTERNAL', "CLIR Extern" ) );
+	$tmp[15] = array( 'k' => 'internal' , 'v' => gs_get_conf('GS_CLIR_INTERNAL', __("CLIR Intern")) );
+	$tmp[25] = array( 'k' => 'external', 'v' => gs_get_conf('GS_CLIR_EXTERNAL', __("CLIR Extern")) );
 
 }
 
 if ( $show_cw ) {
 
-	$tmp[35] = array( 'k' => 'callwaiting','v' => gs_get_conf('GS_CALLWAITING', "Anklopfen" ) );
+	$tmp[35] = array( 'k' => 'callwaiting','v' => gs_get_conf('GS_CALLWAITING', __("Anklopfen") ) );
 
 }
 
@@ -195,7 +202,7 @@ function defineBackMenu()
 	     '</SoftKeyItem>', "\n";
 	echo '<SoftKeyItem>',
 		'<Name>F4</Name>',
-		'<Label>' ,snomXmlEsc('Menü'), '</Label>',
+		'<Label>' ,snomXmlEsc(__('Menü')), '</Label>',
 		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 		'</SoftKeyItem>', "\n";
 	# Snom does not understand &amp; !
@@ -213,7 +220,7 @@ function defineBackKey()
 		# Snom does not understand &amp; !
 	echo '<SoftKeyItem>',
 		'<Name>F4</Name>',
-		'<Label>' ,snomXmlEsc('Zurück'),'</Label>',
+		'<Label>' ,snomXmlEsc(__('Zurück')),'</Label>',
 		'<URL>' ,$url_snom_features, '?m=',$mac, '&u=',$user, '</URL>',
 		'</SoftKeyItem>', "\n";
 }
@@ -318,7 +325,7 @@ if (($type == 'internal' || $type == 'external' ||  $type == 'callwaiting') && $
 		echo '<MenuItem';
 		if($state == 'aus')echo ' sel=true';
 		echo '>',"\n";
-		echo '<Name>',snomXmlEsc('Aus'),'</Name>',"\n";
+		echo '<Name>',snomXmlEsc(__('Aus')),'</Name>',"\n";
 		echo '<URL>';
 		echo  $url_snom_features, '?m=',$mac, '&u=',$user, '&t=',$type,'&state=no';
 		echo '</URL>',"\n";  
@@ -327,7 +334,7 @@ if (($type == 'internal' || $type == 'external' ||  $type == 'callwaiting') && $
 		echo '<MenuItem';
 		if($state == 'ein')echo ' sel=true';
 		echo '>',"\n";
-		echo '<Name>',snomXmlEsc('Ein'),'</Name>',"\n";
+		echo '<Name>',snomXmlEsc(__('Ein')),'</Name>',"\n";
 		echo '<URL>';
 		echo  $url_snom_features, '?m=',$mac, '&u=',$user, '&t=',$type,'&state=yes';
 		echo '</URL>',"\n";  
@@ -377,7 +384,7 @@ if ($type == 'cidint' || $type == 'cidext') {
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
 		'<SnomIPPhoneMenu>', "\n",
-		'<Title>Cid</Title>', "\n\n";
+		'<Title>'. __("Cid") .'</Title>', "\n\n";
 		echo '<MenuItem';
 		if($selected == true)echo ' sel=true';
 		echo '>', "\n",
@@ -416,14 +423,14 @@ if (! $type) {
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
 	     '<SnomIPPhoneMenu>', "\n",
-	       '<Title>Dienstmerkmale</Title>', "\n\n";
+	       '<Title>'. __("Dienstmerkmale") .'</Title>', "\n\n";
 	foreach ($typeToTitle as $t => $title) {
 	
-	$state = ": aus";
+	$state = ": ". __("aus");
 	if($t == 'callwaiting'){
 		$result = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
-		if($result == 1)$state = ": ein";
-		else($state == ": aus");
+		if($result == 1)$state = ": ". __("ein");
+		else($state == ": ". __("aus"));
 	}
 	else if($t == 'cidext'){
 		unset($result);
@@ -443,8 +450,8 @@ if (! $type) {
 	}
 	else{
 		$result = $db->executeGetOne( 'SELECT `'. $t.'_restrict` FROM `clir` WHERE `user_id`='. $user_id );
-		if($result == "yes")$state = ": ein";
-                else($state == ": aus");
+		if($result == "yes")$state = ": ". __("ein");
+                else($state == ": ". __("aus"));
 	}
 		
 		echo '<MenuItem>', "\n",
