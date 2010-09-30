@@ -484,7 +484,7 @@ msgstr "Anruf"
 #
 # File: opt/gemeinschaft/htdocs/prov/tiptel/settings.php, line: 1048
 msgid "Anruf Listen"
-msgstr ""
+msgstr "Anruflisten"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 183
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 194
