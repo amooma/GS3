@@ -307,7 +307,7 @@ if ($action == 'edit') {
 <table cellspacing="1">
 <thead>
 <tr>
-	<th style="min-width:21em;" colspan="5"><?php echo __('Untergruppen der Gruppe '), ' "',htmlEnt($group['name']),'"'; ?></th>
+	<th style="min-width:21em;" colspan="5"><?php echo sprintf( htmlEnt(__('Untergruppen der Gruppe %s')), '<q>'.htmlEnt($group['name']).'</q>' ); ?></th>
 </tr>
 
 <tr>
