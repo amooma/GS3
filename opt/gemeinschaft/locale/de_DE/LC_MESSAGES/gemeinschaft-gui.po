@@ -3203,7 +3203,7 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 532
 msgid "Mitglied Einf&uuml;gen"
-msgstr ""
+msgstr "Mitglied einf&uuml;gen"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 207
 msgid "Mitglied konnte nicht entfernt werden."
