@@ -3353,7 +3353,7 @@ msgstr "Name suchen"
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 553
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 853
 msgid "Name, V."
-msgstr ""
+msgstr "Fam.name, V."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 552
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 852
