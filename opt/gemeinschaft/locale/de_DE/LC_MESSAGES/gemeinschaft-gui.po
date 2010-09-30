@@ -4976,7 +4976,7 @@ msgstr "Vorname"
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 551
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 851
 msgid "Vorname Name"
-msgstr ""
+msgstr "Vorname Fam.name"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 413
 msgid ""
