@@ -1914,7 +1914,7 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 434
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 571
 msgid "Eintrag Entfernen"
-msgstr ""
+msgstr "Eintrag entfernen"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 953
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 574
