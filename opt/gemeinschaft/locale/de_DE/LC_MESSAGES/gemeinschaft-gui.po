@@ -5330,7 +5330,7 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 268
 msgid "anruf"
-msgstr ""
+msgstr "Anruf"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 215
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_inbound.php, line: 251
