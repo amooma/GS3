@@ -479,7 +479,7 @@ ORDER BY `title`'
 	echo '<th>', __('Gleichzeitige Anrufe') ,':</th>',"\n";
 	echo '<td>',"\n";
 	echo '<input type="text" name="gw-param-call-limit" class="r" size="4" maxlength="4" value="', htmlEnt(@$gw_params['call-limit']) ,'" />',"\n";
-	echo ' &nbsp; <small>(', htmlEnt(__("0 f\xC3\xBCr unbegrenzt")) ,', ', htmlEnt(__('Standard')) ,': ', htmlEnt(__('0')) ,')</small>',"\n";
+	echo ' &nbsp; <small>(', htmlEnt(__("0 f\xC3\xBCr unbegrenzt")) ,', ', htmlEnt(__('Standard')) ,': ', '0' ,')</small>',"\n";
 	echo '</td>',"\n";
 	echo '<td class="transp xs gray"><code>call-limit</code></td>',"\n";
 	echo '</tr>',"\n";
