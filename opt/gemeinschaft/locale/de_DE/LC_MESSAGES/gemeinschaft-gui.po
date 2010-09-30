@@ -4824,12 +4824,12 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 554
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 854
 msgid "V. Name"
-msgstr ""
+msgstr "V. Fam.name"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 555
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 855
 msgid "V.N."
-msgstr ""
+msgstr "V.F."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/keys_snom.php, line: 167
 msgid ""
