@@ -141,8 +141,8 @@ $vm_rec_num_idx_table=array();
 $rs = $DB->execute('SELECT * from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
 $ncnt=0;
 while ($r = $rs->fetchRow()) {
-	$actives['vml-'.++$ncnt] = __('AB mit Ansage ').$ncnt;
-	$timeruleactives['vml-'.$r['id']] =  __('AB mit Ansage ').$ncnt;;
+	$actives['vml-'.++$ncnt] = sprintf(__('AB mit Ansg. %u'), $ncnt);
+	$timeruleactives['vml-'.$r['id']] =  sprintf(__('AB mit Ansg. %u'), $ncnt);
 	$vm_rec_num_idx_table[$ncnt] = $r['id'];
 }
 if ($ncnt==0)
@@ -151,8 +151,8 @@ if ($ncnt==0)
 $rs = $DB->execute('SELECT * from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
 $ncnt=0;
 while ($r = $rs->fetchRow()) {
-	$actives['vmln-'.++$ncnt] = __('Ansage ').$ncnt;
-	$timeruleactives['vmln-'.$r['id']] = __('Ansage ').$ncnt;
+	$actives['vmln-'.++$ncnt] = sprintf(__('Ansg. %u'), $ncnt);
+	$timeruleactives['vmln-'.$r['id']] = sprintf(__('Ansg. %u'), $ncnt);
 }
 
 $id = (int)$DB->executeGetOne('SELECT `_user_id` from `cf_timerules` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);

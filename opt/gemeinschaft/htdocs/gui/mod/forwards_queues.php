@@ -163,15 +163,15 @@ if ($queue_ext != '') {
 	$rs = $DB->execute('SELECT * from `queue_vm_rec_messages` WHERE `_queue_id`='.$queue_id);
 	$ncnt=0;
 	while ($r = $rs->fetchRow()) {
-		$actives['vml-'.++$ncnt] = __('AB mit Ansage ').$ncnt;
-		$timeruleactives['vml-'.$r['id']] =  __('AB mit Ansage ').$ncnt;
+		$actives['vml-'.++$ncnt] = sprintf(__('AB mit Ansg. %u'), $ncnt);
+		$timeruleactives['vml-'.$r['id']] =  sprintf(__('AB mit Ansg. %u'), $ncnt);
 		$vm_rec_num_idx_table[$ncnt] = $r['id'];
 	}
 	$rs = $DB->execute('SELECT * from `queue_vm_rec_messages` WHERE `_queue_id`='.$queue_id);
 	$ncnt=0;
 	while ($r = $rs->fetchRow()) {
-		$actives['vmln-'.++$ncnt] = __('Ansage ').$ncnt;
-		$timeruleactives['vmln-'.$r['id']] = __('Ansage ').$ncnt;
+		$actives['vmln-'.++$ncnt] = sprintf(__('Ansg. %u'), $ncnt);
+		$timeruleactives['vmln-'.$r['id']] = sprintf(__('Ansg. %u'), $ncnt);
 	}
 	
 	$id = (int)$DB->executeGetOne('SELECT `_queue_id` from `queue_cf_timerules` WHERE `_queue_id`='.$queue_id);
@@ -700,7 +700,7 @@ foreach ($sources as $src => $srctitle) {  //internal, external
 				if ($callforwards[$src][$case]['active'] === $active
 				&&  substr($callforwards[$src][$case]['number_vml'],0,3) === 'vm*')
 					echo ' selected="selected"';
-				echo '>', __('Ansage') ,'</option>', "\n";
+				echo '>', __('Ansg.') ,'</option>', "\n";
 			} else if (substr($active,0,4) === 'vml-')  {
 				//multiple ansagen mit AB
 				$idx= $vm_rec_num_idx_table[(int) substr($active,4)];
