@@ -157,6 +157,16 @@ macro is_dmz( is_dmz_num ) {
 
 
 //---------------------------------------------------------------------
+//  Count calls from caller
+//---------------------------------------------------------------------
+
+macro caller-count() {
+	Set(GROUP(${CALLERID(num)})=callcount);
+	return;
+}
+
+
+//---------------------------------------------------------------------
 //  User Login Macro
 //---------------------------------------------------------------------
 
@@ -522,10 +532,12 @@ context sys-rec-record {
 context to-conferences {
 	
 	_88000 => {
+		&caller-count();
 		Set(confprefix=${EXTEN:0:2});
 		jump c-empty@to-conferences;
 	}
 	_880000 => {
+		&caller-count();
 		Set(confprefix=${EXTEN:0:2});
 		jump c-empty@to-conferences;
 	}
@@ -565,10 +577,12 @@ context to-conferences {
 	}
 	
 	_88XXX => {
+		&caller-count();
 		Set(confprefix=${EXTEN:0:2});
 		jump c-${EXTEN:2}@to-conferences;
 	}
 	_88XXXX => {
+		&caller-count();
 		Set(confprefix=${EXTEN:0:2});
 		jump c-${EXTEN:2}@to-conferences;
 	}
@@ -763,6 +777,7 @@ context queues-login-logout {
 context voicemail-self {
 	
 	voicemail => {
+		&caller-count();
 		//Set(CHANNEL(language)=en);  // derzeit notwendig da der dt. Sprachbaustein "eine" im Englischen fehlt
 		Set(CDR(amaflags)=OMIT);
 		Answer();
@@ -780,6 +795,7 @@ context voicemail-any {
 	
 	//_80. => {
 	_vm-. => {
+		&caller-count();
 		Set(vmbox=${EXTEN:3});
 		Set(CDR(amaflags)=OMIT);
 		Verbose(1,### Check mailbox ${vmbox});
@@ -953,6 +969,7 @@ context vm-ann-del-ok {
 context vm-ann-rec {
 	
 	vm_rec_internal => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		Set(__msource=internal);
 		Answer();
@@ -961,6 +978,7 @@ context vm-ann-rec {
 		Hangup();
 	}
 	vm_rec_external => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		Set(__msource=external);
 		Answer();
@@ -1267,6 +1285,7 @@ context to-emergency {
 }
 
 macro emergency-call( mnumber ) {
+	&caller-count();
 	if ("${mnumber}" = "${emergency_police}") {
 		Set(tmp=(police));
 	} else if ("${mnumber}" = "${emergency_fire}") {

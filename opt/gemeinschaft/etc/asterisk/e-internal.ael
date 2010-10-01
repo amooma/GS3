@@ -143,12 +143,20 @@ context to-internal-nobody-self {
 }
 
 macro dial-internal-nobody-self( mext3 ) {
+	&caller-count();
 	Verbose(1,### Incoming call to ${mext3} at this node);
 	if ("${user_id}" != "") {
 		// from internal user, store dial log (out)
 		AGI(/opt/gemeinschaft/dialplan-scripts/get_callerid.agi,${CALLERID(num)},internal);
 		&dial-log-store(${user_name},out,${mext3},0);
 	}
+	// check for callwaiting
+	/*Set(GROUP(${mext3})=callcount);
+	if ("${GROUP_COUNT(callcount@${mext3})}" > "1") {
+		Hangup();
+	}
+	Set(GROUP(${mext3})=);
+	Set(OUTBOUND_GROUP_ONCE=callcount@${mext3});*/
 	&set-callerid-by-clir();
 	Verbose(1,### Call local nobody ${mext3}, timeout 30);
 	Dial(SIP/${mext3},30,o);
@@ -276,6 +284,8 @@ context to-internal-users {
 		if ( "${is_from_gateway}" != "" ) {
 			Verbose(1,### Incoming call from a gateway to ${EXTEN});
 			//Set(__is_from_gateway=1);
+		} else {
+			&caller-count();
 		}
 		//else if ("${CHANNEL(channeltype)}" = "SIP") {
 		//	// this needs to be nested because Asterisk would otherwise complain
@@ -343,7 +353,8 @@ context to-internal-users {
 	
 
 	_*81*. => {
- 		Set(pext=${EXTEN:4});
+		&caller-count();
+		Set(pext=${EXTEN:4});
 		if ("${pext}" != "") {
  			Verbose(1,### User ${user_name} tries to pickup ext. ${pext});
 			// Override searching for huntgroups when picking calls
@@ -437,6 +448,7 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 	_*85*. => {
+		&caller-count();
 		Set(iext=${EXTEN:4});
 		Verbose(1,### Intercom call to ${iext});
 		&pass-connid();
@@ -461,11 +473,21 @@ context to-internal-users {
 			Hangup();
 		}
 		
-		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${iext},intercom);
+		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${iext},intercom_call);
 		if ("${permission}" != "true") {
 			Verbose(1,### ${user_name} have no intercom permission to ${iext});
 			Hangup();
 		}
+		
+		// check callwaiting
+		Set(GROUP(${iext})=callcount);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${iext});
+		if ("${GROUP_COUNT(callcount@${iext})}" > "1" && "${callwaiting}" = "0") {
+			Verbose(1,### ${user_name} have callwaiting deactivate );
+			Hangup();
+		}
+		Set(GROUP(${iext})=);
+		Set(OUTBOUND_GROUP_ONCE=callcount@${iext});
 		
 		//Set(CALLERID(name)=ICOM ${CALLERID(name)});		
 		SIPAddHeader(Call-Info: <http://127.0.0.1>\;answer-after=0);
@@ -479,6 +501,7 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 	_***Z. => {
+		&caller-count();
 		Set(boss=${EXTEN:3});
 		if ("${allow_direct_dial}" != "yes") {
 			Verbose(1,### Direct dialing not enabled);
@@ -569,6 +592,17 @@ context to-internal-users-self {
 		Verbose(1,### Secretary (${user_name}) to boss (${boss}) direct dial);
 		Set(__is_call_from=internal);
 		&pass-connid();
+		
+		// check callwaiting
+		Set(GROUP(${boss})=callcount);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${boss});
+		if ("${GROUP_COUNT(callcount@${boss})}" > "1" && "${callwaiting}" = "0") {
+			Verbose(1,### ${user_name} have callwaiting deactivate);
+			Hangup();
+		}
+		Set(GROUP(${boss})=);
+		Set(OUTBOUND_GROUP_ONCE=callcount@${boss});
+		
 		// get ringer
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${boss},${is_call_from});
 		if ("${ringer}" != "") {
@@ -861,6 +895,19 @@ context to-internal-users-self {
 					Verbose(1,### Callfile: Don't forward for origin side);
 				}
 			}
+			
+			// check callwaiting
+			Set(GROUP(${EXTEN})=callcount);
+			AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${EXTEN});
+			if ("${GROUP_COUNT(callcount@${EXTEN})}" > "1" && "${callwaiting}" = "0") {
+				Verbose(1,### ${user_name} have callwaiting deactivate);
+				Set(GROUP(${EXTEN})=);
+				Set(DIALSTATUS=BUSY);
+				goto user_busy;
+			}
+			Set(GROUP(${EXTEN})=);
+			Set(OUTBOUND_GROUP_ONCE=callcount@${EXTEN});
+			
 			// call the user
 			//
 			if ("${is_huntgroup}" != "1") {
@@ -1005,6 +1052,7 @@ context to-internal-users-self {
 					Set(__forwarded_to=${fw_${is_call_from}_busy});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
+					Set(GROUP(${CALLERID(num)})=);
 					Dial(Local/${fw_${is_call_from}_busy}/n,200);
 					&hangup-proper-status();
 				}
@@ -1031,6 +1079,7 @@ context to-internal-users-self {
 					Set(__forwarded_to=${fw_${is_call_from}_unavail});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
+					Set(GROUP(${CALLERID(num)})=);
 					Dial(Local/${fw_${is_call_from}_unavail}/n,200);
 					&hangup-proper-status();
 				}
@@ -1057,6 +1106,7 @@ context to-internal-users-self {
 					Set(__forwarded_to=${fw_${is_call_from}_offline});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
+					Set(GROUP(${CALLERID(num)})=);
 					Dial(Local/${fw_${is_call_from}_offline}/n,200);
 					Congestion(3);
 					&hangup-proper-status();
