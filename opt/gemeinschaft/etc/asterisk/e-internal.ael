@@ -333,7 +333,7 @@ context to-internal-users {
 
 			AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${pext},pickup);
 			if ("${permission}" != "true") {
-				Verbose(1,### ${user_name} have no pickup permission to ${pext});
+				Verbose(1,### ${user_name} has no pickup permission to ${pext});
 				Hangup();
 			}
 		
@@ -439,7 +439,7 @@ context to-internal-users {
 		
 		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${iext},intercom_call);
 		if ("${permission}" != "true") {
-			Verbose(1,### ${user_name} have no intercom permission to ${iext});
+			Verbose(1,### ${user_name} has no intercom permission to ${iext});
 			Hangup();
 		}
 		
@@ -447,7 +447,7 @@ context to-internal-users {
 		Set(GROUP(${iext})=callcount);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${iext});
 		if ("${GROUP_COUNT(callcount@${iext})}" > "1" && "${callwaiting}" = "0") {
-			Verbose(1,### ${user_name} have callwaiting deactivate);
+			Verbose(1,### callwaiting for ${user_name} not active);
 			Hangup();
 		}
 		Set(GROUP(${iext})=);
@@ -576,7 +576,7 @@ context to-internal-users-self {
 		Set(GROUP(${boss})=callcount);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${boss});
 		if ("${GROUP_COUNT(callcount@${boss})}" > "1" && "${callwaiting}" = "0") {
-			Verbose(1,### ${user_name} have callwaiting deactivate);
+			Verbose(1,### callwaiting for ${user_name} not active);
 			Hangup();
 		}
 		Set(GROUP(${boss})=);
@@ -800,7 +800,7 @@ context to-internal-users-self {
 			Set(GROUP(${EXTEN})=callcount);
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${EXTEN});
 			if ("${GROUP_COUNT(callcount@${EXTEN})}" > "1" && "${callwaiting}" = "0") {
-				Verbose(1,### ${user_name} have callwaiting deactivate);
+				Verbose(1,### callwaiting for ${user_name} not active);
 				Set(GROUP(${EXTEN})=);
 				Set(DIALSTATUS=BUSY);
 				goto user_busy;
