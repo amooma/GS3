@@ -3708,6 +3708,9 @@ msgid ""
 "übertragen wird. Sie sollte daher nicht verwendet werden.<br />MD5: In "
 "diesem Challenge/Response Verfahren wird eine MD5-Prüfsumme übertragen."
 msgstr ""
+"Plaintext: Diese Methode ist sehr unsicher, da das Passwort im Klartext "
+"übertragen wird. Sie sollte daher nicht verwendet werden.<br />MD5: In "
+"diesem Challenge/Response-Verfahren wird eine MD5-Prüfsumme übertragen."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_logging.php, line: 81
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 210
