@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-02 00:00+0200\n"
+"POT-Creation-Date: 2010-10-02 00:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -221,12 +221,16 @@ msgstr ""
 msgid "AB"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 164
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 166
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 167
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 144
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 145
 msgid "AB mit Ansage "
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 164
+#, php-format
+msgid "AB mit Ansg. %u"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 656
@@ -590,14 +594,12 @@ msgstr ""
 msgid "Anrufsperre"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 490
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 703
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 797
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 413
 msgid "Ansage"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 173
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 173
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 174
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 154
@@ -623,6 +625,15 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-isdn.php, line: 313
 msgid "Anschlu&szlig;"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 490
+msgid "Ansg."
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 173
+#, php-format
+msgid "Ansg. %u"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 429
