@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-02 00:59+0200\n"
+"POT-Creation-Date: 2010-10-02 00:00+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: German <>\n"
@@ -246,14 +246,6 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 317
 msgid "AB"
 msgstr "AB"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 164
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 166
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 167
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 144
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 145
-msgid "AB mit Ansage "
-msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 164
 #, php-format
@@ -564,14 +556,6 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 358
 msgid "Ansage"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 173
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 173
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 174
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 154
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 155
-msgid "Ansage "
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 87
