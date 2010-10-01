@@ -250,7 +250,7 @@ msgstr "AB"
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 164
 #, php-format
 msgid "AB mit Ansg. %u"
-msgstr ""
+msgstr "AB mit Ansage %u"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 656
 msgid "AB-Nummer (interner Nutzer)"
@@ -580,12 +580,12 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 490
 msgid "Ansg."
-msgstr ""
+msgstr "Ansage"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 173
 #, php-format
 msgid "Ansg. %u"
-msgstr ""
+msgstr "Ansage %u"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 429
 msgid "Antwortzeit"

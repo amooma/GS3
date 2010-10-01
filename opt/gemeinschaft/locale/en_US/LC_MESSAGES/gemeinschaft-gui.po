@@ -245,12 +245,9 @@ msgid "AB"
 msgstr "Voicemail"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 164
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 166
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 167
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 144
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 145
-msgid "AB mit Ansage "
-msgstr "VM with announcement"
+#, php-format
+msgid "AB mit Ansg. %u"
+msgstr "VM w. Anncmnt. %u"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 656
 msgid "AB-Nummer (interner Nutzer)"
@@ -568,14 +565,6 @@ msgstr "Call Barring"
 msgid "Ansage"
 msgstr "Anncmnt."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 173
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 173
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 174
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 154
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 155
-msgid "Ansage "
-msgstr "Announcement "
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 87
 msgid "Ansage wiederholen"
 msgstr "Repeat announcement"
@@ -595,6 +584,15 @@ msgstr "Announcements for the VM of this queue"
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-misdn.php, line: 248
 msgid "Anschlu&szlig;"
 msgstr "ISDN circuit"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 490
+msgid "Ansg."
+msgstr "Anncmnt."
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 173
+#, php-format
+msgid "Ansg. %u"
+msgstr "Anncmnt. %u"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 429
 msgid "Antwortzeit"
@@ -6130,6 +6128,14 @@ msgstr "prev. page"
 #~ "the message LED will start blinking. Your display will show the numbers "
 #~ "of new and old messages."
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 164
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 166
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 167
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 144
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 145
+#~ msgid "AB mit Ansage "
+#~ msgstr "VM with announcement "
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 64
 #~ msgid "Abweisen"
 #~ msgstr "Deflect"
@@ -6165,6 +6171,14 @@ msgstr "prev. page"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 333
 #~ msgid "Anrufdauer insges."
 #~ msgstr "Call duration (overall)"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 173
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 173
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 174
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 154
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 155
+#~ msgid "Ansage "
+#~ msgstr "Announcement "
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 589
 #~ msgid "Anzeige-Text"
