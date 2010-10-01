@@ -1075,6 +1075,8 @@ msgid ""
 "Beschreibt die Taste am Telefon, im Beispiel ist F001 die oberste Taste am "
 "Display vom Siemens Openstage 60."
 msgstr ""
+"Beschreibt die Taste am Telefon. Im Beispiel ist F001 die oberste Taste am "
+"Display vom Siemens OpenStage 60."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_inbound.php, line: 280
 msgid "Beschreibung"
@@ -1579,6 +1581,9 @@ msgid ""
 "Hier eine Liste f&uuml;r das Openstage 60, welches die Tastenfunktionen der "
 "meisten Telefone abdecken sollte:"
 msgstr ""
+"Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ngig. "
+"Hier eine Liste f&uuml;r das OpenStage 60, welches die Tastenfunktionen der "
+"meisten Telefone abdecken sollte:"
 #
 # File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 162
 #, php-format
