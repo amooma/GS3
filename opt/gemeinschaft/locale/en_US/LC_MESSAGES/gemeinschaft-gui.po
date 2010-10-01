@@ -840,7 +840,7 @@ msgstr "Upload audio file:"
 msgid ""
 "Audiodatei kann nicht gel&ouml;scht werden da in Verwendung von "
 "Warteschlange %s"
-msgstr ""
+msgstr "Audio file is in use by queue %s and cannot be deleted"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 151
 #, php-format
