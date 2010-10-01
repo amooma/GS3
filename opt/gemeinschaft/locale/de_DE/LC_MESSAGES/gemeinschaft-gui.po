@@ -3108,8 +3108,8 @@ msgid ""
 "m&ouml;glich."
 msgstr ""
 "Mehrfachauswahl mit gedr&uuml;ckter <q>Cmd</q>- oder <q>Shift</q>-Taste "
-"(Apple-Tastatur) bzw. <q>Strg</q>- oder <q>Shift</q>-Taste (IBM-kompatible "
-"Tastatur) beim Klicken m&ouml;glich."
+"(Apple-Tastatur) bzw. <q>Strg</q>- oder <q>Shift</q>-Taste (IBM-PC-"
+"kompatible Tastatur) beim Klicken m&ouml;glich."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 124
 msgid "Min."
