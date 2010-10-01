@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-01 17:30+0200\n"
+"POT-Creation-Date: 2010-10-02 00:00+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: English <>\n"
@@ -836,9 +836,10 @@ msgid "Audiodatei hochladen:"
 msgstr "Upload audio file:"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 383
+#, php-format
 msgid ""
 "Audiodatei kann nicht gel&ouml;scht werden da in Verwendung von "
-"Warteschlange <b>"
+"Warteschlange %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 151
@@ -2449,9 +2450,9 @@ msgid ""
 "&nbsp; <tt>s/^(?:(?:0049|0)2631)?3370(.*)/$1/</tt>"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 109
-msgid "Gemeinschaft Telefon-Manager Monitor"
-msgstr "Gemeinschaft Phone Manager Monitor"
+# File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 130
+msgid "Gemeinschaft Monitor"
+msgstr "Gemeinschaft Monitor"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 41
 msgid ""
@@ -6271,6 +6272,10 @@ msgstr "prev. page"
 # File: opt/gemeinschaft/htdocs/gui/index.php, line: 104
 #~ msgid "Gemeinschaft Telefon-Manager"
 #~ msgstr "Gemeinschaft Phone Manager"
+#
+# File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 109
+#~ msgid "Gemeinschaft Telefon-Manager Monitor"
+#~ msgstr "Gemeinschaft Phone Manager Monitor"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 196
 #~ msgid "Hersteller"

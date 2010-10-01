@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-01 17:15+0200\n"
+"POT-Creation-Date: 2010-10-02 00:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -836,9 +836,10 @@ msgid "Audiodatei hochladen:"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 383
+#, php-format
 msgid ""
 "Audiodatei kann nicht gel&ouml;scht werden da in Verwendung von "
-"Warteschlange <b>"
+"Warteschlange %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 151
@@ -2543,7 +2544,7 @@ msgid ""
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 130
-msgid "Gemeinschaft Telefon-Manager Monitor"
+msgid "Gemeinschaft Monitor"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 41

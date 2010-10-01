@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-01 17:30+0200\n"
+"POT-Creation-Date: 2010-10-02 00:00+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: German <>\n"
@@ -800,9 +800,10 @@ msgid "Audiodatei hochladen:"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 383
+#, php-format
 msgid ""
 "Audiodatei kann nicht gel&ouml;scht werden da in Verwendung von "
-"Warteschlange <b>"
+"Warteschlange %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 151
@@ -2363,8 +2364,8 @@ msgid ""
 "&nbsp; <tt>s/^(?:(?:0049|0)2631)?3370(.*)/$1/</tt>"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 109
-msgid "Gemeinschaft Telefon-Manager Monitor"
+# File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 130
+msgid "Gemeinschaft Monitor"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 41
@@ -3705,7 +3706,7 @@ msgstr ""
 msgid ""
 "Plaintext: Diese Methode ist sehr unsicher, da das Passwort im Klartext "
 "übertragen wird. Sie sollte daher nicht verwendet werden.<br />MD5: In "
-"diesem Challenge/Response-Verfahren wird eine MD5-Prüfsumme übertragen."
+"diesem Challenge/Response Verfahren wird eine MD5-Prüfsumme übertragen."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_logging.php, line: 81
