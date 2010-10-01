@@ -563,7 +563,7 @@ msgstr "Call Barring"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 358
 msgid "Ansage"
-msgstr "Anncmnt."
+msgstr "Announcement"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 87
 msgid "Ansage wiederholen"
