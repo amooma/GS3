@@ -30,7 +30,7 @@
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
   '' => 'Project-Id-Version: Gemeinschaft, file $Revision$
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2010-09-29 18:00+0200
+POT-Creation-Date: 2010-10-01 17:15+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -219,7 +219,6 @@ Content-Transfer-Encoding: 8bit
   'Reload Interval' => 'Neu-laden-Intervall',
   'Reserve' => 'Reserve',
   'Rolle' => 'Rolle',
-  'Rufanahmegrp.' => 'Rufannahmegrp.',
   'Rufannahme-Gruppe' => 'Rufannahme-Gruppe',
   'Rufannahmegrp.' => 'Rufannahmegrp.',
   'Rufannahmegrp.#pl' => 'Rufannahmegrp.',

@@ -30,7 +30,7 @@
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
   '' => 'Project-Id-Version: Gemeinschaft, file $Revision$
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2010-09-29 18:00+0200
+POT-Creation-Date: 2010-10-01 17:15+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: English <>
@@ -57,7 +57,6 @@ Content-Transfer-Encoding: 8bit
   '(Beispiel OpenStage)' => '(example: OpenStage)',
   '-- Ihr %s-Team' => '-- Your %s team',
   '-erben-' => '-inherit-',
-  0 => '0',
   '0 für unbegrenzt' => '0 for unlimited',
   '15 Minuten' => '15 minutes',
   '1:1 DID -&gt; Extension' => '1:1 DID -&gt; extension',
@@ -348,9 +347,6 @@ ist für Sie eingegangen.' => 'You have received a new voicemail message from\\
   'Erneut suchen' => 'Re-scan',
   'Erstellt' => 'Created',
   'Erw.-Mod.' => 'Exp. mod.',
-  'Erweiterung 1' => 'Expansion 1',
-  'Erweiterung 2' => 'Expansion 2',
-  'Erweiterung 3' => 'Expansion 3',
   'Erweiterungs-Modul' => 'Expansion module',
   'Erzeugt' => 'Created',
   'Es befinden sich jetzt %d neue Voicemails in Ihrer Mailbox.' => 'There are now %d new voicemail messages in your mailbox.',
@@ -399,7 +395,6 @@ ist für Sie eingegangen.' => 'You have received a new voicemail message from\\
   'Finden' => 'Find',
   'Firmware' => 'Firmware',
   'Fn.-Schalter' => 'Ft. toggle',
-  'Fn.Schalter' => 'Ft.toggle',
   'Format' => 'Format',
   'Freier Speicherplatz' => 'Free disk space',
   'Freitag' => 'Friday',
@@ -706,7 +701,6 @@ ist für Sie eingegangen.' => 'You have received a new voicemail message from\\
   'Routen eingehend' => 'Inbound routes',
   'Router' => 'Router',
   'Routing-Test' => 'Routing test',
-  'Rufanahmegrp.' => 'Pickup grp.',
   'Rufannahme-Gruppe' => 'Pickup group',
   'Rufannahme-Gruppen' => 'Pickup groups',
   'Rufannahmegrp.' => 'Pickup grp.',
@@ -793,7 +787,6 @@ ist für Sie eingegangen.' => 'You have received a new voicemail message from\\
   'Tag der Woche' => 'Day of the week',
   'Tag des gew&auml;hlten Monats' => 'Day of month',
   'Taste' => 'Key',
-  'Taste ' => 'Key ',
   'Tasten-Profile' => 'Softkey profiles',
   'Tastenbelegung' => 'Softkeys',
   'Tastenbelegungs-Profil' => 'Softkey profile',
@@ -841,7 +834,6 @@ ist für Sie eingegangen.' => 'You have received a new voicemail message from\\
   'Ungültiges Modul %s' => 'Invalid module %s',
   'Unknown user "%s".' => 'Unknown user "%s".',
   'Untere Tasten' => 'Lower keys',
-  'Untergruppen der Gruppe ' => 'Sub-groups of group ',
   'Update Interval' => 'Update interval',
   'Upgrade' => 'Upgrade',
   'Upgrades' => 'Upgrades',
@@ -945,7 +937,6 @@ ist für Sie eingegangen.' => 'You have received a new voicemail message from\\
   'diese Woche' => 'this week',
   'diesen Monat' => 'this month',
   'durch.' => 'avg.',
-  'durchsuchen' => 'search',
   'eXtern' => 'eXternal',
   'eigene beibehalten' => 'keep custom ringer',
   'ein' => 'on',
