@@ -134,7 +134,7 @@ Content-Transfer-Encoding: 8bit
   'Anrufliste' => 'Call Log',
   'Anruflisten' => 'Call Logs',
   'Anrufsperre' => 'Call Barring',
-  'Ansage' => 'Anncmnt.',
+  'Ansage' => 'Announcement',
   'Ansage wiederholen' => 'Repeat announcement',
   'Ansagedatei' => 'Announcement file',
   'Ansagen' => 'Announcements',
