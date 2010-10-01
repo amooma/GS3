@@ -447,7 +447,7 @@ context to-internal-users {
 		Set(GROUP(${iext})=callcount);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${iext});
 		if ("${GROUP_COUNT(callcount@${iext})}" > "1" && "${callwaiting}" = "0") {
-			Verbose(1,### ${user_name have callwaiting deactivate);
+			Verbose(1,### ${user_name} have callwaiting deactivate);
 			Hangup();
 		}
 		Set(GROUP(${iext})=);
