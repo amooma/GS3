@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-29 18:00+0200\n"
+"POT-Creation-Date: 2010-10-01 17:15+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: English <>\n"
@@ -104,10 +104,6 @@ msgstr "-- Your %s team"
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 115
 msgid "-erben-"
 msgstr "-inherit-"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 389
-msgid "0"
-msgstr "0"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 389
 msgid "0 für unbegrenzt"
@@ -285,7 +281,10 @@ msgid ""
 "Abh&auml;ngig vom SIP-Provider kann es erforderlich sein die Form "
 "<tt>benutzer@domain</tt> anzugeben. (<tt>domain</tt> wird dann im <tt>From</"
 "tt>-Header verwendet, was <tt>fromdomain</tt> in Asterisk entspricht.)"
-msgstr "Depending on the SIP provider you may need to use the form <tt>user@domain</tt>. (<tt>domain</tt> will then be used in the <tt>From</tt> header, corresponding to <tt>fromdomain</tt> in Asterisk.)"
+msgstr ""
+"Depending on the SIP provider you may need to use the form <tt>user@domain</"
+"tt>. (<tt>domain</tt> will then be used in the <tt>From</tt> header, "
+"corresponding to <tt>fromdomain</tt> in Asterisk.)"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 267
 # File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 268
@@ -2007,24 +2006,6 @@ msgstr "Created"
 msgid "Erw.-Mod."
 msgstr "Exp. mod."
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 995
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1022
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1046
-msgid "Erweiterung 1"
-msgstr "Expansion 1"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1001
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1028
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1052
-msgid "Erweiterung 2"
-msgstr "Expansion 2"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1007
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1034
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1058
-msgid "Erweiterung 3"
-msgstr "Expansion 3"
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 467
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 571
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 573
@@ -2287,10 +2268,6 @@ msgstr "Firmware"
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 72
 msgid "Fn.-Schalter"
 msgstr "Ft. toggle"
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 205
-msgid "Fn.Schalter"
-msgstr "Ft.toggle"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_ami.php, line: 213
 msgid "Format"
@@ -3929,10 +3906,6 @@ msgstr "Router"
 msgid "Routing-Test"
 msgstr "Routing test"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 187
-msgid "Rufanahmegrp."
-msgstr "Pickup grp."
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 921
 msgid "Rufannahme-Gruppe"
 msgstr "Pickup group"
@@ -4506,10 +4479,6 @@ msgstr ""
 msgid "Taste"
 msgstr "Key"
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 446
-msgid "Taste "
-msgstr "Key "
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 218
 msgid "Tasten-Profile"
 msgstr "Softkey profiles"
@@ -4574,6 +4543,11 @@ msgstr "Phone type"
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 42
 msgid "Telefonbuch"
 msgstr "Phonebook"
+#
+# File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 209
+#, php-format
+msgid "Telefonbuch %s durchsuchen"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 253
 msgid "Telefone"
@@ -4787,8 +4761,9 @@ msgid "Untere Tasten"
 msgstr "Lower keys"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 298
-msgid "Untergruppen der Gruppe "
-msgstr "Sub-groups of group "
+#, php-format
+msgid "Untergruppen der Gruppe %s"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 434
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 664
@@ -5409,10 +5384,6 @@ msgstr "this month"
 msgid "durch."
 msgstr "avg."
 #
-# File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 209
-msgid "durchsuchen"
-msgstr "search"
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 577
 msgid "eXtern"
 msgstr "eXternal"
@@ -5968,6 +5939,10 @@ msgstr "prev."
 msgid "zur&uuml;ckbl&auml;ttern"
 msgstr "prev. page"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 389
+#~ msgid "0"
+#~ msgstr "0"
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/help_snom.php, line: 129
 #~ msgid ""
 #~ "<b>Mailbox</b> abfragen<br /> Hat die Mailbox ein Gespr&auml;ch f&uuml;r "
@@ -6068,6 +6043,24 @@ msgstr "prev. page"
 #~ msgstr ""
 #~ "Check your own mailbox (Snom phone: Press &quot;Retrieve&quot; key.)"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 995
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1022
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1046
+#~ msgid "Erweiterung 1"
+#~ msgstr "Expansion 1"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1001
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1028
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1052
+#~ msgid "Erweiterung 2"
+#~ msgstr "Expansion 2"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1007
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1034
+# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1058
+#~ msgid "Erweiterung 3"
+#~ msgstr "Expansion 3"
+#
 # File: opt/gemeinschaft/htdocs/gui/inc/session.php, line: 90
 #~ msgid "Failed to get LDAP user \"%s\"."
 #~ msgstr "Failed to get LDAP user \"%s\"."
@@ -6087,6 +6080,10 @@ msgstr "prev. page"
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 45
 #~ msgid "Firma (aus LDAP)"
 #~ msgstr "Org. (from LDAP)"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 205
+#~ msgid "Fn.Schalter"
+#~ msgstr "Ft.toggle"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 409
 #~ msgid "Fremd-Host"
@@ -6182,6 +6179,10 @@ msgstr "prev. page"
 #~ msgid "Reg.?"
 #~ msgstr "Reg.?"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 187
+#~ msgid "Rufanahmegrp."
+#~ msgstr "Pickup grp."
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 60
 #~ msgid "Rufgruppe"
 #~ msgstr "Group pickup"
@@ -6234,6 +6235,10 @@ msgstr "prev. page"
 #~ msgid "Supervisoren"
 #~ msgstr "Supervisors"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 446
+#~ msgid "Taste "
+#~ msgstr "Key "
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 371
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 467
 #~ msgid "Tasten"
@@ -6254,6 +6259,10 @@ msgstr "prev. page"
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 183
 #~ msgid "Umleitungsnummern"
 #~ msgstr "Call forwarding numbers"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 298
+#~ msgid "Untergruppen der Gruppe "
+#~ msgstr "Sub-groups of group "
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 118
 #~ msgid "Verbindungen"
@@ -6279,6 +6288,10 @@ msgstr "prev. page"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 230
 #~ msgid "bereit"
 #~ msgstr "idle"
+#
+# File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 209
+#~ msgid "durchsuchen"
+#~ msgstr "search"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 340
 #~ msgid "keine Anrufe"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-29 18:00+0200\n"
+"POT-Creation-Date: 2010-10-01 17:15+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: German <>\n"
@@ -103,10 +103,6 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 115
 msgid "-erben-"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 389
-msgid "0"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 389
@@ -2013,24 +2009,6 @@ msgstr ""
 msgid "Erw.-Mod."
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 995
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1022
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1046
-msgid "Erweiterung 1"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1001
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1028
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1052
-msgid "Erweiterung 2"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1007
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1034
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1058
-msgid "Erweiterung 3"
-msgstr ""
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 467
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 571
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 573
@@ -2292,10 +2270,6 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 72
 msgid "Fn.-Schalter"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 205
-msgid "Fn.Schalter"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_ami.php, line: 213
@@ -3934,10 +3908,6 @@ msgstr ""
 msgid "Routing-Test"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 187
-msgid "Rufanahmegrp."
-msgstr "Rufannahmegrp."
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 921
 msgid "Rufannahme-Gruppe"
 msgstr "Rufannahme-Gruppe"
@@ -4511,10 +4481,6 @@ msgstr ""
 msgid "Taste"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 446
-msgid "Taste "
-msgstr ""
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 218
 msgid "Tasten-Profile"
 msgstr ""
@@ -4579,6 +4545,11 @@ msgstr "Telefon-Typ"
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 42
 msgid "Telefonbuch"
 msgstr "Telefonbuch"
+#
+# File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 209
+#, php-format
+msgid "Telefonbuch %s durchsuchen"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 253
 msgid "Telefone"
@@ -4792,7 +4763,8 @@ msgid "Untere Tasten"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 298
-msgid "Untergruppen der Gruppe "
+#, php-format
+msgid "Untergruppen der Gruppe %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 434
@@ -5414,10 +5386,6 @@ msgstr "diesen Monat"
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 764
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 773
 msgid "durch."
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 209
-msgid "durchsuchen"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 577
@@ -6110,6 +6078,10 @@ msgstr "zur&uuml;ckbl&auml;ttern"
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 103
 #~ msgid "Player"
 #~ msgstr "Player"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 187
+#~ msgid "Rufanahmegrp."
+#~ msgstr "Rufannahmegrp."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 98
 #~ msgid ""
