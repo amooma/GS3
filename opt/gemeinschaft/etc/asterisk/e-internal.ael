@@ -224,9 +224,9 @@ context to-internal-users {
 		Set(CHANNEL(language)=de);
 		Answer();
 		Wait(0.5);
-		//set the multiple announce-File, if any
+		// set the multi-announce file, if any
 		Set(vm_announce_file_multi=${fw_file_${vm_source}_${forward_case}});
-		Verbose(1,### The File is: ${vm_announce_file_multi} );
+		Verbose(1,### The multi-announce file is: ${vm_announce_file_multi});
 		if ("${vm_announce_file_multi}" != "") {
 			Set(vm_announce_file=${vm_announce_file_multi});
 		} else {
