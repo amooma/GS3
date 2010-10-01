@@ -4184,6 +4184,10 @@ msgid ""
 "gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang "
 "wegzuschneiden."
 msgstr ""
+"Sie k&ouml;nnen dieses Feld auch verwenden um f&uuml;r die Anruflisten mit "
+"<tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;"
+"gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang "
+"wegzuschneiden."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 183
 msgid ""
