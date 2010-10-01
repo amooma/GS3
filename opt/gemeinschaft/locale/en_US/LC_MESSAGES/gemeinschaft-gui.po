@@ -1177,6 +1177,7 @@ msgid ""
 "Bitte haben Sie etwas Geduld. Trennen der Stromversorgung / Reset kann zu "
 "Datenverlust f&uuml;hren."
 msgstr ""
+"Please have some patience. Power cycling / resetting could lead to data loss."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 978
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 992
@@ -1184,18 +1185,22 @@ msgid ""
 "Bitte haben Sie etwas Geduld. Vorzeitiges Ausschalten kann zu Datenverlust "
 "f&uuml;hren."
 msgstr ""
+"Please have some patience. Premature powering down could lead to data loss."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/shutdown.php, line: 42
 msgid ""
 "Bitte haben Sie etwas Geduld. Vorzeitiges Trennen der Stromversorgung / "
 "Reset kann zu Datenverlust f&uuml;hren."
 msgstr ""
+"Please have some patience. Premature powering down / resetting could lead to "
+"data loss."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/dhcpd.php, line: 104
 msgid ""
 "Bitte konfigurieren Sie Ihren vorhandenen DHCP-Server wie folgt (Beispiel "
 "f&uuml;r den ISC DHCPd 3)"
 msgstr ""
+"Please configure your existing DHCP server as follows (example: ISC DHCPd 3)"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 272
 msgid ""
@@ -1203,6 +1208,8 @@ msgid ""
 "hier angezeigt werden. Dr&uuml;cken Sie danach den Import-Knopf am Ende "
 "dieser Seite."
 msgstr ""
+"Please check if the data is to be imported as displayed here. Then click the "
+"Import button at the bottom of this page."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/login.php, line: 117
 msgid ""
@@ -1211,6 +1218,10 @@ msgid ""
 "lang sein und aus Buchstaben, Zahlen und Sonderzeichen wie z.B. <code>#</"
 "code>, <code>!</code> oder <code>=</code> bestehen."
 msgstr ""
+"Please set a password to protect the Setup area against unauthorized access. "
+"The password should have a minimum length of 8 characters and should consist "
+"of alphabetic characters, digits and special characters like <code>#</code>, "
+"<code>!</code> or <code>=</code>."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 727
 msgid ""
@@ -1337,7 +1348,7 @@ msgstr "DTMF mode"
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 271
 msgid ""
 "Dabei ist die Reihenfolge entscheidend; das erste zutreffende Muster gewinnt."
-msgstr "The first matching pattern wins."
+msgstr "Order matters. The first matching pattern wins."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 244
 #, php-format
@@ -1345,6 +1356,8 @@ msgid ""
 "Danach können Sie sich als User %s in dieser Web-Oberfläche einloggen, um "
 "dort andere User anzulegen und das System zu konfigurieren."
 msgstr ""
+"You can then login to the web GUI as user %s to create other users there and "
+"to configure the system."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 231
 msgid ""
@@ -1356,11 +1369,11 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/login_login.php, line: 249
 msgid "Danke dass Sie sich für Gemeinschaft entschieden haben."
-msgstr ""
+msgstr "Thank you for choosing Gemeinschaft."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 53
 msgid "Dannach sehen Sie die folgende &Uuml;bersicht (oder &auml;hnlich):"
-msgstr "Then you will see an overview similar to the following:"
+msgstr "You will then see an overview similar to the following:"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pb_csvimport.php, line: 412
 msgid "Das Format sollte etwa folgendermaßen aussehen."
@@ -1372,6 +1385,9 @@ msgid ""
 "<br />Die BT-Serie kann nicht zwischen intern und extern unterscheiden. Es "
 "wird immer die Ruftonmelodie f&uuml;r intern verwendet!"
 msgstr ""
+"The Grandstream has to be synced after changing a ringtone.<br />The BT "
+"series can&apos;t distinguish between internal and external calls. It will "
+"always play the ringtone for internal calls."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/login.php, line: 42
 msgid "Das Pa&szlig;wort darf nicht leer sein!"
@@ -1399,6 +1415,8 @@ msgid ""
 "intern und extern unterscheiden. Es wird immer die Ruftonmelodie für intern "
 "verwendet!"
 msgstr ""
+"The Siemens OpenStage is not able to distinguish between internal and "
+"external calls. It will always play the ringtone for internal calls."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/ringtones_ringtones.php, line: 173
 msgid ""
@@ -1407,10 +1425,9 @@ msgid ""
 "Klingeltondatei eingestellt sein, nicht f&uuml;r beides. Die L&auml;nge wird "
 "auf wenige Sekunden begrenzt."
 msgstr ""
-"Das Snom unterst&uuml;tzt Ringer 1-5 und lautlos.<br /> F&uuml;r das Snom "
-"kann nur entweder f&uuml;r interne oder f&uuml;r externe Anrufe eine eigene "
-"Klingeltondatei eingestellt sein, nicht f&uuml;r beides. Die L&auml;nge wird "
-"auf wenige Sekunden begrenzt."
+"The Snom supports ringer 1-5 and silent.<br /> A custom audio file can "
+"either be configured for internal calls or for external calls, not both. The "
+"duration will be limited to a few seconds."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/shutdown.php, line: 41
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 991
@@ -1480,6 +1497,8 @@ msgid ""
 "Daten in Ihr pers&ouml;nliches Telefonbuch (Benutzer <code>%s</code>, %s %s, "
 "Durchwahl <code>%s</code>) importieren?"
 msgstr ""
+"Import entries into your personal phonebook (user <code>%s</code>, %s %s, "
+"extension <code>%s</code>)?"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-diskusage.php, line: 122
 msgid "Daten-Partition"
@@ -1506,6 +1525,8 @@ msgid ""
 "Dem User %s Adminrechte geben indem Sie in der Datei %s folgende Einstellung "
 "vornehmen:"
 msgstr ""
+"Assign admin permissions to user %s by conducting the configuration in "
+"following in file %s:"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 44
 msgid "Der DHCP-Server auf diesem System ist nicht aktiviert."
@@ -1540,7 +1561,7 @@ msgstr "The meaning of the columns:"
 msgid ""
 "Die Benutzer auf Host %s konnten nicht aktualisiert werden! (Verbindung "
 "fehlgeschlagen.)"
-msgstr ""
+msgstr "The users on host %s could not be updated! (Connection failed.)"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 161
 #, php-format
@@ -1554,15 +1575,15 @@ msgstr "The entries have now been imported into your private phonebook."
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 741
 msgid ""
 "Die Netzwerk-Einstellungen wurden gespeichert, sind aber noch nicht aktiv."
-msgstr ""
+msgstr "The network settings were stored, but they are not active yet."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 728
 msgid "Die Netzwerkkarte der GPBX wird dann auf diese Werte eingestellt."
-msgstr ""
+msgstr "The network card of the GPBX will then be set to these values."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 732
 msgid "Die Netzwerkkarte wird dann auf diese Werte eingestellt."
-msgstr ""
+msgstr "The network card will then be set to these values."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_extnumbers.php, line: 98
 msgid "Die Nummer ist eine Call-by-Call-Nummer."
@@ -1582,6 +1603,8 @@ msgid ""
 "Die Nummer w&uuml;rde als <b>%s</b> mit den Mustern in der Routing-Tabelle "
 "verglichen."
 msgstr ""
+"The number would be compared to the patterns in the routing table as <b>%s</"
+"b>."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pin_pin.php, line: 88
 msgid ""
@@ -1590,6 +1613,9 @@ msgid ""
 "ausschlie&szlig;lich Ziffern enthalten, muss mindestens 4 und h&ouml;chstens "
 "10 Stellen lang sein."
 msgstr ""
+"The PIN serves for the login at a phone set as well as for checking your "
+"voicemail from a different phone. The PIN must exclusively consist of digits "
+"and must have a minimum length of 4 and a maximum length of 10 digits."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pin_pin.php, line: 86
 msgid ""
@@ -1598,6 +1624,10 @@ msgid ""
 "dieser Weboberfl&auml;che. Die PIN darf ausschlie&szlig;lich Ziffern "
 "enthalten, muss mindestens 4 und h&ouml;chstens 10 Stellen lang sein."
 msgstr ""
+"The PIN serves for the login at a phone set, for checking your voicemail "
+"from a different phone as well as for the login at this web interface. The "
+"PIN must exclusively consist of digits and must have a minimum length of 4 "
+"and a maximum length of 10 digits."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pin_pin.php, line: 76
 msgid "Die PIN wurde ge&auml;ndert."
@@ -1613,6 +1643,8 @@ msgid ""
 "Hier eine Liste f&uuml;r das Openstage 60, welches die Tastenfunktionen der "
 "meisten Telefone abdecken sollte:"
 msgstr ""
+"The key functions depend on the phone set in use. Here&apos;s a list for the "
+"OpenStage 60:"
 #
 # File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 162
 #, php-format
@@ -1632,12 +1664,16 @@ msgid ""
 "Die folgenden Schritte leiten Sie durch die grundlegende Netzwerk-"
 "Konfiguration der <b>GPBX</b>."
 msgstr ""
+"The steps in following guide you through the basic network configuration of "
+"the <b>GPBX</b>."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 44
 msgid ""
 "Die folgenden Schritte leiten Sie durch die grundlegende Netzwerk-"
 "Konfiguration der Telefonanlage <b>Gemeinschaft</b>."
 msgstr ""
+"The steps in following guide you through the basic network configuration of "
+"the <b>Gemeinschaft</b> PBX."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/done.php, line: 41
 msgid ""
@@ -1646,6 +1682,9 @@ msgid ""
 "normalen Web-Oberfl&auml;che vor. Nat&uuml;rlich k&ouml;nnen Sie auch "
 "sp&auml;ter wieder das Setup aufrufen."
 msgstr ""
+"The basic network configuration of the GPBX is now complete. Please go "
+"through the other settings in the admin menus in the normal web interface. "
+"You are free to return to this Setup interface at any time though."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/done.php, line: 44
 msgid ""
@@ -1654,6 +1693,9 @@ msgid ""
 "normalen Web-Oberfl&auml;che vor. Nat&uuml;rlich k&ouml;nnen Sie auch "
 "sp&auml;ter wieder das Setup aufrufen."
 msgstr ""
+"The basic network configuration of the system is now complete. Please go "
+"through the other settings in the admin menus in the normal web interface. "
+"You are free to return to this Setup interface at any time though."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/pin_pin.php, line: 69
 msgid "Die neue PIN ist nicht numerisch!"
@@ -1669,7 +1711,7 @@ msgstr "New PIN is too long!"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 415
 msgid "Die zugeh&ouml;rige Audiodatei existiert nicht"
-msgstr ""
+msgstr "The corresponding audio file does not exist"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 301
 msgid "Dienstag"
@@ -1687,6 +1729,8 @@ msgid ""
 "Dies ist die Adresse, die ggf. per Stonith &uuml;bernommen werden w&uuml;"
 "rde. (Die dynamische Adresse hat hier nichts mit DHCP zu tun.)"
 msgstr ""
+"This is the address that would be carried over via Stonith, should the "
+"situation arise. (The dynamical address has no bearing on DHCP.)"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 434
 msgid ""
@@ -1694,10 +1738,13 @@ msgid ""
 "Ausfall von einem der anderen Nodes per Stonith und Gratuitous ARP &uuml;"
 "bernommen werden w&uuml;rde."
 msgstr ""
+"This is the primary IP address for Gemeinschaft. Should one of the nodes "
+"fail one of the other nodes would adopt this IP address via Stonith and "
+"Gratuitous ARP."
 #
 # File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 181
 msgid "Dies ist eine automatisierte Nachricht. Bitte antworten Sie nicht."
-msgstr ""
+msgstr "This is an automated notification. Please do not reply."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 391
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 500
@@ -1740,6 +1787,10 @@ msgid ""
 "<b>nationalen</b> Form oder &quot;wie gew&auml;hlt&quot; mit dem Muster "
 "verglichen."
 msgstr ""
+"These dialing rules for outbound routes will be processed from top to bottom "
+"until a rule matches. In this process the dialed number will be compared to "
+"the patterns in it&apos;s canonized (according to your settings) "
+"<b>national</b> form."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_inbound.php, line: 263
 msgid ""
@@ -1783,7 +1834,7 @@ msgstr "Average call duration of the accepted calls"
 msgid ""
 "Durchschnittliche Gespr&auml;chsdauer der angenommenen Anrufe auf diese "
 "Warteschlange"
-msgstr ""
+msgstr "Average duration of answered calls to this queue"
 #
 # File: opt/gemeinschaft/htdocs/gui/graph.php, line: 361
 msgid "Durchschnittliche Gesprächsdauer"
@@ -2072,7 +2123,7 @@ msgstr "A database error occurred"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_queues.php, line: 457
 msgid "Es kann etwa 1 Minute dauern bis &Auml;nderungen aktiv werden."
-msgstr ""
+msgstr "It may take about a minute until changes become active."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 424
 msgid "Experimentell"
@@ -2100,6 +2151,9 @@ msgid ""
 "GPBX verwenden oder einen bereits vorhandenen DHCP-Server entsprechend "
 "konfigurieren."
 msgstr ""
+"For the automatic provisioning of your phones a DHCP server is required. You "
+"can either choose to use the DHCP server on the GPBX or you can configure an "
+"existing DHCP server accordingly."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/dhcpd.php, line: 64
 msgid ""
@@ -2108,6 +2162,9 @@ msgid ""
 "diesem System verwenden oder einen bereits vorhandenen DHCP-Server "
 "entsprechend konfigurieren."
 msgstr ""
+"For the automatic provisioning of your phones a DHCP server is required. You "
+"can either choose to use the DHCP server on this system or you can configure "
+"an existing DHCP server accordingly."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 206
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 286
@@ -2166,7 +2223,7 @@ msgstr "File conversion error"
 #
 # File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 225
 msgid "Fehler bei der Zuordnung der IP:"
-msgstr ""
+msgstr "Failed to attribute IP:"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 85
 #, php-format
@@ -2293,6 +2350,8 @@ msgid ""
 "die Kanonisierung auswirken. Bitte halten Sie sich an die angegebenen "
 "Beispiele!"
 msgstr ""
+"Presetting of the parts of your phone number which depend on your location "
+"and which influence the canonization. Please stick to the denoted examples."
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 213
 msgid "Finden"
@@ -2376,6 +2435,8 @@ msgid ""
 "Gateways m&uuml;ssen jeweils einer Gateway-Gruppe zugeordnet werden damit "
 "sie benutzt werden k&ouml;nnen."
 msgstr ""
+"Gateways have to be assigned to a gateway group in order that they can be "
+"used."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gwgrps.php, line: 415
 #, php-format
@@ -2390,13 +2451,15 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 109
 msgid "Gemeinschaft Telefon-Manager Monitor"
-msgstr ""
+msgstr "Gemeinschaft Phone Manager Monitor"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 41
 msgid ""
 "Gemeinschaft bietet die M&ouml;glichkeit, Tasten an unterst&uuml;tzten "
 "Endger&auml;ten &uuml;ber diese Benutzeroberfl&auml;che zu konfigurieren."
 msgstr ""
+"Gemeinschaft allows you to configure keys of supported IP phones via this "
+"user interface."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peers.php, line: 361
 msgid "Gesamt"
@@ -2515,7 +2578,7 @@ msgstr "Group ID"
 msgid ""
 "H&auml;lt das aktuell gef&uuml;hrte Gespr&auml;ch. Der Anrufer h&ouml;rt "
 "Wartemusik."
-msgstr ""
+msgstr "Puts the current call on hold. The other party will hear hold music."
 #
 # File: opt/gemeinschaft/inc/util.php, line: 152
 msgid "H:i"
