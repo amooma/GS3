@@ -30,7 +30,7 @@
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
   '' => 'Project-Id-Version: Gemeinschaft, file $Revision$
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2010-10-01 17:15+0200
+POT-Creation-Date: 2010-10-01 17:30+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -101,7 +101,9 @@ Content-Transfer-Encoding: 8bit
   'Benutzergruppen' => 'Benutzergruppen',
   'Benutzername' => 'Benutzername',
   'Berechtigung Einf&uuml;gen' => 'Berechtigung einf&uuml;gen',
+  'Beschreibt die Taste am Telefon, im Beispiel ist F001 die oberste Taste am Display vom Siemens Openstage 60.' => 'Beschreibt die Taste am Telefon. Im Beispiel ist F001 die oberste Taste am Display vom Siemens OpenStage 60.',
   'Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.' => 'Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.',
+  'Bitte setzen Sie ein Pa&szlig;wort um den Setup-Bereich gegen unbefugte Zugriffe zu sch&uuml;tzen. Das Pa&szlig;wort sollte mindestens 8 Zeichen lang sein und aus Buchstaben, Zahlen und Sonderzeichen wie z.B. <code>#</code>, <code>!</code> oder <code>=</code> bestehen.' => 'Bitte setzen Sie ein Pa&szlig;wort um den Setup-Bereich gegen unbefugte Zugriffe zu sch&uuml;tzen. Das Pa&szlig;wort sollte mindestens 8 Zeichen lang sein und aus Buchstaben, Ziffern und Sonderzeichen wie z.B. <code>#</code>, <code>!</code> oder <code>=</code> bestehen.',
   'Bitte w&auml;hlen Sie eine Warteschleife.' => 'Bitte w&auml;hlen Sie eine Warteschleife.',
   'CLIR nach extern' => 'CLIR nach extern',
   'CLIR nach intern' => 'CLIR nach intern',
@@ -114,6 +116,7 @@ Content-Transfer-Encoding: 8bit
   'Datei-Upload f&uuml;r %s fehlgeschlagen.' => 'Datei-Upload f&uuml;r %s fehlgeschlagen.',
   'Datum' => 'Datum',
   'Dauer' => 'Dauer',
+  'Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ngig. Hier eine Liste f&uuml;r das Openstage 60, welches die Tastenfunktionen der meisten Telefone abdecken sollte:' => 'Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ngig. Hier eine Liste f&uuml;r das OpenStage 60, welches die Tastenfunktionen der meisten Telefone abdecken sollte:',
   'Die Voicemail erreichte Sie auf Durchwahl %s.' => 'Die Nachricht erreichte Sie auf Durchwahl %s.',
   'Dienstmerkmale' => 'Dienstmerkmale',
   'Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die Bedeutungen werden ggf. am unteren Rand des Displays angezeigt.' => 'Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die Bedeutungen werden ggf. am unteren Rand des Displays angezeigt.',
@@ -184,6 +187,7 @@ Content-Transfer-Encoding: 8bit
   'Letztes Endger&auml;t eingetragen' => 'Letztes Endger&auml;t eingetragen',
   'Login' => 'Login',
   'Logout' => 'Abmelden',
+  'Mehrfachauswahl mit gedr&uuml;ckter <q>STRG</q> oder <q>SHIFT</q> Taste m&ouml;glich.' => 'Mehrfachauswahl mit gedr&uuml;ckter <q>Cmd</q>- oder <q>Shift</q>-Taste (Apple-Tastatur) bzw. <q>Strg</q>- oder <q>Shift</q>-Taste (IBM-PC-kompatible Tastatur) beim Klicken m&ouml;glich.',
   'Mitglied Einf&uuml;gen' => 'Mitglied einf&uuml;gen',
   'Mitglieder' => 'Mitglieder',
   'Mitglieder der Rufannahme-Gruppe' => 'Mitglieder der Rufannahme-Gruppe',
@@ -232,6 +236,7 @@ Content-Transfer-Encoding: 8bit
   'Service-Nummern' => 'Service-Nummern',
   'Shift' => 'Shift',
   'Shift-Ebene' => 'Shift-Ebene',
+  'Sie k&ouml;nnen diese Feld auch verwenden um f&uuml;r die Anruflisten mit <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang wegzuschneiden.' => 'Sie k&ouml;nnen dieses Feld auch verwenden um f&uuml;r die Anruflisten mit <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang wegzuschneiden.',
   'Sie sind jetzt abgemeldet.' => 'Sie sind jetzt abgemeldet.',
   'Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-St&ouml;ren-Funktion am Telefon ben&ouml;tigt.' => 'Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-St&ouml;ren-Funktion am Telefon ben&ouml;tigt.',
   'Snom' => 'Snom',
