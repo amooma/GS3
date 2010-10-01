@@ -30,7 +30,7 @@
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
   '' => 'Project-Id-Version: Gemeinschaft, file $Revision$
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2010-10-01 17:30+0200
+POT-Creation-Date: 2010-10-02 00:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -216,6 +216,7 @@ Content-Transfer-Encoding: 8bit
   'Pers&ouml;nlich' => 'Pers&ouml;nlich',
   'Persönlich' => 'Persönlich',
   'Ping' => 'Ping',
+  'Plaintext: Diese Methode ist sehr unsicher, da das Passwort im Klartext übertragen wird. Sie sollte daher nicht verwendet werden.<br />MD5: In diesem Challenge/Response Verfahren wird eine MD5-Prüfsumme übertragen.' => 'Plaintext: Diese Methode ist sehr unsicher, da das Passwort im Klartext übertragen wird. Sie sollte daher nicht verwendet werden.<br />MD5: In diesem Challenge/Response-Verfahren wird eine MD5-Prüfsumme übertragen.',
   'Pos.' => 'Pos.',
   'Privatgespr&auml;ch f&uuml;hren' => 'Privatgespr&auml;ch f&uuml;hren',
   'Privatgespr&auml;che' => 'Privatgespr&auml;che',

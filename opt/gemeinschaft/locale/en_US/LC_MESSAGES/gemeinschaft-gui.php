@@ -30,7 +30,7 @@
 $g_gs_LANG['en_US']['gemeinschaft-gui'] = array (
   '' => 'Project-Id-Version: Gemeinschaft, file $Revision$
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2010-10-01 17:30+0200
+POT-Creation-Date: 2010-10-02 00:00+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: English <>
@@ -182,6 +182,7 @@ Content-Transfer-Encoding: 8bit
   'Audiodatei erfolgreich hochgeladen.' => 'Audio file uploaded successfully.',
   'Audiodatei gel&ouml;scht' => 'Audio file deleted.',
   'Audiodatei hochladen:' => 'Upload audio file:',
+  'Audiodatei kann nicht gel&ouml;scht werden da in Verwendung von Warteschlange %s' => 'Audio file is in use by queue %s and cannot be deleted',
   'Audiodatei kann nicht von Node %s gel&ouml;scht werden' => 'Audio file cannot be deleted on node %s',
   'Audiodatei konnte nicht auf Node %s kopiert werden' => 'Audio file could not be copied to node %s',
   'Audiodateien' => 'Audio files',
@@ -478,7 +479,7 @@ ist für Sie eingegangen.' => 'You have received a new voicemail message from\\
   'Gateway-Gruppen' => 'Gateway groups',
   'Gateways' => 'Gateways',
   'Gateways m&uuml;ssen jeweils einer Gateway-Gruppe zugeordnet werden damit sie benutzt werden k&ouml;nnen.' => 'Gateways have to be assigned to a gateway group in order that they can be used.',
-  'Gemeinschaft Telefon-Manager Monitor' => 'Gemeinschaft Phone Manager Monitor',
+  'Gemeinschaft Monitor' => 'Gemeinschaft Monitor',
   'Gemeinschaft bietet die M&ouml;glichkeit, Tasten an unterst&uuml;tzten Endger&auml;ten &uuml;ber diese Benutzeroberfl&auml;che zu konfigurieren.' => 'Gemeinschaft allows you to configure keys of supported IP phones via this user interface.',
   'Gesamt' => 'Total',
   'Gesch&uuml;tzt' => 'Locked',
