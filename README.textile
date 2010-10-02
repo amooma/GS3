@@ -1,7 +1,6 @@
 h1. Installationsanleitung
 
-siehe
-"http://github.com/amooma/GemeinschaftPBX/wiki/Installation
+siehe "http://github.com/amooma/GemeinschaftPBX/wiki/Installation":http://github.com/amooma/GemeinschaftPBX/wiki/Installation
 
 h1. Wo bekomme ich Hilfe?
 
