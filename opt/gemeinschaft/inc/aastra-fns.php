@@ -106,7 +106,6 @@ function aastra_reboot( $phone_ip )
 
 function aastra_textscreen( $title, $text, $timeout=0, $beep=false )
 {
-	// $xml = '<AastraIPPhoneTextScreen destroyOnExit="yes">' ."\n";
 	$xml = '<AastraIPPhoneTextScreen';
 	if ((int)$timeout > 0)
 		$xml .= ' Timeout="' . (int)$timeout . '"';
