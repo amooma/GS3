@@ -331,10 +331,14 @@ $AASTRA_PROV_ENABLED        = true;   # do provisioning for Aastra?
 $AASTRA_PROV_PB_NUM_RESULTS = 10;
   # number of results in phonebook search on Aastra phone
 
+$AASTRA_PROV_FW_UPDATE      = false;  # allow firmware updates?
 //$AASTRA_PROV_FW_DEFAULT_51I = 'x.x.x';  # not used (yet)
 //$AASTRA_PROV_FW_DEFAULT_53I = 'x.x.x';  # not used (yet)
 //$AASTRA_PROV_FW_DEFAULT_55I = 'x.x.x';  # not used (yet)
 //$AASTRA_PROV_FW_DEFAULT_57I = 'x.x.x';  # not used (yet)
+
+$AASTRA_PROV_USER_PASS      = '';      # must be numeric
+$AASTRA_PROV_ADMIN_PASS     = '22222'; # must be numeric
 
 //$AASTRA_PROV_KEY_BLACKLIST  = '';
   # do not show these softkey functions in GUI,
