@@ -36,7 +36,7 @@ function gs_group_types_get()
 		'user',
 		'queue',
 		'host',
-		'module_gui'
+		'module_gui',
 	);
 }
 
@@ -57,7 +57,7 @@ function gs_group_permission_types_get()
 		'login_queues',
 		'record_call',
 		'wakeup_call',
-		'private_call'
+		'private_call',
 	);
 }
 
@@ -67,7 +67,7 @@ function gs_group_external_types_get()
 		'user',
 		'queue',
 		'host',
-		'mysql'
+		'mysql',
 	);
 }
 
