@@ -140,6 +140,9 @@ function aastra_get_softkeys( $user_id, $phone_type )
 					if ($key_num >=300) $key_name = 'expmod2 key'.($key_num-299);
 					if ($key_num >=400) $key_name = 'expmod3 key'.($key_num-399);
 					break;
+				case 'aastra-53i':
+					if ($key_num >=100) $key_name = 'prgkey'    .($key_num-100);
+					break;
 				default:
 					$key_name = 'prgkey'.$key_num;
 				}
@@ -157,11 +160,28 @@ function aastra_get_softkeys( $user_id, $phone_type )
 			if ($key_num >= 200 && $dynamic == true) {
 				# no not provision expansion module in dynamic mode
 			} else {
-				if ($key_num >=  1) $key_name = 'topsoftkey'.($key_num);
-				if ($key_num >=100) $key_name = 'softkey'   .($key_num-100);
-				if ($key_num >=200) $key_name = 'expmod1 key'.($key_num-199);
-				if ($key_num >=300) $key_name = 'expmod2 key'.($key_num-299);
-				if ($key_num >=400) $key_name = 'expmod3 key'.($key_num-399);
+
+				switch ($phone_type) {
+				case 'aastra-57i':
+					if ($key_num >=  1) $key_name = 'topsoftkey'.($key_num);
+					if ($key_num >=100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >=200) $key_name = 'expmod1 key'.($key_num-199);
+					if ($key_num >=300) $key_name = 'expmod2 key'.($key_num-299);
+					if ($key_num >=400) $key_name = 'expmod3 key'.($key_num-399);
+					break;
+				case 'aastra-55i':
+					if ($key_num >=  1) $key_name = 'prgkey'     .($key_num);
+					if ($key_num >=100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >=200) $key_name = 'expmod1 key'.($key_num-199);
+					if ($key_num >=300) $key_name = 'expmod2 key'.($key_num-299);
+					if ($key_num >=400) $key_name = 'expmod3 key'.($key_num-399);
+					break;
+				case 'aastra-53i':
+					if ($key_num >=100) $key_name = 'prgkey'    .($key_num-100);
+					break;
+				default:
+					$key_name = 'prgkey'.$key_num;
+				}
 				$softkeys[$key_name] = $r;
 			}
 		}
@@ -454,25 +474,34 @@ for ($i=1; $i<=5; ++$i) {
 	psetting('softkey'.$i.' type'   , 'empty', true, $dynamic);
 }
 
-psetting('softkey1 type'   , 'xml', true, $dynamic);
-psetting('softkey1 value'  , $prov_url_aastra.'pb.php', true, $dynamic);
-psetting('softkey1 label'  , __('Tel.buch'), true, $dynamic);
+if (! $user['nobody_index']) {
+	psetting('softkey1 type'   , 'xml', true, $dynamic);
+	psetting('softkey1 value'  , $prov_url_aastra.'pb.php', true, $dynamic);
+	psetting('softkey1 label'  , __('Tel.buch'), true, $dynamic);
 
-psetting('softkey2 type'   , 'xml', true, $dynamic);
-psetting('softkey2 value'  , $prov_url_aastra.'dial-log.php', true, $dynamic);
-psetting('softkey2 label'  , __('Anrufliste'), true, $dynamic);
+	psetting('softkey2 type'   , 'xml', true, $dynamic);
+	psetting('softkey2 value'  , $prov_url_aastra.'dial-log.php', true, $dynamic);
+	psetting('softkey2 label'  , __('Anrufliste'), true, $dynamic);
 
-psetting('softkey3 type'   , 'speeddial', true, $dynamic);
-psetting('softkey3 value'  , 'voicemail', true, $dynamic);
-psetting('softkey3 label'  , __('Voicemail'), true, $dynamic);
+	psetting('softkey3 type'   , 'speeddial', true, $dynamic);
+	psetting('softkey3 value'  , 'voicemail', true, $dynamic);
+	psetting('softkey3 label'  , __('Voicemail'), true, $dynamic);
 
-psetting('softkey4 type'   , 'xml', true, $dynamic);
-psetting('softkey4 value'  , $prov_url_aastra.'dnd.php', true, $dynamic);
-$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
-if ($current_dndstate == 'yes')
-	psetting('softkey4 label'  , __('Ruhe aus'), true, $dynamic);
+	psetting('softkey4 type'   , 'xml', true, $dynamic);
+	psetting('softkey4 value'  , $prov_url_aastra.'dnd.php', true, $dynamic);
+	$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
+	if ($current_dndstate == 'yes')
+		psetting('softkey4 label'  , __('Ruhe aus'), true, $dynamic);
+	else
+		psetting('softkey4 label'  , __('Ruhe'), true, $dynamic);
+}
+
+psetting('softkey5 type'   , 'xml', true, $dynamic);
+psetting('softkey5 label'  , __('Login'), true, $dynamic);
+if ($user['nobody_index'])
+	psetting('softkey5 value'  , $prov_url_aastra.'login.php?a=login', true, $dynamic);
 else
-	psetting('softkey4 label'  , __('Ruhe'), true, $dynamic);
+	psetting('softkey5 value'  , $prov_url_aastra.'login.php', true, $dynamic);
 
 $softkeys = aastra_get_softkeys( $user_id, $phone_type );
 if (is_array($softkeys)) {
@@ -488,10 +517,27 @@ if (is_array($softkeys)) {
 			$softkey['data'    ] = $prov_url_aastra.'dial-log.php';
 			$softkey['label'   ] = __('Anrufliste');
 			break;
+		case '_dnd':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'dnd.php';
+			$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
+			if ($current_dndstate == 'yes')
+				$softkey['label'   ] = __('Ruhe aus');
+			else
+				$softkey['label'   ] = __('Ruhe');
+			break;
 		case '_fwd':
 			$softkey['function'] = 'blf';
 			$softkey['data'    ] = 'fwd' . $user_ext;
 			$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_login':
+			$softkey['function'] = 'xml';
+			$softkey['label'   ] = __('Login');
+			if ($user['nobody_index'])
+				$softkey['data'] = $prov_url_aastra.'login.php?a=login';
+			else
+				$softkey['data'] = $prov_url_aastra.'login.php';
 			break;
 		}
 		psetting($key_name.' type' , $softkey['function'], true, $dynamic);
