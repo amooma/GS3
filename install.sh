@@ -1042,8 +1042,6 @@ if [ -e /opt/gemeinschaft-source/etc/init.d/silverbullet ]; then
 	invoke-rc.d silverbullet start
 fi
 
-# Add GUI Editor to Admin GUI
-/opt/gemeinschaft/scripts/gs-group-member-add --group=admin_gui --member=15013
 
 
 echo ""
