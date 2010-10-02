@@ -809,6 +809,12 @@ ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-queues-refresh || true
 cd
 
 
+# fix permissions
+chown -h asterisk:asterisk /opt/gemeinschaft/vm-rec
+chmod 0777 /opt/gemeinschaft/vm-rec
+chmod 0777 /opt/gemeinschaft/sys-rec
+
+
 # remove build environment 
 #
 echo ""
