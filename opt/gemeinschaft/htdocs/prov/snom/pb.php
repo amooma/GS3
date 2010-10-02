@@ -34,6 +34,7 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
+include_once( GS_DIR .'inc/langhelper.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -103,6 +104,10 @@ if (! in_array( $type, array('gs','prv','imported'), true )) {
 
 $db = gs_db_slave_connect();
 
+// setup i18n stuff
+gs_setlang( gs_get_lang_user($db, trim($_REQUEST['u']), GS_LANG_FORMAT_GS) );
+gs_loadtextdomain( 'gemeinschaft-gui' );
+gs_settextdomain( 'gemeinschaft-gui' );
 
 /*
 $typeToTitle = array(
@@ -133,7 +138,6 @@ foreach ($tmp as $arr) {
 
 
 $url_snom_pb = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/pb.php';
-
 
 
 #################################### INITIAL SCREEN {

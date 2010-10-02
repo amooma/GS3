@@ -39,6 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_callblocking_set.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
 require_once( GS_DIR .'inc/boi-soap/boi-api.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
+include_once( GS_DIR .'inc/langhelper.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -162,7 +163,8 @@ if ($action === 'del') {
 if ($action === 'add' || $action === 'add-and-view') {
 	
 	if ($user_name) {
-		$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_host, $user_email );
+		$user_lang = gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST);
+		$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_lang, $user_host, $user_email );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 		
 		if ($action === 'add-and-view') {
@@ -219,7 +221,7 @@ if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 
 if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 	
-	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, $user_host, false, $user_email );
+	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, @$_REQUEST['ulang'], $user_host, false, $user_email );
 	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	if (! isGsError( $ret )) {
 		$boi_api = gs_host_get_api((int)$user_host);
@@ -733,7 +735,7 @@ else {
 	
 	$rs = $DB->execute(
 'SELECT
-	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`, `u`.`group_id`,
+	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`, `s`.`language`, `u`.`group_id`,
 	`hp1`.`value` `hp_route_prefix`
 FROM
 	`users` `u` JOIN
@@ -940,6 +942,18 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 		<th><?php echo __('E-Mail'); ?>:</th>
 		<td>
 			<input type="text" name="uemail" value="<?php echo htmlEnt($r['email']); ?>" size="38" maxlength="60" style="width:97%;" />
+		</td>
+		<td class="transp xs gray">
+			&nbsp;
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __('Sprache'); ?>:</th>
+		<td>
+			<select name="ulang">
+				<option value="de"<?php echo (($r['language'] == 'de') ? " selected" : ""); ?>>Deutsch (de-DE)</option>
+				<option value="en"<?php echo (($r['language'] == 'en') ? " selected" : ""); ?>>Englisch (en-US)</option>
+			</select>
 		</td>
 		<td class="transp xs gray">
 			&nbsp;

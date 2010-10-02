@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_add.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --ext=<1234> --pin=<123456> --firstname=<firstname> --lastname=<lastname> --email=<email> --host=<id>|<ip> [--group=<id>] [--no-reload]';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --ext=<1234> --pin=<123456> --firstname=<firstname> --lastname=<lastname> --language=<language> --email=<email> --host=<id>|<ip> [--group=<id>] [--no-reload]';
 
 $opts = @getOptsNoMultiples( '',
 	array(
@@ -47,6 +47,7 @@ $opts = @getOptsNoMultiples( '',
 		'pin=',
 		'firstname=',
 		'lastname=',
+		'language=',
 		'email=',
 		'host=',
 		'group=',
@@ -59,6 +60,7 @@ if (! isSet($opts['user'])
  || ! isSet($opts['pin'])
  || ! isSet($opts['firstname'])
  || ! isSet($opts['lastname'])
+ || ! isSet($opts['language'])
  || ! isSet($opts['email'])
  || ! isSet($opts['host'])
  ) {
@@ -70,7 +72,7 @@ $reload = !(array_key_exists('no-reload', $opts));
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_user_add( $opts['user'], $opts['ext'], $opts['pin'], $opts['firstname'], $opts['lastname'], $opts['host'], $opts['email'], (array_key_exists('group', $opts) ? $opts['group'] : null), $reload );
+$ret = @ gs_user_add( $opts['user'], $opts['ext'], $opts['pin'], $opts['firstname'], $opts['lastname'], $opts['language'], $opts['host'], $opts['email'], (array_key_exists('group', $opts) ? $opts['group'] : null), $reload );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 echo "User added.\n";
