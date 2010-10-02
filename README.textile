@@ -1,29 +1,6 @@
 h1. Installationsanleitung
 
-h2. Das Basissystem
-
-Für eine möglichst einfache Installation gibt es hier ein Installations-Skript. Damit kann Gemeinschaft auf einem frisch installierten Debian Linux in der Version 6 ("Squeeze") installiert werden. Das können Sie am einfachsten mit der folgenden CD installieren:
-"http://cdimage.debian.org/cdimage/daily-builds/squeeze_d-i/current/i386/iso-cd/debian-testing-i386-netinst.iso":http://cdimage.debian.org/cdimage/daily-builds/squeeze_d-i/current/i386/iso-cd/debian-testing-i386-netinst.iso
-
-oder für 64-Bit-Systeme die Architektur "amd64" statt "i386".
-
-Minimales System installieren ohne grafische Oberfläche. "Minimal" heißt wirklich minimal und nicht noch sonst was dazu!
-
-h2. Gemeinschaft
-
-Bitte als root einloggen und folgende Befehle eingeben:
-
-cd /tmp
-
-wget http://github.com/amooma/GemeinschaftPBX/raw/3.0/install.sh
-
-chmod u+x install.sh
-
-./install.sh
-
-Warten.
-
-Fertig.
+siehe http://github.com/amooma/GemeinschaftPBX/wiki/Installation
 
 h1. Wo bekomme ich Hilfe?
 
