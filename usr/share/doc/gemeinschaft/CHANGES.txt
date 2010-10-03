@@ -1,4 +1,4 @@
-Version 2.3 zu 2.4
+Version 2.3 zu 3.0.0
 
 - neues Gruppen- und Berechtigungssystem
 - Erweiterung der Rufumleitungen
