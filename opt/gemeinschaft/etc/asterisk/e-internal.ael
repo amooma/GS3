@@ -207,7 +207,10 @@ context to-internal-users {
 		else {
 			Set(record_msg=1);
 		}
-		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi,${box});
+		if ("${box}" != "") {
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi,${box});
+			Set(record_msg=1);
+		}
 		if ("${user_id}" != "") {
 			Set(vm_source=internal);
 		}
