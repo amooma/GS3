@@ -418,7 +418,7 @@ if ($action == 'edit') {
 <table cellspacing="1">
 <thead>
 <tr>
-	<th style="min-width:21em;" colspan="4"><?php echo sprintf( htmlEnt(__('Untergruppen der Gruppe %s')), '<q>'.htmlEnt($group['name']).'</q>' ); ?></th>
+	<th style="min-width:21em;" colspan="4"><?php echo sprintf( htmlEnt(__('Verbindungen der Gruppe %s')), '<q>'.htmlEnt($group['name']).'</q>' ); ?></th>
 </tr>
 
 <tr>
