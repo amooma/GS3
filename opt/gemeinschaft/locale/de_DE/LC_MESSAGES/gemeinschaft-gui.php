@@ -30,7 +30,7 @@
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
   '' => 'Project-Id-Version: Gemeinschaft, file $Revision$
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2010-10-02 00:00+0200
+POT-Creation-Date: 2010-10-03 23:50+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -142,6 +142,7 @@ Content-Transfer-Encoding: 8bit
   'Empf&auml;nger' => 'Empf&auml;nger',
   'Empfangen' => 'Empfangen',
   'Endger&auml;te' => 'Endger&auml;te',
+  'Englisch' => 'Englisch',
   'Entsperr-PIN' => 'Entsperr-PIN',
   'Erfolgreich' => 'Erfolgreich',
   'Erfolgsquote' => 'Erfolgsquote',
