@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-02 00:00+0200\n"
+"POT-Creation-Date: 2010-10-03 23:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1129,7 +1129,8 @@ msgid "Berechtigung konnte nicht hinzugef&uuml;gt werden."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 359
-msgid "Berechtigungen der Gruppe"
+#, php-format
+msgid "Berechtigungen der Gruppe %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 113
@@ -1564,6 +1565,7 @@ msgstr ""
 msgid "Der Endanwender soll keine Call-by-Call-Vorwahlen verwenden."
 msgstr ""
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 954
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 58
 msgid "Deutsch"
 msgstr ""
@@ -2050,6 +2052,10 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 93
 msgid "Endger&auml;te"
+msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 955
+msgid "Englisch"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 344
@@ -3482,7 +3488,8 @@ msgid "Mitglieder"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 484
-msgid "Mitglieder der Gruppe"
+#, php-format
+msgid "Mitglieder der Gruppe %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 267
@@ -5367,6 +5374,7 @@ msgid "Untere Tasten"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 298
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 421
 #, php-format
 msgid "Untergruppen der Gruppe %s"
 msgstr ""
@@ -5421,10 +5429,6 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/phone-takeover.php, line: 244
 msgid "Verbindung fehlgeschlagen."
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 421
-msgid "Verbindungen der Gruppe"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 361

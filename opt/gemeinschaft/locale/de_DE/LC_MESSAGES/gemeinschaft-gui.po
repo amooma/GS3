@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-02 00:00+0200\n"
+"POT-Creation-Date: 2010-10-03 23:45+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: German <>\n"
@@ -1056,7 +1056,8 @@ msgid "Berechtigung konnte nicht hinzugef&uuml;gt werden."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 359
-msgid "Berechtigungen der Gruppe"
+#, php-format
+msgid "Berechtigungen der Gruppe %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 113
@@ -1955,6 +1956,10 @@ msgstr "Empfangen"
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_overview.php, line: 94
 msgid "Endger&auml;te"
 msgstr "Endger&auml;te"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 955
+msgid "Englisch"
+msgstr "Englisch"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 344
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 406
@@ -3203,7 +3208,8 @@ msgid "Mitglieder"
 msgstr "Mitglieder"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 484
-msgid "Mitglieder der Gruppe"
+#, php-format
+msgid "Mitglieder der Gruppe %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 258
@@ -4835,10 +4841,6 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/phone-takeover.php, line: 251
 msgid "Verbindung fehlgeschlagen."
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 421
-msgid "Verbindungen der Gruppe"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 320
