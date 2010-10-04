@@ -199,6 +199,7 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 	_vm. => {
+		&caller-count();
 		Set(box=${EXTEN:2});
 		if ("${box:0:1}" = "*") {
 			Set(box=${box:1});
@@ -786,6 +787,7 @@ context to-internal-users-self {
 						Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 						Set(__forwarded_by=${EXTEN});
 						Set(__is_from_gateway=);
+						Set(GROUP(${CALLERID(num)})=);
 						Dial(Local/${fw_${is_call_from}_always}/n,200);
 						&hangup-proper-status();
 					}

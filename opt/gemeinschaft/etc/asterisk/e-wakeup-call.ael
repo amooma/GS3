@@ -54,6 +54,7 @@ macro wakeuptime-remove(user) {
 context wakeup-call {
 
 	s => {
+		&caller-count();
 		Set(__lang=de-DE);
 		Set(CHANNEL(language)=de);
 
