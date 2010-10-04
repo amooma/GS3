@@ -205,6 +205,7 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 	_vm. => {
+		&caller-count();
 		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		Set(box=${EXTEN:2});
 		if ("${box:0:1}" = "*") {
@@ -882,6 +883,7 @@ context to-internal-users-self {
 						Set(__forwarded_to=${fw_${is_call_from}_always});
 						if ( "${is_from_gateway}" = "1" )
 							Set(__is_from_gateway=2);
+						Set(GROUP(${CALLERID(num)})=);
 						Dial(Local/${fw_${is_call_from}_always}/n,200);
 						&hangup-proper-status();
 					}
