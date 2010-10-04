@@ -161,7 +161,7 @@ $vm_rec_num_idx_table=array();
 $rs = $DB->execute('SELECT * from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
 $ncnt=0;
 while ($r = $rs->fetchRow()) {
-	$actives['vml-'.++$ncnt] = __('AB mit Ansage ').$ncnt;
+	$actives['vml-'.++$ncnt] = sprintf(__('AB mit Ansg. %u'), $ncnt);
 	$vm_rec_num_idx_table[$ncnt] = $r['id'];
 }
 if ($ncnt==0)
@@ -170,7 +170,7 @@ if ($ncnt==0)
 $rs = $DB->execute('SELECT * from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
 $ncnt=0;
 while ($r = $rs->fetchRow()) {
-	$actives['vmln-'.++$ncnt] = __('Ansage ').$ncnt;
+	$actives['vmln-'.++$ncnt] = sprintf(__('Ansg. %u'), $ncnt);
 }
 
 $id = (int)$DB->executeGetOne('SELECT `_user_id` from `cf_timerules` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
@@ -487,7 +487,7 @@ foreach ($sources as $src => $srctitle) {
 				if ($callforwards[$src][$case]['active'] === $active
 				&&  substr($callforwards[$src][$case]['number_vml'],0,3) === 'vm*')
 					echo ' selected="selected"';
-				echo '>', __('Ansage') ,'</option>', "\n";
+				echo '>', __('Ansg.') ,'</option>', "\n";
 			}
 			elseif (substr($active,0,4) === 'vml-')  {
 				//multiple ansagen mit AB

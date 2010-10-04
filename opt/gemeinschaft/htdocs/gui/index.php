@@ -493,7 +493,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php echo @$_SESSION['isolang']; ?>" xml:lang="<?php echo @$_SESSION['isolang']; ?>">
 <head><!--<![CDATA[
                 Gemeinschaft
-  @(_)=====(_)  (c) 2007-2009, amooma GmbH - http://www.amooma.de
+  @(_)=====(_)  (c) 2007-2010, AMOOMA GmbH - http://www.amooma.de
  @   / ### \    Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>

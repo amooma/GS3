@@ -36,7 +36,7 @@ function gs_group_types_get()
 		'user',
 		'queue',
 		'host',
-		'module_gui'
+		'module_gui',
 	);
 }
 
@@ -57,7 +57,7 @@ function gs_group_permission_types_get()
 		'login_queues',
 		'record_call',
 		'wakeup_call',
-		'private_call'
+		'private_call',
 	);
 }
 
@@ -67,7 +67,7 @@ function gs_group_external_types_get()
 		'user',
 		'queue',
 		'host',
-		'mysql'
+		'mysql',
 	);
 }
 
@@ -471,8 +471,7 @@ function gs_group_member_add($group_id, $member, $include = false)
 	if (!$member_id)
 		return new GsError( 'Cannot add member. Member "'.$member.'" of type "'.$type.'" not found.' );
 
-	$ret = $db_master->execute('INSERT INTO `'.$db_master->escape($table).'` (`group`, `member`) VALUES ('.$group_id.', '.$member_id.')');
-
+	$ret = $db_master->execute('INSERT INTO `'.$db_master->escape($table).'` (`group`, `member`) VALUES ('.$group_id.', '.$member_id.') ON DUPLICATE KEY UPDATE `member` = '.$member_id);
 	return $ret;
 }
 

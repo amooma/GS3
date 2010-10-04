@@ -980,86 +980,43 @@ if ($phone_layout) {
 		break;
 	case 'aastra':
 		//if ($show_ext_modules >= 0) {
-			$key_levels = array();
+			$key_levels = array(
+				0 => array('from'=>   1, 'to'=>  10, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten') ),
+				1 => array('from'=> 101, 'to'=> 120, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten') )
+			);
 		//}
+		if ($show_ext_modules >= 1) {
+			$key_levels += array(
+				2 => array('from'=> 200, 'to'=> 260, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1')
+			);
+		}
+		if ($show_ext_modules >= 2) {
+			$key_levels += array(
+				3 => array('from'=> 300, 'to'=> 360, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2')
+			);
+		}
+		if ($show_ext_modules >= 3) {
+			$key_levels += array(
+				4 => array('from'=> 400, 'to'=> 460, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 3')
+			);
+		}
 		switch ($phone_type) {
+			/*
 			case 'aastra-57i':
-				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
-				$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten');
-				$key_levels[0]['from'] =    1;
-				$key_levels[0]['to'  ] =   10;
-				$key_levels[1]['from'] =  101;
-				$key_levels[1]['to'  ] =  120;
-
-				if ($show_ext_modules >= 1) {
-					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
-					$key_levels[2]['from'] =  200;
-					$key_levels[2]['to'  ] =  260;
-				}
-
-				if ($show_ext_modules >= 2) {
-					$key_levels[3]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 2');
-					$key_levels[3]['from'] =  300;
-					$key_levels[3]['to'  ] =  360;
-				}
-
-				if ($show_ext_modules >= 3) {
-					$key_levels[8]['title'] = htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 3');
-					$key_levels[8]['from']  =  400;
-					$key_levels[8]['to'  ]  =  460;
-				}
-
 				break;
+			*/
 			case 'aastra-55i':
-				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
-				$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten');
-				$key_levels[0]['from'] =    1;
 				$key_levels[0]['to'  ] =    6;
-				$key_levels[1]['from'] =  101;
-				$key_levels[1]['to'  ] =  120;
-
-				if ($show_ext_modules >= 1) {
-					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
-					$key_levels[2]['from'] =  200;
-					$key_levels[2]['to'  ] =  260;
-				}
-
-				if ($show_ext_modules >= 2) {
-					$key_levels[3]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 2');
-					$key_levels[3]['from'] =  300;
-					$key_levels[3]['to'  ] =  360;
-				}
-
-				if ($show_ext_modules >= 3) {
-					$key_levels[8]['title'] = htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 3');
-					$key_levels[8]['from']  =  400;
-					$key_levels[8]['to'  ]  =  460;
-				}
-
 				break;
 			case 'aastra-53i':
-				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten');
-				$key_levels[0]['from'] =  101;
-				$key_levels[0]['to'  ] =  120;
-
-				if ($show_ext_modules >= 1) {
-					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
-					$key_levels[2]['from'] =  200;
-					$key_levels[2]['to'  ] =  260;
-				}
-
-				if ($show_ext_modules >= 2) {
-					$key_levels[3]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 2');
-					$key_levels[3]['from'] =  300;
-					$key_levels[3]['to'  ] =  360;
-				}
-
-				if ($show_ext_modules >= 3) {
-					$key_levels[8]['title'] = htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 3');
-					$key_levels[8]['from']  =  400;
-					$key_levels[8]['to'  ]  =  460;
-				}
-
+				$key_levels[0]['from'] =    0;
+				$key_levels[0]['to'  ] =   -1;
+				//unset($key_levels[0]);
 				break;
 			/*
 			case 'aastra-51i':
@@ -1076,9 +1033,9 @@ if ($phone_layout) {
 			switch ($phone_type) {
 				case 'grandstream-gxp2010':
 					$key_levels[0]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Linke Tasten');
-					$key_levels[0]['to'   ] = 8;
+					$key_levels[0]['to'   ] =  8;
 					$key_levels[1]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Rechte Tasten');
-					$key_levels[1]['from' ] = 9;
+					$key_levels[1]['from' ] =  9;
 					$key_levels[1]['to'   ] = 17;
 				break;
 			}

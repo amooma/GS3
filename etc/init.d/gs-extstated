@@ -27,6 +27,22 @@
 # MA 02110-1301, USA.
 #####################################################################
 
+### BEGIN INIT INFO
+# Provides:          gs-extstated
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Should-Start:      $time asterisk
+# Should-Stop:       $time asterisk
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Gemeinschaft/Asterisk extension state daemon
+# Description:       Gemeinschaft/Asterisk extension state daemon
+#                    connects to one (or more) Asterisk Manager
+#                    Interfaces (AMI), reads the extension states,
+#                    listens to extension state changes and acts as
+#                    a proxy for the states.
+### END INIT INFO
+
 DAEMON=/opt/gemeinschaft/sbin/ast_extstated/ast_extstated
 EXECUTABLE=`basename 'ast_extstated'`
 DESC="Gemeinschaft Extension State Daemon"

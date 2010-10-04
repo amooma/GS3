@@ -1,4 +1,10 @@
-Version 2.3 zu 2.4
+Version 3.0 zu 3.1.0
+
+- diverse kleinere Probleme bei der Installation gefixt
+- Übersetzungen des Web-Interfaces für Englisch (en-US) vervollständigt
+- ...
+
+Version 2.3 zu 3.0.0
 
 - neues Gruppen- und Berechtigungssystem
 - Erweiterung der Rufumleitungen

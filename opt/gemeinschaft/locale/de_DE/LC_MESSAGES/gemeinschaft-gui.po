@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gemeinschaft, file $Revision$\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-29 18:00+0200\n"
+"POT-Creation-Date: 2010-10-03 23:50+0200\n"
 "PO-Revision-Date: 2007-05-23 12:00+0200\n"
 "Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>\n"
 "Language-Team: German <>\n"
@@ -103,10 +103,6 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 115
 msgid "-erben-"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 389
-msgid "0"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-sip.php, line: 389
@@ -252,12 +248,9 @@ msgid "AB"
 msgstr "AB"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 164
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 166
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 167
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 144
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 145
-msgid "AB mit Ansage "
-msgstr ""
+#, php-format
+msgid "AB mit Ansg. %u"
+msgstr "AB mit Ansage %u"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 656
 msgid "AB-Nummer (interner Nutzer)"
@@ -565,14 +558,6 @@ msgstr ""
 msgid "Ansage"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 173
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 173
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_queues.php, line: 174
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 154
-# File: opt/gemeinschaft/htdocs/gui/mod/forwards_vmconfig.php, line: 155
-msgid "Ansage "
-msgstr ""
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 87
 msgid "Ansage wiederholen"
 msgstr ""
@@ -592,6 +577,15 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_gws-misdn.php, line: 248
 msgid "Anschlu&szlig;"
 msgstr ""
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 490
+msgid "Ansg."
+msgstr "Ansage"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 173
+#, php-format
+msgid "Ansg. %u"
+msgstr "Ansage %u"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 429
 msgid "Antwortzeit"
@@ -804,9 +798,10 @@ msgid "Audiodatei hochladen:"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 383
+#, php-format
 msgid ""
 "Audiodatei kann nicht gel&ouml;scht werden da in Verwendung von "
-"Warteschlange <b>"
+"Warteschlange %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 151
@@ -1061,7 +1056,8 @@ msgid "Berechtigung konnte nicht hinzugef&uuml;gt werden."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 359
-msgid "Berechtigungen der Gruppe"
+#, php-format
+msgid "Berechtigungen der Gruppe %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_sysrecs.php, line: 113
@@ -1079,6 +1075,8 @@ msgid ""
 "Beschreibt die Taste am Telefon, im Beispiel ist F001 die oberste Taste am "
 "Display vom Siemens Openstage 60."
 msgstr ""
+"Beschreibt die Taste am Telefon. Im Beispiel ist F001 die oberste Taste am "
+"Display vom Siemens OpenStage 60."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_inbound.php, line: 280
 msgid "Beschreibung"
@@ -1175,6 +1173,10 @@ msgid ""
 "lang sein und aus Buchstaben, Zahlen und Sonderzeichen wie z.B. <code>#</"
 "code>, <code>!</code> oder <code>=</code> bestehen."
 msgstr ""
+"Bitte setzen Sie ein Pa&szlig;wort um den Setup-Bereich gegen unbefugte "
+"Zugriffe zu sch&uuml;tzen. Das Pa&szlig;wort sollte mindestens 8 Zeichen "
+"lang sein und aus Buchstaben, Ziffern und Sonderzeichen wie z.B. <code>#</"
+"code>, <code>!</code> oder <code>=</code> bestehen."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 727
 msgid ""
@@ -1579,6 +1581,9 @@ msgid ""
 "Hier eine Liste f&uuml;r das Openstage 60, welches die Tastenfunktionen der "
 "meisten Telefone abdecken sollte:"
 msgstr ""
+"Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ngig. "
+"Hier eine Liste f&uuml;r das OpenStage 60, welches die Tastenfunktionen der "
+"meisten Telefone abdecken sollte:"
 #
 # File: opt/gemeinschaft/dialplan-scripts/vm-postexec, line: 162
 #, php-format
@@ -1952,6 +1957,10 @@ msgstr "Empfangen"
 msgid "Endger&auml;te"
 msgstr "Endger&auml;te"
 #
+# File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 955
+msgid "Englisch"
+msgstr "Englisch"
+#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 344
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 406
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 548
@@ -2011,24 +2020,6 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 118
 msgid "Erw.-Mod."
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 995
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1022
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1046
-msgid "Erweiterung 1"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1001
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1028
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1052
-msgid "Erweiterung 2"
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1007
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1034
-# File: opt/gemeinschaft/htdocs/gui/mod/inc_keyprof.php, line: 1058
-msgid "Erweiterung 3"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_keyprof.php, line: 467
@@ -2294,10 +2285,6 @@ msgstr ""
 msgid "Fn.-Schalter"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 205
-msgid "Fn.Schalter"
-msgstr ""
-#
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_ami.php, line: 213
 msgid "Format"
 msgstr ""
@@ -2380,8 +2367,8 @@ msgid ""
 "&nbsp; <tt>s/^(?:(?:0049|0)2631)?3370(.*)/$1/</tt>"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 109
-msgid "Gemeinschaft Telefon-Manager Monitor"
+# File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 130
+msgid "Gemeinschaft Monitor"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 41
@@ -3124,6 +3111,9 @@ msgid ""
 "Mehrfachauswahl mit gedr&uuml;ckter <q>STRG</q> oder <q>SHIFT</q> Taste "
 "m&ouml;glich."
 msgstr ""
+"Mehrfachauswahl mit gedr&uuml;ckter <q>Cmd</q>- oder <q>Shift</q>-Taste "
+"(Apple-Tastatur) bzw. <q>Strg</q>- oder <q>Shift</q>-Taste (IBM-PC-"
+"kompatible Tastatur) beim Klicken m&ouml;glich."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/prov_jobs.php, line: 124
 msgid "Min."
@@ -3218,7 +3208,8 @@ msgid "Mitglieder"
 msgstr "Mitglieder"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 484
-msgid "Mitglieder der Gruppe"
+#, php-format
+msgid "Mitglieder der Gruppe %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_pgroups.php, line: 258
@@ -3721,6 +3712,9 @@ msgid ""
 "übertragen wird. Sie sollte daher nicht verwendet werden.<br />MD5: In "
 "diesem Challenge/Response Verfahren wird eine MD5-Prüfsumme übertragen."
 msgstr ""
+"Plaintext: Diese Methode ist sehr unsicher, da das Passwort im Klartext "
+"übertragen wird. Sie sollte daher nicht verwendet werden.<br />MD5: In "
+"diesem Challenge/Response-Verfahren wird eine MD5-Prüfsumme übertragen."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_logging.php, line: 81
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 210
@@ -3933,10 +3927,6 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 235
 msgid "Routing-Test"
 msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 187
-msgid "Rufanahmegrp."
-msgstr "Rufannahmegrp."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_users.php, line: 921
 msgid "Rufannahme-Gruppe"
@@ -4202,6 +4192,10 @@ msgid ""
 "gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang "
 "wegzuschneiden."
 msgstr ""
+"Sie k&ouml;nnen dieses Feld auch verwenden um f&uuml;r die Anruflisten mit "
+"<tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;"
+"gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang "
+"wegzuschneiden."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 183
 msgid ""
@@ -4511,10 +4505,6 @@ msgstr ""
 msgid "Taste"
 msgstr ""
 #
-# File: opt/gemeinschaft/htdocs/gui/mod/admin_ivrs.php, line: 446
-msgid "Taste "
-msgstr ""
-#
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 218
 msgid "Tasten-Profile"
 msgstr ""
@@ -4579,6 +4569,11 @@ msgstr "Telefon-Typ"
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 42
 msgid "Telefonbuch"
 msgstr "Telefonbuch"
+#
+# File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 209
+#, php-format
+msgid "Telefonbuch %s durchsuchen"
+msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 253
 msgid "Telefone"
@@ -4792,7 +4787,8 @@ msgid "Untere Tasten"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 298
-msgid "Untergruppen der Gruppe "
+#, php-format
+msgid "Untergruppen der Gruppe %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 434
@@ -4848,7 +4844,8 @@ msgid "Verbindung fehlgeschlagen."
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_groups.php, line: 421
-msgid "Verbindungen der Gruppe"
+#, php-format
+msgid "Verbindungen der Gruppe %s"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_calls.php, line: 320
@@ -5414,10 +5411,6 @@ msgstr "diesen Monat"
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 764
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_queuemon.php, line: 773
 msgid "durch."
-msgstr ""
-#
-# File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 209
-msgid "durchsuchen"
 msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/monitor_peermon.php, line: 577
@@ -6110,6 +6103,10 @@ msgstr "zur&uuml;ckbl&auml;ttern"
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 103
 #~ msgid "Player"
 #~ msgstr "Player"
+#
+# File: opt/gemeinschaft/htdocs/gui/mod/help_keys.php, line: 187
+#~ msgid "Rufanahmegrp."
+#~ msgstr "Rufannahmegrp."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/features_features.php, line: 98
 #~ msgid ""

@@ -30,7 +30,7 @@
 $g_gs_LANG['de_DE']['gemeinschaft-gui'] = array (
   '' => 'Project-Id-Version: Gemeinschaft, file $Revision$
 Report-Msgid-Bugs-To: 
-POT-Creation-Date: 2010-09-29 18:00+0200
+POT-Creation-Date: 2010-10-03 23:50+0200
 PO-Revision-Date: 2007-05-23 12:00+0200
 Last-Translator: Philipp Kempgen <philipp.kempgen@amooma.de>
 Language-Team: German <>
@@ -57,6 +57,7 @@ Content-Transfer-Encoding: 8bit
   '<b>Vermitteln</b><br /> Es gibt zwei Wege, wie Sie Ihren Gespr&auml;chspartner mit einer anderen Nummer verbinden k&ouml;nnen:<br /> <i>Direktes Verbinden</i>: Wenn Sie w&auml;hrend eines Gespr&auml;chs die Transfer-Taste dr&uuml;cken, wird Ihr Gespr&auml;chsparter auf Halten gesetzt. Geben Sie danach die Nummer an, mit der Sie den Anrufer verbinden m&ouml;chten. Durch Dr&uuml;cken der OK-Taste wird der Teilnehmer dann mit der gew&auml;hlten Nummer verbunden.<br /> <i>Verbinden mit R&uuml;ckfrage</i>: Dr&uuml;cken Sie hierzu w&auml;hrend eines Gespr&auml;chs die Hold-Taste um Ihren Gespr&auml;chspartner zu halten und w&auml;hlen dann die Nummer, mit der Sie ihn verbinden m&ouml;chten. Sie k&ouml;nnen jetzt mit dem zweiten Teilnehmer sprechen. Durch Dr&uuml;cken der Transfer-Taste oder durch Auflegen werden die beiden Teilnehmer verbunden.' => '<b>Vermitteln</b><br /> Es gibt zwei Wege, wie Sie Ihren Gespr&auml;chspartner mit einer anderen Nummer verbinden k&ouml;nnen:<br /> <i>Direktes Verbinden</i>: Wenn Sie w&auml;hrend eines Gespr&auml;chs die Transfer-Taste dr&uuml;cken, wird Ihr Gespr&auml;chsparter auf Halten gesetzt. Geben Sie danach die Nummer an, mit der Sie den Anrufer verbinden m&ouml;chten. Durch Dr&uuml;cken der OK-Taste wird der Teilnehmer dann mit der gew&auml;hlten Nummer verbunden.<br /> <i>Verbinden mit R&uuml;ckfrage</i>: Dr&uuml;cken Sie hierzu w&auml;hrend eines Gespr&auml;chs die Hold-Taste um Ihren Gespr&auml;chspartner zu halten und w&auml;hlen dann die Nummer, mit der Sie ihn verbinden m&ouml;chten. Sie k&ouml;nnen jetzt mit dem zweiten Teilnehmer sprechen. Durch Dr&uuml;cken der Transfer-Taste oder durch Auflegen werden die beiden Teilnehmer verbunden.',
   '<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nnen Sie die letzten angerufenen Nummern erneut anrufen und sehen angenommene und verpasste Anrufe. W&auml;hlen Sie zun&auml;chst mit den Pfeiltasten die Nummer aus und dr&uuml;cken danach die OK-Taste.' => '<b>Wahlwiederholung</b><br /> Durch Dr&uuml;cken dieser Taste k&ouml;nnen Sie die letzten angerufenen Nummern erneut anrufen und sehen angenommene und verpasste Anrufe. W&auml;hlen Sie zun&auml;chst mit den Pfeiltasten die Nummer aus und dr&uuml;cken danach die OK-Taste.',
   'AB' => 'AB',
+  'AB mit Ansg. %u' => 'AB mit Ansage %u',
   'API' => 'API',
   'Abbrechen' => 'Abbrechen',
   'Abwesenheitsansage aufzeichnen' => 'Abwesenheitsansage aufzeichnen',
@@ -82,6 +83,8 @@ Content-Transfer-Encoding: 8bit
   'Anrufer' => 'Anrufer',
   'Anrufer(p)' => 'Anrufer',
   'Anruflisten' => 'Anruflisten',
+  'Ansg.' => 'Ansage',
+  'Ansg. %u' => 'Ansage %u',
   'Anzeigen' => 'Anzeigen',
   'Arbeit' => 'Arbeit',
   'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:' => 'Au&szlig;er auf interne Nummern d&uuml;rfen Sie auf folgende externe Nummern weiterleiten:',
@@ -101,7 +104,9 @@ Content-Transfer-Encoding: 8bit
   'Benutzergruppen' => 'Benutzergruppen',
   'Benutzername' => 'Benutzername',
   'Berechtigung Einf&uuml;gen' => 'Berechtigung einf&uuml;gen',
+  'Beschreibt die Taste am Telefon, im Beispiel ist F001 die oberste Taste am Display vom Siemens Openstage 60.' => 'Beschreibt die Taste am Telefon. Im Beispiel ist F001 die oberste Taste am Display vom Siemens OpenStage 60.',
   'Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.' => 'Bitte beachten Sie, da&szlig; die unterst&uuml;tzten Klingelt&ouml;ne stark von dem Endger&auml;t abh&auml;ngig sind, auf dem Sie sich anmelden. Ggf. wird also ein anderer als der hier eingestellte Klingelton gespielt.',
+  'Bitte setzen Sie ein Pa&szlig;wort um den Setup-Bereich gegen unbefugte Zugriffe zu sch&uuml;tzen. Das Pa&szlig;wort sollte mindestens 8 Zeichen lang sein und aus Buchstaben, Zahlen und Sonderzeichen wie z.B. <code>#</code>, <code>!</code> oder <code>=</code> bestehen.' => 'Bitte setzen Sie ein Pa&szlig;wort um den Setup-Bereich gegen unbefugte Zugriffe zu sch&uuml;tzen. Das Pa&szlig;wort sollte mindestens 8 Zeichen lang sein und aus Buchstaben, Ziffern und Sonderzeichen wie z.B. <code>#</code>, <code>!</code> oder <code>=</code> bestehen.',
   'Bitte w&auml;hlen Sie eine Warteschleife.' => 'Bitte w&auml;hlen Sie eine Warteschleife.',
   'CLIR nach extern' => 'CLIR nach extern',
   'CLIR nach intern' => 'CLIR nach intern',
@@ -114,6 +119,7 @@ Content-Transfer-Encoding: 8bit
   'Datei-Upload f&uuml;r %s fehlgeschlagen.' => 'Datei-Upload f&uuml;r %s fehlgeschlagen.',
   'Datum' => 'Datum',
   'Dauer' => 'Dauer',
+  'Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ngig. Hier eine Liste f&uuml;r das Openstage 60, welches die Tastenfunktionen der meisten Telefone abdecken sollte:' => 'Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ngig. Hier eine Liste f&uuml;r das OpenStage 60, welches die Tastenfunktionen der meisten Telefone abdecken sollte:',
   'Die Voicemail erreichte Sie auf Durchwahl %s.' => 'Die Nachricht erreichte Sie auf Durchwahl %s.',
   'Dienstmerkmale' => 'Dienstmerkmale',
   'Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die Bedeutungen werden ggf. am unteren Rand des Displays angezeigt.' => 'Diese Tasten werden mit kontextabh&auml;ngigen Funktionen belegt. Die Bedeutungen werden ggf. am unteren Rand des Displays angezeigt.',
@@ -136,6 +142,7 @@ Content-Transfer-Encoding: 8bit
   'Empf&auml;nger' => 'Empf&auml;nger',
   'Empfangen' => 'Empfangen',
   'Endger&auml;te' => 'Endger&auml;te',
+  'Englisch' => 'Englisch',
   'Entsperr-PIN' => 'Entsperr-PIN',
   'Erfolgreich' => 'Erfolgreich',
   'Erfolgsquote' => 'Erfolgsquote',
@@ -184,6 +191,7 @@ Content-Transfer-Encoding: 8bit
   'Letztes Endger&auml;t eingetragen' => 'Letztes Endger&auml;t eingetragen',
   'Login' => 'Login',
   'Logout' => 'Abmelden',
+  'Mehrfachauswahl mit gedr&uuml;ckter <q>STRG</q> oder <q>SHIFT</q> Taste m&ouml;glich.' => 'Mehrfachauswahl mit gedr&uuml;ckter <q>Cmd</q>- oder <q>Shift</q>-Taste (Apple-Tastatur) bzw. <q>Strg</q>- oder <q>Shift</q>-Taste (IBM-PC-kompatible Tastatur) beim Klicken m&ouml;glich.',
   'Mitglied Einf&uuml;gen' => 'Mitglied einf&uuml;gen',
   'Mitglieder' => 'Mitglieder',
   'Mitglieder der Rufannahme-Gruppe' => 'Mitglieder der Rufannahme-Gruppe',
@@ -212,6 +220,7 @@ Content-Transfer-Encoding: 8bit
   'Pers&ouml;nlich' => 'Pers&ouml;nlich',
   'Persönlich' => 'Persönlich',
   'Ping' => 'Ping',
+  'Plaintext: Diese Methode ist sehr unsicher, da das Passwort im Klartext übertragen wird. Sie sollte daher nicht verwendet werden.<br />MD5: In diesem Challenge/Response Verfahren wird eine MD5-Prüfsumme übertragen.' => 'Plaintext: Diese Methode ist sehr unsicher, da das Passwort im Klartext übertragen wird. Sie sollte daher nicht verwendet werden.<br />MD5: In diesem Challenge/Response-Verfahren wird eine MD5-Prüfsumme übertragen.',
   'Pos.' => 'Pos.',
   'Privatgespr&auml;ch f&uuml;hren' => 'Privatgespr&auml;ch f&uuml;hren',
   'Privatgespr&auml;che' => 'Privatgespr&auml;che',
@@ -219,7 +228,6 @@ Content-Transfer-Encoding: 8bit
   'Reload Interval' => 'Neu-laden-Intervall',
   'Reserve' => 'Reserve',
   'Rolle' => 'Rolle',
-  'Rufanahmegrp.' => 'Rufannahmegrp.',
   'Rufannahme-Gruppe' => 'Rufannahme-Gruppe',
   'Rufannahmegrp.' => 'Rufannahmegrp.',
   'Rufannahmegrp.#pl' => 'Rufannahmegrp.',
@@ -233,6 +241,7 @@ Content-Transfer-Encoding: 8bit
   'Service-Nummern' => 'Service-Nummern',
   'Shift' => 'Shift',
   'Shift-Ebene' => 'Shift-Ebene',
+  'Sie k&ouml;nnen diese Feld auch verwenden um f&uuml;r die Anruflisten mit <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang wegzuschneiden.' => 'Sie k&ouml;nnen dieses Feld auch verwenden um f&uuml;r die Anruflisten mit <tt>s/^/0/</tt> oder <tt>s/^(.*)/0$1/</tt> eine 0 am Anfang hinzuzuf&uuml;gen oder mit <tt>s/^0//</tt> oder <tt>s/^0(.*)/$1/</tt> eine 0 am Anfang wegzuschneiden.',
   'Sie sind jetzt abgemeldet.' => 'Sie sind jetzt abgemeldet.',
   'Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-St&ouml;ren-Funktion am Telefon ben&ouml;tigt.' => 'Sie sollten eine Std.-Umleitungsnummer angeben! Sie wird f&uuml;r die Nicht-St&ouml;ren-Funktion am Telefon ben&ouml;tigt.',
   'Snom' => 'Snom',

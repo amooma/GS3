@@ -951,8 +951,8 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 		<th><?php echo __('Sprache'); ?>:</th>
 		<td>
 			<select name="ulang">
-				<option value="de"<?php echo (($r['language'] == 'de') ? " selected" : ""); ?>>Deutsch (de-DE)</option>
-				<option value="en"<?php echo (($r['language'] == 'en') ? " selected" : ""); ?>>Englisch (en-US)</option>
+				<option value="de"<?php echo (($r['language'] === 'de') ? ' selected' : ''); ?>><?php echo htmlEnt(__("Deutsch"  )); ?> (de-DE)</option>
+				<option value="en"<?php echo (($r['language'] === 'en') ? ' selected' : ''); ?>><?php echo htmlEnt(__("Englisch" )); ?> (en-US)</option>
 			</select>
 		</td>
 		<td class="transp xs gray">
