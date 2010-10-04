@@ -99,6 +99,9 @@ if(!preg_match("/^\d+$/", $user)) _err("Not a valid SIP user.");
 
 $db = gs_db_slave_connect();
 
+$user_id = getUserID($user);
+$mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST["m"])));
+
 // check permissions
 $user_groups = gs_group_members_groups_get(Array($user_id), "user");
 $members_fwd = gs_group_permissions_get($user_groups, "forward");
@@ -125,9 +128,6 @@ $url_polycom_menu = $url_polycom_provdir ."configmenu.php";
 //////////////////// INITIAL SCREEN {
 
 if(!$type) {
-	$mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST["m"])));
-	$user = trim(@$_REQUEST["u"]);
-
 	ob_start();
 
 	echo $phonemenu_doctype ."\n";
