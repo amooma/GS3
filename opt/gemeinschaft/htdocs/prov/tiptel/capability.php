@@ -85,7 +85,7 @@ class PhoneCapability_tiptel extends PhoneCapability
 		} else
 			$rm_tmp = false;
 		
-		$cmd = 'sox '. qsa($infile) .' -r 8000 -c 1 -U '. qsa($outfile) .' trim 0 200000s 2>>/dev/null';
+		$cmd = 'sox '. qsa($infile) .' -c 1 -U '. qsa($outfile) .' rate 8000 trim 0 200000s 2>>/dev/null';
 		# WAV, uLaw, 8 kHz, 16 bit, mono
 		# "The time for loading the file should not be longer then 3 seconds.
 		# Size < 200 KByte."
