@@ -420,7 +420,7 @@ context to-internal-users {
 		Set(iext=${EXTEN:4});
 		Verbose(1,### Intercom call to ${iext});
 		&pass-connid();
-
+		
 		if ("${is_from_gateway}" = "1") {
 			Verbose(1,### No intercom from gateway);
 			Hangup();
@@ -457,12 +457,12 @@ context to-internal-users {
 		Set(GROUP(${iext})=);
 		Set(OUTBOUND_GROUP_ONCE=callcount@${iext});
 		
-		//Set(CALLERID(name)=ICOM ${CALLERID(name)});		
+		//Set(CALLERID(name)=ICOM ${CALLERID(name)});
 		SIPAddHeader(Call-Info: <http://127.0.0.1>\;answer-after=0);
 		Dial(SIP/${iext},30);
 		&hangup-proper-status();
 	}	
-
+	
 	
 	//----------------------------------------------------------
 	// Boss/secretary function (override call forwards)
