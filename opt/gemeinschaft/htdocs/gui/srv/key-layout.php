@@ -75,9 +75,13 @@ function _get_key_label($knump)
 	$key_defs = @$softkeys['f'.$knump];
 	if ( is_array($key_defs) ) {
 		if (array_key_exists('slf', $key_defs)) {
-			return $key_defs['slf']['label'];
+			if (strlen($key_defs['slf']['label']) > 12)
+				$key_defs['slf']['label'] = substr($key_defs['slf']['label'], 0, 10) . '...';
+			return utf8_decode($key_defs['slf']['label']);
 		} elseif (array_key_exists('inh', $key_defs)) {
-			return $key_defs['inh']['label'];
+			if (strlen($key_defs['inh']['label']) > 12)
+				$key_defs['inh']['label'] = substr($key_defs['inh']['label'], 0, 10) . '...';
+			return utf8_decode($key_defs['inh']['label']);
 		}
 	}
 	
@@ -92,7 +96,8 @@ class PDF extends FPDF {
 
 	function Header() {
 		$this->SetFont('Arial', 'B', 15);
-		$this->Cell(0, 10, __('Tastenbeschriftung') .' '. __('von') .' '. $this->firstname .' '. $this->lastname .' ('. $this->ext .')', 0, 0, 'C');
+		$label = __('Tastenbeschriftung') .' '. __('von') .' '. $this->firstname .' '. $this->lastname .' ('. $this->ext .')';
+		$this->Cell(0, 10, utf8_decode($label), 0, 0, 'C');
 		//$this->Ln(20);
 	}
 
@@ -179,7 +184,7 @@ foreach ($phone_types as $phone_type_name => $phone_type_title) {
 		$softkeys = $GS_Softkeys->get_keys();
 				
 		$pdf->AddPage();
-		$pdf->SetFont('Arial', '', 12);
+		$pdf->SetFont('Arial', '', 8);
 		//$pdf->SetFillColor(224, 235, 255);
 		$pdf->SetFillColor(100, 149, 237);
 		$pdf->SetTextColor(  0,   0,   0);
@@ -191,7 +196,9 @@ foreach ($phone_types as $phone_type_name => $phone_type_title) {
 			$key_levels = array(
 				0 => array('from'=> 0, 'to'=>11, 'title'=>$phone_type_title             , 'X'=> 10, 'Y'=>30, 'width'=>19),
 				1 => array('from'=>12, 'to'=>32, 'title'=>__('Erweiterungs-Modul') .' 1', 'X'=> 75, 'Y'=>30, 'width'=>19),
-				2 => array('from'=>33, 'to'=>53, 'title'=>__('Erweiterungs-Modul') .' 2', 'X'=>140, 'Y'=>30, 'width'=>19)
+				2 => array('from'=>33, 'to'=>53, 'title'=>__('Erweiterungs-Modul') .' 2', 'X'=>140, 'Y'=>30, 'width'=>19),
+				3 => array('from'=>54, 'to'=>74, 'title'=>__('Erweiterungs-Modul') .' 3', 'X'=> 10, 'Y'=>30, 'width'=>19),
+				4 => array('from'=>75, 'to'=>95, 'title'=>__('Erweiterungs-Modul') .' 4', 'X'=> 75, 'Y'=>30, 'width'=>19)
 			);
 			
 		} elseif (subStr($phone_type_name,0,11)==='grandstream') {
@@ -231,6 +238,8 @@ foreach ($phone_types as $phone_type_name => $phone_type_title) {
 						case 0: $left =  0; $right =  6; $fill = false; break;
 						case 1: $left = 12; $right = 23; $fill = true;  break;
 						case 2: $left = 33; $right = 44; $fill = true;  break;
+						case 3: $left = 54; $right = 65; $fill = true;  break;
+						case 4: $left = 75; $right = 86; $fill = true;  break;
 					}
 					break;
 			}		
@@ -265,9 +274,26 @@ foreach ($phone_types as $phone_type_name => $phone_type_title) {
 					$height = 6;
 					
 					# Table
-					$pdf->Cell($width, $height, ($i%2===($key_level_idx+1)%2 ? $keynum : ''), 1      , 0, 'C'             , false);
-					$pdf->Cell($width, $height, _get_key_label($knump)                      , $border, 0, ($i%2 ? 'L':'R'), $fill);
-					$pdf->Cell($width, $height, ($i%2===($key_level_idx+1)%2 ? '' : $keynum), 1      , 0, 'C'             , false);
+					switch ($key_level_idx) {
+						case 0:
+						case 2:
+						case 4:
+							if ($i%2)
+								$align = 'L';
+							else
+								$align = 'R';
+							break;
+						case 1:
+						case 3:
+							if ($i%2)
+								$align = 'R';
+							else
+								$align = 'L';
+							break;
+					}
+					$pdf->Cell($width, $height, ($i%2===($key_level_idx+1)%2 ? $keynum : ''), 1      , 0, 'C'   , false);
+					$pdf->Cell($width, $height, _get_key_label($knump)                      , $border, 0, $align, $fill);
+					$pdf->Cell($width, $height, ($i%2===($key_level_idx+1)%2 ? '' : $keynum), 1      , 0, 'C'   , false);
 					
 					$pdf->Ln();
 		                        
@@ -344,11 +370,13 @@ foreach ($phone_types as $phone_type_name => $phone_type_title) {
 				$fill = !$fill;
 			}
 			
+			if ($phone_layout === 'snom' && $key_level_idx == 2) {
+				$pdf->AddPage();
+			}
+			
 			if ($phone_layout === 'grandstream' && $key_level_idx < 2 ) {
 				$pdf->AddPage();
-			} /*else {
-				$pdf->Ln();
-			}*/
+			}
 		}
 		
 	}
