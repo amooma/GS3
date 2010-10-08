@@ -458,7 +458,11 @@ context to-internal-users {
 		Set(OUTBOUND_GROUP_ONCE=callcount@${iext});
 		
 		//Set(CALLERID(name)=ICOM ${CALLERID(name)});
-		SIPAddHeader(Call-Info: <http://127.0.0.1>\;answer-after=0);
+		
+		// Add SIP-Header for Intercom (auto-answer)
+		SIPAddHeader(Call-Info: <http://127.0.0.1>\;answer-after=0);  // for Grandstream, Snom, Tiptel
+		SIPAddHeader(Alert-Info: <http://127.0.0.1>\;info=alert-autoanswer);  // for Aastra, Siemens
+		
 		Dial(SIP/${iext},30);
 		&hangup-proper-status();
 	}	
