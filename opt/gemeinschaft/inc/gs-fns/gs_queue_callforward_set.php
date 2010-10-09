@@ -47,7 +47,7 @@ function gs_queue_callforward_set( $queue, $source, $case, $type, $number, $time
 	if (! in_array( $type, array('std','var','vml','trl','par'), true ))
 		return new GsError( 'Type must be std|var|vml|trl|par.' );
 	//$number = preg_replace( '/[^\d]/', '', $number );
-	$number = preg_replace( '/[^0-9vm*]/', '', $number );
+	$number = preg_replace( '/[^0-9vm*sysrec]/', '', $number );
 	$timeout = (int)$timeout;
 	if ($case != 'timeout') $timeout = 0;
 	else {
