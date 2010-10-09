@@ -258,7 +258,19 @@ context to-internal-users {
 		}
 		Hangup();
 	}
-	
+	//------------------------
+	//Only playback sysrec file
+	//------------------------
+	_sysrec. => {
+		AGI(/opt/gemeinschaft/dialplan-scripts/sys-rec-getfile,${EXTEN:6});
+		if ("${md5hashname}" != ""  &&  "${forwards}"= "0") {
+			Playback(/opt/gemeinschaft/sys-rec/${md5hashname});
+		} else {
+			Verbose(1,### Sysrec file with ID ${EXTEN:6} not found);
+		}
+	Hangup();
+	}
+
 	
 	//----------------------------------------------------------
 	// Users, Queues, ...
