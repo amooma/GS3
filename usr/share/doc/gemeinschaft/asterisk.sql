@@ -7305,7 +7305,6 @@ CREATE TABLE `users` (
   `group_id` mediumint(8) unsigned default NULL,
   `softkey_profile_id` int(10) unsigned default NULL,
   `prov_param_profile_id` int(10) unsigned default NULL,
-  `dnd` tinyint(1) unsigned NOT NULL default '0',
   `pb_hide` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `user` (`user`),
@@ -7329,7 +7328,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'supervisor','123','','Supervisor','','',NULL,1,NULL,'',NULL,NULL,NULL,0,1);
+INSERT INTO `users` VALUES (1,'supervisor','123','','Supervisor','','',NULL,1,NULL,'',NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7506,3 +7505,9 @@ DROP TABLE IF EXISTS `room_state`;
 
 
  
+DROP TABLE IF EXISTS `dnd`;
+CREATE TABLE IF NOT EXISTS `dnd` (
+  `_user_id` int(10) NOT NULL DEFAULT '0',
+  `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
+  PRIMARY KEY (`_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -51,7 +51,7 @@ $db = gs_db_slave_connect();
 	$uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($uname) .'\'' );
 	if ($uid < 1) die();
 
-$dnd = (int)$db->executeGetOne( 'SELECT `dnd` FROM `users` WHERE `id`='. $db->escape($uid) );
+$dnd = $db->executeGetOne( 'SELECT `active` FROM `dnd` WHERE `_user_id`='. $db->escape($uid) );
 if ($uid < 1) die();
 
 

@@ -210,6 +210,9 @@ function gs_user_del( $user, $reload=true )
 	#
 	$db->execute( 'DELETE FROM `user_calldrop` WHERE `user_id`='. $user_id );
 	
+	# delete dnd
+	#
+	$db->execute( 'DELETE FROM `dnd` WHERE `_user_id`='. $user_id );
 	
 	# delete user
 	#

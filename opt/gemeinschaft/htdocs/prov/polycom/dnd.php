@@ -113,10 +113,10 @@ if(($newdndstate == "on") || ($newdndstate == "off"))
 	$masterdb = gs_db_master_connect();
 	if(!$masterdb) _err("Could not connect to database.");
 
-	if($newdndstate == "on") $dndvalue = 1;
-	if($newdndstate == "off") $dndvalue = 0;
+	if($newdndstate == "on") $dndvalue = 'yes';
+	if($newdndstate == "off") $dndvalue = 'no';
 
-	$check = $db->execute("UPDATE `users` SET `dnd`=". $db->escape($dndvalue) ." WHERE `id`=". $user_id);
+	$ckeck = $db->execute("INSERT INTO `dnd` (`_user_id`, `active`) VALUES (" . $user_id . ", '" . $db->escape($dndvalue) ."') ON DUPLICATE KEY UPDATE `active` = '" . $db->escape($dndvalue) ."'");
 	if(!$check) _err("Failed to set new DND state.");
 
 	if(GS_BUTTONDAEMON_USE == true)	gs_dnd_changed_ui($user);

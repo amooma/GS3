@@ -51,23 +51,23 @@ function gs_user_dnd_toggle( $user_id )
 	if (! $user_name)
 		return new GsError( 'Unknown user.' );
 	
-	$dnd = $db->executeGetOne( 'SELECT `dnd` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
-	        if (! $user_id)
-	                        return new GsError( 'Unknown dnd-set.' );
+	$dnd = $db->executeGetOne( 'SELECT `active` FROM `dnd` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+	if (! $dnd)
+		$dnd = 'no';
 	
 	# toggle-dnd
 	#
-	$new_dnd = 0;
-	if($dnd == 0)$new_dnd = 1;
+	$new_dnd = 'no';
+	if($dnd == 'no')$new_dnd = 'yes';
 	
-	$ok = $db->execute( 'UPDATE `users` SET `dnd`='. $db->escape($new_dnd) . ' WHERE `id`='. $user_id );
+	$ok = $db->execute("INSERT INTO `dnd` (`_user_id`, `active`) VALUES (" . $user_id . ", '" . $new_dnd ."') ON DUPLICATE KEY UPDATE `active` = '" . $new_dnd ."'");
 	if (! $ok)
 		return new GsError( 'Failed to toggle dnd.' );
 	else{
 		if ( GS_BUTTONDAEMON_USE == true ) 
 		{
 			
-			if( $new_dnd == 1 )
+			if( $new_dnd == 'yes' )
 				$state = 'on';
 			else
 				$state = 'off';

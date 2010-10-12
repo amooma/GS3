@@ -896,7 +896,7 @@ context to-internal-users-self {
 			}
 
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-dnd.agi,${EXTEN});
-			if ("${dnd_active}" = "1") {
+			if ("${dnd_active}" = "yes") {
 				Set(DIALSTATUS="BUSY");
 				if ("${is_huntgroup}" = "1") {
 					Verbose(1,### DND active in huntgroup - skipping member);
