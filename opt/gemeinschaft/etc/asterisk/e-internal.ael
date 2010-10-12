@@ -1360,21 +1360,8 @@ context to-internal-users-self {
 			NoCDR();
 			Answer();
 			Wait(0.5);
-			Set(vm_announce_file=${vm_announce_${vm_source}});
-			if ("${vm_announce_file}" = "") {
-				Playback(vm-theperson);
-				SayDigits(${EXTEN});
-				if ("${DIALSTATUS}" = "BUSY") {
-					Playback(vm-isonphone);
-				}
-				else {
-					Playback(vm-isunavail);
-				}
-			}
-			else {
-				Playback(${vm_announce_file});
-			}
-			Set(cc_to_ext=${EXTEN});
+			Set(__vm_announce_file=${vm_announce_${vm_source}});
+			Set(__cc_to_ext=${EXTEN});
 			jump offer@program-cc;
 		
 	}
@@ -1548,12 +1535,28 @@ context to-internal-users-self {
 context program-cc {
 	
 	offer => {
-		Answer();
 
 		if ("${CHANNEL(language)}" = "") {
 			#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		}
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-gs-language-by-ast-code,${CHANNEL(language)});
+
+
+		if ("${vm_announce_file}" = "") {
+			Background(vm-theperson);
+			SayDigits(${cc_to_ext});
+			if ("${DIALSTATUS}" = "BUSY") {
+				Background(vm-isonphone);
+			}
+			else {
+				Background(vm-isunavail);
+			}
+		}
+		else {
+			Background(${vm_announce_file});
+		}
+
+		Answer();
 
 		Wait(0.5);
 		Set(TIMEOUT(digit)=5);
