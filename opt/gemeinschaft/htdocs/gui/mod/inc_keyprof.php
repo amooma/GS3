@@ -1106,19 +1106,19 @@ if ($phone_layout) {
 
 				if ($show_ext_modules >= 1) {
 					$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
-					$key_levels[1]['from'] =  200;
+					$key_levels[1]['from'] =  201;
 					$key_levels[1]['to'  ] =  260;
 				}
 
 				if ($show_ext_modules >= 2) {
 					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 2');
-					$key_levels[2]['from'] =  300;
+					$key_levels[2]['from'] =  301;
 					$key_levels[2]['to'  ] =  360;
 				}
 
 				if ($show_ext_modules >= 3) {
 					$key_levels[3]['title'] = htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 3');
-					$key_levels[3]['from']  =  400;
+					$key_levels[3]['from']  =  401;
 					$key_levels[3]['to'  ]  =  460;
 				}
 
@@ -1130,19 +1130,19 @@ if ($phone_layout) {
 
 				if ($show_ext_modules >= 1) {
 					$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
-					$key_levels[1]['from'] =  200;
+					$key_levels[1]['from'] =  201;
 					$key_levels[1]['to'  ] =  260;
 				}
 
 				if ($show_ext_modules >= 2) {
 					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 2');
-					$key_levels[2]['from'] =  300;
+					$key_levels[2]['from'] =  301;
 					$key_levels[2]['to'  ] =  360;
 				}
 
 				if ($show_ext_modules >= 3) {
 					$key_levels[3]['title'] = htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 3');
-					$key_levels[3]['from']  =  400;
+					$key_levels[3]['from']  =  401;
 					$key_levels[3]['to'  ]  =  460;
 				}
 
@@ -1154,19 +1154,19 @@ if ($phone_layout) {
 
 				if ($show_ext_modules >= 1) {
 					$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
-					$key_levels[1]['from'] =  200;
+					$key_levels[1]['from'] =  201;
 					$key_levels[1]['to'  ] =  260;
 				}
 
 				if ($show_ext_modules >= 2) {
 					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 2');
-					$key_levels[2]['from'] =  300;
+					$key_levels[2]['from'] =  301;
 					$key_levels[2]['to'  ] =  360;
 				}
 
 				if ($show_ext_modules >= 3) {
 					$key_levels[3]['title'] = htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 3');
-					$key_levels[3]['from']  =  400;
+					$key_levels[3]['from']  =  401;
 					$key_levels[3]['to'  ]  =  460;
 				}
 

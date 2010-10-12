@@ -82,19 +82,19 @@ function aastra_get_softkeys( $user_id, $phone_type, $modtype, $modnum, $level )
 		case 'aastra-560m':
 			switch ($modnum) {
 				case 1:
-					$minkey = 200 + (($level-1) * 20);
-					$maxkey = $minkey + 20;
-					$offset = 199;
+					$minkey = 201 + (($level-1) * 20);
+					$maxkey = $minkey + 19;
+					$offset = 200;
 					break;
 				case 2:
-					$minkey = 300 + (($level-1) * 20);
-					$maxkey = $minkey + 20;
-					$offset = 299;
+					$minkey = 301 + (($level-1) * 20);
+					$maxkey = $minkey + 19;
+					$offset = 300;
 					break;
 				case 3:
-					$minkey = 400 + (($level-1) * 20);
-					$maxkey = $minkey + 20;
-					$offset = 399;
+					$minkey = 401 + (($level-1) * 20);
+					$maxkey = $minkey + 19;
+					$offset = 400;
 					break;
 			}
 			break;
@@ -102,18 +102,18 @@ function aastra_get_softkeys( $user_id, $phone_type, $modtype, $modnum, $level )
 		case 'aastra-536m':
 			switch ($modnum) {
 				case 1:
-					$minkey = 200;
-					$maxkey = $minkey + 36;
+					$minkey = 201;
+					$maxkey = $minkey + 35;
 					$offset = 200;
 					break;
 				case 2:
-					$minkey = 300;
-					$maxkey = $minkey + 36;
+					$minkey = 301;
+					$maxkey = $minkey + 35;
 					$offset = 300;
 					break;
 				case 3:
-					$minkey = 400;
-					$maxkey = $minkey + 36;
+					$minkey = 401;
+					$maxkey = $minkey + 35;
 					$offset = 400;
 					break;
 			}
@@ -124,7 +124,7 @@ function aastra_get_softkeys( $user_id, $phone_type, $modtype, $modnum, $level )
 			break;
 	}
 
-	for ($i = ($minkey - $offset); $i < ($maxkey - $offset); $i++) {
+	for ($i = ($minkey - $offset); $i <= ($maxkey - $offset); $i++) {
 		$softkeys['expmod'.$modnum.' key'.$i]['function'] = 'emtpy';
 	}
 
@@ -141,7 +141,7 @@ function aastra_get_softkeys( $user_id, $phone_type, $modtype, $modnum, $level )
 		if (! $rs) return false;
 		while ($r = $rs->fetchRow()) {
 			$key_num = (int) preg_replace('/[^0-9]/', '', @$r['key']);
-			if ( $key_num >= $minkey && $key_num < ($maxkey) ) {
+			if ( $key_num >= $minkey && $key_num <= ($maxkey) ) {
 				switch ($phone_type) {
 				case 'aastra-57i':
 					$key_name = 'expmod'.$modnum.' key'   .($key_num-$offset);
@@ -163,7 +163,7 @@ function aastra_get_softkeys( $user_id, $phone_type, $modtype, $modnum, $level )
 		if (! $rs) return false;
 		while ($r = $rs->fetchRow()) {
 			$key_num = (int) preg_replace('/[^0-9]/', '', @$r['key']);
-			if ( $key_num >= $minkey && $key_num < ($maxkey) ) {
+			if ( $key_num >= $minkey && $key_num <= ($maxkey) ) {
 				$key_name = 'expmod'.$modnum.' key'   .($key_num-$offset);
 				$softkeys[$key_name] = $r;
 			}
