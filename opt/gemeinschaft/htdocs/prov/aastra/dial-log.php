@@ -33,6 +33,8 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 
 $xml = '';
@@ -52,6 +54,17 @@ function _get_userid()
 	if ($user_id < 1) _err( 'Unknown user.' );
 	return $user_id;
 }
+
+function _get_user( $user_id )
+{
+	global $db;
+	
+	$user = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
+	if (!$user ) _err( 'Unknown user.' );
+	return $user;
+}
+
+
 
 $type = trim( @$_REQUEST['t'] );
 if (! in_array( $type, array('in','out','missed', 'ind','outd','missedd'), true )) {
@@ -168,6 +181,15 @@ LIMIT '.$num_results;
 		$xml.= '</SoftKey>' ."\n";
 		
 		$xml.= '</AastraIPPhoneTextMenu>' ."\n";
+
+		if ( $type === 'missed') {
+		gs_user_watchedmissed( $user_id );
+		if ( GS_BUTTONDAEMON_USE == true ) {
+			$user = _get_user ( $user_id );
+			if ( $user )
+				gs_user_missedcalls_ui( $user );
+			}
+		}
 	}
 	else {
 		aastra_textscreen($typeToTitle[$type], __('Kein Eintrag'));
@@ -228,7 +250,6 @@ LIMIT 1';
 	$xml.= '</SoftKey>' ."\n";
 	
 	$xml.= '</AastraIPPhoneFormattedTextScreen>' ."\n";
-	
 }
 
 aastra_transmit_str( $xml );
