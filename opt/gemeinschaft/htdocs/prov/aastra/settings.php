@@ -122,26 +122,26 @@ function aastra_get_softkeys( $user_id, $phone_type )
 		if (! $rs) return false;
 		while ($r = $rs->fetchRow()) {
 			$key_num = (int) preg_replace('/[^0-9]/', '', @$r['key']);
-			if ($key_num >= 200 && $dynamic == true) {
+			if ($key_num > 200 && $dynamic == true) {
 				# no not provision expansion module in dynamic mode
 			} else {
 				switch ($phone_type) {
 				case 'aastra-57i':
 					if ($key_num >=  1) $key_name = 'topsoftkey'.($key_num);
-					if ($key_num >=100) $key_name = 'softkey'    .($key_num-100);
-					if ($key_num >=200) $key_name = 'expmod1 key'.($key_num-199);
-					if ($key_num >=300) $key_name = 'expmod2 key'.($key_num-299);
-					if ($key_num >=400) $key_name = 'expmod3 key'.($key_num-399);
+					if ($key_num >100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >200) $key_name = 'expmod1 key'.($key_num-200);
+					if ($key_num >300) $key_name = 'expmod2 key'.($key_num-300);
+					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				case 'aastra-55i':
 					if ($key_num >=  1) $key_name = 'prgkey'     .($key_num);
-					if ($key_num >=100) $key_name = 'softkey'    .($key_num-100);
-					if ($key_num >=200) $key_name = 'expmod1 key'.($key_num-199);
-					if ($key_num >=300) $key_name = 'expmod2 key'.($key_num-299);
-					if ($key_num >=400) $key_name = 'expmod3 key'.($key_num-399);
+					if ($key_num >100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >200) $key_name = 'expmod1 key'.($key_num-200);
+					if ($key_num >300) $key_name = 'expmod2 key'.($key_num-300);
+					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				case 'aastra-53i':
-					if ($key_num >=100) $key_name = 'prgkey'    .($key_num-100);
+					if ($key_num >100) $key_name = 'prgkey'    .($key_num-100);
 					break;
 				default:
 					$key_name = 'prgkey'.$key_num;
@@ -157,24 +157,24 @@ function aastra_get_softkeys( $user_id, $phone_type )
 		if (! $rs) return false;
 		while ($r = $rs->fetchRow()) {
 			$key_num = (int) preg_replace('/[^0-9]/', '', @$r['key']);
-			if ($key_num >= 200 && $dynamic == true) {
+			if ($key_num > 200 && $dynamic == true) {
 				# no not provision expansion module in dynamic mode
 			} else {
 
 				switch ($phone_type) {
 				case 'aastra-57i':
 					if ($key_num >=  1) $key_name = 'topsoftkey'.($key_num);
-					if ($key_num >=100) $key_name = 'softkey'    .($key_num-100);
-					if ($key_num >=200) $key_name = 'expmod1 key'.($key_num-199);
-					if ($key_num >=300) $key_name = 'expmod2 key'.($key_num-299);
-					if ($key_num >=400) $key_name = 'expmod3 key'.($key_num-399);
+					if ($key_num >100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >200) $key_name = 'expmod1 key'.($key_num-200);
+					if ($key_num >300) $key_name = 'expmod2 key'.($key_num-300);
+					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				case 'aastra-55i':
 					if ($key_num >=  1) $key_name = 'prgkey'     .($key_num);
-					if ($key_num >=100) $key_name = 'softkey'    .($key_num-100);
-					if ($key_num >=200) $key_name = 'expmod1 key'.($key_num-199);
-					if ($key_num >=300) $key_name = 'expmod2 key'.($key_num-299);
-					if ($key_num >=400) $key_name = 'expmod3 key'.($key_num-399);
+					if ($key_num >100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >200) $key_name = 'expmod1 key'.($key_num-200);
+					if ($key_num >300) $key_name = 'expmod2 key'.($key_num-300);
+					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				case 'aastra-53i':
 					if ($key_num >=100) $key_name = 'prgkey'    .($key_num-100);
