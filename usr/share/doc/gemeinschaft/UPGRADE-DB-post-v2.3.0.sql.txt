@@ -135,6 +135,18 @@ ALTER TABLE `queue_cf_timerules`
 	ADD  `id` int(10) UNSIGNED NOT NULL DEFAULT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 
 --
+-- After: e73b1042653bf36babe31e16863ecfec9662bf94
+--
+
+CREATE TABLE IF NOT EXISTS `dnd` (
+  `_user_id` int(10) NOT NULL DEFAULT '0',
+  `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
+  PRIMARY KEY (`_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `users` DROP `dnd`;
+
+--
 -- After: 9351b250a70dd4cd80356e2a8546f7afc4360cc8
 --
 
