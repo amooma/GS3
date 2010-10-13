@@ -129,6 +129,7 @@ while ($gw = $rs->fetchRow()) {
 	$params['jitterbuffer'  ] = 'yes';
 	$params['trunk'         ] = 'yes';
 	$params['qualify'       ] = 'yes';
+	$params['encryption'    ] = 'no';
 	$params['auth'          ] = 'md5';
 	$params['permit'        ] = null;
 	
@@ -155,6 +156,9 @@ while ($gw = $rs->fetchRow()) {
 	}
 	if (array_key_exists('qualify'       , $params_override)) {
 		$params['qualify'       ] = $params_override['qualify'       ];
+	}
+	if (array_key_exists('encryption'    , $params_override)) {
+		$params['encryption'    ] = $params_override['encryption'    ];
 	}
 	if (array_key_exists('auth'          , $params_override)) {
 		$params['auth'          ] = $params_override['auth'          ];
@@ -201,6 +205,7 @@ while ($gw = $rs->fetchRow()) {
 	echo 'setvar=__is_from_gateway=1' ,"\n";
 	echo 'context = '         , 'from-gg-'.$gw['gg_name'] ,"\n";
 	echo 'qualify = '         , $params['qualify'       ] ,"\n";
+	echo 'encryption = '      , $params['encryption'    ] ,"\n";
 	echo 'disallow = '        , 'all' ,"\n";
 	echo 'requirecalltoken = ' , 'no' ,"\n";
 
