@@ -283,6 +283,8 @@ foreach ($users as $i => $user) {
 	$users[$i]['secret'      ] = $user['secret'      ];
 	$users[$i]['nobody_index'] = $user['nobody_index'];
 	$users[$i]['user'        ] = $user['user'        ];
+	$users[$i]['firstname'   ] = $user['firstname'   ];
+	$users[$i]['lastname'    ] = $user['lastname'    ];
 	
 	# get host for user
 	#
@@ -413,13 +415,17 @@ foreach ($users as $i => $user) {
 	psetting('SUBSCR_'.$i.'_SIP_UA_DATA_VOICE_MAILBOX_NUMBER','"'.$user['mailbox'].'"');
 	psetting('SUBSCR_'.$i.'_SIP_UA_DATA_VOICE_MAILBOX_NAME'  ,'""');
 	psetting('SUBSCR_'.$i.'_UA_DATA_DISP_NAME'         , '"'.$user['ext'].'"');
+
+	#####################################################################
+	# Handset name
+	#####################################################################
+	psetting('HANDSET_'.($i+1).'_NAME', '"' . $user['ext'] . ' ' . mb_subStr($user['firstname'],0,1) .'. '. $user['lastname'] . '"');
 }
 
 for ($i=1; $i<9; ++$i) {
 	#####################################################################
 	# Handset settings
 	#####################################################################
-	psetting('HANDSET_'.$i.'_NAME', '"' . $user['ext'] . ' ' . mb_subStr($user['firstname'],0,1) .'. '. $user['lastname'] . '"');
 	psetting('HANDSET_'.$i.'_CW'  , 0);
 	psetting('HANDSET_'.$i.'_DND' , 0);
 	
