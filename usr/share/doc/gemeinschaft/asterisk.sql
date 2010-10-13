@@ -6723,7 +6723,8 @@ CREATE TABLE `queue_cf_timerules` (
   `d_su` tinyint(1) unsigned NOT NULL default '1',
   `h_from` time NOT NULL default '00:00:00',
   `h_to` time NOT NULL default '24:00:00',
-  `target` varchar(20) character set ascii NOT NULL
+  `target` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
