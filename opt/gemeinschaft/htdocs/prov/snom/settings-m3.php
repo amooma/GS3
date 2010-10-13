@@ -426,6 +426,7 @@ for ($i=1; $i<9; ++$i) {
 	#####################################################################
 	# Handset settings
 	#####################################################################
+	psetting('HANDSET_'.$i.'_NAME', '"' . $user['ext'] . ' ' . mb_subStr($user['firstname'],0,1) .'. '. $user['lastname'] . '"');
 	psetting('HANDSET_'.$i.'_CW'  , 0);
 	psetting('HANDSET_'.$i.'_DND' , 0);
 	
