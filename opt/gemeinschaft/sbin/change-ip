@@ -1,0 +1,461 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+# Copyright 2010, AMOOMA GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+
+from getopt import getopt, GetoptError
+from sys import exit, argv, stderr
+from os import system
+from time import sleep
+import re
+import MySQLdb #from debian package: python-mysqldb
+
+
+class IPCalc():
+
+	def bitmask(self, bits):
+		bits = int(bits)
+		if (bits == 0):
+			return bits
+
+		bitmask = (int(2) << bits -1) -1
+
+		return bitmask << (32 - bits)
+
+	def toint(self, address_str):
+		ret = address_str.split('.')
+
+		try:
+			address = int(ret[3])
+			address += (int(ret[2]) << 8)
+			address += (int(ret[1]) << 16)
+			address += (int(ret[0]) << 24)
+			
+			if (address > 4294967295):
+			    return None
+
+		except:
+			return None
+
+		return address
+	def tostr(self, address):
+		try:
+		    return "%d.%d.%d.%d" % ((address >> 24), ((address >> 16) & 255), ((address >> 8) & 255), (address & 255))
+		except:
+		    return ""
+		    
+	def innet(self, address, network, bitmask):
+
+		return ((address & bitmask) == (network & bitmask))
+		
+	def netrange(self, network, bitmask):
+		host_min = network + 1
+		host_max = network + 2**32 - bitmask - 2
+		
+		return (host_min, host_max)
+		
+
+	def netsplit(self, netaddr_str):
+		try:
+			network_str, netmask_str = netaddr_str.split('/')
+
+		except:
+			return None
+
+		network = self.toint(network_str)
+
+		if (netmask_str.find('.') >= 0):
+			bitmask = self.toint(netmask_str)
+		else:
+			bitmask = self.bitmask(netmask_str)
+			
+		network = network & bitmask
+
+		return network, bitmask
+	
+	def default_masklen(self, address):
+	  #8: 0 - 2147483647
+	  #16: 2147483648 - 3221225471
+	  #24: 3221225472 - 3758096383
+		if (address < 2147483648):
+		    return 8
+		elif (address > 2147483647 and address < 3221225472):
+		    return 16
+		elif (address > 3221225471 and address < 3758096384):
+		    return 24
+		else:
+		    return None
+		    
+class GSMySQL():
+
+	def __init__(self, address=None, port=3306, user=None , password='', database=None):
+
+		self.port = port
+		self.address = address
+		self.user = user
+		self.password = password
+		self.database = database
+		self.dbhandler = None
+		self.dbresult = None
+
+	def connect(self, address=None, port=None, user=None , password='', database=None):
+		if (address):
+			self.address = address
+		if (port):
+			self.port = port
+		if (user):
+			self.user = user
+		if (password):
+			self.password = password
+		if (database):
+			self.database = database
+
+		try:
+			self.dbhandler = MySQLdb.connect(host=self.address,port=self.port,user=self.user,passwd=self.password,db=self.database)
+		except:
+			return False
+
+		return True
+
+	def close(self):
+		self.dbhandler.close()
+
+	def execute(self, query):
+		try:
+			self.dbhandler.query(query)
+			dbresult = self.dbhandler.store_result()
+			return dbresult
+		except:
+			return False
+
+		return dbresult
+
+	def commit(self):
+		self.dbhandler.commit()
+
+	def rollback(self):
+		self.dbhandler.rollback()
+
+	def fetch_row(self, dbresult):
+		row = dbresult.fetch_row(1,1)[0]
+
+		return row
+
+	def fetch_rows(self, dbresult):
+		rows = dbresult.fetch_row(0,1)
+
+		return rows
+	
+	def execute_get_row(self, query):
+		dbresult = self.execute(query)
+		
+		if (dbresult == False):
+			return False
+
+		row = dbresult.fetch_row(1,1)
+
+		if (not row):
+			return False
+			
+		return row[0]
+		
+	def execute_get_value(self, query):
+		dbresult = self.execute(query)
+		if (dbresult == False):
+			return False
+
+		row = dbresult.fetch_row(1,0)
+
+		if (not row):
+			return False
+
+		return row[0][0]
+
+	def update_row(self, table, row):
+		record = {}
+		update_str = ''
+		for entry in row:
+			record['`%s`' % str(entry)] = "'%s'" % str(row[entry])
+			if (update_str):
+				update_str += ','
+			update_str += "`%s` = '%s'" % (str(entry), str(row[entry]))
+
+		return self.execute('INSERT `%s` (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s' % (table, ','.join(record.keys()), ','.join(record.values()), update_str))
+
+	def update_row_if_exists(self, table, key, row):
+		record = {}
+		update_str = ''
+		key_str = ''
+
+		for entry in key:
+			if (key_str):
+				key_str += ' AND '
+			key_str += "`%s` = '%s'" % (str(entry), str(key[entry]))
+			
+		for entry in row:
+			if (update_str):
+				update_str += ','
+			update_str += "`%s` = '%s'" % (str(entry), str(row[entry]))
+
+		return self.execute('UPDATE `%s` SET %s WHERE %s' % (table, update_str, key_str))
+
+
+def perror(message):
+    print >> stderr, "ERROR:", message
+
+def check_valid_ip(address):
+    ipcalc = IPCalc()
+    
+    if (ipcalc.toint(address) == None):
+	return False
+    
+    return True
+    
+def default_netmask(address):
+    ipcalc = IPCalc()
+      
+    ip_address = ipcalc.toint(address)
+    
+    masklen = ipcalc.default_masklen(ip_address)
+    
+    if (masklen == 8):
+	return "255.0.0.0"
+    elif (masklen == 16):
+        return "255.255.0.0"
+    elif (masklen == 24):
+        return "255.255.255.0"
+    else:
+	return "255.255.255.0"
+
+
+def scan_file_for_ip(filename):
+    try:
+	fd = open(filename, 'r')
+	for line in fd:
+	   line = line.strip()
+	   res = re.match('[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', line)
+	
+	if (res):
+	    return res.group(0)  
+	   
+    except:
+	return False
+		      
+	fd.closed
+
+def get_old_address(filename):
+    return scan_file_for_ip(filename)
+  
+
+def change_ip_in_file(filename, old_address, new_address):
+    src = open(filename, 'r')
+    srcbuf = src.readlines()
+    src.closed
+    dst = open(filename, 'w')
+    for line in srcbuf:
+	line = re.sub(old_address, new_address, line)
+	dst.write( line )
+	
+    dst.closed
+    
+    
+def change_node_ip(address, host = 1):
+    gsdb = GSMySQL('127.0.0.1', 3306, 'root', '', 'asterisk')
+    gsdb.connect()
+    record = {}
+    record['id'] = host
+    record['host'] = address
+    
+    rs = gsdb.update_row('hosts', record)
+
+    if (rs == None):
+	    gsdb.commit()
+	    return True
+    else:
+	    gsdb.rollback()
+	    return False
+	    
+def change_dhcp_config(filename, old_address, new_address, netmask, gateway):
+    ipcalc = IPCalc()
+    
+    subnet, mask = ipcalc.netsplit('%s/%s' % (new_address, netmask))
+    minip, maxip = ipcalc.netrange(subnet, mask)
+    broadcast = ipcalc.tostr(maxip + 1)
+    
+    src = open(filename, 'r')
+    srcbuf = src.readlines()
+    src.closed
+    
+    dst = open(filename, 'w')
+    
+    for line in srcbuf:	
+	line = re.sub(old_address, new_address, line)
+	
+	if (gateway):
+	  line = re.sub('(?<=routers) [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', ' %s' % gateway, line)
+	
+	line = re.sub('(?<=subnet-mask) [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', ' %s' % netmask, line)
+	    
+	line = re.sub('(?<=broadcast-address) [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', ' %s' % broadcast, line)
+	
+	res = re.search('(?<=subnet) [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', line)
+	if (res):
+	    line = re.sub('(?<=subnet) [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', ' %s' % ipcalc.tostr(subnet), line)
+	    line = re.sub('(?<=netmask) [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', ' %s' % ipcalc.tostr(mask), line)
+	    
+	res = re.search('(?<=range) [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', line)
+	if (res):
+	      range_a = res.group(0).strip()
+	      range_min, range_max = range_a.split(' ')
+	      range_min = ipcalc.toint(range_min)
+	      range_max = ipcalc.toint(range_max)
+	      if (not ipcalc.innet(range_min, subnet, mask) or not ipcalc.innet(range_max, subnet, mask)):
+		 old_subnet, old_mask = ipcalc.netsplit('%s/%s' % (old_address, netmask))
+		 delta =  subnet - old_subnet
+		 range_min = range_min + delta
+		 range_max = range_max + delta
+		 
+		 if (not ipcalc.innet(range_min, subnet, mask) or not ipcalc.innet(range_max, subnet, mask)):
+		    range_min = minip + 40
+		    range_max = maxip - 10
+		 
+		 line = re.sub('(?<=range) [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3} [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', ' %s %s' % (ipcalc.tostr(range_min), ipcalc.tostr(range_max)), line)	
+	
+	dst.write(line)
+    dst.closed
+
+def change_interfaces_ip(filename, old_address, new_address, netmask, gateway):
+    src = open(filename, 'r')
+    srcbuf = src.readlines()
+    src.closed
+    dst = open(filename, 'w')
+    interface = False
+    interface_this = False
+    for line in srcbuf:
+	
+	res = re.search('(?<=iface) \S*', line)
+	if (res):
+	    interface_this = False
+	    if (not re.search('inet\s*static', line)):
+		interface = False
+		continue
+	    
+	    interface = res.group(0).strip()
+	    
+	if (re.search('(?<=address) %s' % old_address, line)):
+	   line = re.sub(old_address, new_address, line)
+	   interface_this = True
+	if (gateway and interface_this):
+	    line = re.sub('(?<=gateway) [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', ' %s' % gateway, line)
+	    
+	if (netmask and interface_this):
+	    line = re.sub('(?<=netmask) [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}', ' %s' % netmask, line)
+	    
+	dst.write( line )
+	
+    dst.closed
+
+def usage():
+    print "usage:"
+    print "-h, --help\t\tprint this page"
+    print "-a, --address\t\tip address"
+    print "-n, --netmask\t\tnetmask"
+    print "-o, --old-address\told ip address"
+    print "-g, --gateway\tgateway ip address"
+
+
+def main():
+   # ASTERISKFILE = "/tmp/listen-to-ip"
+   # DHCPFILE = "/tmp/dhcpd3.conf"
+   # INTERFACEFILE = "/tmp/interfaces"
+   
+    ASTERISKFILE = "/opt/gemeinschaft/etc/listen-to-ip"
+    GEMEINSCHAFTFILE = "/etc/gemeinschaft/gemeinschaft.php"
+    DHCPFILE = "/etc/dhcp3/dhcpd.conf"
+    INTERFACEFILE = "/etc/network/interfaces"
+
+
+    try:
+	opts, args = getopt(argv[1:], "ho:a:n:g:", ["help", "old-address=", 'address=', 'netmask=', 'gateway='])
+    
+    except GetoptError, err:
+	perror(str(err))
+	usage()
+	exit(2)
+
+    help = False
+    address = False
+    old_address = False
+    netmask = False
+    gateway = False
+
+    for opt, arg in opts:
+	if (opt in ("-h", "--help")):
+	    usage()
+	    exit(0)
+	elif (opt in ("-o", "--old-address")):
+	    old_address = arg.strip()
+	elif (opt in ("-q", "--address")):
+	    address = arg.strip()  
+	elif (opt in ("-n", "--netmask")):
+	    netmask = arg.strip() 
+	elif (opt in ("-n", "--gateway")):
+	    gateway = arg.strip()
+	else:
+	    perror('Missing parameters')
+	    usage()
+	    exit(2)
+
+    if (not address):
+      perror('no ip address')
+      usage()
+      exit(2)
+      
+      
+    if (not check_valid_ip(address)):
+        perror('ip address out of range: %s' % address)
+        exit(2)
+        
+    if (not netmask):
+	netmask = default_netmask(address)
+    
+    if (not check_valid_ip(netmask)):
+        perror('netmask out of range: %s' % netmask)
+        exit(2)
+    
+    if (not old_address):
+	old_address = get_old_address(ASTERISKFILE)
+    
+    if (not old_address): 
+	perror('cannot determin old ip adress: %s' % old_address)
+	exit(2)
+	
+    if (not check_valid_ip(old_address)):
+        perror('old address out of range: %s' % old_address)
+        exit(2)
+        
+    if (gateway):
+	if (not check_valid_ip(gateway)):
+	     perror('old address out of range: %s' % old_address)
+	     exit(2)
+	else:
+	    ipcalc = IPCalc()
+	    subnet, mask = ipcalc.netsplit('%s/%s' % (address, netmask))
+	    if (not ipcalc.innet(ipcalc.toint(gateway), subnet, mask)):
+		perror('gateway address (%s) not in subnet: %s/%s' % (gateway, ipcalc.tostr(subnet), ipcalc.tostr(netmask)))
+		exit (2)
+  
+    change_ip_in_file(GEMEINSCHAFTFILE, old_address, address)
+    change_ip_in_file(ASTERISKFILE, old_address, address)
+    change_node_ip(address)
+    change_dhcp_config(DHCPFILE, old_address, address, netmask, gateway)
+    change_interfaces_ip(INTERFACEFILE, old_address, address, netmask, gateway)
+    
+    system('/etc/init.d/networking restart')
+    sleep(0.5)
+    system('/etc/init.d/dhcp3-server restart')
+    sleep(0.5)
+    system('/etc/init.d/asterisk restart')
+
+if __name__ == "__main__":
+    main()
