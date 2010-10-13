@@ -258,6 +258,7 @@ def change_ip_in_file(filename, old_address, new_address):
 	
     dst.closed
     
+    return True
     
 def change_node_ip(address, host = 1):
     gsdb = GSMySQL('127.0.0.1', 3306, 'root', '', 'asterisk')
@@ -323,6 +324,8 @@ def change_dhcp_config(filename, old_address, new_address, netmask, gateway):
 	
 	dst.write(line)
     dst.closed
+    
+    return True
 
 def change_interfaces_ip(filename, old_address, new_address, netmask, gateway):
     src = open(filename, 'r')
@@ -395,11 +398,11 @@ def main():
 	    exit(0)
 	elif (opt in ("-o", "--old-address")):
 	    old_address = arg.strip()
-	elif (opt in ("-q", "--address")):
+	elif (opt in ("-a", "--address")):
 	    address = arg.strip()  
 	elif (opt in ("-n", "--netmask")):
 	    netmask = arg.strip() 
-	elif (opt in ("-n", "--gateway")):
+	elif (opt in ("-g", "--gateway")):
 	    gateway = arg.strip()
 	else:
 	    perror('Missing parameters')
@@ -445,11 +448,30 @@ def main():
 		perror('gateway address (%s) not in subnet: %s/%s' % (gateway, ipcalc.tostr(subnet), ipcalc.tostr(netmask)))
 		exit (2)
   
-    change_ip_in_file(GEMEINSCHAFTFILE, old_address, address)
-    change_ip_in_file(ASTERISKFILE, old_address, address)
-    change_node_ip(address)
-    change_dhcp_config(DHCPFILE, old_address, address, netmask, gateway)
-    change_interfaces_ip(INTERFACEFILE, old_address, address, netmask, gateway)
+    try:
+	change_ip_in_file(GEMEINSCHAFTFILE, old_address, address)
+    except:
+	perror('changing IP in "%s" failed' % GEMEINSCHAFTFILE)
+    
+    try:
+	change_ip_in_file(ASTERISKFILE, old_address, address)
+    except:
+	perror('changing IP in "%s" failed' % ASTERISKFILE)
+    
+    try:
+	change_node_ip(address)
+    except:
+	perror('changing node IP failed')
+	
+    try:
+	change_dhcp_config(DHCPFILE, old_address, address, netmask, gateway)
+    except:
+	perror('changing DHCP IP in "%s" failed' % DHCPFILE)
+	
+    try:
+	change_interfaces_ip(INTERFACEFILE, old_address, address, netmask, gateway)
+    except:
+        perror('changing system IP in "%s" failed' % INTERFACEFILE)
     
     system('/etc/init.d/networking restart')
     sleep(0.5)
