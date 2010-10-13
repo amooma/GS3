@@ -256,7 +256,7 @@ function _gs_prov_phone_checkcfg_by_ip_do_snom_m3( $ip, $reboot=true )
 	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
 	
 	// The M3 has to be rebooted to read its config.
-	@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/reboot.html') . ' >>/dev/null 2>>/dev/null &', $out, $err );
+	@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_M3_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_M3_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/reboot.html') . ' >>/dev/null 2>>/dev/null &', $out, $err );
 }
 
 
