@@ -377,8 +377,8 @@ psetting('VOIP_LOG_AUTO_UPLOAD', 0);
 psetting('PINCODE_PROTECTED_SETTINGS', 0);
 psetting('VOIP_SETTINGS_PIN_CODE', '"0000"');
 psetting('LOCAL_HTTP_SERVER_TEMPLATE_TITLE', ($hp_route_prefix) ? '" SNOM M3 ('.$hp_route_prefix.')"' : '"SNOM M3"' );
-psetting('LOCAL_HTTP_SERVER_AUTH_NAME', '""');
-psetting('LOCAL_HTTP_SERVER_AUTH_PASS', '""');
+psetting('LOCAL_HTTP_SERVER_AUTH_NAME', '"' . gs_get_conf('GS_SNOM_PROV_M3_HTTP_USER') . '"');
+psetting('LOCAL_HTTP_SERVER_AUTH_PASS', '"' . gs_get_conf('GS_SNOM_PROV_M3_HTTP_PASS') . '"');
 psetting('LOCAL_HTTP_SERVER_ACCESS'   , '34815');
 
 #####################################################################
@@ -419,7 +419,7 @@ for ($i=1; $i<9; ++$i) {
 	#####################################################################
 	# Handset settings
 	#####################################################################
-	psetting('HANDSET_'.$i.'_NAME', '"Mobil '.$i.'"');
+	psetting('HANDSET_'.$i.'_NAME', '"' . $user['ext'] . ' ' . mb_subStr($user['firstname'],0,1) .'. '. $user['lastname'] . '"');
 	psetting('HANDSET_'.$i.'_CW'  , 0);
 	psetting('HANDSET_'.$i.'_DND' , 0);
 	

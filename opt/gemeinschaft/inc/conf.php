@@ -261,6 +261,8 @@ _gscnf( 'SNOM_PROV_FW_DEFAULT_370'  , null               );
 _gscnf( 'SNOM_PROV_KEY_BLACKLIST'   , ''                 );
 
 _gscnf( 'SNOM_PROV_M3_ACCOUNTS'     , 1                  );
+_gscnf( 'SNOM_PROV_M3_HTTP_USER'    , ''                 );
+_gscnf( 'SNOM_PROV_M3_HTTP_PASS'    , ''                 );
 //_gscnf( 'SNOM_PROV_M3_FW_DEFAULT_SNOM_M3', null          );
 //_gscnf( 'SNOM_PROV_M3_KEY_BLACKLIST', ''                 );
 
