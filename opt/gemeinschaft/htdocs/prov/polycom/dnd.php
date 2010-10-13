@@ -131,7 +131,7 @@ if(($newdndstate == "on") || ($newdndstate == "off"))
 	if($newdndstate == "on") $dndvalue = 'yes';
 	if($newdndstate == "off") $dndvalue = 'no';
 
-	$ckeck = $db->execute("INSERT INTO `dnd` (`_user_id`, `active`) VALUES (" . $user_id . ", '" . $db->escape($dndvalue) ."') ON DUPLICATE KEY UPDATE `active` = '" . $db->escape($dndvalue) ."'");
+	$check = $masterdb->execute("INSERT INTO `dnd` (`_user_id`, `active`) VALUES (" . $user_id . ", '" . $db->escape($dndvalue) ."') ON DUPLICATE KEY UPDATE `active` = '" . $db->escape($dndvalue) ."'");
 	if(!$check) _err("Failed to set new DND state.");
 
 	if(GS_BUTTONDAEMON_USE == true)	gs_dnd_changed_ui( $user, $newdndstate );
@@ -139,7 +139,7 @@ if(($newdndstate == "on") || ($newdndstate == "off"))
 
 #################################### MAIN MENU {
 
-$current_dndstate = (int)$db->executeGetOne("SELECT `dnd` FROM `users` WHERE `id`=". $user_id);
+$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
 
 echo $mainmenu_doctype ."\n";
 
@@ -152,8 +152,8 @@ echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n"
 echo "<tr>";
 echo "<th width=\"100%\" align=\"center\">". __("Ruhe/DND-Status setzen") .":</th></tr>\n";
 
-echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=on\">". (($current_dndstate == 1) ? "*" : "") . __("Ein") ."</a></td></tr>\n";
-echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=off\">". (($current_dndstate != 1) ? "*" : "") . __("Aus") ."</a></td></tr>\n";
+echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=on\">". (($current_dndstate == 'yes') ? "*" : "") . __("Ein") ."</a></td></tr>\n";
+echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=off\">". (($current_dndstate != 'yes') ? "*" : "") . __("Aus") ."</a></td></tr>\n";
 
 echo "</table>\n";
 
