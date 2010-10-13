@@ -336,6 +336,10 @@ $SNOM_PROV_M3_ACCOUNTS      = 1;
 
 //$SNOM_PROV_M3_FW_DEFAULT_SNOM_M3 = 'x.x.x';  # not used (yet)
 
+$SNOM_PROV_M3_HTTP_USER        = 'gs';
+$SNOM_PROV_M3_HTTP_PASS        = 'gEheiM23y89sdo23';
+  # if the username is empty, access to the base station's web 
+  # interface will be denied
 
 //----------------------[  Aastra  ]----------------------//
 
