@@ -45,7 +45,7 @@ class PhoneCapability
 		 0 => array('settings'=>'Silent'  , 'alertinfo'=>'Silent'       )
 	);
 	
-	function conv_ringtone( $file )
+	function conv_ringtone( $infile, $outbase )
 	{
 		// phone specific. sox and mpg123 can be used.
 		// must return null if not implemented, false on error,
