@@ -152,3 +152,11 @@ ALTER TABLE `users` DROP `dnd`;
 
 ALTER TABLE `phones` ADD
   `expansion_modules` varchar(50) character set ascii default NULL AFTER `fw_manual_update`;
+
+
+--
+-- After: 24111e0c1fddf49bd84e00af3aada20418249ff7
+--
+
+ALTER TABLE `phones` MODIFY
+  `mac_addr` varchar(14) character set ascii NOT NULL default '';

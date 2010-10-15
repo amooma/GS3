@@ -6505,7 +6505,7 @@ DROP TABLE IF EXISTS `phones`;
 CREATE TABLE `phones` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `type` varchar(30) character set ascii NOT NULL default '',
-  `mac_addr` varchar(12) character set ascii NOT NULL default '',
+  `mac_addr` varchar(14) character set ascii NOT NULL default '',
   `user_id` int(10) unsigned default NULL,
   `nobody_index` mediumint(8) unsigned NOT NULL default '0',
   `added` int(10) unsigned NOT NULL default '0',
