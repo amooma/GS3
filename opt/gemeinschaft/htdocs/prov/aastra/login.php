@@ -35,6 +35,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 $xml = '';
 
@@ -52,6 +53,20 @@ function _get_user()
 	$user_name = (string)$db->executeGetOne( 'SELECT `user`, `nobody_index` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 	
 	return gs_user_get($user_name);
+}
+
+function _get_user_ext( $user_id )
+{
+	$db = gs_db_slave_connect();
+	
+	$user_ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+
+	if (!$user_ext ) {
+		_err( 'Unknown user.' );
+		return false;
+	}
+
+	return $user_ext;
 }
 
 function _logout_user()
@@ -113,6 +128,17 @@ function _logout_user()
 	# reboot phone
 	#
 	gs_prov_phone_checkcfg_by_ip( $remote_addr,true );
+	
+	# generate userevent
+	#
+	if ( GS_BUTTONDAEMON_USE == true ) {
+
+		$user_ext = _get_user_ext ( $old_uid );
+		if ( $user_ext ) {
+			gs_user_logoff_ui ( $user_ext );
+		}
+	}
+
 	
 	return true;
 }
@@ -215,6 +241,17 @@ function _login_user($new_ext, $password)
 	# reboot new phone
 	#
 	if ($new_ip_addr) gs_prov_phone_checkcfg_by_ip( $new_ip_addr ,true );
+	
+	# generate userevent
+	#
+	if ( GS_BUTTONDAEMON_USE == true ) {
+
+		$user_ext = _get_user_ext ( $new_uid );
+		if ( $user_ext ) {
+			gs_user_login_ui ( $user_ext );
+		}
+	}
+
 	
 	return true;
 }

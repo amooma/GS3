@@ -381,4 +381,24 @@ function gs_agent_logoff_ui( $agent )
 
 	_gs_send_event ( $data );
 }
+
+function gs_user_login_ui( $user )
+{
+	$data = _get_ui_head( 'UserLoginUI' );
+	
+	$data[] = array( 'parm' => 'user', 'value' => $user );
+
+	_gs_send_event ( $data );
+}
+
+function gs_user_logoff_ui( $user )
+{
+	$data = _get_ui_head( 'UserLogoffUI' );
+	
+	$data[] = array( 'parm' => 'user', 'value' => $user );
+
+	_gs_send_event ( $data );
+}
+
+
 ?>
