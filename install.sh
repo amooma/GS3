@@ -428,6 +428,7 @@ ${APTITUDE_INSTALL} \
 	apache2 \
 	php5-cli libapache2-mod-php5 php5-mysql php5-ldap \
 	python2.6 \
+	python-mysqldb \
 	sox libsox-fmt-all mpg123
 unset DEBIAN_FRONTEND
 unset DEBIAN_PRIORITY

@@ -283,6 +283,8 @@ foreach ($users as $i => $user) {
 	$users[$i]['secret'      ] = $user['secret'      ];
 	$users[$i]['nobody_index'] = $user['nobody_index'];
 	$users[$i]['user'        ] = $user['user'        ];
+	$users[$i]['firstname'   ] = $user['firstname'   ];
+	$users[$i]['lastname'    ] = $user['lastname'    ];
 	
 	# get host for user
 	#
@@ -377,8 +379,8 @@ psetting('VOIP_LOG_AUTO_UPLOAD', 0);
 psetting('PINCODE_PROTECTED_SETTINGS', 0);
 psetting('VOIP_SETTINGS_PIN_CODE', '"0000"');
 psetting('LOCAL_HTTP_SERVER_TEMPLATE_TITLE', ($hp_route_prefix) ? '" SNOM M3 ('.$hp_route_prefix.')"' : '"SNOM M3"' );
-psetting('LOCAL_HTTP_SERVER_AUTH_NAME', '""');
-psetting('LOCAL_HTTP_SERVER_AUTH_PASS', '""');
+psetting('LOCAL_HTTP_SERVER_AUTH_NAME', '"' . gs_get_conf('GS_SNOM_PROV_M3_HTTP_USER') . '"');
+psetting('LOCAL_HTTP_SERVER_AUTH_PASS', '"' . gs_get_conf('GS_SNOM_PROV_M3_HTTP_PASS') . '"');
 psetting('LOCAL_HTTP_SERVER_ACCESS'   , '34815');
 
 #####################################################################
@@ -413,13 +415,17 @@ foreach ($users as $i => $user) {
 	psetting('SUBSCR_'.$i.'_SIP_UA_DATA_VOICE_MAILBOX_NUMBER','"'.$user['mailbox'].'"');
 	psetting('SUBSCR_'.$i.'_SIP_UA_DATA_VOICE_MAILBOX_NAME'  ,'""');
 	psetting('SUBSCR_'.$i.'_UA_DATA_DISP_NAME'         , '"'.$user['ext'].'"');
+
+	#####################################################################
+	# Handset name
+	#####################################################################
+	psetting('HANDSET_'.($i+1).'_NAME', '"' . $user['ext'] . ' ' . mb_subStr($user['firstname'],0,1) .'. '. $user['lastname'] . '"');
 }
 
 for ($i=1; $i<9; ++$i) {
 	#####################################################################
 	# Handset settings
 	#####################################################################
-	psetting('HANDSET_'.$i.'_NAME', '"Mobil '.$i.'"');
 	psetting('HANDSET_'.$i.'_CW'  , 0);
 	psetting('HANDSET_'.$i.'_DND' , 0);
 	
