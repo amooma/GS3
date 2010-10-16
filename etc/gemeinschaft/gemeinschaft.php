@@ -529,15 +529,6 @@ $DP_SUBSYSTEM               = false;
   # are we a sub-system behind another PBX in the same private
   # branch? if true dial outbound for unknown numbers
 
-  # emergency numbers - no checking for permissions etc.:
-$DP_EMERGENCY_POLICE        = '110,0110';  # 110,0110,911,999,767,...
-$DP_EMERGENCY_POLICE_MAP    = '110';
-$DP_EMERGENCY_FIRE          = '112,0112';
-$DP_EMERGENCY_FIRE_MAP      = '112';
-  # if you do not dial to the PSTN directly but via some kind
-  # of gateway you might need to prefix the ..._MAP numbers
-  # with 0
-
 $DP_DIALTIMEOUT_IN          = 45;
   # default timeout when dialing to internal users
 
