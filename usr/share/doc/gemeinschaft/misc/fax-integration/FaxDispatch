@@ -16,9 +16,12 @@ EXTEN_ID=$CALLID4;
 
 if [ -z "$EXTEN_ID" ] ; then EXTEN_ID=0;
 fi
+MYSQL_HOST=$(/opt/gemeinschaft/sbin/gs-get-conf DB_SLAVE_HOST);
+MYSQL_USER=$(/opt/gemeinschaft/sbin/gs-get-conf DB_SLAVE_USER);
+MYSQL_PASS=$(/opt/gemeinschaft/sbin/gs-get-conf DB_SLAVE_PWD);
+MYSQL_DB=$(/opt/gemeinschaft/sbin/gs-get-conf DB_SLAVE_DB);
 
-
-SQL_RESULT=$(mysql --user=root --password= -hlocalhost -Dasterisk --execute="SELECT \`u\`.\`id\`, \`u\`.\`email\` FROM \`users\` \`u\` JOIN \`ast_sipfriends\` \`x\` ON \`x\`.\`_user_id\`
+SQL_RESULT=$(mysql --user=$MYSQL_USER --password=$MYSQL_PASS -h$MYSQL_HOST -D$MYSQL_DB --execute="SELECT \`u\`.\`id\`, \`u\`.\`email\` FROM \`users\` \`u\` JOIN \`ast_sipfriends\` \`x\` ON \`x\`.\`_user_id\`
 = \`u\`.\`id\` WHERE \`x\`.\`name\` = '$EXTEN_ID' " );
 
 SENDTO=`echo $SQL_RESULT | awk  '{print $4}'`;
