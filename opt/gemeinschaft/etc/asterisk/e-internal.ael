@@ -864,7 +864,7 @@ context to-internal-users-self {
 			
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-dnd.agi,${EXTEN});
 			if ("${dnd_active}" = "yes") {
-				Set(DIALSTATUS="BUSY");
+				Set(DIALSTATUS=BUSY);
 			} else {
 				AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${is_call_from});
 				Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout});
