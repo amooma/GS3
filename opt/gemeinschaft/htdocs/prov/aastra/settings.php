@@ -54,6 +54,7 @@ require_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'inc/prov-fns.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
+include_once( GS_DIR .'inc/string.php' );
 set_error_handler('err_handler_die_on_err');
 
 function _settings_err( $msg='' )

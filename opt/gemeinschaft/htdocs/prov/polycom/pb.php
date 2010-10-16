@@ -34,6 +34,7 @@ include_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gettext.php");
 include_once(GS_DIR ."inc/langhelper.php");
 include_once(GS_DIR ."inc/group-fns.php");
+include_once( GS_DIR .'inc/string.php' );
 
 header("Content-Type: text/html; charset=utf-8");
 header("Expires: 0");
@@ -64,7 +65,7 @@ function _err($msg = "")
 
         echo "<html>\n";
         echo "<head><title>". __("Fehler") ."</title></head>\n";
-        echo "<body><b>". __("Fehler") ."</b>: ". $msg ."</body>\n";
+        echo "<body><b>". __("Fehler") ."</b>: ". htmlEnt($msg) ."</body>\n";
         echo "</html>\n";
 
         _ob_send();
@@ -147,7 +148,7 @@ if (!$type)
 
         echo $phonebook_doctype ."\n";
         echo "<html>\n";
-        echo "<head><title>". __("Telefonbuch") ."</title></head>\n";
+        echo "<head><title>". htmlEnt(__("Telefonbuch")) ."</title></head>\n";
         echo "<body><br />\n";
 
         foreach($typeToTitle as $t => $title)
@@ -171,7 +172,7 @@ if (!$type)
 
 		$c = $cq ? (" (". (int)@$db->executeGetOne($cq) .")") : "";
 
-                echo "- <a href=\"". $url_polycom_pb ."?m=". $mac ."&amp;u=". $user ."&amp;t=". $t ."\">". $title . $c ."</a><br />\n";
+                echo "- <a href=\"". $url_polycom_pb ."?m=". $mac ."&amp;u=". $user ."&amp;t=". $t ."\">". htmlEnt($title) . $c ."</a><br />\n";
         }
 
         echo "</body>\n";
@@ -196,7 +197,7 @@ if ($searchform === 1)
 	echo $phonebook_doctype ."\n";
 
 	echo "<html>\n";
-	echo "<head><title>". __("Telefonbuch") ." - ". $typeToTitle[$type] ."</title></head>\n";
+	echo "<head><title>". htmlEnt(__("Telefonbuch")) ." - ". htmlEnt($typeToTitle[$type]) ."</title></head>\n";
 	echo "<body><br />\n";
 
 	echo "<form name=\"search\" method=\"GET\" action=\"". $url_polycom_pb ."\">\n";
@@ -206,7 +207,7 @@ if ($searchform === 1)
 
 	echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 	echo "<tr>";
-	echo "<th align=\"center\" width=\"100%\">". sprintf(__("Telefonbuch %s durchsuchen"), " '". $typeToTitle[$type] ."' ") .":</th>";
+	echo "<th align=\"center\" width=\"100%\">". htmlEnt(sprintf(__("Telefonbuch %s durchsuchen")), " '". htmlEnt($typeToTitle[$type]) ."' ") .":</th>";
 	echo "</tr>";
 
 	echo "<tr><td align=\"center\" width=\"100%\"><input type=\"text\" name=\"q\" /></td></tr>\n";
@@ -246,7 +247,7 @@ if( $type === "imported" )
 	}
 
 	echo "<html>\n";
-	echo "<head><title>". $pagetitle ."</title></head>\n";
+	echo "<head><title>". htmlEnt($pagetitle) ."</title></head>\n";
 	echo "<body><br />\n";
 
 	$query =
@@ -273,7 +274,7 @@ if( $type === "imported" )
 
 			echo "<tr>";
 
-			echo "<td width=\"50%\">". $name ."</td>";
+			echo "<td width=\"50%\">". htmlEnt($name) ."</td>";
 			echo "<td width=\"50%\"><a href=\"tel://". $number."\">". $number ."</a></td></tr>\n";
 
 		}
@@ -282,14 +283,14 @@ if( $type === "imported" )
 	}
 	else
 	{
-		echo "<br />". $noresultsmsg ."<br />\n";
+		echo "<br />". htmlEnt($noresultsmsg) ."<br />\n";
 	}
 
 	echo "</body>\n";
 
-	echo "<softkey index=\"1\" label=\"". __("Zur\xC3\xBCck") ."\" action=\"Softkey:Back\" />\n";
+	echo "<softkey index=\"1\" label=\"". htmlEnt(__("Zur\xC3\xBCck")) ."\" action=\"Softkey:Back\" />\n";
 	echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"3\" label=\"". __("Beenden") ."\" action=\"Softkey:Exit\" />\n";
+	echo "<softkey index=\"3\" label=\"". html(__("Beenden")) ."\" action=\"Softkey:Exit\" />\n";
 	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
 	echo "</html>\n";
 
@@ -326,7 +327,7 @@ if ($type === "gs")
 	}
 
 	echo "<html>\n";
-	echo "<head><title>". $pagetitle ."</title></head>\n";
+	echo "<head><title>". htmlEnt($pagetitle) ."</title></head>\n";
 	echo "<body><br />\n";
 
 
@@ -359,7 +360,7 @@ if ($type === "gs")
 
 			echo "<tr>";
 
-			echo "<td width=\"50%\">". $name ."</td>";
+			echo "<td width=\"50%\">". htmlEnt($name) ."</td>";
 			echo "<td width=\"50%\"><a href=\"tel://". $number."\">". $number ."</a></td></tr>\n";
 
 		}
@@ -368,14 +369,14 @@ if ($type === "gs")
 	}
 	else
 	{
-		echo "<br />". $noresultsmsg. "<br />\n";
+		echo "<br />". htmlEnt($noresultsmsg). "<br />\n";
 	}
 
 	echo "</body>\n";
 
-	echo "<softkey index=\"1\" label=\"". __("Zur\xC3\xBCck") ."\" action=\"Softkey:Back\" />\n";
-	echo "<softkey index=\"2\" label=\"". __("Suchen") ."\" action=\"Softkey:Fetch;". $url_polycom_pb ."?u=". $user ."&amp;m=". $mac ."&amp;t=". $type ."&amp;searchform=1\" />\n";
-	echo "<softkey index=\"3\" label=\"". __("Beenden") ."\" action=\"Softkey:Exit\" />\n";
+	echo "<softkey index=\"1\" label=\"". htmlEnt(__("Zur\xC3\xBCck")) ."\" action=\"Softkey:Back\" />\n";
+	echo "<softkey index=\"2\" label=\"". htmlEnt(__("Suchen")) ."\" action=\"Softkey:Fetch;". $url_polycom_pb ."?u=". $user ."&amp;m=". $mac ."&amp;t=". $type ."&amp;searchform=1\" />\n";
+	echo "<softkey index=\"3\" label=\"". htmlEnt(__("Beenden")) ."\" action=\"Softkey:Exit\" />\n";
 	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
 	echo "</html>\n";
 
@@ -408,7 +409,7 @@ if ( $type === "prv" )
 	}
 
 	echo "<html>\n";
-	echo "<head><title>". $pagetitle ."</title></head>\n";
+	echo "<head><title>". htmlEnt($pagetitle) ."</title></head>\n";
 	echo "<body><br />\n";
 
 	$user_id_check = $db->executeGetOne("SELECT `user_id` FROM `phones` WHERE `mac_addr`='". $db->escape($mac) ."'");
@@ -437,8 +438,8 @@ if ( $type === "prv" )
 
 		echo "<tr>";
 
-		echo "<th width=\"50%\">". __("Name") ."</th>";
-		echo "<th width=\"50%\">". __("Nummer") ."</th></tr>\n";
+		echo "<th width=\"50%\">". htmlEnt(__("Name")) ."</th>";
+		echo "<th width=\"50%\">". htmlEnt(__("Nummer")) ."</th></tr>\n";
 
 		while ( $r = $rs->fetchRow() )
 		{
@@ -447,7 +448,7 @@ if ( $type === "prv" )
 
 			echo "<tr>";
 
-			echo "<td width=\"50%\">". $name ."</td>";
+			echo "<td width=\"50%\">". htmlEnt($name) ."</td>";
 			echo "<td width=\"50%\"><a href=\"tel://". $number."\">". $number ."</a></td>";
 
 			echo "</tr>\n";
@@ -457,7 +458,7 @@ if ( $type === "prv" )
 	}
 	else
 	{
-		echo "<br />". $noresultsmsg ."<br />\n";
+		echo "<br />". htmlEnt($noresultsmsg) ."<br />\n";
 	}
 
 	echo "</body>\n";

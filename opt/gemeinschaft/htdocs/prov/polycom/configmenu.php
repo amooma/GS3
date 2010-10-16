@@ -34,6 +34,7 @@ require_once( dirname(__FILE__) .'/../../../inc/conf.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 require_once(GS_DIR ."inc/langhelper.php");
+include_once( GS_DIR .'inc/string.php' );
 
 header( 'Content-Type: text/html; charset=utf-8' );
 header( 'Expires: 0' );
@@ -62,8 +63,8 @@ function _err( $msg='' )
         ob_start();
 
         echo '<html>',"\n";
-        echo '<head><title>'. __('Fehler') .'</title></head>',"\n";
-        echo '<body><b>'. __('Fehler') .'</b>: '. $msg .'</body>',"\n";
+        echo '<head><title>'. htmlEnc(__('Fehler')) .'</title></head>',"\n";
+        echo '<body><b>'. htmlEnc(__('Fehler')) .'</b>: '. $msg .'</body>',"\n";
         echo '</html>',"\n";
 
         _ob_send();
@@ -116,13 +117,13 @@ if(!$type) {
 
 	echo $phonemenu_doctype ."\n";
 	echo '<html>',"\n";
-	echo "<head><title>". __("Konfigurationsmen\xC3\xBC") ."</title></head>\n";
+	echo "<head><title>". htmlEnt(__("Konfigurationsmen\xC3\xBC")) ."</title></head>\n";
 	echo '<body><br />',"\n";
 
-	echo '- <a href="'. $url_polycom_menu .'?m='. $mac .'&amp;u='. $user .'&amp;t=forward">'. __("Rufumleitung") .'</a><br />',"\n";
-	echo '- <a href="'. $url_polycom_provdir .'features.php?m='. $mac .'&amp;u='. $user .'&amp;t=forward">'. __("Dienstmerkmale") .'</a><br />',"\n";
+	echo '- <a href="'. $url_polycom_menu .'?m='. $mac .'&amp;u='. $user .'&amp;t=forward">'. htmlEnt(__("Rufumleitung")) .'</a><br />',"\n";
+	echo '- <a href="'. $url_polycom_provdir .'features.php?m='. $mac .'&amp;u='. $user .'&amp;t=forward">'. htmlEnt(__("Dienstmerkmale")) .'</a><br />',"\n";
 //	echo '- <a href="'. $url_polycom_provdir .'rt.php?m='. $mac .'&amp;u='. $user .'&amp;t=forward">'. __("Klingelt\xC3\xB6ne") .'</a><br />',"\n";
-	echo '- <a href="Key:Setup">'. __("Lokale Telefoneinstellungen") .'</a><br />',"\n";
+	echo '- <a href="Key:Setup">'. htmlEnt(__("Lokale Telefoneinstellungen")) .'</a><br />',"\n";
 
 	echo '</body>',"\n";
 
@@ -144,12 +145,12 @@ if ($type == 'forward') {
 
 	echo $phonemenu_doctype ."\n";
 	echo '<html>',"\n";
-	echo '<head><title>'. __("Rufumleitung") .'</title></head>',"\n";
+	echo '<head><title>'. htmlEnt(__("Rufumleitung")) .'</title></head>',"\n";
 	echo '<body><br />',"\n";
 
 
-	echo '- <a href="'. $url_polycom_provdir .'callforward.php?m='. $mac .'&amp;u='. $user .'">'. __("Rufumleitung") .'</a><br />',"\n";
-	echo '- <a href="'. $url_polycom_provdir .'extnumbers.php?m='. $mac .'&amp;u='. $user .'">'. __("Externe Nummern") .'</a><br />',"\n";
+	echo '- <a href="'. $url_polycom_provdir .'callforward.php?m='. $mac .'&amp;u='. $user .'">'. htmlEnt(__("Rufumleitung")) .'</a><br />',"\n";
+	echo '- <a href="'. $url_polycom_provdir .'extnumbers.php?m='. $mac .'&amp;u='. $user .'">'. htmlEnt(__("Externe Nummern")) .'</a><br />',"\n";
 
 	echo '</body>',"\n";
 

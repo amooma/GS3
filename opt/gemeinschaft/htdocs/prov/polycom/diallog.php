@@ -33,6 +33,7 @@ define( 'GS_VALID', true ); // this is a parent file
 require_once( dirname(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
+include_once( GS_DIR .'inc/string.php' );
 require_once(GS_DIR ."inc/langhelper.php");
 
 header( 'Content-Type: text/html; charset=utf-8' );
@@ -218,7 +219,7 @@ else
 			echo '<tr>';
 
 			echo '<td width="30%">'. $when .'</td>';
-			echo '<td width="70%"><a href="tel://'. $r['number'].'">'. $entry_name;
+			echo '<td width="70%"><a href="tel://'. $r['number'].'">'. htmlEnt($entry_name);
 
 			if ($num_calls > 0) echo ' ('. $num_calls .')';
 
