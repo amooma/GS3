@@ -111,7 +111,7 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	
 	if ($dst != '') {
 		if ($query_line != '') $query_line .= ' AND';
-		$query_line .= ' `dst` LIKE \''. $CDR_DB->escape($dst_sql).'\' OR `userfield` LIKE \''. $CDR_DB->escape($dst_sql).'\'';
+		$query_line .= ' ( `dst` LIKE \''. $CDR_DB->escape($dst_sql).'\' OR `userfield` LIKE \''. $CDR_DB->escape($dst_sql).'\' ) ';
 	}
 	$dur = _sanitize_dur( $dur );
 	if ($dur != '') {
