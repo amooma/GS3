@@ -1378,3 +1378,10 @@ CREATE TABLE IF NOT EXISTS `dnd` (
 
 ALTER TABLE `phones` ADD
   `expansion_modules` varchar(50) character set ascii default NULL AFTER `fw_manual_update`;
+
+--
+-- After: c18d7d390b8e5d1cdfa340a6b676ca7ca1f1e323
+--
+
+ALTER TABLE `phones`
+  CHANGE `mac_addr` `mac_addr` VARCHAR(14) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL;
