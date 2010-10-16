@@ -947,31 +947,6 @@ macro dial-gateway( mnumber ) {
 		return;
 }
 
-
-//---------------------------------------------------------------------
-//  To Emergency Numbers
-//---------------------------------------------------------------------
-
-context to-emergency {
-	
-	#exec "/opt/gemeinschaft/etc/asterisk/e-emergency.ael.php"
-}
-
-macro emergency-call( mnumber ) {
-	&caller-count();
-	if ("${mnumber}" = "${emergency_police}") {
-		Set(tmp=(police));
-	} else if ("${mnumber}" = "${emergency_fire}") {
-		Set(tmp=(fire dept.));
-	} else {
-		Set(tmp=);
-	}
-	Verbose(1,### Call to ${MACRO_EXTEN} mapped to emergency ${mnumber} ${tmp});
-	&dial-gateway-do(${mnumber});
-	return;
-}
-
-
 //---------------------------------------------------------------------
 //  Private Calls
 //---------------------------------------------------------------------
@@ -1027,7 +1002,6 @@ context private-call {
 context from-internal-nobody {
 	
 	includes {
-		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
 		voicemail-any;        // voicemail main (any mailbox)
 		to-conferences;       // conferences
@@ -1047,7 +1021,6 @@ context from-internal-nobody {
 context from-internal-users {
 	
 	includes {
-		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
 		from-internal-custom;
 		to-internal-custom;

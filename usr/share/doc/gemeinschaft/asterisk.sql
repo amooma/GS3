@@ -6061,15 +6061,15 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `gates` WRITE;
 /*!40000 ALTER TABLE `gates` DISABLE KEYS */;
-INSERT INTO `gates` VALUES (5,6,'zap','gw_5_prispan1','PRI Span 1',1,'Zap/r1/{number:1}',NULL,NULL,NULL,NULL,0,NULL);
-INSERT INTO `gates` VALUES (6,6,'zap','gw_6_prispan2','PRI Span 2',1,'Zap/r2/{number:1}',NULL,NULL,NULL,NULL,0,NULL);
-INSERT INTO `gates` VALUES (7,5,'sip','gw_7_sipisdninterna','SIP-ISDN intern A',1,'SIP/{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
-INSERT INTO `gates` VALUES (8,5,'sip','gw_8_sipisdninternb','SIP-ISDN intern B',1,'SIP/{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
-INSERT INTO `gates` VALUES (9,8,'sip','gw_9_sipgsmvodafone','SIP-GSM Vodafone',1,'SIP/{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
-INSERT INTO `gates` VALUES (16,12,'misdn','gw_16_briport1','BRI Port 1',1,'mISDN/g:{gateway}/{number:1}',NULL,NULL,NULL,NULL,0,1);
-INSERT INTO `gates` VALUES (17,12,'misdn','gw_17_briport2','BRI Port 2',1,'mISDN/g:{gateway}/{number:1}',NULL,NULL,NULL,NULL,0,2);
-INSERT INTO `gates` VALUES (18,12,'misdn','gw_18_briport3','BRI Port 3',1,'mISDN/g:{gateway}/{number:1}',NULL,NULL,NULL,NULL,0,3);
-INSERT INTO `gates` VALUES (19,12,'misdn','gw_19_briport4','BRI Port 4',1,'mISDN/g:{gateway}/{number:1}',NULL,NULL,NULL,NULL,0,4);
+INSERT INTO `gates` VALUES (5,6,'zap','gw_5_prispan1','PRI Span 1',1,'Zap/r1/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,NULL);
+INSERT INTO `gates` VALUES (6,6,'zap','gw_6_prispan2','PRI Span 2',1,'Zap/r2/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,NULL);
+INSERT INTO `gates` VALUES (7,5,'sip','gw_7_sipisdninterna','SIP-ISDN intern A',1,'SIP/{prefix}{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
+INSERT INTO `gates` VALUES (8,5,'sip','gw_8_sipisdninternb','SIP-ISDN intern B',1,'SIP/{prefix}{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
+INSERT INTO `gates` VALUES (9,8,'sip','gw_9_sipgsmvodafone','SIP-GSM Vodafone',1,'SIP/{prefix}{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
+INSERT INTO `gates` VALUES (16,12,'misdn','gw_16_briport1','BRI Port 1',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,1);
+INSERT INTO `gates` VALUES (17,12,'misdn','gw_17_briport2','BRI Port 2',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,2);
+INSERT INTO `gates` VALUES (18,12,'misdn','gw_18_briport3','BRI Port 3',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,3);
+INSERT INTO `gates` VALUES (19,12,'misdn','gw_19_briport4','BRI Port 4',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,4);
 /*!40000 ALTER TABLE `gates` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6992,6 +6992,8 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `routes` WRITE;
 /*!40000 ALTER TABLE `routes` DISABLE KEYS */;
+INSERT INTO `routes` VALUES (2,1,3,'^11[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'1','Notrufnummern etc.');
+INSERT INTO `routes` VALUES (3,1,4,'^19222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'1','Notruf Rettungsdienst');
 INSERT INTO `routes` VALUES (5,1,3,'^011[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'','Notrufnummern etc.');
 INSERT INTO `routes` VALUES (6,1,4,'^019222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'','Notruf Rettungsdienst');
 INSERT INTO `routes` VALUES (7,0,14,'^00900',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,0,0,'','Mehrwertnummern');
