@@ -7549,4 +7549,4 @@ CREATE TABLE IF NOT EXISTS `dnd` (
   `_user_id` int(10) NOT NULL DEFAULT '0',
   `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
   PRIMARY KEY (`_user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
