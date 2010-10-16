@@ -28,13 +28,18 @@ _check-cwd:
 
 _pot: _check-cwd
 	@echo "### Generating the .pot (.po template) ..."
-	@if [ "x`svn status -v ${DIR}/pot/${GETTEXT_DOMAIN}.pot | head -c 1`" != "x " ]; then \
+#	@if [ "x.`svn status -v ${DIR}/pot/${GETTEXT_DOMAIN}.pot | head -c 1`" != "x. " ]; then \
+#		echo "### pot/${GETTEXT_DOMAIN}.pot has local modifications." ;\
+#		exit 1 ;\
+#	fi
+	@if [ "x.`git status --porcelain -- ${DIR}/pot/${GETTEXT_DOMAIN}.pot | head -c 2`" != "x." ]; then \
 		echo "### pot/${GETTEXT_DOMAIN}.pot has local modifications." ;\
 		exit 1 ;\
 	fi
 	cd ${GEMEINSCHAFT_TAG_ROOT} \
 	&& find . -type f \
 		! -path '*/.svn/*' \
+		! -path '*/.git/*' \
 		! -path '*/_*' \
 		! -path '* *' \
 		! -path './patches/*' \

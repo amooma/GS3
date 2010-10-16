@@ -56,7 +56,7 @@ context wakeup-call {
 	s => {
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		Set(__lang=${gs_userlang_gs});
-		//Set(CHANNEL(language)=de);
+		&caller-count();
 
 		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${user_name},wakeup_call);
 		if ("${permission}" != "true") {

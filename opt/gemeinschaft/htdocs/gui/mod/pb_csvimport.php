@@ -396,16 +396,20 @@ if ($action === 'import') {
 }
 
 
+
+$sudo_url_param =
+	(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
+	? '' : ('sudo='. @$_SESSION['sudo_user']['name']);
+
+
 if ($action == '') {
 	
-
 	echo "<h3>".__('CSV-Export')."</h3>\n<br />";
 	
-	echo '<a href="', GS_URL_PATH, 'srv/csv-export.php', $sudo_url, '" title="', __('CSV-Datei des Telefonbuches herunterladen'), '">'.__('CSV-Datei herunterladen').'</a>';
-
+	echo '<a href="', GS_URL_PATH, 'srv/csv-export.php', ($sudo_url_param != '' ? '?'.$sudo_url_param : ''), '" title="', __('CSV-Datei des Telefonbuches herunterladen'), '">'.__('CSV-Datei herunterladen').'</a>';
+	
 	echo "<br /><br /><br /><h3>".__('CSV-Import')."</h3>\n<br />";
-
-
+	
 	echo '<form method="post" action="', GS_URL_PATH, '" enctype="multipart/form-data">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE), "\n";
 	echo '<input type="hidden" name="action" value="upload" />', "\n";

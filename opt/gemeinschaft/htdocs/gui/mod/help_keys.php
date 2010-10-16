@@ -37,19 +37,23 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
-echo __("Gemeinschaft bietet die M&ouml;glichkeit, Tasten an unterst&uuml;tzten Endgeräten &uuml;ber diese Benutzeroberfl&auml;che zu konfigurieren.")."<br>";
-echo __("Um Tasten f&uuml;r Ihr Endger&auml;t zu konfigurieren, folgen Sie einfach den folgenden Schritten, nachdem Sie links im Men&uuml; auf Tastenbelegung geklickt haben:")."<br><br>";
-echo '<h3>' .__("Schritt 1:") .'</h3>';
-echo __("W&auml;hlen Sie Ihr Telefonmodell aus (1) und dr&uuml;cken Sie auf 'Zeigen' (2)")."<br>";
-echo '<img alt="Step1" src="'.GS_URL_PATH.'img/help_keys/step1.jpg"/>';
-echo '<br>';
-echo '<br>';
 
-echo '<h3>' .__("Schritt 2:") .'</h3>';
-echo __("Dannach sehen Sie die folgende &Uuml;bersicht (oder &auml;hnlich):")."<br>";
-echo '<img alt="Step2" src="'.GS_URL_PATH.'img/help_keys/step2.jpg"/>';
+echo '<p class="text">', __("Gemeinschaft bietet die M&ouml;glichkeit, Tasten an unterst&uuml;tzten Endger&auml;ten &uuml;ber diese Benutzeroberfl&auml;che zu konfigurieren.") ,'</p>',"\n";
+echo '<p class="text">', __("Um Tasten f&uuml;r Ihr Endger&auml;t zu konfigurieren, folgen Sie einfach den folgenden Schritten, nachdem Sie links im Men&uuml; auf Tastenbelegung geklickt haben:") ,'</p>',"\n";
+
+
+echo '<h3>', __("Schritt"), ' 1' ,'</h3>';
+echo __("W&auml;hlen Sie Ihr Telefonmodell aus (1) und dr&uuml;cken Sie auf &quot;Zeigen&quot; (2)") ,'<br />',"\n";
+echo '<img alt="Step1" src="',GS_URL_PATH,'img/help_keys/step1.jpg" />';
+echo '<br />',"\n";
+echo '<br />',"\n";
+
+
+echo '<h3>', __("Schritt"), ' 2' ,'</h3>';
+echo __("Dannach sehen Sie die folgende &Uuml;bersicht (oder &auml;hnlich):") ,'<br />',"\n";
+echo '<img alt="Step2" src="',GS_URL_PATH,'img/help_keys/step2.jpg" />';
 ?>
-<br><br>
+<br /><br />
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
@@ -66,7 +70,7 @@ echo '<img alt="Step2" src="'.GS_URL_PATH.'img/help_keys/step2.jpg"/>';
 <tr>
 	<td>:=</td>
 	<td>
-i		<?php echo __('Zeigt an, ob die Taste aktiviert ist oder nicht, Sie k&ouml;nnen die Taste nur definieren, wenn Sie diese vorher mit dem Haken in dieser Box aktivieren. Wenn die Taste vom Administrator vorgegeben ist, wird die Box f&uuml;r den Haken ausgegraut angezeigt. Sie können die Taste nicht bearbeiten.'); ?>
+i		<?php echo __('Zeigt an, ob die Taste aktiviert ist oder nicht, Sie k&ouml;nnen die Taste nur definieren, wenn Sie diese vorher mit dem Haken in dieser Box aktivieren. Wenn die Taste vom Administrator vorgegeben ist, wird die Box f&uuml;r den Haken ausgegraut angezeigt. Sie k&ouml;nnen die Taste nicht bearbeiten.'); ?>
 	</td>
 </tr>
 <tr>
@@ -89,27 +93,28 @@ i		<?php echo __('Zeigt an, ob die Taste aktiviert ist oder nicht, Sie k&ouml;nn
 </tr>
 </tbody>
 </table>
-<br><br>
+<br /><br />
+
 <?php
-echo '<h3>' .__("Schritt 3:") .'</h3>';
-echo __("Aktivieren Sie die Taste durch Anklicken des Hakens in der 2. Spalte (1)")."<br>";
-echo __("W&auml;hlen Sie aus der Liste (2) die gew&uuml;nschte Tastenfunktion (3) aus:")."<br>";
-echo '<img alt="Step3" src="'.GS_URL_PATH.'img/help_keys/step3.jpg"/>';
-echo '<br>';
-echo __("Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ngig. Hier eine Liste f&uuml;r das Openstage 60, welches die Tastenfunktionen der meisten Telefone abdecken sollte:")."<br>";
+echo '<h3>', __("Schritt"), ' 3' ,'</h3>';
+echo __("Aktivieren Sie die Taste durch Anklicken des Hakens in der 2. Spalte (1)") ,'<br />',"\n";
+echo __("W&auml;hlen Sie aus der Liste (2) die gew&uuml;nschte Tastenfunktion (3) aus:") ,'<br />',"\n";
+echo '<img alt="Step3" src="',GS_URL_PATH,'img/help_keys/step3.jpg" />';
+echo '<br />',"\n";
+echo __("Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ngig. Hier eine Liste f&uuml;r das Openstage 60, welches die Tastenfunktionen der meisten Telefone abdecken sollte:") ,'<br />',"\n";
 ?>
-<br><br>
+<br /><br />
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th colspan="2"><?php echo __('Liste der einzelnen Tastenfunktionen:'); ?></th>
+	<th colspan="2"><?php echo __('Liste der einzelnen Tastenfunktionen'); ?> <?php echo __('(Beispiel OpenStage)'); ?>:</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 	<td style="width:140px;"> <?php echo __('-erben-'); ?></td>
 	<td style="width:420px;">
-		<?php echo __('Wenn "-erben-" aktiviert ist, wird die vom Administrator voreingestellte Funktion benutzt.'); ?>
+		<?php echo __('Wenn &quot;-erben-&quot; aktiviert ist, wird die vom Administrator voreingestellte Funktion benutzt.'); ?>
 	</td>
 </tr>
 <tr>
@@ -133,13 +138,13 @@ echo __("Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ng
 <tr>
 	<td><?php echo __('Halten'); ?></td>
 	<td>
-		<?php echo __('H&auml;lt das aktuell geführte Gespr&auml;ch. Der Anrufer h&ouml;rt Wartemusik.'); ?>
+		<?php echo __('H&auml;lt das aktuell gef&uuml;hrte Gespr&auml;ch. Der Anrufer h&ouml;rt Wartemusik.'); ?>
 	</td>
 </tr>
 <tr>
 	<td><?php echo __('Makeln'); ?></td>
 	<td>
-		<?php echo __('Mit dieser Funktion kann man zwischen Anrufern hin und her schalten, w&auml;hrend man sich in einer &Uuml;bergabe befindet.'); ?>
+		<?php echo __('Mit dieser Funktion kann man zwischen Anrufern hin- und herschalten, w&auml;hrend man sich in einer &Uuml;bergabe befindet.'); ?>
 	</td>
 </tr>
 <tr>
@@ -163,7 +168,7 @@ echo __("Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ng
 <tr>
 	<td><?php echo __('Shift'); ?></td>
 	<td>
-		<?php echo __('Mit der Shift-Funktion hat man die M&ouml;glichkeit, Tasten doppelt zu belegen. Die Funktion schaltet zwischen den Ebenen hin und her. Die eigentlichen Tastenfunktionen kann man dann in "Shift-Ebene" festlegen.'); ?>
+		<?php echo __('Mit der Shift-Funktion hat man die M&ouml;glichkeit, Tasten doppelt zu belegen. Die Funktion schaltet zwischen den Ebenen hin und her. Die eigentlichen Tastenfunktionen kann man dann in &quot;Shift-Ebene&quot; festlegen.'); ?>
 	</td>
 </tr>
 <tr>
@@ -179,7 +184,7 @@ echo __("Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ng
 	</td>
 </tr>
 <tr>
-	<td><?php echo __('Rufanahmegrp.'); ?></td>
+	<td><?php echo __('Rufannahmegrp.'); ?></td>
 	<td>
 		<?php echo __('Wenn Sie in einer Rufannahmegruppe sind, k&ouml;nnen Sie ein ankommendes Gespr&auml;ch mit dieser Taste aufnehmen.'); ?>
 	</td>
@@ -193,11 +198,11 @@ echo __("Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ng
 <tr>
 	<td><?php echo __('R&uuml;ckfrage'); ?></td>
 	<td>
-		<?php echo __('Setzt den Anrufer auf "Halten" und ruft die Nummer, die bei Nummer/Daten eingegeben wurde, für eine R&uuml;ckfrage an.'); ?>
+		<?php echo __('Setzt den Anrufer auf &quot;Halten&quot; und ruft die Nummer, die bei Nummer/Daten eingegeben wurde, f&uuml;r eine R&uuml;ckfrage an.'); ?>
 	</td>
 </tr>
 <tr>
-	<td><?php echo __('Fn.Schalter'); ?></td>
+	<td><?php echo __('Fn.-Schalter'); ?></td>
 	<td>
 		<?php echo __('Mit dem Funktionsschalter kann man bestimmte Telefoniefunktionen aktivieren oder deaktivieren (z.B. die Rufumleitung). W&auml;hlen Sie einfach die gew&uuml;nschte Funktion aus dem Hilfe-Dialog aus. '); ?>
 	</td>
@@ -205,34 +210,34 @@ echo __("Die Tastenfunktionen sind stark vom benutzten Endger&auml;t abh&auml;ng
 <tr>
 	<td><?php echo __('Appl. aufrufen'); ?></td>
 	<td>
-		<?php echo __('Erm&ouml;glicht das Belegen einer Applikation auf eine Taste, damit ist es m&ouml;glich, z.B. das Telefonbuch zu starten. W&auml;hlen Sie einfach die gew&uuml;nschte Applikation aus dem Hilfe-Dialog aus.'); ?>
+		<?php echo __('Erm&ouml;glicht das Belegen einer Applikation auf eine Taste. Damit ist es m&ouml;glich z.B. das Telefonbuch zu starten. W&auml;hlen Sie einfach die gew&uuml;nschte Applikation aus dem Hilfe-Dialog aus.'); ?>
 	</td>
 </tr>
 </tbody>
 </table>
-<br><br>
+<br /><br />
 <?php
-echo '<br>';
-echo '<h3>' .__("Schritt 4:") .'</h3>';
-echo __("Bei manchen Tastenfunktionen bietet das Programm eine Hilfestellung zum Ausf&uuml;llen der 3.Spalte 'Nummern/Daten' an, wenn man - wie im Beispiel - 'Nebenstelle/BLF' ausw&auml;hlt, dann kommt dieser Dialog:")."<br>";
-echo '<img alt="Step4" src="'.GS_URL_PATH.'img/help_keys/step4.jpg"/>';
-echo '<br>';
-echo __("In diesem Dialog k&ouml;nnen Sie die Nummer (1) die Sie im Besetztlampenfeld anzeigen wollen, eintragen und den Dialog mit dem Haken (2) best&auml;tigen.")."<br>";
-echo '<br>';
-echo '<br>';
+
+echo '<h3>', __("Schritt"), ' 4' ,'</h3>';
+echo __("Bei manchen Tastenfunktionen bietet das Programm eine Hilfestellung zum Ausf&uuml;llen der 3. Spalte &quot;Nummern/Daten&quot; an, wenn man - wie im Beispiel - &quot;Nebenstelle/BLF&quot; ausw&auml;hlt, dann kommt dieser Dialog:") ,'<br />',"\n";
+echo '<img alt="Step4" src="',GS_URL_PATH,'img/help_keys/step4.jpg" />';
+echo '<br />',"\n";
+echo __("In diesem Dialog k&ouml;nnen Sie die Nummer (1) die Sie im Besetztlampenfeld anzeigen wollen eintragen und den Dialog mit dem Haken (2) best&auml;tigen.") ,'<br />',"\n";
+echo '<br />',"\n";
+echo '<br />',"\n";
 
 
-echo '<h3>' .__("Schritt 5:") .'</h3>';
-echo __("Dannach sehen Sie, wie der Hilfedialog die Daten in Spalte 3 eingetragen hat. Sie m&uuml;ssen an diesem Text nichts mehr &auml;ndern. Sie k&ouml;nnen zus&auml;tzlich noch eine Beschriftung (1) eingeben, die die Taste am Telefon haben soll:")."<br>";
-echo '<img alt="Step5" src="'.GS_URL_PATH.'img/help_keys/step5.jpg"/>';
-echo '<br>';
-echo '<br>';
+echo '<h3>', __("Schritt"), ' 5' ,'</h3>';
+echo __("Danach sehen Sie, wie der Hilfedialog die Daten in Spalte 3 eingetragen hat. Sie m&uuml;ssen an diesem Text nichts mehr &auml;ndern. Sie k&ouml;nnen zus&auml;tzlich noch eine Beschriftung (1) eingeben, die die Taste am Telefon haben soll:") ,'<br />',"\n";
+echo '<img alt="Step5" src="',GS_URL_PATH,'img/help_keys/step5.jpg" />';
+echo '<br />',"\n";
+echo '<br />',"\n";
 
 
-echo '<h3>' .__("Schritt 6:") .'</h3>';
-echo __("Sie können Schritt 3-5 f&uuml;r jede Taste, die Sie definieren wollen, wiederholen. Vergessen Sie aber nicht, am Ende auf 'Speichern und Telefon aktualisieren' (1) zu klicken. Wenn Sie dies getan haben, sollte die &Auml;nderung ca. eine Minute sp&auml;ter auf Ihrem Telefon zu sehen sein.")."<br>";
-echo '<img alt="Step6" src="'.GS_URL_PATH.'img/help_keys/step6.jpg"/>';
-echo '<br>';
-echo '<br>'
+echo '<h3>', __("Schritt"), ' 6' ,'</h3>';
+echo __("Sie k&ouml;nnen Schritt 3-5 f&uuml;r jede Taste die Sie definieren wollen wiederholen. Vergessen Sie aber nicht, am Ende auf &quot;Speichern und Telefon aktualisieren&quot; (1) zu klicken. Wenn Sie dies getan haben, sollte die &Auml;nderung ca. eine Minute sp&auml;ter auf Ihrem Telefon zu sehen sein.") ,'<br />',"\n";
+echo '<img alt="Step6" src="',GS_URL_PATH,'img/help_keys/step6.jpg" />';
+echo '<br />',"\n";
+echo '<br />',"\n";
 
 ?>

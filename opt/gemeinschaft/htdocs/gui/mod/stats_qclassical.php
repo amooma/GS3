@@ -85,11 +85,14 @@ $queue_groups   = gs_group_members_get(gs_group_permissions_get($user_groups, 'c
 <label for="ipt-queue_id"><?php echo __('Warteschlange'); ?>:</label>
 <select name="queue_id" id="ipt-queue_id">
 <?php
-$rs = $DB->execute( 'SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_id` IN ('.implode(',',$queue_groups).') ORDER BY `name`' );
-
-if ($rs)
-	while ($r = $rs->fetchrow()) {
-		echo '<option value="',$r['_id'],'"', ($r['_id']==$queue_id ? ' selected="selected"' : ''),'>', $r['name'] ,' (', htmlEnt($r['_title']) ,')' ,'</option>' ,"\n";
+if (count($queue_groups) > 0) {
+	$rs = $DB->execute( 'SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_id` IN ('.implode(',',$queue_groups).') ORDER BY `name`' );
+	
+	if ($rs) {
+		while ($r = $rs->fetchrow()) {
+			echo '<option value="',$r['_id'],'"', ($r['_id']==$queue_id ? ' selected="selected"' : ''),'>', $r['name'] ,' (', htmlEnt($r['_title']) ,')' ,'</option>' ,"\n";
+		}
+	}
 }
 ?>
 </select>
@@ -116,6 +119,10 @@ for ($i=-3; $i<=0; ++$i) {
 <?php
 
 if ($action == '') return;
+if ($queue_id < 1) {
+	echo '<div class="noticebox">', __("Bitte wählen Sie eine Warteschlange aus.") ,'</div>' ,"\n";
+	return;
+}
 
 #####################################################################
 
@@ -383,7 +390,7 @@ AND '. $sql_time
 		? ($num_connected / $num_entered)
 		: 0.0;
 	$pct_connected = round($pct_connected*100);
-	echo '<td class="r"',$style_wd,'><div class="bargraph" style="width: '.$pct_connected.'%;">'.$pct_connected.'&nbsp;<small>%</small></div></td>', "\n";
+	echo '<td class="r"',$style_wd,'><div class="bargraph" style="width: ',$pct_connected,'%;">', $pct_connected ,'&nbsp;<small>%</small></div></td>', "\n";
 	//$totals['pct_connected'] += $pct_connected;
 	
 	
@@ -482,8 +489,8 @@ $avg_calldur_month = ($totals['num_connected'] > 0)
 	: 0;
 
 $pct_connected_month = ($totals['num_connected'] > 0)
-		? ($totals['num_connected'] / $totals['num_entered'])
-		: 0.0;
+	? ($totals['num_connected'] / $totals['num_entered'])
+	: 0.0;
 $pct_connected_month = round($pct_connected_month*100);
 
 
@@ -498,7 +505,7 @@ echo '<td class="r" ',$style,'>', $totals['num_abandoned' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_timeout'   ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_empty'     ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_full'      ] ,'</td>', "\n";
-echo '<td class="r" ',$style,'><div class="bargraph" style="width: '.$pct_connected_month.'%;">'.$pct_connected_month.'&nbsp;<small>%</small></div></td>', "\n";
+echo '<td class="r" ',$style,'><div class="bargraph" style="width: ',$pct_connected_month,'%;">', $pct_connected_month ,'&nbsp;<small>%</small></div></td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_dur_lower' ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['num_dur_higher'] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', _secs_to_minsecs($avg_calldur_month) ,'</td>', "\n";

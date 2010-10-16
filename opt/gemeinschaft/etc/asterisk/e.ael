@@ -143,6 +143,16 @@ macro is_dmz( is_dmz_num ) {
 
 
 //---------------------------------------------------------------------
+//  Count calls from caller
+//---------------------------------------------------------------------
+
+macro caller-count() {
+	Set(GROUP(${CALLERID(num)})=callcount);
+	return;
+}
+
+
+//---------------------------------------------------------------------
 //  User Login Macro
 //---------------------------------------------------------------------
 
@@ -317,10 +327,12 @@ context sys-rec-record {
 context to-conferences {
 	
 	_88000 => {
+		&caller-count();
 		Set(confprefix=${EXTEN:0:2});
 		jump c-empty@to-conferences;
 	}
 	_880000 => {
+		&caller-count();
 		Set(confprefix=${EXTEN:0:2});
 		jump c-empty@to-conferences;
 	}
@@ -360,10 +372,12 @@ context to-conferences {
 	}
 	
 	_88XXX => {
+		&caller-count();
 		Set(confprefix=${EXTEN:0:2});
 		jump c-${EXTEN:2}@to-conferences;
 	}
 	_88XXXX => {
+		&caller-count();
 		Set(confprefix=${EXTEN:0:2});
 		jump c-${EXTEN:2}@to-conferences;
 	}
@@ -451,6 +465,7 @@ context to-conferences-self {
 
 macro queue-login( queue ) {
 	
+	&caller-count();
 	Set(CDR(amaflags)=OMIT);
 	Answer();
 	Verbose(1,### User ${user_name} wants to log in to queue ${queue});
@@ -480,7 +495,7 @@ macro queue-login( queue ) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},login);
 	if ("${agent_login_status}" = "loggedin") {
 		// fake login for the statistics:
-		QueueLog(NONE,${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGIN,fake);
+		QueueLog(${queue},${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGIN,fake);
 	}
 	Verbose(1,### agent_login_status: ${agent_login_status});
 	Wait(0.5);
@@ -495,13 +510,14 @@ macro queue-login( queue ) {
 }
 macro queue-logout( queue ) {
 	
+	&caller-count();
 	Set(CDR(amaflags)=OMIT);
 	Answer();
 	Verbose(1,### User ${user_name} wants to log out from queue ${queue});
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},${queue},logout);
 	Wait(0.5);
 	if ("${agent_login_status}" = "loggedout") {
-		QueueLog(NONE,${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGOFF,fake);
+		QueueLog(${queue},${UNIQUEID},${CHANNEL(channeltype)}/${user_name},AGENTLOGOFF,fake);
 		Playback(agent-loggedoff);
 	} else {
 		Playback(beeperr);
@@ -512,6 +528,7 @@ macro queue-logout( queue ) {
 }
 macro queue-logout-all() {
 	
+	&caller-count();
 	Set(CDR(amaflags)=OMIT);
 	Answer();
 	Verbose(1,### User ${user_name} wants to log out from all queues);
@@ -527,6 +544,7 @@ macro queue-logout-all() {
 	
 }macro queue-login-all() {
 	
+	&caller-count();
 	Set(CDR(amaflags)=OMIT);
 	Answer();
 	Verbose(1,### User ${user_name} wants to log in into all allowed queues);
@@ -542,6 +560,7 @@ macro queue-logout-all() {
 	
 }macro queue-logout-all-silent() {
 	// like &queue-logout-all() but silent
+	&caller-count();
 	Set(CDR(amaflags)=OMIT);
 	Verbose(1,### User ${user_name} wants to log out from all queues);
 	AGI(/opt/gemeinschaft/dialplan-scripts/queue-login-logout.agi,${user_name},0,logoutall);
@@ -570,6 +589,7 @@ context queues-login-logout {
 context voicemail-self {
 	
 	voicemail => {
+		&caller-count();
 		//Set(CHANNEL(language)=en);  // derzeit notwendig da der dt. Sprachbaustein "eine" im Englischen fehlt
 		Set(CDR(amaflags)=OMIT);
 		Answer();
@@ -587,6 +607,7 @@ context voicemail-any {
 	
 	//_80. => {
 	_vm-. => {
+		&caller-count();
 		Set(vmbox=${EXTEN:3});
 		Set(CDR(amaflags)=OMIT);
 		Verbose(1,### Check mailbox ${vmbox});
@@ -648,11 +669,13 @@ macro vm-record( msource ) {
 context vm-ann-rec {
 	
 	vm_rec_internal => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&vm-record(internal);
 		Hangup();
 	}
 	vm_rec_external => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&vm-record(external);
 		Hangup();
@@ -939,6 +962,7 @@ context to-emergency {
 }
 
 macro emergency-call( mnumber ) {
+	&caller-count();
 	if ("${mnumber}" = "${emergency_police}") {
 		Set(tmp=(police));
 	} else if ("${mnumber}" = "${emergency_fire}") {

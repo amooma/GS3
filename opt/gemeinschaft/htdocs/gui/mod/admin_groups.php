@@ -295,7 +295,7 @@ if ($action == 'edit') {
 <table cellspacing="1">
 <thead>
 <tr>
-	<th style="min-width:21em;" colspan="5"><?php echo __('Untergruppen der Gruppe '), ' "',htmlEnt($group['name']),'"'; ?></th>
+	<th style="min-width:21em;" colspan="5"><?php echo sprintf( htmlEnt(__('Untergruppen der Gruppe %s')), '<q>'.htmlEnt($group['name']).'</q>' ); ?></th>
 </tr>
 
 <tr>
@@ -356,7 +356,7 @@ if ($action == 'edit') {
 <table cellspacing="1">
 <thead>
 <tr>
-	<th style="min-width:21em;" colspan="3"><?php echo __('Berechtigungen der Gruppe'), ' "',htmlEnt($group['name']),'"'; ?></th>
+	<th style="min-width:21em;" colspan="3"><?php echo sprintf( htmlEnt(__('Berechtigungen der Gruppe %s')), '<q>'.htmlEnt($group['name']).'</q>' ); ?></th>
 </tr>
 
 <tr>
@@ -418,7 +418,7 @@ if ($action == 'edit') {
 <table cellspacing="1">
 <thead>
 <tr>
-	<th style="min-width:21em;" colspan="4"><?php echo __('Verbindungen der Gruppe'), ' "',htmlEnt($group['name']),'"'; ?></th>
+	<th style="min-width:21em;" colspan="4"><?php echo sprintf( htmlEnt(__('Verbindungen der Gruppe %s')), '<q>'.htmlEnt($group['name']).'</q>' ); ?></th>
 </tr>
 
 <tr>
@@ -481,7 +481,7 @@ if ($action == 'edit') {
 <table cellspacing="1">
 <thead>
 <tr>
-	<th style="min-width:21em;" colspan="4"><?php echo __('Mitglieder der Gruppe'), ' "',htmlEnt($group['name']),'"'; ?></th>
+	<th style="min-width:21em;" colspan="4"><?php echo sprintf( htmlEnt(__('Mitglieder der Gruppe %s')), '<q>'.htmlEnt($group['name']).'</q>' ); ?></th>
 </tr>
 
 <tr>

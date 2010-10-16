@@ -33,7 +33,12 @@
 
 
 define( 'GS_VALID', true );  /// this is a parent file
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
+
+//require_once( dirName(__FILE__) .'/../inc/conf.php' );
+# Do not use "/../inc/conf.php" (which would load
+# "/etc/gemeinschaft/gemeinschaft.php") on the build system.
+define( 'GS_DIR', dirName(__FILE__).'/../' );
+
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 

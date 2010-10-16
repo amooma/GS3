@@ -128,9 +128,28 @@ if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
 echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 */
+?>
+<script type="text/javascript">
+//<![CDATA[
+function gs_num_sel( el )
+{
+try {
+	if (el.value == '') return;
+	switch (el.id) {
+		case 'sel-num-std': var text_el_id = 'ipt-num-std'; break;
+		case 'sel-num-var': var text_el_id = 'ipt-num-var'; break;
+		default: return;
+	}
+	document.getElementById(text_el_id).value = el.value;
+	//el.value = '';
+} catch(e){}
+}
+//]]>
+</script>
+
+<?php
 echo __('Rufumleitung Warteschleifen');
 echo '</h2>', "\n";
-
 
 $sources = array(
 	'internal' => __('intern'),
@@ -163,15 +182,15 @@ if ($queue_ext != '') {
 	$rs = $DB->execute('SELECT * from `queue_vm_rec_messages` WHERE `_queue_id`='.$queue_id);
 	$ncnt=0;
 	while ($r = $rs->fetchRow()) {
-		$actives['vml-'.++$ncnt] = __('AB mit Ansage ').$ncnt;
-		$timeruleactives['vml-'.$r['id']] =  __('AB mit Ansage ').$ncnt;
+		$actives['vml-'.++$ncnt] = sprintf(__('AB mit Ansg. %u'), $ncnt);
+		$timeruleactives['vml-'.$r['id']] =  sprintf(__('AB mit Ansg. %u'), $ncnt);
 		$vm_rec_num_idx_table[$ncnt] = $r['id'];
 	}
 	$rs = $DB->execute('SELECT * from `queue_vm_rec_messages` WHERE `_queue_id`='.$queue_id);
 	$ncnt=0;
 	while ($r = $rs->fetchRow()) {
-		$actives['vmln-'.++$ncnt] = __('Ansage ').$ncnt;
-		$timeruleactives['vmln-'.$r['id']] = __('Ansage ').$ncnt;
+		$actives['vmln-'.++$ncnt] = sprintf(__('Ansg. %u'), $ncnt);
+		$timeruleactives['vmln-'.$r['id']] = sprintf(__('Ansg. %u'), $ncnt);
 	}
 	
 	$id = (int)$DB->executeGetOne('SELECT `_queue_id` from `queue_cf_timerules` WHERE `_queue_id`='.$queue_id);
@@ -220,9 +239,16 @@ if ($queue_ext != '') {
 $warnings = array();
 
 if (@$_REQUEST['action']=='save' && $queue) {
-	
-	$num_std = preg_replace('/[^\d]/', '', @$_REQUEST['num-std']);
-	$num_var = preg_replace('/[^\d]/', '', @$_REQUEST['num-var']);
+	if (preg_match('/sysrec\B[\d]/', @$_REQUEST['num-std'])) {
+		$num_std = @$_REQUEST['num-std'];
+	} else {
+		$num_std = preg_replace('/[^\d]/', '', @$_REQUEST['num-std']);
+	}
+	if (preg_match('/sysrec\B[\d]/', @$_REQUEST['num-var'])) {
+                $num_var = @$_REQUEST['num-var'];
+        } else {
+                $num_var = preg_replace('/[^\d]/', '', @$_REQUEST['num-var']);
+        }
 	$num_vml_orig = preg_replace('/[^\d]/', '', @$_REQUEST['num-vml']);
 	$timeout = abs((int)@$_REQUEST['timeout']);
 	if ($timeout < 1) $timeout = 1;
@@ -632,7 +658,14 @@ if (is_array($warnings) && count($warnings) > 0) {
 <form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
 <input type="hidden" name="action" value="save" />
 <input type="hidden" name="queue" value="<?php echo $queue_ext; ?>" />
-
+<?php
+$rs = $DB->execute('SELECT `id`, `description` FROM `systemrecordings`;');
+$announce = array();
+while ($r = $rs->fetchRow()) {
+	$announce[$r['id']] = $r['id'] ;
+	$announce_name[$r['id']] = $r['description'];
+	}
+?>
 <table cellspacing="1">
 <thead>
 <tr>
@@ -642,14 +675,40 @@ if (is_array($warnings) && count($warnings) > 0) {
 <tbody>
 <tr class="even">
 	<td style="width:170px;"><?php echo __('Standardnummer'); ?></td>
-	<td style="width:299px;">
-		<input type="text" name="num-std" value="<?php echo htmlEnt($number_std); ?>" size="30" style="width:220px;" maxlength="25" />
+	<td style="width:400px;">
+		<input type="text" name="num-std" id="ipt-num-std" value="<?php echo htmlEnt($number_std); ?>" size="30" style="width:220px;" maxlength="25" />
+		<div id="num-select-std" style="display:none;">
+		&larr;<select  width='100' style='width: 100px' id="sel-num-std" onchange="gs_num_sel(this);">
+<?php
+	if (! isGsError($announce) && is_array($announce)) {
+		echo '<option value="">', __('Audiodateien') ,'</option>' ,"\n";
+		foreach ($announce as $number) {
+			echo '<option value="', htmlEnt('sysrec'.$number) ,'">', htmlEnt($number.' '.$announce_name[$number]) ,'</option>' ,"\n";
+		}
+	}
+?>
+		</select>
+		</div>
+
 	</td>
 </tr>
 <tr class="even">
 	<td><?php echo __('Tempor&auml;re Nummer'); ?></td>
 	<td>
-		<input type="text" name="num-var" value="<?php echo htmlEnt($number_var); ?>" size="30" style="width:220px;" maxlength="25" />
+		<input type="text" name="num-var" id="ipt-num-var" value="<?php echo htmlEnt($number_var); ?>" size="30" style="width:220px;" maxlength="25" />
+		<div id="num-select-var" style="display:none;">
+		&larr;<select width='100' style="width: 100px" id="sel-num-var" onchange="gs_num_sel(this);">
+<?php
+	if (! isGsError($announce) && is_array($announce)) {
+		echo '<option value="">', __('Audiodateien') ,'</option>' ,"\n";
+		foreach ($announce as $number) {
+			echo '<option value="', htmlEnt('sysrec'.$number) ,'">', htmlEnt($number.' '.$announce_name[$number]) ,'</option>' ,"\n";
+		}
+	}
+?>
+		</select>
+		</div>
+
 	</td>
 </tr>
 <tr class="even">
@@ -660,6 +719,13 @@ if (is_array($warnings) && count($warnings) > 0) {
 </tr>
 </tbody>
 </table>
+<script>
+//<![CDATA[
+// show selectors if javascript is available
+try { document.getElementById('num-select-std').style.display = 'inline'; } catch(e){}
+try { document.getElementById('num-select-var').style.display = 'inline'; } catch(e){}
+//]]>
+</script>
 
 <br />
 
@@ -700,7 +766,7 @@ foreach ($sources as $src => $srctitle) {  //internal, external
 				if ($callforwards[$src][$case]['active'] === $active
 				&&  substr($callforwards[$src][$case]['number_vml'],0,3) === 'vm*')
 					echo ' selected="selected"';
-				echo '>', __('Ansage') ,'</option>', "\n";
+				echo '>', __('Ansg.') ,'</option>', "\n";
 			} else if (substr($active,0,4) === 'vml-')  {
 				//multiple ansagen mit AB
 				$idx= $vm_rec_num_idx_table[(int) substr($active,4)];

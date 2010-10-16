@@ -380,7 +380,7 @@ if($delete)
     {   
       while($r = $rs->fetchRow())
       {
-         $errormsgs[] = __('Audiodatei kann nicht gel&ouml;scht werden da in Verwendung von Warteschlange <b>'. $r["name"] . '</b>');      
+         $errormsgs[] = sprintf( __('Audiodatei kann nicht gel&ouml;scht werden da in Verwendung von Warteschlange %s'), '<b>'. htmlEnt($r['name']) .'</b>' );
       }
     }
     else 

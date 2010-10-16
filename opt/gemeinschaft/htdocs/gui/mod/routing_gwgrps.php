@@ -228,7 +228,7 @@ if ($action === 'gaddcid') {
 	$cid_int = preg_replace( '/[^0-9]/', '', @$_REQUEST['cid-int']);
 	$cid_ext = preg_replace( '/[^0-9]/', '', @$_REQUEST['cid-ext']);
 	
-	if (($ggid > 0) && ($cid_int != '') && ($cid_ext != '')) {
+	if (($ggid > 0) && ($cid_int != '')) {
 		
 		$DB->execute(
 			'INSERT INTO `gate_cids` '.

@@ -50,7 +50,7 @@ echo '<script type="text/javascript" src="', GS_URL_PATH ,'js/tooltips.js"></scr
 
 
 $duration_level  = 90;  # 90 s = 1:30 min
-$waittime_level = 15;  # 15 s
+$waittime_level  = 15;  # 15 s
 
 //CDR Database Connection
 $CDR_DB = gs_db_cdr_master_connect();
@@ -74,19 +74,17 @@ function userids_to_exts( $users )
 	$users_sql = implode(',',$users);
 	
 	$rs = $DB->execute(
-'SELECT `name` AS `ext`
-FROM
-	`ast_sipfriends`
-WHERE
-	`_user_id` IN ('. $users_sql .')'
+		'SELECT `name` AS `ext` '.
+		'FROM `ast_sipfriends` '.
+		'WHERE `_user_id` IN ('. $users_sql .')'
 	);
-
-	$exts = array();
 	
-	if ($rs)
+	$exts = array();
+	if ($rs) {
 		while ($r = $rs->fetchRow()) {
 			$exts[] = '\''.$DB->escape($r['ext']).'\'';
 		}
+	}
 	return implode(',', $exts);
 }
 
@@ -96,13 +94,13 @@ $sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 
 $action = @$_REQUEST['action'];
 if ($action == 'report') {
-	$group = @$_REQUEST['group'];
+	$group    = @$_REQUEST['group'];
 	$month_d  = (int)@$_REQUEST['month'   ];
 } else {
 	$action   = '';
-	$group =  '';
+	$group    =  '';
 	//$month_d  = -1;  # previous month
-	$month_d  = 0;  # current month
+	$month_d  =  0;  # current month
 }
 
 if (!$group) $group = @$_SESSION['sudo_user']['name'];
@@ -111,13 +109,11 @@ $user_groups    = gs_group_members_groups_get(Array(@$_SESSION['sudo_user']['inf
 $select_groups  = gs_group_permissions_get($user_groups, 'call_stats', 'user');
 $group_info     = gs_group_info_get($select_groups);
 
-if (array_search($group, $select_groups) === FALSE) 
+if (array_search($group, $select_groups) === false) {
 	$exts_sql = '';
-else {
-
+} else {
 	$users = gs_group_members_get(Array($group));
 	$exts_sql = userids_to_exts( $users );
-
 } 
 
 ?>
@@ -267,7 +263,7 @@ function mytip( evt, key )
 	<th style="font-weight:normal;" onmouseover="mytip(event,'durl');"><?php echo __('Dauer'), ' &le;', _secs_to_minsecs($duration_level); ?></th>
 	<th style="font-weight:normal;" onmouseover="mytip(event,'durg');"><?php echo __('Dauer'), ' &gt;', _secs_to_minsecs($duration_level); ?></th>
 	<th style="font-weight:normal;" onmouseover="mytip(event,'duravg');"><?php echo '&empty; ', __('Dauer'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'holdlsl');"><?php echo __('Wartez.') ,'  0:5-', _secs_to_minsecs($waittime_level); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'holdlsl');"><?php echo __('Wartez.') ,' 0:05-', _secs_to_minsecs($waittime_level); ?></th>
 	<th style="font-weight:normal;" onmouseover="mytip(event,'holdgsl');"><?php echo __('Wartez.') ,' &gt;', _secs_to_minsecs($waittime_level); ?></th>
 </tr>
 </thead>
@@ -294,178 +290,183 @@ $totals = array(
 //$exts_sql = "9993";
 
 
-$day_m_end  = (int)mkTime( 23,59,59 , $m,$num_days,$y );
-$day_m_start = (int)mkTime(  0, 0, 0 , $m,1,$y );
+$day_m_end   = (int)mkTime( 23,59,59 , $m,$num_days,$y );
+$day_m_start = (int)mkTime(  0, 0, 0 , $m,        1,$y );
 
 $user_name = @$_SESSION['sudo_user']['name'];
 
 $table = 'cdr_tmp_'.$user_name;
 
-$ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`');
+$ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`' );
 
-$rs = $CDR_DB->execute( 'CREATE TABLE `'.$table.'` TYPE=heap SELECT * FROM `ast_cdr` WHERE
-		( `calldate`>=\''. date('Y-m-d H:i:s', $day_m_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $day_m_end) .'\' ) AND
-	`dst` IN ('. $exts_sql .') AND
-	`channel` NOT LIKE \'Local/%\' AND
-	`dstchannel` NOT LIKE \'SIP/gs-0%\' AND
-	`dst`<>\'s\' AND
-	`dst`<>\'h\'');
+$sql_query =
+	'CREATE TEMPORARY TABLE `'.$table.'` TYPE=HEAP '.
+		'SELECT * FROM `ast_cdr` WHERE '.
+			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_m_start) .'\' AND '.
+			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_m_end) .'\' ) AND '.
+			'  `dst` IN ('. $exts_sql .') AND '.
+			'  `channel` NOT LIKE \'Local/%\' AND '.
+			'  `dstchannel` NOT LIKE \'SIP/gs-0%\' AND '.
+			'  `dst` <> \'s\' AND '.
+			'  `dst` <> \'h\' '
+	;
+if (! $CDR_DB->execute( $sql_query )) {
+	echo '<div class="errorbox">', "Fehler beim Anlegen einer temporären Tabelle!" ,'</div>',"\n";
+}
 
 for ($day=1; $day<=$num_days; ++$day) {
 	
 	if ($month_d >= 0 && $day > $today_day) break;
 	
-
 	$day_t_start = (int)mkTime(  0, 0, 0 , $m,$day,$y );
 	$day_t_end   = (int)mkTime( 23,59,59 , $m,$day,$y );
 	$day_t_end_month  = (int)mkTime( 23,59,59 , $m,$num_days,$y );
 	$dow         = (int)date('w', $day_t_start);
 	$is_weekend  = ($dow==6 || $dow==0);
-
+	
 	$sql_query = 
-	'SELECT COUNT(*)
-	FROM `'.$table.'`
-	WHERE
-	( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' )'; 
-
+		'SELECT COUNT(*) '.
+		'FROM `'.$table.'` '.
+		'WHERE '.
+		'( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+		'  `calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' )';
+	
 	$n_calls_in = (int) $CDR_DB->executeGetOne( $sql_query );
-
+	
 	switch ($dow) {
-	case 5:  # friday
-		$style_wd = ' style="border-bottom:1px solid #aaa;"'; break;
-	case 0:  # sunday
-		$style_wd = ' style="border-bottom:1px solid #666;"'; break;
-	default:
-		$style_wd = '';
+		case 5:  # friday
+			$style_wd = ' style="border-bottom:1px solid #aaa;"'; break;
+		case 0:  # sunday
+			$style_wd = ' style="border-bottom:1px solid #666;"'; break;
+		default:
+			$style_wd = '';
 	}
 	
 	
 	echo '<tr class="', ($is_weekend ? 'even':'odd') ,'">', "\n";
 	echo '<td class="r"',$style_wd,'>', $day ,'.</td>', "\n";
-
-
-if ($n_calls_in) {
-
-	$sql_query = 
-	'SELECT COUNT(*)
-	FROM `'.$table.'`
-	WHERE
-	( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND
-	( `disposition`=\''. $DB->escape('BUSY') .'\' OR 
-	  OR  `dcontext` = \'program-cc\')'; 
-
-	 $n_calls_busy = (int) $CDR_DB->executeGetOne( $sql_query );
-
-
-	$sql_query = 
-	'SELECT COUNT(*)
-	FROM `'.$table.'`
-	WHERE
-	( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND
-	`disposition`=\''. $DB->escape('ANSWERED') .'\' AND
-	`duration` > 5 AND
-	`billsec` IS NOT NULL AND
-	`billsec`<='. (int)$duration_level; 
-
-	 $n_calls_dur_lower = $CDR_DB->executeGetOne( $sql_query );
 	
-	$sql_query = 
-	'SELECT COUNT(*)
-	FROM `'.$table.'`
-	WHERE
-	( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND
-	`disposition`=\''. $DB->escape('ANSWERED') .'\' AND
-	`billsec`>'. (int)$duration_level ; 
-
-	 $n_calls_dur_higher = $CDR_DB->executeGetOne( $sql_query );
-
-
-	$sql_query = 
-	'SELECT AVG(`billsec`)
-	FROM `'.$table.'`
-	WHERE
-	( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND
-	`disposition`=\''. $DB->escape('ANSWERED') .'\' AND
-	`billsec` > 0 '; 
-
-	 $calls_dur_avg = $CDR_DB->executeGetOne( $sql_query );
-
-	$sql_query = 
-	'SELECT COUNT(*)
-	FROM `'.$table.'`
-	WHERE
-	( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND
-	( `disposition`=\''. $DB->escape('ANSWERED') .'\' OR  `disposition`=\''. $DB->escape('NO ANSWER') .'\')  AND
-	`duration` > 5 AND
-	( `duration`  - `billsec`) <='. (int)$waittime_level ; 
-
-	 $n_calls_wait_lower = $CDR_DB->executeGetOne( $sql_query );	
-
-	$sql_query = 
-	'SELECT COUNT(*)
-	FROM `'.$table.'`
-	WHERE
-	( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND
-	( `disposition`=\''. $DB->escape('ANSWERED') .'\'  OR  `disposition`=\''. $DB->escape('NO ANSWER') .'\') AND
-	`duration` IS NOT NULL AND
-	( `duration` - `billsec`) > '. (int)$waittime_level ; 
-
-	 $n_calls_wait_higher = $CDR_DB->executeGetOne( $sql_query );	
-
-	$n_calls_in_stat = $n_calls_wait_lower + $n_calls_wait_higher;
-	$n_calls_answer = $n_calls_dur_lower + $n_calls_dur_higher;
-//	$n_calls_noanswer = $n_calls_in - $n_calls_answer - $n_calls_busy;
-	$n_calls_noanswer = $n_calls_in_stat - $n_calls_answer ;	
-	$pct_connected = ($n_calls_answer > 0)
-		? ($n_calls_answer / $n_calls_in_stat  )
-		: 0.0;
-	$pct_connected = round($pct_connected*100);
-
-	$totals['n_calls_in'] += $n_calls_in;
-	$totals['n_calls_in_stat'] += $n_calls_in_stat;
-	$totals['n_calls_answer'] += $n_calls_answer;
-	$totals['n_calls_noanswer'] += $n_calls_noanswer;
-	$totals['n_calls_busy'] += $n_calls_busy;
-	$totals['n_calls_dur_lower'] += $n_calls_dur_lower;
-	$totals['n_calls_dur_higher'] += $n_calls_dur_higher;
-	$totals['calls_dur_avg'] += $calls_dur_avg;
-	$totals['n_calls_wait_lower'] += $n_calls_wait_lower;
-	$totals['n_calls_wait_higher'] += $n_calls_wait_higher;
 	
-
-//	echo '<tr class="', ($is_weekend ? 'even':'odd') ,'">', "\n";
-//	echo '<td class="r"',$style_wd,'>', $day ,'.</td>', "\n";
-	echo '<td class="r"',$style_wd,'>', $n_calls_in ,'</td>', "\n";
-	echo '<td class="r"',$style_wd,'>', $n_calls_in_stat ,'</td>', "\n";
-	echo '<td class="r"',$style_wd,'>', $n_calls_answer ,'</td>', "\n";
-	echo '<td class="r"',$style_wd,'>', $n_calls_noanswer ,'</td>', "\n";
-	echo '<td class="r"',$style_wd,'>', $n_calls_busy ,'</td>', "\n";
-//	echo '<td class="r"',$style_wd,'>', $pct_connected ,' <small>%</small></td>', "\n";
-	echo '<td class="r" ',$style_wd,'><div class="bargraph" style="width: '.$pct_connected.'%;">'.$pct_connected.'&nbsp;<small>%</small></div></td>', "\n";
-
-	echo '<td class="r"',$style_wd,'>', $n_calls_dur_lower ,'</td>', "\n";
-	echo '<td class="r"',$style_wd,'>', $n_calls_dur_higher ,'</td>', "\n";
-	echo '<td class="r"',$style_wd,'>', _secs_to_minsecs($calls_dur_avg) ,'</td>', "\n";
-	echo '<td class="r"',$style_wd,'>', $n_calls_wait_lower ,'</td>', "\n";
-	echo '<td class="r"',$style_wd,'>',  $n_calls_wait_higher,'</td>', "\n";
-
-} else {
-	
-	for ($i=0 ; $i < 11 ; $i++) {
-		echo '<td class="r"',$style_wd,'></td>', "\n";   
+	if ($n_calls_in) {
+		
+		$sql_query = 
+			'SELECT COUNT(*) '.
+			'FROM `'.$table.'` '.
+			'WHERE '.
+			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'( `disposition` = \''. $DB->escape('BUSY') .'\' OR '.
+			'  `dcontext` = \'program-cc\')';
+		
+		$n_calls_busy = (int) $CDR_DB->executeGetOne( $sql_query );
+		
+		$sql_query = 
+			'SELECT COUNT(*) '.
+			'FROM `'.$table.'` '.
+			'WHERE '.
+			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'  `disposition` = \''. $DB->escape('ANSWERED') .'\' AND '.
+			'  `duration` > 5 AND '.
+			'  `billsec` IS NOT NULL AND '.
+			'  `billsec` <= '. (int)$duration_level;
+		
+		$n_calls_dur_lower = $CDR_DB->executeGetOne( $sql_query );
+		
+		$sql_query = 
+			'SELECT COUNT(*) '.
+			'FROM `'.$table.'` '.
+			'WHERE '.
+			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'  `disposition` = \''. $DB->escape('ANSWERED') .'\' AND '.
+			'  `billsec` > '. (int)$duration_level;
+		
+		$n_calls_dur_higher = $CDR_DB->executeGetOne( $sql_query );
+		
+		$sql_query = 
+			'SELECT AVG(`billsec`) '.
+			'FROM `'.$table.'` '.
+			'WHERE '.
+			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'`calldate` <= \''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'`disposition` = \''. $DB->escape('ANSWERED') .'\' AND '.
+			'`billsec` > 0';
+		
+		$calls_dur_avg = $CDR_DB->executeGetOne( $sql_query );
+		
+		$sql_query = 
+			'SELECT COUNT(*) '.
+			'FROM `'.$table.'` '.
+			'WHERE '.
+			'( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'  `calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'( `disposition`=\''. $DB->escape('ANSWERED') .'\' OR '.
+			'  `disposition`=\''. $DB->escape('NO ANSWER') .'\') AND '.
+			'  `duration` > 5 AND '.
+			'( `duration` - `billsec`) <= '. (int)$waittime_level;
+		
+		$n_calls_wait_lower = $CDR_DB->executeGetOne( $sql_query );	
+		
+		$sql_query = 
+			'SELECT COUNT(*) '.
+			'FROM `'.$table.'` '.
+			'WHERE '.
+			'( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'  `calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'( `disposition`=\''. $DB->escape('ANSWERED') .'\' OR '.
+			'  `disposition`=\''. $DB->escape('NO ANSWER') .'\') AND '.
+			'  `duration` IS NOT NULL AND '.
+			'( `duration` - `billsec`) > '. (int)$waittime_level;
+		
+		$n_calls_wait_higher = $CDR_DB->executeGetOne( $sql_query );	
+		
+		$n_calls_in_stat     = $n_calls_wait_lower + $n_calls_wait_higher;
+		$n_calls_answer      = $n_calls_dur_lower + $n_calls_dur_higher;
+	//	$n_calls_noanswer    = $n_calls_in - $n_calls_answer - $n_calls_busy;
+		$n_calls_noanswer    = $n_calls_in_stat - $n_calls_answer;	
+		
+		$pct_connected       = ($n_calls_answer > 0)
+			? ($n_calls_answer / $n_calls_in_stat)
+			: 0.0;
+		$pct_connected = round($pct_connected*100);
+		
+		$totals['n_calls_in'          ] += $n_calls_in;
+		$totals['n_calls_in_stat'     ] += $n_calls_in_stat;
+		$totals['n_calls_answer'      ] += $n_calls_answer;
+		$totals['n_calls_noanswer'    ] += $n_calls_noanswer;
+		$totals['n_calls_busy'        ] += $n_calls_busy;
+		$totals['n_calls_dur_lower'   ] += $n_calls_dur_lower;
+		$totals['n_calls_dur_higher'  ] += $n_calls_dur_higher;
+		$totals['calls_dur_avg'       ] += $calls_dur_avg;
+		$totals['n_calls_wait_lower'  ] += $n_calls_wait_lower;
+		$totals['n_calls_wait_higher' ] += $n_calls_wait_higher;
+		
+		
+	//	echo '<tr class="', ($is_weekend ? 'even':'odd') ,'">', "\n";
+	//	echo '<td class="r"',$style_wd,'>', $day                 ,'.</td>', "\n";
+		echo '<td class="r"',$style_wd,'>', $n_calls_in          ,'</td>', "\n";
+		echo '<td class="r"',$style_wd,'>', $n_calls_in_stat     ,'</td>', "\n";
+		echo '<td class="r"',$style_wd,'>', $n_calls_answer      ,'</td>', "\n";
+		echo '<td class="r"',$style_wd,'>', $n_calls_noanswer    ,'</td>', "\n";
+		echo '<td class="r"',$style_wd,'>', $n_calls_busy        ,'</td>', "\n";
+	//	echo '<td class="r"',$style_wd,'>', $pct_connected       ,' <small>%</small></td>', "\n";
+		echo '<td class="r"',$style_wd,'><div class="bargraph" style="width: ',$pct_connected,'%;">', $pct_connected ,'&nbsp;<small>%</small></div></td>', "\n";
+		echo '<td class="r"',$style_wd,'>', $n_calls_dur_lower   ,'</td>', "\n";
+		echo '<td class="r"',$style_wd,'>', $n_calls_dur_higher  ,'</td>', "\n";
+		echo '<td class="r"',$style_wd,'>', _secs_to_minsecs($calls_dur_avg) ,'</td>', "\n";
+		echo '<td class="r"',$style_wd,'>', $n_calls_wait_lower  ,'</td>', "\n";
+		echo '<td class="r"',$style_wd,'>', $n_calls_wait_higher ,'</td>', "\n";
+		
+	} else {
+		
+		for ($i=0; $i < 11; $i++) {
+			echo '<td class="r"',$style_wd,'></td>', "\n";
+		}
+		
 	}
-
-}
 	echo '</tr>', "\n";
-
+	
 }
 --$day;
 
@@ -475,57 +476,59 @@ $month_t_end   = (int)mkTime( 23,59,59, $m, $day, $y );
 
 
 $pct_connected_month = ($totals['n_calls_answer' ] > 0)
-		? ($totals['n_calls_answer' ] / $totals['n_calls_in_stat'   ]   )
-		: 0.0;
+	? ($totals['n_calls_answer' ] / $totals['n_calls_in_stat'   ])
+	: 0.0;
 $pct_connected_month = round($pct_connected_month*100);
 
 $calls_dur_avg_month = 0;
 $calls_dur_month = 0;
 
-if ( $totals['n_calls_answer'] ) { 
-
-	$sql_query = 'SELECT AVG(`billsec`)
-	FROM `'.$table.'`
-	WHERE
-	( `calldate`>=\''. date('Y-m-d H:i:s', $month_t_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $month_t_end) .'\' ) AND
-	`disposition`=\''. $DB->escape('ANSWERED') .'\' AND
-	`billsec` > 0 '; 
-		$calls_dur_avg_month = $CDR_DB->executeGetOne( $sql_query );
+if ( $totals['n_calls_answer'] ) {
+	
+	$sql_query =
+		'SELECT AVG(`billsec`) '.
+		'FROM `'.$table.'` '.
+		'WHERE '.
+		'( `calldate`>=\''. date('Y-m-d H:i:s', $month_t_start) .'\' AND '.
+		'  `calldate`<=\''. date('Y-m-d H:i:s', $month_t_end) .'\' ) AND '.
+		'  `disposition`=\''. $DB->escape('ANSWERED') .'\' AND '.
+		'`billsec` > 0';
+	
+	$calls_dur_avg_month = $CDR_DB->executeGetOne( $sql_query );
 }
 
 if ($totals['n_calls_answer'] > 0) {
 
-	 $sql_query = 'SELECT SUM(`billsec`)
-	FROM `'.$table.'`
-	WHERE
-	( `calldate`>=\''. date('Y-m-d H:i:s', $month_t_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $month_t_end) .'\' ) AND
-	`disposition`=\''. $DB->escape('ANSWERED') .'\' AND
-	`billsec` > 0 ';
+	$sql_query =
+		'SELECT SUM(`billsec`) '.
+		'FROM `'.$table.'` '.
+		'WHERE '.
+		'( `calldate`>=\''. date('Y-m-d H:i:s', $month_t_start) .'\' AND '.
+		'  `calldate`<=\''. date('Y-m-d H:i:s', $month_t_end) .'\' ) AND '.
+		'  `disposition`=\''. $DB->escape('ANSWERED') .'\' AND '.
+		'`billsec` > 0';
 	
-		$calls_dur_month = $CDR_DB->executeGetOne( $sql_query );
+	$calls_dur_month = $CDR_DB->executeGetOne( $sql_query );
 }
 
-$rs = $CDR_DB->execute( 'DROP TABLE `'.$table.'`');
+$ok = $CDR_DB->execute( 'DROP TABLE `'.$table.'`' );
 
 
 $style = 'style="border-top:3px solid #b90; background:#feb; line-height:2.5em;"';
 echo '<tr>', "\n";
 
 echo '<td class="r" ',$style,'><b>&sum;</b></td>', "\n";
-
-echo '<td class="r" ',$style,'>', $totals['n_calls_in'   ] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['n_calls_in_stat'   ] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['n_calls_answer' ] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['n_calls_noanswer' ] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['n_calls_busy'   ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['n_calls_in'          ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['n_calls_in_stat'     ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['n_calls_answer'      ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['n_calls_noanswer'    ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['n_calls_busy'        ] ,'</td>', "\n";
 //echo '<td class="r" ',$style,'>', $pct_connected_month ,' <small>%</small></td>', "\n";
-echo '<td class="r" ',$style,'><div class="bargraph" style="width: '.$pct_connected_month.'%;">'.$pct_connected_month.'&nbsp;<small>%</small></div></td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['n_calls_dur_lower' ] ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['n_calls_dur_higher'] ,'</td>', "\n";
+echo '<td class="r" ',$style,'><div class="bargraph" style="width: ',$pct_connected_month,'%;">', $pct_connected_month ,'&nbsp;<small>%</small></div></td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['n_calls_dur_lower'   ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['n_calls_dur_higher'  ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', _secs_to_minsecs($calls_dur_avg_month) ,'</td>', "\n";
-echo '<td class="r" ',$style,'>', $totals['n_calls_wait_lower'   ] ,'</td>', "\n";
+echo '<td class="r" ',$style,'>', $totals['n_calls_wait_lower'  ] ,'</td>', "\n";
 echo '<td class="r" ',$style,'>', $totals['n_calls_wait_higher' ] ,'</td>', "\n";
 
 echo '</tr>', "\n";

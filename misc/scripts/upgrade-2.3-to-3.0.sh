@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 ########################
 #
 # Author: Sascha Daniels <sd@alternative-solution.de>
@@ -91,15 +91,17 @@ test -f /opt/gemeinschaft-source/usr/share/doc/gemeinschaft/asterisk.sql || MY_E
 
 sed -e 's/asterisk/asterisk_new/g' /opt/gemeinschaft-source/usr/share/doc/gemeinschaft/asterisk.sql  | $MY_MYSQL -D asterisk_new
 
-MY_FIELDS="select new.TABLE_NAME, new.COLUMN_NAME, new.COLUMN_DEFAULT, new.IS_NULLABLE, new.DATA_TYPE, new.COLUMN_TYPE, new.EXTRA, new.COLUMN_KEY from new, old where new.column_name=old.column_name and new.table_name=old.table_name and new.TABLE_NAME !='ast_sipfriends_gs' and new.DATA_TYPE != old.DATA_TYPE;"
+MY_FIELDS="select new.TABLE_NAME, new.COLUMN_NAME, new.COLUMN_DEFAULT, new.IS_NULLABLE, new.DATA_TYPE, new.COLUMN_TYPE, new.EXTRA, new.COLUMN_KEY from new, old where new.column_name=old.column_name and new.table_name=old.table_name and new.TABLE_NAME !='ast_sipfriends_gs' and (new.DATA_TYPE != old.DATA_TYPE or new.COLUMN_TYPE != old.COLUMN_TYPE);"
 
 echo -e "############\n I will change these columns:\n"
 
 $MY_MYSQL --batch -D gemeinschaft_schema  -e "$MY_FIELDS" | tr '\t' '|' | while IFS='|' read TABLE COLUMN DEFAULT NULLABLE DATATYPE COLUMNTYPE EXTRA KEY  
 do 
         echo -e "$TABLE.$COLUMN\n";
-        DEFAULT="default $DEFAULT";
-
+		if [ "$DEFAULT" != "NULL" ]
+        then
+			DEFAULT="default '$DEFAULT'";
+		fi
         case $NULLABLE in NO)
                 NULLABLE="NOT NULL";
                 if [ "$DEFAULT" = "default NULL" ]
@@ -111,8 +113,7 @@ do
                 NULLABLE="";
                 ;;
         esac
-
-        MY_CHANGE="alter table \`$TABLE\` change \`$COLUMN\` \`$COLUMN\` $COLUMNTYPE $EXTRA $NULLABLE $DEFAULT;"
+	    MY_CHANGE="alter table \`$TABLE\` change \`$COLUMN\` \`$COLUMN\` $COLUMNTYPE $EXTRA $NULLABLE $DEFAULT;"
         $MY_MYSQL -D asterisk -e "$MY_CHANGE";
 done;
 

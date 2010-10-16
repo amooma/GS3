@@ -87,7 +87,7 @@ class PhoneCapability_snom extends PhoneCapability
 		} else
 			$rm_tmp = false;
 		
-		$cmd = 'sox '. qsa($infile) .' -r 8000 -c 1 -w '. qsa($outfile) .' trim 0 125000s 2>>/dev/null';
+		$cmd = 'sox '. qsa($infile) .' -c 1 -2 '. qsa($outfile) .' rate 8000 trim 0 125000s 2>>/dev/null';
 		# WAV, PCM, 8 kHz, 16 bit, mono
 		# "The time for loading the file should not be longer then 3 seconds.
 		# Size < 250 KByte."

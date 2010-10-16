@@ -55,18 +55,22 @@ context user-config {
 	//-------------------------------------------------------------
 	
 	*90 => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(internal,1);
 	}
 	*90* => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(internal,0);
 	}
 	*91 => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(external,1);
 	}
 	*91* => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-config-clir(external,0);
 	}
@@ -77,10 +81,12 @@ context user-config {
 	//-------------------------------------------------------------
 	
 	*92 => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-config-call-waiting(1);
 	}
 	*92* => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-config-call-waiting(0);
 	}
@@ -91,6 +97,7 @@ context user-config {
 	//-------------------------------------------------------------
 	
 	_*9[34][01]. => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		Set(number=${EXTEN:4});
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
@@ -131,6 +138,7 @@ context user-config {
 	}
 	
 	_*95XX => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		Set(timeout=${EXTEN:3});
 		Verbose(1,### User ${user_name}: set Unavail Timeout to ${timeout});
@@ -148,6 +156,7 @@ context user-config {
 	}
 	
 	_*9*[01][0-3] => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,${EXTEN:3:1},${EXTEN:4:1},1);
 		Wait(0.5);
@@ -155,6 +164,7 @@ context user-config {
 		Hangup();
 	}
 	_*9*[01][0-3]* => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,${EXTEN:3:1},${EXTEN:4:1},0);
 		Wait(0.5);
@@ -162,6 +172,7 @@ context user-config {
 		Hangup();
 	}
 	_*9**[01][0-3] => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(var,${EXTEN:4:1},${EXTEN:5:1},1);
 		Wait(0.5);
@@ -169,6 +180,7 @@ context user-config {
 		Hangup();
 	}
 	_*9**[01][0-3]* => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(var,${EXTEN:4:1},${EXTEN:5:1},0);
 		Wait(0.5);
@@ -180,6 +192,7 @@ context user-config {
 	
 	*2 => {
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		&caller-count();
 		//toggle callforwarding 
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${user_name});
 		if ("${fw_std_active}" = "1") {
@@ -204,6 +217,7 @@ context user-config {
 	}
 	dnd-on => {
 		// like *2 but silent
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,0,0,1);
 		&user-call-forward-activate-numeric(std,1,0,1);
@@ -212,6 +226,7 @@ context user-config {
 	}
 	
 	*2* => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&user-call-forward-activate-numeric(std,0,0,0);
@@ -223,6 +238,7 @@ context user-config {
 	}
 	dnd-off => {
 		// like *2* but silent
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
@@ -230,6 +246,7 @@ context user-config {
 	}
 	
 	*21 => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&usercode-by-ext(${user_name});
@@ -247,6 +264,7 @@ context user-config {
 	}
 	
 	*22 => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&usercode-by-ext(${user_name});
@@ -264,6 +282,7 @@ context user-config {
 	}
 	
 	_*2X. => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&usercode-by-ext(${user_name});
@@ -287,6 +306,7 @@ context user-config {
 	}
 	
 	*30 => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&usercode-by-ext(${user_name});
@@ -314,10 +334,12 @@ context user-config {
 	//-------------------------------------------------------------
 	
 	*96 => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-config-comment(1);
 	}
 	*96* => {
+		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-config-comment(0);
 	}

@@ -139,11 +139,11 @@ $MODULES['monitor'  ]=  array(
 	'boi_ok'=> false,
 	'id' => 7000,
 	'sub' => array(
-		/*'queues'       => array('title' => __('Warteschlangen'), 'id' => 7001),
-		'peers'        => array('title' => __('Kollegen'),       'id' => 7003),*/
-		'queuemon'     => array('title' => __('QueueMon'),       'id' => 7001),
-		'peermon'      => array('title' => __('PeerMon'),        'id' => 7003),
-		'pgrps'        => array('title' => __('Rufannahmegrp.'), 'id' => 7002)
+	//	'queues'       => array('title' => __('Warteschlangen'), 'id' => 7001),
+		'pgrps'        => array('title' => __('Rufannahmegrp.'), 'id' => 7002),
+	//	'peers'        => array('title' => __('Kollegen'),       'id' => 7003),
+		'queuemon'     => array('title' => __('QueueMon'),       'id' => 7005),
+		'peermon'      => array('title' => __('PeerMon'),        'id' => 7006),
 	)
 );
 
@@ -296,7 +296,7 @@ $MODULES['prov'     ]=  array(
 	'id' => 16000,
 	'sub' => array(
 		'phones'       => array('title' => __('Telefone'), 'id' => 16001),
-		'groups'       => array('title' => __('Provisioning-Grp.'), 'id' => 16002),
+		'groups'       => array('title' => __('Prov.-Gruppen'), 'id' => 16002),
 		'keyprof'      => array('title' => __('Tasten-Profile'), 'id' => 16003),
 		'provparams'   => array('title' => __('Parameter'), 'id' => 16004),
 		'jobs'         => array('title' => __('Jobs'), 'id' => 16005),

@@ -5,7 +5,8 @@
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
 
-GEMEINSCHAFT_VERS="3.0"
+#GEMEINSCHAFT_VERS="master"
+GEMEINSCHAFT_VERS="3.1-rc3"
 
 GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
 
@@ -426,7 +427,8 @@ ${APTITUDE_INSTALL} \
 	mysql-client mysql-server \
 	apache2 \
 	php5-cli libapache2-mod-php5 php5-mysql php5-ldap \
-    python2.6 \
+	python2.6 \
+	python-mysqldb \
 	sox libsox-fmt-all mpg123
 unset DEBIAN_FRONTEND
 unset DEBIAN_PRIORITY
@@ -628,6 +630,11 @@ sed -i -r -e 's#^(astrundir\s*).*#\1=> /var/run/asterisk#' /etc/asterisk/asteris
 # change owner of /opt/gemeinschaft/etc/asterisk/* to asterisk
 chown -h -R asterisk:asterisk /opt/gemeinschaft/etc/asterisk
 
+# add Apache user (www-data) to the Asterisk group (asterisk) so
+# voicemails can be played via the web GUI:
+adduser www-data asterisk
+invoke-rc.d apache2 restart
+
 
 # configure Gemeinschaft
 #
@@ -785,6 +792,15 @@ if [ -e /opt/gemeinschaft-source/etc/init.d/gs-sip-ua-config-responder ]; then
 fi
 
 
+# Gemeinschaft/Asterisk extension state daemon
+#
+if [ -e /opt/gemeinschaft-source/etc/init.d/gs-extstated ]; then
+	ln -snf /opt/gemeinschaft-source/etc/init.d/gs-extstated /etc/init.d/gs-extstated
+	update-rc.d gs-extstated defaults 92 08
+	invoke-rc.d gs-extstated start
+fi
+
+
 # cron jobs
 #
 cd /etc/cron.d/
@@ -792,6 +808,12 @@ ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-cc-guardian || true
 ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-queuelog-to-db || true
 ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-queues-refresh || true
 cd
+
+
+# fix permissions
+chown -h asterisk:asterisk /opt/gemeinschaft/vm-rec
+chmod 0777 /opt/gemeinschaft/vm-rec
+chmod 0777 /opt/gemeinschaft/sys-rec
 
 
 # remove build environment 
@@ -816,16 +838,18 @@ echo "" >> /root/.bashrc || true
 
 # motd
 #
-echo "***" > /etc/motd.static
-echo "***    _____                                              _____" >> /etc/motd.static
-echo "***   (.---.)       G E M E I N S C H A F T  ${GEMEINSCHAFT_VERS}       (.---.)" >> /etc/motd.static
-echo "***    /:::\\ _.-----------------------------------------._/:::\\" >> /etc/motd.static
-echo "***    -----                                              -----" >> /etc/motd.static
-echo "***" >> /etc/motd.static
-echo "***   Need help with Gemeinschaft? We have an excellent free mailinglist" >> /etc/motd.static
-echo "***   and offer the best support and consulting money can buy. Have a" >> /etc/motd.static
-echo "***   look at http://www.gemeinschaft.de for more information." >> /etc/motd.static
-echo "***" >> /etc/motd.static
+(
+echo "***"
+echo "***    _____                                              _____"
+echo "***   (.---.)             GEMEINSCHAFT $(printf "% -7s" $GEMEINSCHAFT_VERS)           (.---.)"
+echo "***    /:::\\ _.-----------------------------------------._/:::\\"
+echo "***    -----                                              -----"
+echo "***"
+echo "***   Need help with Gemeinschaft? We have an excellent free mailinglist"
+echo "***   and offer the best support and consulting money can buy. Have a"
+echo "***   look at http://www.gemeinschaft.de for more information."
+echo "***"
+) > /etc/motd.static
 [ -e /etc/motd ] && rm -rf /etc/motd || true
 ln -s /etc/motd.static /etc/motd
 
@@ -949,6 +973,7 @@ USER_PIN=`printf "%04d\n" "$PIN"`
 	--pin="$ADMIN_PIN" \
 	--firstname="$ADMIN_FNAME" \
 	--lastname="$ADMIN_LNAME" \
+	--language="de" \
 	--email="" \
 	--host=1 || true
 
@@ -959,6 +984,7 @@ USER_PIN=`printf "%04d\n" "$PIN"`
 	--pin="$USER_PIN" \
 	--firstname="$USER_FNAME" \
 	--lastname="$USER_LNAME" \
+	--language="de" \
 	--email="" \
 	--host=1 || true
 
@@ -1017,14 +1043,12 @@ fi
 
 
 if [ -e /opt/gemeinschaft-source/etc/init.d/silverbullet ]; then
-        cd /etc/init.d/
-        ln -snf /opt/gemeinschaft-source/etc/init.d/silverbullet
-        update-rc.d silverbullet defaults 92 8
-        invoke-rc.d silverbullet start
+	cd /etc/init.d/
+	ln -snf /opt/gemeinschaft-source/etc/init.d/silverbullet
+	update-rc.d silverbullet defaults 92 8
+	invoke-rc.d silverbullet start
 fi
 
-# Add GUI Editor to Admin GUI
-/opt/gemeinschaft/scripts/gs-group-member-add --group=admin_gui --member=15013
 
 
 echo ""

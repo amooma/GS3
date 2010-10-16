@@ -124,7 +124,7 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	$err=0; $out=array();
 	@exec( 'sudo chmod a+r '. qsa($origfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
 	if ($err != 0) {
-		gs_log( GS_LOG_WARNING, 'Can\'t read \"$origfile\"' );
+		gs_log( GS_LOG_WARNING, "Can't read origfile \"$origfile\"" );
 		return false;
 	}
 	
@@ -197,12 +197,12 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	$GS_EMAIL_DELIVERY = gs_get_conf('GS_EMAIL_DELIVERY');
 	
 	if (! file_exists($outfile) || ! is_readable($outfile)) {
-		gs_log( GS_LOG_WARNING, 'Can\'t read \"$outfile\"' );
+		gs_log( GS_LOG_WARNING, "Can\'t read outfile \"$outfile\"" );
 		return false;
 	}
 	$fh = @fOpen($outfile, 'rb');
 	if (! $fh) {
-		gs_log( GS_LOG_WARNING, 'Can\'t read \"$outfile\"' );
+		gs_log( GS_LOG_WARNING, "Can\'t read outfile \"$outfile\"" );
 		return false;
 	}
 	

@@ -56,19 +56,24 @@ foreach ($phone_types as $phone_type) {
 	$PhoneCapa = new $class;
 	
 	$firmware_files = $PhoneCapa->get_firmware_files();
-	if(!is_array($firmware_files) || $firmware_files == null) {
-		continue;
-	}
-	echo '<table cellspacing="1">' ,"\n";
+	
+	echo '<table cellspacing="1" style="width:95%;">' ,"\n";
 	echo '<thead>' ,"\n";
 	echo '<tr><th>',strToUpper($phone_type),'</th></tr>' ,"\n";
 	echo '</thead>' ,"\n";
 	echo '<tbody>' ,"\n";
-	
-	foreach($firmware_files as $firmware_file) {
-		echo '<tr><td>', $firmware_file, '</td></tr>' ,"\n";
+	if (! is_array($firmware_files) || $firmware_files === null) {
+		echo '<tr><td><i>', htmlEnt(__('Lesen der Firmware-Dateien nicht implementiert')), '</i></td></tr>' ,"\n";
 	}
-	
+	else {
+		if (count($firmware_files) > 0) {
+			foreach($firmware_files as $firmware_file) {
+				echo '<tr><td>', htmlEnt($firmware_file), '</td></tr>' ,"\n";
+			}
+		} else {
+			echo '<tr><td><i>', htmlEnt(__('keine Firmware-Dateien vorhanden')), '</i></td></tr>' ,"\n";
+		}
+	}
 	echo '</tbody>' ,"\n";
 	echo '</table>' ,"\n";
 	echo '<br />' ,"\n";

@@ -103,6 +103,7 @@ if (($action == 'edit') && ($group_id > 0)) {
 	echo '<input type="hidden" name="action" value="save" />', "\n";
 	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 
+	$i = 0;
 	foreach ($MODULES as $section) {
 		$i++;
 		
