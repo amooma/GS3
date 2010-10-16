@@ -39,6 +39,23 @@ require_once( GS_DIR .'inc/prov-fns.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 set_error_handler('err_handler_die_on_err');
 
+function _tiptel_astlang_to_tiptellang($langcode)
+{
+	$lang_default = 'German';
+	
+	$lang_transtable = array(
+		'de' => 'German',
+		'en' => 'English',
+		'us' => 'English',
+	);
+	
+	$lang_ret = $lang_transtable[$langcode];
+	if(strlen($lang_ret) == 0)
+		return $lang_default;
+	
+	return $lang_ret;
+}
+
 function _tiptel_normalize_version( $fwvers )
 {
 	$tmp = explode('.', $fwvers);
@@ -480,7 +497,7 @@ psetting('UserPassword|password', 'user' );					# User Password
 # Lang
 psetting('Lang|path', '/yealink/config/Setting/Setting.cfg');
 psetting('Lang|WebLanguage', 'English');	# web interface
-psetting('Lang|ActiveWebLanguage', 'German');	# lcd
+psetting('Lang|ActiveWebLanguage', _tiptel_astlang_to_tiptellang($user['language']) );	# lcd
 
 # Time
 psetting('Time|path', '/yealink/config/Setting/Setting.cfg');
