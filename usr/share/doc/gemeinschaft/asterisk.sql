@@ -6979,7 +6979,7 @@ SET character_set_client = @saved_cs_client;
 LOCK TABLES `routes` WRITE;
 /*!40000 ALTER TABLE `routes` DISABLE KEYS */;
 INSERT INTO `routes` VALUES (5,1,3,'^011[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'','Notrufnummern etc.');
-INSERT INTO `routes` VALUES (6,0,4,'^019222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,7,9,'','Notruf Rettungsdienst');
+INSERT INTO `routes` VALUES (6,1,4,'^019222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'','Notruf Rettungsdienst');
 INSERT INTO `routes` VALUES (7,0,14,'^00900',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,0,0,'','Mehrwertnummern');
 INSERT INTO `routes` VALUES (8,0,8,'^0118',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,0,0,'','Auskünfte (u.U. teuer, können vermitteln)');
 INSERT INTO `routes` VALUES (9,0,10,'^009009',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,0,0,0,'','Mehrwertnummern (Dialer)');
