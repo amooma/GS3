@@ -59,7 +59,7 @@ function _err( $msg='' )
 	echo
 		'<?','xml version="1.0" encoding="utf-8"?','>', "\n",
 		'<TiptelIPPhoneTextScreen>', "\n",
-			'<Title>', __('Fehler'), '</Title>', "\n",
+			'<Title>', tiptelXmlEsc(__('Fehler')), '</Title>', "\n",
 			'<Text>', tiptelXmlEsc( __('Fehler') .': '. $msg ), '</Text>', "\n",
 		'</TiptelIPPhoneTextScreen>', "\n";
 	_ob_send();
@@ -140,10 +140,10 @@ if ($search === 1) {
 	echo '<?','xml version="1.0" encoding="utf-8"?','>',"\n";
 	echo 
 		'<TiptelIPPhoneInputScreen>', "\n",
-		'<Title>Suchen</Title>', "\n",
+		'<Title>', tiptelXmlEsc(__('Suchen')), '</Title>', "\n",
 		'<URL>', tiptelXmlEsc($url_tiptel_pb.'?u='.$user.'&t='.$type) ,'</URL>', "\n",
 		'<InputField type="string" password="no" editable="yes">', "\n",
-			'<Prompt>Suche nach</Prompt>', "\n",
+			'<Prompt>', tiptelXmlEsc(__('Suche nach')), '</Prompt>', "\n",
 			'<Parameter>q</Parameter>',"\n",
 		'</InputField>', "\n",
 		'</TiptelIPPhoneInputScreen>', "\n";
@@ -168,7 +168,7 @@ if (! $type) {
 	echo
 		'<?','xml version="1.0" encoding="utf-8"?','>', "\n",
 		'<TiptelIPPhoneTextMenu>', "\n",
-			'<Title>', __('Telefonbuch') ,'</Title>', "\n\n";
+			'<Title>', tiptelXmlEsc(__('Telefonbuch')) ,'</Title>', "\n\n";
 	foreach ($typeToTitle as $t => $title) {
 		$cq = 'SELECT COUNT(*) FROM ';
 		switch ($t) {
