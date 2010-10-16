@@ -75,7 +75,7 @@ function _settings_err( $msg='' )
 function setting( $name, $idx, $val, $attrs=null, $writeable=false, $xml=false )
 {
 	if ($xml === true)
-		echo '  <ConfigurationItem><Parameter>', $name , ($idx>0? ' '.$idx :'') ,'</Parameter><Value>', str_replace(array("\n", "\r"), array(' ', ' '), $val) , '</Value></ConfigurationItem>', "\n";
+		echo '  <ConfigurationItem><Parameter>', $name , ($idx>0? ' '.$idx :'') ,'</Parameter><Value>', htmlEnt(str_replace(array("\n", "\r"), array(' ', ' '), $val)) , '</Value></ConfigurationItem>', "\n";
 	else
 		echo ($writeable == false ? '!' : ''), $name , ($idx>0? ' '.$idx :'') ,': ', str_replace(array("\n", "\r"), array(' ', ' '), $val) ,"\n";
 }
