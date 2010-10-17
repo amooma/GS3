@@ -147,7 +147,7 @@ ob_start();
 
 echo '<?','xml version="1.0" encoding="utf-8"?','>' ,"\n";
 echo '<TiptelIPPhoneDirectory>' ,"\n";
-echo '<Title>'. $pb['title'] .'</Title>', "\n";
+echo '<Title>'. tiptelXmlEsc($pb['title']) .'</Title>', "\n";
 
 $rs = $db->execute( $pb['query'] );
 
@@ -158,8 +158,8 @@ if ( $rs && $rs->numRows() !== 0 ) {
 		$number    = $r['ext'];
 
 		echo '<DirectoryEntry>' ,"\n";
-		echo '<Name>'. $lastname .', '. $firstname .' ('. $number .')</Name>', "\n";
-		echo '<Telephone>'. $number .'</Telephone>', "\n";
+		echo '<Name>'. tiptelXmlEsc($lastname) .', '. tiptelXmlEsc($firstname) .' ('. tiptelXmlEsc($number) .')</Name>', "\n";
+		echo '<Telephone>'. tiptelXmlEsc($number) .'</Telephone>', "\n";
 		echo '</DirectoryEntry>' ,"\n";
 	}
 }

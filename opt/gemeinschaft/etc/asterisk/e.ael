@@ -819,6 +819,7 @@ macro dial-gateway-do( mnumber ) {
 			SetCallerPres(prohib_passed_screen);
 		}
 		Verbose(1,### Outbound route: ${r_${r}_dial} - Caller ID: "${CALLERID(name)}" <${CALLERID(num)}@${r_${r}_cid_host}>);
+		Set(CDR(userfield)=${mnumber});
 		Dial(${r_${r}_dial},180);
 		Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
 		if ("${DIALSTATUS}" = "ANSWER" || "${DIALSTATUS}" = "CANCEL") {
