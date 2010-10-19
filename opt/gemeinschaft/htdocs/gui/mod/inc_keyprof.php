@@ -1095,6 +1095,7 @@ if ($phone_layout) {
 		}
 		break;
 	case 'aastra':
+	case 'aastra':
 		//if ($show_ext_modules >= 0) {
 			$key_levels = array();
 		//}
