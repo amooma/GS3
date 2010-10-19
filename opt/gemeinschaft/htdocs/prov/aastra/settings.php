@@ -310,8 +310,9 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('sip blf subscription period'         , 120, false, false);
 	psetting('sip customized codec'                , 'payload=8;payload=0;payload=115;payload=9;payload=18;silsupp=off', false, false);
 	psetting('sip silence suppression'             , 0, false, false);
+	psetting('sip dial plan'                       , 'X+#|XX+*', false, false);
 	psetting('lldp'                                , 0, false, false);
-	psetting('call hold reminder'                  , 1, false, false);
+	psetting('call hold reminder'                  , 0, false, false);
 	psetting('sip diversion display'               , 1, false, false);
 	psetting('show call destination name'          , 1, false, false);
 	if (gs_get_conf('GS_AASTRA_PROV_FW_UPDATE'))
