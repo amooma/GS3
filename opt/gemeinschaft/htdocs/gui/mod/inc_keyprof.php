@@ -981,32 +981,10 @@ if ($phone_layout) {
 		}
 		break;
 	case 'aastra':
+	case 'aastra':
 		//if ($show_ext_modules >= 0) {
-			$key_levels = array(
-				0 => array('from'=>   1, 'to'=>  10, 'shifted'=>false,
-					'title'=> htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten') ),
-				1 => array('from'=> 101, 'to'=> 120, 'shifted'=>false,
-					'title'=> htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten') )
-			);
+			$key_levels = array();
 		//}
-		if ($show_ext_modules >= 1) {
-			$key_levels += array(
-				2 => array('from'=> 200, 'to'=> 260, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 1')
-			);
-		}
-		if ($show_ext_modules >= 2) {
-			$key_levels += array(
-				3 => array('from'=> 300, 'to'=> 360, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 2')
-			);
-		}
-		if ($show_ext_modules >= 3) {
-			$key_levels += array(
-				4 => array('from'=> 400, 'to'=> 460, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 3')
-			);
-		}
 		switch ($phone_type) {
 			case 'aastra-57i':
 				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
@@ -1079,10 +1057,6 @@ if ($phone_layout) {
 					$key_levels[3]['to'  ]  =  460;
 				}
 
-				break;
-			case 'aastra-53i':
-				$key_levels[0]['from'] =    0;
-				$key_levels[0]['to'  ] =   -1;
 				break;
 			/*
 			case 'aastra-51i':
