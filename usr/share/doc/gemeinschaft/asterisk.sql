@@ -5934,6 +5934,20 @@ LOCK TABLES `dial_log` WRITE;
 /*!40000 ALTER TABLE `dial_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+
+
+DROP TABLE IF EXISTS `dnd`;
+CREATE TABLE IF NOT EXISTS `dnd` (
+  `_user_id` int(10) NOT NULL DEFAULT '0',
+  `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
+  PRIMARY KEY (`_user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+
+
 --
 -- Table structure for table `gate_cids`
 --
@@ -6481,6 +6495,87 @@ CREATE TABLE `ivrs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
 
 
+
+--
+-- Table structure for table `monitor`
+--
+DROP TABLE IF EXISTS `monitor`;
+SET character_set_client = utf8;
+CREATE TABLE `monitor` (
+  `user_id` int(10) unsigned NOT NULL,
+  `type` tinyint(2) unsigned NOT NULL default '1',
+  `display_x` smallint(4) unsigned NOT NULL default '0',
+  `display_y` smallint(4) unsigned NOT NULL default '0',
+  `columns` tinyint(2) unsigned NOT NULL default '2',
+  `update` smallint(4) unsigned NOT NULL default '2',
+  `reload` smallint(4) unsigned NOT NULL default '120',
+  PRIMARY KEY  (`user_id`, `type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+
+--
+-- Table structure for table `monitor_colors`
+--
+DROP TABLE IF EXISTS `monitor_colors`;
+SET character_set_client = utf8;
+CREATE TABLE `monitor_colors` (
+  `user_id` int(10) unsigned NOT NULL,
+  `type` tinyint(2) unsigned NOT NULL default '1',
+  `status` tinyint(3) unsigned NOT NULL default '2',
+  `color` varchar(20) collate utf8_unicode_ci NOT NULL default '#fff',
+  PRIMARY KEY  (`user_id`, `type`, `status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+
+
+--
+-- Table structure for table `monitor_groups`
+--
+DROP TABLE IF EXISTS `monitor_groups`;
+CREATE TABLE `monitor_groups` (
+	  `user_id` int(10) unsigned NOT NULL,
+	  `group_id` int(10) unsigned NOT NULL,
+	  `active` tinyint(1) unsigned NOT NULL default '1',
+	  `display_columns` tinyint(2) unsigned NOT NULL default '2',
+	  `display_width` smallint(4) unsigned NOT NULL default '500',
+	  `display_height` smallint(4) unsigned NOT NULL default '150',
+	  `display_extension` smallint(5) unsigned NOT NULL default '2',
+	  `display_name` smallint(5) unsigned NOT NULL default '4',
+	  `display_forw` smallint(5) unsigned NOT NULL default '3',
+	  `display_comment` smallint(5) unsigned NOT NULL default '0',
+	  PRIMARY KEY  (`user_id`, `group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+
+
+--
+-- Table structure for table `monitor_queues`
+--
+DROP TABLE IF EXISTS `monitor_queues`;
+SET character_set_client = utf8;
+CREATE TABLE `monitor_queues` (
+  `user_id` int(10) unsigned NOT NULL,
+  `queue_id` int(10) unsigned NOT NULL,
+  `active` tinyint(1) unsigned NOT NULL default '1',
+  `display_columns` tinyint(2) unsigned NOT NULL default '2',
+  `display_width` smallint(4) unsigned NOT NULL default '500',
+  `display_height` smallint(4) unsigned NOT NULL default '150',
+  `display_calls` smallint(5) unsigned NOT NULL default '15',
+  `display_answered` smallint(5) unsigned NOT NULL default '15',
+  `display_abandoned` smallint(5) unsigned NOT NULL default '15',
+  `display_timeout` smallint(5) unsigned NOT NULL default '15',
+  `display_wait_max` smallint(5) unsigned NOT NULL default '15',
+  `display_wait_min` smallint(5) unsigned NOT NULL default '15',
+  `display_wait_avg` smallint(5) unsigned NOT NULL default '15',
+  `display_call_max` smallint(5) unsigned NOT NULL default '15',
+  `display_call_min` smallint(5) unsigned NOT NULL default '15',
+  `display_call_avg` smallint(5) unsigned NOT NULL default '15',
+  `display_name` smallint(5) unsigned NOT NULL default '4',
+  `display_extension` smallint(5) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`user_id`, `queue_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+
+
+
+
+
 --
 -- Table structure for table `pb_ldap`
 --
@@ -6541,6 +6636,38 @@ LOCK TABLES `pb_prv` WRITE;
 /*!40000 ALTER TABLE `pb_prv` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pb_prv` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+--
+-- Table structure for table `penalties`
+--
+
+DROP TABLE IF EXISTS `penalties`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+ CREATE TABLE `penalties` (
+ `_queue_id` int(10) unsigned NOT NULL,
+ `_user_id` int(10) unsigned NOT NULL,
+ `_host_id` mediumint(8) unsigned NOT NULL,
+ `penalty` int(1) NOT NULL,
+ PRIMARY KEY  (`_queue_id`,`_user_id`,`_host_id`),
+ KEY `penaltys_ibfk_2` (`_user_id`),
+ KEY `penaltys_ibfk_3` (`_host_id`),
+ CONSTRAINT `penalties_ibfk_1` FOREIGN KEY (`_queue_id`) REFERENCES `ast_queues` (`_id`) ON DELETE CASCADE,
+ CONSTRAINT `penalties_ibfk_2` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+ CONSTRAINT `penalties_ibfk_3` FOREIGN KEY (`_host_id`) REFERENCES `hosts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `penalties`
+--
+
+LOCK TABLES `penalties` WRITE;
+/*!40000 ALTER TABLE `penalties` DISABLE KEYS */;
+/*!40000 ALTER TABLE `penalties` ENABLE KEYS */;
+UNLOCK TABLES;
+
 
 --
 -- Table structure for table `phone_msgs`
@@ -7419,109 +7546,20 @@ LOCK TABLES `vm_rec_messages` WRITE;
 /*!40000 ALTER TABLE `vm_rec_messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `penalties`
---
 
-DROP TABLE IF EXISTS `penalties`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
- CREATE TABLE `penalties` (
- `_queue_id` int(10) unsigned NOT NULL,
- `_user_id` int(10) unsigned NOT NULL,
- `_host_id` mediumint(8) unsigned NOT NULL,
- `penalty` int(1) NOT NULL,
- PRIMARY KEY  (`_queue_id`,`_user_id`,`_host_id`),
- KEY `penaltys_ibfk_2` (`_user_id`),
- KEY `penaltys_ibfk_3` (`_host_id`),
- CONSTRAINT `penalties_ibfk_1` FOREIGN KEY (`_queue_id`) REFERENCES `ast_queues` (`_id`) ON DELETE CASCADE,
- CONSTRAINT `penalties_ibfk_2` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
- CONSTRAINT `penalties_ibfk_3` FOREIGN KEY (`_host_id`) REFERENCES `hosts` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-SET character_set_client = @saved_cs_client;
 
---
--- Dumping data for table `penalties`
---
 
-LOCK TABLES `penalties` WRITE;
-/*!40000 ALTER TABLE `penalties` DISABLE KEYS */;
-/*!40000 ALTER TABLE `penalties` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `monitor`
---
-DROP TABLE IF EXISTS `monitor`;
-SET character_set_client = utf8;
-CREATE TABLE `monitor` (
-  `user_id` int(10) unsigned NOT NULL,
-  `type` tinyint(2) unsigned NOT NULL default '1',
-  `display_x` smallint(4) unsigned NOT NULL default '0',
-  `display_y` smallint(4) unsigned NOT NULL default '0',
-  `columns` tinyint(2) unsigned NOT NULL default '2',
-  `update` smallint(4) unsigned NOT NULL default '2',
-  `reload` smallint(4) unsigned NOT NULL default '120',
-  PRIMARY KEY  (`user_id`, `type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
+DROP TABLE IF EXISTS `wakeup_calls`;
+ CREATE TABLE `asterisk`.`wakeup_calls` (
+ `target` VARCHAR( 16 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+ `hour` TINYINT( 2 ) UNSIGNED NOT NULL ,
+ `minute` TINYINT( 2 ) UNSIGNED NOT NULL ,
+ PRIMARY KEY ( `target` )
+ ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Table structure for table `monitor_colors`
---
-DROP TABLE IF EXISTS `monitor_colors`;
-SET character_set_client = utf8;
-CREATE TABLE `monitor_colors` (
-  `user_id` int(10) unsigned NOT NULL,
-  `type` tinyint(2) unsigned NOT NULL default '1',
-  `status` tinyint(3) unsigned NOT NULL default '2',
-  `color` varchar(20) collate utf8_unicode_ci NOT NULL default '#fff',
-  PRIMARY KEY  (`user_id`, `type`, `status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
---
--- Table structure for table `monitor_queues`
---
-DROP TABLE IF EXISTS `monitor_queues`;
-SET character_set_client = utf8;
-CREATE TABLE `monitor_queues` (
-  `user_id` int(10) unsigned NOT NULL,
-  `queue_id` int(10) unsigned NOT NULL,
-  `active` tinyint(1) unsigned NOT NULL default '1',
-  `display_columns` tinyint(2) unsigned NOT NULL default '2',
-  `display_width` smallint(4) unsigned NOT NULL default '500',
-  `display_height` smallint(4) unsigned NOT NULL default '150',
-  `display_calls` smallint(5) unsigned NOT NULL default '15',
-  `display_answered` smallint(5) unsigned NOT NULL default '15',
-  `display_abandoned` smallint(5) unsigned NOT NULL default '15',
-  `display_timeout` smallint(5) unsigned NOT NULL default '15',
-  `display_wait_max` smallint(5) unsigned NOT NULL default '15',
-  `display_wait_min` smallint(5) unsigned NOT NULL default '15',
-  `display_wait_avg` smallint(5) unsigned NOT NULL default '15',
-  `display_call_max` smallint(5) unsigned NOT NULL default '15',
-  `display_call_min` smallint(5) unsigned NOT NULL default '15',
-  `display_call_avg` smallint(5) unsigned NOT NULL default '15',
-  `display_name` smallint(5) unsigned NOT NULL default '4',
-  `display_extension` smallint(5) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`user_id`, `queue_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
---
--- Table structure for table `monitor_groups`
---
-DROP TABLE IF EXISTS `monitor_groups`;
-CREATE TABLE `monitor_groups` (
-	  `user_id` int(10) unsigned NOT NULL,
-	  `group_id` int(10) unsigned NOT NULL,
-	  `active` tinyint(1) unsigned NOT NULL default '1',
-	  `display_columns` tinyint(2) unsigned NOT NULL default '2',
-	  `display_width` smallint(4) unsigned NOT NULL default '500',
-	  `display_height` smallint(4) unsigned NOT NULL default '150',
-	  `display_extension` smallint(5) unsigned NOT NULL default '2',
-	  `display_name` smallint(5) unsigned NOT NULL default '4',
-	  `display_forw` smallint(5) unsigned NOT NULL default '3',
-	  `display_comment` smallint(5) unsigned NOT NULL default '0',
-	  PRIMARY KEY  (`user_id`, `group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8  COLLATE=utf8_unicode_ci;
 
 
 --
@@ -7552,17 +7590,4 @@ USE `asterisk`;
 -- Dump completed on 2010-04-12 23:22:57
 
 
-DROP TABLE IF EXISTS `wakeup_calls`;
- CREATE TABLE `asterisk`.`wakeup_calls` (
- `target` VARCHAR( 16 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
- `hour` TINYINT( 2 ) UNSIGNED NOT NULL ,
- `minute` TINYINT( 2 ) UNSIGNED NOT NULL ,
- PRIMARY KEY ( `target` )
- ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `dnd`;
-CREATE TABLE IF NOT EXISTS `dnd` (
-  `_user_id` int(10) NOT NULL DEFAULT '0',
-  `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
-  PRIMARY KEY (`_user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
