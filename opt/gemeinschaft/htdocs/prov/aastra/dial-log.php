@@ -64,7 +64,19 @@ function _get_user( $user_id )
 	return $user;
 }
 
+function _get_user_ext( $user_id )
+{
+	global $db;
+	
+	$user_ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
 
+	if (!$user_ext ) {
+		_err( 'Unknown user.' );
+		return false;
+	}
+
+	return $user_ext;
+}
 
 $type = trim( @$_REQUEST['t'] );
 if (! in_array( $type, array('in','out','missed', 'ind','outd','missedd'), true )) {
@@ -185,9 +197,9 @@ LIMIT '.$num_results;
 		if ( $type === 'missed') {
 		gs_user_watchedmissed( $user_id );
 		if ( GS_BUTTONDAEMON_USE == true ) {
-			$user = _get_user ( $user_id );
-			if ( $user )
-				gs_user_missedcalls_ui( $user );
+			$user_ext = _get_user_ext ( $user_id );
+			if ( $user_ext )
+				gs_user_missedcalls_ui( $user_ext );
 			}
 		}
 	}
