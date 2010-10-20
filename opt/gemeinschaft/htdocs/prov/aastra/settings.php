@@ -468,11 +468,11 @@ if ($dynamic == true) {
 }
 
 # reset all visible softkeys
-for ($i=1; $i<=5; ++$i) {
-	psetting('topsoftkey'.$i.' type', 'empty', true, $dynamic);
+for ($i=1; $i<=12; ++$i) {
+	psetting('topsoftkey'.$i.' type', 'none', true, $dynamic);
 }
-for ($i=1; $i<=5; ++$i) {
-	psetting('softkey'.$i.' type'   , 'empty', true, $dynamic);
+for ($i=1; $i<=12; ++$i) {
+	psetting('softkey'.$i.' type'   , 'none', true, $dynamic);
 }
 
 if (! $user['nobody_index']) {

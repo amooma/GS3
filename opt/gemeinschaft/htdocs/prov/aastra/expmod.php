@@ -125,7 +125,7 @@ function aastra_get_softkeys( $user_id, $phone_type, $modtype, $modnum, $level )
 	}
 
 	for ($i = ($minkey - $offset); $i <= ($maxkey - $offset); $i++) {
-		$softkeys['expmod'.$modnum.' key'.$i]['function'] = 'emtpy';
+		$softkeys['expmod'.$modnum.' key'.$i]['function'] = 'none';
 	}
 
 	$sql_query = 'SELECT `group_id`, `softkey_profile_id`  FROM `users` WHERE `id`='. $user_id;
