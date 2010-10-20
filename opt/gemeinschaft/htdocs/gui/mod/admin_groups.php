@@ -47,7 +47,7 @@ function confirm_delete() {
 </script>' ,"\n";
 
 $action = @$_REQUEST['action'];
-if (! in_array($action, array('', 'save', 'delete', 'edit', 'insert', 'remove', 'add', 'remove-perm', 'insert-perm', 'remove-member', 'insert-member'), true))
+if (! in_array($action, array('', 'save', 'delete', 'edit', 'insert', 'remove', 'add', 'remove-perm', 'insert-perm', 'remove-member', 'insert-member', 'insert-connection'), true))
 	$action = '';
 
 $group_id    = (int)@$_REQUEST['id'];
@@ -205,6 +205,25 @@ if ($action === 'remove-member') {
 		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Mitglied konnte nicht entfernt werden.') ,'</div>',"\n";
+	}
+	sleep(1); // FIXME
+	$action = 'edit';  # view
+}
+
+#####################################################################
+# add connection
+#####################################################################
+if ($action === 'insert-connection') {
+	$external = trim(@$_REQUEST['external']);
+	$key = trim(@$_REQUEST['key']);
+	$connection = trim(@$_REQUEST['connection']);
+
+	$ret = 	gs_group_connection_add($group_id, $key, $connection, $external);
+
+	if (isGsError($ret)) {
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	} elseif (! $ret) {
+		echo '<div class="errorbox">', __('Verbindung konnte nicht hinzugef&uuml;gt werden.') ,'</div>',"\n";
 	}
 	sleep(1); // FIXME
 	$action = 'edit';  # view
@@ -390,7 +409,7 @@ if ($action == 'edit') {
 	echo '</select>', "\n";
 	echo '</td>', "\n";
 	echo '<td class="r" colspan="2">', "\n";
-	echo  '<button type="submit" name="action" value="insert-perm" title="', __('Berechtigung Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
+	echo  '<button type="submit" name="action" value="insert-perm" title="', __('Berechtigung einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
 	echo '</td>', "\n";
 	echo '</tr>' ,"\n";
 	echo '</form>',"\n";
@@ -431,7 +450,8 @@ if ($action == 'edit') {
 <tbody>
 <?php
 	$group_externals = gs_group_connections_get($group['id']);
-/*
+
+
 	echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
 	echo '<form method="post" action="'.GS_URL_PATH.'">';
 	echo gs_form_hidden($SECTION, $MODULE);
@@ -451,11 +471,11 @@ if ($action == 'edit') {
 	echo '<input type="text" name="connection" value="" size="20" maxlength="255" style="width:96%;" />';
 	echo '</td>', "\n";
 	echo '<td class="r" colspan="2">', "\n";
-	echo  '<button type="submit" name="action" value="insert-perm" title="', __('Berechtigung Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
+	echo  '<button type="submit" name="action" value="insert-connection" title="', __('Verbindung einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
 	echo '</td>', "\n";
 	echo '</tr>' ,"\n";
 	echo '</form>',"\n";
-*/	
+
 	$i=0;
 	foreach ($group_externals as $group_external) {
 		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
