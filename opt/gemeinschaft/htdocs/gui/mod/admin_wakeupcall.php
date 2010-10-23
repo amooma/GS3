@@ -4,8 +4,11 @@
 * 
 * $Revision$
 * 
-* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* Copyright 2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
 * 
 * Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
 *
