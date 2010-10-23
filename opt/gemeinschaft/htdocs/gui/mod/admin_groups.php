@@ -47,7 +47,7 @@ function confirm_delete() {
 </script>' ,"\n";
 
 $action = @$_REQUEST['action'];
-if (! in_array($action, array('', 'save', 'delete', 'edit', 'insert', 'remove', 'add', 'remove-perm', 'insert-perm', 'remove-member', 'insert-member', 'insert-connection'), true))
+if (! in_array($action, array('', 'save', 'delete', 'edit', 'insert', 'remove', 'add', 'remove-perm', 'insert-perm', 'remove-member', 'insert-member', 'insert-connection', 'insert-parameter', 'remove-parameter'), true))
 	$action = '';
 
 $group_id    = (int)@$_REQUEST['id'];
@@ -224,6 +224,44 @@ if ($action === 'insert-connection') {
 		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Verbindung konnte nicht hinzugef&uuml;gt werden.') ,'</div>',"\n";
+	}
+	sleep(1); // FIXME
+	$action = 'edit';  # view
+}
+
+#####################################################################
+# add group parameter
+#####################################################################
+if ($action === 'insert-parameter') {
+	$group_id = (int)@$_REQUEST['id'];
+	$type = @$_REQUEST['type'];
+	$parameter = @$_REQUEST['parameter'];
+	$value = @$_REQUEST['value'];
+
+	$ret = 	gs_group_parameter_add($group_id, $parameter, $value, $type);
+
+	if (isGsError($ret)) {
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	} elseif (! $ret) {
+		echo '<div class="errorbox">', __('Parameter konnte nicht hinzugef&uuml;gt werden.') ,'</div>',"\n";
+	}
+	sleep(1); // FIXME
+	$action = 'edit';  # view
+}
+
+#####################################################################
+# remove a group parameter
+#####################################################################
+if ($action === 'remove-parameter') {
+	$group_id = (int)@$_REQUEST['id'];
+	$parameter_id = (int)@$_REQUEST['parameter'];
+
+	$ret = 	gs_group_parameter_del($group_id, $parameter_id);
+
+	if (isGsError($ret)) {
+		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	} elseif (! $ret) {
+		echo '<div class="errorbox">', __('Parameter konnte nicht entfernt werden.') ,'</div>',"\n";
 	}
 	sleep(1); // FIXME
 	$action = 'edit';  # view
@@ -423,6 +461,67 @@ if ($action == 'edit') {
 		echo '<td>',$group_permission['name']  ,'</td>', "\n";
 		echo '<td class="r">', "\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-perm&amp;id='.$group['id'].'&amp;page='.$page.'&amp;group='.$group_permission['id'].'&amp;permission='.$group_permission['permission']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+		echo '</td>', "\n";
+		echo '</tr>' ,"\n";
+		$i++;
+	}
+
+?>
+
+</tbody>
+</table>
+
+<br>
+<table cellspacing="1">
+<thead>
+<tr>
+	<th style="min-width:21em;" colspan="4"><?php echo sprintf( htmlEnt(__('Parameter der Gruppe %s')), '<q>'.htmlEnt($group['name']).'</q>' ); ?></th>
+</tr>
+
+<tr>
+	
+	<th style="min-width:10em;"><?php echo __('Typ'); ?></th>
+	<th style="min-width:10em;"><?php echo __('Parameter'); ?></th>
+	<th style="min-width:10em;"><?php echo __('Wert'); ?></th>
+	<th style="min-width:1em;"></th>
+</tr>
+</thead>
+<tbody>
+<?php
+	$group_parameters = gs_group_parameters_get($group['id']);
+
+	echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+	echo '<form method="post" action="'.GS_URL_PATH.'">';
+	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="page" value="'.$page.'" />' ,"\n";
+	echo '<input type="hidden" name="id" value="'.$group_id.'" />' ,"\n";
+	echo '<td>';
+	echo '<select name="type">', "\n";
+	foreach (gs_group_parameter_types_get() as $parameter_type) {
+		echo '<option value="',$parameter_type,'">',$parameter_type ,'</option>' ,"\n";
+	}
+	echo '</select>', "\n";
+	echo '</td>', "\n";
+	echo '<td>';
+	echo '<input type="text" name="parameter" value="" size="20" maxlength="255" style="width:96%;" />';
+	echo '</td>', "\n";
+	echo '<td>';
+	echo '<input type="text" name="value" value="" size="20" maxlength="255" style="width:96%;" />';
+	echo '</td>', "\n";
+	echo '<td class="r" colspan="2">', "\n";
+	echo  '<button type="submit" name="action" value="insert-parameter" title="', __('Parameter einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
+	echo '</td>', "\n";
+	echo '</tr>' ,"\n";
+	echo '</form>',"\n";
+	
+	$i=0;
+	foreach ($group_parameters as $group_parameter) {
+		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
+		echo '<td>',$group_parameter['type']  ,'</td>', "\n";
+		echo '<td>',$group_parameter['parameter']  ,'</td>', "\n";
+		echo '<td>',$group_parameter['value']  ,'</td>', "\n";
+		echo '<td class="r">', "\n";
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-parameter&amp;id='.$group_id.'&amp;page='.$page.'&amp;parameter='.$group_parameter['id']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
 		echo '</td>', "\n";
 		echo '</tr>' ,"\n";
 		$i++;
