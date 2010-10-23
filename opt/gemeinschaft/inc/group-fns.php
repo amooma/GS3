@@ -58,6 +58,7 @@ function gs_group_permission_types_get()
 		'record_call',
 		'wakeup_call',
 		'private_call',
+		'phonebook_imported_edit',
 	);
 }
 

@@ -6664,12 +6664,14 @@ DROP TABLE IF EXISTS `pb_ldap`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pb_ldap` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT '',
   `lastname` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `firstname` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `number` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `user_number` (`user`,`number`),
+  `group_id` mediumint(8) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
   KEY `updated` (`updated`),
   KEY `lastname_firstname` (`lastname`(15),`firstname`(15),`number`(7)),
   KEY `firstname_lastname` (`firstname`(15),`lastname`(10),`number`(7)),
