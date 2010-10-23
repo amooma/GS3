@@ -6670,7 +6670,7 @@ CREATE TABLE `pb_ldap` (
   `firstname` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `number` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `group_id` mediumint(8) unsigned DEFAULT NULL,
+  `group_id` mediumint(8) unsigned DEFAULT 2,
   PRIMARY KEY (`id`),
   KEY `updated` (`updated`),
   KEY `lastname_firstname` (`lastname`(15),`firstname`(15),`number`(7)),
