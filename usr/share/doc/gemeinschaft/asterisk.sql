@@ -6155,6 +6155,23 @@ INSERT INTO `group_members` VALUES (1,1);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `group_parameters`
+--
+
+DROP TABLE IF EXISTS `group_parameters`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `group_parameters` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `type` varchar(20) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,
+  `parameter` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  `value` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `group_permissions`
 --
 

@@ -1,0 +1,74 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+*
+* Author: Henning Holtschneider <henning@loca.net> - LocaNet oHG
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
+include_once( GS_DIR .'inc/db_connect.php' );
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+$user  = trim( @$argv[1] );
+
+if (! $user )
+	die();
+
+$db = gs_db_slave_connect();
+
+$user_id = (int)$db->executeGetOne('SELECT `_user_id` FROM `ast_sipfriends` WHERE `name` = "' . $db->escape($user) . '"');
+
+if (! $user_id )
+	die();
+
+$query = 'SELECT `group_parameters`.`group` AS `group`,
+`group_parameters`.`parameter` AS `parameter`,
+`group_parameters`.`value` AS `value`,
+`groups`.`name` AS `name`
+FROM
+`group_parameters`, `group_members`, `groups`
+WHERE
+`group_parameters`.`group` = `group_members`.`group`
+AND `group_parameters`.`group` = `groups`.`id`
+AND `group_parameters`.`type` = "asterisk"
+AND `group_parameters`.`parameter` = "call-limit"
+AND `group_members`.`member` = ' . $user_id . '
+ORDER BY `group` LIMIT 1';
+
+$rs = $db->execute($query);
+
+if ($rs) {
+	$row = $rs->fetchRow();
+	gs_agi_set_variable( 'call_limit_group_id', $row['group'] );
+	gs_agi_set_variable( 'call_limit_group_name', $row['name'] );
+	gs_agi_set_variable( 'call_limit_value', $row['value'] );
+}
+?>

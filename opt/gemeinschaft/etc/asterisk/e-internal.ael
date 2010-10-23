@@ -897,9 +897,22 @@ context to-internal-users-self {
 					Verbose(1,### Callfile: Don't forward for origin side);
 				}
 			}
-			
-			// check callwaiting
+
+			// set call count
 			Set(GROUP(${EXTEN})=callcount);
+			Set(GROUP(${CALLERID(num)})=callcount);
+
+			AGI(/opt/gemeinschaft/dialplan-scripts/get-call-limit,${EXTEN});
+			if ("${call_limit_group_id}" != "") {
+				Set(GROUP(${call_limit_group_id})=groupcount);
+				if ("${GROUP_COUNT(groupcount@${call_limit_group_id})}" > "${call_limit_value}") {
+					Verbose(1,### Too many calls in group ${call_limit_group_name} (outbound));
+					Set(DIALSTATUS=BUSY);
+					&hangup-proper-status();
+				}
+			}
+
+			// check callwaiting
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${EXTEN});
 			if ("${GROUP_COUNT(callcount@${EXTEN})}" > "1" && "${callwaiting}" = "0") {
 				Verbose(1,### ${user_name} have callwaiting deactivate);

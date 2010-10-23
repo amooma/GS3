@@ -162,6 +162,15 @@ macro is_dmz( is_dmz_num ) {
 
 macro caller-count() {
 	Set(GROUP(${CALLERID(num)})=callcount);
+	AGI(/opt/gemeinschaft/dialplan-scripts/get-call-limit,${user_name});
+	if ("${call_limit_group_id}" != "") {
+		Set(GROUP(${call_limit_group_id})=groupcount);
+		if ("${GROUP_COUNT(groupcount@${call_limit_group_id})}" > "${call_limit_value}") {
+			Verbose(1,### Too many calls in group ${call_limit_group_name} (outbound));
+			Set(DIALSTATUS=BUSY);
+			&hangup-proper-status();
+		}
+	}
 	return;
 }
 
