@@ -6444,12 +6444,14 @@ CREATE TABLE `ivrs` (
 
 DROP TABLE IF EXISTS `pb_ldap`;
 CREATE TABLE `pb_ldap` (
-  `user` varchar(20) character set ascii NOT NULL default '',
-  `lastname` varchar(50) collate utf8_unicode_ci NOT NULL default '',
-  `firstname` varchar(50) collate utf8_unicode_ci NOT NULL default '',
-  `number` varchar(25) character set ascii NOT NULL default '',
-  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  UNIQUE KEY `user_number` (`user`,`number`),
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT '',
+  `lastname` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `firstname` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `number` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `group_id` mediumint(8) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
   KEY `updated` (`updated`),
   KEY `lastname_firstname` (`lastname`(15),`firstname`(15),`number`(7)),
   KEY `firstname_lastname` (`firstname`(15),`lastname`(10),`number`(7)),

@@ -67,7 +67,8 @@ function gs_group_permission_types_get()
 		'intercom',
 		'login_queues',
 		'record_call',
-		'private_call'
+		'private_call',
+		'phonebook_imported_edit'
 	);
 }
 

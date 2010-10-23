@@ -3,12 +3,12 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision: 4529 $
+* $Revision$
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 *
-* Andreas Neugebauer <neugebauer@loca.net>
+* Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -30,39 +30,24 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
-//include_once( GS_DIR .'inc/canonization.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
-function find_private( $num , $cid, $db ) {
-
-	
-	$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_prv` WHERE `user_id`=' . $num .' AND `number`= \''. $db->escape($cid) . '\'';	
-	
-	search_number ( $query, $cid, $db);
-	
-
-}
-
-function find_public( $cid, $db ) {
-
-	$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_ldap` WHERE `number`=\''. $db->escape($cid) . '\'';
-
-	search_number ( $query, $cid, $db);
-
-}
-
-
-function search_number ( $query, $cid , $db) {
+function search_number ( $user_id, $source, $cid , $db ) {
+	if ($source == 'private')
+		$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_prv` WHERE `user_id`=' . $user_id . ' AND `number`= \'' . $db->escape($cid) . '\'';
+	else if ($source == 'public') {
+		$user_groups = gs_group_members_groups_get(array($user_id), 'user');
+		$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_ldap` WHERE `number`=\''. $db->escape($cid) . '\' AND `group_id` IN (' . implode(',', $user_groups) . ')';
+	}
 
 	$rs = $db->execute( $query );
-
 	$result = array();
-
-	if( @$rs ) {
-		while ( $caller = $rs->fetchRow()) {
-
+	
+	if (@$rs) {
+		while ($caller = $rs->fetchRow()) {
 			$firstname	= $caller['firstname'];
 			$lastname	= $caller['lastname'];
 			$number		= $caller['number'];
@@ -70,42 +55,37 @@ function search_number ( $query, $cid , $db) {
 			$result[$number] = $set;
 		}
 	}
-
+	
 	//direct match
-	if ( isset ( $result[$cid] ) ) {
+	if ( isset($result[$cid]) ) {
 		$hit = $result[$cid];
-		print_name ( $hit['firstname'], $hit['lastname'] );
+		print_name($hit['firstname'], $hit['lastname']);
 	}
-
 }
 
-
-
 function print_name ( $firstname, $lastname ) {
-
 	$fullname = '';
-	if( strlen( $firstname ) > 0 )
-		$fullname = strtoupper( substr( $firstname, 0, 1 ) ) . ". " . $lastname;
+	if(strlen($firstname) > 0)
+		$fullname = strtoupper( substr($firstname, 0, 1) ) . '. ' . $lastname;
 	else
 		$fullname = $lastname;
-	gs_agi_set_variable( 'CALLERID(name)' , $fullname );
+	gs_agi_set_variable('CALLERID(name)' , $fullname);
 	die();
-
 }
 
 $ext  = trim( @$argv[1] );
 $cid  = trim( @$argv[2] );
 $source = trim( @$argv[3] );
 
-if (! $ext) {
+if (! $ext ) {
 	die();
 }
 
-$sources = array ( 'internal', 'external' );
-if ( ! in_array ( $source, $sources, true ))
+$sources = array ('internal', 'external');
+if (! in_array($source, $sources, true) )
 	die();
 
-if (! preg_match( '/^\d+$/', $ext ) ) {  // is not just digits
+if (! preg_match('/^\d+$/', $ext) ) {  // is not just digits
 	die();
 }
 if (! $cid ) {
@@ -115,43 +95,34 @@ if (! $cid ) {
 
 $db = gs_db_slave_connect();
 
-# is it a user?
-#
+if ($source == 'internal') {
 
-
-if ( $source == 'internal' ) {
-
-	$query = 'SELECT `u`.`firstname`, `u`.`lastname` FROM `users` `u`, `ast_sipfriends` `a`
- WHERE `a`.`_user_id`=`u`.`id` AND `a`.`name`=\'' . $db->escape( $cid ) .'\'';
-
-			
-	$rs = $db->execute( $query );
-
+	$query = 'SELECT `u`.`firstname`, `u`.`lastname` FROM `users` `u`, `ast_sipfriends` `a` WHERE `a`.`_user_id`=`u`.`id` AND `a`.`name`=\'' . $db->escape( $cid ) . '\'';
+	$rs = $db->execute($query);
 	$result = array();
 
 	if( @$rs ) {
 		$caller = $rs->fetchRow();
 		
-		if( $caller ) {
+		if ($caller) {
 			$firstname	= $caller['firstname'];
 			$lastname	= $caller['lastname'];
-			print_name ( $caller['firstname'], $caller['lastname'] );
+			print_name($caller['firstname'], $caller['lastname']);
 		}
 
 	}
 	
-}
-else if ( GS_PB_REVERSE_SEARCH == true ) {
+} else if (GS_PB_REVERSE_SEARCH == true) {
 
 	$num = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 
 	# we do not need to lookup in the private phonebook of an unknown user
-	if ( $num > 0 ) {
-			find_private( $num, $cid, $db );
+	if ($num > 0) {
+		search_number($num, 'private', $cid, $db);
 	}
 
 	# if the public phonebook is disabled we will  not lookup there
-	if( GS_PB_IMPORTED_ENABLED == true )
-		find_public( $cid, $db );
+	if(GS_PB_IMPORTED_ENABLED == true)
+		search_number($num, 'public', $cid, $db);
 }
 ?>
