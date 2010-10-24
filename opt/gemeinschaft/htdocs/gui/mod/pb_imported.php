@@ -113,6 +113,7 @@ if ($number != '') {
 			'`id`, `firstname` `fn`, `lastname` `ln`, `number` `ext`, `group_id` '.
 		'FROM `pb_ldap` '.
 		'WHERE `number` LIKE \''. $DB->escape($number_sql) .'\' '.
+		'AND `group_id` IN ('. implode(',', $user_groups) .') '.
 		'ORDER BY `number` '.
 		'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		);
@@ -136,8 +137,9 @@ if ($number != '') {
 			'`id`, `firstname` `fn`, `lastname` `ln`, `number` `ext`, `group_id` '.
 		'FROM `pb_ldap` '.
 		'WHERE '.
-			'`lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR '.
-			'`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci '.
+			'(`lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR '.
+			'`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci) '.
+			'AND ( `group_id` IN ('. implode(',', $user_groups) .') ) '.
 		'ORDER BY `lastname`, `firstname`, `user`, `number` DESC '.
 		'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		);

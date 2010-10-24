@@ -157,8 +157,8 @@ if(!$type)
 			case 'gs' :
 				$cq .= "`users` WHERE `id` IN (". implode(",", $group_members) .") AND `id` != ". $user_id;
 				break;
-			case "imported" :
-				$cq .= "`pb_ldap`";
+			case "imported":
+				$cq .= '`pb_ldap` WHERE `group_id` IN ('. implode(',', $user_groups) .')' ;
 				break;
 			case "prv" :
 				$cq .= "`pb_prv` WHERE `user_id`=". $user_id;
@@ -227,7 +227,9 @@ $num_results = (int) gs_get_conf("GS_POLYCOM_PROV_PB_NUM_RESULTS", 10);
 
 if($type === "imported")
 {
-	// we don't need $user for this
+	$user = trim( @$_REQUEST['u'] );
+	$user_id = getUserID( $user );
+	$user_groups = gs_group_members_groups_get(array($user_id), 'user');
 
 	ob_start();
 
@@ -247,6 +249,8 @@ if($type === "imported")
 	echo "<html>\n";
 	echo "<head><title>". $pagetitle ."</title></head>\n";
 	echo "<body><br />\n";
+
+	$searchsql .= ($searchsql ? ' AND ' : ' ') . '`group_id` IN ('. implode(',', $user_groups) .')';
 
 	$query =
 		"SELECT `lastname` `ln`, `firstname` `fn`, `number` `ext` ".

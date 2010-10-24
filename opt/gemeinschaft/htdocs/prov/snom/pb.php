@@ -159,8 +159,8 @@ if (! $type) {
 	foreach ($typeToTitle as $t => $title) {
 		$cq = 'SELECT COUNT(*) FROM ';
 		switch ($t) {
-		case 'gs'      : $cq .= '`users` WHERE `id` IN ('.implode(',',$group_members).') AND `id`!='.$user_id; break;
-		case 'imported': $cq .= '`pb_ldap`'                           ; break;
+		case 'gs'      : $cq .= '`users` WHERE `nobody_index` IS NULL AND `pb_hide` = 0'; break;
+		case 'imported': $cq .= '`pb_ldap` WHERE `group_id` IN ('. implode(',', $user_groups) .')' ; break;
 		case 'prv'     : $cq .= '`pb_prv` WHERE `user_id`='. $user_id ; break;
 		default        : $cq  = false;
 		}
@@ -287,7 +287,9 @@ $num_results = (int)gs_get_conf('GS_SNOM_PROV_PB_NUM_RESULTS', 10);
 #################################### IMPORTED PHONEBOOK {
 if ($type === 'imported') {
 	
-	// we don't need $user for this
+	$user = trim( @$_REQUEST['u'] );
+	$user_id = getUserID( $user );
+	$user_groups = gs_group_members_groups_get(array($user_id), 'user');
 	
 	ob_start();
 	echo '<?','xml version="1.0" encoding="utf-8"?','>',"\n";
@@ -314,6 +316,7 @@ if ($type === 'imported') {
 	  ('. ($likeFn ? ($likeFn .' AND ') : '') .'
 	  `firstname` REGEXP \'^'. $db->escape($regex) .'\' )';
 	}
+	$where .= ($where ? ' AND ' : ' ') . '`group_id` IN ('. implode(',', $user_groups) .')';
 	$query =
 'SELECT `lastname` `ln`, `firstname` `fn`, `number` `ext`
 FROM `pb_ldap`
