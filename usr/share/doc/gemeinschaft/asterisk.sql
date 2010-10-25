@@ -6177,7 +6177,7 @@ SET character_set_client = @saved_cs_client;
 
 DROP TABLE IF EXISTS `group_permissions`;
 CREATE TABLE `group_permissions` (
-  `type` varchar(20) character set ascii NOT NULL default '',
+  `type` varchar(25) character set ascii NOT NULL default '',
   `group` mediumint(8) unsigned NOT NULL,                     /* FIXME: should be group_id */
   `permit` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`type`,`group`,`permit`)

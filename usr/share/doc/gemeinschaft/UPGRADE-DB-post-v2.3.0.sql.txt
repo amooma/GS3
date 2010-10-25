@@ -160,3 +160,10 @@ ALTER TABLE `phones` ADD
 
 ALTER TABLE `phones` MODIFY
   `mac_addr` varchar(14) character set ascii NOT NULL default '';
+
+--
+-- After: 6bbda1f0a87467bffe4421421812c25bd2618aff
+--
+
+ALTER TABLE `group_permissions`
+ MODIFY `type` varchar(25) NOT NULL default '';
