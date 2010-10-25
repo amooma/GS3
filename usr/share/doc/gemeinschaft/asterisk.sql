@@ -6680,16 +6680,6 @@ CREATE TABLE `pb_ldap` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `pb_ldap`
---
-
-LOCK TABLES `pb_ldap` WRITE;
-/*!40000 ALTER TABLE `pb_ldap` DISABLE KEYS */;
-INSERT INTO `pb_ldap` VALUES ('012345','TEST','HANS','123','2007-05-24 07:28:28');
-/*!40000 ALTER TABLE `pb_ldap` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `pb_prv`
 --
 
