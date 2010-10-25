@@ -1427,6 +1427,9 @@ context to-internal-users-self {
 			Wait(0.5);
 			Set(__vm_announce_file=${vm_announce_${vm_source}});
 			Set(__cc_to_ext=${EXTEN});
+			AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${CALLERID(num)});
+			Set(__lang=${gs_userlang_gs});
+			Set(CHANNEL(language)=${gs_userlang_ast});
 			jump offer@program-cc;
 		
 	}
