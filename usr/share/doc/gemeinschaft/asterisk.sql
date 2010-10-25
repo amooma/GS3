@@ -6167,7 +6167,7 @@ CREATE TABLE `group_parameters` (
   `group` mediumint(8) unsigned NOT NULL,
   `parameter` varchar(255) collate utf8_unicode_ci NOT NULL default '',
   `value` varchar(255) collate utf8_unicode_ci NOT NULL default '',
-  PRIMARY KEY  (`_id`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET character_set_client = @saved_cs_client;
 
