@@ -1267,6 +1267,11 @@ context to-internal-users-self {
 			Answer();
 			Wait(0.5);
 			Set(vm_announce_file=${vm_announce_${vm_source}});
+
+			AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${CALLERID(num)});
+			Set(__lang=${gs_userlang_gs});
+			Set(CHANNEL(language)=${gs_userlang_ast});
+
 			if ("${vm_announce_file}" = "") {
 				Playback(vm-theperson);
 				SayDigits(${EXTEN});
