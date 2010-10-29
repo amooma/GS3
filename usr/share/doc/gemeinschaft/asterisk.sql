@@ -5547,7 +5547,7 @@ CREATE TABLE `ast_sipfriends` (
 
 LOCK TABLES `ast_sipfriends` WRITE;
 /*!40000 ALTER TABLE `ast_sipfriends` DISABLE KEYS */;
-INSERT INTO `ast_sipfriends` VALUES (1,'999999','5826899294','friend','dynamic',NULL,'from-internal-users','Supervisor <999999>','999999','1','1','__user_id=1;__user_name=999999',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,'yes');
+INSERT INTO `ast_sipfriends` VALUES (1,'999999','5826899294','friend','dynamic',NULL,'from-internal-users','Supervisor <999999>','999999','1','1','__user_id=1;__user_name=999999',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'yes');
 /*!40000 ALTER TABLE `ast_sipfriends` ENABLE KEYS */;
 UNLOCK TABLES;
 
