@@ -167,3 +167,15 @@ ALTER TABLE `phones` MODIFY
 
 ALTER TABLE `group_permissions`
  MODIFY `type` varchar(25) NOT NULL default '';
+
+--
+-- After: e839a7118b4ddd72abe3a4b5f6395e0f431ceea7
+--
+
+ALTER TABLE `ast_sipfriends` ADD
+  `directmedia` varchar(5) character set ascii NOT NULL default 'yes';
+
+/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 CREATE ALGORITHM=MERGE */
+/*!50013 DEFINER=CURRENT_USER() SQL SECURITY INVOKER */
+/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact`,`s`.`accountcode` AS `accountcode`,`s`.`allowtransfer` AS `allowtransfer`,`s`.`allow` AS `allow`,`s`.`amaflags` AS `amaflags`,`s`.`auth` AS `auth`,`s`.`autoframing` AS `autoframing`,`s`.`callingpres` AS `callingpres`,`s`.`cid_number` AS `cid_number`,`s`.`defaultuser` AS `defaultuser`,`s`.`fromdomain` AS `fromdomain`,`s`.`fromuser` AS `fromuser`,`s`.`incominglimit` AS `incominglimit`,`s`.`insecure` AS `insecure`,`s`.`language` AS `language`,`s`.`lastms` AS `lastms`,`s`.`maxcallbitrate` AS `maxcallbitrate`,`s`.`md5secret` AS `md5secret`,`s`.`mohsuggest` AS `mohsuggest`,`s`.`musicclass` AS `musicclass`,`s`.`outboundproxy` AS `outboundproxy`,`s`.`qualify` AS `qualify`,`s`.`regexten` AS `regexten`,`s`.`rtpholdtimeout` AS `rtpholdtimeout`,`s`.`rtpkeepalive` AS `rtpkeepalive`,`s`.`rtptimeout` AS `rtptimeout`,`s`.`subscribemwi` AS `subscribemwi`,`s`.`usereqphone` AS `usereqphone`,`s`.`vmexten` AS `vmexten`,`s`.`disallow` AS `disallow`,`s`.`useragent` AS `useragent`, `s`.`directmedia` AS `directmedia` FROM ((`ast_sipfriends` `s` JOIN `users` `u` ON((`u`.`id` = `s`.`_user_id`))) JOIN `hosts` `h` ON((`h`.`id` = `u`.`host_id`))) WHERE (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
