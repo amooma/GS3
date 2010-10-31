@@ -349,9 +349,19 @@ if (is_array($softkeys)) {
 				$softkey['label'   ] = __('Ruhe');
 			break;
 		case '_fwd':
-			$softkey['function'] = 'blf';
-			$softkey['data'    ] = 'fwd' . $user_ext;
-			$softkey['label'   ] = __('Umleit.');
+			$softkey['function'] = 'xml';
+			if (strlen($softkey['data']) > 0)
+				$softkey['data'    ] = $prov_url_aastra.'cf.php?v='.$softkey['data'];
+			else
+				$softkey['data'    ] = $prov_url_aastra.'cf.php';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_dlg':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?d=1';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
 			break;
 		case '_login':
 			$softkey['function'] = 'xml';

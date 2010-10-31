@@ -142,7 +142,10 @@ function aastra_get_softkeys( $user_id, $phone_type )
 					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				case 'aastra-53i':
-					if ($key_num >100) $key_name = 'prgkey'    .($key_num-100);
+					if ($key_num >100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >200) $key_name = 'expmod1 key'.($key_num-200);
+					if ($key_num >300) $key_name = 'expmod2 key'.($key_num-300);
+					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				default:
 					$key_name = 'prgkey'.$key_num;
@@ -161,7 +164,6 @@ function aastra_get_softkeys( $user_id, $phone_type )
 			if ($key_num > 200 && $dynamic == true) {
 				# no not provision expansion module in dynamic mode
 			} else {
-
 				switch ($phone_type) {
 				case 'aastra-57i':
 					if ($key_num >=  1) $key_name = 'topsoftkey'.($key_num);
@@ -178,7 +180,10 @@ function aastra_get_softkeys( $user_id, $phone_type )
 					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				case 'aastra-53i':
-					if ($key_num >=100) $key_name = 'prgkey'    .($key_num-100);
+					if ($key_num >100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >200) $key_name = 'expmod1 key'.($key_num-200);
+					if ($key_num >300) $key_name = 'expmod2 key'.($key_num-300);
+					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				default:
 					$key_name = 'prgkey'.$key_num;
@@ -279,7 +284,8 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('options simple menu'                 , 1, false, false);
 	psetting('dhcp'                                , 1, false, false);
 	psetting('backlight mode'                      , 1, false, false);
-	psetting('bl on time'                          , 16, false, false);
+	// psetting('bl on time'                          , 16, false, false);
+	psetting('bl on time'                          , 600, false, false);
 	psetting('tone set'                            , 'Germany', false, false);
 	psetting('language 1'                          , 'lang_de.txt', false, false);
 	psetting('language'                            , 1, false, false);
@@ -529,9 +535,19 @@ if (is_array($softkeys)) {
 				$softkey['label'   ] = __('Ruhe');
 			break;
 		case '_fwd':
-			$softkey['function'] = 'blf';
-			$softkey['data'    ] = 'fwd' . $user_ext;
-			$softkey['label'   ] = __('Umleit.');
+			$softkey['function'] = 'xml';
+			if (strlen($softkey['data']) > 0)
+				$softkey['data'    ] = $prov_url_aastra.'cf.php?v='.$softkey['data'];
+			else
+				$softkey['data'    ] = $prov_url_aastra.'cf.php';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_dlg':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?d=1';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
 			break;
 		case '_login':
 			$softkey['function'] = 'xml';
