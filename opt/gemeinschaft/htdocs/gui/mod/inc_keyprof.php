@@ -225,6 +225,7 @@ $key_functions_aastra = array(
 	'_callers'  => __('Anrufliste'),   # defined by Gemeinschaft
 	'_dir'      => __('Telefonbuch'),  # defined by Gemeinschaft
 	'_fwd'      => __('Rufumleitung'), # defined by Gemeinschaft
+	'_fwd_dlg'  => __('Rufumleitung Dialog'), # defined by Gemeinschaft
 	'_login'    => __('Login'),        # defined by Gemeinschaft
 	'_dnd'      => __('Ruhe'),         # defined by Gemeinschaft
 );
