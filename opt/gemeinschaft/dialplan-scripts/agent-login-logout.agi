@@ -29,6 +29,7 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -42,12 +43,9 @@ if (! preg_match('/^\d+$/', $user))  // is not just digits
 if (! in_array( $action, array('login','logout','logoutall'), true ))
 	die();
 
-
-
 include_once( GS_DIR .'inc/db_connect.php' );
 
 $db = gs_db_master_connect();
-
 
 # get user id
 #
@@ -58,12 +56,10 @@ if ($user_id < 1) die();
 # check permissions
 #
 
-include_once( GS_DIR .'inc/group-fns.php' );
-
 $user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
 $members = gs_group_permissions_get ( $user_groups, 'agent' );
 
-if ( count ( $members ) <= 0 ) {
+if ( count ($members) <= 0 ) {
 	
 	gs_agi_set_variable(  'agent_login_status' , 'notallowed' );
 	die();
@@ -79,7 +75,7 @@ if ($action === 'logoutall' && (strlen($agent) < 1) ) {
 }
 
 $agent_id = (int)$db->executeGetOne( 'SELECT `id` FROM `agents` WHERE `number`=\''. $db->escape($agent) .'\'' );
-if ($user_id < 1) die();
+if ($agent_id < 1) die();
 
 gs_agi_set_variable(  'agent' , $agent );
 
@@ -98,12 +94,12 @@ if ($action != 'logoutall') {
 	# get queue
 	#
 	$rs = $db->execute( 'SELECT `agent_queues`.`queue_id`, `agent_queues`.`penalty`, `ast_queues`.`_host_id` `host_id`, `ast_queues`.`name` FROM `agent_queues`, `ast_queues` WHERE `ast_queues`.`_id` = `agent_queues`.`queue_id`  AND `agent_id`=\''. $db->escape($agent_id) .'\'' );
-	if(! @$rs){
+	if (! @$rs) {
 		gs_agi_set_variable(  'agent_login_status' , 'no queues found' );
 		die();
 	}
 	$queue_set = array();
-	while($queue = $rs->fetchRow()){
+	while ($queue = $rs->fetchRow()) {
 		$queue_id = (int)$queue['queue_id'];
 		$host_id = (int)$queue['host_id'];
 		$name = $queue['name'];
@@ -111,7 +107,7 @@ if ($action != 'logoutall') {
 		$queue_set[] = array('id'=>$queue_id, 'host'=>$host_id, 'name'=>$name, 'penalty' => $penalty );
 	
 	}
-	if(count($queue_set) < 1){
+	if (count($queue_set) < 1) {
 		gs_agi_set_variable(  'agent_login_status' , 'no queues defined' );
 		die();
 	}
@@ -159,8 +155,7 @@ elseif ($action === 'logoutall') {
 			$c ++;
 		}
 			
-			gs_agi_set_variable(  'oqueue_count' , $c );
-
+		gs_agi_set_variable(  'oqueue_count' , $c );
 	}	
 
 	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_user_id`='. $user_id );
@@ -171,6 +166,5 @@ elseif ($action === 'logoutall') {
 
 	$db->execute( 'UPDATE `agents` SET `user_id`=0,`paused`=0 WHERE `id`='. $agent_id );
 }
-
 
 ?>
