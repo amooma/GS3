@@ -4,11 +4,28 @@
 # Lizenz: CC-by-nc-nd 3.0
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
+echo -e "\n
+	Installation for developers ONLY!\n \
+	No support at all.\n \
+	Use allways stable version for production.\n \
+	This installer might be broken.
+	If you agree please type 'yes'.\n"
+read answer
 
-#GEMEINSCHAFT_VERS="master"
-GEMEINSCHAFT_VERS="3.1-rc3"
+case $answer in 
+	yes)
+	;;
+	*)
+		echo "Good bye";
+		exit 0;
+	;;
+esac
 
-GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
+GEMEINSCHAFT_VERS="master"
+#GEMEINSCHAFT_VERS="3.1-rc3"
+
+#GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
+GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GemeinschaftPBX.git"
 
 GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
 GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR="misc/provisioning/siemens"
@@ -243,7 +260,7 @@ ${APTITUDE_INSTALL} \
 	expect dialog logrotate hostname net-tools ifupdown iputils-ping netcat \
 	udev psmisc dnsutils iputils-arping pciutils bzip2 \
 	console-data console-tools \
-	vim less
+	vim less git
 #${APTITUDE_INSTALL} ssh
 # No ssh by default.
 #aptitude clean
@@ -464,10 +481,11 @@ cd /opt/
 
 # Get tarball from GitHub {
 #
-${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}" -O amooma-GemeinschaftPBX.tar.gz
-tar -xvzf amooma-GemeinschaftPBX*.tar.gz
-rm -f amooma-GemeinschaftPBX*.tar.gz
-mv amooma-GemeinschaftPBX-* \
+git clone -b ${GEMEINSCHAFT_VERS} ${GEMEINSCHAFT_CLONE_URL_DIR} 
+#${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}" -O amooma-GemeinschaftPBX.tar.gz
+#tar -xvzf amooma-GemeinschaftPBX*.tar.gz
+#rm -f amooma-GemeinschaftPBX*.tar.gz
+mv GemeinschaftPBX \
    gemeinschaft-${GEMEINSCHAFT_VERS}
 echo -n ${GEMEINSCHAFT_VERS} > gemeinschaft-${GEMEINSCHAFT_VERS}/etc/gemeinschaft/.gemeinschaft-version
 mv "gemeinschaft-${GEMEINSCHAFT_VERS}" \
@@ -809,6 +827,15 @@ ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-queuelog-to-db || true
 ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-queues-refresh || true
 cd
 
+#make local directories
+LOCAL_DIRS="vm-rec sys-rec"
+LOCAL_PATH="/opt/gemeinschaft-local"
+for i in $LOCAL_DIRS;
+		do
+			echo $LOCAL_PATH/$i
+			test -d $LOCAL_PATH/$i || mkdir -p $LOCAL_PATH/$i;
+		done
+
 
 # fix permissions
 chown -h asterisk:asterisk /opt/gemeinschaft/vm-rec
@@ -1121,6 +1148,8 @@ echo "**************************************************************************
 clear
 cat /tmp/gemeinschaft-beispiel-user.txt
 
+# Fixing permissions of cronjobs
+chmod 0600 /opt/gemeinschaft-source/etc/cron.d/*
 
 # make bash re-read .bashrc:
 #
