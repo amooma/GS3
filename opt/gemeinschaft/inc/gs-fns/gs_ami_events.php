@@ -373,11 +373,31 @@ function gs_queue_logoff_ui( $username, $queue )
 	_gs_send_event ( $data );
 }
 
+function gs_queue_login_ui( $username, $queue )
+{
+	$data = _get_ui_head( 'QueueLoginUI' );
+	
+	$data[] = array( 'parm' => 'user', 'value' => $username );
+	$data[] = array( 'parm' => 'queue', 'value' => $queue );
+
+	_gs_send_event ( $data );
+}
+
 function gs_agent_logoff_ui( $agent )
 {
 	$data = _get_ui_head( 'AgentLogoffUI' );
 	
 	$data[] = array( 'parm' => 'agent', 'value' => $agent );
+
+	_gs_send_event ( $data );
+}
+
+function gs_agent_login_ui( $agent, $ext )
+{
+	$data = _get_ui_head( 'AgentLoginUI' );
+	
+	$data[] = array( 'parm' => 'agent', 'value' => $agent );
+	$data[] = array( 'parm' => 'user', 'value' => $ext );
 
 	_gs_send_event ( $data );
 }
