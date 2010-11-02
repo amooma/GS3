@@ -38,6 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_callforward_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callforward_set.php' );
 include_once( GS_DIR .'inc/string.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 function _err( $msg='' )
 {
@@ -152,6 +153,7 @@ if ($dialog) {
 		aastra_textscreen(htmlEnt(__('Rufumleitung')), htmlEnt(__('Rufumleitung aktiviert')), 3);
 	else
 		aastra_textscreen(htmlEnt(__('Rufumleitung')), htmlEnt(__('Rufumleitung deaktiviert')), 3);
+        gs_diversion_changed_ui($user['name']);
 
 }
 ?>
