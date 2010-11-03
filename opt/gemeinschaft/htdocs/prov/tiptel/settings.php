@@ -1057,12 +1057,14 @@ if ( in_array($phone_model, array('ip284','ip286'), true) ) {
 	psetting('memory12|Value', $prov_url_tiptel.'pb.php?u='.$user_ext);
 	psetting('memory12|DKtype', '27');
 	psetting('memory12|PickupValue', __('Tel.buch'));
+	psetting('memory12|Label', __('Tel.buch'));
 
 	# XML Browser for Dial-Log on Line Key 3
 	psetting('memory13|path', '/yealink/config/vpPhone/vpPhone.ini');
 	psetting('memory13|Value', $prov_url_tiptel.'dial-log.php?u='.$user_ext);
 	psetting('memory13|DKtype', '27');
 	psetting('memory13|PickupValue', __('Anruf Listen'));
+	psetting('memory13|Label', __('Anruf Listen'));
 
 }
 
