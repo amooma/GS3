@@ -179,3 +179,33 @@ ALTER TABLE `ast_sipfriends` ADD
 /*!50001 CREATE ALGORITHM=MERGE */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY INVOKER */
 /*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact`,`s`.`accountcode` AS `accountcode`,`s`.`allowtransfer` AS `allowtransfer`,`s`.`allow` AS `allow`,`s`.`amaflags` AS `amaflags`,`s`.`auth` AS `auth`,`s`.`autoframing` AS `autoframing`,`s`.`callingpres` AS `callingpres`,`s`.`cid_number` AS `cid_number`,`s`.`defaultuser` AS `defaultuser`,`s`.`fromdomain` AS `fromdomain`,`s`.`fromuser` AS `fromuser`,`s`.`incominglimit` AS `incominglimit`,`s`.`insecure` AS `insecure`,`s`.`language` AS `language`,`s`.`lastms` AS `lastms`,`s`.`maxcallbitrate` AS `maxcallbitrate`,`s`.`md5secret` AS `md5secret`,`s`.`mohsuggest` AS `mohsuggest`,`s`.`musicclass` AS `musicclass`,`s`.`outboundproxy` AS `outboundproxy`,`s`.`qualify` AS `qualify`,`s`.`regexten` AS `regexten`,`s`.`rtpholdtimeout` AS `rtpholdtimeout`,`s`.`rtpkeepalive` AS `rtpkeepalive`,`s`.`rtptimeout` AS `rtptimeout`,`s`.`subscribemwi` AS `subscribemwi`,`s`.`usereqphone` AS `usereqphone`,`s`.`vmexten` AS `vmexten`,`s`.`disallow` AS `disallow`,`s`.`useragent` AS `useragent`, `s`.`directmedia` AS `directmedia` FROM ((`ast_sipfriends` `s` JOIN `users` `u` ON((`u`.`id` = `s`.`_user_id`))) JOIN `hosts` `h` ON((`h`.`id` = `u`.`host_id`))) WHERE (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
+
+--
+-- After: c1a29f065e1967462c62895423e2bfcccf089c7b
+--
+
+CREATE TABLE `group_parameters` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `type` varchar(20) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,
+  `parameter` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  `value` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- After: 38eafbced0951262a8169091fcf838680d5c6b30
+--
+
+ALTER TABLE `pb_ldap`
+  ADD `id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+
+ALTER TABLE `pb_ldap`
+  ADD `group_id` mediumint(8) unsigned DEFAULT NULL AFTER `updated`;
+
+--
+-- After: f7624949db8428f489052a7c8be5b9e0b26bcc59
+--
+
+ALTER TABLE `pb_ldap`
+  MODIFY `group_id` mediumint(8) unsigned DEFAULT 2;
