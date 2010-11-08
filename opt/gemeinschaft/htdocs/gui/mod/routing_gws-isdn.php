@@ -39,7 +39,7 @@ $default_dialstrs = array(
 	'woomera' => 'Woomera/g{port}/{number:1}',
 	//'zap'     => 'Zap/g{port}/{number:1}',
 	'dahdi'   => 'DAHDI/g{port}/{number:1}',
-	'capi'    => 'Capi/isdn_{gateway}/{number:1}',
+	'capi'    => 'Capi/isdn_{gateway}/{number:1}/b',
 	'vpb'     => 'vpb/g{port}/{number:1}',
 );
 $gw_types = array(
