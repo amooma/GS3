@@ -240,10 +240,8 @@ function defineKey( $keyDef )
 	$args = array();
 	$args[] = 't='. $type;
 	$args[] = 'k='. $keys . $keyDef['name'];
-	if ($type === 'gs' || $type === 'prv') {
-		$args[] = 'm='. $mac;
-		$args[] = 'u='. $user;
-	}
+	$args[] = 'm='. $mac;
+	$args[] = 'u='. $user;
 	echo
 		'<SoftKeyItem>',
 			'<Name>', $keyDef['label'], '</Name>',
