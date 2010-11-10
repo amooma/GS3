@@ -102,7 +102,7 @@ if (count($queue_groups) > 0) {
 <label for="ipt-month"><?php echo __('Monat'); ?>:</label>
 <select name="month" id="ipt-month">
 <?php
-$t = time();
+$t = mktime(0,0,0,date("n"),1,date("Y"));
 for ($i=-3; $i<=0; ++$i) {
 	echo '<option value="',$i,'"', ($i==$month_d ? ' selected="selected"' : ''),'>', date('m / Y', (int)strToTime("$i months", $t)) ,'</option>' ,"\n";
 }
