@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # (c) 2009-2010 AMOOMA GmbH - http://www.amooma.de
 # Lizenz: CC-by-nc-nd 3.0
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
@@ -25,7 +24,7 @@ GEMEINSCHAFT_VERS="master"
 #GEMEINSCHAFT_VERS="3.1-rc3"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
-GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GemeinschaftPBX.git"
+GEMEINSCHAFT_CLONE_URL_DIR="git://github.com/amooma/GemeinschaftPBX.git"
 
 GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
 GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR="misc/provisioning/siemens"
@@ -143,7 +142,7 @@ HEREDOC
 type apt-get 1>>/dev/null 2>>/dev/null
 type aptitude 1>>/dev/null 2>>/dev/null || apt-get -y install aptitude
 #APTITUDE_INSTALL="aptitude -y --allow-new-upgrades --allow-new-installs install"
-APTITUDE_INSTALL="aptitude -y"
+APTITUDE_INSTALL="aptitude -y --safe-resolver"
 APTITUDE_REMOVE="aptitude -y purge"
 APTITUDE_INSTALL="${APTITUDE_INSTALL} --allow-new-upgrades --allow-new-installs"
 APTITUDE_INSTALL="${APTITUDE_INSTALL} install"
