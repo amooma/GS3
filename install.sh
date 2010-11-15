@@ -511,7 +511,7 @@ ln -snf gemeinschaft-source/opt/gemeinschaft gemeinschaft
 
 # fix MOH location for Debian:
 #
-sed -i -r -e 's#^( *;? *directory *= *)/var/lib/asterisk(/moh)#\1/usr/share/asterisk\2#g' /opt/gemeinschaft/etc/asterisk/musiconhold.conf
+sed -i -r -e 's#^( *;? *directory *= *)/var/lib/asterisk(/moh)#\1/usr/share/asterisk\2#g' /etc/asterisk/musiconhold.conf
 
 
 # install German voice prompts for Asterisk
@@ -642,7 +642,8 @@ echo "***  Setting up Gemeinschaft ..."
 echo "***"
 cd /etc/
 mv asterisk asterisk.DEBIAN
-ln -snf /opt/gemeinschaft-source/etc/asterisk
+cp -r /opt/gemeinschaft-source/etc/asterisk
+#ln -snf /opt/gemeinschaft-source/etc/asterisk
 
 # Replace astdatadir "/var/lib/asterisk" by "/usr/share/asterisk"
 # (the default on Debian):
@@ -654,7 +655,7 @@ sed -i -r -e 's#^(astrundir\s*).*#\1=> /var/run/asterisk#' /etc/asterisk/asteris
 
 
 # change owner of /opt/gemeinschaft/etc/asterisk/* to asterisk
-chown -h -R asterisk:asterisk /opt/gemeinschaft/etc/asterisk
+chown -h -R asterisk:asterisk /etc/asterisk
 
 # add Apache user (www-data) to the Asterisk group (asterisk) so
 # voicemails can be played via the web GUI:
@@ -898,7 +899,7 @@ cp "${HF_CONF_SRC}/ttyIAX1" /etc/iaxmodem/ttyIAX1
 
 # add iaxmodem entries to iax.conf
 #
-cat "${HF_CONF_SRC}/iax.conf.template" >> /opt/gemeinschaft/etc/asterisk/iax.conf
+cat "${HF_CONF_SRC}/iax.conf.template" >> /etc/asterisk/iax.conf
 
 # add faxgetty entries to inittab
 # //FIXME? - set USE_FAXGETTY=yes or USE_FAXGETTY=init in
