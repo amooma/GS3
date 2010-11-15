@@ -371,7 +371,7 @@ if ($phone_has_microbrowser)
 	echo "<efk>\n";
 	echo "   <version efk.version=\"1\"/>\n";
 	echo "   <efklist";
-	echo " efk.efklist.1.mname=\"gsdiallog\" efk.efklist.1.status=\"1\" efk.efklist.1.action.string=\"". $prov_url_polycom ."diallog.php?user=". $user_ext ."\"";
+	echo " efk.efklist.1.mname=\"gsdiallog\" efk.efklist.1.status=\"1\" efk.efklist.1.action.string=\"". $prov_url_polycom ."diallog.php?user=". $user_ext ."&amp;mac=". $mac ."\"";
 	echo " efk.efklist.2.mname=\"gsphonebook\" efk.efklist.2.status=\"1\" efk.efklist.2.action.string=\"". $prov_url_polycom ."pb.php?m=". $mac ."&amp;u=". $user_ext ."\"";
 	echo " efk.efklist.3.mname=\"gsdnd\" efk.efklist.3.status=\"1\" efk.efklist.3.action.string=\"". $prov_url_polycom ."dnd.php?m=". $mac ."&amp;u=". $user_ext ."\"";
 	echo " efk.efklist.4.mname=\"gsmenu\" efk.efklist.4.status=\"1\" efk.efklist.4.action.string=\"". $prov_url_polycom ."configmenu.php?m=". $mac ."&amp;u=". $user_ext ."\"";

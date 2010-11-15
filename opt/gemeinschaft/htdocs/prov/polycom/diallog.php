@@ -83,6 +83,8 @@ $user = trim(@$_REQUEST['user']);
 
 if (! preg_match('/^\d+$/', $user)) _err('Not a valid SIP user.');
 
+$mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST["mac"])));
+
 $type = trim(@$_REQUEST['type']);
 if (! in_array($type, array('in', 'out', 'missed', 'queue'), true)) $type = false;
 
@@ -98,6 +100,18 @@ gs_settextdomain( 'gemeinschaft-gui' );
 //--- get user_id
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1) _err('Unknown user.');
+
+//--- check user/ip/mac
+$user_id_check = $db->executeGetOne("SELECT `user_id` FROM `phones` WHERE `mac_addr`='". $db->escape($mac) ."'");
+if ($user_id != $user_id_check) _err("Not authorized");
+
+$remote_addr = @$_SERVER["REMOTE_ADDR"];
+$remote_addr_check = $db->executeGetOne("SELECT `current_ip` FROM `users` WHERE `id`=". $user_id);
+if ($remote_addr != $remote_addr_check) _err("Not authorized");
+
+unset($remote_addr_check);
+unset($remote_addr);
+unset($user_id_check);
 
 $typeToTitle = array(
 	'out'    => __("Gew\xC3\xA4hlt"),
@@ -138,7 +152,7 @@ if(!$type)
 	{
 		$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE `user_id`='. $user_id .' AND `type`=\''. $t .'\'' );
 
-		echo '- <a href="'. $url_polycom_dl .'?user='. $user .'&amp;type='. $t .'">'. $title .'</a><br />',"\n";
+		echo '- <a href="'. $url_polycom_dl .'?user='. $user .'&amp;mac='. $mac .'&amp;type='. $t .'">'. $title .'</a><br />',"\n";
 	}
 
 	echo '</body>',"\n";
@@ -231,7 +245,7 @@ else
 
 	echo '</body>',"\n";
 
-	echo '<softkey index="1" label="', __("Leeren"), '" action="Softkey:Fetch;'. $url_polycom_dl .'?user='. $user .'&amp;type='. $type .'&amp;delete=1" />',"\n";
+	echo '<softkey index="1" label="', __("Leeren"), '" action="Softkey:Fetch;'. $url_polycom_dl .'?user='. $user .'&amp;mac='. $mac .'&amp;type='. $type .'&amp;delete=1" />',"\n";
 	echo '<softkey index="2" label="', __("Beenden"), '" action="Softkey:Exit" />',"\n";
 	echo '</html>',"\n";
 }
