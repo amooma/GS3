@@ -729,8 +729,8 @@ HFAXADM_PASS=`head -c 20 /dev/urandom | md5sum -b - | cut -d ' ' -f 1 | head -c 
 sed -i "s/\(^[\s#\/]*\)\(\$FAX_HYLAFAX_ADMIN\s*=\s*\)\([\"']\)[^\"']*[\"']\s*;/\2'hfaxadm';/g" /etc/gemeinschaft/gemeinschaft.php
 sed -i "s/\(^[\s#\/]*\)\(\$FAX_HYLAFAX_PASS\s*=\s*\)\([\"']\)[^\"']*[\"']\s*;/\2'${HFAXADM_PASS}';/g" /etc/gemeinschaft/gemeinschaft.php
 
-sed -i -e 's/^\s*[^#].*//g' /opt/gemeinschaft/etc/listen-to-ip
-( echo ; echo $MY_IP_ADDR ; echo ) >> /opt/gemeinschaft/etc/listen-to-ip
+#sed -i -e 's/^\s*[^#].*//g' /opt/gemeinschaft/etc/listen-to-ip
+#( echo ; echo $MY_IP_ADDR ; echo ) >> /opt/gemeinschaft/etc/listen-to-ip
 
 mysql --batch --user=gemeinschaft --password="${GEMEINSCHAFT_DB_PASS}" -e "USE \`asterisk\`; UPDATE \`hosts\` SET \`host\`='${MY_IP_ADDR}' WHERE \`id\`=1;" || true
 mysql --batch --user=gemeinschaft --password="${GEMEINSCHAFT_DB_PASS}" -e "USE \`asterisk\`; UPDATE \`hosts\` SET \`host\`='${MY_IP_ADDR}';" || true
