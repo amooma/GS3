@@ -125,7 +125,7 @@ HEREDOC
 type apt-get 1>>/dev/null 2>>/dev/null
 type aptitude 1>>/dev/null 2>>/dev/null || apt-get -y install aptitude
 #APTITUDE_INSTALL="aptitude -y --allow-new-upgrades --allow-new-installs install"
-APTITUDE_INSTALL="aptitude -y"
+APTITUDE_INSTALL="aptitude -y --safe-resolver"
 APTITUDE_REMOVE="aptitude -y purge"
 APTITUDE_INSTALL="${APTITUDE_INSTALL} --allow-new-upgrades --allow-new-installs"
 APTITUDE_INSTALL="${APTITUDE_INSTALL} install"
@@ -461,7 +461,7 @@ cd /opt/
 
 # Get tarball from GitHub {
 #
-${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}"
+${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}" -O amooma-GemeinschaftPBX.tar.gz
 tar -xvzf amooma-GemeinschaftPBX*.tar.gz
 rm -f amooma-GemeinschaftPBX*.tar.gz
 mv amooma-GemeinschaftPBX-* \
