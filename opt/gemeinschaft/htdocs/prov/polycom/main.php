@@ -97,7 +97,7 @@ $user_id = (int) $db->executeGetOne("SELECT `_user_id` FROM `ast_sipfriends` WHE
 if($user_id < 1) _err("Unknown user.");
 
 $menuitems = Array(
-	Array(	"file"	=> "diallog.php?user=". $user,
+	Array(	"file"	=> "diallog.php?user=". $user ."&mac=". $mac,
 		"title"	=> __("Ruflisten")),
 	Array(	"file"	=> "pb.php?u=". $user ."&amp;m=". $mac,
 		"title"	=> __("Telefonbuch")),
