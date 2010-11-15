@@ -158,6 +158,15 @@ while [  $COUNTER -lt 5 ]; do
     let COUNTER=COUNTER+1 
 done
 echo ""
+#make local directories
+LOCAL_DIRS="vm-rec sys-rec sounds"
+LOCAL_PATH="/opt/gemeinschaft-local"
+for i in $LOCAL_DIRS;
+		do
+			echo $LOCAL_PATH/$i
+			test -d $LOCAL_PATH/$i || mkdir -p $LOCAL_PATH/$i;
+		done
+
 
 
 # update package lists
@@ -527,8 +536,8 @@ rm -f asterisk-core-sounds-de-alaw.tar.gz
 # voice prompts for Gemeinschaft
 #
 echo "Installing Voiceprompts for Gemeinschaft ..."
-[ -e /opt/gemeinschaft/sounds ]
-cd /opt/gemeinschaft/sounds
+[ -e /opt/gemeinschaft-local/sounds ]
+cd /opt/gemeinschaft-local/sounds
 if [ -e de-DE ]; then
 	rm -rf de-DE || true
 fi
@@ -545,10 +554,10 @@ rm -f gemeinschaft-sounds-de-wav-${GEMEINSCHAFT_SOUNDS_DE_WAV_VERS}.tar.gz || tr
 if [ -e de-DE ]; then
 	mv de-DE de-DE-tts
 fi
-if [ -e de-DE-tts ]; then
-	ln -snf de-DE-tts de-DE
-fi
-cd de-DE-tts
+#if [ -e de-DE-tts ]; then
+#	ln -snf de-DE-tts de-DE
+#fi
+#cd de-DE-tts
 #/opt/gemeinschaft/sbin/sounds-wav-to-alaw.sh || true
 # //FIXME: "sox: invalid option -- w"
 # see man sox. -b 16 ? -b 8 ?
@@ -825,15 +834,6 @@ ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-cc-guardian || true
 ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-queuelog-to-db || true
 ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-queues-refresh || true
 cd
-
-#make local directories
-LOCAL_DIRS="vm-rec sys-rec"
-LOCAL_PATH="/opt/gemeinschaft-local"
-for i in $LOCAL_DIRS;
-		do
-			echo $LOCAL_PATH/$i
-			test -d $LOCAL_PATH/$i || mkdir -p $LOCAL_PATH/$i;
-		done
 
 
 # fix permissions
