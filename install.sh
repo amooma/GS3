@@ -642,7 +642,7 @@ echo "***  Setting up Gemeinschaft ..."
 echo "***"
 cd /etc/
 mv asterisk asterisk.DEBIAN
-cp -r /opt/gemeinschaft-source/etc/asterisk
+cp -r /opt/gemeinschaft-source/etc/asterisk ./
 #ln -snf /opt/gemeinschaft-source/etc/asterisk
 
 # Replace astdatadir "/var/lib/asterisk" by "/usr/share/asterisk"
