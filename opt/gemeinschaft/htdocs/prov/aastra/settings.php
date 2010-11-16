@@ -320,7 +320,7 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('lldp'                                , 0, false, false);
 	psetting('call hold reminder'                  , 0, false, false);
 	psetting('sip diversion display'               , 1, false, false);
-	psetting('show call destination name'          , 1, false, false);
+	psetting('show call destination name'          , 0, false, false);
 	if (gs_get_conf('GS_AASTRA_PROV_FW_UPDATE'))
 		psetting('firmware server'                     , $prov_url_aastra.'sw', false, false);
 	else
