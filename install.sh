@@ -1,14 +1,30 @@
 #!/bin/bash
-
 # (c) 2009-2010 AMOOMA GmbH - http://www.amooma.de
 # Lizenz: CC-by-nc-nd 3.0
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
+echo -e "\n
+	Installation for developers ONLY!\n \
+	No support at all.\n \
+	Use allways stable version for production.\n \
+	This installer might be broken.
+	If you agree please type 'yes'.\n"
+read answer
 
-#GEMEINSCHAFT_VERS="master"
-GEMEINSCHAFT_VERS="3.1-rc3"
+case $answer in 
+	yes)
+	;;
+	*)
+		echo "Good bye";
+		exit 0;
+	;;
+esac
 
-GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
+GEMEINSCHAFT_VERS="master"
+#GEMEINSCHAFT_VERS="3.1-rc3"
+
+#GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
+GEMEINSCHAFT_CLONE_URL_DIR="git://github.com/amooma/GemeinschaftPBX.git"
 
 GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
 GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR="misc/provisioning/siemens"
@@ -126,7 +142,7 @@ HEREDOC
 type apt-get 1>>/dev/null 2>>/dev/null
 type aptitude 1>>/dev/null 2>>/dev/null || apt-get -y install aptitude
 #APTITUDE_INSTALL="aptitude -y --allow-new-upgrades --allow-new-installs install"
-APTITUDE_INSTALL="aptitude -y"
+APTITUDE_INSTALL="aptitude -y --safe-resolver"
 APTITUDE_REMOVE="aptitude -y purge"
 APTITUDE_INSTALL="${APTITUDE_INSTALL} --allow-new-upgrades --allow-new-installs"
 APTITUDE_INSTALL="${APTITUDE_INSTALL} install"
@@ -142,6 +158,15 @@ while [  $COUNTER -lt 5 ]; do
     let COUNTER=COUNTER+1 
 done
 echo ""
+#make local directories
+LOCAL_DIRS="vm-rec sys-rec sounds"
+LOCAL_PATH="/opt/gemeinschaft-local"
+for i in $LOCAL_DIRS;
+		do
+			echo $LOCAL_PATH/$i
+			test -d $LOCAL_PATH/$i || mkdir -p $LOCAL_PATH/$i;
+		done
+
 
 
 # update package lists
@@ -243,7 +268,7 @@ ${APTITUDE_INSTALL} \
 	expect dialog logrotate hostname net-tools ifupdown iputils-ping netcat \
 	udev psmisc dnsutils iputils-arping pciutils bzip2 \
 	console-data console-tools \
-	vim less
+	vim less git
 #${APTITUDE_INSTALL} ssh
 # No ssh by default.
 #aptitude clean
@@ -464,10 +489,11 @@ cd /opt/
 
 # Get tarball from GitHub {
 #
-${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}" -O amooma-GemeinschaftPBX.tar.gz
-tar -xvzf amooma-GemeinschaftPBX*.tar.gz
-rm -f amooma-GemeinschaftPBX*.tar.gz
-mv amooma-GemeinschaftPBX-* \
+git clone -b ${GEMEINSCHAFT_VERS} ${GEMEINSCHAFT_CLONE_URL_DIR} 
+#${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}" -O amooma-GemeinschaftPBX.tar.gz
+#tar -xvzf amooma-GemeinschaftPBX*.tar.gz
+#rm -f amooma-GemeinschaftPBX*.tar.gz
+mv GemeinschaftPBX \
    gemeinschaft-${GEMEINSCHAFT_VERS}
 echo -n ${GEMEINSCHAFT_VERS} > gemeinschaft-${GEMEINSCHAFT_VERS}/etc/gemeinschaft/.gemeinschaft-version
 mv "gemeinschaft-${GEMEINSCHAFT_VERS}" \
@@ -485,7 +511,7 @@ ln -snf gemeinschaft-source/opt/gemeinschaft gemeinschaft
 
 # fix MOH location for Debian:
 #
-sed -i -r -e 's#^( *;? *directory *= *)/var/lib/asterisk(/moh)#\1/usr/share/asterisk\2#g' /opt/gemeinschaft/etc/asterisk/musiconhold.conf
+sed -i -r -e 's#^( *;? *directory *= *)/var/lib/asterisk(/moh)#\1/usr/share/asterisk\2#g' /etc/asterisk/musiconhold.conf
 
 
 # install German voice prompts for Asterisk
@@ -510,8 +536,8 @@ rm -f asterisk-core-sounds-de-alaw.tar.gz
 # voice prompts for Gemeinschaft
 #
 echo "Installing Voiceprompts for Gemeinschaft ..."
-[ -e /opt/gemeinschaft/sounds ]
-cd /opt/gemeinschaft/sounds
+[ -e /opt/gemeinschaft-local/sounds ]
+cd /opt/gemeinschaft-local/sounds
 if [ -e de-DE ]; then
 	rm -rf de-DE || true
 fi
@@ -528,10 +554,10 @@ rm -f gemeinschaft-sounds-de-wav-${GEMEINSCHAFT_SOUNDS_DE_WAV_VERS}.tar.gz || tr
 if [ -e de-DE ]; then
 	mv de-DE de-DE-tts
 fi
-if [ -e de-DE-tts ]; then
-	ln -snf de-DE-tts de-DE
-fi
-cd de-DE-tts
+#if [ -e de-DE-tts ]; then
+#	ln -snf de-DE-tts de-DE
+#fi
+#cd de-DE-tts
 #/opt/gemeinschaft/sbin/sounds-wav-to-alaw.sh || true
 # //FIXME: "sox: invalid option -- w"
 # see man sox. -b 16 ? -b 8 ?
@@ -616,7 +642,8 @@ echo "***  Setting up Gemeinschaft ..."
 echo "***"
 cd /etc/
 mv asterisk asterisk.DEBIAN
-ln -snf /opt/gemeinschaft-source/etc/asterisk
+cp -r /opt/gemeinschaft-source/etc/asterisk ./
+#ln -snf /opt/gemeinschaft-source/etc/asterisk
 
 # Replace astdatadir "/var/lib/asterisk" by "/usr/share/asterisk"
 # (the default on Debian):
@@ -628,7 +655,7 @@ sed -i -r -e 's#^(astrundir\s*).*#\1=> /var/run/asterisk#' /etc/asterisk/asteris
 
 
 # change owner of /opt/gemeinschaft/etc/asterisk/* to asterisk
-chown -h -R asterisk:asterisk /opt/gemeinschaft/etc/asterisk
+chown -h -R asterisk:asterisk /etc/asterisk
 
 # add Apache user (www-data) to the Asterisk group (asterisk) so
 # voicemails can be played via the web GUI:
@@ -702,8 +729,8 @@ HFAXADM_PASS=`head -c 20 /dev/urandom | md5sum -b - | cut -d ' ' -f 1 | head -c 
 sed -i "s/\(^[\s#\/]*\)\(\$FAX_HYLAFAX_ADMIN\s*=\s*\)\([\"']\)[^\"']*[\"']\s*;/\2'hfaxadm';/g" /etc/gemeinschaft/gemeinschaft.php
 sed -i "s/\(^[\s#\/]*\)\(\$FAX_HYLAFAX_PASS\s*=\s*\)\([\"']\)[^\"']*[\"']\s*;/\2'${HFAXADM_PASS}';/g" /etc/gemeinschaft/gemeinschaft.php
 
-sed -i -e 's/^\s*[^#].*//g' /opt/gemeinschaft/etc/listen-to-ip
-( echo ; echo $MY_IP_ADDR ; echo ) >> /opt/gemeinschaft/etc/listen-to-ip
+#sed -i -e 's/^\s*[^#].*//g' /opt/gemeinschaft/etc/listen-to-ip
+#( echo ; echo $MY_IP_ADDR ; echo ) >> /opt/gemeinschaft/etc/listen-to-ip
 
 mysql --batch --user=gemeinschaft --password="${GEMEINSCHAFT_DB_PASS}" -e "USE \`asterisk\`; UPDATE \`hosts\` SET \`host\`='${MY_IP_ADDR}' WHERE \`id\`=1;" || true
 mysql --batch --user=gemeinschaft --password="${GEMEINSCHAFT_DB_PASS}" -e "USE \`asterisk\`; UPDATE \`hosts\` SET \`host\`='${MY_IP_ADDR}';" || true
@@ -872,7 +899,7 @@ cp "${HF_CONF_SRC}/ttyIAX1" /etc/iaxmodem/ttyIAX1
 
 # add iaxmodem entries to iax.conf
 #
-cat "${HF_CONF_SRC}/iax.conf.template" >> /opt/gemeinschaft/etc/asterisk/iax.conf
+cat "${HF_CONF_SRC}/iax.conf.template" >> /etc/asterisk/iax.conf
 
 # add faxgetty entries to inittab
 # //FIXME? - set USE_FAXGETTY=yes or USE_FAXGETTY=init in
@@ -1121,6 +1148,8 @@ echo "**************************************************************************
 clear
 cat /tmp/gemeinschaft-beispiel-user.txt
 
+# Fixing permissions of cronjobs
+chmod 0600 /opt/gemeinschaft-source/etc/cron.d/*
 
 # make bash re-read .bashrc:
 #
