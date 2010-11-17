@@ -327,6 +327,23 @@ $SNOM_PROV_M3_HTTP_PASS        = 'gEheiM23y89sdo23';
   # if the username is empty, access to the base station's web 
   # interface will be denied
 
+
+//----------------------[  Snom M9  ]---------------------//
+
+$SNOM_PROV_M9_ACCOUNTS   = 1;
+  # set to 0 to disable Snom M9 provisioning
+
+$SNOM_PROV_M9_HTTP_USER  = 'admin';
+$SNOM_PROV_M9_HTTP_PASS  = 'password';
+  # to password protect the phone's web gui.
+  # changing these values will likely cause automatic rebooting to fail
+
+$SNOM_PROV_M9_BASE_PIN   = '0000';
+
+$SNOM_PROV_M9_FW_UPDATE  = false;  # allow firmware updates?
+//$SNOM_PROV_M9_FW_DEFAULT = '09.02.28';
+
+
 //----------------------[  Aastra  ]----------------------//
 
 $AASTRA_PROV_ENABLED        = true;   # do provisioning for Aastra?

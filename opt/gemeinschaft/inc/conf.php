@@ -266,6 +266,13 @@ _gscnf( 'SNOM_PROV_M3_HTTP_PASS'    , ''                 );
 //_gscnf( 'SNOM_PROV_M3_FW_DEFAULT_SNOM_M3', null          );
 //_gscnf( 'SNOM_PROV_M3_KEY_BLACKLIST', ''                 );
 
+_gscnf( 'SNOM_PROV_M9_ACCOUNTS'     , 1                  );
+_gscnf( 'SNOM_PROV_M9_HTTP_USER'    , ''                 );
+_gscnf( 'SNOM_PROV_M9_HTTP_PASS'    , ''                 );
+_gscnf( 'SNOM_PROV_M9_BASE_PIN'     , '0000'             );
+_gscnf( 'SNOM_PROV_M9_FW_UPDATE'    , false              );
+_gscnf( 'SNOM_PROV_M9_FW_DEFAULT'   , null               );
+
 _gscnf( 'SIEMENS_PROV_ENABLED'      , false              );
 _gscnf( 'SIEMENS_PROV_PREFER_HTTP'  , true               );
 _gscnf( 'SIEMENS_PROV_FW_DEFAULT_OS20', null             );
