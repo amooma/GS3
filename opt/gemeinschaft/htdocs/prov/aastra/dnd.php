@@ -34,6 +34,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 include_once( GS_DIR .'inc/gettext.php' );
+require_once(GS_DIR .'inc/group-fns.php');
 
 $xml = '';
 
@@ -79,6 +80,15 @@ if ( preg_match('/\sMAC:(00-08-5D-\w{2}-\w{2}-\w{2})\s/', $ua, $m) )
 
 $user = trim(@$_REQUEST['u']);
 $user_id = _get_userid($user);
+
+// Check permissions
+$user_groups = gs_group_members_groups_get(Array($user_id), "user");
+$members = gs_group_permissions_get($user_groups, "dnd_set");
+
+// exit if access is not granted
+if(count($members) <= 0) {
+	_err( 'Not permitted' );
+}
 
 $user_id_check = $db->executeGetOne("SELECT `user_id` FROM `phones` WHERE `mac_addr`='". $db->escape($mac) ."'");
 if($user_id != $user_id_check) _err("Not authorized");
