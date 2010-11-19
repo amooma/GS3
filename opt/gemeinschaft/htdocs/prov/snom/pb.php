@@ -265,10 +265,8 @@ function defineBackKey()
 	$args = array();
 	$args[] = 't='. $type;
 	$args[] = 'k='. subStr($keys,0,-1);
-	if ($type === 'gs' || $type === 'prv') {
-		$args[] = 'm='. $mac;
-		$args[] = 'u='. $user;
-	}
+	$args[] = 'm='. $mac;
+	$args[] = 'u='. $user;
 	echo
 		'<SoftKeyItem>',
 			'<Name>#</Name>',
