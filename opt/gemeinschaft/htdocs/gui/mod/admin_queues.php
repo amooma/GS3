@@ -104,6 +104,9 @@ if ($action === 'save') {
         else if (  $announce_holdtime ==  'once' )
               $announce_frequency = 255;
 	
+	$autopausehangup = @$_REQUEST['autopausehangup'];
+	if (! in_array($autopausehangup, array('yes', 'no'), true))
+		$autopausehangup = 'no';
 	$wrapuptime = (int)@$_REQUEST['wrapuptime'];
 	if ($wrapuptime < 1) $wrapuptime = 0;
 	$timeout = (int)@$_REQUEST['timeout'];
@@ -147,11 +150,13 @@ if ($action === 'save') {
 	`_sysrec_id`='. $salutation .',
 	`announce_holdtime`=\''. $announce_holdtime .'\',
 	`announce_frequency`=\''. $announce_frequency .'\',
+	`periodic_announce_frequency`=\''. $announce_frequency .'\',
 	`wrapuptime`='. $wrapuptime .',
 	`timeout`='. $timeout .',
 	`strategy`=\''. $strategy .'\',
 	`joinempty`=\''. $joinempty .'\',
-	`leavewhenempty`=\''. $leavewhenempty .'\'
+	`leavewhenempty`=\''. $leavewhenempty .'\',
+	`autopausehangup`=\''. $autopausehangup .'\'
 WHERE `_id`='.$queue_id
 		);
 	}
@@ -233,7 +238,7 @@ FROM
 	if ($queue_id > 0) {
 		$rs = $DB->execute(
 'SELECT
-	`name`, `_host_id`, `_title`, `musicclass`, `_sysrec_id`, `announce_holdtime`, `announce_frequency`, `periodic_announce_frequency`,`timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`
+	`name`, `_host_id`, `_title`, `musicclass`, `_sysrec_id`, `announce_holdtime`, `announce_frequency`, `periodic_announce_frequency`,`timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`, `autopausehangup`
 FROM
 	`ast_queues`
 WHERE
@@ -257,7 +262,8 @@ WHERE
 			'timeout'                    => 10,
 			'strategy'                   => 'rrmemory',
 			'joinempty'                  => 'strict',
-			'leavewhenempty'             => 'yes'
+			'leavewhenempty'             => 'yes',
+			'autopausehangup'            => 'no'
 		);
 	}
 	
@@ -377,6 +383,24 @@ WHERE
 		echo '</td>';
 		echo '<td class="transp xs gray"><code>wrapuptime</code></td>',"\n";
 		echo '</tr>',"\n";
+
+		echo '<tr>',"\n";
+		echo '<th class="r">', __('Agent bei Auflegen pausieren') ,'</th>',"\n";
+		echo '<td>',"\n";
+		
+		echo '<input type="radio" name="autopausehangup" id="ipt-autopausehangup-yes" value="yes" ';
+		if ($queue['autopausehangup']==='yes') echo 'checked="checked" ';
+		echo '/>', "\n";
+		echo '<label for="ipt-autopausehangup-yes">', __('ja') ,'</label> &nbsp;', "\n";
+		
+		echo '<input type="radio" name="autopausehangup" id="ipt-autopausehangup-no" value="no" ';
+		if ($queue['autopausehangup']==='no') echo 'checked="checked" ';
+		echo '/>', "\n";
+		echo '<label for="ipt-announce_holdtime-once">', __('nein') ,'</label> &nbsp;', "\n";
+		
+		echo '</td>';
+		echo '<td class="transp xs gray"><code>autopausehangup = </code><code>yes</code> | <code>no</code></td>',"\n";
+		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Klingelzeit p. Agent') ,'</th>',"\n";
@@ -417,7 +441,7 @@ WHERE
 		echo '</td>';
 		echo '<td class="transp xs gray"><code>announce_holdtime</code></td>',"\n";
 		echo '</tr>',"\n";
-		
+
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Eintritt') ,'</th>',"\n";
 		echo '<td>',"\n";

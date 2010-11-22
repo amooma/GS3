@@ -5438,6 +5438,7 @@ CREATE TABLE `ast_queues` (
   `context` varchar(50) character set ascii default NULL,
   `timeout` smallint(5) unsigned default NULL,
   `autopause` varchar(5) character set ascii default NULL,
+  `autopausehangup` varchar(5) character set ascii default NULL,
   `setinterfacevar` varchar(5) character set ascii default NULL,
   `monitor_join` tinyint(1) unsigned default NULL,
   `monitor_format` varchar(50) character set ascii default NULL,
@@ -5471,7 +5472,7 @@ CREATE TABLE `ast_queues` (
 
 LOCK TABLES `ast_queues` WRITE;
 /*!40000 ALTER TABLE `ast_queues` DISABLE KEYS */;
-INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',0,NULL,NULL,10,'no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','yes',NULL,NULL,NULL,'no',NULL,0,NULL);
+INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',0,NULL,NULL,10,'no','no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','yes',NULL,NULL,NULL,'no',NULL,0,NULL);
 /*!40000 ALTER TABLE `ast_queues` ENABLE KEYS */;
 UNLOCK TABLES;
 

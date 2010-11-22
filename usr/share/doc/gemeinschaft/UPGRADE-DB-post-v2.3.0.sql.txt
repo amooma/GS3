@@ -209,3 +209,10 @@ ALTER TABLE `pb_ldap`
 
 ALTER TABLE `pb_ldap`
   MODIFY `group_id` mediumint(8) unsigned DEFAULT 2;
+
+--
+-- After: 2fc4b10745eb02c81658909adc93fdfc4e8b0e3c
+--
+
+ALTER TABLE `ast_queues`
+  ADD `autopausehangup` varchar(5) character set ascii default NULL AFTER `updated`;
