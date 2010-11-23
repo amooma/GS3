@@ -215,4 +215,4 @@ ALTER TABLE `pb_ldap`
 --
 
 ALTER TABLE `ast_queues`
-  ADD `autopausehangup` varchar(5) character set ascii default NULL AFTER `updated`;
+  ADD `autopausehangup` varchar(5) character set ascii default NULL AFTER `autopause`;
