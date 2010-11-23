@@ -163,6 +163,9 @@ $key_functions_aastra = array(
 	'_callers'  => __('Anrufliste'),   # defined by Gemeinschaft
 	'_dir'      => __('Telefonbuch'),  # defined by Gemeinschaft
 	'_fwd'      => __('Rufumleitung'), # defined by Gemeinschaft
+	'_fwd_dlg'  => __('Rufumleitung Dialog'), # defined by Gemeinschaft
+	'_login'    => __('Login'),        # defined by Gemeinschaft
+	'_dnd'      => __('Ruhe'),         # defined by Gemeinschaft
 );
 $key_function_none_aastra = 'empty';
 $key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_AASTRA_PROV_KEY_BLACKLIST'));
@@ -979,44 +982,82 @@ if ($phone_layout) {
 		}
 		break;
 	case 'aastra':
+	case 'aastra':
 		//if ($show_ext_modules >= 0) {
-			$key_levels = array(
-				0 => array('from'=>   1, 'to'=>  10, 'shifted'=>false,
-					'title'=> htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten') ),
-				1 => array('from'=> 101, 'to'=> 120, 'shifted'=>false,
-					'title'=> htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten') )
-			);
+			$key_levels = array();
 		//}
-		if ($show_ext_modules >= 1) {
-			$key_levels += array(
-				2 => array('from'=> 200, 'to'=> 260, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 1')
-			);
-		}
-		if ($show_ext_modules >= 2) {
-			$key_levels += array(
-				3 => array('from'=> 300, 'to'=> 360, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 2')
-			);
-		}
-		if ($show_ext_modules >= 3) {
-			$key_levels += array(
-				4 => array('from'=> 400, 'to'=> 460, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 3')
-			);
-		}
 		switch ($phone_type) {
-			/*
 			case 'aastra-57i':
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
+				$key_levels[0]['from'] =    1;
+				$key_levels[0]['to'  ] =   10;
+
+				if ($show_ext_modules >= 1) {
+					$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
+					$key_levels[1]['from'] =  201;
+					$key_levels[1]['to'  ] =  260;
+				}
+
+				if ($show_ext_modules >= 2) {
+					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 2');
+					$key_levels[2]['from'] =  301;
+					$key_levels[2]['to'  ] =  360;
+				}
+
+				if ($show_ext_modules >= 3) {
+					$key_levels[3]['title'] = htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 3');
+					$key_levels[3]['from']  =  401;
+					$key_levels[3]['to'  ]  =  460;
+				}
+
 				break;
-			*/
 			case 'aastra-55i':
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
+				$key_levels[0]['from'] =    1;
 				$key_levels[0]['to'  ] =    6;
+
+				if ($show_ext_modules >= 1) {
+					$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
+					$key_levels[1]['from'] =  201;
+					$key_levels[1]['to'  ] =  260;
+				}
+
+				if ($show_ext_modules >= 2) {
+					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 2');
+					$key_levels[2]['from'] =  301;
+					$key_levels[2]['to'  ] =  360;
+				}
+
+				if ($show_ext_modules >= 3) {
+					$key_levels[3]['title'] = htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 3');
+					$key_levels[3]['from']  =  401;
+					$key_levels[3]['to'  ]  =  460;
+				}
+
 				break;
 			case 'aastra-53i':
-				$key_levels[0]['from'] =    0;
-				$key_levels[0]['to'  ] =   -1;
-				//unset($key_levels[0]);
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
+				$key_levels[0]['from'] =  103;
+				$key_levels[0]['to'  ] =  106;
+
+				if ($show_ext_modules >= 1) {
+					$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
+					$key_levels[1]['from'] =  201;
+					$key_levels[1]['to'  ] =  260;
+				}
+
+				if ($show_ext_modules >= 2) {
+					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 2');
+					$key_levels[2]['from'] =  301;
+					$key_levels[2]['to'  ] =  360;
+				}
+
+				if ($show_ext_modules >= 3) {
+					$key_levels[3]['title'] = htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 3');
+					$key_levels[3]['from']  =  401;
+					$key_levels[3]['to'  ]  =  460;
+				}
+
 				break;
 			/*
 			case 'aastra-51i':

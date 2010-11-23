@@ -77,7 +77,6 @@ $remote_addr_check = $db->executeGetOne("SELECT `current_ip` FROM `users` WHERE 
 if($remote_addr != $remote_addr_check) _err("Not authorized");
 
 $current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
-gs_log(GS_LOG_NOTICE, "current_dndstate: " . $current_dndstate . " " . $user_id);
 if ($current_dndstate == 'yes') {
 	$check = $db->execute("INSERT INTO `dnd`
 		(`_user_id`, `active`) VALUES

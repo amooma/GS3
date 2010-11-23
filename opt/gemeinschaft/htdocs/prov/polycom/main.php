@@ -33,6 +33,7 @@ require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 include_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gettext.php");
 include_once(GS_DIR ."inc/langhelper.php");
+include_once( GS_DIR .'inc/string.php' );
 //require_once(GS_DIR ."inc/gs-fns/gs_user_watchedmissed.php");
 
 Header("Content-Type: text/html; charset=utf-8");
@@ -64,7 +65,7 @@ function _err($msg="")
 
 	echo "<html>\n";
 	echo "<head><title>". __("Fehler") ."</title></head>\n";
-	echo "<body><b>". __("Fehler") ."</b>: ". $msg ."</body>\n";
+	echo "<body><b>". __("Fehler") ."</b>: ". htmlEnt($msg) ."</body>\n";
 	echo "</html>\n";
 
 	_ob_send();
@@ -95,7 +96,7 @@ $user_id = (int) $db->executeGetOne("SELECT `_user_id` FROM `ast_sipfriends` WHE
 if ($user_id < 1) _err('Unknown user.');
 
 $menuitems = Array(
-	Array(	'file'	=> 'diallog.php?user='. $user,
+	Array(	'file'	=> 'diallog.php?user='. $user .'&mac='. $mac,
 		'title'	=> __("Ruflisten")),
 	Array(	'file'	=> 'pb.php?u='. $user .'&amp;m='. $mac,
 		'title'	=> __("Telefonbuch")),
@@ -110,11 +111,11 @@ $url_polycom_base = GS_PROV_SCHEME ."://". GS_PROV_HOST . (GS_PROV_PORT ? ":". G
 #################################### MAIN MENU {
 
 echo "<html>\n";
-echo "<head><title>". __("Telefonmen\xC3\xBC") ."</title></head>\n";
+echo "<head><title>". htmlEnt(__("Telefonmen\xC3\xBC")) ."</title></head>\n";
 echo "<body><br />\n";
 
 foreach($menuitems as $thismenuitem) {
-	echo "- <a href=\"". $url_polycom_base . $thismenuitem["file"] ."\">". $thismenuitem["title"] ."</a><br />\n";
+	echo "- <a href=\"". $url_polycom_base . $thismenuitem["file"] ."\">". htmlEnt($thismenuitem["title"]) ."</a><br />\n";
 }
 
 echo "</body>\n";

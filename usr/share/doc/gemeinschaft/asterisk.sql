@@ -6783,20 +6783,6 @@ CREATE TABLE `phones` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `phones`
---
-
-LOCK TABLES `phones` WRITE;
-/*!40000 ALTER TABLE `phones` DISABLE KEYS */;
-INSERT INTO `phones` VALUES (1,'snom-360','000413233C9F',NULL,1,1174110000,'',0,NULL);
-INSERT INTO `phones` VALUES (2,'snom-360','000413231C76',NULL,2,1174110000,'',0,NULL);
-INSERT INTO `phones` VALUES (3,'snom-360','000413233483',NULL,3,1174110000,'',0,NULL);
-INSERT INTO `phones` VALUES (8,'snom-360','0004132308A4',NULL,4,1174119746,'',0,NULL);
-INSERT INTO `phones` VALUES (9,'snom-360','000413000000',NULL,5,1177010534,'',0,NULL);
-/*!40000 ALTER TABLE `phones` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `pickupgroups`
 --
 

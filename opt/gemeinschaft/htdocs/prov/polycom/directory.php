@@ -42,6 +42,7 @@ require_once(GS_DIR ."inc/gs-lib.php");
 require_once( GS_DIR .'inc/prov-fns.php' );
 require_once(GS_DIR ."inc/langhelper.php");
 include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/string.php' );
 
 //---------------------------------------------------------------------------
 
@@ -186,8 +187,8 @@ if (!$phone_has_microbrowser)
 		while($r = $rs->fetchRow())
 		{
 			echo '      <item>',"\n";
-			echo '         <fn>'. $r['fn'] .'</fn>',"\n";
-			echo '         <ln>'. $r['ln'] .'</ln>',"\n";
+			echo '         <fn>'. htmlEnt($r['fn']) .'</fn>',"\n";
+			echo '         <ln>'. htmlEnt($r['ln']) .'</ln>',"\n";
 			echo '         <ct>'. $r['ext'] .'</ct>',"\n";
 			echo '      </item>',"\n";
 		}

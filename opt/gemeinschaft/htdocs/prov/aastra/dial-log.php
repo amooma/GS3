@@ -34,6 +34,7 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
 include_once( GS_DIR .'inc/gettext.php' );
+include_once( GS_DIR .'inc/string.php' );
 
 $xml = '';
 
@@ -88,7 +89,7 @@ if (! $type) {
 	
 	foreach ($typeToTitle as $key => $title) {
 		$xml.= '<MenuItem>' ."\n";
-		$xml.= '	<Prompt>'.$title.'</Prompt>' ."\n";
+		$xml.= '	<Prompt>'.htmlEnt($title).'</Prompt>' ."\n";
 		$xml.= '	<URI>'. $url_aastra_dl .'?t='.$key.'</URI>' ."\n";
 		//$xml.= '<Selection>0&amp;menu_pos=1</Selection>' ."\n";
 		$xml.= '</MenuItem>' ."\n";
@@ -151,7 +152,7 @@ if (! $type) {
 				$entry_name .= ' ('. $r['num_calls'] .')';
 			}
 			$xml.= '<MenuItem>' ."\n";
-			$xml.= '	<Prompt>'. $entry_name .'</Prompt>' ."\n";
+			$xml.= '	<Prompt>'. htmlEnt($entry_name) .'</Prompt>' ."\n";
 			$xml.= '	<Dial>'. $r['number'] .'</Dial>' ."\n";
 			$xml.= '	<URI>'. $url_aastra_dl .'?t='.$type.'d&amp;e='.$r['ts'] .'</URI>' ."\n";
 			$xml.= '</MenuItem>' ."\n";

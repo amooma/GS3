@@ -34,6 +34,7 @@ require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 require_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gs-lib.php");
 include_once( GS_DIR .'inc/gettext.php' );
+include_once( GS_DIR .'inc/string.php' );
 require_once(GS_DIR ."inc/langhelper.php");
 
 Header("Content-Type: text/html; charset=utf-8");
@@ -65,7 +66,7 @@ function _err($msg="")
 
 	echo "<html>\n";
 	echo "<head><title>". __("Fehler") ."</title></head>\n";
-	echo "<body><b>". __("Fehler") ."</b>: ". $msg ."</body>\n";
+	echo "<body><b>". __("Fehler") ."</b>: ". htmlEnt($msg) ."</body>\n";
 	echo "</html>\n";
 
 	_ob_send();
@@ -131,16 +132,16 @@ if ( ($newdndstate == 'on') || ($newdndstate == 'off') ) {
 $current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
 
 echo "<html>\n";
-echo "<head><title>". __("Ruhe/DND") ."</title></head>\n";
+echo "<head><title>". htmlEnt(__("Ruhe/DND")) ."</title></head>\n";
 echo "<body><br />\n";
 
 echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 
 echo "<tr>";
-echo "<th width=\"100%\" align=\"center\">". __("Ruhe/DND-Status setzen") .":</th></tr>\n";
+echo "<th width=\"100%\" align=\"center\">". htmlEnt(__("Ruhe/DND-Status setzen")) .":</th></tr>\n";
 
-echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=on\">". (($current_dndstate == "on") ? "*" : "") . __("Ein") ."</a></td></tr>\n";
-echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=off\">". (($current_dndstate == "off") ? "*" : "") . __("Aus") ."</a></td></tr>\n";
+echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=on\">". (($current_dndstate == "on") ? "*" : "") . htmlEnt(__("Ein")) ."</a></td></tr>\n";
+echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_dnd ."?m=". $mac ."&amp;u=". $user ."&amp;setdnd=off\">". (($current_dndstate == "off") ? "*" : "") . htmlEnt(__("Aus")) ."</a></td></tr>\n";
 
 echo "</table>\n";
 

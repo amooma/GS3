@@ -100,6 +100,8 @@ context user-config {
 		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		Set(number=${EXTEN:4});
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+
 		if ("${EXTEN:2:1}" = "3") {
 			Set(type=std);
 		} else {
@@ -119,17 +121,17 @@ context user-config {
 		Wait(0.5);
 		//Playback(beep);
 		if ("${type}" = "std") {
-			Playback(/opt/gemeinschaft/sounds/${gs_lang}/standard);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/standard);
 		} else {
-			Playback(/opt/gemeinschaft/sounds/${gs_lang}/variable);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/variable);
 		}
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitungsnummer&/opt/gemeinschaft/sounds/${gs_lang}/fuer-anrufe&/opt/gemeinschaft/sounds/${gs_lang}/von);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitungsnummer&/opt/gemeinschaft/sounds/${gs_userlang_gs}/fuer-anrufe&/opt/gemeinschaft/sounds/${gs_userlang_gs}/von);
 		if ("${source}" = "internal") {
-			Playback(/opt/gemeinschaft/sounds/${gs_lang}/intern);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/intern);
 		} else {
-			Playback(/opt/gemeinschaft/sounds/${gs_lang}/extern);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/extern);
 		}
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/eingestellt);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/eingestellt);
 		Wait(0.5);
 		SayDigits(${number});
 		Hangup();
@@ -189,6 +191,7 @@ context user-config {
 	_fwdX. => jump *2;
 	
 	*2 => {
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&caller-count();
 		//toggle callforwarding 
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${user_name});
@@ -198,7 +201,7 @@ context user-config {
 			&user-call-forward-activate-numeric(std,1,0,0);
 			TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=NOT_INUSE));
 			Wait(0.5);
-			Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/deaktiviert);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/deaktiviert);
 			Hangup();
 		} else {
 			Set(CDR(amaflags)=OMIT);
@@ -207,7 +210,7 @@ context user-config {
 			&queue-logout-all-silent();
 			Wait(0.5);
 			TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=BUSY));
-			Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
 			Hangup();
 		}
 
@@ -225,11 +228,12 @@ context user-config {
 	*2* => {
 		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
 		TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=NOT_INUSE));
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/deaktiviert);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/deaktiviert);
 		Hangup();
 	}
 	dnd-off => {
@@ -244,6 +248,7 @@ context user-config {
 	*21 => {
 		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -254,13 +259,14 @@ context user-config {
 		&user-call-forward-activate-numeric(vml,1,0,1);
 		&queue-logout-all-silent();
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
 		Hangup();
 	}
 	
 	*22 => {
 		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -271,13 +277,14 @@ context user-config {
 		&user-call-forward-activate-numeric(vml,1,0,1);
 		&queue-logout-all-silent();
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
 		Hangup();
 	}
 	
 	_*2X. => {
 		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -285,8 +292,8 @@ context user-config {
 		Set(tonumber=${EXTEN:2});
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
 		if ("${SYSTEMSTATUS}" != "SUCCESS") {
-			Playback(/opt/gemeinschaft/sounds/${gs_lang}/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
-			Playback(/opt/gemeinschaft/sounds/${gs_lang}/auf-wiedersehen);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/auf-wiedersehen);
 			Hangup();
 		}
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
@@ -294,13 +301,14 @@ context user-config {
 		&user-call-forward-activate-numeric(var,1,0,1);
 		&queue-logout-all-silent();
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
 		Hangup();
 	}
 	
 	*30 => {
 		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
@@ -311,7 +319,7 @@ context user-config {
 		&user-call-forward-activate-numeric(vml,1,0,1);
 		&queue-logout-all-silent();
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
 		Hangup();
 	}
 
@@ -378,6 +386,7 @@ macro user-config-clir( mdest, mactive_num ) {
 
 
 macro user-config-call-waiting( mactive_num ) {
+	AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 	&usercode-by-ext(${user_name});
 	if ("${user_code}" = "")
 		Hangup();
@@ -391,11 +400,11 @@ macro user-config-call-waiting( mactive_num ) {
 	TrySystem(/opt/gemeinschaft/scripts/gs-callwaiting-activate --user='${user_code}' --active='${mactive}');
 	Wait(0.5);
 	//Playback(beep);
-	Playback(/opt/gemeinschaft/sounds/${gs_lang}/anklopfen);
+	Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/anklopfen);
 	if ("${mactive}" = "yes") {
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/eingeschaltet);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/eingeschaltet);
 	} else {
-		Playback(/opt/gemeinschaft/sounds/${gs_lang}/ausgeschaltet);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/ausgeschaltet);
 	}
 	Hangup();
 	return;
