@@ -72,6 +72,7 @@ $agent_id = (int)$db->executeGetOne( 'SELECT `id` FROM `agents` WHERE `number`=\
 if ($user_id < 1)
 	die();
 
+/*
 if ($action == 'pause') {
 	
 	# get queue
@@ -100,5 +101,5 @@ if ($action == 'unpause') {
 	}
 	
 }
-
+*/
 ?>

@@ -365,6 +365,7 @@ macro agent-login( new_user_name ) {
 			UserEvent(QueueLoginUI,user: ${user_name},queue: ${queueNr});
 			QueueLog(${queueNr},${UNIQUEID},Agent/${new_user_name},ADDMEMBER,SIP/${user_name});
 			QueueLog(NONE,${UNIQUEID},Agent/${new_user_name},HOTDESK,SIP/${user_name});
+			Set(tmp=${QUEUE_MEMBER(${queueNr},logged)});
 		} 
 		Playback(agent-loginok);
 
@@ -413,6 +414,7 @@ macro agent-logout() {
 		for(i=0;${i} < ${oqueue_count}; i=${i} + 1){
 			queueNr=${oqueue${i}};
 			QueueLog(${queueNr},${UNIQUEID},Agent/${agent},REMOVEMEMBER,SIP/${user_name});
+			Set(tmp=${QUEUE_MEMBER(${queueNr},logged)});
 		}
 		Playback(agent-loggedoff);
 		
@@ -431,10 +433,10 @@ macro agent-pause() {
 	
 	Wait(0.5);
 	if ("${agent}" != "") {
-		QueueLog(NONE,NONE,SIP/${user_name},PAUSEALL,);
+		PauseQueueMember(,SIP/${user_name});
 		UserEvent(AgentPausedUI,agent: ${user_name});
 		Verbose(1,### Agent ${agent} on ${user_name} paused);
-		Playback(beep);
+		//Playback(beep);
 	} else {
 		Verbose(1,### Failed to pause agent on ${user_name});
 		Playback(beeperr);
@@ -451,10 +453,10 @@ macro agent-unpause() {
 	Wait(0.5);
 	
 	if ("${agent}" != "") {
-		QueueLog(NONE,NONE,SIP/${user_name},UNPAUSEALL,);
+		UnpauseQueueMember(,SIP/${user_name});
 		UserEvent(AgentUnPausedUI,agent: ${user_name});
 		Verbose(1,### Agent ${agent} on ${user_name} unpaused);
-		Playback(beep);
+		//Playback(beep);
 	} else {
 		Verbose(1,### Failed to unpause agent on ${user_name});
 		Playback(beeperr);
