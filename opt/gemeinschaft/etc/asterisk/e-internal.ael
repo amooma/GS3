@@ -650,6 +650,8 @@ context to-internal-users-self {
 		
 		Set(last_exten=${EXTEN});
 
+		Set(__forwarded_by_id=);
+
 		//if ("${saved_callerid}" != "") {
 		//	// __saved_callerid is set by call-init.php
 		//	Set(CALLERID(all)=${saved_callerid});
@@ -880,6 +882,7 @@ context to-internal-users-self {
 						Verbose(1,### Called user: ${EXTEN} - always forward to: ${fw_${is_call_from}_always});
 						Set(__forwarded_by=${EXTEN});
 						Set(__forwarded_by_name=${mname});
+						Set(__forwarded_by_id=${fw_user_id});
 						Set(__forwarded_to=${fw_${is_call_from}_always});
 						if ( "${is_from_gateway}" = "1" )
 							Set(__is_from_gateway=2);
@@ -1063,6 +1066,7 @@ context to-internal-users-self {
 					}
 					Verbose(1,### Called user: ${EXTEN}, forward on busy to: ${fw_${is_call_from}_busy});
 					Set(__forwarded_by=${EXTEN});
+					Set(__forwarded_by_id=${fw_user_id});
 					Set(__forwarded_by_name=${mname});
 					Set(__forwarded_to=${fw_${is_call_from}_busy});
 					if ( "${is_from_gateway}" = "1" )
@@ -1090,6 +1094,7 @@ context to-internal-users-self {
 					}
 					Verbose(1,### Called user ${EXTEN} - forward on unavail to: ${fw_${is_call_from}_unavail});
 					Set(__forwarded_by=${EXTEN});
+					Set(__forwarded_by_id=${fw_user_id});
 					Set(__forwarded_by_name=${mname});
 					Set(__forwarded_to=${fw_${is_call_from}_unavail});
 					if ( "${is_from_gateway}" = "1" )
@@ -1117,6 +1122,7 @@ context to-internal-users-self {
 					}
 					Verbose(1,### Called user: ${EXTEN} - forward on offline to: ${fw_${is_call_from}_offline});
 					Set(__forwarded_by=${EXTEN});
+					Set(__forwarded_by_id=${fw_user_id});
 					Set(__forwarded_by_name=${mname});
 					Set(__forwarded_to=${fw_${is_call_from}_offline});
 					if ( "${is_from_gateway}" = "1" )

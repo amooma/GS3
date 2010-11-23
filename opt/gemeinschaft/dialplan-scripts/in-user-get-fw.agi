@@ -60,9 +60,10 @@ $db = gs_db_slave_connect();
 
 # get user id:
 $uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($uname) .'\'' );
-if ($uid < 1) gs_agi_err( 'User not found' );
+if ($uid < 1)
+	gs_agi_err( 'User not found' );
 
-
+gs_agi_set_variable( 'fw_user_id', $uid );
 
 $forwards = array(
 	'internal' => array(
