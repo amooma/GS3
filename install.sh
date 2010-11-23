@@ -554,6 +554,7 @@ rm -f gemeinschaft-sounds-de-wav-${GEMEINSCHAFT_SOUNDS_DE_WAV_VERS}.tar.gz || tr
 if [ -e de-DE ]; then
 	mv de-DE de-DE-tts
 fi
+ln -s de-DE-tts de-DE
 #if [ -e de-DE-tts ]; then
 #	ln -snf de-DE-tts de-DE
 #fi
