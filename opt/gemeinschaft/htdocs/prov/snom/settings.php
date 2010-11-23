@@ -893,9 +893,9 @@ psetting('vpn_netcatserver', ''  );
 
 /*
 # (for building redial menu)
-psetting('action_incoming_url', 'http://192.168.1.11/snom/dial-log.php?user=$user_name1&type=in&remote=$remote');
-psetting('action_outgoing_url', 'http://192.168.1.11/snom/dial-log.php?user=$user_name1&type=out&remote=$remote');
-psetting('action_missed_url', 'http://192.168.1.11/snom/dial-log.php?user=$user_name1&type=missed&remote=$remote');
+psetting('action_incoming_url', 'http://192.168.1.11/snom/dial-log.php?user=$user_name1&mac=$mac&type=in&remote=$remote');
+psetting('action_outgoing_url', 'http://192.168.1.11/snom/dial-log.php?user=$user_name1&mac=$mac&type=out&remote=$remote');
+psetting('action_missed_url', 'http://192.168.1.11/snom/dial-log.php?user=$user_name1&mac=$mac&type=missed&remote=$remote');
 */
 psetting('action_incoming_url'       , '');
 psetting('action_outgoing_url'       , '');
@@ -931,7 +931,7 @@ psetting('dkey_menu'     , 'keyevent F_MENU'      );
 psetting('dkey_redial'   , 'keyevent F_REDIAL'    );
 
 psetting('dkey_directory', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1');
-psetting('dkey_redial'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1');
+psetting('dkey_redial'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac');
 # so geht die Retrieve-Taste auch ohne neue Nachrichten:
 psetting('dkey_retrieve' , 'speed voicemail');
 
@@ -959,7 +959,7 @@ for ($i=0; $i<=$max_key; ++$i) {
 # pre-defined keys for snom 300
 #
 if ($phone_model == '300') {
-	setting('fkey', 2, 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
+	setting('fkey', 2, 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac', array('context'=>'active'));
 	setting('fkey', 3, 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
 	setting('fkey', 4, 'keyevent F_TRANSFER', array('context'=>'active'));
 	setting('fkey', 5, 'keyevent F_MUTE', array('context'=>'active'));

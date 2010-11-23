@@ -40,6 +40,7 @@ include_once(GS_DIR ."inc/gs-fns/gs_clir_activate.php");
 include_once(GS_DIR ."inc/gs-fns/gs_clir_get.php");
 include_once(GS_DIR ."inc/gs-fns/gs_callwaiting_activate.php");
 include_once(GS_DIR ."inc/gs-fns/gs_callwaiting_get.php");
+include_once( GS_DIR .'inc/string.php' );
 
 header("Content-Type: text/html; charset=utf-8");
 header("Expires: 0");
@@ -70,7 +71,7 @@ function _err($msg = "")
 
 	echo "<html>\n";
 	echo "<head><title>". __("Fehler") ."</title></head>\n";
-	echo "<body><b>". __("Fehler") ."</b>: ". $msg ."</body>\n";
+	echo "<body><b>". __("Fehler") ."</b>: ". htmlEnt($msg) ."</body>\n";
 	echo "</html>\n";
 
 	_ob_send();
@@ -204,16 +205,16 @@ if ( (($type == 'internal') || ($type == 'external') || ($type == 'callwaiting')
 	}
 
 	echo "<html>\n";
-	echo "<head><title>". __("Dienstmerkmale") ." - ". $typeToTitle[$type] ."</title></head>\n";
+	echo "<head><title>". htmlEnt(__("Dienstmerkmale")) ." - ". htmlEnt($typeToTitle[$type]) ."</title></head>\n";
 	echo "<body><br />\n";
 
 	echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 
 	echo "<tr>";
-	echo "<th width=\"100%\" align=\"center\">". __("Dienstmerkmale") .": ". $typeToTitle[$type] ."</th></tr>\n";
+	echo "<th width=\"100%\" align=\"center\">". htmlEnt(__("Dienstmerkmale")) .": ". htmlEnt($typeToTitle[$type]) ."</th></tr>\n";
 
-	echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_features ."?m=". $mac ."&amp;u=". $user ."&amp;t=". $type ."&amp;state=no\">". (($state == "aus") ? "*" : "") . __("Aus") ."</a></td></tr>\n";
-	echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_features ."?m=". $mac ."&amp;u=". $user ."&amp;t=". $type ."&amp;state=yes\">". (($state == "ein") ? "*" : "") . __("Ein") ."</a></td></tr>\n";
+	echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_features ."?m=". $mac ."&amp;u=". $user ."&amp;t=". $type ."&amp;state=no\">". (($state == "aus") ? "*" : "") . htmlEnt(__("Aus")) ."</a></td></tr>\n";
+	echo "<tr><td width=\"100%\" align=\"center\"><a href=\"". $url_polycom_features ."?m=". $mac ."&amp;u=". $user ."&amp;t=". $type ."&amp;state=yes\">". (($state == "ein") ? "*" : "") . htmlEnt(__("Ein")) ."</a></td></tr>\n";
 
 	echo "</table>\n";
 
@@ -237,13 +238,13 @@ if (!$type)
 	echo $features_doctype ."\n";
 
 	echo "<html>\n";
-	echo "<head><title>". __("Einstellungen") ." - ". __("Dienstmerkmale") ."</title></head>\n";
+	echo "<head><title>". htmlEnt(__("Einstellungen")) ." - ". htmlEnt(__("Dienstmerkmale")) ."</title></head>\n";
 	echo "<body><br />\n";
 
 	echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 
 	echo "<tr>";
-	echo "<th width=\"100%\" align=\"center\" colspan=\"2\">". __("Dienstmerkmale") ."</th></tr>\n";
+	echo "<th width=\"100%\" align=\"center\" colspan=\"2\">". htmlEnt(__("Dienstmerkmale")) ."</th></tr>\n";
 
 	foreach($typeToTitle as $t => $title)
 	{
@@ -268,8 +269,8 @@ if (!$type)
 
 		echo "<tr>";
 
-		echo "<td width=\"50%\" align=\"right\"><a href=\"". $url_polycom_features ."?m=". $mac ."&amp;u=". $user ."&amp;t=". $t ."\">". $title .":</a></td>";
-		echo "<td width=\"50%\" align=\"left\">". $state ."</td>";
+		echo "<td width=\"50%\" align=\"right\"><a href=\"". $url_polycom_features ."?m=". $mac ."&amp;u=". $user ."&amp;t=". $t ."\">". htmlEnt($title) .":</a></td>";
+		echo "<td width=\"50%\" align=\"left\">". htmlEnt($state) ."</td>";
 
 		echo "</tr>";
 	}

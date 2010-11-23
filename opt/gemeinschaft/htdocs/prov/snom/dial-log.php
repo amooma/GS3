@@ -86,6 +86,9 @@ if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 $user = trim( @ $_REQUEST['user'] );
 if (! preg_match('/^\d+$/', $user))
 	_err( 'Not a valid SIP user.' );
+
+$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['mac'] )));
+
 $type = trim( @ $_REQUEST['type'] );
 if (! in_array( $type, array('in','out','missed','queue'), true ))
 	$type = false;
@@ -97,6 +100,18 @@ $db = gs_db_slave_connect();
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1)
 	_err( 'Unknown user.' );
+
+# user/ip/mac check
+$user_id_check = $db->executeGetOne( 'SELECT `user_id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
+if ($user_id != $user_id_check) _err( 'Not authorized' );
+
+$remote_addr = @$_SERVER['REMOTE_ADDR'];
+$remote_addr_check = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );
+if ($remote_addr != $remote_addr_check) _err( 'Not authorized' );
+
+unset($remote_addr_check);
+unset($remote_addr);
+unset($user_id_check);
 
 // setup i18n stuff
 gs_setlang( gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS) );
@@ -139,7 +154,7 @@ if (! $type) {
 				"\n",
 				'<MenuItem>', "\n",
 					'<Name>', snomXmlEsc( $title ) ,'</Name>', "\n",
-					'<URL>', $url_snom_dl ,'?user=',$user, '&type=',$t, '</URL>', "\n",
+					'<URL>', $url_snom_dl ,'?user=',$user, '&mac=',$mac, '&type=',$t, '</URL>', "\n",
 				'</MenuItem>', "\n";
 			# Snom does not understand &amp; !
 		//}

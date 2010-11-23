@@ -158,6 +158,9 @@ macro caller-count() {
 
 macro cmm-login( new_user_name ) {
 	
+	AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${new_user_name});
+	Set(CHANNEL(language)=${gs_userlang_ast});
+
 	Set(CDR(amaflags)=OMIT);
 	Answer();
 	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-check-user.agi,${new_user_name},${is_from_gateway});
@@ -175,8 +178,8 @@ macro cmm-login( new_user_name ) {
 		goto unknown;
 	
 	//Playback(agent-loginok);
-	Playback(/opt/gemeinschaft/sounds/${gs_lang}/sie-sind-jetzt-angemeldet);
-	Playback(/opt/gemeinschaft/sounds/${gs_lang}/bitte-warten-sie);
+	Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/sie-sind-jetzt-angemeldet);
+	Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/bitte-warten-sie);
 	TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${new_user_name}');
 	if ("${user_name}" != "${new_user_name}") {
 		if ("${user_name}" != "") {
@@ -223,12 +226,13 @@ macro cmm-login( new_user_name ) {
 macro cmm-logout() {
 	
 	Set(CDR(amaflags)=OMIT);
+	AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${CALLERID(num)});
 	Answer();
 	Wait(0.5);
 	AGI(/opt/gemeinschaft/dialplan-scripts/cmm-logout.agi,${user_id},${is_from_gateway},${CALLERID(num)});
 	//Playback(agent-loggedoff&vm-goodbye);
-	Playback(/opt/gemeinschaft/sounds/${gs_lang}/sie-sind-abgemeldet);
-	Playback(/opt/gemeinschaft/sounds/${gs_lang}/bitte-warten-sie);
+	Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/sie-sind-abgemeldet);
+	Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/bitte-warten-sie);
 	if ("${user_name}" != "") {
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ext='${user_name}');
 	} else {
@@ -278,6 +282,7 @@ macro rec-playback(id) {
 
 macro rec-record(extension) {
 
+	AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${extension});
 	Set(filename=/tmp/${UNIQUEID});
 	Set(response=0);
 	Answer();
@@ -293,11 +298,11 @@ macro rec-record(extension) {
 			Record(${filename}.sln);
 			Set(endtime=${STRFTIME(${EPOCH},,%Y%m%d%H%M%S)});
 		}
-		Read(response,/opt/gemeinschaft/sounds/de-DE/druecken-sie-1-um-die-aufnahme-zu-speichern,1,,3,);
+		Read(response,/opt/gemeinschaft/sounds/${gs_userlang_gs}/druecken-sie-1-um-die-aufnahme-zu-speichern,1,,3,);
 	}
 
 	AGI(/opt/gemeinschaft/dialplan-scripts/sys-rec-record,${extension},${filename}.sln,$[${endtime} - ${starttime}]);
-	Playback(/opt/gemeinschaft/sounds/de-DE/vielen-dank);
+	Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/vielen-dank);
 	Hangup();
 	return;
 
@@ -1139,13 +1144,14 @@ context call-completion {
 	
 	_cc-. => {
 		Set(callee=${EXTEN:3});
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		//Set(CHANNEL(language)=de);
 		#exec "/opt/gemeinschaft/etc/asterisk/e-lang.ael.php"
 		Verbose(1,### Call completion from ${user_name} to ${callee});
 		Answer();
 		Wait(0.5);
 		//SayDigits(${callee});
-		//Playback(/opt/gemeinschaft/sounds/${gs_lang}/ist-jetzt-wieder-erreichbar);
+		//Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/ist-jetzt-wieder-erreichbar);
 		Set(CALLERID(all)=${orig_callerid});
 		//DumpChan();
 		Set(__is_callcompletion=1); // no forwards and no mailbox

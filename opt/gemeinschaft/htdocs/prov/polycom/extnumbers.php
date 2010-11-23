@@ -35,6 +35,7 @@ require_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gs-lib.php");
 include_once(GS_DIR ."inc/gs-fns/gs_user_external_numbers_get.php");
 include_once(GS_DIR ."inc/gettext.php");
+include_once( GS_DIR .'inc/string.php' );
 require_once(GS_DIR ."inc/langhelper.php");
 
 header("Content-Type: text/html; charset=utf-8");
@@ -66,7 +67,7 @@ function _err($msg = "")
 
 	echo "<html>\n";
 	echo "<head><title>". __("Fehler") ."</title></head>\n";
-	echo "<body><b>". __("Fehler") ."</b>: ". $msg ."</body>\n";
+	echo "<body><b>". __("Fehler") ."</b>: ". htmlEnt($msg) ."</body>\n";
 	echo "</html>\n";
 
 	_ob_send();
@@ -116,18 +117,17 @@ if(isGsError($enumbers))
  }
 
 ob_start();
-echo $phonemenu_doctype ."\n";
 
 echo "<html>\n";
 echo "<head><title>". __("Externe Rufnummern") ."</title></head>\n";
 echo "<body><br />\n";
 
 if (sizeof($enumbers) <= 0) {
-	echo __("Keine externen Rufumleitungsziele hinterlegt") .".<br />\n";
+	echo htmlEnt(__("Keine externen Rufumleitungsziele konfiguriert")) .".<br />\n";
 } else {
 	echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 
-	echo "<tr><th width=\"100%\" align=\"left\">". __("M\xC3\xB6gliche externe Rufumleitungsziele") .":</th></tr>\n";
+	echo "<tr><th width=\"100%\" align=\"left\">". htmlEnt(__("M\xC3\xB6gliche externe Rufumleitungsziele")) .":</th></tr>\n";
 
 	foreach($enumbers as $extnumber)
 		echo "<tr><td width=\"100%\">". $extnumber ."</td></tr>\n";

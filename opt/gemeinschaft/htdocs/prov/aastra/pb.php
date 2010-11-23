@@ -34,7 +34,7 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
 include_once( GS_DIR .'inc/gettext.php' );
-
+include_once( GS_DIR .'inc/string.php' );
 $xml = '';
 
 function _err( $msg='' )
@@ -192,7 +192,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$number = $r['ext'];
 			$xml.= '<MenuItem>' ."\n";
-			$xml.= '	<Prompt>'. $name .' - '. $number .'</Prompt>' ."\n";
+			$xml.= '	<Prompt>'. htmlEnt($name) .' - '. htmlEnt($number) .'</Prompt>' ."\n";
 			$xml.= '	<Dial>'. $number .'</Dial>' ."\n";
 			$xml.= '	<URI>'. $url_aastra_pb .'?t=gss&amp;e='.$r['id'] .'</URI>' ."\n";
 			$xml.= '</MenuItem>' ."\n";
@@ -291,7 +291,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$xml.= '<MenuItem>' ."\n";
-			$xml.= '	<Prompt>'. $name .' - '. $r['number'] .'</Prompt>' ."\n";
+			$xml.= '	<Prompt>'. htmlEnt($name) .' - '. htmlEnt($r['number']) .'</Prompt>' ."\n";
 			$xml.= '	<Dial>'. $r['number'] .'</Dial>' ."\n";
 			$xml.= '	<URI>'. $url_aastra_pb .'?t=prvs&amp;e='.$r['id'] .'</URI>' ."\n";
 			$xml.= '</MenuItem>' ."\n";

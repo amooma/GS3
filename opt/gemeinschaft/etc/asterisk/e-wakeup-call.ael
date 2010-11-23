@@ -6,7 +6,7 @@ macro wakeuptime-announce (hour,minute) {
 
 	Wait(1);
 	if( "${CHANNEL(language)}" == "en" ) {
-		Playback(/opt/gemeinschaft/sounds/en-US/wakeup_call_confirmed);
+		Playback(/opt/gemeinschaft/sounds/${lang}/wakeup_call_confirmed);
 		//Playback(digits/at);
 		SayNumber(${hour});
 		if( "${minute}" == "0" ) {
@@ -17,7 +17,7 @@ macro wakeuptime-announce (hour,minute) {
 		}
 	}
 	else {
-		Playback(/opt/gemeinschaft/sounds/de-DE/wakeup_call_confirmed);
+		Playback(/opt/gemeinschaft/sounds/${lang}/wakeup_call_confirmed);
 		SayNumber(${hour});
 		Playback(digits/oclock);
 		if( "${minute}" != "0" ) {
@@ -54,9 +54,9 @@ macro wakeuptime-remove(user) {
 context wakeup-call {
 
 	s => {
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		Set(__lang=${gs_userlang_gs});
 		&caller-count();
-		Set(__lang=de-DE);
-		Set(CHANNEL(language)=de);
 
 		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${user_name},wakeup_call);
 		if ("${permission}" != "true") {
@@ -165,8 +165,10 @@ context wakeup-call-notset {
 context wakeup-job {
 
 	s => {
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-gs-language-by-ast-code,${CHANNEL(language)});
+		Answer();
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/de-DE/wakeup_call_announcement);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/wakeup_call_announcement);
 		SayUnixTime(,,R);
 		Wait(0.5);
 		MusicOnHold();
