@@ -159,7 +159,7 @@ while [  $COUNTER -lt 5 ]; do
 done
 echo ""
 #make local directories
-LOCAL_DIRS="vm-rec sys-rec sounds"
+LOCAL_DIRS="vm-rec sys-rec sounds htdocs/prov/ringtones/"
 LOCAL_PATH="/opt/gemeinschaft-local"
 for i in $LOCAL_DIRS;
 		do
