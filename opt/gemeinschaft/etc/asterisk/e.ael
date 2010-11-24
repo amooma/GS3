@@ -785,7 +785,7 @@ macro dial-gateway-do( mnumber ) {
 		}
 	}
 	
-	AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi,${mnumber},${is_sub_system},${CALLERID(num)},${user_id});
+	AGI(/opt/gemeinschaft/dialplan-scripts/out-route.agi,${mnumber},${is_sub_system},${CALLERID(num)},${forwarded_by});
 	Set(no_route=1);
 	Set(r=1);
 	Set(r_x_cid_name=${CALLERID(name)});
