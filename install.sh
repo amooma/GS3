@@ -24,7 +24,7 @@ GEMEINSCHAFT_VERS="master"
 #GEMEINSCHAFT_VERS="3.1-rc3"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
-GEMEINSCHAFT_CLONE_URL_DIR="git://github.com/amooma/GemeinschaftPBX.git"
+GEMEINSCHAFT_CLONE_URL_DIR="http://github.com/amooma/GemeinschaftPBX.git"
 
 GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
 GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR="misc/provisioning/siemens"
