@@ -900,7 +900,7 @@ cp "${HF_CONF_SRC}/ttyIAX1" /etc/iaxmodem/ttyIAX1
 
 # add iaxmodem entries to iax.conf
 #
-cat "${HF_CONF_SRC}/iax.conf.template" >> /etc/asterisk/iax.conf
+#cat "${HF_CONF_SRC}/iax.conf.template" >> /etc/asterisk/iax.conf
 
 # add faxgetty entries to inittab
 # //FIXME? - set USE_FAXGETTY=yes or USE_FAXGETTY=init in
