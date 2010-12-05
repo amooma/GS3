@@ -511,7 +511,7 @@ ln -snf gemeinschaft-source/opt/gemeinschaft gemeinschaft
 
 # fix MOH location for Debian:
 #
-sed -i -r -e 's#^( *;? *directory *= *)/var/lib/asterisk(/moh)#\1/usr/share/asterisk\2#g' /etc/asterisk/musiconhold.conf
+#sed -i -r -e 's#^( *;? *directory *= *)/var/lib/asterisk(/moh)#\1/usr/share/asterisk\2#g' /etc/asterisk/musiconhold.conf
 
 
 # install German voice prompts for Asterisk
