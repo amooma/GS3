@@ -55,6 +55,9 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 		$phone_types['snom-360'] = 'Snom 360';
 	if (in_array('*', $enabled_models) || in_array('370', $enabled_models))
 		$phone_types['snom-370'] = 'Snom 370';
+	if (in_array('*', $enabled_models) || in_array('821', $enabled_models))
+		$phone_types['snom-821'] = 'Snom 821';
+
 }
 /*
 # Maybe there will be some reason for enabling keys on Snom M3 phones in future.
@@ -262,6 +265,7 @@ if ($phone_type == '') {
 		elseif (array_key_exists('snom-320', $phone_types)) $phone_type = 'snom-320';
 		elseif (array_key_exists('snom-360', $phone_types)) $phone_type = 'snom-360';
 		elseif (array_key_exists('snom-370', $phone_types)) $phone_type = 'snom-370';
+		elseif (array_key_exists('snom-821', $phone_types)) $phone_type = 'snom-821';
 	} else
 	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 		if     (array_key_exists('siemens-os20', $phone_types)) $phone_type = 'siemens-os20';
@@ -284,7 +288,7 @@ if ($phone_type == '') {
 		elseif (array_key_exists('tiptel-ip286', $phone_types)) $phone_type = 'tiptel-ip286';
 	}
 }
-if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370'), true)) {
+if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 'snom-821'), true)) {
 	$phone_layout = 'snom';
 	$key_function_none = $key_function_none_snom;
 } elseif (in_array($phone_type, array('siemens-os20', 'siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
@@ -1403,7 +1407,7 @@ if ($phone_layout) {
 	echo '</table>' ,"\n";
 	echo '<br />' ,"\n";
 
-	if (in_array($phone_type, array('snom-300','snom-320','snom-360','snom-370','grandstream-gxp2000','grandstream-gxp2010','grandstream-gxp2020'), true))
+	if (in_array($phone_type, array('snom-300','snom-320','snom-360','snom-370','snom-821','grandstream-gxp2000','grandstream-gxp2010','grandstream-gxp2020'), true))
 		echo '<a href="',GS_URL_PATH ,'srv/key-layout.php?phone_type=',$phone_type,'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n"; 
 
 	echo $save_bt;
