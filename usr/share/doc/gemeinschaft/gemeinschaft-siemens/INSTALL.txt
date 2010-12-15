@@ -28,9 +28,6 @@ cd /opt/
 ln -s gemeinschaft-siemens-svn/opt/gemeinschaft-siemens gemeinschaft-siemens
 )
 
-/etc/php.ini (bzw. /etc/php5/apache2/php.ini):
-always_populate_raw_post_data = On
-
 SSL für den Apache installieren:
 yum install openssl mod_ssl
 (bzw. apt-get install openssl)
@@ -88,6 +85,7 @@ passwd gs-siemens-fw
 
 
 in /etc/vsftpd/vsftpd.conf (Debian: /etc/vsftpd.conf):
+listen=YES
 ascii_upload_enable=NO
 ascii_download_enable=NO
 anonymous_enable=NO
