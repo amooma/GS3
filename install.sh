@@ -24,7 +24,7 @@ GEMEINSCHAFT_VERS="master"
 #GEMEINSCHAFT_VERS="3.1-rc3"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
-GEMEINSCHAFT_CLONE_URL_DIR="git://github.com/amooma/GemeinschaftPBX.git"
+GEMEINSCHAFT_CLONE_URL_DIR="http://github.com/amooma/GemeinschaftPBX.git"
 
 GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
 GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR="misc/provisioning/siemens"
@@ -159,7 +159,7 @@ while [  $COUNTER -lt 5 ]; do
 done
 echo ""
 #make local directories
-LOCAL_DIRS="vm-rec sys-rec sounds"
+LOCAL_DIRS="vm-rec sys-rec sounds htdocs/prov/ringtones/"
 LOCAL_PATH="/opt/gemeinschaft-local"
 for i in $LOCAL_DIRS;
 		do
@@ -511,7 +511,7 @@ ln -snf gemeinschaft-source/opt/gemeinschaft gemeinschaft
 
 # fix MOH location for Debian:
 #
-sed -i -r -e 's#^( *;? *directory *= *)/var/lib/asterisk(/moh)#\1/usr/share/asterisk\2#g' /etc/asterisk/musiconhold.conf
+#sed -i -r -e 's#^( *;? *directory *= *)/var/lib/asterisk(/moh)#\1/usr/share/asterisk\2#g' /etc/asterisk/musiconhold.conf
 
 
 # install German voice prompts for Asterisk
@@ -554,6 +554,7 @@ rm -f gemeinschaft-sounds-de-wav-${GEMEINSCHAFT_SOUNDS_DE_WAV_VERS}.tar.gz || tr
 if [ -e de-DE ]; then
 	mv de-DE de-DE-tts
 fi
+ln -s de-DE-tts de-DE
 #if [ -e de-DE-tts ]; then
 #	ln -snf de-DE-tts de-DE
 #fi
@@ -899,7 +900,7 @@ cp "${HF_CONF_SRC}/ttyIAX1" /etc/iaxmodem/ttyIAX1
 
 # add iaxmodem entries to iax.conf
 #
-cat "${HF_CONF_SRC}/iax.conf.template" >> /etc/asterisk/iax.conf
+#cat "${HF_CONF_SRC}/iax.conf.template" >> /etc/asterisk/iax.conf
 
 # add faxgetty entries to inittab
 # //FIXME? - set USE_FAXGETTY=yes or USE_FAXGETTY=init in
