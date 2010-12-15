@@ -35,6 +35,8 @@ Listen 18443
 	#    "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 	
 	DocumentRoot /opt/gemeinschaft/htdocs/prov/siemens
+
+	php_flag always_populate_raw_post_data On
 	
 	# KeepAlive ist absolutely necessary!
 	KeepAlive On
