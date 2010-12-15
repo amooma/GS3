@@ -690,7 +690,8 @@ while ($r = $rs->fetchRow()) {
 	if (! isGsError($e_numbers) && is_array($e_numbers)) {
 		echo '<option value="">', __('einf&uuml;gen &hellip;') ,'</option>' ,"\n";
 		foreach ($e_numbers as $e_number) {
-			echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
+			//echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
+			echo '<option value="0', htmlEnt($e_number) ,'">0', htmlEnt($e_number) ,'</option>' ,"\n";
 		}
 	}		
 	echo '</select></div>';
@@ -713,7 +714,8 @@ if ( $disabled == '' ) {
 	if (! isGsError($e_numbers) && is_array($e_numbers)) {
 		echo '<option value="">', __('einf&uuml;gen &hellip;') ,'</option>' ,"\n";
 		foreach ($e_numbers as $e_number) {
-			echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
+			//echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
+			echo '<option value="0', htmlEnt($e_number) ,'">0', htmlEnt($e_number) ,'</option>' ,"\n";
 		}
 	}       
 	
