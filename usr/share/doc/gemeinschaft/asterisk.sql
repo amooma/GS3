@@ -7123,8 +7123,6 @@ CREATE TABLE `ringtones` (
 
 LOCK TABLES `ringtones` WRITE;
 /*!40000 ALTER TABLE `ringtones` DISABLE KEYS */;
-INSERT INTO `ringtones` VALUES (23,'internal',1,'somefile');
-INSERT INTO `ringtones` VALUES (23,'external',2,NULL);
 /*!40000 ALTER TABLE `ringtones` ENABLE KEYS */;
 UNLOCK TABLES;
 
