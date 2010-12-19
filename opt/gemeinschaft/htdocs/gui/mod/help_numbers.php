@@ -215,6 +215,12 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 		<?php echo __('Ausloggen aus allen Warteschlangen'); ?>
 	</td>
 </tr>
+<tr>
+	<td><code>*5</code></td>
+	<td>
+		<?php echo __('Einloggen in alle Warteschlangen'); ?>
+	</td>
+</tr>
 </tbody>
 </table>
 <?php } ?>
@@ -241,4 +247,3 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 </tr>
 </tbody>
 </table>
-
