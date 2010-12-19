@@ -89,7 +89,7 @@ echo "\n";
 
 # hints for pickup groups
 #
-echo "// hints for pickup groups (auto-generated):\n";
+/**echo "// hints for pickup groups (auto-generated):\n";
 $query =
 'SELECT
 	`pg`.`id` `pg_id`,
@@ -125,5 +125,5 @@ if ($rs) {
 }
 echo "// end\n";
 echo "\n";
-
+**/
 ?>

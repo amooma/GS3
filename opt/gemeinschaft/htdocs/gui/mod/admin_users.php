@@ -1056,32 +1056,33 @@ echo '<input type="hidden" name="u_prv_grp_ed" value="yes" />', "\n";
 <br />
 
 <?php
-echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
+/*echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";*/
 ?>
-<table cellspacing="1">
+<!-- <table cellspacing="1">
 <tbody>
 	<tr>
 		<th style="width:180px;" class="l t">
-			<?php echo __('Rufannahme-Gruppe'); ?>
+			<?php/** echo __('Rufannahme-Gruppe'); **/?>
 		</th>
-		<td style="width:280px;">
+		<td style="width:280px;"> -->
 <?php
-		echo '<select multiple="multiple" name="u_pgrps[]" size="4">',"\n";
+/**		echo '<select multiple="multiple" name="u_pgrps[]" size="4">',"\n";
 		foreach ($pgroups as $key => $pgroup) {
 			echo '<option value="',$key,'"';
 			if (@$pgroups_my[$key]) echo ' selected="selected"';
 			echo '>', $key ,' (', htmlEnt($pgroup) ,')</option>',"\n";
 		}
 		echo '<option value=""></option>',"\n";
-		echo '</select>',"\n";
+		echo '</select>',"\n";**/
 ?>
+<!--
 		</td>
 	</tr>
 </tbody>
 </table>
 
 <br />
-
+-->
 <table cellspacing="1">
 <thead>
 	<tr>

@@ -140,7 +140,7 @@ $MODULES['monitor'  ]=  array(
 	'id' => 7000,
 	'sub' => array(
 	//	'queues'       => array('title' => __('Warteschlangen'), 'id' => 7001),
-		'pgrps'        => array('title' => __('Rufannahmegrp.'), 'id' => 7002),
+//		'pgrps'        => array('title' => __('Rufannahmegrp.'), 'id' => 7002),
 	//	'peers'        => array('title' => __('Kollegen'),       'id' => 7003),
 		'queuemon'     => array('title' => __('QueueMon'),       'id' => 7005),
 		'peermon'      => array('title' => __('PeerMon'),        'id' => 7006),
@@ -268,7 +268,7 @@ $MODULES['admin'    ]=  array(
 		'groups'       => array('title' => __('Gruppen'), 'id' => 15004),
 		'gui'          => array('title' => __('GUI'), 'id' => 15013),
 		'queues'       => array('title' => __('Warteschlangen'), 'id' => 15005),
-		'pgroups'      => array('title' => __('Rufannahmegrp.#pl'), 'id' => 15006),
+//		'pgroups'      => array('title' => __('Rufannahmegrp.#pl'), 'id' => 15006),
 		//'conferences'  => array('title' => __('Konferenzen'), 'id' => 15007),
 		'ivrs'         => array('title' => __('Sprachmen&uuml;'), 'id' => 15008),
 		'wakeupcall'   => array('title' => __('Weckruf'), 'id' => 15014),
