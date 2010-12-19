@@ -3,24 +3,8 @@
 # Lizenz: CC-by-nc-nd 3.0
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
-echo -e "\n
-	Installation for developers ONLY!\n \
-	No support at all.\n \
-	Use allways stable version for production.\n \
-	This installer might be broken.
-	If you agree please type 'yes'.\n"
-read answer
 
-case $answer in 
-	yes)
-	;;
-	*)
-		echo "Good bye";
-		exit 0;
-	;;
-esac
-
-GEMEINSCHAFT_VERS="master"
+GEMEINSCHAFT_VERS="3.1"
 #GEMEINSCHAFT_VERS="3.1-rc3"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
