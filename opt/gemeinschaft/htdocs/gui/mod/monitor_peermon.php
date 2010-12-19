@@ -93,15 +93,16 @@ function group_defaults(&$group, $fill = False) {
 
 	if (!is_array($group))  $group = array();
 
-	$group['active']			= True;
+	$group['active']		= True;
 	$group['display_columns']	= 3;
 	$group['display_width']		= 550;
-	$group['display_height']		= 185;
+	$group['display_height']	= 185;
 	$group['display_all']		= 0;
 	$group['display_comment']	= 0;
 	$group['display_forw']		= 0;
 	$group['display_extension']	= 2;
 	$group['display_name']		= 4;
+	$group['members']		= array();
 	
        if ($fill) {
 		foreach ($fill as $key => $value) {
@@ -121,7 +122,7 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 $action = @$_REQUEST['action'];
-
+$tab = (int) @$_REQUEST['tab'];
 $user_id = @$_SESSION['sudo_user']['info']['id'];
 
 if (!$user_id) exit;
@@ -175,6 +176,8 @@ if ($action == 'save') {
 			$page['update'] = (int)$_REQUEST['qu'];
 	if (array_key_exists('qr', $_REQUEST))
 			$page['reload'] = (int)$_REQUEST['qr'];
+	if (array_key_exists('qt', $_REQUEST))
+			$page['columns'] = 0;
 
 	if ($page) {
 		$sql_query =
@@ -210,13 +213,43 @@ if ($action == 'save') {
 	$action = "edit";
 }
 
+$sql_query =
+'SELECT `display_x`, `display_y`, `columns`, `update`, `reload`
+FROM `monitor`
+WHERE `user_id` = '.$user_id.'
+AND `type` = 2
+LIMIT 1';
+
+$rs = $DB->execute( $sql_query );
+
+$extmon_data = array();
+$extmon_data['columns'] = 2;
+$extmon_data['update'] = 2;
+$extmon_data['reload'] = 120;
+$extmon_data['tabs'] = False;
+$extmon_data['tabs_groups'] = array();
+
+if ($rs->numRows() == 1) {
+	$r = $rs->fetchRow();
+	foreach ($r as $key => $value) {
+		if ($value !== NULL) {
+			if ($key == 'columns' && $value == 0) {
+				$extmon_data[$key] = 1;
+				$extmon_data['tabs'] = True;
+			} else $extmon_data[$key] = $value;
+		}
+	}
+}
+
 $groups = array();
 $groups_array = gs_group_info_get($monitor_group_ids);
+
 foreach ($groups_array as $group) {
 	group_defaults($group);
 	$group['memberids'] = gs_group_members_get(array($group['id']));
 	$groups[$group['id']] = $group;
 }
+
 unset($groups_array);
 
 $sql_query =
@@ -241,24 +274,12 @@ if ($rs) {
 	}
 }
 
-$sql_query =
-'SELECT `display_x`, `display_y`, `columns`, `update`, `reload`
-FROM `monitor`
-WHERE `user_id` = '.$user_id.'
-AND `type` = 2
-LIMIT 1';
-
-$rs = $DB->execute( $sql_query );
-
-$extmon_data = array();
-$extmon_data['columns'] = 2;
-$extmon_data['update'] = 2;
-$extmon_data['reload'] = 120;
-
-if ($rs->numRows() == 1) {
-	$r = $rs->fetchRow();
-	foreach ($r as $key => $value) {
-		if ($value != NULL)  $extmon_data[$key] = $value;
+if ($extmon_data['tabs'] === True) {
+	foreach ($groups as $group_id => $group_data) {
+		if ($group_data['active']) {
+			$extmon_data['tabs_groups'][$group_id]=$group_data['title'];
+			if ($tab == 0) $tab = $group_id;
+		}
 	}
 }
 
@@ -313,10 +334,9 @@ function changebgcolor(color_id, color_value) {
 }
 
 function checkval(el_obj) {
-
 	if (el_obj.name == 'qx') {
 		var input_value = parseInt( el_obj.value );
-		if ((input_value > 0) && (input_value < 11)) {
+		if ((input_value > -1) && (input_value < 11)) {
 			el_obj.value = input_value;
 		} else {
 			el_obj.value = 2;
@@ -393,6 +413,9 @@ window.onload=page_init
 	echo '<form name="edit" method="post" action="?f=0">',"\n";
 	echo gs_form_hidden($SECTION, $MODULE);
 	echo '<input type="hidden" name="action" value="save" />' ,"\n";
+
+	if (@$extmon_data['tabs'] === True) $active = 'checked';
+	else $active = '';
 ?>
 
 <table cellspacing="1">
@@ -417,6 +440,15 @@ window.onload=page_init
 		<td style="min-width:12em;">
 			<span id="screen_res"></span>
 			<?php echo __('Pixel'); ?>
+		</td>
+	</tr>
+	<tr>
+		<td style="width:1em;"></td>
+		<th style="min-width:12em;">
+			 <?php echo __('Tabs benutzen'); ?>
+		</th>
+		<td style="min-width:12em;">
+		<input type="checkbox" name="qt" <?php echo $active; ?> />
 		</td>
 	</tr>
 	<tr>
@@ -613,10 +645,18 @@ window.onload=page_init
 if ($action == "") {
 
 	$fullscreen = (int) @$_REQUEST['f'];
+	
+	if ($extmon_data['tabs'] === True)
+		foreach ($groups as $group => $group_data) {
+			if ($group_data['id'] != $tab) {
+				unset($groups[$group]);
+			}
+		}
 
 	$peers = array();
 	foreach ($groups as $group => $group_data) {
 		if (!array_key_exists('memberids', $group_data)) continue;
+		if (count($group_data['memberids']) == 0) continue;
 
 		$sql_query =
 		'SELECT
@@ -631,6 +671,8 @@ if ($action == "") {
 		ON (`u`.`id` = `s`.`_user_id`)
 		JOIN `hosts` `h` ON (`h`.`id`=`u`.`host_id`)
 		WHERE `u`.`id` IN ( '.implode(',',$group_data['memberids']).')';
+
+		
 
 		$rs = $DB->execute( $sql_query );
 		$group_members = array();
@@ -899,28 +941,52 @@ window.onload=data_reload
 	$qy = 0;
 	$qmaxh = 0;
 
+	if ($fullscreen) $fullscreen_str='&f=1';
+	echo '<table>'."\n";
+	echo '<tr>'."\n";
 	
-	foreach ($groups as $group => $group_data) {
+	foreach ($extmon_data['tabs_groups'] as $group_id => $group_title) {
+		if ($tab == $group_id) {
+			echo '<td class="grouptabsactive">'."\n";
+			echo '<a href="?tab='.$group_id.$fullscreen_str.'">'.$group_title.'</a>'."\n";
+		} else { 
+			echo '<td class="grouptabs">'."\n";
+			echo '<a href="?tab='.$group_id.$fullscreen_str.'">'.$group_title.'</a>'."\n";
+		}
+		echo '</td>'."\n";
+	}
+	
+	echo '</tr>'."\n";
+	echo '</table>'."\n";
+	if ($extmon_data['tabs'] === True && array_key_exists($tab, $groups)) {
+		$group_data = $groups[$tab];
+		$st_y = $st_y + 20;
+		group_window($st_x,$st_y,$group_data['display_width'],$group_data['display_height'],"q".$group,$group_data['title'], $group_data['members'], $group_data['display_columns'], 0, CQ_WINDOW_BG, CQ_WINDOW_FG, $stats);
+	} 
+	else foreach ($groups as $group => $group_data) {
 		
 		$stats = array();	
 
 		$st_x = $qx;
 		$st_y = $qy;
 		
-		if ($group_data['active']) {
-				group_window($st_x,$st_y,$group_data['display_width'],$group_data['display_height'],"q".$group,$group_data['title'], $group_data['members'], $group_data['display_columns'], 0, CQ_WINDOW_BG, CQ_WINDOW_FG, $stats);
-				if ($qmaxh < $group_data['display_height']) $qmaxh = $group_data['display_height'];
-				if ($qh < $extmon_data['columns']) {
-					$qx = $qx + $group_data['display_width'] + 1 ;
-					++$qh;
-				} else {
-					$qh = 1;
-					$qx = 0;
-					$qy = $qy + $qmaxh +1;
-					$qmaxh = 0;
-				}
+		if ($group_data['active']) {		
+			group_window($st_x,$st_y,$group_data['display_width'],$group_data['display_height'],"q".$group,$group_data['title'], $group_data['members'], $group_data['display_columns'], 0, CQ_WINDOW_BG, CQ_WINDOW_FG, $stats);
+			if ($qmaxh < $group_data['display_height']) $qmaxh = $group_data['display_height'];
+			if ($qh < $extmon_data['columns']) {
+				$qx = $qx + $group_data['display_width'] + 1 ;
+				++$qh;
+			} else {
+				$qh = 1;
+				$qx = 0;
+				$qy = $qy + $qmaxh +1;
+				$qmaxh = 0;
 			}
+		}
 	}
+
+	
+	
 	echo "</div>\n";
 }
 ?>

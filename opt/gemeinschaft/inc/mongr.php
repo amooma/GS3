@@ -122,6 +122,12 @@ function group_window($px, $py, $width, $height, $id, $title='', $members, $cols
 	echo '</tr>',"\n";
 	echo '</table>',"\n";
 	$member_count = count($members);
+	
+	if ($member_count == 0) {
+		show();
+		return;
+	}
+
 	if ($rows == 0) $rows = ceil( $member_count / $cols);
 	$a_width = (int) floor(($width - 1 - $cols) / $cols);
 	$a_height = (int) floor(($height - $offset_py - $rows) / $rows);
