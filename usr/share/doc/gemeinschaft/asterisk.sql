@@ -6192,7 +6192,7 @@ INSERT INTO `group_members` VALUES (6,7000);
 INSERT INTO `group_members` VALUES (6,7001);
 INSERT INTO `group_members` VALUES (6,7002);
 INSERT INTO `group_members` VALUES (6,7003);
-INSERT INTO `group_members` VALUES (6,7004);
+INSERT INTO `group_members` VALUES (6,7006);
 INSERT INTO `group_members` VALUES (6,7005);
 INSERT INTO `group_members` VALUES (6,8000);
 INSERT INTO `group_members` VALUES (6,8001);
