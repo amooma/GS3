@@ -132,20 +132,39 @@ if (! $type) {
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '</AastraIPPhoneTextMenu>' ."\n";
 	
-} elseif ($type==='out' || $type==='in' || $type==='missed') {
+} elseif ($type==='out' || $type==='in' || $type==='missed' || $type=='queue' ) {
 	
-	$query =
-'SELECT
-	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`, `queue_id`,
-	COUNT(*) `num_calls`
-FROM `dial_log`
-WHERE
-	`user_id`='. $user_id .' AND
-	`type`=\''. $type .'\'
-GROUP BY `number`,`queue_id`
-ORDER BY `ts` DESC
-LIMIT '.$num_results;
+	if ($type==='missed') {
+		$xml = "<AastraIPPhoneExecute>\n" .
+		"	<ExecuteItem URI=\"Command: ClearCallersList\"/>\n" .
+		"</AastraIPPhoneExecute>\n";
+		$phone_ip = @$_SERVER['REMOTE_ADDR'];
+		aastra_push_str($phone_ip, $xml);
+	}
 	
+	if ( $type == queue ){	
+		$query =
+		'SELECT
+			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
+		FROM `dial_log`
+		WHERE
+			`user_id`='. $user_id .' AND
+			`type`=\''. $type .'\'
+		ORDER BY `ts` DESC
+		LIMIT '.$num_results;
+	} else {
+		$query =
+		'SELECT
+			MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
+			COUNT(*) `num_calls`
+		FROM `dial_log`
+		WHERE
+			`user_id`='. $user_id .' AND
+			`type`=\''. $type .'\'
+		GROUP BY `number`
+		ORDER BY `ts` DESC
+		LIMIT '.$num_results;
+	}
 	//echo $query;
 	
 	$rs = $db->execute( $query );
