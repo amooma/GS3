@@ -982,7 +982,6 @@ if ($phone_layout) {
 		}
 		break;
 	case 'aastra':
-	case 'aastra':
 		//if ($show_ext_modules >= 0) {
 			$key_levels = array();
 		//}
@@ -992,22 +991,26 @@ if ($phone_layout) {
 				$key_levels[0]['from'] =    1;
 				$key_levels[0]['to'  ] =   10;
 
+				$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten');
+				$key_levels[1]['from'] =  101;
+				$key_levels[1]['to'  ] =  112;
+
 				if ($show_ext_modules >= 1) {
-					$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
-					$key_levels[1]['from'] =  201;
-					$key_levels[1]['to'  ] =  260;
+					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
+					$key_levels[2]['from'] =  201;
+					$key_levels[2]['to'  ] =  260;
 				}
 
 				if ($show_ext_modules >= 2) {
-					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 2');
-					$key_levels[2]['from'] =  301;
-					$key_levels[2]['to'  ] =  360;
+					$key_levels[3]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 2');
+					$key_levels[3]['from'] =  301;
+					$key_levels[3]['to'  ] =  360;
 				}
 
 				if ($show_ext_modules >= 3) {
-					$key_levels[3]['title'] = htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 3');
-					$key_levels[3]['from']  =  401;
-					$key_levels[3]['to'  ]  =  460;
+					$key_levels[4]['title'] = htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 3');
+					$key_levels[4]['from']  =  401;
+					$key_levels[4]['to'  ]  =  460;
 				}
 
 				break;

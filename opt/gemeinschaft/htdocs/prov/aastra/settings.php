@@ -284,8 +284,7 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('options simple menu'                 , 1, false, false);
 	psetting('dhcp'                                , 1, false, false);
 	psetting('backlight mode'                      , 1, false, false);
-	// psetting('bl on time'                          , 16, false, false);
-	psetting('bl on time'                          , 600, false, false);
+	psetting('bl on time'                          , 16, false, false);
 	psetting('tone set'                            , 'Germany', false, false);
 	psetting('language 1'                          , 'lang_de.txt', false, false);
 	psetting('language'                            , 1, false, false);
@@ -309,7 +308,7 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('dynamic sip'                         , 1, false, false);
 	psetting('call forward disabled'               , 1, false, false);
 	psetting('call waiting'                        , 1, false, false);
-	psetting('missed calls indicator disabled'     , 1, false, false);
+	psetting('missed calls indicator disabled'     , 0, false, false);
 	psetting('sip explicit mwi subscription'       , 1, false, false);
 	psetting('sip explicit mwi subscription period', 120, false, false);
 	psetting('sip registration retry timer'        , 60, false, false);
@@ -321,6 +320,7 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('call hold reminder'                  , 0, false, false);
 	psetting('sip diversion display'               , 1, false, false);
 	psetting('show call destination name'          , 0, false, false);
+	psetting('callers list disabled'               , 0, false, false);
 	if (gs_get_conf('GS_AASTRA_PROV_FW_UPDATE'))
 		psetting('firmware server'                     , $prov_url_aastra.'sw', false, false);
 	else
