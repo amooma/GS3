@@ -64,6 +64,11 @@ ORDER BY `id`'
 		return new GsError( 'Failed to open HylaFax authfile.' );
 	}
 	
+	# create localhost access without authentication first, if enabled
+	#
+	if ( gs_get_conf('GS_FAX_NOAUTH_LOCALHOST' === true) )
+		fWrite($fh, "127.0.0.1\n", strLen("127.0.0.1\n"));
+	
 	# create admin entry first
 	#
 	if (gs_get_conf('GS_FAX_HYLAFAX_ADMIN') != '') {

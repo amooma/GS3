@@ -672,6 +672,11 @@ $FAX_ENABLED            = false;
 
 //$FAX_INIT_DOCDIR         = '/tmp/';
   # directory containing fax documents to be used by "send-fax.php"
+  
+//$FAX_NOAUTH_LOCALHOST    = false;
+  # allow connections to HylaFAX server from the local system without
+  # prompting for a password. May be required for local third-party
+  # applications
 
 /***********************************************************
 *    BRANCH OFFICE INTEGRATION (BOI)

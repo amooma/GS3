@@ -391,6 +391,7 @@ $FAX_HYLAFAX_PASS  =
 _gscnf( 'FAX_HYLAFAX_PASS'          , ''                 );
 _gscnf( 'FAX_HYLAFAX_PATH'          , '/var/spool/hylafax/' );
 _gscnf( 'FAX_INIT_DOCDIR'           , '/tmp/' );
+_gscnf( 'FAX_NOAUTH_LOCALHOST'      , false );
 
 
 _gscnf( 'BOI_ENABLED'               , false              );
