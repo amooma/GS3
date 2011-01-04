@@ -44,6 +44,7 @@ require_once( GS_DIR .'inc/find_executable.php' );
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 require_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
+include_once( GS_DIR .'inc/string.php' );
 
 require_once(dirname(__FILE__).'/CFPropertyList-1.0.1/CFPropertyList.php');
 
@@ -198,7 +199,7 @@ $_REQUEST['login_pwd'] = @$_SERVER['PHP_AUTH_PW'];
 
 require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );
 
-$methods =  split( ',', GS_GUI_AUTH_METHOD );
+$methods =  explode( ',', GS_GUI_AUTH_METHOD );
 array_walk( $methods, 'gs_trim_value' );
 
 foreach ( $methods as &$method ) {
@@ -366,9 +367,9 @@ ORDER BY `ts` DESC'
 				echo '		<key>timeStamp</key>',"\n";
 				echo '		<integer>', $r['ts'], '</integer>',"\n";
 				echo '		<key>firstName</key>',"\n";
-				echo '		<string>', $firstname, '</string>',"\n";
+				echo '		<string>', htmlEnt($firstname), '</string>',"\n";
 				echo '		<key>lastName</key>',"\n";
-				echo '		<string>', $lastname, '</string>',"\n";
+				echo '		<string>', htmlEnt($lastname), '</string>',"\n";
 				echo '		<key>telephoneNumber</key>',"\n";
 				if (strlen($r['number']) > 0)
 					echo '		<string>', $r['number'], '</string>',"\n";
@@ -450,9 +451,9 @@ WHERE
 			while ($r = $rs->fetchRow()) {
 				echo '	<dict>',"\n";
 				echo '		<key>firstName</key>',"\n";
-				echo '		<string>', $r['firstname'], '</string>',"\n";
+				echo '		<string>', htmlEnt($r['firstname']), '</string>',"\n";
 				echo '		<key>lastName</key>',"\n";
-				echo '		<string>', $r['lastname'], '</string>',"\n";
+				echo '		<string>', htmlEnt($r['lastname']), '</string>',"\n";
 				echo '		<key>telephoneNumber</key>',"\n";
 				echo '		<string>', $r['number'], '</string>',"\n";
 				echo '	</dict>',"\n";
@@ -484,9 +485,9 @@ ORDER BY `u`.`lastname`, `u`.`firstname`'
 			while ($r = $rs->fetchRow()) {
 				echo '	<dict>',"\n";
 				echo '		<key>firstName</key>',"\n";
-				echo '		<string>', $r['firstname'], '</string>',"\n";
+				echo '		<string>', htmlEnt($r['firstname']), '</string>',"\n";
 				echo '		<key>lastName</key>',"\n";
-				echo '		<string>', $r['lastname'], '</string>',"\n";
+				echo '		<string>', htmlEnt($r['lastname']), '</string>',"\n";
 				echo '		<key>telephoneNumber</key>',"\n";
 				echo '		<string>', $r['number'], '</string>',"\n";
 				echo '	</dict>',"\n";
@@ -514,9 +515,9 @@ ORDER BY `lastname`, `firstname`, `user`, `number` DESC'
 			while ($r = $rs->fetchRow()) {
 				echo '	<dict>',"\n";
 				echo '		<key>firstName</key>',"\n";
-				echo '		<string>', $r['firstname'], '</string>',"\n";
+				echo '		<string>', htmlEnt($r['firstname']), '</string>',"\n";
 				echo '		<key>lastName</key>',"\n";
-				echo '		<string>', $r['lastname'], '</string>',"\n";
+				echo '		<string>', htmlEnt($r['lastname']), '</string>',"\n";
 				echo '		<key>telephoneNumber</key>',"\n";
 				echo '		<string>', $r['number'], '</string>',"\n";
 				echo '	</dict>',"\n";
@@ -547,7 +548,7 @@ ORDER BY `orig_time`'
 				echo '		<key>id</key>',"\n";
 				echo '		<integer>', $r['id'], '</integer>',"\n";
 				echo '		<key>cidName</key>',"\n";
-				echo '		<string>', $r['cidname'], '</string>',"\n";
+				echo '		<string>', htmlEnt($r['cidname']), '</string>',"\n";
 				echo '		<key>cidNumber</key>',"\n";
 				echo '		<string>', $r['cidnum'], '</string>',"\n";
 				echo '		<key>timeStamp</key>',"\n";
