@@ -1558,7 +1558,7 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 	
 	# Dial Plan & Dialling properties
 	#
-	_set_cfg('dial-plan-enabled'     , null, '' ); # ?
+	_set_cfg('dial-plan-enabled'     , null, 'true' );
 	
 	# (they modify search results from LDAP for example:)
 	_set_cfg('Canonical-dialing-international-prefix', null, '00'  ); # 00
@@ -1590,7 +1590,7 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 	# Feature access
 	#
 	# 0=Context, 1=Hot keypad
-	_set_cfg('hot-keypad-dialing'    , null, '' );
+	_set_cfg('hot-keypad-dialing'    , null, '0' );
 	
 	
 	# Applications
@@ -1910,7 +1910,7 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 	########################################
 	# XML Applications
 	########################################
-	
+
 	if ($openstage_type >= 40) {
 
 		/*gs_log(GS_LOG_DEBUG, 'Dumping Config Array...');
@@ -1918,7 +1918,7 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 		print_r($cur_cfg);
 		$var = ob_get_contents();
 		ob_end_clean();
-		$fp=fopen('/var/log/gemeinschaft/var_dump.'.$user_ext ,'w');
+		$fp=fopen('/tmp/gs_var_dump.'.$user_ext ,'w');
 		fputs($fp,$var);
 		fclose($fp);*/
 
@@ -1993,145 +1993,6 @@ WHERE `mac_addr`=\''. $DBM->escape($mac) .'\' AND `device`=\''. $DBM->escape($db
 		}
 
 
-		/*
-		# Phonebook
-		#
-		$app_name = 'gs-phonebook';
-		$idx++;
-		$action = 'update';
-		if ($action === 'update' || $action === 'delete') {
-			# trick our _set_cfg() function into thinking that the name needs
-			# to be set. that is necessary because for update|delete the name
-			# must be present in the response
-			if ( ! array_key_exists('XML-app-name', $cur_cfg)
-			||   ! is_array($cur_cfg['XML-app-name']) )
-				$cur_cfg['XML-app-name'] = array();
-			$cur_cfg['XML-app-name'][$idx] = $app_name .' ';
-		} else {
-			$action = '';
-		}
-		if ($action != '') {
-			_set_cfg('XML-app-name'            , $idx, $app_name, true );  # max. 20 chars
-			_set_cfg('XML-app-action'          , $idx, $action, true );  # update | delete
-		}
-		if ($action === 'update') {
-			# max. 20 chars:
-			_set_cfg('XML-app-display-name'    , $idx, mb_strCut('Telefonbuch', 0, 20), true );
-			$tmp = GS_PROV_PATH;
-			if (subStr($tmp,0,1)==='/') $tmp = subStr($tmp,1);
-			_set_cfg('XML-app-program-name'    , $idx, $tmp .'siemens/pb/pb.php', true );
-			# 0=normal, 1=Xpressions:
-			_set_cfg('XML-app-special-instance', $idx, '0', true );
-			_set_cfg('XML-app-server-addr'     , $idx, GS_PROV_HOST, true );
-			_set_cfg('XML-app-server-port'     , $idx, GS_PROV_PORT, true );
-			_set_cfg('XML-app-transport'       , $idx, (strToLower(GS_PROV_SCHEME)==='https' ? '1' : '0'), true );
-			_set_cfg('XML-app-proxy-enabled'   , $idx, 'false', true );
-			//_set_cfg('XML-app-remote-debug'    , $idx, 'true', true );
-			//_set_cfg('XML-app-debug-prog-name' , $idx, $tmp .'siemens/app-debug.php', true );
-			_set_cfg('XML-app-remote-debug'    , $idx, 'false', true );
-			_set_cfg('XML-app-debug-prog-name' , $idx, '', true );
-			
-			_set_cfg('XML-app-num-tabs'        , $idx, '0', true );  # 0 or 1-3
-			_set_cfg('XML-app-restart'         , $idx, 'true', true );  # restart when its config is changed?
-			_set_cfg('XML-app-tab1-display-name', $idx, $app_name     , true );  # max. 20 chars
-			//_set_cfg('XML-app-tab2-display-name', $idx, $app_name.'_2', true );  # max. 20 chars
-			//_set_cfg('XML-app-tab3-display-name', $idx, $app_name.'_3', true );  # max. 20 chars
-		}
-		*/
-		
-		/*
-		# Phonebook (integrated on phonebook mode key)
-		#
-		$app_name = 'XMLPhonebook';  # special name. do not change
-		$idx++;
-		$action = 'update';
-		if ($action === 'update' || $action === 'delete') {
-			# trick our _set_cfg() function into thinking that the name needs
-			# to be set. that is necessary because for update|delete the name
-			# must be present in the response
-			if ( ! array_key_exists('XML-app-name', $cur_cfg)
-			||   ! is_array($cur_cfg['XML-app-name']) )
-				$cur_cfg['XML-app-name'] = array();
-			$cur_cfg['XML-app-name'][$idx] = $app_name .' ';
-		} else {
-			$action = '';
-		}
-		if ($action != '') {
-			_set_cfg('XML-app-name'            , $idx, $app_name, true );  # max. 20 chars
-			_set_cfg('XML-app-action'          , $idx, $action, true );  # update | delete
-		}
-		if ($action === 'update') {
-			_set_cfg('XML-app-enabled'         , $idx, 'false', true );  # fixed. do not change
-			# max. 20 chars:
-			_set_cfg('XML-app-display-name'    , $idx, $app_name, true );  # special title. do not change
-			$tmp = GS_PROV_PATH;
-			if (subStr($tmp,0,1)==='/') $tmp = subStr($tmp,1);
-			_set_cfg('XML-app-program-name'    , $idx, $tmp .'siemens/pb/pb.php', true );
-			# 0=normal, 1=Xpressions:
-			_set_cfg('XML-app-special-instance', $idx, '2', true );  # fixed. do not change
-			_set_cfg('XML-app-server-addr'     , $idx, GS_PROV_HOST, true );
-			_set_cfg('XML-app-server-port'     , $idx, GS_PROV_PORT, true );
-			_set_cfg('XML-app-transport'       , $idx, (strToLower(GS_PROV_SCHEME)==='https' ? '1' : '0'), true );
-			_set_cfg('XML-app-proxy-enabled'   , $idx, 'false', true );
-			//_set_cfg('XML-app-remote-debug'    , $idx, 'true', true );
-			//_set_cfg('XML-app-debug-prog-name' , $idx, $tmp .'siemens/app-debug.php', true );
-			_set_cfg('XML-app-remote-debug'    , $idx, 'false', true );
-			_set_cfg('XML-app-debug-prog-name' , $idx, '', true );
-			_set_cfg('XML-app-restart'         , $idx, 'true', true );  # restart when its config is changed
-			
-			_set_cfg('XML-app-num-tabs'         , $idx, '3', true );  # 0 or 1-3
-			_set_cfg('XML-app-tab1-name'        , $idx, $app_name         , true );  # special
-			_set_cfg('XML-app-tab1-display-name', $idx, 'Privat'          , true );  # max. 20 chars
-			_set_cfg('XML-app-tab2-name'        , $idx, $app_name.'_2'    , true );  # special
-			_set_cfg('XML-app-tab2-display-name', $idx, 'Gemeinschaft'    , true );  # max. 20 chars
-			_set_cfg('XML-app-tab3-name'        , $idx, $app_name.'_3'    , true );  # special
-			_set_cfg('XML-app-tab3-display-name', $idx, 'Importiert'      , true );  # max. 20 chars
-		}
-		*/
-		
-		/*
-		# Dial Log
-		#
-		$app_name = 'gs-diallog';
-		$idx++;
-		$action = 'update';
-		if ($action === 'update' || $action === 'delete') {
-			# trick our _set_cfg() function into thinking that the name needs
-			# to be set. that is necessary because for update|delete the name
-			# must be present in the response
-			if ( ! array_key_exists('XML-app-name', $cur_cfg)
-			||   ! is_array($cur_cfg['XML-app-name']) )
-				$cur_cfg['XML-app-name'] = array();
-			$cur_cfg['XML-app-name'][$idx] = $app_name .' ';
-		} else {
-			$action = '';
-		}
-		if ($action != '') {
-			_set_cfg('XML-app-name'            , $idx, $app_name, true );  # max. 20 chars
-			_set_cfg('XML-app-action'          , $idx, $action, true );  # update | delete
-		}
-		if ($action === 'update') {
-			# max. 20 chars:
-			_set_cfg('XML-app-display-name'    , $idx, mb_strCut('Ruflisten', 0, 20), true );
-			$tmp = GS_PROV_PATH;
-			if (subStr($tmp,0,1)==='/') $tmp = subStr($tmp,1);
-			_set_cfg('XML-app-program-name'    , $idx, $tmp .'siemens/dial-log/dlog.php', true );
-			# 0=normal, 1=Xpressions:
-			_set_cfg('XML-app-special-instance', $idx, '0', true );
-			_set_cfg('XML-app-server-addr'     , $idx, GS_PROV_HOST, true );
-			_set_cfg('XML-app-server-port'     , $idx, GS_PROV_PORT, true );
-			_set_cfg('XML-app-transport'       , $idx, (strToLower(GS_PROV_SCHEME)==='https' ? '1' : '0'), true );
-			_set_cfg('XML-app-proxy-enabled'   , $idx, 'false', true );
-			_set_cfg('XML-app-remote-debug'    , $idx, 'false', true );
-			_set_cfg('XML-app-debug-prog-name' , $idx, '', true );
-			
-			_set_cfg('XML-app-num-tabs'        , $idx, '0', true );  # 0 or 1-3
-			_set_cfg('XML-app-restart'         , $idx, 'true', true );  # restart when its config is changed?
-			_set_cfg('XML-app-tab1-display-name', $idx, $app_name     , true );  # max. 20 chars
-			//_set_cfg('XML-app-tab2-display-name', $idx, $app_name.'_2', true );  # max. 20 chars
-			//_set_cfg('XML-app-tab3-display-name', $idx, $app_name.'_3', true );  # max. 20 chars
-		}
-		*/
 	}
 	
 	
