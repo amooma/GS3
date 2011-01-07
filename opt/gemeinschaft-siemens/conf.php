@@ -80,6 +80,7 @@ $gs_phonebook = array(
 	'XML-app-remote-debug' => 'false',
 	'XML-app-debug-prog-name' => '',
 	'XML-app-num-tabs' => '0',
+	'XML-app-auto-start' => 'true',
 );
 
 # Phonebook (integrated on phonebook mode key)
@@ -95,11 +96,13 @@ $gs_phonebook_pb_key = array(
 	'XML-app-debug-prog-name' => '',
 	'XML-app-num-tabs' => '3',
 	'XML-app-tab1-name' => 'XMLPhonebook',
-	'XML-app-tab1-display-name' => 'Privat',
+	'XML-app-tab1-display-name' => gs_get_conf('GS_PB_PRIVATE_TITLE' , __("Pers\xC3\xB6nlich")),
 	'XML-app-tab2-name' => 'XMLPhonebook_2',
-	'XML-app-tab2-display-name' => 'Gemeinschaft',
+	'XML-app-tab2-display-name' => gs_get_conf('GS_PB_INTERNAL_TITLE', __("Intern")),
 	'XML-app-tab3-name' => 'XMLPhonebook_3',
-	'XML-app-tab3-display-name' => 'Importiert' 
+	'XML-app-tab3-display-name' => gs_get_conf('GS_PB_IMPORTED_TITLE', __("Extern")),
+	'XML-app-auto-start' => 'true',
+	'XML-app-all-tabs-start' => 'true',
 );
 
 
@@ -116,6 +119,8 @@ $gs_diallog_dl_key = array(
 	'XML-app-debug-prog-name' => '',
 	'XML-app-num-tabs' => '0',
 	'XML-app-tab1-display-name' => 'gs-diallog',
+	'XML-app-auto-start' => 'true',
+	'XML-app-control-key' => '3',
 );
 
 
