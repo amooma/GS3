@@ -259,7 +259,7 @@ if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 	
 	require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );
 
-        $methods =  split( ',', GS_GUI_AUTH_METHOD );
+        $methods =  explode( ',', GS_GUI_AUTH_METHOD );
         array_walk( $methods, 'gs_trim_value' );
 
         foreach ( $methods as &$method ) {
