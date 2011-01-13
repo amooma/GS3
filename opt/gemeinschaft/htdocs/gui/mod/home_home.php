@@ -38,6 +38,11 @@ $action = array_key_exists('action', $_REQUEST) ? $_REQUEST['action'] : '';
 
 if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 	
+	if ($action === 'checkcfg') {
+		
+		gs_prov_phone_checkcfg_by_ext( $_SESSION['sudo_user']['info']['ext'], false );
+		
+	}
 	if ($action === 'reboot') {
 		
 		gs_prov_phone_checkcfg_by_ext( $_SESSION['sudo_user']['info']['ext'], true );
@@ -374,11 +379,30 @@ LIMIT 5'
 <div style="height:20px;"></div>
 
 <div class="fr">
-<form method="get" action="<?php echo GS_URL_PATH; ?>">
+<?php
+if (gs_get_conf('GS_SNOM_PROV_SIP_INFO')) {
+?>
+<form method="post" action="<?php echo GS_URL_PATH; ?>">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<input type="hidden" name="action" value="checkcfg" />
+<input type="submit" value="<?php echo __('Telefon aktualisieren'); ?>" />
+</form>
+<form method="post" action="<?php echo GS_URL_PATH; ?>">
+<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+<input type="hidden" name="action" value="reboot" />
+<input type="submit" value="<?php echo __('Telefon aktualisieren (Problembehebung)'); ?>" />
+</form>
+<?php
+} else {
+?>
+<form method="post" action="<?php echo GS_URL_PATH; ?>">
 <?php echo gs_form_hidden($SECTION, $MODULE); ?>
 <input type="hidden" name="action" value="reboot" />
 <input type="submit" value="<?php echo __('Telefon aktualisieren'); ?>" />
 </form>
+<?php
+}
+?>
 </div>
 
 <br style="clear:right" />
