@@ -1245,7 +1245,7 @@ context to-internal-users-self {
 			//Verbose(1,### Called user ${origext} unreachable\, mailbox not active);
 			Verbose(1,### Called user ${EXTEN} unreachable\, mailbox not active);
 			if ("${DIALSTATUS}" = "BUSY") {
-				Hangup();
+				Hangup(17);
 			} else {
 				Hangup(19);
 				// 19 = no answer from the user => 480 Temporarily unavailable
