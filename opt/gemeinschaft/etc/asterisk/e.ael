@@ -788,6 +788,17 @@ context queues-login-logout {
 context voicemail-self {
 	
 	voicemail => {
+		if (${REGEX("," ${SIPPEER(${user_name},mailbox)})} = 1) {
+			Verbose(1,### User ${user_name} has more than one mailbox. Asking for mailbox);
+			Answer();
+			Wait(0.5);
+			Read(mailbox,vm-login,,,,3);
+			if ("${mailbox}" != "") {
+				jump vm-${mailbox};
+			} else {
+				jump voicemail;
+			}
+		}
 		&caller-count();
 		//Set(CHANNEL(language)=en);  // derzeit notwendig da der dt. Sprachbaustein "eine" im Englischen fehlt
 		Set(CDR(amaflags)=OMIT);

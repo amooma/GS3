@@ -132,6 +132,11 @@ $sortorder   = @$_REQUEST['sortorder'];
 if (! in_array($sortorder, array('ASC', 'DESC')) )
 	$sortorder = 'ASC';
 
+$drop_call   = (bool)@$_REQUEST['drop_call'  ] ;
+$drop_number = trim(@$_REQUEST['drop_number' ]);
+
+$mailbox     = trim(@$_REQUEST['mailbox']);
+
 $pen_avail = range( 0, 9);
 
 if ($edit_user) {
@@ -159,10 +164,6 @@ if ($edit_user) {
 	$groups_my  = gs_group_members_groups_get(Array($uid), 'user', false);
 	
 }
-
-$drop_call   = (bool)@$_REQUEST['drop_call'  ] ;
-
-$drop_number = trim(@$_REQUEST['drop_number'    ]);
 
 if ($action === 'del') {
 	
@@ -229,7 +230,7 @@ if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 
 if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 	
-	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, @$_REQUEST['ulang'], $user_host, false, $user_email, true, $pb_hide, $drop_call, $drop_number );
+	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, @$_REQUEST['ulang'], $user_host, false, $user_email, true, $pb_hide, $drop_call, $drop_number, $mailbox );
 	/*
 	$DB->execute( 'UPDATE `ast_sipfriends` SET `language`=\''. $DB->escape(preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['ulang'])) .'\' WHERE `_user_id`='. $uid );
 	if ( GS_BUTTONDAEMON_USE == true ) {
@@ -769,7 +770,7 @@ else {
 	$rs = $DB->execute(
 'SELECT
 	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`, `s`.`language`, `u`.`group_id`, `u`.`pb_hide`,
-	`hp1`.`value` `hp_route_prefix`, `d`.`drop_call`, `d`.`number`
+	`hp1`.`value` `hp_route_prefix`, `d`.`drop_call`, `d`.`number`, `s`.`mailbox` `mailbox`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) LEFT JOIN
@@ -997,6 +998,21 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 		</td>
 		<td class="transp xs gray">
 			&larr; <?php echo htmlEnt(__("das SIP-Passwort")); ?>
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __('Anrufbeantworter'); ?>:</th>
+		<td>
+			<?php
+				if ($boi_api == '') {
+					echo '<input type="text" name="mailbox" value="', htmlEnt($r['mailbox']) ,'" size="16" maxlength="16" />' ,"\n";
+				} else {
+					echo htmlEnt($r['mailbox']);
+				}
+			?>
+		</td>
+		<td class="transp xs gray">
+			&larr; <?php echo htmlEnt(__("durch Komma getrennt, falls mehrere Anrufbeantworter &uuml;berwacht werden sollen")); ?>
 		</td>
 	</tr>
 	<tr>

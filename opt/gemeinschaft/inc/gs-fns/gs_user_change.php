@@ -39,7 +39,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 *    change a user account
 ***********************************************************/
 
-function gs_user_change( $user, $pin, $firstname, $lastname, $language, $host_id_or_ip, $force=false, $email='', $reload=true, $pb_hide=false, $drop_call=false, $drop_target='' )
+function gs_user_change( $user, $pin, $firstname, $lastname, $language, $host_id_or_ip, $force=false, $email='', $reload=true, $pb_hide=false, $drop_call=false, $drop_target='', $mailbox='' )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -147,7 +147,11 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $language, $host_id
 	# update sip account (including language code)
 	#
 	$calleridname = trim( gs_utf8_decompose_to_ascii( $firstname .' '. $lastname ));
-	$ok = $db->execute( 'UPDATE `ast_sipfriends` SET `callerid`=CONCAT(_utf8\''. $db->escape($calleridname) .'\', \' <\', `name`, \'>\'), `language`=\''. $db->escape($language) .'\' WHERE `_user_id`='. $user_id );
+	$sqlcmd = 'UPDATE `ast_sipfriends` SET `callerid`=CONCAT(_utf8\''. $db->escape($calleridname) .'\', \' <\', `name`, \'>\'), `language`=\''. $db->escape($language) .'\'';
+	if ($mailbox != '')
+		$sqlcmd .= ', `mailbox`=\''. $mailbox . '\'';
+	$sqlcmd .= ' WHERE `_user_id`='. $user_id;
+	$ok = $db->execute( $sqlcmd );
 	if (! $ok) {
 		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to change SIP account.' );
