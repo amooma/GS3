@@ -86,6 +86,7 @@ $formats = array( # internal name to info
 	'wav-pcma' => array( 'title'=>'aLaw', 'ext'=>'alaw.wav', 'mime'=>'audio/x-wav'  ),
 	//'pcma'     => array( 'title'=>'aLaw', 'ext'=>'al'      , 'mime'=>'audio/PCMA'   ),  # RFC 4856
 	'mp3'      => array( 'title'=>'MP3' , 'ext'=>'mp3'     , 'mime'=>'audio/mpeg'   ),  # RFC 3003
+	'ogg'      => array( 'title'=>'OGG' , 'ext'=>'ogg'     , 'mime'=>'audio/ogg'    ),
 	'sun-pcmu' => array( 'title'=>'Au'  , 'ext'=>'au'      , 'mime'=>'audio/basic'  ),  # RFC 2046
 	'wav-pcm'  => array( 'title'=>'sLin', 'ext'=>'slin.wav', 'mime'=>'audio/x-wav'  ),
 );
@@ -119,7 +120,7 @@ $attach  = (@$_REQUEST['disp'] === 'attach');
 if ($ext == '') _not_allowed();
 
 
-if (in_array($fmt, array('mp3', 'wav-pcm', 'sun-pcmu'), true)) {
+if (in_array($fmt, array('mp3', 'ogg', 'wav-pcm', 'sun-pcmu'), true)) {
 	$sox  = find_executable('sox', array(
 		'/usr/bin/', '/usr/local/bin/', '/usr/sbin/', '/usr/local/sbin/' ));
 	if (! $sox) {
@@ -129,6 +130,7 @@ if (in_array($fmt, array('mp3', 'wav-pcm', 'sun-pcmu'), true)) {
 } else {
 	$sox = '/bin/false';
 }
+
 if (in_array($fmt, array('mp3'), true)) {
 	$lame = find_executable('lame', array(
 		'/usr/local/bin/', '/usr/bin/', '/usr/local/sbin/', '/usr/sbin/' ));
@@ -138,6 +140,17 @@ if (in_array($fmt, array('mp3'), true)) {
 	}
 } else {
 	$lame = '/bin/false';
+}
+
+if (in_array($fmt, array('ogg'), true)) {
+	$oggenc = find_executable('oggenc', array(
+		'/usr/local/bin/', '/usr/bin/', '/usr/local/sbin/', '/usr/sbin/' ));
+	if (! $oggenc) {
+		gs_log( GS_LOG_WARNING, 'oggenc - command not found.' );
+		_server_error( 'Failed to convert file.' );
+	}
+} else {
+	$oggenc = '/bin/false';
 }
 
 
@@ -257,6 +270,19 @@ if ($fmt === 'mp3') {
 		_server_error( 'Failed to convert file.' );
 	}
 }
+elseif ($fmt === 'ogg') {
+	# convert file from original format (aLaw) to WAV (signed linear PCM,
+	# 8000 Hz sampling rate, 16 bits/sample), then to OGG/Vorbis
+	#
+	
+	$cmd = $sox.' -q -t al '. qsa($origfile) .' -r 8000 -c 1 -s -b 16 -t wav - 2>>/dev/null | '.$oggenc.' -Q -t '.qsa($id3_title).' -a '.qsa($id3_artist).' -l '.qsa($id3_album).' -c '.qsa($id3_comment).' -o'. qsa($outfile) .' - 2>&1 1>>/dev/null';
+	$err=0; $out=array();
+	@exec( $cmd, $out, $err );
+	if ($err != 0) {
+		gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file to '.$fmt.'. Output of command "'.$cmd.'": '.trim(implode(' - ',$out)) );
+		_server_error( 'Failed to convert file.' );
+	}
+}
 elseif ($fmt === 'pcma') {
 	# not supported by any players
 	
@@ -268,17 +294,6 @@ elseif ($fmt === 'wav-pcma') {
 	# A-law logarithmic PCM in WAVE container
 	# same format as "alaw" in Asterisk, plus an additional file header
 	# => no conversion required
-	
-	/*
-	$cmd = $sox.' -q -t al '. qsa($origfile) .' -r 8000 -c 1 -A -b -t wav '. qsa($outfile) .' 1>>/dev/null';
-	gs_log( GS_LOG_DEBUG, $cmd);
-	$err=0; $out=array();
-	@exec( $cmd, $out, $err );
-	if ($err != 0) {
-		gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file to '.$fmt.'. ('.trim(implode(' - ',$out)).')' );
-		_server_error( 'Failed to convert file.' );
-	}
-	*/
 	
 	# http://de.wikipedia.org/wiki/RIFF_WAVE#Beispiel_eines_allgemein_lesbaren_WAVE-Dateiformates
 	# (RIFF is little-endian!)
@@ -333,37 +348,6 @@ if (! file_exists($outfile)) {
 	gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file.' );
 	_server_error( 'Failed to convert file.' );
 }
-
-
-/*
-$intermedfile = $tmpfile_base.'.sln.wav';
-
-$cmd = 'sox -t al '. qsa($origfile) .' -r 8000 -c 1 -s -w -t wav '. qsa($intermedfile);
-$err=0; $out=array();
-@exec( $cmd, $out, $err );
-if ($err != 0) {
-	gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file.' );
-	_server_error( 'Failed to convert file.' );
-}
-if (! file_exists($intermedfile)) {
-	gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file.' );
-	_server_error( 'Failed to convert file.' );
-}
-
-$cmd = 'lame --preset fast standard -m m -a -b 32 -B 96 --quiet --ignore-tag-errors --tt '. qsa($id3_title) .' --ta '. qsa($id3_artist) .' --tl '. qsa($id3_album) .' --tc '. qsa($id3_comment) .' --tg 101 '. qsa($intermedfile) .' '. qsa($outfile);
-$err=0; $out=array();
-@exec( $cmd, $out, $err );
-if ($err != 0) {
-	gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file.' );
-	_server_error( 'Failed to convert file.' );
-}
-if (! file_exists($outfile)) {
-	gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file.' );
-	_server_error( 'Failed to convert file.' );
-}
-*/
-
-
 
 @header( 'Content-Type: '. $formats[$fmt]['mime'] );
 $fake_filename = preg_replace('/[^0-9a-z\-_.]/i', '', 'vm_'. $ext .'_'. date('Ymd_Hi', $info['orig_time']) .'_'. subStr(md5(date('s', $info['orig_time']).$info['cidnum']),0,4) .'.'. $formats[$fmt]['ext'] );
