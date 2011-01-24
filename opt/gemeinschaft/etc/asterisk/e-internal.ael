@@ -1226,7 +1226,7 @@ context to-internal-users-self {
 					Answer();
 					Wait(0.5);
 				}
-				Queue(${EXTEN},${ring_instead_of_moh},${subqueue},,${queuetimeout});
+				Queue(${EXTEN},${ring_instead_of_moh},${subqueue},,${queuetimeout},,queue-answer-callback);
 			}
 			else {
 				Verbose(1,### Don't even try to enter queue ${EXTEN} because: ${QUEUESTATUS});
