@@ -1195,9 +1195,7 @@ else
 
 # call waiting (Anklopfen) aktiviert?
 #
-//psetting('call_waiting', 'off');  # ""Call Waiting (CW)" can be enabled ("on", "visual only", "ringer") or disabled ("off")."
-$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
-psetting('call_waiting', ($callwaiting ? 'on' : 'off'));
+psetting('call_waiting', 'on');  # ""Call Waiting (CW)" can be enabled ("on", "visual only", "ringer") or disabled ("off")."
 
 psetting('call_completion', 'off');
 /*
