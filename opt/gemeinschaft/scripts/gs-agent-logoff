@@ -1,0 +1,275 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* Author: Henning Holtschneider <henning@loca.net>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( '/opt/gemeinschaft/inc/conf.php' );
+include_once( GS_DIR .'lib/getopt.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/quote_shell_arg.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
+require_once( GS_DIR .'inc/get-listen-to-ids.php' );
+require_once( GS_DIR .'inc/remote-exec.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
+
+
+
+/***********************************************************
+*    function _queue_log - creates callfile content
+***********************************************************/
+
+function _queue_log ( $agent, $peer, $queues, $username )
+{
+
+
+	$content = array();
+	
+	$content[] = "Channel: Local/s@queuelog-agent-logoff" ;
+	$content[] = "MaxRetries: 0" ;
+	$content[] = "WaitTime: 15" ;
+	$content[] = "CallerID: \"Script\" <" . $peer .">" ;
+	$content[] = "Application: Wait" ;
+	$content[] = "Data: 3" ;
+	$content[] = "Setvar: agent=" . $agent ;
+	$content[] = "Setvar: user_name=" . $peer ;
+	$content[] = "Setvar: oqueue_count=" . count( $queues ) ;
+	foreach ( $queues as $index => $queue ) {
+		$content[] = "Setvar: oqueue" . $index . "=" . $queue ;
+	}
+	
+	$file_content = implode ( "\n" , $content ) . "\n";
+	
+	_write_file ( $agent, $username, $file_content );
+	
+}	
+
+/***********************************************************
+*    function _write_file - creates callfile
+***********************************************************/
+
+
+function _write_file ( $agent, $username, $file_content )
+{
+	
+	$user = @ gs_user_get( $username );
+	if (isGsError( $user ))
+		die_invalid( $user->getMsg() );
+	if ($user['nobody_index'] > 0)
+		die_not_allowed( 'Nobody user. Not allowed to init a call.' );
+	
+	$filename = '/tmp/ag-'. $agent .'-'. _pack_int(time()) . rand(100,999) .'.call';
+	$cf = @fOpen( $filename, 'wb' );
+	if (! $cf) {
+		gs_log( GS_LOG_WARNING, 'Failed to write call file "'. $filename .'"' );
+		die_error( 'Failed to write call file.' );
+	}
+	@fWrite( $cf, $file_content, strLen($file_content) );
+	@fClose( $cf );
+	@chmod( $filename, 00666 );
+	
+	$spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
+	
+	
+	if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+		$our_host_ids = @gs_get_listen_to_ids();
+		if (! is_array($our_host_ids)) $our_host_ids = array();
+		$user_is_on_this_host = in_array( $user['host_id'], $our_host_ids );
+	} else {
+		$user_is_on_this_host = true;
+	}
+	
+	
+	if ($user_is_on_this_host) {
+		
+		# the Asterisk of this user and the web server both run on this host
+		
+		//$ok = @rename( $filename, $spoolfile );
+		$err=0; $out=array();
+		@exec( 'sudo mv '. qsa($filename) .' '. qsa($spoolfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		if ($err != 0) {
+			@unlink( $filename );
+			gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"' );
+			die_error( 'Failed to move call file.' );
+		}
+		
+	}
+	else {
+		
+		$cmd = 'sudo scp -p -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $filename ) .' '. qsa( 'root@'. $user['host'] .':'. $filename );
+		//echo $cmd, "\n";
+		@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		@unlink( $filename );
+		if ($err != 0) {
+			gs_log( GS_LOG_WARNING, 'Failed to scp call file "'. $filename .'" to '. $user['host'] );
+			die_error( 'Failed to scp call file.' );
+		}
+		//remote_exec( $user['host'], $cmd, 10, $out, $err ); // <-- does not use sudo!
+		$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa( $user['host'] ) .' '. qsa( 'mv '. qsa( $filename ) .' '. qsa( $spoolfile ) );
+		//echo $cmd, "\n";
+		@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		if ($err != 0) {
+			gs_log( GS_LOG_WARNING, 'Failed to mv call file "'. $filename .'" on '. $user['host'] .' to "'. $spoolfile .'"' );
+			die_error( 'Failed to mv call file on remote host.' );
+		}
+		
+	}
+	
+	
+}
+
+/***********************************************************
+*    function _pack_int
+***********************************************************/
+
+
+function _pack_int( $int ) 
+{
+	$str = base64_encode(pack('N', $int ));
+	return preg_replace('/[^a-z\d]/i', '', $str);
+}
+
+
+/***********************************************************
+*    the shell parameters
+***********************************************************/
+$usage = 'Usage: '. baseName(__FILE__) .' --agent=<regex>|--queue=<queue>';
+
+$opts = @getOptsNoMultiples( '',
+	array(
+		'agent=',
+		'queue='
+	),
+	$usage
+);
+if ( (!isSet($opts['agent'])) && (!isSet($opts['queue'])) ) {
+	gs_script_invalid_usage( $usage );
+}
+
+# connect to db
+#
+$db = gs_db_master_connect();
+if (! $db) {
+	echo "Could not connect to database.\n";
+	exit(1);
+}
+
+if (isSet($opts['agent'])) 
+{
+
+	# remove agents provided on command line from all queues
+	#
+	$rs = $db->execute( 'SELECT `agents`.`number` AS `number`, `agents`.`user_id` AS `user_id`, `ast_sipfriends`.`name` AS `sip_peer`, `users`.`user` AS `username`  FROM `agents`, `ast_sipfriends`, `users` WHERE `number` LIKE \'' . $opts['agent'] . '\' AND `agents`.`user_id` = `ast_sipfriends`.`_user_id` AND `agents`.`user_id` = `users`.`id`');
+	if (! $rs) {
+		echo "Agent(s) not found.\n";
+		exit(1);
+	}
+}
+else {
+
+	# remove all agents from the queues provided on command line
+	#
+	
+	$rs = $db->execute( 'SELECT `ast_queue_members`.`_user_id` AS `user_id`, `ast_sipfriends`.`name` AS `sip_peer`, `agents`.`number`, `users`.`user` AS `username` FROM `ast_queue_members`, `ast_sipfriends`, `agents`, `users` WHERE `queue_name` = \'' . $opts['queue'] . '\' AND `ast_queue_members`.`_user_id` = `ast_sipfriends`.`_user_id` AND `ast_queue_members`.`_user_id` = `agents`.`user_id` AND `users`.`id` = `agents`.`user_id`');
+	if (! $rs) {
+		echo "No agents found in queue(s).\n";
+		exit(1);
+	}
+
+}
+
+## create array from user data
+#	
+
+$users = array();
+	
+if ( $rs->numRows() > 0 ) {		
+
+	while ( $r = $rs->fetchRow() ) {
+			
+		$users[ $r[ 'user_id' ] ] = $r;
+						
+	}
+}
+
+if ( count ( $users ) <= 0 ) {
+	echo "Agent(s) not found.\n";
+	exit(1);
+}
+
+
+## search queues of the agents
+#
+
+$rs = $db->execute( 'SELECT `queue_name`, `_user_id` AS `user_id` FROM `ast_queue_members` WHERE `_user_id` IN (' . implode( ","  , array_keys( $users ) ) . ')');
+	
+if (! $rs) {
+	echo "No queues found for the agent(s).\n";
+	exit(1);
+}
+	
+if ($rs->numRows() > 0) {		
+
+	while ($r = $rs->fetchRow()) {
+			
+		if ( ! array_key_exists ( 'queues', $users[ $r ['user_id'] ] )) {
+			$users[ $r ['user_id'] ] [ 'queues' ] = array();
+		}
+		$users[ $r ['user_id'] ] [ 'queues' ][] = $r ['queue_name'];
+		//echo "Added queue " .  $r ['queue_name'] ." \n";
+	}
+}
+
+## Logoff agent in db / remove peer vom queues
+#
+
+foreach ( $users as $uid => $user ) {
+	if (! $db->execute( 'DELETE FROM `ast_queue_members` WHERE `_user_id` = ' . $uid ) ) {
+		echo "Error!\n";
+		exit(1);
+	}
+				
+	if (! $db->execute( 'UPDATE `agents` SET `user_id` = 0 WHERE `number` = \'' . $user['number'] . '\'' ) ) {
+		echo "Error!\n";
+		exit(1);
+	}
+
+	# call queuelog_function
+	#
+
+	_queue_log ( $user[ 'number' ], $user[ 'sip_peer' ], $user[ 'queues' ], $user[ 'username' ] );
+
+	gs_agent_logoff_ui( $user['number'] );
+	gs_queue_logoff_ui( $user[ 'username' ], "*" );
+}
+
+echo count ( $users )  . ' agent' .  ( count( $users ) != 1 ? 's' : '') . ' logged off' . "\n";
+
+?>
