@@ -372,11 +372,8 @@ function gs_buttondeamon_version( )
 		}
 		fwrite( $socket, "quit\n" );
 		fclose( $socket );
-
 		return $version ;
 	}
 	return;
 }
-
-
 ?>
