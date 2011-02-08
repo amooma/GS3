@@ -115,7 +115,7 @@ while ($r = $rs->fetchRow()) {
 	if     ($r['active']==='std' && $number_std != '') {
 		$number = $number_std;
 		if ($r['case'] == 'always')
-			gs_agi_set_variable( 'fw_std_active', '1');  //used for Featuretoggling cfwd
+			gs_agi_set_variable( '__fw_std_active', '1');  //used for Featuretoggling cfwd
 	}
 	elseif ($r['active']==='var' && $number_var != '') {
 		$number = $number_var;
@@ -145,9 +145,9 @@ foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {
 		if ($fw['number'] === $callerid) $fw['number'] = '';
 		
-		gs_agi_set_variable( 'fw_'.$source.'_'.$case, $fw['number'] );
+		gs_agi_set_variable( '__fw_'.$source.'_'.$case, $fw['number'] );
 		
-		gs_agi_set_variable( 'fw_file_'.$source.'_'.$case, '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
+		gs_agi_set_variable( '__fw_file_'.$source.'_'.$case, '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
 		
 		if (is_array($fw['number'])) {  # this is an array if we are forwarding to parallel-call
 			$cnt=0;
@@ -158,28 +158,28 @@ foreach ($forwards as $source => $arr) {
 				if (!in_array($target, $parcallextens)) {
 					$newparcallextens[] = $target;
 					if ($target == $uname) //set this, if the user wants to ring his extension too
-						gs_agi_set_variable( 'fw_to_self_'.$source.'_'.$case .'_'.$uname, 1 );
+						gs_agi_set_variable( '__fw_to_self_'.$source.'_'.$case .'_'.$uname, 1 );
 					$numbers[] = $target;	
 				}
 			}
-			gs_agi_set_variable( 'fw_'.$source.'_'.$case, implode('/n&Local/',$numbers) );
-			gs_agi_set_variable( 'fw_parcallextens_'.$source.'_'.$case, implode(',',$newparcallextens) );
+			gs_agi_set_variable( '__fw_'.$source.'_'.$case, implode('/n&Local/',$numbers) );
+			gs_agi_set_variable( '__fw_parcallextens_'.$source.'_'.$case, implode(',',$newparcallextens) );
 		} else {
-			gs_agi_set_variable( 'fw_'.$source.'_'.$case, $fw['number'] );
+			gs_agi_set_variable( '__fw_'.$source.'_'.$case, $fw['number'] );
 		}
 	}
 }
 
 if ($forwards['internal']['unavail']['number'] != '') {
-	gs_agi_set_variable( 'fw_internal_unavail_timeout', $forwards['internal']['unavail']['timeout'] );
+	gs_agi_set_variable( '__fw_internal_unavail_timeout', $forwards['internal']['unavail']['timeout'] );
 } else {
-	gs_agi_set_variable( 'fw_internal_unavail_timeout', '' );
+	gs_agi_set_variable( '__fw_internal_unavail_timeout', '' );
 }
 
 if ($forwards['external']['unavail']['number'] != '') {
-	gs_agi_set_variable( 'fw_external_unavail_timeout', $forwards['external']['unavail']['timeout'] );
+	gs_agi_set_variable( '__fw_external_unavail_timeout', $forwards['external']['unavail']['timeout'] );
 } else {
-	gs_agi_set_variable( 'fw_external_unavail_timeout', '' );
+	gs_agi_set_variable( '__fw_external_unavail_timeout', '' );
 }
 
 $msgs = array(
