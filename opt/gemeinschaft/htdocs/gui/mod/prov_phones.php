@@ -74,6 +74,9 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	$phone_types['aastra-53i'] = 'Aastra 53i';
 	$phone_types['aastra-55i'] = 'Aastra 55i';
 	$phone_types['aastra-57i'] = 'Aastra 57i';
+	$phone_types['aastra-6730i'] = 'Aastra 6730i';
+	$phone_types['aastra-6731i'] = 'Aastra 6731i';
+	$phone_types['aastra-6739i'] = 'Aastra 6739i';
 }
 if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-ht287'  ] = 'Grandstream HT 287';
