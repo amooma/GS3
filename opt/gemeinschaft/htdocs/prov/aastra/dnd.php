@@ -33,6 +33,7 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_user_phonemodel_get.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 require_once(GS_DIR .'inc/group-fns.php');
 
@@ -63,6 +64,15 @@ function _get_user( $user_id )
 	return $user;
 }
 
+function _get_sipuser( $user_id )
+{
+	global $db;
+	
+	$user = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+	if (!$user ) _err( 'Unknown sip user.' );
+	return $user;
+}
+
 
 if ( !gs_get_conf('GS_AASTRA_PROV_ENABLED') )
 {
@@ -78,12 +88,21 @@ $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 if ( preg_match('/\sMAC:(00-08-5D-\w{2}-\w{2}-\w{2})\s/', $ua, $m) )
 	$mac = preg_replace( '/[^0-9A-F]/', '', strToUpper($m[1]) );
 
-$user = trim(@$_REQUEST['u']);
+//$user = trim(@$_REQUEST['u']);
 $user_id = _get_userid($user);
+$user = _get_user ( $user_id );
 
 // Check permissions
 $user_groups = gs_group_members_groups_get(Array($user_id), "user");
 $members = gs_group_permissions_get($user_groups, "dnd_set");
+
+//get phone-model
+
+$phone = gs_user_phonemodel_get( $user );
+$dnd_softkey = 4;
+
+if ( $phone == 'aastra-6739i' )
+	$dnd_softkey = 2;
 
 // exit if access is not granted
 if(count($members) <= 0) {
@@ -105,8 +124,9 @@ if ($current_dndstate == 'yes') {
 		(" . $user_id . ", 'no') 
 		ON DUPLICATE KEY UPDATE `active` = 'no'");
 	if (!$check) _err('Failed to set new DND state.');
+	
 	$xml = "<AastraIPPhoneExecute>\n" .
-		"	<ExecuteItem URI=\"Led: softkey4=off\"/>\n" .
+		"	<ExecuteItem URI=\"Led: softkey" . $dnd_softkey . "=off\"/>\n" .
 		"	<ExecuteItem URI=\"" . $prov_url_aastra . 'settings.php?dynamic=1' . "\"/>\n" .
 		"</AastraIPPhoneExecute>\n";
 } else {
@@ -116,19 +136,19 @@ if ($current_dndstate == 'yes') {
 		ON DUPLICATE KEY UPDATE `active` = 'yes'");
 	if (!$check) _err('Failed to set new DND state.');
 	$xml = "<AastraIPPhoneExecute>\n" .
-		"	<ExecuteItem URI=\"Led: softkey4=slowflash\"/>\n" .
+		"	<ExecuteItem URI=\"Led: softkey" . $dnd_softkey  . "=slowflash\"/>\n" .
 		"	<ExecuteItem URI=\"" . $prov_url_aastra . 'settings.php?dynamic=1' . "\"/>\n" .
 		"</AastraIPPhoneExecute>\n";
 }
 
 if ( GS_BUTTONDAEMON_USE == true ) {
 
-	$user = _get_user ( $user_id );
+	$peer = _get_sipuser ( $user_id );
 	$newstate = "off";
 	if ($current_dndstate == 'no')
 		$newstate = "on";	
-	if ( $user ) {
-		gs_dnd_changed_ui ( $user, $newstate );
+	if ( $peer ) {
+		gs_dnd_changed_ui ( $peer, $newstate );
 	}
 }
 

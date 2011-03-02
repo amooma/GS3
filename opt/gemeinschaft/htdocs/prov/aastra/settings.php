@@ -141,7 +141,7 @@ function aastra_get_softkeys( $user_id, $phone_type )
 					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				case 'aastra-53i':
-					if ($key_num >100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >100) $key_name = 'prgkey'    .($key_num-100);
 					if ($key_num >200) $key_name = 'expmod1 key'.($key_num-200);
 					if ($key_num >300) $key_name = 'expmod2 key'.($key_num-300);
 					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
@@ -188,7 +188,7 @@ function aastra_get_softkeys( $user_id, $phone_type )
 					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				case 'aastra-53i':
-					if ($key_num >100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >100) $key_name = 'prgkey'    .($key_num-100);
 					if ($key_num >200) $key_name = 'expmod1 key'.($key_num-200);
 					if ($key_num >300) $key_name = 'expmod2 key'.($key_num-300);
 					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
@@ -491,6 +491,28 @@ if ($dynamic == true) {
 	echo '<AastraIPPhoneConfiguration setType="override">',"\n";
 }
 
+# unlock save and delete
+
+if ($phone_type == 'aastra-53i') {
+
+	psetting('prgkey1 locked'   , '0', true, $dynamic);
+	psetting('prgkey2 locked'   , '0', true, $dynamic);
+	
+	for ($i=1; $i<=6; ++$i) {
+		psetting('prgkey'.$i.' type'   , 'empty', true, $dynamic);
+	}
+
+}
+else if ($phone_type == 'aastra-6730i' || $phone_type == 'aastra-6730i') {
+	psetting('prgkey5 locked'   , '0', true, $dynamic);
+	psetting('prgkey6 locked'   , '0', true, $dynamic);
+	
+	for ($i=1; $i<=8; ++$i) {
+		psetting('prgkey'.$i.' type'   , 'empty', true, $dynamic);
+	}
+}
+
+
 # reset all visible softkeys
 if ($phone_type == 'aastra-55i' || $phone_type == 'aastra-57i' || $phone_type == 'aastra-6739i') {
 	for ($i=1; $i<=12; ++$i) {
@@ -587,6 +609,97 @@ if (is_array($softkeys)) {
 		case '_fwd_dlg':
 			$softkey['function'] = 'xml';
 			$softkey['data'    ] = $prov_url_aastra.'cf.php?d=1';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_vml':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?a=vml';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_ano':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?a=ano';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_par':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?a=par';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_trl':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?a=trl';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;		
+		case '_fwd_int':
+			$softkey['function'] = 'xml';
+			if (strlen($softkey['data']) > 0)
+				$softkey['data'    ] = $prov_url_aastra.'cf.php?o=internal&v='.$softkey['data'];
+			else
+				$softkey['data'    ] = $prov_url_aastra.'cf.php';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_int_vml':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=internal&a=vml';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_int_ano':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=internal&a=ano';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_int_par':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=internal&a=par';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_int_trl':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=internal&a=trl';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		
+		case '_fwd_ext':
+			$softkey['function'] = 'xml';
+			if (strlen($softkey['data']) > 0)
+				$softkey['data'    ] = $prov_url_aastra.'cf.php?o=external&v='.$softkey['data'];
+			else
+				$softkey['data'    ] = $prov_url_aastra.'cf.php';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_ext_vml':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=external&a=vml';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_ext_ano':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=external&a=ano';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_ext_par':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=external&a=par';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_ext_trl':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=external&a=trl';
 			if (! $softkey['label'])
 				$softkey['label'   ] = __('Umleit.');
 			break;
