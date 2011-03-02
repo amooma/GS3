@@ -341,7 +341,7 @@ if (@$_REQUEST['login_user'] != '') {
 	$login_user_prefill = '';
 }
 ?>
-<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="20" value="<?php echo htmlEnt($login_user_prefill); ?>" style="width:150px; font-size:1.2em;" /><br />
+<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="50" value="<?php echo htmlEnt($login_user_prefill); ?>" style="width:150px; font-size:1.2em;" /><br />
 
 <label for="ipt-login_pwd"><?php echo __('Pa&szlig;wort'); ?>:</label><br />
 <input name="login_pwd" id="ipt-login_pwd" type="password" size="15" maxlength="20" value="" style="width:150px; font-size:1.2em;" /><br />
