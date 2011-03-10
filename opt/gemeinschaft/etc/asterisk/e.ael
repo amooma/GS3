@@ -1041,6 +1041,11 @@ context vm-rec-multiple {
 
 #include "/opt/gemeinschaft/etc/asterisk/e-internal.ael"
 
+//---------------------------------------------------------------------
+//  Queue control macros
+//---------------------------------------------------------------------
+
+#include "/opt/gemeinschaft/etc/asterisk/e-queue.ael"
 
 //---------------------------------------------------------------------
 //  From the gateways

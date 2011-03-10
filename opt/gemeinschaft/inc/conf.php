@@ -393,6 +393,7 @@ _gscnf( 'BUTTONDAEMON_SECRET'            , 'SecretLocaNetPassword' );
 _gscnf( 'BUTTONDAEMON_DISPLAYDIR'      , '/var/spool/astbuttond/' );
 
 _gscnf( 'CALL_RECORDING'            , false              );
+_gscnf( 'CALL_RECORDING_AUTO'       , false              );
 
 # to communicate with HylaFax ftp_raw() is required, which is not
 # available in PHP < 5

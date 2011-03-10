@@ -105,5 +105,7 @@ echo 'system_ip=', $our_ip ,';',"\n";
 $connid_enabled = gs_get_conf('GS_DP_CONNID');
 echo 'connid_enabled=', ($connid_enabled ? '1':'0') ,';',"\n";
 
+$call_recording_auto = gs_get_conf('GS_CALL_RECORDING_AUTO');
+echo 'call_recording_auto=', ($call_recording_auto ? '1':'0') ,';',"\n";
 
 ?>

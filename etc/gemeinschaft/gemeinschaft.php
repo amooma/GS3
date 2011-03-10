@@ -681,6 +681,10 @@ $SWITCHBOARD_DROP_TIMEOUT = 0;
 
 $CALL_RECORDING	        = false;
   # allow recording phone calls as WAV files
+  
+$CALL_RECORDING_AUTO	= false;
+  # automatically record calls if the group of the calling/called user has the
+  # permission 'record_call'
 
 $VMBOX_ALWAYS_ASK_PIN 	= false;
   # asks for the pin before the user can enter the voicemail menu if

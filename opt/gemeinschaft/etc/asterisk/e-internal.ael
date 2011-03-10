@@ -47,7 +47,7 @@ macro check-valid-extension( mext ) {
 	AGI(/opt/gemeinschaft/dialplan-scripts/in-get-where.agi,${mext},${user_id},${CALLERID(num)},${is_huntgroup});
 	Verbose(1,### Extension ${mext} is of type ${exttype});
 	
-	if ("${record_call}" != "") {
+	if ("${call_recording_auto}" = "1" && "${record_call}" != "") {
 		Verbose(1,### Record call to file ${record_call});
 		MixMonitor(${record_call},ab);
 	}
@@ -159,7 +159,10 @@ macro dial-internal-nobody-self( mext3 ) {
 	Set(OUTBOUND_GROUP_ONCE=callcount@${mext3});*/
 	&set-callerid-by-clir();
 	Verbose(1,### Call local nobody ${mext3}, timeout 30);
-	Dial(SIP/${mext3},30,o);
+	if ("${record_call}" != "")
+		Dial(SIP/${mext3},30,owW);
+	else
+		Dial(SIP/${mext3},30,o);
 	&hangup-proper-status();
 	return;
 }
@@ -615,7 +618,10 @@ context to-internal-users-self {
 		//	Set(CALLERID(all)=${saved_callerid});
 		//}
 		Set(CALLERID(name)=Sek. ${CALLERID(name)});
-		Dial(SIP/${boss},30);
+		if ("${record_call}" != "")
+			Dial(SIP/${boss},30,wW);
+		else
+			Dial(SIP/${boss},30);
 		&hangup-proper-status();
 	}
 	
@@ -995,7 +1001,12 @@ context to-internal-users-self {
 				}
 				//UserEvent(UserCallUI,user: ${user_name},calledparty: ${EXTEN});
 				Set(GROUP()=callcount${EXTEN});
-				Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},o);
+				if ("${record_call}" != "") {
+					Set(TOUCH_MONITOR_PREFIX=user);
+					Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},owW);
+				} else {
+					Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},o);
+				}
 			}
 			
 			if ("${is_callfile_origin}" != "1") {
@@ -1226,7 +1237,7 @@ context to-internal-users-self {
 					Answer();
 					Wait(0.5);
 				}
-				Queue(${EXTEN},${ring_instead_of_moh},${subqueue},,${queuetimeout},,queue-answer-callback);
+				Queue(${EXTEN},${ring_instead_of_moh}wW,${subqueue},,${queuetimeout},,queue-answer-callback);
 			}
 			else {
 				Verbose(1,### Don't even try to enter queue ${EXTEN} because: ${QUEUESTATUS});

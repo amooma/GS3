@@ -50,5 +50,7 @@ max_forwards=10;
 	// deprecated!
 	// commented out in the dialplan (e-internal.ael)!
 
+DYNAMIC_FEATURES=automon
+
 #exec "/opt/gemeinschaft/etc/asterisk/e-globals.ael.php"
 
