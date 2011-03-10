@@ -28,6 +28,8 @@
 
 defined('GS_VALID') or die('No direct access.');
 
+include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
+
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
@@ -49,6 +51,48 @@ function _secs_to_days( $secs )
 		$secs / (1)        % 60
 	);
 	return $ret;
+}
+
+#####################################################################
+#   LocaPhone-Version
+#####################################################################
+
+
+$versionfile_gemeinschaft="/opt/gemeinschaft/etc/.gemeinschaft-version";
+
+if ( file_exists ($versionfile_gemeinschaft)) {
+
+	$version = file_get_contents( $versionfile_gemeinschaft ); 
+	
+
+	
+	if( strlen ( $version ) > 0 ) {
+	
+		echo '<h3>LocaPhone</h3>' ,"\n";
+		echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">";
+		echo '<b>',  __("Version:"), ' ' , htmlEnt($version), '</b>';
+		echo "\n</pre>\n";
+	}
+
+}
+
+#####################################################################
+#   AstButtond-Version
+#####################################################################
+
+
+if (  GS_BUTTONDAEMON_USE == true ) {
+
+	$version =  gs_buttondeamon_version() ;
+	
+	if( $version &&  strlen ( $version ) > 0 ) {
+	
+		echo '<h3>AstButtond</h3>' ,"\n";
+		echo "<pre style=\"margin:0.1em 0.5em 1.2em 0.5em;\">";
+		echo ' <b>', htmlEnt($version), '</b>';
+		echo "\n</pre>\n";
+	}
+
 }
 
 

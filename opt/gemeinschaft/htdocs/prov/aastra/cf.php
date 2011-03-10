@@ -83,9 +83,42 @@ $remote_addr = @$_SERVER["REMOTE_ADDR"];
 $remote_addr_check = $db->executeGetOne("SELECT `current_ip` FROM `users` WHERE `id`='". $user_id ."'");
 if($remote_addr != $remote_addr_check) _err("Not authorized");
 
-$action = trim(@$_REQUEST['a']);
+$actives = array(
+  'no'  => __('Aus'),
+  'std' => __('Std.'),
+  'var' => __('Tmp.'),
+  'vml' => __('AB'),
+  'ano' => __('Ansage'),
+  'par' => __('Parallel'),
+  'trl' => __('Zeitsteuerung')
+);
+                                                        
+
+
+$active = trim(@$_REQUEST['a']);
 $value  = trim(@$_REQUEST['v']);
 $dialog = trim(@$_REQUEST['d']);
+$origin = trim(@$_REQUEST['o']);
+
+if ( strlen ( $origin ) > 0 ) {
+  if ( $origin != 'internal' && $origin != 'external' )
+     _err("Unknown origin");
+}
+
+//no action set (maybe a normal redirection)
+if ( strlen ($active ) == 0 ) {
+  if( strlen ( $value ) > 0 ) {
+    $active = 'var'; 
+  }
+  else {
+    $active = 'std';
+  }
+}
+
+//test active
+if ( ! array_key_exists ( $active, $actives ) )
+  _err('Parameter `a` not valid.');
+    
 
 $url_aastra_cf = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'aastra/cf.php';
 
@@ -127,29 +160,53 @@ if ($dialog) {
 	aastra_transmit_str( $xml );
 
 } else {
+        //switching both
+        
+        if ( strlen( $origin ) <= 0 ) {
+            if ( $active == $callforwards['internal']['always']['active']
+                || $active == $callforwards['external']['always']['active'] ){
+                
+                if ( $active == 'var' &&  $callforwards['internal']['always']['number_var'] == $value ) {
+                    $active = 'no';
+                } 
+                else if ( $active != 'var' ) {
+                    $active = 'no';
+                }
+            }
+        
+        }
+        else {
+            if ( $active == $callforwards[$origin]['always']['active'] ) {
+                
+                if ( $active == 'var' &&  $callforwards[$origin]['always']['number_var'] == $value ) {
+                    $active = 'no';
+                } 
+                else if ( $active != 'var' ) {
+                    $active = 'no';
+                }
+            }
+        }
+        
 
-	if ( ($callforwards['internal']['always']['active'] == 'var')
-		|| ($callforwards['external']['always']['active'] == 'var')
-	   )
-	{
-		$callforwards['internal']['always']['active'] = 'no';
-		$callforwards['external']['always']['active'] = 'no';
-	} else {
-		if ($value)
-			$callforwards['internal']['always']['number_var'] = $value;
-		if (! $callforwards['internal']['always']['number_var'] )
-			_err(htmlEnt(__('Kein Umleitungsziel konfiguriert.')));
-		$callforwards['external']['always']['number_var'] = $callforwards['internal']['always']['number_var'];
-		$callforwards['internal']['always']['active'] = 'var';
-		$callforwards['external']['always']['active'] = 'var';
+        if ( strlen( $origin ) == 0 ) {
+          $callforwards['internal']['always']['active'] = $active;
+          $callforwards['external']['always']['active'] = $active;
+        }
+        else {
+          $callforwards[$origin]['always']['active'] = $active;
+        }
+        
+
+        
+	if( $active == 'var' ) {
+              gs_callforward_set($user['user'], 'internal', 'always', 'var', $callforwards['internal']['always']['number_var'], $callforwards['internal']['always']['timeout']);
+              gs_callforward_set($user['user'], 'external', 'always', 'var', $callforwards['external']['always']['number_var'], $callforwards['external']['always']['timeout']);
 	}
-
-	gs_callforward_set($user['user'], 'internal', 'always', 'var', $callforwards['internal']['always']['number_var'], $callforwards['internal']['always']['timeout']);
-	gs_callforward_set($user['user'], 'external', 'always', 'var', $callforwards['external']['always']['number_var'], $callforwards['external']['always']['timeout']);
+	
 	gs_callforward_activate($user['user'], 'internal', 'always', $callforwards['internal']['always']['active']);
 	gs_callforward_activate($user['user'], 'external', 'always', $callforwards['external']['always']['active']);
 
-	if ($callforwards['internal']['always']['active'] == 'var')
+	if ($active != 'no' )
 		aastra_textscreen(htmlEnt(__('Rufumleitung')), htmlEnt(__('Rufumleitung aktiviert')), 3);
 	else
 		aastra_textscreen(htmlEnt(__('Rufumleitung')), htmlEnt(__('Rufumleitung deaktiviert')), 3);

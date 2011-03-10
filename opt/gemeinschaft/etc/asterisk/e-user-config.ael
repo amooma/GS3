@@ -418,7 +418,7 @@ context user-config {
 				Set(type=vml);
 				break;
 			case 2:
-				Set(type=vml);
+				Set(type=ano);
 				break;
 			case 3:
 				Set(type=trl);

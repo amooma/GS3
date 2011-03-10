@@ -88,6 +88,12 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 		$phone_types['aastra-55i'] = 'Aastra 55i';
 	if (in_array('*', $enabled_models) || in_array('57i', $enabled_models))
 		$phone_types['aastra-57i'] = 'Aastra 57i';
+	if (in_array('*', $enabled_models) || in_array('6730i', $enabled_models))
+		$phone_types['aastra-6730i'] = 'Aastra 6730i';
+	if (in_array('*', $enabled_models) || in_array('6731i', $enabled_models))
+		$phone_types['aastra-6731i'] = 'Aastra 6731i';
+	if (in_array('*', $enabled_models) || in_array('6739i', $enabled_models))
+		$phone_types['aastra-6739i'] = 'Aastra 6739i';
 }
 if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$enabled_models = preg_split('/[,\\s]+/', gs_get_conf('GS_PROV_MODELS_ENABLED_GRANDSTREAM'));
@@ -228,6 +234,20 @@ $key_functions_aastra = array(
 	'_dir'      => __('Telefonbuch'),  # defined by Gemeinschaft
 	'_fwd'      => __('Rufumleitung'), # defined by Gemeinschaft
 	'_fwd_dlg'  => __('Rufumleitung Dialog'), # defined by Gemeinschaft
+	'_fwd_vml'		=> __('Umleitung AB'),              	# Umleitung VM
+	'_fwd_ano'		=> __('Umleitung Ansage'),              # Umleitung Ansage
+	'_fwd_trl'		=> __('Umleitung Zeit'),              	# Umleitung Zeitsteuerung
+	'_fwd_par'		=> __('Umleitung Parallel'),            # Umleitung Parallelruf
+	'_fwd_int'		=> __('Umleitung intern'),		# Umleitung itern
+	'_fwd_int_vml'		=> __('Umleitung intern  AB'),          # Umleitung intern VM
+	'_fwd_int_ano'		=> __('Umleitung intern Ansage'),       # Umleitung intern Ansage
+	'_fwd_int_trl'		=> __('Umleitung intern Zeit'),         # Umleitung intern Zeitsteuerung
+	'_fwd_int_par'		=> __('Umleitung intern Parallel'),     # Umleitung intern Parallelruf
+	'_fwd_ext'		=> __('Umleitung extern'),		# Umleitung extern
+	'_fwd_ext_vml'		=> __('Umleitung extern  AB'),          # Umleitung VM
+	'_fwd_ext_ano'		=> __('Umleitung extern Ansage'),       # Umleitung extern Ansage
+	'_fwd_ext_trl'		=> __('Umleitung extern Zeit'),         # Umleitung extern Zeitsteuerung
+	'_fwd_ext_par'		=> __('Umleitung extern Parallel'),     # Umleitung extern Parallelruf
 	'_login'    => __('Login'),        # defined by Gemeinschaft
 	'_dnd'      => __('Ruhe'),         # defined by Gemeinschaft
 	'_agent'    => __('An/Abmelden Agent'), # defined by Gemeinschaft
@@ -346,6 +366,9 @@ if ($phone_type == '') {
 		if     (array_key_exists('aastra-53i', $phone_types)) $phone_type = 'aastra-53i';
 		elseif (array_key_exists('aastra-55i', $phone_types)) $phone_type = 'aastra-55i';
 		elseif (array_key_exists('aastra-57i', $phone_types)) $phone_type = 'aastra-57i';
+		elseif (array_key_exists('aastra-6730i', $phone_types)) $phone_type = 'aastra-6730i';
+		elseif (array_key_exists('aastra-6731i', $phone_types)) $phone_type = 'aastra-6731i';
+		elseif (array_key_exists('aastra-6739i', $phone_types)) $phone_type = 'aastra-6739i';
 	} else
 	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 		if     (array_key_exists('grandstream-gxp2000', $phone_types)) $phone_type = 'grandstream-gxp2000';
@@ -363,7 +386,7 @@ if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 
 } elseif (in_array($phone_type, array('siemens-os15', 'siemens-os20', 'siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
 	$phone_layout = 'siemens';
 	$key_function_none = $key_function_none_siemens;
-} elseif (in_array($phone_type, array('aastra-53i', 'aastra-55i', 'aastra-57i'), true)) {
+} elseif (in_array($phone_type, array('aastra-53i', 'aastra-55i', 'aastra-57i', 'aastra-6730i', 'aastra-6731i', 'aastra-6739i'), true)) {
 	$phone_layout = 'aastra';
 	$key_function_none = $key_function_none_aastra;
 } elseif (in_array($phone_type, array('grandstream-gxp2000', 'grandstream-gxp2010', 'grandstream-gxp2020'), true)) {
@@ -1171,7 +1194,7 @@ if ($phone_layout) {
 				break;
 			case 'aastra-53i':
 				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
-				$key_levels[0]['from'] =  103;
+				$key_levels[0]['from'] =  101;
 				$key_levels[0]['to'  ] =  106;
 
 				if ($show_ext_modules >= 1) {
@@ -1191,6 +1214,28 @@ if ($phone_layout) {
 					$key_levels[3]['from']  =  401;
 					$key_levels[3]['to'  ]  =  460;
 				}
+
+				break;
+
+			case 'aastra-6730i':
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
+				$key_levels[0]['from'] =  101;
+				$key_levels[0]['to'  ] =  108;
+
+				break;
+
+			case 'aastra-6731i':
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
+				$key_levels[0]['from'] =  101;
+				$key_levels[0]['to'  ] =  108;
+
+				break;
+
+
+			case 'aastra-6739i':
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
+				$key_levels[0]['from'] =  103;
+				$key_levels[0]['to'  ] =  112;
 
 				break;
 			/*
