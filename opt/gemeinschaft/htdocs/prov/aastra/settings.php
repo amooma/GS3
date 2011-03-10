@@ -292,7 +292,7 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('time zone name'                      , 'DE-Berlin', false, false);
 	psetting('xml beep notification'               , 1, false, false);
 	psetting('xml status scroll delay'             , 3, false, false);
-	psetting('sip update callerid'                 , 1, false, false);
+	psetting('sip update callerid'                 , 0, false, false);
 	psetting('admin password'                      , gs_get_conf('GS_AASTRA_PROV_ADMIN_PASS'), false, false);
 	psetting('user password'                       , gs_get_conf('GS_AASTRA_PROV_USER_PASS'), false, false);
 	psetting('options password enabled'            , 1, false, false);
@@ -315,6 +315,7 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('sip blf subscription period'         , 120, false, false);
 	psetting('sip customized codec'                , 'payload=8;payload=0;payload=115;payload=9;payload=18;silsupp=off', false, false);
 	psetting('sip silence suppression'             , 0, false, false);
+	psetting('sip pai'                             , 1, false, false);
 	psetting('lldp'                                , 0, false, false);
 	psetting('call hold reminder'                  , 0, false, false);
 	psetting('sip diversion display'               , 1, false, false);
