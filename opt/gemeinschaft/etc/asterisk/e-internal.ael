@@ -51,6 +51,9 @@ macro check-valid-extension( mext ) {
 		Verbose(1,### Record call to file ${record_call});
 		MixMonitor(${record_call},ab);
 	}
+
+	if ("${record_call}" != "")  
+		Set(TOUCH_MONITOR=${record_call});
 	
 	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference" && "${exttype}" != "huntgroup" && "${exttype}" != "ivr" && "${exttype}" != "foreign") {
 		Verbose(1,### Extension ${mext} is unknown);
@@ -1002,7 +1005,6 @@ context to-internal-users-self {
 				//UserEvent(UserCallUI,user: ${user_name},calledparty: ${EXTEN});
 				Set(GROUP()=callcount${EXTEN});
 				if ("${record_call}" != "") {
-					Set(TOUCH_MONITOR_PREFIX=user);
 					Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},owW);
 				} else {
 					Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},o);

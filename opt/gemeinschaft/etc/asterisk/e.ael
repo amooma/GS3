@@ -1167,7 +1167,10 @@ macro dial-gateway-do( mnumber ) {
 		}
 		Verbose(1,### Outbound route: ${r_${r}_dial} - Caller ID: "${CALLERID(name)}" <${CALLERID(num)}@${r_${r}_cid_host}>);
 		Set(GROUP()=callcount${user_name});
-		Dial(${r_${r}_dial},180);
+		if ("${record_call}" != "")
+			Dial(${r_${r}_dial},180);
+		else
+			Dial(${r_${r}_dial},180,W);
 		Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
 		if ("${DIALSTATUS}" = "ANSWER" || "${DIALSTATUS}" = "CANCEL") {
 			Hangup();
