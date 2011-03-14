@@ -87,37 +87,43 @@ function record_file( $type, $to, $from=null, $to_id=null, $from_id=null )
 	include_once( GS_DIR .'inc/group-fns.php' );
 	include_once( GS_DIR .'inc/get-listen-to-ids.php' );
 	
-	$host_groups = gs_group_members_groups_get( gs_get_listen_to_ids(), 'host');
-	
-	if (! $host_groups) return;	
-	
 	if (! $from) $from = 'anonymous';
 	
 	$rec_users = array();
 	
 	if ($from_id || $to_id) {
-		$rec_user_groups = gs_group_permissions_get( $host_groups, 'record_call', 'user');
+		$users = array();
+		if ($from_id)
+			$users[] = $from_id;
+		if ($to_id)
+			$users[] = $to_id;
+			
+		$user_groups = gs_group_members_groups_get( $users, 'user' );
+		$rec_user_groups = gs_group_permissions_get( $user_groups, 'record_call', 'user' );
 		
 		if ($rec_user_groups) {
-			$rec_users  = gs_group_members_get( $rec_user_groups);
+			$rec_users  = gs_group_members_get( $rec_user_groups );
 		}
 		
 		if ($rec_users) {
 			if ($from_id && in_array($from_id, $rec_users)) {	
-				gs_agi_set_variable( '__record_call', 'rec_'.$type.'_'.date('ymdHis').'_'.$from.'-'.$to.'.wav' );
+				gs_agi_set_variable( '__record_call', 'rec_'.$type.'_'.date('YmdHis').'_'.$from.'-'.$to );
 				return;
 			}
 			if ($to_id && in_array($to_id, $rec_users)) {	
-				gs_agi_set_variable( '__record_call', 'rec_'.$type.'_'.date('ymdHis').'_'.$from.'-'.$to.'.wav' );
+				gs_agi_set_variable( '__record_call', 'rec_'.$type.'_'.date('YmdHis').'_'.$from.'-'.$to );
 				return;
 			}
 		}
 	}
+
+	$host_groups = gs_group_members_groups_get( gs_get_listen_to_ids(), 'host' );
+	if (! $host_groups) return;	
 	
 	if ($rec_host_groups = gs_group_permissions_get($host_groups, 'record_call', 'host')) {
 		foreach ($rec_host_groups as $rec_host_group) {
 			if (in_array($rec_host_group, $host_groups)) {
-				gs_agi_set_variable( '__record_call', 'rec_'.date('ymdHis').'_'.$from.'-'.$to.'.wav' );
+				gs_agi_set_variable( '__record_call', 'rec_'.date('YmdHis').'_'.$from.'-'.$to );
 				return;
 			}
 		}
@@ -226,7 +232,7 @@ if ($r = $rs->fetchRow()) {
 	die();
 }
 
-if ($allow_recording) record_file( 'queue', $ext, $caller, $r['id'] /*//FIXME?*/, $user_id );
+if ($allow_recording) record_file( 'unknown', $ext, $caller, $r['id'] /*//FIXME?*/, $user_id );
 gs_agi_set_variable( '__exttype', 'unknown' );
 gs_agi_set_variable( '__dial_to_node', '' );
 ?>
