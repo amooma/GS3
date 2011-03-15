@@ -34,6 +34,8 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
 include_once( GS_DIR .'inc/gettext.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
+include_once( GS_DIR .'inc/string.php' );
 
 $xml = '';
 
@@ -54,7 +56,7 @@ function _get_userid()
 }
 
 $type = trim( @$_REQUEST['t'] );
-if (! in_array( $type, array('gs','prv','imported', 'gss','prvs'), true )) {
+if (! in_array( $type, array('gs', 'prv', 'imported', 'gss', 'prvs', 'importeds'), true )) {
 	$type = false;
 }
 $page  = (int)trim( @$_REQUEST['p'] );
@@ -63,7 +65,8 @@ $search = trim( @$_REQUEST['s'] );
 $name_search = trim( @$_REQUEST['n'] );
 
 
-$per_page = (int)gs_get_conf('GS_AASTRA_PROV_PB_NUM_RESULTS', 10);
+//$per_page = (int)gs_get_conf('GS_AASTRA_PROV_PB_NUM_RESULTS', 10);
+$per_page = 4;
 $db = gs_db_slave_connect();
 
 $tmp = array(
@@ -140,10 +143,6 @@ elseif (! $type) {
 	$xml.= '	<URI>SoftKey:Exit</URI>' ."\n";
 	$xml.= '</SoftKey>' ."\n";
 	
-	$xml.= '<SoftKey index="6">' ."\n";
-	$xml.= '	<Label>&gt;&gt;</Label>' ."\n";
-	$xml.= '	<URI>SoftKey:Select</URI>' ."\n";
-	$xml.= '</SoftKey>' ."\n";
 	$xml.= '</AastraIPPhoneTextMenu>' ."\n";
 	
 	
@@ -159,22 +158,23 @@ elseif ($type==='gs') {
 	$name_sql = str_replace(
 		array( '*', '?' ),
 		array( '%', '_' ),
-		$name_search
+		strtolower($name_search)
 	) .'%';
 	
 	$query =
 'SELECT SQL_CALC_FOUND_ROWS
 	`u`.`id` `id`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
 FROM
-	`u`.`pb_hide` = 0 AND
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE
+	`u`.`pb_hide` = 0 AND
 	`u`.`nobody_index` IS NULL AND (
-	`u`.`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
+	LOWER(`u`.`lastname`) LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
+	OR LOWER(`u`.`firstname`) LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
 	)
 ORDER BY `u`.`lastname`, `u`.`firstname`
-LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
+LIMIT '. ($page * $per_page) .','. $per_page;
 	
 	$rs = $db->execute($query);
 	$num_total = @$db->numFoundRows();
@@ -193,7 +193,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$number = $r['ext'];
 			$xml.= '<MenuItem>' ."\n";
-			$xml.= '	<Prompt>'. $name .' - '. $number .'</Prompt>' ."\n";
+			$xml.= '	<Prompt>'. htmlEnt($name) .' - '. $number .'</Prompt>' ."\n";
 			$xml.= '	<Dial>'. $number .'</Dial>' ."\n";
 			$xml.= '	<URI>'. $url_aastra_pb .'?t=gss&amp;e='.$r['id'] .'</URI>' ."\n";
 			$xml.= '</MenuItem>' ."\n";
@@ -224,7 +224,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		}
 		if ($page < $num_pages-1) {
 			$xml.= '<SoftKey index="6">' ."\n";
-			$xml.= '	<Label>&gt;&gt;'.($page+2).'</Label>' ."\n";
+			$xml.= '	<Label>'.($page+2).'&gt;&gt;</Label>' ."\n";
 			$xml.= '	<URI>'. $url_aastra_pb .'?t=gs&amp;p='.($page+1).'&amp;n='.$name_search .'</URI>' ."\n";
 			$xml.= '</SoftKey>' ."\n";
 		}
@@ -250,31 +250,32 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 #################################### INTERNAL PHONEBOOK }
 
 
-#################################### PRIVATE PHONEBOOK {
-elseif ($type==='prv') {
-	
+#################################### IMPORTED PHONEBOOK {
+elseif ($type==='imported') {
+
 	$search_url = 'name='. urlEncode($name_search);
 	
 	$name_sql = str_replace(
 		array( '*', '?' ),
 		array( '%', '_' ),
-		$name_search
+		strtolower($name_search)
 	) .'%';
 	
-	//$user_id = 31;
 	$user_id = _get_userid();
+	$user_groups = gs_group_members_groups_get(array($user_id), 'user');
 	
 	$query =
 'SELECT SQL_CALC_FOUND_ROWS
 	`id`, `lastname` `ln`, `firstname` `fn`, `number`
 FROM
-	`pb_prv`
+	`pb_ldap`
 WHERE
-	`user_id`='. $user_id .' AND (
-	`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
+	`group_id` IN ('. implode(',', $user_groups) .') AND (
+	LOWER(`lastname`) LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR
+	LOWER(`firstname`) LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
 	)
 ORDER BY `lastname`, `firstname`
-LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
+LIMIT '. ($page * $per_page) .','. $per_page;
 	
 	$rs = $db->execute($query);
 	$num_total = @$db->numFoundRows();
@@ -292,7 +293,105 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$xml.= '<MenuItem>' ."\n";
-			$xml.= '	<Prompt>'. $name .' - '. $r['number'] .'</Prompt>' ."\n";
+			$xml.= '	<Prompt>'. htmlEnt($name) .' - '. $r['number'] .'</Prompt>' ."\n";
+			$xml.= '	<Dial>'. $r['number'] .'</Dial>' ."\n";
+			$xml.= '	<URI>'. $url_aastra_pb .'?t=importeds&amp;e='.$r['id'] .'</URI>' ."\n";
+			$xml.= '</MenuItem>' ."\n";
+		}
+		
+		$xml.= '<SoftKey index="1">' ."\n";
+		$xml.= '	<Label>'. __('OK') .'</Label>' ."\n";
+		$xml.= '	<URI>SoftKey:Select</URI>' ."\n";
+		$xml.= '</SoftKey>' ."\n";
+		$xml.= '<SoftKey index="2">' ."\n";
+		$xml.= '	<Label>'. __('Anrufen') .'</Label>' ."\n";
+		$xml.= '	<URI>SoftKey:Dial2</URI>' ."\n";
+		$xml.= '</SoftKey>' ."\n";
+		$xml.= '<SoftKey index="4">' ."\n";
+		$xml.= '	<Label>'. __('Abbrechen') .'</Label>' ."\n";
+		$xml.= '	<URI>SoftKey:Exit</URI>' ."\n";
+		$xml.= '</SoftKey>' ."\n";
+		$xml.= '<SoftKey index="5">' ."\n";
+		$xml.= '	<Label>'. __('Suchen') .'</Label>' ."\n";
+		$xml.= '	<URI>'. $url_aastra_pb .'?t='.$type.'&amp;s=1</URI>' ."\n";
+		$xml.= '</SoftKey>' ."\n";
+		
+		if ($page > 0) {
+			$xml.= '<SoftKey index="3">' ."\n";
+			$xml.= '	<Label>&lt;&lt;'.($page).'</Label>' ."\n";
+			$xml.= '	<URI>'. $url_aastra_pb .'?t=imported&amp;p='.($page-1).'&amp;n='.$name_search .'</URI>' ."\n";
+			$xml.= '</SoftKey>' ."\n";
+		}
+		if ($page < $num_pages-1) {
+			$xml.= '<SoftKey index="6">' ."\n";
+			$xml.= '	<Label>'.($page+2).'&gt;&gt;</Label>' ."\n";
+			$xml.= '	<URI>'. $url_aastra_pb .'?t=imported&amp;p='.($page+1).'&amp;n='.$name_search .'</URI>' ."\n";
+			$xml.= '</SoftKey>' ."\n";
+		}
+		
+		$xml.= '</AastraIPPhoneTextMenu>' ."\n";
+		
+	}
+	else {
+		if ($name_search) {
+			aastra_textscreen(
+				__('Nicht gefunden'),
+				sprintF(__('Eintrag &quot;%s&quot; nicht gefunden.'), $name_search)
+				);
+		} else {
+			aastra_textscreen(
+				$page_title,
+				__('Kein Eintrag'));
+		}
+	}
+
+}
+#################################### IMPORTED PHONEBOOK }
+
+
+#################################### PRIVATE PHONEBOOK {
+elseif ($type==='prv') {
+	
+	$search_url = 'name='. urlEncode($name_search);
+	
+	$name_sql = str_replace(
+		array( '*', '?' ),
+		array( '%', '_' ),
+		strtolower($name_search)
+	) .'%';
+	
+	$user_id = _get_userid();
+	
+	$query =
+'SELECT SQL_CALC_FOUND_ROWS
+	`id`, `lastname` `ln`, `firstname` `fn`, `number`
+FROM
+	`pb_prv`
+WHERE
+	`user_id`='. $user_id .' AND (
+	LOWER(`lastname`) LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR
+	LOWER(`firstname`) LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
+	)
+ORDER BY `lastname`, `firstname`
+LIMIT '. ($page * $per_page) .','. $per_page;
+	
+	$rs = $db->execute($query);
+	$num_total = @$db->numFoundRows();
+	$num_pages = ceil($num_total / $per_page);
+	
+	if ($name_search) $page_title = $name_search;
+	else $page_title = $typeToTitle[$type];
+	if ($num_pages > 1) $page_title.= ' '.($page+1).'/'.$num_pages;
+	
+	if ($rs && $rs->numRows() !== 0) {
+		
+		$xml = '<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_pb .'">' ."\n";
+		$xml.= '<Title>'. $page_title .'</Title>' ."\n";
+		
+		while ($r = $rs->fetchRow()) {
+			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
+			$xml.= '<MenuItem>' ."\n";
+			$xml.= '	<Prompt>'. htmlEnt($name) .' - '. $r['number'] .'</Prompt>' ."\n";
 			$xml.= '	<Dial>'. $r['number'] .'</Dial>' ."\n";
 			$xml.= '	<URI>'. $url_aastra_pb .'?t=prvs&amp;e='.$r['id'] .'</URI>' ."\n";
 			$xml.= '</MenuItem>' ."\n";
@@ -323,7 +422,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		}
 		if ($page < $num_pages-1) {
 			$xml.= '<SoftKey index="6">' ."\n";
-			$xml.= '	<Label>&gt;&gt;'.($page+2).'</Label>' ."\n";
+			$xml.= '	<Label>'.($page+2).'&gt;&gt;</Label>' ."\n";
 			$xml.= '	<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page+1).'&amp;n='.$name_search .'</URI>' ."\n";
 			$xml.= '</SoftKey>' ."\n";
 		}
@@ -437,13 +536,46 @@ WHERE
 }
 #################################### INTERNAL PHONEBOOK (calling?) }
 
-
-#################################### IMPORTED PHONEBOOK {
-elseif ($type==='imported') {
-	//FIXME
+#################################### IMPORTED PHONEBOOK (calling?) {
+elseif ($type==='importeds') {
+	
+	$user_id = _get_userid();
+	$user_groups = gs_group_members_groups_get(array($user_id), 'user');
+	
+	$xml = '<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction="'. $url_aastra_pb .'?t=prv">' ."\n";
+	
+	$query =
+'SELECT
+	`id`, `lastname` `ln`, `firstname` `fn`, `number`
+FROM
+	`pb_ldap`
+WHERE
+	`group_id` IN ('. implode(',', $user_groups) .') AND
+	`id`='. $entry;
+	
+	$rs = $db->execute($query);
+	if ($rs->numRows() !== 0) {
+		$r = $rs->fetchRow();
+		$xml.= '<Line Align="left">'. $r['ln'].' '.$r['fn'] .'</Line>' ."\n";
+		$xml.= '<Line Align="right" Size="double">'. $r['number'] .'</Line>' ."\n";
+	}
+	
+	$xml.= '<SoftKey index="1">' ."\n";
+	$xml.= '	<Label>'. __('OK') .'</Label>' ."\n";
+	$xml.= 	'<URI>SoftKey:Select</URI>' ."\n";
+	$xml.= '</SoftKey>' ."\n";
+	$xml.= '<SoftKey index="2">' ."\n";
+	$xml.= '	<Label>'. __('Anrufen') .'</Label>' ."\n";
+	$xml.= '	<URI>Dial:'.$r['number'].'</URI>' ."\n";
+	$xml.= '</SoftKey>' ."\n";
+	$xml.= '<SoftKey index="4">' ."\n";
+	$xml.= '	<Label>'. __('Abbrechen') .'</Label>' ."\n";
+	$xml.= '	<URI>SoftKey:Exit</URI>' ."\n";
+	$xml.= '</SoftKey>' ."\n";
+	$xml.= '</AastraIPPhoneFormattedTextScreen>' ."\n";
+	
 }
-#################################### IMPORTED PHONEBOOK }
-
+#################################### PRIVATE PHONEBOOK (calling?) }
 
 aastra_transmit_str( $xml );
 
