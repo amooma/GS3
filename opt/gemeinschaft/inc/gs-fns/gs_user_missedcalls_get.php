@@ -32,7 +32,7 @@ defined('GS_VALID') or die('No direct access.');
 *    returns a user's missed calls
 ***********************************************************/
 
-function gs_user_missedcalls_get( $user )
+function gs_user_missedcalls_get( $user , $queue=false )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -50,7 +50,10 @@ function gs_user_missedcalls_get( $user )
 	
 	# get count
 	#
-	$count = $db->executeGetOne( 'SELECT Count(*) FROM `dial_log` WHERE `read`=0 AND `type`=\'missed\' AND `user_id`='. $user_id  );
+	if (! $queue )
+		$count = $db->executeGetOne( 'SELECT Count(*) FROM `dial_log` WHERE `queue_id` IS NULL AND `read`=0 AND `type`=\'missed\' AND `user_id`='. $user_id  );
+	else
+		$count = $db->executeGetOne( 'SELECT Count(*) FROM `dial_log` WHERE `queue_id` IS NOT NULL AND `read`=0 AND `type`=\'missed\' AND `user_id`='. $user_id  );
 	if (! $count) return 0;
 	
 	return $count;

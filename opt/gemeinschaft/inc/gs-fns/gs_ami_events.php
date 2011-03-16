@@ -282,7 +282,7 @@ function gs_pickupgroup_remove_ui( $group )
 	_gs_send_event ( $data );
 }
 
-function gs_user_missedcalls_ui( $username  )
+function gs_user_missedcalls_ui( $username , $queue=false )
 {
 	//get the username
 
@@ -298,11 +298,17 @@ function gs_user_missedcalls_ui( $username  )
 	
 	include_once( GS_DIR .'inc/gs-fns/gs_user_missedcalls_get.php' );
 	
-	$count = gs_user_missedcalls_get( $user_name );
+	$count = gs_user_missedcalls_get( $user_name, $queue );
 	
 	$data = _get_ui_head( 'UserMissedcallsUI' );	
 	
+	// is it a missed queue call
+	$type = "user";
+	if ( $queue )
+		$ype = "queue";
+	
 	$data[] = array( 'parm' => 'user', 'value' => $username );
+	$data[] = array( 'parm' => 'type', 'value' => $type );
 	$data[] = array( 'parm' => 'count', 'value' => $count );	
 	
 	_gs_send_event ( $data );

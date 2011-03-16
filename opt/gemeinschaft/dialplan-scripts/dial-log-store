@@ -51,8 +51,8 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
-if (! GS_LOG_MISSED_QUEUE_CALLS ) {
-	if( $queue_number > 0 && $type == 'missed')
+if (! GS_LOG_QUEUE_CALLS ) {
+	if( $queue_number > 0 )
 		die(); 
 }
 
@@ -113,7 +113,7 @@ if ($remote_user) {
 #
 $db->execute( 'INSERT INTO `dial_log` (`user_id`, `type`, `timestamp`, `number`, `remote_name`, `remote_user_id`, `queue_id`) VALUES ('. $uid .', \''. $type .'\', '. time() .', \''. $db->escape($number) .'\', \''. $db->escape($remote_name) .'\', '. $db_remote_user_id . ', ' . $queue_id . ')' );
 if ( $type =='missed' && gs_get_conf('GS_BUTTONDAEMON_USE') ) {
-	gs_user_missedcalls_ui( $user_ext );
+	gs_user_missedcalls_ui( $user_ext, $queue_id != 'NULL' );
 }
 
 ?>

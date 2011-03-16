@@ -65,6 +65,7 @@ FROM
 	LEFT JOIN `users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
 	LEFT JOIN `ast_queues` `q` ON (`q`.`_id`=`d`.`queue_id`)
 WHERE
+	`d`.`queue_id` IS NULL AND
 	`d`.`user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .' AND
 	`d`.`type`=\''. $DB->escape($type) .'\' AND
 	`d`.`timestamp`>'. (time()-GS_PROV_DIAL_LOG_LIFE) .' AND

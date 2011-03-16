@@ -92,7 +92,7 @@ if (! preg_match('/^\d+$/', $user))
 $mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['mac'] )));
 
 $type = trim( @ $_REQUEST['type'] );
-if (! in_array( $type, array('in','out','missed'), true ))
+if (! in_array( $type, array('in','out','missed','qin','qmissed'), true ))
 	$type = false;
 
 if ( isset($_REQUEST['delete']) )
@@ -126,10 +126,16 @@ gs_settextdomain( 'gemeinschaft-gui' );
 $typeToTitle = array(
 	'out'    => __("Gew\xC3\xA4hlt"),
 	'missed' => __("Verpasst"),
-	'in'     => __("Angenommen")
+	'in'     => __("Angenommen"),
+	'qmissed' => __("WS Verpasst"),
+	'qin'     => __("WS Angenommen")
 );
 
 
+if ( $type == 'qin' || $type == 'qmissed' )
+        $is_queue = true;
+else
+        $is_queue = false;
 
 ob_start();
 
@@ -137,6 +143,7 @@ ob_start();
 $url_snom_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/dial-log.php';
 
 if ( (isset($delete)) && $type) {
+ 
 
 	$query =
 'SELECT
@@ -183,7 +190,20 @@ if (! $type) {
 	
 	foreach ($typeToTitle as $t => $title) {
 		
-		$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE `user_id`='. $user_id .' AND `type`=\''. $t .'\'' );
+		$queue_null = "IS NOT NULL";
+		if ( $t == 'qin' ) {
+		        $tp = 'in';
+                }
+                else if ( $t == 'qmissed' ) {
+                         $tp = 'missed';
+                }
+                else {
+                        $tp = $t;
+                        $queue_null = "IS NULL";
+                }
+                
+		
+		$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE `user_id`='. $user_id .' AND `type`=\''. $tp .'\' AND `queue_id` ' . $queue_null );
 		//if ($num_calls > 0) {
 			echo
 				"\n",
@@ -206,6 +226,18 @@ if (! $type) {
 
 #################################### DIAL LOG {
 else {
+
+        $queue_null = "IS NOT NULL";
+        if ( $type == 'qin' ) {
+                $tp = 'in';
+        }
+        else if ( $type == 'qmissed' ) {
+                $tp = 'missed';
+        }
+        else {
+                $tp = $type;
+                $queue_null = "IS NULL";
+        }
 	
 	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n";
 	
@@ -216,8 +248,9 @@ else {
 FROM `dial_log`
 WHERE
 	`user_id`='. $user_id .' AND
-	`type`=\''. $type .'\'
-GROUP BY `number`,`queue_id`
+	`type`=\''. $tp .'\' AND ' .
+	 '`queue_id` ' . $queue_null . 
+' GROUP BY `number`,`queue_id`
 ORDER BY `ts` DESC
 LIMIT 20';
 	$rs = $db->execute( $query );
@@ -239,9 +272,10 @@ FROM `dial_log`
 WHERE
 		`user_id`=' . $user_id . ' AND
 		`number`=\'' . $r['number'] . '\' AND
-		`type`=\'' . $type . '\' AND
+		`type`=\'' . $tp . '\' AND
 		`queue_id`' . (($r['queue_id'] > 0) ? '='.$r['queue_id'] : ' IS NULL') . ' AND
-		`read` < 1'
+		`read` < 1 AND ' .
+		 '`queue_id` ' . $queue_null
 			);
 		}
 		
@@ -280,11 +314,11 @@ WHERE
 	echo
 		"\n",
 		'</SnomIPPhoneDirectory>';
-	if ( $type == 'missed') {
-	 	gs_user_watchedmissed( $user_id );
+	if ( $tp == 'missed') {
+	 	gs_user_watchedmissed( $user_id, $is_queue );
 	}
 	if ( GS_BUTTONDAEMON_USE == true ) {
-		gs_user_missedcalls_ui( $user);
+		gs_user_missedcalls_ui( $user, $is_queue);
 	}
 	
 }

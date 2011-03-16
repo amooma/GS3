@@ -601,10 +601,9 @@ $USER_SELECT_CALLERID = true;
 *    QUEUE LOGGING
 ***********************************************************/
 
-$LOG_MISSED_QUEUE_CALLS = true;
-  # If this is set to "true" all members of a queue will get
-  # the missed call logged in their dial log if a queue call
-  # is missed.
+$LOG_QUEUE_CALLS = true;
+  # If this is set to "true" queue calls will be logged
+  # in the dial log
  
 /***********************************************************
 *    MISC

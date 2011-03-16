@@ -28,8 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/util.php' );
-require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
-require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php' );
+
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -45,7 +44,7 @@ echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></scrip
 
 $per_page = (int)GS_GUI_NUM_RESULTS;
 $page = (int)@$_REQUEST['page'];
-$type = 'missed';
+$type = 'in';
 
 
 if (@$_REQUEST['action'] === 'del') {
@@ -56,28 +55,26 @@ if (@$_REQUEST['action'] === 'del') {
 	}
 }
 
-
 $rs = $DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
 	MAX(`d`.`timestamp`) `ts`, `d`.`number`, `d`.`remote_name`, `q`.`_title` AS `queue_title`,
 	`u`.`id` `r_uid`, `u`.`lastname` `r_ln`, `u`.`firstname` `r_fn`
 FROM
-	`dial_log` `d`
+	`dial_log` `d` 
 	LEFT JOIN `users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
 	LEFT JOIN `ast_queues` `q` ON (`q`.`_id`=`d`.`queue_id`)
 WHERE
-	`d`.`queue_id` IS NULL AND
+	`d`.`queue_id` IS NOT NULL AND
 	`d`.`user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .' AND
 	`d`.`type`=\''. $DB->escape($type) .'\' AND
 	`d`.`timestamp`>'. (time()-GS_PROV_DIAL_LOG_LIFE) .' AND
 	`d`.`number` <> \''. $DB->escape( @$_SESSION['sudo_user']['info']['ext'] ) .'\'
-GROUP BY `d`.`number`,`queue_title`
+GROUP BY `number`,`queue_title`
 ORDER BY `ts` DESC
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 );
 $num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
-
 
 ?>
 
@@ -86,13 +83,14 @@ $num_pages = ceil($num_total / $per_page);
 <tr>
 	<th style="width:140px;"><?php echo __('Nummer'); ?></th>
 	<th style="width:210px;"><?php echo __('Name'); ?></th>
+	<th style="width:210px;"><?php echo __('Warteschlange'); ?></th>
 	<th style="width:120px;"><span class="sort-col"><?php echo __('Datum'); ?></span></th>
 	<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
 </tr>
 </thead>
 <tbody>
 <tr class="even">
-	<td colspan="3">&nbsp;</td>
+	<td colspan="4">&nbsp;</td>
 	<td>
 <?php
 
@@ -128,15 +126,15 @@ if (@$rs) {
 		echo '<td>', htmlEnt($r['number']), '</td>';
 		
 		unset($name);
-		if ($r['queue_title'])
-			$name = '[' . $r['queue_title'] . '] ';
 		if (! $r['r_uid'])
-			$name .= $r['remote_name'];
+			$name = $r['remote_name'];
 		else {
 			$name = $r['r_ln'];
 			if ($r['r_fn'] != '') $name .= ', ' . $r['r_fn'];
 		}
 		echo '<td>', htmlEnt($name), '</td>';
+		
+		echo '<td>', htmlEnt('[' . $r['queue_title'] . '] '), '</td>';
 		
 		echo '<td>', date_human($r['ts']), '</td>';
 		
@@ -153,10 +151,6 @@ if (@$rs) {
 			'</a>', "\n";
 		echo '</td>';
 		echo '</tr>', "\n";
-	}
-	gs_user_watchedmissed( $_SESSION['sudo_user']['info']['id'], false );
-	if ( GS_BUTTONDAEMON_USE == true ) {
-		gs_user_missedcalls_ui( @$_SESSION['sudo_user']['info']['ext'] , false );
 	}
 }
 

@@ -80,7 +80,7 @@ function _get_user_ext( $user_id )
 }
 
 $type = trim( @$_REQUEST['t'] );
-if (! in_array( $type, array('in','out','missed', 'ind','outd','missedd'), true )) {
+if (! in_array( $type, array('in','out','missed','qin','qmissed','ind','outd','missedd','qmissedd','qmissedd'), true )) {
 	$type = false;
 }
 
@@ -94,8 +94,15 @@ $db = gs_db_slave_connect();
 $typeToTitle = array(
 	'out'    => __("Gew\xC3\xA4hlt"),
 	'missed' => __("Verpasst"),
-	'in'     => __("Angenommen")
+	'in'     => __("Angenommen"),
+	'qmissed' => __("WS Verpasst"),
+	'qin'     => __("WS Angenommen")
 );
+
+if ( $type == 'qin' || $type == 'qmissed' )
+	$is_queue = true;
+else
+	$is_queue = false;
 
 $user_id = _get_userid();
 
@@ -134,44 +141,49 @@ if (! $type) {
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '</AastraIPPhoneTextMenu>' ."\n";
 	
-} elseif ($type==='out' || $type==='in' || $type==='missed' || $type==='queue' ) {
+} elseif ($type==='out' || $type==='in' || $type==='missed' || $type==='qin' || $type==='qmissed' ) {
 
 	if (strlen($delete) > 0) {
 		$DB = gs_db_master_connect();
-		@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `number`='. $delete );
+		if ( $is_queue )
+			@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `queue_id` IS NULL AND `number`='. $delete );
+		else
+			@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `queue_id` IS NOT NULL AND `number`='. $delete );
 		if ($type==='missed') {
-			gs_user_watchedmissed( $user_id );
+			gs_user_watchedmissed( $user_id, $is_queue );
 			if ( GS_BUTTONDAEMON_USE == true ) {
 				$user_ext = _get_user_ext ( $user_id );
 				if ( $user_ext )
-					gs_user_missedcalls_ui( $user_ext );
+					gs_user_missedcalls_ui( $user_ext, $is_queue );
 			}
 		}
 	}
-
-	if ( $type === 'queue' ) {
-		$query =
-		'SELECT
-			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
-		FROM `dial_log`
-		WHERE
-			`user_id`='. $user_id .' AND
-			`type`=\''. $type .'\'
-		ORDER BY `ts` DESC
-		LIMIT '.$num_results;
-	} else {
-		$query =
-		'SELECT
-			MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
-			COUNT(*) `num_calls`
-		FROM `dial_log`
-		WHERE
-			`user_id`='. $user_id .' AND
-			`type`=\''. $type .'\'
-		GROUP BY `number`
-		ORDER BY `ts` DESC
-		LIMIT '.$num_results;
+	
+	$queue_null = "IS NOT NULL";
+        if ( $type == 'qin' ) {
+        	$tp = 'in';
 	}
+	else if ( $type == 'qmissed' ) {
+		$tp = 'missed';
+	}
+	else {
+		$tp = $type;
+		$queue_null = "IS NULL";
+	}
+	                                                                                                                	
+
+	$query =
+	'SELECT
+	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
+	COUNT(*) `num_calls`
+	FROM `dial_log`
+	WHERE
+		`user_id`='. $user_id .' AND
+		`type`=\''. $tp .'\' AND
+		`queue_id` ' . $queue_null .'
+	GROUP BY `number`
+	ORDER BY `ts` DESC
+	LIMIT '.$num_results;
 	
 	$rs = $db->execute( $query );
 	if ($rs && $db->numFoundRows()) {
@@ -181,7 +193,7 @@ if (! $type) {
 		
 		while ($r = $rs->fetchRow()) {
 			$num_calls = 0;
-			if ( $type === 'missed' && $r['num_calls'] > 0 ) {
+			if ( $tp === 'missed' && $r['num_calls'] > 0 ) {
 				$query =
 				'SELECT
 					COUNT(*)
@@ -190,7 +202,8 @@ if (! $type) {
 					`user_id`=' . $user_id . ' AND
 					`number`=\'' . $r['number'] . '\' AND
 					`type`=\'' . $type . '\' AND
-					`read` < 1';
+					`read` < 1 AND
+					`queue_id` ' . $queue_null;
 				$num_calls = (int)$db->executeGetOne($query);
             }
 
@@ -229,12 +242,12 @@ if (! $type) {
 		
 		$xml.= '</AastraIPPhoneTextMenu>' ."\n";
 
-		if ( $type === 'missed') {
-			gs_user_watchedmissed( $user_id );
+		if ( $tp === 'missed') {
+			gs_user_watchedmissed( $user_id, $is_queue );
 			if ( GS_BUTTONDAEMON_USE == true ) {
 				$user_ext = _get_user_ext($user_id);
 				if ( $user_ext )
-					gs_user_missedcalls_ui($user_ext);
+					gs_user_missedcalls_ui($user_ext, $is_queue);
 			}
 		}
 	} else {
@@ -242,10 +255,23 @@ if (! $type) {
 	}
 	
 	
-} elseif ($type==='outd' || $type==='ind' || $type==='missedd') {
+} elseif ($type==='outd' || $type==='ind' || $type==='missedd'|| $type==='qmissedd' || $type==='qind' ) {
 	
 	$type = substr($type,0,strlen($type)-1);
 	$xml = '<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction="'. $url_aastra_dl .'?t='.$type.'">' ."\n";
+
+	$queue_null = "IS NOT NULL";
+        if ( $type == 'qin' ) {
+        	$tp = 'in';
+	}
+	else if ( $type == 'qmissed' ) {
+		$tp = 'missed';
+	}
+	else {
+		$tp = $type;
+		$queue_null = "IS NULL";
+	}
+
 	
 	$query =
 'SELECT
@@ -256,8 +282,9 @@ FROM
 	`users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
 WHERE
 	`d`.`user_id`='. $user_id .' AND
-	`d`.`type`=\''. $type .'\' AND
-	`d`.`timestamp`='. $timestamp .'
+	`d`.`type`=\''. $tp .'\' AND
+	`d`.`timestamp`='. $timestamp .' AND
+	`d`.`queue_id`'. $queue_null . '
 GROUP BY `number`
 LIMIT 1';
 	

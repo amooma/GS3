@@ -197,7 +197,7 @@ _gscnf( 'DB_CDR_MASTER_DB'          , null               );
 _gscnf( 'DB_SIP_REG_UPDATE'         , gs_get_conf('GS_INSTALLATION_TYPE_SINGLE') );
 _gscnf( 'DB_QUEUELOG_IMPORT'        , true               );
 
-_gscnf( 'LOG_MISSED_QUEUE_CALLS'    , true               );
+_gscnf( 'LOG_QUEUE_CALLS'    , true               );
 
 _gscnf( 'LDAP_HOST'                 , '0.0.0.0'          );
 _gscnf( 'LDAP_SSL'                  , false              );

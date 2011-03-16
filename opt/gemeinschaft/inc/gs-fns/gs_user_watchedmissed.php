@@ -33,7 +33,7 @@ defined('GS_VALID') or die('No direct access.');
 *    sets a user's comment
 ***********************************************************/
 
-function gs_user_watchedmissed(  $user_id )
+function gs_user_watchedmissed(  $user_id , $queue=false )
 {
 	//if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
 	//	return new GsError( 'User must be alphanumeric.' );
@@ -52,7 +52,10 @@ function gs_user_watchedmissed(  $user_id )
 	
 	# set comment
 	#
-	$ok = $db->execute( 'UPDATE `dial_log` SET `read`= 1 WHERE `read`=0 AND `user_id`='. $user_id );
+	if ( ! $queue )
+		$ok = $db->execute( 'UPDATE `dial_log` SET `read`= 1 WHERE `queue_id` IS NULL AND `read`=0 AND `user_id`='. $user_id );
+	else
+		$ok = $db->execute( 'UPDATE `dial_log` SET `read`= 1 WHERE `queue_id` IS NOT NULL AND `read`=0 AND `user_id`='. $user_id );
 	if (! $ok)
 		return new GsError( 'Failed to set update missed calles.' );
 	return true;

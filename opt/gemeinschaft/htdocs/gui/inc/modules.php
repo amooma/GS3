@@ -99,7 +99,9 @@ $MODULES['calls'    ]=  array(
 	'sub' => array(
 		'out'          => array('title' => __('gew&auml;hlt'), 'id' => 4001),
 		'missed'       => array('title' => __('verpasst'), 'id' => 4002),
-		'in'           => array('title' => __('angenommen'), 'id' => 4003)
+		'in'           => array('title' => __('angenommen'), 'id' => 4003),
+		'queue_missed' => array('title' => __('WS verpasst'), 'id' => 4004),
+		'queue_in'     => array('title' => __('WS angenommen'), 'id' => 4005)
 	)
 );
 
