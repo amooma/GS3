@@ -95,42 +95,12 @@ if ($action === 'view') {
 	$rs_jobs = $DB->execute($query);
 	$num_total = @$DB->numFoundRows();
 	$num_pages = ceil($num_total / $per_page);
+	if ( $num_pages < 1 )
+		$num_pages = 1
 	
 ?>
 
-<table cellspacing="1">
-<tbody>
-<tr>
-	<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
-</tr>
-<tr>
-	<td rowspan="2">
-<?php
-	if ($page > 0) {
-		echo
-		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
-		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
-		'</a>', "\n";
-	} else {
-		echo
-		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust-dis.png" />', "\n";
-	}
-	if ($page < $num_pages-1) {
-		echo
-		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
-		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
-		'</a>', "\n";
-	} else {
-		echo
-		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust-dis.png" />', "\n";
-	}
-?>
-	</td>
-</tr>
-</tbody>
-</table>
 
-<br />
 <table cellspacing="1">
 <thead>
 <tr>
@@ -142,7 +112,7 @@ if ($action === 'view') {
 	<th style="min-width: 5em;"  rowspan="2"><?php echo __('Art'        ); ?></th>
 	<th style="min-width: 5em;"  rowspan="2"><?php echo __('Daten'   ); ?></th>
 	<th colspan="5" class="c"><?php echo __('Cron-Regel'); ?></th>
-	<th style="min-width: 5em;"  rowspan="2"> </th>
+	<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
 </tr>
 <tr>
 	<th class="c" style="min-width: 1em;"><?php echo __('Min.'); ?></th>
@@ -150,6 +120,31 @@ if ($action === 'view') {
 	<th class="c" style="min-width: 1em;"><?php echo __('Tag' ); ?></th>
 	<th class="c" style="min-width: 1em;"><?php echo __('Mon.'); ?></th>
 	<th class="c" style="min-width: 1em;"><?php echo __('WT'  ); ?></th>
+	<td class="l" style="min-width: 1em;">
+	
+	<?php
+	if ($page > 0) {
+		echo
+		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust.png" />',
+		'</a>', "\n";
+	} else {
+		echo
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust-dis.png" />', "\n";
+	}
+	if ($page < $num_pages-1) {
+		echo
+		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust.png" />',
+		'</a>', "\n";
+	} else {
+		echo
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust-dis.png" />', "\n";
+	}
+?>	
+	
+	
+	</td>
 </tr>
 </thead>
 <tbody>

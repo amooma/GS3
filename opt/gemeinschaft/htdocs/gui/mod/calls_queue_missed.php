@@ -92,35 +92,36 @@ $num_pages = ceil($num_total / $per_page);
 </tr>
 </thead>
 <tbody>
-<tr class="even">
-	<td colspan="4">&nbsp;</td>
-	<td>
 <?php
 
-if ($page > 0) {
-	echo
-	'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
-	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
-	'</a>', "\n";
-} else {
-	echo
-	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust-dis.png" />', "\n";
-}
-if ($page < $num_pages-1) {
-	echo
-	'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
-	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
-	'</a>', "\n";
-} else {
-	echo
-	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust-dis.png" />', "\n";
-}
+if ( $num_pages > 1  ) {
+echo '<tr class="even">';
+	echo '<td colspan="4">&nbsp;</td>';
+	echo '<td>';
 
-?>
-	</td>
-</tr>
 
-<?php
+	if ($page > 0) {
+		echo
+		'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust.png" />',
+		'</a>', "\n";
+		} else {
+		echo
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust-dis.png" />', "\n";
+		}
+		if ($page < $num_pages-1) {
+		echo
+		'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust.png" />',
+		'</a>', "\n";
+		} else {
+		echo
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust-dis.png" />', "\n";
+		}
+
+		echo '</td>';
+	echo '</tr>';
+}
 
 if (@$rs) {
 	$i = 0;
