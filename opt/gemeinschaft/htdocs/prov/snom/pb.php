@@ -325,7 +325,7 @@ LIMIT '. $num_results;
 		
 		echo
 			'<SnomIPPhoneDirectory>', "\n",
-				'<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n",
+				'<Title>', snomXmlEsc( $typeToTitle[$type] . ': ' . $keys ), '</Title>', "\n",
 				'<Prompt>Prompt</Prompt>', "\n";
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
