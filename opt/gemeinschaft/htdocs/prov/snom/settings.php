@@ -1171,6 +1171,15 @@ psetting('family_ring_sound'        , 'Ringer1');
 psetting('colleagues_ring_sound'    , 'Ringer1');
 psetting('vip_ring_sound'           , 'Ringer1');
 
+#internal-ringer1-10
+
+setting('internal_ringer_text', 0, 'internal-ringer0');
+setting('internal_ringer_file', 0, 'Silent');
+for ( $i =1; $i <= 10; $i++ ) {
+	setting('internal_ringer_text', $i, 'internal-ringer' . $i );
+	setting('internal_ringer_file', $i, 'Ringer' . $i );
+}
+
 
 
 #####################################################################

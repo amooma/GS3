@@ -136,7 +136,7 @@ if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
 	} elseif (array_key_exists('bellcore', $ringtones[$source])) {
 		if (@$ringtones[$source]['bellcore'] == 1) exit();
 		if (@$ringtones[$source]['bellcore'] != 0) {
-			gs_agi_set_variable( 'ringer', ('<http://127.0.0.1/Bellcore-dr'. $ringtones[$source]['bellcore']. '>') );
+			gs_agi_set_variable( 'ringer', ('Alert-Info:<http://www.notused.com>\;info=internal-ringer'. $ringtones[$source]['bellcore'] . '\;x-line-id=0') );
 		} else {
 			gs_agi_set_variable( 'ringer', ('<http://127.0.0.1/Bellcore-dr0>') );
 		}

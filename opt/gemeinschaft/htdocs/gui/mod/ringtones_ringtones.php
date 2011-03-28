@@ -223,7 +223,6 @@ for ($i=1; $i<=11; ++$i) {
 		$dr_v = 'eigene Datei';
 	}*/
 	$sel = ($dr_i == @$ringtones[$source]['bellcore']) ? ' selected="selected"' : '';
-	if ( $i > 5 && $i < 11 ) $sel .= ' disabled ';
 	echo '<option value="', $dr_i, '"', $sel, '>', $dr_v, '</option>', "\n";
 }
 ?>
@@ -275,7 +274,7 @@ if (@$ringtones[$source]['file']) {
 ?>
 <p class="small" style="max-width:48em;">
 	<sup>[1]</sup>
-	<?php echo __('Das Snom unterst&uuml;tzt Ringer 1-5 und lautlos.<br />Die L&auml;nge der eigenen Klingelt&ouml;ne wird auf wenige Sekunden begrenzt. F&uuml;r den eigenen Klingelton k&ouml;nnen Sie Audio-Dateien in den Dateiformaten "wav", "mp3" oder "ogg" nutzen.'); ?>
+	<?php echo __('Die L&auml;nge der eigenen Klingelt&ouml;ne wird auf wenige Sekunden begrenzt. F&uuml;r den eigenen Klingelton k&ouml;nnen Sie Audio-Dateien in den Dateiformaten "wav", "mp3" oder "ogg" nutzen.'); ?>
 </p>
 <?php
 //}
