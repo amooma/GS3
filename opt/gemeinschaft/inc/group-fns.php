@@ -64,7 +64,7 @@ function gs_group_permission_types_get()
 		'forward_vmconfig',
 		'wakeup_call',
 		'room_state',
-		'intercom_call',
+		'intercom',
 		'login_queues',
 		'record_call',
 		'private_call',
