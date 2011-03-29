@@ -158,84 +158,110 @@ FROM
 	return true;
 }
 
+// PRIVATE:
+function _gs_prov_phone_checkcfg_getphonetype($dettype, $detvalue)
+{
+	// initialize return value
+	$phonetype = "";
+
+	// make sure $dettype contains something sane
+	if(($dettype != "ip") && ($dettype != "ext")) return "unknown";
+
+	// also make sure $detvalue contains more than nothing
+	if(strlen(trim($detvalue)) == 0) return "unknown";
+
+	// open database connection
+	// needed early because mysql_real_escape_string() fails otherwise
+	$db = @gs_db_slave_connect();
+	if(!$db)
+	{
+		gs_log(GS_LOG_WARNING, "Failed to connect to DB");
+		return "unknown";
+	}
+
+	// base SQL string
+	$sql_phonetype = "SELECT "
+		."`p`.`type` "
+		."FROM "
+		."`phones` `p` LEFT JOIN "
+		."`users` `u` ON (`u`.`id`=`p`.`user_id`) LEFT JOIN "
+		."`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) "
+		."WHERE ";
+
+	$sql_phonetype_where = "1";
+
+	switch($dettype)
+	{
+		case "ip": // add 'where' for IP address
+			$sql_phonetype_where =
+				"`u`.`current_ip` = '". mysql_real_escape_string($detvalue) ."' ";
+			break;
+		case "ext"; // add 'where' for extension
+			$sql_phonetype_where =
+				"`s`.`name` = '". mysql_real_escape_string($detvalue) ."' ";
+			break;
+	}
+
+	// put SQL strings together
+	$sql_phonetype .= $sql_phonetype_where;
+
+	// get phonetype from database contents
+	$phonetype = @$db->executeGetOne($sql_phonetype);
+
+	if(strlen(trim($phonetype)) <= 0) return "unknown";
+
+	if(preg_match("/^snom\-\d\d\d$/", $phonetype)) return "snom3xx";
+	if(preg_match("/^siemens\-/", $phonetype)) return "siemens";
+	if(preg_match("/^aastra\-/", $phonetype)) return "aastra";
+	if(preg_match("/^grandstream\-/", $phonetype)) return "grandstream";
+	if(preg_match("/^tiptel\-/", $phonetype)) return "tiptel";
+	if(preg_match("/^polycom\-/", $phonetype)) return "polycom";
+	if(preg_match("/^elmeg\-/", $phonetype)) return "snom3xx";
+
+	if(preg_match("/^snom\-m3$/", $phonetype)) return "snomm3";
+
+	return "unknown";
+}
 
 // PRIVATE:
 function _gs_prov_phone_checkcfg_by_ip_do( $ip, $reboot=true )
 {
 	if (! preg_match( '/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $ip ))
 		return false;
-	
-	gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ip \"$ip\"");
-	
-	/*
-	$db = @gs_db_slave_connect();
-	if (! $db) {
-		gs_log(GS_LOG_WARNING, 'Failed to connect to DB');
-		return false;
-	}
-	$rs = @$db->execute(
-'SELECT DISTINCT(`p`.`type`)
-FROM
-	`users` `u` JOIN
-	`phones` `p` ON (`p`.`user_id`=`u`.`id`)
-WHERE
-	`u`.`current_ip`=\''. $db->escape($ip) .'\''
-	);
-	if (! $rs) {
-		gs_log(GS_LOG_WARNING, 'DB error');
-		return false;
-	}
-	$is_snom    = false;
-	$is_siemens = false;
-	while ($r = $rs->fetchRow()) {
-		$tmp = strToLower($r['type']);
-		if     (subStr($tmp,0,4)==='snom')
-			$is_snom    = true;
-		elseif (subStr($tmp,0,7)==='siemens')
-			$is_siemens = true;
-	}
-	
-	# no elseif here!:
-	if ($is_snom) {
-		gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ip \"$ip\" (snom)");
+
+	$chktype = _gs_prov_phone_checkcfg_getphonetype("ip", $ip);
+
+	gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ip \"$ip\" and type \"$chktype\"");
+
+	if (gs_get_conf('GS_SNOM_PROV_ENABLED') && (($chktype == "snom3xx") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ip_do_snom for ip \"$ip\"");
 		_gs_prov_phone_checkcfg_by_ip_do_snom   ( $ip, $reboot );
 	}
-	if ($is_siemens) {
-		gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ip \"$ip\" (siemens)");
-		_gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot );
-	}
-	if (! $is_snom && ! $is_siemens) {
-		# we don't know the type of that phone, just try everything
-		gs_log(GS_LOG_NOTICE, "Not sure how to sync phone");
-		gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ip \"$ip\" (unknown phone type)");
-		_gs_prov_phone_checkcfg_by_ip_do_snom   ( $ip, $reboot );
-		_gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot );
-	}
-	*/
-	# damn - we did already removed the user id from the phones table
-	
-	if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
-		_gs_prov_phone_checkcfg_by_ip_do_snom   ( $ip, $reboot );
-	}
-	if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
+	if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS') && (($chktype == "snomm3") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ip_do_snom_m3 for ip \"$ip\"");
 		_gs_prov_phone_checkcfg_by_ip_do_snom_m3( $ip, $reboot );
 	}
-	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
+	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED') && (($chktype == "siemens") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ip_do_siemens for ip \"$ip\"");
 		_gs_prov_phone_checkcfg_by_ip_do_siemens( $ip, $reboot );
 	}
-	if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
+	if (gs_get_conf('GS_AASTRA_PROV_ENABLED') && (($chktype == "aastra") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ip_do_aastra for ip \"$ip\"");
 		_gs_prov_phone_checkcfg_by_ip_do_aastra ( $ip, $reboot );
 	}
-	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
+	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED') && (($chktype == "grandstream") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ip_do_grandstream for ip \"$ip\"");
 		_gs_prov_phone_checkcfg_by_ip_do_grandstream( $ip, $reboot );
 	}
-	if (gs_get_conf('GS_POLYCOM_PROV_ENABLED')) {
+	if (gs_get_conf('GS_POLYCOM_PROV_ENABLED') && (($chktype == "polycom") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ip_do_polycom for ip \"$ip\"");
 		_gs_prov_phone_checkcfg_by_ip_do_polycom( $ip, $reboot );
 	}
-	if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
+	if (gs_get_conf('GS_TIPTEL_PROV_ENABLED') && (($chktype == "tiptel") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ip_do_tiptel for ip \"$ip\"");
 		_gs_prov_phone_checkcfg_by_ip_do_tiptel( $ip, $reboot );
 	}
-	
+
 	//return $err == 0;
 	return true;
 }
@@ -378,64 +404,40 @@ function _gs_prov_phone_checkcfg_by_ext_do( $ext, $reboot=true )
 {
 	if (! preg_match( '/^[\d]+$/', $ext ))
 		return new GsError( 'Extension must be numeric.' );
-	
-	gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ext \"$ext\"");
-	
-	/*
-	$db = @gs_db_slave_connect();
-	if (! $db) {
-		gs_log(GS_LOG_WARNING, 'Failed to connect to DB');
-		return false;
-	}
-	$phone_type = strToLower( (string)@$db->executeGetOne(
-'SELECT `p`.`type`
-FROM
-	`ast_sipfriends` `s` JOIN
-	`phones` `p` ON (`p`.`user_id`=`s`.`_user_id`)
-WHERE
-	`s`.`name`=\''. $db->escape($ext) .'\''
-	));  # remember ast_sipfriends.name is unique
-	
-	if       (subStr($phone_type,0,4)==='snom') {
-		gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ext \"$ext\" (snom)");
+
+	$chktype = _gs_prov_phone_checkcfg_getphonetype("ext", $ext);
+
+	gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ext \"$ext\" and type \"$chktype\"");
+
+	if (gs_get_conf('GS_SNOM_PROV_ENABLED') && (($chktype == "snom3xx") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ext_do_snom for ext \"$ext\"");
 		_gs_prov_phone_checkcfg_by_ext_do_snom   ( $ext, $reboot );
 	}
-	elseif (subStr($phone_type,0,7)==='siemens') {
-		gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ext \"$ext\" (siemens)");
-		_gs_prov_phone_checkcfg_by_ext_do_siemens( $ext, $reboot );
-	}
-	else {
-		# we don't know the type of that phone, just try everything
-		gs_log(GS_LOG_NOTICE, "Not sure how to sync phone of type \"$phone_type\"");
-		gs_log(GS_LOG_DEBUG, "do phone_checkcfg by ext \"$ext\" (unknown phone type)");
-		_gs_prov_phone_checkcfg_by_ext_do_snom   ( $ext, $reboot );
-		_gs_prov_phone_checkcfg_by_ext_do_siemens( $ext, $reboot );
-	}
-	*/
-	// damn - we have already removed the user id from the phones table
-	
-	if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
-		_gs_prov_phone_checkcfg_by_ext_do_snom   ( $ext, $reboot );
-	}
-	if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
+	if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS') && (($chktype == "snomm3") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ext_do_snom_m3 for ext \"$ext\"");
 		_gs_prov_phone_checkcfg_by_ext_do_snom_m3( $ext, $reboot );
 	}
-	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
+	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED') && (($chktype == "siemens") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ext_do_siemens for ext \"$ext\"");
 		_gs_prov_phone_checkcfg_by_ext_do_siemens( $ext, $reboot );
 	}
-	if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
+	if (gs_get_conf('GS_AASTRA_PROV_ENABLED') && (($chktype == "aastra") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ext_do_aastra for ext \"$ext\"");
 		_gs_prov_phone_checkcfg_by_ext_do_aastra ( $ext, $reboot );
 	}
-	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
+	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED') && (($chktype == "grandstream") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ext_do_grandstream for ext \"$ext\"");
 		_gs_prov_phone_checkcfg_by_ext_do_grandstream( $ext, $reboot );
 	}
-	if (gs_get_conf('GS_POLYCOM_PROV_ENABLED')) {
+	if (gs_get_conf('GS_POLYCOM_PROV_ENABLED') && (($chktype == "polycom") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ext_do_polycom for ext \"$ext\"");
 		_gs_prov_phone_checkcfg_by_ext_do_polycom( $ext, $reboot );
 	}
-	if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
+	if (gs_get_conf('GS_TIPTEL_PROV_ENABLED') && (($chktype == "tiptel") || ($chktype == "unknown"))) {
+		gs_log(GS_LOG_DEBUG, "about to gs_prov_phone_checkcfg_by_ext_do_tiptel for ext \"$ext\"");
 		_gs_prov_phone_checkcfg_by_ext_do_tiptel( $ext, $reboot );
 	}
-	
+
 	//return $err == 0;
 	return true;
 }
