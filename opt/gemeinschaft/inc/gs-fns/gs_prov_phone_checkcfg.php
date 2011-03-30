@@ -179,36 +179,95 @@ function _gs_prov_phone_checkcfg_getphonetype($dettype, $detvalue)
 		return "unknown";
 	}
 
-	// base SQL string
-	$sql_phonetype = "SELECT "
-		."`p`.`type` "
-		."FROM "
-		."`phones` `p` LEFT JOIN "
-		."`users` `u` ON (`u`.`id`=`p`.`user_id`) LEFT JOIN "
-		."`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) "
-		."WHERE ";
-
-	$sql_phonetype_where = "1";
-
+	// try various methods to detect the phone type
 	switch($dettype)
 	{
-		case "ip": // add 'where' for IP address
-			$sql_phonetype_where =
-				"`u`.`current_ip` = '". mysql_real_escape_string($detvalue) ."' ";
+		case "ip": // requested phonetype by ip address
+			// clear variable
+			unset($sql_phonetype);
+
+			// create SQL statement for phones<->nobody
+			// we do this first as phones<->users might be wrong already
+			$sql_phonetype = "SELECT "
+				."`p`.`type` "
+				."FROM "
+				."`phones` `p` LEFT JOIN "
+				."`users` `u` ON (`u`.`nobody_index`=`p`.`nobody_index`) "
+				."WHERE "
+				."`u`.`current_ip` = '". mysql_real_escape_string($detvalue) ."' ";
+
+			// exec query
+			$phonetype = @$db->executeGetOne($sql_phonetype);
+
+			// see if we got something
+			if(strlen(trim($phonetype)) <= 0)
+			{ // got nothing useful, try again with using nobody indices
+				// clear variables
+				unset($sql_phonetype);
+				unset($phonetype);
+
+				// create SQL statement for phones<->users
+				$sql_phonetype = "SELECT "
+					."`p`.`type` "
+					."FROM "
+					."`phones` `p` LEFT JOIN "
+					."`users` `u` ON (`u`.`id`=`p`.`user_id`) "
+					."WHERE "
+					."`u`.`current_ip` = '". mysql_real_escape_string($detvalue) ."' ";
+
+				// exec query
+				$phonetype = @$db->executeGetOne($sql_phonetype);
+
+				// if we still got nothing, return unknown
+				if(strlen(trim($phonetype)) <= 0) return "unknown";
+			}
+
+			// $phonetype should now contain something useful
 			break;
-		case "ext"; // add 'where' for extension
-			$sql_phonetype_where =
-				"`s`.`name` = '". mysql_real_escape_string($detvalue) ."' ";
+		case "ext": // requested phonetype by extension
+			// clear variable
+			unset($sql_phonetype);
+
+			// create SQL statement for phones<->nobody first
+			$sql_phonetype = "SELECT "
+				."`p`.`type` "
+				."FROM "
+				."`phones` `p` LEFT JOIN "
+				."`users` `u` ON (`u`.`nobody_index`=`p`.`nobody_index`) LEFT JOIN "
+				."`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) "
+				."WHERE "
+				."`s`.`name` = '". mysql_real_escape_string($detvalue) ."' ";
+
+			// exec query
+			$phonetype = @$db->executeGetOne($sql_phonetype);
+
+			// see if we got something
+			if(strlen(trim($phonetype)) <= 0)
+			{ // got nothing useful, try again with using nobody indices
+				// clear variables
+				unset($sql_phonetype);
+				unset($phonetype);
+
+				// create SQL statement for phones<->users
+				$sql_phonetype = "SELECT "
+					."`p`.`type` "
+					."FROM "
+					."`phones` `p` LEFT JOIN "
+					."`users` `u` ON (`u`.`id`=`p`.`user_id`) LEFT JOIN "
+					."`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) "
+					."WHERE "
+					."`s`.`name` = '". mysql_real_escape_string($detvalue) ."' ";
+
+				// exec query
+				$phonetype = @$db->executeGetOne($sql_phonetype);
+
+				// if we still got nothing, return unknown
+				if(strlen(trim($phonetype)) <= 0) return "unknown";
+			}
+
+			// $phonetype should now contain something useful
 			break;
 	}
-
-	// put SQL strings together
-	$sql_phonetype .= $sql_phonetype_where;
-
-	// get phonetype from database contents
-	$phonetype = @$db->executeGetOne($sql_phonetype);
-
-	if(strlen(trim($phonetype)) <= 0) return "unknown";
 
 	if(preg_match("/^snom\-\d\d\d$/", $phonetype)) return "snom3xx";
 	if(preg_match("/^siemens\-/", $phonetype)) return "siemens";
