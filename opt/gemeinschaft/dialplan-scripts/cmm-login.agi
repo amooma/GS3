@@ -191,7 +191,7 @@ $new_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='
 gs_log( GS_LOG_DEBUG, "Mobility: IP address found for new phone: $new_ip_addr");
 gs_agi_set_variable( 'new_phone_ip', $new_ip_addr );
 
-# Support prov_checkcfg mechanism by storing the old_ip into the new-nobody-user
+# Support prov_checkcfg mechanism by storing the new_ip into the new-nobody-user
 #
 if(($nobody_user_id > 0) && (strlen(trim($new_ip_addr)) > 0))
 {

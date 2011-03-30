@@ -234,6 +234,18 @@ function _login_user($new_ext, $password)
 	$new_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$new_uid );
 	gs_log( GS_LOG_DEBUG, "Mobility: IP address found for new phone: $new_ip_addr");
 	
+	# Support prov_checkcfg mechanism by storing the new_ip into the new-nobody-user
+	#
+	if(($nobody_user_id > 0) && (strlen(trim($new_ip_addr)) > 0))
+	{
+		$db->execute(
+			"UPDATE `users` SET ".
+				"`current_ip`='". $new_ip_addr ."' ".
+			"WHERE ".
+				"`id`=". $nobody_user_id
+		);
+	}
+
 	# reboot old phone
 	#
 	gs_prov_phone_checkcfg_by_ip( $remote_addr,true );
