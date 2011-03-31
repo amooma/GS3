@@ -108,3 +108,19 @@ INSERT INTO `group_permissions` VALUES ('private_call',(SELECT `id` FROM `groups
 INSERT INTO `groups` VALUES (NULL,'nobody_users','All Nobody Users','user');
 INSERT INTO `group_connections` VALUES ('mysql',(SELECT `id` FROM `groups` WHERE `name` = 'nobody_users' LIMIT 1),'id','SELECT `id` FROM `users` WHERE `nobody_index` IS NOT NULL');
 INSERT INTO `group_permissions` VALUES ('phonebook_user',(SELECT `id` FROM `groups` WHERE `name` = 'nobody_users' LIMIT 1),(SELECT `id` FROM `groups` WHERE `name` = 'users' LIMIT 1));
+
+--
+-- Cache table for prov_checkcfg phonetypes
+-- As this contains only temp. data, it can safely be dropped and recreated
+--
+
+DROP TABLE IF EXISTS `phones_typecache`;
+CREATE TABLE IF NOT EXISTS `phones_typecache` (
+ `entrytype` enum('ip','ext') COLLATE utf8_unicode_ci NOT NULL,
+ `value` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+ `phonetype` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+ `epoch_inserted` bigint(20) NOT NULL,
+ KEY `idx_entrytype` (`entrytype`),
+ KEY `idx_value` (`value`),
+ KEY `idx_epoch_inserted` (`epoch_inserted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

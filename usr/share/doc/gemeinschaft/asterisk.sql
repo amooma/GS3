@@ -7358,3 +7358,19 @@ CREATE TABLE IF NOT EXISTS `dnd` (
   `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
   PRIMARY KEY (`_user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Cache table for prov_checkcfg phonetypes
+-- As this contains only temp. data, it can safely be dropped and recreated
+--
+
+DROP TABLE IF EXISTS `phones_typecache`;
+CREATE TABLE IF NOT EXISTS `phones_typecache` (
+ `entrytype` enum('ip','ext') COLLATE utf8_unicode_ci NOT NULL,
+ `value` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+ `phonetype` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+ `epoch_inserted` bigint(20) NOT NULL,
+ KEY `idx_entrytype` (`entrytype`),
+ KEY `idx_value` (`value`),
+ KEY `idx_epoch_inserted` (`epoch_inserted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -31,6 +31,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/log.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
+require_once( GS_DIR .'inc/prov-phonetypecache.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -137,6 +138,12 @@ if ($phone_id < 1) {
 	}
 }
 
+# cache currently used phone types for further use
+#
+gs_phonetypecache_add_by_ext($db, $caller_ext);
+gs_phonetypecache_add_by_ext_to_ip($db, $caller_ext);
+gs_phonetypecache_add_by_ext($db, $new_ext);
+gs_phonetypecache_add_by_ext_to_ip($db, $new_ext);
 
 # log out the old user, assign the default nobody
 #
@@ -190,17 +197,5 @@ gs_agi_set_variable( 'old_phone_ip', $old_ip_addr );
 $new_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$new_uid );
 gs_log( GS_LOG_DEBUG, "Mobility: IP address found for new phone: $new_ip_addr");
 gs_agi_set_variable( 'new_phone_ip', $new_ip_addr );
-
-# Support prov_checkcfg mechanism by storing the new_ip into the new-nobody-user
-#
-if(($nobody_user_id > 0) && (strlen(trim($new_ip_addr)) > 0))
-{
-	$db->execute(
-		"UPDATE `users` SET ".
-			"`current_ip`='". $new_ip_addr ."' ".
-		"WHERE ".
-			"`id`=". $nobody_user_id
-	);
-}
 
 ?>

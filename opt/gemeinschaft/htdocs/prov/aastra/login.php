@@ -36,6 +36,7 @@ include_once( GS_DIR .'inc/aastra-fns.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
+include_once( GS_DIR .'inc/prov-phonetypecache.php' );
 
 $xml = '';
 
@@ -190,6 +191,10 @@ function _login_user($new_ext, $password)
 		}
 	}
 	
+	# cache currently used phone types for further use
+	gs_phonetypecache_add_by_uid_to_ip($db, $old_uid);
+	gs_phonetypecache_add_by_ext_to_ip($db, $new_ext);
+
 	# log out the old user, assign the default nobody
 	#
 	$rs = $db->execute( 'SELECT `id`, `mac_addr`, `nobody_index`, `user_id` FROM `phones` WHERE `user_id` IN ('. $old_uid .','. $new_uid .') AND `id`<>'. $phone_id );
@@ -234,17 +239,6 @@ function _login_user($new_ext, $password)
 	$new_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$new_uid );
 	gs_log( GS_LOG_DEBUG, "Mobility: IP address found for new phone: $new_ip_addr");
 	
-	# Support prov_checkcfg mechanism by storing the new_ip into the new-nobody-user
-	#
-	if(($nobody_user_id > 0) && (strlen(trim($new_ip_addr)) > 0))
-	{
-		$db->execute(
-			"UPDATE `users` SET ".
-				"`current_ip`='". $new_ip_addr ."' ".
-			"WHERE ".
-				"`id`=". $nobody_user_id
-		);
-	}
 
 	# reboot old phone
 	#
