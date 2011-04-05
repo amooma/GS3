@@ -145,6 +145,7 @@ function gs_extstate( $host, $exts )
 	}
 }
 
+
 function gs_extstate_single( $ext )
 {
 	if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
@@ -170,6 +171,91 @@ WHERE `s`.`name`=\''. $db->escape($ext) .'\'' );
 	
 	return gs_extstate( $host, $ext );
 }
+
+function gs_extstate_callable( $ext ) {
+
+	
+	include_once( GS_DIR .'inc/db_connect.php' );
+	$db = @ gs_db_slave_connect();
+	if (! $db) {
+		gs_log( GS_LOG_FATAL, 'Could not connect to slave DB!' );
+		return AST_MGR_EXT_UNKNOWN;
+	}
+
+
+	
+	//user and parallel call
+	$rs = $db->execute(
+'SELECT `a`.`_user_id`, `a`.`host`, `c`.`active` FROM `ast_sipfriends` `a`
+	LEFT JOIN `callforwards` `c` ON ( `a`.`_user_id`= `c`.`user_id` 
+		AND `c`.`source`="internal" AND `c`.`case`="always")
+	WHERE `a`.`name`="' . $ext . '"');
+	if ( ! $rs )	
+		return new GsError( 'DB Error.' );
+	if ( ! $user = $rs->FetchRow() ) {
+		return new GsError( 'No extension ' . $ext  );	
+	}
+	
+	if( $user['active'] == '' || $user['active'] == 'no' ) {
+		//this is a user, no callforwards
+		$state = gs_extstate ( $user[ 'host' ], $ext );
+		return gs_ast_extstate_try_cc( $state );
+	
+	}
+	else if ( $user['active'] == 'par' ) {
+		//this is a user, parallel call enabled
+		$rs = $db->execute(
+'SELECT `a`.`name`, `a`.`host` 
+	FROM `ast_sipfriends` `a`, `cf_parallelcall` `c` 
+	WHERE `c`.`_user_id`= ' . $user ['_user_id'] . ' AND
+		`c`.`number`=`a`.`name`');
+		if ( ! $rs ) {
+			return new GsError( 'DB Error.' . $ext  );
+		}
+		
+		$count = 0;
+		$hosts = array();
+		
+		while( $peer = $rs->FetchRow() ) {
+			$count++;
+			
+			$host_id= $peer['host_id'];
+			$hosts[$host_id][] = $peer['name'];
+		}
+		
+		//no callforward users
+		if( $count == 0 )
+			return false;
+			
+		$allstates = array ();
+		
+		foreach ( $hosts as $host => $peers ) {
+		
+			$states =  gs_extstate( $host, $peers );
+			if ( is_array ( $states )) {
+				$allstates = array_merge ( $allstates , $states);
+			}
+		}
+		
+		
+		foreach ( $allstates as $singlestate ) {
+			
+			if ( $singlestate != AST_MGR_EXT_IDLE )
+				return false;
+		}
+		
+		return true;
+			
+	}
+	else {
+		//any other callforward
+		return false;
+	}
+	
+	return false;
+		
+}
+
 
 function _sock_read( $sock, $timeout, $stop_regex )
 {

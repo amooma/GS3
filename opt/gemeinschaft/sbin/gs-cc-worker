@@ -83,10 +83,23 @@ function _extstate_v( $state )
 	return array_key_exists($state, $states) ? $states[$state] : $state;
 }
 
+function _parallel_callers ( $uid )
+{
+
+	$numbers = $db->execute( 'SELECT `number` FROM `cf_parallelcall` WHERE `_user_id`='. $uid );
+	while ($num = $numbers->fetchRow()) {
+		if($num['number'] != '') {
+			$number[] = $num['number'];
+		}
+	}
+
+
+}
+
 function _do_one_pass()
 {
 	global $DB, $our_host_ids, $hosts, $GS_INSTALLATION_TYPE_SINGLE;
-	
+
 	gs_log(GS_LOG_DEBUG, 'Checking waiting call completions ...', 'cc.log');
 	
 	# get hosts
@@ -136,25 +149,36 @@ FROM
 		
 		gs_log(GS_LOG_DEBUG, 'Checking CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .' ...', 'cc.log');
 
-		$dnd = $DB->executeGetOne( 'SELECT `dnd` FROM `users` WHERE `id`='. (int)$cc['to_user_id'] );
-		if($dnd > 0)
+		$dnd = $DB->executeGetOne( 'SELECT `active` FROM `dnd` WHERE `_user_id`='. (int)$cc['to_user_id'] );
+		if( $dnd == 'yes')
 			continue;
 		
 		if ( ! isSet( $hosts[$cc['from_host_id']] )
 		  || ! isSet( $hosts[$cc[  'to_host_id']] ) ) continue;
 		
 		if ($cc['from_ext'] == $cc['to_ext']) continue;
-		$caller_state = gs_extstate( $hosts[$cc['from_host_id']], $cc['from_ext'] );
-		if (! gs_ast_extstate_try_cc( $caller_state )) {
-			gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': '. $cc['from_ext'] .' is not idle (state: '. _extstate_v($caller_state) .') => no CC', 'cc.log');
-			continue;
-		};
-		$callee_state = gs_extstate( $hosts[$cc[  'to_host_id']], $cc[  'to_ext'] );
-		if (! gs_ast_extstate_try_cc( $callee_state )) {
-			gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': '. $cc['to_ext'] .' is not idle (state: '. _extstate_v($callee_state) .') => no CC', 'cc.log');
+
+		//check state of caller
+		$state = gs_extstate_callable( $cc['from_ext'] );
+		if ( isGsError($state) ) {
+			gs_log(GS_LOG_NOTICE, $state->getMsg() );
 			continue;
 		}
+		if ( ! $state ) {
+			gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': '. $cc['from_ext'] .' is not idle  => no CC', 'cc.log');
+			continue;
+		}		
 		
+		//check state of called user
+		$state = gs_extstate_callable( $cc['to_ext'] );
+		if ( isGsError($state) ) {
+			 gs_log(GS_LOG_NOTICE, $state->getMsg() );
+			continue;
+		}
+		if ( ! $state ) {
+			gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': '. $cc['to_ext'] .' is not idle => no CC', 'cc.log');
+			continue;
+		}		
 		# check if original caller has unconditional forward and if so
 		# don't even try CC
 		#
@@ -162,12 +186,12 @@ FROM
 		if (! $from_user) continue;
 		$cf = gs_callforward_get( $from_user );
 		if (isGsError($cf) || ! is_array($cf)) continue;
-		if (@$cf['internal']['always']['active'] != 'no') {
+		if (@$cf['internal']['always']['active'] != 'no' && @$cf['internal']['always']['active'] != 'par' ) {
 			//gs_log(GS_LOG_DEBUG, 'Don\'t try CC from "'. $cc['from_ext'] .'" because of unconditional forward');
 			gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': '. $cc['from_ext'] .' has unconditional forward. => no CC', 'cc.log');
 			continue;
 		}
-		
+
 		# check if original callee has unconditional forward and if so
 		# don't even try CC
 		#
@@ -175,7 +199,7 @@ FROM
 		if (! $to_user) continue;
 		$cf = gs_callforward_get( $to_user );
 		if (isGsError($cf) || ! is_array($cf)) continue;
-		if (@$cf['internal']['always']['active'] != 'no') {
+		if (@$cf['internal']['always']['active'] != 'no' && @$cf['internal']['always']['active'] != 'par' ) {
 			//gs_log(GS_LOG_DEBUG, 'Don\'t try CC to "'. $cc['to_ext'] .'" because of unconditional forward');
 			gs_log(GS_LOG_DEBUG, 'CC '. $cc['from_ext'] .' to '. $cc['to_ext'] .': '. $cc['to_ext'] .' has unconditional forward. => no CC', 'cc.log');
 			continue;

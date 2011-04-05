@@ -882,7 +882,7 @@ context to-internal-users-self {
 					}
 					if ("${fw_${is_call_from}_always_${EXTEN}}" == "")
 						Set(__fw_${is_call_from}_always_${EXTEN}_done=1);
-					if ("${is_callcompletion}" = "1") {
+					if ("${is_callcompletion}" = "1" && "${fw_parcall_extens}" == "" ) {
 						// no forwarding for call completion
 						Verbose(1,### Call completion to ${EXTEN} - don't forward);
 						Hangup();
@@ -1445,7 +1445,12 @@ context to-internal-users-self {
 			Answer();
 			Wait(0.5);
 			Set(__vm_announce_file=${vm_announce_${vm_source}});
-			Set(__cc_to_ext=${EXTEN});
+			if ( "${fw_parcall_extens}" != ""  && "${forwarded_by}" != "" ) {
+				Set(__cc_to_ext=${forwarded_by});
+			}
+			else {
+				Set(__cc_to_ext=${EXTEN});
+			}
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${CALLERID(num)});
 			Set(__lang=${gs_userlang_gs});
 			Set(CHANNEL(language)=${gs_userlang_ast});
