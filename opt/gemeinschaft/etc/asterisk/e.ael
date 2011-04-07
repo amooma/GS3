@@ -1108,13 +1108,7 @@ macro dial-gateway-do( mnumber ) {
 	}
 	*/
 	// get CLIR for a call to external:
-	&is_dmz(${mnumber});
-	if ("${is_dmz}" != "1") {
-		Set(zone=external);
-	}
-	else {
-		Set(zone=internal);
-	}
+	Set(zone=external);
 	if ("${user_id}" != "") {
 		AGI(/opt/gemeinschaft/dialplan-scripts/get_callerid.agi,${user_name},${zone});
 		if ("${clir}" = "" ) {
