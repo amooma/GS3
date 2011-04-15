@@ -71,20 +71,18 @@ while ($ggrp = $rs->fetchRow()) {
 		
 		echo "\t\t\t", 'Set(did_full=${EXTEN});' ,"\n";
 		
-		/*
-		# hack for Sipgate.de {
-		if (preg_match('/\bsipgate\b/i', $name)) {
+		# hack for Sipgate.de et.al. {
+		if (
+		   (preg_match('/\bsipgate\b/i', $name)) ||
+		   (preg_match('/\btoplink\b/i', $name)) ||
+		   (preg_match('/\bqsc\b/i', $name))
+		) {
 			echo "\t\t\t", "\n";
-			echo "\t\t\t", 'Set(did_full=${SIP_HEADER(To)});' ,"\n";
-			echo "\t\t\t", 'Set(did_full=${CUT(did_full,@,1)});' ,"\n";
-			//echo "\t\t\t", 'Set(did_full=${did_full:5});' ,"\n";
-			# You should cut off the prefix with the gateway group's
-			# search/replace PCRE.
-			echo "\t\t\t", 'Verbose(1,##### Inbound call from Sipgate to ${did_full});' ,"\n";
+			echo "\t\t\t", 'Set(did_full=${CUT(CUT(SIP_HEADER(To),@,1),:,2)});' ,"\n";
+			echo "\t\t\t", 'Verbose(1,##### Inbound call from ' . $name . ' to ${did_full});' ,"\n";
 			echo "\t\t\t", "\n";
 		}
 		# hack for Sipgate.de }
-		*/
 		
 		# strip prefix off DID number (sets sets did_ext) and apply
 		# redirection rules for inbound calls (sets did_ext_to):
