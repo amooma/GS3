@@ -66,20 +66,12 @@ function _not_found( $errmsg='' )
 	exit(1);
 }
 
-if (! is_array($_SESSION)
-||  ! @array_key_exists('sudo_user', @$_SESSION)
-||  ! @array_key_exists('info'     , @$_SESSION['sudo_user'])
-||  ! @array_key_exists('id'       , @$_SESSION['sudo_user']['info'])
-) {
+$admin_ids = gs_group_members_get(array(gs_group_id_get('admins')));
+if (! in_array(@$_SESSION['real_user']['info']['id'], $admin_ids) )
+{
 	_not_allowed();
 }
-
-if ($_SESSION['real_user']['name'] !== 'sysadmin'
-&&  (! gs_user_is_admin(@$_SESSION['real_user']['name']))
-) {
-	_not_allowed();
-}
-
+        
 if (! array_key_exists('u', $_REQUEST)) {
 	_not_found( 'Username not specified.' );
 }
