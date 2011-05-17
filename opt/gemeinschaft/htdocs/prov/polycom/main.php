@@ -43,7 +43,7 @@ Header("Pragma: no-cache");
 Header("Cache-Control: private, no-cache, must-revalidate");
 Header("Vary: *");
 
-$mainpage_doctype = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+$mainmenu_doctype = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 
 //---------------------------------------------------------------------------
 
@@ -97,7 +97,7 @@ $user_id = (int) $db->executeGetOne("SELECT `_user_id` FROM `ast_sipfriends` WHE
 if($user_id < 1) _err("Unknown user.");
 
 $menuitems = Array(
-	Array(	"file"	=> "diallog.php?user=". $user ."&mac=". $mac,
+	Array(	"file"	=> "diallog.php?user=". $user ."&amp;mac=". $mac,
 		"title"	=> __("Ruflisten")),
 	Array(	"file"	=> "pb.php?u=". $user ."&amp;m=". $mac,
 		"title"	=> __("Telefonbuch")),
