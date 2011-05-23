@@ -304,6 +304,23 @@ context cmm {
 
 
 //---------------------------------------------------------------------
+//  LDAP phonebook quick dial
+//---------------------------------------------------------------------
+
+context pb {
+	
+	_*1.  => {
+		AGI(/opt/gemeinschaft/dialplan-scripts/pb-imported-get.agi, ${EXTEN:2});
+		if ( "${LEN(${pb_ldap_number})}" = "0" ) {
+			Playback(beeperr);
+		} else {
+			Dial(Local/${pb_ldap_number}@from-internal-users);
+		}
+		Hangup();
+	}
+}
+
+//---------------------------------------------------------------------
 //  Agent Login Macro
 //---------------------------------------------------------------------
 
@@ -1402,6 +1419,7 @@ context from-internal-users {
 		//ivrs;                 //FIXME IVR demo
 		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
+		pb;                   // LDAP phonebook quickdial
 		from-internal-custom;
 		to-internal-custom;
 		vm-ann-rec;           // record vm-box announcements

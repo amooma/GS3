@@ -65,6 +65,23 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 </tbody>
 </table>
 
+<?php if ( PB_IMPORTED_ENABLED ) { ?>
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th colspan="2"><?php echo __('Zentrale Kurzwahl'); ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td style="width:140px;"><code>*1 <i><?php echo __('Kurzwahlnummer'); ?></i></code></td>
+	<td style="width:420px;">
+	<?php echo __('Wahl der unter der Kurzwahlnummer gespeicherten externen Rufnummer'); ?>
+</td>
+</tr>
+</tbody>
+</table>	
+<?php } ?>
 
 <table cellspacing="1" class="phonebook">
 <thead>
