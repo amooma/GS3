@@ -81,6 +81,8 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 		$phone_types['aastra-55i'] = 'Aastra 55i';
 	if (in_array('*', $enabled_models) || in_array('57i', $enabled_models))
 		$phone_types['aastra-57i'] = 'Aastra 57i';
+	if (in_array('*', $enabled_models) || in_array('6731i', $enabled_models))
+		$phone_types['aastra-6731i'] = 'Aastra 6731i';
 }
 if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$enabled_models = preg_split('/[,\\s]+/', gs_get_conf('GS_PROV_MODELS_ENABLED_GRANDSTREAM'));
@@ -273,6 +275,7 @@ if ($phone_type == '') {
 		if     (array_key_exists('aastra-53i', $phone_types)) $phone_type = 'aastra-53i';
 		elseif (array_key_exists('aastra-55i', $phone_types)) $phone_type = 'aastra-55i';
 		elseif (array_key_exists('aastra-57i', $phone_types)) $phone_type = 'aastra-57i';
+		elseif (array_key_exists('aastra-6731i', $phone_types)) $phone_type = 'aastra-6731i';
 	} else
 	if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 		if     (array_key_exists('grandstream-gxp2000', $phone_types)) $phone_type = 'grandstream-gxp2000';
@@ -290,7 +293,7 @@ if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370'),
 } elseif (in_array($phone_type, array('siemens-os20', 'siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
 	$phone_layout = 'siemens';
 	$key_function_none = $key_function_none_siemens;
-} elseif (in_array($phone_type, array('aastra-53i', 'aastra-55i', 'aastra-57i'), true)) {
+} elseif (in_array($phone_type, array('aastra-53i', 'aastra-55i', 'aastra-57i', 'aastra-6731i'), true)) {
 	$phone_layout = 'aastra';
 	$key_function_none = $key_function_none_aastra;
 } elseif (in_array($phone_type, array('grandstream-gxp2000', 'grandstream-gxp2010', 'grandstream-gxp2020'), true)) {
@@ -1063,6 +1066,11 @@ if ($phone_layout) {
 			case 'aastra-51i':
 				break;
 			*/
+			case 'aastra-6731i':
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
+				$key_levels[0]['from'] =  1;
+				$key_levels[0]['to'  ] =  8;
+				break;
 		}
 		break;
 	case 'grandstream':
