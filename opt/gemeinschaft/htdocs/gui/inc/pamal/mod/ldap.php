@@ -28,7 +28,7 @@ class PAMAL_auth_ldap extends PAMAL_auth
 			return false;
 			
 		if ( $ldapconn ) {
-			$ldapbind = @ ldap_bind( $ldapconn, $ldapsearchuser, $ldapsearchpass );
+			$ldapbind = @ ldap_bind( $ldapconn, $ldapsearchdn, $ldapsearchpass );
 			if ( $ldapbind ) {
 				$searchresult = @ ldap_search( $ldapconn, 
 							gs_get_conf( 'GS_LDAP_SEARCHBASE' ),
@@ -43,7 +43,7 @@ class PAMAL_auth_ldap extends PAMAL_auth
 			}
 			else
 			{
-				gs_log( GS_LOG_DEBUG, 'Unable to bind to LDAP server as ' . $ldapsearchuser . ', ' . ldap_error($ldapconn) );
+				gs_log( GS_LOG_DEBUG, 'Unable to bind to LDAP server as ' . $ldapsearchdn . ', ' . ldap_error($ldapconn) );
 				return false;
 			}
 		}
