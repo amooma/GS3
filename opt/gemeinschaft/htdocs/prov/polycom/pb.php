@@ -33,6 +33,7 @@ include_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gettext.php");
 include_once(GS_DIR ."inc/langhelper.php");
 include_once(GS_DIR ."inc/group-fns.php");
+require_once( GS_DIR .'inc/string.php' );
 
 header("Content-Type: text/html; charset=utf-8");
 header("Expires: 0");
@@ -170,7 +171,7 @@ if(!$type)
 
 		$c = $cq ? (" (". (int)@$db->executeGetOne($cq) .")") : "";
 
-                echo "- <a href=\"". $url_polycom_pb ."?m=". $mac ."&amp;u=". $user ."&amp;t=". $t ."\">". $title . $c ."</a><br />\n";
+                echo "- <a href=\"". $url_polycom_pb ."?m=". $mac ."&amp;u=". $user ."&amp;t=". $t ."\">". htmlEnt($title) . $c ."</a><br />\n";
         }
 
         echo "</body>\n";
@@ -195,7 +196,7 @@ if($searchform === 1)
 	echo $phonebook_doctype ."\n";
 
 	echo "<html>\n";
-	echo "<head><title>". __("Telefonbuch") ." - ". $typeToTitle[$type] ."</title></head>\n";
+	echo "<head><title>". __("Telefonbuch") ." - ". htmlEnt($typeToTitle[$type]) ."</title></head>\n";
 	echo "<body><br />\n";
 
 	echo "<form name=\"search\" method=\"GET\" action=\"". $url_polycom_pb ."\">\n";
@@ -205,7 +206,7 @@ if($searchform === 1)
 
 	echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 	echo "<tr>";
-	echo "<th align=\"center\" width=\"100%\">". __("Telefonbuch") ." '". $typeToTitle[$type] ."' ". __("durchsuchen") .":</th>";
+	echo "<th align=\"center\" width=\"100%\">". __("Telefonbuch") ." '". htmlEnt($typeToTitle[$type]) ."' ". __("durchsuchen") .":</th>";
 	echo "</tr>";
 
 	echo "<tr><td align=\"center\" width=\"100%\"><input type=\"text\" name=\"q\" /></td></tr>\n";
@@ -247,7 +248,7 @@ if($type === "imported")
 	}
 
 	echo "<html>\n";
-	echo "<head><title>". $pagetitle ."</title></head>\n";
+	echo "<head><title>". htmlEnt($pagetitle) ."</title></head>\n";
 	echo "<body><br />\n";
 
 	$searchsql .= ($searchsql ? ' AND ' : ' ') . '`group_id` IN ('. implode(',', $user_groups) .')';
@@ -276,7 +277,7 @@ if($type === "imported")
 
 			echo "<tr>";
 
-			echo "<td width=\"50%\">". $name ."</td>";
+			echo "<td width=\"50%\">". htmlEnt($name) ."</td>";
 			echo "<td width=\"50%\"><a href=\"tel://". $number."\">". $number ."</a></td></tr>\n";
 
 		}
@@ -329,7 +330,7 @@ if($type === "gs")
 	}
 
 	echo "<html>\n";
-	echo "<head><title>". $pagetitle ."</title></head>\n";
+	echo "<head><title>". htmlEnt($pagetitle) ."</title></head>\n";
 	echo "<body><br />\n";
 
 
@@ -362,7 +363,7 @@ if($type === "gs")
 
 			echo "<tr>";
 
-			echo "<td width=\"50%\">". $name ."</td>";
+			echo "<td width=\"50%\">". htmlEnt($name) ."</td>";
 			echo "<td width=\"50%\"><a href=\"tel://". $number."\">". $number ."</a></td></tr>\n";
 
 		}
@@ -411,7 +412,7 @@ if($type === "prv")
 	}
 
 	echo "<html>\n";
-	echo "<head><title>". $pagetitle ."</title></head>\n";
+	echo "<head><title>". htmlEnt($pagetitle) ."</title></head>\n";
 	echo "<body><br />\n";
 
 	$user_id_check = $db->executeGetOne("SELECT `user_id` FROM `phones` WHERE `mac_addr`='". $db->escape($mac) ."'");
@@ -450,7 +451,7 @@ if($type === "prv")
 
 			echo "<tr>";
 
-			echo "<td width=\"50%\">". $name ."</td>";
+			echo "<td width=\"50%\">". htmlEnt($name) ."</td>";
 			echo "<td width=\"50%\"><a href=\"tel://". $number."\">". $number ."</a></td>";
 
 			echo "</tr>\n";
