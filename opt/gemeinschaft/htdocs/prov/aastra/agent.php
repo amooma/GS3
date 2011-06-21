@@ -93,18 +93,22 @@ $members = gs_group_permissions_get ( $user_groups, 'agent' );
 if ( count($members ) <= 0 )
         _err(__('Keine Berechtigung'));
 
+
+
 # get agent
 #
-if ($agent)
+if ($agent) {
+
 	$agent_id = (int)$db->executeGetOne( 'SELECT `id` FROM `agents` WHERE `number`="'.$agent.'"' );
-else
+}
+else {
 	$agent_id = (int)$db->executeGetOne( 'SELECT `id` FROM `agents` WHERE `user_id`='.$user_id );
+}
 
-$rs = $db->execute( 'SELECT 1 FROM `agents` WHERE `id`='.$agent_id.' AND `user_id` > 0' );
-if (! $rs)
-	_err(htmlEnt(__('Fehler bei Agentenanmeldung')));
+$old_user_id = (int)$db->executeGetOne( 'SELECT `user_id` FROM `agents` WHERE `id`='.$agent_id.' AND `user_id` > 0' );
 
-if ($rs->numRows()) {
+
+if ( $old_user_id == $user_id  ) {
 	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_user_id`='. $user_id );
 	$db->execute( 'UPDATE `agents` SET `user_id`=0, `paused`=0 WHERE `id`='. $agent_id );
 	$agent_number = $db->executeGetOne( 'SELECT `number` FROM `agents` WHERE `id`='.$agent_id );
@@ -113,6 +117,16 @@ if ($rs->numRows()) {
 	aastra_textscreen(htmlEnt(__('Agent')), htmlEnt(__('Agent abgemeldet')), 3);
 	exit;
 }
+
+else if ( $old_user_id > 0 ){
+	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_user_id`='. $old_user_id );
+	$db->execute( 'UPDATE `agents` SET `user_id`=0, `paused`=0 WHERE `id`='. $agent_id );
+	$old_user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $old_user_id );
+	$agent_number = $db->executeGetOne( 'SELECT `number` FROM `agents` WHERE `id`='.$agent_id );
+	gs_queue_logoff_ui($old_user_name, '*');
+	gs_agent_logoff_ui($agent_number);
+}
+
 
 if ($agent && isset($pin)) {
 	$rs = $db->execute( 'SELECT 1 FROM `agents` WHERE `number`="'.$db->escape($agent).'" AND `pin`="'.$db->escape($pin).'"' );
