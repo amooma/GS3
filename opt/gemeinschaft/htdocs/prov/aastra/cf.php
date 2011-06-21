@@ -127,8 +127,10 @@ if (isGsError($callforwards))
 	_err( htmlEnt(__('Fehler')) . ': ' . htmlEnt($callforwards->getMsg()) );
 
 // if callforward is active, do not display cf dialog. Disable call forward instead
-if ($callforwards['internal']['always']['active'] == 'var')
+if ( $dialog && $callforwards['internal']['always']['active'] == 'var') {
 	unset($dialog);
+	$active = 'var';
+}
 
 if ($dialog) {
 
@@ -199,8 +201,10 @@ if ($dialog) {
 
         
 	if( $active == 'var' ) {
-              gs_callforward_set($user['user'], 'internal', 'always', 'var', $callforwards['internal']['always']['number_var'], $callforwards['internal']['always']['timeout']);
-              gs_callforward_set($user['user'], 'external', 'always', 'var', $callforwards['external']['always']['number_var'], $callforwards['external']['always']['timeout']);
+              gs_callforward_set($user['user'], 'internal', 'always', 'var', $value , $callforwards['internal']['always']['timeout']);
+              gs_callforward_set($user['user'], 'external', 'always', 'var', $value , $callforwards['external']['always']['timeout']);
+              
+            
 	}
 	
 	gs_callforward_activate($user['user'], 'internal', 'always', $callforwards['internal']['always']['active']);
