@@ -80,7 +80,7 @@ function _get_user_ext( $user_id )
 }
 
 $type = trim( @$_REQUEST['t'] );
-if (! in_array( $type, array('in','out','missed','qin','qmissed','ind','outd','missedd','qmissedd','qmissedd'), true )) {
+if (! in_array( $type, array('in','out','missed','qin','qmissed','ind','outd','missedd','qmissedd','qmissedd','qind'), true )) {
 	$type = false;
 }
 
@@ -143,22 +143,6 @@ if (! $type) {
 	
 } elseif ($type==='out' || $type==='in' || $type==='missed' || $type==='qin' || $type==='qmissed' ) {
 
-	if (strlen($delete) > 0) {
-		$DB = gs_db_master_connect();
-		if ( $is_queue )
-			@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `queue_id` IS NULL AND `number`='. $delete );
-		else
-			@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `queue_id` IS NOT NULL AND `number`='. $delete );
-		if ($type==='missed') {
-			gs_user_watchedmissed( $user_id, $is_queue );
-			if ( GS_BUTTONDAEMON_USE == true ) {
-				$user_ext = _get_user_ext ( $user_id );
-				if ( $user_ext )
-					gs_user_missedcalls_ui( $user_ext, $is_queue );
-			}
-		}
-	}
-	
 	$queue_null = "IS NOT NULL";
         if ( $type == 'qin' ) {
         	$tp = 'in';
@@ -170,8 +154,14 @@ if (! $type) {
 		$tp = $type;
 		$queue_null = "IS NULL";
 	}
-	                                                                                                                	
+	
+	if (strlen($delete) > 0) {
 
+		$DB = gs_db_master_connect();
+
+		@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .'  AND `queue_id` ' . $queue_null  . ' AND `type`=\'' . $tp  . '\' AND `number`=\''. $delete . '\'' );
+	}
+	
 	$query =
 	'SELECT
 	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
