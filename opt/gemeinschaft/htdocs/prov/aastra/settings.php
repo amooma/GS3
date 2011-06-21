@@ -325,7 +325,14 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('dynamic sip'                         , 1, false, false);
 	psetting('call forward disabled'               , 1, false, false);
 	psetting('call waiting'                        , 1, false, false);
-	psetting('missed calls indicator disabled'     , 0, false, false);
+	
+	if (gs_get_conf('GS_BUTTONDAEMON_USE')){
+		psetting('missed calls indicator disabled'     , 1, false, false);
+	}
+	else {
+		psetting('missed calls indicator disabled'     , 0, false, false);
+	}
+	
 	psetting('sip explicit mwi subscription'       , 1, false, false);
 	psetting('sip explicit mwi subscription period', 120, false, false);
 	psetting('sip registration retry timer'        , 60, false, false);
