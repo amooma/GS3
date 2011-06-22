@@ -1144,11 +1144,7 @@ if ($phone_layout) {
 				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
 				$key_levels[0]['from'] =    1;
 				$key_levels[0]['to'  ] =   10;
-
-				$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten');
-				$key_levels[1]['from'] =  101;
-				$key_levels[1]['to'  ] =  112;
-
+				
 				if ($show_ext_modules >= 1) {
 					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
 					$key_levels[2]['from'] =  201;
