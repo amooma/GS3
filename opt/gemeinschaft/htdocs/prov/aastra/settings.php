@@ -313,7 +313,6 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('sip update callerid'                 , 0, false, false);
 	psetting('admin password'                      , gs_get_conf('GS_AASTRA_PROV_ADMIN_PASS'), false, false);
 	psetting('user password'                       , gs_get_conf('GS_AASTRA_PROV_USER_PASS'), false, false);
-	psetting('options password enabled'            , 1, false, false);
 	psetting('web interface enabled'               , 1, false, false);
 	psetting('directed call pickup'                , 1, false, false);
 	psetting('directed call pickup prefix'         , '*81*', false, false);
