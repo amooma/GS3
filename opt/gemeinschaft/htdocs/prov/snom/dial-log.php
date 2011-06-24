@@ -143,6 +143,18 @@ ob_start();
 $url_snom_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'snom/dial-log.php';
 
 if ( (isset($delete)) && $type) {
+
+        $tp = $type;
+        $queue_null = "IS NULL";
+        if ( $type == "qin" ) {
+                $tp = "in";
+                $queue_null = "IS NOT NULL";
+        }
+        else if ( $type == "qmissed" ) {
+                $tp = "missed";
+                $queue_null = "IS NOT NULL";
+        }
+        
  
 
 	$query =
@@ -152,7 +164,8 @@ if ( (isset($delete)) && $type) {
 FROM `dial_log`
 WHERE
 	`user_id`='. $user_id .' AND
-	`type`=\''. $type .'\'
+	`type`=\''. $tp .'\' AND
+	`queue_id` ' . $queue_null . '
 GROUP BY `number`,`queue_id`
 ORDER BY `ts` DESC
 LIMIT ' . $delete . ',1';
@@ -166,7 +179,7 @@ $DB = gs_db_master_connect();
 'DELETE FROM `dial_log`
 WHERE
 	`user_id`=' . $user_id . ' AND
-	`type`=\'' . $type . '\' AND
+	`type`=\'' . $tp . '\' AND
 	`number`=\'' . $r['number'] . '\' AND
 	`queue_id`' . (($r['queue_id'] > 0) ? '='.$r['queue_id'] : ' IS NULL')
 	);
