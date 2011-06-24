@@ -87,6 +87,7 @@ if (! in_array( $type, array('in','out','missed','qin','qmissed','ind','outd','m
 $timestamp = (int)@$_REQUEST['e'];
 $number = trim( @$_REQUEST['n'] );
 $delete = trim( @$_REQUEST['delete'] );
+$queue_id = trim( @$_REQUEST['qid'] );
 
 $num_results = (int)gs_get_conf('GS_AASTRA_PROV_PB_NUM_RESULTS', 10);
 $db = gs_db_slave_connect();
@@ -159,7 +160,12 @@ if (! $type) {
 
 		$DB = gs_db_master_connect();
 
-		@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .'  AND `queue_id` ' . $queue_null  . ' AND `type`=\'' . $tp  . '\' AND `number`=\''. $delete . '\'' );
+		if ( $queue_id ) {
+			@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .'  AND `queue_id`=' . $queue_id  . ' AND `type`=\'' . $tp  . '\' AND `number`=\''. $delete . '\'' );
+		}
+		else {
+			@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .'  AND `queue_id` ' . $queue_null  . ' AND `type`=\'' . $tp  . '\' AND `number`=\''. $delete . '\'' );
+		}
 	}
 	
 	$query =
@@ -171,7 +177,7 @@ if (! $type) {
 		`user_id`='. $user_id .' AND
 		`type`=\''. $tp .'\' AND
 		`queue_id` ' . $queue_null .'
-	GROUP BY `number`
+	GROUP BY `number`, `queue_id`
 	ORDER BY `ts` DESC
 	LIMIT '.$num_results;
 	
@@ -265,7 +271,7 @@ if (! $type) {
 	
 	$query =
 'SELECT
-	`d`.`timestamp` `ts`, `d`.`number` `number`, `d`.`remote_name` `remote_name`, `d`.`remote_user_id` `remote_user_id`, `u`.`firstname` `fn`, `u`.`lastname` `ln`,
+	`d`.`timestamp` `ts`, `d`.`number` `number`, `d`.`remote_name` `remote_name`, `d`.`remote_user_id` `remote_user_id`, `d`.`queue_id` `queue_id`, `u`.`firstname` `fn`, `u`.`lastname` `ln`,
 	COUNT(*) `num_calls`
 FROM
 	`dial_log` `d` LEFT JOIN
@@ -275,7 +281,7 @@ WHERE
 	`d`.`type`=\''. $tp .'\' AND
 	`d`.`timestamp`='. $timestamp .' AND
 	`d`.`queue_id`'. $queue_null . '
-GROUP BY `number`
+GROUP BY `number`, `queue_id`
 LIMIT 1';
 	
 	//echo $query;
@@ -309,7 +315,12 @@ LIMIT 1';
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '<SoftKey index="3">' ."\n";
 	$xml.= '	<Label>'. __('Löschen') .'</Label>' ."\n";
-	$xml.= '	<URI>'. $url_aastra_dl .'?t='.$type.'&amp;e='.$r['ts'].'&amp;delete='.$r['number'].'</URI>' ."\n";
+	if (  $type == 'qin' ||  $type == 'qmissed' ) {
+		$xml.= '	<URI>'. $url_aastra_dl .'?t='.$type.'&amp;e='.$r['ts'].'&amp;delete='.$r['number']. '&amp;qid='.$r['queue_id'].'</URI>' ."\n";
+	}
+	else {
+		$xml.= '	<URI>'. $url_aastra_dl .'?t='.$type.'&amp;e='.$r['ts'].'&amp;delete='.$r['number'].'</URI>' ."\n";
+	}
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '<SoftKey index="4">' ."\n";
 	$xml.= '	<Label>'. __('Abbrechen') .'</Label>' ."\n";
