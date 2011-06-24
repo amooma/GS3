@@ -293,8 +293,10 @@ WHERE
 		}
 		
 		$entry_name = '';
+		/*
 		if ($r['queue_id'] > 0)
 			$entry_name = 'WS: ';
+                */
 		$entry_name .= $r['number'];
 		if ($r['remote_name'] != '') {
 			$entry_name .= ' '. $r['remote_name'];
