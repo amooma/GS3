@@ -148,8 +148,8 @@ while ($gw = $rs->fetchRow()) {
 	
 	$params = array();
 	$params['nat'           ] = 'yes';
-	//$params['canreinvite'   ] = 'no';
-	$params['canreinvite'   ] = 'nonat';
+	//$params['directmedia'   ] = 'no';
+	$params['directmedia'   ] = 'nonat';
 	$params['port'          ] = 5060;
 	$params['call-limit'    ] = 0;
 	$params['dtmfmode'      ] = 'rfc2833';
@@ -179,7 +179,7 @@ while ($gw = $rs->fetchRow()) {
 		
 		# also assume that this gateway is a SIP provider and
 		# that re-invites will not work
-		$params['canreinvite'   ]    = 'no';
+		$params['directmedia'   ]    = 'no';
 	}
 	
 	if ($gw['proxy'] == null || $gw['proxy'] === $gw['host']) {
@@ -188,7 +188,7 @@ while ($gw = $rs->fetchRow()) {
 	
 	/*
 	if (strToLower($gw['host']) === 'sip.1und1.de') {  # special settings for 1und1.de
-		//$canreinvite    = 'no';
+		//$directmedia    = 'no';
 		
 		//$fromdomain     = '1und1.de';
 		//$fromuser       = $gw['user'];
@@ -201,14 +201,14 @@ while ($gw = $rs->fetchRow()) {
 		//$codecs_allow['slinear'] = true;
 	}
 	elseif (strToLower($gw['host']) === 'sipgate.de') {  # special settings for SipGate.de
-		//$canreinvite    = 'no';
+		//$directmedia    = 'no';
 		//$fromdomain     = 'sipgate.de';
 		//$fromuser       = $gw['user'];
 	}
 	elseif (preg_match('/\\.sipgate\\.de$/i', $gw['host'])) {  # special settings for SipGate.de
 		# sipconnect.sipgate.de, SipGate "Team" trunk
 		//$fromuser       = $gw['user'];
-		//$canreinvite    = 'no';
+		//$directmedia    = 'no';
 	}
 	*/
 	
@@ -226,8 +226,8 @@ while ($gw = $rs->fetchRow()) {
 	if (array_key_exists('nat'           , $params_override)) {
 		$params['nat'           ] = $params_override['nat'           ];
 	}
-	if (array_key_exists('canreinvite'   , $params_override)) {
-		$params['canreinvite'   ] = $params_override['canreinvite'   ];
+	if (array_key_exists('directmedia'   , $params_override)) {
+		$params['directmedia'   ] = $params_override['directmedia'   ];
 	}
 	if (array_key_exists('qualify'       , $params_override)) {
 		$params['qualify'       ] = $params_override['qualify'       ];
@@ -287,7 +287,7 @@ while ($gw = $rs->fetchRow()) {
 	}
 	echo 'insecure = '        , 'port,invite' ,"\n";
 	echo 'nat = '             , $params['nat'           ] ,"\n";
-	echo 'canreinvite = '     , $params['canreinvite'   ] ,"\n";
+	echo 'directmedia = '     , $params['directmedia'   ] ,"\n";
 	echo 'dtmfmode = '        , $params['dtmfmode'      ] ,"\n";
 	echo 'call-limit = '      , $params['call-limit'    ] ,"\n";
 	echo 'registertimeout = ' , '60' ,"\n";
