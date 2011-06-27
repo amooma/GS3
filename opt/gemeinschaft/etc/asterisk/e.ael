@@ -1270,9 +1270,11 @@ macro dial-gateway( mnumber ) {
 	if ("${forwarded_by}" = "") {
 		Set(__is_forwarded=0);
 		Set(__forwarded_by=${user_name});
+		Set(CDR(accountcode)=out-${user_name});
 	}
 	else {
 		Set(__is_forwarded=1);
+		Set(CDR(accountcode)=cfw-${forwarded_by});
 		Verbose(1,### forwarded_by: ${forwarded_by});
 	}
 	// AGI ...      dial_allowed = yes | no | pin,  dial_pin = <pin>
