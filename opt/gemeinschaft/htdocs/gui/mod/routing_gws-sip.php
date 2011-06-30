@@ -33,6 +33,7 @@ include_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 include_once( GS_DIR .'inc/pcre_check.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
+include_once( GS_DIR .'inc/langhelper.php' );
 
 function printparam( $param, $value, &$userparamarray, $html=false ) {
 	if ($param == '')
@@ -65,6 +66,31 @@ if (! in_array($action, array( '', 'edit', 'save', 'saveextended', 'delextended'
 	$action = '';
 
 
+$directmedia_modes = array(
+		'no'            => 'nein' .' - '. __('RTP-Strom nicht umlenken (Standard)'),
+                'yes'           => 'ja' .' - '. __('RTP-Strom umlenken'),
+                'nonat'         => 'nonat' .' - '. __('RTP-Strom nicht bei NAT umlenken'),
+                'update'        => 'update' .' - '. __('RTP-Strom über Update-Paket umlenken'),
+                'update,nonat'  => 'update,nonat' .' - '. __('Nicht bei NAT und Option Update')
+	);
+                                                                                        
+
+$insecure_modes = array(
+		'no'            => 'no' .' - '. __('Deaktiviert (Default)'),
+                'port'          => 'port' .' - '. __('Port-Nummer ignorieren'),
+                'invite'        => 'invite' .' - '. __('keine authentifizierung bei eing. Invites'),
+                'port,invite'	=> 'port,invite' .' - '. __('Option "port"  und Option "invite"')
+	);
+	
+$language_modes = array(
+		'none'  => 'keine' .' - '. __('Parameter nicht setzen'),
+                'de'    => 'de' .' - '. __('Deutsch (de-DE)'),
+                'en'	=> 'en' .' - '. __('Englisch (en-US)')
+	);
+
+
+	                                                                                        
+
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
@@ -85,21 +111,27 @@ function confirm_delete() {
 if ($action === 'saveextended') {
 	
 	$gwid = (int)@$_REQUEST['gw-id'];
-	$newparam = $DB->escape($_REQUEST['extra-new-param']);
-	$newvalue = $DB->escape($_REQUEST['extra-new-value']);
 
-	if ($newparam != '') {
-		$DB->execute('INSERT INTO `gate_params` (`gate_id`,`param`, `value`) VALUES('.$gwid.", '".$newparam."', '".$newvalue."')");
+	$newvalue = $DB->escape($_REQUEST['saveextra']);
+	$saveparam = $DB->escape($_REQUEST['saveparam']);
+
+	if ($newvalue != '') {
+		if ( $saveparam > 0 ) {
+			$DB->execute('UPDATE `gate_params` SET `value`="' .$newvalue. '" WHERE `param_id`=' .  $saveparam );
+		}
+		else {
+			$DB->execute('INSERT INTO `gate_params` (`gate_id`,`param`, `value`) VALUES('.$gwid.", NULL, '".$newvalue."')");
+		}
 	}
 }
 
 if ($action === 'delextended') {
 	$gwid = (int)@$_REQUEST['gw-id'];
+	
 	$delparam = $DB->escape($_REQUEST['deleteparam']);
-	$delvalue = $DB->escape($_REQUEST['deletevalue']);
 
 	if ($delparam != '') {
-		$DB->execute('DELETE FROM `gate_params` WHERE `param` = \''.$delparam.'\' AND value =\''.$delvalue.'\'');
+		$DB->execute('DELETE FROM `gate_params` WHERE `param_id` =' . $delparam );
 	}
 }
 
@@ -180,20 +212,18 @@ WHERE `id`='. (int)$gwid
 	$v = (int)trim(@$_REQUEST['gw-param-port']);
 	if ($v < 1 || $v > 65535) $v = null;
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('port').'\'' );
-	//if ($v !== null) {
 		$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
 			' VALUES ('.$gwid.', \''.$DB->escape('port').'\', \''.$DB->escape($v).'\')' );
-	//}
 	
 	$v = @$_REQUEST['gw-param-nat'];
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('nat').'\'' );
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
 		' VALUES ('.$gwid.', \''.$DB->escape('nat').'\', \''.$DB->escape($v).'\')' );
 	
-	$v = @$_REQUEST['gw-param-canreinvite'];
-	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('canreinvite').'\'' );
+	$v = @$_REQUEST['gw-param-directmedia'];
+	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('directmedia').'\'' );
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
-		' VALUES ('.$gwid.', \''.$DB->escape('canreinvite').'\', \''.$DB->escape($v).'\')' );
+		' VALUES ('.$gwid.', \''.$DB->escape('directmedia').'\', \''.$DB->escape($v).'\')' );
 	
 	$v = @$_REQUEST['gw-param-qualify'];
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('qualify').'\'' );
@@ -204,6 +234,12 @@ WHERE `id`='. (int)$gwid
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('dtmfmode').'\'' );
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
 		' VALUES ('.$gwid.', \''.$DB->escape('dtmfmode').'\', \''.$DB->escape($v).'\')' );
+	
+	$v = @$_REQUEST['gw-param-insecure'];
+	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('insecure').'\'' );
+	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
+		' VALUES ('.$gwid.', \''.$DB->escape('insecure').'\', \''.$DB->escape($v).'\')' );
+	
 	
 	$v = (int)trim(@$_REQUEST['gw-param-call-limit']);
 	if ($v < 1 || $v > 99999) $v = null;
@@ -233,14 +269,23 @@ WHERE `id`='. (int)$gwid
 	}
 	
 	$v = @$_REQUEST['gw-param-codecs'];
-	if (! is_array($v) || count($v) < 1) {
-		$v = array('alaw'=>1);
-		gs_log( GS_LOG_WARNING, 'You did not allow any codecs for gateway '. $sip_friend_name .'. Allowing G.711a by default.' );
-	}
-	$v = array_keys($v);
+
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('allow').'\'' );
-	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
-		' VALUES ('.$gwid.', \''.$DB->escape('allow').'\', \''.$DB->escape(implode(',',$v)).'\')' );
+	 if ( is_array($v) || count($v) >= 1) {
+	 	$v = array_keys($v);
+		$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
+			' VALUES ('.$gwid.', \''.$DB->escape('allow').'\', \''.$DB->escape(implode(',',$v)).'\')' );
+	}
+	
+	$v = trim(@$_REQUEST['gw-param-language']);
+	if ( ! isset($v) || $v == '' || $v == 'none' ) $v = null;
+	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('language').'\'' );
+	if ( $v != null ) {
+		$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
+			' VALUES ('.$gwid.', \''.$DB->escape('language').'\', \''.$DB->escape($v).'\')' );
+	}
+	
+	
 	
 	$cmd = '/opt/gemeinschaft/sbin/start-asterisk 1>>/dev/null 2>>/dev/null';
 	@exec( 'sudo sh -c '. qsa($cmd) .' 1>>/dev/null 2>>/dev/null' );
@@ -295,7 +340,7 @@ if ($action === 'edit') {
 			return;
 		}
 		# get gateway parameters
-		$rs = $DB->execute( 'SELECT `param`, `value` FROM `gate_params` WHERE `gate_id`='.$gwid );
+		$rs = $DB->execute( 'SELECT `param`, `value` FROM `gate_params` WHERE `param` IS NOT NULL AND `gate_id`='.$gwid );
 		$gw_params = array();
 		while ($r = $rs->fetchRow()) $gw_params[$r['param']] = $r['value'];
 	}
@@ -317,12 +362,24 @@ if ($action === 'edit') {
 	}
 	if (! array_key_exists('port'        , $gw_params)) $gw_params['port'        ] = /*''*/ '5060';
 	if (! array_key_exists('nat'         , $gw_params)) $gw_params['nat'         ] = 'yes';
-	if (! array_key_exists('canreinvite' , $gw_params)) $gw_params['canreinvite' ] = 'no';
+	if (! array_key_exists('directmedia' , $gw_params)) $gw_params['directmedia' ] = 'no';
 	if (! array_key_exists('qualify'     , $gw_params)) $gw_params['qualify'     ] = 'yes';
 	if (! array_key_exists('call-limit'  , $gw_params)) $gw_params['call-limit'  ] = '0';
 	if (! array_key_exists('dtmfmode'    , $gw_params)) $gw_params['dtmfmode'    ] = 'rfc2833';
-	if (! array_key_exists('allow'       , $gw_params)) $gw_params['allow'       ] = 'alaw';
+	if (! array_key_exists('insecure'    , $gw_params)) $gw_params['insecure'    ] = 'no';
 	if (! array_key_exists('permit'      , $gw_params)) $gw_params['permit'      ] = '0.0.0.0/0';
+	
+	//Defaults for new gateways
+	if ($gwid <= 0 ) {
+		if ( ! array_key_exists('allow'       , $gw_params) ) $gw_params['allow'       ] = 'alaw';
+		if ( ! array_key_exists('language'    , $gw_params) ) 
+			$gw_params['language'    ] = gs_get_lang_global( GS_LANG_OPT_AST, GS_LANG_FORMAT_AST );
+	}
+	else {
+		if ( ! array_key_exists('language'    , $gw_params) ) 
+			$gw_params['language'    ] = 'none' ;
+	}
+	
 ?>
 
 
@@ -385,6 +442,22 @@ if ($action === 'edit') {
 	echo '<td class="transp xs gray">..., <code>register</code></td>',"\n";
 	echo '</tr>',"\n";
 	
+	//Sprache
+	echo '<tr class="m">',"\n";
+	echo '<th>', __("Sprache") ,':</th>',"\n";
+	echo '<td>',"\n";
+	echo '<select name="gw-param-language">',"\n";
+	foreach ($language_modes as $k => $v) {
+		echo '<option value="', htmlEnt($k) ,'"';
+		if ($k === @$gw_params['language']) echo ' selected="selected"';
+		echo '>', htmlEnt($v) ,'</option>',"\n";
+	}
+	echo '</select>',"\n";
+	echo '</td>',"\n";
+	echo '<td class="transp xs gray"><code>language = </code><code>de</code> | <code>en</code></td>',"\n";
+	echo '</tr>',"\n";
+	
+	
 	echo '<tr class="m">',"\n";
 	echo '<th>', __('W&auml;hlbefehl') ,' <sup>[3]</sup>:</th>',"\n";
 	echo '<td>',"\n";
@@ -438,25 +511,31 @@ ORDER BY `title`'
 	if (@$gw_params['nat'] === 'no') echo ' checked="checked"';
 	echo ' />',"\n";
 	echo '<label for="ipt-gw-param-nat-no">', htmlEnt(__('nein')) ,'</label>',"\n";
+	echo '<input type="radio" name="gw-param-nat" id="ipt-gw-param-nat-never" value="force_rport"';
+	if (@$gw_params['nat'] === 'force_rport') echo ' checked="checked"';
+	echo ' />',"\n";
+	echo '<label for="ipt-gw-param-nat-rport">', htmlEnt(__('rport erzwingen')) ,'</label>',"\n";
+	echo '<input type="radio" name="gw-param-nat" id="ipt-gw-param-nat-never" value="comedia"';
+	if (@$gw_params['nat'] === 'comedia') echo ' checked="checked"';
+	echo ' />',"\n";
+	echo '<label for="ipt-gw-param-nat-comedia">', htmlEnt(__('nur comedia')) ,'</label>',"\n";
 	echo ' &nbsp; <small>(', htmlEnt(__('Standard')) ,': ', htmlEnt(__('ja')) ,')</small>',"\n";
 	echo '</td>',"\n";
-	echo '<td class="transp xs gray"><code>nat = </code><code>yes</code> | <code>no</code></td>',"\n";
+	echo '<td class="transp xs gray"><code>nat = </code><code>yes</code> | <code>no</code> | <code>force_rport</code> | <code>comedia</code></td>',"\n";
 	echo '</tr>',"\n";
 	
 	echo '<tr class="m">',"\n";
 	echo '<th>', __('RTP-Strom umlenken') ,':</th>',"\n";
 	echo '<td>',"\n";
-	echo '<input type="radio" name="gw-param-canreinvite" id="ipt-gw-param-canreinvite-yes" value="yes"';
-	if (@$gw_params['canreinvite'] === 'yes') echo ' checked="checked"';
-	echo ' />',"\n";
-	echo '<label for="ipt-gw-param-canreinvite-yes">', htmlEnt(__('ja')) ,'</label>',"\n";
-	echo '<input type="radio" name="gw-param-canreinvite" id="ipt-gw-param-canreinvite-no" value="no"';
-	if (@$gw_params['canreinvite'] === 'no') echo ' checked="checked"';
-	echo ' />',"\n";
-	echo '<label for="ipt-gw-param-canreinvite-no">', htmlEnt(__('nein')) ,'</label>',"\n";
-	echo ' &nbsp; <small>(', htmlEnt(__('Standard')) ,': ', htmlEnt(__('nein')) ,')</small>',"\n";
+	echo '<select name="gw-param-directmedia">',"\n";
+	foreach ($directmedia_modes as $k => $v) {
+		echo '<option value="', htmlEnt($k) ,'"';
+		if ($k === @$gw_params['directmedia']) echo ' selected="selected"';
+		echo '>', htmlEnt($v) ,'</option>',"\n";
+	}
+	echo '</select>',"\n";
 	echo '</td>',"\n";
-	echo '<td class="transp xs gray"><code>canreinvite = </code><code>yes</code> | <code>no</code></td>',"\n";
+	echo '<td class="transp xs gray"><code>directmedia = </code><code>no</code> | <code>yes</code> | <code>nonat</code> | <code>update</code> | <code>update,nonat</code></td>',"\n";
 	echo '</tr>',"\n";
 	
 	echo '<tr class="m">',"\n";
@@ -484,14 +563,18 @@ ORDER BY `title`'
 	echo '<td class="transp xs gray"><code>call-limit</code></td>',"\n";
 	echo '</tr>',"\n";
 	
+	//dtmf-modes
+	
 	echo '<tr class="m">',"\n";
 	echo '<th>', __("DTMF-Modus") ,':</th>',"\n";
 	echo '<td>',"\n";
 	echo '<select name="gw-param-dtmfmode">',"\n";
 	$dtmf_modes = array(
-		'inband'  => 'inband' .' - '. __('RTP-Audio'),
-		'rfc2833' => 'rfc2833' .' - '. __('RTP-Meta-Daten'),
-		'info'    => 'info' .' - '. __('SIP INFO')
+		'inband'	=> 'inband' .' - '. __('RTP-Audio'),
+		'rfc2833'	=> 'rfc2833' .' - '. __('RTP-Meta-Daten'),
+		'info'    	=> 'info' .' - '. __('SIP INFO application/dtmf-relay'),
+		'shortinfo'     => 'shortinfo' .' - '. __('SIP INFO application/dtmf'),
+		'auto'    	=> 'auto' .' - '. __('rfc2833 wenn angeboten, sonst inband')
 	);
 	foreach ($dtmf_modes as $k => $v) {
 		echo '<option value="', htmlEnt($k) ,'"';
@@ -499,10 +582,28 @@ ORDER BY `title`'
 		echo '>', htmlEnt($v) ,'</option>',"\n";
 	}
 	echo '</select>',"\n";
-	echo ' &nbsp; <small>(', htmlEnt(__('Standard')) ,': ', htmlEnt('rfc2833') ,')</small>',"\n";
+	echo ' &nbsp; <small>(', htmlEnt(__('Std.')) ,': ', htmlEnt('rfc2833') ,')</small>',"\n";
 	echo '</td>',"\n";
 	echo '<td class="transp xs gray"><code>dtmfmode</code></td>',"\n";
 	echo '</tr>',"\n";
+	
+	//insecure
+	
+	echo '<tr class="m">',"\n";
+	echo '<th>', __("Insecure") ,':</th>',"\n";
+	echo '<td>',"\n";
+	echo '<select name="gw-param-insecure">',"\n";
+	foreach ($insecure_modes as $k => $v) {
+		echo '<option value="', htmlEnt($k) ,'"';
+		if ($k === @$gw_params['insecure']) echo ' selected="selected"';
+		echo '>', htmlEnt($v) ,'</option>',"\n";
+	}
+	echo '</select>',"\n";
+	echo '</td>',"\n";
+	echo '<td class="transp xs gray"><code>insecure = </code><code>no</code> | <code>port</code>| <code>invite</code>| <code>port,invite</code></td>',"\n";
+	echo '</tr>',"\n";
+	
+	//codecs
 	
 	echo '<tr class="m">',"\n";
 	echo '<th>', __('Codecs') ,':</th>',"\n";
@@ -608,43 +709,58 @@ if ($_REQUEST['extended'] == "show") {
 <table cellspacing=1 class=phonebook\">
 <thead>
 <tr>
-	<th style="width: 160px;"><?php echo __('Parameter');?></th>
 	<th style="width: 285px;"><?php echo __('Wert');?></th>
-	<th style="width: 20px;"></th>
+	<th style="width: 40px;"></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <?php
+
 	$gwid = (int)@$_REQUEST['gw-id'];
+	$editparam = (int)@$_REQUEST['editparam'];
+	
 	$userparamarray = array();
-	$rs = $DB->execute('SELECT * FROM `gate_params` WHERE `gate_id` ='.$gwid);
+	$rs = $DB->execute( 'SELECT `param_id`, `value` FROM `gate_params` WHERE `param` IS NULL AND `gate_id`='.$gwid );
 	while ($param = $rs->fetchRow()) {
-		$userparamarray[$param['param']] = $param['value'];
-		echo "<tr>";
-		echo "<td>";
-		echo $param['param'];
-		echo "</td>";
-		echo "<td>";
-		echo $param['value'];
-		echo "</td>";
-		echo "<td>";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'deleteparam='. rawUrlEncode($param['param']) .'&amp;deletevalue='.rawUrlEncode($param['value']).'&amp;action=delextended&amp;extended=show&amp;gw-title='.rawUrlEncode($_REQUEST['gw-title']).'&amp;gw-id='.rawUrlEncode($gwid).'').'" title="',__('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-		echo "</td>";
-		echo "</tr>";
+		$userparamarray[$param['param_id']] = $param['value'];
+		
+		
+		if ( $editparam == $param['param_id'] ) {
+			echo "<tr>";
+			echo "<td>";
+			echo '<input type="text" name="saveextra" value="'.  $param['value'] .'" size="25" maxlength="50" style="width:97%;" />',"\n";
+			echo '<input type="hidden" name="saveparam" value="' . $param['param_id']  . '" />',"\n";
+			echo "</td>";
+			echo "<td>";
+			echo "<button type=\"submit\" title=\"". __('Parameter Speichern'). "\" class=\"plain\" name=\"extra-action\" value=\"save\"><img alt=\"". __('Speichern')."\" src=\"".GS_URL_PATH."crystal-svg/16/act/filesave.png\" </button>";
+			echo "</td>";
+			echo "</tr>";
+		}
+		else {
+			echo "<tr>";
+			echo "<td>";
+			echo $param['value'];
+			echo "</td>";
+			echo "<td>";
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'editparam='. rawUrlEncode($param['param_id']) . '&amp;action=delextended&amp;extended=show&amp;gw-title='.rawUrlEncode($_REQUEST['gw-title']).'&amp;gw-id='.rawUrlEncode($gwid).'').'" title="',__('l&ouml;schen'), '"><img alt="',__('bearbeiten'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a>';
+			echo "&nbsp;\n";
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'deleteparam='. rawUrlEncode($param['param_id']).'&amp;action=delextended&amp;extended=show&amp;gw-title='.rawUrlEncode($_REQUEST['gw-title']).'&amp;gw-id='.rawUrlEncode($gwid).'').'" title="',__('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			echo "</td>";
+			echo "</tr>";
+		}
 	}
 	
-	echo "<td>";
-	echo '<input type="text" name="extra-new-param" value="" size="25" maxlength="50" style="width:97%;" />',"\n";
-	echo "</td>";
-	echo "<td>";
-	echo '<input type="text" name="extra-new-value" value="" size="25" maxlength="50" style="width:97%;" />',"\n";
-	echo "</td>";
-	echo "<td>";
-	echo "<button type=\"submit\" title=\"". __('Parameter Speichern'). "\" class=\"plain\" name=\"extra-action\" value=\"save\"><img alt=\"". __('Speichern')."\" src=\"".GS_URL_PATH."crystal-svg/16/act/filesave.png\" </button>";
-	echo "</td>";
-	echo "</tr>\n";
-
+	if ( ! $editparam ) {
+		echo "<tr>";
+		echo "<td>";
+		echo '<input type="text" name="saveextra" value="" size="25" maxlength="50" style="width:97%;" />',"\n";
+		echo "</td>";
+		echo "<td>";
+		echo "<button type=\"submit\" title=\"". __('Parameter Speichern'). "\" class=\"plain\" name=\"extra-action\" value=\"save\"><img alt=\"". __('Speichern')."\" src=\"".GS_URL_PATH."crystal-svg/16/act/filesave.png\" </button>";
+		echo "</td>";
+		echo "</tr>\n";
+	}
 	$action = 'extended';
 
 	echo "</tbody>";
@@ -668,24 +784,15 @@ if ($_REQUEST['extended'] == "show") {
 		`g`.`id`='.$gwid
 	);
 	$gw = $rs->fetchRow();
-
+	
+	
 	if ($gw['name'] != '' && $gw['host'] != '') {
 	
-		$nat            = 'yes';
-		//$canreinvite    = 'no';
-		$canreinvite    = 'nonat';
-		
-		$qualify        = 'yes';
-		$maxexpiry      =  185;
-		$defaultexpiry  =  145;
-		
-		$codecs_allow = array();
-		$codecs_allow['alaw'   ] = true;
-		$codecs_allow['ulaw'   ] = false;
-		
-		//$fromdomain     = 'gemeinschaft.localdomain';
-		$fromdomain     = null;
-		$fromuser       = null;
+	$userguiparam = array();
+	$rs = $DB->execute( 'SELECT `param`, `value` FROM `gate_params` WHERE `param` IS NOT NULL AND `gate_id`='.$gwid );
+	while ($param = $rs->fetchRow()) {
+		$userguiparam[$param['param']] = $param['value'];
+	}
 		
 		if (preg_match('/@([^@]*)$/', $gw['user'], $m)) {
 			# set domain in the From header
@@ -698,81 +805,59 @@ if ($_REQUEST['extended'] == "show") {
 			# header)
 			$fromuser   = $gw['user'];
 			
-			# also assume that this gateway is a SIP provider and
-			# that re-invites will not work
-			$canreinvite    = 'no';
-		}
-		
-		if ($gw['proxy'] == null || $gw['proxy'] === $gw['host']) {
-			$gw['proxy'] = null;
-		}
-		
-		
-		if (strToLower($gw['host']) === 'sip.1und1.de') {  # special settings for 1und1.de
-			//$canreinvite    = 'no';
 			
-			//$fromdomain     = '1und1.de';
-			//$fromuser       = $gw['user'];
-			
-			$qualify        = 'no';
-			$maxexpiry      = 3600;
-			$defaultexpiry  = 3600;
-			
-			$codecs_allow['alaw'   ] = true;
-			$codecs_allow['ulaw'   ] = true;
-			$codecs_allow['ilbc'   ] = true;
-			$codecs_allow['gsm'    ] = true;
-			$codecs_allow['g729'   ] = true;
-			$codecs_allow['slinear'] = true;
-		}
-		elseif (strToLower($gw['host']) === 'sipgate.de') {  # special settings for SipGate.de
-			//$canreinvite    = 'no';
-			//$fromdomain     = 'sipgate.de';
-			//$fromuser       = $gw['user'];
-		}
-		elseif (preg_match('/\\.sipgate\\.de$/i', $gw['host'])) {  # special settings for SipGate.de
-			# sipconnect.sipgate.de, SipGate "Team" trunk
-			//$fromuser       = $gw['user'];
-			//$canreinvite    = 'no';
 		}
 		
 		echo '[', $gw['name'] ,']' ,"<br>\n";
-		printparam( 'type', 'peer', $userparamarray, true);
-		printparam( 'host', $gw['host'], $userparamarray, true);
-		printparam( 'port', '5060', $userparamarray, true);
-		printparam( 'username', $gw['user'], $userparamarray, true);
-		printparam( 'secret', $gw['pwd'], $userparamarray, true);
+		
+		
+		printparam( 'type', 'peer', $userguiparam, true);
+		printparam( 'host', $gw['host'], $userguiparam, true);
+		 
+		printparam( 'port', '5060', $userguiparam, true);
+		printparam( 'username', $gw['user'], $userguiparam, true);
+		printparam( 'secret', $gw['pwd'], $userguiparam, true);
 		
 		if ($gw['proxy'] != null) {
-			printparam( 'outboundproxy', $gw['proxy'], $userparamarray, true);
+			printparam( 'outboundproxy', $gw['proxy'], $userguiparam, true);
 		}
 		if ($fromdomain != null) {
-			printparam( 'fromdomain', $fromdomain, $userparamarray, true);
+			printparam( 'fromdomain', $fromdomain, $userguiparam, true);
 		}
 		if ($fromuser != null) {
-			printparam( 'fromuser', $fromuser, $userparamarray, true);
+			printparam( 'fromuser', $fromuser, $userguiparam, true);
 		}
-		printparam( 'insecure', 'port,invite', $userparamarray, true);
-		printparam( 'nat', $nat, $userparamarray, true);
-		printparam( 'canreinvite', $canreinvite, $userparamarray, true);
-		printparam( 'dtmfmode', 'rfc2833', $userparamarray, true);
-		printparam( 'call-limit', '0', $userparamarray, true);
-		printparam( 'registertimeout', '60', $userparamarray, true);
-		printparam( 'setvar=__is_from_gateway', '1', $userparamarray, true);
-		printparam( 'context', 'from-gg-'.$gw['gg_name'], $userparamarray, true);
-		printparam( 'qualify', $qualify, $userparamarray, true);
-		printparam( 'language', 'de', $userparamarray, true);
-		printparam( 'maxexpiry', $maxexpiry, $userparamarray, true);
-		printparam( 'defaultexpiry', $defaultexpiry, $userparamarray, true);
-		printparam( 'disallow', 'all', $userparamarray, true);
-		foreach ($codecs_allow as $codec => $allowed) {
-			if ($allowed) {
-				printparam( 'allow', $codec, $userparamarray, true);
-			}
+		if ($userguiparam['language'] != null) {
+			printparam( 'language', '', $userguiparam, true);
 		}
+		printparam( 'insecure', 'port,invite', $userguiparam, true);
+		printparam( 'nat', $nat, $userguiparam, true);
+		printparam( 'directmedia', $directmedia, $userguiparam, true);
+		printparam( 'dtmfmode', 'rfc2833', $userguiparam, true);
+		printparam( 'call-limit', '0', $userguiparam, true);
+		printparam( 'setvar=__is_from_gateway', '1', $userguiparam, true);
+		printparam( 'context', 'from-gg-'.$gw['gg_name'], $userguiparam, true);
+		printparam( 'qualify', $qualify, $userguiparam, true);
+		
+		if ( array_key_exists ( 'allow',  $userguiparam ) ) {
+			printparam( 'disallow', 'all', $userguiparam, true);
+				$codecs = explode ( "," , $userguiparam['allow']);
+				foreach( $codecs as $codec )
+				//printparam( 'allow', 'alaw', $userguiparam, true);
+				echo 'allow = ',$codec,"<br>";
+		}
+	        if (array_key_exists('permit', $userguiparam )
+	                &&  'x'.$userguiparam['permit'        ] != 'x'.'0.0.0.0/0') {
+				echo 'deny = '            ,'0.0.0.0/0.0.0.0' ,"<br>";  # deny all
+				echo 'permit = '          , $userguiparam['permit'] ,"<br>";
+				
+		}
+		
 		foreach ($userparamarray as $param => $value) {
-			printparam( $param, '', $userparamarray, true);
+			//printparam( $param, '', $userparamarray, true);
+			echo $value,"<br>";
 		}
+		
 	}
 }
 
@@ -792,24 +877,6 @@ if ($action == '') {
 </thead>
 <tbody>
 <?php
-	
-	/*
-	$err=0; $out=array();
-	@exec( 'sudo asterisk -rx \'sip show registry\' 2>>/dev/null', $out, $err );
-	$regs = array();
-	if ($err === 0) {
-		foreach ($out as $line) {
-			if (! preg_match('/(gw_[0-9]+_[a-z0-9\-_]*)/', $line, $m))
-				continue;
-			$peername = $m[1];
-			if (! preg_match('/\b((?:Un)?[Rr]egistered)/', $line, $m)) {
-				$regs[$peername] = false;
-				continue;
-			}
-			$regs[$peername] = ($m[1] === 'Registered');
-		}
-	}
-	*/
 	
 	# get gateways from DB
 	#

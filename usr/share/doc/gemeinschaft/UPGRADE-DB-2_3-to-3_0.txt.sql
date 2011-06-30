@@ -124,3 +124,10 @@ CREATE TABLE IF NOT EXISTS `phones_typecache` (
  KEY `idx_value` (`value`),
  KEY `idx_epoch_inserted` (`epoch_inserted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Add new column with primary key to table `gate_params`
+--
+
+ALTER TABLE `gate_params` ADD `param_id` INT( 8 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST 
