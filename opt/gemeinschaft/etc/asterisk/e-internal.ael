@@ -153,13 +153,6 @@ macro dial-internal-nobody-self( mext3 ) {
 		AGI(/opt/gemeinschaft/dialplan-scripts/get_callerid.agi,${CALLERID(num)},internal);
 		&dial-log-store(${user_name},out,${mext3},0);
 	}
-	// check for callwaiting
-	/*Set(GROUP(${mext3})=callcount);
-	if (${GROUP_COUNT(callcount@${mext3})} > 1) {
-		Hangup();
-	}
-	Set(GROUP(${mext3})=);
-	Set(OUTBOUND_GROUP_ONCE=callcount@${mext3});*/
 	&set-callerid-by-clir();
 	Verbose(1,### Call local nobody ${mext3}, timeout 30);
 	if ("${record_call}" != "")
@@ -487,14 +480,13 @@ context to-internal-users {
 		}
 		
 		// check callwaiting
-		Set(GROUP(${iext})=callcount);
+		Set(GROUP(callcount)=${iext});
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${iext});
-		if (${GROUP_COUNT(callcount@${iext})} > 1 && "${callwaiting}" = "0") {
+		if (${GROUP_COUNT(${iext}@callcount)} > 0 && "${callwaiting}" = "0") {
 			Verbose(1,### ${user_name} has callwaiting deactivated );
 			Hangup();
 		}
-		Set(GROUP(${iext})=);
-		Set(OUTBOUND_GROUP_ONCE=callcount@${iext});
+		Set(OUTBOUND_GROUP_ONCE=${iext}@callcount);
 		
 		//Set(CALLERID(name)=ICOM ${CALLERID(name)});		
 		SIPAddHeader(Call-Info: <http://127.0.0.1>\;answer-after=0);
@@ -601,14 +593,13 @@ context to-internal-users-self {
 		&pass-connid();
 		
 		// check callwaiting
-		Set(GROUP(${boss})=callcount);
+		Set(GROUP(callcount)=${boss});
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${boss});
-		if (${GROUP_COUNT(callcount@${boss})} > 1 && "${callwaiting}" = "0") {
-			Verbose(1,### ${user_name} have callwaiting deactivate);
+		if (${GROUP_COUNT(callcount@${boss})} > 0 && "${callwaiting}" = "0") {
+			Verbose(1,### ${user_name} has callwaiting deactivated);
 			Hangup();
 		}
-		Set(GROUP(${boss})=);
-		Set(OUTBOUND_GROUP_ONCE=callcount@${boss});
+		Set(OUTBOUND_GROUP_ONCE=${boss}@callcount);
 		
 		// get ringer
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${boss},${is_call_from});
@@ -873,7 +864,7 @@ context to-internal-users-self {
 					Set(__fw_parcall_extens=${fw_parcallextens_${is_call_from}_always});
 					Set(parcall_item=1);
 					while ("${fw_parcallexten_${parcall_item}}" != "") {
-						if (${GROUP_COUNT(callcount${fw_parcallexten_${parcall_item}})} > 0) {
+						if (${GROUP_COUNT(${fw_parcallexten_${parcall_item}}@callcount)} > 0) {
 							Verbose(1,### User ${fw_parcallexten_${parcall_item}} of parallel call is BUSY);
 							Set(DIALSTATUS="BUSY");
 							goto user_busy;
@@ -895,7 +886,6 @@ context to-internal-users-self {
 						Set(__forwarded_to=${fw_${is_call_from}_always});
 						if ( "${is_from_gateway}" = "1" )
 							Set(__is_from_gateway=2);
-						Set(GROUP(${CALLERID(num)})=);
 						Dial(Local/${fw_${is_call_from}_always}/n,200);
 						&hangup-proper-status();
 					}
@@ -911,13 +901,13 @@ context to-internal-users-self {
 			}
 
 			// set call count
-			Set(GROUP(${EXTEN})=callcount);
-			Set(GROUP(${CALLERID(num)})=callcount);
+			Set(GROUP(callcount)=${EXTEN});
+			Set(GROUP(callcount)=${CALLERID(num)});
 
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-call-limit,${EXTEN});
 			if ("${call_limit_group_id}" != "") {
-				Set(GROUP(${call_limit_group_id})=groupcount);
-				if (${GROUP_COUNT(groupcount@${call_limit_group_id})} > ${call_limit_value}) {
+				Set(GROUP(groupcount)=${call_limit_group_id});
+				if (${GROUP_COUNT(${call_limit_group_id}@groupcount)} > ${call_limit_value}) {
 					Verbose(1,### Too many calls in group ${call_limit_group_name} (outbound));
 					Set(DIALSTATUS=BUSY);
 					&hangup-proper-status();
@@ -926,14 +916,12 @@ context to-internal-users-self {
 
 			// check callwaiting
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${EXTEN});
-			if (${GROUP_COUNT(callcount@${EXTEN})} > 1 && "${callwaiting}" = "0") {
-				Verbose(1,### ${user_name} have callwaiting deactivate);
-				Set(GROUP(${EXTEN})=);
+			if (${GROUP_COUNT(${EXTEN}@callcount)} > 0 && "${callwaiting}" = "0") {
+				Verbose(1,### ${user_name} has callwaiting deactivated);
 				Set(DIALSTATUS=BUSY);
 				goto user_busy;
 			}
-			Set(GROUP(${EXTEN})=);
-			Set(OUTBOUND_GROUP_ONCE=callcount@${EXTEN});
+			Set(OUTBOUND_GROUP_ONCE=${EXTEN}@callcount);
 			
 			// call the user
 			//
@@ -1003,7 +991,7 @@ context to-internal-users-self {
 					}
 				}
 				//UserEvent(UserCallUI,user: ${user_name},calledparty: ${EXTEN});
-				Set(GROUP()=callcount${EXTEN});
+				Set(GROUP(callcount)=${EXTEN});
 				if ("${record_call}" != "") {
 					Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},owW);
 				} else {
@@ -1084,7 +1072,6 @@ context to-internal-users-self {
 					Set(__forwarded_to=${fw_${is_call_from}_busy});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
-					Set(GROUP(${CALLERID(num)})=);
 					Dial(Local/${fw_${is_call_from}_busy}/n,200);
 					&hangup-proper-status();
 				}
@@ -1112,7 +1099,6 @@ context to-internal-users-self {
 					Set(__forwarded_to=${fw_${is_call_from}_unavail});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
-					Set(GROUP(${CALLERID(num)})=);
 					Dial(Local/${fw_${is_call_from}_unavail}/n,200);
 					&hangup-proper-status();
 				}
@@ -1140,7 +1126,6 @@ context to-internal-users-self {
 					Set(__forwarded_to=${fw_${is_call_from}_offline});
 					if ( "${is_from_gateway}" = "1" )
 						Set(__is_from_gateway=2);
-					Set(GROUP(${CALLERID(num)})=);
 					Dial(Local/${fw_${is_call_from}_offline}/n,200);
 					Congestion(3);
 					&hangup-proper-status();

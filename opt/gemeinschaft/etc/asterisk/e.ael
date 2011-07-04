@@ -161,11 +161,11 @@ macro is_dmz( is_dmz_num ) {
 //---------------------------------------------------------------------
 
 macro caller-count() {
-	Set(GROUP(${CALLERID(num)})=callcount);
+	Set(GROUP(callcount)=${CALLERID(num)});
 	AGI(/opt/gemeinschaft/dialplan-scripts/get-call-limit,${user_name});
 	if ("${call_limit_group_id}" != "") {
-		Set(GROUP(${call_limit_group_id})=groupcount);
-		if (${GROUP_COUNT(groupcount@${call_limit_group_id})} > ${call_limit_value}) {
+		Set(GROUP(groupcount)=${call_limit_group_id});
+		if (${GROUP_COUNT(${call_limit_group_id}@groupcount)} > ${call_limit_value}) {
 			Verbose(1,### Too many calls in group ${call_limit_group_name} (outbound));
 			Set(DIALSTATUS=BUSY);
 			&hangup-proper-status();
@@ -1177,7 +1177,7 @@ macro dial-gateway-do( mnumber ) {
 			SetCallerPres(prohib_passed_screen);
 		}
 		Verbose(1,### Outbound route: ${r_${r}_dial} - Caller ID: "${CALLERID(name)}" <${CALLERID(num)}@${r_${r}_cid_host}>);
-		Set(GROUP()=callcount${user_name});
+		Set(GROUP(callcount)=${user_name});
 		if ("${record_call}" != "")
 			Dial(${r_${r}_dial},180,W);
 		else

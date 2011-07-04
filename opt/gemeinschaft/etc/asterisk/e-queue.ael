@@ -30,8 +30,8 @@
 macro macro-queue-answer-callback() {
 
 	Set(TOUCH_MONITOR_PREFIX=queue-${MACRO_EXTEN});
-	Set(GROUP(${user_name})=callcount);
-	Set(OUTBOUND_GROUP_ONCE=callcount@${user_name});
+	Set(GROUP(callcount)=${user_name}));
+	Set(OUTBOUND_GROUP_ONCE=${user_name}@callcount);
 	return;
 	
 }
