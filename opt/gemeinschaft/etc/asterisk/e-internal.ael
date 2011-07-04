@@ -246,7 +246,7 @@ context to-internal-users {
 		Wait(0.5);
 		//set the multiple announce-File, if any
 		Set(vm_announce_file_multi=${fw_file_${vm_source}_${forward_case}});
-		Verbose(1,### The File is: ${vm_announce_file_multi} );
+		Verbose(1,### The File is: ${vm_announce_file_multi});
 		if ("${vm_announce_file_multi}" != "") {
 			Set(vm_announce_file=${vm_announce_file_multi});
 		} else {
@@ -483,7 +483,7 @@ context to-internal-users {
 		Set(GROUP(callcount)=${iext});
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${iext});
 		if (${GROUP_COUNT(${iext}@callcount)} > 0 && "${callwaiting}" = "0") {
-			Verbose(1,### ${user_name} has callwaiting deactivated );
+			Verbose(1,### ${user_name} has callwaiting deactivated);
 			Hangup();
 		}
 		Set(OUTBOUND_GROUP_ONCE=${iext}@callcount);
