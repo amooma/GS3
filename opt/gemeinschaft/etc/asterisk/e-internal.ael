@@ -155,7 +155,7 @@ macro dial-internal-nobody-self( mext3 ) {
 	}
 	// check for callwaiting
 	/*Set(GROUP(${mext3})=callcount);
-	if ("${GROUP_COUNT(callcount@${mext3})}" > "1") {
+	if (${GROUP_COUNT(callcount@${mext3})} > 1) {
 		Hangup();
 	}
 	Set(GROUP(${mext3})=);
@@ -482,15 +482,15 @@ context to-internal-users {
 		
 		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${iext},intercom_call);
 		if ("${permission}" != "true") {
-			Verbose(1,### ${user_name} have no intercom permission to ${iext});
+			Verbose(1,### ${user_name} has no intercom permission to ${iext});
 			Hangup();
 		}
 		
 		// check callwaiting
 		Set(GROUP(${iext})=callcount);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${iext});
-		if ("${GROUP_COUNT(callcount@${iext})}" > "1" && "${callwaiting}" = "0") {
-			Verbose(1,### ${user_name} have callwaiting deactivate );
+		if (${GROUP_COUNT(callcount@${iext})} > 1 && "${callwaiting}" = "0") {
+			Verbose(1,### ${user_name} has callwaiting deactivated );
 			Hangup();
 		}
 		Set(GROUP(${iext})=);
@@ -603,7 +603,7 @@ context to-internal-users-self {
 		// check callwaiting
 		Set(GROUP(${boss})=callcount);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${boss});
-		if ("${GROUP_COUNT(callcount@${boss})}" > "1" && "${callwaiting}" = "0") {
+		if (${GROUP_COUNT(callcount@${boss})} > 1 && "${callwaiting}" = "0") {
 			Verbose(1,### ${user_name} have callwaiting deactivate);
 			Hangup();
 		}
@@ -917,7 +917,7 @@ context to-internal-users-self {
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-call-limit,${EXTEN});
 			if ("${call_limit_group_id}" != "") {
 				Set(GROUP(${call_limit_group_id})=groupcount);
-				if ("${GROUP_COUNT(groupcount@${call_limit_group_id})}" > "${call_limit_value}") {
+				if (${GROUP_COUNT(groupcount@${call_limit_group_id})} > ${call_limit_value}) {
 					Verbose(1,### Too many calls in group ${call_limit_group_name} (outbound));
 					Set(DIALSTATUS=BUSY);
 					&hangup-proper-status();
@@ -926,7 +926,7 @@ context to-internal-users-self {
 
 			// check callwaiting
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${EXTEN});
-			if ("${GROUP_COUNT(callcount@${EXTEN})}" > "1" && "${callwaiting}" = "0") {
+			if (${GROUP_COUNT(callcount@${EXTEN})} > 1 && "${callwaiting}" = "0") {
 				Verbose(1,### ${user_name} have callwaiting deactivate);
 				Set(GROUP(${EXTEN})=);
 				Set(DIALSTATUS=BUSY);
@@ -1025,7 +1025,7 @@ context to-internal-users-self {
 					//	Set(is_dnd=1);
 					//}
 					if ("${CHANNEL(channeltype)}" = "SIP") {
-						if ("${SIPPEER(${EXTEN},limit)}" != "" && "${SIPPEER(${EXTEN},limit)}" > "0") {
+						if ("${SIPPEER(${EXTEN},limit)}" != "" && ${SIPPEER(${EXTEN},limit)} > 0) {
 							if ("${SIPPEER(${EXTEN},curcalls)}" = "0") {
 								// busy with 0 calls? we don't believe them, must be DND
 								Verbose(1,### Local user ${EXTEN} is on DND - busy with 0 calls);
