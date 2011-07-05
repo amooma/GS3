@@ -407,6 +407,24 @@ function gs_agent_login_ui( $agent, $ext )
 	_gs_send_event ( $data );
 }
 
+function gs_agent_paused_ui( $user )
+{
+	$data = _get_ui_head( 'AgentPausedUI' );
+	
+	$data[] = array( 'parm' => 'agent', 'value' => $user );
+
+	_gs_send_event ( $data );
+}
+
+function gs_agent_unpaused_ui( $user )
+{
+	$data = _get_ui_head( 'AgentUnPausedUI' );
+	
+	$data[] = array( 'parm' => 'agent', 'value' => $user );
+
+	_gs_send_event ( $data );
+}
+
 function gs_user_login_ui( $user )
 {
 	$data = _get_ui_head( 'UserLoginUI' );
@@ -425,5 +443,23 @@ function gs_user_logoff_ui( $user )
 	_gs_send_event ( $data );
 }
 
+
+//native asterisk action
+
+function gs_queuepause_unpause( $user, $pause )
+{
+	$data = array();
+	
+	$data[] = array( 'parm' => 'Action', 'value' => 'QueuePause' );
+	$data[] = array( 'parm' => 'ActionId', 'value' => '4711' );
+	$data[] = array( 'parm' => 'Interface', 'value' => 'sip/' . $user );
+	if ( $pause ) {
+		$data[] = array( 'parm' => 'Paused', 'value' => 'true' );
+	}
+	else {
+		$data[] = array( 'parm' => 'Paused', 'value' => 'false' );
+	}
+	_gs_send_event ( $data );
+}
 
 ?>

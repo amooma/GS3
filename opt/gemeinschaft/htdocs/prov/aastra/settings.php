@@ -727,6 +727,12 @@ if (is_array($softkeys)) {
 			if (! $softkey['label'])
 				$softkey['label'   ] = __('Agent');
 			break;
+		case '_agent_pause':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'agent_pause.php';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Agentenpause');
+			break;
 		}
 		psetting($key_name.' type' , $softkey['function'], true, $dynamic);
 		psetting($key_name.' value', $softkey['data'    ], true, $dynamic);

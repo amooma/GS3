@@ -248,9 +248,10 @@ $key_functions_aastra = array(
 	'_fwd_ext_ano'		=> __('Umleitung extern Ansage'),       # Umleitung extern Ansage
 	'_fwd_ext_trl'		=> __('Umleitung extern Zeit'),         # Umleitung extern Zeitsteuerung
 	'_fwd_ext_par'		=> __('Umleitung extern Parallel'),     # Umleitung extern Parallelruf
-	'_login'    => __('Login'),        # defined by Gemeinschaft
-	'_dnd'      => __('Ruhe'),         # defined by Gemeinschaft
-	'_agent'    => __('An/Abmelden Agent'), # defined by Gemeinschaft
+	'_login'    	=> __('Login'),        # defined by Gemeinschaft
+	'_dnd'      	=> __('Ruhe'),         # defined by Gemeinschaft
+	'_agent'    	=> __('An/Abmelden Agent'), # defined by Gemeinschaft
+	'_agent_pause'	=> __('Agentenpause') # defined by Gemeinschaft
 );
 $key_function_none_aastra = 'empty';
 $key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_AASTRA_PROV_KEY_BLACKLIST'));
