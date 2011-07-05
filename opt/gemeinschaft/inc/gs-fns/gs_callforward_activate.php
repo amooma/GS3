@@ -57,6 +57,12 @@ function gs_callforward_activate( $user, $source, $case, $active )
 	$user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
 	if (! $user_id)
 		return new GsError( 'Unknown user.' );
+		
+	# get user_ext 
+	#
+	$user_ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+	if (! $user_ext)
+		return new GsError( 'Unknown user extension.' );			
 	
 	# check if user has an entry
 	#
