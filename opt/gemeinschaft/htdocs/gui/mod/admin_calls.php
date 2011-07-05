@@ -111,7 +111,7 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	
 	if ($dst != '') {
 		if ($query_line != '') $query_line .= ' AND';
-		$query_line .= ' `dst` LIKE \''. $CDR_DB->escape($dst_sql).'\'';
+		$query_line .= ' `dst` LIKE \''. $CDR_DB->escape($dst_sql).'\' OR  `userfield` LIKE \''. $CDR_DB->escape($dst_sql).'\'';
 	}
 	$dur = _sanitize_dur( $dur );
 	if ($dur != '') {
@@ -124,7 +124,7 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	}
 	
 	if ($query_line != '') $query_line .= ' AND';
-	$query_line .= ' `dst`<>\'s\' AND `dst`<>\'h\' AND `dst` NOT LIKE \'*8%\'';
+	$query_line .= ' `dst`<>\'s\' AND `dst`<>\'h\' AND `dst` NOT LIKE \'*8%\' AND `dst` NOT LIKE \'toggle\'';
 	# do not show calls to any of the "s" or pickup extensions
 	
 	if ($query_line != '') $query_line = ' WHERE '.$query_line;
@@ -187,7 +187,7 @@ $rs = $CDR_DB->execute( 'DELETE FROM `ast_cdr` WHERE `dst`=\'h\'' );
 
 $rs = $CDR_DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
-	DATE_FORMAT(`calldate`, \'%d.%m.%Y %H:%i:%s\') `datum`, `clid`, `src`, `dst`, `duration`, `billsec`, `disposition`
+	DATE_FORMAT(`calldate`, \'%d.%m.%Y %H:%i:%s\') `datum`, `clid`, `src`, `dst`, `duration`, `billsec`, `disposition`, `userfield`, `dcontext`
 FROM `ast_cdr` '. $query_string .'
 ORDER BY `calldate` DESC
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
@@ -320,7 +320,10 @@ if (@$rs) {
 		echo '<tr class="', ((++$i % 2 == 0) ? 'even':'odd'), '">';
 		echo '<td>', htmlEnt($r['datum']),'</td>';
 		echo '<td>', htmlEnt($r['src']),'</td>';
-		echo '<td>', htmlEnt($r['dst']), '</td>';
+		if ( $r['dcontext'] != "dial-gateway-do" )
+			echo '<td>', htmlEnt($r['dst']), '</td>';
+		else
+			echo '<td>', htmlEnt($r['userfield']), '</td>';
 		echo '<td>', sec_to_hours($r['billsec']), '</td>';
 		
 		echo '<td>';
