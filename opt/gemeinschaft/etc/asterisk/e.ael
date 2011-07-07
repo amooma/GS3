@@ -161,7 +161,10 @@ macro is_dmz( is_dmz_num ) {
 //---------------------------------------------------------------------
 
 macro caller-count() {
-	Set(GROUP(callcount)=${CALLERID(num)});
+	if ("${forwarded_to}" != "")
+		Set(GROUP(callcount)=${forwarded_to});
+	else
+		Set(GROUP(callcount)=${CUT(CUT(CHANNEL(name),-,1),/,2)});
 	AGI(/opt/gemeinschaft/dialplan-scripts/get-call-limit,${user_name});
 	if ("${call_limit_group_id}" != "") {
 		Set(GROUP(groupcount)=${call_limit_group_id});

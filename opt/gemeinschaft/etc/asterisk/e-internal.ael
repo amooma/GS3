@@ -593,9 +593,8 @@ context to-internal-users-self {
 		&pass-connid();
 		
 		// check callwaiting
-		Set(GROUP(callcount)=${boss});
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${boss});
-		if (${GROUP_COUNT(callcount@${boss})} > 0 && "${callwaiting}" = "0") {
+		if (${GROUP_COUNT(${boss}@callcount)} > 0 && "${callwaiting}" = "0") {
 			Verbose(1,### ${user_name} has callwaiting deactivated);
 			Hangup();
 		}
@@ -866,7 +865,7 @@ context to-internal-users-self {
 					while ("${fw_parcallexten_${parcall_item}}" != "") {
 						if (${GROUP_COUNT(${fw_parcallexten_${parcall_item}}@callcount)} > 0) {
 							Verbose(1,### User ${fw_parcallexten_${parcall_item}} of parallel call is BUSY);
-							Set(DIALSTATUS="BUSY");
+							Set(DIALSTATUS=BUSY);
 							goto user_busy;
 						}
 						parcall_item=${parcall_item}+1;
@@ -901,8 +900,8 @@ context to-internal-users-self {
 			}
 
 			// set call count
-			Set(GROUP(callcount)=${EXTEN});
-			Set(GROUP(callcount)=${CALLERID(num)});
+			if ("${CHANNEL(channeltype)}" != "Local")
+				Set(GROUP(callcount)=${CUT(CUT(CHANNEL(name),-,1),/,2)});
 
 			AGI(/opt/gemeinschaft/dialplan-scripts/get-call-limit,${EXTEN});
 			if ("${call_limit_group_id}" != "") {
@@ -966,7 +965,7 @@ context to-internal-users-self {
 
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-dnd.agi,${EXTEN});
 			if ("${dnd_active}" = "yes") {
-				Set(DIALSTATUS="BUSY");
+				Set(DIALSTATUS=BUSY);
 				if ("${is_huntgroup}" = "1") {
 					Verbose(1,### DND active in huntgroup - skipping member);
 					Hangup();
@@ -991,7 +990,6 @@ context to-internal-users-self {
 					}
 				}
 				//UserEvent(UserCallUI,user: ${user_name},calledparty: ${EXTEN});
-				Set(GROUP(callcount)=${EXTEN});
 				if ("${record_call}" != "") {
 					Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},owW);
 				} else {
@@ -1414,7 +1412,6 @@ context to-internal-users-self {
 			Hangup();
 		
 		user_uncallable_vm_off:
-			//Verbose(1,### Called user ${origext} unreachable, mailbox not active);
 			Verbose(1,### Called user ${EXTEN} unreachable, mailbox not active);
 			if ("${DIALSTATUS}" = "BUSY") {
 				Hangup(17);
