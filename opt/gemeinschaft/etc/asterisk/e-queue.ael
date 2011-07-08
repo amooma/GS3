@@ -27,12 +27,14 @@
 // MA 02110-1301, USA.
 //---------------------------------------------------------------------
 
-macro macro-queue-answer-callback() {
+context queue-answer-callback {
 
-	Set(TOUCH_MONITOR_PREFIX=queue-${MACRO_EXTEN});
-	Set(answered_by=${CUT(CUT(CHANNEL(name),-,1),/,2)});
-	Set(GROUP(callcount)=${answered_by});
-	Set(OUTBOUND_GROUP_ONCE=${user_name}@callcount);
-	return;
-	
+	s => {
+		Set(TOUCH_MONITOR_PREFIX=queue-${MACRO_EXTEN});
+		Set(answered_by=${CUT(CUT(CHANNEL(name),-,1),/,2)});
+		Set(GROUP(callcount)=${answered_by});
+		Set(OUTBOUND_GROUP_ONCE=${user_name}@callcount);
+		return;
+	}
+
 }
