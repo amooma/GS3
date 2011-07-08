@@ -345,10 +345,6 @@ _gscnf( 'CANONIZE_SPECIAL'          , '/^1(?:1[0-9]{1,5}|9222)/' );
 _gscnf( 'CANONIZE_CBC_PREFIX'       , '010'              );
 
 _gscnf( 'DP_SUBSYSTEM'              , false              );
-_gscnf( 'DP_EMERGENCY_POLICE'       , '110,0110'         );
-_gscnf( 'DP_EMERGENCY_POLICE_MAP'   , '110'              );
-_gscnf( 'DP_EMERGENCY_FIRE'         , '112,0112'         );
-_gscnf( 'DP_EMERGENCY_FIRE_MAP'     , '112'              );
 _gscnf( 'DP_DIALTIMEOUT_IN'         , 45                 );
 _gscnf( 'DP_PRV_CALL_PREFIX'        , '*7*'              );
 _gscnf( 'DP_FORWARD_REQ_EXT_NUM'    , false              );

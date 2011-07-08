@@ -1324,30 +1324,6 @@ macro dial-gateway( mnumber ) {
 
 
 //---------------------------------------------------------------------
-//  To Emergency Numbers
-//---------------------------------------------------------------------
-
-context to-emergency {
-	
-	#exec "/opt/gemeinschaft/etc/asterisk/e-emergency.ael.php"
-}
-
-macro emergency-call( mnumber ) {
-	&caller-count();
-	if ("${mnumber}" = "${emergency_police}") {
-		Set(tmp=(police));
-	} else if ("${mnumber}" = "${emergency_fire}") {
-		Set(tmp=(fire dept.));
-	} else {
-		Set(tmp=);
-	}
-	Verbose(1,### Call to ${MACRO_EXTEN} mapped to emergency ${mnumber} ${tmp});
-	&dial-gateway-do(${mnumber});
-	return;
-}
-
-
-//---------------------------------------------------------------------
 //  Private Calls
 //---------------------------------------------------------------------
 
@@ -1404,7 +1380,6 @@ context from-internal-nobody {
 	
 	includes {
 		//ivrs;                 //FIXME IVR demo
-		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
 		voicemail-any;        // voicemail main (any mailbox)
 		to-conferences;       // conferences
@@ -1425,7 +1400,6 @@ context from-internal-users {
 	
 	includes {
 		//ivrs;                 //FIXME IVR demo
-		to-emergency;         // emergency numbers
 		cmm;                  // user login/logout
 		pb;                   // LDAP phonebook quickdial
 		from-internal-custom;
