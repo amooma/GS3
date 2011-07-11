@@ -522,14 +522,17 @@ else if ($phone_type == 'aastra-6730i' || $phone_type == 'aastra-6730i') {
 
 # reset all visible softkeys
 if ($phone_type == 'aastra-55i' || $phone_type == 'aastra-57i' || $phone_type == 'aastra-6739i') {
-	for ($i=1; $i<=12; ++$i) {
-		psetting('topsoftkey'.$i.' type', 'none', true, $dynamic);
-	}
-	for ($i=1; $i<=12; ++$i) {
-		if ($phone_type == 'aastra-6739i' && $i < 12)
-			psetting('softkey'.$i.' type'   , 'empty', true, $dynamic);
-		else
+	
+	if ($phone_type != 'aastra-6739i' ) {
+		for ($i=1; $i<=12; ++$i) {
+			psetting('topsoftkey'.$i.' type', 'none', true, $dynamic);
 			psetting('softkey'.$i.' type'   , 'none', true, $dynamic);
+		}
+	}
+	else {
+		for ($i=1; $i<=22; ++$i) {
+			psetting('softkey'.$i.' type'   , 'empty', true, $dynamic);
+		}
 	}
 	
 	if ($phone_type == 'aastra-6739i') {

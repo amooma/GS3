@@ -1232,7 +1232,7 @@ if ($phone_layout) {
 			case 'aastra-6739i':
 				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
 				$key_levels[0]['from'] =  103;
-				$key_levels[0]['to'  ] =  112;
+				$key_levels[0]['to'  ] =  122;
 
 				break;
 			/*
