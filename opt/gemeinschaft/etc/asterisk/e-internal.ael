@@ -156,9 +156,9 @@ macro dial-internal-nobody-self( mext3 ) {
 	&set-callerid-by-clir();
 	Verbose(1,### Call local nobody ${mext3}, timeout 30);
 	if ("${record_call}" != "")
-		Dial(SIP/${mext3},30,owW);
+		Dial(SIP/${mext3},30,wW);
 	else
-		Dial(SIP/${mext3},30,o);
+		Dial(SIP/${mext3},30);
 	&hangup-proper-status();
 	return;
 }
@@ -817,12 +817,12 @@ context to-internal-users-self {
 			if ("${huntgroup_strategy}" = "linear") {
 				while ("${huntgroup_${huntgroup}_dial}" != "") {
 					Verbose(1,### huntgroup member: ${huntgroup_${huntgroup}_dial});
-					Dial(Local/${huntgroup_${huntgroup}_dial}@to-internal-users-huntgroup,${huntgroup_${huntgroup}_timeout},o);
+					Dial(Local/${huntgroup_${huntgroup}_dial}@to-internal-users-huntgroup,${huntgroup_${huntgroup}_timeout});
 					huntgroup=${huntgroup}+1;
 					}
 			} else {
 				Verbose(1,### Dialling hunt group ${EXTEN} in parallel mode);
-				Dial(${huntgroup_dial},${huntgroup_timeout},o);
+				Dial(${huntgroup_dial},${huntgroup_timeout});
 			}
 			Verbose(1,### finished trying huntgroup members. Last dialstatus: ${DIALSTATUS});
 			if("${DIALSTATUS}" = "CHANUNAVAIL"){
@@ -991,9 +991,9 @@ context to-internal-users-self {
 				}
 				//UserEvent(UserCallUI,user: ${user_name},calledparty: ${EXTEN});
 				if ("${record_call}" != "") {
-					Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},owW);
+					Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},wW);
 				} else {
-					Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout},o);
+					Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout});
 				}
 			}
 			
