@@ -349,26 +349,6 @@ LIMIT 5'
 <div class="fl" style="width:99%; height:10px; font-size:0;"></div>
 
 <?php
-	if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
-?>
-<form method="post" action="<?php echo GS_URL_PATH, 'srv/pb-dial.php'; ?>">
-<?php echo gs_form_hidden($SECTION, $MODULE); ?>
-<?php echo __('Call-Box'); ?>: &nbsp;
-<input type="text" name="n" value="" size="20" maxlength="30" class="m" />
-<button class="m" title="<?php echo htmlEnt(__("w\xC3\xA4hlen")); ?>" style="height:22px; padding:0;">
-<img alt="<?php echo htmlEnt(__("w\xC3\xA4hlen")); ?>" src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png'; ?>" style="margin:0 5px;" />
-</button>
-</form>
-<?php
-	} else {
-?>
-<div class="ie_clearing"></div>
-<div class="fl" style="width:99%; height:10px; font-size:0;"></div>
-<?php
-	}
-?>
-
-<?php
 }
 ?>
 
