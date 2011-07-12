@@ -430,7 +430,7 @@ if ($action == '') {
 	echo '<div style="max-width:45em;">', "\n";
 	echo htmlEnt(__("Das Format sollte etwa folgenderma\xC3\x9Fen aussehen.")) ,"\n";
 	echo '<pre style="margin:0.5em 1em; padding:0.06em 0.3em; background-color:#eee; width:60%; border:1px solid #ddd;">', htmlEnt(__("Vorname;Nachname;Telefon\nAlbert;Einstein;+309876543\nRobert;Bosch;00711123456")) ,'</pre>',"\n";
-	echo htmlEnt(__("Ob eine Kopfzeile vorhanden ist oder nicht, die Reihenfolge der Spalten und die Trennzeichen werden automatisch erkannt und k\xC3\xB6nnen ggf. interaktiv in der Vorschau eingestellt werden.")) ,"\n";
+	echo htmlEnt(__("Ob eine Kopfzeile vorhanden ist oder nicht kann interaktiv in der Vorschau eingestellt werden. Die Trennzeichen und die Feldreihenfolge k\xC3\xB6nnen ebenfalls interaktiv in der Vorschau eingestellt werden.")) ,"\n";
 	echo '</div>' ,"\n";
 	
 }
