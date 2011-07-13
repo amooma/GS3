@@ -803,7 +803,9 @@ setting('user_server_type'        ,$i, ((_snomAppCmp($fw_vers_nrml, '7.3.2') >0)
 setting('ring_after_delay'        ,$i, ''   );
 setting('user_send_local_name'    ,$i, 'on' );  # send display name to caller
 setting('user_dtmf_info'          ,$i, 'off');
-setting('user_mailbox'            ,$i, 'mailbox');
+// no longer needed with Asterisk 1.8
+//setting('user_mailbox'            ,$i, 'mailbox');
+setting('user_mailbox'            ,$i, '');
 setting('user_dp_exp'             ,$i, ''   );  # see http://wiki.snom.com/Settings/user_dp_exp
 setting('user_dp_str'             ,$i, ''   );  # see http://wiki.snom.com/Dial_Plan
 setting('user_dp'                 ,$i, ''   );
