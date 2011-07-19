@@ -947,13 +947,15 @@ psetting('dkey_redial'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name
 psetting('dkey_retrieve' , 'speed voicemail');
 
 # firmware 8.2-Settings
-psetting('idle_left_key_action'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac');
-psetting('idle_right_key_action'   , 'keyevent F_HELP');
-psetting('idle_up_key_action'   , '');
-psetting('idle_down_key_action'   , '');
-psetting('idle_ok_key_action'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac&type=out');
-psetting('idle_cancel_key_action'   , '');
+psetting('idle_left_key_action'  , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac');
+psetting('idle_right_key_action' , 'keyevent F_HELP');
+psetting('idle_up_key_action'    , '');
+psetting('idle_down_key_action'  , '');
+psetting('idle_ok_key_action'    , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac&type=out');
+psetting('idle_cancel_key_action', '');
 
+# do not show snom advertisement in Web UI
+psetting('advertisement'         , 'off');
 
 #####################################################################
 #  Keys
