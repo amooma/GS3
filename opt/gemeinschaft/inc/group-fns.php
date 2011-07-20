@@ -58,6 +58,15 @@ function gs_group_permission_types_get()
 		'record_call',
 		'wakeup_call',
 		'private_call',
+		'phonebook_imported_edit',
+	);
+}
+
+function gs_group_parameter_types_get()
+{
+	return array(
+		'asterisk',
+		'gui',
 	);
 }
 
@@ -717,6 +726,49 @@ function gs_group_connections_get($group_id, $type = false)
 		$members[] = $r;
 
 	return $members;
+}
+
+function gs_group_parameters_get($group_id, $type = false)
+{
+	$db_slave = gs_db_slave_connect();
+	if (! $db_slave)
+		return new GsError( 'Could not connect to database.' );
+	
+	$sql_query = 'SELECT * FROM `group_parameters` WHERE `group` = '. $group_id;
+	
+	if ($type) $sql_query .= ' AND `type` = \''.$db_slave->escape($type).'\'';
+
+	$rs = $db_slave->execute($sql_query);
+
+	$parameters = array();
+	
+	if ($rs)
+	while ($r = $rs->fetchRow())
+		$parameters[] = $r;
+
+	return $parameters;
+}
+
+function gs_group_parameter_add($group_id, $parameter, $value, $type)
+{
+	$db_master = gs_db_master_connect();
+	if (! $db_master)
+		return new GsError( 'Could not connect to database.' );
+	
+	$ret = $db_master->execute('INSERT INTO `group_parameters` (`group`, `parameter`, `value`, `type`) VALUES ('.$group_id.', \''.$db_master->escape($parameter).'\', \''.$db_master->escape($value).'\', \''.$db_master->escape($type).'\')');
+	
+	return $ret;
+}
+
+function gs_group_parameter_del($group_id, $parameter_id)
+{
+	$db_master = gs_db_master_connect();
+	if (! $db_master)
+		return new GsError( 'Could not connect to database.' );
+	
+	$ret = $db_master->execute('DELETE FROM `group_parameters` WHERE `group` = '.$group_id.' AND `id` = '.$parameter_id);
+	
+	return $ret;
 }
 
 ?>

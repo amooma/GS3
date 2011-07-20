@@ -2,7 +2,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 5500 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -88,7 +88,6 @@ function write_alert( $message, $alert_type='ERROR' )
 	xml('</IppDisplay>');
 	xml_output();
 }
-
 
 $user         = trim(@$_REQUEST['user'       ]);
 $phonenumber  = trim(@$_REQUEST['phonenumber']);
@@ -235,10 +234,11 @@ else {
 		if ($r['remote_name'] != '') {
 			$entry_name .= ' '. $r['remote_name'];
 		}
+		setlocale(LC_TIME,gs_get_conf('GS_INTL_LANG').'.utf8');
 		if (date('dm') == date('dm', (int)$r['ts']))
 			$when = date('H:i', (int)$r['ts']);
 		else
-			$when = date('d.m.', (int)$r['ts']);
+			$when = strftime('%d.%b', (int)$r['ts']);
 		$entry_name = $when .'  '. $entry_name;
 		if ($r['num_calls'] > 1) {
 			$entry_name .= ' ('. $r['num_calls'] .')';

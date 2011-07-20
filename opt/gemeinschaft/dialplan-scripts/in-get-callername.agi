@@ -30,7 +30,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
-//include_once( GS_DIR .'inc/canonization.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -38,8 +38,10 @@ ob_implicit_flush(1);
 function search_number ( $user_id, $source, $cid , $db ) {
 	if ($source == 'private')
 		$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_prv` WHERE `user_id`=' . $user_id . ' AND `number`= \'' . $db->escape($cid) . '\'';
-	else if ($source == 'public')
-		$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_ldap` WHERE `number`=\''. $db->escape($cid) . '\'';
+	else if ($source == 'public') {
+		$user_groups = gs_group_members_groups_get(array($user_id), 'user');
+		$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_ldap` WHERE `number`=\''. $db->escape($cid) . '\' AND `group_id` IN (' . implode(',', $user_groups) . ')';
+	}
 
 	$rs = $db->execute( $query );
 	$result = array();

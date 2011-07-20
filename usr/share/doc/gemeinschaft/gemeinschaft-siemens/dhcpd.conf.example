@@ -1,0 +1,86 @@
+#
+# Example of ISC dhcpd configuration
+# for mass deployment of Snom and Siemens phones
+#
+# $Revision: 36 $
+#
+# amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+# http://www.amooma.de/
+# Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+# Philipp Kempgen <philipp.kempgen@amooma.de>
+# Peter Kozak <peter.kozak@amooma.de>
+#
+# (öffentlich von Siemens dokumentiert)
+#
+
+
+# option definitions common to all supported networks...
+option domain-name "fugue.com";
+option domain-name-servers 192.168.1.1;
+option routers 192.168.1.1;
+option ntp-servers 192.168.1.130;
+
+ddns-update-style ad-hoc;
+#ddns-update-style none;
+
+option subnet-mask 255.255.255.0;
+default-lease-time 300;
+max-lease-time 600;
+
+
+#class "Snom" {
+#    match if substring(hardware, 1, 3) = 00:04:13;
+#}
+class "SiemensPhone" {
+    match if substring(hardware, 1, 3) = 00:01:E3;
+}
+
+
+# define option space for Siemens OptiPoint / OpenStage phones:
+option space OptiIpPhone;
+option OptiIpPhone.magic   code 1 = string;
+option OptiIpPhone.vlanid  code 2 = unsigned integer 32;
+option OptiIpPhone.url     code 3 = string;
+
+
+subnet 192.168.0.0 netmask 255.255.0.0 {
+    max-lease-time 3600;
+    default-lease-time 1800;
+    option subnet-mask 255.255.255.0;
+    
+    #pool {
+    #    allow members of "Snom";
+    #    range 192.168.1.220 192.168.1.249;
+    #    option tftp-server-name "http://192.168.1.130:82/snom/settings.php?mac={mac}";
+    #    on commit {
+    #        log(info, concat("Client (Snom) ",
+    #            binary-to-ascii(16, 8, ":", substring(hardware, 1, 6)),
+    #            " requests ",
+    #            binary-to-ascii(16, 8, ":", option dhcp-parameter-request-list),
+    #            ", Vendor: ",
+    #            pick-first-value(option vendor-class-identifier, "")
+    #        ));
+    #    }
+    #}
+    pool {
+        allow members of "SiemensPhone";
+        range 192.168.1.200 192.168.1.219;
+        
+        vendor-option-space        OptiIpPhone;
+        option OptiIpPhone.magic   53:69:65:6D:65:6E:73:00:00:00;
+        #option OptiIpPhone.vlanid  0;
+        option OptiIpPhone.url     "sdlp://192.168.1.130:18443";
+        
+        on commit {
+            log(info, concat("Client (OptiIpPhone) ",
+                binary-to-ascii(16, 8, ":", substring(hardware, 1, 6)),
+                " requests ",
+                binary-to-ascii(16, 8, ":", option dhcp-parameter-request-list),
+                ", Vendor: ",
+                pick-first-value(option vendor-class-identifier, "")
+            ));
+        }
+    }
+}
+
+

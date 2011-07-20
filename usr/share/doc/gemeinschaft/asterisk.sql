@@ -6267,6 +6267,23 @@ INSERT INTO `group_members` VALUES (7,18015);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `group_parameters`
+--
+
+DROP TABLE IF EXISTS `group_parameters`;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+CREATE TABLE `group_parameters` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `type` varchar(20) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,
+  `parameter` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  `value` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `group_permissions`
 --
 
@@ -6647,28 +6664,20 @@ DROP TABLE IF EXISTS `pb_ldap`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pb_ldap` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT '',
   `lastname` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `firstname` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `number` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
   `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `user_number` (`user`,`number`),
+  `group_id` mediumint(8) unsigned DEFAULT 2,
+  PRIMARY KEY (`id`),
   KEY `updated` (`updated`),
   KEY `lastname_firstname` (`lastname`(15),`firstname`(15),`number`(7)),
   KEY `firstname_lastname` (`firstname`(15),`lastname`(10),`number`(7)),
   KEY `number` (`number`,`lastname`(15),`firstname`(10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `pb_ldap`
---
-
-LOCK TABLES `pb_ldap` WRITE;
-/*!40000 ALTER TABLE `pb_ldap` DISABLE KEYS */;
-INSERT INTO `pb_ldap` VALUES ('012345','TEST','HANS','123','2007-05-24 07:28:28');
-/*!40000 ALTER TABLE `pb_ldap` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `pb_prv`
@@ -7114,8 +7123,6 @@ CREATE TABLE `ringtones` (
 
 LOCK TABLES `ringtones` WRITE;
 /*!40000 ALTER TABLE `ringtones` DISABLE KEYS */;
-INSERT INTO `ringtones` VALUES (23,'internal',1,'somefile');
-INSERT INTO `ringtones` VALUES (23,'external',2,NULL);
 /*!40000 ALTER TABLE `ringtones` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -106,6 +106,15 @@ if (! $type) {
 	$xml.= '</AastraIPPhoneTextMenu>' ."\n";
 	
 } elseif ($type==='out' || $type==='in' || $type==='missed' || $type=='queue' ) {
+	
+	if ($type==='missed') {
+		$xml = "<AastraIPPhoneExecute>\n" .
+		"	<ExecuteItem URI=\"Command: ClearCallersList\"/>\n" .
+		"</AastraIPPhoneExecute>\n";
+		$phone_ip = @$_SERVER['REMOTE_ADDR'];
+		aastra_push_str($phone_ip, $xml);
+	}
+	
 	if ( $type == queue ){	
 		$query =
 		'SELECT

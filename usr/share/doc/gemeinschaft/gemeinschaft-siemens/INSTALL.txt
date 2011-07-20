@@ -1,0 +1,111 @@
+* 
+* INSTALLATION
+* 
+* $Revision: 91 $
+* 
+* amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+
+
+Voraussetzungen:
+======================
+- Gemeinschaft installiert
+- DHCP-Server Mass-Deployment für Siemens-Telefone konfiguriert
+
+
+Installation:
+======================
+
+Verzeichnis /opt/gemeinschaft-siemens/ installieren (sollte dann
+z.B. die Dateien prov-settings.php und prov-checkcfg.php enthalten)
+
+(Entwickler:
+cd /opt/
+ln -s gemeinschaft-siemens-svn/opt/gemeinschaft-siemens gemeinschaft-siemens
+)
+
+SSL für den Apache installieren:
+yum install openssl mod_ssl
+(bzw. apt-get install openssl)
+
+Apache-Konfig:
+LoadModule ssl_module modules/mod_ssl.so
+(steht bei CentOS bereits in /etc/httpd/conf.d/ssl.conf)
+(Debian:
+cd /etc/apache2/mods-enabled/
+ln -s ../mods-available/ssl.load ssl.load
+ln -s ../mods-available/ssl.conf ssl.conf
+ln -s ../mods-available/rewrite.load rewrite.load
+)
+
+Selbst-signierten SSL-Schlüssel generieren und die Dateien ggf. in
+die Apache-Konfig-Verzeichnisse (z.B. /etc/httpd/conf/ssl.*/) legen.
+(Möglicherweise sind mit mod_ssl bereits Keys installiert.)
+siehe ssl-certificate.txt
+
+Virtuellen Host in Apache anlegen wie im Beispiel in
+httpd-vhost.conf.example beschrieben. Eigene Keys eintragen.
+
+Apache neu starten:
+/etc/init.d/httpd restart
+(Debian: /etc/init.d/apache2 restart)
+
+zum Debuggen:
+cd /var/log/gemeinschaft/
+touch siemens-access-debug.log
+chown apache:apache siemens-access-debug.log
+(Debian: chown www-data:www-data siemens-access-debug.log)
+
+In der /opt/gemeinschaft-siemens/prov-settings.php zum Debuggen
+des Protokolls $raw_debug auf true setzen (Achtung, die Datei
+wird schnell recht groß!), ansonsten immer auf false.
+
+
+
+FTP-Server für Firmware-Deployment etc. einrichten:
+yum install vsftpd
+(Debian: apt-get install vsftpd
+Für Debian gibt es auch eine Vielzahl anderer FTP-Server als Pakete:
+ftpd, inetutils-ftpd, muddleftpd, proftpd, pure-ftpd, twoftpd,
+twoftpd-run, vsftpd, wu-ftpd, wzdftpd, ...)
+
+useradd -M -d /opt/gemeinschaft-siemens/firmware/ -g nobody -n -s /sbin/nologin gs-siemens-fw
+(Debian:
+useradd -d /opt/gemeinschaft-siemens/firmware/ -g nogroup -s /bin/sh gs-siemens-fw
+)
+
+Paßwort setzen:
+passwd gs-siemens-fw
+(interaktive Eingabe - in /opt/gemeinschaft-siemens/conf.php
+(GS_PROV_SIEMENS_FTP_PWD) eintragen)
+
+
+in /etc/vsftpd/vsftpd.conf (Debian: /etc/vsftpd.conf):
+listen=YES
+ascii_upload_enable=NO
+ascii_download_enable=NO
+anonymous_enable=NO
+anon_upload_enable=NO
+anon_mkdir_write_enable=NO
+local_enable=YES
+write_enable=NO
+userlist_enable=YES
+userlist_file=/etc/vsftpd.user_list
+userlist_deny=NO
+chroot_local_user=YES
+chroot_list_enable=NO
+
+in /etc/vsftpd.user_list nur den User gs-siemens-fw:
+gs-siemens-fw
+
+
+chkconfig --levels 235 vsftpd on
+(Debian: update-rc.d vsftpd defaults)
+/etc/init.d/vsftpd restart
+
+
+
