@@ -5497,7 +5497,7 @@ CREATE TABLE `ast_sipfriends` (
   `call-limit` tinyint(3) unsigned NOT NULL default '20',
   `subscribecontext` varchar(50) character set ascii NOT NULL default 'default',
   `regcontext` varchar(50) character set ascii default NULL,
-  `ipaddr` varchar(15) character set ascii default NULL,
+  `ipaddr` varchar(45) character set ascii default NULL,
   `port` varchar(5) character set ascii default NULL,
   `regseconds` int(10) unsigned NOT NULL default '0',
   `username` varchar(25) character set ascii default NULL,

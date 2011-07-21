@@ -131,3 +131,9 @@ CREATE TABLE IF NOT EXISTS `phones_typecache` (
 --
 
 ALTER TABLE `gate_params` ADD `param_id` INT( 8 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST 
+
+--
+-- Column `ipaddr` in table `ast_sipfriends` needs a length of 45 characters 
+--
+
+ALTER TABLE `ast_sipfriends` CHANGE `ipaddr` `ipaddr` VARCHAR( 45 ) CHARACTER SET ascii COLLATE ascii_general_ci NULL DEFAULT NULL;
