@@ -5589,7 +5589,7 @@ DROP TABLE IF EXISTS `ast_sipfriends_gs`;
 
 DROP TABLE IF EXISTS `ast_voicemail`;
 CREATE TABLE `ast_voicemail` (
-  `_uniqueid` int(10) unsigned NOT NULL auto_increment,
+  `uniqueid` int(10) unsigned NOT NULL auto_increment,
   `_user_id` int(10) unsigned default NULL,
   `mailbox` varchar(10) character set ascii NOT NULL default '',
   `context` varchar(50) character set ascii NOT NULL default 'default',

@@ -137,3 +137,10 @@ ALTER TABLE `gate_params` ADD `param_id` INT( 8 ) UNSIGNED NOT NULL AUTO_INCREME
 --
 
 ALTER TABLE `ast_sipfriends` CHANGE `ipaddr` `ipaddr` VARCHAR( 45 ) CHARACTER SET ascii COLLATE ascii_general_ci NULL DEFAULT NULL;
+
+--
+-- Renamed column `_uniqueid` to `uniqueid` in table `ast_voicemail` (for asterisk 1.8)
+--
+
+ALTER TABLE `ast_voicemail` CHANGE `_uniqueid` `uniqueid` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+
