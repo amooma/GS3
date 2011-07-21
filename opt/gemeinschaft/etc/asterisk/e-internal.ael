@@ -285,7 +285,8 @@ context to-internal-users {
 			Verbose(1,### Incoming call from a gateway to ${EXTEN});
 			//Set(__is_from_gateway=1);
 		} else {
-			&caller-count();
+			if ("${CHANNEL(channeltype)}" != "Local")
+				&caller-count();
 		}
 		//else if ("${CHANNEL(channeltype)}" = "SIP") {
 		//	// this needs to be nested because Asterisk would otherwise complain

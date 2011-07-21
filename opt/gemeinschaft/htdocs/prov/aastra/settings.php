@@ -332,8 +332,6 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 		psetting('missed calls indicator disabled'     , 0, false, false);
 	}
 	
-	psetting('sip explicit mwi subscription'       , 1, false, false);
-	psetting('sip explicit mwi subscription period', 120, false, false);
 	psetting('sip registration retry timer'        , 60, false, false);
 	psetting('sip registration timeout retry timer', 30, false, false);
 	psetting('sip blf subscription period'         , 120, false, false);
@@ -361,7 +359,6 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('redial disabled'    , '0', false, false);
 
 	psetting('sip mode'                , '0', false, false);  # Generic SIP server
-	psetting('sip vmail'               , 'voicemail', false, false);
 	psetting('sip registrar port'      , '5060', false, false);
 	psetting('sip registration period' , '120', false, false);
 	psetting('sip outbound proxy port' , '5060', false, false);

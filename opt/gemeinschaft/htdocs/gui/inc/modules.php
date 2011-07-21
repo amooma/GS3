@@ -289,6 +289,7 @@ $MODULES['admin'    ]=  array(
 		'sysrecs'      => array('title' => __('Audiodateien'), 'id' => 15013),
 //		'conferences'  => array('title' => __('Konferenzen'), 'id' => 15007),
 		'calls'        => array('title' => __('CDRs'), 'id' => 15009),
+		'billing'      => array('title' => __('Abrechnung/EVN')),
 		'reload'       => array('title' => __('Reload'), 'id' => 15010)
 	)
 );
