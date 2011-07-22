@@ -493,11 +493,12 @@ macro agent-unpause() {
 
 context agents {
 
-	*6*  => &agent-logout();
-	*6   => &agent-login-enterid();
-	_*6. => &agent-login(${EXTEN:2});		
 	*6#* => &agent-pause();
 	*6## => &agent-unpause();
+	*6*  => &agent-logout();
+	*6   => &agent-login-enterid();
+	_*6[0-9]. => &agent-login(${EXTEN:2});
+
 
 }
 

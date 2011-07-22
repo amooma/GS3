@@ -168,7 +168,7 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $language, $host
 	# add mailbox
 	#
 	if (! $host['is_foreign']) {
-		$ok = $db->execute( 'INSERT INTO `ast_voicemail` (`_uniqueid`, `_user_id`, `mailbox`, `password`, `email`, `fullname`) VALUES (NULL, '. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($pin) .'\', \'\', _utf8\''. $db->escape($firstname .' '. $lastname) .'\')' );
+		$ok = $db->execute( 'INSERT INTO `ast_voicemail` (`uniqueid`, `_user_id`, `mailbox`, `password`, `email`, `fullname`) VALUES (NULL, '. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($pin) .'\', \'\', _utf8\''. $db->escape($firstname .' '. $lastname) .'\')' );
 		if (! $ok) {
 			gs_db_rollback_trans($db);
 			return new GsError( 'Failed to add user (table ast_voicemail).' );

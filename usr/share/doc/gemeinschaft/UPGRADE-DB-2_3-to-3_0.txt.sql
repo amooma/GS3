@@ -130,4 +130,22 @@ CREATE TABLE IF NOT EXISTS `phones_typecache` (
 -- Add new column with primary key to table `gate_params`
 --
 
-ALTER TABLE `gate_params` ADD `param_id` INT( 8 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST 
+ALTER TABLE `gate_params` ADD `param_id` INT( 8 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+
+--
+-- Column `ipaddr` in table `ast_sipfriends` needs a length of 45 characters 
+--
+
+ALTER TABLE `ast_sipfriends` CHANGE `ipaddr` `ipaddr` VARCHAR( 45 ) CHARACTER SET ascii COLLATE ascii_general_ci NULL DEFAULT NULL;
+
+--
+-- Renamed column `_uniqueid` to `uniqueid` in table `ast_voicemail` (for asterisk 1.8)
+--
+
+ALTER TABLE `ast_voicemail` CHANGE `_uniqueid` `uniqueid` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- Resize column `regseconds` in table `ast_sipfriends` (for asterisk 1.8)
+--
+
+ALTER TABLE `ast_sipfriends` CHANGE `regseconds` `regseconds` INT( 11 ) NULL DEFAULT NULL;

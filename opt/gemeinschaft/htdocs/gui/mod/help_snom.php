@@ -52,6 +52,8 @@ echo '</h2>', "\n";
 <br><a target="_blank" href="http://wiki.snom.com/Snom320/Documentation"><?php echo __('Dokumentation snom 320'); ?></a>
 / <a target="_blank" href="http://wiki.snom.com/Snom360/Documentation"><?php echo __('Dokumentation snom 360'); ?></a>
 / <a target="_blank" href="http://wiki.snom.com/Snom370/Documentation"><?php echo __('Dokumentation snom 370'); ?></a>
+/ <a target="_blank" href="http://wiki.snom.com/Snom820/Documentation"><?php echo __('Dokumentation snom 820'); ?></a>
+/ <a target="_blank" href="http://wiki.snom.com/Snom821/Documentation"><?php echo __('Dokumentation snom 821'); ?></a>
 </p>
 
 <table cellspacing="1">

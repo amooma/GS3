@@ -5497,9 +5497,9 @@ CREATE TABLE `ast_sipfriends` (
   `call-limit` tinyint(3) unsigned NOT NULL default '20',
   `subscribecontext` varchar(50) character set ascii NOT NULL default 'default',
   `regcontext` varchar(50) character set ascii default NULL,
-  `ipaddr` varchar(15) character set ascii default NULL,
+  `ipaddr` varchar(45) character set ascii default NULL,
   `port` varchar(5) character set ascii default NULL,
-  `regseconds` int(10) unsigned NOT NULL default '0',
+  `regseconds` int(11) DEFAULT NULL,
   `username` varchar(25) character set ascii default NULL,
   `regserver` varchar(50) character set ascii default NULL,
   `fullcontact` varchar(100) character set ascii default NULL,
@@ -5589,7 +5589,7 @@ DROP TABLE IF EXISTS `ast_sipfriends_gs`;
 
 DROP TABLE IF EXISTS `ast_voicemail`;
 CREATE TABLE `ast_voicemail` (
-  `_uniqueid` int(10) unsigned NOT NULL auto_increment,
+  `uniqueid` int(10) unsigned NOT NULL auto_increment,
   `_user_id` int(10) unsigned default NULL,
   `mailbox` varchar(10) character set ascii NOT NULL default '',
   `context` varchar(50) character set ascii NOT NULL default 'default',
@@ -5599,7 +5599,7 @@ CREATE TABLE `ast_voicemail` (
   `tz` varchar(25) character set ascii default 'germany',
   `attach` enum('no','yes') character set ascii NOT NULL default 'no',
   `delete` enum('no','yes') character set ascii NOT NULL default 'no',
-  PRIMARY KEY  (`_uniqueid`),
+  PRIMARY KEY  (`uniqueid`),
   UNIQUE KEY `context_mailbox` (`context`,`mailbox`),
   KEY `fullname` (`fullname`(20)),
   KEY `_user_id` (`_user_id`),

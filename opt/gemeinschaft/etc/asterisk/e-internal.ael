@@ -1177,6 +1177,41 @@ context to-internal-users-self {
 			
 			Set(all_busy=);
 			
+			Set(joinempty=${REALTIME_FIELD(queues,name,${EXTEN},joinempty)});
+			Verbose(1,### Queue ${EXTEN} joinempty is: ${joinempty});
+
+
+			if ( "${joinempty}" != "yes" ) {
+				
+
+				Verbose(1,### Queue ${EXTEN} : Agents ${QUEUE_MEMBER_COUNT(${EXTEN})} );
+
+				if ( "${joinempty}" == "no" && ${QUEUE_MEMBER_COUNT(${EXTEN})} <= 0 ) {
+				
+					Set(all_busy=1);	
+					Set(QUEUESTATUS=JOINEMPTY);
+					Verbose(1,### Queue ${EXTEN} : No agents logged in. The caller will not enter the queue );
+				}
+				else if ( "${joinempty}" == "strict" && ${QUEUE_MEMBER(${EXTEN},free)} <= 0 ) {
+					Set(all_busy=1);
+					Set(QUEUESTATUS=JOINUNAVAIL);
+					Verbose(1,### Queue ${EXTEN} : No agents logged in/free. The caller will not enter the queue );
+				}
+
+			}
+			
+			if ( "${all_busy}" != "1" ) {
+				Set(maxlen=${REALTIME_FIELD(queues,name,${EXTEN},maxlen)});
+
+				if ( ${maxlen} > 0 &&  ${QUEUE_WAITING_COUNT(${EXTEN})} >= ${maxlen} ) {
+					Set(all_busy=1);
+					Set(QUEUESTATUS=FULL);
+					Verbose(1,### Queue ${EXTEN} : The queue is full. The caller will net enter the queue );
+				}
+
+			}
+
+
 			// SONDERFALL HACK
 			//if ("${EXTEN}" = "5000") {
 			//	Answer();
@@ -1280,7 +1315,7 @@ context to-internal-users-self {
 					Dial(Local/${fw_${is_call_from}_full}/n,900);
 					&hangup-proper-status();
 				}
-				Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/queue-all-busy);
+				//Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/queue-all-busy);
 				Busy(5);
 				Hangup();
 			}

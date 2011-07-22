@@ -47,6 +47,11 @@ if (! $number)
 	exit(1);
 $number = preg_replace( '/[^\d*#]/', '', $number );
 
+//the number should never be empty
+if ( strlen( $number ) <= 0 ) {
+	$number = 'anonym';
+}
+
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
