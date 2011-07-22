@@ -193,8 +193,15 @@ while ($gw = $rs->fetchRow()) {
 	if ($params['port'          ] > 0) {
 		echo 'port = '            , $params['port'          ] ,"\n";
 	}
-	echo 'username = '            , $gw['user'] ,"\n";
-	echo 'secret = '              , $gw['pwd' ] ,"\n";
+	
+	if ($gw['user'] != null) {
+        	echo 'defaultuser = '            , $gw['user'] ,"\n";
+	}
+	
+	if ($gw['pwd'] != null) {
+        	echo 'secret = '              , $gw['pwd' ] ,"\n";
+        }
+	
 	if ($gw['proxy'] != null) {
 		echo 'outboundproxy = '   , $gw['proxy'] ,"\n";
 	}
@@ -207,17 +214,32 @@ while ($gw = $rs->fetchRow()) {
 	if ($params['language'      ] != null) {
 		echo 'language = '        , $params['language'      ] ,"\n";
 	}
-	echo 'insecure = '        , $params['insecure'           ] ,"\n";
-	echo 'nat = '             , $params['nat'           ] ,"\n";
-	echo 'directmedia = '     , $params['directmedia'   ] ,"\n";
-	echo 'dtmfmode = '        , $params['dtmfmode'      ] ,"\n";
+	
+	if ( array_key_exists ( 'insecure', $params )) {
+	        echo 'insecure = '        , $params['insecure'           ] ,"\n";
+	}
+	
+	if ( array_key_exists ( 'nat', $params )) {
+	        echo 'nat = '             , $params['nat'           ] ,"\n";
+	}
+	
+	if ( array_key_exists ( 'directmedia', $params )) {
+	        echo 'directmedia = '     , $params['directmedia'   ] ,"\n";
+	}
+	if ( array_key_exists ( 'dtmfmode', $params )) {
+        	echo 'dtmfmode = '        , $params['dtmfmode'      ] ,"\n";
+        }
+	
 	if ( array_key_exists ( 'call-limit', $params )) {
 	        echo 'call-limit = '      , $params['call-limit'    ] ,"\n";
 	}
 	
 	echo 'setvar=__is_from_gateway=1' ,"\n";
 	echo 'context = '         , 'from-gg-'.$gw['gg_name'] ,"\n";
-	echo 'qualify = '         , $params['qualify'       ] ,"\n";
+
+	if ( array_key_exists ( 'qualify', $params )) {
+        	echo 'qualify = '         , $params['qualify'       ] ,"\n";
+        }
 
 	if ( count ($params_codecs) > 0 ) {
 		 echo 'disallow = '        , 'all' ,"\n";

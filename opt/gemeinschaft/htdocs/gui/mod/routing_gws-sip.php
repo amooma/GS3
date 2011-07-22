@@ -421,7 +421,7 @@ if ($action === 'edit') {
 	echo '<td>',"\n";
 	echo '<input type="text" name="gw-user" value="', htmlEnt($gw['user']) ,'" size="25" maxlength="35" style="width:97%;" />',"\n";
 	echo '</td>',"\n";
-	echo '<td class="transp xs gray"><code>username / fromuser@fromdomain</code></td>',"\n";
+	echo '<td class="transp xs gray"><code>defaultuser / fromuser@fromdomain</code></td>',"\n";
 	echo '</tr>',"\n";
 	
 	echo '<tr class="m">',"\n";
@@ -815,8 +815,13 @@ if ($_REQUEST['extended'] == "show") {
 		printparam( 'host', $gw['host'], $userguiparam, true);
 		 
 		printparam( 'port', '5060', $userguiparam, true);
-		printparam( 'username', $gw['user'], $userguiparam, true);
-		printparam( 'secret', $gw['pwd'], $userguiparam, true);
+		if ($gw['user'] != null) {
+			printparam( 'defaultuser', $gw['user'], $userguiparam, true);
+		}
+		
+		if ($gw['pwd'] != null) {
+			printparam( 'secret', $gw['pwd'], $userguiparam, true);
+		}
 		
 		if ($gw['proxy'] != null) {
 			printparam( 'outboundproxy', $gw['proxy'], $userguiparam, true);
