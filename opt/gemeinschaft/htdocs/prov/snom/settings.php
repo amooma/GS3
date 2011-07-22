@@ -697,10 +697,34 @@ psetting('enable_keyboard_lock'   , 'on' );
 psetting('keyboard_lock'          , 'off');
 psetting('keyboard_lock_pw'       , ''   );
 psetting('keyboard_lock_emergency', '911 112 110 999 19222');  # default
-psetting('ldap_server'            , ''   );
+if (! gs_get_conf('GS_PB_LDAP_ENABLED') ) {
+	psetting('ldap_server'            , '');
+	psetting('ldap_port'              , '');
+	psetting('ldap_search_filter'     , '');
+	psetting('ldap_number_filter'     , '');
+	psetting('ldap_base'              , '');
+	psetting('ldap_name_attributes'   , '');
+	psetting('ldap_number_attributes' , '');
+	psetting('ldap_display_name'      , '');
+	psetting('guess_start_length'     , 4 );
+} else {
+	psetting('ldap_server'            , gs_get_conf('GS_PB_LDAP_HOST'));
+	if (gs_get_conf('GS_PB_LDAP_PORT') === 0)
+		psetting('ldap_port', 389);
+	else
+		psetting('ldap_port', gs_get_conf('GS_PB_LDAP_PORT'));
+	psetting('ldap_search_filter'     , '(|(cn=%)(sn=%))'             );
+	psetting('ldap_number_filter'     , '(&(telephoneNumber=%)(sn=*))');
+	psetting('ldap_base'              , 'ou=phonebook,dc=gemeinschaft,dc=local');
+	psetting('ldap_name_attributes'   , 'sn givenName'                );
+	psetting('ldap_number_attributes' , 'telephoneNumber'             );
+	psetting('ldap_display_name'      , '%givenName %sn'              );
+	psetting('guess_start_length'     , 4                             );
+}
+psetting('ldap_lookup_ringing'    , 'off');
+psetting('guess_number'           , 'off' );
 psetting('answer_after_policy'    , 'idle');
 psetting('call_join_xfer'         , 'off');
-psetting('guess_number'           , 'off');
 psetting('partial_lookup'         , 'off');
 psetting('deny_all_feature'       , 'off');  # keine Telefon-interne Blacklist
 psetting('audio_device_indicator' , 'on' );

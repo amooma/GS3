@@ -712,6 +712,12 @@ $BUTTONDAEMON_DISPLAYDIR = "/var/spool/astbuttond/";
 //$PB_INTERNAL_TITLE      = "Intern";             #  "
 //$PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";  #  "
 
+# local LDAP server as helper application for LDAP-enabled phones
+//$PB_LDAP_ENABLED  = false;
+//$PB_LDAP_HOST     = '192.168.1.130';
+//$PB_LDAP_PORT     = 0;        # 0 for default (389 / 636)
+//$PB_LDAP_BINDDN   = 'cn=admin,dc=gemeinschaft,dc=local';  # i.e. the rootdn
+//$PB_LDAP_PWD      = 'secret';
 
 
 /***********************************************************

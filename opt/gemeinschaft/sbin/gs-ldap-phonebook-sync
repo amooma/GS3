@@ -1,0 +1,167 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+include_once( GS_DIR .'inc/gs-lib.php' );
+require_once( GS_DIR .'inc/db_connect.php' );
+require_once( GS_DIR .'inc/ldap.php' );
+
+if (! gs_get_conf('GS_PB_LDAP_ENABLED') )
+	die(0);
+
+$db = gs_db_slave_connect();
+if (! $db) {
+	gs_log(GS_LOG_WARNING, 'Could not connect to database.');
+	die(1);
+}
+
+$host = gs_get_conf('GS_PB_LDAP_HOST');
+if (gs_get_conf('GS_PB_LDAP_PORT') === 0)
+	$port = 389;
+else
+	$port = gs_get_conf('GS_PB_LDAP_PORT');
+$binddn = gs_get_conf('GS_PB_LDAP_BINDDN');
+$password = gs_get_conf('GS_PB_LDAP_PWD');
+
+$ldap = gs_ldap_connect($host, $port, $binddn, $password);
+if (! $ldap) {
+	gs_log(GS_LOG_WARNING, 'Count not connect to LDAP server.');
+	die(1);
+}
+
+$entries = gs_ldap_get_list( $ldap, 'ou=phonebook, dc=gemeinschaft, dc=local', '(objectClass=inetOrgPerson)' );
+
+foreach ($entries as $entry) {
+	gs_log(GS_LOG_DEBUG, 'Deleting ' . $entry["dn"]);
+	if (! ldap_delete($ldap, $entry["dn"]) ) {
+		gs_log( GS_LOG_WARNING, 'Could not delete ' . $entry["dn"]. ': ' . gs_get_ldap_error($ldap) );
+	}
+}
+
+$rs = $db->execute(
+'SELECT
+	users.id AS id,
+	users.firstname AS firstname,
+	users.lastname AS lastname,
+	ast_sipfriends.name AS number
+FROM
+	users, ast_sipfriends
+WHERE
+	users.nobody_index IS NULL
+AND
+	users.id = ast_sipfriends._user_id'
+);
+
+while ($user = $rs->fetchRow()) {
+
+	$entry = array();
+
+	$entry["objectClass"][0] = "inetOrgPerson";
+	$entry["objectClass"][1] = "organizationalPerson";
+	$entry["objectClass"][2] = "person";
+	$entry["objectClass"][3] = "top";
+
+	$entry["sn"] = $user["lastname"];
+	$entry["telephoneNumber"] = $user["number"];
+
+	$entry["cn"] = "";
+	if (strlen($user["firstname"]) > 0)
+		$entry["cn"] = $user["firstname"] . ' ';
+	$entry["cn"] .= $user["lastname"];
+
+	if (strlen($user["firstname"]) > 0)
+		$entry["givenName"] = $user["firstname"];
+	
+	$dn = 'cn=';
+	if (strlen($user["firstname"]) > 0)
+		$dn .= $user["firstname"] . ' ';
+	if (strlen($user["lastname"]) > 0)
+	 	$dn .= $user["lastname"];
+	$dn .= $user["id"];
+	$dn .= ',ou=internal,ou=phonebook,dc=gemeinschaft,dc=local';
+
+	gs_log(GS_LOG_DEBUG, 'Adding ' . $dn);
+
+	if (! @ldap_add($ldap, $dn, $entry) ) {
+		gs_log( GS_LOG_WARNING, 'Could not create ' . $dn . ': ' . gs_get_ldap_error($ldap) );
+	}
+	
+	unset($entry);
+}
+
+$rs = $db->execute(
+'SELECT
+	pb_ldap.id AS id,
+	pb_ldap.firstname AS firstname,
+	pb_ldap.lastname AS lastname,
+	pb_ldap.number AS number
+FROM
+	pb_ldap'
+);
+
+while ($user = $rs->fetchRow()) {
+
+	$entry = array();
+
+	$entry["objectClass"][0] = "inetOrgPerson";
+	$entry["objectClass"][1] = "organizationalPerson";
+	$entry["objectClass"][2] = "person";
+	$entry["objectClass"][3] = "top";
+
+	$entry["sn"] = $user["lastname"];
+	$entry["telephoneNumber"] = $user["number"];
+
+	$entry["cn"] = "";
+	if (strlen($user["firstname"]) > 0)
+		$entry["cn"] = $user["firstname"] . ' ';
+	$entry["cn"] .= $user["lastname"];
+
+	if (strlen($user["firstname"]) > 0)
+		$entry["givenName"] = $user["firstname"];
+	
+	$dn = 'cn=';
+	if (strlen($user["firstname"]) > 0)
+		$dn .= $user["firstname"] . ' ';
+	if (strlen($user["lastname"]) > 0)
+	 	$dn .= $user["lastname"];
+	$dn .= $user["id"];
+	$dn .= ',ou=external,ou=phonebook,dc=gemeinschaft,dc=local';
+
+	gs_log(GS_LOG_DEBUG, 'Adding ' . $dn);
+
+	if (! @ldap_add($ldap, $dn, $entry) ) {
+		gs_log( GS_LOG_WARNING, 'Could not create ' . $dn . ': ' . gs_get_ldap_error($ldap) );
+	}
+	
+	unset($entry);
+}
+
+?>
