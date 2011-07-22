@@ -5499,7 +5499,7 @@ CREATE TABLE `ast_sipfriends` (
   `regcontext` varchar(50) character set ascii default NULL,
   `ipaddr` varchar(45) character set ascii default NULL,
   `port` varchar(5) character set ascii default NULL,
-  `regseconds` int(10) unsigned NOT NULL default '0',
+  `regseconds` int(11) DEFAULT NULL,
   `username` varchar(25) character set ascii default NULL,
   `regserver` varchar(50) character set ascii default NULL,
   `fullcontact` varchar(100) character set ascii default NULL,

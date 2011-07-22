@@ -144,3 +144,8 @@ ALTER TABLE `ast_sipfriends` CHANGE `ipaddr` `ipaddr` VARCHAR( 45 ) CHARACTER SE
 
 ALTER TABLE `ast_voicemail` CHANGE `_uniqueid` `uniqueid` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT;
 
+--
+-- Resize column `regseconds` in table `ast_sipfriends` (for asterisk 1.8)
+--
+
+ALTER TABLE `ast_sipfriends` CHANGE `regseconds` `regseconds` INT( 11 ) NULL DEFAULT NULL
