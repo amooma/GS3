@@ -394,7 +394,7 @@ else
 			$bill_thisprice = ($bill_minutes * $real_price_novat);
 
 			// work around possible dialout cdr quirk
-			if($bill_row["dst"] == "s") $bill_tmpdest = $bill_row["userfield"];
+			if(($bill_row["dst"] == "s") || ($bill_row["dst"] == "~~s~~")) $bill_tmpdest = $bill_row["userfield"];
 			else $bill_tmpdest = $bill_row["dst"];
 
 			if($privprefixonly == "on") $bill_dest = str_replace("*7*", "", $bill_tmpdest);
