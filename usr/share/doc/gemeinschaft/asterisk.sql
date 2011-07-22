@@ -5599,7 +5599,7 @@ CREATE TABLE `ast_voicemail` (
   `tz` varchar(25) character set ascii default 'germany',
   `attach` enum('no','yes') character set ascii NOT NULL default 'no',
   `delete` enum('no','yes') character set ascii NOT NULL default 'no',
-  PRIMARY KEY  (`_uniqueid`),
+  PRIMARY KEY  (`uniqueid`),
   UNIQUE KEY `context_mailbox` (`context`,`mailbox`),
   KEY `fullname` (`fullname`(20)),
   KEY `_user_id` (`_user_id`),
