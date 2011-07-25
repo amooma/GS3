@@ -1349,7 +1349,7 @@ context private-call {
 		// accountcode setzen ...
 		AGI(/opt/gemeinschaft/dialplan-scripts/usercode-by-ext.agi,${user_name});
 		Set(CDR(amaflags)=BILLING);
-		Set(CDR(accountcode)=prv-${user_code});
+		Set(CDR(accountcode)=prv-${user_name});
 		Set(CDR(userfield)=${number});
 		
 		// fuer Amtsberechtigung:
