@@ -697,10 +697,34 @@ psetting('enable_keyboard_lock'   , 'on' );
 psetting('keyboard_lock'          , 'off');
 psetting('keyboard_lock_pw'       , ''   );
 psetting('keyboard_lock_emergency', '911 112 110 999 19222');  # default
-psetting('ldap_server'            , ''   );
+if (! gs_get_conf('GS_PB_LDAP_ENABLED') ) {
+	psetting('ldap_server'            , '');
+	psetting('ldap_port'              , '');
+	psetting('ldap_search_filter'     , '');
+	psetting('ldap_number_filter'     , '');
+	psetting('ldap_base'              , '');
+	psetting('ldap_name_attributes'   , '');
+	psetting('ldap_number_attributes' , '');
+	psetting('ldap_display_name'      , '');
+	psetting('guess_start_length'     , 4 );
+} else {
+	psetting('ldap_server'            , gs_get_conf('GS_PB_LDAP_HOST'));
+	if (gs_get_conf('GS_PB_LDAP_PORT') === 0)
+		psetting('ldap_port', 389);
+	else
+		psetting('ldap_port', gs_get_conf('GS_PB_LDAP_PORT'));
+	psetting('ldap_search_filter'     , '(|(cn=%)(sn=%))'             );
+	psetting('ldap_number_filter'     , '(&(telephoneNumber=%)(sn=*))');
+	psetting('ldap_base'              , 'ou=phonebook,dc=gemeinschaft,dc=local');
+	psetting('ldap_name_attributes'   , 'sn givenName'                );
+	psetting('ldap_number_attributes' , 'telephoneNumber'             );
+	psetting('ldap_display_name'      , '%givenName %sn'              );
+	psetting('guess_start_length'     , 4                             );
+}
+psetting('ldap_lookup_ringing'    , 'off');
+psetting('guess_number'           , 'off' );
 psetting('answer_after_policy'    , 'idle');
 psetting('call_join_xfer'         , 'off');
-psetting('guess_number'           , 'off');
 psetting('partial_lookup'         , 'off');
 psetting('deny_all_feature'       , 'off');  # keine Telefon-interne Blacklist
 psetting('audio_device_indicator' , 'on' );
@@ -947,13 +971,15 @@ psetting('dkey_redial'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name
 psetting('dkey_retrieve' , 'speed voicemail');
 
 # firmware 8.2-Settings
-psetting('idle_left_key_action'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac');
-psetting('idle_right_key_action'   , 'keyevent F_HELP');
-psetting('idle_up_key_action'   , '');
-psetting('idle_down_key_action'   , '');
-psetting('idle_ok_key_action'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac&type=out');
-psetting('idle_cancel_key_action'   , '');
+psetting('idle_left_key_action'  , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac');
+psetting('idle_right_key_action' , 'keyevent F_HELP');
+psetting('idle_up_key_action'    , '');
+psetting('idle_down_key_action'  , '');
+psetting('idle_ok_key_action'    , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac&type=out');
+psetting('idle_cancel_key_action', '');
 
+# do not show snom advertisement in Web UI
+psetting('advertisement'         , 'off');
 
 #####################################################################
 #  Keys

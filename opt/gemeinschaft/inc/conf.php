@@ -358,6 +358,12 @@ _gscnf( 'PB_INTERNAL_TITLE'         , "Intern"           );
 _gscnf( 'PB_PRIVATE_TITLE'          , "Pers\xC3\xB6nlich");
 _gscnf( 'PB_REVERSE_SEARCH'         , false              );
 
+_gscnf( 'PB_LDAP_ENABLED'           , false              );
+_gscnf( 'PB_LDAP_HOST'              , ''                 );
+_gscnf( 'PB_LDAP_PORT'              , 389                );
+_gscnf( 'PB_LDAP_BINDDN'            , ''                 );
+_gscnf( 'PB_LDAP_PWD'               , ''                 );
+
 _gscnf( 'LOCK_DIR'                  , '/var/lock/'       );
 _gscnf( 'CALL_INIT_FROM_NET'        , '0.0.0.0/32'       ); # deny all
 _gscnf( 'FAX_INIT_FROM_NET'         , '0.0.0.0/32'       ); # deny all
