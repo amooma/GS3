@@ -5961,7 +5961,7 @@ DROP TABLE IF EXISTS `gate_params`;
 CREATE TABLE `gate_params` (
   `param_id` int(8) unsigned NOT NULL AUTO_INCREMENT,
   `gate_id` smallint(5) unsigned NOT NULL,
-  `param` varchar(50) character set ascii NOT NULL,
+  `param` varchar(50) character set ascii,
   `value` varchar(255) collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`param_id`),
   KEY `gate_id_param` (`gate_id`,`param`(20)),
