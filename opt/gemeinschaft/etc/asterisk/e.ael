@@ -1161,9 +1161,6 @@ macro dial-gateway-do( mnumber ) {
 			if (${LEN(${CALLERID(name)})} < 1) {
 				Set(CALLERID(name)=${CALLERID(num)});
 			}
-			// RFC 3325:
-			SIPAddHeader(P-Asserted-Identity: ${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
-			SIPAddHeader(P-Preferred-Identity: ${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
 			// RFC 3325, RFC 3323:
 			SIPAddHeader(Privacy: none);
 			// Set caller presentation - affects Remote-Party-ID header: ...";privacy:off;screen:yes"
@@ -1174,8 +1171,6 @@ macro dial-gateway-do( mnumber ) {
 			// RFC 2543:
 			Set(CALLERID(num)=anonymous);
 			Set(CALLERID(name)=Anonymous);
-			// RFC 3325:
-			SIPAddHeader(P-Preferred-Identity: ${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
 			// RFC 3325, RFC 3323:
 			SIPAddHeader(Privacy: id;header);
 			// Set caller presentation - affects Remote-Party-ID header: ...";privacy:full;screen:yes"
