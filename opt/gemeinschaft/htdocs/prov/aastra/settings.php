@@ -359,6 +359,9 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('redial disabled'    , '0', false, false);
 
 	psetting('sip mode'                , '0', false, false);  # Generic SIP server
+	# workaround for firmware bug
+	if ($phone_type == 'aastra-6739i')
+		psetting('sip vmail', 'voicemail', false, false);
 	psetting('sip registrar port'      , '5060', false, false);
 	psetting('sip registration period' , '120', false, false);
 	psetting('sip outbound proxy port' , '5060', false, false);
