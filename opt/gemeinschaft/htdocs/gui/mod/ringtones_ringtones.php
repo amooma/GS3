@@ -198,7 +198,7 @@ if (is_array($errMsgs) && count($errMsgs) > 0) {
 <thead>
 <tr>
 	<th><?php echo __('Von'); ?></th>
-	<th>Bellcore</th>
+	<th><?php echo __('Klingelton'); ?></th>
 	<th><?php echo __('Audio-Datei'); ?></th>
 </tr>
 </thead>
@@ -214,7 +214,7 @@ foreach ($sources as $source => $source_v) {
 for ($i=1; $i<=11; ++$i) {
 	if ($i <= 10) {
 		$dr_i = $i;
-		$dr_v = 'Bellcore '. $i;
+		$dr_v = __('Klingelton') . ' ' . $i;
 	} elseif ($i == 11) {
 		$dr_i = 0;
 		$dr_v = __('Lautlos');
