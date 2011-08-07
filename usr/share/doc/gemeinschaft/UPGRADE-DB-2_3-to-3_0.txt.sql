@@ -136,8 +136,7 @@ ALTER TABLE `gate_params` ADD `param_id` INT( 8 ) UNSIGNED NOT NULL AUTO_INCREME
 -- Allow column `param` being null in table `gate_params`
 --
 
-
-ALTER TABLE `gate_params` CHANGE `param` `param` VARCHAR( 50 ) CHARACTER SET ascii COLLATE ascii_general_ci NULL 
+ALTER TABLE `gate_params` CHANGE `param` `param` VARCHAR( 50 ) CHARACTER SET ascii COLLATE ascii_general_ci NULL;
 
 --
 -- Column `ipaddr` in table `ast_sipfriends` needs a length of 45 characters 
