@@ -1,0 +1,1453 @@
+Czech
+480iCT prompts| 
+No handsets are currently paired| Zadna sluch. Nejsou momentalne sparovana.
+Cordless Handset Feature Key Configuration| Funkcni tlacitko bezdrat. sluchatek
+None| Zadny
+Pair| Parovat
+Attempting to pair...| Pokus o parovani...
+Pairing successful| Uspesne sparovano
+Pairing failed       | Parovani neuspesne
+Try again| Zkuste znovu
+Remove Handset:| Odstranit sluchatko:
+Attempting to remove| Pokus o odstraneni
+Wait...| Cekejte...
+Removal successful| Uspesne odstraneno
+Cordless| Bezdratovy
+Cordless Handsets| Bezdratove sluchatko
+None Registered| Zadne registrovane
+Sync| Synchr.
+Private Line| Vlastni linka
+Sending Directory| Posilani adresare
+to Handsets| na sluchatka
+System Unavailable| System nedostupny
+Handset Pairing| Parovani sluch.
+Handset Keys| Tlacitka sluchatka
+Feature Key programming complete.| Programovani funkcniho tlacitka je kompletni
+Two Call Support| Podpora dvou hovoru
+480i prompts| 
+Time Format| Format casu
+    NOT MATCH !!!| NESOUHLASI!!!
+Erase local config?| Smazat konfig.?
+Alternate Server| Zalozni server
+Contrast Level| Uroven kontrastu
+TypeService SIP| Typ sluzby SIP
+TypeService RTP| Typ sluzby RTP
+TypeService DSCP| TypSluzby DHCP
+TypeService RTCP| TypSluzby RTCP
+Dn| Dolu
+Rt| Doprava
+Lf| Vlevo
+Del| Smazat
+System Info Upload| Nahrát systémové info
+Up| Nahore
+Copyright| Autorske pravo
+Reset| Reset
+Phone will restart automatically after finishing.| Tel. bude aut. restartovan po
+Please login| Prosim prihlaste
+Incorrect password| Neplatne heslo
+Reset Configuration?| Reset konfigurace?
+Cfg. Svr.| Conf serv.
+Enable| Povolit
+List| Seznam
+Move Up| Nahoru
+Move Down| Dolů
+Firmware Loaded| Firmware je nahran
+802.1x Authenticating| Autentizace 802.1x
+LLDP| LLDP
+DHCP: Waiting for IP| DHCP: Cekani na IP
+Bluetooth Upgrade .. Please wait| Povyseni bluetooth .. prosim cekejte
+Contacting Redirector| Navazovani spojeni
+Redirecting Step 1| Presmerovani krok 1
+Redirecting Step 2| Presmerovani krok 2
+Redirecting Step 3| Presmerovani krok 3
+Redirecting Step 4| Presmerovani krok 4
+Redirecting Step 5| Presmerovani krok 5
+Redirecting Step 6| Presmerovani krok 6
+Auto Discovery...| Automaticke hledani..
+Starting in Generic SIP Mode| Start v obecnem SIP modu
+Starting in AastraLink Mode| Start v AastraLink modu
+Updating config| Nahraveni konfigurace
+Waiting assignment| Cekani na prirazeni
+Checking for Firmware  Do not unplug phone!| Kontrola firmware. Neodpojujte pristroj
+New Firmware. Do not unplug phone!| Novy firmware. Neodpojujte pristroj!
+New Firmware. Restarting...| Novy firmware. Restartovani...
+Downloading configuration| Stahovani konfigurace
+Downloading Language Packs| Stahovani jazykovych balicku
+Network| Sit
+UPnP device not found| Zdroj UPnP nenalezen
+Port Map In Progress| Mapovani portu
+Port Map Incomplete| Mapovani nekompletni
+DSP| DSP
+SIP| SIP
+Tone| Ton
+Interface| Rozhrani
+Web| Web
+Done| Provedeno
+CopyToAll| Kopir.vsem
+Cannot use firmware.| Nelze pouz. firmware.
+No available lines| Zadne dostupne linky
+Current Password:| Aktualni heslo:
+New Password:| Nove heslo:
+Re-enter Password:| Potvrdit heslo:
+  Password Changed| Heslo zmeneno
+Change| Zmenit
+Use DHCP?| Pouzit DHCP?
+Advanced| Pokrocile
+DNS| DNS
+Ringer | Zvoneni
+ ERROR: invalid port| CHYBA: neplatny port
+SIP Register| Registrace SIP
+Register?| Registrovat?
+Authentication Name| Overovaci jmeno
+Nortel NAT| Nortel NAT
+Reset phone to| Reset telefonu do
+factory defaults?| tovarniho nastaveni?
+Setting phone back to| Nastaveni tel. do
+Factory Defaults| tovarniho nastaveni
+  Please enter the   | Prosim zadejte
+    administrator    | administratorske
+      password.      | heslo.
+Password: | Heslo:
+Quit| Odejit
+More| Vice
+Timeserver Address:| Adr. cas. serveru:
+Network Time Disabled| Sitovy cas nedostupny
+Dialing| Volba
+Incoming| Prichozi
+Calling| Volani
+Pause| Pauza
+Pickup| Vyzvednout
+Previous| Predchozi
+Enter Time:| Zadejte cas
+Message Waiting| Cekajici zprava
+Live Dialpad| Aktivni klavesy
+Live Dialpad is| Aktivni klavesy jsou
+Options List| Seznam moznosti
+    Access denied    |    Pristup odepren   
+Directory is full| Adresar je plny
+30min summertime| Letni cas 30 min.
+1h    summertime| Letni cas 1 h
+No Link| Nespojen
+Next| Dalsi
+Retry| Opakovat
+Negotiation| Prevod
+Live Dialpad disabled| Akt. klavesy nedost.
+Link State| Stav linky
+Headset Mic Volume| Hlasitost mikro nahl.
+Gateway IP Address:| IP adresa brany:
+Enter Date (y-m-d):| Zadejte datum(r-m-d):
+Enter| Potvrdit
+Enable| Povolit
+Full 10Mbps| Plny 10Mbps
+Full 100Mbps| Plny 100Mbps
+Half 10Mbps| Polovicni 10 Mbps
+Half 100Mbps| Polovicni 100 Mbps
+Default| Zakladni
+Add New| Pridat
+DeleteList| Smazat
+Delete entire| Smazat zaznam
+Directory?| Adresar?
+Enter Number:| Zadejte cislo:
+Network disconnected| Sit odpojena
+Network connected| Sit pripojena
+Entry Saved| Zaznam ulozen
+Entry Removed| Zaznam odstranen
+Private| Privatni
+Public| Verejny
+Delete entry?| Smazat zaznam?
+Delete?| Smazat?
+Delete number| Smazat cislo
+or delete all| nebo smazat
+entries?| vsechny zaznamy?
+Name is full| Jmeno je cele
+Empty| Prazdny
+Redial List| Seznam opak. voleb
+Details| Detaily
+Copy| Kopirovat
+Select| Vybrat
+Voicemail| Hlasova posta
+DeleteItem| Sm.polozku
+Delete All| Smazat vse
+Entry copied to| Zaznam kopirovan do
+Entry Exists| Zaznam existuje
+All items erased| Vsechny smazany
+Sort| Tridit
+Resume| Shrnuti
+EditNum| Edit.cis
+DeleteList again to| Smazat seznam
+Delete again to| Smazat znovu
+erase this item| smazat tuto polozku
+erase all calls| smazat vsechna volani
+ new caller| novy volajici
+ new callers| novi volajici
+Press 1st letter| Zadejte 1. znak
+Handset | Sluchatko 
+ Missed Call|  Zmeskane volani 
+ Missed Calls|  Zmeskana volani 
+Call Forward Mode| Mod presmerovani
+CFWD All| Presmerovano vse
+CFWD Busy| Presm. pri obsazenu
+CFWD NoAnswer| Zpozdene presmer.
+Call| Volat
+Select TFTP| Vybrat TFTP
+Use %c for new| %c novy
+Use %c to view| %c zobraz
+Download Protocol| Stahov. protokolu
+OFF| vypnuto
+ON| zapnuto
+Add Number| Pridat.cis
+Arrange| Upravit
+%cmore| %cvice
+Office| Sluzebni
+Home| Domaci
+Cell| Mobil
+Pager| Pager
+VLAN Settings| Nastaveni VLAN
+Softkeys and XML| Tlacitka a XML
+Softkeys Configuration| Konfigurace tlacitek
+Bottom Keys| Dolni tlacitka
+Top Keys| Horni tlacitka
+Page1| Stranka 1
+Page2| Stranka 2
+Page3| Stranka 3
+Page4| Stranka 4
+Page5| Stranka 5
+Idle| Volny
+Outgoing| Odchozi
+Empty| Prazdny
+Enter server name/IP:| Zadejte jm/IP serveru
+Enter HTTPS port:| Zadejte HTTPS port:
+Erase| Smazat
+Proxy IP/Port| Proxy IP/port
+Registrar IP/Port| Registr. IP/port
+Erasing local config| Mazani mistni konfig.
+Proxy Port:| Proxy port:
+Registrar Port:| Registracni port:
+Proxy Server:| Proxy server:
+Registrar Server:| Registr. server:
+Contrast Level:| Uroven kontrastu:
+Erase Local Config.| Smazat mistni konf.
+Administrator Menu| Administracni menu
+Backlight On Time| Doba podsvetleni
+Redirect HTTP->HTTPS?| Presmer. HTTP->HTTPS?
+Block XML HTTP POSTs?| Blok. XML HTTP POSTs?
+HTTP->HTTPS| HTTP->HTTPS
+XML HTTP POSTs| XML HTTP POSTs
+Client Method| Klientska metoda
+To unlock the phone| Pro odblokovani tel.
+No more softkeys| Nejsou dalsi tlacitka
+Ignore| Ignorovat
+Answer| Odpovedet
+Configuration Server| Konfiguracni server
+Primary Path| Primarni cesta
+Alternate Path| Alternativni cesta
+Logging in| Prihlaseni
+Login Failed| Chybne prihlaseni
+Enable?| Povolit?
+Check Expires| Kontrola platnosti
+Check Hostnames| Kontrola dom. nazvu
+Conf. Unavailable| Konfig. neexistuje
+Ringing...| Vyzvaneni …
+Error Messages| Chybova hlaska
+No Error Messages| Zadna chybova hlaska
+Download Options| Moznosti stazeni
+Abc| Abc
+123| 123
+&%*| &%*
+Abc2| Abc2
+A # &| A # &
+  Invalid password   |   Neplatne heslo       
+Upload Sys Info| Nahrát systémové info
+9133i prompts| 
+Password Changed| Heslo zmeneno
+Time Format| Format casu
+Erase local cfg?| Smaz. lok. Konf?
+TypeService SIP| Typ sluzby SIP
+TypeService RTP| Typ sluzby RTP
+TypeService DSCP| TypSluzby DHCP
+TypeService RTCP| TypSluzby RTCP
+Alternate Server| Zalozni server
+Contrast Level| Uroven kontrastu
+Options List| Seznam moznosti
+DELETE to erase item  or # to erase Number| 
+Upload Sys Info| Nahrát systémové info
+Directory Empty. Use Save to add| Prazdny adr. Ulozit pro prid.
+  NOT MATCH !!!| NESOUHLASI!!!
+DELETE again to erase this item| Smazat znovu smazat tuto polozku
+System Info Upload| Nahrát systémové info
+Phone will restart after| Telefon se restartuje po
+Copyright| Autorske
+Reset| Reset
+Use DHCP?| Pouzit DHCP?
+Full 10Mbps| Plny 10Mbps
+Full 100Mbps| Plny 100Mbps
+Half 10Mbps| Polovicni 10 Mbps
+Half 100Mbps| Polovicni 100 Mbps
+Please login| Prosim prihlaste
+Incorrect password| Neplatne heslo
+Reset Configuration?| Reset konfigurace?
+Cfg. Svr.| Konf serv.
+Net disconnected| Sit odpojena
+Live Dialpad| Aktivni klavesy
+Firmware Loaded| Nahran firmware
+802.1x Authenticating| Autentizace 802.1x
+LLDP| LLDP
+Initializing network| Inicializace site
+Bluetooth Upgrade| Povyseni bluetooth
+Contacting Redirector| Navazovani spojeni
+Redirecting Step 1| Presmerovani krok 1
+Redirecting Step 2| Presmerovani krok 2
+Redirecting Step 3| Presmerovani krok 3
+Redirecting Step 4| Presmerovani krok 4
+Redirecting Step 5| Presmerovani krok 5
+Redirecting Step 6| Presmerovani krok 6
+Auto Discovery| Automat. hledani
+Starting in Generic SIP Mode| Start v obecnem SIP modu
+Starting in Aastra Link Mode| Start v AastraLink modu
+Updating configuration| Nahraveni konfigurace
+Waiting assignment| Cekani na prirazeni
+Checking for new firmware| Kontrola firmware
+New Firmware: PLEASE DO NOT UNPLUG THE PHONE| Novy firmware. Neodpojujte pristroj!
+New Firmware: Restarting...| Novy firmware. Restartovani...
+Downloading configuration| Stahovani konfigurace
+Downloading Language Packs| Stahovani jazykovych balicku
+Network| Sit
+UPnP Gateway Not Found| Brana UPnP nenalezena
+UPnP Port Map In Progress| Probiha mapovani portu UPnP
+UPnP Port Map Incomplete| Nekompletni mapovani UPnP portu
+DSP| DSP
+SIP| SIP
+Tone| Ton
+Registering with the voice network...| Registrace k hlasove siti...
+Web| Web
+Done| Provedeno
+Cannot use| Nelze pouzit
+this firmware.| tento firmware.
+All lines in use| Linky pouzity
+Current Password| Aktualni heslo
+New Password| Nove heslo
+Enter Again| Potvrzeni hesla
+Ringer volume   | Hlasitost vyzv.
+DELETE again to| Smazat znovu pro
+erase all calls| smazani vsech
+Caller is erased| Volajici smazan
+Network Time| Sitovy cas
+Change| Zmena
+Options| Moznosti
+Access denied| Pristup odepren
+Directory full| Adresar plny
+Link Active| Linka aktivni
+No Link| Neni linka
+Live Dialpad is\nnot available.| Klavesnice\nneni
+Live Dialpad is\nON| Klavesnice\nzap.
+Live Dialpad is\nOFF| Klavesnice\nvyp.
+-  confirmed   -| -  potvrzeno  -
+Set| Nast.
+DHCP\nON| DHCP\nzapnuto
+DHCP\nOFF| DHCP\nvypnuto
+Enable?\nYes| Povolit?\nAno
+Enable?\nNo| Povolit?\nNe
+Check Expires| Platnost
+Check Expires?\nYes| Platnost?\nAno
+Check Expires?\nNo| Platnost?\nNe
+Check Hostnames| Kontr. jm.
+Check Hostnames?\nYes| Kontr. jm.?\nAno
+Check Hostnames?\nNo| Kontr. jm.?\nNe
+Cancel| Zrusit
+SIP Register\nON| Registr.SIP\nZap
+SIP Register\nOFF| Registr.SIP\nVyp
+Nortel NAT\nEnabled| Nortel NAT\nPov.
+Nortel NAT\nDisabled| Nortel NAT\nZak.
+Next| Dalsi
+Done| Proved.
+Retry| Opak.
+Exit| Zpet
+Pickup| Vyzvednout
+Call held| Pridrzeny hovor
+Calls held| Pridrzene hovory
+Country Code: | Kod zeme: 
+*List Countries| *Seznam zemi
+Enter| Vstup
+Admin Password| Admin. heslo
+yyyy-mm-dd | rrrr-mm-dd      
+Restart phone?| Restartovat tel?
+#Confirm| #Potvrdit
+RestoreDefaults?| Tovarni nast.?
+Call Agent 1| Agent. volani 1
+Call Agent 2| Agent. volani 2
+Call Agent 3| Agent. volani 3
+Invalid Code    | Neplatny kod    
+E: Invalid port!| E: Spatny port!
+Application:| Aplikace:
+Boot ROM:| Boot ROM:
+Negotiation:| Prevod:
+30m summertime| Letni cas 30min
+1h summertime| Letni cas 1h
+Invalid password| Neplatne heslo    
+  disconnected|     odpojeno
+   connected|    pripojeno
+    Network|       Sit
+erase all items| smazani vsech
+Enter Number>| Zadejte cislo>
+Setting phone to| Nastav. tel. do
+Use Save to end| Ulozit na konec
+to enter name>| pro zadani jm.
+Saved: Directory| Ulozeno: Adresar
+Retrying config | Pokus stazeni   
+download...     | konfigurace...
+empty| prazdny
+No Match| Nesouhlasi
+Save to?| Ulozit do?
+Saved Memory key| Uloz. tl. pameti
+Removed Key| Odstranene tl.
+Press 1st letter| Zadejte 1. znak
+Speaker volume  | Hlasitost repr.
+Handset volume  | Hlasitost sl.
+Headset volume  | Hlasitost nahl.
+Factory Defaults| tovar. nastaveni
+ Missed Call| Zmeskany hov.
+ Missed Calls| Zmeskane hov.
+Cfwd State| Stav presmer.
+Cfwd Number| Cislo presmer.
+Cfwd Mode| Typ presmer.
+CFWD All| Presmer. vse
+CFWD Busy| Presm. pri obs.
+CFWD NoAnswer| Zpozd. presm.
+Select TFTP\nPrimary| Primarni\nTFTP
+Select TFTP\nAlternate| Altern.\nTFTP
+DownloadProtocol| Protokol stahov.
+VLAN Settings| Nastaveni VLAN
+Server Name/IP?| Server jmeno/IP?
+HTTPS Port?| HTTPS port?
+Client Method\nSSL 3.0| Metoda\nSSL 3.0
+Client Method\nTLS 1.0| Metoda\nTLS 1.0
+HTTP->HTTPS\nRedirect| HTTP->HTTPS\npre
+HTTP->HTTPS\nDo not redirect| HTTP->HTTPS\nNep
+Redirect| Presmerovat
+Do not redirect| Nepresmerovat
+XML HTTP POSTs\nDo not block| XML HTTPs\nNebl.
+XML HTTP POSTs\nBlock| XML HTTPs\nBl.
+Do not block| Neblokovat
+Block| Blokovat
+Erasing config| Mazani konfig.
+Pri TFTP Path| Prim. TFTP cesta
+Alt TFTP Path| Zal. TFTP cesta
+Backlight Mode| Mod podsvetleni
+Backlight Time| Doba podsvet.
+Answer| Odpov.
+Ignore| Odmit.
+Cfwd| Prsm
+Copy to All?| Kopirovat vse?
+Apply Changes?| Ulozit zmeny?
+Logging in| Prihalseni
+Login Failed| Neplatne prihl.
+Conf Unavailable| Konfig. nedost.
+Error Messages| Chybove zpravy
+No Error Messages| Zadna chyba
+Download Options| Moznosti stazeni
+6739i prompts| 
+SID_ENTER_ADMIN_PASSWORD| Zadejte admin. heslo
+Error Msg| Chybova hlaska
+Lock| Zamknout
+Unlock the phone?|  Odemknout telefon?
+ Enter Unlock Password|  Zadejte heslo
+softkey| softwarového
+Edit Number| Upravit cislo
+Lock the phone?| Zamknout tel.?
+Lock the phone| Zamknout tel.
+keypad| Klávesnice
+Unlock| Odemknout
+ Cust Feat| Uziv. sl.
+Phone is locked| Telefon uzamcen
+Unlock the phone| Odemknout telefon
+GoodBye| Nashledanou
+Pass Thru Port| Pruchozi port
+First| Prvni
+Last| Posl
+Name| Jm.
+Add| Nov
+Edit| Upr.
+Space| Mezer
+Bksp| Bksp
+caps| mala
+CAPS| VELKA
+Reject| Odmitnout
+Silence| Ticho
+Hold| Pridrzet
+Transfer| Prepojit
+>| >
+Lines| Linky
+Settings| Nastaveni
+Device Name| Jmeno zarizeni
+Bluetooth Devices| Zarizeni BT
+Bluetooth Status:| Stav BT:
+Search| Hledat
+Searching...| Hledani...
+device(s) found.| zariz. nalezeno
+Press on a device to start pairing.| Nastavte zarizeni pro parovani.
+Enter PIN| Zadejte PIN
+Add Device| Pridat zarizeni
+Active| Aktivovat
+Are you sure?| Chcete pokracovat?
+ALL| VSE
+Phone No:| Tel. cislo:
+Copy to all modes| Kopirovat pro vsechny
+BUSY| OBSAZENO
+NO ANSWER| NEODPOVIDA
+CFWD NO ANS:| ZPOZDENE PRESM.
+CFWD BUSY:| PRESM: PRI OBSAZ.
+CFWD ALL:| OKAMZITE PRESM.
+Audio| Zvuk
+Calibrate Screen| Kalibrace displeje
+Recalibrate Touchscreen?| Prekalibrovat displej?
+Softkeys| Progr. tlacitka
+Headset Mic Volume| Hlasitost mikro nahl.
+Headset Device| Nahl. soupr.
+Bluetooth| Bluetooth
+Wired| Dratovy
+Restart | Restart
+No Calls| Zadna volani
+Brightness Timer| Doba jasu
+Brightness Level| Uroven jasu
+Add to Directory| Pridat do adresare
+Waiting for Touch Screen activity to subside ...| Cekani na snizeni aktivity displeje
+Touch the UPPER-LEFT corner of the screen| Stisknete horni levy roh displeje
+Touch the UPPER-RIGHT corner of the screen| Stisknete horni pravy roh displeje
+Touch the LOWER-RIGHT corner of the screen| Stisknete dolni pravy roh displeje
+Touch the LOWER-LEFT corner of the screen| Stisknete dolni levy roh displeje
+Received unreliable data. You will be asked to touch the same point again| Prijaty nejiste unformace. Budete dotazani na
+Processing ...| Probiha...
+Validating calibration data ... please wait| Schvalovani kalibrace ... prosim cekejte
+Sanity Check OK. Save changes?| Kontrola logiky OK. Ulozit zmeny?
+Sanity Check Failed| Chyba kontroly logiky
+Retry| Opakovat
+Quit| Konec
+Please Enter| Prosim zadejte
+Submit| Potvrdit
+User ID:| Uzivatelske ID:
+Password:| Heslo:
+Transferring| Prevod
+No. Rings| Pocet zvoneni
+Line| Linka
+Unable to Pair| Nelze parovat
+Please Wait...| Prosim cekejte..
+Add new device...| Pridat nove ...
+Detected:| Nalezeno:
+Connecting:| Pripojovani:
+Disonnecting:| Odpojovani:
+Connected:| Pripojeno:
+ALL| VSE
+BUSY| OBSAZENO
+NO ANSWER| NEPRIJIMA
+CFWD ALL:| OKAMZ.PRESM:
+CFWD BUSY:| PRESM. OBS.:
+CFWD NO ANSWER:| ZPOZD.PRESM:
+Copy to all modes| Kopir. vsem
+| 
+Phone Number:| Tel. cislo:
+Level 1| Uroven 1
+Level 2| Uroven 2
+Level 3| Uroven 3
+Level 4| Uroven 4
+Level 5| Uroven5
+(Min: %d  Max: %d)| (Min: %d  Max: %d)
+ Enter Administrator Password| Zadejte admin. heslo
+Phone will restart automatically after finishing.| Tel. bude aut. restartovan po
+Conference| Konference
+Reset Configuration?| Reset konfigurace?
+Hide| 
+Common prompts| 
+Disable| Zakazat
+Restart Phone?| Restartovat tel?
+12 Hour| 12 hodin
+Speeddial| Rychla volba
+Erase local cfg?| Smaz. lok. Konf?
+Spd Dial| Rychla volba
+Backup Outbound Proxy Server| Zalozni Outbound Proxy server
+Backup Outbound Proxy Port| Zalozni Outbound Proxy port
+Firmware Info| Info firmwaru
+DHSG| DHSG
+DHSG is ON| DHSG je ZAP
+DHSG is OFF| DHSG je VYP
+Backlight On Time| Doba podsvetleni
+Use Alt TFTP| Pouzit nah TFTP
+Pri TFTP Path| Prim. TFTP cesta
+Alt TFTP Path| Zal. TFTP cesta
+RestoreDefaults?| Tovarni nast.?
+HTTP Init Failed| Chyba inic. HTTP
+Get aastra.lic| Ziskat aastra.lic
+Get mac.lic| Ziskat mac.lic
+Firmware not licensed for use on this phone| Firmware není licencovan pro tento telefon
+Redial List is empty| Sezn. opak. Je prazdny
+Callers List is empty| Seznam volani je prazdny
+Callers List| Vypis volani
+Directory| Adresar
+License Information| Licencni informace
+XML Application URI:| XML aplikace URI:
+Missing User ID| Ztracene uzivatelske ID
+TFTP| TFTP
+FTP| FTP
+HTTP| HTTP
+HTTPS| HTTPS
+Use| Pouzit
+Active Features| Aktivni sluzby
+WWW MMM DD| TYD MMM DD
+DD-MMM-YY| DD-MMM-RR
+YYYY-MM-DD| RRRR-MM-DD      
+DD/MM/YYYY| DD/MM/RRRR
+DD/MM/YY| DD/MM/RR
+DD-MM-YY| DD-MM-RR
+MM/DD/YY| MM/DD/RR
+MMM DD| MMM DD
+DD MMM YYYY| DD MMM RRRR
+WWW DD MMM| TYD DD MMM
+DD MMM| DD MMM
+DD.MM.YYYY| DD.MM.RRRR
+24 Hour| 24 hodin
+XML Application Title:| Nazev XML aplikace:
+License Status| Stav licence
+FTP| FTP
+to view| zobraz
+Contact Name already exists| Jmeno jiz existuje
+Leave| Opustit
+Contact Mismatch| Kontakt neodpovida
+ Call Terminated| Hovor ukončen
+IP and gateway have to be on same subnet| Zadaná IP adresa musí být ve stejném subnetu jako výchozí brána
+IP cannot be equal to gateway address| Zadaná IP adresa se nesmí shodovat s IP adresou výchozí brány
+Call Waiting Tone Period| Kadence naklepávání při čekajícím hovoru na lince
+OK| OK
+Directory empty| Prazdny adr.
+Files Sent| Soubory odesl.
+Upload System Info| Nahrát systémové info
+Upload| Nahrani
+Call Transferred| Prepojeny hovor
+Firmware Information| Info firmwaru
+Contact Name already exists| Jmeno jiz existuje
+Replace| Premistit
+No Services| Zadna sluzba
+Merge| Sloucit
+Enter Name:| Zadejte jmeno:
+Call Hold Reminder| Upozorneni na pridrzeny hovor
+Others| Jine
+Call Hold Reminder During Active Calls| Upozorneni na pridrzeny hovor pri hovoru
+Out of service| Vypnuto
+Reason: | Pricina:
+Add blank record?| Pridat prazdny?
+Audio Setting| Automaticke nastaveni
+Delete Item| Smazat polozku
+Services| Sluzby
+Server| Server
+Service Disabled| Sluzba vypnuta
+Port| Port
+Path| Cesta
+Username| Uzivatel. jmeno
+No. Rings| Pocet vyzvaneni
+Use xx to view| xx k prochazeni
+User Password| Uzivatel. heslo
+Time and Date| Datum a cas
+Language| Jazyk
+Screen Language| Jazyk displeje
+Tones| Tony
+Tone Set| Nastaveni tonu
+Ring Tone| Vyzvaneci ton
+State| Stav
+State:| Stav:
+User-Busy| Uzivatel obsaz.
+Unconditional| Nepodminene
+Time of day| Hodina
+Deflection| Odkloneni
+Follow Me| Follow me
+Away| Mimo
+Busy| Obsazen
+Restart| Restart
+All On| Vse zap.
+All Off| Vse vyp.
+AllAccts| Vse ucty
+Conference| Konference
+Flash| Vyzadani
+Dial| Volat
+Directory| Adresar
+Callers| Volajici
+Icom| Intcom
+Dir| Adresar
+Xfer| Prepojit
+Conf| Konference
+SIP Settings| Nastaveni SIP
+Proxy Port| Proxy port
+Registrar Port| Registr. port
+User Name| Uziv. jmeno
+Screen Name| Zobraz. jmeno
+Proxy Server| Proxy server
+Registrar Server| Registr. server
+Auth. Name| Autentizacni jmeno
+Nortel NAT| Nortel NAT
+Sylantro| Sylantro
+Broadsoft| Broadsoft
+Display Name| Jmeno na displ.
+RTP Port Base| Prvni RTP Port
+Static NAT| Staticka NAT
+NAT Settings| Nastaveni NAT
+NAT IP| NAT IP
+NAT SIP Port| NAT SIP Port
+NAT RTP Port| NAT RTP Port
+NAT HTTPS Port| NAT HTTPS Port
+Phone Status| Stav telefonu
+Auto Discovery| Autom. hledani
+Trying...| Zkousim...
+Remote| Vzdal.
+Reset| Reset
+Choose Server| Zvolte server
+Select| Vyber
+Ring Tone:| Vyzvaneci ton:
+Silent| Tichy
+Network Settings| Nastaveni site
+Clear| Vymazat
+Speaker | Reproduktor
+Headset | Nahl. soupr.
+Speaker/Headset| Reprod./nahl.
+Headset/Speaker| Nahl./reprod.
+Audio Mode| Mod zvuku
+Low| Nizky
+Medium| Stredni
+High| Vysoky
+OFF| Vypnuto
+ON| Zapnuto
+DHCP Settings| Nastaveni DHCP
+DHCP User Class| Uziv. trida DHCP
+Hostname| Hostitel. jmeno
+IP Address| IP adresa
+Subnet Mask| Sitova maska
+Subnet Mask:| Sitova maska:
+Gateway| Brana
+Primary DNS| Primarni DNS
+Secondary DNS| Zalozni DNS
+TFTP Settings| Nastaveni TFTP
+VLAN| VLAN
+VLAN ID| VLAN ID
+PC Port VLAN ID| ID PC portu VLAN
+LAN Port VLAN| LAN Port VLAN
+PC Port VLAN| PC Port VLAN
+Priority| Priorita
+VLAN Enabled\nYes| VLAN povol.\nAno
+VLAN Enabled\nNo| VLAN povolen\nNe
+PC Port Priority| Priorita port PC
+LAN Port VLAN ID| VLANID LAN portu
+UPnP| UPnP
+Use UPnP| Pouzit UPnP
+Select Gateway| Vyberte branu
+Portmap Started| Zahajeno map.
+Portmap Error| Chyba map. portu
+LLDP| LLDP
+LLDP packet interval| Trv. pak. LLDP
+LLDP Settings| Nastaveni LLDP
+Use LLDP ELIN| Pouzit LLDP ELIN
+TypeService DSCP| Typ sluzby DSCP
+Type of Service DSCP| Typ sluzby DSCP
+VLAN Priority| Priorita VLAN
+Other Priority| Jina priorita
+SessionBorderCtl| Kontr. relace
+Session Border Ctrl| Kontr. hranice relace
+Select SBC| Vyberte SBC
+SBC Settings| Nastaveni SBC
+None| Zadny
+Kagoor| Kagoor
+Update Interval (sec)| Cas obnovy (s)
+Backspace| Opravit
+No| Ne
+Yes| Ano
+DHCP Download Options| Vlastnosti ziskani DHCP
+Firmware Version| Verze firmwaru
+Restart Phone| Restart telef.
+Show| Ukazat
+is OFF| je vyp.
+Password| Heslo
+Restarting...| Restartovani...
+Speed| Rychlost
+Manual| Manual
+Auto| Autom.
+Half| Polo
+Full| Plne
+Duplex| Duplexni
+ ERROR: |  CHYBA:
+Invalid IP addr.| Nepl. IP adresa
+Invalid mask| Nepl. maska
+Range is 1-4094| Rozsah je 1-4094
+Range is 1-4095| Rozsah je 1-4095
+Range is 0-63| Rozsah je 0-63
+Range is 0-7| Rozsah je 0-7
+DND| Nerusit
+DND On| Nerusit zapnuto
+Time Server| Casovy server
+Set Time| Nastaveni casu
+Set Date| Nastaveni data
+Date Format| Format data
+Time Zone| Casova zona
+Daylight Savings| Letni cas
+Invalid Time| Neplatny cas
+Invalid Date| Nepl. datum
+Invalid IP| Neplatne IP
+ Invalid Number| Neplatne cislo
+On| Zapnout
+Off| Vypnout
+Automatic| Automaticky
+Conf Hold| Konfer. pridrz.
+No Service| Zadna sluzba
+Mute| Vypnuti. mikr.
+Connected| Spojeno
+Drop| Zavesit
+Park| Parkovat
+PickUp| Vyzvednuti
+Redial| Opak. volba
+DCP| Prime vyzvednuti
+DCP List| Seznam vyzv.
+Cancel| Zrusit
+Done| Dokoncit
+Callers List| Vypis volani
+No changes made| Zadne zmeny
+Key is Locked| Tlacitko blokov.
+Cannot Save| Nelze ulozit
+1 item| 1 polozka
+ items|  zaznamy
+No User| Zadny uziv.
+DHCP failed| Nedostupny DHCP
+Unknown Name| Nezname jmeno
+Unknown Number| Nezname cislo
+Unknown Line| Neznama linka
+Item is erased| Polozka smazana
+Unknown| Neznamy
+NextSpace| Mezera
+Dot "."| Tecka "."
+Transfer Failed| Prenos ukoncen
+Call Forward| Presmerovani
+Call Fwd| Prsm
+All| Vse
+Any| Jakykoli
+NoAns| Neodpovida
+BusyNoAns| Obs. neodpov.
+Number:| Cislo:
+Mode:| Mod:
+No. Rings:| Poc.vyzv.:
+Line: | Linka:
+Contrast Level| Uroven kontrastu
+ Message|    Zprava
+ Messages|    Zpravy
+Loading Page...| Nahr. stranky...
+Abort Loading...| Prerusit nahr...
+Connect Timeout| Vycasovano
+Data Timeout| Vycasovani dat
+File Not Found| Soubor nenalezen
+Page Load Error| Chyba stranky
+Cannot display| Nelze zobrazit
+Skip| Preskocit
+Call Failed| Volani odmit.
+Primary Server| Primarni server
+Alternate Server| Zalozni server
+Primary| Primarni
+Alternate| Zalozni
+Bad encrypted cfg| Nespr. sifr.konf
+Use TFTP| Pouzit TFTP
+Use FTP| Pouzit FTP
+Use HTTP| Pouzit HTTP
+Use HTTPS| Pouzit HTTPS
+FTP Settings| Nast. FTP
+FTP Server| FTP server
+FTP Path| FTP cesta
+FTP Username| FTP jmeno
+FTP Password| FTP heslo
+HTTP Settings| Nast. HTTP
+HTTP Server| HTTP server
+HTTP Path| HTTP cesta
+HTTP Port| HTTP port
+HTTPS Settings| Nastaveni HTTPS
+Download Server| Download server
+Download Path| Cesta downloadu
+Download Port| Port downloadu
+HTTPS Server| HTTPS server
+HTTPS Path| HTTPS cesta
+HTTPS Port| HTTPS port
+HTTPS Client| HTTPS klient
+SSL 3.0| SSL 3.0
+TLS 1.0| TLS 1.0
+Bad Certificate| Nepl. certif.
+Certificates| Certifikaty
+Cert Validation| Overeni certif.
+All defaults| Vse zakladni
+Config default| Zakl. konfig.
+AM| AM
+PM| PM
+Factory Default| Tov. nastaveni
+Erase Local Cfg.| Smaz. lok. konf.
+New IP Obtained| Zisk. nova IP
+New NAT IP| Nova IP NAT
+Server IP Change| Zmena IP serveru
+AastraLink Menu| AastraLink menu
+Server Options| Volby serveru
+AastraLink Info| AastraLink Info
+Server Remote IP| IP vzdal.serveru
+Server Local IP| IP lokal.serveru
+Preferences| Predvolby
+Network Status| Stav site
+MAC Address:| MAC adresa
+BT MAC Address:| BT MAC adresa
+Invalid Key| Neplatne tlac.
+Speed Dial Edit:| Uprava rych.vol:
+Press SD button| Stisknete tl. RV
+From: | Od:
+To: | Komu:
+Via: | Kopie:
+Diverted: | Presmerovano:
+Log Off| Odhlaseni
+Customer Support| Uzivatelska podpora
+Status| Stav
+Operation| Provoz
+Basic Settings| Zakladni nastaveni
+Advanced Settings| Rozsirene nastaveni
+System Information| Systemove info
+Down| Dole
+Up| Nahore
+n/a| nedostupny
+10Mbps| 10Mbps
+100Mbps| 100Mbps
+1000Mbps| 1000Mbps
+Attribute| Priznak
+Link State| Stav linky
+Negotiation| Dohodnuti
+Hardware Information| Hardwarove info
+Firmware Information| Info firmwaru
+Firmware Release Code| Kod verze firmwaru
+Value| Hodnota
+Platform| Platforma
+Boot Version| Boot verze
+Date/Time| Datum/cas
+DND Key Mode| Mod tlacitka nerusit
+Call Forward Key Mode| Mod tlacitka presmerovani
+Option 160| Volba 160
+Option 159| Volba 159
+Option 66| Volba 66
+Option 43| Volba 43
+Account| Ucet
+Both| Oboji
+Line| Linka
+Line 1| Linka 1
+Line 2| Linka 2
+Line 3| Linka 3
+Line 4| Linka 4
+Line 5| Linka 5
+Line 6| Linka 6
+Line 7| Linka 7
+Line 8| Linka 8
+Line 9| Linka 9
+Line 10| Linka 10
+Configuration Line %d| Konfigurace linky %d
+Basic SIP Authentication Settings| Zakladni nastaveni autentifikace SIP
+Screen Name| Zobrazene jmeno
+Screen Name 2| Zobrazene jmeno 2
+Phone Number| Telefonni cislo
+Caller ID| ID volajiciho
+Authentication Name| Autentizacni jmeno
+Password| Heslo
+BLA Number| Cislo BLA
+Line Mode| Mod linky
+Generic| Vseobecny
+Broadsoft SCA| Broadsoft SCA
+BLA| BLA
+Asterisk SLA| Asterisk SLA
+Basic SIP Network Settings| Zakladni nastaveni site SIP
+Outbound Proxy Server| Ochozi proxy server
+Outbound Proxy Port| Port odchozi proxy
+Registration Period| Perioda registrace
+RTP Settings| Nastaveni RTP
+Autodial Settings| Nastaveni automaticke volby
+Autodial Number| Cislo automaticke volby
+Autodial Timeout| Doba automaticke volby
+Use Global Settings| Pouzit obecne nastaveni
+DTMF Method| Metoda DTMF
+SIP INFO| SIP info
+BOTH| BOTH
+Save Settings| Ulozit nastaveni
+Global SIP| Obecny SIP
+Global SIP Settings| Obecne nastaveni SIP
+RTP Encryption| Kodovani RTP
+SRTP Disabled| Zakazano SRTP
+SRTP Preferred| Preferovane SRTP
+SRTP Only| Pouze SRTP
+Advanced SIP Settings| Rozsirene nastaveni SIP
+Explicit MWI Subscription| Schvalovani MWI
+Explicit MWI Subscription Period| Doba schvalovani MWI
+MWI for BLA account| MWI pro ucet BLA
+Enabled| Povoleno
+Send MAC Address in REGISTER Message| Poslat MAC adresu v registracni zprave
+Send Line Number in REGISTER Message| Poslat cislo linky v registracni zprave
+Session Timer| Casovac relace
+T1 Timer| Casovac T1
+T2 Timer| Casovac T2
+Transaction Timer| Casovac prenosu
+Transport Protocol| Prenosovy protokol
+UDP and TCP| UDP a TCP
+UDP| UDP
+TCP| TCP
+TLS| TLS
+Persistent TLS| Trvale TLS
+Registration Failed Retry Timer| Casovac chybnych a obnovenych registraci
+Registration Timeout Retry Timer| Casovac doby obnoveni registrace
+Registration Renewal Timer| Casovac obnovy registrace
+BLF Subscription Period| Doba povoleni BLF
+ACD Subscription Period| Doba povoleni ACD
+BLA Subscription Period| Doba povoleni BLA
+Blacklist Duration| Platnost cerne listiny
+ Park Pickup Config| Nastaveni prevzeti park. hovoru
+RTP Port| RTP port
+Basic Codecs| Zakladni kodeky
+Force RFC2833 Out-of-Band DTMF| Pusobeni RFC2833 Out-of-Band DTMF
+Codec Preference List| Seznam preferovanych kodeku
+Silence Suppression| Potlaceni ticha
+Provisioning complete.| Dodani kompletni.
+You must restart the phone before the new settings will take effect.| Musite restertovat telefon pro aktualizaci nastaveni.
+ERROR: Maximum number of connections reached.| CHYBA: Prekrocen maximalni pocet pripojeni.
+Logout Complete| Odhlaseni kompletni
+Your session has ended.  Please close the browser.| Vase relace byla ukoncena. Prosim, zavrete prohlizec.
+Session Expired| Prosla doba relace
+Please close the browser or use the link below to log in again.| Prosim, zavrete prohlizec nebo pouzijte odkaz nize pro nove prihlaseni.
+Log In| Prihl.
+Log Out| Odhlas.
+Avail| Dostup.
+Unavail| Nedost.
+Reset User Password| Smazani uziv. hesla
+Please enter the current and new passwords| Zadejte aktualni a nove heslo
+Current Password| Aktualni heslo
+New Password| Nove heslo
+Password Confirm| Potvrzeni hesla
+Please Enter| Prosim, zadejte
+Submit| Potvrz.
+ABC...| ABC...
+abc...| abc...
+123...| 123...
+Authorizing...| Autorizace
+Authorization Failed| Chyba autorizace
+Auth Failed| Chyba autorizace
+Current password is incorrect.| Aktualni heslo neodpovida.
+Please try again.| Prosim, opakujte.
+The new password fields do not match.| Nova hesla nejsou shodna.
+The new password can not be saved.| Nove heslo nelze ulozit.
+The user password has been changed.| Uzivatelske heslo musi byt zmeneno.
+Task and Stack Info| Informace o ulohach a pameti
+Back| Zpet
+Files Available for Download| Soubory dostupne ke stazeni
+Custom| Vlastni
+Save As...| Ulozit jako...
+Directory List| Adresar
+Current Settings| Aktualni nastaveni
+Restore To Factory Defaults| Reset do tovarniho nastaveni
+Restore| Obnova
+Remove Local Configuration Settings| Smazani lokalni konfigurace
+Remove| Odstranit
+Restarting the hardware...| Restart zarizeni...
+Please return to the <a href="sysinfo.html">main page</a> after your phone restarts.| Vratte se na <a href="sysinfo.html">main page</a> po restartu vaseho telefonu.
+User not authorized to make changes.| Uzivatel neni opravnen provadet zmeny.
+Local configuration file has been deleted.| Lokalni konfigurace bude smazana.
+Please restart the phone for the settings to take effect.| Prosim, restartujte telefon pro provedeni zmen.
+Phone has been set to factory Defaults.| Telefon byl nastaven do tovarniho nastaveni.
+Action URI| Akce URI
+Action URI Configuration| Konfigurace akce URI
+Event| Udalost
+StartUp| Nabihani systemu
+Successful Registration| Uspesna registrace
+Registration Event| Registrace
+Incoming Call| Prichozi volani
+Outgoing Call| Odchozi volani
+Offhook| Vyzvednout
+Onhook| Zavesit
+Disconnected| Odpojeno
+Poll| Volba
+Interval| Casovy usek
+Settings saved.| Nastaveni ulozena.
+Settings could not be saved.| Nastaveni nelze ulozit.
+Firmware Update| Aktualizace firmwaru
+TLS Support| Podpora TLS
+Manual Firmware Update| Manualni aktualizace firmwaru
+Enter the server's IP address and the name of the firmware below to initiate a firmware update.| Zadejte IP adresu serveru a nazev firmwaru pro aktualizaci.
+Configuration Server| Konfiguracni server
+Configuration Server Settings| Nastaveni konfiguracniho serveru
+Server IP| IP serveru
+File Name| Nazev souboru
+Configure File Names| Jmena souboru konfigurace
+Root and Intermediate Certificates Filename| Nazev souboru hlavniho a docasneho certifikatu
+Local Certificate Filename| Nazev souboru mistniho certifikatu
+Private Key Filename| Nazev souboru osobniho klice
+Trusted Certificates Filename| Nazev souboru certifikatu pravosti
+Download Firmware| Nahravani firmwaru
+Firmware upgrade in progress.  Please wait.| Nahravani firmwaru. Prosim cekejte.
+Please enter a valid filename and TFTP server IP address.| Prosim, zadejte platny nazev souboru a IP adresu TFTP serveru.
+Invalid TFTP server IP address| Neplatna IP adresa TFTP serveru
+Invalid download settings.| Nespravne nastaveni nahravani.
+Unable to upgrade firmware.| Nelze nahrat firmware.
+The phone is restarting...| Restartovani telefonu...
+Firmware upgrade successful.| Nahrani firmwaru probehlo uspesne.
+This firmware already exists on the phone.| Firmware jiz v telefonu existuje.
+No upgrade is needed.| Aktualizace neni nutna.
+Troubleshooting| Reseni problemu
+Module| Modul
+Log Settings| Nastaveni vypisu
+Log IP| IP vypisu
+Log Port| Port vypisu
+Debug Level| Testovaci uroven
+Support Information| Informace podpory
+Get local.cfg| Ziskani lokalni konfigurace
+Get server.cfg| Ziskani konfigurace serveru
+Show Task and Stack Status| Zobraz stav uloh a pameti
+Settings| Nastaveni
+Download Protocol| Protokol downloadu
+Auto-Resync| Automaticka opetovna synchronizace
+Days| Dny
+Maximum Delay| Maximalni zpozdeni
+Mode| Mod
+Configuration Files| Konfiguracni soubory
+Time (24-hour)| Cas (24 hodin)
+XML Push Server List(Approved IP Addresses)| Seznam XML push serveru (schvalene IP adresy)
+Phone-side Call Forward Settings| Nastaveni presmerovani hovoru telefonu
+Global Settings| Obecne nastaveni
+No Answer| Neodpovida
+Number| Cislo
+Number of Rings| Pocet zvoneni
+Local Line| Mistni linka
+Forward Number| Cislo presmerovani
+Global| Obecny
+Enable| Povolit
+Network| Sit
+Must provision a valid default gateway IP if DHCP is enabled| Musite zadat platnou IP adresu defaultni brany pro povoleni DHCP
+Invalid IP Address| Neplatna IP adresa
+Invalid IP address| Neplatna IP adresa
+Invalid IP addr.| Neplatna IP adresa
+Invalid gateway address| Neplatna adresa brany
+Invalid subnet mask| Neplatna maska site
+Invalid primary DNS address| Neplatna adresa primarniho DNS
+Invalid secondary DNS address| Neplatna adresa zalozniho DNS
+Basic Network Settings| Zakladni nastaveni site
+Advanced Network Settings| Rozsirene nastaveni site
+DHCP| DHCP
+NAT Port| NAT port
+Nortel NAT Traversal Enabled| Povolen Nortel NAT Traversal
+Nortel NAT Timer (seconds)| Casovac Nortel NAT (sekundy)
+NTP Time Servers| Casove servery NTP
+Time Server 1| Casovy server 1
+Time Server 2| Casovy server 2
+Time Server 3| Casovy server 3
+SIP| SIP
+VLAN Enable| VLAN povolen
+Non-IP Packet| Zadny IP paket
+SIP Priority| Priorita SIP
+RTP Priority| Priorita RTP
+RTCP Priority| Priorita RTCP
+Preferences| Predvolby
+General| Obecny
+Idle Display Name 1| Jmeno na displeji 1
+Idle Display Name 2| Jmeno na displeji 2
+Local Dial Plan| Lokalni cislovaci plan
+Send Dial Plan Terminator| Poslat ukonceni volaciho planu
+Digit Timeout (seconds)| Doba volby (vteriny)
+Park Call:| Hovor v cekani:
+Pick Up Parked Call:| Vyzvednout zaparkovany hovor:
+Suppress DTMF Playback| Zrusit prehravani DTMF
+Display DTMF Digits| Zobrazeni DTMF znaku
+Call Waiting| Cekani hovoru
+Play Call Waiting Tone| Prehrat ton pri cekani
+Stuttered Dial Tone| Prerusovany oznam. ton
+Incoming Call Interrupts Dialing| Prichozi volani prerusi vytaceni
+Switch UI Focus To Ringing Line| Prepnout UI na vyzvanejici linku
+Outgoing Intercom Settings| Nastaveni odchoziho interkomu
+Type| Typ
+Phone-Side| Telefonni cast
+Server-Side| Serverova cast
+Prefix Code| Kod predcisli
+Incoming Intercom Settings| Nasteveni prichoziho interkomu
+Microphone Mute| Vypnuti mikrofonu
+Play Warning Tone| Prehrat upozornovaci ton
+Allow Barge In| Povolit volani
+Auto-Answer| Automaticka odpoved
+Key Mapping| Mapovani tlacitek
+Map Redial Key To| Mapovat tl. opak. volby na
+Map Conf Key To| Mapovat konf. tlacitko na
+Ring Tones| Vyzvaneci tony
+Brazil| Brazilie
+France| Francie
+Germany| Nemecko
+Italy| Italie
+Mexico| Mexiko
+Russia| Rusko
+UK| Velka Britanie
+US| USA
+Global Ring Tone| Obecny vyzvaneci ton
+Tone 1| Ton 1
+Tone 2| Ton 2
+Tone 3| Ton 3
+Tone 4| Ton 4
+Tone 5| Ton 5
+Priority Alerting Settings| Nastaveni prioritniho vyzvaneni
+Enable Priority Alerting| Povolit prioritni vyzvaneni
+Group| Skupina
+External| Externi
+Internal| Interni
+Emergency| Nouzovy
+Auto call distribution| Automaticka distribuce volani
+Auto Call Distribution Settings| Nastaveni automaticke distribuce volani
+ACD| ACD
+Community 1| Spolecnost 1
+Community 2| Spolecnost 2
+Community 3| Spolecnost 3
+Community 4| Spolecnost 4
+Normal ringing| Normalni vyzvaneni
+Bellcore-dr2| Bellcore-dr2
+Bellcore-dr3| Bellcore-dr3
+Bellcore-dr4| Bellcore-dr4
+Bellcore-dr5| Bellcore-dr5
+Directed Call Pickup Settings| Nastaveni automatickeho vyzvedavani
+Directed Call Pickup| Automaticke vyzvedavani
+Directed Call Pickup by Prefix| Prime vyzvednuti pomoci predcisli
+Play a Ring Splash| Prehrat vyzv. ton
+Auto Available| Automaticky dostupne
+Auto Available Timer| Automaticky dostupny casovac
+Time and Date Setting| Nastaveni data a casu
+Time Format| Format casu
+Date Format| Format data
+Programmable Keys| Programovatelna tlacitka
+Programmable Keys Configuration| Nastaveni programovatelnych tlacitek
+Hard Key| Hard tlacitko
+Key| Tlacitko
+BLF List URI:| BLF seznam URI:
+None| Neni
+Speeddial/Xfer| Rychla volba/prepoj.
+Do Not Disturb| Nerusit
+BLF| BLF
+BLF/Xfer| BLF/prepoj.
+BLF/List| BLF/seznam
+XML| XML
+WebApps| Web apli.
+Flash| Vyzadani
+Last Call Return| Navrat k posl. volani
+Sprecode| Spre kod
+Transfer| Prepojeni
+Conference| Konference
+Save| Ulozit
+Delete| Smazat
+Data has been transmitted to the phone successfully.| Data byla uspesne poslana do telefonu
+Data cannot be posted to the phone.| Data nelze poslat do telefonu
+Please ensure the data size is 512 bytes or less and the phone is configured to receive from the host.| Prosim, zajistete velikost dat maximalne 512 bytu a konfiguraci telefonu na prijem od hostitele.
+Expansion Modules| Pridavne moduly
+Expansion Module 1| Pridavny modul 1
+Expansion Module 2| Pridavny modul 2
+Expansion Module 3| Pridavny modul 3
+Page 1| Strana 1
+Page 2| Strana 2
+Page 3| Strana 3
+List 1| Seznam 1
+List 2| Seznam 2
+List 3| Seznam 3
+List 4| Seznam 4
+List 5| Seznam 5
+List 6| Seznam 6
+Incompatible with phone model| Nekompatibilni s typem pristroje
+Backup Proxy Server| Zalozni Proxy server
+Backup Proxy Port| Zalozni Proxy port
+Backup Registrar Server| Zalozni registracni server
+Backup Registrar Port| Zalozni registracni port
+Phone is locked| Telefon uzamcen
+Phone Lock| Zamceni telefonu
+Lock the phone?| Zamknout tel.?
+Phone is unlocked| Tel. odemceny
+Password:| Heslo:
+Emergency Dial Plan| Nouzovy cislovaci plan
+Account Configuration| Nastaveni uctu
+Lock| Zamknout
+Unlock| Odemknout
+Unlock the phone?| Odemknout telefon?
+Lock or unlock the phone| Zamknout nebo odemknout telefon
+HTTPS Client Method| Klient. metoda HTTPS
+HTTPS Server - Redirect HTTP to HTTPS| HTTPS server - presmerovani HTTP do HTTPS
+HTTPS Server - Block XML HTTP POSTs| HTTPS server - zamazeni XML HTTP POST
+Validate Certificates| Overeni opravneni
+Check Certificate Expiration| Overte platnost certifikace
+Check Certificate Hostnames| Proverte opravneni hostitelskeho jmena
+Language Settings| Nastaveni jazyka
+Webpage Language| Jazyk www stranky
+Input Language| Vlozit jazyk
+Input Language| Vlozit jazyk
+Jan| Led
+Feb| Uno
+Mar| Bre
+Apr| Dub
+May| Kve
+Jun| Cen
+Jul| Cec
+Aug| Srp
+Sep| Zar
+Oct| Rij
+Nov| Lis
+Dec| Pro
+Sun| Ne
+Mon| Po
+Tue| Ut
+Wed| St
+Thu| Ct
+Fri| Pa
+Sat| So
+New Password Invalid.| Neplatne nove heslo.
+New password must be 10 characters or less.| Nove heslo musi mit maximalne 10 znaku.
+New password must be numeric.| Nove heslo musi byt ciselne.
+New password and confirm password do not match.| Nove heslo a jeho potvrzeni nesouhlasi.
+Error| Chyba
+Are you sure you want to restart the phone?| Opravdu chcete restartovat telefon?
+This will restore the phone to default settings and cannot be undone.| Tato volba obnovi tovarni nastaveni pristroje.
+This will remove the local configuration settings and cannot be undone.| Tato volba odstrani nastaveni lokalni konfigurace.
+Continue| Pokracovat
+Error: Intercom Settings| Chyba: nastaveni interkomu
+Please enter a prefix code for server-side intercom.| Prosim, zadejte pristupovy kod pro intercom serveru.
+Value must be between| Hodnota musi byt mezi
+and| a
+Invalid Setting:| Neplatne nastaveni:
+Please select at least one state for softkey| Vyberte aspon jeden stav pro tlacitko
+DSCP value| Hodnota DSCP
+is mapped to multiple priorities.| je mapovany na vicenasobne priority.
+Please enter Admin name and password| Prosim, zadejte administratorske jmeno a heslo
+Please enter User name and password| Prosim, zadejte uzivatelske jmeno a heslo
+Centralized Conference| Centralni konference
+Conference Server URI| Konferencni server URI
+UPnP device not found| Zdroj UPnP nenalezen
+Ethernet| Ethernet
+Ethernet Link| Ethernet link
+Ethernet & VLAN| Ethernet a VLAN
+Link| Link
+10M| 10M
+100M| 100M
+Unavailable| Nedostupny
+Available| Dostupny
+Server Info| Server info
+Unique ID:| Jedinecne ID:
+UPnP Mapping Lines| Zobraz. linky UPnP
+Port Failed| Chybny port
+Trying...| Zkousim...
+Seize Failed| Chybne prij.
+Missed Call Summary Subscription| Povoleni ukladani zmeskanych volani
+Missed Call Summary Subscription Period| Doba ulozeni zmeskanych volani
+AS-Feature-Event Subscription| Povoleni sluzeb AS
+AS-Feature-Event Subscription Period| Povolena doba sluzeb AS
+Goodbye Key Cancels Incoming Call| Ukoncovaci tlacitko odmitne prich. volani
+Address Incomplete| Neuplna adresa
+Admin Menu| Admin menu
+IP&MAC Addresses| IP&MAC adresy
+LAN Port| Port LAN
+PC Port| PC port
+Set Audio| Nast. zvuku
+Config. Server| Konfig. server
+IP Address:| IP adresa:
+Error Messages| Chybove hlasky
+No Error Messages| Bez chyb
+ Errors| Chyby
+ Error| Chyba
+Disabled| Zakazano
+LAN Port Link| Pripojena LAN
+PC Port Link| Pripojen PC port
+RTP| RTP
+RTCP| RTCP
+Phone| Telefon
+Headset Mic Vol| Hlasitost nahl.
+TypeService SIP| Typ sluzby SIP
+TypeService RTP| Typ sluzby RTP
+TypeService RTCP| Typ sluzby RTCP
+Authentic. Name| Overov. jmeno
+XML Beep Support| Podpora XML beep
+Status Scroll Delay (seconds)| Zpozdeni prochazeni (vteriny)
+Backlight| Podsvetleni
+Display| Displej
+Speed Dial Edit| Upr. rychl.volby
+second| vterina
+seconds| vteriny
+Label| Popisek
+Message Waiting Indicator Line| Indikace cekajici zpravy
+Keypad Speed Dial| Klavesa rychle volby
+Digit| Cislice
+Whitelist Proxy| Bila listina Proxy
+XML SIP Notify| Oznameni XML SIP
+Custom Feature| Uziv. sluzba
+User ID:| ID uziv.:
+Local SIP UDP/TCP Port| Lokalni port SIP UDP/TCP
+Local SIP TLS Port| Lokalni port SIP TLS
+802.1x Support| Podpora 802.1x
+EAP Type| Typ EAP
+EAP-MD5| EAP-MD5
+EAP-TLS| EAP-TLS
+Identity| Totoznost
+MD5 Password| Heslo MD5
+PC Port PassThru Enable/Disable| PC port PassThru Povolit/Zakazat
+EAP-TLS Settings| Nastaveni EAP-TLS
+EAP-MD5 Settings| Nastaveni EAP-MD5
+Enable PassThru Port| Povol PassThru port
+PC Port Enabled\nYes| PC port pov\nAno
+PC Port Disabled\nNo| PC port zak\nNe
+802.1x Settings| Nastaveni 802.1x
+802.1x Mode| Mod 802.1x
+EAP-MD5 Settings| Nastaveni EAPMD5
+EAP-TLS Settings| Nastaveni EAPTLS
+STUN Server| Server STUN
+STUN Port| Port STUN
+TURN Server| Server TURN
+TURN Port| Port TURN
+TURN User ID| TURN User ID
+TURN Password| Heslo TURN
+Paging| Paging
+Streaming| Smerovani dat
+Group Paging RTP Settings| Nastaveni RTP skupiny pagingu
+Paging Listen Addresses| Sledovaci adresy pagingu
+Rport (RFC 3581)| R port (RFC 3581)
+SIP Account| SIP ucet
+Backup Registrar Used?| Pouzita zalozni registrace?
+Unregistered| Neregistrovano
+Registered| Registrovano
+SIP Status| Stav SIP
+Server Error| Chyba serveru
+Swap| Vymena
+LLDP\nEnabled| LLDP\npovoleno
+LLDP\nDisabled| LLDP\nzakazano
+LLDP Support| Podpora LLDP
+Preferred line| Uprednostnovana linka
+Preferred line Timeout (seconds)| Uprednostnovany cas (sec)
+Invalid URI| Neplatne URI
+WebApps| Web apl.
+Watchdog| Hlidani syst.
+Speeddial/Conf| Zkracene/Konf
+Call is on Hold| Pridrzene hovory
+No subscription| Neprihlaseno
+MDot1xFailedStartup| Selhalo spusteni 802.1x
+802.1x Startup Failed| Selhalo spusteni 802.1x
+LLDP Startup Failed| Selhalo spusteni LLDP
+Failed to config Line Manager| Chyba pri konfiguraci
+Line in use| Linka pouzita
+Get Crash Log| Ziskat vypis chyb
+Time Unavailable| Cas nedostupny
+Packetization Interval| Interval paketizace
+Basic| Zakladni
+Note: Basic Codecs Include| Pozn.: Zakladni kodeky
+Default| Standardni
+Not Configured| Nenastaven
+America| Amerika
+Asia| Asie
+Atlantic| Atlanticky
+Pacific| Tichomorsky
+Australia| Australie
+Europe| Evropa
+Malaysia| Malajsie
+Invalid Setting| Neplatne nastaveni:
+Must not be empty| Nesmi byt prazdne
+Must be a valid number| Musi byt platne cislo
+Must be a nonzero number| Musi byt nenulove cislo
+Not in range| Neni v rozsahu
+Invalid Hostname| Neplatne hostitelske jmeno
+802.1x Failed| Selhani 802.1x
+Admin Password:| Admin. Heslo:
+Voicemail| Hlasova posta
+HTTPS Failed| Selhani HTTPS
+LLDP Failed| Selhani LLDP
+TR69 connect Err| Chyba spoj. TR69
+Downloading Language Packs| Stahovani jazykovych balicku
+Please Wait...| Prosim cekejte..
+Cfg Svr Failure| Selhani cfg serv
+End| 
