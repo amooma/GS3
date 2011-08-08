@@ -311,18 +311,18 @@ $SNOM_PROV_PB_NUM_RESULTS   = 15;
 $SNOM_PROV_FW_UPDATE        = false;  # allow firmware updates?
 $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 
-//$SNOM_PROV_FW_DEFAULT_300   = '7.1.24';
-//$SNOM_PROV_FW_DEFAULT_320   = '7.1.24';
-//$SNOM_PROV_FW_DEFAULT_360   = '6.5.1';
-//$SNOM_PROV_FW_DEFAULT_370   = '7.1.24';
-//$SNOM_PROV_FW_DEFAULT_820   = '8.2.11';
-//$SNOM_PROV_FW_DEFAULT_821   = '8.4.4';
+//$SNOM_PROV_FW_DEFAULT_300   = '8.4.32';
+//$SNOM_PROV_FW_DEFAULT_320   = '8.4.32';
+//$SNOM_PROV_FW_DEFAULT_360   = '8.4.32';
+//$SNOM_PROV_FW_DEFAULT_370   = '8.4.32';
+//$SNOM_PROV_FW_DEFAULT_820   = '8.4.32';
+//$SNOM_PROV_FW_DEFAULT_821   = '8.4.32';
 
   # Intermediate firmware to enable 6->7 upgrade.
   # Images should be named like e.g. snom300-from6to7-07.03.14.bin
-//$SNOM_PROV_FW_FROM6TO7_300  = '7.3.14';
-//$SNOM_PROV_FW_FROM6TO7_320  = '7.3.14';
-//$SNOM_PROV_FW_FROM6TO7_360  = '7.3.14';
+//$SNOM_PROV_FW_FROM6TO7_300  = '7.1.30';
+//$SNOM_PROV_FW_FROM6TO7_320  = '7.1.30';
+//$SNOM_PROV_FW_FROM6TO7_360  = '7.1.30';
 
 //$SNOM_PROV_KEY_BLACKLIST    = '';
   # do not show these softkey functions in GUI,
@@ -331,7 +331,7 @@ $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 
 //----------------------[  Snom M3  ]---------------------//
 
-$SNOM_PROV_M3_ACCOUNTS      = 1;
+$SNOM_PROV_M3_ACCOUNTS      = 0;
   # set to 0 to disable Snom M3 provisioning
 
 //$SNOM_PROV_M3_FW_DEFAULT_SNOM_M3 = 'x.x.x';  # not used (yet)
