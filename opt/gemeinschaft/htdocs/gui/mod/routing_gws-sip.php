@@ -696,7 +696,7 @@ echo  "\n";
 <?php
 }
 #####################################################################
-if ($_REQUEST['extended'] == "show") {
+if (@$_REQUEST['extended'] == "show") {
 ?>
 <h3><?php echo __('Erweiterte Parameter für das SIP-Gateway: ').htmlEnt($_REQUEST['gw-title']);?></h3>
 <form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">

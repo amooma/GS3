@@ -254,7 +254,8 @@ $is_login     = false;
 
 if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 	
-	$_REQUEST['login_user'] = strtolower($_REQUEST['login_user']);
+	if (isset($_REQUEST['login_user']))
+		$_REQUEST['login_user'] = strtolower($_REQUEST['login_user']);
 	$_SESSION['sudo_user']['boi_session'] = null;
 	
 	require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );

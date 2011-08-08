@@ -122,8 +122,9 @@ LIMIT 1'
 	}
 	
 	if($case === 'always') {
-		$call   //= "Channel: Local/". $from_num_dial ."\n"
-			= "Channel: local/toggle@toggle-cfwd-hint\n"
+		$filename = '/tmp/gs-'. $user_id .'-'. time() .'-'. rand(10000,99999) .'.call';
+
+		$call   = "Channel: local/toggle@toggle-cfwd-hint\n"
 			. "MaxRetries: 0\n"
 			. "WaitTime: 15\n"
 			. "Context: toggle-cfwd-hint\n"
@@ -136,8 +137,6 @@ LIMIT 1'
 			. "Setvar: __callfile_from_user=".  $user_ext ."\n"
 			. "Setvar: __record_file=".  $filename ."\n"
 			;
-
-		$filename = '/tmp/gs-'. $user_id .'-'. time() .'-'. rand(10000,99999) .'.call';
 
 		$cf = @fOpen( $filename, 'wb' );
 		if (! $cf) {
