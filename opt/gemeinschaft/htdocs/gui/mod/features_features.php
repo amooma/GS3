@@ -54,7 +54,7 @@ $members_cw = gs_group_permissions_get ( $user_groups, 'callwaiting_set' );
 $members_adm = gs_group_permissions_get ( $user_groups , 'sudo_user' );
 
 
-$disable = array ( 'clip' => '' , 'clir' => '', 'cw' => '' );
+$disabled = array ( 'clip' => '' , 'clir' => '', 'cw' => '' );
 if (  count ( $members_adm ) <= 0 ) {
 	
 	if (  count ( $members_clip ) <= 0 )
