@@ -88,9 +88,8 @@ $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 if ( preg_match('/\sMAC:(00-08-5D-\w{2}-\w{2}-\w{2})\s/', $ua, $m) )
 	$mac = preg_replace( '/[^0-9A-F]/', '', strToUpper($m[1]) );
 
-//$user = trim(@$_REQUEST['u']);
-$user_id = _get_userid($user);
-$user = _get_user ( $user_id );
+$user_id = _get_userid();
+$user = _get_user($user_id);
 
 // Check permissions
 $user_groups = gs_group_members_groups_get(Array($user_id), "user");
