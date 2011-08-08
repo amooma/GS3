@@ -60,82 +60,6 @@ function _pack_int( $int ) {
 	return preg_replace('/[^a-z0-9]/i', '', $str);
 }
 
-
-
-function InitHinttoggleCall() {  //FIXME
-	$user=gs_user_get( $_SESSION['sudo_user']['name'] );
-
-	$call   //= "Channel: Local/". $from_num_dial ."\n"
-		= "Channel: local/toggle@toggle-cfwd-hint\n"
-		. "MaxRetries: 0\n"
-		. "WaitTime: 15\n"
-		. "Context: toggle-cfwd-hint\n"
-		. "Extension: toggle\n"
-		. "Callerid: $user <Toggle>\n"
-		. "Setvar: __user_id=".  $_SESSION['sudo_user']['info']['id'] ."\n"
-		. "Setvar: __user_name=".  $_SESSION['sudo_user']['info']['ext'] ."\n"
-		. "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
-		. "Setvar: __is_callfile_origin=1\n"  # no forwards and no mailbox on origin side
-		. "Setvar: __callfile_from_user=".  $_SESSION['sudo_user']['info']['ext'] ."\n"
-		. "Setvar: __record_file=".  $filename ."\n"
-		;
-
-	$filename = '/tmp/gs-'. $_SESSION['sudo_user']['info']['id'] .'-'. _pack_int(time()) . rand(100,999) .'.call';
-
-	$cf = @fOpen( $filename, 'wb' );
-	if (! $cf) {
-		gs_log( GS_LOG_WARNING, 'Failed to write call file "'. $filename .'"' );
-		echo 'Failed to write call file.';
-		die();
-	}
-	@fWrite( $cf, $call, strLen($call) );
-	@fClose( $cf );
-	@chmod( $filename, 00666 );
-
-	$spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
-
-
-	if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
-		$our_host_ids = @gs_get_listen_to_ids();
-		if (! is_array($our_host_ids)) $our_host_ids = array();
-		$user_is_on_this_host = in_array( $_SESSION['sudo_user']['info']['host_id'], $our_host_ids );
-	} else {
-		$user_is_on_this_host = true;
-	}
-
-	if ($user_is_on_this_host) {
-		# the Asterisk of this user and the web server both run on this host
-		$err=0; $out=array();
-		@exec( 'sudo mv '. qsa($filename) .' '. qsa($spoolfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
-		if ($err != 0) {
-			@unlink( $filename );
-			gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"' );
-			echo 'Failed to move call file.';
-			die();
-		}
-	} else {
-		$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $filename ) .' '. qsa( 'root@'. $user['host'] .':'. $filename );
-		//echo $cmd, "\n";
-		@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
-		@unlink( $filename );
-		if ($err != 0) {
-			gs_log( GS_LOG_WARNING, 'Failed to scp call file "'. $filename .'" to '. $user['host'] );
-			echo 'Failed to scp call file.';
-			die();
-		}
-		//remote_exec( $user['host'], $cmd, 10, $out, $err ); // <-- does not use sudo!
-		$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa( $user['host'] ) .' '. qsa( 'mv '. qsa( $filename ) .' '. qsa( $spoolfile ) );
-		//echo $cmd, "\n";
-		@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
-		if ($err != 0) {
-			gs_log( GS_LOG_WARNING, 'Failed to mv call file "'. $filename .'" on '. $user['host'] .' to "'. $spoolfile .'"' );
-		echo 'Failed to mv call file on remote host.';
-		die();
-		}
-	}
-}
-
-
 $user_groups  = gs_group_members_groups_get( array( $_SESSION['real_user']['info']['id'] ), 'user' );
 $members = gs_group_permissions_get ( $user_groups, 'forward' );
 $members_adm = gs_group_permissions_get ( $user_groups , 'sudo_user' );
@@ -144,10 +68,6 @@ if ( count ( $members_adm ) > 0 || count ( $members ) > 0 )
 	$disabled = '';
 else
 	$disabled = ' disabled';
-
-
-
-
 
 $sources = array(
 	'internal' => __('intern'),
@@ -288,9 +208,7 @@ if (@$_REQUEST['action']==='save' && $disabled == '' ) {
 	if ( GS_BUTTONDAEMON_USE == true ) {
 		gs_diversion_changed_ui( $_SESSION['sudo_user']['info']['ext']);
 	}
-	
-	//Set Devstate for Customhint
-	InitHinttoggleCall();
+
 }
 
 
