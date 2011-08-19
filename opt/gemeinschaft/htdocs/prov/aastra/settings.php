@@ -585,6 +585,15 @@ if ($phone_type == 'aastra-55i' || $phone_type == 'aastra-57i' || $phone_type ==
 $softkeys = aastra_get_softkeys( $user_id, $phone_type );
 if (is_array($softkeys)) {
 	foreach ($softkeys as $key_name => $softkey) {
+		switch ($softkey['data']) {
+		case '{GS_P_EXTEN}':
+			$softkey['data'] = $user_ext;
+			break;
+		case '{GS_P_USER}':
+			$softkey['data'] = $user['user'];
+			break;
+		}
+
 		switch ($softkey['function']) {
 		case '_dir':
 			$softkey['function'] = 'xml';
