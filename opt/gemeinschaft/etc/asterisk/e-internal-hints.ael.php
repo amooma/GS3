@@ -92,6 +92,7 @@ echo "\n";
 # hints for pickup groups
 #
 echo "// hints for pickup groups (auto-generated):\n";
+/*
 $query =
 'SELECT
 	`permit` `pg_id`
@@ -123,6 +124,40 @@ WHERE
 				}
 				echo 'hint(', implode('&', $devices), ') *8*', str_pad($r['pg_id'],5,'0',STR_PAD_LEFT), ' => {}', "\n";
 			}
+		}
+	}
+}
+*/
+$query = 
+'SELECT
+	DISTINCT(`p`.`id`) `id`
+FROM
+	`pickupgroups_users` `pu`
+JOIN
+	`pickupgroups` `p` ON (`p`.`id`=`pu`.`group_id`)';
+
+$rs = $db->execute($query);
+
+if ($rs) {
+	while ($r = $rs->fetchRow()) {
+		$query =
+'SELECT
+	`s`.`name` `name`
+FROM
+	`ast_sipfriends` `s`, `pickupgroups_users` `pu`
+WHERE
+	`pu`.`user_id` = `s`.`_user_id`
+AND
+	`pu`.`group_id` = '.$r['id'];
+	
+		$rsa = $db->execute($query);
+		if ($rsa) {
+			$devices = array();
+			while ($ra = $rsa->fetchRow()) {
+				$ext = preg_replace('/[^0-9*a-z\-_]/iS', '', $ra['name']);
+				if ($ext != '') $devices[] = 'SIP/'.$ext;
+			}
+			echo 'hint(', implode('&', $devices), ') *8*', str_pad($r['id'],5,'0',STR_PAD_LEFT), ' => {}', "\n";
 		}
 	}
 }

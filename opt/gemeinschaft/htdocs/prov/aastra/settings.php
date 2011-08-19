@@ -743,6 +743,12 @@ if (is_array($softkeys)) {
 			if (! $softkey['label'])
 				$softkey['label'   ] = __('Agentenpause');
 			break;
+		case 'pickup':
+			$softkey['function'] = 'blf';
+			$softkey['data'    ] = '*8*'.str_pad($softkey['data'],5,'0',STR_PAD_LEFT);
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Heranholen');
+			break;
 		}
 		psetting($key_name.' type' , $softkey['function'], true, $dynamic);
 		psetting($key_name.' value', $softkey['data'    ], true, $dynamic);

@@ -353,7 +353,7 @@ context to-internal-users {
 	//----------------------------------------------------------
 	
 
-	_*81*. => {
+	_*81*[1-9]. => {
 		&caller-count();
 		Set(pext=${EXTEN:4});
 		if ("${pext}" != "") {
@@ -397,6 +397,26 @@ context to-internal-users {
 		// directly used by Snom (see htdocs/prov/snom/settings.php)
 		if ("${PICKUPMARK}" = "") {
 			Set(pmark=${EXTEN:6});
+			Verbose(1,### User ${user_name} tries to pickup group ${pmark});
+			//FIXME - add pickup group check
+			Pickup(${pmark}@PICKUPMARK);
+			//FIXME - does not work across nodes
+			
+			// if we got here, the pickup attempt was not successful
+			// (maybe because there wasn't even a call)
+			NoCDR();
+			// 31 = AST_CAUSE_NORMAL_UNSPECIFIED => SIP 480 Temporarily unavailable
+			Hangup(31);
+		}
+		else {
+			NoCDR();
+		}
+	}
+	
+	_*81**8*0. => {
+		// used by Aastra
+		if ("${PICKUPMARK}" = "") {
+			Set(pmark=${EXTEN:7});
 			Verbose(1,### User ${user_name} tries to pickup group ${pmark});
 			//FIXME - add pickup group check
 			Pickup(${pmark}@PICKUPMARK);
