@@ -215,31 +215,7 @@ context to-internal-users {
 			Set(record_msg=1);
 		}
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-vm.agi,${box});
-		if ("${user_id}" != "") {
-			Set(vm_source=internal);
-		}
-		else {	
-			if ("${is_sub_system}" = "yes") {
-						
-				&is_dmz(${CALLERID(num)});
-				if ("${is_dmz}" == "1") {
-					Set(vm_source=internal);
-				}
-				else {
-					Set(vm_source=external);
-				}
-	
-			}
-			else {
-				
-				if ( "${is_from_gateway}" = "" ) {
-					Set(vm_source=internal);
-				}
-				else {
-					Set(vm_source=external);
-				}
-			}
-		}
+		Set(vm_source=${is_call_from});
 		Verbose(1,### Forwarded call to voicemail of ${box});
 		Set(CHANNEL(language)=de);
 		Answer();
