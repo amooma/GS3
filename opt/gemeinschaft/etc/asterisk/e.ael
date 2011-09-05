@@ -454,7 +454,6 @@ macro agent-pause() {
 	Wait(0.5);
 	if ("${agent}" != "") {
 		PauseQueueMember(,SIP/${user_name});
-		UserEvent(AgentPausedUI,agent: ${user_name});
 		Verbose(1,### Agent ${agent} on ${user_name} paused);
 		//Playback(beep);
 	} else {
@@ -474,7 +473,6 @@ macro agent-unpause() {
 	
 	if ("${agent}" != "") {
 		UnpauseQueueMember(,SIP/${user_name});
-		UserEvent(AgentUnPausedUI,agent: ${user_name});
 		Verbose(1,### Agent ${agent} on ${user_name} unpaused);
 		//Playback(beep);
 	} else {
