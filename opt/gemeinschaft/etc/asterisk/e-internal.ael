@@ -1165,8 +1165,7 @@ context to-internal-users-self {
 				Verbose(1,### Enter local queue ${EXTEN}, timeout: none);
 			}
 			
-			//Set(CALLERID(name)=Queue ${EXTEN});
-			//Set(CALLERID(name)=Q${EXTEN} ${CALLERID(name)});
+			AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${is_call_from});
 			Set(CALLERID(name)=[${queue_displayname}] ${CALLERID(name)});
 			if ("${CALLERID(num)}" = "")
 				Set(CALLERID(num)=${EXTEN});
