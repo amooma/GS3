@@ -401,6 +401,7 @@ FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
 WHERE
+	`u`.`pb_hide` = 0 AND
 	`u`.`id` IN ('.implode(',',$group_members).') AND (
 	`u`.`id`!='.$user_id.'
 	'. ($where ? ('AND ('. $where .')') : '') .'
