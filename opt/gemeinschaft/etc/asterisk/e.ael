@@ -1167,7 +1167,7 @@ macro dial-gateway-do( mnumber ) {
 		}
 		else {
 			// RFC 2543:
-			Set(CALLERID(num)=anonymous);
+			Set(CALLERID(num)=${r_${r}_cid});
 			Set(CALLERID(name)=Anonymous);
 			// RFC 3325, RFC 3323:
 			SIPAddHeader(Privacy: id;header);
