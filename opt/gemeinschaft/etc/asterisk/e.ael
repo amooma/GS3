@@ -1152,7 +1152,16 @@ macro dial-gateway-do( mnumber ) {
 	while ("${r_${r}_dial}" != "") {
 		//Verbose(1,### route: r_${r});
 		Set(no_route=);
-		if ("${clir}" != "1") {
+
+		if ( "${CALLERID(num)}" = "anonymous" && "${external_callerid_override}" != "true" && "${is_forwarded}" = "1" ) {
+			Set(CALLERID(name)=Anonymous);
+			// RFC 3325, RFC 3323:
+			SIPAddHeader(Privacy: id;header);
+			// Set caller presentation - affects Remote-Party-ID header: ...";privacy:full;screen:yes"
+			Set(CALLERID(num-pres)=prohib_passed_screen);
+			Set(CALLERID(name-pres)=prohib_passed_screen);
+		}
+		else if ("${clir}" != "1") {
 			// RFC 2543:
 			Set(CALLERID(num)=${r_${r}_cid});
 			Set(CALLERID(name)=${r_x_cid_name});
