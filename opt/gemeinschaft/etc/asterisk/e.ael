@@ -1397,7 +1397,7 @@ context from-internal-users {
 		cmm;                  // user login/logout
 		pb;                   // LDAP phonebook quickdial
 		from-internal-custom;
-		to-internal-custom;
+		//to-internal-custom;
 		vm-ann-rec;           // record vm-box announcements
 		voicemail-self;       // voicemail main (own mailbox)
 		voicemail-any;        // voicemail main (any mailbox)
