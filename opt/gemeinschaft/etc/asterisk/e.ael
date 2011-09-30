@@ -1176,7 +1176,7 @@ macro dial-gateway-do( mnumber ) {
 		}
 		else {
 			// RFC 2543:
-			Set(CALLERID(num)=anonymous);
+			Set(CALLERID(num)=${r_${r}_cid});
 			Set(CALLERID(name)=Anonymous);
 			// RFC 3325, RFC 3323:
 			SIPAddHeader(Privacy: id;header);
@@ -1406,7 +1406,7 @@ context from-internal-users {
 		cmm;                  // user login/logout
 		pb;                   // LDAP phonebook quickdial
 		from-internal-custom;
-		to-internal-custom;
+		//to-internal-custom;
 		vm-ann-rec;           // record vm-box announcements
 		voicemail-self;       // voicemail main (own mailbox)
 		voicemail-any;        // voicemail main (any mailbox)
