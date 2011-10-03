@@ -38,6 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_ringtone_set.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'inc/langhelper.php' );
+require_once( GS_DIR .'inc/snom-fns.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -46,16 +47,6 @@ header( 'Pragma: no-cache' );
 header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
 
-
-function snomXmlEsc( $str )
-{
-	return str_replace(
-		array('<', '>', '"'   , "\n"),
-		array('_', '_', '\'\'', ' ' ),
-		$str);
-	# the stupid Snom does not understand &lt;, &gt, &amp;, &quot; or &apos;
-	# - neither as named nor as numbered entities
-}
 
 function _ob_send()
 {
@@ -68,35 +59,23 @@ function _ob_send()
 	die();
 }
 
-function _err( $msg='' )
-{
-	@ob_end_clean();
-	ob_start();
-	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
-	     '<SnomIPPhoneText>', "\n",
-	       '<Title>', 'Error', '</Title>', "\n",
-	       '<Text>', snomXmlEsc( 'Error: '. $msg ), '</Text>', "\n",
-	     '</SnomIPPhoneText>', "\n";
-	_ob_send();
-}
-
 function getUserID( $ext )
 {
 	global $db;
 	
 	if (! preg_match('/^\d+$/', $ext))
-		_err( 'Invalid username' );
+		snom_textscreen( __('Fehler'), snom_xml_esc(__('Ungültiger Benutzername')) );
 	
 	$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 	if ($user_id < 1)
-		_err( 'Unknown user' );
+		snom_textscreen( __('Fehler'), __('Unbekannter Benutzer') );
 	return $user_id;
 }
 
 
 if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
-	_err( 'Not enabled' );
+	snom_textscreen( __('Fehler'), __('Nicht aktiviert') );
 }
 
 $type = trim( @$_REQUEST['t'] );
@@ -114,7 +93,7 @@ $user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
 $members_rt = gs_group_permissions_get ( $user_groups, 'ringtone_set' );
 
 if ( count ( $members_rt ) <= 0 )
-	_err( 'Forbidden' );
+	snom_textscreen( __('Fehler'), __('Keine Berechtigung') );
 
 // setup i18n stuff
 gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
@@ -157,7 +136,7 @@ function defineBackKey()
 	# Snom does not understand &amp; !
 	echo '<SoftKeyItem>',
 		'<Name>F4</Name>',
-		'<Label>' ,snomXmlEsc(__('Zurück')), '</Label>',
+		'<Label>' ,snom_xml_esc(__('Zurück')), '</Label>',
 		'<URL>' ,$url_snom_bellcore, '?m=',$mac, '&u=',$user, '</URL>',
 		'</SoftKeyItem>', "\n";
 }
@@ -177,7 +156,7 @@ function defineBackMenu()
 	# Snom does not understand &amp; !
 	echo '<SoftKeyItem>',
 		'<Name>F4</Name>',
-		'<Label>' ,snomXmlEsc(__('Menü')),'</Label>',
+		'<Label>' ,snom_xml_esc(__('Menü')),'</Label>',
 		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 		'</SoftKeyItem>', "\n";
 }
@@ -219,12 +198,12 @@ if ($type == 'internal' || $type == 'external') {
 	
 	$user_id_check = $db->executeGetOne( 'SELECT `user_id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
 	if ($user_id != $user_id_check)
-		_err( 'Not authorized' );
+		snom_textscreen( __('Fehler'), __('Keine Berechtigung') );
 	
 	$remote_addr = @$_SERVER['REMOTE_ADDR'];
 	$remote_addr_check = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );
 	if ($remote_addr != $remote_addr_check)
-		_err( 'Not authorized' );
+		snom_textscreen( __('Fehler'), __('Keine Berechtigung') );
 	
 
 	$query = 'SELECT bellcore, file FROM ringtones WHERE user_id=\''. $user_id .'\' AND src=\'' . $type . '\'';
@@ -246,7 +225,7 @@ if ($type == 'internal' || $type == 'external') {
 	}
 	
 		echo '<SnomIPPhoneMenu>', "\n",
-		'<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n";
+		'<Title>', snom_xml_esc( $typeToTitle[$type] ), '</Title>', "\n";
 		 		
 		
 		
@@ -254,7 +233,7 @@ if ($type == 'internal' || $type == 'external') {
 		echo '<MenuItem';
 		if($bellcore == 0 && $file == 'NULL')echo ' sel=true';
 		echo '>',"\n";
-		echo '<Name>',snomXmlEsc(__('Lautlos')),'</Name>',"\n";
+		echo '<Name>',snom_xml_esc(__('Lautlos')),'</Name>',"\n";
 		echo '<URL>';
 		echo  $url_snom_bellcore, '?m=',$mac, '&u=',$user, '&t=',$type,'&bc=0';
 		echo '</URL>',"\n";  
@@ -265,7 +244,7 @@ if ($type == 'internal' || $type == 'external') {
 			echo '<MenuItem';
 			if($bellcore == $i && $file == '')echo ' sel=true';
 			echo '>',"\n";
-			echo '<Name>',snomXmlEsc('Bellcore '.$i),'</Name>',"\n";
+			echo '<Name>',snom_xml_esc('Bellcore '.$i),'</Name>',"\n";
 			echo '<URL>';
 			echo  $url_snom_bellcore, '?m=',$mac, '&u=',$user, '&t=',$type,'&bc=',$i;
 			echo '</URL>',"\n";  
@@ -275,7 +254,7 @@ if ($type == 'internal' || $type == 'external') {
 		//Wenn ein eigenes File definiert wurde, wird diese Option angemeldet
 		if($file != ''){
 			echo '<MenuItem sel=true>',"\n";
-			echo '<Name>',snomXmlEsc($file),'</Name>',"\n";
+			echo '<Name>',snom_xml_esc($file),'</Name>',"\n";
 			echo '<URL>';
 			echo  $url_snom_bellcore, '?m=',$mac, '&u=',$user, '&t=',$type,'&bc=99';
 			echo '</URL>',"\n";  
@@ -295,12 +274,12 @@ if (! $type) {
 	
 	$user_id_check = $db->executeGetOne( 'SELECT `user_id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
 	if ($user_id != $user_id_check)
-		_err( 'Not authorized' );
+		snom_textscreen( __('Fehler'), __('Keine Berechtigung') );
 	
 	$remote_addr = @$_SERVER['REMOTE_ADDR'];
 	$remote_addr_check = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );
 	if ($remote_addr != $remote_addr_check)
-		_err( 'Not authorized' );
+		snom_textscreen( __('Fehler'), __('Keine Berechtigung') );
 	
 
 	
@@ -328,7 +307,7 @@ if (! $type) {
 		
 				
 		echo '<MenuItem>', "\n",
-		       '<Name>', snomXmlEsc($title.$display), '</Name>', "\n",
+		       '<Name>', snom_xml_esc($title.$display), '</Name>', "\n",
 		       '<URL>', $url_snom_bellcore, '?m=',$mac, '&u=',$user, '&t=',$t, '</URL>', "\n",
 		     '</MenuItem>', "\n\n";
 		# in XML the & must normally be encoded as &amp; but not for

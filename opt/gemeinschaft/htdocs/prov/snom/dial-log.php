@@ -36,6 +36,7 @@ include_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 include_once( GS_DIR .'inc/langhelper.php' );
+require_once( GS_DIR .'inc/snom-fns.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -43,16 +44,6 @@ header( 'Expires: 0' );
 header( 'Pragma: no-cache' );
 header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
-
-function snomXmlEsc( $str )
-{
-	return str_replace(
-		array('<', '>', '"'   , "\n"),
-		array('_', '_', '\'\'', ' ' ),
-		$str);
-	# the stupid Snom does not understand &lt;, &gt, &amp;, &quot; or &apos;
-	# - neither as named nor as numbered entities
-}
 
 function _ob_send()
 {
@@ -65,29 +56,15 @@ function _ob_send()
 	die();
 }
 
-function _err( $msg='' )
-{
-	@ob_end_clean();
-	ob_start();
-	echo
-		'<?','xml version="1.0" encoding="utf-8"?','>', "\n",
-		'<SnomIPPhoneText>', "\n",
-			'<Title>', __('Fehler'), '</Title>', "\n",
-			'<Text>', snomXmlEsc( __('Fehler') .': '. $msg ), '</Text>', "\n",
-		'</SnomIPPhoneText>', "\n";
-	_ob_send();
-}
-
-
 if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
-	_err( 'Not enabled.' );
+	snom_textscreen( __('Fehler'), __('Nicht aktiviert') );
 }
 
 
 $user = trim( @ $_REQUEST['user'] );
 if (! preg_match('/^\d+$/', $user))
-	_err( 'Not a valid SIP user.' );
+	snom_textscreen( __('Fehler'), __('Ungültiger Benutzer') );
 
 $mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim( @$_REQUEST['mac'] )));
 
@@ -104,15 +81,15 @@ $db = gs_db_slave_connect();
 #
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1)
-	_err( 'Unknown user.' );
+	snom_textscreen( __('Fehler'), __('Unbekannter Benutzer') );
 
 # user/ip/mac check
 $user_id_check = $db->executeGetOne( 'SELECT `user_id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
-if ($user_id != $user_id_check) _err( 'Not authorized' );
+if ($user_id != $user_id_check) snom_textscreen( __('Fehler'), __('Keine Berechtigung') );
 
 $remote_addr = @$_SERVER['REMOTE_ADDR'];
 $remote_addr_check = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );
-if ($remote_addr != $remote_addr_check) _err( 'Not authorized' );
+if ($remote_addr != $remote_addr_check) snom_textscreen( __('Fehler'), __('Keine Berechtigung') );
 
 unset($remote_addr_check);
 unset($remote_addr);
@@ -221,7 +198,7 @@ if (! $type) {
 			echo
 				"\n",
 				'<MenuItem>', "\n",
-					'<Name>', snomXmlEsc( $title ) ,'</Name>', "\n",
+					'<Name>', snom_xml_esc( $title ) ,'</Name>', "\n",
 					'<URL>', $url_snom_dl ,'?user=',$user, '&mac=',$mac, '&type=',$t, '</URL>', "\n",
 				'</MenuItem>', "\n";
 			# Snom does not understand &amp; !
@@ -270,8 +247,8 @@ LIMIT 20';
 	
 	echo
 		'<SnomIPPhoneDirectory>', "\n",
-			'<Title>', snomXmlEsc( $typeToTitle[$type] ) ,
-			($rs->numRows() == 0 ? ' ('.snomXmlEsc(__('keine')).')' : '') ,
+			'<Title>', snom_xml_esc( $typeToTitle[$type] ) ,
+			($rs->numRows() == 0 ? ' ('.snom_xml_esc(__('keine')).')' : '') ,
 			'</Title>', "\n";
 	
 	while ($r = $rs->fetchRow()) {
@@ -314,15 +291,15 @@ WHERE
 		echo
 			"\n",
 			'<DirectoryEntry>', "\n",
-				'<Name>', snomXmlEsc( $entry_name ) ,'</Name>', "\n",
-				'<Telephone>', snomXmlEsc( $r['number'] ) ,'</Telephone>', "\n",
+				'<Name>', snom_xml_esc( $entry_name ) ,'</Name>', "\n",
+				'<Telephone>', snom_xml_esc( $r['number'] ) ,'</Telephone>', "\n",
 			'</DirectoryEntry>', "\n";
 		
 	}
 
 	echo '<SoftKeyItem>',
 		'<Name>F2</Name>',
-		'<Label>' ,snomXmlEsc(__('Löschen')),'</Label>',
+		'<Label>' ,snom_xml_esc(__('Löschen')),'</Label>',
 		'<URL>', $url_snom_dl, '?user=', $user, '&mac=',$mac, '&type=', $type, '&delete={index}</URL>',
 		'</SoftKeyItem>', "\n";
 

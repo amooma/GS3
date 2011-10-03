@@ -36,6 +36,7 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php');
 require_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'inc/langhelper.php' );
+require_once( GS_DIR .'inc/snom-fns.php' );
 
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
@@ -44,17 +45,6 @@ header( 'Expires: 0' );
 header( 'Pragma: no-cache' );
 header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
-
-
-function snomXmlEsc( $str )
-{
-	return str_replace(
-		array('<', '>', '"'   , "\n"),
-		array('_', '_', '\'\'', ' ' ),
-		$str);
-	# the stupid Snom does not understand &lt;, &gt, &amp;, &quot; or &apos;
-	# - neither as named nor as numbered entities
-}
 
 function _ob_send()
 {
@@ -67,35 +57,23 @@ function _ob_send()
 	die();
 }
 
-function _err( $msg='' )
-{
-	@ob_end_clean();
-	ob_start();
-	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
-	     '<SnomIPPhoneText>', "\n",
-	       '<Title>', 'Error', '</Title>', "\n",
-	       '<Text>', snomXmlEsc( 'Error: '. $msg ), '</Text>', "\n",
-	     '</SnomIPPhoneText>', "\n";
-	_ob_send();
-}
-
 function getUserID( $ext )
 {
 	global $db;
 	
 	if (! preg_match('/^\d+$/', $ext))
-		_err( 'Invalid username' );
+		snom_textscreen( __('Fehler'), snom_xml_esc(__('Ungültiger Benutzername')) );
 	
 	$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 	if ($user_id < 1)
-		_err( 'Unknown user' );
+		snom_textscreen( __('Fehler'), __('Benutzer unbekannt') );
 	return $user_id;
 }
 
 
 if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
-	_err( 'Not enabled' );
+	snom_textscreen( __('Fehler'), __('Nicht aktiviert') );
 }
 
 $type = trim( @$_REQUEST['t'] );
@@ -149,7 +127,7 @@ if (! $type) {
 	       '<Title>'. __("externe Nummern") .'</Title>', "\n\n";
 	foreach ($enumbers as $extnumber) {
 		echo '<MenuItem>', "\n",
-		       '<Name>', snomXmlEsc($extnumber), '</Name>', "\n",
+		       '<Name>', snom_xml_esc($extnumber), '</Name>', "\n",
 		       '<URL>',$url_snom_menu,'?t=forward&m=',$mac ,'&u=', $user,'</URL>', "\n",
 		     '</MenuItem>', "\n\n";
 		# in XML the & must normally be encoded as &amp; but not for
@@ -178,12 +156,12 @@ function defineBackMenu()
 		'</SoftKeyItem>', "\n";
 	echo '<SoftKeyItem>',
 		'<Name>F1</Name>',
-		'<Label>' ,snomXmlEsc(__('Zurück')),'</Label>',
+		'<Label>' ,snom_xml_esc(__('Zurück')),'</Label>',
 		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 		'</SoftKeyItem>', "\n";
 	echo '<SoftKeyItem>',
 		'<Name>F4</Name>',
-		'<Label>' ,snomXmlEsc(__('Zurück')),'</Label>',
+		'<Label>' ,snom_xml_esc(__('Zurück')),'</Label>',
 		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 		'</SoftKeyItem>', "\n";
 	# Snom does not understand &amp; !

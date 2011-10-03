@@ -36,16 +36,6 @@ include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_dnd_toggle.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
 
-function snomXmlEsc( $str )
-{
-	return str_replace(
-		array('<', '>', '"'   , "\n"),
-		array('_', '_', '\'\'', ' ' ),
-		$str);
-	# the stupid Snom does not understand &lt;, &gt, &amp;, &quot; or &apos;
-	# - neither as named nor as numbered entities
-}
-
 function _ob_send()
 {
 	if (! headers_sent()) {

@@ -42,6 +42,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_set.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
 require_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'inc/langhelper.php' );
+require_once( GS_DIR .'inc/snom-fns.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -50,16 +51,6 @@ header( 'Pragma: no-cache' );
 header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
 
-
-function snomXmlEsc( $str )
-{
-	return str_replace(
-		array('<', '>', '"'   , "\n"),
-		array('_', '_', '\'\'', ' ' ),
-		$str);
-	# the stupid Snom does not understand &lt;, &gt, &amp;, &quot; or &apos;
-	# - neither as named nor as numbered entities
-}
 
 function _ob_send()
 {
@@ -72,35 +63,23 @@ function _ob_send()
 	die();
 }
 
-function _err( $msg='' )
-{
-	@ob_end_clean();
-	ob_start();
-	echo '<?','xml version="1.0" encoding="utf-8"?','>', "\n",
-	     '<SnomIPPhoneText>', "\n",
-	       '<Title>', 'Error', '</Title>', "\n",
-	       '<Text>', snomXmlEsc( 'Error: '. $msg ), '</Text>', "\n",
-	     '</SnomIPPhoneText>', "\n";
-	_ob_send();
-}
-
 function getUserID( $ext )
 {
 	global $db;
 	
 	if (! preg_match('/^\d+$/', $ext))
-		_err( 'Invalid username' );
+		snom_textscreen( __('Fehler'), snom_xml_esc(__('Ungültiger Benutzername')) );
 	
 	$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 	if ($user_id < 1)
-		_err( 'Unknown user' );
+		snom_textscreen( __('Fehler'), __('Benutzer unbekannt') );
 	return $user_id;
 }
 
 
 if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
-	_err( 'Not enabled' );
+	snom_textscreen( __('Fehler'), __('Nicht aktiviert') );
 }
 
 $type = trim( @$_REQUEST['t'] );
@@ -202,7 +181,7 @@ function defineBackMenu()
 	     '</SoftKeyItem>', "\n";
 	echo '<SoftKeyItem>',
 		'<Name>F4</Name>',
-		'<Label>' ,snomXmlEsc(__('Menü')), '</Label>',
+		'<Label>' ,snom_xml_esc(__('Menü')), '</Label>',
 		'<URL>', $url_snom_menu, '?', implode('&', $args), '</URL>',
 		'</SoftKeyItem>', "\n";
 	# Snom does not understand &amp; !
@@ -220,7 +199,7 @@ function defineBackKey()
 		# Snom does not understand &amp; !
 	echo '<SoftKeyItem>',
 		'<Name>F4</Name>',
-		'<Label>' ,snomXmlEsc(__('Zurück')),'</Label>',
+		'<Label>' ,snom_xml_esc(__('Zurück')),'</Label>',
 		'<URL>' ,$url_snom_features, '?m=',$mac, '&u=',$user, '</URL>',
 		'</SoftKeyItem>', "\n";
 }
@@ -265,7 +244,7 @@ if($type != false && isset($_REQUEST['state'])){
 		gs_user_callerid_set($user_name, $state, 'external');
 	}
 	else {
-		_err( 'Forbidden');
+		snom_textscreen( __('Fehler'), __('Nicht erlaubt') );
 	}
 	
 	
@@ -293,12 +272,12 @@ if (($type == 'internal' || $type == 'external' ||  $type == 'callwaiting') && $
 	
 	$user_id_check = $db->executeGetOne( 'SELECT `user_id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
 	if ($user_id != $user_id_check)
-		_err( 'Not authorized' );
+		snom_textscreen( __('Fehler'), __('Nicht erlaubt') );
 	
 	$remote_addr = @$_SERVER['REMOTE_ADDR'];
 	$remote_addr_check = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );
 	if ($remote_addr != $remote_addr_check)
-		_err( 'Not authorized' );
+		snom_textscreen( __('Fehler'), __('Nicht erlaubt') );
 	
 	$state = "aus";
 	if($type == 'callwaiting'){
@@ -319,13 +298,13 @@ if (($type == 'internal' || $type == 'external' ||  $type == 'callwaiting') && $
 	
 		
 		echo '<SnomIPPhoneMenu>', "\n",
-		       '<Title>', snomXmlEsc( $typeToTitle[$type] ), '</Title>', "\n";
+		       '<Title>', snom_xml_esc( $typeToTitle[$type] ), '</Title>', "\n";
 
 		//Lautlos
 		echo '<MenuItem';
 		if($state == 'aus')echo ' sel=true';
 		echo '>',"\n";
-		echo '<Name>',snomXmlEsc(__('Aus')),'</Name>',"\n";
+		echo '<Name>',snom_xml_esc(__('Aus')),'</Name>',"\n";
 		echo '<URL>';
 		echo  $url_snom_features, '?m=',$mac, '&u=',$user, '&t=',$type,'&state=no';
 		echo '</URL>',"\n";  
@@ -334,7 +313,7 @@ if (($type == 'internal' || $type == 'external' ||  $type == 'callwaiting') && $
 		echo '<MenuItem';
 		if($state == 'ein')echo ' sel=true';
 		echo '>',"\n";
-		echo '<Name>',snomXmlEsc(__('Ein')),'</Name>',"\n";
+		echo '<Name>',snom_xml_esc(__('Ein')),'</Name>',"\n";
 		echo '<URL>';
 		echo  $url_snom_features, '?m=',$mac, '&u=',$user, '&t=',$type,'&state=yes';
 		echo '</URL>',"\n";  
@@ -388,7 +367,7 @@ if ($type == 'cidint' || $type == 'cidext') {
 		echo '<MenuItem';
 		if($selected == true)echo ' sel=true';
 		echo '>', "\n",
-		'<Name>', snomXmlEsc($user), '</Name>', "\n",
+		'<Name>', snom_xml_esc($user), '</Name>', "\n",
 		'<URL>',$url_snom_features,'?t=',$type,'&m=',$mac ,'&u=', $user,'&state=</URL>', "\n",
 		'</MenuItem>', "\n\n";
 	foreach ($enumbers as $extnumber) {
@@ -398,7 +377,7 @@ if ($type == 'cidint' || $type == 'cidext') {
 		echo '<MenuItem';
 		if($extnumber['selected'] === 1)echo ' sel=true'; 
 		echo'>', "\n",
-			'<Name>', snomXmlEsc($extnumber['number']), '</Name>', "\n",
+			'<Name>', snom_xml_esc($extnumber['number']), '</Name>', "\n",
 			'<URL>',$url_snom_features,'?t=',$type,'&m=',$mac ,'&u=', $user,'&state=',$extnumber['number'],'</URL>', "\n",
 			'</MenuItem>', "\n\n";
 		# in XML the & must normally be encoded as &amp; but not for
@@ -455,7 +434,7 @@ if (! $type) {
 	}
 		
 		echo '<MenuItem>', "\n",
-		       '<Name>', snomXmlEsc($title.$state), '</Name>', "\n",
+		       '<Name>', snom_xml_esc($title.$state), '</Name>', "\n",
 		       '<URL>', $url_snom_features, '?m=',$mac, '&u=',$user, '&t=',$t, '</URL>', "\n",
 		     '</MenuItem>', "\n\n";
 		# in XML the & must normally be encoded as &amp; but not for
