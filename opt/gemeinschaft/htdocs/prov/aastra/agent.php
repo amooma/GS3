@@ -153,7 +153,7 @@ if ($agent && isset($pin)) {
 		foreach ($queue_set as $queue) {
 			$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queue_members` WHERE `_queue_id`='. $queue['id'] .' AND `_user_id`='. $user_id );
 			if ($num > 0) // user is already logged in on that queue
-				_err(htmlEnt(__('Benutzer ist bereits angemeldet')));
+				_err(htmlEnt(__('Agent ist bereits angemeldet')));
 		}
 
 		foreach ($queue_set as $queue) {
