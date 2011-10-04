@@ -31,7 +31,6 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
-include_once( GS_DIR .'inc/aastra-fns.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_agent_pause_unpause.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 require_once(GS_DIR .'inc/group-fns.php');
