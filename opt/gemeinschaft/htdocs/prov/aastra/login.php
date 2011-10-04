@@ -104,6 +104,9 @@ function _logout_user()
 			return false;
 		}
 	}
+
+	# cache currently used phone types for further use
+	gs_phonetypecache_add_by_uid_to_ip($db, $old_uid);
 	
 	$rs = $db->execute( 'SELECT `id`, `mac_addr`, `nobody_index` FROM `phones` WHERE `user_id`='. $old_uid );
 	while ($phone = $rs->fetchRow()) {
