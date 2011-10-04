@@ -346,9 +346,42 @@ function _gs_prov_phone_checkcfg_by_ip_do_snom( $ip, $reboot=true )
 {
 	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
 	
-	@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/confirm.htm?REBOOT=yes') . ' >>/dev/null 2>>/dev/null &', $out, $err );
-	// Actually the value after REBOOT= does not matter.
-	// Is there a check-sync URL *without* reboot?
+	/* SIP NOTIFY must originate from the registrar IP address, so
+	   we cannot use the method in a cluster environment */
+	if ( (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) || ($reboot == true) ) {
+		@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/confirm.htm?REBOOT=yes') . ' >>/dev/null 2>>/dev/null &', $out, $err );
+	} else {
+		$srchost = "169.254.254.1";
+		$dsthost = $ip;
+
+		$srcext = "provisioning";
+		$dstext = "snom";
+
+		$socket = @fsockopen("udp://".$dsthost, 5060, $errno, $errstr, 2);
+
+		$message = "NOTIFY sip:". $dstext ."@". $dsthost .":5060 SIP/2.0\r\n"
+			 . "Method: NOTIFY\r\n"
+			 . "Resent Packet: False\r\n"
+			 . "Via: SIP/2.0/UDP ". $srchost .":5060;branch=1\r\n"
+			 . "Via: SIP/2.0/UDP ". $srchost ."\r\n"
+			 . "From: <sip:". $srcext ."@". $srchost .":5060>\r\n"
+			 . "SIP from address: sip:". $srcext ."@". $srchost .":5060\r\n"
+			 . "To: <sip:". $dstext ."@". $dsthost .":5060>\r\n"
+			 . "SIP to address: sip:". $dstext ."@". $dsthost .":5060\r\n"
+			 . "Event: check-sync;reboot=false\r\n"
+			 . "Date: ". strftime("%c %z") ."\r\n"
+			 . "Call-ID: 1@". $srchost ."\r\n"
+			 . "CSeq: 1300 NOTIFY\r\n"
+			 . "Contact: <sip:". $srcext ."@". $srchost .">\r\n"
+			 . "Contact Binding: <sip:". $srcext ."@". $srchost .">\r\n"
+			 . "URI: <sip:". $srcext ."@". $srchost .">\r\n"
+			 . "SIP contact address: sip:". $srcext ."@". $srchost ."\r\n"
+			 . "Content-Length: 0\r\n"
+			 . "\r\n";
+
+		fwrite($socket, $message);
+		fclose($socket);
+	}
 }
 
 // REALLY PRIVATE! CAREFUL WITH PARAMS - NO VALIDATION!
