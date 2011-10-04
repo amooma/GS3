@@ -87,22 +87,18 @@ $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 if ( preg_match('/\sMAC:(00-08-5D-\w{2}-\w{2}-\w{2})\s/', $ua, $m) )
 	$mac = preg_replace( '/[^0-9A-F]/', '', strToUpper($m[1]) );
 
-//$user = trim(@$_REQUEST['u']);
 $user_id = _get_userid();
-//$user = _get_user ( $user_id );
 $sip_user = _get_sipuser ( $user_id );
 
-//get phone-model
-
 $user_id_check = $db->executeGetOne("SELECT `user_id` FROM `phones` WHERE `mac_addr`='". $db->escape($mac) ."'");
-if($user_id != $user_id_check) _err("Not authorized");
+if ($user_id != $user_id_check) _err("Not authorized");
 
 $remote_addr = @$_SERVER["REMOTE_ADDR"];
 $remote_addr_check = $db->executeGetOne("SELECT `current_ip` FROM `users` WHERE `id`='". $user_id ."'");
-if($remote_addr != $remote_addr_check) _err("Not authorized");
+if ($remote_addr != $remote_addr_check) _err("Not authorized");
 
 $agent_id = $db->executeGetOne("SELECT `id` FROM `agents` WHERE `user_id`='". $db->escape($user_id) ."'");
-if($agent_id <= 0) _err("Not an agent");
+if ($agent_id <= 0) _err("Not an agent");
 
 $rs = $db->execute("SELECT SUM(`paused`) AS `paused`, COUNT(`_queue_id`) AS `q_count` FROM `ast_queue_members` WHERE `_user_id`=". $user_id);
 if (! $rs || ! ($r = $rs->fetchRow())) {
@@ -116,7 +112,6 @@ $paused =  (int)$r['paused'];
 # check if db is ok 'ast_queue_menbers' is ok for user
 #
 
-
 if ( $q_count <= 0 ) {
 	//the user does not have queues
 	_err('No queues for user_id ' . $user_id );
@@ -128,33 +123,28 @@ if ( $paused > 0 ) {
 	if ( $q_count != $paused ) {
 		// the user is not pasused in all queues ( imposible for agents)
 		 _err('user_id ' . $user_id . ' is paused in ' .  $paused . ' queues but agent in ' . $q_count . ' queues.' );
-	}
-	else {
+	} else {
 		//everything seems to be fine. So lets toggle (unpause) the user
 		$ret = gs_agent_pause_unpause ( $agent_id , false );
 		if (isGsError($ret)) {
-		//$ret->getMsg()
-		  gs_log(GS_LOG_NOTICE, "Could not unpause user " . $sip_user . ": " .  $ret->getMsg() );
-                  _err ( $ret->getMsg() );
+			gs_log(GS_LOG_NOTICE, "Could not unpause user " . $sip_user . ": " .  $ret->getMsg() );
+			_err( $ret->getMsg() );
 		}
 		gs_log(GS_LOG_NOTICE, "Unpaused user " . $sip_user );
 		aastra_textscreen(htmlEnt(__('Agent')), htmlEnt(__('Pause deaktiviert')), 3);
 		exit;
 	}
 
-}
-else {
-	//user is notz paused
+} else {
+	//user is not paused
 	$ret = gs_agent_pause_unpause ( $agent_id , true );
 	if (isGsError($ret)) {
-          //$ret->getMsg()
-         gs_log(GS_LOG_NOTICE, "Could not pause user " . $sip_user . ": " .  $ret->getMsg() );
-         _err ( $ret->getMsg() );
+		gs_log(GS_LOG_NOTICE, "Could not pause user " . $sip_user . ": " .  $ret->getMsg() );
+		_err( $ret->getMsg() );
 	}
 	gs_log(GS_LOG_NOTICE, "Paused user " . $sip_user );
 	aastra_textscreen(htmlEnt(__('Agent')), htmlEnt(__('Pause aktiviert')), 3);
 	exit;
 }
-
 
 ?>
