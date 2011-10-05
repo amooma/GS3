@@ -125,7 +125,7 @@ if ( $paused > 0 ) {
 		 _err( __('Fehler') );
 	} else {
 		//everything seems to be fine. So lets toggle (unpause) the user
-		$ret = gs_agent_pause_unpause ( $agent_id , false );
+		$ret = gs_agent_pause_unpause ( $agent_id , false, $reason );
 		if (isGsError($ret)) {
 			gs_log(GS_LOG_NOTICE, "Could not unpause user " . $sip_user . ": " .  $ret->getMsg() );
 			_err( $ret->getMsg() );
@@ -136,12 +136,12 @@ if ( $paused > 0 ) {
 
 } else {
 	//user is not paused
-	$ret = gs_agent_pause_unpause ( $agent_id , true );
+	$ret = gs_agent_pause_unpause ( $agent_id , true, $reason );
 	if (isGsError($ret)) {
 		gs_log(GS_LOG_NOTICE, "Could not pause user " . $sip_user . ": " .  $ret->getMsg() );
 		_err( $ret->getMsg() );
 	}
-	gs_log(GS_LOG_NOTICE, "Paused user " . $sip_user );
+	gs_log(GS_LOG_NOTICE, "Paused user " . $sip_user . " with reason " . $reason);
 	exit;
 }
 

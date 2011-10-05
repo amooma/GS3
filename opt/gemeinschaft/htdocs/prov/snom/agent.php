@@ -36,6 +36,7 @@ include_once( GS_DIR .'inc/group-fns.php' );
 include_once( GS_DIR .'inc/snom-fns.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 include_once( GS_DIR .'inc/string.php' );
+require_once( GS_DIR .'inc/langhelper.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 function _get_userid()
@@ -65,6 +66,11 @@ $user = @gs_prov_get_user_info( $db, $user_id );
 if (! is_array($user)) {
 	snom_textscreen( __('Fehler'), __('Datenbankfehler') );
 }
+
+// setup i18n stuff
+gs_setlang( gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS) );
+gs_loadtextdomain( 'gemeinschaft-gui' );
+gs_settextdomain( 'gemeinschaft-gui' );
 
 $remote_addr = @$_SERVER["REMOTE_ADDR"];
 $remote_addr_check = $db->executeGetOne("SELECT `current_ip` FROM `users` WHERE `id`='". $user_id ."'");
