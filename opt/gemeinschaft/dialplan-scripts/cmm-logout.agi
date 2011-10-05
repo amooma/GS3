@@ -32,6 +32,7 @@ require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/log.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
+require_once( GS_DIR .'inc/prov-phonetypecache.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -88,7 +89,9 @@ if ( count ( $members ) <= 0 ) {
 	die();
 }
 
-
+# Remember phonetypes
+gs_phonetypecache_add_by_ext($db, $caller_ext);
+gs_phonetypecache_add_by_ext_to_ip($db, $caller_ext);
 
 $rs = $db->execute( 'SELECT `id`, `mac_addr`, `nobody_index` FROM `phones` WHERE `user_id`='. $user_id );
 while ($phone = $rs->fetchRow()) {
