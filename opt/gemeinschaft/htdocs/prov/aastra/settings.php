@@ -216,7 +216,7 @@ function aastra_get_softkeys( $user_id, $phone_type )
 
 
 if (! gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
-	gs_log( GS_LOG_DEBUG, "Aastra provisioning not enabled" );
+	gs_log( GS_LOG_WARNING, "Aastra provisioning not enabled" );
 	_settings_err( 'Not enabled.' );
 }
 
