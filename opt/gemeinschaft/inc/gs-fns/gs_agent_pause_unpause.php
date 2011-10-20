@@ -35,7 +35,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 *    sets a agents pause status
 ***********************************************************/
 
-function gs_agent_pause_unpause( $agent_id, $pause )
+function gs_agent_pause_unpause( $agent_id, $pause, $reason='' )
 {
 	
 	# connect to db
@@ -61,19 +61,8 @@ function gs_agent_pause_unpause( $agent_id, $pause )
 		
 	# switch pause state
 	#
-	
-	gs_queuepause_unpause (  $user_name, $pause );
-	
-	
-	# send manager user event for user
-	#
-	
-	if ( $pause ) {
-		gs_agent_paused_ui ( $user_name );
-	}
-	else {
-		gs_agent_unpaused_ui ( $user_name );
-	}
+
+	gs_queuepause_unpause (  $user_name, $pause, $reason );
 	
 	return true;
 		

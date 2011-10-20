@@ -949,7 +949,7 @@ psetting('action_log_off_url'        , '');
 #####################################################################
 
 psetting('dkey_help'     , 'keyevent F_HELP'      );
-psetting('dkey_snom'     , 'keyevent F_SNOM'      );
+psetting('dkey_snom'     , 'url '. $prov_url_snom .'login.php');
 psetting('dkey_conf'     , 'keyevent F_CONFERENCE');
 psetting('dkey_transfer' , 'keyevent F_TRANSFER'  );
 psetting('dkey_hold'     , 'keyevent F_R'         ); # or F_HOLD
@@ -973,7 +973,7 @@ psetting('dkey_retrieve' , 'speed voicemail');
 # firmware 8.2-Settings
 psetting('idle_left_key_action'  , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac');
 psetting('idle_right_key_action' , 'keyevent F_HELP');
-psetting('idle_up_key_action'    , '');
+psetting('idle_up_key_action'    , 'url '. $prov_url_snom .'login.php');
 psetting('idle_down_key_action'  , '');
 psetting('idle_ok_key_action'    , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac&type=out');
 psetting('idle_cancel_key_action', '');

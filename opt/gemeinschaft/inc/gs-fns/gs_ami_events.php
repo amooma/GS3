@@ -446,19 +446,21 @@ function gs_user_logoff_ui( $user )
 
 //native asterisk action
 
-function gs_queuepause_unpause( $user, $pause )
+function gs_queuepause_unpause( $user, $pause, $reason='' )
 {
 	$data = array();
 	
 	$data[] = array( 'parm' => 'Action', 'value' => 'QueuePause' );
 	$data[] = array( 'parm' => 'ActionId', 'value' => '4711' );
-	$data[] = array( 'parm' => 'Interface', 'value' => 'sip/' . $user );
-	if ( $pause ) {
+	$data[] = array( 'parm' => 'Interface', 'value' => 'SIP/' . $user );
+	if ( $pause )
 		$data[] = array( 'parm' => 'Paused', 'value' => 'true' );
-	}
-	else {
+	else
 		$data[] = array( 'parm' => 'Paused', 'value' => 'false' );
-	}
+		
+	if ( strlen($reason) > 0 )
+		$data[] = array( 'parm' => 'Reason', 'value' => $reason );
+
 	_gs_send_event ( $data );
 }
 
