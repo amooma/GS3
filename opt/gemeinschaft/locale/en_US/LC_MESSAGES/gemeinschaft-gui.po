@@ -6522,6 +6522,11 @@ msgid ""
 "vorangehenden Zeichens (1 oder mehr) oder <code>*</code> f&uuml;r 0 oder "
 "mehr."
 msgstr ""
+"PCRE syntax (&quot;Perl Compatible Regular Expression&quot;) without <code>"
+"/</code> as separator, means <code>^</code> for the beginning, <code>$"
+"</code> at the end, e.g. <code>[5-8]</code> or <code>[57]</code> for digit "
+"ranges, <code>+</code> for repetition of the previous character (1 or "
+"more) or <code>*</code> for 0 or more."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_outbound.php, line: 43
@@ -6537,6 +6542,10 @@ msgid ""
 "<b>nationalen</b> Form oder &quot;wie gew&auml;hlt&quot; mit dem Muster "
 "verglichen."
 msgstr ""
+"These dial rules for outbound routes are applied from top to bottom until "
+"one rule matches. The dialed number will be (according to your settings) "
+"compared to the pattern in it's canonised <b>national></b> format or "
+"&quot;as dialed&quot;"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_outbound.php, line: 242
@@ -6562,6 +6571,9 @@ msgid ""
 "bei ISDN automatisch vor die Rufnummer gesetzt, bei SIP nur an Stelle von "
 "<code>{prefix}</code> im Dialstring."
 msgstr ""
+"Prefix for LCR (Least Cost Routing), formatted as 010<i>xx</i>. Will "
+"be automatically added for ISDN gateways, for SIP gateways "
+"<code>{prefix}</code> is required in the dial string."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 59
@@ -6570,12 +6582,14 @@ msgid ""
 "Telefonnummern entsprechend Ihrer Einstellungen kanonisiert und geroutet "
 "werden."
 msgstr ""
+"Here you can check how external phone numbers will be canonised and "
+"routed according to your configuration."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 66
 #, php-format
 msgid "Telefonnummer (ohne %s zur Amtsholung)"
-msgstr ""
+msgstr "Phone number (without %s to dial out)"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 69
@@ -6605,7 +6619,7 @@ msgstr "National"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 102
 msgid "Innerorts"
-msgstr ""
+msgstr "Urban"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 107
@@ -6635,7 +6649,7 @@ msgstr "The user must not enter dial around prefixes."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 146
 msgid "Diese Nummer ist innerhalb der eigenen Telefonanlage."
-msgstr ""
+msgstr "This number resides inside this phone system."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 151
@@ -6644,6 +6658,8 @@ msgid ""
 "Die Nummer w&uuml;rde als <b>%s</b> mit den Mustern in der Routing-Tabelle "
 "verglichen."
 msgstr ""
+"The number would be compared to the patterns of the routing tables "
+"as <b>%s</b>."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/routing_test.php, line: 163
@@ -6684,12 +6700,12 @@ msgstr ""
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_callvolume.php, line: 104
 msgid "Vom"
-msgstr ""
+msgstr "From"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_callvolume.php, line: 112
 msgid "Bis"
-msgstr ""
+msgstr "To"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_callvolume.php, line: 121
@@ -6706,12 +6722,12 @@ msgstr "Your browser is unable to display the SVG image."
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 179
 msgid "Woche"
-msgstr ""
+msgstr "Week"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 218
 msgid "Uhr"
-msgstr ""
+msgstr "Time"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 170
@@ -6722,7 +6738,7 @@ msgstr "Move mouse pointer over column headers for descriptions"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 280
 msgid "Tag der Woche"
-msgstr ""
+msgstr "Day of week"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 220
@@ -6732,49 +6748,49 @@ msgstr "Success rate"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 286
 msgid "Anzahl angenommener Anrufe"
-msgstr ""
+msgstr "Number of successful calls"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 288
 msgid "Anzahl verpasster Anrufe"
-msgstr ""
+msgstr "Number of missed calls"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 300
 msgid "Montag"
-msgstr ""
+msgstr "Monday"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 301
 msgid "Dienstag"
-msgstr ""
+msgstr "Tuesday"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 302
 msgid "Mittwoch"
-msgstr ""
+msgstr "Wednesday"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 303
 msgid "Donnerstag"
-msgstr ""
+msgstr "Thursday"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 304
 msgid "Freitag"
-msgstr ""
+msgstr "Friday"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 316
 msgid "ang."
-msgstr ""
+msgstr "suc."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_combined.php, line: 317
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 259
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupout.php, line: 266
 msgid "verp."
-msgstr ""
+msgstr "mis."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 96
@@ -6790,7 +6806,7 @@ msgstr "Day of month"
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 224
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupout.php, line: 231
 msgid "Anzahl der Anrufe f&uuml;r Kollegen aus der Gruppe"
-msgstr ""
+msgstr "Number of calls for colleagues in group"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 226
@@ -6799,12 +6815,14 @@ msgid ""
 "Anzahl der Anrufe zu Kollegen, die l&auml;nger als 5 Sekunden dauerten (mit "
 "Klingeln) und somit in die Erfolgsquote einflie&szlig;en."
 msgstr ""
+"Number of calls to colleagues longer than 5 seconds (ring time included) "
+"and thus are considered for the success quote."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 228
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupout.php, line: 235
 msgid "Anzahl der Anrufe zu Kollegen, die angenommen wurden"
-msgstr ""
+msgstr "Number of calls to colleagues that were answered"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 230
@@ -6813,6 +6831,8 @@ msgid ""
 "Anzahl der Anrufe zu Kollegen, bei denen der Anrufer aufgelegt hat bevor "
 "abgehoben wurde. Dabei werden alle Anrufe unter 5 Sekunden nicht gewertet."
 msgstr ""
+"Number of calls to colleagues where the caller hung up before the call "
+"was answered. Calls shorter than 5 seconds are not counted."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 232
@@ -6821,6 +6841,7 @@ msgid ""
 "Anzahl der Anrufe zu Kollegen, die fehlgeschlagen sind weil der Teilnehmer "
 "besetzt war"
 msgstr ""
+"Number of calls to colleagues that failed due to the agent being busy"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 234
@@ -6829,6 +6850,8 @@ msgid ""
 "Verh&auml;ltnis von angenommenen Anrufen zu eingegangenen Anrufen in "
 "Prozent. Dabei werden alle Anrufe unter 5 Sekunden nicht gewertet."
 msgstr ""
+"Relation of successful to incoming calls in percent. Calls shorter "
+"than 5 seconds are not counted."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 236
@@ -6837,6 +6860,8 @@ msgid ""
 "Anzahl der angenommenen Anrufe zu Kollegen, deren Gespr&auml;chsdauer k&uuml;"
 "rzer als der angeg. Wert war"
 msgstr ""
+"Number of successful calls to colleagues where the call duration was less "
+"than the given value"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 238
@@ -6845,12 +6870,14 @@ msgid ""
 "Anzahl der angenommenen Anrufe zu Kollegen, deren Gespr&auml;chsdauer l&auml;"
 "nger als der angeg. Wert war"
 msgstr ""
+"Number of answered calls to colleagues where the call duration was "
+"longer than the given value"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 240
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupout.php, line: 247
 msgid "Durchschnittliche Gespr&auml;chsdauer der angenommenen Anrufe"
-msgstr ""
+msgstr "Average call duration of answered calls"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 242
@@ -6859,6 +6886,8 @@ msgid ""
 "Anzahl der Anrufe zu Kollegen, bei denen der Anrufer weniger als die angeg. "
 "Dauer, aber mehr als 5 Sekunden gewartet hat"
 msgstr ""
+"Number of calls to colleagues where the caller waited less than the "
+"given duration, but more than 5 seconds"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 244
@@ -6867,18 +6896,20 @@ msgid ""
 "Anzahl der Anrufe zu Kollegen, bei denen der Anrufer l&auml;nger als die "
 "angeg. Dauer gewartet hat"
 msgstr ""
+"Number of calls to colleagues where the caller waited more than the "
+"given duration"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 256
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupout.php, line: 263
 msgid "gez."
-msgstr ""
+msgstr "cnt."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupc.php, line: 258
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_groupout.php, line: 265
 msgid "angen."
-msgstr ""
+msgstr "answ."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 224
@@ -6893,18 +6924,18 @@ msgstr "Total Minutes"
 
 msgid ""
 "Statistiken f&uuml;r Warteschlangen sind auf diesem System abgeschaltet."
-msgstr ""
+msgstr "Queue statistics are disabled on this system."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 179
 msgid "Anzahl der Anrufe auf diese Warteschlange"
-msgstr ""
+msgstr "Number of calls to this queue"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 181
 msgid ""
 "Anzahl der Anrufe auf diese Warteschlange, die von Agenten angenommen wurden"
-msgstr ""
+msgstr "Number of calls to this queue that were answered by agents"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 183
@@ -6912,6 +6943,8 @@ msgid ""
 "Anzahl der Anrufe auf diese Warteschlange, bei denen der Anrufer aufgelegt "
 "hat bevor abgehoben wurde"
 msgstr ""
+"Number of calls to this queue where the caller hung up before the call "
+"was answered"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 185
@@ -6920,6 +6953,9 @@ msgid ""
 "berschreitung abgebrochen/weitergeleitet wurden. Dies kann auftreten wenn "
 "f&uuml;r die Warteschlange eine Weiterleitung nach Zeit eingestellt ist."
 msgstr ""
+"Number of calls to this queue which were cancelled or forwarded due "
+"to exceeded time limits. This can occur if a call forward on time is "
+"set for the queue."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 187
@@ -6927,6 +6963,8 @@ msgid ""
 "Anzahl der Anrufe auf diese Warteschlange, die fehlgeschlagen sind weil "
 "keine Agenten eingeloggt/frei waren"
 msgstr ""
+"Number of calls to this queue that failed because no agents were logged "
+"in or available"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 189
@@ -6934,12 +6972,14 @@ msgid ""
 "Anzahl der Anrufe auf diese Warteschlange, die fehlgeschlagen sind weil die "
 "maximale Anzahl an Anrufern erreicht war"
 msgstr ""
+"Number of calls to this queue that failed because the maximum number of "
+"concurrent calls was reached"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 193
 msgid ""
 "Verh&auml;ltnis von angenommenen Anrufen zu eingegangenen Anrufen in Prozent"
-msgstr ""
+msgstr "Ratio of successful to incoming calls in percent"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 193
@@ -6947,6 +6987,8 @@ msgid ""
 "Anzahl der angenommenen Anrufe auf diese Warteschlange, deren Gespr&auml;"
 "chsdauer k&uuml;rzer als der angeg. Wert war"
 msgstr ""
+"Number of successful calls to this queue with a duration less than the "
+"given value"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 195
@@ -6954,13 +6996,15 @@ msgid ""
 "Anzahl der angenommenen Anrufe auf diese Warteschlange, deren Gespr&auml;"
 "chsdauer l&auml;nger als der angeg. Wert war"
 msgstr ""
+"Number of successful calls to this queue with a longer duration than "
+"the given value"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 197
 msgid ""
 "Durchschnittliche Gespr&auml;chsdauer der angenommenen Anrufe auf diese "
 "Warteschlange"
-msgstr ""
+msgstr "Average duration of successful calls to this queue"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 199
@@ -6968,6 +7012,8 @@ msgid ""
 "Anzahl der Anrufe auf diese Warteschlange, bei denen der Anrufer weniger als "
 "die angeg. Dauer gewartet hat"
 msgstr ""
+"Number of calls to this queue where callers waited less than the given "
+"duration"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 201
@@ -6975,6 +7021,8 @@ msgid ""
 "Anzahl der Anrufe auf diese Warteschlange, bei denen der Anrufer l&auml;nger "
 "als die angeg. Dauer gewartet hat"
 msgstr ""
+"Number of calls to this queue where callers waited longer than the given "
+"duration"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/stats_qclassical.php, line: 218
@@ -6984,17 +7032,17 @@ msgstr "No agents"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 44
 msgid "Der DHCP-Server auf diesem System ist nicht aktiviert."
-msgstr ""
+msgstr "The DHCP service is not active on this system."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 193
 msgid "G&uuml;ltig von"
-msgstr ""
+msgstr "Valid from"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 194
 msgid "G&uuml;ltig bis"
-msgstr ""
+msgstr "Valid until"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_dhcp-leases.php, line: 224
@@ -7009,7 +7057,7 @@ msgstr "infinite"
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 42
 msgid "&Auml;nderungen ben&ouml;tigen ggf. einen Neustart der Anlage."
-msgstr ""
+msgstr "Changes may need a restart of the system."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 52
@@ -7033,6 +7081,9 @@ msgid ""
 "dem Kopf liegend&quot; eingebaut ist. Port 1 befindet sich also (von der "
 "R&uuml;ckseite betrachtet) an der rechten Geh&auml;useseite."
 msgstr ""
+"Please note tat the card is installed &quot;upside down&quot; due to the "
+"construction of the GPBX. That means port 1 is (when looked at the backside) "
+"located rightmost."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 283
@@ -7040,6 +7091,7 @@ msgid ""
 "Bitte verwenden Sie die Ports in der angegebenen Reihenfolge, also mit 1 "
 "beginnend."
 msgstr ""
+"Please use the ports in the given order, starting with port 1."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-b410p.php, line: 285
@@ -7047,6 +7099,8 @@ msgid ""
 "PtP (Point-to-Point) bei einem Anlagenanschlu&szlig;, PtMP (Point-to-"
 "MultiPoint) bei einem Mehrger&auml;teanschlu&szlig; (Basis-ISDN)."
 msgstr ""
+"PtP (Point-to-Point) for DID lines, PtMP (Point-to-MultiPoint) for "
+"MSN lines (BRI ISDN)."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_gpbx-diskusage.php, line: 122
@@ -7089,13 +7143,13 @@ msgstr "Free disk space"
 msgid ""
 "Die Benutzer auf Host %s konnten nicht aktualisiert werden! (Verbindung "
 "fehlgeschlagen.)"
-msgstr ""
+msgstr "The users on host %s could not be updated! (Connection failed.)"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 144
 #, php-format
 msgid "%u von %u Benutzern auf Host %s konnten nicht aktualisiert werden!"
-msgstr ""
+msgstr "%u of %u users on host %s could not be updated!"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 161
@@ -7120,6 +7174,8 @@ msgid ""
 "Hostname &quot;%s&quot; kann nicht verwendet werden, da er zu mehr als einer "
 "IP-Adresse aufgel&ouml;st wird."
 msgstr ""
+"Hostname &quot;%s&quot; cannot be used, as it resolves to more than one IP "
+"address."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 67
@@ -7132,14 +7188,14 @@ msgstr "Invalid IP address &quot;%s&quot;!"
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 85
 #, php-format
 msgid "Fehler beim &Auml;ndern von Host %d"
-msgstr ""
+msgstr "Error while changing host %d"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 112
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 108
 #, php-format
 msgid "Fehler beim Hinzuf&uuml;gen von Host &quot;%s&quot;"
-msgstr ""
+msgstr "Error while adding host &quot;%s&quot;"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 211
@@ -7148,19 +7204,21 @@ msgid ""
 "Auf dem Host sind Benutzer angelegt (%d). Bitte l&ouml;schen Sie zuerst die "
 "Benutzer."
 msgstr ""
+"Users are configured on this host (%d). Please delete the users "
+"first."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 227
 #, php-format
 msgid ""
 "%d von %d Dummy-Usern auf diesem Host konnten nicht gel&ouml;scht werden."
-msgstr ""
+msgstr "%d of %d dummy users on this host could not be deleted."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 184
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 382
 msgid "Host konnte nicht gel&ouml;scht werden."
-msgstr ""
+msgstr "Host could not be deleted."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 412
@@ -7206,6 +7264,8 @@ msgid ""
 "Wenn Sie in dieses Feld einen Hostnamen eintragen wird er automatisch "
 "permanent zu einer IP-Adresse aufgel&ouml;st."
 msgstr ""
+"If you specify a hostname in this field, it will automatically be "
+"resolved to an IP address permanently."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 387
@@ -7213,6 +7273,8 @@ msgid ""
 "Pr&auml;fix der Nebenstellen an diesem Standort, also die Route (z.B. "
 "608000, 60800042)."
 msgstr ""
+"Prefix of the extensions at this location (e.g. "
+"608000, 60800042)."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 389
@@ -7220,6 +7282,8 @@ msgid ""
 "API die zum Anlegen von Benutzern auf dem Fremd-Host, zur GUI-Integration "
 "etc. genutzt wird."
 msgstr ""
+"API that will be used on the foreign host to add users, for GUI integration "
+"and so on."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 391
@@ -7231,6 +7295,9 @@ msgid ""
 "Outbound Proxy gesetzt (d.h. inbound aus Sicht von Gemeinschaft). F&uuml;r "
 "keinen Proxy das Feld leer lassen."
 msgstr ""
+"This IP address will be set as outbound proxy for phones in the WAN "
+"(outside your local networks &quot;%s&quot;), that have a registrar inside "
+"the LAN. Leave empty for no proxy."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts-foreign.php, line: 393
@@ -7243,12 +7310,16 @@ msgid ""
 "tats&auml;chlichen Server umgeleitet werden.) F&uuml;r den normalen Server "
 "das Feld leer lassen."
 msgstr ""
+"This IP address will be set as server/registrar for phones in the WAN "
+"(outside your local networks &quot;%s&quot;), that have a registrar inside "
+"the LAN (must be forwarded by the session border controller to the real "
+"server). Leave empty for no proxy."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 83
 #, php-format
 msgid "Fehler beim &Auml;ndern von Host %u"
-msgstr ""
+msgstr "Error while changing host %u"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 50
@@ -7262,6 +7333,8 @@ msgid ""
 "ordnungsgem&auml;&szlig;e Funktionieren von Gemeinschaft erheblich "
 "beeintr&auml;chtigen!"
 msgstr ""
+"Attention! By making unthought changes, the proper functioning of "
+"Gemeinschaft may be seriously impacted!"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 101
@@ -7298,7 +7371,7 @@ msgstr "Spare"
 msgid ""
 "Zus&auml;tzliche statische IP-Adresse die von Gemeinschaft nicht ver&auml;"
 "ndert wird."
-msgstr ""
+msgstr "Additional static IP address that will not be changed by Gemeinschaft."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_hosts.php, line: 434
@@ -7307,6 +7380,9 @@ msgid ""
 "Ausfall von einem der anderen Nodes per Stonith und Gratuitous ARP &uuml;"
 "bernommen werden w&uuml;rde."
 msgstr ""
+"This is the primary IP address for Gemeinschaft, that will be taken by "
+"one of the other nodes via Stonith and Gratuitous ARP in the case of "
+"failure."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/system_logging.php, line: 47
@@ -7330,6 +7406,8 @@ msgid ""
 "Dies ist die Adresse, die ggf. per Stonith &uuml;bernommen werden w&uuml;"
 "rde. (Die dynamische Adresse hat hier nichts mit DHCP zu tun.)"
 msgstr ""
+"This is the address that will eventually be taken by Stonith (the "
+"dynamic address has nothing to do with DHCP in this case)."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/admin_nodes.php, line: 191
@@ -7364,7 +7442,7 @@ msgid "Ja, neustarten"
 msgstr "Yes, reboot"
 
 msgid "Version:"
-msgstr ""
+msgstr "Version:"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 35
@@ -7419,14 +7497,14 @@ msgstr "Folder 9"
 #, php-format
 msgid ""
 "Datei nicht gefunden, Konvertierungsfehler oder veralteter Webbrowser für %s"
-msgstr ""
+msgstr "File not found, conversion error or old webbrowser for %s"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 262
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 283
 #, php-format
 msgid "Datei nicht gefunden, Konvertierungsfehler oder fehlendes Plugin für %s"
-msgstr ""
+msgstr "File not found, conversion error or missing plugin for %s"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/voicemail_messages.php, line: 289
@@ -7434,57 +7512,60 @@ msgid "In neuem Fenster öffnen"
 msgstr "Open in new window"
 
 msgid "H&ouml;rer"
-msgstr ""
+msgstr "Handset"
 
 msgid "H&ouml;rer Mikrofon"
-msgstr ""
+msgstr "Handset microphone"
 
 msgid "Headset"
-msgstr ""
+msgstr "Headset"
 
 msgid "Headset Mikrofon"
-msgstr ""
+msgstr "Headset microphone"
 
 msgid "Geh&auml;uselautsprecher"
-msgstr ""
+msgstr "Speakerphone"
 
 msgid "Geh&auml;use Mikrofon"
-msgstr ""
+msgstr "Speakerphone microphone"
 
 msgid "Eigenecho H&ouml;rer"
-msgstr ""
+msgstr "Own echo handset"
 
 msgid "Eigenecho Headset"
-msgstr ""
+msgstr "Own echo headset"
 
 msgid "Anklopfton"
-msgstr ""
+msgstr "Call waiting tone"
 
 msgid " in die Datenbank: "
-msgstr ""
+msgstr " to the database: "
 
 msgid "Fehler beim schreinen des Parameters "
-msgstr ""
+msgstr "Error while writing parameter "
 
 msgid " ist au&szlig;erhalb des zul&aumlssigen Bereiches. "
-msgstr ""
+msgstr " is out of the allowed range. "
 
 msgid "Der Parameters "
-msgstr ""
+msgstr "The parameters "
 
 msgid ""
 "Die Einstellungen, die hier vorgenommen werden k&ouml;nnen, werden nach dem "
 "Neustart des Endger&auml;tes aktiv. Einzelne Einstellungen k&ouml;nnen bis "
 "zum n&auml;chsten Neustart auch am Endgerät ge&auml;ndert werden."
 msgstr ""
+"The settings which can be made here are applied after a restart of the "
+"phone. Single settings may be made directly on the phone until the next "
+"restart."
 
 msgid "Lautst&auml;rke"
-msgstr ""
+msgstr "Volume"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/monitor.php, line: 109
 msgid "Gemeinschaft Telefon-Manager Monitor"
-msgstr ""
+msgstr "Gemeinschaft telephone-manager monitor"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/index.php, line: 136
@@ -7520,6 +7601,9 @@ msgid ""
 "GPBX verwenden oder einen bereits vorhandenen DHCP-Server entsprechend "
 "konfigurieren."
 msgstr ""
+"For automatic configuration of the phones (provisioning) a DHCP server is "
+"required. You can use the GPBX-delivered DHCP service, or configure an "
+"existing DHCP server as needed."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/dhcpd.php, line: 64
@@ -7529,6 +7613,9 @@ msgid ""
 "diesem System verwenden oder einen bereits vorhandenen DHCP-Server "
 "entsprechend konfigurieren."
 msgstr ""
+"For automatic configuration of the phones (provisioning) a DHCP server is "
+"required. You can use the system-delivered DHCP service, or configure an "
+"existing DHCP server as needed."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/dhcpd.php, line: 76
@@ -7541,6 +7628,8 @@ msgid ""
 "Vorhandenen DHCP-Server verwenden.<br />(nur f&uuml;r erfahrene Anwender, "
 "Speichern f&uuml;r Beispiel-Konfiguration)"
 msgstr ""
+"Use existing DHCP server.<br />(only for advanced users, save for example "
+"configuration)"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/dhcpd.php, line: 85
@@ -7554,6 +7643,8 @@ msgid ""
 "Bitte konfigurieren Sie Ihren vorhandenen DHCP-Server wie folgt (Beispiel "
 "f&uuml;r den ISC DHCPd 3)"
 msgstr ""
+"Please configure your existing DHCP service like this (example for the "
+"ISC DHCPd 3)"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/dhcpd.php, line: 137
@@ -7562,6 +7653,8 @@ msgid ""
 "Sie haben noch nicht alle \\u00C4nderungen gespeichert! Sie sollten zuerst "
 "speichern oder die \\u00C4nderungen verwerfen."
 msgstr ""
+"You haven't saved all changes yet! You should save them first or discard "
+"the changes."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/done.php, line: 36
@@ -7576,6 +7669,9 @@ msgid ""
 "normalen Web-Oberfl&auml;che vor. Nat&uuml;rlich k&ouml;nnen Sie auch "
 "sp&auml;ter wieder das Setup aufrufen."
 msgstr ""
+"The basic network configuration of GPBX is now completed. Please "
+"configure more settings inside the administration section of the web-"
+"interface. You can of course also re-run the setup later."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/done.php, line: 44
@@ -7585,6 +7681,9 @@ msgid ""
 "normalen Web-Oberfl&auml;che vor. Nat&uuml;rlich k&ouml;nnen Sie auch "
 "sp&auml;ter wieder das Setup aufrufen."
 msgstr ""
+"The basic network configuration of the system is now completed. Please "
+"configure more settings inside the administration section of the web-"
+"interface. You can of course also re-run the setup later."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/login.php, line: 40
@@ -7594,12 +7693,12 @@ msgstr "The passwords do not match."
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/login.php, line: 42
 msgid "Das Pa&szlig;wort darf nicht leer sein!"
-msgstr ""
+msgstr "The password cannot be empty!"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/login.php, line: 46
 msgid "Das Pa&szlig;wort wurde gespeichert."
-msgstr ""
+msgstr "The password was saved."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/login.php, line: 115
@@ -7615,11 +7714,15 @@ msgid ""
 "lang sein und aus Buchstaben, Zahlen und Sonderzeichen wie z.B. <code>#</"
 "code>, <code>!</code> oder <code>=</code> bestehen."
 msgstr ""
+"Please set a password to protect the setup section against unprivileged "
+"access. The password should be at least 8 characters long, and consist "
+"of letters, numbers and special chars, e.g. <code>#</code>, <code>!"
+"</code> or <code>=</code>."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/login.php, line: 120
 msgid "<b>Achtung:</b> Vergessen Sie dieses Pa&szlig;wort nicht!"
-msgstr ""
+msgstr "<b>Attention:</b> Do not forget this password!"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/login.php, line: 136
@@ -7689,11 +7792,14 @@ msgid ""
 "au&szlig;erdem die Netzmaske Ihres Netzwerkes sowie die Adresse Ihres "
 "Routers, Nameservers und Zeitservers an."
 msgstr ""
+"Please set the desired IP address of the GPBX. Please also specify the "
+"netmask of your network, as well as the addresses for your routers, "
+"nameservers and time servers."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 728
 msgid "Die Netzwerkkarte der GPBX wird dann auf diese Werte eingestellt."
-msgstr ""
+msgstr "The network card of the GPBX will then be set to these values."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 731
@@ -7702,17 +7808,20 @@ msgid ""
 "ein. Geben Sie au&szlig;erdem die Netzmaske Ihres Netzwerkes sowie die "
 "Adresse Ihres Routers, Nameservers und Zeitservers an."
 msgstr ""
+"Please set the desired IP address of the Gemeinschaft. Please also specify "
+"the netmask of your network, as well as the addresses for your routers, "
+"nameservers and time servers."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 732
 msgid "Die Netzwerkkarte wird dann auf diese Werte eingestellt."
-msgstr ""
+msgstr "The network card will then be set to these values."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 741
 msgid ""
 "Die Netzwerk-Einstellungen wurden gespeichert, sind aber noch nicht aktiv."
-msgstr ""
+msgstr "The network settings were saved but are not active yet."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 772
@@ -7764,12 +7873,12 @@ msgstr "Ignore warnings"
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 921
 msgid "Wie wollen Sie fortfahren?"
-msgstr ""
+msgstr "How do you want to proceed?"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 929
 msgid "Einstellungen nochmal ver&auml;ndern"
-msgstr ""
+msgstr "Change settings again"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 932
@@ -7785,7 +7894,7 @@ msgstr "Apply settings and shutdown the system"
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/reboot.php, line: 41
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 977
 msgid "Das System wird jetzt neugestartet."
-msgstr ""
+msgstr "The system will now be restarted."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 978
@@ -7793,18 +7902,18 @@ msgstr ""
 msgid ""
 "Bitte haben Sie etwas Geduld. Vorzeitiges Ausschalten kann zu Datenverlust "
 "f&uuml;hren."
-msgstr ""
+msgstr "Please be patient. Premature shutdown can lead to loss of data."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/shutdown.php, line: 41
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/network.php, line: 991
 msgid "Das System wird jetzt heruntergefahren."
-msgstr ""
+msgstr "The system will now shut off."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/phones-scan.php, line: 38
 msgid "Telefone suchen"
-msgstr ""
+msgstr "Find phones"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/phones-scan.php, line: 41
@@ -7837,6 +7946,7 @@ msgid ""
 "Bitte haben Sie etwas Geduld. Trennen der Stromversorgung / Reset kann zu "
 "Datenverlust f&uuml;hren."
 msgstr ""
+"Please be patient. Disconnecting power / reset may lead to loss of data."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/shutdown.php, line: 42
@@ -7844,6 +7954,8 @@ msgid ""
 "Bitte haben Sie etwas Geduld. Vorzeitiges Trennen der Stromversorgung / "
 "Reset kann zu Datenverlust f&uuml;hren."
 msgstr ""
+"Please be patient. Premature disconnection of power / reset may lead "
+"to loss of data."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 41
@@ -7851,6 +7963,8 @@ msgid ""
 "Die folgenden Schritte leiten Sie durch die grundlegende Netzwerk-"
 "Konfiguration der <b>GPBX</b>."
 msgstr ""
+"The following steps will lead you through the basic network configuration "
+"of <b>GPBX</b>."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 44
@@ -7858,18 +7972,20 @@ msgid ""
 "Die folgenden Schritte leiten Sie durch die grundlegende Netzwerk-"
 "Konfiguration der Telefonanlage <b>Gemeinschaft</b>."
 msgstr ""
+"The following steps will lead you through the basic network configuration "
+"of <b>Gemeinschaft</b>."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 47
 msgid ""
 "Sie k&ouml;nnen sp&auml;ter jederzeit zum Setup zur&uuml;ckkehren um "
 "Einstellungen zu ver&auml;ndern."
-msgstr ""
+msgstr "You can return to the setup later at any time to change settings."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 52
 msgid "Installationsart"
-msgstr ""
+msgstr "Installation type"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/system-check.php, line: 55
@@ -7967,7 +8083,7 @@ msgstr "Execute permissions"
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/user.php, line: 66
 msgid "Administratoren"
-msgstr ""
+msgstr "Administrators"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/user.php, line: 67
@@ -7976,16 +8092,19 @@ msgid ""
 "diesem Benutzer k&ouml;nnem Sie sich am normalen Web-Interface anmelden. "
 "Pflichtfelder sind: Benutzername, Durchwahl und PIN."
 msgstr ""
+"You must at least set up one user with administrative rights. With that "
+"user, you can logon to the normal web interface. Mandatory fields are: "
+"Username, Extension and PIN."
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/mod/user.php, line: 72
 msgid "Angelegte Aministratoren"
-msgstr ""
+msgstr "Configured administrators"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/phone-takeover.php, line: 189
 msgid "&Uuml;bernehmen"
-msgstr ""
+msgstr "Apply"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/setup/phone-takeover.php, line: 251
@@ -8011,34 +8130,34 @@ msgstr "Avg. call duration"
 # File: opt/gemeinschaft/htdocs/gui/srv/key-layout.php, line: 96
 # File: opt/gemeinschaft/htdocs/gui/srv/key-layout.php, line: 376
 msgid "Tastenbeschriftung"
-msgstr ""
+msgstr "Key label"
 
 msgid "Keine Berechtigung"
-msgstr ""
+msgstr "No permission"
 
 msgid "Agent"
-msgstr ""
+msgstr "Agent"
 
 msgid "Agent abgemeldet"
-msgstr ""
+msgstr "Agent logged off"
 
 msgid "Fehler bei Agentenanmeldung"
-msgstr ""
+msgstr "Error on agent login"
 
 msgid "Keine Warteschlange konfiguriert"
-msgstr ""
+msgstr "No queue configured"
 
 msgid "Agent ist bereits angemeldet"
-msgstr ""
+msgstr "Agent is already logged on"
 
 msgid "Agent angemeldet"
-msgstr ""
+msgstr "Agent logged on"
 
 msgid "Pause deaktiviert"
-msgstr ""
+msgstr "Pause deactivated"
 
 msgid "Pause aktiviert"
-msgstr ""
+msgstr "Pause activated"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/mod/forwards_forwards.php, line: 241
@@ -8046,13 +8165,13 @@ msgid "Aus"
 msgstr "Off"
 
 msgid "Parallel"
-msgstr ""
+msgstr "Parallel"
 
 msgid "Rufumleitung aktiviert"
-msgstr ""
+msgstr "Call forward activated"
 
 msgid "Rufumleitung deaktiviert"
-msgstr ""
+msgstr "Call forward deactivated"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/siemens/dial-log/dlog.php, line: 126
@@ -8062,10 +8181,10 @@ msgid "Gewählt"
 msgstr "Dialed"
 
 msgid "WS Verpasst"
-msgstr ""
+msgstr "Q missed"
 
 msgid "WS Angenommen"
-msgstr ""
+msgstr "Q answered"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/aastra/dial-log.php, line: 154
@@ -8085,7 +8204,7 @@ msgid "Kein Eintrag"
 msgstr "No entries"
 
 msgid "Löschen"
-msgstr ""
+msgstr "Delete"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/aastra/settings.php, line: 350
@@ -8097,12 +8216,12 @@ msgstr "Phonebook"
 # File: opt/gemeinschaft/htdocs/prov/aastra/expmod.php, line: 354
 # File: opt/gemeinschaft/htdocs/prov/aastra/settings.php, line: 494
 msgid "Umleit."
-msgstr ""
+msgstr "Forw."
 
 #
 # File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 225
 msgid "Fehler bei der Zuordnung der IP:"
-msgstr ""
+msgstr "Error while assigning IP:"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 251
@@ -8112,20 +8231,20 @@ msgstr "Logout failed!"
 #
 # File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 253
 msgid "Benutzer erfolgreich abgemeldet."
-msgstr ""
+msgstr "User successfully logged off."
 
 #
 # File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 261
 msgid "Falsche Durchwahl oder PIN!"
-msgstr ""
+msgstr "Wrong extension or PIN!"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 263
 msgid "Benutzer erfolgreich angemeldet."
-msgstr ""
+msgstr "User successfully logged on."
 
 msgid "Benutzer anmelden"
-msgstr ""
+msgstr "Login user"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/aastra/login.php, line: 317
@@ -8148,12 +8267,12 @@ msgstr "Not found"
 # File: opt/gemeinschaft/htdocs/prov/aastra/pb.php, line: 337
 #, php-format
 msgid "Eintrag &quot;%s&quot; nicht gefunden."
-msgstr ""
+msgstr "Entry &quot;%s&quot; not found."
 
 #
 # File: opt/gemeinschaft/htdocs/prov/aastra/settings.php, line: 473
 msgid "Ruhe aus"
-msgstr ""
+msgstr "DND off"
 
 #
 # File: opt/gemeinschaft/htdocs/gui/inc/modules.php, line: 60
@@ -8165,48 +8284,48 @@ msgstr "Voicemail"
 # File: opt/gemeinschaft/htdocs/prov/polycom/directory.php, line: 230
 # File: opt/gemeinschaft/htdocs/prov/polycom/features.php, line: 240
 msgid "Einstellungen"
-msgstr ""
+msgstr "Settings"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/callforward.php, line: 371
 # File: opt/gemeinschaft/htdocs/prov/polycom/callforward.php, line: 490
 msgid "Temporäre Nummer"
-msgstr ""
+msgstr "Temporary number"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/callforward.php, line: 405
 msgid "Rufumleitungsziel"
-msgstr ""
+msgstr "Call forward destination"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/callforward.php, line: 431
 msgid "Timeout bei keine Antwort"
-msgstr ""
+msgstr "Timeout on no answer"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/callforward.php, line: 496
 msgid "Nicht-Antwort-Timeout"
-msgstr ""
+msgstr "No answer timeout"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/configmenu.php, line: 119
 msgid "Konfigurationsmenü"
-msgstr ""
+msgstr "Configuration menu"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/configmenu.php, line: 125
 msgid "Lokale Telefoneinstellungen"
-msgstr ""
+msgstr "Local phone settings"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/diallog.php, line: 179
 msgid "Keine Einträge vom Typ"
-msgstr ""
+msgstr "No entries of type"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/diallog.php, line: 233
 msgid "Leeren"
-msgstr ""
+msgstr "Empty"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/diallog.php, line: 234
@@ -8214,23 +8333,23 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 378
 # File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 467
 msgid "Beenden"
-msgstr ""
+msgstr "Quit"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/directory.php, line: 207
 # File: opt/gemeinschaft/htdocs/prov/polycom/main.php, line: 99
 msgid "Ruflisten"
-msgstr ""
+msgstr "Call logs"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/dnd.php, line: 134
 msgid "Ruhe/DND"
-msgstr ""
+msgstr "DND"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/dnd.php, line: 140
 msgid "Ruhe/DND-Status setzen"
-msgstr ""
+msgstr "Set DND status"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/callforward.php, line: 275
@@ -8238,48 +8357,48 @@ msgstr ""
 # File: opt/gemeinschaft/htdocs/prov/polycom/dnd.php, line: 142
 # File: opt/gemeinschaft/htdocs/prov/polycom/features.php, line: 216
 msgid "Ein"
-msgstr ""
+msgstr "On"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/extnumbers.php, line: 126
 msgid "Keine externen Rufumleitungsziele hinterlegt"
-msgstr ""
+msgstr "No external call forward destinations set up"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/extnumbers.php, line: 130
 msgid "Mögliche externe Rufumleitungsziele"
-msgstr ""
+msgstr "Possible external call forward destinations"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/features.php, line: 116
 msgid "CLIR Intern"
-msgstr ""
+msgstr "CLIR internal"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/features.php, line: 118
 msgid "CLIR Extern"
-msgstr ""
+msgstr "CLIR external"
 
 msgid "CID extern"
-msgstr ""
+msgstr "CID external"
 
 msgid "CID intern"
-msgstr ""
+msgstr "CID internal"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/main.php, line: 113
 msgid "Telefonmenü"
-msgstr ""
+msgstr "Phone menu"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 209
 msgid "durchsuchen"
-msgstr ""
+msgstr "search"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/polycom/pb.php, line: 213
 msgid "Finden"
-msgstr ""
+msgstr "Find"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 342
@@ -8296,6 +8415,7 @@ msgid ""
 "Keine Treffer für \"%s\". Drücken Sie 'Zurück', um eine neue Suche "
 "auszuführen."
 msgstr ""
+"No matches for \"%s\". Press 'Back' to perform another search."
 
 #
 # File: opt/gemeinschaft/htdocs/prov/siemens/dial-log/dlog.php, line: 216
@@ -8326,73 +8446,73 @@ msgid "Importiert"
 msgstr "Imported"
 
 msgid "Unbekannter Benutzer"
-msgstr ""
+msgstr "Unknown user"
 
 msgid "Nicht aktiviert"
-msgstr ""
+msgstr "Not activated"
 
 msgid "Datenbankfehler"
-msgstr ""
+msgstr "Database error"
 
 msgid "Kein Agent"
-msgstr ""
+msgstr "No agent"
 
 msgid "Keine Warteschlange"
-msgstr ""
+msgstr "No queue"
 
 msgid "Ungültiger Benutzername"
-msgstr ""
+msgstr "Invalid username"
 
 msgid "Benutzer unbekannt"
-msgstr ""
+msgstr "User unknown"
 
 msgid "Menü"
-msgstr ""
+msgstr "Menu"
 
 msgid "temp. Nummer"
-msgstr ""
+msgstr "temp. number"
 
 msgid "Prompt"
-msgstr ""
+msgstr "Prompt"
 
 msgid "neue Nummer"
-msgstr ""
+msgstr "new number"
 
 msgid "neue Timeout"
-msgstr ""
+msgstr "new timeout"
 
 msgid "Timeout keine Antw. "
-msgstr ""
+msgstr "Timeout no answer"
 
 msgid "Ungültiger Benutzer"
-msgstr ""
+msgstr "Invalid user"
 
 msgid "Nicht erlaubt"
-msgstr ""
+msgstr "Not allowed"
 
 msgid "Cid"
-msgstr ""
+msgstr "Cid"
 
 msgid "Unbekannter Benutzer."
-msgstr ""
+msgstr "Unknown user."
 
 msgid "Benutzer angemeldet."
-msgstr ""
+msgstr "User logged on."
 
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 msgid "Abmelden fehlgeschlagen!"
-msgstr ""
+msgstr "Logout failed!"
 
 msgid "Benutzer abgemeldet."
-msgstr ""
+msgstr "User logged off."
 
 msgid "Neustart. Bitte warten."
-msgstr ""
+msgstr "Restart. Please wait."
 
 msgid "Klingeltöne"
-msgstr ""
+msgstr "Ring tones"
 
 #
 # File: opt/gemeinschaft/htdocs/prov/snom/pb.php, line: 340
@@ -8402,6 +8522,7 @@ msgstr ""
 msgid ""
 "Keine Treffer für \"%s\". Drücken Sie # um die letzte Eingabe zu widerrufen."
 msgstr ""
+"No matches for \"%s\". Press # to withdraw the last input."
 
 msgid "Tonsignale"
 msgstr "Audio signals"
@@ -8431,7 +8552,7 @@ msgstr "yesterday"
 # File: opt/gemeinschaft/inc/util.php, line: 151
 #, php-format
 msgid "%d. %b"
-msgstr ""
+msgstr "%d. %b"
 
 #
 # File: opt/gemeinschaft/inc/util.php, line: 152
