@@ -32,6 +32,7 @@ define( 'GS_VALID', true ); // this is a parent file
 require_once( dirname(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
+include_once( GS_DIR ."inc/langhelper.php" );
 require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php');
 require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php');
 
