@@ -32,13 +32,14 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_groups_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_group_change.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_group_del.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
+
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
 if (count( $MODULES[$SECTION]['sub'] ) > 1 )
 	echo $MODULES[$SECTION]['title'], ' - ';
-//echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
-echo __("Provisioning-Gruppen");
+echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 echo '<script type="text/javascript">
@@ -81,6 +82,10 @@ if ($action === 'save') {
 		} elseif (! $ret) {
 			echo '<div class="errorbox">', sPrintF(__('Gruppe &quot;%s&quot; konnte nicht gespeichert werden.'), htmlEnt($name)) ,'</div>',"\n";
 		}
+	}
+	
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		gs_usergroup_update_all_ui();
 	}
 	
 	$action = '';  # view

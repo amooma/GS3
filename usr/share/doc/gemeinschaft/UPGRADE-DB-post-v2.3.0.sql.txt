@@ -1,0 +1,218 @@
+USE `asterisk`;
+
+--
+-- Update `callforwards`
+--
+
+ALTER TABLE `callforwards` CHANGE
+ `active` `active` ENUM( 'no', 'std', 'var', 'vml', 'ano', 'trl', 'par' ) 
+ CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL DEFAULT 'no';
+ 
+ALTER TABLE `callforwards`
+ ADD `vm_rec_id` INT( 10 ) UNSIGNED NULL DEFAULT NULL  AFTER `number_vml`;
+
+
+--
+-- Update table `ast_sipfriends` and view `ast_sipfriends_gs`
+--
+
+DROP VIEW `ast_sipfriends_gs`;
+
+
+ALTER TABLE `ast_sipfriends`
+ MODIFY `regseconds` bigint(20) NOT NULL;
+
+ALTER TABLE `ast_sipfriends`
+ DROP `canreinvite`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `accountcode` varchar(20) collate latin1_general_ci default NULL AFTER `fullcontact`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `allowtransfer` varchar(20) collate latin1_general_ci default NULL AFTER `accountcode`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `allow` varchar(20) collate latin1_general_ci default NULL AFTER `allowtransfer`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `amaflags` varchar(20) collate latin1_general_ci default NULL AFTER `allow`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `auth` varchar(10) collate latin1_general_ci default NULL AFTER `amaflags`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `autoframing` varchar(10) collate latin1_general_ci default NULL AFTER `auth`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `callingpres` varchar(20) collate latin1_general_ci default NULL AFTER `autoframing`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `cid_number` varchar(40) collate latin1_general_ci default NULL AFTER `callingpres`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `defaultuser` varchar(40) collate latin1_general_ci default NULL AFTER `cid_number`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `disallow` varchar(20) collate latin1_general_ci default NULL AFTER `defaultuser`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `fromdomain` varchar(40) collate latin1_general_ci default NULL AFTER `disallow`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `fromuser` varchar(40) collate latin1_general_ci default NULL AFTER `fromdomain`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `incominglimit` varchar(10) collate latin1_general_ci default NULL AFTER `fromuser`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `insecure` varchar(20) collate latin1_general_ci default NULL AFTER `incominglimit`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `language` varchar(10) collate latin1_general_ci default NULL AFTER `insecure`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `lastms` int(11) NOT NULL default '-1' AFTER `language`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `maxcallbitrate` varchar(15) collate latin1_general_ci default NULL AFTER `lastms`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `md5secret` varchar(40) collate latin1_general_ci default NULL AFTER `maxcallbitrate`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `mohsuggest` varchar(20) collate latin1_general_ci default NULL AFTER `md5secret`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `musicclass` varchar(20) collate latin1_general_ci default NULL AFTER `md5secret`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `outboundproxy` varchar(40) collate latin1_general_ci default NULL AFTER `musicclass`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `qualify` varchar(15) collate latin1_general_ci default NULL AFTER `outboundproxy`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `regexten` varchar(20) collate latin1_general_ci default NULL AFTER `qualify`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `rtpholdtimeout` varchar(15) collate latin1_general_ci default NULL AFTER `regexten`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `rtpkeepalive` varchar(15) collate latin1_general_ci default NULL AFTER `rtpholdtimeout`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `rtptimeout` varchar(15) collate latin1_general_ci default NULL AFTER `rtpkeepalive`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `subscribemwi` varchar(10) collate latin1_general_ci default NULL AFTER `rtptimeout`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `usereqphone` varchar(10) collate latin1_general_ci default NULL AFTER `subscribemwi`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `vmexten` varchar(20) collate latin1_general_ci default NULL AFTER  `usereqphone`;
+
+ALTER TABLE `ast_sipfriends`
+ ADD `useragent` varchar(20) collate latin1_general_ci default NULL AFTER `vmexten`;
+
+
+USE `asterisk`;
+
+--
+-- Final view structure for view `ast_sipfriends_gs`
+--
+
+/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 CREATE ALGORITHM=MERGE */
+/*!50013 DEFINER=CURRENT_USER() SQL SECURITY INVOKER */
+/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact`,`s`.`accountcode` AS `accountcode`,`s`.`allowtransfer` AS `allowtransfer`,`s`.`allow` AS `allow`,`s`.`amaflags` AS `amaflags`,`s`.`auth` AS `auth`,`s`.`autoframing` AS `autoframing`,`s`.`callingpres` AS `callingpres`,`s`.`cid_number` AS `cid_number`,`s`.`defaultuser` AS `defaultuser`,`s`.`fromdomain` AS `fromdomain`,`s`.`fromuser` AS `fromuser`,`s`.`incominglimit` AS `incominglimit`,`s`.`insecure` AS `insecure`,`s`.`language` AS `language`,`s`.`lastms` AS `lastms`,`s`.`maxcallbitrate` AS `maxcallbitrate`,`s`.`md5secret` AS `md5secret`,`s`.`mohsuggest` AS `mohsuggest`,`s`.`musicclass` AS `musicclass`,`s`.`outboundproxy` AS `outboundproxy`,`s`.`qualify` AS `qualify`,`s`.`regexten` AS `regexten`,`s`.`rtpholdtimeout` AS `rtpholdtimeout`,`s`.`rtpkeepalive` AS `rtpkeepalive`,`s`.`rtptimeout` AS `rtptimeout`,`s`.`subscribemwi` AS `subscribemwi`,`s`.`usereqphone` AS `usereqphone`,`s`.`vmexten` AS `vmexten`,`s`.`disallow` AS `disallow`,`s`.`useragent` AS `useragent` from ((`ast_sipfriends` `s` join `users` `u` on((`u`.`id` = `s`.`_user_id`))) join `hosts` `h` on((`h`.`id` = `u`.`host_id`))) where (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
+
+--
+-- after 6cd6e7ac2f38188eb426532dc24fea93c99f45f7
+--
+
+ALTER TABLE `queue_cf_timerules`
+	ADD  `id` int(10) UNSIGNED NOT NULL DEFAULT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+
+--
+-- After: e73b1042653bf36babe31e16863ecfec9662bf94
+--
+
+CREATE TABLE IF NOT EXISTS `dnd` (
+  `_user_id` int(10) NOT NULL DEFAULT '0',
+  `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
+  PRIMARY KEY (`_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `users` DROP `dnd`;
+
+--
+-- After: 9351b250a70dd4cd80356e2a8546f7afc4360cc8
+--
+
+ALTER TABLE `phones` ADD
+  `expansion_modules` varchar(50) character set ascii default NULL AFTER `fw_manual_update`;
+
+
+--
+-- After: 24111e0c1fddf49bd84e00af3aada20418249ff7
+--
+
+ALTER TABLE `phones` MODIFY
+  `mac_addr` varchar(14) character set ascii NOT NULL default '';
+
+--
+-- After: 6bbda1f0a87467bffe4421421812c25bd2618aff
+--
+
+ALTER TABLE `group_permissions`
+ MODIFY `type` varchar(25) NOT NULL default '';
+
+--
+-- After: e839a7118b4ddd72abe3a4b5f6395e0f431ceea7
+--
+
+ALTER TABLE `ast_sipfriends` ADD
+  `directmedia` varchar(5) character set ascii NOT NULL default 'yes';
+
+/*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
+/*!50001 CREATE ALGORITHM=MERGE */
+/*!50013 DEFINER=CURRENT_USER() SQL SECURITY INVOKER */
+/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact`,`s`.`accountcode` AS `accountcode`,`s`.`allowtransfer` AS `allowtransfer`,`s`.`allow` AS `allow`,`s`.`amaflags` AS `amaflags`,`s`.`auth` AS `auth`,`s`.`autoframing` AS `autoframing`,`s`.`callingpres` AS `callingpres`,`s`.`cid_number` AS `cid_number`,`s`.`defaultuser` AS `defaultuser`,`s`.`fromdomain` AS `fromdomain`,`s`.`fromuser` AS `fromuser`,`s`.`incominglimit` AS `incominglimit`,`s`.`insecure` AS `insecure`,`s`.`language` AS `language`,`s`.`lastms` AS `lastms`,`s`.`maxcallbitrate` AS `maxcallbitrate`,`s`.`md5secret` AS `md5secret`,`s`.`mohsuggest` AS `mohsuggest`,`s`.`musicclass` AS `musicclass`,`s`.`outboundproxy` AS `outboundproxy`,`s`.`qualify` AS `qualify`,`s`.`regexten` AS `regexten`,`s`.`rtpholdtimeout` AS `rtpholdtimeout`,`s`.`rtpkeepalive` AS `rtpkeepalive`,`s`.`rtptimeout` AS `rtptimeout`,`s`.`subscribemwi` AS `subscribemwi`,`s`.`usereqphone` AS `usereqphone`,`s`.`vmexten` AS `vmexten`,`s`.`disallow` AS `disallow`,`s`.`useragent` AS `useragent`, `s`.`directmedia` AS `directmedia` FROM ((`ast_sipfriends` `s` JOIN `users` `u` ON((`u`.`id` = `s`.`_user_id`))) JOIN `hosts` `h` ON((`h`.`id` = `u`.`host_id`))) WHERE (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
+
+--
+-- After: c1a29f065e1967462c62895423e2bfcccf089c7b
+--
+
+CREATE TABLE `group_parameters` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `type` varchar(20) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,
+  `parameter` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  `value` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- After: 38eafbced0951262a8169091fcf838680d5c6b30
+--
+
+ALTER TABLE `pb_ldap`
+  ADD `id` int(10) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+
+ALTER TABLE `pb_ldap`
+  ADD `group_id` mediumint(8) unsigned DEFAULT NULL AFTER `updated`;
+
+--
+-- After: f7624949db8428f489052a7c8be5b9e0b26bcc59
+--
+
+ALTER TABLE `pb_ldap`
+  MODIFY `group_id` mediumint(8) unsigned DEFAULT 2;
+
+--
+-- After: 2fc4b10745eb02c81658909adc93fdfc4e8b0e3c
+--
+
+ALTER TABLE `ast_queues`
+  ADD `autopausehangup` varchar(5) character set ascii default NULL AFTER `autopause`;

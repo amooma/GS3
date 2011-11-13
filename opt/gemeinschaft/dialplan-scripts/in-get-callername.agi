@@ -40,7 +40,11 @@ function search_number ( $user_id, $source, $cid , $db ) {
 		$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_prv` WHERE `user_id`=' . $user_id . ' AND `number`= \'' . $db->escape($cid) . '\'';
 	else if ($source == 'public') {
 		$user_groups = gs_group_members_groups_get(array($user_id), 'user');
-		$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_ldap` WHERE `number`=\''. $db->escape($cid) . '\' AND `group_id` IN (' . implode(',', $user_groups) . ')';
+		// call may be to a queue, which has no user group id
+		if (count($user_groups) > 0)
+			$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_ldap` WHERE `number`=\''. $db->escape($cid) . '\' AND `group_id` IN (' . implode(',', $user_groups) . ')';
+		else
+			$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_ldap` WHERE `number`=\''. $db->escape($cid) . '\' AND `group_id` = 2';
 	}
 
 	$rs = $db->execute( $query );

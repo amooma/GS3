@@ -205,14 +205,12 @@ ORDER BY `ord`'
 	);
 	$i=0;
 	while ($route = $rsR->fetchRow()) {
-		if (! @preg_match( '/'.$route['pat'].'/', $dial )) continue;
 		
+		if (! @preg_match( '/'.$route['pat'].'/', $dial )) continue;
+
 		if ($route['user_grp_id']) {
-			$group_info = gs_group_info_get( array($route['user_grp_id']) );
-			$group_name = @$group_info[0]['title'];
-		}
-		else {
-			$group_name = '('. __("keine") .')';
+			$group_info = gs_group_info_get(Array($route['user_grp_id']));
+			$group_name = $group_info[0]['title'];
 		}
 		
 		echo '<tr class="', ($i%2 ? 'even':'odd') ,'">', "\n";
@@ -241,7 +239,6 @@ ORDER BY `ord`'
 		echo '&thinsp;-&thinsp;';
 		echo subStr($route['ht'],0,2) .'<sup>'. subStr($route['ht'],3,2) .'</sup>';
 		echo ' </td>', "\n";
-		
 		echo '<td>', htmlEnt($group_name) ,' </td>', "\n";
 		echo '<td class="pre">', htmlEnt($route['pat']) ,' </td>', "\n";
 		

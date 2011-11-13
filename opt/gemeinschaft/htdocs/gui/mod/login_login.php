@@ -50,6 +50,7 @@ echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
 echo '</h2>', "\n";
 
 
+
 $focus_field = false;
 
 
@@ -226,7 +227,7 @@ Gemeinschaft auf \"%s\"
 <input type="hidden" name="login_action" value="forgotpwd" />
 
 <label for="ipt-login_user"><?php echo __('Benutzername'); ?>:</label><br />
-<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="20" value="<?php echo @$_REQUEST['login_user']; ?>" style="width:150px; font-size:1.2em;" /><br />
+<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="50" value="<?php echo @$_REQUEST['login_user']; ?>" style="width:150px; font-size:1.2em;" /><br />
 <script type="text/javascript">/*<![CDATA[*/ try{ document.getElementById('ipt-login_user').focus(); }catch(e){} /*]]>*/</script>
 
 <br />
@@ -340,7 +341,7 @@ if (@$_REQUEST['login_user'] != '') {
 	$login_user_prefill = '';
 }
 ?>
-<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="20" value="<?php echo htmlEnt($login_user_prefill); ?>" style="width:150px; font-size:1.2em;" /><br />
+<input name="login_user" id="ipt-login_user" type="text" size="15" maxlength="50" value="<?php echo htmlEnt($login_user_prefill); ?>" style="width:150px; font-size:1.2em;" /><br />
 
 <label for="ipt-login_pwd"><?php echo __('Pa&szlig;wort'); ?>:</label><br />
 <input name="login_pwd" id="ipt-login_pwd" type="password" size="15" maxlength="20" value="" style="width:150px; font-size:1.2em;" /><br />
@@ -360,11 +361,6 @@ if (@$_REQUEST['login_user'] != '') {
 </div>
 <a href="<?php echo gs_url($SECTION, $MODULE, null, 'login_action=forgotpwd'); ?>" style="font-size:0.95em;"><?php echo __('Pa&szlig;wort vergessen'); ?></a>
 
-<?php /*//FIXME - REMOVEME {  ?>
-<br /><br /><br />
-<a target="_blank" href="http://www.amoocon.de/">
-	<img src="<?php echo GS_URL_PATH; ?>img/banner-amoocon.png" alt="AmooCon" style="outline:1px dashed #ccc; outline-offset:8px;" /></a>
-<?php //FIXME - REMOVEME } */ ?>
 </div>
 <?php
 	

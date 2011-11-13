@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# QLoader startup script for non-RHEL systems
+# 
+# Please edit the following options in order to use the correct paths.
+# $Id: qloaderd,v 1.1 2006/11/22 10:50:16 lenz Exp $
+#
+
+qloader=/usr/local/sbin/qloader.pl
+partition=P001
+queuelog=/var/log/asterisk/queue_log
+logfile=/var/log/asterisk/qloader.log
+args="-h 127.0.0.1 -d queuemetrics -u root -p secret"
+
+start() {
+        echo -n $"Starting $prog: "
+        nice $qloader $args $queuelog $partition $logfile > /dev/null 2>&1 &
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && touch /var/lock/qloader
+        return $RETVAL
+}
+stop() {
+		echo -n $"Stopping $prog: "
+		PID=`cat /var/run/qloader.pid`
+		kill -9 $PID
+		RETVAL=$?
+		echo
+		[ $RETVAL = 0 ] && rm -f /var/lock/qloader /var/run/qloader.pid
+}
+
+case "$1" in
+        start)
+                echo -n "Starting QueueMetrics QLoaderd server: "
+				start
+                ;;
+        stop)
+                echo -n "Stopping QueueMetrics QLoaderd server: "
+                stop
+                ;;
+        restart)
+                stop
+                sleep 2
+                start
+                ;;
+
+        *)
+                echo "Usage: /etc/init.d/qloaderd {start|stop|restart}"
+                exit 1
+esac
+
+exit 0

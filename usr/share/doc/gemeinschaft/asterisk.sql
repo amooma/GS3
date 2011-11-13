@@ -1,8 +1,18 @@
--- MySQL dump 10.13  Distrib 5.1.49, for debian-linux-gnu (i486)
+-- ----------------------------------------------------------------------------
+--   Gemeinschaft database
+--   This file was created with
+--   mysqldump --opt --skip-extended-insert --databases asterisk > asterisk.sql
+--   (that's what usr/share/doc/gemeinschaft/get-database-dump.php does)
+--   
+--   $Revision$
+-- ----------------------------------------------------------------------------
+
+
+-- MySQL dump 10.11
 --
 -- Host: localhost    Database: asterisk
 -- ------------------------------------------------------
--- Server version	5.1.49-1
+-- Server version	5.0.32-Debian_7etch3-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,20 +34,49 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `asterisk` /*!40100 DEFAULT CHARACTER S
 USE `asterisk`;
 
 --
+--  Table structure for table `agents`        
+--
+
+DROP TABLE IF EXISTS `agents`;
+CREATE TABLE IF NOT EXISTS `agents` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `firstname` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `number` varchar(25) character set ascii NOT NULL,
+  `pin` varchar(10) character set ascii collate ascii_bin NOT NULL default '',
+  `user_id` int(10) unsigned NOT NULL default 0,
+  `paused` tinyint(1) NOT NULL default 0,
+  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
+
+--
+--  Table structure for table `agent_queues`                        
+--
+
+DROP TABLE IF EXISTS `agent_queues`;
+CREATE TABLE IF NOT EXISTS `agent_queues` (
+  `agent_id` int(10) unsigned NOT NULL,
+  `queue_id` int(10) unsigned NOT NULL,
+  `penalty` TINYINT( 3 ) unsigned NOT NULL DEFAULT '0',
+  KEY `agent_id` (`agent_id`),
+  KEY `queue_id` (`queue_id`),
+  CONSTRAINT `agent_queues_ibfk_1` FOREIGN KEY (`agent_id`) REFERENCES `agents` (`id`),
+  CONSTRAINT `agent_queues_ibfk_2` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
+
+--
 -- Table structure for table `area_codes`
 --
 
 DROP TABLE IF EXISTS `area_codes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `area_codes` (
-  `cc` varchar(4) CHARACTER SET ascii NOT NULL,
-  `ac` varchar(8) CHARACTER SET ascii NOT NULL,
+  `cc` varchar(4) character set ascii NOT NULL,
+  `ac` varchar(8) character set ascii NOT NULL,
   `is_ac` tinyint(1) unsigned NOT NULL,
-  `area_name` varchar(80) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`cc`,`ac`)
+  `area_name` varchar(80) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`cc`,`ac`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `area_codes`
@@ -5317,34 +5356,31 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ast_cdr`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ast_cdr` (
-  `_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `calldate` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `uniqueid` varchar(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `clid` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `src` varchar(30) NOT NULL DEFAULT '',
-  `dst` varchar(30) NOT NULL DEFAULT '',
-  `dcontext` varchar(50) NOT NULL DEFAULT '',
-  `channel` varchar(60) NOT NULL DEFAULT '',
-  `dstchannel` varchar(60) NOT NULL DEFAULT '',
-  `lastapp` varchar(30) NOT NULL DEFAULT '',
-  `lastdata` varchar(80) NOT NULL DEFAULT '',
-  `duration` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `billsec` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `disposition` varchar(15) NOT NULL DEFAULT '',
-  `amaflags` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `accountcode` varchar(25) NOT NULL DEFAULT '',
-  `userfield` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`_id`),
+  `_id` int(10) unsigned NOT NULL auto_increment,
+  `calldate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `uniqueid` varchar(32) character set ascii collate ascii_bin NOT NULL,
+  `clid` varchar(80) collate utf8_unicode_ci NOT NULL default '',
+  `src` varchar(30) collate ascii_general_ci NOT NULL default '',
+  `dst` varchar(30) collate ascii_general_ci NOT NULL default '',
+  `dcontext` varchar(50) collate ascii_general_ci NOT NULL default '',
+  `channel` varchar(60) collate ascii_general_ci NOT NULL default '',
+  `dstchannel` varchar(60) collate ascii_general_ci NOT NULL default '',
+  `lastapp` varchar(30) collate ascii_general_ci NOT NULL default '',
+  `lastdata` varchar(80) collate ascii_general_ci NOT NULL default '',
+  `duration` mediumint(8) unsigned NOT NULL default '0',
+  `billsec` mediumint(8) unsigned NOT NULL default '0',
+  `disposition` varchar(15) collate ascii_general_ci NOT NULL default '',
+  `amaflags` tinyint(3) unsigned NOT NULL default '0',
+  `accountcode` varchar(25) collate ascii_general_ci NOT NULL default '',
+  `userfield` varchar(255) collate ascii_general_ci NOT NULL default '',
+  PRIMARY KEY  (`_id`),
   KEY `calldate` (`calldate`),
   KEY `accountcode` (`accountcode`),
   KEY `src_disposition` (`src`(25),`disposition`(4)),
   KEY `dst_disposition` (`dst`(25),`disposition`(4)),
   KEY `uniqueid` (`uniqueid`(25))
-) ENGINE=MyISAM DEFAULT CHARSET=ascii;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=MyISAM DEFAULT CHARSET=ascii COLLATE=ascii_general_ci;
 
 --
 -- Dumping data for table `ast_cdr`
@@ -5360,26 +5396,22 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ast_queue_members`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ast_queue_members` (
-  `queue_name` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `_queue_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `interface` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `_user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `penalty` tinyint(3) unsigned NOT NULL DEFAULT '5',
-  `static` tinyint(1) DEFAULT '0',
-  `uniqueid` int(100) unsigned NOT NULL AUTO_INCREMENT,
-  `paused` int(1) DEFAULT NULL,
-  PRIMARY KEY (`uniqueid`),
+  `uniqueid` int(10) unsigned NOT NULL auto_increment,
+  `queue_name` varchar(20) character set ascii NOT NULL default '',
+  `_queue_id` int(10) unsigned NOT NULL default '0',
+  `interface` varchar(25) character set ascii NOT NULL default '',
+  `_user_id` int(10) unsigned NOT NULL default '0',
+  `penalty` tinyint(3) unsigned NOT NULL default '0',
+  `paused` tinyint(3) NOT NULL default '0',
+  PRIMARY KEY  (`queue_name`,`interface`),
   UNIQUE KEY `queue_id_user_id` (`_queue_id`,`_user_id`),
-  UNIQUE KEY `queue_name_interface` (`queue_name`,`interface`),
+  KEY `uniqueid` (`uniqueid`),
   KEY `_user_id` (`_user_id`),
   KEY `interface` (`interface`(15)),
   CONSTRAINT `ast_queue_members_ibfk_1` FOREIGN KEY (`_queue_id`) REFERENCES `ast_queues` (`_id`),
   CONSTRAINT `ast_queue_members_ibfk_2` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ast_queue_members`
@@ -5395,47 +5427,44 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ast_queues`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ast_queues` (
-  `_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(10) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `_host_id` mediumint(8) unsigned NOT NULL DEFAULT '1',
-  `_title` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `musicclass` varchar(50) CHARACTER SET ascii DEFAULT NULL,
-  `_sysrec_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `announce` varchar(10) CHARACTER SET ascii DEFAULT NULL,
-  `context` varchar(50) CHARACTER SET ascii DEFAULT NULL,
-  `timeout` smallint(5) unsigned DEFAULT NULL,
-  `autopause` varchar(5) CHARACTER SET ascii DEFAULT NULL,
-  `setinterfacevar` varchar(5) CHARACTER SET ascii DEFAULT NULL,
-  `monitor_join` tinyint(1) unsigned DEFAULT NULL,
-  `monitor_format` varchar(50) CHARACTER SET ascii DEFAULT NULL,
-  `periodic_announce_frequency` tinyint(3) unsigned DEFAULT NULL,
-  `announce_frequency` tinyint(3) unsigned DEFAULT NULL,
-  `announce_round_seconds` tinyint(3) unsigned DEFAULT NULL,
-  `announce_holdtime` varchar(5) CHARACTER SET ascii DEFAULT NULL,
-  `retry` tinyint(3) unsigned DEFAULT NULL,
-  `wrapuptime` tinyint(3) unsigned DEFAULT NULL,
-  `maxlen` tinyint(3) unsigned DEFAULT NULL,
-  `servicelevel` smallint(5) unsigned DEFAULT NULL,
-  `strategy` varchar(20) CHARACTER SET ascii DEFAULT NULL,
-  `joinempty` varchar(10) CHARACTER SET ascii DEFAULT NULL,
-  `leavewhenempty` varchar(10) CHARACTER SET ascii DEFAULT NULL,
-  `eventmemberstatus` tinyint(1) unsigned DEFAULT NULL,
-  `eventwhencalled` tinyint(1) unsigned DEFAULT NULL,
-  `reportholdtime` tinyint(1) unsigned DEFAULT NULL,
-  `ringinuse` varchar(5) CHARACTER SET ascii DEFAULT NULL,
-  `memberdelay` tinyint(3) unsigned DEFAULT NULL,
-  `weight` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `timeoutrestart` tinyint(1) unsigned DEFAULT NULL,
-  `_min_agents` int(10) unsigned DEFAULT '0',
-  PRIMARY KEY (`_id`),
+  `_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(10) character set ascii NOT NULL default '',
+  `_host_id` mediumint(8) unsigned NOT NULL default '1',
+  `_title` varchar(50) character set utf8 collate utf8_unicode_ci NOT NULL default '',
+  `musicclass` varchar(50) character set ascii default NULL,
+  `_sysrec_id` int(10) unsigned NOT NULL default '0',
+  `announce` varchar(10) character set ascii default NULL,
+  `context` varchar(50) character set ascii default NULL,
+  `timeout` smallint(5) unsigned default NULL,
+  `autopause` varchar(5) character set ascii default NULL,
+  `autopausehangup` varchar(5) character set ascii default NULL,
+  `setinterfacevar` varchar(5) character set ascii default NULL,
+  `monitor_join` tinyint(1) unsigned default NULL,
+  `monitor_format` varchar(50) character set ascii default NULL,
+  `periodic_announce_frequency` tinyint(3) unsigned default NULL,
+  `announce_frequency` tinyint(3) unsigned default NULL,
+  `announce_round_seconds` tinyint(3) unsigned default NULL,
+  `announce_holdtime` varchar(5) character set ascii default NULL,
+  `retry` tinyint(3) unsigned default NULL,
+  `wrapuptime` tinyint(3) unsigned default NULL,
+  `maxlen` tinyint(3) unsigned default NULL,
+  `servicelevel` smallint(5) unsigned default NULL,
+  `strategy` varchar(20) character set ascii default NULL,
+  `joinempty` varchar(10) character set ascii default NULL,
+  `leavewhenempty` varchar(10) character set ascii default NULL,
+  `eventmemberstatus` tinyint(1) unsigned default NULL,
+  `eventwhencalled` tinyint(1) unsigned default NULL,
+  `reportholdtime` tinyint(1) unsigned default NULL,
+  `ringinuse` varchar(5) character set ascii default NULL,
+  `memberdelay` tinyint(3) unsigned default NULL,
+  `weight` tinyint(3) unsigned NOT NULL default '0',
+  `timeoutrestart` tinyint(1) unsigned default NULL,
+  PRIMARY KEY  (`_id`),
   UNIQUE KEY `name` (`name`),
   KEY `host_name` (`_host_id`,`name`),
   CONSTRAINT `ast_queues_ibfk_1` FOREIGN KEY (`_host_id`) REFERENCES `hosts` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
 -- Dumping data for table `ast_queues`
@@ -5443,7 +5472,7 @@ CREATE TABLE `ast_queues` (
 
 LOCK TABLES `ast_queues` WRITE;
 /*!40000 ALTER TABLE `ast_queues` DISABLE KEYS */;
-INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',0,NULL,NULL,10,'no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','yes',NULL,NULL,NULL,'no',NULL,0,NULL,0);
+INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',0,NULL,NULL,10,'no','no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','yes',NULL,NULL,NULL,'no',NULL,0,NULL);
 /*!40000 ALTER TABLE `ast_queues` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5452,68 +5481,66 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ast_sipfriends`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ast_sipfriends` (
-  `_user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(16) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `secret` varchar(16) CHARACTER SET ascii NOT NULL DEFAULT '1234',
-  `type` enum('friend','user','peer') CHARACTER SET ascii NOT NULL DEFAULT 'friend',
-  `host` varchar(50) COLLATE latin1_general_ci NOT NULL DEFAULT 'dynamic',
-  `defaultip` varchar(15) CHARACTER SET ascii DEFAULT NULL,
-  `context` varchar(50) CHARACTER SET ascii NOT NULL DEFAULT 'from-internal-users',
-  `callerid` varchar(80) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `mailbox` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `callgroup` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT '1',
-  `pickupgroup` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT '1',
-  `setvar` varchar(50) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `call-limit` tinyint(3) unsigned NOT NULL DEFAULT '20',
-  `subscribecontext` varchar(50) CHARACTER SET ascii NOT NULL DEFAULT 'default',
-  `regcontext` varchar(50) CHARACTER SET ascii DEFAULT NULL,
-  `ipaddr` varchar(15) CHARACTER SET ascii DEFAULT NULL,
-  `port` varchar(5) CHARACTER SET ascii DEFAULT NULL,
-  `regseconds` bigint(20) NOT NULL,
-  `username` varchar(25) CHARACTER SET ascii DEFAULT NULL,
-  `regserver` varchar(50) CHARACTER SET ascii DEFAULT NULL,
-  `fullcontact` varchar(100) CHARACTER SET ascii DEFAULT NULL,
-  `accountcode` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  `allowtransfer` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  `allow` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  `amaflags` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  `auth` varchar(10) COLLATE latin1_general_ci DEFAULT NULL,
-  `autoframing` varchar(10) COLLATE latin1_general_ci DEFAULT NULL,
-  `callingpres` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  `cid_number` varchar(40) COLLATE latin1_general_ci DEFAULT NULL,
-  `defaultuser` varchar(40) COLLATE latin1_general_ci DEFAULT NULL,
-  `disallow` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  `fromdomain` varchar(40) COLLATE latin1_general_ci DEFAULT NULL,
-  `fromuser` varchar(40) COLLATE latin1_general_ci DEFAULT NULL,
-  `incominglimit` varchar(10) COLLATE latin1_general_ci DEFAULT NULL,
-  `insecure` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  `language` varchar(10) COLLATE latin1_general_ci DEFAULT NULL,
-  `lastms` int(11) NOT NULL DEFAULT '-1',
-  `maxcallbitrate` varchar(15) COLLATE latin1_general_ci DEFAULT NULL,
-  `md5secret` varchar(40) COLLATE latin1_general_ci DEFAULT NULL,
-  `mohsuggest` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  `musicclass` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  `outboundproxy` varchar(40) COLLATE latin1_general_ci DEFAULT NULL,
-  `qualify` varchar(15) COLLATE latin1_general_ci DEFAULT NULL,
-  `regexten` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  `rtpholdtimeout` varchar(15) COLLATE latin1_general_ci DEFAULT NULL,
-  `rtpkeepalive` varchar(15) COLLATE latin1_general_ci DEFAULT NULL,
-  `rtptimeout` varchar(15) COLLATE latin1_general_ci DEFAULT NULL,
-  `subscribemwi` varchar(10) COLLATE latin1_general_ci DEFAULT NULL,
-  `usereqphone` varchar(10) COLLATE latin1_general_ci DEFAULT NULL,
-  `vmexten` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  `useragent` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
-  PRIMARY KEY (`_user_id`),
+  `_user_id` int(10) unsigned NOT NULL default '0',
+  `name` varchar(16) character set ascii NOT NULL default '',
+  `secret` varchar(16) character set ascii NOT NULL default '1234',
+  `type` enum('friend','user','peer') character set ascii NOT NULL default 'friend',
+  `host` varchar(50) collate latin1_general_ci NOT NULL default 'dynamic',
+  `defaultip` varchar(15) character set ascii default NULL,
+  `context` varchar(50) character set ascii NOT NULL default 'from-internal-users',
+  `callerid` varchar(80) collate latin1_general_ci NOT NULL default '',
+  `mailbox` varchar(25) character set ascii NOT NULL default '',
+  `callgroup` varchar(20) character set ascii NOT NULL default '1',
+  `pickupgroup` varchar(20) character set ascii NOT NULL default '',
+  `setvar` varchar(50) character set ascii NOT NULL default '',
+  `call-limit` tinyint(3) unsigned NOT NULL default '20',
+  `subscribecontext` varchar(50) character set ascii NOT NULL default 'default',
+  `regcontext` varchar(50) character set ascii default NULL,
+  `ipaddr` varchar(45) character set ascii default NULL,
+  `port` varchar(5) character set ascii default NULL,
+  `regseconds` int(11) DEFAULT NULL,
+  `username` varchar(25) character set ascii default NULL,
+  `regserver` varchar(50) character set ascii default NULL,
+  `fullcontact` varchar(100) character set ascii default NULL,
+  `accountcode` varchar(20) collate latin1_general_ci default NULL,
+  `allowtransfer` varchar(20) collate latin1_general_ci default NULL,
+  `allow` varchar(20) collate latin1_general_ci default NULL,
+  `amaflags` varchar(20) collate latin1_general_ci default NULL,
+  `auth` varchar(10) collate latin1_general_ci default NULL,
+  `autoframing` varchar(10) collate latin1_general_ci default NULL,
+  `callingpres` varchar(20) collate latin1_general_ci default NULL,
+  `cid_number` varchar(40) collate latin1_general_ci default NULL,
+  `defaultuser` varchar(40) collate latin1_general_ci default NULL,
+  `disallow` varchar(20) collate latin1_general_ci default NULL,
+  `fromdomain` varchar(40) collate latin1_general_ci default NULL,
+  `fromuser` varchar(40) collate latin1_general_ci default NULL,
+  `incominglimit` varchar(10) collate latin1_general_ci default NULL,
+  `insecure` varchar(20) collate latin1_general_ci default NULL,
+  `language` varchar(10) collate latin1_general_ci default NULL,
+  `lastms` int(11) NOT NULL default '-1',
+  `maxcallbitrate` varchar(15) collate latin1_general_ci default NULL,
+  `md5secret` varchar(40) collate latin1_general_ci default NULL,
+  `mohsuggest` varchar(20) collate latin1_general_ci default NULL,
+  `musicclass` varchar(20) collate latin1_general_ci default NULL,
+  `outboundproxy` varchar(40) collate latin1_general_ci default NULL,
+  `qualify` varchar(15) collate latin1_general_ci default NULL,
+  `regexten` varchar(20) collate latin1_general_ci default NULL,
+  `rtpholdtimeout` varchar(15) collate latin1_general_ci default NULL,
+  `rtpkeepalive` varchar(15) collate latin1_general_ci default NULL,
+  `rtptimeout` varchar(15) collate latin1_general_ci default NULL,
+  `subscribemwi` varchar(10) collate latin1_general_ci default NULL,
+  `usereqphone` varchar(10) collate latin1_general_ci default NULL,
+  `vmexten` varchar(20) collate latin1_general_ci default NULL,
+  `useragent` varchar(20) collate latin1_general_ci default NULL,
+  `directmedia` varchar(5) collate latin1_general_ci NOT NULL default 'yes',
+  PRIMARY KEY  (`_user_id`),
   UNIQUE KEY `name` (`name`),
   KEY `host` (`host`(25)),
   KEY `mailbox` (`mailbox`(10)),
   KEY `context` (`context`(25)),
   CONSTRAINT `ast_sipfriends_ibfk_1` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ast_sipfriends`
@@ -5521,34 +5548,17 @@ CREATE TABLE `ast_sipfriends` (
 
 LOCK TABLES `ast_sipfriends` WRITE;
 /*!40000 ALTER TABLE `ast_sipfriends` DISABLE KEYS */;
-INSERT INTO `ast_sipfriends` VALUES (5,'950001','2602729062','friend','dynamic',NULL,'from-internal-nobody','Namenlos-5 <950001>','','1','1','__user_id=5;__user_name=950001',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (6,'950002','7581463327','friend','dynamic',NULL,'from-internal-nobody','Namenlos-6 <950002>','','1','1','__user_id=6;__user_name=950002',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (7,'950003','2099129726','friend','dynamic',NULL,'from-internal-nobody','Namenlos-7 <950003>','','1','1','__user_id=7;__user_name=950003',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (8,'950004','4751258926','friend','dynamic',NULL,'from-internal-nobody','Namenlos-8 <950004>','','1','1','__user_id=8;__user_name=950004',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (9,'950005','7458905728','friend','dynamic',NULL,'from-internal-nobody','Namenlos-9 <950005>','','1','1','__user_id=9;__user_name=950005',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (10,'950006','4040752142','friend','dynamic',NULL,'from-internal-nobody','Namenlos-10 <950006>','','1','1','__user_id=10;__user_name=950006',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (11,'950007','5827043803','friend','dynamic',NULL,'from-internal-nobody','Namenlos-11 <950007>','','1','1','__user_id=11;__user_name=950007',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (12,'950008','7012962864','friend','dynamic',NULL,'from-internal-nobody','Namenlos-12 <950008>','','1','1','__user_id=12;__user_name=950008',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (13,'950009','7583683190','friend','dynamic',NULL,'from-internal-nobody','Namenlos-13 <950009>','','1','1','__user_id=13;__user_name=950009',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (14,'950010','6879527634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-14 <950010>','','1','1','__user_id=14;__user_name=950010',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (22,'2000','5826899294','friend','dynamic',NULL,'from-internal-users','Hans Muster <2000>','2000','1','1','__user_id=22;__user_name=2000',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (23,'2001','4813474487','friend','dynamic',NULL,'from-internal-users','Peter Muster <2001>','2001','1','1','__user_id=23;__user_name=2001',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (24,'2002','6907087521','friend','dynamic',NULL,'from-internal-users','Anna Muster <2002>','2002','1','1','__user_id=24;__user_name=2002',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (25,'2003','9293349941','friend','dynamic',NULL,'from-internal-users','Lisa Muster <2003>','2003','1','1','__user_id=25;__user_name=2003',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (28,'950011','7364863263482634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-28 <950011>','','1','1','__user_id=28;__user_name=950011',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (29,'950012','7364863263482634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-29 <950012>','','1','1','__user_id=29;__user_name=950012',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (30,'950013','3707760381117896','friend','dynamic',NULL,'from-internal-nobody','Namenlos-13 <950013>','','1','1','__user_id=30;__user_name=950013',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `ast_sipfriends` VALUES (1,'999999','5826899294','friend','dynamic',NULL,'from-internal-users','Supervisor <999999>','999999','1','1','__user_id=1;__user_name=999999',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'yes');
 /*!40000 ALTER TABLE `ast_sipfriends` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Temporary table structure for view `ast_sipfriends_gs`
+-- Table structure for table `ast_sipfriends_gs`
 --
 
 DROP TABLE IF EXISTS `ast_sipfriends_gs`;
 /*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
 /*!50001 CREATE TABLE `ast_sipfriends_gs` (
   `_user_id` int(10) unsigned,
   `name` varchar(16),
@@ -5567,70 +5577,35 @@ SET character_set_client = utf8;
   `regcontext` varchar(50),
   `ipaddr` varchar(15),
   `port` varchar(5),
-  `regseconds` bigint(20),
+  `regseconds` int(10) unsigned,
   `username` varchar(25),
   `regserver` varchar(50),
-  `fullcontact` varchar(100),
-  `accountcode` varchar(20),
-  `allowtransfer` varchar(20),
-  `allow` varchar(20),
-  `amaflags` varchar(20),
-  `auth` varchar(10),
-  `autoframing` varchar(10),
-  `callingpres` varchar(20),
-  `cid_number` varchar(40),
-  `defaultuser` varchar(40),
-  `fromdomain` varchar(40),
-  `fromuser` varchar(40),
-  `incominglimit` varchar(10),
-  `insecure` varchar(20),
-  `language` varchar(10),
-  `lastms` int(11),
-  `maxcallbitrate` varchar(15),
-  `md5secret` varchar(40),
-  `mohsuggest` varchar(20),
-  `musicclass` varchar(20),
-  `outboundproxy` varchar(40),
-  `qualify` varchar(15),
-  `regexten` varchar(20),
-  `rtpholdtimeout` varchar(15),
-  `rtpkeepalive` varchar(15),
-  `rtptimeout` varchar(15),
-  `subscribemwi` varchar(10),
-  `usereqphone` varchar(10),
-  `vmexten` varchar(20),
-  `disallow` varchar(20),
-  `useragent` varchar(20)
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
+  `fullcontact` varchar(100)
+) */;
 
 --
 -- Table structure for table `ast_voicemail`
 --
 
 DROP TABLE IF EXISTS `ast_voicemail`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ast_voicemail` (
-  `_uniqueid` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `_user_id` int(10) unsigned DEFAULT NULL,
-  `mailbox` varchar(10) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `context` varchar(50) CHARACTER SET ascii NOT NULL DEFAULT 'default',
-  `password` varchar(10) CHARACTER SET ascii NOT NULL DEFAULT '0000',
-  `email` varchar(50) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `fullname` varchar(50) COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `tz` varchar(25) CHARACTER SET ascii DEFAULT 'germany',
-  `attach` enum('no','yes') CHARACTER SET ascii NOT NULL DEFAULT 'no',
-  `delete` enum('no','yes') CHARACTER SET ascii NOT NULL DEFAULT 'no',
-  `uniqueid` varchar(11) COLLATE latin1_general_ci DEFAULT NULL,
-  PRIMARY KEY (`_uniqueid`),
+  `uniqueid` int(10) unsigned NOT NULL auto_increment,
+  `_user_id` int(10) unsigned default NULL,
+  `mailbox` varchar(10) character set ascii NOT NULL default '',
+  `context` varchar(50) character set ascii NOT NULL default 'default',
+  `password` varchar(10) character set ascii NOT NULL default '0000',
+  `email` varchar(50) character set ascii NOT NULL default '',
+  `fullname` varchar(50) collate latin1_general_ci NOT NULL default '',
+  `tz` varchar(25) character set ascii default 'germany',
+  `attach` enum('no','yes') character set ascii NOT NULL default 'no',
+  `delete` enum('no','yes') character set ascii NOT NULL default 'no',
+  PRIMARY KEY  (`uniqueid`),
   UNIQUE KEY `context_mailbox` (`context`,`mailbox`),
   KEY `fullname` (`fullname`(20)),
   KEY `_user_id` (`_user_id`),
   KEY `mailbox_context` (`mailbox`,`context`(20)),
   CONSTRAINT `ast_voicemail_ibfk_1` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
 -- Dumping data for table `ast_voicemail`
@@ -5638,30 +5613,52 @@ CREATE TABLE `ast_voicemail` (
 
 LOCK TABLES `ast_voicemail` WRITE;
 /*!40000 ALTER TABLE `ast_voicemail` DISABLE KEYS */;
-INSERT INTO `ast_voicemail` VALUES (9,22,'2000','default','123','','Hans Muster','germany','no','no',NULL);
-INSERT INTO `ast_voicemail` VALUES (10,23,'2001','default','123','','Peter Muster','germany','no','no',NULL);
-INSERT INTO `ast_voicemail` VALUES (11,24,'2002','default','123','','Anna Muster','germany','no','no',NULL);
-INSERT INTO `ast_voicemail` VALUES (12,25,'2003','default','123','','Lisa Muster','germany','no','no',NULL);
+INSERT INTO `ast_voicemail` VALUES (1,1,'999999','default','123','','Supervisor','germany','no','no');
 /*!40000 ALTER TABLE `ast_voicemail` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `blacklist`
+--
+
+/*
+DROP TABLE IF EXISTS `blacklist`;
+CREATE TABLE `blacklist` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `group_id` mediumint(8) unsigned default NULL,
+  `type` enum('in','out','both') character set ascii NOT NULL default 'out',
+  `comment` varchar(40) collate utf8_unicode_ci NOT NULL default '',
+  `name` varchar(40) collate utf8_unicode_ci NOT NULL default '',
+  `number` varchar(30) character set ascii NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `group_number` (`group_id`,`number`),
+  CONSTRAINT `blacklist_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+*/
+
+--
+-- Dumping data for table `blacklist`
+--
+
+-- LOCK TABLES `blacklist` WRITE;
+-- /*!40000 ALTER TABLE `blacklist` DISABLE KEYS */;
+-- /*!40000 ALTER TABLE `blacklist` ENABLE KEYS */;
+-- UNLOCK TABLES;
 
 --
 -- Table structure for table `boi_perms`
 --
 
 DROP TABLE IF EXISTS `boi_perms`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `boi_perms` (
   `user_id` int(10) unsigned NOT NULL,
   `host_id` mediumint(8) unsigned NOT NULL,
-  `roles` varchar(8) CHARACTER SET ascii NOT NULL,
-  PRIMARY KEY (`user_id`,`host_id`),
+  `roles` varchar(8) character set ascii NOT NULL,
+  PRIMARY KEY  (`user_id`,`host_id`),
   UNIQUE KEY `host_user` (`host_id`,`user_id`),
   CONSTRAINT `boi_perms_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `boi_perms_ibfk_2` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `boi_perms`
@@ -5677,21 +5674,18 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `call_completion_waiting`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `call_completion_waiting` (
-  `from_ext` varchar(15) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `from_host_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `from_user_id` int(10) unsigned DEFAULT NULL,
-  `to_ext` varchar(15) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `to_host_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `to_user_id` int(10) unsigned DEFAULT NULL,
-  `t_init` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`from_ext`,`to_ext`),
+  `from_ext` varchar(15) character set ascii NOT NULL default '',
+  `from_host_id` mediumint(8) unsigned NOT NULL default '0',
+  `from_user_id` int(10) unsigned default NULL,
+  `to_ext` varchar(15) character set ascii NOT NULL default '',
+  `to_host_id` mediumint(8) unsigned NOT NULL default '0',
+  `to_user_id` int(10) unsigned default NULL,
+  `t_init` int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`from_ext`,`to_ext`),
   UNIQUE KEY `to_from` (`to_ext`,`from_ext`),
   KEY `t_init` (`t_init`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `call_completion_waiting`
@@ -5707,29 +5701,21 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `callblocking`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `callblocking` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `regexp` varchar(40) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `pin` varchar(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `regexp` varchar(40) character set ascii NOT NULL default '',
+  `pin` varchar(10) character set ascii collate ascii_bin NOT NULL default '',
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `user_regex` (`user_id`,`regexp`),
   CONSTRAINT `callblocking_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `callblocking`
 --
 
 LOCK TABLES `callblocking` WRITE;
-/*!40000 ALTER TABLE `callblocking` DISABLE KEYS */;
-INSERT INTO `callblocking` VALUES (1,23,'11.*99','111');
-INSERT INTO `callblocking` VALUES (2,24,'^[0]','222');
-INSERT INTO `callblocking` VALUES (3,24,'^0190','');
-/*!40000 ALTER TABLE `callblocking` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -5737,22 +5723,19 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `callforwards`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `callforwards` (
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `source` enum('internal','external') CHARACTER SET ascii NOT NULL DEFAULT 'internal',
-  `case` enum('always','busy','unavail','offline') CHARACTER SET ascii NOT NULL DEFAULT 'always',
-  `timeout` tinyint(3) unsigned NOT NULL DEFAULT '20',
-  `number_std` varchar(50) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `number_var` varchar(50) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `number_vml` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `vm_rec_id` int(10) unsigned DEFAULT NULL,
-  `active` enum('no','std','var','vml','trl','par') CHARACTER SET ascii NOT NULL DEFAULT 'no',
-  PRIMARY KEY (`user_id`,`source`,`case`),
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `source` enum('internal','external') character set ascii NOT NULL default 'internal',
+  `case` enum('always','busy','unavail','offline') character set ascii NOT NULL default 'always',
+  `timeout` tinyint(3) unsigned NOT NULL default '20',
+  `number_std` varchar(50) character set ascii NOT NULL default '',
+  `number_var` varchar(50) character set ascii NOT NULL default '',
+  `number_vml` varchar(20) character set ascii NOT NULL default '',
+  `vm_rec_id` int(10) unsigned default NULL,
+  `active` enum('no','std','var','vml','ano','trl','par') character set ascii NOT NULL default 'no',
+  PRIMARY KEY  (`user_id`,`source`,`case`),
   CONSTRAINT `callforwards_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `callforwards`
@@ -5768,15 +5751,12 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `callwaiting`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `callwaiting` (
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`user_id`),
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `active` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`user_id`),
   CONSTRAINT `callwaiting_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `callwaiting`
@@ -5793,15 +5773,12 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cf_parallelcall`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cf_parallelcall` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `_user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `number` varchar(20) CHARACTER SET ascii NOT NULL,
-  PRIMARY KEY (`id`)
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_user_id` int(10) unsigned NOT NULL default '0',
+  `number` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cf_parallelcall`
@@ -5817,25 +5794,22 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cf_timerules`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cf_timerules` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `cf_timerules` (
+  `id` int(10) unsigned NOT NULL auto_increment,
   `ord` int(10) unsigned NOT NULL,
   `_user_id` int(10) unsigned NOT NULL,
-  `d_mo` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_tu` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_we` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_th` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_fr` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_sa` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_su` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `h_from` time NOT NULL DEFAULT '00:00:00',
-  `h_to` time NOT NULL DEFAULT '24:00:00',
-  `target` varchar(20) CHARACTER SET ascii NOT NULL,
-  PRIMARY KEY (`id`)
+  `d_mo` tinyint(1) unsigned NOT NULL default '1',
+  `d_tu` tinyint(1) unsigned NOT NULL default '1',
+  `d_we` tinyint(1) unsigned NOT NULL default '1',
+  `d_th` tinyint(1) unsigned NOT NULL default '1',
+  `d_fr` tinyint(1) unsigned NOT NULL default '1',
+  `d_sa` tinyint(1) unsigned NOT NULL default '1',
+  `d_su` tinyint(1) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `target` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cf_timerules`
@@ -5851,16 +5825,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `clir`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `clir` (
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `internal_restrict` enum('no','once','yes') CHARACTER SET ascii NOT NULL DEFAULT 'no',
-  `external_restrict` enum('no','once','yes') CHARACTER SET ascii NOT NULL DEFAULT 'no',
-  PRIMARY KEY (`user_id`),
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `internal_restrict` enum('no','once','yes') character set ascii NOT NULL default 'no',
+  `external_restrict` enum('no','once','yes') character set ascii NOT NULL default 'no',
+  PRIMARY KEY  (`user_id`),
   CONSTRAINT `clir_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `clir`
@@ -5868,12 +5839,7 @@ CREATE TABLE `clir` (
 
 LOCK TABLES `clir` WRITE;
 /*!40000 ALTER TABLE `clir` DISABLE KEYS */;
-INSERT INTO `clir` VALUES (5,'no','no');
-INSERT INTO `clir` VALUES (6,'no','no');
-INSERT INTO `clir` VALUES (7,'no','no');
-INSERT INTO `clir` VALUES (8,'no','no');
-INSERT INTO `clir` VALUES (23,'no','no');
-INSERT INTO `clir` VALUES (24,'no','no');
+INSERT INTO `clir` VALUES (1,'no','no');
 /*!40000 ALTER TABLE `clir` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5882,16 +5848,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `conferences`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `conferences` (
-  `ext` varchar(10) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  `host_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ext`),
+  `ext` varchar(10) character set latin1 collate latin1_general_ci NOT NULL default '',
+  `host_id` mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`ext`),
   KEY `host_ext` (`host_id`,`ext`),
   CONSTRAINT `conferences_ibfk_1` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `conferences`
@@ -5907,24 +5870,25 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `dial_log`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `dial_log` (
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `type` enum('in','out','missed','queue') CHARACTER SET ascii NOT NULL DEFAULT 'out',
-  `timestamp` int(10) unsigned NOT NULL DEFAULT '0',
-  `number` varchar(50) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `remote_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `remote_user_id` int(10) unsigned DEFAULT NULL,
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `type` enum('in','out','missed') character set ascii NOT NULL default 'out',
+  `timestamp` int(10) unsigned NOT NULL default '0',
+  `number` varchar(50) character set ascii NOT NULL default '',
+  `remote_name` varchar(50) collate utf8_unicode_ci NOT NULL default '',
+  `remote_user_id` int(10) unsigned default NULL,
+  `queue_id` int(10) unsigned default NULL,
+  `read` tinyint(1) unsigned NOT NULL default '0',
   KEY `timestamp` (`timestamp`),
   KEY `user_timestamp` (`user_id`,`timestamp`),
   KEY `user_type_number_timestamp` (`user_id`,`type`,`number`(10),`timestamp`),
   KEY `user_type_timestamp` (`user_id`,`type`,`timestamp`),
   KEY `remote_user_id` (`remote_user_id`),
+  KEY `queue_id` (`queue_id`),
   CONSTRAINT `dial_log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `dial_log_ibfk_2` FOREIGN KEY (`remote_user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+  CONSTRAINT `dial_log_ibfk_2` FOREIGN KEY (`remote_user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `dial_log_ibfk_3` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `dial_log`
@@ -5936,43 +5900,17 @@ LOCK TABLES `dial_log` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `dnd`
---
-
-DROP TABLE IF EXISTS `dnd`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `dnd` (
-  `_user_id` int(10) NOT NULL DEFAULT '0',
-  `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
-  PRIMARY KEY (`_user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `dnd`
---
-
-LOCK TABLES `dnd` WRITE;
-/*!40000 ALTER TABLE `dnd` DISABLE KEYS */;
-/*!40000 ALTER TABLE `dnd` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `gate_cids`
 --
 
 DROP TABLE IF EXISTS `gate_cids`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `gate_cids` (
   `grp_id` smallint(5) unsigned NOT NULL,
-  `cid_int` varchar(16) CHARACTER SET ascii NOT NULL,
-  `cid_ext` varchar(30) CHARACTER SET ascii NOT NULL,
-  PRIMARY KEY (`grp_id`,`cid_int`),
+  `cid_int` varchar(16) character set ascii NOT NULL,
+  `cid_ext` varchar(30) character set ascii NOT NULL,
+  PRIMARY KEY  (`grp_id`,`cid_int`),
   CONSTRAINT `gate_cids_ibfk_1` FOREIGN KEY (`grp_id`) REFERENCES `gate_grps` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `gate_cids`
@@ -5988,25 +5926,22 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `gate_grps`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `gate_grps` (
-  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) CHARACTER SET ascii NOT NULL,
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `type` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT 'balance',
-  `allow_in` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `in_dest_search` varchar(50) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `in_dest_replace` varchar(25) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `in_cid_search` varchar(50) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `in_cid_replace` varchar(25) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `out_cid_search` varchar(50) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  `out_cid_replace` varchar(25) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  PRIMARY KEY (`id`),
+  `id` smallint(5) unsigned NOT NULL auto_increment,
+  `name` varchar(20) character set ascii NOT NULL,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `type` varchar(20) character set ascii NOT NULL default 'balance',
+  `allow_in` tinyint(1) unsigned NOT NULL default '1',
+  `in_dest_search` varchar(50) character set ascii collate ascii_bin NOT NULL,
+  `in_dest_replace` varchar(25) character set ascii collate ascii_bin NOT NULL,
+  `in_cid_search` varchar(50) character set ascii collate ascii_bin NOT NULL,
+  `in_cid_replace` varchar(25) character set ascii collate ascii_bin NOT NULL,
+  `out_cid_search` varchar(50) character set ascii collate ascii_bin NOT NULL,
+  `out_cid_replace` varchar(25) character set ascii collate ascii_bin NOT NULL,
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `title` (`title`(8))
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `gate_grps`
@@ -6014,13 +5949,7 @@ CREATE TABLE `gate_grps` (
 
 LOCK TABLES `gate_grps` WRITE;
 /*!40000 ALTER TABLE `gate_grps` DISABLE KEYS */;
-INSERT INTO `gate_grps` VALUES (5,'campus','SIP-ISDN-GWs intern','balance',1,'','','','','','');
-INSERT INTO `gate_grps` VALUES (6,'pstn','ISDN (PRI)','balance',1,'^(?:(?:0049|0)2631)?123(.*)','$1','','','^(.*)','0251702$1');
-INSERT INTO `gate_grps` VALUES (7,'gsm-t-mobile','GSM-GW T-Mobile','balance',0,'','','','','','');
-INSERT INTO `gate_grps` VALUES (8,'gsm-vodafone','GSM-GW Vodafone','balance',0,'','','','','','');
-INSERT INTO `gate_grps` VALUES (9,'sipgate','SIP-GW (sipgate.de)','balance',0,'','','','','','');
-INSERT INTO `gate_grps` VALUES (10,'dusnet','SIP-GW (dus.net)','balance',0,'','','','','','');
-INSERT INTO `gate_grps` VALUES (12,'isdn-bri','ISDN (BRI)','balance',1,'^(?:(?:0049|0)2631)?1234','','','','','');
+INSERT INTO `gate_grps` VALUES (1, 'amt', 'Amt', 'balance', 1, '', '', '', '', '', '');
 /*!40000 ALTER TABLE `gate_grps` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6029,16 +5958,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `gate_params`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `gate_params` (
+  `param_id` int(8) unsigned NOT NULL AUTO_INCREMENT,
   `gate_id` smallint(5) unsigned NOT NULL,
-  `param` varchar(50) CHARACTER SET ascii NOT NULL,
-  `value` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `param` varchar(50) character set ascii,
+  `value` varchar(255) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`param_id`),
   KEY `gate_id_param` (`gate_id`,`param`(20)),
   CONSTRAINT `gate_params_ibfk_1` FOREIGN KEY (`gate_id`) REFERENCES `gates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `gate_params`
@@ -6054,30 +5982,27 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `gates`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `gates` (
-  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `grp_id` smallint(5) unsigned DEFAULT NULL,
-  `type` varchar(10) CHARACTER SET ascii NOT NULL DEFAULT 'sip',
-  `name` varchar(25) CHARACTER SET ascii NOT NULL,
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `allow_out` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `dialstr` varchar(50) CHARACTER SET ascii NOT NULL,
-  `host` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `proxy` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `user` varchar(35) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `pwd` varchar(35) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `register` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `hw_port` tinyint(3) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
+  `id` smallint(5) unsigned NOT NULL auto_increment,
+  `grp_id` smallint(5) unsigned default NULL,
+  `type` varchar(10) character set ascii NOT NULL default 'sip',
+  `name` varchar(25) character set ascii NOT NULL,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `allow_out` tinyint(1) unsigned NOT NULL default '1',
+  `dialstr` varchar(50) character set ascii NOT NULL,
+  `host` varchar(50) collate utf8_unicode_ci default NULL,
+  `proxy` varchar(50) collate utf8_unicode_ci default NULL,
+  `user` varchar(35) collate utf8_unicode_ci default NULL,
+  `pwd` varchar(35) collate utf8_unicode_ci default NULL,
+  `register` tinyint(1) unsigned NOT NULL default '1',
+  `hw_port` tinyint(3) unsigned default NULL,
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `grp_title` (`grp_id`,`title`(10)),
   KEY `grp_allow_out` (`grp_id`,`allow_out`),
   KEY `type` (`type`),
   CONSTRAINT `gates_ibfk_1` FOREIGN KEY (`grp_id`) REFERENCES `gate_grps` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `gates`
@@ -6085,15 +6010,7 @@ CREATE TABLE `gates` (
 
 LOCK TABLES `gates` WRITE;
 /*!40000 ALTER TABLE `gates` DISABLE KEYS */;
-INSERT INTO `gates` VALUES (5,6,'zap','gw_5_prispan1','PRI Span 1',1,'Zap/r1/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,NULL);
-INSERT INTO `gates` VALUES (6,6,'zap','gw_6_prispan2','PRI Span 2',1,'Zap/r2/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,NULL);
-INSERT INTO `gates` VALUES (7,5,'sip','gw_7_sipisdninterna','SIP-ISDN intern A',1,'SIP/{prefix}{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
-INSERT INTO `gates` VALUES (8,5,'sip','gw_8_sipisdninternb','SIP-ISDN intern B',1,'SIP/{prefix}{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
-INSERT INTO `gates` VALUES (9,8,'sip','gw_9_sipgsmvodafone','SIP-GSM Vodafone',1,'SIP/{prefix}{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
-INSERT INTO `gates` VALUES (16,12,'misdn','gw_16_briport1','BRI Port 1',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,1);
-INSERT INTO `gates` VALUES (17,12,'misdn','gw_17_briport2','BRI Port 2',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,2);
-INSERT INTO `gates` VALUES (18,12,'misdn','gw_18_briport3','BRI Port 3',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,3);
-INSERT INTO `gates` VALUES (19,12,'misdn','gw_19_briport4','BRI Port 4',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,4);
+INSERT INTO `gates` VALUES (1, 1, 'sip', 'gw_20_amt', 'Amt', 1, 'SIP/{number:1}@{gateway}', '192.168.1.131', NULL, '', '', 0, NULL);
 /*!40000 ALTER TABLE `gates` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6102,16 +6019,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_connections`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_connections` (
-  `type` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `group` mediumint(8) unsigned NOT NULL,
-  `key` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT 'id',
-  `connection` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`type`,`group`)
+  `type` varchar(20) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,                      /* FIXME: should be group_id */
+  `key` varchar(20) character set ascii NOT NULL default 'id',
+  `connection` varchar(255) collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`type`,`group`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+/* FIXME: group should have a foreign key constraint */
 
 --
 -- Dumping data for table `group_connections`
@@ -6120,9 +6035,8 @@ CREATE TABLE `group_connections` (
 LOCK TABLES `group_connections` WRITE;
 /*!40000 ALTER TABLE `group_connections` DISABLE KEYS */;
 INSERT INTO `group_connections` VALUES ('mysql',2,'id','SELECT `id` FROM `users` WHERE `nobody_index` IS NULL');
-INSERT INTO `group_connections` VALUES ('mysql',3,'id','SELECT `id` FROM `users` WHERE `nobody_index` IS NOT NULL');
-INSERT INTO `group_connections` VALUES ('mysql',4,'id','SELECT `id` FROM `hosts` WHERE `host` != \'\'');
-INSERT INTO `group_connections` VALUES ('mysql',5,'id','SELECT `_id` AS `id` FROM `ast_queues`');
+INSERT INTO `group_connections` VALUES ('mysql',3,'id','SELECT `id` FROM `hosts` WHERE `host` != \'\'');
+INSERT INTO `group_connections` VALUES ('mysql',4,'id','SELECT `_id` AS `id` FROM `ast_queues`');
 /*!40000 ALTER TABLE `group_connections` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6131,14 +6045,12 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_includes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_includes` (
-  `group` mediumint(8) unsigned NOT NULL,
-  `member` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY (`group`,`member`)
+  `group` mediumint(8) unsigned NOT NULL,            /* FIXME: should be group_id */
+  `member` mediumint(8) unsigned NOT NULL,           /* FIXME: should be member_id/member_group_id */
+  PRIMARY KEY  (`group`,`member`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+/* FIXME: group should have a foreign key constraint */
 
 --
 -- Dumping data for table `group_includes`
@@ -6154,14 +6066,12 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_members`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_members` (
-  `group` mediumint(8) unsigned NOT NULL,
-  `member` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY (`group`,`member`)
+  `group` mediumint(8) unsigned NOT NULL,            /* FIXME: should be group_id */
+  `member` mediumint(8) unsigned NOT NULL,           /* FIXME: should be member_id/member_group_id */
+  PRIMARY KEY  (`group`,`member`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+/* FIXME: group should have a foreign key constraint */
 
 --
 -- Dumping data for table `group_members`
@@ -6169,100 +6079,113 @@ CREATE TABLE `group_members` (
 
 LOCK TABLES `group_members` WRITE;
 /*!40000 ALTER TABLE `group_members` DISABLE KEYS */;
-INSERT INTO `group_members` VALUES (6,1000);
-INSERT INTO `group_members` VALUES (6,1001);
-INSERT INTO `group_members` VALUES (6,2000);
-INSERT INTO `group_members` VALUES (6,2001);
-INSERT INTO `group_members` VALUES (6,3000);
-INSERT INTO `group_members` VALUES (6,3001);
-INSERT INTO `group_members` VALUES (6,3002);
-INSERT INTO `group_members` VALUES (6,3003);
-INSERT INTO `group_members` VALUES (6,3004);
-INSERT INTO `group_members` VALUES (6,4000);
-INSERT INTO `group_members` VALUES (6,4001);
-INSERT INTO `group_members` VALUES (6,4002);
-INSERT INTO `group_members` VALUES (6,4003);
-INSERT INTO `group_members` VALUES (6,4004);
-INSERT INTO `group_members` VALUES (6,5000);
-INSERT INTO `group_members` VALUES (6,5001);
-INSERT INTO `group_members` VALUES (6,6000);
-INSERT INTO `group_members` VALUES (6,6001);
-INSERT INTO `group_members` VALUES (6,6002);
-INSERT INTO `group_members` VALUES (6,7000);
-INSERT INTO `group_members` VALUES (6,7001);
-INSERT INTO `group_members` VALUES (6,7002);
-INSERT INTO `group_members` VALUES (6,7003);
-INSERT INTO `group_members` VALUES (6,8000);
-INSERT INTO `group_members` VALUES (6,8001);
-INSERT INTO `group_members` VALUES (6,9000);
-INSERT INTO `group_members` VALUES (6,9001);
-INSERT INTO `group_members` VALUES (6,10000);
-INSERT INTO `group_members` VALUES (6,10001);
-INSERT INTO `group_members` VALUES (6,11000);
-INSERT INTO `group_members` VALUES (6,11001);
-INSERT INTO `group_members` VALUES (6,11002);
-INSERT INTO `group_members` VALUES (6,11003);
-INSERT INTO `group_members` VALUES (6,11004);
-INSERT INTO `group_members` VALUES (6,11005);
-INSERT INTO `group_members` VALUES (6,12000);
-INSERT INTO `group_members` VALUES (6,12001);
-INSERT INTO `group_members` VALUES (6,12002);
-INSERT INTO `group_members` VALUES (6,12003);
-INSERT INTO `group_members` VALUES (6,12004);
-INSERT INTO `group_members` VALUES (6,13000);
-INSERT INTO `group_members` VALUES (6,13001);
-INSERT INTO `group_members` VALUES (6,14000);
-INSERT INTO `group_members` VALUES (6,14001);
-INSERT INTO `group_members` VALUES (6,14002);
-INSERT INTO `group_members` VALUES (6,14003);
-INSERT INTO `group_members` VALUES (6,19000);
-INSERT INTO `group_members` VALUES (6,19001);
-INSERT INTO `group_members` VALUES (7,6003);
-INSERT INTO `group_members` VALUES (7,6004);
-INSERT INTO `group_members` VALUES (7,15000);
-INSERT INTO `group_members` VALUES (7,15001);
-INSERT INTO `group_members` VALUES (7,15002);
-INSERT INTO `group_members` VALUES (7,15003);
-INSERT INTO `group_members` VALUES (7,15004);
-INSERT INTO `group_members` VALUES (7,15005);
-INSERT INTO `group_members` VALUES (7,15006);
-INSERT INTO `group_members` VALUES (7,15007);
-INSERT INTO `group_members` VALUES (7,15008);
-INSERT INTO `group_members` VALUES (7,15009);
-INSERT INTO `group_members` VALUES (7,15010);
-INSERT INTO `group_members` VALUES (7,15011);
-INSERT INTO `group_members` VALUES (7,15012);
-INSERT INTO `group_members` VALUES (7,15013);
-INSERT INTO `group_members` VALUES (7,15014);
-INSERT INTO `group_members` VALUES (7,16000);
-INSERT INTO `group_members` VALUES (7,16001);
-INSERT INTO `group_members` VALUES (7,16002);
-INSERT INTO `group_members` VALUES (7,16003);
-INSERT INTO `group_members` VALUES (7,16004);
-INSERT INTO `group_members` VALUES (7,16005);
-INSERT INTO `group_members` VALUES (7,17000);
-INSERT INTO `group_members` VALUES (7,17001);
-INSERT INTO `group_members` VALUES (7,17002);
-INSERT INTO `group_members` VALUES (7,17003);
-INSERT INTO `group_members` VALUES (7,17004);
-INSERT INTO `group_members` VALUES (7,17005);
-INSERT INTO `group_members` VALUES (7,17006);
-INSERT INTO `group_members` VALUES (7,17007);
-INSERT INTO `group_members` VALUES (7,17008);
-INSERT INTO `group_members` VALUES (7,17009);
-INSERT INTO `group_members` VALUES (7,18000);
-INSERT INTO `group_members` VALUES (7,18001);
-INSERT INTO `group_members` VALUES (7,18002);
-INSERT INTO `group_members` VALUES (7,18003);
-INSERT INTO `group_members` VALUES (7,18004);
-INSERT INTO `group_members` VALUES (7,18005);
-INSERT INTO `group_members` VALUES (7,18006);
-INSERT INTO `group_members` VALUES (7,18007);
-INSERT INTO `group_members` VALUES (7,18008);
-INSERT INTO `group_members` VALUES (7,18012);
-INSERT INTO `group_members` VALUES (7,18013);
-INSERT INTO `group_members` VALUES (7,18014);
-INSERT INTO `group_members` VALUES (7,18015);
+INSERT INTO `group_members` VALUES (5,1000);         
+INSERT INTO `group_members` VALUES (5,1001);         
+INSERT INTO `group_members` VALUES (5,2000);         
+INSERT INTO `group_members` VALUES (5,2001);         
+INSERT INTO `group_members` VALUES (5,3000);         
+INSERT INTO `group_members` VALUES (5,3001);         
+INSERT INTO `group_members` VALUES (5,3002);         
+INSERT INTO `group_members` VALUES (5,3003);         
+INSERT INTO `group_members` VALUES (5,3004);         
+INSERT INTO `group_members` VALUES (5,4000);         
+INSERT INTO `group_members` VALUES (5,4001);         
+INSERT INTO `group_members` VALUES (5,4002);         
+INSERT INTO `group_members` VALUES (5,4003);
+INSERT INTO `group_members` VALUES (5,4004);         
+INSERT INTO `group_members` VALUES (5,4005);         
+INSERT INTO `group_members` VALUES (5,5000);         
+INSERT INTO `group_members` VALUES (5,5001);         
+INSERT INTO `group_members` VALUES (5,6000);         
+INSERT INTO `group_members` VALUES (5,6001);         
+INSERT INTO `group_members` VALUES (5,6002);         
+INSERT INTO `group_members` VALUES (5,7000);         
+INSERT INTO `group_members` VALUES (5,7001);         
+INSERT INTO `group_members` VALUES (5,7002);         
+INSERT INTO `group_members` VALUES (5,7003);         
+INSERT INTO `group_members` VALUES (5,8000);         
+INSERT INTO `group_members` VALUES (5,8001);         
+INSERT INTO `group_members` VALUES (5,9000);         
+INSERT INTO `group_members` VALUES (5,9001);         
+INSERT INTO `group_members` VALUES (5,10000);        
+INSERT INTO `group_members` VALUES (5,10001);        
+INSERT INTO `group_members` VALUES (5,11000);        
+INSERT INTO `group_members` VALUES (5,11001);        
+INSERT INTO `group_members` VALUES (5,11002);        
+INSERT INTO `group_members` VALUES (5,11003);        
+INSERT INTO `group_members` VALUES (5,11004);        
+INSERT INTO `group_members` VALUES (5,11005);        
+INSERT INTO `group_members` VALUES (5,12000);        
+INSERT INTO `group_members` VALUES (5,12001);        
+INSERT INTO `group_members` VALUES (5,12002);        
+INSERT INTO `group_members` VALUES (5,12003);        
+INSERT INTO `group_members` VALUES (5,12004);        
+INSERT INTO `group_members` VALUES (5,13000);        
+INSERT INTO `group_members` VALUES (5,13001);        
+INSERT INTO `group_members` VALUES (5,14000);        
+INSERT INTO `group_members` VALUES (5,14001);        
+INSERT INTO `group_members` VALUES (5,14002);        
+INSERT INTO `group_members` VALUES (5,14003);        
+INSERT INTO `group_members` VALUES (5,19000);        
+INSERT INTO `group_members` VALUES (5,19001);
+INSERT INTO `group_members` VALUES (5,20000);        
+INSERT INTO `group_members` VALUES (5,20001);        
+INSERT INTO `group_members` VALUES (6,6003);
+INSERT INTO `group_members` VALUES (6,6004);
+INSERT INTO `group_members` VALUES (6,6005);         
+INSERT INTO `group_members` VALUES (6,15000);        
+INSERT INTO `group_members` VALUES (6,15001);        
+INSERT INTO `group_members` VALUES (6,15002);        
+INSERT INTO `group_members` VALUES (6,15003);        
+INSERT INTO `group_members` VALUES (6,15004);        
+INSERT INTO `group_members` VALUES (6,15005);        
+INSERT INTO `group_members` VALUES (6,15006);        
+INSERT INTO `group_members` VALUES (6,15007);        
+INSERT INTO `group_members` VALUES (6,15008);        
+INSERT INTO `group_members` VALUES (6,15009);        
+INSERT INTO `group_members` VALUES (6,15010);
+INSERT INTO `group_members` VALUES (6,15011);
+INSERT INTO `group_members` VALUES (6,15012);
+INSERT INTO `group_members` VALUES (6,15013);
+INSERT INTO `group_members` VALUES (6,15014);
+INSERT INTO `group_members` VALUES (6,15015);
+INSERT INTO `group_members` VALUES (6,15016);
+INSERT INTO `group_members` VALUES (6,16000);
+INSERT INTO `group_members` VALUES (6,16001);
+INSERT INTO `group_members` VALUES (6,16002);
+INSERT INTO `group_members` VALUES (6,16003);
+INSERT INTO `group_members` VALUES (6,16004);
+INSERT INTO `group_members` VALUES (6,16005);
+INSERT INTO `group_members` VALUES (6,17000);
+INSERT INTO `group_members` VALUES (6,17001);
+INSERT INTO `group_members` VALUES (6,17002);
+INSERT INTO `group_members` VALUES (6,17003);
+INSERT INTO `group_members` VALUES (6,17004);
+INSERT INTO `group_members` VALUES (6,17005);
+INSERT INTO `group_members` VALUES (6,17006);
+INSERT INTO `group_members` VALUES (6,17007);
+INSERT INTO `group_members` VALUES (6,17008);
+INSERT INTO `group_members` VALUES (6,18000);
+INSERT INTO `group_members` VALUES (6,18001);
+INSERT INTO `group_members` VALUES (6,18002);
+INSERT INTO `group_members` VALUES (6,18003);
+INSERT INTO `group_members` VALUES (6,18004);
+INSERT INTO `group_members` VALUES (6,18005);
+INSERT INTO `group_members` VALUES (6,18006);
+INSERT INTO `group_members` VALUES (6,18007);
+INSERT INTO `group_members` VALUES (6,18008);
+INSERT INTO `group_members` VALUES (6,18009);
+INSERT INTO `group_members` VALUES (6,18010);
+INSERT INTO `group_members` VALUES (6,18011);
+INSERT INTO `group_members` VALUES (6,18012);
+INSERT INTO `group_members` VALUES (6,18013);
+INSERT INTO `group_members` VALUES (6,18014);
+INSERT INTO `group_members` VALUES (6,18015);
+INSERT INTO `group_members` VALUES (7,22000);
+INSERT INTO `group_members` VALUES (7,22001);
+INSERT INTO `group_members` VALUES (8,21000);
+INSERT INTO `group_members` VALUES (8,21001);
+INSERT INTO `group_members` VALUES (1,1);
 /*!40000 ALTER TABLE `group_members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6288,15 +6211,13 @@ SET character_set_client = @saved_cs_client;
 --
 
 DROP TABLE IF EXISTS `group_permissions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_permissions` (
-  `type` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `group` mediumint(8) unsigned NOT NULL,
-  `permit` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`type`,`group`,`permit`)
+  `type` varchar(25) character set ascii NOT NULL default '',
+  `group` mediumint(8) unsigned NOT NULL,                     /* FIXME: should be group_id */
+  `permit` mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`type`,`group`,`permit`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+/* FIXME: group should have a foreign key constraint */
 
 --
 -- Dumping data for table `group_permissions`
@@ -6305,18 +6226,26 @@ CREATE TABLE `group_permissions` (
 LOCK TABLES `group_permissions` WRITE;
 /*!40000 ALTER TABLE `group_permissions` DISABLE KEYS */;
 INSERT INTO `group_permissions` VALUES ('call_stats',2,2);
-INSERT INTO `group_permissions` VALUES ('call_stats',2,5);
-INSERT INTO `group_permissions` VALUES ('display_module_gui',1,7);
-INSERT INTO `group_permissions` VALUES ('display_module_gui',2,6);
-INSERT INTO `group_permissions` VALUES ('forward_queues',2,5);
-INSERT INTO `group_permissions` VALUES ('login_queues',2,5);
-INSERT INTO `group_permissions` VALUES ('override_callforward_call',2,2);
+INSERT INTO `group_permissions` VALUES ('roaming',2,2);
+INSERT INTO `group_permissions` VALUES ('forward',2,2);
+INSERT INTO `group_permissions` VALUES ('forward_vmconfig',2,2);
+INSERT INTO `group_permissions` VALUES ('clir_set',2,2);
+INSERT INTO `group_permissions` VALUES ('clip_set',2,2);
+INSERT INTO `group_permissions` VALUES ('callwaiting_set',2,2);
+INSERT INTO `group_permissions` VALUES ('queue_member',2,2);
+INSERT INTO `group_permissions` VALUES ('agent',2,2);
+INSERT INTO `group_permissions` VALUES ('ringtone_set',2,2);
+INSERT INTO `group_permissions` VALUES ('dnd_set',2,2);
+INSERT INTO `group_permissions` VALUES ('call_stats',2,4);
+INSERT INTO `group_permissions` VALUES ('forward_queues',1,4);
 INSERT INTO `group_permissions` VALUES ('phonebook_user',2,2);
-INSERT INTO `group_permissions` VALUES ('phonebook_user',3,2);
-INSERT INTO `group_permissions` VALUES ('pickup',2,2);
-INSERT INTO `group_permissions` VALUES ('private_call',2,2);
-INSERT INTO `group_permissions` VALUES ('sudo_user',1,2);
 INSERT INTO `group_permissions` VALUES ('wakeup_call',2,2);
+INSERT INTO `group_permissions` VALUES ('room_state',2,2);
+INSERT INTO `group_permissions` VALUES ('sudo_user',1,2);
+INSERT INTO `group_permissions` VALUES ('display_module_gui',1,6);
+INSERT INTO `group_permissions` VALUES ('display_module_gui',1,7);
+INSERT INTO `group_permissions` VALUES ('display_module_gui',1,8);
+INSERT INTO `group_permissions` VALUES ('display_module_gui',2,5);
 /*!40000 ALTER TABLE `group_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6325,19 +6254,16 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `groups`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `groups` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) CHARACTER SET ascii NOT NULL,
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `type` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(20) character set ascii NOT NULL,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL default '',
+  `type` varchar(20) character set ascii NOT NULL default '',
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `title` (`title`(25)),
   KEY `type` (`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `groups`
@@ -6347,11 +6273,12 @@ LOCK TABLES `groups` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
 INSERT INTO `groups` VALUES (1,'admins','Admins','user');
 INSERT INTO `groups` VALUES (2,'users','All Users','user');
-INSERT INTO `groups` VALUES (3,'nobody_users','All Nobody Users','user');
-INSERT INTO `groups` VALUES (4,'hosts','All Hosts','host');
-INSERT INTO `groups` VALUES (5,'queues','All Queues','queue');
-INSERT INTO `groups` VALUES (6,'user_gui','User GUI','module_gui');
-INSERT INTO `groups` VALUES (7,'admin_gui','Admin GUI','module_gui');
+INSERT INTO `groups` VALUES (3,'hosts','All Hosts','host');
+INSERT INTO `groups` VALUES (4,'queues','All Queues','queue');
+INSERT INTO `groups` VALUES (5,'user_gui','User GUI','module_gui');
+INSERT INTO `groups` VALUES (6,'admin_gui','Admin GUI','module_gui');
+INSERT INTO `groups` VALUES (7,'wakeup_call_gui','Wakeup call extension','module_gui');
+INSERT INTO `groups` VALUES (8,'room state gui','Room state extension','module_gui');
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6360,17 +6287,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `host_params`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `host_params` (
   `host_id` mediumint(8) unsigned NOT NULL,
-  `param` varchar(25) CHARACTER SET ascii NOT NULL,
-  `value` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`host_id`,`param`),
+  `param` varchar(25) character set ascii NOT NULL,
+  `value` varchar(100) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`host_id`,`param`),
   KEY `param_value` (`param`,`value`(20)),
   CONSTRAINT `host_params_ibfk_1` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `host_params`
@@ -6386,23 +6310,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `hosts`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `hosts` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `host` varchar(15) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `comment` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `is_foreign` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `group_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `host` varchar(15) character set ascii NOT NULL default '',
+  `comment` varchar(50) collate utf8_unicode_ci NOT NULL default '',
+  `is_foreign` tinyint(1) unsigned NOT NULL default '0',
+  `group_id` mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `host` (`host`),
   KEY `group_id` (`group_id`),
   KEY `is_foreign_id` (`is_foreign`,`id`),
   KEY `is_foreign_host` (`is_foreign`,`host`),
   KEY `foreign_comment` (`is_foreign`,`comment`(20)),
   KEY `comment` (`comment`(20))
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `hosts`
@@ -6415,21 +6336,56 @@ INSERT INTO `hosts` VALUES (1,'192.168.1.130','Gemeinschaft 1',0,0);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `huntgroups`
+--
+
+CREATE TABLE IF NOT EXISTS `huntgroups` (
+  `number` int(10) unsigned NOT NULL default '0',
+  `strategy` enum('linear','parallel') collate utf8_unicode_ci NOT NULL,
+  `sequence_no` int(10) unsigned NOT NULL default '1',
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `timeout` int(10) unsigned NOT NULL default '0',
+  CONSTRAINT `huntgroups_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Table structure for table `huntgroups_busy`
+--
+
+CREATE TABLE IF NOT EXISTS `huntgroups_busy` (
+  `huntgroup` int(10) unsigned NOT NULL default '0',
+  `busy` tinyint(1) unsigned default NULL,
+  PRIMARY KEY  (`huntgroup`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+      
+--
+-- Table structure for table `huntgroups_callforwards`
+--
+
+CREATE TABLE IF NOT EXISTS `huntgroups_callforwards` (
+  `huntgroup` int(10) unsigned NOT NULL default '0',
+  `source` enum('internal','external') character set ascii NOT NULL default 'internal',
+  `case` enum('always','full','timeout','empty') character set ascii NOT NULL default 'always',
+  `timeout` tinyint(3) unsigned NOT NULL default '20',
+  `number_std` varchar(50) character set ascii NOT NULL default '',
+  `number_var` varchar(50) character set ascii NOT NULL default '',
+  `active` enum('no','std','var') character set ascii NOT NULL default 'no',
+  PRIMARY KEY  (`huntgroup`,`source`,`case`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
 -- Table structure for table `instant_messaging`
 --
 
 DROP TABLE IF EXISTS `instant_messaging`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `instant_messaging` (
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `type` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `contact` varchar(80) CHARACTER SET ascii NOT NULL DEFAULT '',
-  PRIMARY KEY (`user_id`,`type`),
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `type` varchar(25) character set ascii NOT NULL default '',
+  `contact` varchar(80) character set ascii NOT NULL default '',
+  PRIMARY KEY  (`user_id`,`type`),
   KEY `type` (`type`),
   CONSTRAINT `instant_messaging_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `instant_messaging`
@@ -6437,7 +6393,6 @@ CREATE TABLE `instant_messaging` (
 
 LOCK TABLES `instant_messaging` WRITE;
 /*!40000 ALTER TABLE `instant_messaging` DISABLE KEYS */;
-INSERT INTO `instant_messaging` VALUES (22,'jabber','test@example.com');
 /*!40000 ALTER TABLE `instant_messaging` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6446,27 +6401,24 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `itemized_bill`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `itemized_bill` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `start` datetime NOT NULL,
-  `dur` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `dur` mediumint(8) unsigned NOT NULL default '0',
   `is_out` tinyint(1) unsigned NOT NULL,
-  `ext` varchar(10) CHARACTER SET ascii NOT NULL,
-  `remote` varchar(25) CHARACTER SET ascii NOT NULL,
-  `tariff_zone` char(4) CHARACTER SET ascii NOT NULL,
+  `ext` varchar(10) character set ascii NOT NULL,
+  `remote` varchar(25) character set ascii NOT NULL,
+  `tariff_zone` char(4) character set ascii NOT NULL,
   `units` mediumint(8) unsigned NOT NULL,
-  `charge` float NOT NULL DEFAULT '0',
-  `cur` char(3) CHARACTER SET ascii NOT NULL,
+  `charge` float NOT NULL default '0',
+  `cur` char(3) character set ascii NOT NULL,
   `vat` float NOT NULL,
-  `cdr_id` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
+  `cdr_id` int(10) unsigned default NULL,
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `start_ext_remote_dur` (`start`,`ext`,`remote`,`dur`),
   KEY `ext` (`ext`),
   KEY `cdr_id` (`cdr_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `itemized_bill`
@@ -6478,191 +6430,54 @@ LOCK TABLES `itemized_bill` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `ivrs`
+-- Tabellenstruktur fuer Tabelle `ivrs`
 --
 
 DROP TABLE IF EXISTS `ivrs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ivrs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `host_id` mediumint(8) unsigned NOT NULL DEFAULT '1',
-  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `announcement` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `timeout` tinyint(3) NOT NULL,
-  `retry` tinyint(3) NOT NULL,
-  `key_0_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_0_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_1_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_1_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_2_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_2_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_3_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_3_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_4_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_4_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_5_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_5_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_6_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_6_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_7_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_7_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_8_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_8_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_9_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_9_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_star_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_star_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_pound_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `key_pound_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `t_action_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `t_action_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `i_action_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `i_action_value` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ivrs`
---
-
-LOCK TABLES `ivrs` WRITE;
-/*!40000 ALTER TABLE `ivrs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ivrs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `monitor`
---
-
-DROP TABLE IF EXISTS `monitor`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `monitor` (
-  `user_id` int(10) unsigned NOT NULL,
-  `type` tinyint(2) unsigned NOT NULL DEFAULT '1',
-  `display_x` smallint(4) unsigned NOT NULL DEFAULT '0',
-  `display_y` smallint(4) unsigned NOT NULL DEFAULT '0',
-  `columns` tinyint(2) unsigned NOT NULL DEFAULT '2',
-  `update` smallint(4) unsigned NOT NULL DEFAULT '2',
-  `reload` smallint(4) unsigned NOT NULL DEFAULT '120',
-  PRIMARY KEY (`user_id`,`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `monitor`
---
-
-LOCK TABLES `monitor` WRITE;
-/*!40000 ALTER TABLE `monitor` DISABLE KEYS */;
-/*!40000 ALTER TABLE `monitor` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `monitor_colors`
---
-
-DROP TABLE IF EXISTS `monitor_colors`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `monitor_colors` (
-  `user_id` int(10) unsigned NOT NULL,
-  `type` tinyint(2) unsigned NOT NULL DEFAULT '1',
-  `status` tinyint(3) unsigned NOT NULL DEFAULT '2',
-  `color` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '#fff',
-  PRIMARY KEY (`user_id`,`type`,`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `monitor_colors`
---
-
-LOCK TABLES `monitor_colors` WRITE;
-/*!40000 ALTER TABLE `monitor_colors` DISABLE KEYS */;
-/*!40000 ALTER TABLE `monitor_colors` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `monitor_groups`
---
-
-DROP TABLE IF EXISTS `monitor_groups`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `monitor_groups` (
-  `user_id` int(10) unsigned NOT NULL,
-  `group_id` int(10) unsigned NOT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `display_columns` tinyint(2) unsigned NOT NULL DEFAULT '2',
-  `display_width` smallint(4) unsigned NOT NULL DEFAULT '500',
-  `display_height` smallint(4) unsigned NOT NULL DEFAULT '150',
-  `display_extension` smallint(5) unsigned NOT NULL DEFAULT '2',
-  `display_name` smallint(5) unsigned NOT NULL DEFAULT '4',
-  `display_forw` smallint(5) unsigned NOT NULL DEFAULT '3',
-  `display_comment` smallint(5) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`user_id`,`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `monitor_groups`
---
-
-LOCK TABLES `monitor_groups` WRITE;
-/*!40000 ALTER TABLE `monitor_groups` DISABLE KEYS */;
-/*!40000 ALTER TABLE `monitor_groups` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `monitor_queues`
---
-
-DROP TABLE IF EXISTS `monitor_queues`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `monitor_queues` (
-  `user_id` int(10) unsigned NOT NULL,
-  `queue_id` int(10) unsigned NOT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `display_columns` tinyint(2) unsigned NOT NULL DEFAULT '2',
-  `display_width` smallint(4) unsigned NOT NULL DEFAULT '500',
-  `display_height` smallint(4) unsigned NOT NULL DEFAULT '150',
-  `display_calls` smallint(5) unsigned NOT NULL DEFAULT '15',
-  `display_answered` smallint(5) unsigned NOT NULL DEFAULT '15',
-  `display_abandoned` smallint(5) unsigned NOT NULL DEFAULT '15',
-  `display_timeout` smallint(5) unsigned NOT NULL DEFAULT '15',
-  `display_wait_max` smallint(5) unsigned NOT NULL DEFAULT '15',
-  `display_wait_min` smallint(5) unsigned NOT NULL DEFAULT '15',
-  `display_wait_avg` smallint(5) unsigned NOT NULL DEFAULT '15',
-  `display_call_max` smallint(5) unsigned NOT NULL DEFAULT '15',
-  `display_call_min` smallint(5) unsigned NOT NULL DEFAULT '15',
-  `display_call_avg` smallint(5) unsigned NOT NULL DEFAULT '15',
-  `display_name` smallint(5) unsigned NOT NULL DEFAULT '4',
-  `display_extension` smallint(5) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`user_id`,`queue_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `monitor_queues`
---
-
-LOCK TABLES `monitor_queues` WRITE;
-/*!40000 ALTER TABLE `monitor_queues` DISABLE KEYS */;
-/*!40000 ALTER TABLE `monitor_queues` ENABLE KEYS */;
-UNLOCK TABLES;
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `host_id` mediumint(8) unsigned NOT NULL default '1',
+  `title` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `announcement` varchar(255) collate utf8_unicode_ci NOT NULL,
+  `timeout` tinyint(3) collate utf8_unicode_ci NOT NULL,
+  `retry` tinyint (3) collate utf8_unicode_ci NOT NULL,
+  `key_0_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_0_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_1_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_1_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_2_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_2_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_3_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_3_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_4_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_4_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_5_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_5_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_6_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_6_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_7_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_7_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_8_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_8_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_9_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_9_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_star_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_star_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_pound_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `key_pound_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `t_action_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `t_action_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `i_action_type` varchar(20) collate utf8_unicode_ci NOT NULL,
+  `i_action_value` varchar(20) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
 
 --
 -- Table structure for table `pb_ldap`
 --
 
 DROP TABLE IF EXISTS `pb_ldap`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pb_ldap` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT '',
@@ -6677,28 +6492,33 @@ CREATE TABLE `pb_ldap` (
   KEY `firstname_lastname` (`firstname`(15),`lastname`(10),`number`(7)),
   KEY `number` (`number`,`lastname`(15),`firstname`(10))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pb_ldap`
+--
+
+LOCK TABLES `pb_ldap` WRITE;
+/*!40000 ALTER TABLE `pb_ldap` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pb_ldap` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `pb_prv`
 --
 
 DROP TABLE IF EXISTS `pb_prv`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pb_prv` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `firstname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `lastname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `number` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `firstname` varchar(40) collate utf8_unicode_ci NOT NULL default '',
+  `lastname` varchar(40) collate utf8_unicode_ci NOT NULL default '',
+  `number` varchar(25) character set ascii NOT NULL default '',
+  PRIMARY KEY  (`id`),
   KEY `uid_lastname_firstname` (`user_id`,`lastname`(15),`firstname`(10)),
   KEY `uid_firstname_lastname` (`user_id`,`firstname`(10),`lastname`(10)),
   KEY `uid_number` (`user_id`,`number`(10)),
   CONSTRAINT `pb_prv_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `pb_prv`
@@ -6710,50 +6530,17 @@ LOCK TABLES `pb_prv` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `penalties`
---
-
-DROP TABLE IF EXISTS `penalties`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `penalties` (
-  `_queue_id` int(10) unsigned NOT NULL,
-  `_user_id` int(10) unsigned NOT NULL,
-  `_host_id` mediumint(8) unsigned NOT NULL,
-  `penalty` int(1) NOT NULL,
-  PRIMARY KEY (`_queue_id`,`_user_id`,`_host_id`),
-  KEY `penaltys_ibfk_2` (`_user_id`),
-  KEY `penaltys_ibfk_3` (`_host_id`),
-  CONSTRAINT `penalties_ibfk_1` FOREIGN KEY (`_queue_id`) REFERENCES `ast_queues` (`_id`) ON DELETE CASCADE,
-  CONSTRAINT `penalties_ibfk_2` FOREIGN KEY (`_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `penalties_ibfk_3` FOREIGN KEY (`_host_id`) REFERENCES `hosts` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `penalties`
---
-
-LOCK TABLES `penalties` WRITE;
-/*!40000 ALTER TABLE `penalties` DISABLE KEYS */;
-/*!40000 ALTER TABLE `penalties` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `phone_msgs`
 --
 
 DROP TABLE IF EXISTS `phone_msgs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `phone_msgs` (
   `user_id` int(10) unsigned NOT NULL,
-  `text` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `text` varchar(250) collate utf8_unicode_ci NOT NULL,
   `modified` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`user_id`),
+  PRIMARY KEY  (`user_id`),
   KEY `modified` (`modified`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `phone_msgs`
@@ -6769,41 +6556,43 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `phones`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `phones` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` varchar(30) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `mac_addr` varchar(14) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `user_id` int(10) unsigned DEFAULT NULL,
-  `nobody_index` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `added` int(10) unsigned NOT NULL DEFAULT '0',
-  `firmware_cur` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `fw_manual_update` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `expansion_modules` varchar(50) CHARACTER SET ascii DEFAULT NULL,
-  PRIMARY KEY (`id`),
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `type` varchar(30) character set ascii NOT NULL default '',
+  `mac_addr` varchar(14) character set ascii NOT NULL default '',
+  `user_id` int(10) unsigned default NULL,
+  `nobody_index` mediumint(8) unsigned NOT NULL default '0',
+  `added` int(10) unsigned NOT NULL default '0',
+  `firmware_cur` varchar(25) collate ascii_general_ci NOT NULL default '',
+  `fw_manual_update` tinyint(1) unsigned NOT NULL default '0',
+  `expansion_modules` varchar(50) character set ascii default NULL,
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `mac_addr` (`mac_addr`),
   KEY `user_id` (`user_id`),
   KEY `added` (`added`),
   KEY `type` (`type`),
   KEY `nobody_index` (`nobody_index`),
   CONSTRAINT `phones_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+--
+-- Dumping data for table `phones`
+--
+
+LOCK TABLES `phones` WRITE;
+/*!40000 ALTER TABLE `phones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `phones` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `pickupgroups`
 --
 
 DROP TABLE IF EXISTS `pickupgroups`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pickupgroups` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `pickupgroups`
@@ -6820,17 +6609,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `pickupgroups_users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `pickupgroups_users` (
-  `group_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `group_id` int(10) unsigned NOT NULL default '0',
+  `user_id` int(10) unsigned NOT NULL default '0',
   KEY `group_id` (`group_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `pickupgroups_users_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `pickupgroups` (`id`),
   CONSTRAINT `pickupgroups_users_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `pickupgroups_users`
@@ -6838,9 +6624,7 @@ CREATE TABLE `pickupgroups_users` (
 
 LOCK TABLES `pickupgroups_users` WRITE;
 /*!40000 ALTER TABLE `pickupgroups_users` DISABLE KEYS */;
-INSERT INTO `pickupgroups_users` VALUES (1,24);
-INSERT INTO `pickupgroups_users` VALUES (1,23);
-INSERT INTO `pickupgroups_users` VALUES (1,22);
+INSERT INTO `pickupgroups_users` VALUES (1,1);
 /*!40000 ALTER TABLE `pickupgroups_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6849,29 +6633,26 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `prov_jobs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `prov_jobs` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `inserted` int(10) unsigned NOT NULL DEFAULT '0',
-  `running` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `trigger` enum('client','server') CHARACTER SET ascii NOT NULL DEFAULT 'client',
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `inserted` int(10) unsigned NOT NULL default '0',
+  `running` tinyint(1) unsigned NOT NULL default '0',
+  `trigger` enum('client','server') character set ascii NOT NULL default 'client',
   `phone_id` int(10) unsigned NOT NULL,
-  `type` varchar(10) CHARACTER SET ascii NOT NULL DEFAULT 'settings',
-  `immediate` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `minute` varchar(20) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '*',
-  `hour` varchar(20) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '*',
-  `day` varchar(20) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '*',
-  `month` varchar(20) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '*',
-  `dow` varchar(20) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '*',
-  `data` varchar(100) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  PRIMARY KEY (`id`),
+  `type` varchar(10) character set ascii NOT NULL default 'settings',
+  `immediate` tinyint(1) unsigned NOT NULL default '0',
+  `minute` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `hour` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `day` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `month` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `dow` varchar(20) character set ascii collate ascii_bin NOT NULL default '*',
+  `data` varchar(100) character set ascii collate ascii_bin NOT NULL,
+  PRIMARY KEY  (`id`),
   KEY `phone_id` (`phone_id`),
   KEY `immediate` (`immediate`),
   KEY `inserted` (`inserted`),
   KEY `type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `prov_jobs`
@@ -6887,17 +6668,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `prov_param_profiles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `prov_param_profiles` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `is_group_profile` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `is_group_profile` tinyint(1) unsigned NOT NULL default '1',
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`),
   KEY `is_group_profile_title` (`is_group_profile`,`title`(45)),
   KEY `title` (`title`(45))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `prov_param_profiles`
@@ -6913,19 +6691,16 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `prov_params`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `prov_params` (
   `profile_id` int(10) unsigned NOT NULL,
-  `phone_type` varchar(20) CHARACTER SET ascii NOT NULL,
-  `param` varchar(50) CHARACTER SET ascii NOT NULL,
-  `index` smallint(5) NOT NULL DEFAULT '-1',
-  `value` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`profile_id`,`phone_type`,`param`,`index`),
+  `phone_type` varchar(20) character set ascii NOT NULL,
+  `param` varchar(50) character set ascii NOT NULL,
+  `index` smallint(5) NOT NULL default '-1',
+  `value` varchar(100) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`profile_id`,`phone_type`,`param`,`index`),
   KEY `phone_type_param_index` (`phone_type`,`param`,`index`),
   CONSTRAINT `prov_params_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `prov_param_profiles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `prov_params`
@@ -6941,22 +6716,19 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `queue_callforwards`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `queue_callforwards` (
-  `queue_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `source` enum('internal','external') CHARACTER SET ascii NOT NULL DEFAULT 'internal',
-  `case` enum('always','full','timeout','empty') CHARACTER SET ascii NOT NULL DEFAULT 'always',
-  `timeout` tinyint(3) unsigned NOT NULL DEFAULT '20',
-  `number_std` varchar(50) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `number_var` varchar(50) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `number_vml` varchar(20) CHARACTER SET ascii NOT NULL,
-  `vm_rec_id` int(10) unsigned DEFAULT NULL,
-  `active` enum('no','std','var','vml','trl','par') CHARACTER SET ascii NOT NULL DEFAULT 'no',
-  PRIMARY KEY (`queue_id`,`source`,`case`),
+  `queue_id` int(10) unsigned NOT NULL default '0',
+  `source` enum('internal','external') character set ascii NOT NULL default 'internal',
+  `case` enum('always','full','timeout','empty') character set ascii NOT NULL default 'always',
+  `timeout` tinyint(3) unsigned NOT NULL default '20',
+  `number_std` varchar(50) character set ascii NOT NULL default '',
+  `number_var` varchar(50) character set ascii NOT NULL default '',
+  `number_vml` varchar(50) character set ascii NOT NULL default '',
+  `vm_rec_id` int(10) unsigned default NULL,
+  `active` enum('no','std','var','vml','trl','par') character set ascii NOT NULL default 'no',
+  PRIMARY KEY  (`queue_id`,`source`,`case`),
   CONSTRAINT `queue_callforwards_ibfk_1` FOREIGN KEY (`queue_id`) REFERENCES `ast_queues` (`_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `queue_callforwards`
@@ -6964,8 +6736,6 @@ CREATE TABLE `queue_callforwards` (
 
 LOCK TABLES `queue_callforwards` WRITE;
 /*!40000 ALTER TABLE `queue_callforwards` DISABLE KEYS */;
-INSERT INTO `queue_callforwards` VALUES (1,'external','always',20,'2001','','std',0,'');
-INSERT INTO `queue_callforwards` VALUES (1,'external','full',0,'','123','var',0,'');
 /*!40000 ALTER TABLE `queue_callforwards` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6974,15 +6744,12 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `queue_cf_parallelcall`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `queue_cf_parallelcall` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `_queue_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `number` varchar(20) CHARACTER SET ascii NOT NULL,
-  PRIMARY KEY (`id`)
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_queue_id` int(10) unsigned NOT NULL default '0',
+  `number` varchar(20) character set ascii NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `queue_cf_parallelcall`
@@ -6998,25 +6765,22 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `queue_cf_timerules`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `queue_cf_timerules` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `_queue_id` int(10) unsigned NOT NULL,
   `ord` int(10) unsigned NOT NULL,
-  `d_mo` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_tu` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_we` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_th` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_fr` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_sa` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_su` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `h_from` time NOT NULL DEFAULT '00:00:00',
-  `h_to` time NOT NULL DEFAULT '24:00:00',
-  `target` varchar(20) CHARACTER SET ascii NOT NULL,
+  `d_mo` tinyint(1) unsigned NOT NULL default '1',
+  `d_tu` tinyint(1) unsigned NOT NULL default '1',
+  `d_we` tinyint(1) unsigned NOT NULL default '1',
+  `d_th` tinyint(1) unsigned NOT NULL default '1',
+  `d_fr` tinyint(1) unsigned NOT NULL default '1',
+  `d_sa` tinyint(1) unsigned NOT NULL default '1',
+  `d_su` tinyint(1) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `target` varchar(20) character set ascii NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `queue_cf_timerules`
@@ -7032,22 +6796,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `queue_log`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `queue_log` (
-  `queue_id` int(10) unsigned DEFAULT NULL,
-  `timestamp` int(10) unsigned NOT NULL DEFAULT '0',
-  `event` varchar(15) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `reason` varchar(10) CHARACTER SET ascii DEFAULT NULL,
-  `ast_call_id` varchar(32) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
-  `user_id` int(10) unsigned DEFAULT NULL,
-  `caller` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `pos` mediumint(8) unsigned DEFAULT NULL,
-  `origpos` mediumint(8) unsigned DEFAULT NULL,
-  `waittime` mediumint(8) unsigned DEFAULT NULL,
-  `logindur` int(10) unsigned DEFAULT NULL,
-  `calldur` mediumint(8) unsigned DEFAULT NULL,
-  `info` varchar(50) CHARACTER SET ascii DEFAULT NULL,
+  `queue_id` int(10) unsigned default NULL,
+  `timestamp` int(10) unsigned NOT NULL default '0',
+  `event` varchar(15) character set ascii NOT NULL default '',
+  `reason` varchar(10) character set ascii default NULL,
+  `ast_call_id` varchar(32) character set ascii collate ascii_bin default NULL,
+  `user_id` int(10) unsigned default NULL,
+  `caller` varchar(50) collate utf8_unicode_ci default NULL,
+  `pos` mediumint(8) unsigned default NULL,
+  `origpos` mediumint(8) unsigned default NULL,
+  `waittime` mediumint(8) unsigned default NULL,
+  `logindur` int(10) unsigned default NULL,
+  `calldur` mediumint(8) unsigned default NULL,
+  `info` varchar(50) character set ascii default NULL,
   KEY `queue_timestamp` (`queue_id`,`timestamp`),
   KEY `queue_event_timestamp` (`queue_id`,`event`,`timestamp`),
   KEY `queue_event_reason_timestamp` (`queue_id`,`event`,`reason`,`timestamp`),
@@ -7055,7 +6817,6 @@ CREATE TABLE `queue_log` (
   KEY `ast_call_id` (`ast_call_id`(25)),
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `queue_log`
@@ -7063,15 +6824,6 @@ CREATE TABLE `queue_log` (
 
 LOCK TABLES `queue_log` WRITE;
 /*!40000 ALTER TABLE `queue_log` DISABLE KEYS */;
-INSERT INTO `queue_log` VALUES (NULL,1270972754,'_CONFIGRELOAD',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (1,1270989609,'REMOVEMEMBER',NULL,'REALTIME',24,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (1,1270989609,'REMOVEMEMBER',NULL,'REALTIME',23,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (NULL,1271113817,'_QUEUESTART',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (NULL,1271114027,'_QUEUESTART',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (NULL,1271114053,'_CONFIGRELOAD',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (NULL,1271114154,'_QUEUESTART',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (NULL,1271114173,'_CONFIGRELOAD',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `queue_log` VALUES (NULL,1271114426,'_QUEUESTART',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `queue_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7080,16 +6832,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `queue_vm_rec_messages`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `queue_vm_rec_messages` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `_queue_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `vm_rec_file` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `vm_comment` varchar(180) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_queue_id` int(10) unsigned NOT NULL default '0',
+  `vm_rec_file` varchar(80) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `vm_comment` varchar(180) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `queue_vm_rec_messages`
@@ -7105,17 +6854,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ringtones`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ringtones` (
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `src` enum('internal','external') COLLATE latin1_general_ci NOT NULL DEFAULT 'internal',
-  `bellcore` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `file` varchar(40) COLLATE latin1_general_ci DEFAULT NULL,
-  PRIMARY KEY (`user_id`,`src`),
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `src` enum('internal','external') collate latin1_general_ci NOT NULL default 'internal',
+  `bellcore` tinyint(3) unsigned NOT NULL default '1',
+  `file` varchar(40) collate latin1_general_ci default NULL,
+  PRIMARY KEY  (`user_id`,`src`),
   CONSTRAINT `ringtones_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ringtones`
@@ -7131,29 +6877,27 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `routes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `routes` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `active` tinyint(1) unsigned NOT NULL default '1',
   `ord` int(10) unsigned NOT NULL,
-  `pattern` varchar(30) CHARACTER SET ascii NOT NULL,
-  `d_mo` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_tu` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_we` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_th` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_fr` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_sa` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `d_su` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `h_from` time NOT NULL DEFAULT '00:00:00',
-  `h_to` time NOT NULL DEFAULT '24:00:00',
-  `user_grp_id` mediumint(8) unsigned DEFAULT NULL,
-  `gw_grp_id_1` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `gw_grp_id_2` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `gw_grp_id_3` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `lcrprfx` varchar(6) CHARACTER SET ascii NOT NULL,
-  `descr` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
+  `pattern` varchar(30) character set ascii NOT NULL,
+  `d_mo` tinyint(1) unsigned NOT NULL default '1',
+  `d_tu` tinyint(1) unsigned NOT NULL default '1',
+  `d_we` tinyint(1) unsigned NOT NULL default '1',
+  `d_th` tinyint(1) unsigned NOT NULL default '1',
+  `d_fr` tinyint(1) unsigned NOT NULL default '1',
+  `d_sa` tinyint(1) unsigned NOT NULL default '1',
+  `d_su` tinyint(1) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `user_grp_id` mediumint(8) unsigned default NULL,
+  `gw_grp_id_1` smallint(5) unsigned NOT NULL default '0',
+  `gw_grp_id_2` smallint(5) unsigned NOT NULL default '0',
+  `gw_grp_id_3` smallint(5) unsigned NOT NULL default '0',
+  `lcrprfx` varchar(6) character set ascii NOT NULL,
+  `descr` varchar(150) collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`),
   KEY `ord` (`ord`),
   KEY `active_mo` (`active`,`d_mo`,`ord`),
   KEY `active_tu` (`active`,`d_tu`,`ord`),
@@ -7163,9 +6907,8 @@ CREATE TABLE `routes` (
   KEY `active_sa` (`active`,`d_sa`,`ord`),
   KEY `active_su` (`active`,`d_su`,`ord`),
   KEY `user_grp_id` (`user_grp_id`),
-  CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`user_grp_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `routes_ibfk_1` FOREIGN KEY (`user_grp_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE  /* FIXME: foreign key user_grp_id should be named group_id */
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `routes`
@@ -7173,41 +6916,39 @@ CREATE TABLE `routes` (
 
 LOCK TABLES `routes` WRITE;
 /*!40000 ALTER TABLE `routes` DISABLE KEYS */;
-INSERT INTO `routes` VALUES (2,1,3,'^11[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'1','Notrufnummern etc.');
-INSERT INTO `routes` VALUES (3,1,4,'^19222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'1','Notruf Rettungsdienst');
-INSERT INTO `routes` VALUES (5,1,3,'^011[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'','Notrufnummern etc.');
-INSERT INTO `routes` VALUES (6,1,4,'^019222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,6,7,9,'','Notruf Rettungsdienst');
-INSERT INTO `routes` VALUES (7,0,14,'^00900',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,0,0,'','Mehrwertnummern');
-INSERT INTO `routes` VALUES (8,0,8,'^0118',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,0,0,'','Auskünfte (u.U. teuer, können vermitteln)');
-INSERT INTO `routes` VALUES (9,0,10,'^009009',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,0,0,0,'','Mehrwertnummern (Dialer)');
-INSERT INTO `routes` VALUES (10,0,12,'^009005',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,0,0,0,'','Mehrwertnummern (Erwachsenenunterhaltung)');
-INSERT INTO `routes` VALUES (11,0,16,'^00902',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,0,0,0,'','Televoting (14 ct/Anruf)');
-INSERT INTO `routes` VALUES (12,0,18,'^0019[1-4]',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,0,0,0,'','Internet-Zugänge');
-INSERT INTO `routes` VALUES (13,0,20,'^0070[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,0,0,'','private Vanity-Nummern');
-INSERT INTO `routes` VALUES (14,0,22,'^0080[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,0,0,'','Mehrwertnummern (kostenlos)');
-INSERT INTO `routes` VALUES (15,0,24,'^001805',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,0,0,0,'','Mehrwertnummern (Hotlines/Erwachsenenunterhaltung)');
-INSERT INTO `routes` VALUES (16,0,26,'^001802001033',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,0,0,0,'','Handvermittlung ins Ausland (teuer)');
-INSERT INTO `routes` VALUES (17,0,28,'^00180',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,0,0,'','Mehrwertnummern');
-INSERT INTO `routes` VALUES (18,0,30,'^00137',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,0,0,0,'','Televoting (25-100 ct/Anruf)');
-INSERT INTO `routes` VALUES (19,0,32,'^0012[0-9]',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,0,0,0,'','Innovative Dienste (teuer)');
-INSERT INTO `routes` VALUES (20,0,34,'^0032',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,0,0,'','ortsunabhängig, unklare Tarifierung, GSM vermeiden');
-INSERT INTO `routes` VALUES (21,0,36,'^00151',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,7,8,6,'','T-Mobile D1');
-INSERT INTO `routes` VALUES (22,0,38,'^0016[01489]',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,7,8,6,'','T-Mobile D1');
-INSERT INTO `routes` VALUES (23,0,40,'^0017[015]',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,7,8,6,'','T-Mobile D1');
-INSERT INTO `routes` VALUES (24,0,42,'^00152',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,8,7,6,'','Vodafone D2');
-INSERT INTO `routes` VALUES (25,0,44,'^00162',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,8,7,6,'','Vodafone D2');
-INSERT INTO `routes` VALUES (26,0,46,'^0017[234]',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,8,7,6,'','Vodafone D2');
-INSERT INTO `routes` VALUES (27,0,48,'^0015[57]',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,8,7,6,'','E-Plus');
-INSERT INTO `routes` VALUES (28,0,50,'^00163',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,8,7,6,'','E-Plus');
-INSERT INTO `routes` VALUES (29,0,52,'^0017[78]',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,8,7,6,'','E-Plus');
-INSERT INTO `routes` VALUES (30,0,54,'^00156',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,7,8,6,'','MobilCom');
-INSERT INTO `routes` VALUES (31,0,56,'^00159',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,8,7,6,'','O2');
-INSERT INTO `routes` VALUES (32,0,58,'^0017[69]',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,8,7,6,'','O2');
-INSERT INTO `routes` VALUES (33,0,60,'^00150',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,7,8,6,'','Group3G');
-INSERT INTO `routes` VALUES (34,0,62,'^001[5-7]',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,8,7,6,'','andere Handy-Gespräche');
-INSERT INTO `routes` VALUES (35,0,64,'^00[1-9][0-9]{2}',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,10,0,'','Ortsnetze');
-INSERT INTO `routes` VALUES (36,0,66,'^000',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,9,0,'','international');
-INSERT INTO `routes` VALUES (37,1,68,'^0',1,1,1,1,1,1,1,'00:00:00','24:00:00',2,6,9,0,'','alles andere');
+INSERT INTO `routes` VALUES (5,0,3,'^011[0-7]$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Notrufnummern etc.');
+INSERT INTO `routes` VALUES (6,0,4,'^019222$',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Notruf Rettungsdienst');
+INSERT INTO `routes` VALUES (7,0,14,'^00900',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern');
+INSERT INTO `routes` VALUES (8,0,8,'^0118',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Auskünfte (u.U. teuer, können vermitteln)');
+INSERT INTO `routes` VALUES (9,0,10,'^009009',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern (Dialer)');
+INSERT INTO `routes` VALUES (10,0,12,'^009005',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern (Erwachsenenunterhaltung)');
+INSERT INTO `routes` VALUES (11,0,16,'^00902',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Televoting (14 ct/Anruf)');
+INSERT INTO `routes` VALUES (12,0,18,'^0019[1-4]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Internet-Zugänge');
+INSERT INTO `routes` VALUES (13,0,20,'^0070[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','private Vanity-Nummern');
+INSERT INTO `routes` VALUES (14,0,22,'^0080[01]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern (kostenlos)');
+INSERT INTO `routes` VALUES (15,0,24,'^001805',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern (Hotlines/Erwachsenenunterhaltung)');
+INSERT INTO `routes` VALUES (16,0,26,'^001802001033',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Handvermittlung ins Ausland (teuer)');
+INSERT INTO `routes` VALUES (17,0,28,'^00180',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Mehrwertnummern');
+INSERT INTO `routes` VALUES (18,0,30,'^00137',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Televoting (25-100 ct/Anruf)');
+INSERT INTO `routes` VALUES (19,0,32,'^0012[0-9]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Innovative Dienste (teuer)');
+INSERT INTO `routes` VALUES (20,0,34,'^0032',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','ortsunabhängig, unklare Tarifierung, GSM vermeiden');
+INSERT INTO `routes` VALUES (21,0,36,'^00151',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','T-Mobile D1');
+INSERT INTO `routes` VALUES (22,0,38,'^0016[01489]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','T-Mobile D1');
+INSERT INTO `routes` VALUES (23,0,40,'^0017[015]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','T-Mobile D1');
+INSERT INTO `routes` VALUES (24,0,42,'^00152',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Vodafone D2');
+INSERT INTO `routes` VALUES (25,0,44,'^00162',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Vodafone D2');
+INSERT INTO `routes` VALUES (26,0,46,'^0017[234]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Vodafone D2');
+INSERT INTO `routes` VALUES (27,0,48,'^0015[57]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','E-Plus');
+INSERT INTO `routes` VALUES (28,0,50,'^00163',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','E-Plus');
+INSERT INTO `routes` VALUES (29,0,52,'^0017[78]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','E-Plus');
+INSERT INTO `routes` VALUES (30,0,54,'^00156',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','MobilCom');
+INSERT INTO `routes` VALUES (31,0,56,'^00159',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','O2');
+INSERT INTO `routes` VALUES (32,0,58,'^0017[69]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','O2');
+INSERT INTO `routes` VALUES (33,0,60,'^00150',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Group3G');
+INSERT INTO `routes` VALUES (34,0,62,'^001[5-7]',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','andere Handy-Gespräche');
+INSERT INTO `routes` VALUES (35,0,64,'^00[1-9][0-9]{2}',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','Ortsnetze');
+INSERT INTO `routes` VALUES (36,0,66,'^000',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,0,0,0,'','international');
+INSERT INTO `routes` VALUES (37,1,68,'^0',1,1,1,1,1,1,1,'00:00:00','24:00:00',NULL,1,0,0,'','alles andere');
 /*!40000 ALTER TABLE `routes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7216,26 +6957,24 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `routes_in`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `routes_in` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `gate_grp_id` smallint(5) unsigned NOT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `active` tinyint(1) unsigned NOT NULL default '1',
   `ord` int(10) unsigned NOT NULL,
-  `pattern` varchar(30) CHARACTER SET ascii NOT NULL,
-  `d_mo` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `d_tu` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `d_we` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `d_th` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `d_fr` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `d_sa` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `d_su` tinyint(3) unsigned NOT NULL DEFAULT '1',
-  `h_from` time NOT NULL DEFAULT '00:00:00',
-  `h_to` time NOT NULL DEFAULT '24:00:00',
-  `to_ext` varchar(10) CHARACTER SET ascii NOT NULL,
-  `descr` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
+  `pattern` varchar(30) character set ascii NOT NULL,
+  `d_mo` tinyint(3) unsigned NOT NULL default '1',
+  `d_tu` tinyint(3) unsigned NOT NULL default '1',
+  `d_we` tinyint(3) unsigned NOT NULL default '1',
+  `d_th` tinyint(3) unsigned NOT NULL default '1',
+  `d_fr` tinyint(3) unsigned NOT NULL default '1',
+  `d_sa` tinyint(3) unsigned NOT NULL default '1',
+  `d_su` tinyint(3) unsigned NOT NULL default '1',
+  `h_from` time NOT NULL default '00:00:00',
+  `h_to` time NOT NULL default '24:00:00',
+  `to_ext` varchar(10) character set ascii NOT NULL,
+  `descr` varchar(150) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`),
   KEY `gategrp_ord` (`gate_grp_id`,`ord`),
   KEY `ggrp_active_mo` (`gate_grp_id`,`active`,`d_mo`,`ord`),
   KEY `ggrp_active_tu` (`gate_grp_id`,`active`,`d_tu`,`ord`),
@@ -7245,8 +6984,7 @@ CREATE TABLE `routes_in` (
   KEY `ggrp_active_sa` (`gate_grp_id`,`active`,`d_sa`,`ord`),
   KEY `ggrp_active_su` (`gate_grp_id`,`active`,`d_su`,`ord`),
   CONSTRAINT `routes_in_ibfk_1` FOREIGN KEY (`gate_grp_id`) REFERENCES `gate_grps` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `routes_in`
@@ -7254,9 +6992,7 @@ CREATE TABLE `routes_in` (
 
 LOCK TABLES `routes_in` WRITE;
 /*!40000 ALTER TABLE `routes_in` DISABLE KEYS */;
-INSERT INTO `routes_in` VALUES (1,6,1,99999,'^(.*)',1,1,1,1,1,1,1,'00:00:00','24:00:00','$1','1:1 DID -> Extension');
-INSERT INTO `routes_in` VALUES (2,6,0,12,'^5000',1,1,1,1,1,1,1,'00:00:00','24:00:00','123','5000 auf 123');
-INSERT INTO `routes_in` VALUES (4,6,0,10,'^5000',1,1,1,1,1,0,0,'08:00:00','18:00:00','5000','5000 auf Queue wenn geöffnet');
+INSERT INTO `routes_in` VALUES (1,1,1,99999,'^(.*)',1,1,1,1,1,1,1,'00:00:00','24:00:00','$1','1:1 DID -> Extension');
 /*!40000 ALTER TABLE `routes_in` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7265,17 +7001,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `softkey_profiles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `softkey_profiles` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `is_user_profile` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `is_user_profile` tinyint(1) unsigned NOT NULL default '0',
+  `title` varchar(50) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`),
   KEY `title` (`title`(45)),
   KEY `is_user_profile_title` (`is_user_profile`,`title`(45))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `softkey_profiles`
@@ -7291,22 +7024,19 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `softkeys`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `softkeys` (
-  `profile_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `profile_id` int(10) unsigned NOT NULL default '0',
   `phone_type` varchar(20) NOT NULL,
   `key` varchar(10) NOT NULL,
   `function` varchar(15) NOT NULL,
   `data` varchar(100) NOT NULL,
-  `label` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `user_writeable` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`profile_id`,`phone_type`,`key`),
+  `label` varchar(40) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `user_writeable` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`profile_id`,`phone_type`,`key`),
   KEY `phone_type_key` (`phone_type`,`key`),
   KEY `phone_type_function` (`phone_type`,`function`),
   CONSTRAINT `softkeys_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `softkey_profiles` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=ascii;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `softkeys`
@@ -7322,45 +7052,45 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `systemrecordings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `systemrecordings` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `md5hashname` char(32) COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
+CREATE TABLE IF NOT EXISTS `systemrecordings` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `md5hashname` char(32) collate utf8_unicode_ci NOT NULL,
+  `description` varchar(150) collate utf8_unicode_ci NOT NULL,
   `length` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY  (`id`),
   KEY `md5hashname` (`md5hashname`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+-- 
+-- Tabellenstruktur für Tabelle `user_calldrop`
+-- 
+
+DROP TABLE IF EXISTS `user_calldrop`;
+CREATE TABLE IF NOT EXISTS `user_calldrop` (
+  `user_id` int(10) unsigned NOT NULL,
+  `number` varchar(50) character set ascii NOT NULL,
+  `drop_call` tinyint(1) unsigned NOT NULL default '1',
+  PRIMARY KEY  (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `systemrecordings`
---
-
-LOCK TABLES `systemrecordings` WRITE;
-/*!40000 ALTER TABLE `systemrecordings` DISABLE KEYS */;
-/*!40000 ALTER TABLE `systemrecordings` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user_groups`
 --
 
 DROP TABLE IF EXISTS `user_groups`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_groups` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
   `lft` mediumint(8) unsigned NOT NULL,
   `rgt` mediumint(8) unsigned NOT NULL,
-  `name` varchar(20) CHARACTER SET ascii NOT NULL,
-  `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `softkey_profile_id` int(10) unsigned DEFAULT NULL,
-  `prov_param_profile_id` int(10) unsigned DEFAULT NULL,
-  `show_ext_modules` tinyint(1) unsigned NOT NULL DEFAULT '255',
-  PRIMARY KEY (`id`),
+  `name` varchar(20) character set ascii NOT NULL,
+  `title` varchar(50) collate utf8_unicode_ci NOT NULL,
+  `softkey_profile_id` int(10) unsigned default NULL,
+  `prov_param_profile_id` int(10) unsigned default NULL,
+  `show_ext_modules` tinyint(1) unsigned NOT NULL default '255',
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `lft` (`lft`),
   UNIQUE KEY `rgt` (`rgt`),
@@ -7370,8 +7100,7 @@ CREATE TABLE `user_groups` (
   KEY `prov_param_profile_id` (`prov_param_profile_id`),
   CONSTRAINT `user_groups_ibfk_6` FOREIGN KEY (`prov_param_profile_id`) REFERENCES `prov_param_profiles` (`id`),
   CONSTRAINT `user_groups_ibfk_5` FOREIGN KEY (`softkey_profile_id`) REFERENCES `softkey_profiles` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `user_groups`
@@ -7388,18 +7117,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_watchlist`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_watchlist` (
   `user_id` int(10) unsigned NOT NULL,
   `buddy_user_id` int(10) unsigned NOT NULL,
-  `status` enum('pnd','ack','nak') CHARACTER SET ascii NOT NULL DEFAULT 'pnd',
-  PRIMARY KEY (`user_id`,`buddy_user_id`),
+  `status` enum('pnd','ack','nak') character set ascii COLLATE ascii_general_ci NOT NULL default 'pnd',
+  PRIMARY KEY  (`user_id`,`buddy_user_id`),
   KEY `buddy_user_id_user_id` (`buddy_user_id`,`user_id`),
   CONSTRAINT `user_watchlist_ibfk_2` FOREIGN KEY (`buddy_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_watchlist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `user_watchlist`
@@ -7415,24 +7141,23 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user` varchar(20) CHARACTER SET ascii NOT NULL DEFAULT '',
-  `pin` varchar(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
-  `firstname` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `lastname` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `honorific` varchar(30) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `email` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `nobody_index` mediumint(8) unsigned DEFAULT NULL,
-  `host_id` mediumint(8) unsigned DEFAULT '1',
-  `current_ip` varchar(15) CHARACTER SET ascii DEFAULT NULL,
-  `user_comment` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  `group_id` mediumint(8) unsigned DEFAULT NULL,
-  `softkey_profile_id` int(10) unsigned DEFAULT NULL,
-  `prov_param_profile_id` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `user` varchar(50) character set ascii NOT NULL default '',
+  `pin` varchar(10) character set ascii collate ascii_bin NOT NULL default '',
+  `firstname` varchar(50) collate utf8_unicode_ci NOT NULL default '',
+  `lastname` varchar(50) collate utf8_unicode_ci NOT NULL default '',
+  `honorific` varchar(30) collate utf8_unicode_ci NOT NULL default '',
+  `email` varchar(50) collate utf8_unicode_ci NOT NULL default '',
+  `nobody_index` mediumint(8) unsigned default NULL,
+  `host_id` mediumint(8) unsigned default '1',
+  `current_ip` varchar(15) character set ascii default NULL,
+  `user_comment` varchar(200) collate utf8_unicode_ci NOT NULL default '',
+  `group_id` mediumint(8) unsigned default NULL,
+  `softkey_profile_id` int(10) unsigned default NULL,
+  `prov_param_profile_id` int(10) unsigned default NULL,
+  `pb_hide` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
   UNIQUE KEY `user` (`user`),
   KEY `lastname_firstname` (`lastname`(15),`firstname`(15)),
   KEY `firstname_lastname` (`firstname`(15),`lastname`(15)),
@@ -7446,8 +7171,7 @@ CREATE TABLE `users` (
   CONSTRAINT `users_ibfk_5` FOREIGN KEY (`prov_param_profile_id`) REFERENCES `prov_param_profiles` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `users_ibfk_2` FOREIGN KEY (`group_id`) REFERENCES `user_groups` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `users_ibfk_3` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `users`
@@ -7455,41 +7179,36 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (8,'nobody-00004','','','','','',4,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (9,'nobody-00005','','','','','',5,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (10,'nobody-00006','','','','','',6,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (11,'nobody-00007','','','','','',7,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (22,'hans','123','Hans','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (23,'peter','123','Peter','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (24,'anna','123','Anna','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (25,'lisa','123','Lisa','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (29,'nobody-00012','','','','','',12,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,NULL,'',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (1,'supervisor','123','','Supervisor','','',NULL,1,NULL,'',NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+-- 
+-- Table structure for table `users_callerids`
+-- 
+
+DROP TABLE IF EXISTS `users_callerids`;
+CREATE TABLE IF NOT EXISTS `users_callerids` (
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `number` varchar(25) character set ascii NOT NULL,
+  `dest` enum('internal','external') character set ascii NOT NULL default 'external',
+  `selected` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`user_id`,`number`,`dest`),
+  CONSTRAINT `users_callerids_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Table structure for table `users_external_numbers`
 --
 
 DROP TABLE IF EXISTS `users_external_numbers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users_external_numbers` (
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `number` varchar(25) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (`user_id`,`number`),
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `number` varchar(25) character set latin1 collate latin1_general_ci NOT NULL default '',
+  PRIMARY KEY  (`user_id`,`number`),
   KEY `number` (`number`),
   CONSTRAINT `users_external_numbers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `users_external_numbers`
@@ -7497,8 +7216,6 @@ CREATE TABLE `users_external_numbers` (
 
 LOCK TABLES `users_external_numbers` WRITE;
 /*!40000 ALTER TABLE `users_external_numbers` DISABLE KEYS */;
-INSERT INTO `users_external_numbers` VALUES (23,'001701234567');
-INSERT INTO `users_external_numbers` VALUES (23,'950001');
 /*!40000 ALTER TABLE `users_external_numbers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7507,17 +7224,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `vm`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `vm` (
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `internal_active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `external_active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `email_notify` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`user_id`),
+  `user_id` int(10) unsigned NOT NULL default '0',
+  `internal_active` tinyint(1) unsigned NOT NULL default '0',
+  `external_active` tinyint(1) unsigned NOT NULL default '0',
+  `email_notify` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`user_id`),
   CONSTRAINT `vm_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `vm`
@@ -7525,12 +7239,7 @@ CREATE TABLE `vm` (
 
 LOCK TABLES `vm` WRITE;
 /*!40000 ALTER TABLE `vm` DISABLE KEYS */;
-INSERT INTO `vm` VALUES (5,0,0,0);
-INSERT INTO `vm` VALUES (6,0,0,0);
-INSERT INTO `vm` VALUES (22,0,0,0);
-INSERT INTO `vm` VALUES (23,0,1,0);
-INSERT INTO `vm` VALUES (24,0,0,0);
-INSERT INTO `vm` VALUES (25,0,0,0);
+INSERT INTO `vm` VALUES (1,0,0,0);
 /*!40000 ALTER TABLE `vm` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7539,23 +7248,21 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `vm_msgs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `vm_msgs` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `host_id` mediumint(8) unsigned NOT NULL,
-  `mbox` varchar(8) CHARACTER SET ascii NOT NULL,
-  `user_id` int(10) unsigned DEFAULT NULL,
-  `orig_mbox` varchar(8) CHARACTER SET ascii NOT NULL,
-  `folder` varchar(10) CHARACTER SET ascii NOT NULL,
-  `file` varchar(10) CHARACTER SET ascii NOT NULL,
+  `mbox` varchar(8) character set ascii NOT NULL,
+  `user_id` int(10) unsigned default NULL,
+  `orig_mbox` varchar(8) character set ascii NOT NULL,
+  `folder` varchar(10) character set ascii NOT NULL,
+  `file` varchar(10) character set ascii NOT NULL,
   `orig_time` int(10) unsigned NOT NULL,
   `dur` smallint(5) unsigned NOT NULL,
-  `callerchan` varchar(40) CHARACTER SET ascii NOT NULL,
-  `cidnum` varchar(25) CHARACTER SET ascii NOT NULL,
-  `cidname` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `listened_to` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
+  `callerchan` varchar(40) character set ascii NOT NULL,
+  `cidnum` varchar(25) character set ascii NOT NULL,
+  `cidname` varchar(30) collate utf8_unicode_ci NOT NULL,
+  `listened_to` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`),
   KEY `mbox_folder_origtime` (`mbox`,`folder`,`orig_time`),
   KEY `origtime_callerchan` (`orig_time`,`callerchan`(20)),
   KEY `hostid` (`host_id`),
@@ -7564,7 +7271,6 @@ CREATE TABLE `vm_msgs` (
   CONSTRAINT `vm_msgs_ibfk_1` FOREIGN KEY (`host_id`) REFERENCES `hosts` (`id`),
   CONSTRAINT `vm_msgs_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `vm_msgs`
@@ -7580,16 +7286,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `vm_rec_messages`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `vm_rec_messages` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `_user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `vm_rec_file` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `vm_comment` varchar(180) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `_user_id` int(10) unsigned NOT NULL default '0',
+  `vm_rec_file` varchar(80) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `vm_comment` varchar(180) character set utf8 collate utf8_unicode_ci NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `vm_rec_messages`
@@ -7601,55 +7304,24 @@ LOCK TABLES `vm_rec_messages` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `wakeup_calls`
---
-
-DROP TABLE IF EXISTS `wakeup_calls`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `wakeup_calls` (
-  `target` varchar(16) CHARACTER SET ascii NOT NULL,
-  `hour` tinyint(2) unsigned NOT NULL,
-  `minute` tinyint(2) unsigned NOT NULL,
-  PRIMARY KEY (`target`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `wakeup_calls`
---
-
-LOCK TABLES `wakeup_calls` WRITE;
-/*!40000 ALTER TABLE `wakeup_calls` DISABLE KEYS */;
-/*!40000 ALTER TABLE `wakeup_calls` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Current Database: `asterisk`
 --
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `asterisk` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
 
 USE `asterisk`;
 
 --
--- Final view structure for view `ast_sipfriends_gs`
+-- View structure for view `ast_sipfriends_gs`
 --
 
 /*!50001 DROP TABLE IF EXISTS `ast_sipfriends_gs`*/;
 /*!50001 DROP VIEW IF EXISTS `ast_sipfriends_gs`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=MERGE */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY INVOKER */
-/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact`,`s`.`accountcode` AS `accountcode`,`s`.`allowtransfer` AS `allowtransfer`,`s`.`allow` AS `allow`,`s`.`amaflags` AS `amaflags`,`s`.`auth` AS `auth`,`s`.`autoframing` AS `autoframing`,`s`.`callingpres` AS `callingpres`,`s`.`cid_number` AS `cid_number`,`s`.`defaultuser` AS `defaultuser`,`s`.`fromdomain` AS `fromdomain`,`s`.`fromuser` AS `fromuser`,`s`.`incominglimit` AS `incominglimit`,`s`.`insecure` AS `insecure`,`s`.`language` AS `language`,`s`.`lastms` AS `lastms`,`s`.`maxcallbitrate` AS `maxcallbitrate`,`s`.`md5secret` AS `md5secret`,`s`.`mohsuggest` AS `mohsuggest`,`s`.`musicclass` AS `musicclass`,`s`.`outboundproxy` AS `outboundproxy`,`s`.`qualify` AS `qualify`,`s`.`regexten` AS `regexten`,`s`.`rtpholdtimeout` AS `rtpholdtimeout`,`s`.`rtpkeepalive` AS `rtpkeepalive`,`s`.`rtptimeout` AS `rtptimeout`,`s`.`subscribemwi` AS `subscribemwi`,`s`.`usereqphone` AS `usereqphone`,`s`.`vmexten` AS `vmexten`,`s`.`disallow` AS `disallow`,`s`.`useragent` AS `useragent` from ((`ast_sipfriends` `s` join `users` `u` on((`u`.`id` = `s`.`_user_id`))) join `hosts` `h` on((`h`.`id` = `u`.`host_id`))) where (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact`,`s`.`accountcode` AS `accountcode`,`s`.`allowtransfer` AS `allowtransfer`,`s`.`allow` AS `allow`,`s`.`amaflags` AS `amaflags`,`s`.`auth` AS `auth`,`s`.`autoframing` AS `autoframing`,`s`.`callingpres` AS `callingpres`,`s`.`cid_number` AS `cid_number`,`s`.`defaultuser` AS `defaultuser`,`s`.`fromdomain` AS `fromdomain`,`s`.`fromuser` AS `fromuser`,`s`.`incominglimit` AS `incominglimit`,`s`.`insecure` AS `insecure`,`s`.`language` AS `language`,`s`.`lastms` AS `lastms`,`s`.`maxcallbitrate` AS `maxcallbitrate`,`s`.`md5secret` AS `md5secret`,`s`.`mohsuggest` AS `mohsuggest`,`s`.`musicclass` AS `musicclass`,`s`.`outboundproxy` AS `outboundproxy`,`s`.`qualify` AS `qualify`,`s`.`regexten` AS `regexten`,`s`.`rtpholdtimeout` AS `rtpholdtimeout`,`s`.`rtpkeepalive` AS `rtpkeepalive`,`s`.`rtptimeout` AS `rtptimeout`,`s`.`subscribemwi` AS `subscribemwi`,`s`.`usereqphone` AS `usereqphone`,`s`.`vmexten` AS `vmexten`,`s`.`disallow` AS `disallow`,`s`.`useragent` AS `useragent`, `s`.`directmedia` AS `directmedia` FROM ((`ast_sipfriends` `s` JOIN `users` `u` ON((`u`.`id` = `s`.`_user_id`))) JOIN `hosts` `h` ON((`h`.`id` = `u`.`host_id`))) WHERE (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
@@ -7658,5 +7330,49 @@ USE `asterisk`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2010-10-19 19:30:00
+-- Dump completed on 2008-11-10  12:00:00
 
+
+--
+-- Table structure for table `wakeup_calls`
+--
+
+DROP TABLE IF EXISTS `wakeup_calls`;
+ CREATE TABLE `asterisk`.`wakeup_calls` (
+ `target` VARCHAR( 16 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+ `hour` TINYINT( 2 ) UNSIGNED NOT NULL ,
+ `minute` TINYINT( 2 ) UNSIGNED NOT NULL ,
+ PRIMARY KEY ( `target` )
+ ) ENGINE = MYISAM;
+ 
+DROP TABLE IF EXISTS `room_state`;
+ CREATE TABLE `asterisk`.`room_state` (
+ `extension` VARCHAR( 16 ) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL ,
+ `state` TINYINT( 1 ) UNSIGNED NOT NULL ,
+ PRIMARY KEY ( `extension` )
+ ) ENGINE = MYISAM;
+
+
+ 
+DROP TABLE IF EXISTS `dnd`;
+CREATE TABLE IF NOT EXISTS `dnd` (
+  `_user_id` int(10) NOT NULL DEFAULT '0',
+  `active` enum('no','yes') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'no',
+  PRIMARY KEY (`_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Cache table for prov_checkcfg phonetypes
+-- As this contains only temp. data, it can safely be dropped and recreated
+--
+
+DROP TABLE IF EXISTS `phones_typecache`;
+CREATE TABLE IF NOT EXISTS `phones_typecache` (
+ `entrytype` enum('ip','ext') COLLATE utf8_unicode_ci NOT NULL,
+ `value` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+ `phonetype` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+ `epoch_inserted` bigint(20) NOT NULL,
+ KEY `idx_entrytype` (`entrytype`),
+ KEY `idx_value` (`value`),
+ KEY `idx_epoch_inserted` (`epoch_inserted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

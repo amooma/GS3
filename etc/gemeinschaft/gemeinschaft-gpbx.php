@@ -177,10 +177,6 @@ $CANONIZE_CBC_PREFIX       =     trim(gs_keyval_get('canonize_cbc_prefix'      )
 ***********************************************************/
 
 $DP_SUBSYSTEM               = false;
-$DP_EMERGENCY_POLICE        = '0110';
-$DP_EMERGENCY_POLICE_MAP    = '110';
-$DP_EMERGENCY_FIRE          = '0112';
-$DP_EMERGENCY_FIRE_MAP      = '112';
 $DP_DIALTIMEOUT_IN          = 90;
 $DP_PRV_CALL_PREFIX         = '*7*';
 $DP_FORWARD_REQ_EXT_NUM     = false;

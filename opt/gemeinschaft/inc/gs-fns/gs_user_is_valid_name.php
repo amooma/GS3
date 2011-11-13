@@ -43,8 +43,8 @@ function gs_user_is_valid_name( $username )
 	if (strLen($username) < 2)
 		return new GsError( 'Username must have 2 characters or more.' );
 	
-	if (strLen($username) > 20)
-		return new GsError( 'Username can\'t have more than 20 characters.' );
+	if (strLen($username) > 50)
+		return new GsError( 'Username can\'t have more than 50 characters.' );
 	
 	if (preg_match( '/^[.]/', $username ))
 		return new GsError( 'Username must not start in ".".' );

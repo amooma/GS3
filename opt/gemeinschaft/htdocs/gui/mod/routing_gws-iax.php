@@ -143,11 +143,6 @@ WHERE `id`='. (int)$gwid
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
 		' VALUES ('.$gwid.', \''.$DB->escape('qualify').'\', \''.$DB->escape($v).'\')' );
 	
-	$v = @$_REQUEST['gw-param-encryption'];
-	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('encryption').'\'' );
-	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
-		' VALUES ('.$gwid.', \''.$DB->escape('encryption').'\', \''.$DB->escape($v).'\')' );
-	
 	$vv = array();
 	for ($i=0; $i<=3; ++$i) {
 		$v = (int)lTrim(preg_replace('/[^0-9]/', '', @$_REQUEST['gw-param-permit-'.$i]),'0');
@@ -259,7 +254,6 @@ if ($action === 'edit') {
 	if (! array_key_exists('jitterbuffer', $gw_params)) $gw_params['jitterbuffer'] = 'yes';
 	if (! array_key_exists('trunk'       , $gw_params)) $gw_params['trunk'       ] = 'yes';
 	if (! array_key_exists('qualify'     , $gw_params)) $gw_params['qualify'     ] = 'yes';
-	if (! array_key_exists('encryption'  , $gw_params)) $gw_params['encryption'  ] = 'no';
 	if (! array_key_exists('auth'        , $gw_params)) $gw_params['auth'        ] = 'md5';
 	if (! array_key_exists('allow'       , $gw_params)) $gw_params['allow'       ] = 'alaw';
 	if (! array_key_exists('permit'      , $gw_params)) $gw_params['permit'      ] = '0.0.0.0/0';
@@ -425,22 +419,6 @@ ORDER BY `title`'
 	echo ' &nbsp; <small>(', htmlEnt(__('Standard')) ,': ', htmlEnt(__('ja')) ,')</small>',"\n";
 	echo '</td>',"\n";
 	echo '<td class="transp xs gray"><code>qualify = </code><code>yes</code> | <code>no</code></td>',"\n";
-	echo '</tr>',"\n";
-	
-	echo '<tr class="m">',"\n";
-	echo '<th>', __("Verschl\xC3\xBCsselung") ,':</th>',"\n";
-	echo '<td>',"\n";
-	echo '<input type="radio" name="gw-param-encryption" id="ipt-gw-param-encryption-yes" value="yes"';
-	if (@$gw_params['encryption'] === 'yes') echo ' checked="checked"';
-	echo ' />',"\n";
-	echo '<label for="ipt-gw-param-encryption-yes">', htmlEnt(__('ja')) ,'</label>',"\n";
-	echo '<input type="radio" name="gw-param-encryption" id="ipt-gw-param-encryption-no" value="no"';
-	if (@$gw_params['encryption'] === 'no') echo ' checked="checked"';
-	echo ' />',"\n";
-	echo '<label for="ipt-gw-param-encryption-no">', htmlEnt(__('nein')) ,'</label>',"\n";
-	echo ' &nbsp; <small>(', htmlEnt(__('Standard')) ,': ', htmlEnt(__('nein')) ,')</small>',"\n";
-	echo '</td>',"\n";
-	echo '<td class="transp xs gray"><code>encryption = </code><code>yes</code> | <code>no</code></td>',"\n";
 	echo '</tr>',"\n";
 	
 	echo '<tr class="m">',"\n";

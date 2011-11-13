@@ -95,7 +95,9 @@ ini_set('output_handler', '');
 	//ini_set('zlib.output_compression_level', 5);
 	//ini_set('zlib.output_handler', '');
 //}
+
 if (get_magic_quotes_runtime()) set_magic_quotes_runtime(0);
+
 //set_include_path('.');
 set_time_limit(65);
 
@@ -193,6 +195,9 @@ _gscnf( 'DB_CDR_MASTER_PWD'         , null               );
 _gscnf( 'DB_CDR_MASTER_DB'          , null               );
 
 _gscnf( 'DB_SIP_REG_UPDATE'         , gs_get_conf('GS_INSTALLATION_TYPE_SINGLE') );
+_gscnf( 'DB_QUEUELOG_IMPORT'        , true               );
+
+_gscnf( 'LOG_QUEUE_CALLS'    , true               );
 
 _gscnf( 'LDAP_HOST'                 , '0.0.0.0'          );
 _gscnf( 'LDAP_SSL'                  , false              );
@@ -228,6 +233,7 @@ _gscnf( 'EXTERNAL_NUMBERS_LDAP_PROP', ''                 );
 
 _gscnf( 'NOBODY_EXTEN_PATTERN'      , '95xxxx'           );
 _gscnf( 'NOBODY_CID_NAME'           , 'Namenlos-'        );
+_gscnf( 'NOBODY_ALLOW_EXTERNAL'     , false              );
 
 _gscnf( 'PROV_HOST'                 , '0.0.0.0'          );
 _gscnf( 'PROV_PORT'                 , 0                  );
@@ -258,6 +264,11 @@ _gscnf( 'SNOM_PROV_FW_DEFAULT_300'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_320'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_360'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_370'  , null               );
+_gscnf( 'SNOM_PROV_FW_DEFAULT_820'  , null               );
+_gscnf( 'SNOM_PROV_FW_DEFAULT_821'  , null               );
+_gscnf( 'SNOM_PROV_FW_FROM6TO7_300' , null               );
+_gscnf( 'SNOM_PROV_FW_FROM6TO7_320' , null               );
+_gscnf( 'SNOM_PROV_FW_FROM6TO7_360' , null               );
 _gscnf( 'SNOM_PROV_KEY_BLACKLIST'   , ''                 );
 
 _gscnf( 'SNOM_PROV_M3_ACCOUNTS'     , 1                  );
@@ -265,13 +276,6 @@ _gscnf( 'SNOM_PROV_M3_HTTP_USER'    , ''                 );
 _gscnf( 'SNOM_PROV_M3_HTTP_PASS'    , ''                 );
 //_gscnf( 'SNOM_PROV_M3_FW_DEFAULT_SNOM_M3', null          );
 //_gscnf( 'SNOM_PROV_M3_KEY_BLACKLIST', ''                 );
-
-_gscnf( 'SNOM_PROV_M9_ACCOUNTS'     , 1                  );
-_gscnf( 'SNOM_PROV_M9_HTTP_USER'    , ''                 );
-_gscnf( 'SNOM_PROV_M9_HTTP_PASS'    , ''                 );
-_gscnf( 'SNOM_PROV_M9_BASE_PIN'     , '0000'             );
-_gscnf( 'SNOM_PROV_M9_FW_UPDATE'    , false              );
-_gscnf( 'SNOM_PROV_M9_FW_DEFAULT'   , null               );
 
 _gscnf( 'SIEMENS_PROV_ENABLED'      , false              );
 _gscnf( 'SIEMENS_PROV_PREFER_HTTP'  , true               );
@@ -315,6 +319,11 @@ _gscnf( 'POLYCOM_PROV_HTTP_USER'    , ''                 );
 _gscnf( 'POLYCOM_PROV_HTTP_PASS'    , ''                 );
 _gscnf( 'POLYCOM_PROV_ALLOW_LOG_PUT', false              );
 
+_gscnf( 'ELMEG_PROV_ENABLED'        , false              );
+_gscnf( 'ELMEG_PROV_HTTP_USER'      , ''                 );
+_gscnf( 'ELMEG_PROV_HTTP_PASS'      , ''                 );
+_gscnf( 'ELMEG_PROV_FW_UPDATE'      , false              );
+
 _gscnf( 'TIPTEL_PROV_ENABLED'       , false              );
 _gscnf( 'TIPTEL_PROV_HTTP_PASS'     , ''                 );
 _gscnf( 'TIPTEL_PROV_NTP'           , gs_get_conf('GS_PROV_HOST','') );
@@ -349,6 +358,12 @@ _gscnf( 'PB_INTERNAL_TITLE'         , "Intern"           );
 _gscnf( 'PB_PRIVATE_TITLE'          , "Pers\xC3\xB6nlich");
 _gscnf( 'PB_REVERSE_SEARCH'         , false              );
 
+_gscnf( 'PB_LDAP_ENABLED'           , false              );
+_gscnf( 'PB_LDAP_HOST'              , ''                 );
+_gscnf( 'PB_LDAP_PORT'              , 389                );
+_gscnf( 'PB_LDAP_BINDDN'            , ''                 );
+_gscnf( 'PB_LDAP_PWD'               , ''                 );
+
 _gscnf( 'LOCK_DIR'                  , '/var/lock/'       );
 _gscnf( 'CALL_INIT_FROM_NET'        , '0.0.0.0/32'       ); # deny all
 _gscnf( 'FAX_INIT_FROM_NET'         , '0.0.0.0/32'       ); # deny all
@@ -364,8 +379,23 @@ _gscnf( 'INTL_LANG_SOUNDS'          , 'de-DE'            );
 _gscnf( 'USERCOMMENT_OFFTIME'       , 'Feierabend'       );
 _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i'              );
 _gscnf( 'EMAIL_DELIVERY'            , 'sendmail'         );
+_gscnf( 'EMAIL_ADDRESS'            , 'noreply@localhost'         );
+_gscnf( 'EMAIL_NAME'            , 'Gemeinschaft'         );
+_gscnf( 'USER_SELECT_CALLERID'      , false		 );
+_gscnf( 'TRANSFER_FAILED_CALLBACK'      , false		 );
+_gscnf( 'CALLBACK_FAILED_EXTENSION'      , ''		 );
+_gscnf( 'SWITCHBOARD_DROP_TARGET'      , ''		 );
+_gscnf( 'SWITCHBOARD_DROP_TIMEOUT'      , 0   		 );
+_gscnf( 'VMBOX_ALWAYS_ASK_PIN'      , false		 );
+#Variables for the Astbuttond
+_gscnf( 'BUTTONDAEMON_USE'            , false           );
+_gscnf( 'BUTTONDAEMON_HOST'            , '127.0.0.1'    );
+_gscnf( 'BUTTONDAEMON_PORT'            , 5041           );
+_gscnf( 'BUTTONDAEMON_SECRET'            , 'SecretLocaNetPassword' );
+_gscnf( 'BUTTONDAEMON_DISPLAYDIR'      , '/var/spool/astbuttond/' );
 
 _gscnf( 'CALL_RECORDING'            , false              );
+_gscnf( 'CALL_RECORDING_AUTO'       , false              );
 
 # to communicate with HylaFax ftp_raw() is required, which is not
 # available in PHP < 5

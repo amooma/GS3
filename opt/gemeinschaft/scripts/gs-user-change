@@ -38,7 +38,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_change.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --pin=<123456> --firstname=<firstname> --lastname=<lastname> --language=<language> --email=<email> --host=<id>|<ip> [--force] [--no-reload]';
+$usage = 'Usage: '. baseName(__FILE__) .' --user=<user> --pin=<123456> --firstname=<firstname> --language=<language> --lastname=<lastname> --email=<email> --host=<id>|<ip> [--hide-pb] [--drop-call] --[drop-target=<number>] [--force] [--no-reload]' ;
 
 $opts = @getOptsNoMultiples( '',
 	array(
@@ -50,7 +50,10 @@ $opts = @getOptsNoMultiples( '',
 		'email=',
 		'host=',
 		'force',
-		'no-reload'
+		'no-reload',
+		'hide-pb',
+		'drop-call',
+		'drop-target='
 	),
 	$usage
 );
@@ -68,10 +71,21 @@ $opts['force'] = array_key_exists('force', $opts);
 
 $reload = !(array_key_exists('no-reload', $opts));
 
+$hide_pb = (array_key_exists('hide-pb', $opts));
+
+$drop_call = (array_key_exists('drop-call', $opts));
+
+if (  !(array_key_exists('drop-target', $opts)) ) {
+	$drop_target = '';
+}
+else {
+	$drop_target = $opts['drop-target'];
+}
+
 /***********************************************************
 *    call the function
 ***********************************************************/
-$ret = @ gs_user_change( $opts['user'], $opts['pin'], $opts['firstname'], $opts['lastname'], $opts['language'], $opts['host'], $opts['force'], $opts['email'], $reload );
+$ret = @ gs_user_change( $opts['user'], $opts['pin'], $opts['firstname'], $opts['lastname'], $opts['language'], $opts['host'], $opts['force'], $opts['email'], $reload, $hide_pb, $drop_call, $drop_target );
 if (isGsError( $ret )) gs_script_error( $ret->getMsg() );
 if (! $ret)            gs_script_error();
 echo "User changed.\n";

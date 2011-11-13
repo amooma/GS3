@@ -100,7 +100,8 @@ $MODULES['calls'    ]=  array(
 		'out'          => array('title' => __('gew&auml;hlt'), 'id' => 4001),
 		'missed'       => array('title' => __('verpasst'), 'id' => 4002),
 		'in'           => array('title' => __('angenommen'), 'id' => 4003),
-		'queue'        => array('title' => __('Warteschlangen'), 'id' => 4004)
+		'queue_missed' => array('title' => __('WS verpasst'), 'id' => 4004),
+		'queue_in'     => array('title' => __('WS angenommen'), 'id' => 4005)
 	)
 );
 
@@ -127,7 +128,8 @@ $MODULES['forwards' ]=  array(
 		'forwards'     => array('title' => __('Rufumleitung'), 'id' => 6001),
 		'vmconfig'     => array('title' => __('Konfiguration'), 'id' => 6002),
 		'extnumbers'   => array('title' => __('externe Nummern'), 'id' => 6003),
-		'queues'       => array('title' => __('Warteschlangen'), 'perms' => 'admin', 'id' => 6004)
+		'queues'       => array('title' => __('Warteschlangen'), 'perms' => 'admin', 'id' => 6004),
+		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse'), 'perms' => 'admin', 'id' => 6005)
 	)
 );
 
@@ -139,11 +141,11 @@ $MODULES['monitor'  ]=  array(
 	'boi_ok'=> false,
 	'id' => 7000,
 	'sub' => array(
-	//	'queues'       => array('title' => __('Warteschlangen'), 'id' => 7001),
-		'pgrps'        => array('title' => __('Rufannahmegrp.'), 'id' => 7002),
-	//	'peers'        => array('title' => __('Kollegen'),       'id' => 7003),
-		'queuemon'     => array('title' => __('QueueMon'),       'id' => 7005),
-		'peermon'      => array('title' => __('PeerMon'),        'id' => 7006),
+		/*'queues'       => array('title' => __('Warteschlangen'), 'id' => 7001),
+		'peers'        => array('title' => __('Kollegen'),       'id' => 7003),*/
+		'queuemon'     => array('title' => __('QueueMon'),       'id' => 7001),
+		'peermon'      => array('title' => __('PeerMon'),        'id' => 7003),
+		'pgrps'        => array('title' => __('Rufannahmegrp.'), 'id' => 7002)
 	)
 );
 
@@ -187,6 +189,17 @@ $MODULES['ringtones']=  array(
 	'id' => 10000,
 	'sub' => array(
 		'ringtones'    => array('title' => __('Klingelt&ouml;ne'), 'id' => 10001)
+	)
+);
+
+#####################################################################
+
+$MODULES['volume']=  array(
+	'title' => __('Lautst&auml;rken'),
+	'icon'  => 'crystal-svg/%s/app/kmix.png',
+	'id' => 20000,
+	'sub' => array(
+		'phone'    => array('title' => __('Lautst&auml;rken'), 'id' => 20001)
 	)
 );
 
@@ -250,7 +263,7 @@ $MODULES['help'     ]=  array(
 );
 if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 $MODULES['help'     ]['sub'][
-		'snom']        =  array('title' => __('Snom'), 'id' => 14003);
+		'snom']        =  array('title' => __('snom'), 'id' => 14003);
 }
 
 #####################################################################
@@ -266,15 +279,18 @@ $MODULES['admin'    ]=  array(
 		'users'        => array('title' => __('Benutzer'), 'id' => 15002),
 		//'groups'       => array('title' => __('Benutzergruppen'), 'id' => 15003),
 		'groups'       => array('title' => __('Gruppen'), 'id' => 15004),
-		'gui'          => array('title' => __('GUI'), 'id' => 15013),
+		'gui'          => array('title' => __('GUI'), 'id' => 15016),
+		'agents'       => array('title' => __('Agenten'), 'id' => 15015),
 		'queues'       => array('title' => __('Warteschlangen'), 'id' => 15005),
 		'pgroups'      => array('title' => __('Rufannahmegrp.#pl'), 'id' => 15006),
-		//'conferences'  => array('title' => __('Konferenzen'), 'id' => 15007),
+		'hgroups'      => array('title' => __('Sammelanschl&uuml;sse'), 'id' => 15014),
 		'ivrs'         => array('title' => __('Sprachmen&uuml;'), 'id' => 15008),
-		'wakeupcall'   => array('title' => __('Weckruf'), 'id' => 15014),
+		'wakeupcall'   => array('title' => __('Weckruf'), 'id' => 15017),
+		'sysrecs'      => array('title' => __('Audiodateien'), 'id' => 15013),
+//		'conferences'  => array('title' => __('Konferenzen'), 'id' => 15007),
 		'calls'        => array('title' => __('CDRs'), 'id' => 15009),
-		'reload'       => array('title' => __('Reload'), 'id' => 15010),
-		'sysrecs'      => array('title' => __('Audiodateien'), 'id' => 15011)
+		'billing'      => array('title' => __('Abrechnung/EVN')),
+		'reload'       => array('title' => __('Reload'), 'id' => 15010)
 	)
 );
 if (gs_get_conf('GS_BOI_ENABLED')) {
@@ -296,7 +312,7 @@ $MODULES['prov'     ]=  array(
 	'id' => 16000,
 	'sub' => array(
 		'phones'       => array('title' => __('Telefone'), 'id' => 16001),
-		'groups'       => array('title' => __('Prov.-Gruppen'), 'id' => 16002),
+		'groups'       => array('title' => __('Provisioning-Grp.'), 'id' => 16002),
 		'keyprof'      => array('title' => __('Tasten-Profile'), 'id' => 16003),
 		'provparams'   => array('title' => __('Parameter'), 'id' => 16004),
 		'jobs'         => array('title' => __('Jobs'), 'id' => 16005),
@@ -396,6 +412,18 @@ $MODULES['system'   ]['sub'][
 $MODULES['system'   ]['sub'][
 		'config']      =  array('title' => __('Konfiguration'), 'id' => 18015);
 */
+
+#####################################################################
+
+$MODULES['room' ]=  array(
+	'title' => __('Zimmer'),
+	'icon'  => 'crystal-svg/%s/app/assistant.png',
+	'boi_ok'=> false,
+	'id' => 21000,
+	'sub' => array(
+		'state'     => array('title' => __('Status'), 'id' => 21001)
+	)
+);
 
 #####################################################################
 

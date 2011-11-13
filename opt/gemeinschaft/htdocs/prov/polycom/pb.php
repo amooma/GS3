@@ -2,16 +2,15 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 6028 $
 * 
-* Copyright 2007-2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
-* Philipp Kempgen <philipp.kempgen@amooma.de>
-* Peter Kozak <peter.kozak@amooma.de>
-* 
-* Author: Daniel Scheller <scheller@loca.net>
 *
+* APS for Polycom SoundPoint IP phones
+* (c) 2009 Daniel Scheller / LocaNet oHG
+* mailto:scheller@loca.net
+* 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -34,7 +33,7 @@ include_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gettext.php");
 include_once(GS_DIR ."inc/langhelper.php");
 include_once(GS_DIR ."inc/group-fns.php");
-include_once( GS_DIR .'inc/string.php' );
+require_once( GS_DIR .'inc/string.php' );
 
 header("Content-Type: text/html; charset=utf-8");
 header("Expires: 0");
@@ -65,7 +64,7 @@ function _err($msg = "")
 
         echo "<html>\n";
         echo "<head><title>". __("Fehler") ."</title></head>\n";
-        echo "<body><b>". __("Fehler") ."</b>: ". htmlEnt($msg) ."</body>\n";
+        echo "<body><b>". __("Fehler") ."</b>: ". $msg ."</body>\n";
         echo "</html>\n";
 
         _ob_send();
@@ -78,26 +77,26 @@ function getUserID($ext)
 	if(!preg_match("/^\d+$/", $ext)) _err("Invalid username");
 
 	$user_id = (int) $db->executeGetOne("SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`='". $db->escape($ext) ."'");
-	if ($user_id < 1) _err("Unknown user");
+	if($user_id < 1) _err("Unknown user");
 	return $user_id;
 }
 
 //---------------------------------------------------------------------------
 
-if ( !gs_get_conf('GS_POLYCOM_PROV_ENABLED') )
+if(!gs_get_conf("GS_POLYCOM_PROV_ENABLED"))
 {
-        gs_log(GS_LOG_DEBUG, 'Polycom provisioning not enabled');
-        _err('Not enabled.');
+        gs_log(GS_LOG_DEBUG, "Polycom provisioning not enabled");
+        _err("Not enabled.");
 }
 
-$type = trim(@$_REQUEST['t']);
-if (! in_array($type, array('gs', 'prv', 'imported'), true) )
+$type = trim(@$_REQUEST["t"]);
+if(!in_array($type, array("gs", "prv", "imported"), true))
 {
 	$type = false;
 }
 
-$searchform = (int)trim(@$_REQUEST['searchform']);
-$querystring = trim(@$_REQUEST['q']);
+$searchform = (int)trim(@$_REQUEST["searchform"]);
+$querystring = trim(@$_REQUEST["q"]);
 
 $db = gs_db_slave_connect();
 
@@ -118,25 +117,25 @@ $tmp = array(
 		'v' => gs_get_conf('GS_PB_PRIVATE_TITLE' , __("Pers\xC3\xB6nlich")))
 );
 
-if ( gs_get_conf('GS_PB_IMPORTED_ENABLED') )
+if(gs_get_conf("GS_PB_IMPORTED_ENABLED"))
 {
-	$pos = (int) gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
+	$pos = (int) gs_get_conf("GS_PB_IMPORTED_ORDER", 9) * 10;
 	$tmp[$pos] = array(
-		'k' => 'imported',
-		'v' => gs_get_conf('GS_PB_IMPORTED_TITLE', __('Extern'))
+		"k" => "imported",
+		"v" => gs_get_conf("GS_PB_IMPORTED_TITLE", __("Extern"))
 	);
 }
 
 kSort($tmp);
-foreach ($tmp as $arr)
+foreach($tmp as $arr)
 {
-	$typeToTitle[$arr['k']] = $arr['v'];
+	$typeToTitle[$arr["k"]] = $arr["v"];
 }
 
 $url_polycom_pb = GS_PROV_SCHEME ."://". GS_PROV_HOST . (GS_PROV_PORT ? ":". GS_PROV_PORT : "") . GS_PROV_PATH ."polycom/pb.php";
 
 #################################### INITIAL SCREEN {
-if (!$type)
+if(!$type)
 {
 	$mac = preg_replace('/[^\dA-Z]/', '', strToUpper(trim(@$_REQUEST['m'])));
 
@@ -148,7 +147,7 @@ if (!$type)
 
         echo $phonebook_doctype ."\n";
         echo "<html>\n";
-        echo "<head><title>". htmlEnt(__("Telefonbuch")) ."</title></head>\n";
+        echo "<head><title>". __("Telefonbuch") ."</title></head>\n";
         echo "<body><br />\n";
 
         foreach($typeToTitle as $t => $title)
@@ -159,10 +158,10 @@ if (!$type)
 			case 'gs' :
 				$cq .= "`users` WHERE `id` IN (". implode(",", $group_members) .") AND `id` != ". $user_id;
 				break;
-			case 'imported':
+			case "imported":
 				$cq .= '`pb_ldap` WHERE `group_id` IN ('. implode(',', $user_groups) .')' ;
 				break;
-			case 'prv' :
+			case "prv" :
 				$cq .= "`pb_prv` WHERE `user_id`=". $user_id;
 				break;
 			default :
@@ -188,7 +187,7 @@ if (!$type)
 
 #################################### SEARCH FORM {
 
-if ($searchform === 1)
+if($searchform === 1)
 {
 	$mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST["m"])));
 
@@ -197,7 +196,7 @@ if ($searchform === 1)
 	echo $phonebook_doctype ."\n";
 
 	echo "<html>\n";
-	echo "<head><title>". htmlEnt(__("Telefonbuch")) ." - ". htmlEnt($typeToTitle[$type]) ."</title></head>\n";
+	echo "<head><title>". __("Telefonbuch") ." - ". htmlEnt($typeToTitle[$type]) ."</title></head>\n";
 	echo "<body><br />\n";
 
 	echo "<form name=\"search\" method=\"GET\" action=\"". $url_polycom_pb ."\">\n";
@@ -207,7 +206,7 @@ if ($searchform === 1)
 
 	echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 	echo "<tr>";
-	echo "<th align=\"center\" width=\"100%\">". htmlEnt(sprintf(__("Telefonbuch %s durchsuchen")), " '". htmlEnt($typeToTitle[$type]) ."' ") .":</th>";
+	echo "<th align=\"center\" width=\"100%\">". __("Telefonbuch") ." '". htmlEnt($typeToTitle[$type]) ."' ". __("durchsuchen") .":</th>";
 	echo "</tr>";
 
 	echo "<tr><td align=\"center\" width=\"100%\"><input type=\"text\" name=\"q\" /></td></tr>\n";
@@ -227,7 +226,7 @@ $num_results = (int) gs_get_conf("GS_POLYCOM_PROV_PB_NUM_RESULTS", 10);
 
 #################################### IMPORTED PHONEBOOK {
 
-if( $type === "imported" )
+if($type === "imported")
 {
 	$user = trim( @$_REQUEST['u'] );
 	$user_id = getUserID( $user );
@@ -241,7 +240,7 @@ if( $type === "imported" )
 	$searchsql = "1";
 	$noresultsmsg = __("Dieses Telefonbuch enth\xC3\xA4lt keine Eintr\xC3\xA4ge.");
 
-	if (strlen($querystring) > 0)
+	if(strlen($querystring) > 0)
 	{
 		$pagetitle .= " ('". $querystring ."')";
 		$searchsql = "`lastname` LIKE '%". $querystring ."%' OR `firstname` LIKE '%". $querystring ."%'";
@@ -262,7 +261,7 @@ if( $type === "imported" )
 		"LIMIT ". $num_results;
 
 	$rs = $db->execute($query);
-	if ($rs->numRows() !== 0)
+	if($rs->numRows() !== 0)
 	{
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 
@@ -271,7 +270,7 @@ if( $type === "imported" )
 		echo "<th width=\"50%\">". __("Name") ."</th>";
 		echo "<th width=\"50%\">". __("Nummer") ."</th></tr>\n";
 
-		while ( $r = $rs->fetchRow() )
+		while($r = $rs->fetchRow())
 		{
 			$name = $r["ln"] .(strlen($r["fn"]) > 0 ? (", ". $r["fn"]) : "");
 			$number = $r["ext"];
@@ -287,14 +286,14 @@ if( $type === "imported" )
 	}
 	else
 	{
-		echo "<br />". htmlEnt($noresultsmsg) ."<br />\n";
+		echo "<br />". $noresultsmsg ."<br />\n";
 	}
 
 	echo "</body>\n";
 
-	echo "<softkey index=\"1\" label=\"". htmlEnt(__("Zur\xC3\xBCck")) ."\" action=\"Softkey:Back\" />\n";
+	echo "<softkey index=\"1\" label=\"". __("Zur\xC3\xBCck") ."\" action=\"Softkey:Back\" />\n";
 	echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"3\" label=\"". html(__("Beenden")) ."\" action=\"Softkey:Exit\" />\n";
+	echo "<softkey index=\"3\" label=\"". __("Beenden") ."\" action=\"Softkey:Exit\" />\n";
 	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
 	echo "</html>\n";
 
@@ -307,7 +306,7 @@ if( $type === "imported" )
 
 #################################### INTERNAL PHONEBOOK {
 
-if ($type === "gs")
+if($type === "gs")
 {
 	$mac = preg_replace("/[^\dA-Z]/", "", strToUpper(trim(@$_REQUEST["m"])));
 
@@ -323,7 +322,7 @@ if ($type === "gs")
 	$searchsql = "1";
 	$noresultsmsg = __("Dieses Telefonbuch enth\xC3\xA4lt keine Eintr\xC3\xA4ge.");
 
-	if ( strlen($querystring) > 0 )
+	if(strlen($querystring) > 0)
 	{
 		$pagetitle .= " ('". $querystring ."')";
 		$searchsql = "`u`.`lastname` LIKE '%". $querystring ."%' OR `u`.`firstname` LIKE '%". $querystring ."%'";
@@ -357,7 +356,7 @@ if ($type === "gs")
 		echo "<th width=\"50%\">". __("Name") ."</th>";
 		echo "<th width=\"50%\">". __("Nummer") ."</th></tr>\n";
 
-		while ( $r = $rs->fetchRow() )
+		while($r = $rs->fetchRow())
 		{
 			$name = $r["ln"] .(strlen($r["fn"]) > 0 ? (", ". $r["fn"]) : "");
 			$number = $r["ext"];
@@ -373,14 +372,14 @@ if ($type === "gs")
 	}
 	else
 	{
-		echo "<br />". htmlEnt($noresultsmsg). "<br />\n";
+		echo "<br />". $noresultsmsg. "<br />\n";
 	}
 
 	echo "</body>\n";
 
-	echo "<softkey index=\"1\" label=\"". htmlEnt(__("Zur\xC3\xBCck")) ."\" action=\"Softkey:Back\" />\n";
-	echo "<softkey index=\"2\" label=\"". htmlEnt(__("Suchen")) ."\" action=\"Softkey:Fetch;". $url_polycom_pb ."?u=". $user ."&amp;m=". $mac ."&amp;t=". $type ."&amp;searchform=1\" />\n";
-	echo "<softkey index=\"3\" label=\"". htmlEnt(__("Beenden")) ."\" action=\"Softkey:Exit\" />\n";
+	echo "<softkey index=\"1\" label=\"". __("Zur\xC3\xBCck") ."\" action=\"Softkey:Back\" />\n";
+	echo "<softkey index=\"2\" label=\"". __("Suchen") ."\" action=\"Softkey:Fetch;". $url_polycom_pb ."?u=". $user ."&amp;m=". $mac ."&amp;t=". $type ."&amp;searchform=1\" />\n";
+	echo "<softkey index=\"3\" label=\"". __("Beenden") ."\" action=\"Softkey:Exit\" />\n";
 	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
 	echo "</html>\n";
 
@@ -392,7 +391,7 @@ if ($type === "gs")
 
 #################################### PRIVATE PHONEBOOK {
 
-if ( $type === "prv" )
+if($type === "prv")
 {
 	$mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST["m"])));
 
@@ -405,7 +404,7 @@ if ( $type === "prv" )
 
 	$noresultsmsg = __("Ihr pers\xC3\xB6nliches Telefonbuch enth\xC3\xA4lt keine Eintr\xC3\xA4ge.");
 
-	if ( strlen($querystring) > 0 )
+	if(strlen($querystring) > 0)
 	{
 		$pagetitle .= " ('". $querystring ."')";
 		$searchsql = "`lastname` LIKE '%". $querystring ."%' OR `firstname` LIKE '%". $querystring ."%'";
@@ -436,16 +435,16 @@ if ( $type === "prv" )
 		"LIMIT ". $num_results;
 
 	$rs = $db->execute($query);
-	if ($rs->numRows() !== 0)
+	if($rs->numRows() !== 0)
 	{
 		echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 
 		echo "<tr>";
 
-		echo "<th width=\"50%\">". htmlEnt(__("Name")) ."</th>";
-		echo "<th width=\"50%\">". htmlEnt(__("Nummer")) ."</th></tr>\n";
+		echo "<th width=\"50%\">". __("Name") ."</th>";
+		echo "<th width=\"50%\">". __("Nummer") ."</th></tr>\n";
 
-		while ( $r = $rs->fetchRow() )
+		while($r = $rs->fetchRow())
 		{
 			$name = $r["ln"] .(strlen($r["fn"]) > 0 ? (", ". $r["fn"]) : "");
 			$number = $r["number"];
@@ -462,7 +461,7 @@ if ( $type === "prv" )
 	}
 	else
 	{
-		echo "<br />". htmlEnt($noresultsmsg) ."<br />\n";
+		echo "<br />". $noresultsmsg ."<br />\n";
 	}
 
 	echo "</body>\n";

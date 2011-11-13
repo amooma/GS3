@@ -533,12 +533,12 @@ psetting('display_method'   , 'display_name_number');
 psetting('tone_scheme'      , 'GER'    );
 psetting('date_us_format'   , 'off'    , true);
 psetting('time_24_format'   , 'on'     , true);
-psetting('message_led_other', 'on'     );
+psetting('message_led_other', 'off'    );
 psetting('use_backlight'    , 'on'     , true);  # always | on | off | dim (370, >= 7.1.33)
 //psetting('headset_device'   , 'headset_rj', true);  # wuerde Default auf Headset am RJ14-Stecker setzen
 //psetting('headset_device'   , 'none'   , true);  # setting this would disable the headset even during a call
 psetting('ethernet_detect'  , 'on'     );  # Warnung falls kein Ethernet
-psetting('ethernet_replug'  , 'reboot' );
+psetting('ethernet_replug'  , 'nothing');
 psetting('reboot_after_nr'  , '5'      );  # nach 5 Min. ohne Registrierung neu starten
 psetting('admin_mode'       , 'off'    , true);  # wenn die Einstellung nicht writable ist, ist auch kein Admin-Login moeglich
 psetting('admin_mode_password'         , '0000');
@@ -571,7 +571,7 @@ psetting('tcp_listen'           , 'off');
 psetting('offer_gruu'           , 'off');
 psetting('short_form'           , 'on' );  # kurze SIP-Header verwenden
 psetting('subscription_delay'   , '2'  );
-psetting('subscription_expiry'  , '80' );  # default: 3600
+psetting('subscription_expiry'  , '600');  # default: 3600
 psetting('terminate_subscribers_on_reboot', 'on');
 psetting('publish_presence'     , 'off');  # unterstuetzt Asterisk nicht
 psetting('presence_timeout'     , '15' );  # default: 15 (minutes)
@@ -657,23 +657,13 @@ psetting('mute'                 , 'off', true);  # mute mic off
 psetting('disable_speaker'      , 'off', true);  # disable casing speaker off
 psetting('dtmf_speaker_phone'   , 'off', true);
 psetting('release_sound'        , 'off');
-if ($phone_model >= '370') {
-	psetting('vol_handset_mic'      ,  '5' , true);  # 1 - 8, Default: 4
-	psetting('vol_headset_mic'      ,  '6' , true);  # 1 - 8, Default: 4
-	psetting('vol_speaker_mic'      ,  '4' , true);  # 1 - 8, Default: 4
-	psetting('vol_speaker'          ,  '5' , true);  # 0 - 15, Default: 8
-	psetting('vol_handset'          , '10' , true);  # 0 - 15, Default: 8
-	psetting('vol_headset'          , '10' , true);  # 0 - 15, Default: 8
-	psetting('vol_ringer'           ,  '8' , true);  # 1 - 15
-} else {
-	psetting('vol_handset_mic'      ,  '4' , true);  # 1 - 8, Default: 4
-	psetting('vol_headset_mic'      ,  '6' , true);  # 1 - 8, Default: 4
-	psetting('vol_speaker_mic'      ,  '6' , true);  # 1 - 8, Default: 4
-	psetting('vol_speaker'          , '10' , true);  # 0 - 15, Default: 8
-	psetting('vol_handset'          , '11' , true);  # 0 - 15, Default: 8
-	psetting('vol_headset'          , '10' , true);  # 0 - 15, Default: 8
-	psetting('vol_ringer'           ,  '7' , true);  # 1 - 15
-}
+psetting('vol_handset_mic'      ,  '5' , true);  # 1 - 8, Default: 4
+psetting('vol_headset_mic'      ,  '4' , true);  # 1 - 8, Default: 4
+psetting('vol_speaker_mic'      ,  '6' , true);  # 1 - 8, Default: 4
+psetting('vol_speaker'          ,  '8' , true);  # 0 - 15, Default: 8
+psetting('vol_handset'          ,  '8' , true);  # 0 - 15, Default: 8
+psetting('vol_headset'          ,  '8' , true);  # 0 - 15, Default: 8
+psetting('vol_ringer'           ,  '8' , true);  # 1 - 15
 psetting('mwi_notification'     , 'silent');  # keine akustischen Hinweise wenn neue Nachrichten
 psetting('mwi_dialtone'         , 'stutter');  # stotternder Waehlton wenn neue Nachrichten
 psetting('silence_compression'  , 'off');  # kann Asterisk (noch?) nicht
@@ -685,8 +675,14 @@ psetting('ringer_headset_device', 'speaker');  # Klingeltonausgabe bei Kopfhoere
 #  Behavior
 #####################################################################
 
-psetting('callpickup_dialoginfo'  , 'on' );
-psetting('show_xml_pickup'        , 'on' );
+if ( GS_BUTTONDAEMON_USE == true ) {
+	psetting('callpickup_dialoginfo'  , 'off' );
+	psetting('show_xml_pickup'        , 'off' );
+} else {
+	psetting('callpickup_dialoginfo'  , 'on' );
+	psetting('show_xml_pickup'        , 'on' );
+}
+                                
 psetting('show_name_dialog'       , 'off');
 psetting('ringing_time'           , '500');  # wird im Dialplan begrenzt
 psetting('block_url_dialing'      , 'on' );  # nur Ziffern erlauben
@@ -701,16 +697,40 @@ psetting('enable_keyboard_lock'   , 'on' );
 psetting('keyboard_lock'          , 'off');
 psetting('keyboard_lock_pw'       , ''   );
 psetting('keyboard_lock_emergency', '911 112 110 999 19222');  # default
-psetting('ldap_server'            , ''   );
+if (! gs_get_conf('GS_PB_LDAP_ENABLED') ) {
+	psetting('ldap_server'            , '');
+	psetting('ldap_port'              , '');
+	psetting('ldap_search_filter'     , '');
+	psetting('ldap_number_filter'     , '');
+	psetting('ldap_base'              , '');
+	psetting('ldap_name_attributes'   , '');
+	psetting('ldap_number_attributes' , '');
+	psetting('ldap_display_name'      , '');
+	psetting('guess_start_length'     , 4 );
+} else {
+	psetting('ldap_server'            , gs_get_conf('GS_PB_LDAP_HOST'));
+	if (gs_get_conf('GS_PB_LDAP_PORT') === 0)
+		psetting('ldap_port', 389);
+	else
+		psetting('ldap_port', gs_get_conf('GS_PB_LDAP_PORT'));
+	psetting('ldap_search_filter'     , '(|(cn=%)(sn=%))'             );
+	psetting('ldap_number_filter'     , '(&(telephoneNumber=%)(sn=*))');
+	psetting('ldap_base'              , 'ou=phonebook,dc=gemeinschaft,dc=local');
+	psetting('ldap_name_attributes'   , 'sn givenName'                );
+	psetting('ldap_number_attributes' , 'telephoneNumber'             );
+	psetting('ldap_display_name'      , '%givenName %sn'              );
+	psetting('guess_start_length'     , 4                             );
+}
+psetting('ldap_lookup_ringing'    , 'off');
+psetting('guess_number'           , 'off' );
 psetting('answer_after_policy'    , 'idle');
 psetting('call_join_xfer'         , 'off');
-psetting('guess_number'           , 'off');
 psetting('partial_lookup'         , 'off');
 psetting('deny_all_feature'       , 'off');  # keine Telefon-interne Blacklist
 psetting('audio_device_indicator' , 'on' );
 psetting('intercom_enabled'       , 'off');  # brauchen wir (noch?) nicht
 psetting('cmc_feature'            , 'off');
-psetting('cancel_on_hold'         , 'on' );
+psetting('cancel_on_hold'         , 'off');
 psetting('cancel_missed'          , 'on' );
 psetting('cancel_desktop'         , 'off');
 psetting('cw_dialtone'            , 'on' , true);
@@ -733,19 +753,26 @@ psetting('max_boot_delay'         , '0'  );  # ? in seconds, default: 0
 psetting('mailbox_active'         , 'off');  # pay attention to the mailbox of the
                                              # active identity only?
 psetting('speaker_dialer'         , 'on' );
-psetting('no_dnd'                 , 'off');
-$dnd_mode = 'off';
-$cf = gs_callforward_get( $user['user'] );
-if (! isGsError($cf) && is_array($cf)) {
-	if ( @$cf['internal']['always']['active'] != 'no'
-	  || @$cf['external']['always']['active'] != 'no' )
-	{
-		$dnd_mode = 'on';  //FIXME - bad hack!
+if ( GS_BUTTONDAEMON_USE == false ) {
+	psetting('no_dnd', 'off');
+	$dnd_mode = 'off';
+	$cf = gs_callforward_get( $user['user'] );
+	if (! isGsError($cf) && is_array($cf)) {
+		if ( @$cf['internal']['always']['active'] != 'no'
+	 	 || @$cf['external']['always']['active'] != 'no' )
+	 	{
+			$dnd_mode = 'on';  //FIXME - bad hack!
+		}
 	}
+	psetting('dnd_mode'               , $dnd_mode, true);
+	psetting('dnd_on_code'            , 'dnd-on');
+	psetting('dnd_off_code'           , 'dnd-off');
 }
-psetting('dnd_mode'               , $dnd_mode, true);
-psetting('dnd_on_code'            , 'dnd-on');
-psetting('dnd_off_code'           , 'dnd-off');
+else {
+	psetting('no_dnd'                 , 'on');
+	psetting('dnd_on_code'            , '');
+	psetting('dnd_off_code'           , '');
+}
 psetting('preselection_nr'        , '');
 
 
@@ -800,7 +827,9 @@ setting('user_server_type'        ,$i, ((_snomAppCmp($fw_vers_nrml, '7.3.2') >0)
 setting('ring_after_delay'        ,$i, ''   );
 setting('user_send_local_name'    ,$i, 'on' );  # send display name to caller
 setting('user_dtmf_info'          ,$i, 'off');
-setting('user_mailbox'            ,$i, 'mailbox');
+// no longer needed with Asterisk 1.8
+//setting('user_mailbox'            ,$i, 'mailbox');
+setting('user_mailbox'            ,$i, '');
 setting('user_dp_exp'             ,$i, ''   );  # see http://wiki.snom.com/Settings/user_dp_exp
 setting('user_dp_str'             ,$i, ''   );  # see http://wiki.snom.com/Dial_Plan
 setting('user_dp'                 ,$i, ''   );
@@ -848,7 +877,7 @@ setting('user_pass'          ,$i, $user['secret']);
 //setting('user_hash'          ,$i, md5($user_ext .':'. 'asterisk' .':'. $user['secret']));
 setting('user_realname'      ,$i, $user['callerid']);
 setting('user_idle_text'     ,$i, $user_ext .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
-setting('record_missed_calls'  ,$i, 'on' );
+setting('record_missed_calls'  ,$i, 'off' );
 setting('record_dialed_calls'  ,$i, 'off');
 setting('record_received_calls',$i, 'off');
 
@@ -920,14 +949,20 @@ psetting('action_log_off_url'        , '');
 #####################################################################
 
 psetting('dkey_help'     , 'keyevent F_HELP'      );
-psetting('dkey_snom'     , 'keyevent F_SNOM'      );
+psetting('dkey_snom'     , 'url '. $prov_url_snom .'login.php');
 psetting('dkey_conf'     , 'keyevent F_CONFERENCE');
 psetting('dkey_transfer' , 'keyevent F_TRANSFER'  );
 psetting('dkey_hold'     , 'keyevent F_R'         ); # or F_HOLD
-psetting('dkey_dnd'      , 'keyevent F_DND'       );
+if ( GS_BUTTONDAEMON_USE == true ) {
+	psetting('dkey_dnd'      ,  'url '. $prov_url_snom .'dnd.php?t=1&m=$mac&u=$user_name1'    );
+}
+else {
+	psetting('dkey_dnd'      , 'keyevent F_DND'       );
+}
 psetting('dkey_record'   , 'keyevent F_REC'       );
+//psetting('dkey_record'   , 'dtmf *1'       );
 psetting('dkey_directory', 'keyevent F_ADR_BOOK'  ); # or F_DIRECTORY
-psetting('dkey_menu'     , 'keyevent F_MENU'      );
+psetting('dkey_menu'     , 'url '. $prov_url_snom .'menu.php?m=$mac&u=$user_name1' );
 psetting('dkey_redial'   , 'keyevent F_REDIAL'    );
 
 psetting('dkey_directory', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1');
@@ -935,7 +970,16 @@ psetting('dkey_redial'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name
 # so geht die Retrieve-Taste auch ohne neue Nachrichten:
 psetting('dkey_retrieve' , 'speed voicemail');
 
+# firmware 8.2-Settings
+psetting('idle_left_key_action'  , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac');
+psetting('idle_right_key_action' , 'keyevent F_HELP');
+psetting('idle_up_key_action'    , 'url '. $prov_url_snom .'login.php');
+psetting('idle_down_key_action'  , '');
+psetting('idle_ok_key_action'    , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac&type=out');
+psetting('idle_cancel_key_action', '');
 
+# do not show snom advertisement in Web UI
+psetting('advertisement'         , 'off');
 
 #####################################################################
 #  Keys
@@ -952,18 +996,15 @@ if ($phone_model == '300') {
 }
 */
 for ($i=0; $i<=$max_key; ++$i) {
-	setting('fkey'        , $i, 'line', array('context'=>'active'));
+        if ( GS_BUTTONDAEMON_USE == false ) {
+        	setting('fkey'        , $i, 'line', array('context'=>'active'));
+        }
+        else{
+		setting('fkey'        , $i, 'button ' . ($i+1), array('context'=>'active'));
+	}
 	//setting('fkey_context', $i, 'active');
 }
 
-# pre-defined keys for snom 300
-#
-if ($phone_model == '300') {
-	setting('fkey', 2, 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac', array('context'=>'active'));
-	setting('fkey', 3, 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
-	setting('fkey', 4, 'keyevent F_TRANSFER', array('context'=>'active'));
-	setting('fkey', 5, 'keyevent F_MUTE', array('context'=>'active'));
-}
 
 /*  //FIXME
 
@@ -992,6 +1033,10 @@ while ($r = $rs->fetchRow()) {
 }
 */
 
+
+//keys not  to rewrite for the astbuttond
+$nativekeys = Array( 'line', 'keyevent', 'blf' );
+
 $softkeys = null;
 $GS_Softkeys = gs_get_key_prov_obj( $phone_type );
 if ($GS_Softkeys->set_user( $user['user'] )) {
@@ -1002,6 +1047,7 @@ if ($GS_Softkeys->set_user( $user['user'] )) {
 		'{GS_P_ROUTE_PREFIX}' => $hp_route_prefix,
 		'{GS_P_USER}'         => $user['user']
 	) )) {
+		gs_log( GS_LOG_DEBUG, "getting keys for $phone_type" );
 		$softkeys = $GS_Softkeys->get_keys();
 	}
 }
@@ -1016,17 +1062,91 @@ if (! is_array($softkeys)) {
 		} else {
 			continue;
 		}
+		
+		$native_anyway = false;
+		switch ($key_def['function']) {
+		
+			case '_dir':
+				$native_anyway = true;
+				$key_def['function'] = 'url';
+				$key_def['data'    ] = $prov_url_snom .'pb.php?m=$mac&u=$user_name1';
+				break;
+			case '_callers':
+				$native_anyway = true;
+				$key_def['function'] = 'url';
+				$key_def['data'    ] = $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac';
+				break;
+			case '_menu':
+				$native_anyway = true;
+				$key_def['function'] = 'url';
+				$key_def['data'    ] = $prov_url_snom .'menu.php?m=$mac&u=$user_name1' ;
+				break;
+			case '_transfer':
+				$key_def['function'] = 'keyevent';
+				$key_def['data'    ] = 'F_TRANSFER';
+				break;
+			case '_mute':
+				$key_def['function'] = 'keyevent';
+				$key_def['data'    ] = 'F_MUTE';
+				break;
+			case '_dnd':
+				if ( GS_BUTTONDAEMON_USE == false ) {
+					$key_def['function'] = 'keyevent';
+					$key_def['data'    ] = 'F_DND';
+				}
+				else {
+					$native_anyway = true;
+					$key_def['function'] = 'url';
+					$key_def['data'    ] = $prov_url_snom .'dnd.php?t=1&m=$mac&u=$user_name1';
+				}
+				break;
+			case '_hold':
+				$key_def['function'] = 'keyevent';
+				$key_def['data'    ] = 'F_R';
+				break;
+			case '_conference':
+				$key_def['function'] = 'keyevent';
+				$key_def['data'    ] = 'F_CONFERENCE';
+				break;
+			case '_record':
+				$key_def['function'] = 'keyevent';
+				$key_def['data'    ] = 'F_REC';
+				break;
+			case '_vm':
+				$native_anyway = true;
+				$key_def['function'] = 'speed';
+				$key_def['data'    ] = 'voicemail' ;
+				break;
+			case 'blf':
+				$native_anyway = true;
+				$key_def['function'] = 'blf';
+				$key_def['data'    ] =  "<sip:" . $key_def['data'    ]. "@" . $pbx  . ";user=phone>|*81*";
+				break;
+			
+				
+		
+		}
+		
 		$key_idx = (int)lTrim(subStr($key_name,1),'0');
 		if ($key_idx > $max_key) continue;
-		if ($key_def['function'] == "blf"){
-			if (substr($key_def['data'], 0,1)  == '*' ) { 
-				setting('fkey', $key_idx, $key_def['function'] .' <sip:'. $key_def['data'].'@'.$host.'>', array('context'=>'active'));
-			} else {
-				setting('fkey', $key_idx, $key_def['function'] .' <sip:'. $key_def['data'].'@'.$host.'>|*81*', array('context'=>'active'));
-			}
-		} else {
+		//if we want to use the AstButtond we have to rewrite some keys
+		if ( GS_BUTTONDAEMON_USE == false ) {
 			setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
 		}
+		else {
+			if ($native_anyway ||  in_array( $key_def['function'], $nativekeys , true))
+				setting('fkey', $key_idx, $key_def['function'] .' '. $key_def['data'], array('context'=>'active'));
+			else
+				setting('fkey', $key_idx, 'button  ' . ($key_idx + 1) , array('context'=>'active'));
+		}
+		if ( $phone_type  == 'snom-820' || $phone_type  == 'snom-821' ) {
+			if ( isset(  $key_def['label'] ) &&  strlen (  $key_def['label'] ) > 0 ) {
+
+				setting ( 'fkey_label', $key_idx, $key_def['label'] );
+			
+			}
+		}
+	
 	}
 }
 
@@ -1079,6 +1199,15 @@ psetting('family_ring_sound'        , 'Ringer1');
 psetting('colleagues_ring_sound'    , 'Ringer1');
 psetting('vip_ring_sound'           , 'Ringer1');
 
+#internal-ringer1-10
+
+setting('internal_ringer_text', 0, 'internal-ringer0');
+setting('internal_ringer_file', 0, 'Silent');
+for ( $i =1; $i <= 10; $i++ ) {
+	setting('internal_ringer_text', $i, 'internal-ringer' . $i );
+	setting('internal_ringer_file', $i, 'Ringer' . $i );
+}
+
 
 
 #####################################################################
@@ -1101,12 +1230,9 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
 else
 	psetting('pnp_config'      , 'off');
 
-# call waiting (Anklopfen) aktiviert? //FIXME
+# call waiting (Anklopfen) aktiviert?
 #
-//psetting('call_waiting', 'off');  # ""Call Waiting (CW)" can be enabled ("on", "visual only", "ringer") or disabled ("off")."
-//$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
-//psetting('call_waiting', ($callwaiting ? 'visual only' : 'off'));
-psetting('call_waiting', 'visual only');
+psetting('call_waiting', 'on');  # ""Call Waiting (CW)" can be enabled ("on", "visual only", "ringer") or disabled ("off")."
 
 psetting('call_completion', 'off');
 /*
@@ -1136,8 +1262,6 @@ psetting('show_local_line', 'off');
 
 psetting('logon_wizard', 'off');
 
-psetting('settings_refresh_timer', (3600*2+rand(0,900)));
-# a little random offset to avoid load spikes on the network and server
 
 
 
@@ -1204,7 +1328,15 @@ if (preg_match('/snom3[0-9]0-SIP\s+(\d+)\.(\d+)\.(\d+)/', $ua, $m)) {
 #####################################################################
 
 $lang_releases = array(  # in descending order!
+	'8.4.32',
+	'8.4.31',
+	'8.4.26',
+	'8.4.20',
 	'7.3.30',
+	'7.3.29',
+	'7.3.27',
+	'7.3.23',
+	'7.1.39',
 	'7.1.33',
 	'7.1.30',
 	'7.1.19',

@@ -2,5 +2,3 @@
 *.DS_Store
 *~
 opt/gemeinschaft/etc/asterisk/extensions.ael
-*.pyc
-.gemeinschaft-version

@@ -73,7 +73,7 @@ function psetting( $name, $val, $writeable=false )
 
 function aastra_get_softkeys( $user_id, $phone_type, $modtype, $modnum, $level )
 {
-	global $db, $mac;
+	global $db;
 	$softkeys = array();
 
 
@@ -118,9 +118,8 @@ function aastra_get_softkeys( $user_id, $phone_type, $modtype, $modnum, $level )
 					break;
 			}
 			break;
-		
 		default:
-			gs_log( GS_LOG_NOTICE, "Unknown expansion module '$modtype' on phone $mac");
+			gs_log( GS_LOG_NOTICE, "Unknown expansion module ".$modtype);
 			break;
 	}
 
@@ -339,15 +338,6 @@ if (is_array($softkeys)) {
 			$softkey['data'    ] = $prov_url_aastra.'dial-log.php';
 			$softkey['label'   ] = __('Anrufliste');
 			break;
-		case '_dnd':
-			$softkey['function'] = 'xml';
-			$softkey['data'    ] = $prov_url_aastra.'dnd.php';
-			$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
-			if ($current_dndstate == 'yes')
-				$softkey['label'   ] = __('Ruhe aus');
-			else
-				$softkey['label'   ] = __('Ruhe');
-			break;
 		case '_fwd':
 			$softkey['function'] = 'xml';
 			if (strlen($softkey['data']) > 0)
@@ -370,6 +360,15 @@ if (is_array($softkeys)) {
 				$softkey['data'] = $prov_url_aastra.'login.php?a=login';
 			else
 				$softkey['data'] = $prov_url_aastra.'login.php';
+			break;
+		case '_agent':
+			$softkey['function'] = 'xml';
+			if (strlen($softkey['data']) > 0)
+				$softkey['data'    ] = $prov_url_aastra.'agent.php?a='.$softkey['data'];
+			else
+				$softkey['data'    ] = $prov_url_aastra.'agent.php';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Agent');
 			break;
 		}
 		psetting($key_name.' type' , $softkey['function'], true);

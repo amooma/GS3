@@ -1,0 +1,30 @@
+# Tree root
+dn: dc=gemeinschaft,dc=local
+objectClass: dcObject
+objectclass: organization
+o: gemeinschaft.local
+dc: gemeinschaft
+description: Tree root
+
+# LDAP admin
+dn: cn=admin,dc=gemeinschaft,dc=local
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: admin
+userPassword: ${password}
+description: LDAP administrator
+
+dn: ou=phonebook,dc=gemeinschaft,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: phonebook
+
+dn: ou=internal,ou=phonebook,dc=gemeinschaft,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: internal
+
+dn: ou=external,ou=phonebook,dc=gemeinschaft,dc=local
+objectClass: organizationalUnit
+objectClass: top
+ou: external

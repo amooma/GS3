@@ -3,15 +3,13 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 *
-* $Revision$
+* $Revision: 4800 $
 *
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
-*
-* Author: Sven Neukirchner <s.neukirchner@konabi.de>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -41,6 +39,8 @@ require_once( GS_DIR .'inc/util.php' );
 require_once( GS_DIR .'inc/gs-fns/gs_sysrec_hash_get.php' );
 set_error_handler('err_handler_quiet');
 require_once( GS_DIR .'inc/db_connect.php' );
+
+//$keys = array('0','1','2','3','4','5','6','7','8','9');
 
 $keys = array(
 	'0'	=> '0',

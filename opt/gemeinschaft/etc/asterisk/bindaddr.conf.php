@@ -86,7 +86,8 @@ if (gs_get_conf('GS_FAX_ENABLED') && $conffile === 'iax') {
 gs_log(GS_LOG_DEBUG, 'Determined '. $bindaddr .' as our bindaddr for '. strToUpper($conffile) );
 
 if ($conffile === 'sip') {
-	echo 'bindaddr=', $bindaddr ,"\n";
+	echo 'udpbindaddr=', $bindaddr ,"\n";
+	echo 'tcpbindaddr=', $bindaddr ,"\n";
 }
 elseif ($conffile === 'iax') {
 	if ($bindaddr === '0.0.0.0')

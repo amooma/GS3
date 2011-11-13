@@ -51,27 +51,38 @@ macro usercode-by-ext( mext ) {
 context user-config {
 	
 	//-------------------------------------------------------------
-	//  CLIR (Rufnummernunterdr�ckung)
+	//  CLIR (Rufnummernunterdueckung)
 	//-------------------------------------------------------------
 	
-	*90 => {
-		&caller-count();
+	*31 => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
+		&user-config-clir(all,2);
+	}
+	*31* => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
+		&user-config-clir(all,0);
+	}
+
+	*32 => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
 		&user-config-clir(internal,1);
 	}
-	*90* => {
-		&caller-count();
+	*32* => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
 		&user-config-clir(internal,0);
 	}
-	*91 => {
-		&caller-count();
+	*33 => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
 		&user-config-clir(external,1);
 	}
-	*91* => {
-		&caller-count();
+	*33* => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,clir_set);
 		&user-config-clir(external,0);
 	}
 	
@@ -81,13 +92,13 @@ context user-config {
 	//-------------------------------------------------------------
 	
 	*92 => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,callwaiting_set);
 		&user-config-call-waiting(1);
 	}
 	*92* => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,callwaiting_set);
 		&user-config-call-waiting(0);
 	}
 	
@@ -97,8 +108,8 @@ context user-config {
 	//-------------------------------------------------------------
 	
 	_*9[34][01]. => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		Set(number=${EXTEN:4});
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 
@@ -118,6 +129,7 @@ context user-config {
 			Hangup();
 		Answer();
 		TrySystem(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='${source}' --type='${type}' --number='${number}');
+		&user-call-forward-userevent(${user_name});
 		Wait(0.5);
 		//Playback(beep);
 		if ("${type}" = "std") {
@@ -138,8 +150,8 @@ context user-config {
 	}
 	
 	_*95XX => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		Set(timeout=${EXTEN:3});
 		Verbose(1,### User ${user_name}: set Unavail Timeout to ${timeout});
 		&usercode-by-ext(${user_name});
@@ -156,134 +168,183 @@ context user-config {
 	}
 	
 	_*9*[01][0-3] => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,${EXTEN:3:1},${EXTEN:4:1},1);
+		&user-call-forward-userevent(${user_name});
 		Wait(0.5);
 		Playback(beep);
 		Hangup();
 	}
 	_*9*[01][0-3]* => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,${EXTEN:3:1},${EXTEN:4:1},0);
+		&user-call-forward-userevent(${user_name});
 		Wait(0.5);
 		Playback(beep);
 		Hangup();
 	}
 	_*9**[01][0-3] => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(var,${EXTEN:4:1},${EXTEN:5:1},1);
+		&user-call-forward-userevent(${user_name});
 		Wait(0.5);
 		Playback(beep);
 		Hangup();
 	}
 	_*9**[01][0-3]* => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(var,${EXTEN:4:1},${EXTEN:5:1},0);
+		&user-call-forward-userevent(${user_name});
 		Wait(0.5);
 		Playback(beep);
 		Hangup();
 	}
-
-	_fwdX. => jump *2;
 	
 	*2 => {
+		//toggle callforwarding
+		Set(CDR(amaflags)=OMIT); 
+		&check-group-permission(${user_id},user,forward);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
-		&caller-count();
 		//toggle callforwarding 
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${user_name});
 		if ("${fw_std_active}" = "1") {
-			Set(CDR(amaflags)=OMIT);
 			&user-call-forward-activate-numeric(std,0,0,0);
 			&user-call-forward-activate-numeric(std,1,0,0);
-			TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=NOT_INUSE));
+			TryExec(Set(DEVICE_STATE(Custom:${user_name}fwd)=NOT_INUSE));
+			&user-call-forward-userevent(${user_name});
 			Wait(0.5);
 			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/deaktiviert);
 			Hangup();
 		} else {
-			Set(CDR(amaflags)=OMIT);
 			&user-call-forward-activate-numeric(std,0,0,1);
 			&user-call-forward-activate-numeric(std,1,0,1);
 			&queue-logout-all-silent();
+			&user-call-forward-userevent(${user_name});
 			Wait(0.5);
 			TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=BUSY));
 			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
 			Hangup();
 		}
+	}
 
+	*90 => {
+		//redirect internal std
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		&user-call-forward-activate-numeric(std,0,0,1);
+		&user-call-forward-userevent(${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
+		Hangup();
+	}
+	*91 => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		&user-call-forward-activate-numeric(std,1,0,1);
+		&user-call-forward-userevent(${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
+		Hangup();
 	}
 	dnd-on => {
 		// like *2 but silent
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,0,0,1);
 		&user-call-forward-activate-numeric(std,1,0,1);
-		&queue-logout-all-silent();
+		&user-call-forward-userevent(${user_name});
 		Hangup();
 	}
 	
 	*2* => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
-		TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=NOT_INUSE));
+		TryExec(Set(DEVICE_STATE(Custom:${user_name}fwd)=NOT_INUSE));
+		&user-call-forward-userevent(${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/deaktiviert);
+		Hangup();
+	}
+
+	*90* => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		&user-call-forward-activate-numeric(std,0,0,0);
+		&user-call-forward-userevent(${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/deaktiviert);
+		Hangup();
+	}
+	*91* => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		&user-call-forward-activate-numeric(std,1,0,0);
+		&user-call-forward-userevent(${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/deaktiviert);
 		Hangup();
 	}
 	dnd-off => {
 		// like *2* but silent
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
+		&user-call-forward-userevent(${user_name});
 		Hangup();
 	}
 	
-	*21 => {
-		&caller-count();
+
+	_*2[1-4] => {
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
 			Hangup();
+
+		switch (${EXTEN:2}) {
+			case 1:
+				Set(type=vml);
+				break;
+			case 2:
+				Set(type=ano);
+				break;
+			case 3:
+				Set(type=trl);
+				break;
+			case 4:
+				Set(type=par);
+				break;
+			default:
+				Hangup();
+		};
+
 		Answer();
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm${user_name}');
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm${user_name}');
-		&user-call-forward-activate-numeric(vml,0,0,1);
-		&user-call-forward-activate-numeric(vml,1,0,1);
-		&queue-logout-all-silent();
+
+		&user-call-forward-activate-numeric(${type},0,0,1);
+		&user-call-forward-activate-numeric(${type},1,0,1);
+		&user-call-forward-userevent(${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
 		Hangup();
 	}
 	
-	*22 => {
-		&caller-count();
-		Set(CDR(amaflags)=OMIT);
-		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
-		&usercode-by-ext(${user_name});
-		if ("${user_code}" = "")
-			Hangup();
-		Answer();
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='vml' --number='vm*${user_name}');
-		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm*${user_name}');
-		&user-call-forward-activate-numeric(vml,0,0,1);
-		&user-call-forward-activate-numeric(vml,1,0,1);
-		&queue-logout-all-silent();
-		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
-		Hangup();
-	}
 	
 	_*2X. => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
@@ -299,15 +360,137 @@ context user-config {
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
 		&user-call-forward-activate-numeric(var,0,0,1);
 		&user-call-forward-activate-numeric(var,1,0,1);
-		&queue-logout-all-silent();
+		&user-call-forward-userevent(${user_name});
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
 		Hangup();
 	}
+	_*2# => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		Wait(0.5);
+		Read(tonumber,/opt/gemeinschaft/sounds/${gs_lang}/forward_target_enter);
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
+		if ("${SYSTEMSTATUS}" != "SUCCESS") {
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/auf-wiedersehen);
+			Hangup();
+		}
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
+		&user-call-forward-activate-numeric(var,0,0,1);
+		&user-call-forward-activate-numeric(var,1,0,1);
+		&user-call-forward-userevent(${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
+		Hangup();
+	}
+
+	_*9[01][1234] => {
+
+
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+
+		switch (${EXTEN:2:-1}) {
+			case 0:
+				Set(source=internal);
+				Set(srcode=0);
+				break;
+			case 1:
+				Set(source=external);
+				Set(srcode=1);
+				break;
+			default:
+				Hangup();
+		};
+
+		switch (${EXTEN:3}) {
+			case 1:
+				Set(type=vml);
+				break;
+			case 2:
+				Set(type=ano);
+				break;
+			case 3:
+				Set(type=trl);
+				break;
+			case 4:
+				Set(type=par);
+				break;
+			default:
+				Hangup();
+		};
+
+
+		Answer();
+
+
+		&user-call-forward-activate-numeric(${type},${srcode},0,1);
+		&user-call-forward-userevent(${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
+		Hangup();
+	}
+
+	_*90X. => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		Set(tonumber=${EXTEN:3});
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
+		if ("${SYSTEMSTATUS}" != "SUCCESS") {
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/auf-wiedersehen);
+			Hangup();
+		}
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
+		&user-call-forward-activate-numeric(var,0,0,1);
+		&user-call-forward-userevent(${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/${gs_lang}/rufumleitung&/opt/gemeinschaft/sounds/${gs_lang}/aktiviert);
+		Hangup();
+	}
+	_*91X. => {
+		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		&usercode-by-ext(${user_name});
+		if ("${user_code}" = "")
+			Hangup();
+		Answer();
+		Set(tonumber=${EXTEN:3});
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='internal' --type='var' --number='${tonumber}');
+		if ("${SYSTEMSTATUS}" != "SUCCESS") {
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/sie-haben-keine-berechtigung-fuer-diese-zielrufnummer);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/auf-wiedersehen);
+			Hangup();
+		}
+		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='var' --number='${tonumber}');
+		&user-call-forward-activate-numeric(var,1,0,1);
+		&user-call-forward-userevent(${user_name});
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
+		Hangup();
+	}
+
+
 	
 	*30 => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		&check-group-permission(${user_id},user,forward);
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&usercode-by-ext(${user_name});
 		if ("${user_code}" = "")
@@ -317,7 +500,7 @@ context user-config {
 		System(/opt/gemeinschaft/scripts/gs-callforward-number-set --user='${user_code}' --source='external' --type='vml' --number='vm${user_name}');
 		&user-call-forward-activate-numeric(vml,0,0,1);
 		&user-call-forward-activate-numeric(vml,1,0,1);
-		&queue-logout-all-silent();
+		&user-call-forward-userevent(${user_name});     
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
 		Hangup();
@@ -327,24 +510,117 @@ context user-config {
 	// Wakeup-call
 	//-------------------------------------------------------------
 
-	*4 => goto wakeup-call|s|1;
-
+	*4 => goto wakeup-call-select-lang|s|1;
+	
 	//-------------------------------------------------------------
 	// Comment
 	//-------------------------------------------------------------
 	
 	*96 => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-config-comment(1);
 	}
 	*96* => {
-		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-config-comment(0);
 	}
-}
 
+
+
+	//-------------------------------------------------------------
+	//  Ausgehende Rufnummer
+	//-------------------------------------------------------------
+
+	*34 => {
+		&check-group-permission(${user_id},user,clip_set);
+		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},internal);
+		if( "${clipset}" == "OK" ) {
+			Wait(0.5);
+			Playback(beep);
+			Hangup();
+		}
+		else {
+			Wait(0.5);
+			Playback(beeperr);
+			Hangup();		
+		}
+	}
+
+	_*34X. => {
+		&check-group-permission(${user_id},user,clip_set);
+		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},internal,${EXTEN:3});
+		if( "${clipset}" == "OK" ) {
+			Wait(0.5);
+			Playback(beep);
+			Hangup();
+		}
+		else {
+			Wait(0.5);
+			Playback(beeperr);
+			Hangup();		
+		}
+	}
+
+	*35 => {
+		&check-group-permission(${user_id},user,clip_set);
+		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},external);
+		if( "${clipset}" == "OK" ) {
+			Wait(0.5);
+			Playback(beep);
+			Hangup();
+		}
+		else {
+			Wait(0.5);
+			Playback(beeperr);
+			Hangup();		
+		}
+	}
+
+	//-------------------------------------------------------------
+	// Room state
+	//-------------------------------------------------------------
+
+	_##9[123] => {
+		&check-group-permission(${user_id},user,room_state);
+		AGI(/opt/gemeinschaft/dialplan-scripts/room-state-set.agi,${user_name},${EXTEN:3});
+		Answer();
+		Wait(0.5);
+		if( "${isset}" == "ok" ) {
+			if ( "${EXTEN:3}" == "1" ) {
+				Playback(/opt/gemeinschaft/sounds/${gs_lang}/room_not_cleaned);
+			}
+			else if ( "${EXTEN:3}" == "2" ) {
+				Playback(/opt/gemeinschaft/sounds/${gs_lang}/room_cleaned);
+			}
+			else {
+				Playback(/opt/gemeinschaft/sounds/${gs_lang}/room_cleaned_proofed);
+			}
+		}
+		else {
+			Playback(beeperr);
+		}
+		Hangup();
+	}
+
+	//-------------------------------------------------------------
+	
+
+	_*35X. => {
+		&check-group-permission(${user_id},user,clip_set);
+		AGI(/opt/gemeinschaft/dialplan-scripts/set-clip.agi,${user_name},external,${EXTEN:3});
+		if( "${clipset}" == "OK" ) {
+			Wait(0.5);
+			Playback(beep);
+			Hangup();
+		}
+		else {
+			Wait(0.5);
+			Playback(beeperr);
+			Hangup();		
+		}
+	}
+
+}
 
 macro user-config-comment( mactive ) {
 	if ("${user_name}" = "")
@@ -368,12 +644,15 @@ macro user-config-clir( mdest, mactive_num ) {
 	if ("${user_code}" = "")
 		Hangup();
 	
-	if ("${mdest}" != "external")
-		Set(mdest=internal);
+	if( "${mdest}" != "internal" && "${mdest}" != "external" )
+		Set(mdest=all);	
 	
 	Set(mactive=yes);
 	if ("${mactive_num}" = "0")
 		Set(mactive=no);
+	else if ("${mactive_num}" = "2")
+		Set(mactive=once);
+	
 	
 	Verbose(1,### User ${user_name}: set CLIR ${mdest}: ${mactive});
 	Answer();
@@ -417,7 +696,7 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 	if ("${user_code}" = "")
 		Hangup();
 	
-	if ("${mtype}" != "std" && "${mtype}" != "vml")
+	if ("${mtype}" != "std" && "${mtype}" != "vml" && "${mtype}" != "trl" && "${mtype}" != "par" && "${mtype}" != "ano" )
 		Set(mtype=var);
 	
 	Set(msource=internal);
@@ -440,6 +719,39 @@ macro user-call-forward-activate-numeric( mtype, msource_num, mcase_num, mactive
 	
 	Answer();
 	System(/opt/gemeinschaft/scripts/gs-callforward-activate --user='${user_code}' --source='${msource}' --case='${mcase}' --active='${mactive}');
+	if ( "${SYSTEMSTATUS}" != "SUCCESS" ) {
+		Playback(beeperr);
+		Hangup();	
+	}	
+
 	return;
 }
 
+macro check-group-permission ( userid, group, type ) {
+
+	AGI(/opt/gemeinschaft/dialplan-scripts/check_group_permission.agi,${userid},${group},${type});
+
+	if ( "${ret}" == "error" ) {
+		Playback(beeperr);
+		Wait(0.5);
+		Hangup();
+		return;
+	}
+
+	return;
+
+}
+
+macro user-call-forward-userevent( user_name ) {
+
+	AGI(/opt/gemeinschaft/dialplan-scripts/user_get_diversion.agi,${user_name});
+	
+	if ("${ret}" != "ok") {
+		Verbose(1,### User ${user_name}: Unable to generate Userevent for diversion ${ret});
+	}
+	else {
+		UserEvent(UserDiversionUI,user: ${user_name},internal: ${internal},external: ${external},std: ${std},var: ${var},vml: ${vml},timeout: ${timeout});
+	}		
+
+	return;
+}

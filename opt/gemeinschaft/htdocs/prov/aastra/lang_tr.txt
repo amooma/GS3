@@ -1,0 +1,1453 @@
+Türkçe
+480iCT prompts| 
+No handsets are currently paired| Dect telefon yok zaten abone.
+Cordless Handset Feature Key Configuration| Dect Telefon Tuş Özellikleri
+None| Hiçbiri
+Pair| Abonelik
+Attempting to pair...| Abone oluyor…
+Pairing successful| Abone oldu
+Pairing failed       | Abone olmadi
+Try again| Yeniden dene
+Remove Handset:| Dect telefon sil:
+Attempting to remove| Silme deneniyor
+Wait...| Bekleyin…
+Removal successful| Silme tamam
+Cordless| Dect
+Cordless Handsets| Dect telefon
+None Registered| Hiçbiri kayitli degil
+Sync| Senkron
+Private Line| Kişisel hat
+Sending Directory| Fihrist yollaniyor
+to Handsets| Dect telefonlara
+System Unavailable| Sistem yok
+Handset Pairing| Abone oluyor
+Handset Keys| Telefon tuşlari
+Feature Key programming complete.| Tuş ayari
+Two Call Support| ikinci çagri
+480i prompts| 
+Time Format| Saat biçimi
+    NOT MATCH !!!| EŞLEŞMEDI !!!
+Erase local config?| Lokal ayar sil?
+Alternate Server| AlternatifSunucu
+Contrast Level| Kontrast Düzeyi
+TypeService SIP| TypeService SIP
+TypeService RTP| TypeService RTP
+TypeService DSCP| TypeService DSCP
+TypeService RTCP| TypeService RTCP
+Dn| Aşagi
+Rt| Sağ
+Lf| Sol
+Del| Sil
+System Info Upload| Sistem Bilgisi Yükleniyor
+Up| Yukari
+Copyright| Copyright
+Reset| Tekrar Başlat
+Phone will restart automatically after finishing.| Telefon otomatik olarak tekrar başlayacak
+Please login| Lütfen Sisteme Giriş Yapın
+Incorrect password| Hatalı Şifre
+Reset Configuration?| İlk Konfigürasyonu yükle
+Cfg. Svr.| Konf. Sunucusu
+Enable| Aktif et
+List| Liste
+Move Up| Yukari
+Move Down| Aşagi
+Firmware Loaded| Yazilim yüklendi
+802.1x Authenticating| 802.1x yetkilendirme
+LLDP| LLDP
+DHCP: Waiting for IP| DHCP: IP bekleniyor
+Bluetooth Upgrade .. Please wait| Bluetooth yeni versiyon yüklemesi
+Contacting Redirector| Adresleme bagl.
+Redirecting Step 1| Yönlendiriliyor adim1
+Redirecting Step 2| Yönlendiriliyor adim2
+Redirecting Step 3| Yönlendiriliyor adim3
+Redirecting Step 4| Yönlendiriliyor adim4
+Redirecting Step 5| Yönlendiriliyor adim5
+Redirecting Step 6| Yönlendiriliyor adim6
+Auto Discovery...| Oto. keşif…
+Starting in Generic SIP Mode| SIP Mode Başlatılıyor
+Starting in AastraLink Mode| AastraLink Mode başlatılıyor
+Updating config| Ayar güncelleniyor
+Waiting assignment| Görev bekleniyor
+Checking for Firmware  Do not unplug phone!| Yazılım Kontrol Ediliyor Lütfen Telefonu Kapatmayınız
+New Firmware. Do not unplug phone!| Yeni Yazılım Yükleniyor Lütfen Telefonu Kapatmayınız
+New Firmware. Restarting...| Yeni Yazılım Telefon Tekrar Başlatılıyor 
+Downloading configuration| Konfigürasyon Yükleniyor
+Downloading Language Packs| Dil paketleri Yükleniyor
+Network| Ag
+UPnP device not found| UPnP aygiti yok
+Port Map In Progress| Port Map isleniyor
+Port Map Incomplete| Port Map bitirilmedi
+DSP| DSP
+SIP| SIP
+Tone| Ton
+Interface| Arayüz
+Web| Web
+Done| Tamamlandi
+CopyToAll| KopyaTümü
+Cannot use firmware.| Yazilim kullanilamaz
+No available lines| Müsait hat yok
+Current Password:| Mevcut şifre:
+New Password:| Yeni şifre:
+Re-enter Password:| Yeni şifre tekrar:
+  Password Changed| Şifre degişti
+Change| Degiştir
+Use DHCP?| DHCP Kullan?
+Advanced| Gelişmiş
+DNS| DNS
+Ringer | Zil 
+ ERROR: invalid port| HATA: geçersiz port
+SIP Register| SIP baglantisi
+Register?| Kayit ol?
+Authentication Name| Kullanici adi
+Nortel NAT| Nortel NAT
+Reset phone to| Ayarlari Sifirla
+factory defaults?| Fabrika Ayarlari?
+Setting phone back to| Ayarlari degiştir
+Factory Defaults| Fabrika ayarlari
+  Please enter the   | Lütfen giriniz
+    administrator    | yönetici
+      password.      | şifresi
+Password: | Şifre:
+Quit| Vazgeç
+More| Daha
+Timeserver Address:| Timeserver adresi:
+Network Time Disabled| Network Time iptal
+Dialing| Araniyor
+Incoming| Gelen
+Calling| Araniyor
+Pause| Dur
+Pickup| Topla
+Previous| Önceki
+Enter Time:| Saat:
+Message Waiting| Mesaj Bekliyor
+Live Dialpad| Canli Tuş Takimi
+Live Dialpad is| Canli Tuş Takimi
+Options List| Seçenek Listesi
+    Access denied    | Erişim engellendi
+Directory is full| Fihrist dolu
+30min summertime| 30 dakika
+1h    summertime| 1 saat
+No Link| Bagl. Yok
+Next| Sonra
+Retry| Tekrar
+Negotiation| Devret
+Live Dialpad disabled| Canli Tuş Takimi ipt.
+Link State| Baglanti
+Headset Mic Volume| Kulaklik Mikr. Sesi
+Gateway IP Address:| Gateway IP Adresi:
+Enter Date (y-m-d):| Tarih (y-a-g)
+Enter| Giriş
+Enable| Aktif et
+Full 10Mbps| Tam 10Mbs
+Full 100Mbps| Tam 100Mbs
+Half 10Mbps| Yarı 10Mbs
+Half 100Mbps| Yarı 100Mbs
+Default| Fabr.deger
+Add New| Yeni ekle
+DeleteList| Liste sil
+Delete entire| Hepsini sil
+Directory?| Telefon defteri
+Enter Number:| Numara gir:
+Network disconnected| Ag bagli degil
+Network connected| Ag bagli
+Entry Saved| Giriş kaydedildi
+Entry Removed| Giriş silindi
+Private| Şahsi
+Public| Genel
+Delete entry?| Giriş sil?
+Delete?| Sil?
+Delete number| Numara sil
+or delete all| veya girişlerin
+entries?| hepsini sil?
+Name is full| Isim çok uzun
+Empty| Boş
+Redial List| Arama Listesi
+Details| Detaylar
+Copy| Kopyala
+Select| Seç
+Voicemail| SesliMsj
+DeleteItem| AdetSil
+Delete All| 
+Entry copied to| Giriş kopyalandi
+Entry Exists| Giriş zaten var
+All items erased| Hepsi silindi
+Sort| Tasnifle
+Resume| Devam
+EditNum| NumDüzelt
+DeleteList again to| Listeyi tekrar sil
+Delete again to| Tekrar sil
+erase this item| bu çagriyi sil
+erase all calls| çagrilarin tümünü sil
+ new caller|  yeni arayan
+ new callers|  yeniarayanlar
+Press 1st letter| ilk harfi tuşla
+Handset | Telefon
+ Missed Call| Cevapsiz çagri
+ Missed Calls| Cevapsiz çagrilar
+Call Forward Mode| Çagri yönlendir modu
+CFWD All| Hepsini Yönlendir
+CFWD Busy| Meşgulde Yönlendir
+CFWD NoAnswer| Cevapsizda Yönlendir
+Call| Ara
+Select TFTP| TFTP seç 
+Use %c for new| Yeni için %c
+Use %c to view| Görüntüle %c
+Download Protocol| Indirme protokolu
+OFF| KAPALI
+ON| AÇIK
+Add Number| Num. ekle
+Arrange| Planlama
+%cmore| %cdaha
+Office| Ofis
+Home| Ev
+Cell| Mobil
+Pager| Çagri cih.
+VLAN Settings| VLAN ayarlari
+Softkeys and XML| SanalTuş ve XML
+Softkeys Configuration| SanalTuş ayar
+Bottom Keys| Alt tuşlar
+Top Keys| Üst tuşlar
+Page1| Sayfa 1
+Page2| Sayfa 2
+Page3| Sayfa 3
+Page4| Sayfa 4
+Page5| Sayfa 5
+Idle| Serbest
+Outgoing| Giden
+Empty| Boş
+Enter server name/IP:| Sunucu adi/IP:
+Enter HTTPS port:| HTTPS port:
+Erase| Sil?
+Proxy IP/Port| Proxy IP/Port
+Registrar IP/Port| Registrar IP/Port
+Erasing local config| Lokal ayar siliniyor
+Proxy Port:| Proxy Port:
+Registrar Port:| Registrar Port:
+Proxy Server:| Proxy Sunucu:
+Registrar Server:| Registrar Sunucu:
+Contrast Level:| Kontast seviyesi:
+Erase Local Config.| Lokal ayar sil
+Administrator Menu| Yönetici Menüsü
+Backlight On Time| Arkaaydinlatma Zamani
+Redirect HTTP->HTTPS?| Redirect HTTP->HTTPS?
+Block XML HTTP POSTs?| Block XML HTTP POSTs?
+HTTP->HTTPS| HTTP->HTTPS
+XML HTTP POSTs| XML HTTP POSTs
+Client Method| Terminal modu
+To unlock the phone| Kilidi açmak için
+No more softkeys| Baska Sanaltuş yok
+Ignore| Atla
+Answer| Cevap
+Configuration Server| Konfig. Sunucusu
+Primary Path| Öncelikli yol
+Alternate Path| Alternatif yol
+Logging in| Oturum açiliyor
+Login Failed| Oturum açilamadi
+Enable?| Aktif et?
+Check Expires| Son Kull.T.Kontrol
+Check Hostnames| Hostname Kontrol
+Conf. Unavailable| Konfig. Kullanilamaz
+Ringing...| Çagri var…
+Error Messages| Hata mesajlari
+No Error Messages| Hata mesaji yok
+Download Options| Indirme seçenekleri
+Abc| Abc
+123| 123
+&%*| &%*
+Abc2| Abc2
+A # &| A # &
+  Invalid password   | Şifre hatalı
+Upload Sys Info| Sistem Bilgisi Yükleniyor
+9133i prompts| 
+Password Changed| Şifre degişti
+Time Format| Saat biçimi
+Erase local cfg?| Lokal Ayar Sil?
+TypeService SIP| TypeService SIP
+TypeService RTP| TypeService RTP
+TypeService DSCP| TypeService DSCP
+TypeService RTCP| TypeService RTCP
+Alternate Server| AlternatifSunucu
+Contrast Level| Kontrast Düzeyi
+Options List| Seçenek Listesi
+DELETE to erase item  or # to erase Number| 
+Upload Sys Info| Sistem Bilgisi Yükleniyor
+Directory Empty. Use Save to add| Fihrist boş. Kayit için ekle
+  NOT MATCH !!!| EŞLEŞMEDI !!!
+DELETE again to erase this item| Tekrar sil bu çagriyi sil
+System Info Upload| Sistem Bilgisi Yükleniyor
+Phone will restart after| Telefon Tekrar Başlayacak
+Copyright| Copyright
+Reset| Tekrar Başlat
+Use DHCP?| DHCP Kullan?
+Full 10Mbps| Tam 10Mbs
+Full 100Mbps| Tam 100Mbs
+Half 10Mbps| Yarı 10Mbs
+Half 100Mbps| Yarı 100Mbs
+Please login| Lütfen Sisteme Giriş Yapın
+Incorrect password| Hatalı Şifre
+Reset Configuration?| Konfigürasyonu ilk haline döndür ?
+Cfg. Svr.| Konf. Sunucusu
+Net disconnected| Ag bagli degil
+Live Dialpad| Canli Tuş Takimi
+Firmware Loaded| Yazılım Yüklendi
+802.1x Authenticating| 802.1x yetkilendirme
+LLDP| LLDP
+Initializing network| Ağ başlatılıyor
+Bluetooth Upgrade| Bluetooth yeni versiyon yüklemesi
+Contacting Redirector| Yönlendirme için bağlanıyor
+Redirecting Step 1| Yönlendirme adım 1
+Redirecting Step 2| Yönlendirme adım 2
+Redirecting Step 3| Yönlendirme adım 3
+Redirecting Step 4| Yönlendirme adım 4
+Redirecting Step 5| Yönlendirme adım 5
+Redirecting Step 6| Yönlendirme adım 6
+Auto Discovery| Otom. Keşif
+Starting in Generic SIP Mode| Genel SIP modunda başlıyor
+Starting in Aastra Link Mode| AastraLink Mode başlatılıyor
+Updating configuration| Konfigürasyon Yükleniyor
+Waiting assignment| Aatama bekleniyor
+Checking for new firmware| Yeni yazılım kontrol ediliyor
+New Firmware: PLEASE DO NOT UNPLUG THE PHONE| Yeni Yazılım Yüklemesi Lütfen telefonu KAPATMAYINIZ
+New Firmware: Restarting...| Yeni yazılım tekrar başlatılıyor
+Downloading configuration| Konfigürasyon Yükleniyor
+Downloading Language Packs| Dil paketleri Yükleniyor
+Network| Network
+UPnP Gateway Not Found| UPnP aygiti yok
+UPnP Port Map In Progress| UPnP Port düzenlemesi çalışıyor
+UPnP Port Map Incomplete| UPnP Port düzenlemesi tamamlanamadı
+DSP| DSP
+SIP| SIP
+Tone| Tonlar
+Registering with the voice network...| Ses ağına kayıt olunuyor
+Web| Web
+Done| Tamamlandi
+Cannot use| Bu yazilim
+this firmware.| kullanilamaz
+All lines in use| Tüm hatlar mesg.
+Current Password| Mevcut şifre
+New Password| Yeni şifre
+Enter Again| Yeni şifre tekr.
+Ringer volume   | Zil sesi
+DELETE again to| Tekrar sil
+erase all calls| Hepsini sil
+Caller is erased| Arayan silindi
+Network Time| Network saati
+Change| Degiştir
+Options| Seçenekler
+Access denied| Erişilemiyor
+Directory full| Fihrist dolu
+Link Active| Link aktif
+No Link| Link yok
+Live Dialpad is\nnot available.| CanliTuştakımı yok
+Live Dialpad is\nON| CanliTuştakımı açık
+Live Dialpad is\nOFF| CanliTuş takımı kapalı
+-  confirmed   -| -  onaylandi   -
+Set| Ayarla
+DHCP\nON| DHCP\nACIK
+DHCP\nOFF| DHCP\nKAPALI
+Enable?\nYes| Aktif?\nEvet
+Enable?\nNo| Aktif?\nHayir
+Check Expires| SonKullKnt
+Check Expires?\nYes| SonKullKnt?\nEvt
+Check Expires?\nNo| SonKullKnt?\nHyr
+Check Hostnames| HostnameKn
+Check Hostnames?\nYes| HostnameKn?\nEvt
+Check Hostnames?\nNo| HostnameKn?\nHyr
+Cancel| Iptal
+SIP Register\nON| SIP Regist\nACIK
+SIP Register\nOFF| SIP Regist\nKPLI
+Nortel NAT\nEnabled| Nortel NAT\nAktf
+Nortel NAT\nDisabled| Nortel NAT\nPasf
+Next| Sonraki
+Done| Tamamlandi
+Retry| TkrDene
+Exit| Çikiş
+Pickup| Yakala
+Call held| Yakalandi
+Calls held| Yakalandi
+Country Code: | Ülke Kodu:
+*List Countries| *Ülkeler listele
+Enter| Giriş
+Admin Password| Yönetici Şifresi
+yyyy-mm-dd | yyyy-aa-gg
+Restart phone?| Yeniden başlat?
+#Confirm| #Onay
+RestoreDefaults?| FabrikaAyarlari?
+Call Agent 1| Çagri Uye 1
+Call Agent 2| Çagri Uye 2
+Call Agent 3| Çagri Uye 3
+Invalid Code    | Kod geçersiz
+E: Invalid port!| E: Geçersizport!
+Application:| Uygulama:
+Boot ROM:| Boot ROM:
+Negotiation:| Devretme:
+30m summertime| 30 dakika
+1h summertime| 1 saat
+Invalid password| Şifre hatalı
+  disconnected|  Ag
+   connected| Baglantisi
+    Network| Kesildi
+erase all items| Hepsini sil
+Enter Number>| Numara>
+Setting phone to| Telefonu ayarla
+Use Save to end| Bitiş için kayit
+to enter name>| isim>
+Saved: Directory| Kaydetti:Fihrist
+Retrying config | Ayarlar
+download...     | yükleniyor…
+empty| Boş
+No Match| Eşleşme yok
+Save to?| Kayit yeri?
+Saved Memory key| Tuşa kaydedildi
+Removed Key| Silinmis tuş
+Press 1st letter| Ilk harfi tuşla
+Speaker volume  | Hoparlör Sesi
+Handset volume  | Ahize sesi
+Headset volume  | Kulaklik sesi
+Factory Defaults| Fabrika Ayarlari
+ Missed Call| CevapsizÇagri
+ Missed Calls| CevapsizÇagri
+Cfwd State| YönlendirmeDurum
+Cfwd Number| Yönlen.Numara
+Cfwd Mode| Yönlen.Modu
+CFWD All| HepsiniYönlendir
+CFWD Busy| Meşgul.Yönlendir
+CFWD NoAnswer| CevapsizYönlen.
+Select TFTP\nPrimary| Seç TFTP Kişisel
+Select TFTP\nAlternate| Seç TFTP\nAlternatif
+DownloadProtocol| IndirmeProtokol
+VLAN Settings| VLAN ayarlari
+Server Name/IP?| Sunucu adi/IP?
+HTTPS Port?| HTTPS Port?
+Client Method\nSSL 3.0| T.metodu\nSSL3.0
+Client Method\nTLS 1.0| T.metodu\nTLS1.0
+HTTP->HTTPS\nRedirect| HTTP>HTTPS\nCevr
+HTTP->HTTPS\nDo not redirect| HTTP>HTTPS\nHyr
+Redirect| TekrarAdreslendi
+Do not redirect| YeniAdreslemeYok
+XML HTTP POSTs\nDo not block| XMLHTTPPOST\nYok
+XML HTTP POSTs\nBlock| XMLHTTPPOST\nBlk
+Do not block| Engelleme
+Block| Engelle
+Erasing config| AyarlarSiliniyor
+Pri TFTP Path| Ilk TFTP Yolu
+Alt TFTP Path| Alt TFTP Yolu
+Backlight Mode| Aydinlatma Modu
+Backlight Time| Aydinlatma sure
+Answer| Cevap
+Ignore| Iptal
+Cfwd| ÇYön
+Copy to All?| Hepsini Kopyala?
+Apply Changes?| Degişiklik Onay?
+Logging in| Oturum açiliyor
+Login Failed| Oturum açilamadi
+Conf Unavailable| AyarKullanilamaz
+Error Messages| Hata mesajlari
+No Error Messages| Hata mesaji yok
+Download Options| Yükleme Seçenek
+6739i prompts| 
+SID_ENTER_ADMIN_PASSWORD| Yönetici Şifresi Girin
+Error Msg| Hata mesajlari
+Lock| Kilitli
+Unlock the phone?|  Kilidi kaldir?
+ Enter Unlock Password| Kilit şifresini girin
+softkey| softkey
+Edit Number| Numaraları düzelt
+Lock the phone?| Telefon kilitle?
+Lock the phone| Telefon kilitle
+keypad| Klavye
+Unlock| Açik
+ Cust Feat| Cust Feat
+Phone is locked| Telefon kilitli
+Unlock the phone| Kilidi kaldir
+GoodBye| Hoşcakalın
+Pass Thru Port| Port üzerinden bağlan
+First| İlk
+Last| Son
+Name| İsim
+Add| Ekle
+Edit| Düzelt
+Space| Ara
+Bksp| Geri
+caps| Küçük
+CAPS| Büyük
+Reject| Red
+Silence| Sessiz
+Hold| Tut
+Transfer| Transfer
+>| >
+Lines| Satırlar
+Settings| Ayarlar
+Device Name| Cihaz Adı
+Bluetooth Devices| Bluetooth Cihazları
+Bluetooth Status:| Bluetooth Durumu
+Search| Ara
+Searching...| Arıyor...
+device(s) found.| Bulunan cihazlar
+Press on a device to start pairing.| Paylaşım için tuşa basın
+Enter PIN| PIN numarasını girin
+Add Device| Cihaz ekle
+Active| Aktif
+Are you sure?| Emin misiniz ?
+ALL| Hepsi
+Phone No:| Telefon numarası
+Copy to all modes| Tüm durumlara kopyala
+BUSY| Meşgul
+NO ANSWER| Cevap Yok
+CFWD NO ANS:| Cevap Yoksa Yönlendir 
+CFWD BUSY:| Meşgul se Yönlendir
+CFWD ALL:| Tüm çağrıları yönlendir.
+Audio| Ses
+Calibrate Screen| Ekranı ayarla
+Recalibrate Touchscreen?| Dokunmatik ekranı tekrar ayarla
+Softkeys| Yazılımsal tuşlar
+Headset Mic Volume| Kulaklık mic ses ayarı
+Headset Device| Kulaklık cihazı
+Bluetooth| Bluetooth
+Wired| Kablolu
+Restart | Tekrar başlat
+No Calls| Çağrı yok
+Brightness Timer| Parlaklık ayarı
+Brightness Level| Parlaklık derecesi
+Add to Directory| Listeye ekle
+Waiting for Touch Screen activity to subside ...| Dokunmatik ekran aktivitesi bekleniyor
+Touch the UPPER-LEFT corner of the screen| Ekranın SOL ÜST kısmına dokunun
+Touch the UPPER-RIGHT corner of the screen| Ekranın SAĞ ÜST kısmına dokunun
+Touch the LOWER-RIGHT corner of the screen| Ekranın SAĞ ALT kısmına dokunun
+Touch the LOWER-LEFT corner of the screen| Ekranın SOL ALT kısmına dokunun
+Received unreliable data. You will be asked to touch the same point again| Doğru olmayan bilgi alındı.Ekrana tekrar 
+Processing ...| İşlem Devam Ediyor ...
+Validating calibration data ... please wait| Kalibrasyon bilgileri yükleniyor ... Lütfen bekleyin.
+Sanity Check OK. Save changes?| Kontrol Tamamlandı. OK. Kayıt edilsin mi ?
+Sanity Check Failed| Kontrol Tamamlanamadı.
+Retry| Tekrar dene.
+Quit| Çık
+Please Enter| Lütfen girin
+Submit| Gönder
+User ID:| Kullanıcı Adı
+Password:| Şifre
+Transferring| Aktarılıyor
+No. Rings| Çalma yok
+Line| Satır
+Unable to Pair| Paylaşılamıyor.
+Please Wait...| Lütfen bekleyin
+Add new device...| Yeni cihaz ekle
+Detected:| Kontrol ediliyor 
+Connecting:| Bağlanıyor
+Disonnecting:| Bağlantı Kesiliyor
+Connected:| Bağlantı Kuruldu
+ALL| Hepsi
+BUSY| Meşgul
+NO ANSWER| Cveap yok
+CFWD ALL:| Tümünü yönlendir
+CFWD BUSY:| Meşgul ise Yönlendir
+CFWD NO ANSWER:| Cevap yoksa yönlendir 
+Copy to all modes| Tüm durumlara kopyala
+| 
+Phone Number:| Telefon Numarası
+Level 1| Seviye 1
+Level 2| Seviye 2
+Level 3| Seviye 3
+Level 4| Seviye 4
+Level 5| Seviye 5
+(Min: %d  Max: %d)| (Min: %d  Max: %d)
+ Enter Administrator Password| Yönetici şifresi girin
+Phone will restart automatically after finishing.| Telefon otomatik olarak tekrar başlayacak
+Conference| Konferans
+Reset Configuration?| İlk Konfigürasyonu yükle
+Hide| 
+Common prompts| 
+Disable| Iptal et
+Restart Phone?| Yeniden başlat?
+12 Hour| 12 Saat
+Speeddial| Hizli Arama
+Erase local cfg?| Lokal Ayar Sil?
+Spd Dial| 
+Backup Outbound Proxy Server| Dış Proxy Sunucusunu Yedekle
+Backup Outbound Proxy Port| Dış Proxy portunu Yedekle
+Firmware Info| Yazilim Bilgisi
+DHSG| DHSG
+DHSG is ON| DHSG AÇIK
+DHSG is OFF| DHSG KAPALI
+Backlight On Time| Arkaaydinlatma Zamani
+Use Alt TFTP| Alt TFTP kullan
+Pri TFTP Path| Ilk TFTP Yolu
+Alt TFTP Path| Alt TFTP Yolu
+RestoreDefaults?| FabrikaAyarlari?
+HTTP Init Failed| HTTP
+Get aastra.lic| aastra.lic
+Get mac.lic| mac.lic
+Firmware not licensed for use on this phone| Yazılım lisansı uygun değil
+Redial List is empty| Çagri listesi boş
+Callers List is empty| Arayan listesi boş
+Callers List| Arama Listesi
+Directory| Rehber
+License Information| Lisans bilgisi
+XML Application URI:| XML uygulama URI:
+Missing User ID| Kullanıcı adı eksik
+TFTP| TFTP
+FTP| FTP
+HTTP| HTTP
+HTTPS| HTTPS
+Use| Kullan
+Active Features| Aktif Özellikler
+WWW MMM DD| WWW AAA GG
+DD-MMM-YY| GG-AAA-YY
+YYYY-MM-DD| YYYY-AA-GG
+DD/MM/YYYY| GG/AA/YYYY
+DD/MM/YY| GG/AA/YY
+DD-MM-YY| GG-AA-YY
+MM/DD/YY| AA/GG/YY
+MMM DD| AAA GG
+DD MMM YYYY| GG AAA YYYY
+WWW DD MMM| WWW GG AAA
+DD MMM| GG AAA
+DD.MM.YYYY| GG.AA.YYYY
+24 Hour| 24 Saat
+XML Application Title:| XML uygulama Unvan:
+License Status| Lisans durumu
+FTP| FTP
+to view| görüntüle
+Contact Name already exists| Kullanıcı ismi mevcut
+Leave| Çık
+Contact Mismatch| Kullanıcı eşlenmedi
+ Call Terminated| Çağrı Sonlandırıldı
+IP and gateway have to be on same subnet| IP ve gateway aynı subnet de olmalı
+IP cannot be equal to gateway address| IP ve gateway adresleri farklı olmalı
+Call Waiting Tone Period| Çağrı bekletme ton süresi
+OK| Tamam
+Directory empty| Fihrist boş
+Files Sent| Gönderilen dosyalar
+Upload System Info| Sistem Bilgisi Yükleniyor
+Upload| Yükleniyor…
+Call Transferred| Çağrı aktarıldı
+Firmware Information| Yazilim Bilgisi
+Contact Name already exists| İsim listede var
+Replace| Değiştir
+No Services| Servis Yok
+Merge| Birleştir
+Enter Name:| İsim giriniz
+Call Hold Reminder| Çağrı bekletme hatırlatma
+Others| Diğerleri
+Call Hold Reminder During Active Calls| Aktif Çağrı bekletme hatırlatma 
+Out of service| Servis yok
+Reason: | Sebeb
+Add blank record?| Boş kayıt ekle
+Audio Setting| Ses ayarı
+Delete Item| Sil
+Services| Servisler
+Server| Sunucu
+Service Disabled| Servis iptal
+Port| Port
+Path| Yol
+Username| Kullanici Adi
+No. Rings| Zil sayisi
+Use xx to view| Gözatmak için xx
+User Password| Şifre
+Time and Date| Saat ve Tarih
+Language| Dil
+Screen Language| Ekran Dili
+Tones| Tonlar
+Tone Set| Ton Ayari
+Ring Tone| Zil Tonu
+State| Durum
+State:| Durum:
+User-Busy| Kullanici-Meşgul
+Unconditional| Mutlak
+Time of day| Günün saati
+Deflection| Aktarma
+Follow Me| BeniTakipEt
+Away| Dişarida
+Busy| Meşgul
+Restart| TekrBaşlat
+All On| TümüAçik
+All Off| TümüKapali
+AllAccts| TümHesaplr
+Conference| Konferans
+Flash| Beklet
+Dial| Ara
+Directory| Rehber
+Callers| AramaList
+Icom| Anons
+Dir| Rehber
+Xfer| Aktar
+Conf| Konferans
+SIP Settings| SIP Ayarlari
+Proxy Port| Proxy Port
+Registrar Port| Kayit Port
+User Name| Kullanici Adi
+Screen Name| Ekran Ismi
+Proxy Server| Proxy Sunucu
+Registrar Server| SIP Sunucu
+Auth. Name| Oto. İsim
+Nortel NAT| Nortel NAT
+Sylantro| Sylantro
+Broadsoft| Broadsoft
+Display Name| Ekran Ismi
+RTP Port Base| RTP Port
+Static NAT| Statik NAT
+NAT Settings| NAT Ayarlari
+NAT IP| NAT IP
+NAT SIP Port| NAT SIP Port
+NAT RTP Port| NAT RTP Port
+NAT HTTPS Port| NAT HTTPS Port
+Phone Status| Telefon Durumu
+Auto Discovery| Oto. Keşif
+Trying...| Deneniyor…
+Remote| Uzak uç
+Reset| Reset
+Choose Server| Sunucu seç
+Select| Seçim
+Ring Tone:| Zil Tonu:
+Silent| Sessiz
+Network Settings| Ag Ayarlari
+Clear| Temizle
+Speaker | Hoparlor
+Headset | Kulaklik
+Speaker/Headset| Hopr/Kulaklik
+Headset/Speaker| Kulaklik/Hopr
+Audio Mode| Ses modu
+Low| Dusuk
+Medium| Orta
+High| Yuksek
+OFF| KAPALI
+ON| AÇIK
+DHCP Settings| DHCP Ayarlari
+DHCP User Class| DHCP Kull. Sinif
+Hostname| Hostname
+IP Address| IP Adresi
+Subnet Mask| Ag Maskesi
+Subnet Mask:| Ag Maskesi:
+Gateway| Ag Geçidi
+Primary DNS| Birincil DNS
+Secondary DNS| Ikincil DNS
+TFTP Settings| TFTP Parametre
+VLAN| VLAN
+VLAN ID| VLAN ID
+PC Port VLAN ID| PC Port VLAN ID
+LAN Port VLAN| LAN Port VLAN
+PC Port VLAN| PC Port VLAN ID
+Priority| Öncelik
+VLAN Enabled\nYes| VLAN Aktif\n Evt
+VLAN Enabled\nNo| VLAN Aktif\n Hyr
+PC Port Priority| PC Port Öncelik
+LAN Port VLAN ID| LAN Port VLAN ID
+UPnP| UPnP
+Use UPnP| UPnP Kullan
+Select Gateway| Ag Geçidi Seç
+Portmap Started| Portmap Başladi
+Portmap Error| Portmap Hatasi
+LLDP| LLDP
+LLDP packet interval| LLDP PaketAralik
+LLDP Settings| LLDP Parametre
+Use LLDP ELIN| LLDP ELIN Kullan
+TypeService DSCP| DSCP ServisTipi
+Type of Service DSCP| ToS DSCP
+VLAN Priority| VLAN Öncelik
+Other Priority| Diger Öncelik
+SessionBorderCtl| OturumSiniriCtrl
+Session Border Ctrl| Oturum Siniri Ctrl
+Select SBC| SBC Seçin
+SBC Settings| SBC Parametre
+None| Hiçbiri
+Kagoor| Kagoor
+Update Interval (sec)| YenileAralik(sn)
+Backspace| Geri
+No| Hayir
+Yes| Evet
+DHCP Download Options| DHCP Yükleme Alt.
+Firmware Version| Yazilim Versiyon
+Restart Phone| Yeniden Başlat
+Show| Göster
+is OFF| KAPALI
+Password| Şifre
+Restarting...| YenidenBaşliyor…
+Speed| Hiz
+Manual| Manuel
+Auto| Otom.
+Half| Half
+Full| Full
+Duplex| Duplex
+ ERROR: | HATA:
+Invalid IP addr.| IP Adr. geçersiz
+Invalid mask| Ag Mask.geçersiz
+Range is 1-4094| Aralik: 1-4094
+Range is 1-4095| Aralik: 1-4095
+Range is 0-63| Aralik: 0-63
+Range is 0-7| Aralik: 0-7
+DND| RE
+DND On| RhtsizEtme Aktif
+Time Server| Saat Sunucusu
+Set Time| Saati Ayarla
+Set Date| Tarihi Ayarla
+Date Format| Tarih Biçimi
+Time Zone| Saat Dilimi
+Daylight Savings| Günişigindan Y.
+Invalid Time| Geçersiz Saat
+Invalid Date| Geçersiz Tarih
+Invalid IP| Hatalı IP
+ Invalid Number| Hatalı numara
+On| ACIK
+Off| KAPALI
+Automatic| Otomatik
+Conf Hold| Konferans Beklet
+No Service| Servis Yok
+Mute| Sessiz
+Connected| Baglandi
+Drop| Iptal
+Park| Beklet
+PickUp| Yakala
+Redial| Tekrar Ara
+DCP| Oto.ÇagriYakala
+DCP List| Oto.ÇagriYakala
+Cancel| Iptal
+Done| Tamam
+Callers List| Arama Listesi
+No changes made| Degiştirilmedi
+Key is Locked| Tuş Kilitlendi
+Cannot Save| Kayit edilemiyor
+1 item| 1 Öge
+ items|  Ögeler
+No User| Kullanici Yok
+DHCP failed| DHCP Hatasi
+Unknown Name| Isim Bilinmiyor
+Unknown Number| No Bilinmiyor
+Unknown Line| Hat Bilinmiyor
+Item is erased| Öge silindi
+Unknown| Bilinmiyor
+NextSpace| Boşluk
+Dot "."| Nokta"."
+Transfer Failed| Aktarma olmadi
+Call Forward| ÇagriYönlendirme
+Call Fwd| ÇYön
+All| Hepsi
+Any| Hiçbiri
+NoAns| Cevapsiz
+BusyNoAns| Meşg/Cevapsiz
+Number:| Numara:
+Mode:| Mod:
+No. Rings:| Çalma Sayisi
+Line: | Hat:
+Contrast Level| Kontrast Düzeyi
+ Message|  Mesaj
+ Messages|  Mesajlar
+Loading Page...| Sayfa Yükleniyor
+Abort Loading...| Yükleme Durdu…
+Connect Timeout| Zamanasimi
+Data Timeout| Veri Zamanasimi
+File Not Found| Dosya Bulunamadi
+Page Load Error| SayfaYükl.Hatasi
+Cannot display| Görüntülenemiyor
+Skip| Atla
+Call Failed| Arama Bararisiz
+Primary Server| Birincil Sunucu
+Alternate Server| AlternatifSunucu
+Primary| Birincil
+Alternate| Alternatif
+Bad encrypted cfg| Kripto başlamadi
+Use TFTP| TFTP Kullan
+Use FTP| FTP Kullan
+Use HTTP| HTTP Kullan
+Use HTTPS| HTTPS Kullan
+FTP Settings| FTP Parametreler
+FTP Server| FTP Sunucu
+FTP Path| FTP Yolu
+FTP Username| FTP KullaniciAdi
+FTP Password| FTP Şifre
+HTTP Settings| HTTP Parametre
+HTTP Server| HTTP Sunucu
+HTTP Path| HTTP Yolu
+HTTP Port| HTTP Port
+HTTPS Settings| HTTPS Parametre
+Download Server| Sunucu Yükle
+Download Path| Adres Yükle
+Download Port| Port Yükle
+HTTPS Server| HTTPS Sunucu
+HTTPS Path| HTTPS Yolu
+HTTPS Port| HTTPS Port
+HTTPS Client| HTTPS Terminal
+SSL 3.0| SSL 3.0
+TLS 1.0| TLS 1.0
+Bad Certificate| Bozuk Sertifika
+Certificates| Sertifikalar
+Cert Validation| SertifikaSnKull.
+All defaults| Varsayilan deger
+Config default| Varsayilan ayar
+AM| AM
+PM| PM
+Factory Default| Fabrika Ayarlari
+Erase Local Cfg.| Lokal Ayar Sil
+New IP Obtained| Yeni IP alindi
+New NAT IP| Yeni NAT IP
+Server IP Change| Sunucu IP degiş.
+AastraLink Menu| AastraLink Menü
+Server Options| Sunucu seçenek
+AastraLink Info| AastraLink Bilgi
+Server Remote IP| Sunucu uzak IP
+Server Local IP| Sunucu lokal IP
+Preferences| Tercihler
+Network Status| Ag durumu
+MAC Address:| MAC Adresi
+BT MAC Address:| BT MAC Adresi
+Invalid Key| Anahtar geçersiz
+Speed Dial Edit:| Kisa kod düzen.:
+Press SD button| HizliArama tuşu
+From: | Kimden:
+To: | Kime:
+Via: | Araciligiyla:
+Diverted: | Yönlendi:
+Log Off| Oturumu Kapat
+Customer Support| Teknik destek
+Status| Durum
+Operation| Işletim
+Basic Settings| Temel Ayarlar
+Advanced Settings| Gelişmiş Ayarlar
+System Information| Sistem Bilgisi
+Down| Aşagi
+Up| Yukari
+n/a| Uyumsuz
+10Mbps| 10Mbps
+100Mbps| 100Mbps
+1000Mbps| 1000Mbps
+Attribute| Nitelik
+Link State| Bagl. Durumu
+Negotiation| Devretme
+Hardware Information| Donanim Bilgisi
+Firmware Information| Yazilim Bilgisi
+Firmware Release Code| Yazilim vers. kodu
+Value| Deger
+Platform| Platform
+Boot Version| Boot versiyonu
+Date/Time| Tarih/Saat
+DND Key Mode| Rhtsiz.etme Tuş Modu
+Call Forward Key Mode| Yönlen.Tuş Modu
+Option 160| Option 160
+Option 159| Option 159
+Option 66| Option 66
+Option 43| Option 43
+Account| Hesap
+Both| Çift
+Line| Hat
+Line 1| Hat 1
+Line 2| Hat 2
+Line 3| Hat 3
+Line 4| Hat 4
+Line 5| Hat 5
+Line 6| Hat 6
+Line 7| Hat 7
+Line 8| Hat 8
+Line 9| Hat 9
+Line 10| Hat 10
+Configuration Line %d| Hat %d Ayarlar
+Basic SIP Authentication Settings| Temel SIP Yetkisi
+Screen Name| Ekran Ismi
+Screen Name 2| Ekran Ismi 2
+Phone Number| Telefon No
+Caller ID| Arayan Numara Bilgisi
+Authentication Name| Yetki Ismi
+Password| Şifre
+BLA Number| BLA Numara
+Line Mode| Hat Modu
+Generic| Genel
+Broadsoft SCA| Broadsoft SCA
+BLA| BLA
+Asterisk SLA| Asterisk SLA
+Basic SIP Network Settings| Temel SIP Agi
+Outbound Proxy Server| Outbound Proxy Sunucu
+Outbound Proxy Port| Outbound Proxy Port
+Registration Period| Kayit periyodu
+RTP Settings| RTP Ayarlari
+Autodial Settings| Oto.Arama Ayarlari
+Autodial Number| Oto.Arama Numara
+Autodial Timeout| Oto.Arama Zamanasimi
+Use Global Settings| Genel ayarlari kullan
+DTMF Method| DTMF yontemi
+SIP INFO| SIP INFO
+BOTH| BOTH
+Save Settings| Kaydet
+Global SIP| Genel SIP
+Global SIP Settings| Genel SIP Ayarlari
+RTP Encryption| RTP Kripto
+SRTP Disabled| SRTP Pasif
+SRTP Preferred| SRTP Tercihi
+SRTP Only| Sadece SRTP
+Advanced SIP Settings| Gelişmiş SIP Ayarlari
+Explicit MWI Subscription| MWI Abonelik
+Explicit MWI Subscription Period| MWI Abonelik
+MWI for BLA account| MWI için BLA Hesabi
+Enabled| Aktif
+Send MAC Address in REGISTER Message| Mac Adresi gönder
+Send Line Number in REGISTER Message| Hat Numarasi gönder
+Session Timer| Oturum Sayaci
+T1 Timer| T1 sayaci
+T2 Timer| T2 sayaci
+Transaction Timer| Işlem sayaci
+Transport Protocol| Iletişim Protokolu
+UDP and TCP| UDP ve TCP
+UDP| UDP
+TCP| TCP
+TLS| TLS
+Persistent TLS| TLS zorla
+Registration Failed Retry Timer| Kayit olmazsa tekrar
+Registration Timeout Retry Timer| Kayit zamanaşimi tekrar
+Registration Renewal Timer| Kayit yenileme süresi
+BLF Subscription Period| BLF abonelik araligi
+ACD Subscription Period| ACD abonelik araligi
+BLA Subscription Period| BLA abonelik araligi
+Blacklist Duration| Karaliste Süresi
+ Park Pickup Config|  Park Pickup Konfig.
+RTP Port| RTP Port
+Basic Codecs| Temel kodlama
+Force RFC2833 Out-of-Band DTMF| RFC2833 zorla
+Codec Preference List| Kodlama tercih listesi
+Silence Suppression| Sessizlik bastirma
+Provisioning complete.| Değişiklikler kaydedildi
+You must restart the phone before the new settings will take effect.| Yeniden başlatmalisiniz
+ERROR: Maximum number of connections reached.| HATA: Maksimum numara
+Logout Complete| Oturum Kapatildi
+Your session has ended.  Please close the browser.| Oturumunuz sona erdi.
+Session Expired| Oturum sonlandirildi
+Please close the browser or use the link below to log in again.| Tarayiciyi kapatiniz
+Log In| OturmAc
+Log Out| OturmKp
+Avail| Mevcut
+Unavail| Yok
+Reset User Password| Şifreyi Sifirla
+Please enter the current and new passwords| Mevcutu giriniz
+Current Password| Mevcut şifre
+New Password| Yeni şifre
+Password Confirm| Yeni şifre tekr.
+Please Enter| Lütfen giriniz
+Submit| Onay
+ABC...| ABC…
+abc...| abc…
+123...| 123…
+Authorizing...| Yetki aliniyor…
+Authorization Failed| Yetki alinamadi
+Auth Failed| Yetki alinamadi
+Current password is incorrect.| Mevcut şifre
+Please try again.| Lütfen tekrar deneyiniz
+The new password fields do not match.| Yeni şifreler eslemedi
+The new password can not be saved.| Yeni şifre kaydedilemedi
+The user password has been changed.| Şifre degiştirildi
+Task and Stack Info| Görev ve veri durumu
+Back| Geri
+Files Available for Download| Dosyalar kullanilabilir bunlar için
+Custom| Ozel
+Save As...| Farkli kaydet
+Directory List| Isim Listesi
+Current Settings| Mevcut ayarlar
+Restore To Factory Defaults| Fabrika Ayar. Yükle
+Restore| Onar
+Remove Local Configuration Settings| Lokal ayarlari temizle
+Remove| Temizle
+Restarting the hardware...| Donanim yeniden başlat
+Please return to the <a href="sysinfo.html">main page</a> after your phone restarts.| Lütfen acin <a href="sysinfo.html">ana sayfa</a> telefon yeniden başladiginda.
+User not authorized to make changes.| Degişiklik yapmaya kullanici yetkili degil
+Local configuration file has been deleted.| Lokal ayar dosyasi silindi
+Please restart the phone for the settings to take effect.| Degişikliklerin geçerli olmasi için yeniden başlatiniz
+Phone has been set to factory Defaults.| Telefona fabrika ayarlari geri yüklendi
+Action URI| Çalişma şekli URI
+Action URI Configuration| Çalişma şekli URI parametre
+Event| Olay
+StartUp| Başlangic
+Successful Registration| Kayit başarili
+Registration Event| Kayit olayi
+Incoming Call| Gelen arama
+Outgoing Call| Giden arama
+Offhook| Hat açik
+Onhook| Hat kapali
+Disconnected| Baglanti kesildi
+Poll| Seçim
+Interval| Devretme
+Settings saved.| Ayarlar kaydedildi
+Settings could not be saved.| Ayarlar kaydedilemiyor
+Firmware Update| Yazilim güncelleme
+TLS Support| TLS destegi
+Manual Firmware Update| Manuel yazilim güncelleme
+Enter the server's IP address and the name of the firmware below to initiate a firmware update.|  Yazilim güncellemesi için sunucunun IP adresini ve ismini asgiya giriniz
+Configuration Server| Parametre sunucusu
+Configuration Server Settings| Parametre sunucu ayarlari
+Server IP| Sunucu IP
+File Name| Dosya adi
+Configure File Names| Dosya adini düzenle
+Root and Intermediate Certificates Filename| Başlangiç ve ara sertifika dosya adi
+Local Certificate Filename| Lokal sertifika dosya adi
+Private Key Filename| Sahsi anahtar dosya adi
+Trusted Certificates Filename| Güvenilir sertifikalar dosya adi
+Download Firmware| Yazilimi yükle
+Firmware upgrade in progress.  Please wait.| Yazilim güncelleniyor. Lütfen bekleyiniz
+Please enter a valid filename and TFTP server IP address.| Geçerli dosya adi ve TFTP sunucu IP adresi giriniz 
+Invalid TFTP server IP address| Geçersiz TFTP sunucu IP adresi
+Invalid download settings.| Geçersiz yükleme ayarlari
+Unable to upgrade firmware.| Yazilim güncellemesi yapilamiyor
+The phone is restarting...| Telefon yeniden başlatiliyor…
+Firmware upgrade successful.| Yazilim güncelleme başarili
+This firmware already exists on the phone.| Bu yazilim zaten yüklü
+No upgrade is needed.| Güncelleme gerekmiyor
+Troubleshooting| Düzeltiliyor
+Module| Modül
+Log Settings| Olay kaydi ayarlari
+Log IP| Olay kaydi IP
+Log Port| Olay kaydi Port
+Debug Level| Onarma seviyesi
+Support Information| Destek bilgisi
+Get local.cfg| local.cfg edinin
+Get server.cfg| server.cfg edinin
+Show Task and Stack Status| Görevleri ve veri durumunu goster
+Settings| Ayarlar
+Download Protocol| Indirme protokolu
+Auto-Resync| Oto. Eszamanlama
+Days| Günler
+Maximum Delay| Maksimum gecikme
+Mode| Mod
+Configuration Files| Ayar dosyalari
+Time (24-hour)| Saat (24-saat)
+XML Push Server List(Approved IP Addresses)| XML Push sunucu listesi (onaylanmis IP)
+Phone-side Call Forward Settings| Çagri yönlendirme ayarlari
+Global Settings| Genel ayarlar
+No Answer| Cevapsiz
+Number| Numara
+Number of Rings| Zil sayisi
+Local Line| Lokal hat
+Forward Number| Yonl. Numara
+Global| Genel
+Enable| Aktif et
+Network| Ag
+Must provision a valid default gateway IP if DHCP is enabled| DHCP aktifse geçerli ag geçidi IP adresi saglanmalidir
+Invalid IP Address| Geçersiz IP adresi
+Invalid IP address| Geçersiz IP adresi
+Invalid IP addr.| Geçersiz IP adresi
+Invalid gateway address| Geçersiz ag geçidi adresi
+Invalid subnet mask| Geçersiz ag maskesi
+Invalid primary DNS address| Geçersiz birincil DNS adresi
+Invalid secondary DNS address| Geçersiz ikincil DNS adresi
+Basic Network Settings| Temel ag ayarlari
+Advanced Network Settings| Gelişmiş ag ayarlari
+DHCP| DHCP
+NAT Port| NAT Port
+Nortel NAT Traversal Enabled| Nortel NAT geçisi aktif edildi
+Nortel NAT Timer (seconds)| Nortel NAT sayaci (saniye)
+NTP Time Servers| NTP saat sunuculari
+Time Server 1| Saat sunucusu 1
+Time Server 2| Saat sunucusu 2
+Time Server 3| Saat sunucusu 3
+SIP| SIP
+VLAN Enable| VLAN aktif
+Non-IP Packet| IP olmayan paket
+SIP Priority| SIP önceligi
+RTP Priority| RTP önceligi
+RTCP Priority| RTCP önceligi
+Preferences| Tercihler
+General| Genel
+Idle Display Name 1| Ekran Ismi 1
+Idle Display Name 2| Ekran Ismi 2
+Local Dial Plan| Lokal numara plani
+Send Dial Plan Terminator| Numara plani sonlandirici gönder
+Digit Timeout (seconds)| Numara çevirme zamanasimi (sn)
+Park Call:| Bekletilen çagri:
+Pick Up Parked Call:| Bekletilen çagri geri al :
+Suppress DTMF Playback| DTMF tonlari bastir
+Display DTMF Digits| DTMF tuşlamayi goster
+Call Waiting| Çagri bekliyor
+Play Call Waiting Tone| Çagri bekliyor tonunu duy
+Stuttered Dial Tone| Kesintili cevir sesi
+Incoming Call Interrupts Dialing| Gelen arama öncelikli
+Switch UI Focus To Ringing Line| Çalan hatta odaklan
+Outgoing Intercom Settings| Anons yapma ayarlari
+Type| Tip
+Phone-Side| Telefon tarafi
+Server-Side| Sunucu tarafi
+Prefix Code| Numara başlangiç kodu
+Incoming Intercom Settings| Gelen anons ayarlari
+Microphone Mute| Mikrofonu kapat
+Play Warning Tone| Hata tonu çal
+Allow Barge In| Çagri sirasinda engelle
+Auto-Answer| Otomatik cevap
+Key Mapping| Tuş dizilimi
+Map Redial Key To| Yeniden ara tuşu ayarla
+Map Conf Key To| Konferans tuşu ayarla
+Ring Tones| Zil tonlari
+Brazil| Brezilya
+France| Fransa
+Germany| Almanya
+Italy| Italya
+Mexico| Meksika
+Russia| Rusya
+UK| Birlesik Krallik
+US| ABD
+Global Ring Tone| Genel zil tonu
+Tone 1| Ton 1
+Tone 2| Ton 2
+Tone 3| Ton 3
+Tone 4| Ton 4
+Tone 5| Ton 5
+Priority Alerting Settings| Öncelik alarm ayarlari
+Enable Priority Alerting| Öncelikli paket alarmi aktif
+Group| Grup
+External| Harici
+Internal| Dahili
+Emergency| Acil
+Auto call distribution| Otomatik Çagri Dagitimi
+Auto Call Distribution Settings| Otomatik Çagri Dagitimi ayarlari
+ACD| ACD
+Community 1| Üye 1
+Community 2| Üye 2
+Community 3| Üye 3
+Community 4| Üye 4
+Normal ringing| Normal zil
+Bellcore-dr2| Zil-dr2
+Bellcore-dr3| Zil-dr3
+Bellcore-dr4| Zil-dr4
+Bellcore-dr5| Zil-dr5
+Directed Call Pickup Settings| Yönlenmis Çagri Yakalama ayari
+Directed Call Pickup| Yönlenmis Çagri Yakalama
+Directed Call Pickup by Prefix| Yonlemis Çagri Yakalama Kod ile
+Play a Ring Splash| Zil efekti cal
+Auto Available| Otomatik kullanim
+Auto Available Timer| Otomatik kullanim zamanlayici
+Time and Date Setting| Saat ve tarih ayari
+Time Format| Saat biçimi
+Date Format| Tarih Biçimi
+Programmable Keys| Programlanabilir Tuşlar
+Programmable Keys Configuration| Programlanabilir Tuşlar Ayari
+Hard Key| Sabit Tuş
+Key| Tuş
+BLF List URI:| Meşgul Takip URI:
+None| Hiçbiri
+Speeddial/Xfer| Hizli Ara/Aktar
+Do Not Disturb| Rahatsiz edilmeme
+BLF| Meşgul Takibi
+BLF/Xfer| MeşglTkp/Aktar
+BLF/List| MeşglTkp/Liste
+XML| XML
+WebApps| WebUygulamalari
+Flash| Beklet
+Last Call Return| Son çagriya geri dön
+Sprecode| Koda dogru
+Transfer| Aktarma
+Conference| Konferans
+Save| Sakla
+Delete| Sil
+Data has been transmitted to the phone successfully.| Başarili bir şekilde veri telefona aktarildi
+Data cannot be posted to the phone.| Veri telefona aktarilamadi
+Please ensure the data size is 512 bytes or less and the phone is configured to receive from the host.| Telefonun sunucudan veri almaya ayarlandigina ve verinin 512 byte veya daha küçük olduguna emin olun
+Expansion Modules| Genişletme Modülü
+Expansion Module 1| Genişletme Modülü 1
+Expansion Module 2| Genişletme Modülü 2
+Expansion Module 3| Genişletme Modülü 3
+Page 1| Sayfa 1
+Page 2| Sayfa 2
+Page 3| Sayfa 3
+List 1| Liste 1
+List 2| Liste 2
+List 3| Liste 3
+List 4| Liste 4
+List 5| Liste 5
+List 6| Liste 6
+Incompatible with phone model| Bu telefon modeli ile uyumsuz
+Backup Proxy Server| Yedek Proxy Sunucusu
+Backup Proxy Port| Yedek Proxy Port
+Backup Registrar Server| Yedek Kayit Suncusu
+Backup Registrar Port| Yedek Kayit Portu
+Phone is locked| Telefon kilitli
+Phone Lock| Telefon kilidi
+Lock the phone?| Telefon kilitle?
+Phone is unlocked| Telefon açildi
+Password:| Şifre:
+Emergency Dial Plan| Acil Durum Arama Plani
+Account Configuration| Hesap Ayarlari
+Lock| Kilitli
+Unlock| Açik
+Unlock the phone?| Kilidi kaldir?
+Lock or unlock the phone| Kilitle veya Aç
+HTTPS Client Method| HTTPS Terminal Metodu
+HTTPS Server - Redirect HTTP to HTTPS| HTTPS Sunucu - HTTP den HTTPS e yönlendirme
+HTTPS Server - Block XML HTTP POSTs| HTTPS Sunucu - XML HTTP POSTs engelle
+Validate Certificates| Kullanilabilir Sertifikalar
+Check Certificate Expiration| Sertifika SonKull.Kontrol
+Check Certificate Hostnames| Sertifika Hostname Kontrol
+Language Settings| Dil Ayarlari
+Webpage Language| Web Sayfasi Dili
+Input Language| Giriş Dili
+Input Language| Giriş Dili
+Jan| Oca
+Feb| Şub
+Mar| Mar
+Apr| Nis
+May| May
+Jun| Haz
+Jul| Tem
+Aug| Agu
+Sep| Eyl
+Oct| Eki
+Nov| Kas
+Dec| Ara
+Sun| Paz
+Mon| Pzt
+Tue| Sal
+Wed| Çar
+Thu| Per
+Fri| Cum
+Sat| Cmt
+New Password Invalid.| Yeni şifre geçersiz
+New password must be 10 characters or less.| Yeni şifre 10 karakter veya daha kisa olmalidir
+New password must be numeric.| Yeni şifre rakamlardan oluşmalidir
+New password and confirm password do not match.| Yeni şifre ve tekrari eslesmiyor
+Error| Hata
+Are you sure you want to restart the phone?| Yeniden başlatmak için emin misiniz?
+This will restore the phone to default settings and cannot be undone.| Telefonu başlangic ayarlarina getirir ve geri alinamaz
+This will remove the local configuration settings and cannot be undone.| Lokal ayarlar silinecek ve geri alinamaz
+Continue| Devam
+Error: Intercom Settings| Hata: Anons Ayarlari
+Please enter a prefix code for server-side intercom.| Lütfen sunucu-tarafi anons için başlangic kodunu girin .
+Value must be between| Olmasi gereken deger araligi
+and| ve
+Invalid Setting:| Geçersiz Ayar:
+Please select at least one state for softkey| Sanal tuş için yer seçiniz
+DSCP value| DSCP degeri
+is mapped to multiple priorities.| Birden çok öncelik için ayarlandi.
+Please enter Admin name and password| Lütfen yönetici ismi ve şifresini girin
+Please enter User name and password| Lütfen kullanici ismi ve şifresini girin
+Centralized Conference| Merkezi Konferans
+Conference Server URI| Konferans Sunucusu URI
+UPnP device not found| UPnP aygiti bulunamadi
+Ethernet| Ethernet
+Ethernet Link| Ethernet Link
+Ethernet & VLAN| Ethernet & VLAN
+Link| Link
+10M| 10M
+100M| 100M
+Unavailable| Kullanilamaz
+Available| Kullanilabilir
+Server Info| Sunucu Bilgi
+Unique ID:| Tek Kimlik(ID):
+UPnP Mapping Lines| UPnP Mapping Hatlari
+Port Failed| Port Hatasi
+Trying...| Deneniyor…
+Seize Failed| Başarısız
+Missed Call Summary Subscription| Cevapsiz çagrilar toplami abonelik
+Missed Call Summary Subscription Period| Cevapsiz çagrilar toplami abonelik periyodu
+AS-Feature-Event Subscription| Uyg.Sun.-Özellik-Olay günlügü
+AS-Feature-Event Subscription Period| Uyg.Sun.-Özellik-Olay günlügü periyodu
+Goodbye Key Cancels Incoming Call| Goodbye tuşu gelen çagriyi engellesin
+Address Incomplete| Adres eksik
+Admin Menu| Yönetici Menüsü
+IP&MAC Addresses| IP&MAC Adresi
+LAN Port| LAN Port
+PC Port| PC Port
+Set Audio| Sesi Ayarla
+Config. Server| Ayar Sunucusu
+IP Address:| IP Adresi:
+Error Messages| Hata Mesajlari
+No Error Messages| Hata Mesaji yok
+ Errors|  Hatalar
+ Error|  Hata
+Disabled| Aktif Degil
+LAN Port Link| LAN Port Link
+PC Port Link| PC Port Link
+RTP| RTP
+RTCP| RTCP
+Phone| Telefon
+Headset Mic Vol| KulaklikMik.Sesi
+TypeService SIP| SIP Servis Tipi
+TypeService RTP| RTP Servis Tipi
+TypeService RTCP| RTCP Servis Tipi
+Authentic. Name| Yetkili Isim
+XML Beep Support| XML uyari destegi
+Status Scroll Delay (seconds)| Durum Akiş Gecikmesi (sn)
+Backlight| Ekran Aydinlatma
+Display| Ekran
+Speed Dial Edit| Hizli AramaDüznl
+second| saniye
+seconds| saniye
+Label| Etiket
+Message Waiting Indicator Line| Mesaj Bekliyor Uyari Hatti
+Keypad Speed Dial| Tuştakimi Hizli Arama
+Digit| Tuş
+Whitelist Proxy| Beyazliste Proxy
+XML SIP Notify| XML SIP Degişikligi
+Custom Feature| Ozel nitelik
+User ID:| Kimlik:
+Local SIP UDP/TCP Port| Lokal SIP UDP/TCP Port
+Local SIP TLS Port| Lokal SIP TLS Port
+802.1x Support| 802.1x Destegi
+EAP Type| EAP Tipi
+EAP-MD5| EAP-MD5
+EAP-TLS| EAP-TLS
+Identity| Kimlik
+MD5 Password| MD5 Şifresi
+PC Port PassThru Enable/Disable| PC Port PassThru Aktif/Pasif
+EAP-TLS Settings| EAP-TLS Ayarlari
+EAP-MD5 Settings| EAP-MD5 Ayarlari
+Enable PassThru Port| PassThru Port Aktif
+PC Port Enabled\nYes| PCPortAktif\nEvt
+PC Port Disabled\nNo| PCPortPasif\nHyr
+802.1x Settings| 802.1x Ayarlari
+802.1x Mode| 802.1x Modu
+EAP-MD5 Settings| EAP-MD5 Ayarlari
+EAP-TLS Settings| EAP-TLS Ayarlari
+STUN Server| STUN Sunucusu
+STUN Port| STUN Port
+TURN Server| TURN Sunucusu
+TURN Port| TURN Port
+TURN User ID| TURN Kullnici
+TURN Password| TURN Şifresi
+Paging| Çagri yapiliyor
+Streaming| Akiyor
+Group Paging RTP Settings| Grup Çagri RTP Ayarlari
+Paging Listen Addresses| Çagri Dinleme Adresi
+Rport (RFC 3581)| Rport (RFC3581)
+SIP Account| SIP Hesabi
+Backup Registrar Used?| Yedek Kayit Kullaniliyor mu?
+Unregistered| Kayit olmadi
+Registered| Kayit oldu
+SIP Status| SIP durumu
+Server Error| Sunucu Hatasi
+Swap| Degiştir
+LLDP\nEnabled| LLDP\nAktif
+LLDP\nDisabled| LLDP\nPasif
+LLDP Support| LLDP Destegi
+Preferred line| Tercih edilen hat
+Preferred line Timeout (seconds)| Tercih edilen hat zamanasimi (sn)
+Invalid URI| Geçersiz URI
+WebApps| WebUygulamalari
+Watchdog| Bekci Kopegi
+Speeddial/Conf| Hizli Arama/Konferans
+Call is on Hold| Çagri Bekliyor
+No subscription| Abonelik yok
+MDot1xFailedStartup| 802.1x Başlatilamadi
+802.1x Startup Failed| 802.1x Başlatilamadi
+LLDP Startup Failed| LLDP Başlatilamadi
+Failed to config Line Manager| Hat Yöneticisi Hatasi
+Line in use| Hat Kullanimda
+Get Crash Log| CrashLog edinin
+Time Unavailable| Zaman yetersiz
+Packetization Interval| Paketleme Araligi
+Basic| Temel
+Note: Basic Codecs Include| Not: Temel kodlamalar dahil
+Default| Varsayilan
+Not Configured| Konfigürasyon başarısız
+America| America
+Asia| Asia
+Atlantic| Atlantic
+Pacific| Pacific
+Australia| Australia
+Europe| Avrupa
+Malaysia| Malaysia
+Invalid Setting| Ayarlar hatalı
+Must not be empty| Boş olmamalı
+Must be a valid number| Gcerli bir numara girin
+Must be a nonzero number| Sıfır olmayan bir sayı olmalı
+Not in range| Belirli alan dışında
+Invalid Hostname| Hatalı adres
+802.1x Failed| 802.1x Hatası
+Admin Password:| Yönetici Şifresi:
+Voicemail| SesliMsj
+HTTPS Failed| HTTPS Hatası
+LLDP Failed| LLDP Hatası
+TR69 connect Err| TR69 Bağlantı Hatası
+Downloading Language Packs| Dil paketleri Yükleniyor
+Please Wait...| Lütfen bekleyin
+Cfg Svr Failure| Sunucu Kon. Hatası
+End| 

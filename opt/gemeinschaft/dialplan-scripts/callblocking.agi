@@ -35,10 +35,10 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 
-$user      = trim(@$argv[1]);
+$user_name = trim(@$argv[1]);
 $to        = trim(@$argv[2]);
 
-if (! preg_match('/^[0-9]*$/', $user)) {
+if (! preg_match('/^[0-9]*$/', $user_name)) {
 	gs_agi_set_variable( 'dial_allowed', 'no' );
 	exit();
 }
@@ -57,25 +57,9 @@ include_once( GS_DIR .'inc/db_connect.php' );
 
 $db = gs_db_slave_connect();
 
-/*
-$number_sql = $to;
-$rs = $db->execute(
-	'SELECT `name`, `comment`, `number` '.
-	'FROM `blacklist` '.
-	'WHERE '.
-		'`type` IN (\'in\', \'both\') AND '.
-		'`number` = \''. $db->escape($number_sql).'\''
-	);
-if ($rs) {
-	if ($row = $rs->fetchRow()) {
-		gs_agi_set_variable( 'dial_allowed', 'no' );
-		exit();
-	}
-}
-*/
 
 $user_id = $db->executeGetOne(
-'SELECT `u`.`id` FROM `users` `u` JOIN `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) WHERE `s`.`name`=\''. $db->escape($user) .'\''
+'SELECT `u`.`id` FROM `users` `u` JOIN `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) WHERE `s`.`name`=\''. $db->escape($user_name) .'\''
 );
 if ($user_id < 1) {
 	// forwarded by a queue
@@ -83,11 +67,22 @@ if ($user_id < 1) {
 	exit();
 }
 
+$allow_nobody = gs_get_conf('GS_NOBODY_ALLOW_EXTERNAL');
+
+$nobody_index = $db->executeGetOne(
+'SELECT `u`.`nobody_index` FROM `users` `u` JOIN `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) WHERE `s`.`name`=\''. $db->escape($user_name) .'\''
+);
+
+if(($nobody_index > 0) && ($allow_nobody == false)) {
+	gs_agi_set_variable( 'dial_allowed', 'no' );
+	die();
+}
+
 
 $rs = $db->execute( 'SELECT `regexp`,`pin` FROM `callblocking` WHERE `user_id`='. $user_id .' ORDER BY LENGTH(`regexp`) DESC' );
 if ($rs) {
 	while ($row = $rs->fetchRow()) {
-		if (preg_match( '/'. $row['regexp'] .'/', $to )) {
+		if (preg_match( '°'. $row['regexp'] .'°', $to )) {
 			if ($row['pin']=='') {
 				gs_agi_set_variable( 'dial_allowed', 'no' );
 			} else {

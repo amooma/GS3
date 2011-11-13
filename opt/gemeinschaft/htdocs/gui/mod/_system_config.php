@@ -72,11 +72,7 @@ $cs = array(
 	),
 	'Dialplan' => array(
 		'DP_DIALTIMEOUT_IN',
-		'DP_PRV_CALL_PREFIX',
-		'DP_EMERGENCY_FIRE',
-		'DP_EMERGENCY_FIRE_MAP',
-		'DP_EMERGENCY_POLICE',
-		'DP_EMERGENCY_POLICE_MAP'
+		'DP_PRV_CALL_PREFIX'
 	),
 	'External Numbers' => array(
 		'EXTERNAL_NUMBERS_BACKEND',

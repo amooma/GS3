@@ -54,7 +54,7 @@ class YADB_MPTT
 	# constructor for PHP 4
 	function YADB_MPTT( $conn, $table, $left, $right, $id )
 	{
-		if (! $conn || ! @is_a($conn, 'YADB_Connection')) {
+		if (! $conn || ! $conn instanceof YADB_Connection) {
 			trigger_error('First parameter passed must be a YaDB database connection.', E_USER_WARNING);
 			return;
 		}

@@ -29,6 +29,27 @@
 
 define( 'GS_VALID', true );  /// this is a parent file
 
+function printparam( $param, $value, &$userparamarray, $html=false ) {
+	if ($param == '')
+		return;
+	$printbr = true;
+
+	if (array_key_exists($param, $userparamarray)) {
+		if ($userparamarray[$param] != '')
+			echo $param ." = ". $userparamarray[$param];
+		else
+			$printbr = false;
+		unset($userparamarray[$param]);
+	} else {
+		echo $param ." = ". $value;
+	}
+	if ($printbr) {
+		if ($html)
+			echo "<br \>";
+		echo "\n";
+	}
+}
+
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
@@ -126,22 +147,7 @@ while ($gw = $rs->fetchRow()) {
 	if ($gw['host'] == '') continue;
 	
 	$params = array();
-	$params['nat'           ] = 'yes';
-	//$params['canreinvite'   ] = 'no';
-	$params['canreinvite'   ] = 'nonat';
-	$params['port'          ] = 5060;
-	$params['call-limit'    ] = 0;
-	$params['dtmfmode'      ] = 'rfc2833';
-	$params['qualify'       ] = 'yes';
-	$params['maxexpiry'     ] =  185;
-	$params['defaultexpiry' ] =  145;
-	$params['permit'        ] = null;
-	
-	$codecs_allow = array();
-	$codecs_allow['alaw'   ] = true;
-	$codecs_allow['ulaw'   ] = false;
-	
-	//$params['fromdomain'    ] = 'gemeinschaft.localdomain';
+
 	$params['fromdomain'    ] = null;
 	$params['fromuser'      ] = null;
 	
@@ -155,89 +161,28 @@ while ($gw = $rs->fetchRow()) {
 		# that the caller ID is to be set in a P-Preferred-Identity
 		# header)
 		$params['fromuser'      ]   = $gw['user'];
-		
-		# also assume that this gateway is a SIP provider and
-		# that re-invites will not work
-		$params['canreinvite'   ]    = 'no';
 	}
-	
-	if ($gw['proxy'] == null || $gw['proxy'] === $gw['host']) {
-		$gw['proxy'] = null;
-	}
-	
-	/*
-	if (strToLower($gw['host']) === 'sip.1und1.de') {  # special settings for 1und1.de
-		//$canreinvite    = 'no';
-		
-		//$fromdomain     = '1und1.de';
-		//$fromuser       = $gw['user'];
-		
-		//$codecs_allow['alaw'   ] = true;
-		//$codecs_allow['ulaw'   ] = true;
-		//$codecs_allow['ilbc'   ] = true;
-		//$codecs_allow['gsm'    ] = true;
-		//$codecs_allow['g729'   ] = true;
-		//$codecs_allow['slinear'] = true;
-	}
-	elseif (strToLower($gw['host']) === 'sipgate.de') {  # special settings for SipGate.de
-		//$canreinvite    = 'no';
-		//$fromdomain     = 'sipgate.de';
-		//$fromuser       = $gw['user'];
-	}
-	elseif (preg_match('/\\.sipgate\\.de$/i', $gw['host'])) {  # special settings for SipGate.de
-		# sipconnect.sipgate.de, SipGate "Team" trunk
-		//$fromuser       = $gw['user'];
-		//$canreinvite    = 'no';
-	}
-	*/
 	
 	
 	$params_override = array();
-	$params_rs = $DB->execute( 'SELECT `param`, `value` FROM `gate_params` WHERE `gate_id`='.$gw['id'] );
+	$params_rs = $DB->execute( 'SELECT `param`, `value` FROM `gate_params` WHERE `param` IS NOT NULL AND `gate_id`='.$gw['id'] );
 	while ($param = $params_rs->fetchRow()) {
-		$params_override[$param['param']] = $param['value'];
+		$params[$param['param']] = $param['value'];
 	}
 	
-	if (array_key_exists('port'          , $params_override)) {
-	//&&  (int)$params_override['port'          ] != 0) {
-		$params['port'          ] = $params_override['port'          ];
-	}
-	if (array_key_exists('nat'           , $params_override)) {
-		$params['nat'           ] = $params_override['nat'           ];
-	}
-	if (array_key_exists('canreinvite'   , $params_override)) {
-		$params['canreinvite'   ] = $params_override['canreinvite'   ];
-	}
-	if (array_key_exists('qualify'       , $params_override)) {
-		$params['qualify'       ] = $params_override['qualify'       ];
-	}
-	if (array_key_exists('call-limit'    , $params_override)) {
-		$params['call-limit'    ] = $params_override['call-limit'    ];
-	}
-	if (array_key_exists('dtmfmode'      , $params_override)) {
-		$params['dtmfmode'      ] = $params_override['dtmfmode'      ];
-	}
-	if (array_key_exists('allow'         , $params_override)) {
-		foreach ($codecs_allow as $codec => $allow) {
-			$codecs_allow[$codec] = false;
-		}
-		
-		$params_override_codecs = preg_split('/\s*,\s*/', trim($params_override['allow']));
+	$params_codecs = array();
+	
+	if ( array_key_exists ( 'allow', $params)) {
+		$params_codecs = preg_split('/\s*,\s*/', trim($params['allow']));
+		/*
 		foreach ($params_override_codecs as $codec) {
 			$codecs_allow[$codec] = true;
 		}
-		
-		$num_allowed_codecs = 0;
-		foreach ($codecs_allow as $codec => $allow) {
-			if ($allow) ++$num_allowed_codecs;
-		}
-		if ($num_allowed_codecs < 1) {
-			gs_log( GS_LOG_WARNING, 'You did not allow any codecs for gateway '. $gw['name'] .'. Allowing G.711a by default.' );
-			$codecs_allow['alaw'   ] = true;
-		}
+		*/
 	}
+	
 	if (array_key_exists('permit'        , $params_override)
-	&&  'x'.$params_override['permit'        ] != 'x'.'0.0.0.0/0') {
+        	&&  'x'.$params_override['permit'        ] != 'x'.'0.0.0.0/0') {
 		$params['permit'        ] = $params_override['permit'        ];
 	}
 	
@@ -248,8 +193,15 @@ while ($gw = $rs->fetchRow()) {
 	if ($params['port'          ] > 0) {
 		echo 'port = '            , $params['port'          ] ,"\n";
 	}
-	echo 'username = '            , $gw['user'] ,"\n";
-	echo 'secret = '              , $gw['pwd' ] ,"\n";
+	
+	if ($gw['user'] != null) {
+        	echo 'defaultuser = '            , $gw['user'] ,"\n";
+	}
+	
+	if ($gw['pwd'] != null) {
+        	echo 'secret = '              , $gw['pwd' ] ,"\n";
+        }
+	
 	if ($gw['proxy'] != null) {
 		echo 'outboundproxy = '   , $gw['proxy'] ,"\n";
 	}
@@ -259,33 +211,58 @@ while ($gw = $rs->fetchRow()) {
 	if ($params['fromuser'      ] != null) {
 		echo 'fromuser = '        , $params['fromuser'      ] ,"\n";
 	}
-	echo 'insecure = '        , 'port,invite' ,"\n";
-	echo 'nat = '             , $params['nat'           ] ,"\n";
-	echo 'canreinvite = '     , $params['canreinvite'   ] ,"\n";
-	echo 'dtmfmode = '        , $params['dtmfmode'      ] ,"\n";
-	echo 'call-limit = '      , $params['call-limit'    ] ,"\n";
-	echo 'registertimeout = ' , '60' ,"\n";
-	//echo 't38pt_udptl = yes' ,"\n";
+	if ($params['language'      ] != null) {
+		echo 'language = '        , $params['language'      ] ,"\n";
+	}
+	
+	if ( array_key_exists ( 'insecure', $params )) {
+	        echo 'insecure = '        , $params['insecure'           ] ,"\n";
+	}
+	
+	if ( array_key_exists ( 'nat', $params )) {
+	        echo 'nat = '             , $params['nat'           ] ,"\n";
+	}
+	
+	if ( array_key_exists ( 'directmedia', $params )) {
+	        echo 'directmedia = '     , $params['directmedia'   ] ,"\n";
+	}
+	if ( array_key_exists ( 'dtmfmode', $params )) {
+        	echo 'dtmfmode = '        , $params['dtmfmode'      ] ,"\n";
+        }
+	
+	if ( array_key_exists ( 'call-limit', $params )) {
+	        echo 'call-limit = '      , $params['call-limit'    ] ,"\n";
+	}
+	
 	echo 'setvar=__is_from_gateway=1' ,"\n";
 	echo 'context = '         , 'from-gg-'.$gw['gg_name'] ,"\n";
-	echo 'qualify = '         , $params['qualify'       ] ,"\n";
-	echo 'maxexpiry = '       , $params['maxexpiry'     ] ,"\n";
-	echo 'defaultexpiry = '   , $params['defaultexpiry' ] ,"\n";
-	echo 'disallow = '        , 'all' ,"\n";
 
-	if (strlen(trim(gs_get_conf('GS_INTL_ASTERISK_LANG'))) > 0)
-		echo 'language = ', gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST) ,"\n";
+	if ( array_key_exists ( 'qualify', $params )) {
+        	echo 'qualify = '         , $params['qualify'       ] ,"\n";
+        }
 
-	foreach ($codecs_allow as $codec => $allowed) {
-		if ($allowed) {
-			echo 'allow = ', $codec ,"\n";
+	if ( count ($params_codecs) > 0 ) {
+		 echo 'disallow = '        , 'all' ,"\n";
+		foreach ($params_codecs as $codec ) {
+                        echo 'allow = ', $codec,"\n"; 
 		}
+	
 	}
+	
 	if ($params['permit'        ] != null
 	&&  'x'.$params['permit'        ] != 'x'.'0.0.0.0/0') {
 		echo 'deny = '            ,'0.0.0.0/0.0.0.0' ,"\n";  # deny all
 		echo 'permit = '          , $params['permit'        ] ,"\n";
 	}
+	
+	
+	//userparams
+	
+	$rs_up = $DB->execute( 'SELECT `value` FROM `gate_params` WHERE `param` IS NULL AND `gate_id`=' . $gw['id'] );
+	while ($param = $rs_up->fetchRow()) {
+	        echo $param['value'], "\n";
+	}
+	
 	echo "\n";
 }
 

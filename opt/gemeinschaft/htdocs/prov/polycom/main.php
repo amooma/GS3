@@ -1,7 +1,7 @@
 <?php
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
-*
+* 
 * $Revision$
 *
 * Copyright 2007-2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
@@ -10,8 +10,10 @@
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
 *
-* Author: Daniel Scheller <scheller@loca.net>
-*
+* APS for Polycom SoundPoint IP phones
+* (c) 2009 Daniel Scheller / LocaNet oHG
+* mailto:scheller@loca.net
+* 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -33,7 +35,6 @@ require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 include_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gettext.php");
 include_once(GS_DIR ."inc/langhelper.php");
-include_once( GS_DIR .'inc/string.php' );
 //require_once(GS_DIR ."inc/gs-fns/gs_user_watchedmissed.php");
 
 Header("Content-Type: text/html; charset=utf-8");
@@ -42,7 +43,7 @@ Header("Pragma: no-cache");
 Header("Cache-Control: private, no-cache, must-revalidate");
 Header("Vary: *");
 
-$mainpage_doctype = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+$mainmenu_doctype = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 
 //---------------------------------------------------------------------------
 
@@ -65,7 +66,7 @@ function _err($msg="")
 
 	echo "<html>\n";
 	echo "<head><title>". __("Fehler") ."</title></head>\n";
-	echo "<body><b>". __("Fehler") ."</b>: ". htmlEnt($msg) ."</body>\n";
+	echo "<body><b>". __("Fehler") ."</b>: ". $msg ."</body>\n";
 	echo "</html>\n";
 
 	_ob_send();
@@ -73,16 +74,16 @@ function _err($msg="")
 
 //---------------------------------------------------------------------------
 
-if (!gs_get_conf('GS_POLYCOM_PROV_ENABLED'))
+if(!gs_get_conf("GS_POLYCOM_PROV_ENABLED"))
 {
-	gs_log(GS_LOG_DEBUG, 'Polycom provisioning not enabled');
-	_err('Not enabled.');
+	gs_log(GS_LOG_DEBUG, "Polycom provisioning not enabled");
+	_err("Not enabled.");
 }
 
-$mac = preg_replace("/[^\dA-Z]/", '', strtoupper(trim(@$_REQUEST['mac'])));
-$user = trim(@$_REQUEST['user']);
+$mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST["mac"])));
+$user = trim(@$_REQUEST["user"]);
 
-if (!preg_match("/^\d+$/", $user)) _err('Not a valid SIP user.');
+if(!preg_match("/^\d+$/", $user)) _err("Not a valid SIP user.");
 
 $db = gs_db_slave_connect();
 
@@ -93,15 +94,15 @@ gs_settextdomain( 'gemeinschaft-gui' );
 
 //--- get user_id
 $user_id = (int) $db->executeGetOne("SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`='". $db->escape($user) ."'");
-if ($user_id < 1) _err('Unknown user.');
+if($user_id < 1) _err("Unknown user.");
 
 $menuitems = Array(
-	Array(	'file'	=> 'diallog.php?user='. $user .'&mac='. $mac,
-		'title'	=> __("Ruflisten")),
-	Array(	'file'	=> 'pb.php?u='. $user .'&amp;m='. $mac,
-		'title'	=> __("Telefonbuch")),
-	Array(	'file'	=> 'configmenu.php?u='. $user .'&amp;m='. $mac,
-		'title'	=> __("Konfiguration"))
+	Array(	"file"	=> "diallog.php?user=". $user ."&amp;mac=". $mac,
+		"title"	=> __("Ruflisten")),
+	Array(	"file"	=> "pb.php?u=". $user ."&amp;m=". $mac,
+		"title"	=> __("Telefonbuch")),
+	Array(	"file"	=> "configmenu.php?u=". $user ."&amp;m=". $mac,
+		"title"	=> __("Konfiguration"))
 );
 
 ob_start();
@@ -110,12 +111,15 @@ $url_polycom_base = GS_PROV_SCHEME ."://". GS_PROV_HOST . (GS_PROV_PORT ? ":". G
 
 #################################### MAIN MENU {
 
+echo $mainmenu_doctype ."\n";
+
 echo "<html>\n";
-echo "<head><title>". htmlEnt(__("Telefonmen\xC3\xBC")) ."</title></head>\n";
+echo "<head><title>". __("Telefonmen\xC3\xBC") ."</title></head>\n";
 echo "<body><br />\n";
 
-foreach($menuitems as $thismenuitem) {
-	echo "- <a href=\"". $url_polycom_base . $thismenuitem["file"] ."\">". htmlEnt($thismenuitem["title"]) ."</a><br />\n";
+foreach($menuitems as $thismenuitem)
+{
+	echo "- <a href=\"". $url_polycom_base . $thismenuitem["file"] ."\">". $thismenuitem["title"] ."</a><br />\n";
 }
 
 echo "</body>\n";

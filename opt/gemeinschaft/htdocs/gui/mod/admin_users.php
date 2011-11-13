@@ -34,11 +34,16 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_change.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_del.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_del.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_add.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_del.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_logout.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_phonemodel_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callblocking_set.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
 require_once( GS_DIR .'inc/boi-soap/boi-api.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 include_once( GS_DIR .'inc/langhelper.php' );
 
 echo '<h2>';
@@ -71,7 +76,6 @@ function count_users_logged_in( $DB ) {
 
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
 
-
 $per_page = (int)GS_GUI_NUM_RESULTS;
 
 $name        = trim(@$_REQUEST['name'     ]);
@@ -81,9 +85,8 @@ $page        = (int)@$_REQUEST['page'     ] ;
 $edit_user   = trim(@$_REQUEST['edit'     ]);
 $delete_user = trim(@$_REQUEST['delete'   ]);
 $action      = trim(@$_REQUEST['action'   ]);
-$penalty     = (int)trim(@$_REQUEST['penalty'   ]);
-$queue_id     = (int)trim(@$_REQUEST['queue_id'   ]);
-if (! in_array($action, array('list','del','add','add-and-view','view','edit','save','insert-group','remove-group','setpenalty','delpenalty'), true))
+
+if (! in_array($action, array('list','del','add','add-and-view','view','edit','save','insert-group','remove-group'), true))
 	$action = 'list';
 
 $cbdelete    = trim(@$_REQUEST['cbdelete' ]);
@@ -92,6 +95,12 @@ $cbpin       = trim(@$_REQUEST['cbpin'    ]);
 
 $extnum      = trim(@$_REQUEST['extnum'   ]);
 $extnumdel   = trim(@$_REQUEST['extndel'  ]);
+
+$callerid_ext      = trim(@$_REQUEST['callerid_ext'   ]);
+$calleriddel_ext   = trim(@$_REQUEST['calleriddel_ext']);
+
+$callerid_int      = trim(@$_REQUEST['callerid_int'   ]);
+$calleriddel_int   = trim(@$_REQUEST['calleriddel_int']);
 
 $u_pgrps     =      @$_REQUEST['u_pgrps'  ] ;
 $u_pgrp_ed   =      @$_REQUEST['u_pgrp_ed'] ;
@@ -113,6 +122,7 @@ $user_host   = trim(@$_REQUEST['uhost'    ]);
 $bp_add_h    = (int)@$_REQUEST['bp_add_h' ] ;
 $bp_del_h    = (int)@$_REQUEST['bp_del_h' ] ;
 
+$pb_hide     = (bool)@$_REQUEST['pb_hide'  ] ;
 $group       = (int)@$_REQUEST['group'    ] ;
 
 $sort        = @$_REQUEST['sort'];
@@ -122,7 +132,13 @@ $sortorder   = @$_REQUEST['sortorder'];
 if (! in_array($sortorder, array('ASC', 'DESC')) )
 	$sortorder = 'ASC';
 
+$drop_call   = (bool)@$_REQUEST['drop_call'  ] ;
+$drop_number = trim(@$_REQUEST['drop_number' ]);
+
+$mailbox     = trim(@$_REQUEST['mailbox']);
+
 $pen_avail = range( 0, 9);
+
 if ($edit_user) {
 	
 	if ($action === 'insert-group') {
@@ -149,7 +165,6 @@ if ($edit_user) {
 	
 }
 
-
 if ($action === 'del') {
 	
 	if ($delete_user) {
@@ -164,7 +179,7 @@ if ($action === 'add' || $action === 'add-and-view') {
 	
 	if ($user_name) {
 		$user_lang = gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST);
-		$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_lang, $user_host, $user_email );
+		$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_lang, $user_host, $user_email);
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 		
 		if ($action === 'add-and-view') {
@@ -188,21 +203,7 @@ if ($action === 'add' || $action === 'add-and-view') {
 	}
 	
 }
-if (($action === 'delpenalty') && ($edit_user) && ($uid > 0) && ($queue_id > 0 )) {
-	$DB->execute('DELETE from `penalties` WHERE `_user_id`='.$uid.' AND `_queue_id`='.$queue_id);
-	$DB->execute('UPDATE `ast_queue_members` SET `penalty`=DEFAULT WHERE `_queue_id`='.$queue_id.' AND `_user_id`='.$uid);
-	$action = 'view';
-}
-if (($action === 'setpenalty') && ($edit_user) && ($uid > 0) && ($queue_id > 0 )) {
-	$qhid = (int)$DB->executeGetOne('SELECT `_host_id` FROM `ast_queues` WHERE `_id`='.$queue_id);
-	$uhid = (int)$DB->executeGetOne('Select `host_id` FROM `users` WHERE `id`='.$uid);
-	if (in_array($penalty, $pen_avail) && ( $qhid == $uhid )){
-		$DB->execute('REPLACE INTO `penalties` VALUES ('.$queue_id.','.$uid.','.$qhid.','.$penalty.')');
-		$DB->execute('UPDATE `ast_queue_members` SET `penalty`='.$penalty.' WHERE `_queue_id`='.$queue_id.' AND `_user_id`='.$uid);
-		$action = 'view';
-	}
 
-}
 if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 	
 	if ($cbdelete) {
@@ -213,6 +214,14 @@ if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 		$ret = gs_user_external_number_del( $edit_user, $extnumdel );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	}
+	if ($calleriddel_ext) {
+		$ret = gs_user_callerid_del( $edit_user, $calleriddel_ext, 'external' );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	if ($calleriddel_int) {
+		$ret = gs_user_callerid_del( $edit_user, $calleriddel_int, 'internal' );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
 	if ($bp_del_h > 0) {
 		$query = 'DELETE FROM `boi_perms` WHERE `user_id`='.$uid.' AND `host_id`='.$bp_del_h;
 		$ok = $DB->execute($query);
@@ -221,7 +230,14 @@ if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 
 if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 	
-	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, @$_REQUEST['ulang'], $user_host, false, $user_email );
+	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, @$_REQUEST['ulang'], $user_host, false, $user_email, true, $pb_hide, $drop_call, $drop_number, $mailbox );
+	/*
+	$DB->execute( 'UPDATE `ast_sipfriends` SET `language`=\''. $DB->escape(preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['ulang'])) .'\' WHERE `_user_id`='. $uid );
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		gs_user_language_changed_ui ( $edit_user , preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['ulang']) ) ;
+	}
+	*/
+	
 	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	if (! isGsError( $ret )) {
 		$boi_api = gs_host_get_api((int)$user_host);
@@ -238,6 +254,15 @@ if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 		$ret = gs_user_external_number_add( $edit_user, $extnum );
 		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 	}
+	if ( strlen($callerid_ext) > 0 ) {
+		$ret = gs_user_callerid_add( $edit_user, $callerid_ext, 'external' );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	if ( strlen($callerid_int) > 0 ) {
+		$ret = gs_user_callerid_add( $edit_user, $callerid_int, 'internal' );
+		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	}
+	
 	
 	if ($u_pgrp_ed) {
 		$sql_query =
@@ -256,6 +281,10 @@ if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 				if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
 			}
 		}
+		if ( GS_BUTTONDAEMON_USE == true ) {
+			$user = gs_user_get($edit_user);
+			gs_pickupgroup_update_ui($user['ext']);
+		}
 	}
 	
 	if ($u_prv_grp_ed) {
@@ -264,6 +293,11 @@ if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 				'`group_id`='. ($u_prv_grp_id > 0 ? $u_prv_grp_id : 'NULL') .' '.
 			'WHERE `user`=\''. $DB->escape($edit_user) .'\'';
 		$ok = $DB->execute($query);
+		if ( GS_BUTTONDAEMON_USE == true ) {
+			if (! isset($user['ext']) )
+				$user = gs_user_get($edit_user);
+			gs_usergroup_update_ui($user['ext']);
+		}
 	}
 	
 	if ($bp_add_h > 0) {
@@ -389,14 +423,14 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	<table cellspacing="1" class="phonebook">
 	<thead>
 	<tr>
-		<th style="width:253px;"><?php echo __('Name suchen'); ?></th>
-		<th style="width:234px;"><?php echo __('Nebenstelle suchen'); ?></th>
-		<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
+		<th colspan="2" ><?php echo __('Name suchen'); ?></th>
+		<th colspan="3"><?php echo __('Nebenstelle suchen'); ?></th>
+		<th colspan="3"><div align="right"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></div></th>
 	</tr>
 	</thead>
 	<tbody>
 	<tr>
-		<td>
+		<td colspan="2">
 			<form method="get" action="<?php echo GS_URL_PATH; ?>">
 			<?php echo gs_form_hidden($SECTION, $MODULE); ?>
 			<input type="text" name="name" id="ipt-name" value="<?php echo htmlEnt($name); ?>" size="25" style="width:200px;" />
@@ -406,42 +440,42 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			</button>
 			</form>
 		</td>
-		<td>
+		<td colspan="3">
 			<form method="get" action="<?php echo GS_URL_PATH; ?>">
 			<?php echo gs_form_hidden($SECTION, $MODULE); ?>
-			<input type="text" name="number" value="<?php echo htmlEnt($number); ?>" size="15" style="width:130px;" />
+			<input type="text" name="number" value="<?php echo htmlEnt($number); ?>" size="15" style="width:200px;" />
 			<button type="submit" title="<?php echo __('Nummer suchen'); ?>" class="plain">
 				<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
 			</button>
 			</form>
 		</td>
-		<td rowspan="2">
+		<td colspan="3"><div align="right">
 	<?php
 	
 	if ($page > 0) {
 		echo
 		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
-		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
+		'<img  alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust.png" />',
 		'</a>', "\n";
 	} else {
 		echo
-		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust-dis.png" />', "\n";
+		'<img  alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust-dis.png" />', "\n";
 	}
+	echo "&nbsp;";
 	if ($page < $num_pages-1) {
 		echo
 		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
-		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
+		'<img  alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust.png" />',
 		'</a>', "\n";
 	} else {
 		echo
-		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust-dis.png" />', "\n";
+		'<img  alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust-dis.png" />', "\n";
 	}
-	
 	?>
-		</td>
+		</div></td>
 	</tr>
 	<tr>
-		<td colspan="2" class="quickchars">
+		<td colspan="8" class="quickchars">
 <?php
 	
 	$chars = array();
@@ -455,7 +489,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		</td>
 	</tr>
 	</tbody>
-	</table>
 	
 <?php
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
@@ -467,7 +500,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
 	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 ?>
-	<table cellspacing="1" class="phonebook">
 	<thead>
 	<tr>
 		<th style="width: 70px;"><?php echo '<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;sort=user&amp;sortorder=' .$sortarray['user']), '">', __('User'), '</a>'; ?></th>
@@ -563,6 +595,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='. rawUrlEncode($r['usern']) .'&amp;action=del&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page .'&amp;sort='.$sort .'&amp;sortorder='.$sortorder), '" title="',__('l&ouml;schen'), '" onclick="return confirm_delete();"><img alt="',__('entfernen'), '" src="',GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			echo "</td>\n";
 			
+			echo "</div></td>\n";
 			echo '</tr>', "\n";
 			@ob_flush(); @flush();
 		}
@@ -576,11 +609,11 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		
 	?>
 		<td>
-			<input type="text" name="uuser" id="ipt-uuser" value="" size="8" maxlength="20" />
+			<input type="text" name="uuser" id="ipt-uuser" value="" size="8" maxlength="50" />
 		</td>
 		<td>
-			<input type="text" name="ulname" id="ipt-ulname" value="" size="15" maxlength="40" style="width:80px;" title="<?php echo __('Nachname'); ?>" />,
-			<input type="text" name="ufname" id="ipt-ufname" value="" size="15" maxlength="40" style="width:70px;" title="<?php echo __('Vorname'); ?>" />
+			<input type="text" name="ulname" id="ipt-ulname" value="" size="15" maxlength="50" style="width:80px;" title="<?php echo __('Nachname'); ?>" />,
+			<input type="text" name="ufname" id="ipt-ufname" value="" size="15" maxlength="50" style="width:70px;" title="<?php echo __('Vorname'); ?>" />
 		</td>
 		<td>
 			<input type="text" name="uext" id="ipt-uext" value="" size="5" maxlength="11" />
@@ -638,10 +671,11 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			<button type="submit" title="<?php echo __('Benutzer anlegen'); ?>" class="plain" name="action" value="add">
 				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			</button>
+			<?php if (strstr($_SERVER['HTTP_USER_AGENT'],'MSIE')) echo "&nbsp;"; ?> 
 			<button type="submit" title="<?php echo __('Benutzer anlegen und bearbeiten'); ?>" class="plain" name="action" value="add-and-view">
 				<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			</button>
-		</td>
+		</div></td>
 		
 	<?php
 	//}
@@ -735,12 +769,13 @@ else {
 	
 	$rs = $DB->execute(
 'SELECT
-	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`, `s`.`language`, `u`.`group_id`,
-	`hp1`.`value` `hp_route_prefix`
+	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`, `s`.`language`, `u`.`group_id`, `u`.`pb_hide`,
+	`hp1`.`value` `hp_route_prefix`, `d`.`drop_call`, `d`.`number`, `s`.`mailbox` `mailbox`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) LEFT JOIN
 	`hosts` `h` ON (`h`.`id`=`u`.`host_id`) LEFT JOIN
+	`user_calldrop` `d` ON (`u`.`id`=`d`.`user_id`) LEFT JOIN
 	`host_params` `hp1` ON (`hp1`.`host_id`=`h`.`id` AND `hp1`.`param`=\'route_prefix\')
 WHERE
 	`u`.`user` = \''. $DB->escape($edit_user) .'\''
@@ -748,6 +783,8 @@ WHERE
 	
 	if ($rs) {
 		$r = $rs->fetchRow();
+		$r['pb_hide'] = (bool)$r['pb_hide'];
+		$r['drop_call'] = (bool)$r['drop_call'];
 		$hid = $r['hid'];
 	} else {
 		$hid = 0;
@@ -755,7 +792,7 @@ WHERE
 	
 	$boi_api = ($hid > 0) ? gs_host_get_api($hid) : '__fail_api';
 	
-	
+if ( GS_BUTTONDAEMON_USE == false ) {	
 	$sql_query =
 'SELECT `p`.`id`, `p`.`title`, `u`.`host_id`
 FROM
@@ -766,6 +803,18 @@ WHERE
 	`u`.`host_id` = '.$r['hid'].' OR
 	`u`.`host_id` IS NULL
 GROUP BY `p`.`id`';
+}
+else {
+
+	$sql_query =
+'SELECT `p`.`id`, `p`.`title`, `u`.`host_id`
+FROM
+	`pickupgroups` `p` LEFT JOIN
+	`pickupgroups_users` `pu` ON (`p`.`id`=`pu`.`group_id`) LEFT JOIN
+	`users` `u` ON (`u`.`id`=`pu`.`user_id`)
+GROUP BY `p`.`id`';
+
+}
 	
 	$rs = $DB->execute($sql_query);
 	$pgroups = array();
@@ -817,7 +866,25 @@ ORDER BY LENGTH(`number`) DESC';
 			$ext_nums[] = $r_en['number'];
 		}
 	}
-	
+
+	$sql_query =
+'SELECT `number`, `dest`
+FROM `users_callerids`
+WHERE `user_id`='. $r['uid'] .'
+ORDER BY LENGTH(`number`) DESC';
+
+	$rs = $DB->execute($sql_query);
+	$callerids_ext = array();
+	$callerids_int = array();
+	if (@$rs) {
+		while ($r_pg = $rs->fetchRow()) {
+			if($r_pg['dest'] == 'external')
+				$callerids_ext[] = $r_pg['number'];
+			else
+				$callerids_int[] = $r_pg['number'];
+		}
+	}
+			
 	if (gs_get_conf('GS_BOI_ENABLED')) {
 	$sql_query =
 		'SELECT '.
@@ -860,11 +927,6 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 
 <table cellspacing="1">
 <thead>
-	<tr>
-		<th colspan="2">
-			Allgemeine Einstellungen
-		</th>
-	</tr>
 	<tr>
 		<th style="width:180px;">
 			<?php echo __('Benutzer'); ?>
@@ -939,6 +1001,21 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 		</td>
 	</tr>
 	<tr>
+		<th><?php echo __('Anrufbeantworter'); ?>:</th>
+		<td>
+			<?php
+				if ($boi_api == '') {
+					echo '<input type="text" name="mailbox" value="', htmlEnt($r['mailbox']) ,'" size="16" maxlength="16" />' ,"\n";
+				} else {
+					echo htmlEnt($r['mailbox']);
+				}
+			?>
+		</td>
+		<td class="transp xs gray">
+			&larr; <?php echo htmlEnt(__("durch Komma getrennt, falls mehrere Anrufbeantworter &uuml;berwacht werden sollen")); ?>
+		</td>
+	</tr>
+	<tr>
 		<th><?php echo __('E-Mail'); ?>:</th>
 		<td>
 			<input type="text" name="uemail" value="<?php echo htmlEnt($r['email']); ?>" size="38" maxlength="60" style="width:97%;" />
@@ -951,8 +1028,8 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 		<th><?php echo __('Sprache'); ?>:</th>
 		<td>
 			<select name="ulang">
-				<option value="de"<?php echo (($r['language'] === 'de') ? ' selected' : ''); ?>><?php echo htmlEnt(__("Deutsch"  )); ?> (de-DE)</option>
-				<option value="en"<?php echo (($r['language'] === 'en') ? ' selected' : ''); ?>><?php echo htmlEnt(__("Englisch" )); ?> (en-US)</option>
+				<option value="de"<?php echo (($r['language'] == 'de') ? " selected" : ""); ?>>Deutsch (de-DE)</option>
+				<option value="en"<?php echo (($r['language'] == 'en') ? " selected" : ""); ?>>Englisch (en-US)</option>
 			</select>
 		</td>
 		<td class="transp xs gray">
@@ -1000,6 +1077,24 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 		</td>
 		<td class="transp xs gray">
 			&larr; <?php echo htmlEnt(__("der SIP-Registrar/-Server")); ?>
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __('Aus Telefonbuch ausblenden'); ?>:</th>
+		<td>
+			<input type="checkbox" name="pb_hide" <?php if ($r['pb_hide'] == true) echo 'checked'; ?>  />
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __('Auf Zentrale abwerfen'); ?>:</th>
+		<td>
+			<input type="checkbox" name="drop_call" <?php if ($r['drop_call'] == true) echo 'checked'; ?>  />
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __('Nummer der Zentrale'); ?>:</th>
+		<td>
+			<input type="text" name="drop_number" value="<?php echo htmlEnt($r['number']); ?>" size="38" maxlength="60" style="width:97%;" />
 		</td>
 	</tr>
 </tbody>
@@ -1061,7 +1156,7 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 <table cellspacing="1">
 <tbody>
 	<tr>
-		<th style="width:180px;" class="l t">
+		<th style="width:180px;">
 			<?php echo __('Rufannahme-Gruppe'); ?>
 		</th>
 		<td style="width:280px;">
@@ -1200,6 +1295,113 @@ echo '<input type="hidden" name="u_pgrp_ed" value="yes" />', "\n";
 </table>
 
 <?php
+if (gs_get_conf('GS_USER_SELECT_CALLERID')) {
+?>
+<br />
+<table cellspacing="1">
+<thead>
+	<tr>
+		<th style="width:180px;">
+			<?php echo __('Angezeigte Rufnummern extern'); ?>
+		</th>
+		<th style="width:217px;">
+			<?php echo __('Rufnummer'); ?>
+		</th>
+		<th style="width:50px;">
+			&nbsp;
+		</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+
+foreach ($callerids_ext as $callerid) {
+	echo "<tr>\n";
+	
+	echo "<td>&nbsp;</td>\n";
+	
+	echo "<td>\n";
+	echo htmlEnt($callerid);	
+	echo "</td>\n";
+	
+	echo "<td>\n";
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'calleriddel_ext='. $callerid .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+	echo "</td>\n";		
+	
+	echo "</tr>\n";
+}
+?>
+<tr>
+	<td>&nbsp;</td>
+
+	<td>
+		<input type="text" name="callerid_ext" value="" size="20" maxlength="40" />	
+	</td>
+
+	<td>
+	</td>
+
+	</form>
+</tr>
+</tbody>
+</table>
+
+<br />
+
+<table cellspacing="1">
+<thead>
+	<tr>
+		<th style="width:180px;">
+			<?php echo __('Angezeigte Rufnummern intern'); ?>
+		</th>
+		<th style="width:217px;">
+			<?php echo __('Rufnummer'); ?>
+		</th>
+		<th style="width:50px;">
+			&nbsp;
+		</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+foreach ($callerids_int as $callerid) {
+	echo "<tr>\n";
+	
+	echo "<td>&nbsp;</td>\n";
+	
+	echo "<td>\n";
+	echo htmlEnt($callerid);	
+	echo "</td>\n";
+	
+	echo "<td>\n";
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'calleriddel_int='. $callerid .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=edit' .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+	echo "</td>\n";		
+	
+	echo "</tr>\n";
+}
+?>
+	<tr>
+		<td>&nbsp;</td>
+
+		<td>
+			<input type="text" name="callerid_int" value="" size="20" maxlength="40" />
+		</td>
+
+		<td>
+		</td>
+
+		</form>
+	</tr>
+</tbody>
+</table>
+
+<br />
+
+<?php
+}
+?>
+
+<?php
 if (gs_get_conf('GS_BOI_ENABLED')) {
 ?>
 <br />
@@ -1291,19 +1493,18 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 //FIXME - invalid XHTML! {
 ?>
 <br />
-
 <table cellspacing="1">
 <thead>
 <tr>
-	<th colspan="5"><?php echo __('Benutzergruppen '); ?></th>
+	<th style="min-width:21em;" colspan="5"><?php echo __('Benutzergruppen '); ?></th>
 </tr>
 
 <tr>
-	<th style="width:130px;"><?php echo __('Gruppe'); ?></th>
-	<th style="width:180px;"><?php echo __('Titel'); ?></th>
-	<th style="width:30px;"><?php echo __('Typ'); ?></th>
-	<th style="width:50px;"><?php echo __('Mitglieder'); ?></th>
-	<th style="width:24px;"></th>
+	<th style="min-width:12em;"><?php echo __('Gruppe'); ?></th>
+	<th style="min-width:12em;width:18em;"><?php echo __('Titel'); ?></th>
+	<th style="min-width:5em;"><?php echo __('Typ'); ?></th>
+	<th style="min-width:3em;"><?php echo __('Mitglieder'); ?></th>
+	<th style="min-width:1em;"></th>
 </tr>
 </thead>
 <tbody>
@@ -1313,7 +1514,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 	
 	$i = 0;
 	
-	if ( (count($groups_my_info) - count($groups) - 1) ) {
+	if ((count($groups_my_info) - count($groups) - 1) ) {
 		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
 		echo '<form method="post" action="'.GS_URL_PATH.'">';
 		echo gs_form_hidden($SECTION, $MODULE);
@@ -1360,67 +1561,25 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 
 </tbody>
 </table>
-
 <?php
 //FIXME - invalid XHTML! }
 ?>
-<br />
-
 <?php
+	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
+	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
+	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
+	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
+	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 
 	echo '<table><thead><tr>';
 	echo '<th colspan="3">', __('Vorhandene Skills'), '</th></tr>';
 	echo '<tr>';
-	echo '<th style="width:348px;">', __('Warteschlange'), '</th>';
-	echo '<th style="width:58px;">', __('Skill'), '</th>';
-	echo '<th style="width:38px;"></th>';
+	echo '<th>', __('Warteschlange'), '</th>';
+	echo '<th>', __('Skill'), '</th>';
+	echo '<th></th>';
 	echo '</thead><tbody>';
-
-	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
-	echo gs_form_hidden($SECTION, $MODULE);
-	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
-	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
-	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
-	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
-	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
-
-	$uhid = $DB->executeGetOne('SELECT `host_id` FROM `users` WHERE `id`='.$uid);
-	$rs = $DB->execute('SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_host_id`='.$uhid.' AND `_id` NOT IN (SELECT `_queue_id` FROM `penalties` WHERE `_user_id`='.$uid.')');
-
-	if ($DB->numFoundRows() > 0) {
-		echo '<tr><td>';
-		echo '<select name="queue_id">';
-		while ($queue_map = $rs->fetchRow()) {
-			echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
-			echo '>',  $queue_map['name'], ' ', $queue_map['_title'], '</option>', "\n";
-		}
-		echo '</select>';
-		echo '</td>';
-		echo '<td>';
-		echo '<select name="penalty">';
-		foreach ($pen_avail as $pen) {
-			echo '<option value="', $pen,  '">', $pen, ' </option>';
-		}
-		echo '</select>';
-		echo '</td>';
-		echo '<td>';
-		echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
-		echo '<img alt="', __('Hinzuf&uuml;gen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>' ,"\n";
-		echo '<input type="hidden" name="action" value="setpenalty" />', "\n";
-		echo '<input type="hidden" name="edit" value="', rawUrlEncode($edit_user), '">', "\n";
-		echo '</td>';
-		echo '</tr>';
-	}
-	echo '</form>';
-
-	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
-	echo gs_form_hidden($SECTION, $MODULE);
-	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
-	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
-	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
-	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
-	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
-
 	$rs = $DB->execute('SELECT `q`.`name`, `penalty`, `_title`, `u`.`host_id`, `p`.`_queue_id` from `users` u,  `penalties` p, `ast_queues` q WHERE `p`.`_user_id`='.$uid.' AND `p`.`_user_id`=`u`.`id` AND `q`.`_id`=`p`.`_queue_id`');
 	while ($pen_map = $rs->fetchRow()) {
 		echo '<tr><td>', $pen_map['name'], ' ', $pen_map['_title'], '</td>';
@@ -1436,7 +1595,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 					}
 		echo '</select>';
 		echo '</td>';
-		echo '<td class="l">';
+		echo '<td>';
 			echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
 			echo '<img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>' ,"\n";
 			echo '<input type="hidden" name="action" value="setpenalty" />', "\n";
@@ -1448,12 +1607,51 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 			echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
 			echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 			echo '</form>';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'queue_id='.$pen_map['_queue_id'] .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=delpenalty' .'&amp;name='. rawUrlEncode($name) ), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+echo '<a href="', gs_url($SECTION, $MODULE, null, 'queue_id='.$pen_map['_queue_id'] .'&amp;edit='. rawUrlEncode($edit_user) .'&amp;action=delpenalty' .'&amp;name='. rawUrlEncode($name) ), '" title="', __('entfernen'), '"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo '</td>';
 		echo '</tr>';
 	}
 	echo '</tbody></table>';
-
+	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+	echo gs_form_hidden($SECTION, $MODULE);
+	echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
+	echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
+	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
+	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
+	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
+	echo '<table><thead><tr>';
+	echo '<th colspan="3">', __('Verf&uuml;gbare Skills'), '</th></tr>';
+	echo '<tr>';
+	echo '<th>', __('Warteschlange'), '</th>';
+	echo '<th>', __('Skill'), '</th>';
+	echo '<th></th>';
+	echo '</thead><tbody>';
+	$uhid = $DB->executeGetOne('SELECT `host_id` FROM `users` WHERE `id`='.$uid);
+	$rs = $DB->execute('SELECT `_id`, `name`, `_title` FROM `ast_queues` WHERE `_host_id`='.$uhid.' AND `_id` NOT IN (SELECT `_queue_id` FROM `penalties` WHERE `_user_id`='.$uid.')');
+	echo '<tr><td>';
+	echo '<select name="queue_id" size="5">';
+	while ($queue_map = $rs->fetchRow()) {
+		echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
+		echo '>',  $queue_map['name'], ' ', $queue_map['_title'], '</option>', "\n";
+	}
+	echo '</select>';
+	echo '</td>';
+	echo '<td>';
+	echo '<select name="penalty">';
+	foreach ($pen_avail as $pen) {
+		echo '<option value="', $pen,  '">', $pen, ' </option>';
+	}
+	echo '</select>';
+	echo '</td>';
+	echo '<td>';
+	echo '<button type="submit" title="', __('Speichern'), '" class="plain">';
+	echo '<img alt="', __('Hinzuf&uuml;gen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>' ,"\n";
+	echo '<input type="hidden" name="action" value="setpenalty" />', "\n";
+	echo '<input type="hidden" name="edit" value="', rawUrlEncode($edit_user), '">', "\n";
+	echo '</td>';
+	echo '</tr>';
+	echo '</form>';
+	echo '</tbody></table>';
 ?>
 <?php
 }

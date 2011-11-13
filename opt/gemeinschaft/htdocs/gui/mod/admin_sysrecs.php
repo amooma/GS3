@@ -25,11 +25,12 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
-defined('GS_VALID') or die('No direct access.');
-include_once( GS_DIR .'inc/get-listen-to-ids.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
+defined("GS_VALID") or die("No direct access.");
+include_once(GS_DIR ."inc/get-listen-to-ids.php");
+include_once(GS_DIR ."inc/gs-fns/gs_hosts_get.php");
+include_once(GS_DIR ."lib/utf8-normalize/gs_utf_normal.php");
 
-define('AUDIOUPLOAD_DESTDIR', '/opt/gemeinschaft/sys-rec');
+define("AUDIOUPLOAD_DESTDIR", "/opt/gemeinschaft/sys-rec");
 
 //--- output title
 echo "<h2>";
@@ -42,6 +43,14 @@ echo "</h2>\n";
 
 //--- include some javascript stuff
 echo "<script type=\"text/javascript\" src=\"". GS_URL_PATH ."js/arrnav.js\"></script>\n";
+
+echo "<script type=\"text/javascript\">\n";
+echo "//<![CDATA[\n";
+echo "function confirm_delete() {\n";
+echo "\treturn confirm(". utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) .");\n";
+echo "}\n";
+echo "//]]>\n";
+echo "</script>\n";
 
 //--- get browser get/post stuff
 $per_page    = (int)GS_GUI_NUM_RESULTS;
@@ -279,7 +288,7 @@ if($newaction === "upload")
 					{
 						@chmod($tmpfile_ext, 0666);
 
-						$soxcmd = "sox -q ". qsa($tmpfile_ext) ." -r 8000 -c 1 -s -2 -t raw - 2>>/dev/null";
+						$soxcmd = "sox -q ". qsa($tmpfile_ext) ." -r 8000 -c 1 -s -b 16 -t raw - 2>>/dev/null";
 						$audiodata = `$soxcmd`;
 
 						@unlink($tmpfile_ext);
@@ -293,11 +302,6 @@ if($newaction === "upload")
 						{
 							$audio_md5 = md5($audiodata);
 							$audio_destination = AUDIOUPLOAD_DESTDIR ."/".$audio_md5.".sln";
-							if(file_exists($audio_destination))
-                       					{
-                               				$errormsgs[] = __('Die Audiodatei existiert bereits!');
-							break;	
-                       					}	
 
 							unset($thiserr);
 							$destfile = @fopen($audio_destination, "wb");
@@ -319,7 +323,9 @@ if($newaction === "upload")
 								else
 								{
 									@chmod($audio_destination, 0666);
-									$audio_newdescr = "Hochgeladene Datei ".@$_FILES["audiofile"]["name"];
+									$audio_newdescr = @$_FILES["audiofile"]["name"];
+									if ( strlen($audio_newdescr) < 1 )
+										$audio_newdescr = "Hochgeladene Datei";
 
 									$sql_query =
 										'INSERT INTO `systemrecordings` (
@@ -361,70 +367,45 @@ if($newaction === "upload")
 
 if($delete)
 {
-  
-    // check if file is in use by queue
-    $sql_query =
-    'SELECT  SQL_CALC_FOUND_ROWS 
-    `name`, `_title`
-     FROM    `ast_queues` 
-     WHERE   `_sysrec_id`= "'. $delete .'"';
-    
-    $rs = $DB->execute($sql_query);
-    $num_total = @$DB->numFoundRows();
-         
-    # echo "<pre>\n";
-    # print_r($rs);
-    # echo "</pre>\n"; 
-      
-    if($num_total >0)  
-    {   
-      while($r = $rs->fetchRow())
-      {
-         $errormsgs[] = sprintf( __('Audiodatei kann nicht gel&ouml;scht werden da in Verwendung von Warteschlange %s'), '<b>'. htmlEnt($r['name']) .'</b>' );
-      }
-    }
-    else 
-    {
 	$sql_query =
-	'SELECT SQL_CALC_FOUND_ROWS
-	`s`.`md5hashname` `md5hashname`
-	FROM
-	`systemrecordings` `s`
-	WHERE
-	`s`.`id` = "'. $delete .'"';
-	
-		$rs = $DB->execute($sql_query);
-		$num_total = @$DB->numFoundRows();
-	
-		if($num_total != 1)
+'SELECT
+`s`.`md5hashname` `md5hashname`
+FROM
+`systemrecordings` `s`
+WHERE
+`s`.`id` = "'. $delete .'"';
+
+	$rs = $DB->execute($sql_query);
+	$num_total = @$DB->numFoundRows();
+
+	if($num_total != 1)
+	{
+		$errormsgs[] = __('Es ist ein Datenbankfehler aufgetreten');
+	}
+	else
+	{
+		$r = $rs->fetchRow();
+		if(strlen($r["md5hashname"]) <= 0)
 		{
 			$errormsgs[] = __('Es ist ein Datenbankfehler aufgetreten');
 		}
 		else
 		{
-			$r = $rs->fetchRow();
-			if(strlen($r["md5hashname"]) <= 0)
+			$audio_realpath = AUDIOUPLOAD_DESTDIR ."/".$r["md5hashname"].".sln";
+			if(!file_exists($audio_realpath))
 			{
-				$errormsgs[] = __('Es ist ein Datenbankfehler aufgetreten');
+				$errormsgs[] = __('Die zugeh&ouml;rige Audiodatei existiert nicht');
 			}
-			else
-			{
-				$audio_realpath = AUDIOUPLOAD_DESTDIR ."/".$r["md5hashname"].".sln";
-				if(!file_exists($audio_realpath))
-				{
-					$errormsgs[] = __('Die zugeh&ouml;rige Audiodatei existiert nicht');
-				}
-	
-				distribute_remove($audio_realpath);
-				@unlink($audio_realpath);
-	
-				$sql_query =
-					'DELETE FROM `systemrecordings`
-					WHERE `id`='. $delete;
-				$rs = $DB->execute($sql_query);
-	
-				$errormsgs[] = __('Audiodatei gel&ouml;scht');
-			}
+
+			distribute_remove($audio_realpath);
+			@unlink($audio_realpath);
+
+			$sql_query =
+				'DELETE FROM `systemrecordings`
+				WHERE `id`='. $delete;
+			$rs = $DB->execute($sql_query);
+
+			$errormsgs[] = __('Audiodatei gel&ouml;scht');
 		}
 	}
 }
@@ -453,8 +434,37 @@ WHERE `id`='. $save;
 //------------
 //--- get data from db
 
+//--- do a full fetch for playback opts first
+
+unset($playback_opts);
+$playback_opts = Array();
+
+$sql_query_full =
+'SELECT
+	`s`.`id` `id`,
+	`s`.`description` `description`
+FROM
+	`systemrecordings` `s`
+ORDER BY `s`.`id`';
+
+$rs_full = $DB->execute($sql_query_full);
+$num_total = @$DB->numFoundRows();
+
+if(@$rs_full)
+{
+	$i = 0;
+	while($r_full = $rs_full->fetchRow())
+	{
+		$playback_opts[] = "<option value=\"". $r_full["id"] ."\">". $r_full["id"] ." - ". htmlEnt($r_full["description"]) ."</option>";
+	}
+}
+
+unset($r_full); unset($sql_query_full);
+
+//--- select relevant items for list display
+
 $sql_query =
-'SELECT SQL_CALC_FOUND_ROWS
+'SELECT
 	`s`.`id` `id`,
 	UNIX_TIMESTAMP(`s`.`date`) `date`,
 	`s`.`description` `description`,
@@ -466,7 +476,6 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 
 $rs = $DB->execute($sql_query);
 
-$num_total = @$DB->numFoundRows();
 $num_pages = ceil($num_total / $per_page);
 
 //------------
@@ -488,9 +497,6 @@ if(is_array($errormsgs) && (count($errormsgs) > 0))
 
 //--- ) display errors if any
 //------------
-
-unset($playback_opts);
-$playback_opts = Array();
 
 echo "<h3>". __('Vorhandene Audiodateien') ."</h3>\n";
 
@@ -564,9 +570,6 @@ if(@$rs)
 	$i = 0;
 	while($r = $rs->fetchRow())
 	{
-		//--- collect playback select options here...
-		$playback_opts[] = "<option value=\"". $r["id"] ."\">". $r["id"] ." - ". htmlEnt($r["description"]) ."</option>";
-
 		unset($r_length); unset($r_created);
 		$r_length = (floor($r['length'] / 60)).":". sprintf("%02d", ($r['length'] % 60));
 
@@ -610,7 +613,7 @@ if(@$rs)
 			echo "<td>\n";
 			echo "<a href=\"". gs_url($SECTION, $MODULE, null, "playback=". $r['id'] ."&amp;page=". $page ."&amp;phonenum=". $_SESSION["real_user"]["info"]["ext"]) ."\" title=\"". __('abspielen') ."\"><img alt=\"". __('abspielen') ."\" src=\"". GS_URL_PATH ."crystal-svg/16/app/kmix.png\" /></a> &nbsp; ";
 			echo "<a href=\"". gs_url($SECTION, $MODULE, null, "edit=". $r['id'] ."&amp;page=".$page) ."\" title=\"". __('bearbeiten') ."\"><img alt=\"". __('bearbeiten') ."\" src=\"". GS_URL_PATH ."crystal-svg/16/act/edit.png\" /></a> &nbsp; ";
-			echo "<a href=\"". gs_url($SECTION, $MODULE, null, "delete=". $r['id'] ."&amp;page=".$page) ."\" title=\"". __('l&ouml;schen') ."\"><img alt=\"". __('entfernen') ."\" src=\"". GS_URL_PATH ."crystal-svg/16/act/editdelete.png\" /></a>";
+			echo "<a href=\"". gs_url($SECTION, $MODULE, null, "delete=". $r['id'] ."&amp;page=".$page) ."\" title=\"". __('l&ouml;schen') ."\" onClick=\"return confirm_delete();\"><img alt=\"". __('entfernen') ."\" src=\"". GS_URL_PATH ."crystal-svg/16/act/editdelete.png\" /></a>";
 			echo "</td>\n";
 		}
 

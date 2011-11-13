@@ -1,0 +1,112 @@
+#!/usr/bin/php -q
+<?php
+/*******************************************************************\
+*            Gemeinschaft - asterisk cluster gemeinschaft
+* 
+* $Revision$
+* 
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+*
+* Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
+* 
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+* MA 02110-1301, USA.
+\*******************************************************************/
+
+define( 'GS_VALID', true );  /// this is a parent file
+require_once( dirName(__FILE__) .'/../inc/conf.php' );
+require_once( GS_DIR .'inc/agi-fns.php' );
+require_once( GS_DIR .'inc/log.php' );
+
+ini_set('implicit_flush', 1);
+ob_implicit_flush(1);
+
+
+$uname  = trim(@$argv[1]);
+if (! $uname) {
+	gs_agi_set_variable( 'ret', 'noextension' );
+	die();
+}
+if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
+	gs_agi_set_variable( 'ret', 'extensionnomatch' );
+	die();
+}
+//get the username
+
+include_once( GS_DIR .'inc/gs-fns/gs_user_name_by_ext.php' );
+	
+$user_name =  gs_user_name_by_ext( $uname );
+if (isGsError( $user_name )) {
+	gs_log ( GS_LOG_WARNING,  $ret->getMsg() );
+	gs_agi_set_variable( 'ret', 'unknownuser' );
+	die();
+}
+//get the callforwards
+	
+include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
+	
+$cf = gs_callforward_get( $user_name );
+	
+if (isGsError( $cf )) {
+	gs_log ( GS_LOG_WARNING,  $ret->getMsg() );
+	gs_agi_set_variable( 'ret', 'nocf' );
+	die();
+}
+	
+$cases = array( 'always', 'busy', 'unavail', 'offline' );
+
+//build a string for internal diversions
+	
+$cf_int = array();
+	
+foreach ( $cases as $case ) {
+	
+	$cf_int[] = $cf['internal'][$case]['active'];
+	
+} 
+	
+$internal = implode ( "/", $cf_int );
+	
+//build a string for internal diversions
+	
+$cf_ext = array();
+	
+foreach ( $cases as $case ) {
+	
+	$cf_ext[] = $cf['external'][$case]['active'];
+
+} 
+	
+$external = implode ( "/", $cf_ext );
+	
+$std = $cf['external']['always']['number_std'];
+	
+$var = $cf['external']['always']['number_var'];
+
+$vml = $cf['external']['always']['number_vml'];
+	
+$timeout = $cf['external']['unavail']['timeout'];
+
+
+gs_agi_set_variable( 'internal', $internal );
+gs_agi_set_variable( 'external', $external );
+gs_agi_set_variable( 'std', $std );
+gs_agi_set_variable( 'var', $var );
+gs_agi_set_variable( 'vml', $vml );
+gs_agi_set_variable( 'timeout', $timeout );
+gs_agi_set_variable( 'ret', 'ok' );
+
+?>

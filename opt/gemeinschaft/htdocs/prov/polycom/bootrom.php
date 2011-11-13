@@ -2,15 +2,14 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 *
-* $Revision$
+* $Revision: 5996 $
 *
-* Copyright 2007-2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* Copyright 2007-2009, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
-* Philipp Kempgen <philipp.kempgen@amooma.de>
-* Peter Kozak <peter.kozak@amooma.de>
-* 
-* Author: Daniel Scheller <scheller@loca.net>
+*
+* APS for Polycom SoundPoint IP phones
+* (c) 2009 Daniel Scheller / LocaNet oHG
+* mailto:scheller@loca.net
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License

@@ -1,29 +1,13 @@
 <?php
 /*******************************************************************\
-*            Gemeinschaft - asterisk cluster gemeinschaft
+*                            Gemeinschaft
 * 
-* $Revision$
-* 
-* Copyright 2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* Copyright 2010, AMOOMA GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
 * 
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-* 
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-* 
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-* MA 02110-1301, USA.
 \*******************************************************************/
 
 defined('GS_VALID') or die('No direct access.');
@@ -435,12 +419,8 @@ FROM
 `ast_queues` `q` JOIN
 `hosts` `h` ON (`h`.`id`=`q`.`_host_id`)
 LEFT JOIN `monitor_queues` `m` ON (`q`.`_id` = `m`.`queue_id` AND `m`.`user_id` = '.$user_id.')
-WHERE '.
-	( count($queue_ids) > 0
-	? ' `q`.`_id` IN ('.implode(',',$queue_ids).') '
-	: ' FALSE '
-	).' '.
-'ORDER BY `q`.`name`';
+WHERE `q`.`_id` IN ('.implode(',',$queue_ids).')
+ORDER BY `q`.`name`';
 
 $rs = $DB->execute( $sql_query );
 
@@ -896,12 +876,8 @@ JOIN `ast_sipfriends` `s`
 ON (`s`.`_user_id` = `q`.`_user_id`)
 JOIN `users` `u`
 ON (`u`.`id` = `q`.`_user_id`)
-WHERE '.
-	( count($queue_ids_active) > 0
-	? ' `q`.`_queue_id` IN ('.implode(',',$queue_ids_active).') '
-	: ' FALSE '
-	).' '.
-'ORDER BY `q`.`queue_name`';
+WHERE `q`.`_queue_id` IN ('.implode(',',$queue_ids_active).')
+ORDER BY `q`.`queue_name`';
 
 	$members = array();
 	$rs = $DB->execute( $sql_query );

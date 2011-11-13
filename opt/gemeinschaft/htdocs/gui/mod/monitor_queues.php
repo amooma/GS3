@@ -92,7 +92,7 @@ FROM
 	`ast_queues` `q` JOIN
 	`hosts` `h` ON (`h`.`id`=`q`.`_host_id`)
 WHERE `q`.`_id` IN ('.implode(',',$queue_groups).') OR `q`.`_id` IN 
-	( SELECT `_queue_id` FROM`ast_queue_members` `m` WHERE `m`.`_user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .') 
+	( SELECT `_queue_id` FROM `ast_queue_members` `m` WHERE `m`.`_user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .') 
 ORDER BY `q`.`name`';
 
 $rs_queues = $DB->execute( $sql_query );

@@ -29,6 +29,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 /***********************************************************
 *    (de)activates CLIR for a user for calls to
@@ -39,7 +40,7 @@ function gs_clir_activate( $user, $dest, $active )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
-	if (! in_array( $dest, array('internal','external'), true ))
+	if (! in_array( $dest, array('internal','external','all'), true ))
 		return new GsError( 'Dest must be internal|external.' );
 	if (! in_array( $active, array('no','yes','once'), true ))
 		return new GsError( 'Active must be no|yes|once.' );
@@ -66,10 +67,24 @@ function gs_clir_activate( $user, $dest, $active )
 	
 	# set clir
 	#
-	$field = $dest .'_restrict';
-	$ok = $ok && $db->execute( 'UPDATE `clir` SET `'. $field .'`=\''. $active .'\' WHERE `user_id`='. $user_id );
+	if ( $dest != 'all' ) {
+	
+		$field = $dest .'_restrict';
+		$ok = $ok && $db->execute( 'UPDATE `clir` SET `'. $field .'`=\''. $active .'\' WHERE `user_id`='. $user_id );
+	}
+	else {
+	
+		$ok = $ok && $db->execute( 'UPDATE `clir` SET `internal_restrict`=\'' . $active  .'\', `external_restrict`=\'' . $active  . '\' WHERE `user_id`='. $user_id );
+	
+	}
 	if (! $ok)
 		return new GsError( 'Failed to set CLIR.' );
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+		if (! $user_name)
+			return new GsError( 'Unknown user.' );
+		gs_clir_changed_ui($user_name);
+	}
 	return true;
 }
 

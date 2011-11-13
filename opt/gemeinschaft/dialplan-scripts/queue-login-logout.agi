@@ -10,8 +10,7 @@
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
-* Sascha Daniels <sd@alternative-solution.de>
-*
+* 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -31,8 +30,6 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
-require_once( GS_DIR .'inc/group-fns.php' );
-require_once( GS_DIR .'inc/ami-fns.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -46,7 +43,7 @@ if (! preg_match('/^\d+$/', $user))  // is not just digits
 	gs_agi_err( 'Invalid user extension' );
 if (! preg_match('/^\d+$/', $queue_name))  // is not just digits
 	gs_agi_err( 'Invalid queue extension' );
-if (! in_array( $action, array('login','logout','logoutall', 'loginall'), true ))
+if (! in_array( $action, array('login','logout','logoutall'), true ))
 	gs_agi_err( 'Invalid action argument' );
 
 
@@ -59,13 +56,38 @@ $db = gs_db_master_connect();
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1) gs_agi_err( 'User not found' );
 
+
+# check permissions
+#
+
+include_once( GS_DIR .'inc/group-fns.php' );
+
+$user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'queue_member' );
+
+if ( count ( $members ) <= 0 ) {
+	
+	gs_agi_set_variable(  'agent_login_status' , 'notallowed' );
+	die();
+}
+
+
+
+# test whether there is a agent logged in on this phone
+#
+$agent = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `agents` WHERE `user_id`='. $db->escape($user_id) );
+if ($agent > 0){
+	gs_agi_set_variable ( 'agent_login_status' , 'agent-exists' );
+	die();
+}
+
 # get user's host id
 #
 $user_host_id = (int)$db->executeGetOne( 'SELECT `host_id` FROM `users` WHERE `id`='. $user_id );
 if ($user_host_id < 1) gs_agi_err( 'Host not found' );
 
 
-if (! in_array($action, array('logoutall', 'loginall'))) {
+if ($action != 'logoutall') {
 	
 	# get queue
 	#
@@ -84,117 +106,41 @@ if ($action === 'login') {
 		gs_agi_set_variable( 'agent_login_status', 'failhost' );
 		exit();
 	}
+	
 	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queue_members` WHERE `_queue_id`='. $queue_id .' AND `_user_id`='. $user_id );
 	if ($num > 0) {  // user is already logged in on that queue
 		gs_agi_set_variable( 'agent_login_status', 'alreadyon' );
 		exit();
 	}
-	$penalty = (int)$db->executeGetOne('SELECT `penalty` FROM `penalties` WHERE `_user_id`='.$user_id.' AND `_queue_id`='.$queue_id);
-	if ($penalty) {
-		$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`, `penalty`) VALUES (\''. $db->escape($queue_name) .'\', '. $queue_id .', \''. $db->escape( 'SIP/'. $user ) .'\', '. $user_id .', '. $penalty .')' );
-	} else {
-		$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`) VALUES (\''. $db->escape($queue_name) .'\', '. $queue_id .', \''. $db->escape( 'SIP/'. $user ) .'\', '. $user_id .')' );
-	}
+	
+	$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`) VALUES (\''. $db->escape($queue_name) .'\', '. $queue_id .', \''. $db->escape( 'SIP/'. $user ) .'\', '. $user_id .')' );
 	gs_agi_set_variable( 'agent_login_status', 'loggedin' );
 	
 }
 elseif ($action === 'logout') {
-		// Tell user that he can NOT log out, because he is a static agent
-		// FIXME: Voicepromt needed?
-	if (queue_static_agent( $queue_id, $user_id)) exit();
-	$agent_on = $db->executeGetOne('SELECT count(`_queue_id`) FROM `ast_queue_members` WHERE `_queue_id` ='.$queue_id);
-	$min_agent = $db->executeGetOne('SELECT `_min_agents` FROM `ast_queues` WHERE `_id`='.$queue_id);
-		if ($agent_on > $min_agent) {
-			$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_queue_id`='. $queue_id .' AND `_user_id`='. $user_id );
-			gs_agi_set_variable( 'agent_login_status', 'loggedout' );
-		} else {
-			exit();
-		}
+	
+	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_queue_id`='. $queue_id .' AND `_user_id`='. $user_id );
+	gs_agi_set_variable( 'agent_login_status', 'loggedout' );
 	
 }
 elseif ($action === 'logoutall') {
-	// Only logout from queue, when we are NOT a static agent
-	$rs = $db->execute('SELECT `queue_name`, `interface`, `_queue_id` FROM `ast_queue_members` WHERE `_user_id`='. $user_id . ' AND static = 0');
-	(int)$logoff_ok = 0;
-	// Create Queuelog entry for each queue
-	$ami = new AMI;
-	$ami->ami_login('gscc', 'gspass', '127.0.0.1', 5038);
-	while ($queue_map = $rs->fetchrow()) {
-		$agent_on = $db->executeGetOne('SELECT count(`_queue_id`) FROM `ast_queue_members` WHERE `_queue_id` ='.(int)$queue_map['_queue_id']);
-		$min_agent = $db->executeGetOne('SELECT `_min_agents` FROM `ast_queues` WHERE `_id`='.(int)$queue_map['_queue_id']);
-		// Only logoff if min_agents are in queue
-		if ($agent_on > $min_agent) {
-			$db->execute('DELETE from `ast_queue_members` WHERE
-				`_user_id`='.$user_id.'
-				AND `static`= 0 
-				AND `_queue_id`='.(int)$queue_map['_queue_id'] 
-				);
-		$ami->ami_send_command(
-			'Action: Queuelog'."\n".
-			'Queue: '.$queue_map['queue_name']."\n".
-			'Interface: '.$queue_map['interface']."\n".
-			'Event: AGENTLOGOFF'."\r\n\r\n"
-			);
-		} else {
-			// If unable to logoff increase error counter
-			$logoff_ok =$logoff_ok + 1;
+	$rs = $db->execute( 'SELECT `queue_name` FROM `ast_queue_members` WHERE `_user_id`='. $user_id );
+	if( @$rs ) {
+		$c = 0;
+		while( $queues = $rs->fetchRow() ) {
+			$queue = $queues['queue_name'];
+			gs_agi_set_variable ( 'oqueue' . $c  , $queue );
+			$c++;
 		}
-	}
-	// Only O.K. if all logoffs did work
-	if ($logoff_ok === 0) {
+			gs_agi_set_variable ( 'oqueue_count' , $c );
+
+	}	
+	
+	
+	$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_user_id`='. $user_id );
 	gs_agi_set_variable( 'agent_login_status', 'loggedout' );
-	}
-	$ami->ami_logout();
+	
 }
 
-elseif ($action === 'loginall') {
-	$user_groups  = gs_group_members_groups_get( array($user_id), 'user');
-	$queues_allowed = gs_group_members_get( gs_group_permissions_get($user_groups, 'login_queues', 'queue'));
-	// Exit if now Queues available
-	if (empty($queues_allowed)) exit();
-	// All allowed Queues on same host
-	$rs = $db->execute(
-		'SELECT `_id`, `name` FROM `ast_queues`  WHERE `_host_id`='.$user_host_id.' 
-		AND `_id` IN ('.implode(",", $queues_allowed).')
-		AND `_id` NOT IN 
-		(SELECT `_queue_id` FROM `ast_queue_members` WHERE `_user_id`='.$user_id. ')'
-	);
-	$ami = new AMI;
-	$ami->ami_login('gscc', 'gspass', '127.0.0.1', 5038);
-	while ($queue_map = $rs->fetchrow()) {
-		$penalty = $db->executeGetOne('SELECT `penalty` FROM `penalties` WHERE `_user_id`='.$user_id.' AND `_queue_id`='.$queue_map['_id']);
-		if (! $penalty) $penalty='DEFAULT';
-		$interface = 'SIP/'.$user;
-		$db->execute(
-			'INSERT INTO `ast_queue_members` SET 
-			`_user_id` ='.$user_id.', '.
-			'`_queue_id` ='.(int)$queue_map['_id'].', '.
-			'`queue_name`= \''.$queue_map['name'].'\',
-			`interface` = \''.$interface.'\',
-			`penalty`='.$penalty
-		);
-		// Queuelog for each Queue
-		$ami->ami_send_command(
-			'Action: Queuelog'."\n".
-			'Queue: '.$queue_map['name']."\n".
-			'Interface: '.$user."\n".
-			'Event: AGENTLOGIN'."\r\n\r\n"
-		);
-	}
-	$ami->ami_logout();
-	gs_agi_set_variable( 'agent_login_status', 'loggedin' );
-}
-function queue_static_agent( $q, $u)
-{
-	include_once( GS_DIR .'inc/db_connect.php' );
-	$db = gs_db_master_connect();
-
-	$agent_static = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ast_queue_members` WHERE `_queue_id`='. $q .' AND `_user_id`='. $u .' AND `static` = 1' );
-	if ($agent_static > 0) {
-		return true;
-	} else {
-		return false;
-	}
-}
 
 ?>

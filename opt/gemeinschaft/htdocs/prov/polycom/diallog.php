@@ -2,16 +2,15 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 6053 $
 * 
-* Copyright 2007-2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
-* Philipp Kempgen <philipp.kempgen@amooma.de>
-* Peter Kozak <peter.kozak@amooma.de>
-* 
-* Author: Daniel Scheller <scheller@loca.net>
 *
+* APS for Polycom SoundPoint IP phones
+* (c) 2009 Daniel Scheller / LocaNet oHG
+* mailto:scheller@loca.net
+* 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -33,8 +32,9 @@ define( 'GS_VALID', true ); // this is a parent file
 require_once( dirname(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
-include_once( GS_DIR .'inc/string.php' );
-require_once(GS_DIR ."inc/langhelper.php");
+include_once( GS_DIR ."inc/langhelper.php" );
+require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php');
+require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php');
 
 header( 'Content-Type: text/html; charset=utf-8' );
 header( 'Expires: 0 ');
@@ -79,16 +79,16 @@ if (! gs_get_conf('GS_POLYCOM_PROV_ENABLED'))
 	_err('Not enabled.');
 }
 
-$user = trim(@$_REQUEST['user']);
+$user = trim(@$_REQUEST["user"]);
 
 if (! preg_match('/^\d+$/', $user)) _err('Not a valid SIP user.');
 
 $mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST["mac"])));
 
-$type = trim(@$_REQUEST['type']);
-if (! in_array($type, array('in', 'out', 'missed', 'queue'), true)) $type = false;
+$type = trim(@$_REQUEST["type"]);
+if(!in_array($type, array('in', 'out', 'missed', 'queue'), true)) $type = false;
 
-if (isset($_REQUEST['delete'])) $delete = (int) $_REQUEST['delete'];
+if(isset($_REQUEST["delete"])) $delete = (int) $_REQUEST["delete"];
 
 $db = gs_db_slave_connect();
 
@@ -114,17 +114,16 @@ unset($remote_addr);
 unset($user_id_check);
 
 $typeToTitle = array(
-	'out'    => __("Gew\xC3\xA4hlt"),
-	'missed' => __('Verpasst'),
-	'in'     => __('Angenommen'),
-	'queue'  => __('Warteschlangen')
+	"out"    => __("Gew\xC3\xA4hlt"),
+	"missed" => __("Verpasst"),
+	"in"     => __("Angenommen")
 );
 
 ob_start();
 
 $url_polycom_dl = GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'. GS_PROV_PORT : '') . GS_PROV_PATH .'polycom/diallog.php';
 
-if ( (isset($delete)) && $type )
+if((isset($delete)) && $type)
 {
 //--- clear list (
 	$db->execute(
@@ -133,7 +132,6 @@ if ( (isset($delete)) && $type )
 		'  `user_id`='. $user_id .' AND '.
 		'  `type`=\'' . $type . '\''
 	);
-
 //--- ) clear list
 }
 
@@ -141,6 +139,8 @@ if ( (isset($delete)) && $type )
 if(!$type)
 {
 	//--- delete outdated entries
+	
+	$DB = gs_db_master_connect();
 	$db->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `timestamp`<'. (time()-(int)GS_PROV_DIAL_LOG_LIFE) );
 
 	echo $diallog_doctype ."\n";
@@ -151,8 +151,7 @@ if(!$type)
 	foreach($typeToTitle as $t => $title)
 	{
 		$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE `user_id`='. $user_id .' AND `type`=\''. $t .'\'' );
-
-		echo '- <a href="'. $url_polycom_dl .'?user='. $user .'&amp;mac='. $mac .'&amp;type='. $t .'">'. $title .'</a><br />',"\n";
+		echo "- <a href=\"". $url_polycom_dl ."?user=". $user ."&amp;mac=". $mac ."&amp;type=". $t ."\">". $title ."</a><br />\n";
 	}
 
 	echo '</body>',"\n";
@@ -189,7 +188,7 @@ else
 
 	$rs = $db->execute($query);
 
-	if ($rs->numRows() == 0)
+	if($rs->numRows() == 0)
 	{
 		echo "<br />". __("Keine Eintr\xC3\xA4ge vom Typ") ."'<b>". $typeToTitle[$type] ."</b>'<br />\n";
 	}
@@ -202,13 +201,14 @@ else
 		echo '<th width="30%">', __("Datum"), '</th>';
 		echo '<th width="70%">', __("Nummer"), '</th></tr>',"\n";
 
-		while ( $r = $rs->fetchRow() )
+		while($r = $rs->fetchRow())
 		{
 			unset($num_calls);
 
-			if ( $r['num_calls'] > 0 )
+			if($r["num_calls"] > 0)
 			{
 				$num_calls = (int) $db->executeGetOne(
+
 					'SELECT '.
 					'  COUNT(*) '.
 					'FROM `dial_log` '.
@@ -218,12 +218,15 @@ else
 					'  `type`=\''. $type .'\'' );
 			}
 
-			$entry_name = $r['number'];
+			$entry_name = "";
+			if($r["queue_id"] > 0) $entry_name = "WS: ";
+			$entry_name .= $r["number"];
 
-			if ($r['remote_name'] != '')
+			if($r["remote_name"] != "")
 			{
 				$entry_name .= ' '. $r['remote_name'];
 			}
+
 
 			if ( date('dm') == date('dm', (int)$r['ts']) )
 				$when = date('H:i', (int)$r['ts']);
@@ -233,7 +236,7 @@ else
 			echo '<tr>';
 
 			echo '<td width="30%">'. $when .'</td>';
-			echo '<td width="70%"><a href="tel://'. $r['number'].'">'. htmlEnt($entry_name);
+			echo '<td width="70%"><a href="tel://'. $r['number'].'">'. $entry_name;
 
 			if ($num_calls > 0) echo ' ('. $num_calls .')';
 
@@ -248,6 +251,16 @@ else
 	echo '<softkey index="1" label="', __("Leeren"), '" action="Softkey:Fetch;'. $url_polycom_dl .'?user='. $user .'&amp;mac='. $mac .'&amp;type='. $type .'&amp;delete=1" />',"\n";
 	echo '<softkey index="2" label="', __("Beenden"), '" action="Softkey:Exit" />',"\n";
 	echo '</html>',"\n";
+	
+	if($type == "missed")
+	{
+	 	gs_user_watchedmissed($user_id);
+	}
+
+	if(GS_BUTTONDAEMON_USE == true)
+	{
+		gs_user_missedcalls_ui($user);
+	}
 }
 
 #################################### DIAL LOG }

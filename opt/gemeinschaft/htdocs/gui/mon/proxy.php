@@ -81,9 +81,6 @@ if (! is_resource($sock)) {
 	echo $html_end;
 	
 	@ob_flush(); @flush();
-	
-	gs_log( GS_LOG_NOTICE, 'Extension state daemon not running.' );
-	
 	sleep(1);
 	die();
 }

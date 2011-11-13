@@ -39,6 +39,7 @@ $wtime = trim(@$argv[2]);
 
 if (! $exten) {
 	gs_agi_set_variable(  'isset' , 'unknown' );
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
@@ -100,8 +101,15 @@ if ( count ( $members ) <= 0 ) {
 
 require_once( GS_DIR .'inc/gs-fns/gs_wake_up_call_fns.php' );
 
+$real_target = get_alert_target ( $exten );
 
-$wakeup_time = set_alert_time_by_target( $exten, $hour, $minute );
+if ( isGsError ( $real_target ) ) {
+
+	gs_agi_set_variable(  'isset' , 'error' );
+	die();
+}
+
+$wakeup_time = set_alert_time_by_target( $real_target, $hour, $minute );
 
 if ( ! $wakeup_time ) {
 	gs_agi_set_variable(  'isset' , 'notset' );

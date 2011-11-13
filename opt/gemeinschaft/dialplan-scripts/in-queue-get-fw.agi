@@ -135,12 +135,13 @@ while ($r = $rs->fetchRow()) {
 
 foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {
-		//if ($fw['number'] != '') {
-			gs_agi_set_variable( '__fw_'.$source.'_'.$case, $fw['number'] );
-		//}
-		//if ($fw['file'] != '') {
-			gs_agi_set_variable( '__fw_file_'.$source.'_'.$case, '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
-		//}
+		gs_agi_set_variable( 'fw_' . $source . '_' . $case , $fw['number'] );
+		if ( ! is_null ( $fw['file'] ) && $fw['file'] != '' ) {
+			gs_agi_set_variable( '__fw_file_' . $source . '_' . $case , '/opt/gemeinschaft/vm-rec/' . $fw['file'] );
+		}
+		else {
+			gs_agi_set_variable( '__fw_file_' . $source . '_' . $case , '' );
+		}
 	}
 }
 if ($forwards['internal']['timeout']['number'] != '') {

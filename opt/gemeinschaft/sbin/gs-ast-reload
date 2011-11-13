@@ -52,31 +52,31 @@ if ($generate_dialplan) {
 	$err=0;
 	@passThru( '/opt/gemeinschaft/sbin/gs-ast-dialplan-gen', $err );
 	if ($err !== 0)
-		echo "; Failed to generate dialplan.\n";
+		echo "Failed to generate dialplan.\n";
 	else
-		echo "; Dialplan generated.\n";
+		echo "Dialplan generated.\n";
 }
 
 
 $asterisk = find_executable('asterisk',
 	array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/'));
 if (! $asterisk) {
-	echo "; asterisk not found!\n";
+	echo "asterisk not found!\n";
 	exit(1);
 }
 
-echo "; Reloading Asterisk ...\n";
+echo "Reloading Asterisk ...\n";
 $err=0; $out=array();
 @exec( $asterisk .' -rx \'module reload\' 1>>/dev/null', $out, $err );
 $start_ast = ($err !== 0);
 
 if ($start_ast) {
-	echo "; Asterisk not running. Starting Asterisk ...\n";
+	echo "Asterisk not running. Starting Asterisk ...\n";
 	
 	$safe_asterisk = find_executable('safe_asterisk',
 		array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/'));
 	if (! $safe_asterisk) {
-		echo "; safe_asterisk not found!\n";
+		echo "safe_asterisk not found!\n";
 		exit(1);
 	}
 	
@@ -84,11 +84,11 @@ if ($start_ast) {
 	//@exec( 'asterisk 1>>/dev/null', $out, $err );
 	@exec( $safe_asterisk .' 1>>/dev/null', $out, $err );
 	if ($err !== 0) {
-		echo "; Failed to start Asterisk!\n";
+		echo "Failed to start Asterisk!\n";
 		exit(1);
 	}
 }
-echo "; Asterisk reloaded.\n";
+echo "Asterisk reloaded.\n";
 
 
 ?>

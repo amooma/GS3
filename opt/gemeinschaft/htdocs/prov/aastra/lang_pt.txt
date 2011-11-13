@@ -1,9 +1,6 @@
 Português (Europa)
 480iCT prompts| 
-Upload System Info| Transferir informações do sistema
-Directory| Agenda
-Callers List| Lista Chamadas
-Do not unplug phone!|  NÃO desligue o telef.!
+No handsets are currently paired| Nenhum terminal emparelhado.
 Cordless Handset Feature Key Configuration| Config. Teclas de Função para Terminal Portátil
 None| Nenhuma
 Pair| Emparelhar
@@ -12,8 +9,6 @@ Pairing successful| Emparelhamento efect.
 Pairing failed       | Falha no Emparelham. 
 Try again| Tente novamente    
 Remove Handset:| Remover terminal:
-No handsets are| Nenhum terminal
-currently paired| emparelhado 
 Attempting to remove| A tentar remover
 Wait...| Aguarde...
 Removal successful| Acção efectuada
@@ -29,36 +24,38 @@ Handset Pairing| Emparelhar term.
 Handset Keys| Teclas do Terminal
 Feature Key programming complete.| Programação de tecla de função completa.
 Two Call Support| Suporte para duas chamadas
-| 
 480i prompts| 
-Upload System Info| Transferir informações do sistema
-Directory| Agenda
-Callers List| Lista Chamadas
-  ERROR: invalid port|   Erro: Porta inválida
-    NOT MATCH !!!|   NÃO COINCIDEM !  
-  Invalid password   |   Password errada  
+Time Format| Formato da Hora
+    NOT MATCH !!!| NÃO COINCIDEM !
+Erase local config?| ApagConf local?
+Alternate Server| Serv.Alternativo
+Contrast Level| Nível contraste
+TypeService SIP| TipoServiço SIP
+TypeService RTP| TipoServiço RTP
+TypeService DSCP| TipoServiço DSCP
+TypeService RTCP| TipoServiço RTCP
+Dn| Descer
+Rt| Direita
+Lf| Esquerdo
+Del| Apagar
+System Info Upload| Transferir informações do sistema
+Up| Subir
+Copyright| Copyright 
+Reset| Reset
+Phone will restart automatically after finishing.| O telefone reinicializará automaticamente.
+Please login| Efectuar login
+Incorrect password| A password inserida está incorrecta.
+Reset Configuration?| Reiniciar Config.?
+Cfg. Svr.| Servidor
 Enable| Activar
-Disable| Desactivar
-Checking for Firmware| Verificar Firmware
-System Info| Informações do Sistema
-Do not unplug phone!|  NÃO desligue o telef.!
-Downloading| Download
-configuration| configuração...
-New Firmware| Novo Firmware:
-Restarting...| Reiniciar...
-Starting in Generic| Iniciar no
-SIP Mode| modo SIP genérico
-Starting in| Iniciar no
-Generic SIP Mode| modo SIP genérico
-Starting in| Iniciar no
-AastraLink Mode|  modo AastraLink
-Please log in| Efectuar login
-Downloading| Download
-Language Packs|  dos pacotes de Idiomas
+List| Lista
+Move Up| Sentido ascendente
+Move Down| Sentido descendente
 Firmware Loaded| Firmware carregado
 802.1x Authenticating| Autenticação 802.1x
 LLDP| LLDP
 DHCP: Waiting for IP| DHCP: Aguarda IP
+Bluetooth Upgrade .. Please wait| Actualização Bluetooth. Aguarde…
 Contacting Redirector| A ligar ao Redirector
 Redirecting Step 1| Redireccionar Passo 1
 Redirecting Step 2| Redireccionar Passo 2
@@ -67,8 +64,15 @@ Redirecting Step 4| Redireccionar Passo 4
 Redirecting Step 5| Redireccionar Passo 5
 Redirecting Step 6| Redireccionar Passo 6
 Auto Discovery...| Pesquisa Auto...
+Starting in Generic SIP Mode| Iniciar no modo SIP genérico
+Starting in AastraLink Mode| Iniciar no modo AastraLink
 Updating config| Actualização config.
 Waiting assignment| À aguardar associação
+Checking for Firmware  Do not unplug phone!| Verificar Firmware. Não desligue o term.!
+New Firmware. Do not unplug phone!| Novo Firmware. Não desligue o terminal!
+New Firmware. Restarting...| Novo Firmware. A reiniciar...
+Downloading configuration| Download da config. em curso
+Downloading Language Packs| Download dos pacotes de Idiomas
 Network| Rede
 UPnP device not found| Disp.UPnP não localiz
 Port Map In Progress| Map. Porta em curso
@@ -85,19 +89,17 @@ No available lines| Sem linhas disponív.
 Current Password:| Password actual:
 New Password:| Nova password:
 Re-enter Password:| Repetir Password:
-     Password Changed|   Password Alterada  
+  Password Changed| Password Alterada
 Change| Alterar
 Use DHCP?| Usar DHCP?
 Advanced| Avançado
 DNS| DNS
 Ringer | Toque
-  ERROR: invalid port|   Erro: Porta inválida
+ ERROR: invalid port| Erro: Porta inválida
 SIP Register| SIP Registrar
 Register?| Registar?
 Authentication Name| Nome autenticação
 Nortel NAT| Nortel NAT
-Are you sure you wish| Pretende mesmo
-to restart the phone?| reiniciar o terminal?
 Reset phone to| Reiniciar o terminal
 factory defaults?| com valores fábrica?
 Setting phone back to| Config. telefone com 
@@ -108,8 +110,6 @@ Factory Defaults| os valores de fábrica
 Password: | Password: 
 Quit| Sair
 More| Mais
-Time Format| Formato hora
-Time Format:| Formato hora:
 Timeserver Address:| End.servidor de hora:
 Network Time Disabled| Hora rede desactivada
 Dialing| A marcar
@@ -120,7 +120,6 @@ Pickup| Atender
 Previous| Anterior
 Enter Time:| Introduzir hora:
 Message Waiting| Msg em Espera
-DHSG| DHSG
 Live Dialpad| Marc. Mãos-Livres
 Live Dialpad is| Mãos-livres está
 Options List| Lista de Opções
@@ -139,7 +138,10 @@ Gateway IP Address:| End. IP Gateway:
 Enter Date (y-m-d):| Inserir Data (d-m-a):
 Enter| Inserir
 Enable| Activar
-Disable| Desactivar
+Full 10Mbps| 10Mbps Full
+Full 100Mbps| 100Mbps Full
+Half 10Mbps| 10Mbps Half
+Half 100Mbps| 100Mbps Half
 Default| De fábrica
 Add New| Novo
 DeleteList| Apag.Lista
@@ -148,10 +150,8 @@ Directory?| agenda?
 Enter Number:| Inserir número:
 Network disconnected| Rede desligada
 Network connected| Rede ligada
-OK| Sim
 Entry Saved| Registo Guardado
 Entry Removed| Registo Removido
-Enter Name:| Inserir Nome:
 Private| Privado
 Public| Público
 Delete entry?| Apagar registo?
@@ -167,6 +167,7 @@ Copy| Copiar
 Select| Selecc.
 Voicemail| Voice Mail
 DeleteItem| Apag.Item
+Delete All| Apag.Todos
 Entry copied to| Registo copiado para
 Entry Exists| Entrada já existe
 All items erased| Todos items apagados
@@ -175,12 +176,12 @@ Resume| Resumo
 EditNum| Editar Nº
 DeleteList again to| Apag.Lista novam.para
 Delete again to| Apag. novamente para:
+erase this item| apagar este item
+erase all calls| apagar todas chamadas
  new caller|  novo contacto
  new callers|  novos contact
 Press 1st letter| Insira a 1ª letra
 Handset | Microtel.
-erase all calls| apagar todas chamadas
-erase this item| apagar este item
  Missed Call|  Chamada n/atend.
  Missed Calls|  Chamadas n/atend.
 Call Forward Mode| Modo Desvio Chamadas
@@ -189,11 +190,10 @@ CFWD Busy| Desviar se Ocupado
 CFWD NoAnswer| Desvio PorNãoAtendim.
 Call| Chamada
 Select TFTP| Seleccione TFTP
-Erase local config?| Apagar config. local?
 Use %c for new| Use %c para nova 
 Use %c to view| Use %c para ver
 Download Protocol| Protoc. Download
-OFF| Desactivado
+OFF| OFF
 ON| Activado
 Add Number| Insira Nº
 Arrange| Dispor
@@ -207,17 +207,16 @@ Softkeys and XML| Teclas Programáveis e XML
 Softkeys Configuration| Configuração das Teclas Programáveis
 Bottom Keys| Teclas inferiores
 Top Keys| Teclas superiores
+Page1| Página1
+Page2| Página2
+Page3| Página3
+Page4| Página4
+Page5| Página5
 Idle| Livre
 Outgoing| Saída
 Empty| Vazio
-XML Application URI:| Aplicação XML URI:
-XML Application Title:| Título Aplicação XML:
 Enter server name/IP:| Nome servidor/IP:
 Enter HTTPS port:| Porta HTTPS:
-Type of Service DSCP| Tipo de serviço DSCP
-Type of Service SIP| Tipo de serviço SIP
-Type of Service RTP| Tipo de serviço RTP
-Type of Service RTCP| Tipo de serviço RTCP
 Erase| Apagar
 Proxy IP/Port| Proxy IP/Porta
 Registrar IP/Port| Registr IP/Porta
@@ -244,83 +243,82 @@ Primary Path| Caminho princip.
 Alternate Path| Caminho secund.
 Logging in| Inicio da sessão
 Login Failed| Erro na ligação
-Enable| Activo
 Enable?| Activar?
 Check Expires| Verif.ValidadeCertif.
-Check Expires?| Verif.ValidadeCertif?
 Check Hostnames| Verif.NomeMáquinas
-Check Hostnames?| Verif.NomeMáquinas?
 Conf. Unavailable| Conf. Indisp.
 Ringing...| A chamar…
 Error Messages| Mensagens de erro
 No Error Messages| Sem mensagens de erro
 Download Options| Opç. transferência
-| 
-Upload| Transferir
+Abc| Abc
+123| 123
+&%*| &%*
+Abc2| Abc2
+A # &| A # &
+  Invalid password   |   Password errada   
+Upload Sys Info| Transferir informações do sistema
 9133i prompts| 
-Upload System Info| Transferir informações do sistema
-Directory| Agenda
-Callers List| Lista Chamadas
-Do not unplug phone!|  NÃO desligue o telef.!
-Checking for new| A verficar novo
-firmware| firmware
-Move Up| Sentido ascendente
-Move Down| Sentido descendente
-Global| Geral
-Enable| Activar
-Disable| Desactivar
-Call Hold Reminder| Lembrança de chamada em espera
-Call Hold Reminder During Active Calls| Lembrança de Chamada em Espera Durante Chamadas Activas
-Dial| Marcar
-Redirecting| Redireccionar
-Step 1| Passo 1
-Redirecting| Redireccionar
-Step 2| Passo 2
-Redirecting| Redireccionar
-Step 3| Passo 3
-Redirecting| Redireccionar
-Step 4| Passo 4
-Redirecting| Redireccionar
-Step 5| Passo 5
-Redirecting| Redireccionar
-Step 6| Passo 6
-Firmware | Firmware 
-Loaded| carregado
-802.1x| 802.1x
-Authenticating| Autenticação
+Password Changed| Password Alterada
+Time Format| Formato da Hora
+Erase local cfg?| Apag.conf.Local?
+TypeService SIP| TipoServiço SIP
+TypeService RTP| TipoServiço RTP
+TypeService DSCP| TipoServiço DSCP
+TypeService RTCP| TipoServiço RTCP
+Alternate Server| Serv.Alternativo
+Contrast Level| Nível contraste
+Options List| Lista de Opções
+DELETE to erase item  or # to erase Number| DEL ou # p/ limpar item ou núm.
+Upload Sys Info| Transferir informações do sistema
+Directory Empty. Use Save to add| Agenda vazia. Guardar p/adic.
+  NOT MATCH !!!| NÃO COINCIDEM !
+DELETE again to erase this item| Apag. novamente para:apagar este item
+System Info Upload| Transferir informações do sistema
+Phone will restart after| Telefone é reiniciado após a
+Copyright| Copyright 
+Reset| Reset
+Use DHCP?| Usar DHCP?
+Full 10Mbps| 10Mbps Full
+Full 100Mbps| 100Mbps Full
+Half 10Mbps| 10Mbps Half
+Half 100Mbps| 100Mbps Half
+Please login| Efectuar login
+Incorrect password| A password inserida está incorrecta.
+Reset Configuration?| Reiniciar Config.?
+Cfg. Svr.| Servidor
+Net disconnected| Rede desligada
+Live Dialpad| Marc. Mãos-Livres
+Firmware Loaded| Firmware carregado
+802.1x Authenticating| Autenticação 802.1x
 LLDP| LLDP
-Initializing| A estabelecer ligação
-network| à rede
+Initializing network| A estabelecer ligação à rede
 Bluetooth Upgrade| Actualização Bluetooth.
 Contacting Redirector| A ligar ao Redirector…
+Redirecting Step 1| Redireccionar Passo 1
+Redirecting Step 2| Redireccionar Passo 2
+Redirecting Step 3| Redireccionar Passo 3
+Redirecting Step 4| Redireccionar Passo 4
+Redirecting Step 5| Redireccionar Passo 5
+Redirecting Step 6| Redireccionar Passo 6
 Auto Discovery| Pesquisa auto
-Starting in| Iniciar no
-Generic SIP Mode| modo SIP genérico
-Starting in| Iniciar no
- AastraLink Mode|  modo AastraLink
-Updating| Actualização da
- configuration|  configuração...
-Waiting| A aguardar
-assignment| associação
-Checking for Firmware| Verificar Firmware
-New Firmware:| Novo Firmware:
-PLEASE DO NOT| NÃO DESLIGAR
-UNPLUG THE PHONE| O TERMINAL
-New Firmware| Novo Firmware
-Downloading| Download
-Language Packs|  dos pacotes de Idiomas
+Starting in Generic SIP Mode| Iniciar no modo SIP genérico
+Starting in Aastra Link Mode| Iniciar no modo AastraLink
+Updating configuration| Actualização da configuração...
+Waiting assignment| A aguardar associação
+Checking for new firmware| A verficar novo firmware
+New Firmware: PLEASE DO NOT UNPLUG THE PHONE| Novo Firmware: POR FAVOR, NÃO desligue o telef.!
+New Firmware: Restarting...| Novo Firmware: a reiniciar…
+Downloading configuration| Download da config. em curso...
+Downloading Language Packs| Download dos pacotes de Idiomas…
 Network| Rede
 UPnP Gateway Not Found| Gateway UPnP não localizada
-UPnP Port Map| Map. porta UPnP
-In Progress| em curso
-UPnP Port Map| Map. porta UPnP
-incomplete| incompleto
+UPnP Port Map In Progress| Map. porta UPnP em curso
+UPnP Port Map Incomplete| Map. porta UPnP Incompleto
 DSP| DSP
 SIP| SIP
 Tone| Tons
-Registering with| A efectuar 
-the voice| registo na
-network...| rede de voz...
+Registering with the voice network...| A efectuar registo na rede de voz…
 Web| Web
 Done| Efectuado
 Cannot use| Firmware
@@ -329,15 +327,10 @@ All lines in use| Linhas ocupadas
 Current Password| Password actual
 New Password| Nova password
 Enter Again| Confirmar
-  NOT MATCH !!!|   NÃO COINCIDEM !  
-     Password Changed|   Password Alterada  
 Ringer volume   | Volume toque  
-Time Format:\n12h| Form. hora:\n12h
-Time Format:\n24h| Form. hora:\n24h
-Contrast| Contraste
 DELETE again to| Prima apag. para
+erase all calls| apagar tds chmds
 Caller is erased| Contacto é apag.
-Callers List is| Lista Chamadas
 Network Time| Hora de rede
 Change| Alterar
 Options| Opções
@@ -354,8 +347,10 @@ DHCP\nON| DHCP\nActivado
 DHCP\nOFF| DHCP\nDesactiv.
 Enable?\nYes| Activo\nSim
 Enable?\nNo| Activo\nNão
+Check Expires| Verif.Cert
 Check Expires?\nYes| Verif.Cert?\nSim
 Check Expires?\nNo| Verif.Cert?\nNão
+Check Hostnames| V.NomeMáq
 Check Hostnames?\nYes| V.NomeMáq?\nSim
 Check Hostnames?\nNo| V.NomeMáq?\nNão
 Cancel| Canc.
@@ -388,12 +383,10 @@ Boot ROM:| Boot ROM:
 Negotiation:| Negociação:
 30m summertime| Hora verão 30 m
 1h summertime| Hora verão 1h
-  Invalid password   |   Password errada  
+Invalid password| Password errada
   disconnected|    desligada
    connected|      ligada
     Network|       Rede
-Directory empty| Agenda vazia
-Use Save to add| Guardar p/adic.
 erase all items| apagar tds items
 Enter Number>| Inserir nº>
 Setting phone to| Repor term. com
@@ -404,7 +397,6 @@ Retrying config | Repetir Down. da
 download...     | configuração... 
 empty| está vazia
 No Match| Não coincide
-Redial List is| Lista remarc.
 Save to?| Guardar na?
 Saved Memory key| Guard. Tecla Mem
 Removed Key| Tecla Removida
@@ -412,8 +404,6 @@ Press 1st letter| Insira 1ª letra
 Speaker volume  | Vol. Alta-voz   
 Handset volume  | Vol. Microtelef.
 Headset volume  | Vol. Auricular  
-erase all calls| apagar tds chmds
-erase this item| apagar este item
 Factory Defaults| Config. Fábrica
  Missed Call| Chmd n atend
  Missed Calls| Chmds n atend
@@ -425,7 +415,6 @@ CFWD Busy| Desv. se Ocupado
 CFWD NoAnswer| Desv.NãoAtendim.
 Select TFTP\nPrimary| Selec.TFTP Prim.
 Select TFTP\nAlternate| Selec.TFTP Sec.
-Erase local cfg?| ApagConf local?
 DownloadProtocol| Prot. Download
 VLAN Settings| Parâmetros VLAN
 Server Name/IP?| NomeServidor/IP?
@@ -456,47 +445,22 @@ Conf Unavailable| Conf. Indisp.
 Error Messages| Mensagens erro
 No Error Messages| Sem Msgs de erro
 Download Options| Opç. transferênc
-DHSG is\nON| DHSG activado
-DHSG is\nOFF| DHSG desactivado
-Files Sent| Enviados
-System Info| Informações do sistema
-Upload| Transferir
-Upload Sys Info| Transferir informações do sistema
-Call Transferred| Chamada transferida
-Firmware Information| Informação de Firmware
-Please log in| Efectuar login
 6739i prompts| 
-Upload System Info| Transferir informações do sistema
-Directory| Agenda
-Callers List| Lista Chamadas
-     Password Changed|   Password Alterada  
-Do not unplug phone!|  NÃO desligue o telef.!
-Invalid password|   Password errada  
-Checking for new| A verficar novo
-firmware| firmware
-Global| Geral
-Enable| Activar
-Disable| Desactivar
-Starting in| Iniciar no
-Generic SIP Mode| modo SIP genérico
-Starting in| Iniciar no
-AastraLink Mode|  modo AastraLink
-Waiting | A aguardar
-assignment| associação
-802.1x| 802.1x
-Authenticating| Autenticação
-UPnP Port Map| Map. porta UPnP
-Incomplete| incompleto
-Downloading| Download
-configuration| configuração...
-Firmware| Firmware 
-Loaded| carregado
-Checking for Firmware| Verificar Firmware
-Contacting| A ligar ao
-Redirector| Redirector
-UPnP Gateway| Gateway UPnP
-Not Found|  não localizada
-Restarting...| Reiniciar...
+SID_ENTER_ADMIN_PASSWORD| Insira a password de administrador
+Error Msg| Msg de erro
+Lock| Bloquear
+Unlock the phone?|  Desbloquear terminal?
+ Enter Unlock Password|  Int. palavra-passe desbloquear
+softkey| softkey
+Edit Number| Editar número
+Lock the phone?| Bloq. terminal?
+Lock the phone| Bloq. Terminal
+keypad| Teclado
+Unlock| Desbloquear
+ Cust Feat| Função personalizada
+Phone is locked| Term. está bloq.
+Unlock the phone| Desbloquear terminal
+GoodBye| Adeus
 Pass Thru Port| Porta Pass Thru
 First| Primeiro
 Last| Último
@@ -504,81 +468,48 @@ Name| Nome
 Add| Adicionar
 Edit| Editar
 Space| Espaço
-Contact name already exists| Nome contacto já existe
-Replace| Substituir
-Merge| Juntar
 Bksp| Retr
 caps| Maiúsc.
 CAPS| MAIÚSC.
 Reject| Rejeitar
 Silence| Silêncio
 Hold| Espera
-Conf| Conf.
-Transfer| Transfer.
+Transfer| Transfer
 >| > 
-Leave| Libertar
 Lines| Linhas
 Settings| Configurações
 Device Name| Nome do dispos.
-Bluetooth Devices| Disp. Bluetooth
+Bluetooth Devices| Dispositivos BT
 Bluetooth Status:| Est. Bluetooth:
 Search| Procura
 Searching...| A procurar…
 device(s) found.| disp. encont.
 Press on a device to start pairing.| Selecione o disp. para iniciar empar.
 Enter PIN| Introduza PIN
-Delete Item| Apagar item
 Add Device| Adicionar dispositivo
 Active| Activo
 Are you sure?| Tem a certeza?
 ALL| TODOS
-Phone Number:| Número de telefone:
-Copy to all modes| Copiar para todos os modos
+Phone No:| Nº. telefone:
+Copy to all modes| Copiar todos modos
 BUSY| OCUPADO
 NO ANSWER| NÃO ATDM
-CFWD NO ANS:| DESVIO NÃO ATDM:
-CFWD BUSY:| DESVIO SE OCUP.:
-CFWD ALL:| DESVIO TODOS:
+CFWD NO ANS:| D. NÃO ATDM:
+CFWD BUSY:| DESV. OCUP:
+CFWD ALL:| DESV. TODOS:
 Audio| Áudio
-Audio Setting| Parâmetros Áudio
 Calibrate Screen| Calibrar ecrã
 Recalibrate Touchscreen?| Recalibrar ecrã táctil?
-12 Hour| 12 Horas
-24 Hour| 24 Horas
 Softkeys| Softkeys
-Enter Name:| Inserir Nome:
-WWW MMM DD| AAA MMM DD
-DD-MMM-YY| DD-MMM-AA
-YYYY-MM-DD| AAAA-MM-DD
-DD/MM/YYYY| DD/MM/AAAA
-DD/MM/YY| DD/MM/AA
-DD-MM-YY| DD-MM-AA
-MM/DD/YY| MM/DD/AA
-MMM DD| MMM DD
-DD MMM YYYY| DD MMM AAAA
-WWW DD MMM| AAA DD MMM
-DD MMM| DD MMM
-DD.MM.YYYY| DD.MM.AAAA
-Restart The Phone?| Reinicializar o telefone?
 Headset Mic Volume| Volume auricular
-Contrast| Contraste
 Headset Device| Dispositivo auricular
 Bluetooth| Bluetooth
 Wired| Com fios
-TFTP| TFTP
-FTP| FTP
-HTTP| HTTP
-HTTPS| HTTPS
-Alt. TFTP Server| Servidor TFTP altern.
-Reset Configuration?| Reiniciar Config.?
-Phone will restart automatically after finishing.| O telefone reinicializará automaticamente.
-Reset| Reset
 Restart | Reiniciar
 No Calls| Sem chamadas
 Brightness Timer| Temp. brilho
 Brightness Level| Nível do brilho
 Add to Directory| Adic. à agenda
-Cfg. Svr.| Servidor
 Waiting for Touch Screen activity to subside ...| A aguardar que a actividade do ecrã táctil diminua…
 Touch the UPPER-LEFT corner of the screen| Tocar no canto SUPERIOR-ESQUERDO do visor
 Touch the UPPER-RIGHT corner of the screen| Tocar no canto SUPERIOR-DIREITO do visor
@@ -605,63 +536,105 @@ Detected:| Detectado:
 Connecting:| A ligar:
 Disonnecting:| A desligar:
 Connected:| Ligado:
-Please log in| Efectuar login
-DHSG is| DHSG está
-Add blank record?| Ad. registo vazio?
 ALL| TODOS
 BUSY| OCUPADO
 NO ANSWER| NÃO ATDM
-CFWD ALL:| DESVIO TODOS:
-CFWD BUSY:| DESVIO SE OCUP.:
-CFWD NO ANSWER:| DESVIO NÃO ATDM:
+CFWD ALL:| DESV. TODOS:
+CFWD BUSY:| DESV. OCUP:
+CFWD NO ANSWER:| D. NÃO ATDM:
 Copy to all modes| Copiar para todos os modos
-Phone Number:| Número de telefone:
-Enter Administrator Password| Insira a password de administrador
-Incorrect password| A password inserida está incorrecta.
+| 
+Phone Number:| Nº. telefone:
 Level 1| Nível 1
 Level 2| Nível 2
 Level 3| Nível 3
 Level 4| Nível 4
 Level 5| Nível 5
 (Min: %d  Max: %d)| (Mín: %d  Máx: %d)
-Hide| Ocultar
-Call Waiting enabled| Chamada em espera activada
-Call Waiting disabled| Chamada em espera fora
-Files Sent| Enviados
-Upload Sys Info| Transferir informações do sistema
-Upload| Transferir
-Call Transferred| Chamada transferida
-Firmware Information| Informação de Firmware
+ Enter Administrator Password| Insira a password de administrador
+Phone will restart automatically after finishing.| O telefone reinicializará automaticamente.
+Conference| Conferênc.
+Reset Configuration?| Reiniciar Config.?
+Hide| Ocul
 Common prompts| 
-Upload System Info| Transferir informações do sistema
-Checking for Firmware| Verificar Firmware
-  ERROR: invalid port|   Erro: Porta inválida
-Do not unplug phone!|  NÃO desligue o telef.!
-Ip/Gw/Mask Error| Ip/Gw/ ErroMáscara
-Move Up| Sentido ascendente
-Move Down| Sentido descendente
-Others| Outros
-Out of service| Fora de Serviço
-Config Server Fail-over| Falha de Serv. Config.
-Ip equal gw addr| Endereço IP igual ao IP do GW
+Disable| Desactivar
+Restart Phone?| Reiniciar ter.?
+12 Hour| 12 Horas
+Speeddial| Marcação Directa
+Erase local cfg?| Apag.conf.Local?
+Spd Dial| M. Rápida
+Backup Outbound Proxy Server| Serv. Outbound Proxy de Backup
+Backup Outbound Proxy Port| Porta Outbound Proxy de Backup
+Firmware Info| Info de Firmware
+DHSG| DHSG
+DHSG is ON| DHSG activado
+DHSG is OFF| DHSG desactivado
+Backlight On Time| Duração Retroiluminação
+Use Alt TFTP| Utilizar um servidor TFTP alt
+Pri TFTP Path| Cam. TFTP princ.
+Alt TFTP Path| Cam. TFTP secund
+RestoreDefaults?| Repor Conf Fab?
+HTTP Init Failed| Erro de Init HTTP
+Get aastra.lic| Obter lic. Aastra
+Get mac.lic| Obter lic. mac.
+Firmware not licensed for use on this phone| O firmware não tem licença para ser utilizado neste telefone
+Redial List is empty| Lista remarc.vazio
+Callers List is empty| Lista Chamadas vazio
+Callers List| Lista Chamadas
+Directory| Agenda
+License Information| Informações de licenciamento
+XML Application URI:| Aplicação XML URI:
+Missing User ID| Falta o ID utilizador
+TFTP| TFTP
+FTP| FTP
+HTTP| HTTP
+HTTPS| HTTPS
+Use| Usar
+Active Features| Facilidades activadas
+WWW MMM DD| AAA MMM DD
+DD-MMM-YY| DD-MMM-AA
+YYYY-MM-DD| AAAA-MM-DD
+DD/MM/YYYY| DD/MM/AAAA
+DD/MM/YY| DD/MM/AA
+DD-MM-YY| DD-MM-AA
+MM/DD/YY| MM/DD/AA
+MMM DD| MMM DD
+DD MMM YYYY| DD MMM AAAA
+WWW DD MMM| AAA DD MMM
+DD MMM| DD MMM
+DD.MM.YYYY| DD.MM.AAAA
+24 Hour| 24 Horas
+XML Application Title:| Título Aplicação XML:
+License Status| Estado da licença
+FTP| FTP
+to view| para ver
+Contact Name already exists| Nome contacto já existe
+Leave| Libertar
 Contact Mismatch| Contacto não coincide
-Call Terminated| Chamada Terminada
+ Call Terminated| Chamada Terminada
 IP and gateway have to be on same subnet| O IP e o GW têm de estar na mesma subnet
 IP cannot be equal to gateway address| O endereço IP não pode ser igual ao endereço do GW
 Call Waiting Tone Period| Tempo da tonalidade de chamada em espera
+OK| Sim
+Directory empty| Agenda vazia
 Files Sent| Enviados
-Upload Sys Info| Transferir informações do sistema
+Upload System Info| Transferir informações do sistema
 Upload| Transferir
 Call Transferred| Chamada transferida
-Delete All| Apagar toda a
-Audio Settings| Parâmetros Áudio
-DHSG is| DHSG está
-Firmware Info| Informação de Firmware
-Please Wait...| Aguarde…
+Firmware Information| Informação de Firmware
+Contact Name already exists| Nome contacto já existe
+Replace| Substituir
+No Services| Sem Serviço
+Merge| Juntar
+Enter Name:| Inserir Nome:
 Call Hold Reminder| Lembrança de chamada em espera
+Others| Outros
 Call Hold Reminder During Active Calls| Lembrança de Chamada em Espera Durante Chamadas Activas
-Call Waiting enabled| Chamada em espera activada
-Call Waiting disabled| Chamada em espera fora
+Out of service| Fora de Serviço
+Reason: | Motivo:
+Add blank record?| Ad. registo vazio?
+Audio Setting| Parâmetros de Áudio
+Delete Item| Apagar item
 Services| Serviços
 Server| Servidor
 Service Disabled| Serviço desact.
@@ -669,7 +642,6 @@ Port| Porta
 Path| Caminho
 Username| Nome utilizador
 No. Rings| Nº. de toques
-Intercom| Intercom
 Use xx to view| Para ver use: xx
 User Password| Password util.
 Time and Date| Data & Hora
@@ -691,7 +663,7 @@ Restart| Reiniciar
 All On| Todos On
 All Off| Todos Off
 AllAccts| TdsContas
-Conference| Conferência
+Conference| Conferênc.
 Flash| Flash
 Dial| Marcar
 Directory| Agenda
@@ -707,6 +679,7 @@ User Name| Nome Utilizador
 Screen Name| Nome Visor
 Proxy Server| Servidor Proxy
 Registrar Server| Serv. Registrar
+Auth. Name| Nome de autent.
 Nortel NAT| Nortel NAT
 Sylantro| Sylantro
 Broadsoft| Broadsoft
@@ -737,7 +710,7 @@ Audio Mode| Modo áudio
 Low| Baixo
 Medium| Médio
 High| Alto
-OFF| Desactivado
+OFF| OFF
 ON| Activado
 DHCP Settings| Parâm. DHCP
 DHCP User Class| ClasseDHCP Util.
@@ -749,7 +722,6 @@ Gateway| Gateway
 Primary DNS| DNS Principal
 Secondary DNS| DNS Secundário
 TFTP Settings| Parâmetros TFTP
-TFTP Server| Servidor TFTP
 VLAN| VLAN
 VLAN ID| ID VLAN
 PC Port VLAN ID| ID Porta PC VLAN
@@ -787,7 +759,7 @@ DHCP Download Options| Opções de transferência DHCP
 Firmware Version| Versão Firmware
 Restart Phone| Reiniciar term.
 Show| Mostrar
-is OFF| está desact.
+is OFF| está OFF
 Password| Password
 Restarting...| Reiniciar...
 Speed| Cadência
@@ -797,14 +769,13 @@ Half| Half
 Full| Full
 Duplex| Duplex
  ERROR: |  ERRO: 
-Invalid IP address| End. IP errado
 Invalid IP addr.| End. IP errado
 Invalid mask| Máscara errada
 Range is 1-4094| Intervalo 1-4094
 Range is 1-4095| Intervalo 1-4095
 Range is 0-63| Intervalo 0-63
 Range is 0-7| Intervalo 0-7
-DND| Não Incom.
+DND| NP
 DND On| Não Inc. ACTIVO
 Time Server| Servidor horário
 Set Time| Inserir Hora
@@ -814,6 +785,8 @@ Time Zone| Zona horária
 Daylight Savings| Horário Verão
 Invalid Time| Hora Incorrecta
 Invalid Date| Data Incorrecta
+Invalid IP| IP inválido
+ Invalid Number| Número inválido
 On| Activar
 Off| Desactivar
 Automatic| Automático
@@ -845,7 +818,7 @@ Unknown| Privado
 NextSpace| Espaço
 Dot "."| Ponto "."
 Transfer Failed| Erro transfer.
-Call Forward| Desviar
+Call Forward| Desvio
 Call Fwd| DESV
 All| Todos
 Any| Qualquer
@@ -900,6 +873,8 @@ Certificates| Certificados
 Cert Validation| Valid. Certif.
 All defaults| Repor Todos
 Config default| Config. Predef.
+AM| AM
+PM| PM
 Factory Default| Parâmetros fáb.
 Erase Local Cfg.| Apag.conf.Local 
 New IP Obtained| Obtido novo IP 
@@ -913,6 +888,7 @@ Server Local IP| IP Serv. Local
 Preferences| Preferências
 Network Status| Estado da rede
 MAC Address:| Endereço MAC:
+BT MAC Address:| BT Endereço MAC
 Invalid Key| Chave inválida
 Speed Dial Edit:| Editar Marc.Dir:
 Press SD button| Prima tecla MD
@@ -1019,6 +995,7 @@ BLF Subscription Period| Período de subscrição BLF
 ACD Subscription Period| Periodo de Subscrição ACD
 BLA Subscription Period| Periodo de Subscrição BLA
 Blacklist Duration| Duração Blacklist
+ Park Pickup Config| Configuração Captura Parque
 RTP Port| Porta RTP
 Basic Codecs| Codecs básicos
 Force RFC2833 Out-of-Band DTMF| Forçar RFC2833 Fora da Banda DTMF
@@ -1120,15 +1097,11 @@ Get server.cfg| Obter ficheiro server.cfg
 Show Task and Stack Status| Visualizar Estado das Tarefas & Stack 
 Settings| Parâmetros
 Download Protocol| Protocolo Download
-TFTP Path| Caminho TFTP
-Alternate TFTP Path| Caminho de acesso secundário TFTP
-Use Alternate TFTP| Utilizar um servidor TFTP alternativo
 Auto-Resync| Resincr. autom.
 Days| Dias
 Maximum Delay| Atraso máximo
 Mode| Modo
 Configuration Files| Ficheiros de configuração
-Firmware| Firmware
 Time (24-hour)| Horario (24 horas)
 XML Push Server List(Approved IP Addresses)| Lista de servidores XML Push (Endereços IP Aprovados)
 Phone-side Call Forward Settings| Parâmetros de Desvio de Chamadas no Terminal
@@ -1140,11 +1113,12 @@ Local Line| Linha Local
 Forward Number| Nº. de desvio
 Global| Geral
 Enable| Activar
-Disable| Desactivar
 Network| Rede
 Must provision a valid default gateway IP if DHCP is enabled| Deve providenciar uma gateway IP por defeito válida se o DHCP estiver activo.
+Invalid IP Address| O endereço IP não é válido
+Invalid IP address| O endereço IP não é válido
+Invalid IP addr.| O endereço IP não é válido
 Invalid gateway address| O endereço da gateway não é válido
-Invalid gw addr| O endereço da gateway não é válido
 Invalid subnet mask| A máscara de sub-rede não é válida
 Invalid primary DNS address| O endereço DNS primário não é válido.
 Invalid secondary DNS address| O endereço DNS secundário não é válido.
@@ -1241,7 +1215,6 @@ Hard Key| Tecla hardware
 Key| Tecla
 BLF List URI:| BLF lista URI:
 None| Nenhum
-Speeddial| Marcação Directa
 Speeddial/Xfer| Marcação directa/Transferência
 Do Not Disturb| Não Incomodar
 BLF| BLF
@@ -1252,8 +1225,8 @@ WebApps| Aplicaçãoes web
 Flash| Flash
 Last Call Return| Info. Última Chamada 
 Sprecode| Sprecode
-Transfer| Transferência
-Conference| Conferência
+Transfer| Transfer
+Conference| Conferênc.
 Save| Guardar
 Delete| Apagar
 Data has been transmitted to the phone successfully.| Os dados foram transmitidos para o terminal com sucesso.
@@ -1330,6 +1303,7 @@ Error: Intercom Settings| Erro: Parâmetros Intercom
 Please enter a prefix code for server-side intercom.| Favor inserir um prefixo para o lado do servidor intercom.
 Value must be between| O valor deverá estar compreendido entre
 and| e
+Invalid Setting:| Valor incorrecto:
 Please select at least one state for softkey| Seleccionar pelo menos um estado para a tecla programável
 DSCP value| Valor DSCP
 is mapped to multiple priorities.| está atribuido a várias prioridades.
@@ -1351,6 +1325,7 @@ Unique ID:| ID único:
 UPnP Mapping Lines| Linhas de Map. UPnP
 Port Failed| Porta errada
 Trying...| A tentar...
+Seize Failed| Falhou captura
 Missed Call Summary Subscription| Subscrição Chamadas Perdidas
 Missed Call Summary Subscription Period| Período Subscrição Chamadas Perdidas
 AS-Feature-Event Subscription| Subscrição para AS evento-função
@@ -1441,9 +1416,9 @@ Watchdog| Temporizador de vigia
 Speeddial/Conf| Marc.Rápida/Conf.
 Call is on Hold| Cham. em Espera
 No subscription| Sem subscrição
+MDot1xFailedStartup| Falha no arranque do 802.1x
 802.1x Startup Failed| Falha no arranque do 802.1x
 LLDP Startup Failed| Falha no arranque do LLDP
-HTTP Connection Manager Init Failed| Erro na inicialização do Gestor de Ligações HTTP
 Failed to config Line Manager| Impossível configurar o Gestor de Ligações
 Line in use| Linha em uso
 Get Crash Log| Obter ficheiro de registo de falhas 
@@ -1452,9 +1427,27 @@ Packetization Interval| Intervalo entre os pacotes
 Basic| Codecs básicos
 Note: Basic Codecs Include| Nota: codecs básicos incluem
 Default| De fábrica
+Not Configured| Não configurado
+America| América
+Asia| Ásia
+Atlantic| Atlântico
 Pacific| Pacífico
 Australia| Austrália
 Europe| Europa
 Malaysia| Malásia
-Invalid Setting:| Valor incorrecto:
+Invalid Setting| Valor incorrecto
+Must not be empty| Não pode estar vazio
+Must be a valid number| Deve ser um número válido
+Must be a nonzero number| Deve ser um número diferente de zero
+Not in range| Não está dentro do intervalo
+Invalid Hostname| Nome do anfitrião não é válido
+802.1x Failed| Falha 802.1x
+Admin Password:| Password Admin:
+Voicemail| Voice Mail
+HTTPS Failed| Falha HTTPS
+LLDP Failed| Falha LLDP
+TR69 connect Err| Err. ligação TR69
+Downloading Language Packs| Download dos pacotes de Idiomas
+Please Wait...| Aguarde…
+Cfg Svr Failure| Falha Srv Cfg
 End| 

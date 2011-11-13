@@ -31,11 +31,11 @@ include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callwaiting_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_clir_activate.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_clir_get.php' );
-include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_callerid_set.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_callerids_get.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
-include_once( GS_DIR .'inc/ami-fns.php' );
 
-require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
+
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
 	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
@@ -46,97 +46,66 @@ echo '</h2>', "\n";
 
 
 
+$user_groups  = gs_group_members_groups_get( array( $_SESSION['real_user']['info']['id'] ), 'user' );
+$members_clip = gs_group_permissions_get ( $user_groups, 'clip_set' );
+$members_clir = gs_group_permissions_get ( $user_groups, 'clir_set' );
+$members_cw = gs_group_permissions_get ( $user_groups, 'callwaiting_set' );
+
+$members_adm = gs_group_permissions_get ( $user_groups , 'sudo_user' );
+
+
+$disabled = array ( 'clip' => '' , 'clir' => '', 'cw' => '' );
+if (  count ( $members_adm ) <= 0 ) {
+	
+	if (  count ( $members_clip ) <= 0 )
+		$disabled[ 'clip' ] = ' disabled';
+	if (  count ( $members_clir ) <= 0 )
+		$disabled[ 'clir' ] = ' disabled';	
+	if (  count ( $members_cw ) <= 0 )
+		$disabled[ 'cw' ] = ' disabled';
+}
 
 
 if (@$_REQUEST['action']=='save') {
 	
 	$clir_internal = (@$_REQUEST['clir-internal']=='yes' ? 'yes':'no');
 	$clir_external = (@$_REQUEST['clir-external']=='yes' ? 'yes':'no');
-	gs_clir_activate( $_SESSION['sudo_user']['name'], 'internal', $clir_internal );
-	gs_clir_activate( $_SESSION['sudo_user']['name'], 'external', $clir_external );
 	
-	$cw = !! @$_REQUEST['callwaiting'];
-	# setting this reboots phone, so check if it has really changed
-	$cw_old = gs_callwaiting_get( $_SESSION['sudo_user']['name'] );
-	if (! isGsError($cw_old)) {
-		if ($cw != $cw_old)
-			gs_callwaiting_activate( $_SESSION['sudo_user']['name'], $cw );
+	if (  $disabled[ 'clir' ] == '' ) {
+	
+		gs_clir_activate( $_SESSION['sudo_user']['name'], 'internal', $clir_internal );
+		gs_clir_activate( $_SESSION['sudo_user']['name'], 'external', $clir_external );
+	
 	}
 	
-}
-
-$user_groups  = gs_group_members_groups_get(
-	array(@$_SESSION['sudo_user']['info']['id']), 'user');
-$queues_allowed = gs_group_members_get( gs_group_permissions_get(
-	$user_groups, 'login_queues', 'queue'));
-$user = gs_user_get( $_SESSION['sudo_user']['name'] );
-$queue_ids = @$_REQUEST['queue_id'];
-
-if (@$_REQUEST['action']=='loginqueue' && (! empty($queue_ids))) {
-	$ami = new AMI;
-	$ami->ami_login('gscc', 'gspass', '127.0.0.1', 5038);
-	$agent = $DB->executeGetOne('SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='.$user['id']);
-	// Ich vertraue  gs_group_members_get
-	// in dem array sind NUR int()
-	$queue_ids = array_intersect($queue_ids, $queues_allowed);
-	$rs = $DB->execute(
-		'SELECT `_id`, `name` FROM `ast_queues`  WHERE `_host_id`='.$user['host_id'].' 
-		AND `_id` IN ('.implode(",", $queue_ids).') 
-		AND `_id` NOT IN 
-		(SELECT `_queue_id` FROM `ast_queue_members` WHERE `_user_id`='.$user['id']. ')'
-	); 
-	while ($queue_map = $rs->fetchRow()) {
-		$penalty = $DB->executeGetOne('SELECT `penalty` FROM `penalties` WHERE `_user_id`='.$user['id'].' AND `_queue_id`='.$queue_map['_id']);
-		if (! $penalty) $penalty='DEFAULT';
-		$interface = 'SIP/'.$agent;
-		$DB->execute(
-			'INSERT INTO `ast_queue_members` SET 
-			`_user_id` ='.(int)$user['id'].', '. 
-			'`_queue_id` ='.(int)$queue_map['_id'].', '.
-			'`queue_name`= \''.$queue_map['name'].'\',
-			`interface` = \''.$interface.'\',
-			`penalty`='.$penalty
-		);
-		$ami->ami_send_command(
-			'Action: Queuelog'."\n".
-			'Queue: '.$queue_map['name']."\n".
-			'Interface: '.$agent."\n".
-			'Event: AGENTLOGIN'."\r\n\r\n"
-		);
-	}
-$ami->ami_logout();
-}
-
-if (@$_REQUEST['action']=='logoutqueue'  && (! empty($queue_ids))) {
-	$ami = new AMI;
-	$ami->ami_login('gscc', 'gspass', '127.0.0.1', 5038);
-	$agent = $DB->executeGetOne('SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='.$user['id']);
-	$interface = 'SIP/'.$agent;
-	$queue_ids = array_intersect($queue_ids, $queues_allowed);
-	$rs = $DB->execute(
-		'SELECT `queue_name`, `_queue_id`  FROM `ast_queue_members` WHERE 
-		`_user_id`='.$user['id'].'
-		AND `static`= 0
-		AND `_queue_id` IN ('.implode(",", $queue_ids).')'
-	);
-	while ($queue_map = $rs->fetchRow()) {
-		$agent_on = $DB->executeGetOne('SELECT count(`_queue_id`) FROM `ast_queue_members` WHERE `_queue_id` ='. (int)$queue_map['_queue_id']);
-		$min_agent = $DB->executeGetOne('SELECT `_min_agents` FROM `ast_queues` WHERE `_id`='.(int)$queue_map['_queue_id']);
-		if ($agent_on > $min_agent) {
-			$DB->execute('DELETE from `ast_queue_members` WHERE
-				`_user_id`='.$user['id'].'
-				AND `static`= 0 
-				AND `_queue_id`='.(int)$queue_map['_queue_id'] 
-				);
-			$ami->ami_send_command(
-				'Action: Queuelog'."\n".
-				'Queue: '.$queue_map['queue_name']."\n".
-				'Interface: '.$agent."\n".
-				'Event: AGENTLOGOFF'."\r\n\r\n"
-			);
+	if (  $disabled[ 'cw' ] == '' ) {
+		$cw = !! @$_REQUEST['callwaiting'];
+		# setting this reboots phone, so check if it has really changed
+		$cw_old = gs_callwaiting_get( $_SESSION['sudo_user']['name'] );
+		if (! isGsError($cw_old)) {
+			if ($cw != $cw_old)
+				gs_callwaiting_activate( $_SESSION['sudo_user']['name'], $cw );
 		}
 	}
+	
+	if (  $disabled[ 'clip' ] == '' ) {
+	
+		if(isset($_REQUEST['callerid_ext'])){
+			$callerid_num = $_REQUEST['callerid_ext'];
+		
+			$ok = gs_user_callerid_set( $_SESSION['sudo_user']['name'], $callerid_num , 'external');
+			if (isGsError( $ok )) echo $ok->getMsg();
+		}
+		if(isset($_REQUEST['callerid_int'])){
+			$callerid_num = $_REQUEST['callerid_int'];
+		
+			$ok = gs_user_callerid_set( $_SESSION['sudo_user']['name'], $callerid_num , 'internal');
+			if (isGsError( $ok )) echo $ok->getMsg();
+		}
+	}
+	
 }
+
 
 
 $clir = gs_clir_get( $_SESSION['sudo_user']['name'] );
@@ -167,9 +136,9 @@ if (isGsError($callwaiting)) {
 <tr>
 	<td style="width:170px;"><?php echo __('CLIR nach intern'); ?></td>
 	<td style="width:130px;">
-		<input type="radio" name="clir-internal" value="yes" id="ipt-clir-internal-yes" <?php if ($clir['internal_restrict']=='yes') echo 'checked="checked" '; ?>/>
+		<input type="radio" name="clir-internal" value="yes" id="ipt-clir-internal-yes" <?php if ($clir['internal_restrict']=='yes') echo 'checked="checked" '; echo  $disabled[ 'clir' ]; ?>/>
 			<label for="ipt-clir-internal-yes"><?php echo __('an'); ?></label>
-		<input type="radio" name="clir-internal" value="no" id="ipt-clir-internal-no" <?php if ($clir['internal_restrict'] != 'yes') echo 'checked="checked" '; ?>/>
+		<input type="radio" name="clir-internal" value="no" id="ipt-clir-internal-no" <?php if ($clir['internal_restrict'] != 'yes') echo 'checked="checked" '; echo  $disabled[ 'clir' ]; ?>/>
 			<label for="ipt-clir-internal-no"><?php echo __('aus'); ?></label>
 	</td>
 	<td rowspan="2" style="width:200px;">
@@ -179,25 +148,75 @@ if (isGsError($callwaiting)) {
 <tr>
 	<td><?php echo __('CLIR nach extern'); ?></td>
 	<td>
-		<input type="radio" name="clir-external" value="yes" id="ipt-clir-external-yes" <?php if ($clir['external_restrict']=='yes') echo 'checked="checked" '; ?>/>
+		<input type="radio" name="clir-external" value="yes" id="ipt-clir-external-yes" <?php if ($clir['external_restrict']=='yes') echo 'checked="checked" '; echo  $disabled[ 'clir' ]; ?> />
 			<label for="ipt-clir-external-yes"><?php echo __('an'); ?></label>
-		<input type="radio" name="clir-external" value="no" id="ipt-clir-external-no" <?php if ($clir['external_restrict'] != 'yes') echo 'checked="checked" '; ?>/>
+		<input type="radio" name="clir-external" value="no" id="ipt-clir-external-no" <?php if ($clir['external_restrict'] != 'yes') echo 'checked="checked" '; echo  $disabled[ 'clir' ]; ?> />
 			<label for="ipt-clir-external-no"><?php echo __('aus'); ?></label>
 	</td>
 </tr>
 <tr>
 	<td><?php echo __('Anklopfen'); ?></td>
 	<td>
-		<input type="radio" name="callwaiting" value="1" id="ipt-callwaiting-1" <?php if ($callwaiting) echo 'checked="checked" '; ?>/>
+		<input type="radio" name="callwaiting" value="1" id="ipt-callwaiting-1" <?php if ($callwaiting) echo 'checked="checked" '; echo  $disabled[ 'cw' ]; ?> />
 			<label for="ipt-callwaiting-1"><?php echo __('an'); ?></label>
-		<input type="radio" name="callwaiting" value="0" id="ipt-callwaiting-0" <?php if (! $callwaiting) echo 'checked="checked" '; ?>/>
+		<input type="radio" name="callwaiting" value="0" id="ipt-callwaiting-0" <?php if (! $callwaiting) echo 'checked="checked" '; echo  $disabled[ 'cw' ]; ?> />
 			<label for="ipt-callwaiting-0"><?php echo __('aus'); ?></label>
 	</td>
 	<td>
 		<small><?php echo __('Das Verhalten ist ggf. von Ihrem Endger&auml;t abh&auml;ngig.'); ?></small>
 	</td>
-</tr>
+	</tr>
 
+<?php
+if ( gs_get_conf( 'GS_USER_SELECT_CALLERID' ) ) {
+	echo "<tr>\n";
+	$numbers =  gs_user_callerids_get( $_SESSION['sudo_user']['name'] );
+	if (isGsError( $numbers )) echo $numbers->getMsg();
+	$sel = " selected";
+	foreach ($numbers as $number) {
+		if ($number['dest'] != 'external') continue;
+		
+		if ($number['selected'] == 1) $sel = "";
+	}                                                                                                 
+	
+	echo "<td>", __('Angezeigte Rufnummer extern') ,"</td>\n";
+	echo "<td>\n";
+	echo '<select name="callerid_ext" size="1"' , $disabled['clip']  , '>', "\n";
+	echo '<option value= ""',$sel,'>' , __('Standardnummer'),"</option>\n";
+	foreach ($numbers as $number) {
+		if ($number['dest'] != 'external') continue;
+		$sel ="";
+		$num = $number['number'];
+		if ($number['selected'] == 1) $sel =" selected";
+		echo '<option value="',$num,'" ',$sel ,">",$num,"</option>\n";
+	}
+	echo "</select>";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "<tr>\n";
+	
+	$sel_int = " selected";
+	foreach ($numbers as $number) {
+		if ($number['dest'] != 'internal') continue;
+		if ($number['selected'] == 1) $sel_int = "";
+	}                                                                                                 
+	
+	echo "<td>", __('Angezeigte Rufnummer intern') ,"</td>\n";
+	echo "<td>\n";
+	echo '<select name="callerid_int" size="1"' , $disabled['clip']  , '>', "\n";
+	echo '<option value= ""',$sel_int,'>' , __('Standardnummer'),"</option>\n";
+	foreach ($numbers as $number) {
+		if ($number['dest'] != 'internal') continue;
+		$sel_int = "";
+		$num = $number['number'];
+		if ($number['selected'] == 1) $sel_int =" selected";
+		echo '<option value="',$num,'" ',$sel_int ,">",$num,"</option>\n";
+	}
+	echo "</select>";
+	echo "</td>\n";
+	echo "</tr>\n";
+}
+?>
 
 <tr>
 	<td colspan="6" class="quickchars r">
@@ -212,76 +231,7 @@ if (isGsError($callwaiting)) {
 </tbody>
 </table>
 </form>
-<?php
-$rs = $DB->execute('SELECT `_queue_id` FROM `ast_queue_members` WHERE  `static`=0 AND `_user_id` ='.$user['id']); 
-while ( $queues = $rs->fetchrow()) {
-	$queues_in =  explode(',', $queues['_queue_id']);
-}
-if (empty($queues_in)) {
-	$queues_avail = $queues_allowed;
-} else {
-	$queues_avail = array_diff( $queues_allowed, $queues_in); 
-}
-?>
-<table>
-<tr><th colspan="2">
-<?php echo __('Warteschlangen');?>
-</th></tr>
-<tr><th>
-<?php echo __('Verf&uuml;gbare');?>
-</th><th>
-<?php echo __('Angemeldet');?>
-</th></tr>
-<tr><td colspan="2"><small>
-<?php echo __('Mehrfachauswahl mit gedr&uuml;ckter <q>STRG</q> oder <q>SHIFT</q> Taste m&ouml;glich.');?>
-</small></td></tr>
-<tr><td>
-<form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
-<input type="hidden" name="action" value="loginqueue" />
-<select name="queue_id[]" size="5" multiple="multiple">
-<?php
-if (! empty($queues_avail)) {
-		$rs = $DB->execute(
-		'SELECT `_id`, `name`, `_title` FROM `ast_queues`  
-		WHERE `_host_id`='.$user['host_id'].' 
-		AND `_id` IN ('.implode(",", $queues_avail).') 
-		AND `_id` NOT IN 
-		(SELECT `_queue_id` FROM `ast_queue_members` WHERE `_user_id`='.$user['id']. ')'
-	);
-	while ( $queue_map = $rs->fetchrow()) {
-		echo $queue_map['name'], $queue_map['_title'], "\n";
-		echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
-		echo '>',  $queue_map['name'], ' ', $queue_map['_title'], '</option>', "\n";
-	}
-}
-?>
-</select>
-<?php
-echo '<button type="submit" title="', __('Anmelden'), '" class="plain">';
-echo '<img alt="', __('Anmelden') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/next.png" /></button>', "\n";
-?></form>
-</td><td>
-<form method="post" action="<?php echo gs_url($SECTION, $MODULE); ?>">
-<input type="hidden" name="action" value="logoutqueue" />
-<?php
-echo '<button type="submit" title="', __('Abmelden'), '" class="plain">';
-echo '<img alt="', __('Abmelden') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/previous.png" /></button>', "\n";
-?>
-<select name="queue_id[]" size="5" multiple="multiple">
-<?php
-$rs = $DB->execute('SELECT `queue_name`, `_title`, `_queue_id`, `static`, `_min_agents`  FROM `ast_queue_members`, `ast_queues` WHERE `_user_id`='.$user['id'].'  AND `_queue_id`=`_id`');
-while ( $queue_map = $rs->fetchrow()) {
-	$agent_on = $DB->executeGetOne('SELECT count(`_queue_id`) FROM `ast_queue_members` WHERE `_queue_id` ='.  (int)$queue_map['_queue_id']);
-	echo '<option value="', (int)$queue_map['_queue_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
-	if ($queue_map['static'] == '1' || $queue_map['_min_agents'] >= $agent_on) echo 'disabled="disabled"'; 
-	echo '>',  $queue_map['queue_name'], ' ', $queue_map['_title'], '</option>', "\n";
-}
-?>
-</select>
-</form>
-</td>
 
-</tr></table>
 <br />
 <br />
 <p class="small" style="max-width:48em;">

@@ -3,13 +3,10 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 4529 $
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
-* Philipp Kempgen <philipp.kempgen@amooma.de>
-* Peter Kozak <peter.kozak@amooma.de>
 *
 * Author: Andreas Neugebauer <neugebauer@loca.net> - LocaNet oHG
 * 
@@ -36,6 +33,7 @@ require_once( GS_DIR .'inc/agi-fns.php' );
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
+
 $uname  = trim(@$argv[1]);
 
 if (! $uname) die();
@@ -43,16 +41,24 @@ if (! preg_match('/^\d+$/', $uname)) {  // is not just digits
 	die();
 }
 
+
 include_once( GS_DIR .'inc/db_connect.php' );
+
 
 $db = gs_db_slave_connect();
 
 # get user id:
-$uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($uname) .'\'' );
-if ($uid < 1) die();
+	$uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($uname) .'\'' );
+	if ($uid < 1) die();
 
 $dnd = $db->executeGetOne( 'SELECT `active` FROM `dnd` WHERE `_user_id`='. $db->escape($uid) );
+if ($uid < 1) die();
+
+
 
 gs_agi_set_variable ( 'dnd_active' , $dnd );
+
+//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
+
 
 ?>

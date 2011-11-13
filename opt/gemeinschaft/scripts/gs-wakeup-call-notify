@@ -38,8 +38,7 @@ require_once( GS_DIR .'inc/gs-fns/gs_wake_up_call_fns.php' );
 *    function to create callfiles
 ***********************************************************/
 
-function _pack_int( $int )
-{
+function _pack_int( $int ) {
 	$str = base64_encode(pack('N', $int ));
 	return preg_replace('/[^a-z0-9]/i', '', $str);
 }

@@ -43,8 +43,8 @@ function gs_callforward_activate( $user, $source, $case, $active )
 		return new GsError( 'Source must be internal|external.' );
 	if (! in_array( $case, array('always','busy','unavail','offline'), true ))
 		return new GsError( 'Case must be always|busy|unavail|offline.' );
-	if (! in_array( $active, array('no','std','var','vml','trl','par'), true ))
-		return new GsError( 'Active must be no|std|var|vml|trl|par.' );
+	if (! in_array( $active, array('no','std','var','vml','ano','trl','par'), true ))
+		return new GsError( 'Active must be no|std|var|vml|ano|trl|par.' );
 	
 	# connect to db
 	#
@@ -57,16 +57,12 @@ function gs_callforward_activate( $user, $source, $case, $active )
 	$user_id = $db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape($user) .'\'' );
 	if (! $user_id)
 		return new GsError( 'Unknown user.' );
-
-	# get user_ext
-	$user_ext = $db->executeGetOne('SELECT `s`.`name` `ext`
-FROM
-        `users` `u` JOIN
-        `ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)
-WHERE `u`.`user`=\''. $db->escape($user) .'\''
-        );
+		
+	# get user_ext 
+	#
+	$user_ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
 	if (! $user_ext)
-		return new GsError( 'Unknown user.' );
+		return new GsError( 'Unknown user extension.' );			
 	
 	# check if user has an entry
 	#
@@ -75,6 +71,30 @@ WHERE `u`.`user`=\''. $db->escape($user) .'\''
 		$ok = $db->execute( 'INSERT INTO `callforwards` (`user_id`, `source`, `case`, `number_std`, `number_var`, `number_vml`, `active`) VALUES ('. $user_id .', \''. $db->escape($source) .'\', \''. $db->escape($case) .'\', \'\', \'\', \'\', \'no\')' );
 	else
 		$ok = true;
+	
+	
+	# do not allow time rules if no time rules  are defined
+	#
+	
+	if ( $active == 'trl'  ) {
+		
+		$id = (int)$db->executeGetOne('SELECT `_user_id` from `cf_timerules` WHERE `_user_id`=' . $user_id );
+
+		if ( ! $id ) {
+			return new GsError( 'No time rules defined. Cannot activate call forward.' );
+		}
+	}
+	# do not allow parallel calls if no parallel targets  are defined
+	#
+	else if ( $active == 'par'  ) {
+		
+		$id = (int)$db->executeGetOne('SELECT `_user_id` from `cf_parallelcall` WHERE `_user_id`=' . $user_id  );
+
+		if ( ! $id ) {
+			return new GsError( 'No parsllel call tragets. Cannot activate call forward.' );
+		}
+	}
+	
 	
 	# set state
 	#
@@ -92,7 +112,7 @@ LIMIT 1'
 	
 	# do not allow an empty number to be active
 	#
-	if ($active != 'no' && $active != 'trl' && $active != 'par') {
+	if ($active == 'std' || $active == 'var' ) {
 		$field = 'number_'. $active;
 		$number = $db->executeGetOne( 'SELECT `'. $field .'` FROM `callforwards` WHERE `user_id`='. $user_id .' AND `source`=\''. $db->escape($source) .'\' AND `case`=\''. $db->escape($case) .'\'' );
 		if (trim($number)=='') {
@@ -102,8 +122,9 @@ LIMIT 1'
 	}
 	
 	if($case === 'always') {
-		$call   //= "Channel: Local/". $from_num_dial ."\n"
-			= "Channel: local/toggle@toggle-cfwd-hint\n"
+		$filename = '/tmp/gs-'. $user_id .'-'. time() .'-'. rand(10000,99999) .'.call';
+
+		$call   = "Channel: local/toggle@toggle-cfwd-hint\n"
 			. "MaxRetries: 0\n"
 			. "WaitTime: 15\n"
 			. "Context: toggle-cfwd-hint\n"
@@ -116,8 +137,6 @@ LIMIT 1'
 			. "Setvar: __callfile_from_user=".  $user_ext ."\n"
 			. "Setvar: __record_file=".  $filename ."\n"
 			;
-
-		$filename = '/tmp/gs-'. $user_id .'-'. time() .'-'. rand(10000,99999) .'.call';
 
 		$cf = @fOpen( $filename, 'wb' );
 		if (! $cf) {

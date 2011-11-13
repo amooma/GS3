@@ -36,7 +36,7 @@ function gs_group_types_get()
 		'user',
 		'queue',
 		'host',
-		'module_gui',
+		'module_gui'
 	);
 }
 
@@ -47,18 +47,27 @@ function gs_group_permission_types_get()
 		'monitor_queues',
 		'forward_queues',
 		'sudo_user',
-		'call_stats',
+		'call_stats', 
 		'phonebook_user',
 		'display_module_gui',
 		'group_pickup',
 		'pickup',
-		'override_callforward_call',
-		'intercom_call',
-		'login_queues',
-		'record_call',
+		'roaming',
+		'agent',
+		'queue_member',
+		'forward',
+		'clip_set',
+		'clir_set',
+		'callwaiting_set',
+		'ringtone_set',
+		'dnd_set',
+		'forward_vmconfig',
 		'wakeup_call',
+		'room_state',
+		'intercom_call',
+		'record_call',
 		'private_call',
-		'phonebook_imported_edit',
+		'phonebook_imported_edit'
 	);
 }
 
@@ -76,7 +85,7 @@ function gs_group_external_types_get()
 		'user',
 		'queue',
 		'host',
-		'mysql',
+		'mysql'
 	);
 }
 
@@ -480,7 +489,8 @@ function gs_group_member_add($group_id, $member, $include = false)
 	if (!$member_id)
 		return new GsError( 'Cannot add member. Member "'.$member.'" of type "'.$type.'" not found.' );
 
-	$ret = $db_master->execute('INSERT INTO `'.$db_master->escape($table).'` (`group`, `member`) VALUES ('.$group_id.', '.$member_id.') ON DUPLICATE KEY UPDATE `member` = '.$member_id);
+	$ret = $db_master->execute('INSERT INTO `'.$db_master->escape($table).'` (`group`, `member`) VALUES ('.$group_id.', '.$member_id.')');
+
 	return $ret;
 }
 

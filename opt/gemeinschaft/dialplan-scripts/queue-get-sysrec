@@ -48,7 +48,7 @@ if ( $queue['sysrec_id'] > 0 ) {
 	$filename = $db->executeGetOne( 'SELECT `md5hashname` FROM `systemrecordings` WHERE id =' . $queue['sysrec_id'] );
 	
 	if ( strlen($filename) > 0 )
-		gs_agi_set_variable( 'sysrec_filename', $filename );
+		gs_agi_set_variable ( 'sysrec_filename' , $filename );
 	
 }
 

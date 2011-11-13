@@ -10,7 +10,6 @@
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
 * Soeren Sprenger <soeren.sprenger@amooma.de>
-* Sascha Daniels <sd@alternative-solution.de>
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -56,11 +55,10 @@ function confirm_delete() {
 </script>' ,"\n";
 
 $action = @$_REQUEST['action'];
-if (! in_array($action, array('','edit','save','del', 'insert-group', 'remove-group', 'delstatic', 'addstatic'), true))
+if (! in_array($action, array('','edit','save','del', 'insert-group', 'remove-group' ), true))
 	$action = '';
 
 $queue_id = (int)@$_REQUEST['qid'];
-$agent_id = (int)@$_REQUEST['aid'];
 $group    = (int)@$_REQUEST['group'];
 $per_page = (int)gs_get_conf('GS_GUI_NUM_RESULTS');
 if ($per_page < 1) $per_page = 1;
@@ -99,6 +97,16 @@ if ($action === 'save') {
 	$announce_holdtime = @$_REQUEST['announce_holdtime'];
 	if (! in_array($announce_holdtime, array('yes', 'once', 'no'), true))
 		$announce_holdtime = 'yes';
+	
+	$announce_frequency = 90;
+	if (  $announce_holdtime ==  'no' )
+	        $announce_frequency = 0;
+        else if (  $announce_holdtime ==  'once' )
+              $announce_frequency = 255;
+	
+	$autopausehangup = @$_REQUEST['autopausehangup'];
+	if (! in_array($autopausehangup, array('yes', 'no'), true))
+		$autopausehangup = 'no';
 	$wrapuptime = (int)@$_REQUEST['wrapuptime'];
 	if ($wrapuptime < 1) $wrapuptime = 0;
 	$timeout = (int)@$_REQUEST['timeout'];
@@ -117,7 +125,7 @@ if ($action === 'save') {
 	//	$musicclass = 'default';
 	$musicclass_db = ($musicclass != '' ? '\''. $DB->escape($musicclass) .'\'' : 'NULL');
 	$salutation = (int)@$_REQUEST['salutation'];
-	$min_agents = (int)@$_REQUEST['_min_agents'];
+	
 	$update_additional = false;
 	if ($queue_id < 1) {
 		$ret = gs_queue_add( $name, $title, $maxlen, (int)@$_REQUEST['_host_id'] );
@@ -141,12 +149,14 @@ if ($action === 'save') {
 	`musicclass`='. $musicclass_db .',
 	`_sysrec_id`='. $salutation .',
 	`announce_holdtime`=\''. $announce_holdtime .'\',
+	`announce_frequency`=\''. $announce_frequency .'\',
+	`periodic_announce_frequency`=\''. $announce_frequency .'\',
 	`wrapuptime`='. $wrapuptime .',
 	`timeout`='. $timeout .',
 	`strategy`=\''. $strategy .'\',
 	`joinempty`=\''. $joinempty .'\',
 	`leavewhenempty`=\''. $leavewhenempty .'\',
-	`_min_agents`=\''. $min_agents .'\'
+	`autopausehangup`=\''. $autopausehangup .'\'
 WHERE `_id`='.$queue_id
 		);
 	}
@@ -156,6 +166,7 @@ WHERE `_id`='.$queue_id
 #####################################################################
 #                               save }
 #####################################################################
+
 
 ####################################################################
 #                              groups {
@@ -186,78 +197,6 @@ if ($action === 'remove-group') {
 ####################################################################
 #                              groups }
 ###################################################################
-
-####################################################################
-#                              static_agents {
-###################################################################
-
-if ($action === 'delstatic') {
-
-	if (($queue_id > 0) && ($agent_id > 0)) {
-		$DB->execute(
-			'DELETE FROM `ast_queue_members` '.
-			'WHERE '.
-			'`_queue_id` = '.$queue_id.' AND '.
-			'`_user_id` = '.$agent_id. ' AND '.
-			'`static` = 1'
-		);
-	}
-	$action = 'edit';
-
-}
-
-if ($action === 'addstatic') {
-	$q_hid = (int)$DB->executeGetOne(
-	'SELECT `_host_id` FROM `ast_queues` '.
-	'WHERE `_id`='.$queue_id
-	);
-	$a_hid = (int)$DB->executeGetOne(
-	'SELECT `host_id` from `users` '.
-	'WHERE `id`='.$agent_id
-	);
-	if ($a_hid != $q_hid) {
-		echo '<div class="errorbox">';
-		echo __('Warteschlange und Agent sind nicht auf dem gleichen Host!');
-		echo '</div>',"\n";
-		$action = 'edit';
-	} else {
-		if (($queue_id > 0) && ($agent_id >0)) {
-			$queue_name = $DB->executeGetOne(
-			'SELECT `name` FROM `ast_queues` WHERE '.
-			'`_id`='.$queue_id
-			);
-			$user_name = $DB->executeGetOne(
-			'SELECT `name` FROM `ast_sipfriends` '.
-			'WHERE `_user_id`='.$agent_id
-			);
-			if (($user_name != '') && ($queue_name != '')) {
-				$interface = 'SIP/'.$user_name;
-				$penalty = $DB->executeGetOne('SELECT `penalty` FROM `penalties` WHERE `_user_id`='.$agent_id);
-				if (! $penalty) $penalty='DEFAULT';
-				$DB->execute(
-				'REPLACE into `ast_queue_members` SET 
-				`queue_name` = \''. $DB->escape($queue_name) .'\',
-				`interface` = \''. $DB->escape($interface) .'\',
-				`_user_id` ='.$agent_id. ', '.
-				'`_queue_id` ='.$queue_id. ', '.
-				'`static` = 1, `penalty`='.$penalty
-				);
-				} else {
-					echo '<div class="errorbox">';
-					echo __('User oder Warteschlange ung&uuml;ltig!');
-					echo '</div>',"\n";
-				}
-		}
-	}
-	$action = 'edit';
-}
-####################################################################
-#                              static_agents } 
-###################################################################
-
-
-
-
 
 
 #####################################################################
@@ -299,7 +238,7 @@ FROM
 	if ($queue_id > 0) {
 		$rs = $DB->execute(
 'SELECT
-	`name`, `_host_id`, `_title`, `musicclass`, `_sysrec_id`, `announce_holdtime`, `timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`, `_min_agents`
+	`name`, `_host_id`, `_title`, `musicclass`, `_sysrec_id`, `announce_holdtime`, `announce_frequency`, `periodic_announce_frequency`,`timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`, `autopausehangup`
 FROM
 	`ast_queues`
 WHERE
@@ -324,7 +263,7 @@ WHERE
 			'strategy'                   => 'rrmemory',
 			'joinempty'                  => 'strict',
 			'leavewhenempty'             => 'yes',
-			'_min_agents'                => 0,
+			'autopausehangup'            => 'no'
 		);
 	}
 	
@@ -381,20 +320,7 @@ WHERE
 		echo '</td>';
 		echo '<td class="transp xs gray"></td>',"\n";
 		echo '</tr>',"\n";
-
-		echo '<tr>',"\n";
-		echo '<th class="r">', __('Begr&uuml;&szlig;ung') ,'</th>',"\n";
-		echo '<td>';
-		echo '<select name="salutation">', "\n";
-		echo '<option value="0"', ($queue['_sysrec_id'] ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
-		echo '<option value="" disabled="disabled">-</option>', "\n";
-		foreach( $recordings as $rec_id => $desc ) {
-			echo '<option value="' . $rec_id .'"', ($queue['_sysrec_id'] ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
-		}
-		echo '</select>';
-		echo '</td>';
-		echo '</tr>',"\n";		
-
+		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Wartemusik') ,'</th>',"\n";
 		echo '<td>';
@@ -412,7 +338,20 @@ WHERE
 		echo '</td>';
 		echo '<td class="transp xs gray"><code>musicclass</code> / <code>Queue(,r)</code></td>',"\n";
 		echo '</tr>',"\n";
-		
+
+		echo '<tr>',"\n";
+		echo '<th class="r">', __('Begr&uuml;&szlig;ung') ,'</th>',"\n";
+		echo '<td>';
+		echo '<select name="salutation">', "\n";
+		echo '<option value="0"', ($queue['_sysrec_id'] ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
+		echo '<option value="" disabled="disabled">-</option>', "\n";
+		foreach( $recordings as $rec_id => $desc ) {
+			echo '<option value="' . $rec_id .'"', ($queue['_sysrec_id'] ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+		}
+		echo '</select>';
+		echo '</td>';
+		echo '</tr>',"\n";		
+
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Wartezeit ansagen') ,'</th>',"\n";
 		echo '<td>',"\n";
@@ -436,12 +375,31 @@ WHERE
 		echo '<td class="transp xs gray"><code>announce_holdtime = </code><code>yes</code> | <code>once</code> | <code>no</code></td>',"\n";
 		echo '</tr>',"\n";
 		
+		
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Nachbereitungszeit') ,'</th>',"\n";
 		echo '<td>';
 		echo '<input type="text" name="wrapuptime" value="', $queue['wrapuptime'] ,'" size="3" maxlength="3" class="r" /> s', "\n";
 		echo '</td>';
 		echo '<td class="transp xs gray"><code>wrapuptime</code></td>',"\n";
+		echo '</tr>',"\n";
+
+		echo '<tr>',"\n";
+		echo '<th class="r">', __('Agent bei Auflegen pausieren') ,'</th>',"\n";
+		echo '<td>',"\n";
+		
+		echo '<input type="radio" name="autopausehangup" id="ipt-autopausehangup-yes" value="yes" ';
+		if ($queue['autopausehangup']==='yes') echo 'checked="checked" ';
+		echo '/>', "\n";
+		echo '<label for="ipt-autopausehangup-yes">', __('ja') ,'</label> &nbsp;', "\n";
+		
+		echo '<input type="radio" name="autopausehangup" id="ipt-autopausehangup-no" value="no" ';
+		if ($queue['autopausehangup']==='no') echo 'checked="checked" ';
+		echo '/>', "\n";
+		echo '<label for="ipt-announce_holdtime-once">', __('nein') ,'</label> &nbsp;', "\n";
+		
+		echo '</td>';
+		echo '<td class="transp xs gray"><code>autopausehangup = </code><code>yes</code> | <code>no</code></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
@@ -458,14 +416,6 @@ WHERE
 		echo '<input type="text" name="maxlen" value="', $queue['maxlen'] ,'" size="3" maxlength="3" class="r" />', "\n";
 		echo '</td>';
 		echo '<td class="transp xs gray"><code>maxlen</code></td>',"\n";
-		echo '</tr>',"\n";
-
-		echo '<tr>',"\n";
-		echo '<th class="r">', __('Min. Agentenzahl') ,'</th>',"\n";
-		echo '<td>';
-		echo '<input type="text" name="_min_agents" value="', $queue['_min_agents'] ,'" size="3" maxlength="3" class="r" />', "\n";
-		echo '</td>';
-		echo '<td class="transp xs gray"></td>',"\n";
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
@@ -489,9 +439,9 @@ WHERE
 		echo '>', __('alle anklingeln') ,'</option>', "\n";
 		echo '</select>';
 		echo '</td>';
-		echo '<td class="transp xs gray"><code>strategy</code></td>',"\n";
+		echo '<td class="transp xs gray"><code>announce_holdtime</code></td>',"\n";
 		echo '</tr>',"\n";
-		
+
 		echo '<tr>',"\n";
 		echo '<th class="r">', __('Eintritt') ,'</th>',"\n";
 		echo '<td>',"\n";
@@ -571,8 +521,10 @@ WHERE
 		</button></a>' ,"\n";
 		echo '</td>',"\n";
 		echo '</tr>',"\n";
+		
 		echo '</tbody>',"\n";
 		echo '</table>',"\n";
+
 		echo '</form>';
 		
 		echo '<br />',"\n";
@@ -640,53 +592,15 @@ WHERE
 		
 		echo '<br />',"\n";
 		
-		echo '<h3>', __('Statische'), ' ', __('Agenten'), '</h3><p>';
-		echo __('Statische'), ' ', __('Agenten'), ' ', __('sind immer an der Warteschlange angemeldet.');
-		echo '<table>';
-		echo '<tr>';
-		echo '<th>', __('Verf&uuml;gbare'), ' ', __('Agenten'), '</th>';
-		echo '<th>', __('Angemeldete'), ' ', __('Agenten'), '</th>';
-		echo '</tr><tr><td>';
-		echo '<div align="right">';
-		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
-		echo gs_form_hidden($SECTION, $MODULE), "\n";
-		echo '<input type="hidden" name="action" value="addstatic" />', "\n";
-		echo '<input type="hidden" name="qid" value="', $queue_id , '" />', "\n";
-		$host_id = (int)$DB->executeGetOne('SELECT `_host_id` from `ast_queues` WHERE `_id`='.$queue_id);
-		$rs = $DB->execute('SELECT `user`, `name`, `id`, `firstname`, `lastname` from `users`, `ast_sipfriends` WHERE `nobody_index` IS NULL AND `id`=`_user_id` AND `host_id`='.$host_id. '  AND `id` NOT IN (select `_user_id` from `ast_queue_members` where `static`=1 and `_queue_id`='. $queue_id .') ORDER BY `name`');
-		echo '<select name="aid" size="10">', "\n";
-		while ($user_map = $rs->fetchRow()) {
-		echo '<option value="', (int)$user_map['id'], '"', 'title="', htmlEnt( $user_map['lastname']), ', ', htmlEnt( $user_map['firstname']), '"';
-		echo '>',  $user_map['name'], ' ', htmlEnt( $user_map['user'] ), '</option>', "\n";
-		}
-		echo '</select>';
-		echo '<button type="submit" title="', __('Hinzuf&uuml;gen'), '" class="plain">';
-		echo '<img alt="', __('Hinzuf&uuml;gen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/next.png" /></button>' ,"\n";
-		echo '</form></div>';
-		echo '</td><td>';
-		echo '<div align="left">';
-		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
-		echo gs_form_hidden($SECTION, $MODULE), "\n";
-		echo '<button type="submit" title="', __('Entfernen'), '" class="plain">';
-		echo '<img alt="', __('Entfernen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/previous.png" /></button>' ,"\n";
-		echo '<input type="hidden" name="action" value="delstatic" />', "\n";
-		echo '<input type="hidden" name="qid" value="', $queue_id , '" />', "\n";
-		$host_id = (int)$DB->executeGetOne('SELECT `_host_id` from `ast_queues` WHERE `_id`='.$queue_id);
-		$rs = $DB->execute('SELECT `user`, `name`, q.`_user_id`, `firstname`, `lastname`  FROM `users` u , `ast_sipfriends` s, `ast_queue_members` q  where `s`.`_user_id`=`q`.`_user_id` AND `u`.`id`=`q`.`_user_id` and `q`.`static`=1 AND `q`.`_queue_id`='. $queue_id .' ORDER BY `NAME`');
-		echo '<select name="aid" size="10">', "\n";
-		while ($user_map = $rs->fetchRow()) {
-		echo '<option value="', (int)$user_map['_user_id'], '"', 'title="', htmlEnt( $user_map['lastname']), ', ', htmlEnt( $user_map['firstname']), '"';
-		echo '>',  $user_map['name'], ' ', htmlEnt( $user_map['user'] ), '</option>', "\n";
-		}
-		echo '</select>';
-		echo '</form>',"\n";
-		echo '</div></td></tr></table>';
+		
 	}
 	
-}
+  }
 #####################################################################
 #                               edit }
 #####################################################################
+
+
 
 
 #####################################################################

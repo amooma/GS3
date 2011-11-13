@@ -1,0 +1,6 @@
+# Gemeinschaft
+# $Revision$
+
+# replicate phonebooks into LDAP server
+
+30 4  * * *   root   /opt/gemeinschaft/sbin/gs-ldap-phonebook-sync 1>>/dev/null 2>>/dev/null

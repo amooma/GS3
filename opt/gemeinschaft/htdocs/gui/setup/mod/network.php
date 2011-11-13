@@ -39,6 +39,7 @@ if ($action === 'save2') {
 	if ($save2_action === '') $action = '';
 }
 
+
 /*
 $ifconfig = find_executable('ifconfig', array(
 	'/sbin/', '/bin/', '/usr/sbin/', '/usr/bin/'

@@ -35,18 +35,17 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 ?>
 <html>
 <head>
-	<title>Gemeinschaft Extension Monitor</title>
+	<title></title>
 </head>
 <body>
 <br />
 
-Beispiele:
 <ul>
 	<li>
-		<a href="mon.php?extensions=1-99999">Extensions 1-99999</a>
+		<a href="mon.php?extensions=100-599,700-999">Extensions 100-599, 700-999</a>
 	</li>
 	<li>
-		<a href="mon.php?extensions=100-599,700-999">Extensions 100-599, 700-999</a>
+		<a href="mon.php?extensions=10-9999">Extensions 10-9999</a>
 	</li>
 	<li>
 		...

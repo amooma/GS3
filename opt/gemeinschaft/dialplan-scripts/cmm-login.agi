@@ -31,6 +31,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/log.php' );
 require_once( GS_DIR .'inc/agi-fns.php' );
+require_once( GS_DIR .'inc/prov-phonetypecache.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -82,6 +83,8 @@ if ($old_uid < 1) {
 	gs_agi_set_variable( 'user_name', $caller_ext );
 }
 
+
+
 $new_uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($new_ext) .'\'' );
 if ($new_uid < 1) {
 	# unknown user
@@ -89,6 +92,20 @@ if ($new_uid < 1) {
 	gs_agi_set_variable( 'ret', 'unknown' );
 	exit();
 }
+
+# check login as new user allow
+
+include_once( GS_DIR .'inc/group-fns.php' );
+$user_groups  = gs_group_members_groups_get( array( $new_uid ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'roaming' );
+
+
+if (  count ( $members ) <= 0  ) {
+	
+	gs_agi_set_variable(  'ret' , 'error' );
+	die();
+}
+
 $pin = $db->executeGetOne( 'SELECT `pin` FROM `users` WHERE `id`='. $new_uid );
 if (trim($pin)=='') {
 	# db error, unknown user
@@ -121,6 +138,12 @@ if ($phone_id < 1) {
 	}
 }
 
+# cache currently used phone types for further use
+#
+gs_phonetypecache_add_by_ext($db, $caller_ext);
+gs_phonetypecache_add_by_ext_to_ip($db, $caller_ext);
+gs_phonetypecache_add_by_ext($db, $new_ext);
+gs_phonetypecache_add_by_ext_to_ip($db, $new_ext);
 
 # log out the old user, assign the default nobody
 #
@@ -174,6 +197,5 @@ gs_agi_set_variable( 'old_phone_ip', $old_ip_addr );
 $new_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$new_uid );
 gs_log( GS_LOG_DEBUG, "Mobility: IP address found for new phone: $new_ip_addr");
 gs_agi_set_variable( 'new_phone_ip', $new_ip_addr );
-
 
 ?>

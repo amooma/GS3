@@ -28,7 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
-//include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' ); //FIXME
+include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 
 
 /***********************************************************
@@ -70,7 +70,7 @@ function gs_callwaiting_activate( $user, $active )
 	#
 	//$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
 	//@ exec( 'asterisk -rx \'sip notify snom-reboot '. $user_name .'\'' );
-	//@ gs_prov_phone_checkcfg_by_user( $user, false ); //FIXME
+	@ gs_prov_phone_checkcfg_by_user( $user, false );
 	
 	return true;
 }

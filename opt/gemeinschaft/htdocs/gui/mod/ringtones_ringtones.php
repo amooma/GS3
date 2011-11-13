@@ -30,7 +30,7 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-fns/gs_ringtones_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_ringtone_set.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
-
+include_once( GS_DIR .'inc/group-fns.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -51,11 +51,22 @@ $audio_exts = array( 'aif', 'aiff', 'wav', 'au', 'al', 'alaw', 'la',
 
 $errMsgs = array();
 
+$user_groups  = gs_group_members_groups_get( array( $_SESSION['real_user']['info']['id'] ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'ringtone_set' );
+$members_adm = gs_group_permissions_get ( $user_groups , 'sudo_user' );
+
+if ( count ( $members_adm ) > 0 || count ( $members ) > 0 ) 
+	$disabled = '';
+else
+	$disabled = ' disabled';
+
+
+
 $action = @$_REQUEST['action'];
 if (! in_array($action, array('', 'save', 'save-and-resync'), true))
 	$action = '';
 
-if ($action === 'save' || $action === 'save-and-resync') {
+if ( $disabled == '' && ( $action === 'save' || $action === 'save-and-resync') ) {
 	
 	/*
 	echo "<pre>";
@@ -187,7 +198,7 @@ if (is_array($errMsgs) && count($errMsgs) > 0) {
 <thead>
 <tr>
 	<th><?php echo __('Von'); ?></th>
-	<th>Bellcore</th>
+	<th><?php echo __('Klingelton'); ?></th>
 	<th><?php echo __('Audio-Datei'); ?></th>
 </tr>
 </thead>
@@ -198,12 +209,12 @@ foreach ($sources as $source => $source_v) {
 <tr>
 	<td style="width:55px;"><?php echo $source_v; ?></td>
 	<td style="width:115px;">
-		<select name="<?php echo $source; ?>-bellcore">
+		<select name="<?php echo $source; ?>-bellcore" <?php echo $disabled; ?>>
 <?php
 for ($i=1; $i<=11; ++$i) {
 	if ($i <= 10) {
 		$dr_i = $i;
-		$dr_v = 'Bellcore '. $i;
+		$dr_v = __('Klingelton') . ' ' . $i;
 	} elseif ($i == 11) {
 		$dr_i = 0;
 		$dr_v = __('Lautlos');
@@ -218,18 +229,18 @@ for ($i=1; $i<=11; ++$i) {
 		</select>
 	</td>
 	<td style="width:430px;">
-		<input type="radio" name="<?php echo $source; ?>-file-change" value="off" id="<?php echo $source; ?>-file-change-off" <?php if (! @$ringtones[$source]['file']) echo 'checked="checked" '; ?>/>
+		<input type="radio" name="<?php echo $source; ?>-file-change" value="off" id="<?php echo $source; ?>-file-change-off" <?php if (! @$ringtones[$source]['file']) echo 'checked="checked" '; echo $disabled; ?>/>
 			<label for="<?php echo $source; ?>-file-change-off"><?php echo __('keine'); ?></label><br />
 <?php
 if (@$ringtones[$source]['file']) {
 ?>
-		<input type="radio" name="<?php echo $source; ?>-file-change" value="keep" id="<?php echo $source; ?>-file-change-keep" checked="checked" />
+		<input type="radio" name="<?php echo $source; ?>-file-change" value="keep" id="<?php echo $source; ?>-file-change-keep" checked="checked"<?php echo $disabled; ?> />
 			<label for="<?php echo $source; ?>-file-change-keep"><?php echo __('eigene beibehalten'); ?></label><br />
 <?php
 }
 ?>
-		<input type="radio" name="<?php echo $source; ?>-file-change" value="new" id="<?php echo $source; ?>-file-change-new" />
-		<input type="file" name="<?php echo $source; ?>-file" size="45" style="font-size:10px;" accept="audio/*" onchange="var r=document.getElementById('<?php echo $source; ?>-file-change-new'); if(r)r.click(); return true;" />
+		<input type="radio" name="<?php echo $source; ?>-file-change" value="new" id="<?php echo $source; ?>-file-change-new"<?php echo $disabled; ?> />
+		<input type="file" name="<?php echo $source; ?>-file" size="45" style="font-size:10px;" accept="audio/*" onchange="var r=document.getElementById('<?php echo $source; ?>-file-change-new'); if(r)r.click(); return true;" <?php echo $disabled; ?>/>
 	</td>
 </tr>
 <?php
@@ -240,11 +251,11 @@ if (@$ringtones[$source]['file']) {
 	<td colspan="3" class="quickchars r">
 		<br />
 		<br />
-		<button type="submit" title="<?php echo __('Speichern'); ?>" name="action" value="save">
+		<button type="submit" title="<?php echo __('Speichern'); ?>" name="action" value="save"<?php echo $disabled; ?>>
 			<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			<?php echo __('Speichern'); ?>
 		</button>
-		<button type="submit" title="<?php echo __('Speichern und Telefon aktualisieren'); ?>" name="action" value="save-and-resync">
+		<button type="submit" title="<?php echo __('Speichern und Telefon aktualisieren'); ?>" name="action" value="save-and-resync"<?php echo $disabled; ?>>
 			<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 			<?php echo __('Speichern und Telefon aktualisieren'); ?>
 		</button>
@@ -263,7 +274,7 @@ if (@$ringtones[$source]['file']) {
 ?>
 <p class="small" style="max-width:48em;">
 	<sup>[1]</sup>
-	<?php echo __('Das Snom unterst&uuml;tzt Ringer 1-5 und lautlos.<br /> F&uuml;r das Snom kann nur entweder f&uuml;r interne oder f&uuml;r externe Anrufe eine eigene Klingeltondatei eingestellt sein, nicht f&uuml;r beides. Die L&auml;nge wird auf wenige Sekunden begrenzt.'); ?>
+	<?php echo __('Die L&auml;nge der eigenen Klingelt&ouml;ne wird auf wenige Sekunden begrenzt. F&uuml;r den eigenen Klingelton k&ouml;nnen Sie Audio-Dateien in den Dateiformaten "wav", "mp3" oder "ogg" nutzen.'); ?>
 </p>
 <?php
 //}

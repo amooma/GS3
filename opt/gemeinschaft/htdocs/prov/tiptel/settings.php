@@ -39,23 +39,6 @@ require_once( GS_DIR .'inc/prov-fns.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 set_error_handler('err_handler_die_on_err');
 
-function _tiptel_astlang_to_tiptellang($langcode)
-{
-	$lang_default = 'German';
-	
-	$lang_transtable = array(
-		'de' => 'German',
-		'en' => 'English',
-		'us' => 'English',
-	);
-	
-	$lang_ret = $lang_transtable[$langcode];
-	if(strlen($lang_ret) == 0)
-		return $lang_default;
-	
-	return $lang_ret;
-}
-
 function _tiptel_normalize_version( $fwvers )
 {
 	$tmp = explode('.', $fwvers);
@@ -497,7 +480,7 @@ psetting('UserPassword|password', 'user' );					# User Password
 # Lang
 psetting('Lang|path', '/yealink/config/Setting/Setting.cfg');
 psetting('Lang|WebLanguage', 'English');	# web interface
-psetting('Lang|ActiveWebLanguage', _tiptel_astlang_to_tiptellang($user['language']) );	# lcd
+psetting('Lang|ActiveWebLanguage', 'German');	# lcd
 
 # Time
 psetting('Time|path', '/yealink/config/Setting/Setting.cfg');
@@ -669,10 +652,9 @@ if (! isGsError($cf) && is_array($cf)) {
 	}                                                  
 }*/
 psetting('Features|DND', $dnd);			# 0 = disable, 1 = enable  //don't function FIXME
-# call waiting (Anklopfen) activate ? //FIXME
-//$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
-//psetting('Features|Call_Waiting', ($callwaiting ? '1' : '0') );	# 0 = disable, 1 = enable
-psetting('Features|Call_Waiting', '1');		# 0 = disable, 1 = enable
+# call waiting (Anklopfen) activate ?
+$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
+psetting('Features|Call_Waiting', ($callwaiting ? '1' : '0') );	# 0 = disable, 1 = enable
 psetting('Features|EnableHotline', '0');	# 0 = disable, 1 = enable
 psetting('Features|Hotlinenumber', '');		# Hotline Number ???
 psetting('Features|BusyToneDelay', '0');	# 0, 3 or 5 sec
@@ -1057,14 +1039,12 @@ if ( in_array($phone_model, array('ip284','ip286'), true) ) {
 	psetting('memory12|Value', $prov_url_tiptel.'pb.php?u='.$user_ext);
 	psetting('memory12|DKtype', '27');
 	psetting('memory12|PickupValue', __('Tel.buch'));
-	psetting('memory12|Label', __('Tel.buch'));
 
 	# XML Browser for Dial-Log on Line Key 3
 	psetting('memory13|path', '/yealink/config/vpPhone/vpPhone.ini');
 	psetting('memory13|Value', $prov_url_tiptel.'dial-log.php?u='.$user_ext);
 	psetting('memory13|DKtype', '27');
 	psetting('memory13|PickupValue', __('Anruf Listen'));
-	psetting('memory13|Label', __('Anruf Listen'));
 
 }
 

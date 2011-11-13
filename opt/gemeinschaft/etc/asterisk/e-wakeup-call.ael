@@ -2,11 +2,12 @@
 //  Wakeup-Call Macros
 //---------------------------------------------------------------------
 
+
 macro wakeuptime-announce (hour,minute) {
 
 	Wait(1);
 	if( "${CHANNEL(language)}" == "en" ) {
-		Playback(/opt/gemeinschaft/sounds/${lang}/wakeup_call_confirmed);
+		Playback(/opt/gemeinschaft/sounds/en-US/wakeup_call_confirmed);
 		//Playback(digits/at);
 		SayNumber(${hour});
 		if( "${minute}" == "0" ) {
@@ -17,7 +18,7 @@ macro wakeuptime-announce (hour,minute) {
 		}
 	}
 	else {
-		Playback(/opt/gemeinschaft/sounds/${lang}/wakeup_call_confirmed);
+		Playback(/opt/gemeinschaft/sounds/de-DE/wakeup_call_confirmed);
 		SayNumber(${hour});
 		Playback(digits/oclock);
 		if( "${minute}" != "0" ) {
@@ -25,7 +26,7 @@ macro wakeuptime-announce (hour,minute) {
 		}
 	}
 
-	return;	
+	return;
 
 };
 
@@ -51,19 +52,44 @@ macro wakeuptime-remove(user) {
 //  Wakeup-Call
 //---------------------------------------------------------------------
 
+
+
+context wakeup-call-select-lang {
+	
+	s => {
+		&caller-count();
+		Set(__lang=de-DE);
+		Answer();
+	begin:
+		Background(/opt/gemeinschaft/sounds/de-DE/wakeup_call_language_selection);
+		Background(/opt/gemeinschaft/sounds/en-US/wakeup_call_language_selection);
+		WaitExten(20);
+	};
+	1=> {
+		Set(CHANNEL(language)=de);
+		Set(__lang=de-DE);
+		goto wakeup-call|s|1;
+	};
+	2=> {
+		Set(CHANNEL(language)=en);
+		Set(__lang=en-US);
+		goto wakeup-call|s|1;
+	};
+	t => {
+		jump s;
+	};
+	i => {
+		jump s;
+	};
+	h => {
+		Hangup();
+	};
+};
+
+
 context wakeup-call {
 
 	s => {
-		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
-		Set(__lang=${gs_userlang_gs});
-		&caller-count();
-
-		AGI(/opt/gemeinschaft/dialplan-scripts/check-group-permission.agi,${user_id},${user_name},wakeup_call);
-		if ("${permission}" != "true") {
-			Verbose(1,### ${user_name} have no wakeup_call permission);
-			Hangup();
-		}
-
 		AGI(/opt/gemeinschaft/dialplan-scripts/wakeup-call-check.agi,${user_name});
 		
 		if ( "${ret}" == "" || "${ret}" == "error" )
@@ -88,7 +114,9 @@ context wakeup-call {
 			Wait(0.5);
 			Playback(vm-goodbye);
 			Hangup();
-	};
+	
+
+	}
 
 };
 
@@ -156,7 +184,7 @@ context wakeup-call-notset {
 		Hangup();
 		
 
-	};
+	}
 
 
 };
@@ -165,13 +193,14 @@ context wakeup-call-notset {
 context wakeup-job {
 
 	s => {
-		AGI(/opt/gemeinschaft/dialplan-scripts/get-gs-language-by-ast-code,${CHANNEL(language)});
-		Answer();
-		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/wakeup_call_announcement);
+		Wait(1);
+		Playback(/opt/gemeinschaft/sounds/de-DE/wakeup_call_announcement);
 		SayUnixTime(,,R);
 		Wait(0.5);
+		Set(CHANNEL(language)=en);
+		Playback(/opt/gemeinschaft/sounds/en-US/wakeup_call_announcement);
+		SayUnixTime(,,R);
 		MusicOnHold();
-	};
+	}
 
-};
+}

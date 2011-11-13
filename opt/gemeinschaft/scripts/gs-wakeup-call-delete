@@ -52,7 +52,7 @@ $opts = @getOptsNoMultiples( '',
 *    call the function
 ***********************************************************/
 
-if ( ! isSet($opts['extension']) ) {
+if (! isSet($opts['extension']) ) {
         gs_script_invalid_usage( $usage );
 }
 

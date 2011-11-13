@@ -4,13 +4,12 @@
 *
 * $Revision$
 *
-* Copyright 2007-2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* Copyright 2007-2009, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
-* Philipp Kempgen <philipp.kempgen@amooma.de>
-* Peter Kozak <peter.kozak@amooma.de>
-* 
-* Author: Daniel Scheller <scheller@loca.net>
+*
+* APS for Polycom SoundPoint IP phones
+* (c) 2009 Daniel Scheller / LocaNet oHG
+* mailto:scheller@loca.net
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -42,7 +41,6 @@ require_once(GS_DIR ."inc/gs-lib.php");
 require_once( GS_DIR .'inc/prov-fns.php' );
 require_once(GS_DIR ."inc/langhelper.php");
 include_once( GS_DIR .'inc/db_connect.php' );
-include_once( GS_DIR .'inc/string.php' );
 
 //---------------------------------------------------------------------------
 
@@ -66,14 +64,14 @@ function _settings_err( $msg='' )
 
 if (! gs_get_conf('GS_POLYCOM_PROV_ENABLED') )
 {
-	gs_log(GS_LOG_DEBUG, 'Polycom provisioning not enabled');
-	_settings_err('Not enabled.');
+	gs_log(GS_LOG_DEBUG, "Polycom provisioning not enabled");
+	_settings_err("Not enabled.");
 }
 
 $requester = gs_prov_check_trust_requester();
-if (!$requester['allowed'])
+if(!$requester["allowed"])
 {
-	_settings_err('No! See log for details.');
+	_settings_err("No! See log for details.");
 }
 
 //--- identify polycom phone
@@ -132,10 +130,10 @@ else
 //--- check if this phone has the XHTML microbrowser and prepare vars
 //--- for directory generator.
 
-switch ($phone_model)
+switch($phone_model)
 {
-        case '300' :
-        case '500' :
+        case "300" :
+        case "500" :
                 $phone_has_microbrowser = FALSE;
                 break;
         default :
@@ -160,7 +158,7 @@ gs_settextdomain( 'gemeinschaft-gui' );
 
 echo '<' . '?xml version="1.0" encoding="UTF-8" standalone="yes"?' . '>' ."\n";
 
-if (!$phone_has_microbrowser)
+if(!$phone_has_microbrowser)
 {
 	//--- this phone does not have microbrowser capabilities, so create
 	//--- a company directory based on the local users table
@@ -179,7 +177,7 @@ if (!$phone_has_microbrowser)
 
 	$rs = $db->execute($query);
 
-	if ($rs->numRows() !== 0)
+	if($rs->numRows() !== 0)
 	{
 		echo '<directory>',"\n";
 		echo '   <item_list>',"\n";
@@ -187,8 +185,8 @@ if (!$phone_has_microbrowser)
 		while($r = $rs->fetchRow())
 		{
 			echo '      <item>',"\n";
-			echo '         <fn>'. htmlEnt($r['fn']) .'</fn>',"\n";
-			echo '         <ln>'. htmlEnt($r['ln']) .'</ln>',"\n";
+			echo '         <fn>'. $r['fn'] .'</fn>',"\n";
+			echo '         <ln>'. $r['ln'] .'</ln>',"\n";
 			echo '         <ct>'. $r['ext'] .'</ct>',"\n";
 			echo '      </item>',"\n";
 		}
@@ -201,6 +199,7 @@ else
 {
 	//--- this phone model has the microbrowser - create speeddials
 	//--- for the key remappings
+
 
 	echo '<directory>',"\n";
 	echo '   <item_list>',"\n";
@@ -218,15 +217,15 @@ else
 	echo '         <bw>0</bw>',"\n";
 	echo '         <bb>0</bb>',"\n";
 	echo '      </item>',"\n";
-	/*
+	
 	echo '      <item>',"\n";
-	echo '         <fn>Ruhe/DND</fn>',"\n";
+	echo '         <fn>', __('Ruhe/DND'), '</fn>',"\n";
 	echo '         <ct>!gsdnd</ct>',"\n";
 	echo '         <sd>3</sd>',"\n";
 	echo '         <bw>0</bw>',"\n";
 	echo '         <bb>0</bb>',"\n";
 	echo '      </item>',"\n";
-	 */
+	
 	echo '      <item>',"\n";
 	echo '         <fn>', __("Einstellungen"), '</fn>',"\n";
 	echo '         <ct>!gsmenu</ct>',"\n";

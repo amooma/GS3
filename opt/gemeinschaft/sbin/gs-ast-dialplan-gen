@@ -141,7 +141,7 @@ function ael_eval_callback( $m )
 	$max_include_depth = 10;
 	if (count($ael_include_stack) > $max_include_depth) {
 		$reason_msg = "Not going to eval #$directive $filename. Max. include depth ($max_include_depth) reached!";
-		echo "; WARNING: $reason_msg"."\n";
+		echo "WARNING: $reason_msg"."\n";
 		gs_log( GS_LOG_WARNING, ael_get_log_indent(1) ."$reason_msg" );
 		$ret = "\n"."// WARNING: $reason_msg"."\n\n";
 	}
@@ -164,7 +164,7 @@ function ael_eval_callback( $m )
 				$reason_msg = 'unknown error';
 			
 			$reason_msg = "Could not read included file \"$filename\" ($reason_msg)!";
-			echo "; WARNING: $reason_msg"."\n";
+			echo "WARNING: $reason_msg"."\n";
 			gs_log( GS_LOG_WARNING, ael_get_log_indent(0) ."$reason_msg" );
 			$ret = "\n"."// WARNING: $reason_msg"."\n\n";
 		}
@@ -204,7 +204,7 @@ function ael_eval_callback( $m )
 					$reason_msg = 'exit '.$err /*.' - '. implode(' - ',$out)*/;
 				
 				$reason_msg = "Could not exec included script \"$filename\" ($reason_msg)!";
-				echo "; WARNING: $reason_msg"."\n";
+				echo "WARNING: $reason_msg"."\n";
 				gs_log( GS_LOG_WARNING, ael_get_log_indent(0) ."$reason_msg" );
 				$ret = "\n"."// WARNING: $reason_msg"."\n\n";
 			}
@@ -218,7 +218,7 @@ function ael_eval_callback( $m )
 
 
 
-echo "; Generating extensions.ael ...\n";
+echo "Generating extensions.ael ...\n";
 
 $gs_extensions_ael_filename = ael_file_realname( $gs_extensions_ael_filename );
 array_push( $ael_include_stack, $gs_extensions_ael_filename );
@@ -235,7 +235,7 @@ $content = preg_replace(
 
 $f = @fOpen($extensions_ael_filename, 'wb');
 if (! $f) {
-	echo "; ERROR: Could not open $extensions_ael_filename for writing!\n";
+	echo "ERROR: Could not open $extensions_ael_filename for writing!\n";
 	gs_log( GS_LOG_WARNING, "Could not open extensions.ael for writing" );
 	exit(1);
 }
@@ -248,11 +248,11 @@ $content =
 "\n". $content;
 $b = @fWrite($f, $content, strLen($content));
 if ($b < 1) {
-	echo "; ERROR: Failed to write to $extensions_ael_filename!\n";
+	echo "ERROR: Failed to write to $extensions_ael_filename!\n";
 	gs_log( GS_LOG_WARNING, "Failed to write to extensions.ael" );
 	exit(1);
 } else {
-	echo "; extensions.ael written.\n";
+	echo "extensions.ael written.\n";
 }
 @fClose($f);
 

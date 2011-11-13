@@ -140,34 +140,34 @@ class GS_Softkeys_snom
 		# fix some key definitions
 		#
 		foreach ($this->_keys as $key_name => $key_defs) {
-		foreach ($key_defs as $inh_slf => $key_def) {
+			foreach ($key_defs as $inh_slf => $key_def) {
 			
-			# make sure the user does not set keys for pickup groups
-			# which he/she does not belong to
-			#
-			if (in_array($key_def['function'], array('dest', 'blf'), true)
-			&&  subStr($key_def['data'],0,2) === '*8') {
-				if (preg_match('/(?:^|[:])\*8\*([0-9]+)/S', $key_def['data'], $m)) {
-					$pgrpid = (int)lTrim($m[1],'0');
-				} else {
-					$pgrpid = 0;
-				}
-				if ($pgrpid > 0) {
-					if (! array_key_exists($pgrpid, $pgroups))
+				# make sure the user does not set keys for pickup groups
+				# which he/she does not belong to
+				#
+				if (in_array($key_def['function'], array('dest', 'blf'), true)
+				&&  subStr($key_def['data'],0,2) === '*8') {
+					if (preg_match('/(?:^|[:])\*8\*([0-9]+)/S', $key_def['data'], $m)) {
+						$pgrpid = (int)lTrim($m[1],'0');
+					} else {
 						$pgrpid = 0;
-				}
-				if ($pgrpid < 1) {
-					unset($this->_keys[$key_name][$inh_slf]);
-				} else {
-					$this->_keys[$key_name][$inh_slf]['data' ] =
-						'*8*'. str_pad($pgrpid,5,'0',STR_PAD_LEFT);
-					$title = mb_subStr(trim($pgroups[$pgrpid]),0,20);
-					$this->_keys[$key_name][$inh_slf]['label'] =
-						'Grp. '. ($title != '' ? $title : $pgrpid);
-					unset($pgroups[$pgrpid]);
+					}
+					if ($pgrpid > 0) {
+						if (! array_key_exists($pgrpid, $pgroups))
+							$pgrpid = 0;
+					}
+					if ($pgrpid < 1) {
+						unset($this->_keys[$key_name][$inh_slf]);
+					} else {
+						$this->_keys[$key_name][$inh_slf]['data' ] =
+							'*8*'. str_pad($pgrpid,5,'0',STR_PAD_LEFT);
+						$title = mb_subStr(trim($pgroups[$pgrpid]),0,20);
+						$this->_keys[$key_name][$inh_slf]['label'] =
+							'Grp. '. ($title != '' ? $title : $pgrpid);
+						unset($pgroups[$pgrpid]);
+					}
 				}
 			}
-		}
 		}
 		
 		# find free keys for the remaining pickup groups (if any)

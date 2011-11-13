@@ -37,7 +37,7 @@ include_once( GS_DIR .'inc/get-listen-to-ips.php' );
 
 function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null )
 {
-	if (! preg_match( '/^[a-zA-Z\d]+$/', $user ))
+	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
 	
 	if (! in_array( $src, array('internal','external'), true ))
@@ -253,7 +253,7 @@ function gs_ringtone_set( $user, $src, $bellcore, $change_file=false, $file=null
 		$rand = rand(10000,99999).time();
 		
 		shell_exec( 'mpg123 -m -r 8000 -w - -n 500 -q \''. $file .'\' > \'/opt/gemeinschaft/htdocs/prov/ringtones/'. $rand .'.wav\'' );
-		shell_exec( 'sox \'/opt/gemeinschaft/htdocs/prov/ringtones/'. $rand .'.wav\' -r 8000 -c 1 -2 \'/opt/gemeinschaft/htdocs/prov/ringtones/'. $ext .'-'. time() .'.wav\'' );
+		shell_exec( 'sox \'/opt/gemeinschaft/htdocs/prov/ringtones/'. $rand .'.wav\' -r 8000 -c 1 -w \'/opt/gemeinschaft/htdocs/prov/ringtones/'. $ext .'-'. time() .'.wav\'' );
 		shell_exec( 'rm \'/opt/gemeinschaft/htdocs/prov/ringtones/'. $rand .'.wav\'' );
 		
 	} else {

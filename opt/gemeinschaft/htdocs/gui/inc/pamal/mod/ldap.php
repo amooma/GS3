@@ -1,31 +1,5 @@
 <?php
-/*******************************************************************\
-*            Gemeinschaft - asterisk cluster gemeinschaft
-* 
-* $Revision$
-* 
-* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
-* http://www.amooma.de/
-* Sascha Daniels <sd@alternative-solution.de> 
-* 
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version.
-* 
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-* 
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-* MA 02110-1301, USA.
-\*******************************************************************/
-
 defined('PAMAL_DIR') or die('No direct access.');
-
 
 class PAMAL_auth_ldap extends PAMAL_auth
 {
@@ -33,25 +7,54 @@ class PAMAL_auth_ldap extends PAMAL_auth
 	{
 		$this->_user = $this->_getUser();
 	}
+
 	function _getUser()
 	{
-		include_once( PAMAL_DIR .'mod/functions.php' ); 
-		// Check if we have an LDAP USER
-		$user_found=_searchUser_ldap();
-		if ( $user_found )
+		$ldapproto      = gs_get_conf( 'GS_LDAP_PROTOCOL' );
+		$ldapuser       = trim( @$_REQUEST['login_user'] );
+		$ldapdn         = gs_get_conf( 'GS_LDAP_PROP_USER' ) . '=' . $ldapuser . ',' . gs_get_conf( 'GS_LDAP_SEARCHBASE' );
+		$ldappass       =  @$_REQUEST['login_pwd'];
+		$ldapsearchdn   = gs_get_conf( 'GS_LDAP_BINDDN' );
+		$ldapsearchpass = gs_get_conf( 'GS_LDAP_PWD' );
+		
+		$ldapconn = @ ldap_connect( gs_get_conf( 'GS_LDAP_HOST' ) );
+		@ ldap_set_option( $ldapconn, LDAP_OPT_PROTOCOL_VERSION, (int)$ldapproto );
+		if ( !$ldapconn ) {
+			gs_log( GS_LOG_WARNING, 'Unable to connect to LDAP server' );
+			return false;
+		}
+
+		if ( $ldapuser== '' || $ldappass== '' )
+			return false;
+			
+		if ( $ldapconn ) {
+			$ldapbind = @ ldap_bind( $ldapconn, $ldapsearchdn, $ldapsearchpass );
+			if ( $ldapbind ) {
+				$searchresult = @ ldap_search( $ldapconn, 
+							gs_get_conf( 'GS_LDAP_SEARCHBASE' ),
+							'(' . gs_get_conf( 'GS_LDAP_PROP_UID' ) . '=' . $ldapuser . ')',
+							array()
+							);
+				$ldapinfo = ldap_get_entries( $ldapconn, $searchresult );
+				if ( $ldapinfo['count'] != 1 ) {
+					gs_log( GS_LOG_DEBUG, 'Number of users found in LDAP is not 1 (' . $ldapinfo['count'] . ')' );
+					return false;
+				}
+			}
+			else
+			{
+				gs_log( GS_LOG_DEBUG, 'Unable to bind to LDAP server as ' . $ldapsearchdn . ', ' . ldap_error($ldapconn) );
+				return false;
+			}
+		}
+		$ldapbind = @ ldap_bind( $ldapconn, $ldapinfo[0]['dn'], $ldappass );
+		if ( $ldapbind ) {
+			gs_log( GS_LOG_DEBUG, 'User ' . $ldapinfo[0]['dn'] . ' found!' );
+			return $ldapuser;
+		}
+		else
 		{
-			$user=_getUser_ldap();
-		}
-		else {
-			//USER not found in LDAP
-			//guess user is in gemeinschaft
-			$user=_getUser_gemeinschaft();
-		}
-		if ( $user ) 
-		{
-			return $user;
-		}
-		else {
+			gs_log( GS_LOG_DEBUG, 'Unable to bind to LDAP server as ' . $ldapinfo[0]['dn'] . ', ' . ldap_error($ldapconn) );
 			return false;
 		}
 	}

@@ -24,8 +24,8 @@ Listen 18443
 	# debugging
 	
 	# Debian
-	SSLCertificateFile      /etc/apache2/ssl/openstage-crt.pem
-	SSLCertificateKeyFile   /etc/apache2/ssl/openstage-key.pem
+	SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
+	SSLCertificateKeyFile   /etc/ssl/private/ssl-cert-snakeoil.key
 	
 	# RedHat
 	#SSLCertificateFile      /etc/httpd/ssl/openstage-crt.pem

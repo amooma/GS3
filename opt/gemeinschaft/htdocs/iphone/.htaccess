@@ -1,0 +1,7 @@
+Options FollowSymLinks
+
+RewriteEngine on
+RewriteBase /gemeinschaft/iphone
+
+RewriteRule ^index\.php$ - [L]
+RewriteRule ^([^/]+)(?:/([^/]+))? index.php?action=$1&id=$2 [QSA,L]

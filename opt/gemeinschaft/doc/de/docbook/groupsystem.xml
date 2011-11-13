@@ -181,7 +181,7 @@ in Gemeinschaft dient.
           				</listitem>
         			</varlistentry>
 				<varlistentry>
-          				<term>login_queues</term>
+          				<term>queue_member</term>
           				<listitem>
             					<para>Einloggen in eine Warteschlange</para>
           				</listitem>

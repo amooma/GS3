@@ -3,7 +3,7 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$  
+* $Revision$
 * 
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
@@ -96,7 +96,7 @@ function __($str)
 }
 }
 
-function email_notify( $mailbox, $uid, $info, $about, $email )
+function email_notify( $mailbox, $uid, $info, $about, $email, $delete=1 )
 {
 	global $db;
 	
@@ -124,7 +124,7 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	$err=0; $out=array();
 	@exec( 'sudo chmod a+r '. qsa($origfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
 	if ($err != 0) {
-		gs_log( GS_LOG_WARNING, "Can't read origfile \"$origfile\"" );
+		gs_log( GS_LOG_WARNING, 'Can\'t read \"$origfile\"' );
 		return false;
 	}
 	
@@ -147,6 +147,18 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 		if (! $hostname) $hostname = 'localhost';
 	} else {
 		$hostname = 'localhost';
+	}
+
+	$mailname = $hostname;
+
+	if ( file_exists  ( '/etc/mailname'  ) ) {
+		
+		$handle = fopen("/etc/mailname", "r");
+		$mn = fgets  ( $handle );
+		if( $mn ) {
+			$mailname = trim( $mn  );
+		}
+		fclose ( $handle );
 	}
 	
 	$subject = sPrintF(__('Neue Voicemail von %s'),
@@ -197,12 +209,12 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	$GS_EMAIL_DELIVERY = gs_get_conf('GS_EMAIL_DELIVERY');
 	
 	if (! file_exists($outfile) || ! is_readable($outfile)) {
-		gs_log( GS_LOG_WARNING, "Can\'t read outfile \"$outfile\"" );
+		gs_log( GS_LOG_WARNING, 'Can\'t read \"$outfile\"' );
 		return false;
 	}
 	$fh = @fOpen($outfile, 'rb');
 	if (! $fh) {
-		gs_log( GS_LOG_WARNING, "Can\'t read outfile \"$outfile\"" );
+		gs_log( GS_LOG_WARNING, 'Can\'t read \"$outfile\"' );
 		return false;
 	}
 	
@@ -212,8 +224,8 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 		
 		$boundary = '=_'.strToUpper(md5(uniqid(time())));
 		$mail_headers = array();
-		$mail_headers[] = "From: \"Gemeinschaft\" <root>";
-		$mail_headers[] = "Reply-To: \"". 'Nicht antworten' ."\" <noreply@noreply.local>";
+		$mail_headers[] = "From:" .  gs_get_conf('GS_EMAIL_NAME') . "<". gs_get_conf('GS_EMAIL_ADDRESS') .">";
+		$mail_headers[] = "Reply-To: \"". __( 'Nicht antworten' ) ."\"<noreply@". $mailname . ">";
 		$mail_headers[] = "MIME-Version: 1.0";
 		$mail_headers[] = "Content-Type: multipart/mixed; boundary=\"$boundary\"";
 		
@@ -253,6 +265,9 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 			implode("\n", $mail_headers)
 			);
 		unset($mime_body);
+
+		if( $delete == 2)
+			 deletevm( $uid, $mailbox, $info['fld'], $info['file'] );
 		return $ok;
 		
 	}
@@ -265,9 +280,9 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 			strToLower(subStr( gs_get_conf('GS_INTL_LANG'),0,2)),
 			GS_DIR .'lib/phpmailer/language/' );
 		$mail->Hostname = $hostname;
-		$mail->From = 'root@'.$hostname;
-		$mail->FromName = 'Gemeinschaft';
-		$mail->AddReplyTo( '', 'Nicht antworten' );
+		$mail->From = gs_get_conf('GS_EMAIL_ADDRESS');
+		$mail->FromName =  gs_get_conf('GS_EMAIL_NAME');
+		$mail->AddReplyTo( '', __( 'Nicht antworten' ) );
 		$mail->AddAddress($email,'','');
 		$mail->Subject = $subject;
 		$mail->Body = $body;
@@ -301,18 +316,65 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 			}
 		}
 		unset($mail);
+
+		if( $delete == 2)
+			 deletevm( $uid, $mailbox, $info['fld'], $info['file'] );
+
 		return $ok;
 		
 	}
 }
 
+function deletevm( $uid, $extension, $folder, $file ) {
 
-$our_host_id = (int)gs_get_listen_to_primary_id();
-if (! $our_host_id) {
-	gs_log(GS_LOG_WARNING, "Could not get our primary host ID!");
-	echo "Could not get our primary host ID!\n";
-	exit(1);
-}
+	global $db;
+
+	$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
+
+	if (! $GS_INSTALLATION_TYPE_SINGLE) {
+		# find host
+		#
+		$rs = $db->execute(
+		'SELECT `u`.`host_id` `id`, `h`.`host`
+		FROM
+			`users` `u` LEFT JOIN
+			`hosts` `h` ON (`h`.`id`=`u`.`host_id`)
+		WHERE
+			`u`.`id`='. (int)$uid
+		);
+		$host = $rs->fetchRow();
+		if (! $host)
+			die( 'Failed to get host.' );
+		
+		$our_host_ids = @gs_get_listen_to_ids();
+		if (! is_array($our_host_ids))
+			die( 'Failed to get our host IDs.' );
+		
+		$user_is_on_this_host = in_array($host['id'], $our_host_ids, true);
+		} else 	{
+			$user_is_on_this_host = true;
+		}
+
+
+		$cmd = GS_DIR .'sbin/vm-local-del '. qsa( $extension ) .' '. qsa($folder) .' '. qsa($file);
+		$err=0; $out=array();
+		if ($user_is_on_this_host) {
+			# user is on this host
+			@exec( 'sudo '. $cmd .' 2>>/dev/null', $out, $err );
+		} else {
+			# user is not on this host
+			@exec( GS_DIR .'sbin/remote-exec-do '. qsa($host['host']) .' '. qsa($cmd) .' 10 2>>/dev/null', $out, $err );
+		}
+
+	}
+
+
+	$our_host_id = (int)gs_get_listen_to_primary_id();
+	if (! $our_host_id) {
+		gs_log(GS_LOG_WARNING, "Could not get our primary host ID!");
+		echo "Could not get our primary host ID!\n";
+		exit(1);
+	}
 
 $uniqueids = array();
 
@@ -347,16 +409,19 @@ foreach ($files as $filename) {
 		[duration] => 7
 	)
 	*/
+	if (strpos(@$about['callerid'], '<')) {
+		if (preg_match('/<([^>]+)/S', @$about['callerid'], $m))
+			$info['cidnum' ] = $m[1];
+		else
+			$info['cidnum' ] = '';
 	
-	if (preg_match('/<([^>]+)/S', @$about['callerid'], $m))
-		$info['cidnum' ] = $m[1];
-	else
-		$info['cidnum' ] = '';
-	
-	if (preg_match('/^([^<]*)/S', @$about['callerid'], $m))
-		$info['cidname'] = trim($m[1], ' "');
-	else
-		$info['cidname'] = '';
+		if (preg_match('/^([^<]*)/S', @$about['callerid'], $m))
+			$info['cidname'] = trim($m[1], ' "');
+		else
+			$info['cidname'] = '';
+	} else {
+		$info['cidnum'] = @$about['callerid'];
+	}
 	
 	$uniqueid = array(
 		'mailbox'    =>              $mailbox     ,
@@ -494,11 +559,11 @@ WHERE `id`='. (int)$r['id']
 	if (@$send_notification) {
 		if ($uid_curr > 0) {
 			$email_notify = (int)$db->executeGetOne( 'SELECT `email_notify` FROM `vm` WHERE `user_id`='. $uid_curr  );
-			if ($email_notify == 1) {
+			if ($email_notify >= 1) {
 				$email = $db->executeGetOne( 'SELECT `email` FROM `users` WHERE `id`='. $uid_curr );
 				if ($email != '') {
 					gs_log(GS_LOG_DEBUG, "Notify user_id $uid_curr, email \"$email\"" );
-					$ok = email_notify( $mailbox, $uid_curr, $info, $about, $email );
+					$ok = email_notify( $mailbox, $uid_curr, $info, $about,	$email, $email_notify );
 					if (! $ok)
 						gs_log(GS_LOG_WARNING, "Failed to send notification to \"$email\"" );
 				}

@@ -56,12 +56,11 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	$phone_types['snom-320'    ] = 'Snom 320';
 	$phone_types['snom-360'    ] = 'Snom 360';
 	$phone_types['snom-370'    ] = 'Snom 370';
+	$phone_types['snom-820'    ] = 'Snom 820';
+	$phone_types['snom-821'    ] = 'Snom 821';
 }
 if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 	$phone_types['snom-m3'    ] = 'Snom M3';
-}
-if (gs_get_conf('GS_SNOM_PROV_M9_ACCOUNTS')) {
-	$phone_types['snom-m9'    ] = 'Snom M9';
 }
 if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 	$phone_types['siemens-os15'] = 'Siemens OpenStage 15';
@@ -117,6 +116,9 @@ if (gs_get_conf('GS_POLYCOM_PROV_ENABLED')) {
 	$phone_types['polycom-spip-670'] = 'Polycom SoundPoint IP 670';
 }
 
+if (gs_get_conf('GS_ELMEG_PROV_ENABLED')) {
+	$phone_types['elmeg-290'  ] = 'ElmegIP 290';
+}
 
 $per_page = (int)GS_GUI_NUM_RESULTS;
 
@@ -198,20 +200,20 @@ if ($action === 'view') {
 	if ($page > 0) {
 		echo
 		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
-		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust.png" />',
 		'</a>', "\n";
 	} else {
 		echo
-		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust-dis.png" />', "\n";
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust-dis.png" />', "\n";
 	}
 	if ($page < $num_pages-1) {
 		echo
 		'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
-		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust.png" />',
 		'</a>', "\n";
 	} else {
 		echo
-		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust-dis.png" />', "\n";
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust-dis.png" />', "\n";
 	}
 ?>
 	</td>

@@ -1,9 +1,6 @@
-Русский
+Russian
 480iCT prompts| 
-Upload System Info| Загрузка системной информации
-Directory| Каталог
-Callers List| Список Вызовов
-Do not unplug phone!|  НЕ ОТКЛЮЧАЙТЕ ТЕЛЕФОН
+No handsets are currently paired| Нет спаренной Гарнитуры.
 Cordless Handset Feature Key Configuration| Программир.функц.клавиш
 None| Нет
 Pair| Соединение
@@ -12,8 +9,6 @@ Pairing successful| Соед-е установлено
 Pairing failed       | Соед-е не установлено
 Try again| Попробуйте еще раз
 Remove Handset:| Отключить Гарнитуру
-No handsets are| Нет спаренной
-currently paired| Гарнитуры
 Attempting to remove| Попытка удаления
 Wait...| Ждите...
 Removal successful| Удаление завершено
@@ -29,36 +24,38 @@ Handset Pairing| Гарнитура Подкл.
 Handset Keys| Кнопки Гарнитуры
 Feature Key programming complete.| Настройка функциональных клавиш
 Two Call Support| Поддержка двух вызовов
-| 
 480i prompts| 
-Upload System Info| Загрузка системной информации
-Directory| Каталог
-Callers List| Список Вызовов
-  ERROR: invalid port|   ОШИБКА: неверн порт
-    NOT MATCH !!!|   НЕ СОВПАДАЮТ !  
-  Invalid password   |   Неверный пароль  
+Time Format| Формат Времени
+    NOT MATCH !!!| НЕ СОВПАДАЮТ !
+Erase local config?| Удалить конфиг.?
+Alternate Server| Резервный Сервер
+Contrast Level| Ур-нь Контраста
+TypeService SIP| Тип Сервиса SIP
+TypeService RTP| Тип Сервиса RTP
+TypeService DSCP| ТипСервиса DSCP
+TypeService RTCP| ТипСервиса RTCP
+Dn| Вниз
+Rt| Вправо
+Lf| Левый
+Del| Удалить
+System Info Upload| Загрузка системной информации
+Up| Вверх
+Copyright| Авторские
+Reset| Сброс
+Phone will restart automatically after finishing.| После завершения, телефон перезагрузиться автоматически.
+Please login| Авторизуйтесь
+Incorrect password| Неверный пароль
+Reset Configuration?| Сброс конфигурации?
+Cfg. Svr.| Срв. Нстр.
 Enable| Включить
-Disable| Отключить
-Checking for Firmware| Проверка новой прошивки
-System Info| Системная Информация
-Do not unplug phone!|  НЕ ОТКЛЮЧАЙТЕ ТЕЛЕФОН
-Downloading| Загрузка
-configuration| конфигурации
-New Firmware| Новая прошивка:
-Restarting...| Перезапуск...
-Starting in Generic| Старт в
-SIP Mode| режиме SIP
-Starting in| Старт в
-Generic SIP Mode| режиме SIP
-Starting in| Старт в
-AastraLink Mode|  режиме AastraLink 
-Please log in| Авторизуйтесь
-Downloading| Загрузка
-Language Packs|  языковых пакетов
+List| Список
+Move Up| Вверх
+Move Down| Вниз
 Firmware Loaded| Прошивка загружена
 802.1x Authenticating| Аутентиф-я 802.1x 
 LLDP| LLDP
 DHCP: Waiting for IP| DHCP: Ожидание IP
+Bluetooth Upgrade .. Please wait| Обновление Bluetooth.. Подождите
 Contacting Redirector| Обращение к переадр.
 Redirecting Step 1| Переадресация Шаг 1
 Redirecting Step 2| Переадресация Шаг 2
@@ -67,8 +64,15 @@ Redirecting Step 4| Переадресация Шаг 4
 Redirecting Step 5| Переадресация Шаг 5
 Redirecting Step 6| Переадресация Шаг 6
 Auto Discovery...| Автоопределение..
+Starting in Generic SIP Mode| Старт в режиме SIP
+Starting in AastraLink Mode| Старт в режиме AastraLink 
 Updating config| Обновление конфигурации
 Waiting assignment| Ожидание задачи
+Checking for Firmware  Do not unplug phone!| Проверка прошивки. Не выключайте телефон!
+New Firmware. Do not unplug phone!| Новая прошивка. Не выключайте телефон!
+New Firmware. Restarting...| Новая прошивка. Перезагрузка…
+Downloading configuration| Загрузка конфигурации
+Downloading Language Packs| Загрузка языковых пакетов
 Network| Сеть
 UPnP device not found| UPnP ус-во не найдено
 Port Map In Progress| Привязка Портов
@@ -85,19 +89,17 @@ No available lines| Нет доступных линий
 Current Password:| Старый Пароль:
 New Password:| Новый Пароль:
 Re-enter Password:| Повторите Пароль
-     Password Changed|   Пароль изменен  
+  Password Changed| Пароль изменен
 Change| Изменить
 Use DHCP?| Использовать DHCP?
 Advanced| Расшир
 DNS| DNS
 Ringer | Звонок
-  ERROR: invalid port|   ОШИБКА: неверн порт
+ ERROR: invalid port| ОШИБКА: неверн порт
 SIP Register| SIP Регистратор
 Register?| Зарегистрировать?
 Authentication Name| Имя для аутентификац
 Nortel NAT| Nortel NAT
-Are you sure you wish| Вы уверены что хотите
-to restart the phone?| перезагруз телефон?
 Reset phone to| Сбросить телефон в
 factory defaults?| заводские настройки?
 Setting phone back to| Вернуть настройки в
@@ -108,8 +110,6 @@ Factory Defaults| заводские
 Password: | Пароль:
 Quit| Выход
 More| Подробнее
-Time Format| Формат времени
-Time Format:| Формат времени:
 Timeserver Address:| Адрес серв. времени:
 Network Time Disabled| Сетевое Время Откл.
 Dialing| Набор
@@ -120,7 +120,6 @@ Pickup| Перехват
 Previous| Предыдущий
 Enter Time:| Укажите время:
 Message Waiting| Ожидающее Сообщение
-DHSG| DHSG
 Live Dialpad| Live Dialpad
 Live Dialpad is| Live Dialpad это
 Options List| Список Функций
@@ -139,7 +138,10 @@ Gateway IP Address:| IP-адрес Шлюза
 Enter Date (y-m-d):| Укажите дату(г-м-д):
 Enter| Ввод
 Enable| Включить
-Disable| Отключить
+Full 10Mbps| Full 10Mbps
+Full 100Mbps| Full 100Mbps
+Half 10Mbps| Half 10Mbps
+Half 100Mbps| Half 100Mbps
 Default| По умолч-ю
 Add New| Доб. Новый
 DeleteList| Уд. Список
@@ -148,10 +150,8 @@ Directory?| Каталог?
 Enter Number:| Укажите Номер:
 Network disconnected| Сеть не подключена
 Network connected| Сеть подключена
-OK| ОК
 Entry Saved| Запись сохранена
 Entry Removed| Запись Удалена
-Enter Name:| Укажите Имя:
 Private| Частный
 Public| Публичный
 Delete entry?| Удалить запись?
@@ -167,6 +167,7 @@ Copy| Копировать
 Select| Выбор
 Voicemail| Голосовая Почта
 DeleteItem| УдалЗапись
+Delete All| УдалВсе
 Entry copied to| Запись скопирована в
 Entry Exists| Запись уже существует
 All items erased| Все записи удалены
@@ -175,12 +176,12 @@ Resume| Восстан-ть
 EditNum| РедактНом.
 DeleteList again to| УдалСписок снова на
 Delete again to| Удалить снова на
+erase this item| удалить эту запись
+erase all calls| удалить все вызовы
  new caller|  новый абонент
  new callers|  новые аб-ты
 Press 1st letter| Нажмите 1ю букву
 Handset | Трубка
-erase all calls| удалить все вызовы
-erase this item| удалить эту запись
  Missed Call|  Пропущенный вызов
  Missed Calls|  ПропущенныеВызовы
 Call Forward Mode| Режим Переадресации
@@ -189,7 +190,6 @@ CFWD Busy| Переадр.Занято
 CFWD NoAnswer| Переадр.Нет ответа
 Call| Вызов
 Select TFTP| Выбор TFTP
-Erase local config?| Удалить конфигурацию?
 Use %c for new| Исп.%c для нового
 Use %c to view| Исп.%c для просм
 Download Protocol| Протокол Загрузки
@@ -207,17 +207,16 @@ Softkeys and XML| Софтклавиши и XML
 Softkeys Configuration| Настройка Софтклавиш
 Bottom Keys| Нижние клавиши
 Top Keys| Верхние клавиши
+Page1| Стр.1
+Page2| Стр.2
+Page3| Стр.3
+Page4| Стр.4
+Page5| Стр.5
 Idle| Свободный
 Outgoing| Исходящий
 Empty| Пустой
-XML Application URI:| XML URL:
-XML Application Title:| Название XML-приложения:
 Enter server name/IP:| УкажитеИмя/IPСервера:
 Enter HTTPS port:| Укажите HTTPS порт:
-Type of Service DSCP| Тип Сервиса DSCP
-Type of Service SIP| Тип Сервиса SIP
-Type of Service RTP| Тип Сервиса RTP
-Type of Service RTCP| Тип Сервиса RTCP
 Erase| Удалить
 Proxy IP/Port| IP/Порт Прокси
 Registrar IP/Port| IP/ПортРегистрат.
@@ -244,83 +243,82 @@ Primary Path| Основной Маршрут
 Alternate Path| Альтернативн. Маршрут
 Logging in| Вход
 Login Failed| Вход неудачный
-Enable| Включить
 Enable?| Включить?
 Check Expires| Проверить Срок
-Check Expires?| Проверить Срок?
 Check Hostnames| Проверить Имя Хоста
-Check Hostnames?| Проверить Имя Хоста?
 Conf. Unavailable| Конфигурац.Недоступна
 Ringing...| Вызов...
 Error Messages| Сообщения об Ошибках
 No Error Messages| Нет Сообщ. об Ошибках
 Download Options| Настройка Загрузки
-| 
-Upload| Загрузка 
+Abc| Абв
+123| 123
+&%*| &%*
+Abc2| Абв2
+A # &| А # &
+  Invalid password   |   Неверный пароль   
+Upload Sys Info| Загрузка системной информации
 9133i prompts| 
-Upload System Info| Загрузка системной информации
-Directory| Каталог
-Callers List| Список Вызовов
-Do not unplug phone!|  НЕ ОТКЛЮЧАЙТЕ ТЕЛЕФОН
-Checking for new| Проверка
-firmware| новой прошивки
-Move Up| Вверх
-Move Down| Вниз
-Global| Глобальные
-Enable| Включить
-Disable| Отключить
-Call Hold Reminder| Удержание вызова Напоминание
-Call Hold Reminder During Active Calls| Удержание вызова напоминание ходе активных звонков
-Dial| Набор
-Redirecting| Переадресация
-Step 1| Шаг 1
-Redirecting| Переадресация
-Step 2| Шаг 2
-Redirecting| Переадресация
-Step 3| Шаг 3
-Redirecting| Переадресация
-Step 4| Шаг 4
-Redirecting| Переадресация
-Step 5| Шаг 5
-Redirecting| Переадресация
-Step 6| Шаг 6
-Firmware | Прошивка
-Loaded| загружена
-802.1x| 802.1x
-Authenticating| Аутентификация
+Password Changed| Пароль изменен
+Time Format| Формат Времени
+Erase local cfg?| Удалить Конф-ю?
+TypeService SIP| Тип Сервиса SIP
+TypeService RTP| Тип Сервиса RTP
+TypeService DSCP| ТипСервиса DSCP
+TypeService RTCP| ТипСервиса RTCP
+Alternate Server| Резервный Сервер
+Contrast Level| Ур-нь Контраста
+Options List| Список Функций
+DELETE to erase item  or # to erase Number| УДАЛИТЬ-стереть пункт, #-номер
+Upload Sys Info| Загрузка системной информации
+Directory Empty. Use Save to add| Каталог пуст. Нажмите кл. СОХР
+  NOT MATCH !!!| НЕ СОВПАДАЮТ !
+DELETE again to erase this item| Удалить снова на удалить эту запись
+System Info Upload| Загрузка системной информации
+Phone will restart after| Телефон после перезагрузки
+Copyright| Авторские
+Reset| Сброс
+Use DHCP?| Использовать DHCP?
+Full 10Mbps| Full 10Mbps
+Full 100Mbps| Full 100Mbps
+Half 10Mbps| Half 10Mbps
+Half 100Mbps| Half 100Mbps
+Please login| Авторизуйтесь
+Incorrect password| Неверный пароль
+Reset Configuration?| Сброс конфигурации?
+Cfg. Svr.| Срв. Нстр.
+Net disconnected| Сеть не подклю.
+Live Dialpad| Live Dialpad
+Firmware Loaded| Прошивка
+802.1x Authenticating| Аутентификация 802.1x
 LLDP| LLDP
-Initializing| Инициализация
-network| сети
+Initializing network| Инициализация сети
 Bluetooth Upgrade| Обновление Bluetooth
 Contacting Redirector| Связаться со службой переадресации…
+Redirecting Step 1| Шаг переадресации 1
+Redirecting Step 2| Шаг переадресации 2
+Redirecting Step 3| Шаг переадресации 3
+Redirecting Step 4| Шаг переадресации 4
+Redirecting Step 5| Шаг переадресации 5
+Redirecting Step 6| Шаг переадресации 6
 Auto Discovery| АвтоПоиск
-Starting in| Старт в
-Generic SIP Mode| режиме SIP
-Starting in| Старт в
- AastraLink Mode|  режиме AastraLink 
-Updating| Обновление
- configuration|  конфигурации
-Waiting| Ожидание
-assignment|  задачи
-Checking for Firmware| Проверка новой прошивки
-New Firmware:| Новая прошивка:
-PLEASE DO NOT| ПОЖАЛУЙСТА, НЕ
-UNPLUG THE PHONE| Отключите телефон
-New Firmware| Новая прошивка
-Downloading| Загрузка
-Language Packs|  языковых пакетов
+Starting in Generic SIP Mode| Старт в режиме SIP
+Starting in Aastra Link Mode| Старт в режиме Aastra Link 
+Updating configuration| Обновление конфигурации
+Waiting assignment| Ожидание задачи
+Checking for new firmware| Проверка новой прошивки
+New Firmware: PLEASE DO NOT UNPLUG THE PHONE| Новая прошивка: НЕ ОТКЛЮЧАЙТЕ ТЕЛЕФОН
+New Firmware: Restarting...| Новая прошивка:Перезагрузка…
+Downloading configuration| Загрузка конфигурации
+Downloading Language Packs| Загрузка языковых пакетов
 Network| Сеть
 UPnP Gateway Not Found| UPnP шлюз не найден
-UPnP Port Map| UPnP привязка 
-In Progress| портов в процессе
-UPnP Port Map| UPnP привязка портов
-incomplete| не завершена
+UPnP Port Map In Progress| UPnP привязка портов в процессе
+UPnP Port Map Incomplete| UPnP привязка портов не завершена
 DSP| DSP
 SIP| SIP
 Tone| Тон
-Registering with| 
-the voice| Регистрация в
-network...|  в голосовой сети...
+Registering with the voice network...| Регистрация в голосовой сети...
 Web| Веб
 Done| Конец
 Cannot use| Эту прошивку
@@ -329,15 +327,10 @@ All lines in use| Все линии заняты
 Current Password| Текущий Пароль
 New Password| Новый пароль
 Enter Again| Укажите еще раз
-  NOT MATCH !!!|   НЕ СОВПАДАЮТ !  
-     Password Changed|   Пароль изменен  
 Ringer volume   | Громкость Звонка
-Time Format:\n12h| Форм. Врем:\n12ч
-Time Format:\n24h| Форм. Врем:\n24ч
-Contrast| Контраст
 DELETE again to| Еще раз УДАЛИТЬ
+erase all calls| очистить вызовы
 Caller is erased| Контакт удален
-Callers List is| Список звонящих
 Network Time| Время в Сети
 Change| Изменить
 Options| Настройки
@@ -354,8 +347,10 @@ DHCP\nON| DHCP\nВКЛ
 DHCP\nOFF| DHCP\nВЫКЛ
 Enable?\nYes| Включить?\nДа
 Enable?\nNo| Включить?\nНет
+Check Expires| ПроверСроки
 Check Expires?\nYes| ПроверСроки?\nДа
 Check Expires?\nNo| Пров.Сроки?\nНет
+Check Hostnames| Проверить Имена
 Check Hostnames?\nYes| Проверить Имена?\nДа
 Check Hostnames?\nNo| Проверить Имена?\nНет
 Cancel| Отмена
@@ -388,12 +383,10 @@ Boot ROM:| Boot ROM:
 Negotiation:| Взаимодействие:
 30m summertime| 30м летнее время
 1h summertime| 1ч летнее время
-  Invalid password   |   Неверный пароль  
+Invalid password| Неверный пароль
   disconnected|   нет соединения
    connected|    подключено
     Network|     Сеть
-Directory empty| Каталог пуст
-Use Save to add| Нажмите кл. СОХР
 erase all items| для стир. всего
 Enter Number>| Укажите Номер>
 Setting phone to| Устан.телефона в
@@ -404,7 +397,6 @@ Retrying config | Повторн.загрузка
 download...     | конфигурации...
 empty| пусто
 No Match| Не Совпадает
-Redial List is| Повторный Набор
 Save to?| Сохранить в?
 Saved Memory key| Кнопка Запомнить
 Removed Key| Кнопка Удалить
@@ -412,8 +404,6 @@ Press 1st letter| Набер.1-ю букву
 Speaker volume  | Громк. динамика
 Handset volume  | Громкость трубки
 Headset volume  | Громк. гарнитуры
-erase all calls| очистить вызовы
-erase this item| удалить запись
 Factory Defaults| Завод.Настройки
  Missed Call|  Пропущ.Вызов
  Missed Calls|  Пропу.Вызовы
@@ -425,7 +415,6 @@ CFWD Busy| Переад.при Занят
 CFWD NoAnswer| Переад.при Неотв
 Select TFTP\nPrimary| УкажОсновн\nTFTP
 Select TFTP\nAlternate| УкажРезерв\nTFTP
-Erase local cfg?| Удалить конфиг.?
 DownloadProtocol| Протокол.Загруз.
 VLAN Settings| Настройки VLAN 
 Server Name/IP?| Имя/IP Сервера
@@ -456,47 +445,22 @@ Conf Unavailable| Конфер.Недоступ.
 Error Messages| Сообщ.об ошибках
 No Error Messages| Нет ошибок
 Download Options| Настр. Загрузки
-DHSG is\nON| DHSG \nВКЛ
-DHSG is\nOFF| DHSG \nВЫКЛ+P288
-Files Sent| Файлы отправлены
-System Info| Cистемной информации
-Upload| Загрузка 
-Upload Sys Info| Загрузка системной информации
-Call Transferred| Вызов переведен
-Firmware Information| Информация о ПО
-Please log in| Авторизуйтесь
 6739i prompts| 
-Upload System Info| Загрузка системной информации
-Directory| Каталог
-Callers List| Список Вызовов
-     Password Changed|   Пароль изменен  
-Do not unplug phone!|  НЕ ОТКЛЮЧАЙТЕ ТЕЛЕФОН
-Invalid password|   Неверный пароль  
-Checking for new| Проверка
-firmware| новой прошивки
-Global| Глобальные
-Enable| Включить
-Disable| Отключить
-Starting in| Старт в
-Generic SIP Mode| режиме SIP
-Starting in| Старт в
-AastraLink Mode|  режиме AastraLink 
-Waiting | Ожидание
-assignment|  задачи
-802.1x| 802.1x
-Authenticating| Аутентификация
-UPnP Port Map| UPnP привязка портов
-Incomplete| не завершена
-Downloading| Загрузка
-configuration| конфигурации
-Firmware| Прошивка
-Loaded| загружена
-Checking for Firmware| Проверка новой прошивки
-Contacting| Обращение к
-Redirector| переадр.
-UPnP Gateway| UPnP шлюз 
-Not Found| не найден
-Restarting...| Перезапуск...
+SID_ENTER_ADMIN_PASSWORD| Пароль администратора
+Error Msg| Сообщения об Ошибках
+Lock| Блокировать
+Unlock the phone?|  Разблокировать Телефон
+ Enter Unlock Password|  Введ. пароль разблок.
+softkey| клавишу
+Edit Number| Изменить номер
+Lock the phone?| Заблок. телефон?
+Lock the phone| Заблок. Телефон
+keypad| Клавиатура
+Unlock| Разблокировать
+ Cust Feat| Пользовательские функции
+Phone is locked| Телефон заблок.
+Unlock the phone| Разблокировать Телефон
+GoodBye| До свидания
 Pass Thru Port| Pass Thru Port
 First| Имя
 Last| Фам
@@ -504,35 +468,29 @@ Name| имя
 Add| Доб
 Edit| Изм
 Space| Проб
-Contact name already exists| Контакт уже существует
-Replace| Заменить
-Merge| Слияние
 Bksp| Удал.
 caps| caps
 CAPS| CAPS
 Reject| Отклонить
 Silence| Тишина
 Hold| Удержание
-Conf| Конф
 Transfer| Переадр
 >| >
-Leave| Отменить
 Lines| Уйти
 Settings| Настройки
 Device Name| Название
-Bluetooth Devices| Устр. Bluetooth
+Bluetooth Devices| Устр. BT
 Bluetooth Status:| Cост. Bluetooth:
 Search| Поиск
 Searching...| Поиск…
 device(s) found.| устр-ва не найдены.
 Press on a device to start pairing.| Нажмите на устр-ве для подключения.
 Enter PIN| Введите ПИН
-Delete Item| Удалить запись
 Add Device| Добавить устройство
 Active| Активно
 Are you sure?| Вы уверены?
 ALL| ВСЕ
-Phone Number:| Номер Телефона:
+Phone No:| Номер Тлф:
 Copy to all modes| Копия для всех режимов
 BUSY| ЗАНЯТ
 NO ANSWER| НЕТ ОТВЕТА
@@ -540,45 +498,18 @@ CFWD NO ANS:| ПЕРЕАДР НЕТ ОТВЕТА:
 CFWD BUSY:| ПЕРЕАДР ЗАНЯТ:
 CFWD ALL:| ПЕРЕАДР ВСЕ:
 Audio| Аудио
-Audio Setting| Настройка звука
 Calibrate Screen| Калибровка экрана
 Recalibrate Touchscreen?| Калибровать Touchscreen?
-12 Hour| 12 часов
-24 Hour| 24 часа
 Softkeys| Кнопки
-Enter Name:| Укажите Имя:
-WWW MMM DD| WWW MMM DD
-DD-MMM-YY| DD-MMM-YY
-YYYY-MM-DD| YYYY-MM-DD
-DD/MM/YYYY| DD/MM/YYYY
-DD/MM/YY| DD/MM/YY
-DD-MM-YY| DD-MM-YY
-MM/DD/YY| MM/DD/YY
-MMM DD| MMM DD
-DD MMM YYYY| DD MMM YYYY
-WWW DD MMM| WWW DD MMM
-DD MMM| DD MMM
-DD.MM.YYYY| DD.MM.YYYY
-Restart The Phone?| Перезагрузить телефон?
 Headset Mic Volume| Громкость микр. Гарнтитуры
-Contrast| Контраст
 Headset Device| Гарнитура
 Bluetooth| Bluetooth
 Wired| Проводная
-TFTP| TFTP
-FTP| FTP
-HTTP| HTTP
-HTTPS| HTTPS
-Alt. TFTP Server| Альт. TFTP Сервер
-Reset Configuration?| Сброс конфигурации?
-Phone will restart automatically after finishing.| После завершения, телефон перезагрузиться автоматически.
-Reset| Сброс
 Restart | Перезагрузка
 No Calls| Нет Вызовов
 Brightness Timer| Таймер Подсветки
 Brightness Level| Уровень Подсветки
 Add to Directory| Добавить в Каталог
-Cfg. Svr.| Срв. Нстр.
 Waiting for Touch Screen activity to subside ...| Ожидание активизации Touch Screen ...
 Touch the UPPER-LEFT corner of the screen| Нажмите в ВЕРХНИЙ-ЛЕВЫЙ угол экрана
 Touch the UPPER-RIGHT corner of the screen| Нажмите в ПРАВЫЙ_ВЕРХНИЙ угол экрана
@@ -605,9 +536,6 @@ Detected:| Обнаружен:
 Connecting:| Подключение:
 Disonnecting:| Отключение:
 Connected:| Подключен:
-Please log in| Авторизуйтесь
-DHSG is| DHSG
-Add blank record?| Доб. пуст. зап.?
 ALL| ВСЕ
 BUSY| ЗАНЯТ
 NO ANSWER| НЕТ ОТВЕТА
@@ -615,53 +543,98 @@ CFWD ALL:| ПЕРЕАД ВСЕ:
 CFWD BUSY:| ПЕРАД ЗАНЯТ:
 CFWD NO ANSWER:| ПРД НЕТ ОТВ:
 Copy to all modes| Копир. все реж
-Phone Number:| Номер Тлф:
-Enter Administrator Password| Пароль администратора
-Incorrect password| Неверный пароль
+| 
+Phone Number:| Номер Телефона:
 Level 1| Уровень 1
 Level 2| Уровень 2
 Level 3| Уровень 3
 Level 4| Уровень 4
 Level 5| Уровень 5
 (Min: %d  Max: %d)| (Мин: %d  Макс: %d)
-Hide| Прятать
-Call Waiting enabled| Ожидающий вызов на
-Call Waiting disabled| Ожидающий вызов вне
-Files Sent| Файлы отправлены
-Upload Sys Info| Загрузка системной информации
-Upload| Загрузка 
-Call Transferred| Вызов переведен
-Firmware Information| Информация о ПО
+ Enter Administrator Password| Пароль администратора
+Phone will restart automatically after finishing.| После завершения, телефон перезагрузиться автоматически.
+Conference| Конференция
+Reset Configuration?| Сброс конфигурации?
+Hide| Прят
 Common prompts| 
-Upload System Info| Загрузка системной информации
-Checking for Firmware| Проверка новой прошивки
-  ERROR: invalid port|   ОШИБКА: неверн порт
-Do not unplug phone!|  НЕ ОТКЛЮЧАЙТЕ ТЕЛЕФОН
-Ip/Gw/Mask Error| ошибка IP/Шлюза/Маски
-Move Up| Вверх
-Move Down| Вниз
-Others| Другие
-Out of service| Из службы
-Config Server Fail-over| конфигурационный сервер обеспечения отказоустойчивости
-Ip equal gw addr| Адрес IP равен адресу шлюза
+Disable| Отключить
+Restart Phone?| ПерезагрТелефон?
+12 Hour| 12 часов
+Speeddial| Быстрый Набор
+Erase local cfg?| Удалить Конф-ю?
+Spd Dial| Уск.Набор
+Backup Outbound Proxy Server| Резервный исход. прокси-сервер
+Backup Outbound Proxy Port| Резервный исход. прокси-порт
+Firmware Info| Информация о ПО
+DHSG| DHSG
+DHSG is ON| DHSG ВКЛ
+DHSG is OFF| DHSG ВЫКЛ+P288
+Backlight On Time| Отключение подсветки
+Use Alt TFTP| Использовать Резервный TFTP
+Pri TFTP Path| Перв.TFTP маршр.
+Alt TFTP Path| Альт.TFTP маршр.
+RestoreDefaults?| ВосстУмолчания?
+HTTP Init Failed| HTTP не инициализирован
+Get aastra.lic| Получите лицензию aastra
+Get mac.lic| Получите МАС лицензию
+Firmware not licensed for use on this phone| ПО не лицензировано для этого телефона
+Redial List is empty| Повторный Набор пустой
+Callers List is empty| Список звонящих пустой
+Callers List| Список Вызовов
+Directory| Каталог
+License Information| Информация о лицензии
+XML Application URI:| XML URL:
+Missing User ID| Отсутствует ID пользователя
+TFTP| TFTP
+FTP| FTP
+HTTP| HTTP
+HTTPS| HTTPS
+Use| Использовать
+Active Features| Активные функции
+WWW MMM DD| WWW MMM DD
+DD-MMM-YY| DD-MMM-YY
+YYYY-MM-DD| YYYY-MM-DD
+DD/MM/YYYY| DD/MM/YYYY
+DD/MM/YY| DD/MM/YY
+DD-MM-YY| DD-MM-YY
+MM/DD/YY| MM/DD/YY
+MMM DD| MMM DD
+DD MMM YYYY| DD MMM YYYY
+WWW DD MMM| WWW DD MMM
+DD MMM| DD MMM
+DD.MM.YYYY| DD.MM.YYYY
+24 Hour| 24 часа
+XML Application Title:| Название XML-приложения:
+License Status| Статус License
+FTP| FTP
+to view| для просм
+Contact Name already exists| Контакт уже существует
+Leave| Отменить
 Contact Mismatch| Несоответствие контакту
-Call Terminated| Вызов завершен
+ Call Terminated| Вызов завершен
 IP and gateway have to be on same subnet| Адрес IP и шлюза должны быть в одной подсети
 IP cannot be equal to gateway address| Адрес IP не может быть равен адресу шлюза
 Call Waiting Tone Period| Период сигнала Ожидание Вызова
+OK| ОК
+Directory empty| Каталог пуст
 Files Sent| Файлы отправлены
-Upload Sys Info| Загрузка системной информации
+Upload System Info| Загрузка системной информации
 Upload| Загрузка 
 Call Transferred| Вызов переведен
-Delete All| Удалить Запись
-Audio Settings| Настройка звука
-DHSG is| DHSG
-Firmware Info| Информация о ПО
-Please Wait...| Подожите…
+Firmware Information| Информация о ПО
+Contact Name already exists| Контакт уже существует
+Replace| Заменить
+No Services| Нет Сервиса
+Merge| Слияние
+Enter Name:| Укажите Имя:
 Call Hold Reminder| Удержание вызова Напоминание
+Others| Другие
 Call Hold Reminder During Active Calls| Удержание вызова напоминание ходе активных звонков
-Call Waiting enabled| Ожидающий вызов на
-Call Waiting disabled| Ожидающий вызов вне
+Out of service| Из службы
+Reason: | Причина:
+Add blank record?| Доб. пуст. зап.?
+Audio Setting| Настройка звука
+Delete Item| Удалить запись
 Services| Сервисы
 Server| Сервер
 Service Disabled| Сервис Отключен
@@ -669,7 +642,6 @@ Port| Порт
 Path| Путь
 Username| Имя Пользователя
 No. Rings| Нет Звонка
-Intercom| Интерком
 Use xx to view| Исп.хх для просм
 User Password| Пароль Польз.
 Time and Date| Время и Дата
@@ -707,6 +679,7 @@ User Name| Имя Пользователя
 Screen Name| Название
 Proxy Server| Прокси-сервер
 Registrar Server| Сервер Регистр.
+Auth. Name| Логин
 Nortel NAT| Nortel NAT
 Sylantro| Sylantro
 Broadsoft| Broadsoft
@@ -749,7 +722,6 @@ Gateway| Шлюз
 Primary DNS| Основной DNS
 Secondary DNS| Вторичный DNS
 TFTP Settings| Настройки TFTP
-TFTP Server| TFTP сервер
 VLAN| VLAN
 VLAN ID| VLAN ID
 PC Port VLAN ID| ПК порт  VLAN ID
@@ -797,14 +769,13 @@ Half| Полу
 Full| Полный
 Duplex| Дуплекс
  ERROR: |  ОШИБКА: 
-Invalid IP address| Неверн. IP адрес
 Invalid IP addr.| Неверн. IP адрес
 Invalid mask| Неверная Маска
 Range is 1-4094| Диапазон 1-4094
 Range is 1-4095| Диапазон 1-4095
 Range is 0-63| Диапазон 0-63
 Range is 0-7| Диапазон 0-7
-DND| Не Бесп.
+DND| Неб
 DND On| Не Бесп. ВКЛ
 Time Server| Сервер Времени
 Set Time| Время
@@ -814,6 +785,8 @@ Time Zone| Часовой Пояс
 Daylight Savings| Летнее Время
 Invalid Time| Неверное Время
 Invalid Date| Неверная Дата
+Invalid IP| Неверный IP
+ Invalid Number|  Неверный Номер
 On| ВКЛ.
 Off| ВЫКЛ.
 Automatic| Автоматически
@@ -900,6 +873,8 @@ Certificates| Сертификаты
 Cert Validation| Пров-ка Сертиф.
 All defaults| Все по умолчанию
 Config default| Настр. умолчаний
+AM| AM
+PM| PM
 Factory Default| Заводские Настр.
 Erase Local Cfg.| Удалить Конф-ю
 New IP Obtained| Новый IP получен
@@ -913,6 +888,7 @@ Server Local IP| IP локал.сервера
 Preferences| Настройки
 Network Status| Статус Сети
 MAC Address:| MAC Адрес:
+BT MAC Address:| BT MAC Адрес:
 Invalid Key| Неверный Ключ
 Speed Dial Edit:| Ред.Быстр.Набор:
 Press SD button| Нажм. кнопку SD
@@ -1019,6 +995,7 @@ BLF Subscription Period| Период Подписки BLF
 ACD Subscription Period| Период Подписки ACD
 BLA Subscription Period| Период Подписки BLA
 Blacklist Duration| Срок Черного Списка
+ Park Pickup Config|  Настройка Парковки
 RTP Port| RTP Порт
 Basic Codecs| Основные Кодеки
 Force RFC2833 Out-of-Band DTMF| Force RFC2833 Out-of-Band DTMF
@@ -1120,15 +1097,11 @@ Get server.cfg| Получить конфигурацию с сервера
 Show Task and Stack Status| Показать Статус Задач и Стека
 Settings| Настройки
 Download Protocol| Загрузить Протокол
-TFTP Path| Путь TFTP
-Alternate TFTP Path| Резервный Путь TFTP
-Use Alternate TFTP| Использовать Резервный TFTP
 Auto-Resync| Авто-Ресинхронизация
 Days| Дней
 Maximum Delay| Максимальная Задержка
 Mode| Режим
 Configuration Files| Файлы Настройки
-Firmware| Прошивка
 Time (24-hour)| Время(24 часа)
 XML Push Server List(Approved IP Addresses)| Список XML серверов (IP адреса)
 Phone-side Call Forward Settings| Переадресация вызова на Телефоне
@@ -1140,11 +1113,12 @@ Local Line| Локальная Линия
 Forward Number| Номер Переадресации
 Global| Глобальные
 Enable| Включить
-Disable| Отключить
 Network| Сеть
 Must provision a valid default gateway IP if DHCP is enabled| Необходим существующий адрес шлюза, если включен DHCP
+Invalid IP Address| Неверный IP-адрес
+Invalid IP address| Неверный IP-адрес
+Invalid IP addr.| Неверный IP-адрес
 Invalid gateway address| Неверный адрес шлюза
-Invalid gw addr| Неверный адрес шлюза
 Invalid subnet mask| Неверная маска подсети
 Invalid primary DNS address| Неверный первичный DNS
 Invalid secondary DNS address| Неверный вторичный DNS
@@ -1241,7 +1215,6 @@ Hard Key| Предустановленые Кнопки
 Key| Кнопка
 BLF List URI:| Список BLF URI:
 None| Нет
-Speeddial| Быстрый Набор
 Speeddial/Xfer| Быстрый Набор/Переадр
 Do Not Disturb| Не Беспокоить
 BLF| BLF
@@ -1330,6 +1303,7 @@ Error: Intercom Settings| Ошибка:Нстройки Интеркома
 Please enter a prefix code for server-side intercom.| Пожалуйста, введите префикс для интеркома на сервере.
 Value must be between| Значение должно быть между
 and| и
+Invalid Setting:| Неверные Настройки:
 Please select at least one state for softkey| Пожалуйста, выберите по крайней мере одну настроку софткнопки
 DSCP value| Значение DSCP
 is mapped to multiple priorities.| привязано к нескольким приоритетам.
@@ -1351,6 +1325,7 @@ Unique ID:| Уникальный iD:
 UPnP Mapping Lines| UPnP Привязка Линий
 Port Failed| Ошибка Порта
 Trying...| В процессе...
+Seize Failed| Не перехв.
 Missed Call Summary Subscription| Пропущенных Звонков Всего
 Missed Call Summary Subscription Period| Пероид пропущенных звонков
 AS-Feature-Event Subscription| Подписка на функцию AS-Feature-Event
@@ -1441,9 +1416,9 @@ Watchdog| Watchdog
 Speeddial/Conf| Быстрый набор/конф.
 Call is on Hold| Вызов на удерж.
 No subscription| Нет подписки
+MDot1xFailedStartup| Ошибка запуска 802.1x 
 802.1x Startup Failed| Ошибка запуска 802.1x 
 LLDP Startup Failed| Ошибка запуска LLDP
-HTTP Connection Manager Init Failed| Ошибка иниц. HTTP Connection Manager
 Failed to config Line Manager| Ошибка конфиг. Line Manager
 Line in use| Линия занята
 Get Crash Log| Получить список ошибок
@@ -1452,9 +1427,27 @@ Packetization Interval| Интервал пакетизации
 Basic| Основной
 Note: Basic Codecs Include| Замечание: Включены Основные Кодеки
 Default| По умолчанию
+Not Configured| Нет настр.
+America| Америка
+Asia| Азия
+Atlantic| Атлантический
 Pacific| Тихоокеанский
 Australia| Австралия
 Europe| Европа
 Malaysia| Malaysia
-Invalid Setting:| Неверные Настройки:
+Invalid Setting| Неверные Настройки
+Must not be empty| Не может быть пустым
+Must be a valid number| Неверный номер
+Must be a nonzero number| Не может быть ноль
+Not in range| Вне диапазона
+Invalid Hostname| Неверное имя хоста
+802.1x Failed| Ошибка 802.1x
+Admin Password:| Пароль админист:
+Voicemail| Голосовая Почта
+HTTPS Failed| Ошибка HTTPS
+LLDP Failed| Ошибка LLDP
+TR69 connect Err| Сбой соедин.TR69
+Downloading Language Packs| Загрузка языковых пакетов
+Please Wait...| Подожите…
+Cfg Svr Failure| Сбой конфиг.серв
 End| 

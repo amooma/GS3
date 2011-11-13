@@ -45,17 +45,16 @@ class AMI {
 	        
 		@fWrite( $this->_socket, $command, strLen($command) );
 		@fFlush( $this->_socket );
-		
 		$data = array();
 		while (! fEof($this->_socket)) {
-			$tmp = @fRead( $this->_socket, 8192 );
+			$tmp = @fgets( $this->_socket, 8192 );
+			if ( strlen ( trim ( $tmp ) ) <= 0 ) {
+				break;
+			}
 			list($first,$last) = explode(':', $tmp);
 			$data[trim($first)] = trim($last);
-			
-			if (@ preg_match('/\\r\\n\\r\\n/S', $tmp)) break;
 			usleep(1000);  # sleep 0.001 secs
 		}
-		
 		return $data;
 		
 	}
@@ -103,18 +102,17 @@ class AMI {
 			        . 'Events: off' ."\r\n"
 			        . "\r\n";
 			$data = $this->ami_send_command($req);
-			if (strToLower($data['Message']) !== 'authentication accepted') {
+			if (strToLower($data['Message']) != 'authentication accepted') {
 				gs_log( GS_LOG_WARNING, 'Authentication to AMI on '. $host .' failed' );
 				return false;
 			}
                         
 		}
-		
 		return true;
 	}
 	
 	public function ami_logout() {
-		
+	
 		if (! $this->_check_socket()) return false;
 		
 		$data = $this->ami_send_command('Action: Logoff'."\r\n\r\n");

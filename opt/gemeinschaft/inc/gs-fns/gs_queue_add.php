@@ -66,6 +66,12 @@ function gs_queue_add( $name, $title, $maxlen, $host_id_or_ip )
 	if ($num > 0)
 		return new GsError( 'A SIP user with that extension already exists.' );
 	
+	# check if ivr exists
+	#
+	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ivrs` WHERE `name`=\''. $db->escape($name) .'\'' );
+	if ($num > 0)
+		return new GsError( 'A ivr with that extension already exists.' );	
+	
 	# check if host exists
 	#
 	$host = gs_host_by_id_or_ip( $host_id_or_ip );

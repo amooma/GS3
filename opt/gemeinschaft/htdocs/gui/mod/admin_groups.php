@@ -29,6 +29,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/group-fns.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_astphonebuttons.php' );
 
 echo '<h2>';
 if (@$MODULES[$SECTION]['icon'])
@@ -67,6 +68,10 @@ if ($action === 'save') {
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Gruppe konnte nicht gespeichert werden.') ,'</div>',"\n";
 	}
+
+	if ( GS_BUTTONDAEMON_USE == true )
+		gs_buttondeamon_usergroups_update();
+
 	sleep(1); // FIXME
 	$action = '';  # view
 }
@@ -86,6 +91,10 @@ if ($action === 'add') {
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Gruppe konnte nicht angelegt werden.') ,'</div>',"\n";
 	}	
+
+	if ( GS_BUTTONDAEMON_USE == true )
+		gs_buttondeamon_usergroups_update();
+
 	sleep(1); // FIXME
 	$action = '';  # view
 }
@@ -101,8 +110,11 @@ if ($action === 'delete') {
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Gruppe konnte nicht gel&ouml;scht werden.') ,'</div>',"\n";
 	}
+	
+	if ( GS_BUTTONDAEMON_USE == true )
+		gs_buttondeamon_usergroup_remove( $group_id );
+	
 	sleep(1); // FIXME
-		
 	$action = '';  # view
 }
 
@@ -267,7 +279,6 @@ if ($action === 'remove-parameter') {
 	$action = 'edit';  # view
 }
 
-
 #####################################################################
 # edit
 #####################################################################
@@ -413,7 +424,7 @@ if ($action == 'edit') {
 <table cellspacing="1">
 <thead>
 <tr>
-	<th style="min-width:21em;" colspan="3"><?php echo sprintf( htmlEnt(__('Berechtigungen der Gruppe %s')), '<q>'.htmlEnt($group['name']).'</q>' ); ?></th>
+	<th style="min-width:21em;" colspan="3"><?php echo __('Berechtigungen der Gruppe'), ' "',htmlEnt($group['name']),'"'; ?></th>
 </tr>
 
 <tr>
@@ -447,7 +458,7 @@ if ($action == 'edit') {
 	echo '</select>', "\n";
 	echo '</td>', "\n";
 	echo '<td class="r" colspan="2">', "\n";
-	echo  '<button type="submit" name="action" value="insert-perm" title="', __('Berechtigung einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
+	echo  '<button type="submit" name="action" value="insert-perm" title="', __('Berechtigung Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
 	echo '</td>', "\n";
 	echo '</tr>' ,"\n";
 	echo '</form>',"\n";
@@ -549,8 +560,7 @@ if ($action == 'edit') {
 <tbody>
 <?php
 	$group_externals = gs_group_connections_get($group['id']);
-
-
+/*
 	echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
 	echo '<form method="post" action="'.GS_URL_PATH.'">';
 	echo gs_form_hidden($SECTION, $MODULE);
@@ -570,11 +580,11 @@ if ($action == 'edit') {
 	echo '<input type="text" name="connection" value="" size="20" maxlength="255" style="width:96%;" />';
 	echo '</td>', "\n";
 	echo '<td class="r" colspan="2">', "\n";
-	echo  '<button type="submit" name="action" value="insert-connection" title="', __('Verbindung einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
+	echo  '<button type="submit" name="action" value="insert-perm" title="', __('Berechtigung Einf&uuml;gen') ,'" class="plain"><img alt="', __('Einf&uuml;gen') ,'" src="', GS_URL_PATH,'img/plus.gif" /></button>';
 	echo '</td>', "\n";
 	echo '</tr>' ,"\n";
 	echo '</form>',"\n";
-
+*/	
 	$i=0;
 	foreach ($group_externals as $group_external) {
 		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
@@ -600,7 +610,7 @@ if ($action == 'edit') {
 <table cellspacing="1">
 <thead>
 <tr>
-	<th style="min-width:21em;" colspan="4"><?php echo sprintf( htmlEnt(__('Mitglieder der Gruppe %s')), '<q>'.htmlEnt($group['name']).'</q>' ); ?></th>
+	<th style="min-width:21em;" colspan="4"><?php echo __('Mitglieder der Gruppe'), ' "',htmlEnt($group['name']),'"'; ?></th>
 </tr>
 
 <tr>
@@ -611,6 +621,7 @@ if ($action == 'edit') {
 </thead>
 <tbody>
 <?php
+
 	$group_members = gs_group_members_get_names($group['id']);
 
 	if (!gs_group_connections_get($group['id'])) {

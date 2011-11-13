@@ -58,17 +58,19 @@ if (@$_REQUEST['action'] === 'del') {
 
 $rs = $DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
-	MAX(`d`.`timestamp`) `ts`, `d`.`number`, `d`.`remote_name`,
+	MAX(`d`.`timestamp`) `ts`, `d`.`number`, `d`.`remote_name`, `q`.`_title` AS `queue_title`,
 	`u`.`id` `r_uid`, `u`.`lastname` `r_ln`, `u`.`firstname` `r_fn`
 FROM
-	`dial_log` `d` LEFT JOIN
-	`users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
+	`dial_log` `d` 
+	LEFT JOIN `users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
+	LEFT JOIN `ast_queues` `q` ON (`q`.`_id`=`d`.`queue_id`)
 WHERE
+	`d`.`queue_id` IS NULL AND
 	`d`.`user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .' AND
 	`d`.`type`=\''. $DB->escape($type) .'\' AND
 	`d`.`timestamp`>'. (time()-GS_PROV_DIAL_LOG_LIFE) .' AND
 	`d`.`number` <> \''. $DB->escape( @$_SESSION['sudo_user']['info']['ext'] ) .'\'
-GROUP BY `d`.`number`
+GROUP BY `number`,`queue_title`
 ORDER BY `ts` DESC
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 );
@@ -88,35 +90,36 @@ $num_pages = ceil($num_total / $per_page);
 </tr>
 </thead>
 <tbody>
-<tr class="even">
-	<td colspan="3">&nbsp;</td>
-	<td>
 <?php
 
-if ($page > 0) {
-	echo
-	'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
-	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
-	'</a>', "\n";
-} else {
-	echo
-	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust-dis.png" />', "\n";
-}
-if ($page < $num_pages-1) {
-	echo
-	'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
-	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
-	'</a>', "\n";
-} else {
-	echo
-	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust-dis.png" />', "\n";
-}
+if ( $num_pages > 1  ) {
+echo '<tr class="even">';
+	echo '<td colspan="3">&nbsp;</td>';
+	echo '<td>';
 
-?>
-	</td>
-</tr>
 
-<?php
+	if ($page > 0) {
+		echo
+		'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust.png" />',
+		'</a>', "\n";
+		} else {
+		echo
+		'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust-dis.png" />', "\n";
+		}
+		if ($page < $num_pages-1) {
+		echo
+		'<a href="', gs_url($SECTION, $MODULE, null, 'page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust.png" />',
+		'</a>', "\n";
+		} else {
+		echo
+		'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust-dis.png" />', "\n";
+		}
+
+		echo '</td>';
+	echo '</tr>';
+}
 
 if (@$rs) {
 	$i = 0;
@@ -124,8 +127,11 @@ if (@$rs) {
 		echo '<tr class="'. ((++$i % 2 == 0) ? 'even':'odd') .'">';
 		echo '<td>', htmlEnt($r['number']), '</td>';
 		
+		unset($name);
+		if ($r['queue_title'])
+			$name = '[' . $r['queue_title'] . '] ';
 		if (! $r['r_uid'])
-			$name = $r['remote_name'];
+			$name .= $r['remote_name'];
 		else {
 			$name = $r['r_ln'];
 			if ($r['r_fn'] != '') $name .= ', ' . $r['r_fn'];

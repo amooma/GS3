@@ -54,7 +54,6 @@ require_once( GS_DIR .'inc/gs-lib.php' );
 require_once( GS_DIR .'inc/prov-fns.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
-include_once( GS_DIR .'inc/string.php' );
 set_error_handler('err_handler_die_on_err');
 
 function _settings_err( $msg='' )
@@ -76,7 +75,7 @@ function _settings_err( $msg='' )
 function setting( $name, $idx, $val, $attrs=null, $writeable=false, $xml=false )
 {
 	if ($xml === true)
-		echo '  <ConfigurationItem><Parameter>', $name , ($idx>0? ' '.$idx :'') ,'</Parameter><Value>', htmlEnt(str_replace(array("\n", "\r"), array(' ', ' '), $val)) , '</Value></ConfigurationItem>', "\n";
+		echo '  <ConfigurationItem><Parameter>', $name , ($idx>0? ' '.$idx :'') ,'</Parameter><Value>', str_replace(array("\n", "\r"), array(' ', ' '), $val) , '</Value></ConfigurationItem>', "\n";
 	else
 		echo ($writeable == false ? '!' : ''), $name , ($idx>0? ' '.$idx :'') ,': ', str_replace(array("\n", "\r"), array(' ', ' '), $val) ,"\n";
 }
@@ -142,7 +141,7 @@ function aastra_get_softkeys( $user_id, $phone_type )
 					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				case 'aastra-53i':
-					if ($key_num >100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >100) $key_name = 'prgkey'    .($key_num-100);
 					if ($key_num >200) $key_name = 'expmod1 key'.($key_num-200);
 					if ($key_num >300) $key_name = 'expmod2 key'.($key_num-300);
 					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
@@ -189,7 +188,7 @@ function aastra_get_softkeys( $user_id, $phone_type )
 					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
 					break;
 				case 'aastra-53i':
-					if ($key_num >100) $key_name = 'softkey'    .($key_num-100);
+					if ($key_num >100) $key_name = 'prgkey'    .($key_num-100);
 					if ($key_num >200) $key_name = 'expmod1 key'.($key_num-200);
 					if ($key_num >300) $key_name = 'expmod2 key'.($key_num-300);
 					if ($key_num >400) $key_name = 'expmod3 key'.($key_num-400);
@@ -217,7 +216,7 @@ function aastra_get_softkeys( $user_id, $phone_type )
 
 
 if (! gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
-	gs_log( GS_LOG_DEBUG, "Aastra provisioning not enabled" );
+	gs_log( GS_LOG_WARNING, "Aastra provisioning not enabled" );
 	_settings_err( 'Not enabled.' );
 }
 
@@ -311,10 +310,9 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('time zone name'                      , 'DE-Berlin', false, false);
 	psetting('xml beep notification'               , 1, false, false);
 	psetting('xml status scroll delay'             , 3, false, false);
-	psetting('sip update callerid'                 , 1, false, false);
+	psetting('sip update callerid'                 , 0, false, false);
 	psetting('admin password'                      , gs_get_conf('GS_AASTRA_PROV_ADMIN_PASS'), false, false);
 	psetting('user password'                       , gs_get_conf('GS_AASTRA_PROV_USER_PASS'), false, false);
-	psetting('options password enabled'            , 1, false, false);
 	psetting('web interface enabled'               , 1, false, false);
 	psetting('directed call pickup'                , 1, false, false);
 	psetting('directed call pickup prefix'         , '*81*', false, false);
@@ -326,14 +324,20 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('dynamic sip'                         , 1, false, false);
 	psetting('call forward disabled'               , 1, false, false);
 	psetting('call waiting'                        , 1, false, false);
-	psetting('missed calls indicator disabled'     , 0, false, false);
-	psetting('sip explicit mwi subscription'       , 1, false, false);
-	psetting('sip explicit mwi subscription period', 120, false, false);
+	
+	if (gs_get_conf('GS_BUTTONDAEMON_USE')){
+		psetting('missed calls indicator disabled'     , 1, false, false);
+	}
+	else {
+		psetting('missed calls indicator disabled'     , 0, false, false);
+	}
+	
 	psetting('sip registration retry timer'        , 60, false, false);
 	psetting('sip registration timeout retry timer', 30, false, false);
 	psetting('sip blf subscription period'         , 120, false, false);
 	psetting('sip customized codec'                , 'payload=8;payload=0;payload=115;payload=9;payload=18;silsupp=off', false, false);
 	psetting('sip silence suppression'             , 0, false, false);
+	psetting('sip pai'                             , 1, false, false);
 	psetting('lldp'                                , 0, false, false);
 	psetting('call hold reminder'                  , 0, false, false);
 	psetting('sip diversion display'               , 1, false, false);
@@ -492,16 +496,41 @@ if ($dynamic == true) {
 	echo '<AastraIPPhoneConfiguration setType="override">',"\n";
 }
 
+# unlock save and delete
+
+if ($phone_type == 'aastra-53i') {
+
+	psetting('prgkey1 locked'   , '0', true, $dynamic);
+	psetting('prgkey2 locked'   , '0', true, $dynamic);
+	
+	for ($i=1; $i<=6; ++$i) {
+		psetting('prgkey'.$i.' type'   , 'empty', true, $dynamic);
+	}
+
+}
+else if ($phone_type == 'aastra-6730i' || $phone_type == 'aastra-6730i') {
+	psetting('prgkey5 locked'   , '0', true, $dynamic);
+	psetting('prgkey6 locked'   , '0', true, $dynamic);
+	
+	for ($i=1; $i<=8; ++$i) {
+		psetting('prgkey'.$i.' type'   , 'empty', true, $dynamic);
+	}
+}
+
+
 # reset all visible softkeys
 if ($phone_type == 'aastra-55i' || $phone_type == 'aastra-57i' || $phone_type == 'aastra-6739i') {
-	for ($i=1; $i<=12; ++$i) {
-		psetting('topsoftkey'.$i.' type', 'none', true, $dynamic);
-	}
-	for ($i=1; $i<=12; ++$i) {
-		if ($phone_type == 'aastra-6739i' && $i < 12)
-			psetting('softkey'.$i.' type'   , 'empty', true, $dynamic);
-		else
+	
+	if ($phone_type != 'aastra-6739i' ) {
+		for ($i=1; $i<=12; ++$i) {
+			psetting('topsoftkey'.$i.' type', 'none', true, $dynamic);
 			psetting('softkey'.$i.' type'   , 'none', true, $dynamic);
+		}
+	}
+	else {
+		for ($i=1; $i<=22; ++$i) {
+			psetting('softkey'.$i.' type'   , 'empty', true, $dynamic);
+		}
 	}
 	
 	if ($phone_type == 'aastra-6739i') {
@@ -553,16 +582,18 @@ if ($phone_type == 'aastra-55i' || $phone_type == 'aastra-57i' || $phone_type ==
 	}
 }
 
-psetting('softkey5 type'   , 'xml', true, $dynamic);
-psetting('softkey5 label'  , __('Login'), true, $dynamic);
-if ($user['nobody_index'])
-	psetting('softkey5 value'  , $prov_url_aastra.'login.php?a=login', true, $dynamic);
-else
-	psetting('softkey5 value'  , $prov_url_aastra.'login.php', true, $dynamic);
-
 $softkeys = aastra_get_softkeys( $user_id, $phone_type );
 if (is_array($softkeys)) {
 	foreach ($softkeys as $key_name => $softkey) {
+		switch ($softkey['data']) {
+		case '{GS_P_EXTEN}':
+			$softkey['data'] = $user_ext;
+			break;
+		case '{GS_P_USER}':
+			$softkey['data'] = $user['user'];
+			break;
+		}
+
 		switch ($softkey['function']) {
 		case '_dir':
 			$softkey['function'] = 'xml';
@@ -598,6 +629,97 @@ if (is_array($softkeys)) {
 			if (! $softkey['label'])
 				$softkey['label'   ] = __('Umleit.');
 			break;
+		case '_fwd_vml':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?a=vml';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_ano':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?a=ano';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_par':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?a=par';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_trl':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?a=trl';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;		
+		case '_fwd_int':
+			$softkey['function'] = 'xml';
+			if (strlen($softkey['data']) > 0)
+				$softkey['data'    ] = $prov_url_aastra.'cf.php?o=internal&v='.$softkey['data'];
+			else
+				$softkey['data'    ] = $prov_url_aastra.'cf.php';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_int_vml':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=internal&a=vml';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_int_ano':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=internal&a=ano';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_int_par':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=internal&a=par';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_int_trl':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=internal&a=trl';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		
+		case '_fwd_ext':
+			$softkey['function'] = 'xml';
+			if (strlen($softkey['data']) > 0)
+				$softkey['data'    ] = $prov_url_aastra.'cf.php?o=external&v='.$softkey['data'];
+			else
+				$softkey['data'    ] = $prov_url_aastra.'cf.php';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_ext_vml':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=external&a=vml';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_ext_ano':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=external&a=ano';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_ext_par':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=external&a=par';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
+		case '_fwd_ext_trl':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'cf.php?o=external&a=trl';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Umleit.');
+			break;
 		case '_login':
 			$softkey['function'] = 'xml';
 			$softkey['label'   ] = __('Login');
@@ -605,6 +727,27 @@ if (is_array($softkeys)) {
 				$softkey['data'] = $prov_url_aastra.'login.php?a=login';
 			else
 				$softkey['data'] = $prov_url_aastra.'login.php';
+			break;
+		case '_agent':
+			$softkey['function'] = 'xml';
+			if (strlen($softkey['data']) > 0)
+				$softkey['data'    ] = $prov_url_aastra.'agent.php?a='.$softkey['data'];
+			else
+				$softkey['data'    ] = $prov_url_aastra.'agent.php';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Agent');
+			break;
+		case '_agent_pause':
+			$softkey['function'] = 'xml';
+			$softkey['data'    ] = $prov_url_aastra.'agent_pause.php';
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Agentenpause');
+			break;
+		case 'pickup':
+			$softkey['function'] = 'blf';
+			$softkey['data'    ] = '*8*'.str_pad($softkey['data'],5,'0',STR_PAD_LEFT);
+			if (! $softkey['label'])
+				$softkey['label'   ] = __('Heranholen');
 			break;
 		}
 		psetting($key_name.' type' , $softkey['function'], true, $dynamic);

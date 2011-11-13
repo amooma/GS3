@@ -700,6 +700,30 @@ if ( in_array($phone_model, array('gxv3000','gxv3005','gxv3140'), true) ) {
 
 
 #####################################################################
+#  Video Codecs specific for SIP Account 1 (only GXV) (specific)
+#####################################################################
+if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
+	psetting('P295',  '99');	# Codec 1 ( 34 = H.263, 99 = H.264, 103 = H.263+ )
+	psetting('P296',  '99');	# Codec 2 ( 34 = H.263, 99 = H.264, 103 = H.263+ )
+	psetting('P1307', '99');	# Codec 3 ( 34 = H.263, 99 = H.264, 103 = H.263+ )
+}
+
+
+#####################################################################
+#  Video Settings specific for SIP Account 1 (only GXV) (specific)
+#####################################################################
+if ( in_array($phone_model, array('gxv3000','gxv3005'), true) ) {
+	psetting('P1308', '0');		# Choose video codec by local preference ( 0 = no, 1 = yes )
+	psetting('P300', '0');		# Jitter Delay ( 0 = medium, 1 = low, 2 = high )
+	psetting('P292', '0');		# Enable Video ( 0 = no, 1 = yes, 2 = no but allow in-call enabling )
+	psetting('P293', '99');		# H.264 payload type ( between 96 and 127 | default 99 )
+	psetting('P350', '103');	# H.263+ payload type ( between 96 and 127 | default 103 )
+	psetting('P1330', '1');		# H.263 Default Resolution ( 0 = CIF, 1 = QCIF )
+	psetting('P1331', '0');		# Enable RFC5168 support ( 0 = no, 1 = yes )
+}
+
+
+#####################################################################
 #  SIP Account 1
 #####################################################################
 if ( in_array($phone_model, array('gxp280','gxp1200','gxp2000','gxp2010','gxp2020','gxv3000','gxv3005','gxv3140'), true) ) {
@@ -876,10 +900,9 @@ if ( in_array($phone_model, array('ht287','bt110','bt200','bt201','gxp280','gxp1
 	psetting('P76', '' );		# STUN Server
 	psetting('P101', '');		# Use NAT IP ( if specified, this IP address is used for SIP/SDP message )
 
-	# call waiting (Anklopfen) aktiviert ? //FIXME
-	//$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
-	//psetting('P91', ($callwaiting ? '0' : '1') );	# Disable Call Waiting ( 0 = no, 1 = yes )
-	psetting('P91', '0');		# Disable Call Waiting ( 0 = no, 1 = yes )
+	# call waiting (Anklopfen) aktiviert ?
+	$callwaiting = (int)$db->executeGetOne( 'SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id );
+	psetting('P91', ($callwaiting ? '0' : '1') );	# Disable Call Waiting ( 0 = no, 1 = yes )
 }
 
 # RTP global Ports

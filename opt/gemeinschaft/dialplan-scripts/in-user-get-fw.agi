@@ -60,9 +60,10 @@ $db = gs_db_slave_connect();
 
 # get user id:
 $uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($uname) .'\'' );
-if ($uid < 1) gs_agi_err( 'User not found' );
+if ($uid < 1)
+	gs_agi_err( 'User not found' );
 
-
+gs_agi_set_variable( 'fw_user_id', $uid );
 
 $forwards = array(
 	'internal' => array(
@@ -83,7 +84,7 @@ $rs = $db->execute( 'SELECT `source`, `case`, `timeout`, `number_std`, `number_v
 while ($r = $rs->fetchRow()) {
 	$number_std = trim( $r['number_std'] );
 	$number_var = trim( $r['number_var'] );
-	$number_vml = trim( $r['number_vml'] );
+	//$number_vml = trim( $r['number_vml'] );
 	
 	if ($r['active']==='trl') { //make the timerule-magic before anything else, to manipulate data...
 		$t = time();
@@ -93,14 +94,16 @@ while ($r = $rs->fetchRow()) {
 		$target = $db->executeGetOne($query );
 		if (substr($target,0,4) == 'vmln') {
 			//define number (get number_vml and say that only the message is played, this is be done with the vm*<exten>)
-			$tmpnumber= preg_replace('/[^0-9]/S', '', $number_vml );
+			//$tmpnumber= preg_replace('/[^0-9]/S', '', $number_vml );
+			$tmpnumber = $uname;
 			$number_vml = "vm*".$tmpnumber;
 			//define vm_rec_id (is lige vmln-<id>)
 			$r['vm_rec_id'] = preg_replace('/[^0-9]/S', '', $target );
-			$r['active'] = 'vml';
+			$r['active'] = 'ano';
 		} else if (substr($target,0,3) == 'vml') {
 			//define number (get number_vml and say that the message is played) 
-			$tmpnumber= preg_replace('/[^0-9]/S', '', $number_vml );
+			//$tmpnumber= preg_replace('/[^0-9]/S', '', $number_vml );
+			$tmpnumber = $uname;
 			$number_vml = "vm".$tmpnumber;
 			//define vm_rec_id (is lige vmln-<id>)
 			$r['vm_rec_id'] = preg_replace('/[^0-9]/S', '', $target );
@@ -120,9 +123,20 @@ while ($r = $rs->fetchRow()) {
 	elseif ($r['active']==='var' && $number_var != '') {
 		$number = $number_var;
 	}
-	elseif ($r['active']==='vml' && $number_vml != '') {
-		$number = $number_vml;
-		$audiofile = $db->executeGetOne( 'SELECT `vm_rec_file` FROM `vm_rec_messages` WHERE `id`='. (int)$r['vm_rec_id'] );
+	elseif ($r['active']==='vml' || $r['active']==='ano' ) {
+		if ( $r['active']==='vml' ) {
+			$number = "vm" . $uname;
+		}
+		else {
+			$number = "vm*" . $uname;
+		}
+
+		if ( isset ( $r['vm_rec_id'] ) && $r['vm_rec_id'] != '' ) { 
+			$audiofile = $db->executeGetOne( 'SELECT `vm_rec_file` FROM `vm_rec_messages` WHERE `id`='. (int)$r['vm_rec_id'] );
+		}
+		else {
+			$audiofile = null;
+		}
 	}
 	elseif ($r['active']==='par') {
 		$parcall = '1';
@@ -140,26 +154,58 @@ while ($r = $rs->fetchRow()) {
 		$forwards[$r['source']][$r['case']]['timeout'] = $r['timeout'];
 }
 
+$drop_target = '';
+
+$rs = $db->execute( 'SELECT `number`  FROM `user_calldrop` WHERE `drop_call`=1 AND `user_id`=' . $uid );
+if( $r = $rs->fetchRow() ) {
+	$drop_target = $r['number'];
+}
+else if ( GS_SWITCHBOARD_DROP_TARGET != '' ) {
+	
+	$drop_target = GS_SWITCHBOARD_DROP_TARGET;
+
+}
+
+if ( $drop_target !=  '' ) {
+	foreach ($forwards as $source => $arr) {
+		foreach ($arr as $case => $fw) {
+			if ( $case != 'always' && $fw['number'] == '') {
+				$forwards [$source][$case]['number'] = $drop_target;
+				if ( $case === 'unavail' && GS_SWITCHBOARD_DROP_TIMEOUT > 0) {
+					$forwards [$source][$case]['timeout'] = GS_SWITCHBOARD_DROP_TIMEOUT;
+				}				
+			}
+		}
+	}		
+}
 
 foreach ($forwards as $source => $arr) {
 	foreach ($arr as $case => $fw) {
 		if ($fw['number'] === $callerid) $fw['number'] = '';
 		
-		gs_agi_set_variable( 'fw_'.$source.'_'.$case, $fw['number'] );
+		gs_agi_set_variable( 'fw_' . $source . '_' . $case , $fw['number'] );
 		
-		gs_agi_set_variable( 'fw_file_'.$source.'_'.$case, '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
+		if ( ! is_null ( $fw['file'] ) && $fw['file'] != '' ) {
+			gs_agi_set_variable( '__fw_file_' . $source . '_' . $case , '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
+		}
+		else {
+			gs_agi_set_variable( '__fw_file_' . $source . '_' . $case , '' );
+		}
 		
 		if (is_array($fw['number'])) {  # this is an array if we are forwarding to parallel-call
 			$cnt=0;
 			$newparcallextens = $parcallextens;
 			$numbers = array();
 			//filter out already forwarded Parallel-call extension to dont ring them twice
+			$i = 1;
 			foreach ($fw['number'] as $target) {
 				if (!in_array($target, $parcallextens)) {
 					$newparcallextens[] = $target;
 					if ($target == $uname) //set this, if the user wants to ring his extension too
 						gs_agi_set_variable( 'fw_to_self_'.$source.'_'.$case .'_'.$uname, 1 );
-					$numbers[] = $target;	
+					$numbers[] = $target;
+					gs_agi_set_variable( 'fw_parcallexten_' . $i, $target );
+					$i++;
 				}
 			}
 			gs_agi_set_variable( 'fw_'.$source.'_'.$case, implode('/n&Local/',$numbers) );

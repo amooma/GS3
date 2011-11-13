@@ -1,0 +1,1453 @@
+Dutch (Netherlands)
+480iCT prompts| 
+No handsets are currently paired| Geen handsets verbonden.
+Cordless Handset Feature Key Configuration| Functietoets-config. draadloos toestel
+None| Geen
+Pair| Verbinden
+Attempting to pair...| Verbindingsverzoek
+Pairing successful| Verbinding OK
+Pairing failed       | Verbindingsfout    
+Try again| Nogmaals proberen
+Remove Handset:| Handset verwijderen
+Attempting to remove| Proberen te verw.
+Wait...| Wachten...
+Removal successful| Verwijderen succesvol
+Cordless| draadloos
+Cordless Handsets| draadl.toestel
+None Registered| Geen aanmelding
+Sync| Synchr.
+Private Line| persoonlijke lijn
+Sending Directory| Lijst sturen
+to Handsets| naar handsets
+System Unavailable| niet beschikbaar
+Handset Pairing| Handset verbinden
+Handset Keys| Handset toetsen
+Feature Key programming complete.| Toetsprogrammering compleet
+Two Call Support| Aankloppen
+480i prompts| 
+Time Format| Tijdformaat
+    NOT MATCH !!!| ONGELIJK !!!
+Erase local config?| Loc conf wissen?
+Alternate Server| Secundair server
+Contrast Level| Contrast inst.
+TypeService SIP| Type SIP service
+TypeService RTP| Type RTP service
+TypeService DSCP| TypeDSCP service
+TypeService RTCP| TypeRTCP service
+Dn| Naar beneden
+Rt| Rechts
+Lf| Links
+Del| Wissen
+System Info Upload| 
+Up| Naar boven
+Copyright| Copyright
+Reset| Reset
+Phone will restart automatically after finishing.| Telefoon zal automatisch herstarten na beëindiging.
+Please login| Inloggen AUB
+Incorrect password|  Verkeerd wachtwoord
+Reset Configuration?| Reset Configuratie?
+Cfg. Svr.| Config Svr
+Enable| Activeren
+List| Lijst
+Move Up| Naar boven
+Move Down| Naar beneden
+Firmware Loaded| Firmware geladen
+802.1x Authenticating| 802.1x Authentificati
+LLDP| LLDP
+DHCP: Waiting for IP| DHCP: wachten op IP
+Bluetooth Upgrade .. Please wait| Bluetooth Upgrade .. Wachten AUB
+Contacting Redirector| Verb. met redirector
+Redirecting Step 1| Omleiden Stap 1
+Redirecting Step 2| Omleiden Stap 2
+Redirecting Step 3| Omleiden Stap 3
+Redirecting Step 4| Omleiden Stap 4
+Redirecting Step 5| Omleiden Stap 5
+Redirecting Step 6| Omleiden Stap 6
+Auto Discovery...| Auto verkenning…
+Starting in Generic SIP Mode| Starten in Generiek SIP Mode
+Starting in AastraLink Mode| Starten in AastraLink Mode
+Updating config| Config bijwerken
+Waiting assignment| Wachten op toewijzing
+Checking for Firmware  Do not unplug phone!| Firmware controle. Laat toestel aan staan
+New Firmware. Do not unplug phone!| Nieuwe Firmware. Laat Uw toestel aan staan
+New Firmware. Restarting...| Nieuwe Firmware. Herstarten...
+Downloading configuration| Downloaden configuratie
+Downloading Language Packs| Downloaden Taal Pakketten
+Network| Netwerk
+UPnP device not found| UPnP-app.n.gevonden
+Port Map In Progress| Poorttoewijzing loopt
+Port Map Incomplete| Poorttoew.onvoll.
+DSP| DSP
+SIP| SIP
+Tone| Toon
+Interface| Interface
+Web| Web
+Done| Gereed
+CopyToAll| KopieAllen
+Cannot use firmware.| Firmware onbruikbaar
+No available lines| Geen bruikbare lijnen
+Current Password:| Huidig wachtwoord
+New Password:| Nieuw wachtwoord
+Re-enter Password:| Bevestig wachtwoord:
+  Password Changed| Wachtwoord gewijzigd
+Change| Wijzigen
+Use DHCP?| DHCP gebruiken?
+Advanced| Geavancrd
+DNS| DNS
+Ringer | Beltoon 
+ ERROR: invalid port| Fout: Poort ongeldig
+SIP Register| SIP registreren
+Register?| Registreren?
+Authentication Name| Authenticatie naam
+Nortel NAT| Nortel NAT
+Reset phone to| Reset toestel naar
+factory defaults?| fabrieksinstellingen?
+Setting phone back to| Standaard instell.
+Factory Defaults| Fabrieksinstellingen
+  Please enter the   | Administrator  
+    administrator    |  wachtwoord       
+      password.      |  ingeven aub       
+Password: | Wachtwoord: 
+Quit| Stoppen
+More| Meer
+Timeserver Address:| Adres tijdserver:
+Network Time Disabled| Netwerk tijd UIT
+Dialing| Kiezen
+Incoming| Inkomend
+Calling| Belt
+Pause| Pauze
+Pickup| Pickup
+Previous| Vorige
+Enter Time:| -> Tijd:
+Message Waiting| Bericht wacht
+Live Dialpad| Act. toetsenbord
+Live Dialpad is| Act. toetsenbord is
+Options List| Optielijst
+    Access denied    |   Geen toegang     
+Directory is full| Lijst is vol
+30min summertime| Zomertijd 30 min.
+1h    summertime| Zomertijd 1 uur
+No Link| Geen link
+Next| Volgende
+Retry| Opnieuw
+Negotiation| Onderhandeling
+Live Dialpad disabled| Toetsenbord UIT
+Link State| LinkStatus
+Headset Mic Volume| Volume headset micr.
+Gateway IP Address:| IP Adres Gateway
+Enter Date (y-m-d):| -> Datum (D-M-J)
+Enter| Invoeren
+Enable| Activeren
+Full 10Mbps| Full 10Mbps
+Full 100Mbps| Full 100Mbps
+Half 10Mbps| Half 10Mbps
+Half 100Mbps| Half 100Mbps
+Default| Default
+Add New| Nieuw
+DeleteList| Lijst wiss
+Delete entire| Totale map
+Directory?| wissen?
+Enter Number:| Geef nummer in:
+Network disconnected| Netwerk verbroken
+Network connected| Netwerk verbonden
+Entry Saved| Invoer opgeslagen
+Entry Removed| Invoer verwijderd
+Private| Prive
+Public| Publiek
+Delete entry?| Invoer wissen?
+Delete?| Wissen?
+Delete number| Nummer wissen
+or delete all| Alles wissen
+entries?| Invoer?
+Name is full| Naam is vol
+Empty| Leeg
+Redial List| Nummer herh. lijst
+Details| Details
+Copy| Copie
+Select| Keuze
+Voicemail| Voice-Mail
+DeleteItem| Wissen
+Delete All| Wis alles
+Entry copied to| Gekopieerd naar
+Entry Exists| Bestaat al
+All items erased| Alles gewist
+Sort| Sorteren
+Resume| Hervatten
+EditNum| Nr. bew.
+DeleteList again to| Druk om lijst te verw
+Delete again to| Druk op wissen om
+erase this item| dit item wissen
+erase all calls| alle oproepen wissen
+ new caller|  Nieuwe oproep
+ new callers|  Nieuwe oproep
+Press 1st letter| Druk 1ste letter
+Handset | Hoorn 
+ Missed Call|  Onbeantwoord
+ Missed Calls|  Onbeantw. Oproep
+Call Forward Mode| Omleiding modus
+CFWD All| Alles omleiden
+CFWD Busy| Omleiding bij bezet
+CFWD NoAnswer| Oml. bij niet beantw.
+Call| Oproep
+Select TFTP| TFTP kiezen
+Use %c for new| Nieuwe opr. %c
+Use %c to view| Tonen met %c
+Download Protocol| Download-Protoc.
+OFF| Uit
+ON| Aan
+Add Number| Nr.toevoeg
+Arrange| Sorteren
+%cmore| %cmeer
+Office| Office
+Home| Privé
+Cell| GSM
+Pager| Pager
+VLAN Settings| VLAN instellingen
+Softkeys and XML| Softkeys en XML
+Softkeys Configuration| Softkey-configuratie
+Bottom Keys| Onderste toetsen
+Top Keys| Bovenste toetsen
+Page1| Pagina 1
+Page2| Pagina 2
+Page3| Pagina 3
+Page4| Pagina 4
+Page5| Pagina 5
+Idle| Rust
+Outgoing| Uitgaand
+Empty| Leeg
+Enter server name/IP:| Servernaam/IP ingeven
+Enter HTTPS port:| HTTPS-poort ingeven:
+Erase| Wissen
+Proxy IP/Port| Proxy IP/Port
+Registrar IP/Port| Registrar IP/Port
+Erasing local config| Wissen lokale config
+Proxy Port:| Proxy poort:
+Registrar Port:| Registrar poort:
+Proxy Server:| Proxy server:
+Registrar Server:| Registrar Server:
+Contrast Level:| Contrast inst.
+Erase Local Config.| Lokale config wissen
+Administrator Menu| Administrator menu
+Backlight On Time| Displayverlichting tijd
+Redirect HTTP->HTTPS?| Redirect HTTP->HTTPS?
+Block XML HTTP POSTs?| Blokk XML HTTP POSTs?
+HTTP->HTTPS| HTTP->HTTPS
+XML HTTP POSTs| XML HTTP POSTs
+Client Method| Client-Methode
+To unlock the phone| Toestel deblokkeren
+No more softkeys| Geen softkeys meer
+Ignore| Negeren
+Answer| Antwoorden
+Configuration Server| Configuratie server
+Primary Path| Primair pad
+Alternate Path| Secundair pad
+Logging in| Inloggen
+Login Failed| Inloggen mislukt
+Enable?| Activeren?
+Check Expires| Datum cert. controle
+Check Hostnames| Hostnamen controle
+Conf. Unavailable| Conf niet beschikbaar
+Ringing...| Belt...
+Error Messages| Foutmeldingen
+No Error Messages| Geen foutmeldingen
+Download Options| Download opties
+Abc| Abc
+123| 123
+&%*| &%*
+Abc2| Abc2
+A # &| A # &
+  Invalid password   |   Verkeerd wachtwoord    
+Upload Sys Info| 
+9133i prompts| 
+Password Changed| Wachtwoord gewijzigd
+Time Format| Tijdformaat
+Erase local cfg?| Lok confg wissen?
+TypeService SIP| Type SIP service
+TypeService RTP| Type RTP service
+TypeService DSCP| TypeDSCP service
+TypeService RTCP| TypeRTCP service
+Alternate Server| Secundair server
+Contrast Level| Contrast inst.
+Options List| Optielijst
+DELETE to erase item  or # to erase Number| 
+Upload Sys Info| 
+Directory Empty. Use Save to add| Map leeg. Druk Bew v.toev.
+  NOT MATCH !!!| ONGELIJK !!!
+DELETE again to erase this item| Druk op wissen om dit item wissen
+System Info Upload| 
+Phone will restart after| Telefoon wordt opnieuw opgestart na
+Copyright| Copyright
+Reset| Reset
+Use DHCP?| DHCP gebruiken?
+Full 10Mbps| Full 10Mbps
+Full 100Mbps| Full 100Mbps
+Half 10Mbps| Half 10Mbps
+Half 100Mbps| Half 100Mbps
+Please login| Inloggen AUB
+Incorrect password|  Verkeerd wachtwoord
+Reset Configuration?| Reset Configuratie?
+Cfg. Svr.| Config Svr
+Net disconnected| Netw. verbroken
+Live Dialpad| Act. toetsenbord
+Firmware Loaded| Firmware Geladen
+802.1x Authenticating| 802.1x Authenticering
+LLDP| LLDP
+Initializing network| Initialisering netwerk
+Bluetooth Upgrade| Bluetooth Upgrade
+Contacting Redirector| Contact maken met Redirector
+Redirecting Step 1| Redirecting Stap 1
+Redirecting Step 2| Redirecting Stap 2
+Redirecting Step 3| Redirecting Stap 3
+Redirecting Step 4| Redirecting Stap 4
+Redirecting Step 5| Redirecting Stap 5
+Redirecting Step 6| Redirecting Stap 6
+Auto Discovery| Auto-detect
+Starting in Generic SIP Mode| Opstarten in Generiek SIP Mode
+Starting in Aastra Link Mode| Opstarten in Aastra Link Mode
+Updating configuration| Update configuratie
+Waiting assignment| Wachten op toewijzing
+Checking for new firmware| Controle op nieuwe firmware
+New Firmware: PLEASE DO NOT UNPLUG THE PHONE| Nieuwe Firmware: LAAT UW TOESTEL AAN STAAN
+New Firmware: Restarting...| Nieuwe Firmware: Herstarten...
+Downloading configuration| Download configuratie
+Downloading Language Packs| Download Taal Pakketten
+Network| Netwerk
+UPnP Gateway Not Found| UPnP Gateway Niet Gevonden
+UPnP Port Map In Progress| UPnP Poort Map In Uitvoering
+UPnP Port Map Incomplete| UPnP Poort Map Incompleet
+DSP| DSP
+SIP| SIP
+Tone| Toon
+Registering with the voice network...| Registrering met het spraak netwerk...
+Web| Web
+Done| Gereed
+Cannot use| Kan Firmware
+this firmware.| niet gebruiken
+All lines in use| Alles bezet
+Current Password| Act. wachtwoord
+New Password| Nieuw wachtwoord
+Enter Again| Opnieuw invoeren
+Ringer volume   | Bel volume   
+DELETE again to| Wissen drukkn om
+erase all calls| alle oproep wiss
+Caller is erased| Data gewist
+Network Time| Netwerktijd
+Change| Wijzigen
+Options| Opties
+Access denied| Toegang geweig.
+Directory full| Map vol
+Link Active| Link actief
+No Link| Geen link
+Live Dialpad is\nnot available.| Toetsenbord is\nniet gereed
+Live Dialpad is\nON| Toetsenbord is\nactief
+Live Dialpad is\nOFF| Toetsenbord is\nniet actief
+-  confirmed   -| -  bevestigd   -
+Set| Instel
+DHCP\nON| DHCP\nAAN
+DHCP\nOFF| DHCP\nUIT
+Enable?\nYes| Aktiveren?\nJa
+Enable?\nNo| Aktiveren?\nNee
+Check Expires| Controlle datum
+Check Expires?\nYes| Controlle datum?\nJa
+Check Expires?\nNo| Controlle datum?\nNee
+Check Hostnames| Controll Hostnm
+Check Hostnames?\nYes| Controll Hostnm?\nJa
+Check Hostnames?\nNo| Controll Hostnm?\nNee
+Cancel| Stop
+SIP Register\nON| SIP Registratie\nAAN
+SIP Register\nOFF| SIP Registratie\nUIT
+Nortel NAT\nEnabled| Nortel NAT\nActief
+Nortel NAT\nDisabled| Nortel NAT\nniet actief
+Next| Volgend
+Done| Gereed
+Retry| Opnieuw
+Exit| Einde
+Pickup| Pickup
+Call held| Wachtende oproep
+Calls held| Wachtende oproep
+Country Code: | Landcode: 
+*List Countries| *Landen weergave
+Enter| Invoer
+Admin Password| Admin wachtw.
+yyyy-mm-dd | jjjj-mm-dd
+Restart phone?| Herstart toest.?
+#Confirm| #Bevestigen
+RestoreDefaults?| Default laden?
+Call Agent 1| Call Agent 1
+Call Agent 2| Call Agent 2
+Call Agent 3| Call Agent 3
+Invalid Code    | Ongeldige code 
+E: Invalid port!| E:PoortOngeldig!
+Application:| Applicatie:
+Boot ROM:| Boot ROM:
+Negotiation:| Onderhandeling:
+30m summertime| Zomertijd 30 min
+1h summertime| Zomertijd 1 uur
+Invalid password|  Verkeerd wachtwoord 
+  disconnected|     verbroken
+   connected|    verbonden
+    Network|     Netwerk
+erase all items| Alles wissen
+Enter Number>| -> Nummer
+Setting phone to| Default waardes
+Use Save to end| Druk op Opslaan
+to enter name>| naam invoeren>
+Saved: Directory| Opgesl.:Map
+Retrying config | Opnieuw config.
+download...     | download...     
+empty| Leeg
+No Match| Geen match
+Save to?| Opslaan onder?
+Saved Memory key| Geheugentoets
+Removed Key| Verwijdrde toets
+Press 1st letter| Druk 1ste letter
+Speaker volume  | Luidspr.volume  
+Handset volume  | Hoorn volume
+Headset volume  | Headset volume
+Factory Defaults| terugzetten
+ Missed Call|  Onbeantw opr
+ Missed Calls|  Onbeantw opr
+Cfwd State| Omleiding status
+Cfwd Number| Oml. naar nr.
+Cfwd Mode| Oproepomleiding
+CFWD All| Alle omleiden
+CFWD Busy| Oml. bij bezet
+CFWD NoAnswer| Oml niet beantw.
+Select TFTP\nPrimary| Select TFTP\nPrimair
+Select TFTP\nAlternate| Select TFTP\nSecondair
+DownloadProtocol| DownloadProtocol
+VLAN Settings| VLAN instellngen
+Server Name/IP?| Server/IP?
+HTTPS Port?| HTTPS-Poort?
+Client Method\nSSL 3.0| Client-Methode\nSSL 3.0
+Client Method\nTLS 1.0| Client-Methode\nTLS 1.0
+HTTP->HTTPS\nRedirect| HTTP->HTTPS\nOmleiding
+HTTP->HTTPS\nDo not redirect| HTTP->HTTPS\nGeen Omleiding
+Redirect| Omleiden
+Do not redirect| Niet omleiden
+XML HTTP POSTs\nDo not block| XML HTTP POSTs\nGeen blokkering
+XML HTTP POSTs\nBlock| XML HTTP POSTs\nBlokkering
+Do not block| Niet blokkeren
+Block| Blokkeren
+Erasing config| Config. Wissen
+Pri TFTP Path| Primair TFTP Pad
+Alt TFTP Path| Sec. TFTP Pad
+Backlight Mode| Backlight mode
+Backlight Time| Backlight tijd
+Answer| Antwrdn
+Ignore| Negeren
+Cfwd| Oml.
+Copy to All?| Kopie naar ieder
+Apply Changes?| Wijzig. doorv.?
+Logging in| Inloggen
+Login Failed| Inloggen mislukt
+Conf Unavailable| Conf n. beschikb
+Error Messages| Foutmeldingen
+No Error Messages| Geen foutmelding
+Download Options| Download opties
+6739i prompts| 
+SID_ENTER_ADMIN_PASSWORD| Geef Administrator Wachtwoord in
+Error Msg| Foutmeldingen
+Lock| Blokkeren
+Unlock the phone?| Toestel deblokk.?
+ Enter Unlock Password| Voer ontgrendelen wachtwoord
+softkey| softkey
+Edit Number| Nummer bewerken
+Lock the phone?| Toestel blokkrn?
+Lock the phone| Toestel blokkrn
+keypad| Toetsen
+Unlock| Deblokkeren
+ Cust Feat| Custom Features
+Phone is locked| Toestel gblokkrd
+Unlock the phone| Toestel deblokk.
+GoodBye| 
+Pass Thru Port| Pass Thru Poort
+First| Eerste
+Last| Laatste
+Name| Naam
+Add| Toevoegen
+Edit| Wijzigen
+Space| Spatie
+Bksp| Bksp
+caps| hoofdletters
+CAPS| HOOFDLETTERS
+Reject| Afwijzen
+Silence| Stilte
+Hold| Wacht
+Transfer| Doorverb.
+>| >
+Lines| Lijnen
+Settings| Instellingen
+Device Name| Toestel Naam
+Bluetooth Devices| BT Apparaten
+Bluetooth Status:| Bluetooth Status:
+Search| Zoek
+Searching...| Zoeken
+device(s) found.| app. gevonden
+Press on a device to start pairing.| Druk op een apparaat om te starten
+Enter PIN| PIN ingeven
+Add Device| Apparaat toevoegen
+Active| Actief
+Are you sure?| Weet U het zeker?
+ALL| Allemaal
+Phone No:| Telefoon Nummer:
+Copy to all modes| Kopie naar alle modes
+BUSY| BEZET
+NO ANSWER| GEEN ANTWOORD
+CFWD NO ANS:| OMLEIDING BIJ GEEN ANTWOORD:
+CFWD BUSY:| OMLEIDING BIJ BEZET:
+CFWD ALL:| ALLES OMLEIDEN
+Audio| Audio
+Calibrate Screen| Kalibreer Scherm
+Recalibrate Touchscreen?| Scherm opnieuw kalibreren?
+Softkeys| Softkeys
+Headset Mic Volume| Mic Volume Hoofdtelefoon
+Headset Device| Hoofdtelefoon
+Bluetooth| Bluetooth
+Wired| Bedraad
+Restart | Herstart
+No Calls| Geen Gesprekken
+Brightness Timer| Helderheid Timer
+Brightness Level| Helderheid Niveau
+Add to Directory| Toevoeg aan tel.gids
+Waiting for Touch Screen activity to subside ...| Wachten op Aanraak Scherm activiteit om te laten afnemen ...
+Touch the UPPER-LEFT corner of the screen| Raak de BOVENSTE-LINKER hoek van het scherm aan
+Touch the UPPER-RIGHT corner of the screen| Raak de BOVENSTE-RECHTER hoek van het scherm aan
+Touch the LOWER-RIGHT corner of the screen| Raak de ONDERSTE-RECHTER hoek van het scherm aan
+Touch the LOWER-LEFT corner of the screen| Raak de ONDERSTE-LINKER hoek van het scherm aan
+Received unreliable data. You will be asked to touch the same point again| Onbetrouwbare data ontvangen. U wordt gevraagd om hetzelfde punt opnieuw aan te raken
+Processing ...| Verwerken ...
+Validating calibration data ... please wait| Controleren kalibratie gegevens ... Wachten AUB
+Sanity Check OK. Save changes?| Verificatie OK. Wijzigingen opslaan?
+Sanity Check Failed| Verificatie mislukt
+Retry| Opnieuw proberen
+Quit| Stoppen
+Please Enter| Enter AUB
+Submit| Verzenden
+User ID:| Gebruiker ID:
+Password:| Wachtwoord:
+Transferring| Versturen
+No. Rings| Aantal Belsignalen
+Line| Lijn
+Unable to Pair| Verbinden niet mogelijk
+Please Wait...| Wachten AUB...
+Add new device...| Voeg nieuw apparaat toe...
+Detected:| Gedetecteerd:
+Connecting:| Verbinden:
+Disonnecting:| Niet verbinden:
+Connected:| Verbonden:
+ALL| ALLES
+BUSY| BEZET
+NO ANSWER| GEEN ANTWOORD
+CFWD ALL:| ALLES OMLEIDEN:
+CFWD BUSY:| OMLEIDEN BIJ BEZET:
+CFWD NO ANSWER:| OMLEIDEN BIJ GEEN ANTWOORD:
+Copy to all modes| Kopieer naar alle modes
+| 
+Phone Number:| Telefoon nummer:
+Level 1| Niveau 1
+Level 2| Niveau 2
+Level 3| Niveau 3
+Level 4| Niveau 4
+Level 5| Niveau 5
+(Min: %d  Max: %d)| (Min: %d  Max: %d)
+ Enter Administrator Password| Geef Administrator Wachtwoord in
+Phone will restart automatically after finishing.| Telefoon zal automatisch herstarten na beëindiging.
+Conference| Conferentie
+Reset Configuration?| Reset Configuratie?
+Hide| 
+Common prompts| 
+Disable| Deact.
+Restart Phone?| Herstart toest.?
+12 Hour| 12 uur
+Speeddial| Snelkeuze
+Erase local cfg?| Lok confg wissen?
+Spd Dial| 
+Backup Outbound Proxy Server| 
+Backup Outbound Proxy Port| 
+Firmware Info| Firmware-Info
+DHSG| DHSG
+DHSG is ON| DHSG is AAN
+DHSG is OFF| DHSG is UIT
+Backlight On Time| Displayverlichting tijd
+Use Alt TFTP| Alt TFTP-server gebruiken
+Pri TFTP Path| Primair TFTP Pad
+Alt TFTP Path| Sec. TFTP Pad
+RestoreDefaults?| Default laden?
+HTTP Init Failed| 
+Get aastra.lic| 
+Get mac.lic| 
+Firmware not licensed for use on this phone| 
+Redial List is empty| Herhaal lijst leeg
+Callers List is empty| Oproeplijst leeg
+Callers List| Oproeplijst
+Directory| Telef. Boek
+License Information| Licentie-informatie
+XML Application URI:| URL XML-Applicatie:
+Missing User ID| Ontbrekende Gebruiker ID
+TFTP| TFTP
+FTP| FTP
+HTTP| HTTP
+HTTPS| HTTPS
+Use| Gebruiken
+Active Features| 
+WWW MMM DD| WWW MMM DD
+DD-MMM-YY| DD-MMM-JJ
+YYYY-MM-DD| JJJJ-MM-DD
+DD/MM/YYYY| DD/MM/YYYY
+DD/MM/YY| DD/MM/JJ
+DD-MM-YY| DD-MM-JJ
+MM/DD/YY| MM/DD/JJ
+MMM DD| MMM DD
+DD MMM YYYY| DD MMM JJJJ
+WWW DD MMM| WWW DD MMM
+DD MMM| DD MMM
+DD.MM.YYYY| DD.MM.JJJJ
+24 Hour| 24 uur
+XML Application Title:| Titel XML-Applicatie:
+License Status| Status licentie
+FTP| FTP
+to view| Tonen
+Contact Name already exists| Contact Naam bestaat al
+Leave| Verlaten
+Contact Mismatch| 
+ Call Terminated| 
+IP and gateway have to be on same subnet| 
+IP cannot be equal to gateway address| 
+Call Waiting Tone Period| 
+OK| OK
+Directory empty| Map leeg
+Files Sent| 
+Upload System Info| 
+Upload| 
+Call Transferred| 
+Firmware Information| Firmware-Informatie
+Contact Name already exists| Kontakt naam bestaat al
+Replace| Vervangen
+No Services| Geen service
+Merge| Samenvoegen
+Enter Name:| Geef naam in:
+Call Hold Reminder| Herinnering gesprek in de wacht
+Others| Andere
+Call Hold Reminder During Active Calls| Herinnering gesprek in de wacht tijdens een actief gesprek
+Out of service| Uit dienst
+Reason: | Reden:
+Add blank record?| Lege record toev?
+Audio Setting| Audio instelling
+Delete Item| Wis item
+Services| Services
+Server| Server
+Service Disabled| service deactiv.
+Port| Poort
+Path| Pad
+Username| Gebruikersnaam
+No. Rings| Aantal belsignal
+Use xx to view| Kies met xx
+User Password| Gebruikerswachtw
+Time and Date| Datum en tijd
+Language| Taal
+Screen Language| Schermtaal
+Tones| Tonen
+Tone Set| Signaal config.
+Ring Tone| Beltonen
+State| Status
+State:| Status:
+User-Busy| Gebruiker bezet
+Unconditional| Onvoorwaardelijk
+Time of day| Tijd 
+Deflection| Doorschakelen
+Follow Me| Follow Me
+Away| Afwezig
+Busy| Bezet
+Restart| Herstarten
+All On| Alle AAN
+All Off| Alle UIT
+AllAccts| Alle acc.
+Conference| Conferentie
+Flash| Flash
+Dial| Kies
+Directory| Telef. Boek
+Callers| Oproepen
+Icom| Intercom
+Dir| Telefoonb.
+Xfer| Doorverb.
+Conf| Conferent.
+SIP Settings| SIP-parameter
+Proxy Port| Proxy-Port
+Registrar Port| Registrar-Port
+User Name| Gebruikersnaam
+Screen Name| Naam in display
+Proxy Server| Proxy-Server
+Registrar Server| Registrar-Server
+Auth. Name| Auth. Naam
+Nortel NAT| Nortel NAT
+Sylantro| Sylantro
+Broadsoft| Broadsoft
+Display Name| Display naam
+RTP Port Base| RTP Basis-Port
+Static NAT| Statische NAT
+NAT Settings| NAT-Parameter
+NAT IP| NAT-IP-Adres
+NAT SIP Port| NAT-SIP-Port
+NAT RTP Port| NAT-RTP-Port
+NAT HTTPS Port| NAT-HTTPS-Port
+Phone Status| Telefoonstatus
+Auto Discovery| Auto-Config.
+Trying...| Proberen... 
+Remote| Remote
+Reset| Reset
+Choose Server| Server kiezen
+Select| Keuze
+Ring Tone:| Beltoon:
+Silent| Stil
+Network Settings| Netwerk instell.
+Clear| Wissen
+Speaker | Luidspreker 
+Headset | Headset 
+Speaker/Headset| Luidspr./Heads.
+Headset/Speaker| Heads./Luidspr.
+Audio Mode| Audio mode
+Low| Zacht
+Medium| Medium
+High| Luid
+OFF| Uit
+ON| Aan
+DHCP Settings| DHCP Instellingn
+DHCP User Class| DHCP User Class
+Hostname| Hostnaam
+IP Address| IP-Adres
+Subnet Mask| Subnet-Mask
+Subnet Mask:| Subnet Mask:
+Gateway| Gateway
+Primary DNS| Primaire DNS
+Secondary DNS| Secundaire DNS
+TFTP Settings| TFTP Instellingn
+VLAN| VLAN
+VLAN ID| VLAN ID
+PC Port VLAN ID| PC poort VLAN ID
+LAN Port VLAN| LAN poort VLAN
+PC Port VLAN| PC poort VLAN ID
+Priority| Prioriteit
+VLAN Enabled\nYes| VLAN actief\nJa
+VLAN Enabled\nNo| VLAN actief\nNee
+PC Port Priority| PC poort prior.
+LAN Port VLAN ID| LANpoort VLAN ID
+UPnP| UPnP
+Use UPnP| Gebruik UPnP
+Select Gateway| Gateway keuze
+Portmap Started| Start poort toew
+Portmap Error| Fout poort toew.
+LLDP| LLDP
+LLDP packet interval| LLDP pckt interv
+LLDP Settings| LLDP instellingn
+Use LLDP ELIN| Gebr LLDP ELIN
+TypeService DSCP| DSCP ServiceType
+Type of Service DSCP| DSCP Service Type
+VLAN Priority| VLAN Prioriteit
+Other Priority| Ander Prioriteit
+SessionBorderCtl| SessionBorderCtl
+Session Border Ctrl| SessionBorder Control
+Select SBC| SBC kiezen
+SBC Settings| SBC instellingen
+None| Geen
+Kagoor| Kagoor
+Update Interval (sec)| Update-Intrv (s)
+Backspace| Terug
+No| NEE
+Yes| JA
+DHCP Download Options| DHCP Download Opties
+Firmware Version| Firmware Version
+Restart Phone| Toestel opstartn
+Show| Tonen 
+is OFF| is UIT
+Password| Wachtwoord
+Restarting...| Herstarten...
+Speed| Snelheid
+Manual| Handm.
+Auto| Auto
+Half| Half
+Full| Voll
+Duplex| Duplex
+ ERROR: |  Fout: 
+Invalid IP addr.| Ongeldig IP-adr.
+Invalid mask| Ongeldig SN mask
+Range is 1-4094| Range 1-4094
+Range is 1-4095| Range 1-4095
+Range is 0-63| Range 0-63
+Range is 0-7| Range 0-7
+DND| NS
+DND On| Niet storen AAN
+Time Server| NTP-server
+Set Time| Tijd instellen
+Set Date| Datum instellen
+Date Format| Datum formaat
+Time Zone| Tijdzone
+Daylight Savings| Zomertijd
+Invalid Time| Tijd ongeldig
+Invalid Date| Datum ongeldig
+Invalid IP| Ongeldig IP
+ Invalid Number|  Ongeldig Nummer
+On| Aan
+Off| Uit
+Automatic| Automatisch
+Conf Hold| Conf. wacht
+No Service| Geen service
+Mute| Mute
+Connected| Verbonden
+Drop| Verbreken
+Park| Parkeren
+PickUp| Pickup
+Redial| Herhalen
+DCP| DCP
+DCP List| DCP Lijst
+Cancel| Annuleren
+Done| Gereed
+Callers List| Oproeplijst
+No changes made| Geen wijzigingen
+Key is Locked| Toets geblokk.
+Cannot Save| Niet bewaard
+1 item| 1 item
+ items|  items
+No User| Geen gebruiker
+DHCP failed| DHCP fout
+Unknown Name| Naam onbekend
+Unknown Number| Nr. onbekend
+Unknown Line| Lijn onbekend
+Item is erased| Item is gewist
+Unknown| Onbekend
+NextSpace| Spatie
+Dot "."| Punt "."
+Transfer Failed| Doorverb mislukt
+Call Forward| Oproepomleiding
+Call Fwd| Oml.
+All| Alles
+Any| Ieder
+NoAns| Geen antwoord
+BusyNoAns| Bezet/Geen Antw
+Number:| Nummer:
+Mode:| Mode
+No. Rings:| AantBelsign:
+Line: | Lijn: 
+Contrast Level| Contrast inst.
+ Message|  Bericht
+ Messages|  Berichten
+Loading Page...| Pagina laden...
+Abort Loading...| Laden afbreken
+Connect Timeout| Verbind. Timeout
+Data Timeout| Data Timeout
+File Not Found| File n. gevonden
+Page Load Error| Fout bij laden
+Cannot display| Geen display
+Skip| overslaan
+Call Failed| Oproep mislukt
+Primary Server| Primaire server
+Alternate Server| Secundair server
+Primary| Primair
+Alternate| Secundair
+Bad encrypted cfg| Foutieve config.
+Use TFTP| TFTP gebruiken
+Use FTP| FTP gebruiken
+Use HTTP| HTTP gebruiken
+Use HTTPS| HTTPS gebruiken
+FTP Settings| FTP Instellingen
+FTP Server| FTP-Server
+FTP Path| FTP-directory
+FTP Username| FTP-gbruikrsnaam
+FTP Password| FTP-wachtwoord
+HTTP Settings| HTTP Instellingn
+HTTP Server| HTTP-Server
+HTTP Path| HTTP-Pad
+HTTP Port| HTTP Poort
+HTTPS Settings| HTTPS Settings
+Download Server| Download-Server
+Download Path| Download-Pad
+Download Port| Download poort
+HTTPS Server| HTTPS-Server
+HTTPS Path| HTTPS-Pad
+HTTPS Port| HTTPS Poort
+HTTPS Client| HTTPS-Client
+SSL 3.0| SSL 3.0
+TLS 1.0| TLS 1.0
+Bad Certificate| Verk certificaat
+Certificates| Certificaten
+Cert Validation| Certif validatie
+All defaults| Alle def.waarden
+Config default| Default config 
+AM| AM
+PM| PM
+Factory Default| Default waardes
+Erase Local Cfg.| Lok confg wissen
+New IP Obtained| Nieuw IP-Adr
+New NAT IP| Nieuwe NAT IP
+Server IP Change| IP server wijzig
+AastraLink Menu| AastraLink Menu
+Server Options| Server opties
+AastraLink Info| AastraLink info
+Server Remote IP| Server Remote IP
+Server Local IP| Server Local IP
+Preferences| Voorkeuren
+Network Status| Netwerkstatus
+MAC Address:| MAC-Adr. tst
+BT MAC Address:| BT MAC Аdres:
+Invalid Key| Ongeldige toets
+Speed Dial Edit:| SnelKeuze edit:
+Press SD button| Druk SnelK knop
+From: | Van:
+To: | Tot:
+Via: | Via: 
+Diverted: | Omgeleid
+Log Off| Log uit
+Customer Support| Customer support
+Status| Status
+Operation| Bedrijf
+Basic Settings| Basis instellingen
+Advanced Settings| Geavanceerde instellingen
+System Information| Systeeminformatie
+Down| Naar beneden
+Up| Naar boven
+n/a| n/a
+10Mbps| 10 Mb/s
+100Mbps| 100 Mb/s
+1000Mbps| 1000 Mb/s
+Attribute| Attribuut
+Link State| Link status
+Negotiation| Onderhandeling
+Hardware Information| Hardware-Informatie
+Firmware Information| Firmware-Informatie
+Firmware Release Code| Firmware-Release-Code
+Value| Waarde
+Platform| Platform
+Boot Version| Boot-Version
+Date/Time| Datum/Tijd
+DND Key Mode| Modus niet storen toets 
+Call Forward Key Mode| Modus Omleiden toets
+Option 160| Optie 160
+Option 159| Optie 159
+Option 66| Optie 66
+Option 43| Optie 43
+Account| Account
+Both| Beide
+Line| Lijn
+Line 1| Lijn 1
+Line 2| Lijn 2
+Line 3| Lijn 3
+Line 4| Lijn 4
+Line 5| Lijn 5
+Line 6| Lijn 6
+Line 7| Lijn 7
+Line 8| Lijn 8
+Line 9| Lijn 9
+Line 10| Lijn 10
+Configuration Line %d| Configuratie lijn %d
+Basic SIP Authentication Settings| Basisinstellingen SIP authenticatie
+Screen Name| Naam in display
+Screen Name 2| Schermnaam 2
+Phone Number| Telefoonnummer
+Caller ID| CLIP
+Authentication Name| Authenticatie naam
+Password| Wachtwoord
+BLA Number| BLA-nummer
+Line Mode| Lijn mode
+Generic| Generiek
+Broadsoft SCA| Broadsoft SCA
+BLA| BLA
+Asterisk SLA| Asterisk SLA
+Basic SIP Network Settings| Basis SIP netwerkinstellingen
+Outbound Proxy Server| Outbound Proxy-Server
+Outbound Proxy Port| Outbound Proxy-Poort
+Registration Period| Registratieperiode
+RTP Settings| RTP-instellingen
+Autodial Settings| Instellingen Automatisch kiezen
+Autodial Number| Nummer Automatisch kiezen
+Autodial Timeout| Automatisch kiezen time-out
+Use Global Settings| Algemene instellingen kiezen
+DTMF Method| DTMF-methode
+SIP INFO| SIP-INFO
+BOTH| BEIDE
+Save Settings| Instellingen opslaan
+Global SIP| SIP global
+Global SIP Settings| Globale SIP-instellingen
+RTP Encryption| RTP versleuteling
+SRTP Disabled| SRTP niet actief
+SRTP Preferred| SRTP voorkeur
+SRTP Only| Uitsluitend SRTP
+Advanced SIP Settings| Geavanceerde SIP-instellingen
+Explicit MWI Subscription| Expliciet MWI-instelling
+Explicit MWI Subscription Period| Expliciet MWI abonnement periode
+MWI for BLA account| MWI voor BLA account
+Enabled| Geactiveerd
+Send MAC Address in REGISTER Message| Stuur MAC-adres in REGISTER bericht
+Send Line Number in REGISTER Message| Stuur lijnnummer in REGISTER-bericht
+Session Timer| Session-Timer
+T1 Timer| Timer T1
+T2 Timer| Timer T2
+Transaction Timer| Transactie timer
+Transport Protocol| Transport protocol
+UDP and TCP| UDP en TCP
+UDP| UDP
+TCP| TCP
+TLS| TLS
+Persistent TLS| TLS persistent
+Registration Failed Retry Timer| Registratie mislukt herhaaltimer
+Registration Timeout Retry Timer| Registratie timeout herhaaltimer
+Registration Renewal Timer| Registratie vernieuwingstimer
+BLF Subscription Period| BLF registratieperiode
+ACD Subscription Period| ACD registratieperiode
+BLA Subscription Period| BLA registratieperiode
+Blacklist Duration| Blacklistduur
+ Park Pickup Config|  Parkeer Pick-up Config
+RTP Port| RTP-poort
+Basic Codecs| Basis codecs
+Force RFC2833 Out-of-Band DTMF| Forceer RFC2833 Out-of-Band-DTMF
+Codec Preference List| Aangepaste voorkeur codec lijst
+Silence Suppression| Stilte onderdrukking
+Provisioning complete.| Provisioning afgesloten
+You must restart the phone before the new settings will take effect.| Om de wijzigingen te activeren, aub het toestel opnieuw starten 
+ERROR: Maximum number of connections reached.| FOUT: Maximaal aantal verbindingen bereikt
+Logout Complete| Logout afgesloten
+Your session has ended.  Please close the browser.| Uw sessie is beëindigd. Wilt U de browser sluiten.
+Session Expired| Sessie beëindigd
+Please close the browser or use the link below to log in again.| Aub browservenster sluiten of gebruik de link om opnieuw in te loggen
+Log In| Log in
+Log Out| Log uit
+Avail| Beschkb
+Unavail| Nbschkb
+Reset User Password| Reset gebruikerswachtwoord
+Please enter the current and new passwords| Geef aub het huidige en nieuwe wachtwoord in
+Current Password| Huidig wachtwoord
+New Password| Nieuw wachtwoord
+Password Confirm| Wachtwoord bevestigen
+Please Enter| Geef in
+Submit| Ingeven
+ABC...| ABC…
+abc...| abc…
+123...| 123…
+Authorizing...| Authoriseren…
+Authorization Failed| Authorisatie mislukt
+Auth Failed| Authorst mislukt
+Current password is incorrect.| Wachtwoord is niet correct
+Please try again.| Probeer het opnieuw
+The new password fields do not match.| De nieuwe wachtwoorden komen niet overeen 
+The new password can not be saved.| Het nieuwe wachtwoord kan niet opgeslagen worden 
+The user password has been changed.| Het wachtwoord is gewijzigd
+Task and Stack Info| Taak- en Stack informatie
+Back| Terug
+Files Available for Download| Download bestanden staan gereed
+Custom| Individueel
+Save As...| Opslaan als.
+Directory List| Telefoonboek lijst
+Current Settings| Huidige instellingen
+Restore To Factory Defaults| Terug naar fabrieksinstellingen
+Restore| Terugzetten
+Remove Local Configuration Settings| Lokale instellingen terugzetten
+Remove| Verwijderen
+Restarting the hardware...| Hardware opnieuw starten..
+Please return to the <a href="sysinfo.html">main page</a> after your phone restarts.| Ga naar <a href="sysinfo.html">main page</a> nadat telefoon opnieuw is opgestart.
+User not authorized to make changes.| Gebruiker heeft geen rechten on te wijzigen 
+Local configuration file has been deleted.| Lokale configuratiegegevens is gewist
+Please restart the phone for the settings to take effect.| Om de wijzigingen te activeren, toestel opnieuw starten
+Phone has been set to factory Defaults.| Toestel is terug gezet naar fabrieksinstellingen
+Action URI| Actie URI
+Action URI Configuration| Actie URI configuratie
+Event| Gebeurtenis
+StartUp| Opstarten
+Successful Registration| Registratie succesvol
+Registration Event| Registratie event
+Incoming Call| Inkomende oproep:
+Outgoing Call| Uitgaande oproep:
+Offhook| Van de haak
+Onhook| Op de haak
+Disconnected| Verbroken
+Poll| Poll
+Interval| Interval
+Settings saved.| Configuratie opgeslagen
+Settings could not be saved.| Instellingen konden niet opgeslagen worden
+Firmware Update| Firmware-Update
+TLS Support| TLS ondersteuning
+Manual Firmware Update| Handmatige Firmware-Update
+Enter the server's IP address and the name of the firmware below to initiate a firmware update.| Geef het adres van de configuratieserver en de naam van de firmware op om een update te starten.
+Configuration Server| Configuratieserver
+Configuration Server Settings| Configuratieserver - Instellingen 
+Server IP| IP-adres server
+File Name| Bestandsnaam
+Configure File Names| Bestandsnamen configureren
+Root and Intermediate Certificates Filename| Root en Intermediate certificaten
+Local Certificate Filename| Lokale certificaat filenaam  
+Private Key Filename| Filenaam privé-sleutel
+Trusted Certificates Filename| Vertouwde certificaten filenaam
+Download Firmware| Firmware downloaden
+Firmware upgrade in progress.  Please wait.| Bezig met firmware upgrade.. Wachten aub
+Please enter a valid filename and TFTP server IP address.| Geef een geldige bestandsnaam en het adres van de TFTP-server in
+Invalid TFTP server IP address| Ongeldig adres van de TFTP server
+Invalid download settings.| Ongeldige download instellingen
+Unable to upgrade firmware.| Firmware upgrade niet mogelijk
+The phone is restarting...| Toestel wordt opnieuw gestart..
+Firmware upgrade successful.| Firmware upgrade succesvol
+This firmware already exists on the phone.| Deze firmware is al geinstalleerd
+No upgrade is needed.| Geen firmware update noodzakelijk
+Troubleshooting| Foutzoeken
+Module| Module
+Log Settings| Log instellingen
+Log IP| Log IP-adres
+Log Port| Log Poort
+Debug Level| Debug Level
+Support Information| Support informatie
+Get local.cfg| local.cfg ophalen
+Get server.cfg| server.cfg ophalen
+Show Task and Stack Status| Toon Taak en Stack status
+Settings| Instellingen
+Download Protocol| Download Protocol
+Auto-Resync| Auto-Resync
+Days| Dagen
+Maximum Delay| Maximale vertraging
+Mode| Modus
+Configuration Files| Configuratie files
+Time (24-hour)| Tijd (24-uren)
+XML Push Server List(Approved IP Addresses)| Lijst van de XML Push-Server (geteste IP adressen)
+Phone-side Call Forward Settings| Omleiding instellingen op het toestel
+Global Settings| Algemene instellingen
+No Answer| Geen antwoord
+Number| Nummer
+Number of Rings| Aantal belsignalen
+Local Line| Lokale lijn
+Forward Number| Omleidingsnummer
+Global| Global
+Enable| Activeren
+Network| Netwerk
+Must provision a valid default gateway IP if DHCP is enabled| Geldig IP-adres van de standaard gateway noodzakelijk, indien u van DHCP gebruik maakt
+Invalid IP Address| Ongeldig IP-adres
+Invalid IP address| Ongeldig IP-adres
+Invalid IP addr.| Ongeldig IP-adres
+Invalid gateway address| Ongeldig Gateway-adres
+Invalid subnet mask| Ongeldig subnet-mask
+Invalid primary DNS address| Ongeldige primaire DNS-adres
+Invalid secondary DNS address| Ongeldig secundair DNS-adres
+Basic Network Settings| Basis netwerkinstellingen
+Advanced Network Settings| Geavanceerde netwerkinstellingen
+DHCP| DHCP
+NAT Port| NAT-Port
+Nortel NAT Traversal Enabled| Nortel NAT-traversal actief
+Nortel NAT Timer (seconds)| Nortel NAT-Timer (seconden)
+NTP Time Servers| NTP-tijdservers
+Time Server 1| Tijdserver 1
+Time Server 2| Tijdserver 2
+Time Server 3| Tijdserver 3
+SIP| SIP
+VLAN Enable| VLAN-activering
+Non-IP Packet| Non-IP-paket
+SIP Priority| SIP-prioriteit
+RTP Priority| RTP-prioriteit
+RTCP Priority| RTCP-prioriteit
+Preferences| Voorkeuren
+General| Algemeen
+Idle Display Name 1| Rust display naam 1
+Idle Display Name 2| Rust display naam 2
+Local Dial Plan| Lokaal nummerplan
+Send Dial Plan Terminator| Stuur nummerplan terminator
+Digit Timeout (seconds)| Time-out cijferinvoer (seconden)
+Park Call:| Parkeer oproep
+Pick Up Parked Call:| Pickup van geparkeerde oproep
+Suppress DTMF Playback| Afspelen DTMF onderdrukken 
+Display DTMF Digits| DTMF-cijfers weergeven
+Call Waiting| Aankloppen
+Play Call Waiting Tone| Aankloptoon hoorbaar
+Stuttered Dial Tone| Onderbroken kiestoon
+Incoming Call Interrupts Dialing| Inkomende oproep onderbreekt nummerkeuze
+Switch UI Focus To Ringing Line| Schakel GI focus naar bellende lijn 
+Outgoing Intercom Settings| Uitgaande intercom instellingen
+Type| Type
+Phone-Side| Toestelzijde
+Server-Side| Serverzijde
+Prefix Code| Prefix
+Incoming Intercom Settings| Inkomende intercom instellingen
+Microphone Mute| Microfoon mute
+Play Warning Tone| Waarschuwingstoon afspelen 
+Allow Barge In| Inbreken toestaan
+Auto-Answer| Automatisch beantwoorden
+Key Mapping| Toets toewijzing
+Map Redial Key To| Herhaaltoets toewijzen
+Map Conf Key To| Configuratietoets toewijzen
+Ring Tones| Belsignalen
+Brazil| Brazilië
+France| Frankrijk
+Germany| Duitsland
+Italy| Italië
+Mexico| Mexico
+Russia| Rusland
+UK| Verenigd Koninkr
+US| Verenigde Staten
+Global Ring Tone| Algemene beltoon
+Tone 1| Beltoon 1
+Tone 2| Beltoon 2
+Tone 3| Beltoon 3
+Tone 4| Beltoon 4
+Tone 5| Beltoon 5
+Priority Alerting Settings| Oproep prioriteitsinstellingen
+Enable Priority Alerting| Prioriteitsoproep actief
+Group| Groep
+External| Extern
+Internal| Intern
+Emergency| Noodnummer
+Auto call distribution| Automatische oproepverdeling
+Auto Call Distribution Settings| Automatische oproepverdeling instellingen
+ACD| ACD
+Community 1| Community 1
+Community 2| Community 2
+Community 3| Community 3
+Community 4| Community 4
+Normal ringing| Normale beltoon
+Bellcore-dr2| Bellcore-dr2
+Bellcore-dr3| Bellcore-dr3
+Bellcore-dr4| Bellcore-dr4
+Bellcore-dr5| Bellcore-dr5
+Directed Call Pickup Settings| Call Pickup instellingen
+Directed Call Pickup| Call Pickup
+Directed Call Pickup by Prefix| Call Pickup met prefix
+Play a Ring Splash| Begroetingstoon afspelen
+Auto Available| Auto beschikbaarheid
+Auto Available Timer| Auto beschikbaarheid timer
+Time and Date Setting| Tijd en datum instellingen
+Time Format| Tijdformaat
+Date Format| Datum formaat
+Programmable Keys| Configureerbare toetsen
+Programmable Keys Configuration| Toetsconfiguratie
+Hard Key| Vaste toetsen
+Key| Toets
+BLF List URI:| BLF URI-Lijst:
+None| Geen
+Speeddial/Xfer| Snelkeuze/Doorschakelen
+Do Not Disturb| Niet storen aub
+BLF| BLF
+BLF/Xfer| BLF/Doorschakelen
+BLF/List| BLF/Lijst
+XML| XML
+WebApps| WebAppl
+Flash| Flash
+Last Call Return| Laatste terugbel opdracht
+Sprecode| Sprecode
+Transfer| Doorverbinden
+Conference| Conferentie
+Save| Opslaan
+Delete| Wissen
+Data has been transmitted to the phone successfully.| Gegevens werden succesvol verzonden naar het toestel
+Data cannot be posted to the phone.| Gegevens konden niet naar het toestel verzonden worden 
+Please ensure the data size is 512 bytes or less and the phone is configured to receive from the host.| Controleer of de datapakketten op 512 bytes of minder ingesteld zijn om te ontvangen door de host
+Expansion Modules| Uitbreidingsmodules
+Expansion Module 1| Uitbreidingsmodule 1
+Expansion Module 2| Uitbreidingsmodule 2
+Expansion Module 3| Uitbreidingsmodule 3
+Page 1| Pagina 1
+Page 2| Pagina 2
+Page 3| Pagina 3
+List 1| Lijst 1
+List 2| Lijst 2
+List 3| Lijst 3
+List 4| Lijst 4
+List 5| Lijst 5
+List 6| Lijst 6
+Incompatible with phone model| Functioneert niet met dit telefoonmodel
+Backup Proxy Server| Back-up Proxy-server
+Backup Proxy Port| Back-up Proxy-port
+Backup Registrar Server| Back-up Registrar-Server
+Backup Registrar Port| Back-up Registrar-Port
+Phone is locked| Toestel gblokkrd
+Phone Lock| Toestelblokk.
+Lock the phone?| Toestel blokkrn?
+Phone is unlocked| Toestel vrij
+Password:| Wachtwoord:
+Emergency Dial Plan| Noodnummers
+Account Configuration| Account Configuratie
+Lock| Blokkeren
+Unlock| Deblokkeren
+Unlock the phone?| Toestel deblokk.?
+Lock or unlock the phone| Toestel blokkeren of deblokkeren
+HTTPS Client Method| HTTPS-Client-methode
+HTTPS Server - Redirect HTTP to HTTPS| HTTPS-Server - HTTP naar HTTPS omleiden
+HTTPS Server - Block XML HTTP POSTs| HTTPS-Server - XML HTTP-POSTs blokkeren
+Validate Certificates| Certificaat valideren
+Check Certificate Expiration| Certificaat vervaldatum controleren
+Check Certificate Hostnames| Certificaat hostnamen controleren
+Language Settings| Taalinstellingen
+Webpage Language| Web taalinstellingen
+Input Language| Invoer taal
+Input Language| Invoer taal
+Jan| Jan
+Feb| Feb
+Mar| Mar
+Apr| Apr
+May| Mei
+Jun| Jun
+Jul| Jul
+Aug| Aug
+Sep| Sep
+Oct| Okt
+Nov| Nov
+Dec| Dec
+Sun| Zo
+Mon| Ma
+Tue| Di
+Wed| Wo
+Thu| Do
+Fri| Vr
+Sat| Za
+New Password Invalid.| Het nieuwe wachtwoord is ongeldig
+New password must be 10 characters or less.| Het nieuwe wachtwoord mag niet meer dan 10 tekens bevatten
+New password must be numeric.| Het wachtwoord mag alleen cijfers bevatten
+New password and confirm password do not match.| Wachtwoorden komen niet overeen
+Error| Fout
+Are you sure you want to restart the phone?| Wilt u het toestel nu opnieuw starten?
+This will restore the phone to default settings and cannot be undone.| Het toestel wordt teruggezet naar fabrieksinstellingen. Dit kan niet ongedaan gemaakt worden.
+This will remove the local configuration settings and cannot be undone.| Alle lokale configuratie-instellingen worden verwijderd. Dit kan niet ongedaan gemaakt worden.
+Continue| Verder
+Error: Intercom Settings| Fout: Intercominstellingen
+Please enter a prefix code for server-side intercom.| Geef de prefixcode voor intercom van de serverzijde in
+Value must be between| De waarde moet liggen tussen
+and| en
+Invalid Setting:| Ongeldige instelling:
+Please select at least one state for softkey| kies minimaal één status voor de softkeys
+DSCP value| De DSCP-waarde
+is mapped to multiple priorities.| is met meerdere prioriteiten geassocieerd
+Please enter Admin name and password| Administrator naam en wachtwoord ingeven
+Please enter User name and password| Gebruikersnaam en wachtwoord ingeven
+Centralized Conference| Gecentraliseerde conferentie
+Conference Server URI| Conferentie server URI
+UPnP device not found| UPnP-app.n.gevonden
+Ethernet| Ethernet
+Ethernet Link| Ethernet Link
+Ethernet & VLAN| Ethernet & VLAN
+Link| Link
+10M| 10M
+100M| 100M
+Unavailable| Niet beschikbaar
+Available| Beschikbaar
+Server Info| Server Info
+Unique ID:| Unieke ID:
+UPnP Mapping Lines| UPnP Mapping Lijnen
+Port Failed| Fout bij Poort
+Trying...| Proberen... 
+Seize Failed| Lijn niet OK
+Missed Call Summary Subscription| Gemiste-oproepenlijst - aanmelden
+Missed Call Summary Subscription Period| Gemiste-oproepenlijst - aanmeld periode
+AS-Feature-Event Subscription| AS-Feature-Event - aanmelden
+AS-Feature-Event Subscription Period| AS-Feature-Event - aanmeld periode
+Goodbye Key Cancels Incoming Call| Verbreek toets wijst inkomend gesprek af
+Address Incomplete| Adres incompleet
+Admin Menu| Admin menu
+IP&MAC Addresses| IP&MAC Adressen
+LAN Port| LAN Port
+PC Port| PC Poort
+Set Audio| Audio-instell.
+Config. Server| Config. Server
+IP Address:| IP Adres:
+Error Messages| Foutmeldingen
+No Error Messages| Geen foutmeldingen
+ Errors| Fouten 
+ Error| Fout
+Disabled| Uitgeschak.
+LAN Port Link| LAN poort link
+PC Port Link| PC poort link
+RTP| RTP
+RTCP| RTCP
+Phone| Telefoon
+Headset Mic Vol| Vol. mic. hoorn
+TypeService SIP| TypeService SIP
+TypeService RTP| TypeService RTP
+TypeService RTCP| TypeService RTCP
+Authentic. Name| Authent. naam
+XML Beep Support| XML Beep Support
+Status Scroll Delay (seconds)| Status Scroll vertraging (seconden)
+Backlight| Displayverlchtng
+Display| Display
+Speed Dial Edit| Snelkeuze edit
+second| seconde
+seconds| seconden
+Label| Label
+Message Waiting Indicator Line| Bericht Indicator Lijn
+Keypad Speed Dial| Snelkeuze toetsenbord
+Digit| Cijfer
+Whitelist Proxy| Whitelist Proxy
+XML SIP Notify| XML SIP notificeren
+Custom Feature| Eigenschappen
+User ID:| Gebr ID:
+Local SIP UDP/TCP Port| Local SIP UDP/TCP Poort
+Local SIP TLS Port| Local SIP TLS Poort
+802.1x Support| 802.1x Ondersteuning
+EAP Type| EAP Type
+EAP-MD5| EAP-MD5
+EAP-TLS| EAP-TLS
+Identity| Identiteit
+MD5 Password| MD5 Wachtwoord
+PC Port PassThru Enable/Disable| PC Poort PassThru Actief/Inactief
+EAP-TLS Settings| EAP-TLS Instellingen
+EAP-MD5 Settings| EAP-MD5 Instellingen
+Enable PassThru Port| Activeren PassThru
+PC Port Enabled\nYes| PC prt act\nJa
+PC Port Disabled\nNo| PCprt inact\nNee
+802.1x Settings| 802.1x Instell.
+802.1x Mode| 802.1x Modus
+EAP-MD5 Settings| EAP-MD5 Instell.
+EAP-TLS Settings| EAP-TLS Instell.
+STUN Server| STUN Server
+STUN Port| STUN Poort
+TURN Server| TURN Server
+TURN Port| TURN Poort
+TURN User ID| TURN Gebr. ID
+TURN Password| TURN Wachtwrd
+Paging| Oproepen
+Streaming| Streaming
+Group Paging RTP Settings| RTP Groepsoproep Instellingen
+Paging Listen Addresses| Paging luister adres
+Rport (RFC 3581)| Rport (RFC 3581)
+SIP Account| SIP Account
+Backup Registrar Used?| Backup registrar gebruikt?
+Unregistered| Niet geregistreerd
+Registered| Geregistreerd
+SIP Status| SIP Status
+Server Error| Serverfout
+Swap| Wisselen
+LLDP\nEnabled| LLDP\nActief
+LLDP\nDisabled| LLDP\nInactief
+LLDP Support| LLDP Onderst.
+Preferred line| Voorkeurlijn
+Preferred line Timeout (seconds)| Voorkeurlijn time-out (seconden)
+Invalid URI| Invalid URI
+WebApps| WebAppl
+Watchdog| Watchdog
+Speeddial/Conf| Snelkiezen/conf.
+Call is on Hold| Oproep in wacht
+No subscription| Geen abonnement
+MDot1xFailedStartup| 802.1x startup onderbroken
+802.1x Startup Failed| 802.1x startup onderbroken
+LLDP Startup Failed| LLDP startup onderbroken
+Failed to config Line Manager| Config Line Manager mislukt
+Line in use| Gebruikte lijnen
+Get Crash Log| Ophalen crash logboek
+Time Unavailable| Tijd n beschikb.
+Packetization Interval| Pakket interval
+Basic| Basis Codec
+Note: Basic Codecs Include| Nota: basis codecs inbegrepen
+Default| Standaard
+Not Configured| Niet conf.
+America| Amerika
+Asia| Azië
+Atlantic| Atlantisch
+Pacific| Pacific
+Australia| Australië
+Europe| Europa
+Malaysia| Maleisië
+Invalid Setting| Ongeldige instelling
+Must not be empty| Mag niet leeg zijn
+Must be a valid number| Moet een geldig nummer zijn
+Must be a nonzero number| Mag geen nummer met nul zijn
+Not in range| Niet binnen bereik
+Invalid Hostname| Ongeldige Hostnaam
+802.1x Failed| 
+Admin Password:| Admin wachtw.
+Voicemail| Voice-Mail
+HTTPS Failed| 
+LLDP Failed| 
+TR69 connect Err| 
+Downloading Language Packs| Downloaden Taal Pakketten
+Please Wait...| Wachten AUB...
+Cfg Svr Failure| 
+End| 

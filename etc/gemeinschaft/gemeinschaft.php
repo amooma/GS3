@@ -89,7 +89,12 @@ $DB_SIP_REG_UPDATE      = false;
   # in fact not a slave but a node of a MySQL cluster! It's
   # safe to use this with INSTALLATION_TYPE = "single".
 
-
+$DB_QUEUELOG_IMPORT     = true;
+  # Import /var/log/asterisk/queue_log into the database
+  # periodically? Warning: if this is set to "true", the
+  # logfile will be truncated periodically and thus be unavailable
+  # for external analysis
+  # default value: true
 
 /***********************************************************
 *    LDAP
@@ -130,9 +135,10 @@ $DB_SIP_REG_UPDATE      = false;
   # not used. always start session but fallback gracefully
 
 //$GUI_AUTH_METHOD            = 'gemeinschaft';
+  # comma separated list of authentication methods
+  # available methods:
   # "gemeinschaft": Authenticate users against our internal database.
-  # "ldap" : Checks if user can be found in LDAP. If yes, bind against
-  #          LDAP is performed. If not, "gemeinschaft" is used.
+  # "ldap"        : Authenticate users against LDAP server
   # "webseal"     : Trust the non-standard "IV-User" HTTP header.
   #                 Make sure every access goes through WebSeal
   #                 and nobody can access our GUI directly!
@@ -218,7 +224,8 @@ $NOBODY_CID_NAME        = 'Namenlos-';
   # The CallerID name prefix.
   # Call scripts/gs_nobodies_change if you ever change this!
 
-
+$NOBODY_ALLOW_EXTERNAL  = false;
+  # Allow nobody accounts to dial external destinations
 
 /***********************************************************
 *    PROVISIONING
@@ -275,7 +282,6 @@ $PROV_ALLOW_NET             = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.25
 //$PROV_MODELS_ENABLED_AASTRA      = '*';  # or '51i,53i,55i,57i'
 //$PROV_MODELS_ENABLED_GRANDSTREAM = '*';  # or 'bt110,gxp2000,gxp2020', ...
 //$PROV_MODELS_ENABLED_TIPTEL      = '*';  # or 'ip280,ip284,ip286'
-//$PROV_MODELS_ENABLED_POLYCOM     = '*';  # or 'spip-550,spip-670', ...
 
 
 
@@ -305,10 +311,18 @@ $SNOM_PROV_PB_NUM_RESULTS   = 15;
 $SNOM_PROV_FW_UPDATE        = false;  # allow firmware updates?
 $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 
-//$SNOM_PROV_FW_DEFAULT_300   = '7.1.24';
-//$SNOM_PROV_FW_DEFAULT_320   = '7.1.24';
-//$SNOM_PROV_FW_DEFAULT_360   = '6.5.1';
-//$SNOM_PROV_FW_DEFAULT_370   = '7.1.24';
+//$SNOM_PROV_FW_DEFAULT_300   = '8.4.32';
+//$SNOM_PROV_FW_DEFAULT_320   = '8.4.32';
+//$SNOM_PROV_FW_DEFAULT_360   = '8.4.32';
+//$SNOM_PROV_FW_DEFAULT_370   = '8.4.32';
+//$SNOM_PROV_FW_DEFAULT_820   = '8.4.32';
+//$SNOM_PROV_FW_DEFAULT_821   = '8.4.32';
+
+  # Intermediate firmware to enable 6->7 upgrade.
+  # Images should be named like e.g. snom300-from6to7-07.03.14.bin
+//$SNOM_PROV_FW_FROM6TO7_300  = '7.1.30';
+//$SNOM_PROV_FW_FROM6TO7_320  = '7.1.30';
+//$SNOM_PROV_FW_FROM6TO7_360  = '7.1.30';
 
 //$SNOM_PROV_KEY_BLACKLIST    = '';
   # do not show these softkey functions in GUI,
@@ -317,7 +331,7 @@ $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 
 //----------------------[  Snom M3  ]---------------------//
 
-$SNOM_PROV_M3_ACCOUNTS      = 1;
+$SNOM_PROV_M3_ACCOUNTS      = 0;
   # set to 0 to disable Snom M3 provisioning
 
 //$SNOM_PROV_M3_FW_DEFAULT_SNOM_M3 = 'x.x.x';  # not used (yet)
@@ -327,26 +341,9 @@ $SNOM_PROV_M3_HTTP_PASS        = 'gEheiM23y89sdo23';
   # if the username is empty, access to the base station's web 
   # interface will be denied
 
-
-//----------------------[  Snom M9  ]---------------------//
-
-$SNOM_PROV_M9_ACCOUNTS   = 1;
-  # set to 0 to disable Snom M9 provisioning
-
-$SNOM_PROV_M9_HTTP_USER  = 'admin';
-$SNOM_PROV_M9_HTTP_PASS  = 'password';
-  # to password protect the phone's web gui.
-  # changing these values will likely cause automatic rebooting to fail
-
-$SNOM_PROV_M9_BASE_PIN   = '0000';
-
-$SNOM_PROV_M9_FW_UPDATE  = false;  # allow firmware updates?
-//$SNOM_PROV_M9_FW_DEFAULT = '09.02.28';
-
-
 //----------------------[  Aastra  ]----------------------//
 
-$AASTRA_PROV_ENABLED        = true;   # do provisioning for Aastra?
+$AASTRA_PROV_ENABLED        = false;  # do provisioning for Aastra?
                                       # experimental!
                                       # show keyset for Aastra in the GUI?
 $AASTRA_PROV_PB_NUM_RESULTS = 10;
@@ -368,7 +365,7 @@ $AASTRA_PROV_ADMIN_PASS     = '22222'; # must be numeric
 
 //-----------------[  Siemens OpenStage  ]----------------//
 
-$SIEMENS_PROV_ENABLED       = true;   # do provisioning for Siemens?
+$SIEMENS_PROV_ENABLED       = false;  # do provisioning for Siemens?
 //...
 
 //$SIEMENS_PROV_PREFER_HTTP   = true;
@@ -403,7 +400,7 @@ $SIEMENS_PROV_ENABLED       = true;   # do provisioning for Siemens?
 
 //---------------------[ Grandstream ]--------------------//
 
-$GRANDSTREAM_PROV_ENABLED   = true;   # do provisioning for Grandstream?
+$GRANDSTREAM_PROV_ENABLED   = false;  # do provisioning for Grandstream?
   # Warning: The phonebook for Grandstream does not currently have
   # authentication!
 
@@ -432,16 +429,27 @@ $GRANDSTREAM_PROV_FW_UPDATE = false;  # allow firmware updates?
 
 //$GRANDSTREAM_PROV_FW_DEFAULT_GXV3000 = '1.1.3.50';
 //$GRANDSTREAM_PROV_FW_DEFAULT_GXV3005 = '1.1.3.50';
-//$GRANDSTREAM_PROV_FW_DEFAULT_GXV3140 = '1.0.1.6';
 
 //$GRANDSTREAM_PROV_KEY_BLACKLIST = '';
   # do not show these softkey functions in GUI,
   # comma separated list, default: ''
 
 
+//------------------------[ Elmeg ]-----------------------//
+
+$ELMEG_PROV_ENABLED = false;  # do provisioning for Elmeg?
+
+$ELMEG_PROV_HTTP_USER = "";
+$ELMEG_PROV_HTTP_PASS = "";
+  # to password protect the phone's web gui.
+  # changing these values will likely cause automatic rebooting to fail
+
+$ELMEG_PROV_FW_UPDATE = false; # allow firmware updates?
+  # FIXME: not implemented yet
+
 //-----------------------[ Tiptel ]-----------------------//
 
-$TIPTEL_PROV_ENABLED   = true;   # do provisioning for Tiptel?
+$TIPTEL_PROV_ENABLED   = false;  # do provisioning for Tiptel?
 
 $TIPTEL_PROV_HTTP_PASS = 'admin';  # e.g. "gEheiM23y89sdo23", default: 'admin'
   # to password protect the phone's web gui.
@@ -502,7 +510,6 @@ $POLYCOM_PROV_HTTP_PASS      = 'gEheiM23y89sdo23';
 
 $POLYCOM_PROV_ALLOW_LOG_PUT  = false;
   # allow Polycom phones to PUT their logs to Apache
-
 
 
 /***********************************************************
@@ -569,8 +576,26 @@ $DP_ALLOW_DIRECT_DIAL       = false;
   # pass (/generate) a "connection ID" via the custom X-Org-ConnID
   # SIP header, store in CDR(x_connid)
 
+$PB_REVERSE_SEARCH      = false;
+  # reverse search of the callers name in the global and 
+  # personal phonebooks
 
+/***********************************************************
+*    SELECTABLE Callerid
+***********************************************************/
 
+$USER_SELECT_CALLERID = true;
+  # allow the user to select another callerid when
+  # placing calls
+
+/***********************************************************
+*    QUEUE LOGGING
+***********************************************************/
+
+$LOG_QUEUE_CALLS = true;
+  # If this is set to "true" queue calls will be logged
+  # in the dial log
+ 
 /***********************************************************
 *    MISC
 ***********************************************************/
@@ -622,11 +647,59 @@ $EMAIL_DELIVERY         = 'sendmail';
   #                  sendmail / postfix / exim)
   # "direct-smtp" :  connect to the MX servers of the recipient directly
   #                  via SMTP
+$EMAIL_ADDRESS          = 'noreply@gemeinschaft.net';
+  # the email address the voicemail notifications appears to come from
+$EMAIL_NAME             = 'Gemeinschaft';
+  # the realname of a user the voicemail notifications appears to come from
+
+$TRANSFER_FAILED_CALLBACK       = true;
+  # a blind transfered call will return to its origin
+  # if the target is busy, unavailable or offline
+
+$CALLBACK_FAILED_EXTENSION      = '';
+  # if the origin of a blind transfer that failed is also busy, unavailable or 
+  # offline the call will be transfered to this extension. 
+  # If empty, the channel will be busy.
+
+$SWITCHBOARD_DROP_TARGET = '';
+  # global target for droping the call no answer/busy/offline
+
+$SWITCHBOARD_DROP_TIMEOUT = 0;
+  # global timeout for droping to call no answer/busy/offline
+  # if the feature is enabled.
+  # if you want the user to define this himself set 0.
 
 $CALL_RECORDING	        = false;
   # allow recording phone calls as WAV files
+  
+$CALL_RECORDING_AUTO	= false;
+  # automatically record calls if the group of the calling/called user has the
+  # permission 'record_call'
 
+$VMBOX_ALWAYS_ASK_PIN 	= false;
+  # asks for the pin before the user can enter the voicemail menu if
+  # set to true.
+  
+/***********************************************************
+*    Astbuttond
+*
+*       The username of asterisk manager interface
+*       is always "astbuttond" for the buttondamon
+*
+***********************************************************/
 
+$BUTTONDAEMON_USE       = true;
+# do we want to use the Astbuttond instead of normal subscribtions
+$BUTTONDAEMON_HOST      = '192.168.1.130';
+# the ip, on which the daemon is running
+$BUTTONDAEMON_PORT      = 5041;
+# the Post of the daemons socketserver
+$BUTTONDAEMON_SECRET    ='SecretLocaNetPassword';
+# Needs to be set in the Astbuttonds config, too
+$BUTTONDAEMON_DISPLAYDIR = "/var/spool/astbuttond/";
+# Filesystem location where astbuttond stores it's display contents files
+# MUST be identical to the path specified in astbuttond.config to work
+# correctly!
 
 /***********************************************************
 *    PHONEBOOK
@@ -639,9 +712,12 @@ $CALL_RECORDING	        = false;
 //$PB_INTERNAL_TITLE      = "Intern";             #  "
 //$PB_PRIVATE_TITLE       = "Pers\xC3\xB6nlich";  #  "
 
-$PB_REVERSE_SEARCH      = false;
-  # reverse search of the caller name in the global and 
-  # personal phonebooks
+# local LDAP server as helper application for LDAP-enabled phones
+//$PB_LDAP_ENABLED  = false;
+//$PB_LDAP_HOST     = '192.168.1.130';
+//$PB_LDAP_PORT     = 0;        # 0 for default (389 / 636)
+//$PB_LDAP_BINDDN   = 'cn=admin,dc=gemeinschaft,dc=local';  # i.e. the rootdn
+//$PB_LDAP_PWD      = 'secret';
 
 
 /***********************************************************
@@ -739,3 +815,4 @@ if (@$INSTALLATION_TYPE === 'gpbx') {
 		include_once($inc_file);
 	}
 }
+

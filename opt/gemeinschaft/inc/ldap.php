@@ -138,7 +138,7 @@ function gs_ldap_get_list( $ldap_conn, $base, $filter='', $props=array(), $limit
 	if (strLen($filter) < 1) $filter = 'objectclass=*';
 	if (! is_array($props)) $props = array();
 	
-	$rs = @ldap_list( $ldap_conn, $base, $filter, $props, 0, (int)$limit, 60, LDAP_DEREF_SEARCHING );
+	$rs = @ldap_search( $ldap_conn, $base, $filter, $props, 0, (int)$limit, 60, LDAP_DEREF_SEARCHING );
 	if (! $rs)
 		return new GsError( 'Failed to query LDAP, search base: "'. $base .'", filter: "'. $filter .'" - '. @gs_get_ldap_error($ldap) );
 	

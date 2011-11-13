@@ -33,13 +33,13 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_prune_peer.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
-
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 /***********************************************************
 *    change a user account
 ***********************************************************/
 
-function gs_user_change( $user, $pin, $firstname, $lastname, $language, $host_id_or_ip, $force=false, $email='', $reload=true )
+function gs_user_change( $user, $pin, $firstname, $lastname, $language, $host_id_or_ip, $force=false, $email='', $reload=true, $pb_hide=false, $drop_call=false, $drop_target='', $mailbox='' )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $user ))
 		return new GsError( 'User must be alphanumeric.' );
@@ -65,6 +65,16 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $language, $host_id
 		return new GsError( 'GS_EMAIL_PATTERN_VALID not defined.' );
 	if ($email != '' && ! preg_match( GS_EMAIL_PATTERN_VALID, $email ))
 		return new GsError( 'Invalid e-mail address.' );
+		
+	$pb_hide = (int)$pb_hide;
+	
+	$drop_call = (int)$drop_call;
+	
+	$drop_target = trim( $drop_target );
+	
+	if ( $drop_target != '' &&  ! preg_match( '/^(vm|vm\*)?[0-9]+$/', $drop_target ))
+		return new GsError( 'Drop target must be numeric.' );
+	
 	
 	include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 	
@@ -128,7 +138,7 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $language, $host_id
 	
 	# update user
 	#
-	$ok = $db->execute( 'UPDATE `users` SET `pin`=\''. $db->escape($pin) .'\', `firstname`=\''. $db->escape($firstname) .'\', `lastname`=\''. $db->escape($lastname) .'\', `email`=\''. $db->escape($email) .'\', `host_id`='. $host['id'] .' WHERE `id`='. $user_id );
+	$ok = $db->execute( 'UPDATE `users` SET `pin`=\''. $db->escape($pin) .'\', `firstname`=\''. $db->escape($firstname) .'\', `lastname`=\''. $db->escape($lastname) .'\', `email`=\''. $db->escape($email) .'\', `pb_hide`=' . $pb_hide . ', `host_id`='. $host['id'] .' WHERE `id`='. $user_id );
 	if (! $ok) {
 		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to change user.' );
@@ -137,11 +147,33 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $language, $host_id
 	# update sip account (including language code)
 	#
 	$calleridname = trim( gs_utf8_decompose_to_ascii( $firstname .' '. $lastname ));
-	$ok = $db->execute( 'UPDATE `ast_sipfriends` SET `callerid`=CONCAT(_utf8\''. $db->escape($calleridname) .'\', \' <\', `name`, \'>\'), `language`=\''. $db->escape($language) .'\' WHERE `_user_id`='. $user_id );
+	$sqlcmd = 'UPDATE `ast_sipfriends` SET `callerid`=CONCAT(_utf8\''. $db->escape($calleridname) .'\', \' <\', `name`, \'>\'), `language`=\''. $db->escape($language) .'\'';
+	if ($mailbox != '')
+		$sqlcmd .= ', `mailbox`=\''. $mailbox . '\'';
+	$sqlcmd .= ' WHERE `_user_id`='. $user_id;
+	$ok = $db->execute( $sqlcmd );
 	if (! $ok) {
 		gs_db_rollback_trans($db);
 		return new GsError( 'Failed to change SIP account.' );
 	}
+	else {
+		if ( GS_BUTTONDAEMON_USE == true ) {
+			gs_user_language_changed_ui ( $user , preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['ulang']) ) ;
+		}
+	}
+	
+	# update dropping the call
+	#
+	
+	$drop_exists = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `user_calldrop` WHERE `user_id`='. $user_id );
+	if ( $drop_exists <= 0 ) {
+		$db->execute( 'INSERT INTO `user_calldrop` ( `user_id`, `number`, `drop_call` ) 
+			VALUES ( ' . $user_id . ', \'' . $drop_target  . '\', ' . $drop_call . ' )'   );
+	}
+	else {
+		$db->execute( 'UPDATE `user_calldrop` SET `drop_call`=' . $drop_call . ', `number`=\'' . $drop_target  .  '\'  WHERE `user_id`=' . $user_id );
+	}
+	
 	
 	# delete stuff not used for users on foreign hosts
 	#
@@ -333,6 +365,12 @@ function gs_user_change( $user, $pin, $firstname, $lastname, $language, $host_id
 		}
 		if (! $host['is_foreign']) {
 			if ($reload) @ gs_asterisks_reload( array($host['id'] ), true );
+		}
+		if ( GS_BUTTONDAEMON_USE == true ) {
+			$user_name = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+			if (! $user_name)
+				return new GsError( 'Unknown user.' );
+			gs_user_remove_ui($user_name);
 		}
 	} else {
 		$ok = @ gs_asterisks_prune_peer( $ext, array($host['id']) );

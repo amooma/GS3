@@ -33,10 +33,11 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
 
 
-$user_ext = trim(@$argv[1]);
-$type     = trim(@$argv[2]);
-$number   = trim(@$argv[3]);
-$rname    = trim(@$argv[4]);
+$user_ext     = trim(@$argv[1]);
+$type         = trim(@$argv[2]);
+$number       = trim(@$argv[3]);
+$queue_number = trim(@$argv[4]);
+$rname        = trim(@$argv[5]);
 
 if (! preg_match('/^[0-9]+$/', $user_ext))
 	exit(1);
@@ -46,10 +47,19 @@ if (! $number)
 	exit(1);
 $number = preg_replace( '/[^\d*#]/', '', $number );
 
+//the number should never be empty
+if ( strlen( $number ) <= 0 ) {
+	$number = 'anonym';
+}
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
+if (! GS_LOG_QUEUE_CALLS ) {
+	if( $queue_number > 0 )
+		die(); 
+}
 
 $db = gs_db_master_connect();
 
@@ -57,6 +67,13 @@ $db = gs_db_master_connect();
 #
 $uid = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user_ext) .'\'' );
 if ($uid < 1) exit(1);
+
+# get queue id, if provided
+#
+if ($queue_number > 0)
+	$queue_id = (int)$db->executeGetOne( 'SELECT `_id` FROM `ast_queues` WHERE `name`=\''. $db->escape($queue_number) .'\'' );
+else
+	$queue_id = 'NULL';
 
 # get remote user
 #
@@ -99,8 +116,9 @@ if ($remote_user) {
 
 # log
 #
-$db->execute( 'INSERT INTO `dial_log` (`user_id`, `type`, `timestamp`, `number`, `remote_name`, `remote_user_id`) VALUES ('. $uid .', \''. $type .'\', '. time() .', \''. $db->escape($number) .'\', \''. $db->escape($remote_name) .'\', '. $db_remote_user_id .')' );
-
-
+$db->execute( 'INSERT INTO `dial_log` (`user_id`, `type`, `timestamp`, `number`, `remote_name`, `remote_user_id`, `queue_id`) VALUES ('. $uid .', \''. $type .'\', '. time() .', \''. $db->escape($number) .'\', \''. $db->escape($remote_name) .'\', '. $db_remote_user_id . ', ' . $queue_id . ')' );
+if ( $type =='missed' && gs_get_conf('GS_BUTTONDAEMON_USE') ) {
+	gs_user_missedcalls_ui( $user_ext, $queue_id != 'NULL' );
+}
 
 ?>

@@ -2,9 +2,9 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 5319 $
 * 
-* Copyright 2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 *
 * Andreas Neugebauer <neugebauer@loca.net>
@@ -51,9 +51,10 @@ function gs_user_phonemodel_get( $user )
 	# get phone-model
 	#
 	$type = $db->executeGetOne( 'SELECT `type` FROM `phones` WHERE `user_id`='. $user_id  );
-	if (! $type) return 'none';
+	if (! $type) return "none";
 	
 	return $type;
 }
+
 
 ?>

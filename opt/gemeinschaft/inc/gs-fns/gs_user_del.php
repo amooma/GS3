@@ -34,7 +34,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_reload.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_asterisks_prune_peer.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_hylafax_authfile.php' );
-
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 /***********************************************************
 *    delete a user account
@@ -152,6 +152,10 @@ function gs_user_del( $user, $reload=true )
 	#
 	$db->execute( 'DELETE FROM `callblocking` WHERE `user_id`='. $user_id );
 	
+	# delete callerids
+	#
+	$db->execute( 'DELETE FROM `users_callerids` WHERE `user_id`='. $user_id );
+	
 	# delete sip account
 	#
 	$db->execute( 'DELETE FROM `ast_sipfriends` WHERE `_user_id`='. $user_id );
@@ -196,10 +200,29 @@ function gs_user_del( $user, $reload=true )
 	# do a clean logout from the current phone
 	#
 	$db->execute( 'UPDATE `phones` SET `user_id`=NULL WHERE `user_id`='. $user_id );
+
+	# delete huntgroup memberships
+	#
+	$db->execute( 'DELETE FROM `huntgroups` WHERE `user_id`='. $user_id );
+	
+	
+	# delete drop targets
+	#
+	$db->execute( 'DELETE FROM `user_calldrop` WHERE `user_id`='. $user_id );
+	
+	# delete dnd
+	#
+	$db->execute( 'DELETE FROM `dnd` WHERE `_user_id`='. $user_id );
 	
 	# delete user
 	#
 	$db->execute( 'DELETE FROM `users` WHERE `id`='. $user_id );
+	
+	# astbuttond
+	
+	if ( GS_BUTTONDAEMON_USE == true ) {
+	        gs_user_remove_ui( $ext );
+	}
 	
 	# reload dialplan (to update hints) and prune realtime peer
 	#

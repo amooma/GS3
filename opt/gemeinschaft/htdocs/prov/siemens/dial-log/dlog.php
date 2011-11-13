@@ -31,6 +31,8 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 
 header( 'Content-Type: text/xml; charset=utf-8' );
 header( 'Expires: 0' );
@@ -39,6 +41,21 @@ header( 'Cache-Control: private, no-cache, must-revalidate' );
 header( 'Vary: *' );
 
 $xml_buf = '';
+
+function _get_user_ext( $user_id )
+{
+	global $db;
+	
+	$user_ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+
+	if (!$user_ext ) {
+		_err( 'Unknown user.' );
+		return false;
+	}
+
+	return $user_ext;
+}
+
 
 function xml( $string )
 {
@@ -103,7 +120,7 @@ if (! preg_match('/^\d+$/', $user)) {
 }
 
 $type = trim(@$_REQUEST['type']);
-if (! in_array( $type, array('in','out','missed', 'queue'), true )) {
+if (! in_array( $type, array('in','out','missed','qin','qmissed'), true )) {
 	$type = false;
 }
 
@@ -125,7 +142,8 @@ $typeToTitle = array(
 	'out'    => __("Gew\xC3\xA4hlt"),
 	'missed' => __("Verpasst"),
 	'in'     => __("Angenommen"),
-	'queue'  => __("Warteschlangen")
+	'qmissed' => __("WS Verpasst"),
+	'qin'     => __("WS Angenommen")
 );
 
 
@@ -153,7 +171,7 @@ if (! $type) {
 	foreach ($typeToTitle as $t => $title) {
 		$num_calls = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `dial_log` WHERE `user_id`='. $user_id .' AND `type`=\''. $t .'\'' );
 		$i++;
-		xml('    <Option ID="'.$i.'" Selected="'.($i===1 ?'TRUE':'FALSE').'" Key="type" Value="'.$t.'">');
+		xml('    <Option ID="'.$i.'" Selected="'.($i===1 ? 'TRUE':'FALSE').'" Key="type" Value="'.$t.'">');
 		switch ($t) {
 			case 'out':
 				$image = $img_url.'keyboard.png';
@@ -162,6 +180,12 @@ if (! $type) {
 				$image = $img_url.'karm.png';
 				break;
 			case 'in':
+				$image = $img_url.'yast_sysadmin.png';
+				break;
+			case 'qmissed':
+				$image = $img_url.'karm.png';
+				break;
+			case 'qin':
 				$image = $img_url.'yast_sysadmin.png';
 				break;
 			default:
@@ -186,29 +210,31 @@ if (! $type) {
 #########################################################
 
 else {
-	if ( $type == queue ){	
-			$query =
-		'SELECT SQL_CALC_FOUND_ROWS
-			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
-		FROM `dial_log`
-		WHERE
-			`user_id`='. $user_id .' AND
-			`type`=\''. $type .'\'
-		ORDER BY `ts` DESC
-		LIMIT 20';
-	}else{
-			 $query =	
-		'SELECT SQL_CALC_FOUND_ROWS
-			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`,
-		COUNT(*) `num_calls`
-		FROM `dial_log`
-		WHERE
-			`user_id`='. $user_id .' AND
-			`type`=\''. $type .'\'
-		GROUP BY `number`	
-		ORDER BY `ts` DESC
-		LIMIT 20';
+
+	$queue_null = "IS NOT NULL";
+	if ( $t == 'qin' ) {
+		$tp = 'in';
 	}
+	else if ( $t == 'qmissed' ) {
+		$tp = 'missed';
+	}
+	else {
+		$tp = $t;
+		$queue_null = "IS NULL";
+	}
+	
+	$query =
+'SELECT SQL_CALC_FOUND_ROWS
+	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
+COUNT(*) `num_calls`
+FROM `dial_log`
+WHERE
+	`user_id`='. $user_id .' AND
+	`type`=\''. $tp .'\' AND
+	`queue_id` ' . $queue_null . '
+GROUP BY `number`
+ORDER BY `ts` DESC
+LIMIT 20';
 	$rs = $db->execute($query);
 	$per_page = 15;
 	$num_total = @$db->numFoundRows();
@@ -255,6 +281,16 @@ else {
 	xml('  </IppHidden>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
+
+
+	if ( $tp === 'missed') {
+		gs_user_watchedmissed( $user_id, $is_queue );
+		if ( GS_BUTTONDAEMON_USE == true ) {
+			$user_ext = _get_user_ext($user_id);
+			if ( $user_ext )
+				gs_user_missedcalls_ui($user_ext, $is_queue);
+		}
+	}
 	
 }
 

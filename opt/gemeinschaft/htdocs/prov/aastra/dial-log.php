@@ -33,6 +33,8 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_user_watchedmissed.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 include_once( GS_DIR .'inc/string.php' );
 
@@ -53,13 +55,39 @@ function _get_userid()
 	if ($user_id < 1) _err( 'Unknown user.' );
 	return $user_id;
 }
+
+function _get_user( $user_id )
+{
+	global $db;
+	
+	$user = $db->executeGetOne( 'SELECT `user` FROM `users` WHERE `id`=\''. $db->escape($user_id) .'\'' );
+	if (!$user ) _err( 'Unknown user.' );
+	return $user;
+}
+
+function _get_user_ext( $user_id )
+{
+	global $db;
+	
+	$user_ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+
+	if (!$user_ext ) {
+		_err( 'Unknown user.' );
+		return false;
+	}
+
+	return $user_ext;
+}
+
 $type = trim( @$_REQUEST['t'] );
-if (! in_array( $type, array('in','out','missed', 'queue', 'queued', 'ind','outd','missedd'), true )) {
+if (! in_array( $type, array('in','out','missed','qin','qmissed','ind','outd','missedd','qmissedd','qmissedd','qind'), true )) {
 	$type = false;
 }
 
 $timestamp = (int)@$_REQUEST['e'];
 $number = trim( @$_REQUEST['n'] );
+$delete = trim( @$_REQUEST['delete'] );
+$queue_id = trim( @$_REQUEST['qid'] );
 
 $num_results = (int)gs_get_conf('GS_AASTRA_PROV_PB_NUM_RESULTS', 10);
 $db = gs_db_slave_connect();
@@ -68,8 +96,14 @@ $typeToTitle = array(
 	'out'    => __("Gew\xC3\xA4hlt"),
 	'missed' => __("Verpasst"),
 	'in'     => __("Angenommen"),
-	'queue'  => __("Warteschlangen")
+	'qmissed' => __("WS Verpasst"),
+	'qin'     => __("WS Angenommen")
 );
+
+if ( $type == 'qin' || $type == 'qmissed' )
+	$is_queue = true;
+else
+	$is_queue = false;
 
 $user_id = _get_userid();
 
@@ -81,7 +115,10 @@ if (! $type) {
 	
 	# delete outdated entries
 	#
-	@$db->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `timestamp`<'. (time()-(int)GS_PROV_DIAL_LOG_LIFE) );
+	
+	$DB = gs_db_master_connect();
+	
+	@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .' AND `timestamp`<'. (time()-(int)GS_PROV_DIAL_LOG_LIFE) );
 	
 	
 	$xml = '<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none">' ."\n";
@@ -89,7 +126,7 @@ if (! $type) {
 	
 	foreach ($typeToTitle as $key => $title) {
 		$xml.= '<MenuItem>' ."\n";
-		$xml.= '	<Prompt>'.htmlEnt($title).'</Prompt>' ."\n";
+		$xml.= '	<Prompt>'.$title.'</Prompt>' ."\n";
 		$xml.= '	<URI>'. $url_aastra_dl .'?t='.$key.'</URI>' ."\n";
 		//$xml.= '<Selection>0&amp;menu_pos=1</Selection>' ."\n";
 		$xml.= '</MenuItem>' ."\n";
@@ -105,40 +142,44 @@ if (! $type) {
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '</AastraIPPhoneTextMenu>' ."\n";
 	
-} elseif ($type==='out' || $type==='in' || $type==='missed' || $type=='queue' ) {
-	
-	if ($type==='missed') {
-		$xml = "<AastraIPPhoneExecute>\n" .
-		"	<ExecuteItem URI=\"Command: ClearCallersList\"/>\n" .
-		"</AastraIPPhoneExecute>\n";
-		$phone_ip = @$_SERVER['REMOTE_ADDR'];
-		aastra_push_str($phone_ip, $xml);
+} elseif ($type==='out' || $type==='in' || $type==='missed' || $type==='qin' || $type==='qmissed' ) {
+
+	$queue_null = "IS NOT NULL";
+        if ( $type == 'qin' ) {
+        	$tp = 'in';
+	}
+	else if ( $type == 'qmissed' ) {
+		$tp = 'missed';
+	}
+	else {
+		$tp = $type;
+		$queue_null = "IS NULL";
 	}
 	
-	if ( $type == queue ){	
-		$query =
-		'SELECT
-			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
-		FROM `dial_log`
-		WHERE
-			`user_id`='. $user_id .' AND
-			`type`=\''. $type .'\'
-		ORDER BY `ts` DESC
-		LIMIT '.$num_results;
-	} else {
-		$query =
-		'SELECT
-			MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
-			COUNT(*) `num_calls`
-		FROM `dial_log`
-		WHERE
-			`user_id`='. $user_id .' AND
-			`type`=\''. $type .'\'
-		GROUP BY `number`
-		ORDER BY `ts` DESC
-		LIMIT '.$num_results;
+	if (strlen($delete) > 0) {
+
+		$DB = gs_db_master_connect();
+
+		if ( $queue_id ) {
+			@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .'  AND `queue_id`=' . $queue_id  . ' AND `type`=\'' . $tp  . '\' AND `number`=\''. $delete . '\'' );
+		}
+		else {
+			@$DB->execute( 'DELETE FROM `dial_log` WHERE `user_id`='. $user_id .'  AND `queue_id` ' . $queue_null  . ' AND `type`=\'' . $tp  . '\' AND `number`=\''. $delete . '\'' );
+		}
 	}
-	//echo $query;
+	
+	$query =
+	'SELECT
+	MAX(`timestamp`) `ts`, `number`, `remote_name`, `remote_user_id`,
+	COUNT(*) `num_calls`
+	FROM `dial_log`
+	WHERE
+		`user_id`='. $user_id .' AND
+		`type`=\''. $tp .'\' AND
+		`queue_id` ' . $queue_null .'
+	GROUP BY `number`, `queue_id`
+	ORDER BY `ts` DESC
+	LIMIT '.$num_results;
 	
 	$rs = $db->execute( $query );
 	if ($rs && $db->numFoundRows()) {
@@ -147,7 +188,21 @@ if (! $type) {
 		$xml.= '<Title>'. $typeToTitle[$type] .'</Title>' ."\n";
 		
 		while ($r = $rs->fetchRow()) {
-			
+			$num_calls = 0;
+			if ( $tp === 'missed' && $r['num_calls'] > 0 ) {
+				$query =
+				'SELECT
+					COUNT(*)
+				FROM `dial_log`
+				WHERE
+					`user_id`=' . $user_id . ' AND
+					`number`=\'' . $r['number'] . '\' AND
+					`type`=\'' . $type . '\' AND
+					`read` < 1 AND
+					`queue_id` ' . $queue_null;
+				$num_calls = (int)$db->executeGetOne($query);
+            }
+
 			$entry_name = $r['number'];
 			if ($r['remote_name'] != '') {
 				$entry_name .= ' '. $r['remote_name'];
@@ -156,10 +211,10 @@ if (! $type) {
 				$when = date('H:i', (int)$r['ts']);
 			else
 				$when = date('d.m.', (int)$r['ts']);
-			$entry_name = $when .'  '. $entry_name;
-			if ($r['num_calls'] > 1) {
-				$entry_name .= ' ('. $r['num_calls'] .')';
-			}
+			$entry_name = $when .' '. $entry_name;
+			if ($num_calls > 0)
+				$entry_name .= '('. $num_calls .')';
+
 			$xml.= '<MenuItem>' ."\n";
 			$xml.= '	<Prompt>'. htmlEnt($entry_name) .'</Prompt>' ."\n";
 			$xml.= '	<Dial>'. $r['number'] .'</Dial>' ."\n";
@@ -182,29 +237,51 @@ if (! $type) {
 		$xml.= '</SoftKey>' ."\n";
 		
 		$xml.= '</AastraIPPhoneTextMenu>' ."\n";
-	}
-	else {
+
+		if ( $tp === 'missed') {
+			gs_user_watchedmissed( $user_id, $is_queue );
+			if ( GS_BUTTONDAEMON_USE == true ) {
+				$user_ext = _get_user_ext($user_id);
+				if ( $user_ext )
+					gs_user_missedcalls_ui($user_ext, $is_queue);
+			}
+		}
+	} else {
 		aastra_textscreen($typeToTitle[$type], __('Kein Eintrag'));
 	}
 	
 	
-} elseif ($type==='outd' || $type==='ind' || $type==='missedd' || $type=='queued') {
+} elseif ($type==='outd' || $type==='ind' || $type==='missedd'|| $type==='qmissedd' || $type==='qind' ) {
 	
 	$type = substr($type,0,strlen($type)-1);
 	$xml = '<AastraIPPhoneFormattedTextScreen destroyOnExit="yes" cancelAction="'. $url_aastra_dl .'?t='.$type.'">' ."\n";
+
+	$queue_null = "IS NOT NULL";
+        if ( $type == 'qin' ) {
+        	$tp = 'in';
+	}
+	else if ( $type == 'qmissed' ) {
+		$tp = 'missed';
+	}
+	else {
+		$tp = $type;
+		$queue_null = "IS NULL";
+	}
+
 	
 	$query =
 'SELECT
-	`d`.`timestamp` `ts`, `d`.`number` `number`, `d`.`remote_name` `remote_name`, `d`.`remote_user_id` `remote_user_id`, `u`.`firstname` `fn`, `u`.`lastname` `ln`,
+	`d`.`timestamp` `ts`, `d`.`number` `number`, `d`.`remote_name` `remote_name`, `d`.`remote_user_id` `remote_user_id`, `d`.`queue_id` `queue_id`, `u`.`firstname` `fn`, `u`.`lastname` `ln`,
 	COUNT(*) `num_calls`
 FROM
 	`dial_log` `d` LEFT JOIN
 	`users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
 WHERE
 	`d`.`user_id`='. $user_id .' AND
-	`d`.`type`=\''. $type .'\' AND
-	`d`.`timestamp`='. $timestamp .'
-GROUP BY `number`
+	`d`.`type`=\''. $tp .'\' AND
+	`d`.`timestamp`='. $timestamp .' AND
+	`d`.`queue_id`'. $queue_null . '
+GROUP BY `number`, `queue_id`
 LIMIT 1';
 	
 	//echo $query;
@@ -227,7 +304,7 @@ LIMIT 1';
 			$num_calls = ' ('. $r['num_calls'] .')';
 		}
 		
-		$xml.= '<Line Align="left">'. $name .'</Line>' ."\n";
+		$xml.= '<Line Align="left">'. htmlEnt($name) .'</Line>' ."\n";
 		$xml.= '<Line Align="right" Size="double">'. $r['number'] .'</Line>' ."\n";
 		$xml.= '<Line Align="left">'. $when .'</Line>' ."\n";
 	}
@@ -236,13 +313,21 @@ LIMIT 1';
 	$xml.= '	<Label>'. __('Anrufen') .'</Label>' ."\n";
 	$xml.= '	<URI>Dial:'. $r['number'] .'</URI>' ."\n";
 	$xml.= '</SoftKey>' ."\n";
+	$xml.= '<SoftKey index="3">' ."\n";
+	$xml.= '	<Label>'. __('Löschen') .'</Label>' ."\n";
+	if (  $type == 'qin' ||  $type == 'qmissed' ) {
+		$xml.= '	<URI>'. $url_aastra_dl .'?t='.$type.'&amp;e='.$r['ts'].'&amp;delete='.$r['number']. '&amp;qid='.$r['queue_id'].'</URI>' ."\n";
+	}
+	else {
+		$xml.= '	<URI>'. $url_aastra_dl .'?t='.$type.'&amp;e='.$r['ts'].'&amp;delete='.$r['number'].'</URI>' ."\n";
+	}
+	$xml.= '</SoftKey>' ."\n";
 	$xml.= '<SoftKey index="4">' ."\n";
 	$xml.= '	<Label>'. __('Abbrechen') .'</Label>' ."\n";
 	$xml.= '	<URI>SoftKey:Exit</URI>' ."\n";
 	$xml.= '</SoftKey>' ."\n";
 	
 	$xml.= '</AastraIPPhoneFormattedTextScreen>' ."\n";
-	
 }
 
 aastra_transmit_str( $xml );

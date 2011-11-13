@@ -396,20 +396,16 @@ if ($action === 'import') {
 }
 
 
-
-$sudo_url_param =
-	(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
-	? '' : ('sudo='. @$_SESSION['sudo_user']['name']);
-
-
 if ($action == '') {
 	
+
 	echo "<h3>".__('CSV-Export')."</h3>\n<br />";
 	
-	echo '<a href="', GS_URL_PATH, 'srv/csv-export.php', ($sudo_url_param != '' ? '?'.$sudo_url_param : ''), '" title="', __('CSV-Datei des Telefonbuches herunterladen'), '">'.__('CSV-Datei herunterladen').'</a>';
-	
+	echo '<a href="', GS_URL_PATH, 'srv/csv-export.php', $sudo_url, '" title="', __('CSV-Datei des Telefonbuches herunterladen'), '">'.__('CSV-Datei herunterladen').'</a>';
+
 	echo "<br /><br /><br /><h3>".__('CSV-Import')."</h3>\n<br />";
-	
+
+
 	echo '<form method="post" action="', GS_URL_PATH, '" enctype="multipart/form-data">', "\n";
 	echo gs_form_hidden($SECTION, $MODULE), "\n";
 	echo '<input type="hidden" name="action" value="upload" />', "\n";
@@ -434,7 +430,7 @@ if ($action == '') {
 	echo '<div style="max-width:45em;">', "\n";
 	echo htmlEnt(__("Das Format sollte etwa folgenderma\xC3\x9Fen aussehen.")) ,"\n";
 	echo '<pre style="margin:0.5em 1em; padding:0.06em 0.3em; background-color:#eee; width:60%; border:1px solid #ddd;">', htmlEnt(__("Vorname;Nachname;Telefon\nAlbert;Einstein;+309876543\nRobert;Bosch;00711123456")) ,'</pre>',"\n";
-	echo htmlEnt(__("Ob eine Kopfzeile vorhanden ist oder nicht, die Reihenfolge der Spalten und die Trennzeichen werden automatisch erkannt und k\xC3\xB6nnen ggf. interaktiv in der Vorschau eingestellt werden.")) ,"\n";
+	echo htmlEnt(__("Ob eine Kopfzeile vorhanden ist oder nicht kann interaktiv in der Vorschau eingestellt werden. Die Trennzeichen und die Feldreihenfolge k\xC3\xB6nnen ebenfalls interaktiv in der Vorschau eingestellt werden.")) ,"\n";
 	echo '</div>' ,"\n";
 	
 }

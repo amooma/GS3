@@ -334,6 +334,9 @@ function iface_to_agent_ext( $interface )
 
 set_error_handler('_err_handler');
 
+if ( gs_get_conf('GS_DB_QUEUELOG_IMPORT') == false )
+        exit();
+
 $current_euid = posix_geteuid();
 if ($current_euid !== 0) {
 	gs_log( GS_LOG_WARNING, "Must be run as root (you are $current_euid)." );

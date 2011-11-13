@@ -2,16 +2,15 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 3307 $
 * 
-* Copyright 2007-2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
-* Philipp Kempgen <philipp.kempgen@amooma.de>
-* Peter Kozak <peter.kozak@amooma.de>
-* 
-* Author: Daniel Scheller <scheller@loca.net>
 *
+* APS for Polycom SoundPoint IP phones
+* (c) 2009 Daniel Scheller / LocaNet oHG
+* mailto:scheller@loca.net
+* 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -30,12 +29,11 @@
 
 define("GS_VALID", true); // this is a parent file
 
-require_once("../../../inc/conf.php");
+require_once( dirname(__FILE__) .'/../../../inc/conf.php' );
 require_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gs-lib.php");
 include_once(GS_DIR ."inc/gs-fns/gs_user_external_numbers_get.php");
 include_once(GS_DIR ."inc/gettext.php");
-include_once( GS_DIR .'inc/string.php' );
 require_once(GS_DIR ."inc/langhelper.php");
 
 header("Content-Type: text/html; charset=utf-8");
@@ -67,7 +65,7 @@ function _err($msg = "")
 
 	echo "<html>\n";
 	echo "<head><title>". __("Fehler") ."</title></head>\n";
-	echo "<body><b>". __("Fehler") ."</b>: ". htmlEnt($msg) ."</body>\n";
+	echo "<body><b>". __("Fehler") ."</b>: ". $msg ."</body>\n";
 	echo "</html>\n";
 
 	_ob_send();
@@ -80,15 +78,16 @@ function getUserID($ext)
 	if (!preg_match("/^\d+$/", $ext)) _err('Invalid username');
 
 	$user_id = (int) $db->executeGetOne("SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`='". $db->escape($ext) ."'");
-	if ($user_id < 1) _err('Unknown user');
+	if($user_id < 1) _err("Unknown user");
 	return $user_id;
 }
 
 //---------------------------------------------------------------------------
 
-if ( !gs_get_conf('GS_POLYCOM_PROV_ENABLED') ) {
-        gs_log(GS_LOG_DEBUG, 'Polycom provisioning not enabled');
-        _err('Not enabled.');
+if(!gs_get_conf("GS_POLYCOM_PROV_ENABLED"))
+{
+        gs_log(GS_LOG_DEBUG, "Polycom provisioning not enabled");
+        _err("Not enabled.");
 }
 
 $db = gs_db_slave_connect();
@@ -107,30 +106,34 @@ $url_polycom_menu = GS_PROV_SCHEME ."://". GS_PROV_HOST . (GS_PROV_PORT ? ":". G
 #################################### INITIAL SCREEN {
 
 $mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST['m'])));
+
 $user_name = $db->executeGetOne("SELECT `user` FROM `users` WHERE `id`='". $db->escape($user_id) ."'");
 
 $enumbers = gs_user_external_numbers_get($user_name);
 
 if(isGsError($enumbers))
 {
-	_err('Fehler beim Abfragen.');
+	_err("Fehler beim Abfragen.");
  }
 
 ob_start();
+echo $phonemenu_doctype ."\n";
 
 echo "<html>\n";
 echo "<head><title>". __("Externe Rufnummern") ."</title></head>\n";
 echo "<body><br />\n";
 
 if (sizeof($enumbers) <= 0) {
-	echo htmlEnt(__("Keine externen Rufumleitungsziele konfiguriert")) .".<br />\n";
+	echo __("Keine externen Rufumleitungsziele hinterlegt") .".<br />\n";
 } else {
 	echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" width=\"100%\">\n";
 
-	echo "<tr><th width=\"100%\" align=\"left\">". htmlEnt(__("M\xC3\xB6gliche externe Rufumleitungsziele")) .":</th></tr>\n";
+	echo "<tr><th width=\"100%\" align=\"left\">". __("M\xC3\xB6gliche externe Rufumleitungsziele") .":</th></tr>\n";
 
 	foreach($enumbers as $extnumber)
+	{
 		echo "<tr><td width=\"100%\">". $extnumber ."</td></tr>\n";
+	}
 
 	echo "</table>\n";
 }

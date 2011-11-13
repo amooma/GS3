@@ -53,18 +53,35 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 <tr>
 	<td style="width:140px;"><code>*0 <i><?php echo __('Durchwahl'); ?></i></code></td>
 	<td style="width:420px;">
-		<?php echo __('Einloggen an einem Telefon. Dabei wird die Eingabe der PIN-Nummer verlangt.'); ?>
+		<?php echo __('Benutzer am Endger&auml;t einloggen. Hierzu wird die Eingabe der PIN-Nummer abgefragt und mit der "#"-Taste best&auml;tigt.'); ?>
 	</td>
 </tr>
 <tr>
 	<td><code>*0*</code></td>
 	<td>
-		<?php echo __('Ausloggen'); ?>
+		<?php echo __('Benutzer am Endger&auml;t ausloggen'); ?>
 	</td>
 </tr>
 </tbody>
 </table>
 
+<?php if ( PB_IMPORTED_ENABLED ) { ?>
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th colspan="2"><?php echo __('Zentrale Kurzwahl'); ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td style="width:140px;"><code>*1 <i><?php echo __('Kurzwahlnummer'); ?></i></code></td>
+	<td style="width:420px;">
+	<?php echo __('Wahl der unter der Kurzwahlnummer gespeicherten externen Rufnummer'); ?>
+</td>
+</tr>
+</tbody>
+</table>	
+<?php } ?>
 
 <table cellspacing="1" class="phonebook">
 <thead>
@@ -76,36 +93,180 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 <tr>
 	<td style="width:140px;"><code>*2</code></td>
 	<td style="width:420px;">
-		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)'); ?>
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren (zur Funktion muss im Men&uuml;punkt "Rufumleitung" eine Std.-Nr. angegeben werden!).'); ?>
 	</td>
 </tr>
 <tr>
 	<td><code>*2 <i><?php echo __('Nummer'); ?></i></code></td>
-	<td>
-		<?php echo __('Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die angegebene Nummer programmieren'); ?>
+	<td style="width:420px;">
+		<?php echo __('Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die angegebene Nummer aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*2#</code></td>
+	<td style="width:420px;">
+		<?php echo __('Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot;. Hierzu wird die Eingabe der Nummer abgefragt und mit der "#"-Taste best&auml;tigt.'); ?>
 	</td>
 </tr>
 <tr>
 	<td><code>*21</code></td>
-	<td>
+	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf den Anrufbeantworter aktivieren'); ?>
 	</td>
 </tr>
 <tr>
 	<td><code>*22</code></td>
-	<td>
+	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Ansage ohne Anrufbeantworter aktivieren'); ?>
 	</td>
 </tr>
 <tr>
-	<td><code>*2*</code></td>
+	<td><code>*23</code></td>
 	<td>
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die Zeitsteuerung aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td><code>*24</code></td>
+	<td>
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf den Parallelruf aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td><code>*2*</code></td>
+	<td style="width:420px;">
 		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; deaktivieren'); ?>
+	</td>
+</tr>
+
+
+<tr>
+	<td style="width:140px;"><code>*90</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall "immer" auf die Std.-Nummer aktivieren (zur Funktion muss im Men&uuml;punkt "Rufumleitung" eine Std.-Nr. angegeben werden!).'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*90 <i><?php echo __('Nummer'); ?></i></code></td>
+	<td style="width:420px;">
+		<?php echo __('Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern im Fall "immer" auf die angegebene Nummer aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*901</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; auf den Anrufbeantworter aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*902</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; auf die Ansage ohne Anrufbeantworter aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*903</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; auf die Zeitsteuerung aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*904</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; auf den Parallelruf aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*90*</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; deaktivieren'); ?>
+	</td>
+</tr>
+
+<tr>
+	<td style="width:140px;"><code>*91</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall "immer" auf die Std.-Nummer aktivieren (zur Funktion muss im Men&uuml;punkt "Rufumleitung" eine Std.-Nr. angegeben werden!).'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*91 <i><?php echo __('Nummer'); ?></i></code></td>
+	<td style="width:420px;">
+		<?php echo __('Tempor&auml;re Rufumleitung f&uuml;r Anrufe von extern im Fall "immer" auf die angegebene Nummer aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*911</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf den Anrufbeantworter aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*912</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf die Ansage ohne Anrufbeantworter aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*913</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf die Zeitsteuerung aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*914</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf den Parallelruf aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*91*</code></td>
+	<td style="width:420px;">
+		<?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; deaktivieren'); ?>
+	</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<?php if ( count(gs_group_permissions_get($user_groups, 'wakeup_call')) > 0 ) { ?>
+
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th colspan="2"><?php echo __('Weckruf'); ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td style="width:140px;"><code>*4</code></td>
+	<td style="width:420px;">
+		<?php echo __('Einrichten eines Weckrufes'); ?>
 	</td>
 </tr>
 </tbody>
 </table>
 
+</table>
+
+<?php } ?>
+
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th colspan="2"><?php echo __('Anruf &uuml;bernehmen'); ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td style="width:140px;"><code>*81* <i><?php echo __('Durchwahl'); ?></i></code></td>
+	<td style="width:420px;">
+		<?php echo __('Gezieltes Heranholen (Pick-up) von Anrufen'); ?>
+	</td>
+</tr>
+</tbody>
+</table>
 
 <table cellspacing="1" class="phonebook">
 <thead>
@@ -117,7 +278,7 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 <tr>
 	<td style="width:140px;"><code>80</code></td>
 	<td style="width:420px;">
-		<?php echo __('Eigenen Anrufbeantworter abfragen (Am Snom-Telefon kann daf&uuml;r auch die &quot;Retrieve&quot;-Taste gedr&uuml;ckt werden.)'); ?>
+		<?php echo __('Eigenen Anrufbeantworter abfragen (an snom-Endger&auml;ten durch Bet&auml;tigen der "Retrive"-Taste m&ouml;glich)'); ?>
 	</td>
 </tr>
 <tr>
@@ -170,26 +331,6 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 </table>
 <?php } ?>
 
-<?php if ( count(gs_group_permissions_get($user_groups, 'wakeup_call')) > 0 ) { ?>
-<table cellspacing="1" class="phonebook">
-<thead>
-<tr>
-	<th colspan="2"><?php echo __('Weckruf'); ?></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-	<td style="width:140px;"><code>*4</code></td>
-	<td style="width:420px;">
-		<?php echo __('Einrichten eines Weckrufes'); ?>
-	</td>
-</tr>
-</tbody>
-</table>
-<?php } ?>
-
-
-<?php if ( count(gs_group_permissions_get($user_groups, 'login_queues')) > 0 ) { ?>
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
@@ -200,24 +341,64 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 <tr>
 	<td style="width:140px;"><code>*5 <i><?php echo __('Durchwahl'); ?></i></code></td>
 	<td style="width:420px;">
-		<?php echo __('Einloggen in die Warteschlange mit der angegebenen Durchwahl'); ?>
+		<?php echo __('Einloggen in die Warteschlange mit angegebenen Durchwahl'); ?>
 	</td>
 </tr>
 <tr>
-	<td><code>*5 <i><?php echo __('Durchwahl'); ?></i> *</code></td>
-	<td>
-		<?php echo __('Ausloggen aus der Warteschlange mit der angegebenen Durchwahl'); ?>
+	<td style="width:140px;"><code>*5 <i><?php echo __('Durchwahl'); ?></i> *</code></td>
+	<td style="width:420px;">
+		<?php echo __('Ausloggen aus der Warteschlange mit angegebenen Durchwahl'); ?>
 	</td>
 </tr>
 <tr>
-	<td><code>*5*</code></td>
-	<td>
+	<td style="width:140px;"><code>*5*</code></td>
+	<td style="width:420px;">
 		<?php echo __('Ausloggen aus allen Warteschlangen'); ?>
 	</td>
 </tr>
 </tbody>
 </table>
-<?php } ?>
+
+
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th colspan="2"><?php echo __('Agenten'); ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td style="width:140px;"><code>*6 <i><?php echo __('Agentennummer'); ?></i></code></td>
+	<td style="width:420px;">
+		<?php echo __('Direktes Einloggen eines Agenten. Hierzu wird die Eingabe der PIN-Nummer abgefragt und mit der "#"-Taste best&auml;tigt.'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*6 </code></td>
+	<td style="width:420px;">
+		<?php echo __('Einloggen eines Agenten. Hierzu wird die Eingabe der Agentennummer und der PIN-Nummer abgefragt und mit der "#"-Taste best&auml;tigt.'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*6*</code></td>
+	<td style="width:420px;">
+		<?php echo __('Agenten ausloggen'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*6#*</code></td>
+	<td style="width:420px;">
+		<?php echo __('Status Pause f&uuml;r Agent aktivieren'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*6##</code></td>
+	<td style="width:420px;">
+		<?php echo __('Status Pause f&uuml;r Agent deaktivieren'); ?>
+	</td>
+</tr>
+</tbody>
+</table>
 
 
 <table cellspacing="1" class="phonebook">
@@ -230,15 +411,102 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 <tr>
 	<td style="width:140px;"><code>88 <i><?php echo __('Konf.nr.'); ?></i></code></td>
 	<td style="width:420px;">
-		<?php echo __('Einen Konferenzraum (nach 88 eine 3- oder 4-stellige Nummer) betreten bzw. er&ouml;ffnen. Wenn die Konferenz leer ist, kann eine PIN-Nr. gesetzt werden (f&uuml;r keine PIN # dr&uuml;cken). Ansonsten muss eine ggf. f&uuml;r diesen Raum gesetzte PIN eingegeben werden.'); ?>
+		<?php echo __('Einen Konferenzraum betreten bzw. er&ouml;ffnen (dazu 88 und eine beliebige 3- oder 4-stellige Nummer w&auml;hlen). Ist der Konferenzraum leer, so kann eine PIN gesetzt werden (ohne PIN Taste # dr&uuml;cken). Ist eine PIN vergeben, so muss diese zum Betreten des Konferenzraumes eingegeben werden.'); ?>
 	</td>
 </tr>
 <tr>
-	<td><code>88000</code> <?php echo __('oder'); ?> <code>880000</code></td>
-	<td>
+	<td style="width:140px;"><code>88000</code> <?php echo __('oder'); ?> <code>880000</code></td>
+	<td style="width:420px;">
 		<?php echo __('Einen freien Konferenzraum finden. Die Nummer der Konferenz wird beim Betreten angesagt. (Die anderen Teilnehmer w&auml;hlen dann <code>88 <i>Konferenznr.</i></code>, s.o.)'); ?>
 	</td>
 </tr>
 </tbody>
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th colspan="2"><?php echo __('Rufnummernunterdr&uuml;ckung (CLIR)'); ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td style="width:140px;"><code>*31</code></td>
+	<td style="width:420px;">
+		<?php echo __('Unterdr&uuml;ckung der eigenen Rufnummer f&uuml;r den n&auml;chsten Anruf (intern und extern)'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*31*</code></td>
+	<td style="width:420px;">
+		<?php echo __('Unterdr&uuml;ckung der eigenen Rufnummer deaktivieren (intern und extern)'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*31<i><?php echo __('Rufziel'); ?></code></td>
+	<td style="width:420px;">
+		<?php echo __('Unterdr&uuml;ckung der eigenen Rufnummer f&uuml;r einen Anruf zu einem beliebigen Rufziel'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*32</code></td>
+	<td style="width:420px;">
+		<?php echo __('Permanente Unterdr&uuml;ckung der eigenen Rufnummer f&uuml;r alle internen Rufziele'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*32*</code></td>
+	<td style="width:420px;">
+		<?php echo __('Unterdr&uuml;ckung der eigenen Rufnummer f&uuml;r alle internen Rufziele deaktivieren'); ?>
+	</td>
+</tr>
+
+<tr>
+	<td style="width:140px;"><code>*33</code></td>
+	<td style="width:420px;">
+		<?php echo __('Permanente Unterdr&uuml;ckung der eigenen Rufnummer f&uuml;r alle externen Rufziele'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*33*</code></td>
+	<td style="width:420px;">
+		<?php echo __('Unterdr&uuml;ckung der eigenen Rufnummer f&uuml;r alle externen Rufziele deaktivieren'); ?>
+	</td>
+</tr>
+</tbody>
+</table>
+<?php if( GS_USER_SELECT_CALLERID ){ ?>
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th colspan="2"><?php echo __('Angezeigte Rufnummer (CLIP)'); ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td style="width:140px;"><code>*34</code></td>
+	<td style="width:420px;">
+		<?php echo __('Als angezeigte Rufnummer f&uuml;r interne Gespr&auml;che die Standardnummer festlegen'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*34<i><?php echo __('Nummer'); ?></code></td>
+	<td style="width:420px;">
+		<?php echo __('Als angezeigte Rufnummer f&uuml;r interne Gespr&auml;che die angegebene Nummer festlegen'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*35</code></td>
+	<td style="width:420px;">
+		<?php echo __('Als angezeigte Rufnummer f&uuml;r externe Gespr&auml;che die Standardnummer festlegen'); ?>
+	</td>
+</tr>
+<tr>
+	<td style="width:140px;"><code>*35<i><?php echo __('Nummer'); ?></code></td>
+	<td style="width:420px;">
+		<?php echo __('Als angezeigte Rufnummer f&uuml;r externe Gespr&auml;che die angegebene Nummer festlegen'); ?>
+	</td>
+</tr>
+</tbody>
+</table>
+<?php } ?>
 </table>
 

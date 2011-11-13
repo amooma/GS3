@@ -2,15 +2,14 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 *
-* $Revision$
+* $Revision: 5996 $
 *
-* Copyright 2007-2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* Copyright 2007-2009, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
-* Philipp Kempgen <philipp.kempgen@amooma.de>
-* Peter Kozak <peter.kozak@amooma.de>
-* 
-* Author: Daniel Scheller <scheller@loca.net>
+*
+* APS for Polycom SoundPoint IP phones
+* (c) 2009 Daniel Scheller / LocaNet oHG
+* mailto:scheller@loca.net
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -76,7 +75,7 @@ function _settings_err($msg="")
 	@ob_start();
 
 	echo "<!-- // ", ($msg != "" ? str_replace("--","- -",$msg) : "Error") ," // -->\n";
-	if (!headers_sent())
+	if(!headers_sent())
 	{
 		header("Content-Type: text/plain; charset=utf-8");
 		header("Content-Length: ". (int)@ob_get_length());
@@ -88,131 +87,135 @@ function _settings_err($msg="")
 
 //---------------------------------------------------------------------------
 
-if (! gs_get_conf('GS_POLYCOM_PROV_ENABLED') )
+if(!gs_get_conf("GS_POLYCOM_PROV_ENABLED"))
 {
-	gs_log(GS_LOG_DEBUG, 'Polycom provisioning not enabled');
-	_settings_err('Not enabled.');
+	gs_log(GS_LOG_DEBUG, "Polycom provisioning not enabled");
+	_settings_err("Not enabled.");
 }
 
 $requester = gs_prov_check_trust_requester();
-if (! $requester['allowed'] )
+if(!$requester["allowed"])
 {
-	_settings_err('No! See log for details.');
+	_settings_err("No! See log for details.");
 }
 
 //--- identify polycom phone
 
-$mac = preg_replace('/[^0-9A-F]/', '', strtoupper(@$_REQUEST['mac']));
-if ( strlen($mac) !== 12 )
+$mac = preg_replace("/[^0-9A-F]/", "", strtoupper(@$_REQUEST["mac"]));
+if(strlen($mac) !== 12)
 {
-	gs_log(GS_LOG_NOTICE, 'Polycom provisioning: Invalid MAC address \"$mac\" (wrong length)');
+	gs_log(GS_LOG_NOTICE, "Polycom provisioning: Invalid MAC address \"$mac\" (wrong length)");
 	//--- don't explain this to the users
-	_settings_err('No! See log for details.');
+	_settings_err("No! See log for details.");
 }
-if ( hexdec(substr($mac, 0, 2)) % 2 == 1 )
+if(hexdec(substr($mac, 0, 2)) % 2 == 1)
 {
-	gs_log(GS_LOG_NOTICE, 'Polycom provisioning: Invalid MAC address \"$mac\" (multicast address)');
+	gs_log(GS_LOG_NOTICE, "Polycom provisioning: Invalid MAC address \"$mac\" (multicast address)");
 	//--- don't explain this to the users
-	_settings_err('No! See log for details.');
+	_settings_err("No! See log for details.");
 }
-if ( $mac === '000000000000' )
+if($mac === "000000000000")
 {
-	gs_log(GS_LOG_NOTICE, 'Polycom provisioning: Invalid MAC address \"$mac\" (huh?)');
+	gs_log(GS_LOG_NOTICE, "Polycom provisioning: Invalid MAC address \"$mac\" (huh?)");
 	//--- don't explain this to the users
-	_settings_err('No! See log for details.');
+	_settings_err("No! See log for details.");
 }
 
 //--- make sure the phone is a Polycom
 
-if ( substr($mac, 0, 6) !== '0004F2' )
+if(substr($mac, 0, 6) !== "0004F2")
 {
-	gs_log(GS_LOG_NOTICE, 'Polycom provisioning: MAC address \"$mac\" is not a Polycom phone');
+	gs_log(GS_LOG_NOTICE, "Polycom provisioning: MAC address \"$mac\" is not a Polycom phone");
 	//--- don't explain this to the users
-	_settings_err('No! See log for details.');
+	_settings_err("No! See log for details.");
 }
 
 //--- debug
-//$ua = 'FileTransport PolycomSoundPointIP-SPIP_601-UA/3.1.2.0392';
-//$ua = 'FileTransport PolycomSoundPointIP-SPIP_501-UA/3.1.2.0392';
+//$ua = "FileTransport PolycomSoundPointIP-SPIP_601-UA/3.1.2.0392";
+//$ua = "FileTransport PolycomSoundPointIP-SPIP_501-UA/3.1.2.0392";
 
-$ua = trim(@$_SERVER['HTTP_USER_AGENT']);
-if ( preg_match('/PolycomSoundPointIP/', $ua) )
+$ua = trim(@$_SERVER["HTTP_USER_AGENT"]);
+if(preg_match("/PolycomSoundPointIP/", $ua))
 {
-	$phone_model = ((preg_match('/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//', $ua, $m)) ? $m[1] : 'unknown');
-	$phone_type = 'polycom-spip-'. $phone_model;
-	$fw_vers = ((preg_match('/PolycomSoundPointIP\-SPIP_\d+\-UA\/(.*)/', $ua, $m)) ? $m[1] : '0.0.0.000');
+	$phone_model = ((preg_match("/PolycomSoundPointIP\-SPIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
+	$phone_type = "polycom-spip-". $phone_model;
+	$fw_vers = ((preg_match("/PolycomSoundPointIP\-SPIP_\d+\-UA\/(.*)/", $ua, $m)) ? $m[1] : "0.0.0.000");
 }
-else if ( preg_match('/PolycomSoundStationIP/', $ua) )
+else if(preg_match("/PolycomSoundStationIP/", $ua))
 {
-	$phone_model = ((preg_match('/PolycomSoundStationIP\-SSIP_(\d+)\-UA\//', $ua, $m)) ? $m[1] : 'unknown');
-	$phone_type = 'polycom-ssip-'. $phone_model;
-	$fw_vers = ((preg_match('/PolycomSoundStationIP\-SPIP_\d+\-UA\/(.*)/', $ua, $m)) ? $m[1] : '0.0.0.000');
+	$phone_model = ((preg_match("/PolycomSoundStationIP\-SSIP_(\d+)\-UA\//", $ua, $m)) ? $m[1] : "unknown");
+	$phone_type = "polycom-ssip-". $phone_model;
+	$fw_vers = ((preg_match("/PolycomSoundStationIP\-SPIP_\d+\-UA\/(.*)/", $ua, $m)) ? $m[1] : "0.0.0.000");
 }
 else
 {
-	gs_log(GS_LOG_WARNING, 'Phone with MAC \"$mac\" (Polycom) has invalid User-Agent (\"'. $ua .'\")');
+	gs_log(GS_LOG_WARNING, "Phone with MAC \"$mac\" (Polycom) has invalid User-Agent (\"". $ua ."\")");
 	//--- don't explain this to the users
-	_settings_err('No! See log for details.');
+	_settings_err("No! See log for details.");
 }
 
-gs_log(GS_LOG_DEBUG, 'Polycom phone \"'. $mac .'\" asks for settings (UA: ...\"'. $ua .'\") - model '. $phone_model);
-$prov_url_polycom = GS_PROV_SCHEME .'://'. GS_PROV_HOST .(GS_PROV_PORT ? ':'. GS_PROV_PORT : ''). GS_PROV_PATH .'polycom/';
+gs_log(GS_LOG_DEBUG, "Polycom phone \"". $mac ."\" asks for settings (UA: ...\"". $ua ."\") - model ". $phone_model);
+$prov_url_polycom = GS_PROV_SCHEME ."://". GS_PROV_HOST .(GS_PROV_PORT ? ":". GS_PROV_PORT : ""). GS_PROV_PATH ."polycom/";
 
 $db = gs_db_master_connect();
-if( !$db )
+if(!$db)
 {
-	gs_log(GS_LOG_WARNING, 'Polycom phone asks for settings - Could not connect to DB');
-	_settings_err('Could not connect to DB.');
+	gs_log(GS_LOG_WARNING, "Polycom phone asks for settings - Could not connect to DB");
+	_settings_err("Could not connect to DB.");
 }
 
 //--- do we know the phone?
 
 $user_id = @gs_prov_user_id_by_mac_addr($db, $mac);
-if ( $user_id < 1 )
+if($user_id < 1)
 {
-	if (! GS_PROV_AUTO_ADD_PHONE )
+	if(!GS_PROV_AUTO_ADD_PHONE)
 	{
-		gs_log(GS_LOG_NOTICE, 'New phone '. $mac .' not added to DB. Enable PROV_AUTO_ADD_PHONE');
-		_settings_err('Unknown phone. (Enable PROV_AUTO_ADD_PHONE in order to auto-add)');
+		gs_log(GS_LOG_NOTICE, "New phone ". $mac ." not added to DB. Enable PROV_AUTO_ADD_PHONE");
+		_settings_err("Unknown phone. (Enable PROV_AUTO_ADD_PHONE in order to auto-add)");
 	}
-	gs_log(GS_LOG_NOTICE, 'Adding new Polycom phone '. $mac .' to DB');
+	gs_log(GS_LOG_NOTICE, "Adding new Polycom phone ". $mac ." to DB");
 
-	$user_id = @gs_prov_add_phone_get_nobody_user_id($db, $mac, $phone_type, $requester['phone_ip']);
-	if ($user_id < 1)
+	$user_id = @gs_prov_add_phone_get_nobody_user_id($db, $mac, $phone_type, $requester["phone_ip"]);
+	if($user_id < 1)
 	{
-		gs_log(GS_LOG_WARNING, 'Failed to add nobody user for new phone '. $mac);
-		_settings_err('Failed to add nobody user for new phone.');
+		gs_log(GS_LOG_WARNING, "Failed to add nobody user for new phone ". $mac);
+		_settings_err("Failed to add nobody user for new phone.");
 	}
 }
 
 //--- is it a valid user id?
 
 $num = (int) $db->executeGetOne("SELECT COUNT(*) FROM `users` WHERE `id`=". $user_id);
-if ($num < 1)
-	$user_id = 0;
+if($num < 1) $user_id = 0;
 
-if ($user_id < 1)
+if($user_id < 1)
 {
 	//--- something bad happened, nobody (not even a nobody user) is logged
 	//--- in at that phone. assign the default nobody user of the phone:
 	$user_id = @gs_prov_assign_default_nobody($db, $mac, null);
-	if ($user_id < 1)
-		_settings_err('Failed to assign nobody account to phone '. $mac);
+	if($user_id < 1)
+	{
+		_settings_err("Failed to assign nobody account to phone ". $mac);
+	}
 }
 
 //--- get host for user
 
 $host = @gs_prov_get_host_for_user_id($db, $user_id);
-if (!$host)
-	_settings_err('Failed to find host.');
-
+if(!$host)
+{
+	_settings_err("Failed to find host.");
+}
 $pbx = $host; //--- $host might be changed if SBC configured
 
 //--- who is logged in at that phone?
 
 $user = @gs_prov_get_user_info($db, $user_id);
-if (! is_array($user) )
-	_settings_err('DB error.');
+if(!is_array($user))
+{
+	_settings_err("DB error.");
+}
 
 //--- get polycom'ized language string from user lang pref
 $user_polycomlang = @_polycom_astlang_to_polycomlang($user['language']);
@@ -226,21 +229,25 @@ $user_polycomlang = @_polycom_astlang_to_polycomlang($user['language']);
 
 //--- store the user's current IP address in the database:
 
-if (! @gs_prov_update_user_ip($db, $user_id, $requester['phone_ip']) )
-	gs_log(GS_LOG_WARNING, 'Failed to store current IP addr of user ID '. $user_id);
+if(!@gs_prov_update_user_ip($db, $user_id, $requester["phone_ip"]))
+{
+	gs_log(GS_LOG_WARNING, "Failed to store current IP addr of user ID ". $user_id);
+}
 
 //--- get callwaiting state
-$callwaiting = (int) $db->executeGetOne('SELECT `active` FROM `callwaiting` WHERE `user_id`='. $user_id);
+$callwaiting = (int) $db->executeGetOne("SELECT `active` FROM `callwaiting` WHERE `user_id`=". $user_id);
 
 //--- get SIP proxy to be set as the phone's outbound proxy
 
-$sip_proxy_and_sbc = gs_prov_get_wan_outbound_proxy($db, $requester['phone_ip'], $user_id);
-if ( $sip_proxy_and_sbc['sip_server_from_wan'] != '' )
-	$host = $sip_proxy_and_sbc['sip_server_from_wan'];
+$sip_proxy_and_sbc = gs_prov_get_wan_outbound_proxy($db, $requester["phone_ip"], $user_id);
+if($sip_proxy_and_sbc["sip_server_from_wan"] != "")
+{
+	$host = $sip_proxy_and_sbc["sip_server_from_wan"];
+}
 
 //--- get extension without route prefix
 
-if ( gs_get_conf('GS_BOI_ENABLED') )
+if(gs_get_conf("GS_BOI_ENABLED"))
 {
 	$hp_route_prefix = (string)$db->executeGetOne(
 		"SELECT `value` FROM `host_params` ".
@@ -253,24 +260,24 @@ if ( gs_get_conf('GS_BOI_ENABLED') )
 }
 else
 {
-	$hp_route_prefix = '';
-	$user_ext = $user['name'];
+	$hp_route_prefix = "";
+	$user_ext = $user["name"];
 }
 
 //--- check if this phone has the XHTML microbrowser and prepare vars
 //--- and phone features accordingly. E.g. IP300 and IP500 don't have a
 //--- firmware with microbrowser capabilities.
 
-switch ($phone_model)
+switch($phone_model)
 {
-	case '300' :
-	case '500' :
+	case "300" :
+	case "500" :
 		$phone_has_microbrowser = FALSE;
-		$phone_use_internal_divertion = '1';
+		$phone_use_internal_divertion = "1";
 		break;
 	default :
 		$phone_has_microbrowser = TRUE;
-		$phone_use_internal_divertion = '0';
+		$phone_use_internal_divertion = "0";
 		break;
 }
 
@@ -312,7 +319,7 @@ echo "reg.1.acd-agent-available=\"0\" ";
 echo "reg.1.proxyRequire=\"\" ";
 echo "reg.1.ringType=\"2\" ";
 echo "reg.1.lineKeys=\"\" ";
-echo "reg.1.callsPerLineKey=\"8\" ";
+echo "reg.1.callsPerLineKey=\"". ($callwaiting ? "8" : "1") ."\" ";
 echo "reg.1.bargeInEnabled=\"\" ";
 echo "reg.1.serverFeatureControl.dnd=\"1\" ";
 echo "reg.1.serverFeatureControl.cf=\"1\" ";
@@ -324,7 +331,7 @@ echo "reg.1.strictLineSeize=\"\" ";
       <autoOffHook call.autoOffHook.1.enabled="0" call.autoOffHook.1.contact="" call.autoOffHook.2.enabled="0" call.autoOffHook.2.contact="" call.autoOffHook.3.enabled="0" call.autoOffHook.3.contact="" call.autoOffHook.4.enabled="0" call.autoOffHook.4.contact="" call.autoOffHook.5.enabled="0" call.autoOffHook.5.contact="" call.autoOffHook.6.enabled="0" call.autoOffHook.6.contact=""/>
       <missedCallTracking call.missedCallTracking.1.enabled="1" call.missedCallTracking.2.enabled="1" call.missedCallTracking.3.enabled="1" call.missedCallTracking.4.enabled="1" call.missedCallTracking.5.enabled="1" call.missedCallTracking.6.enabled="1"/>
       <serverMissedCall call.serverMissedCall.1.enabled="0" call.serverMissedCall.2.enabled="0" call.serverMissedCall.3.enabled="0" call.serverMissedCall.4.enabled="0" call.serverMissedCall.5.enabled="0" call.serverMissedCall.6.enabled="0"/>
-      <callWaiting call.callWaiting.enabled="1" call.callWaiting.ring="beep"/>
+      <callWaiting call.callWaiting.enabled="0" call.callWaiting.ring="beep"/>
    </call>
    <divert divert.1.contact="" divert.1.autoOnSpecificCaller="1" divert.1.sharedDisabled="1" divert.2.contact="" divert.2.autoOnSpecificCaller="1" divert.2.sharedDisabled="1" divert.3.contact="" divert.3.autoOnSpecificCaller="1" divert.3.sharedDisabled="1" divert.4.contact="" divert.4.autoOnSpecificCaller="1" divert.4.sharedDisabled="1" divert.5.contact="" divert.5.autoOnSpecificCaller="1" divert.5.sharedDisabled="1" divert.6.contact="" divert.6.autoOnSpecificCaller="1" divert.6.sharedDisabled="1">
       <fwd divert.fwd.1.enabled="0" divert.fwd.2.enabled="0" divert.fwd.3.enabled="0" divert.fwd.4.enabled="0" divert.fwd.5.enabled="0" divert.fwd.6.enabled="0"/>
@@ -363,7 +370,7 @@ $sipapp_langsettings .= "  </localization>\n";
 //--- configuration for xhtml browser and key remappings on phones where
 //--- the feature is supported
 
-if ($phone_has_microbrowser)
+if($phone_has_microbrowser)
 {
 
 //--- efk configuration - provide phone macros for url handling
@@ -429,9 +436,9 @@ if ($phone_has_microbrowser)
 
 	//--- Microbrowser settings
 	echo "   <microbrowser>\n";
-	echo "      <main mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
-	//echo "      <main mb.main.idleTimeout=\"60\" mb.main.statusbar=\"0\" mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
-	//echo "      <idleDisplay mb.idleDisplay.home=\"". $prov_url_polycom ."idle.php?user=". $user_ext ."&amp;mac=". $mac ."\" mb.idleDisplay.refresh=\"10\"/>\n";
+	//echo "      <main mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
+	echo "      <main mb.main.idleTimeout=\"60\" mb.main.statusbar=\"0\" mb.main.home=\"". $prov_url_polycom ."main.php?user=". $user_ext ."&amp;mac=". $mac ."\" />\n";
+	echo "      <idleDisplay mb.idleDisplay.home=\"". $prov_url_polycom ."idle.php?user=". $user_ext ."&amp;mac=". $mac ."\" mb.idleDisplay.refresh=\"10\"/>\n";
 	echo "   </microbrowser>\n";
 
 	//--- add language settings

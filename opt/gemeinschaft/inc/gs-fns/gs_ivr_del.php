@@ -2,15 +2,13 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 *
-* $Revision$
+* $Revision: 5949 $
 *
 * Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
-*
-* Author: Sven Neukirchner <s.neukirchner@konabi.de>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License

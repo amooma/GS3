@@ -72,7 +72,8 @@ if ($number != '') {
 		'WHERE '.
 			'`u`.`id` IN ('.implode(',', $group_members).') AND ( '.
 			'`s`.`name` LIKE \''. $DB->escape($number_sql) .'\' '.
-			') '.
+			') AND '.
+			'`u`.`pb_hide` = 0 '.
 		'ORDER BY `s`.`name` '.
 		'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 		);
@@ -98,6 +99,7 @@ if ($number != '') {
 			'`users` `u` JOIN '.
 			'`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`) '.
 		'WHERE '.
+			'`u`.`pb_hide` = 0 AND'.
 			'`u`.`id` IN ('.implode(',', $group_members).') AND ( '.
 			'`u`.`lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR '.
 			'`u`.`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci '.
@@ -148,20 +150,20 @@ if ($number != '') {
 if ($page > 0) {
 	echo
 	'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page-1)), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
-	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
+	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust.png" />',
 	'</a>', "\n";
 } else {
 	echo
-	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust-dis.png" />', "\n";
+	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/back-cust-dis.png" />', "\n";
 }
 if ($page < $num_pages-1) {
 	echo
 	'<a href="', gs_url($SECTION, $MODULE, null, $search_url .'&amp;page='.($page+1)), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
-	'<img alt="weiter" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
+	'<img alt="weiter" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust.png" />',
 	'</a>', "\n";
 } else {
 	echo
-	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust-dis.png" />', "\n";
+	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/forward-cust-dis.png" />', "\n";
 }
 
 ?>

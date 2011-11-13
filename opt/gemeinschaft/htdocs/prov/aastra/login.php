@@ -35,7 +35,8 @@ include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/aastra-fns.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
-include_once( GS_DIR .'inc/string.php' );
+require_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
+include_once( GS_DIR .'inc/prov-phonetypecache.php' );
 
 $xml = '';
 
@@ -53,6 +54,20 @@ function _get_user()
 	$user_name = (string)$db->executeGetOne( 'SELECT `user`, `nobody_index` FROM `users` WHERE `current_ip`=\''. $db->escape($remote_addr) .'\'' );
 	
 	return gs_user_get($user_name);
+}
+
+function _get_user_ext( $user_id )
+{
+	$db = gs_db_slave_connect();
+	
+	$user_ext = $db->executeGetOne( 'SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`=\''. $db->escape($user_id) .'\'' );
+
+	if (!$user_ext ) {
+		_err( 'Unknown user.' );
+		return false;
+	}
+
+	return $user_ext;
 }
 
 function _logout_user()
@@ -89,6 +104,9 @@ function _logout_user()
 			return false;
 		}
 	}
+
+	# cache currently used phone types for further use
+	gs_phonetypecache_add_by_uid_to_ip($db, $old_uid);
 	
 	$rs = $db->execute( 'SELECT `id`, `mac_addr`, `nobody_index` FROM `phones` WHERE `user_id`='. $old_uid );
 	while ($phone = $rs->fetchRow()) {
@@ -114,6 +132,17 @@ function _logout_user()
 	# reboot phone
 	#
 	gs_prov_phone_checkcfg_by_ip( $remote_addr,true );
+	
+	# generate userevent
+	#
+	if ( GS_BUTTONDAEMON_USE == true ) {
+
+		$user_ext = _get_user_ext ( $old_uid );
+		if ( $user_ext ) {
+			gs_user_logoff_ui ( $user_ext );
+		}
+	}
+
 	
 	return true;
 }
@@ -165,6 +194,10 @@ function _login_user($new_ext, $password)
 		}
 	}
 	
+	# cache currently used phone types for further use
+	gs_phonetypecache_add_by_uid_to_ip($db, $old_uid);
+	gs_phonetypecache_add_by_ext_to_ip($db, $new_ext);
+
 	# log out the old user, assign the default nobody
 	#
 	$rs = $db->execute( 'SELECT `id`, `mac_addr`, `nobody_index`, `user_id` FROM `phones` WHERE `user_id` IN ('. $old_uid .','. $new_uid .') AND `id`<>'. $phone_id );
@@ -209,6 +242,7 @@ function _login_user($new_ext, $password)
 	$new_ip_addr = $db->executeGetOne('SELECT `current_ip` FROM `users` WHERE `id`='.$new_uid );
 	gs_log( GS_LOG_DEBUG, "Mobility: IP address found for new phone: $new_ip_addr");
 	
+
 	# reboot old phone
 	#
 	gs_prov_phone_checkcfg_by_ip( $remote_addr,true );
@@ -216,6 +250,17 @@ function _login_user($new_ext, $password)
 	# reboot new phone
 	#
 	if ($new_ip_addr) gs_prov_phone_checkcfg_by_ip( $new_ip_addr ,true );
+	
+	# generate userevent
+	#
+	if ( GS_BUTTONDAEMON_USE == true ) {
+
+		$user_ext = _get_user_ext ( $new_uid );
+		if ( $user_ext ) {
+			gs_user_login_ui ( $user_ext );
+		}
+	}
+
 	
 	return true;
 }
@@ -277,7 +322,7 @@ if ($action === 'login' && $type === 'user') {
 		$xml.= '<Default></Default>' ."\n";
 		$xml.= '<InputField type="empty"></InputField>' ."\n";
 		$xml.= '<InputField type="number">' ."\n";
-		$xml.= '	<Prompt>'.htmlEnt(__('Durchwahl')) .':</Prompt>' ."\n";
+		$xml.= '	<Prompt>'.__('Durchwahl') .':</Prompt>' ."\n";
 		$xml.= '	<Default>'.$user.'</Default>' ."\n";
 		$xml.= '	<Parameter>u</Parameter>' ."\n";
 		$xml.= '	<Selection>1</Selection>' ."\n";
@@ -314,15 +359,15 @@ elseif (! $action) {
 	
 	$xml.= '<MenuItem>' ."\n";
 	if ($u['nobody_index'])
-		$xml.= '	<Prompt>'. htmlEnt(__('Benutzer anmelden')) .'</Prompt>' ."\n";
+		$xml.= '	<Prompt>'. __('Benutzer anmelden') .'</Prompt>' ."\n";
 	else
-		$xml.= '	<Prompt>'. htmlEnt(__('Benutzer wechseln')) .'</Prompt>' ."\n";
+		$xml.= '	<Prompt>'. __('Benutzer wechseln') .'</Prompt>' ."\n";
 	$xml.= '	<URI>'. $url_aastra_login .'?a=login</URI>' ."\n";
 	$xml.= '</MenuItem>' ."\n";
 	
 	if (! $u['nobody_index']) {
 		$xml.= '<MenuItem>' ."\n";
-		$xml.= '	<Prompt>'. htmlEnt(__('Benutzer abmelden')) .'</Prompt>' ."\n";
+		$xml.= '	<Prompt>'. __('Benutzer abmelden') .'</Prompt>' ."\n";
 		$xml.= '	<URI>'. $url_aastra_login .'?a=logout</URI>' ."\n";
 		$xml.= '</MenuItem>' ."\n";
 	}
@@ -332,7 +377,7 @@ elseif (! $action) {
 	$xml.= '</MenuItem>' ."\n";
 	
 	$xml.= '<MenuItem>' ."\n";
-	$xml.= '	<Prompt>'. htmlEnt(__('Telefon neu starten')) .'</Prompt>' ."\n";
+	$xml.= '	<Prompt>'. __('Telefon neu starten') .'</Prompt>' ."\n";
 	$xml.= '	<URI>'. $url_aastra_login .'?a=restart</URI>' ."\n";
 	$xml.= '</MenuItem>' ."\n";
 	

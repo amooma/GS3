@@ -30,13 +30,47 @@ defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 
 
-
 /***************************************************************
-*    returns the alert time else GsError
+*    returns the huntgroup of the user else the user extension
 ***************************************************************/
 
-function get_alert_time_by_target( $target )
+function get_alert_target( $ext )
 {
+	## connect to db
+	#
+	
+	$db = gs_db_slave_connect();
+	if ( ! $db )
+		return new GsError( 'Could not connect to database.' );
+
+	## check huntgroup
+	#
+	
+	$hg =$db-> executeGetOne(
+'SELECT 
+	`huntgroups`.`number`
+FROM
+	`huntgroups`, `ast_sipfriends`
+WHERE
+	`ast_sipfriends`.`name` = "' . $db->escape($ext) . '" AND `ast_sipfriends`.`_user_id` = `huntgroups`.`user_id`'
+	);
+	
+	if ( $hg )
+	{
+		return $hg;
+	}
+	else
+	{
+		return $ext;
+	}
+}
+
+
+/***************************************************************
+*    returns the alert time else false
+***************************************************************/
+
+function get_alert_time_by_target( $target ) {
 
 	## connect to db
 	#
@@ -44,9 +78,10 @@ function get_alert_time_by_target( $target )
 	$db = gs_db_slave_connect();
 	if (! $db)
 		return new GsError( 'Could not connect to database.' );
-
-
 		
+	## get ringing-time
+	#
+	
 	$rs = $db->execute(
 'SELECT
 	`wakeup_calls`.`hour`, `wakeup_calls`.`minute`
@@ -70,11 +105,6 @@ WHERE
 		
 
 }
-
-/***************************************************************
-*    returns all extensions that have to be notified at
-*    the specified time else GsError
-***************************************************************/
 
 function get_alert_tagets_by_time( $hour, $minute )
 {
@@ -134,10 +164,6 @@ WHERE
 }
 
 
-/***************************************************************
-*    delete a single wakeupcall by extension
-***************************************************************/
-
 function delete_alert_by_target( $target )
 {
 	
@@ -155,11 +181,6 @@ function delete_alert_by_target( $target )
 	return true;
 
 }
-
-
-/***************************************************************
-*    delete all wakeupcalls by time
-***************************************************************/
 
 function delete_alert_by_time( $hour, $minute )
 {
@@ -199,10 +220,6 @@ function delete_alert_by_time( $hour, $minute )
 	return true;
 
 }
-
-/***************************************************************
-*    set alert time for an extension
-***************************************************************/
 
 function set_alert_time_by_target( $target, $hour, $minute )
 {
@@ -264,7 +281,7 @@ WHERE
 		return true;
 	
 	}
-	else if ( $exists == 1 ) {
+	else if( $exists == 1 ) {
 	
 		$query = 'UPDATE `wakeup_calls` SET `hour`=' . $db->escape($hour) . 
 			', `minute`=' . $db->escape($minute) . ' WHERE `target`="' .

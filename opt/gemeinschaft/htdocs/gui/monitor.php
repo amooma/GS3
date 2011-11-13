@@ -122,12 +122,12 @@ function get_ext_ranges( $ext_ranges )
 <html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
 <head><!--<![CDATA[
                 Gemeinschaft
-  @(_)=====(_)  (c) 2007-2010, AMOOMA GmbH - http://www.amooma.de/
+  @(_)=====(_)  (c) 2007-2008, amooma GmbH - http://www.amooma.de/
  @   / ### \    Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
                                                       GNU GPL ]]>-->
-<title><?php echo __('Gemeinschaft Monitor'); ?></title>
+<title><?php echo __('Gemeinschaft Telefon-Manager Monitor'); ?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="<?php echo GS_URL_PATH; ?>styles/original.css" />
 <?php if ($GUI_ADDITIONAL_STYLESHEET = gs_get_conf('GS_GUI_ADDITIONAL_STYLESHEET')) { ?>

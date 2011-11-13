@@ -49,6 +49,7 @@ $formats = array( # internal name to info
 	'wav-pcma' => array( 'title'=>'aLaw', 'ext'=>'alaw.wav', 'mime'=>'audio/x-wav'  ),
 	//'pcma'     => array( 'title'=>'aLaw', 'ext'=>'al'      , 'mime'=>'audio/PCMA'   ),  # RFC 4856
 	'mp3'      => array( 'title'=>'MP3' , 'ext'=>'mp3'     , 'mime'=>'audio/mpeg'   ),  # RFC 3003
+	'ogg'      => array( 'title'=>'OGG' , 'ext'=>'ogg'     , 'mime'=>'audio/ogg'    ),
 	'sun-pcmu' => array( 'title'=>'Au'  , 'ext'=>'au'      , 'mime'=>'audio/basic'  ),  # RFC 2046
 	'wav-pcm'  => array( 'title'=>'sLin', 'ext'=>'slin.wav', 'mime'=>'audio/x-wav'  ),
 );
@@ -57,6 +58,17 @@ $formats = array( # internal name to info
 
 
 $fmt  = preg_replace('/[^a-z0-9\-_]/i', '', @$_REQUEST['fmt' ]);
+
+# guess browser if output format is not set
+if (strlen($fmt) == 0) {
+	gs_log(GS_LOG_DEBUG, 'Audio format not set. Guessing from HTTP USER_AGENT "'.@$_SERVER['HTTP_USER_AGENT'].'"');
+	if ( strPos(@$_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false )
+		$fmt = 'wav';
+	elseif ( strPos(@$_SERVER['HTTP_USER_AGENT'], 'Safari') !== false )
+		$fmt = 'mp3';
+	elseif ( strPos(@$_SERVER['HTTP_USER_AGENT'], 'Firefox') !== false )
+		$fmt = 'ogg';
+}
 if (! array_key_exists($fmt, $formats)) {
 	reset($formats);
 	$fmt = key($formats);
@@ -142,90 +154,7 @@ if (@$_REQUEST['action']==='play') {
 	$fld  = preg_replace('/[^a-z0-9\-_]/i', '', @$play[0]);
 	$file = preg_replace('/[^a-z0-9\-_]/i', '', @$play[1]);
 	
-	/*
-	$vm_dir = '/var/spool/asterisk/voicemail/default/';
-	$origfile = $vm_dir . @$_SESSION['sudo_user']['info']['ext'] .'/'. $fld .'/'. $file .'.gsm';
-	$tmpfile = '/tmp/gs-vm-'. preg_replace('/[^0-9]/', '', @$_SESSION['sudo_user']['info']['ext']) .'-'. $fld .'-'. $file .'.gsm';
-	
-	$msg_exists = false;
-	if (array_key_exists($fld, $folders)) {
-		$out = array();
-		if ($user_is_on_this_host) {
-			# user is on this host
-			if (file_exists( $origfile )) {
-				@exec( 'sudo rm -rf '. qsa($tmpfile) );
-				@exec( 'sudo cp '. qsa($origfile) .' '. qsa($tmpfile) .' && sudo chmod 666 '. qsa($tmpfile) );
-				$msg_exists = true;
-			}
-		} else {
-			# user is not on this host
-			@exec( 'sudo rm -rf '. qsa($tmpfile) );
-			@exec( 'sudo -u root cp '. qsa($origfile) .' '. qsa($tmpfile) .' && sudo -u root chmod 666 '. qsa($tmpfile) );
-			
-			$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $tmpfile ) .' '. qsa( 'root@'. $host['host'] .':'. $tmpfile );
-			@ exec( $cmd .' 1>>/dev/null 2>&1', $out, $err );
-			//@exec( 'sudo rm -rf '. qsa($tmpfile) );
-			$msg_exists = true;
-		}
-	}
-	
-	if (! $msg_exists) {
-		echo '?';
-	}
-	else {
-		echo '<div class="fr" style="width:250px; border:1px solid #ccc; padding:4px; background:#eee;">', "\n";
-		echo __('Player'), "\n";
-		
-		if (strPos(@$_SERVER['HTTP_USER_AGENT'], 'MSIE')===false) {
-		?>
-		
-		<!-- W3 compliant version: -->
-		<object
-			id="player"
-			type="audio/x-gsm"
-			data="<?php echo GS_URL_PATH, 'srv/vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>"
-			width="250"
-			height="18"
-			align="right"
-			>
-			<param name="autoplay" value="true" />
-			<param name="controller" value="true" />
-			<?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'GSM'); ?>
-			
-		</object>
-		
-		<?php
-		} else {
-		?>
-		
-		<!-- MSIE version (for QuickTime ActiveX): -->
-		<object
-			id="player"
-			type="audio/x-gsm"
-			classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"
-			codebase="http://www.apple.com/qtactivex/qtplugin.cab"
-			data="<?php echo GS_URL_PATH, 'srv/vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>"
-			width="250"
-			height="18"
-			align="right"
-			>
-			<param name="src" value="<?php echo GS_URL_PATH, 'srv/vm-play.php?sudo=', @$_SESSION['sudo_user']['name'], '&amp;fld=',$fld, '&amp;msg=',$file, '&amp;msie=.gsm'; ?>" />
-			<param name="autoplay" value="true" />
-			<param name="controller" value="true" />
-			<?php echo sPrintF(__('Ihr Browser kann die %s-Datei nicht abspielen.'), 'GSM'); ?>
-			
-		</object>
-		
-		<?php
-		}
-		?>
-		
-		</div>
-		<?php
-	}
-	*/
-	
-	echo '<div class="fr" style="clear:right; width:250px; border:1px solid #ccc; padding:3px 3px 1px 3px; background:#eee;">' ,"\n";
+	echo '<div class="fr" style="clear:right; width:300px; border:1px solid #ccc; padding:3px 3px 1px 3px; background:#eee;">' ,"\n";
 	//echo __('Player') ,"\n";
 	
 	$audio_url_base_esc
@@ -247,20 +176,7 @@ if (@$_REQUEST['action']==='play') {
 	
 	if (strPos(@$_SERVER['HTTP_USER_AGENT'], 'MSIE')===false) {
 ?>
-	
-	<!-- W3 compliant version: -->
-	<object
-		id="player"
-		type="<?php echo $formats[$fmt]['mime']; ?>"
-		data="<?php echo $audio_url_esc; ?>"
-		width="250"
-		height="22"
-		align="right"
-		>
-		<param name="autoplay" value="true" />
-		<param name="controller" value="true" />
-		<small><?php echo htmlEnt(sPrintF(__("Datei nicht gefunden, Konvertierungsfehler oder fehlendes Plugin f\xC3\xBCr %s"), $formats[$fmt]['title'])); ?></small>
-	</object>
+	<audio src="<?php echo $audio_url_esc; ?>" controls autoplay autobuffer=true preload=auto><?php echo htmlEnt(sPrintF(__("Datei nicht gefunden, Konvertierungsfehler oder veralteter Webbrowser f\xC3\xBCr %s"), $formats[$fmt]['title'])); ?></audio>
 	
 <?php
 	} else {

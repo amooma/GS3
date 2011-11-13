@@ -1,13 +1,34 @@
-h1. Installationsanleitung
+h1. Gemeinschaft 3.0
 
-siehe "http://github.com/amooma/GemeinschaftPBX/wiki/Installation":http://github.com/amooma/GemeinschaftPBX/wiki/Installation
+We are currently in the process of updating everything. Please wait till you see a different message on this page which will tell you how you can install Gemeinschaft.
 
 h1. Wo bekomme ich Hilfe?
 
-Kostenlos auf der Mailingliste:
+Auf folgender Mailingliste:
 "http://groups.google.com/group/gemeinschaft-users":http://groups.google.com/group/gemeinschaft-users
 
-Kostenpflichtig bei der "AMOOMA GmbH":http://www.amooma.de
+h1. Installationsanleitung
+
+Für eine möglichst einfache Installation gibt es hier ein Installations-Skript. Damit kann Gemeinschaft auf einem frisch installierten Debian Linux in der Version 6 ("Squeeze") installiert werden. Das können Sie am einfachsten mit der folgenden CD installieren:
+"http://cdimage.debian.org/cdimage/daily-builds/squeeze_d-i/current/i386/iso-cd/debian-testing-i386-netinst.iso":http://cdimage.debian.org/cdimage/daily-builds/squeeze_d-i/current/i386/iso-cd/debian-testing-i386-netinst.iso
+
+oder für 64-Bit-Systeme die Architektur "amd64" statt "i386".
+
+Minimales System installieren ohne grafische Oberfläche. "Minimal" heißt wirklich minimal und nicht noch sonst was dazu!
+
+Installations-Skript runterladen:
+
+cd /root/
+
+wget http://github.com/amooma/GemeinschaftPBX/blob/master/install.sh
+
+chmod a+x install.sh
+
+./install.sh
+
+Warten.
+
+Fertig.
 
 h1. Sonstiges
 

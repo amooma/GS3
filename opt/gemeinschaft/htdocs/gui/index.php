@@ -160,6 +160,7 @@ if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 	}
 }
 
+
 include_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'htdocs/gui/inc/session.php' );  # defines $DB
 require_once( GS_HTDOCS_DIR .'inc/modules.php' );
@@ -169,7 +170,7 @@ if (! @$_SESSION['login_ok'] )
 else 
 	$display_modules  = gs_group_members_get(
 		gs_group_permissions_get(
-			gs_group_members_groups_get(Array(@$_SESSION['sudo_user']['info']['id']), 'user')
+			gs_group_members_groups_get(Array(@$_SESSION['real_user']['info']['id']), 'user')
 		, 'display_module_gui','module_gui')
 	);
 
@@ -493,7 +494,7 @@ function gs_form_hidden( $sect='', $mod='', $sudo_user=null )
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php echo @$_SESSION['isolang']; ?>" xml:lang="<?php echo @$_SESSION['isolang']; ?>">
 <head><!--<![CDATA[
                 Gemeinschaft
-  @(_)=====(_)  (c) 2007-2010, AMOOMA GmbH - http://www.amooma.de
+  @(_)=====(_)  (c) 2007-2009, amooma GmbH - http://www.amooma.de
  @   / ### \    Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
  @  |  ###  |   Philipp Kempgen <philipp.kempgen@amooma.de>
   @@|_______|   Peter Kozak <peter.kozak@amooma.de>
@@ -964,8 +965,5 @@ else {
 
 </div>
 
-<div class="nofloat"></div>
-<div id="copyright"><a target="_blank" href="http://www.amooma.de/gemeinschaft/">www.amooma.de/gemeinschaft</a><br />
-<a target="_blank" href="http://www.amooma.de/"><img alt="&copy; amooma" src="<?php echo GS_URL_PATH; ?>img/amooma-c.gif" /></a></div>
 </body>
 </html>

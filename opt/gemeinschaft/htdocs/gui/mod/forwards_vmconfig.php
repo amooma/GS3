@@ -35,6 +35,7 @@ require_once( GS_DIR .'inc/remote-exec.php' );
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_numbers_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_get.php' );
+include_once( GS_DIR .'inc/group-fns.php' );
 
 function _pack_int( $int ) {
 	$str = base64_encode(pack('N', $int ));
@@ -136,13 +137,25 @@ $timeruleactives = array(
 
 $vm_rec_num_idx_table=array();
 
+## check permissions
+#
+
+$user_groups  = gs_group_members_groups_get( array( $_SESSION['real_user']['info']['id'] ), 'user' );
+$members = gs_group_permissions_get ( $user_groups, 'forward_vmconfig' );
+$members_adm = gs_group_permissions_get ( $user_groups , 'sudo_user' );
+
+if ( count ( $members_adm ) > 0 || count ( $members ) > 0 ) 
+	$disabled = '';
+else
+	$disabled = ' disabled';
+
 
 //loop Voicemail-Announce-Files
 $rs = $DB->execute('SELECT * from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
 $ncnt=0;
 while ($r = $rs->fetchRow()) {
-	$actives['vml-'.++$ncnt] = sprintf(__('AB mit Ansg. %u'), $ncnt);
-	$timeruleactives['vml-'.$r['id']] =  sprintf(__('AB mit Ansg. %u'), $ncnt);
+	$actives['vml-'.++$ncnt] = __('AB mit Ansage ').$ncnt;
+	$timeruleactives['vml-'.$r['id']] =  __('AB mit Ansage ').$ncnt;;
 	$vm_rec_num_idx_table[$ncnt] = $r['id'];
 }
 if ($ncnt==0)
@@ -151,8 +164,8 @@ if ($ncnt==0)
 $rs = $DB->execute('SELECT * from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
 $ncnt=0;
 while ($r = $rs->fetchRow()) {
-	$actives['vmln-'.++$ncnt] = sprintf(__('Ansg. %u'), $ncnt);
-	$timeruleactives['vmln-'.$r['id']] = sprintf(__('Ansg. %u'), $ncnt);
+	$actives['vmln-'.++$ncnt] = __('Ansage ').$ncnt;
+	$timeruleactives['vmln-'.$r['id']] = __('Ansage ').$ncnt;
 }
 
 $id = (int)$DB->executeGetOne('SELECT `_user_id` from `cf_timerules` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
@@ -172,7 +185,7 @@ $show_email_notification = ! @$_SESSION['sudo_user']['info']['host_is_foreign'];
 
 $warnings = array();
 
-if (@$_REQUEST['action']==='savemailnotify') {
+if (@$_REQUEST['action']==='savemailnotify' && $disabled == '' ) {
 	
 	if ($show_email_notification) {
 		$email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
@@ -188,7 +201,7 @@ if (@$_REQUEST['action']==='savemailnotify') {
 			$warnings['vm_email_n'] = __('Fehler beim (De-)Aktivieren der E-Mail-Benachrichtigung') .' ('. $ret->getMsg() .')';
 	}
 }
-elseif (@$_REQUEST['action']==='savevmrec') {
+elseif (@$_REQUEST['action']==='savevmrec' && $disabled == '' ) {
 	
 	if (isset($_REQUEST['save_new'])) {
 		$new_entry = $_REQUEST['comment_new'];
@@ -225,8 +238,8 @@ elseif (@$_REQUEST['action']==='savevmrec') {
 	}
 	
 }
-elseif (@$_REQUEST['action']==='movetimeruleup'
-||      @$_REQUEST['action']==='movetimeruledown')   {
+elseif ( $disabled == '' && ( @$_REQUEST['action']==='movetimeruleup'
+||      @$_REQUEST['action']==='movetimeruledown' ) )   {
 	
 	$user_id =  $_SESSION['sudo_user']['info']['id'];
 	$id=(int)$_REQUEST['move'];
@@ -246,7 +259,7 @@ elseif (@$_REQUEST['action']==='movetimeruleup'
 	}
 	
 }
-elseif (@$_REQUEST['action']==='savetimerule') {
+elseif (@$_REQUEST['action']==='savetimerule' && $disabled == '' ) {
 	
 	$user_id =  $_SESSION['sudo_user']['info']['id'];
 	# SAVE changes in old timerules...
@@ -296,7 +309,7 @@ elseif (@$_REQUEST['action']==='savetimerule') {
 
 	# SAVE NEW timerule
 
-	if (array_key_exists('new_r_target' , $_REQUEST) && $_REQUEST['new_r_target'] != "" ) {
+	if (array_key_exists('new_r_target' , $_REQUEST) && $_REQUEST['new_r_target'] != ""  && $disabled == '' ) {
 
 		# get value for sort
 		$ord =(int)$DB->executeGetOne('SELECT `ord` FROM `cf_timerules` WHERE `_user_id`='.$user_id.' ORDER BY `ord` DESC');
@@ -343,7 +356,7 @@ elseif (@$_REQUEST['action']==='savetimerule') {
 	}
 
 }
-elseif (@$_REQUEST['action']==='deltimerule') {
+elseif (@$_REQUEST['action']==='deltimerule'  && $disabled == '' ) {
 	$id = (int)$_REQUEST['delete'];
 	if ($id) {
 		$DB->execute('DELETE FROM `cf_timerules` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id'].' AND `id`='.$id);
@@ -360,7 +373,7 @@ elseif (@$_REQUEST['action']==='deltimerule') {
 		}
 	}
 }
-elseif (@$_REQUEST['action']==='saveparcall') {
+elseif (@$_REQUEST['action']==='saveparcall'  && $disabled == '' ) {
 	if (isset($_REQUEST['save_new'])) {
 		$new_entry = preg_replace('/[^0-9*#]/S', '', @$_REQUEST['number_new']);
 		if ($new_entry != "") {
@@ -381,12 +394,12 @@ elseif (@$_REQUEST['action']==='saveparcall') {
 		$DB->execute('DELETE from `cf_parallelcall` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id'].' AND `id`='.$DB->escape($id));
 	}	
 }
-elseif (@$_REQUEST['action']==='delparcall') {
+elseif (@$_REQUEST['action']==='delparcall'  && $disabled == '' ) {
 	if (isset($_REQUEST['delete'])) {
 		$id = $_REQUEST['delete'];
 		$DB->execute('DELETE from `cf_parallelcall` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id'].' AND `id`='.$DB->escape($id));
 	}
-}
+} 
 
 if (is_array($warnings) && count($warnings) > 0) {
 ?>
@@ -412,10 +425,13 @@ $email_address = gs_user_email_address_get( $_SESSION['sudo_user']['name'] );
 <tr>
 	<th style="width:45px;"><?php echo __('Ansage'); ?></th>
 	<th style="width:410px;"><?php echo __('Kommentar'); ?></th>
-	<th style="width:41px;"></th>
+<?php
+	if ( $disabled == '' )
+		echo '<th style="width:41px;"></td>';
+?>
+
 </tr>
-</thead>
-<tbody>
+
 <?php
 //loop all files
 $rs = $DB->execute('SELECT * from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id']);
@@ -424,29 +440,33 @@ while ($r = $rs->fetchRow()) {
 	echo "<tr>\n";
 	echo "<td>".++$ncnt."</td>";
 	echo "<td>";
-	echo '<input type="text" name="comment_'.$r['id'].'" value="'.htmlEnt($r['vm_comment']).'" size="50" maxlength="180"/>';
+	echo '<input type="text" name="comment_'.$r['id'].'" value="'.htmlEnt($r['vm_comment']).'" size="50" maxlength="180" ' , $disabled ,  '/>';
 	echo "</td>";
-	echo "<td>";
+	if ( $disabled == '' )  {
+		echo "<td>";
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'record='.$r['id'].'&amp;action=savevmrec') ,'">', '<img alt="', __('Sprachnachricht mit dem Telefon aufnehmen') ,'" src="', GS_URL_PATH,'crystal-svg/16/app/yast_PhoneTTOffhook.png" />', '</a>', "\n";
 
-	echo '<a href="', gs_url($SECTION, $MODULE, null, 'record='.$r['id'].'&amp;action=savevmrec') ,'">', '<img alt="', __('Sprachnachricht mit dem Telefon aufnehmen') ,'" src="', GS_URL_PATH,'crystal-svg/16/app/yast_PhoneTTOffhook.png" />', '</a>', "\n";
-
-//	echo '<input type="file" name="'.$r['id'].'-file" size="0" style="font-size:10px;" accept="audio/*" />';
-	echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'].'&amp;action=savevmrec') ,'">', '<img alt="', __('Eintrag Entfernen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/editdelete.png" />', '</a>', "\n";
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'].'&amp;action=savevmrec') ,'">', '<img alt="', __('Eintrag Entfernen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/editdelete.png" />', '</a>', "\n";
+	}
 	echo "</td>";
-	echo "</tr>\n";
 }
+	echo "</tr>\n";
+
+	if ( $disabled == '' )  {
+
+		echo "<tr>\n";
+		
+		echo "<td>", __('Neu'), "</td>";
+		echo "<td>";
+			echo '<input type="text" name="comment_new" value="" size="50" maxlength="180"/>';
+		echo "</td>";
+		echo "<td>";
+			echo '<button type="submit" name="save_new" value="1" title="', __('Eintrag speichern') ,'" class="plain"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>';
+		echo "</td>";
+		
+		echo "</tr>\n";
+	}
 ?>
-
-<tr>
-	<td><?php echo __('Neu'); ?>:</td>
-	<td>
-		<input type="text" name="comment_new" value="" size="50" maxlength="180"/>
-	</td>
-	<td>
-<?php echo '<button type="submit" name="save_new" value="1" title="', __('Eintrag speichern') ,'" class="plain"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>';?>
-	</td>
-</tr>
-
 
 
 </tbody>
@@ -467,7 +487,11 @@ while ($r = $rs->fetchRow()) {
 	<th><?php echo __('Wochentage'); ?></th>
 	<th><?php echo __('Uhrzeit'); ?></th>
 	<th><?php echo __('Ziel'); ?> </th>
-	<th></th>
+<?php
+	if ( $disabled == '' )
+		echo '<th></th>' , "\n";
+?>
+
 </tr>
 </thead>
 <tbody>
@@ -518,7 +542,7 @@ while ($r = $rs->fetchRow()) {
 		echo $route['ord'];
 		echo '</td><td>';
 		foreach ($wdaysl as $col => $v) {
-			echo '<span class="nobr"><input type="checkbox" name="'.$route['id'].'-d_',$col,'" id="ipt-'.$route['id'].'-r_d_',$col,'" value="1" ', ($route['d_'.$col] ? 'checked="checked" ' : ''), '/>';
+			echo '<span class="nobr"><input type="checkbox" name="'.$route['id'].'-d_',$col,'" id="ipt-'.$route['id'].'-r_d_',$col,'" value="1" ', ($route['d_'.$col] ? 'checked="checked" ' : ''), $disabled , '/>';
 			echo '<label for="ipt-r_d_',$col,'">', $v, '</label></span>';
 		}
 		echo '</td>', "\n";
@@ -534,8 +558,8 @@ while ($r = $rs->fetchRow()) {
 		elseif ($mf > 59) $mf = 59;
 		$mf = str_pad($mf, 2, '0', STR_PAD_LEFT);
 		echo '<span class="nobr">';
-		echo '<input type="text" name="'.$route['id'].'-r_h_from_h" value="', $hf, '" size="2" maxlength="2" class="r" />:';
-		echo '<input type="text" name="'.$route['id'].'-r_h_from_m" value="', $mf, '" size="2" maxlength="2" class="r" /> -';
+		echo '<input type="text" name="'.$route['id'].'-r_h_from_h" value="', $hf, '" size="2" maxlength="2" class="r" ' , $disabled , '/>:';
+		echo '<input type="text" name="'.$route['id'].'-r_h_from_m" value="', $mf, '" size="2" maxlength="2" class="r" ' , $disabled , '/> -';
 		echo '</span> ', "\n";
 		$tmp = explode(':', $route['h_to']);
 		$ht = (int)lTrim(@$tmp[0], '0-');
@@ -551,13 +575,13 @@ while ($r = $rs->fetchRow()) {
 			$hm = $mf;
 		}
 		echo '<span class="nobr">';
-		echo '<input type="text" name="'.$route['id'].'-r_h_to_h" value="', $ht, '" size="2" maxlength="2" class="r" />:';
-		echo '<input type="text" name="'.$route['id'].'-r_h_to_m" value="', $mt, '" size="2" maxlength="2" class="r" />';
+		echo '<input type="text" name="'.$route['id'].'-r_h_to_h" value="', $ht, '" size="2" maxlength="2" class="r" ' , $disabled , '/>:';
+		echo '<input type="text" name="'.$route['id'].'-r_h_to_m" value="', $mt, '" size="2" maxlength="2" class="r" ' , $disabled , '/>';
 		echo '</span>';
 		echo '</td>', "\n";
 		echo '<td>'."\n";
 
-		echo '<select name="'.$route['id'].'-r_target" />', "\n";
+		echo '<select name="'.$route['id'].'-r_target" ' , $disabled , '/>', "\n";
 		foreach ($timeruleactives as $active => $atitle) { //voicemail, Std, tmp ...
 			echo '<option value="', $active, '"';
 			if ($route['target'] === $active)
@@ -567,31 +591,38 @@ while ($r = $rs->fetchRow()) {
 		echo '</select>';
 
 		echo '</td>'. "\n";
-		echo '<td>'."\n";
-		echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$route['id'].'&amp;action=deltimerule') ,'">', '<img alt="', __('Eintrag Entfernen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/editdelete.png" />', '</a>', "\n";
+		
+		if ( $disabled == '' ) {
+		
+			echo '<td>'."\n";
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$route['id'].'&amp;action=deltimerule') ,'">', '<img alt="', __('Eintrag Entfernen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/editdelete.png" />', '</a>', "\n";
 
-		if ($i > 0) {
-			echo '&thinsp;<a href="', gs_url($SECTION, $MODULE, null, 'move='.$route['id'].'&amp;action=movetimeruleup') ,'">', '<img alt="', __('Eintrag nach oben schieben') ,'" src="', GS_URL_PATH,'img/move_up.gif" />', '</a>', "\n";
-		} else {
-			echo '&thinsp;<img alt="&uarr;" src="', GS_URL_PATH, 'img/move_up_d.gif" />';
+			if ($i > 0) {
+				echo '&thinsp;<a href="', gs_url($SECTION, $MODULE, null, 'move='.$route['id'].'&amp;action=movetimeruleup') ,'">', '<img alt="', __('Eintrag nach oben schieben') ,'" src="', GS_URL_PATH,'img/move_up.gif" />', '</a>', "\n";
+			} else {
+				echo '&thinsp;<img alt="&uarr;" src="', GS_URL_PATH, 'img/move_up_d.gif" />';
+			}
+
+			if ($i < $rs->numRows()-1) {
+				echo '&thinsp;<a href="', gs_url($SECTION, $MODULE, null, 'move='.$route['id'].'&amp;action=movetimeruledown') ,'">', '<img alt="', __('Eintrag nach unten schieben') ,'" src="', GS_URL_PATH,'img/move_down.gif" />', '</a>', "\n";
+			} else {
+				echo '&thinsp;<img alt="&darr;" src="', GS_URL_PATH, 'img/move_down_d.gif" />';
+			}
+
+			echo '</td>'."\n";
+		
 		}
-
-		if ($i < $rs->numRows()-1) {
-			echo '&thinsp;<a href="', gs_url($SECTION, $MODULE, null, 'move='.$route['id'].'&amp;action=movetimeruledown') ,'">', '<img alt="', __('Eintrag nach unten schieben') ,'" src="', GS_URL_PATH,'img/move_down.gif" />', '</a>', "\n";
-		} else {
-			echo '&thinsp;<img alt="&darr;" src="', GS_URL_PATH, 'img/move_down_d.gif" />';
-		}
-
-		echo '</td>'."\n";
+		
 		echo '</tr>';
 		$i++;
 	}
 
 	//new timerule...
-	echo '<tr><td>'._("Neu:").'</td><td>';
-	foreach ($wdaysl as $col => $v) {
-		echo '<span class="nobr"><input type="checkbox" name="new_d_',$col,'" id="ipt-r_d_',$col,'" value="1" ', ($route['d_'.$col] ? 'checked="checked" ' : ''), '/>';
-		echo '<label for="ipt-r_d_',$col,'">', $v, '</label></span>';
+	if ( $disabled == '' ) {
+		echo '<tr><td>'._("Neu:").'</td><td>';
+		foreach ($wdaysl as $col => $v) {
+			echo '<span class="nobr"><input type="checkbox" name="new_d_',$col,'" id="ipt-r_d_',$col,'" value="1" ', ($route['d_'.$col] ? 'checked="checked" ' : ''), '/>';
+			echo '<label for="ipt-r_d_',$col,'">', $v, '</label></span>';
 	}
 	echo '</td>', "\n";
 	echo '<td>';
@@ -614,8 +645,11 @@ while ($r = $rs->fetchRow()) {
 	}
 	echo '</select>';
 	echo '</td>'. "\n";
-	echo "</tbody>\n</table>";
+	echo '<td>'. "\n";
 	echo '<button type="submit" name="savetimerule" value="1" title="', __('Eintrag speichern') ,'" class="plain"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>';
+	echo '</td>'. "\n";
+	}
+	echo "</tbody>\n</table>";
 ?>
 
 </tbody>
@@ -631,7 +665,10 @@ while ($r = $rs->fetchRow()) {
 <tr>
 	<th></th>
 	<th><?php echo __('Nummer'); ?></th>
-	<th></th>
+<?php
+	if ( $disabled == '' )
+		echo '<th></th>' ,"\n";
+?>
 </tr>
 </thead>
 <tbody>
@@ -646,43 +683,51 @@ while ($r = $rs->fetchRow()) {
 	echo "<tr>\n";
 	echo "<td>".++$ncnt."</td>";
 	echo "<td>";
-	echo '<input type="text" id="number_'.$r['id'].'" name="number_'.$r['id'].'" value="'.htmlEnt($r['number']).'" size="41" maxlength="20"/>';
+	echo '<input type="text" id="number_'.$r['id'].'" name="number_'.$r['id'].'" value="'.htmlEnt($r['number']).'" size="41" maxlength="20" ' , $disabled , '/>';
 	echo '<div id="ext-num-select-'.$ncnt.'" style="display:none;">';
-	echo '&larr;<select name="_ignore-1" id="sel-num-'.$r['id'].'" onchange="gs_num_sel(this);">';
+	echo '&larr;<select name="_ignore-1" id="sel-num-'.$r['id'].'" onchange="gs_num_sel(this);"' , $disabled , '>';
 	$jscriptcode .= "case 'sel-num-".$r['id']."': var text_el_id = 'number_".$r['id']."'; break;\n";
 	if (! isGsError($e_numbers) && is_array($e_numbers)) {
 		echo '<option value="">', __('einf&uuml;gen &hellip;') ,'</option>' ,"\n";
 		foreach ($e_numbers as $e_number) {
-			echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
+			//echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
+			echo '<option value="0', htmlEnt($e_number) ,'">0', htmlEnt($e_number) ,'</option>' ,"\n";
 		}
 	}		
 	echo '</select></div>';
 	echo "</td>";
-	echo "<td>";
-	echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'].'&amp;action=delparcall') ,'">', '<img alt="', __('Entfernen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/editdelete.png" />', '</a>', "\n";
-	echo "</td>";
+	if ( $disabled == '' ) {
+		echo "<td>";
+		echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'].'&amp;action=delparcall') ,'">', '<img alt="', __('Entfernen') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/editdelete.png" />', '</a>', "\n";
+		echo "</td>";
+	}
+	echo "</tr>\n";
+}
+
+if ( $disabled == '' ) {
+	echo "<tr>\n";
+	echo '<td>' , __('Neu') , ':</td>';
+	echo "<td>\n";
+		echo '<input type="text" id="number_new" name="number_new" value="" size="41" maxlength="20"/>' , "\n";
+		echo '<div id="ext-num-select-new" style="display:none;">' , "\n" ;
+		echo '&larr;<select name="_ignore-1" id="sel-num-new" onchange="gs_num_sel(this);">' , "\n";
+	if (! isGsError($e_numbers) && is_array($e_numbers)) {
+		echo '<option value="">', __('einf&uuml;gen &hellip;') ,'</option>' ,"\n";
+		foreach ($e_numbers as $e_number) {
+			//echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
+			echo '<option value="0', htmlEnt($e_number) ,'">0', htmlEnt($e_number) ,'</option>' ,"\n";
+		}
+	}       
+	
+	echo "</select></div>\n";
+	echo "</td>\n";
+	echo "<td>\n";
+	echo '<button type="submit" name="save_new" value="1" title="', __('Eintrag speichern') ,'" class="plain"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>';
+	echo "</td>\n";
 	echo "</tr>\n";
 }
 ?>
-<tr>
-	<td><?php echo __('Neu'); ?>:</td>
-	<td>
-		<input type="text" id="number_new" name="number_new" value="" size="41" maxlength="20"/>
-		<div id="ext-num-select-new" style="display:none;">
-		&larr;<select name="_ignore-1" id="sel-num-new" onchange="gs_num_sel(this);">
-<?php   if (! isGsError($e_numbers) && is_array($e_numbers)) {
-		echo '<option value="">', __('einf&uuml;gen &hellip;') ,'</option>' ,"\n";
-		foreach ($e_numbers as $e_number) {
-			echo '<option value="', htmlEnt($e_number) ,'">', htmlEnt($e_number) ,'</option>' ,"\n";
-		}
-	}       
-	?>
-	</select></div>
-	</td>
-	<td>
-<?php echo '<button type="submit" name="save_new" value="1" title="', __('Eintrag speichern') ,'" class="plain"><img alt="', __('Speichern') ,'" src="', GS_URL_PATH,'crystal-svg/16/act/filesave.png" /></button>';?>
-	</td>
-</tr>
+
 </tbody>
 </table>
 <script type="text/javascript">
@@ -739,20 +784,33 @@ try {
 	<td><?php echo __('Benachrichtigung'); ?></td>
 	<td>
 <?php
-	$disabled = ($email_address == '');
-	if ($disabled) $email_notify = false;
+	$dis = ($email_address == '');
+	if ($dis) $email_notify = false;
 	
-	echo '<input type="radio" name="email_notify" value="on" id="ipt-email_notify-on"';
-	if ($email_notify) echo ' checked="checked"';
-	if ($disabled) echo ' disabled="disabled"';
-	echo ' />';
-	echo '<label for="ipt-email_notify-on">', __('an') ,'</label>' ,"\n";
+	echo '<select name="email_notify" id="ipt-email_notify-on" ';
+	if ( $dis || $disabled != '' )
+		echo ' disabled="disabled"';
+	echo '>', "\n";
 	
-	echo '<input type="radio" name="email_notify" value="off" id="ipt-email_notify-off"';
-	if (! $email_notify) echo ' checked="checked"';
-	if ($disabled) echo ' disabled="disabled"';
-	echo ' />';
-	echo '<label for="ipt-email_notify-off">', __('aus') ,'</label>' ,"\n";
+		echo '<option value="off"';
+		if ( $email_notify  === 0 )
+			echo ' selected="selected"';
+			
+		echo '>',  __('aus') , '</option>', "\n";
+		
+		echo '<option value="on"';
+		if ( $email_notify  === 1 )
+			echo ' selected="selected"';
+			
+		echo '>',  __('ein') , '</option>', "\n";
+		
+		echo '<option value="delete"';
+		if ( $email_notify  === 2 )
+			echo ' selected="selected"';
+			
+		echo '>',  __('Nachricht nach Versand l&ouml;schen') , '</option>', "\n";
+			
+	echo '</select>';
 ?>
 	</td>
 </tr>
@@ -765,10 +823,15 @@ try {
 <tbody>
 <tr>
 	<td style="width:562px;" class="transp r">
-		<button type="submit">
-			<img alt=" " src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
-			<?php echo __('Speichern'); ?>
-		</button>
+	<?php
+		
+		if ( $disabled == '' ) {
+			echo '<button type="submit">', "\n";
+				echo '<img alt=" " src="', GS_URL_PATH, 'crystal-svg/16/act/filesave.png" />', "\n";
+				echo __('Speichern'), "\n";
+			echo '</button>', "\n";
+		}
+	?>
 	</td>
 </tr>
 </tbody>

@@ -31,6 +31,7 @@
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_phonemodel_get.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );  # for utf8_json_quote()
 if (! isSet($is_user_profile)) {
@@ -55,6 +56,10 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 		$phone_types['snom-360'] = 'Snom 360';
 	if (in_array('*', $enabled_models) || in_array('370', $enabled_models))
 		$phone_types['snom-370'] = 'Snom 370';
+	if (in_array('*', $enabled_models) || in_array('820', $enabled_models))
+		$phone_types['snom-820'] = 'Snom 820';
+		if (in_array('*', $enabled_models) || in_array('821', $enabled_models))
+		$phone_types['snom-821'] = 'Snom 821';
 }
 /*
 # Maybe there will be some reason for enabling keys on Snom M3 phones in future.
@@ -107,6 +112,36 @@ if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 		$phone_types['tiptel-ip286'] = 'Tiptel IP 286';
 }
 
+$key_astbuttond = array(
+	'gpickup'		=> __('Gruppenpickup'),              	# Gruppenpickup
+	'diversion'		=> __('Umleitung'),              	# Umleitung
+	'div_vm'		=> __('Umleitung AB'),              	# Umleitung VM
+	'div_anno'		=> __('Umleitung Ansage'),              # Umleitung Ansage
+	'div_time'		=> __('Umleitung Zeit'),              	# Umleitung Zeitsteuerung
+	'div_par'		=> __('Umleitung Parallel'),            # Umleitung Parallelruf
+	'diversion_int'		=> __('Umleitung intern'),		# Umleitung itern
+	'div_int_vm'		=> __('Umleitung intern  AB'),          # Umleitung intern VM
+	'div_int_anno'		=> __('Umleitung intern Ansage'),       # Umleitung intern Ansage
+	'div_int_time'		=> __('Umleitung intern Zeit'),         # Umleitung intern Zeitsteuerung
+	'div_int_par'		=> __('Umleitung intern Parallel'),     # Umleitung intern Parallelruf
+	'diversion_ext'		=> __('Umleitung extern'),		# Umleitung extern
+	'div_ext_vm'		=> __('Umleitung extern  AB'),          # Umleitung VM
+	'div_ext_anno'		=> __('Umleitung extern Ansage'),       # Umleitung extern Ansage
+	'div_ext_time'		=> __('Umleitung extern Zeit'),         # Umleitung extern Zeitsteuerung
+	'div_ext_par'		=> __('Umleitung extern Parallel'),     # Umleitung extern Parallelruf
+	'diversion_dlg'		=> __('Umleitung Dialog'),		# Umleitung dialog
+	'queue'  		=> __('An/Abmelden Warteschlange'),	# Queue an/abmelden 
+	'agent'  		=> __('An/Abmelden Agent'),		# Agent an/abmelden 
+	'agent_paused' 		=> __('Agentenpause'),			# Agentenpause ein/aus
+	'clip_intern' 		=> __('CLIP intern'),			# CLIP intern
+	'clip_extern' 		=> __('CLIP extern'),			# CLIP extern
+	'clir_intern' 		=> __('CLIR intern'),			# CLIR intern
+	'clir_extern' 		=> __('CLIR extern'),			# CLIR extern
+	'clir_nextcall' 		=> __('CLIR f&uuml;r n&auml;chsten Anruf'),# CLIR once
+	'url' 			=> __('URL')				# URL
+
+);
+
 
 $key_functions_snom = array(
 	'none'  => __('Leer'),              # none
@@ -114,13 +149,40 @@ $key_functions_snom = array(
 	'dest'  => __('Nebenstelle'),       # destination (//FIXME - auch BLF hiermit machen?)
 	'blf'   => __('BLF'),               # BLF
 	'line'  => __('Leitung'),           # line
+	//'f_transfer'  => __('Weiterleiten')   # F_TRANSFER	
+	
 );
+
+// The snom-300 does not have static keys for this functions
+$keys_functions_snom300 = array(
+	'_dir'		=>__('Telefonbuch'),            # Telefonbuch
+	'_callers'	=>__('Anruflisten'),            # Anruflisten
+	'_transfer'	=>__('Transfer-Taste'),         # Transfer-Key
+	'_hold'		=>__('Halten-Taste'),	        # Hold-Key
+	'_menu'		=>__('Men&uuml;-Taste'),	# Menu-Key
+	'_dnd'		=>__('Ruhe/DND-Taste'),		# DND-Key
+	'_conference' 	=>__('Konferenz-Taste'),	# Conference-Key
+	'_record' 	=>__('Aufnahme-Taste'),		# Record-Key
+	'_vm' 		=>__('Anrufbeantworter'),		# Record-Key
+	'_mute'		=>__('Stummschaltung')          # Mute-Key
+	
+);
+
+
+if ( GS_BUTTONDAEMON_USE == true ) {
+	$key_functions_snom = array_merge( $key_functions_snom, $key_astbuttond);
+	//unset ( $key_functions_snom['blf'] );
+	
+}
+
+
 $key_function_none_snom = 'none';
 $key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_SNOM_PROV_KEY_BLACKLIST'));
 foreach ($key_functions_blacklist as $keyfn) {
 	if (array_key_exists($keyfn, $key_functions_snom))
 		unset($key_functions_snom[$keyfn]);
 }
+
 
 $key_functions_siemens = array(
 	'f0'  => __('Leer'),                  # clear
@@ -172,8 +234,24 @@ $key_functions_aastra = array(
 	'_dir'      => __('Telefonbuch'),  # defined by Gemeinschaft
 	'_fwd'      => __('Rufumleitung'), # defined by Gemeinschaft
 	'_fwd_dlg'  => __('Rufumleitung Dialog'), # defined by Gemeinschaft
-	'_login'    => __('Login'),        # defined by Gemeinschaft
-	'_dnd'      => __('Ruhe'),         # defined by Gemeinschaft
+	'_fwd_vml'		=> __('Umleitung AB'),              	# Umleitung VM
+	'_fwd_ano'		=> __('Umleitung Ansage'),              # Umleitung Ansage
+	'_fwd_trl'		=> __('Umleitung Zeit'),              	# Umleitung Zeitsteuerung
+	'_fwd_par'		=> __('Umleitung Parallel'),            # Umleitung Parallelruf
+	'_fwd_int'		=> __('Umleitung intern'),		# Umleitung itern
+	'_fwd_int_vml'		=> __('Umleitung intern  AB'),          # Umleitung intern VM
+	'_fwd_int_ano'		=> __('Umleitung intern Ansage'),       # Umleitung intern Ansage
+	'_fwd_int_trl'		=> __('Umleitung intern Zeit'),         # Umleitung intern Zeitsteuerung
+	'_fwd_int_par'		=> __('Umleitung intern Parallel'),     # Umleitung intern Parallelruf
+	'_fwd_ext'		=> __('Umleitung extern'),		# Umleitung extern
+	'_fwd_ext_vml'		=> __('Umleitung extern  AB'),          # Umleitung VM
+	'_fwd_ext_ano'		=> __('Umleitung extern Ansage'),       # Umleitung extern Ansage
+	'_fwd_ext_trl'		=> __('Umleitung extern Zeit'),         # Umleitung extern Zeitsteuerung
+	'_fwd_ext_par'		=> __('Umleitung extern Parallel'),     # Umleitung extern Parallelruf
+	'_login'    	=> __('Login'),        # defined by Gemeinschaft
+	'_dnd'      	=> __('Ruhe'),         # defined by Gemeinschaft
+	'_agent'    	=> __('An/Abmelden Agent'), # defined by Gemeinschaft
+	'_agent_pause'	=> __('Agentenpause') # defined by Gemeinschaft
 );
 $key_function_none_aastra = 'empty';
 $key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_AASTRA_PROV_KEY_BLACKLIST'));
@@ -255,12 +333,17 @@ if (! $is_user_profile) {
 if ($profile_id < 1) $profile_id = 0;
 
 $phone_type = preg_replace('/[^a-z0-9\-]/', '', @$_REQUEST['phone_type']);
+
+
 if (! $is_user_profile) {
 	if ($profile_id < 1) $phone_type = '';
 }
+
 if( $is_user_profile && $phone_type == '' ) {
-	$phone_type = gs_user_phonemodel_get( @$_SESSION['sudo_user']['name'] );
+	 $phone_type  = gs_user_phonemodel_get( @$_SESSION['sudo_user']['name'] );
+	
 }
+
 if ($phone_type != '' && ! array_key_exists($phone_type, $phone_types)) {
 	$phone_type = '';
 }
@@ -270,6 +353,8 @@ if ($phone_type == '') {
 		elseif (array_key_exists('snom-320', $phone_types)) $phone_type = 'snom-320';
 		elseif (array_key_exists('snom-360', $phone_types)) $phone_type = 'snom-360';
 		elseif (array_key_exists('snom-370', $phone_types)) $phone_type = 'snom-370';
+		elseif (array_key_exists('snom-820', $phone_types)) $phone_type = 'snom-820';
+		elseif (array_key_exists('snom-821', $phone_types)) $phone_type = 'snom-821';
 	} else
 	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 		if     (array_key_exists('siemens-os15', $phone_types)) $phone_type = 'siemens-os15';
@@ -296,7 +381,7 @@ if ($phone_type == '') {
 		elseif (array_key_exists('tiptel-ip286', $phone_types)) $phone_type = 'tiptel-ip286';
 	}
 }
-if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370'), true)) {
+if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 'snom-820', 'snom-821'), true)) {
 	$phone_layout = 'snom';
 	$key_function_none = $key_function_none_snom;
 } elseif (in_array($phone_type, array('siemens-os15', 'siemens-os20', 'siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
@@ -314,6 +399,11 @@ if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370'),
 } else {
 	$phone_layout = false;
 	$key_function_none = false;
+}
+
+// The snom-300 does not have static keys for this functions
+if ( $phone_type == 'snom-300' ) {
+	$key_functions_snom = array_merge( $key_functions_snom, $keys_functions_snom300);	 
 }
 
 
@@ -432,6 +522,13 @@ if ($action === 'save' || $action === 'save-and-resync') {
 		}
 	}
 	
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		if (  $is_user_profile)
+			gs_user_keyset_update($_SESSION['sudo_user']['info']['ext']);
+		else
+			gs_softkeyprofile_update_ui ( $profile_id );
+	}
+	
 	$action = '';  # view
 }
 #####################################################################
@@ -478,6 +575,9 @@ if ($action === 'delete') {
 						'`is_user_profile`='. (int)$is_user_profile );
 			}
 		}
+	}
+	if ( GS_BUTTONDAEMON_USE == true ) {
+		gs_softkeyprofile_remove_ui( $profile_id );
 	}
 	
 	$action = '';  # view
@@ -943,9 +1043,39 @@ if ($phone_layout) {
 					'title'=> __('Erweiterungs-Modul') .' 2')
 			);
 		}
+		if ($show_ext_modules >= 3) {
+			$key_levels += array(
+				3 => array('from'=>  54, 'to'=>  74, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 3')
+			);
+		}
+		if ($show_ext_modules >= 4) {
+			$key_levels += array(
+				4 => array('from'=>  75, 'to'=>  95, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 4')
+			);
+		}
 		switch ($phone_type) {
 			case 'snom-300':
 				$key_levels[0]['to'  ] =    5;
+				unset($key_levels[1]);
+				unset($key_levels[2]);
+				unset($key_levels[3]);
+				unset($key_levels[4]);
+				break;
+			case 'snom-820':
+				$key_levels[0]['to'  ] =    3;
+				unset($key_levels[1]);
+				unset($key_levels[2]);
+				unset($key_levels[3]);
+				unset($key_levels[4]);
+				break;
+			case 'snom-821':
+				$key_levels[0]['to'  ] =    3;
+				unset($key_levels[1]);
+				unset($key_levels[2]);
+				unset($key_levels[3]);
+				unset($key_levels[4]);
 				break;
 		}
 		break;
@@ -1007,7 +1137,6 @@ if ($phone_layout) {
 		}
 		break;
 	case 'aastra':
-	case 'aastra':
 		//if ($show_ext_modules >= 0) {
 			$key_levels = array();
 		//}
@@ -1016,11 +1145,7 @@ if ($phone_layout) {
 				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
 				$key_levels[0]['from'] =    1;
 				$key_levels[0]['to'  ] =   10;
-
-				$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Untere Tasten');
-				$key_levels[1]['from'] =  101;
-				$key_levels[1]['to'  ] =  112;
-
+				
 				if ($show_ext_modules >= 1) {
 					$key_levels[2]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Erweiterung 1');
 					$key_levels[2]['from'] =  201;
@@ -1066,7 +1191,7 @@ if ($phone_layout) {
 				break;
 			case 'aastra-53i':
 				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
-				$key_levels[0]['from'] =  103;
+				$key_levels[0]['from'] =  101;
 				$key_levels[0]['to'  ] =  106;
 
 				if ($show_ext_modules >= 1) {
@@ -1090,31 +1215,24 @@ if ($phone_layout) {
 				break;
 
 			case 'aastra-6730i':
-				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Linke Tasten');
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
 				$key_levels[0]['from'] =  101;
-				$key_levels[0]['to'  ] =  104;
-
-				$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Rechte Tasten');
-				$key_levels[1]['from'] =  107;
-				$key_levels[1]['to'  ] =  108;
+				$key_levels[0]['to'  ] =  108;
 
 				break;
 
 			case 'aastra-6731i':
-				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Linke Tasten');
+				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
 				$key_levels[0]['from'] =  101;
-				$key_levels[0]['to'  ] =  104;
-
-				$key_levels[1]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Rechte Tasten');
-				$key_levels[1]['from'] =  107;
-				$key_levels[1]['to'  ] =  108;
+				$key_levels[0]['to'  ] =  108;
 
 				break;
+
 
 			case 'aastra-6739i':
 				$key_levels[0]['title']= htmlEnt($phone_type_title) .' &ndash; '. __('Obere Tasten');
 				$key_levels[0]['from'] =  103;
-				$key_levels[0]['to'  ] =  112;
+				$key_levels[0]['to'  ] =  122;
 
 				break;
 			/*
@@ -1132,9 +1250,9 @@ if ($phone_layout) {
 			switch ($phone_type) {
 				case 'grandstream-gxp2010':
 					$key_levels[0]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Linke Tasten');
-					$key_levels[0]['to'   ] =  8;
+					$key_levels[0]['to'   ] = 8;
 					$key_levels[1]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Rechte Tasten');
-					$key_levels[1]['from' ] =  9;
+					$key_levels[1]['from' ] = 9;
 					$key_levels[1]['to'   ] = 17;
 				break;
 			}
@@ -1216,10 +1334,17 @@ if ($phone_layout) {
 		break;
 	}
 	
-	//if (in_array($phone_layout, array('snom', 'grandstream', 'tiptel'), true)) {
-	if (in_array($phone_layout, array('tiptel'), true)) {
-		$have_key_label = false;
-		$table_cols = 5;
+	if (in_array($phone_layout, array('snom', 'grandstream', 'tiptel' ), true)) {
+		
+		if ( $phone_type == 'snom-300' ) {
+			//not supportet atm
+			$have_key_label = false;
+			$table_cols = 5;
+		}
+		else {
+			$have_key_label = true;
+			$table_cols = 6;
+		}
 	} else {
 		$have_key_label = true;
 		$table_cols = 6;
@@ -1256,6 +1381,8 @@ if ($phone_layout) {
 					case 0: $left =  0; $right =  6; break;
 					case 1: $left = 12; $right = 23; break;
 					case 2: $left = 33; $right = 44; break;
+					case 3: $left = 54; $right = 65; break;
+					case 4: $left = 75; $right = 86; break;
 				}
 				break;
 		}
@@ -1264,7 +1391,13 @@ if ($phone_layout) {
 		for ($i=$key_level_info['from']; $i<=$key_level_info['to']; ++$i) {
 			
 			if ($phone_layout === 'snom') {
-				$knum  = ($i%2===($key_level_idx+1)%2 ? $left : $right);
+				switch ($phone_type) {
+					case 'snom-300' : $knum = $i; break;
+					default: $knum  = ($i%2===($key_level_idx+1)%2 ? $left : $right);
+					case 'snom-820' : $knum = $i; break;
+					case 'snom-821' : $knum = $i; break;
+					default: $knum  = ($i%2===($key_level_idx+1)%2 ? $left : $right);
+				}
 				$knump = str_pad($knum, 3, '0', STR_PAD_LEFT);
 			} else {
 				$knum  = $i;
@@ -1349,7 +1482,12 @@ if ($phone_layout) {
 			echo '<td style="font-size:96%;"';
 			switch ($phone_layout) {
 				case 'snom':
-					echo ' class="', ($i%2===($key_level_idx+1)%2 ?'l':'r') ,'"';
+					if ( $phone_type == 'snom-300')
+						echo ' class="l"';
+					else if ( $phone_type == 'snom-820' || $phone_type == 'snom-821' )
+						echo ' class="l"';
+					else
+						echo ' class="', ($i%2===($key_level_idx+1)%2 ?'l':'r') ,'"';
 					break;
 				case 'tiptel':
 					if ($key_level_idx > 0)
@@ -1460,10 +1598,13 @@ if ($phone_layout) {
 	echo '</tbody>' ,"\n";
 	echo '</table>' ,"\n";
 	echo '<br />' ,"\n";
-
-	if (in_array($phone_type, array('snom-300','snom-320','snom-360','snom-370','grandstream-gxp2000','grandstream-gxp2010','grandstream-gxp2020'), true))
-		echo '<a href="',GS_URL_PATH ,'srv/key-layout.php?phone_type=',$phone_type,'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n"; 
-
+	
+	if ( $is_user_profile && in_array($phone_layout, array('snom', 'grandstream'), true) ) {
+		
+		if ( $phone_type != 'snom-300' && $phone_type != 'snom-820' && $phone_type != 'snom-821' ) {
+			echo '<a href="',GS_URL_PATH ,'srv/key-layout.php?phone_type=',$phone_type,'&user_id=',$user_id,'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n"; 
+		}
+	}
 	echo $save_bt;
 }
 #################################################################

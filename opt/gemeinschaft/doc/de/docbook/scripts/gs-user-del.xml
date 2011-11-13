@@ -92,6 +92,15 @@
       </varlistentry>
 
       <varlistentry>
+        <term><option>--no-reload</option></term>
+
+        <listitem>
+          <para>Keinen <quote>Reload</quote> der Asterisk-Server
+          durchführen.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
         <term><option>--help</option></term>
 
         <term><option>-?</option></term>

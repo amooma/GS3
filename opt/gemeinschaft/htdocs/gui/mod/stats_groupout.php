@@ -76,18 +76,19 @@ function userids_to_exts( $users )
 	$users_sql = implode(',',$users);
 	
 	$rs = $DB->execute(
-		'SELECT `name` AS `ext` '.
-		'FROM `ast_sipfriends` '.
-		'WHERE `_user_id` IN ('. $users_sql .')'
+'SELECT `name` AS `ext`
+FROM
+	`ast_sipfriends`
+WHERE
+	`_user_id` IN ('. $users_sql .')'
 	);
-	
+
 	$exts = array();
 	
-	if ($rs) {
+	if ($rs)
 		while ($r = $rs->fetchRow()) {
 			$exts[] = '\''.$DB->escape($r['ext']).'\'';
 		}
-	}
 	return implode(',', $exts);
 }
 
@@ -146,7 +147,7 @@ foreach ($group_info AS $group_select) {
 <label for="ipt-month"><?php echo __('Monat'); ?>:</label>
 <select name="month" id="ipt-month">
 <?php
-$t = mktime(0,0,0,date("n"),1,date("Y"));
+$t = time();
 for ($i=-3; $i<=0; ++$i) {
 	echo '<option value="',$i,'"', ($i==$month_d ? ' selected="selected"' : ''),'>', date('m / Y', (int)strToTime("$i months", $t)) ,'</option>' ,"\n";
 }
@@ -270,7 +271,7 @@ function mytip( evt, key )
 	<th style="font-weight:normal;" onmouseover="mytip(event,'durl');"><?php echo __('Dauer'), ' &le;', _secs_to_minsecs($duration_level); ?></th>
 	<th style="font-weight:normal;" onmouseover="mytip(event,'durg');"><?php echo __('Dauer'), ' &gt;', _secs_to_minsecs($duration_level); ?></th>
 	<th style="font-weight:normal;" onmouseover="mytip(event,'duravg');"><?php echo '&empty; ', __('Dauer'); ?></th>
-	<th style="font-weight:normal;" onmouseover="mytip(event,'holdlsl');"><?php echo __('Wartez.') ,' 0:05-', _secs_to_minsecs($waittime_level); ?></th>
+	<th style="font-weight:normal;" onmouseover="mytip(event,'holdlsl');"><?php echo __('Wartez.') ,'  0:5-', _secs_to_minsecs($waittime_level); ?></th>
 	<th style="font-weight:normal;" onmouseover="mytip(event,'holdgsl');"><?php echo __('Wartez.') ,' &gt;', _secs_to_minsecs($waittime_level); ?></th>
 </tr>
 </thead>
@@ -304,22 +305,18 @@ $user_name = @$_SESSION['sudo_user']['name'];
 
 $table = 'cdr_tmp_'.$user_name;
 
-$ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`' );
+$ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`');
 
-$sql_query =
-	'CREATE TEMPORARY TABLE `'.$table.'` TYPE=HEAP '.
-		' SELECT * FROM `ast_cdr` WHERE '.
-			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_m_start) .'\' AND '.
-			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_m_end) .'\' ) AND '.
-			'  `src` IN ('. $exts_sql .') AND '.
-			'  `channel` NOT LIKE \'Local/%\' AND '.
-			'  `dstchannel` NOT LIKE \'SIP/gs-0%\' AND '.
-			'  `dst` <> \'s\' AND '.
-			'  `dst` <> \'h\' '
-	;
-if (! $CDR_DB->execute( $sql_query )) {
-	echo '<div class="errorbox">', "Fehler beim Anlegen einer temporären Tabelle!" ,'</div>',"\n";
-}
+$sql_query = 'CREATE TABLE `'.$table.'` TYPE=heap SELECT * FROM `ast_cdr` WHERE
+		( `calldate`>=\''. date('Y-m-d H:i:s', $day_m_start) .'\' AND 
+	`calldate`<=\''. date('Y-m-d H:i:s', $day_m_end) .'\' ) AND
+	`src` IN ('. $exts_sql .') AND
+	`channel` NOT LIKE \'Local/%\' AND
+	`dstchannel` NOT LIKE \'SIP/gs-0%\' AND
+	`dst`<>\'s\' AND
+	`dst`<>\'h\'';
+
+$rs = $CDR_DB->execute( $sql_query  );
 
 for ($day=1; $day<=$num_days; ++$day) {
 	
@@ -523,7 +520,7 @@ if ($totals['n_calls_answer'] > 0) {
 	$calls_dur_month = $CDR_DB->executeGetOne( $sql_query );
 }
 
-$ok = $CDR_DB->execute( 'DROP TABLE `'.$table.'`' );
+$rs = $CDR_DB->execute( 'DROP TABLE `'.$table.'`');
 
 
 $style = 'style="border-top:3px solid #b90; background:#feb; line-height:2.5em;"';

@@ -2,16 +2,15 @@
 /*******************************************************************\
 *            Gemeinschaft - asterisk cluster gemeinschaft
 * 
-* $Revision$
+* $Revision: 6053 $
 * 
-* Copyright 2007-2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
-* Philipp Kempgen <philipp.kempgen@amooma.de>
-* Peter Kozak <peter.kozak@amooma.de>
-* 
-* Author: Daniel Scheller <scheller@loca.net>
 *
+* APS for Polycom SoundPoint IP phones
+* (c) 2009 Daniel Scheller / LocaNet oHG
+* mailto:scheller@loca.net
+* 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -32,9 +31,7 @@ define("GS_VALID", true);		// this is a parent file
 require_once(dirname(__FILE__) ."/../../../inc/conf.php");
 include_once(GS_DIR ."inc/db_connect.php");
 include_once(GS_DIR ."inc/gettext.php");
-include_once( GS_DIR .'inc/string.php' );
 require_once(GS_DIR ."inc/gs-fns/gs_user_watchedmissed.php");
-require_once(GS_DIR ."inc/gs-fns/gs_astphonebuttons.php");
 
 Header("Content-Type: application/xhtml+xml; charset=utf-8");
 Header("Expires: 0");
@@ -65,7 +62,7 @@ function _err($msg="")
 
 	echo "<html>\n";
 	echo "<head><title>". __("Fehler") ."</title></head>\n";
-	echo "<body><b>". __("Fehler") ."</b>: ". htmlEnt($msg) ."</body>\n";
+	echo "<body><b>". __("Fehler") ."</b>: ". $msg ."</body>\n";
 	echo "</html>\n";
 
 	_ob_send();

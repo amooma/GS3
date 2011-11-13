@@ -28,6 +28,7 @@
 
 defined('GS_VALID') or die('No direct access.');
 include_once( GS_DIR .'inc/gs-lib.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ami_events.php' );
 require_once( GS_DIR .'lib/yadb/yadb_mptt.php' );
 
 
@@ -46,7 +47,16 @@ function gs_prov_group_del( $id )
 		return new GsError( 'Could not connect to database.' );
 	
 	$mptt = new YADB_MPTT($DB, 'user_groups', 'lft', 'rgt', 'id');
-	return $mptt->delete( $id, true );
+	if ( GS_BUTTONDAEMON_USE == false ) {
+		return $mptt->delete( $id, true );
+	}
+	else {
+		$ret = $mptt->delete( $id, true );
+		if ( !isGsError($ret) && $ret ) {
+			gs_usergroup_remove_ui( $id );
+		}
+		return $ret;
+	}	
 }
 
 function gs_prov_group_del_by_name( $group )

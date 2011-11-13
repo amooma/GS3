@@ -254,13 +254,24 @@ $is_login     = false;
 
 if (! @$_SESSION['login_ok'] && ! @$_SESSION['login_user']) {
 	
+	if (isset($_REQUEST['login_user']))
+		$_REQUEST['login_user'] = strtolower($_REQUEST['login_user']);
 	$_SESSION['sudo_user']['boi_session'] = null;
 	
 	require_once( GS_DIR .'htdocs/gui/inc/pamal/pamal.php' );
-	
-	$PAM = new PAMAL( GS_GUI_AUTH_METHOD );
-	$user = $PAM->getUser();
-	if (! $user) {
+
+        $methods =  explode( ',', GS_GUI_AUTH_METHOD );
+        array_walk( $methods, 'gs_trim_value' );
+
+        foreach ( $methods as &$method ) {
+		$PAM = new PAMAL( $method );
+		$user = $PAM->getUser();
+		if ( $user )
+			break;
+	}
+	unset( $method );
+
+	if (! $user ) {
 		$_SESSION['login_ok'  ] = false;
 		$_SESSION['login_user'] = false;
 		$login_info = sPrintF(__('You are not logged in (authentication method: "%s").'), $PAM->getAuthMethod());

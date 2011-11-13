@@ -210,16 +210,18 @@ if (! @$_SESSION['sudo_user']['info']['host_is_foreign']) {
 					//echo '<td>';
 					echo ' &nbsp; ';
 					echo '&rarr; &nbsp; ';
-					if ($cf['active'] === 'vml'
-					||  preg_match('/^vm/', $cf['number'], $m)) {
+					if ($cf['active'] === 'vml' ) {
 						echo htmlEnt(__('AB'));
-						if (preg_match('/^(?:(?:vm)?)(.*)/', $cf['number'], $m)) {
-							$vm_number = $m[1];
-							if ($vm_number != $_SESSION['sudo_user']['info']['ext']) {
-								echo ' ', htmlEnt($vm_number);
-							}
-						}
-					} else {
+					} 
+					else if ($cf['active'] === 'ano' ) {
+						echo htmlEnt(__('Ansage'));
+					} 
+					else if ($cf['active'] === 'trl' ) {
+						echo htmlEnt(__('Zeitsteuerung'));
+					}
+					else if ($cf['active'] === 'par' ) {
+						echo htmlEnt(__('Parallelruf'));
+					}else {
 						echo htmlEnt($cf['number']);
 					}
 					echo '</td>' ,"\n";
@@ -345,26 +347,6 @@ LIMIT 5'
 
 <div class="ie_clearing"></div>
 <div class="fl" style="width:99%; height:10px; font-size:0;"></div>
-
-<?php
-	if (gs_get_conf('GS_GUI_MON_PEERS_ENABLED')) {
-?>
-<form method="post" action="<?php echo GS_URL_PATH, 'srv/pb-dial.php'; ?>">
-<?php echo gs_form_hidden($SECTION, $MODULE); ?>
-<?php echo __('Call-Box'); ?>: &nbsp;
-<input type="text" name="n" value="" size="20" maxlength="30" class="m" />
-<button class="m" title="<?php echo htmlEnt(__("w\xC3\xA4hlen")); ?>" style="height:22px; padding:0;">
-<img alt="<?php echo htmlEnt(__("w\xC3\xA4hlen")); ?>" src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png'; ?>" style="margin:0 5px;" />
-</button>
-</form>
-<?php
-	} else {
-?>
-<div class="ie_clearing"></div>
-<div class="fl" style="width:99%; height:10px; font-size:0;"></div>
-<?php
-	}
-?>
 
 <?php
 }

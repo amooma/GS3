@@ -39,6 +39,8 @@ require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_quiet');
 require_once( GS_DIR .'inc/get-listen-to-ids.php' );
 require_once( GS_DIR .'inc/gs-lib.php' );
+require_once( GS_DIR .'inc/db_connect.php' );
+require_once( GS_DIR .'inc/group-fns.php' );
 
 echo "\n";
 
@@ -77,7 +79,7 @@ if ($rs) {
 	while ($r = $rs->fetchRow()) {
 		echo 'hint(SIP/', $r['name'] ,') ', $r['name'] ,' => {}', "\n";
 		echo 'hint(SIP/', $r['name'] ,') ***', $r['name'] ,' => {}', "\n";
-		echo 'hint(Custom:fwd',$r['name'],') fwd', $r['name'] ,' => {}', "\n";
+		echo 'hint(Custom:',$r['name'] ,'fwd) ', $r['name'] ,'fwd => {}', "\n";
 	}
 } else {
 	echo "//ERROR\n";
@@ -90,40 +92,78 @@ echo "\n";
 # hints for pickup groups
 #
 echo "// hints for pickup groups (auto-generated):\n";
+/*
 $query =
 'SELECT
-	`pg`.`id` `pg_id`,
-	GROUP_CONCAT(`s`.`name` SEPARATOR \',\') `pg_members`
+	`permit` `pg_id`
 FROM
-	`pickupgroups` `pg` JOIN
-	`pickupgroups_users` `pu` ON (`pu`.`group_id`=`pg`.`id`) JOIN
-	`ast_sipfriends` `s` ON (`s`.`_user_id`=`pu`.`user_id`) JOIN
-	`users` `u` ON (`u`.`id`=`pu`.`user_id`)'
-;
-if (! $GS_INSTALLATION_TYPE_SINGLE) {
-	$query.= "\n". 'WHERE `u`.`host_id` IN ('. implode(',', $our_ids) .')';
-}
-$query.= "\n". 'GROUP BY `pg`.`id`';
+	`group_permissions`
+WHERE
+	`type` = \'group_pickup\'
+GROUP BY
+	`pg_id`';
+
 $rs = $db->execute($query);
 if ($rs) {
 	while ($r = $rs->fetchRow()) {
-		$members = explode(',', $r['pg_members']);
-		if (count($members) < 1) continue;
-
-		$devices = array();
-		foreach ($members as $ext) {
-			$ext = preg_replace('/[^0-9*a-z\-_]/iS', '', $ext);
-			if ($ext == '') continue;
-			$devices[] = 'SIP/'.$ext;
+		if ($group_members = gs_group_members_get(Array($r['pg_id']))) {
+			$query =
+'SELECT
+	`name` `ext`
+FROM
+	`ast_sipfriends`	
+WHERE
+	`_user_id` IN ('.implode(',',$group_members).')
+';
+			$rsa = $db->execute($query);
+			if ($rsa) {
+				$devices = array();
+				while ($ra = $rsa->fetchRow()) {
+					$ext = preg_replace('/[^0-9*a-z\-_]/iS', '', $ra['ext']);
+					if ($ext != '') $devices[] = 'SIP/'.$ext;
+				}
+				echo 'hint(', implode('&', $devices), ') *8*', str_pad($r['pg_id'],5,'0',STR_PAD_LEFT), ' => {}', "\n";
+			}
 		}
-		if (count($devices) < 1) continue;
-
-		echo 'hint(', implode('&', $devices), ') *8*', str_pad($r['pg_id'],5,'0',STR_PAD_LEFT), ' => {}', "\n";
 	}
-} else {
-	echo "//ERROR\n";
 }
+*/
+$query = 
+'SELECT
+	DISTINCT(`p`.`id`) `id`
+FROM
+	`pickupgroups_users` `pu`
+JOIN
+	`pickupgroups` `p` ON (`p`.`id`=`pu`.`group_id`)';
+
+$rs = $db->execute($query);
+
+if ($rs) {
+	while ($r = $rs->fetchRow()) {
+		$query =
+'SELECT
+	`s`.`name` `name`
+FROM
+	`ast_sipfriends` `s`, `pickupgroups_users` `pu`
+WHERE
+	`pu`.`user_id` = `s`.`_user_id`
+AND
+	`pu`.`group_id` = '.$r['id'];
+	
+		$rsa = $db->execute($query);
+		if ($rsa) {
+			$devices = array();
+			while ($ra = $rsa->fetchRow()) {
+				$ext = preg_replace('/[^0-9*a-z\-_]/iS', '', $ra['name']);
+				if ($ext != '') $devices[] = 'SIP/'.$ext;
+			}
+			echo 'hint(', implode('&', $devices), ') *8*', str_pad($r['id'],5,'0',STR_PAD_LEFT), ' => {}', "\n";
+		}
+	}
+}
+
 echo "// end\n";
 echo "\n";
+
 
 ?>

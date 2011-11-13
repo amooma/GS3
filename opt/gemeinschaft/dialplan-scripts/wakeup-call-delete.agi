@@ -37,6 +37,7 @@ $exten = trim(@$argv[1]);
 
 if (! $exten) {
 	gs_agi_set_variable(  'ret' , 'unknown' );
+	//fFlush(STDOUT); // <- do not use. not defined in php-cgi!
 	die();
 }
 
@@ -61,15 +62,22 @@ $user_groups  = gs_group_members_groups_get( array( $user_id ), 'user' );
 $members = gs_group_permissions_get ( $user_groups, 'wakeup_call' );
 
 if ( count ( $members ) <= 0 ) {
-
+	
 	gs_agi_set_variable(  'ret' , 'error' );
 	die();
 }
 
 require_once( GS_DIR .'inc/gs-fns/gs_wake_up_call_fns.php' );
 
+$real_target = get_alert_target ( $exten );
 
-$del_ok = delete_alert_by_target( $exten );
+if ( isGsError ( $real_target ) ) {
+
+	gs_agi_set_variable(  'ret' , 'error' );
+	die();
+}
+
+$del_ok = delete_alert_by_target( $real_target );
 
 if ( ! $del_ok ) {
 	gs_agi_set_variable(  'ret' , 'error' );

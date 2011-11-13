@@ -1,0 +1,6 @@
+USE `asterisk`;
+
+--
+-- Fix potentially broken auto_increment counter
+--
+ALTER TABLE `ast_voicemail` AUTO_INCREMENT = 1;

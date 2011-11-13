@@ -87,7 +87,7 @@ function gs_asterisks_prune_peer( $peer, $host_ids=false )
 			if (! $GS_INSTALLATION_TYPE_SINGLE
 			&&  ! in_array($host['id'], $our_host_ids)) {
 				# this is not the local node
-				$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd);
+				$cmd = $sudo .'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd);
 			}
 			@ exec( $sudo . $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
 			$ok = $ok && ($err==0);

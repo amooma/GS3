@@ -243,5 +243,9 @@ function gs_add_c_slashes( $str )
 	return addCSlashes( $str, "\\\0\r\n\t\x00..\x1F\x7F..\xFF" );
 }
 
+function gs_trim_value(&$value)
+{
+	$value = trim($value);
+}
 
 ?>

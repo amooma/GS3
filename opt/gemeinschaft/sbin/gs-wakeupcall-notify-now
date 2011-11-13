@@ -29,7 +29,10 @@ define( 'GS_VALID', true );  /// this is a parent file
 
 require_once( dirName(__FILE__) .'/../inc/conf.php' );
 require_once( GS_DIR .'inc/log.php' );
-//require_once( GS_DIR .'inc/gs-lib.php' );
+require_once( GS_DIR .'inc/gs-lib.php' );
+require_once( GS_DIR .'inc/get-listen-to-ids.php' );
+include_once( GS_DIR .'inc/find_executable.php' );
+require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 $now = getdate();
 		

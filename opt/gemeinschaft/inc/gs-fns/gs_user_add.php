@@ -110,6 +110,13 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $language, $host
 		return new GsError( 'A queue with that name already exists.' );
 	}
 	
+	# check if ivr exists
+	#
+	$num = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `ivrs` WHERE `name`=\''. $db->escape($ext) .'\'' );
+	if ($num > 0)
+		return new GsError( 'A ivr with that extension already exists.' );
+		
+	
 	# check if host exists
 	#
 	$host = gs_host_by_id_or_ip( $host_id_or_ip );
@@ -161,7 +168,7 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $language, $host
 	# add mailbox
 	#
 	if (! $host['is_foreign']) {
-		$ok = $db->execute( 'INSERT INTO `ast_voicemail` (`_uniqueid`, `_user_id`, `mailbox`, `password`, `email`, `fullname`) VALUES (NULL, '. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($pin) .'\', \'\', _utf8\''. $db->escape($firstname .' '. $lastname) .'\')' );
+		$ok = $db->execute( 'INSERT INTO `ast_voicemail` (`uniqueid`, `_user_id`, `mailbox`, `password`, `email`, `fullname`) VALUES (NULL, '. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($pin) .'\', \'\', _utf8\''. $db->escape($firstname .' '. $lastname) .'\')' );
 		if (! $ok) {
 			gs_db_rollback_trans($db);
 			return new GsError( 'Failed to add user (table ast_voicemail).' );
