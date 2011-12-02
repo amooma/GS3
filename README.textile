@@ -2,6 +2,13 @@ h1. Installationsanleitung
 
 siehe "http://github.com/amooma/GemeinschaftPBX/wiki/Installation":http://github.com/amooma/GemeinschaftPBX/wiki/Installation
 
+h1. Support und Consulting für Gemeinschaft
+
+Kostenpflichtig bei der "AMOOMA GmbH":http://www.amooma.de
+Für 200 Euro pro Stunde (plus MwSt.) können Sie Support und Consulting für
+Ihre Gemeinschaft Installation bekommen. Schreiben Sie uns dazu einfach eine
+E-Mail an info@amooma.de
+
 h1. Sammlung für eine Version 3.2
 
 Im Januar 2012 wird die Version 4.0 auf Basis von FreeSWITCH veröffentlicht.
@@ -12,13 +19,6 @@ wir noch eine Version 3.2 veröffentlichen. Sonst geht es direkt zur 4.0.
 
 Hier geht es zur Spendensammlung für die 3.2:
 "http://pledgie.com/campaigns/16375":http://pledgie.com/campaigns/16375
-
-h1. Wo bekomme ich Hilfe?
-
-Kostenpflichtig bei der "AMOOMA GmbH":http://www.amooma.de
-Für 200 Euro pro Stunde (plus MwSt.) können Sie Support und Consulting für
-Ihre Gemeinschaft Installation bekommen. Schreiben Sie uns dazu einfach eine
-E-Mail an "mailto:info@amooma.de":info@amooma.de
 
 h1. Sonstiges
 
