@@ -4,7 +4,7 @@
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
 echo -e "\n
-	Installation for developers ONLY!\n \
+	This is an old Version of Gemeinschaft!\n \
 	No support at all.\n \
 	Use allways stable version for production.\n \
 	This installer might be broken.
@@ -23,8 +23,8 @@ esac
 GEMEINSCHAFT_VERS="master"
 #GEMEINSCHAFT_VERS="3.1-rc3"
 
-#GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
-GEMEINSCHAFT_CLONE_URL_DIR="http://github.com/amooma/GemeinschaftPBX.git"
+#GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
+GEMEINSCHAFT_CLONE_URL_DIR="http://github.com/amooma/GS3.git"
 
 GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
 GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR="misc/provisioning/siemens"
@@ -490,10 +490,10 @@ cd /opt/
 # Get tarball from GitHub {
 #
 git clone -b ${GEMEINSCHAFT_VERS} ${GEMEINSCHAFT_CLONE_URL_DIR} 
-#${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}" -O amooma-GemeinschaftPBX.tar.gz
-#tar -xvzf amooma-GemeinschaftPBX*.tar.gz
-#rm -f amooma-GemeinschaftPBX*.tar.gz
-mv GemeinschaftPBX \
+#${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}" -O amooma-GS3.tar.gz
+#tar -xvzf amooma-GS3*.tar.gz
+#rm -f amooma-GS3*.tar.gz
+mv GS3 \
    gemeinschaft-${GEMEINSCHAFT_VERS}
 echo -n ${GEMEINSCHAFT_VERS} > gemeinschaft-${GEMEINSCHAFT_VERS}/etc/gemeinschaft/.gemeinschaft-version
 mv "gemeinschaft-${GEMEINSCHAFT_VERS}" \
