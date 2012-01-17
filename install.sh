@@ -477,7 +477,7 @@ git clone -b ${GEMEINSCHAFT_VERS} ${GEMEINSCHAFT_CLONE_URL_DIR}
 #${DOWNLOAD} "${GEMEINSCHAFT_TGZ_URL_DIR}/${GEMEINSCHAFT_VERS}" -O amooma-GemeinschaftPBX.tar.gz
 #tar -xvzf amooma-GemeinschaftPBX*.tar.gz
 #rm -f amooma-GemeinschaftPBX*.tar.gz
-mv GemeinschaftPBX \
+mv GS3 \
    gemeinschaft-${GEMEINSCHAFT_VERS}
 echo -n ${GEMEINSCHAFT_VERS} > gemeinschaft-${GEMEINSCHAFT_VERS}/etc/gemeinschaft/.gemeinschaft-version
 mv "gemeinschaft-${GEMEINSCHAFT_VERS}" \
