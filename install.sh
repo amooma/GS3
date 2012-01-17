@@ -7,7 +7,7 @@
 
 GEMEINSCHAFT_VERS="v3.0"
 
-GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GemeinschaftPBX/tarball"
+GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
 
 GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
 GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR="misc/provisioning/siemens"
