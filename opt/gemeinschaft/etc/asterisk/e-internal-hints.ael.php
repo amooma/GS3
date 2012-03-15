@@ -78,6 +78,7 @@ if ($rs) {
 		echo 'hint(SIP/', $r['name'] ,') ', $r['name'] ,' => {}', "\n";
 		echo 'hint(SIP/', $r['name'] ,') ***', $r['name'] ,' => {}', "\n";
 		echo 'hint(Custom:fwd',$r['name'],') fwd', $r['name'] ,' => {}', "\n";
+		echo 'hint(Custom:cwait', $r['name'] ,') cwait', $r['name'] ,' => {}', "\n";
 	}
 } else {
 	echo "//ERROR\n";

@@ -79,16 +79,39 @@ context user-config {
 	//-------------------------------------------------------------
 	//  Call Waiting (Anklopfen)
 	//-------------------------------------------------------------
+
+	_cwaitX. => jump *92;
 	
 	*92 => {
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&caller-count();
-		Set(CDR(amaflags)=OMIT);
-		&user-config-call-waiting(1);
+		//toggle callwaiting
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${user_name});
+		if ("${callwaiting}" = "1") {
+			Set(CDR(amaflags)=OMIT);
+			&user-config-call-waiting(0);
+			TryExec(Set(DEVICE_STATE(Custom:cwait${user_name})=NOT_INUSE));
+			Wait(0.5);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/anklopfen&/opt/gemeinschaft/sounds/${gs_userlang_gs}/ausgeschaltet);
+			Hangup();
+		} else {
+			Set(CDR(amaflags)=OMIT);
+			&user-config-call-waiting(1);
+			TryExec(Set(DEVICE_STATE(Custom:cwait${user_name})=BUSY));
+			Wait(0.5);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/anklopfen&/opt/gemeinschaft/sounds/${gs_userlang_gs}/eingeschaltet);
+			Hangup();
+		}
 	}
 	*92* => {
 		&caller-count();
 		Set(CDR(amaflags)=OMIT);
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&user-config-call-waiting(0);
+		TryExec(Set(DEVICE_STATE(Custom:cwait${user_name})=NOT_INUSE));
+		Wait(0.5);
+		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/anklopfen&/opt/gemeinschaft/sounds/${gs_userlang_gs}/ausgeschaltet);
+		Hangup();
 	}
 	
 	
@@ -386,7 +409,6 @@ macro user-config-clir( mdest, mactive_num ) {
 
 
 macro user-config-call-waiting( mactive_num ) {
-	AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 	&usercode-by-ext(${user_name});
 	if ("${user_code}" = "")
 		Hangup();
@@ -398,15 +420,6 @@ macro user-config-call-waiting( mactive_num ) {
 	Verbose(1,### User ${user_name}: set Call Waiting: ${mactive});
 	Answer();
 	TrySystem(/opt/gemeinschaft/scripts/gs-callwaiting-activate --user='${user_code}' --active='${mactive}');
-	Wait(0.5);
-	//Playback(beep);
-	Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/anklopfen);
-	if ("${mactive}" = "yes") {
-		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/eingeschaltet);
-	} else {
-		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/ausgeschaltet);
-	}
-	Hangup();
 	return;
 }
 

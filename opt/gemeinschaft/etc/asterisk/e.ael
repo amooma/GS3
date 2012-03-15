@@ -1216,6 +1216,28 @@ context toggle-cfwd-hint {
 	}
 }
 
+
+//--------------------------------------------------------------------
+//  Set the Custom-Hints if there is set an callwaiting from the GUI
+//--------------------------------------------------------------------
+
+context toggle-cwait-hint {
+	toggle => {
+		//toggle callwaiting
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-callwaiting.agi,${user_name});
+		if ("${callwaiting}" = "1") {
+			Set(CDR(amaflags)=OMIT);
+			TryExec(Set(DEVICE_STATE(Custom:cwait${user_name})=BUSY));
+			Hangup();
+		} else {
+			Set(CDR(amaflags)=OMIT);
+			TryExec(Set(DEVICE_STATE(Custom:cwait${user_name})=NOT_INUSE));
+			Hangup();
+		}
+	}
+}
+
+
 //---------------------------------------------------------------------
 //  Contexts for IVRs
 //---------------------------------------------------------------------
