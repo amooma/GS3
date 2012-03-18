@@ -102,8 +102,8 @@ if ($user_id < 1)
 	_err( 'Unknown user.' );
 
 # user/ip/mac check
-$user_id_check = $db->executeGetOne( 'SELECT `user_id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
-if ($user_id != $user_id_check) _err( 'Not authorized' );
+//$user_id_check = $db->executeGetOne( 'SELECT `user_id` FROM `phones` WHERE `mac_addr`=\''. $db->escape($mac) .'\'' );
+//if ($user_id != $user_id_check) _err( 'Not authorized' );
 
 $remote_addr = @$_SERVER['REMOTE_ADDR'];
 $remote_addr_check = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );

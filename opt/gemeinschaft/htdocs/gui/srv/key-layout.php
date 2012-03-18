@@ -128,6 +128,8 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 		$phone_types['snom-360'] = 'Snom 360';
 	if (in_array('*', $enabled_models) || in_array('370', $enabled_models))
 		$phone_types['snom-370'] = 'Snom 370';
+	if (in_array('*', $enabled_models) || in_array('870', $enabled_models))
+                $phone_types['snom-870'] = 'Snom 870';
 }
 if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$enabled_models = preg_split('/[,\\s]+/', gs_get_conf('GS_PROV_MODELS_ENABLED_GRANDSTREAM'));

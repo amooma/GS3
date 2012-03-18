@@ -43,6 +43,7 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	$phone_types['snom-320'    ] = 'Snom 320';
 	$phone_types['snom-360'    ] = 'Snom 360';
 	$phone_types['snom-370'    ] = 'Snom 370';
+        $phone_types['snom-870'    ] = 'Snom 870';
 }
 if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 	$phone_types['snom-m3'    ] = 'Snom M3';
@@ -93,6 +94,7 @@ if ($phone_type == '') {
 		elseif (array_key_exists('snom-320', $phone_types)) $phone_type = 'snom-320';
 		elseif (array_key_exists('snom-360', $phone_types)) $phone_type = 'snom-360';
 		elseif (array_key_exists('snom-370', $phone_types)) $phone_type = 'snom-370';
+		elseif (array_key_exists('snom-870', $phone_types)) $phone_type = 'snom-870';
 	} else
 	if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 		if     (array_key_exists('snom-m3', $phone_types)) $phone_type = 'snom-m3';

@@ -672,7 +672,7 @@ WHERE
 		echo '<input type="hidden" name="action" value="delstatic" />', "\n";
 		echo '<input type="hidden" name="qid" value="', $queue_id , '" />', "\n";
 		$host_id = (int)$DB->executeGetOne('SELECT `_host_id` from `ast_queues` WHERE `_id`='.$queue_id);
-		$rs = $DB->execute('SELECT `user`, `name`, q.`_user_id`, `firstname`, `lastname`  FROM `users` u , `ast_sipfriends` s, `ast_queue_members` q  where `s`.`_user_id`=`q`.`_user_id` AND `u`.`id`=`q`.`_user_id` and `q`.`static`=1 AND `q`.`_queue_id`='. $queue_id .' ORDER BY `NAME`');
+		$rs = $DB->execute('SELECT `user`, `name`, q.`_user_id`, `firstname`, `lastname`  FROM `users` u , `ast_sipfriends` s, `ast_queue_members` q  where `s`.`_user_id`=`q`.`_user_id` AND `u`.`nobody_index`IS NULL AND  `u`.`id`=`q`.`_user_id` and `q`.`static`=1 AND `q`.`_queue_id`='. $queue_id .' ORDER BY `NAME`');
 		echo '<select name="aid" size="10">', "\n";
 		while ($user_map = $rs->fetchRow()) {
 		echo '<option value="', (int)$user_map['_user_id'], '"', 'title="', htmlEnt( $user_map['lastname']), ', ', htmlEnt( $user_map['firstname']), '"';

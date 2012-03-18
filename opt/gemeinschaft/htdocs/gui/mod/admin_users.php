@@ -1373,7 +1373,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 	echo '<tr>';
 	echo '<th style="width:348px;">', __('Warteschlange'), '</th>';
 	echo '<th style="width:58px;">', __('Skill'), '</th>';
-	echo '<th style="width:38px;"></th>';
+	echo '<th style="width:45px;"></th>';
 	echo '</thead><tbody>';
 
 	echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
@@ -1389,6 +1389,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 
 	if ($DB->numFoundRows() > 0) {
 		echo '<tr><td>';
+
 		echo '<select name="queue_id">';
 		while ($queue_map = $rs->fetchRow()) {
 			echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
@@ -1420,11 +1421,13 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 	echo '<input type="hidden" name="page" value="', (int)$page, '" />', "\n";
 	echo '<input type="hidden" name="sort" value="', $sort, '" />', "\n";
 	echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
-
+	echo '</form>';
 	$rs = $DB->execute('SELECT `q`.`name`, `penalty`, `_title`, `u`.`host_id`, `p`.`_queue_id` from `users` u,  `penalties` p, `ast_queues` q WHERE `p`.`_user_id`='.$uid.' AND `p`.`_user_id`=`u`.`id` AND `q`.`_id`=`p`.`_queue_id`');
 	while ($pen_map = $rs->fetchRow()) {
 		echo '<tr><td>', $pen_map['name'], ' ', $pen_map['_title'], '</td>';
 		echo '<td>';
+		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+		echo gs_form_hidden($SECTION, $MODULE);
 		echo '<select name="penalty">';
 		foreach ($pen_avail as $pen) {
 			if ($pen_map['penalty'] == $pen) {

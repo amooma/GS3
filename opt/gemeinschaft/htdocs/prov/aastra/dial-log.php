@@ -65,8 +65,8 @@ $num_results = (int)gs_get_conf('GS_AASTRA_PROV_PB_NUM_RESULTS', 10);
 $db = gs_db_slave_connect();
 
 $typeToTitle = array(
-	'out'    => __("Gew\xC3\xA4hlt"),
 	'missed' => __("Verpasst"),
+	'out'    => __("Gew\xC3\xA4hlt"),
 	'in'     => __("Angenommen"),
 	'queue'  => __("Warteschlangen")
 );
@@ -106,7 +106,14 @@ if (! $type) {
 	$xml.= '</AastraIPPhoneTextMenu>' ."\n";
 	
 } elseif ($type==='out' || $type==='in' || $type==='missed' || $type=='queue' ) {
-	if ( $type == queue ){	
+	if ($type==='missed') {
+	    $xml = "<AastraIPPhoneExecute>\n" .
+	    "  <ExecuteItem URI=\"Command: ClearCallersList\"/>\n" .
+	    "</AastraIPPhoneExecute>\n";
+	    $phone_ip = @$_SERVER['REMOTE_ADDR'];
+	    aastra_push_str($phone_ip, $xml);
+	  }
+	if ( $type == 'queue' ){	
 		$query =
 		'SELECT
 			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`

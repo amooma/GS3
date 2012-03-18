@@ -309,7 +309,7 @@ $SNOM_PROV_FW_6TO7          = false;  # allow upgrade from v.6 to 7?
 //$SNOM_PROV_FW_DEFAULT_320   = '7.1.24';
 //$SNOM_PROV_FW_DEFAULT_360   = '6.5.1';
 //$SNOM_PROV_FW_DEFAULT_370   = '7.1.24';
-
+//$SNOM_PROV_FW_DEFAULT_870   = '8.4.32';
 //$SNOM_PROV_KEY_BLACKLIST    = '';
   # do not show these softkey functions in GUI,
   # comma separated list

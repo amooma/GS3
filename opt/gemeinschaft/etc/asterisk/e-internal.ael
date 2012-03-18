@@ -1057,7 +1057,8 @@ context to-internal-users-self {
 				}
 				if ("${ring_instead_of_moh}" = "r") {
 					//Proceeding();  // SIP: "100 Trying"
-					TryExec(Proceeding());  // Proceeding() was added in Asterisk 1.6
+					Answer();
+					//TryExec(Proceeding());  // Proceeding() was added in Asterisk 1.6
 					if ("${TRYSTATUS}"="NOAPP") {
 						Verbose(1,Proceeding ...);
 						//Ringing();
@@ -1065,7 +1066,7 @@ context to-internal-users-self {
 				}
 				else {
 					Set(ring_instead_of_moh=);
-					Progress();  // SIP: "183 Session Progress" with early media
+					Answer();  // SIP: "183 Session Progress" with early media
 				}
 				Set(queue_entertime=${EPOCH});
 				Queue(${EXTEN},${ring_instead_of_moh},,,${queuetimeout},/opt/gemeinschaft/dialplan-scripts/dial-log-store-queue);
@@ -1283,7 +1284,10 @@ context to-internal-users-self {
 	
 	h => {
 		ResetCDR(w);
+		//DumpChan();
 		NoCDR();
+
+
 		if ("${confnum}" != "") {
 			Verbose(1,### Participant "${CALLERID(all)}" has left conference ${confprefix}${confnum});
 			MeetMeCount(${confnum},cnt);
@@ -1296,18 +1300,24 @@ context to-internal-users-self {
 			}
 		}
 		else
+	
+
 		if ("${exttype}" = "user") {
 			// to internal user, store dial log (in|missed)
-			
 			Set(type=missed);
 			if ("${DIALSTATUS}" = "ANSWER")
 				Set(type=in);
-			
-			if (("${CALLERID(dnid)}" != "" || "${did_ext_to}" != "") && "${DIALEDPEERNUMBER:0:1}" != "*") {
+			 //&dial-log-store(${CALLERID(num)},${type},${CALLERID(num)});			
+			if (("${CALLERID(dnid)}" != "" || "${did_ext_to}" != "" ) && "${DIALEDPEERNUMBER:0:1}" != "*") {
 				if ("${did_ext_to}" != "")
 					&dial-log-store(${did_ext_to},${type},${CALLERID(num)});
 				else
 					&dial-log-store(${CALLERID(dnid)},${type},${CALLERID(num)});
+
+			}	
+                        if (("${CALLERID(dnid)}" = "" || "${did_ext_to}" = "" && "${mext}" != "" && "${callfile_from_user}" != "") && "${DIALEDPEERNUMBER:0:1}" != "*") {
+
+				&dial-log-store(${mext},${type},${CALLERID(num)});
 			}
 		}
 	}

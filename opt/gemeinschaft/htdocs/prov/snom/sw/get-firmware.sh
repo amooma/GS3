@@ -126,3 +126,17 @@ ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
 
 echo ""
 
+#####################################################################
+#  8.4.32
+#####################################################################
+
+VERS='8.4.32-SIP-r'
+VERSFILE='08.04.32'
+
+MODEL='snom870'
+echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
+${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' ||
+echo 'Failed'
+ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
+
+echo ""

@@ -17,7 +17,12 @@
 		Order allow,deny
 		Allow from all
 	</Directory>
-
+	Alias /polycom /var/www/polycom
+	<Directory /var/www/polycom>
+                Options FollowSymLinks +Indexes
+                AllowOverride None
+        </Directory>	
+	
 	ErrorLog /var/log/apache2/error.log
 
 	# Possible values include: debug, info, notice, warn, error, crit,

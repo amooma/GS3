@@ -149,3 +149,29 @@ tbody tr.odd th {
 	color: #00e;
 }
 
+.grouptabs a {
+        text-decoration: none;
+        color: #9ae;
+        display: block;
+        float: left;
+        font-size: 1.1em;
+}
+.grouptabs a:hover {
+        font-size: 1.3em;
+        color: #00e;
+        line-height: 0.9em;
+}
+
+.grouptabsactive a {
+        text-decoration: none;
+        color: #000;
+        display: block;
+        float: left;
+        font-size: 1.1em;
+}
+.grouptabsactive a:hover {
+        color: #222;
+        font-size: 1.3em;
+        line-height: 0.9em;
+}
+

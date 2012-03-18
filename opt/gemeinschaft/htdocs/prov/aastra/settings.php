@@ -284,8 +284,7 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('options simple menu'                 , 1, false, false);
 	psetting('dhcp'                                , 1, false, false);
 	psetting('backlight mode'                      , 1, false, false);
-	// psetting('bl on time'                          , 16, false, false);
-	psetting('bl on time'                          , 600, false, false);
+	psetting('bl on time'                          , 16, false, false);
 	psetting('tone set'                            , 'Germany', false, false);
 	psetting('language 1'                          , 'lang_de.txt', false, false);
 	psetting('language'                            , 1, false, false);
@@ -294,10 +293,10 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('time zone name'                      , 'DE-Berlin', false, false);
 	psetting('xml beep notification'               , 1, false, false);
 	psetting('xml status scroll delay'             , 3, false, false);
-	psetting('sip update callerid'                 , 1, false, false);
+	psetting('sip update callerid'                 , 0, false, false);
 	psetting('admin password'                      , gs_get_conf('GS_AASTRA_PROV_ADMIN_PASS'), false, false);
 	psetting('user password'                       , gs_get_conf('GS_AASTRA_PROV_USER_PASS'), false, false);
-	psetting('options password enabled'            , 1, false, false);
+	psetting('options password enabled'            , 0, false, false);
 	psetting('web interface enabled'               , 1, false, false);
 	psetting('directed call pickup'                , 1, false, false);
 	psetting('directed call pickup prefix'         , '*81*', false, false);
@@ -309,7 +308,7 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('dynamic sip'                         , 1, false, false);
 	psetting('call forward disabled'               , 1, false, false);
 	psetting('call waiting'                        , 1, false, false);
-	psetting('missed calls indicator disabled'     , 1, false, false);
+	psetting('missed calls indicator disabled'     , 0, false, false);
 	psetting('sip explicit mwi subscription'       , 1, false, false);
 	psetting('sip explicit mwi subscription period', 120, false, false);
 	psetting('sip registration retry timer'        , 60, false, false);
@@ -322,6 +321,7 @@ if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 	psetting('call hold reminder'                  , 0, false, false);
 	psetting('sip diversion display'               , 1, false, false);
 	psetting('show call destination name'          , 0, false, false);
+	psetting('callers list disabled'               , 0, false, false);
 	if (gs_get_conf('GS_AASTRA_PROV_FW_UPDATE'))
 		psetting('firmware server'                     , $prov_url_aastra.'sw', false, false);
 	else
@@ -491,25 +491,31 @@ if (! $user['nobody_index']) {
 	psetting('softkey2 value'  , $prov_url_aastra.'dial-log.php', true, $dynamic);
 	psetting('softkey2 label'  , __('Anrufliste'), true, $dynamic);
 
-	psetting('softkey3 type'   , 'speeddial', true, $dynamic);
-	psetting('softkey3 value'  , 'voicemail', true, $dynamic);
-	psetting('softkey3 label'  , __('Voicemail'), true, $dynamic);
+	//psetting('softkey3 type'   , 'speeddial', true, $dynamic);
+	//psetting('softkey3 value'  , 'voicemail', true, $dynamic);
+	//psetting('softkey3 label'  , __('Voicemail'), true, $dynamic);
 
-	psetting('softkey4 type'   , 'xml', true, $dynamic);
-	psetting('softkey4 value'  , $prov_url_aastra.'dnd.php', true, $dynamic);
-	$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
-	if ($current_dndstate == 'yes')
-		psetting('softkey4 label'  , __('Ruhe aus'), true, $dynamic);
-	else
-		psetting('softkey4 label'  , __('Ruhe'), true, $dynamic);
+	//psetting('softkey4 type'   , 'xml', true, $dynamic);
+	//psetting('softkey4 value'  , $prov_url_aastra.'dnd.php', true, $dynamic);
+	//$current_dndstate = $db->executeGetOne("SELECT `active` FROM `dnd` WHERE `_user_id`=". $user_id);
+	//if ($current_dndstate == 'yes')
+	//	psetting('softkey4 label'  , __('Ruhe aus'), true, $dynamic);
+	//else
+	//	psetting('softkey4 label'  , __('Ruhe'), true, $dynamic);
+	psetting('softkey7 type' , 'speeddial', true, $dynamic);
+	psetting('softkey7 value' , '*5', true, $dynamic);
+	psetting('softkey7 label', 'CC Anmelden', true, $dynamic);
+	psetting('softkey8 type' , 'speeddial', true, $dynamic);
+	psetting('softkey8 value' , '*5*', true, $dynamic);
+	psetting('softkey8 label', 'CC Abmelden', true, $dynamic);
 }
 
-psetting('softkey5 type'   , 'xml', true, $dynamic);
-psetting('softkey5 label'  , __('Login'), true, $dynamic);
+psetting('softkey3 type'   , 'xml', true, $dynamic);
+psetting('softkey3 label'  , __('Login'), true, $dynamic);
 if ($user['nobody_index'])
-	psetting('softkey5 value'  , $prov_url_aastra.'login.php?a=login', true, $dynamic);
+	psetting('softkey3 value'  , $prov_url_aastra.'login.php?a=login', true, $dynamic);
 else
-	psetting('softkey5 value'  , $prov_url_aastra.'login.php', true, $dynamic);
+	psetting('softkey3 value'  , $prov_url_aastra.'login.php', true, $dynamic);
 
 $softkeys = aastra_get_softkeys( $user_id, $phone_type );
 if (is_array($softkeys)) {

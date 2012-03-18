@@ -1,1 +1,1 @@
-_80. => jump vm-${EXTEN:2};
+_80X. => jump vm-${EXTEN:2};

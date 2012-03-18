@@ -48,7 +48,7 @@ function queue_window($px, $py, $width, $height, $id, $title='', $members, $cols
 	echo '<table class="extmonhd">',"\n";
 	echo '<tr>',"\n";
 	echo '<th class="extmonhd">',"\n";
-	echo '<span id="'.$id.'_title">',htmlentities($title),'</span>',"\n";
+	echo '<span id="'.$id.'_title"><font size="+3">',htmlentities($title),'</font></span>',"\n";
 	echo '</th>',"\n";
 	if ($stats)
 		foreach ($stats as $stat) {
@@ -122,6 +122,12 @@ function group_window($px, $py, $width, $height, $id, $title='', $members, $cols
 	echo '</tr>',"\n";
 	echo '</table>',"\n";
 	$member_count = count($members);
+	
+	if ($member_count == 0) {
+		show();
+		return;
+	}
+
 	if ($rows == 0) $rows = ceil( $member_count / $cols);
 	$a_width = (int) floor(($width - 1 - $cols) / $cols);
 	$a_height = (int) floor(($height - $offset_py - $rows) / $rows);

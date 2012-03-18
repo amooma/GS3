@@ -440,7 +440,7 @@ WHERE '.
 	? ' `q`.`_id` IN ('.implode(',',$queue_ids).') '
 	: ' FALSE '
 	).' '.
-'ORDER BY `q`.`name`';
+'ORDER BY `q`.`name` ASC';
 
 $rs = $DB->execute( $sql_query );
 
