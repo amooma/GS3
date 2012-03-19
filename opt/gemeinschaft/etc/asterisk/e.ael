@@ -577,6 +577,19 @@ context queues-login-logout {
 	_*5XXXX* => &queue-logout(${EXTEN:2:-1});
 	_*5XXXXX* => &queue-logout(${EXTEN:2:-1});
 	_*5XXXXXX* => &queue-logout(${EXTEN:2:-1});
+
+	_qZ.uZ. => {
+		//toggle queue login/logout
+		AGI(/opt/gemeinschaft/dialplan-scripts/toggle-queue.agi,${EXTEN});
+		Set(__queue=${queue});
+		Set(__user_name=${user_name});
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-in-queue.agi,${user_name},${queue});
+		if ("${agent_login}" = "1") {
+			&queue-logout(${queue});
+		} else {
+			&queue-login(${queue});
+		}
+	}
 }
 
 
@@ -1232,6 +1245,27 @@ context toggle-cwait-hint {
 		} else {
 			Set(CDR(amaflags)=OMIT);
 			TryExec(Set(DEVICE_STATE(Custom:cwait${user_name})=NOT_INUSE));
+			Hangup();
+		}
+	}
+}
+
+
+//--------------------------------------------------------------------
+//  Set the Custom-Hints for Queue login/logout
+//--------------------------------------------------------------------
+
+context toggle-queue-user-hint {
+	toggle => {
+		//toggle queue login/logout
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-in-queue.agi,${user_name},${queue});
+		if ("${agent_login}" = "1") {
+			Set(CDR(amaflags)=OMIT);
+			TryExec(Set(DEVICE_STATE(Custom:q${queue}u${user_name})=BUSY));
+			Hangup();
+		} else {
+			Set(CDR(amaflags)=OMIT);
+			TryExec(Set(DEVICE_STATE(Custom:q${queue}u${user_name})=NOT_INUSE));
 			Hangup();
 		}
 	}

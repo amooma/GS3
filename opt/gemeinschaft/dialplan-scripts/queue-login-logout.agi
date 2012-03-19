@@ -96,6 +96,7 @@ if ($action === 'login') {
 		$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`) VALUES (\''. $db->escape($queue_name) .'\', '. $queue_id .', \''. $db->escape( 'SIP/'. $user ) .'\', '. $user_id .')' );
 	}
 	gs_agi_set_variable( 'agent_login_status', 'loggedin' );
+	write_callfile( $queue_name, $user );
 	
 }
 elseif ($action === 'logout') {
@@ -107,6 +108,7 @@ elseif ($action === 'logout') {
 		if ($agent_on > $min_agent) {
 			$db->execute( 'DELETE FROM `ast_queue_members` WHERE `_queue_id`='. $queue_id .' AND `_user_id`='. $user_id );
 			gs_agi_set_variable( 'agent_login_status', 'loggedout' );
+			write_callfile( $queue_name, $user );
 		} else {
 			exit();
 		}
@@ -129,6 +131,8 @@ elseif ($action === 'logoutall') {
 				AND `static`= 0 
 				AND `_queue_id`='.(int)$queue_map['_queue_id'] 
 				);
+			write_callfile( $queue_map['queue_name'], $user );
+
 		$ami->ami_send_command(
 			'Action: Queuelog'."\n".
 			'Queue: '.$queue_map['queue_name']."\n".
@@ -173,6 +177,7 @@ elseif ($action === 'loginall') {
 			`interface` = \''.$interface.'\',
 			`penalty`='.$penalty
 		);
+		write_callfile( $queue_map['name'], $user );
 		// Queuelog for each Queue
 		$ami->ami_send_command(
 			'Action: Queuelog'."\n".
@@ -195,6 +200,75 @@ function queue_static_agent( $q, $u)
 	} else {
 		return false;
 	}
+}
+
+function write_callfile( $queue_ext, $user_ext)
+{
+	$call   //= "Channel: Local/". $from_num_dial ."\n"
+		= "Channel: local/toggle@toggle-queue-user-hint\n"
+		. "MaxRetries: 0\n"
+		. "WaitTime: 15\n"
+		. "Context: toggle-queue-user-hint\n"
+		. "Extension: toggle\n"
+		. "Callerid: $user <Toggle>\n"
+		//. "Setvar: __user_id=".  $user_id ."\n"
+		. "Setvar: __user_name=".  $user_ext ."\n"
+		. "Setvar: __queue=". $queue_ext ."\n"
+		. "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
+		. "Setvar: __is_callfile_origin=1\n"  # no forwards and no mailbox on origin side
+		. "Setvar: __callfile_from_user=".  $user_ext ."\n"
+		//. "Setvar: __record_file=".  $filename ."\n"
+		;
+	
+	$filename = '/tmp/gs-'. $user_name .'-'. time() .'-'. rand(10000,99999) .'.call';
+	
+	$cf = @fOpen( $filename, 'wb' );
+	if (! $cf) {
+		gs_log( GS_LOG_WARNING, 'Failed to write call file "'. $filename .'"' );
+		return new GsError( 'Failed to write call file.' );
+	}
+	@fWrite( $cf, $call, strLen($call) );
+	@fClose( $cf );
+	@chmod( $filename, 00666 );
+	
+	$spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
+	
+	
+	if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
+		$our_host_ids = @gs_get_listen_to_ids();
+		if (! is_array($our_host_ids)) $our_host_ids = array();
+		$user_is_on_this_host = in_array( $_SESSION['sudo_user']['info']['host_id'], $our_host_ids );
+	} else {
+		$user_is_on_this_host = true;
+	}
+	
+	if ($user_is_on_this_host) {
+		# the Asterisk of this user and the web server both run on this host
+		$err=0; $out=array();
+		@exec( 'sudo mv '. qsa($filename) .' '. qsa($spoolfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		if ($err != 0) {
+			@unlink( $filename );
+			gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. $spoolfile .'"' );
+			return new GsError( 'Failed to move call file.' );
+		}
+	} else {
+		$cmd = 'sudo scp -o StrictHostKeyChecking=no -o BatchMode=yes '. qsa( $filename ) .' '. qsa( 'root@'. $user['host'] .':'. $filename );
+		//echo $cmd, "\n";
+		@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		@unlink( $filename );
+		if ($err != 0) {
+			gs_log( GS_LOG_WARNING, 'Failed to scp call file "'. $filename .'" to '. $user['host'] );
+			return new GsError( 'Failed to scp call file.' );
+		}
+		//remote_exec( $user['host'], $cmd, 10, $out, $err ); // <-- does not use sudo!
+		$cmd = 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa( $user['host'] ) .' '. qsa( 'mv '. qsa( $filename ) .' '. qsa( $spoolfile ) );
+		//echo $cmd, "\n";
+		@exec( $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
+		if ($err != 0) {
+			gs_log( GS_LOG_WARNING, 'Failed to mv call file "'. $filename .'" on '. $user['host'] .' to "'. $spoolfile .'"' );
+			return new GsError( 'Failed to mv call file on remote host.' );
+		}
+	}	
 }
 
 ?>

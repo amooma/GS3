@@ -56,6 +56,23 @@ $db = gs_db_slave_connect();
 if (! $db) die();
 //FIXME - should probably write a message to gs_log() before dying
 
+# get queues
+$queues = array();
+$query =
+'SELECT `q`.`name`
+FROM
+	`ast_queues` `q`'
+;
+if (! $GS_INSTALLATION_TYPE_SINGLE) {
+	$query.= "\n". 'WHERE `q`.`_host_id` IN ('. implode(',', $our_ids) .')';
+}
+$rs = $db->execute($query);
+if ($rs) {
+	while ($r = $rs->fetchRow()) {
+		$queues[] = $r['name'];
+	}
+}
+
 
 # hints for extensions
 #
@@ -77,8 +94,10 @@ if ($rs) {
 	while ($r = $rs->fetchRow()) {
 		echo 'hint(SIP/', $r['name'] ,') ', $r['name'] ,' => {}', "\n";
 		echo 'hint(SIP/', $r['name'] ,') ***', $r['name'] ,' => {}', "\n";
-		echo 'hint(Custom:fwd',$r['name'],') fwd', $r['name'] ,' => {}', "\n";
+		echo 'hint(Custom:fwd', $r['name'] ,') fwd', $r['name'] ,' => {}', "\n";
 		echo 'hint(Custom:cwait', $r['name'] ,') cwait', $r['name'] ,' => {}', "\n";
+		foreach($queues as $queue)
+			echo 'hint(Custom:q', $queue ,'u', $r['name'] ,') q', $queue ,'u', $r['name'] ,' => {}', "\n";
 	}
 } else {
 	echo "//ERROR\n";
