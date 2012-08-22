@@ -5430,6 +5430,7 @@ CREATE TABLE `ast_queues` (
   `weight` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `timeoutrestart` tinyint(1) unsigned DEFAULT NULL,
   `_min_agents` int(10) unsigned DEFAULT '0',
+  `early_media` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`_id`),
   UNIQUE KEY `name` (`name`),
   KEY `host_name` (`_host_id`,`name`),

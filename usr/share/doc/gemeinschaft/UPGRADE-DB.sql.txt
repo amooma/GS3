@@ -1401,3 +1401,9 @@ CREATE ALGORITHM=MERGE DEFINER=`root`@`localhost` SQL SECURITY INVOKER VIEW `ast
 --
 
 alter table users add column `hotdescable` boolean default true;
+
+--
+-- After: e3f878af639a110670de8c6c535d7a2a5d090870
+--
+
+alter table ast_queues add column `early_media` boolean default true;
