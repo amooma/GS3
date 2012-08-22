@@ -7426,6 +7426,7 @@ CREATE TABLE `users` (
   `group_id` mediumint(8) unsigned DEFAULT NULL,
   `softkey_profile_id` int(10) unsigned DEFAULT NULL,
   `prov_param_profile_id` int(10) unsigned DEFAULT NULL,
+  `hotdescable` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user` (`user`),
   KEY `lastname_firstname` (`lastname`(15),`firstname`(15)),
