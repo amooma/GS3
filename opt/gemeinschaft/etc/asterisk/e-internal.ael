@@ -1059,7 +1059,7 @@ context to-internal-users-self {
 			if ("${all_busy}" != "1") {
 				AGI(/opt/gemeinschaft/dialplan-scripts/queue-get-sysrec,${EXTEN});
 				if ("${sysrec_filename}" != ""  &&  "${forwards}"= "0") {
-					Dumpchan();
+					//Dumpchan();
 					if("${queue_early_media}" == "1") {
 					Progress();
 					Playback(/opt/gemeinschaft/sys-rec/${sysrec_filename},noanswer);
