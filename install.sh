@@ -20,7 +20,7 @@ case $answer in
 	;;
 esac
 
-GEMEINSCHAFT_VERS="master"
+GEMEINSCHAFT_VERS="dev"
 #GEMEINSCHAFT_VERS="3.1-rc3"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
