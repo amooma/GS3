@@ -56,7 +56,7 @@ macro check-valid-extension( mext ) {
 	if ("${exttype}" != "user" && "${exttype}" != "queue" && "${exttype}" != "conference" && "${exttype}" != "ivr" && "${exttype}" != "foreign") {
 		Verbose(1,### Extension ${mext} is unknown);
 		
-		if ("${is_from_gateway}" = "1") {
+		if ("${is_from_gateway}" = "2") {
 			Verbose(1,### Don't allow call from the gateway to go to the gateway again - extension: ${mext});
 			//Congestion(3);
 			// 2 = AST_CAUSE_NO_ROUTE_TRANSIT_NET => SIP 404 Not Found
@@ -991,7 +991,12 @@ context to-internal-users-self {
 		to_queue:
 			
 			//Verbose(1,### Called queue: ${EXTEN});
-			
+			if ("${EXTEN}" : "[0-9][0-9][0-9][0-9]34") {
+                        	Set(CHANNEL(language)=es);
+                 	}	
+			if ("${EXTEN}" : "[0-9][0-9][0-9][0-9]48") {
+                                Set(CHANNEL(language)=pl);
+                        }
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-queue-get-fw.agi,${EXTEN});
 			// sets fw_*_* and ring_instead_of_moh
 			// and queue_displayname
@@ -1019,6 +1024,7 @@ context to-internal-users-self {
 			
 			//Set(CALLERID(name)=Queue ${EXTEN});
 			//Set(CALLERID(name)=Q${EXTEN} ${CALLERID(name)});
+			SetCallerPres(allowed_passed_screen);
 			Set(CALLERID(name)=[${queue_displayname}] ${CALLERID(name)});
 			if ("${CALLERID(num)}" = "")
 				Set(CALLERID(num)=${EXTEN});
@@ -1053,7 +1059,14 @@ context to-internal-users-self {
 			if ("${all_busy}" != "1") {
 				AGI(/opt/gemeinschaft/dialplan-scripts/queue-get-sysrec,${EXTEN});
 				if ("${sysrec_filename}" != ""  &&  "${forwards}"= "0") {
+					Dumpchan();
+					if("${queue_early_media}" == "1") {
+					Progress();
+					Playback(/opt/gemeinschaft/sys-rec/${sysrec_filename},noanswer);
+					}
+					else {
 					Playback(/opt/gemeinschaft/sys-rec/${sysrec_filename});
+					}
 				}
 				if ("${ring_instead_of_moh}" = "r") {
 					//Proceeding();  // SIP: "100 Trying"
@@ -1066,7 +1079,12 @@ context to-internal-users-self {
 				}
 				else {
 					Set(ring_instead_of_moh=);
-					Answer();  // SIP: "183 Session Progress" with early media
+					if("${queue_early_media}" == "1") {
+					Progress(); // SIP: "183 Session Progress" with early media
+					} 
+					else {
+					Answer();  
+					}	
 				}
 				Set(queue_entertime=${EPOCH});
 				Queue(${EXTEN},${ring_instead_of_moh},,,${queuetimeout},/opt/gemeinschaft/dialplan-scripts/dial-log-store-queue);
