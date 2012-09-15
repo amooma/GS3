@@ -129,7 +129,7 @@ elseif ($type ==='prv') { # PRIVATE phonebook
 		ORDER BY `pb`.`lastname`, `pb`.`firstname`'
 	);
 }
-elseif (type === 'imported') { # IMPORTED phonebook
+elseif ($type === 'imported') { # IMPORTED phonebook
 	if (! gs_get_conf('GS_PB_IMPORTED_ENABLED'))
 		_err( 'Not allowed' );
 		
