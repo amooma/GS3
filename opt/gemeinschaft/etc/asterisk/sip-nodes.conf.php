@@ -244,6 +244,7 @@ while ($gw = $rs->fetchRow()) {
 	
 	echo '[', $gw['name'] ,']' ,"\n";
 	echo 'type = '            , 'peer' ,"\n";
+	echo 'sendrpid ='		, 'no' , "\n";
 	echo 'host = '            , $gw['host'] ,"\n";
 	if ($params['port'          ] > 0) {
 		echo 'port = '            , $params['port'          ] ,"\n";
