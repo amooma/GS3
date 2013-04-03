@@ -353,7 +353,7 @@ context to-internal-users {
 				Hangup();
 			}
 		
-			Pickup(${pext}@to-internal-users-self);
+			PickupChane(SIP/${pext});
 			//FIXME - does not work across nodes
 		}
 	}
