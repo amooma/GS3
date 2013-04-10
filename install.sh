@@ -4,7 +4,7 @@
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
 echo -e "\n
-	This is an old Version of Gemeinschaft!\n \
+	This the Asterisk 1.8 TESTING Version of Gemeinschaft!\n \
 	Only community support.\n \
 	Use allways stable version for production.\n \
 	This installer might be broken.
@@ -20,7 +20,7 @@ case $answer in
 	;;
 esac
 
-GEMEINSCHAFT_VERS="develop"
+GEMEINSCHAFT_VERS="1.8_testing"
 #GEMEINSCHAFT_VERS="3.1-rc3"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
