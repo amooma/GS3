@@ -320,7 +320,7 @@ if (@$rs) {
 		echo '<tr class="', ((++$i % 2 == 0) ? 'even':'odd'), '">';
 		echo '<td>', htmlEnt($r['datum']),'</td>';
 		echo '<td>', htmlEnt($r['src']),'</td>';
-		if ( $r['dst'] == 's') { 
+		if ( $r['dst'] == 's' || $r['dst'] == '~~s~~') { 
 			echo '<td>', htmlEnt($r['userfield']), '</td>';
 		} else {
 			echo '<td>', htmlEnt($r['dst']), '</td>';
