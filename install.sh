@@ -577,13 +577,13 @@ mv asterisk asterisk.DEBIAN
 cp -r /opt/gemeinschaft-source/etc/asterisk ./
 #ln -snf /opt/gemeinschaft-source/etc/asterisk
 
-# Replace astdatadir "/var/lib/asterisk" by "/usr/share/asterisk"
-# (the default on Debian):
-sed -i -r -e 's#^(astdatadir\s*).*#\1=> /usr/share/asterisk#' /etc/asterisk/asterisk.conf || true
-
-# Replace astrundir "/var/run" by "/var/run/asterisk"
-# (the default on Debian):
-sed -i -r -e 's#^(astrundir\s*).*#\1=> /var/run/asterisk#' /etc/asterisk/asterisk.conf || true
+## Replace astdatadir "/var/lib/asterisk" by "/usr/share/asterisk"
+## (the default on Debian):
+#sed -i -r -e 's#^(astdatadir\s*).*#\1=> /usr/share/asterisk#' /etc/asterisk/asterisk.conf || true
+#
+## Replace astrundir "/var/run" by "/var/run/asterisk"
+## (the default on Debian):
+#sed -i -r -e 's#^(astrundir\s*).*#\1=> /var/run/asterisk#' /etc/asterisk/asterisk.conf || true
 
 
 # change owner of /opt/gemeinschaft/etc/asterisk/* to asterisk
