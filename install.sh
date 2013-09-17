@@ -82,8 +82,8 @@ if [ "`id -un`" != "root" ]; then
 	fi
 fi
 
-if ( ! cat /etc/debian_version | head -n 1 | grep '^6.'      1>>/dev/null ) \
-&& ( ! cat /etc/debian_version | head -n 1 | grep 'squeeze'  1>>/dev/null )
+if ( ! cat /etc/debian_version | head -n 1 | grep '^7.'      1>>/dev/null ) \
+&& ( ! cat /etc/debian_version | head -n 1 | grep 'wheezy'  1>>/dev/null )
 then
 	if [ "$L2" == "de" ]; then
 		err "  Ihr Debian ist nicht Version 6 (\"Squeeze\").\n" \
@@ -210,7 +210,7 @@ ${APTITUDE_INSTALL} \
 	console-data console-tools \
 	vim less git linux-headers-$(uname -r) \
     gcc make gcc make ncurses-dev zlib1g-dev \
-    g++ libxml2-dev doxygen libmysql++-dev
+    g++ libxml2-dev doxygen libmysql++-dev libcrypto++-dev libssl-dev libportaudio-dev
 
 # now that we have vim, enable syntax highlighting by default:
 if ( which vim 1>>/dev/null 2>>/dev/null ); then
@@ -360,7 +360,7 @@ if ( ! which lame 1>>/dev/null 2>>/dev/null ); then
 	echo "***"
 	echo "***  Installing Lame ..."
 	echo "***"
-	echo 'deb http://deb-multimedia.org squeeze main non-free' \
+	echo 'deb http://deb-multimedia.org wheezy main non-free' \
 		> /etc/apt/sources.list.d/debian-multimedia.list
 	aptitude update --allow-untrusted || true
 	${APTITUDE_INSTALL} --allow-untrusted debian-multimedia-keyring || true
