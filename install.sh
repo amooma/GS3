@@ -210,7 +210,8 @@ ${APTITUDE_INSTALL} \
 	console-data console-tools \
 	vim less git linux-headers-$(uname -r) \
     gcc make gcc make ncurses-dev zlib1g-dev \
-    g++ libxml2-dev doxygen libmysql++-dev libcrypto++-dev libssl-dev libportaudio-dev
+    g++ libxml2-dev doxygen libmysql++-dev libcrypto++-dev libssl-dev \ 
+    libportaudio2 portaudio19-dev libasound-dev
 
 # now that we have vim, enable syntax highlighting by default:
 if ( which vim 1>>/dev/null 2>>/dev/null ); then
