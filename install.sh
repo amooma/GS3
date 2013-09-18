@@ -86,13 +86,13 @@ if ( ! cat /etc/debian_version | head -n 1 | grep '^7.'      1>>/dev/null ) \
 && ( ! cat /etc/debian_version | head -n 1 | grep 'wheezy'  1>>/dev/null )
 then
 	if [ "$L2" == "de" ]; then
-		err "  Ihr Debian ist nicht Version 6 (\"Squeeze\").\n" \
+		err "  Ihr Debian ist nicht Version 7 (\"Wheezy\").\n" \
 			"  Bitte laden Sie einen Debian-Installer herunter:\n" \
-			"  http://cdimage.debian.org/cdimage/daily-builds/squeeze_d-i/current/"
+			"  http://cdimage.debian.org/cdimage/release/current/i386/iso-cd/debian-7.1.0-i386-netinst.iso"
 	else
-		err "  Your Debian is not version 6 (\"Squeeze\").\n" \
+		err "  Your Debian is not version 7 (\"Wheezy\").\n" \
 			"  Please download a Debian installer from\n" \
-			"  http://cdimage.debian.org/cdimage/daily-builds/squeeze_d-i/current/"
+			"  http://cdimage.debian.org/cdimage/release/current/i386/iso-cd/debian-7.1.0-i386-netinst.iso"
 	fi
 fi
 
