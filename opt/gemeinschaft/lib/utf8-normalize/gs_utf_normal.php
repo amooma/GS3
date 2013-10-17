@@ -61,15 +61,16 @@ function hexUnicodeToUtf8( $hexcp )
 # style \uXXXX sequences
 function utf8_to_unicode_uhex( $str )
 {
-	return preg_replace(
-		'/[\x{00}-\x{1F}\x{7F}-\x{7FFFFFFF}]/uSe',
-		'sPrintF("\\u%04x", utf8ToCodepoint("$0"))',
-		str_replace(
-			array( '\\'  , "\x08", "\x0C", "\n" , "\r" , "\t"  ),
-			array( '\\\\', '\\b' , '\\f' , '\\n', '\\r', '\\t' ),
-			$str
-			)
-		);
+        return $str;
+	//return preg_replace(
+	//	'/[\x{00}-\x{1F}\x{7F}-\x{7FFFFFFF}]/uSe',
+	//	'sPrintF("\\u%04x", utf8ToCodepoint("$0"))',
+	//	str_replace(
+	//		array( '\\'  , "\x08", "\x0C", "\n" , "\r" , "\t"  ),
+	//		array( '\\\\', '\\b' , '\\f' , '\\n', '\\r', '\\t' ),
+	//		$str
+	//		)
+	//	);
 }
 
 # quotes a string according to RFC 4627 (JSON)
