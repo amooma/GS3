@@ -1,6 +1,6 @@
 h1. Alte Version
 
-Gemeinschaft in der Version 3 die ältere Software mit einem Asterisk-Kern. Die aktuellere Version von Gemeinschaft hat Freeswitch als Kern. Weitere Informationen dazu finden Sie auf "http://www.amooma.de/gemeinschaft":http://www.amooma.de/gemeinschaft
+Gemeinschaft in der Version 3 ist die ältere Software mit einem Asterisk-Kern. Die aktuellere Version von Gemeinschaft hat Freeswitch als Kern. Weitere Informationen dazu finden Sie auf "http://www.amooma.de/gemeinschaft":http://www.amooma.de/gemeinschaft
 
 h1. Installationsanleitung für Gemeinschaft 3.1
 
