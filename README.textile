@@ -1,6 +1,6 @@
-h1. Alte Version
+h1. Asterisk Version
 
-Gemeinschaft in der Version 3.1 ist eine veraltete Software mit einem Asterisk-Kern. Wenn Sie möchten, können Sie die Software natürlich weiterhin einsetzen. Wir empfehlen Ihnen aber lieber auf eine neue Version zu gehen. Weitere Informationen dazu finden Sie auf "http://www.amooma.de/gemeinschaft":http://www.amooma.de/gemeinschaft
+Gemeinschaft in der Version 3 ist die ältere Software mit einem Asterisk-Kern. Die aktuellere Version von Gemeinschaft hat Freeswitch als Kern. Weitere Informationen dazu finden Sie auf "http://www.amooma.de/gemeinschaft":http://www.amooma.de/gemeinschaft
 
 h1. Installationsanleitung für Gemeinschaft 3.1
 
