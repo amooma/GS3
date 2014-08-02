@@ -958,6 +958,9 @@ if ($phone_model == '870') {
 	psetting('backlight_idle', '4', array('context'=>'active'));
 
 }
+if ($phone_model == '760') {
+	psetting('dkey_menu'     , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac', array('context'=>'active'));
+}
 
 /*  //FIXME
 
