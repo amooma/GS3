@@ -307,8 +307,8 @@ $table = 'cdr_tmp_'.$user_name;
 $ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`' );
 
 $sql_query =
-	'CREATE TEMPORARY TABLE `'.$table.'` TYPE=HEAP '.
-		' SELECT * FROM `ast_cdr` WHERE '.
+	'CREATE TEMPORARY TABLE `'.$table.'`
+		SELECT * FROM `ast_cdr` WHERE '.
 			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_m_start) .'\' AND '.
 			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_m_end) .'\' ) AND '.
 			'  `src` IN ('. $exts_sql .') AND '.
@@ -319,6 +319,7 @@ $sql_query =
 	;
 if (! $CDR_DB->execute( $sql_query )) {
 	echo '<div class="errorbox">', "Fehler beim Anlegen einer temporären Tabelle!" ,'</div>',"\n";
+echo $sql_query;
 }
 
 for ($day=1; $day<=$num_days; ++$day) {
