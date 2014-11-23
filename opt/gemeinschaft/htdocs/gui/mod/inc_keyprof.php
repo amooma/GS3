@@ -113,12 +113,14 @@ if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 		$phone_types['tiptel-ip284'] = 'Tiptel IP 284';
 	if (in_array('*', $enabled_models) || in_array('ip286', $enabled_models))
 		$phone_types['tiptel-ip286'] = 'Tiptel IP 286';
+}
+if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
+	$enabled_models = preg_split('/[,\\s]+/', gs_get_conf('GS_PROV_MODELS_ENABLED_YEALINK'));
 	if (in_array('*', $enabled_models) || in_array('yealink-sip-t46g', $enabled_models))
 		$phone_types['yealink-sip-t46g' ] = 'Yealink SIP T46G';
 	if (in_array('*', $enabled_models) || in_array('yealink-sip-t48g', $enabled_models))
 		$phone_types['yealink-sip-t48g' ] = 'Yealink SIP T48G';	
 }
-
 
 $key_functions_snom = array(
 	'none'  => __('Leer'),              # none

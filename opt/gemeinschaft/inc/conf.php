@@ -243,6 +243,7 @@ _gscnf( 'PROV_MODELS_ENABLED_SIEMENS'     , '*'          );  # / 'os20,os40,os60
 _gscnf( 'PROV_MODELS_ENABLED_AASTRA'      , '*'          );  # / '51i,53i,55i,57i'
 _gscnf( 'PROV_MODELS_ENABLED_GRANDSTREAM' , '*'          );  # / 'gxp2000,gxp2020'...
 _gscnf( 'PROV_MODELS_ENABLED_TIPTEL'      , '*'          );  # / 'ip280,ip284,ip286'
+_gscnf( 'PROV_MODELS_ENABLED_YEALINK'     , '*'          );  # / 'yealink-sip-t46g,yealink-sip-t48g'
 _gscnf( 'PROV_MODELS_ENABLED_POLYCOM'     , '*'          );  # / 'spip-550,spip-670', ...
 
 _gscnf( 'SNOM_PROV_ENABLED'         , false              );

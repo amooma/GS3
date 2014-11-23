@@ -275,6 +275,7 @@ $PROV_ALLOW_NET             = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.25
 //$PROV_MODELS_ENABLED_AASTRA      = '*';  # or '51i,53i,55i,57i'
 //$PROV_MODELS_ENABLED_GRANDSTREAM = '*';  # or 'bt110,gxp2000,gxp2020', ...
 //$PROV_MODELS_ENABLED_TIPTEL      = '*';  # or 'ip280,ip284,ip286'
+//$PROV_MODELS_ENABLED_YEALINK     = '*';  # or 'yealink-sip-t46g,yealink-sip-t48g'
 //$PROV_MODELS_ENABLED_POLYCOM     = '*';  # or 'spip-550,spip-670', ...
 
 
@@ -627,7 +628,7 @@ $LOCK_DIR               = '/tmp/';
   # does not control where apache, mysql, zaptel etc. put their
   # lock files
 
-$CALL_INIT_FROM_NET         = '192.168.178.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
+$CALL_INIT_FROM_NET         = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # a comma (,) separated list of IP addresses or
   # <IP address>/<netmask> pairs from where calls can be inited
   # with HTTP GET
@@ -759,7 +760,7 @@ $BOI_ENABLED            = false;
 ***********************************************************/
 
 $LOG_TO      = 'file';              # 'file'|'syslog'
-$LOG_LEVEL   = 'DEBUG';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
+$LOG_LEVEL   = 'NOTICE';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
 
   # these settings affect only file logging:
 //$LOG_FILE    = '/var/log/gemeinschaft/gs.log';
