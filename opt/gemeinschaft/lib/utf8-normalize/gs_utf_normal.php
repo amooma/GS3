@@ -112,4 +112,3 @@ function _gs_utf8_get_map()
 }
 
 
-
