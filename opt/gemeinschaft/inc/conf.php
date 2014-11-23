@@ -127,7 +127,6 @@ function gs_get_conf( $key, $default=null )
 	return @defined($key) ? constant($key) : $default;
 }
 
-
 $conf = '/etc/gemeinschaft/gemeinschaft.php';
 if (! file_exists( $conf )) {
 	trigger_error( "Config file \"$conf\" not found!\n", E_USER_ERROR );
@@ -139,7 +138,6 @@ if (! file_exists( $conf )) {
 		exit(1);
 	}
 }
-
 
 function _gscnf( $param, $default=null )
 {
@@ -331,6 +329,16 @@ _gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP280' , null            );
 _gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP284' , null            );
 _gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP286' , null            );
 _gscnf( 'TIPTEL_PROV_KEY_BLACKLIST' , ''                 );
+
+_gscnf( 'YEALINK_PROV_ENABLED'       , false              );
+_gscnf( 'YEALINK_PROV_HTTP_PASS'     , ''                 );
+_gscnf( 'YEALINK_PROV_NTP'           , gs_get_conf('GS_PROV_HOST','') );
+_gscnf( 'YEALINK_PROV_FW_UPDATE'     , false              );
+_gscnf( 'YEALINK_PROV_FW_DEFAULT_IP28XS', null            );
+_gscnf( 'YEALINK_PROV_FW_DEFAULT_IP280' , null            );
+_gscnf( 'YEALINK_PROV_FW_DEFAULT_IP284' , null            );
+_gscnf( 'YEALINK_PROV_FW_DEFAULT_IP286' , null            );
+_gscnf( 'YEALINK_PROV_KEY_BLACKLIST' , ''                 );
 
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
 _gscnf( 'CANONIZE_INTL_PREFIX'      , '00'               );

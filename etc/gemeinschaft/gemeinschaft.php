@@ -58,16 +58,16 @@ $INSTALLATION_TYPE      = 'single';
 
 //----------------------[  Master  ]----------------------//
 
-$DB_MASTER_HOST         = '192.168.1.130';
+$DB_MASTER_HOST         = '127.0.0.1';
 $DB_MASTER_USER         = 'gemeinschaft';
-$DB_MASTER_PWD          = '';
+$DB_MASTER_PWD          = '9ad951b941bb68cf6b4625f44c1a40';
 $DB_MASTER_DB           = 'asterisk';
 
 //----------------------[  Slave  ]-----------------------//
 
 $DB_SLAVE_HOST          = '127.0.0.1';
 $DB_SLAVE_USER          = 'gemeinschaft';
-$DB_SLAVE_PWD           = '';
+$DB_SLAVE_PWD           = '9ad951b941bb68cf6b4625f44c1a40';
 $DB_SLAVE_DB            = 'asterisk';
 
 //--------------------[  CDR Master  ]--------------------//
@@ -224,7 +224,7 @@ $NOBODY_CID_NAME        = 'Namenlos-';
 *    PROVISIONING
 ***********************************************************/
 
-$PROV_HOST                  = '192.168.1.130';
+$PROV_HOST                  = '192.168.178.22';
 //$PROV_PORT                  = 0;  # 0 for default port for $PROV_SCHEME
 //$PROV_SCHEME                = 'http';  # without "://"
 $PROV_PATH                  = '/gemeinschaft/prov/';
@@ -490,6 +490,49 @@ $TIPTEL_PROV_FW_UPDATE = false;  # allow firmware updates?
   # 'f20' Private Hold
   # 'f27' XML Browser
 
+//-----------------------[ Yealink ]-----------------------//
+
+$YEALINK_PROV_ENABLED   = true;   # do provisioning for Tiptel?
+
+$YEALINK_PROV_HTTP_PASS = 'admin';  # e.g. "gEheiM23y89sdo23", default: 'admin'
+  # to password protect the phone's web gui.
+  # changing these values will likely cause automatic rebooting to fail
+
+//$YEALINK_PROV_NTP       = @$PROV_HOST;
+//$YEALINK_PROV_NTP       = '192.168.1.130';
+  # NTP Server. the stupid Tiptel needs it
+
+  # Set $LOG_LEVEL to "NOTICE" or even "DEBUG" and
+  # tail -f /var/log/gemeinschaft/gs.log
+  # Test the update mechanism with 1 or 2 phones. This is especially
+  # important with PoE (Power over Ethernet) switches.
+$YEALINK_PROV_FW_UPDATE = false;  # allow firmware updates?
+
+//$YEALINK_PROV_KEY_BLACKLIST = '';
+  # do not show these softkey functions in GUI,
+  # comma separated list (e.g. 'f5,f12,f17'), default: ''
+  # 'f13' SpeedDial
+  # 'f16' BLF
+  # 'f1'  Conference
+  # 'f2'  Forward
+  # 'f3'  Transfer
+  # 'f4'  Hold
+  # 'f5'  DND
+  # 'f6'  Redial
+  # 'f7'  Call Return
+  # 'f8'  SMS
+  # 'f9'  Call Pickup
+  # 'f10' Call Park
+  # 'f11' Custom
+  # 'f12' Voicemail
+  # 'f14' Intercom
+  # 'f15' Line
+  # 'f17' URL
+  # 'f18' Group Listening
+  # 'f19' Public Hold
+  # 'f20' Private Hold
+  # 'f27' XML Browser
+
 
 //-----------------------[ Polycom ]----------------------//
 
@@ -584,7 +627,7 @@ $LOCK_DIR               = '/tmp/';
   # does not control where apache, mysql, zaptel etc. put their
   # lock files
 
-$CALL_INIT_FROM_NET         = '192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
+$CALL_INIT_FROM_NET         = '192.168.178.0/16, 172.16.0.0/12, 10.0.0.0/8, 169.254.0.0/16, 127.0.0.0/8';
   # a comma (,) separated list of IP addresses or
   # <IP address>/<netmask> pairs from where calls can be inited
   # with HTTP GET
@@ -716,7 +759,7 @@ $BOI_ENABLED            = false;
 ***********************************************************/
 
 $LOG_TO      = 'file';              # 'file'|'syslog'
-$LOG_LEVEL   = 'NOTICE';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
+$LOG_LEVEL   = 'DEBUG';            # "FATAL"|"WARNING"|"NOTICE"|"DEBUG"
 
   # these settings affect only file logging:
 //$LOG_FILE    = '/var/log/gemeinschaft/gs.log';

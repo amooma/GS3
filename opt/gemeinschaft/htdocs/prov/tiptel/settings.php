@@ -89,6 +89,8 @@ function _settings_err( $msg='' )
 if (! gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Tiptel provisioning not enabled" );
 	_settings_err( 'Not enabled.' );
+} else {
+	gs_log( GS_LOG_DEBUG, "Tiptel provisioning enabled" );
 }
 
 

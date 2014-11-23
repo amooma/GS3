@@ -65,6 +65,10 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	$phone_types['aastra-55i'] = 'Aastra 55i';
 	$phone_types['aastra-57i'] = 'Aastra 57i';
 }
+if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
+	$phone_types['yealink-sip-t46g' ] = 'Yealink SIP T46G';
+	$phone_types['yealink-sip-t48g' ] = 'Yealink SIP T48G';	
+}
 if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-ht287'  ] = 'Grandstream HT 287';
 	$phone_types['grandstream-bt110'  ] = 'Grandstream BT 110';

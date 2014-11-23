@@ -99,6 +99,8 @@ if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 	$phone_types['tiptel-ip280' ] = 'Tiptel IP 280';
 	$phone_types['tiptel-ip284' ] = 'Tiptel IP 284';
 	$phone_types['tiptel-ip286' ] = 'Tiptel IP 286';
+	$phone_types['yealink-sip-t46G' ] = 'Yealink SIP T46G';
+	$phone_types['yealink-sip-t48G' ] = 'Yealink SIP T48G';	
 }
 if (gs_get_conf('GS_POLYCOM_PROV_ENABLED')) {
 	$phone_types['polycom-spip-300'] = 'Polycom SoundPoint IP 300';
