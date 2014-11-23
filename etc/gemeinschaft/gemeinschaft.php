@@ -58,16 +58,16 @@ $INSTALLATION_TYPE      = 'single';
 
 //----------------------[  Master  ]----------------------//
 
-$DB_MASTER_HOST         = '127.0.0.1';
+$DB_MASTER_HOST         = '192.168.1.130';
 $DB_MASTER_USER         = 'gemeinschaft';
-$DB_MASTER_PWD          = '9ad951b941bb68cf6b4625f44c1a40';
+$DB_MASTER_PWD          = '';
 $DB_MASTER_DB           = 'asterisk';
 
 //----------------------[  Slave  ]-----------------------//
 
 $DB_SLAVE_HOST          = '127.0.0.1';
 $DB_SLAVE_USER          = 'gemeinschaft';
-$DB_SLAVE_PWD           = '9ad951b941bb68cf6b4625f44c1a40';
+$DB_SLAVE_PWD           = '';
 $DB_SLAVE_DB            = 'asterisk';
 
 //--------------------[  CDR Master  ]--------------------//
@@ -224,7 +224,7 @@ $NOBODY_CID_NAME        = 'Namenlos-';
 *    PROVISIONING
 ***********************************************************/
 
-$PROV_HOST                  = '192.168.178.22';
+$PROV_HOST                  = '192.168.1.130';
 //$PROV_PORT                  = 0;  # 0 for default port for $PROV_SCHEME
 //$PROV_SCHEME                = 'http';  # without "://"
 $PROV_PATH                  = '/gemeinschaft/prov/';
