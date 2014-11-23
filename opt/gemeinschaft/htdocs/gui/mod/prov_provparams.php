@@ -65,7 +65,7 @@ if (gs_get_conf('GS_AASTRA_PROV_ENABLED')) {
 	$phone_types['aastra-55i'] = 'Aastra 55i';
 	$phone_types['aastra-57i'] = 'Aastra 57i';
 }
-if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
+if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
 	$phone_types['yealink-sip-t46g' ] = 'Yealink SIP T46G';
 	$phone_types['yealink-sip-t48g' ] = 'Yealink SIP T48G';	
 }
