@@ -444,69 +444,183 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 	$user_ext = $user['name'];
 }
 
-#####################################################################
-#  Common provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
-#####################################################################
-
-# Language
-##It configures the language of the web user interface.
-##Chinese_S is only applicable to SIP-T19P, SIP-T21P and SIP-T46G IP phones.
-##Chinese_T is only applicable to SIP-T46G IP phones.
-##French, Portuguese and Spanish are not applicable to SIP-T19P and SIP-T21P IP phones.
-psetting('lang.wui', 'English');
-##It configures the language of the phone user interface.
-##Chinese_S and Chinese_T are only applicable to SIP-T19P, SIP-T21P and SIP-T46G IP phones.
-##The default value is English.
-psetting('lang.gui', _yealink_astlang_to_yealinklang($user['language']));
-
-
-# Remote Phonebook
-###X ranges from 1 to 5
-###remote_phonebook.data.X.url =   
-###remote_phonebook.data.X.name = 
-psetting('remote_phonebook.data.1.url', $prov_url_yealink.'pb.php?u='.$user_ext);
-psetting('remote_phonebook.data.1.name', 'Tel.buch');
-###Except T41P/T42G Models
-psetting('remote_phonebook.display_name', 'Tel.buch');
-
-# Show Remote Phonebook on Home Screen
-psetting('programablekey.2.type', '47');
-psetting('programablekey.2.line', '1');
-psetting('programablekey.2.value', '');
-psetting('programablekey.2.label', 'Tel.buch');
-
-##It enables or disables the phone to perform a remote phone book search when receiving an incoming call.
-##0-Disabled,1-Enabled.
-##The default value is 0.
-psetting('features.remote_phonebook.enable', '0');
-##It configures the interval (in seconds) for the phone to update the data of the remote phone book from the remote phone book server.
-##The default value is 21600.Integer from 3600 to 2592000.
-psetting('features.remote_phonebook.flash_time', '21600');
-
-# Ringtone
-# exp.: tftp://192.168.1.100/Ring9.wav
-# http://192.168.178.26/gemeinschaft/prov/ringtones/admin-int-fgz-tiptel.wav
-#psetting('ringtone.url', 'http://192.168.178.26/gemeinschaft/prov/ringtones/admin-int-fgz-tiptel.wav');
-#psetting('ringtone.delete', '');
-#Delete all the custom ringtones uploaded through auto provisioning
-#psetting('ringtone.delete', 'http://localhost/all');
-
-# Security
-###Define the login username and password of the user, var and administrator.
-###If you change the username of the administrator from "admin" to "admin1", your new administrator's username should be configured as: security.user_name.admin = admin1.
-###If you change the password of the administrator from "admin" to "admin1pwd", your new administrator's password should be configured as: security.user_password = admin1:admin1pwd.
-###The following examples change the user's username to "user23" and the user's password to "user23pwd".
-###security.user_name.user = user23
-###security.user_password = user23:user23pwd
-###The following examples change the var's username to "var55" and the var's password to "var55pwd".
-###security.user_name.var = var55
-###security.user_password = var55:var55pwd
-#psetting('security.user_name.user', '');
-#psetting('security.user_name.admin', '');
-#psetting('security.user_name.var', '');
-psetting('security.user_password', 'admin:'.gs_get_conf('GS_YEALINK_PROV_HTTP_PASS'));
-
+# Phonetype Check
 if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) ) {
+
+	#####################################################################
+	#  Common provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
+	#####################################################################
+
+	# Language
+	##It configures the language of the web user interface.
+	##Chinese_S is only applicable to SIP-T19P, SIP-T21P and SIP-T46G IP phones.
+	##Chinese_T is only applicable to SIP-T46G IP phones.
+	##French, Portuguese and Spanish are not applicable to SIP-T19P and SIP-T21P IP phones.
+	psetting('lang.wui', 'English');
+	##It configures the language of the phone user interface.
+	##Chinese_S and Chinese_T are only applicable to SIP-T19P, SIP-T21P and SIP-T46G IP phones.
+	##The default value is English.
+	psetting('lang.gui', _yealink_astlang_to_yealinklang($user['language']));
+
+
+	# Remote Phonebook
+	###X ranges from 1 to 5
+	###remote_phonebook.data.X.url =   
+	###remote_phonebook.data.X.name = 
+	psetting('remote_phonebook.data.1.url', $prov_url_yealink.'pb.php?u='.$user_ext);
+	psetting('remote_phonebook.data.1.name', 'Tel.buch');
+	###Except T41P/T42G Models
+	psetting('remote_phonebook.display_name', 'Tel.buch');
+
+	# Show Remote Phonebook on Home Screen
+	psetting('programablekey.2.type', '47');
+	psetting('programablekey.2.line', '1');
+	psetting('programablekey.2.value', '');
+	psetting('programablekey.2.label', 'Tel.buch');
+
+	##It enables or disables the phone to perform a remote phone book search when receiving an incoming call.
+	##0-Disabled,1-Enabled.
+	##The default value is 0.
+	psetting('features.remote_phonebook.enable', '0');
+	##It configures the interval (in seconds) for the phone to update the data of the remote phone book from the remote phone book server.
+	##The default value is 21600.Integer from 3600 to 2592000.
+	psetting('features.remote_phonebook.flash_time', '21600');
+
+	# Ringtone
+	# exp.: tftp://192.168.1.100/Ring9.wav
+	# http://192.168.178.26/gemeinschaft/prov/ringtones/admin-int-fgz-tiptel.wav
+	#psetting('ringtone.url', 'http://192.168.178.26/gemeinschaft/prov/ringtones/admin-int-fgz-tiptel.wav');
+	#psetting('ringtone.delete', '');
+	#Delete all the custom ringtones uploaded through auto provisioning
+	#psetting('ringtone.delete', 'http://localhost/all');
+
+	# Security
+	###Define the login username and password of the user, var and administrator.
+	###If you change the username of the administrator from "admin" to "admin1", your new administrator's username should be configured as: security.user_name.admin = admin1.
+	###If you change the password of the administrator from "admin" to "admin1pwd", your new administrator's password should be configured as: security.user_password = admin1:admin1pwd.
+	###The following examples change the user's username to "user23" and the user's password to "user23pwd".
+	###security.user_name.user = user23
+	###security.user_password = user23:user23pwd
+	###The following examples change the var's username to "var55" and the var's password to "var55pwd".
+	###security.user_name.var = var55
+	###security.user_password = var55:var55pwd
+	#psetting('security.user_name.user', '');
+	#psetting('security.user_name.admin', '');
+	#psetting('security.user_name.var', '');
+	psetting('security.user_password', 'admin:'.gs_get_conf('GS_YEALINK_PROV_HTTP_PASS'));
+		
+
+	#####################################################################
+	#  MAC-specific provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
+	#####################################################################
+	# Account1 Basic Settings 
+	psetting('account.1.enable', '1'); # 0 = disable, 1 = enable
+	psetting('account.1.label', $user_ext .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
+	psetting('account.1.display_name', $user['callerid']);
+	psetting('account.1.auth_name', $user_ext);
+	psetting('account.1.user_name', $user_ext);
+	psetting('account.1.password', $user['secret']);
+	psetting('account.1.outbound_proxy_enable', '0'); # 0 = disable, 1 = enable
+	psetting('account.1.outbound_host', '');
+	psetting('account.1.outbound_port', '5061');
+	##It configures the local SIP port for account 1. The default value is 5060.
+	psetting('account.1.sip_listen_port', '5060');
+	##It configures the transport type for account 1. 0-UDP,1-TCP,2-TLS,3-DNS-NAPTR
+	psetting('account.1.transport', '0'); ##The default value is 0.
+
+	// # Failback
+	psetting('account.1.sip_server.1.address', $host);
+	psetting('account.1.sip_server.1.port', '5060');
+
+	// # Register Advanced
+	// ##It configures the SIP server type for account X.0-Default,2-BroadSoft,4-Cosmocom,6-UCAP
+	// ##The default value is 0.
+	psetting('account.1.sip_server_type', '0');
+
+	// psetting('account.1.unregister_on_reboot', '');
+	// psetting('account.1.sip_trust_ctrl', '');
+	// psetting('account.1.proxy_require', '');
+	// psetting('account.1.srv_ttl_timer_enable', '');
+	// psetting('account.1.register_mac', '1'); # 0 = disable, 1 = enable
+	// psetting('account.1.register_line', '1'); # 0 = disable, 1 = enable
+	// psetting('account.1.reg_fail_retry_interval', '30'); # 0 to 1800, default 30
+
+	// # NAT
+	// ##It enables or disables the NAT traversal for account X.0-Disabled,1-Enabled
+	// ##The default value is 0.
+	// psetting('account.1.nat.nat_traversal', '');
+	// ##It configures the IP address or domain name of the STUN server for account X.
+	// ##The default value is blank.
+	// psetting('account.1.nat.stun_server', '');
+	// ##It configures the port of the STUN server for account X.
+	// ##The default value is 3478.
+	// psetting('account.1.nat.stun_port', '');
+	// ##It configures the type of keep-alive packets sent by the phone to the NAT device to keep the communication port open so that NAT can continue to function for account X.
+	// ##The default value is 1.
+	// psetting('account.1.nat.udp_update_enable', '');
+	// ##It configures the keep-alive interval (in seconds) for account X.
+	// ##The default value is 30.Integer from 15 to 2147483647
+	// psetting('account.1.nat.udp_update_time', '');
+	// ##It enables or disables NAT Rport feature for account X.0-Disabled,1-Enabled
+	// ##The default value is 0.
+	// psetting('account.1.nat.rport', '');
+
+	// # Pickup
+	// ##It enables or disables the phone to pick up a call according to the SIP header of dialog-info for account X
+	// ##0-Disabled,1-Enabled.
+	// ##The default value is 0.
+	// Must be DISABLED to work on Asterisk PBX
+	psetting('account.1.dialoginfo_callpickup', '0');
+	// ##It configures the group pickup code for account X.
+	// ##The default value is blank.
+	psetting('account.1.group_pickup_code', '');
+	// ##It configures the directed pickup code for account X.
+	// ##The default value is blank.
+	psetting('account.1.direct_pickup_code', '*81*');
+
+	# Time
+	##It configures the time zone.For more available time zones, refer to Time Zones on page 215.
+	##The default value is +8.
+	psetting('local_time.time_zone', '+'.( ((int)date('Z')) / 3600));
+	##It configures the time zone name.For more available time zone names, refer to Time Zones on page 215.
+	##The default time zone name is China(Beijing).
+	psetting('local_time.ntp_server1', gs_get_conf('GS_YEALINK_PROV_NTP'));
+
+	#######################################################################################
+	##                                   Features Pickup(Except T20P model)              ##       
+	#######################################################################################
+	##It enables or disables the phone to display the GPickup soft key when the phone is in the pre-dialing screen.
+	##0-Disabled,1-Enabled.
+	##The default value is 0.
+	psetting('features.pickup.group_pickup_enable', '0');
+
+	##It configures the group call pickup code.
+	##The default value is blank.
+	psetting('features.pickup.group_pickup_code', '');
+
+	##It enables or disables the phone to display the DPickup soft key when the phone is in the pre-dialing screen.
+	##0-Disabled,1-Enabled.
+	##The default value is 0.
+	psetting('features.pickup.direct_pickup_enable', '1');
+
+	##It configures the directed call pickup code.
+	##The default value is blank.
+	psetting('features.pickup.direct_pickup_code', '*81*');
+
+	##It enables or disables the phone to display a visual alert when the monitored user receives an incoming call.
+	##0-Disabled,1-Enabled.
+	##The default value is 0.
+	psetting('features.pickup.blf_visual_enable', '1');
+
+	##It enables or disables the phone to play an audio alert when the monitored user receives an incoming call.
+	##0-Disabled,1-Enabled.
+	##The default value is 0.
+	psetting('features.pickup.blf_audio_enable', '0');
+
+	#####################################################################
+	#  Keys
+	#####################################################################
+
 	$max_keys = 10;
 
 	# RESET KEYS
@@ -602,119 +716,8 @@ if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) )
 			# TODO: Programmable Keys
 			# TODO: Keys on Expansion Modul
 		}
-	}
-
+	}	
 }
-
-#####################################################################
-#  MAC-specific provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
-#####################################################################
-# Account1 Basic Settings 
-psetting('account.1.enable', '1'); # 0 = disable, 1 = enable
-psetting('account.1.label', $user_ext .' '. mb_subStr($user['firstname'],0,1) .'. '. $user['lastname']);
-psetting('account.1.display_name', $user['callerid']);
-psetting('account.1.auth_name', $user_ext);
-psetting('account.1.user_name', $user_ext);
-psetting('account.1.password', $user['secret']);
-psetting('account.1.outbound_proxy_enable', '0'); # 0 = disable, 1 = enable
-psetting('account.1.outbound_host', '');
-psetting('account.1.outbound_port', '5061');
-##It configures the local SIP port for account 1. The default value is 5060.
-psetting('account.1.sip_listen_port', '5060');
-##It configures the transport type for account 1. 0-UDP,1-TCP,2-TLS,3-DNS-NAPTR
-psetting('account.1.transport', '0'); ##The default value is 0.
-
-// # Failback
-psetting('account.1.sip_server.1.address', $host);
-psetting('account.1.sip_server.1.port', '5060');
-
-// # Register Advanced
-// ##It configures the SIP server type for account X.0-Default,2-BroadSoft,4-Cosmocom,6-UCAP
-// ##The default value is 0.
-psetting('account.1.sip_server_type', '0');
-
-// psetting('account.1.unregister_on_reboot', '');
-// psetting('account.1.sip_trust_ctrl', '');
-// psetting('account.1.proxy_require', '');
-// psetting('account.1.srv_ttl_timer_enable', '');
-// psetting('account.1.register_mac', '1'); # 0 = disable, 1 = enable
-// psetting('account.1.register_line', '1'); # 0 = disable, 1 = enable
-// psetting('account.1.reg_fail_retry_interval', '30'); # 0 to 1800, default 30
-
-// # NAT
-// ##It enables or disables the NAT traversal for account X.0-Disabled,1-Enabled
-// ##The default value is 0.
-// psetting('account.1.nat.nat_traversal', '');
-// ##It configures the IP address or domain name of the STUN server for account X.
-// ##The default value is blank.
-// psetting('account.1.nat.stun_server', '');
-// ##It configures the port of the STUN server for account X.
-// ##The default value is 3478.
-// psetting('account.1.nat.stun_port', '');
-// ##It configures the type of keep-alive packets sent by the phone to the NAT device to keep the communication port open so that NAT can continue to function for account X.
-// ##The default value is 1.
-// psetting('account.1.nat.udp_update_enable', '');
-// ##It configures the keep-alive interval (in seconds) for account X.
-// ##The default value is 30.Integer from 15 to 2147483647
-// psetting('account.1.nat.udp_update_time', '');
-// ##It enables or disables NAT Rport feature for account X.0-Disabled,1-Enabled
-// ##The default value is 0.
-// psetting('account.1.nat.rport', '');
-
-// # Pickup
-// ##It enables or disables the phone to pick up a call according to the SIP header of dialog-info for account X
-// ##0-Disabled,1-Enabled.
-// ##The default value is 0.
-<<<<<<< HEAD
-=======
-// Must be DISABLED to work on Asterisk PBX
->>>>>>> abc790b9b6e321c242309513c3fda63ca3175a38
-psetting('account.1.dialoginfo_callpickup', '0');
-// ##It configures the group pickup code for account X.
-// ##The default value is blank.
-psetting('account.1.group_pickup_code', '');
-// ##It configures the directed pickup code for account X.
-// ##The default value is blank.
-psetting('account.1.direct_pickup_code', '*81*');
-
-# Time
-##It configures the time zone.For more available time zones, refer to Time Zones on page 215.
-##The default value is +8.
-psetting('local_time.time_zone', '+'.( ((int)date('Z')) / 3600));
-##It configures the time zone name.For more available time zone names, refer to Time Zones on page 215.
-##The default time zone name is China(Beijing).
-psetting('local_time.ntp_server1', gs_get_conf('GS_YEALINK_PROV_NTP'));
-
-#######################################################################################
-##                                   Features Pickup(Except T20P model)              ##       
-#######################################################################################
-##It enables or disables the phone to display the GPickup soft key when the phone is in the pre-dialing screen.
-##0-Disabled,1-Enabled.
-##The default value is 0.
-psetting('features.pickup.group_pickup_enable', '0');
-
-##It configures the group call pickup code.
-##The default value is blank.
-psetting('features.pickup.group_pickup_code', '');
-
-##It enables or disables the phone to display the DPickup soft key when the phone is in the pre-dialing screen.
-##0-Disabled,1-Enabled.
-##The default value is 0.
-psetting('features.pickup.direct_pickup_enable', '1');
-
-##It configures the directed call pickup code.
-##The default value is blank.
-psetting('features.pickup.direct_pickup_code', '*81*');
-
-##It enables or disables the phone to display a visual alert when the monitored user receives an incoming call.
-##0-Disabled,1-Enabled.
-##The default value is 0.
-psetting('features.pickup.blf_visual_enable', '1');
-
-##It enables or disables the phone to play an audio alert when the monitored user receives an incoming call.
-##0-Disabled,1-Enabled.
-##The default value is 0.
-psetting('features.pickup.blf_audio_enable', '0');
 
 
 #####################################################################
