@@ -303,7 +303,7 @@ echo "***"
 cd /usr/local/src/
 $DOWNLOAD "http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-current.tar.gz"
 tar -xvzf dahdi-linux-complete-current.tar.gz
-cd dahdi*
+cd $(tar -tzf dahdi-linux-complete-current.tar.gz | head -n 1 | cut -d '/' -f1)
 make all
 make install
 make config
@@ -313,7 +313,7 @@ dahdi_genconf || true
 cd /usr/local/src/
 $DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-1.8-current.tar.gz"
 tar -xvzf asterisk-1.8-current.tar.gz
-cd /usr/local/src/asterisk*
+cd $(tar -tzf asterisk-1.8-current.tar.gz | head -n 1 | cut -d '/' -f1)
 ./configure
 make menuselect.makeopts
 menuselect/menuselect --enable res_config_mysql menuselect.makeopts
