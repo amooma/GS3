@@ -94,6 +94,8 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 		$phone_types['grandstream-gxp2010'] = 'Grandstream GXP 2010';
 	if (in_array('*', $enabled_models) || in_array('gxp2020', $enabled_models))
 		$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
+	if (in_array('*', $enabled_models) || in_array('gxp2110', $enabled_models))
+		$phone_types['grandstream-gxp2110'] = 'Grandstream GXP 2110';
 }
 if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 	$enabled_models = preg_split('/[,\\s]+/', gs_get_conf('GS_PROV_MODELS_ENABLED_TIPTEL'));
@@ -284,6 +286,7 @@ if ($phone_type == '') {
 		if     (array_key_exists('grandstream-gxp2000', $phone_types)) $phone_type = 'grandstream-gxp2000';
 		elseif (array_key_exists('grandstream-gxp2010', $phone_types)) $phone_type = 'grandstream-gxp2010';
 		elseif (array_key_exists('grandstream-gxp2020', $phone_types)) $phone_type = 'grandstream-gxp2020';
+		elseif (array_key_exists('grandstream-gxp2110', $phone_types)) $phone_type = 'grandstream-gxp2110';
 	} else
 	if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 		if     (array_key_exists('tiptel-ip284', $phone_types)) $phone_type = 'tiptel-ip284';
@@ -299,7 +302,7 @@ if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 
 } elseif (in_array($phone_type, array('aastra-53i', 'aastra-55i', 'aastra-57i'), true)) {
 	$phone_layout = 'aastra';
 	$key_function_none = $key_function_none_aastra;
-} elseif (in_array($phone_type, array('grandstream-gxp2000', 'grandstream-gxp2010', 'grandstream-gxp2020'), true)) {
+} elseif (in_array($phone_type, array('grandstream-gxp2000', 'grandstream-gxp2010', 'grandstream-gxp2020', 'grandstream-gxp2110'), true)) {
 	$phone_layout = 'grandstream';
 	$key_function_none = $key_function_none_grandstream;
 } elseif (in_array($phone_type, array('tiptel-ip284', 'tiptel-ip286'), true)) {
@@ -1108,7 +1111,14 @@ if ($phone_layout) {
 					$key_levels[1]['from' ] =  9;
 					$key_levels[1]['to'   ] = 17;
 				break;
-			}
+			case 'grandstream-gxp2110':
+					$key_levels[0]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Linke Tasten');
+					$key_levels[0]['to'   ] =  8;
+					$key_levels[1]['title'] = htmlEnt($phone_type_title).' &ndash; '. __('Rechte Tasten');
+					$key_levels[1]['from' ] =  9;
+					$key_levels[1]['to'   ] = 17;
+				break;
+}
 		//}
 		if ($show_ext_modules >= 1) {
 			$key_levels += array(
@@ -1454,7 +1464,7 @@ if ($phone_layout) {
 	echo '</table>' ,"\n";
 	echo '<br />' ,"\n";
 
-	if (in_array($phone_type, array('snom-300','snom-320','snom-360','snom-370','snom-870', 'snom-760','grandstream-gxp2000','grandstream-gxp2010','grandstream-gxp2020'), true))
+	if (in_array($phone_type, array('snom-300','snom-320','snom-360','snom-370','snom-870', 'snom-760','grandstream-gxp2000','grandstream-gxp2010','grandstream-gxp2020','grandstream-gxp2110'), true))
 		echo '<a href="',GS_URL_PATH ,'srv/key-layout.php?phone_type=',$phone_type,'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n"; 
 
 	echo $save_bt;
