@@ -991,12 +991,7 @@ context to-internal-users-self {
 		to_queue:
 			
 			//Verbose(1,### Called queue: ${EXTEN});
-			if ("${EXTEN}" : "[0-9][0-9][0-9][0-9]34") {
-                        	Set(CHANNEL(language)=es);
-                 	}	
-			if ("${EXTEN}" : "[0-9][0-9][0-9][0-9]48") {
-                                Set(CHANNEL(language)=pl);
-                        }
+
 			AGI(/opt/gemeinschaft/dialplan-scripts/in-queue-get-fw.agi,${EXTEN});
 			// sets fw_*_* and ring_instead_of_moh
 			// and queue_displayname
