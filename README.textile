@@ -1,6 +1,6 @@
 h1. Asterisk Version
 
-Gemeinschaft in der Version 3 ist die ältere Software mit einem Asterisk-Kern. Die aktuellere Version von Gemeinschaft hat Freeswitch als Kern. Weitere Informationen dazu finden Sie auf "http://www.amooma.de/gemeinschaft":http://www.amooma.de/gemeinschaft
+Gemeinschaft in der Version 3 ist die ältere Software mit einem Asterisk-Kern. Die aktuellere Version von Gemeinschaft hat Freeswitch als Kern. Weitere Informationen dazu finden Sie auf "https://www.alternative-solution.de/gs3":https://www.alternative-solution.de/gs3
 
 h1. Installationsanleitung für Gemeinschaft 3.1
 
@@ -8,8 +8,9 @@ Eine Installationsanleitung finden Sie unter  "http://github.com/amooma/GS3/wiki
 
 h1. Support und Consulting für Gemeinschaft 3.x
 
-Kostenpflichtig bei der "AMOOMA GmbH":http://www.amooma.de
-Für 200 Euro pro Stunde (plus MwSt.) können Sie Support und Consulting für Ihre Gemeinschaft Installation bekommen. Schreiben Sie uns dazu einfach eine E-Mail an info@amooma.de
+Kostenlos durch die Community: "https://groups.google.com/forum/#!forum/gs3-users":https://groups.google.com/forum/#!forum/gs3-users
+
+Kostenpflichtig bei "https://www.alternative-solution.de":https://www.alternative-solution.de
 
 h1. Sonstiges
 
