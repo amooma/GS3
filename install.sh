@@ -3,24 +3,8 @@
 # Lizenz: CC-by-nc-nd 3.0
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
-echo -e "\n
-	This the the release candidate of Gemeinschaft version 3.2!\n \
-	Only community support.\n \
-	Use allways stable version for production.\n \
-	This installer might be broken.
-	If you agree please type 'yes'.\n"
-read answer
 
-case $answer in 
-	yes)
-	;;
-	*)
-		echo "Good bye";
-		exit 0;
-	;;
-esac
-
-GEMEINSCHAFT_VERS="3.2-RC"
+GEMEINSCHAFT_VERS="3.2"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
 GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GS3.git"
