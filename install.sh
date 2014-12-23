@@ -4,7 +4,7 @@
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
 
-GEMEINSCHAFT_VERS="3.2"
+GEMEINSCHAFT_VERS="master"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
 GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GS3.git"
