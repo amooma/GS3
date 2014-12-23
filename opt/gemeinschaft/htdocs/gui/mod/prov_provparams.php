@@ -44,6 +44,8 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	$phone_types['snom-360'    ] = 'Snom 360';
 	$phone_types['snom-370'    ] = 'Snom 370';
         $phone_types['snom-870'    ] = 'Snom 870';
+        $phone_types['snom-760'    ] = 'Snom 760';
+        $phone_types['snom-720'    ] = 'Snom 720';
 }
 if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 	$phone_types['snom-m3'    ] = 'Snom M3';
@@ -72,6 +74,7 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-gxp1200'] = 'Grandstream GXP 1200';
 	$phone_types['grandstream-gxp2000'] = 'Grandstream GXP 2000';
 	$phone_types['grandstream-gxp2010'] = 'Grandstream GXP 2010';
+	$phone_types['grandstream-gxp2110'] = 'Grandstream GXP 2110';
 	$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
 	$phone_types['grandstream-gxv3000'] = 'Grandstream GXV 3000';
 	$phone_types['grandstream-gxv3005'] = 'Grandstream GXV 3005';
@@ -95,6 +98,8 @@ if ($phone_type == '') {
 		elseif (array_key_exists('snom-360', $phone_types)) $phone_type = 'snom-360';
 		elseif (array_key_exists('snom-370', $phone_types)) $phone_type = 'snom-370';
 		elseif (array_key_exists('snom-870', $phone_types)) $phone_type = 'snom-870';
+		elseif (array_key_exists('snom-760', $phone_types)) $phone_type = 'snom-760';
+		elseif (array_key_exists('snom-720', $phone_types)) $phone_type = 'snom-720';
 	} else
 	if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 		if     (array_key_exists('snom-m3', $phone_types)) $phone_type = 'snom-m3';

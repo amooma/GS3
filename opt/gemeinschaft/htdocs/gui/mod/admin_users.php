@@ -78,6 +78,7 @@ $name        = trim(@$_REQUEST['name'     ]);
 $number      = trim(@$_REQUEST['number'   ]);
 $page        = (int)@$_REQUEST['page'     ] ;
 
+$canreinvite = trim(@$_REQUEST['canreinvite']);
 $edit_user   = trim(@$_REQUEST['edit'     ]);
 $delete_user = trim(@$_REQUEST['delete'   ]);
 $action      = trim(@$_REQUEST['action'   ]);
@@ -223,10 +224,13 @@ if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 	
 	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, @$_REQUEST['ulang'], $user_host, false, $user_email );
 	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+
+	if (! in_array($canreinvite, array( 'yes', 'no' ), true))
+		$canreinvite = 'no';
 	if (! isGsError( $ret )) {
 		$boi_api = gs_host_get_api((int)$user_host);
 		if ($boi_api == '') {
-			$DB->execute( 'UPDATE `ast_sipfriends` SET `secret`=\''. $DB->escape(preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['usecret'])) .'\' WHERE `_user_id`='. $uid );
+			$DB->execute( 'UPDATE `ast_sipfriends` SET `secret`=\''. $DB->escape(preg_replace('/[^0-9a-zA-Z]/', '', @$_REQUEST['usecret'])) .'\', `canreinvite` = \''. $canreinvite .'\' WHERE `_user_id`='. $uid );
 		}
 	}
 	
@@ -735,7 +739,7 @@ else {
 	
 	$rs = $DB->execute(
 'SELECT
-	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`secret`, `s`.`language`, `u`.`group_id`,
+	`u`.`firstname` `fn`, `u`.`lastname` `ln`, `u`.`host_id` `hid`, `u`.`honorific` `hnr`, `u`.`user` `usern`, `s`.`name` `ext` , `u`.`email` `email`, `u`.`pin` `pin`, `u`.`id` `uid`, `s`.`canreinvite`, `s`.`secret`, `s`.`language`, `u`.`group_id`,
 	`hp1`.`value` `hp_route_prefix`
 FROM
 	`users` `u` JOIN
@@ -914,7 +918,7 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 			&nbsp;
 		</td>
 	</tr>
-	<tr>
+		<tr>
 		<th><?php echo __('PIN'); ?>:</th>
 		<td>
 			<input type="text" name="upin" value="<?php echo htmlEnt($r['pin']); ?>" size="8" maxlength="10" />
@@ -936,6 +940,28 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 		</td>
 		<td class="transp xs gray">
 			&larr; <?php echo htmlEnt(__("das SIP-Passwort")); ?>
+		</td>
+	</tr>
+	<tr>
+		<th><?php echo __('RTP-Strom umlenken'); ?>:</th>
+		<td>
+		<?php 
+			echo '<input type="radio" name="canreinvite" id="ipt-user-param-canreinvite-yes" value="yes"';
+        		if (@$r['canreinvite'] === 'yes') echo ' checked="checked"';
+        		echo ' />',"\n";
+       			 echo '<label for="ipt-user-param-canreinvite-yes">', htmlEnt(__('ja')) ,'</label>',"\n";
+       			 echo '<input type="radio" name="canreinvite" id="ipt-user-param-canreinvite-no" value="no"';
+       			 if (@$r['canreinvite'] === 'no') echo ' checked="checked"';
+       			 echo ' />',"\n";
+       			 echo '<label for="ipt-user-param-canreinvite-no">', htmlEnt(__('nein')) ,'</label>',"\n";
+       			 echo ' &nbsp; <small>(', htmlEnt(__('Standard')) ,': ', htmlEnt(__('ja')) ,')</small>',"\n";
+       			 echo '</td>',"\n";
+       			 echo '<td class="transp xs gray"><code>canreinvite = </code><code>yes</code> | <code>no</code></td>',"\n";
+			 echo '</tr>',"\n";
+		?>
+		</td>
+		<td class="transp xs gray">
+			&nbsp;
 		</td>
 	</tr>
 	<tr>

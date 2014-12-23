@@ -3,25 +3,8 @@
 # Lizenz: CC-by-nc-nd 3.0
 # http://creativecommons.org/licenses/by-nc-nd/3.0/de/
 
-echo -e "\n
-	This is an old Version of Gemeinschaft!\n \
-	No support at all.\n \
-	Use allways stable version for production.\n \
-	This installer might be broken.
-	If you agree please type 'yes'.\n"
-read answer
 
-case $answer in 
-	yes)
-	;;
-	*)
-		echo "Good bye";
-		exit 0;
-	;;
-esac
-
-GEMEINSCHAFT_VERS="master"
-#GEMEINSCHAFT_VERS="3.1-rc3"
+GEMEINSCHAFT_VERS="3.2"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
 GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GS3.git"
@@ -82,17 +65,17 @@ if [ "`id -un`" != "root" ]; then
 	fi
 fi
 
-if ( ! cat /etc/debian_version | head -n 1 | grep '^6.'      1>>/dev/null ) \
-&& ( ! cat /etc/debian_version | head -n 1 | grep 'squeeze'  1>>/dev/null )
+if ( ! cat /etc/debian_version | head -n 1 | grep '^7.'      1>>/dev/null ) \
+&& ( ! cat /etc/debian_version | head -n 1 | grep 'wheezy'  1>>/dev/null )
 then
 	if [ "$L2" == "de" ]; then
-		err "  Ihr Debian ist nicht Version 6 (\"Squeeze\").\n" \
+		err "  Ihr Debian ist nicht Version 7 (\"Wheezy\").\n" \
 			"  Bitte laden Sie einen Debian-Installer herunter:\n" \
-			"  http://cdimage.debian.org/cdimage/daily-builds/squeeze_d-i/current/"
+			"  http://cdimage.debian.org/cdimage/release/current/i386/iso-cd/debian-7.1.0-i386-netinst.iso"
 	else
-		err "  Your Debian is not version 6 (\"Squeeze\").\n" \
+		err "  Your Debian is not version 7 (\"Wheezy\").\n" \
 			"  Please download a Debian installer from\n" \
-			"  http://cdimage.debian.org/cdimage/daily-builds/squeeze_d-i/current/"
+			"  http://cdimage.debian.org/cdimage/release/current/i386/iso-cd/debian-7.1.0-i386-netinst.iso"
 	fi
 fi
 
@@ -184,70 +167,10 @@ echo ""
 echo "***"
 echo "***  Installing local caching nameserver ..."
 echo "***"
-if ( ! which named 1>>/dev/null 2>>/dev/null ); then
-	echo "***  Installing bind9 ..."
-	${APTITUDE_INSTALL} bind9
-fi
-if [ ! -e /etc/init.d/bind9 ]; then
-	echo "***  Installing bind9 ..."
-	${APTITUDE_INSTALL} bind9
-fi
 
 ${APTITUDE_INSTALL} dnsutils
 # install dnsutils so we can use dig later
 #aptitude clean
-
-if [ -e /etc/resolv.conf ]; then
-	if [[ `grep -Ee "^nameserver[ \t]+" /etc/resolv.conf | head -n 1 | grep -Ee "127\.0\.0\.1"` ]]; then
-		echo "nameserver 127.0.0.1 already configured."
-	else
-		[ -e /tmp/resolv.conf ] && rm -f /tmp/resolv.conf || true
-		echo "nameserver 127.0.0.1" > /tmp/resolv.conf
-		cat /etc/resolv.conf >> /tmp/resolv.conf
-		mv -fT /tmp/resolv.conf /etc/resolv.conf
-	fi
-	if [ -e /etc/bind/named.conf.local ]; then
-		if [ -e /etc/bind/zones.rfc1918 ]; then
-			if [[ `grep "^include" /etc/bind/named.conf.local | grep "zones\.rfc1918"` ]]; then
-				echo "/etc/bind/named.conf.local already includes /etc/bind/zones.rfc1918"
-			else
-				echo 'include "/etc/bind/zones.rfc1918";' >> /etc/bind/named.conf.local
-			fi
-			if [[ `grep "OPTIONS" /etc/default/bind9 | grep -e "-4"` ]]; then
-				echo "/etc/default/bind9 already has -4 option for named."
-			else
-				sed -i 's/OPTIONS.*/OPTIONS="-4 -u bind"/' /etc/default/bind9
-			fi
-		fi
-	fi
-	/etc/init.d/bind9 restart || true
-fi
-
-# try to fill the DNS cache to speed up things later:
-for server in \
-  "www.amooma.de" \
-  "www.amooma.com" \
-  "www.gemeinschaft.de" \
-  "github.com" \
-  "download.github.com" \
-  "nodeload.github.com" \
-  "downloads.digium.com" \
-  "downloads.asterisk.org" \
-  "downloads.sourceforge.net" \
-  "0.debian.pool.ntp.org" \
-  "1.debian.pool.ntp.org" \
-  "ftp.de.debian.org" \
-  "security.debian.org" \
-  "ftp.debian.org" \
-  "ftp.sangoma.com" \
-  "example.com" \
-  "example.net" \
-  "example.org" \
-; do
-    dig +short ${server} >>/dev/null 2>>/dev/null &
-    sleep 0.01 2>>/dev/null || true
-done
-sleep 1
 
 
 # wait for internet access
@@ -268,10 +191,10 @@ ${APTITUDE_INSTALL} \
 	expect dialog logrotate hostname net-tools ifupdown iputils-ping netcat \
 	udev psmisc dnsutils iputils-arping pciutils bzip2 \
 	console-data console-tools \
-	vim less git
-#${APTITUDE_INSTALL} ssh
-# No ssh by default.
-#aptitude clean
+	vim less git linux-headers-$(uname -r) \
+    gcc make gcc make ncurses-dev zlib1g-dev \
+    g++ libxml2-dev doxygen libmysql++-dev libcrypto++-dev libssl-dev \
+    libportaudio2 portaudio19-dev libasound-dev
 
 # now that we have vim, enable syntax highlighting by default:
 if ( which vim 1>>/dev/null 2>>/dev/null ); then
@@ -355,60 +278,52 @@ sleep 3
 sed -i -r -e 's/^(RAMRUN=)no/\1yes/' /etc/default/rcS || true
 
 
-# install dahdi (//FIXME - do we need Dahdi? it requires a build
-# environment!)
+# install dahdi 
 #
 echo ""
 echo "***"
 echo "***  Installing Dahdi ..."
 echo "***"
-if ( aptitude search dahdi | grep '^i' | grep -e '\sdahdi\s' 1>>/dev/null 2>>/dev/null ) \
-&& ( aptitude search dahdi-modules-`uname -r` | grep '^i' | grep -e '\sdahdi-modules-' 1>>/dev/null 2>>/dev/null )
-then
-	echo "*** Dahdi base already installed."
-	HAVE_DAHDI_USER=YES
-else
-	echo "*** Dahdi base yet to install ..."
-	HAVE_DAHDI_USER=NO
-fi
-if [ "$HAVE_DAHDI_USER" != "YES" ]; then
-	${APTITUDE_INSTALL} dahdi dahdi-modules
-fi
-
-if [ ! -e /lib/modules/`uname -r`/dahdi/dahdi.ko ]; then
-	${APTITUDE_INSTALL} dahdi-source
-	echo ""
-	echo "***"
-	echo "***  Building Dahdi drivers ..."
-	echo "***"
-	m-a a-i -i -f dahdi
-	# now we have dahdi-modules-`uname -r` (e.g. dahdi-modules-2.6.32-3-686)
-	# which provides dahdi-modules
-	# /lib/modules/`uname -r`/dahdi/...
-	aptitude -y markauto dahdi-source \
-		linux-headers-`uname -r` linux-kernel-headers
-	#aptitude -y markauto debhelper module-assistant
-	aptitude clean
-fi
-
+cd /usr/local/src/
+$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-current.tar.gz"
+tar -xvzf dahdi-linux-complete-current.tar.gz
+cd $(tar -tzf dahdi-linux-complete-current.tar.gz | head -n 1 | cut -d '/' -f1)
+make all
+make install
+make config
 # generate /etc/dahdi/system.conf:
 dahdi_genconf || true
 
+cd /usr/local/src/
+$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-1.8-current.tar.gz"
+tar -xvzf asterisk-1.8-current.tar.gz
+cd $(tar -tzf asterisk-1.8-current.tar.gz | head -n 1 | cut -d '/' -f1)
+./configure
+make menuselect.makeopts
+menuselect/menuselect --enable res_config_mysql menuselect.makeopts
+menuselect/menuselect --enable cdr_mysql menuselect.makeopts
+make
+make install 
+make samples
+make config
 
-# install libpri, asterisk
-#
-echo ""
-echo "***"
-echo "***  Installing Asterisk ..."
-echo "***"
-${APTITUDE_INSTALL} libpri1.4 asterisk \
-	asterisk-mysql \
-	vpb-driver-source-
-# asterisk depends on libvpb0 which recommends vpb-driver-source.
-# Don't install that because that in turn pulls a complete build
-# environment.
-aptitude clean
+groupadd asterisk
+useradd -d /var/lib/asterisk -g asterisk asterisk
+chown --recursive asterisk:asterisk /var/lib/asterisk
+chown --recursive asterisk:asterisk /var/log/asterisk
+chown --recursive asterisk:asterisk /var/run/asterisk
+chown --recursive asterisk:asterisk /var/spool/asterisk
+chown --recursive asterisk:asterisk /usr/lib/asterisk
+chmod --recursive u=rwX,g=rX,o= /var/lib/asterisk
+chmod --recursive u=rwX,g=rX,o= /var/log/asterisk
+chmod --recursive u=rwX,g=rX,o= /var/run/asterisk
+chmod --recursive u=rwX,g=rX,o= /var/spool/asterisk
+chmod --recursive u=rwX,g=rX,o= /usr/lib/asterisk
+chown --recursive root:asterisk /etc/asterisk
+chmod --recursive u=rwX,g=rX,o= /etc/asterisk
 
+echo 'AST_USER="asterisk"' >> /etc/default/asterisk
+echo 'AST_GROUP="asterisk"' >> /etc/default/asterisk
 
 # create directory for call-files
 #
@@ -429,7 +344,7 @@ if ( ! which lame 1>>/dev/null 2>>/dev/null ); then
 	echo "***"
 	echo "***  Installing Lame ..."
 	echo "***"
-	echo 'deb http://www.debian-multimedia.org squeeze main non-free' \
+	echo 'deb http://deb-multimedia.org wheezy main non-free' \
 		> /etc/apt/sources.list.d/debian-multimedia.list
 	aptitude update --allow-untrusted || true
 	${APTITUDE_INSTALL} --allow-untrusted debian-multimedia-keyring || true
@@ -521,7 +436,7 @@ echo "***"
 echo "***  Installing German voice prompts for Asterisk ..."
 echo "***"
 
-cd /usr/share/asterisk/sounds/
+cd /var/lib/asterisk/sounds/
 [ -e de ] && rm -rf de || true
 
 # Get tarball from within Gemeinschaft {
@@ -646,13 +561,13 @@ mv asterisk asterisk.DEBIAN
 cp -r /opt/gemeinschaft-source/etc/asterisk ./
 #ln -snf /opt/gemeinschaft-source/etc/asterisk
 
-# Replace astdatadir "/var/lib/asterisk" by "/usr/share/asterisk"
-# (the default on Debian):
-sed -i -r -e 's#^(astdatadir\s*).*#\1=> /usr/share/asterisk#' /etc/asterisk/asterisk.conf || true
-
-# Replace astrundir "/var/run" by "/var/run/asterisk"
-# (the default on Debian):
-sed -i -r -e 's#^(astrundir\s*).*#\1=> /var/run/asterisk#' /etc/asterisk/asterisk.conf || true
+## Replace astdatadir "/var/lib/asterisk" by "/usr/share/asterisk"
+## (the default on Debian):
+#sed -i -r -e 's#^(astdatadir\s*).*#\1=> /usr/share/asterisk#' /etc/asterisk/asterisk.conf || true
+#
+## Replace astrundir "/var/run" by "/var/run/asterisk"
+## (the default on Debian):
+#sed -i -r -e 's#^(astrundir\s*).*#\1=> /var/run/asterisk#' /etc/asterisk/asterisk.conf || true
 
 
 # change owner of /opt/gemeinschaft/etc/asterisk/* to asterisk
@@ -1046,7 +961,7 @@ if [ -z $ADMIN_SIPPW ]; then USER_SIPPW='x'; fi
 # soweit die möglich ist.
 
 # snort
-${APTITUDE_INSTALL} snort
+#${APTITUDE_INSTALL} snort
 
 # harden-servers (remove services that are known to be insecure)
 # Will alert the admin if they try to install e.g. telnetd or nfs-kernel-server.
@@ -1056,7 +971,7 @@ ${APTITUDE_INSTALL} snort
 ${APTITUDE_INSTALL} harden-servers harden-clients
 
 # portsentry (detect port scans)
-${APTITUDE_INSTALL} portsentry
+#${APTITUDE_INSTALL} portsentry
 
 # Silver-Bullet 
 cd /opt/
@@ -1099,7 +1014,9 @@ invoke-rc.d dahdi start    || true
 invoke-rc.d asterisk start || true
 
 dmesg | grep -i dahdi || true
-
+if (test -e /dev/dahdi); then
+  chown --recursive asterisk:asterisk /dev/dahdi
+fi
 
 # updating authentication file
 #

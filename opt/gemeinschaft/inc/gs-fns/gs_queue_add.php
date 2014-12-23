@@ -39,7 +39,7 @@ function gs_queue_add( $name, $title, $maxlen, $host_id_or_ip )
 {
 	if (! preg_match( '/^[\d]+$/', $name ))
 		return new GsError( 'Queue extension must be numeric.' );
-	if (! preg_match( '/^[1-9][0-9]{1,4}$/', $name ))
+	if (! preg_match( '/^[1-9][0-9]{1,5}$/', $name ))
 		return new GsError( 'Please use 2-5 digit extension.' );
 	$title = trim($title);
 	$maxlen = (int)$maxlen;
@@ -94,7 +94,8 @@ function gs_queue_add( $name, $title, $maxlen, $host_id_or_ip )
 	`strategy`,
 	`joinempty`,
 	`leavewhenempty`,
-	`ringinuse`
+	`ringinuse`,
+	`early_media`
 ) VALUES (
 	NULL,
 	\''. $db->escape($name) .'\',
@@ -112,7 +113,8 @@ function gs_queue_add( $name, $title, $maxlen, $host_id_or_ip )
 	\'rrmemory\',
 	\'strict\',
 	\'yes\',
-	\'no\'
+	\'no\',
+	\''. $db->escape($early_media) .'\'
 )' );
 	if (! $ok)
 		return new GsError( 'Failed to add queue.' );

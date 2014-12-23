@@ -57,6 +57,8 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	$phone_types['snom-360'    ] = 'Snom 360';
 	$phone_types['snom-370'    ] = 'Snom 370';
         $phone_types['snom-870'    ] = 'Snom 870';
+        $phone_types['snom-760'    ] = 'Snom 760';
+        $phone_types['snom-720'    ] = 'Snom 720';
 }
 if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 	$phone_types['snom-m3'    ] = 'Snom M3';
@@ -86,6 +88,7 @@ if (gs_get_conf('GS_GRANDSTREAM_PROV_ENABLED')) {
 	$phone_types['grandstream-gxp1200'] = 'Grandstream GXP 1200';
 	$phone_types['grandstream-gxp2000'] = 'Grandstream GXP 2000';
 	$phone_types['grandstream-gxp2010'] = 'Grandstream GXP 2010';
+	$phone_types['grandstream-gxp2110'] = 'Grandstream GXP 2110';
 	$phone_types['grandstream-gxp2020'] = 'Grandstream GXP 2020';
 	$phone_types['grandstream-gxv3000'] = 'Grandstream GXV 3000';
 	$phone_types['grandstream-gxv3005'] = 'Grandstream GXV 3005';

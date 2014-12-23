@@ -300,8 +300,8 @@ $table = 'cdr_tmp_'.$user_name;
 $ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`' );
 
 $sql_query =
-	'CREATE TEMPORARY TABLE `'.$table.'` TYPE=HEAP '.
-		'SELECT * FROM `ast_cdr` WHERE '.
+	'CREATE TEMPORARY TABLE `'.$table.'` 
+		SELECT * FROM `ast_cdr` WHERE '.
 			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_m_start) .'\' AND '.
 			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_m_end) .'\' ) AND '.
 			'  `dst` IN ('. $exts_sql .') AND '.

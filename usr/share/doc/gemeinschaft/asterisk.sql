@@ -5430,6 +5430,7 @@ CREATE TABLE `ast_queues` (
   `weight` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `timeoutrestart` tinyint(1) unsigned DEFAULT NULL,
   `_min_agents` int(10) unsigned DEFAULT '0',
+  `early_media` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`_id`),
   UNIQUE KEY `name` (`name`),
   KEY `host_name` (`_host_id`,`name`),
@@ -5443,7 +5444,7 @@ CREATE TABLE `ast_queues` (
 
 LOCK TABLES `ast_queues` WRITE;
 /*!40000 ALTER TABLE `ast_queues` DISABLE KEYS */;
-INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',0,NULL,NULL,10,'no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','yes',NULL,NULL,NULL,'no',NULL,0,NULL,0);
+INSERT INTO `ast_queues` VALUES (1,'5000',1,'Support-Schlange','default',0,NULL,NULL,10,'no','yes',NULL,NULL,60,90,NULL,'yes',5,NULL,5,NULL,'rrmemory','strict','yes',NULL,NULL,NULL,'no',NULL,0,NULL,0,'');
 /*!40000 ALTER TABLE `ast_queues` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5506,6 +5507,7 @@ CREATE TABLE `ast_sipfriends` (
   `usereqphone` varchar(10) COLLATE latin1_general_ci DEFAULT NULL,
   `vmexten` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
   `useragent` varchar(20) COLLATE latin1_general_ci DEFAULT NULL,
+  `canreinvite` char(3) COLLATE latin1_general_ci DEFAULT 'yes',
   PRIMARY KEY (`_user_id`),
   UNIQUE KEY `name` (`name`),
   KEY `host` (`host`(25)),
@@ -5521,23 +5523,23 @@ CREATE TABLE `ast_sipfriends` (
 
 LOCK TABLES `ast_sipfriends` WRITE;
 /*!40000 ALTER TABLE `ast_sipfriends` DISABLE KEYS */;
-INSERT INTO `ast_sipfriends` VALUES (5,'950001','2602729062','friend','dynamic',NULL,'from-internal-nobody','Namenlos-5 <950001>','','1','1','__user_id=5;__user_name=950001',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (6,'950002','7581463327','friend','dynamic',NULL,'from-internal-nobody','Namenlos-6 <950002>','','1','1','__user_id=6;__user_name=950002',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (7,'950003','2099129726','friend','dynamic',NULL,'from-internal-nobody','Namenlos-7 <950003>','','1','1','__user_id=7;__user_name=950003',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (8,'950004','4751258926','friend','dynamic',NULL,'from-internal-nobody','Namenlos-8 <950004>','','1','1','__user_id=8;__user_name=950004',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (9,'950005','7458905728','friend','dynamic',NULL,'from-internal-nobody','Namenlos-9 <950005>','','1','1','__user_id=9;__user_name=950005',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (10,'950006','4040752142','friend','dynamic',NULL,'from-internal-nobody','Namenlos-10 <950006>','','1','1','__user_id=10;__user_name=950006',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (11,'950007','5827043803','friend','dynamic',NULL,'from-internal-nobody','Namenlos-11 <950007>','','1','1','__user_id=11;__user_name=950007',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (12,'950008','7012962864','friend','dynamic',NULL,'from-internal-nobody','Namenlos-12 <950008>','','1','1','__user_id=12;__user_name=950008',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (13,'950009','7583683190','friend','dynamic',NULL,'from-internal-nobody','Namenlos-13 <950009>','','1','1','__user_id=13;__user_name=950009',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (14,'950010','6879527634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-14 <950010>','','1','1','__user_id=14;__user_name=950010',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (22,'2000','5826899294','friend','dynamic',NULL,'from-internal-users','Hans Muster <2000>','2000','1','1','__user_id=22;__user_name=2000',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (23,'2001','4813474487','friend','dynamic',NULL,'from-internal-users','Peter Muster <2001>','2001','1','1','__user_id=23;__user_name=2001',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (24,'2002','6907087521','friend','dynamic',NULL,'from-internal-users','Anna Muster <2002>','2002','1','1','__user_id=24;__user_name=2002',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (25,'2003','9293349941','friend','dynamic',NULL,'from-internal-users','Lisa Muster <2003>','2003','1','1','__user_id=25;__user_name=2003',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (28,'950011','7364863263482634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-28 <950011>','','1','1','__user_id=28;__user_name=950011',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (29,'950012','7364863263482634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-29 <950012>','','1','1','__user_id=29;__user_name=950012',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO `ast_sipfriends` VALUES (30,'950013','3707760381117896','friend','dynamic',NULL,'from-internal-nobody','Namenlos-13 <950013>','','1','1','__user_id=30;__user_name=950013',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `ast_sipfriends` VALUES (5,'950001','2602729062','friend','dynamic',NULL,'from-internal-nobody','Namenlos-5 <950001>','','1','1','__user_id=5;__user_name=950001',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (6,'950002','7581463327','friend','dynamic',NULL,'from-internal-nobody','Namenlos-6 <950002>','','1','1','__user_id=6;__user_name=950002',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (7,'950003','2099129726','friend','dynamic',NULL,'from-internal-nobody','Namenlos-7 <950003>','','1','1','__user_id=7;__user_name=950003',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (8,'950004','4751258926','friend','dynamic',NULL,'from-internal-nobody','Namenlos-8 <950004>','','1','1','__user_id=8;__user_name=950004',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (9,'950005','7458905728','friend','dynamic',NULL,'from-internal-nobody','Namenlos-9 <950005>','','1','1','__user_id=9;__user_name=950005',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (10,'950006','4040752142','friend','dynamic',NULL,'from-internal-nobody','Namenlos-10 <950006>','','1','1','__user_id=10;__user_name=950006',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (11,'950007','5827043803','friend','dynamic',NULL,'from-internal-nobody','Namenlos-11 <950007>','','1','1','__user_id=11;__user_name=950007',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (12,'950008','7012962864','friend','dynamic',NULL,'from-internal-nobody','Namenlos-12 <950008>','','1','1','__user_id=12;__user_name=950008',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (13,'950009','7583683190','friend','dynamic',NULL,'from-internal-nobody','Namenlos-13 <950009>','','1','1','__user_id=13;__user_name=950009',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (14,'950010','6879527634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-14 <950010>','','1','1','__user_id=14;__user_name=950010',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (22,'2000','5826899294','friend','dynamic',NULL,'from-internal-users','Hans Muster <2000>','2000','1','1','__user_id=22;__user_name=2000',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (23,'2001','4813474487','friend','dynamic',NULL,'from-internal-users','Peter Muster <2001>','2001','1','1','__user_id=23;__user_name=2001',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (24,'2002','6907087521','friend','dynamic',NULL,'from-internal-users','Anna Muster <2002>','2002','1','1','__user_id=24;__user_name=2002',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (25,'2003','9293349941','friend','dynamic',NULL,'from-internal-users','Lisa Muster <2003>','2003','1','1','__user_id=25;__user_name=2003',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (28,'950011','7364863263482634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-28 <950011>','','1','1','__user_id=28;__user_name=950011',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (29,'950012','7364863263482634','friend','dynamic',NULL,'from-internal-nobody','Namenlos-29 <950012>','','1','1','__user_id=29;__user_name=950012',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
+INSERT INTO `ast_sipfriends` VALUES (30,'950013','3707760381117896','friend','dynamic',NULL,'from-internal-nobody','Namenlos-13 <950013>','','1','1','__user_id=30;__user_name=950013',20,'default',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,-1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
 /*!40000 ALTER TABLE `ast_sipfriends` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7425,6 +7427,7 @@ CREATE TABLE `users` (
   `group_id` mediumint(8) unsigned DEFAULT NULL,
   `softkey_profile_id` int(10) unsigned DEFAULT NULL,
   `prov_param_profile_id` int(10) unsigned DEFAULT NULL,
+  `hotdescable` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user` (`user`),
   KEY `lastname_firstname` (`lastname`(15),`firstname`(15)),
@@ -7448,23 +7451,23 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (8,'nobody-00004','','','','','',4,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (9,'nobody-00005','','','','','',5,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (10,'nobody-00006','','','','','',6,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (11,'nobody-00007','','','','','',7,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (22,'hans','123','Hans','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (23,'peter','123','Peter','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (24,'anna','123','Anna','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (25,'lisa','123','Lisa','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (29,'nobody-00012','','','','','',12,1,NULL,'',NULL,NULL,NULL);
-INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,NULL,'',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (8,'nobody-00004','','','','','',4,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (9,'nobody-00005','','','','','',5,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (10,'nobody-00006','','','','','',6,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (11,'nobody-00007','','','','','',7,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (12,'nobody-00008','','','','','',8,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (13,'nobody-00009','','','','','',9,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (14,'nobody-00010','','','','','',10,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (22,'hans','123','Hans','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (23,'peter','123','Peter','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (24,'anna','123','Anna','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (25,'lisa','123','Lisa','Muster','','',NULL,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (28,'nobody-00011','','','','','',11,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (29,'nobody-00012','','','','','',12,1,NULL,'',NULL,NULL,NULL,'');
+INSERT INTO `users` VALUES (30,'nobody-00013','','','','','',13,1,NULL,'',NULL,NULL,NULL,'');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -7637,7 +7640,7 @@ USE `asterisk`;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=MERGE */
 /*!50013 DEFINER=CURRENT_USER() SQL SECURITY INVOKER */
-/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact`,`s`.`accountcode` AS `accountcode`,`s`.`allowtransfer` AS `allowtransfer`,`s`.`allow` AS `allow`,`s`.`amaflags` AS `amaflags`,`s`.`auth` AS `auth`,`s`.`autoframing` AS `autoframing`,`s`.`callingpres` AS `callingpres`,`s`.`cid_number` AS `cid_number`,`s`.`defaultuser` AS `defaultuser`,`s`.`fromdomain` AS `fromdomain`,`s`.`fromuser` AS `fromuser`,`s`.`incominglimit` AS `incominglimit`,`s`.`insecure` AS `insecure`,`s`.`language` AS `language`,`s`.`lastms` AS `lastms`,`s`.`maxcallbitrate` AS `maxcallbitrate`,`s`.`md5secret` AS `md5secret`,`s`.`mohsuggest` AS `mohsuggest`,`s`.`musicclass` AS `musicclass`,`s`.`outboundproxy` AS `outboundproxy`,`s`.`qualify` AS `qualify`,`s`.`regexten` AS `regexten`,`s`.`rtpholdtimeout` AS `rtpholdtimeout`,`s`.`rtpkeepalive` AS `rtpkeepalive`,`s`.`rtptimeout` AS `rtptimeout`,`s`.`subscribemwi` AS `subscribemwi`,`s`.`usereqphone` AS `usereqphone`,`s`.`vmexten` AS `vmexten`,`s`.`disallow` AS `disallow`,`s`.`useragent` AS `useragent` from ((`ast_sipfriends` `s` join `users` `u` on((`u`.`id` = `s`.`_user_id`))) join `hosts` `h` on((`h`.`id` = `u`.`host_id`))) where (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
+/*!50001 VIEW `ast_sipfriends_gs` AS (select `s`.`_user_id` AS `_user_id`,`s`.`name` AS `name`,`s`.`secret` AS `secret`,`s`.`type` AS `type`,`s`.`host` AS `host`,`s`.`defaultip` AS `defaultip`,`s`.`context` AS `context`,`s`.`callerid` AS `callerid`,`s`.`mailbox` AS `mailbox`,`s`.`callgroup` AS `callgroup`,`s`.`pickupgroup` AS `pickupgroup`,`s`.`setvar` AS `setvar`,`s`.`call-limit` AS `call-limit`,`s`.`subscribecontext` AS `subscribecontext`,`s`.`regcontext` AS `regcontext`,`s`.`ipaddr` AS `ipaddr`,`s`.`port` AS `port`,`s`.`regseconds` AS `regseconds`,`s`.`username` AS `username`,`s`.`regserver` AS `regserver`,`s`.`fullcontact` AS `fullcontact`,`s`.`accountcode` AS `accountcode`,`s`.`allowtransfer` AS `allowtransfer`,`s`.`allow` AS `allow`,`s`.`amaflags` AS `amaflags`,`s`.`auth` AS `auth`,`s`.`autoframing` AS `autoframing`,`s`.`callingpres` AS `callingpres`,`s`.`cid_number` AS `cid_number`,`s`.`defaultuser` AS `defaultuser`,`s`.`fromdomain` AS `fromdomain`,`s`.`fromuser` AS `fromuser`,`s`.`incominglimit` AS `incominglimit`,`s`.`insecure` AS `insecure`,`s`.`language` AS `language`,`s`.`lastms` AS `lastms`,`s`.`maxcallbitrate` AS `maxcallbitrate`,`s`.`md5secret` AS `md5secret`,`s`.`mohsuggest` AS `mohsuggest`,`s`.`musicclass` AS `musicclass`,`s`.`outboundproxy` AS `outboundproxy`,`s`.`qualify` AS `qualify`,`s`.`regexten` AS `regexten`,`s`.`rtpholdtimeout` AS `rtpholdtimeout`,`s`.`rtpkeepalive` AS `rtpkeepalive`,`s`.`rtptimeout` AS `rtptimeout`,`s`.`subscribemwi` AS `subscribemwi`,`s`.`usereqphone` AS `usereqphone`,`s`.`vmexten` AS `vmexten`,`s`.`disallow` AS `disallow`,`s`.`useragent` AS `useragent`, s.`canreinvite`AS `canreinvite` from ((`ast_sipfriends` `s` join `users` `u` on((`u`.`id` = `s`.`_user_id`))) join `hosts` `h` on((`h`.`id` = `u`.`host_id`))) where (`h`.`is_foreign` = 0)) WITH CASCADED CHECK OPTION */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

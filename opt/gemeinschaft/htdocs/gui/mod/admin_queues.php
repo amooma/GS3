@@ -86,11 +86,11 @@ if ($action === 'del') {
 #                               save {
 #####################################################################
 if ($action === 'save') {
-	/*
+	/*	
 	echo "<pre>\n";
 	print_r($_REQUEST);
 	echo "</pre>\n";
-	*/
+	 */
 	
 	$name = preg_replace('/[^0-9]/', '', @$_REQUEST['name']);
 	$title = trim(@$_REQUEST['_title']);
@@ -115,6 +115,9 @@ if ($action === 'save') {
 	$musicclass = preg_replace('/[^a-zA-Z0-9\-_]/', '', @$_REQUEST['musicclass']);
 	//if (! in_array($musicclass, array('default', ''), true))
 	//	$musicclass = 'default';
+	$early_media = @$_REQUEST['early_media'];
+	if (! in_array($early_media, array('1', '0'), true))
+		$early_media='0';
 	$musicclass_db = ($musicclass != '' ? '\''. $DB->escape($musicclass) .'\'' : 'NULL');
 	$salutation = (int)@$_REQUEST['salutation'];
 	$min_agents = (int)@$_REQUEST['_min_agents'];
@@ -146,7 +149,8 @@ if ($action === 'save') {
 	`strategy`=\''. $strategy .'\',
 	`joinempty`=\''. $joinempty .'\',
 	`leavewhenempty`=\''. $leavewhenempty .'\',
-	`_min_agents`=\''. $min_agents .'\'
+	`_min_agents`=\''. $min_agents .'\',
+	`early_media`=\''. $early_media .'\'
 WHERE `_id`='.$queue_id
 		);
 	}
@@ -299,7 +303,7 @@ FROM
 	if ($queue_id > 0) {
 		$rs = $DB->execute(
 'SELECT
-	`name`, `_host_id`, `_title`, `musicclass`, `_sysrec_id`, `announce_holdtime`, `timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`, `_min_agents`
+	`name`, `_host_id`, `_title`, `musicclass`, `_sysrec_id`, `announce_holdtime`, `timeout`, `wrapuptime`, `maxlen`, `strategy`, `joinempty`, `leavewhenempty`, `_min_agents`, `early_media`
 FROM
 	`ast_queues`
 WHERE
@@ -325,6 +329,7 @@ WHERE
 			'joinempty'                  => 'strict',
 			'leavewhenempty'             => 'yes',
 			'_min_agents'                => 0,
+			'early_media'		     => false,
 		);
 	}
 	
@@ -493,6 +498,32 @@ WHERE
 		echo '</tr>',"\n";
 		
 		echo '<tr>',"\n";
+		
+		
+		echo '<th class="r">', __('Early media') ,'</th>',"\n";
+		echo '<td>',"\n";
+		echo '<div class="radio_and_label_blocks">', "\n";
+		echo '<div class="radio_and_label_block">', "\n";
+	        echo '<input type="radio" name="early_media" id="ipt-early-media-true" value="1" ';
+		if ($queue['early_media']===1) echo 'checked="checked" ';
+		echo '/>', "\n";
+		echo '<label for="ipt-early-media-true">', __('Kostenfreie Wartemusik (ealry media)') ,'</label>', "\n";
+		echo '</div>', "\n";
+		echo '<div class="radio_and_label_block">', "\n";
+	        echo '<input type="radio" name="early_media" id="ipt-early-media-false" value="0" ';
+		if ($queue['early_media']===0) echo 'checked="checked" ';
+		echo '/>', "\n";
+		echo '<label for="ipt-early-media-false">', __('Kostenpflichtige Wartemusik (Answer)') ,'</label>', "\n";
+		echo '</div>', "\n";
+		
+		echo '</div>', "\n";
+		
+		echo '</td>';
+		echo '<td class="transp xs gray">',"\n";
+		echo '</tr>',"\n";
+		
+
+		echo '<tr>',"\n";
 		echo '<th class="r">', __('Eintritt') ,'</th>',"\n";
 		echo '<td>',"\n";
 		
@@ -518,6 +549,7 @@ WHERE
 		echo '/>', "\n";
 		echo '<label for="ipt-joinempty-strict">', __('nicht wenn keine Agenten angemeldet sind oder keine Agenten frei sind') ,'</label>', "\n";
 		echo '</div>', "\n";
+
 		
 		echo '</div>', "\n";
 		
