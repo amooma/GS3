@@ -263,7 +263,7 @@ context to-internal-users {
 	//------------------------
 	_sysrec. => {
 		AGI(/opt/gemeinschaft/dialplan-scripts/sys-rec-getfile,${EXTEN:6});
-		if ("${md5hashname}" != ""  &&  "${forwards}"= "0") {
+		if ("${md5hashname}" != "" ) {
 			Playback(/opt/gemeinschaft/sys-rec/${md5hashname});
 		} else {
 			Verbose(1,### Sysrec file with ID ${EXTEN:6} not found);
