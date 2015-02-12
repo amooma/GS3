@@ -559,6 +559,28 @@ echo '<small>(', __('Vor dem Wechsel ggf. &Auml;nderungen speichern!') ,')</smal
 #####################################################################
 
 ?>
+<small>
+Folgende persönliche Einstellungen können mit BLF Tasten gesteuert und überwacht werden:<br>
+In den Beispielen wird immer die Durchwahl 99 verwendet.<br>
+<table>
+<th>Funktion</th>
+<th>Daten</th>
+<tr>
+<td>Anklopfen</td>
+<td>cwait99</td>
+</tr>
+<tr>
+<td>Interne und externe Anrufe auf Standardnummer umleiten</td>
+<td>fwd99</td>
+</tr>
+<tr>
+<td>Interne Anrufe auf Standardnummer umleiten</td>
+<td>fwdint99</td>
+</tr><tr>
+<td>Externe Anrufe auf Standardnummer umleiten</td>
+<td>fwdext99</td>
+</tr></table>
+</small>
 <hr />
 <?php /*if (! $is_user_profile) { ?>
 <br />
