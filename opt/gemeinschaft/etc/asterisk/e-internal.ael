@@ -340,7 +340,9 @@ context to-internal-users {
 	//----------------------------------------------------------
 	// Pickup for single users
 	//----------------------------------------------------------
-	
+  _*81*fwd. => {
+    jump *2*@user-config;
+    }	
 	_*81*. => {
 		&caller-count();
 		Set(pext=${EXTEN:4});
