@@ -58,5 +58,11 @@ function gs_nobody_index_to_extension( $index, $at_boi_host=false )
 	return (string)( $start + (int)$index );
 }
 
+function gs_is_nobody_extension( $ext, $at_boi_host=false )
+{
+	$nobody_rxpattern = '/' . preg_replace('/[^\d]/', '\d', gs_conf_nobody_pattern($at_boi_host)) . '/';
+
+	return (int)preg_match($nobody_rxpattern, (string)$ext);
+}
 
 ?>

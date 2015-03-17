@@ -33,6 +33,7 @@ require_once( GS_DIR .'inc/agi-fns.php' );
 require_once( GS_DIR .'inc/pcre_check.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
 include_once( GS_DIR .'inc/get-listen-to-ids.php' );
+include_once( GS_DIR .'inc/nobody-extensions.php' );
 
 ini_set('implicit_flush', 1);
 ob_implicit_flush(1);
@@ -194,10 +195,14 @@ foreach ($gate_grps as $ggrp_id) {
 	if ($qualify_cid
 	&&  ! in_array(strToLower($out_cid_num), array('anonymous', 'unknown', ''), true))  # no action for "anonymous"
 	{
-		$user_cid_override = $db->executeGetOne(
-			'SELECT `cid_ext` '.
-			'FROM `gate_cids` '.
-			'WHERE `grp_id` = '.$ggrp_id.' AND `cid_int` = \''.$db->escape($out_cid_num).'\'' );
+		if (gs_is_nobody_extension($out_cid_num)) {
+			$user_cid_override = 0;
+		} else {
+			$user_cid_override = $db->executeGetOne(
+				'SELECT `cid_ext` '.
+				'FROM `gate_cids` '.
+				'WHERE `grp_id` = '.$ggrp_id.' AND `cid_int` = \''.$db->escape($out_cid_num).'\'' );
+		}
 		if ($user_cid_override !== false) {
 			gs_agi_verbose( '### Overriding caller ID "'.$out_cid_num.'" -> "'.$user_cid_override.'" for gategroup ID: '. $ggrp_id );
 			$out_cid_num = preg_replace('/[^0-9+a-zA-Z\-_.]/', '', $user_cid_override);
