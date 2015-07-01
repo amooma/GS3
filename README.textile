@@ -2,7 +2,7 @@ h1. Asterisk Version
 
 Gemeinschaft in der Version 3 ist die ältere Software mit einem Asterisk-Kern. Die aktuellere Version von Gemeinschaft hat Freeswitch als Kern. Weitere Informationen dazu finden Sie auf "https://www.alternative-solution.de/gs3":https://www.alternative-solution.de/gs3
 
-h1. Installationsanleitung für Gemeinschaft 3.1
+h1. Installationsanleitung für Gemeinschaft 3.2
 
 Eine Installationsanleitung finden Sie unter  "http://github.com/amooma/GS3/wiki/Installation":http://github.com/amooma/GS3/wiki/Installation
 

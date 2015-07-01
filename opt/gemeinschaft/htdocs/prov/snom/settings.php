@@ -667,7 +667,7 @@ psetting('ringer_headset_device', 'speaker');  # Klingeltonausgabe bei Kopfhoere
 
 psetting('callpickup_dialoginfo'  , 'on' );
 psetting('show_xml_pickup'        , 'on' );
-psetting('show_name_dialog'       , 'off');
+psetting('show_name_dialog'       , 'on');
 psetting('ringing_time'           , '500');  # wird im Dialplan begrenzt
 psetting('block_url_dialing'      , 'on' );  # nur Ziffern erlauben
 psetting('ringer_animation'       , 'on' , true);
@@ -938,6 +938,20 @@ for ($i=0; $i<=$max_key; ++$i) {
 	setting('fkey'        , $i, 'line', array('context'=>'active'));
 	//setting('fkey_context', $i, 'active');
 }
+# GUI softkeys
+#
+/*
+psetting('gui_fkey1', 'F_DIALOG');
+psetting('gui_fkey2', 'F_CALL_LIST');
+psetting('gui_fkey3', 'F_ADR_BOOK');
+psetting('gui_fkey4', 'F_PRESENCE');
+*/
+psetting('gui_fkey1', '');
+psetting('gui_fkey2', '');
+psetting('gui_fkey3', '');
+psetting('gui_fkey4', '');
+# these settings do not use the idx attribute in XML
+
 
 # pre-defined keys for snom 300
 #
@@ -946,6 +960,14 @@ if ($phone_model == '300') {
 	setting('fkey', 3, 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
 	setting('fkey', 4, 'keyevent F_TRANSFER', array('context'=>'active'));
 	setting('fkey', 5, 'keyevent F_MUTE', array('context'=>'active'));
+}
+if ($phone_model == '710') {
+	psetting('dkey_fkey1', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
+	psetting('dkey_fkey2', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
+	psetting('gui_fkey1', 'F_CALL_LIST');
+	psetting('gui_fkey2', 'F_ADR_BOOK');
+	psetting('gui_fkey3', 'F_SETTINGS');
+	psetting('gui_fkey4', 'F_DND');
 }
 if ($phone_model == '870') {
 	psetting('dkey_touch_idle_adr_book', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
@@ -958,8 +980,12 @@ if ($phone_model == '870') {
 	psetting('backlight_idle', '4', array('context'=>'active'));
 
 }
-if (($phone_model == '760') || ($phone_model == '720')) {
-	psetting('dkey_menu'     , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1&mac=$mac', array('context'=>'active'));
+if (($phone_model == '760') || ($phone_model == '720') ) {
+	psetting('dkey_fkey1', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
+        psetting('dkey_fkey2', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
+        psetting('gui_fkey1', 'F_CALL_LIST');
+	psetting('gui_fkey2', 'F_ADR_BOOK');
+	psetting('dkey_menu', 'keyevent F_SETTINGS');
 }
 
 /*  //FIXME
@@ -1027,20 +1053,6 @@ if (! is_array($softkeys)) {
 	}
 }
 
-
-# GUI softkeys
-#
-/*
-psetting('gui_fkey1', 'F_DIALOG');
-psetting('gui_fkey2', 'F_CALL_LIST');
-psetting('gui_fkey3', 'F_ADR_BOOK');
-psetting('gui_fkey4', 'F_PRESENCE');
-*/
-psetting('gui_fkey1', '');
-psetting('gui_fkey2', '');
-psetting('gui_fkey3', '');
-psetting('gui_fkey4', '');
-# these settings do not use the idx attribute in XML
 
 
 
