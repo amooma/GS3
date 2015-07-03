@@ -95,6 +95,8 @@ if ($rs) {
 		echo 'hint(SIP/', $r['name'] ,') ', $r['name'] ,' => {}', "\n";
 		echo 'hint(SIP/', $r['name'] ,') ***', $r['name'] ,' => {}', "\n";
 		echo 'hint(Custom:fwd', $r['name'] ,') fwd', $r['name'] ,' => {}', "\n";
+		echo 'hint(Custom:fwdint', $r['name'] ,') fwdint', $r['name'] ,' => {}', "\n";
+		echo 'hint(Custom:fwdext', $r['name'] ,') fwdext', $r['name'] ,' => {}', "\n";
 		echo 'hint(Custom:cwait', $r['name'] ,') cwait', $r['name'] ,' => {}', "\n";
 		foreach($queues as $queue)
 			echo 'hint(Custom:q', $queue ,'u', $r['name'] ,') q', $queue ,'u', $r['name'] ,' => {}', "\n";

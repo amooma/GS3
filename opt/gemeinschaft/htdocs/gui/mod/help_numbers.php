@@ -80,6 +80,18 @@ $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 	</td>
 </tr>
 <tr>
+  <td style="width:140px;"><code>*21*</code></td>
+  <td style="width:420px;">
+    <?php echo __('Rufumleitung f&uuml;r Anrufe von extern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)'); ?>
+  </td>
+</tr>
+<tr>
+  <td style="width:140px;"><code>*22*</code></td>
+  <td style="width:420px;">
+    <?php echo __('Rufumleitung f&uuml;r Anrufe von intern im Fall &quot;immer&quot; auf die Std.-Nummer aktivieren. (Dazu m&uuml;ssen Sie im Men&uuml;punkt &quot;Rufumleitung&quot; eine Std.-Nr. angegeben haben!)'); ?>
+  </td>
+</tr>
+<tr>
 	<td><code>*2 <i><?php echo __('Nummer'); ?></i></code></td>
 	<td>
 		<?php echo __('Tempor&auml;re Rufumleitung f&uuml;r Anrufe von intern und extern im Fall &quot;immer&quot; auf die angegebene Nummer programmieren'); ?>

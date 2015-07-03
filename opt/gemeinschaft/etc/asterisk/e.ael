@@ -1217,16 +1217,35 @@ context toggle-cfwd-hint {
 	toggle => {
 		//toggle callforwarding
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${user_name});
-		if ("${fw_std_active}" = "1") {
+		if ("${fw_internal_always}" != "" && "${fw_external_always}" != "") {
 			Set(CDR(amaflags)=OMIT);
 			TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=BUSY));
-			Hangup();
-		} else {
-			Set(CDR(amaflags)=OMIT);
-			TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=NOT_INUSE));
-			Hangup();
-		}
-	}
+		} 
+    if (("${fw_internal_always}" == "" && "${fw_external_always}" != "") || ("${fw_internal_always}" != "" && "${fw_external_always}" == "")) {
+       Set(CDR(amaflags)=OMIT);
+       TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=RINGING));
+    } 
+    if ("${fw_internal_always}" == "" && "${fw_external_always}" == "") {
+      Set(CDR(amaflags)=OMIT);
+      TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=NOT_INUSE));
+      } 
+    if ("${fw_internal_always}" != "") {
+  			Set(CDR(amaflags)=OMIT);
+  			TryExec(Set(DEVICE_STATE(Custom:fwdint${user_name})=BUSY));
+  		} else {
+  			Set(CDR(amaflags)=OMIT);
+  			TryExec(Set(DEVICE_STATE(Custom:fwdint${user_name})=NOT_INUSE));
+  		}	
+    if ("${fw_external_always}" != "") {
+  			Set(CDR(amaflags)=OMIT);
+  			TryExec(Set(DEVICE_STATE(Custom:fwdext${user_name})=BUSY));
+  		} else {
+  			Set(CDR(amaflags)=OMIT);
+  			TryExec(Set(DEVICE_STATE(Custom:fwdext${user_name})=NOT_INUSE));
+  		}
+  Hangup();
+  	}
+
 }
 
 

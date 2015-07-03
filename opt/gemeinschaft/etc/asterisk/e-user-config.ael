@@ -211,9 +211,11 @@ context user-config {
 		Hangup();
 	}
 
-	_fwdX. => jump *2;
+	_fwdi[n]tZ. => jump *22*;
+	_fwde[x]tZ. => jump *21*;
+	_fwdZ. => jump *2;
 	
-	*2 => {
+  *2 => {
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&caller-count();
 		//toggle callforwarding 
@@ -222,19 +224,59 @@ context user-config {
 			Set(CDR(amaflags)=OMIT);
 			&user-call-forward-activate-numeric(std,0,0,0);
 			&user-call-forward-activate-numeric(std,1,0,0);
-			TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=NOT_INUSE));
 			Wait(0.5);
 			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/deaktiviert);
-			Hangup();
-		} else {
+	    jump toggle@toggle-cfwd-hint;	  
+    } else {
 			Set(CDR(amaflags)=OMIT);
 			&user-call-forward-activate-numeric(std,0,0,1);
 			&user-call-forward-activate-numeric(std,1,0,1);
 			&queue-logout-all-silent();
 			Wait(0.5);
-			TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=BUSY));
 			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
-			Hangup();
+	    jump toggle@toggle-cfwd-hint;	  
+		}
+
+	}
+  *21* => {
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		&caller-count();
+		//toggle callforwarding 
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${user_name});
+  	if ("${fw_external_always}" != "") {
+			Set(CDR(amaflags)=OMIT);
+			&user-call-forward-activate-numeric(std,1,0,0);
+			Wait(0.5);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/deaktiviert);
+	    jump toggle@toggle-cfwd-hint;	  
+    } else {
+			Set(CDR(amaflags)=OMIT);
+			&user-call-forward-activate-numeric(std,1,0,1);
+			&queue-logout-all-silent();
+			Wait(0.5);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
+	    jump toggle@toggle-cfwd-hint;	  
+		}
+
+	}
+  *22* => {
+		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
+		&caller-count();
+		//toggle callforwarding 
+		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-fw.agi,${user_name});
+		if ("${fw_internal_always}" != "") {
+			Set(CDR(amaflags)=OMIT);
+			&user-call-forward-activate-numeric(std,0,0,0);
+			Wait(0.5);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/deaktiviert);
+	    jump toggle@toggle-cfwd-hint;	  
+    } else {
+			Set(CDR(amaflags)=OMIT);
+			&user-call-forward-activate-numeric(std,0,0,1);
+			&queue-logout-all-silent();
+			Wait(0.5);
+			Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
+	    jump toggle@toggle-cfwd-hint;	  
 		}
 
 	}
@@ -254,19 +296,17 @@ context user-config {
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-user-language,${user_name});
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
-		TryExec(Set(DEVICE_STATE(Custom:fwd${user_name})=NOT_INUSE));
 		Wait(0.5);
-		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/deaktiviert);
-		Hangup();
-	}
+	  jump toggle@toggle-cfwd-hint;
+  }
 	dnd-off => {
 		// like *2* but silent
 		&caller-count();
 		Set(CDR(amaflags)=OMIT);
 		&user-call-forward-activate-numeric(std,0,0,0);
 		&user-call-forward-activate-numeric(std,1,0,0);
-		Hangup();
-	}
+	  jump toggle@toggle-cfwd-hint;
+  }
 	
 	*21 => {
 		&caller-count();
@@ -283,8 +323,8 @@ context user-config {
 		&queue-logout-all-silent();
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
-		Hangup();
-	}
+	  jump toggle@toggle-cfwd-hint;
+  }
 	
 	*22 => {
 		&caller-count();
@@ -301,8 +341,8 @@ context user-config {
 		&queue-logout-all-silent();
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/rufumleitung&/opt/gemeinschaft/sounds/${gs_userlang_gs}/aktiviert);
-		Hangup();
-	}
+	  jump toggle@toggle-cfwd-hint;
+  }
 	
 	_*2X. => {
 		&caller-count();

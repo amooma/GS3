@@ -61,6 +61,10 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
                 $phone_types['snom-760'] = 'Snom 760';
 	if (in_array('*', $enabled_models) || in_array('720', $enabled_models))
                 $phone_types['snom-720'] = 'Snom 720';
+	if (in_array('*', $enabled_models) || in_array('821', $enabled_models))
+                $phone_types['snom-821'] = 'Snom 821';
+       if (in_array('*', $enabled_models) || in_array('710', $enabled_models))
+                $phone_types['snom-710'] = 'Snom 710';
 }
 /*
 # Maybe there will be some reason for enabling keys on Snom M3 phones in future.
@@ -273,6 +277,8 @@ if ($phone_type == '') {
 		elseif (array_key_exists('snom-870', $phone_types)) $phone_type = 'snom-870';
 		elseif (array_key_exists('snom-760', $phone_types)) $phone_type = 'snom-760';
 		elseif (array_key_exists('snom-720', $phone_types)) $phone_type = 'snom-720';
+		elseif (array_key_exists('snom-710', $phone_types)) $phone_type = 'snom-710';
+		elseif (array_key_exists('snom-821', $phone_types)) $phone_type = 'snom-821';
 	} else
 	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 		if     (array_key_exists('siemens-os20', $phone_types)) $phone_type = 'siemens-os20';
@@ -296,7 +302,7 @@ if ($phone_type == '') {
 		elseif (array_key_exists('tiptel-ip286', $phone_types)) $phone_type = 'tiptel-ip286';
 	}
 }
-if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 'snom-870', 'snom-760', 'snom-720'), true)) {
+if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 'snom-870', 'snom-760', 'snom-720', 'snom-710', 'snom-821'), true)) {
 	$phone_layout = 'snom';
 	$key_function_none = $key_function_none_snom;
 } elseif (in_array($phone_type, array('siemens-os20', 'siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
@@ -553,6 +559,28 @@ echo '<small>(', __('Vor dem Wechsel ggf. &Auml;nderungen speichern!') ,')</smal
 #####################################################################
 
 ?>
+<small>
+Folgende persönliche Einstellungen können mit BLF Tasten gesteuert und überwacht werden:<br>
+In den Beispielen wird immer die Durchwahl 99 verwendet.<br>
+<table>
+<th>Funktion</th>
+<th>Daten</th>
+<tr>
+<td>Anklopfen</td>
+<td>cwait99</td>
+</tr>
+<tr>
+<td>Interne und externe Anrufe auf Standardnummer umleiten</td>
+<td>fwd99</td>
+</tr>
+<tr>
+<td>Interne Anrufe auf Standardnummer umleiten</td>
+<td>fwdint99</td>
+</tr><tr>
+<td>Externe Anrufe auf Standardnummer umleiten</td>
+<td>fwdext99</td>
+</tr></table>
+</small>
 <hr />
 <?php /*if (! $is_user_profile) { ?>
 <br />
@@ -959,6 +987,16 @@ if ($phone_layout) {
                                 break;
                 }
 		switch ($phone_type) {
+                        case 'snom-821':
+                                $key_levels = array(
+                                        0 => array('from'=>  0,
+                                        'to'=>  11, 'shifted'=>false,
+                                        'title'=> htmlEnt($phone_type_title))
+                                );
+                                //$key_levels[0]['to'  ] =   15;
+                                break;
+                }
+		switch ($phone_type) {
                         case 'snom-760':
                                 $key_levels = array(
                                         0 => array('from'=>  4,
@@ -977,7 +1015,18 @@ if ($phone_layout) {
                                 );
                                 //$key_levels[0]['to'  ] =   15;
                                 break;
-                }break;
+                }
+		switch ($phone_type) {
+                        case 'snom-710':
+                                $key_levels = array(
+                                        0 => array('from'=>  0,
+					'to'=>  4, 'shifted'=>false,
+                                        'title'=> htmlEnt($phone_type_title))
+                                );
+                                //$key_levels[0]['to'  ] =   15;
+                                break;
+                }
+		break;
 	case 'siemens':
 		//if ($show_ext_modules >= 0) {
 			$key_levels = array(
@@ -1265,6 +1314,14 @@ if ($phone_layout) {
 						switch ($key_level_idx) {
 							case 0: $left =  0; $right =  17; break;
 						}
+					case 'snom-710';
+                                                switch ($key_level_idx) {
+                                                        case 0: $left =  0; $right =  4; break;
+                                                }
+					case 'snom-821';
+                                                switch ($key_level_idx) {
+                                                        case 0: $left =  0; $right =  11; break;
+                                                }
         				break;
                                 }
 				break;
@@ -1274,7 +1331,7 @@ if ($phone_layout) {
 		for ($i=$key_level_info['from']; $i<=$key_level_info['to']; ++$i) {
 			
 			if ($phone_layout === 'snom') {
-                        	if ($phone_type === 'snom-760' || $phone_type === 'snom-870' || $phone_type == 'snom-720') {
+                        	if ($phone_type === 'snom-760' || $phone_type === 'snom-870' || $phone_type == 'snom-720' || $phone_type == 'snom-710' || $phone_type == 'snom-821') {
 				$knum = $i;
 				$knump = str_pad($knum, 3, '0', STR_PAD_LEFT);
 				}else {
@@ -1364,7 +1421,7 @@ if ($phone_layout) {
 			echo '<td style="font-size:96%;"';
 			switch ($phone_layout) {
 				case 'snom':
-					if ($phone_type === 'snom-760' || $phone_type === 'snom-870' || $phone_type == 'snom-720') {
+					if ($phone_type === 'snom-760' || $phone_type === 'snom-870' || $phone_type == 'snom-720' || $phone_type == 'snom-710' || $phone_type == 'snom-821') {
 						echo ' class="r"';
 					} else {
 						echo ' class="', ($i%2===($key_level_idx+1)%2 ?'l':'r') ,'"';
@@ -1481,7 +1538,7 @@ if ($phone_layout) {
 	echo '<br />' ,"\n";
 
 	if (in_array($phone_type, array('snom-300','snom-320','snom-360','snom-370','snom-870', 'snom-760', 'snom-720', 'grandstream-gxp2000','grandstream-gxp2010','grandstream-gxp2020','grandstream-gxp2110'), true))
-		echo '<a href="',GS_URL_PATH ,'srv/key-layout.php?phone_type=',$phone_type,'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n"; 
+		echo '<a href="',GS_URL_PATH ,'srv/key-layout.php?phone_type=',$phone_type,'&user_id=',$user_id,'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n"; 
 
 	echo $save_bt;
 }
