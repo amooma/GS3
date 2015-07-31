@@ -5,3 +5,7 @@ opt/gemeinschaft/etc/asterisk/extensions.ael
 *.pyc
 .gemeinschaft-version
 *.komodoproject
+
+# exclude yealink firmware directory
+opt/gemeinschaft/htdocs/prov/yealink/fw
+

@@ -7,9 +7,16 @@
 	RewriteEngine on
 	
 	# The phone asks for
-	# <MAC-addr>.cfg
+	# <MAC-addr>C.cfg
 	
 	# Rewrite requests for <MAC-addr>.txt
-	RewriteRule ^(001565[0-9a-f]*).cfg$ settings.php?mac=$1 [L]
+	# xx.72 Firmware requests 001565xxxxxxC.cfg
+	RewriteRule ^(001565[0-9a-f]*)C.cfg$ settings.php?mac=$1 [L]
+
+
+        # xx.73 Firmware requests 001565xxxxxx.cfg
+        RewriteRule ^(001565[0-9a-f]*).cfg$ settings.php?mac=$1 [L]
+
+
 
 </IfModule>

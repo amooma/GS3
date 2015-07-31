@@ -163,8 +163,10 @@ else if (strToLower(@$ua_parts[0]) !== 'yealink') {
 gs_log( GS_LOG_DEBUG, "Yealink model $ua found." );
 
 # find out the type of the phone:
-if (preg_match('/SIP-(T46G|T48G)/', @$ua_parts[1], $m))  # e.g. "SIP-T46G", "SIP-T48G" or "SIP-T22P"
+if (preg_match('/SIP-(T46G|T48G)/', @$ua_parts[1], $m))  {    # e.g. "SIP-T46G", "SIP-T48G" or "SIP-T22P"
 	$phone_model =  'SIP-'.$m[1];
+	$phone_model_config = 'SIP_'.$m[1];
+}
 else
 	$phone_model = 'unknown';
 
@@ -297,11 +299,11 @@ if (! gs_get_conf('GS_YEALINK_PROV_FW_UPDATE')) {
 	if ($fw_was_upgraded_manually) {
 		gs_log( GS_LOG_DEBUG, "Phone $mac: Firmware was upgraded \"manually\". Not scheduling an upgrade." );
 	} else {
-		$fw_default_vers = _yealink_normalize_version(trim(gs_get_conf('GS_YEALINK_PROV_FW_DEFAULT_'.strToUpper($phone_model))));
+		$fw_default_vers = _yealink_normalize_version(trim(gs_get_conf('GS_YEALINK_PROV_FW_DEFAULT_'.strToUpper($phone_model_config))));
 		if (in_array($fw_default_vers, array(null, false,''), true)) {
 			gs_log( GS_LOG_DEBUG, "Phone $mac: No default firmware set in config file" );
 		} elseif (subStr($fw_default_vers,0,2) === '00') {
-			gs_log( GS_LOG_DEBUG, "Phone $mac: Bad default firmware set in config file" );
+			gs_log( GS_LOG_DEBUG, "Phone $mac: Bad default firmware set in config file: $fw_default_vers" );
 		} else {
 			if ($fw_vers_nrml != $fw_default_vers) {
 				gs_log( GS_LOG_NOTICE, "Phone $mac: The Firmware version ($fw_vers_nrml) differs from the default version ($fw_default_vers), scheduling an upgrade ..." );
@@ -462,6 +464,9 @@ if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) )
 	##The default value is English.
 	psetting('lang.gui', _yealink_astlang_to_yealinklang($user['language']));
 
+	# Network LLDP enable (for identifying IP phone on LLDP-enabled switches)
+	psetting('network.lldp.enable', '1');
+	psetting('network.lldp.packet_interval', '60');
 
 	# Remote Phonebook
 	###X ranges from 1 to 5
@@ -494,6 +499,18 @@ if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) )
 	#Delete all the custom ringtones uploaded through auto provisioning
 	#psetting('ringtone.delete', 'http://localhost/all');
 
+	# Country Tone
+	# Custom,Australia,Austria, Brazil,Belgium,China, Czech,Denmark,Finland,France,Germany,Great Britain,Greece,Hungary,Lithuania,India, Italy,Japan,Mexico, New Zealand,
+	# Netherlands,Norway,Portugal,Spain,Switzerland,Sweden,Russia, UnitedStates, Chile,Czech ETSI
+	psetting('voice.tone.country', 'Germany');
+
+	# DND
+	psetting('features.dnd.enable', '0');
+	psetting('features.dnd.on_code', 'dnd-on');
+	psetting('features.dnd.off_code', 'dnd-off');
+	
+	
+	
 	# Security
 	###Define the login username and password of the user, var and administrator.
 	###If you change the username of the administrator from "admin" to "admin1", your new administrator's username should be configured as: security.user_name.admin = admin1.
@@ -531,12 +548,69 @@ if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) )
 	// # Failback
 	psetting('account.1.sip_server.1.address', $host);
 	psetting('account.1.sip_server.1.port', '5060');
+	psetting('account.1.sip_server.1.expires', '120');
 
 	// # Register Advanced
 	// ##It configures the SIP server type for account X.0-Default,2-BroadSoft,4-Cosmocom,6-UCAP
 	// ##The default value is 0.
 	psetting('account.1.sip_server_type', '0');
 
+	psetting('voice_mail.number.1', 'voicemail');
+	psetting('account.1.subscribe_mwi', '1');
+    psetting('account.1.display_mwi.enable', '1');
+	psetting('account.1.subscribe_mwi_to_vm', '1');
+
+	# Codecs
+	psetting('account.1.codec.1.enable', '1');
+	psetting('account.1.codec.2.enable', '1');
+	psetting('account.1.codec.3.enable', '1');
+	psetting('account.1.codec.4.enable', '0');
+	psetting('account.1.codec.5.enable', '0');
+	psetting('account.1.codec.6.enable', '0');
+	psetting('account.1.codec.7.enable', '0');
+	psetting('account.1.codec.8.enable', '0');
+	psetting('account.1.codec.9.enable', '0');
+	psetting('account.1.codec.10.enable', '0');
+	psetting('account.1.codec.11.enable', '0');
+	
+	psetting('account.1.codec.1.payload_type', 'PCMA');
+	psetting('account.1.codec.2.payload_type', 'PCMU');
+	psetting('account.1.codec.3.payload_type', 'G722');
+	psetting('account.1.codec.4.payload_type', 'G723_53');
+	psetting('account.1.codec.5.payload_type', 'G723_63');
+	psetting('account.1.codec.6.payload_type', 'G729');
+	psetting('account.1.codec.7.payload_type', 'iLBC');
+	psetting('account.1.codec.8.payload_type', 'G726-16');
+	psetting('account.1.codec.9.payload_type', 'G726-24');
+	psetting('account.1.codec.10.payload_type', 'G726-32');
+	psetting('account.1.codec.11.payload_type', 'G726-40');	
+	
+	psetting('account.1.codec.1.priority', '1');
+	psetting('account.1.codec.2.priority', '2');
+	psetting('account.1.codec.3.priority', '3');
+	psetting('account.1.codec.4.priority', '0');
+	psetting('account.1.codec.5.priority', '0');
+	psetting('account.1.codec.6.priority', '0');
+	psetting('account.1.codec.7.priority', '0');
+	psetting('account.1.codec.8.priority', '0');
+	psetting('account.1.codec.9.priority', '0');
+	psetting('account.1.codec.10.priority', '0');
+	psetting('account.1.codec.11.priority', '0');
+	
+	psetting('account.1.codec.1.rtpmap', '8'); # PCMA
+	psetting('account.1.codec.2.rtpmap', '0'); # PCMU
+	psetting('account.1.codec.3.rtpmap', '9'); # G722
+	psetting('account.1.codec.4.rtpmap', '4'); # G723_53
+	psetting('account.1.codec.5.rtpmap', '4'); # G723_63
+	psetting('account.1.codec.6.rtpmap', '18'); # G729
+	psetting('account.1.codec.7.rtpmap', '106'); # iLBC
+	psetting('account.1.codec.8.rtpmap', '103'); # G726-16
+	psetting('account.1.codec.9.rtpmap', '104'); # G726-24
+	psetting('account.1.codec.10.rtpmap', '102'); # G726-32
+	psetting('account.1.codec.11.rtpmap', '105'); # G726-40
+	
+	psetting('account.1.ptime', '20');      # 20ms
+	
 	// psetting('account.1.unregister_on_reboot', '');
 	// psetting('account.1.sip_trust_ctrl', '');
 	// psetting('account.1.proxy_require', '');
@@ -581,11 +655,18 @@ if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) )
 	# Time
 	##It configures the time zone.For more available time zones, refer to Time Zones on page 215.
 	##The default value is +8.
-	psetting('local_time.time_zone', '+'.( ((int)date('Z')) / 3600));
+	psetting('local_time.time_zone', '+1');
+	psetting('local_time.time_zone_name', 'Germany(Berlin)');
 	##It configures the time zone name.For more available time zone names, refer to Time Zones on page 215.
 	##The default time zone name is China(Beijing).
 	psetting('local_time.ntp_server1', gs_get_conf('GS_YEALINK_PROV_NTP'));
-
+	psetting('local_time.ntp_server2', gs_get_conf('GS_YEALINK_PROV_NTP'));     # override default chinese NTP server
+	## NTP setting fron DHCP has high priority
+	psetting('local_time.manual_ntp_srv_prior','0');
+	psetting('local_time.interval'  , strval(rand(980,1020)));  # default 1000
+	psetting('local_time.time_format', '1');
+	psetting('local_time.date_format', '0');    # WWW MMM DD
+	
 	#######################################################################################
 	##                                   Features Pickup(Except T20P model)              ##       
 	#######################################################################################
