@@ -69,7 +69,12 @@ while ($ggrp = $rs->fetchRow()) {
 		echo "\t\t\t\t", 'WaitExten(1);' ,"\n";
 		echo "\t\t\t", '}' ,"\n";
 		
-		echo "\t\t\t", 'Set(did_full=${EXTEN});' ,"\n";
+		if (preg_match('/\bpbx\-network\b/i', $name)) {
+                        // PBX Network hack
+                        echo "\t\t\t", 'Set(did_full=${CUT(CUT(SIP_HEADER(P-Called-Party-ID),:,2),@,1)});', "\n";
+                } else {
+                        echo "\t\t\t", 'Set(did_full=${EXTEN});' ,"\n";
+                }
 		
 		/*
 		# hack for Sipgate.de {
