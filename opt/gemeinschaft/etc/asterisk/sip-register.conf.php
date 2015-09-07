@@ -99,19 +99,24 @@ if (! $DB) {
 	exit(1);
 }
 $rs = $DB->execute(
-'SELECT
+'SELECT `g`.`id`,
 	`g`.`name`, `g`.`host`, `g`.`proxy`, `g`.`user`, `g`.`pwd`,
 	`gg`.`name` `gg_name`
-FROM
-	`gates` `g` JOIN
-	`gate_grps` `gg` ON (`gg`.`id`=`g`.`grp_id`)
+FROM (`gates` `g`)
+JOIN `gate_grps` `gg` ON (`gg`.`id`=`g`.`grp_id`)
 WHERE
-	`g`.`type`=\'sip\' AND
+	`g`.`type`="sip" AND
 	`g`.`host` IS NOT NULL AND
 	`g`.`register`= 1
 ORDER BY `g`.`id`'
 );
 while ($gw = $rs->fetchRow()) {
+	$params_override = array();
+	$params_rs = $DB->execute( 'SELECT `param`, `value` FROM `gate_params` WHERE `gate_id`='.$gw['id'] );
+	while ($param = $params_rs->fetchRow()) {
+		$params_override[$param['param']] = $param['value'];
+	}
+
 	if ($gw['host'] != '' && $gw['user'] != '') {
 		
 		if ($gw['proxy'] == null || $gw['proxy'] === $gw['host']) {
@@ -144,6 +149,9 @@ while ($gw = $rs->fetchRow()) {
 			echo $gw['host'];             # host
 		} else {
 			echo $gw['proxy'];             # proxy
+		}
+		if (!empty($params_override['port'])) {
+			echo ':'.$params_override['port'];
 		}
 		if ($gw['user'] != '') {
 			echo '/', $gw['user'];         # contact
