@@ -38,20 +38,16 @@ include_once( GS_DIR .'inc/gs-fns/gs_prov_phone_checkcfg.php' );
 /***********************************************************
 *    the shell parameters
 ***********************************************************/
-/*
 $usage = 'Reboots a phone by user code, extension, IP addr. or all phones
 Usage: '. baseName(__FILE__) .' ( --user=<usercode> | --ext=<extension> | --ip=<ip_addr> | --all=yes ) --reboot=yes|no';
-*/
-$usage = 'Reboots a phone by user code, extension, IP addr. or all phones
-Usage: '. baseName(__FILE__) .' ( --user=<usercode> | --ext=<extension> | --ip=<ip_addr> | --all=yes )';
 
 $opts = @getOptsNoMultiples( '',
 	array(
 		'user=',
 		'ext=',
 		'ip=',
-		'all='/*,
-		'reboot='*/
+		'all=',
+		'reboot='
 	),
 	$usage
 );
@@ -62,13 +58,12 @@ if (! isSet( $opts['user'] )
  ) {
 	gs_script_invalid_usage( $usage );
 }
-/*
+
 if (! isSet( $opts['reboot'] )) {
 	echo "Use --reboot=yes|no\n";
 	gs_script_invalid_usage( $usage );
 }
-*/
-$opts['reboot'] = 'yes';
+
 if (count($opts) > 2) {
 	echo "Use only one of the parameters!\n";
 	gs_script_invalid_usage( $usage );

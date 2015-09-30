@@ -145,7 +145,7 @@ function gs_prov_phone_checkcfg_all( $reboot=true )
 	gs_log(GS_LOG_DEBUG, 'phone_checkcfg all phones');
 	
 	$rs = $db->execute(
-'SELECT `s`.`name`, `u`.`current_ip` `ip`
+'SELECT `s`.`name` `ext`, `u`.`current_ip` `ip`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)'
@@ -153,7 +153,7 @@ FROM
 	while ($r = $rs->fetchRow()) {
 		if ($r['ip'])
 			_gs_prov_phone_checkcfg_by_ip_do( $r['ip'], $reboot );
-		_gs_prov_phone_checkcfg_by_ext_do( $ext, $reboot );
+		_gs_prov_phone_checkcfg_by_ext_do( $r['ext'], $reboot );
 	}
 	return true;
 }
