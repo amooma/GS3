@@ -316,6 +316,20 @@ LIMIT 5'
 			<img alt="<?php echo htmlEnt(__("w\xC3\xA4hlen")); ?>" src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png'; ?>" style="margin:0 5px;" />
 			</button>
 			</form>
+
+			<?php if(gs_get_conf('GS_PHONESUITE_PROV_ENABLED')) { ?>
+			<hr />
+			<?php if(!file_exists('/opt/gemeinschaft/htdocs/gui/img/phonesuite.ico')) { ?>
+			<p>Please save an icon for the phonesuite button to /opt/gemeinschaft/htdocs/gui/img/phonesuite.ico. You may take the Phonesuite icon from PhoneSuite_TAPI_for_Asterisk_setup.zip/bin/prog.ico</p>
+			<?php } ?>
+			<form method="get" action="<?php echo GS_URL_PATH, 'prov/phonesuite/settings.php' ?>">
+			<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+			<button class="m" title="<?php echo __("PhoneSuite-Profil herunterladen"); ?>" style="height:22px; padding:0;">
+			<img alt="<?php echo __("PhoneSuite-Profil herunterladen"); ?>" src="<?php echo GS_URL_PATH, 'img/phonesuite.ico'; ?>" style="margin:0 5px;" />
+			<?php echo __("PhoneSuite-Profil herunterladen"); ?>
+			</button>
+			</form>
+			<?php } ?>
 		</div>
 
 		<div class="th" style="padding:0.35em 0.5em; margin-bottom:2px;">
