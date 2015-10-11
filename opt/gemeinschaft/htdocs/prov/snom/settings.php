@@ -980,7 +980,7 @@ if ($phone_model == '870') {
 	psetting('backlight_idle', '4', array('context'=>'active'));
 
 }
-if (($phone_model == '760') || ($phone_model == '720') ) {
+if (($phone_model == '760') || ($phone_model == '720') || ($phone_model == '821') ) {
 	psetting('dkey_fkey1', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
         psetting('dkey_fkey2', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
         psetting('gui_fkey1', 'F_CALL_LIST');
