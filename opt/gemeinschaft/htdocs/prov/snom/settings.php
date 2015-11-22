@@ -50,7 +50,8 @@ function _snom_normalize_version( $appvers )
 	$vmaj = str_pad((int)@$tmp[0], 2, '0', STR_PAD_LEFT);
 	$vmin = str_pad((int)@$tmp[1], 2, '0', STR_PAD_LEFT);
 	$vsub = str_pad((int)@$tmp[2], 2, '0', STR_PAD_LEFT);
-	return $vmaj.'.'.$vmin.'.'.$vsub;
+	$vsubsub = str_pad((int)@$tmp[3], 2, '0', STR_PAD_LEFT);
+	return $vmaj.'.'.$vmin.'.'.$vsub.'.'.$vsubsub;
 }
 
 function _snomAppCmp( $appv1, $appv2 )
@@ -961,7 +962,7 @@ if ($phone_model == '300') {
 	setting('fkey', 4, 'keyevent F_TRANSFER', array('context'=>'active'));
 	setting('fkey', 5, 'keyevent F_MUTE', array('context'=>'active'));
 }
-if ($phone_model == '710') {
+if (($phone_model == '710') || ($phone_model == '715')) {
 	psetting('dkey_fkey1', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
 	psetting('dkey_fkey2', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
 	psetting('gui_fkey1', 'F_CALL_LIST');
@@ -980,7 +981,7 @@ if ($phone_model == '870') {
 	psetting('backlight_idle', '4', array('context'=>'active'));
 
 }
-if (($phone_model == '760') || ($phone_model == '720') ) {
+if (($phone_model == '760') || ($phone_model == '720') || ($phone_model == '725') ) {
 	psetting('dkey_fkey1', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
         psetting('dkey_fkey2', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
         psetting('gui_fkey1', 'F_CALL_LIST');
