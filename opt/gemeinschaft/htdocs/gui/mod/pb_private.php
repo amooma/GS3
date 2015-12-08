@@ -10,6 +10,10 @@
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
 * Soeren Sprenger <soeren.sprenger@amooma.de>
+* Markus Neubauer <markus.neubauer@email-online.org> - 2015
+*  - extending db and preparing for vcards
+* you need to alter the db for this version to work:
+* 
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -52,9 +56,11 @@ $per_page = (int)GS_GUI_NUM_RESULTS;
 
 $name         =      trim(@$_REQUEST['name'   ]);
 $number       =      trim(@$_REQUEST['number' ]);
+$ptype        =      trim(@$_REQUEST['ptype' ]);
 $save_lname   =      trim(@$_REQUEST['slname' ]);
 $save_fname   =      trim(@$_REQUEST['sfname' ]);
 $save_number  =      trim(@$_REQUEST['snumber']);
+$save_ptype   =      trim(@$_REQUEST['sptype']);
 $page         = (int)    (@$_REQUEST['page'   ]);
 $delete_entry = (int)trim(@$_REQUEST['delete' ]);
 $edit_entry   = (int)trim(@$_REQUEST['edit'   ]);
@@ -78,18 +84,19 @@ if (($save_lname != '' || $save_fname != '') && ($save_number != '')) {
 	if ($save_entry < 1) {
 		
 		$rs = $DB->execute(
-'INSERT INTO `pb_prv` (`id`, `user_id`, `lastname`, `firstname`, `number`) VALUES
-(NULL, '. $user_id .', \''. $DB->escape($save_lname) .'\', \''. $DB->escape($save_fname) .'\', \''. $DB->escape($save_number) .'\')'
+'INSERT INTO `pb_prv` (`id`, `user_id`, `lastname`, `firstname`, `number`, `ptype`) VALUES
+(NULL, '. $user_id .', \''. $DB->escape($save_lname) .'\', \''. $DB->escape($save_fname) .'\', \''. $DB->escape($save_number) .'\', \''. $DB->escape($save_ptype) .'\')'
 		);
 		
 	} else {
 		
 		$rs = $DB->execute(
-'UPDATE `pb_prv` SET `lastname`=\''. $DB->escape($save_lname) .'\', `firstname`=\''. $DB->escape($save_fname) .'\', `number`=\''. $DB->escape($save_number) .'\'
+'UPDATE `pb_prv` SET `lastname`=\''. $DB->escape($save_lname) .'\', `firstname`=\''. $DB->escape($save_fname) .'\', `number`=\''. $DB->escape($save_number) .'\', `ptype`=\''. $DB->escape($save_ptype) .'\'
 WHERE `id`='. $save_entry .' AND `user_id`='. $user_id
 		);
 	$save_number = '';
 	$save_name = '';
+	$save_ptype = '';
 		
 	}
 }
@@ -112,7 +119,7 @@ if ($number != '') {
 	
 	$rs = $DB->execute(
 		'SELECT SQL_CALC_FOUND_ROWS '.
-			'`id`, `lastname`, `firstname`, `number` '.
+			'`id`, `lastname`, `firstname`, `number` , `ptype` '.
 		'FROM '.
 			'`pb_prv` '.
 		'WHERE '.
@@ -140,7 +147,7 @@ if ($number != '') {
 	
 	$rs = $DB->execute(
 		'SELECT SQL_CALC_FOUND_ROWS '.
-			'`id`, `lastname`, `firstname`, `number` '.
+			'`id`, `lastname`, `firstname`, `number`, `ptype` '.
 		'FROM '.
 			'`pb_prv` '.
 		'WHERE '.
@@ -164,7 +171,7 @@ if ($number != '') {
 <tr>
 	<th style="width:270px;"><?php echo __('Name suchen'); ?></th>
 	<th style="width:200px;"><?php echo __('Nummer suchen'); ?></th>
-	<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
+	<th style="width:220px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
 </tr>
 </thead>
 <tbody>
@@ -214,7 +221,7 @@ if ($page < $num_pages-1) {
 	</td>
 </tr>
 <tr>
-	<td colspan="2" class="quickchars">
+	<td colspan="3" class="quickchars">
 <?php
 
 $chars = array();
@@ -237,6 +244,7 @@ echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 echo gs_form_hidden($SECTION, $MODULE), "\n";
 echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
 echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
+echo '<input type="hidden" name="ptype" value="', htmlEnt($ptype), '" />', "\n";
 ?>
 
 <table cellspacing="1" class="phonebook">
@@ -247,6 +255,9 @@ echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n
 	</th>
 	<th style="width:200px;"<?php if ($number!='') echo ' class="sort-col"'; ?>>
 		<?php echo __('Nummer'); ?>
+	</th>
+	<th style="width:100px;"<?php if ($ptype!='') echo ' class="sort-col"'; ?>>
+		<?php echo __('Location'); ?><sup>[1]</sup>
 	</th>
 	<th style="width:100px;">&nbsp;</th>
 </tr>
@@ -271,6 +282,10 @@ if (@$rs) {
 			echo '</td>', "\n";
 			
 			echo '<td>';
+			echo '<input type="text" name="sptype" value="', htmlEnt($r['ptype']), '" size="15" maxlength="16" style="width:100px;" />';
+			echo '</td>', "\n";
+			
+			echo '<td>';
 			echo '<input type="hidden" name="save" value="', $r['id'], '" />';
 			echo '<input type="hidden" name="page" value="', $page, '" />';
 			echo '<button type="submit" title="', __('Eintrag speichern'), '" class="plain">';
@@ -291,6 +306,8 @@ if (@$rs) {
 			echo '</td>', "\n";
 			
 			echo '<td>', htmlEnt($r['number']), '</td>', "\n";
+
+			echo '<td>', htmlEnt($r['ptype']), '</td>', "\n";
 			
 			echo '<td>';
 			$sudo_url =
@@ -321,6 +338,9 @@ if ($edit_entry < 1) {
 		<input type="text" name="snumber" value="" size="15" maxlength="25" style="width:150px;" />
 	</td>
 	<td>
+		<input type="text" name="sptype" value="" size="15" maxlength="16" style="width:100px;" />
+	</td>
+	<td>
 		<button type="submit" title="<?php echo __('Eintrag speichern'); ?>" class="plain">
 			<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
 		</button>
@@ -335,3 +355,27 @@ if ($edit_entry < 1) {
 </table>
 
 </form>
+<br>
+<p class="text"><sup>[1]</sup> Type of phone number: cell/work/home etc.</p>
+<?php
+/*
+function check_pb_table() {
+
+	if ( empty( $DB->execute('SHOW COLUMNS FROM pb_prv LIKE "ptype"')->fetchRow() ) ) {
+		$rs = $DB->execute('ALTER TABLE `pb_prv` ADD `ptype` varchar(16) NOT NULL COMMENT "cell,work,home"');
+	}
+	if (empty( $DB->execute('SHOW COLUMNS FROM pb_prv LIKE "vcard_id"')->fetchRow() )) {
+		$rs = $DB->execute('ALTER TABLE `pb_prv` ADD `vcard_id` int(11) NOT NULL');
+		$rs = $DB->execute('ALTER TABLE `pb_prv` ADD INDEX `uid_vcard` (`user_id`,`vcard_id`)');
+	}
+	if (empty( $DB->execute('SHOW COLUMNS FROM pb_prv LIKE "cat_id"')->fetchRow() )) {
+		$rs = $DB->execute('ALTER TABLE `pb_prv` ADD `cat_id` int(11) NOT NULL');
+		$rs = $DB->execute('ALTER TABLE `pb_prv` ADD INDEX `uid_cat_lastname_firstname` (`user_id`,`cat_id`,`lastname`,`firstname`)');
+		$rs = $DB->execute('ALTER TABLE `pb_prv` ADD INDEX `uid_cat_firstname_lastname` (`user_id`,`cat_id`,`firstname`,`lastname`)');
+	}
+	if (empty( $DB->execute('SHOW COLUMNS FROM pb_prv LIKE "modified"')->fetchRow() )) {
+		$rs = $DB->execute('ALTER TABLE `pb_prv` ADD `modified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP');
+	}
+}
+*/
+?>
