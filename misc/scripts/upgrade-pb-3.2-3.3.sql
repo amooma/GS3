@@ -1,3 +1,4 @@
+// gs 3.3 private phonebook
 CREATE TABLE IF NOT EXISTS `pb_prv` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -17,6 +18,17 @@ CREATE TABLE IF NOT EXISTS `pb_prv` (
   KEY `uid_cat_firstname_lastname` (`user_id`,`cat_id`,`firstname`,`lastname`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+// alter existing 3.2 private phonebook
+ALTER TABLE `pb_prv`  ADD `ptype` VARCHAR(16) NOT NULL COMMENT 'cell,work,home';
+ALTER TABLE `pb_prv` ADD `vcard_id` int(11) NOT NULL;
+ALTER TABLE `pb_prv` ADD `cat_id` int(11) NOT NULL;
+ALTER TABLE `pb_prv` ADD `modified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE `pb_prv` ADD INDEX `uid_vcard` (`user_id`,`vcard_id`);
+ALTER TABLE `pb_prv` ADD INDEX `uid_cat_lastname_firstname` (`user_id`,`cat_id`,`lastname`,`firstname`);
+ALTER TABLE `pb_prv` ADD INDEX `uid_cat_firstname_lastname` (`user_id`,`cat_id`,`firstname`,`lastname`);
+
+
+// import voip phone book from cloud for preparing the xml to phone functionality
 CREATE TABLE IF NOT EXISTS `pb_cloud` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -33,10 +45,11 @@ CREATE TABLE IF NOT EXISTS `pb_cloud` (
   KEY `login` (`user_id`,`login`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-ALTER TABLE `pb_prv`  ADD `ptype` VARCHAR(16) NOT NULL COMMENT 'cell,work,home';
-ALTER TABLE `pb_prv` ADD `vcard_id` int(11) NOT NULL;
-ALTER TABLE `pb_prv` ADD `cat_id` int(11) NOT NULL;
-ALTER TABLE `pb_prv` ADD `modified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE `pb_prv` ADD INDEX `uid_vcard` (`user_id`,`vcard_id`);
-ALTER TABLE `pb_prv` ADD INDEX `uid_cat_lastname_firstname` (`user_id`,`cat_id`,`lastname`,`firstname`);
-ALTER TABLE `pb_prv` ADD INDEX `uid_cat_firstname_lastname` (`user_id`,`cat_id`,`firstname`,`lastname`);
+// add categories like family etc. to phone book
+CREATE TABLE IF NOT EXISTS `pb_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `category` varchar(24) COLLATE utf8_unicode_ci NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
