@@ -71,7 +71,13 @@ $tmp = array(
 		's' => array('title' => __('Intern' ), 'id' => 3001)  ),
 	25=>array(
 		'k' => 'private',
-		's' => array('title' => __('Pers&ouml;nlich' ), 'id' => 3002)  )
+		's' => array('title' => __('Pers&ouml;nlich' ), 'id' => 3002)  ),
+	35=>array(
+		'k' => 'category' ,
+		's' => array('title' => __('Kategorien' ), 'id' => 3006)  ),
+	45=>array(
+		'k' => 'cloud' ,
+		's' => array('title' => __('Cloud' ), 'id' => 3005)  )
 );
 if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
