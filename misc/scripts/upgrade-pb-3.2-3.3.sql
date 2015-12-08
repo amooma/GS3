@@ -53,3 +53,7 @@ CREATE TABLE IF NOT EXISTS `pb_category` (
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+// set new modules active
+INSERT INTO `group_members` (`group`, `member`) VALUES (6, 3005) ON DUPLICATE KEY UPDATE `member` = 3005;
+INSERT INTO `group_members` (`group`, `member`) VALUES (6, 3006) ON DUPLICATE KEY UPDATE `member` = 3006;
