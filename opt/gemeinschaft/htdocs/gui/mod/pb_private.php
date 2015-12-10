@@ -94,11 +94,11 @@ if (($save_lname != '' || $save_fname != '') && ($save_number != '')) {
 'UPDATE `pb_prv` SET `lastname`=\''. $DB->escape($save_lname) .'\', `firstname`=\''. $DB->escape($save_fname) .'\', `number`=\''. $DB->escape($save_number) .'\', `ptype`=\''. $DB->escape($save_ptype) .'\'
 WHERE `id`='. $save_entry .' AND `user_id`='. $user_id
 		);
+		
+	}
 	$save_number = '';
 	$save_name = '';
 	$save_ptype = '';
-		
-	}
 }
 
 
