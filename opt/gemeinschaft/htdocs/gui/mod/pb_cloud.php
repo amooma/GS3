@@ -73,17 +73,19 @@ WHERE `id`='. $delete_entry .' AND `user_id`='. $user_id
 	
 }
 
-if (($save_url != '' || $save_login != '') && ($save_pass != '')) {
+if ($save_url != '' && $save_login != '' && $save_pass != '') {
 	# save entry
 
 	// check or correct frequency
-	if ( empty($save_frequency) ) {
-		$save_frequency='1d';
+	if ( strlen($save_frequency) < 2 ) {
+		$save_frequency = '1d';
 	} else {
+		$save_frequency = str_replace(' ', '', $save_frequency);
 		$p = substr($save_frequency, -1);
-		if ( ! ('h' == $p || 'd' == $p || 'm' == $p) ) {
-			$save_frequency='1d';
-		}
+		if ( ! ('h' == $p || 'd' == $p || 'm' == $p) )
+			$save_frequency = substr($save_frequency, 0, -1) . 'd';
+                if ( ! is_numeric(substr($save_frequency, 0, -1)) || substr($save_frequency, 0, -1) == '0' ) 
+			$save_frequency = '1' . substr($save_frequency, -1);
 	}
 	
 	if ($save_entry < 1) {
@@ -99,12 +101,12 @@ if (($save_url != '' || $save_login != '') && ($save_pass != '')) {
 'UPDATE `pb_cloud` SET `url`=\''. $DB->escape($save_url) .'\', `login`=\''. $DB->escape($save_login) .'\', `pass`=des_encrypt(\''. $save_pass .'\',\'' . $save_login .'\'), `frequency`=\'' . $save_frequency . '\', `next_poll`=NOW() 
  WHERE `id`='. $save_entry .' AND `user_id`='. $user_id
 		);
+		
+	}
 	$save_url = '';
 	$save_login = '';
 	$save_pass = '';
 	$save_frequency = '';
-		
-	}
 }
 
 
@@ -381,4 +383,5 @@ if ($edit_entry < 1) {
 <dt class="text">Apple Addressbook Server</dt><dd class="text">https://example.com/addressbooks/users/{resource|principal|username}/{collection}/</dd>
 </dl>
 </div>
-<p class="text"><sup>[2]</sup> Schedule: Refresh in h=hour, d=day, m=month etc., two digits followed by one char allowed<br> &nbsp; &nbsp; &nbsp; Example: Where '4h' is every 4 hours (~ also during night). Defaults to '1d'</p>
+<p class="text"><sup>[2]</sup> Schedule: h=hour, d=day, m=month (Max. 2 digits + 1 char, no minutes allowed).<br>
+ &nbsp; &nbsp; &nbsp; Example: '4h' = refresh every 4 hours (~ also during night). Defaults to '1d'.</p>
