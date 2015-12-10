@@ -6,52 +6,78 @@ CREATE TABLE IF NOT EXISTS `pb_prv` (
   `lastname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `number` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
   `ptype` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'cell,work,home',
-  `vcard_id` int(11) NOT NULL,
-  `cat_id` int(11) NOT NULL,
+  `card_id` int(10) unsigned NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `uid_lastname_firstname` (`user_id`,`lastname`(15),`firstname`(10)),
   KEY `uid_firstname_lastname` (`user_id`,`firstname`(10),`lastname`(10)),
   KEY `uid_number` (`user_id`,`number`(10)),
-  KEY `uid_vcard` (`user_id`,`vcard_id`),
-  KEY `uid_cat_lastname_firstname` (`user_id`,`cat_id`,`lastname`,`firstname`),
-  KEY `uid_cat_firstname_lastname` (`user_id`,`cat_id`,`firstname`,`lastname`)
+  KEY `uid_cardid` (`user_id`,`card_id`),
+  KEY `cloud_card_id` (`card_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 // alter existing 3.2 private phonebook
 ALTER TABLE `pb_prv`  ADD `ptype` VARCHAR(16) NOT NULL COMMENT 'cell,work,home';
-ALTER TABLE `pb_prv` ADD `vcard_id` int(11) NOT NULL;
-ALTER TABLE `pb_prv` ADD `cat_id` int(11) NOT NULL;
+ALTER TABLE `pb_prv` ADD `vcard_id` int(10) NOT NULL;
 ALTER TABLE `pb_prv` ADD `modified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE `pb_prv` ADD INDEX `uid_vcard` (`user_id`,`vcard_id`);
-ALTER TABLE `pb_prv` ADD INDEX `uid_cat_lastname_firstname` (`user_id`,`cat_id`,`lastname`,`firstname`);
-ALTER TABLE `pb_prv` ADD INDEX `uid_cat_firstname_lastname` (`user_id`,`cat_id`,`firstname`,`lastname`);
+ALTER TABLE `pb_prv` ADD INDEX `uid_cardid` (`user_id`,`card_id`);
+ALTER TABLE `pb_prv` ADD INDEX `cloud_card_id` (`card_id`);
 
 
 // import voip phone book from cloud for preparing the xml to phone functionality
 CREATE TABLE IF NOT EXISTS `pb_cloud` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
   `url` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-  `login` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `login` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `pass` varbinary(64) NOT NULL,
   `frequency` varchar(3) COLLATE utf8_unicode_ci NOT NULL DEFAULT '1d',
+  `ctag` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `last_remote_modified` datetime NOT NULL,
   `next_poll` datetime NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
+  UNIQUE KEY `uid_url_login` (`user_id`,`url`(255),`login`),
   KEY `next_poll` (`next_poll`),
-  KEY `url` (`user_id`,`url`(255)),
-  KEY `login` (`user_id`,`login`)
+  KEY `uid_login` (`user_id`,`login`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-// add categories like family etc. to phone book
+// holds the vcards
+CREATE TABLE IF NOT EXISTS `pb_cloud_card` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cloud_id` int(10) unsigned NOT NULL,
+  `vcard_id` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `etag` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `vcard` text COLLATE utf8_unicode_ci NOT NULL,
+  `last_modified` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cloud_id_vcard_id` (`cloud_id`,`vcard_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+// add categories (i.e like family, company etc.)
 CREATE TABLE IF NOT EXISTS `pb_category` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
   `category` varchar(24) COLLATE utf8_unicode_ci NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uid_catid` (`user_id`,`category`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+// connect a phone book entry to a category
+CREATE TABLE IF NOT EXISTS `pb_prv_category` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `cat_id` int(10) unsigned NOT NULL,
+  `card_id` int(10) unsigned NOT NULL,
+  `prv_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `uid_catid_cardid` (`user_id`,`cat_id`,`card_id`),
+  KEY `uid_prvid` (`user_id`,`prv_id`),
+  KEY `uid_cardid` (`user_id`,`card_id`),
+  KEY `card_id` (`card_id`),
+  KEY `prv_id` (`prv_id`),
+  KEY `cat_id` (`cat_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 // set new modules active
