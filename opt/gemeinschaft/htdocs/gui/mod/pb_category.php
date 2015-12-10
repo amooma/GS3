@@ -83,9 +83,9 @@ if ( $save_category != '' ) {
 'UPDATE `pb_category` SET `category`=\''. $DB->escape($save_category) .'\' 
  WHERE `id`='. $save_entry .' AND `user_id`='. $user_id
 		);
-	$save_category = '';
 		
 	}
+	$save_category = '';
 }
 
 
