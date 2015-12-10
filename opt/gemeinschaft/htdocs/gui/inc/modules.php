@@ -77,7 +77,7 @@ $tmp = array(
 		's' => array('title' => __('Kategorien' ), 'id' => 3006)  ),
 	45=>array(
 		'k' => 'cloud' ,
-		's' => array('title' => __('Cloud' ), 'id' => 3005)  )
+		's' => array('title' => __('Cloud Import' ), 'id' => 3005)  )
 );
 if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
 	$pos = (int)gs_get_conf('GS_PB_IMPORTED_ORDER', 9) * 10;
