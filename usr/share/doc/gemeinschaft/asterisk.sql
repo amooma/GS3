@@ -6180,6 +6180,8 @@ INSERT INTO `group_members` VALUES (6,3001);
 INSERT INTO `group_members` VALUES (6,3002);
 INSERT INTO `group_members` VALUES (6,3003);
 INSERT INTO `group_members` VALUES (6,3004);
+INSERT INTO `group_members` VALUES (6,3005);
+INSERT INTO `group_members` VALUES (6,3006);
 INSERT INTO `group_members` VALUES (6,4000);
 INSERT INTO `group_members` VALUES (6,4001);
 INSERT INTO `group_members` VALUES (6,4002);
@@ -6673,24 +6675,91 @@ INSERT INTO `pb_ldap` VALUES ('012345','TEST','HANS','123','2007-05-24 07:28:28'
 UNLOCK TABLES;
 
 --
+-- Tabellenstruktur für Tabelle `pb_category`
+--
+
+CREATE TABLE IF NOT EXISTS `pb_category` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `category` varchar(24) COLLATE utf8_unicode_ci NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uid_catid` (`user_id`,`category`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Tabellenstruktur für Tabelle `pb_cloud`
+--
+
+CREATE TABLE IF NOT EXISTS `pb_cloud` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `url` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `login` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `pass` varbinary(64) NOT NULL,
+  `frequency` varchar(3) COLLATE utf8_unicode_ci NOT NULL DEFAULT '1d',
+  `ctag` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `last_remote_modified` datetime NOT NULL,
+  `next_poll` datetime NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uid_url_login` (`user_id`,`url`(255),`login`),
+  KEY `next_poll` (`next_poll`),
+  KEY `uid_login` (`user_id`,`login`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Tabellenstruktur für Tabelle `pb_cloud_card`
+--
+
+CREATE TABLE IF NOT EXISTS `pb_cloud_card` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cloud_id` int(10) unsigned NOT NULL,
+  `vcard_id` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `etag` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `vcard` text COLLATE utf8_unicode_ci NOT NULL,
+  `last_modified` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cloud_id_vcard_id` (`cloud_id`,`vcard_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Tabellenstruktur für Tabelle `pb_category`
+--
+
+CREATE TABLE IF NOT EXISTS `pb_category` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `category` varchar(24) COLLATE utf8_unicode_ci NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uid_catid` (`user_id`,`category`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
 -- Table structure for table `pb_prv`
 --
 
 DROP TABLE IF EXISTS `pb_prv`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `pb_prv` (
+DROP TABLE IF EXISTS `pb_prv`;
+CREATE TABLE IF NOT EXISTS `pb_prv` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `firstname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `lastname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `number` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
+  `ptype` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'cell,work,home',
+  `card_id` int(10) unsigned NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `uid_lastname_firstname` (`user_id`,`lastname`(15),`firstname`(10)),
   KEY `uid_firstname_lastname` (`user_id`,`firstname`(10),`lastname`(10)),
   KEY `uid_number` (`user_id`,`number`(10)),
-  CONSTRAINT `pb_prv_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `uid_vcard` (`user_id`,`card_id`),
+  KEY `cloud_card_id` (`card_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7655,4 +7724,3 @@ USE `asterisk`;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2010-10-19 19:30:00
-
