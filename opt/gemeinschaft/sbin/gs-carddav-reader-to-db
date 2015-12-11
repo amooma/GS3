@@ -93,32 +93,29 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 	
 	$n = array();
 	$acat = array();
+	$aparam = array();
 	$fn   = '';
 	$ln   = '';
 	foreach ( $tmp_vcard as $value ) {
 		if ( empty( $value ) ) continue;
 
-		$elem = substr($value, strpos($value, ':') + 1 );
-		$key  = substr($value, 0, strpos($value, ':') );
+		$pos = strpos($value, ':');
+		$elem = trim(substr($value, $pos + 1 ));
+		$aparam = explode(';', substr($value, 0, $pos));
+		$key  = strtoupper( array_shift( $aparam ) );
+
 		if     ( 'N' == $key ) {
-			$elem = trim($elem);
 			$aname = explode(';', $elem);
-			$ln = array_shift ( $aname );
+			$ln = array_shift( $aname );
 			for ($i = count($aname); $i >= 0; $i--) {
 				if ( empty($aname[$i]) ) continue;
 				$fn .= ' ' . $aname[$i];
 			}
 			$fn = ltrim( $fn );
 		}
-		if ( empty( $ln) ) {
-			$ln = $fn;
-			$fn='';
-		}
+		if ( empty( $ln) ) { $ln = $fn; $fn=''; }
 
-		elseif ( 'TEL' == substr($key, 0, 3) ) {
-			$elem = trim($elem);
-			$ptype =  strtolower( substr($key, strpos($key, '=') + 1) );
-			
+		elseif ( 'TEL' == $key ) {
 			if ( '+' == substr($elem, 0, 1) ) 
 				$elem = GS_CANONIZE_INTL_PREFIX . substr($elem, 1);
 				
@@ -127,18 +124,27 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 			if ( GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE == substr($number, 0, strlen(GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE) ) ) 
 				$number = GS_CANONIZE_NATL_PREFIX . substr($number, strlen(GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE));
 
-			// insert number
-			$n[$number] = $ptype;
+			// add number to array, making it singular
+			$n[$number] = array( 'type' => '', 'pref' => 99 );
+
+			// add attributes to the number
+			foreach ( $aparam as $param ) {
+				if ( empty($param) ) continue;
+				$k2 = explode('=', strtoupper( $param ));
+				if ( 'TYPE' == $k2[0] ) {
+					if ( $k2[1] == 'PREF' ) $n[$number]['pref'] = 0;
+					else $n[$number]['type'] .= strtolower( $k2[1] ) . ',';
+				}
+				elseif ( 'PREF' == $key2 ) $n[$number]['pref'] = $value2;
+			}
+			$n[$number]['type'] = rtrim($n[$number]['type'], ',');
 		}
 
-		elseif ( 'CATEGORIES' == $key ) {
-			$elem = trim($elem);
-			$acat = explode( ',', $elem );
-		}
+		elseif ( 'CATEGORIES' == $key ) $acat = explode( ',', $elem );
 	}
 	
 	// loop over phone numbers
-	foreach ( $n as $number => $ptype ) {
+	foreach ( $n as $number => $param ) {
 
 		// check_duplicates from within a vcard
 		if ( $prc = $DB->execute('SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $vcr['user_id'] . ' and `firstname`=\'' . $fn . '\' and `lastname`=\'' . $ln . '\' and `number`=\'' . $number . '\' and `card_id`=0')->fetchRow() )
@@ -146,12 +152,12 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 
 		// add a phone record
 		$DB->execute('INSERT INTO `pb_prv` ' .
-			' (`user_id`,`firstname`,`lastname`,`number`,`ptype`,`card_id`) ' .
-			' VALUES(' . $vcr['user_id'] .',\'' . $fn .'\',\'' . $ln .'\',\'' . $number .'\',\'' . $ptype .'\',' . $lvc['id'] . ')');
+			' (`user_id`,`firstname`,`lastname`,`number`,`ptype`,`pref`,`card_id`) ' .
+			' VALUES(' . $vcr['user_id'] .',\'' . $fn .'\',\'' . $ln .'\',\'' . $number .'\',\'' . $param['type'] .'\',' . $param['pref'] . ',' . $lvc['id'] . ')');
 
 		// loop over categories
 		if ( ! empty( $acat) ) {
-			$prc = $DB->execute( 'SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $vcr['user_id'] . ' and `firstname`=\'' . $fn  . '\' and `lastname`=\'' . $ln  . '\' and `number`=\'' . $number . '\' and `ptype`=\'' . $ptype . '\' and `card_id`=' . $lvc['id'])->fetchRow();
+			$prc = $DB->execute( 'SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $vcr['user_id'] . ' and `firstname`=\'' . $fn  . '\' and `lastname`=\'' . $ln  . '\' and `number`=\'' . $number . '\' and `ptype`=\'' . $param['type'] . '\' and `card_id`=' . $lvc['id'])->fetchRow();
 			foreach ( $acat as $cat ) {
 				if ( empty($cat) ) continue;
 				if ( ! $crc = $DB->execute( 'SELECT `id` FROM `pb_category` WHERE `user_id`=' . $vcr['user_id'] . ' and `category`=\'' . $cat  . '\'')->fetchRow() ) {
