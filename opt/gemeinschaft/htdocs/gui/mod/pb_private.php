@@ -119,7 +119,7 @@ if ($number != '') {
 	
 	$rs = $DB->execute(
 		'SELECT SQL_CALC_FOUND_ROWS '.
-			'`id`, `lastname`, `firstname`, `number` , `ptype` '.
+			'`id`, `lastname`, `firstname`, `number` , `ptype`, `card_id` '.
 		'FROM '.
 			'`pb_prv` '.
 		'WHERE '.
@@ -147,7 +147,7 @@ if ($number != '') {
 	
 	$rs = $DB->execute(
 		'SELECT SQL_CALC_FOUND_ROWS '.
-			'`id`, `lastname`, `firstname`, `number`, `ptype` '.
+			'`id`, `lastname`, `firstname`, `number`, `ptype`, `card_id` '.
 		'FROM '.
 			'`pb_prv` '.
 		'WHERE '.
@@ -314,8 +314,10 @@ if (@$rs) {
 				(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 				? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
 			echo '<a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', rawUrlEncode($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a> &nbsp; ';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page), '" title="', __('entfernen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			if ( ! $r['card_id'] ) {
+				echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+				echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page), '" title="', __('entfernen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			}
 			echo '</td>';
 			
 		}
