@@ -383,5 +383,7 @@ if ($edit_entry < 1) {
 <dt class="text">Apple Addressbook Server</dt><dd class="text">https://example.com/addressbooks/users/{resource|principal|username}/{collection}/</dd>
 </dl>
 </div>
-<p class="text"><sup>[2]</sup> Schedule: h=hour, d=day, m=month (Max. 2 digits + 1 char, no minutes allowed).<br>
- &nbsp; &nbsp; &nbsp; Example: '4h' = refresh every 4 hours (~ also during night). Defaults to '1d'.</p>
+<p class="text"><sup>[2]</sup> Schedule: Defaults to '1d', the first/next update will happen within half an hour.<br>
+ &nbsp; &nbsp; &nbsp; Where h=hour, d=day, m=month (Max. 2 digits plus 1 char, no blank/minutes allowed).<br>
+ &nbsp; &nbsp; &nbsp; Example: <i>12h</i> =~ refresh every 12 hours (~ also during night), starting with now (save time).<br>
+ &nbsp; &nbsp; &nbsp; You can <i>trigger</i> a refresh using <i>edit</i> and <i>save</i> with no other changes.<p>
