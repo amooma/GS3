@@ -6,20 +6,28 @@ CREATE TABLE IF NOT EXISTS `pb_prv` (
   `lastname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `number` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
   `ptype` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'cell,work,home',
+  `pref` int(2) unsigned NOT NULL DEFAULT '9',
   `card_id` int(10) unsigned NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `uid_lastname_firstname` (`user_id`,`lastname`(15),`firstname`(10)),
-  KEY `uid_firstname_lastname` (`user_id`,`firstname`(10),`lastname`(10)),
-  KEY `uid_number` (`user_id`,`number`(10)),
-  KEY `uid_cardid` (`user_id`,`card_id`),
-  KEY `cloud_card_id` (`card_id`)
+  KEY `uid_vcard` (`user_id`,`card_id`),
+  KEY `cloud_card_id` (`card_id`),
+  KEY `uid_lastname_firstname_pref` (`user_id`,`lastname`(15),`firstname`(10),`pref`,`ptype`),
+  KEY `uid_number_pref` (`user_id`,`number`(10),`pref`,`ptype`),
+  KEY `uid_firstname_lastname_pref` (`user_id`,`firstname`(10),`lastname`(10),`pref`,`ptype`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 // alter existing 3.2 private phonebook
-ALTER TABLE `pb_prv`  ADD `ptype` VARCHAR(16) NOT NULL COMMENT 'cell,work,home';
+ALTER TABLE `pb_prv` ADD `ptype` VARCHAR(16) NOT NULL COMMENT 'cell,work,home';
+ALTER TABLE `pb_prv` ADD `pref` int(2) unsigned NOT NULL DEFAULT '9';
 ALTER TABLE `pb_prv` ADD `vcard_id` int(10) NOT NULL;
 ALTER TABLE `pb_prv` ADD `modified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE `asterisk`.`pb_prv` DROP INDEX `uid_firstname_lastname_pref` ,
+ ADD INDEX `uid_firstname_lastname_pref` ( `user_id` , `firstname` ( 10 ) , `lastname` ( 10 ) , `pref` , `ptype` );
+ALTER TABLE `asterisk`.`pb_prv` DROP INDEX `uid_lastname_firstname_pref` , 
+ ADD INDEX `uid_lastname_firstname_pref` ( `user_id` , `lastname` ( 15 ) , `firstname` ( 10 ) , `pref` , `ptype` );
+ALTER TABLE `asterisk`.`pb_prv` DROP INDEX `uid_number_pref` ,
+ ADD INDEX `uid_number_pref` ( `user_id` , `number` ( 10 ) , `pref` , `ptype` );
 ALTER TABLE `pb_prv` ADD INDEX `uid_cardid` (`user_id`,`card_id`);
 ALTER TABLE `pb_prv` ADD INDEX `cloud_card_id` (`card_id`);
 
