@@ -6724,26 +6724,12 @@ CREATE TABLE IF NOT EXISTS `pb_cloud_card` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Tabellenstruktur für Tabelle `pb_category`
---
-
-CREATE TABLE IF NOT EXISTS `pb_category` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL,
-  `category` varchar(24) COLLATE utf8_unicode_ci NOT NULL,
-  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uid_catid` (`user_id`,`category`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
 -- Table structure for table `pb_prv`
 --
 
 DROP TABLE IF EXISTS `pb_prv`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-DROP TABLE IF EXISTS `pb_prv`;
 CREATE TABLE IF NOT EXISTS `pb_prv` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -6751,14 +6737,15 @@ CREATE TABLE IF NOT EXISTS `pb_prv` (
   `lastname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `number` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
   `ptype` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'cell,work,home',
+  `pref` int(2) unsigned NOT NULL DEFAULT '9',
   `card_id` int(10) unsigned NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `uid_lastname_firstname` (`user_id`,`lastname`(15),`firstname`(10)),
-  KEY `uid_firstname_lastname` (`user_id`,`firstname`(10),`lastname`(10)),
-  KEY `uid_number` (`user_id`,`number`(10)),
   KEY `uid_vcard` (`user_id`,`card_id`),
-  KEY `cloud_card_id` (`card_id`)
+  KEY `cloud_card_id` (`card_id`),
+  KEY `uid_lastname_firstname_pref` (`user_id`,`lastname`(15),`firstname`(10),`pref`,`ptype`),
+  KEY `uid_number_pref` (`user_id`,`number`(10),`pref`,`ptype`),
+  KEY `uid_firstname_lastname_pref` (`user_id`,`firstname`(10),`lastname`(10),`pref`,`ptype`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6770,6 +6757,22 @@ LOCK TABLES `pb_prv` WRITE;
 /*!40000 ALTER TABLE `pb_prv` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pb_prv` ENABLE KEYS */;
 UNLOCK TABLES;
+
+-- connect a phone book entry to a category
+CREATE TABLE IF NOT EXISTS `pb_prv_category` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `cat_id` int(10) unsigned NOT NULL,
+  `card_id` int(10) unsigned NOT NULL,
+  `prv_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `uid_catid_cardid` (`user_id`,`cat_id`,`card_id`),
+  KEY `uid_prvid` (`user_id`,`prv_id`),
+  KEY `uid_cardid` (`user_id`,`card_id`),
+  KEY `card_id` (`card_id`),
+  KEY `prv_id` (`prv_id`),
+  KEY `cat_id` (`cat_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Table structure for table `penalties`
