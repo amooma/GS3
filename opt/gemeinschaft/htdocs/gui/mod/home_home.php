@@ -9,6 +9,8 @@
 * Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
 * Philipp Kempgen <philipp.kempgen@amooma.de>
 * Peter Kozak <peter.kozak@amooma.de>
+* STD Markus Neubauer <markus.neubauer@email-online.org> 
+*  - added view for cloud books
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -297,6 +299,7 @@ LIMIT 5'
 			
 			?>
 		</div>
+
 	</div>
 	
 	<div class="fl" style="width:49%; min-width:20em; max-width:30em; margin:1px;">
@@ -317,6 +320,59 @@ LIMIT 5'
 			</button>
 			</form>
 		</div>
+	</div>
+</div>
+
+<div class="ie_clearing"></div>
+
+<div class="fl" style="clear:right; width:99%; margin:0.2em 0;">
+
+	<div class="fl" style="width:49%; min-width:20em; max-width:35em; margin:1px;">
+
+	<?php
+                $rs = $DB->execute(
+'SELECT `url`, `login`, `message`, `active`, `error_count` 
+FROM
+        `pb_cloud`
+WHERE
+        `user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] . ' 
+ORDER BY `active`, `error_count` DESC
+LIMIT 5'
+                );
+	?>
+	
+	        <div class="th" style="padding:0.35em 0.5em; margin-bottom:2px;">
+                        <img alt=" " src="<?php echo GS_URL_PATH, 'crystal-svg/16/act/contents.png'; ?>" />&nbsp;
+                        <a href="<?php echo gs_url('pb','cloud'); ?>"><?php
+                                echo __('Cloud Telefonb&uuml;cher');
+                        ?></a>
+                </div>
+                <div class="td" style="padding:0.0em;">
+                        <?php
+                        
+                        echo '<table cellspacing="1" style="width:100%;">' ,"\n";
+                        echo '<tbody>' ,"\n";
+                        $i=0;
+                        while ($r = $rs->fetchRow()) {
+                                echo '<tr class="', ($i%2?'even':'odd') ,'">' ,"\n";
+                                echo '<td style="width:30%;">', htmlEnt($r['url']) ,', Status: ';
+                                echo htmlEnt($r['message']) ,'</td>' ,"\n";
+                                echo '</tr>' ,"\n";
+                                ++$i;
+                        }
+                        if ($i===0) {
+                                echo '<tr>' ,"\n";
+                                echo '<td colspan="2"><i>', __('keine') ,'</i></td>' ,"\n";
+                                echo '</tr>' ,"\n";
+                        }
+                        echo '</tbody>' ,"\n";
+                        echo '</table>' ,"\n";
+                          
+                        ?>
+                </div>	
+	
+	</div>
+	<div class="fl" style="width:49%; min-width:20em; max-width:30em; margin:1px;">
 
 		<div class="th" style="padding:0.35em 0.5em; margin-bottom:2px;">
 			<img alt=" " src="<?php echo GS_URL_PATH, 'crystal-svg/16/app/display.png'; ?>" />&nbsp;
