@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS `pb_prv` (
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `uid_vcard` (`user_id`,`card_id`),
-  KEY `cloud_card_id` (`card_id`),
   KEY `uid_lastname_firstname_pref` (`user_id`,`lastname`(15),`firstname`(10),`pref`,`ptype`),
+  KEY `cloud_card_id` (`card_id`),
   KEY `uid_number_pref` (`user_id`,`number`(10),`pref`,`ptype`),
   KEY `uid_firstname_lastname_pref` (`user_id`,`firstname`(10),`lastname`(10),`pref`,`ptype`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -23,7 +23,7 @@ ALTER TABLE `pb_prv` ADD `pref` int(2) unsigned NOT NULL DEFAULT '9';
 ALTER TABLE `pb_prv` ADD `vcard_id` int(10) NOT NULL;
 ALTER TABLE `pb_prv` ADD `modified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE `asterisk`.`pb_prv` DROP INDEX `uid_firstname_lastname_pref` ,
- ADD INDEX `uid_firstname_lastname_pref` ( `user_id` , `firstname` ( 10 ) , `lastname` ( 10 ) , `pref` , `ptype` );
+ ADD INDEX `uid_firstname_lastname_pref` ( `user_id` , `firstname` ( 10 ) , `lastname` ( 15 ) , `pref` , `ptype` );
 ALTER TABLE `asterisk`.`pb_prv` DROP INDEX `uid_lastname_firstname_pref` , 
  ADD INDEX `uid_lastname_firstname_pref` ( `user_id` , `lastname` ( 15 ) , `firstname` ( 10 ) , `pref` , `ptype` );
 ALTER TABLE `asterisk`.`pb_prv` DROP INDEX `uid_number_pref` ,
@@ -44,10 +44,13 @@ CREATE TABLE IF NOT EXISTS `pb_cloud` (
   `last_remote_modified` datetime NOT NULL,
   `next_poll` datetime NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `message` tinytext COLLATE utf8_unicode_ci NOT NULL,
+  `error_count` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid_url_login` (`user_id`,`url`(255),`login`),
   KEY `next_poll` (`next_poll`),
-  KEY `uid_login` (`user_id`,`login`)
+  KEY `uid_login_url` (`user_id`,`login`,`url`(255))
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 // holds the vcards
@@ -85,9 +88,8 @@ CREATE TABLE IF NOT EXISTS `pb_prv_category` (
   KEY `uid_cardid` (`user_id`,`card_id`),
   KEY `card_id` (`card_id`),
   KEY `prv_id` (`prv_id`),
-  KEY `cat_id` (`cat_id`)
+  KEY `catid_uid` (`cat_id`,`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 // set new modules active
 INSERT INTO `group_members` (`group`, `member`) VALUES (6, 3005) ON DUPLICATE KEY UPDATE `member` = 3005;
-INSERT INTO `group_members` (`group`, `member`) VALUES (6, 3006) ON DUPLICATE KEY UPDATE `member` = 3006;
