@@ -57,6 +57,7 @@ $per_page = (int)GS_GUI_NUM_RESULTS;
 $name         =      trim(@$_REQUEST['name'   ]);
 $number       =      trim(@$_REQUEST['number' ]);
 $ptype        =      trim(@$_REQUEST['ptype' ]);
+$catid        =      trim(@$_REQUEST['catid' ]);
 $save_lname   =      trim(@$_REQUEST['slname' ]);
 $save_fname   =      trim(@$_REQUEST['sfname' ]);
 $save_number  =      trim(@$_REQUEST['snumber']);
@@ -101,68 +102,72 @@ WHERE `id`='. $save_entry .' AND `user_id`='. $user_id
 	$save_ptype = '';
 }
 
+if ( empty($catid) && isset($SESSION['catid']) ) $catid=(int)@$SESSION['catid'];
+elseif ( empty($catid) ) $catid=0;
 
+$sel = ( $catid == 0 ) ? ' selected="selected"' : '';
+$ac = array('<option value="0"'.$sel.'>' . __('Alle Kategorien') . '</option>');
 
+$cs = $DB->execute(
+        'SELECT `c`.`id`, `c`.`category` '.
+	'FROM   `pb_category` `c` '.
+        'LEFT JOIN `pb_prv_category` `p` ON `c`.`id` = `p`.`cat_id` ' .
+	'WHERE '.
+	        '`p`.`id` IS NOT NULL AND ' .
+		'`c`.`user_id`='. $DB->escape($user_id).' '.
+        'GROUP BY `c`.`category` '.
+	'ORDER BY `c`.`category`'
+	);
+while ( $r = $cs->fetchRow() ) {
+       	$sel = ($catid == @$r['id']) ? ' selected="selected"' : '';
+        $ac[] = '<option value="' . $r['id'] . '"' . $sel . '>' . $r['category'] . '</option>';
+}
 
+$query = 'SELECT SQL_CALC_FOUND_ROWS '.
+			'`p`.`id`, `p`.`lastname`, `p`.`firstname`, `p`.`number` , `p`.`ptype`, `p`.`card_id`'.
+		' FROM `pb_prv` `p`';
+$where = ' WHERE `p`.`user_id`='. $user_id;
 
 if ($number != '') {
-	
+
 	# search by number
-	
+	$name = '';
 	$search_url = 'number='. urlEncode($number);
-	
 	$number_sql = str_replace(
 		array( '*', '?' ),
 		array( '%', '_' ),
 		$number
 	) .'%';
-	
-	$rs = $DB->execute(
-		'SELECT SQL_CALC_FOUND_ROWS '.
-			'`id`, `lastname`, `firstname`, `number` , `ptype`, `card_id` '.
-		'FROM '.
-			'`pb_prv` '.
-		'WHERE '.
-			'`number` LIKE \''. $DB->escape($number_sql) .'\' '.
-			'AND '.
-			'`user_id`='. $user_id .' '.
-		'ORDER BY `lastname`, `firstname`, `pref`, `ptype` '.
-		'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
-		);
-	$num_total = @$DB->numFoundRows();
-	$num_pages = ceil($num_total / $per_page);
-	
+        $where .= ' AND `p`.`number` LIKE \''. $DB->escape($number_sql) .'\' ';
+
 } else {
-	
+
 	# search by name
-	
 	$number = '';
 	$search_url = 'name='. urlEncode($name);
-	
 	$name_sql = str_replace(
 		array( '*', '?' ),
 		array( '%', '_' ),
 		$name
 	) .'%';
-	
-	$rs = $DB->execute(
-		'SELECT SQL_CALC_FOUND_ROWS '.
-			'`id`, `lastname`, `firstname`, `number`, `ptype`, `card_id` '.
-		'FROM '.
-			'`pb_prv` '.
-		'WHERE '.
-			'( `lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR '.
-			'  `firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci ) '.
-			'AND '.
-			'`user_id`='. $DB->escape($user_id).' '.
-		'ORDER BY `lastname`, `firstname`, `pref`, `ptype` '.
-		'LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
-		);
-	$num_total = @$DB->numFoundRows();
-	$num_pages = ceil($num_total / $per_page);
-	
+        $where .= ' AND ( `p`.`lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR '.
+                    ' `p`.`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci ) ';
 }
 
+if ( $catid != 0 ) {
+        $search_url .= '&amp;catid='. $catid;
+        $query .= ' LEFT JOIN `pb_prv_category` `pc` ON `p`.`id` = `pc`.`prv_id` ';
+        $where .= ' AND `pc`.`cat_id` = ' . $catid;
+}
+$SESSION['catid']=$catid;
+
+$order = ' ORDER BY `p`.`lastname`, `p`.`firstname`, `p`.`pref`, `p`.`ptype` ';
+$limit = ' LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
+
+$rs = $DB->execute( $query . $where . $order . $limit);
+
+$num_total = @$DB->numFoundRows();
+$num_pages = ceil($num_total / $per_page);
 
 ?>
 
@@ -170,8 +175,9 @@ if ($number != '') {
 <thead>
 <tr>
 	<th style="width:270px;"><?php echo __('Name suchen'); ?></th>
-	<th style="width:200px;"><?php echo __('Nummer suchen'); ?></th>
-	<th style="width:220px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
+	<th style="width:170px;"><?php echo __('Nummer suchen'); ?></th>
+	<th style="width:138px;"><?php echo __('Kategorie'); ?> <sup>[1]</sup></th>
+	<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
 </tr>
 </thead>
 <tbody>
@@ -194,6 +200,19 @@ if ($number != '') {
 			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
 		</button>
 		</form>
+	</td>
+	<td>
+		<?php
+	        if ( !empty($ac[1]) ) {
+                        echo '<form method="get" action="' . GS_URL_PATH .'">';
+                        echo gs_form_hidden($SECTION, $MODULE);
+        		echo '<select name="catid" onchange="this.form.submit();">';
+                        foreach ($ac as $option) {
+                                echo $option;
+                        }
+        		echo '</select></form>';
+                } else echo '&nbsp;';
+                ?>
 	</td>
 	<td rowspan="2">
 <?php
@@ -245,6 +264,7 @@ echo gs_form_hidden($SECTION, $MODULE), "\n";
 echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
 echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
 echo '<input type="hidden" name="ptype" value="', htmlEnt($ptype), '" />', "\n";
+echo '<input type="hidden" name="catid" value="', $catid, '" />', "\n";
 ?>
 
 <table cellspacing="1" class="phonebook">
@@ -253,15 +273,13 @@ echo '<input type="hidden" name="ptype" value="', htmlEnt($ptype), '" />', "\n";
 	<th style="width:270px;"<?php if ($number=='') echo ' class="sort-col"'; ?>>
 		<?php echo __('Nachname') .', '. __('Vorname'); ?>
 	</th>
-	<th style="width:200px;"<?php if ($number!='') echo ' class="sort-col"'; ?>>
+	<th style="width:170px;"<?php if ($number!='') echo ' class="sort-col"'; ?>>
 		<?php echo __('Nummer'); ?>
 	</th>
-	<th style="width:100px;"<?php if ($ptype!='') echo ' class="sort-col"'; ?>>
-		<?php echo __('Location'); ?><sup>[1]</sup>
+	<th style="width:130px;"<?php if ($ptype!='') echo ' class="sort-col"'; ?>>
+		<?php echo __('Lokation'); ?><sup>[2]</sup>
 	</th>
-	<th style="width:100px;">
-		<?php echo __('call') . '/' . __('edit') . '/' . __('delete')?>
-	</th>
+	<th style="width:100px;">&nbsp;</th>
 </tr>
 </thead>
 <tbody>
@@ -285,7 +303,7 @@ if (@$rs) {
 			echo '</td>', "\n";
 			
 			echo '<td>';
-			echo '<input type="text" name="sptype" value="', htmlEnt($r['ptype']), '" size="15" maxlength="16" style="width:100px;" />';
+			echo '<input type="text" name="sptype" value="', htmlEnt($r['ptype']), '" size="15" maxlength="16" style="width:130px;" />';
 			echo '</td>', "\n";
 			
 			echo '<td>';
@@ -323,7 +341,7 @@ if (@$rs) {
 			echo '<a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', rawUrlEncode($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a> &nbsp; ';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page), '" title="', __('entfernen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
-			if ( $r['card_id'] ) echo ' <sup>[2]</sup>';
+			if ( $r['card_id'] ) echo ' <sup>[1]</sup>';
 			echo '</td>';
 			
 		}
@@ -346,7 +364,7 @@ if ($edit_entry < 1) {
 		<input type="text" name="snumber" value="" size="15" maxlength="25" style="width:150px;" />
 	</td>
 	<td>
-		<input type="text" name="sptype" value="" size="15" maxlength="16" style="width:100px;" />
+		<input type="text" name="sptype" value="" size="15" maxlength="16" style="width:130px;" />
 	</td>
 	<td>
 		<button type="submit" title="<?php echo __('Eintrag speichern'); ?>" class="plain">
@@ -364,5 +382,6 @@ if ($edit_entry < 1) {
 
 </form>
 <br>
-<p class="text"><sup>[1]</sup> Type of phone number: cell/work/home etc.</p>
-<p class="text"><sup>[2]</sup> You can loose local changes on a refresh, rather modify/delete this entry within your cloud!</p>
+<p class="text"><sup>[1]</sup> is only shown for cloud records. You can loose local changes on a cloud record with a refresh,<br>
+ &nbsp; &nbsp; &nbsp;  rather modify/delete this entry within your cloud!</p>
+<p class="text"><sup>[2]</sup> Type of phone number: cell/work/home etc.</p>
