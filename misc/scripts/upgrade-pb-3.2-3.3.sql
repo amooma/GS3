@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `pb_prv` (
 
 // alter existing 3.2 private phonebook
 ALTER TABLE `pb_prv` ADD `ptype` VARCHAR(16) NOT NULL COMMENT 'cell,work,home';
-ALTER TABLE `pb_prv` ADD `pref` int(2) unsigned NOT NULL DEFAULT '9';
+ALTER TABLE `pb_prv` ADD `pref` int(2) unsigned NOT NULL DEFAULT '2';
 ALTER TABLE `pb_prv` ADD `vcard_id` int(10) NOT NULL;
 ALTER TABLE `pb_prv` ADD `modified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE `asterisk`.`pb_prv` DROP INDEX `uid_firstname_lastname_pref` ,
