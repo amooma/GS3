@@ -189,7 +189,7 @@ echo '<input type="hidden" name="category" value="', htmlEnt($category), '" />',
 <table cellspacing="1" class="phonebook">
 <thead>
 <tr>
-	<th style="width:270px;"<?php if ($category=='') echo ' class="sort-col"'; ?>>
+	<th style="width:350px;"<?php if ($category=='') echo ' class="sort-col"'; ?>>
 		<?php echo __('Kategorie'); ?>
 	</th>
 </tr>
@@ -206,7 +206,7 @@ if (@$rs) {
 		if ($r['id']==$edit_entry) {
  			
 			echo '<td>';
-			echo '<input type="text" name="scategory" value="', htmlEnt($r['category']), '" size="15" maxlength="256" style="width:250px;" />';
+			echo '<input type="text" name="scategory" value="', htmlEnt($r['category']), '" size="50" maxlength="256" style="width:300px;" />';
 			echo '</td>', "\n";
 			
 			echo '<td>';
@@ -249,7 +249,7 @@ if (@$rs) {
 if ($edit_entry < 1) {
 ?>
 	<td>
-		<input type="category" name="scategory" value="" size="30" maxlength="256" style="width:250px;" />
+		<input type="category" name="scategory" value="" size="50" maxlength="256" style="width:300px;" />
 	</td>
 	<td>
 		<button type="submit" title="<?php echo __('Eintrag speichern'); ?>" class="plain">
@@ -266,3 +266,5 @@ if ($edit_entry < 1) {
 </table>
 
 </form>
+<p class="text">Hint: Categories are coming from the cloud and<br>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; must be changed within the cloud to really become active here.</p>
