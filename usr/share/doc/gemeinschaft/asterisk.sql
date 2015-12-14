@@ -6677,7 +6677,7 @@ UNLOCK TABLES;
 --
 -- Tabellenstruktur für Tabelle `pb_category`
 --
-
+DROP TABLE IF EXISTS `pb_category`;
 CREATE TABLE IF NOT EXISTS `pb_category` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
@@ -6690,7 +6690,7 @@ CREATE TABLE IF NOT EXISTS `pb_category` (
 --
 -- Tabellenstruktur für Tabelle `pb_cloud`
 --
-
+DROP TABLE IF EXISTS `pb_cloud`;
 CREATE TABLE IF NOT EXISTS `pb_cloud` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
@@ -6702,16 +6702,19 @@ CREATE TABLE IF NOT EXISTS `pb_cloud` (
   `last_remote_modified` datetime NOT NULL,
   `next_poll` datetime NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `message` tinytext COLLATE utf8_unicode_ci NOT NULL,
+  `error_count` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid_url_login` (`user_id`,`url`(255),`login`),
   KEY `next_poll` (`next_poll`),
-  KEY `uid_login` (`user_id`,`login`)
+  KEY `uid_login_url` (`user_id`,`login`,`url`(255))
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Tabellenstruktur für Tabelle `pb_cloud_card`
 --
-
+DROP TABLE IF EXISTS `pb_cloud_card`;
 CREATE TABLE IF NOT EXISTS `pb_cloud_card` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cloud_id` int(10) unsigned NOT NULL,
@@ -6742,8 +6745,8 @@ CREATE TABLE IF NOT EXISTS `pb_prv` (
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `uid_vcard` (`user_id`,`card_id`),
-  KEY `cloud_card_id` (`card_id`),
   KEY `uid_lastname_firstname_pref` (`user_id`,`lastname`(15),`firstname`(10),`pref`,`ptype`),
+  KEY `cloud_card_id` (`card_id`),
   KEY `uid_number_pref` (`user_id`,`number`(10),`pref`,`ptype`),
   KEY `uid_firstname_lastname_pref` (`user_id`,`firstname`(10),`lastname`(10),`pref`,`ptype`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
