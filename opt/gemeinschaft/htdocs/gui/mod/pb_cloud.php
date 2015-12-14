@@ -67,10 +67,38 @@ if ($delete_entry > 0) {
 	# delete entry
 	
 	$rs = $DB->execute(
-'DELETE FROM `pb_cloud`
-WHERE `id`='. $delete_entry .' AND `user_id`='. $user_id
+'DELETE FROM `pb_cloud` ' .
+     ' WHERE `id`='. $delete_entry .
+       ' AND `user_id`='. $user_id
 	);
-	
+	$rs2 = $DB->execute(
+'DELETE FROM `pb_cloud_card` ' .
+     ' WHERE `cloud_id`='. $delete_entry
+	);
+	$rs2 = $DB->execute(
+'DELETE p FROM `pb_prv` AS p ' . 
+   ' LEFT JOIN `pb_cloud_card` AS c ' .
+          ' ON  c.id = p.card_id ' . 
+       ' WHERE  p.user_id = ' . $user_id .
+         ' AND  p.card_id != 0 ' . 
+         ' AND  c.id IS NULL'
+	);
+	$rs2 = $DB->execute(
+'DELETE p FROM `pb_prv_category` AS p ' . 
+   ' LEFT JOIN `pb_cloud_card` AS c ' . 
+          ' ON  c.id = p.card_id' .
+       ' WHERE  p.user_id = ' . $user_id .
+         ' AND  p.card_id != 0 ' . 
+         ' AND  c.id IS NULL'
+	);
+	$rs2 = $DB->execute(
+'DELETE c FROM `pb_category` AS c ' . 
+	' LEFT JOIN `pb_prv_category` AS p ' .
+          ' ON  c.id = p.cat_id ' . 
+       ' WHERE  c.user_id = ' . $user_id .
+         ' AND  p.id IS NULL'
+	);
+
 }
 
 if ($save_url != '' && $save_login != '' && $save_pass != '') {
@@ -89,17 +117,21 @@ if ($save_url != '' && $save_login != '' && $save_pass != '') {
 	}
 	
 	if ($save_entry < 1) {
-		
+
 		$rs = $DB->execute(
-'INSERT INTO `pb_cloud` (`id`, `user_id`, `url`, `login`, `pass`, `frequency`, `next_poll`) VALUES
-(NULL, '. $user_id .', \''. $DB->escape($save_url) .'\', \''. $DB->escape($save_login) .'\', des_encrypt(\''. $save_pass .'\',\'' . $save_login. '\'), \''. $DB->escape($save_frequency) .'\', NOW())'
+'INSERT INTO `pb_cloud` ' . 
+          ' (`id`, `user_id`, `url`, `login`, `pass`, `frequency`, `next_poll`, `message`) ' .
+    ' VALUES' .
+        '(NULL, '. $user_id .', \''. $DB->escape($save_url) .'\', \''. $DB->escape($save_login) .'\', des_encrypt(\''. $save_pass .'\',\'' . $save_login. '\'), \''. $DB->escape($save_frequency) .'\', NOW(), \'Scheduled\')'
 		);
 		
 	} else {
 		
 		$rs = $DB->execute(
-'UPDATE `pb_cloud` SET `url`=\''. $DB->escape($save_url) .'\', `login`=\''. $DB->escape($save_login) .'\', `pass`=des_encrypt(\''. $save_pass .'\',\'' . $save_login .'\'), `frequency`=\'' . $save_frequency . '\', `next_poll`=NOW() 
- WHERE `id`='. $save_entry .' AND `user_id`='. $user_id
+'UPDATE `pb_cloud` ' .
+  ' SET `url`=\''. $DB->escape($save_url) .'\', `login`=\''. $DB->escape($save_login) .'\', `pass`=des_encrypt(\''. $save_pass .'\',\'' . $save_login .'\'), ' .
+       ' `frequency`=\'' . $save_frequency . '\', `next_poll`=NOW(), message=\'Scheduled\', last_remote_modified=\'2000-01-01 00:00:00\', active=1 ' .
+' WHERE `id`='. $save_entry .' AND `user_id`='. $user_id
 		);
 		
 	}
@@ -127,7 +159,7 @@ if ($url != '') {
 	
 	$rs = $DB->execute(
 		'SELECT SQL_CALC_FOUND_ROWS '.
-			'`id`, `url`, `login`, cast(des_decrypt(`pass`,`login`) as char(16)) as pass, `frequency` '.
+			'`id`, `url`, `login`, cast(des_decrypt(`pass`,`login`) as char(16)) as pass, `frequency`, `message` '.
 		'FROM '.
 			'`pb_cloud` '.
 		'WHERE '.
@@ -154,7 +186,7 @@ if ($url != '') {
 	
 	$rs = $DB->execute(
 		'SELECT SQL_CALC_FOUND_ROWS '.
-			'`id`, `url`, `login`, cast(des_decrypt(`pass`,`login`) as char(16)) as pass, `frequency` '.
+			'`id`, `url`, `login`, cast(des_decrypt(`pass`,`login`) as char(16)) as pass, `frequency`, `message` '.
 		'FROM '.
 			'`pb_cloud` '.
 		'WHERE '.
@@ -259,13 +291,13 @@ echo '<input type="hidden" name="login" value="', htmlEnt($login), '" />', "\n";
 		<?php echo __('vCard URL'); ?> <sup>[1]</sup>
 	</th>
 	<th style="width:200px;"<?php if ($login!='') echo ' class="sort-col"'; ?>>
-		<?php echo __('Login'); ?>
+		<?php echo __('Login ID'); ?>
 	</th>
-	<th style="width:200px;">
-		<?php echo __('Password'); ?>
+	<th style="width:150px;">
+		<?php echo __('Passwort'); ?>
 	</th>
 	<th style="width:50px;">
-		<?php echo __('Schedule'); ?><sup>[2]</sup>
+		<?php echo __('Zeitplan'); ?><sup>[2]</sup>
 	</th>
 	<th style="width:100px;">&nbsp;</th>
 </tr>
@@ -294,7 +326,7 @@ if (@$rs) {
 			echo '</td>', "\n";
 			
 			echo '<td>';
-			echo '<input type="text" name="sfrequency" value="', htmlEnt($r['frequency']), '" size="3" maxlength="3" style="width:150px;" />';
+			echo '<input type="text" name="sfrequency" value="', htmlEnt($r['frequency']), '" size="3" maxlength="3" style="width:50px;" />';
 			echo '</td>', "\n";
 			
 			echo '<td>';
@@ -328,6 +360,17 @@ if (@$rs) {
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;login='. rawUrlEncode($login) .'&amp;page='.$page), '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page), '" title="', __('entfernen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			echo '</td>';
+			if ( !empty($r['message']) ) {
+			        echo '</tr><tr class="', (($i % 2 == 0) ? 'even':'odd'), '">';
+			        echo '<td colspan=5>';
+			        echo ' &nbsp; &nbsp; &nbsp; ' . __('Status') . ': ';
+			        if ( 'OK' != substr($r['message'], 0, 2) ) {
+			                if   ( 'Scheduled' == $r['message'] ) $bg = '#FFFF00 ';
+			                else $bg = '#FF0000';
+			                echo '<span style="background-color:' . $bg . '">'  . $r['message'] . '</span>';
+			        } else  echo $r['message'];
+ 				echo '</td>';
+			}
 			
 		}
 		
@@ -369,21 +412,28 @@ if ($edit_entry < 1) {
 </table>
 
 </form>
-<br>
-<p class="text">Hint: vCards automatically will be fetched on new entry or record changes, besides schedule.</p>
-<p class="text"><sup>[1]</sup> URL: Enter the full vCard URL including scheme from your provider. Naiv examples:</p>
 <div class="text">
+<dl>
+<dt>Hints:</dt>
+<dd>vCards are imported into your private phone book.</dd>
+<dd>Updating vCards is based on changes within the cloud - the cloud always wins.</dd>
+<dd>Matching local entries with an equal vCard entry will be removed to avoid dulicates.</dd>
+<dd>The next update should be done within &#190; hour.</dd>
+<dd>To refresh all vCards of a cloud entry locally, you will need to delete and recreate an entry.</dd>
+</dl>
+<p class="text"><sup>[1]</sup> vCard URL: Any valid URL from your cloud provider, starting with scheme <i>(http/https)://</i>.<br>
+Naiv Examples:
 <dl class="text">
 <dt class="text">ownCloud</dt><dd class="text">https://example.com/remote.php/carddav/addressbooks/{resource|principal|username}/{collection}/</dd>
-<dt class="text">memotoo</dt><dd class="text">https://sync.memotoo.com/cardDAV/</dd>
 <dt class="text">SabreDAV</dt><dd class="text">https://example.com/addressbooks/{resource|principal|username}/{collection}/</dd>
 <dt class="text">radicale</dt><dd class="text">https://example.com/radicale/{resource|principal|username}/{collection}/</dd>
 <dt class="text">SOGo</dt><dd class="text">https://example.com/SOGo/dav/{resource|principal|username}/Contacts/{collection}/</dd>
 <dt class="text">DAViCal</dt><dd class="text">https://example.com/{resource|principal|username}/{collection}/</dd>
-<dt class="text">Apple Addressbook Server</dt><dd class="text">https://example.com/addressbooks/users/{resource|principal|username}/{collection}/</dd>
+<dt class="text">Apple Adrbook Server</dt><dd class="text">https://example.com/addressbooks/users/{resource|principal|username}/{collection}/</dd>
 </dl>
-</div>
-<p class="text"><sup>[2]</sup> Schedule: Defaults to '1d', the first/next update will happen within half an hour.<br>
+</p>
+<p class="text"><sup>[2]</sup> Schedule: Defaults to '1d', also see hints before.<br>
  &nbsp; &nbsp; &nbsp; Where h=hour, d=day, m=month (Max. 2 digits plus 1 char, no blank/minutes allowed).<br>
- &nbsp; &nbsp; &nbsp; Example: <i>12h</i> =~ refresh every 12 hours (~ also during night), starting with now (save time).<br>
- &nbsp; &nbsp; &nbsp; You can <i>trigger</i> a refresh using <i>edit</i> and <i>save</i> with no other changes.<p>
+ &nbsp; &nbsp; &nbsp; Example: <i>12h</i> =~ refresh every 12 hours (~ also during night), starting with the <i>save</i>d time.<br>
+ &nbsp; &nbsp; &nbsp; You can simply <i>trigger</i> a refresh using <i>edit</i> and <i>save</i> with <i>no other changes</i>.<p>
+</div>
