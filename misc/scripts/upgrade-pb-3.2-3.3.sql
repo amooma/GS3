@@ -1,4 +1,4 @@
-// gs 3.3 private phonebook
+// gs 3.3 private phonebook modifications
 ALTER TABLE `pb_prv` DROP FOREIGN KEY `pb_prv_ibfk_1` ;
 RENAME TABLE `pb_prv` TO `pb_prv_previous`;
 
@@ -64,6 +64,8 @@ CREATE TABLE IF NOT EXISTS `pb_cloud_card` (
 
 ALTER TABLE `pb_cloud_card` ADD FOREIGN KEY ( `cloud_id` ) 
   REFERENCES `pb_cloud` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_prv` ADD FOREIGN KEY ( `card_id` ) 
+  REFERENCES `pb_cloud_card` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
 
 // add categories (i.e like family, company etc.)
 CREATE TABLE IF NOT EXISTS `pb_category` (
@@ -96,15 +98,12 @@ CREATE TABLE IF NOT EXISTS `pb_prv_category` (
 
 ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `user_id` ) 
   REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
-
 ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `cat_id` ) 
   REFERENCES `pb_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
-
 ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `card_id` ) 
   REFERENCES `pb_cloud_card` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
-
 ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `prv_id` ) 
   REFERENCES `pb_prv` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
-  
+
 // set new modules active
 INSERT INTO `group_members` (`group`, `member`) VALUES (6, 3005) ON DUPLICATE KEY UPDATE `member` = 3005;
