@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS `pb_prv` (
   KEY `uid_firstname_lastname_pref` (`user_id`,`firstname`(10),`lastname`(10),`pref`,`ptype`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO pb_prv (id, user_id, firstname, lastname, number) SELECT id, user_id, firstname, lastname, number FROM `pb_prv_previous`;
+INSERT INTO pb_prv (id, user_id, firstname, lastname, number) 
+  SELECT id, user_id, firstname, lastname, number FROM `pb_prv_previous`;
 
 // import voip phone book from cloud for preparing the xml to phone functionality
 CREATE TABLE IF NOT EXISTS `pb_cloud` (
