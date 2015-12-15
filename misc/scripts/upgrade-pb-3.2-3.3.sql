@@ -1,5 +1,4 @@
 // gs 3.3 private phonebook modifications
-ALTER TABLE `pb_prv` DROP FOREIGN KEY `pb_prv_ibfk_1` ;
 RENAME TABLE `pb_prv` TO `pb_prv_previous`;
 
 CREATE TABLE IF NOT EXISTS `pb_prv` (
