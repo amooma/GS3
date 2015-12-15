@@ -1,4 +1,5 @@
 // gs 3.3 private phonebook
+ALTER TABLE `pb_prv` DROP FOREIGN KEY `pb_prv_ibfk_1` ;
 RENAME TABLE `pb_prv` TO `pb_prv_previous`;
 
 CREATE TABLE IF NOT EXISTS `pb_prv` (
@@ -19,8 +20,11 @@ CREATE TABLE IF NOT EXISTS `pb_prv` (
   KEY `uid_firstname_lastname_pref` (`user_id`,`firstname`(10),`lastname`(10),`pref`,`ptype`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO pb_prv (id, user_id, firstname, lastname, number) 
-  SELECT id, user_id, firstname, lastname, number FROM `pb_prv_previous`;
+INSERT INTO `pb_prv` (`id`, `user_id`, `firstname`, `lastname`, `number`) 
+  SELECT `id`, `user_id`, `firstname`, `lastname`, `number` FROM `pb_prv_previous`;
+  
+ALTER TABLE `pb_prv` ADD CONSTRAINT `pb_prv_ibfk_1` FOREIGN KEY (`user_id`) 
+  REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT ;
 
 // import voip phone book from cloud for preparing the xml to phone functionality
 CREATE TABLE IF NOT EXISTS `pb_cloud` (
@@ -43,6 +47,9 @@ CREATE TABLE IF NOT EXISTS `pb_cloud` (
   KEY `uid_login_url` (`user_id`,`login`,`url`(255))
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+ALTER TABLE `pb_cloud` ADD FOREIGN KEY ( `user_id` ) 
+  REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT ;
+
 // holds the vcards
 CREATE TABLE IF NOT EXISTS `pb_cloud_card` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -55,6 +62,9 @@ CREATE TABLE IF NOT EXISTS `pb_cloud_card` (
   KEY `cloud_id_vcard_id` (`cloud_id`,`vcard_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+ALTER TABLE `pb_cloud_card` ADD FOREIGN KEY ( `cloud_id` ) 
+  REFERENCES `pb_cloud` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+
 // add categories (i.e like family, company etc.)
 CREATE TABLE IF NOT EXISTS `pb_category` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -64,6 +74,9 @@ CREATE TABLE IF NOT EXISTS `pb_category` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid_catid` (`user_id`,`category`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `pb_category` ADD FOREIGN KEY ( `user_id` ) 
+  REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
 
 // connect a phone book entry to a category
 CREATE TABLE IF NOT EXISTS `pb_prv_category` (
@@ -81,5 +94,17 @@ CREATE TABLE IF NOT EXISTS `pb_prv_category` (
   KEY `catid_uid` (`cat_id`,`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `user_id` ) 
+  REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `cat_id` ) 
+  REFERENCES `pb_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `card_id` ) 
+  REFERENCES `pb_cloud_card` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `prv_id` ) 
+  REFERENCES `pb_prv` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+  
 // set new modules active
 INSERT INTO `group_members` (`group`, `member`) VALUES (6, 3005) ON DUPLICATE KEY UPDATE `member` = 3005;
