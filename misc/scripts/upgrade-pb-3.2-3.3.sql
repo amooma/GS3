@@ -1,4 +1,5 @@
 // gs 3.3 private phonebook modifications
+DROP TABLE IF EXISTS `pb_prv_previous`;
 RENAME TABLE `pb_prv` TO `pb_prv_previous`;
 
 CREATE TABLE IF NOT EXISTS `pb_prv` (
