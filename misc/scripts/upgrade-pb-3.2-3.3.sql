@@ -1,4 +1,6 @@
 // gs 3.3 private phonebook
+RENAME TABLE `pb_prv` TO `pb_prv_previous`;
+
 CREATE TABLE IF NOT EXISTS `pb_prv` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -17,20 +19,7 @@ CREATE TABLE IF NOT EXISTS `pb_prv` (
   KEY `uid_firstname_lastname_pref` (`user_id`,`firstname`(10),`lastname`(10),`pref`,`ptype`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-// alter existing 3.2 private phonebook
-ALTER TABLE `pb_prv` ADD `ptype` VARCHAR(16) NOT NULL COMMENT 'cell,work,home';
-ALTER TABLE `pb_prv` ADD `pref` int(2) unsigned NOT NULL DEFAULT '2';
-ALTER TABLE `pb_prv` ADD `vcard_id` int(10) NOT NULL;
-ALTER TABLE `pb_prv` ADD `modified` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE `asterisk`.`pb_prv` DROP INDEX `uid_firstname_lastname_pref` ,
- ADD INDEX `uid_firstname_lastname_pref` ( `user_id` , `firstname` ( 10 ) , `lastname` ( 15 ) , `pref` , `ptype` );
-ALTER TABLE `asterisk`.`pb_prv` DROP INDEX `uid_lastname_firstname_pref` , 
- ADD INDEX `uid_lastname_firstname_pref` ( `user_id` , `lastname` ( 15 ) , `firstname` ( 10 ) , `pref` , `ptype` );
-ALTER TABLE `asterisk`.`pb_prv` DROP INDEX `uid_number_pref` ,
- ADD INDEX `uid_number_pref` ( `user_id` , `number` ( 10 ) , `pref` , `ptype` );
-ALTER TABLE `pb_prv` ADD INDEX `uid_cardid` (`user_id`,`card_id`);
-ALTER TABLE `pb_prv` ADD INDEX `cloud_card_id` (`card_id`);
-
+INSERT INTO pb_prv (id, user_id, firstname, lastname, number) SELECT id, user_id, firstname, lastname, number FROM `pb_prv_previous`;
 
 // import voip phone book from cloud for preparing the xml to phone functionality
 CREATE TABLE IF NOT EXISTS `pb_cloud` (
