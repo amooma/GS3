@@ -417,9 +417,9 @@ if ($edit_entry < 1) {
 <dt>Hints:</dt>
 <dd>vCards are imported into your private phone book.</dd>
 <dd>Updating vCards is based on changes within the cloud - the cloud always wins.</dd>
-<dd>Matching local entries with an equal vCard entry will be removed to avoid dulicates.</dd>
-<dd>The next update should be done within &#190; hour.</dd>
-<dd>To refresh all vCards of a cloud entry locally, you will need to delete and recreate an entry.</dd>
+<dd>Matching local entries with an equal vCard entry will be removed to avoid duplicates.</dd>
+<dd>An update should occur within &#190; of a hour.</dd>
+<dd>To refresh locally all phone numbers of a cloud entry, you will have to delete and recreate an entry.</dd>
 </dl>
 <p class="text"><sup>[1]</sup> vCard URL: Any valid URL from your cloud provider, starting with scheme <i>(http/https)://</i>.<br>
 Naiv Examples:
