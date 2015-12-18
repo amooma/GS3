@@ -52,7 +52,7 @@ function gs_vcards_connect( $url=null, $login=null, $pass=null ) {
 
 	if (! class_exists('carddav_backend')) {
 		$CLOUD_MSG = 'This system does not support carddav (lib CardDav.php missing)!';
-		gs_log( GS_LOG_FATAL, getmypid() . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
+		gs_log( GS_LOG_FATAL, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
 		return false;
 	}
 
@@ -61,11 +61,11 @@ function gs_vcards_connect( $url=null, $login=null, $pass=null ) {
 
 	if ( $carddav_conn->check_connection() ) {
 		$CLOUD_MSG = 'connected CardDAV '. $url .' for user ' . $login;
-		gs_log(GS_LOG_DEBUG, getmypid() . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
+		gs_log(GS_LOG_DEBUG, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
 		return $carddav_conn;
 	} else {
 		$CLOUD_MSG = 'can not connect to cloud, check url, and login/password.';
-		gs_log(GS_LOG_FATAL, getmypid() . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
+		gs_log(GS_LOG_FATAL, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
 		return false;
 	}
 }
@@ -136,7 +136,7 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 				if ( empty($param) ) continue;
 				$k2 = explode('=', strtoupper( $param ));
 				if ( 'TYPE' == $k2[0] ) {
-					if ( $k2[1] == 'PREF' ) $n[$number]['pref'] = 0;
+					if ( $k2[1] == 'PREF' ) $n[$number]['pref'] = 1;
 					else $n[$number]['type'] .= strtolower( $k2[1] ) . ',';
 				}
 				elseif ( 'PREF' == $key2 ) $n[$number]['pref'] = $value2;
@@ -207,7 +207,7 @@ function gs_vcards_update( $vcr ) {
 		$last_ctag = str_replace('"', '', $head['d:propstat']['d:prop']['cs:getctag']);
 		if ( $last_ctag == $vcr['last_ctag'] ) {
 			$CLOUD_MSG =  'no update, cloud last ctag: '. $last_ctag;
-			gs_log(GS_LOG_DEBUG, getmypid() . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
+			gs_log(GS_LOG_DEBUG, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
 			return true;
 		}
 	} else  $last_ctag = '';
@@ -216,7 +216,7 @@ function gs_vcards_update( $vcr ) {
 		$last_modified = date("Y-m-d H:i:s", strtotime( $head['d:propstat']['d:prop']['d:getlastmodified'] ));
 		if ( $last_modified <= $vcr['last_remote_modified'] ) {
 			$CLOUD_MSG = 'no update, cloud last modified: '. $last_modified;
-			gs_log(GS_LOG_DEBUG, getmypid() . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
+			gs_log(GS_LOG_DEBUG, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
 			return true;
 		}
 	} else $last_modified = $vcr['modified'];
@@ -295,7 +295,7 @@ function gs_vcards_update( $vcr ) {
 				);
 
 	$CLOUD_MSG = $vc_seen . ' seen, ' . $vc_mod . ' modified, ' . $vc_add . ' added, ' . $vc_del . ' deleted';
-	gs_log(GS_LOG_DEBUG, getmypid() . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
+	gs_log(GS_LOG_DEBUG, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
 
 	return true;
 }
@@ -315,7 +315,10 @@ while ( true ) {
 		LIMIT 1'
 		);
 	if ( $vcr = $vcrc->fetchRow() ) {
-		gs_log(GS_LOG_NOTICE, getmypid() .': Check vCards: '. $vcr['login'] . ': ' .  $vcr['url'], $CARDDAV_LOG, $FIFO );
+		$usrc = $DB->execute('SELECT `user` FROM `users` WHERE `id`=' . $vcr['user_id'] . ' LIMIT 1');
+		$urc =  $usrc->fetchRow();
+		$sudo_user = $urc['user'];
+		gs_log(GS_LOG_NOTICE, getmypid() .': Check vCards for ' . $sudo_user . ': '. $vcr['login'] . ': ' .  $vcr['url'], $CARDDAV_LOG, $FIFO );
 	} else {
 		break; //the loop
 	}
@@ -338,7 +341,7 @@ while ( true ) {
 	$unset_active='';
 	if ( gs_vcards_update( $vcr )  === true ) {
 		// all went ok
-		gs_log(GS_LOG_NOTICE, getmypid() .': Check vCards completed normal.', $CARDDAV_LOG, $FIFO );
+		gs_log(GS_LOG_NOTICE, getmypid() .': Check vCards completed normal for ' . $sudo_user . '.', $CARDDAV_LOG, $FIFO );
 		$CLOUD_MSG     = 'OK - ' . $CLOUD_MSG;
 		$error_counter = ', `error_count`=0 ';
 
@@ -352,7 +355,7 @@ while ( true ) {
 			$CLOUD_MSG .= 'Set inactive. ';
 		};
 		$CLOUD_MSG .= 'Check vCards failed for ' . $vcr['login'] . ': ' . $vcr['url'] . ', ' . $CLOUD_MSG;
-		gs_log(GS_LOG_WARNING, $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
+		gs_log(GS_LOG_WARNING, $sudo_user . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
 		// increment error counter
 	}
 	// inform on user display
