@@ -107,6 +107,6 @@ ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `prv_id` )
   REFERENCES `pb_prv` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
 
 // set new modules active
-INSERT INTO `group_members` (`group`, `member`) VALUES (6, 3005) ON DUPLICATE KEY UPDATE `member` = 3005;
+INSERT INTO `group_members` VALUES (6, 3005);
 // needed dependency for public cloud entries
-INSERT OR REPLACE INTO `users` VALUES ('1', 'public-abook', '', '', '', '', '', '1', '1', NULL, '', NULL, NULL, NULL, '0');
+INSERT INTO `users` VALUES ('1', 'public-abook', '', '', '', '', '', '1', '1', NULL, '', NULL, NULL, NULL, '');
