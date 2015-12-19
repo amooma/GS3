@@ -82,7 +82,7 @@ if ( empty($catid) && ! empty($cat) ) {
 $query = 'SELECT SQL_CALC_FOUND_ROWS '.
 			'`p`.`id`, `p`.`lastname`, `p`.`firstname`, `p`.`number` , `p`.`ptype`, `p`.`card_id`'.
 		' FROM `pb_prv` `p`';
-$where = ' WHERE `p`.`user_id`='. $user_id;
+$where = ' WHERE ( `p`.`user_id`='. $user_id . ' OR `p`.`user_id`=1 ) ';
 
 if ($number != '') {
 
