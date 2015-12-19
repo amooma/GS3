@@ -6181,7 +6181,6 @@ INSERT INTO `group_members` VALUES (6,3002);
 INSERT INTO `group_members` VALUES (6,3003);
 INSERT INTO `group_members` VALUES (6,3004);
 INSERT INTO `group_members` VALUES (6,3005);
-INSERT INTO `group_members` VALUES (6,3006);
 INSERT INTO `group_members` VALUES (6,4000);
 INSERT INTO `group_members` VALUES (6,4001);
 INSERT INTO `group_members` VALUES (6,4002);
@@ -6705,11 +6704,15 @@ CREATE TABLE IF NOT EXISTS `pb_cloud` (
   `message` tinytext COLLATE utf8_unicode_ci NOT NULL,
   `error_count` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `public` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid_url_login` (`user_id`,`url`(255),`login`),
   KEY `next_poll` (`next_poll`),
   KEY `uid_login_url` (`user_id`,`login`,`url`(255))
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `pb_cloud` ADD FOREIGN KEY ( `user_id` ) 
+  REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT ;
 
 --
 -- Tabellenstruktur für Tabelle `pb_cloud_card`
@@ -6776,6 +6779,21 @@ CREATE TABLE IF NOT EXISTS `pb_prv_category` (
   KEY `prv_id` (`prv_id`),
   KEY `cat_id` (`cat_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `pb_cloud_card` ADD FOREIGN KEY ( `cloud_id` ) 
+  REFERENCES `pb_cloud` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_prv` ADD FOREIGN KEY ( `card_id` ) 
+  REFERENCES `pb_cloud_card` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_category` ADD FOREIGN KEY ( `user_id` ) 
+  REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `user_id` ) 
+  REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `cat_id` ) 
+  REFERENCES `pb_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `card_id` ) 
+  REFERENCES `pb_cloud_card` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `prv_id` ) 
+  REFERENCES `pb_prv` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
 
 --
 -- Table structure for table `penalties`
@@ -7526,6 +7544,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES ('1', 'public-abook', '', '', '', '', '', '1', '1', NULL, '', NULL, NULL, NULL, '')
 INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,NULL,'',NULL,NULL,NULL,'');
 INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'',NULL,NULL,NULL,'');
 INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,NULL,'',NULL,NULL,NULL,'');
