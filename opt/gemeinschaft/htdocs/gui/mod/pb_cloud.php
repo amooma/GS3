@@ -47,34 +47,38 @@ function confirm_delete() {
 
 $per_page = (int)GS_GUI_NUM_RESULTS;
 
-$name         =      trim(@$_REQUEST['name'   ]);
-$url          =      trim(@$_REQUEST['url' ]);
-$login        =      trim(@$_REQUEST['login' ]);
-$pass         =      trim(@$_REQUEST['pass' ]);
+$name         =      trim(@$_REQUEST['name'	]);
+$url          =      trim(@$_REQUEST['url'	]);
+$login        =      trim(@$_REQUEST['login'	]);
+$pass         =      trim(@$_REQUEST['pass'	]);
 $frequency    =      trim(@$_REQUEST['frequency' ]);
-$save_url     =      trim(@$_REQUEST['surl']);
-$save_login   =      trim(@$_REQUEST['slogin' ]);
-$save_pass    =      trim(@$_REQUEST['spass' ]);
+$public       =      trim(@$_REQUEST['public'	]);
+$save_url     =      trim(@$_REQUEST['surl'	]);
+$save_login   =      trim(@$_REQUEST['slogin'	]);
+$save_pass    =      trim(@$_REQUEST['spass'	]);
 $save_frequency =    trim(@$_REQUEST['sfrequency' ]);
-$page         = (int)    (@$_REQUEST['page'   ]);
-$delete_entry = (int)trim(@$_REQUEST['delete' ]);
-$edit_entry   = (int)trim(@$_REQUEST['edit'   ]);
-$save_entry   = (int)trim(@$_REQUEST['save'   ]);
+$save_public  =      trim(@$_REQUEST['spublic'	]);
+$page         = (int)    (@$_REQUEST['page'	]);
+$delete_entry = (int)trim(@$_REQUEST['delete'	]);
+$edit_entry   = (int)trim(@$_REQUEST['edit'	]);
+$save_entry   = (int)trim(@$_REQUEST['save'	]);
 
 $user_id = (int)@$_SESSION['sudo_user']['info']['id'];
 
 if ($delete_entry > 0) {
-	# delete entry
+	// delete entry
 	
 	$rs = $DB->execute(
 'DELETE FROM `pb_cloud` ' .
      ' WHERE `id`='. $delete_entry .
        ' AND `user_id`='. $user_id
 	);
+	// remove cards
 	$rs2 = $DB->execute(
 'DELETE FROM `pb_cloud_card` ' .
      ' WHERE `cloud_id`='. $delete_entry
 	);
+        // remove from phone book
 	$rs2 = $DB->execute(
 'DELETE p FROM `pb_prv` AS p ' . 
    ' LEFT JOIN `pb_cloud_card` AS c ' .
@@ -83,6 +87,7 @@ if ($delete_entry > 0) {
          ' AND  p.card_id != 0 ' . 
          ' AND  c.id IS NULL'
 	);
+	// remove from categories xref
 	$rs2 = $DB->execute(
 'DELETE p FROM `pb_prv_category` AS p ' . 
    ' LEFT JOIN `pb_cloud_card` AS c ' . 
@@ -91,6 +96,7 @@ if ($delete_entry > 0) {
          ' AND  p.card_id != 0 ' . 
          ' AND  c.id IS NULL'
 	);
+	// remove from categories
 	$rs2 = $DB->execute(
 'DELETE c FROM `pb_category` AS c ' . 
 	' LEFT JOIN `pb_prv_category` AS p ' .
@@ -115,30 +121,41 @@ if ($save_url != '' && $save_login != '' && $save_pass != '') {
                 if ( ! is_numeric(substr($save_frequency, 0, -1)) || substr($save_frequency, 0, -1) == '0' ) 
 			$save_frequency = '1' . substr($save_frequency, -1);
 	}
+
+	if ( $save_public != 1 ) $save_public = 0;
 	
 	if ($save_entry < 1) {
 
 		$rs = $DB->execute(
 'INSERT INTO `pb_cloud` ' . 
-          ' (`id`, `user_id`, `url`, `login`, `pass`, `frequency`, `next_poll`, `message`) ' .
+          ' (`id`, `user_id`, `url`, `login`, `pass`, `frequency`, `next_poll`, `message`, `public`) ' .
     ' VALUES' .
-        '(NULL, '. $user_id .', \''. $DB->escape($save_url) .'\', \''. $DB->escape($save_login) .'\', des_encrypt(\''. $save_pass .'\',\'' . $save_login. '\'), \''. $DB->escape($save_frequency) .'\', NOW(), \'Scheduled\')'
+        '(NULL, '. $user_id .', \''. $DB->escape($save_url) .'\', \''. $DB->escape($save_login) .'\', des_encrypt(\''. $save_pass .'\',\'' . $save_login. '\'), \''. $DB->escape($save_frequency) .'\', NOW(), \'Scheduled\', ' . $save_public . ')'
 		);
 		
 	} else {
+	        // get old public status
+	        $r = $DB->execute('SELECT `public` FROM `pb_cloud` WHERE `id`='. $save_entry . ' LIMIT 1')->fetchrow();
 		
 		$rs = $DB->execute(
 'UPDATE `pb_cloud` ' .
   ' SET `url`=\''. $DB->escape($save_url) .'\', `login`=\''. $DB->escape($save_login) .'\', `pass`=des_encrypt(\''. $save_pass .'\',\'' . $save_login .'\'), ' .
-       ' `frequency`=\'' . $save_frequency . '\', `next_poll`=NOW(), message=\'Scheduled\', last_remote_modified=\'2000-01-01 00:00:00\', active=1 ' .
+       ' `frequency`=\'' . $save_frequency . '\', `next_poll`=NOW(), `message`=\'Scheduled\', `last_remote_modified`=\'2000-01-01 00:00:00\', `active`=1, ' .
+       ' `public`=' . $save_public .
 ' WHERE `id`='. $save_entry .' AND `user_id`='. $user_id
 		);
+
+		//  delete vcards if it was public and should not be anymore or vs
+	        if ( $r['public'] != $save_public ) {
+	                $DB->execute('DELETE FROM `pb_cloud_card` WHERE `cloud_id`=' . $save_entry);
+	        }
 		
 	}
 	$save_url = '';
 	$save_login = '';
 	$save_pass = '';
 	$save_frequency = '';
+	$save_public = 0;
 }
 
 
@@ -159,7 +176,7 @@ if ($url != '') {
 	
 	$rs = $DB->execute(
 		'SELECT SQL_CALC_FOUND_ROWS '.
-			'`id`, `url`, `login`, cast(des_decrypt(`pass`,`login`) as char(16)) as pass, `frequency`, `message` '.
+			'`id`, `url`, `login`, cast(des_decrypt(`pass`,`login`) as char(16)) as pass, `frequency`, `message`, `public` '.
 		'FROM '.
 			'`pb_cloud` '.
 		'WHERE '.
@@ -186,7 +203,7 @@ if ($url != '') {
 	
 	$rs = $DB->execute(
 		'SELECT SQL_CALC_FOUND_ROWS '.
-			'`id`, `url`, `login`, cast(des_decrypt(`pass`,`login`) as char(16)) as pass, `frequency`, `message` '.
+			'`id`, `url`, `login`, cast(des_decrypt(`pass`,`login`) as char(16)) as pass, `frequency`, `message`, `public` '.
 		'FROM '.
 			'`pb_cloud` '.
 		'WHERE '.
@@ -282,6 +299,8 @@ echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 echo gs_form_hidden($SECTION, $MODULE), "\n";
 echo '<input type="hidden" name="url" value="', htmlEnt($url), '" />', "\n";
 echo '<input type="hidden" name="login" value="', htmlEnt($login), '" />', "\n";
+echo '<input type="hidden" name="frequency" value="', htmlEnt($frequency), '" />', "\n";
+echo '<input type="hidden" name="public" value="', htmlEnt($public), '" />', "\n";
 ?>
 
 <table cellspacing="1" class="phonebook">
@@ -299,7 +318,10 @@ echo '<input type="hidden" name="login" value="', htmlEnt($login), '" />', "\n";
 	<th style="width:50px;">
 		<?php echo __('Zeitplan'); ?><sup>[2]</sup>
 	</th>
-	<th style="width:100px;">&nbsp;</th>
+	<th style="width:30px;">
+		<?php echo __('Public'); ?>
+	</th>
+	<th style="width:60px;">&nbsp;</th>
 </tr>
 </thead>
 <tbody>
@@ -328,6 +350,11 @@ if (@$rs) {
 			echo '<td>';
 			echo '<input type="text" name="sfrequency" value="', htmlEnt($r['frequency']), '" size="3" maxlength="3" style="width:50px;" />';
 			echo '</td>', "\n";
+
+			echo '<td>';
+			$checked = ($r['public']) ? 'checked' : '';
+			echo '<input type="checkbox" name="spublic" value="1" ' . $checked . ' style="width:30px;" />';
+			echo '</td>', "\n";
 			
 			echo '<td>';
 			echo '<input type="hidden" name="save" value="', $r['id'], '" />';
@@ -353,6 +380,8 @@ if (@$rs) {
 			
 			echo '<td>', htmlEnt($r['frequency']), '</td>', "\n";
 			
+			echo '<td>', ($r['public']) ? 'public' : '&nbsp;', '</td>', "\n";
+
 			echo '<td>';
 			$sudo_url =
 				(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
@@ -362,7 +391,7 @@ if (@$rs) {
 			echo '</td>';
 			if ( !empty($r['message']) ) {
 			        echo '</tr><tr class="', (($i % 2 == 0) ? 'even':'odd'), '">';
-			        echo '<td colspan=5>';
+			        echo '<td colspan=6>';
 			        echo ' &nbsp; &nbsp; &nbsp; ' . __('Status') . ': ';
 			        if ( 'OK' != substr($r['message'], 0, 2) ) {
 			                if   ( 'Scheduled' == $r['message'] ) $bg = '#FFFF00 ';
@@ -396,6 +425,9 @@ if ($edit_entry < 1) {
 	</td>
 	<td>
 		<input type="text" name="sfrequency" value="" size="3" maxlength="3" style="width:50px;" />
+	</td>
+	<td>
+		<input type="checkbox" name="spublic" value="1" style="width:30px;" />
 	</td>
 	<td>
 		<button type="submit" title="<?php echo __('Eintrag speichern'); ?>" class="plain">
