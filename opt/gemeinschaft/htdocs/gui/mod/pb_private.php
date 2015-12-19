@@ -156,9 +156,10 @@ if ($number != '') {
 
 if ( $catid != 0 ) {
         $search_url .= '&amp;catid='. $catid;
+        $search_cat = '&amp;catid='. $catid;
         $query .= ' LEFT JOIN `pb_prv_category` `pc` ON `p`.`id` = `pc`.`prv_id` ';
         $where .= ' AND `pc`.`cat_id` = ' . $catid;
-}
+} else $search_cat = '';
 $SESSION['catid']=$catid;
 
 $order = ' ORDER BY `p`.`lastname`, `p`.`firstname`, `p`.`pref`, `p`.`ptype` ';
@@ -185,6 +186,7 @@ $num_pages = ceil($num_total / $per_page);
 	<td>
 		<form method="get" action="<?php echo GS_URL_PATH; ?>">
 		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+		<input type="hidden" name="catid" value="<?php echo $catid ?>" />
 		<input type="text" name="name" id="ipt-name" value="<?php echo htmlEnt($name); ?>" size="25" style="width:200px;" />
 		<script type="text/javascript">/*<![CDATA[*/ try{ document.getElementById('ipt-name').focus(); }catch(e){} /*]]>*/</script>
 		<button type="submit" title="<?php echo __('Name suchen'); ?>" class="plain">
@@ -195,6 +197,7 @@ $num_pages = ceil($num_total / $per_page);
 	<td>
 		<form method="get" action="<?php echo GS_URL_PATH; ?>">
 		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+		<input type="hidden" name="catid" value="<?php echo $catid ?>" />
 		<input type="text" name="number" value="<?php echo htmlEnt($number); ?>" size="15" style="width:130px;" />
 		<button type="submit" title="<?php echo __('Nummer suchen'); ?>" class="plain">
 			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
@@ -247,7 +250,7 @@ $chars = array();
 $chars['#'] = '';
 for ($i=65; $i<=90; ++$i) $chars[chr($i)] = chr($i);
 foreach ($chars as $cd => $cs) {
-	echo '<a href="', gs_url($SECTION, $MODULE, null, 'name='. htmlEnt($cs)), '">', htmlEnt($cd), '</a>', "\n";
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'name='. htmlEnt($cs)) . $search_cat, '">', htmlEnt($cd), '</a>', "\n";
 }
 
 ?>
@@ -315,7 +318,7 @@ if (@$rs) {
 			echo '<button type="reset" title="', __('r&uuml;ckg&auml;ngig'), '" class="plain">';
 			echo '<img alt="', __('r&uuml;ckg&auml;ngig'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/reload.png" />';
 			echo '</button>';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'page='. $page), '" title="', __('abbrechen'), '"><img alt="', __('abbrechen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/cancel.png" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'page='. $page) . $search_cat, '" title="', __('abbrechen'), '"><img alt="', __('abbrechen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/cancel.png" /></a>';
 	
 			echo '</td>';
 			
@@ -339,8 +342,8 @@ if (@$rs) {
 				(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 				? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
 			echo '<a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', rawUrlEncode($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a> &nbsp; ';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page), '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
-			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page), '" title="', __('entfernen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page) . $search_cat, '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page) . $search_cat, '" title="', __('entfernen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 			if ( $r['card_id'] ) echo ' <sup>[1]</sup>';
 			echo '</td>';
 			
