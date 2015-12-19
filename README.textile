@@ -1,3 +1,8 @@
+h1. Modifizierte Verion evtl. für GS 3.3
+
+Eine Übersicht erhält man im Wiki unter https://github.com/marneu/GS3/wiki/Installation-der-Erweiterungen-auf-GS-3.2
+> Hinweis: Diese Version hat derzeit keinen Support von der GS3 Gemeinschaft und es kann nicht sichergestellt werden, ob die Änderungen in den GS 3 Master übernommen werden.
+
 h1. Asterisk Version
 
 Gemeinschaft in der Version 3 ist die ältere Software mit einem Asterisk-Kern. Die aktuellere Version von Gemeinschaft hat Freeswitch als Kern. Weitere Informationen dazu finden Sie auf "https://www.alternative-solution.de/gs3":https://www.alternative-solution.de/gs3
