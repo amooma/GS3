@@ -169,7 +169,7 @@ $pb[25] = array(
 	'query'	=> 'SELECT `pb`.`lastname` `ln`, `pb`.`firstname` `fn`, `pb`.`number` `ext`
 FROM
 	`pb_prv` `pb`
-WHERE `pb`.`user_id`='.$user_id.'
+WHERE  (`pb`.`user_id`='. $user_id . 'OR `pb`.`user_id`=1 )
 ORDER BY `pb`.`lastname`, `pb`.`firstname`
 LIMIT 100'
 );
