@@ -162,8 +162,12 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 	// loop over phone numbers
 	foreach ( $n as $number => $param ) {
 
-		// check_duplicates from within a vcard
-		if ( $prc = $DB->execute('SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $USER_ID . ' and `firstname`=\'' . $fn . '\' and `lastname`=\'' . $ln . '\' and `number`=\'' . $number . '\' and `card_id`=0 LIMIT 1')->fetchRow() )
+		$prc=false;
+		// check_duplicates from within a vcard -> try to avoid duplicates, the latest wins
+		if ( $prc = $DB->execute('SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $USER_ID . ' AND `firstname`=\'' . $fn . '\' AND `lastname`=\'' . $ln . '\' AND `number`=\'' . $number . '\' AND `card_id`=0 LIMIT 1')->fetchRow() )
+			$DB->execute('DELETE FROM `pb_prv` WHERE `id`=' . $prc['id']);
+		// net could probably changed to an update 
+		elseif ( $prc = $DB->execute('SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $USER_ID . ' AND `firstname`=\'' . $fn . '\' AND `lastname`=\'' . $ln . '\' AND `number`=\'' . $number . '\' LIMIT 1')->fetchRow() )
 			$DB->execute('DELETE FROM `pb_prv` WHERE `id`=' . $prc['id']);
 
 		// add a phone record
