@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `pb_cloud` (
   `message` tinytext COLLATE utf8_unicode_ci NOT NULL,
   `error_count` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `public` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid_url_login` (`user_id`,`url`(255),`login`),
   KEY `next_poll` (`next_poll`),
@@ -107,3 +108,5 @@ ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `prv_id` )
 
 // set new modules active
 INSERT INTO `group_members` (`group`, `member`) VALUES (6, 3005) ON DUPLICATE KEY UPDATE `member` = 3005;
+// needed dependency for public cloud entries
+INSERT OR REPLACE INTO `users` VALUES ('1', 'public-abook', '', '', '', '', '', '1', '1', NULL, '', NULL, NULL, NULL, '0');
