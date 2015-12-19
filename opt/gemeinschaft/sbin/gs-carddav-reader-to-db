@@ -120,13 +120,19 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 		if ( empty( $ln) ) { $ln = $fn; $fn=''; }
 
 		elseif ( 'TEL' == $key ) {
-			if ( '+' == substr($elem, 0, 1) ) 
-				$elem = GS_CANONIZE_INTL_PREFIX . substr($elem, 1);
 
-			$number = preg_replace('/\D/', '', $elem);
+			// do not canonize on sip strings
+			if ( strpos($elem, '@') === false ) {
 
-			if ( GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE == substr($number, 0, strlen(GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE) ) ) 
-				$number = GS_CANONIZE_NATL_PREFIX . substr($number, strlen(GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE));
+				if ( '+' == substr($elem, 0, 1) ) 
+					$elem = GS_CANONIZE_INTL_PREFIX . substr($elem, 1);
+
+				$number = preg_replace('/\D/', '', $elem);
+
+				if ( GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE == substr($number, 0, strlen(GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE) ) ) 
+					$number = GS_CANONIZE_NATL_PREFIX . substr($number, strlen(GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE));
+			}
+			else $number = $elem;
 
 			// add number to array, making it singular
 			$n[$number] = array( 'type' => '', 'pref' => 99 );
@@ -136,6 +142,7 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 				if ( empty($param) ) continue;
 				$k2 = explode('=', strtoupper( $param ));
 				if ( 'TYPE' == $k2[0] ) {
+					if ( $k2[1] == 'MAIN' ) $n[$number]['pref'] = 1;
 					if ( $k2[1] == 'PREF' ) $n[$number]['pref'] = 1;
 					else $n[$number]['type'] .= strtolower( $k2[1] ) . ',';
 				}
