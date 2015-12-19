@@ -89,7 +89,7 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 		$lvc = $DB->execute( 'SELECT `id`,`cloud_id`,`vcard_id`,`etag`,`last_modified`' .
 				' FROM `pb_cloud_card` ' .
 				' WHERE `cloud_id`=' . $vcr['id'] . 
-					' and `vcard_id`=\'' . $head['vcard_id'] . '\''
+					' and `vcard_id`=\'' . $head['vcard_id'] . '\' LIMIT 1'
 				)->fetchRow();
 	}
 
@@ -103,12 +103,16 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 	foreach ( $tmp_vcard as $value ) {
 		if ( empty( $value ) ) continue;
 
+		// we need only name, category and tel type records for the phone book
+		if ( 'N' != $key && 'TEL' != $key && 'CATEGORIES' != $key ) continue;
+
 		$pos = strpos($value, ':');
 		$elem = trim(substr($value, $pos + 1 ));
 		$aparam = explode(';', substr($value, 0, $pos));
 		$key  = strtoupper( array_shift( $aparam ) );
 
 		if     ( 'N' == $key ) {
+			// reverse the array N for the phones display
 			$aname = explode(';', $elem);
 			$ln = array_shift( $aname );
 			for ($i = count($aname); $i >= 0; $i--) {
@@ -116,8 +120,8 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 				$fn .= ' ' . $aname[$i];
 			}
 			$fn = ltrim( $fn );
+			if ( empty( $ln) ) { $ln = $fn; $fn=''; }
 		}
-		if ( empty( $ln) ) { $ln = $fn; $fn=''; }
 
 		elseif ( 'TEL' == $key ) {
 
@@ -135,7 +139,7 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 			else $number = $elem;
 
 			// add number to array, making it singular
-			$n[$number] = array( 'type' => '', 'pref' => 99 );
+			if ( ! isset($n[$number]) ) $n[$number] = array( 'type' => '', 'pref' => 99 );
 
 			// add attributes to the number
 			foreach ( $aparam as $param ) {
@@ -150,7 +154,6 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 			}
 			$n[$number]['type'] = rtrim($n[$number]['type'], ',');
 		}
-
 		elseif ( 'CATEGORIES' == $key ) $acat = explode( ',', $elem );
 	}
 
@@ -158,7 +161,7 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 	foreach ( $n as $number => $param ) {
 
 		// check_duplicates from within a vcard
-		if ( $prc = $DB->execute('SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $vcr['user_id'] . ' and `firstname`=\'' . $fn . '\' and `lastname`=\'' . $ln . '\' and `number`=\'' . $number . '\' and `card_id`=0')->fetchRow() )
+		if ( $prc = $DB->execute('SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $vcr['user_id'] . ' and `firstname`=\'' . $fn . '\' and `lastname`=\'' . $ln . '\' and `number`=\'' . $number . '\' and `card_id`=0 LIMIT 1')->fetchRow() )
 			$DB->execute('DELETE FROM `pb_prv` WHERE `id`=' . $prc['id']);
 
 		// add a phone record
@@ -168,7 +171,7 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 
 		// loop over categories
 		if ( ! empty( $acat) ) {
-			$prc = $DB->execute( 'SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $vcr['user_id'] . ' and `firstname`=\'' . $fn  . '\' and `lastname`=\'' . $ln  . '\' and `number`=\'' . $number . '\' and `ptype`=\'' . $param['type'] . '\' and `card_id`=' . $lvc['id'])->fetchRow();
+			$prc = $DB->execute( 'SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $vcr['user_id'] . ' and `firstname`=\'' . $fn  . '\' and `lastname`=\'' . $ln  . '\' and `number`=\'' . $number . '\' and `ptype`=\'' . $param['type'] . '\' and `card_id`=' . $lvc['id'] . ' LIMIT 1')->fetchRow();
 			foreach ( $acat as $cat ) {
 				if ( empty($cat) ) continue;
 				if ( ! $crc = $DB->execute( 'SELECT `id` FROM `pb_category` WHERE `user_id`=' . $vcr['user_id'] . ' and `category`=\'' . $cat  . '\'')->fetchRow() ) {
@@ -176,13 +179,13 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 					$DB->execute('INSERT INTO `pb_category` ' .
 						' (`user_id`,`category`) ' .
 						' VALUES(' . $vcr['user_id'] .',\'' . $cat .'\')');
-					$crc = $DB->execute( 'SELECT `id` FROM `pb_category` WHERE `user_id`=' . $vcr['user_id'] . ' and `category`=\'' . $cat  . '\'')->fetchRow();
+					$crc = $DB->execute( 'SELECT `id` FROM `pb_category` WHERE `user_id`=' . $vcr['user_id'] . ' and `category`=\'' . $cat  . '\' LIMIT 1')->fetchRow();
 				}
 				// correct xref
 				$DB->execute('INSERT INTO `pb_prv_category` ' .
 					' (`user_id`,`cat_id`,`card_id`,`prv_id`) ' .
 					' VALUES(' . $vcr['user_id'] .',' . $crc['id'] .',' . $lvc['id'] .',' . $prc['id'] . ')');
-				}
+			}
 		}
 	}
 
@@ -326,9 +329,8 @@ while ( true ) {
 		$urc =  $usrc->fetchRow();
 		$sudo_user = $urc['user'];
 		gs_log(GS_LOG_NOTICE, getmypid() .': Check vCards for ' . $sudo_user . ': '. $vcr['login'] . ': ' .  $vcr['url'], $CARDDAV_LOG, $FIFO );
-	} else {
-		break; //the loop
-	}
+
+	} else break; //the loop
 
 	// update next check immediately to avoid concurrent execs in timeout situations
 	$hdm2text = array(
