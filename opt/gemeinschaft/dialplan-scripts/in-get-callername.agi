@@ -37,7 +37,7 @@ ob_implicit_flush(1);
 
 function search_number ( $user_id, $source, $cid , $db ) {
 	if ($source == 'private')
-		$query = 'SELECT `firstname`, `lastname`, `number`, `ptype` FROM `pb_prv` WHERE `user_id`=' . $user_id . ' AND `number`= \'' . $db->escape($cid) . '\'';
+		$query = 'SELECT `firstname`, `lastname`, `number`, `ptype` FROM `pb_prv` WHERE ( `user_id`=' . $user_id . ' OR `user_id`=1 ) AND `number`= \'' . $db->escape($cid) . '\'';
 	else if ($source == 'public')
 		$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_ldap` WHERE `number`=\''. $db->escape($cid) . '\'';
 
