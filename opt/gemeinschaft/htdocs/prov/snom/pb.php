@@ -161,7 +161,7 @@ if (! $type) {
 		switch ($t) {
 		case 'gs'      : $cq .= '`users` WHERE `id` IN ('.implode(',',$group_members).') AND `id`!='.$user_id; break;
 		case 'imported': $cq .= '`pb_ldap`'                           ; break;
-		case 'prv'     : $cq .= '`pb_prv` WHERE `user_id`='. $user_id ; break;
+		case 'prv'     : $cq .= '`pb_prv` WHERE (`user_id`='. $user_id . 'OR `user_id`=1 )' ; break;
 		default        : $cq  = false;
 		}
 		$c = $cq ? (' ('. (int)@$db->executeGetOne( $cq ) .')') : '';
