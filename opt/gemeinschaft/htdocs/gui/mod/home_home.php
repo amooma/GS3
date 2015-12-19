@@ -337,7 +337,7 @@ FROM
 WHERE
         `user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] . ' 
 ORDER BY `active`, `error_count` DESC
-LIMIT 5'
+LIMIT 3'
                 );
 	?>
 	
