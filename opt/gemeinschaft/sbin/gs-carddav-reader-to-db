@@ -148,7 +148,7 @@ function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
 				if ( empty($param) ) continue;
 				$k2 = explode('=', strtoupper( $param ));
 				if ( 'TYPE' == $k2[0] ) {
-					$k2[1] = preg_replace('"', '', $k2[1]);
+					$k2[1] = str_replace('"', '', $k2[1]);
 					if ( $k2[1] == 'MAIN' ) $n[$number]['pref'] = 1;
 					if ( $k2[1] == 'PREF' ) $n[$number]['pref'] = 1;
 					else $n[$number]['type'] .= strtolower( $k2[1] ) . ',';
