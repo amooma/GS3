@@ -342,7 +342,7 @@ if (@$rs) {
 				(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 				? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
 			echo '<a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', rawUrlEncode($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a> &nbsp; ';
-			if ( $r['user_id'] ) { // edit only own recordset, other's within the cloud
+			if ( $r['user_id'] != 1 ) { // edit only own recordset, other's within the cloud
         			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page) . $search_cat, '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
 	        		echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page) . $search_cat, '" title="', __('entfernen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
                         }
@@ -388,5 +388,5 @@ if ($edit_entry < 1) {
 </form>
 <br>
 <p class="text"><sup>[1]</sup> is only shown for cloud records. You can loose local changes on a cloud record with a refresh,<br>
- &nbsp; &nbsp; &nbsp;  rather modify/delete this entry within your cloud!</p>
+ &nbsp; &nbsp; &nbsp;  rather modify/delete this entry within your cloud. Public entries can not be edited here.</p>
 <p class="text"><sup>[2]</sup> Type of phone number: cell/work/home etc.</p>
