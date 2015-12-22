@@ -1,13 +1,18 @@
-#!/usr/bin/php -q
 <?php
 /*******************************************************************\
-*	Gemeinschaft - asterisk cluster gemeinschaft
+*            Gemeinschaft - asterisk cluster gemeinschaft
 * 
 * $Revision$
 * 
-* Copyright 2015, Markus Neubauer, Zeitblomstr. 29, 81735 München, Germany,
-* http://www.std-soft.com/
-* Markus Neubauer <markus.neubauer@email-online.org>
+* Copyright 2007, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
+* http://www.amooma.de/
+* Stefan Wintermeyer <stefan.wintermeyer@amooma.de>
+* Philipp Kempgen <philipp.kempgen@amooma.de>
+* Peter Kozak <peter.kozak@amooma.de>
+* Soeren Sprenger <soeren.sprenger@amooma.de>
+* Markus Neubauer <markus.neubauer@email-online.org> - 2015
+*  - extending db and preparing for vcards
+* you need to alter the db for this version to work:
 * 
 * 
 * This program is free software; you can redistribute it and/or
@@ -26,367 +31,362 @@
 * MA 02110-1301, USA.
 \*******************************************************************/
 
+defined('GS_VALID') or die('No direct access.');
+include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
-define('GS_VALID', true); // arriving nativ here
+echo '<h2>';
+if (@$MODULES[$SECTION]['icon'])
+	echo '<img alt=" " src="', GS_URL_PATH, str_replace('%s', '32', $MODULES[$SECTION]['icon']), '" /> ';
+if (count( $MODULES[$SECTION]['sub'] ) > 1 )
+	echo $MODULES[$SECTION]['title'], ' - ';
+echo $MODULES[$SECTION]['sub'][$MODULE]['title'];
+echo '</h2>', "\n";
 
-require_once( dirName(__FILE__) .'/../inc/conf.php' );
-$CARDDAV_LOG = 'cloud_connector.log';
-$FIFO = '';
-$process_name = 'vcard-checker';
-include_once( GS_DIR .'inc/log.php' );
 
-if (defined('STDIN' )) @fClose(STDIN );
-if (defined('STDOUT')) @fClose(STDOUT);
-if (defined('STDERR')) @fClose(STDERR);
-
-include_once( GS_DIR .'lib/yadb/yadb.php' );
-include_once( GS_DIR .'inc/gs-lib.php' );
-require_once( GS_DIR .'lib/carddav/CardDAV.php' );
-require_once( GS_DIR .'lib/XML/xml2array.php' );
-require_once( GS_DIR .'inc/db_connect.php' );
-
-$CLOUD_MSG = '';
-
-// vCard DAV connect
-function gs_vcards_connect( $url=null, $login=null, $pass=null ) {
-  global $CARDDAV_LOG, $FIFO, $CLOUD_MSG, $sudo_user;
-
-	if (! class_exists('carddav_backend')) {
-		$CLOUD_MSG = 'This system does not support carddav (lib CardDav.php missing)!';
-		gs_log( GS_LOG_FATAL, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
-		return false;
-	}
-
-	$carddav_conn = new carddav_backend($url);
-	$carddav_conn->set_auth($login, $pass);
-
-	if ( $carddav_conn->check_connection() ) {
-		$CLOUD_MSG = $sudo_user . ': connected to CardDAV '. $url .' for user ' . $login;
-		gs_log(GS_LOG_DEBUG, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
-		return $carddav_conn;
-	} else {
-		$CLOUD_MSG = $sudo_user . ': Can not connect to cloud, check url, and login/password.';
-		gs_log(GS_LOG_FATAL, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
-		return false;
-	}
+echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
+echo '<script type="text/javascript">
+//<![CDATA[
+function confirm_delete() {
+	return confirm(', utf8_json_quote(__("Wirklich l\xC3\xB6schen?")) ,');
 }
+//]]>
+</script>' ,"\n";
 
-// update gs records
-function gs_vcard_update( $vcr, $head, $vcard, $lvc=array() ) {
-  global $CARDDAV_LOG, $FIFO, $DB, $CANONIZE_INTL_PREFIX, $CANONIZE_COUNTRY_CODE, $CANONIZE_NATL_PREFIX, $USER_ID;
+$per_page = (int)GS_GUI_NUM_RESULTS;
 
-	$last_modified = date("Y-m-d H:i:s", strtotime( $head['d:propstat']['d:prop']['d:getlastmodified'] ));
-	$etag = str_replace('"', '', $head['d:propstat']['d:prop']['d:getetag']);
+$name         =      trim(@$_REQUEST['name'   ]);
+$number       =      trim(@$_REQUEST['number' ]);
+$ptype        =      trim(@$_REQUEST['ptype' ]);
+$catid        =      trim(@$_REQUEST['catid' ]);
+$save_lname   =      trim(@$_REQUEST['slname' ]);
+$save_fname   =      trim(@$_REQUEST['sfname' ]);
+$save_number  =      trim(@$_REQUEST['snumber']);
+$save_ptype   =      trim(@$_REQUEST['sptype']);
+$page         = (int)    (@$_REQUEST['page'   ]);
+$delete_entry = (int)trim(@$_REQUEST['delete' ]);
+$edit_entry   = (int)trim(@$_REQUEST['edit'   ]);
+$save_entry   = (int)trim(@$_REQUEST['save'   ]);
 
-	// remove phone numbers on existing vcards -> update is difficult due to aligment with name/phone number
-	if ( ! empty($lvc) ) {
-		$DB->execute('DELETE FROM `pb_prv` WHERE `card_id`=' . $lvc['id']);
-		$DB->execute('DELETE FROM `pb_prv_category` WHERE `card_id`=' . $lvc['id']);
-	}
-	else {
-		$DB->execute('INSERT INTO `pb_cloud_card` ' .
-				' (`cloud_id`,`vcard_id`,`etag`,`vcard`,`last_modified`) ' .
-				' VALUES(' . $vcr['id'] . ',\'' . $head['vcard_id'] . '\',\'' . $etag . '\',\'' . mysql_real_escape_string($vcard) . '\',\'' . $last_modified . '\')');
-		$lvc = $DB->execute( 'SELECT `id`,`cloud_id`,`vcard_id`,`etag`,`last_modified`' .
-				' FROM `pb_cloud_card` ' .
-				' WHERE `cloud_id`=' . $vcr['id'] . 
-					' and `vcard_id`=\'' . $head['vcard_id'] . '\' LIMIT 1'
-				)->fetchRow();
-	}
+$user_id = (int)@$_SESSION['sudo_user']['info']['id'];
 
-	$tmp_vcard = explode("\n", $vcard);
-
-	$n = array();
-	$acat = array();
-	$aparam = array();
-	$fn   = '';
-	$ln   = '';
-	foreach ( $tmp_vcard as $value ) {
-		if ( empty( $value ) ) continue;
-
-
-		$pos = strpos($value, ':');
-		$elem = trim(substr($value, $pos + 1 ));
-		$aparam = explode(';', substr($value, 0, $pos));
-		$key  = strtoupper( array_shift( $aparam ) );
-
-		// we need only name, category and tel type records for the phone book
-		if ( 'N' != $key && 'TEL' != $key && 'CATEGORIES' != $key ) continue;
-
-		if     ( 'N' == $key ) {
-			// reverse the array N for the phones display
-			$aname = explode(';', $elem);
-			$ln = array_shift( $aname );
-			for ($i = count($aname); $i >= 0; $i--) {
-				if ( empty($aname[$i]) ) continue;
-				$fn .= ' ' . $aname[$i];
-			}
-			$fn = ltrim( $fn );
-			if ( empty( $ln) ) { $ln = $fn; $fn=''; }
-		}
-
-		elseif ( 'TEL' == $key ) {
-
-			// do not canonize on sip strings
-			if ( strpos($elem, '@') === false ) {
-
-				if ( '+' == substr($elem, 0, 1) ) 
-					$elem = GS_CANONIZE_INTL_PREFIX . substr($elem, 1);
-
-				$number = preg_replace('/\D/', '', $elem);
-
-				if ( GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE == substr($number, 0, strlen(GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE) ) ) 
-					$number = GS_CANONIZE_NATL_PREFIX . substr($number, strlen(GS_CANONIZE_INTL_PREFIX . GS_CANONIZE_COUNTRY_CODE));
-			}
-			else $number = $elem;
-
-			// add number to array, making it singular
-			if ( ! isset($n[$number]) ) $n[$number] = array( 'type' => '', 'pref' => 99 );
-
-			// add attributes to the number
-			foreach ( $aparam as $param ) {
-				if ( empty($param) ) continue;
-				$k2 = explode('=', strtoupper( $param ));
-				if ( 'TYPE' == $k2[0] ) {
-					$k2[1] = str_replace('"', '', $k2[1]);
-					if ( $k2[1] == 'MAIN' ) $n[$number]['pref'] = 1;
-					if ( $k2[1] == 'PREF' ) $n[$number]['pref'] = 1;
-					else $n[$number]['type'] .= strtolower( $k2[1] ) . ',';
-				}
-				elseif ( 'PREF' == $key2 ) $n[$number]['pref'] = $value2;
-			}
-			$n[$number]['type'] = rtrim($n[$number]['type'], ',');
-		}
-		elseif ( 'CATEGORIES' == $key ) $acat = explode( ',', $elem );
-	}
-
-	// loop over phone numbers
-	foreach ( $n as $number => $param ) {
-
-		$prc=false;
-		// check_duplicates from within a vcard -> try to avoid duplicates, the latest wins
-		if ( $prc = $DB->execute('SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $USER_ID . ' AND `firstname`=\'' . $fn . '\' AND `lastname`=\'' . $ln . '\' AND `number`=\'' . $number . '\' AND `card_id`=0 LIMIT 1')->fetchRow() )
-			$DB->execute('DELETE FROM `pb_prv` WHERE `id`=' . $prc['id']);
-		// net could probably changed to an update 
-		elseif ( $prc = $DB->execute('SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $USER_ID . ' AND `firstname`=\'' . $fn . '\' AND `lastname`=\'' . $ln . '\' AND `number`=\'' . $number . '\' LIMIT 1')->fetchRow() )
-			$DB->execute('DELETE FROM `pb_prv` WHERE `id`=' . $prc['id']);
-
-		// add a phone record
-		$DB->execute('INSERT INTO `pb_prv` ' .
-			' (`user_id`,`firstname`,`lastname`,`number`,`ptype`,`pref`,`card_id`) ' .
-			' VALUES(' . $USER_ID .',\'' . $fn .'\',\'' . $ln .'\',\'' . $number .'\',\'' . $param['type'] .'\',' . $param['pref'] . ',' . $lvc['id'] . ')');
-
-		// loop over categories
-		if ( ! empty( $acat) ) {
-			$prc = $DB->execute( 'SELECT `id` FROM `pb_prv` WHERE `user_id`=' . $USER_ID . ' and `firstname`=\'' . $fn  . '\' and `lastname`=\'' . $ln  . '\' and `number`=\'' . $number . '\' and `ptype`=\'' . $param['type'] . '\' and `card_id`=' . $lvc['id'] . ' LIMIT 1')->fetchRow();
-			foreach ( $acat as $cat ) {
-				if ( empty($cat) ) continue;
-				if ( ! $crc = $DB->execute( 'SELECT `id` FROM `pb_category` WHERE `user_id`=' . $USER_ID . ' and `category`=\'' . $cat  . '\'')->fetchRow() ) {
-					// insert rec
-					$DB->execute('INSERT INTO `pb_category` ' .
-						' (`user_id`,`category`) ' .
-						' VALUES(' . $USER_ID .',\'' . $cat .'\')');
-					$crc = $DB->execute( 'SELECT `id` FROM `pb_category` WHERE `user_id`=' . $USER_ID . ' and `category`=\'' . $cat  . '\' LIMIT 1')->fetchRow();
-				}
-				// correct xref
-				$DB->execute('INSERT INTO `pb_prv_category` ' .
-					' (`user_id`,`cat_id`,`card_id`,`prv_id`) ' .
-					' VALUES(' . $USER_ID .',' . $crc['id'] .',' . $lvc['id'] .',' . $prc['id'] . ')');
-			}
-		}
-	}
-
-}
-
-
-// fetch vcards for a cloud entry
-function gs_user_vcards_update( $vcr ) {
-  global $CARDDAV_LOG, $FIFO, $DB, $CLOUD_MSG, $USER_ID;
-	$vc_add = 0;
-	$vc_mod = 0;
-	$vc_del = 0;
-	$vc_seen = 0;
-
-	$carddav_conn = gs_vcards_connect( $vcr['url'], $vcr['login'], $vcr['pass'] );
-	if ( ! is_object( $carddav_conn ) || $carddav_conn === false ) {
-		return false;
-	}
-
-	$a = new XMLThing();
-	$vchead = $a->parse($carddav_conn->get(false,true));
-	$vchead = $vchead['d:multistatus']['d:response'];
-	$head   = array_shift ( $vchead );
-	$CLOUD_MSG = '';
-
-	// skip rest if not modified between, depending on header etag or lastmodified
-	if ( isset( $head['d:propstat']['d:prop']['cs:getctag'] ) ) {
-		// ref etag: https://tools.ietf.org/html/rfc6352
-		$last_ctag = str_replace('"', '', $head['d:propstat']['d:prop']['cs:getctag']);
-		if ( $last_ctag == $vcr['last_ctag'] ) {
-			$CLOUD_MSG =  'no update, cloud last ctag: '. $last_ctag;
-			gs_log(GS_LOG_DEBUG, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
-			return true;
-		}
-	} else  $last_ctag = '';
-
-	if ( isset($head['d:propstat']['d:prop']['d:getlastmodified']) ) {
-		$last_modified = date("Y-m-d H:i:s", strtotime( $head['d:propstat']['d:prop']['d:getlastmodified'] ));
-		if ( $last_modified <= $vcr['last_remote_modified'] ) {
-			$CLOUD_MSG = 'no update, cloud last modified: '. $last_modified;
-			gs_log(GS_LOG_DEBUG, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
-			return true;
-		}
-	} else $last_modified = $vcr['modified'];
-
-	gs_log(GS_LOG_DEBUG, getmypid() .': updating..., last modified='. $last_modified, $CARDDAV_LOG, $FIFO );
-	// update ctag and last_modified immed
-	$DB->execute('UPDATE `pb_cloud` SET `ctag`=\'' . $last_ctag . '\', `last_remote_modified`=\'' . $last_modified . '\' WHERE `id`=' . $vcr['id']);
-
-	// get unseen records
-	gs_log(GS_LOG_DEBUG, getmypid() .': fetch unseen', $CARDDAV_LOG, $FIFO );
-	$unseen=array();
-	$unrc = $DB->execute('SELECT `id`, `vcard_id`,`etag`, `last_modified` FROM `pb_cloud_card` WHERE `cloud_id`=' . $vcr['id']);
-	while ( $urc = $unrc->fetchRow() ) {
-		$unseen[$urc['vcard_id']] = array(
-			'id'		=> $urc['id'],
-			'etag'		=> $urc['etag'],
-			'last_modified' => $urc['last_modified']
-			);
-	}
-	if ( empty($unseen) ) gs_log(GS_LOG_DEBUG, getmypid() .': no unseen, adding ...', $CARDDAV_LOG, $FIFO );
-
-	gs_log(GS_LOG_DEBUG, getmypid() .': updating vcards...', $CARDDAV_LOG, $FIFO );
-
-	// iterate through all of them
-	for ($i = 0; $i < count($vchead); $i++) {
-
-		$vcard_id=str_replace('.vcf', null, substr($vchead[$i]['d:href'], strrpos($vchead[$i]['d:href'], '/') + 1) );
-
-		$vchead[$i]['vcard_id'] =  $vcard_id;
-
-		$vc_seen += 1;
-		// check for existing vcard
-		if ( isset($unseen[$vcard_id]) ) {
-			$lvc = $unseen[$vcard_id];
-			// avoid deleting
-			unset($unseen["$vcard_id"]);
-
-			// skip if not modified
-			$last_modified = date("Y-m-d H:i:s", strtotime( $vchead[$i]['d:propstat']['d:prop']['d:getlastmodified'] ));
-			$last_etag = str_replace('"', '', $vchead[$i]['d:propstat']['d:prop']['d:getetag']);
-			if ( $last_etag == $lvc['etag'] && $last_modified == $lvc['last_modified'] ) continue;
-
-			$vc_mod += 1;
-			gs_log(GS_LOG_DEBUG, getmypid() .': updating '. $vcard_id, $CARDDAV_LOG, $FIFO );
-
-			$vchead[$i]['d:propstat']['d:prop']['d:getlastmodified'] = $last_modified;
-
-			// modified remote get the new vcard
-			$vcard = $carddav_conn->get_vcard($vcard_id . '.vcf');
-			gs_vcard_update( $vcr, $vchead[$i], $vcard, $lvc );
-
-		} else {
-			// missing local add new vcard
-			$vc_add += 1;
-			gs_log(GS_LOG_DEBUG, getmypid() .': adding '. $vcard_id, $CARDDAV_LOG, $FIFO );
-			$vcard = $carddav_conn->get_vcard($vcard_id . '.vcf');
-			gs_vcard_update( $vcr, $vchead[$i], $vcard );
-		}
-	}
-
-	// delete no more existing recs
-	foreach ($unseen as $vcard_id => $value) {
-		$vc_del += 1;
-		gs_log(GS_LOG_DEBUG, getmypid() .': deleting '. $vcard_id, $CARDDAV_LOG, $FIFO );
-		$DB->execute('DELETE FROM `pb_prv_category` WHERE `user_id`=' . $USER_ID . ' and `card_id`=' . $value['id']);
-		$DB->execute('DELETE FROM `pb_prv` WHERE `user_id`=' . $USER_ID . ' and `card_id`=' . $value['id']);
-		$DB->execute('DELETE FROM `pb_cloud_card` WHERE `id`=' . $value['id']);
-	}
-
-	// clean up categories
-	$rs2 = $DB->execute(  'DELETE c FROM `pb_category` AS c ' . 
-				 ' LEFT JOIN `pb_prv_category` AS p ' .
-					' ON  c.id = p.cat_id ' . 
-				     ' WHERE  c.user_id = ' . $USER_ID .
-				       ' AND  p.id IS NULL'
-				);
-	$CLOUD_MSG = $vc_seen . ' seen, ' . $vc_mod . ' modified, ' . $vc_add . ' added, ' . $vc_del . ' deleted';
-	gs_log(GS_LOG_DEBUG, getmypid() . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
-
-	return true;
-}
-
-$DB = gs_db_master_connect();
-
-
-// remain in loop, doing a record time by time (avoid race cond in dup exec)
-while ( true ) {
-	$CLOUD_MSG = '';
-	$vcrc = @ $DB->execute(
-		'SELECT
-		`id`, `user_id`, `url`, `login`, cast(des_decrypt(`pass`,`login`) as char(16)) as pass, `frequency`, `ctag`, 
-		`last_remote_modified`, `modified`, `error_count`, `public`
-		FROM `pb_cloud` 
-		WHERE `next_poll` < NOW() AND `active`=1 ORDER BY `next_poll`
-		LIMIT 1'
-		);
-	if ( $vcr = $vcrc->fetchRow() ) {
-		$usrc = $DB->execute('SELECT `user` FROM `users` WHERE `id`=' . $vcr['user_id'] . ' LIMIT 1');
-		$urc =  $usrc->fetchRow();
-		$sudo_user = $urc['user'];
-		gs_log(GS_LOG_NOTICE, getmypid() .': Checking vCards for ' . $sudo_user . ': '. $vcr['login'] . ': ' .  $vcr['url'], $CARDDAV_LOG, $FIFO );
-
-	} else break; // the loop, nothing to be done anymore
+if ($delete_entry > 0) {
+	# delete entry
 	
-
-	// update next check immediately to avoid concurrent execs in timeout situations
-	$hdm2text = array(
-		'h' => 'hour',
-		'd' => 'day', 
-		'm' => 'month' 
+	$rs = $DB->execute(
+'DELETE FROM `pb_prv`
+WHERE `id`='. $delete_entry .' AND `user_id`='. $user_id
 	);
-	$period = substr($vcr['frequency'], -1);
-	$freq = substr($vcr['frequency'], 0, -1);
-	if ( $freq > 1 ) $more = 's'; 
-	else $more = '';
+	
+}
 
-	$next_poll = date_format(date_add( date_create(), DateInterval::createFromDateString("$freq $hdm2text[$period]" . "$more") ), "Y-m-d H:i:s");
-
-	$DB->execute('UPDATE `pb_cloud` SET `next_poll`=\'' . $next_poll . '\', `message`=\'Update in progress...\' WHERE `id`=' . $vcr['id']);
-
-	// if its a public record we are goig to write for user_id = 0 (which should(!) not exist)
-	if ( $vcr['public'] ) $USER_ID = 1;
-	else $USER_ID = $vcr['user_id'];
-
-	$unset_active='';
-
-	if ( gs_user_vcards_update( $vcr )  === true ) {
-
-		// all went ok
-		gs_log(GS_LOG_NOTICE, getmypid() .': Check vCards completed normal for ' . $sudo_user . '.', $CARDDAV_LOG, $FIFO );
-		$CLOUD_MSG     = 'OK - ' . $CLOUD_MSG;
-		$error_counter = ', `error_count`=0 ';
-
+if (($save_lname != '' || $save_fname != '') && ($save_number != '')) {
+	# save entry
+	
+	if ($save_entry < 1) {
+		
+		$rs = $DB->execute(
+'INSERT INTO `pb_prv` (`id`, `user_id`, `lastname`, `firstname`, `number`, `ptype`) VALUES
+(NULL, '. $user_id .', \''. $DB->escape($save_lname) .'\', \''. $DB->escape($save_fname) .'\', \''. $DB->escape($save_number) .'\', \''. $DB->escape($save_ptype) .'\')'
+		);
+		
 	} else {
-
-		// any failure
-		$error_counter=', `error_count`=`error_count`+1 ';
-		$CLOUD_MSG = getmypid() . ': ';
-		if ( $vcr['error_count'] = 4 ) {
-			// deactivate record
-			$unset_active = ', `active`=0 ';
-			$CLOUD_MSG .= 'Set inactive. ';
-		};
-		$CLOUD_MSG .= 'Check vCards failed for ' . $vcr['login'] . ': ' . $vcr['url'];
-		gs_log(GS_LOG_WARNING, $sudo_user . ': ' . $CLOUD_MSG, $CARDDAV_LOG, $FIFO );
-		// increment error counter
+		
+		$rs = $DB->execute(
+'UPDATE `pb_prv` SET `lastname`=\''. $DB->escape($save_lname) .'\', `firstname`=\''. $DB->escape($save_fname) .'\', `number`=\''. $DB->escape($save_number) .'\', `ptype`=\''. $DB->escape($save_ptype) .'\'
+WHERE `id`='. $save_entry .' AND `user_id`='. $user_id
+		);
+		
 	}
+	$save_number = '';
+	$save_name = '';
+	$save_ptype = '';
+}
 
-	// inform on user display
-	$DB->execute('UPDATE `pb_cloud` SET `message` = CONCAT_WS(\' \', ' .
-				'\'' . $CLOUD_MSG . '\',\', last check: \', `modified` ) ' .
-				$error_counter . $unset_active .
-                     ' WHERE `id` = ' . $vcr['id']);
+if ( empty($catid) && isset($SESSION['catid']) ) $catid=(int)@$SESSION['catid'];
+elseif ( empty($catid) ) $catid=0;
+
+$sel = ( $catid == 0 ) ? ' selected="selected"' : '';
+$ac = array('<option value="0"'.$sel.'>' . __('Alle Kategorien') . '</option>');
+
+$cs = $DB->execute(
+        'SELECT `c`.`id`, `c`.`category` '.
+	'FROM   `pb_category` `c` '.
+        'LEFT JOIN `pb_prv_category` `p` ON `c`.`id` = `p`.`cat_id` ' .
+	'WHERE '.
+	        '`p`.`id` IS NOT NULL AND ' .
+		'( `c`.`user_id`='. $DB->escape($user_id).' OR `c`.`user_id`=1 )'.
+        'GROUP BY `c`.`category` '.
+	'ORDER BY `c`.`category`'
+	);
+while ( $r = $cs->fetchRow() ) {
+       	$sel = ($catid == @$r['id']) ? ' selected="selected"' : '';
+        $ac[] = '<option value="' . $r['id'] . '"' . $sel . '>' . $r['category'] . '</option>';
+}
+
+$query = 'SELECT SQL_CALC_FOUND_ROWS '.
+			'`p`.`id`, `p`.`lastname`, `p`.`firstname`, `p`.`number` , `p`.`ptype`, `p`.`card_id`, `p`.`user_id`'.
+		' FROM `pb_prv` `p`';
+$where = ' WHERE ( `p`.`user_id`='. $user_id . ' OR `p`.`user_id`=1 ) ';
+
+if ($number != '') {
+
+	# search by number
+	$name = '';
+	$search_url = 'number='. urlEncode($number);
+	$number_sql = str_replace(
+		array( '*', '?' ),
+		array( '%', '_' ),
+		$number
+	) .'%';
+        $where .= ' AND `p`.`number` LIKE \''. $DB->escape($number_sql) .'\' ';
+
+} else {
+
+	# search by name
+	$number = '';
+	$search_url = 'name='. urlEncode($name);
+	$name_sql = str_replace(
+		array( '*', '?' ),
+		array( '%', '_' ),
+		$name
+	) .'%';
+        $where .= ' AND ( `p`.`lastname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci OR '.
+                    ' `p`.`firstname` LIKE _utf8\''. $DB->escape($name_sql) .'\' COLLATE utf8_unicode_ci ) ';
+}
+
+if ( $catid != 0 ) {
+        $search_url .= '&amp;catid='. $catid;
+        $search_cat = '&amp;catid='. $catid;
+        $query .= ' LEFT JOIN `pb_prv_category` `pc` ON `p`.`id` = `pc`.`prv_id` ';
+        $where .= ' AND `pc`.`cat_id` = ' . $catid;
+} else $search_cat = '';
+$SESSION['catid']=$catid;
+
+$order = ' ORDER BY `p`.`lastname`, `p`.`firstname`, `p`.`pref`, `p`.`ptype` ';
+$limit = ' LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
+
+$rs = $DB->execute( $query . $where . $order . $limit);
+
+$num_total = @$DB->numFoundRows();
+$num_pages = ceil($num_total / $per_page);
+
+?>
+
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th style="width:270px;"><?php echo __('Name suchen'); ?></th>
+	<th style="width:170px;"><?php echo __('Nummer suchen'); ?></th>
+	<th style="width:138px;"><?php echo __('Kategorie'); ?> <sup>[1]</sup></th>
+	<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>
+		<form method="get" action="<?php echo GS_URL_PATH; ?>">
+		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+		<input type="hidden" name="catid" value="<?php echo $catid ?>" />
+		<input type="text" name="name" id="ipt-name" value="<?php echo htmlEnt($name); ?>" size="25" style="width:200px;" />
+		<script type="text/javascript">/*<![CDATA[*/ try{ document.getElementById('ipt-name').focus(); }catch(e){} /*]]>*/</script>
+		<button type="submit" title="<?php echo __('Name suchen'); ?>" class="plain">
+			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
+		</button>
+		</form>
+	</td>
+	<td>
+		<form method="get" action="<?php echo GS_URL_PATH; ?>">
+		<?php echo gs_form_hidden($SECTION, $MODULE); ?>
+		<input type="hidden" name="catid" value="<?php echo $catid ?>" />
+		<input type="text" name="number" value="<?php echo htmlEnt($number); ?>" size="15" style="width:130px;" />
+		<button type="submit" title="<?php echo __('Nummer suchen'); ?>" class="plain">
+			<img alt="<?php echo __('Suchen'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/search.png" />
+		</button>
+		</form>
+	</td>
+	<td>
+		<?php
+	        if ( !empty($ac[1]) ) {
+                        echo '<form method="get" action="' . GS_URL_PATH .'">';
+                        echo gs_form_hidden($SECTION, $MODULE);
+        		echo '<select name="catid" onchange="this.form.submit();">';
+                        foreach ($ac as $option) {
+                                echo $option;
+                        }
+        		echo '</select></form>';
+                } else echo '&nbsp;';
+                ?>
+	</td>
+	<td rowspan="2">
+<?php
+
+if ($page > 0) {
+	echo
+	'<a href="', gs_url($SECTION, $MODULE, null, $search_url), '&amp;page=', ($page-1), '" title="', __('zur&uuml;ckbl&auml;ttern'), '" id="arr-prev">',
+	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust.png" />',
+	'</a>', "\n";
+} else {
+	echo
+	'<img alt="', __('zur&uuml;ck'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/back-cust-dis.png" />', "\n";
+}
+if ($page < $num_pages-1) {
+	echo
+	'<a href="', gs_url($SECTION, $MODULE, null, $search_url), '&amp;page=', ($page+1), '" title="', __('weiterbl&auml;ttern'), '" id="arr-next">',
+	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust.png" />',
+	'</a>', "\n";
+} else {
+	echo
+	'<img alt="', __('weiter'), '" src="', GS_URL_PATH, 'crystal-svg/32/act/forward-cust-dis.png" />', "\n";
 }
 
 ?>
+	</td>
+</tr>
+<tr>
+	<td colspan="3" class="quickchars">
+<?php
+
+$chars = array();
+$chars['#'] = '';
+for ($i=65; $i<=90; ++$i) $chars[chr($i)] = chr($i);
+foreach ($chars as $cd => $cs) {
+	echo '<a href="', gs_url($SECTION, $MODULE, null, 'name='. htmlEnt($cs)) . $search_cat, '">', htmlEnt($cd), '</a>', "\n";
+}
+
+?>
+	</td>
+</tr>
+</tbody>
+</table>
+
+
+
+<?php
+echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
+echo gs_form_hidden($SECTION, $MODULE), "\n";
+echo '<input type="hidden" name="name" value="', htmlEnt($name), '" />', "\n";
+echo '<input type="hidden" name="number" value="', htmlEnt($number), '" />', "\n";
+echo '<input type="hidden" name="ptype" value="', htmlEnt($ptype), '" />', "\n";
+echo '<input type="hidden" name="catid" value="', $catid, '" />', "\n";
+?>
+
+<table cellspacing="1" class="phonebook">
+<thead>
+<tr>
+	<th style="width:270px;"<?php if ($number=='') echo ' class="sort-col"'; ?>>
+		<?php echo __('Nachname') .', '. __('Vorname'); ?>
+	</th>
+	<th style="width:170px;"<?php if ($number!='') echo ' class="sort-col"'; ?>>
+		<?php echo __('Nummer'); ?>
+	</th>
+	<th style="width:130px;"<?php if ($ptype!='') echo ' class="sort-col"'; ?>>
+		<?php echo __('Lokation'); ?><sup>[2]</sup>
+	</th>
+	<th style="width:100px;">&nbsp;</th>
+</tr>
+</thead>
+<tbody>
+
+<?php
+
+if (@$rs) {
+	$i = 0;
+	$last_seen = '';
+	while ($r = $rs->fetchRow()) {
+		echo '<tr class="', ((++$i % 2 == 0) ? 'even':'odd'), '">', "\n";
+		
+		if ($r['id']==$edit_entry) {
+ 			
+			echo '<td>';
+			echo '<input type="text" name="slname" value="', htmlEnt($r['lastname']), '" size="15" maxlength="40" style="width:125px;" /><input type="text" name="sfname" value="', htmlEnt($r['firstname']), '" size="15" maxlength="40" style="width:115px;" />';
+			echo '</td>', "\n";
+			
+			echo '<td>';
+			echo '<input type="text" name="snumber" value="', htmlEnt($r['number']), '" size="15" maxlength="25" style="width:150px;" />';
+			echo '</td>', "\n";
+			
+			echo '<td>';
+			echo '<input type="text" name="sptype" value="', htmlEnt($r['ptype']), '" size="15" maxlength="16" style="width:130px;" />';
+			echo '</td>', "\n";
+			
+			echo '<td>';
+			echo '<input type="hidden" name="save" value="', $r['id'], '" />';
+			echo '<input type="hidden" name="page" value="', $page, '" />';
+			echo '<button type="submit" title="', __('Eintrag speichern'), '" class="plain">';
+			echo '<img alt="', __('speichern'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/filesave.png" />';
+			echo '</button>';
+			echo '<button type="reset" title="', __('r&uuml;ckg&auml;ngig'), '" class="plain">';
+			echo '<img alt="', __('r&uuml;ckg&auml;ngig'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/reload.png" />';
+			echo '</button>';
+			echo '<a href="', gs_url($SECTION, $MODULE, null, 'page='. $page) . $search_cat, '" title="', __('abbrechen'), '"><img alt="', __('abbrechen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/cancel.png" /></a>';
+	
+			echo '</td>';
+			
+		} else {
+			
+			$show_name = trim( $r['lastname'] . ', ' . $r['firstname'], " ," );
+			if ( $last_seen != $show_name ) {
+				echo '<td>';
+				$last_seen = htmlEnt($show_name);
+			}
+			else echo '<td style="opacity: 0.0;">';
+			echo $last_seen;
+			echo '</td>', "\n";
+			
+			echo '<td>', htmlEnt($r['number']), '</td>', "\n";
+
+			echo '<td>', htmlEnt($r['ptype']), '</td>', "\n";
+			
+			echo '<td>';
+			$sudo_url =
+				(@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
+				? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);
+			echo '<a href="', GS_URL_PATH, 'srv/pb-dial.php?n=', rawUrlEncode($r['number']), $sudo_url, '" title="', __('w&auml;hlen'), '"><img alt="', __('w&auml;hlen'), '" src="', GS_URL_PATH, 'crystal-svg/16/app/yast_PhoneTTOffhook.png" /></a> &nbsp; ';
+			if ( $r['user_id'] != 1 ) { // edit only own recordset, other's within the cloud
+        			echo '<a href="', gs_url($SECTION, $MODULE, null, 'edit='.$r['id'] .'&amp;name='. rawUrlEncode($name) .'&amp;number='. rawUrlEncode($number) .'&amp;page='.$page) . $search_cat, '" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';
+	        		echo '<a href="', gs_url($SECTION, $MODULE, null, 'delete='.$r['id'] .'&amp;page='.$page) . $search_cat, '" title="', __('entfernen'), '" onclick="return confirm_delete();"><img alt="', __('entfernen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+                        }
+			if ( $r['card_id'] ) echo ' <sup>[1]</sup>';
+			echo '</td>';
+			
+		}
+		
+		echo '</tr>', "\n";
+	}
+}
+
+?>
+
+
+<tr>
+<?php
+if ($edit_entry < 1) {
+?>
+	<td>
+		<input type="text" name="slname" value="" size="15" maxlength="40" style="width:125px;" /><input type="text" name="sfname" value="" size="15" maxlength="40" style="width:115px;" />
+	</td>
+	<td>
+		<input type="text" name="snumber" value="" size="15" maxlength="25" style="width:150px;" />
+	</td>
+	<td>
+		<input type="text" name="sptype" value="" size="15" maxlength="16" style="width:130px;" />
+	</td>
+	<td>
+		<button type="submit" title="<?php echo __('Eintrag speichern'); ?>" class="plain">
+			<img alt="<?php echo __('Speichern'); ?>" src="<?php echo GS_URL_PATH; ?>crystal-svg/16/act/filesave.png" />
+		</button>
+		<?php /*echo '<a href="', gs_url($SECTION, $MODULE, null, 'page='.$page), '" title="abbrechen"><img alt="abbrechen" src="', GS_URL_PATH, 'crystal-svg/16/act/cancel.png" /></a>';*/ ?>
+	</td>
+<?php
+}
+?>
+</tr>
+
+</tbody>
+</table>
+
+</form>
+<br>
+<p class="text"><sup>[1]</sup> is only shown for cloud records. You can loose local changes on a cloud record with a refresh,<br>
+ &nbsp; &nbsp; &nbsp;  rather modify/delete this entry within your cloud. Public entries can not be edited here.</p>
+<p class="text"><sup>[2]</sup> Type of phone number: cell/work/home etc.</p>
