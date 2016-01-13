@@ -138,7 +138,9 @@ if (@$rs) {
 	$last_seen = '';
 	while ($r = $rs->fetchRow()) {
 	        echo '<DirectoryEntry>' . PHP_EOL;
-	        echo '<Name>' . trim( $r['lastname'] . ', ' . $r['firstname'], " ," ) . ' (' . $r['ptype'] . ')</Name>' . PHP_EOL;
+	        echo '<Name>' . trim( $r['lastname'] . ', ' . $r['firstname'], " ," );
+		if ( ! empty($r['ptype']) )  echo ' (' . $r['ptype'] . ')';
+		echo '</Name>' . PHP_EOL;
 	        echo '<Telephone>' . $r['number'] . '</Telephone>' . PHP_EOL;
 	        echo '</DirectoryEntry>' . PHP_EOL;
 	}
