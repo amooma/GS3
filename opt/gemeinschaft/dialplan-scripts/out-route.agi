@@ -234,7 +234,7 @@ FROM `gates`
 WHERE
 	 `grp_id`='. $ggrp_id .' AND
 	 `allow_out`=1
-ORDER BY `name` LIKE CONCAT("gw_%_","'. $out_cid_num .'") DESC
+ORDER BY `title` LIKE CONCAT("%","'. $out_cid_num .'","%") DESC
 LIMIT 9'
 		);
 
