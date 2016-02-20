@@ -799,6 +799,7 @@ setting('user_pic'                ,$i, ''   );
 # sends Call-Info: icon="http://example.com/example.jpg" header
 setting('keepalive_interval'      ,$i, '14' );
 setting('user_full_sdp_answer'    ,$i, 'on' );
+setting('allow_mismatched_sdp_answers'    ,$i, 'on' );
 setting('user_failover_identity'  ,$i, 'none');
 setting('user_xml_screen_url'     ,$i, ''   );
 setting('user_event_list_subscription',$i, 'off');
@@ -840,6 +841,7 @@ setting('record_received_calls',$i, 'off');
 #
 for ($i=2; $i<=12; ++$i) {
 	setting('user_active', $i , 'off', null, true);
+	setting('allow_mismatched_sdp_answers'    ,$i, 'on' );
 }
 
 # Account 1 als aktiv setzen
