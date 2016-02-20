@@ -1319,19 +1319,24 @@ if ($phone_layout) {
 						switch ($key_level_idx) {
 							case 0: $left =  4; $right =  15; break;
 						}
-                                        case ('snom-720' || 'snom-725');
+                                        case ('snom-720' || 'snom-725'):
 						switch ($key_level_idx) {
 							case 0: $left =  0; $right =  17; break;
 						}
-					case ('snom-710' || 'snom-715');
+					case ('snom-710' || 'snom-715'):
                                                 switch ($key_level_idx) {
                                                         case 0: $left =  0; $right =  4; break;
                                                 }
-					case 'snom-821';
+					case 'snom-821':
                                                 switch ($key_level_idx) {
                                                         case 0: $left =  0; $right =  11; break;
                                                 }
-        				break;
+					default:
+						switch ($key_level_idx) {
+                                                        case 0: $left =  0; $right =  6; break;
+                                                }
+					break;
+
                                 }
 				break;
 		}
