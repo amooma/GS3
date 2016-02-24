@@ -6,7 +6,8 @@
 * 
 * Copyright 2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
-* Sebastian Ertz <gemeinschaft@swastel.eisfair.net>
+* Dirk Markwardt <dm@markwardt-software.de>
+* Mirco Bartels
 * 
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -509,7 +510,8 @@ if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) )
 	psetting('features.dnd.on_code', 'dnd-on');
 	psetting('features.dnd.off_code', 'dnd-off');
 	
-	
+	# Display own Extension
+	psetting('features.show_default_account', '1');
 	
 	# Security
 	###Define the login username and password of the user, var and administrator.
@@ -665,7 +667,7 @@ if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) )
 	psetting('local_time.manual_ntp_srv_prior','0');
 	psetting('local_time.interval'  , strval(rand(980,1020)));  # default 1000
 	psetting('local_time.time_format', '1');
-	psetting('local_time.date_format', '0');    # WWW MMM DD
+	psetting('local_time.date_format', '5');    # 0-WWW MMM DD; 1-DD-MMM-YY; 2-YYYY-MM-DD; 3-DD/MM/YYYY; 4-MM/DD/YY; 5-DD MMM YYYY; 6-WWW DD MMM
 	
 	#######################################################################################
 	##                                   Features Pickup(Except T20P model)              ##       
