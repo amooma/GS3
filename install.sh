@@ -391,7 +391,7 @@ ${APTITUDE_INSTALL} \
 	sipsak \
 	mysql-client mysql-server \
 	apache2 \
-	php5-cli libapache2-mod-php5 php5-mysql php5-ldap \
+	php5-cli libapache2-mod-php5 php5-mysql php5-ldap php5-curl \
 	python2.6 \
 	python-mysqldb \
 	sox libsox-fmt-all mpg123
