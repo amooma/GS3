@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -x
 
 #####################################################################
 #            Gemeinschaft - asterisk cluster gemeinschaft
@@ -31,7 +31,7 @@ SNOM_SW_DIR="/opt/gemeinschaft/htdocs/prov/snom/sw/"
 WGET="/usr/bin/wget"
 WGET_ARGS="-q -a /dev/null -t 1 -T 300 -nc -c"
 DOWNLOAD="${WGET} ${WGET_ARGS}"
-SNOM_BASE_URL="http://provisioning.snom.com/download/fw/"
+SNOM_BASE_URL="http://downloads.snom.com/fw/"
 SNOM_BASE_URL_6TO7="http://provisioning.snom.com/from6to7/"
 
 if [ ! -x ${WGET} ]; then
@@ -41,102 +41,36 @@ fi
 
 cd "${SNOM_SW_DIR}" || exit 1
 
-
 #####################################################################
-#  misc
+#  8.7.5.17
 #####################################################################
+MODELS="snom300
+snom320
+snom360
+snom370
+snom821
+snom870
+snom710
+snom720
+snom725
+snom715
+snom760"
 
-echo -n "Fetching Linux image snom360-3.25-l ...               "
-${DOWNLOAD} ${SNOM_BASE_URL}snom360-3.25-l.bin && echo 'Done' || echo 'Failed'
+function get_firmware {
+if [[ $i == snom3* ]];
+then
+	VERS='8.7.5.17-SIP-f'
+else
+	VERS='8.7.5.17-SIP-r'
+fi
+VERSFILE='08.07.05.17'
 
-echo -n "Fetching RootFS snom360-ramdiskToJffs2-3.36 ...       "
-${DOWNLOAD} ${SNOM_BASE_URL}snom360-ramdiskToJffs2-3.36-br.bin && echo 'Done' || echo 'Failed'
-
-echo -n "Fetching 6to7 Linux image snom360-3.38-l ...          "
-${DOWNLOAD} ${SNOM_BASE_URL_6TO7}snom360-3.38-l.bin && echo 'Done' || echo 'Failed'
-
-echo -n "Fetching 6to7 firmware snom360-update6to7-7.1.6 ...   "
-${DOWNLOAD} ${SNOM_BASE_URL_6TO7}snom360-update6to7-7.1.6-bf.bin && echo 'Done' || echo 'Failed'
-
-
-#####################################################################
-#  6.5.10
-#####################################################################
-
-VERS='6.5.10-SIP-j'
-
-MODEL='snom360'
-echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
-${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
-
-
-#####################################################################
-#  6.5.12-beta
-#####################################################################
-
-VERS='6.5.12-beta-SIP-j'
-
-MODEL='snom360'
-echo -n "Fetching firmware ${VERS} for ${MODEL} ...   "
-${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
-
-
-#####################################################################
-#  7.1.24
-#####################################################################
-
-VERS='7.1.24-SIP-f'
-
-MODEL='snom370'
-echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
-${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
-
-MODEL='snom360'
-echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
-${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
-
-
-#####################################################################
-#  8.4.18
-#####################################################################
-
-VERS='8.4.18-SIP-f'
-VERSFILE='08.04.18'
-
-MODEL='snom370'
-echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
-${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
-ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
-
-MODEL='snom360'
-echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
-${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
-ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
-
-MODEL='snom320'
-echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
-${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
-ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
-
-MODEL='snom300'
-echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
-${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' || echo 'Failed'
-ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
-
-
-echo ""
-
-#####################################################################
-#  8.4.32
-#####################################################################
-
-VERS='8.4.32-SIP-r'
-VERSFILE='08.04.32'
-
-MODEL='snom870'
+MODEL=$1
 echo -n "Fetching firmware ${VERS} for ${MODEL} ...        "
 ${DOWNLOAD} ${SNOM_BASE_URL}${MODEL}-${VERS}.bin && echo 'Done' ||
 echo 'Failed'
 ln -s ${MODEL}-${VERS}.bin ${MODEL}-${VERSFILE}.bin
-
-echo ""
+}
+for i in $MODELS;
+	do get_firmware $i
+done

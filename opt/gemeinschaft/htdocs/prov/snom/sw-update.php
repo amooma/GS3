@@ -121,7 +121,8 @@ function _snom_normalize_version( $appvers )
 	$vmaj = str_pad((int)@$tmp[0], 2, '0', STR_PAD_LEFT);
 	$vmin = str_pad((int)@$tmp[1], 2, '0', STR_PAD_LEFT);
 	$vsub = str_pad((int)@$tmp[2], 2, '0', STR_PAD_LEFT);
-	return $vmaj.'.'.$vmin.'.'.$vsub;
+	$vsubsub = str_pad((int)@$tmp[3], 2, '0', STR_PAD_LEFT);
+	return $vmaj.'.'.$vmin.'.'.$vsub.'.'.$vsubsub;
 }
 
 function _snomAppCmp( $appv1, $appv2 )
@@ -192,7 +193,7 @@ gs_log( GS_LOG_DEBUG, "Snom $mac ($phone_type, user $user) has app \"$app\"" );
 
 
 $a = _snom_normalize_version( (!empty($app)) ? $app : '0.0.0' );
-
+gs_log( GS_LOG_DEBUG, "Snom $mac ($phone_type, user $user) has app \"$a\"" );
 $ready_for_v6 =
 	   _snomAppCmp($a, '6'  )>=0
 	||(_snomAppCmp($a, '5.5')>=0
@@ -276,7 +277,7 @@ if ($fw_was_upgraded_manually) {
 		gs_log( GS_LOG_DEBUG, "No default firmware version set in config file" );
 	} else {
 		if ('x'.$a != 'x'.$sw_default_vers) {
-			gs_log( GS_LOG_NOTICE, "The firmware version ($a) differs from the default version ($sw_default_vers), scheduling an upgrade ..." );
+			gs_log( GS_LOG_NOTICE, "The firmware version ($a) differs from the default version ($sw_default_vers) $phone_type, scheduling an upgrade ..." );
 			# simply add a provisioning job to the database. this is done to be clean and we can trace the job.
 			$ok = $db->execute(
 				'INSERT INTO `prov_jobs` ('.

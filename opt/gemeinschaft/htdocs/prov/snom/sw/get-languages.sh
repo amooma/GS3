@@ -85,4 +85,48 @@ fi
 echo ""
 
 
+#####################################################################
+#  8.7.5
+#####################################################################
+
+LANGVERS='8.7.5'
+echo "Fetching language files for firmware version \"${LANGVERS}\""
+cd "${SNOM_SW_DIR}" || exit 1
+if [ ! -d "lang-${LANGVERS}" ]; then
+	mkdir "lang-${LANGVERS}"
+fi
+if [ ! -d "lang-${LANGVERS}" ]; then
+	echo "Failed to create directory \"lang-${LANGVERS}\"!"
+else
+	cd "lang-${LANGVERS}"
+	
+	# GUI
+	#
+	BASE_URL="${SNOM_BASE_URL}${LANGVERS}/gui_lang_"
+	
+	echo -n "Fetching ${LANGVERS} gui DE ...  "
+	${DOWNLOAD} ${BASE_URL}DE.xml && echo 'Done' || echo 'Failed'
+	touch gui_lang_DE.xml.done
+	echo -n "Fetching ${LANGVERS} gui EN ...  "
+	${DOWNLOAD} ${BASE_URL}EN.xml && echo 'Done' || echo 'Failed'
+	touch gui_lang_EN.xml.done
+	echo -n "Fetching ${LANGVERS} gui UK ...  "
+	${DOWNLOAD} ${BASE_URL}UK.xml && echo 'Done' || echo 'Failed'
+	touch gui_lang_UK.xml.done
+	
+	# Web
+	#
+	BASE_URL="${SNOM_BASE_URL}${LANGVERS}/web_lang_"
+	
+	echo -n "Fetching ${LANGVERS} web DE ...  "
+	${DOWNLOAD} ${BASE_URL}DE.xml && echo 'Done' || echo 'Failed'
+	touch web_lang_DE.xml.done
+
+	echo -n "Fetching ${LANGVERS} web EN ...  "
+	${DOWNLOAD} ${BASE_URL}EN.xml && echo 'Done' || echo 'Failed'
+	touch web_lang_EN.xml.done
+	
+	
+fi
+echo ""
 
