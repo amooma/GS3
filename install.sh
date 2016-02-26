@@ -17,7 +17,7 @@
 # MA 02110-1301, USA.
 ###################################################################
 
-GEMEINSCHAFT_VERS="master"
+GEMEINSCHAFT_VERS="develop"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
 GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GS3.git"
@@ -298,9 +298,9 @@ echo "***"
 echo "***  Installing Dahdi ..."
 echo "***"
 cd /usr/local/src/
-$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-current.tar.gz"
-tar -xvzf dahdi-linux-complete-current.tar.gz
-cd $(tar -tzf dahdi-linux-complete-current.tar.gz | head -n 1 | cut -d '/' -f1)
+$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-2.10.2+2.10.2.tar.gz"
+tar -xvzf "dahdi-linux-complete-2.10.2+2.10.2.tar.gz"
+cd $(tar -tzf "dahdi-linux-complete-2.10.2+2.10.2.tar.gz" | head -n 1 | cut -d '/' -f1)
 make all
 make install
 make config
