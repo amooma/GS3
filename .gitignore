@@ -6,6 +6,6 @@ opt/gemeinschaft/etc/asterisk/extensions.ael
 .gemeinschaft-version
 *.komodoproject
 
-# exclude yealink firmware directory
-opt/gemeinschaft/htdocs/prov/yealink/fw
+# exclude yealink firmware images
+opt/gemeinschaft/htdocs/prov/yealink/fw/*.rom
 
