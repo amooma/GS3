@@ -16,6 +16,22 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 ###################################################################
+echo -e "\n
+  This the DEVELOPMENT Version of Gemeinschaft!\n \
+  Only community support.\n \
+  Use allways stable version for production.\n \
+  This installer might be broken.
+  If you agree please type 'yes'.\n"
+read answer
+
+case $answer in
+  yes)
+  ;;
+  *)
+    echo "Good bye";
+    exit 0;
+  ;;
+esac
 
 GEMEINSCHAFT_VERS="develop"
 
