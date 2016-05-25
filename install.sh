@@ -98,9 +98,9 @@ if ( ! cat /etc/debian_version | head -n 1 | grep '^8.'      1>>/dev/null ) \
 && ( ! cat /etc/debian_version | head -n 1 | grep 'jessie'  1>>/dev/null )
 then
 	if [ "$L2" == "de" ]; then
-		err "  Ihr Debian ist nicht Version 8 (\"Jessie\").\n" \
+		err "  Ihr Debian ist nicht Version 8 (\"Jessie\").\n" 
 	else
-		err "  Your Debian is not version 8 (\"Jessie\").\n" \
+		err "  Your Debian is not version 8 (\"Jessie\").\n" 
 	fi
 fi
 
@@ -541,12 +541,12 @@ echo "***"
 if [ -e /opt/gemeinschaft-source/etc/apache2/sites-available/gemeinschaft ]; then
 	cd /etc/apache2/sites-available/
 	ln -snf /opt/gemeinschaft-source/etc/apache2/sites-available/gemeinschaft gemeinschaft.conf
-	a2dissite default
+	a2dissite 000-default
 	a2ensite gemeinschaft
 else
 	cd /etc/apache2/sites-available/
 	cat default | sed -e 's/AllowOverride None/AllowOverride All/i' > gemeinschaft.conf
-	a2dissite default
+	a2dissite 000-default
 	a2ensite gemeinschaft
 fi
 a2enmod rewrite
