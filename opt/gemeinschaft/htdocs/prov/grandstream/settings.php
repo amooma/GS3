@@ -624,10 +624,10 @@ if ( in_array($phone_model, array('gxp280','gxp1200','gxp2000','gxp2010','gxp202
 if (! in_array($phone_model, array('gxp2110'), true) ) {
 psetting('P107', '');			# Custom ringtone 3, used if incoming caller ID is: ""
 }
-if ( in_array($phone_model, array('bt200','bt201','gxp1200','gxp2000'), true) ) {
+if ( in_array($phone_model, array('bt200','bt201','gxp1200'), true) ) {
 	psetting('P345', '3,2,7,2,0;11,1,7,2,0;60');	# System ringtone ( maxlength 64 )
 }
-if ( in_array($phone_model, array('gxp2010','gxp2020','gxv3000','gxv3005','gxp2110'), true) ) {
+if ( in_array($phone_model, array('gxp2010','gxp2020','gxv3000','gxv3005','gxp2110','gxp2000'), true) ) {
 	psetting('P345', 'f1=440,f2=480,c=200/400;');	# System ringtone ( maxlength 64 | default "f1=440,f2=480,c=200/400;" )
 }
 

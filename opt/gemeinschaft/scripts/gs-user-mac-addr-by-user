@@ -50,7 +50,7 @@ if (! isSet($opts['user'])
 	echo $usage ,"\n\n";
 	die(1);
 }
-if (preg_match('/[^a-z0-9\-_]/', $opts['user'])) {
+if (preg_match('/[^a-z0-9\-_.]/', $opts['user'])) {
 	echo $usage ,"\n\n";
 	die(1);
 }

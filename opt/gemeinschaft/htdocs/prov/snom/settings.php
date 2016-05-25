@@ -919,7 +919,7 @@ psetting('dkey_redial'   , 'keyevent F_REDIAL'    );
 psetting('dkey_directory', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1');
 psetting('dkey_redial'   , 'url '. $prov_url_snom .'dial-log.php?user=$user_name1');
 # so geht die Retrieve-Taste auch ohne neue Nachrichten:
-psetting('dkey_retrieve' , 'speed voicemail');
+psetting('dkey_retrieve' , 'speed voicemail@'. $host);
 
 
 
