@@ -17,7 +17,7 @@
 # MA 02110-1301, USA.
 ###################################################################
 echo -e "\n
-  This the DEVELOPMENT Version of Gemeinschaft!\n \
+  This an RC Version of Gemeinschaft!\n \
   Only community support.\n \
   Use allways stable version for production.\n \
   This installer might be broken.
@@ -33,7 +33,7 @@ case $answer in
   ;;
 esac
 
-GEMEINSCHAFT_VERS="develop"
+GEMEINSCHAFT_VERS="3.2_RC"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
 GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GS3.git"
