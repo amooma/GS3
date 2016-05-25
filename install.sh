@@ -78,17 +78,17 @@ if [ "`id -un`" != "root" ]; then
 	fi
 fi
 
-if ( ! cat /etc/debian_version | head -n 1 | grep '^7.'      1>>/dev/null ) \
-&& ( ! cat /etc/debian_version | head -n 1 | grep 'wheezy'  1>>/dev/null )
+if ( ! cat /etc/debian_version | head -n 1 | grep '^8.'      1>>/dev/null ) \
+&& ( ! cat /etc/debian_version | head -n 1 | grep 'jessie'  1>>/dev/null )
 then
 	if [ "$L2" == "de" ]; then
-		err "  Ihr Debian ist nicht Version 7 (\"Wheezy\").\n" \
+		err "  Ihr Debian ist nicht Version 8 (\"Jessie\").\n" \
 			"  Bitte laden Sie einen Debian-Installer herunter:\n" \
-			"  http://cdimage.debian.org/cdimage/release/current/i386/iso-cd/debian-7.1.0-i386-netinst.iso"
+			"  http://cdimage.debian.org/debian-cd/8.4.0/amd64/iso-cd/debian-8.4.0-amd64-netinst.iso"
 	else
-		err "  Your Debian is not version 7 (\"Wheezy\").\n" \
+		err "  Your Debian is not version 8 (\"Jessie\").\n" \
 			"  Please download a Debian installer from\n" \
-			"  http://cdimage.debian.org/cdimage/release/current/i386/iso-cd/debian-7.1.0-i386-netinst.iso"
+			"  http://cdimage.debian.org/debian-cd/8.4.0/amd64/iso-cd/debian-8.4.0-amd64-netinst.iso"
 	fi
 fi
 
