@@ -94,17 +94,13 @@ if [ "`id -un`" != "root" ]; then
 	fi
 fi
 
-if ( ! cat /etc/debian_version | head -n 1 | grep '^7.'      1>>/dev/null ) \
-&& ( ! cat /etc/debian_version | head -n 1 | grep 'wheezy'  1>>/dev/null )
+if ( ! cat /etc/debian_version | head -n 1 | grep '^8.'      1>>/dev/null ) \
+&& ( ! cat /etc/debian_version | head -n 1 | grep 'jessie'  1>>/dev/null )
 then
 	if [ "$L2" == "de" ]; then
-		err "  Ihr Debian ist nicht Version 7 (\"Wheezy\").\n" \
-			"  Bitte laden Sie einen Debian-Installer herunter:\n" \
-			"  http://cdimage.debian.org/cdimage/release/current/i386/iso-cd/debian-7.1.0-i386-netinst.iso"
+		err "  Ihr Debian ist nicht Version 8 (\"Jessie\").\n" \
 	else
-		err "  Your Debian is not version 7 (\"Wheezy\").\n" \
-			"  Please download a Debian installer from\n" \
-			"  http://cdimage.debian.org/cdimage/release/current/i386/iso-cd/debian-7.1.0-i386-netinst.iso"
+		err "  Your Debian is not version 8 (\"Jessie\").\n" \
 	fi
 fi
 
@@ -542,16 +538,14 @@ echo ""
 echo "***"
 echo "***  Setting up Apache web server ..."
 echo "***"
-cd /etc/apache2/conf.d/
-ln -snf /opt/gemeinschaft-source/etc/apache2/conf.d/gemeinschaft.conf gemeinschaft.conf
 if [ -e /opt/gemeinschaft-source/etc/apache2/sites-available/gemeinschaft ]; then
 	cd /etc/apache2/sites-available/
-	ln -snf /opt/gemeinschaft-source/etc/apache2/sites-available/gemeinschaft gemeinschaft
+	ln -snf /opt/gemeinschaft-source/etc/apache2/sites-available/gemeinschaft gemeinschaft.conf
 	a2dissite default
 	a2ensite gemeinschaft
 else
 	cd /etc/apache2/sites-available/
-	cat default | sed -e 's/AllowOverride None/AllowOverride All/i' > gemeinschaft
+	cat default | sed -e 's/AllowOverride None/AllowOverride All/i' > gemeinschaft.conf
 	a2dissite default
 	a2ensite gemeinschaft
 fi
@@ -716,7 +710,7 @@ cd /etc/apache2/ssl/
 chown root:root openstage-*.pem
 chmod 640 openstage-*.pem
 cd /etc/apache2/sites-available/
-ln -snf /opt/gemeinschaft-siemens-source/doc/httpd-vhost.conf.example gemeinschaft-siemens
+ln -snf /opt/gemeinschaft-siemens-source/doc/httpd-vhost.conf.example gemeinschaft-siemens.conf
 a2ensite gemeinschaft-siemens
 invoke-rc.d apache2 restart
 cd
