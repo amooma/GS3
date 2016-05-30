@@ -145,7 +145,7 @@ function gs_prov_phone_checkcfg_all( $reboot=true )
 	gs_log(GS_LOG_DEBUG, 'phone_checkcfg all phones');
 	
 	$rs = $db->execute(
-'SELECT `s`.`name`, `u`.`current_ip` `ip`
+'SELECT `s`.`name` `ext`, `u`.`current_ip` `ip`
 FROM
 	`users` `u` JOIN
 	`ast_sipfriends` `s` ON (`s`.`_user_id`=`u`.`id`)'
@@ -153,7 +153,7 @@ FROM
 	while ($r = $rs->fetchRow()) {
 		if ($r['ip'])
 			_gs_prov_phone_checkcfg_by_ip_do( $r['ip'], $reboot );
-		_gs_prov_phone_checkcfg_by_ext_do( $ext, $reboot );
+		_gs_prov_phone_checkcfg_by_ext_do( $r['ext'], $reboot );
 	}
 	return true;
 }
@@ -245,9 +245,22 @@ function _gs_prov_phone_checkcfg_by_ip_do_snom( $ip, $reboot=true )
 {
 	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
 	
-	@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/confirm.htm?REBOOT=yes') . ' >>/dev/null 2>>/dev/null &', $out, $err );
-	// Actually the value after REBOOT= does not matter.
-	// Is there a check-sync URL *without* reboot?
+	if (!gs_get_conf('GS_SNOM_PROV_SIP_INFO') || $reboot) {
+		@ exec( 'wget -O /dev/null -o /dev/null -b --tries=3 --timeout=8 --retry-connrefused -q --user='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_USER','')) .' --password='. qsa(gs_get_conf('GS_SNOM_PROV_HTTP_PASS','')) .' '. qsa('http://'. $ip .'/confirm.htm?REBOOT=yes') . ' >>/dev/null 2>>/dev/null &', $out, $err );
+		// Actually the value after REBOOT= does not matter.
+	} else {
+		$socket = @fsockopen("udp://".$ip, 5060, $errno, $errstr, 2);
+
+		$message =	'NOTIFY sip:1234@' . $ip . ' SIP/2.0' . "\n" .
+				'To: sip:1234@' . $ip . "\n" .
+				'From: gemeinschaft@' . GS_PROV_HOST . "\n" .
+				'CSeq: 10 NOTIFY' . "\n" .
+				'Call-ID: 1234@' . GS_PROV_HOST . "\n" .
+				'Event: check-sync;reboot=false';
+
+		fwrite($socket, $message);
+		fclose($socket);
+	}
 }
 
 // REALLY PRIVATE! CAREFUL WITH PARAMS - NO VALIDATION!

@@ -157,6 +157,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_callforward_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_keys_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_prov_params_get.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_prov_params_get.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_ringtones_get.php' );
 
 
 $settings = array();
@@ -1081,9 +1082,24 @@ psetting('ring_sound'               , 'Ringer1');  # Ringer[1-10] / Silent
 setting('user_ringer', 1            , 'Ringer1');  # Ringer[1-10] / Silent / Custom
 
 # Alert-Info-Klingeltoene:
-psetting('alert_internal_ring_sound', 'Ringer2');  # Alert-Info: alert-internal
-psetting('alert_external_ring_sound', 'Ringer3');  # Alert-Info: alert-external
+
+$ringtones = gs_ringtones_get($user['user']);
+
+$bellcore_internal = 2;
+if (array_key_exists('bellcore', $ringtones['internal'])) {
+	$bellcore_internal = $ringtones['internal']['bellcore'];
+}
+
+$bellcore_external = 3;
+if (array_key_exists('bellcore', $ringtones['external'])) {
+	$bellcore_external = $ringtones['external']['bellcore'];
+}
+psetting('alert_internal_ring_sound', 'Ringer' . $bellcore_internal);  # Alert-Info: alert-internal
+psetting('alert_external_ring_sound', 'Ringer' . $bellcore_external);  # Alert-Info: alert-external
 psetting('alert_group_ring_sound'   , 'Ringer4');  # Alert-Info: alert-group
+
+unset($bellcore_internal);
+unset($bellcore_external);
 
 # Adressbuchklingeltoene (wir benutzen nicht das Telefon-interne Telefonbuch, diese Einstellungen werden also nicht benutzt):
 psetting('friends_ring_sound'       , 'Ringer1');

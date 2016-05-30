@@ -296,6 +296,10 @@ $SNOM_PROV_HTTP_PASS        = '';     # e.g. "gEheiM23y89sdo23"
 $SNOM_PROV_PB_NUM_RESULTS   = 15;
   # number of results in phonebook search on Snom phone
 
+$SNOM_PROV_SIP_INFO         = false;
+  # Use Sip-Info to reprovision the phone after changes.
+  # The phone does not have to reboot for this.
+
   # Before you do firmware updates be sure to read
   # doc/other/snom-and-cisco-switches.txt
   # Set $LOG_LEVEL to "NOTICE" or even "DEBUG" and

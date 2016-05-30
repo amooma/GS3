@@ -133,13 +133,8 @@ if (strToLower(subStr($user['phone_type'],0,4)) === 'snom') {
 	
 	if (@$ringtones[$source]['file']) {
 		gs_agi_set_variable( 'ringer', ('<'. GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH .'ringtones/'. $ringtones[$source]['file'] .'-snom.wav>') );
-	} elseif (array_key_exists('bellcore', $ringtones[$source])) {
-		if (@$ringtones[$source]['bellcore'] == 1) exit();
-		if (@$ringtones[$source]['bellcore'] != 0) {
-			gs_agi_set_variable( 'ringer', ('<http://127.0.0.1/Bellcore-dr'. $ringtones[$source]['bellcore']. '>') );
-		} else {
-			gs_agi_set_variable( 'ringer', ('<http://127.0.0.1/Bellcore-dr0>') );
-		}
+	} else {
+		gs_agi_set_variable( 'ringer', ('<http://www.notused.com>;info=alert-' . $source . ';x-line-id=0') );
 	}
 	
 }

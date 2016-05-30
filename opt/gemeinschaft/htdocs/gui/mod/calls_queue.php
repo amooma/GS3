@@ -60,12 +60,13 @@ if (@$_REQUEST['action'] === 'del') {
 $rs = $DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
 	`d`.`timestamp` `ts`, `d`.`number`, `d`.`remote_name`,
-	`u`.`id` `r_uid`, `u`.`lastname` `r_ln`, `u`.`firstname` `r_fn`
+	`u`.`id` `r_uid`, `u`.`lastname` `r_ln`, `u`.`firstname` `r_fn`,
+	`s`.`callerid`
 FROM
 	`dial_log` `d` LEFT JOIN
-	`users` `u` ON (`u`.`id`=`d`.`remote_user_id`)
+	`users` `u` ON (`u`.`id`=`d`.`remote_user_id`) LEFT JOIN
+	`ast_sipfriends` `s` ON (`d`.`user_id` = `s`.`_user_id`)
 WHERE
-	`d`.`user_id`='. (int)@$_SESSION['sudo_user']['info']['id'] .' AND
 	`d`.`type`=\''. $DB->escape($type) .'\' AND
 	`d`.`timestamp`>'. (time()-GS_PROV_DIAL_LOG_LIFE) .' AND
 	`d`.`number` <> \''. $DB->escape( @$_SESSION['sudo_user']['info']['ext'] ) .'\'
@@ -83,6 +84,7 @@ $num_pages = ceil($num_total / $per_page);
 <tr>
 	<th style="width:140px;"><?php echo __('Nummer'); ?></th>
 	<th style="width:210px;"><?php echo __('Name'); ?></th>
+	<th style="width:210px;"><?php echo __('Angenommen'); ?></th>
 	<th style="width:120px;"><span class="sort-col"><?php echo __('Datum'); ?></span></th>
 	<th style="width:100px;"><?php echo __('Seite'), ' ', ($page+1), ' / ', $num_pages; ?></th>
 </tr>
@@ -131,6 +133,7 @@ if (@$rs) {
 			if ($r['r_fn'] != '') $name .= ', ' . $r['r_fn'];
 		}
 		echo '<td>', htmlEnt($name), '</td>';
+		echo '<td>', htmlEnt($r['callerid']), '</td>';
 		
 		echo '<td>', date_human($r['ts']), '</td>';
 		

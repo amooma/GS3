@@ -176,11 +176,12 @@ else {
 	if ($type === 'queue'){	
 			$query =
 		'SELECT
-			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
-		FROM `dial_log`
+			`d`.`timestamp` `ts`, `d`.`number`, `d`.`remote_name`, `d`.`remote_user_id`,
+			`s`.`name` `int_user`
+		FROM `dial_log` `d` LEFT JOIN
+		`ast_sipfriends` `s` ON (`d`.`user_id` = `s`.`_user_id`)
 		WHERE
-			`user_id`='. $user_id .' AND
-			`type`=\''. $type .'\'
+			`d`.`type`=\''. $type .'\'
 		ORDER BY `ts` DESC
 		LIMIT 20';
 	} else {
@@ -206,18 +207,27 @@ else {
 	
 	while ($r = $rs->fetchRow()) {
 		
-		$entry_name = $r['number'];
-		if ($r['remote_name'] != '') {
-			$entry_name .= ' '. $r['remote_name'];
-		}
 		if (date('dm') == date('dm', (int)$r['ts']))
 			$when = date('H:i', (int)$r['ts']);
 		else
 			$when = date('d.m.', (int)$r['ts']);
-		$entry_name = $when .'  '. $entry_name;
-		if ($r['num_calls'] > 1) {
-			$entry_name .= ' ('. $r['num_calls'] .')';
+
+		if($type == 'queue') {
+			$entry_name = $r['remote_name'];
+			$entry_name = $r['int_user'] . ' &lt;- ' . $entry_name;
+			$entry_name = $when .'  '. $entry_name;
+			$entry_name = $entry_name . ' ' . $r['number'];
+		} else {
+			$entry_name = $r['number'];
+			if ($r['remote_name'] != '') {
+				$entry_name .= ' '. $r['remote_name'];
+			}
+			$entry_name = $when .'  '. $entry_name;
+			if ($r['num_calls'] > 1) {
+				$entry_name .= ' ('. $r['num_calls'] .')';
+			}
 		}
+
 		echo
 			"\n",
 			'<DirectoryEntry>', "\n",
