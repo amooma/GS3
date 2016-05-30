@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# force ip change on dialup lines 
+# AGPL (Markus neubauer( et) std - service.com) 2015
+
+# Description:
+# some DSL providers disconnect after 24h of online time, to have control 
+# over that behaviour, you can do it yourself in a nightly period where
+# nobody will be diconnected.
+
+# You need to:
+## put a unhashed stanca in your crontab or make it otherwise a nightly task
+## example:
+#11  04 *   *   *        /usr/local/sbin/provider-reconnect
+
+## variables - adapt to your needs
+HOSTMASTER="hostmaster@your-domain.world"   # your hostmaster address
+subject="Neue externe IP Adresse"       # mail subject
+EXTERNAL_IF="eth0"                      # your external interface
+USE_DDCLIENT="on"                       # set to no if youre not using ddclient
+
+## force reconnect function
+function reconnect_provider {
+        ifdown ${EXTERNAL_IF}
+        sleep 1
+        ifup ${EXTERNAL_IF}
+}
+
+## mainline code
+workfile=`mktemp`
+
+while read msg; do
+
+        if [[ "$msg" =~ "DHCPRELEASE" ]] ; then
+                GW=`echo $msg | cut -d' ' -f5`
+                echo "OLD GATEWAY: $GW" >> $workfile
+
+        elif [[ "$msg" =~ "DHCPACK" ]] || 
+                GW=`echo $msg | cut -d' ' -f3`
+                echo "NEW EXTERNAL GATEWAY: $GW" >> $workfile
+
+        elif [[ "$msg" =~ "bound to" ]]; then
+                subject="$subject `echo $msg | cut -d' ' -f3`"
+                if [ 'on' == "$USE_DDCLIENT" ]; then
+                        service ddclient force-reload > /dev/null
+                fi
+        fi
+done <<< "`reconnect_provider 2>&1`"
+
+mail -s "$subject" ${HOSTMASTER} < $workfile
+
+rm $workfile
+
+## eof
