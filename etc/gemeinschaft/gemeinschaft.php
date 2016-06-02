@@ -507,6 +507,29 @@ $POLYCOM_PROV_ALLOW_LOG_PUT  = false;
   # allow Polycom phones to PUT their logs to Apache
 
 
+//---------------------[ Phonesuite ]--------------------//
+
+$PHONESUITE_PROV_ENABLED      = false;  # do provisioning for Phonesuite?
+
+#$PHONESUITE_PROV_HOST         = '';
+  # The hostname or IP which is reachable by the phonesuite
+  # (default: PROV_HOST)
+
+$PHONESUITE_PROV_AMI_USERNAME = 'phonesuite';
+$PHONESUITE_PROV_AMI_SECRET   = 'gEheiM23y89sdo23';
+  # asterisk manager login data.
+  # see GUI -> Administration -> Asterisk Manager for configuration details
+
+$PHONESUITE_PROV_AUTO_ANSWER_MODE = 0;
+  # 0 = PBX calls phone and connects after pickup
+  # > 1 Phone directly starts a call without user intervention
+  # 1 = Default behavior
+  # 3 = Snom behaviour
+  
+#$PHONESUITE_PROV_LICENSEKEY   = 'XXXXXX-XXXXXX-XXXXXX';
+#$PHONESUITE_PROV_LICENSEE     = 'My Company';
+  # set these variables if you want to provision your license as well
+  # set to null if you dont want this
 
 /***********************************************************
 *    CANONICAL PHONE NUMBERS (FQTN)

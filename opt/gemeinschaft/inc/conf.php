@@ -332,6 +332,14 @@ _gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP284' , null            );
 _gscnf( 'TIPTEL_PROV_FW_DEFAULT_IP286' , null            );
 _gscnf( 'TIPTEL_PROV_KEY_BLACKLIST' , ''                 );
 
+_gscnf( 'PHONESUITE_PROV_ENABLED'          , false       );
+_gscnf( 'PHONESUITE_PROV_HOST'             , gs_get_conf('GS_PROV_HOST',''));
+_gscnf( 'PHONESUITE_PROV_AMI_USERNAME'     , ''          );
+_gscnf( 'PHONESUITE_PROV_AMI_SECRET'       , ''          );
+_gscnf( 'PHONESUITE_PROV_AUTO_ANSWER_MODE' , 0           );
+_gscnf( 'PHONESUITE_PROV_LICENSEKEY'       , null        );
+_gscnf( 'PHONESUITE_PROV_LICENSEE'         , null        );
+
 _gscnf( 'CANONIZE_OUTBOUND'         , true               );
 _gscnf( 'CANONIZE_INTL_PREFIX'      , '00'               );
 _gscnf( 'CANONIZE_COUNTRY_CODE'     , '49'               );
