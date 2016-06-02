@@ -311,7 +311,7 @@ if ($action === 'edit') {
 	echo '<tr class="m">',"\n";
 	echo '<th>', __('Benutzername') ,' <sup>[2]</sup>:</th>',"\n";
 	echo '<td>',"\n";
-	echo '<input type="text" name="gw-user" value="', htmlEnt($gw['user']) ,'" size="25" maxlength="35" style="width:97%;" />',"\n";
+	echo '<input type="text" name="gw-user" value="', htmlEnt($gw['user']) ,'" size="25" maxlength="50" style="width:97%;" />',"\n";
 	echo '</td>',"\n";
 	echo '<td class="transp xs gray"><code>username / fromuser@fromdomain</code></td>',"\n";
 	echo '</tr>',"\n";

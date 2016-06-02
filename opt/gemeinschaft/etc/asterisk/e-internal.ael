@@ -1021,7 +1021,8 @@ context to-internal-users-self {
 			
 			//Set(CALLERID(name)=Queue ${EXTEN});
 			//Set(CALLERID(name)=Q${EXTEN} ${CALLERID(name)});
-			SetCallerPres(allowed_passed_screen);
+			Set(CALLERID(name-pres)=allowed_passed_screen);
+                        Set(CALLERID(num-pres)=allowed_passed_screen);
 			Set(CALLERID(name)=[${queue_displayname}] ${CALLERID(name)});
 			if ("${CALLERID(num)}" = "")
 				Set(CALLERID(num)=${EXTEN});
