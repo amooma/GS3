@@ -837,23 +837,12 @@ cp "${HF_CONF_SRC}/ttyIAX0" /etc/iaxmodem/ttyIAX0
 cp "${HF_CONF_SRC}/ttyIAX1" /etc/iaxmodem/ttyIAX1
 
 # add iaxmodem entries to iax.conf
-#
-#cat "${HF_CONF_SRC}/iax.conf.template" >> /etc/asterisk/iax.conf
 
-# add faxgetty entries to inittab
-# //FIXME? - set USE_FAXGETTY=yes or USE_FAXGETTY=init in
-# /etc/default/hylafax instead?
-#
-echo "" >> /etc/inittab 
-echo "# HylaFax getty" >> /etc/inittab
-echo "mo00:23:respawn:/usr/sbin/faxgetty ttyIAX0" >> /etc/inittab
-echo "mo01:23:respawn:/usr/sbin/faxgetty ttyIAX1" >> /etc/inittab
-# adding these lines to /etc/inittab makes /etc/default/hylafax
-# default to USE_FAXGETTY=init instead of USE_FAXGETTY=yes
+ln -s /opt/gemeinschaft-source/etc/systemd/system/faxgetty-ttyIAX0.service /etc/systemd/system/
+ln -s /opt/gemeinschaft-source/etc/systemd/system/faxgetty-ttyIAX1.service /etc/systemd/system/
 
-# make init reload /etc/inittab
-/sbin/init q
-
+systemctl start faxgetty-ttyIAX0.service
+systemctl start faxgetty-ttyIAX1.service
 
 echo ""
 echo "***"

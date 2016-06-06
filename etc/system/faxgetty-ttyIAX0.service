@@ -1,0 +1,12 @@
+[Unit]
+Description=HylaFAX faxgetty for ttyIAX0
+
+[Service]
+User=root
+Group=root
+Restart=always
+RestartSec=30
+ExecStart=/usr/sbin/faxgetty /dev/ttyIAX0
+
+[Install]
+WantedBy=multi-user.target
