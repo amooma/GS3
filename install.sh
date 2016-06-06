@@ -753,8 +753,8 @@ ln -snf /opt/gemeinschaft-source/var/lib/gemeinschaft
 if [ -e /opt/gemeinschaft-source/etc/init.d/gs-sip-ua-config-responder ]; then
 	cd /etc/init.d/
 	ln -snf /opt/gemeinschaft-source/etc/init.d/gs-sip-ua-config-responder
-	update-rc.d gs-sip-ua-config-responder defaults 92 8
-	invoke-rc.d gs-sip-ua-config-responder start
+	insserv /etc/init.d/gs-sip-ua-config-responder 
+	/etc/init.d/gs-sip-ua-config-responder start
 fi
 
 
@@ -762,8 +762,8 @@ fi
 #
 if [ -e /opt/gemeinschaft-source/etc/init.d/gs-extstated ]; then
 	ln -snf /opt/gemeinschaft-source/etc/init.d/gs-extstated /etc/init.d/gs-extstated
-	update-rc.d gs-extstated defaults 92 08
-	invoke-rc.d gs-extstated start
+	insserv /etc/init.d/gs-extstated 
+	/etc/init.d/gs-extstated start
 fi
 
 
