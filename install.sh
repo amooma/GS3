@@ -1011,8 +1011,8 @@ fi
 if [ -e /opt/gemeinschaft-source/etc/init.d/silverbullet ]; then
 	cd /etc/init.d/
 	ln -snf /opt/gemeinschaft-source/etc/init.d/silverbullet
-	update-rc.d silverbullet defaults 92 8
-	invoke-rc.d silverbullet start
+	insserv /etc/init.d/silverbullet
+	/etc/init.d/silverbullet start
 fi
 
 
