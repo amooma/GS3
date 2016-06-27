@@ -147,6 +147,9 @@ foreach ($forwards as $source => $arr) {
 		
 		gs_agi_set_variable( '__fw_'.$source.'_'.$case, $fw['number'] );
 		
+		/* STD/MN Variable not set, so no content will be played - WORKAROUND */
+                if ($fw['file'] === '') $fw['file']=$fw['number'].'-external.alaw';
+		
 		gs_agi_set_variable( '__fw_file_'.$source.'_'.$case, '/opt/gemeinschaft/vm-rec/'.$fw['file'] );
 		
 		if (is_array($fw['number'])) {  # this is an array if we are forwarding to parallel-call
