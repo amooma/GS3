@@ -33,7 +33,7 @@ case $answer in
   ;;
 esac
 
-GEMEINSCHAFT_VERS="3.3_RC"
+GEMEINSCHAFT_VERS="3.3-ast-13"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
 GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GS3.git"
@@ -320,9 +320,9 @@ make config
 dahdi_genconf || true
 
 cd /usr/local/src/
-$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-1.8-current.tar.gz"
-tar -xvzf asterisk-1.8-current.tar.gz
-cd $(tar -tzf asterisk-1.8-current.tar.gz | head -n 1 | cut -d '/' -f1)
+$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-13-current.tar.gz"
+tar -xvzf asterisk-13-current.tar.gz
+cd $(tar -tzf asterisk-13-current.tar.gz | head -n 1 | cut -d '/' -f1)
 ./configure
 make menuselect.makeopts
 menuselect/menuselect --enable res_config_mysql menuselect.makeopts
