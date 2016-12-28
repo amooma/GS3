@@ -9,6 +9,9 @@
 * Dirk Markwardt <dm@markwardt-software.de>
 * Mirco Bartels
 * 
+* based on Tiptel provisioning by
+* Sebastian Ertz <gemeinschaft@swastel.eisfair.net>
+*
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
 * as published by the Free Software Foundation; either version 2
@@ -88,6 +91,7 @@ function _settings_err( $msg='' )
 	exit(1);
 }
 
+// Tiptel and Yealink share OUI from MAC address. So redirect Tiptel phones to Tiptel provisioning.
 function _redirect_tiptel()
 {
 	$prov_url_tiptel =  GS_PROV_SCHEME .'://'. GS_PROV_HOST . (GS_PROV_PORT ? ':'.GS_PROV_PORT : '') . GS_PROV_PATH.'tiptel/'.$_REQUEST['mac'].'.cfg';
@@ -145,7 +149,7 @@ if (subStr($mac,0,6) !== '001565') {
 
 # HTTP_USER_AGENTs
 # 
-# yealink SIP-T46G: "Yealink SIP-T46G 28.72.0.25 00:15:65:5b:53:84"
+# e.g. yealink SIP-T46G: "Yealink SIP-T46G 28.72.0.25 00:15:65:5b:53:84"
 #
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 $ua_parts = explode(' ', $ua);

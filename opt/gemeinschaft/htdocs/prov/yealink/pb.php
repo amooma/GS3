@@ -6,6 +6,10 @@
 * 
 * Copyright 2010, amooma GmbH, Bachstr. 126, 56566 Neuwied, Germany,
 * http://www.amooma.de/
+* Dirk Markwardt <dm@markwardt-software.de>
+* Mirco Bartels
+* 
+* based on Tiptel by
 * Sebastian Ertz <gemeinschaft@swastel.eisfair.net>
 * 
 * This program is free software; you can redistribute it and/or
