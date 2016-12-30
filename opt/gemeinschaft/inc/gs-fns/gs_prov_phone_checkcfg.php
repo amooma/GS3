@@ -439,6 +439,8 @@ function _gs_prov_phone_checkcfg_by_ip_do_yealink( $ip, $reboot=true )
 {
 	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
 
+	gs_log(GS_LOG_DEBUG, "Send yealink update config \"$ip\"");
+	
 	$url = 'http://' . qsa($ip) .'/servlet';
 
 	//open connection
@@ -516,7 +518,9 @@ WHERE
 	if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ext_do_tiptel( $ext, $reboot );
 	}
-	
+	if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ext_do_yealink( $ext, $reboot );
+	}	
 	//return $err == 0;
 	return true;
 }
@@ -675,6 +679,24 @@ function _gs_prov_phone_checkcfg_by_ext_do_polycom( $ext, $reboot=true )
 function _gs_prov_phone_checkcfg_by_ext_do_tiptel( $ext, $reboot=true )
 {
 	//FIXME
+}
+
+function _gs_prov_phone_checkcfg_by_ext_do_yealink( $ext, $reboot=true )
+{
+	$sip_notify = $reboot ? 'yealink-check-cfg-reboot' : 'yealink-check-cfg';
+	@exec( 'sudo asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
+	
+	$hosts = @gs_hosts_get(false);
+	if (isGsError($hosts)) {
+		gs_log(GS_LOG_WARNING, 'Failed to get hosts - '. $hosts->getMsg());
+	} elseif (! is_array($hosts)) {
+		gs_log(GS_LOG_WARNING, 'Failed to get hosts');
+	} else {
+		$cmd = 'asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\'';
+		foreach ($hosts as $host) {
+			@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd) .' >>/dev/null 2>>/dev/null &' );
+		}
+	}
 }
 
 ?>

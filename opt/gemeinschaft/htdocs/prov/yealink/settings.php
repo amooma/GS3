@@ -509,6 +509,13 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	# Netherlands,Norway,Portugal,Spain,Switzerland,Sweden,Russia, UnitedStates, Chile,Czech ETSI
 	psetting('voice.tone.country', 'Germany');
 
+	# Sending volume
+	# integer range from -50 to 50, default is 0
+	# handset is a bit quiet, so so raise it up a bit
+	psetting('voice.handfree_send', '0');
+	psetting('voice.handset_send', '10');
+	psetting('voice.headset_send', '0');
+	
 	# DND
 	psetting('features.dnd.enable', '0');
 	psetting('features.dnd.on_code', 'dnd-on');
@@ -531,8 +538,11 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	#psetting('security.user_name.admin', '');
 	#psetting('security.user_name.var', '');
 	psetting('security.user_password', 'admin:'.gs_get_conf('GS_YEALINK_PROV_HTTP_PASS'));
-		
-
+	
+	# Reboot on SIP NOTIFY
+	# 0=reboot, if additional parameter "reboot=true" was given,  1=reboot always,  2=ignore SIP NOTIFY message
+	psetting(sip.notify_reboot_enable, '0');
+	
 	#####################################################################
 	#  MAC-specific provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
 	#####################################################################
