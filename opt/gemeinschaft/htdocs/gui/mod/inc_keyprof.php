@@ -116,6 +116,8 @@ if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 }
 if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
 	$enabled_models = preg_split('/[,\\s]+/', gs_get_conf('GS_PROV_MODELS_ENABLED_YEALINK'));
+	if (in_array('*', $enabled_models) || in_array('yealink-sip-t42g', $enabled_models))
+		$phone_types['yealink-sip-t42g' ] = 'Yealink SIP T42G';
 	if (in_array('*', $enabled_models) || in_array('yealink-sip-t46g', $enabled_models))
 		$phone_types['yealink-sip-t46g' ] = 'Yealink SIP T46G';
 	if (in_array('*', $enabled_models) || in_array('yealink-sip-t48g', $enabled_models))
@@ -344,7 +346,8 @@ if ($phone_type == '') {
 		elseif (array_key_exists('tiptel-ip286', $phone_types)) $phone_type = 'tiptel-ip286';
 	}
 	if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
-		if     (array_key_exists('yealink-sip-t46g', $phone_types)) $phone_type = 'yealink-sip-t46g';
+		if     (array_key_exists('yealink-sip-t42g', $phone_types)) $phone_type = 'yealink-sip-t42g';
+		elseif (array_key_exists('yealink-sip-t46g', $phone_types)) $phone_type = 'yealink-sip-t46g';
 		elseif (array_key_exists('yealink-sip-t48g', $phone_types)) $phone_type = 'yealink-sip-t48g';
 	}
 }
@@ -363,9 +366,9 @@ if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 
 } elseif (in_array($phone_type, array('tiptel-ip284', 'tiptel-ip286'), true)) {
 	$phone_layout = 'tiptel';
 	$key_function_none = $key_function_none_tiptel;
-} elseif (in_array($phone_type, array('yealink-sip-t46g', 'yealink-sip-t48g'), true)) {
+} elseif (in_array($phone_type, array('yealink-sip-t42g', 'yealink-sip-t46g', 'yealink-sip-t48g'), true)) {
 	$phone_layout = 'yealink';
-	$key_function_none = $key_function_none_tiptel;
+	$key_function_none = $key_function_none_yealink;
 } else {
 	$phone_layout = false;
 	$key_function_none = false;
@@ -1309,12 +1312,20 @@ if ($phone_layout) {
 		}
 		break;
 	case 'yealink':
-		//if ($show_ext_modules >= 0) {
-			$key_levels = array(
-				0 => array('from'=>   1, 'to'=>   10, 'shifted'=>false,
-					'title'=> htmlEnt($phone_type_title))
-			);
-		//}
+		switch($phone_type) {
+			case 'yealink-sip-t46g':
+				$key_levels = array(
+					0 => array('from'=>   1, 'to'=>   27, 'shifted'=>false,
+						'title'=> htmlEnt($phone_type_title))
+				);
+				break;
+			case 'yealink-sip-t48g':
+				$key_levels = array(
+					0 => array('from'=>   1, 'to'=>   29, 'shifted'=>false,
+						'title'=> htmlEnt($phone_type_title))
+				);
+				break;	
+		}
 		if ($show_ext_modules >= 1) {
 			$key_levels += array(
 				1 => array('from'=> 100, 'to'=> 118, 'shifted'=>false,
@@ -1345,6 +1356,14 @@ if ($phone_layout) {
 					'title'=> __('Erweiterungs-Modul') .' 3 '. __('Spalte') .' 2')
 			);
 		}
+		switch($phone_type) {
+			case 'yealink-sip-t42g':
+				$key_levels[0]['title']= htmlEnt($phone_type_title);
+				$key_levels[0]['from'] =    1;
+				$key_levels[0]['to'  ] =    15;
+				break;
+		}
+		
 		break;
 	}
 	

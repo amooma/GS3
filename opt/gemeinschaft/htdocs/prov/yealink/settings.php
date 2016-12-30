@@ -168,7 +168,7 @@ else if (strToLower(@$ua_parts[0]) !== 'yealink') {
 gs_log( GS_LOG_DEBUG, "Yealink model $ua found." );
 
 # find out the type of the phone:
-if (preg_match('/SIP-(T46G|T48G)/', @$ua_parts[1], $m))  {    # e.g. "SIP-T46G", "SIP-T48G" or "SIP-T22P"
+if (preg_match('/SIP-(T42G|T46G|T48G)/', @$ua_parts[1], $m))  {    # e.g. "SIP-T46G", "SIP-T48G" or "SIP-T22P"
 	$phone_model =  'SIP-'.$m[1];
 	$phone_model_config = 'SIP_'.$m[1];
 }
@@ -452,7 +452,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 }
 
 # Phonetype Check
-if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) ) {
+if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-sip-t48g'), true) ) {
 
 	#####################################################################
 	#  Common provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
@@ -591,9 +591,9 @@ if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) )
 	psetting('account.1.codec.10.payload_type', 'G726-32');
 	psetting('account.1.codec.11.payload_type', 'G726-40');	
 	
-	psetting('account.1.codec.1.priority', '1');
-	psetting('account.1.codec.2.priority', '2');
-	psetting('account.1.codec.3.priority', '3');
+	psetting('account.1.codec.1.priority', '2');
+	psetting('account.1.codec.2.priority', '3');
+	psetting('account.1.codec.3.priority', '1');
 	psetting('account.1.codec.4.priority', '0');
 	psetting('account.1.codec.5.priority', '0');
 	psetting('account.1.codec.6.priority', '0');
@@ -697,7 +697,7 @@ if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) )
 	##It enables or disables the phone to display a visual alert when the monitored user receives an incoming call.
 	##0-Disabled,1-Enabled.
 	##The default value is 0.
-	psetting('features.pickup.blf_visual_enable', '1');
+	psetting('features.pickup.blf_visual_enable', '0');
 
 	##It enables or disables the phone to play an audio alert when the monitored user receives an incoming call.
 	##0-Disabled,1-Enabled.
@@ -708,8 +708,18 @@ if ( in_array($phone_type, array('yealink-sip-t46g','yealink-sip-t48g'), true) )
 	#  Keys
 	#####################################################################
 
-	$max_keys = 10;
-
+	switch ($phone_type) {
+		case 'yealink-sip-t42g':
+			$max_keys=15;
+			break;
+		case 'yealink-sip-t46g':
+			$max_keys=27;
+			break;
+		case 'yealink-sip-t48g':
+			$max_keys=29;
+			break;
+	}
+	
 	# RESET KEYS
 	for ($i=1; $i <= $max_keys; $i++) {
 		psetting('linekey.'.$i.'.line', '0');
