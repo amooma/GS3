@@ -493,7 +493,7 @@ $TIPTEL_PROV_FW_UPDATE = false;  # allow firmware updates?
 
 //-----------------------[ Yealink ]-----------------------//
 
-$YEALINK_PROV_ENABLED   = true;   # do provisioning for Tiptel?
+$YEALINK_PROV_ENABLED   = true;   # do provisioning for Yealink?
 
 $YEALINK_PROV_HTTP_PASS = 'admin';  # e.g. "gEheiM23y89sdo23", default: 'admin'
   # to password protect the phone's web gui.
@@ -534,6 +534,7 @@ $YEALINK_PROV_FW_UPDATE = false;  # allow firmware updates?
   # 'f20' Private Hold
   # 'f27' XML Browser
 
+$YEALINK_PROV_FW_DEFAULT_SIP_T42G = '';
 $YEALINK_PROV_FW_DEFAULT_SIP_T46G = '';
 $YEALINK_PROV_FW_DEFAULT_SIP_T48G = '';
 
@@ -724,6 +725,9 @@ $FAX_ENABLED            = false;
 //$FAX_INIT_DOCDIR         = '/tmp/';
   # directory containing fax documents to be used by "send-fax.php"
 
+//$FAX_MAP_IAXMODEM_USER  = "";
+  # use group membership of user for dialout by IAXmodem
+  
 /***********************************************************
 *    BRANCH OFFICE INTEGRATION (BOI)
 ***********************************************************/
