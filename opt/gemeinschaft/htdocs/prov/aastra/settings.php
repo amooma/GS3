@@ -242,6 +242,7 @@ $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 # "Aastra57i MAC:00-08-5D-1A-99-01 V:2.1.2.30-SIP"
 # "Aastra57i MAC:00-08-5D-1A-98-70 V:2.4.1.37-SIP"
 # "Aastra53i MAC:00-08-5D-12-64-11 V:2.4.0.96-SIP"
+# "Aastra6731i MAC:00-08-5D-13-1C-75 V:2.4.1.37-SIP"
 if (! preg_match('/^Aastra/', $ua)
 ||  ! preg_match('/MAC:00-08-5D/i', $ua) ) {
 	gs_log( GS_LOG_WARNING, "Phone with MAC \"$mac\" (Aastra) has invalid User-Agent (\"". $ua ."\")" );
@@ -277,7 +278,7 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_prov_params_get.php' );
 # phone requests global settings
 if ( (!isset($_REQUEST['mac'])) && ($dynamic == false) ) {
 
-	gs_log( GS_LOG_DEBUG, "Aastra phone \"$mac\" asks for global settings (UA: ...\"$ua\") - model $phone_model" );
+	gs_log( GS_LOG_DEBUG, "Aastra phone \"$mac\" asks for global settings (UA: ...\"$ua\") - model $phone_model, type $phone_type" );
 
 	ob_start();
 
