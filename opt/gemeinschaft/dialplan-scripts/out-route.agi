@@ -65,11 +65,13 @@ if ($user_cid_num == '') {
 	$user_cid_num = '0';  # main number on a PtP interface
 }
 
-$user_id = (int)trim($argv[4]);
-
-
 include_once( GS_DIR .'inc/db_connect.php' );
 
+$db = gs_db_slave_connect();
+if (! $db) gs_agi_err( 'DB error' );
+
+$ext = trim($argv[4]);
+$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 
 $qualify_cid = true;
 
@@ -126,10 +128,6 @@ if (gs_get_conf('GS_CANONIZE_OUTBOUND')) {
 } else {
 	$number_dial = $number;
 }
-
-
-$db = gs_db_slave_connect();
-if (! $db) gs_agi_err( 'DB error' );
 
 $user_groups = gs_group_members_groups_get(array($user_id), 'user');
 if (! is_array($user_groups)) $user_groups = array(0);
