@@ -477,11 +477,41 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	###X ranges from 1 to 5
 	###remote_phonebook.data.X.url =   
 	###remote_phonebook.data.X.name = 
-	psetting('remote_phonebook.data.1.url', $prov_url_yealink.'pb.php?u='.$user_ext);
-	psetting('remote_phonebook.data.1.name', 'Tel.buch');
-	###Except T41P/T42G Models
-	psetting('remote_phonebook.display_name', 'Tel.buch');
+	
+	$i=1;
+	# Intern
+	psetting('remote_phonebook.data.'.$i.'.url', $prov_url_yealink.'pb_on_phone.php?u='.$user_ext.'&t=gs');
+	psetting('remote_phonebook.data.'.$i.'.name', 'Intern');
+	$i++;
+	
+	if (gs_get_conf('GS_PB_IMPORTED_ENABLED')) {
+		# Firma
+		psetting('remote_phonebook.data.'.$i.'.url', $prov_url_yealink.'pb_on_phone.php?u='.$user_ext.'&t=imported');
+		psetting('remote_phonebook.data.'.$i.'.name', 'Firma');
+		$i++;
+	};
+	
+	# Personal
+	psetting('remote_phonebook.data.'.$i.'.url', $prov_url_yealink.'pb_on_phone.php?u='.$user_ext.'&t=prv');
+	psetting('remote_phonebook.data.'.$i.'.name', 'Persönlich');
+	$i++;
+	
+	# empty 4 and 5
+	psetting('remote_phonebook.data.'.$i.'.url', '');
+	psetting('remote_phonebook.data.'.$i.'.name', '');
+	$i++;
 
+	psetting('remote_phonebook.data.'.$i.'.url', '');
+	psetting('remote_phonebook.data.'.$i.'.name', '');
+		
+	###Except T41P/T42G Models
+	psetting('remote_phonebook.display_name', 'Telefonbuch');
+
+	###Super Search recommended by Yealink support
+	psetting('remote_phonebook.super_search.enable', '1');
+	psetting('directory.search_type', '1');
+	
+	
 	# Show Remote Phonebook on Home Screen
 	psetting('programablekey.2.type', '47');
 	psetting('programablekey.2.line', '1');
@@ -491,10 +521,14 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	##It enables or disables the phone to perform a remote phone book search when receiving an incoming call.
 	##0-Disabled,1-Enabled.
 	##The default value is 0.
-	psetting('features.remote_phonebook.enable', '0');
+	psetting('features.remote_phonebook.enable', '1');
+	##It enables or disables the phone to perform a remote phone book search when accessing.
+	##0-Disabled,1-Enabled.
+	##The default value is 0.
+	psetting('features.remote_phonebook.enter_update_enable', '1');	
 	##It configures the interval (in seconds) for the phone to update the data of the remote phone book from the remote phone book server.
 	##The default value is 21600.Integer from 3600 to 2592000.
-	psetting('features.remote_phonebook.flash_time', '21600');
+	psetting('features.remote_phonebook.flash_time', '3600');
 
 	# Ringtone
 	# exp.: tftp://192.168.1.100/Ring9.wav
@@ -542,6 +576,19 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	# Reboot on SIP NOTIFY
 	# 0=reboot, if additional parameter "reboot=true" was given,  1=reboot always,  2=ignore SIP NOTIFY message
 	psetting(sip.notify_reboot_enable, '0');
+	
+	
+	# Transfer
+	psetting('transfer.blind_tran_on_hook_enable', '1');
+	psetting('transfer.on_hook_trans_enable', '1');
+	psetting('transfer.semi_attend_tran_enable', '1');
+	
+	# DSS Key press on active call: 0=new call  1=attended transfer  2=blind transfer
+	psetting('transfer.dsskey_deal_type', '1');
+	
+	# Enables or disables custom soft keys layout feature.
+	psetting('phone_setting.custom_softkey_enable', '1');
+	
 	
 	#####################################################################
 	#  MAC-specific provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
