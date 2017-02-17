@@ -789,7 +789,18 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	}
 
 	# TODO: RESET PROGRAMMABLE KEYS?
-	# TODO: RESET EXP KEYS?
+	# RESET EXP KEYS on EXP40
+	if ($phone_type == 'yealink-sip-t46g' || $phone_type == 'yealink-sip-t48g') {
+		for ($j=1; $j<=6; $j++) {
+			for ($i=1; $i <= 40; $i++) {
+				psetting('expansion_module.'.$j.'.key.'.$i.'.line', '0');
+				psetting('expansion_module.'.$j.'.key.'.$i.'.value', '');
+				psetting('expansion_module.'.$j.'.key.'.$i.'.type', '0');
+				psetting('expansion_module.'.$j.'.key.'.$i.'.label', '');
+			}
+		}
+	}
+	
 
 	$softkeys = null;
 	$GS_Softkeys = gs_get_key_prov_obj( $phone_type );
@@ -818,13 +829,16 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 				continue;
 			}
 			
-			$key_idx = (int)lTrim(subStr($key_name,1),'0');
+			# $key_name is Fxxyy , where xx is extension module and yy is key index
+			$key_idx = (int)lTrim(subStr($key_name,3),'0');
+			$key_exp = (int)lTrim(subStr($key_name,1,2),'0');
+			# gs_log( GS_LOG_DEBUG, 'Softkey '.$key_name.' -> Exp='.$key_exp.' Idx='.$key_idx );
 			if ($key_def['function'] === 'f0') continue;
 
 			#######################################################################################
 			##                                   Line Keys                                       ##       
 			#######################################################################################	
-			if ($key_idx >= 1 && $key_idx <= $max_keys ) {
+			if ($key_idx >= 1 && $key_idx <= $max_keys && $key_exp == 0) {
 				gs_log( GS_LOG_DEBUG, 'Set LineKey('.$key_idx.') value=\''.$key_def['data'].'\' type=\''.subStr($key_def['function'],1).'\' label=\''.$key_def['label'].'\'' );
 
 				###It configures the desired line to apply the key feature.Integer from 1 to 6
@@ -866,7 +880,51 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 				###The default value is blank.
 				psetting('linekey.'.$key_idx.'.label', $key_def['label']);
 			}
-			
+			#######################################################################################
+			##                              Expansion Keys                                       ##       
+			#######################################################################################	
+			else if ($key_idx >= 1 && $key_idx <= 40 && $key_exp >= 1 && $key_exp <=6) {
+				gs_log( GS_LOG_DEBUG, 'Set ExpKey('.$key_idx.') value=\''.$key_def['data'].'\' type=\''.subStr($key_def['function'],1).'\' label=\''.$key_def['label'].'\'' );
+				###It configures the desired line to apply the key feature.Integer from 1 to 6
+				psetting('expansion_module.'.$key_exp.'.key.'.$key_idx.'.line', 1);
+				###It configures the value of the line key feature.
+				###For example, when setting the key feature to BLF, it configures the number of the monitored user.
+				###The default value is blank.
+				psetting('expansion_module.'.$key_exp.'.key.'.$key_idx.'.value', $key_def['data']);
+				# for BLF
+				if (subStr($key_def['function'],1) == 16 ) {
+					###It configures the pickup code for BLF feature or conference ID followed by the # sign for Meet-Me conference feature.
+					###It only applies to BLF and Meet-Me conference features.
+					###The default value is blank
+					psetting('expansion_module.'.$key_exp.'.key.'.$key_idx.'.pickup_value', '*81*');
+				}
+				###It configures the key feature for the line key X.
+				#The valid types are: 
+				#0-NA 1-Conference 2-Forward 3-Transfer 4-Hold 5-DND 7-Call Return 8-SMS 9-Directed Pickup   
+				#10-Call Park 11-DTMF 12-Voice Mail 13-Speed Dial 14-Intercom 15-Line 16-BLF 17-URL 18-Group Listening  
+				#20-Private Hold 22-XML Group 23-Group Pickup 24-Multicast Paging 25-Record 27-XML Browser
+				#34-Hot Desking 35-URL Record 38-LDAP 39-BLF List   
+				#40-Prefix 41-Zero Touch 42-ACD 45-Local Group 46-Network Group 49-Custom Button   
+				#50-Keypad Lock 55-Meet-Me Conference 56-Retrieve Park 57-Hoteling 58-ACD Grace 59-Sisp Code   
+				#60-Emergency 61-Directory
+				#----
+				#0-NA £¨Only for T41/T42/T46)
+				#22-XML Group (Not support T20)
+				#38-LDAP (Not support T20)
+				#46-Network Group (Not support T20)
+				#8-SMS (Only support T21/T46/T22/T26/T28)
+				#17-URL (Only support T41/T42/T46)
+				#49-Custom Button (Only support T20/T22/T26/T28)
+				psetting('expansion_module.'.$key_exp.'.key.'.$key_idx.'.type', subStr($key_def['function'],1));
+				###It configures the desired local group/XML group/network group for the line key X.
+				###It only applies to the Local Group, XML Group and Network Group features.
+				###XML Group and Network Group features are not applicable to SIP-T20P IP phones.
+				// psetting('linekey.'.$key_idx.'.xml_phonebook', '0');
+				###It configures the label displayed on the LCD screen for each line key.
+				###The default value is blank.
+				psetting('expansion_module.'.$key_exp.'.key.'.$key_idx.'.label', $key_def['label']);
+
+			}
 			# TODO: Programmable Keys
 			# TODO: Keys on Expansion Modul
 		}

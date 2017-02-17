@@ -1328,32 +1328,32 @@ if ($phone_layout) {
 		}
 		if ($show_ext_modules >= 1) {
 			$key_levels += array(
-				1 => array('from'=> 100, 'to'=> 118, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Spalte') .' 1')
+				1 => array('from'=> 101, 'to'=> 120, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 1')
 			);
 			$key_levels += array(
-				2 => array('from'=> 119, 'to'=> 137, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Spalte') .' 2')
+				2 => array('from'=> 121, 'to'=> 140, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 2')
 			);
 		}
 		if ($show_ext_modules >= 2) {
 			$key_levels += array(
-				3 => array('from'=> 200, 'to'=> 218, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Spalte') .' 1')
+				3 => array('from'=> 201, 'to'=> 220, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 1')
 			);
 			$key_levels += array(
-				4 => array('from'=> 219, 'to'=> 237, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Spalte') .' 2')
+				4 => array('from'=> 221, 'to'=> 240, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 2')
 			);
 		}
 		if ($show_ext_modules >= 3) {
 			$key_levels += array(
-				5 => array('from'=> 300, 'to'=> 318, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 3 '. __('Spalte') .' 1')
+				5 => array('from'=> 301, 'to'=> 320, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 1')
 			);
 			$key_levels += array(
-				6 => array('from'=> 319, 'to'=> 337, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 3 '. __('Spalte') .' 2')
+				6 => array('from'=> 321, 'to'=> 340, 'shifted'=>false,
+					'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 2')
 			);
 		}
 		switch($phone_type) {
