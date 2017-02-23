@@ -789,6 +789,20 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	}
 
 	# TODO: RESET PROGRAMMABLE KEYS?
+	# Programable Key 1 (default "History") > GS History
+	# Programable Key 5 (UP Key)(default "History") > GS History
+	# Programable Key 6 (DOWN Key)(default "Phonebook") > XML Phonebook
+	psetting('programablekey.1.type', '27');     # XML Browser
+	psetting('programablekey.1.value', $prov_url_yealink.'dial-log.php?user='.$user_ext );
+	psetting('programablekey.1.label', 'Anrufliste');
+	psetting('programablekey.5.type', '27');     # XML Browser
+	psetting('programablekey.5.value', $prov_url_yealink.'dial-log.php?user='.$user_ext );
+	psetting('programablekey.5.label', 'Anrufliste');	
+	
+	psetting('programablekey.6.type', '47');     # XML Phonebook
+	psetting('programablekey.6.value', '' );
+	psetting('programablekey.6.label', 'Tel.Buch');
+	
 	# RESET EXP KEYS on EXP40
 	if ($phone_type == 'yealink-sip-t46g' || $phone_type == 'yealink-sip-t48g') {
 		for ($j=1; $j<=6; $j++) {
