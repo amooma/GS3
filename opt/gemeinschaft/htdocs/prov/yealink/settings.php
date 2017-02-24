@@ -589,6 +589,14 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	# Enables or disables custom soft keys layout feature.
 	psetting('phone_setting.custom_softkey_enable', '1');
 	
+	# DSS extended key length
+	psetting('features.config_dsskey_length', '1');
+	
+	# blf_and_callpark_idle_led_enable
+	psetting('features.blf_and_callpark_idle_led_enable', '1');
+	
+	# IP for XML push
+	psetting('push_xml.server', GS_PROV_HOST );	
 	
 	#####################################################################
 	#  MAC-specific provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
@@ -714,6 +722,13 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	// ##It configures the directed pickup code for account X.
 	// ##The default value is blank.
 	psetting('account.1.direct_pickup_code', '*81*');
+	
+	
+	# DTMF    0=Inband  1=RFC2833  2=SIP INFO  3=RFC2833+SIP INFO
+	psetting('account.1.dtmf.type', '1');
+	
+	# DTMF Info Type   1=DTMF-Relay   2=DTMF   3=Telephone-Event
+	psetting('account.1.dtmf.info_type', '1');
 
 	# Time
 	##It configures the time zone.For more available time zones, refer to Time Zones on page 215.
@@ -762,7 +777,7 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	psetting('features.pickup.blf_audio_enable', '0');
 
 	#####################################################################
-	#  Keys
+	#  Keys and Device specific settings
 	#####################################################################
 
 	switch ($phone_type) {
@@ -771,9 +786,11 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 			break;
 		case 'yealink-sip-t46g':
 			$max_keys=27;
+			psetting('screensaver.wait_time', '21600');
 			break;
 		case 'yealink-sip-t48g':
 			$max_keys=29;
+			psetting('screensaver.wait_time', '21600');
 			break;
 	}
 	
