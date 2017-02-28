@@ -594,6 +594,12 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	# blf_and_callpark_idle_led_enable
 	psetting('features.blf_and_callpark_idle_led_enable', '1');
 	
+	# push XML server
+	psetting('push_xml.server', $host);
+	
+	# features.action_uri_limit_ip 
+	psetting('features.action_uri_limit_ip', 'any');
+	
 	#####################################################################
 	#  MAC-specific provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
 	#####################################################################
