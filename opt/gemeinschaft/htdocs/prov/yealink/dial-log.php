@@ -98,9 +98,9 @@ if ($user_id < 1)
 	_err( 'Unknown user.' );
 
 
-# $remote_addr = @$_SERVER['REMOTE_ADDR'];
-#$remote_addr_check = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );
-#if ($remote_addr != $remote_addr_check) _err( 'Not authorized' );
+$remote_addr = @$_SERVER['REMOTE_ADDR'];
+$remote_addr_check = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );
+if ($remote_addr != $remote_addr_check) _err( 'Not authorized' );
 
 unset($remote_addr_check);
 unset($remote_addr);

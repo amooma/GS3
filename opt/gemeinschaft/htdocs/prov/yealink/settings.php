@@ -504,7 +504,6 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	psetting('remote_phonebook.data.'.$i.'.url', '');
 	psetting('remote_phonebook.data.'.$i.'.name', '');
 		
-	###Except T41P/T42G Models
 	psetting('remote_phonebook.display_name', 'Telefonbuch');
 
 	###Super Search recommended by Yealink support
@@ -594,9 +593,6 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	
 	# blf_and_callpark_idle_led_enable
 	psetting('features.blf_and_callpark_idle_led_enable', '1');
-	
-	# IP for XML push
-	psetting('push_xml.server', GS_PROV_HOST );	
 	
 	#####################################################################
 	#  MAC-specific provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
@@ -820,9 +816,15 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	psetting('programablekey.6.value', '' );
 	psetting('programablekey.6.label', 'Tel.Buch');
 	
+	# max 6 EXP40 Modules allowed
+	# get max configured EXP40 count to speed up provisioning
+	$max_ext_modules = (int)$db->executeGetOne( 'SELECT `g`.`show_ext_modules` FROM `users` `u` JOIN `user_groups` `g` ON (`g`.`id`=`u`.`group_id`) WHERE `u`.`id`='.$user_id );
+	if ($max_ext_modules >6) { $max_ext_modules=6; }
+	
+	
 	# RESET EXP KEYS on EXP40
 	if ($phone_type == 'yealink-sip-t46g' || $phone_type == 'yealink-sip-t48g') {
-		for ($j=1; $j<=6; $j++) {
+		for ($j=1; $j<=$max_ext_modules; $j++) {
 			for ($i=1; $i <= 40; $i++) {
 				psetting('expansion_module.'.$j.'.key.'.$i.'.line', '0');
 				psetting('expansion_module.'.$j.'.key.'.$i.'.value', '');
