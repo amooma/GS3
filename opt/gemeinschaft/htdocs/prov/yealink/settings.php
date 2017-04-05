@@ -731,6 +731,9 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	
 	# DTMF Info Type   1=DTMF-Relay   2=DTMF   3=Telephone-Event
 	psetting('account.1.dtmf.info_type', '1');
+	
+	# allow alert info URL
+	psetting('account.1.alert_info_url_enable', '1');
 
 	# Time
 	##It configures the time zone.For more available time zones, refer to Time Zones on page 215.
