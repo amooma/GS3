@@ -338,6 +338,8 @@ _gscnf( 'YEALINK_PROV_FW_UPDATE'     , false              );
 _gscnf( 'YEALINK_PROV_FW_DEFAULT_SIP_T42G', null            );
 _gscnf( 'YEALINK_PROV_FW_DEFAULT_SIP_T46G', null            );
 _gscnf( 'YEALINK_PROV_FW_DEFAULT_SIP_T48G', null            );
+_gscnf( 'YEALINK_PROV_FW_DEFAULT_SIP_T42S', null            );
+_gscnf( 'YEALINK_PROV_FW_DEFAULT_SIP_T46S', null            );
 //_gscnf( 'YEALINK_PROV_FW_DEFAULT_IP284' , null            );
 //_gscnf( 'YEALINK_PROV_FW_DEFAULT_IP286' , null            );
 _gscnf( 'YEALINK_PROV_KEY_BLACKLIST' , ''                 );

@@ -122,7 +122,11 @@ if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
 		$phone_types['yealink-sip-t46g' ] = 'Yealink SIP T46G';
 	if (in_array('*', $enabled_models) || in_array('yealink-sip-t48g', $enabled_models))
 		$phone_types['yealink-sip-t48g' ] = 'Yealink SIP T48G';	
-}
+	if (in_array('*', $enabled_models) || in_array('yealink-sip-t42s', $enabled_models))
+		$phone_types['yealink-sip-t42s' ] = 'Yealink SIP T42S';
+	if (in_array('*', $enabled_models) || in_array('yealink-sip-t46s', $enabled_models))
+		$phone_types['yealink-sip-t46s' ] = 'Yealink SIP T46S';
+	}
 
 $key_functions_snom = array(
 	'none'  => __('Leer'),              # none
@@ -349,6 +353,8 @@ if ($phone_type == '') {
 		if     (array_key_exists('yealink-sip-t42g', $phone_types)) $phone_type = 'yealink-sip-t42g';
 		elseif (array_key_exists('yealink-sip-t46g', $phone_types)) $phone_type = 'yealink-sip-t46g';
 		elseif (array_key_exists('yealink-sip-t48g', $phone_types)) $phone_type = 'yealink-sip-t48g';
+		elseif (array_key_exists('yealink-sip-t42s', $phone_types)) $phone_type = 'yealink-sip-t42s';
+		elseif (array_key_exists('yealink-sip-t46s', $phone_types)) $phone_type = 'yealink-sip-t46s';
 	}
 }
 if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 'snom-870', 'snom-760', 'snom-720', 'snom-725', 'snom-710', 'snom-715', 'snom-821'), true)) {
@@ -366,7 +372,7 @@ if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 
 } elseif (in_array($phone_type, array('tiptel-ip284', 'tiptel-ip286'), true)) {
 	$phone_layout = 'tiptel';
 	$key_function_none = $key_function_none_tiptel;
-} elseif (in_array($phone_type, array('yealink-sip-t42g', 'yealink-sip-t46g', 'yealink-sip-t48g'), true)) {
+} elseif (in_array($phone_type, array('yealink-sip-t42g', 'yealink-sip-t46g', 'yealink-sip-t48g', 'yealink-sip-t42s', 'yealink-sip-t46s'), true)) {
 	$phone_layout = 'yealink';
 	$key_function_none = $key_function_none_yealink;
 } else {
@@ -1314,6 +1320,7 @@ if ($phone_layout) {
 	case 'yealink':
 		switch($phone_type) {
 			case 'yealink-sip-t46g':
+			case 'yealink-sip-t46s':
 				$key_levels = array(
 					0 => array('from'=>   1, 'to'=>   27, 'shifted'=>false,
 						'title'=> htmlEnt($phone_type_title))
@@ -1358,6 +1365,7 @@ if ($phone_layout) {
 		}
 		switch($phone_type) {
 			case 'yealink-sip-t42g':
+			case 'yealink-sip-t42s':
 				$key_levels[0]['title']= htmlEnt($phone_type_title);
 				$key_levels[0]['from'] =    1;
 				$key_levels[0]['to'  ] =    15;

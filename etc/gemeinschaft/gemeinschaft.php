@@ -538,7 +538,8 @@ $YEALINK_PROV_FW_DEFAULT_SIP_T42G = '';
 $YEALINK_PROV_FW_DEFAULT_SIP_T46G = '';
 $YEALINK_PROV_FW_DEFAULT_SIP_T48G = '';
 
-
+$YEALINK_PROV_FW_DEFAULT_SIP_T42S = '';
+$YEALINK_PROV_FW_DEFAULT_SIP_T46S = '';
 
 //-----------------------[ Polycom ]----------------------//
 
