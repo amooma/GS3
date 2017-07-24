@@ -574,7 +574,7 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	
 	# Reboot on SIP NOTIFY
 	# 0=reboot, if additional parameter "reboot=true" was given,  1=reboot always,  2=ignore SIP NOTIFY message
-	psetting(sip.notify_reboot_enable, '0');
+	psetting('sip.notify_reboot_enable', '0');
 	
 	
 	# Transfer
