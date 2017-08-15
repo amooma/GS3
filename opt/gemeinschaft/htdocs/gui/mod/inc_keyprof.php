@@ -1320,7 +1320,12 @@ if ($phone_layout) {
 	case 'yealink':
 		switch($phone_type) {
 			case 'yealink-sip-t46g':
-			case 'yealink-sip-t46s':
+				$key_levels = array(
+					0 => array('from'=>   1, 'to'=>   27, 'shifted'=>false,
+						'title'=> htmlEnt($phone_type_title))
+				);
+				break;
+			case  'yealink-sip-t46s':
 				$key_levels = array(
 					0 => array('from'=>   1, 'to'=>   27, 'shifted'=>false,
 						'title'=> htmlEnt($phone_type_title))
@@ -1332,6 +1337,20 @@ if ($phone_layout) {
 						'title'=> htmlEnt($phone_type_title))
 				);
 				break;	
+			case 'yealink-sip-t42g':
+				$show_ext_modules=0;
+				$key_levels = array(
+					0 => array('from'=>   1, 'to'=>   15, 'shifted'=>false,
+						'title'=> htmlEnt($phone_type_title))
+				);
+				break;
+			case 'yealink-sip-t42s':
+				$show_ext_modules=0;
+				$key_levels = array(
+					0 => array('from'=>   1, 'to'=>   15, 'shifted'=>false,
+						'title'=> htmlEnt($phone_type_title))
+				);
+				break;
 		}
 		if ($show_ext_modules >= 1) {
 			$key_levels += array(
@@ -1363,14 +1382,7 @@ if ($phone_layout) {
 					'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 2')
 			);
 		}
-		switch($phone_type) {
-			case 'yealink-sip-t42g':
-			case 'yealink-sip-t42s':
-				$key_levels[0]['title']= htmlEnt($phone_type_title);
-				$key_levels[0]['from'] =    1;
-				$key_levels[0]['to'  ] =    15;
-				break;
-		}
+
 		
 		break;
 	}
