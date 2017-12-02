@@ -735,6 +735,9 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	# allow alert info URL
 	psetting('account.1.alert_info_url_enable', '1');
 
+	# CID Source. 0-FROM  1-PAI  2-PAI-FROM  3-RPID-PAI-FROM  4-PAI-RPID-FROM  5-RPID-FROM
+	psetting('account.1.cid_source', '3');
+	
 	# Time
 	##It configures the time zone.For more available time zones, refer to Time Zones on page 215.
 	##The default value is +8.
