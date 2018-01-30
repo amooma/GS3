@@ -600,6 +600,14 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	# features.action_uri_limit_ip 
 	psetting('features.action_uri_limit_ip', 'any');
 	
+	# RTCP-XR features
+	psetting('phone_setting.vq_rtcpxr.session_report.enable', '1');
+	psetting('phone_setting.vq_rtcpxr.interval_report.enable', '1');
+	psetting('phone_setting.vq_rtcpxr_interval_period', '20');
+	psetting('phone_setting.vq_rtcpxr.states_show_on_web.enable', '1');
+	psetting('voice.rtcp_xr.enable', '1');	
+	
+	
 	#####################################################################
 	#  MAC-specific provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
 	#####################################################################
