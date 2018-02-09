@@ -121,7 +121,7 @@ if (subStr($mac,0,6) !== '000413') {
 
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
 if (! preg_match('/^Mozilla/i', $ua)
-||  ! preg_match('/snom[0-9]{3}/i', $ua) ) {
+||  ! preg_match('/snomd?[0-9]{3}/i', $ua) ) {
 	gs_log( GS_LOG_WARNING, "Phone with MAC \"$mac\" (Snom) has invalid User-Agent (\"". $ua ."\")" );
 	# don't explain this to the users
 	_settings_err( 'No! See log for details.' );
@@ -134,15 +134,15 @@ if (preg_match('/^Mozilla\/\d\.\d\s*\(compatible;\s*/i', $ua, $m)) {
 # user-agents:
 # 360: "Mozilla/4.0 (compatible; snom360-SIP 6.5.2; snom360 ramdisk v3.31; snom360 linux 3.25)"
 # 370: "Mozilla/4.0 (compatible; snom370-SIP 7.1.2)"
-if (preg_match('/snom([1-9][0-9]{2})/i', $ua, $m))  # e.g. "snom360"
-	$phone_model = $m[1];
+if (preg_match('/snom(d?[1-9][0-9]{2})/i', $ua, $m))  # e.g. "snom360"
+	$phone_model = strtolower($m[1]);
 else
 	$phone_model = 'unknown';
 
 $phone_type = 'snom-'.$phone_model;  # e.g. "snom-360"
 # to be used when auto-adding the phone
 
-$fw_vers = (preg_match('/snom[0-9]{3}-SIP\s+(\d+\.\d+\.\d+)/', $ua, $m))
+$fw_vers = (preg_match('/snomd?[0-9]{3}-SIP\s+(\d+\.(\d+\.){1,3}\d+)/i', $ua, $m))
 	? $m[1] : '0.0.0';
 $fw_vers_nrml = _snom_normalize_version( $fw_vers );
 
@@ -725,8 +725,8 @@ if (! isGsError($cf) && is_array($cf)) {
 	}
 }
 psetting('dnd_mode'               , $dnd_mode, true);
-psetting('dnd_on_code'            , 'dnd-on@'. $host));
-psetting('dnd_off_code'           , 'dnd-off@'. $host));
+psetting('dnd_on_code'            , 'dnd-on@'. $host);
+psetting('dnd_off_code'           , 'dnd-off@'. $host);
 psetting('preselection_nr'        , '');
 
 
@@ -963,6 +963,17 @@ if ($phone_model == '300') {
 	setting('fkey', 3, 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
 	setting('fkey', 4, 'keyevent F_TRANSFER', array('context'=>'active'));
 	setting('fkey', 5, 'keyevent F_MUTE', array('context'=>'active'));
+}
+if ($phone_model == 'd305' || $phone_model == 'd315') {
+	psetting('status_msgs_that_are_blocked', '');
+	psetting('dkey_fkey1', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
+	psetting('dkey_fkey2', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
+	psetting('gui_fkey1', 'keyevent F_CALL_LIST');
+	psetting('gui_fkey2', 'keyevent F_ADR_BOOK');
+	psetting('gui_fkey3', 'keyevent F_SETTINGS');
+	setting('fkey', 2, 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
+	setting('fkey', 3, 'keyevent F_TRANSFER', array('context'=>'active'));
+	setting('fkey', 4, 'keyevent F_MUTE', array('context'=>'active'));
 }
 if (($phone_model == '710') || ($phone_model == '715')) {
 	psetting('dkey_fkey1', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
