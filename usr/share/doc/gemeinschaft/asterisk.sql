@@ -6180,6 +6180,7 @@ INSERT INTO `group_members` VALUES (6,3001);
 INSERT INTO `group_members` VALUES (6,3002);
 INSERT INTO `group_members` VALUES (6,3003);
 INSERT INTO `group_members` VALUES (6,3004);
+INSERT INTO `group_members` VALUES (6,3005);
 INSERT INTO `group_members` VALUES (6,4000);
 INSERT INTO `group_members` VALUES (6,4001);
 INSERT INTO `group_members` VALUES (6,4002);
@@ -6673,24 +6674,85 @@ INSERT INTO `pb_ldap` VALUES ('012345','TEST','HANS','123','2007-05-24 07:28:28'
 UNLOCK TABLES;
 
 --
+-- Tabellenstruktur für Tabelle `pb_category`
+--
+DROP TABLE IF EXISTS `pb_category`;
+CREATE TABLE IF NOT EXISTS `pb_category` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `category` varchar(24) COLLATE utf8_unicode_ci NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uid_catid` (`user_id`,`category`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Tabellenstruktur für Tabelle `pb_cloud`
+--
+DROP TABLE IF EXISTS `pb_cloud`;
+CREATE TABLE IF NOT EXISTS `pb_cloud` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `url` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `login` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `pass` varbinary(64) NOT NULL,
+  `frequency` varchar(3) COLLATE utf8_unicode_ci NOT NULL DEFAULT '1d',
+  `ctag` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `last_remote_modified` datetime NOT NULL,
+  `next_poll` datetime NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `message` tinytext COLLATE utf8_unicode_ci NOT NULL,
+  `error_count` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `public` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uid_url_login` (`user_id`,`url`(255),`login`),
+  KEY `next_poll` (`next_poll`),
+  KEY `uid_login_url` (`user_id`,`login`,`url`(255))
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `pb_cloud` ADD FOREIGN KEY ( `user_id` ) 
+  REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT ;
+
+--
+-- Tabellenstruktur für Tabelle `pb_cloud_card`
+--
+DROP TABLE IF EXISTS `pb_cloud_card`;
+CREATE TABLE IF NOT EXISTS `pb_cloud_card` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cloud_id` int(10) unsigned NOT NULL,
+  `vcard_id` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `etag` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `vcard` text COLLATE utf8_unicode_ci NOT NULL,
+  `last_modified` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `cloud_id_vcard_id` (`cloud_id`,`vcard_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
 -- Table structure for table `pb_prv`
 --
 
 DROP TABLE IF EXISTS `pb_prv`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `pb_prv` (
+CREATE TABLE IF NOT EXISTS `pb_prv` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `firstname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `lastname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `number` varchar(25) CHARACTER SET ascii NOT NULL DEFAULT '',
+  `ptype` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'cell,work,home',
+  `pref` int(2) unsigned NOT NULL DEFAULT '9',
+  `card_id` int(10) unsigned NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `uid_lastname_firstname` (`user_id`,`lastname`(15),`firstname`(10)),
-  KEY `uid_firstname_lastname` (`user_id`,`firstname`(10),`lastname`(10)),
-  KEY `uid_number` (`user_id`,`number`(10)),
-  CONSTRAINT `pb_prv_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `uid_vcard` (`user_id`,`card_id`),
+  KEY `uid_lastname_firstname_pref` (`user_id`,`lastname`(15),`firstname`(10),`pref`,`ptype`),
+  KEY `cloud_card_id` (`card_id`),
+  KEY `uid_number_pref` (`user_id`,`number`(10),`pref`,`ptype`),
+  KEY `uid_firstname_lastname_pref` (`user_id`,`firstname`(10),`lastname`(10),`pref`,`ptype`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6701,6 +6763,37 @@ LOCK TABLES `pb_prv` WRITE;
 /*!40000 ALTER TABLE `pb_prv` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pb_prv` ENABLE KEYS */;
 UNLOCK TABLES;
+
+-- connect a phone book entry to a category
+CREATE TABLE IF NOT EXISTS `pb_prv_category` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `cat_id` int(10) unsigned NOT NULL,
+  `card_id` int(10) unsigned NOT NULL,
+  `prv_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `uid_catid_cardid` (`user_id`,`cat_id`,`card_id`),
+  KEY `uid_prvid` (`user_id`,`prv_id`),
+  KEY `uid_cardid` (`user_id`,`card_id`),
+  KEY `card_id` (`card_id`),
+  KEY `prv_id` (`prv_id`),
+  KEY `cat_id` (`cat_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `pb_cloud_card` ADD FOREIGN KEY ( `cloud_id` ) 
+  REFERENCES `pb_cloud` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_prv` ADD FOREIGN KEY ( `card_id` ) 
+  REFERENCES `pb_cloud_card` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_category` ADD FOREIGN KEY ( `user_id` ) 
+  REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `user_id` ) 
+  REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `cat_id` ) 
+  REFERENCES `pb_category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `card_id` ) 
+  REFERENCES `pb_cloud_card` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
+ALTER TABLE `pb_prv_category` ADD FOREIGN KEY ( `prv_id` ) 
+  REFERENCES `pb_prv` (`id`) ON DELETE CASCADE ON UPDATE CASCADE ;
 
 --
 -- Table structure for table `penalties`
@@ -7451,6 +7544,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES ('1', 'public-abook', '', '', '', '', '', '1', '1', NULL, '', NULL, NULL, NULL, '')
 INSERT INTO `users` VALUES (5,'nobody-00001','','','','','',1,1,NULL,'',NULL,NULL,NULL,'');
 INSERT INTO `users` VALUES (6,'nobody-00002','','','','','',2,1,NULL,'',NULL,NULL,NULL,'');
 INSERT INTO `users` VALUES (7,'nobody-00003','','','','','',3,1,NULL,'',NULL,NULL,NULL,'');
@@ -7655,4 +7749,3 @@ USE `asterisk`;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2010-10-19 19:30:00
-

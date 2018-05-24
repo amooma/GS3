@@ -1,0 +1,6 @@
+# Gemeinschaft
+# $Revision$
+
+# refresh cloud card phone books into the database
+
+*/17 *  * * *   root   sleep 23; nice -n 15 /opt/gemeinschaft/sbin/gs-carddav-reader.php 1>>/dev/null 2>>/dev/null

@@ -142,9 +142,9 @@ q:after  { content: close-quote; }
 .r {text-align: right;}
 .c {text-align: center;}
 
-.t {text-align: top;}
-.m {text-align: middle;}
-.b {text-align: bottom;}
+.t {vertical-align: top;}
+.m {vertical-align: middle;}
+.b {vertical-align: bottom;}
 
 .m,
 tr.m td,

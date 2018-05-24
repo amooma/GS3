@@ -269,7 +269,7 @@ elseif ($type==='prv') {
 FROM
 	`pb_prv`
 WHERE
-	`user_id`='. $user_id .' AND (
+	(`user_id`='. $user_id . 'OR `user_id`=1 ) AND (
 	`lastname` LIKE _utf8\''. $db->escape($name_sql) .'\' COLLATE utf8_unicode_ci
 	)
 ORDER BY `lastname`, `firstname`

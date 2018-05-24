@@ -76,7 +76,7 @@ $remote_user = $rs->fetchRow();
 $is_from_phonebook = false;
 if (! $remote_user) {
 	# if there is nothing in the ast_sipfriends, check the private phonebook
-	$rs = $db->execute('SELECT `firstname`, `lastname` FROM `pb_prv` WHERE `user_id`='.$uid.' AND `number`=\''. $db->escape($number) .'\'');
+	$rs = $db->execute('SELECT `firstname`, `lastname` FROM `pb_prv` WHERE (`user_id`='.$uid.' OR `user_id`=1) AND `number`=\''. $db->escape($number) .'\'');
 	//FIXME - probably doesn't make much sense with uncanonized phone numbers
 	$remote_user = $rs->fetchRow();
 	$is_from_phonebook = true;

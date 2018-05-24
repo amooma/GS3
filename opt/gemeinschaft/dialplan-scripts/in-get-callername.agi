@@ -37,7 +37,7 @@ ob_implicit_flush(1);
 
 function search_number ( $user_id, $source, $cid , $db ) {
 	if ($source == 'private')
-		$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_prv` WHERE `user_id`=' . $user_id . ' AND `number`= \'' . $db->escape($cid) . '\'';
+		$query = 'SELECT `firstname`, `lastname`, `number`, `ptype` FROM `pb_prv` WHERE ( `user_id`=' . $user_id . ' OR `user_id`=1 ) AND `number`= \'' . $db->escape($cid) . '\'';
 	else if ($source == 'public')
 		$query = 'SELECT `firstname`, `lastname`, `number` FROM `pb_ldap` WHERE `number`=\''. $db->escape($cid) . '\'';
 
@@ -49,7 +49,9 @@ function search_number ( $user_id, $source, $cid , $db ) {
 			$firstname	= $caller['firstname'];
 			$lastname	= $caller['lastname'];
 			$number		= $caller['number'];
-			$set = array( 'firstname' => $caller['firstname'], 'lastname' => $caller['lastname'], 'number' => $caller['number']);
+			if (isset($caller['ptype']) && !empty($caller['ptype']) ) $ptype = $caller['ptype'];
+			else $ptype = '';
+			$set = array( 'firstname' => $caller['firstname'], 'lastname' => $caller['lastname'], 'number' => $caller['number'], 'ptype' => $ptype);
 			$result[$number] = $set;
 		}
 	}
@@ -57,14 +59,17 @@ function search_number ( $user_id, $source, $cid , $db ) {
 	//direct match
 	if ( isset($result[$cid]) ) {
 		$hit = $result[$cid];
-		print_name($hit['firstname'], $hit['lastname']);
+		print_name($hit['firstname'], $hit['lastname'], $hit['ptype']);
 	}
 }
 
-function print_name ( $firstname, $lastname ) {
+function print_name ( $firstname, $lastname, $ptype='' ) {
 	$fullname = '';
-	if(strlen($firstname) > 0)
-		$fullname = strtoupper( substr($firstname, 0, 1) ) . '. ' . $lastname;
+	if(strlen($ptype) > 0)
+		$fullname = strtoupper( substr($firstname, 0, 1) ) . '. ' . $lastname . ' (' . $ptype .')';
+//	else
+//	if(strlen($firstname) > 0)
+//		$fullname = strtoupper( substr($firstname, 0, 1) ) . '. ' . $lastname;
 	else
 		$fullname = $lastname;
 	gs_agi_set_variable('CALLERID(name)' , $fullname);

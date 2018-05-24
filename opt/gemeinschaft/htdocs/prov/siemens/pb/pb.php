@@ -283,7 +283,7 @@ if (! $type) {
 				$image = $img_url.'contents.png';
 				break;
 			case 'prv':
-				$c = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `pb_prv` WHERE `user_id`='. $user_id );
+				$c = (int)$db->executeGetOne( 'SELECT COUNT(*) FROM `pb_prv` WHERE (`user_id`='. $user_id . 'OR `user_id`=1 )' );
 				$image = $img_url.'yast_sysadmin.png';
 				break;
 			case 'imported':

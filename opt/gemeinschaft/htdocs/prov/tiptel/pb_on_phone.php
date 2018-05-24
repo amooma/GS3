@@ -125,7 +125,7 @@ elseif ($type ==='prv') { # PRIVATE phonebook
 		'query'	=> 'SELECT `pb`.`lastname` `ln`, `pb`.`firstname` `fn`, `pb`.`number` `ext`
 		FROM
 		`pb_prv` `pb`
-		WHERE `pb`.`user_id`='.$user_id.'
+		WHERE (`pb`.`user_id`='. $user_id . 'OR `pb`.`user_id`=1 ) 
 		ORDER BY `pb`.`lastname`, `pb`.`firstname`'
 	);
 }

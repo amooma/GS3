@@ -17,19 +17,19 @@
   Tabellenstruktur eingespielt wird, ist in <xref
   linkend="mysql-replikation" /> beschrieben.</para>
 
-  <para>Die Datei <filename>asterisk.sql</filename> enthält hier alle zum
-  Erzeugen der Tabellen nötigen SQL-Befehle. Einige Einträge (z.B. IP-Adressen
-  etc.) müssen noch an die Installation angepaßt werden.</para>
+  <para>Die Datei <filename>asterisk.sql</filename> enthÃ¤lt hier alle zum
+  Erzeugen der Tabellen nÃ¶tigen SQL-Befehle. Einige EintrÃ¤ge (z.B. IP-Adressen
+  etc.) mÃ¼ssen noch an die Installation angepaÃŸt werden.</para>
 
   <section id="datenbank-infos">
     <title>Datenbank-Struktur</title>
 
     <para>In der Datenbank <literal>asterisk</literal> werden zentral
-    Laufzeitkonfiguration und Logeinträge vorgehalten. Auf alle Tabellen, die
+    Laufzeitkonfiguration und LogeintrÃ¤ge vorgehalten. Auf alle Tabellen, die
     mit <literal>ast_</literal> beginnen, wird direkt aus Asterisk
     zugegriffen, wodurch auch die Struktur und Spaltennamen vorgegeben sind.
-    Zusätzliche Spalten, die für Asterisk keine Bedeutung haben, sind in
-    diesen Tabellen mit einem führenden Unterstrich (<literal>_</literal>)
+    ZusÃ¤tzliche Spalten, die fÃ¼r Asterisk keine Bedeutung haben, sind in
+    diesen Tabellen mit einem fÃ¼hrenden Unterstrich (<literal>_</literal>)
     benannt.</para>
   </section>
 
@@ -37,7 +37,7 @@
     <title>Tabellenstruktur der Datenbank <quote>asterisk</quote></title>
 
     <para>Die Tabellen der Datenbank werden hier alphabetisch
-    aufgeführt.</para>
+    aufgefÃ¼hrt.</para>
 
     <section>
       <title><literal>ast_cdr</literal></title>
@@ -48,9 +48,9 @@
       Konfigurationen dazu werden auf den Asterisk-Servern in der
       <filename>/opt/gemeinschaft/etc/asterisk/cdr_mysql.conf</filename>
       vorgenommen. Im Gegensatz zur Tabelle <literal>dial_log</literal> wird
-      diese Tabelle zur Auswertung von Gespächsdaten verwendet (z.B.
+      diese Tabelle zur Auswertung von GespÃ¤chsdaten verwendet (z.B.
       Statistik). Die Tabelle <literal>dial_log</literal> dient hingegen nur
-      der Anzeige für den Benutzer und wird von AGI-Skripten erstellt.</para>
+      der Anzeige fÃ¼r den Benutzer und wird von AGI-Skripten erstellt.</para>
 
       <variablelist>
         <varlistentry>
@@ -83,8 +83,8 @@
           <term><literal>dst</literal></term>
 
           <listitem>
-            <para>Zuletzt für den Anruf im Dialplan ausgeführte
-            Ziel-Extension; Achtung: kann auch <literal>h</literal> (für
+            <para>Zuletzt fÃ¼r den Anruf im Dialplan ausgefÃ¼hrte
+            Ziel-Extension; Achtung: kann auch <literal>h</literal> (fÃ¼r
             Hangup-Extension) sein!</para>
           </listitem>
         </varlistentry>
@@ -120,7 +120,7 @@
           <term><literal>lastapp</literal></term>
 
           <listitem>
-            <para>Letzte ausgeführte Applikation im Dialplan, z.B.:
+            <para>Letzte ausgefÃ¼hrte Applikation im Dialplan, z.B.:
             <literal>NoOp</literal></para>
           </listitem>
         </varlistentry>
@@ -129,7 +129,7 @@
           <term><literal>lastdata</literal></term>
 
           <listitem>
-            <para>Die dieser Applikation (s.o.) übergebenen Argumente, z.B.:
+            <para>Die dieser Applikation (s.o.) Ã¼bergebenen Argumente, z.B.:
             <literal>Finish if-to-internal-users-self-79</literal></para>
           </listitem>
         </varlistentry>
@@ -147,7 +147,7 @@
           <term><literal>billsec</literal></term>
 
           <listitem>
-            <para>Dauer des Gesprächs in Sekunden, also ohne Klingeln o.ä.
+            <para>Dauer des GesprÃ¤chs in Sekunden, also ohne Klingeln o.Ã¤.
             (die ggf. in Rechnung zu stellende Zeit), z.B.:
             <literal>29</literal></para>
           </listitem>
@@ -190,7 +190,7 @@
 
                   <listitem>
                     <simpara>Fehlgeschlagen. - Unbekannte Rufnummer, Stau,
-                    o.ä.</simpara>
+                    o.Ã¤.</simpara>
                   </listitem>
                 </varlistentry>
 
@@ -198,8 +198,8 @@
                   <term><literal>UNKNOWN</literal></term>
 
                   <listitem>
-                    <simpara>Unbekannt. - Keine Information über den Erfolg
-                    verfügbar.</simpara>
+                    <simpara>Unbekannt. - Keine Information Ã¼ber den Erfolg
+                    verfÃ¼gbar.</simpara>
                   </listitem>
                 </varlistentry>
               </variablelist></para>
@@ -304,7 +304,7 @@
           <term><literal>penalty</literal></term>
 
           <listitem>
-            <para>Legt die Priorität fest, nach der die Mitglieder einer
+            <para>Legt die PrioritÃ¤t fest, nach der die Mitglieder einer
             Warteschlange (Agenten) angerufen werden.</para>
           </listitem>
         </varlistentry>
@@ -346,7 +346,7 @@
           <term><literal>musicclass</literal></term>
 
           <listitem>
-            <para>Die Art der Wartemusik kann hiermit für die einzelne
+            <para>Die Art der Wartemusik kann hiermit fÃ¼r die einzelne
             Warteschlange (z.B. nach Musikrichtung) definiert werden.</para>
           </listitem>
         </varlistentry>
@@ -366,7 +366,7 @@
 
           <listitem>
             <para>Legt einen optionalen Kontext fest. Ein Anrufer wird durch
-            Drücken einer einzigen Ziffer zu der entsprechenden Extension in
+            DrÃ¼cken einer einzigen Ziffer zu der entsprechenden Extension in
             diesem Kontext weitergeleitet.</para>
           </listitem>
         </varlistentry>
@@ -385,7 +385,7 @@
 
           <listitem>
             <para>Legt fest, ob ein Agent automatisch auf "Pause" gesetzt
-            wird, wenn er einen Anruf nicht beantwortet. Mögliche Werte:
+            wird, wenn er einen Anruf nicht beantwortet. MÃ¶gliche Werte:
             <literal>yes</literal>|<literal>no</literal></para>
           </listitem>
         </varlistentry>
@@ -396,7 +396,7 @@
           <listitem>
             <para>Legt fest, ob das Interface des Mitglieds der Warteschlange,
             welches mit dem Anrufer verbunden wird, in der Variable
-            "MEMBERINTERFACE" gespeichert wird. Mögliche Werte:
+            "MEMBERINTERFACE" gespeichert wird. MÃ¶gliche Werte:
             <literal>yes</literal>|<literal>no</literal></para>
           </listitem>
         </varlistentry>
@@ -405,9 +405,9 @@
           <term><literal>monitor_join</literal></term>
 
           <listitem>
-            <para>Legt fest, ob bei einem Gesprächsmitschnitt die Audiodateien
+            <para>Legt fest, ob bei einem GesprÃ¤chsmitschnitt die Audiodateien
             der eIngehenden und der ausgehenden Richtung zu einer einzigen
-            Datei zusammengemischt werden. Mögliche Werte:
+            Datei zusammengemischt werden. MÃ¶gliche Werte:
             <literal>yes</literal>|<literal>no</literal></para>
           </listitem>
         </varlistentry>
@@ -416,7 +416,7 @@
           <term><literal>monitor_format</literal></term>
 
           <listitem>
-            <para>Legt fest ob und in welchem Audioformat Gesprächsmitschnitte
+            <para>Legt fest ob und in welchem Audioformat GesprÃ¤chsmitschnitte
             gespeichert werden sollen.</para>
 
             <variablelist>
@@ -424,7 +424,7 @@
                 <term><literal>NULL</literal></term>
 
                 <listitem>
-                  <para>Keine Aufzeichnung der Sprachkanäle wird durchgeführt,
+                  <para>Keine Aufzeichnung der SprachkanÃ¤le wird durchgefÃ¼hrt,
                   wenn kein Format definiert wurde.</para>
                 </listitem>
               </varlistentry>
@@ -483,8 +483,8 @@
 
           <listitem>
             <para>Sekunden, auf welche die Ansage der Wartezeit abgerundet
-            oder aufgerundet werden soll, um nicht unnötige Präzision
-            vorzutäuschen. Sinnvolle Werte: <literal>0</literal> (keine Ansage
+            oder aufgerundet werden soll, um nicht unnÃ¶tige PrÃ¤zision
+            vorzutÃ¤uschen. Sinnvolle Werte: <literal>0</literal> (keine Ansage
             der Sekunden), <literal>1</literal>, <literal>5</literal>,
             <literal>10</literal>, <literal>15</literal>,
             <literal>30</literal>.</para>
@@ -542,7 +542,7 @@
 
           <listitem>
             <para>Zeit in Sekunden, die ein Mitglied der Warteschlange nicht
-            angerufen wird, nachdem er ein vorhergehendes Gespräch beendet
+            angerufen wird, nachdem er ein vorhergehendes GesprÃ¤ch beendet
             hat.</para>
           </listitem>
         </varlistentry>
@@ -552,7 +552,7 @@
 
           <listitem>
             <para>Maximale Anzahl der Anrufer, die in der Warteschlange
-            gehalten werden dürfen. Der Wert <literal>0</literal> steht für
+            gehalten werden dÃ¼rfen. Der Wert <literal>0</literal> steht fÃ¼r
             eine unbegrenzte Anzahl.</para>
           </listitem>
         </varlistentry>
@@ -600,8 +600,8 @@
 
                 <listitem>
                   <para>Das Mitglied der Warteschlange wird angeklingelt,
-                  dessen letztes Telefonat zeitlich am längsten
-                  zurückliegt.</para>
+                  dessen letztes Telefonat zeitlich am lÃ¤ngsten
+                  zurÃ¼ckliegt.</para>
                 </listitem>
               </varlistentry>
 
@@ -618,7 +618,7 @@
                 <term><literal>random</literal></term>
 
                 <listitem>
-                  <para>Ein zufällig ausgewähltes Mitglied der Warteschlange
+                  <para>Ein zufÃ¤llig ausgewÃ¤hltes Mitglied der Warteschlange
                   wird angeklingelt.</para>
                 </listitem>
               </varlistentry>
@@ -629,7 +629,7 @@
                 <listitem>
                   <para>Alle Mitglieder der Warteschlange werden nacheinander
                   angeklingelt, jedoch wird die Anfangsposition aus einem
-                  vorhergehenden Durchlauf berücksichtigt.</para>
+                  vorhergehenden Durchlauf berÃ¼cksichtigt.</para>
                 </listitem>
               </varlistentry>
             </variablelist>
@@ -641,14 +641,14 @@
 
           <listitem>
             <para>Legt fest ob Anrufer in eine Warteschlange aufgenommen
-            werden, die keine Mitglieder enthält.</para>
+            werden, die keine Mitglieder enthÃ¤lt.</para>
 
             <variablelist>
               <varlistentry>
                 <term><literal>yes</literal></term>
 
                 <listitem>
-                  <para>Anrufer können in die Warteschlange aufgenommen
+                  <para>Anrufer kÃ¶nnen in die Warteschlange aufgenommen
                   werden, auch wenn diese keine Mitglieder definiert
                   hat.</para>
                 </listitem>
@@ -658,8 +658,8 @@
                 <term><literal>no</literal></term>
 
                 <listitem>
-                  <para>Anrufer können nur in die Warteschlange aufgenommen
-                  werden, mindestens ein Mitglied verfügbar ist.</para>
+                  <para>Anrufer kÃ¶nnen nur in die Warteschlange aufgenommen
+                  werden, mindestens ein Mitglied verfÃ¼gbar ist.</para>
                 </listitem>
               </varlistentry>
 
@@ -667,8 +667,8 @@
                 <term><literal>strict</literal></term>
 
                 <listitem>
-                  <para>Anrufer können nur in die Warteschlange aufgenommen
-                  werden, wenn mindestens ein Mitglied definiert ist, muß aber
+                  <para>Anrufer kÃ¶nnen nur in die Warteschlange aufgenommen
+                  werden, wenn mindestens ein Mitglied definiert ist, muÃŸ aber
                   zu diesem Zeitpunkt nicht unbedingt eingeloggt sein.</para>
                 </listitem>
               </varlistentry>
@@ -720,7 +720,7 @@
 
           <listitem>
             <para>Legt fest, ob QueueMemberStatus-Events im Manager-Interface
-            erzeugt werden. Mögliche Werte:
+            erzeugt werden. MÃ¶gliche Werte:
             <literal>yes</literal>|<literal>no</literal></para>
           </listitem>
         </varlistentry>
@@ -729,10 +729,10 @@
           <term><literal>eventwhencalled</literal></term>
 
           <listitem>
-            <para>Legt fest, ob u.a. die folgenden Events für das
+            <para>Legt fest, ob u.a. die folgenden Events fÃ¼r das
             Manager-Interface erzeugt werden: <literal>AgentCalled</literal>,
             <literal>AgentDump</literal>, <literal>AgentConnect</literal>,
-            <literal>AgentComplete</literal>. Mögliche Werte:
+            <literal>AgentComplete</literal>. MÃ¶gliche Werte:
             <literal>yes</literal>|<literal>no</literal></para>
           </listitem>
         </varlistentry>
@@ -742,8 +742,8 @@
 
           <listitem>
             <para>Legt fest ob dem Mitglied der Warteschlange, der das
-            Gespräch annimmt, die Wartezeit des Anrufers angesagt werden soll,
-            bevor dieser zu ihm durchgestellt wird. Mögliche Werte:
+            GesprÃ¤ch annimmt, die Wartezeit des Anrufers angesagt werden soll,
+            bevor dieser zu ihm durchgestellt wird. MÃ¶gliche Werte:
             <literal>yes</literal>|<literal>no</literal></para>
           </listitem>
         </varlistentry>
@@ -753,8 +753,8 @@
 
           <listitem>
             <para>Legt fest, ob Mitglieder der Warteschlange auch dann
-            angeklingelt werden ,wenn sie sich in einem Gespräch befinden.
-            Mögliche Werte:
+            angeklingelt werden ,wenn sie sich in einem GesprÃ¤ch befinden.
+            MÃ¶gliche Werte:
             <literal>yes</literal>|<literal>no</literal></para>
           </listitem>
         </varlistentry>
@@ -774,7 +774,7 @@
           <listitem>
             <para>Die relative Gewichtung der Warteschlangen. Ist ein Benutzer
             Mitglied in mehreren Warteschlangen, kann hiermit die Reihenfolge
-            der Wichtigkeit festgelegt werden. Schlangen mit höherem Wert
+            der Wichtigkeit festgelegt werden. Schlangen mit hÃ¶herem Wert
             werden bevorzugt.</para>
           </listitem>
         </varlistentry>
@@ -784,8 +784,8 @@
 
           <listitem>
             <para>Bestimmt, ob der Antwort-Timeout eines Mitglieds der
-            Warteschlange bei einem Besetzt- oder Leitung-überlastet-Signal
-            zurückgesetzt wird.</para>
+            Warteschlange bei einem Besetzt- oder Leitung-Ã¼berlastet-Signal
+            zurÃ¼ckgesetzt wird.</para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -794,9 +794,9 @@
     <section>
       <title><literal>ast_sipfriends</literal></title>
 
-      <para>Die SIP Endgeräte - Datenbankversion der
-      <filename>sip.conf</filename>. Für diese Tabelle existiert der View ast_sipfriends_gs,
-      dieser wird von Asterisk ausgewertet, der view beschränkt die Tabelle um peers die für 
+      <para>Die SIP EndgerÃ¤te - Datenbankversion der
+      <filename>sip.conf</filename>. FÃ¼r diese Tabelle existiert der View ast_sipfriends_gs,
+      dieser wird von Asterisk ausgewertet, der view beschrÃ¤nkt die Tabelle um peers die fÃ¼r 
       Asterisk nicht relevant sind, so zb. User auf externen Hosts (Angenturen)</para>
 
       <variablelist>
@@ -813,7 +813,7 @@
           <term><literal>name</literal></term>
 
           <listitem>
-            <para>Der Name des Endgerätes zur Identifikation z.B. im
+            <para>Der Name des EndgerÃ¤tes zur Identifikation z.B. im
             Dialplan.</para>
           </listitem>
         </varlistentry>
@@ -822,8 +822,8 @@
           <term><literal>secret</literal></term>
 
           <listitem>
-            <para>Legt das Passwort fest, welches das SIP-Endgerät zur
-            Anmeldung benutzten muß.</para>
+            <para>Legt das Passwort fest, welches das SIP-EndgerÃ¤t zur
+            Anmeldung benutzten muÃŸ.</para>
           </listitem>
         </varlistentry>
 
@@ -831,7 +831,7 @@
           <term><literal>type</literal></term>
 
           <listitem>
-            <para>Die Art, wie der SIP-Anschluss und damit das SIP-Endgerät
+            <para>Die Art, wie der SIP-Anschluss und damit das SIP-EndgerÃ¤t
             behandelt werden soll</para>
 
             <variablelist>
@@ -869,7 +869,7 @@
           <term><literal>host</literal></term>
 
           <listitem>
-            <para>Legt fest, ob sich das SIP-Endgerät eine dynamische oder
+            <para>Legt fest, ob sich das SIP-EndgerÃ¤t eine dynamische oder
             eine statische IP-Adresse verwendet.</para>
 
             <variablelist>
@@ -877,7 +877,7 @@
                 <term><literal>dynamic</literal></term>
 
                 <listitem>
-                  <para>Die IP-Adresse des Endgerätes ist dynamisch, seine IP
+                  <para>Die IP-Adresse des EndgerÃ¤tes ist dynamisch, seine IP
                   ist dem System nicht bekannt.</para>
                 </listitem>
               </varlistentry>
@@ -886,8 +886,8 @@
                 <term><literal><replaceable>&lt;IP&gt;</replaceable>|<replaceable>&lt;hostname&gt;</replaceable></literal></term>
 
                 <listitem>
-                  <para>Die IP-Adresse oder der Hostname des Endgerätes. Das
-                  System kann hierüber das Endgerät erreichen, ohne dass sich
+                  <para>Die IP-Adresse oder der Hostname des EndgerÃ¤tes. Das
+                  System kann hierÃ¼ber das EndgerÃ¤t erreichen, ohne dass sich
                   dieses erst registrieren muss.</para>
                 </listitem>
               </varlistentry>
@@ -900,7 +900,7 @@
 
           <listitem>
             <para>Legt die IP-Adresse fest, unter der das System versucht ein
-            Endgerät zu erreichen, wenn es sich noch nicht registriert
+            EndgerÃ¤t zu erreichen, wenn es sich noch nicht registriert
             hat.</para>
           </listitem>
         </varlistentry>
@@ -909,7 +909,7 @@
           <term><literal>context</literal></term>
 
           <listitem>
-            <para>Der Kontext, zu welchem das SIP-Endgerät gehören
+            <para>Der Kontext, zu welchem das SIP-EndgerÃ¤t gehÃ¶ren
             soll.</para>
           </listitem>
         </varlistentry>
@@ -918,7 +918,7 @@
           <term><literal>callerid</literal></term>
 
           <listitem>
-            <para>Die ID des Anrufers, die an die Gegenstelle übetragen
+            <para>Die ID des Anrufers, die an die Gegenstelle Ã¼betragen
             wird.</para>
           </listitem>
         </varlistentry>
@@ -927,7 +927,7 @@
           <term><literal>mailbox</literal></term>
 
           <listitem>
-            <para>Die Nummer der Mailbox, die dem Endgerät zugeordnet
+            <para>Die Nummer der Mailbox, die dem EndgerÃ¤t zugeordnet
             ist.</para>
           </listitem>
         </varlistentry>
@@ -936,8 +936,8 @@
           <term><literal>callgroup</literal></term>
 
           <listitem>
-            <para>Liste numerischer IDs der Call-Groups, zu denen das Endgerät
-            gehören soll.</para>
+            <para>Liste numerischer IDs der Call-Groups, zu denen das EndgerÃ¤t
+            gehÃ¶ren soll.</para>
           </listitem>
         </varlistentry>
 
@@ -945,8 +945,8 @@
           <term><literal>pickupgroup</literal></term>
 
           <listitem>
-            <para>Liste numerischer IDs der Call-Groups, für die das
-            Heranholen von Gesprächen an dieses Endgerät erlaubt ist.</para>
+            <para>Liste numerischer IDs der Call-Groups, fÃ¼r die das
+            Heranholen von GesprÃ¤chen an dieses EndgerÃ¤t erlaubt ist.</para>
           </listitem>
         </varlistentry>
 
@@ -955,7 +955,7 @@
 
           <listitem>
             <para>Legt fest, ob und welche Channelvariable bei Anrufen von
-            diesem Endgerät gesetzt werden soll.</para>
+            diesem EndgerÃ¤t gesetzt werden soll.</para>
           </listitem>
         </varlistentry>
 
@@ -963,8 +963,8 @@
           <term><literal>call-limit</literal></term>
 
           <listitem>
-            <para>Legt die Maximale Anzahl von Gesprächen fest, die über
-            dieses Endgerät geführt werden können.</para>
+            <para>Legt die Maximale Anzahl von GesprÃ¤chen fest, die Ã¼ber
+            dieses EndgerÃ¤t gefÃ¼hrt werden kÃ¶nnen.</para>
           </listitem>
         </varlistentry>
 
@@ -973,8 +973,8 @@
 
           <listitem>
             <para>Legt den Kontext fest, welcher zur Signalisierung z.B. von
-            LEDs an einem SIP-Endgerät verwendet wird. In diesem Kontext
-            befinden sich z.B. die "hint" Einträge im Dialplan.</para>
+            LEDs an einem SIP-EndgerÃ¤t verwendet wird. In diesem Kontext
+            befinden sich z.B. die "hint" EintrÃ¤ge im Dialplan.</para>
           </listitem>
         </varlistentry>
 
@@ -983,7 +983,7 @@
 
           <listitem>
             <para>Legt fest, welcher Kontest beim ersten Registrieren eines
-            SIP-Endgerätes automatisch aufgerufen wird. Als Extension wird der
+            SIP-EndgerÃ¤tes automatisch aufgerufen wird. Als Extension wird der
             Inhalt des Feldes <literal>name</literal> verwendet.</para>
           </listitem>
         </varlistentry>
@@ -992,7 +992,7 @@
           <term><literal>ipaddr</literal></term>
 
           <listitem>
-            <para>Die aktuelle IP-Adresse des SIP-Endgerätes wird vom
+            <para>Die aktuelle IP-Adresse des SIP-EndgerÃ¤tes wird vom
             Asterisk-Server in diesem Feld abgelegt.</para>
           </listitem>
         </varlistentry>
@@ -1001,7 +1001,7 @@
           <term><literal>port</literal></term>
 
           <listitem>
-            <para>Die aktuelle Portnummer des SIP-Endgerätes wird vom
+            <para>Die aktuelle Portnummer des SIP-EndgerÃ¤tes wird vom
             Asterisk-Server in diesem Feld abgelegt.</para>
           </listitem>
         </varlistentry>
@@ -1010,7 +1010,7 @@
           <term><literal>regseconds</literal></term>
 
           <listitem>
-            <para>Zeitstempel der Registrierung des SIP-Endgerätes wird vom
+            <para>Zeitstempel der Registrierung des SIP-EndgerÃ¤tes wird vom
             Asterisk-Server in diesem Feld abgelegt.</para>
           </listitem>
         </varlistentry>
@@ -1019,7 +1019,7 @@
           <term><literal>username</literal></term>
 
           <listitem>
-            <para>Benutzername, wie er in der Konfiguration des SIP-Endgerätes
+            <para>Benutzername, wie er in der Konfiguration des SIP-EndgerÃ¤tes
             festgelegt wurde.</para>
           </listitem>
         </varlistentry>
@@ -1028,7 +1028,7 @@
           <term><literal>regserver</literal></term>
 
           <listitem>
-            <para>Name des Servers, an dem das Endgerät registriert ist, wird
+            <para>Name des Servers, an dem das EndgerÃ¤t registriert ist, wird
             vom Asterisk-Server in diesem Feld abgelegt.</para>
           </listitem>
         </varlistentry>
@@ -1037,7 +1037,7 @@
           <term><literal>fullcontact</literal></term>
 
           <listitem>
-            <para>Die Kontaktdaten des SIP-Endgerätes werden vom
+            <para>Die Kontaktdaten des SIP-EndgerÃ¤tes werden vom
             Asterisk-Server in diesem Feld abgelegt.</para>
           </listitem>
         </varlistentry>
@@ -1079,7 +1079,7 @@
           <term><literal>context</literal></term>
 
           <listitem>
-            <para>Legt fest, zu welchem Kontext die Mailbox gehört.</para>
+            <para>Legt fest, zu welchem Kontext die Mailbox gehÃ¶rt.</para>
           </listitem>
         </varlistentry>
 
@@ -1104,7 +1104,7 @@
           <term><literal>fullname</literal></term>
 
           <listitem>
-            <para>Vollständiger Name des Benutzers der Mailbox.</para>
+            <para>VollstÃ¤ndiger Name des Benutzers der Mailbox.</para>
           </listitem>
         </varlistentry>
 
@@ -1121,8 +1121,8 @@
           <term><literal>attach</literal></term>
 
           <listitem>
-            <para>Legt fest, ob an die Benachrichtigung über eMail, eine
-            Audiodatei mit der Aufnahme angehängt werden soll. Mögliche Werte:
+            <para>Legt fest, ob an die Benachrichtigung Ã¼ber eMail, eine
+            Audiodatei mit der Aufnahme angehÃ¤ngt werden soll. MÃ¶gliche Werte:
             <literal>yes</literal>|<literal>no</literal></para>
           </listitem>
         </varlistentry>
@@ -1132,7 +1132,7 @@
 
           <listitem>
             <para>Legt fest, ob nach der Benachrichtigung per eMail die
-            Audiodatei gelöscht werden soll.</para>
+            Audiodatei gelÃ¶scht werden soll.</para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -1165,7 +1165,7 @@
           <term><literal>regexp</literal></term>
 
           <listitem>
-            <para>Regulärer Ausdruck zur Definition der
+            <para>RegulÃ¤rer Ausdruck zur Definition der
             Rufnummernsperre</para>
           </listitem>
         </varlistentry>
@@ -1199,7 +1199,7 @@
           <term><literal>case</literal></term>
 
           <listitem>
-            <simpara>Legt fest, für welchen Fall die Anrufweiterleitung
+            <simpara>Legt fest, fÃ¼r welchen Fall die Anrufweiterleitung
             aktiviert werden soll.</simpara>
 
             <variablelist>
@@ -1231,7 +1231,7 @@
                 <term><literal>offline</literal></term>
 
                 <listitem>
-                  <para>Wenn das Endgerät des Benutzers nicht angemeldet
+                  <para>Wenn das EndgerÃ¤t des Benutzers nicht angemeldet
                   ist.</para>
                 </listitem>
               </varlistentry>
@@ -1319,8 +1319,8 @@
           <term><literal>active</literal></term>
 
           <listitem>
-            <para>Legt fest, ob das Signal für einen weiteren, ankommenden
-            Anruf, während eines bestehenden Gesprächs gesendet wird.</para>
+            <para>Legt fest, ob das Signal fÃ¼r einen weiteren, ankommenden
+            Anruf, wÃ¤hrend eines bestehenden GesprÃ¤chs gesendet wird.</para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -1330,7 +1330,7 @@
       <title><literal>clir</literal></title>
 
       <para>Konfiguration des Dienstmerkmals "CLIR"
-      (Rufnummernunterdrückung)</para>
+      (RufnummernunterdrÃ¼ckung)</para>
 
       <variablelist>
         <varlistentry>
@@ -1346,8 +1346,8 @@
           <term><literal>internal_restrict</literal></term>
 
           <listitem>
-            <para>Legt fest, ob bei ausgehenden, internen Gesprächen die
-            eigene Rufnummer unterdrückt wird. Mögliche Werte:
+            <para>Legt fest, ob bei ausgehenden, internen GesprÃ¤chen die
+            eigene Rufnummer unterdrÃ¼ckt wird. MÃ¶gliche Werte:
             <literal>yes</literal>|<literal>no</literal></para>
           </listitem>
         </varlistentry>
@@ -1356,8 +1356,8 @@
           <term><literal>external_restrict</literal></term>
 
           <listitem>
-            <para>Legt fest, ob bei ausgehenden, externen Gesprächen die
-            eigene Rufnummer unterdrückt wird. Mögliche Werte:
+            <para>Legt fest, ob bei ausgehenden, externen GesprÃ¤chen die
+            eigene Rufnummer unterdrÃ¼ckt wird. MÃ¶gliche Werte:
             <literal>yes</literal>|<literal>no</literal></para>
           </listitem>
         </varlistentry>
@@ -1367,7 +1367,7 @@
     <section>
       <title><literal>conferences</literal></title>
 
-      <para>Konferenzräume</para>
+      <para>KonferenzrÃ¤ume</para>
 
       <variablelist>
         <varlistentry>
@@ -1392,9 +1392,9 @@
     <section>
       <title><literal>dial_log</literal></title>
 
-      <para>Liste getätigter, erhaltener oder verpasster Anrufe. Diese Tabelle
-      wird durch AGI-Skripte im Dialplan gefüllt, und die einzelnen Einträge
-      können auch vom Benutzer gelöscht werden.</para>
+      <para>Liste getÃ¤tigter, erhaltener oder verpasster Anrufe. Diese Tabelle
+      wird durch AGI-Skripte im Dialplan gefÃ¼llt, und die einzelnen EintrÃ¤ge
+      kÃ¶nnen auch vom Benutzer gelÃ¶scht werden.</para>
 
       <variablelist>
         <varlistentry>
@@ -1425,7 +1425,7 @@
                 <term><literal>out</literal></term>
 
                 <listitem>
-                  <para>Getätigter Anruf</para>
+                  <para>GetÃ¤tigter Anruf</para>
                 </listitem>
               </varlistentry>
 
@@ -1480,7 +1480,7 @@
     <section>
       <title><literal>hosts</literal></title>
 
-      <para>Zum System gehörende Hosts</para>
+      <para>Zum System gehÃ¶rende Hosts</para>
 
       <variablelist>
         <varlistentry>
@@ -1597,14 +1597,14 @@
     <section>
       <title><literal>pb_prv</literal></title>
 
-      <para>Die persönlichen Telefonbücher der Benutzer.</para>
+      <para>Die persÃ¶nlichen TelefonbÃ¼cher der Benutzer.</para>
 
       <variablelist>
         <varlistentry>
           <term><literal>id</literal></term>
 
           <listitem>
-            <para>Fortlaufende Nummer der Einträge.</para>
+            <para>Fortlaufende Nummer der EintrÃ¤ge.</para>
           </listitem>
         </varlistentry>
 
@@ -1613,7 +1613,7 @@
 
           <listitem>
             <para>ID des Benutzers (aus der Tabelle <literal>users</literal>)
-            dem das Telefonbuch gehört.</para>
+            dem das Telefonbuch gehÃ¶rt.</para>
           </listitem>
         </varlistentry>
 
@@ -1638,14 +1638,14 @@
     <section>
       <title><literal>phones</literal></title>
 
-      <para>Die Endgeräte.</para>
+      <para>Die EndgerÃ¤te.</para>
 
       <variablelist>
         <varlistentry>
           <term><literal>id</literal></term>
 
           <listitem>
-            <para>Eindeutige, numerische ID des Endgerätes.</para>
+            <para>Eindeutige, numerische ID des EndgerÃ¤tes.</para>
           </listitem>
         </varlistentry>
 
@@ -1653,7 +1653,7 @@
           <term><literal>type</literal></term>
 
           <listitem>
-            <para>Typ des Endgerätes, z.B. <literal>snom360</literal></para>
+            <para>Typ des EndgerÃ¤tes, z.B. <literal>snom360</literal></para>
           </listitem>
         </varlistentry>
 
@@ -1661,7 +1661,7 @@
           <term><literal>mac_addr</literal></term>
 
           <listitem>
-            <para>Die MAC-Adresse des Endgerätes.</para>
+            <para>Die MAC-Adresse des EndgerÃ¤tes.</para>
           </listitem>
         </varlistentry>
 
@@ -1680,11 +1680,11 @@
           <listitem>
             <para>Eindeutige, numerische ID eines Pseudo-Benutzers aus dem
             Feld <literal>nobody_index</literal> der Tabelle
-            <literal>users</literal>. Jedem Endgerät wird bei der Installation
+            <literal>users</literal>. Jedem EndgerÃ¤t wird bei der Installation
             ein solcher Benutzer zugewiesen, um auch dann das Telefon
-            verwenden zu können, wenn sich noch kein Benutzer an diesem Gerät
-            angemeldet hat. Dies ermöglicht Notrufe, kostenlose
-            Interngespräche etc. direkt nach der Installation.</para>
+            verwenden zu kÃ¶nnen, wenn sich noch kein Benutzer an diesem GerÃ¤t
+            angemeldet hat. Dies ermÃ¶glicht Notrufe, kostenlose
+            InterngesprÃ¤che etc. direkt nach der Installation.</para>
           </listitem>
         </varlistentry>
 
@@ -1733,7 +1733,7 @@
 
           <listitem>
             <para>Numerische ID der Pickup-Gruppe, zu welcher der Benutzer
-            gehört, aus der Tabelle <literal>pickupgroups</literal>.</para>
+            gehÃ¶rt, aus der Tabelle <literal>pickupgroups</literal>.</para>
           </listitem>
         </varlistentry>
 
@@ -1776,7 +1776,7 @@
           <term><literal>event</literal></term>
 
           <listitem>
-            <para>Ereignis, welches zum Eintrag ins Log geführt hat.</para>
+            <para>Ereignis, welches zum Eintrag ins Log gefÃ¼hrt hat.</para>
           </listitem>
         </varlistentry>
 
@@ -1810,8 +1810,8 @@
           <term><literal>caller</literal></term>
 
           <listitem>
-            <para>Die Anrufer-ID, wie sie zum System übertragen wurde oder
-            NULL, fals keine Rufnummernübertragung aktiviert war.</para>
+            <para>Die Anrufer-ID, wie sie zum System Ã¼bertragen wurde oder
+            NULL, fals keine RufnummernÃ¼bertragung aktiviert war.</para>
           </listitem>
         </varlistentry>
 
@@ -1861,7 +1861,7 @@
           <term><literal>info</literal></term>
 
           <listitem>
-            <para>Zusätzliche Informationen (z.B.
+            <para>ZusÃ¤tzliche Informationen (z.B.
             <literal><replaceable>&lt;extension&gt;</replaceable>@<replaceable>&lt;context&gt;</replaceable></literal>)
             bei einer Weiterleitung.</para>
           </listitem>
@@ -1872,7 +1872,7 @@
     <section>
       <title><literal>ringtones</literal></title>
 
-      <para>Die pro Benutzer eingestellten Klingeltöne.</para>
+      <para>Die pro Benutzer eingestellten KlingeltÃ¶ne.</para>
 
       <variablelist>
         <varlistentry>
@@ -1888,7 +1888,7 @@
           <term><literal>src</literal></term>
 
           <listitem>
-            <para>Für Anrufe von welcher Quelle der Klingelton gelten soll.
+            <para>FÃ¼r Anrufe von welcher Quelle der Klingelton gelten soll.
             <literal>internal</literal> | <literal>external</literal>.</para>
           </listitem>
         </varlistentry>
@@ -1897,10 +1897,10 @@
           <term><literal>bellcore</literal></term>
 
           <listitem>
-            <para>Die Nummer eines Standard-Klingeltons. Üblicherweise
-            <literal>1</literal> - <literal>10</literal> für
+            <para>Die Nummer eines Standard-Klingeltons. Ãœblicherweise
+            <literal>1</literal> - <literal>10</literal> fÃ¼r
             <literal>Bellcore-dr<replaceable>X</replaceable></literal> oder
-            <literal>0</literal> für <literal>Silent</literal>
+            <literal>0</literal> fÃ¼r <literal>Silent</literal>
             (lautlos).</para>
           </listitem>
         </varlistentry>
@@ -1942,10 +1942,10 @@
           <term><literal>key</literal></term>
 
           <listitem>
-            <para>Telefon-Typ-spezifisches Kürzel der Taste. Wird aber vom
+            <para>Telefon-Typ-spezifisches KÃ¼rzel der Taste. Wird aber vom
             Provisioning-System (z.B.
-            <filename>htdocs/prov/snom/settings.php</filename>) nochmal für
-            das Telefon übersetzt.</para>
+            <filename>htdocs/prov/snom/settings.php</filename>) nochmal fÃ¼r
+            das Telefon Ã¼bersetzt.</para>
           </listitem>
         </varlistentry>
 
@@ -1954,6 +1954,38 @@
 
           <listitem>
             <para>Eingestellte Rufnummer.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>ptype</literal></term>
+
+          <listitem>
+            <para>Lokation der Nummer (cell/work/home/fax etc.).</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>pref</literal></term>
+
+          <listitem>
+            <para>Praeferenz der Nummer (1=highest, 99=lowest, default=9).</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>card_id</literal></term>
+
+          <listitem>
+            <para>vCard ID Referenz.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>modified</literal></term>
+
+          <listitem>
+            <para>Zeitstemples letzter Aenderung.</para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -1979,7 +2011,7 @@
 
           <listitem>
             <para>Eindeutige alphanumerische Bezeichnung des Benutzers, z.B.
-            Personalnummer o.ä.</para>
+            Personalnummer o.Ã¤.</para>
           </listitem>
         </varlistentry>
 
@@ -2020,8 +2052,8 @@
 
           <listitem>
             <para>Eindeutige, numerische ID eines Pseudo-Benutzers. Diese
-            speziellen Benutzer werden verwendet, wenn an einem Endgerät noch
-            kein anderer Benutzer angemeldet ist. Dies ermöglicht z.B.
+            speziellen Benutzer werden verwendet, wenn an einem EndgerÃ¤t noch
+            kein anderer Benutzer angemeldet ist. Dies ermÃ¶glicht z.B.
             Notrufe.</para>
           </listitem>
         </varlistentry>
@@ -2030,7 +2062,7 @@
           <term><literal>host_id</literal></term>
 
           <listitem>
-            <para>Numerische ID des Asterisk-Servers, an dem sich das Endgerät
+            <para>Numerische ID des Asterisk-Servers, an dem sich das EndgerÃ¤t
             des Benutzer anmeldet.</para>
           </listitem>
         </varlistentry>
@@ -2039,7 +2071,7 @@
           <term><literal>current_ip</literal></term>
 
           <listitem>
-            <para>Aktuelle IP des Endgerätes, welches der Benutzer aktuell
+            <para>Aktuelle IP des EndgerÃ¤tes, welches der Benutzer aktuell
             verwendet.</para>
           </listitem>
         </varlistentry>
@@ -2058,7 +2090,7 @@
     <section>
       <title><literal>users_external_numbers</literal></title>
 
-      <para>Mögliche Ausgangsrufnummern pro Benutzer zur Initiierung von
+      <para>MÃ¶gliche Ausgangsrufnummern pro Benutzer zur Initiierung von
       Anrufen.</para>
 
       <variablelist>
@@ -2100,8 +2132,8 @@
           <term><literal>internal_active</literal></term>
 
           <listitem>
-            <para>Legt fest, ob die Anrufbeantworterfunktion für interne
-            Gespräche aktiviert werden soll.</para>
+            <para>Legt fest, ob die Anrufbeantworterfunktion fÃ¼r interne
+            GesprÃ¤che aktiviert werden soll.</para>
           </listitem>
         </varlistentry>
 
@@ -2109,8 +2141,8 @@
           <term><literal>external_active</literal></term>
 
           <listitem>
-            <para>Legt fest, ob die Anrufbeantworterfunktion für externe
-            Gespräche aktiviert werden soll.</para>
+            <para>Legt fest, ob die Anrufbeantworterfunktion fÃ¼r externe
+            GesprÃ¤che aktiviert werden soll.</para>
           </listitem>
         </varlistentry>
       </variablelist>

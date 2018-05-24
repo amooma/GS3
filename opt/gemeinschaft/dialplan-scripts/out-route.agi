@@ -228,20 +228,22 @@ WHERE `id`='. $ggrp_id
 		}
 	}
 	
-	$rs = $db->execute(
+	$rs = $db->execute( 
 'SELECT `type`, `name`, `dialstr`, `hw_port`, `host`, `user`
 FROM `gates`
 WHERE
-	`grp_id`='. $ggrp_id .' AND
-	`allow_out`=1
-ORDER BY RAND()
+	 `grp_id`='. $ggrp_id .' AND
+	 `allow_out`=1
+ORDER BY `title` LIKE CONCAT("%","'. $out_cid_num .'","%") DESC
 LIMIT 9'
-	);
+		);
+
 	//while ($gate = $rs->fetchRow()) $gates[] = $gate;
 	while ($gate = $rs->fetchRow()) {
 		$pos = 0;
 		$dial_arr = array();
 		while ($pos < strLen($gate['dialstr'])) {
+//			gs_agi_verbose( $gate['dialstr'] );
 			
 			$dial_vara = array();
 			
