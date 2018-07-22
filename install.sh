@@ -34,6 +34,13 @@ GEMEINSCHAFT_SOUNDS_DE_WAV_TGZ_IN_TGZ_DIR="misc/voiceprompts"
 ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR="misc/voiceprompts"
 # File: ${ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR}/asterisk-core-sounds-de-alaw.tar.gz
 
+# asterisk-1.8-current
+ASTERISK="https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-1.8.32.3.tar.gz"
+
+if [ -s /tmp/gemeinschaft.setup ]; then
+  . /tmp/gemeinschaft.setup
+fi
+
 # language
 L2=`echo $LANG | head -c 2 | tr 'A-Z' 'a-z'`
 if [ -z $L2 ]; then L2='xx'; fi
@@ -41,6 +48,7 @@ if [ -z $L2 ]; then L2='xx'; fi
 
 err()
 {
+	set >> /tmp/gemeinschaft-debug.var
 	ERRMSG="$*"
 	echo '' >&2
 	echo '*****************************************************************' >&2
@@ -273,16 +281,16 @@ echo ""
 echo "***"
 echo "***  Installing NTP ..."
 echo "***"
-if ( ! which ntpd 1>>/dev/null 2>>/dev/null ); then
-	${APTITUDE_INSTALL} ntp
+if ( ! which openntpd 1>>/dev/null 2>>/dev/null ); then
+	${APTITUDE_INSTALL} openntpd
 fi
 if ( ! which ntpdate 1>>/dev/null 2>>/dev/null ); then
 	${APTITUDE_INSTALL} ntpdate
 fi
-/etc/init.d/ntp stop 2>>/dev/null || true
+/etc/init.d/openntpd stop 2>>/dev/null || true
 ntpdate 0.debian.pool.ntp.org || true
 ntpdate 1.debian.pool.ntp.org || true
-/etc/init.d/ntp start || true
+/etc/init.d/openntpd start || true
 sleep 3
 
 
@@ -305,10 +313,16 @@ make all
 make install
 make config
 # generate /etc/dahdi/system.conf:
+DAHDI_LOADED=`lsmod | grep dahdi`
+if [ -z "$DAHDI_LOADED" ]; then
+  modprobe dahdi && echo dahdi >> /etc/modules
+fi
 dahdi_genconf || true
 
 cd /usr/local/src/
-$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-1.8-current.tar.gz"
+#$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-1.8-current.tar.gz"
+$DOWNLOAD "${ASTERISK}"
+mv `basename $ASTERISK` asterisk-1.8-current.tar.gz
 tar -xvzf asterisk-1.8-current.tar.gz
 cd $(tar -tzf asterisk-1.8-current.tar.gz | head -n 1 | cut -d '/' -f1)
 ./configure
@@ -349,6 +363,8 @@ chmod a+rwx /var/spool/asterisk/tmp
 echo "asterisk  ALL=(ALL)  NOPASSWD: ALL" > /etc/sudoers.d/gemeinschaft-asterisk
 chmod 0440 /etc/sudoers.d/gemeinschaft-asterisk
 
+# Repeated from above as asterisk was not existant
+dahdi_genconf || true
 
 # install lame
 #
@@ -380,7 +396,7 @@ ${APTITUDE_INSTALL} \
 	mysql-client mysql-server \
 	apache2 \
 	php5-cli libapache2-mod-php5 php5-mysql php5-ldap \
-	python2.6 \
+	python2.7 \
 	python-mysqldb \
 	sox libsox-fmt-all mpg123
 unset DEBIAN_FRONTEND
@@ -526,17 +542,19 @@ echo ""
 echo "***"
 echo "***  Setting up Apache web server ..."
 echo "***"
-cd /etc/apache2/conf.d/
+cd /etc/apache2/conf-available/
+ln -snf /opt/gemeinschaft-source/etc/apache2/conf.d/gemeinschaft.conf gemeinschaft.conf
+cd /etc/apache2/conf-enabled/
 ln -snf /opt/gemeinschaft-source/etc/apache2/conf.d/gemeinschaft.conf gemeinschaft.conf
 if [ -e /opt/gemeinschaft-source/etc/apache2/sites-available/gemeinschaft ]; then
 	cd /etc/apache2/sites-available/
-	ln -snf /opt/gemeinschaft-source/etc/apache2/sites-available/gemeinschaft gemeinschaft
-	a2dissite default
+	ln -snf /opt/gemeinschaft-source/etc/apache2/sites-available/gemeinschaft gemeinschaft.conf
+	a2dissite 000-default
 	a2ensite gemeinschaft
 else
 	cd /etc/apache2/sites-available/
-	cat default | sed -e 's/AllowOverride None/AllowOverride All/i' > gemeinschaft
-	a2dissite default
+	cat 000-default | sed -e 's/AllowOverride None/AllowOverride All/i' > gemeinschaft.conf
+	a2dissite 000-default
 	a2ensite gemeinschaft
 fi
 a2enmod rewrite
@@ -559,7 +577,7 @@ invoke-rc.d apache2 restart
 
 # sudo permissions for Apache
 #
-echo "www-data  ALL=(ALL)  NOPASSWD: ALL" > /etc/sudoers.d/gemeinschaft-apache
+echo 'www-data  ALL=(ALL)  NOPASSWD: ALL' > /etc/sudoers.d/gemeinschaft-apache
 chmod 0440 /etc/sudoers.d/gemeinschaft-apache
 
 
@@ -700,7 +718,7 @@ cd /etc/apache2/ssl/
 chown root:root openstage-*.pem
 chmod 640 openstage-*.pem
 cd /etc/apache2/sites-available/
-ln -snf /opt/gemeinschaft-siemens-source/doc/httpd-vhost.conf.example gemeinschaft-siemens
+ln -snf /opt/gemeinschaft-siemens-source/doc/httpd-vhost.conf.example gemeinschaft-siemens.conf
 a2ensite gemeinschaft-siemens
 invoke-rc.d apache2 restart
 cd
@@ -751,6 +769,7 @@ fi
 # Gemeinschaft/Asterisk extension state daemon
 #
 if [ -e /opt/gemeinschaft-source/etc/init.d/gs-extstated ]; then
+	chmod a+x /opt/gemeinschaft-source/etc/init.d/gs-extstated
 	ln -snf /opt/gemeinschaft-source/etc/init.d/gs-extstated /etc/init.d/gs-extstated
 	update-rc.d gs-extstated defaults 92 08
 	invoke-rc.d gs-extstated start
@@ -835,6 +854,7 @@ cp "${HF_CONF_SRC}/ttyIAX1" /etc/iaxmodem/ttyIAX1
 # /etc/default/hylafax instead?
 #
 echo "" >> /etc/inittab 
+echo "# does not make sense this way on systemd setup - needs change and remove after that." >> /etc/inittab
 echo "# HylaFax getty" >> /etc/inittab
 echo "mo00:23:respawn:/usr/sbin/faxgetty ttyIAX0" >> /etc/inittab
 echo "mo01:23:respawn:/usr/sbin/faxgetty ttyIAX1" >> /etc/inittab
@@ -981,7 +1001,7 @@ if [ -z $ADMIN_SIPPW ]; then USER_SIPPW='x'; fi
 #
 # harden-...
 #
-${APTITUDE_INSTALL} harden-servers harden-clients
+${APTITUDE_INSTALL} harden-servers harden-clients || echo "Hardening no longer present in packages"
 
 # portsentry (detect port scans)
 #${APTITUDE_INSTALL} portsentry
