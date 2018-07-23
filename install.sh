@@ -33,30 +33,41 @@ case $answer in
   ;;
 esac
 
-GEMEINSCHAFT_VERS="3.3-ast-13"
+export GEMEINSCHAFT_VERS="3.3-ast-13"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
-GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GS3.git"
+export GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GS3.git"
 
-GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
-GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR="misc/provisioning/siemens"
+export GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
+export GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR="misc/provisioning/siemens"
 # File: ${GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR}/gemeinschaft-siemens-${GEMEINSCHAFT_SIEMENS_VERS}.tgz
 
-GEMEINSCHAFT_SOUNDS_DE_WAV_VERS="current"
-GEMEINSCHAFT_SOUNDS_DE_WAV_TGZ_IN_TGZ_DIR="misc/voiceprompts"
+export GEMEINSCHAFT_SOUNDS_DE_WAV_VERS="current"
+export GEMEINSCHAFT_SOUNDS_DE_WAV_TGZ_IN_TGZ_DIR="misc/voiceprompts"
 # File: ${GEMEINSCHAFT_SOUNDS_DE_WAV_TGZ_IN_TGZ_DIR}/gemeinschaft-sounds-de-wav-${GEMEINSCHAFT_SOUNDS_DE_WAV_VERS}.tar.gz
 
 #ASTERISK_SOUNDS_DE_ALAW_VERS="current"
-ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR="misc/voiceprompts"
+export ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR="misc/voiceprompts"
 # File: ${ASTERISK_SOUNDS_DE_ALAW_TGZ_IN_TGZ_DIR}/asterisk-core-sounds-de-alaw.tar.gz
 
+export DAHDI="http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-2.10.2+2.10.2.tar.gz"
+
+export ASTERISK="http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-13-current.tar.gz"
+
 # language
-L2=`echo $LANG | head -c 2 | tr 'A-Z' 'a-z'`
+export L2=`echo $LANG | head -c 2 | tr 'A-Z' 'a-z'`
 if [ -z $L2 ]; then L2='xx'; fi
 
+if [ -s /tmp/gemeinschaft.setup ]; then
+  # maybe used f.e. "export http_proxy=http://proxy:3128" etc.
+  echo "Using '/tmp/gemeinschaft.setup' before start"
+  . /tmp/gemeinschaft.setup
+fi
+set >/tmp/gemeinschaft-variables.before
 
 err()
 {
+	set >/tmp/gemeinschaft-variables-error.debug
 	ERRMSG="$*"
 	echo '' >&2
 	echo '*****************************************************************' >&2
@@ -111,16 +122,21 @@ export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:${PATH
 
 
 
-if ( which asterisk 1>>/dev/null 2>>/dev/null ); then
+if [ -z "$do_not_break_asterisk" ]; then
+    if ( which asterisk 1>>/dev/null 2>>/dev/null ); then
 	if ( ! aptitude search asterisk | grep '^i' | grep -Ee '\sasterisk\s' 1>>/dev/null 2>>/dev/null ); then
+		echo "You may want to set 'export do_not_break_asterisk=1'
+ to keep yout local version in '/tmp/gemeinschaft.setup'
+Keep in mind - it may only work on a new setup."
 		if [ "$L2" == "de" ]; then
-		err "  Auf diesem System ist bereits eine andere, möglicherweise\n" \
+		    err "  Auf diesem System ist bereits eine andere, möglicherweise\n" \
 			"  nicht kompatible Version von Asterisk installiert."
-	else
-		err "  This system already has a version of Astersik which might\n" \
+		else
+		    err "  This system already has a version of Astersik which might\n" \
 			"  not be compatible."
+		fi
 	fi
-	fi
+    fi
 fi
 
 
@@ -151,9 +167,9 @@ type apt-get 1>>/dev/null 2>>/dev/null
 type aptitude 1>>/dev/null 2>>/dev/null || apt-get -y install aptitude
 #APTITUDE_INSTALL="aptitude -y --allow-new-upgrades --allow-new-installs install"
 APTITUDE_INSTALL="aptitude -y --safe-resolver"
-APTITUDE_REMOVE="aptitude -y purge"
+export APTITUDE_REMOVE="aptitude -y purge"
 APTITUDE_INSTALL="${APTITUDE_INSTALL} --allow-new-upgrades --allow-new-installs"
-APTITUDE_INSTALL="${APTITUDE_INSTALL} install"
+export APTITUDE_INSTALL="${APTITUDE_INSTALL} install"
 #echo "APTITUDE_INSTALL = ${APTITUDE_INSTALL}"
 
 
@@ -202,7 +218,7 @@ ${APTITUDE_INSTALL} dnsutils
 #
 echo "Checking Internet access ..."
 while ! ( wget -O - -T 30 --spider http://ftp.debian.org/ >>/dev/null ); do sleep 5; done
-MY_MAC_ADDR=`LANG=C ifconfig | grep -oE '[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}' | head -n 1`
+export MY_MAC_ADDR=`LANG=C ifconfig | grep -oE '[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}' | head -n 1`
 
 
 # install basic stuff
@@ -219,7 +235,8 @@ ${APTITUDE_INSTALL} \
 	vim less git linux-headers-$(uname -r) \
     gcc make gcc make ncurses-dev zlib1g-dev \
     g++ libxml2-dev doxygen libmysql++-dev libcrypto++-dev libssl-dev \
-    libportaudio2 portaudio19-dev libasound-dev
+    libportaudio2 portaudio19-dev libasound-dev \
+    libjansson-dev libsqlite3-dev sqlite3
 
 # now that we have vim, enable syntax highlighting by default:
 if ( which vim 1>>/dev/null 2>>/dev/null ); then
@@ -228,16 +245,19 @@ fi
 
 # set EDITOR to "vim"
 if ( which vim 1>>/dev/null 2>>/dev/null ); then
-	echo "" >> /root/.bashrc || true
-	echo "export EDITOR=\"vim\"" >> /root/.bashrc || true
-	echo "" >> /root/.bashrc || true
-	#if [ "x${SHELL}" = "x/bin/bash" ]; then
-	#	source /root/.bashrc
-	#fi
+	if ! grep -qm1 "^export EDITOR" /root/.bashrc; then
+	  echo "" >> /root/.bashrc || true
+	  echo "export EDITOR=\"vim\"" >> /root/.bashrc || true
+	  echo "" >> /root/.bashrc || true
+	  #if [ "x${SHELL}" = "x/bin/bash" ]; then
+	  #	source /root/.bashrc
+	  #fi
+	fi
 fi
 
 # and add ls colors and some useful bash aliases:
-cat <<\HEREDOC >> /root/.bashrc
+if ! grep -qm1 "^export LS_OPTION" /root/.bashrc; then
+  cat <<\HEREDOC >> /root/.bashrc
 
 export LS_OPTIONS='--color=auto'
 eval "`dircolors`"
@@ -246,13 +266,14 @@ alias l='ls $LS_OPTIONS -lF'
 alias ll='ls $LS_OPTIONS -lFA'
 
 HEREDOC
-#if [ "x${SHELL}" = "x/bin/bash" ]; then
-#	source /root/.bashrc
-#fi
+  #if [ "x${SHELL}" = "x/bin/bash" ]; then
+  #	source /root/.bashrc
+  #fi
+fi
 
-WGET="wget"
-WGET_ARGS="-c -T 60 --no-check-certificate"
-DOWNLOAD="${WGET} ${WGET_ARGS}"
+export WGET="wget"
+export WGET_ARGS="-c -T 60 --no-check-certificate"
+export DOWNLOAD="${WGET} ${WGET_ARGS}"
 
 
 # set up lang enviroment
@@ -310,56 +331,69 @@ echo "***"
 echo "***  Installing Dahdi ..."
 echo "***"
 cd /usr/local/src/
-$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-2.10.2+2.10.2.tar.gz"
-tar -xvzf "dahdi-linux-complete-2.10.2+2.10.2.tar.gz"
-cd $(tar -tzf "dahdi-linux-complete-2.10.2+2.10.2.tar.gz" | head -n 1 | cut -d '/' -f1)
-make all
-make install
-make config
-# generate /etc/dahdi/system.conf:
-dahdi_genconf || true
+# $DOWNLOAD "http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-2.10.2+2.10.2.tar.gz"
+if ( ! which dahdi_genconf 1>>/dev/null 2>>/dev/null ); then
+  $DOWNLOAD "${DAHDI}"
+  export DAHDI_VERSION="`basename $DAHDI`"
+  tar -xvzf ${DAHDI_VERSION}
+  cd $(tar -tzf ${DAHDI_VERSION} | head -n 1 | cut -d '/' -f1)
+  make all
+  make install
+  make config
+  # generate /etc/dahdi/system.conf:
+  DAHDI_LOADED=`lsmod | grep dahdi`
+  if [ -z "$DAHDI_LOADED" ]; then
+    modprobe dahdi && echo dahdi >> /etc/modules
+  fi
+  dahdi_genconf || true
+fi
 
 cd /usr/local/src/
-$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-13-current.tar.gz"
-tar -xvzf asterisk-13-current.tar.gz
-cd $(tar -tzf asterisk-13-current.tar.gz | head -n 1 | cut -d '/' -f1)
-./configure
-make menuselect.makeopts
-menuselect/menuselect --enable res_config_mysql menuselect.makeopts
-menuselect/menuselect --enable cdr_mysql menuselect.makeopts
-make
-make install 
-make samples
-make config
+if ( ! which dahdi_genconf 1>>/dev/null 2>>/dev/null ); then
+  # $DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-13-current.tar.gz"
+  $DOWNLOAD "${ASTERISK}"
+  export ASTERISK_VERSION="`basename $ASTERISK`"
+  tar -xvzf ${ASTERISK_VERSION}
+  cd $(tar -tzf ${ASTERISK_VERSION} | head -n 1 | cut -d '/' -f1)
+  ./configure
+  make menuselect.makeopts
+  menuselect/menuselect --enable res_config_mysql menuselect.makeopts
+  menuselect/menuselect --enable cdr_mysql menuselect.makeopts
+  make
+  make install 
+  make samples
+  make config
+fi
 
-groupadd asterisk
-useradd -d /var/lib/asterisk -g asterisk asterisk
-chown --recursive asterisk:asterisk /var/lib/asterisk
-chown --recursive asterisk:asterisk /var/log/asterisk
-chown --recursive asterisk:asterisk /var/run/asterisk
-chown --recursive asterisk:asterisk /var/spool/asterisk
-chown --recursive asterisk:asterisk /usr/lib/asterisk
-chmod --recursive u=rwX,g=rX,o= /var/lib/asterisk
-chmod --recursive u=rwX,g=rX,o= /var/log/asterisk
-chmod --recursive u=rwX,g=rX,o= /var/run/asterisk
-chmod --recursive u=rwX,g=rX,o= /var/spool/asterisk
-chmod --recursive u=rwX,g=rX,o= /usr/lib/asterisk
-chown --recursive root:asterisk /etc/asterisk
-chmod --recursive u=rwX,g=rX,o= /etc/asterisk
+if groupadd asterisk; then
+  useradd -d /var/lib/asterisk -g asterisk asterisk || true
+  chown --recursive asterisk:asterisk /var/lib/asterisk
+  chown --recursive asterisk:asterisk /var/log/asterisk
+  chown --recursive asterisk:asterisk /var/run/asterisk
+  chown --recursive asterisk:asterisk /var/spool/asterisk
+  chown --recursive asterisk:asterisk /usr/lib/asterisk
+  chmod --recursive u=rwX,g=rX,o= /var/lib/asterisk
+  chmod --recursive u=rwX,g=rX,o= /var/log/asterisk
+  chmod --recursive u=rwX,g=rX,o= /var/run/asterisk
+  chmod --recursive u=rwX,g=rX,o= /var/spool/asterisk
+  chmod --recursive u=rwX,g=rX,o= /usr/lib/asterisk
+  chown --recursive root:asterisk /etc/asterisk
+  chmod --recursive u=rwX,g=rX,o= /etc/asterisk
 
-echo 'AST_USER="asterisk"' >> /etc/default/asterisk
-echo 'AST_GROUP="asterisk"' >> /etc/default/asterisk
+  echo 'AST_USER="asterisk"' >> /etc/default/asterisk
+  echo 'AST_GROUP="asterisk"' >> /etc/default/asterisk
 
-# create directory for call-files
-#
-mkdir -p /var/spool/asterisk/outgoing
-chmod a+rwx /var/spool/asterisk/outgoing
-chmod a+rwx /var/spool/asterisk/tmp
+  # create directory for call-files
+  #
+  mkdir -p /var/spool/asterisk/outgoing
+  chmod a+rwx /var/spool/asterisk/outgoing
+  chmod a+rwx /var/spool/asterisk/tmp
 
-# sudo permissions for Asterisk
-#
-echo "asterisk  ALL=(ALL)  NOPASSWD: ALL" > /etc/sudoers.d/gemeinschaft-asterisk
-chmod 0440 /etc/sudoers.d/gemeinschaft-asterisk
+  # sudo permissions for Asterisk
+  #
+  echo 'asterisk  ALL=(ALL)  NOPASSWD: ALL' > /etc/sudoers.d/gemeinschaft-asterisk
+  chmod 0440 /etc/sudoers.d/gemeinschaft-asterisk
+fi
 
 
 # install lame
@@ -369,7 +403,7 @@ if ( ! which lame 1>>/dev/null 2>>/dev/null ); then
 	echo "***"
 	echo "***  Installing Lame ..."
 	echo "***"
-	echo 'deb http://deb-multimedia.org wheezy main non-free' \
+	echo 'deb http://deb-multimedia.org jessie main non-free' \
 		> /etc/apt/sources.list.d/debian-multimedia.list
 	aptitude update --allow-untrusted || true
 	${APTITUDE_INSTALL} --allow-untrusted debian-multimedia-keyring || true
@@ -392,7 +426,7 @@ ${APTITUDE_INSTALL} \
 	mysql-client mysql-server \
 	apache2 \
 	php5-cli libapache2-mod-php5 php5-mysql php5-ldap \
-	python2.6 \
+	python2.7 \
 	python-mysqldb \
 	sox libsox-fmt-all mpg123
 unset DEBIAN_FRONTEND
@@ -412,7 +446,7 @@ mkdir -p /usr/share/asterisk/moh
 cd /usr/share/asterisk/moh/
 for fmt in alaw; do
 	#F=asterisk-moh-freeplay-${fmt}
-	F=asterisk-moh-opsound-${fmt}-current
+	export F=asterisk-moh-opsound-${fmt}-current
 	${DOWNLOAD} http://downloads.asterisk.org/pub/telephony/sounds/${F}.tar.gz
 	tar -xzf ${F}.tar.gz
 	rm ${F}.tar.gz || true
@@ -513,7 +547,7 @@ echo ""
 echo "***"
 echo "***  Creating Gemeinschaft database ..."
 echo "***"
-GEMEINSCHAFT_DB_PASS=`head -c 20 /dev/urandom | md5sum -b - | cut -d ' ' -f 1 | head -c 30`
+export GEMEINSCHAFT_DB_PASS=`head -c 20 /dev/urandom | md5sum -b - | cut -d ' ' -f 1 | head -c 30`
 [ -e /tmp/mysql-gemeinschaft-grant.sql ] && rm -f /tmp/mysql-gemeinschaft-grant.sql || true
 touch /tmp/mysql-gemeinschaft-grant.sql
 chmod go-rwx /tmp/mysql-gemeinschaft-grant.sql
@@ -569,7 +603,7 @@ invoke-rc.d apache2 restart
 
 # sudo permissions for Apache
 #
-echo "www-data  ALL=(ALL)  NOPASSWD: ALL" > /etc/sudoers.d/gemeinschaft-apache
+echo 'www-data  ALL=(ALL)  NOPASSWD: ALL' > /etc/sudoers.d/gemeinschaft-apache
 chmod 0440 /etc/sudoers.d/gemeinschaft-apache
 
 
@@ -616,7 +650,7 @@ mkdir -p /etc/gemeinschaft/asterisk
 cd /etc/gemeinschaft/asterisk
 cp -R /opt/gemeinschaft-source/etc/gemeinschaft/asterisk/* ./
 if [ -e /etc/gemeinschaft/asterisk/manager.conf.d-available/phonesuite.conf ]; then
-	AMI_PASS=`head -c 20 /dev/urandom | md5sum -b - | cut -d ' ' -f 1 | head -c 9`
+	export AMI_PASS=`head -c 20 /dev/urandom | md5sum -b - | cut -d ' ' -f 1 | head -c 9`
 	sed -i "s/^\(\s*secret\s*=\s*\)[^; \t]*\(.*\)/\1${AMI_PASS}\2/g" /etc/gemeinschaft/asterisk/manager.conf.d-available/phonesuite.conf
 fi
 
@@ -663,7 +697,7 @@ sed -i "s/\(^[\s#\/]*\)\(\$FAX_TSI\s*=\s*\)\([\"']\)[^\"']*[\"']\s*;/\2 @\$CANON
 sed -i "s/\(^[\s#\/]*\)\(\$FAX_HYLAFAX_HOST\s*=\s*\)\([\"']\)[^\"']*[\"']\s*;/\2'127.0.0.1';/g" /etc/gemeinschaft/gemeinschaft.php
 sed -i "s/\(^[\s#\/]*\)\(\$FAX_HYLAFAX_PORT\s*=\s*\)\([0-9']\)*\s*;/\2 4559;/g" /etc/gemeinschaft/gemeinschaft.php
 
-HFAXADM_PASS=`head -c 20 /dev/urandom | md5sum -b - | cut -d ' ' -f 1 | head -c 12`
+export HFAXADM_PASS=`head -c 20 /dev/urandom | md5sum -b - | cut -d ' ' -f 1 | head -c 12`
 
 sed -i "s/\(^[\s#\/]*\)\(\$FAX_HYLAFAX_ADMIN\s*=\s*\)\([\"']\)[^\"']*[\"']\s*;/\2'hfaxadm';/g" /etc/gemeinschaft/gemeinschaft.php
 sed -i "s/\(^[\s#\/]*\)\(\$FAX_HYLAFAX_PASS\s*=\s*\)\([\"']\)[^\"']*[\"']\s*;/\2'${HFAXADM_PASS}';/g" /etc/gemeinschaft/gemeinschaft.php
@@ -952,10 +986,10 @@ USER_PIN=`printf "%04d\n" "$PIN"`
 
 # get SIP passwords:
 
-ADMIN_SIPPW=$( mysql --user=gemeinschaft --password=${GEMEINSCHAFT_DB_PASS} -h localhost -D asterisk -A -B --raw -N -s -s -s -e "SELECT \`secret\` FROM \`ast_sipfriends\` WHERE \`name\`='$ADMIN_EXTEN'" | awk  '{print $1}' );
+export ADMIN_SIPPW=$( mysql --user=gemeinschaft --password=${GEMEINSCHAFT_DB_PASS} -h localhost -D asterisk -A -B --raw -N -s -s -s -e "SELECT \`secret\` FROM \`ast_sipfriends\` WHERE \`name\`='$ADMIN_EXTEN'" | awk  '{print $1}' );
 if [ -z $ADMIN_SIPPW ]; then ADMIN_SIPPW='x'; fi
 
-USER_SIPPW=$( mysql --user=gemeinschaft --password=${GEMEINSCHAFT_DB_PASS} -h localhost -D asterisk -A -B --raw -N -s -s -s -e "SELECT \`secret\` FROM \`ast_sipfriends\` WHERE \`name\`='$USER_EXTEN'" | awk  '{print $1}' );
+export USER_SIPPW=$( mysql --user=gemeinschaft --password=${GEMEINSCHAFT_DB_PASS} -h localhost -D asterisk -A -B --raw -N -s -s -s -e "SELECT \`secret\` FROM \`ast_sipfriends\` WHERE \`name\`='$USER_EXTEN'" | awk  '{print $1}' );
 if [ -z $ADMIN_SIPPW ]; then USER_SIPPW='x'; fi
 
 
@@ -1081,6 +1115,8 @@ cat /tmp/gemeinschaft-beispiel-user.txt
 # Fixing permissions of cronjobs
 chmod 0600 /opt/gemeinschaft-source/etc/cron.d/*
 
+set >/tmp/gemeinschaft-variables.after
+
 # make bash re-read .bashrc:
 #
 if [ "x${SHELL}" = "x/bin/bash" ]; then
@@ -1089,4 +1125,3 @@ fi
 
 cd
 exit 0
-
