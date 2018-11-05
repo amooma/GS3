@@ -219,7 +219,7 @@ ${APTITUDE_INSTALL} \
 	vim less git linux-headers-$(uname -r) \
     gcc make gcc make ncurses-dev zlib1g-dev \
     g++ libxml2-dev doxygen libmysql++-dev libcrypto++-dev libssl-dev \
-    libportaudio2 portaudio19-dev libasound-dev
+    libportaudio2 portaudio19-dev libasound-dev lame
 
 # now that we have vim, enable syntax highlighting by default:
 if ( which vim 1>>/dev/null 2>>/dev/null ); then
@@ -302,6 +302,24 @@ sleep 3
 #
 sed -i -r -e 's/^(RAMRUN=)no/\1yes/' /etc/default/rcS || true
 
+# install libjansson-dev, sqlite3, libsqlite-dev 
+#
+echo ""
+echo "***"
+echo "***  Installing libjansson-dev, sqlite3, libsqlite3-dev ..."
+echo "***"
+if ( ! which libjansson-dev 1>>/dev/null 2>>/dev/null ); then
+	${APTITUDE_INSTALL} libjansson-dev  
+fi
+if ( ! which sqlite3 1>>/dev/null 2>>/dev/null ); then
+	${APTITUDE_INSTALL} sqlite3  
+fi
+if ( ! which libsqlite3-dev 1>>/dev/null 2>>/dev/null ); then
+	${APTITUDE_INSTALL} libsqlite3-dev  
+fi
+if ( ! which uuid-dev 1>>/dev/null 2>>/dev/null ); then
+	${APTITUDE_INSTALL} uuid-dev  
+fi
 
 # install dahdi 
 #
@@ -319,14 +337,37 @@ make config
 # generate /etc/dahdi/system.conf:
 dahdi_genconf || true
 
+# install asterisk 
+#
+echo ""
+echo "***"
+echo "***  Installing Asterisk ..."
+echo "***"
 cd /usr/local/src/
-$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-13-current.tar.gz"
-tar -xvzf asterisk-13-current.tar.gz
-cd $(tar -tzf asterisk-13-current.tar.gz | head -n 1 | cut -d '/' -f1)
+$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/old-releases/asterisk-13.15.1.tar.gz"
+$DOWNLOAD "https://issues.asterisk.org/jira/secure/attachment/55471/asterisk-13.13.1-one-way-audio.patch"
+tar -xvzf asterisk-13.15.1.tar.gz
+cd $(tar -tzf asterisk-13.15.1.tar.gz | head -n 1 | cut -d '/' -f1)
+
+# patch asterisk 
+#
+echo ""
+echo "***"
+echo "***  Patching Asterisk ..."
+echo "***"
+# Patch against 1-way-audio when transcoding
+patch -p0 < ../asterisk-13.13.1-one-way-audio.patch
+
+# read -p "Patching completed, Press enter to continue"
+
 ./configure
 make menuselect.makeopts
 menuselect/menuselect --enable res_config_mysql menuselect.makeopts
 menuselect/menuselect --enable cdr_mysql menuselect.makeopts
+menuselect/menuselect --enable app_meetme menuselect.makeopts
+menuselect/menuselect --enable app_setcallerid menuselect.makeopts
+# read -p "Setting asterisk options completed, Press enter to continue"
+
 make
 make install 
 make samples

@@ -607,6 +607,8 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 	psetting('phone_setting.vq_rtcpxr.states_show_on_web.enable', '1');
 	psetting('voice.rtcp_xr.enable', '1');	
 	
+	# Disable Warnings Display (Default Password set, Network, ...)
+	psetting('phone_setting.warnings_display.mode', '0');
 	
 	#####################################################################
 	#  MAC-specific provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
