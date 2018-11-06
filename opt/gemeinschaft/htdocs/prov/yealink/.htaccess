@@ -13,8 +13,11 @@
 	# xx.72 Firmware requests 001565xxxxxxC.cfg
 	RewriteRule ^(001565[0-9a-f]*)C.cfg$ settings.php?mac=$1 [L]
 
-    # xx.73 Firmware requests 001565xxxxxx.cfg
-    RewriteRule ^(001565[0-9a-f]*).cfg$ settings.php?mac=$1 [L]
+        # xx.73 Firmware requests 001565xxxxxx.cfg
+        RewriteRule ^(001565[0-9a-f]*).cfg$ settings.php?mac=$1 [L]
+
+        # newer Yealink phones have 805ec0xxxxxx.cfg
+        RewriteRule ^(805ec0[0-9a-f]*).cfg$ settings.php?mac=$1 [L]
 
 	# PB
 	# RewriteRule ^pb.([0-9]*).(imported|prv|gs).([0-9]*).xml$ pb.php?u=$1&t=$2&p=$3 [L]

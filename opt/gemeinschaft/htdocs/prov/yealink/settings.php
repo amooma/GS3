@@ -141,7 +141,7 @@ if ($mac === '000000000000') {
 
 # make sure the phone is a Yealink:
 #
-if (subStr($mac,0,6) !== '001565') {
+if ((subStr($mac,0,6) !== '001565') && (subStr($mac,0,6) !== '805EC0')) {
 	gs_log( GS_LOG_NOTICE, "Yealink provisioning: MAC address \"$mac\" is not a Yealink phone" );
 	# don't explain this to the users
 	_settings_err( 'No! See log for details.' );
