@@ -36,6 +36,8 @@ include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_user_external_number_del.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_pickupgroup_user_add.php' );
 include_once( GS_DIR .'inc/gs-fns/gs_callblocking_set.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_ip_by_ext.php' );
+include_once( GS_DIR .'inc/gs-fns/gs_user_phonemodel_get.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
 require_once( GS_DIR .'inc/boi-soap/boi-api.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
@@ -1028,6 +1030,24 @@ echo '<input type="hidden" name="sortorder" value="', $sortorder, '" />', "\n";
 			&larr; <?php echo htmlEnt(__("der SIP-Registrar/-Server")); ?>
 		</td>
 	</tr>
+	<tr>
+		<th><?php echo __('Angemeldete IP'); ?>:</th>
+		<td>
+			<?php echo gs_user_ip_by_ext ($r['ext']); ?>
+		</td>
+		<td class="transp xs gray">
+			&nbsp;
+		</td>
+	</tr>	
+	<tr>
+		<th><?php echo __('Telefontyp'); ?>:</th>
+		<td>
+			<?php echo gs_user_phonemodel_get ($edit_user); ?>
+		</td>
+		<td class="transp xs gray">
+			&nbsp;
+		</td>
+	</tr>	
 </tbody>
 </table>
 
