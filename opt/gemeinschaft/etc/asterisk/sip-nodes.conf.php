@@ -138,6 +138,7 @@ while ($gw = $rs->fetchRow()) {
 	$params['permit'        ] = null;
 	
 	$codecs_allow = array();
+	$codecs_allow['g722'   ] = false;
 	$codecs_allow['alaw'   ] = true;
 	$codecs_allow['ulaw'   ] = false;
 	

@@ -457,6 +457,7 @@ ORDER BY `title`'
 	echo '<th>', __('Codecs') ,':</th>',"\n";
 	echo '<td>',"\n";
 	$codecs = array(
+		'g722'   => 'G.722',
 		'alaw'   => 'G.711a',
 		'ulaw'   => 'G.711u',
 		'gsm'    => 'GSM',
@@ -469,7 +470,7 @@ ORDER BY `title`'
 		echo '<input type="checkbox" name="gw-param-codecs[', htmlEnt($k) ,']" id="ipt-gw-param-codecs-', htmlEnt($k) ,'" value="1"';
 		if (in_array($k, $gw_params_codecs, true)) echo ' checked="checked"';
 		echo ' />',"\n";
-		echo '<label for="ipt-gw-param-codecs-', htmlEnt($k) ,'">', htmlEnt($v) ,'</label>',"\n";
+		echo '<label for="ipt-gw-param-codecs-', htmlEnt($k) ,'">', htmlEnt($v) ,'</label><BR>',"\n";
 	}
 	echo ' &nbsp; <small>(', htmlEnt(__('Standard')) ,': ', htmlEnt('G.711a') ,')</small>',"\n";
 	echo '</td>',"\n";

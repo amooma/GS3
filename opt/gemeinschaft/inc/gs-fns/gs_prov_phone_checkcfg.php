@@ -235,6 +235,9 @@ WHERE
 	if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ip_do_tiptel( $ip, $reboot );
 	}
+	if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ip_do_yealink( $ip, $reboot );
+	}
 	
 	//return $err == 0;
 	return true;
@@ -318,7 +321,67 @@ function _gs_prov_phone_checkcfg_by_ip_do_grandstream( $ip, $reboot=true )
 {
 	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
 	
+	$db = @gs_db_slave_connect();
+    if (! $db) {
+            gs_log(GS_LOG_WARNING, 'Failed to connect to DB');
+            return;
+    }
+
+    $type = @$db->executeGetOne('
+            SELECT
+                    `p`.`type`
+            FROM
+                    `users` `u`
+            JOIN
+                    `phones` `p` ON (`p`.`user_id` = `u`.`id`)
+            WHERE
+                    `u`.`current_ip` = \''. $db->escape($ip) .'\'
+    ');
+
+    $model = strtoupper( str_replace( 'grandstream-', '', $type ) );
+
+    if ( preg_match('/^GXP21([0-9]{2})$/', $model) ) {
+            reboot_grandstream21xx( $ip, $model );
+            return;
+    }
+
 	@ exec( '/opt/gemeinschaft/sbin/gs-grandstream-reboot --ip='. qsa($ip) .' >>/dev/null 2>>/dev/null &', $out, $err );
+}
+
+function reboot_grandstream21xx($ip_addr, $model)
+{
+   $socket = fsockopen("$ip_addr","23", $errno, $errstr, 1000);
+   if (!$socket) {
+   //   echo "$errstr ($errno)<br />\n";
+      exit;
+   }
+   read_up_to("Grandstream $model Command Shell Copyright 2011",$socket);
+   fputs($socket, "admin\r\n");
+   read_up_to("$model",$socket);
+   fputs($socket, "reboot\r\n");
+   read_up_to("Rebooting",$socket);
+   fputs($socket, "exit\r\n");
+   read_up_to("endlessssssssss",$socket);      //this is just to keep it until reboot command execute
+   fclose($socket);
+}
+
+function read_up_to($string,$socket)
+{
+   $max_loop = 30;
+   $resp = "";
+   while (!feof($socket))
+   {
+      if ($max_loop<0)
+         break;
+      $max_loop--;
+      $resp .= fgets($socket, 10);
+     // echo $resp."<br>";
+      if (strstr($resp,$string))
+      {
+       //  echo "found" . $resp . "<br>";
+         break;
+      }
+   }
 }
 
 function _gs_prov_phone_checkcfg_by_ip_do_polycom( $ip, $reboot=true )
@@ -370,6 +433,27 @@ function _gs_prov_phone_checkcfg_by_ip_do_tiptel( $ip, $reboot=true )
 	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
 	
 	@ exec( '/opt/gemeinschaft/sbin/gs-tiptel-reboot --ip='. qsa($ip) .' >>/dev/null 2>>/dev/null &', $out, $err );
+}
+
+function _gs_prov_phone_checkcfg_by_ip_do_yealink( $ip, $reboot=true )
+{
+	if (_gs_prov_phone_checkcfg_exclude_ip( $ip )) return;
+
+	gs_log(GS_LOG_DEBUG, "Send yealink update config \"$ip\"");
+	
+	$url = 'http://' . qsa($ip) .'/servlet';
+
+	//open connection
+	$ch = curl_init();
+
+	//set the url, number of POST vars, POST data
+	curl_setopt($ch,CURLOPT_URL,$url);
+	curl_setopt($ch,CURLOPT_POST,3);
+	curl_setopt($ch,CURLOPT_POSTFIELDS,'p=settings-autop&q=write&now=true');
+
+	//execute post
+	$result = curl_exec($ch);
+
 }
 
 // PRIVATE:
@@ -434,7 +518,9 @@ WHERE
 	if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 		_gs_prov_phone_checkcfg_by_ext_do_tiptel( $ext, $reboot );
 	}
-	
+	if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
+		_gs_prov_phone_checkcfg_by_ext_do_yealink( $ext, $reboot );
+	}	
 	//return $err == 0;
 	return true;
 }
@@ -548,7 +634,28 @@ WHERE `s`.`name`=\''. $db->escape($ext) .'\''
 
 function _gs_prov_phone_checkcfg_by_ext_do_grandstream( $ext, $reboot=true )
 {
-	//FIXME
+	$db = @gs_db_slave_connect();
+	if (! $db) {
+	       gs_log(GS_LOG_WARNING, 'Failed to connect to DB');
+	       return;
+	}
+
+	$ip = @$db->executeGetOne(
+		'SELECT
+		   `u`.`current_ip`
+		FROM
+		   `ast_sipfriends` `s`
+		JOIN
+		   `users` `u` ON (`u`.`id`=`s`.`_user_id`)
+		WHERE `s`.`name`=\''. $db->escape($ext) .'\''
+    );
+
+    if (! $ip || ! preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $ip)) {
+    	gs_log(GS_LOG_WARNING, 'Bad IP');
+		return;
+    }
+
+    _gs_prov_phone_checkcfg_by_ip_do_grandstream( $ip, $reboot);
 }
 
 function _gs_prov_phone_checkcfg_by_ext_do_polycom( $ext, $reboot=true )
@@ -572,6 +679,24 @@ function _gs_prov_phone_checkcfg_by_ext_do_polycom( $ext, $reboot=true )
 function _gs_prov_phone_checkcfg_by_ext_do_tiptel( $ext, $reboot=true )
 {
 	//FIXME
+}
+
+function _gs_prov_phone_checkcfg_by_ext_do_yealink( $ext, $reboot=true )
+{
+	$sip_notify = $reboot ? 'yealink-check-cfg-reboot' : 'yealink-check-cfg';
+	@exec( 'sudo asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
+	
+	$hosts = @gs_hosts_get(false);
+	if (isGsError($hosts)) {
+		gs_log(GS_LOG_WARNING, 'Failed to get hosts - '. $hosts->getMsg());
+	} elseif (! is_array($hosts)) {
+		gs_log(GS_LOG_WARNING, 'Failed to get hosts');
+	} else {
+		$cmd = 'asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\'';
+		foreach ($hosts as $host) {
+			@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd) .' >>/dev/null 2>>/dev/null &' );
+		}
+	}
 }
 
 ?>
