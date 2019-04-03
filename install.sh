@@ -17,10 +17,11 @@
 # MA 02110-1301, USA.
 ###################################################################
 echo -e "\n
-  This an RC Version of Gemeinschaft!\n \
-  Only community support.\n \
+  This a pure DEVELOPMENT Version of Gemeinschaft!\n \
   Use allways stable version for production.\n \
-  This installer might be broken.
+  This script will install a DEVELOPMENT system, \n \
+  it will most likely exit with an error.\n \
+  ONLY USE FOR DEVELOPMENT.\ \
   If you agree please type 'yes'.\n"
 read answer
 
@@ -33,7 +34,7 @@ case $answer in
   ;;
 esac
 
-GEMEINSCHAFT_VERS="3.3-ast-13"
+GEMEINSCHAFT_VERS="3.4-dev"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
 GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GS3.git"
@@ -94,15 +95,15 @@ if [ "`id -un`" != "root" ]; then
 	fi
 fi
 
-if ( ! cat /etc/debian_version | head -n 1 | grep '^8.'      1>>/dev/null ) \
-&& ( ! cat /etc/debian_version | head -n 1 | grep 'jessie'  1>>/dev/null )
-then
-	if [ "$L2" == "de" ]; then
-		err "  Ihr Debian ist nicht Version 8 (\"Jessie\").\n" 
-	else
-		err "  Your Debian is not version 8 (\"Jessie\").\n" 
-	fi
-fi
+#if ( ! cat /etc/debian_version | head -n 1 | grep '^8.'      1>>/dev/null ) \
+#&& ( ! cat /etc/debian_version | head -n 1 | grep 'jessie'  1>>/dev/null )
+#then
+#	if [ "$L2" == "de" ]; then
+#		err "  Ihr Debian ist nicht Version 8 (\"Jessie\").\n" 
+#	else
+#		err "  Your Debian is not version 8 (\"Jessie\").\n" 
+#	fi
+#fi
 
 
 # set PATH
@@ -202,7 +203,6 @@ ${APTITUDE_INSTALL} dnsutils
 #
 echo "Checking Internet access ..."
 while ! ( wget -O - -T 30 --spider http://ftp.debian.org/ >>/dev/null ); do sleep 5; done
-MY_MAC_ADDR=`LANG=C ifconfig | grep -oE '[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}' | head -n 1`
 
 
 # install basic stuff
@@ -215,40 +215,13 @@ ${APTITUDE_INSTALL} \
 	coreutils lsb-base grep findutils sudo wget curl cron \
 	expect dialog logrotate hostname net-tools ifupdown iputils-ping netcat \
 	udev psmisc dnsutils iputils-arping pciutils bzip2 \
-	console-data console-tools \
+	console-data net-tools\
 	vim less git linux-headers-$(uname -r) \
     gcc make gcc make ncurses-dev zlib1g-dev \
     g++ libxml2-dev doxygen libmysql++-dev libcrypto++-dev libssl-dev \
-    libportaudio2 portaudio19-dev libasound-dev
-
-# now that we have vim, enable syntax highlighting by default:
-if ( which vim 1>>/dev/null 2>>/dev/null ); then
-	sed -i -r -e 's/^"(syntax) on/\1 on/' /etc/vim/vimrc || true
-fi
-
-# set EDITOR to "vim"
-if ( which vim 1>>/dev/null 2>>/dev/null ); then
-	echo "" >> /root/.bashrc || true
-	echo "export EDITOR=\"vim\"" >> /root/.bashrc || true
-	echo "" >> /root/.bashrc || true
-	#if [ "x${SHELL}" = "x/bin/bash" ]; then
-	#	source /root/.bashrc
-	#fi
-fi
-
-# and add ls colors and some useful bash aliases:
-cat <<\HEREDOC >> /root/.bashrc
-
-export LS_OPTIONS='--color=auto'
-eval "`dircolors`"
-alias ls='ls $LS_OPTIONS'
-alias l='ls $LS_OPTIONS -lF'
-alias ll='ls $LS_OPTIONS -lFA'
-
-HEREDOC
-#if [ "x${SHELL}" = "x/bin/bash" ]; then
-#	source /root/.bashrc
-#fi
+    libportaudio2 portaudio19-dev libasound-dev libjansson-dev patch \
+    mysql-client mysql-server insserv\
+    libedit-dev unixodbc unixodbc-bin unixodbc-dev libsqlite3-dev
 
 WGET="wget"
 WGET_ARGS="-c -T 60 --no-check-certificate"
@@ -257,27 +230,27 @@ DOWNLOAD="${WGET} ${WGET_ARGS}"
 
 # set up lang enviroment
 #
-echo ""
-echo "***"
-echo "***  Setting up language environment ..."
-echo "***"
-if ( ! which locale-gen 1>>/dev/null 2>>/dev/null ); then
-	${APTITUDE_INSTALL} locales
-elif [ ! -e /usr/share/i18n/locales/. ]; then
-	${APTITUDE_INSTALL} locales
-elif [ ! -e /usr/share/locale/. ]; then
-	${APTITUDE_INSTALL} locales
-fi
-if [ -e /etc/locale.gen ]; then
-	grep -e "^de_DE\.UTF-8 UTF-8" /etc/locale.gen || echo "de_DE.UTF-8 UTF-8" >> /etc/locale.gen
-	grep -e "^en_US\.UTF-8 UTF-8" /etc/locale.gen || echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-fi
-if ( type locale-gen 2>>/dev/null ); then
-	locale-gen
-else
-	echo "WARNING: locale-gen not found!" >&2
-fi
-
+#echo ""
+#echo "***"
+#echo "***  Setting up language environment ..."
+#echo "***"
+#if ( ! which locale-gen 1>>/dev/null 2>>/dev/null ); then
+#	${APTITUDE_INSTALL} locales
+#elif [ ! -e /usr/share/i18n/locales/. ]; then
+#	${APTITUDE_INSTALL} locales
+#elif [ ! -e /usr/share/locale/. ]; then
+#	${APTITUDE_INSTALL} locales
+#fi
+#if [ -e /etc/locale.gen ]; then
+#	grep -e "^de_DE\.UTF-8 UTF-8" /etc/locale.gen || echo "de_DE.UTF-8 UTF-8" >> /etc/locale.gen
+#	grep -e "^en_US\.UTF-8 UTF-8" /etc/locale.gen || echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+#fi
+#if ( type locale-gen 2>>/dev/null ); then
+#	locale-gen
+#else
+#	echo "WARNING: locale-gen not found!" >&2
+#fi
+#
 
 # install ntp
 #
@@ -320,13 +293,13 @@ make config
 dahdi_genconf || true
 
 cd /usr/local/src/
-$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-13-current.tar.gz"
-tar -xvzf asterisk-13-current.tar.gz
-cd $(tar -tzf asterisk-13-current.tar.gz | head -n 1 | cut -d '/' -f1)
-./configure
-make menuselect.makeopts
-menuselect/menuselect --enable res_config_mysql menuselect.makeopts
-menuselect/menuselect --enable cdr_mysql menuselect.makeopts
+$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-16-current.tar.gz"
+tar -xvzf asterisk-16-current.tar.gz
+cd $(tar -tzf asterisk-16-current.tar.gz | head -n 1 | cut -d '/' -f1)
+./configure --with-jansson-bundled
+#make menuselect.makeopts
+#menuselect/menuselect --enable res_config_mysql menuselect.makeopts
+#menuselect/menuselect --enable cdr_mysql menuselect.makeopts
 make
 make install 
 make samples
@@ -362,21 +335,6 @@ echo "asterisk  ALL=(ALL)  NOPASSWD: ALL" > /etc/sudoers.d/gemeinschaft-asterisk
 chmod 0440 /etc/sudoers.d/gemeinschaft-asterisk
 
 
-# install lame
-#
-if ( ! which lame 1>>/dev/null 2>>/dev/null ); then
-	echo ""
-	echo "***"
-	echo "***  Installing Lame ..."
-	echo "***"
-	echo 'deb http://deb-multimedia.org wheezy main non-free' \
-		> /etc/apt/sources.list.d/debian-multimedia.list
-	aptitude update --allow-untrusted || true
-	${APTITUDE_INSTALL} --allow-untrusted debian-multimedia-keyring || true
-	#${APTITUDE_INSTALL} lame || true
-	${APTITUDE_INSTALL} --allow-untrusted lame || true
-fi
-
 
 # install misc packages
 #
@@ -389,12 +347,11 @@ export DEBIAN_PRIORITY=critical
 ${APTITUDE_INSTALL} \
 	perl perl-modules libnet-daemon-perl libnet-netmask-perl libio-interface-perl libio-socket-multicast-perl \
 	sipsak \
-	mysql-client mysql-server \
 	apache2 \
-	php5-cli libapache2-mod-php5 php5-mysql php5-ldap \
-	python2.6 \
+	php-cli libapache2-mod-php php-mysql php-ldap \
+	python \
 	python-mysqldb \
-	sox libsox-fmt-all mpg123
+	sox libsox-fmt-all mpg123 lame
 unset DEBIAN_FRONTEND
 unset DEBIAN_PRIORITY
 #aptitude clean
@@ -552,7 +509,6 @@ fi
 a2enmod rewrite
 a2enmod alias
 a2enmod mime
-a2enmod php5
 a2enmod headers || true
 
 
