@@ -141,7 +141,7 @@ if ($mac === '000000000000') {
 
 # make sure the phone is a Yealink:
 #
-if ((subStr($mac,0,6) !== '001565') && (subStr($mac,0,6) !== '805EC0')) {
+if ((subStr($mac,0,6) !== '001565') && (subStr($mac,0,6) !== '805EC0') && (subStr($mac,0,6) !== '805E0C')) {
 	gs_log( GS_LOG_NOTICE, "Yealink provisioning: MAC address \"$mac\" is not a Yealink phone" );
 	# don't explain this to the users
 	_settings_err( 'No! See log for details.' );
@@ -168,7 +168,7 @@ else if (strToLower(@$ua_parts[0]) !== 'yealink') {
 gs_log( GS_LOG_DEBUG, "Yealink model $ua found." );
 
 # find out the type of the phone:
-if (preg_match('/SIP-(T42G|T46G|T48G|T42S|T46S)/', @$ua_parts[1], $m))  {    # e.g. "SIP-T46G", "SIP-T48G" or "SIP-T22P"
+if (preg_match('/SIP-(T42G|T46G|T48G|T42S|T46S|T46U)/', @$ua_parts[1], $m))  {    # e.g. "SIP-T46G", "SIP-T48G" or "SIP-T22P"
 	$phone_model =  'SIP-'.$m[1];
 	$phone_model_config = 'SIP_'.$m[1];
 }
@@ -452,7 +452,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 }
 
 # Phonetype Check
-if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-sip-t48g','yealink-sip-t42s','yealink-sip-t46s'), true) ) {
+if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-sip-t48g','yealink-sip-t42s','yealink-sip-t46s','yealink-sip-t46u'), true) ) {
 
 	#####################################################################
 	#  Common provisioning parameters (applicable to SIP-T28P/T26P/T22P/T20P/T21P/T19P/T46G/T42G/T41P IP phones running firmware version 72 or later)
@@ -817,6 +817,10 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 			$max_keys=27;
 			psetting('screensaver.wait_time', '21600');
 			break;
+                case 'yealink-sip-t46u':
+                        $max_keys=27;
+                        psetting('screensaver.wait_time', '21600');
+                        break;
 			}
 	
 	# RESET KEYS
@@ -862,6 +866,22 @@ if ( in_array($phone_type, array('yealink-sip-t42g','yealink-sip-t46g','yealink-
 			}
 		}
 	}
+
+        # RESET EXP KEYS on EXP43
+        if ($phone_type == 'yealink-sip-t46u') {
+                # max 3 EXP43 Modules allowed
+        	# get max configured EXP43 count to speed up provisioning
+        	if ($max_ext_modules >3) { $max_ext_modules=3; }
+
+		for ($j=1; $j<=$max_ext_modules; $j++) {
+                        for ($i=1; $i <= 60; $i++) {
+                                psetting('expansion_module.'.$j.'.key.'.$i.'.line', '0');
+                                psetting('expansion_module.'.$j.'.key.'.$i.'.value', '');
+                                psetting('expansion_module.'.$j.'.key.'.$i.'.type', '0');
+                                psetting('expansion_module.'.$j.'.key.'.$i.'.label', '');
+                        }
+                }
+        }
 	
 
 	$softkeys = null;

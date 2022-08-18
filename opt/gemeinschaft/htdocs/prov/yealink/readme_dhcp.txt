@@ -19,6 +19,18 @@ subnet 192.168.x.0 netmask 255.255.255.0 {
     # GS3
     option tftp-server-name "http://192.168.x.250/gemeinschaft/prov/yealink/$MAC.cfg";
   }
+  # Yealink-Phones, MAC starts with 80:5e:c0
+  if binary-to-ascii(16, 32, "", substring(hardware, 0, 4)) = "1805ec0" {
+    log(info, "request from yealink phone, setting proper options.");
+    # GS3
+    option tftp-server-name "http://192.168.9.1/gemeinschaft/prov/yealink/$MAC.cfg";
+  }
+  # Yealink-Phones, MAC starts with 80:5e:0c
+  if binary-to-ascii(16, 32, "", substring(hardware, 0, 4)) = "1805e0c" {
+    log(info, "request from yealink phone, setting proper options.");
+    # GS3
+    option tftp-server-name "http://192.168.9.1/gemeinschaft/prov/yealink/$MAC.cfg";
+  }
 
 }
 

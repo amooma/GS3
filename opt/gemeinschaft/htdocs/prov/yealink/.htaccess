@@ -19,6 +19,9 @@
         # newer Yealink phones have 805ec0xxxxxx.cfg
         RewriteRule ^(805ec0[0-9a-f]*).cfg$ settings.php?mac=$1 [L]
 
+        # even newer Yealink phones have 805e0cxxxxxx.cfg
+        RewriteRule ^(805e0c[0-9a-f]*).cfg$ settings.php?mac=$1 [L]
+
 	# PB
 	# RewriteRule ^pb.([0-9]*).(imported|prv|gs).([0-9]*).xml$ pb.php?u=$1&t=$2&p=$3 [L]
 

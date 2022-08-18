@@ -132,6 +132,8 @@ if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
 		$phone_types['yealink-sip-t42s' ] = 'Yealink SIP T42S';
 	if (in_array('*', $enabled_models) || in_array('yealink-sip-t46s', $enabled_models))
 		$phone_types['yealink-sip-t46s' ] = 'Yealink SIP T46S';
+        if (in_array('*', $enabled_models) || in_array('yealink-sip-t46u', $enabled_models))
+                $phone_types['yealink-sip-t46u' ] = 'Yealink SIP T46U';
 	}
 
 $key_functions_snom = array(
@@ -364,6 +366,7 @@ if ($phone_type == '') {
 		elseif (array_key_exists('yealink-sip-t48g', $phone_types)) $phone_type = 'yealink-sip-t48g';
 		elseif (array_key_exists('yealink-sip-t42s', $phone_types)) $phone_type = 'yealink-sip-t42s';
 		elseif (array_key_exists('yealink-sip-t46s', $phone_types)) $phone_type = 'yealink-sip-t46s';
+		elseif (array_key_exists('yealink-sip-t46u', $phone_types)) $phone_type = 'yealink-sip-t46u';
 	}
 }
 if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 'snom-870', 'snom-760', 'snom-720', 'snom-725', 'snom-710', 'snom-715', 'snom-821', 'snom-d305', 'snom-d315', 'snom-d375'), true)) {
@@ -381,7 +384,7 @@ if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 
 } elseif (in_array($phone_type, array('tiptel-ip284', 'tiptel-ip286'), true)) {
 	$phone_layout = 'tiptel';
 	$key_function_none = $key_function_none_tiptel;
-} elseif (in_array($phone_type, array('yealink-sip-t42g', 'yealink-sip-t46g', 'yealink-sip-t48g', 'yealink-sip-t42s', 'yealink-sip-t46s'), true)) {
+} elseif (in_array($phone_type, array('yealink-sip-t42g', 'yealink-sip-t46g', 'yealink-sip-t48g', 'yealink-sip-t42s', 'yealink-sip-t46s', 'yealink-sip-t46u'), true)) {
 	$phone_layout = 'yealink';
 	$key_function_none = $key_function_none_yealink;
 } else {
@@ -1350,6 +1353,12 @@ if ($phone_layout) {
 						'title'=> htmlEnt($phone_type_title))
 				);
 				break;
+                        case  'yealink-sip-t46u':
+                                $key_levels = array(
+                                        0 => array('from'=>   1, 'to'=>   27, 'shifted'=>false,
+                                                'title'=> htmlEnt($phone_type_title))
+                                );
+                                break;
 			case 'yealink-sip-t48g':
 				$key_levels = array(
 					0 => array('from'=>   1, 'to'=>   29, 'shifted'=>false,
@@ -1371,37 +1380,84 @@ if ($phone_layout) {
 				);
 				break;
 		}
-		if ($show_ext_modules >= 1) {
-			$key_levels += array(
-				1 => array('from'=> 101, 'to'=> 120, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 1')
-			);
-			$key_levels += array(
-				2 => array('from'=> 121, 'to'=> 140, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 2')
-			);
+		// EXT43 with 3 layers
+		if ($phone_type == 'yealink-sip-t46u') {
+                        if ($show_ext_modules >= 1) {
+                                $key_levels += array(
+                                        1 => array('from'=> 101, 'to'=> 120, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 1')
+                                );
+                                $key_levels += array(
+                                        2 => array('from'=> 121, 'to'=> 140, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 2')
+                                );
+                                $key_levels += array(
+                                        3 => array('from'=> 141, 'to'=> 160, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 3')
+                                );
+                        }
+                        if ($show_ext_modules >= 2) {
+                                $key_levels += array(
+                                        4 => array('from'=> 201, 'to'=> 220, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 1')
+                                );
+                                $key_levels += array(
+                                        5 => array('from'=> 221, 'to'=> 240, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 2')
+                                );
+                                $key_levels += array(
+                                        6 => array('from'=> 241, 'to'=> 260, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 3')
+                                );
+                        }
+                        if ($show_ext_modules >= 3) {
+                                $key_levels += array(
+                                        7 => array('from'=> 301, 'to'=> 320, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 1')
+                                );
+                                $key_levels += array(
+                                        8 => array('from'=> 321, 'to'=> 340, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 2')
+                                );
+                                $key_levels += array(
+                                        9 => array('from'=> 341, 'to'=> 360, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 3')
+                                );
+                        }
 		}
-		if ($show_ext_modules >= 2) {
-			$key_levels += array(
-				3 => array('from'=> 201, 'to'=> 220, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 1')
-			);
-			$key_levels += array(
-				4 => array('from'=> 221, 'to'=> 240, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 2')
-			);
+		// EXT40 with 2 layers
+		else {
+			if ($show_ext_modules >= 1) {
+				$key_levels += array(
+					1 => array('from'=> 101, 'to'=> 120, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 1')
+				);
+				$key_levels += array(
+					2 => array('from'=> 121, 'to'=> 140, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 2')
+				);
+			}
+			if ($show_ext_modules >= 2) {
+				$key_levels += array(
+					3 => array('from'=> 201, 'to'=> 220, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 1')
+				);
+				$key_levels += array(
+					4 => array('from'=> 221, 'to'=> 240, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 2')
+				);
+			}
+			if ($show_ext_modules >= 3) {
+				$key_levels += array(
+					5 => array('from'=> 301, 'to'=> 320, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 1')
+				);
+				$key_levels += array(
+					6 => array('from'=> 321, 'to'=> 340, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 2')
+				);
+			}
 		}
-		if ($show_ext_modules >= 3) {
-			$key_levels += array(
-				5 => array('from'=> 301, 'to'=> 320, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 1')
-			);
-			$key_levels += array(
-				6 => array('from'=> 321, 'to'=> 340, 'shifted'=>false,
-					'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 2')
-			);
-		}
-
 		
 		break;
 	}
