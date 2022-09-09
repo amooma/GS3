@@ -59,6 +59,9 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
         $phone_types['snom-870'    ] = 'Snom 870';
         $phone_types['snom-760'    ] = 'Snom 760';
         $phone_types['snom-720'    ] = 'Snom 720';
+        $phone_types['snom-d305'   ] = 'Snom D305';
+        $phone_types['snom-d315'   ] = 'Snom D315';
+        $phone_types['snom-d375'   ] = 'Snom D375';
 }
 if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 	$phone_types['snom-m3'    ] = 'Snom M3';
@@ -99,6 +102,14 @@ if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 	$phone_types['tiptel-ip280' ] = 'Tiptel IP 280';
 	$phone_types['tiptel-ip284' ] = 'Tiptel IP 284';
 	$phone_types['tiptel-ip286' ] = 'Tiptel IP 286';
+}
+if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
+	$phone_types['yealink-sip-t42g' ] = 'Yealink SIP T42G';
+	$phone_types['yealink-sip-t46g' ] = 'Yealink SIP T46G';
+	$phone_types['yealink-sip-t48g' ] = 'Yealink SIP T48G';
+	$phone_types['yealink-sip-t42s' ] = 'Yealink SIP T42S';
+	$phone_types['yealink-sip-t46s' ] = 'Yealink SIP T46S';
+	$phone_types['yealink-sip-t46u' ] = 'Yealink SIP T46U';
 }
 if (gs_get_conf('GS_POLYCOM_PROV_ENABLED')) {
 	$phone_types['polycom-spip-300'] = 'Polycom SoundPoint IP 300';

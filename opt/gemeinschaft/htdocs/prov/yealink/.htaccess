@@ -1,0 +1,28 @@
+# Gemeinschaft
+# $Revision: 1 $
+
+# Provisioning for Tiptel / Yealink *requires* mod_rewrite in order to work!
+
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	
+	# The phone asks for
+	# <MAC-addr>C.cfg
+	
+	# Rewrite requests for <MAC-addr>.txt
+	# xx.72 Firmware requests 001565xxxxxxC.cfg
+	RewriteRule ^(001565[0-9a-f]*)C.cfg$ settings.php?mac=$1 [L]
+
+        # xx.73 Firmware requests 001565xxxxxx.cfg
+        RewriteRule ^(001565[0-9a-f]*).cfg$ settings.php?mac=$1 [L]
+
+        # newer Yealink phones have 805ec0xxxxxx.cfg
+        RewriteRule ^(805ec0[0-9a-f]*).cfg$ settings.php?mac=$1 [L]
+
+        # even newer Yealink phones have 805e0cxxxxxx.cfg
+        RewriteRule ^(805e0c[0-9a-f]*).cfg$ settings.php?mac=$1 [L]
+
+	# PB
+	# RewriteRule ^pb.([0-9]*).(imported|prv|gs).([0-9]*).xml$ pb.php?u=$1&t=$2&p=$3 [L]
+
+</IfModule>

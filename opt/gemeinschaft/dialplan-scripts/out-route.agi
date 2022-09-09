@@ -70,6 +70,19 @@ $user_id = (int)trim($argv[4]);
 
 include_once( GS_DIR .'inc/db_connect.php' );
 
+// Map user for use by IAXmodem if configured
+if ($argv[4] == 'IAXmodem') {
+    # use map user from gemeinschaft.php
+
+    $db = gs_db_slave_connect();
+    if (! $db) gs_agi_err( 'DB error' );
+
+    $user_id = (int)$db->executeGetOne( 'SELECT `id` FROM `users` WHERE `user`=\''. $db->escape(gs_get_conf('GS_FAX_MAP_IAXMODEM_USER')) .'\'' );
+    if ($user_id < 1) $user_id=0;
+}
+else {
+    $user_id = (int)trim($argv[4]);
+}
 
 $qualify_cid = true;
 

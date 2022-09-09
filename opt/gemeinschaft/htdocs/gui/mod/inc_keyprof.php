@@ -69,6 +69,12 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
                 $phone_types['snom-710'] = 'Snom 710';
        if (in_array('*', $enabled_models) || in_array('715', $enabled_models))
                 $phone_types['snom-715'] = 'Snom 715';
+	if (in_array('*', $enabled_models) || in_array('d305', $enabled_models))
+                $phone_types['snom-d305'] = 'Snom D305';
+	if (in_array('*', $enabled_models) || in_array('d315', $enabled_models))
+                $phone_types['snom-d315'] = 'Snom D315';
+	if (in_array('*', $enabled_models) || in_array('d375', $enabled_models))
+                $phone_types['snom-d375'] = 'Snom D375';
 }
 /*
 # Maybe there will be some reason for enabling keys on Snom M3 phones in future.
@@ -114,7 +120,21 @@ if (gs_get_conf('GS_TIPTEL_PROV_ENABLED')) {
 	if (in_array('*', $enabled_models) || in_array('ip286', $enabled_models))
 		$phone_types['tiptel-ip286'] = 'Tiptel IP 286';
 }
-
+if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
+	$enabled_models = preg_split('/[,\\s]+/', gs_get_conf('GS_PROV_MODELS_ENABLED_YEALINK'));
+	if (in_array('*', $enabled_models) || in_array('yealink-sip-t42g', $enabled_models))
+		$phone_types['yealink-sip-t42g' ] = 'Yealink SIP T42G';
+	if (in_array('*', $enabled_models) || in_array('yealink-sip-t46g', $enabled_models))
+		$phone_types['yealink-sip-t46g' ] = 'Yealink SIP T46G';
+	if (in_array('*', $enabled_models) || in_array('yealink-sip-t48g', $enabled_models))
+		$phone_types['yealink-sip-t48g' ] = 'Yealink SIP T48G';	
+	if (in_array('*', $enabled_models) || in_array('yealink-sip-t42s', $enabled_models))
+		$phone_types['yealink-sip-t42s' ] = 'Yealink SIP T42S';
+	if (in_array('*', $enabled_models) || in_array('yealink-sip-t46s', $enabled_models))
+		$phone_types['yealink-sip-t46s' ] = 'Yealink SIP T46S';
+        if (in_array('*', $enabled_models) || in_array('yealink-sip-t46u', $enabled_models))
+                $phone_types['yealink-sip-t46u' ] = 'Yealink SIP T46U';
+	}
 
 $key_functions_snom = array(
 	'none'  => __('Leer'),              # none
@@ -235,6 +255,36 @@ foreach ($key_functions_blacklist as $keyfn) {
 		unset($key_functions_tiptel[$keyfn]);
 }
 
+$key_functions_yealink = array(
+	'f0'  => __('Leer'),
+	'f13' => __('Zielwahl'),	# SpeedDial
+	'f16' => __('BLF'),		# BLF
+	//'f1'  => __('Konferenz'),	# Conference
+	//'f2'  => __('Forward'),	# Forward
+	'f3'  => __('&Uuml;bergabe'),	# Transfer
+	'f4'  => __('Halten'),		# Hold
+	'f5'  => __('Nicht st&ouml;ren'),	# DND
+	//'f6'  => __('Redial'),	# Redial
+	//'f7'  => __('CallReturn'),	# Call Return
+	//'f8'  => __('SMS'),		# SMS
+	//'f9'  => __('CallPickup'),	# Call Pickup
+	//'f10' => __('CallPark'),	# Call Park
+	//'f11' => __('Custom'),	# Custom
+	//'f12' => __('Voicemail'),	# Voicemail
+	//'f14' => __('Intercom'),	# Intercom
+	//'f15' => __('Leitung'),	# Line (for line key only)
+	//'f17' => __('URL'),	# URL
+	//'f18' => __('GroupListening'),	# Group Listening
+	//'f19' => __('PublicHold'),	# Public Hold
+	//'f20' => __('PrivateHold'),	# Private Hold
+	//'f27' => __('XML Browser'),	# XML Browser
+);
+$key_function_none_yealink = 'f0';
+$key_functions_blacklist = preg_split('/[\\s,]+/', gs_get_conf('GS_YEALINK_PROV_KEY_BLACKLIST'));
+foreach ($key_functions_blacklist as $keyfn) {
+	if (array_key_exists($keyfn, $key_functions_yealink))
+		unset($key_functions_yealink[$keyfn]);
+}
 
 
 $key_default = array(
@@ -285,6 +335,9 @@ if ($phone_type == '') {
 		elseif (array_key_exists('snom-710', $phone_types)) $phone_type = 'snom-710';
 		elseif (array_key_exists('snom-715', $phone_types)) $phone_type = 'snom-715';
 		elseif (array_key_exists('snom-821', $phone_types)) $phone_type = 'snom-821';
+		elseif (array_key_exists('snom-d305', $phone_types)) $phone_type = 'snom-d305';
+		elseif (array_key_exists('snom-d315', $phone_types)) $phone_type = 'snom-d315';
+		elseif (array_key_exists('snom-d375', $phone_types)) $phone_type = 'snom-d375';
 	} else
 	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 		if     (array_key_exists('siemens-os20', $phone_types)) $phone_type = 'siemens-os20';
@@ -307,8 +360,16 @@ if ($phone_type == '') {
 		if     (array_key_exists('tiptel-ip284', $phone_types)) $phone_type = 'tiptel-ip284';
 		elseif (array_key_exists('tiptel-ip286', $phone_types)) $phone_type = 'tiptel-ip286';
 	}
+	if (gs_get_conf('GS_YEALINK_PROV_ENABLED')) {
+		if     (array_key_exists('yealink-sip-t42g', $phone_types)) $phone_type = 'yealink-sip-t42g';
+		elseif (array_key_exists('yealink-sip-t46g', $phone_types)) $phone_type = 'yealink-sip-t46g';
+		elseif (array_key_exists('yealink-sip-t48g', $phone_types)) $phone_type = 'yealink-sip-t48g';
+		elseif (array_key_exists('yealink-sip-t42s', $phone_types)) $phone_type = 'yealink-sip-t42s';
+		elseif (array_key_exists('yealink-sip-t46s', $phone_types)) $phone_type = 'yealink-sip-t46s';
+		elseif (array_key_exists('yealink-sip-t46u', $phone_types)) $phone_type = 'yealink-sip-t46u';
+	}
 }
-if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 'snom-870', 'snom-760', 'snom-720', 'snom-725', 'snom-710', 'snom-715', 'snom-821'), true)) {
+if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 'snom-870', 'snom-760', 'snom-720', 'snom-725', 'snom-710', 'snom-715', 'snom-821', 'snom-d305', 'snom-d315', 'snom-d375'), true)) {
 	$phone_layout = 'snom';
 	$key_function_none = $key_function_none_snom;
 } elseif (in_array($phone_type, array('siemens-os20', 'siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
@@ -323,6 +384,9 @@ if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 
 } elseif (in_array($phone_type, array('tiptel-ip284', 'tiptel-ip286'), true)) {
 	$phone_layout = 'tiptel';
 	$key_function_none = $key_function_none_tiptel;
+} elseif (in_array($phone_type, array('yealink-sip-t42g', 'yealink-sip-t46g', 'yealink-sip-t48g', 'yealink-sip-t42s', 'yealink-sip-t46s', 'yealink-sip-t46u'), true)) {
+	$phone_layout = 'yealink';
+	$key_function_none = $key_function_none_yealink;
 } else {
 	$phone_layout = false;
 	$key_function_none = false;
@@ -1035,6 +1099,16 @@ if ($phone_layout) {
                                 //$key_levels[0]['to'  ] =   15;
                                 break;
                 }
+                switch ($phone_type) {
+                	case 'snom-d305':
+                	case 'snom-d315':
+                		$key_levels = array(
+                			0 => array('from'>  0,
+                			'to' => 1, 'shifted'=>false,
+                			'title' => htmlEnt($phone_type_title))
+				);
+				break;
+                }
 		break;
 	case 'siemens':
 		//if ($show_ext_modules >= 0) {
@@ -1265,6 +1339,127 @@ if ($phone_layout) {
 			);
 		}
 		break;
+	case 'yealink':
+		switch($phone_type) {
+			case 'yealink-sip-t46g':
+				$key_levels = array(
+					0 => array('from'=>   1, 'to'=>   27, 'shifted'=>false,
+						'title'=> htmlEnt($phone_type_title))
+				);
+				break;
+			case  'yealink-sip-t46s':
+				$key_levels = array(
+					0 => array('from'=>   1, 'to'=>   27, 'shifted'=>false,
+						'title'=> htmlEnt($phone_type_title))
+				);
+				break;
+                        case  'yealink-sip-t46u':
+                                $key_levels = array(
+                                        0 => array('from'=>   1, 'to'=>   27, 'shifted'=>false,
+                                                'title'=> htmlEnt($phone_type_title))
+                                );
+                                break;
+			case 'yealink-sip-t48g':
+				$key_levels = array(
+					0 => array('from'=>   1, 'to'=>   29, 'shifted'=>false,
+						'title'=> htmlEnt($phone_type_title))
+				);
+				break;	
+			case 'yealink-sip-t42g':
+				$show_ext_modules=0;
+				$key_levels = array(
+					0 => array('from'=>   1, 'to'=>   15, 'shifted'=>false,
+						'title'=> htmlEnt($phone_type_title))
+				);
+				break;
+			case 'yealink-sip-t42s':
+				$show_ext_modules=0;
+				$key_levels = array(
+					0 => array('from'=>   1, 'to'=>   15, 'shifted'=>false,
+						'title'=> htmlEnt($phone_type_title))
+				);
+				break;
+		}
+		// EXT43 with 3 layers
+		if ($phone_type == 'yealink-sip-t46u') {
+                        if ($show_ext_modules >= 1) {
+                                $key_levels += array(
+                                        1 => array('from'=> 101, 'to'=> 120, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 1')
+                                );
+                                $key_levels += array(
+                                        2 => array('from'=> 121, 'to'=> 140, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 2')
+                                );
+                                $key_levels += array(
+                                        3 => array('from'=> 141, 'to'=> 160, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 3')
+                                );
+                        }
+                        if ($show_ext_modules >= 2) {
+                                $key_levels += array(
+                                        4 => array('from'=> 201, 'to'=> 220, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 1')
+                                );
+                                $key_levels += array(
+                                        5 => array('from'=> 221, 'to'=> 240, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 2')
+                                );
+                                $key_levels += array(
+                                        6 => array('from'=> 241, 'to'=> 260, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 3')
+                                );
+                        }
+                        if ($show_ext_modules >= 3) {
+                                $key_levels += array(
+                                        7 => array('from'=> 301, 'to'=> 320, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 1')
+                                );
+                                $key_levels += array(
+                                        8 => array('from'=> 321, 'to'=> 340, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 2')
+                                );
+                                $key_levels += array(
+                                        9 => array('from'=> 341, 'to'=> 360, 'shifted'=>false,
+                                                'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 3')
+                                );
+                        }
+		}
+		// EXT40 with 2 layers
+		else {
+			if ($show_ext_modules >= 1) {
+				$key_levels += array(
+					1 => array('from'=> 101, 'to'=> 120, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 1')
+				);
+				$key_levels += array(
+					2 => array('from'=> 121, 'to'=> 140, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 1 '. __('Ebene') .' 2')
+				);
+			}
+			if ($show_ext_modules >= 2) {
+				$key_levels += array(
+					3 => array('from'=> 201, 'to'=> 220, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 1')
+				);
+				$key_levels += array(
+					4 => array('from'=> 221, 'to'=> 240, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 2 '. __('Ebene') .' 2')
+				);
+			}
+			if ($show_ext_modules >= 3) {
+				$key_levels += array(
+					5 => array('from'=> 301, 'to'=> 320, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 1')
+				);
+				$key_levels += array(
+					6 => array('from'=> 321, 'to'=> 340, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 3 '. __('Ebene') .' 2')
+				);
+			}
+		}
+		
+		break;
 	}
 	
 	//if (in_array($phone_layout, array('snom', 'grandstream', 'tiptel'), true)) {
@@ -1331,6 +1526,10 @@ if ($phone_layout) {
                                                 switch ($key_level_idx) {
                                                         case 0: $left =  0; $right =  11; break;
                                                 }
+					case ('snom-d305' || 'snom-d315'):
+                                                switch ($key_level_idx) {
+                                                        case 0: $left =  0; $right =  1; break;
+                                                }
 					default:
 						switch ($key_level_idx) {
                                                         case 0: $left =  0; $right =  6; break;
@@ -1345,7 +1544,7 @@ if ($phone_layout) {
 		for ($i=$key_level_info['from']; $i<=$key_level_info['to']; ++$i) {
 			
 			if ($phone_layout === 'snom') {
-                        	if ($phone_type === 'snom-760' || $phone_type === 'snom-870' || $phone_type == 'snom-720' || $phone_type == 'snom-725' || $phone_type == 'snom-710' || $phone_type == 'snom-715' || $phone_type == 'snom-821') {
+                        	if ($phone_type === 'snom-760' || $phone_type === 'snom-870' || $phone_type == 'snom-720' || $phone_type == 'snom-725' || $phone_type == 'snom-710' || $phone_type == 'snom-715' || $phone_type == 'snom-821' || $phone_type == 'snom-d305' || $phone_type == 'snom-d315') {
 				$knum = $i;
 				$knump = str_pad($knum, 3, '0', STR_PAD_LEFT);
 				}else {
@@ -1435,7 +1634,7 @@ if ($phone_layout) {
 			echo '<td style="font-size:96%;"';
 			switch ($phone_layout) {
 				case 'snom':
-					if ($phone_type === 'snom-760' || $phone_type === 'snom-870' || $phone_type == 'snom-720' || $phone_type == 'snom-725' || $phone_type == 'snom-710' || $phone_type == 'snom-715' || $phone_type == 'snom-821') {
+					if ($phone_type === 'snom-760' || $phone_type === 'snom-870' || $phone_type == 'snom-720' || $phone_type == 'snom-725' || $phone_type == 'snom-710' || $phone_type == 'snom-715' || $phone_type == 'snom-821' || $phone_type == 'snom-d305' || $phone_type == 'snom-d315') {
 						echo ' class="r"';
 					} else {
 						echo ' class="', ($i%2===($key_level_idx+1)%2 ?'l':'r') ,'"';
@@ -1495,6 +1694,9 @@ if ($phone_layout) {
 				break;
 			case 'tiptel':
 				$fns =& $key_functions_tiptel;
+				break;
+			case 'yealink':
+				$fns =& $key_functions_yealink;
 				break;
 			}
 			foreach ($fns as $function => $title) {

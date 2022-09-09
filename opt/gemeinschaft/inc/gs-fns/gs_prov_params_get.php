@@ -70,8 +70,7 @@ function gs_prov_params_get( $username, $phone_type )
 		if (! is_array($path))
 			return new GsError( 'DB error.' );
 		foreach ($path as $group) {
-			if ($group['prov_param_profile_id'] > 0) {
-				
+			if ($group['prov_param_profile_id'] > 0) {				
 				//echo 'Get group\'s prov param profile, id '. $group['prov_param_profile_id'] ."\n";
 				$rs = $db->execute(
 					'SELECT `param`, `index`, `value` '.
@@ -90,7 +89,31 @@ function gs_prov_params_get( $username, $phone_type )
 			}
 		}
 	}
-	
+
+	# get keys for phonetype
+	if($user['group_id'] < 1) {
+		$mptt = new YADB_MPTT($db, 'user_groups', 'lft', 'rgt', 'title');
+		$group = $mptt->_db_query( 'SELECT * FROM user_groups WHERE `title`=\''. $db->escape($phone_type) .'\'' );		
+		if (! $group)
+			return new GsError( 'DB error.' );
+		if ($group['prov_param_profile_id'] > 0) {				
+			//echo 'Get group\'s prov param profile, id '. $group['prov_param_profile_id'] ."\n";
+			$rs = $db->execute(
+				'SELECT `param`, `index`, `value` '.
+				'FROM `prov_params` '.
+				'WHERE '.
+					'`profile_id`='. $group['prov_param_profile_id'] .' AND '.
+					'`phone_type`=\''. $db->escape($phone_type) .'\' '.
+				'ORDER BY `param`, `index`' );
+			while ($r = $rs->fetchRow()) {
+				$r['_set_by'] = 'g';
+				$r['_setter'] = $user['group_id'];
+				
+				$params[$r['param']][$r['index']] = $r['value'];
+			}
+		}
+	}
+
 	return $params;
 }
 
