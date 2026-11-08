@@ -18,10 +18,10 @@
 ###################################################################
 
 
-GEMEINSCHAFT_VERS="3.2"
+GEMEINSCHAFT_VERS="${GEMEINSCHAFT_VERS:-php8-port}"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
-GEMEINSCHAFT_CLONE_URL_DIR="https://github.com/amooma/GS3.git"
+GEMEINSCHAFT_CLONE_URL_DIR="${GEMEINSCHAFT_CLONE_URL_DIR:-https://github.com/amooma/GS3.git}"
 
 GEMEINSCHAFT_SIEMENS_VERS="trunk-r00358"
 GEMEINSCHAFT_SIEMENS_TGZ_IN_TGZ_DIR="misc/provisioning/siemens"
@@ -64,11 +64,12 @@ trap "err; exit 1" ERR
 
 # check system
 #
-if [ ! -e /etc/debian_version ]; then
+. /etc/os-release 2>>/dev/null || true
+if [ "x${ID}" != "xubuntu" ] || [ "x${VERSION_ID}" != "x24.04" ]; then
 	if [ "$L2" == "de" ]; then
-		err "  Ihr System ist kein Debian."
+		err "  Ihr System ist nicht Ubuntu 24.04."
 	else
-		err "  Your system is not Debian."
+		err "  Your system is not Ubuntu 24.04."
 	fi
 fi
 if [ "`id -un`" != "root" ]; then
@@ -76,20 +77,6 @@ if [ "`id -un`" != "root" ]; then
 		err "  Dieses Skript muss als Benutzer \"root\" ausgeführt werden."
 	else
 		err "  This script must be run as user \"root\"."
-	fi
-fi
-
-if ( ! cat /etc/debian_version | head -n 1 | grep '^7.'      1>>/dev/null ) \
-&& ( ! cat /etc/debian_version | head -n 1 | grep 'wheezy'  1>>/dev/null )
-then
-	if [ "$L2" == "de" ]; then
-		err "  Ihr Debian ist nicht Version 7 (\"Wheezy\").\n" \
-			"  Bitte laden Sie einen Debian-Installer herunter:\n" \
-			"  http://cdimage.debian.org/cdimage/release/current/i386/iso-cd/debian-7.1.0-i386-netinst.iso"
-	else
-		err "  Your Debian is not version 7 (\"Wheezy\").\n" \
-			"  Please download a Debian installer from\n" \
-			"  http://cdimage.debian.org/cdimage/release/current/i386/iso-cd/debian-7.1.0-i386-netinst.iso"
 	fi
 fi
 
@@ -101,21 +88,19 @@ export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:${PATH
 
 
 if ( which asterisk 1>>/dev/null 2>>/dev/null ); then
-	if ( ! aptitude search asterisk | grep '^i' | grep -Ee '\sasterisk\s' 1>>/dev/null 2>>/dev/null ); then
-		if [ "$L2" == "de" ]; then
+	if [ "$L2" == "de" ]; then
 		err "  Auf diesem System ist bereits eine andere, möglicherweise\n" \
 			"  nicht kompatible Version von Asterisk installiert."
 	else
-		err "  This system already has a version of Astersik which might\n" \
+		err "  This system already has a version of Asterisk which might\n" \
 			"  not be compatible."
-	fi
 	fi
 fi
 
 
 # setup basic stuff
 #
-clear
+[ -t 1 ] && clear || true
 echo ""
 echo "***         Now we start to install and setup stuff we need for"
 echo "***         Gemeinschaft. Better get yourself a cup of coffee."
@@ -136,14 +121,8 @@ HEREDOC
 #echo "***"
 #echo "***  Setting up basic stuff ..."
 #echo "***"
-type apt-get 1>>/dev/null 2>>/dev/null
-type aptitude 1>>/dev/null 2>>/dev/null || apt-get -y install aptitude
-#APTITUDE_INSTALL="aptitude -y --allow-new-upgrades --allow-new-installs install"
-APTITUDE_INSTALL="aptitude -y --safe-resolver"
-APTITUDE_REMOVE="aptitude -y purge"
-APTITUDE_INSTALL="${APTITUDE_INSTALL} --allow-new-upgrades --allow-new-installs"
-APTITUDE_INSTALL="${APTITUDE_INSTALL} install"
-#echo "APTITUDE_INSTALL = ${APTITUDE_INSTALL}"
+export DEBIAN_FRONTEND=noninteractive
+APT_INSTALL="apt-get -y install"
 
 
 # very cheap hack to wait for the DHCP-client
@@ -172,7 +151,10 @@ echo ""
 echo "***"
 echo "***  Updating package lists ..."
 echo "***"
-aptitude update
+apt-get update
+${APT_INSTALL} software-properties-common
+add-apt-repository -y universe
+apt-get update
 
 
 # install and configure local nameserver
@@ -182,7 +164,7 @@ echo "***"
 echo "***  Installing local caching nameserver ..."
 echo "***"
 
-${APTITUDE_INSTALL} dnsutils
+${APT_INSTALL} dnsutils wget ca-certificates net-tools
 # install dnsutils so we can use dig later
 #aptitude clean
 
@@ -190,7 +172,7 @@ ${APTITUDE_INSTALL} dnsutils
 # wait for internet access
 #
 echo "Checking Internet access ..."
-while ! ( wget -O - -T 30 --spider http://ftp.debian.org/ >>/dev/null ); do sleep 5; done
+while ! ( wget -O - -T 30 --spider http://archive.ubuntu.com/ >>/dev/null ); do sleep 5; done
 MY_MAC_ADDR=`LANG=C ifconfig | grep -oE '[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}\:[0-9a-fA-F]{1,2}' | head -n 1`
 
 
@@ -200,15 +182,15 @@ echo ""
 echo "***"
 echo "***  Installing basic stuff ..."
 echo "***"
-${APTITUDE_INSTALL} \
-	coreutils lsb-base grep findutils sudo wget curl cron \
-	expect dialog logrotate hostname net-tools ifupdown iputils-ping netcat \
+${APT_INSTALL} \
+	coreutils grep findutils sudo wget curl cron openssl patch \
+	expect dialog logrotate hostname net-tools iputils-ping netcat-openbsd \
 	udev psmisc dnsutils iputils-arping pciutils bzip2 \
-	console-data console-tools \
 	vim less git linux-headers-$(uname -r) \
-    gcc make gcc make ncurses-dev zlib1g-dev \
-    g++ libxml2-dev doxygen libmysql++-dev libcrypto++-dev libssl-dev \
-    libportaudio2 portaudio19-dev libasound-dev
+	build-essential autoconf automake libtool pkg-config bison flex bc \
+	libelf-dev libncurses-dev zlib1g-dev libxml2-dev libnewt-dev \
+	libmysqlclient-dev libssl-dev \
+	libportaudio2 portaudio19-dev libasound2-dev
 
 # now that we have vim, enable syntax highlighting by default:
 if ( which vim 1>>/dev/null 2>>/dev/null ); then
@@ -240,7 +222,7 @@ HEREDOC
 #fi
 
 WGET="wget"
-WGET_ARGS="-c -T 60 --no-check-certificate"
+WGET_ARGS="-c -T 60"
 DOWNLOAD="${WGET} ${WGET_ARGS}"
 
 
@@ -251,11 +233,11 @@ echo "***"
 echo "***  Setting up language environment ..."
 echo "***"
 if ( ! which locale-gen 1>>/dev/null 2>>/dev/null ); then
-	${APTITUDE_INSTALL} locales
+	${APT_INSTALL} locales
 elif [ ! -e /usr/share/i18n/locales/. ]; then
-	${APTITUDE_INSTALL} locales
+	${APT_INSTALL} locales
 elif [ ! -e /usr/share/locale/. ]; then
-	${APTITUDE_INSTALL} locales
+	${APT_INSTALL} locales
 fi
 if [ -e /etc/locale.gen ]; then
 	grep -e "^de_DE\.UTF-8 UTF-8" /etc/locale.gen || echo "de_DE.UTF-8 UTF-8" >> /etc/locale.gen
@@ -268,28 +250,9 @@ else
 fi
 
 
-# install ntp
+# time is kept by systemd-timesyncd
 #
-echo ""
-echo "***"
-echo "***  Installing NTP ..."
-echo "***"
-if ( ! which ntpd 1>>/dev/null 2>>/dev/null ); then
-	${APTITUDE_INSTALL} ntp
-fi
-if ( ! which ntpdate 1>>/dev/null 2>>/dev/null ); then
-	${APTITUDE_INSTALL} ntpdate
-fi
-/etc/init.d/ntp stop 2>>/dev/null || true
-ntpdate 0.debian.pool.ntp.org || true
-ntpdate 1.debian.pool.ntp.org || true
-/etc/init.d/ntp start || true
-sleep 3
-
-
-# make /var/run/ available as a ram file system (tmpfs).
-#
-sed -i -r -e 's/^(RAMRUN=)no/\1yes/' /etc/default/rcS || true
+timedatectl set-ntp true || true
 
 
 # install dahdi 
@@ -299,25 +262,48 @@ echo "***"
 echo "***  Installing Dahdi ..."
 echo "***"
 cd /usr/local/src/
-$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-2.10.2+2.10.2.tar.gz"
-tar -xvzf "dahdi-linux-complete-2.10.2+2.10.2.tar.gz"
-cd $(tar -tzf "dahdi-linux-complete-2.10.2+2.10.2.tar.gz" | head -n 1 | cut -d '/' -f1)
+DAHDI_TGZ="dahdi-linux-complete-3.4.0+3.4.0.tar.gz"
+$DOWNLOAD -O "${DAHDI_TGZ}" "https://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-3.4.0%2B3.4.0.tar.gz"
+echo "5af87c00ea2d54ddfec26fc2c099e4f72f36efcbc33507520fdd6e79709a6cf4  ${DAHDI_TGZ}" | sha256sum -c -
+tar -xzf "${DAHDI_TGZ}"
+cd "dahdi-linux-complete-3.4.0+3.4.0"
 make all
 make install
 make config
+# load DAHDI on boot. MeetMe needs /dev/dahdi/pseudo even without any
+# telephony hardware:
+echo "dahdi" > /etc/modules-load.d/dahdi.conf
+depmod -a
+modprobe dahdi
 # generate /etc/dahdi/system.conf:
 dahdi_genconf || true
 
+echo ""
+echo "***"
+echo "***  Installing Asterisk ..."
+echo "***"
 cd /usr/local/src/
-$DOWNLOAD "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-1.8.32.3.tar.gz"
-tar -xvzf asterisk-1.8.32.3.tar.gz
-cd $(tar -tzf asterisk-1.8.32.3.tar.gz | head -n 1 | cut -d '/' -f1)
+AST_TGZ="asterisk-1.8.32.3.tar.gz"
+$DOWNLOAD -O "${AST_TGZ}" "https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/${AST_TGZ}"
+echo "3c12ddbb86e2b901af449bd5a3ac7bbc55a28664159d0c4fb70f89d761d8bf9e  ${AST_TGZ}" | sha256sum -c -
+tar -xzf "${AST_TGZ}"
+cd asterisk-1.8.32.3
+
+# adapt Asterisk 1.8 to current versions of OpenSSL, glibc, GCC and MySQL:
+sed -i -e 's/if (!stream->ssl->server) {/if (!SSL_is_server(stream->ssl)) {/' \
+       -e 's/SSLv2_client_method()/TLS_client_method()/' \
+       -e 's/SSLv3_client_method()/TLS_client_method()/' main/tcptls.c
+sed -i -e '0,/#include "asterisk.h"/s//#include "asterisk.h"\n#include <sys\/sysmacros.h>/' channels/chan_dahdi.c
+AST_FLAGS="-fgnu89-inline -fcommon -Dmy_bool=_Bool"
+
 ./configure
 make menuselect.makeopts
 menuselect/menuselect --enable res_config_mysql menuselect.makeopts
 menuselect/menuselect --enable cdr_mysql menuselect.makeopts
-make
-make install 
+menuselect/menuselect --enable app_meetme menuselect.makeopts
+menuselect/menuselect --enable chan_dahdi menuselect.makeopts
+make ASTCFLAGS="${AST_FLAGS}"
+make install ASTCFLAGS="${AST_FLAGS}"
 make samples
 make config
 
@@ -331,6 +317,8 @@ chown --recursive asterisk:asterisk /usr/lib/asterisk
 chmod --recursive u=rwX,g=rX,o= /var/lib/asterisk
 chmod --recursive u=rwX,g=rX,o= /var/log/asterisk
 chmod --recursive u=rwX,g=rX,o= /var/run/asterisk
+# /var/run is a tmpfs:
+echo "d /run/asterisk 0750 asterisk asterisk -" > /etc/tmpfiles.d/asterisk.conf
 chmod --recursive u=rwX,g=rX,o= /var/spool/asterisk
 chmod --recursive u=rwX,g=rX,o= /usr/lib/asterisk
 chown --recursive root:asterisk /etc/asterisk
@@ -353,18 +341,7 @@ chmod 0440 /etc/sudoers.d/gemeinschaft-asterisk
 
 # install lame
 #
-if ( ! which lame 1>>/dev/null 2>>/dev/null ); then
-	echo ""
-	echo "***"
-	echo "***  Installing Lame ..."
-	echo "***"
-	echo 'deb http://deb-multimedia.org wheezy main non-free' \
-		> /etc/apt/sources.list.d/debian-multimedia.list
-	aptitude update --allow-untrusted || true
-	${APTITUDE_INSTALL} --allow-untrusted debian-multimedia-keyring || true
-	#${APTITUDE_INSTALL} lame || true
-	${APTITUDE_INSTALL} --allow-untrusted lame || true
-fi
+${APT_INSTALL} lame
 
 
 # install misc packages
@@ -373,19 +350,15 @@ echo ""
 echo "***"
 echo "***  Installing other packages ..."
 echo "***"
-export DEBIAN_FRONTEND=noninteractive
-export DEBIAN_PRIORITY=critical
-${APTITUDE_INSTALL} \
-	perl perl-modules libnet-daemon-perl libnet-netmask-perl libio-interface-perl libio-socket-multicast-perl \
+${APT_INSTALL} \
+	perl libnet-daemon-perl libnet-netmask-perl libio-interface-perl libio-socket-multicast-perl \
 	sipsak \
 	mysql-client mysql-server \
 	apache2 \
-	php5-cli libapache2-mod-php5 php5-mysql php5-ldap \
-	python2.6 \
-	python-mysqldb \
+	php8.3-cli libapache2-mod-php8.3 php8.3-mysql php8.3-ldap php8.3-mbstring \
+	php8.3-curl php8.3-xml php8.3-soap \
+	python3 python3-mysqldb \
 	sox libsox-fmt-all mpg123
-unset DEBIAN_FRONTEND
-unset DEBIAN_PRIORITY
 #aptitude clean
 
 
@@ -402,7 +375,7 @@ cd /usr/share/asterisk/moh/
 for fmt in alaw; do
 	#F=asterisk-moh-freeplay-${fmt}
 	F=asterisk-moh-opsound-${fmt}-current
-	${DOWNLOAD} http://downloads.asterisk.org/pub/telephony/sounds/${F}.tar.gz
+	${DOWNLOAD} https://downloads.asterisk.org/pub/telephony/sounds/${F}.tar.gz
 	tar -xzf ${F}.tar.gz
 	rm ${F}.tar.gz || true
 done
@@ -502,22 +475,27 @@ echo ""
 echo "***"
 echo "***  Creating Gemeinschaft database ..."
 echo "***"
+# The queries were written for the permissive mode of old MySQL versions
+# and we create triggers as a user without the SUPER privilege.
+cat <<\HEREDOC > /etc/mysql/mysql.conf.d/gemeinschaft.cnf
+[mysqld]
+sql_mode = ""
+log_bin_trust_function_creators = 1
+HEREDOC
+systemctl restart mysql
+
 GEMEINSCHAFT_DB_PASS=`head -c 20 /dev/urandom | md5sum -b - | cut -d ' ' -f 1 | head -c 30`
-[ -e /tmp/mysql-gemeinschaft-grant.sql ] && rm -f /tmp/mysql-gemeinschaft-grant.sql || true
-touch /tmp/mysql-gemeinschaft-grant.sql
-chmod go-rwx /tmp/mysql-gemeinschaft-grant.sql
-echo "GRANT ALL ON \`asterisk\`.* TO 'gemeinschaft'@'localhost' IDENTIFIED BY '${GEMEINSCHAFT_DB_PASS}';" >> /tmp/mysql-gemeinschaft-grant.sql
-echo "GRANT ALL ON \`asterisk\`.* TO 'gemeinschaft'@'%' IDENTIFIED BY '${GEMEINSCHAFT_DB_PASS}';" >> /tmp/mysql-gemeinschaft-grant.sql
-echo "FLUSH PRIVILEGES;" >> /tmp/mysql-gemeinschaft-grant.sql
-cat /tmp/mysql-gemeinschaft-grant.sql | mysql --batch
-rm -f /tmp/mysql-gemeinschaft-grant.sql
-mysql --batch --user=gemeinschaft --password="${GEMEINSCHAFT_DB_PASS}" -e "SELECT 'test'" > /dev/null
+for GS_DB_HOST in localhost 127.0.0.1 %; do
+	mysql --batch -e "CREATE USER IF NOT EXISTS 'gemeinschaft'@'${GS_DB_HOST}' IDENTIFIED BY '${GEMEINSCHAFT_DB_PASS}'; GRANT ALL ON \`asterisk\`.* TO 'gemeinschaft'@'${GS_DB_HOST}';"
+done
+mysql --batch -e "FLUSH PRIVILEGES;"
+mysql --batch --user=gemeinschaft --password="${GEMEINSCHAFT_DB_PASS}" -h 127.0.0.1 -e "SELECT 'test'" > /dev/null
 
 # Gemeinschaft database
 #
 cd /opt/gemeinschaft-source/usr/share/doc/gemeinschaft/
 sed -i -e 's/DEFINER *= *[^ ]*/DEFINER=CURRENT_USER()/g' asterisk.sql
-mysql --batch --user=gemeinschaft --password="${GEMEINSCHAFT_DB_PASS}" < asterisk.sql
+mysql --batch < asterisk.sql
 cd
 
 
@@ -527,36 +505,20 @@ echo ""
 echo "***"
 echo "***  Setting up Apache web server ..."
 echo "***"
-cd /etc/apache2/conf.d/
+cd /etc/apache2/conf-available/
 ln -snf /opt/gemeinschaft-source/etc/apache2/conf.d/gemeinschaft.conf gemeinschaft.conf
-if [ -e /opt/gemeinschaft-source/etc/apache2/sites-available/gemeinschaft ]; then
-	cd /etc/apache2/sites-available/
-	ln -snf /opt/gemeinschaft-source/etc/apache2/sites-available/gemeinschaft gemeinschaft
-	a2dissite default
-	a2ensite gemeinschaft
-else
-	cd /etc/apache2/sites-available/
-	cat default | sed -e 's/AllowOverride None/AllowOverride All/i' > gemeinschaft
-	a2dissite default
-	a2ensite gemeinschaft
-fi
+a2enconf gemeinschaft
+cd /etc/apache2/sites-available/
+ln -snf /opt/gemeinschaft-source/etc/apache2/sites-available/gemeinschaft gemeinschaft.conf
+a2dissite 000-default
+a2ensite gemeinschaft
 a2enmod rewrite
 a2enmod alias
 a2enmod mime
-a2enmod php5
-a2enmod headers || true
+a2enmod php8.3
+a2enmod headers
 
-
-# PHP-APC
-#
-echo ""
-#echo "***"
-#echo "***  Installing PHP-APC ..."
-#echo "***"
-${APTITUDE_INSTALL} php-apc || true
-
-/etc/init.d/apache2 stop
-invoke-rc.d apache2 restart
+systemctl restart apache2
 
 # sudo permissions for Apache
 #
@@ -590,7 +552,7 @@ chown -h -R asterisk:asterisk /etc/asterisk
 # add Apache user (www-data) to the Asterisk group (asterisk) so
 # voicemails can be played via the web GUI:
 adduser www-data asterisk
-invoke-rc.d apache2 restart
+systemctl restart apache2
 
 
 # configure Gemeinschaft
@@ -689,7 +651,7 @@ cd
 
 # configure gemeinschaft-siemens
 #
-${APTITUDE_INSTALL} openssl 
+${APT_INSTALL} openssl 
 a2enmod rewrite 
 a2enmod ssl
 
@@ -697,13 +659,17 @@ cd /etc/apache2/
 [ -e ssl ] && rm -rf ssl || true
 ln -snf /opt/gemeinschaft-siemens-source/doc/etc-apache2-ssl ssl
 cd /etc/apache2/ssl/
+# OpenSSL 3 rejects 1024 bit keys by default
+sed -i -e 's/^\([[:space:]]*\)1024$/\12048/' gen-cert.sh
 ./gen-cert.sh >>/dev/null
 chown root:root openstage-*.pem
 chmod 640 openstage-*.pem
 cd /etc/apache2/sites-available/
-ln -snf /opt/gemeinschaft-siemens-source/doc/httpd-vhost.conf.example gemeinschaft-siemens
+sed -e 's/^\([[:space:]]*\)SSLCipherSuite .*/\1SSLCipherSuite DEFAULT:@SECLEVEL=1/' \
+    -e 's#^</VirtualHost>#\t<Directory /opt/gemeinschaft/htdocs/prov/siemens>\n\t\tRequire all granted\n\t</Directory>\n</VirtualHost>#' \
+    /opt/gemeinschaft-siemens-source/doc/httpd-vhost.conf.example > gemeinschaft-siemens.conf
 a2ensite gemeinschaft-siemens
-invoke-rc.d apache2 restart
+systemctl restart apache2
 cd
 
 
@@ -779,8 +745,7 @@ echo ""
 echo "***"
 echo "***  Removing build environment  ..."
 echo "***"
-aptitude -y markauto linux-headers-`uname -r` linux-kernel-headers
-aptitude clean
+apt-get clean
 
 
 # add /opt/gemeinschaft/scripts to PATH
@@ -820,7 +785,7 @@ echo ""
 echo "***"
 echo "***  Installing IAXmodem ..."
 echo "***"
-${APTITUDE_INSTALL} iaxmodem
+${APT_INSTALL} iaxmodem
 
 # iaxmodem config
 #
@@ -831,19 +796,7 @@ cp "${HF_CONF_SRC}/ttyIAX1" /etc/iaxmodem/ttyIAX1
 #
 #cat "${HF_CONF_SRC}/iax.conf.template" >> /etc/asterisk/iax.conf
 
-# add faxgetty entries to inittab
-# //FIXME? - set USE_FAXGETTY=yes or USE_FAXGETTY=init in
-# /etc/default/hylafax instead?
-#
-echo "" >> /etc/inittab 
-echo "# HylaFax getty" >> /etc/inittab
-echo "mo00:23:respawn:/usr/sbin/faxgetty ttyIAX0" >> /etc/inittab
-echo "mo01:23:respawn:/usr/sbin/faxgetty ttyIAX1" >> /etc/inittab
-# adding these lines to /etc/inittab makes /etc/default/hylafax
-# default to USE_FAXGETTY=init instead of USE_FAXGETTY=yes
-
-# make init reload /etc/inittab
-/sbin/init q
+# start one faxgetty per modem (units are written after HylaFax is installed)
 
 
 echo ""
@@ -853,9 +806,11 @@ echo "***"
 # hylafax-server (/usr/sbin/faxsetup) needs /usr/sbin/sendmail but
 # does not depend on mail-transfer-agent
 if ( ! which postfix 1>>/dev/null 2>>/dev/null ); then
-	${APTITUDE_INSTALL} postfix
+	echo "postfix postfix/main_mailer_type select Internet Site" | debconf-set-selections
+	echo "postfix postfix/mailname string `hostname -f`" | debconf-set-selections
+	${APT_INSTALL} postfix
 fi
-${APTITUDE_INSTALL} hylafax-server
+${APT_INSTALL} hylafax-server
 
 if [ ! -e /etc/hylafax/getty-link ]; then
 	ln -sn /usr/sbin/faxgetty /etc/hylafax/getty-link
@@ -876,8 +831,9 @@ chmod 0440 /etc/sudoers.d/gemeinschaft-hylafax
 
 # fax modem config
 #
-cp "${HF_CONF_SRC}/config.ttyIAX0" /var/spool/hylafax/etc/config.ttyIAX0
-cp "${HF_CONF_SRC}/config.ttyIAX0" /var/spool/hylafax/etc/config.ttyIAX1
+# (/etc/hylafax is bind-mounted to /var/spool/hylafax/etc by the services)
+cp "${HF_CONF_SRC}/config.ttyIAX0" /etc/hylafax/config.ttyIAX0
+cp "${HF_CONF_SRC}/config.ttyIAX0" /etc/hylafax/config.ttyIAX1
 
 # fax daemon config
 #
@@ -885,11 +841,32 @@ cp "${HF_CONF_SRC}/hfaxd.conf" /etc/hylafax/hfaxd.conf
 
 # fax dispatch config
 #
-cp "${HF_CONF_SRC}/FaxDispatch" /var/spool/hylafax/etc/
+cp "${HF_CONF_SRC}/FaxDispatch" /etc/hylafax/
 
 # make hylafax run on boot
 #
-sed -i -r -e 's/^ *# *(RUN_HYLAFAX)=.*/\1=1/g' /etc/default/hylafax
+systemctl enable hylafax.service faxq.service hfaxd.service
+
+# faxgetty services
+#
+for tty in ttyIAX0 ttyIAX1; do
+	cat <<HEREDOC > /etc/systemd/system/faxgetty-${tty}.service
+[Unit]
+Description=HylaFAX faxgetty for ${tty}
+After=iaxmodem.service
+
+[Service]
+BindPaths=/etc/hylafax:/var/spool/hylafax/etc
+WorkingDirectory=/var/spool/hylafax
+Restart=always
+RestartSec=30
+ExecStart=/usr/sbin/faxgetty ${tty}
+
+[Install]
+WantedBy=multi-user.target
+HEREDOC
+	systemctl enable faxgetty-${tty}.service
+done
 
 
 # delete example users, queues etc.
@@ -911,14 +888,14 @@ ADMIN_NAME="admin"
 ADMIN_FNAME="System"
 ADMIN_LNAME="Administrator"
 ADMIN_EXTEN="9999"
-let "PIN = $RANDOM % 9999"
+PIN=$(( RANDOM % 10000 ))
 ADMIN_PIN=`printf "%04d\n" "$PIN"`
 
 USER_NAME="user"
 USER_FNAME="Ordinary"
 USER_LNAME="User"
 USER_EXTEN="9998"
-let "PIN = $RANDOM % 9999"
+PIN=$(( RANDOM % 10000 ))
 USER_PIN=`printf "%04d\n" "$PIN"`
 
 #TODO: Loop on error!
@@ -958,7 +935,7 @@ ADMIN_SIPPW=$( mysql --user=gemeinschaft --password=${GEMEINSCHAFT_DB_PASS} -h l
 if [ -z $ADMIN_SIPPW ]; then ADMIN_SIPPW='x'; fi
 
 USER_SIPPW=$( mysql --user=gemeinschaft --password=${GEMEINSCHAFT_DB_PASS} -h localhost -D asterisk -A -B --raw -N -s -s -s -e "SELECT \`secret\` FROM \`ast_sipfriends\` WHERE \`name\`='$USER_EXTEN'" | awk  '{print $1}' );
-if [ -z $ADMIN_SIPPW ]; then USER_SIPPW='x'; fi
+if [ -z $USER_SIPPW ]; then USER_SIPPW='x'; fi
 
 
 
@@ -975,17 +952,11 @@ if [ -z $ADMIN_SIPPW ]; then USER_SIPPW='x'; fi
 # soweit die möglich ist.
 
 # snort
-#${APTITUDE_INSTALL} snort
+#${APT_INSTALL} snort
 
-# harden-servers (remove services that are known to be insecure)
-# Will alert the admin if they try to install e.g. telnetd or nfs-kernel-server.
-#
-# harden-...
-#
-${APTITUDE_INSTALL} harden-servers harden-clients
 
 # portsentry (detect port scans)
-#${APTITUDE_INSTALL} portsentry
+#${APT_INSTALL} portsentry
 
 # Silver-Bullet 
 cd /opt/
@@ -1013,18 +984,17 @@ echo "***"
 echo "***  Restarting services ..."
 echo "***"
 
-/etc/init.d/hylafax stop  || true
+systemctl stop hfaxd.service faxq.service || true
 /etc/init.d/iaxmodem stop || true
 
 /etc/init.d/asterisk stop || true
-/etc/init.d/dahdi stop || true
 /opt/gemeinschaft/sbin/gs-ast-dialplan-gen
 
 # start services
 #
-invoke-rc.d hylafax start  || true
 invoke-rc.d iaxmodem start || true
-invoke-rc.d dahdi start    || true
+systemctl start hylafax.service faxq.service hfaxd.service || true
+systemctl start faxgetty-ttyIAX0.service faxgetty-ttyIAX1.service || true
 invoke-rc.d asterisk start || true
 
 dmesg | grep -i dahdi || true
@@ -1043,7 +1013,7 @@ logger "Gemeinschaft ${GEMEINSCHAFT_VERS} has just been installed."
 
 # warning
 #
-clear
+[ -t 1 ] && clear || true
 echo "Security Warning"
 echo "================"
 echo ""
@@ -1077,7 +1047,7 @@ echo "***     http://www.gemeinschaft.de"
 echo "**************************************************************************"
 ) > /tmp/gemeinschaft-beispiel-user.txt
 
-clear
+[ -t 1 ] && clear || true
 cat /tmp/gemeinschaft-beispiel-user.txt
 
 # Fixing permissions of cronjobs
@@ -1085,7 +1055,7 @@ chmod 0600 /opt/gemeinschaft-source/etc/cron.d/*
 
 # make bash re-read .bashrc:
 #
-if [ "x${SHELL}" = "x/bin/bash" ]; then
+if [ -t 0 ] && [ "x${SHELL}" = "x/bin/bash" ]; then
 	exec ${SHELL}
 fi
 

@@ -72,9 +72,9 @@ class NetClientThread(Thread):
 
 		self.conf = conf
 
-		if (not self.conf.has_key('auth')):
+		if ('auth' not in self.conf):
 			self.conf['auth'] = []
-		if (not self.conf['auth'].has_key('user')):
+		if ('user' not in self.conf['auth']):
 			self.conf['auth']['user'] = False
 
 		return True
@@ -87,7 +87,7 @@ class NetClientThread(Thread):
 
 	def events(self, event_subscriptions):
 		self.event_subscriptions = event_subscriptions
-		if (not event_subscriptions.has_key(1)):
+		if (1 not in event_subscriptions):
 			event_subscriptions[1] = []
 		event_subscriptions[1].append(self.client_key)
 
@@ -107,6 +107,10 @@ class NetClientThread(Thread):
 			return False
 
 	def msg(self, msg_type, data = ''):
+		# the protocol is binary: payloads are handled as latin-1 strings, so
+		# that every character is one byte
+		if (isinstance(data, str)):
+			data = data.encode('latin-1')
 		msg_len = len(data)
 		msg_data = pack("HHH", NetClientThread.PREAMBLE, msg_type, msg_len)
 		msg_data += data
@@ -128,12 +132,12 @@ class NetClientThread(Thread):
 			self.nack(NetClientThread.M_LOGIN_PLAINTEXT)
 			return 0
 
-		if (not self.conf.has_key('auth')):
+		if ('auth' not in self.conf):
 			linfo('no user authentification allowed')
 			self.nack(NetClientThread.M_LOGIN_PLAINTEXT)
 			return 0
 
-		if (not self.conf['auth'].has_key('user')):
+		if ('user' not in self.conf['auth']):
 			linfo('no user authentification allowed')
 			self.nack(NetClientThread.M_LOGIN_PLAINTEXT)
 			return 0
@@ -181,7 +185,7 @@ class NetClientThread(Thread):
 
 		ext_states = ''
 
-		if (not ext_groups.has_key(group_id)):
+		if (group_id not in ext_groups):
 			self.nack(0x62)
 			return 0
 
@@ -198,7 +202,7 @@ class NetClientThread(Thread):
 
 	def msg_extgroupsubscribe(self, ext_groups, group_id, sequence):
 
-		if (not ext_groups.has_key(group_id)):
+		if (group_id not in ext_groups):
 			self.nack(0x65)
 			return 0
 			
@@ -230,14 +234,14 @@ class NetClientThread(Thread):
 			if (status == None or status['status'] == None):
 				self.nack(0x72)
 				return 0
-			if (status['status'].has_key('calls')):
+			if ('calls' in status['status']):
 				calls = status['status']['calls']
 				if (calls == None or calls < 0):
 					calls = 65535
 			else:
 				calls = 65535
 
-			queue_calls = pack("H", calls)
+			queue_calls = pack("H", calls).decode('latin-1')
 			queue_group_calls += queue_calls
 
 		self.msg(NetClientThread.R_QUEUEGROUPSET, chr(group_id)+sequence+queue_group_calls)
@@ -245,7 +249,7 @@ class NetClientThread(Thread):
 		return 0
 
 	def msg_queuegroupcalls(self, queue_groups, group_id, sequence):
-		if (not queue_groups.has_key(group_id)):
+		if (group_id not in queue_groups):
 			self.nack(0x72)
 			return 0
 
@@ -256,14 +260,14 @@ class NetClientThread(Thread):
 			if (status == None or status['status'] == None):
 				self.nack(0x72)
 				return 0
-			if (status['status'].has_key('calls')):
+			if ('calls' in status['status']):
 				calls = status['status']['calls']
 				if (calls == None or calls < 0):
 					calls = 65535
 			else:
 				calls = 65535
 
-			queue_calls = pack("H", calls)
+			queue_calls = pack("H", calls).decode('latin-1')
 			queue_group_calls += queue_calls
 
 		self.msg(NetClientThread.R_QUEUEGROUPCALLS, chr(group_id)+sequence+queue_group_calls)
@@ -317,7 +321,7 @@ class NetClientThread(Thread):
 
 					if (msg_ident == NetClientThread.PREAMBLE):
 						if (msg_len > 0):
-							data = self.netsocket.recv(msg_len)
+							data = self.netsocket.recv(msg_len).decode('latin-1')
 						else:
 							data = ''
 					else:
@@ -404,11 +408,11 @@ class NetSocket():
 
 		try:
 			serversocket.bind((self.address, self.port))
-		except ValueError, serror:
+		except ValueError as serror:
 			lerror('listening socket address error: %s ' % serror)
 			return False
-		except socket.error, serror:
-			lerror('listening socket error (%d): %s ' % (serror[0], serror[1]))
+		except socket.error as serror:
+			lerror('listening socket error (%d): %s ' % (serror.errno, serror.strerror))
 			return False
 		except:
 			lerror('listening socket error')
@@ -433,17 +437,17 @@ class NetServer(Thread):
 		self.em = EventManager()
 		
 	def config(self, conf):
-		if (not conf.has_key('netserver')):
+		if ('netserver' not in conf):
 			return False
-		if (not conf['netserver'].has_key('address')):
+		if ('address' not in conf['netserver']):
 			return False
-		if (not conf['netserver'].has_key('port')):
+		if ('port' not in conf['netserver']):
 			return False
-		if (not conf['netserver'].has_key('accept')):
+		if ('accept' not in conf['netserver']):
 			conf['netserver']['accept'] = '0.0.0.0/0'
-		if (not conf['netserver'].has_key('reject')):
+		if ('reject' not in conf['netserver']):
 			conf['netserver']['reject'] = '0.0.0.0/32'
-		if (not conf['netserver'].has_key('allow')):
+		if ('allow' not in conf['netserver']):
 			conf['netserver']['allow'] = '0.0.0.0/32'
 		self.address = conf['netserver']['address']
 		self.port = conf['netserver']['port']
@@ -472,7 +476,7 @@ class NetServer(Thread):
 		self.em.plugins(plugins)
 		
 	def add_event(self, event):
-		if (not self.event_subscriptions.has_key(event['type'])):
+		if (event['type'] not in self.event_subscriptions):
 			return False
 
 		for client in self.event_subscriptions[event['type']]:
@@ -495,8 +499,8 @@ class NetServer(Thread):
 			try:
 				clientsocket, address = serversocket.accept()
 
-			except socket.error, serror:
-				lerror('socket error (%d): %s ' % (serror[0], serror[1]))
+			except socket.error as serror:
+				lerror('socket error (%d): %s ' % (serror.errno, serror.strerror))
 				continue
 			except:
 				lerror('socket error')
@@ -544,7 +548,7 @@ class NetServer(Thread):
 		ldebug('exiting netserver thread')
 		if (self.clients):
 			ldebug('closing  %d client connections' % len(self.clients))
-			for client in self.clients:
+			for client in list(self.clients):
 				try:
 					ldebug('purge %s from client list' % client)
 					self.clients[client]['thread'].stop()

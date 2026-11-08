@@ -11,7 +11,7 @@ class EventManager():
 		self.handler_thread = None
 		
 	def plugins(self, plugins):
-		if (plugins.has_key('EventHandler') and (0 in plugins['EventHandler']['type'])):
+		if ('EventHandler' in plugins and (0 in plugins['EventHandler']['type'])):
 			self.handler_thread = plugins['EventHandler']['object']
 		else:
 			self.handler_thread = None

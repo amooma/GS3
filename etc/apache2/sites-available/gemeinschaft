@@ -14,8 +14,7 @@
 	<Directory /var/www/>
 		Options FollowSymLinks
 		AllowOverride All
-		Order allow,deny
-		Allow from all
+		Require all granted
 	</Directory>
 
 	ErrorLog /var/log/apache2/error.log
@@ -29,8 +28,7 @@
 	# Increase max. number of POST variables from default 1000 to
 	# 2000 (for GUI modules routing_inbound and routing_outbound, see
 	# <http://groups.google.de/group/gemeinschaft-users/browse_thread/thread/ef0c194394dfbb2c>):
-	php_value suhosin.post.max_vars    2000
-	php_value suhosin.request.max_vars 2000
+	php_value max_input_vars 2000
 
 </VirtualHost>
 

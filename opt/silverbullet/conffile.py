@@ -21,9 +21,9 @@ class ConfigFile():
 				if (line[0] == ';'):
 					continue
 					
-				ret = re.match('\[(\w*)\]', line)
+				ret = re.match(r'\[(\w*)\]', line)
 				if ret:
-					 section = re.sub('\W','',ret.group())
+					 section = re.sub(r'\W','',ret.group())
 					 config[section] = {}
 					 continue
 				

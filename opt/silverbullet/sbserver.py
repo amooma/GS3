@@ -10,7 +10,8 @@ from getopt import getopt
 from loglib import ldebug, linfo, lwarn, lerror, lcritic, logsetup
 from conffile import ConfigFile
 from time import sleep
-from imp import find_module, load_module
+from importlib.machinery import PathFinder
+from importlib.util import module_from_spec
 from eventhandler import EventHandler
 
 import os
@@ -29,7 +30,7 @@ def sig_handler(number, frame):
 def start_daemon(stdio = "/dev/null"):
 	try:
 		ret = os.fork()
-	except OSError, err:
+	except OSError as err:
 		lcritic('on daemon start error: (%d) %s ' % (err.errno, err.strerror))
 		return 1
 
@@ -37,7 +38,7 @@ def start_daemon(stdio = "/dev/null"):
 		os.setsid()
 		try:
 			ret = os.fork()
-		except OSError, err:
+		except OSError as err:
 			lcritic('on daemon start error: (%d) %s ' % (err.errno, err.strerror))
 			return 1
 
@@ -104,7 +105,7 @@ def start_config_get(conf):
 		return False
 	
 	for section in conff:
-		if (not conf.has_key(section)):
+		if (section not in conf):
 			 conf[section] = {}
 			
 		for item in conff[section]:			
@@ -132,21 +133,21 @@ def start_modules(conf):
 	plugins = {}
 	for module_name in modules_all:
 
-		if (modules.has_key(module_name)):
+		if (module_name in modules):
 			continue
 
 		ldebug('loading module %s' % module_name)
 		try:
-			module_file, module_path, module_info = find_module(module_name, conf['general']['modulepath'].split(','))
+			module_spec = PathFinder.find_spec(module_name, conf['general']['modulepath'].split(','))
+			if (module_spec is None):
+				raise ImportError(module_name)
 		except:
 			lerror('unable to load module: %s' % module_name)
 			continue
 
-		try:
-			module_object = load_module(module_name, module_file, module_path, module_info)
-		finally:
-			if (module_file):
-				module_file.close()
+		module_object = module_from_spec(module_spec)
+		modules[module_name] = module_object
+		module_spec.loader.exec_module(module_object)
 
 		if (module_name in modules_listeners):
 			try:
@@ -161,7 +162,7 @@ def start_modules(conf):
 		if (module_name in modules_handlers):
 			try:
 				for module_class in module_object.classes_list(2):
-					if (plugins.has_key(module_class.__name__)):
+					if (module_class.__name__ in plugins):
 						plugins[module_class.__name__]['type'].append(2)
 						continue
 
@@ -210,7 +211,8 @@ def sbserver():
 	plugins['EventHandler']['type'] = (0,)
 	plugins['EventHandler']['object'] = eventhandler
 
-	for plugin in plugins:
+	# the event handler has to be running before the plugins register with it
+	for plugin in sorted(plugins, key = lambda name: 0 if (0 in plugins[name]['type']) else 1):
 		if (0 in plugins[plugin]['type']):
 			ldebug('start system plugin %s' % plugin)
 			plugins[plugin]['object'].config(conf)

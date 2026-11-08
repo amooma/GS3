@@ -67,7 +67,7 @@ class AsteriskManager(Thread):
 		self.sendlock = True
 
 		try:
-			self.mgsocket.send(send_string)
+			self.mgsocket.send(send_string.encode('utf-8'))
 			self.sendlock = False
 			return True
 
@@ -88,7 +88,7 @@ class AsteriskManager(Thread):
 		s.settimeout(1)
 
 		try:
-			s.send(send_string)
+			s.send(send_string.encode('utf-8'))
 		except:
 			return False
 			
@@ -111,7 +111,7 @@ class AsteriskManager(Thread):
 			while self.runthread:
 
 				try:
-					data = self.mgsocket.recv(65634)
+					data = self.mgsocket.recv(65634).decode('utf-8', 'replace')
 					timeout = False
 				except:
 					timeout = True
@@ -187,7 +187,7 @@ class AsteriskHandler(Thread):
 		idlesleep = 0.1
 		timeout = int(self.status_timeout / idlesleep)
 
-		if (self.extstates.has_key(exten) and ((time() - self.extstates[exten]['time']) < self.status_expire)):
+		if (exten in self.extstates and ((time() - self.extstates[exten]['time']) < self.status_expire)):
 			state = int(self.extstates[exten]['status'])
 
 		else:
@@ -200,7 +200,7 @@ class AsteriskHandler(Thread):
 
 			wait = 0
 			while (wait < timeout):
-				if (self.extstates.has_key(exten)):
+				if (exten in self.extstates):
 					state = int(self.extstates[exten]['status'])
 					break
 				else:
@@ -217,7 +217,7 @@ class AsteriskHandler(Thread):
 		idlesleep = 0.1
 		timeout = int(self.status_timeout / idlesleep)
 
-		if (self.queuestats.has_key(queue) and ((time() - self.queuestats[queue]['time']) < self.status_expire)):
+		if (queue in self.queuestats and ((time() - self.queuestats[queue]['time']) < self.status_expire)):
 			status = self.queuestats[queue]
 
 		else:
@@ -232,7 +232,7 @@ class AsteriskHandler(Thread):
 
 			wait = 0
 			while (wait < timeout):
-				if (self.queuestats.has_key(queue)):
+				if (queue in self.queuestats):
 					status = self.queuestats[queue]
 					ldebug('got new status of queue %s' % queue)
 					break
@@ -279,7 +279,7 @@ class AsteriskHandler(Thread):
 				self.queuereadflag = queue_stats_time
 				continue
 
-			if (not event.has_key("Event")):
+			if ("Event" not in event):
 				continue
 
 			if (event["Event"] == "ExtensionStatus"):
@@ -349,7 +349,7 @@ class AsteriskHandler(Thread):
 				if (count == None):
 					continue
 			
-				if (self.queuestats.has_key(queue)):
+				if (queue in self.queuestats):
 					self.queuestats[queue]['status']['calls'] = count
 					
 			elif (event["Event"] == "Newchannel"):
@@ -371,7 +371,7 @@ class AsteriskHandler(Thread):
 				chan_id = array_value(event, 'Uniqueid')
 				
 				if (chan_id):
-					if (not self.channels.has_key(chan_id)):
+					if (chan_id not in self.channels):
 						self.channels[chan_id]={}
 					self.channels[chan_id]['channel'] = array_value(event, 'Channel')
 					self.channels[chan_id]['time'] = time()
@@ -381,7 +381,7 @@ class AsteriskHandler(Thread):
 				chan_id = array_value(event, 'Uniqueid')
 				
 				if (chan_id):
-					if (not self.channels.has_key(chan_id)):
+					if (chan_id not in self.channels):
 						self.channels[chan_id]={}
 					self.channels[chan_id]['channel'] = array_value(event, 'Channel')
 					self.channels[chan_id]['time'] = time()
@@ -393,7 +393,7 @@ class AsteriskHandler(Thread):
 				chan_id = array_value(event, 'Uniqueid')
 				
 				if (chan_id):
-					if (not self.channels.has_key(chan_id)):
+					if (chan_id not in self.channels):
 						self.channels[chan_id]={}
 					self.channels[chan_id]['channel'] = array_value(event, 'Channel')
 					self.channels[chan_id]['time'] = time()
@@ -405,7 +405,7 @@ class AsteriskHandler(Thread):
 				chan_id2 = array_value(event, 'Uniqueid2')
 				
 				if (chan_id1 and chan_id2):
-					if (not self.channels.has_key(chan_id1)):
+					if (chan_id1 not in self.channels):
 						self.channels[chan_id1]={}
 					self.channels[chan_id1]['channel'] = array_value(event, 'Channel1')
 					self.channels[chan_id1]['time'] = time()
@@ -415,7 +415,7 @@ class AsteriskHandler(Thread):
 					self.channels[chan_id1]['bridgechannel'] = array_value(event, 'Channel2')
 					self.channels[chan_id1]['bridgechanid'] = chan_id2
 					
-					if (not self.channels.has_key(chan_id2)):
+					if (chan_id2 not in self.channels):
 						self.channels[chan_id2]={}
 					self.channels[chan_id2]['channel'] = array_value(event, 'Channel2')
 					self.channels[chan_id2]['time'] = time()

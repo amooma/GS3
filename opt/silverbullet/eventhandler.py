@@ -48,7 +48,7 @@ class EventHandler(Thread):
 			return False
 
 	def has_handler(self, handler):
-		return self.handlers.has_key(handler)
+		return handler in self.handlers
 
 	def add_event(self, event):
 		self.eventpipe.appendleft(event)
