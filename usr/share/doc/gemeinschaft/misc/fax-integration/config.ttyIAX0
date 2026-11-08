@@ -24,6 +24,7 @@ ModemReadyCmds:         "ATH0"
 PagerTTYParity:         none                     
 Class1AdaptRecvCmd:     AT+FAR=1                 
 Class1TMConnectDelay:   400                      
+Class1ECMSupport:       no                       
 CallIDPattern:          "NMBR="                  
 CallIDPattern:          "NAME="                  
 CallIDPattern:          "ANID="                  

@@ -73,7 +73,7 @@ else {
 	#PDF
 	$pdf_file = basename($file,'.tif').'.pdf';
 	
-	@system('cd /var/spool/hylafax/ && /var/spool/hylafax/bin/tiff2pdf -o '. qsa('/tmp/'.$pdf_file) .' '. qsa('/tmp/'.$file));
+	@system('/usr/bin/tiff2pdf -o '. qsa('/tmp/'.$pdf_file) .' '. qsa('/tmp/'.$file));
 	unlink('/tmp/'.$file);
 	
 	if (! file_exists('/tmp/'.$pdf_file)) {
