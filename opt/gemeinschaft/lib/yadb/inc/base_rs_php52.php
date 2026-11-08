@@ -38,6 +38,7 @@ foreach ($rs as $rowPos => $row) {
 */
 class YADB_BaseRS implements IteratorAggregate
 {
+	#[\ReturnTypeWillChange]
 	function getIterator()
 	{
 		return new YADB_RSIterator( $this );
@@ -56,16 +57,23 @@ class YADB_RSIterator implements SeekableIterator, Countable
 	private $_rs;
 	
 	// required methods for Iterator:
+	#[\ReturnTypeWillChange]
 	function current()  { return $this->_rs->_row;    }
+	#[\ReturnTypeWillChange]
 	function key()      { return $this->_rs->_rowPos; }
+	#[\ReturnTypeWillChange]
 	function rewind()   { $this->_rs->moveFirst();    }
+	#[\ReturnTypeWillChange]
 	function next()     { $this->_rs->moveNext();     }
+	#[\ReturnTypeWillChange]
 	function valid()    { return !$this->_rs->EOF;    }
 	
 	// required methods for Countable:
+	#[\ReturnTypeWillChange]
 	function count()    { return $this->_rs->numRows(); }
 	
 	// required methods for SeekableIterator:
+	#[\ReturnTypeWillChange]
 	function seek($pos) { $this->_rs->move($pos);     }
 	
 	// required methods for OuterIterator:

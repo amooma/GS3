@@ -62,7 +62,7 @@ function gs_ldap_connect( $host=null, $port=null, $binddn=null, $pwd=null, $prot
 	} else {
 			$ldap = @ ldap_connect( $uri );
 	}
-	if (! is_resource($ldap)) {
+	if (! $ldap) {
 		gs_log( GS_LOG_WARNING, 'Could not connect to LDAP server "'. $uri .'"!' );
 		return null;
 	}
@@ -132,7 +132,7 @@ function ldap_prop_equal( $a, $b )
 
 function gs_ldap_get_list( $ldap_conn, $base, $filter='', $props=array(), $limit=0 )
 {
-	if (! is_resource($ldap_conn)) {
+	if (! $ldap_conn) {
 		return new GsError( 'Failed to query LDAP - Not connected!' );
 	}
 	if (strLen($filter) < 1) $filter = 'objectclass=*';
@@ -152,16 +152,25 @@ function gs_ldap_get_list( $ldap_conn, $base, $filter='', $props=array(), $limit
 		}
 	}
 	*/
-	if (count($props) > 0) {
-		$revProps = array_reverse($props);
-		foreach ($revProps as $prop)
-			ldap_sort( $ldap_conn, $rs, $prop );
-	}
-	
 	$res = @ldap_get_entries( $ldap_conn, $rs );
 	@ ldap_free_result( $rs );
 	if (! is_array($res))
 		return new GsError( 'Failed to get LDAP entries.' );
+
+	# ldap_sort() was removed in PHP 8
+	if (count($props) > 0) {
+		$cnt = (int)@$res['count'];
+		unset( $res['count'] );
+		usort( $res, function( $a, $b ) use ($props) {
+			foreach ($props as $prop) {
+				$prop = strToLower($prop);
+				$cmp = strCmp( (string)@$a[$prop][0], (string)@$b[$prop][0] );
+				if ($cmp !== 0) return $cmp;
+			}
+			return 0;
+		});
+		$res['count'] = $cnt;
+	}
 	
 	/*
 	$arr = array();

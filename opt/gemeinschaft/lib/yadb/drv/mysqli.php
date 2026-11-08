@@ -72,10 +72,10 @@ class YADB_Connection_mysqli extends YADB_Connection
 	var $_drvSrvVers      = null;
 	
 	
-	function YADB_Connection_mysqli( $dbtype ) #DONE
+	function __construct( $dbtype ) #DONE
 	{
 		//parent::__construct( $dbtype );
-		parent::YADB_Connection( $dbtype );
+		parent::__construct( $dbtype );
 		if (!extension_loaded('mysqli')) {
 			trigger_error( 'YADB: mysqli extension not available.', E_USER_WARNING );
 			$this->_drvLoadErr = true;
@@ -104,9 +104,9 @@ class YADB_Connection_mysqli extends YADB_Connection
 	
 	function clientVers() #DONE
 	{
-		$orig = @ mysqli_get_client_info($this->_conn);
+		$orig = @ mysqli_get_client_info();
 		$vstr = $this->_findVers($orig);
-		$vint = @ mysqli_get_client_version($this->_conn);
+		$vint = @ mysqli_get_client_version();
 		return array(
 			'orig' => $orig,
 			'vstr' => $vstr,
@@ -130,6 +130,9 @@ class YADB_Connection_mysqli extends YADB_Connection
 	function _connect() #DONE
 	{
 		if (YADB_PHPVER < 50000) return false;
+		
+		// PHP 8.1 made mysqli throw exceptions by default, YADB expects return values
+		mysqli_report( MYSQLI_REPORT_OFF );
 		
 		$this->_conn = @ mysqli_init();
 		if (is_null($this->_conn)) {
@@ -184,6 +187,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 			$clientFlags ))
 		{
 			// try without SSL:
+			if (! ($clientFlags & MYSQLI_CLIENT_SSL)) return false;
 			$clientFlags -= MYSQLI_CLIENT_SSL;
 			mysqli_ssl_set( $this->_conn, null,null,null,null,null );
 			if (! @ mysqli_real_connect( $this->_conn,
@@ -224,19 +228,14 @@ class YADB_Connection_mysqli extends YADB_Connection
 	
 	function escape( $str ) #DONE
 	{
-		if (!get_magic_quotes_gpc()) {
-			if (is_resource($this->_conn))
-				return @ mysqli_real_escape_string( $this->_conn, $str );
-			
-			return @ mysqli_escape_string( $str );
-			
-			// the 3 lines in following do not seem to be needed (?)
-			if ($this->replaceQuote[0]==='\\')
-				$str = str_replace( array('\\',"\0"), array('\\\\',"\\\0"), $str );
-			return str_replace( '\'', $this->replaceQuote, $str );
-		}
-		// undo magic quotes for "
-		return str_replace('\\"','"',$str);
+		if ($this->_conn instanceof mysqli)
+			return mysqli_real_escape_string( $this->_conn, (string)$str );
+		
+		// not connected, so the character set is not known
+		return strTr( (string)$str, array(
+			'\\' => '\\\\', "\0" => '\\0', "\n" => '\\n', "\r" => '\\r',
+			"'"  => "\\'" , '"'  => '\\"', "\x1a" => '\\Z'
+		));
 	}
 	
 	
@@ -300,7 +299,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 	
 	function _close() #DONE
 	{
-		return is_resource($this->_conn) ? @ mysqli_close($this->_conn) : true;
+		return ($this->_conn instanceof mysqli) ? @ mysqli_close($this->_conn) : true;
 	}
 	
 	
@@ -613,7 +612,7 @@ class YADB_Connection_mysqli extends YADB_Connection
 		$seqName = strToLower(trim($seqName));
 		$getNext = 'UPDATE `'. $seqTbl .'` SET `id`=LAST_INSERT_ID(`id`+1) WHERE `seq`=\''. $this->escape($seqName) .'\'';
 		$rs = $this->_execute( $getNext );
-		$affRows = (int)@ mysql_affected_rows( $this->_conn );
+		$affRows = (int)@ mysqli_affected_rows( $this->_conn );
 		if ( ! $rs || $affRows < 1 ) {
 			$this->createSequence( $seqName, $startId );
 			$rs = @ $this->_execute( $getNext );
@@ -633,6 +632,37 @@ class YADB_Connection_mysqli extends YADB_Connection
 		return $nextId;
 	}
 	*/
+	
+	
+	// mysqli throws an Error instead of returning a value if the
+	// connection could not be established
+	function getLastNativeError() #DONE
+	{
+		try {
+			return mysqli_errno( $this->_conn );
+		} catch (Throwable $e) {
+			return mysqli_connect_errno();
+		}
+	}
+	
+	function getLastNativeErrorMsg() #DONE
+	{
+		try {
+			return mysqli_error( $this->_conn );
+		} catch (Throwable $e) {
+			return mysqli_connect_error();
+		}
+	}
+	
+	// return standardized ANSI SQL / ODBC error code
+	function getLastErrorCode() #DONE
+	{
+		try {
+			return mysqli_sqlstate( $this->_conn );
+		} catch (Throwable $e) {
+			return 'HY000';
+		}
+	}
 	
 	
 	function getLastInsertId() #DONE
@@ -726,7 +756,7 @@ class YADB_RecordSet_mysqli extends YADB_RecordSet
 	
 	function _close() #DONE
 	{
-		if (is_resource( $this->_rs ))
+		if ($this->_rs instanceof mysqli_result)
 			@ mysqli_free_result( $this->_rs );
 		$this->_rs = null;
 		return true;

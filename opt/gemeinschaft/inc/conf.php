@@ -95,7 +95,6 @@ ini_set('output_handler', '');
 	//ini_set('zlib.output_compression_level', 5);
 	//ini_set('zlib.output_handler', '');
 //}
-if (get_magic_quotes_runtime()) set_magic_quotes_runtime(0);
 //set_include_path('.');
 set_time_limit(65);
 
@@ -390,11 +389,11 @@ _gscnf( 'FAX_HYLAFAX_HOST'          , '127.0.0.1'        );
 _gscnf( 'FAX_HYLAFAX_PORT'          , 4559               );
 $FAX_HYLAFAX_ADMIN =
 	preg_replace('/[^a-z0-9\-_.]/i', '',
-	@$FAX_HYLAFAX_ADMIN );
+	(string)@$FAX_HYLAFAX_ADMIN );
 _gscnf( 'FAX_HYLAFAX_ADMIN'         , ''                 );
 $FAX_HYLAFAX_PASS  =
 	preg_replace('/[^a-z0-9\-_.]/i', '',
-	@$FAX_HYLAFAX_PASS  );
+	(string)@$FAX_HYLAFAX_PASS  );
 _gscnf( 'FAX_HYLAFAX_PASS'          , ''                 );
 _gscnf( 'FAX_HYLAFAX_PATH'          , '/var/spool/hylafax/' );
 _gscnf( 'FAX_INIT_DOCDIR'           , '/tmp/' );

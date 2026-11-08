@@ -52,7 +52,7 @@ class YADB_MPTT
 	*/
 	
 	# constructor for PHP 4
-	function YADB_MPTT( $conn, $table, $left, $right, $id )
+	function __construct( $conn, $table, $left, $right, $id )
 	{
 		if (! $conn || ! @is_a($conn, 'YADB_Connection')) {
 			trigger_error('First parameter passed must be a YaDB database connection.', E_USER_WARNING);
@@ -262,7 +262,7 @@ class YADB_MPTT
 		}
 	}
 	*/
-	function print_tree( $branch_id=null, $title_row )
+	function print_tree( $branch_id, $title_row )
 	{
 		$list = $this->get_tree_as_list( $branch_id );
 		if (! is_array($list)) return;

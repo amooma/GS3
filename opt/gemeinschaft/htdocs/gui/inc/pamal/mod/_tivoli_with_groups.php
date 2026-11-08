@@ -37,7 +37,7 @@ include_once( PAMAL_DIR .'mod/tivoli.php' );
 class PAMAL_auth_tivoli_with_groups extends PAMAL_auth_tivoli
 {
 	# constructor:
-	function PAMAL_auth_tivoli_with_groups() {
+	function __construct() {
 		$parent = get_parent_class($this);
 		parent::$parent();
 		$this->_groups = $this->_getGroups();

@@ -138,7 +138,7 @@ class GS_ProvParams_unknown
 	var $_params      = null;
 	
 	# constructor for PHP 4
-	function GS_ProvParams_unknown( $db=null )
+	function __construct( $db=null )
 	{
 		if ($db) {
 			$this->_db = $db;

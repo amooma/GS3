@@ -194,7 +194,7 @@ function _test_result( $str, $status )
 	<td>&nbsp;</td>
 	<td><?php
 		$k = 'magic_quotes_gpc';
-		$v = get_magic_quotes_gpc();
+		$v = false;  # removed from PHP
 		echo '<tt>', $k ,': ', php_ini_bool_verbose($v) ,'</tt>';
 	?></td>
 	<td><?php
@@ -206,7 +206,7 @@ function _test_result( $str, $status )
 	<td>&nbsp;</td>
 	<td><?php
 		$k = 'magic_quotes_runtime';
-		$v = get_magic_quotes_runtime();
+		$v = false;  # removed from PHP
 		echo '<tt>', $k ,': ', php_ini_bool_verbose($v) ,'</tt>';
 	?></td>
 	<td><?php

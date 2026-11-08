@@ -77,7 +77,7 @@ function gs_yadb_sql_query_cb_readonly( &$yadbConn, $sql, $bindParams=null )
 }
 
 
-function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, $_backtrace_level=0 )
+function gs_db_connect( &$conn/*=null*/, $tag, $host, $user, $pwd, $db=null, $_backtrace_level=0 )
 {
 	$caller_info = '';
 	if (GS_LOG_LEVEL >= GS_LOG_DEBUG) {
@@ -95,7 +95,7 @@ function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, 
 	}
 	gs_log( GS_LOG_DEBUG, 'New'. ($tag != '' ? ' '.str_pad($tag,6).'':'') .' DB connection' . $caller_info );
 	
-	if (!( $conn = YADB_newConnection( 'mysql' ) )) {
+	if (!( $conn = YADB_newConnection( 'mysqli' ) )) {
 		$conn = null;
 		return false;
 	}
@@ -116,6 +116,9 @@ function gs_db_connect( &$conn/*=null*/, $tag='', $host, $user, $pwd, $db=null, 
 		return false;
 	}
 	@ $conn->setCharSet( 'utf8', 'utf8_unicode_ci' );
+	# MySQL >= 5.7 is strict by default. The queries were written for the
+	# permissive mode of older versions, e.g. they rely on implicit defaults.
+	@ $conn->execute( "SET SESSION sql_mode=''" );
 	@ $conn->setQueryErrCb( 'gs_db_query_err_handler' );
 	
 	return 1;  # opened a new connection

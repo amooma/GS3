@@ -144,16 +144,11 @@ Gemeinschaft auf \"%s\"
 						}
 						elseif ($GS_EMAIL_DELIVERY === 'direct-smtp') {
 							
-							require_once( GS_DIR .'lib/phpmailer/class.phpmailer.php' );
-							$mail = new PHPMailer();
-							$mail->CharSet = 'utf-8';
-							$mail->SetLanguage(
-								strToLower(subStr( gs_get_conf('GS_INTL_LANG') ,0,2)),
-								GS_DIR .'lib/phpmailer/language/' );
+							require_once( GS_DIR .'inc/gs-mail.php' );
+							$mail = gs_mailer_new();
 							$mail->Hostname = $hostname;
 							$mail->From = 'root@'.$hostname;
 							$mail->FromName = 'Gemeinschaft';
-							$mail->AddReplyTo( '', 'Nicht antworten' );
 							$mail->AddAddress(
 								$u['email'],
 								(@$u['firstname'] != '' ? $u['firstname'] : '') .
@@ -174,7 +169,7 @@ Gemeinschaft auf \"%s\"
 								$mx_weights = array();
 								getMXRR($host, $mx_hosts, $mx_weights);
 								$mxs = array();
-								if (@count($mx_hosts) > 0) {
+								if (count((array)$mx_hosts) > 0) {
 									for($i=0; $i<count($mx_hosts); ++$i) {
 										$mxs[$mx_hosts[$i]] = @$mx_weights[$i];
 									}
@@ -184,7 +179,7 @@ Gemeinschaft auf \"%s\"
 								}
 								//echo "<pre>\n"; print_r($mxs); echo "</pre>\n";
 								
-								while (list($mx_host, $mx_weight) = each($mxs)) {
+								foreach ($mxs as $mx_host => $mx_weight) {
 									//echo "<b>$mx_host</b><br />\n";
 									@set_time_limit(30);
 									$mail->Host = $mx_host;

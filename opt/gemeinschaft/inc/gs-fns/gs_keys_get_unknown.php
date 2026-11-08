@@ -55,7 +55,7 @@ class GS_Softkeys_unknown
 	);
 	
 	# constructor for PHP 4
-	function GS_Softkeys_unknown( $db=null )
+	function __construct( $db=null )
 	{
 		if ($db) {
 			$this->_db = $db;

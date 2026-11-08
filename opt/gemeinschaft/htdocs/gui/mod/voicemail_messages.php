@@ -374,7 +374,7 @@ while ($msg = $rs->fetchRow()) {
 <tbody>
 <?php
 foreach ($folders as $folder => $folder_title) {
-	if ($folder=='INBOX' || $folder=='Old' || @count(@$msgs[$folder])>0) {
+	if ($folder=='INBOX' || $folder=='Old' || count((array)@$msgs[$folder])>0) {
 ?>
 <tr>
 	<th colspan="5" class="transp"><h3><?php echo $folder_title; ?></h3></th>

@@ -351,7 +351,7 @@ function _gs_prov_phone_checkcfg_by_ip_do_polycom( $ip, $reboot=true )
 	         . "To: <sip:". $dstext ."@". $dsthost .":5060>\r\n"
 	         . "SIP to address: sip:". $dstext ."@". $dsthost .":5060\r\n"
 	         . "Event: check-sync\r\n"
-	         . "Date: ". strftime("%c %z") ."\r\n"
+	         . "Date: ". gs_strftime("%c %z") ."\r\n"
 	         . "Call-ID: 1@". $srchost ."\r\n"
 	         . "CSeq: 1300 NOTIFY\r\n"
 	         . "Contact: <sip:". $srcext ."@". $srchost .">\r\n"

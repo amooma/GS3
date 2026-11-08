@@ -127,7 +127,7 @@ class UtfNormal
 	 * @return string a clean, shiny, normalized UTF-8 string
 	 * @static
 	 */
-	/*static*/ function cleanUp( $string )
+	static function cleanUp( $string )
 	{
 		if( NORMALIZE_ICU ) {
 			# We exclude a few chars that ICU would not.
@@ -160,7 +160,7 @@ class UtfNormal
 	 * @return string a UTF-8 string in normal form C
 	 * @static
 	 */
-	/*static*/ function toNFC( $string )
+	static function toNFC( $string )
 	{
 		if( NORMALIZE_ICU )
 			return utf8_normalize( $string, UNORM_NFC );
@@ -178,7 +178,7 @@ class UtfNormal
 	 * @return string a UTF-8 string in normal form D
 	 * @static
 	 */
-	/*static*/ function toNFD( $string )
+	static function toNFD( $string )
 	{
 		if( NORMALIZE_ICU )
 			return utf8_normalize( $string, UNORM_NFD );
@@ -197,7 +197,7 @@ class UtfNormal
 	 * @return string a UTF-8 string in normal form KC
 	 * @static
 	 */
-	/*static*/ function toNFKC( $string )
+	static function toNFKC( $string )
 	{
 		if( NORMALIZE_ICU )
 			return utf8_normalize( $string, UNORM_NFKC );
@@ -216,7 +216,7 @@ class UtfNormal
 	 * @return string a UTF-8 string in normal form KD
 	 * @static
 	 */
-	/*static*/ function toNFKD( $string )
+	static function toNFKD( $string )
 	{
 		if( NORMALIZE_ICU )
 			return utf8_normalize( $string, UNORM_NFKD );
@@ -231,7 +231,7 @@ class UtfNormal
 	 * @private
 	 * @static
 	 */
-	/*static*/ function loadData()
+	static function loadData()
 	{
 		return;  # --pk
 		# Warning: This is incomplete without loading the transliteration
@@ -251,7 +251,7 @@ class UtfNormal
 	 * @return bool
 	 * @static
 	 */
-	/*static*/ function quickIsNFC( $string )
+	static function quickIsNFC( $string )
 	{
 		# ASCII is always valid NFC!
 		# If it's pure ASCII, let it through.
@@ -261,7 +261,7 @@ class UtfNormal
 		global $utfCheckNFC, $utfCombiningClass;
 		$len = strlen( $string );
 		for( $i = 0; $i < $len; ++$i ) {
-			$c = $string{$i};
+			$c = $string[$i];
 			$n = ord( $c );
 			if( $n < 0x80 ) {
 				continue;
@@ -293,7 +293,7 @@ class UtfNormal
 	 * @param string $string a UTF-8 string, altered on output to be valid UTF-8 safe for XML.
 	 * @static
 	 */
-	/*static*/ function quickIsNFCVerify( &$string )
+	static function quickIsNFCVerify( &$string )
 	{
 		# Screen out some characters that eg won't be allowed in XML
 		$string = preg_replace( '/[\x00-\x08\x0b\x0c\x0e-\x1f]/', UTF8_REPLACEMENT, $string );
@@ -349,7 +349,7 @@ class UtfNormal
 		foreach( $matches[1] as $str ) {
 			$chunk = strlen( $str );
 			
-			if( $str{0} < "\x80" ) {
+			if( $str[0] < "\x80" ) {
 				# ASCII chunk: guaranteed to be valid UTF-8
 				# and in normal form C, so skip over it.
 				$base += $chunk;
@@ -367,12 +367,12 @@ class UtfNormal
 			$len = $chunk + 1; # Counting down is faster. I'm *so* sorry.
 			
 			for( $i = -1; --$len; ) {
-				if( $remaining = $tailBytes[$c = $str{++$i}] ) {
+				if( $remaining = $tailBytes[$c = $str[++$i]] ) {
 					# UTF-8 head byte!
 					$sequence = $head = $c;
 					do {
 						# Look for the defined number of tail bytes...
-						if( --$len && ( $c = $str{++$i} ) >= "\x80" && $c < "\xc0" ) {
+						if( --$len && ( $c = $str[++$i] ) >= "\x80" && $c < "\xc0" ) {
 							# Legal tail bytes are nice.
 							$sequence .= $c;
 						} else {
@@ -512,7 +512,7 @@ class UtfNormal
 	 * @private
 	 * @static
 	 */
-	/*static*/ function NFC( $string )
+	static function NFC( $string )
 	{
 		return UtfNormal::fastCompose( UtfNormal::NFD( $string ) );
 	}
@@ -523,7 +523,7 @@ class UtfNormal
 	 * @private
 	 * @static
 	 */
-	/*static*/ function NFD( $string )
+	static function NFD( $string )
 	{
 		global $utfCanonicalDecomp;
 		UtfNormal::loadData();
@@ -537,7 +537,7 @@ class UtfNormal
 	 * @private
 	 * @static
 	 */
-	/*static*/ function NFKC( $string )
+	static function NFKC( $string )
 	{
 		return UtfNormal::fastCompose( UtfNormal::NFKD( $string ) );
 	}
@@ -548,7 +548,7 @@ class UtfNormal
 	 * @private
 	 * @static
 	 */
-	/*static*/ function NFKD( $string )
+	static function NFKD( $string )
 	{
 		global $utfCompatibilityDecomp;
 		if( !isset( $utfCompatibilityDecomp ) ) {
@@ -570,13 +570,13 @@ class UtfNormal
 	 * @return string a UTF-8 string decomposed, not yet normalized (needs sorting)
 	 * @static
 	 */
-	/*static*/ function fastDecompose( $string, $map )
+	static function fastDecompose( $string, $map )
 	{
 		UtfNormal::loadData();
 		$len = strlen( $string );
 		$out = '';
 		for( $i = 0; $i < $len; ++$i ) {
-			$c = $string{$i};
+			$c = $string[$i];
 			$n = ord( $c );
 			if( $n < 0x80 ) {
 				# ASCII chars never decompose
@@ -603,9 +603,9 @@ class UtfNormal
 					# A lookup table would be slightly faster,
 					# but adds a lot of memory & disk needs.
 					#
-					$index = ( (ord( $c{0} ) & 0x0f) << 12
-					         | (ord( $c{1} ) & 0x3f) <<  6
-					         | (ord( $c{2} ) & 0x3f)       )
+					$index = ( (ord( $c[0] ) & 0x0f) << 12
+					         | (ord( $c[1] ) & 0x3f) <<  6
+					         | (ord( $c[2] ) & 0x3f)       )
 					         - UNICODE_HANGUL_FIRST;
 					$l = intval( $index / UNICODE_HANGUL_NCOUNT );
 					$v = intval( ($index % UNICODE_HANGUL_NCOUNT) / UNICODE_HANGUL_TCOUNT);
@@ -632,7 +632,7 @@ class UtfNormal
 	 * @return string a UTF-8 string with combining characters sorted in canonical order
 	 * @static
 	 */
-	/*static*/ function fastCombiningSort( $string )
+	static function fastCombiningSort( $string )
 	{
 		UtfNormal::loadData();
 		global $utfCombiningClass;
@@ -641,7 +641,7 @@ class UtfNormal
 		$combiners = array();
 		$lastClass = -1;
 		for( $i = 0; $i < $len; ++$i ) {
-			$c = $string{$i};
+			$c = $string[$i];
 			$n = ord( $c );
 			if( $n >= 0x80 ) {
 				if      ( $n >= 0xf0 ) {
@@ -687,7 +687,7 @@ class UtfNormal
 	 * @return string a UTF-8 string with canonical precomposed characters used where possible
 	 * @static
 	 */
-	/*static*/ function fastCompose( $string )
+	static function fastCompose( $string )
 	{
 		UtfNormal::loadData();
 		global $utfCanonicalComp, $utfCombiningClass;
@@ -700,7 +700,7 @@ class UtfNormal
 		$x1 = ord(substr(UTF8_HANGUL_VBASE,0,1));
 		$x2 = ord(substr(UTF8_HANGUL_TEND ,0,1));
 		for( $i = 0; $i < $len; ++$i ) {
-			$c = $string{$i};
+			$c = $string[$i];
 			$n = ord( $c );
 			if       ( $n < 0x80 ) {
 				# No combining characters here...
@@ -760,8 +760,8 @@ class UtfNormal
 					{
 						#$lIndex = utf8ToCodepoint( $startChar ) - UNICODE_HANGUL_LBASE;
 						#$vIndex = utf8ToCodepoint( $c         ) - UNICODE_HANGUL_VBASE;
-						$lIndex = ord( $startChar{2} ) - 0x80;
-						$vIndex = ord( $c{2}         ) - 0xa1;
+						$lIndex = ord( $startChar[2] ) - 0x80;
+						$vIndex = ord( $c[2]         ) - 0xa1;
 						
 						$hangulPoint = UNICODE_HANGUL_FIRST +
 							UNICODE_HANGUL_TCOUNT *
@@ -783,23 +783,23 @@ class UtfNormal
 					&& !$lastHangul )
 					{
 						# $tIndex = utf8ToCodepoint( $c ) - UNICODE_HANGUL_TBASE;
-						$tIndex = ord( $c{2} ) - 0xa7;
-						if( $tIndex < 0 ) $tIndex = ord( $c{2} ) - 0x80 + (0x11c0 - 0x11a7);
+						$tIndex = ord( $c[2] ) - 0xa7;
+						if( $tIndex < 0 ) $tIndex = ord( $c[2] ) - 0x80 + (0x11c0 - 0x11a7);
 						
 						# Increment the code point by $tIndex, without
 						# the function overhead of decoding and recoding UTF-8
 						#
-						$tail = ord( $startChar{2} ) + $tIndex;
+						$tail = ord( $startChar[2] ) + $tIndex;
 						if( $tail > 0xbf ) {
 							$tail -= 0x40;
-							$mid = ord( $startChar{1} ) + 1;
+							$mid = ord( $startChar[1] ) + 1;
 							if( $mid > 0xbf ) {
-								$startChar{0} = chr( ord( $startChar{0} ) + 1 );
+								$startChar[0] = chr( ord( $startChar[0] ) + 1 );
 								$mid -= 0x40;
 							}
-							$startChar{1} = chr( $mid );
+							$startChar[1] = chr( $mid );
 						}
-						$startChar{2} = chr( $tail );
+						$startChar[2] = chr( $tail );
 						
 						# If there's another jamo char after this, *don't* try to merge it.
 						$lastHangul = 1;
@@ -825,12 +825,12 @@ class UtfNormal
 	 * @return string
 	 * @static
 	 */
-	/*static*/ function placebo( $string )
+	static function placebo( $string )
 	{
 		$len = strlen( $string );
 		$out = '';
 		for( $i = 0; $i < $len; ++$i ) {
-			$out .= $string{$i};
+			$out .= $string[$i];
 		}
 		return $out;
 	}

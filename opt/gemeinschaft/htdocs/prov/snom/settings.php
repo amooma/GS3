@@ -725,8 +725,8 @@ if (! isGsError($cf) && is_array($cf)) {
 	}
 }
 psetting('dnd_mode'               , $dnd_mode, true);
-psetting('dnd_on_code'            , 'dnd-on@'. $host));
-psetting('dnd_off_code'           , 'dnd-off@'. $host));
+psetting('dnd_on_code'            , 'dnd-on@'. $host);
+psetting('dnd_off_code'           , 'dnd-off@'. $host);
 psetting('preselection_nr'        , '');
 
 

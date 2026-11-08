@@ -228,19 +228,20 @@ function gs_agi_err( $msg='')
 
 function gs_err_handler_agi( $type, $msg, $file, $line )
 {
+	if (gs_err_is_benign( $type, $msg, $file, $line )) return true;
 	switch ($type) {
 		case E_NOTICE:
 		case E_USER_NOTICE:
 		case E_DEPRECATED:
 		case E_USER_DEPRECATED:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				gs_log( GS_LOG_NOTICE, 'PHP: '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
 				//gs_log( GS_LOG_DEBUG , 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
 			}
 			break;
 		case E_STRICT:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				gs_log( GS_LOG_DEBUG, 'PHP (Strict): '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
 				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line );
@@ -257,7 +258,7 @@ function gs_err_handler_agi( $type, $msg, $file, $line )
 		case E_WARNING:
 		case E_USER_WARNING:
 		default:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
 				gs_agi_err('A warning occurred. See log for details.');
 			} else {  # suppressed by @

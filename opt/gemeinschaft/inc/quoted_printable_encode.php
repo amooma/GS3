@@ -28,7 +28,7 @@
 defined('GS_VALID') or die('No direct access.');
 
 
-function quoted_printable_encode( $str, $wrap=true )
+function gs_quoted_printable_encode( $str, $wrap=true )
 {
 	$ret = '';
 	$l = strLen($str);

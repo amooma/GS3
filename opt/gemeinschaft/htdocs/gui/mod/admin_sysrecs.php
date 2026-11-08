@@ -570,7 +570,7 @@ if(@$rs)
 		unset($r_length); unset($r_created);
 		$r_length = (floor($r['length'] / 60)).":". sprintf("%02d", ($r['length'] % 60));
 
-		$r_created = strftime("%d.%m.%y,&nbsp;%H:%M:%S", $r['date']);
+		$r_created = gs_strftime("%d.%m.%y,&nbsp;%H:%M:%S", $r['date']);
 
 		echo "<tr class=\"". ((++$i % 2) ? "odd" : "even") ."\">\n";
 

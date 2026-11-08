@@ -30,7 +30,7 @@ defined('GS_VALID') or die('No direct access.');
 require_once( GS_DIR .'inc/quote_shell_arg.php' );
 
 
-function remote_exec( $host, $cmd, $timeout=10, &$out, &$err )
+function remote_exec( $host, $cmd, $timeout, &$out, &$err )
 {
 	$host = trim($host);
 	if ($host=='') return false;

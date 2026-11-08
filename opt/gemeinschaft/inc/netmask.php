@@ -70,7 +70,7 @@ function ip_addr_in_network( $ip, $networkDef )
 	//echo "netmask: $nMaskBin\n";
 	
 	for ($i=0; $i<32; ++$i) {
-		if ($nMaskBin{$i}=='1' && ($ipBin{$i} != $nIpBin{$i}))
+		if ($nMaskBin[$i]=='1' && ($ipBin[$i] != $nIpBin[$i]))
 			return false;
 	}
 	return true;
@@ -103,7 +103,7 @@ function ip_addr_network_add_sub( $network, $sub_ip )
 	$binary_ip  = '';
 	for ($i=0; $i<32; ++$i) {
 		$binary_ip .=
-			($binary_net{$i}=='1' || $binary_sub{$i}=='1') ? '1':'0';
+			($binary_net[$i]=='1' || $binary_sub[$i]=='1') ? '1':'0';
 	}
 	$ip = long2ip(binDec( $binary_ip ));
 	return $ip ? $ip : false;

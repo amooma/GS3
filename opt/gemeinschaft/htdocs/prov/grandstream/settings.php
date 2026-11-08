@@ -185,10 +185,15 @@ include_once( GS_DIR .'htdocs/prov/grandstream/grandstream-fns.php' );
 
 $settings = array();
 
+function _gs_prov_urlencode_char( $m )
+{
+	return ($m[1] === ' ') ? '+' : sprintf('%%%02x', ord($m[1]));
+}
+
 function psetting( $name, $val='' )
 {
 	global $settings;
-	if (! preg_match('/^P[0-9]{1,4}$/S', $name)) continue;
+	if (! preg_match('/^P[0-9]{1,4}$/S', $name)) return;
 	$settings[$name] = $val;
 }
 
@@ -197,7 +202,7 @@ function _settings_out()
 	global $settings;
 	$data = '';
 	foreach ($settings as $name => $val) {
-		$val = preg_replace("/([^A-Za-z0-9.*_\-])/e", "('$1' == ' ') ? '+' : sprintf('%%%02x',ord('$1'))", $val);
+		$val = preg_replace_callback('/([^A-Za-z0-9.*_\-])/', '_gs_prov_urlencode_char', $val);
 		$data .= $name .'='. $val .'&';
 	}
 	$data .= 'gnkey=0b82';
@@ -212,7 +217,7 @@ function xml_output()
 		'<gs_provision version="1">'."\n".
 		'<config version="1">'."\n";
 	foreach ($settings as $name => $val) {
-		$val = preg_replace("/([^A-Za-z0-9.*_\-])/e", "('$1' == ' ') ? '+' : sprintf('%%%02x',ord('$1'))", $val);
+		$val = preg_replace_callback('/([^A-Za-z0-9.*_\-])/', '_gs_prov_urlencode_char', $val);
 		$data .= '<'.$name.'>'.urldecode($val).'</'.$name.'>'."\n";
 	}
 	$data .= '</config>'."\n";

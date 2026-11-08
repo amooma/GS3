@@ -35,7 +35,7 @@ defined('PAMAL_DIR') or die('No direct access.');
 class PAMAL_auth_webseal extends PAMAL_auth
 {
 	# constructor:
-	function PAMAL_auth_webseal()
+	function __construct()
 	{
 		$this->_user = $this->_getUser();
 	}

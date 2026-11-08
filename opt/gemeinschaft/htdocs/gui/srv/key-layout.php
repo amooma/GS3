@@ -77,11 +77,11 @@ function _get_key_label($knump)
 		if (array_key_exists('slf', $key_defs)) {
 			if (strlen($key_defs['slf']['label']) > 12)
 				$key_defs['slf']['label'] = substr($key_defs['slf']['label'], 0, 10) . '...';
-			return utf8_decode($key_defs['slf']['label']);
+			return mb_convert_encoding($key_defs['slf']['label'], 'ISO-8859-1', 'UTF-8');
 		} elseif (array_key_exists('inh', $key_defs)) {
 			if (strlen($key_defs['inh']['label']) > 12)
 				$key_defs['inh']['label'] = substr($key_defs['inh']['label'], 0, 10) . '...';
-			return utf8_decode($key_defs['inh']['label']);
+			return mb_convert_encoding($key_defs['inh']['label'], 'ISO-8859-1', 'UTF-8');
 		}
 	}
 	
@@ -97,7 +97,7 @@ class PDF extends FPDF {
 	function Header() {
 		$this->SetFont('Arial', 'B', 15);
 		$label = __('Tastenbeschriftung') .' '. __('von') .' '. $this->firstname .' '. $this->lastname .' ('. $this->ext .')';
-		$this->Cell(0, 10, utf8_decode($label), 0, 0, 'C');
+		$this->Cell(0, 10, mb_convert_encoding($label, 'ISO-8859-1', 'UTF-8'), 0, 0, 'C');
 		//$this->Ln(20);
 	}
 

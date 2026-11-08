@@ -74,10 +74,10 @@
 		
 		settype($args, 'array');
 		if ($long_options) sort($long_options);
-		if (isset($args[0]{0}) && $args[0]{0} != '-') array_shift($args);
+		if (isset($args[0][0]) && $args[0][0] != '-') array_shift($args);
 		reset($args);
 		
-		while (list($i, $arg) = each($args)) {
+		while (list($i, $arg) = _getopt_each($args)) {
 			
 			/* The special element '--' means explicit end of
 			   options. Treat the rest of the arguments as non-options
@@ -87,10 +87,10 @@
 				break;
 			}
 			
-			if ($arg{0} != '-' || (strlen($arg) > 1 && $arg{1} == '-' && !$long_options)) {
+			if ($arg[0] != '-' || (strlen($arg) > 1 && $arg[1] == '-' && !$long_options)) {
 				$non_opts = array_merge($non_opts, array_slice($args, $i));
 				break;
-			} elseif (strlen($arg) > 1 && $arg{1} == '-') {
+			} elseif (strlen($arg) > 1 && $arg[1] == '-') {
 				$error = _Console_Getopt_parseLongOption(substr($arg, 2), $long_options, $opts, $args);
 				if (Getopt_isError($error))
 					handleGetOptError( $error, $short_options, $long_options, $cliHelp );
@@ -110,15 +110,15 @@
 	function _Console_Getopt_parseShortOption( $arg, $short_options, &$opts, &$args )
 	{
 		for ($i = 0; $i < strlen($arg); $i++) {
-			$opt = $arg{$i};
+			$opt = $arg[$i];
 			$opt_arg = null;
 			
 			/* Try to find the short option in the specifier string. */
-			if (($spec = strstr($short_options, $opt)) === false || $arg{$i} == ':')
+			if (($spec = strstr($short_options, $opt)) === false || $arg[$i] == ':')
 				return new Getopt_Error("unrecognized option -- $opt");
 			
-			if (strlen($spec) > 1 && $spec{1} == ':') {
-				if (strlen($spec) > 2 && $spec{2} == ':') {
+			if (strlen($spec) > 1 && $spec[1] == ':') {
+				if (strlen($spec) > 2 && $spec[2] == ':') {
 					if ($i + 1 < strlen($arg)) {
 						/* Option takes an optional argument. Use the remainder of
 						   the arg string if there is anything left. */
@@ -131,7 +131,7 @@
 					if ($i + 1 < strlen($arg)) {
 						$opts[] = array($opt,  substr($arg, $i + 1));
 						break;
-					} else if (list(, $opt_arg) = each($args))
+					} else if (list(, $opt_arg) = _getopt_each($args))
 						/* Else use the next argument. */;
 					else
 						return new Getopt_Error("option requires an argument -- $opt");
@@ -162,7 +162,7 @@
 			
 			/* Check that the options uniquely matches one of the allowed
 			   options. */
-			if ($opt_rest != '' && $opt{0} != '=' &&
+			if ($opt_rest != '' && $opt[0] != '=' &&
 				$i + 1 < count($long_options) &&
 				$opt == substr($long_options[$i+1], 0, $opt_len)) {
 				return new Getopt_Error("option --$opt is ambiguous");
@@ -172,10 +172,10 @@
 				if (substr($long_opt, -2) != '==') {
 					/* Long option requires an argument.
 					   Take the next argument if one wasn't specified. */
-					//if (!$opt_arg && !(list(, $opt_arg) = each($args)))
+					//if (!$opt_arg && !(list(, $opt_arg) = _getopt_each($args)))
 					//var_dump($opt_arg);
 					if ( ($opt_arg===null || $opt_arg===false)
-					  && !(list(, $opt_arg) = each($args)) )   // fixed to allow empty strings --philipp
+					  && !(list(, $opt_arg) = _getopt_each($args)) )   // fixed to allow empty strings --philipp
 						return new Getopt_Error("option --$opt requires an argument");
 				}
 			} else if ($opt_arg) {
@@ -228,11 +228,21 @@
 \*******************************************************************/
 
 
+# replacement for each(), which was removed in PHP 8
+function _getopt_each( array &$array )
+{
+	$key = key($array);
+	if ($key === null) return false;
+	$val = current($array);
+	next($array);
+	return array( 0=>$key, 1=>$val, 'key'=>$key, 'value'=>$val );
+}
+
 class Getopt_Error {
 	var $isErr = true;
 	var $msg = '';
 	
-	function Getopt_Error($msg)
+	function __construct($msg)
 	{
 		$this->msg = $msg;
 	}

@@ -73,10 +73,7 @@ if (@fileSize($leases_file) > 1000000) {
 
 function un_octal_escape( $str )
 {
-	return preg_replace_callback('/\\\([0-7]{1,3})/S', create_function(
-		'$m',
-		'return chr(octDec($m[1]));'
-	), $str);
+	return preg_replace_callback('/\\\([0-7]{1,3})/S', function( $m ) { return chr(octDec($m[1])); }, $str);
 }
 
 function binary_to_hex( $str )
@@ -85,7 +82,7 @@ function binary_to_hex( $str )
 	$c = strLen($str);
 	for ($i=0; $i<$c; ++$i) {
 		if ($i !== 0) $ret .= '-';
-		$ret .= str_pad(decHex(ord(@$str{$i})),2,'0',STR_PAD_LEFT);
+		$ret .= str_pad(decHex(ord(@$str[$i])),2,'0',STR_PAD_LEFT);
 	}
 	return $ret;
 }

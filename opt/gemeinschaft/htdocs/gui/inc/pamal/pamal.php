@@ -39,7 +39,7 @@ class PAMAL_auth
 	var $_groups = array();
 	
 	# constructor:
-	function PAMAL_auth() { die(get_class($this) .' is an abstract class!'); }
+	function __construct() { die(get_class($this) .' is an abstract class!'); }
 	
 	# returns the identifier of the authenticated user:
 	function getUser()   { return $this->_user; }
@@ -95,7 +95,7 @@ class PAMAL
 	var $_user       = false;
 	var $_groups     = false;
 	
-	function PAMAL( $method, $fnMap=false )
+	function __construct( $method, $fnMap=false )
 	{
 		$this->_authObj = new_PAMAL_auth( $method );
 		

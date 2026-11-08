@@ -117,7 +117,7 @@ VALUES
 function ael_file_realname( $file )
 {
 	global $etc_asterisk;
-	return (@ $file{0} == '/') ? $file : ($etc_asterisk . $file);
+	return (@ $file[0] == '/') ? $file : ($etc_asterisk . $file);
 }
 
 function ael_get_file_content( $file )

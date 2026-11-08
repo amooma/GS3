@@ -915,42 +915,15 @@ while ($r = $rs->fetchRow()) {
 </thead>
 <tbody>
 <?php
-	$oldLocale = setLocale(LC_TIME, '0'); # probably "C"
 	$lang = @$_SESSION['lang'];
 	if (! $lang)
 		$lang = gs_get_conf('GS_INTL_LANG', 'de_DE');
 	$lang = strToLower(subStr($lang,0,2));
-	switch ($lang) {
-		case 'de':
-		$l = array('de_DE.UTF-8', 'de_DE.utf8', 'de_DE.iso88591', 'de_DE.iso885915@euro', 'de_DE.ISO8859-1', 'de_DE.ISO8859-15', 'de_DE@euro', 'de_DE', 'de');
-		break;
-	case 'en':
-		$l = array('en_US.utf8', 'en_US.iso88591', 'en_US.ISO8859-1', 'en_US.US-ASCII', 'en_US', 'en');
-		break;
-	default  :
-		$l = array('C');
-	}
-	$lfound = setLocale(LC_TIME, $l);
-	if ($lfound === false) {
-	$err=0; $out=array();
-		exec('locale -a | grep -i '. qsa('^'.$lang.'_') .' 2>>/dev/null', $out, $err);
-		if ($err != 0)
-			gs_log( GS_LOG_NOTICE, 'Failed to find locales on your system' );
-		else {
-			$lfound = setLocale(LC_TIME, $out);
-			if ($lfound === false) {
-				gs_log( GS_LOG_NOTICE, 'Your system does not have any locales like "'. $lang .'_*"' );
-			} else {
-				gs_log( GS_LOG_NOTICE, 'Using locale "'. $lfound .'" as a fallback' );
-			}
-		}
-	}
 	$wdays = array('mo'=>'Mon', 'tu'=>'Tue', 'we'=>'Wed', 'th'=>'Thu', 'fr'=>'Fri', 'sa'=>'Sat', 'su'=>'Sun');
 	$wdaysl = array();
 	foreach ($wdays as $col => $wdca)
-		$wdaysl[$col] = mb_subStr(strFTime('%a', strToTime('last '.$wdca)),0,1);
+		$wdaysl[$col] = mb_subStr(gs_strftime('%a', strToTime('last '.$wdca), $lang),0,1);
 	unset($wdays);
-	setLocale(LC_TIME, array($oldLocale, 'C'));
 
 
 	$i=0;

@@ -43,6 +43,7 @@ if (! defined('E_USER_DEPRECATED'  )) define('E_USER_DEPRECATED'  , 1<<14); # si
 
 function err_handler_configtest( $type, $msg, $file, $line )
 {
+	if (function_exists('gs_err_is_benign') && gs_err_is_benign( $type, $msg, $file, $line )) return true;
 	global $exit_code;
 	
 	switch ($type) {
@@ -50,14 +51,14 @@ function err_handler_configtest( $type, $msg, $file, $line )
 		case E_USER_NOTICE:
 		case E_DEPRECATED:
 		case E_USER_DEPRECATED:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				echo 'Notice: '. $msg .' in '. $file .' on line '. $line ."\n";
 			} else {  # suppressed by @
 				//echo 'Notice: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' ."\n";
 			}
 			break;
 		case E_STRICT:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				echo 'Strict notice: '. $msg .' in '. $file .' on line '. $line ."\n";
 			} else {  # suppressed by @
 				//echo 'Strict notice: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' ."\n";
@@ -75,7 +76,7 @@ function err_handler_configtest( $type, $msg, $file, $line )
 			break;
 		case E_WARNING:
 		case E_USER_WARNING:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				echo 'Warning: '. $msg .' in '. $file .' on line '. $line ."\n";
 				$exit_code = 1;
 				@ob_end_flush();

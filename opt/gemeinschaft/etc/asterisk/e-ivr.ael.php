@@ -94,7 +94,7 @@ if (! $db) die();
 
 
 $rs = $db->execute(
-	'SELECT  * FROM `ivrs` ORDER BY  `id'
+	'SELECT  * FROM `ivrs` ORDER BY `id`'
 );
 
 if (! $rs) {

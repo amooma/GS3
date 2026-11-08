@@ -58,7 +58,7 @@ class CanonicalPhoneNumber
 	
 	/* constructor:
 	 */
-	function CanonicalPhoneNumber( $number )
+	function __construct( $number )
 	{
 		$this->_INTL = $this->_cnf('GS_CANONIZE_INTL_PREFIX' , '00' );
 		if ($this->_INTL === '+' || $this->_INTL == '')

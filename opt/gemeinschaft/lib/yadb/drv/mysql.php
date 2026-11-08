@@ -61,10 +61,10 @@ class YADB_Connection_mysql extends YADB_Connection
 	var $_drvSrvVers      = null;
 	
 	
-	function YADB_Connection_mysql( $dbtype )
+	function __construct( $dbtype )
 	{
 		//parent::__construct( $dbtype );
-		parent::YADB_Connection( $dbtype );
+		parent::__construct( $dbtype );
 		if (!extension_loaded('mysql')) {
 			trigger_error( 'YADB: mysql extension not available.', E_USER_WARNING );
 			$this->_drvLoadErr = true;

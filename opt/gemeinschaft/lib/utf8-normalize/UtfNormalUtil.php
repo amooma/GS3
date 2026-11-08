@@ -85,9 +85,9 @@ function hexSequenceToUtf8( $sequence )
  */
 function utf8ToHexSequence( $str )
 {
-	return rtrim( preg_replace(
-		'/(.)/uSe',
-		'sprintf("%04x ", utf8ToCodepoint("$1"))',
+	return rtrim( preg_replace_callback(
+		'/(.)/uS',
+		function( $m ) { return sprintf("%04x ", utf8ToCodepoint($m[1])); },
 		$str ) );
 }
 
@@ -102,7 +102,7 @@ function utf8ToHexSequence( $str )
 function utf8ToCodepoint( $char )
 {
 	# Find the length
-	$z = ord( $char{0} );
+	$z = ord( $char[0] );
 	if ( $z & 0x80 ) {
 		$length = 0;
 		while ( $z & 0x80 ) {
@@ -127,7 +127,7 @@ function utf8ToCodepoint( $char )
 	# Add in the free bits from subsequent bytes
 	for ( $i=1; $i<$length; ++$i ) {
 		$z <<= 6;
-		$z  |= ord( $char{$i} ) & 0x3f;
+		$z  |= ord( $char[$i] ) & 0x3f;
 	}
 	
 	return $z;

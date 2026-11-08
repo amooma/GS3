@@ -29,7 +29,7 @@ defined('PAMAL_DIR') or die('No direct access.');
 
 class PAMAL_auth_ldap extends PAMAL_auth
 {
-	function PAMAL_auth_ldap()
+	function __construct()
 	{
 		$this->_user = $this->_getUser();
 	}

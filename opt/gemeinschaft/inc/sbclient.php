@@ -25,7 +25,7 @@ class SBClient {
 	
 	var $gsserversocket;
 	
-	function SBClient($server_ip, $server_port, $timeout = 1)
+	function __construct($server_ip, $server_port, $timeout = 1)
 	{
 		$this->connect($server_ip, $server_port, $timeout);
 
@@ -34,21 +34,20 @@ class SBClient {
 	function connect($server_ip, $server_port, $timeout = 1)
 	{
 		$sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+		if (! $sock) {
+			return false;
+		}
 		socket_set_option($sock,SOL_SOCKET, SO_RCVTIMEO, array('sec'=>$timeout, 'usec'=>0));
 		socket_connect($sock, $server_ip, $server_port);
 
-		if (! is_resource($sock)) {
-			return false;
-		} else {
-			$this->gsserversocket = $sock;
-			return true;
-		}
+		$this->gsserversocket = $sock;
+		return true;
        
 	}
 
 	function close()
 	{
-		if (! is_resource($this->gsserversocket)) {
+		if (! ($this->gsserversocket instanceof Socket)) {
 			return false;
 		} else {
 			socket_close($this->gsserversocket);
@@ -61,7 +60,7 @@ class SBClient {
 		$msg_data = pack('SSS', $this->PREAMBLE, $msg_type, $msg_len);
 		$msg_data .= $data;
 
-		if (! is_resource($this->gsserversocket)) {
+		if (! ($this->gsserversocket instanceof Socket)) {
 			return false;
 		} else {
 			return socket_write($this->gsserversocket, $msg_data);
@@ -125,7 +124,7 @@ class SBClient {
 	}
 
 	function receive() {
-		if (! is_resource($this->gsserversocket)) {
+		if (! ($this->gsserversocket instanceof Socket)) {
 			return false;
 		}
 

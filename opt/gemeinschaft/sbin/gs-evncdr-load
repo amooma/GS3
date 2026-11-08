@@ -76,15 +76,16 @@ if (! defined('E_STRICT')) define('E_STRICT', 2048);
 
 function _err_handler( $type, $msg, $file, $line )
 {
+	if (gs_err_is_benign( $type, $msg, $file, $line )) return true;
 	switch ($type) {
 		case E_NOTICE:
 		case E_USER_NOTICE:
-			if (error_reporting() != 0) {  # suppressed by @
+			if (error_reporting() & $type) {  # suppressed by @
 				gs_log( GS_LOG_NOTICE, 'PHP: '. $msg .' in '. $file .' on line '. $line );
 			}
 			break;
 		case E_STRICT:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				gs_log( GS_LOG_DEBUG, 'PHP (Strict): '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
 				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line );

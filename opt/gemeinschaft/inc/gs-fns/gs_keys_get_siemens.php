@@ -54,7 +54,7 @@ class GS_Softkeys_siemens
 	);
 	
 	# constructor for PHP 4
-	function GS_Softkeys_siemens( $db=null )
+	function __construct( $db=null )
 	{
 		if ($db) {
 			$this->_db = $db;

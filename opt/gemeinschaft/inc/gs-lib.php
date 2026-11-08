@@ -50,7 +50,7 @@ class GsError
 {
 	var $_msg = '';
 	// the constructor:
-	function GsError( $msg ) {
+	function __construct( $msg ) {
 		$this->_msg = $msg;
 	}
 	function getMsg() {

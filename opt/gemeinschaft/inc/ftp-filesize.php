@@ -38,7 +38,7 @@ class GS_FTP_FileSize
 	var $_conn_failed = false;
 	
 	# constructor for PHP 4
-	function GS_FTP_FileSize()
+	function __construct()
 	{
 	}
 	
@@ -122,7 +122,7 @@ class GS_FTP_FileSize
 			$file_size = -1;
 			@ftp_raw( $this->_conn, 'TYPE I' );  # binary mode
 			$out = @ftp_raw( $this->_conn, 'SIZE '. ($chdir ? baseName($file) : $file) );
-			if (@count($out) < 1) {
+			if (count((array)$out) < 1) {
 				gs_log( GS_LOG_NOTICE, 'FTP server '. $this->_host .' did not answer the SIZE command' );
 			}
 			else {

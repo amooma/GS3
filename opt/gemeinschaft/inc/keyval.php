@@ -39,10 +39,10 @@ function gs_keyval_enc( $str )
 {
 	/*
 	return str_replace(' ', '=20',
-		quoted_printable_encode($str, false));
+		gs_quoted_printable_encode($str, false));
 	*/
 	
-	$str = quoted_printable_encode($str, false);
+	$str = gs_quoted_printable_encode($str, false);
 	
 	# encode trailing spaces:
 	do { $str = preg_replace('/ ( *)$/', '=20$1', $str, -1, $cnt); }

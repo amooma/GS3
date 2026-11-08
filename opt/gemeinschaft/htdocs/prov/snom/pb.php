@@ -229,7 +229,7 @@ $keyPatternsLike = array(  # for the LIKE comparison
 $keys = preg_replace('/[^0-9AH]/', '', @$_REQUEST['k']);
 $regex = '';
 for ($i=0; $i<strLen($keys); ++$i) {
-	$regex .= @$keyPatterns[$keys{$i}];
+	$regex .= @$keyPatterns[$keys[$i]];
 }
 
 
@@ -294,10 +294,10 @@ if ($type === 'imported') {
 	
 	$likeFn = false;
 	$likeLn = false;
-	if (strLen($keys) > 0 && is_array($keyPatternsLike[$keys{0}])) {
+	if (strLen($keys) > 0 && is_array($keyPatternsLike[$keys[0]])) {
 		$likeFn = array();
 		$likeLn = array();
-		foreach ($keyPatternsLike[$keys{0}] as $char) {
+		foreach ($keyPatternsLike[$keys[0]] as $char) {
 			$l = 'LIKE \''. $db->escape($char) .'%\'';
 			$likeFn[] = '`firstname` '. $l;
 			$likeLn[] = '`lastname` '.  $l;
@@ -376,10 +376,10 @@ if ($type === 'gs') {
 	
 	$likeFn = false;
 	$likeLn = false;
-	if (strLen($keys) > 0 && is_array($keyPatternsLike[$keys{0}])) {
+	if (strLen($keys) > 0 && is_array($keyPatternsLike[$keys[0]])) {
 		$likeFn = array();
 		$likeLn = array();
-		foreach ($keyPatternsLike[$keys{0}] as $char) {
+		foreach ($keyPatternsLike[$keys[0]] as $char) {
 			$l = 'LIKE \''. $db->escape($char) .'%\'';
 			$likeFn[] = '`u`.`firstname` '. $l;
 			$likeLn[] = '`u`.`lastname` '.  $l;
@@ -469,10 +469,10 @@ if ($type === 'prv') {
 	
 	$likeFn = false;
 	$likeLn = false;
-	if (strLen($keys) > 0 && is_array($keyPatternsLike[$keys{0}])) {
+	if (strLen($keys) > 0 && is_array($keyPatternsLike[$keys[0]])) {
 		$likeFn = array();
 		$likeLn = array();
-		foreach ($keyPatternsLike[$keys{0}] as $char) {
+		foreach ($keyPatternsLike[$keys[0]] as $char) {
 			$l = 'LIKE \''. $db->escape($char) .'%\'';
 			$likeFn[] = '`firstname` '. $l;
 			$likeLn[] = '`lastname` '.  $l;

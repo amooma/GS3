@@ -378,8 +378,7 @@ if (! array_key_exists($SECTION, $MODULES)
 }
 
 if (count( $MODULES[$SECTION]['sub'] ) < 2) {
-	list($k,$v) = each( $MODULES[$SECTION]['sub'] );
-	$MODULE = $k;
+	$MODULE = array_key_first( $MODULES[$SECTION]['sub'] );
 }
 
 if (! $MODULE) {

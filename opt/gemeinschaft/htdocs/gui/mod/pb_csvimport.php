@@ -179,9 +179,9 @@ if ($action === 'preview' || $action === 'import') {
 				$fn = trim(@$csv[$col_fn-1]);
 				$nr = trim(@$csv[$col_nr-1]);
 				if ($enc==='iso88591') {
-					$ln = utf8_encode($ln);
-					$fn = utf8_encode($fn);
-					$nr = utf8_encode($nr);
+					$ln = mb_convert_encoding($ln, 'UTF-8', 'ISO-8859-1');
+					$fn = mb_convert_encoding($fn, 'UTF-8', 'ISO-8859-1');
+					$nr = mb_convert_encoding($nr, 'UTF-8', 'ISO-8859-1');
 				}
 				if ($ln==='' && $fn==='' && $nr==='') continue;
 				

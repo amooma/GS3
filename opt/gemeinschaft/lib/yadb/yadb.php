@@ -160,8 +160,6 @@ else
 	trigger_error('YADB: PHP >= 4.3 required.', E_USER_ERROR);
 
 
-@ set_magic_quotes_runtime(0);
-@ ini_set('magic_quotes_gpc', 0);
 
 
 /***********************************************************
@@ -215,6 +213,7 @@ class YADB_Connection
 	var $_dbType          = '';
 	var $_conn            = null;  /// the connection resource
 	var $_host            = null;
+	var $_db              = null;
 	var $_port            = null;
 	var $_socket          = null;
 	var $_user            = null;
@@ -260,7 +259,7 @@ class YADB_Connection
 	* The constructor (PHP 4). Calls __construct().
 	***********************************************************/
 	
-	function YADB_Connection( $dbType )
+	function __construct( $dbType )
 	{
 		//$this->__construct( $dbType );
 		
@@ -461,9 +460,7 @@ class YADB_Connection
 	
 	
 	/***********************************************************
-	* Escapes quotes in a string. Respects
-	* get_magic_quotes_gpc(). This undoes the stupidity of
-	* magic quotes for GPC.
+	* Escapes quotes in a string.
 	*
 	* Example: $db->escape("Don't bother");
 	*
@@ -473,21 +470,9 @@ class YADB_Connection
 	
 	function escape( $str )
 	{
-		if (!get_magic_quotes_gpc()) {
-			if ($this->_replaceQuote[0]==='\\')
-				$str = str_replace( array('\\',"\0"), array('\\\\',"\\\0"), $str );
-			return str_replace( '\'', $this->_replaceQuote, $str );
-		}
-		
-		// undo magic quotes for " :
-		$str = str_replace( '\\"', '"' , $str );
-		
-		if ($this->_replaceQuote==='\\\'') return $str;
-		// ' already quoted, no need to change anything
-		else {  // change \' to '' for sybase/mssql
-			$str = str_replace( '\\\\', '\\', $str );
-			return str_replace( '\\\'', $this->_replaceQuote, $str );
-		}
+		if ($this->_replaceQuote[0]==='\\')
+			$str = str_replace( array('\\',"\0"), array('\\\\',"\\\0"), $str );
+		return str_replace( '\'', $this->_replaceQuote, $str );
 	}
 	
 	
@@ -1440,7 +1425,7 @@ class YADB_Statement
 	var $_sql   = '';   /// plain SQL
 	var $_drv   = '';   /// YADB driver used to prepare the stmt
 	var $_stmt  = null; /// prepared statement. depends on driver
-	function YADB_Statement( $sql, $driver, $stmt )
+	function __construct( $sql, $driver, $stmt )
 	{
 		$this->_sql  = $sql;
 		$class = 'YADB_Connection_'. $driver;
@@ -1536,7 +1521,7 @@ class YADB_RecordSet extends YADB_BaseRS
 	* $this->YADB_RecordSet( $rs );   or
 	* parent::YADB_RecordSet( $rs );
 	***********************************************************/
-	function YADB_RecordSet( &$rs, &$conn, $sql )
+	function __construct( &$rs, &$conn, $sql )
 	{
 		$this->_rs = $rs;
 		$this->_conn = $conn;
@@ -1820,7 +1805,7 @@ class YADB_RecordObject
 	var $_pkVal  = null;
 	var $_fields = null;
 	
-	function YADB_RecordObject( &$conn, $table, $pkCol, $pkVal, $fields )
+	function __construct( &$conn, $table, $pkCol, $pkVal, $fields )
 	{
 		// we don't do any checking here for quick creation of
 		// the object

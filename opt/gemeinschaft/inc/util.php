@@ -71,21 +71,37 @@ if (! defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 1<<12); # si
 if (! defined('E_DEPRECATED'       )) define('E_DEPRECATED'       , 1<<13); # since PHP 5.3
 if (! defined('E_USER_DEPRECATED'  )) define('E_USER_DEPRECATED'  , 1<<14); # since PHP 5.3
 
+# PHP 8 reports several former notices as E_WARNING ("Undefined array key"
+# etc.). This code was written with notices turned off and our error handlers
+# exit on E_WARNING, so keep treating these as the notices they used to be.
+# The same goes for deprecations. Returns true if the error has been dealt with.
+#
+function gs_err_is_benign( $type, $msg, $file, $line )
+{
+	if (! ($type & (E_DEPRECATED | E_USER_DEPRECATED))
+	&&  ! ($type === E_WARNING && preg_match('/^(?:Undefined (?:variable|array key|property)|Attempt to read property|Trying to access array offset|Uninitialized string offset|Array to string conversion)/S', $msg)))
+		return false;
+	if (error_reporting() & $type)
+		gs_log( GS_LOG_DEBUG, 'PHP: '. $msg .' in '. $file .' on line '. $line );
+	return true;
+}
+
 function err_handler_die_on_err( $type, $msg, $file, $line )
 {
+	if (gs_err_is_benign( $type, $msg, $file, $line )) return true;
 	switch ($type) {
 		case E_NOTICE:
 		case E_USER_NOTICE:
 		case E_DEPRECATED:
 		case E_USER_DEPRECATED:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				gs_log( GS_LOG_NOTICE, 'PHP: '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
 				//gs_log( GS_LOG_DEBUG , 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
 			}
 			break;
 		case E_STRICT:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				gs_log( GS_LOG_DEBUG, 'PHP (Strict): '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
 				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line );
@@ -102,7 +118,7 @@ function err_handler_die_on_err( $type, $msg, $file, $line )
 			break;
 		case E_WARNING:
 		case E_USER_WARNING:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
 				gs_write_error( 'A warning occurred. See log for details.'."\n" );
 				exit(1);
@@ -120,19 +136,20 @@ function err_handler_die_on_err( $type, $msg, $file, $line )
 
 function err_handler_quiet( $type, $msg, $file, $line )
 {
+	if (gs_err_is_benign( $type, $msg, $file, $line )) return true;
 	switch ($type) {
 		case E_NOTICE:
 		case E_USER_NOTICE:
 		case E_DEPRECATED:
 		case E_USER_DEPRECATED:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				gs_log( GS_LOG_NOTICE, 'PHP: '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
 				//gs_log( GS_LOG_DEBUG , 'PHP: '. $msg .' in '. $file .' on line '. $line .' (suppressed)' );
 			}
 			break;
 		case E_STRICT:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				gs_log( GS_LOG_DEBUG, 'PHP (Strict): '. $msg .' in '. $file .' on line '. $line );
 			} else {  # suppressed by @
 				gs_log( GS_LOG_DEBUG, 'PHP (strict): '. $msg .' in '. $file .' on line '. $line );
@@ -143,7 +160,7 @@ function err_handler_quiet( $type, $msg, $file, $line )
 			break;
 		case E_WARNING:
 		case E_USER_WARNING:
-			if (error_reporting() != 0) {
+			if (error_reporting() & $type) {
 				gs_log( GS_LOG_WARNING, 'PHP: '. $msg .' in '. $file .' on line '. $line );
 				exit(1);
 			} else {  # suppressed by @
@@ -174,29 +191,56 @@ function gs_shutdown_fn()
 register_shutdown_function('gs_shutdown_fn');
 
 
+# replacement for strftime(), which is deprecated since PHP 8.1. Knows the
+# conversion specifiers we use. Takes the language for the names of days
+# and months instead of depending on the locales installed on the system.
+#
+function gs_strftime( $format, $ts=null, $lang='en' )
+{
+	static $names = array(
+		'en' => array(
+			'a' => array('Sun','Mon','Tue','Wed','Thu','Fri','Sat'),
+			'b' => array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec')
+		),
+		'de' => array(
+			'a' => array('So','Mo','Di','Mi','Do','Fr','Sa'),
+			'b' => array('Jan','Feb',"M\xC3\xA4r",'Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez')
+		)
+	);
+	$ts = ($ts === null) ? time() : (int)$ts;
+	$n = array_key_exists($lang, $names) ? $names[$lang] : $names['en'];
+	
+	return preg_replace_callback( '/%(.)/s', function( $m ) use ($ts, $n) {
+		switch ($m[1]) {
+			case 'a': return $n['a'][(int)date('w', $ts)];
+			case 'b': return $n['b'][(int)date('n', $ts) - 1];
+			case 'c': return $n['a'][(int)date('w', $ts)] .' '. $n['b'][(int)date('n', $ts) - 1]
+			                 .' '. str_pad(date('j', $ts), 2, ' ', STR_PAD_LEFT) . date(' H:i:s Y', $ts);
+			case 'd': return date('d', $ts);
+			case 'H': return date('H', $ts);
+			case 'm': return date('m', $ts);
+			case 'M': return date('i', $ts);
+			case 'S': return date('s', $ts);
+			case 'y': return date('y', $ts);
+			case 'Y': return date('Y', $ts);
+			case 'z': return date('O', $ts);
+			case '%': return '%';
+		}
+		return $m[0];
+	}, $format );
+}
+
+
 function date_human( $ts )
 {
-	$old_locale = setLocale(LC_TIME, '0');
 	$lang = strToLower(subStr(gs_get_conf('GS_INTL_LANG', 'de_DE'), 0,2));
-	switch ($lang) {
-		case 'de':
-			$l = array('de_DE.UTF-8', 'de_DE.utf8', 'de_DE.iso88591', 'de_DE.iso885915@euro', 'de_DE.ISO8859-1', 'de_DE.ISO8859-15', 'de_DE@euro', 'de_DE', 'de');
-			break;
-		case 'en':
-			$l = array('en_US.utf8', 'en_US.iso88591', 'en_US.ISO8859-1', 'en_US.US-ASCII', 'en_US', 'en');
-			break;
-		default  :
-			$l = array('C');
-	}
-	setLocale(LC_TIME, $l);
 	if (date('Ymd', $ts) == date('Ymd'))
 		$dv = __('heute');
 	elseif (date('Ymd', $ts) == date('Ymd', strToTime('-1 days', $ts)))
 		$dv = __('gestern');
 	else
-		$dv = strFTime(__('%d. %b'), $ts);
+		$dv = gs_strftime(__('%d. %b'), $ts, $lang);
 	$ret = $dv .', '. date(__('H:i'), $ts);
-	setLocale(LC_TIME, array($old_locale, 'C'));
 	return $ret;
 }
 
@@ -218,10 +262,7 @@ function sec_to_hours( $sec )
 function gs_isatty( $fd )
 {
 	if (! function_exists('posix_isatty')) return false;
-	set_error_handler( create_function(
-		'$type, $msg, $file, $line',
-		'/* ignore error */'
-	));
+	set_error_handler( function() { /* ignore error */ } );
 	$isatty = @posix_isatty($fd);
 	@restore_error_handler();
 	return $isatty;
@@ -240,7 +281,7 @@ function gs_stdout_is_console()
 
 function gs_add_c_slashes( $str )
 {
-	return addCSlashes( $str, "\\\0\r\n\t\x00..\x1F\x7F..\xFF" );
+	return addCSlashes( (string)$str, "\\\0\r\n\t\x00..\x1F\x7F..\xFF" );
 }
 
 

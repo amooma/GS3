@@ -134,7 +134,7 @@ function gs_log( $level, $msg, $logfile=null, $fifo=false )
 		}
 				
 		if ($fifo) {
-			@stream_set_blocking($fd, false);  # not even really needed
+			@stream_set_blocking($logfiles[$logfile], false);  # not even really needed
 			
 			# Just to be sure check that the stream will not block.
 			# However by using the above trick it will not block anyways.
