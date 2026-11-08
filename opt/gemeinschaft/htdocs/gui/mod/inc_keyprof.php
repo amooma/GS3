@@ -65,6 +65,14 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
                 $phone_types['snom-720'] = 'Snom 720';
 	if (in_array('*', $enabled_models) || in_array('821', $enabled_models))
                 $phone_types['snom-821'] = 'Snom 821';
+	if (in_array('*', $enabled_models) || in_array('765', $enabled_models))
+		$phone_types['snom-765'] = 'Snom 765';
+	if (in_array('*', $enabled_models) || in_array('785', $enabled_models))
+		$phone_types['snom-785'] = 'Snom 785';
+	if (in_array('*', $enabled_models) || in_array('815', $enabled_models))
+		$phone_types['snom-815'] = 'Snom D815';
+	if (in_array('*', $enabled_models) || in_array('MP', $enabled_models))
+		$phone_types['snom-MP'] = 'Snom MP';
        if (in_array('*', $enabled_models) || in_array('710', $enabled_models))
                 $phone_types['snom-710'] = 'Snom 710';
        if (in_array('*', $enabled_models) || in_array('715', $enabled_models))
@@ -262,7 +270,7 @@ if (! $is_user_profile) {
 }
 if ($profile_id < 1) $profile_id = 0;
 
-$phone_type = preg_replace('/[^a-z0-9\-]/', '', @$_REQUEST['phone_type']);
+$phone_type = preg_replace('/[^a-zA-Z0-9\-]/', '', @$_REQUEST['phone_type']);
 if (! $is_user_profile) {
 	if ($profile_id < 1) $phone_type = '';
 }
@@ -285,6 +293,10 @@ if ($phone_type == '') {
 		elseif (array_key_exists('snom-710', $phone_types)) $phone_type = 'snom-710';
 		elseif (array_key_exists('snom-715', $phone_types)) $phone_type = 'snom-715';
 		elseif (array_key_exists('snom-821', $phone_types)) $phone_type = 'snom-821';
+		elseif (array_key_exists('snom-765', $phone_types)) $phone_type = 'snom-765';
+		elseif (array_key_exists('snom-785', $phone_types)) $phone_type = 'snom-785';
+		elseif (array_key_exists('snom-815', $phone_types)) $phone_type = 'snom-815';
+		elseif (array_key_exists('snom-MP', $phone_types)) $phone_type = 'snom-MP';
 	} else
 	if (gs_get_conf('GS_SIEMENS_PROV_ENABLED')) {
 		if     (array_key_exists('siemens-os20', $phone_types)) $phone_type = 'siemens-os20';
@@ -308,7 +320,7 @@ if ($phone_type == '') {
 		elseif (array_key_exists('tiptel-ip286', $phone_types)) $phone_type = 'tiptel-ip286';
 	}
 }
-if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 'snom-870', 'snom-760', 'snom-720', 'snom-725', 'snom-710', 'snom-715', 'snom-821'), true)) {
+if (in_array($phone_type, array('snom-300', 'snom-320', 'snom-360', 'snom-370', 'snom-870', 'snom-760', 'snom-720', 'snom-725', 'snom-710', 'snom-715', 'snom-821', 'snom-765', 'snom-785', 'snom-815', 'snom-MP'), true)) {
 	$phone_layout = 'snom';
 	$key_function_none = $key_function_none_snom;
 } elseif (in_array($phone_type, array('siemens-os20', 'siemens-os40', 'siemens-os60', 'siemens-os80'), true)) {
@@ -979,6 +991,7 @@ if ($phone_layout) {
 		}
 		switch ($phone_type) {
 			case 'snom-300':
+			case 'snom-MP':
 				$key_levels[0]['to'  ] =    5;
 				break;
 		}
@@ -1024,6 +1037,82 @@ if ($phone_layout) {
                                 //$key_levels[0]['to'  ] =   15;
                                 break;
                 }
+		switch ($phone_type) {
+		case 'snom-765':
+			$key_levels = array(
+				0 => array('from'=>  4, 'to'=>  15, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title))
+			);
+			if ($show_ext_modules >= 1) {
+				$key_levels += array(
+					1 => array('from'=>  16, 'to'=>  33, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 1')
+				);
+			}
+			if ($show_ext_modules >= 2) {
+				$key_levels += array(
+					2 => array('from'=>  34, 'to'=>  51, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 2')
+				);
+			}
+			if ($show_ext_modules >= 3) {
+				$key_levels += array(
+					3 => array('from'=>  52, 'to'=>  69, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 3')
+				);
+			}
+			break;
+		case 'snom-785':
+			$key_levels = array(
+				0 => array('from'=>  1, 'to'=>   5, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title) .' |X|_|_|_|'),
+				1 => array('from'=>  6, 'to'=>  11, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title) .' |_|X|_|_|'),
+				2 => array('from'=> 12, 'to'=>  17, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title) .' |_|_|X|_|'),
+				3 => array('from'=> 18, 'to'=>  23, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title) .' |_|_|_|X|')
+			);
+			if ($show_ext_modules >= 1) {
+				$key_levels += array(
+					4 => array('from'=> 24, 'to'=>  39, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 1 |X|_|_|'),
+					5 => array('from'=> 40, 'to'=>  55, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 1 |_|X|_|'),
+					6 => array('from'=> 56, 'to'=>  71, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 1 |_|_|X|')
+				);
+			}
+			break;
+		case 'snom-815':
+			# Snom D815: 10 SmartLabel keys (P1-P5 left, P6-P10 right of the
+			# display) on 4 pages = fkey 0-39. The 10th key of every page
+			# (fkey 9, 19, 29, 39) is the "Next page" key and therefore not
+			# configurable here (see $snom_reserved_keys in prov/snom/settings.php).
+			$key_levels = array(
+				0 => array('from'=>  0, 'to'=>  8, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title) .' |X|_|_|_|'),
+				1 => array('from'=> 10, 'to'=> 18, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title) .' |_|X|_|_|'),
+				2 => array('from'=> 20, 'to'=> 28, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title) .' |_|_|X|_|'),
+				3 => array('from'=> 30, 'to'=> 38, 'shifted'=>false,
+					'title'=> htmlEnt($phone_type_title) .' |_|_|_|X|')
+			);
+			# D8C expansion module: 20 keys on 3 pages = 60 keys.
+			# FIXME: verify on a real device that the D8C keys start at fkey 40.
+			if ($show_ext_modules >= 1) {
+				$key_levels += array(
+					4 => array('from'=> 40, 'to'=> 59, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 1 |X|_|_|'),
+					5 => array('from'=> 60, 'to'=> 79, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 1 |_|X|_|'),
+					6 => array('from'=> 80, 'to'=> 99, 'shifted'=>false,
+						'title'=> __('Erweiterungs-Modul') .' 1 |_|_|X|')
+				);
+			}
+			break;
+		}
 		switch ($phone_type) {
                         case 'snom-710';
 			case 'snom-715';
@@ -1303,55 +1392,58 @@ if ($phone_layout) {
 		
 		switch ($phone_layout) {
 			case 'snom':
+				// first column: 0=left (default), 1=right (Snom 3xx, level 0)
+				$start_col = 0;
 				switch ($key_level_idx) {
-					case 0: $left =  0; $right =  6; break;
+					case 0: $left =  0; $right =  6; $start_col = 1; break;
 					case 1: $left = 12; $right = 23; break;
 					case 2: $left = 33; $right = 44; break;
 				}
+				// $left === $right means a single column
 				switch ($phone_type) {
-                                        case 'snom-870':
-                                                switch ($key_level_idx) {
-                                                        case 0: $left =  0; $right =  8; break;
-                                                        case 1: $left = 16; $right = 24; break;
-                                                        case 2: $left = 33; $right = 44; break;
-                                                }
-					case 'snom-760':
-						switch ($key_level_idx) {
-							case 0: $left =  4; $right =  15; break;
-						}
-                                        case ('snom-720' || 'snom-725'):
-						switch ($key_level_idx) {
-							case 0: $left =  0; $right =  17; break;
-						}
-					case ('snom-710' || 'snom-715'):
-                                                switch ($key_level_idx) {
-                                                        case 0: $left =  0; $right =  4; break;
-                                                }
+					case 'snom-870':
 					case 'snom-821':
-                                                switch ($key_level_idx) {
-                                                        case 0: $left =  0; $right =  11; break;
-                                                }
-					default:
+					case 'snom-760':
+					case 'snom-720':
+					case 'snom-725':
+					case 'snom-710':
+					case 'snom-715':
+						if ($key_level_idx === 0)
+							$left = $right = $key_level_info['from'];
+						break;
+					case 'snom-765':
 						switch ($key_level_idx) {
-                                                        case 0: $left =  0; $right =  6; break;
-                                                }
-					break;
-
-                                }
+							case 0: $left =  4; $right =  4; break;
+							case 1: $left = 16; $right = 25; break;
+							case 2: $left = 34; $right = 43; break;
+							case 3: $left = 52; $right = 61; break;
+						}
+						break;
+					case 'snom-785':
+						$left = $right = $key_level_info['from'];
+						break;
+					case 'snom-815':
+						# left column P1-P5, right column P6-P9 (P10 = next page)
+						switch ($key_level_idx) {
+							case 0: $left =  0; $right =  5; $start_col = 0; break;
+							case 1: $left = 10; $right = 15; break;
+							case 2: $left = 20; $right = 25; break;
+							case 3: $left = 30; $right = 35; break;
+							case 4: $left = 40; $right = 40; break;
+							case 5: $left = 60; $right = 60; break;
+							case 6: $left = 80; $right = 80; break;
+						}
+						break;
+				}
 				break;
 		}
-		
+
 		$row = 0;
 		for ($i=$key_level_info['from']; $i<=$key_level_info['to']; ++$i) {
 			
 			if ($phone_layout === 'snom') {
-                        	if ($phone_type === 'snom-760' || $phone_type === 'snom-870' || $phone_type == 'snom-720' || $phone_type == 'snom-725' || $phone_type == 'snom-710' || $phone_type == 'snom-715' || $phone_type == 'snom-821') {
-				$knum = $i;
+				$knum  = (($i - $key_level_info['from'] + $start_col) % 2 ? $right : $left);
 				$knump = str_pad($knum, 3, '0', STR_PAD_LEFT);
-				}else {
-				$knum  = ($i%2===($key_level_idx+1)%2 ? $left : $right);
-				$knump = str_pad($knum, 3, '0', STR_PAD_LEFT);
-				}
 			} else {
 				$knum  = $i;
 				$knump = str_pad($knum, 4, '0', STR_PAD_LEFT);
@@ -1435,11 +1527,7 @@ if ($phone_layout) {
 			echo '<td style="font-size:96%;"';
 			switch ($phone_layout) {
 				case 'snom':
-					if ($phone_type === 'snom-760' || $phone_type === 'snom-870' || $phone_type == 'snom-720' || $phone_type == 'snom-725' || $phone_type == 'snom-710' || $phone_type == 'snom-715' || $phone_type == 'snom-821') {
-						echo ' class="r"';
-					} else {
-						echo ' class="', ($i%2===($key_level_idx+1)%2 ?'l':'r') ,'"';
-					}
+					echo ' class="', ($knum === $right ? 'r':'l'), '"';
 					break;
 				case 'tiptel':
 					if ($key_level_idx > 0)
@@ -1541,8 +1629,9 @@ if ($phone_layout) {
 			++$row;
 			switch ($phone_layout) {
 			case 'snom':
-				if ($i%2===($key_level_idx+1)%2) ++$left;
-				else ++$right;
+				// a single column has $left === $right, so both move on
+				if ($knum === $left) ++$left;
+				if ($knum === $right) ++$right;
 				break;
 			}
 		}

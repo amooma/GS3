@@ -59,6 +59,10 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
         $phone_types['snom-870'    ] = 'Snom 870';
         $phone_types['snom-760'    ] = 'Snom 760';
         $phone_types['snom-720'    ] = 'Snom 720';
+        $phone_types['snom-785'    ] = 'Snom 785';
+        $phone_types['snom-815'    ] = 'Snom D815';
+        $phone_types['snom-765'    ] = 'Snom 765';
+        $phone_types['snom-MP'     ] = 'Snom MP';
 }
 if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 	$phone_types['snom-m3'    ] = 'Snom M3';

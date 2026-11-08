@@ -46,6 +46,10 @@ if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {
         $phone_types['snom-870'    ] = 'Snom 870';
         $phone_types['snom-760'    ] = 'Snom 760';
         $phone_types['snom-720'    ] = 'Snom 720';
+        $phone_types['snom-785'    ] = 'Snom 785';
+        $phone_types['snom-815'    ] = 'Snom D815';
+        $phone_types['snom-765'    ] = 'Snom 765';
+        $phone_types['snom-MP'     ] = 'Snom MP';
 }
 if (gs_get_conf('GS_SNOM_PROV_M3_ACCOUNTS')) {
 	$phone_types['snom-m3'    ] = 'Snom M3';
@@ -89,7 +93,7 @@ if (! in_array($action, array('', 'save', 'delete'), true))
 $profile_id = (int)@$_REQUEST['profile_id'];
 if ($profile_id < 1) $profile_id = 0;
 
-$phone_type = preg_replace('/[^a-z0-9\-]/', '', @$_REQUEST['phone_type']);
+$phone_type = preg_replace('/[^a-zA-Z0-9\-]/', '', @$_REQUEST['phone_type']);
 if ($profile_id < 1) $phone_type = '';
 if ($phone_type == '') {
 	if (gs_get_conf('GS_SNOM_PROV_ENABLED')) {

@@ -120,8 +120,7 @@ if (subStr($mac,0,6) !== '000413') {
 }
 
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
-if (! preg_match('/^Mozilla/i', $ua)
-||  ! preg_match('/snom[0-9]{3}/i', $ua) ) {
+if (! preg_match('/snom(?:D?[0-9]{3}|MP)/i', $ua)) {
 	gs_log( GS_LOG_WARNING, "Phone with MAC \"$mac\" (Snom) has invalid User-Agent (\"". $ua ."\")" );
 	# don't explain this to the users
 	_settings_err( 'No! See log for details.' );
@@ -136,13 +135,23 @@ if (preg_match('/^Mozilla\/\d\.\d\s*\(compatible;\s*/i', $ua, $m)) {
 # 370: "Mozilla/4.0 (compatible; snom370-SIP 7.1.2)"
 if (preg_match('/snom([1-9][0-9]{2})/i', $ua, $m))  # e.g. "snom360"
 	$phone_model = $m[1];
+elseif (preg_match('/snomD([1-9][0-9]{2})/i', $ua, $m))  # e.g. "snomD785"
+	$phone_model = $m[1];
+elseif (preg_match('/snom(MP)/i', $ua, $m))  # MeetingPoint
+	$phone_model = 'MP';
 else
 	$phone_model = 'unknown';
 
 $phone_type = 'snom-'.$phone_model;  # e.g. "snom-360"
 # to be used when auto-adding the phone
 
-$fw_vers = (preg_match('/snom[0-9]{3}-SIP\s+(\d+\.\d+\.\d+)/', $ua, $m))
+# settings which only these models get, the older ones stay as they were
+$is_d_series_setup = in_array($phone_model, array('765','785','815','MP'), true);
+
+# D8xx (e.g. "snomD815-SIP 10.1.193.14") is included so these phones get
+# the XML format and the version-dependent settings. D7xx and MP are
+# deliberately left out (not tested with the XML output).
+$fw_vers = (preg_match('/snom(?:[0-9]{3}|D8[0-9]{2})-SIP\s+(\d+\.\d+\.\d+)/', $ua, $m))
 	? $m[1] : '0.0.0';
 $fw_vers_nrml = _snom_normalize_version( $fw_vers );
 
@@ -191,6 +200,23 @@ function psetting( $name, $val, $writeable=false )
 	setting( $name, null, $val, null, $writeable );
 }
 
+# permission flags, $writeable:
+#   false = read only             (text "&", XML perm="R")
+#   true  = writeable, overwrite  (text "$", XML perm="RW")
+#   '!'   = writeable, but a value changed by the user is kept,
+#           i.e. the provisioned value is only a default
+#                                 (text "!", XML perm="!")
+function _snom_perm_txt( $writeable )
+{
+	if ($writeable === '!') return '!';
+	return $writeable ? '$' : '&';
+}
+function _snom_perm_xml( $writeable )
+{
+	if ($writeable === '!') return '!';
+	return $writeable ? 'RW' : 'R';
+}
+
 function _add_to_cat( &$cats, $setting_name, $line )
 {
 	switch ($setting_name) {
@@ -223,23 +249,28 @@ function _settings_out()
 			if (subStr($name,0,1) === '_') continue;
 			
 			if (! array_key_exists('_is_array', $a1)) {
-				echo $name, ($a1['w'] ? '$':'&'), ': ', $a1['v'], "\n";
+				echo $name, _snom_perm_txt($a1['w']), ': ', $a1['v'], "\n";
 			} else {
 				if ($name !== 'fkey') {
 					foreach ($a1 as $idx => $a2) {
 						if ($idx === '_is_array') continue;
 						
-						echo $name,$idx, ($a2['w'] ? '$':'&'), ': ', $a2['v'], "\n";
+						echo $name,$idx, _snom_perm_txt($a2['w']), ': ', $a2['v'], "\n";
 					}
 				} else {
 					foreach ($a1 as $idx => $a2) {
 						if ($idx === '_is_array') continue;
 						
-						echo $name,$idx, ($a2['w'] ? '$':'&'), ': ', $a2['v'], "\n";
+						echo $name,$idx, _snom_perm_txt($a2['w']), ': ', $a2['v'], "\n";
 						if (is_array($a2['a'])
 						&&  array_key_exists('context', $a2['a']))
 						{
-							echo $name,'_context',$idx, ($a2['w'] ? '$':'&'), ': ', $a2['a']['context'], "\n";
+							echo $name,'_context',$idx, _snom_perm_txt($a2['w']), ': ', $a2['a']['context'], "\n";
+						}
+						if (is_array($a2['a'])
+						&&  array_key_exists('label', $a2['a']))
+						{
+							echo $name,'_label',$idx, _snom_perm_txt($a2['w']), ': ', $a2['a']['label'], "\n";
 						}
 					}
 				}
@@ -266,7 +297,7 @@ function _settings_out()
 						$attrstr .= ' '.$attr.'="'._snomCnfXmlEsc($attrval).'"';
 					}
 				}
-				$line = '<'.$name. $attrstr.' perm="'. ($a1['w'] ? 'RW':'R') .'">'. _snomCnfXmlEsc( $a1['v'] ) .'</'.$name.'>';
+				$line = '<'.$name. $attrstr.' perm="'. _snom_perm_xml($a1['w']) .'">'. _snomCnfXmlEsc( $a1['v'] ) .'</'.$name.'>';
 				_add_to_cat( $xml_cats, $name, $line );
 			} else {
 				if ($name==='_gui_lang' || $name==='_web_lang') {
@@ -337,7 +368,7 @@ function _settings_out()
 								$attrstr .= ' '.$attr.'="'._snomCnfXmlEsc($attrval).'"';
 							}
 						}
-						$line = '<'.$name. $attrstr.' idx="'.$idx.'" perm="'. ($a2['w'] ? 'RW':'R') .'">'. _snomCnfXmlEsc( $a2['v'] ) .'</'.$name.'>';
+						$line = '<'.$name. $attrstr.' idx="'.$idx.'" perm="'. _snom_perm_xml($a2['w']) .'">'. _snomCnfXmlEsc( $a2['v'] ) .'</'.$name.'>';
 						_add_to_cat( $xml_cats, $name, $line );
 					}
 				}
@@ -615,6 +646,16 @@ psetting('webserver_type'  , 'http_https');
 psetting('http_scheme'     , 'off');  # off = Basic, on = Digest
 psetting('http_user'       , gs_get_conf('GS_SNOM_PROV_HTTP_USER', '') );
 psetting('http_pass'       , gs_get_conf('GS_SNOM_PROV_HTTP_PASS', '') );
+# Firmware >= 10 (D7xx/D8xx): the new web interface has its own accounts.
+# Without HTTP credentials these phones ask for a web user on every start
+# (PSTI), so $SNOM_PROV_HTTP_USER / $SNOM_PROV_HTTP_PASS must be set.
+if (_snomAppCmp($fw_vers_nrml, '10') >= 0) {
+	if (gs_get_conf('GS_SNOM_PROV_HTTP_USER', '') == ''
+	||  gs_get_conf('GS_SNOM_PROV_HTTP_PASS', '') == '')
+		gs_log( GS_LOG_WARNING, "Snom $mac ($phone_model): SNOM_PROV_HTTP_USER/_PASS not set, the phone will ask for a web user" );
+	psetting('webserver_admin_name'    , gs_get_conf('GS_SNOM_PROV_HTTP_USER', '') );
+	psetting('webserver_admin_password', gs_get_conf('GS_SNOM_PROV_HTTP_PASS', '') );
+}
 psetting('http_port'       , '80' );
 psetting('https_port'      , '443');
 psetting('web_logout_timer', '10' );
@@ -836,6 +877,14 @@ setting('user_idle_text'     ,$i, $user_ext .' '. mb_subStr($user['firstname'],0
 setting('record_missed_calls'  ,$i, 'on' );
 setting('record_dialed_calls'  ,$i, 'off');
 setting('record_received_calls',$i, 'off');
+if ($is_d_series_setup) {
+	setting('fwd_all_enabled' ,$i, 'off');
+	setting('fwd_busy_enabled',$i, 'off');
+	setting('fwd_time_enabled',$i, 'off');
+	setting('fwd_all_target'  ,$i, '');
+	setting('fwd_busy_target' ,$i, '');
+	setting('fwd_time_target' ,$i, '');
+}
 
 # andere Accounts
 #
@@ -937,8 +986,20 @@ if ($phone_model == '300') {
 	$max_key = -1;
 }
 */
+# keys which must not be overwritten by the provisioning
+#
+$snom_reserved_keys = array();
+if ($phone_model == '815') {
+	# Snom D815: the 10th SmartLabel key of each of the 4 pages is
+	# "Next page" by factory default. Leave it alone, otherwise the
+	# pages 2-4 can't be reached anymore.
+	$snom_reserved_keys = array(9, 19, 29, 39);
+}
 for ($i=0; $i<=$max_key; ++$i) {
-	setting('fkey'        , $i, 'line', array('context'=>'active'));
+	if (in_array($i, $snom_reserved_keys, true)) continue;
+	setting('fkey'        , $i, 'line', $is_d_series_setup
+		? array('context'=>'active','label'=>'')
+		: array('context'=>'active'));
 	//setting('fkey_context', $i, 'active');
 }
 # GUI softkeys
@@ -989,6 +1050,59 @@ if (($phone_model == '760') || ($phone_model == '720') || ($phone_model == '725'
         psetting('gui_fkey1', 'F_CALL_LIST');
 	psetting('gui_fkey2', 'F_ADR_BOOK');
 	psetting('dkey_menu', 'keyevent F_SETTINGS');
+}
+
+if ($phone_model == '785') {
+	psetting('dkey_fkey1', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
+	psetting('dkey_fkey2', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
+	psetting('context_key0', '');
+	psetting('context_key1', '');
+	psetting('context_key2', '');
+	psetting('dkey_menu', 'keyevent F_SETTINGS');
+	psetting('fkey_context0', 'active');
+	psetting('fkey_label0', 'Anrufliste');
+	psetting('fkey0', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
+}
+if ($phone_model == '815') {
+	# Snom D815 / D815W / D815WB (firmware 10.x)
+	# Context keys below the display (idle screen), index 0-3 = F1-F4:
+	#   context_key<n>         function, also defines label text/icon
+	#   context_key_mapping<n> overrides the function, but has no label
+	#                          (the old dkey_fkey<n+1> is mapped to it)
+	# Call list and directory have dedicated keys, so only F1 is used:
+	# it opens the settings dialog and is labeled by the firmware.
+	# gui_fkey1-4 (set empty for all models above) are the predecessors
+	# of context_key0-3 and must not overwrite them
+	for ($i=1; $i<=4; ++$i) unset($settings['gui_fkey'.$i]);
+	# indexed settings: in XML they must be sent as <name idx="n">,
+	# "<context_key0>" is ignored by the phone
+	setting('context_key'        , 0, 'keyevent F_SETTINGS');
+	setting('context_key_mapping', 0, '');
+	setting('context_key_mapping', 1, '');
+	# show the label text (e.g. "Einstellungen") below the icon
+	psetting('context_key_text', 'on');
+	# Bluetooth (D815WB, firmware >= 10.1.226.13) on by default. "!" keeps
+	# a value the user changed on the phone, so it is only a default.
+	# Ignored by models/firmware without Bluetooth.
+	psetting('bt_enabled', 'on', '!');
+}
+if ($phone_model == 'MP') {
+	psetting('dkey_fkey1', 'url '. $prov_url_snom .'dial-log.php?user=$user_name1', array('context'=>'active'));
+	psetting('dkey_fkey2', 'url '. $prov_url_snom .'pb.php?m=$mac&u=$user_name1', array('context'=>'active'));
+	psetting('dkey_fkey3', 'url '. $prov_url_snom .'pb.php?u=$user_name1', array('context'=>'active'));
+	psetting('gui_fkey1', 'F_CALL_LIST');
+	psetting('gui_fkey2', 'F_ADR_BOOK');
+	psetting('gui_fkey3', 'F_XX');
+	psetting('dkey_menu', 'keyevent F_SETTINGS');
+	psetting('backlight', '15');
+	psetting('label_backlight', '15');
+	psetting('label_backlight_idle', '0');
+	psetting('backlight_idle', '8');
+	psetting('enable_backlight_dimming', 'on');
+	psetting('uxm_backlight', '15');
+	psetting('uxm_backlight_idle', '1');
+	psetting('expansion_module_backlight', '15');
+	psetting('expansion_module_backlight_idle', '8');
 }
 
 /*  //FIXME
@@ -1044,6 +1158,7 @@ if (! is_array($softkeys)) {
 		}
 		$key_idx = (int)lTrim(subStr($key_name,1),'0');
 		if ($key_idx > $max_key) continue;
+		if (in_array($key_idx, $snom_reserved_keys, true)) continue;
 		if ($key_def['function'] == "blf"){
 			if (substr($key_def['data'], 0,1)  == '*' ) { 
 				setting('fkey', $key_idx, $key_def['function'] .' <sip:'. $key_def['data'].'@'.$host.'>', array('context'=>'active','label'=>$key_def['label']));
@@ -1228,6 +1343,9 @@ $lang_releases = array(  # in descending order!
 );
 
 $lang_vers = null;
+# firmware >= 10 (D7xx/D8xx) ships its own languages, the 7.x language
+# files must not be sent
+if (_snomAppCmp($fw_vers_nrml, '10') >= 0) $lang_releases = array();
 foreach ($lang_releases as $lang_release) {
 	if (_snomAppCmp($fw_vers_nrml, $lang_release) >=0) {
 		$lang_vers = $lang_release;

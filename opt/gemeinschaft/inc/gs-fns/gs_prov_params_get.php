@@ -39,7 +39,7 @@ function gs_prov_params_get( $username, $phone_type )
 {
 	if (! preg_match( '/^[a-z0-9\-_.]+$/', $username ))
 		return new GsError( 'User must be alphanumeric.' );
-	if (! preg_match( '/^[a-z0-9\-_]+$/', $phone_type ))
+	if (! preg_match( '/^[A-Za-z0-9\-_]+$/', $phone_type ))
 		return new GsError( 'Phone type be alphanumeric.' );
 	
 	# connect to db

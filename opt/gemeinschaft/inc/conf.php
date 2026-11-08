@@ -264,6 +264,8 @@ _gscnf( 'SNOM_PROV_FW_DEFAULT_720'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_715'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_725'  , null               );
 _gscnf( 'SNOM_PROV_FW_DEFAULT_760'  , null               );
+_gscnf( 'SNOM_PROV_FW_DEFAULT_D785' , null               );
+_gscnf( 'SNOM_PROV_FW_DEFAULT_D815' , null               );
 _gscnf( 'SNOM_PROV_KEY_BLACKLIST'   , ''                 );
 
 _gscnf( 'SNOM_PROV_M3_ACCOUNTS'     , 1                  );

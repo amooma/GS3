@@ -43,7 +43,7 @@ function gs_keys_get_by_profile_or_user( $profile_id, $username, $phone_type )
 		return new GsError( 'Neither profile_id nor user specified.' );
 	if ($profile_id > 0 && $username != '')
 		return new GsError( 'Both profile_id and user specified.' );
-	if (! preg_match( '/^[a-z0-9\-_]+$/', $phone_type ))
+	if (! preg_match( '/^[A-Za-z0-9\-_]+$/', $phone_type ))
 		return new GsError( 'Phone type must be alphanumeric.' );
 	
 	//gs_log( GS_LOG_DEBUG, "Getting keys: profile_id: $profile_id, user: $username, " );

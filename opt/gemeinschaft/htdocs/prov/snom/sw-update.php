@@ -69,7 +69,7 @@ if (strLen($mac) != 12) {
 $user = preg_replace('/[^a-z0-9_\-]/i', '', @$_REQUEST['u']);
 
 $ua = trim( @$_SERVER['HTTP_USER_AGENT'] );
-if (preg_match('/snom([1-9][0-9]{2})/i', $ua, $m)) {  # e.g. "snom360"
+if (preg_match('/snom(D?[0-9]{3})/i', $ua, $m)) {  # e.g. "snom360", "snomD815"
 	$phone_type = $m[1];
 } else {
 	gs_log( GS_LOG_DEBUG, "Could not recognize User-Agent" );
@@ -87,7 +87,13 @@ function _generate_settings( $model, $appl, $rtfs, $lnux )
 		/*$allow_beta,*/ $mac, $phone_type, $user;
 		
 	$file = '';
-	if     (!empty($appl)) $file = $model.'-'.$appl.'.bin'  ;
+	if     (!empty($appl)) {
+		$file = $model.'-'.$appl.'.bin';
+		# firmware 10 for the D8xx is a .swu image (see sw/get-firmware.sh)
+		if (! file_exists($firmware_path.$file)
+		&&    file_exists($firmware_path.$model.'-'.$appl.'.swu'))
+			$file = $model.'-'.$appl.'.swu';
+	}
 	elseif (!empty($rtfs)) $file = $model.'-'.$rtfs         ;
 	elseif (!empty($lnux)) $file = $model.'-'.$lnux.'-l.bin';
 	
@@ -145,14 +151,10 @@ $linux          = false;
 
 foreach ($sw_info as $k => $v)
 {
-	$tmp = strStr($v, $phone_model.'-SIP ');
-	if (!empty($tmp)) {
-		$app = $tmp;
-		if (@$app[strLen($app)-1] === ')')
-			$app = subStr($app, 12, -1);
-		else
-			$app = subStr($app, 12);
-		$app = preg_replace('/[^0-9.]/', '', $app);
+	# e.g. "snom360-SIP 8.7.3.25" or "snomD815-SIP 10.1.193.14"
+	# (the old fixed offset of 12 chars did not fit "snomDxxx")
+	if (preg_match('/'. preg_quote($phone_model,'/') .'-SIP\s+([0-9.]+)/', $v, $mm)) {
+		$app = rTrim($mm[1], '.');
 		continue;
 	}
 	
@@ -272,8 +274,11 @@ if ($fw_was_upgraded_manually) {
 } elseif ($a === null) {
 	gs_log( GS_LOG_DEBUG, "Phone did not report its current firmware version." );
 } else {
-	$sw_default_vers = _snom_normalize_version(trim(gs_get_conf('GS_SNOM_PROV_FW_DEFAULT_'.$phone_type)));
-	if (in_array($sw_default_vers, array(null,false,''), true)) {
+	# check the raw value: _snom_normalize_version('') returns "00.00.00.00",
+	# so an unset default caused an upgrade job on every request
+	$sw_default_vers_raw = trim((string)gs_get_conf('GS_SNOM_PROV_FW_DEFAULT_'.$phone_type));
+	$sw_default_vers = _snom_normalize_version($sw_default_vers_raw);
+	if ($sw_default_vers_raw === '') {
 		gs_log( GS_LOG_DEBUG, "No default firmware version set in config file" );
 	} else {
 		if ('x'.$a != 'x'.$sw_default_vers) {
