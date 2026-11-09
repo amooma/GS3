@@ -1,4 +1,5 @@
 h1. Das ist die neueste ALPHA Version von Gemeinschaft 3
+
 - Nicht für denproduktiven Betrieb gedacht
 - Niemals direkt an einer public IP betreiben!
 - Installations Basis ist Ubuntu 24.04 Server minimal Installation!
