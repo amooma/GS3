@@ -7670,7 +7670,8 @@ SELECT `name` AS `id`,
        145 AS `default_expiration`,
        65 AS `minimum_expiration`,
        185 AS `maximum_expiration`,
-       NULL AS `contact`
+       NULL AS `contact`,
+       IF(`mailbox`='', NULL, CONCAT(`mailbox`, '@default')) AS `mailboxes`
 FROM `ast_sipfriends_gs`;
 
 CREATE OR REPLACE SQL SECURITY INVOKER VIEW `ps_auths` AS
@@ -7704,6 +7705,7 @@ SELECT `name` AS `id`,
        'yes' AS `send_pai`,
        'yes' AS `notify_early_inuse_ringing`,
        'voicemail' AS `voicemail_extension`,
+       'yes' AS `mwi_subscribe_replaces_unsolicited`,
        15 AS `rtp_keepalive`,
        30 AS `rtp_timeout`,
        200 AS `rtp_timeout_hold`,

@@ -92,8 +92,8 @@ if (! $GS_INSTALLATION_TYPE_SINGLE) {
 $rs = $db->execute($query);
 if ($rs) {
 	while ($r = $rs->fetchRow()) {
-		echo 'hint(SIP/', $r['name'] ,') ', $r['name'] ,' => {}', "\n";
-		echo 'hint(SIP/', $r['name'] ,') ***', $r['name'] ,' => {}', "\n";
+		echo 'hint(PJSIP/', $r['name'] ,') ', $r['name'] ,' => {}', "\n";
+		echo 'hint(PJSIP/', $r['name'] ,') ***', $r['name'] ,' => {}', "\n";
 		echo 'hint(Custom:fwd', $r['name'] ,') fwd', $r['name'] ,' => {}', "\n";
 		echo 'hint(Custom:fwdint', $r['name'] ,') fwdint', $r['name'] ,' => {}', "\n";
 		echo 'hint(Custom:fwdext', $r['name'] ,') fwdext', $r['name'] ,' => {}', "\n";
@@ -136,7 +136,7 @@ if ($rs) {
 		foreach ($members as $ext) {
 			$ext = preg_replace('/[^0-9*a-z\-_]/iS', '', $ext);
 			if ($ext == '') continue;
-			$devices[] = 'SIP/'.$ext;
+			$devices[] = 'PJSIP/'.$ext;
 		}
 		if (count($devices) < 1) continue;
 

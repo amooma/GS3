@@ -82,25 +82,10 @@ macro check-valid-extension( mext ) {
 //---------------------------------------------------------------------
 
 macro dial-node( mext_at_node ) {
-	//if ("${saved_callerid}" != "") {
-	//	// __saved_callerid is set by call-init.php
-	//	// is this needed here? call-init.php should have picked the
-	//	// correct node already
-	//	Set(CALLERID(all)=${saved_callerid});
-	//}
-	Verbose(1,### Dial and forget: ${mext_at_node});
-	SIPAddHeader(X-GS-user_id: ${user_id});
-	SIPAddHeader(X-GS-user_name: ${user_name});
-	SIPAddHeader(X-GS-forwards: ${forwards});
-	SIPAddHeader(X-GS-origext: ${origext});
-	SIPAddHeader(X-GS-clir: ${clir});
-	SIPAddHeader(X-GS-src: ${is_call_from});
-	SIPAddHeader(X-GS-is_callcompletion: ${is_callcompletion});
-	SIPAddHeader(X-GS-is_callfile_origin: ${is_callfile_origin});
-	SIPAddHeader(X-GS-callfile_from_user: ${callfile_from_user});
-	Dial(SIP/${mext_at_node},500);
-	Verbose(1,### Tried to call ${mext_at_node} but: ${DIALSTATUS});
-	&hangup-proper-status();
+	// Connections between Gemeinschaft nodes are not supported with PJSIP.
+	Verbose(0,### Cannot dial ${mext_at_node}: multiple nodes are not supported);
+	Congestion(3);
+	Hangup();
 	return;
 }
 
@@ -153,7 +138,7 @@ macro dial-internal-nobody-self( mext3 ) {
 	Set(OUTBOUND_GROUP_ONCE=callcount@${mext3});*/
 	&set-callerid-by-clir();
 	Verbose(1,### Call local nobody ${mext3}\, timeout 30);
-	Dial(SIP/${mext3},30);
+	Dial(PJSIP/${mext3},30,b(gs-sip-headers^s^1));
 	&hangup-proper-status();
 	return;
 }
@@ -314,7 +299,7 @@ context to-internal-users {
 					&dial-gateway(${EXTEN});
 				} else {
 					Verbose(1,### We are not a sub-system. Call foreign ext. ${EXTEN} directly.);
-					Dial(SIP/${EXTEN}@${dial_to_node},70);
+					Dial(PJSIP/${EXTEN}@${dial_to_node},70,b(gs-sip-headers^s^1));
 				}
 				Hangup();
 			}
@@ -355,7 +340,7 @@ context to-internal-users {
 				Hangup();
 			}
 		
-			PickupChan(SIP/${pext});
+			PickupChan(PJSIP/${pext});
 			//FIXME - does not work across nodes
 		}
 	}
@@ -385,12 +370,12 @@ context to-internal-users {
 			
 			// if we got here, the pickup attempt was not successful
 			// (maybe because there wasn't even a call)
-			NoCDR();
+			Set(CDR_PROP(disable)=1);
 			// 31 = AST_CAUSE_NORMAL_UNSPECIFIED => SIP 480 Temporarily unavailable
 			Hangup(31);
 		}
 		else {
-			NoCDR();
+			Set(CDR_PROP(disable)=1);
 		}
 	}
 	
@@ -400,7 +385,7 @@ context to-internal-users {
 	
 	_*8*. => {
 		if ("${PICKUPMARK}" != "") {
-			NoCDR();
+			Set(CDR_PROP(disable)=1);
 			Verbose(1,### Call to pickup group ${EXTEN:3});
 		}
 		else {
@@ -474,10 +459,10 @@ context to-internal-users {
 		//Set(CALLERID(name)=ICOM ${CALLERID(name)});
 		
 		// Add SIP-Header for Intercom (auto-answer)
-		SIPAddHeader(Call-Info: <http://127.0.0.1>\;answer-after=0);  // for Grandstream, Snom, Tiptel
-		SIPAddHeader(Alert-Info: <http://127.0.0.1>\;info=alert-autoanswer);  // for Aastra, Siemens
+		Set(__GS_SIPHDR_CALL_INFO=<http://127.0.0.1>\;answer-after=0);  // for Grandstream, Snom, Tiptel
+		Set(__GS_SIPHDR_ALERT_INFO=<http://127.0.0.1>\;info=alert-autoanswer);  // for Aastra, Siemens
 		
-		Dial(SIP/${iext},30);
+		Dial(PJSIP/${iext},30,b(gs-sip-headers^s^1));
 		&hangup-proper-status();
 	}	
 	
@@ -608,14 +593,14 @@ context to-internal-users-self {
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${boss},${is_call_from});
 		if ("${ringer}" != "") {
 			Verbose(1,### Ringer: ${ringer});
-			SIPAddHeader(Alert-Info: ${ringer});
+			Set(__GS_SIPHDR_ALERT_INFO=${ringer});
 		}
 		//if ("${saved_callerid}" != "") {
 		//	// __saved_callerid is set by call-init.php
 		//	Set(CALLERID(all)=${saved_callerid});
 		//}
 		Set(CALLERID(name)=Sek. ${CALLERID(name)});
-		Dial(SIP/${boss},30);
+		Dial(PJSIP/${boss},30,b(gs-sip-headers^s^1));
 		&hangup-proper-status();
 	}
 	
@@ -634,9 +619,9 @@ context to-internal-users-self {
 		AGI(/opt/gemeinschaft/dialplan-scripts/in-user-get-ringer.agi,${callfile_from},${is_call_from});
 		if ("${ringer}" != "") {
 			Verbose(1,### Ringer: ${ringer});
-			SIPAddHeader(Alert-Info: ${ringer});
+			Set(__GS_SIPHDR_ALERT_INFO=${ringer});
 		}
-		Dial(SIP/${callfile_from},30);
+		Dial(PJSIP/${callfile_from},30,b(gs-sip-headers^s^1));
 		&hangup-proper-status();
 	}
 	
@@ -704,37 +689,6 @@ context to-internal-users-self {
 
 		AGI(/opt/gemeinschaft/dialplan-scripts/get-gs-language-by-ast-code,${CHANNEL(language)});
 
-		if ("${from_node}" = "yes") {
-			Verbose(1,### Incoming call to ${EXTEN} is from another node);
-			if ("${CHANNEL(channeltype)}" = "SIP") {
-				if ("${SIP_HEADER(X-GS-user_id)}" != "")
-					Set(__user_id=${SIP_HEADER(X-GS-user_id)});
-				if ("${SIP_HEADER(X-GS-user_name)}" != "")
-					Set(__user_name=${SIP_HEADER(X-GS-user_name)});
-				if ("${SIP_HEADER(X-GS-forwards)}" != "")
-					Set(__forwards=${SIP_HEADER(X-GS-forwards)});
-				if ("${SIP_HEADER(X-GS-origext)}" != "")
-					Set(__origext=${SIP_HEADER(X-GS-origext)});
-				if ("${SIP_HEADER(X-GS-clir)}" != "")
-					Set(clir=${SIP_HEADER(X-GS-clir)});  // nicht vererben
-				if ("${SIP_HEADER(X-GS-src)}" != "")
-					Set(__is_call_from=${SIP_HEADER(X-GS-src)});
-				if ("${SIP_HEADER(X-GS-is_callcompletion)}" != "")
-					Set(__is_callcompletion=${SIP_HEADER(X-GS-is_callcompletion)});
-				if ("${SIP_HEADER(X-GS-is_callfile_origin)}" != "")
-					Set(__is_callfile_origin=${SIP_HEADER(X-GS-is_callfile_origin)});
-				if ("${SIP_HEADER(X-GS-callfile_from_user)}" != "")
-					Set(__callfile_from_user=${SIP_HEADER(X-GS-callfile_from_user)});
-			}
-			//else {
-				//if ("${CHANNEL(channeltype)}" != "Local") {
-					// because we need to pass variables to other nodes which can
-					// only be done with SIP we support only SIP for inter-node
-					// connections. (and calls from Local can also get here of
-					// course.)
-				//}
-			//}
-		}
 		&pass-connid();
 		
 		if ("${forwards}" = "") {
@@ -857,7 +811,7 @@ context to-internal-users-self {
 			if ("${ringer}" != "") {
 				Verbose(1,### Ringer: ${ringer});
 				//SIPAddHeader(Alert-Info: <http://192.168.1.110:82/ringtones/${ringer}>);
-				SIPAddHeader(Alert-Info: ${ringer});
+				Set(__GS_SIPHDR_ALERT_INFO=${ringer});
 			}
 			
 			if ("${is_callfile_origin}" != "1") {
@@ -878,7 +832,7 @@ context to-internal-users-self {
 				Set(DIALSTATUS=BUSY);
 			} else {
 				AGI(/opt/gemeinschaft/dialplan-scripts/in-get-callername.agi,${EXTEN},${CALLERID(num)},${is_call_from});
-				Dial(SIP/${EXTEN}${pgrpdialstr},${dialtimeout});
+				Dial(PJSIP/${EXTEN}${pgrpdialstr},${dialtimeout},b(gs-sip-headers^s^1));
 			}
 			
 			if ("${is_callfile_origin}" != "1") {
@@ -890,13 +844,11 @@ context to-internal-users-self {
 					//	Verbose(1,### Local user ${EXTEN} is on DND - rejected);
 					//	Set(is_dnd=1);
 					//}
-					if ("${CHANNEL(channeltype)}" = "SIP") {
-						if ("${SIPPEER(${EXTEN},limit)}" != "" && "${SIPPEER(${EXTEN},limit)}" > "0") {
-							if ("${SIPPEER(${EXTEN},curcalls)}" = "0") {
-								// busy with 0 calls? we don't believe them, must be DND
-								Verbose(1,### Local user ${EXTEN} is on DND - busy with 0 calls);
-								Set(is_dnd=1);
-							}
+					if ("${CHANNEL(channeltype)}" = "PJSIP") {
+						if ("${GROUP_COUNT(callcount@${EXTEN})}" = "0") {
+							// busy with 0 calls? we don't believe them, must be DND
+							Verbose(1,### Local user ${EXTEN} is on DND - busy with 0 calls);
+							Set(is_dnd=1);
 						}
 					}
 					goto user_busy;
@@ -917,7 +869,7 @@ context to-internal-users-self {
 			}
 			else {
 				Verbose(1,### Callfile: Origin user ${callfile_from_user} did not answer);
-				NoCDR();
+				Set(CDR_PROP(disable)=1);
 			}
 			Hangup();
 			
@@ -1021,7 +973,7 @@ context to-internal-users-self {
 			
 			//Set(CALLERID(name)=Queue ${EXTEN});
 			//Set(CALLERID(name)=Q${EXTEN} ${CALLERID(name)});
-			SetCallerPres(allowed_passed_screen);
+			Set(CALLERID(pres)=allowed_passed_screen);
 			Set(CALLERID(name)=[${queue_displayname}] ${CALLERID(name)});
 			if ("${CALLERID(num)}" = "")
 				Set(CALLERID(num)=${EXTEN});
@@ -1084,7 +1036,7 @@ context to-internal-users-self {
 					}	
 				}
 				Set(queue_entertime=${EPOCH});
-				Queue(${EXTEN},${ring_instead_of_moh},,,${queuetimeout},/opt/gemeinschaft/dialplan-scripts/dial-log-store-queue);
+				Queue(${EXTEN},${ring_instead_of_moh}b(gs-sip-headers^s^1),,,${queuetimeout},/opt/gemeinschaft/dialplan-scripts/dial-log-store-queue);
 				Set(queue_waittime=$[${EPOCH}-${queue_entertime}]);
 				Verbose(1,### Tried to enter queue ${EXTEN}\, result: ${QUEUESTATUS}\, waittime: ${queue_waittime});
 				
@@ -1269,8 +1221,8 @@ context to-internal-users-self {
 		
 		user_uncallable_offer_cc:
 			Verbose(1,### Called user ${EXTEN} unreachable (${DIALSTATUS})\, offer call completion);
-			ResetCDR(w);
-			NoCDR();
+			ForkCDR(e);
+			Set(CDR_PROP(disable)=1);
 			Answer();
 			Wait(0.5);
 			Set(vm_announce_file=${vm_announce_${vm_source}});
@@ -1298,9 +1250,6 @@ context to-internal-users-self {
 	}
 	
 	h => {
-		ResetCDR(w);
-		//DumpChan();
-		NoCDR();
 
 
 		if ("${confnum}" != "") {

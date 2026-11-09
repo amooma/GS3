@@ -39,31 +39,42 @@ globals {
 // Macro to emulate SIPRemoveHeader() if absent
 //---------------------------------------------------------------------
 
-macro sip-remove-header( sipremoveheader_arg ) {
-	// SIPRemoveHeader() was added in Asterisk trunk rev. 168638, branch 1.6.2, tag 1.6.2.0-beta1 (https://issues.asterisk.org/view.php?id=14246)
-	// http://lists.digium.com/pipermail/asterisk-dev/2009-January/036102.html
-	// https://issues.asterisk.org/view.php?id=14246
-	TryExec(SIPRemoveHeader(${sipremoveheader_arg}));
-	if ("${TRYSTATUS}" = "NOAPP") {
-		Verbose(2,### Emulating SIPRemoveHeader ...);
-		if ("${sipremoveheader_arg}" = "") {
-			// Remove all custom headers (
-			for (i=1; ${i}<=99; i=${i}+1) {
-				Set(sipaddheader_varname=SIPADDHEADER${SPRINTF(%02d,${i})});
-				if (${LEN(${${sipaddheader_varname}})} > 0) {
-					//Verbose(2,### ${sipaddheader_varname} = ${${sipaddheader_varname}});
-					Set(${sipaddheader_varname}=);
-				}
+macro sip-clear-headers() {
+	// remove all custom headers
+	Set(__GS_SIPHDR_ALERT_INFO=);
+	Set(__GS_SIPHDR_CALL_INFO=);
+	Set(__GS_SIPHDR_PAI=);
+	Set(__GS_SIPHDR_PPI=);
+	Set(__GS_SIPHDR_PRIVACY=);
+	return;
+}
+
+// Pre-dial handler (option b of Dial and Queue). It runs on each outgoing
+// channel and adds the headers kept in the inherited GS_SIPHDR_* variables.
+context gs-sip-headers {
+	s => {
+		if ("${CHANNEL(channeltype)}" = "PJSIP") {
+			if ("${GS_SIPHDR_ALERT_INFO}" != "") {
+				Set(PJSIP_HEADER(add,Alert-Info)=${GS_SIPHDR_ALERT_INFO});
+			}
+			if ("${GS_SIPHDR_CALL_INFO}" != "") {
+				Set(PJSIP_HEADER(add,Call-Info)=${GS_SIPHDR_CALL_INFO});
+			}
+			if ("${GS_SIPHDR_PAI}" != "") {
+				Set(PJSIP_HEADER(add,P-Asserted-Identity)=${GS_SIPHDR_PAI});
+			}
+			if ("${GS_SIPHDR_PPI}" != "") {
+				Set(PJSIP_HEADER(add,P-Preferred-Identity)=${GS_SIPHDR_PPI});
+			}
+			if ("${GS_SIPHDR_PRIVACY}" != "") {
+				Set(PJSIP_HEADER(add,Privacy)=${GS_SIPHDR_PRIVACY});
+			}
+			if ("${GS_SIPHDR_CONNID}" != "") {
+				Set(PJSIP_HEADER(add,X-Org-ConnID)=${GS_SIPHDR_CONNID});
 			}
 		}
-		else {
-			//Verbose(1,### Emulation of SIPRemoveHeader with arguments not implemented!);
-			// Remove some headers
-			Verbose(2,### Emulating SIPRemoveHeader: removing "${sipremoveheader_arg}" ...);
-			AGI(/opt/gemeinschaft/dialplan-scripts/sip-remove-header.agi,${sipremoveheader_arg});
-		}
+		Return();
 	}
-	return;
 }
 
 
@@ -76,9 +87,9 @@ macro pass-connid() {
 	// sets ${connid}.
 	if ("${connid_enabled}" = "1") {
 		if ("${connid}" = "") {
-			if ("${CHANNEL(channeltype)}" = "SIP") {
-				if ("${SIP_HEADER(X-Org-ConnID)}" != "") {
-					Set(__connid=${SIP_HEADER(X-Org-ConnID)});
+			if ("${CHANNEL(channeltype)}" = "PJSIP") {
+				if ("${PJSIP_HEADER(read,X-Org-ConnID)}" != "") {
+					Set(__connid=${PJSIP_HEADER(read,X-Org-ConnID)});
 					Verbose(1,### Received ConnID: ${connid});
 				}
 			}
@@ -89,7 +100,7 @@ macro pass-connid() {
 			}
 		}
 		Set(CDR(x_connid)=${connid});
-		Set(__SIPADDHEADER_connid=X-Org-ConnID: ${connid});
+		Set(__GS_SIPHDR_CONNID=${connid});
 	}
 	return;
 }
@@ -194,11 +205,9 @@ macro cmm-login( new_user_name ) {
 	if ("${old_phone_ip}" != "" && "${old_phone_ip}" != "${new_phone_ip}") {
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${old_phone_ip}');
 	}
-	if ("${CHANNEL(channeltype)}" = "SIP") {
-		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${CHANNEL(peerip)}');
-		if ("${CHANNEL(recvip)}" != "${CHANNEL(peerip)}") {
-			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${CHANNEL(recvip)}');
-		}
+	if ("${CHANNEL(channeltype)}" = "PJSIP") {
+		Set(peer_addr=${CHANNEL(pjsip,remote_addr)});
+		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${CUT(peer_addr,:,1)}');
 	}
 	
 	Hangup();
@@ -241,12 +250,11 @@ macro cmm-logout() {
 	if ("${old_phone_ip}" != "") {
 		TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${old_phone_ip}');
 	}
-	if ("${CHANNEL(channeltype)}" = "SIP") {
-		if ("${CHANNEL(peerip)}" != "${old_phone_ip}") {
-			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${CHANNEL(peerip)}');
-		}
-		if ("${CHANNEL(recvip)}" != "${old_phone_ip}" && "${CHANNEL(recvip)}" != "${CHANNEL(peerip)}") {
-			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${CHANNEL(recvip)}');
+	if ("${CHANNEL(channeltype)}" = "PJSIP") {
+		Set(peer_addr=${CHANNEL(pjsip,remote_addr)});
+		Set(peer_ip=${CUT(peer_addr,:,1)});
+		if ("${peer_ip}" != "${old_phone_ip}") {
+			TrySystem(/opt/gemeinschaft/dialplan-scripts/prov-sync-phone --ip='${peer_ip}');
 		}
 	}
 	
@@ -813,27 +821,27 @@ macro dial-gateway-do( mnumber ) {
 				Set(CALLERID(name)=${CALLERID(num)});
 			}
 			// RFC 3325:
-			SIPAddHeader(P-Asserted-Identity: ${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
-			SIPAddHeader(P-Preferred-Identity: ${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
+			Set(__GS_SIPHDR_PAI=${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
+			Set(__GS_SIPHDR_PPI=${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
 			// RFC 3325, RFC 3323:
-			SIPAddHeader(Privacy: none);
+			Set(__GS_SIPHDR_PRIVACY=none);
 			// Set caller presentation - affects Remote-Party-ID header: ...";privacy:off;screen:yes"
-			SetCallerPres(allowed_passed_screen);
+			Set(CALLERID(pres)=allowed_passed_screen);
 		}
 		else {
 			// RFC 2543:
 			//Set(CALLERID(num)=anonymous);
 			//Set(CALLERID(name)=Anonymous);
 			// RFC 3325:
-			SIPAddHeader(P-Preferred-Identity: ${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
+			Set(__GS_SIPHDR_PPI=${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
 			// RFC 3325, RFC 3323:
-			SIPAddHeader(Privacy: id;header);
+			Set(__GS_SIPHDR_PRIVACY=id\;header);
 			// Set caller presentation - affects Remote-Party-ID header: ...";privacy:full;screen:yes"
-			SetCallerPres(prohib_passed_screen);
+			Set(CALLERID(pres)=prohib_passed_screen);
 		}
 		Verbose(1,### Outbound route: ${r_${r}_dial} - Caller ID: "${CALLERID(name)}" <${CALLERID(num)}@${r_${r}_cid_host}>);
 		Set(CDR(userfield)=${mnumber});
-		Dial(${r_${r}_dial},180);
+		Dial(${r_${r}_dial},180,b(gs-sip-headers^s^1));
 		Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
 		if ("${DIALSTATUS}" = "ANSWER" || "${DIALSTATUS}" = "CANCEL") {
 			Hangup();
@@ -894,7 +902,7 @@ macro dial-gateway-do( mnumber ) {
 		r=${r}+1;
 		
 		// Remove all custom headers (P-Preferred-Identity, Privacy, ... - see above):
-		&sip-remove-header(${});
+		&sip-clear-headers();
 	}
 	if ("${no_route}" != "") {
 		Verbose(1,### No matching route for ${mnumber} configured);
@@ -1089,20 +1097,6 @@ context from-iax-unauth {
 
 
 //---------------------------------------------------------------------
-//  From other Nodes
-//---------------------------------------------------------------------
-
-context from-node {
-	includes {
-		to-conferences-self;       // conferences
-		to-internal-nobody-self;   // internal phones (nobodies)
-		voicemail-any-self;        // vm boxes
-		to-internal-users-self;    // internal phones (users)
-	}
-}
-
-
-//---------------------------------------------------------------------
 //  Macro to store dial log
 //---------------------------------------------------------------------
 
@@ -1202,7 +1196,7 @@ context urldial {
 	
 	failed => {
 		Verbose(1,### Callfile: Origin user ${callfile_from_user} did not answer);
-		NoCDR();
+		Set(CDR_PROP(disable)=1);
 		Hangup();
 	}
 	

@@ -75,7 +75,7 @@ while ($ggrp = $rs->fetchRow()) {
 		# hack for Sipgate.de {
 		if (preg_match('/\bsipgate\b/i', $name)) {
 			echo "\t\t\t", "\n";
-			echo "\t\t\t", 'Set(did_full=${SIP_HEADER(To)});' ,"\n";
+			echo "\t\t\t", 'Set(did_full=${PJSIP_HEADER(read,To)});' ,"\n";
 			echo "\t\t\t", 'Set(did_full=${CUT(did_full,@,1)});' ,"\n";
 			//echo "\t\t\t", 'Set(did_full=${did_full:5});' ,"\n";
 			# You should cut off the prefix with the gateway group's

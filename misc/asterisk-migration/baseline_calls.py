@@ -153,7 +153,9 @@ class Phone:
         self.send('BYE %s SIP/2.0\r\nVia: SIP/2.0/UDP %s:%d;branch=%s;rport\r\nMax-Forwards: 70\r\nFrom: %s\r\nTo: %s\r\nCall-ID: %s\r\nCSeq: %d BYE\r\nContent-Length: 0\r\n\r\n' % (d['target'], SRV, self.port, self.branch(), d['local'], d['remote'], d['callid'], self.cseq))
         self.dialog = None; r = self.wait(); return int(r.split(' ', 2)[1]) if r else 'timeout'
     def dtmf(self, digit):
-        d = self.dialog; self.cseq += 1; b = 'Signal=%s\r\nDuration=160\r\n' % digit
+        d = self.dialog
+        if not d: return None
+        self.cseq += 1; b = 'Signal=%s\r\nDuration=160\r\n' % digit
         self.send('INFO %s SIP/2.0\r\nVia: SIP/2.0/UDP %s:%d;branch=%s;rport\r\nMax-Forwards: 70\r\nFrom: %s\r\nTo: %s\r\nCall-ID: %s\r\nCSeq: %d INFO\r\nContent-Type: application/dtmf-relay\r\nContent-Length: %d\r\n\r\n%s' % (d['target'], SRV, self.port, self.branch(), d['local'], d['remote'], d['callid'], self.cseq, len(b), b))
         return self.wait(3)
     def subscribe(self, target, event, accept):
