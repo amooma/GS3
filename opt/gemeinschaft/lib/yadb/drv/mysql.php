@@ -466,7 +466,7 @@ class YADB_Connection_mysql extends YADB_Connection
 					case YADB_MTYPE_INT:
 						$col['def'] =    (int)$col['def']; break;
 					case YADB_MTYPE_FLOAT:
-						$col['def'] = (double)$col['def']; break;
+						$col['def'] = (float)$col['def']; break;
 					case YADB_MTYPE_BOOL:
 						$col['def'] =   (bool)$col['def']; break;
 					// no need to cast string to string
@@ -1169,7 +1169,7 @@ class YADB_RecordSet_mysql extends YADB_RecordSet
 						case YADB_MTYPE_STR:
 															  break;  // is a string already
 						case YADB_MTYPE_FLOAT:
-							$row[$col] = (double)$row[$col];  break;
+							$row[$col] = (float)$row[$col];  break;
 						case YADB_MTYPE_BOOL:
 							$row[$col] =   (bool)$row[$col];  break;
 					}

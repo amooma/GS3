@@ -65,11 +65,11 @@ trap "err; exit 1" ERR
 # check system
 #
 . /etc/os-release 2>>/dev/null || true
-if [ "x${ID}" != "xubuntu" ] || [ "x${VERSION_ID}" != "x24.04" ]; then
+if [ "x${ID}" != "xubuntu" ] || [ "x${VERSION_ID}" != "x26.04" ]; then
 	if [ "$L2" == "de" ]; then
-		err "  Ihr System ist nicht Ubuntu 24.04."
+		err "  Ihr System ist nicht Ubuntu 26.04."
 	else
-		err "  Your system is not Ubuntu 24.04."
+		err "  Your system is not Ubuntu 26.04."
 	fi
 fi
 if [ "`id -un`" != "root" ]; then
@@ -186,11 +186,7 @@ ${APT_INSTALL} \
 	coreutils grep findutils sudo wget curl cron openssl patch \
 	expect dialog logrotate hostname net-tools iputils-ping netcat-openbsd \
 	udev psmisc dnsutils iputils-arping pciutils bzip2 \
-	vim less git linux-headers-$(uname -r) \
-	build-essential autoconf automake libtool pkg-config bison flex bc \
-	libelf-dev libncurses-dev zlib1g-dev libxml2-dev libnewt-dev \
-	libmysqlclient-dev libssl-dev \
-	libportaudio2 portaudio19-dev libasound2-dev
+	vim less git
 
 # now that we have vim, enable syntax highlighting by default:
 if ( which vim 1>>/dev/null 2>>/dev/null ); then
@@ -255,77 +251,26 @@ fi
 timedatectl set-ntp true || true
 
 
-# install dahdi 
-#
-echo ""
-echo "***"
-echo "***  Installing Dahdi ..."
-echo "***"
-cd /usr/local/src/
-DAHDI_TGZ="dahdi-linux-complete-3.4.0+3.4.0.tar.gz"
-$DOWNLOAD -O "${DAHDI_TGZ}" "https://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-3.4.0%2B3.4.0.tar.gz"
-echo "5af87c00ea2d54ddfec26fc2c099e4f72f36efcbc33507520fdd6e79709a6cf4  ${DAHDI_TGZ}" | sha256sum -c -
-tar -xzf "${DAHDI_TGZ}"
-cd "dahdi-linux-complete-3.4.0+3.4.0"
-make all
-make install
-make config
-# load DAHDI on boot. MeetMe needs /dev/dahdi/pseudo even without any
-# telephony hardware:
-echo "dahdi" > /etc/modules-load.d/dahdi.conf
-depmod -a
-modprobe dahdi
-# generate /etc/dahdi/system.conf:
-dahdi_genconf || true
-
 echo ""
 echo "***"
 echo "***  Installing Asterisk ..."
 echo "***"
-cd /usr/local/src/
-AST_TGZ="asterisk-1.8.32.3.tar.gz"
-$DOWNLOAD -O "${AST_TGZ}" "https://downloads.asterisk.org/pub/telephony/asterisk/old-releases/${AST_TGZ}"
-echo "3c12ddbb86e2b901af449bd5a3ac7bbc55a28664159d0c4fb70f89d761d8bf9e  ${AST_TGZ}" | sha256sum -c -
-tar -xzf "${AST_TGZ}"
-cd asterisk-1.8.32.3
+${APT_INSTALL} asterisk asterisk-modules asterisk-config unixodbc odbc-mariadb
+# the package starts Asterisk with its stock configuration:
+systemctl stop asterisk || true
 
-# adapt Asterisk 1.8 to current versions of OpenSSL, glibc, GCC and MySQL:
-sed -i -e 's/if (!stream->ssl->server) {/if (!SSL_is_server(stream->ssl)) {/' \
-       -e 's/SSLv2_client_method()/TLS_client_method()/' \
-       -e 's/SSLv3_client_method()/TLS_client_method()/' main/tcptls.c
-sed -i -e '0,/#include "asterisk.h"/s//#include "asterisk.h"\n#include <sys\/sysmacros.h>/' channels/chan_dahdi.c
-AST_FLAGS="-fgnu89-inline -fcommon -Dmy_bool=_Bool"
-
-./configure
-make menuselect.makeopts
-menuselect/menuselect --enable res_config_mysql menuselect.makeopts
-menuselect/menuselect --enable cdr_mysql menuselect.makeopts
-menuselect/menuselect --enable app_meetme menuselect.makeopts
-menuselect/menuselect --enable chan_dahdi menuselect.makeopts
-make ASTCFLAGS="${AST_FLAGS}"
-make install ASTCFLAGS="${AST_FLAGS}"
-make samples
-make config
-
-groupadd asterisk
-useradd -d /var/lib/asterisk -g asterisk asterisk
 chown --recursive asterisk:asterisk /var/lib/asterisk
 chown --recursive asterisk:asterisk /var/log/asterisk
 chown --recursive asterisk:asterisk /var/run/asterisk
 chown --recursive asterisk:asterisk /var/spool/asterisk
-chown --recursive asterisk:asterisk /usr/lib/asterisk
 chmod --recursive u=rwX,g=rX,o= /var/lib/asterisk
 chmod --recursive u=rwX,g=rX,o= /var/log/asterisk
 chmod --recursive u=rwX,g=rX,o= /var/run/asterisk
 # /var/run is a tmpfs:
 echo "d /run/asterisk 0750 asterisk asterisk -" > /etc/tmpfiles.d/asterisk.conf
 chmod --recursive u=rwX,g=rX,o= /var/spool/asterisk
-chmod --recursive u=rwX,g=rX,o= /usr/lib/asterisk
 chown --recursive root:asterisk /etc/asterisk
 chmod --recursive u=rwX,g=rX,o= /etc/asterisk
-
-echo 'AST_USER="asterisk"' >> /etc/default/asterisk
-echo 'AST_GROUP="asterisk"' >> /etc/default/asterisk
 
 # create directory for call-files
 #
@@ -355,8 +300,8 @@ ${APT_INSTALL} \
 	sipsak \
 	mysql-client mysql-server \
 	apache2 \
-	php8.3-cli libapache2-mod-php8.3 php8.3-mysql php8.3-ldap php8.3-mbstring \
-	php8.3-curl php8.3-xml php8.3-soap \
+	php8.5-cli libapache2-mod-php8.5 php8.5-mysql php8.5-ldap php8.5-mbstring \
+	php8.5-curl php8.5-xml php8.5-soap \
 	python3 python3-mysqldb \
 	sox libsox-fmt-all mpg123
 #aptitude clean
@@ -423,7 +368,8 @@ echo "***"
 echo "***  Installing German voice prompts for Asterisk ..."
 echo "***"
 
-cd /var/lib/asterisk/sounds/
+mkdir -p /usr/share/asterisk/sounds
+cd /usr/share/asterisk/sounds/
 [ -e de ] && rm -rf de || true
 
 # Get tarball from within Gemeinschaft {
@@ -515,7 +461,7 @@ a2ensite gemeinschaft
 a2enmod rewrite
 a2enmod alias
 a2enmod mime
-a2enmod php8.3
+a2enmod php8.5
 a2enmod headers
 
 systemctl restart apache2
@@ -996,11 +942,6 @@ invoke-rc.d iaxmodem start || true
 systemctl start hylafax.service faxq.service hfaxd.service || true
 systemctl start faxgetty-ttyIAX0.service faxgetty-ttyIAX1.service || true
 invoke-rc.d asterisk start || true
-
-dmesg | grep -i dahdi || true
-if (test -e /dev/dahdi); then
-  chown --recursive asterisk:asterisk /dev/dahdi
-fi
 
 # updating authentication file
 #

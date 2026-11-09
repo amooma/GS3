@@ -1,0 +1,106 @@
+Error. A queue with that extension already exists.
+
+===== registration and BLF subscription
+REGISTER 9999                                ok    
+REGISTER 9998                                ok    
+REGISTER 9997                                ok    
+SUBSCRIBE dialog for 9998                    ok    
+SUBSCRIBE MWI for 9998                       ok    
+CDR:
+QUEUE_LOG:
+
+===== internal call answered
+answered                                     ok    responses [401, 100, 180, 200] final 200
+  9998 INVITE P-Asserted-Identity: "S. Administrator" <sip:9999@10.0.2.15>
+  9998 INVITE From: "S. Administrator" <sip:9999@10.0.2.15>;tag=*
+callee got BYE                               ok    
+  BLF states seen by 9999: ['early', 'confirmed', 'terminated']
+CDR:
+  9999	9998	to-internal-users-self	SIP/9999-00000015	SIP/9998-00000016	Dial	SIP/9998&Local/*8*00002&Local/*8*00003,5	ANSWERED	3	3		
+  9999	*8*00003	default	Local/*8*00003@default-0000000e;2				NO ANSWER	0	3
+QUEUE_LOG:
+
+===== callee busy (486 with no other call)
+  caller result: responses [401, 100, 486] final 486
+CDR:
+  9999	9998	to-internal-users-self	SIP/9999-00000017	Local/*8*00003@default-00000010;1	Hangup	17	BUSY	0	3
+QUEUE_LOG:
+
+===== forward always to 9997
+answered                                     ok    responses [401, 100, 180, 200] final 200
+forward target rang                          ok    
+  9997 INVITE P-Asserted-Identity: "S. Administrator" <sip:9999@10.0.2.15>
+  9997 INVITE From: "S. Administrator" <sip:9999@10.0.2.15>;tag=*
+CDR:
+  Toggle	toggle	toggle-cfwd-hint	Local/toggle@toggle-cfwd-hint-00000011;1		Dial	local/toggle@toggle-cfwd-hint	NO ANSWER	0	3		
+  Toggle	toggle	toggle-cfwd-hint	Local/toggle@toggle-cfwd-hint-00000011;2		Hangup		NO ANSWER	0	1		
+  9999	9998	to-internal-users-self	SIP/9999-00000019	Local/9997@default-00000012;1	Dial	Local/9997/n,200	ANSWERED	3	3		
+  9999	9997	to-internal-users-self	Local/9997@default-00000012;2	SIP/9997-0000001a	Dial	SIP/9997&Local/*8*00002&Local/*8*00003,45	ANSWERED	3	3		
+  Toggle	toggle	toggle-cfwd-hint	Local/toggle@toggle-cfwd-hint-00000015;1		Dial	local/toggle@toggle-cfwd-hint	NO ANSWER	0	3		
+  Toggle	toggle	toggle-cfwd-hint	Local/toggle@toggle-cfwd-hint-00000015;2		Hangup		NO ANSWER	0	1
+QUEUE_LOG:
+
+===== call waiting off: second call to busy user
+first call answered                          ok    
+  second caller result: responses [401, 100, 200] final 200
+CDR:
+  Toggle	toggle	toggle-cwait-hint	Local/toggle@toggle-cwait-hint-00000016;1		Dial	local/toggle@toggle-cwait-hint	NO ANSWER	0	3		
+  Toggle	toggle	toggle-cwait-hint	Local/toggle@toggle-cwait-hint-00000016;2		Hangup		NO ANSWER	0	1		
+  9999	9998	to-internal-users-self	SIP/9999-0000001b	SIP/9998-0000001c	Dial	SIP/9998&Local/*8*00002&Local/*8*00003,5	ANSWERED	3	3		
+  9997	9998	from-internal-users	SIP/9997-0000001d		ResetCDR	w	NO ANSWER	0	3
+QUEUE_LOG:
+
+===== queue call
+queue answered                               ok    responses [401, 100, 200] final 200
+member rang                                  ok    
+  9998 INVITE P-Asserted-Identity: "[baseline] System Administrator" <sip:9999@10.0.2.15>
+  9998 INVITE From: "[baseline] System Administrator" <sip:9999@10.0.2.15>;tag=*
+CDR:
+  9999	5000	to-internal-users-self	SIP/9999-0000001e	SIP/9998-0000001f	Queue	5000,,,,3600,/opt/gemeinschaft/dialplan-scripts/dial-log-store-queue	ANSWERED	4	3
+QUEUE_LOG:
+  5000|NONE|ENTERQUEUE||9999|1
+  5000|SIP/9998|CONNECT|0|1794235201.82|0
+  5000|SIP/9998|COMPLETECALLER|0|4|1
+
+===== pickup of ringing phone
+  pickup result: responses [401, 100, 200] final 200
+  original caller result: 200
+CDR:
+  9999	9998	to-internal-users-self	SIP/9999-00000020	SIP/9997-00000022	Dial	SIP/9998&Local/*8*00002&Local/*8*00003,5	ANSWERED	2	3
+QUEUE_LOG:
+
+===== blind transfer
+call answered                                ok    
+  REFER response: 202
+transfer target rang                         ok    
+CDR:
+  9999	9998	to-internal-users-self	SIP/9999-00000023	SIP/9998-00000024	Dial	SIP/9998&Local/*8*00002&Local/*8*00003,5	ANSWERED	2	3		
+  9999	9997	to-internal-users-self	SIP/9999-00000023	SIP/9997-00000025	Dial	SIP/9997&Local/*8*00002&Local/*8*00003,45	ANSWERED	6	3
+QUEUE_LOG:
+
+===== conference with caller-set PIN
+first caller connects                        ok    
+second caller connects                       ok    
+  after wrong PIN: User #: 01         9999 System Administrator Channel: SIP/9999-00000026     (talking) 00:00:14 | 1 users in that conference. | 
+  after right PIN: User #: 01         9999 System Administrator Channel: SIP/9999-00000026     (talking) 00:00:20 | User #: 02         9998 Ordinary User        Channel: SIP/9998-00000027     (talking) 00:00:05 | 2 users in that conference
+CDR:
+  9999	c-123	to-conferences-self	SIP/9999-00000026		MeetMe	123,DcoT	ANSWERED	25	3		
+  	s	default	DAHDI/pseudo-693704822				NO ANSWER	0	3		
+  9998	c-123	to-conferences-self	SIP/9998-00000027		MeetMe	123,DcoT	ANSWERED	17	3
+QUEUE_LOG:
+
+===== NOTIFY to phone (provisioning resync)
+phone received NOTIFY                        ok    ['check-sync;reboot=false']
+CDR:
+QUEUE_LOG:
+
+===== no answer to voicemail, MWI
+diverted to voicemail                        ok    phone rang 7 time(s)
+message stored                               ok    1 -> 2
+  MWI: ['Messages-Waiting: yes']
+CDR:
+  9999	9998	to-internal-users-self	SIP/9999-00000028	Local/vm9998@default-00000021;1	Dial	Local/vm9998/n,200	ANSWERED	50	3		
+  9999	vm9998	default	Local/vm9998@default-00000021;2		VoiceMail	9998,s	ANSWERED	50	3
+QUEUE_LOG:
+
+RESULT: 19 of 19 passed

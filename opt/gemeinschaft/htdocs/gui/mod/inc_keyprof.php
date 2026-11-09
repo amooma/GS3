@@ -1026,8 +1026,8 @@ if ($phone_layout) {
                                 break;
                 }
 		switch ($phone_type) {
-                        case 'snom-720'; 
-			case 'snom-725';
+                        case 'snom-720': 
+			case 'snom-725':
                         //case 'snom-720':
                                 $key_levels = array(
                                         0 => array('from'=>  0,
@@ -1114,8 +1114,8 @@ if ($phone_layout) {
 			break;
 		}
 		switch ($phone_type) {
-                        case 'snom-710';
-			case 'snom-715';
+                        case 'snom-710':
+			case 'snom-715':
                                 $key_levels = array(
                                         0 => array('from'=>  0,
 					'to'=>  4, 'shifted'=>false,

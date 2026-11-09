@@ -1857,7 +1857,7 @@ class YADB_RecordObject
 			elseif (is_string ($v)) $v = '"'. addSlashes($v) .'"';
 			elseif (is_null   ($v)) $v = ' NULL';
 			elseif (is_double ($v)) {
-				if ((double)(int)$v != $v) $v = (string)$v;
+				if ((float)(int)$v != $v) $v = (string)$v;
 				else                       $v = (string)$v .'.0';
 			}
 			elseif (is_bool   ($v)) $v = $v ? ' true':' false';
@@ -1918,7 +1918,7 @@ class YADB_RecordObject
 			}
 			switch ($this->_fields[$prop]['mty']) {
 				case YADB_MTYPE_INT  : $val =    (int)$val; break;
-				case YADB_MTYPE_FLOAT: $val = (double)$val; break;
+				case YADB_MTYPE_FLOAT: $val = (float)$val; break;
 				case YADB_MTYPE_STR  : $val = (string)$val; break;
 				case YADB_MTYPE_BOOL : $val =   (bool)$val; break;
 			}

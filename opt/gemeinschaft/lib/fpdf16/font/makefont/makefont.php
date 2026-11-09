@@ -92,7 +92,7 @@ function ReadAFM($file, &$map)
 		elseif($code=='Weight')
 			$fm['Weight']=$param;
 		elseif($code=='ItalicAngle')
-			$fm['ItalicAngle']=(double)$param;
+			$fm['ItalicAngle']=(float)$param;
 		elseif($code=='Ascender')
 			$fm['Ascender']=(int)$param;
 		elseif($code=='Descender')
