@@ -1,3 +1,10 @@
+h1. Das ist die neueste ALPHA Version von Gemeinschaft 3
+- Nicht für denproduktiven Betrieb gedacht
+- Niemals direkt an einer public IP betreiben!
+- Installations Basis ist Ubuntu 24.04 Server minimal Installation!
+
+Happy testing!
+
 h1. Asterisk Version
 
 Gemeinschaft in der Version 3 ist die ältere Software mit einem Asterisk-Kern. Die aktuellere Version von Gemeinschaft hat Freeswitch als Kern. Weitere Informationen dazu finden Sie auf "https://www.alternative-solution.de/gs3":https://www.alternative-solution.de/gs3
