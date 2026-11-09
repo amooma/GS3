@@ -298,7 +298,7 @@ echo "***"
 ${APT_INSTALL} \
 	perl libnet-daemon-perl libnet-netmask-perl libio-interface-perl libio-socket-multicast-perl \
 	sipsak \
-	mysql-client mysql-server \
+	mariadb-client mariadb-client-compat mariadb-server \
 	apache2 \
 	php8.5-cli libapache2-mod-php8.5 php8.5-mysql php8.5-ldap php8.5-mbstring \
 	php8.5-curl php8.5-xml php8.5-soap \
@@ -423,12 +423,30 @@ echo "***  Creating Gemeinschaft database ..."
 echo "***"
 # The queries were written for the permissive mode of old MySQL versions
 # and we create triggers as a user without the SUPER privilege.
-cat <<\HEREDOC > /etc/mysql/mysql.conf.d/gemeinschaft.cnf
+cat <<\HEREDOC > /etc/mysql/mariadb.conf.d/60-gemeinschaft.cnf
 [mysqld]
 sql_mode = ""
 log_bin_trust_function_creators = 1
 HEREDOC
-systemctl restart mysql
+systemctl restart mariadb
+
+# Asterisk needs the database when it starts:
+mkdir -p /etc/systemd/system/asterisk.service.d
+cat <<\HEREDOC > /etc/systemd/system/asterisk.service.d/gemeinschaft.conf
+[Unit]
+After=mariadb.service
+Wants=mariadb.service
+HEREDOC
+systemctl daemon-reload
+
+# ODBC data source for Asterisk
+cat <<\HEREDOC > /etc/odbc.ini
+[gemeinschaft]
+Description = Gemeinschaft database
+Driver      = MariaDB Unicode
+Socket      = /var/run/mysqld/mysqld.sock
+Database    = asterisk
+HEREDOC
 
 GEMEINSCHAFT_DB_PASS=`head -c 20 /dev/urandom | md5sum -b - | cut -d ' ' -f 1 | head -c 30`
 for GS_DB_HOST in localhost 127.0.0.1 %; do

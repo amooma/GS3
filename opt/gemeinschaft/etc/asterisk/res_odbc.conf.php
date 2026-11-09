@@ -37,27 +37,13 @@ error_reporting(0);
 require_once( dirName(__FILE__) .'/../../inc/conf.php' );
 require_once( GS_DIR .'inc/util.php' );
 set_error_handler('err_handler_quiet');
-require_once( GS_DIR .'inc/mysql-find-socket.php' );
+
+# The data source name "gemeinschaft" is defined in /etc/odbc.ini.
+echo 'dsn => gemeinschaft'                            ,"\n";
+echo 'username => ', gs_get_conf('GS_DB_SLAVE_USER') ,"\n";
+echo 'password => ', gs_get_conf('GS_DB_SLAVE_PWD' ) ,"\n";
 
 
-$socket = gs_mysql_find_socket( gs_get_conf('GS_DB_SLAVE_HOST') );
-
-echo "\n";
-if (! $socket) {
-	echo 'dbhost = ', gs_get_conf('GS_DB_SLAVE_HOST') ,"\n";
-	echo 'dbport = 3306'                              ,"\n";  # MySQL default
-} else {
-	echo 'dbhost = localhost' ,"\n";  # "localhost" is special
-	echo 'dbport = 3306'      ,"\n";  # not used
-	echo 'dbsock = ', $socket ,"\n";
-}
-echo 'dbuser = ', gs_get_conf('GS_DB_SLAVE_USER') ,"\n";
-echo 'dbpass = ', gs_get_conf('GS_DB_SLAVE_PWD' ) ,"\n";
-echo 'dbname = ', gs_get_conf('GS_DB_SLAVE_DB'  ) ,"\n";
-echo 'requirements = warn' ,"\n";
-echo "\n";
-
-
-gs_log(GS_LOG_DEBUG, 'etc/asterisk/res_mysql.conf has just been loaded');
+gs_log(GS_LOG_DEBUG, 'etc/asterisk/res_odbc.conf has just been loaded');
 
 ?>

@@ -5371,6 +5371,7 @@ CREATE TABLE `ast_queue_members` (
   `static` tinyint(1) DEFAULT '0',
   `uniqueid` int(100) unsigned NOT NULL AUTO_INCREMENT,
   `paused` int(1) DEFAULT NULL,
+  `reason_paused` varchar(80) CHARACTER SET ascii DEFAULT NULL,
   PRIMARY KEY (`uniqueid`),
   UNIQUE KEY `queue_id_user_id` (`_queue_id`,`_user_id`),
   UNIQUE KEY `queue_name_interface` (`queue_name`,`interface`),
