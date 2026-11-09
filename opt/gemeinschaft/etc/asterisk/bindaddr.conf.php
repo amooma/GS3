@@ -88,6 +88,25 @@ gs_log(GS_LOG_DEBUG, 'Determined '. $bindaddr .' as our bindaddr for '. strToUpp
 if ($conffile === 'sip') {
 	echo 'bindaddr=', $bindaddr ,"\n";
 }
+elseif ($conffile === 'pjsip') {
+	# PJSIP cannot share 0.0.0.0:5060 with gs-sip-ua-config-responder on
+	# 224.0.1.75:5060, so it has to use a real address of this host.
+	if ($bindaddr === '0.0.0.0') {
+		$local_ips = array();
+		@exec( 'ip -4 -o addr show scope global 2>>/dev/null', $out );
+		foreach ($out as $line) {
+			if (preg_match('/\sinet\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\//', $line, $m)) {
+				$local_ips[] = $m[1];
+			}
+		}
+		if (in_array(gs_get_conf('GS_PROV_HOST'), $local_ips, true)) {
+			$bindaddr = gs_get_conf('GS_PROV_HOST');
+		} elseif (count($local_ips) > 0) {
+			$bindaddr = $local_ips[0];
+		}
+	}
+	echo 'bind = ', $bindaddr ,":5060\n";
+}
 elseif ($conffile === 'iax') {
 	if ($bindaddr === '0.0.0.0')
 		echo ';bindaddr=', $bindaddr ,"\n";

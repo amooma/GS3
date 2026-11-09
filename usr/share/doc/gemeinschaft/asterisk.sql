@@ -7657,3 +7657,56 @@ USE `asterisk`;
 
 -- Dump completed on 2010-10-19 19:30:00
 
+
+--
+-- PJSIP realtime objects for the phones, derived from ast_sipfriends
+--
+
+CREATE OR REPLACE SQL SECURITY INVOKER VIEW `ps_aors` AS
+SELECT `name` AS `id`,
+       1 AS `max_contacts`,
+       'yes' AS `remove_existing`,
+       60 AS `qualify_frequency`,
+       145 AS `default_expiration`,
+       65 AS `minimum_expiration`,
+       185 AS `maximum_expiration`,
+       NULL AS `contact`
+FROM `ast_sipfriends_gs`;
+
+CREATE OR REPLACE SQL SECURITY INVOKER VIEW `ps_auths` AS
+SELECT `name` AS `id`,
+       'userpass' AS `auth_type`,
+       `name` AS `username`,
+       `secret` AS `password`
+FROM `ast_sipfriends_gs`;
+
+CREATE OR REPLACE SQL SECURITY INVOKER VIEW `ps_endpoints` AS
+SELECT `name` AS `id`,
+       'transport-udp' AS `transport`,
+       `name` AS `aors`,
+       `name` AS `auth`,
+       `context` AS `context`,
+       `subscribecontext` AS `subscribe_context`,
+       'all' AS `disallow`,
+       'alaw,h261,h263,h263p' AS `allow`,
+       `callerid` AS `callerid`,
+       IF(`mailbox`='', NULL, CONCAT(`mailbox`, '@default')) AS `mailboxes`,
+       `callgroup` AS `call_group`,
+       `pickupgroup` AS `pickup_group`,
+       NULLIF(`setvar`, '') AS `set_var`,
+       NULLIF(`language`, '') AS `language`,
+       'username' AS `identify_by`,
+       'rfc4733' AS `dtmf_mode`,
+       'no' AS `direct_media`,
+       'yes' AS `force_rport`,
+       'yes' AS `rewrite_contact`,
+       'yes' AS `rtp_symmetric`,
+       'yes' AS `send_pai`,
+       'yes' AS `notify_early_inuse_ringing`,
+       'voicemail' AS `voicemail_extension`,
+       15 AS `rtp_keepalive`,
+       30 AS `rtp_timeout`,
+       200 AS `rtp_timeout_hold`,
+       'ef' AS `tos_audio`,
+       'af41' AS `tos_video`
+FROM `ast_sipfriends_gs`;
