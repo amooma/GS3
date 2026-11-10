@@ -180,7 +180,7 @@ sub handle_response
 			&handle_extstate(\$exten_at_context, $state);
 		}
 	}
-	elsif ($message eq 'follows' && $pkt =~ m/^ActionID:\s*dialplan/mio) {
+	elsif ($message eq 'command output follows' && $pkt =~ m/^ActionID:\s*dialplan/mio) {
 		my $context = '';
 		while ($pkt =~ m/Context\s*['"]?([a-z\-_0-9]+)/gio) {
 			$context = $1;
@@ -196,7 +196,7 @@ sub handle_response
 			'ActionID: hints' .CRLF.
 			CRLF);
 		}
-	elsif ($message eq 'follows' && $pkt =~ m/^ActionID:\s*hints/mio) {
+	elsif ($message eq 'command output follows' && $pkt =~ m/^ActionID:\s*hints/mio) {
 		my $exten   = '';
 		my $context = '';
 		while ($pkt =~ m/([0-9*a-z\-_]+)@([a-z\-_0-9]+)/gcio) {
@@ -292,7 +292,7 @@ sub handle_event
 		
 		my $ext = '';
 		my $ext_is_external = 0;
-		if ($pkt =~ m/^Channel:\s*(?:SIP)\/([0-9]+)/mio) {
+		if ($pkt =~ m/^Channel:\s*(?:PJSIP)\/([0-9]+)/mio) {
 			if (! defined($1)) {return;}
 			$ext = $1;
 			if ($ext =~ m/^0/o) { $ext_is_external = 1; }
@@ -311,35 +311,40 @@ sub handle_event
 		&handle_channel_up_down(\$uniqueid, \$ext, $ext_is_external, ($evtname eq 'newchannel' ? 1:0));
 	}
 	
-	elsif ($evtname eq 'link' || $evtname eq 'unlink') {
+	elsif ($evtname eq 'bridgeenter' || $evtname eq 'bridgeleave') {
 		#print "\nGOT EVENT $evtname:\n$pkt\n\n";
 		
-		if ($pkt !~ m/^Uniqueid1:\s*([0-9\.\-_]+)/mio) {return;}
-		if (! defined($1)) {return;}
-		my $uniqueid1 = $1;
+		if ($pkt !~ m/^BridgeUniqueid:\s*(\S+)/mio) {return;}
+		my $bridge = $1;
+		if ($pkt !~ m/^Uniqueid:\s*([0-9\.\-_]+)/mio) {return;}
+		my $uniqueid = $1;
 		
-		if ($pkt !~ m/^Uniqueid2:\s*([0-9\.\-_]+)/mio) {return;}
-		if (! defined($1)) {return;}
-		my $uniqueid2 = $1;
-		
-		# maybe we did not get a callerid/calleeid with the NewChannel
-		# event but now it might be available
-		my $cidnum = '';
-		if ($pkt =~ m/^CallerID1:\s*([0-9\.\-_]+)/mio) {
-			$cidnum = $1;
-			&handle_channel_up_down(\$uniqueid1, \$cidnum, (($cidnum =~ m/^0/o) ? 1:0), 1);
+		our %bridge_members;
+		if ($evtname eq 'bridgeenter') {
+			# maybe we did not get a callerid with the NewChannel
+			# event but now it might be available
+			if ($pkt =~ m/^CallerIDNum:\s*([0-9\.\-_]+)/mio) {
+				my $cidnum = $1;
+				&handle_channel_up_down(\$uniqueid, \$cidnum, (($cidnum =~ m/^0/o) ? 1:0), 1);
+			}
+			foreach my $other (keys %{$bridge_members{$bridge}}) {
+				&handle_channel_link_unlink(\$other, \$uniqueid, 1);
+			}
+			$bridge_members{$bridge}{$uniqueid} = 1;
+		} else {
+			delete $bridge_members{$bridge}{$uniqueid};
+			foreach my $other (keys %{$bridge_members{$bridge}}) {
+				&handle_channel_link_unlink(\$other, \$uniqueid, 0);
+			}
+			if (! %{$bridge_members{$bridge}}) {
+				delete $bridge_members{$bridge};
+			}
 		}
-		if ($pkt =~ m/^CallerID2:\s*([0-9\.\-_]+)/mio) {
-			$cidnum = $1;
-			&handle_channel_up_down(\$uniqueid2, \$cidnum, (($cidnum =~ m/^0/o) ? 1:0), 1);
-		}
-		
-		&handle_channel_link_unlink(\$uniqueid1, \$uniqueid2, ($evtname eq 'link' ? 1:0));
 	}
 	
 }
 
-sub handle_extstate : locked
+sub handle_extstate
 {
 	my $ext_at_context = ${$_[0]};
 	my $state          =   $_[1];
@@ -381,7 +386,7 @@ sub handle_extstate : locked
 	#print "----\n";
 }
 
-sub handle_channel_up_down : locked
+sub handle_channel_up_down
 {
 	my $uniqueid        = ${$_[0]};
 	my $ext             = ${$_[1]};
@@ -422,7 +427,7 @@ sub handle_channel_up_down : locked
 	#print "\n";
 }
 
-sub handle_channel_link_unlink : locked
+sub handle_channel_link_unlink
 {
 	my $uniqueid1   = ${$_[0]};
 	my $uniqueid2   = ${$_[1]};
@@ -459,7 +464,7 @@ sub handle_channel_link_unlink : locked
 	#print "\n";
 }
 
-sub handle_channelinfo : locked
+sub handle_channelinfo
 {
 	my $ext_from             = ${$_[0]};
 	my $ext_from_is_external =   $_[1];
@@ -484,7 +489,7 @@ sub handle_channelinfo : locked
 	}
 }
 
-sub get_extstate : locked
+sub get_extstate
 {
 	my $ext_at_context =   $_[0];
 	
@@ -639,7 +644,7 @@ sub ami_listen
 	
 	$ami->debug(0);
 	$ami->register_loggedin_cb( \&handle_loggedin );
-	my @eventtypes = ('extensionstatus', 'newchannel', 'hangup', 'link', 'unlink');
+	my @eventtypes = ('extensionstatus', 'newchannel', 'hangup', 'bridgeenter', 'bridgeleave');
 	$ami->register_event_cb( \&handle_event, \@eventtypes );
 	$ami->register_response_cb( \&handle_response );
 	

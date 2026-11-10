@@ -160,7 +160,7 @@ sub run_one_timeslice
 				$self->{'cb_auth'}( \$self );
 				last;
 			} else {
-				print STDERR "We expected \"Asterisk Call Manager/1.0\" but got:\n$pkt\n";
+				print STDERR "We expected \"Asterisk Call Manager\" but got:\n$pkt\n";
 				undef $pkt;
 				undef $buf;
 				$self->_reset_conn();

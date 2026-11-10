@@ -158,6 +158,7 @@ class AsteriskHandler(Thread):
 		self.queuestats = {}
 		self.extstates = {}
 		self.channels = {}
+		self.bridges = {}
 		self.status_expire = 60
 		self.status_timeout = 1
 		
@@ -340,7 +341,7 @@ class AsteriskHandler(Thread):
 			
 				self.queuestats[queue]['members'].append(queue_member)
 
-			elif (event["Event"] == "Join" or event["Event"] == "Leave"):
+			elif (event["Event"] == "QueueCallerJoin" or event["Event"] == "QueueCallerLeave"):
 				queue = array_value(event, 'Queue', None, str)
 				count = array_value(event, 'Count', None, int)
 
@@ -367,16 +368,6 @@ class AsteriskHandler(Thread):
 				if (chan_id):
 					self.channels[chan_id]=channelinfo
 					
-			elif (event["Event"] == "ChannelUpdate"):
-				chan_id = array_value(event, 'Uniqueid')
-				
-				if (chan_id):
-					if (chan_id not in self.channels):
-						self.channels[chan_id]={}
-					self.channels[chan_id]['channel'] = array_value(event, 'Channel')
-					self.channels[chan_id]['time'] = time()
-					self.channels[chan_id]['channeltype'] = array_value(event, 'Channeltype')
-					
 			elif (event["Event"] == "Newstate"):
 				chan_id = array_value(event, 'Uniqueid')
 				
@@ -400,30 +391,41 @@ class AsteriskHandler(Thread):
 					self.channels[chan_id]['cidnum'] = array_value(event, 'CallerIDNum')
 					self.channels[chan_id]['cidname'] = array_value(event, 'CallerIDName')
 					
-			elif (event["Event"] == "Bridge"):
-				chan_id1 = array_value(event, 'Uniqueid1')
-				chan_id2 = array_value(event, 'Uniqueid2')
+			elif (event["Event"] == "BridgeEnter" or event["Event"] == "BridgeLeave"):
+				chan_id = array_value(event, 'Uniqueid')
+				bridge_id = array_value(event, 'BridgeUniqueid')
 				
-				if (chan_id1 and chan_id2):
-					if (chan_id1 not in self.channels):
-						self.channels[chan_id1]={}
-					self.channels[chan_id1]['channel'] = array_value(event, 'Channel1')
-					self.channels[chan_id1]['time'] = time()
-					self.channels[chan_id1]['cidnum'] = array_value(event, 'CallerID1')
-					self.channels[chan_id1]['bridgestate'] = array_value(event, 'Bridgestate')
-					self.channels[chan_id1]['bridgetype'] = array_value(event, 'Bridgetype')
-					self.channels[chan_id1]['bridgechannel'] = array_value(event, 'Channel2')
-					self.channels[chan_id1]['bridgechanid'] = chan_id2
+				if (chan_id and bridge_id):
+					members = self.bridges.setdefault(bridge_id, {})
+					entering = (event["Event"] == "BridgeEnter")
 					
-					if (chan_id2 not in self.channels):
-						self.channels[chan_id2]={}
-					self.channels[chan_id2]['channel'] = array_value(event, 'Channel2')
-					self.channels[chan_id2]['time'] = time()
-					self.channels[chan_id2]['cidnum'] = array_value(event, 'CallerID2')
-					self.channels[chan_id2]['bridgestate'] = array_value(event, 'Bridgestate')
-					self.channels[chan_id2]['bridgetype'] = array_value(event, 'Bridgetype')
-					self.channels[chan_id2]['bridgechannel'] = array_value(event, 'Channel1')
-					self.channels[chan_id2]['bridgechanid'] = chan_id1
+					if (entering):
+						members[chan_id] = array_value(event, 'Channel')
+					else:
+						members.pop(chan_id, None)
+					
+					if (chan_id not in self.channels):
+						self.channels[chan_id]={}
+					info = self.channels[chan_id]
+					info['channel'] = array_value(event, 'Channel')
+					info['time'] = time()
+					info['cidnum'] = array_value(event, 'CallerIDNum')
+					info['bridgestate'] = 'Link' if entering else 'Unlink'
+					info['bridgetype'] = array_value(event, 'BridgeType')
+					
+					# a two-party bridge links the channels to each other
+					others = [other for other in members if other != chan_id]
+					other_id = others[0] if (entering and others) else None
+					if (entering and others):
+						info['bridgechannel'] = members[other_id]
+						info['bridgechanid'] = other_id
+						if (other_id in self.channels):
+							self.channels[other_id]['bridgestate'] = 'Link'
+							self.channels[other_id]['bridgetype'] = info['bridgetype']
+							self.channels[other_id]['bridgechannel'] = info['channel']
+							self.channels[other_id]['bridgechanid'] = chan_id
+					if (not members):
+						del(self.bridges[bridge_id])
 					
 			elif (event["Event"] == "Hangup"):
 				channelinfo = {}
