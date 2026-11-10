@@ -73,16 +73,8 @@ $start_ast = ($err !== 0);
 if ($start_ast) {
 	echo "; Asterisk not running. Starting Asterisk ...\n";
 	
-	$safe_asterisk = find_executable('safe_asterisk',
-		array('/usr/sbin/', '/usr/bin/', '/usr/local/sbin/', '/usr/local/bin/'));
-	if (! $safe_asterisk) {
-		echo "; safe_asterisk not found!\n";
-		exit(1);
-	}
-	
 	$err=0; $out=array();
-	//@exec( 'asterisk 1>>/dev/null', $out, $err );
-	@exec( $safe_asterisk .' 1>>/dev/null', $out, $err );
+	@exec( 'systemctl start asterisk 1>>/dev/null', $out, $err );
 	if ($err !== 0) {
 		echo "; Failed to start Asterisk!\n";
 		exit(1);

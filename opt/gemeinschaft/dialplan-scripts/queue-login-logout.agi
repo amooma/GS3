@@ -91,9 +91,9 @@ if ($action === 'login') {
 	}
 	$penalty = (int)$db->executeGetOne('SELECT `penalty` FROM `penalties` WHERE `_user_id`='.$user_id.' AND `_queue_id`='.$queue_id);
 	if ($penalty) {
-		$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`, `penalty`) VALUES (\''. $db->escape($queue_name) .'\', '. $queue_id .', \''. $db->escape( 'SIP/'. $user ) .'\', '. $user_id .', '. $penalty .')' );
+		$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`, `penalty`) VALUES (\''. $db->escape($queue_name) .'\', '. $queue_id .', \''. $db->escape( 'PJSIP/'. $user ) .'\', '. $user_id .', '. $penalty .')' );
 	} else {
-		$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`) VALUES (\''. $db->escape($queue_name) .'\', '. $queue_id .', \''. $db->escape( 'SIP/'. $user ) .'\', '. $user_id .')' );
+		$db->execute( 'INSERT INTO `ast_queue_members` (`queue_name`, `_queue_id`, `interface`, `_user_id`) VALUES (\''. $db->escape($queue_name) .'\', '. $queue_id .', \''. $db->escape( 'PJSIP/'. $user ) .'\', '. $user_id .')' );
 	}
 	gs_agi_set_variable( 'agent_login_status', 'loggedin' );
 	write_callfile( $queue_name, $user );
@@ -168,7 +168,7 @@ elseif ($action === 'loginall') {
 	while ($queue_map = $rs->fetchrow()) {
 		$penalty = $db->executeGetOne('SELECT `penalty` FROM `penalties` WHERE `_user_id`='.$user_id.' AND `_queue_id`='.$queue_map['_id']);
 		if (! $penalty) $penalty='DEFAULT';
-		$interface = 'SIP/'.$user;
+		$interface = 'PJSIP/'.$user;
 		$db->execute(
 			'INSERT INTO `ast_queue_members` SET 
 			`_user_id` ='.$user_id.', '.

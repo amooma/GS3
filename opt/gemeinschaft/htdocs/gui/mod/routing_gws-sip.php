@@ -643,7 +643,7 @@ ORDER BY `g`.`grp_id`, `g`.`title`'
 <?php echo __('Registrierungs-Status'); ?><?php echo ' (',__('lokaler Asterisk'),')'; ?><br />
 <div style="font-family:monospace; white-space:pre; background:#eee; border:1px solid #e9e9e9; padding:1px 3px;"><?php
 	$err=0; $out=array();
-	@exec( 'sudo asterisk -rx '.qsa('sip show registry').' 2>>/dev/null', $out, $err );
+	@exec( 'sudo asterisk -rx '.qsa('pjsip show registrations').' 2>>/dev/null', $out, $err );
 	if ($err !== 0) {
 		echo '?';
 	} else {

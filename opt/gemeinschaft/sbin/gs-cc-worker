@@ -202,7 +202,7 @@ function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid,
 	$rr = "RR";
 	$cid_to_caller = "$rr ". ($cid_to_caller ? $cid_to_caller : '<*>');
 	$cid_to_callee = $cid_to_callee ? $cid_to_callee : "$rr <*>";
-	$call = "Channel: SIP/$from\n"
+	$call = "Channel: PJSIP/$from\n"
       . "MaxRetries: 1\n"
       . "WaitTime: 20\n"
       . "Context: call-completion\n"

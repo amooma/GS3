@@ -88,7 +88,7 @@ if (@$_REQUEST['action']=='loginqueue' && (! empty($queue_ids))) {
 	while ($queue_map = $rs->fetchRow()) {
 		$penalty = $DB->executeGetOne('SELECT `penalty` FROM `penalties` WHERE `_user_id`='.$user['id'].' AND `_queue_id`='.$queue_map['_id']);
 		if (! $penalty) $penalty='DEFAULT';
-		$interface = 'SIP/'.$agent;
+		$interface = 'PJSIP/'.$agent;
 		$DB->execute(
 			'INSERT INTO `ast_queue_members` SET 
 			`_user_id` ='.(int)$user['id'].', '. 
@@ -111,7 +111,7 @@ if (@$_REQUEST['action']=='logoutqueue'  && (! empty($queue_ids))) {
 	$ami = new AMI;
 	$ami->ami_login('gscc', 'gspass', '127.0.0.1', 5038);
 	$agent = $DB->executeGetOne('SELECT `name` FROM `ast_sipfriends` WHERE `_user_id`='.$user['id']);
-	$interface = 'SIP/'.$agent;
+	$interface = 'PJSIP/'.$agent;
 	$queue_ids = array_intersect($queue_ids, $queues_allowed);
 	$rs = $DB->execute(
 		'SELECT `queue_name`, `_queue_id`  FROM `ast_queue_members` WHERE 

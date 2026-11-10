@@ -257,8 +257,8 @@ function gs_queue_status( $host, $ext, $getMembers, $getCallers )
 		$rs = $db->execute( 'SELECT `interface` FROM `ast_queue_members` WHERE `queue_name`=\''. $db->escape($ext) .'\'' );
 		$queue_members = array();
 		while ($r = $rs->fetchRow()) {
-			if (strToUpper(subStr($r['interface'],0,4)) == 'SIP/')
-				$queue_members[] = subStr($r['interface'],4);
+			if (strToUpper(subStr($r['interface'],0,6)) == 'PJSIP/')
+				$queue_members[] = subStr($r['interface'],6);
 			else
 				$queue_members[] = $r['interface'];
 		}
@@ -266,7 +266,7 @@ function gs_queue_status( $host, $ext, $getMembers, $getCallers )
 			return $queue_stats;
 		
 		foreach ($queue_members as $queue_member)
-			$queue_stats['members']['SIP/'.$queue_member] = $default_member;
+			$queue_stats['members']['PJSIP/'.$queue_member] = $default_member;
 		
 		$ext_states = @gs_extstate( $host, $queue_members );
 		if (! is_array($ext_states)) {
@@ -274,7 +274,7 @@ function gs_queue_status( $host, $ext, $getMembers, $getCallers )
 		}
 		
 		foreach ($queue_members as $queue_member)
-			$queue_stats['members']['SIP/'.$queue_member]['devstate']
+			$queue_stats['members']['PJSIP/'.$queue_member]['devstate']
 				= extstate_to_devstate( @$ext_states[$queue_member] );
 	}
 	/*

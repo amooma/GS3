@@ -48,7 +48,7 @@ function InitRecordCall($filename, $index, $comment) {  //FIXME
 	
 	$call
 		//= "Channel: Local/". $from_num_dial ."\n"
-		= "Channel: SIP/".$_SESSION['sudo_user']['info']['ext']."\n"
+		= "Channel: PJSIP/".$_SESSION['sudo_user']['info']['ext']."\n"
 		. "MaxRetries: 0\n"
 		. "WaitTime: 15\n"
 		. "Context: vm-rec-multiple\n"

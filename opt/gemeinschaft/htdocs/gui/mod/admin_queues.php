@@ -235,7 +235,7 @@ if ($action === 'addstatic') {
 			'WHERE `_user_id`='.$agent_id
 			);
 			if (($user_name != '') && ($queue_name != '')) {
-				$interface = 'SIP/'.$user_name;
+				$interface = 'PJSIP/'.$user_name;
 				$penalty = $DB->executeGetOne('SELECT `penalty` FROM `penalties` WHERE `_user_id`='.$agent_id);
 				if (! $penalty) $penalty='DEFAULT';
 				$DB->execute(

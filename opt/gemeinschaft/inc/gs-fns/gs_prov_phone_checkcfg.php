@@ -443,7 +443,7 @@ WHERE
 function _gs_prov_phone_checkcfg_by_ext_do_snom( $ext, $reboot=true )
 {
 	$sip_notify = $reboot ? 'snom-reboot' : 'snom-check-cfg';
-	@exec( 'sudo asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
+	@exec( 'sudo asterisk -rx \'pjsip send notify '. $sip_notify .' endpoint '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
 	
 	$hosts = @gs_hosts_get(false);
 	if (isGsError($hosts)) {
@@ -451,7 +451,7 @@ function _gs_prov_phone_checkcfg_by_ext_do_snom( $ext, $reboot=true )
 	} elseif (! is_array($hosts)) {
 		gs_log(GS_LOG_WARNING, 'Failed to get hosts');
 	} else {
-		$cmd = 'asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\'';
+		$cmd = 'asterisk -rx \'pjsip send notify '. $sip_notify .' endpoint '. $ext .'\'';
 		foreach ($hosts as $host) {
 			@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd) .' >>/dev/null 2>>/dev/null &' );
 		}
@@ -554,7 +554,7 @@ function _gs_prov_phone_checkcfg_by_ext_do_grandstream( $ext, $reboot=true )
 function _gs_prov_phone_checkcfg_by_ext_do_polycom( $ext, $reboot=true )
 {
 	$sip_notify = "polycom-check-cfg";
-	@exec( 'sudo asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
+	@exec( 'sudo asterisk -rx \'pjsip send notify '. $sip_notify .' endpoint '. $ext .'\' >>/dev/null 2>>/dev/null &', $out, $err );
 	
 	$hosts = @gs_hosts_get(false);
 	if (isGsError($hosts)) {
@@ -562,7 +562,7 @@ function _gs_prov_phone_checkcfg_by_ext_do_polycom( $ext, $reboot=true )
 	} elseif (! is_array($hosts)) {
 		gs_log(GS_LOG_WARNING, 'Failed to get hosts');
 	} else {
-		$cmd = 'asterisk -rx \'sip notify '. $sip_notify .' '. $ext .'\'';
+		$cmd = 'asterisk -rx \'pjsip send notify '. $sip_notify .' endpoint '. $ext .'\'';
 		foreach ($hosts as $host) {
 			@exec( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd) .' >>/dev/null 2>>/dev/null &' );
 		}

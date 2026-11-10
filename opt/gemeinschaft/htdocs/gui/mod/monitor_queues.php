@@ -283,8 +283,8 @@ if (@$rs_members) {
 			
 			$memberinfo = @$queue_stats['members'][$interface];
 			
-			if (strToUpper(subStr($interface,0,4))=='SIP/')
-				$interface = subStr($interface,4);
+			if (strToUpper(subStr($interface,0,6))=='PJSIP/')
+				$interface = subStr($interface,6);
 			echo '<td>', htmlEnt($interface), '</td>';
 			//$sudo_url = (@$_SESSION['sudo_user']['name'] == @$_SESSION['real_user']['name'])
 			//	? '' : ('&amp;sudo='. @$_SESSION['sudo_user']['name']);

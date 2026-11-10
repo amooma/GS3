@@ -37,64 +37,10 @@ include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
 *    $host_ids=false for all
 ***********************************************************/
 
-function gs_asterisks_prune_peer( $peer, $host_ids=false )
+function gs_asterisks_prune_peer( $peer, $host_ids=array() )
 {
-	if (! $host_ids || ! is_array($host_ids)) $host_ids = false;
-	
-	# check peer
-	if ($peer === 'all' || $peer == '') {
-		$peer = 'all';
-	} elseif (! preg_match( '/^[1-9][0-9]{1,9}$/', $peer )) {
-		return new GsError( 'Invalid peer name.' );
-	}
-	
-	# connect to db
-	#
-	$db = gs_db_master_connect();
-	if (! $db)
-		return new GsError( 'Could not connect to database.' );
-	
-	# get hosts
-	#
-	$hosts = @ gs_hosts_get();
-	if (isGsError( $hosts ))
-		return new GsError( $hosts->getMsg() );
-	if (! is_array( $hosts ))
-		return new GsError( 'Failed to get hosts.' );
-	
-	$GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
-	if (! $GS_INSTALLATION_TYPE_SINGLE) {
-		# get our host IDs
-		#
-		$our_host_ids = @ gs_get_listen_to_ids();
-		if (isGsError( $our_host_ids ))
-			return new GsError( $our_host_ids->getMsg() );
-		if (! is_array( $our_host_ids ))
-			return new GsError( 'Failed to get our host IDs.' );
-	}
-	
-	# are we root? do we have to sudo?
-	#
-	$uid = @ posix_geteuid();
-	$uinfo = @ posix_getPwUid($uid);
-	$uname = @ $uinfo['name'];
-	$sudo = ($uname=='root') ? '' : 'sudo ';
-	
-	$ok = true;
-	foreach ($hosts as $host) {
-		if (! $host_ids || in_array($host['id'], $host_ids)) {
-			$cmd = 'asterisk -rx \'sip prune realtime '. $peer .'\' ';
-			if (! $GS_INSTALLATION_TYPE_SINGLE
-			&&  ! in_array($host['id'], $our_host_ids)) {
-				# this is not the local node
-				$cmd = 'ssh -o StrictHostKeyChecking=no -o BatchMode=yes -l root '. qsa($host['host']) .' '. qsa($cmd);
-			}
-			@ exec( $sudo . $cmd .' 1>>/dev/null 2>>/dev/null', $out, $err );
-			$ok = $ok && ($err==0);
-		}
-	}
-	if (! $ok)
-		return new GsError( 'Failed to prune peer "'.$peer.'".' );
+	# Phones are read from the database for each request (PJSIP realtime
+	# without a cache), so there is nothing to remove from Asterisk.
 	return true;
 }
 
