@@ -6018,12 +6018,11 @@ CREATE TABLE `gate_grps` (
 LOCK TABLES `gate_grps` WRITE;
 /*!40000 ALTER TABLE `gate_grps` DISABLE KEYS */;
 INSERT INTO `gate_grps` VALUES (5,'campus','SIP-ISDN-GWs intern','balance',1,'','','','','','');
-INSERT INTO `gate_grps` VALUES (6,'pstn','ISDN (PRI)','balance',1,'^(?:(?:0049|0)2631)?123(.*)','$1','','','^(.*)','0251702$1');
+INSERT INTO `gate_grps` VALUES (6,'pstn','PSTN','balance',1,'^(?:(?:0049|0)2631)?123(.*)','$1','','','^(.*)','0251702$1');
 INSERT INTO `gate_grps` VALUES (7,'gsm-t-mobile','GSM-GW T-Mobile','balance',0,'','','','','','');
 INSERT INTO `gate_grps` VALUES (8,'gsm-vodafone','GSM-GW Vodafone','balance',0,'','','','','','');
 INSERT INTO `gate_grps` VALUES (9,'sipgate','SIP-GW (sipgate.de)','balance',0,'','','','','','');
 INSERT INTO `gate_grps` VALUES (10,'dusnet','SIP-GW (dus.net)','balance',0,'','','','','','');
-INSERT INTO `gate_grps` VALUES (12,'isdn-bri','ISDN (BRI)','balance',1,'^(?:(?:0049|0)2631)?1234','','','','','');
 /*!40000 ALTER TABLE `gate_grps` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6088,15 +6087,9 @@ CREATE TABLE `gates` (
 
 LOCK TABLES `gates` WRITE;
 /*!40000 ALTER TABLE `gates` DISABLE KEYS */;
-INSERT INTO `gates` VALUES (5,6,'zap','gw_5_prispan1','PRI Span 1',1,'Zap/r1/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,NULL);
-INSERT INTO `gates` VALUES (6,6,'zap','gw_6_prispan2','PRI Span 2',1,'Zap/r2/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,NULL);
 INSERT INTO `gates` VALUES (7,5,'sip','gw_7_sipisdninterna','SIP-ISDN intern A',1,'PJSIP/{prefix}{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
 INSERT INTO `gates` VALUES (8,5,'sip','gw_8_sipisdninternb','SIP-ISDN intern B',1,'PJSIP/{prefix}{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
 INSERT INTO `gates` VALUES (9,8,'sip','gw_9_sipgsmvodafone','SIP-GSM Vodafone',1,'PJSIP/{prefix}{number:1}@{gateway}','example.com',NULL,'','',0,NULL);
-INSERT INTO `gates` VALUES (16,12,'misdn','gw_16_briport1','BRI Port 1',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,1);
-INSERT INTO `gates` VALUES (17,12,'misdn','gw_17_briport2','BRI Port 2',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,2);
-INSERT INTO `gates` VALUES (18,12,'misdn','gw_18_briport3','BRI Port 3',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,3);
-INSERT INTO `gates` VALUES (19,12,'misdn','gw_19_briport4','BRI Port 4',1,'mISDN/g:{gateway}/{prefix}{number:1}',NULL,NULL,NULL,NULL,0,4);
 /*!40000 ALTER TABLE `gates` ENABLE KEYS */;
 UNLOCK TABLES;
 

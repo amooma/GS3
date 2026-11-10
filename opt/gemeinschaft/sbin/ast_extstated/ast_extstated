@@ -296,13 +296,6 @@ sub handle_event
 			if (! defined($1)) {return;}
 			$ext = $1;
 			if ($ext =~ m/^0/o) { $ext_is_external = 1; }
-		} elsif ($pkt =~ m/^Channel:\s*Zap\//mio) {
-			$ext_is_external = 1;
-			if ($pkt =~ m/^CallerIDNum:\s*([0-9*#]*)\//mio) {
-				$ext = $1 unless (!defined($1));
-			} elsif ($pkt =~ m/^Callerid:\s*[^<]*<([0-9*#]*)\//mio) {
-				$ext = $1 unless (!defined($1));
-			}
 		} else {return;}
 		
 		#print "\n UNIQUEID $uniqueid\n";

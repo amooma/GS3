@@ -315,8 +315,7 @@ $MODULES['routing'  ]=  array(
 	'sub' => array(
 		'gwgrps'       => array('title' => __('Gateway-Gruppen'), 'id' => 17001),
 		'gws-sip'      => array('title' => __('SIP-Gateways'), 'id' => 17002),
-		'gws-iax'      => array('title' => __('IAX-Gateways'), 'id' => 17009),
-		'gws-isdn'     => array('title' => __('ISDN-Gateways'), 'id' => 17003)
+		'gws-iax'      => array('title' => __('IAX-Gateways'), 'id' => 17009)
 	)
 );
 if ($GS_INSTALLATION_TYPE === 'gpbx') {
@@ -372,15 +371,6 @@ $MODULES['system'   ]['sub'][
 }
 }
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
-$MODULES['system'   ]['sub'][
-		'cards']       =  array('title' => __('PCI-Karten'), 'id' => 18009);
-if ($GS_INSTALLATION_TYPE !== 'gpbx') {  //FIXME
-$MODULES['system'   ]['sub'][
-		'isdnports']   =  array('title' => __('ISDN-Ports'), 'id' => 18010);
-} else {  //FIXME
-$MODULES['system'   ]['sub'][
-		'gpbx-b410p']  =  array('title' => __('ISDN-Ports (BRI)'), 'id' => 18011);
-}
 if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
 $MODULES['system'   ]['sub'][
 		'asterisk-log']=  array('title' => __('Asterisk-Log'), 'id' => 18012);
