@@ -40,67 +40,6 @@ set_error_handler('err_handler_quiet');
 require_once( GS_DIR .'inc/log.php' );
 require_once( GS_DIR .'inc/langhelper.php' );
 
-if (! gs_get_conf('GS_INSTALLATION_TYPE_SINGLE')) {
-	
-	require_once( GS_DIR .'inc/get-listen-to-ids.php' );
-	require_once( GS_DIR .'inc/gs-lib.php' );
-	include_once( GS_DIR .'inc/gs-fns/gs_hosts_get.php' );
-	
-	$our_ids = @ gs_get_listen_to_ids();
-	if (! is_array($our_ids)) $our_ids = array();
-	//echo 'OUR IDS: ', implode(', ', $our_ids), "\n";
-	
-	$hosts = @ gs_hosts_get();
-	if (isGsError( $hosts )) $hosts = array();
-	if (! $hosts)            $hosts = array();
-	//echo "HOSTS:\n"; print_r($hosts);
-	
-	$min_our_ids = (count($our_ids) > 0) ? min($our_ids) : 0;
-	$outUser = 'gs-'. str_pad( $min_our_ids, 4, '0', STR_PAD_LEFT );
-	
-	$out = '';
-	foreach ($hosts as $host) {
-		if (in_array( (int)$host['id'], $our_ids )) {
-			//echo "SKIPPING ", $host['id'], "\n";
-			continue;
-		} else
-			//echo "DOING ", $host['id'], "\n";
-		
-		# it's one of the other nodes
-		
-		$inUser = 'gs-'. str_pad( $host['id'], 4, '0', STR_PAD_LEFT );
-		$inPass = 'thiS is rEally seCret.';
-		$inPass = subStr( str_replace(
-			array( '+', '/', '=' ),
-			array( '', '', ''  ),
-			base64_encode( $inPass )
-		), 0, 25 );
-		$outPass = $inPass;
-		
-		$name = str_pad( $host['id'], 4, '0', STR_PAD_LEFT );
-		$out .= '
-[gs-'. $name .'](node-user)
-host='. $host['host'] .'
-defaultip='. $host['host'] .'
-username='. $inUser .'
-secret='. $inPass .'
-setvar=__from_node=yes
-
-[gs-'. $name .'](node-peer)
-host='. 'dynamic' .'
-defaultip='. $host['host'] .'
-username='. $outUser .'
-fromuser='. $outUser .'
-secret='. $outPass .'
-setvar=__from_node=yes
-';
-	}
-	echo $out;
-	
-}
-echo "\n";
-
-
 
 # get gateways from DB
 #
@@ -111,7 +50,7 @@ if (! $DB) {
 }
 $rs = $DB->execute(
 'SELECT
-	`g`.`id`, `g`.`name`, `g`.`host`, `g`.`proxy`, `g`.`user`, `g`.`pwd`,
+	`g`.`id`, `g`.`name`, `g`.`host`, `g`.`proxy`, `g`.`user`, `g`.`pwd`, `g`.`register`,
 	`gg`.`name` `gg_name`
 FROM
 	`gates` `g` JOIN
@@ -242,52 +181,96 @@ while ($gw = $rs->fetchRow()) {
 	}
 	
 	
-	echo '[', $gw['name'] ,']' ,"\n";
-	echo 'type = '            , 'peer' ,"\n";
-	echo 'sendrpid ='		, 'no' , "\n";
-	echo 'host = '            , $gw['host'] ,"\n";
-	if ($params['port'          ] > 0) {
-		echo 'port = '            , $params['port'          ] ,"\n";
-	}
-	echo 'username = '            , $gw['user'] ,"\n";
-	echo 'secret = '              , $gw['pwd' ] ,"\n";
-	if ($gw['proxy'] != null) {
-		echo 'outboundproxy = '   , $gw['proxy'] ,"\n";
-	}
-	if ($params['fromdomain'    ] != null) {
-		echo 'fromdomain = '      , $params['fromdomain'    ] ,"\n";
-	}
-	if ($params['fromuser'      ] != null) {
-		echo 'fromuser = '        , $params['fromuser'      ] ,"\n";
-	}
-	echo 'insecure = '        , 'port,invite' ,"\n";
-	echo 'nat = '             , $params['nat'           ] ,"\n";
-	echo 'canreinvite = '     , $params['canreinvite'   ] ,"\n";
-	echo 'dtmfmode = '        , $params['dtmfmode'      ] ,"\n";
-	echo 'call-limit = '      , $params['call-limit'    ] ,"\n";
-	echo 'registertimeout = ' , '60' ,"\n";
-	//echo 't38pt_udptl = yes' ,"\n";
-	echo 'setvar=__is_from_gateway=1' ,"\n";
-	echo 'context = '         , 'from-gg-'.$gw['gg_name'] ,"\n";
-	echo 'qualify = '         , $params['qualify'       ] ,"\n";
-	echo 'maxexpiry = '       , $params['maxexpiry'     ] ,"\n";
-	echo 'defaultexpiry = '   , $params['defaultexpiry' ] ,"\n";
-	echo 'disallow = '        , 'all' ,"\n";
-
-	if (strlen(trim(gs_get_conf('GS_INTL_ASTERISK_LANG'))) > 0)
-		echo 'language = ', gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST) ,"\n";
-
+	$name = $gw['name'];
+	$nat  = ($params['nat'] !== 'no') ? 'yes' : 'no';
+	$host_port = $gw['host'] . ($params['port'] > 0 ? ':'.$params['port'] : '');
+	$has_auth = ($gw['user'] != '' && $gw['pwd'] != '');
+	
+	$codecs = array();
 	foreach ($codecs_allow as $codec => $allowed) {
-		if ($allowed) {
-			echo 'allow = ', $codec ,"\n";
-		}
+		if ($allowed) $codecs[] = $codec;
 	}
-	if ($params['permit'        ] != null
-	&&  'x'.$params['permit'        ] != 'x'.'0.0.0.0/0') {
-		echo 'deny = '            ,'0.0.0.0/0.0.0.0' ,"\n";  # deny all
-		echo 'permit = '          , $params['permit'        ] ,"\n";
+	$dtmfmode = ($params['dtmfmode'] === 'rfc2833') ? 'rfc4733' : $params['dtmfmode'];
+	
+	echo '[', $name ,']' ,"\n";
+	echo 'type = endpoint' ,"\n";
+	echo 'transport = transport-udp' ,"\n";
+	echo 'context = from-gg-', $gw['gg_name'] ,"\n";
+	echo 'aors = ', $name ,"\n";
+	if ($has_auth) {
+		echo 'outbound_auth = ', $name ,'-auth' ,"\n";
+	}
+	echo 'identify_by = ip' ,"\n";
+	echo 'disallow = all' ,"\n";
+	echo 'allow = ', implode(',', $codecs) ,"\n";
+	echo 'dtmf_mode = ', $dtmfmode ,"\n";
+	echo 'direct_media = ', ($params['canreinvite'] === 'yes' ? 'yes' : 'no') ,"\n";
+	echo 'force_rport = ', $nat ,"\n";
+	echo 'rewrite_contact = ', $nat ,"\n";
+	echo 'rtp_symmetric = ', $nat ,"\n";
+	echo 'set_var = __is_from_gateway=1' ,"\n";
+	if ($gw['proxy'] != null) {
+		echo 'outbound_proxy = sip:', $gw['proxy'] ,'\;lr' ,"\n";
+	}
+	if ($params['fromdomain'] != null) {
+		echo 'from_domain = ', $params['fromdomain'] ,"\n";
+	}
+	if ($params['fromuser'] != null) {
+		echo 'from_user = ', $params['fromuser'] ,"\n";
+	}
+	if (strlen(trim(gs_get_conf('GS_INTL_ASTERISK_LANG'))) > 0) {
+		echo 'language = ', gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST) ,"\n";
+	}
+	if ($params['permit'] != null
+	&&  'x'.$params['permit'] != 'x'.'0.0.0.0/0') {
+		echo 'deny = 0.0.0.0/0.0.0.0' ,"\n";  # deny all
+		echo 'permit = ', $params['permit'] ,"\n";
 	}
 	echo "\n";
+	
+	echo '[', $name ,']' ,"\n";
+	echo 'type = aor' ,"\n";
+	echo 'contact = sip:', $host_port ,"\n";
+	if ($params['qualify'] !== 'no') {
+		echo 'qualify_frequency = 60' ,"\n";
+	}
+	echo "\n";
+	
+	if ($has_auth) {
+		echo '[', $name ,'-auth]' ,"\n";
+		echo 'type = auth' ,"\n";
+		echo 'auth_type = userpass' ,"\n";
+		echo 'username = ', $gw['user'] ,"\n";
+		echo 'password = ', $gw['pwd'] ,"\n";
+		echo "\n";
+	}
+	
+	echo '[', $name ,'-identify]' ,"\n";
+	echo 'type = identify' ,"\n";
+	echo 'endpoint = ', $name ,"\n";
+	echo 'match = ', $gw['host'] ,"\n";
+	echo "\n";
+	
+	if ($gw['register'] && $gw['user'] != '') {
+		$reg_domain = ($params['fromdomain'] != null) ? $params['fromdomain'] : $gw['host'];
+		$server = ($gw['proxy'] != null) ? $gw['proxy'] : $host_port;
+		
+		echo '[', $name ,'-reg]' ,"\n";
+		echo 'type = registration' ,"\n";
+		echo 'transport = transport-udp' ,"\n";
+		echo 'server_uri = sip:', $server ,"\n";
+		echo 'client_uri = sip:', $gw['user'] ,'@', $reg_domain ,"\n";
+		echo 'contact_user = ', $gw['user'] ,"\n";
+		if ($has_auth) {
+			echo 'outbound_auth = ', $name ,'-auth' ,"\n";
+		}
+		echo 'endpoint = ', $name ,"\n";
+		echo 'line = yes' ,"\n";
+		echo 'retry_interval = 60' ,"\n";
+		echo 'forbidden_retry_interval = 60' ,"\n";
+		echo 'max_retries = 10000' ,"\n";
+		echo "\n";
+	}
 }
 
 ?>

@@ -35,7 +35,7 @@ include_once( GS_DIR .'inc/pcre_check.php' );
 include_once( GS_DIR .'lib/utf8-normalize/gs_utf_normal.php' );
 
 $default_dialstrs = array(
-	'sip'     => 'SIP/{number:1}@{gateway}',
+	'sip'     => 'PJSIP/{number:1}@{gateway}',
 	);
 $gw_type = 'sip';
 

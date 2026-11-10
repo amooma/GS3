@@ -237,7 +237,7 @@ WHERE `id`='.$ggid
 			$dialstr = preg_replace('/\{peer\}/iS', '{peer}', $dialstr);
 			switch ($type) {
 				case 'sip':
-					$dialstr = preg_replace('/^[^\/]*\//S', 'SIP/', $dialstr);
+					$dialstr = preg_replace('/^[^\/]*\//S', 'PJSIP/', $dialstr);
 					break;
 				case 'zap':
 					$dialstr = preg_replace('/^[^\/]*\//S', 'Zap/', $dialstr);

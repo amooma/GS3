@@ -783,6 +783,17 @@ fi
 # make tmp directory world accessible
 chmod 777 /var/spool/hylafax/tmp/
 
+# Ubuntu confines Ghostscript with AppArmor, and HylaFAX uses it to
+# convert documents in its spool directory:
+mkdir -p /etc/apparmor.d/local
+cat <<\HEREDOC > /etc/apparmor.d/local/gs
+capability dac_override,
+/var/spool/hylafax/** rwk,
+HEREDOC
+if [ -e /etc/apparmor.d/gs ]; then
+	apparmor_parser -r /etc/apparmor.d/gs || true
+fi
+
 # sudo permissions for FaxDispatch
 #
 echo "uucp ALL = NOPASSWD: /bin/chgrp" > /etc/sudoers.d/gemeinschaft-hylafax

@@ -883,7 +883,23 @@ macro dial-gateway-do( mnumber ) {
 		}
 		Verbose(1,### Outbound route: ${r_${r}_dial} - Caller ID: "${CALLERID(name)}" <${CALLERID(num)}@${r_${r}_cid_host}>);
 		Set(CDR(userfield)=${mnumber});
-		Dial(${r_${r}_dial},180,b(gs-sip-headers^s^1));
+		Set(gw_full=0);
+		if ("${r_${r}_limit}" != "" && "${r_${r}_limit}" != "0") {
+			Set(GROUP(${r_${r}_gw})=gwcalls);
+			if (${GROUP_COUNT(gwcalls@${r_${r}_gw})} > ${r_${r}_limit}) {
+				Verbose(1,### Gateway ${r_${r}_gw} is at its call limit of ${r_${r}_limit});
+				Set(GROUP(${r_${r}_gw})=);
+				Set(gw_full=1);
+			}
+		}
+		if ("${gw_full}" = "1") {
+			// try the next gateway
+			Set(DIALSTATUS=CHANUNAVAIL);
+			Set(HANGUPCAUSE=34);
+		}
+		else {
+			Dial(${r_${r}_dial},180,b(gs-sip-headers^s^1));
+		}
 		Verbose(1,### Dialstatus for ${r_${r}_dial}: ${DIALSTATUS});
 		if ("${DIALSTATUS}" = "ANSWER" || "${DIALSTATUS}" = "CANCEL") {
 			Hangup();
@@ -940,6 +956,9 @@ macro dial-gateway-do( mnumber ) {
 			Verbose(1,### Could not reach ${mnumber} via 10 different gateways);
 			Congestion(5);
 			Hangup();
+		}
+		if ("${r_${r}_limit}" != "" && "${r_${r}_limit}" != "0") {
+			Set(GROUP(${r_${r}_gw})=);
 		}
 		r=${r}+1;
 		

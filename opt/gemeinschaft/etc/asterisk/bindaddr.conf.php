@@ -85,10 +85,7 @@ if (gs_get_conf('GS_FAX_ENABLED') && $conffile === 'iax') {
 
 gs_log(GS_LOG_DEBUG, 'Determined '. $bindaddr .' as our bindaddr for '. strToUpper($conffile) );
 
-if ($conffile === 'sip') {
-	echo 'bindaddr=', $bindaddr ,"\n";
-}
-elseif ($conffile === 'pjsip') {
+if ($conffile === 'pjsip') {
 	# PJSIP cannot share 0.0.0.0:5060 with gs-sip-ua-config-responder on
 	# 224.0.1.75:5060, so it has to use a real address of this host.
 	if ($bindaddr === '0.0.0.0') {

@@ -229,7 +229,7 @@ WHERE `id`='. $ggrp_id
 	}
 	
 	$rs = $db->execute(
-'SELECT `type`, `name`, `dialstr`, `hw_port`, `host`, `user`
+'SELECT `id`, `type`, `name`, `dialstr`, `hw_port`, `host`, `user`
 FROM `gates`
 WHERE
 	`grp_id`='. $ggrp_id .' AND
@@ -323,6 +323,11 @@ LIMIT 9'
 				$sip_uri_cid_host = $gate['host'];
 			}
 			gs_agi_set_variable( 'r_'.$idx.'_cid_host', $sip_uri_cid_host );
+			
+			# maximum number of simultaneous calls (0 = no limit)
+			$call_limit = (int)$db->executeGetOne( 'SELECT `value` FROM `gate_params` WHERE `gate_id`='. (int)$gate['id'] .' AND `param`=\'call-limit\'' );
+			gs_agi_set_variable( 'r_'.$idx.'_gw', $gate['name'] );
+			gs_agi_set_variable( 'r_'.$idx.'_limit', $call_limit );
 			
 			++$idx;
 		}
