@@ -62,7 +62,7 @@ do {
 } while (time() < $runctl_t_stop);
 
 
-@ exec( 'find \'/tmp/\' -maxdepth 1 -name \'gs-cc-*.call\' -type f -mmin +10 | xargs rm -f 1>>/dev/null 2>>/dev/null' );
+@ exec( 'find \'/var/spool/asterisk/tmp/\' -maxdepth 1 -name \'gs-cc-*.call\' -type f -mmin +10 | xargs rm -f 1>>/dev/null 2>>/dev/null' );
 gs_log(GS_LOG_DEBUG, 'Worker ended normally.', 'cc.log');
 die(0);
 
@@ -216,7 +216,8 @@ function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid,
 	//echo $call, "\n";
 	
 	//$filename = '/tmp/gs-'. $user['id'] .'-'. _pack_int(time()) . rand(100,999) .'.call';
-	$filename = '/tmp/gs-cc-'. _pack_int(time()) . rand(100,999) .'.call';
+	# same filesystem as the spool directory, so that the rename is atomic
+	$filename = '/var/spool/asterisk/tmp/gs-cc-'. _pack_int(time()) . rand(100,999) .'.call';
 	$cf = @ fOpen( $filename, 'wb' );
 	if (! $cf) {
 		gs_log(GS_LOG_WARNING, 'Failed to write call file "'. $filename .'"');
@@ -233,11 +234,14 @@ function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid,
 	||  in_array( $from_host_id, $our_host_ids )) {
 		# the Asterisk of this user and the web server both run on this host
 		
+		error_clear_last();
 		$ok = @ rename( $filename, $spoolfile );
 		if ($ok < 1) {
+			$rename_err = error_get_last();
+			$rename_err = is_array($rename_err) ? $rename_err['message'] : 'unknown error';
 			@ unlink( $filename );
-			gs_log(GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"');
-			gs_log(GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"', 'cc.log');
+			gs_log(GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'": '. $rename_err);
+			gs_log(GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'": '. $rename_err, 'cc.log');
 			return false;
 		}
 		
