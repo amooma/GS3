@@ -1254,7 +1254,7 @@ context to-internal-users-self {
 
 		if ("${confnum}" != "") {
 			Verbose(1,### Participant "${CALLERID(all)}" has left conference ${confprefix}${confnum});
-			MeetMeCount(${confnum},cnt);
+			Set(cnt=${CONFBRIDGE_INFO(parties,${confnum})});
 			Verbose(1,### There are now ${cnt} people left in conference ${confprefix}${confnum});
 			if (${cnt} < 1) {
 				Verbose(1,### Conference ${confprefix}${confnum} is empty. Free it.);

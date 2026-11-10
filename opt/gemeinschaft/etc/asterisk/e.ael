@@ -329,7 +329,7 @@ context sys-rec-record {
 }
 
 //---------------------------------------------------------------------
-//  Conferences (MeetMe)
+//  Conferences (ConfBridge)
 //---------------------------------------------------------------------
 
 context to-conferences {
@@ -368,7 +368,6 @@ context to-conferences {
 				Verbose(1,### Found an empty conference: ${confprefix}${confnum});
 				Playback(conf-enteringno);
 				SayDigits(${confprefix}${confnum});
-				//MeetMe(${confnum},DcoT);
 				//Hangup();
 				jump ${confprefix}${confnum}@to-conferences-self;
 			}
@@ -432,36 +431,79 @@ context to-conferences-self {
 		Set(confprefix=${EXTEN:0:2});
 		jump c-${EXTEN:2}@to-conferences-self;
 	}
-	/*
-	c-empty => {
-		Verbose(1,### Trying to enter new empty conference);
-		//MeetMe(${confnum},eD);
-		Answer();
-		for (i=100; ${i}<999; i=${i}+1) {
-			Verbose(1,### Trying to find empty conference - ${i});
-			MeetMeCount(${i},cnt);
-			if (${cnt} < 1) {
-				Verbose(1,### Found empty conference: ${i});
-				Playback(conf-enteringno);
-				SayDigits(${confprefix}${i});
-				MeetMe(${i},DcoT);
-				Hangup();
-			}
-		}
-		Verbose(1,### Could not find empty conference);
-		Playback(beeperr);
-		Congestion(3);
-		Hangup();
-	}
-	*/
 	_c-XX. => {
 		Set(confnum=${EXTEN:2});
 		Verbose(1,### Entering conference ${confprefix}${confnum});
 		&pass-connid();
 		Answer();
 		Wait(0.5);
-		MeetMe(${confnum},DcoT);
+		
+		// CONF_STATE_<room>: empty = room is free, "pending" = the first
+		// caller is choosing a PIN, "-" = no PIN, anything else is the PIN.
+		Set(lock_ok=${LOCK(conf_${confnum})});
+		Set(conf_parties=${CONFBRIDGE_INFO(parties,${confnum})});
+		if ("${GLOBAL(CONF_STATE_${confnum})}" = "" && "${conf_parties}" = "0") {
+			// empty room: the first caller may set a PIN (just # for none)
+			Set(GLOBAL(CONF_STATE_${confnum})=pending);
+			Set(conf_claimed=1);
+			Set(lock_ok=${UNLOCK(conf_${confnum})});
+			Read(conf_pin,conf-getpin,8,,1,8);
+			if ("${conf_pin}" = "") {
+				Set(conf_pin=-);
+			}
+			Set(GLOBAL(CONF_STATE_${confnum})=${conf_pin});
+			Set(conf_claimed=);
+		}
+		else {
+			Set(lock_ok=${UNLOCK(conf_${confnum})});
+			// wait until the first caller has chosen the PIN
+			for (i=0; ${i}<25; i=${i}+1) {
+				if ("${GLOBAL(CONF_STATE_${confnum})}" != "pending") {
+					break;
+				}
+				Wait(1);
+			}
+			Set(conf_pin=${GLOBAL(CONF_STATE_${confnum})});
+			if ("${conf_pin}" != "" && "${conf_pin}" != "-" && "${conf_pin}" != "pending") {
+				Set(conf_ok=0);
+				Set(conf_prompt=conf-getpin);
+				for (i=1; ${i}<=3; i=${i}+1) {
+					Read(conf_entry,${conf_prompt},8,,1,8);
+					if ("${conf_entry}" = "${conf_pin}") {
+						Set(conf_ok=1);
+						break;
+					}
+					// also part of the next Read so digits can interrupt it
+					Set(conf_prompt=conf-invalidpin&conf-getpin);
+				}
+				if ("${conf_ok}" != "1") {
+					Playback(conf-invalidpin);
+				}
+				if ("${conf_ok}" != "1") {
+					Verbose(1,### Wrong PIN for conference ${confprefix}${confnum});
+					Hangup();
+				}
+			}
+		}
+		
+		ConfBridge(${confnum},gs_conf_bridge,gs_conf_user);
 		Hangup();
+	}
+	
+	h => {
+		if ("${confnum}" != "") {
+			if ("${conf_claimed}" = "1") {
+				// hung up while choosing the PIN
+				Set(GLOBAL(CONF_STATE_${confnum})=);
+			}
+			Verbose(1,### Participant "${CALLERID(all)}" has left conference ${confprefix}${confnum});
+			Set(conf_parties=${CONFBRIDGE_INFO(parties,${confnum})});
+			if ("${conf_parties}" = "0" && "${GLOBAL(CONF_STATE_${confnum})}" != "pending") {
+				Verbose(1,### Conference ${confprefix}${confnum} is empty. Free it.);
+				Set(GLOBAL(CONF_STATE_${confnum})=);
+				TrySystem(/opt/gemeinschaft/dialplan-scripts/conf-remove ${confprefix}${confnum});
+			}
+		}
 	}
 	
 }

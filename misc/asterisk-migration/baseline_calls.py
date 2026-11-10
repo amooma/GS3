@@ -89,7 +89,9 @@ class Phone:
                     self.dialog = dict(callid=self.hdr(m, 'Call-ID'), local=self.hdr(m, 'To') + ';tag=' + tag, remote=self.hdr(m, 'From'),
                                        target=re.search(r'<?(sip:[^>;\s]+)', self.hdr(m, 'Contact')).group(1))
             elif meth == 'BYE':
-                self.reply(m, 200, 'OK', contact=False); self.media = False; self.got_bye = True; self.dialog = None
+                self.reply(m, 200, 'OK', contact=False)
+                if not self.dialog or self.hdr(m, 'Call-ID') == self.dialog['callid']:
+                    self.media = False; self.got_bye = True; self.dialog = None
             elif meth == 'ACK': pass
             elif meth == 'NOTIFY':
                 self.notifies.append(m); self.reply(m, 200, 'OK', contact=False)
@@ -194,7 +196,10 @@ def qlog_len():
     try: return sum(1 for _ in open('/var/log/asterisk/queue_log', errors='replace'))
     except OSError: return 0
 marks = {}
+PHONES = []
 def begin(name):
+    for p in PHONES: p.register()   # real phones re-register too
+    time.sleep(1 if PHONES else 0)
     log('\n===== ' + name); marks['cdr'] = mysql('SELECT COUNT(*) FROM ast_cdr').strip(); marks['q'] = qlog_len()
 def end():
     time.sleep(6)
@@ -212,7 +217,7 @@ def show_invite(p):
             v = Phone.hdr(p.invites[-1], h)
             if v: log('  %s INVITE %s: %s' % (p.user, h, re.sub(r'tag=\w+', 'tag=*', v)))
 def reset(*ps):
-    for p in ps: p.invites, p.notifies, p.got_bye, p.reject, p.auto = [], [], False, None, True
+    for p in ps: p.invites, p.notifies, p.got_bye, p.reject, p.auto, p.incoming = [], [], False, None, True, 0
 def scripts(c): return sh('cd /opt/gemeinschaft/scripts; %s 2>&1' % c).strip()
 
 host = mysql('SELECT id FROM hosts ORDER BY id LIMIT 1').strip()
@@ -226,6 +231,7 @@ for u in ('admin', 'user', 'third'): scripts('./gs-pickupgroup-user-add --pgroup
 sh('/opt/gemeinschaft/sbin/gs-ast-reload 2>&1'); time.sleep(8)
 
 A, B, C = Phone('9999'), Phone('9998'), Phone('9997')
+PHONES.extend((A, B, C))
 begin('registration and BLF subscription')
 for p in (A, B, C): rec('REGISTER ' + p.user, p.register() == 200)
 time.sleep(3)
@@ -265,23 +271,38 @@ end()
 
 begin('blind transfer'); reset(A, B, C)
 c = A.call('9998'); rec('call answered', c == 200); time.sleep(2)
-r = B.refer('9997'); log('  REFER response: %s' % r); time.sleep(5); rec('transfer target rang', C.incoming > 0); time.sleep(2)
+r = B.refer('9997'); log('  REFER response: %s' % r); time.sleep(5); rec('transfer target rang', C.incoming > 0); B.bye(); time.sleep(2)   # the transferring phone hangs up
 for p in (A, C):
     if p.dialog: p.bye()
     time.sleep(0.5)
 end()
 
 def conf_count():
-    t = ast('meetme list 123' if TECH == 'SIP' else 'confbridge list 88123'); return len([l for l in t.splitlines() if re.match(r'^(User #:|\s*\d+|.*(PJSIP|SIP)/)', l)])
+    t = ast('meetme list 123' if TECH == 'SIP' else 'confbridge list 123'); return len([l for l in t.splitlines() if re.match(r'^(User #:|\s*\d+|.*(PJSIP|SIP)/)', l)])
 begin('conference with caller-set PIN'); reset(A, B, C)
 c1 = A.call('88123'); rec('first caller connects', c1 == 200); time.sleep(4)
 for d in '1234#': A.dtmf(d); time.sleep(0.4)
 time.sleep(3)
 c2 = B.call('88123'); rec('second caller connects', c2 == 200); time.sleep(4)
 for d in '9999#': B.dtmf(d); time.sleep(0.4)
-time.sleep(3); wrong = ast('meetme list 123' if TECH == 'SIP' else 'confbridge list 88123'); log('  after wrong PIN: ' + ' | '.join(wrong.split('\n')[:4])[:220])
+time.sleep(3); wrong = ast('meetme list 123' if TECH == 'SIP' else 'confbridge list 123'); log('  after wrong PIN: ' + ' | '.join(wrong.split('\n')[:4])[:220])
 for d in '1234#': B.dtmf(d); time.sleep(0.4)
-time.sleep(4); right = ast('meetme list 123' if TECH == 'SIP' else 'confbridge list 88123'); log('  after right PIN: ' + ' | '.join(right.split('\n')[:4])[:220])
+time.sleep(4); right = ast('meetme list 123' if TECH == 'SIP' else 'confbridge list 123'); log('  after right PIN: ' + ' | '.join(right.split('\n')[:4])[:220])
+def users(t): return len(re.findall(r'(?:PJSIP|SIP)/99', t))
+rec('wrong PIN keeps caller out', users(wrong) == 1, str(users(wrong)))
+rec('right PIN lets caller in', users(right) == 2, str(users(right)))
+reset(C); c3 = C.call('88123'); rec('third caller connects', c3 == 200); time.sleep(4)
+for t in range(3):
+    for d in '0000#': C.dtmf(d); time.sleep(0.4)
+    time.sleep(4)
+time.sleep(4); rec('three wrong PINs hang up', C.got_bye or C.dialog is None, ''); 
+A.bye(); B.bye(); time.sleep(6)
+gone = ast('meetme list 123' if TECH == 'SIP' else 'confbridge list 123'); rec('room closed', users(gone) == 0, gone.strip()[:60])
+reset(A, B); c1 = A.call('88123'); time.sleep(4)
+for d in '5555#': A.dtmf(d); time.sleep(0.4)
+time.sleep(3); c2 = B.call('88123'); time.sleep(4)
+for d in '5555#': B.dtmf(d); time.sleep(0.4)
+time.sleep(4); again = ast('meetme list 123' if TECH == 'SIP' else 'confbridge list 123'); rec('new PIN works after room was freed', users(again) == 2, str(users(again)))
 A.bye(); B.bye(); time.sleep(2); end()
 
 begin('NOTIFY to phone (provisioning resync)'); reset(A, B, C); out = ast(NOTIFY_CMD % '9998'); time.sleep(2)
