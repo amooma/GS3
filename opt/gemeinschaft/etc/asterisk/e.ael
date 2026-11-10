@@ -53,6 +53,8 @@ macro sip-clear-headers() {
 // channel and adds the headers kept in the inherited GS_SIPHDR_* variables.
 context gs-sip-headers {
 	s => {
+		// this runs on the dialed channel, which must not get its own CDR
+		Set(CDR_PROP(disable)=1);
 		if ("${CHANNEL(channeltype)}" = "PJSIP") {
 			if ("${GS_SIPHDR_ALERT_INFO}" != "") {
 				Set(PJSIP_HEADER(add,Alert-Info)=${GS_SIPHDR_ALERT_INFO});
