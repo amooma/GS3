@@ -79,6 +79,9 @@ function gs_log( $level, $msg, $logfile=null, $fifo=false )
 		$dateFn = GS_LOG_GMT ? 'gmDate' : 'date';
 		if (strLen($line) < 4)
 			$line = str_pad($line, 4, ' ', STR_PAD_LEFT);
+		# no line breaks or control characters, or else request data
+		# could forge log entries
+		$msg = addCSlashes( (string)$msg, "\x00..\x1F\x7F" );
 		$msg = $dateFn('Y-m-d H:i:s') .' ['. str_pad($level_info['v'], 5) .'] '. $file.':'.$line.': '. $msg ."\n";
 		if (! $logfile) $logfile = GS_LOG_FILE;
 		if (@subStr($logfile,0,1) != '/')

@@ -259,6 +259,9 @@ function fax_send( $user_id, $user, $to_num, $from_num, $file, $user_email, $res
 
 function fax_download( $file, $user='', $pass='' )
 {
+	# plain file names only, no path traversal
+	if (! preg_match('/^[a-zA-Z0-9_\-][a-zA-Z0-9_.\-]*$/D', (string)$file)) return false;
+	
 	if ($user == '') {
 		$user = gs_get_conf('GS_FAX_HYLAFAX_ADMIN');
 		$pass = gs_get_conf('GS_FAX_HYLAFAX_PASS');

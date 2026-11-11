@@ -82,7 +82,7 @@ $rs = $db->execute('SELECT `user`, `name`, `pin`, `firstname`, `lastname` FROM `
 
 while ( $admin = $rs->fetchrow()) {
 echo '<tr>';
-echo '<td>',$admin['user'], '</td><td>', $admin['firstname'], '</td><td>', $admin['lastname'], '</td><td>', $admin['name'], '</td><td>', $admin['pin'], '</td>';
+echo '<td>',htmlEnt($admin['user']), '</td><td>', htmlEnt($admin['firstname']), '</td><td>', htmlEnt($admin['lastname']), '</td><td>', htmlEnt($admin['name']), '</td><td>', htmlEnt($admin['pin']), '</td>';
 echo '</tr>';
 }
 }

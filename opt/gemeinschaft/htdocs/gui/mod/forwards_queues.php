@@ -54,7 +54,7 @@ function InitRecordCall($filename, $index, $comment) {  //FIXME
 		. "WaitTime: 15\n"
 		. "Context: vm-rec-multiple\n"
 		. "Extension: webdialrecord\n"
-		. "Callerid: $comment <Aufnahme>\n"
+		. "Callerid: ". preg_replace('/[\x00-\x1F<>"]+/', ' ', (string)$comment) ." <Aufnahme>\n"
 		. "Setvar: __user_id=".  $_SESSION['sudo_user']['info']['id'] ."\n"
 		. "Setvar: __user_name=".  $_SESSION['sudo_user']['info']['ext'] ."\n"
 		. "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
@@ -173,7 +173,7 @@ $timeruleactives = array(
 	'var' => __('Tmp.')
 );
 
-$queue_ext = preg_replace('/[^\d]$/', '', @$_REQUEST['queue']);
+$queue_ext = preg_replace('/[^\d]/', '', (string)@$_REQUEST['queue']);
 $queue_id = NULL;
 if ($queue_ext != '') {
 	
@@ -293,7 +293,7 @@ if (@$_REQUEST['action']=='save' && $queue) {
 	}
 	
 }
-elseif (@$_REQUEST['action']==='savevmrec') {
+elseif (@$_REQUEST['action']==='savevmrec' && $queue) {
 	if (isset($_REQUEST['save_new'])) {
 		$new_entry = $_REQUEST['comment_new'];
 		if ($new_entry != "") {
@@ -309,11 +309,11 @@ elseif (@$_REQUEST['action']==='savevmrec') {
 		foreach ($_REQUEST as $item => $comment ) {
 			if (substr($item,0,8) == "comment_" && $item != "comment_new") {
 				$id = substr($item,8);
-				$DB->execute('UPDATE `queue_vm_rec_messages` SET `vm_comment`=\''.$DB->escape($comment).'\' WHERE `_queue_id`='.$queue_id.' AND `id`='.$DB->escape($id));
+				$DB->execute('UPDATE `queue_vm_rec_messages` SET `vm_comment`=\''.$DB->escape($comment).'\' WHERE `_queue_id`='.$queue_id.' AND `id`='.(int)$id);
 			}
 		}
 	} else if (isset($_REQUEST['delete'])) {
-		$id = $_REQUEST['delete'];
+		$id = (int)$_REQUEST['delete'];
 		//disable call Forwards which using this File
 		$DB->execute('UPDATE `queue_callforwards` SET `active`=\'no\', `vm_rec_id`=\'0\' WHERE `queue_id`='.$queue_id.' AND `vm_rec_id`='.$DB->escape($id));
 		$DB->execute('DELETE from `queue_vm_rec_messages` WHERE `_queue_id`='.$queue_id.' AND `id`='.$DB->escape($id));
@@ -326,11 +326,11 @@ elseif (@$_REQUEST['action']==='savevmrec') {
 		InitRecordCall($file, $i,$comment);
 	}
 }
-elseif (@$_REQUEST['action']==='movetimeruleup'
-||      @$_REQUEST['action']==='movetimeruledown') {
+elseif ((@$_REQUEST['action']==='movetimeruleup'
+||      @$_REQUEST['action']==='movetimeruledown') && $queue) {
 	
 	$id=(int)$_REQUEST['move'];
-	$rs=$DB->execute('SELECT `id`,`ord` FROM `queue_cf_timerules` WHERE `id` ='.$id);
+	$rs=$DB->execute('SELECT `id`,`ord` FROM `queue_cf_timerules` WHERE `_queue_id` ='.$queue_id.' AND `id` ='.$id);
 	$entry = $rs->fetchRow();
 	$oldord = (int)$entry['ord'];
 	if ($_REQUEST['action']==='movetimeruleup')
@@ -339,13 +339,13 @@ elseif (@$_REQUEST['action']==='movetimeruleup'
 		$neword = $oldord+1;
 	$rs2=$DB->execute('SELECT `id`,`ord` FROM `queue_cf_timerules` WHERE `_queue_id` ='.$queue_id.' AND `ord`='.$neword);
 	$entry2 = $rs2->fetchRow();
-	if ($entry2['id'] != 0) {
+	if ($entry && $entry2 && $entry2['id'] != 0) {
 		$DB->execute('UPDATE `queue_cf_timerules` SET `ord`='.$oldord.' WHERE `id` ='.$entry2['id']);
 		$ord--;
 		$DB->execute('UPDATE `queue_cf_timerules` SET `ord`='.$neword.' WHERE `id` ='.$entry['id']);
 	}
 }
-elseif (@$_REQUEST['action']==='savetimerule') {
+elseif (@$_REQUEST['action']==='savetimerule' && $queue) {
 	# SAVE changes in old timerules...
 	foreach ($_REQUEST as $tr => $trid) {
 		if(substr($tr,0,3) == "tr_") {
@@ -399,7 +399,7 @@ elseif (@$_REQUEST['action']==='savetimerule') {
 		$DB->execute($query);
 	}
 }
-elseif (@$_REQUEST['action']==='deltimerule') {
+elseif (@$_REQUEST['action']==='deltimerule' && $queue) {
 	$id = (int)$_REQUEST['delete'];
 	if ($id) {
 		$DB->execute('DELETE FROM `queue_cf_timerules` WHERE `_queue_id`='.$queue_id.' AND `id`='.$id);
@@ -417,7 +417,7 @@ elseif (@$_REQUEST['action']==='deltimerule') {
 	}
 	
 }
-elseif (@$_REQUEST['action']==='saveparcall') {
+elseif (@$_REQUEST['action']==='saveparcall' && $queue) {
 	if (isset($_REQUEST['save_new'])) {
 		$new_entry = preg_replace('/[^0-9*#]/S', '', @$_REQUEST['number_new']);
 		if ($new_entry != "") {
@@ -430,12 +430,12 @@ elseif (@$_REQUEST['action']==='saveparcall') {
 		foreach ( $_REQUEST as $item => $comment ) {
 			if (substr($item,0,7) == "number_" && $item != "number_new") {
 				$id = substr($item,7);
-				$DB->execute('UPDATE `queue_cf_parallelcall` SET `number`=\''.$DB->escape($comment).'\' WHERE `_queue_id`='.$queue_id.' AND `id`='.$DB->escape($id));
+				$DB->execute('UPDATE `queue_cf_parallelcall` SET `number`=\''.$DB->escape(preg_replace('/[^0-9*#]/S', '', (string)$comment)).'\' WHERE `_queue_id`='.$queue_id.' AND `id`='.(int)$id);
 			}
 		}
 	} else if (isset($_REQUEST['delete'])) {
-		$id = $_REQUEST['delete'];
-		$DB->execute('DELETE from `queue_cf_parallelcall` WHERE `_queue_id`='.$queue_id.' AND `id`='.$DB->escape($id));
+		$id = (int)$_REQUEST['delete'];
+		$DB->execute('DELETE from `queue_cf_parallelcall` WHERE `_queue_id`='.$queue_id.' AND `id`='.$id);
 	}	
 }
 ?>

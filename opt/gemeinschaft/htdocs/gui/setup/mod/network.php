@@ -37,6 +37,8 @@ $action = (string)@$_REQUEST['action'];
 if ($action === 'save2') {
 	$save2_action = (string)@$_REQUEST['save2_action'];
 	if ($save2_action === '') $action = '';
+	# reboot/shutdown only by submitting the form, not by a mere link
+	if (@$_SERVER['REQUEST_METHOD'] !== 'POST') $action = '';
 }
 
 /*
@@ -271,7 +273,7 @@ if ($action === 'save') {
 			}
 		} else {
 			# is name
-			$addr = preg_replace('[^a-z0-9.\-_]', '', strToLower($addr));
+			$addr = preg_replace('/[^a-z0-9.\-_]/', '', strToLower($addr));
 			/*
 			$addrs = getHostByNameL( $addr );
 			if (! is_array($addrs) || count($addrs) < 1) {

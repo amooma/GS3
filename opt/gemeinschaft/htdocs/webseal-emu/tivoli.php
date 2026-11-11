@@ -74,7 +74,7 @@ function tivoli_login_screen()
 <h1 align="center">Tivoli Login</h1>
 <br />
 <div style="width:200px; margin:auto; padding:1em; background:#ddd; text-align:left;">
-<form action="http://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] .'" method="post">
+<form action="http://'. htmlSpecialChars( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) .'" method="post">
 <input type="hidden" name="_x_tivoli_action" value="login" />
 User:<br />
 <input type="text" name="_x_tivoli_username" value="'. htmlSpecialChars( @$_REQUEST['_x_tivoli_username'] ) .'" size="20" maxlength="50" /><br />

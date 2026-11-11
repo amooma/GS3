@@ -32,7 +32,7 @@ require_once( GS_DIR .'inc/quoted_printable_encode.php' );
 
 function gs_keyval_is_valid_key( $key )
 {
-	return (bool)preg_match('/[a-z0-9_\-][a-z0-9_\-.]*/', $key);
+	return (bool)preg_match('/^[a-z0-9_\-][a-z0-9_\-.]*$/D', (string)$key);
 }
 
 function gs_keyval_enc( $str )

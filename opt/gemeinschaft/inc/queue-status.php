@@ -79,6 +79,9 @@ function gs_queue_status( $host, $ext, $getMembers, $getCallers )
 {
 	static $hosts = array();
 	
+	# the name goes into the AMI request and into regular expressions
+	if (! preg_match('/^[a-zA-Z0-9_\-]+$/D', (string)$ext)) return false;
+	
 	if (gs_get_conf('GS_INSTALLATION_TYPE_SINGLE'))
 		$host = '127.0.0.1';
 	

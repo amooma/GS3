@@ -305,10 +305,10 @@ if ($action === 'preview') {
 		$i=0;
 		foreach ($records as $r) {
 			echo '<tr class="', ($i%2? 'even':'odd') ,'">', "\n";
-			echo '<td>', $r['ln'   ] ,'</td>', "\n";
-			echo '<td>', $r['fn'   ] ,'</td>', "\n";
-			echo '<td>', $r['nr'   ] ,'</td>', "\n";
-			echo '<td>', $r['nrimp'] ,'</td>', "\n";
+			echo '<td>', htmlEnt($r['ln'   ]) ,'</td>', "\n";
+			echo '<td>', htmlEnt($r['fn'   ]) ,'</td>', "\n";
+			echo '<td>', htmlEnt($r['nr'   ]) ,'</td>', "\n";
+			echo '<td>', htmlEnt($r['nrimp']) ,'</td>', "\n";
 			echo '</tr>', "\n";
 			++$i;
 		}
@@ -332,10 +332,10 @@ if ($action === 'preview') {
 		
 		echo '<p class="text">',
 			@sPrintF(__('Daten in Ihr pers&ouml;nliches Telefonbuch (Benutzer <code>%s</code>, %s %s, Durchwahl <code>%s</code>) importieren?'),
-				@$_SESSION['sudo_user']['name'],
-				@$_SESSION['sudo_user']['info']['firstname'],
-				@$_SESSION['sudo_user']['info']['lastname'],
-				@$_SESSION['sudo_user']['info']['ext']
+				htmlEnt(@$_SESSION['sudo_user']['name']),
+				htmlEnt(@$_SESSION['sudo_user']['info']['firstname']),
+				htmlEnt(@$_SESSION['sudo_user']['info']['lastname']),
+				htmlEnt(@$_SESSION['sudo_user']['info']['ext'])
 			),
 			'</p>', "\n";
 		

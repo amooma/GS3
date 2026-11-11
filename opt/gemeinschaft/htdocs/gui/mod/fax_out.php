@@ -47,10 +47,11 @@ echo '</h2>', "\n";
 
 $per_page = (int)gs_get_conf('GS_GUI_NUM_RESULTS');
 $page     = (int)@$_REQUEST['page'];
-$delete   = trim(@$_REQUEST['delete']);
+$delete   = (int)trim(@$_REQUEST['delete']);
 
 if ($delete) {
-	fax_kill_job($delete);
+	# use the user's own HylaFax login so that only the owner can kill a job
+	fax_kill_job($delete, $_SESSION['sudo_user']['name'], gs_user_pin_get($_SESSION['sudo_user']['name']));
 }
 
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
@@ -127,15 +128,15 @@ for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 		echo '<tr class="', (($i%2==0) ? 'odd':'even'), '">', "\n";
 		
 		echo "<td>", date("d.m.y H:i:s",$jobs_send[$i][32]) ,"</td>\n";
-		echo "<td>", $jobs_send[$i][9] ,"</td>\n";
-		echo "<td>", $jobs_send[$i][4] ,"</td>\n";
-		echo "<td>", $jobs_send[$i][13] ,' / ', $jobs_send[$i][22] ,"</td>\n";
-		echo "<td>", $jobs_send[$i][15] ," lpi</td>\n";
-		echo "<td>", $jobs_send[$i][3] ,"</td>\n";
+		echo "<td>", htmlEnt($jobs_send[$i][9]) ,"</td>\n";
+		echo "<td>", htmlEnt($jobs_send[$i][4]) ,"</td>\n";
+		echo "<td>", htmlEnt($jobs_send[$i][13]) ,' / ', htmlEnt($jobs_send[$i][22]) ,"</td>\n";
+		echo "<td>", htmlEnt($jobs_send[$i][15]) ," lpi</td>\n";
+		echo "<td>", htmlEnt($jobs_send[$i][3]) ,"</td>\n";
 		//echo "<td>", $jobs_send[$i][30] ,"</td>\n";
-		echo "<td>", $jobs_send[$i][16] ,"</td>\n";
+		echo "<td>", htmlEnt($jobs_send[$i][16]) ,"</td>\n";
 		echo "<td>\n";
-		echo '<a href="',$mod_url, '&amp;delete=',$jobs_send[$i][9], '&amp;page=',$page, '" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="',$mod_url, '&amp;delete=',(int)$jobs_send[$i][9], '&amp;page=',$page, '" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo "</td>\n";
 		
 		echo "</tr>\n";

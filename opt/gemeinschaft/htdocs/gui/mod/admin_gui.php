@@ -216,7 +216,7 @@ else if ($action == '') {
 
 			echo '<td class="l nobr">';
 			echo $group['name']  ,'</td>', "\n";
-			echo '<td>',$group['title']  ,'</td>', "\n";
+			echo '<td>',htmlEnt($group['title'])  ,'</td>', "\n";
 			echo '<td class="r">',count(gs_group_members_get(Array($group['id']))),' / ',($num_sections+$num_modules), '</td>', "\n";
 			echo '<td class="r">', "\n";
 

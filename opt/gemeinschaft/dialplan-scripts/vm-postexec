@@ -131,7 +131,9 @@ function email_notify( $mailbox, $uid, $info, $about, $email )
 	$outfile = $tmpfile_base.'.wav';
 	$cmd = 'sox -q -t al -r 8000 -c 1 '. qsa($origfile) .' -t wav -e signed-integer -b 16 '. qsa($outfile) .' 2>>/dev/null';
 	$err=0; $out=array();
+	$old_umask = umask(0077);  # the copy in /tmp must not be world-readable
 	@exec( $cmd, $out, $err );
+	umask($old_umask);
 	if ($err != 0) {
 		gs_log( GS_LOG_WARNING, 'Failed to convert voicemail file' );
 		return false;

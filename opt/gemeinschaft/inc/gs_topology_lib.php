@@ -579,7 +579,11 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	if (! $ok)
 		return new GsError( 'Failed to stop database slave replication' );
 	
-	$dump_filename = '/tmp/gs-db-resync-dump-'. rand() .'.sql';
+	# tempnam() creates the file with mode 0600. The dump holds all
+	# PINs and SIP passwords.
+	$dump_filename = tempnam('/tmp', 'gs-db-resync-dump-');
+	if (! $dump_filename)
+		return new GsError( 'Failed to save dump of master database!' );
 	
 	# dump Master database
 	#
@@ -589,8 +593,10 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	
 	$err=0; $out=array();
 	@exec( $sudo . $cmd, $out, $err );
-	if ($err != 0)
+	if ($err != 0) {
+		@unlink( $dump_filename );
 		return new GsError( 'Failed to save dump of master database!' );
+	}
 	
 	# restore dump on Slave
 	#
@@ -601,6 +607,7 @@ function gs_db_setup_replication( $master_host, $slave_host, $user, $pass )
 	
 	$err=0; $out=array();
 	@exec( $sudo . $cmd, $out, $err );
+	@unlink( $dump_filename );
 	if ($err != 0)
 		return new GsError( 'Failed to restore database dump on slave!' );
 	

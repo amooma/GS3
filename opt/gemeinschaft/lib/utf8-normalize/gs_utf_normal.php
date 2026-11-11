@@ -79,8 +79,8 @@ function utf8_json_quote( $str )
 	return
 		'"'.
 		str_replace(
-			array( '"'  , '/'   ),
-			array( '\\"', '\\/' ),
+			array( '\\'  , '"'  , '/'  , "\n" , "\r" , '<'      ),
+			array( '\\\\', '\\"', '\\/', '\\n', '\\r', '\\u003C' ),
 			utf8_to_unicode_uhex( $str )) .
 		'"';
 }

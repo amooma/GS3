@@ -75,6 +75,10 @@ if ($action == 'report') {
 $user_groups    = gs_group_members_groups_get(Array(@$_SESSION['sudo_user']['info']['id']), 'user');
 $queue_groups   = gs_group_members_get(gs_group_permissions_get($user_groups, 'call_stats', 'queue'));
 
+# only queues this user is allowed to see
+if (! is_array($queue_groups) || array_search($queue_id, $queue_groups) === false)
+	$queue_id = 0;
+
 ?>
 
 

@@ -164,13 +164,13 @@ if (@$rs_friends) {
 	while ($r = @$rs_friends->fetchRow()) {
 		echo '<tr>', "\n";
 		echo '<td>';
-		echo $r['user'];
+		echo htmlEnt($r['user']);
 		echo '</td>';
 		echo '<td>';
-		echo $r['firstname'];
+		echo htmlEnt($r['firstname']);
 		echo '</td>';
 		echo '<td>';
-		echo $r['lastname'];
+		echo htmlEnt($r['lastname']);
 		echo '</td>';
 		echo '<td>';
 		echo '<select name="status_'.$r['id'].'" style="min-width:42px;">',"\n";

@@ -136,7 +136,7 @@ if ($action == 'save') {
        
 	for ($status = 0; $status <= 255; ++$status) {
 		if (array_key_exists('ec'.$status, $_REQUEST)) {
-			$colors[$status] = trim($_REQUEST['ec'.$status]);
+			$colors[$status] = preg_replace('/[^#0-9a-zA-Z(),.% ]/', '', trim((string)$_REQUEST['ec'.$status]));
 		}
 	}
 
@@ -317,7 +317,7 @@ $rs = $DB->execute( $sql_query );
 
 if ($rs) {
 	while ($r = $rs->fetchRow()) {
-		$colors[$r['status']] = $r['color'];
+		$colors[(int)$r['status']] = preg_replace('/[^#0-9a-zA-Z(),.% ]/', '', (string)$r['color']);
 	}
 }
 
@@ -948,10 +948,10 @@ window.onload=data_reload
 	foreach ($extmon_data['tabs_groups'] as $group_id => $group_title) {
 		if ($tab == $group_id) {
 			echo '<td class="grouptabsactive">'."\n";
-			echo '<a href="?tab='.$group_id.$fullscreen_str.'">'.$group_title.'</a>'."\n";
+			echo '<a href="?tab='.$group_id.$fullscreen_str.'">'.htmlEnt($group_title).'</a>'."\n";
 		} else { 
 			echo '<td class="grouptabs">'."\n";
-			echo '<a href="?tab='.$group_id.$fullscreen_str.'">'.$group_title.'</a>'."\n";
+			echo '<a href="?tab='.$group_id.$fullscreen_str.'">'.htmlEnt($group_title).'</a>'."\n";
 		}
 		echo '</td>'."\n";
 	}

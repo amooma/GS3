@@ -128,22 +128,22 @@ WHERE `id`='. (int)$gwid
 			' VALUES ('.$gwid.', \''.$DB->escape('port').'\', \''.$DB->escape($v).'\')' );
 	//}
 	
-	$v = @$_REQUEST['gw-param-jitterbuffer'];
+	$v = (@$_REQUEST['gw-param-jitterbuffer'] === 'no' ? 'no' : 'yes');
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('jitterbuffer').'\'' );
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
 		' VALUES ('.$gwid.', \''.$DB->escape('jitterbuffer').'\', \''.$DB->escape($v).'\')' );
 	
-	$v = @$_REQUEST['gw-param-trunk'];
+	$v = (@$_REQUEST['gw-param-trunk'] === 'no' ? 'no' : 'yes');
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('trunk').'\'' );
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
 		' VALUES ('.$gwid.', \''.$DB->escape('trunk').'\', \''.$DB->escape($v).'\')' );
 	
-	$v = @$_REQUEST['gw-param-qualify'];
+	$v = (@$_REQUEST['gw-param-qualify'] === 'no' ? 'no' : 'yes');
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('qualify').'\'' );
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
 		' VALUES ('.$gwid.', \''.$DB->escape('qualify').'\', \''.$DB->escape($v).'\')' );
 	
-	$v = @$_REQUEST['gw-param-encryption'];
+	$v = (@$_REQUEST['gw-param-encryption'] === 'yes' ? 'yes' : 'no');
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('encryption').'\'' );
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
 		' VALUES ('.$gwid.', \''.$DB->escape('encryption').'\', \''.$DB->escape($v).'\')' );
@@ -172,7 +172,7 @@ WHERE `id`='. (int)$gwid
 		$v = array('alaw'=>1);
 		gs_log( GS_LOG_WARNING, 'You did not allow any codecs for gateway '. $iax_friend_name .'. Allowing G.711a by default.' );
 	}
-	$v = array_keys($v);
+	$v = preg_grep('/^[a-z0-9]+$/D', array_keys($v));
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('allow').'\'' );
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
 		' VALUES ('.$gwid.', \''.$DB->escape('allow').'\', \''.$DB->escape(implode(',',$v)).'\')' );
@@ -182,7 +182,7 @@ WHERE `id`='. (int)$gwid
 		$v = array('plaintext'=>1);
 		gs_log( GS_LOG_WARNING, 'You did not allow any codecs for gateway '. $iax_friend_name .'. Allowing G.711a by default.' );
 	}
-	$v = array_keys($v);
+	$v = preg_grep('/^[a-z0-9]+$/D', array_keys($v));
 	$v = array_reverse($v);
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('auth').'\'' );
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.

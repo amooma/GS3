@@ -119,6 +119,11 @@ function gs_extstate( $host, $exts )
 	
 	$states = array();
 	foreach ($exts as $ext) {
+		if (preg_match('/[\r\n]/', (string)$ext)) {
+			# would add headers or actions to the AMI request
+			$states[$ext] = AST_MGR_EXT_UNKNOWN;
+			continue;
+		}
 		$req = "Action: ExtensionState\r\n"
 		     . "Context: to-internal-users\r\n"  // "to-internal-users" or "default"
 		     . "Exten: ". $ext ."\r\n"

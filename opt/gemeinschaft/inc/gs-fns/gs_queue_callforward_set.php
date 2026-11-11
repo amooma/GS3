@@ -83,7 +83,7 @@ function gs_queue_callforward_set( $queue, $source, $case, $type, $number, $time
 		'UPDATE `queue_callforwards` SET
 			`'. $field .'`=\''. $db->escape($number) .'\',
 			`timeout`='. $timeout .',
-			`vm_rec_id`='. $db->escape($vmail_rec_num).' 
+			`vm_rec_id`='. (int)$vmail_rec_num .' 
 		WHERE
 			`queue_id`='. $queue_id .' AND
 			`source`=\''. $db->escape($source) .'\' AND

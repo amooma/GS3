@@ -155,6 +155,21 @@ if ( $user_id == ''  ) { // TODO ? FIXME
 	_not_allowed();
 }
 
+# must be logged in. only admins may get the keys of other users
+if (! is_array($_SESSION)
+||  ! @array_key_exists('sudo_user', @$_SESSION)
+||  ! @array_key_exists('info'     , @$_SESSION['sudo_user'])
+||  ! @array_key_exists('id'       , @$_SESSION['sudo_user']['info']) )
+{
+	_not_allowed();
+}
+if ((int)$user_id !== (int)$_SESSION['sudo_user']['info']['id']
+&&  @$_SESSION['real_user']['name'] !== 'sysadmin'
+&&  ! gs_user_is_admin(@$_SESSION['real_user']['name']) )
+{
+	_not_allowed();
+}
+
 # get DB infos
 $rs = $DB->execute( 'SELECT `u`.`user`, `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
 FROM

@@ -32,6 +32,19 @@ require_once( GS_DIR .'htdocs/gui/inc/session.php' );
 require_once( GS_DIR .'inc/db_connect.php' );
 require_once( GS_DIR .'inc/string.php' );
 
+# must be logged in
+if (! is_array($_SESSION)
+||  ! @array_key_exists('sudo_user', @$_SESSION)
+||  ! @array_key_exists('info'     , @$_SESSION['sudo_user'])
+||  ! @array_key_exists('id'       , @$_SESSION['sudo_user']['info']) )
+{
+	@header( 'HTTP/1.0 403 Forbidden', true, 403 );
+	@header( 'Status: 403 Forbidden' , true, 403 );
+	@header( 'Content-Type: text/plain' );
+	echo 'Not authorized.';
+	exit(1);
+}
+
 
 @header('Content-Type: image/svg+xml; charset=utf-8');
 @header('Content-Disposition: inline');
@@ -79,6 +92,14 @@ if ($to < $fr) {
 }
 $time_range = $to - $fr;
 $time_range_days = $time_range/(60*60*24);
+if ($fr === false || $to === false
+||  $time_range_days > 365*100 || abs($fr) > 99999999999) {
+	# absurd range, would run one query per step for ages
+	$to = $fr = 0;
+	$time_range = 0;
+	$time_range_days = 0;
+	$dataset = '';
+}
 if     ($time_range_days <= 2     ) {$xtstr = '+1 hours' ; $xdfmt = 'H'  ;}
 elseif ($time_range_days <= 31    ) {$xtstr = '+1 days'  ; $xdfmt = 'j'  ;}
 elseif ($time_range_days <= 31*2  ) {$xtstr = '+1 weeks' ; $xdfmt = 'M j';}

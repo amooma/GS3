@@ -96,7 +96,7 @@ function gs_callforward_set( $user, $source, $case, $type, $number, $timeout=20,
 'UPDATE `callforwards` SET
 	`'. $field .'`=\''. $db->escape($number) .'\',
 	`timeout`='. $timeout .',
-	`vm_rec_id`='. $db->escape($vmail_rec_num).' 
+	`vm_rec_id`='. (int)$vmail_rec_num .' 
 WHERE
 	`user_id`='. $user_id .' AND
 	`source`=\''. $db->escape($source) .'\' AND

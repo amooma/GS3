@@ -196,7 +196,7 @@ if ($action === 'view') {
 		<input type="text" name="mac" value="<?php echo $mac_addr_display; ?>" size="17" maxlength="30" />
 	</td>
 	<td>
-		<input type="text" name="ip" value="<?php echo $ip_addr; ?>" size="15" maxlength="15" />
+		<input type="text" name="ip" value="<?php echo htmlEnt($ip_addr); ?>" size="15" maxlength="15" />
 	</td>
 	<td rowspan="2">
 <?php

@@ -206,7 +206,7 @@ if ($action === 'save') {
 		$DB->execute(
 'UPDATE `ivrs` SET
 	`title`           = \''. $DB->escape($title) .'\',
-	`announcement`    = \''. $announcement .'\',
+	`announcement`    = \''. $DB->escape($announcement) .'\',
 	`timeout`         = \''. $timeout .'\',
 	`retry`           = \''. $retry .'\',
 	`key_0_type`      = \''. $value['key_0_type'] .'\',
@@ -380,7 +380,7 @@ ORDER BY `id`';
 		echo gs_form_hidden($SECTION, $MODULE), "\n";
 		echo '<input type="hidden" name="action" value="save" />', "\n";
 		echo '<input type="hidden" name="iid" value="', $ivr_id , '" />', "\n";
-		echo '<input type="hidden" name="iname" value="', $ivr['name'] , '" />', "\n";
+		echo '<input type="hidden" name="iname" value="', htmlEnt($ivr['name']) , '" />', "\n";
 		echo '<input type="hidden" name="page" value="', $page, '" />', "\n";
 		
 		echo '<table cellspacing="1">',"\n";
@@ -419,7 +419,7 @@ ORDER BY `id`';
 		echo '<option value="0">', __('keine') ,'</option>', "\n";
 		echo '<option value="" disabled="disabled">-</option>', "\n";
 		foreach ($recordings as $rec_id => $desc) {
-			echo '<option value="' . $rec_id .'"', ( htmlEnt($ivr['announcement']) == $rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+			echo '<option value="' . $rec_id .'"', ( htmlEnt($ivr['announcement']) == $rec_id ? ' selected="selected"' : '') ,'>', htmlEnt(__($desc)) ,'</option>', "\n";
 		}
 		echo '</select>';
 		echo '</td>';
@@ -469,7 +469,7 @@ ORDER BY `id`';
 			echo '<option value="0"', ( htmlEnt( $ivr['key_'.$v.'_value_select']) == 0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
 			echo '<option value="" disabled="disabled">-</option>', "\n";
 			foreach ($recordings as $rec_id => $desc) {
-				echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr['key_'.$v.'_value_select']) == $rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+				echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr['key_'.$v.'_value_select']) == $rec_id ? ' selected="selected"' : '') ,'>', htmlEnt(__($desc)) ,'</option>', "\n";
 			}
 			echo '</select>';
 			
@@ -506,7 +506,7 @@ ORDER BY `id`';
 		echo '<option value="0"', ( htmlEnt( $ivr["t_action_value_select"]) == 0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
 		echo '<option value="" disabled="disabled">-</option>', "\n";
 		foreach ($recordings as $rec_id => $desc) {
-			echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr["t_action_value_select"]) == $rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+			echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr["t_action_value_select"]) == $rec_id ? ' selected="selected"' : '') ,'>', htmlEnt(__($desc)) ,'</option>', "\n";
 		}
 		echo '</select>';
 
@@ -541,7 +541,7 @@ ORDER BY `id`';
 		echo '<option value="0"', ( htmlEnt( $ivr['i_action_value_select']) == 0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
 		echo '<option value="" disabled="disabled">-</option>', "\n";
 		foreach ($recordings as $rec_id => $desc) {
-			echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr['i_action_value_select']) == $rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+			echo '<option value="' . $rec_id .'"', ( htmlEnt( $ivr['i_action_value_select']) == $rec_id ? ' selected="selected"' : '') ,'>', htmlEnt(__($desc)) ,'</option>', "\n";
 		}
 		echo '</select>';
 		echo '</td>';
@@ -657,7 +657,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 		
 		echo '<td>', htmlEnt($r['title']) ,'</td>',"\n";
 		
-		echo '<td>', $r['host_id'] ,' (', @$hosts[$r['host_id']] ,')</td>',"\n";
+		echo '<td>', $r['host_id'] ,' (', htmlEnt(@$hosts[$r['host_id']]) ,')</td>',"\n";
 		
 		echo '<td class="">',"\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;iid='.$r['id'] .'&amp;page='.$page) ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';

@@ -249,9 +249,9 @@ if (! empty($queues_avail)) {
 		(SELECT `_queue_id` FROM `ast_queue_members` WHERE `_user_id`='.$user['id']. ')'
 	);
 	while ( $queue_map = $rs->fetchrow()) {
-		echo $queue_map['name'], $queue_map['_title'], "\n";
+		echo htmlEnt($queue_map['name']), htmlEnt($queue_map['_title']), "\n";
 		echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
-		echo '>',  $queue_map['name'], ' ', $queue_map['_title'], '</option>', "\n";
+		echo '>',  htmlEnt($queue_map['name']), ' ', htmlEnt($queue_map['_title']), '</option>', "\n";
 	}
 }
 ?>
@@ -274,7 +274,7 @@ while ( $queue_map = $rs->fetchrow()) {
 	$agent_on = $DB->executeGetOne('SELECT count(`_queue_id`) FROM `ast_queue_members` WHERE `_queue_id` ='.  (int)$queue_map['_queue_id']);
 	echo '<option value="', (int)$queue_map['_queue_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
 	if ($queue_map['static'] == '1' || $queue_map['_min_agents'] >= $agent_on) echo 'disabled="disabled"'; 
-	echo '>',  $queue_map['queue_name'], ' ', $queue_map['_title'], '</option>', "\n";
+	echo '>',  htmlEnt($queue_map['queue_name']), ' ', htmlEnt($queue_map['_title']), '</option>', "\n";
 }
 ?>
 </select>

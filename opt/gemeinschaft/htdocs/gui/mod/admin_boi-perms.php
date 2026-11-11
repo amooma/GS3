@@ -62,7 +62,7 @@ if ($action === 'add') {
 	$user_id = (int)$DB->executeGetOne(
 		'SELECT `id` FROM `users` WHERE `user`=\''. $DB->escape(trim(@$_REQUEST['p_user'])) .'\'' );
 	if ($user_id < 1) {
-		echo '<div class="errorbox">', sPrintF(__('Benutzer &quot;%s&quot; unbekannt.'), @$_REQUEST['p_user']) ,'</div>' ,"\n";
+		echo '<div class="errorbox">', sPrintF(__('Benutzer &quot;%s&quot; unbekannt.'), htmlEnt(@$_REQUEST['p_user'])) ,'</div>' ,"\n";
 	} else {
 		$perms = '';
 		if ((int)@$_REQUEST['p_perm_l'] == 1) $perms.= 'l';
@@ -243,9 +243,9 @@ $num_pages = ceil($num_total / $per_page);
 $i=0;
 while ($r = $rs->fetchRow()) {
 	echo '<tr class="', ($i%2===0 ? 'odd':'even') ,'">' ,"\n";
-	echo '<td>', $r['host'] ,'</td>' ,"\n";
+	echo '<td>', htmlEnt($r['host']) ,'</td>' ,"\n";
 	echo '<td>', htmlEnt($r['h_comment']) ,'</td>' ,"\n";
-	echo '<td>', $r['user'] ,'</td>' ,"\n";
+	echo '<td>', htmlEnt($r['user']) ,'</td>' ,"\n";
 	echo '<td>', htmlEnt($r['u_fn']) ,' ', htmlEnt($r['u_ln']) ,'</td>' ,"\n";
 	echo '<td>' ,"\n";
 	echo '<span class="nobr">';
@@ -293,7 +293,7 @@ if ($action !== 'edit') {
 		'ORDER BY `host`'
 		);
 	while ($host = $rs->fetchRow()) {
-		echo '<option value="', $host['id'] ,'" title="', htmlEnt($host['comment']) ,'">', $host['host'] ,'</option>' ,"\n";
+		echo '<option value="', (int)$host['id'] ,'" title="', htmlEnt($host['comment']) ,'">', htmlEnt($host['host']) ,'</option>' ,"\n";
 	}
 	echo '</select></td>' ,"\n";
 	echo '<td colspan="2"><input type="text" name="p_user" size="10" /></td>' ,"\n";

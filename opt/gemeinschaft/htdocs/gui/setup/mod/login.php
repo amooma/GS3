@@ -34,7 +34,7 @@ $action = @$_REQUEST['action'];
 $change_pwd_ok = false;
 $change_pwd_msg = '';
 
-if ($action === 'setpwd') {
+if ($action === 'setpwd' && @$_SESSION['login_ok']) {
 	$newpwd = trim(@$_REQUEST['change_login_pwd1']);
 	if ($newpwd !== trim(@$_REQUEST['change_login_pwd2'])) {
 		$change_pwd_msg = __('Die Pa&szlig;w&ouml;rter stimmen nicht &uuml;berein!');

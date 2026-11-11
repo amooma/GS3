@@ -171,7 +171,7 @@ if ($action === 'insert-group') {
 		'`_id`='.$queue_id
 	);
 	$ret = gs_group_member_add( $group,  $queue_name);
-	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	sleep(1); //FIXME
 	$action = 'edit';
 }
@@ -182,7 +182,7 @@ if ($action === 'remove-group') {
 		'`_id`='.$queue_id
 	);
 	$ret = gs_group_member_del( $group,  $queue_name);
-	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	sleep(1); //FIXME
 	$action = 'edit';
 }
@@ -394,7 +394,7 @@ WHERE
 		echo '<option value="0"', ($queue['_sysrec_id'] ==0 ? ' selected="selected"' : '') ,'>', __('keine') ,'</option>', "\n";
 		echo '<option value="" disabled="disabled">-</option>', "\n";
 		foreach( $recordings as $rec_id => $desc ) {
-			echo '<option value="' . $rec_id .'"', ($queue['_sysrec_id'] ==$rec_id ? ' selected="selected"' : '') ,'>', __($desc) ,'</option>', "\n";
+			echo '<option value="' . $rec_id .'"', ($queue['_sysrec_id'] ==$rec_id ? ' selected="selected"' : '') ,'>', htmlEnt(__($desc)) ,'</option>', "\n";
 		}
 		echo '</select>';
 		echo '</td>';
@@ -639,7 +639,7 @@ WHERE
 			echo '<select name="group">', "\n";
 			foreach ($groups as $group) {
 				if (!in_array($group['id'], $groups_my) && !gs_group_connections_get($group['id']))
-					echo '<option value="',$group['id'] ,'">',$group['name'], ' -- ',$group['title'] ,'</option>' ,"\n";
+					echo '<option value="',$group['id'] ,'">',$group['name'], ' -- ',htmlEnt($group['title']) ,'</option>' ,"\n";
 			}
 			echo '</select>', "\n";
 			echo '</td>', "\n";
@@ -655,7 +655,7 @@ WHERE
 			echo '<tr class="',($i%2===0 ? 'odd':'even'),'">' ,"\n";
 			echo '<td class="l nobr">';
 			echo $group['name']  ,'</td>', "\n";
-			echo '<td>',$group['title']  ,'</td>', "\n";
+			echo '<td>',htmlEnt($group['title'])  ,'</td>', "\n";
 			echo '<td>',$group['type']  ,'</td>', "\n";
 			echo '<td class="r">',count(gs_group_members_get(Array($group['id']))), '</td>', "\n";
 			echo '<td class="r">', "\n";
@@ -800,7 +800,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page;
 		
 		echo '<td class="r">', $r['maxlen'] ,'</td>',"\n";
 		
-		echo '<td>', $r['_host_id'] ,' (', @$hosts[$r['_host_id']] ,')</td>',"\n";
+		echo '<td>', $r['_host_id'] ,' (', htmlEnt(@$hosts[$r['_host_id']]) ,')</td>',"\n";
 		
 		echo '<td class="">',"\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=edit&amp;qid='.$r['_id'] .'&amp;page='.$page) ,'" title="', __('bearbeiten'), '"><img alt="', __('bearbeiten'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/edit.png" /></a> &nbsp; ';

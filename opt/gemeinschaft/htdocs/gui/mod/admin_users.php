@@ -128,13 +128,13 @@ if ($edit_user) {
 	
 	if ($action === 'insert-group') {
 		$ret = gs_group_member_add( $group,  $edit_user);
-		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 		sleep(1); //FIXME
 		$action = 'view';
 	}
 	if ($action === 'remove-group') {
 		$ret = gs_group_member_del( $group,  $edit_user);
-		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 		sleep(1); //FIXME
 		$action = 'view';
 	}
@@ -155,7 +155,7 @@ if ($action === 'del') {
 	
 	if ($delete_user) {
 		$ret = gs_user_del( $delete_user );
-		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	}
 	
 	$action = 'list';
@@ -166,7 +166,7 @@ if ($action === 'add' || $action === 'add-and-view') {
 	if ($user_name) {
 		$user_lang = gs_get_lang_global(GS_LANG_OPT_AST, GS_LANG_FORMAT_AST);
 		$ret = gs_user_add( $user_name, $user_ext, $user_pin, $user_fname, $user_lname, $user_lang, $user_host, $user_email );
-		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 		
 		if ($action === 'add-and-view') {
 			$action = 'view';
@@ -208,11 +208,11 @@ if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 	
 	if ($cbdelete) {
 		$ret = gs_callblocking_delete( $edit_user, $cbdelete );
-		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	}
 	if ($extnumdel) {
 		$ret = gs_user_external_number_del( $edit_user, $extnumdel );
-		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	}
 	if ($bp_del_h > 0) {
 		$query = 'DELETE FROM `boi_perms` WHERE `user_id`='.$uid.' AND `host_id`='.$bp_del_h;
@@ -223,7 +223,7 @@ if (($action === 'edit') && ($edit_user) && ($uid > 0)) {
 if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 	
 	$ret = gs_user_change( $edit_user, $user_pin, $user_fname, $user_lname, @$_REQUEST['ulang'], $user_host, false, $user_email );
-	if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+	if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 
 	if (! in_array($canreinvite, array( 'yes', 'no' ), true))
 		$canreinvite = 'no';
@@ -236,11 +236,11 @@ if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 	
 	if ($cbregexp) {
 		$ret = gs_callblocking_set( $edit_user, $cbregexp, $cbpin );
-		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	}
 	if ($extnum) {
 		$ret = gs_user_external_number_add( $edit_user, $extnum );
-		if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	}
 	
 	if ($u_pgrp_ed) {
@@ -257,7 +257,7 @@ if (($action === 'save') && ($edit_user) && ($uid > 0))  {
 			foreach ($u_pgrps as $u_pgrp) {
 				if ($u_pgrp < 1) continue;
 				$ret = gs_pickupgroup_user_add( $u_pgrp, $edit_user );
-				if (isGsError( $ret )) echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+				if (isGsError( $ret )) echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 			}
 		}
 	}
@@ -590,7 +590,7 @@ LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
 			<input type="text" name="uext" id="ipt-uext" value="" size="5" maxlength="11" />
 		</td>
 		<td>
-			<input type="password" name="upin" id="ipt-upin" value="<?php echo mt_rand(100000,999999); ?>" size="5" maxlength="10" />
+			<input type="password" name="upin" id="ipt-upin" value="<?php echo random_int(100000,999999); ?>" size="5" maxlength="10" />
 		</td>
 		<td>
 			<input type="text" name="uemail" id="ipt-uemail" value="" size="20" maxlength="50" />
@@ -1349,7 +1349,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 		echo '<select name="group">', "\n";
 		foreach ($groups as $group) {
 			if (!in_array($group['id'], $groups_my) && !gs_group_connections_get($group['id']))
-				echo '<option value="',$group['id'] ,'">',$group['name'], ' -- ',$group['title'] ,'</option>' ,"\n";
+				echo '<option value="',$group['id'] ,'">',$group['name'], ' -- ',htmlEnt($group['title']) ,'</option>' ,"\n";
 		}
 		echo '</select>', "\n";
 		echo '</td>', "\n";
@@ -1365,7 +1365,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
 		echo '<td class="l nobr">';
 		echo $group['name']  ,'</td>', "\n";
-		echo '<td>',$group['title']  ,'</td>', "\n";	
+		echo '<td>',htmlEnt($group['title'])  ,'</td>', "\n";	
 		echo '<td>',$group['type']  ,'</td>', "\n";
 		echo '<td class="r">',count(gs_group_members_get(Array($group['id']))), '</td>', "\n";
 		echo '<td class="r">', "\n";
@@ -1414,7 +1414,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 		echo '<select name="queue_id">';
 		while ($queue_map = $rs->fetchRow()) {
 			echo '<option value="', (int)$queue_map['_id'], '"', 'title="', htmlEnt( $queue_map['_title']),'"';
-			echo '>',  $queue_map['name'], ' ', $queue_map['_title'], '</option>', "\n";
+			echo '>',  htmlEnt($queue_map['name']), ' ', htmlEnt($queue_map['_title']), '</option>', "\n";
 		}
 		echo '</select>';
 		echo '</td>';
@@ -1445,7 +1445,7 @@ if (gs_get_conf('GS_BOI_ENABLED')) {
 	echo '</form>';
 	$rs = $DB->execute('SELECT `q`.`name`, `penalty`, `_title`, `u`.`host_id`, `p`.`_queue_id` from `users` u,  `penalties` p, `ast_queues` q WHERE `p`.`_user_id`='.$uid.' AND `p`.`_user_id`=`u`.`id` AND `q`.`_id`=`p`.`_queue_id`');
 	while ($pen_map = $rs->fetchRow()) {
-		echo '<tr><td>', $pen_map['name'], ' ', $pen_map['_title'], '</td>';
+		echo '<tr><td>', htmlEnt($pen_map['name']), ' ', htmlEnt($pen_map['_title']), '</td>';
 		echo '<td>';
 		echo '<form method="post" action="', GS_URL_PATH, '">', "\n";
 		echo gs_form_hidden($SECTION, $MODULE);

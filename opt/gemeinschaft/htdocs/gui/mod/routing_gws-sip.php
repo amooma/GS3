@@ -156,6 +156,7 @@ WHERE `id`='. (int)$gwid
 		' VALUES ('.$gwid.', \''.$DB->escape('qualify').'\', \''.$DB->escape($v).'\')' );
 	
 	$v = @$_REQUEST['gw-param-dtmfmode'];
+	if (! in_array($v, array('inband', 'rfc2833', 'info'), true)) $v = 'rfc2833';
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('dtmfmode').'\'' );
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
 		' VALUES ('.$gwid.', \''.$DB->escape('dtmfmode').'\', \''.$DB->escape($v).'\')' );
@@ -192,7 +193,7 @@ WHERE `id`='. (int)$gwid
 		$v = array('alaw'=>1);
 		gs_log( GS_LOG_WARNING, 'You did not allow any codecs for gateway '. $sip_friend_name .'. Allowing G.711a by default.' );
 	}
-	$v = array_keys($v);
+	$v = preg_grep('/^[a-z0-9]+$/D', array_keys($v));
 	$DB->execute( 'DELETE FROM `gate_params` WHERE `gate_id`='.$gwid.' AND `param`=\''.$DB->escape('allow').'\'' );
 	$DB->execute( 'INSERT INTO `gate_params` (`gate_id`, `param`, `value`)'.
 		' VALUES ('.$gwid.', \''.$DB->escape('allow').'\', \''.$DB->escape(implode(',',$v)).'\')' );

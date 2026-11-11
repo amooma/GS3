@@ -63,7 +63,7 @@ if ($action === 'save') {
 	$ret = gs_group_change( $group_id, $group_name, $group_title );	
 	
 	 if (isGsError($ret)) {
-		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Gruppe konnte nicht gespeichert werden.') ,'</div>',"\n";
 	}
@@ -82,7 +82,7 @@ if ($action === 'add') {
 	$ret = gs_group_add( $group_name, $group_title, $group_type );
 
 	if (isGsError($ret)) {
-		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Gruppe konnte nicht angelegt werden.') ,'</div>',"\n";
 	}	
@@ -97,7 +97,7 @@ if ($action === 'delete') {
 	$ret = gs_group_del( $group_name );
 
 	if (isGsError($ret)) {
-		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Gruppe konnte nicht gel&ouml;scht werden.') ,'</div>',"\n";
 	}
@@ -115,7 +115,7 @@ if ($action === 'insert') {
 	$ret = gs_group_member_add( $group_id, $insert, true );
 	
 	if (isGsError($ret)) {
-		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Gruppe konnte nicht hinzugef&uuml;gt werden.') ,'</div>',"\n";
 	}
@@ -132,7 +132,7 @@ if ($action === 'remove') {
 	$ret = gs_group_member_del( $group_id, $remove, true );
 	
 	if (isGsError($ret)) {
-		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Gruppe konnte nicht entfernt werden.') ,'</div>',"\n";
 	}
@@ -150,7 +150,7 @@ if ($action === 'insert-perm') {
 	$ret = 	gs_group_permission_add($group_id, $pg_group, $pg_permission);
 
 	if (isGsError($ret)) {
-		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Berechtigung konnte nicht hinzugef&uuml;gt werden.') ,'</div>',"\n";
 	}
@@ -168,7 +168,7 @@ if ($action === 'remove-perm') {
 	$ret = 	gs_group_permission_del($group_id, $pg_group, $pg_permission);
 
 	if (isGsError($ret)) {
-		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Berechtigung konnte nicht entfernt werden.') ,'</div>',"\n";
 	}
@@ -185,7 +185,7 @@ if ($action === 'insert-member') {
 	$ret = 	gs_group_member_add($group_id, $pg_member);
 
 	if (isGsError($ret)) {
-		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Mitglied konnte nicht hinzugef&uuml;gt werden.') ,'</div>',"\n";
 	}
@@ -202,7 +202,7 @@ if ($action === 'remove-member') {
 	$ret = 	gs_group_member_del($group_id, $pg_member);
 
 	if (isGsError($ret)) {
-		echo '<div class="errorbox">', $ret->getMsg() ,'</div>',"\n";
+		echo '<div class="errorbox">', htmlEnt($ret->getMsg()) ,'</div>',"\n";
 	} elseif (! $ret) {
 		echo '<div class="errorbox">', __('Mitglied konnte nicht entfernt werden.') ,'</div>',"\n";
 	}
@@ -321,7 +321,7 @@ if ($action == 'edit') {
 			if (($group_same_type['id'] == $group['id']) || (in_array($group_same_type['id'], $group_includes_ids))) {
 
 			} else
-			echo '<option value="',$group_same_type['name'] ,'">',$group_same_type['name'], ' -- ', $group_same_type['title'],'</option>' ,"\n";
+			echo '<option value="',$group_same_type['name'] ,'">',$group_same_type['name'], ' -- ', htmlEnt($group_same_type['title']),'</option>' ,"\n";
 		}
 		echo '</select>', "\n";
 		echo '</td>', "\n";
@@ -337,7 +337,7 @@ if ($action == 'edit') {
 		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
 		echo '<td class="l nobr">';
 		echo $group_include['name']  ,'</td>', "\n";
-		echo '<td>',$group_include['title']  ,'</td>', "\n";	
+		echo '<td>',htmlEnt($group_include['title'])  ,'</td>', "\n";	
 		echo '<td>',$group_include['type']  ,'</td>', "\n";
 		echo '<td class="r">',count(gs_group_members_get(Array($group_include['id']))), '</td>', "\n";
 		echo '<td class="r">', "\n";
@@ -385,7 +385,7 @@ if ($action == 'edit') {
 	echo '<td>';
 	echo '<select name="group">', "\n";
 	foreach (gs_group_info_get() as $group_info) {
-		echo '<option value="',$group_info['id'],'">',$group_info['name'],' -- ', $group_info['title'],'</option>' ,"\n";
+		echo '<option value="',$group_info['id'],'">',$group_info['name'],' -- ', htmlEnt($group_info['title']),'</option>' ,"\n";
 	}
 	echo '</select>', "\n";
 	echo '</td>', "\n";
@@ -459,9 +459,9 @@ if ($action == 'edit') {
 	$i=0;
 	foreach ($group_externals as $group_external) {
 		echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
-		echo '<td>',$group_external['type']  ,'</td>', "\n";
-		echo '<td>',$group_external['key']  ,'</td>', "\n";
-		echo '<td>',$group_external['connection']  ,'</td>', "\n";
+		echo '<td>',htmlEnt($group_external['type'])  ,'</td>', "\n";
+		echo '<td>',htmlEnt($group_external['key'])  ,'</td>', "\n";
+		echo '<td>',htmlEnt($group_external['connection'])  ,'</td>', "\n";
 		/*
 		echo '<td class="r">', "\n";
 		echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-perm&amp;id='.$group['id'].'&amp;page='.$page.'&amp;type='.$group_external['type'].'&amp;permission='.$group_external['key']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
@@ -569,10 +569,10 @@ if ($action == 'edit') {
 		foreach ($group_members as $group_member) {
 			echo '<tr class="',($i%2===0?'odd':'even'),'">' ,"\n";
 			echo '<td>',$group_member['type']  ,'</td>', "\n";
-			echo '<td>',$group_member['member']  ,'</td>', "\n";
+			echo '<td>',htmlEnt($group_member['member'])  ,'</td>', "\n";
 			echo '<td class="r">', "\n";
 			if (!gs_group_connections_get($group['id']))
-				echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-member&amp;id='.$group['id'].'&amp;page='.$page.'&amp;type='.$group_member['type'].'&amp;member='.$group_member['member']) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
+				echo '<a href="', gs_url($SECTION, $MODULE, null, 'action=remove-member&amp;id='.$group['id'].'&amp;page='.$page.'&amp;type='.$group_member['type'].'&amp;member='.rawUrlEncode($group_member['member'])) ,'"><img alt="', __('Entfernen') ,'" title="', __('Entfernen') ,'" src="', GS_URL_PATH ,'img/minus.gif" /></a>';
 			echo '</td>', "\n";
 			echo '</tr>' ,"\n";
 			$i++;
@@ -660,7 +660,7 @@ if (isGsError($groups)) {
 			
 		echo '<td class="l nobr">';
 		echo $group['name']  ,'</td>', "\n";
-		echo '<td>',$group['title']  ,'</td>', "\n";
+		echo '<td>',htmlEnt($group['title'])  ,'</td>', "\n";
 		echo '<td>',$group['type']  ,'</td>', "\n";
 		echo '<td>', count($group_includes_ids) ,'</td>', "\n";
 		echo '<td class="r">',count(gs_group_members_get(Array($group['id']), false)),' / ',count(gs_group_members_get(Array($group['id']))), '</td>', "\n";

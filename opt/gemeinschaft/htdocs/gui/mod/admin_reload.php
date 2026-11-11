@@ -102,7 +102,7 @@ if ($action === 'dialplan-reload') {
 		else {
 		*/
 			gs_log(GS_LOG_DEBUG, "Reloading Asterisk dialplan on ". $r['host']);
-			echo "Reloading Asterisk dialplan on <b>", $r['host'] ,"</b>\n";
+			echo "Reloading Asterisk dialplan on <b>", htmlEnt($r['host']) ,"</b>\n";
 			@ob_flush(); @flush();
 			passThru( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=8 -l root '. qsa($r['host']) .' '. qsa(GS_DIR.'sbin/start-asterisk') .' --dialplan', $err );
 		/*
@@ -140,7 +140,7 @@ elseif ($action === 'reload') {
 		else {
 		*/
 			gs_log(GS_LOG_DEBUG, "Reloading Asterisk on ". $r['host']);
-			echo "Reloading Asterisk on <b>", $r['host'] ,"</b>\n";
+			echo "Reloading Asterisk on <b>", htmlEnt($r['host']) ,"</b>\n";
 			@ob_flush(); @flush();
 			passThru( 'sudo ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=8 -l root '. qsa($r['host']) .' '. qsa(GS_DIR.'sbin/start-asterisk') , $err );
 		/*

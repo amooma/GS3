@@ -38,7 +38,16 @@ $file = trim(@$_REQUEST['file']);
 $raw  = trim(@$_REQUEST['raw']);
 
 if (!$file) $file = $raw;
-if (!$file) {
+# must be logged in (an empty user name would make fax_download() fall
+# back to the HylaFax admin account), and the file name must not be
+# able to leave /tmp/ resp. recvq/
+if (!$file
+||  ! is_array($_SESSION)
+||  ! @array_key_exists('sudo_user', @$_SESSION)
+||  ! @array_key_exists('info'     , @$_SESSION['sudo_user'])
+||  ! @array_key_exists('id'       , @$_SESSION['sudo_user']['info'])
+||  @$_SESSION['sudo_user']['name'] == ''
+||  ! preg_match('/^[a-zA-Z0-9_\-][a-zA-Z0-9_\-.]*$/D', $file)) {
 	header('HTTP/1.0 403 Forbidden', true, 403);
 	header('Status: 403 Forbidden' , true, 403);
 	header('Content-Type: text/plain');

@@ -49,7 +49,8 @@ $per_page = (int)gs_get_conf('GS_GUI_NUM_RESULTS');
 $page     = (int)@$_REQUEST['page'];
 $delete   = trim(@$_REQUEST['delete']);
 
-if ($delete) fax_delete_file('/recvq/'.$delete);
+# the file is deleted with the HylaFax admin login, so allow plain file names only
+if ($delete && preg_match('/^[a-zA-Z0-9_\-][a-zA-Z0-9_.\-]*$/', $delete)) fax_delete_file('/recvq/'.$delete);
 
 echo '<script type="text/javascript" src="', GS_URL_PATH, 'js/arrnav.js"></script>', "\n";
 
@@ -135,16 +136,16 @@ for ($i=($page*$per_page); $i < ($per_page*$page)+$per_page; $i++) {
 		echo '<tr class="', (($i%2==0) ? 'odd':'even'), '">', "\n";
 		
 		echo "<td>", date('d.m.y H:i:s', $jobs_rec[$i][18]), "</td>\n";
-		if (@$jobs_rec[$i][15]) echo "<td>", $jobs_rec[$i][15] ," </td>\n";
-		else                    echo "<td>", $jobs_rec[$i][7] ,"</td>\n";
-		echo "<td>", $jobs_rec[$i][5] ,"</td>\n";
-		echo "<td>", round($jobs_rec[$i][10] / 1024) ," kB</td>\n";
-		echo "<td>", $jobs_rec[$i][12] ,"</td>\n";
-		echo "<td>", $jobs_rec[$i][14] ," lpi</td>\n";
+		if (@$jobs_rec[$i][15]) echo "<td>", htmlEnt($jobs_rec[$i][15]) ," </td>\n";
+		else                    echo "<td>", htmlEnt($jobs_rec[$i][7]) ,"</td>\n";
+		echo "<td>", htmlEnt($jobs_rec[$i][5]) ,"</td>\n";
+		echo "<td>", round((int)$jobs_rec[$i][10] / 1024) ," kB</td>\n";
+		echo "<td>", htmlEnt($jobs_rec[$i][12]) ,"</td>\n";
+		echo "<td>", htmlEnt($jobs_rec[$i][14]) ," lpi</td>\n";
 		//echo '<td><a href="srv/faxdown.php?file=',$jobs_rec[$i][4],'">', $jobs_rec[$i][4] ,"</a></td>\n";
-		echo "<td>", $jobs_rec[$i][1] ,"</td>\n";
+		echo "<td>", htmlEnt($jobs_rec[$i][1]) ,"</td>\n";
 		echo "<td>\n";
-		echo '<a href="',$mod_url,'&amp;delete=',$jobs_rec[$i][4],'&amp;page=',$page,'" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
+		echo '<a href="',$mod_url,'&amp;delete=',rawUrlEncode($jobs_rec[$i][4]),'&amp;page=',$page,'" title="', __('l&ouml;schen'), '"><img alt="', __('l&ouml;schen'), '" src="', GS_URL_PATH, 'crystal-svg/16/act/editdelete.png" /></a>';
 		echo ' &nbsp; <a href="',GS_URL_PATH ,'srv/faxdown.php?file='.rawUrlEncode($jobs_rec[$i][4]).'&amp;sudo='.rawUrlEncode(@$_SESSION['sudo_user']['name']).'"><img alt="PDF" src="', GS_URL_PATH, 'crystal-svg/16/mime/pdf.png" /></a>'."\n";
 		echo ' &nbsp; <a href="',GS_URL_PATH ,'srv/faxdown.php?raw='.rawUrlEncode($jobs_rec[$i][4]).'&amp;sudo='.rawUrlEncode(@$_SESSION['sudo_user']['name']).'"><img alt="TIFF" src="', GS_URL_PATH, 'crystal-svg/16/mime/image.png" /></a>'."\n";
 		echo "</td>\n";

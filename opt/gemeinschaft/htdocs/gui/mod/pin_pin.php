@@ -73,7 +73,7 @@ if (@$_REQUEST['action']==='save') {
 		$new_pin_repeat = $new_pin;
 	}
 		
-	if ($db_pin != $type_old_pin) {
+	if (isGsError($db_pin) || (string)$db_pin !== $type_old_pin) {
 		$msg = __('Alte PIN falsch!');
 	} elseif ($new_pin != $new_pin_repeat) {
 		$msg = __('Die beiden neuen PINs stimmen nicht &uuml;berein!');

@@ -85,7 +85,7 @@ function gs_callblocking_set( $user, $regexp, $pin )
 	
 	# set outgoing callblocking
 	#
-	$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `callblocking` WHERE `user_id`='. $user_id.' AND `regexp`=\''. $regexp.'\'' );
+	$num = $db->executeGetOne( 'SELECT COUNT(*) FROM `callblocking` WHERE `user_id`='. $user_id.' AND `regexp`=\''. $db->escape($regexp) .'\'' );
 	if ($num < 1) {
 		$ok = $db->execute( 'INSERT INTO `callblocking` (`user_id`, `regexp`, `pin`) VALUES ('. $user_id .', \''. $db->escape($regexp) .'\', \''. $db->escape($pin) .'\')');
 	} else {

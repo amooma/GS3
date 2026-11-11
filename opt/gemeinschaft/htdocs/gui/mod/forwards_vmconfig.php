@@ -53,7 +53,7 @@ function InitRecordCall($filename, $index, $comment) {
 		. "WaitTime: 15\n"
 		. "Context: vm-rec-multiple\n"
 		. "Extension: webdialrecord\n"
-		. "Callerid: $comment <Aufnahme>\n"
+		. "Callerid: ". preg_replace('/[\x00-\x1F<>"]+/', ' ', (string)$comment) ." <Aufnahme>\n"
 		. "Setvar: __user_id=".  $_SESSION['sudo_user']['info']['id'] ."\n"
 		. "Setvar: __user_name=".  $_SESSION['sudo_user']['info']['ext'] ."\n"
 		. "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
@@ -205,12 +205,12 @@ elseif (@$_REQUEST['action']==='savevmrec') {
 		foreach ($_REQUEST as $item => $comment ) {
 			if (substr($item,0,8) == "comment_" && $item != "comment_new") {
 				$id = substr($item,8);
-				$DB->execute('UPDATE `vm_rec_messages` SET `vm_comment`=\''.$DB->escape($comment).'\' WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id'].' AND `id`='.$DB->escape($id));
+				$DB->execute('UPDATE `vm_rec_messages` SET `vm_comment`=\''.$DB->escape($comment).'\' WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id'].' AND `id`='.(int)$id);
 			}
 		}
 	}
 	elseif (isset($_REQUEST['delete'])) {
-		$id = $_REQUEST['delete'];
+		$id = (int)$_REQUEST['delete'];
 		//disable call Forwards which using this File
 		$DB->execute('UPDATE `callforwards` SET `active`=\'no\', `vm_rec_id`=\'0\' WHERE `user_id`='.$_SESSION['sudo_user']['info']['id'].' AND `vm_rec_id`='.$DB->escape($id));
 		$DB->execute('DELETE from `vm_rec_messages` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id'].' AND `id`='.$DB->escape($id));
@@ -333,17 +333,17 @@ elseif (@$_REQUEST['action']==='saveparcall') {
 		foreach ( $_REQUEST as $item => $comment ) {
 			if (substr($item,0,7) == "number_" && $item != "number_new") {
 				$id = substr($item,7);
-				$DB->execute('UPDATE `cf_parallelcall` SET `number`=\''.$DB->escape($comment).'\' WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id'].' AND `id`='.$DB->escape($id));
+				$DB->execute('UPDATE `cf_parallelcall` SET `number`=\''.$DB->escape(preg_replace('/[^0-9*#]/S', '', (string)$comment)).'\' WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id'].' AND `id`='.(int)$id);
 			}
 		}
 	} else if (isset($_REQUEST['delete'])) {
-		$id = $_REQUEST['delete'];
+		$id = (int)$_REQUEST['delete'];
 		$DB->execute('DELETE from `cf_parallelcall` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id'].' AND `id`='.$DB->escape($id));
 	}	
 }
 elseif (@$_REQUEST['action']==='delparcall') {
 	if (isset($_REQUEST['delete'])) {
-		$id = $_REQUEST['delete'];
+		$id = (int)$_REQUEST['delete'];
 		$DB->execute('DELETE from `cf_parallelcall` WHERE `_user_id`='.$_SESSION['sudo_user']['info']['id'].' AND `id`='.$DB->escape($id));
 	}
 }

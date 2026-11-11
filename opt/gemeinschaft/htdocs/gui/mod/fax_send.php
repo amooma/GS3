@@ -63,6 +63,11 @@ $tsi        = trim(@$_REQUEST['tsi']);
 $faxnumber  = trim(@$_REQUEST['faxnumber']);
 $resolution = (int) trim(@$_REQUEST['res']);
 $document   = trim(@$_REQUEST['doc']);
+# plain file names only, no path traversal
+if (! preg_match('/^[a-zA-Z0-9_\-][a-zA-Z0-9_.\-]*$/', $document)) $document = '';
+# no FTP command or dial string tricks
+$faxnumber  = preg_replace('/[^0-9+*#]/', '', $faxnumber);
+$tsi        = preg_replace('/[\x00-\x1F\x7F]/', '', $tsi);
 
 if (is_array($_FILES)
 &&  @array_key_exists('file', @$_FILES)
@@ -132,7 +137,7 @@ echo "</tr>\n";
 echo "<tr>\n";
 echo '<th>', __('Faxnummer'), '</th>' ,"\n";
 echo '<td>';
-echo '<input name="faxnumber" type="text" value="'.$faxnumber.'" style="width:250px;" />';
+echo '<input name="faxnumber" type="text" value="'.htmlEnt($faxnumber).'" style="width:250px;" />';
 echo "</td>\n";
 echo "</tr>\n";
 
@@ -150,7 +155,7 @@ echo "</tr>\n";
 echo "<tr>\n";
 echo '<th>', __('Datei'), '</th>' ,"\n";
 echo '<td>';
-if ($document) echo '<input name="doc" type="text" value="'.$document.'"/>';
+if ($document) echo '<input name="doc" type="text" value="'.htmlEnt($document).'"/>';
 else echo '<input name="file" type="file" />';
 echo "</td>\n";
 echo "</tr>\n";
@@ -159,7 +164,7 @@ echo "<tr>\n";
 echo '<th>&nbsp;</th>' ,"\n";
 echo '<th style="width:350px;">';
 if ($file_ok) {
-	echo baseName($_FILES['file']['name']) ," (", round( (int)$_FILES['file']['size'] / 1024 ) ," kB)\n";
+	echo htmlEnt(baseName($_FILES['file']['name'])) ," (", round( (int)$_FILES['file']['size'] / 1024 ) ," kB)\n";
 	if ($fax_job_id) echo '', __('wird gesendet.'), ' ID: ', $fax_job_id;
 	else             echo ' - ', __('Fehler beim Senden');
 }

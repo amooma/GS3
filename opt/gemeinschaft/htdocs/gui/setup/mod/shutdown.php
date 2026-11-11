@@ -27,6 +27,12 @@
 \*******************************************************************/
 defined('GS_VALID') or die('No direct access.');
 
+# only by submitting the form, not by a mere link (or <img src>)
+if (@$_SERVER['REQUEST_METHOD'] !== 'POST'
+||  @$_POST['action'] !== 'shutdown') {
+	return;
+}
+
 ?>
 
 <br />

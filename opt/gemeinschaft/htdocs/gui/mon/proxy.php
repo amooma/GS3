@@ -29,6 +29,25 @@
 define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 //include_once( GS_DIR .'inc/db_connect.php' );
+require_once( GS_DIR .'inc/netmask.php' );
+
+# same access check as in mon.php
+$remote_ip = @$_SERVER['REMOTE_ADDR'];
+$allowed = false;
+$networks = explode(',', gs_get_conf('GS_MONITOR_FROM_NET'));
+foreach ($networks as $net) {
+	if (ip_addr_in_network( $remote_ip, trim($net) )) {
+		$allowed = true;
+		break;
+	}
+}
+if (! $allowed) {
+	@header( 'HTTP/1.0 403 Forbidden', true, 403 );
+	@header( 'Status: 403 Forbidden', true, 403 );
+	@header( 'Content-Type: text/plain; charset=utf-8' );
+	echo "Not allowed.\nSee config.\n";
+	die();
+}
 
 $host = '127.0.0.1';
 $port = 5039;
@@ -124,11 +143,18 @@ while (! @fEof( $sock ) && time() < $tStart+$maxtime) {
 		$msg = subStr($buf, 0, $pos);
 		$buf = subStr($buf, $pos+strLen(@$m[0][0]));
 		
-		@ob_start();
-		$states = null;
-		$ret = eval('$states = '.$msg.';');
-		@ob_end_clean();
-		if ($ret === false || ! is_array(@$states)) continue;
+		# parse the message instead of eval()ing it. format:
+		# array( '123'=>array('s'=>1,'e'=>1,'l'=>'456'), ... )
+		if (strPos($msg, 'array(') === false) continue;
+		$states = array();
+		preg_match_all('/\'([0-9a-zA-Z@_\-*#+.]+)\'=>array\(\'s\'=>(-?[0-9]+)(,\'e\'=>1)?(?:,\'l\'=>\'([^\'\\\\]*)\')?\)/S', $msg, $mm, PREG_SET_ORDER);
+		foreach ($mm as $st) {
+			$states[$st[1]] = array(
+				's' => (int)$st[2],
+				'e' => (@$st[3] != ''),
+				'l' => (string)@$st[4]
+			);
+		}
 		
 		echo $msg_open;
 		echo 'm({'."\n";

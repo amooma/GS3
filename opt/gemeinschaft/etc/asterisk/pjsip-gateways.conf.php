@@ -61,6 +61,10 @@ WHERE
 ORDER BY `g`.`id`'
 );
 while ($gw = $rs->fetchRow()) {
+	# a line break in a value would add lines to the config
+	foreach ($gw as $gw_k => $gw_v) {
+		if (is_string($gw_v)) $gw[$gw_k] = preg_replace('/[\x00-\x1F\x7F]/', '', $gw_v);
+	}
 	if ($gw['name'] == '') continue;
 	if ($gw['host'] == '') continue;
 	
@@ -134,7 +138,7 @@ while ($gw = $rs->fetchRow()) {
 	$params_override = array();
 	$params_rs = $DB->execute( 'SELECT `param`, `value` FROM `gate_params` WHERE `gate_id`='.$gw['id'] );
 	while ($param = $params_rs->fetchRow()) {
-		$params_override[$param['param']] = $param['value'];
+		$params_override[$param['param']] = preg_replace('/[\x00-\x1F\x7F]/', '', (string)$param['value']);
 	}
 	
 	if (array_key_exists('port'          , $params_override)) {

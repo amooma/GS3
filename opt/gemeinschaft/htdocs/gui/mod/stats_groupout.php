@@ -137,7 +137,7 @@ else {
 <?php
 
 foreach ($group_info AS $group_select) {
-	echo '<option value="',$group_select['id'],'"',($group_select['id']==$group ? ' selected="selected"' : ''),'>', $group_select['title'] ,'</option>' ,"\n";
+	echo '<option value="',$group_select['id'],'"',($group_select['id']==$group ? ' selected="selected"' : ''),'>', htmlEnt($group_select['title']) ,'</option>' ,"\n";
 }
 ?>
 </select>
@@ -319,7 +319,6 @@ $sql_query =
 	;
 if (! $CDR_DB->execute( $sql_query )) {
 	echo '<div class="errorbox">', "Fehler beim Anlegen einer temporären Tabelle!" ,'</div>',"\n";
-echo $sql_query;
 }
 
 for ($day=1; $day<=$num_days; ++$day) {

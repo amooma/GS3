@@ -151,7 +151,7 @@ function gs_user_add( $user, $ext, $pin, $firstname, $lastname, $language, $host
 	# add sip account
 	#
 	$callerid = trim( gs_utf8_decompose_to_ascii( $firstname .' '. $lastname )) .' <'. $ext .'>';
-	$sip_pwd = rand(10000,99999).rand(10000,99999);
+	$sip_pwd = random_int(10000,99999).random_int(10000,99999);
 	$ok = $db->execute( 'INSERT INTO `ast_sipfriends` (`_user_id`, `name`, `secret`, `callerid`, `mailbox`, `setvar`, `language`) VALUES ('. $user_id .', \''. $db->escape($ext) .'\', \''. $db->escape($sip_pwd) .'\', _utf8\''. $db->escape($callerid) .'\', \''. $db->escape($ext) .'\', \''. $db->escape('__user_id='. $user_id .';__user_name='. $ext) .'\', \''. $db->escape($language) .'\')' );
 	if (! $ok) {
 		gs_db_rollback_trans($db);

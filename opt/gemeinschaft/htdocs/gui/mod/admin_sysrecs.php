@@ -100,7 +100,7 @@ function distribute_file($localfile)
 			if($err != 0)
 			{
 				gs_log(GS_LOG_WARNING, "Failed to scp system recording '". $localfile ."' to ". $currenthost["host"]);
-				$errormsgs[] = sprintf(__('Audiodatei konnte nicht auf Node %s kopiert werden'), $currenthost["host"]);
+				$errormsgs[] = sprintf(__('Audiodatei konnte nicht auf Node %s kopiert werden'), htmlEnt($currenthost["host"]));
 			}
 			else
 			{
@@ -110,7 +110,7 @@ function distribute_file($localfile)
 				if($err != 0)
 				{
 					gs_log(GS_LOG_WARNING, "Failed to chmod system recording '". $localfile ."' on ". $currenthost["host"]);
-					$errormsgs[] = sprintf(__('Berechtigungen k&ouml;nnen auf Node %s nicht gesetzt werden'), $currenthost["host"]);
+					$errormsgs[] = sprintf(__('Berechtigungen k&ouml;nnen auf Node %s nicht gesetzt werden'), htmlEnt($currenthost["host"]));
 				}
 			}
 		}
@@ -148,7 +148,7 @@ function distribute_remove($localfile)
 			if($err != 0)
 			{
 				gs_log(GS_LOG_WARNING, "Failed to remove system recording '". $localfile ."' from ". $currenthost["host"]);
-				$errormsgs[] = sprintf(__('Audiodatei kann nicht von Node %s gel&ouml;scht werden'), $currenthost["host"]);
+				$errormsgs[] = sprintf(__('Audiodatei kann nicht von Node %s gel&ouml;scht werden'), htmlEnt($currenthost["host"]));
 			}
 		}
 	}
@@ -258,7 +258,7 @@ if($newaction === "upload")
 
 				if(!in_array($fileext, $audio_exts, true))
 				{
-					$errormsgs[] = sprintf(__('Datei %s ist keine zul&auml;ssige Audio-Datei'), $_FILES["audiofile"]["name"]);
+					$errormsgs[] = sprintf(__('Datei %s ist keine zul&auml;ssige Audio-Datei'), htmlEnt($_FILES["audiofile"]["name"]));
 					$errormsgs[] = __('Erlaubte Formate') .": ". implode(", ", $audio_exts);
 				}
 				elseif(!is_uploaded_file(@$_FILES["audiofile"]["tmp_name"]))

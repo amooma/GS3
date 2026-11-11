@@ -95,7 +95,7 @@ if (trim($pin)=='') {
 	gs_agi_set_variable( 'ret', 'unknown' );
 	exit();
 }
-if ((string)$pin != (string)$pass) {
+if ((string)$pin !== (string)$pass) {
 	# wrong password
 	gs_log( GS_LOG_NOTICE, "Mobility: Login attempt for ext. $new_ext - Wrong PIN number" );
 	gs_agi_set_variable( 'ret', 'badpass' );

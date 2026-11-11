@@ -108,6 +108,9 @@ if ($action == 'report') {
 	$day_d  = @$_REQUEST['day'   ];
 	$h_start = (int) @$_REQUEST['hstart'];
 	$h_end = (int) @$_REQUEST['hend'];
+	if ($h_start < 0) $h_start = 0;
+	if ($h_start > 24) $h_start = 24;
+	if ($h_end > 24) $h_end = 24;
 	if ($h_end < $h_start) $h_end = $h_start;
 } else {
 	$action   = '';
@@ -152,7 +155,7 @@ if (array_search($queue_id, $queue_groups) === FALSE)
 <?php
 echo '<option value="0"> - </option>' ,"\n";
 foreach ($group_info AS $group_select) {
-	echo '<option value="',$group_select['id'],'"',($group_select['id']==$group ? ' selected="selected"' : ''),'>', $group_select['title'] ,'</option>' ,"\n";
+	echo '<option value="',$group_select['id'],'"',($group_select['id']==$group ? ' selected="selected"' : ''),'>', htmlEnt($group_select['title']) ,'</option>' ,"\n";
 }
 ?>
 </select>

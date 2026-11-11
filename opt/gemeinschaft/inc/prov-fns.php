@@ -168,10 +168,10 @@ function gs_prov_gen_sip_pwd()
 	$rand_from = base_convert('1000',36,10);
 	$rand_to   = base_convert('zzzz',36,10);
 	return
-		base_convert(   rand( $rand_from, $rand_to ),10,36).
-		base_convert(mt_rand( $rand_from, $rand_to ),10,36).
-		base_convert(mt_rand( $rand_from, $rand_to ),10,36).
-		base_convert(   rand( $rand_from, $rand_to ),10,36);
+		base_convert(random_int( $rand_from, $rand_to ),10,36).
+		base_convert(random_int( $rand_from, $rand_to ),10,36).
+		base_convert(random_int( $rand_from, $rand_to ),10,36).
+		base_convert(random_int( $rand_from, $rand_to ),10,36);
 }
 
 

@@ -139,7 +139,10 @@ function gs_hylafax_authfile_sync( $authfile = '' )
 	# There is a fallback mechanism which copies the file instead of
 	# FTP put'ting it if the fax server is running on the local machine.
 	
-	if (! $authfile) $authfile = '/tmp/gs-hylafax-hosts.hfaxd-'.rand(100000,999999);
+	# tempnam() creates the file with mode 0600 under a name nobody can
+	# predict. It holds the password hashes of all users.
+	if (! $authfile) $authfile = tempnam('/tmp', 'gs-hylafax-hosts.hfaxd-');
+	if (! $authfile) return new GsError( 'Failed to open HylaFax authfile.' );
 	
 	# create authfile locally
 	#
