@@ -879,7 +879,7 @@ macro dial-gateway-do( mnumber ) {
 			// RFC 3325:
 			Set(__GS_SIPHDR_PPI=${QUOTE(${URIENCODE(${CALLERID(name)})})} <sip:${CALLERID(num)}@${r_${r}_cid_host}>);
 			// RFC 3325, RFC 3323:
-			Set(__GS_SIPHDR_PRIVACY=id\;header);
+			Set(__GS_SIPHDR_PRIVACY=id;header);
 			// Set caller presentation - affects Remote-Party-ID header: ...";privacy:full;screen:yes"
 			Set(CALLERID(pres)=prohib_passed_screen);
 		}

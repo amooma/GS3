@@ -459,8 +459,9 @@ context to-internal-users {
 		//Set(CALLERID(name)=ICOM ${CALLERID(name)});
 		
 		// Add SIP-Header for Intercom (auto-answer)
-		Set(__GS_SIPHDR_CALL_INFO=<http://127.0.0.1>\;answer-after=0);  // for Grandstream, Snom, Tiptel
-		Set(__GS_SIPHDR_ALERT_INFO=<http://127.0.0.1>\;info=alert-autoanswer);  // for Aastra, Siemens
+		// no backslash before ';': Set() would keep it in the header
+		Set(__GS_SIPHDR_CALL_INFO=<http://127.0.0.1>;answer-after=0);  // for Grandstream, Snom, Tiptel
+		Set(__GS_SIPHDR_ALERT_INFO=<http://127.0.0.1>;info=alert-autoanswer);  // for Aastra, Siemens
 		
 		Dial(PJSIP/${iext},30,b(gs-sip-headers^s^1));
 		&hangup-proper-status();
