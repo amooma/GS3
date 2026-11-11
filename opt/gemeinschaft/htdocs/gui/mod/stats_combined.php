@@ -346,8 +346,8 @@ $ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`' );
 $sql_query=
 	'CREATE TEMPORARY TABLE `'.$table.'`
 		SELECT * FROM `ast_cdr` WHERE '.
-			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_w_start) .'\' AND '.
-			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_w_end) .'\' ) AND '.
+			'( `calldate` >= \''. gmDate('Y-m-d H:i:s', $day_w_start) .'\' AND '.
+			'  `calldate` <= \''. gmDate('Y-m-d H:i:s', $day_w_end) .'\' ) AND '.
 			( $exts_sql != ''
 				? '  `dst` IN ('. $exts_sql .') '
 				: '  FALSE '
@@ -408,8 +408,8 @@ for ($hour=$h_start; $hour<=$h_end; ($hour=$hour+0.5)) {
 	FROM `'.$table.'`
 	WHERE
 	`dst` IN ('. $exts_sql .') AND
-	( `calldate`>=\''. date('Y-m-d H:i:s', $hour_t_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $hour_t_end) .'\' ) AND
+	( `calldate`>=\''. gmDate('Y-m-d H:i:s', $hour_t_start) .'\' AND 
+	`calldate`<=\''. gmDate('Y-m-d H:i:s', $hour_t_end) .'\' ) AND
 	`disposition`=\''. $CDR_DB->escape('ANSWERED') .'\' AND
 	`duration` > 5 AND
 	`billsec` IS NOT NULL AND
@@ -425,8 +425,8 @@ for ($hour=$h_start; $hour<=$h_end; ($hour=$hour+0.5)) {
 	FROM `'.$table.'`
 	WHERE
 	`dst` IN ('. $exts_sql .') AND
-	( `calldate`>=\''. date('Y-m-d H:i:s', $hour_t_start) .'\' AND 
-	`calldate`<=\''. date('Y-m-d H:i:s', $hour_t_end) .'\' ) AND
+	( `calldate`>=\''. gmDate('Y-m-d H:i:s', $hour_t_start) .'\' AND 
+	`calldate`<=\''. gmDate('Y-m-d H:i:s', $hour_t_end) .'\' ) AND
 	( `disposition`=\''. $CDR_DB->escape('ANSWERED') .'\' OR  `disposition`=\''. $CDR_DB->escape('NO ANSWER') .'\')  AND
 	`duration` > 5 AND
 	`channel` NOT LIKE \'Local/%\' AND

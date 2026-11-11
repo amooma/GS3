@@ -280,7 +280,7 @@ FROM `ast_cdr`
 WHERE
 	`src` IN ('. $exts_sql .') AND
 	`dst` '. ($external ? '':'NOT ') .'LIKE \'0%\' AND
-	`calldate`>=\''. date('Y-m-d H:i:s', $t_from) .'\' AND
+	`calldate`>=\''. gmDate('Y-m-d H:i:s', $t_from) .'\' AND
 	`disposition`=\''. $CDR_DB->escape($disposition) .'\' AND
 	`channel` NOT LIKE \'Local/%\' AND
 	`dst`<>\'s\' AND
@@ -298,7 +298,7 @@ FROM `ast_cdr`
 WHERE
 	`dst` IN ('. $exts_sql .') AND
 	`src` '. ($external ? '':'NOT ') .'LIKE \'0%\' AND
-	`calldate`>=\''. date('Y-m-d H:i:s', $t_from) .'\' AND
+	`calldate`>=\''. gmDate('Y-m-d H:i:s', $t_from) .'\' AND
 	`disposition`=\''. $CDR_DB->escape($disposition) .'\' AND
 	`channel` NOT LIKE \'Local/%\' AND
 	`dst`<>\'s\' AND

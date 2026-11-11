@@ -368,6 +368,7 @@ _gscnf( 'INTL_LANG'                 , 'de_DE'            );
 _gscnf( 'INTL_USE_GETTEXT'          , false              );
 _gscnf( 'INTL_ASTERISK_LANG'        , 'de'               );
 _gscnf( 'INTL_LANG_SOUNDS'          , 'de-DE'            );
+_gscnf( 'TIMEZONE'                  , 'Europe/Berlin'    );
 
 _gscnf( 'USERCOMMENT_OFFTIME'       , 'Feierabend'       );
 _gscnf( 'EMAIL_PATTERN_VALID'       , '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i'              );
@@ -427,21 +428,11 @@ define( 'GS_LOG_LEVEL', constant('GS_LOG_'.$LOG_LEVEL) );
 if (function_exists('date_default_timezone_set')) {
 	# PHP >= 5.1.0
 	# needed by date() and other functions
-	# PHP >= 5.4 no longer guesses the system timezone and uses UTC
-	# unless date.timezone is set in php.ini, so use the system one
-	# like Asterisk and cron do (wakeup calls, CDR times). PHP 8
-	# reports its built-in default as "UTC", so treat that as unset.
-	$tz = (string)@ini_get('date.timezone');
-	if ($tz === '' || $tz === 'UTC') {
-		$tz = @trim((string)@file_get_contents('/etc/timezone'));
-		if ($tz === '' && @is_link('/etc/localtime')) {
-			$tz = preg_replace('#^.*/zoneinfo/#', '', (string)@readlink('/etc/localtime'));
-		}
+	# The system and the CDRs run on UTC, PHP shows and takes the local
+	# time of the users ($TIMEZONE in gemeinschaft.php).
+	if (! @date_default_timezone_set( GS_TIMEZONE )) {
+		@date_default_timezone_set( 'UTC' );
 	}
-	if ($tz === '' || ! @date_default_timezone_set($tz)) {
-		@date_default_timezone_set( @date_default_timezone_get() );
-	}
-	unset($tz);
 }
 
 # logger and error handler:

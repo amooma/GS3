@@ -302,8 +302,8 @@ $ok = $CDR_DB->execute( 'DROP TABLE IF EXISTS `'.$table.'`' );
 $sql_query =
 	'CREATE TEMPORARY TABLE `'.$table.'` 
 		SELECT * FROM `ast_cdr` WHERE '.
-			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_m_start) .'\' AND '.
-			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_m_end) .'\' ) AND '.
+			'( `calldate` >= \''. gmDate('Y-m-d H:i:s', $day_m_start) .'\' AND '.
+			'  `calldate` <= \''. gmDate('Y-m-d H:i:s', $day_m_end) .'\' ) AND '.
 			'  `dst` IN ('. $exts_sql .') AND '.
 			'  `channel` NOT LIKE \'Local/%\' AND '.
 			'  `dstchannel` NOT LIKE \'SIP/gs-0%\' AND '.
@@ -328,8 +328,8 @@ for ($day=1; $day<=$num_days; ++$day) {
 		'SELECT COUNT(*) '.
 		'FROM `'.$table.'` '.
 		'WHERE '.
-		'( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
-		'  `calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' )';
+		'( `calldate`>=\''. gmDate('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+		'  `calldate`<=\''. gmDate('Y-m-d H:i:s', $day_t_end) .'\' )';
 	
 	$n_calls_in = (int) $CDR_DB->executeGetOne( $sql_query );
 	
@@ -353,8 +353,8 @@ for ($day=1; $day<=$num_days; ++$day) {
 			'SELECT COUNT(*) '.
 			'FROM `'.$table.'` '.
 			'WHERE '.
-			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
-			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'( `calldate` >= \''. gmDate('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'  `calldate` <= \''. gmDate('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
 			'( `disposition` = \''. $DB->escape('BUSY') .'\' OR '.
 			'  `dcontext` = \'program-cc\')';
 		
@@ -364,8 +364,8 @@ for ($day=1; $day<=$num_days; ++$day) {
 			'SELECT COUNT(*) '.
 			'FROM `'.$table.'` '.
 			'WHERE '.
-			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
-			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'( `calldate` >= \''. gmDate('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'  `calldate` <= \''. gmDate('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
 			'  `disposition` = \''. $DB->escape('ANSWERED') .'\' AND '.
 			'  `duration` > 5 AND '.
 			'  `billsec` IS NOT NULL AND '.
@@ -377,8 +377,8 @@ for ($day=1; $day<=$num_days; ++$day) {
 			'SELECT COUNT(*) '.
 			'FROM `'.$table.'` '.
 			'WHERE '.
-			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
-			'  `calldate` <= \''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'( `calldate` >= \''. gmDate('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'  `calldate` <= \''. gmDate('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
 			'  `disposition` = \''. $DB->escape('ANSWERED') .'\' AND '.
 			'  `billsec` > '. (int)$duration_level;
 		
@@ -388,8 +388,8 @@ for ($day=1; $day<=$num_days; ++$day) {
 			'SELECT AVG(`billsec`) '.
 			'FROM `'.$table.'` '.
 			'WHERE '.
-			'( `calldate` >= \''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
-			'`calldate` <= \''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'( `calldate` >= \''. gmDate('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'`calldate` <= \''. gmDate('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
 			'`disposition` = \''. $DB->escape('ANSWERED') .'\' AND '.
 			'`billsec` > 0';
 		
@@ -399,8 +399,8 @@ for ($day=1; $day<=$num_days; ++$day) {
 			'SELECT COUNT(*) '.
 			'FROM `'.$table.'` '.
 			'WHERE '.
-			'( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
-			'  `calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'( `calldate`>=\''. gmDate('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'  `calldate`<=\''. gmDate('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
 			'( `disposition`=\''. $DB->escape('ANSWERED') .'\' OR '.
 			'  `disposition`=\''. $DB->escape('NO ANSWER') .'\') AND '.
 			'  `duration` > 5 AND '.
@@ -412,8 +412,8 @@ for ($day=1; $day<=$num_days; ++$day) {
 			'SELECT COUNT(*) '.
 			'FROM `'.$table.'` '.
 			'WHERE '.
-			'( `calldate`>=\''. date('Y-m-d H:i:s', $day_t_start) .'\' AND '.
-			'  `calldate`<=\''. date('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
+			'( `calldate`>=\''. gmDate('Y-m-d H:i:s', $day_t_start) .'\' AND '.
+			'  `calldate`<=\''. gmDate('Y-m-d H:i:s', $day_t_end) .'\' ) AND '.
 			'( `disposition`=\''. $DB->escape('ANSWERED') .'\' OR '.
 			'  `disposition`=\''. $DB->escape('NO ANSWER') .'\') AND '.
 			'  `duration` IS NOT NULL AND '.
@@ -489,8 +489,8 @@ if ( $totals['n_calls_answer'] ) {
 		'SELECT AVG(`billsec`) '.
 		'FROM `'.$table.'` '.
 		'WHERE '.
-		'( `calldate`>=\''. date('Y-m-d H:i:s', $month_t_start) .'\' AND '.
-		'  `calldate`<=\''. date('Y-m-d H:i:s', $month_t_end) .'\' ) AND '.
+		'( `calldate`>=\''. gmDate('Y-m-d H:i:s', $month_t_start) .'\' AND '.
+		'  `calldate`<=\''. gmDate('Y-m-d H:i:s', $month_t_end) .'\' ) AND '.
 		'  `disposition`=\''. $DB->escape('ANSWERED') .'\' AND '.
 		'`billsec` > 0';
 	
@@ -503,8 +503,8 @@ if ($totals['n_calls_answer'] > 0) {
 		'SELECT SUM(`billsec`) '.
 		'FROM `'.$table.'` '.
 		'WHERE '.
-		'( `calldate`>=\''. date('Y-m-d H:i:s', $month_t_start) .'\' AND '.
-		'  `calldate`<=\''. date('Y-m-d H:i:s', $month_t_end) .'\' ) AND '.
+		'( `calldate`>=\''. gmDate('Y-m-d H:i:s', $month_t_start) .'\' AND '.
+		'  `calldate`<=\''. gmDate('Y-m-d H:i:s', $month_t_end) .'\' ) AND '.
 		'  `disposition`=\''. $DB->escape('ANSWERED') .'\' AND '.
 		'`billsec` > 0';
 	

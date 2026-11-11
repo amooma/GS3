@@ -250,9 +250,10 @@ fi
 #
 timedatectl set-ntp true || true
 
-# local time for wakeup calls, cron jobs and the GUI (cloud images use UTC)
+# The system, Asterisk, the database and the CDRs run on UTC. The local
+# time of the users is $TIMEZONE in /etc/gemeinschaft/gemeinschaft.php.
 #
-timedatectl set-timezone Europe/Berlin || true
+timedatectl set-timezone Etc/UTC || true
 systemctl try-restart cron || true
 
 
@@ -972,6 +973,15 @@ echo "***"
 
 systemctl stop hfaxd.service faxq.service || true
 /etc/init.d/iaxmodem stop || true
+
+# the time in the header line of sent faxes is the local time of the
+# users, not the UTC of the system (faxq starts faxsend)
+mkdir -p /etc/systemd/system/faxq.service.d
+cat <<\HEREDOC > /etc/systemd/system/faxq.service.d/gemeinschaft.conf
+[Service]
+Environment=TZ=Europe/Berlin
+HEREDOC
+systemctl daemon-reload || true
 
 /etc/init.d/asterisk stop || true
 /opt/gemeinschaft/sbin/gs-ast-dialplan-gen

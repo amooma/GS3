@@ -1,6 +1,5 @@
 DirectoryIndex index.php index.html
 Options +FollowSymLinks -SymLinksIfOwnerMatch -Indexes -MultiViews
-DefaultType text/html
 
 <IfModule mod_mime.c>
 	AddDefaultCharset UTF-8

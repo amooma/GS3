@@ -169,7 +169,7 @@ context wakeup-job {
 		Answer();
 		Wait(0.5);
 		Playback(/opt/gemeinschaft/sounds/${gs_userlang_gs}/wakeup_call_announcement);
-		SayUnixTime(,,R);
+		SayUnixTime(,${GS_TIMEZONE},R);  // the system runs on UTC
 		Wait(0.5);
 		MusicOnHold();
 	};

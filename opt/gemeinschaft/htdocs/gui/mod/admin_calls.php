@@ -61,37 +61,42 @@ function query_string( $period, $src, $dst, $dur, $stat )
 	global $CDR_DB;
 	
 	$query_line = '';
-	
+
+	# calldate is UTC, the periods are in local time
+	$now = time();
+	$y = (int)date('Y'); $m = (int)date('n'); $d = (int)date('j');
 	switch ($period) {
 	case 'month':
-		$query_line = '`calldate` > (NOW()-INTERVAL 1 MONTH)';
+		$from = mktime((int)date('G'), (int)date('i'), (int)date('s'), $m-1, $d, $y);
 		break;
 	case 'day':
-		$query_line = '`calldate` > (NOW()-INTERVAL 1 DAY)';
+		$from = $now - 24*3600;
 		break;
 	case 'hour':
-		$query_line = '`calldate` > (NOW()-INTERVAL 1 HOUR)';
+		$from = $now - 3600;
 		break;
 	case 'qhour':
-		$query_line = '`calldate` > (NOW()-INTERVAL 15 MINUTE)';
+		$from = $now - 15*60;
 		break;
 	case 'tmonth':
-		$query_line = 'DATE_FORMAT(`calldate`,\'%Y-%m\') =  DATE_FORMAT(CURRENT_DATE(),\'%Y-%m\')';
+		$from = mktime(0,0,0, $m, 1, $y);
 		break;
 	case 'tweek':
 		$dow = (int)date('w');
 		if ($dow == 0) $dow = 7;
-		$query_line = '`calldate` > (CURRENT_DATE()-INTERVAL '.$dow.' DAY)';
+		$from = mktime(0,0,0, $m, $d-$dow, $y);
 		break;
 	case 'today':
-		$query_line = 'DATE_FORMAT(`calldate`,\'%Y-%m-%d\') = CURRENT_DATE()';
+		$from = mktime(0,0,0, $m, $d, $y);
 		break;
 	case 'all':
-		$query_line = '';
+		$from = null;
 		break;
 	default:
-		$query_line = '`calldate` > (NOW()-INTERVAL 7 DAY)';
+		$from = $now - 7*24*3600;
 	}
+	if ($from !== null)
+		$query_line = '`calldate` >= \''. gmDate('Y-m-d H:i:s', $from) .'\'';
 	
 	$src_sql = str_replace(
 		array( '*', '?' ),
@@ -187,7 +192,7 @@ $rs = $CDR_DB->execute( 'DELETE FROM `ast_cdr` WHERE `dst`=\'h\'' );
 
 $rs = $CDR_DB->execute(
 'SELECT SQL_CALC_FOUND_ROWS
-	DATE_FORMAT(`calldate`, \'%d.%m.%Y %H:%i:%s\') `datum`, `clid`, `src`, `dst`, `duration`, `billsec`, `disposition`, `userfield`
+	`calldate`, `clid`, `src`, `dst`, `duration`, `billsec`, `disposition`, `userfield`
 FROM `ast_cdr` '. $query_string .'
 ORDER BY `calldate` DESC
 LIMIT '. ($page*(int)$per_page) .','. (int)$per_page
@@ -318,7 +323,7 @@ if (@$rs) {
 	$i = 0;
 	while ($r = $rs->fetchRow()) {
 		echo '<tr class="', ((++$i % 2 == 0) ? 'even':'odd'), '">';
-		echo '<td>', htmlEnt($r['datum']),'</td>';
+		echo '<td>', htmlEnt(date('d.m.Y H:i:s', strToTime($r['calldate'].' UTC'))),'</td>';  # calldate is UTC
 		echo '<td>', htmlEnt($r['src']),'</td>';
 		if ( $r['dst'] == 's' || $r['dst'] == '~~s~~') { 
 			echo '<td>', htmlEnt($r['userfield']), '</td>';

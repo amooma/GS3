@@ -61,6 +61,7 @@ function callfile_make( $extension )
 		. "Callerid: Weckruf <*4>\n"
 		. "Setvar: __is_callfile_origin=1\n"  # no forwards and nomailbox on origin side
 		. "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
+		. "Setvar: GS_TIMEZONE=". GS_TIMEZONE ."\n"
 		;
 
 	# same filesystem as the spool directory, so that the rename is atomic

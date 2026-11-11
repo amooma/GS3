@@ -615,6 +615,12 @@ $INTL_LANG_SOUNDS       = 'de-DE';
   # language to be used for Gemeinschaft sounds prompts.
   # see /opt/gemeinschaft/sounds/ directory.
 
+$TIMEZONE               = 'Europe/Berlin';
+  # local time of the users: wakeup calls, GUI and statistics, time
+  # rules, announced times. The system, Asterisk, the database and the
+  # CDRs stay on UTC. Also change "tz" in voicemail.conf and TZ in
+  # /etc/systemd/system/faxq.service.d/gemeinschaft.conf.
+
 $USERCOMMENT_OFFTIME    = 'Feierabend';  # e.g. "off-time"
 
 //$EMAIL_PATTERN_VALID    = '/^[a-z0-9\-._]+@[a-z0-9\-._]{2,80}\.[a-z]{2,10}$/i';
