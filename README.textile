@@ -1,6 +1,7 @@
 h1. Asterisk Version
 
-Gemeinschaft in der Version 3 ist die ältere Software mit einem Asterisk-Kern. Die aktuellere Version von Gemeinschaft hat Freeswitch als Kern. Weitere Informationen dazu finden Sie auf "https://www.alternative-solution.de/gs3":https://www.alternative-solution.de/gs3
+Gemeinschaft in der Version 3 ist die ältere Basis mit einem Asterisk-Kern, die jetzt enmal komplett auf die aktuellste Technik protiert wurde.
+Siehe: https://www.alternative-solution.de/postings/12
 
 h1. Gemeinschaft 3.2 auf Ubuntu 26.04 mit Asterisk 22
 
