@@ -427,7 +427,21 @@ define( 'GS_LOG_LEVEL', constant('GS_LOG_'.$LOG_LEVEL) );
 if (function_exists('date_default_timezone_set')) {
 	# PHP >= 5.1.0
 	# needed by date() and other functions
-	@date_default_timezone_set( @date_default_timezone_get() );
+	# PHP >= 5.4 no longer guesses the system timezone and uses UTC
+	# unless date.timezone is set in php.ini, so use the system one
+	# like Asterisk and cron do (wakeup calls, CDR times). PHP 8
+	# reports its built-in default as "UTC", so treat that as unset.
+	$tz = (string)@ini_get('date.timezone');
+	if ($tz === '' || $tz === 'UTC') {
+		$tz = @trim((string)@file_get_contents('/etc/timezone'));
+		if ($tz === '' && @is_link('/etc/localtime')) {
+			$tz = preg_replace('#^.*/zoneinfo/#', '', (string)@readlink('/etc/localtime'));
+		}
+	}
+	if ($tz === '' || ! @date_default_timezone_set($tz)) {
+		@date_default_timezone_set( @date_default_timezone_get() );
+	}
+	unset($tz);
 }
 
 # logger and error handler:

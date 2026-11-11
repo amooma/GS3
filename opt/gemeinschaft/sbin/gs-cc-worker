@@ -58,6 +58,11 @@ $GS_INSTALLATION_TYPE_SINGLE = gs_get_conf('GS_INSTALLATION_TYPE_SINGLE');
 
 do {
 	$ok = @_do_one_pass();
+	if (! $ok) {
+		# e.g. the database was restarted: connect again next time
+		if ($DB) @ $DB->close();
+		$DB = gs_db_master_connect();
+	}
 	sleep( $ok ? 8 : 21 );
 } while (time() < $runctl_t_stop);
 
@@ -227,7 +232,10 @@ function _make_call_file( $from, $to, $cid_to_caller, $cid_to_callee, $from_uid,
 	@ fWrite( $cf, $call, strLen($call) );
 	@ fClose( $cf );
 	@ chmod( $filename, 00666 );
-	
+	# Asterisk changes the mtime of the file to schedule retries
+	@ chown( $filename, 'asterisk' );
+	@ chgrp( $filename, 'asterisk' );
+
 	$spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
 	
 	if ($GS_INSTALLATION_TYPE_SINGLE

@@ -250,6 +250,11 @@ fi
 #
 timedatectl set-ntp true || true
 
+# local time for wakeup calls, cron jobs and the GUI (cloud images use UTC)
+#
+timedatectl set-timezone Europe/Berlin || true
+systemctl try-restart cron || true
+
 
 echo ""
 echo "***"
@@ -403,6 +408,8 @@ if [ -e de-DE ]; then
 	mv de-DE de-DE-tts
 fi
 ln -s de-DE-tts de-DE
+# prompts for the wakeup call, not in the tarball
+cp /opt/gemeinschaft-source/misc/voiceprompts/de-DE-wakeup/*.wav de-DE-tts/
 #if [ -e de-DE-tts ]; then
 #	ln -snf de-DE-tts de-DE
 #fi
@@ -697,6 +704,7 @@ cd /etc/cron.d/
 ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-cc-guardian || true
 ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-queuelog-to-db || true
 ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-queues-refresh || true
+ln -snf /opt/gemeinschaft-source/etc/cron.d/gs-wakeupcall-notify-now || true
 cd
 
 

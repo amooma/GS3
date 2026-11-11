@@ -60,9 +60,11 @@ function callfile_make( $extension )
 		. "Extension: s\n"
 		. "Callerid: Weckruf <*4>\n"
 		. "Setvar: __is_callfile_origin=1\n"  # no forwards and nomailbox on origin side
+		. "Setvar: CHANNEL(language)=". gs_get_conf('GS_INTL_ASTERISK_LANG','de') ."\n"
 		;
 
-	$filename = '/tmp/gs-'. $extension .'-'. _pack_int(time()) . rand(100,999) .'.call';
+	# same filesystem as the spool directory, so that the rename is atomic
+	$filename = '/var/spool/asterisk/tmp/gs-wakeup-'. $extension .'-'. _pack_int(time()) . rand(100,999) .'.call';
 
 	$cf = @fOpen( $filename, 'wb' );
 	if (! $cf) {
@@ -72,14 +74,18 @@ function callfile_make( $extension )
 	@fWrite( $cf, $call, strLen($call) );
 	@fClose( $cf );
 	@chmod( $filename, 00666 );
-	
+	# Asterisk changes the mtime of the file to schedule retries
+	@chown( $filename, 'asterisk' );
+	@chgrp( $filename, 'asterisk' );
+
 	$spoolfile = '/var/spool/asterisk/outgoing/'. baseName($filename);
 
-	$err=0; $out=array();
-	@exec( 'sudo mv '. qsa($filename) .' '. qsa($spoolfile) .' 1>>/dev/null 2>>/dev/null', $out, $err );
-	if ($err != 0) {
+	error_clear_last();
+	if (! @rename( $filename, $spoolfile )) {
+		$rename_err = error_get_last();
+		$rename_err = is_array($rename_err) ? $rename_err['message'] : 'unknown error';
 		@unlink( $filename );
-		gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. '/var/spool/asterisk/outgoing/'. baseName($filename) .'"' );
+		gs_log( GS_LOG_WARNING, 'Failed to move call file "'. $filename .'" to "'. $spoolfile .'": '. $rename_err );
 		die_error( 'Failed to move call file.' );
 	}
 
