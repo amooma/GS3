@@ -23,9 +23,10 @@ h2. Basis-System
 h2. Neuinstallation
 
 # Ubuntu Server 26.04 LTS minimal installieren, mit fester IP-Adresse und Zugang als root.
-# @install.sh@ aus diesem Branch auf den Server kopieren und als root starten. Solange der Branch nicht der Standard ist, muss er angegeben werden:
-<pre>GEMEINSCHAFT_VERS=3.2_ubuntu_26.04_asterisk22 bash install.sh</pre>
-Ein anderes Repository (z.B. ein lokaler Klon) lässt sich mit @GEMEINSCHAFT_CLONE_URL_DIR@ angeben.
+# @install.sh@ aus diesem Branch auf den Server laden und als root starten:
+<pre>wget https://raw.githubusercontent.com/amooma/GS3/3.2_ubuntu_26.04_asterisk22/install.sh
+bash install.sh</pre>
+Einen anderen Branch oder ein anderes Repository (z.B. einen lokalen Klon) lassen sich mit @GEMEINSCHAFT_VERS@ und @GEMEINSCHAFT_CLONE_URL_DIR@ angeben.
 # @install.sh@ installiert die Pakete, klont Gemeinschaft nach @/opt/gemeinschaft-source@, legt die Datenbank in MariaDB an und richtet Apache, ODBC, Asterisk, HylaFAX, die Sprachansagen, die Cron-Jobs und die systemd-Einstellungen ein. Am Ende zeigt es den Admin-Zugang (Name und PIN) für die GUI unter @http://<IP>/gemeinschaft/@ sowie zwei SIP-Konten für die ersten Telefone.
 # In @/etc/gemeinschaft/gemeinschaft.php@ die eigenen Einstellungen prüfen, vor allem die Zugangsdaten für das Provisioning der Telefone und @$TIMEZONE@.
 

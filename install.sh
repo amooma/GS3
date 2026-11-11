@@ -18,7 +18,7 @@
 ###################################################################
 
 
-GEMEINSCHAFT_VERS="${GEMEINSCHAFT_VERS:-3.2_ubuntu_24.04_alpha}"
+GEMEINSCHAFT_VERS="${GEMEINSCHAFT_VERS:-3.2_ubuntu_26.04_asterisk22}"
 
 #GEMEINSCHAFT_TGZ_URL_DIR="https://github.com/amooma/GS3/tarball"
 GEMEINSCHAFT_CLONE_URL_DIR="${GEMEINSCHAFT_CLONE_URL_DIR:-https://github.com/amooma/GS3.git}"
