@@ -193,7 +193,7 @@ function _settings_out() //TODO Variablen löschen (warte auf RE von Tiptel)
 	foreach ($settings as $section_name => $section_values) {
 		echo '[', $section_name, ']', "\n";
 		foreach ($section_values as $name => $val) {
-			echo $name .'='. $val, "\n";
+			echo $name .'='. str_replace(array("\n", "\r"), array(' ', ' '), $val), "\n";
 		}
 		echo "\n";
 	}

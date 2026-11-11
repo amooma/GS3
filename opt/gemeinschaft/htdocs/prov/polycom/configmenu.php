@@ -63,8 +63,8 @@ function _err( $msg='' )
         ob_start();
 
         echo '<html>',"\n";
-        echo '<head><title>'. htmlEnc(__('Fehler')) .'</title></head>',"\n";
-        echo '<body><b>'. htmlEnc(__('Fehler')) .'</b>: '. $msg .'</body>',"\n";
+        echo '<head><title>'. htmlEnt(__('Fehler')) .'</title></head>',"\n";
+        echo '<body><b>'. htmlEnt(__('Fehler')) .'</b>: '. $msg .'</body>',"\n";
         echo '</html>',"\n";
 
         _ob_send();

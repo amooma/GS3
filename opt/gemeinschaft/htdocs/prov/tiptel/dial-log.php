@@ -29,6 +29,8 @@ require_once( dirName(__FILE__) .'/../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/string.php' );
 include_once( GS_DIR .'inc/gettext.php' );
+require_once( GS_DIR .'inc/util.php' );
+require_once( GS_DIR .'inc/prov-fns.php' );
 
 header( 'Content-Type: application/xml; charset=utf-8' );
 header( 'Expires: 0' );
@@ -86,6 +88,14 @@ $db = gs_db_slave_connect();
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1)
 	_err( 'Unknown user.' );
+
+# the request must come from the phone this user is logged in at
+$requester = gs_prov_check_trust_requester();
+if (! $requester['allowed'])
+	_err( 'Not authorized' );
+$current_ip = (string)$db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );
+if ($current_ip === '' || $current_ip !== (string)$requester['phone_ip'])
+	_err( 'Not authorized' );
 
 
 $typeToTitle = array(

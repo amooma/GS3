@@ -104,6 +104,16 @@ $db = gs_db_slave_connect();
 $user = trim(@$_REQUEST['u']);
 $user_id = getUserID($user);
 
+//--- check user/ip/mac
+$mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST['m'])));
+$user_id_check = $db->executeGetOne("SELECT `user_id` FROM `phones` WHERE `mac_addr`='". $db->escape($mac) ."'");
+if ($user_id != $user_id_check)
+	_err("Not authorized");
+$remote_addr = @$_SERVER["REMOTE_ADDR"];
+$remote_addr_check = $db->executeGetOne("SELECT `current_ip` FROM `users` WHERE `id`=". $user_id);
+if ($remote_addr != $remote_addr_check)
+	_err("Not authorized");
+
 // setup i18n stuff
 gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
 gs_loadtextdomain( 'gemeinschaft-gui' );
@@ -242,7 +252,7 @@ if( $type === "imported" )
 	if (strlen($querystring) > 0)
 	{
 		$pagetitle .= " ('". $querystring ."')";
-		$searchsql = "`lastname` LIKE '%". $querystring ."%' OR `firstname` LIKE '%". $querystring ."%'";
+		$searchsql = "(`lastname` LIKE '%". $db->escape($querystring) ."%' OR `firstname` LIKE '%". $db->escape($querystring) ."%')";
 		$noresultsmsg = sprintf(__("Keine Treffer f\xC3\xBCr \"%s\". Dr\xC3\xBCcken Sie 'Zur\xC3\xBCck', um eine neue Suche auszuf\xC3\xBChren."), $querystring);
 	}
 
@@ -275,7 +285,7 @@ if( $type === "imported" )
 			echo "<tr>";
 
 			echo "<td width=\"50%\">". htmlEnt($name) ."</td>";
-			echo "<td width=\"50%\"><a href=\"tel://". $number."\">". $number ."</a></td></tr>\n";
+			echo "<td width=\"50%\"><a href=\"tel://". htmlEnt($number)."\">". htmlEnt($number) ."</a></td></tr>\n";
 
 		}
 
@@ -290,7 +300,7 @@ if( $type === "imported" )
 
 	echo "<softkey index=\"1\" label=\"". htmlEnt(__("Zur\xC3\xBCck")) ."\" action=\"Softkey:Back\" />\n";
 	echo "<softkey index=\"2\" label=\"\" action=\"\" />\n";
-	echo "<softkey index=\"3\" label=\"". html(__("Beenden")) ."\" action=\"Softkey:Exit\" />\n";
+	echo "<softkey index=\"3\" label=\"". htmlEnt(__("Beenden")) ."\" action=\"Softkey:Exit\" />\n";
 	echo "<softkey index=\"4\" label=\"\" action=\"\" />\n";
 	echo "</html>\n";
 
@@ -322,7 +332,7 @@ if ($type === "gs")
 	if ( strlen($querystring) > 0 )
 	{
 		$pagetitle .= " ('". $querystring ."')";
-		$searchsql = "`u`.`lastname` LIKE '%". $querystring ."%' OR `u`.`firstname` LIKE '%". $querystring ."%'";
+		$searchsql = "(`u`.`lastname` LIKE '%". $db->escape($querystring) ."%' OR `u`.`firstname` LIKE '%". $db->escape($querystring) ."%')";
 		$noresultsmsg = sprintf(__("Keine Treffer f\xC3\xBCr \"%s\". Dr\xC3\xBCcken Sie 'Zur\xC3\xBCck', um eine neue Suche auszuf\xC3\xBChren."), $querystring);
 	}
 
@@ -361,7 +371,7 @@ if ($type === "gs")
 			echo "<tr>";
 
 			echo "<td width=\"50%\">". htmlEnt($name) ."</td>";
-			echo "<td width=\"50%\"><a href=\"tel://". $number."\">". $number ."</a></td></tr>\n";
+			echo "<td width=\"50%\"><a href=\"tel://". htmlEnt($number)."\">". htmlEnt($number) ."</a></td></tr>\n";
 
 		}
 
@@ -404,7 +414,7 @@ if ( $type === "prv" )
 	if ( strlen($querystring) > 0 )
 	{
 		$pagetitle .= " ('". $querystring ."')";
-		$searchsql = "`lastname` LIKE '%". $querystring ."%' OR `firstname` LIKE '%". $querystring ."%'";
+		$searchsql = "(`lastname` LIKE '%". $db->escape($querystring) ."%' OR `firstname` LIKE '%". $db->escape($querystring) ."%')";
 		$noresultsmsg = sprintf(__("Keine Treffer f\xC3\xBCr \"%s\". Dr\xC3\xBCcken Sie 'Zur\xC3\xBCck', um eine neue Suche auszuf\xC3\xBChren."), $querystring);
 	}
 
@@ -449,7 +459,7 @@ if ( $type === "prv" )
 			echo "<tr>";
 
 			echo "<td width=\"50%\">". htmlEnt($name) ."</td>";
-			echo "<td width=\"50%\"><a href=\"tel://". $number."\">". $number ."</a></td>";
+			echo "<td width=\"50%\"><a href=\"tel://". htmlEnt($number)."\">". htmlEnt($number) ."</a></td>";
 
 			echo "</tr>\n";
 		}

@@ -44,6 +44,7 @@ require_once(GS_DIR ."inc/quote_shell_arg.php");
 require_once(GS_DIR ."inc/langhelper.php");
 require_once(GS_DIR ."inc/db_connect.php");
 require_once(GS_DIR ."inc/nobody-extensions.php");
+require_once(GS_DIR ."inc/string.php");
 include_once(GS_DIR ."inc/gs-fns/gs_prov_params_get.php");
 include_once(GS_DIR ."inc/gs-fns/gs_user_prov_params_get.php");
 
@@ -283,7 +284,7 @@ echo "   <reg ";
 $proxy_or_host = ($sip_proxy_and_sbc["sip_proxy_from_wan"] != "" ? $sip_proxy_and_sbc["sip_proxy_from_wan"] : $host);
 $user_address = $user_ext ."@". $proxy_or_host;
 
-echo "reg.1.displayName=\"".$user["firstname"] ." ".$user["lastname"] ."\" ";
+echo "reg.1.displayName=\"".htmlEnt($user["firstname"] ." ".$user["lastname"]) ."\" ";
 echo "reg.1.address=\"". $user_address ."\" ";
 echo "reg.1.label=\"". $user_ext ."\" ";
 echo "reg.1.type=\"private\" ";

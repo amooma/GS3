@@ -90,6 +90,13 @@ $db = gs_db_slave_connect();
 $user_id = (int) $db->executeGetOne("SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`='". $db->escape($user) ."'");
 if($user_id < 1) _err("Unknown user.");
 
+//--- check user/ip/mac
+$user_id_check = $db->executeGetOne("SELECT `user_id` FROM `phones` WHERE `mac_addr`='". $db->escape($mac) ."'");
+if($user_id != $user_id_check) _err("Not authorized");
+$remote_addr = @$_SERVER["REMOTE_ADDR"];
+$remote_addr_check = $db->executeGetOne("SELECT `current_ip` FROM `users` WHERE `id`=". $user_id);
+if($remote_addr != $remote_addr_check) _err("Not authorized");
+
 //--- get user info
 $query_name =
 	"SELECT ".
@@ -145,7 +152,7 @@ ob_start();
 echo $mainpage_doctype ."\n";
 
 echo "<html>\n";
-echo "<head><title>". $user ." ". $user_name ."</title></head>\n";
+echo "<head><title>". $user ." ". htmlEnt($user_name) ."</title></head>\n";
 echo "<body><hr />\n";
 
 if(strlen($displaydata) > 0)

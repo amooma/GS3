@@ -107,6 +107,16 @@ $db = gs_db_slave_connect();
 $user = trim(@$_REQUEST["u"]);
 $user_id = getUserID($user);
 
+//--- check user/ip/mac before anything is read or changed
+$mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST['m'])));
+$user_id_check = $db->executeGetOne("SELECT `user_id` FROM `phones` WHERE `mac_addr`='". $db->escape($mac) ."'");
+if ($user_id != $user_id_check)
+	_err('Not authorized');
+$remote_addr = @$_SERVER['REMOTE_ADDR'];
+$remote_addr_check = $db->executeGetOne("SELECT `current_ip` FROM `users` WHERE `id`='". $user_id ."'");
+if ($remote_addr != $remote_addr_check)
+	_err('Not authorized');
+
 // setup i18n stuff
 gs_setlang(gs_get_lang_user($db, $user, GS_LANG_FORMAT_GS));
 gs_loadtextdomain( 'gemeinschaft-gui' );

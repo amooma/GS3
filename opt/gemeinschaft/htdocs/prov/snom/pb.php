@@ -35,6 +35,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
 include_once( GS_DIR .'inc/langhelper.php' );
+require_once( GS_DIR .'inc/prov-fns.php' );
 
 header( 'Content-Type: application/x-snom-xml; charset=utf-8' );
 # the Content-Type header is ignored by the Snom
@@ -94,6 +95,11 @@ function getUserID( $ext )
 if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 	gs_log( GS_LOG_DEBUG, "Snom provisioning not enabled" );
 	_err( 'Not enabled' );
+}
+
+$requester = gs_prov_check_trust_requester();
+if (! $requester['allowed']) {
+	_err( 'Not authorized' );
 }
 
 $type = trim( @$_REQUEST['t'] );

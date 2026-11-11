@@ -329,7 +329,7 @@ $call = "Channel: Local/". $from_num_effective ."\n"
 //echo $call;
 
 $filename = '/tmp/gs-'. $user['id'] .'-'. _pack_int(time()) . rand(100,999) .'.call';
-$cf = @fOpen( $filename, 'wb' );
+$cf = @fOpen( $filename, 'xb' );
 if (! $cf) {
 	gs_log( GS_LOG_WARNING, 'Failed to write call file "'. $filename .'"' );
 	die_error( 'Failed to write call file.' );

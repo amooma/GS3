@@ -135,7 +135,7 @@ function _login_user($new_ext, $password)
 		gs_log( GS_LOG_NOTICE, "Mobility:Unknown user or no PIN" );
 		return false;
 	}
-	if ((string)$pin != (string)$password) {
+	if ((string)$pin !== (string)$password) {
 		# wrong password
 		gs_log( GS_LOG_NOTICE, "Mobility: Login attempt for ext. $new_ext - Wrong PIN number" );
 		return false;
@@ -278,13 +278,13 @@ if ($action === 'login' && $type === 'user') {
 		$xml.= '<InputField type="empty"></InputField>' ."\n";
 		$xml.= '<InputField type="number">' ."\n";
 		$xml.= '	<Prompt>'.htmlEnt(__('Durchwahl')) .':</Prompt>' ."\n";
-		$xml.= '	<Default>'.$user.'</Default>' ."\n";
+		$xml.= '	<Default>'.htmlEnt($user).'</Default>' ."\n";
 		$xml.= '	<Parameter>u</Parameter>' ."\n";
 		$xml.= '	<Selection>1</Selection>' ."\n";
 		$xml.= '</InputField>' ."\n";
 		$xml.= '<InputField type="number" password="yes">' ."\n";
 		$xml.= '	<Prompt>PIN:</Prompt>' ."\n";
-		$xml.= '	<Default>'.$password.'</Default>' ."\n";
+		$xml.= '	<Default>'.htmlEnt($password).'</Default>' ."\n";
 		$xml.= '	<Parameter>p</Parameter>' ."\n";
 		$xml.= '	<Selection>2</Selection>' ."\n";
 		$xml.= '</InputField>' ."\n";
@@ -310,7 +310,7 @@ elseif (! $action) {
 	
 	$xml = '<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none">' ."\n";
 	if (! $u['nobody_index'])
-		$xml.= '<Title>'. __('Benutzer').': '.$u['user'].'</Title>' ."\n";
+		$xml.= '<Title>'. __('Benutzer').': '.htmlEnt($u['user']).'</Title>' ."\n";
 	
 	$xml.= '<MenuItem>' ."\n";
 	if ($u['nobody_index'])

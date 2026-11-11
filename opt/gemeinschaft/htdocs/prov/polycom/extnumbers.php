@@ -107,6 +107,15 @@ $url_polycom_menu = GS_PROV_SCHEME ."://". GS_PROV_HOST . (GS_PROV_PORT ? ":". G
 #################################### INITIAL SCREEN {
 
 $mac = preg_replace("/[^\dA-Z]/", "", strtoupper(trim(@$_REQUEST['m'])));
+
+$user_id_check = $db->executeGetOne("SELECT `user_id` FROM `phones` WHERE `mac_addr`='". $db->escape($mac) ."'");
+if ($user_id != $user_id_check)
+	_err('Not authorized');
+$remote_addr = @$_SERVER['REMOTE_ADDR'];
+$remote_addr_check = $db->executeGetOne("SELECT `current_ip` FROM `users` WHERE `id`='". $user_id ."'");
+if ($remote_addr != $remote_addr_check)
+	_err('Not authorized');
+
 $user_name = $db->executeGetOne("SELECT `user` FROM `users` WHERE `id`='". $db->escape($user_id) ."'");
 
 $enumbers = gs_user_external_numbers_get($user_name);
@@ -130,7 +139,7 @@ if (sizeof($enumbers) <= 0) {
 	echo "<tr><th width=\"100%\" align=\"left\">". htmlEnt(__("M\xC3\xB6gliche externe Rufumleitungsziele")) .":</th></tr>\n";
 
 	foreach($enumbers as $extnumber)
-		echo "<tr><td width=\"100%\">". $extnumber ."</td></tr>\n";
+		echo "<tr><td width=\"100%\">". htmlEnt($extnumber) ."</td></tr>\n";
 
 	echo "</table>\n";
 }

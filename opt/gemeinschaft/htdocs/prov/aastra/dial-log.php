@@ -225,7 +225,7 @@ LIMIT 1';
 			$num_calls = ' ('. $r['num_calls'] .')';
 		}
 		
-		$xml.= '<Line Align="left">'. $name .'</Line>' ."\n";
+		$xml.= '<Line Align="left">'. htmlEnt($name) .'</Line>' ."\n";
 		$xml.= '<Line Align="right" Size="double">'. $r['number'] .'</Line>' ."\n";
 		$xml.= '<Line Align="left">'. $when .'</Line>' ."\n";
 	}

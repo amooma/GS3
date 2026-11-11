@@ -125,12 +125,12 @@ if ($allowed) {
 
 $user_id    = 0;
 
-$tsi        = trim(@$_REQUEST['tsi']);
-$to         = trim(@$_REQUEST['to']);
+$tsi        = preg_replace('/[\x00-\x1F\x7F]/', '', trim(@$_REQUEST['tsi']));
+$to         = preg_replace('/[\x00-\x1F\x7F]/', '', trim(@$_REQUEST['to']));
 $resolution = (int) trim(@$_REQUEST['res']);
-$user       = trim(@$_REQUEST['user']);
+$user       = preg_replace('/[\x00-\x1F\x7F]/', '', trim(@$_REQUEST['user']));
 $sidnum     = trim(@$_REQUEST['cidnum']);
-$local_file = trim(@$_REQUEST['file']);
+$local_file = preg_replace('/[\x00-\x1F\x7F]/', '', trim(@$_REQUEST['file']));
 
 if ($user != '') {
 	$user_id = get_user_id($user);

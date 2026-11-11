@@ -154,6 +154,8 @@ elseif (! $type) {
 #################################### INTERNAL PHONEBOOK {
 elseif ($type==='gs') {
 	
+	$user_id = _get_userid();
+	
 	$search_url = 'name='. urlEncode($name_search);
 	
 	$name_sql = str_replace(
@@ -187,7 +189,7 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	if ($rs->numRows() !== 0) {
 		
 		$xml = '<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_pb .'">' ."\n";
-		$xml.= '<Title>'. $page_title .'</Title>' ."\n";
+		$xml.= '<Title>'. htmlEnt($page_title) .'</Title>' ."\n";
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$number = $r['ext'];
@@ -218,13 +220,13 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		if ($page > 0) {
 			$xml.= '<SoftKey index="3">' ."\n";
 			$xml.= '	<Label>&lt;&lt;'.($page).'</Label>' ."\n";
-			$xml.= '	<URI>'. $url_aastra_pb .'?t=gs&amp;p='.($page-1).'&amp;n='.$name_search .'</URI>' ."\n";
+			$xml.= '	<URI>'. $url_aastra_pb .'?t=gs&amp;p='.($page-1).'&amp;n='.urlEncode($name_search) .'</URI>' ."\n";
 			$xml.= '</SoftKey>' ."\n";
 		}
 		if ($page < $num_pages-1) {
 			$xml.= '<SoftKey index="6">' ."\n";
 			$xml.= '	<Label>&gt;&gt;'.($page+2).'</Label>' ."\n";
-			$xml.= '	<URI>'. $url_aastra_pb .'?t=gs&amp;p='.($page+1).'&amp;n='.$name_search .'</URI>' ."\n";
+			$xml.= '	<URI>'. $url_aastra_pb .'?t=gs&amp;p='.($page+1).'&amp;n='.urlEncode($name_search) .'</URI>' ."\n";
 			$xml.= '</SoftKey>' ."\n";
 		}
 		
@@ -235,11 +237,11 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		if ($name_search) {
 			aastra_textscreen(
 				__('Nicht gefunden'),
-				sprintF(__('Eintrag &quot;%s&quot; nicht gefunden.'), $name_search)
+				sprintF(__('Eintrag &quot;%s&quot; nicht gefunden.'), htmlEnt($name_search))
 				);
 		} else {
 			aastra_textscreen(
-				$page_title,
+				htmlEnt($page_title),
 				__('Kein Eintrag'));
 		}
 	}
@@ -286,13 +288,13 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	if ($rs && $rs->numRows() !== 0) {
 		
 		$xml = '<AastraIPPhoneTextMenu destroyOnExit="yes" LockIn="no" style="none" cancelAction="'. $url_aastra_pb .'">' ."\n";
-		$xml.= '<Title>'. $page_title .'</Title>' ."\n";
+		$xml.= '<Title>'. htmlEnt($page_title) .'</Title>' ."\n";
 		
 		while ($r = $rs->fetchRow()) {
 			$name = $r['ln'] .( strLen($r['fn'])>0 ? (', '.$r['fn']) : '' );
 			$xml.= '<MenuItem>' ."\n";
 			$xml.= '	<Prompt>'. htmlEnt($name) .' - '. htmlEnt($r['number']) .'</Prompt>' ."\n";
-			$xml.= '	<Dial>'. $r['number'] .'</Dial>' ."\n";
+			$xml.= '	<Dial>'. htmlEnt($r['number']) .'</Dial>' ."\n";
 			$xml.= '	<URI>'. $url_aastra_pb .'?t=prvs&amp;e='.$r['id'] .'</URI>' ."\n";
 			$xml.= '</MenuItem>' ."\n";
 		}
@@ -317,13 +319,13 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		if ($page > 0) {
 			$xml.= '<SoftKey index="3">' ."\n";
 			$xml.= '	<Label>&lt;&lt;'.($page).'</Label>' ."\n";
-			$xml.= '	<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page-1).'&amp;n='.$name_search .'</URI>' ."\n";
+			$xml.= '	<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page-1).'&amp;n='.urlEncode($name_search) .'</URI>' ."\n";
 			$xml.= '</SoftKey>' ."\n";
 		}
 		if ($page < $num_pages-1) {
 			$xml.= '<SoftKey index="6">' ."\n";
 			$xml.= '	<Label>&gt;&gt;'.($page+2).'</Label>' ."\n";
-			$xml.= '	<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page+1).'&amp;n='.$name_search .'</URI>' ."\n";
+			$xml.= '	<URI>'. $url_aastra_pb .'?t=prv&amp;p='.($page+1).'&amp;n='.urlEncode($name_search) .'</URI>' ."\n";
 			$xml.= '</SoftKey>' ."\n";
 		}
 		
@@ -334,11 +336,11 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		if ($name_search) {
 			aastra_textscreen(
 				__('Nicht gefunden'),
-				sprintF(__('Eintrag &quot;%s&quot; nicht gefunden.'), $name_search)
+				sprintF(__('Eintrag &quot;%s&quot; nicht gefunden.'), htmlEnt($name_search))
 				);
 		} else {
 			aastra_textscreen(
-				$page_title,
+				htmlEnt($page_title),
 				__('Kein Eintrag'));
 		}
 	}
@@ -367,8 +369,8 @@ AND
 	$rs = $db->execute($query);
 	if ($rs->numRows() !== 0) {
 		$r = $rs->fetchRow();
-		$xml.= '<Line Align="left">'. $r['ln'].' '.$r['fn'] .'</Line>' ."\n";
-		$xml.= '<Line Align="right" Size="double">'. $r['number'] .'</Line>' ."\n";
+		$xml.= '<Line Align="left">'. htmlEnt($r['ln'].' '.$r['fn']) .'</Line>' ."\n";
+		$xml.= '<Line Align="right" Size="double">'. htmlEnt($r['number']) .'</Line>' ."\n";
 	}
 	
 	$xml.= '<SoftKey index="1">' ."\n";
@@ -377,7 +379,7 @@ AND
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '<SoftKey index="2">' ."\n";
 	$xml.= '	<Label>'. __('Anrufen') .'</Label>' ."\n";
-	$xml.= '	<URI>Dial:'.$r['number'].'</URI>' ."\n";
+	$xml.= '	<URI>Dial:'.htmlEnt(@$r['number']).'</URI>' ."\n";
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '<SoftKey index="4">' ."\n";
 	$xml.= '	<Label>'. __('Abbrechen') .'</Label>' ."\n";
@@ -407,8 +409,8 @@ WHERE
 	$rs = $db->execute($query);
 	if ($rs->numRows() !== 0) {
 		$r = $rs->fetchRow();
-		$xml.= '<Line Align="left">'. $r['ln'].' '.$r['fn'] .'</Line>' ."\n";
-		$xml.= '<Line Align="right" Size="double">'. $r['number'] .'</Line>' ."\n";
+		$xml.= '<Line Align="left">'. htmlEnt($r['ln'].' '.$r['fn']) .'</Line>' ."\n";
+		$xml.= '<Line Align="right" Size="double">'. htmlEnt($r['number']) .'</Line>' ."\n";
 	}
 	
 	$xml.= '<SoftKey index="1">' ."\n";
@@ -417,7 +419,7 @@ WHERE
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '<SoftKey index="2">' ."\n";
 	$xml.= '	<Label>'. __('Anrufen') .'</Label>' ."\n";
-	$xml.= '	<URI>Dial:'.$r['number'].'</URI>' ."\n";
+	$xml.= '	<URI>Dial:'.htmlEnt(@$r['number']).'</URI>' ."\n";
 	$xml.= '</SoftKey>' ."\n";
 	$xml.= '<SoftKey index="4">' ."\n";
 	$xml.= '	<Label>'. __('Abbrechen') .'</Label>' ."\n";

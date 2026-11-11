@@ -34,6 +34,7 @@ require_once( GS_DIR .'inc/quote_shell_arg.php' );
 set_error_handler('err_handler_die_on_err');
 require_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/cron-rule.php' );
+require_once( GS_DIR .'inc/prov-fns.php' );
 
 
 $allow_update    = gs_get_conf('GS_SNOM_PROV_FW_UPDATE');
@@ -56,6 +57,11 @@ if (! gs_get_conf('GS_SNOM_PROV_ENABLED')) {
 }
 if (! $allow_update) {
 	gs_log( GS_LOG_DEBUG, "Snom firmware update not enabled" );
+	die();
+}
+
+$requester = gs_prov_check_trust_requester();
+if (! $requester['allowed']) {
 	die();
 }
 

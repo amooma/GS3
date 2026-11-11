@@ -31,6 +31,7 @@ define( 'GS_VALID', true );  /// this is a parent file
 require_once( dirName(__FILE__) .'/../../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
+require_once( GS_DIR .'inc/string.php' );
 
 header( 'Content-Type: text/xml; charset=utf-8' );
 header( 'Expires: 0' );
@@ -63,11 +64,11 @@ function dial_number( $number )
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
 	xml('  <IppAlert Type="INFO" Delay="3000">');
 	xml('    <Title>'. __('Anruf') .'</Title>');
-	xml('    <Text>'. __('Rufe an:') .' '. $number .'</Text>');
+	xml('    <Text>'. __('Rufe an:') .' '. htmlEnt($number) .'</Text>');
 	xml('    <Image></Image>');
 	xml('  </IppAlert>');
 	xml('  <IppAction Type="MAKECALL">');
-	xml('    <Number>'. $number .'</Number>');
+	xml('    <Number>'. htmlEnt($number) .'</Number>');
 	xml('  </IppAction>');
 	xml('</IppScreen>');
 	xml('</IppDisplay>');
@@ -81,7 +82,7 @@ function write_alert( $message, $alert_type='ERROR' )
 	xml('<IppScreen ID="1" HiddenCount="0" CommandCount="0">');
 	xml('  <IppAlert Type="'.$alert_type.'" Delay="5000">');
 	xml('    <Title>'. __('Fehler') .'</Title>');
-	xml('    <Text>'. $message .'</Text>');
+	xml('    <Text>'. htmlEnt($message) .'</Text>');
 	xml('    <Image></Image>');
 	xml('  </IppAlert>');
 	xml('</IppScreen>');
@@ -119,6 +120,11 @@ $db = gs_db_slave_connect();
 $user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($user) .'\'' );
 if ($user_id < 1)
 	write_alert( 'Unknown user.' );
+
+$remote_addr = @$_SERVER['REMOTE_ADDR'];
+$remote_addr_check = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );
+if ($remote_addr != $remote_addr_check)
+	write_alert( 'Not authorized.' );
 
 
 
@@ -187,7 +193,7 @@ if (! $type) {
 #########################################################
 
 else {
-	if ( $type == queue ){	
+	if ( $type == 'queue' ){	
 			$query =
 		'SELECT SQL_CALC_FOUND_ROWS
 			`timestamp` `ts`, `number`, `remote_name`, `remote_user_id`
@@ -243,8 +249,8 @@ else {
 		if ($r['num_calls'] > 1) {
 			$entry_name .= ' ('. $r['num_calls'] .')';
 		}
-		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="dial" Value="'.$r['number'].'">');
-		xml('      <OptionText>'.$entry_name.'</OptionText>');
+		xml('    <Option ID="'.$i.'" Selected="FALSE" Key="dial" Value="'.htmlEnt($r['number']).'">');
+		xml('      <OptionText>'.htmlEnt($entry_name).'</OptionText>');
 		xml('      <Image></Image>');
 		xml('    </Option>');
 	}

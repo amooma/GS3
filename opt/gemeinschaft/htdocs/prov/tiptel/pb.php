@@ -30,6 +30,7 @@ include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 include_once( GS_DIR .'inc/string.php' );
 include_once( GS_DIR .'inc/group-fns.php' );
+require_once( GS_DIR .'inc/prov-fns.php' );
 
 header( 'Content-Type: application/xml; charset=utf-8' );
 header( 'Expires: 0' );
@@ -75,6 +76,14 @@ function getUserID( $ext )
 	$user_id = (int)$db->executeGetOne( 'SELECT `_user_id` FROM `ast_sipfriends` WHERE `name`=\''. $db->escape($ext) .'\'' );
 	if ($user_id < 1)
 		_err( 'Unknown user' );
+
+	# the request must come from the phone this user is logged in at
+	$requester = gs_prov_check_trust_requester();
+	if (! $requester['allowed'])
+		_err( 'Not authorized' );
+	$current_ip = (string)$db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );
+	if ($current_ip === '' || $current_ip !== (string)$requester['phone_ip'])
+		_err( 'Not authorized' );
 	return $user_id;
 }
 
@@ -205,7 +214,7 @@ if ($type === 'gs') {
 	
 	$where = '';
 	if (strLen($query) > 0)
-		$where = 'AND (`u`.`lastname` LIKE \'%'. $query .'%\' OR `u`.`firstname` LIKE \'%'. $query .'%\')';
+		$where = 'AND (`u`.`lastname` LIKE \'%'. $db->escape($query) .'%\' OR `u`.`firstname` LIKE \'%'. $db->escape($query) .'%\')';
 	
 	$query =
 'SELECT SQL_CALC_FOUND_ROWS `u`.`lastname` `ln`, `u`.`firstname` `fn`, `s`.`name` `ext`
@@ -227,7 +236,7 @@ elseif ($type === 'prv') {
 	
 	$where = '';
 	if (strLen($query) > 0)
-		$where = 'AND (`pb`.`lastname` LIKE \'%'. $query .'%\' OR `pb`.`firstname` LIKE \'%'. $query .'%\')';
+		$where = 'AND (`pb`.`lastname` LIKE \'%'. $db->escape($query) .'%\' OR `pb`.`firstname` LIKE \'%'. $db->escape($query) .'%\')';
 	
 	$query =
 'SELECT SQL_CALC_FOUND_ROWS `pb`.`lastname` `ln`, `pb`.`firstname` `fn`, `pb`.`number` `ext`
@@ -240,6 +249,9 @@ LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 	
 }
 elseif ($type === 'imported') {
+	
+	$user = trim( @ $_REQUEST['u'] );
+	$user_id = getUserID( $user );
 	
 	$query =
 'SELECT SQL_CALC_FOUND_ROWS `lastname` `ln`, `firstname` `fn`, `number` `ext`
@@ -271,7 +283,7 @@ if (in_array( $type, array('gs','prv','imported'), true )) {
 			echo
 				'<MenuItem>',
 					'<Prompt>', tiptelXmlEsc( $name ) ,' (', tiptelXmlEsc( $number ) ,')</Prompt>',
-					'<URI>', $number ,'</URI>',
+					'<URI>', tiptelXmlEsc( $number ) ,'</URI>',
 				'</MenuItem>', "\n";
 		}
 		echo "\n";

@@ -74,31 +74,31 @@ function _err( $msg='' )
 
 if (gs_get_conf('GS_SNOM_PROV_M9_ACCOUNTS') < 1) {
 	gs_log( GS_LOG_DEBUG, "Snom M9 provisioning not enabled" );
-	_settings_err( 'Not enabled.' );
+	_err( 'Not enabled.' );
 }
 
 
 
 $requester = gs_prov_check_trust_requester();
 if (! $requester['allowed']) {
-	_settings_err( 'No! See log for details.' );
+	_err( 'No! See log for details.' );
 }
 
 $mac = preg_replace( '/[^0-9A-F]/', '', strToUpper( @$_REQUEST['mac'] ) );
 if (strLen($mac) !== 12) {
 	gs_log( GS_LOG_NOTICE, "Snom M9 provisioning: Invalid MAC address \"$mac\" (wrong length)" );
 	# don't explain this to the users
-	_settings_err( 'No! See log for details.' );
+	_err( 'No! See log for details.' );
 }
 if (hexDec(subStr($mac,0,2)) % 2 == 1) {
 	gs_log( GS_LOG_NOTICE, "Snom M9 provisioning: Invalid MAC address \"$mac\" (multicast address)" );
 	# don't explain this to the users
-	_settings_err( 'No! See log for details.' );
+	_err( 'No! See log for details.' );
 }
 if ($mac === '000000000000') {
 	gs_log( GS_LOG_NOTICE, "Snom M9 provisioning: Invalid MAC address \"$mac\" (huh?)" );
 	# don't explain this to the users
-	_settings_err( 'No! See log for details.' );
+	_err( 'No! See log for details.' );
 }
 
 # make sure the phone is a Snom-M9:
@@ -106,7 +106,7 @@ if ($mac === '000000000000') {
 if ( (subStr($mac,0,6) !== '000413') ) {
 	gs_log( GS_LOG_NOTICE, "Snom M9 provisioning: MAC address \"$mac\" is not a Snom M9 phone" );
 	# don't explain this to the users
-	_settings_err( 'No! See log for details.' );
+	_err( 'No! See log for details.' );
 }
 
 $ua = trim(@$_SERVER['HTTP_USER_AGENT']);
@@ -122,7 +122,7 @@ if (! preg_match('/^Mozilla/i', $ua)
 $db = gs_db_slave_connect();
 if (! $db) {
 	gs_log( GS_LOG_WARNING, "Snom M9 phone asks for phonebook - Could not connect to DB" );
-	_settings_err( 'Could not connect to DB.' );
+	_err( 'Could not connect to DB.' );
 }
 
 

@@ -32,6 +32,7 @@ require_once( dirName(__FILE__) .'/../../../../inc/conf.php' );
 include_once( GS_DIR .'inc/db_connect.php' );
 include_once( GS_DIR .'inc/gettext.php' );
 require_once( GS_DIR .'inc/string.php' );
+require_once( GS_DIR .'inc/prov-fns.php' );
 
 header( 'Content-Type: text/xml; charset=utf-8' );
 header( 'Expires: 0' );
@@ -170,6 +171,11 @@ if (! in_array( $type, array('gs','prv','imported'), true )) {
 
 $dial = trim(@$_REQUEST['dial']);
 
+
+$requester = gs_prov_check_trust_requester();
+if (! $requester['allowed']) {
+	write_alert( 'Not authorized.' );
+}
 
 $db = gs_db_slave_connect();
 
@@ -357,6 +363,10 @@ ORDER BY `u`.`lastname`, `u`.`firstname`
 LIMIT '. ($page * (int)$per_page) .','. (int)$per_page;
 		break;
 	case 'prv' :
+		$remote_addr = @$_SERVER['REMOTE_ADDR'];
+		$remote_addr_check = $db->executeGetOne( 'SELECT `current_ip` FROM `users` WHERE `id`='. $user_id );
+		if ($remote_addr != $remote_addr_check)
+			write_alert( 'Not authorized.' );
 		$query =
 'SELECT SQL_CALC_FOUND_ROWS
 	`id`, `lastname` `ln`, `firstname` `fn`, `number`

@@ -129,7 +129,7 @@ elseif ($type ==='prv') { # PRIVATE phonebook
 		ORDER BY `pb`.`lastname`, `pb`.`firstname`'
 	);
 }
-elseif (type === 'imported') { # IMPORTED phonebook
+elseif ($type === 'imported') { # IMPORTED phonebook
 	if (! gs_get_conf('GS_PB_IMPORTED_ENABLED'))
 		_err( 'Not allowed' );
 		
@@ -147,7 +147,7 @@ ob_start();
 
 echo '<?','xml version="1.0" encoding="utf-8"?','>' ,"\n";
 echo '<TiptelIPPhoneDirectory>' ,"\n";
-echo '<Title>'. tiptelXmlEsc($pb['title']) .'</Title>', "\n";
+echo '<Title>'. _tiptel_xml_esc($pb['title']) .'</Title>', "\n";
 
 $rs = $db->execute( $pb['query'] );
 
@@ -158,8 +158,8 @@ if ( $rs && $rs->numRows() !== 0 ) {
 		$number    = $r['ext'];
 
 		echo '<DirectoryEntry>' ,"\n";
-		echo '<Name>'. tiptelXmlEsc($lastname) .', '. tiptelXmlEsc($firstname) .' ('. tiptelXmlEsc($number) .')</Name>', "\n";
-		echo '<Telephone>'. tiptelXmlEsc($number) .'</Telephone>', "\n";
+		echo '<Name>'. _tiptel_xml_esc($lastname) .', '. _tiptel_xml_esc($firstname) .' ('. _tiptel_xml_esc($number) .')</Name>', "\n";
+		echo '<Telephone>'. _tiptel_xml_esc($number) .'</Telephone>', "\n";
 		echo '</DirectoryEntry>' ,"\n";
 	}
 }
