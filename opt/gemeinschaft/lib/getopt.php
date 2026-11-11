@@ -77,7 +77,7 @@
 		if (isset($args[0][0]) && $args[0][0] != '-') array_shift($args);
 		reset($args);
 		
-		while (list($i, $arg) = _getopt_each($args)) {
+		while (_getopt_next_pair($args, $i, $arg)) {
 			
 			/* The special element '--' means explicit end of
 			   options. Treat the rest of the arguments as non-options
@@ -131,7 +131,7 @@
 					if ($i + 1 < strlen($arg)) {
 						$opts[] = array($opt,  substr($arg, $i + 1));
 						break;
-					} else if (list(, $opt_arg) = _getopt_each($args))
+					} else if (_getopt_next_value($args, $opt_arg))
 						/* Else use the next argument. */;
 					else
 						return new Getopt_Error("option requires an argument -- $opt");
@@ -175,7 +175,7 @@
 					//if (!$opt_arg && !(list(, $opt_arg) = _getopt_each($args)))
 					//var_dump($opt_arg);
 					if ( ($opt_arg===null || $opt_arg===false)
-					  && !(list(, $opt_arg) = _getopt_each($args)) )   // fixed to allow empty strings --philipp
+					  && !_getopt_next_value($args, $opt_arg) )   // fixed to allow empty strings --philipp
 						return new Getopt_Error("option --$opt requires an argument");
 				}
 			} else if ($opt_arg) {
@@ -229,6 +229,22 @@
 
 
 # replacement for each(), which was removed in PHP 8
+// PHP 8.5 warns when list() unpacks false at the end of the array, so
+// these return a boolean and set the variables instead.
+function _getopt_next_pair( array &$array, &$key, &$val )
+{
+	$each = _getopt_each($array);
+	if ($each === false) return false;
+	$key = $each[0];
+	$val = $each[1];
+	return true;
+}
+
+function _getopt_next_value( array &$array, &$val )
+{
+	return _getopt_next_pair($array, $unused, $val);
+}
+
 function _getopt_each( array &$array )
 {
 	$key = key($array);

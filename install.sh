@@ -430,12 +430,15 @@ log_bin_trust_function_creators = 1
 HEREDOC
 systemctl restart mariadb
 
-# Asterisk needs the database when it starts:
+# Asterisk needs the database when it starts. It also has to restart
+# after the database restarts (e.g. after an update), or it would not
+# check the phones' reachability:
 mkdir -p /etc/systemd/system/asterisk.service.d
 cat <<\HEREDOC > /etc/systemd/system/asterisk.service.d/gemeinschaft.conf
 [Unit]
 After=mariadb.service
 Wants=mariadb.service
+PartOf=mariadb.service
 HEREDOC
 systemctl daemon-reload
 
