@@ -167,7 +167,7 @@ $t         = (int)strToTime("$month_d months", $t);
 $num_days  = (int)date('t', $t);
 $y         = (int)date('Y', $t);
 $m         = (int)date('n', $t);
-$today_day = (int)date('j', $t);
+$today_day = (int)date('j');  # the current month ends today
 
 
 ?>
