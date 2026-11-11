@@ -210,7 +210,7 @@ function write_callfile( $queue_ext, $user_ext)
 		. "WaitTime: 15\n"
 		. "Context: toggle-queue-user-hint\n"
 		. "Extension: toggle\n"
-		. "Callerid: $user <Toggle>\n"
+		. "Callerid: $user_ext <Toggle>\n"
 		//. "Setvar: __user_id=".  $user_id ."\n"
 		. "Setvar: __user_name=".  $user_ext ."\n"
 		. "Setvar: __queue=". $queue_ext ."\n"
@@ -220,7 +220,7 @@ function write_callfile( $queue_ext, $user_ext)
 		//. "Setvar: __record_file=".  $filename ."\n"
 		;
 	
-	$filename = '/tmp/gs-'. $user_name .'-'. time() .'-'. rand(10000,99999) .'.call';
+	$filename = '/tmp/gs-'. $user_ext .'-'. time() .'-'. rand(10000,99999) .'.call';
 	
 	$cf = @fOpen( $filename, 'wb' );
 	if (! $cf) {
